@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,12 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-BYTE type;
+struct _t22211x {
+	BYTE reg[4];
+} t22211x;
+struct _txctmp {
+	BYTE type;
+} txctmp;
 
 void map_init_Txc(BYTE model) {
 	switch (model) {
@@ -73,7 +78,7 @@ void map_init_Txc(BYTE model) {
 			break;
 	}
 
-	type = model;
+	txctmp.type = model;
 }
 
 void extcl_cpu_wr_mem_Txc_tw(WORD address, BYTE value) {
@@ -114,7 +119,7 @@ void extcl_cpu_wr_mem_Txc_t22211x(WORD address, BYTE value) {
 	{
 		DBWORD bank;
 
-		if (type == T22211B) {
+		if (txctmp.type == T22211B) {
 			value = (((save ^ t22211x.reg[2]) >> 3) & 0x02)
 				| (((save ^ t22211x.reg[2]) >> 5) & 0x01);
 		} else {
@@ -135,12 +140,12 @@ void extcl_cpu_wr_mem_Txc_t22211x(WORD address, BYTE value) {
 
 	}
 }
-BYTE extcl_cpu_rd_mem_Txc_t22211x(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Txc_t22211x(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address != 0x4100) {
 		return (openbus);
 	}
 
-	if (type == T22211C) {
+	if (txctmp.type == T22211C) {
 		return ((t22211x.reg[1] ^ t22211x.reg[2]) | 0x41);
 	} else {
 		return ((t22211x.reg[1] ^ t22211x.reg[2]) | 0x40);

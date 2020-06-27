@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,13 @@
 #include "save_slot.h"
 #include "cpu.h"
 #include "ppu.h"
+
+struct _m91 {
+	struct _m91_irq {
+		BYTE active;
+		BYTE count;
+	} irq;
+} m91;
 
 void map_init_91(void) {
 	EXTCL_CPU_WR_MEM(91);

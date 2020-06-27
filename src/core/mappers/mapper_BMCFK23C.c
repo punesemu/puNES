@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,18 @@ static void prg_fix_BMCFK23CPW(BYTE value);
 static void prg_swap_BMCFK23CPW(WORD address, WORD value);
 static void chr_fix_BMCFK23CPW(BYTE value);
 static void chr_swap_BMCFK23CCW(WORD address, WORD value);
+
+struct _bmcfk23c {
+	uint32_t dipswitch;
+	BYTE unromchr;
+	BYTE A000;
+	BYTE A001;
+	BYTE reg[8];
+	BYTE mmc3[8];
+	WORD chr_map[8];
+	/* questo posso tranquillamente non salvarlo */
+	BYTE prg_mask;
+} bmcfk23c;
 
 void map_init_BMCFK23C(void) {
 	EXTCL_CPU_WR_MEM(BMCFK23C);
@@ -160,33 +172,36 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 				bmcfk23c.unromchr = value & mask;
 				chr_fix_BMCFK23CPW(mmc3.bank_to_update);
 			}
-
-
-
 		} else {
 			if ((address == 0x8001) && ((bmcfk23c.reg[3] & 0x02) && (mmc3.bank_to_update & 0x08))) {
 				bmcfk23c.reg[4 | (mmc3.bank_to_update & 0x03)] = value;
 				prg_fix_BMCFK23CPW(mmc3.bank_to_update);
 				chr_fix_BMCFK23CPW(mmc3.bank_to_update);
 			} else if (address < 0xC000) {
-				/**/
+				/*
 				if (info.format == UNIF_FORMAT) {
 				//if (info.format != UNIF_FORMAT) {
 					// hacky... strange behaviour, must be bit scramble due to pcb layot restrictions
 					// check if it not interfer with other dumps
 					if (address == 0x8000) {
 						if (value == 0x46) {
-							printf("0x%04X : 0x%02X\n", address, value);
+
+
+							fprintf(stderr, "0x%04X : 0x%02X\n", address, value);
+
 
 							value = 0x47;
 						} else if (value == 0x47) {
-							printf("0x%04X : 0x%02X\n", address, value);
+
+
+							fprintf(stderr, "0x%04X : 0x%02X\n", address, value);
+
 
 							value = 0x46;
 						}
 					}
 				}
-				/**/
+				*/
 				switch (address & 0xE001) {
 					case 0x8000:
 						if ((value & 0x40) != (mmc3.bank_to_update & 0x40)) {

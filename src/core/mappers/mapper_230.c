@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,10 @@
 #include "info.h"
 #include "mem_map.h"
 #include "save_slot.h"
+
+struct _m230 {
+	BYTE mode;
+} m230;
 
 void map_init_230(void) {
 	EXTCL_CPU_WR_MEM(230);
@@ -43,7 +47,7 @@ void map_init_230(void) {
 		map_prg_rom_8k(2, 2, info.prg.rom[0].max.banks_16k);
 	}
 }
-void extcl_cpu_wr_mem_230(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_230(UNUSED(WORD address), BYTE value) {
 	BYTE save = value;
 
 	if (!m230.mode) {

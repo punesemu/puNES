@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,11 +24,7 @@ void map_init_0(void) {
 	EXTCL_CPU_WR_MEM(0);
 	EXTCL_CPU_RD_MEM(0);
 }
-void extcl_cpu_wr_mem_0(WORD address, BYTE value) {
-#if defined (DEBUG)
-	//fprintf(stderr, "Attempt to write %02X to %04X\n", value, address);
-#endif
-}
+void extcl_cpu_wr_mem_0(UNUSED(WORD address), UNUSED(BYTE value)) {}
 BYTE extcl_cpu_rd_mem_0(WORD address, BYTE openbus, BYTE before) {
 	if (address < 0x6000) {
 		return (before);

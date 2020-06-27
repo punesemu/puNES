@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE unif158b_update_prg(void);
+INLINE static void unif158b_update_prg(void);
 
 #define unif158b_8000()\
 	if (mmc3.prg_rom_cfg != old_prg_rom_cfg) {\
@@ -44,6 +44,11 @@ static void INLINE unif158b_update_prg(void);
 	}
 
 static const BYTE unif158b_vlu[8] = { 0x00, 0x00, 0x00, 0x01, 0x02, 0x04, 0x0F, 0x00 };
+
+struct _unif158b {
+	BYTE reg[8];
+	WORD prg_map[4];
+} unif158b;
 
 void map_init_UNIF158B(void) {
 	EXTCL_CPU_WR_MEM(UNIF158B);
@@ -106,7 +111,7 @@ void extcl_cpu_wr_mem_UNIF158B(WORD address, BYTE value) {
 		unif158b_update_prg();
 	}
 }
-BYTE extcl_cpu_rd_mem_UNIF158B(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_UNIF158B(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x5000) || (address > 0x5FFF)) {
 		return (openbus);
 	}
@@ -121,7 +126,7 @@ BYTE extcl_save_mapper_UNIF158B(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE unif158b_update_prg(void) {
+INLINE static void unif158b_update_prg(void) {
 	WORD value;
 
 	if (unif158b.reg[0] & 0x80) {

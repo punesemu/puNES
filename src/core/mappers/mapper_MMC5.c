@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
-#include "apu.h"
 #include "ppu.h"
 #include "cpu.h"
 #include "irql2f.h"
@@ -36,7 +35,7 @@
 		map_prg_rom_8k(1, slot, value);\
 	} else {\
 		/* modalita' ram */\
-		BYTE bank = prg_ram_access[prg_ram_mode][value & 0x07];\
+		BYTE bank = prg_ram_access[mmc5tmp.prg_ram_mode][value & 0x07];\
 		if (bank != INVALID) {\
 			mmc5.prg_ram_bank[slot][0] = TRUE;\
 			mmc5.prg_ram_bank[slot][1] = bank << 13;\
@@ -52,12 +51,12 @@
 		map_prg_rom_8k(2, 0, value);\
 	} else {\
 		/* modalita' ram */\
-		BYTE bank = prg_ram_access[prg_ram_mode][value & 0x07];\
+		BYTE bank = prg_ram_access[mmc5tmp.prg_ram_mode][value & 0x07];\
 		if (bank != INVALID) {\
 			mmc5.prg_ram_bank[0][0] = TRUE;\
 			mmc5.prg_ram_bank[0][1] = (value & 0x06) << 13;\
 		}\
-		bank = prg_ram_access[prg_ram_mode][(value + 1) & 0x07];\
+		bank = prg_ram_access[mmc5tmp.prg_ram_mode][(value + 1) & 0x07];\
 		if (bank != INVALID) {\
 			mmc5.prg_ram_bank[1][0] = TRUE;\
 			mmc5.prg_ram_bank[1][1] = (value & 0x07) << 13;\
@@ -136,9 +135,9 @@
 			break;\
 	}
 
-void prg_swap(void);
-void use_chr_s(void);
-void use_chr_b(void);
+INLINE static void prg_swap(void);
+INLINE static void use_chr_s(void);
+INLINE static void use_chr_b(void);
 
 enum {
 	PRG_RAM_NONE,
@@ -163,7 +162,10 @@ static const BYTE prg_ram_access[6][8] = {
 	{0,1,2,3,4,4,4,4},
 	{0,1,2,3,4,5,6,7}
 };
-BYTE prg_ram_mode;
+_mmc5 mmc5;
+struct _mmc5tmp {
+	BYTE prg_ram_mode;
+} mmc5tmp;
 
 void map_init_MMC5(void) {
 	EXTCL_CPU_WR_MEM(MMC5);
@@ -171,6 +173,7 @@ void map_init_MMC5(void) {
 	EXTCL_SAVE_MAPPER(MMC5);
 	EXTCL_PPU_256_TO_319(MMC5);
 	EXTCL_PPU_320_TO_34X(MMC5);
+	EXTCL_RD_R2007(MMC5);
 	EXTCL_AFTER_RD_CHR(MMC5);
 	EXTCL_RD_NMT(MMC5);
 	EXTCL_RD_CHR(MMC5);
@@ -223,26 +226,40 @@ void map_init_MMC5(void) {
 		case EKROM:
 			info.prg.ram.banks_8k_plus = 1;
 			info.prg.ram.bat.banks = 1;
-			prg_ram_mode = PRG_RAM_8K;
+			mmc5tmp.prg_ram_mode = PRG_RAM_8K;
 			break;
 		case ELROM:
-		default:
 			info.prg.ram.banks_8k_plus = FALSE;
 			info.prg.ram.bat.banks = FALSE;
-			prg_ram_mode = PRG_RAM_NONE;
+			mmc5tmp.prg_ram_mode = PRG_RAM_NONE;
 			break;
 		case ETROM:
 			info.prg.ram.banks_8k_plus = 2;
 			info.prg.ram.bat.banks = 1;
 			info.prg.ram.bat.start = 0;
-			prg_ram_mode = PRG_RAM_16K;
+			mmc5tmp.prg_ram_mode = PRG_RAM_16K;
 			break;
 		case EWROM:
 			info.prg.ram.banks_8k_plus = 4;
 			info.prg.ram.bat.banks = 4;
-			prg_ram_mode = PRG_RAM_32K;
+			mmc5tmp.prg_ram_mode = PRG_RAM_32K;
+			break;
+		default:
+			info.prg.ram.banks_8k_plus = 8;
+			info.prg.ram.bat.banks = FALSE;
+			mmc5tmp.prg_ram_mode = PRG_RAM_64K;
 			break;
 	}
+}
+void map_init_NSF_MMC5(void) {
+	memset(&mmc5, 0x00, sizeof(mmc5));
+
+	mmc5.S3.frequency = 1;
+	mmc5.S4.frequency = 1;
+	mmc5.S3.length.enabled = 0;
+	mmc5.S3.length.value = 0;
+	mmc5.S4.length.enabled = 0;
+	mmc5.S4.length.value = 0;
 }
 void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 	if (address < 0x5000) {
@@ -280,7 +297,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			if (mmc5.pcm.enabled) {
 				mmc5.pcm.output = mmc5.pcm.amp;
 			}
-			mmc5.pcm.clocked = TRUE;
+			mmc5.clocked = TRUE;
 			return;
 		case 0x5011:
 			mmc5.pcm.amp = value;
@@ -288,7 +305,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			if (mmc5.pcm.enabled) {
 				mmc5.pcm.output = mmc5.pcm.amp;
 			}
-			mmc5.pcm.clocked = TRUE;
+			mmc5.clocked = TRUE;
 			return;
 		case 0x5015:
 			if (!(mmc5.S3.length.enabled = value & 0x01)) {
@@ -307,16 +324,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			return;
 		case 0x5101:
 			value &= 0x03;
-			if (value != mmc5.chr_mode) {
-				mmc5.chr_mode = value;
-				if ((r2000.size_spr != 16) || !r2001.visible || r2002.vblank) {
-					if (mmc5.chr_last == CHR_S) {
-						use_chr_s();
-					} else {
-						use_chr_b();
-					}
-				}
-			}
+			mmc5.chr_mode = value;
 			return;
 		case 0x5102:
 		case 0x5103:
@@ -347,7 +355,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			memset(&mmc5.fill_table[0x3C0], filler_attrib[mmc5.fill_attr], 0x40);
 			return;
 		case 0x5113: {
-			BYTE bank = prg_ram_access[prg_ram_mode][value & 0x07];
+			BYTE bank = prg_ram_access[mmc5tmp.prg_ram_mode][value & 0x07];
 
 			if (bank != INVALID) {
 				prg.ram_plus_8k = &prg.ram_plus[bank * 0x2000];
@@ -372,37 +380,19 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 		case 0x5124:
 		case 0x5125:
 		case 0x5126:
-		case 0x5127: {
-			WORD bank = value | (mmc5.chr_high << 2);
-
+		case 0x5127:
 			address &= 0x0007;
-
-			if ((mmc5.chr_last != CHR_S) || (mmc5.chr_s[address] != bank)) {
-				mmc5.chr_s[address] = bank;
-				mmc5.chr_last = CHR_S;
-				if ((r2000.size_spr != 16) || !r2001.visible || r2002.vblank) {
-					use_chr_s();
-				}
-			}
+			mmc5.chr_s[address] = value | (mmc5.chr_high << 2);
+			mmc5.chr_last = CHR_S;
 			return;
-		}
 		case 0x5128:
 		case 0x5129:
 		case 0x512A:
-		case 0x512B: {
-			WORD bank = value | (mmc5.chr_high << 2);
-
+		case 0x512B:
 			address &= 0x0003;
-
-			if ((mmc5.chr_last != CHR_B) || (mmc5.chr_b[address] != bank)) {
-				mmc5.chr_b[address] = bank;
-				mmc5.chr_last = CHR_B;
-				if ((r2000.size_spr != 16) || !r2001.visible || r2002.vblank) {
-					use_chr_b();
-				}
-			}
+			mmc5.chr_b[address] = value | (mmc5.chr_high << 2);
+			mmc5.chr_last = CHR_B;
 			return;
-		}
 		case 0x5130:
 			mmc5.chr_high = (value & 0x03) << 6;
 			return;
@@ -445,7 +435,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			if ((address >= 0x5C00) && (address < 0x6000)) {
 				address &= 0x03FF;
 				if (mmc5.ext_mode < MODE2) {
-					if (!r2002.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) {
+					if (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) {
 						mmc5.ext_ram[address] = value;
 					} else {
 						mmc5.ext_ram[address] = 0;
@@ -471,7 +461,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	BYTE value;
 
 	switch (address) {
@@ -575,10 +565,14 @@ void extcl_ppu_256_to_319_MMC5(void) {
 		return;
 	};
 
-	if ((mmc5.chr_last == CHR_S) || (r2000.size_spr == 16)) {
+	if ((r2000.size_spr == 8) || r2001.visible) {
 		use_chr_s();
 	} else {
-		use_chr_b();
+		if (mmc5.chr_last == CHR_S) {
+			use_chr_s();
+		} else {
+			use_chr_b();
+		}
 	}
 }
 void extcl_ppu_320_to_34x_MMC5(void) {
@@ -601,13 +595,41 @@ void extcl_ppu_320_to_34x_MMC5(void) {
 		}
 	}
 
-	if ((mmc5.chr_last == CHR_B) || (r2000.size_spr == 16)) {
-		use_chr_b();
-	} else {
+	if (r2000.size_spr == 8) {
 		use_chr_s();
+	} else if (r2001.visible) {
+		use_chr_b();
+	} else  {
+		if (mmc5.chr_last == CHR_S) {
+			use_chr_s();
+		} else {
+			use_chr_b();
+		}
 	}
 }
-void extcl_after_rd_chr_MMC5(WORD address) {
+void extcl_rd_r2007_MMC5(void) {
+
+	// When 8x8 sprites are used, the registers from $5120-5127 ("set A") are used for everything
+	// (sprites, BG tiles, and reads from $2007 during vblank or forced blank).
+	// Registers $5128-512B ("set B") are unused.
+
+	// When 8x16 sprites are used, sprites use the "set A" banks; BG tiles use the "set B" banks;
+	// reads from $2007 during vblank or forced blank are treated as sprite accesses
+	// (using bank set A) if the most recently written register was $5120-5127; and treated as
+	// BG accesses (using bank set B) if the most recently written register was $5128-512B
+
+
+	if (r2000.size_spr == 8) {
+		use_chr_s();
+	} else {
+		if (mmc5.chr_last == CHR_S) {
+			use_chr_s();
+		} else {
+			use_chr_b();
+		}
+	}
+}
+void extcl_after_rd_chr_MMC5(UNUSED(WORD address)) {
 	/*
 	 * dopo ogni fetch del high byte del background
 	 * azzero il flag con cui indico se il tile era
@@ -697,11 +719,11 @@ void extcl_envelope_clock_MMC5(void) {
 	envelope_run(mmc5.S4)
 }
 void extcl_apu_tick_MMC5(void) {
-	square_tick(mmc5.S3, 0)
-	square_tick(mmc5.S4, 0)
+	square_tick(mmc5.S3, 0, mmc5)
+	square_tick(mmc5.S4, 0, mmc5)
 }
 
-void prg_swap(void) {
+INLINE static void prg_swap(void) {
 	BYTE value, i;
 
 	switch (mmc5.prg_mode) {
@@ -743,7 +765,7 @@ void prg_swap(void) {
 		}
 	}
 }
-void use_chr_s(void) {
+INLINE static void use_chr_s(void) {
 	DBWORD value;
 
 	switch (mmc5.chr_mode) {
@@ -772,7 +794,7 @@ void use_chr_s(void) {
 			break;
 	}
 }
-void use_chr_b(void) {
+INLINE static void use_chr_b(void) {
 	DBWORD value;
 
 	switch (mmc5.chr_mode) {

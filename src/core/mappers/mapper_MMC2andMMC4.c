@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,10 +22,17 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+struct _mmc2and4 {
+	BYTE regs[4];
+	BYTE latch0;
+	BYTE latch1;
+} mmc2and4;
+
 void map_init_MMC2and4(void) {
 	EXTCL_CPU_WR_MEM(MMC2and4);
 	EXTCL_SAVE_MAPPER(MMC2and4);
 	EXTCL_AFTER_RD_CHR(MMC2and4);
+	EXTCL_UPDATE_R2006(MMC2and4);
 	mapper.internal_struct[0] = (BYTE *) &mmc2and4;
 	mapper.internal_struct_size[0] = sizeof(mmc2and4);
 
@@ -132,4 +139,7 @@ void extcl_after_rd_chr_MMC2and4(WORD address) {
 	chr.bank_1k[1 | bank] = chr_chip_byte_pnt(0, value | 0x0400);
 	chr.bank_1k[2 | bank] = chr_chip_byte_pnt(0, value | 0x0800);
 	chr.bank_1k[3 | bank] = chr_chip_byte_pnt(0, value | 0x0C00);
+}
+void extcl_update_r2006_MMC2and4(WORD new_r2006, UNUSED(WORD old_r2006)) {
+	extcl_after_rd_chr_MMC2and4(new_r2006);
 }

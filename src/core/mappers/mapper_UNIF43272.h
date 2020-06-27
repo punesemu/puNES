@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,10 +20,6 @@
 #define MAPPER_UNIF43272_H_
 
 #include "common.h"
-
-struct _unif43272 {
-	WORD address;
-} unif43272;
 
 void map_init_UNIF43272(void);
 void extcl_cpu_wr_mem_UNIF43272(WORD address, BYTE value);

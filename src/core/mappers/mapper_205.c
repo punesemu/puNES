@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE m205_update_prg(void);
-static void INLINE m205_update_chr(void);
+INLINE static void m205_update_prg(void);
+INLINE static void m205_update_chr(void);
 
 #define m205_chr_1k(vl) value = ((m205.reg[0] & 0x30) << 3) | vl
 #define m205_prg_8k(vl) value = (m205.reg[0] & 0x30) | (vl & ((m205.reg[0] & 0xC0) ? 0x0F : 0x1F))
@@ -78,6 +78,8 @@ static void INLINE m205_update_chr(void);
 			m205.prg_map[1] = value;\
 			break;\
 	}
+
+_m205 m205;
 
 void map_init_205(void) {
 	EXTCL_CPU_WR_MEM(205);
@@ -175,7 +177,7 @@ BYTE extcl_save_mapper_205(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE m205_update_prg(void) {
+INLINE static void m205_update_prg(void) {
 	BYTE value;
 
 	m205_prg_8k(m205.prg_map[0]);
@@ -196,7 +198,7 @@ static void INLINE m205_update_prg(void) {
 
 	map_prg_rom_8k_update();
 }
-static void INLINE m205_update_chr(void) {
+INLINE static void m205_update_chr(void) {
 	BYTE i;
 	WORD value;
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,12 +20,7 @@
 #define SCALE2X_H_
 
 #include "common.h"
-#include "gfx.h"
-#include "palette.h"
 
-gfx_filter_function(scaleNx);
-void scale2x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix);
-void scale3x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix);
-void scale4x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix);
+void scaleNx(void);
 
 #endif /* SCALE2X_H_ */

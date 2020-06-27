@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,17 +20,6 @@
 #define MAPPER_KS7032_H_
 
 #include "common.h"
-
-struct _ks7032 {
-	BYTE ind;
-	BYTE reg[8];
-	struct _ks7032_irq {
-		BYTE used;
-		BYTE active;
-		WORD count;
-		WORD reload;
-	} irq;
-} ks7032;
 
 void map_init_KS7032(void);
 void extcl_cpu_wr_mem_KS7032(WORD address, BYTE value);

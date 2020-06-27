@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,10 +20,6 @@
 #define MAPPER_BMC64IN1NOREPEAT_H_
 
 #include "common.h"
-
-struct _bmc64in1norepeat {
-	BYTE reg[4];
-} bmc64in1norepeat;
 
 void map_init_BMC64IN1NOREPEAT(void);
 void extcl_cpu_wr_mem_BMC64IN1NOREPEAT(WORD address, BYTE value);

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,16 +20,6 @@
 #define MAPPER_252_H_
 
 #include "common.h"
-
-struct _m252 {
-	WORD chr_map[8];
-	struct _m252_irq {
-		BYTE active;
-		WORD prescaler;
-		WORD count;
-		WORD reload;
-	} irq;
-} m252;
 
 void map_init_252(void);
 void extcl_cpu_wr_mem_252(WORD address, BYTE value);

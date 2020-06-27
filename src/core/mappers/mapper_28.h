@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,12 +20,6 @@
 #define MAPPER_28_H_
 
 #include "common.h"
-
-struct _m28 {
-	BYTE index;
-	BYTE mirroring;
-	BYTE prg[3];
-} m28;
 
 void map_init_28(void);
 void extcl_cpu_wr_mem_28(WORD address, BYTE value);

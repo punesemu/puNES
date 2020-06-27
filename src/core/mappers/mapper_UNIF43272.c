@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,10 @@
 #include "info.h"
 #include "mem_map.h"
 #include "save_slot.h"
+
+struct _unif43272 {
+	WORD address;
+} unif43272;
 
 void map_init_UNIF43272(void) {
 	EXTCL_CPU_WR_MEM(UNIF43272);
@@ -48,7 +52,7 @@ void extcl_cpu_wr_mem_UNIF43272(WORD address, BYTE value) {
 	}
 	map_prg_rom_8k_update();
 }
-BYTE extcl_cpu_rd_mem_UNIF43272(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_UNIF43272(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address < 0x6000) {
 		return (openbus);
 	}

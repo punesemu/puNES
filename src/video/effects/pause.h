@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,16 +21,18 @@
 
 #include "common.h"
 
+typedef struct _pause_effect {
+	void *palette;
+	void *ntsc;
+} _pause_effect;
+
+extern _pause_effect pause_effect;
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-EXTERNC struct _pause {
-	void *palette;
-	void *ntsc;
-} pause;
 
 EXTERNC BYTE pause_init(void);
 EXTERNC void pause_quit(void);

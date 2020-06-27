@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,13 +21,12 @@
 
 #include "common.h"
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
+enum frame_status_modes {
+	FRAME_FINISHED,
+	FRAME_STARTED,
+	FRAME_INTERRUPTED
+};
 
-#define _rom_file uTCHAR rom_file[LENGTH_FILE_NAME_MID]
 typedef struct _info_sh1sum {
 	struct _info_sha1sum_prg {
 		BYTE value[20];
@@ -38,11 +37,12 @@ typedef struct _info_sh1sum {
 		char string[41];
 	} chr;
 } _info_sh1sum;
-
-EXTERNC struct _info {
+typedef struct _info {
 	uTCHAR base_folder[LENGTH_FILE_NAME_MID];
-	_rom_file;
-	uTCHAR load_rom_file[LENGTH_FILE_NAME_MID];
+	struct _info_rom {
+		uTCHAR file[LENGTH_FILE_NAME_LONG];
+		uTCHAR *from_load_menu;
+	} rom;
 	BYTE format;
 	BYTE machine[2];
 	struct _info_mapper {
@@ -58,17 +58,17 @@ EXTERNC struct _info {
 	BYTE trainer;
 	BYTE stop;
 	BYTE reset;
-	BYTE execute_cpu;
+	BYTE frame_status;
 	BYTE gui;
 	BYTE turn_off;
 	BYTE no_rom;
-	BYTE uncompress_rom;
-	WORD pause;
+	int pause;
+	int no_ppu_draw_screen;
 	BYTE pause_from_gui;
 	BYTE on_cfg;
-	BYTE pause_frames_drawscreen;
 	BYTE first_illegal_opcode;
 	BYTE wave_in_record;
+	BYTE cpu_rw_extern;
 #if defined (WITH_OPENGL)
 	BYTE sRGB_FBO_in_use;
 #endif
@@ -114,16 +114,21 @@ EXTERNC struct _info {
 	BYTE r4016_dmc_double_read_disabled;
 	BYTE r2002_race_condition_disabled;
 	BYTE r4014_precise_timing_disabled;
+	BYTE r2002_jump_first_vblank;
 	WORD default_dipswitches;
 	WORD extra_from_db;
 	DBWORD bat_ram_frames;
 	DBWORD bat_ram_frames_snap;
+	BYTE doublebuffer;
+	BYTE start_frame_0;
+	WORD CPU_PC_before;
+	BYTE zapper_is_present;
 
 #if !defined (RELEASE)
 	BYTE snd_info;
 #endif
-} info;
+} _info;
 
-#undef EXTERNC
+extern _info info;
 
 #endif /* INFO_H_ */

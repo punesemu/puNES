@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,14 +21,9 @@
 
 #include "common.h"
 
-struct _m52 {
-	BYTE disabled;
-	BYTE reg;
-	WORD prg_map[4];
-	WORD chr_map[8];
-} m52;
+enum { MARIO7IN1 };
 
-void map_init_52(void);
+void map_init_52(BYTE type);
 void extcl_cpu_wr_mem_52(WORD address, BYTE value);
 BYTE extcl_save_mapper_52(BYTE mode, BYTE slot, FILE *fp);
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -44,6 +44,10 @@
 	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);\
 	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);\
 }
+
+struct _ave_d1012 {
+	BYTE reg[3];
+} ave_d1012;
 
 void map_init_Ave(BYTE model) {
 	switch (model) {
@@ -152,7 +156,7 @@ void extcl_cpu_wr_mem_Ave_D1012(WORD address, BYTE value) {
 	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
 	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
 }
-BYTE extcl_cpu_rd_mem_Ave_D1012(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Ave_D1012(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0xFF80) || (address > 0xFFF7)) {
 		return (openbus);
 	}

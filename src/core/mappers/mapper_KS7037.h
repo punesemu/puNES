@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,11 +20,6 @@
 #define MAPPER_KS7037_H_
 
 #include "common.h"
-
-struct _ks7037 {
-	BYTE ind;
-	BYTE reg[8];
-} ks7037;
 
 void map_init_KS7037(void);
 void extcl_after_mapper_init_KS7037(void);

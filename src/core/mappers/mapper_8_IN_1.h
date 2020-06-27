@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,12 +20,6 @@
 #define MAPPER_8_IN_1_H_
 
 #include "common.h"
-
-struct _m8in1 {
-	BYTE reg;
-	WORD prg_map[4];
-	WORD chr_map[8];
-} m8in1;
 
 void map_init_8_IN_1(void);
 void extcl_cpu_wr_mem_8_IN_1(WORD address, BYTE value);

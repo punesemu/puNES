@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,19 +33,19 @@ enum {
 	MINDSEEKER
 };
 
-typedef struct {
+typedef struct _n163_snd_ch {
 	BYTE enabled;
 	BYTE active;
 	WORD address;
 	DBWORD freq;
 	DBWORD cycles_reload;
 	DBWORD cycles;
-	BYTE length;
-	BYTE step;
+	WORD length;
+	WORD step;
 	WORD volume;
 	SWORD output;
 } _n163_snd_ch;
-struct _n163 {
+typedef struct _n163 {
 	uint32_t nmt_bank[4][2];
 	BYTE irq_delay;
 	DBWORD irq_count;
@@ -55,16 +55,12 @@ struct _n163 {
 	BYTE snd_ch_start;
 	BYTE snd_wave[0x100];
 	_n163_snd_ch ch[8];
-} n163;
-struct _n3425 {
-	BYTE bank_to_update;
-} n3425;
-struct _n3446 {
-	BYTE bank_to_update;
-	BYTE prg_rom_mode;
-} n3446;
+} _n163;
+
+extern _n163 n163;
 
 void map_init_Namco(BYTE model);
+void map_init_NSF_Namco(BYTE model);
 
 void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_Namco_163(WORD address, BYTE openbus, BYTE before);

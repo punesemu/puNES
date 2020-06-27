@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,10 @@
 #define ax5705_chr_rom_1k_update_low(slot)\
 	value = (ax5705.chr_map[slot] & 0xF0) | (value & 0x0F);\
 	_ax5705_chr_rom_1k_update(slot)
+
+struct _ax5705 {
+	WORD chr_map[8];
+} ax5705;
 
 void map_init_AX5705(void) {
 	EXTCL_CPU_WR_MEM(AX5705);

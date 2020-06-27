@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@
 #include "recent_roms.h"
 #include "info.h"
 #include "conf.h"
-#include "cheat.h"
 #include "settings.h"
 #include "gui.h"
 
@@ -53,14 +52,25 @@ void recent_roms_init(void) {
 		recent.close();
 	}
 }
-void recent_roms_add(uTCHAR *rom) {
+void recent_roms_add(uTCHAR *file) {
 	int index = 0, rr_index = 1, count = 0;
 	_recent_roms rr_tmp;
-	QString utf = uQString(rom);
+	QString utf;
+	uTCHAR *rom;
 
-	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
+	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase != GG_LOAD_ROM)) {
 		return;
 	}
+
+	if (file[0] == 0) {
+		return;
+	}
+
+	if ((rom = uncompress_storage_archive_name(file)) == NULL) {
+		rom = file;
+	}
+
+	utf = uQString(rom);
 
 	// normalizzo il path
 	utf.replace('\\', '/');

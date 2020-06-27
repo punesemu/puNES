@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,10 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
+struct _m208 {
+	BYTE ctrl;
+	BYTE reg[4];
+} m208;
 static const BYTE vlu208[256] = {
 		0x59, 0x59, 0x59, 0x59, 0x59, 0x59, 0x59, 0x59,
 		0x59, 0x49, 0x19, 0x09, 0x59, 0x49, 0x19, 0x09,
@@ -114,7 +118,7 @@ void extcl_cpu_wr_mem_208(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_208(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_208(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x5800) || (address > 0x5FFF)) {
 		return (openbus);
 	}

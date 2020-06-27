@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #include "mappers.h"
 #include "vs_system.h"
 
-typedef struct {
+typedef struct _dbelement {
 	char sha1sum[41];
 	WORD mapper;
 	BYTE submapper;
@@ -96,10 +96,28 @@ static const _dbelement dblist[] = {
 	{"e392ce12e622295f2e0b9f0c2ea3e8a31eb69d31", 0, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* nes15-PAL.nes */
 	{"37aaba8411f8306b6377dcfb209ccd285f32d70f", 0, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* PalRenderingDisabled_Rows1-256v2.nes */
+	{"6454236f1ed53de6b123c58dded1c2c649cee46c", 0, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* PalRenderingDisabled_Rows257-512v2.nes */
+	{"40408ac93b0cf478e6ada60dd9fdda9524b18811", 0, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* PalRenderingEnabled_Rows1-256v2.nes */
+	{"465d21fb353c62a188511f9527cc4fe8f3c92696", 0, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* PalRenderingEnabled_Rows257-512v2.nes */
+	{"c5ebd392edd1c9791020c6dc774a2df3017a0fcd", 0, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* PalRendOff1_v3.nes */
+	{"e15029fe7b038657465aa2e9a641addb0689304b", 0, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* PalRendOff2_v3.nes */
+	{"4b172cf92c7fadcf321833bfe3128c5328dec200", 0, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* PalRendOn1_v3.nes */
+	{"bfd9e7ce1c926b5a1435e628aaed4de07a0f1679", 0, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* PalRendOn2_v3.nes */
+	{"e63db7b0b826bd73ccf0705341eab57079945c7c", 0, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Retrocoders - Years behind.nes */
 	{"cb69e8acda28b487cd4e9254b603272f428416eb", 1, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Driar.nes */
 	{"240998798bdb32da7428d9b8447d335f05dd5885", 1, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Retrocoders - Years behind_debugwrites.nes ret.nes */
+	{"398b1d268a3c466ca55ed382b15b8ca70ce094eb", 1, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* TANESPOT.nes */
 	{"74d49e41970d79fb26ba6737fdb5d027703ee36f", 3, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* 20090805_shaping_reality_(lcp_2009).nes */
@@ -158,6 +176,8 @@ static const _dbelement dblist[] = {
 	{"fdba4087683caaaa6d36a2a8d390c8661bc0b6ee", 0, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Mario Bros. (E) [!].nes */
 	{"f5d609720bc60bcb02f434d41149ae68e9f6b899", 0, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* NGE Third Impact 40Kb.nes */
+	{"5e8757d31927fee033a83967fb558aff9d94745f", 0, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Pac-Man (E) [!].nes */
 	{"8fef2bdce0c0be2ece67b26587aa22097ba3c9cf", 0, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Pac-Man (E) [T+FreFinal_ks151].nes */
@@ -240,6 +260,14 @@ static const _dbelement dblist[] = {
 	{"0b698ad2b7cfa855e01726226f221294a8a2d9ed", 0, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Ball Hack v.2_2001-03-21 by Knoxburry-Aneurysm (Balloon Fight Hack) [o1].nes */
 	{"c0a936c933185a73edde30f34160c61219a8bae0", 0, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Hidden Chinese Chess - An Qi (Asia) (NTSC) (Unl).nes */
+	//{"261d13eaeeba7b9893b1f9427ddf431618bf41c1", 0, DEFAULT, BAD_AN_QI, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Ms. Pac-Man (USA) (Unl).nes */
+	{"83057a9b6f6a3ea8fe59af149be4c71d9c319617", 0, DEFAULT, DEFAULT, DEFAULT, UNK_HORIZONTAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Mr. Happyface (Ms. Pac-Man Hack).nes */
+	{"2c77d3a31556035681ab369bee319b15663190a1", 0, DEFAULT, DEFAULT, DEFAULT, UNK_HORIZONTAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Tank (Caltron, CN-16)(Unl)[!].nes */
+	{"1c013575aea14e70371cb76aaacaf948c1a3e696", 0, DEFAULT, DEFAULT, DEFAULT, UNK_VERTICAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* -------------------------------------- MMC1 -------------------------------------------- */
 	/* Darkman (E) [!].nes */
@@ -386,6 +414,8 @@ static const _dbelement dblist[] = {
 	{"e28ba80be814bb032bbe4647c1b2104f868dfa25", 1, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Miracle Piano Teaching System, The (E) [!].nes */
 	{"ed961fe21ecce26b15c2722a91080da39f4e394d", 1, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Miracle Piano Teaching System, The (France).nes */
+	{"b0eb752ae1c5d14280ec8c67bc88bbacdedf31a7", 1, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* New Ghostbusters II (E) [!].nes */
 	{"3bb85626b3caa71c996a00bbe1f05e342f870c2f", 1, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* New Ghostbusters II (E) [T+Rus_magic team].nes */
@@ -505,6 +535,11 @@ static const _dbelement dblist[] = {
 	/* Iron Tank - The Invasion of Normandy (U) [!].nes */
 	{"1b8e9bab097a4345c67fc46fa13951847aabef12", 1, DEFAULT, DEFAULT, NTSC, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+	/* Airwolf (U) [o3].nes */
+	{"7bc0296cfd36fb817a1e589fb81e0de0032f5958", 1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Airwolf (U) [!].nes */
+	{"a9a8083a26f70f9ad4cb9095045ab1be75f6567b", 1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 	/* Bard's Tale, The - Tales of the Unknown (J) [b1].nes */
 	{"2dcd37cc860793899a4ab305057af2e66e88aba1", 1, SNROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Bard's Tale, The - Tales of the Unknown (J) [b2].nes */
@@ -534,7 +569,7 @@ static const _dbelement dblist[] = {
 	/* Dynablaster (E) [!].nes */
 	{"31c720f9a75eb2d069244bd257aa23de6b5bce8b", 1, SNROM, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Elite by Ian Bell & David Braben (NTSC Hack).nes */
-	{"fcf9ff27f097892148eaec439ab79bc53164d751", 1, SNROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"fcf9ff27f097892148eaec439ab79bc53164d751", 1, SNROM, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Elite (E) [!].nes */
 	{"8d7ca48394996ef45ab1094b582d00ad7b028f21", 1, SNROM, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Easy Final Fantasy (FF1 Hack).nes */
@@ -1072,7 +1107,7 @@ static const _dbelement dblist[] = {
 	/* Mario Open Golf (J) (PRG1) [!].nes */
 	{"9a5628dfb31b4e8f07079a30b58100884b5590a9", 1, SNROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Mario Open Golf (PC10) [!].nes */
-	{"2d5ac7c65ce63d409b6e0b2e2185d81bc7c57c69", 1, SNROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"2d5ac7c65ce63d409b6e0b2e2185d81bc7c57c69", 1, SNROM, MOWPC10, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Spot (J).nes */
 	{"8b62b3fc95957f52d146e7bc3c90ab33c4005aec", 1, SNROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Spot (U) [!].nes */
@@ -1712,12 +1747,12 @@ static const _dbelement dblist[] = {
 	{"1b143750dc8597372892ff4fa64c7e982b5e7cdb", 2, UNLROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Zoids 2 - Zenebas no Gyakushuu (J) [p1][hM02].nes */
 	{"e81966607afceca236779c63134ff5a9333c4638", 2, UNLROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Battle Kid 2 - Mountain of Torment (U).nes */
-	{"dcd6870e0d5a79899dce11b975c8a16652fc7143", 2, UNROM_BK2, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Trog (U) [b1].nes */
 	{"13c3394f08f4bc6d3df83db92693bdac9d091766", 2, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Trog (U) [o1].nes */
 	{"29ca7cc398b855472c9d94e7581be8288468382b", 2, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Mega Man (U).nes */
+	{"6047e52929dfe8ed4708d325766ccb8d3d583c7d", 2, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Best of the Best - Championship Karate (E) [!].nes */
 	{"45a47a23cd3d6779ff8a1be8853d14a9df7ea3ca", 2, DEFAULT, BAD_INES_BOTBE, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Alfred Chicken (E) [!].nes */
@@ -1927,10 +1962,6 @@ static const _dbelement dblist[] = {
 	/* quantum_disco_brothers_by_wAMMA.nes */
 	{"2ab9a13a76f17546582ebe2c7ce7ed55713622bd", 3, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ---------------------------------- Color Dreams ---------------------------------------- */
-	/* Free Fall (U) (Prototype) [!].nes */
-	{"41f6f581c7da9f90c18e0eb2442df7a6adbe3e76", 11, CD_NO_CONFLCT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-
 /* ------------------------------------- MMC3 --------------------------------------------- */
 	/* Summer Carnival '92 - Recca (U).nes */
 	{"4042bbe6e1ca346d5b56889dfc1cfe6124761333", 4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
@@ -2049,6 +2080,15 @@ static const _dbelement dblist[] = {
 	{"7ab1e18c8fbce1ac5f7699ea50ea05b5490fe3e0", 4, MMC3_ALTERNATE, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* 6.MMC3_rev_B.nes */
 	{"0e971e2ccad1dee51a0c305ed38fafd2e6ca3b41", 4, MMC3_ALTERNATE, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+	/* Pokemon HeartGold (KT-008 PCB)(Ch)[!].nes */
+	{"6545611c3704b8624343f4bdab7c1096523a1ac9", 4, KT008, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Pokemon Platinum Alt title 1 (KT-008 PCB)(Ch)[!].nes */
+	{"d88dfadb681a61dfa36177afbec07364ed6c0011", 4, KT008, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Pokemon Platinum Alt title 2 (KT-008 PCB)(Ch)[!].nes */
+	{"6d57879ec66a523882813bcc0bc69d5bc8ff0ed0", 4, KT008, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Pokemon Platinum (KT-008 PCB)(Ch)[!].nes */
+	{"7bdc865f0123a643cbfb7645957cf6cc0e30677e", 4, KT008, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 	/* Adventures of Lolo 2 (E) [!].nes */
 	{"1d99e097573e55457cc0858a06c63e8e6b76fb8f", 4, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
@@ -2519,7 +2559,7 @@ static const _dbelement dblist[] = {
 	/* Captain SkyHawk (E) [!].nes */
 	{"5d940b2224946def3f9f9fad13d879170f3bf494", 7, AMROM, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Captain Skyhawk (PC10) [!].nes */
-	{"e12086a3f1a3b5e9ec035cb778505e43f501416a", 7, AMROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"e12086a3f1a3b5e9ec035cb778505e43f501416a", 7, AMROM, CSPC10, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Captain Skyhawk (U) (PRG0) [o1].nes */
 	{"92f0c3153d0dec1f78d61425f88fc6573b0f9be8", 7, AMROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Captain Skyhawk (U) (PRG1) [!].nes */
@@ -2617,10 +2657,14 @@ static const _dbelement dblist[] = {
 	{"012a23b6fe872bcbcc42dfeb5835a7bfaf721fc6", 11, DEFAULT, BAD_KING_NEPT, DEFAULT, UNK_VERTICAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Kojiki_by_wAMMA.nes */
 	{"9becee07199b622408c0806d1dd1f510989b2488", 11, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Free Fall (U) (Prototype) [!].nes */
+	{"41f6f581c7da9f90c18e0eb2442df7a6adbe3e76", 11, CD_NO_CONFLCT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Secret Scout in the Temple of Demise (USA) (Beta) (Unl).nes */
+	{"e667fe1a0eb044c8615042d31dea3b2913d813bb", 11, CD_NO_CONFLCT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* --------------------------------------- CPROM ------------------------------------------ */
 	/* Volshebnaya Palitra (R) [!].nes */
-	{"e4414c160c7e91136c62d99154336035e5636eeb", 13, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"e4414c160c7e91136c62d99154336035e5636eeb", 13, DEFAULT, DEFAULT, NTSC, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------ Bandai FCGX --------------------------------------- */
 	/* Akuma-kun - Makai no Wana (J) [!].nes */
@@ -2771,6 +2815,10 @@ static const _dbelement dblist[] = {
 	{"b911fde519b8f62ebda1a4528f586ef8215ebfdd", 21, VRC4C, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Ganbare Goemon Gaiden 2 - Tenka no Zaihou (J) [o1].nes */
 	{"711929b7621a9a80743f0542c89877c8b862c32e", 21, VRC4C, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Ganbare Goemon Gaiden 2 - Tenka no Zaihou (J) [o1].nes Traduction v101 */
+	{"16c6c4fb02e9ee1eee286b21ef35d09f4eadb408", 21, VRC4C, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Ganbare Goemon Gaiden 2 - Tenka no Zaihou (J) [b2].nes Traduction v101 */
+	{"e8a7c35c793288bf9c0161c3edd49c825c8f7981", 21, VRC4C, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 	/* 2-in-1 - Yuu Yuu + Dragonball Z [p1][!].nes */
 	{"4097d5a814308e39d592466b60b64862699cc22a", 23, VRC4BMC, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
@@ -2803,6 +2851,8 @@ static const _dbelement dblist[] = {
 	{"c384462009cb645d87455ca0b18bfb10dbf34027", 23, VRC4E, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Akumajou Special - Boku Dracula-kun (J) [T+EngR1_Kalas].nes */
 	{"c7209cfa6b7f13f949599f5e5b12fd92be99a926", 23, VRC4E, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* mlla1i.nes and iki73k.nes*/
+	{"99ab4d923ca6433c6063a700c2b8aea77f6a8314", 23, VRC4E, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Crisis Force (J) [b1].nes */
 	{"baf62ae548f93e69af44e4458a32a0d28faa1439", 23, VRC4E, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Crisis Force (J) [b1][t1].nes */
@@ -2879,8 +2929,15 @@ static const _dbelement dblist[] = {
 	/* Teenage Mutant Ninja Turtles 2 - The Manhattan Project (J) [T+Kor_eastwind].nes */
 	{"4568f379dbe6e73df96466e332c90e88962674da", 25, VRC4D, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+	/* Gradius II (J) (VC).nes */
+	{"cf97e13a30b688eafdd0509b63e0228ea2185a25", 25, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 	/* World Hero (Unl)(TV System Select)[!].nes */
 	{"0b351c586130ad0ae6203144136b6e199fa5ae20", 27, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ------------------------------------- mapper 30 ---------------------------------------- */
+	/* Battle Kid 2 - Mountain of Torment (U).nes */
+	{"dcd6870e0d5a79899dce11b975c8a16652fc7143", 30, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* --------------------------------------- Irem ------------------------------------------- */
 	/* Major League (J).nes */
@@ -2961,6 +3018,16 @@ static const _dbelement dblist[] = {
 	{"a6b1a2acae1e4034c5e048d1318541d67a86f17c", 34, BXROMBC, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Variable Width Font Demo v0.02 by Damian Yerrick+Blargg (PD).nes */
 	{"8ef30f9143876207c9862fbc03af353df416fce7", 34, BXROMBC, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Caesars Palace (U) [b1][o1].nes */
+	{"204988c8d9547839c83e8b4d856a696d18518978", 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Caesars Palace (U) [b2].nes */
+	{"2e6c5157bf7b62a1a6cd9c80dd20c8d689bbd879", 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* WWF WrestleMania Challenge (U) [b1][o1].nes */
+	{"a93a6e0039d119ae04c5fb803723b67468f0103b", 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* WWF WrestleMania Challenge (U) [b2].nes */
+	{"f1745a076053b5cf55a71390b1e5d12a99c08221", 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* WWF WrestleMania Challenge (U) [b3].nes */
+	{"5cad070d0926f25941556c5274b5ac9ce9d1c6ef", 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- mapper 37 ---------------------------------------- */
 	/* Super Mario Bros. + Tetris + Nintendo World Cup (E) [b1].nes */
@@ -2971,6 +3038,10 @@ static const _dbelement dblist[] = {
 /* ------------------------------------- mapper 45 ---------------------------------------- */
 	/* Kunio 8-in-1 [p1][!].nes */
 	{"b80dca69c0943fea309d3cc0bf34d6bfc38e29c9", 45, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ------------------------------------- mapper 52 ---------------------------------------- */
+	/* Mario 7-in-1 [p1][!].nes */
+	{"4fe43bef9d9217881b7c8ece0007dc4cd830fbec", 52, MARIO7IN1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- mapper 60 ---------------------------------------- */
 	/* Reset Based 4-in-1 [p1].nes */
@@ -2987,8 +3058,12 @@ static const _dbelement dblist[] = {
 	{"b493bdd843627d63353f73b846d120723149d59d", 66, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Dragon Ball (E) (PRG1) [!].nes */
 	{"2338059ab6dc540e59283edee65714bcd94ac188", 66, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* AV Super Real Pachinko (Japan) (Unl).nes */
+	{"c11d158465475bfe8fdd950fb39180df2ef597f0", 66, DEFAULT, DEFAULT, DEFAULT, UNK_HORIZONTAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Super Mario Bros. + Duck Hunt (E) [!].nes */
 	{"63db029e1e1ff3374c0b08b9df198018d4472716", 66, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Mississippi Satsujin Jiken (J) [h2][o1].nes */
+	{"e0459af1bcd2a8510bc058c9c00bb5b4bf64c83b", 66, DEFAULT, GXROM_NOBC, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------ Sunsoft S4 ---------------------------------------- */
 	/* Maharaja (J).nes */
@@ -3015,6 +3090,8 @@ static const _dbelement dblist[] = {
 	{"5ab195bbbd35cdecc9c00dd7de7a315234fe7300", 70, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- Camerica ----------------------------------------- */
+	/* Fire Hawk (PAL)[!].nes */
+	{"7b23cacd3a6864450561c546c052b6f7f348cf04", 71, BF9097, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Fire Hawk (Camerica) [b1].nes */
 	{"1b22f43bf366ebb4fda452ddf2fc9e980f9dd2f1", 71, BF9097, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Fire Hawk (Camerica) [b2].nes */
@@ -3194,6 +3271,8 @@ static const _dbelement dblist[] = {
 	{"474ebc84f7c19b357e0f9ef087da1b6a103900b8", 87, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Kage no Densetsu (J) [!].nes */
 	{"7b71f891dbf8beb9ab4a13e18313c6321eec1b29", 87, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Kage no Densetsu (J) (VC).nes */
+	{"a4c8b7d762cc0be1cdbba479498d51c5d472988d", 87, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Ninja Jajamaru-kun (J) [a1].nes */
 	{"bcb59af271894e6f20cc64ec5792c306ae13d556", 87, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Ninja Jajamaru-kun (J) [!].nes */
@@ -3270,6 +3349,8 @@ static const _dbelement dblist[] = {
 	{"294a82b061ce9c0908305777656f026b8474066a", 113, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Total Funpak (HES).nes */
 	{"17c721cab79fe83eb47a6fb1e53af1f65b851558", 113, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Sidewinder (Australia) (Unl).nes */
+	{"b1cc3ed04c610be18742a3fd78a8f27a597f8549", 113, DEFAULT, BAD_INES_SWAUS, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* --------------------------------------- 114 -------------------------------------------- */
 	/* Lion King, The (Unl) (Mapper 114).nes */
@@ -3363,17 +3444,67 @@ static const _dbelement dblist[] = {
 	/* Qi Wang - Chinese Chess (MGC-001) (Ch) [!].nes */
 	{"d293232ddbdeecd0d999652f02cb3ae2576cf251", 133, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* ---------------------------------- Sachen (SA8259B) ------------------------------------ */
+	/* Silver Eagle (Sachen) [!].nes */
+	{"2a4dae7634943c9c86760a00e24d2bc70efb03d0", 138, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ---------------------------------- Sachen (SA8259C) ------------------------------------ */
+	/* Hell Fighter (Asia) (PAL) (Unl).nes */
+	{"db8e5ff5ffd45517226611c3a577e89a1236e394", 139, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* ------------------------------------- Jaleco ------------------------------------------- */
 	/* Youkai Kurabu (J) [o1].nes */
 	{"7227a9aa0baf11d324f55280c1c1ddc2d46bebd3", 140, JF11, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Mississippi Satsujin Jiken (Japan) (Rev A).nes */
+	{"5505e239b1317816b3608f973bf46117084216cc", 140, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------ Sachen (SA8259A) ---------------------------------- */
 	/* Q Boy (Sachen) [!].nes */
 	{"568bf236fb3085b8bd522fbd2c18c7831e3a2dd1", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Po Po Team (Sachen) [!].nes */
+	{"0514b2d5a70601cb895b40d577e60c350fc42438", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Rockball (Sachen) [!].nes */
+	{"2f38e7cc617142cbdca1eafbc596840177e5d77d", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 1 - 4 in 1 (Asia) (Unl).nes */
+	{"aa801e57925d74b83fe5abc3d294fe5aeb314817", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 2 - 10 in 1 (Asia) (Unl).nes */
+	{"7227e6664d7a8e2f386b7bec0b098c1977ec8b54", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 3 - 8 in 1 (Asia) (Unl).nes */
+	{"26cf676f1af40c0ff63c07e225a3f40a4c88a377", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 4 - 6 in 1 (Asia) (Unl).nes */
+	{"138aa2df6a9369d14ec4fc7e7d491d3f2df1ea06", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 5 - 7 in 1 (Asia) (Unl).nes */
+	{"d5303cbd082858070494775f29fea2877da64d56", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 6 - 6 in 1 (Asia) (Unl).nes */
+	{"556085d9ef4977cdaa8da86afa359cb838f615fc", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 7 - 4 in 1 (Asia) (Unl).nes */
+	{"d6f2111ebb31e11dfb94bdddfe6b8048653d55c0", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 8 - 4 in 1 (Asia) (Unl).nes */
+	{"6b112db7b32511654dbcedf86baa54b7560b6dcf", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 9 - 3 in 1 (Asia) (Unl).nes */
+	{"f0784b3ded01f16b252ad99594894a0f5e7989ad", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Pang (Sachen) [!].nes */
+	{"769ba79eb7e3133aa692487f300333c618badb40", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Pang 2 (Sachen) [!].nes */
+	{"41dc9fb7107f8130621da4def43d5b9e4aefe5bf", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- Agci --------------------------------------------- */
 	/* Death Race (AGCI) [!].nes */
 	{"d33248186697e488021358369e6407b5d85526fc", 144, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ------------------------------------ Sachen (SA72007) ---------------------------------- */
+	/* Sidewinder (Sachen) [!].nes */
+	{"248e11d7dba271a9fa047a357f9d532494969568", 145, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ------------------------------------- Ave (NINA06) ------------------------------------- */
+	/* Metal Fighter (Asia) (Sachen) (Unl).nes */
+	{"5c92ee55b274b658725c358301d802c91d9aac12", 146, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Pyramid II (Sachen) [!].nes */
+	{"5ade95b4b28acf730258a23d37737bdfb001baba", 146, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Silent Assault (Sachen-Joy Van) [!].nes */
+	{"40bc04ea95570005fe6b4ac316a5bbe94c927d70", 146, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Twin Eagle (Asia) (PAL) (Unl).nes */
+	{"ff3cffbd148201fc104165eeea294d1421ac2d56", 146, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------ Sachen (SA0037) ----------------------------------- */
 	/* AV Soccer (Hacker) [!].nes */
@@ -3384,6 +3515,10 @@ static const _dbelement dblist[] = {
 	{"b48627517b149261e32d275d46e41f72f48d623a", 148, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Shisen Mahjong - Seifuku Hen (Sachen) [!].nes */
 	{"a9c6581ce2a59fb5409f2723567c5010714d069f", 148, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ------------------------------------ Sachen (SA0036) ----------------------------------- */
+	/* Taiwan Mahjong 16 (Sachen) [!].nes */
+	{"cf16da11aa7a6b4fabc80a589e4fbd0738626a7a", 149, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ----------------------------------- Sachen (SA74374B) ---------------------------------- */
 	/* 2-in-1 Cosmo Cop + Cyber Monster (Sachen) [!].nes */
@@ -3553,10 +3688,16 @@ static const _dbelement dblist[] = {
 	{"bfa31777e077e64af0e274b5a22b57c6765d36e1", 177, HEN_FANKONG, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ----------------------------------------- 178 ------------------------------------------ */
+	/* Education Computer 32-in-1 (Game Star)(Unl)[!].nes */
+	{"156a81a1c1e0d2238cbdc261f8c71d71afe17d73", 178, M178EC32IN1, DEFAULT, DENDY, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Education Computer 2000 48-in-1 (Unl)[f1].nes */
+	{"c8770f4285e7600b15b2e728533575b41db7b612", 178, DEFAULT, DEFAULT, DENDY, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Education Computer 48-in-1 (Game Star)(Unl)[!].nes */
+	{"1b6da86ea95ca2b8e0793b09b60b4df24c3cc74c", 178, DEFAULT, DEFAULT, DENDY, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* GLK Book 48-in-1 (Unl)[!].nes */
+	{"c9853f1530c0e557e3098b9ad228c3df111a4fb0", 178, DEFAULT, DEFAULT, DENDY, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* San Guo Zhong Lie Zhuan (Ch).nes */
 	{"5437f45450954ef46b97e92517a9b48304772596", 178, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Xing Ji Zheng Ba (Ch).nes */
-	{"3c72706af5998133ec6be703994c10466a094eab", 178, XINGJI, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ----------------------------------- UxROM (UNROM_180) ------------------------------------ */
 	/* Crazy Climber (J).nes */
@@ -3585,6 +3726,8 @@ static const _dbelement dblist[] = {
 	{"54e0e88775338db1a902639ae36401af72d4b543", 185, DEFAULT, CNROM_26CE27CE, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* U-Wings (B-Wings Hack).nes */
 	{"52356eb55bfbb5c549ccbcc0e23cf1f873db83db", 185, DEFAULT, CNROM_26CE27CE, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Mighty Bomb Jack (Japan) (Rev A).nes */
+	{"8b4b3361f84c11dc77fdb84a33405e2439f8ea88", 185, DEFAULT, CNROM_26CE27NCE, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Mighty Bomb Jack (J) [o1].nes */
 	{"ae5cc14f59a7e484b3d05471a2c31d2273c9398d", 185, DEFAULT, CNROM_26CE27NCE, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Sansuu 1 Nen - Keisan Game (J).nes */
@@ -3686,9 +3829,21 @@ static const _dbelement dblist[] = {
 	/* Street Fighter IV (Unl).nes */
 	{"d7ec65c41ed88cb449f9afb898d2f2044992af45", 208, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* ------------------------------------- mapper 209 --------------------------------------- */
+	/* Power Rangers III (Pirate Original).nes */
+	{"3c309516cb3a4b8ced49e1c7a2a7785fd573c6e5", 209, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Power Rangers IV (Pirate Original).nes */
+	{"3a5df16b1a08d72d75281e0b950e0fb4084b8a9b", 209, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* ------------------------------------- mapper 215 --------------------------------------- */
 	/* Mortal Kombat 3 Extra 60 (Unl) [!].nes */
 	{"dc1e114d59afcdb2cf2927b830d94f42dd0ea547", 215, DEFAULT, M215_MK3E, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ------------------------------------- mapper 216 --------------------------------------- */
+	/* Videopoker Bonza (Rev A)(R)[!].nes */
+	{"e934d390fc7027bbaa30a8a659f98b5a66fac07d", 216, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Videopoker Bonza (Rev B)(R)[!].nes */
+	{"3dcad958c7c05a39629780a37e0edf00d8005b9f", 216, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- mapper 219 --------------------------------------- */
 	/* Toy Story (Unl)[!].nes */
@@ -3707,6 +3862,12 @@ static const _dbelement dblist[] = {
 	{"4692a622af6a3d79514bf3e5fb4e9fbe6c6080fc", 235, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* 260-in-1 [p1][!].nes (4MB) */
 	{"da39a3ee5e6b4b0d3255bfef95601890afd80709", 235, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ------------------------------------- mapper 241 --------------------------------------- */
+	/* Xing Ji Zheng Ba (Ch).nes */
+	{"3c72706af5998133ec6be703994c10466a094eab", 241, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Education Computer 26-in-1 (R)[!].nes */
+	{"eea726f679d364e6805d48f923ddd21fe14d9f43", 241, DEFAULT, DEFAULT, DENDY, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- mapper 242 --------------------------------------- */
 	/* Dragon Quest VIII (ES-1077) (Ch) [!].nes */
@@ -3902,7 +4063,8 @@ static const _dbelement dblist[] = {
 	{"230f514c80b5dfbe6a86f3e24947ad34c0235835", UNIF_MAPPER, 30, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Super Car (Ch)(full copyrights)[!].nes */
 	{"31b3e7cfb2069ca9f52aa2f4c9ce295d722432cf", UNIF_MAPPER, 30, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-
+	/* Street Heroes (Asia) (Unl).nes */
+	{"9500c52045909a239c21f15cdeda1782c7303f1e", UNIF_MAPPER, 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 };
 
 #endif /* DATABASE_H_ */

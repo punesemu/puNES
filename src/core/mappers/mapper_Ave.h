@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,10 +22,6 @@
 #include "common.h"
 
 enum { NINA06, D1012, PUZZLEUNL };
-
-struct _ave_d1012 {
-	BYTE reg[3];
-} ave_d1012;
 
 void map_init_Ave(BYTE model);
 

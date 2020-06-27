@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,36 +19,33 @@
 #ifndef DLGVSSYSTEM_HPP_
 #define DLGVSSYSTEM_HPP_
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QDialog>
-#else
 #include <QtWidgets/QDialog>
-#endif
 #include "dlgVsSystem.hh"
 
-class dlgVsSystem : public QDialog, public Ui::Vs_System {
+class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
 		Q_OBJECT
 
 	public:
 		bool in_update;
 
 	public:
-		dlgVsSystem(QWidget *parent);
+		dlgVsSystem(QWidget *parent = 0);
 		~dlgVsSystem();
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event);
+		void changeEvent(QEvent *event);
 
 	public:
 		int update_pos(int startY);
-		void update_dialog();
+		void update_dialog(void);
 		void insert_coin(int index);
 
 	private slots:
 		void s_coins_clicked(bool checked);
 		void s_ds_changed(int state);
 		void s_defaults_clicked(bool checked);
+		void s_x_clicked(bool checked);
 };
 
 #endif /* DLGVSSYSTEM_HPP_ */

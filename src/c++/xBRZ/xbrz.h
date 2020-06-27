@@ -18,6 +18,9 @@
 
 #include "common.h"
 #define NDEBUG
+#if defined (_WIN32)
+#include "win.h"
+#endif
 
 #include <cstddef> //size_t
 #include <cstdint> //uint32_t
@@ -59,11 +62,17 @@ THREAD-SAFETY: - parts of the same image may be scaled by multiple threads as lo
                - there is a minor inefficiency for the first row of a slice, so avoid processing single rows only; suggestion: process 8-16 rows at least
 */
 void scale(BYTE factor, //valid range: 2 - 6
-           const WORD* src, uint32_t* trg, uint32_t* palette, int noOv, int startx,
+           const WORD* src, uint32_t* trg, uint32_t* palette,
            int srcWidth, int srcHeight,
            ColorFormat colFmt,
            const ScalerCfg& cfg = ScalerCfg(),
            int yFirst = 0, int yLast = std::numeric_limits<int>::max()); //slice of source image
+
+#if defined (__unix__)
+void *scale_mt(void *param);
+#elif defined (_WIN32)
+DWORD WINAPI scale_mt(void *param);
+#endif
 
 void nearestNeighborScale(const uint32_t* src, int srcWidth, int srcHeight,
                           uint32_t* trg, int trgWidth, int trgHeight);

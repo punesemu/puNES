@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,8 +21,6 @@
 
 #include "video/filters/nes_ntsc.h"
 #include "common.h"
-#include "gfx.h"
-#include "palette.h"
 
 enum ntsc_mode { COMPOSITE, SVIDEO, RGBMODE };
 
@@ -32,12 +30,10 @@ enum ntsc_mode { COMPOSITE, SVIDEO, RGBMODE };
 #define EXTERNC
 #endif
 
-EXTERNC gfx_filter_function(ntsc_surface);
-EXTERNC BYTE ntsc_init(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in,
-		BYTE *palette_out);
+EXTERNC void ntsc_surface(void);
+EXTERNC BYTE ntsc_init(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out);
 EXTERNC void ntsc_quit(void);
-EXTERNC void ntsc_set(nes_ntsc_t *ntsc_in, BYTE effect, BYTE color, BYTE *palette_base,
-		BYTE *palette_in, BYTE *palette_out);
+EXTERNC void ntsc_set(nes_ntsc_t *ntsc_in, BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out);
 
 #undef EXTERNC
 

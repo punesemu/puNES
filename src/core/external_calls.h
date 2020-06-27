@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,109 +22,90 @@
 #include <stdio.h>
 #include "common.h"
 
-/* mappers */
+// mappers
 #define EXTCL_AFTER_MAPPER_INIT(n) extcl_after_mapper_init = extcl_after_mapper_init_##n
 #define EXTCL_CPU_WR_MEM(n) extcl_cpu_wr_mem = extcl_cpu_wr_mem_##n
 #define EXTCL_CPU_RD_MEM(n) extcl_cpu_rd_mem = extcl_cpu_rd_mem_##n
 #define EXTCL_SAVE_MAPPER(n) extcl_save_mapper = extcl_save_mapper_##n
-
-/* CPU */
+// CPU
 #define EXTCL_CPU_EVERY_CYCLE(n) extcl_cpu_every_cycle = extcl_cpu_every_cycle_##n
 #define EXTCL_CPU_WR_R4016(n) extcl_cpu_wr_r4016 = extcl_cpu_wr_r4016_##n
-
-/* PPU */
+// PPU
 #define EXTCL_PPU_000_TO_34X(n) extcl_ppu_000_to_34x = extcl_ppu_000_to_34x_##n
 #define EXTCL_PPU_000_TO_255(n) extcl_ppu_000_to_255 = extcl_ppu_000_to_255_##n
 #define EXTCL_PPU_256_TO_319(n) extcl_ppu_256_to_319 = extcl_ppu_256_to_319_##n
 #define EXTCL_PPU_320_TO_34X(n) extcl_ppu_320_to_34x = extcl_ppu_320_to_34x_##n
 #define EXTCL_PPU_UPDATE_SCREEN_Y(n) extcl_ppu_update_screen_y = extcl_ppu_update_screen_y_##n
 #define EXTCL_UPDATE_R2006(n) extcl_update_r2006 = extcl_update_r2006_##n
+#define EXTCL_RD_R2007(n) extcl_rd_r2007 = extcl_rd_r2007_##n
 #define EXTCL_AFTER_RD_CHR(n) extcl_after_rd_chr = extcl_after_rd_chr_##n
 #define EXTCL_RD_PPU(n) extcl_rd_ppu = extcl_rd_ppu_##n
 #define EXTCL_RD_NMT(n) extcl_rd_nmt = extcl_rd_nmt_##n
 #define EXTCL_RD_CHR(n) extcl_rd_chr = extcl_rd_chr_##n
 #define EXTCL_WR_NMT(n) extcl_wr_nmt = extcl_wr_nmt_##n
 #define EXTCL_WR_CHR(n) extcl_wr_chr = extcl_wr_chr_##n
-
-/* APU */
+// APU
 #define EXTCL_LENGTH_CLOCK(n) extcl_length_clock = extcl_length_clock_##n
 #define EXTCL_ENVELOPE_CLOCK(n) extcl_envelope_clock = extcl_envelope_clock_##n
 #define EXTCL_APU_TICK(n) extcl_apu_tick = extcl_apu_tick_##n
-
-/* irqA12 */
+// irqA12
 #define EXTCL_IRQ_A12_CLOCK(n) extcl_irq_A12_clock = extcl_irq_A12_clock_##n
-
-/* battery */
+// battery
 #define EXTCL_BATTERY_IO(n) extcl_battery_io = extcl_battery_io_##n
-
-/* snd */
+// snd
 #define EXTCL_SND_PLAYBACK_START(n) extcl_snd_playback_start = extcl_snd_playback_start_##n
+// audio
+#define EXTCL_AUDIO_SAMPLES_MOD(n) extcl_audio_samples_mod = extcl_audio_samples_mod_##n
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
+// viene chiamata dopo il map_init(), map_prg_ram_init() e map_chr_ram_init()
+extern void (*extcl_after_mapper_init)(void);
+extern void (*extcl_cpu_wr_mem)(WORD address, BYTE value);
+extern BYTE (*extcl_cpu_rd_mem)(WORD address, BYTE openbus, BYTE before);
+extern BYTE (*extcl_save_mapper)(BYTE mode, BYTE slot, FILE *fp);
+// CPU
+extern void (*extcl_cpu_every_cycle)(void);
+// viene chiamata ogni volta si scrive qualcosa nel registro $4016
+extern void (*extcl_cpu_wr_r4016)(BYTE value);
+// PPU
+// viene chiamata sempre, ad ogni ciclo della PPU
+extern void (*extcl_ppu_000_to_34x)(void);
+// viene chiamata se (!ppu.vblank && (ppu.screen_y < SCR_LINES))
+// quindi per essere sicuri di essere durante il rendering della PPU
+// nella funzione devo controllare anche se r2001.visible non e' a zero.
+extern void (*extcl_ppu_000_to_255)(void);
+// vengono chiamate solo se la PPU e' in fase di rendering
+// (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_LINES))
+extern void (*extcl_ppu_256_to_319)(void);
+extern void (*extcl_ppu_320_to_34x)(void);
+// viene chiamata ogni volta viene modificato ppu.screen_y
+extern void (*extcl_ppu_update_screen_y)(void);
+// viene chiamata dopo ogni cambiamento del $2006 in cpu_inline.h
+extern void (*extcl_update_r2006)(WORD new_r2006, WORD old_r2006);
+// viene chiamata alla lettura del $2007 in cpu_inline.h
+extern void (*extcl_rd_r2007)(void);
+// vengono chiamate in ppu_inline.h
+extern void (*extcl_rd_ppu)(WORD address);
+extern BYTE (*extcl_rd_nmt)(WORD address);
+extern BYTE (*extcl_rd_chr)(WORD address);
+// viene chiamata dopo il FETCHB e dopo il fetch dello sprite
+extern void (*extcl_after_rd_chr)(WORD address);
+// viene chiamato quando si tenta di scrivere nella Nametable Ram
+extern void (*extcl_wr_nmt)(WORD address, BYTE value);
+// viene chiamato quando si tenta di scrivere nella CHR Ram
+extern void (*extcl_wr_chr)(WORD address, BYTE value);
+// APU
+extern void (*extcl_length_clock)(void);
+extern void (*extcl_envelope_clock)(void);
+extern void (*extcl_apu_tick)(void);
+// irqA12
+extern void (*extcl_irq_A12_clock)(void);
+// battery
+extern void (*extcl_battery_io)(BYTE mode, FILE *fp);
+// snd
+extern void (*extcl_snd_playback_start)(WORD samplarate);
+// audio
+extern void (*extcl_audio_samples_mod)(SWORD *samples, int count);
 
-EXTERNC void extcl_init(void);
-
-/* mappers */
-/* viene chiamata dopo il map_init(), map_prg_ram_init() e map_chr_ram_init() */
-EXTERNC void (*extcl_after_mapper_init)(void);
-/* */
-EXTERNC void (*extcl_cpu_wr_mem)(WORD address, BYTE value);
-EXTERNC BYTE (*extcl_cpu_rd_mem)(WORD address, BYTE openbus, BYTE before);
-EXTERNC BYTE (*extcl_save_mapper)(BYTE mode, BYTE slot, FILE *fp);
-
-/* CPU */
-EXTERNC void (*extcl_cpu_every_cycle)(void);
-/* viene chiamata ogni volta si scrive qualcosa nel registro $4016 */
-EXTERNC void (*extcl_cpu_wr_r4016)(BYTE value);
-
-/* PPU */
-/* viene chiamata sempre, ad ogni ciclo della PPU */
-EXTERNC void (*extcl_ppu_000_to_34x)(void);
-/*
- * viene chiamata se (!r2002.vblank && (ppu.screen_y < SCR_LINES))
- * quindi per essere sicuri di essere durante il rendering della PPU
- * nella funzione devo controllare anche se r2001.visible non e' a zero.
- */
-EXTERNC void (*extcl_ppu_000_to_255)(void);
-/*
- * vengono chiamate solo se la PPU e' in fase di rendering
- * (!r2002.vblank && r2001.visible && (ppu.screen_y < SCR_LINES))
- */
-EXTERNC void (*extcl_ppu_256_to_319)(void);
-EXTERNC void (*extcl_ppu_320_to_34x)(void);
-/* viene chiamata ogni volta viene modificato ppu.screen_y */
-EXTERNC void (*extcl_ppu_update_screen_y)(void);
-/* viene chiamata dopo ogni cambiamento del $2006 in cpu_inline.h */
-EXTERNC void (*extcl_update_r2006)(WORD new_r2006, WORD old_r2006);
-/* vengono chiamate in ppu_inline.h */
-EXTERNC void (*extcl_rd_ppu)(WORD address);
-EXTERNC BYTE (*extcl_rd_nmt)(WORD address);
-EXTERNC BYTE (*extcl_rd_chr)(WORD address);
-/* viene chiamata dopo il FETCHB e dopo il fetch dello sprite */
-EXTERNC void (*extcl_after_rd_chr)(WORD address);
-/* viene chiamato quando si tenta di scrivere nella Nametable Ram */
-EXTERNC void (*extcl_wr_nmt)(WORD address, BYTE value);
-/* viene chiamato quando si tenta di scrivere nella CHR Ram */
-EXTERNC void (*extcl_wr_chr)(WORD address, BYTE value);
-
-/* APU */
-EXTERNC void (*extcl_length_clock)(void);
-EXTERNC void (*extcl_envelope_clock)(void);
-EXTERNC void (*extcl_apu_tick)(void);
-
-/* irqA12 */
-EXTERNC void (*extcl_irq_A12_clock)(void);
-
-/* battery */
-EXTERNC void (*extcl_battery_io)(BYTE mode, FILE *fp);
-
-/* snd */
-EXTERNC void (*extcl_snd_playback_start)(WORD samplarate);
-
-#undef EXTERNC
+void extcl_init(void);
 
 #endif /* EXTERNAL_CALLS_H_ */

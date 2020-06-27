@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,10 +22,6 @@
 #include "common.h"
 
 enum { VRC2B, VRC2A };
-
-struct _vrc2 {
-	BYTE chr_rom_bank[8];
-} vrc2;
 
 void map_init_VRC2(BYTE revision);
 void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value);

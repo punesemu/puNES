@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,9 +32,9 @@ EXTERNC BYTE l7z_init(void);
 EXTERNC void l7z_quit(void);
 EXTERNC BYTE l7z_present(void);
 EXTERNC BYTE l7z_control_ext(const uTCHAR *ext);
-EXTERNC BYTE l7z_control_in_archive(void);
-EXTERNC BYTE l7z_file_from_archive(_uncomp_file_data *file);
-EXTERNC BYTE l7z_name_file_compress(_uncomp_file_data *file);
+EXTERNC BYTE l7z_examine_archive(_uncompress_archive *archive);
+EXTERNC BYTE l7z_extract_from_archive(_uncompress_archive *archive, uint32_t selected, BYTE type);
+EXTERNC uTCHAR *l7z_item_file_name(_uncompress_archive *archive, uint32_t selected, BYTE type);
 
 #undef EXTERNC
 

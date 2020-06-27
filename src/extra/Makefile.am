@@ -2,6 +2,4 @@ if WINDOWS
 AM_MAKEFLAGS = -j1
 endif
 
-if COMPILE_LIB7ZIP
 SUBDIRS = $(LIB7ZIP_SRC)
-endif

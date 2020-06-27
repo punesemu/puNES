@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,12 +20,6 @@
 #define MAPPER_BMC830118C_H_
 
 #include "common.h"
-
-struct _bmc830118c {
-	BYTE reg;
-	WORD prg_map[4];
-	WORD chr_map[8];
-} bmc830118c;
 
 void map_init_BMC830118C(void);
 void extcl_cpu_wr_mem_BMC830118C(WORD address, BYTE value);

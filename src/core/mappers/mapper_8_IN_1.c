@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE m8in1_update_prg(void);
-static void INLINE m8in1_update_chr(void);
+INLINE static void m8in1_update_prg(void);
+INLINE static void m8in1_update_chr(void);
 
 #define m8in1_swap_chr_1k(a, b)\
 	chr1k = m8in1.chr_map[b];\
@@ -76,6 +76,12 @@ static void INLINE m8in1_update_chr(void);
 			m8in1.prg_map[1] = value;\
 			break;\
 	}
+
+struct _m8in1 {
+	BYTE reg;
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m8in1;
 
 void map_init_8_IN_1(void) {
 	EXTCL_CPU_WR_MEM(8_IN_1);
@@ -158,7 +164,7 @@ BYTE extcl_save_mapper_8_IN_1(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE m8in1_update_prg(void) {
+INLINE static void m8in1_update_prg(void) {
 	WORD value;
 
 	if (m8in1.reg & 0x10) {
@@ -176,7 +182,7 @@ static void INLINE m8in1_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE m8in1_update_chr(void) {
+INLINE static void m8in1_update_chr(void) {
 	BYTE i;
 	WORD value;
 

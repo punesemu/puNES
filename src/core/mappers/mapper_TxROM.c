@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -65,7 +65,13 @@
 	}\
 }
 
-BYTE type;
+struct _txrom {
+	BYTE delay;
+	uint32_t chr[8][2];
+} txrom;
+struct _txromtmp {
+	BYTE type;
+} txromtmp;
 
 void map_init_TxROM(BYTE model) {
 	switch (model) {
@@ -117,7 +123,7 @@ void map_init_TxROM(BYTE model) {
 
 	irqA12.present = TRUE;
 
-	type = model;
+	txromtmp.type = model;
 }
 
 void extcl_cpu_wr_mem_TKSROM(WORD address, BYTE value) {
@@ -195,7 +201,7 @@ void extcl_wr_chr_TQROM(WORD address, BYTE value) {
 
 BYTE extcl_save_mapper_TxROM(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, txrom.delay);
-	if (type == TQROM) {
+	if (txromtmp.type == TQROM) {
 		save_slot_ele(mode, slot, txrom.chr);
 		if (mode == SAVE_SLOT_READ) {
 			BYTE i;

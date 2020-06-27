@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,20 @@
 #define chr_rom_1k_update_low(slot)\
 	_chr_rom_1k_update(slot, 0xF0, 0)
 
-BYTE type;
+struct _vrc4 {
+	WORD chr_rom_high_bank[8];
+	BYTE chr_rom_bank[8];
+	BYTE swap_mode;
+	BYTE irq_enabled;
+	BYTE irq_reload;
+	BYTE irq_mode;
+	BYTE irq_acknowledge;
+	BYTE irq_count;
+	WORD irq_prescaler;
+} vrc4;
+struct _vrc4tmp {
+	BYTE type;
+} vrc4tmp;
 
 const BYTE shift_VRC4[6] = { 0x01, 0x00, 0x06, 0x02, 0x02, 0x00 };
 const WORD mask_VRC4[6]  = { 0x0006, 0x0003, 0x00C0, 0x000C, 0x000C, 0x0003 };
@@ -72,7 +85,7 @@ void map_init_VRC4(BYTE revision) {
 		vrc4.irq_prescaler = 0;
 	}
 
-	type = revision;
+	vrc4tmp.type = revision;
 }
 void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 	WORD tmp = address & 0xF000;
@@ -80,8 +93,7 @@ void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 	if ((tmp == 0x8000) || (tmp == 0xA000)) {
 		address &= 0xF000;
 	} else {
-		address = (address & 0xF000)
-			| table_VRC4[type][(address & mask_VRC4[type]) >> shift_VRC4[type]];
+		address = (address & 0xF000) | table_VRC4[vrc4tmp.type][(address & mask_VRC4[vrc4tmp.type]) >> shift_VRC4[vrc4tmp.type]];
 	}
 
 	switch (address) {

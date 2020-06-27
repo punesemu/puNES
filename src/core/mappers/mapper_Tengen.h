@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,18 +22,6 @@
 #include "common.h"
 
 enum { TRAMBO, T800037, NOCNTPLUS };
-
-struct _tengen_rambo {
-	BYTE prg_mode;
-	BYTE chr_mode;
-	BYTE reg_index;
-	BYTE chr[8];
-	BYTE prg[4];
-	BYTE irq_mode;
-	BYTE irq_delay;
-	BYTE irq_prescaler;
-	BYTE irq_plus_clock;
-} tengen_rambo;
 
 void map_init_Tengen(BYTE model);
 

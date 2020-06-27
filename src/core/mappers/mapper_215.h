@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,11 +22,6 @@
 #include "common.h"
 
 enum { M215_MK3E };
-
-struct _m215 {
-	BYTE reg[4];
-	WORD prg_8k_bank[4];
-} m215;
 
 void map_init_215(void);
 void extcl_cpu_wr_mem_215(WORD address, BYTE value);

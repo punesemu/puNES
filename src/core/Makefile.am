@@ -2,18 +2,26 @@ noinst_LIBRARIES = libcore.a
 libcore_a_SOURCES = \
 	apu.c \
 	apu.h \
+	bck_states.c \
+	bck_states.h \
 	build.h \
 	cheat.c \
 	cheat.h \
 	clock.h \
 	common.h \
+	compilation_unit_orphan.h \
 	conf.h \
 	cpu.c \
 	cpu.h \
 	cpu_inline.h \
 	database.h \
+	debugger.h \
+	draw_on_screen.h \
+	draw_on_screen.c \
 	emu.c \
 	emu.h \
+	emu_thread.c \
+	emu_thread.h \
 	external_calls.c \
 	external_calls.h \
 	fds.c \
@@ -21,8 +29,6 @@ libcore_a_SOURCES = \
 	font.h \
 	fps.c \
 	fps.h \
-	gfx_functions_inline.h \
-	gfx.h \
 	gui.h \
 	ines.c \
 	ines.h \
@@ -38,22 +44,29 @@ libcore_a_SOURCES = \
 	mappers.h \
 	mem_map.h \
 	miniz.h \
+	nsf.c \
+	nsf.h \
+	nsfe.c \
+	nsfe.h \
 	overscan.c \
 	overscan.h \
+	patcher.c \
+	patcher.h \
+	patcher_xdelta3_wrap.c \
+	patcher_xdelta3_wrap.h \
 	paldef.h \
 	palette.h \
 	ppu.c \
 	ppu.h \
 	ppu_inline.h \
+	rewind.c \
+	rewind.h \
+	rom_mem.c \
+	rom_mem.h \
 	save_slot.c \
 	save_slot.h \
 	sha1.c \
 	sha1.h \
-	snd.h \
-	text.c \
-	text.h \
-	timeline.c \
-	timeline.h \
 	uncompress.c \
 	uncompress.h \
 	uncompress_selection.h \
@@ -61,6 +74,36 @@ libcore_a_SOURCES = \
 	unif.h \
 	version.h\
 	vs_system.h
+
+libcore_a_SOURCES += \
+	input/arkanoid.h \
+	input/arkanoid.c \
+	input/famicom.h \
+	input/famicom.c \
+	input/four_score.h \
+	input/four_score.c \
+	input/mouse.h \
+	input/nes_001.h \
+	input/nes_001.c \
+	input/nsf_controller.h \
+	input/nsf_controller.c \
+	input/nsf_mouse.h \
+	input/nsf_mouse.c \
+	input/oeka_kids_tablet.h \
+	input/oeka_kids_tablet.c \
+	input/snes_mouse.h \
+	input/snes_mouse.c \
+	input/standard_controller.h \
+	input/standard_controller.c \
+	input/vs.h \
+	input/vs.c \
+	input/zapper.h \
+	input/zapper.c
+
+libcore_a_SOURCES += \
+	../extra/kiss_fft130/kiss_fft.c \
+	../extra/kiss_fft130/_kiss_fft_guts.h \
+	../extra/kiss_fft130/kiss_fft.h
 
 libcore_a_SOURCES += \
 	mappers/mapper_0.c \
@@ -179,6 +222,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_28.h \
 	mappers/mapper_31.c \
 	mappers/mapper_31.h \
+	mappers/mapper_36.c \
+	mappers/mapper_36.h \
 	mappers/mapper_37.c \
 	mappers/mapper_37.h \
 	mappers/mapper_40.c \
@@ -291,6 +336,10 @@ libcore_a_SOURCES += \
 	mappers/mapper_CPROM.h \
 	mappers/mapper_DRAGONFIGHTER.c \
 	mappers/mapper_DRAGONFIGHTER.h \
+	mappers/mapper_DREAMTECH01.c \
+	mappers/mapper_DREAMTECH01.h \
+	mappers/mapper_EDU2000.c \
+	mappers/mapper_EDU2000.h \
 	mappers/mapper_EH8813A.c \
 	mappers/mapper_EH8813A.h \
 	mappers/mapper_FDS.c \
@@ -363,6 +412,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Namco.h \
 	mappers/mapper_NovelDiamond.c \
 	mappers/mapper_NovelDiamond.h \
+	mappers/mapper_NSF.c \
+	mappers/mapper_NSF.h \
 	mappers/mapper_Ntdec.c \
 	mappers/mapper_Ntdec.h \
 	mappers/mapper_Rcm.c \
@@ -433,3 +484,6 @@ libcore_a_SOURCES += \
 	mappers/mapper_Whirlwind.h \
 	mappers/mapper_YOKO.c \
 	mappers/mapper_YOKO.h
+
+patcher_xdelta3_wrap.o: patcher_xdelta3_wrap.c patcher_xdelta3_wrap.h
+	${CC} -w ${DEFS} ${DEFAULT_INCLUDES} ${CFLAGS} -c -o $@ $<

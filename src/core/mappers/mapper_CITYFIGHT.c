@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,16 @@
 	chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);\
 	cityfight.chr_map[slot] = value
 
-static void INLINE cityfight_prg_update(void);
+INLINE static void cityfight_prg_update(void);
+
+struct _cityfight {
+	BYTE reg[2];
+	WORD chr_map[8];
+	struct _cityfight_irq {
+		BYTE enable;
+		WORD count;
+	} irq;
+} cityfight;
 
 void map_init_CITYFIGHT(void) {
 	EXTCL_CPU_WR_MEM(CITYFIGHT);
@@ -158,7 +167,7 @@ void extcl_cpu_every_cycle_CITYFIGHT(void) {
 	}
 }
 
-static void INLINE cityfight_prg_update(void) {
+INLINE static void cityfight_prg_update(void) {
 	BYTE value;
 
 	value = cityfight.reg[1] >> 2;

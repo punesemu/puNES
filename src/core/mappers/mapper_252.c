@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,17 @@
 #define m252_chr_extra_1k(a)\
 	chr.bank_1k[a] = &chr.extra.data[(m252.chr_map[a] & 0x01) << 10];
 
-static void INLINE m252_update_chr_extra(void);
+INLINE static void m252_update_chr_extra(void);
+
+struct _m252 {
+	WORD chr_map[8];
+	struct _m252_irq {
+		BYTE active;
+		WORD prescaler;
+		WORD count;
+		WORD reload;
+	} irq;
+} m252;
 
 void map_init_252(void) {
 	EXTCL_CPU_WR_MEM(252);
@@ -159,7 +169,7 @@ void extcl_cpu_every_cycle_252(void) {
 	irq.high |= EXT_IRQ;
 }
 
-static void INLINE m252_update_chr_extra(void) {
+INLINE static void m252_update_chr_extra(void) {
 	BYTE i;
 
 	for (i = 0; i < 8 ; i++) {

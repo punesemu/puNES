@@ -13,10 +13,11 @@
 // * do so, delete this exception statement from your version.                *
 // ****************************************************************************
 
+#include <algorithm>
+#include "c++/xBRZ/xbrz_wrap.h"
 #include "c++/xBRZ/xbrz.h"
 #include <cassert>
 #include <cmath>
-#include <algorithm>
 #include <vector>
 
 namespace
@@ -163,7 +164,7 @@ template <class T> inline
 T square(T value) { return value * value; }
 
 
-
+#if 0
 inline
 double distRGB(uint32_t pix1, uint32_t pix2)
 {
@@ -174,8 +175,10 @@ double distRGB(uint32_t pix1, uint32_t pix2)
     //euklidean RGB distance
     return std::sqrt(square(r_diff) + square(g_diff) + square(b_diff));
 }
+#endif
 
 
+#if 0
 inline
 double distYCbCr(uint32_t pix1, uint32_t pix2, double lumaWeight)
 {
@@ -201,6 +204,7 @@ double distYCbCr(uint32_t pix1, uint32_t pix2, double lumaWeight)
     //we skip division by 255 to have similar range like other distance functions
     return std::sqrt(square(lumaWeight * y) + square(c_b) + square(c_r));
 }
+#endif
 
 
 struct DistYCbCrBuffer //30% perf boost compared to distYCbCr()!
@@ -343,6 +347,11 @@ struct Kernel_3x3
     /**/g,  h,  i;
 };
 
+#if defined (__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
+#endif
+
 #define DEF_GETTER(x) template <RotationDegree rotDeg> uint32_t inline get_##x(const Kernel_3x3& ker) { return ker.x; }
 //we cannot and NEED NOT write "ker.##x" since ## concatenates preprocessor tokens but "." is not a token
 DEF_GETTER(a) DEF_GETTER(b) DEF_GETTER(c)
@@ -374,6 +383,10 @@ inline BlendType getTopL   (unsigned char b) { return static_cast<BlendType>(0x3
 inline BlendType getTopR   (unsigned char b) { return static_cast<BlendType>(0x3 & (b >> 2)); }
 inline BlendType getBottomR(unsigned char b) { return static_cast<BlendType>(0x3 & (b >> 4)); }
 inline BlendType getBottomL(unsigned char b) { return static_cast<BlendType>(0x3 & (b >> 6)); }
+
+#if defined (__clang__)
+#pragma clang diagnostic pop
+#endif
 
 inline void setTopL   (unsigned char& b, BlendType bt) { b |= bt; } //buffer is assumed to be initialized before preprocessing!
 inline void setTopR   (unsigned char& b, BlendType bt) { b |= (bt << 2); }
@@ -497,7 +510,7 @@ void blendPixel(const Kernel_3x3& ker,
 
 
 template <class Scaler, class ColorDistance> //scaler policy: see "Scaler2x" reference implementation
-void scaleImage(const WORD* src, uint32_t* trg, uint32_t* palette, int noOv, int startx, int srcWidth, int srcHeight, const xbrz::ScalerCfg& cfg, int yFirst, int yLast)
+void scaleImage(const WORD* src, uint32_t* trg, uint32_t* palette, int srcWidth, int srcHeight, const xbrz::ScalerCfg& cfg, int yFirst, int yLast)
 {
     yFirst = std::max(yFirst, 0);
     yLast  = std::min(yLast, srcHeight);
@@ -519,10 +532,10 @@ void scaleImage(const WORD* src, uint32_t* trg, uint32_t* palette, int noOv, int
     {
         const int y = yFirst - 1;
 
-        const WORD* s_m1 = (src + startx) + noOv * std::max(y - 1, 0);
-        const WORD* s_0  = (src + startx) + noOv * y; //center line
-        const WORD* s_p1 = (src + startx) + noOv * std::min(y + 1, srcHeight - 1);
-        const WORD* s_p2 = (src + startx) + noOv * std::min(y + 2, srcHeight - 1);
+        const WORD* s_m1 = src + srcWidth * std::max(y - 1, 0);
+        const WORD* s_0  = src + srcWidth * y; //center line
+        const WORD* s_p1 = src + srcWidth * std::min(y + 1, srcHeight - 1);
+        const WORD* s_p2 = src + srcWidth * std::min(y + 2, srcHeight - 1);
 
         for (int x = 0; x < srcWidth; ++x)
         {
@@ -572,10 +585,10 @@ void scaleImage(const WORD* src, uint32_t* trg, uint32_t* palette, int noOv, int
     {
         uint32_t* out = trg + Scaler::scale * y * trgWidth; //consider MT "striped" access
 
-        const WORD* s_m1 = (src + startx) + noOv * std::max(y - 1, 0);
-        const WORD* s_0  = (src + startx) + noOv * y; //center line
-        const WORD* s_p1 = (src + startx) + noOv * std::min(y + 1, srcHeight - 1);
-        const WORD* s_p2 = (src + startx) + noOv * std::min(y + 2, srcHeight - 1);
+        const WORD* s_m1 = src + srcWidth * std::max(y - 1, 0);
+        const WORD* s_0  = src + srcWidth * y; //center line
+        const WORD* s_p1 = src + srcWidth * std::min(y + 1, srcHeight - 1);
+        const WORD* s_p2 = src + srcWidth * std::min(y + 2, srcHeight - 1);
 
         unsigned char blend_xy1 = 0; //corner blending for current (x, y + 1) position
 
@@ -1030,7 +1043,7 @@ struct Scaler6x : public ColorGradient
 
 struct ColorDistanceRGB
 {
-    static double dist(uint32_t pix1, uint32_t pix2, double luminanceWeight)
+    static double dist(uint32_t pix1, uint32_t pix2, UNUSED(double luminanceWeight))
     {
         return DistYCbCrBuffer::dist(pix1, pix2);
 
@@ -1042,7 +1055,7 @@ struct ColorDistanceRGB
 
 struct ColorDistanceARGB
 {
-    static double dist(uint32_t pix1, uint32_t pix2, double luminanceWeight)
+    static double dist(uint32_t pix1, uint32_t pix2, UNUSED(double luminanceWeight))
     {
         const double a1 = getAlpha(pix1) / 255.0 ;
         const double a2 = getAlpha(pix2) / 255.0 ;
@@ -1087,7 +1100,7 @@ struct ColorGradientARGB
 }
 
 
-void xbrz::scale(BYTE factor, const WORD* src, uint32_t* trg, uint32_t* palette, int noOv, int startx, int srcWidth, int srcHeight, ColorFormat colFmt, const xbrz::ScalerCfg& cfg, int yFirst, int yLast)
+void xbrz::scale(BYTE factor, const WORD* src, uint32_t* trg, uint32_t* palette, int srcWidth, int srcHeight, ColorFormat colFmt, const xbrz::ScalerCfg& cfg, int yFirst, int yLast)
 {
     switch (colFmt)
     {
@@ -1095,15 +1108,15 @@ void xbrz::scale(BYTE factor, const WORD* src, uint32_t* trg, uint32_t* palette,
             switch (factor)
             {
                 case 2:
-                    return scaleImage<Scaler2x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler2x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 3:
-                    return scaleImage<Scaler3x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler3x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 4:
-                    return scaleImage<Scaler4x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler4x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 5:
-                    return scaleImage<Scaler5x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler5x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 6:
-                    return scaleImage<Scaler6x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler6x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
             }
             break;
 
@@ -1111,19 +1124,91 @@ void xbrz::scale(BYTE factor, const WORD* src, uint32_t* trg, uint32_t* palette,
             switch (factor)
             {
                 case 2:
-                    return scaleImage<Scaler2x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler2x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 3:
-                    return scaleImage<Scaler3x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler3x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 4:
-                    return scaleImage<Scaler4x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler4x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 5:
-                    return scaleImage<Scaler5x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler5x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 6:
-                    return scaleImage<Scaler6x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler6x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
             }
             break;
     }
     assert(false);
+}
+
+
+#if defined (__unix__)
+    void *xbrz::scale_mt(void *param)
+#elif defined (_WIN32)
+    DWORD WINAPI xbrz::scale_mt(void *param)
+#endif
+{
+    _xbrz_wrap *p = (_xbrz_wrap *) param;
+    int yFirst = (p->srcHeight / XBRZ_NUM_SLICE) + (p->srcHeight % 2);
+    uint32_t *output = p->trg;
+    int yLast = yFirst * (p->slice + 1);
+
+    output += yFirst * p->slice * p->factor * 4;
+    yFirst *= p->slice;
+
+    if ((p->slice + 1) == XBRZ_NUM_SLICE) {
+        yLast = p->srcHeight;
+    }
+
+    switch ((ColorFormat) p->colFmt)
+    {
+        case ColorFormat::ARGB:
+            switch (p->factor)
+            {
+                case 2:
+                    scaleImage<Scaler2x<ColorGradientARGB>, ColorDistanceARGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 3:
+                    scaleImage<Scaler3x<ColorGradientARGB>, ColorDistanceARGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 4:
+                    scaleImage<Scaler4x<ColorGradientARGB>, ColorDistanceARGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 5:
+                    scaleImage<Scaler5x<ColorGradientARGB>, ColorDistanceARGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 6:
+                    scaleImage<Scaler6x<ColorGradientARGB>, ColorDistanceARGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+            }
+            break;
+
+        case ColorFormat::RGB:
+            switch (p->factor)
+            {
+                case 2:
+                    scaleImage<Scaler2x<ColorGradientRGB>, ColorDistanceRGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 3:
+                    scaleImage<Scaler3x<ColorGradientRGB>, ColorDistanceRGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 4:
+                    scaleImage<Scaler4x<ColorGradientRGB>, ColorDistanceRGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 5:
+                    scaleImage<Scaler5x<ColorGradientRGB>, ColorDistanceRGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 6:
+                    scaleImage<Scaler6x<ColorGradientRGB>, ColorDistanceRGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+            }
+            break;
+    }
+    assert(false);
+
+#if defined (__unix__)
+    return (NULL);
+#elif defined (_WIN32)
+    return (0);
+#endif
 }
 
 

@@ -1,8 +1,19 @@
 /*
- * mapper_MMC3.c
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
- *  Created on: 24/feb/2011
- *      Author: fhorse
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
 #include <string.h>
@@ -22,6 +33,9 @@
 	mmc3.irq_reload = FALSE;\
 }
 
+_mmc3 mmc3;
+_kt008 kt008;
+
 void map_init_MMC3(void) {
 	EXTCL_CPU_WR_MEM(MMC3);
 	EXTCL_SAVE_MAPPER(MMC3);
@@ -31,11 +45,12 @@ void map_init_MMC3(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *) &mmc3;
+	mapper.internal_struct[0] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[0] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
 		memset(&mmc3, 0x00, sizeof(mmc3));
+		memset(&kt008, 0x00, sizeof(kt008));
 		memset(&irqA12, 0x00, sizeof(irqA12));
 	}
 
@@ -53,6 +68,14 @@ void map_init_MMC3(void) {
 			break;
 		case MMC3_ALTERNATE:
 			EXTCL_IRQ_A12_CLOCK(MMC3_alternate);
+			break;
+		case KT008:
+			EXTCL_CPU_WR_MEM(KT008);
+			EXTCL_SAVE_MAPPER(KT008);
+			mapper.internal_struct[1] = (BYTE *)&kt008;
+			mapper.internal_struct_size[1] = sizeof(kt008);
+
+			info.mapper.extend_wr = TRUE;
 			break;
 	}
 
@@ -293,4 +316,36 @@ void extcl_irq_A12_clock_MMC3_alternate(void) {
 	if (!irqA12.counter && irqA12.enable) {
 		irq.high |= EXT_IRQ;
 	}
+}
+
+void extcl_cpu_wr_mem_KT008(WORD address, BYTE value) {
+	if ((address >= 0x5000) && (address <= 0x5FFF)) {
+		if ((address & 0x0003) == 0x0000) {
+			kt008.value = value;
+		}
+		return;
+	}
+	if (address < 0x8000) {
+		return;
+	}
+	if ((address & 0xE001) == 0x8001) {
+		switch (mmc3.bank_to_update) {
+			default:
+				extcl_cpu_wr_mem_MMC3(address, value);
+				break;
+			case 6:
+			case 7:
+				value = (value & 0x7F) | ((kt008.value & 0x04) << 4);
+				extcl_cpu_wr_mem_MMC3(address, value);
+				break;
+		}
+		return;
+	}
+	extcl_cpu_wr_mem_MMC3(address, value);
+}
+BYTE extcl_save_mapper_KT008(BYTE mode, BYTE slot, FILE *fp) {
+	extcl_save_mapper_MMC3(mode, slot, fp);
+	save_slot_ele(mode, slot, kt008.value);
+
+	return (EXIT_OK);
 }

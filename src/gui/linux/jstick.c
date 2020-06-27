@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,8 +24,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
-#include "jstick.h"
-#include "input.h"
 #include "gui.h"
 #include "conf.h"
 
@@ -80,7 +78,9 @@
 static void js_open(_js *joy);
 static void js_close(_js *joy);
 
-void js_init(BYTE first_time) {
+_js js[PORT_MAX], js_shcut;
+
+void js_init(UNUSED(BYTE first_time)) {
 	BYTE i;
 
 	for (i = PORT1; i < PORT_MAX; i++) {
@@ -91,11 +91,11 @@ void js_init(BYTE first_time) {
 		}
 
 		usnprintf(js[i].dev, usizeof(js[i].dev), uL("" JS_DEV_PATH "%d"), port[i].joy_id);
-		js[i].input_decode_event = input_decode_event[i];
+		js[i].input_decode_event = port_funct[i].input_decode_event;
 		js_open(&js[i]);
 	}
 }
-void js_quit(BYTE last_time) {
+void js_quit(UNUSED(BYTE last_time)) {
 	BYTE i;
 
 	for (i = PORT1; i < PORT_MAX; i++) {
@@ -115,7 +115,7 @@ void js_control(_js *joy, _port *port) {
 		_js_control()
 
 		if (value && joy->input_decode_event) {
-			joy->input_decode_event(mode, value, JOYSTICK, port);
+			joy->input_decode_event(mode, FALSE, value, JOYSTICK, port);
 		}
 	}
 }
@@ -199,7 +199,7 @@ DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD le
 	}
 	return (js);
 }
-DBWORD js_read_in_dialog(BYTE *id, int fd) {
+DBWORD js_read_in_dialog(UNUSED(BYTE *id), int fd) {
 	static const WORD sensibility = (PLUS / 100) * 75;
 	_js_event jse;
 	ssize_t size = sizeof(jse);

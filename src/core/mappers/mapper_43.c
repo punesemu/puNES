@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,17 +26,27 @@
 #define prg_5000_43()\
 	value = 8 << 1;\
 	control_bank(info.prg.rom[0].max.banks_4k)\
-	prg_5000 = prg_chip_byte_pnt(0, value << 12)
+	m43tmp.prg_5000 = prg_chip_byte_pnt(0, value << 12)
 #define prg_6000_swap_43()\
 	value = m43.swap ? 0 : 2;\
 	control_bank(info.prg.rom[0].max.banks_8k)\
-	prg_6000 = prg_chip_byte_pnt(0, value << 13)
+	m43tmp.prg_6000 = prg_chip_byte_pnt(0, value << 13)
 #define prg_E000_swap_43()\
 	value = m43.swap ? 8 : 9;\
 	control_bank(info.prg.rom[0].max.banks_8k)\
 	map_prg_rom_8k(1, 3, value)
 
-BYTE *prg_5000, *prg_6000;
+struct _m43 {
+	BYTE swap;
+	struct _m43_irq {
+		BYTE active;
+		WORD count;
+	} irq;
+} m43;
+struct _m43tmp {
+	BYTE *prg_5000;
+	BYTE *prg_6000;
+} m43tmp;
 
 void map_init_43(void) {
 	EXTCL_CPU_WR_MEM(43);
@@ -87,16 +97,16 @@ void extcl_cpu_wr_mem_43(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_43(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_43(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x5000) || (address > 0x7FFF)) {
 		return (openbus);
 	}
 
 	if (address < 0x6000) {
-		return (prg_5000[address & 0x0FFF]);
+		return (m43tmp.prg_5000[address & 0x0FFF]);
 	}
 
-	return (prg_6000[address & 0x1FFF]);
+	return (m43tmp.prg_6000[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_43(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m43.swap);

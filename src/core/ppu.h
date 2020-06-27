@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 
 enum ppu_sprite_byte { YC, TL, AT, XC };
 enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
+enum ppu_scanline_cycles { SHORT_SLINE_CYCLES = 340, SLINE_CYCLES };
 
 #define screen_size() (SCR_LINES * SCR_ROWS) * sizeof(WORD)
 #define _ppu_spr_adr(sprite, epl, spl, sadr)\
@@ -128,6 +129,7 @@ typedef struct _ppu {
 	WORD frame_y;
 	BYTE fine_x;
 	BYTE screen_y;
+	BYTE vblank;
 	WORD pixel_tile;
 	WORD sline_cycles;
 	WORD tmp_vram;
@@ -135,7 +137,6 @@ typedef struct _ppu {
 	WORD bck_adr;
 	BYTE openbus;
 	BYTE odd_frame;
-	BYTE skip_draw;
 	SWORD cycles;
 	uint32_t frames;
 	struct _short_frame {
@@ -146,9 +147,17 @@ typedef struct _ppu {
 	} sf;
 	WORD rnd_adr;
 }  _ppu;
-typedef struct _screen {
+typedef struct _screen_buffer {
+	BYTE ready;
 	WORD *data;
 	WORD *line[SCR_LINES];
+} _screen_buffer;
+typedef struct _screen {
+	BYTE index;
+	_screen_buffer *wr;
+	_screen_buffer *rd;
+	_screen_buffer *last_completed_wr;
+	_screen_buffer buff[2];
 } _screen;
 typedef struct _ppu_openbus {
 	int32_t bit0;
@@ -188,16 +197,27 @@ typedef struct _r2001 {
 		WORD ctrl;
 		WORD value;
 	} race;
+	struct _r2001_grayscale_bit {
+		BYTE delay;
+	} grayscale_bit;
 } _r2001;
 typedef struct _r2002 {
 	BYTE vblank;
 	BYTE sprite0_hit;
 	BYTE sprite_overflow;
 	BYTE toggle;
+	struct _r2002_race {
+		WORD sprite_overflow;
+	} race;
 } _r2002;
 typedef struct _r2006 {
 	WORD value;
+	// ormai non più utilizzato
 	WORD changed_from_op;
+	struct _r2006_second_write {
+		BYTE delay;
+		WORD value;
+	} second_write;
 	struct _r2006_race {
 		WORD ctrl;
 		WORD value;
@@ -237,20 +257,13 @@ typedef struct _tile {
 	WORD l_byte;
 	DBWORD h_byte;
 } _tile;
-
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _ppu_sclines {
+typedef struct _ppu_sclines {
 	WORD total;
 	WORD frame;
 	WORD vint;
 	WORD vint_extra;
-} ppu_sclines;
-EXTERNC struct _overclock {
+} _ppu_sclines;
+typedef struct _overclock {
 	BYTE in_extra_sclines;
 	BYTE DMC_in_use;
 	struct _extra_sclines {
@@ -258,26 +271,43 @@ EXTERNC struct _overclock {
 		WORD pr;
 		WORD total;
 	} sclines;
-} overclock;
+} _overclock;
 
-EXTERNC _ppu ppu;
-EXTERNC _screen screen;
-EXTERNC _ppu_openbus ppu_openbus;
-EXTERNC _r2000 r2000;
-EXTERNC _r2001 r2001;
-EXTERNC _r2002 r2002;
-EXTERNC _r2006 r2006;
-EXTERNC _r2xxx r2003, r2004, r2007;
-EXTERNC _spr_evaluate spr_ev;
-EXTERNC _spr sprite[8], sprite_plus[8];
-EXTERNC _spr_evaluate spr_ev_unl;
-EXTERNC _spr sprite_unl[56], sprite_plus_unl[56];
-EXTERNC _tile tile_render, tile_fetch;
+extern _ppu ppu;
+extern _screen screen;
+extern _ppu_openbus ppu_openbus;
+extern _r2000 r2000;
+extern _r2001 r2001;
+extern _r2002 r2002;
+extern _r2006 r2006;
+extern _r2xxx r2003, r2004, r2007;
+extern _spr_evaluate spr_ev;
+extern _spr sprite[8], sprite_plus[8];
+extern _spr_evaluate spr_ev_unl;
+extern _spr sprite_unl[56], sprite_plus_unl[56];
+extern _tile tile_render, tile_fetch;
+extern _ppu_sclines ppu_sclines;
+extern _overclock overclock;
 
-EXTERNC void ppu_tick(WORD cycles_cpu);
-EXTERNC BYTE ppu_turn_on(void);
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC void ppu_init(void);
 EXTERNC void ppu_quit(void);
+
+EXTERNC void ppu_tick(void);
+EXTERNC BYTE ppu_turn_on(void);
 EXTERNC void ppu_overclock(BYTE reset_dmc_in_use);
+
+EXTERNC void ppu_draw_screen_pause(void);
+EXTERNC void ppu_draw_screen_continue(void);
+
+EXTERNC void ppu_draw_screen_pause_with_count(int *count);
+EXTERNC void ppu_draw_screen_continue_with_count(int *count);
+EXTERNC void ppu_draw_screen_continue_ctrl_count(int *count);
 
 #undef EXTERNC
 

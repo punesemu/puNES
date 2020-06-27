@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 
 enum { EKROM, ELROM, ETROM, EWROM };
 
-struct _mmc5 {
+typedef struct _mmc5 {
 	BYTE prg_mode;
 	BYTE chr_mode;
 	BYTE ext_mode;
@@ -51,26 +51,30 @@ struct _mmc5 {
 	BYTE factor[2];
 	WORD product;
 	_apuSquare S3, S4;
-	struct {
+	struct _mmc5_pcm {
 		BYTE enabled;
 		BYTE output;
 		BYTE amp;
+	} pcm;
+	BYTE filler[50];
 
 	/* ------------------------------------------------------- */
 	/* questi valori non e' necessario salvarli nei savestates */
 	/* ------------------------------------------------------- */
 	/* */ BYTE clocked;                                     /* */
 	/* ------------------------------------------------------- */
-	} pcm;
-	BYTE filler[50];
-} mmc5;
+} _mmc5;
+
+extern _mmc5 mmc5;
 
 void map_init_MMC5(void);
+void map_init_NSF_MMC5(void);
 void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_MMC5(BYTE mode, BYTE slot, FILE *fp);
 void extcl_ppu_256_to_319_MMC5(void);
 void extcl_ppu_320_to_34x_MMC5(void);
+void extcl_rd_r2007_MMC5(void);
 void extcl_after_rd_chr_MMC5(WORD address);
 BYTE extcl_rd_chr_MMC5(WORD address);
 BYTE extcl_rd_nmt_MMC5(WORD address);

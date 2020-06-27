@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -58,44 +58,13 @@ enum vs_system_special_mode {
 #define vs_system_r4020_timer(type)\
 	++vs_system.r4020.type.actual.timer;\
 	if (vs_system.r4020.type.old.value && !vs_system.r4020.type.actual.value) {\
-		if ((vs_system.r4020.type.old.timer > VSONTIME)\
-	        && (vs_system.r4020.type.actual.timer > VSOFFTIME)) {\
+		if ((vs_system.r4020.type.old.timer > VSONTIME) && \
+			(vs_system.r4020.type.actual.timer > VSOFFTIME)) {\
 			vs_system.coins.counter++;\
 			gui_vs_system_update_dialog();\
 			vs_system.r4020.type.old.value = 0;\
 			vs_system.r4020.type.old.timer = 0;\
 		}\
-	}
-#define vs_system_r4016_r4017(port)\
-	if (port == PORT1) {\
-		/*
-		 * port $4016
-		 * 7  bit  0
-		 * ---- ----
-		 * xCCD DSxB
-		 *  ||| || |
-		 *  ||| || +- Buttons for player 2 (A, B, 1, 3, Up, Down, Left, Right)
-		 *  ||| |+--- Service button (commonly inserts a credit)
-		 *  ||+-+---- DIP switches "2" and "1", respectively
-		 *  ++------- Coin inserted (read below)
-		 */\
-		return ((vs_system.coins.right ? 0x40 : 0x00) |\
-				(vs_system.coins.left ? 0x20 : 0x00) |\
-				((cfg->dipswitch & 0x03) << 3) |\
-				(vs_system.coins.service ? 0x04 : 0x00) |\
-				(value & 0x01));\
-	} else {\
-		/*
-		 * port $4017
-		 * 7  bit  0
-		 * ---- ----
-		 * DDDD DDxB
-		 * |||| || |
-		 * |||| || +- Buttons for player 1 (A, B, 2, 4, Up, Down, Left, Right)
-		 * ++++-++--- More DIP switches (7 down to 2)
-		 */\
-		vs_system.watchdog.timer = 0;\
-		return ((cfg->dipswitch & 0xFC) | (value & 0x01));\
 	}
 
 typedef struct _r4020_base {
@@ -106,37 +75,7 @@ typedef struct _r4020_type {
 	_r4020_base old;
 	_r4020_base actual;
 } _r4020_type;
-
-static const BYTE vs_protection_data[2][32] = {
-	{
-		0xFF, 0xBF, 0xB7, 0x97,
-		0x97, 0x17, 0x57, 0x4F,
-		0x6F, 0x6B, 0xEB, 0xA9,
-		0xB1, 0x90, 0x94, 0x14,
-		0x56, 0x4E, 0x6F, 0x6B,
-		0xEB, 0xA9, 0xB1, 0x90,
-		0xD4, 0x5C, 0x3E, 0x26,
-		0x87, 0x83, 0x13, 0x00
-	},
-	{
-		0x00, 0x00, 0x00, 0x00,
-		0xB4, 0x00, 0x00, 0x00,
-		0x00, 0x6F, 0x00, 0x00,
-		0x00, 0x00, 0x94, 0x00,
-		0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00,
-		0x00, 0x00, 0x00, 0x00
-	}
-};
-
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _vs_system {
+typedef struct _vs_system {
 	BYTE enabled;
 	BYTE ppu;
 	BYTE shared_mem;
@@ -164,8 +103,31 @@ EXTERNC struct _vs_system {
 		DBWORD left;
 		DBWORD right;
 	} coins;
-} vs_system;
+} _vs_system;
 
-#undef EXTERNC
+static const BYTE vs_protection_data[2][32] = {
+	{
+		0xFF, 0xBF, 0xB7, 0x97,
+		0x97, 0x17, 0x57, 0x4F,
+		0x6F, 0x6B, 0xEB, 0xA9,
+		0xB1, 0x90, 0x94, 0x14,
+		0x56, 0x4E, 0x6F, 0x6B,
+		0xEB, 0xA9, 0xB1, 0x90,
+		0xD4, 0x5C, 0x3E, 0x26,
+		0x87, 0x83, 0x13, 0x00
+	},
+	{
+		0x00, 0x00, 0x00, 0x00,
+		0xB4, 0x00, 0x00, 0x00,
+		0x00, 0x6F, 0x00, 0x00,
+		0x00, 0x00, 0x94, 0x00,
+		0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00
+	}
+};
+
+extern _vs_system vs_system;
 
 #endif /* VS_SYSTEM_H_ */

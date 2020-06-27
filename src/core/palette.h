@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,9 +19,11 @@
 #ifndef PALETTE_H_
 #define PALETTE_H_
 
+#include "common.h"
+
 #define NUM_COLORS 512
 
-enum {
+enum palettes_types {
 	PALETTE_PAL,
 	PALETTE_NTSC,
 	PALETTE_SONY,
@@ -32,20 +34,25 @@ enum {
 	PALETTE_FRBX_YUV
 };
 
-typedef struct {
+typedef struct _color_RGB {
 	BYTE r;
 	BYTE g;
 	BYTE b;
 } _color_RGB;
+typedef struct _palette_RGB {
+	_color_RGB *in_use;
+	_color_RGB noswap[NUM_COLORS];
+	_color_RGB swapped[NUM_COLORS];
+} _palette_RGB;
+
+extern _color_RGB palette_base_file[64];
+extern _palette_RGB palette_RGB;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-EXTERNC _color_RGB palette_base_file[64];
-EXTERNC _color_RGB palette_RGB[NUM_COLORS];
 
 EXTERNC void palette_save_on_file(const uTCHAR *file);
 EXTERNC BYTE palette_load_from_file(const uTCHAR *file);

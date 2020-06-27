@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ typedef struct _js {
 	WORD open_try;
 	SWORD last[16];
 	SWORD last_value[16];
-	BYTE (*input_decode_event)(BYTE mode, DBWORD event, BYTE type, _port *port);
+	BYTE (*input_decode_event)(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *port);
 } _js;
 typedef struct _js_event {
 	/* event timestamp in milliseconds */
@@ -60,12 +60,6 @@ typedef struct _js_sch {
 	DBWORD value;
 	BYTE mode;
 } _js_sch;
-
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
 
 static const _js_element jsn_list[] = {
 	{ 0x0FF,  uL("NULL")        },
@@ -100,7 +94,13 @@ static const _js_element jsv_list[] = {
 	{ 0x416, uL("JB22")   }, { 0x417, uL("JB23")   },
 };
 
-EXTERNC _js js[PORT_MAX], js_shcut;;
+extern _js js[PORT_MAX], js_shcut;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC void js_init(BYTE first_time);
 EXTERNC void js_quit(BYTE last_time);
@@ -114,7 +114,7 @@ EXTERNC void js_set_id(BYTE *id, int dev);
 EXTERNC uTCHAR *js_name_device(int dev);
 EXTERNC BYTE js_read_event(_js_event *event, _js *joy);
 EXTERNC uTCHAR *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length);
-EXTERNC DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD lenght);
+EXTERNC DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD length);
 EXTERNC DBWORD js_read_in_dialog(BYTE *id, int fd);
 
 EXTERNC void js_shcut_init(void);

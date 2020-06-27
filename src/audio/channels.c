@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,11 +17,16 @@
  */
 
 #include <stddef.h>
-#include "snd.h"
+#include "audio/snd.h"
 #include "audio/channels.h"
 #include "audio/mono.h"
 #include "audio/delay.h"
 #include "audio/panning.h"
+
+BYTE (*audio_channels_init)(void);
+void (*audio_channels_quit)(void);
+void (*audio_channels_reset)(void);
+void (*audio_channels_tick)(SWORD value);
 
 void audio_channels(BYTE channels) {
 	if (audio_channels_quit) {
@@ -30,6 +35,7 @@ void audio_channels(BYTE channels) {
 
 	audio_channels_init = NULL;
 	audio_channels_quit = NULL;
+	audio_channels_reset = NULL;
 	audio_channels_tick = NULL;
 
 	switch (channels) {

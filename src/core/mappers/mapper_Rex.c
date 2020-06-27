@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -47,6 +47,11 @@
 		rex_dbz_chr_1k_update(i)\
 	}\
 }
+
+struct _rex_dbz {
+	WORD chr_rom_bank[8];
+	BYTE chr_high;
+} rex_dbz;
 
 void map_init_Rex(BYTE model) {
 	if (model == DBZ) {
@@ -134,7 +139,7 @@ void extcl_cpu_wr_mem_Rex_dbz(WORD address, BYTE value) {
 	}
 	extcl_cpu_wr_mem_MMC3(address, value);
 }
-BYTE extcl_cpu_rd_mem_Rex_dbz(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Rex_dbz(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x4100) || (address < 0x6000)) {
 		/* TODO:
 		 * se disabilito questo return ed avvio la rom,

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,30 +21,23 @@
 
 #include "common.h"
 
-enum fps_values {
-	FPS_DEFAULT,
-	FPS_60,
-	FPS_59,
-	FPS_58,
-	FPS_57,
-	FPS_56,
-	FPS_55,
-	FPS_54,
-	FPS_53,
-	FPS_52,
-	FPS_51,
-	FPS_50,
-	FPS_49,
-	FPS_48,
-	FPS_47,
-	FPS_46,
-	FPS_45,
-	FPS_44
-};
 enum ff_velocity_values { FF_2X = 2, FF_3X, FF_4X, FF_5X };
 
 #define fps_machine_ms(factor)\
-	machine.ms_frame = fps.ms = (1000.0f / (double) machine.fps) * factor;
+	machine.ms_frame = fps.frame.estimated_ms = (1000.0f / (double)machine.fps) * factor;
+
+typedef struct _fps {
+	double gfx;
+	uint8_t fast_forward;
+	uint32_t frames_skipped;
+	uint32_t frames_emu_too_long;
+	struct _frame {
+		double estimated_ms;
+		double expected_end;
+	} frame;
+} _fps;
+
+extern _fps fps;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -52,30 +45,9 @@ enum ff_velocity_values { FF_2X = 2, FF_3X, FF_4X, FF_5X };
 #define EXTERNC
 #endif
 
-EXTERNC struct _fps {
-	uint8_t fast_forward;
-	int counter;
-	int frames_before_skip;
-	int max_frames_skipped;
-	int frames_skipped;
-	uint32_t total_frames_skipped;
-	double ms;
-	double next_frame;
-	double second_start;
-	double second_end;
-	double avarage;
-	double nominal;
-} fps;
-EXTERNC struct _framerate {
-	uint32_t interval;
-	double value;
-	double last_time;
-} framerate;
-
 EXTERNC void fps_init(void);
 EXTERNC void fps_fast_forward(void);
 EXTERNC void fps_normalize(void);
-EXTERNC void fps_frameskip(void);
 
 #undef EXTERNC
 

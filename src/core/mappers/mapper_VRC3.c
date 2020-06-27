@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,15 @@
 #include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
+
+struct _vrc3 {
+	BYTE enabled;
+	WORD reload;
+	BYTE mode;
+	BYTE acknowledge;
+	WORD mask;
+	WORD count;
+} vrc3;
 
 void map_init_VRC3(void) {
 	EXTCL_CPU_WR_MEM(VRC3);

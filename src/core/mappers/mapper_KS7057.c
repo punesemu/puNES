@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,16 +22,21 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static void INLINE ks7057_update(void);
+INLINE static void ks7057_update(void);
 
-BYTE *ks7057_prg_6000;
-BYTE *ks7057_prg_6800;
-BYTE *ks7057_prg_7000;
-BYTE *ks7057_prg_7800;
-BYTE *ks7057_prg_8000;
-BYTE *ks7057_prg_8800;
-BYTE *ks7057_prg_9000;
-BYTE *ks7057_prg_9800;
+struct _ks7057 {
+	BYTE reg[8];
+} ks7057;
+struct _ks7057tmp {
+	BYTE *prg_6000;
+	BYTE *prg_6800;
+	BYTE *prg_7000;
+	BYTE *prg_7800;
+	BYTE *prg_8000;
+	BYTE *prg_8800;
+	BYTE *prg_9000;
+	BYTE *prg_9800;
+} ks7057tmp;
 
 void map_init_KS7057(void) {
 	EXTCL_CPU_WR_MEM(KS7057);
@@ -118,24 +123,24 @@ void extcl_cpu_wr_mem_KS7057(WORD address, BYTE value) {
 	}
 	ks7057_update();
 }
-BYTE extcl_cpu_rd_mem_KS7057(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_KS7057(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	switch (address & 0xF800) {
 		case 0x6000:
-			return (ks7057_prg_6000[address & 0x07FF]);
+			return (ks7057tmp.prg_6000[address & 0x07FF]);
 		case 0x6800:
-			return (ks7057_prg_6800[address & 0x07FF]);
+			return (ks7057tmp.prg_6800[address & 0x07FF]);
 		case 0x7000:
-			return (ks7057_prg_7000[address & 0x07FF]);
+			return (ks7057tmp.prg_7000[address & 0x07FF]);
 		case 0x7800:
-			return (ks7057_prg_7800[address & 0x07FF]);
+			return (ks7057tmp.prg_7800[address & 0x07FF]);
 		case 0x8000:
-			return (ks7057_prg_8000[address & 0x07FF]);
+			return (ks7057tmp.prg_8000[address & 0x07FF]);
 		case 0x8800:
-			return (ks7057_prg_8800[address & 0x07FF]);
+			return (ks7057tmp.prg_8800[address & 0x07FF]);
 		case 0x9000:
-			return (ks7057_prg_9000[address & 0x07FF]);
+			return (ks7057tmp.prg_9000[address & 0x07FF]);
 		case 0x9800:
-			return (ks7057_prg_9800[address & 0x07FF]);
+			return (ks7057tmp.prg_9800[address & 0x07FF]);
 	}
 	return (openbus);
 }
@@ -149,44 +154,44 @@ BYTE extcl_save_mapper_KS7057(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE ks7057_update(void) {
+INLINE static void ks7057_update(void) {
 	WORD value;
 
 	// 0x6000
 	value = ks7057.reg[4];
 	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7057_prg_6000 = prg_chip_byte_pnt(0, value << 11);
+	ks7057tmp.prg_6000 = prg_chip_byte_pnt(0, value << 11);
 	// 0x6800
 	value = ks7057.reg[5];
 	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7057_prg_6800 = prg_chip_byte_pnt(0, value << 11);
+	ks7057tmp.prg_6800 = prg_chip_byte_pnt(0, value << 11);
 
 	// 0x7000
 	value = ks7057.reg[6];
 	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7057_prg_7000 = prg_chip_byte_pnt(0, value << 11);
+	ks7057tmp.prg_7000 = prg_chip_byte_pnt(0, value << 11);
 	// 0x7800
 	value = ks7057.reg[7];
 	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7057_prg_7800 = prg_chip_byte_pnt(0, value << 11);
+	ks7057tmp.prg_7800 = prg_chip_byte_pnt(0, value << 11);
 
 	// 0x8000
 	value = ks7057.reg[0];
 	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7057_prg_8000 = prg_chip_byte_pnt(0, value << 11);
+	ks7057tmp.prg_8000 = prg_chip_byte_pnt(0, value << 11);
 	// 0x8800
 	value = ks7057.reg[1];
 	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7057_prg_8800 = prg_chip_byte_pnt(0, value << 11);
+	ks7057tmp.prg_8800 = prg_chip_byte_pnt(0, value << 11);
 
 	// 0x9000
 	value = ks7057.reg[2];
 	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7057_prg_9000 = prg_chip_byte_pnt(0, value << 11);
+	ks7057tmp.prg_9000 = prg_chip_byte_pnt(0, value << 11);
 	// 0x9800
 	value = ks7057.reg[3];
 	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7057_prg_9800 = prg_chip_byte_pnt(0, value << 11);
+	ks7057tmp.prg_9800 = prg_chip_byte_pnt(0, value << 11);
 
 	// 0xA000 - 0xB000
 	value = 0x0D;

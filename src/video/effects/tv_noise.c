@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,28 +21,30 @@
 #include "tv_noise.h"
 #include "ppu.h"
 #include "conf.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "emu.h"
-#include "video/filters/ntsc.h"
+#include "palette.h"
+
+_turn_off_effect turn_off_effect;
 
 BYTE tv_noise_init(void) {
 	uint32_t *palette;
 	_color_RGB pRGB[NUM_COLORS];
 	WORD i;
 
-	if (!(turn_off.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
+	if (!(turn_off_effect.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
 		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}
-	palette = (uint32_t *) turn_off.palette;
+	palette = (uint32_t *)turn_off_effect.palette;
 
-	if (!(turn_off.ntsc = malloc(sizeof(nes_ntsc_t)))) {;
+	if (!(turn_off_effect.ntsc = malloc(sizeof(nes_ntsc_t)))) {;
 		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}
 
-	rgb_modifier((nes_ntsc_t *) turn_off.ntsc, pRGB, 0x1A, -0x20, -0x30, -0x20);
-	//rgb_modifier((nes_ntsc_t *) turn_off.ntsc, pRGB, 0x00, -0x20, -0x20, -0x20);
+	rgb_modifier((nes_ntsc_t *)turn_off_effect.ntsc, pRGB, 0x1A, -0x20, -0x30, -0x20);
+	//rgb_modifier((nes_ntsc_t *)turn_off_effect.ntsc, pRGB, 0x00, -0x20, -0x20, -0x20);
 
 	for (i = 0; i < NUM_COLORS; i++) {
 		palette[i] = gfx_color(255, pRGB[i].r, pRGB[i].g, pRGB[i].b);
@@ -51,13 +53,13 @@ BYTE tv_noise_init(void) {
 	return (EXIT_OK);
 }
 void tv_noise_quit(void) {
-	if (turn_off.palette) {
-		free(turn_off.palette);
-		turn_off.palette = NULL;
+	if (turn_off_effect.palette) {
+		free(turn_off_effect.palette);
+		turn_off_effect.palette = NULL;
 	}
-	if (turn_off.ntsc) {
-		free(turn_off.ntsc);
-		turn_off.ntsc = NULL;
+	if (turn_off_effect.ntsc) {
+		free(turn_off_effect.ntsc);
+		turn_off_effect.ntsc = NULL;
 	}
 }
 void tv_noise_effect(void) {
@@ -68,7 +70,7 @@ void tv_noise_effect(void) {
 	if (cfg->disable_tv_noise) {
 		for (y = 0; y < SCR_LINES; y++) {
 			for (x = 0; x < SCR_ROWS; x++) {
-				screen.line[y][x] = 0x0D;
+				screen.wr->line[y][x] = 0x0D;
 			}
 		}
 		return;
@@ -77,7 +79,7 @@ void tv_noise_effect(void) {
 	for (y = 0; y < SCR_LINES; y++) {
 		for (x = 0; x < SCR_ROWS; x++) {
 			WORD w = 7 + sin(x / 50000 + t0 / 7);
-			screen.line[y][x] = emu_irand(16) * w;
+			screen.wr->line[y][x] = emu_irand(16) * w;
 		}
 		t0 = (t0 + 1) % SCR_LINES;
 	}

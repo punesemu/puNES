@@ -1,8 +1,19 @@
 /*
- * mapper_Sunsoft.c
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
- *  Created on: 13/set/2011
- *      Author: fhorse
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
 #include <string.h>
@@ -76,14 +87,28 @@
 	if (--fm7.square[sq].timer == 0) {\
 		fm7.square[sq].step = (fm7.square[sq].step + 1) & 0x1F;\
 		fm7.square[sq].timer = fm7.square[sq].frequency + 1;\
-		fm7.square[sq].clocked = TRUE;\
+		fm7.clocked = TRUE;\
 	}\
 	if (!fm7.square[sq].disable) {\
 		/*fm7.square[sq].output = -fm7.square[sq].volume * ((fm7.square[sq].step & 0x10) ? 2 : -2);*/\
 		fm7.square[sq].output = fm7.square[sq].volume * ((fm7.square[sq].step & 0x10) ? 1 : 0);\
 	}
 
-BYTE type;
+struct _sunsoft3 {
+	BYTE enable;
+	BYTE toggle;
+	WORD count;
+	BYTE delay;
+} s3;
+struct _sunsoft4 {
+	uint32_t chr_nmt[2];
+	BYTE mode;
+	BYTE mirroring;
+} s4;
+_sunsoft_fm7 fm7;
+struct _sunsofttmp {
+	BYTE type;
+} sunsofttmp;
 
 void map_init_Sunsoft(BYTE model) {
 	switch (model) {
@@ -150,7 +175,16 @@ void map_init_Sunsoft(BYTE model) {
 			break;
 	}
 
-	type = model;
+	sunsofttmp.type = model;
+}
+void map_init_NSF_Sunsoft(BYTE model) {
+	memset(&fm7, 0x00, sizeof(fm7));
+
+	fm7.square[0].timer = 1;
+	fm7.square[1].timer = 1;
+	fm7.square[2].timer = 1;
+
+	sunsofttmp.type = model;
 }
 
 void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value) {
@@ -180,11 +214,11 @@ void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value) {
 	}
 }
 
-void extcl_cpu_wr_mem_Sunsoft_S2(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sunsoft_S2(UNUSED(WORD address), BYTE value) {
 	const BYTE save = value;
 	DBWORD bank;
 
-	if (type == SUN2B) {
+	if (sunsofttmp.type == SUN2B) {
 		if (value & 0x08) {
 			mirroring_SCR1();
 		} else {
@@ -426,7 +460,7 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_Sunsoft_FM7(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Sunsoft_FM7(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (fm7.prg_ram_enable) {
 		return (openbus);
 	}

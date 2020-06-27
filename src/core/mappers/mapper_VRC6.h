@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 
 enum { VRC6A, VRC6B };
 
-typedef struct {
+typedef struct _vrc6_square {
 	BYTE enabled;
 	BYTE duty;
 	BYTE step;
@@ -32,14 +32,8 @@ typedef struct {
 	WORD timer;
 	WORD frequency;
 	SWORD output;
-
-/* ------------------------------------------------------- */
-/* questi valori non e' necessario salvarli nei savestates */
-/* ------------------------------------------------------- */
-/* */ BYTE clocked;                                     /* */
-/* ------------------------------------------------------- */
 } _vrc6_square;
-typedef struct {
+typedef struct _vrc6_saw {
 	BYTE enabled;
 	BYTE accumulator;
 	BYTE step;
@@ -47,26 +41,31 @@ typedef struct {
 	WORD timer;
 	WORD frequency;
 	SWORD output;
-
-/* ------------------------------------------------------- */
-/* questi valori non e' necessario salvarli nei savestates */
-/* ------------------------------------------------------- */
-/* */ BYTE clocked;                                     /* */
-/* ------------------------------------------------------- */
 } _vrc6_saw;
-struct _vrc6 {
+typedef struct _vrc6 {
 	BYTE enabled;
 	BYTE reload;
 	BYTE mode;
 	BYTE acknowledge;
 	BYTE count;
 	BYTE delay;
+	BYTE b003;
+	BYTE chr_map[8];
 	WORD prescaler;
 	_vrc6_square S3, S4;
 	_vrc6_saw saw;
-} vrc6;
+
+	/* ------------------------------------------------------- */
+	/* questi valori non e' necessario salvarli nei savestates */
+	/* ------------------------------------------------------- */
+	/* */ BYTE clocked;                                     /* */
+	/* ------------------------------------------------------- */
+} _vrc6;
+
+extern _vrc6 vrc6;
 
 void map_init_VRC6(BYTE revision);
+void map_init_NSF_VRC6(BYTE revision);
 void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value);
 BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_VRC6(void);

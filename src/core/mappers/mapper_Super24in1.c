@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE super24in1_update_prg(void);
-static void INLINE super24in1_update_chr(void);
+INLINE static void super24in1_update_prg(void);
+INLINE static void super24in1_update_chr(void);
 
 #define super24in1_prg_value(bnk)\
 	(super24in1.prg_map[bnk] & super24in1_mask[super24in1.reg[0] & 0x07]) | (super24in1.reg[1] << 1)
@@ -80,6 +80,12 @@ static void INLINE super24in1_update_chr(void);
 	}
 
 static const BYTE super24in1_mask[8] = { 0x3F, 0x1F, 0x0F, 0x01, 0x03, 0x00, 0x00, 0x00 };
+
+struct _super24in1 {
+	BYTE reg[3];
+	WORD prg_map[4];
+	WORD chr_map[8];
+} super24in1;
 
 void map_init_Super24in1(void) {
 	EXTCL_CPU_WR_MEM(Super24in1);
@@ -175,7 +181,7 @@ void extcl_wr_chr_Super24in1(WORD address, BYTE value) {
 	}
 }
 
-static void INLINE super24in1_update_prg(void) {
+INLINE static void super24in1_update_prg(void) {
 	BYTE chip;
 	WORD value;
 
@@ -205,7 +211,7 @@ static void INLINE super24in1_update_prg(void) {
 
 	map_prg_rom_8k_update();
 }
-static void INLINE super24in1_update_chr(void) {
+INLINE static void super24in1_update_chr(void) {
 	BYTE chip, i;
 	WORD value;
 

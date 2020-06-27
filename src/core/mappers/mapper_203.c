@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ void map_init_203(void) {
 		extcl_cpu_wr_mem_203(0x8000, 0);
 	}
 }
-void extcl_cpu_wr_mem_203(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_203(UNUSED(WORD address), BYTE value) {
 	BYTE save = value;
 	DBWORD bank;
 

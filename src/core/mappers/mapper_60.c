@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,12 @@
 #include "mem_map.h"
 #include "save_slot.h"
 #include "cpu.h"
+
+struct _m60 {
+	BYTE index;
+	// per la variante vt5201
+	WORD address;
+} m60;
 
 void map_init_60(void) {
 	EXTCL_CPU_WR_MEM(60);
@@ -57,9 +63,7 @@ void map_init_60(void) {
 		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
 	}
 }
-void extcl_cpu_wr_mem_60(WORD address, BYTE value) {
-	return;
-}
+void extcl_cpu_wr_mem_60(UNUSED(WORD address), UNUSED(BYTE value)) {}
 BYTE extcl_save_mapper_60(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m60.index);
 
@@ -120,7 +124,7 @@ void extcl_cpu_wr_mem_60_vt5201(WORD address, BYTE value) {
 		mirroring_V();
 	}
 }
-BYTE extcl_cpu_rd_mem_60_vt5201(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_60_vt5201(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address < 0x6000) {
 		return (openbus);
 	}

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,9 @@
 #include "mem_map.h"
 #include "info.h"
 
-BYTE *gs_2004_prg_6000;
+struct _gs2004tmp {
+	BYTE *prg_6000;
+} gs2004tmp;
 
 void map_init_GS_2004(void) {
 	EXTCL_CPU_WR_MEM(GS_2004);
@@ -33,16 +35,16 @@ void map_init_GS_2004(void) {
 		map_prg_rom_8k(4, 0, value);
 	}
 
-	gs_2004_prg_6000 = prg_chip_byte_pnt(1, 0);
+	gs2004tmp.prg_6000 = prg_chip_byte_pnt(1, 0);
 }
-void extcl_cpu_wr_mem_GS_2004(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_GS_2004(UNUSED(WORD address), BYTE value) {
 	control_bank(info.prg.rom[0].max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 }
-BYTE extcl_cpu_rd_mem_GS_2004(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_GS_2004(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (gs_2004_prg_6000[address & 0x1FFF]);
+		return (gs2004tmp.prg_6000[address & 0x1FFF]);
 	}
 	return (openbus);
 }

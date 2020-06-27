@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,20 +30,6 @@ enum {
 	TAMS1,
 	MAJORLEAGUE
 };
-
-struct _irem_G101 {
-	BYTE prg_mode;
-	BYTE prg_reg;
-} irem_G101;
-struct _irem_H3000 {
-	BYTE enable;
-	WORD count;
-	WORD reload;
-	BYTE delay;
-} irem_H3000;
-struct _irem_LROG017 {
-	BYTE filler;
-} irem_LROG017;
 
 void map_init_Irem(BYTE model);
 

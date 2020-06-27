@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,9 @@
 #include <Cg/cg.h>
 #include <Cg/cgD3D9.h>
 #include "shaders.h"
-#include "gfx.h"
+#include "video/gfx.h"
+
+#define D3D9_ADAPTER(i) (_d3d9_adapter *) ((BYTE *) d3d9.array + (i * sizeof(_d3d9_adapter)))
 
 typedef struct _vertex_buffer {
 	// position
@@ -56,7 +58,7 @@ typedef struct _shader_uniforms_tex {
 		CGparameter video_size;
 		CGparameter texture_size;
 	} f;
-}  _shader_uniforms_tex;
+} _shader_uniforms_tex;
 typedef struct _shader_uniforms_prog {
 	CGparameter video_size;
 	CGparameter output_size;
@@ -79,7 +81,7 @@ typedef struct _shader_uniforms {
 	_shader_uniforms_tex passprev[MAX_PASS];
 	_shader_uniforms_tex prev[MAX_PREV];
 	_shader_uniforms_tex feedback;
-}  _shader_uniforms;
+} _shader_uniforms;
 typedef struct _shader_info {
 	D3DXVECTOR2 video_size;
 	D3DXVECTOR2 texture_size;
@@ -147,23 +149,30 @@ typedef struct _d3d9 {
 	UINT adapters_in_use;
 	_d3d9_adapter *array, *adapter;
 
-	BYTE scale;
-
 	struct _d3d9_screen {
-		INT in_use;
+		UINT in_use;
 		UINT index;
 		_texture_simple tex[MAX_PREV + 1];
 	} screen;
+
+	struct _d3d9_video_mode {
+		UINT w;
+		UINT h;
+	} video_mode;
 
 	struct _feedback {
 		uint8_t in_use;
 		_texture tex;
 	} feedback;
 
-	_texture_simple text;
+	RECT viewp;
+
+	_texture_simple overlay;
 	_texture texture[MAX_PASS + 1];
 	_lut lut[MAX_PASS];
 } _d3d9;
+
+extern _d3d9 d3d9;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -171,7 +180,10 @@ typedef struct _d3d9 {
 #define EXTERNC
 #endif
 
-EXTERNC _d3d9 d3d9;
+EXTERNC BYTE d3d9_init(void);
+EXTERNC BYTE d3d9_context_create(void);
+EXTERNC void d3d9_draw_scene(void);
+EXTERNC void d3d9_quit(void);
 
 #undef EXTERNC
 

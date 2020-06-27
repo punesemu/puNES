@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,8 +23,12 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE bmcghostbusters63in1_update_chr(void);
+INLINE static void bmcghostbusters63in1_update_chr(void);
 
+struct _bmcghostbusters63in1 {
+	BYTE reg[2];
+	BYTE index;
+} bmcghostbusters63in1;
 static const BYTE bmcghostbusters63in1_chip[4] = { 0, 0, 1, 2 };
 
 void map_init_BMCGHOSTBUSTERS63IN1(void) {
@@ -97,7 +101,7 @@ void extcl_wr_chr_BMCGHOSTBUSTERS63IN1(WORD address, BYTE value) {
 	chr.extra.data[address] = value;
 }
 
-static void INLINE bmcghostbusters63in1_update_chr(void) {
+INLINE static void bmcghostbusters63in1_update_chr(void) {
 	if (!mapper.write_vram && (bmcghostbusters63in1.reg[1] & 0x02)) {
 		chr.bank_1k[0] = &chr.extra.data[0x0000];
 		chr.bank_1k[1] = &chr.extra.data[0x0400];

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE ctrl_reg_105(void);
-static void INLINE swap_prg_rom_105(void);
+INLINE static void ctrl_reg_105(void);
+INLINE static void swap_prg_rom_105(void);
 
 /*
  * IRQ Counter:
@@ -58,7 +58,25 @@ static void INLINE swap_prg_rom_105(void);
 
 enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 
-uint32_t counter_must_reach;
+struct _m105 {
+	BYTE reg;
+	BYTE pos;
+	BYTE ctrl;
+	BYTE reset;
+	struct _prg_m105 {
+		BYTE mode;
+		BYTE locked;
+		BYTE upper;
+		BYTE reg[2];
+	} prg;
+	struct _irq_m105 {
+		BYTE reg;
+		uint32_t count;
+	} irq;
+} m105;
+struct _m105tmp {
+	uint32_t counter_must_reach;
+} m105tmp;
 
 void map_init_105(void) {
 	EXTCL_CPU_WR_MEM(105);
@@ -67,7 +85,7 @@ void map_init_105(void) {
 	mapper.internal_struct[0] = (BYTE *) &m105;
 	mapper.internal_struct_size[0] = sizeof(m105);
 
-	counter_must_reach = M105_DIPSWITCH << 25;
+	m105tmp.counter_must_reach = M105_DIPSWITCH << 25;
 
 	if (info.reset >= HARD) {
 		memset(&m105, 0x00, sizeof(m105));
@@ -180,14 +198,14 @@ BYTE extcl_save_mapper_105(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_105(void) {
 	if (!m105.irq.reg) {
-		if (++m105.irq.count == counter_must_reach) {
+		if (++m105.irq.count == m105tmp.counter_must_reach) {
 			m105.irq.count = 0;
 			irq.high |= EXT_IRQ;
 		}
 	}
 }
 
-static void INLINE ctrl_reg_105(void) {
+INLINE static void ctrl_reg_105(void) {
 	m105.prg.mode = (m105.ctrl & 0x0C) >> 2;
 	switch (m105.ctrl & 0x03) {
 		case 0x00:
@@ -204,7 +222,7 @@ static void INLINE ctrl_reg_105(void) {
 			break;
 	}
 }
-static void INLINE swap_prg_rom_105(void) {
+INLINE static void swap_prg_rom_105(void) {
 	BYTE value;
 
 	if (m105.prg.locked == TRUE) {

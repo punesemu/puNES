@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,9 +22,14 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static void INLINE whirlwind_6000_update(void);
+INLINE static void whirlwind_6000_update(void);
 
-BYTE *whirlwind_prg_6000;
+struct _whirlwind {
+	uint32_t reg;
+} whirlwind;
+struct _whirlwindtmp {
+	BYTE *prg_6000;
+} whirlwindtmp;
 
 void map_init_Whirlwind(void) {
 	EXTCL_CPU_WR_MEM(Whirlwind);
@@ -52,11 +57,11 @@ void extcl_cpu_wr_mem_Whirlwind(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_Whirlwind(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Whirlwind(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	switch (address & 0xF000) {
 		case 0x6000:
 		case 0x7000:
-			return (whirlwind_prg_6000[address & 0x1FFF]);
+			return (whirlwindtmp.prg_6000[address & 0x1FFF]);
 	}
 	return (openbus);
 
@@ -64,20 +69,20 @@ BYTE extcl_cpu_rd_mem_Whirlwind(WORD address, BYTE openbus, BYTE before) {
 BYTE extcl_save_mapper_Whirlwind(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, whirlwind.reg);
 
-    if (mode == SAVE_SLOT_READ) {
-    	if (save_slot.version < 15) {
-    		whirlwind.reg >>= 13;
-    	}
-    	whirlwind_6000_update();
+	if (mode == SAVE_SLOT_READ) {
+		if (save_slot.version < 15) {
+			whirlwind.reg >>= 13;
+		}
+		whirlwind_6000_update();
 	}
 
 	return (EXIT_OK);
 }
 
-static void INLINE whirlwind_6000_update(void) {
+INLINE static void whirlwind_6000_update(void) {
 	WORD value;
 
 	value = whirlwind.reg;
 	control_bank(info.prg.rom[0].max.banks_8k)
-	whirlwind_prg_6000 = prg_chip_byte_pnt(0, value << 13);
+	whirlwindtmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
 }

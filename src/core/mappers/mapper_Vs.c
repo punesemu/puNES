@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,9 +28,7 @@ void map_init_Vs(void) {
 		map_prg_rom_8k(4, 0, 0);
 	}
 }
-void extcl_cpu_wr_mem_Vs(WORD address, BYTE value) {
-	return;
-}
+void extcl_cpu_wr_mem_Vs(UNUSED(WORD address), UNUSED(BYTE value)) {}
 void extcl_cpu_wr_r4016_Vs(BYTE value) {
 	const BYTE save = value;
 	DBWORD bank;

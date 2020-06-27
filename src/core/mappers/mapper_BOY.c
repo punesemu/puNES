@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE boy_update_prg(void);
-static void INLINE boy_update_chr(void);
+INLINE static void boy_update_prg(void);
+INLINE static void boy_update_chr(void);
 
 #define boy_swap_chr_1k(a, b)\
 	chr1k = boy.chr_map[b];\
@@ -76,6 +76,12 @@ static void INLINE boy_update_chr(void);
 			boy.prg_map[1] = value;\
 			break;\
 	}
+
+struct _boy {
+	BYTE reg[4];
+	WORD prg_map[4];
+	WORD chr_map[8];
+} boy;
 
 void map_init_BOY(void) {
 	EXTCL_CPU_WR_MEM(BOY);
@@ -160,7 +166,7 @@ BYTE extcl_save_mapper_BOY(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE boy_update_prg(void) {
+INLINE static void boy_update_prg(void) {
 	BYTE i;
 	WORD value;
 	WORD mask = ((0x3F | (boy.reg[1] & 0x40) |
@@ -210,7 +216,7 @@ static void INLINE boy_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE boy_update_chr(void) {
+INLINE static void boy_update_chr(void) {
 	BYTE i, mask = 0xFF ^ (boy.reg[0] & 0x80);
 	WORD value;
 

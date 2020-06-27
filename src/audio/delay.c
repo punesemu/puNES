@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "snd.h"
+#include "audio/snd.h"
 #include "audio/delay.h"
 #include "audio/channels.h"
 #include "conf.h"
@@ -29,6 +29,7 @@ static struct _delay {
 	DBWORD samples;
 	DBWORD max_pos;
 	DBWORD pos;
+	DBWORD size;
 	SWORD *ptr[2];
 	SWORD *buf[2];
 
@@ -44,6 +45,7 @@ BYTE ch_stereo_delay_init(void) {
 	BYTE i;
 
 	audio_channels_quit = ch_stereo_delay_quit;
+	audio_channels_reset = ch_stereo_delay_reset;
 	audio_channels_tick = ch_stereo_delay_tick;
 
 	switch (snd.samplerate) {
@@ -63,20 +65,19 @@ BYTE ch_stereo_delay_init(void) {
 
 	delay.max_pos = delay.samples * cfg->stereo_delay;
 	delay.pos = 0;
+	delay.size = delay.samples * sizeof(*snd.cache->write);
 
 	for (i = 0; i < 2; i++) {
-		DBWORD size = delay.samples * sizeof(*SNDCACHE->write);
-
-		delay.buf[i] = (SWORD *) malloc(size);
-		memset(delay.buf[i], 0x00, size);
+		delay.buf[i] = (SWORD *)malloc(delay.size);
+		memset(delay.buf[i], 0x00, delay.size);
 		delay.ptr[i] = delay.buf[i];
-
-		delay.bck.start = (SWORD *) malloc(size * 2);
-		memset(delay.bck.start, 0x00, size * 2);
-		delay.bck.write = delay.bck.start;
-		delay.bck.middle = delay.bck.start + delay.samples;
-		delay.bck.end = (SBYTE *) delay.bck.start + (size * 2);
 	}
+
+	delay.bck.start = (SWORD *)malloc(delay.size * 2);
+	memset(delay.bck.start, 0x00, delay.size * 2);
+	delay.bck.write = delay.bck.start;
+	delay.bck.middle = delay.bck.start + delay.samples;
+	delay.bck.end = (SBYTE *)delay.bck.start + (delay.size * 2);
 
 	return (EXIT_OK);
 }
@@ -98,15 +99,28 @@ void ch_stereo_delay_quit(void) {
 		delay.ptr[i] = delay.buf[i] = NULL;
 	}
 }
+void ch_stereo_delay_reset(void) {
+	BYTE i;
+
+	delay.pos = 0;
+
+	for (i = 0; i < 2; i++) {
+		memset(delay.buf[i], 0x00, delay.size);
+		delay.ptr[i] = delay.buf[i];
+	}
+
+	memset(delay.bck.start, 0x00, delay.size * 2);
+	delay.bck.write = delay.bck.start;
+}
 void ch_stereo_delay_tick(SWORD value) {
 	// sinistro
-	(*SNDCACHE->write++) = value;
+	(*snd.cache->write++) = value;
 
 	// salvo il dato nel buffer del canale sinistro
 	delay.ptr[CH_LEFT][delay.pos] = value;
 
 	// scrivo nel frame audio il canale destro ritardato rispetto al canale sinistro
-	(*SNDCACHE->write++) = delay.ptr[CH_RIGHT][delay.pos];
+	(*snd.cache->write++) = delay.ptr[CH_RIGHT][delay.pos];
 
 	// swappo i buffers dei canali
 	if (++delay.pos >= delay.max_pos) {
@@ -119,12 +133,12 @@ void ch_stereo_delay_tick(SWORD value) {
 
 	(*delay.bck.write++) = value;
 
-	if (delay.bck.write >= (SWORD *) delay.bck.end) {
+	if (delay.bck.write >= (SWORD *)delay.bck.end) {
 		delay.bck.write = delay.bck.start;
 	}
 
-	SNDCACHE->samples_available++;
-	SNDCACHE->bytes_available += (2 * sizeof(*SNDCACHE->write));
+	snd.cache->samples_available++;
+	snd.cache->bytes_available += (2 * sizeof(*snd.cache->write));
 }
 void ch_stereo_delay_set(void) {
 	SWORD *here;
@@ -140,15 +154,15 @@ void ch_stereo_delay_set(void) {
 	here = delay.bck.write - delay.max_pos;
 
 	if (here >= delay.bck.start) {
-		memcpy(delay.ptr[CH_RIGHT], here, delay.max_pos * sizeof(*SNDCACHE->write));
+		memcpy(delay.ptr[CH_RIGHT], here, delay.max_pos * sizeof(*snd.cache->write));
 	} else {
 		DBWORD step = delay.bck.start - here;
-		SWORD *src1 = (SWORD *) delay.bck.end - step;
+		SWORD *src1 = (SWORD *)delay.bck.end - step;
 		SWORD *src2 = delay.bck.start;
 		SWORD *dst1 = delay.ptr[CH_RIGHT];
 		SWORD *dst2 = delay.ptr[CH_RIGHT] + step;
 
-		memcpy(dst1, src1, step * sizeof(*SNDCACHE->write));
-		memcpy(dst2, src2, (delay.max_pos - step) * sizeof(*SNDCACHE->write));
+		memcpy(dst1, src1, step * sizeof(*snd.cache->write));
+		memcpy(dst2, src2, (delay.max_pos - step) * sizeof(*snd.cache->write));
 	}
 }

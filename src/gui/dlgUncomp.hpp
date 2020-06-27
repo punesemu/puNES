@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,30 +19,27 @@
 #ifndef DLGUNCOMP_HPP_
 #define DLGUNCOMP_HPP_
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QDialog>
-#else
 #include <QtWidgets/QDialog>
-#endif
 #include "dlgUncomp.hh"
+#include "common.h"
+#include "uncompress.h"
 
-class dlgUncomp : public QDialog, public Ui::Uncompress_selection {
+class dlgUncomp : public QDialog, public Ui::dlgUncomp {
 		Q_OBJECT
 
 	private:
 		int selected;
 
 	public:
-		dlgUncomp(QWidget *parent);
+		dlgUncomp(QWidget *parent = 0, void *uncompress_archive = NULL, BYTE type = UNCOMPRESS_TYPE_ALL);
 		~dlgUncomp();
 
 	private:
-		void closeEvent(QCloseEvent *e);
+		void closeEvent(QCloseEvent *event);
 
 	private slots:
 		void s_ok_clicked(bool checked);
-		void s_cancel_clicked(bool checked);
+		void s_none_clicked(bool checked);
 };
 
 #endif /* DLGUNCOMP_HPP_ */

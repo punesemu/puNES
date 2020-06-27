@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,18 +22,6 @@
 #include "common.h"
 
 enum bmcfk23c_types { NOBMCFK23C, BMCFK23C_0 = 1, BMCFK23C_1 = 2, BMCFK23CA = 8 };
-
-struct _bmcfk23c {
-	uint32_t dipswitch;
-	BYTE unromchr;
-	BYTE A000;
-	BYTE A001;
-	BYTE reg[8];
-	BYTE mmc3[8];
-	WORD chr_map[8];
-	/* questo posso tranquillamente non salvarlo */
-	BYTE prg_mask;
-} bmcfk23c;
 
 void map_init_BMCFK23C(void);
 void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value);

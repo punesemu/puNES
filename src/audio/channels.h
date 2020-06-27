@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,11 @@
 
 enum types_of_audio_channels { CH_MONO, CH_STEREO_DELAY, CH_STEREO_PANNING };
 
+extern BYTE (*audio_channels_init)(void);
+extern void (*audio_channels_quit)(void);
+extern void (*audio_channels_reset)(void);
+extern void (*audio_channels_tick)(SWORD value);
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
@@ -31,9 +36,6 @@ enum types_of_audio_channels { CH_MONO, CH_STEREO_DELAY, CH_STEREO_PANNING };
 
 EXTERNC void audio_channels(BYTE channels);
 EXTERNC void audio_channels_init_mode(void);
-EXTERNC BYTE (*audio_channels_init)(void);
-EXTERNC void (*audio_channels_quit)(void);
-EXTERNC void (*audio_channels_tick)(SWORD value);
 
 #undef EXTERNC
 

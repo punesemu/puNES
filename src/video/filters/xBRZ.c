@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,21 +16,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "video/filters/xBRZ.h"
-#include "overscan.h"
+#include "video/gfx.h"
+#include "ppu.h"
 
-void xBRZ_init(void) {
-	;
+void xBRZ_init(void) {}
+void xBRZ(void) {
+	xbrz_scale(gfx.filter.factor, screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
+		SCR_ROWS, SCR_LINES);
 }
-gfx_filter_function(xBRZ) {
-	if (overscan.enabled) {
-		screen += (SCR_ROWS * overscan.borders->up);
-	}
-
-	if (factor == 1) {
-		return;
-	} else {
-		xbrz_scale(factor, screen, (uint32_t *) pix, (uint32_t *) palette, SCR_ROWS,
-		        (overscan.enabled == TRUE ? overscan.borders->left : 0), rows, lines);
-	}
+void xBRZ_mt(void) {
+	xbrz_scale_mt(gfx.filter.factor, screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
+		SCR_ROWS, SCR_LINES);
 }

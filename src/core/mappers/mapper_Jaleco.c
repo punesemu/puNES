@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,6 +34,15 @@
 	control_bank(info.chr.rom[0].max.banks_1k)\
 	chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);\
 	ss8806.chr_rom_bank[slot] = value
+
+struct _ss8806 {
+	BYTE chr_rom_bank[8];
+	BYTE enabled;
+	WORD mask;
+	WORD reload;
+	WORD count;
+	BYTE delay;
+} ss8806;
 
 void map_init_Jaleco(BYTE model) {
 	switch (model) {

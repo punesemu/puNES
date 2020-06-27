@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,23 +19,25 @@
 #ifndef INPUT_H_
 #define INPUT_H_
 
-#if defined (__WIN32__)
+#if defined (_WIN32)
 #define INITGUID
 #include <guiddef.h>
 #undef INITGUID
 #endif
 #include "common.h"
 
-#define SET_DECODE_EVENT(id, funct) input_decode_event[id] = funct
-#define SET_ADD_EVENT(id, funct) input_add_event[id] = funct
-#define SET_WR_REG(funct) input_wr_reg = funct
-#define SET_RD_REG(id, funct) input_rd_reg[id] = funct
-
 #define TURBO_BUTTON_DELAY_DEFAULT 1
 #define TURBO_BUTTON_DELAY_MAX     20
 
 enum controller_modes { CTRL_MODE_NES, CTRL_MODE_FAMICOM, CTRL_MODE_FOUR_SCORE };
-enum controller_types { CTRL_DISABLED, CTRL_STANDARD, CTRL_ZAPPER };
+enum controller_types {
+	CTRL_DISABLED,
+	CTRL_STANDARD,
+	CTRL_ZAPPER,
+	CTRL_SNES_MOUSE,
+	CTRL_ARKANOID_PADDLE,
+	CTRL_OEKA_KIDS_TABLET
+};
 enum pad_types { CTRL_PAD_AUTO, CTRL_PAD_ORIGINAL, CTRL_PAD_3RD_PARTY };
 enum controller_buttons {
 	BUT_A,
@@ -55,19 +57,21 @@ enum input_types { KEYBOARD, JOYSTICK };
 enum button_states { RELEASED = 0x00, PRESSED = 0x01 };
 enum input_max_values { MAX_JOYSTICK = 16 };
 enum input_set_cursor { NO_SET_CURSOR = FALSE, SET_CURSOR = TRUE};
-
 enum port_controllers {
 	PORT1,
 	PORT2,
-	PORT3,
+	PORT_BASE,
+	PORT3 = PORT_BASE,
 	PORT4,
 	PORT_MAX
 };
 
 typedef struct _config_input {
 	BYTE permit_updown_leftright;
+	BYTE hide_zapper_cursor;
 	BYTE controller_mode;
-#if defined (__WIN32__)
+	BYTE expansion;
+#if defined (_WIN32)
 	GUID shcjoy_id;
 #else
 	BYTE shcjoy_id;
@@ -83,28 +87,42 @@ typedef struct _turbo_button {
 } _turbo_button;
 typedef struct _port {
 	BYTE type;
-#if defined (__WIN32__)
+#if defined (_WIN32)
 	GUID joy_id;
 #else
 	BYTE joy_id;
 #endif
 
-	/* standard controller */
+	// decodifica tastiera e joystick
+	DBWORD input[2][24];
+
+	// standard controller
 	BYTE type_pad;
 	BYTE index;
 	BYTE data[24];
-	DBWORD input[2][24];
-	/* turbo buttons */
+	// turbo buttons
 	_turbo_button turbo[2];
-	/* zapper */
-	BYTE zapper;
 } _port;
-typedef struct _four_score {
-	BYTE count;
-} _four_score;
+typedef struct _arkanoid {
+	int x, rdx, button;
+} _arkanoid;
 typedef struct _array_pointers_port {
 	_port *port[PORT_MAX];
 } _array_pointers_port;
+typedef struct _port_funct {
+	void (*input_wr)(BYTE *value, BYTE nport);
+	void (*input_rd)(BYTE *value, BYTE nport, BYTE shift);
+	void (*input_add_event)(BYTE index);
+	BYTE (*input_decode_event)(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *port);
+} _port_funct;
+
+extern _r4016 r4016;
+extern _port port[PORT_MAX];
+extern _port_funct port_funct[PORT_MAX];
+extern _arkanoid arkanoid[PORT_BASE];
+
+extern BYTE (*input_wr_reg)(BYTE value);
+extern BYTE (*input_rd_reg[2])(BYTE openbus, BYTE nport);
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -112,36 +130,12 @@ typedef struct _array_pointers_port {
 #define EXTERNC
 #endif
 
-EXTERNC _r4016 r4016;
-EXTERNC _port port[PORT_MAX];
-EXTERNC _four_score four_score[PORT2 + 1];
-
 EXTERNC void input_init(BYTE set_cursor);
 
-EXTERNC BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, BYTE nport);
+EXTERNC void input_wr_disabled(BYTE *value, BYTE nport);
+EXTERNC void input_rd_disabled(BYTE *value, BYTE nport, BYTE shift);
 
-EXTERNC BYTE input_decode_event_standard(BYTE mode, DBWORD event, BYTE type, _port *port);
-EXTERNC void input_add_event_standard(BYTE index);
-EXTERNC BYTE input_wr_reg_standard(BYTE value);
-EXTERNC BYTE input_rd_reg_standard(BYTE openbus, WORD **screen_index, BYTE nport);
-
-EXTERNC BYTE input_rd_reg_famicon_expansion(BYTE openbus, WORD **screen_index, BYTE nport);
-
-EXTERNC BYTE input_wr_reg_four_score(BYTE value);
-EXTERNC BYTE input_rd_reg_four_score(BYTE openbus, WORD **screen_index, BYTE nport);
-
-EXTERNC BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport);
-EXTERNC BYTE input_zapper_is_connected(_port *array);
-
-EXTERNC BYTE input_wr_reg_vs(BYTE value);
-EXTERNC BYTE input_rd_reg_vs_disabled(BYTE openbus, WORD **screen_index, BYTE nport);
-EXTERNC BYTE input_rd_reg_vs_standard(BYTE openbus, WORD **screen_index, BYTE nport);
-EXTERNC BYTE input_rd_reg_vs_zapper(BYTE openbus, WORD **screen_index, BYTE nport);
-
-EXTERNC BYTE (*input_decode_event[PORT_MAX])(BYTE mode, DBWORD event, BYTE type, _port *port);
-EXTERNC void (*input_add_event[PORT_MAX])(BYTE index);
-EXTERNC BYTE (*input_wr_reg)(BYTE value);
-EXTERNC BYTE (*input_rd_reg[PORT2 + 1])(BYTE openbus, WORD **screen_index, BYTE nport);
+EXTERNC BYTE input_draw_target();
 
 #undef EXTERNC
 

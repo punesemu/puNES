@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,10 @@
 #include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
+
+struct _m120 {
+	BYTE *prg_ram_rd;
+} m120;
 
 void map_init_120(void) {
 	EXTCL_CPU_WR_MEM(120);
@@ -50,7 +54,7 @@ void extcl_cpu_wr_mem_120(WORD address, BYTE value) {
 		m120.prg_ram_rd = prg_chip_byte_pnt(0, value << 13);
 	}
 }
-BYTE extcl_cpu_rd_mem_120(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_120(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {
 		return (openbus);
 	}

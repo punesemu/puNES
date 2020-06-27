@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,11 @@
 #include "cpu.h"
 #include "irqA12.h"
 #include "save_slot.h"
+
+struct _m222 {
+	BYTE count;
+	BYTE delay;
+} m222;
 
 void map_init_222(void) {
 	EXTCL_CPU_WR_MEM(222);

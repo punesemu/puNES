@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,42 +21,51 @@
 
 #include "apu.h"
 #include "input.h"
-#include "overscan.h"
 
+typedef struct _last_pos {
+	int x;
+	int y;
+} _last_pos;
+typedef struct _toolbar {
+	BYTE area;
+	BYTE hidden;
+} _toolbar;
 typedef struct _config {
 	BYTE save_on_exit;
 	BYTE mode;
 	BYTE samplerate;
 	BYTE channels_mode;
 	double stereo_delay;
-	BYTE audio_quality;
 	BYTE audio_buffer_factor;
 	BYTE swap_duty;
-	BYTE fps;
-	BYTE frameskip;
+	BYTE rewind_minutes;
 	BYTE ff_velocity;
 	BYTE hide_sprites;
 	BYTE hide_background;
 	BYTE unlimited_sprites;
-#if defined (WITH_OPENGL)
-	BYTE render;
-#endif
 	BYTE scale;
 	BYTE fullscreen;
 	BYTE fullscreen_in_window;
 	DBWORD filter;
+	DBWORD shader;
 	BYTE ntsc_format;
 	BYTE palette;
 	BYTE disable_swap_emphasis_pal;
 	BYTE vsync;
+	BYTE integer_scaling;
 	BYTE stretch;
 	BYTE oscan;
+	BYTE oscan_black_borders;
+	BYTE oscan_black_borders_fscr;
 	BYTE oscan_default;
 	BYTE pixel_aspect_ratio;
 	BYTE PAR_soft_stretch;
 	BYTE interpolation;
 	BYTE cheat_mode;
 	BYTE txt_on_screen;
+	BYTE screen_rotation;
+	BYTE text_rotation;
+	BYTE show_fps;
 	BYTE input_display;
 	BYTE disable_tv_noise;
 	BYTE disable_sepia_color;
@@ -65,13 +74,15 @@ typedef struct _config {
 #endif
 	BYTE bck_pause;
 	WORD language;
-	BYTE disable_new_menu;
 	WORD dipswitch;
 	BYTE ppu_overclock;
 	BYTE ppu_overclock_dmc_control_disabled;
 	WORD extra_vb_scanlines;
 	WORD extra_pr_scanlines;
 	BYTE save_battery_ram_file;
+	BYTE nsf_player_effect;
+	BYTE nsf_player_nsfe_playlist;
+	BYTE nsf_player_nsfe_fadeout;
 
 	_config_input input;
 	_config_apu apu;
@@ -79,24 +90,19 @@ typedef struct _config {
 	uTCHAR shader_file[LENGTH_FILE_NAME_LONG];
 	uTCHAR palette_file[LENGTH_FILE_NAME_LONG];
 	uTCHAR save_file[LENGTH_FILE_NAME_LONG];
+	uTCHAR gg_rom_file[LENGTH_FILE_NAME_LONG];
+	uTCHAR fds_bios_file[LENGTH_FILE_NAME_LONG];
+	uTCHAR last_import_cheat_path[LENGTH_FILE_NAME_LONG];
 
 	uTCHAR audio_output[100];
 	uTCHAR audio_input[100];
 
-	struct _last_pos {
-		int x;
-		int y;
-	} last_pos;
+	_last_pos last_pos;
+	_last_pos last_pos_settings;
+	_toolbar toolbar;
 } _config;
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC _config cfg_from_file, *cfg;
-
-#undef EXTERNC
+extern _config *cfg;
+extern _config cfg_from_file;
 
 #endif /* CONF_H_ */

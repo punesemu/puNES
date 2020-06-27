@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,12 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE sync_31(void);
+INLINE static void sync_31(void);
+
+struct _m31 {
+	WORD regs[8];
+	BYTE *rom_4k[8];
+} m31;
 
 void map_init_31(void) {
 	EXTCL_CPU_WR_MEM(31);
@@ -39,7 +44,6 @@ void map_init_31(void) {
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
 }
-
 void extcl_cpu_wr_mem_31(WORD address, BYTE value) {
 	if ((address < 0x5000) && (address > 0x5FFF)) {
 		return;
@@ -47,7 +51,7 @@ void extcl_cpu_wr_mem_31(WORD address, BYTE value) {
 	m31.regs[address & 0x0007] = value;
 	sync_31();
 }
-BYTE extcl_cpu_rd_mem_31(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_31(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address < 0x8000) {
 		return (openbus);
 	}
@@ -63,7 +67,7 @@ BYTE extcl_save_mapper_31(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE sync_31(void) {
+INLINE static void sync_31(void) {
 	BYTE i, value;
 
 	for (i = 0; i < 8; ++i) {

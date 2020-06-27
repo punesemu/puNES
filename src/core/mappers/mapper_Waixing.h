@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,13 +33,6 @@ enum {
 	SH2,
 	BAD_SUGOROQUEST
 };
-
-struct _waixing {
-	WORD prg_map[4];
-	WORD chr_map[8];
-	BYTE reg;
-	WORD ctrl[8];
-} waixing;
 
 void map_init_Waixing(BYTE model);
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ enum irqA12_misc_value {
 	irqA12_min_cpu_cycles_prev_rising_edge = 18
 };
 
-typedef struct {
+typedef struct _irqA12 {
 	BYTE present;
 	BYTE delay;
 	BYTE counter;
@@ -104,9 +104,9 @@ typedef struct {
 	} race;
 } _irqA12;
 
-_irqA12 irqA12;
+extern _irqA12 irqA12;
 /* questo non e' necessario salvarlo */
-BYTE irqA12_delay;
+extern BYTE irqA12_delay;
 
 void irqA12_IO(WORD value, WORD value_old);
 void irqA12_BS(void);

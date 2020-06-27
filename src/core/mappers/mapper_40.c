@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,14 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-BYTE *prg_6000;
+struct _m40 {
+	BYTE enabled;
+	WORD count;
+	BYTE delay;
+} m40;
+struct _m40tmp {
+	BYTE *prg_6000;
+} m40tmp;
 
 void map_init_40(void) {
 	EXTCL_CPU_WR_MEM(40);
@@ -39,7 +46,7 @@ void map_init_40(void) {
 		mapper.rom_map_to[2] = 0;
 	}
 
-	prg_6000 = prg_chip_byte_pnt(0, 6 << 13);
+	m40tmp.prg_6000 = prg_chip_byte_pnt(0, 6 << 13);
 
 	mapper.rom_map_to[0] = 4;
 	mapper.rom_map_to[1] = 5;
@@ -68,12 +75,12 @@ void extcl_cpu_wr_mem_40(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_40(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_40(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {
 		return (openbus);
 	}
 
-	return (prg_6000[address & 0x1FFF]);
+	return (m40tmp.prg_6000[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_40(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m40.enabled);

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,10 +22,17 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static void INLINE lh10_update(void);
+INLINE static void lh10_update(void);
 
-BYTE *lh10_prg_6000;
-BYTE *lh10_prg_C000;
+struct _lh10 {
+	BYTE ind;
+	BYTE reg[8];
+} lh10;
+struct _lh10tmp {
+	BYTE *prg_6000;
+	BYTE *prg_C000;
+} lh10tmp;
+
 
 void map_init_LH10(void) {
 	EXTCL_AFTER_MAPPER_INIT(LH10);
@@ -58,7 +65,7 @@ void extcl_cpu_wr_mem_LH10(WORD address, BYTE value) {
 		case 0xC001:
 		case 0xD000:
 		case 0xD001:
-			lh10_prg_C000[address & 0x1FFF] = value;
+			lh10tmp.prg_C000[address & 0x1FFF] = value;
 			return;
 		case 0x8000:
 		case 0x9000:
@@ -79,14 +86,14 @@ void extcl_cpu_wr_mem_LH10(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_LH10(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_LH10(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	switch (address & 0xF000) {
 		case 0x6000:
 		case 0x7000:
-			return (lh10_prg_6000[address & 0x1FFF]);
+			return (lh10tmp.prg_6000[address & 0x1FFF]);
 		case 0xC000:
 		case 0xD000:
-			return (lh10_prg_C000[address & 0x1FFF]);
+			return (lh10tmp.prg_C000[address & 0x1FFF]);
 	}
 	return (openbus);
 }
@@ -101,13 +108,13 @@ BYTE extcl_save_mapper_LH10(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE lh10_update(void) {
+INLINE static void lh10_update(void) {
 	WORD value;
 
 	// 0x6000 - 0x7000
 	value = 0xFE;
 	control_bank(info.prg.rom[0].max.banks_8k)
-	lh10_prg_6000 = prg_chip_byte_pnt(0, value << 13);
+	lh10tmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
 
 	// 0x8000 - 0x9000
 	value = lh10.reg[6];
@@ -122,5 +129,5 @@ static void INLINE lh10_update(void) {
 	prg.rom_8k[1] = prg_chip_byte_pnt(prg.rom_chip[0], mapper.rom_map_to[1] << 13);
 
 	// 0xC000 - 0xD000
-	lh10_prg_C000 = &prg.ram_plus_8k[0];
+	lh10tmp.prg_C000 = &prg.ram_plus_8k[0];
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -160,6 +160,14 @@
 	}\
 }
 
+struct _m45 {
+	BYTE reg[4];
+	BYTE index;
+	BYTE read;
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m45;
+
 void map_init_45(void) {
 	EXTCL_CPU_WR_MEM(45);
 	EXTCL_CPU_RD_MEM(45);
@@ -233,7 +241,7 @@ void extcl_cpu_wr_mem_45(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_45(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_45(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		WORD adr = 1 << (m45.read + 4);
 

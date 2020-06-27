@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,10 @@
 	value = m219.reg[2] | ((save >> 1) | a);\
 	control_bank(info.chr.rom[0].max.banks_1k)\
 	chr.bank_1k[b] = chr_chip_byte_pnt(0, value << 10)
+
+struct _m219 {
+	BYTE reg[3];
+} m219;
 
 void map_init_219(void) {
 	EXTCL_CPU_WR_MEM(219);

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,10 +23,10 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE unif8237_update_prg(void);
-static void INLINE unif8237_update_chr(void);
-static void INLINE unif8237a_update_prg(void);
-static void INLINE unif8237a_update_chr(void);
+INLINE static void unif8237_update_prg(void);
+INLINE static void unif8237_update_chr(void);
+INLINE static void unif8237a_update_prg(void);
+INLINE static void unif8237a_update_chr(void);
 
 #define unif8237_prg_8k_a(vl) value = ((unif8237.reg[1] & 0x03) << 5) | (vl & 0x0F) | bnk0
 #define unif8237_prg_8k_b(vl) value = ((unif8237.reg[1] & 0x03) << 5) | (vl & 0x1F)
@@ -85,13 +85,13 @@ static void INLINE unif8237a_update_chr(void);
 			break;\
 	}
 #define unif8237_updt_prg()\
-	if (unif8237_model == U8237) {\
+	if (unif8237tmp.model == U8237) {\
 		unif8237_update_prg();\
 	} else {\
 		unif8237a_update_prg();\
 	}
 #define unif8237_updt_prg_and_chr()\
-	if (unif8237_model == U8237) {\
+	if (unif8237tmp.model == U8237) {\
 		unif8237_update_prg();\
 		unif8237_update_chr();\
 	} else {\
@@ -119,7 +119,14 @@ static const BYTE unif8237_adr[8][8] = {
 	{ 0, 1, 2, 3, 4, 5, 6, 7 },
 	{ 0, 1, 2, 3, 4, 5, 6, 7 },
 };
-BYTE unif8237_model;
+struct _unif8237 {
+	BYTE reg[4];
+	WORD prg_map[4];
+	WORD chr_map[8];
+} unif8237;
+struct _unif8237tmp {
+	BYTE model;
+} unif8237tmp;
 
 void map_init_UNIF8237(BYTE model) {
 	EXTCL_CPU_WR_MEM(UNIF8237);
@@ -139,7 +146,7 @@ void map_init_UNIF8237(BYTE model) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&unif8237, 0x00, sizeof(unif8237));
 
-	unif8237_model = model;
+	unif8237tmp.model = model;
 
 	{
 		BYTE i;
@@ -224,7 +231,7 @@ BYTE extcl_save_mapper_UNIF8237(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE unif8237_update_prg(void) {
+INLINE static void unif8237_update_prg(void) {
 	BYTE value;
 
 	if (unif8237.reg[0] & 0x40) {
@@ -292,7 +299,7 @@ static void INLINE unif8237_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE unif8237_update_chr(void) {
+INLINE static void unif8237_update_chr(void) {
 	BYTE i;
 	WORD value;
 
@@ -307,7 +314,7 @@ static void INLINE unif8237_update_chr(void) {
 		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
 	}
 }
-static void INLINE unif8237a_update_prg(void) {
+INLINE static void unif8237a_update_prg(void) {
 	BYTE value;
 
 	if (unif8237.reg[0] & 0x40) {
@@ -377,7 +384,7 @@ static void INLINE unif8237a_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE unif8237a_update_chr(void) {
+INLINE static void unif8237a_update_chr(void) {
 	BYTE i;
 	WORD value;
 

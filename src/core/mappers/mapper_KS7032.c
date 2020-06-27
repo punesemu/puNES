@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,9 +23,21 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE ks7032_update(void);
+INLINE static void ks7032_update(void);
 
-BYTE *ks7032_prg_6000;
+struct _ks7032 {
+	BYTE ind;
+	BYTE reg[8];
+	struct _ks7032_irq {
+		BYTE used;
+		BYTE active;
+		WORD count;
+		WORD reload;
+	} irq;
+} ks7032;
+struct _ks7032tmp {
+	BYTE *prg_6000;
+} ks7032tmp;
 
 void map_init_KS7032(void) {
 	EXTCL_CPU_WR_MEM(KS7032);
@@ -76,9 +88,9 @@ void extcl_cpu_wr_mem_KS7032(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_KS7032(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_KS7032(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (ks7032_prg_6000[address & 0x1FFF]);
+		return (ks7032tmp.prg_6000[address & 0x1FFF]);
 	}
 	return (openbus);
 }
@@ -107,22 +119,23 @@ void extcl_cpu_every_cycle_KS7032(void) {
 		irq.high |= EXT_IRQ;
 	}
 }
-static void INLINE ks7032_update(void) {
+
+INLINE static void ks7032_update(void) {
 	WORD value;
 
 	value = ks7032.reg[4];
 	control_bank(info.prg.rom[0].max.banks_8k)
-	ks7032_prg_6000 = prg_chip_byte_pnt(0, value << 13);
+	ks7032tmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
 
-    value = ks7032.reg[1];
+	value = ks7032.reg[1];
 	control_bank(info.prg.rom[0].max.banks_8k)
 	map_prg_rom_8k(1, 0, value);
 
-    value = ks7032.reg[2];
+	value = ks7032.reg[2];
 	control_bank(info.prg.rom[0].max.banks_8k)
 	map_prg_rom_8k(1, 1, value);
 
-    value = ks7032.reg[3];
+	value = ks7032.reg[3];
 	control_bank(info.prg.rom[0].max.banks_8k)
 	map_prg_rom_8k(1, 2, value);
 

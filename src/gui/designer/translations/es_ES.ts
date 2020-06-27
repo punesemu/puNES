@@ -1501,7 +1501,7 @@
     </message>
     <message>
       <source>Portuguese (Brazil)</source>
-      <translation type="unfinished">Portuguese (Brazil)</translation>
+      <translation>Portugués (Brasil)</translation>
     </message>
   </context>
   <context>

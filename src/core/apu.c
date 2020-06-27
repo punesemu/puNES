@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,16 +21,27 @@
 #include "ppu.h"
 #include "cpu.h"
 #include "clock.h"
-#include "snd.h"
+#include "audio/snd.h"
 #include "mem_map.h"
 #include "fds.h"
+#include "nsf.h"
 #include "conf.h"
 #include "mappers.h"
 #include "info.h"
 
-void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
+_nla_table nla_table;
+_apu apu;
+_r4011 r4011;
+_r4015 r4015;
+_r4017 r4017;
+_apuSquare S1, S2;
+_apuTriangle TR;
+_apuNoise NS;
+_apuDMC DMC;
+
+void apu_tick(BYTE *hwtick) {
 	/* sottraggo il numero di cicli eseguiti */
-	apu.cycles -= cycles_cpu;
+	apu.cycles--;
 	/*
 	 * questo flag sara' a TRUE solo nel ciclo
 	 * in cui viene eseguito il length counter.
@@ -41,18 +52,11 @@ void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 	 * questo il ciclo successivo, valorizzo il
 	 * registro.
 	 */
-#if defined (VECCHIA_GESTIONE_JITTER)
-	if (r4017.jitter.delay) {
-		r4017.jitter.delay = FALSE;
-		r4017_jitter();
-	}
-#else
 	if (r4017.jitter.delay) {
 		r4017.jitter.delay = FALSE;
 		r4017_jitter(0)
 	}
 	r4017_reset_frame()
-#endif
 
 	/* quando apu.cycles e' a 0 devo eseguire uno step */
 	if (!apu.cycles) {
@@ -186,8 +190,8 @@ void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 	 * eseguo un ticket per ogni canale
 	 * valorizzandone l'output.
 	 */
-	square_tick(S1, cfg->swap_duty)
-	square_tick(S2, cfg->swap_duty)
+	square_tick(S1, cfg->swap_duty, apu)
+	square_tick(S2, cfg->swap_duty, apu)
 	triangle_tick()
 	noise_tick()
 	dmc_tick()
@@ -246,6 +250,11 @@ void apu_turn_on(void) {
 		DMC.empty = TRUE;
 		DMC.silence = TRUE;
 		DMC.counter_out = 8;
+		// sembra che l'address del DMC al power on dia valorizzato a 0xC000
+		// e la lunghezza del sample sia settato a 1 byte.
+		// http://forums.nesdev.com/viewtopic.php?f=3&t=18278
+		DMC.length = 1;
+		DMC.address_start = 0xC000;
 	} else {
 		S1.output = 0;
 		S2.output = 0;
@@ -254,12 +263,8 @@ void apu_turn_on(void) {
 		DMC.output = 0;
 		r4017.jitter.delay = FALSE;
 		r4017.reset_frame_delay = 0;
-#if defined (VECCHIA_GESTIONE_JITTER)
-		r4017_jitter();
-#else
 		r4017_jitter(9999)
 		r4017_reset_frame()
-#endif
 		r4015.value = 0;
 		S1.length.enabled = 0;
 		S1.length.value = 0;

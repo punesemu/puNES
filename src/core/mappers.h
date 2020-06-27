@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,10 +19,11 @@
 #ifndef MAPPERS_H_
 #define MAPPERS_H_
 
-/* INES/NES2.0 */
 #include "common.h"
 #include "external_calls.h"
 #include "unif.h"
+#include "mappers/mapper_NSF.h"
+/* INES/NES2.0 */
 #include "mappers/mapper_0.h"
 #include "mappers/mapper_MMC1.h"
 #include "mappers/mapper_MMC2andMMC4.h"
@@ -153,6 +154,7 @@
 #include "mappers/mapper_166.h"
 #include "mappers/mapper_SC_127.h"
 #include "mappers/mapper_190.h"
+#include "mappers/mapper_36.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"
@@ -208,6 +210,8 @@
 #include "mappers/mapper_KS7031.h"
 #include "mappers/mapper_DRAGONFIGHTER.h"
 #include "mappers/mapper_Super24in1.h"
+#include "mappers/mapper_EDU2000.h"
+#include "mappers/mapper_DREAMTECH01.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\
@@ -256,15 +260,15 @@ typedef struct _mapper {
 	BYTE mirroring;
 	BYTE write_vram;
 	WORD rom_map_to[4];
-	BYTE *internal_struct[2];
-	WORD internal_struct_size[2];
+	BYTE *internal_struct[10];
+	WORD internal_struct_size[10];
 } _mapper;
-
-struct _trainer {
+typedef struct _trainer {
 	BYTE data[512];
-} trainer;
+} _trainer;
 
-_mapper mapper;
+extern _trainer trainer;
+extern _mapper mapper;
 
 BYTE map_init(void);
 void map_quit(void);

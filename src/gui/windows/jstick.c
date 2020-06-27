@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ enum joy_misc {
 #define JOY_AXIS_SENSIBILITY 0.45f
 #define JOY_AXIS_SENSIBILITY_DIALOG 0.45f
 #define JOY_AXIS_TO_FLOAT(vl)\
-	(vl - JOY_AXIS_MIN) / (float) (JOY_AXIS_MAX - JOY_AXIS_MIN) * 2.0f - 1.0f
+	(vl - JOY_AXIS_MIN) / (float)(JOY_AXIS_MAX - JOY_AXIS_MIN) * 2.0f - 1.0f
 
 typedef struct XINPUT_GAMEPAD_EX {
 	WORD wButtons;
@@ -120,17 +120,13 @@ static BOOL CALLBACK cb_count_axes(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID c
 static BOOL CALLBACK cb_count_buttons(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID context);
 static BOOL CALLBACK cb_enum_axes(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID context);
 static BOOL CALLBACK cb_enum_buttons(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID context);
-static INLINE DBWORD js_update_button(_js *joy, _port *port, joy_states sm, BYTE index, BYTE value,
-		BYTE *mode);
-static INLINE DBWORD js_update_axis_float(_js *joy, _port *port, joy_states sm, BYTE index,
-		float value, BYTE *mode);
-static INLINE DBWORD js_update_axis(_js *joy, _port *port, joy_states sm, BYTE index, LONG value,
-		BYTE *mode);
-static INLINE void js_pov_to_xy(DWORD pov, float *x, float *y);
-static INLINE DBWORD js_update_pov(_js *joy, _port *port, joy_states sm, BYTE index, DWORD value,
-		BYTE *mode);
-static INLINE void js_lock(void);
-static INLINE void js_unlock(void);
+INLINE static DBWORD js_update_button(_js *joy, _port *port, joy_states sm, BYTE index, BYTE value, BYTE *mode);
+INLINE static DBWORD js_update_axis_float(_js *joy, _port *port, joy_states sm, BYTE index, float value, BYTE *mode);
+INLINE static DBWORD js_update_axis(_js *joy, _port *port, joy_states sm, BYTE index, LONG value, BYTE *mode);
+INLINE static void js_pov_to_xy(DWORD pov, float *x, float *y);
+INLINE static DBWORD js_update_pov(_js *joy, _port *port, joy_states sm, BYTE index, DWORD value, BYTE *mode);
+INLINE static void js_lock(void);
+INLINE static void js_unlock(void);
 
 DEFINE_GUID(IID_ZeroGUID,              MAKELONG(0x0000, 0x0000), 0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
 DEFINE_GUID(IID_ValveStreamingGamepad, MAKELONG(0x28DE, 0x11FF), 0x0000, 0x0000, 0x00, 0x00, 0x50, 0x49, 0x44, 0x56, 0x49, 0x44);
@@ -329,24 +325,32 @@ struct _jstick {
 	DWORD (WINAPI *XInputGetCapabilities_proc)(DWORD dwUserIndex, DWORD dwFlags, XINPUT_CAPABILITIES *pCapabilities);
 } jstick;
 
+_js js[PORT_MAX], js_shcut;
+
 void js_init(BYTE first_time) {
 	int i;
 
 	if (first_time) {
 		memset(&jstick, 0x00, sizeof(jstick));
 
+#if defined (__GNUC__)
+#if __GNUC__ >= 8
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-function-type"
+#endif
+#endif
 		if (((jstick.xinput = LoadLibrary("XInput1_4.dll")) == NULL) &&
-				((jstick.xinput = LoadLibrary("XInput1_3.dll")) == NULL)) {
+			((jstick.xinput = LoadLibrary("XInput1_3.dll")) == NULL)) {
 			fprintf(stderr, "XInput : failed to load XInput dll\n");
 			jstick.xinput_available = FALSE;
 		} else {
 			jstick.xinput_available = TRUE;
-			jstick.XInputGetStateEx_proc = (DWORD (WINAPI *)(DWORD, XINPUT_STATE_EX *))
-					GetProcAddress(jstick.xinput, (LPCSTR) 100);
-			jstick.XInputGetState_proc = (DWORD (WINAPI *)(DWORD, XINPUT_STATE *))
-					GetProcAddress(jstick.xinput, "XInputGetState");
-			jstick.XInputGetCapabilities_proc = (DWORD (WINAPI *)(DWORD, DWORD, XINPUT_CAPABILITIES *))
-					GetProcAddress(jstick.xinput, "XInputGetCapabilities");
+			jstick.XInputGetStateEx_proc =
+				(DWORD (WINAPI *)(DWORD, XINPUT_STATE_EX *))GetProcAddress(jstick.xinput, (LPCSTR) 100);
+			jstick.XInputGetState_proc =
+				(DWORD (WINAPI *)(DWORD, XINPUT_STATE *))GetProcAddress(jstick.xinput, "XInputGetState");
+			jstick.XInputGetCapabilities_proc =
+				(DWORD (WINAPI *)(DWORD, DWORD, XINPUT_CAPABILITIES *))GetProcAddress(jstick.xinput, "XInputGetCapabilities");
 		}
 
 		if ((jstick.di8 = LoadLibrary("DINPUT8.dll")) == NULL) {
@@ -354,12 +358,15 @@ void js_init(BYTE first_time) {
 		} else {
 			HRESULT (WINAPI *DirectInput8Create_proc)(HINSTANCE, DWORD, REFIID, LPVOID *, LPUNKNOWN);
 
-			DirectInput8Create_proc = (HRESULT (WINAPI *)(HINSTANCE, DWORD, REFIID, LPVOID *, LPUNKNOWN))
-					GetProcAddress(jstick.di8, "DirectInput8Create");
-			DirectInput8Create_proc(GetModuleHandle(NULL), DIRECTINPUT_VERSION,
-					&IID_IDirectInput8W, (void **) &jstick.directInputInterface, NULL);
+			DirectInput8Create_proc =
+				(HRESULT (WINAPI *)(HINSTANCE, DWORD, REFIID, LPVOID *, LPUNKNOWN))GetProcAddress(jstick.di8, "DirectInput8Create");
+			DirectInput8Create_proc(GetModuleHandle(NULL), DIRECTINPUT_VERSION, &IID_IDirectInput8W, (void **)&jstick.directInputInterface, NULL);
 		}
-
+#if defined (__GNUC__)
+#if __GNUC__ >= 8
+#pragma GCC diagnostic pop
+#endif
+#endif
 		jstick.lock = CreateSemaphore(NULL, 1, 2, NULL);
 	}
 
@@ -402,13 +409,13 @@ void js_control(_js *joy, _port *port) {
 	_jstick_device *jdev;
 	BYTE mode = 0;
 
-#define	js_control_button(index, bts)\
+#define js_control_button(index, bts)\
 	js_update_button(joy, port, JOY_ST_CTRL, index, bts, &mode)
-#define	js_control_axis_float(index, axs)\
+#define js_control_axis_float(index, axs)\
 	js_update_axis_float(joy, port, JOY_ST_CTRL, index, axs, &mode)
-#define	js_control_axis(index, axs)\
+#define js_control_axis(index, axs)\
 	js_update_axis(joy, port, JOY_ST_CTRL, index, axs, &mode)
-#define	js_control_pov(index, pov)\
+#define js_control_pov(index, pov)\
 	js_update_pov(joy, port, JOY_ST_CTRL, index, pov, &mode)
 
 	js_lock();
@@ -499,12 +506,10 @@ void js_control(_js *joy, _port *port) {
 			DWORD count = INPUT_QUEUE_SIZE;
 			unsigned int i;
 
-			rc = IDirectInputDevice8_GetDeviceData(jdev->di8device,
-					sizeof(DIDEVICEOBJECTDATA), events, &count, 0);
+			rc = IDirectInputDevice8_GetDeviceData(jdev->di8device, sizeof(DIDEVICEOBJECTDATA), events, &count, 0);
 			if ((rc == DIERR_INPUTLOST) || (rc == DIERR_NOTACQUIRED)) {
 				IDirectInputDevice8_Acquire(jdev->di8device);
-				rc = IDirectInputDevice8_GetDeviceData(jdev->di8device,
-						sizeof(DIDEVICEOBJECTDATA), events, &count, 0);
+				rc = IDirectInputDevice8_GetDeviceData(jdev->di8device, sizeof(DIDEVICEOBJECTDATA), events, &count, 0);
 			}
 			if (!SUCCEEDED(rc)) {
 				jdev->present = FALSE;
@@ -536,8 +541,7 @@ void js_control(_js *joy, _port *port) {
 					&state);
 			if ((rc == DIERR_INPUTLOST) || (rc == DIERR_NOTACQUIRED)) {
 				IDirectInputDevice8_Acquire(jdev->di8device);
-				rc = IDirectInputDevice8_GetDeviceState(jdev->di8device, sizeof(DIJOYSTATE2),
-						&state);
+				rc = IDirectInputDevice8_GetDeviceState(jdev->di8device, sizeof(DIJOYSTATE2), &state);
 			}
 			if (rc != DI_OK) {
 				jdev->present = FALSE;
@@ -605,7 +609,7 @@ void js_control(_js *joy, _port *port) {
 }
 
 BYTE js_is_connected(int dev) {
-	if (dev >= jstick.jdd.count) {
+	if (dev >= (int)jstick.jdd.count) {
 		return (EXIT_ERROR);
 	}
 
@@ -622,13 +626,14 @@ BYTE js_is_null(GUID *guid) {
 	return (js_guidcmp(guid, (GUID *) &IID_ZeroGUID));
 }
 void js_set_id(GUID *guid, int dev) {
-	if (dev >= jstick.jdd.count) {
+	if (dev >= (int)jstick.jdd.count) {
 		memcpy(guid, &IID_ZeroGUID, sizeof(GUID));
+		return;
 	}
 	memcpy(guid, &jstick.jdd.devices[dev].guid, sizeof(GUID));
 }
 uTCHAR *js_name_device(int dev) {
-	if (dev >= jstick.jdd.count) {
+	if (dev >= (int)jstick.jdd.count) {
 		return (NULL);
 	}
 	return (jstick.jdd.devices[dev].product_name);
@@ -658,18 +663,18 @@ DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD le
 	}
 	return (js);
 }
-DBWORD js_read_in_dialog(GUID *guid, int fd) {
+DBWORD js_read_in_dialog(GUID *guid, UNUSED(int fd)) {
 	DBWORD value = 0;
 	_jstick_device *jdev = NULL;
 	float fl, x, y;
-	int i;
+	unsigned int i;
 
-#define	js_read_in_dialog_button(index, bts)\
+#define js_read_in_dialog_button(index, bts)\
 	if (bts) {\
 		value = index | 0x400;\
 		goto js_read_in_dialog_exit;\
 	}
-#define	js_read_in_dialog_axis_float(index, axs)\
+#define js_read_in_dialog_axis_float(index, axs)\
 	fl = axs;\
 	if (fl >= JOY_AXIS_SENSIBILITY_DIALOG) {\
 		value = (index << 1) + 1 + 1;\
@@ -678,9 +683,9 @@ DBWORD js_read_in_dialog(GUID *guid, int fd) {
 		value = (index << 1) + 1;\
 		goto js_read_in_dialog_exit;\
 	}
-#define	js_read_in_dialog_axis(index, axs)\
+#define js_read_in_dialog_axis(index, axs)\
 	js_read_in_dialog_axis_float(index, JOY_AXIS_TO_FLOAT(axs))
-#define	js_read_in_dialog_pov(index, pov)\
+#define js_read_in_dialog_pov(index, pov)\
 	if (LOWORD(pov) == 0xFFFF) {\
 		x = y = 0.0f;\
 	} else {\
@@ -768,12 +773,10 @@ DBWORD js_read_in_dialog(GUID *guid, int fd) {
 			IDirectInputDevice8_Poll(jdev->di8device);
 		}
 
-		rc = IDirectInputDevice8_GetDeviceState(jdev->di8device, sizeof(DIJOYSTATE2),
-				&state);
+		rc = IDirectInputDevice8_GetDeviceState(jdev->di8device, sizeof(DIJOYSTATE2), &state);
 		if ((rc == DIERR_INPUTLOST) || (rc == DIERR_NOTACQUIRED)) {
 			IDirectInputDevice8_Acquire(jdev->di8device);
-			rc = IDirectInputDevice8_GetDeviceState(jdev->di8device, sizeof(DIJOYSTATE2),
-					&state);
+			rc = IDirectInputDevice8_GetDeviceState(jdev->di8device, sizeof(DIJOYSTATE2), &state);
 		}
 		if (rc != DI_OK) {
 			goto js_read_in_dialog_exit;
@@ -858,13 +861,13 @@ BYTE js_shcut_read(_js_sch *js_sch) {
 		js_unlock();\
 		return (EXIT_OK);\
 	}
-#define	js_shcut_read_button(index, bts)\
+#define js_shcut_read_button(index, bts)\
 	_js_shcut_read_control(js_update_button, index, bts)
-#define	js_shcut_read_axis_float(index, axs)\
+#define js_shcut_read_axis_float(index, axs)\
 	_js_shcut_read_control(js_update_axis_float, index, axs)
-#define	js_shcut_read_axis(index, axs)\
+#define js_shcut_read_axis(index, axs)\
 	_js_shcut_read_control(js_update_axis, index, axs)
-#define	js_shcut_read_pov(index, pov)\
+#define js_shcut_read_pov(index, pov)\
 	_js_shcut_read_control(js_update_pov, index, pov)
 
 	js_sch->value = 0;
@@ -954,12 +957,10 @@ BYTE js_shcut_read(_js_sch *js_sch) {
 			IDirectInputDevice8_Poll(jdev->di8device);
 		}
 
-		rc = IDirectInputDevice8_GetDeviceState(jdev->di8device, sizeof(DIJOYSTATE2),
-				&state);
+		rc = IDirectInputDevice8_GetDeviceState(jdev->di8device, sizeof(DIJOYSTATE2), &state);
 		if ((rc == DIERR_INPUTLOST) || (rc == DIERR_NOTACQUIRED)) {
 			IDirectInputDevice8_Acquire(jdev->di8device);
-			rc = IDirectInputDevice8_GetDeviceState(jdev->di8device, sizeof(DIJOYSTATE2),
-					&state);
+			rc = IDirectInputDevice8_GetDeviceState(jdev->di8device, sizeof(DIJOYSTATE2), &state);
 		}
 		if (rc != DI_OK) {
 			jdev->present = FALSE;
@@ -1035,19 +1036,17 @@ static void js_detect_devices(void) {
 
 	jstick.xinput_player_index = 0;
 
-	if ((GetRawInputDeviceList(NULL, &raw.count, sizeof(RAWINPUTDEVICELIST)) != -1) &&
-			(raw.count > 0)) {
+	if ((GetRawInputDeviceList(NULL, &raw.count, sizeof(RAWINPUTDEVICELIST)) != (UINT)-1) && (raw.count > 0)) {
 		raw.list = malloc(sizeof(RAWINPUTDEVICELIST) * raw.count);
-		if (GetRawInputDeviceList(raw.list, &raw.count, sizeof(RAWINPUTDEVICELIST)) == -1) {
+		if (GetRawInputDeviceList(raw.list, &raw.count, sizeof(RAWINPUTDEVICELIST)) == (UINT)-1) {
 			free(raw.list);
 			raw.list = NULL;
 			raw.count = 0;
 		}
 	}
 
-	if ((result = IDirectInput_EnumDevices(jstick.directInputInterface, DI8DEVCLASS_GAMECTRL,
-			cb_enum_dev, (void *) &raw, DIEDFL_ALLDEVICES)) != DI_OK) {
-		fprintf(stderr, "IDirectInput_EnumDevices : 0x%X\n", (unsigned int) result);
+	if ((result = IDirectInput_EnumDevices(jstick.directInputInterface, DI8DEVCLASS_GAMECTRL, cb_enum_dev, (void *)&raw, DIEDFL_ALLDEVICES)) != DI_OK) {
+		fprintf(stderr, "IDirectInput_EnumDevices : 0x%X\n", (unsigned int)result);
 	}
 
 	if (raw.list) {
@@ -1066,7 +1065,7 @@ static void js_update_jdev(_js *joy, BYTE enable_decode, BYTE decode_index) {
 	joy->input_decode_event = NULL;
 
 	if (js_is_null(&joy->guid) == FALSE) {
-		int d;
+		unsigned int d;
 
 		for (d = 0; d < jstick.jdd.count; d++) {
 			if (js_guidcmp(&joy->guid, &jstick.jdd.devices[d].guid) == TRUE) {
@@ -1078,7 +1077,7 @@ static void js_update_jdev(_js *joy, BYTE enable_decode, BYTE decode_index) {
 		joy->inited = TRUE;
 
 		if (enable_decode) {
-			joy->input_decode_event = input_decode_event[decode_index];
+			joy->input_decode_event = port_funct[decode_index].input_decode_event;
 		}
 	}
 }
@@ -1103,8 +1102,7 @@ static void js_open(_jstick_device *jdev) {
 	if (jdev->is_xinput && (jdev->xinput_player_index < 4)) {
 		XINPUT_CAPABILITIES capabilities;
 
-		if (jstick.XInputGetCapabilities_proc(jdev->xinput_player_index, 0,
-				&capabilities) == ERROR_SUCCESS) {
+		if (jstick.XInputGetCapabilities_proc(jdev->xinput_player_index, 0, &capabilities) == ERROR_SUCCESS) {
 			jdev->num_axes = 6;
 			jdev->num_buttons = 15;
 			jdev->ts_update_present = gui_get_ms();
@@ -1123,25 +1121,21 @@ static void js_open(_jstick_device *jdev) {
 		DIPROPDWORD bufferSizeProp;
 		BYTE buffered = TRUE;
 
-		if ((rc = IDirectInput8_CreateDevice(jstick.directInputInterface, &jdev->guid, &didevice,
-				NULL)) != DI_OK) {
-			fprintf(stderr, "IDirectInput8_CreateDevice : 0x%X\n", (unsigned int) rc);
+		if ((rc = IDirectInput8_CreateDevice(jstick.directInputInterface, &jdev->guid, &didevice, NULL)) != DI_OK) {
+			fprintf(stderr, "IDirectInput8_CreateDevice : 0x%X\n", (unsigned int)rc);
 		}
 
-		if ((rc = IDirectInputDevice8_QueryInterface(didevice, &IID_IDirectInputDevice8W,
-				(LPVOID * ) &di8device)) != DI_OK) {
-			fprintf(stderr, "IDirectInputDevice8_QueryInterface : 0x%X\n", (unsigned int) rc);
+		if ((rc = IDirectInputDevice8_QueryInterface(didevice, &IID_IDirectInputDevice8W, (LPVOID * ) &di8device)) != DI_OK) {
+			fprintf(stderr, "IDirectInputDevice8_QueryInterface : 0x%X\n", (unsigned int)rc);
 		}
 		IDirectInputDevice8_Release(didevice);
 
-		if ((rc = IDirectInputDevice8_SetCooperativeLevel(di8device, GetActiveWindow(),
-				DISCL_NONEXCLUSIVE | DISCL_BACKGROUND)) != DI_OK) {
-			fprintf(stderr, "IDirectInputDevice8_SetCooperativeLevel : 0x%X\n",
-					(unsigned int) rc);
+		if ((rc = IDirectInputDevice8_SetCooperativeLevel(di8device, GetActiveWindow(), DISCL_NONEXCLUSIVE | DISCL_BACKGROUND)) != DI_OK) {
+			fprintf(stderr, "IDirectInputDevice8_SetCooperativeLevel : 0x%X\n", (unsigned int)rc);
 		}
 
 		if ((rc = IDirectInputDevice8_SetDataFormat(di8device, &c_dfDIJoystick2)) != DI_OK) {
-			fprintf(stderr, "IDirectInputDevice8_SetDataFormat : 0x%X\n", (unsigned int) rc);
+			fprintf(stderr, "IDirectInputDevice8_SetDataFormat : 0x%X\n", (unsigned int)rc);
 		}
 
 		bufferSizeProp.diph.dwSize = sizeof(DIPROPDWORD);
@@ -1154,7 +1148,7 @@ static void js_open(_jstick_device *jdev) {
 		if (rc == DI_POLLEDDEVICE) {
 			buffered = FALSE;
 		} else if (rc != DI_OK) {
-			fprintf(stderr, "IDirectInputDevice8_SetProperty : 0x%X\n", (unsigned int) rc);
+			fprintf(stderr, "IDirectInputDevice8_SetProperty : 0x%X\n", (unsigned int)rc);
 		}
 
 		jdev->di8device = di8device;
@@ -1219,7 +1213,7 @@ static void js_close(_jstick_device *jdev) {
 }
 static void js_close_detected_devices(void) {
 	if (jstick.jdd.devices) {
-		int i;
+		unsigned int i;
 
 		for (i = 0; i < jstick.jdd.count; i++) {
 			js_close(&jstick.jdd.devices[i]);
@@ -1242,7 +1236,7 @@ static BOOL js_is_xinput_dev(const GUID *pGuidProductFromDirectInput, _jstick_ra
 		&IID_X360WiredGamepad,
 		&IID_X360WirelessGamepad
 	};
-	int i;
+	unsigned int i;
 
 	for (i = 0; i < LENGTH(s_XInputProductGUID); i++) {
 		if (js_guidcmp((GUID *) pGuidProductFromDirectInput, (GUID *) s_XInputProductGUID[i]) == TRUE) {
@@ -1261,10 +1255,10 @@ static BOOL js_is_xinput_dev(const GUID *pGuidProductFromDirectInput, _jstick_ra
 
 		rdi.cbSize = sizeof(rdi);
 		if ((raw->list[i].dwType == RIM_TYPEHID) &&
-				(GetRawInputDeviceInfoA(raw->list[i].hDevice, RIDI_DEVICEINFO, &rdi, &srdi) != -1) &&
-				(MAKELONG(rdi.hid.dwVendorId, rdi.hid.dwProductId) == (LONG) pGuidProductFromDirectInput->Data1) &&
-				(GetRawInputDeviceInfoA(raw->list[i].hDevice, RIDI_DEVICENAME, name, &sname) != -1) &&
-				(strstr(name, "IG_") != NULL)) {
+			(GetRawInputDeviceInfoA(raw->list[i].hDevice, RIDI_DEVICEINFO, &rdi, &srdi) != (UINT)-1) &&
+			(MAKELONG(rdi.hid.dwVendorId, rdi.hid.dwProductId) == (LONG) pGuidProductFromDirectInput->Data1) &&
+			(GetRawInputDeviceInfoA(raw->list[i].hDevice, RIDI_DEVICENAME, name, &sname) != (UINT)-1) &&
+			(strstr(name, "IG_") != NULL)) {
 			return (TRUE);
 		}
 	}
@@ -1275,8 +1269,7 @@ static BOOL CALLBACK cb_enum_dev(LPCDIDEVICEINSTANCEW instance, LPVOID context) 
 	_jstick_raw_devices *raw = (_jstick_raw_devices *) context;
 	_jstick_device *jdev, *jdevs;
 
-	if ((jdevs = (_jstick_device *) realloc(jstick.jdd.devices,
-			(jstick.jdd.count + 1) * sizeof(_jstick_device)))) {
+	if ((jdevs = (_jstick_device *)realloc(jstick.jdd.devices, (jstick.jdd.count + 1) * sizeof(_jstick_device)))) {
 		jstick.jdd.devices = jdevs;
 		jdev = &jstick.jdd.devices[jstick.jdd.count];
 		jstick.jdd.count++;
@@ -1304,7 +1297,7 @@ static BOOL CALLBACK cb_count_axes(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID c
 	}
 	return (DIENUM_CONTINUE);
 }
-static BOOL CALLBACK cb_count_buttons(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID context) {
+static BOOL CALLBACK cb_count_buttons(UNUSED(LPCDIDEVICEOBJECTINSTANCEW instance), LPVOID context) {
 	_jstick_device *jdev = context;
 
 	if (jdev->num_buttons < JOY_MAX_BUTTONS) {
@@ -1357,9 +1350,8 @@ static BOOL CALLBACK cb_enum_axes(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID co
 		range.lMin = JOY_AXIS_MIN;
 		range.lMax = JOY_AXIS_MAX;
 
-		if ((rc = IDirectInputDevice8_SetProperty(jdev->di8device, DIPROP_RANGE, &range.diph))
-				!= DI_OK) {
-			fprintf(stderr, "IDIrectInputDevice8_SetProperty : 0x%X\n", (unsigned int) rc);
+		if ((rc = IDirectInputDevice8_SetProperty(jdev->di8device, DIPROP_RANGE, &range.diph)) != DI_OK) {
+			fprintf(stderr, "IDIrectInputDevice8_SetProperty : 0x%X\n", (unsigned int)rc);
 		}
 
 		deadZone.diph.dwSize = sizeof(deadZone);
@@ -1367,15 +1359,13 @@ static BOOL CALLBACK cb_enum_axes(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID co
 		deadZone.diph.dwObj = instance->dwType;
 		deadZone.diph.dwHow = DIPH_BYID;
 		deadZone.dwData = 0;
-		if ((rc = IDirectInputDevice8_SetProperty(jdev->di8device, DIPROP_DEADZONE,
-				&deadZone.diph)) != DI_OK) {
-			fprintf(stderr, "IDIrectInputDevice8_SetProperty : 0x%X\n",
-					(unsigned int) rc);
+		if ((rc = IDirectInputDevice8_SetProperty(jdev->di8device, DIPROP_DEADZONE, &deadZone.diph)) != DI_OK) {
+			fprintf(stderr, "IDIrectInputDevice8_SetProperty : 0x%X\n", (unsigned int)rc);
 		}
 	}
 	return (DIENUM_CONTINUE);
 }
-static BOOL CALLBACK cb_enum_buttons(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID context) {
+static BOOL CALLBACK cb_enum_buttons(UNUSED(LPCDIDEVICEOBJECTINSTANCEW instance), LPVOID context) {
 	_jstick_device *jdev = context;
 
 	if (jdev->num_buttons < JOY_MAX_BUTTONS) {
@@ -1384,8 +1374,7 @@ static BOOL CALLBACK cb_enum_buttons(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID
 	}
 	return (DIENUM_CONTINUE);
 }
-static INLINE DBWORD js_update_button(_js *joy, _port *port, joy_states st, BYTE index, BYTE value,
-		BYTE *mode) {
+INLINE static DBWORD js_update_button(_js *joy, _port *port, joy_states st, BYTE index, BYTE value, BYTE *mode) {
 	DBWORD event = 0;
 
 	(*mode) = value;
@@ -1396,13 +1385,12 @@ static INLINE DBWORD js_update_button(_js *joy, _port *port, joy_states st, BYTE
 		//if (!state)
 		//	wprintf(uL("%d : %s %d\n"), st, jsv_to_name(event), (*mode));
 		if (joy->input_decode_event) {
-			joy->input_decode_event(value, event, JOYSTICK, port);
+			joy->input_decode_event(value, FALSE, event, JOYSTICK, port);
 		}
 	}
 	return (event);
 }
-static INLINE DBWORD js_update_axis_float(_js *joy, _port *port, joy_states st, BYTE index,
-		float value, BYTE *mode) {
+INLINE static DBWORD js_update_axis_float(_js *joy, _port *port, joy_states st, BYTE index, float value, BYTE *mode) {
 	float lastValue;
 	DBWORD event = (index << 1) + 1;
 	(*mode) = PRESSED;
@@ -1428,17 +1416,16 @@ static INLINE DBWORD js_update_axis_float(_js *joy, _port *port, joy_states st, 
 		//if (!state)
 		//	wprintf(uL("%d : %s %d\n"), st, jsv_to_name(event), (*mode));
 		if (joy->input_decode_event) {
-			joy->input_decode_event((*mode), event, JOYSTICK, port);
+			joy->input_decode_event((*mode), FALSE, event, JOYSTICK, port);
 		}
 		return (event);
 	}
 	return (0);
 }
-static INLINE DBWORD js_update_axis(_js *joy, _port *port, joy_states st, BYTE index, LONG value,
-		BYTE *mode) {
+INLINE static DBWORD js_update_axis(_js *joy, _port *port, joy_states st, BYTE index, LONG value, BYTE *mode) {
 	return (js_update_axis_float(joy, port, st, index, JOY_AXIS_TO_FLOAT(value), mode));
 }
-static INLINE void js_pov_to_xy(DWORD pov, float *x, float *y) {
+INLINE static void js_pov_to_xy(DWORD pov, float *x, float *y) {
 	if (LOWORD(pov) == 0xFFFF) {
 		(*x) = (*y) = 0.0f;
 	} else {
@@ -1459,8 +1446,7 @@ static INLINE void js_pov_to_xy(DWORD pov, float *x, float *y) {
 		}
 	}
 }
-static INLINE DBWORD js_update_pov(_js *joy, _port *port, joy_states st, BYTE index, DWORD value,
-		BYTE *mode) {
+INLINE static DBWORD js_update_pov(_js *joy, _port *port, joy_states st, BYTE index, DWORD value, BYTE *mode) {
 	DBWORD event = 0;
 	float x = 0.0f, y = 0.0f;
 
@@ -1470,9 +1456,9 @@ static INLINE DBWORD js_update_pov(_js *joy, _port *port, joy_states st, BYTE in
 	};
 	return (event);
 }
-static INLINE void js_lock(void) {
+INLINE static void js_lock(void) {
 	WaitForSingleObject(jstick.lock, INFINITE);
 }
-static INLINE void js_unlock(void) {
+INLINE static void js_unlock(void) {
 	ReleaseSemaphore(jstick.lock, 1, NULL);
 }

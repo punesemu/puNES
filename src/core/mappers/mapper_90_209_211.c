@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,11 +25,11 @@
 #include "save_slot.h"
 #include "ppu_inline.h"
 
-static void INLINE prg_setup_90_209_211(void);
-static void INLINE chr_setup_90_209_211(void);
-static void INLINE nmt_setup_90_209_211(void);
-static void INLINE irq_clock_prescaler_90_209_211(void);
-static void INLINE irq_clock_count_90_209_211(void);
+INLINE static void prg_setup_90_209_211(void);
+INLINE static void chr_setup_90_209_211(void);
+INLINE static void nmt_setup_90_209_211(void);
+INLINE static void irq_clock_prescaler_90_209_211(void);
+INLINE static void irq_clock_count_90_209_211(void);
 
 #define chr_90_209_211(index)\
 	((m90_209_211.chr.low[index] | (m90_209_211.chr.high[index] << 8)) & mask) | base
@@ -42,6 +42,47 @@ static void INLINE irq_clock_count_90_209_211(void);
 	value = m90_209_211.nmt.reg[index] & 0x01;\
 	ntbl.bank_1k[index] = &ntbl.data[value << 10];\
 	m90_209_211.nmt.write[index] = TRUE
+
+struct _m90_209_211 {
+	BYTE mul[2];
+	BYTE single_byte_ram;
+	BYTE tekker;
+
+	BYTE mode[4];
+
+	BYTE prg[4];
+
+	struct _m90_209_211_chr {
+		BYTE latch[2];
+		BYTE low[8];
+		BYTE high[8];
+	} chr;
+
+	struct _m90_209_211_nmt {
+		BYTE extended_mode;
+		WORD reg[4];
+		BYTE write[4];
+	} nmt;
+
+	struct _m90_209_211_irq {
+		BYTE active;
+		BYTE mode;
+		BYTE prescaler;
+		BYTE count;
+		BYTE xor_value;
+		BYTE pre_size;
+		BYTE premask;
+	} irq;
+
+/*  questi non serve salvarli  */
+	BYTE model;
+
+	struct _m90_209_211_m6000 {
+		WORD prg;
+		BYTE *rom_8k;
+	} m6000;
+/*                             */
+} m90_209_211;
 
 void map_init_90_209_211(BYTE model) {
 	BYTE i;
@@ -58,7 +99,7 @@ void map_init_90_209_211(BYTE model) {
 	EXTCL_PPU_320_TO_34X(90_209_211);
 	EXTCL_UPDATE_R2006(90_209_211);
 
-	mapper.internal_struct[0] = (BYTE *) &m90_209_211;
+	mapper.internal_struct[0] = (BYTE *)&m90_209_211;
 	mapper.internal_struct_size[0] = sizeof(m90_209_211);
 
 	if (info.reset >= HARD) {
@@ -164,11 +205,11 @@ void extcl_cpu_wr_mem_90_209_211(WORD address, BYTE value) {
 				m90_209_211.irq.active = value & 0x01;
 				if (!m90_209_211.irq.active) {
 					irq.high &= ~EXT_IRQ;
+					m90_209_211.irq.prescaler = 0;
 				}
 				break;
 			case 1:
 				m90_209_211.irq.mode = value;
-
 				if (m90_209_211.irq.mode & 0x04) {
 					m90_209_211.irq.premask = 0x07;
 				} else {
@@ -178,6 +219,7 @@ void extcl_cpu_wr_mem_90_209_211(WORD address, BYTE value) {
 			case 2:
 				m90_209_211.irq.active = 0;
 				irq.high &= ~EXT_IRQ;
+				m90_209_211.irq.prescaler = 0;
 				break;
 			case 3:
 				m90_209_211.irq.active = 1;
@@ -197,14 +239,13 @@ void extcl_cpu_wr_mem_90_209_211(WORD address, BYTE value) {
 		}
 		return;
 	}
-	if (address <= 0xDFFF) {
+	if (address <= 0xD5FF) {
 		BYTE index = address & 0x0003;
 
 		m90_209_211.mode[index] = value;
 
 		if (index == 0) {
-			if (((m90_209_211.mode[0] & 0x20) && (m90_209_211.model == MAP209))
-					|| (m90_209_211.model == MAP211)) {
+			if (((m90_209_211.mode[0] & 0x20) && (m90_209_211.model == MAP209)) || (m90_209_211.model == MAP211)) {
 				m90_209_211.nmt.extended_mode = TRUE;
 			} else {
 				m90_209_211.nmt.extended_mode = FALSE;
@@ -215,16 +256,8 @@ void extcl_cpu_wr_mem_90_209_211(WORD address, BYTE value) {
 		nmt_setup_90_209_211();
 		return;
 	}
-	/* questi non servono
-	if (address <= 0xDFFF) {
-		return;
-	}
-	if (address <= 0xFFFF) {
-		return;
-	}
-	*/
 }
-BYTE extcl_cpu_rd_mem_90_209_211(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_90_209_211(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address <= 0x4FFF) {
 		return (openbus);
 	}
@@ -284,15 +317,8 @@ void extcl_cpu_every_cycle_90_209_211(void) {
 		irq_clock_prescaler_90_209_211();
 	}
 }
-void extcl_rd_ppu_90_209_211(WORD address) {
+void extcl_rd_ppu_90_209_211(UNUSED(WORD address)) {
 	if ((m90_209_211.irq.mode & 0x03) == 2) {
-		/*
-		if (lastread != A) {
-			ClockCounter();
-			ClockCounter();
-		}
-		lastread = A;
-		*/
 		irq_clock_prescaler_90_209_211();
 	}
 }
@@ -318,23 +344,10 @@ void extcl_wr_nmt_90_209_211(WORD address, BYTE value) {
 
 	ntbl.bank_1k[index][address & 0x3FF] = value;
 }
+
 void extcl_ppu_000_to_255_90_209_211(void) {
 	if (r2001.visible) {
-		if ((ppu.frame_x & 0x0007) != 0x0003) {
-			return;
-		}
-
-		if (ppu.frame_x == 323) {
-			ppu_spr_adr(7);
-		}
-
-		ppu_bck_adr(r2000.bpt_adr, r2006.value);
-
-		if ((m90_209_211.irq.mode & 0x03) == 1) {
-			if ((ppu.bck_adr & 0x1000) > (ppu.spr_adr & 0x1000)) {
-				irq_clock_prescaler_90_209_211();
-			}
-		}
+		extcl_ppu_320_to_34x_90_209_211();
 	}
 }
 void extcl_ppu_256_to_319_90_209_211(void) {
@@ -355,7 +368,21 @@ void extcl_ppu_256_to_319_90_209_211(void) {
 	}
 }
 void extcl_ppu_320_to_34x_90_209_211(void) {
-	extcl_ppu_000_to_255_90_209_211();
+	if ((ppu.frame_x & 0x0007) != 0x0003) {
+		return;
+	}
+
+	if (ppu.frame_x == 323) {
+		ppu_spr_adr(7);
+	}
+
+	ppu_bck_adr(r2000.bpt_adr, r2006.value);
+
+	if ((m90_209_211.irq.mode & 0x03) == 1) {
+		if ((ppu.bck_adr & 0x1000) > (ppu.spr_adr & 0x1000)) {
+			irq_clock_prescaler_90_209_211();
+		}
+	}
 }
 void extcl_update_r2006_90_209_211(WORD new_r2006, WORD old_r2006) {
 	if ((m90_209_211.irq.mode & 0x03) == 1) {
@@ -365,7 +392,7 @@ void extcl_update_r2006_90_209_211(WORD new_r2006, WORD old_r2006) {
 	}
 }
 
-static void INLINE prg_setup_90_209_211(void) {
+INLINE static void prg_setup_90_209_211(void) {
 	BYTE value, bankmode = ((m90_209_211.mode[3] & 0x06) << 5);
 
 	switch (m90_209_211.mode[0] & 0x07) {
@@ -459,7 +486,7 @@ static void INLINE prg_setup_90_209_211(void) {
 	m90_209_211.m6000.rom_8k = prg_chip_byte_pnt(0, m90_209_211.m6000.prg << 13);
 	map_prg_rom_8k_update();
 }
-static void INLINE chr_setup_90_209_211(void) {
+INLINE static void chr_setup_90_209_211(void) {
 	WORD value, base = 0, mask = 0xFFFF;
 	DBWORD bank;
 
@@ -572,7 +599,7 @@ static void INLINE chr_setup_90_209_211(void) {
 			break;
 	}
 }
-static void INLINE nmt_setup_90_209_211(void) {
+INLINE static void nmt_setup_90_209_211(void) {
 	if (m90_209_211.nmt.extended_mode == TRUE) {
 		WORD value;
 
@@ -609,7 +636,11 @@ static void INLINE nmt_setup_90_209_211(void) {
 		}
 	}
 }
-static void INLINE irq_clock_prescaler_90_209_211(void) {
+INLINE static void irq_clock_prescaler_90_209_211(void) {
+	if (!m90_209_211.irq.active) {
+		return;
+	}
+
 	if ((m90_209_211.irq.mode >> 6) == 1) {
 		if ((++m90_209_211.irq.prescaler & m90_209_211.irq.premask) == 0) {
 			irq_clock_count_90_209_211();
@@ -620,13 +651,13 @@ static void INLINE irq_clock_prescaler_90_209_211(void) {
 		}
 	}
 }
-static void INLINE irq_clock_count_90_209_211(void) {
+INLINE static void irq_clock_count_90_209_211(void) {
 	if ((m90_209_211.irq.mode >> 6) == 1) {
-		if ((++m90_209_211.irq.count == 0) && m90_209_211.irq.active) {
+		if (++m90_209_211.irq.count == 0x00) {
 			irq.high |= EXT_IRQ;
 		}
 	} else if ((m90_209_211.irq.mode >> 6) == 2) {
-		if ((--m90_209_211.irq.count == 0xFF) && m90_209_211.irq.active) {
+		if (--m90_209_211.irq.count == 0xFF) {
 			irq.high |= EXT_IRQ;
 		}
 	}

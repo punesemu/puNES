@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,15 +30,6 @@ enum {
 	BAD_INES_FLINJ = 100,
 	X1005_NO_BAT = 101
 };
-
-struct _taito_X1005 {
-	BYTE ram[0x80];
-	BYTE enable;
-} taito_X1005;
-struct _taito_X1017 {
-	BYTE chr[6];
-	BYTE control;
-} taito_X1017;
 
 void map_init_Taito(BYTE model);
 

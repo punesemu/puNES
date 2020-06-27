@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,12 +20,6 @@
 #define MAPPER_40_H_
 
 #include "common.h"
-
-struct _m40 {
-	BYTE enabled;
-	WORD count;
-	BYTE delay;
-} m40;
 
 void map_init_40(void);
 void extcl_cpu_wr_mem_40(WORD address, BYTE value);

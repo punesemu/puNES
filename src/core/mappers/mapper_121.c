@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,9 +23,9 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE m121_update_reg(void);
-static void INLINE m121_update_prg(void);
-static void INLINE m121_update_chr(void);
+INLINE static void m121_update_reg(void);
+INLINE static void m121_update_prg(void);
+INLINE static void m121_update_chr(void);
 
 #define m121_swap_chr_1k(a, b)\
 	chr1k = m121.chr_map[b];\
@@ -79,6 +79,11 @@ static void INLINE m121_update_chr(void);
 			break;\
 	}
 
+struct _m121 {
+	BYTE reg[8];
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m121;
 static const BYTE vlu121[4] = { 0x83, 0x83, 0x42, 0x00 };
 
 void map_init_121(void) {
@@ -169,7 +174,7 @@ void extcl_cpu_wr_mem_121(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_121(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_121(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x5000) || (address > 0x5FFF)) {
 		return (openbus);
 	}
@@ -185,7 +190,7 @@ BYTE extcl_save_mapper_121(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE m121_update_reg(void) {
+INLINE static void m121_update_reg(void) {
 	switch (m121.reg[5] & 0x3F) {
 		case 0x20:
 			m121.reg[7] = 1;
@@ -229,7 +234,7 @@ static void INLINE m121_update_reg(void) {
 			break;
 	}
 }
-static void INLINE m121_update_prg(void) {
+INLINE static void m121_update_prg(void) {
 	BYTE value;
 
 	if (m121.reg[5] & 0x3F) {
@@ -267,7 +272,7 @@ static void INLINE m121_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE m121_update_chr(void) {
+INLINE static void m121_update_chr(void) {
 	BYTE i;
 	WORD value;
 

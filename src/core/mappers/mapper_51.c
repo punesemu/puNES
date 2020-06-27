@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,14 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-BYTE *prg_6000;
+struct _m51 {
+	BYTE mode;
+	WORD bank;
+	BYTE prg_6000;
+} m51;
+struct _m51tmp {
+	BYTE *prg_6000;
+} m51tmp;
 
 void map_init_51(void) {
 	EXTCL_CPU_WR_MEM(51);
@@ -76,7 +83,7 @@ void extcl_cpu_wr_mem_51(WORD address, BYTE value) {
 
 	m51.prg_6000 = m51.prg_6000 | (m51.bank << 2);
 	_control_bank(m51.prg_6000, info.prg.rom[0].max.banks_8k)
-	prg_6000 = prg_chip_byte_pnt(0, m51.prg_6000 << 13);
+	m51tmp.prg_6000 = prg_chip_byte_pnt(0, m51.prg_6000 << 13);
 
 	if (m51.mode == 0x03) {
 		mirroring_H();
@@ -84,12 +91,12 @@ void extcl_cpu_wr_mem_51(WORD address, BYTE value) {
 		mirroring_V();
 	}
 }
-BYTE extcl_cpu_rd_mem_51(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_51(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {
 		return (openbus);
 	}
 
-	return (prg_6000[address & 0x1FFF]);
+	return (m51tmp.prg_6000[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_51(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m51.bank);
@@ -97,7 +104,7 @@ BYTE extcl_save_mapper_51(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m51.prg_6000);
 
 	if (mode == SAVE_SLOT_READ) {
-		prg_6000 = prg_chip_byte_pnt(0, m51.prg_6000 << 13);
+		m51tmp.prg_6000 = prg_chip_byte_pnt(0, m51.prg_6000 << 13);
 	}
 
 	return (EXIT_OK);

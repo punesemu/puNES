@@ -11,18 +11,20 @@ libaudio_a_SOURCES = \
 	handler.c \
 	mono.c \
 	mono.h \
-	original.c \
-	original.h \
 	panning.c \
 	panning.h \
-	quality.c \
-	quality.h \
+	snd.h \
 	wave.c \
 	wave.h
 
 if LINUX
 libaudio_a_SOURCES += \
 	alsa/snd.c
+endif
+
+if BSD
+libaudio_a_SOURCES += \
+	sndio/snd.c
 endif
 
 if WINDOWS

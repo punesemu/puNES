@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,14 @@
 #define INES_H_
 
 #include "common.h"
+
+enum ines_flags { FL6, FL7, FL8, FL9, FL10, FL11, FL12, FL13, FL14, FL15, TOTAL_FL };
+
+typedef struct _ines {
+	BYTE flags[TOTAL_FL];
+} _ines;
+
+extern _ines ines;
 
 BYTE ines_load_rom(void);
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,20 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE yoko_update(void);
+INLINE static void yoko_update(void);
+
+struct _yoko {
+	BYTE mode;
+	BYTE bank;
+	BYTE dip;
+	BYTE low[4];
+	BYTE reg[7];
+
+	struct _yoko_irq {
+		BYTE active;
+		WORD count;
+	} irq;
+} yoko;
 
 void map_init_YOKO(void) {
 	EXTCL_CPU_WR_MEM(YOKO);
@@ -95,7 +108,7 @@ void extcl_cpu_wr_mem_YOKO(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_YOKO(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_YOKO(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x5000) && (address <= 0x53FF)) {
 		return ((openbus & 0xFC) | yoko.dip);
 	}
@@ -124,7 +137,7 @@ void extcl_cpu_every_cycle_YOKO(void) {
 	}
 }
 
-static void INLINE yoko_update(void) {
+INLINE static void yoko_update(void) {
 	WORD value;
 	SDBWORD bank;
 

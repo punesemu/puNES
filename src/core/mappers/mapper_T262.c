@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,11 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static void INLINE t262_update(BYTE value);
+INLINE static void t262_update(BYTE value);
+
+struct _t262 {
+	BYTE reg[5];
+} t262;
 
 void map_init_T262(void) {
 	EXTCL_CPU_WR_MEM(T262);
@@ -50,7 +54,7 @@ BYTE extcl_save_mapper_T262(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE t262_update(BYTE value) {
+INLINE static void t262_update(BYTE value) {
 	BYTE bank = value & 0x07;
 	BYTE chip = t262.reg[0] >> 3;;
 

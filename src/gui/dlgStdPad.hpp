@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,38 +21,29 @@
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QTimer>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QDialog>
-#else
 #include <QtWidgets/QDialog>
-#endif
 #include "dlgStdPad.hh"
-#include "dlgInput.hpp"
+#include "wdgSettingsInput.hpp"
 
-class dlgStdPad : public QDialog, public Ui::Standard_Pad {
+class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		Q_OBJECT
 
 	private:
 		struct _data {
-			QPushButton *bp;
-
 			struct _joy {
 				int fd;
 				WORD value;
 				QTimer *timer;
 			} joy;
-
 			struct _seq {
 				bool active;
 				int type;
 				int counter;
 				QTimer *timer;
 			} seq;
-
 			bool no_other_buttons;
-
+			QPushButton *bp;
 			BYTE vbutton;
-
 			_cfg_port cfg;
 		} data;
 
@@ -62,15 +53,18 @@ class dlgStdPad : public QDialog, public Ui::Standard_Pad {
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event);
+		void changeEvent(QEvent *event);
+		void showEvent(QShowEvent *event);
+		void closeEvent(QCloseEvent *event);
 
 	private:
-		bool keypressEvent(QEvent *event);
-		void update_dialog();
-		void combo_id_init();
+		bool keypress(QKeyEvent *event);
+		void update_dialog(void);
+		void combo_id_init(void);
 		void setEnable_tab_buttons(int type, bool mode);
 		void disable_tab_and_other(int type, int vbutton);
 		void info_entry_print(int type, QString txt);
-		void js_press_event();
+		void js_press_event(void);
 		void td_update_label(int type, int value);
 
 	private slots:
@@ -82,8 +76,8 @@ class dlgStdPad : public QDialog, public Ui::Standard_Pad {
 		void s_defaults_clicked(bool checked);
 		void s_combobox_controller_type_activated(int index);
 		void s_slider_td_value_changed(int value);
-		void s_pad_joy_read_timer();
-		void s_pad_in_sequence_timer();
+		void s_pad_joy_read_timer(void);
+		void s_pad_in_sequence_timer(void);
 		void s_apply_clicked(bool checked);
 		void s_discard_clicked(bool checked);
 };

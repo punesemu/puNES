@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 enum { FDS_MAPPER = 0x1000 };
 
 void map_init_FDS(void);
+void map_init_NSF_FDS(void);
 void extcl_cpu_every_cycle_FDS(void);
 void extcl_apu_tick_FDS(void);
 

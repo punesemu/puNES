@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,6 +33,12 @@
 	mapper.rom_map_to[1] = m114.prg_rom_bank[1];\
 	mapper.rom_map_to[2] = m114.prg_rom_bank[2];\
 	mapper.rom_map_to[3] = m114.prg_rom_bank[3]
+
+struct _m114 {
+	BYTE prg_rom_switch;
+	BYTE mmc3_ctrl_change;
+	WORD prg_rom_bank[4];
+} m114;
 
 void map_init_114(void) {
 	EXTCL_CPU_WR_MEM(114);

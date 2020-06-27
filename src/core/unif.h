@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,30 +23,32 @@
 
 enum { UNIF_MAPPER = 0x1002 };
 
-struct _unif {
+typedef struct _unif {
 	BYTE finded;
 	WORD internal_mapper;
 	char board[64];
 	char *stripped_board;
 	char name[256];
 
-	struct _dumped {
+	struct _unif_dumped {
 		char by[100];
 		BYTE day;
 		BYTE month;
 		WORD year;
 		char with[100];
 	} dumped;
-	struct _header {
+	struct _unif_header {
 		char identification[4];
 		uint32_t revision;
 		BYTE expansion[24];
 	} header;
-	struct _chunk {
+	struct _unif_chunk {
 		char id[4];
 		uint32_t length;
 	} chunk;
-} unif;
+} _unif;
+
+extern _unif unif;
 
 BYTE unif_load_rom(void);
 

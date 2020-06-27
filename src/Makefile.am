@@ -1,8 +1,5 @@
 SUBDIRS = audio c++ core gui video extra
-
-if ENAB_QT5
 AM_CXXFLAGS = -fPIC
-endif
 
 if HAVE_WINDRES
 ico_stuff = gui/windows/resources.rc
@@ -15,7 +12,7 @@ bin_PROGRAMS = punes
 
 punes_SOURCES = \
 	core/main.c \
-	gui/application.cpp \
+	gui/resources.cpp \
 	core/palette.c \
 	$(ico_stuff)
 

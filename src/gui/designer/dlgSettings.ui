@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dlgSettings</class>
+ <widget class="QDialog" name="dlgSettings">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>515</width>
+    <height>283</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Settings</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_dlgSettings">
+   <item>
+    <widget class="QTabWidget" name="tabWidget_Settings">
+     <property name="currentIndex">
+      <number>5</number>
+     </property>
+     <widget class="QWidget" name="tab_General">
+      <attribute name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icon/icons/general.svg</normaloff>:/icon/icons/general.svg</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>General</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_tab_General">
+       <item>
+        <widget class="wdgSettingsGeneral" name="widget_Settings_General" native="true"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_Video">
+      <attribute name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icon/icons/video.svg</normaloff>:/icon/icons/video.svg</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Video</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_tab_Video">
+       <item>
+        <widget class="wdgSettingsVideo" name="widget_Settings_Video" native="true"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_Audio">
+      <attribute name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icon/icons/audio.svg</normaloff>:/icon/icons/audio.svg</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Audio</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_tab_Audio">
+       <item>
+        <widget class="wdgSettingsAudio" name="widget_Settings_Audio" native="true"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_Input">
+      <attribute name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icon/icons/input.svg</normaloff>:/icon/icons/input.svg</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Input</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_tab_Input">
+       <item>
+        <widget class="wdgSettingsInput" name="widget_Settings_Input" native="true"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_PPU">
+      <attribute name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icon/icons/ppu.svg</normaloff>:/icon/icons/ppu.svg</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>PPU</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_tab_PPU">
+       <item>
+        <widget class="wdgSettingsPPU" name="widget_Settings_PPU" native="true"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_Cheats">
+      <attribute name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icon/icons/cheat.svg</normaloff>:/icon/icons/cheat.svg</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Cheats</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_tab_Cheats">
+       <item>
+        <widget class="wdgSettingsCheats" name="widget_Settings_Cheats" native="true"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_Save_Close_Buttons">
+     <item>
+      <widget class="QPushButton" name="pushButton_Save_Settings">
+       <property name="text">
+        <string>Save Settings</string>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_Close_Settings">
+       <property name="text">
+        <string>Close Settings</string>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/window_close.svg</normaloff>:/icon/icons/window_close.svg</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>wdgSettingsPPU</class>
+   <extends>QWidget</extends>
+   <header>wdgSettingsPPU.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>wdgSettingsInput</class>
+   <extends>QWidget</extends>
+   <header>wdgSettingsInput.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>wdgSettingsGeneral</class>
+   <extends>QWidget</extends>
+   <header>wdgSettingsGeneral.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>wdgSettingsVideo</class>
+   <extends>QWidget</extends>
+   <header>wdgSettingsVideo.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>wdgSettingsAudio</class>
+   <extends>QWidget</extends>
+   <header>wdgSettingsAudio.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>wdgSettingsCheats</class>
+   <extends>QWidget</extends>
+   <header>wdgSettingsCheats.hpp</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

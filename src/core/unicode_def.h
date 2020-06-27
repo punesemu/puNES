@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,12 +20,12 @@
 #define UNICODE_DEF_H_
 
 // windows
-#if defined(__WIN32__)
+#if defined (_WIN32)
 #include <wchar.h>
 
 typedef wchar_t uTCHAR;
 
-#if defined(_WIN64) || defined(__MINGW64__)
+#if defined (_WIN64) || defined (__MINGW64__)
 #define ustructstat _stat64i32
 #else
 #define ustructstat _stat32
@@ -35,7 +35,7 @@ typedef wchar_t uTCHAR;
 
 #define uPERCENTs "%ls"
 #define uL(string) L##string
-#define uPTCHAR(string) (wchar_t *) string
+#define uPTCHAR(string) (wchar_t *)string
 
 #define usizeof(string) LENGTH(string)
 #define uQString QString::fromWCharArray
@@ -43,6 +43,7 @@ typedef wchar_t uTCHAR;
 
 #define uvsnprintf vswprintf
 #define umemset wmemset
+#define ustrcpy wcscpy
 #define ustrncpy wcsncpy
 #define usnprintf swprintf
 #define uprintf wprintf
@@ -51,6 +52,7 @@ typedef wchar_t uTCHAR;
 #define ustat _wstat
 #define ufprintf fwprintf
 #define ufopen _wfopen
+#define ufdopen _wfdopen
 #define ustrrchr wcsrchr
 #define ustrcasecmp gui_utf_strcasecmp
 #define ustrcmp wcscmp
@@ -65,7 +67,7 @@ typedef wchar_t uTCHAR;
 #define ustrchr wcschr
 #define ustrdup _wcsdup
 
-// linux
+// linux, bsd
 #else
 
 typedef char uTCHAR;
@@ -76,7 +78,7 @@ typedef char uTCHAR;
 
 #define uPERCENTs "%s"
 #define uL(string) string
-#define uPTCHAR(string) (char *) string
+#define uPTCHAR(string) (char *)string
 
 #define usizeof(string) sizeof(string)
 #define uQString QString::fromUtf8
@@ -84,6 +86,7 @@ typedef char uTCHAR;
 
 #define uvsnprintf vsnprintf
 #define umemset memset
+#define ustrcpy strcpy
 #define ustrncpy strncpy
 #define usnprintf snprintf
 #define uprintf printf
@@ -92,6 +95,7 @@ typedef char uTCHAR;
 #define ustat stat
 #define ufprintf fprintf
 #define ufopen fopen
+#define ufdopen fdopen
 #define ustrrchr strrchr
 #define ustrcasecmp strcasecmp
 #define ustrcmp strcmp

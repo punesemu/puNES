@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ enum recent_roms_misc {
 #endif
 
 EXTERNC void recent_roms_init(void);
-EXTERNC void recent_roms_add(uTCHAR *rom);
+EXTERNC void recent_roms_add(uTCHAR *file);
 EXTERNC void recent_roms_parse(void);
 EXTERNC void recent_roms_save(void);
 EXTERNC int recent_roms_count(void);

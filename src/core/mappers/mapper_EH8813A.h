@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,11 +20,6 @@
 #define MAPPER_EH8813A_H_
 
 #include "common.h"
-
-struct _eh8813a {
-	WORD address;
-	BYTE hwmode;
-} eh88131a;
 
 void map_init_EH8813A(void);
 void extcl_cpu_wr_mem_EH8813A(WORD address, BYTE value);

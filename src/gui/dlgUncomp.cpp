@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,64 +19,94 @@
 #include "dlgUncomp.moc"
 #include <QtGui/QStandardItemModel>
 #include <QtCore/QFileInfo>
-#include "uncompress.h"
-#if defined (__WIN32__)
+#if defined (_WIN32)
 #include <libgen.h>
 #endif
 #include "gui.h"
-#include "info.h"
 
-dlgUncomp::dlgUncomp(QWidget *parent = 0) : QDialog(parent) {
-	selected = UNCOMP_NO_FILE_SELECTED;
+dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDialog(parent) {
+	_uncompress_archive *archive = (_uncompress_archive *)uncompress_archive;
+	uint32_t index;
+
+	selected = UNCOMPRESS_NO_FILE_SELECTED;
+
+	if (archive == NULL) {
+		return;
+	}
 
 	setupUi(this);
 
-	setFont(parent->font());
-
 	//tableWidget_Selection->setStyleSheet("QTreeView {selection-background-color: red;}");
 
-	setWindowTitle(QFileInfo(uQString(info.rom_file)).fileName());
+	setWindowTitle(QFileInfo(uQString(archive->file)).fileName());
 
-	for (int i = 0; i < uncomp.files_founded; i++) {
-		if (uncomp_name_file(&uncomp.file[i]) == EXIT_OK) {
-			QTableWidgetItem *item = new QTableWidgetItem(QFileInfo(uQString(uncomp.buffer)).fileName());
+	switch (type) {
+		case UNCOMPRESS_TYPE_ROM: {
+			QTableWidgetItem *header = new QTableWidgetItem(tr("which ROM do you want to load?"));
 
-			tableWidget_Selection->insertRow(i);
-			tableWidget_Selection->setItem(i, 0, item);
+			header->setTextAlignment(Qt::AlignHCenter);
+			tableWidget_Selection->setHorizontalHeaderItem(0, header);
+			break;
+		}
+		case UNCOMPRESS_TYPE_PATCH: {
+			QTableWidgetItem *header = new QTableWidgetItem(tr("which PATCH do you want to apply?"));
+
+			header->setTextAlignment(Qt::AlignHCenter);
+			tableWidget_Selection->setHorizontalHeaderItem(0, header);
+			break;
 		}
 	}
 
-	connect(pushButton_Ok, SIGNAL(clicked(bool)), this, SLOT(s_ok_clicked(bool)));
-	connect(pushButton_Cancel, SIGNAL(clicked(bool)), this, SLOT(s_cancel_clicked(bool)));
+	index = 0;
 
-	QVBoxLayout *vbox = new QVBoxLayout(this);
-	vbox->addWidget(tableWidget_Selection);
-	vbox->addWidget(horizontalLayoutWidget);
+	for (unsigned int i = 0; i < uncompress_archive_counter(archive, type); i++) {
+		_uncompress_archive_item *aitem;
+		uTCHAR *file;
+
+		if ((aitem = uncompress_archive_find_item(archive, index, type)) == NULL) {
+			continue;
+		}
+
+		if ((file = uncompress_archive_file_name(archive, index, type))) {
+			QTableWidgetItem *item = new QTableWidgetItem(QFileInfo(uQString(file)).fileName());
+
+			tableWidget_Selection->insertRow(index);
+			tableWidget_Selection->setItem(index, 0, item);
+			index++;
+		}
+	}
+
+	tableWidget_Selection->setCurrentCell(0, 0);
+
+	connect(pushButton_Ok, SIGNAL(clicked(bool)), this, SLOT(s_ok_clicked(bool)));
+	connect(pushButton_None, SIGNAL(clicked(bool)), this, SLOT(s_none_clicked(bool)));
+
+	setAttribute(Qt::WA_DeleteOnClose);
 
 	// se l'archivio compresso e' caricato da riga di comando,
 	// la gui non e' ancora stata avviata.
 	if (gui.start == TRUE) {
 		emu_pause(TRUE);
 	}
-
-	setAttribute(Qt::WA_DeleteOnClose);
 }
 dlgUncomp::~dlgUncomp() {}
-void dlgUncomp::closeEvent(QCloseEvent *e) {
+
+void dlgUncomp::closeEvent(QCloseEvent *event) {
 	if (gui.start == TRUE) {
 		emu_pause(FALSE);
 	}
 
 	gui.dlg_rc = selected;
 
-	QDialog::closeEvent(e);
+	QDialog::closeEvent(event);
 }
-void dlgUncomp::s_ok_clicked(bool checked) {
+
+void dlgUncomp::s_ok_clicked(UNUSED(bool checked)) {
 	QModelIndexList indexList = tableWidget_Selection->selectionModel()->selectedIndexes();
 
 	selected = indexList.first().row();
 	close();
 }
-void dlgUncomp::s_cancel_clicked(bool checked) {
+void dlgUncomp::s_none_clicked(UNUSED(bool checked)) {
 	close();
 }

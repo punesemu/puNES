@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,13 +21,9 @@
 
 #include "common.h"
 
-enum { MAP178, XINGJI };
+enum { M178EC32IN1 };
 
-struct _m178 {
-	BYTE reg;
-} m178;
-
-void map_init_178(BYTE model);
+void map_init_178(BYTE type);
 void extcl_cpu_wr_mem_178(WORD address, BYTE value);
 BYTE extcl_save_mapper_178(BYTE mode, BYTE slot, FILE *fp);
 

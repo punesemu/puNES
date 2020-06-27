@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,19 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE m253_update_chr(void);
+INLINE static void m253_update_chr(void);
+
+struct _m253 {
+	BYTE disabled_vram;
+	WORD chr_map_high[8];
+	BYTE chr_map[8];
+	struct _m253_irq {
+		BYTE active;
+		WORD prescaler;
+		WORD count;
+		WORD reload;
+	} irq;
+} m253;
 
 void map_init_253(void) {
 	EXTCL_CPU_WR_MEM(253);
@@ -160,7 +172,7 @@ void extcl_cpu_every_cycle_253(void) {
 	irq.high |= EXT_IRQ;
 }
 
-static void INLINE m253_update_chr(void) {
+INLINE static void m253_update_chr(void) {
 	BYTE i;
 	WORD value;
 

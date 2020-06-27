@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 void map_init_BMC11160(void) {
 	EXTCL_CPU_WR_MEM(BMC11160);
 }
-void extcl_cpu_wr_mem_BMC11160(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_BMC11160(UNUSED(WORD address), BYTE value) {
 	DBWORD bank;
 	BYTE save = value;
 

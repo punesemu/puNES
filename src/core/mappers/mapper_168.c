@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,11 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE m168_update_chr(void);
+INLINE static void m168_update_chr(void);
+
+struct _m168 {
+	WORD chr_map[8];
+} m168;
 
 void map_init_168(void) {
 	EXTCL_CPU_WR_MEM(168);
@@ -77,7 +81,7 @@ void extcl_wr_chr_168(WORD address, BYTE value) {
 	chr.bank_1k[i][address & 0x3FF] = value;
 }
 
-static void INLINE m168_update_chr(void) {
+INLINE static void m168_update_chr(void) {
 	BYTE i;
 
 	for (i = 0; i < 8 ; i++) {

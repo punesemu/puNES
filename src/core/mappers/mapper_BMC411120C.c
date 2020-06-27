@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE bmc411120c_update_prg(void);
-static void INLINE bmc411120c_update_chr(void);
+INLINE static void bmc411120c_update_prg(void);
+INLINE static void bmc411120c_update_chr(void);
 
 #define bmc411120c_chr_1k(vl) value = vl | ((bmc411120c.reg & 0x03) << 7)
 #define bmc411120c_prg_8k(vl) value = ((bmc411120c.reg & 0x03) << 4) | (vl & 0x0F)
@@ -80,7 +80,14 @@ static void INLINE bmc411120c_update_chr(void);
 			break;\
 	}
 
-BYTE bmc411120c_reset;
+struct _bmc411120c {
+	BYTE reg;
+	WORD prg_map[4];
+	WORD chr_map[8];
+} bmc411120c;
+struct _bmc411120ctmp {
+	BYTE reset;
+} bmc411120ctmp;
 
 void map_init_BMC411120C(void) {
 	EXTCL_CPU_WR_MEM(BMC411120C);
@@ -115,9 +122,9 @@ void map_init_BMC411120C(void) {
 	}
 
 	if (info.reset >= HARD) {
-		bmc411120c_reset = 0;
+		bmc411120ctmp.reset = 0;
 	} else if (info.reset == RESET) {
-		bmc411120c_reset ^= 0x04;
+		bmc411120ctmp.reset ^= 0x04;
 	}
 
 	bmc411120c_update_prg();
@@ -167,10 +174,10 @@ BYTE extcl_save_mapper_BMC411120C(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE bmc411120c_update_prg(void) {
+INLINE static void bmc411120c_update_prg(void) {
 	BYTE value;
 
-	if (bmc411120c.reg & (0x08 | bmc411120c_reset)) {
+	if (bmc411120c.reg & (0x08 | bmc411120ctmp.reset)) {
 		value = 0x0C | ((bmc411120c.reg >> 4) & 0x03);
 		control_bank(info.prg.rom[0].max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
@@ -193,7 +200,7 @@ static void INLINE bmc411120c_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE bmc411120c_update_chr(void) {
+INLINE static void bmc411120c_update_chr(void) {
 	BYTE i;
 	WORD value;
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,10 +22,6 @@
 #include "common.h"
 
 enum { TXCTW, T22211A, T22211B, T22211C };
-
-struct _t22211x {
-	BYTE reg[4];
-} t22211x;
 
 void map_init_Txc(BYTE model);
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,19 +16,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QMessageBox>
-#else
 #include <QtWidgets/QMessageBox>
-#endif
 #include <QtCore/QFileInfo>
 #include "info.h"
 #include "settings.h"
 #include "cmd_line.h"
 #include "conf.h"
 #include "version.h"
-#include "gfx.h"
 #include "gui.h"
 
 #define req_arg true
@@ -55,27 +49,23 @@ static struct _cl_option {
 	QString sopt;
 } opt_long[] = {
 	{ "mode",                  req_arg, "m"},
-	{ "fps",                   req_arg, "f"},
-	{ "frameskip",             req_arg, "k"},
 	{ "size",                  req_arg, "s"},
 	{ "overscan",              req_arg, "o"},
 	{ "filter",                req_arg, "i"},
 	{ "ntsc-format",           req_arg, "n"},
 	{ "palette",               req_arg, "p"},
-#if defined (WITH_OPENGL)
-	{ "rendering",             req_arg, "r"},
-#endif
 	{ "vsync",                 req_arg, "v"},
 	{ "pixel-aspect-ratio",    req_arg, "e"},
 	{ "interpolation",         req_arg, "j"},
 	{ "fullscreen",            req_arg, "u"},
+	{ "int-scl-fullscreen",    req_arg, "r"},
 	{ "stretch-fullscreen",    req_arg, "t"},
+	{ "screen-rotation",       req_arg,  0 },
 	{ "audio",                 req_arg, "a"},
 	{ "audio-buffer-factor",   req_arg, "b"},
 	{ "samplerate",            req_arg, "l"},
 	{ "channels",              req_arg, "c"},
 	{ "stereo-delay",          req_arg, "d"},
-	{ "audio-quality",         req_arg, "q"},
 	{ "swap-duty",             req_arg,  0 },
 	{ "swap-emphasis",         req_arg,  0 },
 	{ "gamegenie",             req_arg, "g"},
@@ -98,12 +88,14 @@ static struct _cl_option {
 	{ "background-pause",      req_arg,  0 },
 	{ "save-battery-ram-file", req_arg,  0 },
 	{ "language",              req_arg,  0 },
-	{ "disable-new-menu",      req_arg,  0 },
 	{ "fullscreen-window",     req_arg,  0 },
 	{ "audio-output-device",   req_arg,  0 },
+	{ "shader",                req_arg,  0 },
+	{ "overscan-blk-brd",      req_arg,  0 },
+	{ "rewind-minutes",        req_arg,  0 }
 };
 
-void cmd_line_parse(int argc, uTCHAR **argv) {
+BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 	QStringList splitted;
 	QString arg, key, skey, value, exe = QFileInfo(uQString(argv[0])).baseName();
 	int opt = 0;
@@ -131,22 +123,22 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 							value = QString(splitted.at(1));
 						} else {
 							if ((a + 1) >= argc) {
-								QMessageBox::warning(0,
-									"Error",
+								QMessageBox::warning(0, "Error",
 									QString("%1: the option needs an arguments -- \"%2\"").arg(exe, key));
 								usage(exe);
+								return (EXIT_ERROR);
 							} else {
 								value = uQString(argv[++a]);
 							}
 						}
 					}
-					opt = (*((char *) skey.toLatin1().constData()));
+					opt = (*((char *)skey.toLatin1().constData()));
 					break;
 				}
 			}
 		} else {
-			umemset(info.rom_file, 0x00, usizeof(info.rom_file));
-			ustrncpy(info.rom_file, uQStringCD(key), usizeof(info.rom_file) - 1);
+			umemset(info.rom.file, 0x00, usizeof(info.rom.file));
+			ustrncpy(info.rom.file, uQStringCD(key), usizeof(info.rom.file) - 1);
 			continue;
 		}
 
@@ -160,6 +152,8 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 				} else if (key == "portable") {
 					// l'ho gia' controllato quindi qui non faccio niente
 				} else if (key == "txt-on-screen") {
+					set_int(cfg_from_file.txt_on_screen, SET_TEXT_ON_SCREEN);
+				} else if (key == "screen-rotation") {
 					set_int(cfg_from_file.txt_on_screen, SET_TEXT_ON_SCREEN);
 				} else if (key == "input-display") {
 					set_int(cfg_from_file.input_display, SET_INPUT_DISPLAY);
@@ -189,12 +183,18 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 					set_int(cfg_from_file.bck_pause, SET_BCK_PAUSE);
 				} else if (key == "language") {
 					set_int(cfg_from_file.language, SET_GUI_LANGUAGE);
-				} else if (key == "disable-new-menu") {
-					set_int(cfg_from_file.disable_new_menu, SET_GUI_DISABLE_NEW_MENU);
 				} else if (key == "fullscreen-window") {
 					set_int(cfg_from_file.fullscreen_in_window, SET_FULLSCREEN_IN_WINDOW);
 				} else if (key == "audio-output-device") {
 					set_cpy_utchar_to_val(cfg_from_file.audio_output, SET_AUDIO_OUTPUT_DEVICE);
+				} else if (key == "shader") {
+					set_int(cfg_from_file.shader, SET_SHADER);
+				} else if (key == "overscan-blk-brd") {
+					set_int(cfg_from_file.oscan_black_borders, SET_OVERSCAN_BLACK_BORDERS);
+				} else if (key == "overscan-blk-brd-f") {
+					set_int(cfg_from_file.oscan_black_borders_fscr, SET_OVERSCAN_BLACK_BORDERS_FSCR);
+				} else if (key == "rewind-minutes") {
+					set_int(cfg_from_file.rewind_minutes, SET_REWIND_MINUTES);
 				}
 				break;
 			case 'a':
@@ -209,15 +209,13 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 			case 'd':
 				cfg_from_file.stereo_delay = set_double(5);
 				break;
-			case 'f':
-				set_int(cfg_from_file.fps, SET_FPS);
-				break;
 			case 'g':
 				set_int(cfg_from_file.cheat_mode, SET_CHEAT_MODE);
 				break;
 			case 'h':
 			case '?':
 				usage(exe);
+				return (EXIT_ERROR);
 				break;
 			case 'V': {
 				if (!info.portable) {
@@ -225,12 +223,9 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 				} else {
 					fprintf(stdout, "Portable %s %s\n", NAME, VERSION);
 				}
-				emu_quit(EXIT_SUCCESS);
+				return (EXIT_ERROR);
 				break;
 			}
-			case 'k':
-				set_int(cfg_from_file.frameskip, SET_FRAMESKIP);
-				break;
 			case 'i':
 				set_int(cfg_from_file.filter, SET_FILTER);
 				break;
@@ -249,18 +244,12 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 			case 'p':
 				set_int(cfg_from_file.palette, SET_PALETTE);
 				break;
-			case 'q':
-				set_int(cfg_from_file.audio_quality, SET_AUDIO_QUALITY);
-				break;
-#if defined (WITH_OPENGL)
-			case 'r':
-				set_int(cfg_from_file.render, SET_RENDERING);
-				gfx_set_render(cfg_from_file.render);
-				break;
-#endif
 			case 's':
 				set_int(cfg_from_file.scale, SET_SCALE);
 				gfx.scale_before_fscreen = cfg_from_file.scale;
+				break;
+			case 'r':
+				set_int(cfg_from_file.integer_scaling, SET_INTEGER_FULLSCREEN);
 				break;
 			case 't':
 				{
@@ -287,6 +276,8 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 				break;
 		}
 	}
+
+	return (EXIT_OK);
 }
 BYTE cmd_line_check_portable(int argc, uTCHAR **argv) {
 	if (QFileInfo(uQString(argv[0])).completeBaseName().right(2) == "_p") {
@@ -348,27 +339,26 @@ static void usage(QString name) {
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
-#if defined (WITH_OPENGL)
 			uL("" uPERCENTs "\n")
+			uL("" uPERCENTs "\n")
+#if defined (WITH_OPENGL)
 			uL("" uPERCENTs "\n")
 #endif
 	};
 
-	usage_string = (uTCHAR *) malloc(1024 * 8);
-	usnprintf(usage_string, 1024 * 8, istructions,
+	usage_string = (uTCHAR *)malloc(1024 * 9);
+	usnprintf(usage_string, 1024 * 9, istructions,
 			main_cfg[SET_MODE].hlp,
-			main_cfg[SET_FPS].hlp,
-			main_cfg[SET_FRAMESKIP].hlp,
 			main_cfg[SET_SCALE].hlp,
 			main_cfg[SET_PAR].hlp,
 			main_cfg[SET_PAR_SOFT_STRETCH].hlp,
+			main_cfg[SET_OVERSCAN_BLACK_BORDERS].hlp,
+			main_cfg[SET_OVERSCAN_BLACK_BORDERS_FSCR].hlp,
 			main_cfg[SET_OVERSCAN_DEFAULT].hlp,
 			main_cfg[SET_FILTER].hlp,
 			main_cfg[SET_NTSC_FORMAT].hlp,
+			main_cfg[SET_SHADER].hlp,
 			main_cfg[SET_PALETTE].hlp,
-#if defined (WITH_OPENGL)
-			main_cfg[SET_RENDERING].hlp,
-#endif
 			main_cfg[SET_SWAP_EMPHASIS_PAL].hlp,
 			main_cfg[SET_VSYNC].hlp,
 			main_cfg[SET_INTERPOLATION].hlp,
@@ -383,14 +373,15 @@ static void usage(QString name) {
 			main_cfg[SET_OVERSCAN_BRD_PAL].hlp,
 			main_cfg[SET_FULLSCREEN].hlp,
 			main_cfg[SET_FULLSCREEN_IN_WINDOW].hlp,
+			main_cfg[SET_INTEGER_FULLSCREEN].hlp,
 			main_cfg[SET_STRETCH_FULLSCREEN].hlp,
+			main_cfg[SET_SCREEN_ROTATION].hlp,
 			main_cfg[SET_AUDIO_OUTPUT_DEVICE].hlp,
 			main_cfg[SET_AUDIO].hlp,
 			main_cfg[SET_AUDIO_BUFFER_FACTOR].hlp,
 			main_cfg[SET_SAMPLERATE].hlp,
 			main_cfg[SET_CHANNELS].hlp,
 			main_cfg[SET_STEREO_DELAY].hlp,
-			main_cfg[SET_AUDIO_QUALITY].hlp,
 			main_cfg[SET_SWAP_DUTY].hlp,
 			main_cfg[SET_HIDE_SPRITES].hlp,
 			main_cfg[SET_HIDE_BACKGROUND].hlp,
@@ -398,7 +389,7 @@ static void usage(QString name) {
 			main_cfg[SET_BCK_PAUSE].hlp,
 			main_cfg[SET_CHEAT_MODE].hlp,
 			main_cfg[SET_GUI_LANGUAGE].hlp,
-			main_cfg[SET_GUI_DISABLE_NEW_MENU].hlp
+			main_cfg[SET_REWIND_MINUTES].hlp
 	);
 
 	if (box->font().pointSize() > 9) {
@@ -423,6 +414,4 @@ static void usage(QString name) {
 	box->exec();
 
 	free(usage_string);
-
-	emu_quit(EXIT_SUCCESS);
 }

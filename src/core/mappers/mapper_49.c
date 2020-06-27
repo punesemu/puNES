@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -158,6 +158,12 @@
 			return;\
 	}\
 }
+
+struct _m49 {
+	BYTE reg;
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m49;
 
 void map_init_49(void) {
 	EXTCL_CPU_WR_MEM(49);

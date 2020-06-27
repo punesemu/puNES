@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,11 +22,6 @@
 #include "common.h"
 
 enum { ASDER, FHERO };
-
-struct _asder {
-	BYTE address;
-	BYTE reg[8];
-} asder;
 
 void map_init_Ntdec(BYTE model);
 

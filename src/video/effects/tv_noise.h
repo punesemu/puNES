@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,16 +21,18 @@
 
 #include "common.h"
 
+typedef struct _turn_off_effect {
+	void *palette;
+	void *ntsc;
+} _turn_off_effect;
+
+extern _turn_off_effect turn_off_effect;
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-EXTERNC struct _turn_off {
-	void *palette;
-	void *ntsc;
-} turn_off;
 
 EXTERNC BYTE tv_noise_init(void);
 EXTERNC void tv_noise_quit(void);

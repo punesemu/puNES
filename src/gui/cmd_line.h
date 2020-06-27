@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 #define EXTERNC
 #endif
 
-EXTERNC void cmd_line_parse(int argc, uTCHAR **argv);
+EXTERNC BYTE cmd_line_parse(int argc, uTCHAR **argv);
 EXTERNC BYTE cmd_line_check_portable(int argc, uTCHAR **argv);
 
 #undef EXTERNC

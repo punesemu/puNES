@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -63,6 +63,12 @@
 		value = ((vl << 0) & 0x01) | ((vl >> 3) & 0x02) | ((vl >> 1) & 0x04) | ((vl << 2) & 0x18);\
 	}
 */
+
+struct _m249 {
+	BYTE reg;
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m249;
 
 void map_init_249(void) {
 	EXTCL_CPU_WR_MEM(249);

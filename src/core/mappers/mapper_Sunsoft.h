@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-enum {
+enum sunsoft_types {
 	SUN1,
 	SUN2A,
 	SUN2B,
@@ -33,33 +33,15 @@ enum {
 	DODGEDANPEI2
 };
 
-typedef struct {
+typedef struct _square_fm7 {
 	BYTE disable;
 	BYTE step;
 	WORD frequency;
 	WORD timer;
 	WORD volume;
 	SWORD output;
-
-/* ------------------------------------------------------- */
-/* questi valori non e' necessario salvarli nei savestates */
-/* ------------------------------------------------------- */
-/* */ BYTE clocked;                                     /* */
-/* ------------------------------------------------------- */
 } _square_fm7;
-
-struct _sunsoft3 {
-	BYTE enable;
-	BYTE toggle;
-	WORD count;
-	BYTE delay;
-} s3;
-struct _sunsoft4 {
-	uint32_t chr_nmt[2];
-	BYTE mode;
-	BYTE mirroring;
-} s4;
-struct sunsoft_fm7 {
+typedef struct _sunsoft_fm7 {
 	BYTE address;
 	BYTE prg_ram_enable;
 	BYTE prg_ram_mode;
@@ -70,9 +52,18 @@ struct sunsoft_fm7 {
 	BYTE irq_delay;
 	BYTE snd_reg;
 	_square_fm7 square[3];
-} fm7;
+
+	/* ------------------------------------------------------- */
+	/* questi valori non e' necessario salvarli nei savestates */
+	/* ------------------------------------------------------- */
+	/* */ BYTE clocked;                                     /* */
+	/* ------------------------------------------------------- */
+} _sunsoft_fm7;
+
+extern _sunsoft_fm7 fm7;
 
 void map_init_Sunsoft(BYTE model);
+void map_init_NSF_Sunsoft(BYTE model);
 
 void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value);
 

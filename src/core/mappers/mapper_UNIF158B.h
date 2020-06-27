@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,11 +20,6 @@
 #define MAPPER_UNIF158B_H_
 
 #include "common.h"
-
-struct _unif158b {
-	BYTE reg[8];
-	WORD prg_map[4];
-} unif158b;
 
 void map_init_UNIF158B(void);
 void extcl_cpu_wr_mem_UNIF158B(WORD address, BYTE value);

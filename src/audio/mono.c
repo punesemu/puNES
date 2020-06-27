@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,12 +17,13 @@
  */
 
 #include <math.h>
-#include "snd.h"
+#include "audio/snd.h"
 #include "audio/mono.h"
 #include "audio/channels.h"
 
 BYTE ch_mono_init(void) {
 	audio_channels_quit = ch_mono_quit;
+	audio_channels_reset = ch_mono_reset;
 	audio_channels_tick = ch_mono_tick;
 
 	snd.channels = 1;
@@ -30,9 +31,10 @@ BYTE ch_mono_init(void) {
 	return (EXIT_OK);
 }
 void ch_mono_quit(void) {}
+void ch_mono_reset(void) {}
 void ch_mono_tick(SWORD value) {
-	(*SNDCACHE->write++) = value;
+	(*snd.cache->write++) = value;
 
-	SNDCACHE->samples_available++;
-	SNDCACHE->bytes_available += sizeof(*SNDCACHE->write);
+	snd.cache->samples_available++;
+	snd.cache->bytes_available += sizeof(*snd.cache->write);
 }

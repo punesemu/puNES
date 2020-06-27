@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE sa9602b_update_prg(void);
+INLINE static void sa9602b_update_prg(void);
 
 #define sa9602b_8000()\
 	if (mmc3.prg_rom_cfg != old_prg_rom_cfg) {\
@@ -58,6 +58,11 @@ static void INLINE sa9602b_update_prg(void);
 			sa9602b.prg_map[1] = value & 0x3F;\
 			break;\
 	}
+
+struct _sa9602b {
+	WORD prg_chip[4];
+	WORD prg_map[4];
+} sa9602b;
 
 void map_init_SA_9602B(void) {
 	EXTCL_CPU_WR_MEM(SA_9602B);
@@ -118,7 +123,7 @@ BYTE extcl_save_mapper_SA_9602B(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE sa9602b_update_prg(void) {
+INLINE static void sa9602b_update_prg(void) {
 	WORD value;
 
 	value = sa9602b.prg_map[0];

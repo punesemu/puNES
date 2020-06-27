@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,15 +23,10 @@
 #include <shlobj.h>
 #include "VersionHelpers.h"
 
-double high_resolution_ms(void);
-
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)) && defined (__WIN32__)
-#include <QtCore/QtPlugin>
-Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
-#endif
+static double high_resolution_ms(void);
 
 void gui_init(int *argc, char **argv) {
-	memset(&qt, 0, sizeof(qt));
+	qt = {};
 
 	qt.app = new QApplication((*argc), argv);
 
@@ -49,11 +44,9 @@ void gui_init(int *argc, char **argv) {
 		gui.version_os = WIN_EIGHT;
 	} else if (IsWindows7SP1OrGreater() || IsWindows7OrGreater()) {
 		gui.version_os = WIN_SEVEN;
-	} else if (IsWindowsVistaSP2OrGreater() || IsWindowsVistaSP1OrGreater()
-			|| IsWindowsVistaOrGreater()) {
+	} else if (IsWindowsVistaSP2OrGreater() || IsWindowsVistaSP1OrGreater() || IsWindowsVistaOrGreater()) {
 		gui.version_os = WIN_VISTA;
-	} else if (IsWindowsXPSP3OrGreater() || IsWindowsXPSP2OrGreater()
-			|| IsWindowsXPSP1OrGreater() || IsWindowsXPOrGreater()) {
+	} else if (IsWindowsXPSP3OrGreater() || IsWindowsXPSP2OrGreater() || IsWindowsXPSP1OrGreater() || IsWindowsXPOrGreater()) {
 		gui.version_os = WIN_XP;
 	}
 
@@ -75,17 +68,17 @@ void gui_init(int *argc, char **argv) {
 			case WIN_SEVEN:
 			case WIN_VISTA:
 				// FIXME : non funziona sotto wingw
-				//SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_CREATE, NULL, &gui.home);
+				//SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_CREATE, nullptr, &gui.home);
 				//break;
 			case WIN_XP:
 			default:
-				SHGetFolderPathW(NULL, CSIDL_PERSONAL, NULL, 0, (LPWSTR) gui.home);
+				SHGetFolderPathW(nullptr, CSIDL_PERSONAL, nullptr, 0, (LPWSTR)gui.home);
 				break;
 		}
 
 		if (info.portable) {
 			uTCHAR path[usizeof(info.base_folder)];
-			DWORD length = GetModuleFileNameW(NULL, (LPWSTR) &path, usizeof(path));
+			DWORD length = GetModuleFileNameW(nullptr, (LPWSTR)&path, usizeof(path));
 
 			if (length == 0) {
 				fprintf(stderr, "INFO: Error resolving exe path.\n");
@@ -98,37 +91,55 @@ void gui_init(int *argc, char **argv) {
 		} else {
 			usnprintf(info.base_folder, usizeof(info.base_folder), uL("" uPERCENTs "/" NAME), gui.home);
 		}
+
+		// directory temporanea del sistema operativo
+		{
+			static uTCHAR tmp_path[MAX_PATH];
+			DWORD ret = 0;
+
+			ret = GetTempPathW(MAX_PATH, (LPWSTR)&tmp_path);
+
+			if ((ret > MAX_PATH) || (ret == 0)) {
+				usnprintf(tmp_path, sizeof(tmp_path), uL("" uPERCENTs TMP_FOLDER), info.base_folder);
+			}
+
+			gui.ostmp = (const uTCHAR *)&tmp_path;
+		}
 	}
 
 	// avvio il contatore dei millisecondi
 	{
 		uint64_t pf;
 
-		QueryPerformanceFrequency((LARGE_INTEGER *) &pf);
-		gui.frequency = (double) pf;
-		QueryPerformanceCounter((LARGE_INTEGER *) &pf);
+		QueryPerformanceFrequency((LARGE_INTEGER *)&pf);
+		gui.frequency = (double)pf;
+		QueryPerformanceCounter((LARGE_INTEGER *)&pf);
 		gui.counter_start = pf;
 		gui_get_ms = high_resolution_ms;
 	}
 }
 void gui_sleep(double ms) {
-	if (ms > 0) {
+	if (ms >= 0) {
 		Sleep(ms);
 	}
 }
 HWND gui_screen_id(void) {
-	HWND wid = (HWND) qt.screen->winId();
+#if defined (WITH_OPENGL)
+	HWND wid = (HWND)qt.screen->wogl->winId();
+#elif defined (WITH_D3D9)
+	HWND wid = (HWND)qt.screen->wd3d9->winId();
+#endif
 
 	return (wid);
 }
 
-double high_resolution_ms(void) {
+static double high_resolution_ms(void) {
 	uint64_t time, diff;
 
-	QueryPerformanceCounter((LARGE_INTEGER *) &time);
+	QueryPerformanceCounter((LARGE_INTEGER *)&time);
 	diff = ((time - gui.counter_start) * 1000) / gui.frequency;
 
-	return ((double) (diff & 0xffffffff));
+	return ((double)(diff & 0xffffffff));
 }
 
 #endif /* OS_WINDOWS_H_ */

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,15 +35,6 @@ enum {
 	JAJAMARU,
 	MEZASETOPPRO,
 };
-
-struct _ss8806 {
-	BYTE chr_rom_bank[8];
-	BYTE enabled;
-	WORD mask;
-	WORD reload;
-	WORD count;
-	BYTE delay;
-} ss8806;
 
 void map_init_Jaleco(BYTE model);
 

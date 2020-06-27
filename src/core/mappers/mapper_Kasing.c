@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -59,6 +59,14 @@
 		kasing_chr_1k_update(i)\
 	}\
 }
+
+struct _kasing {
+	BYTE prg_mode;
+	BYTE prg_high;
+	WORD prg_rom_bank[4];
+	BYTE chr_high;
+	WORD chr_rom_bank[8];
+} kasing;
 
 void map_init_Kasing(void) {
 	EXTCL_CPU_WR_MEM(Kasing);

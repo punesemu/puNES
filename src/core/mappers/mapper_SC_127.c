@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,13 @@
 #include "cpu.h"
 #include "ppu.h"
 #include "save_slot.h"
+
+struct _sc127 {
+	struct _sc127_irq {
+		BYTE active;
+		WORD count;
+	} irq;
+} sc127;
 
 void map_init_SC_127(void) {
 	EXTCL_CPU_WR_MEM(SC_127);
@@ -76,7 +83,7 @@ void extcl_cpu_wr_mem_SC_127(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_SC_127(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_SC_127(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address == 0x5800) {
 		return (0x20);
 	}

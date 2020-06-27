@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,22 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE sync_83(void);
+INLINE static void sync_83(void);
+
+struct _m83 {
+	BYTE is2kbank;
+	BYTE isnot2kbank;
+	BYTE mode;
+	BYTE bank;
+	BYTE dip;
+	BYTE low[4];
+	BYTE reg[11];
+
+	struct _m83_irq {
+		BYTE active;
+		WORD count;
+	} irq;
+} m83;
 
 void map_init_83(void) {
 	EXTCL_CPU_WR_MEM(83);
@@ -154,7 +169,7 @@ void extcl_cpu_every_cycle_83(void) {
 	}
 }
 
-static void INLINE sync_83(void) {
+INLINE static void sync_83(void) {
 	WORD value;
 
 	switch (m83.mode & 0x03) {

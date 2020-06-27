@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,18 +22,6 @@
 #include "common.h"
 
 enum { VRC4A, VRC4B, VRC4C, VRC4D, VRC4E, VRC4UNL, VRC4BMC, VRC4T230 };
-
-struct _vrc4 {
-	WORD chr_rom_high_bank[8];
-	BYTE chr_rom_bank[8];
-	BYTE swap_mode;
-	BYTE irq_enabled;
-	BYTE irq_reload;
-	BYTE irq_mode;
-	BYTE irq_acknowledge;
-	BYTE irq_count;
-	WORD irq_prescaler;
-} vrc4;
 
 void map_init_VRC4(BYTE revision);
 void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value);

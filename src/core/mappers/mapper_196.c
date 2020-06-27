@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE m196_update_prg(void);
+INLINE static void m196_update_prg(void);
 
 #define m196_8000()\
 	if (mmc3.prg_rom_cfg != old_prg_rom_cfg) {\
@@ -42,6 +42,11 @@ static void INLINE m196_update_prg(void);
 			m196.prg_map[1] = value;\
 			break;\
 	}
+
+struct _m196 {
+	BYTE reg[2];
+	WORD prg_map[4];
+} m196;
 
 void map_init_196(void) {
 	EXTCL_CPU_WR_MEM(196);
@@ -119,7 +124,7 @@ BYTE extcl_save_mapper_196(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE m196_update_prg(void) {
+INLINE static void m196_update_prg(void) {
 	WORD value;
 
 	if (m196.reg[0]) {

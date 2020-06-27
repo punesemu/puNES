@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,10 @@
 #include "save_slot.h"
 
 static const BYTE unif603_5052_vlu[4] = { 0x00, 0x02, 0x02, 0x03 };
+
+struct _unif603_5052 {
+	BYTE reg;
+} unif603_5052;
 
 void map_init_UNIF603_5052(void) {
 	EXTCL_CPU_WR_MEM(UNIF603_5052);
@@ -56,7 +60,7 @@ void extcl_cpu_wr_mem_UNIF603_5052(WORD address, BYTE value) {
 		return;
 	}
 }
-BYTE extcl_cpu_rd_mem_UNIF603_5052(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_UNIF603_5052(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x4020) && (address <= 0x7FFF)) {
 		return (unif603_5052.reg);
 	}

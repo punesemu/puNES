@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,11 +20,6 @@
 #define MAPPER_TF1201_H_
 
 #include "common.h"
-
-struct _tf1201 {
-	BYTE chr_rom_bank[8];
-	BYTE swap_mode;
-} tf1201;
 
 void map_init_TF1201(void);
 void extcl_cpu_wr_mem_TF1201(WORD address, BYTE value);

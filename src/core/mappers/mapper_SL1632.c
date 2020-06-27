@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,9 +23,9 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE sl1632_update_mmc3(void);
-static void INLINE sl1632_update_chr_mmc3(void);
-static void INLINE sl1632_update(void);
+INLINE static void sl1632_update_mmc3(void);
+INLINE static void sl1632_update_chr_mmc3(void);
+INLINE static void sl1632_update(void);
 
 #define sl1632_change_page_chr_1k_mmc3(ind)\
 	sl1632.mmc3.chr_map[ind] = value | (sl1632.mmc3.chr_map[ind] & 0xFF)
@@ -95,6 +95,18 @@ static void INLINE sl1632_update(void);
 	} else {\
 		mirroring_V();\
 	}
+
+struct _sl1632 {
+	BYTE mode;
+	BYTE mirroring;
+	WORD prg_map[2];
+	WORD chr_map[8];
+	struct _sl1632_mmc3 {
+		BYTE mirroring;
+		WORD prg_map[4];
+		WORD chr_map[8];
+	} mmc3;
+} sl1632;
 
 void map_init_SL1632(void) {
 	EXTCL_CPU_WR_MEM(SL1632);
@@ -258,7 +270,7 @@ BYTE extcl_save_mapper_SL1632(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE sl1632_update_mmc3(void) {
+INLINE static void sl1632_update_mmc3(void) {
 	WORD value;
 
 	value = sl1632.mmc3.prg_map[0];
@@ -279,7 +291,7 @@ static void INLINE sl1632_update_mmc3(void) {
 
 	sl1632_mirroring(sl1632.mmc3.mirroring)
 }
-static void INLINE sl1632_update_chr_mmc3(void) {
+INLINE static void sl1632_update_chr_mmc3(void) {
 	BYTE i;
 	WORD value;
 
@@ -301,7 +313,7 @@ static void INLINE sl1632_update_chr_mmc3(void) {
 		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
 	}
 }
-static void INLINE sl1632_update(void) {
+INLINE static void sl1632_update(void) {
 	BYTE i, value;
 
 	value = sl1632.prg_map[0];

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,23 +16,33 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include "cheat.h"
+#include "rom_mem.h"
 #include "gui.h"
 #include "emu.h"
 #include "info.h"
-#include "text.h"
+#include "patcher.h"
+#include "conf.h"
 
 #define GGFILE "gamegenie.rom"
 
+_gamegenie gamegenie;
+_cheats_list cheats_list;
+
 void gamegenie_init(void) {
-	gamegenie.rom_present = FALSE;
+	memset(&gamegenie, 0x00, sizeof(gamegenie));
 	gamegenie_reset();
 }
+void gamegenie_quit(void) {
+	gamegenie_free_paths();
+}
 void gamegenie_reset(void) {
-	BYTE i;
+	unsigned int i;
 
 	gamegenie.counter = 0;
 	gamegenie.phase = GG_LOAD_GAMEGENIE;
@@ -47,62 +57,135 @@ void gamegenie_reset(void) {
 		ch->replace = 0xFF;
 	}
 }
-void gamegenie_check_rom_present(BYTE print_message) {
-	uTCHAR gg_rom[LENGTH_FILE_NAME_MID];
-
-	usnprintf(gg_rom, usizeof(gg_rom), uL("" uPERCENTs BIOS_FOLDER "/" GGFILE), info.base_folder);
+void gamegenie_free_paths(void) {
+	if (gamegenie.rom) {
+		free(gamegenie.rom);
+		gamegenie.rom = NULL;
+	}
+	if (gamegenie.patch) {
+		free(gamegenie.patch);
+		gamegenie.patch = NULL;
+	}
+}
+uTCHAR *gamegenie_check_rom_present(BYTE print_message) {
+	static uTCHAR gg_rom_file[LENGTH_FILE_NAME_LONG], *lastSlash;
 
 	gamegenie.rom_present = FALSE;
 
-	if (emu_file_exist(gg_rom) == EXIT_OK) {
-		gamegenie.rom_present = TRUE;
+	// 1) file specificato dall'utente
+	usnprintf(gg_rom_file, usizeof(gg_rom_file), uL("" uPERCENTs), cfg->gg_rom_file);
+	if (emu_file_exist(gg_rom_file) == EXIT_OK) {
+		goto gamegenie_check_rom_present_founded;
 	}
 
-	if (print_message && gamegenie.rom_present == FALSE) {
-		text_add_line_info(1, "[red]'bios/gamegenie.rom' not found");
-		fprintf(stderr, "Game Genie rom 'bios/gamegenie.rom' not found\n");
+	// 2) directory di lavoro
+	ustrncpy(gg_rom_file, uL("" GGFILE), usizeof(gg_rom_file));
+	if (emu_file_exist(gg_rom_file) == EXIT_OK) {
+		goto gamegenie_check_rom_present_founded;
 	}
+
+	// 3) directory contenente la rom nes
+	ustrncpy(gg_rom_file, info.rom.file, usizeof(gg_rom_file));
+	// rintraccio l'ultimo '.' nel nome
+#if defined (_WIN32)
+	if ((lastSlash = ustrrchr(gg_rom_file, uL('\\')))) {
+		(*(lastSlash + 1)) = 0x00;
+	}
+#else
+	if ((lastSlash = ustrrchr(gg_rom_file, uL('/')))) {
+		(*(lastSlash + 1)) = 0x00;
+	}
+#endif
+	// aggiungo il nome del file
+	ustrcat(gg_rom_file, uL("" GGFILE));
+	if (emu_file_exist(gg_rom_file) == EXIT_OK) {
+		goto gamegenie_check_rom_present_founded;
+	}
+
+	// 4) directory puNES/bios
+	usnprintf(gg_rom_file, usizeof(gg_rom_file), uL("" uPERCENTs BIOS_FOLDER "/" GGFILE), info.base_folder);
+	if (emu_file_exist(gg_rom_file) == EXIT_OK) {
+		goto gamegenie_check_rom_present_founded;
+	}
+
+	if (print_message) {
+		gui_overlay_info_append_msg_precompiled(2, NULL);
+		fprintf(stderr, "Game Genie rom not found\n");
+	}
+
+	return (NULL);
+
+	gamegenie_check_rom_present_founded:
+	gamegenie.rom_present = TRUE;
+	return (gg_rom_file);
 }
-FILE *gamegenie_load_rom(FILE *fp) {
-	FILE *fp_gg, *fp_rom = fp;
+void gamegenie_load_rom(void *rom_mem) {
+	_rom_mem *rom = (_rom_mem *)rom_mem;
+	uTCHAR *gg_rom_file;
+	BYTE *gg_rom_mem;
+	size_t size;
+	FILE *fp;
 
-	gamegenie_check_rom_present(FALSE);
+	gg_rom_file = gamegenie_check_rom_present(FALSE);
 
 	if ((gamegenie.phase == GG_LOAD_ROM) || !gamegenie.rom_present) {
-		return (fp_rom);
+		return;
 	}
 
-	ustrncpy(info.load_rom_file, info.rom_file, usizeof(info.load_rom_file));
-	usnprintf(info.rom_file, usizeof(info.rom_file), uL("" uPERCENTs BIOS_FOLDER "/" GGFILE),
-			info.base_folder);
+	if (info.rom.file[0] && (gamegenie.rom = emu_ustrncpy(gamegenie.rom, info.rom.file)) == NULL) {
+		return;
+	}
 
-	if (!(fp_gg = ufopen(info.rom_file, uL("rb")))) {
-		text_add_line_info(1, "[red]error loading Game Genie rom");
+	if (patcher.file && (gamegenie.patch = emu_ustrncpy(gamegenie.patch, patcher.file)) == NULL) {
+		gamegenie_free_paths();
+		return;
+	}
+
+	ustrncpy(info.rom.file, gg_rom_file, usizeof(info.rom.file) - 1);
+
+	if (!(fp = ufopen(info.rom.file, uL("rb")))) {
+		gui_overlay_info_append_msg_precompiled(3, NULL);
 		fprintf(stderr, "error loading Game Genie rom\n");
-
-		ustrncpy(info.rom_file, info.load_rom_file, usizeof(info.rom_file));
-
-		umemset(info.load_rom_file, 0, usizeof(info.load_rom_file));
-		return (fp_rom);
+		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file) - 1);
+		gamegenie_free_paths();
+		return;
 	}
-
-	fclose(fp_rom);
 
 	gamegenie.phase = GG_EXECUTE;
 
-	return (fp_gg);
+	fseek(fp, 0L, SEEK_END);
+	size = ftell(fp);
+	fseek(fp, 0L, SEEK_SET);
+
+	if ((gg_rom_mem = (BYTE *) malloc(size)) == NULL) {
+		fclose(fp);
+		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file) - 1);
+		gamegenie_free_paths();
+		return;
+	}
+
+	if (fread(gg_rom_mem, 1, size, fp) != size) {
+		fclose(fp);
+		free(gg_rom_mem);
+		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file) - 1);
+		gamegenie_free_paths();
+		return;
+	}
+
+	fclose(fp);
+	free(rom->data);
+
+	rom->data = gg_rom_mem;
+	rom->size = size;
 }
 
 void cheatslist_init(void) {
-	gui_cheat_init();
-	memset (&cheats_list, 0x00, sizeof(cheats_list));
+	gui_objcheat_init();
+	memset(&cheats_list, 0x00, sizeof(cheats_list));
 }
 void cheatslist_read_game_cheats(void) {
 	cheatslist_blank();
-	gui_cheat_read_game_cheats();
-}
-void cheatslist_save_game_cheats(void) {
-	gui_cheat_save_game_cheats();
+	gui_objcheat_read_game_cheats();
 }
 void cheatslist_blank(void) {
 	if (cheats_list.rom.counter > 0) {
@@ -113,6 +196,5 @@ void cheatslist_blank(void) {
 	}
 }
 void cheatslist_quit(void) {
-	cheatslist_save_game_cheats();
 	cheatslist_blank();
 }

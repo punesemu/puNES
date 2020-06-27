@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,10 @@
 #include "info.h"
 #include "mem_map.h"
 #include "save_slot.h"
+
+struct _m226 {
+	BYTE reg[2];
+} m226;
 
 void map_init_226(void) {
 	EXTCL_CPU_WR_MEM(226);

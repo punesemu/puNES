@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,13 +27,18 @@
 	chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);\
 	vrc2.chr_rom_bank[slot] = value
 #define chr_rom_1k_low_update(slot, mask, shift)\
-	value = (vrc2.chr_rom_bank[slot] & mask) | (((value & 0x0F) >> type) << shift);\
+	value = (vrc2.chr_rom_bank[slot] & mask) | (((value & 0x0F) >> vrc2tmp.type) << shift);\
 	_chr_rom_1k_update(slot)
 #define chr_rom_1k_high_update(slot, mask, shift)\
-	value = (vrc2.chr_rom_bank[slot] & mask) | ((value & 0x0F) << (shift - type));\
+	value = (vrc2.chr_rom_bank[slot] & mask) | ((value & 0x0F) << (shift - vrc2tmp.type));\
 	_chr_rom_1k_update(slot)
 
-BYTE type;
+struct _vrc2 {
+	BYTE chr_rom_bank[8];
+} vrc2;
+struct _vrc2tmp {
+	BYTE type;
+} vrc2tmp;
 
 const WORD shift_VRC2[2][4] = {
 	{0x0000, 0x0001, 0x0002, 0x0003},
@@ -55,13 +60,13 @@ void map_init_VRC2(BYTE revision) {
 		}
 	}
 
-	type = revision;
+	vrc2tmp.type = revision;
 }
 void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
 	if (address < 0xB000) {
 		address &= 0xF000;
 	} else {
-		address = (address & 0xF000) | shift_VRC2[type][address & 0x0003];
+		address = (address & 0xF000) | shift_VRC2[vrc2tmp.type][address & 0x0003];
 	}
 
 	switch (address) {

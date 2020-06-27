@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,12 +20,6 @@
 #define MAPPER_114_H_
 
 #include "common.h"
-
-struct _m114 {
-	BYTE prg_rom_switch;
-	BYTE mmc3_ctrl_change;
-	WORD prg_rom_bank[4];
-} m114;
 
 static const BYTE vlu114[8] = {0, 3, 1, 5, 6, 7, 2, 4};
 

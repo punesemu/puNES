@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,14 +20,6 @@
 #define MAPPER_UNIFSMB2J_H_
 
 #include "common.h"
-
-struct _unifsmb2j {
-	BYTE reg;
-	struct _unifsmb2j_irq {
-		BYTE active;
-		WORD count;
-	} irq;
-} unifsmb2j;
 
 void map_init_UNIFSMB2J(void);
 void extcl_cpu_wr_mem_UNIFSMB2J(WORD address, BYTE value);

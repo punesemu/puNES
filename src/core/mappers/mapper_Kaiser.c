@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,18 @@
 #include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
+
+struct _ks202 {
+	BYTE enabled;
+	WORD count;
+	WORD reload;
+	BYTE delay;
+	BYTE reg;
+	BYTE *prg_ram_rd;
+} ks202;
+struct _ks7022 {
+	BYTE reg;
+} ks7022;
 
 void map_init_Kaiser(BYTE model) {
 	switch (model) {
@@ -146,7 +158,7 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_Kaiser_ks202(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Kaiser_ks202(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {
 		return (openbus);
 	}
@@ -215,7 +227,7 @@ void extcl_cpu_wr_mem_Kaiser_ks7022(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_Kaiser_ks7022(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Kaiser_ks7022(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address == 0xFFFC) {
 		BYTE value = ks7022.reg;
 		DBWORD bank;

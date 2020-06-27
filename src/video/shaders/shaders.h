@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -109,13 +109,13 @@ typedef struct _shader_effect {
 	int8_t feedback_pass;
 } _shader_effect;
 
+extern _shader_effect shader_effect;
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-EXTERNC _shader_effect shader_effect;
 
 EXTERNC BYTE shaders_set(int shader);
 EXTERNC void shader_se_set_default(_shader_effect *se);

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE h2288_update_prg(void);
-static void INLINE h2288_update_chr(void);
+INLINE static void h2288_update_prg(void);
+INLINE static void h2288_update_chr(void);
 
 #define h2288_chr_1k(vl) value = vl 
 #define h2288_prg_8k(vl) value = (vl & 0x3F)
@@ -79,6 +79,12 @@ static void INLINE h2288_update_chr(void);
 			h2288.prg_map[1] = value;\
 			break;\
 	}
+
+struct _h2288 {
+	BYTE reg[2];
+	WORD prg_map[4];
+	WORD chr_map[8];
+} h2288;
 
 void map_init_H2288(void) {
 	EXTCL_CPU_WR_MEM(H2288);
@@ -164,7 +170,7 @@ BYTE extcl_save_mapper_H2288(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE h2288_update_prg(void) {
+INLINE static void h2288_update_prg(void) {
 	BYTE value;
 
 	if (h2288.reg[0] & 0x40) {
@@ -197,7 +203,7 @@ static void INLINE h2288_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE h2288_update_chr(void) {
+INLINE static void h2288_update_chr(void) {
 	BYTE i;
 	WORD value;
 

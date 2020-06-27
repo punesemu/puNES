@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,11 @@
 #include "info.h"
 #include "mem_map.h"
 #include "save_slot.h"
+
+struct _active {
+	BYTE openbus;
+	BYTE prg_ram[4];
+} active;
 
 void map_init_Active(void) {
 	EXTCL_CPU_WR_MEM(Active);
@@ -89,7 +94,7 @@ void extcl_cpu_wr_mem_Active(WORD address, BYTE value) {
 	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
 	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
 }
-BYTE extcl_cpu_rd_mem_Active(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Active(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x4020) && (address < 0x6000)) {
 		return (active.prg_ram[address & 0x0003]);
 	}

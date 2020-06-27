@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,6 +19,9 @@
 #include "mem_map.h"
 #include "ppu_inline.h"
 #include "irqA12.h"
+
+_irqA12 irqA12;
+BYTE irqA12_delay;
 
 void irqA12_IO(WORD value, WORD value_old) {
 	if (!(value_old & 0x1000) && (value & 0x1000)) {

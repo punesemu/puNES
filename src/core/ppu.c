@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,23 +16,21 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#if defined (WITH_D3D9)
 #include <stdlib.h>
-#endif
 #include <string.h>
 #include "cpu.h"
 #include "info.h"
 #include "clock.h"
 #include "mem_map.h"
 #include "ppu_inline.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "mappers.h"
 #include "irqA12.h"
 #include "irql2f.h"
 #include "conf.h"
+#include "fps.h"
 
-enum scanline_cycles { SHORT_SLINE_CYCLES = 340, SLINE_CYCLES };
-enum overflow_sprite { OVERFLOW_SPR = 3 };
+enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 
 #define fetch_at()\
 {\
@@ -57,8 +55,8 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 	nmi.cpu_cycles_from_last_nmi++;\
 	/* deve essere azzerato alla fine di ogni ciclo PPU */\
 	r2006.changed_from_op = 0;
-#define put_pixel(clr) screen.line[ppu.screen_y][ppu.frame_x] = r2001.emphasis | clr;
-#define put_emphasis(clr) put_pixel((palette.color[clr] & r2001.color_mode))
+#define put_pixel(clr) screen.wr->line[ppu.screen_y][ppu.frame_x] = r2001.emphasis | clr;
+#define put_emphasis(clr) put_pixel((mmap_palette.color[clr] & r2001.color_mode))
 #define put_bg put_emphasis(color_bg)
 #define put_sp put_emphasis(color_sp | 0x10)
 #define examine_sprites(senv, sp, vis, ty)\
@@ -77,7 +75,7 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 			 * (in poche parole non vengono disegnati i\
 			 * primi 8 pixel dello screen).\
 			 */\
-			if (r2001.spr_clipping || (ppu.frame_x >= 8)) {\
+			if ((ppu.frame_x >= 8) || r2001.spr_clipping) {\
 				/* indico che uno sprite e' stato trovato */\
 				/*flag_sp = TRUE;*/\
 				/*\
@@ -129,6 +127,8 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 		spl[spenv.tmp_spr_plus].h_byte = (inv_chr[ppu_rd_mem(sadr | 0x08)] << 1);\
 	}
 
+INLINE static void ppu_oam_evaluation(void);
+
 static const BYTE inv_chr[256] = {
 	0x00, 0x80, 0x40, 0xC0, 0x20, 0xA0, 0x60, 0xE0,
 	0x10, 0x90, 0x50, 0xD0, 0x30, 0xB0, 0x70, 0xF0,
@@ -163,12 +163,109 @@ static const BYTE inv_chr[256] = {
 	0x0F, 0x8F, 0x4F, 0xCF, 0x2F, 0xAF, 0x6F, 0xEF,
 	0x1F, 0x9F, 0x5F, 0xDF, 0x3F, 0xBF, 0x7F, 0xFF
 };
+static const BYTE palette_init[0x20] = {
+	0x09, 0x01, 0x00, 0x01, 0x00, 0x02, 0x02, 0x0D,
+	0x08, 0x10, 0x08, 0x24, 0x00, 0x00, 0x04, 0x2C,
+	0x09, 0x01, 0x34, 0x03, 0x00, 0x04, 0x00, 0x14,
+	0x08, 0x3A, 0x00, 0x02, 0x00, 0x20, 0x2C, 0x08
+};
 
-void ppu_tick(WORD cycles_cpu) {
+_ppu ppu;
+_screen screen;
+_ppu_openbus ppu_openbus;
+_r2000 r2000;
+_r2001 r2001;
+_r2002 r2002;
+_r2006 r2006;
+_r2xxx r2003, r2004, r2007;
+_spr_evaluate spr_ev;
+_spr sprite[8], sprite_plus[8];
+_spr_evaluate spr_ev_unl;
+_spr sprite_unl[56], sprite_plus_unl[56];
+_tile tile_render, tile_fetch;
+_ppu_sclines ppu_sclines;
+_overclock overclock;
+
+void ppu_init(void) {
+	memset(&screen, 0x00, sizeof(screen));
+}
+void ppu_quit(void) {
+	/* libero la memoria riservata */
+	BYTE a;
+
+	for (a = 0; a < 2; a++) {
+		_screen_buffer *sb = &screen.buff[a];
+
+		if (sb->data) {
+			free(sb->data);
+		}
+	}
+}
+
+void ppu_tick(void) {
 	/* aggiungo i cicli della cpu trascorsi */
-	ppu.cycles += (cycles_cpu * machine.cpu_divide);
+	ppu.cycles += machine.cpu_divide;
 
 	while (ppu.cycles >= machine.ppu_divide) {
+		r2002.race.sprite_overflow = FALSE;
+
+		/* gestione della condizione di race del $2000 al dot 257 */
+		if (r2000.race.ctrl) {
+			r2000.race.ctrl = FALSE;
+			ppu.tmp_vram = (ppu.tmp_vram & 0xF3FF) | ((r2000.race.value & 0x03) << 10);
+		}
+
+		/* gestione del delay del bit del grayscale */
+		if (r2001.grayscale_bit.delay && (--r2001.grayscale_bit.delay == 0)) {
+			r2001.color_mode = PPU_CM_GRAYSCALE;
+		}
+
+		// gestione della seconda scrittura del $2006
+		if (r2006.second_write.delay && (--r2006.second_write.delay == 0)) {
+			WORD old_r2006 = r2006.value;
+
+			ppu.tmp_vram = r2006.second_write.value;
+
+			if ((!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) && (ppu.frame_y > ppu_sclines.vint)) {
+				// split_scroll_test_v2.nes e split_scroll_delay.nes
+				if (ppu.frame_x == 255) {
+					ppu.tmp_vram &= r2006.value;
+				}
+
+				// condizione di race riscontrata in "scanline.nes" e
+				// "Knight Rider (U) [!].nes" (i glitch grafici sotto la macchina
+				// nell'introduzione sono presenti su hardware reale).
+				// Anche "logo (E).nes" e "Ferrari - Grand Prix Challenge (U) [!].nes"
+				// ne sono soggetti.
+				if (ppu.frame_x < SCR_ROWS) {
+					if ((ppu.pixel_tile >= 1) && (ppu.pixel_tile <= 3)) {
+						r2006.race.ctrl = TRUE;
+						r2006.race.value = (r2006.value & 0x00FF) | (ppu.tmp_vram & 0xFF00);
+					}
+				}
+
+				// aggiorno l'r2006
+				r2006.value = ppu.tmp_vram;
+
+				// split_scroll_test_v2.nes e split_scroll_delay.nes
+				if (ppu.frame_x == 254) {
+					r2006_inc()
+				}
+			} else {
+				// aggiorno l'r2006
+				r2006.value = ppu.tmp_vram;
+			}
+
+			if (extcl_update_r2006) {
+				// utilizzato dalle mappers :
+				// MMC3
+				// Rex (DBZ)
+				// Taito (TC0190FMCPAL16R4)
+				// Tengen (Rambo)
+				extcl_update_r2006(r2006.value, old_r2006);
+			}
+		}
+
 		/* controllo se sono all'inizio della dummy line */
 		if (ppu.frame_y == ppu_sclines.vint) {
 			/*
@@ -179,8 +276,12 @@ void ppu_tick(WORD cycles_cpu) {
 			if (ppu.frame_x == 0) {
 				ppu.screen_y = 0;
 				/* setto a 0 il bit 5, 6 ed il 7 del $2002 */
-				r2002.sprite_overflow = r2002.sprite0_hit = r2002.vblank = FALSE;
-			} else if (machine.type == NTSC) {
+				r2002.sprite_overflow = r2002.sprite0_hit = r2002.vblank = ppu.vblank = FALSE;
+				// serve assolutamente per la corretta lettura delle coordinate del puntatore zapper
+				if ((info.zapper_is_present == TRUE) && (fps.fast_forward == FALSE)) {
+					memset((BYTE *)screen.wr->data, 0, screen_size());
+				}
+			} else if ((ppu.frame_x == (SHORT_SLINE_CYCLES - 1)) && (machine.type == NTSC)) {
 				/*
 				 * nei frame NTSC dispari, la dummy line e' lunga 340
 				 * cicli invece dei soliti 341. Visto che la lettura
@@ -189,20 +290,18 @@ void ppu_tick(WORD cycles_cpu) {
 				 * della dummy line, ne anticipo il controllo e
 				 * l'eventuale modifica.
 				 */
-				if (ppu.frame_x == (SHORT_SLINE_CYCLES - 1)) {
-					ppu.sf.prev = ppu.sf.actual;
-					ppu.sf.actual = FALSE;
-					if (ppu.odd_frame) {
-						if (r2001.bck_visible) {
-							if ((r2001.race.ctrl == FALSE) || (r2001.race.value & 0x08)) {
-								ppu.sline_cycles = SHORT_SLINE_CYCLES;
-								ppu.sf.actual = TRUE;
-							}
-						} else {
-							if ((r2001.race.ctrl == TRUE) && (r2001.race.value & 0x08)) {
-								ppu.sline_cycles = SHORT_SLINE_CYCLES;
-								ppu.sf.actual = TRUE;
-							}
+				ppu.sf.prev = ppu.sf.actual;
+				ppu.sf.actual = FALSE;
+				if (ppu.odd_frame) {
+					if (r2001.bck_visible) {
+						if ((r2001.race.ctrl == FALSE) || (r2001.race.value & 0x08)) {
+							ppu.sline_cycles = SHORT_SLINE_CYCLES;
+							ppu.sf.actual = TRUE;
+						}
+					} else {
+						if ((r2001.race.ctrl == TRUE) && (r2001.race.value & 0x08)) {
+							ppu.sline_cycles = SHORT_SLINE_CYCLES;
+							ppu.sf.actual = TRUE;
 						}
 					}
 				}
@@ -239,7 +338,11 @@ void ppu_tick(WORD cycles_cpu) {
 			 *    la PPU rimane assolutamente ferma per una
 			 *    scanline.
 			 */
-			if (!r2002.vblank && (ppu.screen_y < SCR_LINES)) {
+			if (ppu.vblank) {
+				if ((machine.type == PAL) && (ppu.frame_y > 23)) {
+					ppu_oam_evaluation();
+				}
+			} else if (ppu.screen_y < SCR_LINES) {
 				if (extcl_ppu_000_to_255) {
 					/*
 					 * utilizzato dalle mappers :
@@ -264,7 +367,6 @@ void ppu_tick(WORD cycles_cpu) {
 						 */
 						BYTE color_bg = 0, color_sp = 0;
 						BYTE unlimited_spr = FALSE, visible_spr = 0, visible_spr_unl = 0;
-						//BYTE flag_sp = FALSE, flag_bg = FALSE;
 
 /* -------------------------- FETCH DATI PER TILE SUCCESSIVO --------------------------------- */
 						/*
@@ -298,8 +400,7 @@ void ppu_tick(WORD cycles_cpu) {
 							 * che compongono il tile (che hanno un
 							 * peso minore rispetto ai secondi).
 							 */
-							fetch_lb((r2000.race.ctrl ? r2000.race.value : r2000.bpt_adr),
-									(r2006.race.ctrl ? r2006.race.value : r2006.value))
+							fetch_lb(r2000.bpt_adr, (r2006.race.ctrl ? r2006.race.value : r2006.value))
 						} else if (ppu.pixel_tile == 5) {
 							/*
 							 * faccio il fetch dei secondi 8 bit che
@@ -328,20 +429,7 @@ void ppu_tick(WORD cycles_cpu) {
 							 * l'indirizzo, puntera' alla attribut table.
 							 */
 							if (ppu.frame_x == 253) {
-								/*
-								 * se il $2006 viene aggiornato (tramite istruzione)
-								 * proprio al ciclo 253 della PPU, questo incremento
-								 * viene ignorato.
-								 * Rom interessata :
-								 * Cosmic Wars (J) [!].nes
-								 * (avviare la rom e non premere niente. Dopo la scritta
-								 * 260 iniziale e le esplosioni che seguono, si apre una
-								 * schermata con la parte centrale che saltella senza
-								 * questo controllo.
-								 */
-								if (r2006.changed_from_op != 253) {
-									r2006_inc()
-								}
+								r2006_inc()
 								/*
 								 * alla fine di ogni scanline
 								 * reinizializzo il $2006.
@@ -361,12 +449,11 @@ void ppu_tick(WORD cycles_cpu) {
 							 * (in poche parole non vengono disegnati i primi
 							 * 8 pixel dello screen).
 							 */
-							if (r2001.bck_clipping || (ppu.frame_x >= 8)) {
+							if ((ppu.frame_x >= 8) || r2001.bck_clipping) {
 								/* sto trattando un pixel del background */
 								//flag_bg = TRUE;
 								/* recupero i 2 bit LSB del pixel */
-								color_bg = (tile_render.l_byte & 0x01)
-									| (tile_render.h_byte & 0x02);
+								color_bg = (tile_render.l_byte & 0x01) | (tile_render.h_byte & 0x02);
 								/*
 								 * shifto di un bit (leggi un pixel) i
 								 * due bitmap buffers
@@ -413,22 +500,13 @@ void ppu_tick(WORD cycles_cpu) {
 							}
 						}
 /* ------------------------------------ MULTIPLEXER ------------------------------------------ */
-						/* tratto i pixel del background e dello sprite */
-						//if (!(flag_bg | flag_sp)) {
-							/*
-							 * se sono nella condizione in cui il BG e' invisibile
-							 * e non ho trovato nessuno sprite allora visualizzo
-							 * un pixel nero.
-							 */
-							//put_pixel(palette.color[0])
-						//} else
 						if (!color_sp) {
 							/*
 							 * se il colore dello sprite e' trasparente,
 							 * utilizzo quello del background.
 							 */
 							if (cfg->hide_background) {
-								put_pixel(palette.color[0]);
+								put_pixel(mmap_palette.color[0]);
 							} else {
 								put_bg
 							}
@@ -438,7 +516,7 @@ void ppu_tick(WORD cycles_cpu) {
 							 * trasparente, utilizzo quello dello sprite.
 							 */
 							if (cfg->hide_sprites) {
-								put_pixel(palette.color[0]);
+								put_pixel(mmap_palette.color[0]);
 							} else {
 								put_sp
 							}
@@ -453,7 +531,7 @@ void ppu_tick(WORD cycles_cpu) {
 									 */
 									if (cfg->hide_background) {
 										if (cfg->hide_sprites) {
-											put_pixel(palette.color[0]);
+											put_pixel(mmap_palette.color[0]);
 										} else {
 											put_sp
 										}
@@ -464,7 +542,7 @@ void ppu_tick(WORD cycles_cpu) {
 									/* altrimenti quello dello sprite */
 									if (cfg->hide_sprites) {
 										if (cfg->hide_background) {
-											put_pixel(palette.color[0]);
+											put_pixel(mmap_palette.color[0]);
 										} else {
 											put_bg
 										}
@@ -487,15 +565,14 @@ void ppu_tick(WORD cycles_cpu) {
 								 * posizionate le informazioni su tipo di
 								 * sistema (pal o nes e frequenza di aggiornamento).
 								 */
-								if (!r2002.sprite0_hit && !sprite[visible_spr].number
-										&& (ppu.frame_x != 255)) {
+								if (!r2002.sprite0_hit && !sprite[visible_spr].number && (ppu.frame_x != 255)) {
 									r2002.sprite0_hit = 0x40;
 								}
 							} else {
 								if (sprite_unl[visible_spr_unl].attrib & 0x20) {
 									if (cfg->hide_background) {
 										if (cfg->hide_sprites) {
-											put_pixel(palette.color[0]);
+											put_pixel(mmap_palette.color[0]);
 										} else {
 											put_sp
 										}
@@ -505,7 +582,7 @@ void ppu_tick(WORD cycles_cpu) {
 								} else {
 									if (cfg->hide_sprites) {
 										if (cfg->hide_background) {
-											put_pixel(palette.color[0]);
+											put_pixel(mmap_palette.color[0]);
 										} else {
 											put_bg
 										}
@@ -515,386 +592,15 @@ void ppu_tick(WORD cycles_cpu) {
 								}
 							}
 						}
-
-/* ------------------------------- CONTROLLO SPRITE SCANLINE+1 ------------------------------- */
-						if (ppu.frame_x < 64) {
-							r2004.value = 0xFF;
-							/* inizializzo le varibili per il ciclo 64 */
-							if (ppu.frame_x == 63) {
-								/*
-								 * inizializzo i vari indici
-								 *
-								 * Note:
-								 * imposto index al suo valore massimo
-								 * solo perche' nel 64° ciclo, come prima
-								 * cosa lo incremento azzerandolo.
-								 */
-								spr_ev.timing = 0;
-								spr_ev.real = 0;
-								spr_ev.index = 0xFF;
-								/* la fase 1 e 2 corrispondono */
-								spr_ev.phase = 2;
-							}
-						} else if (ppu.frame_x < 256) {
-/* --------------------------------------- FASE 1 E 2 ---------------------------------------- */
-							/*
-							 * in questa fase esamino e salvo i primi 8 sprites
-							 * che trovo essere nel range. Trovato l'ottavo passo
-							 * alla fase 3. Se invece esamino tutti e 64 gli sprites
-							 * dell'OAM, passo alla fase 4.
-							 */
-							if (spr_ev.phase == 2) {
-								if (!spr_ev.timing) {
-									/* in caso di overflow dell'indice degli sprite ... */
-									if (++spr_ev.index == 64) {
-										/* ...azzero l'indice... */
-										spr_ev.index = spr_ev.real = 0;
-										/* ...passo alla fase 4... */
-										spr_ev.phase = 4;
-										/*
-										 * ...di cui questo stesso ciclo sara' il
-										 * timing = 0, quindi il prossimo sara' l'1.
-										 */
-										spr_ev.timing = 1;
-										/* leggo la coordinata Y dello sprite 0 */
-										r2004.value = oam.element[0][YC];
-#if !defined (VECCHIA_GESTIONE_SPRITE0_1)
-										/*
-										 * We've since discovered that not only are
-										 * sprites 0 and 1 temporarily replaced with
-										 * the pair that OAMADDR&0xF8 points to, but
-										 * it's permanent: the pair that OAMADDR & 0xF8
-										 * points to is copied to the first 8 bytes of
-										 * OAM when rendering starts.
-										 * The difference should only show up with a game
-										 * that doesn't use DMA every frame.
-										 */
-										{
-											static BYTE i;
-
-											for (i = 0; i < 8; i++) {
-												oam.data[i] = oam.data[(r2003.value & 0xF8) + i];
-											}
-										}
-#endif
-									} else {
-#if !defined (VECCHIA_GESTIONE_SPRITE0_1)
-										spr_ev.real = spr_ev.index;
-#else
-										/*
-										 * http://forums.nesdev.com/viewtopic.php?f=3&t=465
-										 * The Wiki says something about sprite 0 and 1 being
-										 * fetched from the high 5 bits of the sprite address,
-										 * instead of address locations 0 and 4. The Sachen
-										 * game "Huge Insect (Sachen) [!].nes" relies on
-										 * this same behavior.
-										 * Questo, inoltre ha fatto sparire la pallina nella
-										 * rom "Escape_from_pong" che, a quanto sembra, e'
-										 * il reale comportamaneto su un autentico NES!!.
-										 */
-										if ((spr_ev.real = (
-												(spr_ev.index <= 1) ? ((r2003.value & 0xF8) >> 2) : 0)
-												+ spr_ev.index) >= 64) {
-											spr_ev.real -= 64;
-										}
-#endif
-										/* leggo dall'OAM il byte 0 dell'elemento in esame */
-										r2004.value = oam.element[spr_ev.real][YC];
-										/*
-										 * calcolo la differenza tra la posizione
-										 * iniziale dello sprite e la posizione Y
-										 * del pixel che sto renderizzando. Se e'
-										 * inferiore a 8 o 16 (dipende dalla dimensione
-										 * dello sprite) allora puo' essere disegnato.
-										 */
-										spr_ev.range = ppu.screen_y - r2004.value;
-										/*
-										 * se sono nel range e lo sprite ha una
-										 * posizione Y inferiore o uguale a 0xEF,
-										 * lo esamino.
-										 */
-										if ((r2004.value <= 0xEF)
-												&& (spr_ev.range < r2000.size_spr)) {
-											spr_ev.evaluate = TRUE;
-										} else {
-											/* questo sprite non mi interessa */
-											spr_ev.evaluate = FALSE;
-										}
-										/* incremento timing */
-										spr_ev.timing++;
-									}
-								} else if (spr_ev.timing == 1) {
-									/*
-									 * esamino lo sprites e se necessario
-									 * inizio a memorizzare le informazioni.
-									 */
-									if (spr_ev.evaluate) {
-										/*
-										 * memorizzo la prima parte delle
-										 * informazione dello sprite nel buffer.
-										 */
-										oam.ele_plus[spr_ev.count_plus][YC] = r2004.value;
-										sprite_plus[spr_ev.count_plus].number = spr_ev.index;
-										sprite_plus[spr_ev.count_plus].flip_v = spr_ev.range;
-										/* continuo a trattare questo sprite */
-										spr_ev.timing++;
-									} else {
-										/* passo al prossimo sprite */
-										spr_ev.timing = 0;
-									}
-								/* tratto i cicli pari */
-								} else if (!(spr_ev.timing & 0x01)) {
-									/* leggo il prossimo byte dell'OAM */
-									r2004.value = oam.element[spr_ev.real][spr_ev.timing >> 1];
-									/* passo al ciclo successivo */
-									spr_ev.timing++;
-								/* tratto i cicli dispari */
-								} else {
-									/* memorizzo il valore letto nel ciclo prima */
-									oam.ele_plus[spr_ev.count_plus][spr_ev.timing >> 1] =
-											r2004.value;
-									/* l'unico ciclo diverso e' l'ultimo */
-									if (spr_ev.timing == 7) {
-										/*
-										 * se ho gia' trovato 8 sprites allora
-										 * devo avviare la fase 3.
-										 */
-										if (++spr_ev.count_plus == 8) {
-											spr_ev.phase = 3;
-											/*
-											 * inizilizzo le variabili che
-											 * mi serviranno. byte_OAM = 3
-											 * perche' verra' aumentata e quindi
-											 * riportata a 0 nel primo ciclo
-											 * della fase 3.
-											 */
-											spr_ev.evaluate = FALSE;
-											spr_ev.byte_OAM = 3;
-											spr_ev.index_plus = 0;
-
-											// unlimited sprites
-											if (cfg->unlimited_sprites == TRUE) {
-												BYTE t2004;
-
-												spr_ev_unl.index = spr_ev.index + 1;
-												spr_ev_unl.count_plus = 0;
-
-												for (; spr_ev_unl.index < 64; spr_ev_unl.index++) {
-													t2004 = oam.element[spr_ev_unl.index][YC];
-
-													spr_ev_unl.range = ppu.screen_y - t2004;
-
-													if ((t2004 <= 0xEF)
-															&& (spr_ev_unl.range < r2000.size_spr)) {
-
-														oam.ele_plus_unl[spr_ev_unl.count_plus][YC] =
-																oam.element[spr_ev_unl.index][YC];
-														oam.ele_plus_unl[spr_ev_unl.count_plus][TL] =
-																oam.element[spr_ev_unl.index][TL];
-														oam.ele_plus_unl[spr_ev_unl.count_plus][AT] =
-																oam.element[spr_ev_unl.index][AT];
-														oam.ele_plus_unl[spr_ev_unl.count_plus][XC] =
-																oam.element[spr_ev_unl.index][XC];
-														sprite_plus_unl[spr_ev_unl.count_plus].number =
-																spr_ev_unl.index;
-														sprite_plus_unl[spr_ev_unl.count_plus].flip_v =
-																spr_ev_unl.range;
-
-														spr_ev_unl.count_plus++;
-													}
-												}
-												if (spr_ev_unl.count_plus) {
-													spr_ev_unl.evaluate = TRUE;
-												}
-											}
-										} else {
-											/*
-											 * index_plus non superera'
-											 * mai il valore 7.
-											 */
-											spr_ev.index_plus = spr_ev.count_plus;
-										}
-										/* passo al prossimo sprite */
-										spr_ev.timing = 0;
-									} else {
-										/* se non sono nel 7° continuo a esaminare lo sprite */
-										spr_ev.timing++;
-									}
-								}
-/* ------------------------------------------- FASE 3 ---------------------------------------- */
-							} else if (spr_ev.phase == 3) {
-								/* cicli pari */
-								if (!(spr_ev.timing & 0x01)) {
-									/*
-									 * se non ho ancora trovato il nono sprite devo
-									 * aumentare sia byte_OAM che index. Questo
-									 * e' un'errore della PPU che, invece di controllare
-									 * la coordinata Y (byte 0), tratta il byte puntato
-									 * da byte_OAM come se fosse la coordinata Y.
-									 */
-									if (spr_ev.evaluate == FALSE) {
-										/* incremento l'indice del byte da leggere */
-										if (++spr_ev.byte_OAM == 4) {
-											spr_ev.byte_OAM = 0;
-										}
-										/* in caso di overflow dell'indice degli sprite ... */
-										if (++spr_ev.index == 64) {
-											/* ...azzero l'indice... */
-											spr_ev.index = 0;
-											/* ...e passo alla fase 4... */
-											spr_ev.phase = 4;
-											/*
-											 * ...di cui questo stesso ciclo sara' il
-											 * timing = 0, quindi il prossimo sara' l'1.
-											 */
-											spr_ev.timing = 1;
-											/* leggo la coordinata Y dello sprite 0 */
-											r2004.value = oam.element[0][YC];
-										} else {
-											/*
-											 * leggo dall'OAM il byte byte_OAM
-											 * dell'elemento in esame.
-											 */
-											r2004.value = oam.element[spr_ev.index][spr_ev.byte_OAM];
-											/* l'unica differenza nei cicli pari e' lo 0 */
-											if (spr_ev.timing == 0) {
-												/*
-												 * calcolo la differenza tra la posizione
-												 * iniziale dello sprite e la posizione Y
-												 * del pixel che sto renderizzando. Se e'
-												 * inferiore a 8 o 16 (dipende dalla dimensione
-												 * dello sprite) allora puo' essere disegnato.
-												 */
-												spr_ev.range = ppu.screen_y - r2004.value;
-												/*
-												 * se sono nel range e lo sprite ha una
-												 * posizione Y inferiore o uguale a 0xEF,
-												 * vuol dire che sono al nono sprite.
-												 */
-												if ((r2004.value <= 0xEF)
-														&& (spr_ev.range < r2000.size_spr)) {
-													/* setto il bit 5 (overflow) del $2002 */
-													r2002.sprite_overflow = 0x20;
-													/*
-													 * devo esaminare i 3 byte
-													 * consequenziali a questo.
-													 */
-													spr_ev.evaluate = TRUE;
-												}
-											}
-											/* continuo a esaminare lo sprite */
-											spr_ev.timing++;
-										}
-									/*
-									 * se ho esaminato tutti i 4 byte del nono allora
-									 * devo riprendere a esaminare le coordinate Y degli
-									 * sprites.
-									 */
-									} else if (spr_ev.evaluate == OVERFLOW_SPR) {
-										/* in caso di overflow dell'indice degli sprite ... */
-										if (++spr_ev.index == 64) {
-											/* ...azzero l'indice... */
-											spr_ev.index = 0;
-											/* ...e passo alla fase 4... */
-											spr_ev.phase = 4;
-										}
-										/* leggo la coordinata Y dello sprite in esame */
-										r2004.value = oam.element[spr_ev.index][YC];
-										/* continuo a esaminare lo sprite */
-										spr_ev.timing++;
-									/*
-									 * sto esaminando il nono sprite e devo farlo controllando
-									 * i 3 byte dell'OAM successivi a quello che ho considerato
-									 * come coordinata Y anche se questi finiscono nell'elemento
-									 * dell'OAM successivo.
-									 */
-									} else if (spr_ev.evaluate == TRUE) {
-										/* incremento l'indice del byte da leggere */
-										if (++spr_ev.byte_OAM == 4) {
-											/*
-											 * c'e' la possibilita' che finisca
-											 * nell'elemento dell'OAM successivo.
-											 */
-											spr_ev.byte_OAM = 0;
-											/* in caso di overflow dell'indice degli sprite ... */
-											if (++spr_ev.index == 64) {
-												/* ...azzero l'indice... */
-												spr_ev.index = 0;
-												/* ...e passo alla fase 4... */
-												spr_ev.phase = 4;
-												/*
-												 * l'ho imposto a 0 perche' in uscita da
-												 * questo if sara' aumentato.
-												 */
-												spr_ev.timing = 0;
-											}
-										}
-										/*
-										 * leggo il byte successivo (in caso di passaggio
-										 * alla fase 4 questo corrispondera' alla coordinata Y
-										 * dello sprite 0
-										 */
-										r2004.value = oam.element[spr_ev.real][spr_ev.byte_OAM];
-										/* continuo a esaminare lo sprite */
-										spr_ev.timing++;
-									}
-								/* cicli dispari */
-								} else {
-									/* leggo la coordinata Y dello sprite in esame */
-									r2004.value = oam.ele_plus[spr_ev.index_plus][YC];
-									/* se sto esaminando il nono sprite... */
-									if (spr_ev.evaluate == TRUE) {
-										/* ...e sono nell'ultimo ciclo...*/
-										if (spr_ev.timing == 7) {
-											/* ...indico la nuova modalita'... */
-											spr_ev.evaluate = OVERFLOW_SPR;
-											/* ...passo al prossimo sprite.. */
-											spr_ev.timing = 0;
-											/*
-											 * ...anche se devo riesaminare questo
-											 * stesso sprite (ricordo che incremento
-											 * index al timing = 0).
-											 */
-											spr_ev.index--;
-										} else {
-											/* ... e non sono nell'ultimo ciclo,
-											 * continuo a esaminare lo sprite.
-											 */
-											spr_ev.timing++;
-										}
-									} else {
-										/*
-										 * se non sono nel nono sprite
-										 * allora passo al prossimo.
-										 */
-										spr_ev.timing = 0;
-									}
-								}
-/* ------------------------------------------- FASE 4 ---------------------------------------- */
-							/* e' composto solo da due cicli (0 e 1) */
-							} else if (spr_ev.phase == 4) {
-								/* ciclo 0 */
-								if (!spr_ev.timing) {
-									/* in caso di overflow dell'indice degli sprite ... */
-									if (++spr_ev.index == 64) {
-										/* ...azzero l'indice */
-										spr_ev.index = 0;
-									}
-									/* leggo la coordinata Y dello sprite OAM in esame */
-									r2004.value = oam.element[spr_ev.index][YC];
-									/* passo al ciclo successivo */
-									spr_ev.timing = 1;
-								/* ciclo 1 */
-								} else {
-									/* leggo la coordinata Y dello sprite in esame */
-									r2004.value = oam.ele_plus[spr_ev.index_plus][YC];
-									/* passo al prossimo sprite */
-									spr_ev.timing = 0;
-								}
-							}
-						}
+						ppu_oam_evaluation();
 /* ------------------------------------------------------------------------------------------- */
 					} else {
+						/*
+						 * altrimenti visualizzo un pixel del
+						 * colore 0 della paletta.
+						 */
+						put_pixel(mmap_palette.color[0])
+
 						if ((r2006.value & 0xFF00) == 0x3F00) {
 							/*
 							 * se background e sprites non sono visibili
@@ -903,12 +609,6 @@ void ppu_tick(WORD cycles_cpu) {
 							 * visualizzare il colore puntato dal registro.
 							 */
 							put_emphasis(r2006.value & 0x1F)
-						} else {
-							/*
-							 * altrimenti visualizzo un pixel del
-							 * colore 0 della paletta.
-							 */
-							put_pixel(palette.color[0])
 						}
 					}
 				}
@@ -931,7 +631,7 @@ void ppu_tick(WORD cycles_cpu) {
 		 * 		This process is repeated 8 times.
 		 */
 		if (ppu.frame_x < 320) {
-			if (!r2002.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) {
+			if (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) {
 				if (extcl_ppu_256_to_319) {
 					/*
 					 * utilizzato dalle mappers :
@@ -947,63 +647,86 @@ void ppu_tick(WORD cycles_cpu) {
 				}
 				/* controllo se ci sono sprite per la (scanline+1) */
 				if (spr_ev.tmp_spr_plus < spr_ev.count_plus) {
-					if (spr_ev.timing == 0) {
-						ppu.rnd_adr = 0x2000 | (r2006.value & 0xFFF);
-					} else if (spr_ev.timing == 2) {
-						ppu.rnd_adr = 0x2000 | (r2006.value & 0xFFF);
-					} else if (spr_ev.timing == 4) {
-						ppu.rnd_adr = ppu.spr_adr;
-					} else if (spr_ev.timing == 6) {
-						ppu.rnd_adr = ppu.spr_adr | 0x0008;
-					}
-					/*
-					 * utilizzo spr_ev.timing come contatore di cicli per
-					 * esaminare uno sprite ogni 8 cicli.
-					 */
-					if (!spr_ev.timing) {
-						ppu_spr_adr(spr_ev.tmp_spr_plus);
-						get_sprites(ele_plus, spr_ev, sprite_plus, ppu.spr_adr)
-						r2004.value = oam.ele_plus[spr_ev.tmp_spr_plus][YC];
-						if (extcl_after_rd_chr) {
+					switch (spr_ev.timing) {
+						case 0:
 							/*
-							 * utilizzato dalle mappers :
-							 * MMC5
-							 * MMC2/4
+							 * utilizzo spr_ev.timing come contatore di cicli per
+							 * esaminare uno sprite ogni 8 cicli.
 							 */
-							extcl_after_rd_chr(ppu.spr_adr);
-						}
-					} else if (spr_ev.timing < 4) {
-						r2004.value = oam.ele_plus[spr_ev.tmp_spr_plus][spr_ev.timing];
-					} else if (spr_ev.timing < 8) {
-						r2004.value = oam.ele_plus[spr_ev.tmp_spr_plus][XC];
-					}
-					/* incremento il contatore del ciclo interno */
-					if (++spr_ev.timing == 8) {
-						/* passo al prossimo sprite */
-						spr_ev.timing = 0;
-						/* incremento l'indice temporaneo degli sprites */
-						if (++spr_ev.tmp_spr_plus == 8) {
-							// unlimited sprites
-							if ((cfg->unlimited_sprites == TRUE) && (spr_ev_unl.evaluate == TRUE)) {
-								for (spr_ev_unl.tmp_spr_plus = 0;
+							ppu.rnd_adr = 0x2000 | (r2006.value & 0xFFF);
+							ppu_spr_adr(spr_ev.tmp_spr_plus);
+							get_sprites(ele_plus, spr_ev, sprite_plus, ppu.spr_adr)
+							r2004.value = oam.ele_plus[spr_ev.tmp_spr_plus][YC];
+							if (extcl_after_rd_chr) {
+								/*
+								 * utilizzato dalle mappers :
+								 * MMC5
+								 * MMC2/4
+								 */
+								extcl_after_rd_chr(ppu.spr_adr);
+							}
+							/* incremento il contatore del ciclo interno */
+							spr_ev.timing++;
+							break;
+						case 2:
+							ppu.rnd_adr = 0x2000 | (r2006.value & 0xFFF);
+							r2004.value = oam.ele_plus[spr_ev.tmp_spr_plus][spr_ev.timing];
+							/* incremento il contatore del ciclo interno */
+							spr_ev.timing++;
+							break;
+						case 1:
+						case 3:
+							r2004.value = oam.ele_plus[spr_ev.tmp_spr_plus][spr_ev.timing];
+							/* incremento il contatore del ciclo interno */
+							spr_ev.timing++;
+							break;
+						case 4:
+							ppu.rnd_adr = ppu.spr_adr;
+							r2004.value = oam.ele_plus[spr_ev.tmp_spr_plus][XC];
+							/* incremento il contatore del ciclo interno */
+							spr_ev.timing++;
+							break;
+						case 5:
+							r2004.value = oam.ele_plus[spr_ev.tmp_spr_plus][XC];
+							/* incremento il contatore del ciclo interno */
+							spr_ev.timing++;
+							break;
+						case 6:
+							ppu.rnd_adr = ppu.spr_adr | 0x0008;
+							r2004.value = oam.ele_plus[spr_ev.tmp_spr_plus][XC];
+							/* incremento il contatore del ciclo interno */
+							spr_ev.timing++;
+							break;
+						case 7:
+							r2004.value = oam.ele_plus[spr_ev.tmp_spr_plus][XC];
+							/* passo al prossimo sprite */
+							spr_ev.timing = 0;
+							/* incremento l'indice temporaneo degli sprites */
+							if (++spr_ev.tmp_spr_plus == 8) {
+								// unlimited sprites
+								if ((cfg->unlimited_sprites == TRUE)
+									&& (spr_ev_unl.evaluate == TRUE)) {
+									for (spr_ev_unl.tmp_spr_plus = 0;
 										spr_ev_unl.tmp_spr_plus < spr_ev_unl.count_plus;
 										spr_ev_unl.tmp_spr_plus++) {
-									WORD spr_adr;
+										WORD spr_adr;
 
-									_ppu_spr_adr(spr_ev_unl.tmp_spr_plus, ele_plus_unl, sprite_plus_unl, spr_adr)
-									get_sprites(ele_plus_unl, spr_ev_unl, sprite_plus_unl, spr_adr)
+										_ppu_spr_adr(spr_ev_unl.tmp_spr_plus, ele_plus_unl, sprite_plus_unl, spr_adr)
+										get_sprites(ele_plus_unl, spr_ev_unl, sprite_plus_unl, spr_adr)
+									}
+									spr_ev_unl.evaluate = FALSE;
 								}
-								spr_ev_unl.evaluate = FALSE;
 							}
-						}
-					}
+							break;
+					 }
 				} else {
-					if (!spr_ev.timing) {
+					if (spr_ev.timing == 0) {
 						r2004.value = oam.element[63][YC];
+						spr_ev.timing++;
 					} else if (spr_ev.timing < 7) {
 						r2004.value = 0xFF;
-					}
-					if (++spr_ev.timing == 8) {
+						spr_ev.timing++;
+					} else {
 						spr_ev.timing = 0;
 					}
 				}
@@ -1015,7 +738,7 @@ void ppu_tick(WORD cycles_cpu) {
 				 * Dusty Diamond's All-Star Softball (U) [!].nes
 				 * Bing Kuang Ji Dan Zi - Flighty Chicken (Ch).nes
 				 */
-				if ((ppu.screen_y == 238) && (ppu.frame_x == 319)) {
+				if ((ppu.frame_x == 319) && (ppu.screen_y == 238)) {
 					r2003.value = 0;
 				}
 				ppu_ticket()
@@ -1030,7 +753,7 @@ void ppu_tick(WORD cycles_cpu) {
 		 * 		3. Fetch 2 pattern table bitmap bytes
 		 * 		This process is repeated 2 times.
 		 */
-		if (!r2002.vblank && (r2001.visible || r2001.race.ctrl) && (ppu.screen_y < SCR_LINES)) {
+		if (!ppu.vblank && (r2001.visible || r2001.race.ctrl) && (ppu.screen_y < SCR_LINES)) {
 			if (extcl_ppu_320_to_34x) {
 				/*
 				 * utilizzato dalle mappers :
@@ -1041,33 +764,40 @@ void ppu_tick(WORD cycles_cpu) {
 				 */
 				extcl_ppu_320_to_34x();
 			}
-			if (ppu.frame_x == 323) {
-				if (ppu.frame_y == ppu_sclines.vint) {
-					/*
-					 * all'inizio di ogni frame reinizializzo
-					 * l'indirizzo della PPU.
-					 */
-					r2006.value = ppu.tmp_vram;
-				}
-				fetch_at()
-			} else if (ppu.frame_x == 331) {
-				fetch_at()
-			} else if ((ppu.frame_x == 325) || (ppu.frame_x == 333)) {
-				fetch_lb(r2000.bpt_adr, r2006.value)
-			} else if ((ppu.frame_x == 327) || (ppu.frame_x == 335)) {
-				fetch_hb()
-				if (extcl_after_rd_chr) {
-					/*
-					 * utilizzato dalle mappers :
-					 * MMC5
-					 * MMC2/4
-					 */
-					extcl_after_rd_chr(ppu.bck_adr);
-				}
-			} else if (ppu.frame_x == 337) {
-				ppu.rnd_adr = 0x2000 | (r2006.value & 0x0FFF);
-			} else if (ppu.frame_x == 339) {
-				ppu.rnd_adr = 0x2000 | (r2006.value & 0x0FFF);
+			switch (ppu.frame_x) {
+				case 323:
+					if (ppu.frame_y == ppu_sclines.vint) {
+						/*
+						 * all'inizio di ogni frame reinizializzo
+						 * l'indirizzo della PPU.
+						 */
+						r2006.value = ppu.tmp_vram;
+					}
+					fetch_at()
+					break;
+				case 331:
+					fetch_at()
+					break;
+				case 325:
+				case 333:
+					fetch_lb(r2000.bpt_adr, r2006.value)
+					break;
+				case 327:
+				case 335:
+					fetch_hb()
+					if (extcl_after_rd_chr) {
+						/*
+						 * utilizzato dalle mappers :
+						 * MMC5
+						 * MMC2/4
+						 */
+						extcl_after_rd_chr(ppu.bck_adr);
+					}
+					break;
+				case 337:
+				case 339:
+					ppu.rnd_adr = 0x2000 | (r2006.value & 0x0FFF);
+					break;
 			}
 		}
 
@@ -1139,6 +869,9 @@ void ppu_tick(WORD cycles_cpu) {
 			if (ppu.frame_y > ppu_sclines.vint) {
 				/* incremento il contatore delle scanline renderizzate */
 				ppu.screen_y++;
+				if ((ppu.screen_y == SCR_LINES) && (info.no_ppu_draw_screen == 0)) {
+					gfx_draw_screen();
+				}
 				if (extcl_ppu_update_screen_y) {
 					/*
 					 * utilizzato dalle mappers :
@@ -1160,7 +893,7 @@ void ppu_tick(WORD cycles_cpu) {
 			 * successiva (scanline+1) nel buffer di quella
 			 * che sto per trattare.
 			 */
-			for (a = 0; a < spr_ev.count; a++) {
+			for (a = spr_ev.count; a--;) {
 				sprite[a].y_C = oam.ele_plus[a][YC];
 				sprite[a].tile = oam.ele_plus[a][TL];
 				sprite[a].attrib = oam.ele_plus[a][AT];
@@ -1180,7 +913,7 @@ void ppu_tick(WORD cycles_cpu) {
 				 * successiva (scanline+1) nel buffer di quella
 				 * che sto per trattare.
 				 */
-				for (a = 0; a < spr_ev_unl.count; a++) {
+				for (a = spr_ev_unl.count; a--;) {
 					sprite_unl[a].y_C = oam.ele_plus_unl[a][YC];
 					sprite_unl[a].tile = oam.ele_plus_unl[a][TL];
 					sprite_unl[a].attrib = oam.ele_plus_unl[a][AT];
@@ -1214,11 +947,15 @@ void ppu_tick(WORD cycles_cpu) {
 			/* azzero frame_y */
 			ppu.frame_y = 0;
 			/* setto il flag che indica che un frame e' stato completato */
-			info.execute_cpu = FALSE;
+			info.frame_status = FRAME_FINISHED;
 			/* e' un frame dispari? */
 			ppu.odd_frame = !ppu.odd_frame;
 			/* abilito il vblank */
 			r2002.vblank = 0x80;
+			ppu.vblank = TRUE;
+			if ((ppu.frames == 1) && info.r2002_jump_first_vblank) {
+				r2002.vblank = 0x00;
+			}
 			/*
 			 * quando il bit 7 del $2002 e il bit 7
 			 * del $2000 sono a 1 devo generare un NMI.
@@ -1282,21 +1019,31 @@ BYTE ppu_turn_on(void) {
 		if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 			BYTE a;
 
-			if (screen.data) {
-				free(screen.data);
-			}
+			screen.rd = &screen.buff[0];
+			screen.wr = &screen.buff[1];
+			screen.last_completed_wr = screen.wr;
 
-			if (!(screen.data = (WORD *) malloc(screen_size()))) {
-				fprintf(stderr, "Out of memory\n");
-				return (EXIT_ERROR);
-			}
+			for (a = 0; a < 2; a++) {
+				_screen_buffer *sb = &screen.buff[a];
+				BYTE b;
 
-			/*
-			 * creo una tabella di indici che puntano
-			 * all'inizio di ogni linea dello screen.
-			 */
-			for (a = 0; a < SCR_LINES; ++a) {
-				screen.line[a] = (WORD *) (screen.data + (a * SCR_ROWS));
+				sb->ready = FALSE;
+
+				if (sb->data) {
+					free(sb->data);
+				}
+
+				if (!(sb->data = (WORD *)malloc(screen_size()))) {
+					fprintf(stderr, "Out of memory\n");
+					return (EXIT_ERROR);
+				}
+				/*
+			 	* creo una tabella di indici che puntano
+			 	* all'inizio di ogni linea dello screen.
+			 	*/
+				for (b = 0; b < SCR_LINES; b++) {
+					sb->line[b] = (WORD *)(sb->data + (b * SCR_ROWS));
+				}
 			}
 			/*
 			 * tabella di indici che puntano ad ogni
@@ -1314,12 +1061,16 @@ BYTE ppu_turn_on(void) {
 		}
 		/* reinizializzazione completa della PPU */
 		{
-			WORD x, y;
+			WORD a, x, y;
 
 			/* inizializzo lo screen */
-			for (y = 0; y < SCR_LINES; y++) {
-				for (x = 0; x < SCR_ROWS; x++) {
-					screen.line[y][x] = 0x000D;
+			for (a = 0; a < 2; a++) {
+				_screen_buffer *sb = &screen.buff[a];
+
+				for (y = 0; y < SCR_LINES; y++) {
+					for (x = 0; x < SCR_ROWS; x++) {
+						sb->line[y][x] = 0x000D;
+					}
 				}
 			}
 			/*
@@ -1333,16 +1084,7 @@ BYTE ppu_turn_on(void) {
 			/* inizializzo nametables */
 			memset(ntbl.data, 0x00, sizeof(ntbl.data));
 			/* e paletta dei colori */
-			// Super 8-in-1 (with Rockin' Kats)(Unl)[U][!].nes
-			// non inizializza tutti i colori della paletta lasciandone alcuni al
-			// valore impostato all'avvio o impostato da uno sei sottogiochi.
-			// Se inizializzo a 0x3F non si vedono alcuni sprites ma soprattutto
-			// non e' visibile la freccia del menu.
-			if ((info.mapper.id == UNIF_MAPPER) && (unif.internal_mapper == 48)) {
-				memset(palette.color, 0x00, sizeof(palette.color));
-			} else {
-				memset(palette.color, 0x3F, sizeof(palette.color));
-			}
+			memcpy(mmap_palette.color, palette_init, sizeof(mmap_palette.color));
 		}
 	} else {
 		memset(&r2000, 0x00, sizeof(r2000));
@@ -1364,12 +1106,6 @@ BYTE ppu_turn_on(void) {
 
 	return (EXIT_OK);
 }
-void ppu_quit(void) {
-	/* libero la memoria riservata */
-	if (screen.data) {
-		free(screen.data);
-	}
-}
 void ppu_overclock(BYTE reset_dmc_in_use) {
 	if (reset_dmc_in_use) {
 		overclock.DMC_in_use = FALSE;
@@ -1386,4 +1122,374 @@ void ppu_overclock(BYTE reset_dmc_in_use) {
 	overclock.sclines.total = overclock.sclines.vb + overclock.sclines.pr;
 	ppu_overclock_update();
 	ppu_overclock_control();
+}
+
+void ppu_draw_screen_pause(void) {
+	info.no_ppu_draw_screen++;
+}
+void ppu_draw_screen_continue(void) {
+	if (--info.no_ppu_draw_screen < 0) {
+		info.no_ppu_draw_screen = 0;
+	}
+}
+void ppu_draw_screen_pause_with_count(int *count) {
+	ppu_draw_screen_pause();
+	(*count)++;
+}
+void ppu_draw_screen_continue_with_count(int *count) {
+	ppu_draw_screen_continue();
+	(*count)--;
+}
+void ppu_draw_screen_continue_ctrl_count(int *count) {
+	for (; (*count) > 0; (*count)--) {
+		ppu_draw_screen_continue();
+	}
+	(*count) = 0;
+}
+
+INLINE static void ppu_oam_evaluation(void) {
+/* ------------------------------- CONTROLLO SPRITE SCANLINE+1 ------------------------------- */
+	if (ppu.frame_x < 64) {
+		r2004.value = 0xFF;
+		/* inizializzo le varibili per il ciclo 64 */
+		if (ppu.frame_x == 63) {
+			/*
+			 * inizializzo i vari indici
+			 *
+			 * Note:
+			 * imposto index al suo valore massimo
+			 * solo perche' nel 64° ciclo, come prima
+			 * cosa lo incremento azzerandolo.
+			 */
+			spr_ev.timing = 0;
+			spr_ev.real = 0;
+			spr_ev.index = 0xFF;
+			/* la fase 1 e 2 corrispondono */
+			spr_ev.phase = 2;
+		}
+	} else if (ppu.frame_x < 256) {
+/* --------------------------------------- FASE 1 E 2 ---------------------------------------- */
+		/*
+		 * in questa fase esamino e salvo i primi 8 sprites
+		 * che trovo essere nel range. Trovato l'ottavo passo
+		 * alla fase 3. Se invece esamino tutti e 64 gli sprites
+		 * dell'OAM, passo alla fase 4.
+		 */
+		if (spr_ev.phase == 2) {
+			if (spr_ev.timing == 0) {
+				/* in caso di overflow dell'indice degli sprite ... */
+				if (++spr_ev.index == 64) {
+					/* ...azzero l'indice... */
+					spr_ev.index = spr_ev.real = 0;
+					/* ...passo alla fase 4... */
+					spr_ev.phase = 4;
+					/*
+					 * ...di cui questo stesso ciclo sara' il
+					 * timing = 0, quindi il prossimo sara' l'1.
+					 */
+					spr_ev.timing = 1;
+					/* leggo la coordinata Y dello sprite 0 */
+					r2004.value = oam.element[0][YC];
+					/*
+					 * We've since discovered that not only are
+					 * sprites 0 and 1 temporarily replaced with
+					 * the pair that OAMADDR&0xF8 points to, but
+					 * it's permanent: the pair that OAMADDR & 0xF8
+					 * points to is copied to the first 8 bytes of
+					 * OAM when rendering starts.
+					 * The difference should only show up with a game
+					 * that doesn't use DMA every frame.
+					 */
+					{
+						static BYTE i;
+
+						for (i = 8; i--;) {
+							oam.data[i] = oam.data[(r2003.value & 0xF8) + i];
+						}
+					}
+				} else {
+					spr_ev.real = spr_ev.index;
+					/* leggo dall'OAM il byte 0 dell'elemento in esame */
+					r2004.value = oam.element[spr_ev.real][YC];
+					/*
+					 * calcolo la differenza tra la posizione
+					 * iniziale dello sprite e la posizione Y
+					 * del pixel che sto renderizzando. Se e'
+					 * inferiore a 8 o 16 (dipende dalla dimensione
+					 * dello sprite) allora puo' essere disegnato.
+					 */
+					spr_ev.range = ppu.screen_y - r2004.value;
+
+					spr_ev.evaluate = FALSE;
+					/*
+					 * se sono nel range e lo sprite ha una
+					 * posizione Y inferiore o uguale a 0xEF,
+					 * lo esamino.
+					 */
+					if ((spr_ev.count_plus < 8) && (r2004.value <= 0xEF) && (spr_ev.range < r2000.size_spr)) {
+						spr_ev.evaluate = TRUE;
+					}
+					/* incremento timing */
+					spr_ev.timing++;
+				}
+			} else if (spr_ev.timing == 1) {
+				/*
+				 * esamino lo sprites e se necessario
+				 * inizio a memorizzare le informazioni.
+				 */
+				if (spr_ev.evaluate) {
+					/*
+					 * memorizzo la prima parte delle
+					 * informazione dello sprite nel buffer.
+					 */
+					oam.ele_plus[spr_ev.count_plus][YC] = r2004.value;
+					sprite_plus[spr_ev.count_plus].number = spr_ev.index;
+					sprite_plus[spr_ev.count_plus].flip_v = spr_ev.range;
+					/* continuo a trattare questo sprite */
+					spr_ev.timing++;
+				} else {
+					/* passo al prossimo sprite */
+					spr_ev.timing = 0;
+				}
+			/* tratto i cicli pari */
+			} else if (!(spr_ev.timing & 0x01)) {
+				/* leggo il prossimo byte dell'OAM */
+				r2004.value = oam.element[spr_ev.real][spr_ev.timing >> 1];
+				/* passo al ciclo successivo */
+				spr_ev.timing++;
+			/* tratto i cicli dispari */
+			} else {
+				/* memorizzo il valore letto nel ciclo prima */
+				oam.ele_plus[spr_ev.count_plus][spr_ev.timing >> 1] = r2004.value;
+				/* l'unico ciclo diverso e' l'ultimo */
+				if (spr_ev.timing == 7) {
+					/*
+					 * se ho gia' trovato 8 sprites allora
+					 * devo avviare la fase 3.
+					 */
+					if (++spr_ev.count_plus == 8) {
+						spr_ev.phase = 3;
+						/*
+						 * inizilizzo le variabili che
+						 * mi serviranno. byte_OAM = 3
+						 * perche' verra' aumentata e quindi
+						 * riportata a 0 nel primo ciclo
+						 * della fase 3.
+						 */
+						spr_ev.evaluate = FALSE;
+						spr_ev.byte_OAM = 3;
+						spr_ev.index_plus = 0;
+
+						// unlimited sprites
+						if (cfg->unlimited_sprites == TRUE) {
+							BYTE t2004;
+
+							spr_ev_unl.index = spr_ev.index + 1;
+							spr_ev_unl.count_plus = 0;
+
+							for (; spr_ev_unl.index < 64; spr_ev_unl.index++) {
+								t2004 = oam.element[spr_ev_unl.index][YC];
+
+								spr_ev_unl.range = ppu.screen_y - t2004;
+
+								if ((t2004 <= 0xEF) && (spr_ev_unl.range < r2000.size_spr)) {
+									oam.ele_plus_unl[spr_ev_unl.count_plus][YC] = oam.element[spr_ev_unl.index][YC];
+									oam.ele_plus_unl[spr_ev_unl.count_plus][TL] = oam.element[spr_ev_unl.index][TL];
+									oam.ele_plus_unl[spr_ev_unl.count_plus][AT] = oam.element[spr_ev_unl.index][AT];
+									oam.ele_plus_unl[spr_ev_unl.count_plus][XC] = oam.element[spr_ev_unl.index][XC];
+									sprite_plus_unl[spr_ev_unl.count_plus].number = spr_ev_unl.index;
+									sprite_plus_unl[spr_ev_unl.count_plus].flip_v = spr_ev_unl.range;
+									spr_ev_unl.count_plus++;
+								}
+							}
+							if (spr_ev_unl.count_plus) {
+								spr_ev_unl.evaluate = TRUE;
+							}
+						}
+					} else {
+						/*
+						 * index_plus non superera'
+						 * mai il valore 7.
+						 */
+						spr_ev.index_plus = spr_ev.count_plus;
+					}
+					/* passo al prossimo sprite */
+					spr_ev.timing = 0;
+				} else {
+					/* se non sono nel 7° continuo a esaminare lo sprite */
+					spr_ev.timing++;
+				}
+			}
+/* ------------------------------------------- FASE 3 ---------------------------------------- */
+		} else if (spr_ev.phase == 3) {
+			/* cicli pari */
+			if (!(spr_ev.timing & 0x01)) {
+				/*
+				 * se non ho ancora trovato il nono sprite devo
+				 * aumentare sia byte_OAM che index. Questo
+				 * e' un'errore della PPU che, invece di controllare
+				 * la coordinata Y (byte 0), tratta il byte puntato
+				 * da byte_OAM come se fosse la coordinata Y.
+				 */
+				if (spr_ev.evaluate == FALSE) {
+					/* incremento l'indice del byte da leggere */
+					if (++spr_ev.byte_OAM == 4) {
+						spr_ev.byte_OAM = 0;
+					}
+					/* in caso di overflow dell'indice degli sprite ... */
+					if (++spr_ev.index == 64) {
+						/* ...azzero l'indice... */
+						spr_ev.index = 0;
+						/* ...e passo alla fase 4... */
+						spr_ev.phase = 4;
+						/*
+						 * ...di cui questo stesso ciclo sara' il
+						 * timing = 0, quindi il prossimo sara' l'1.
+						 */
+						spr_ev.timing = 1;
+						/* leggo la coordinata Y dello sprite 0 */
+						r2004.value = oam.element[0][YC];
+					} else {
+						/*
+						 * leggo dall'OAM il byte byte_OAM
+						 * dell'elemento in esame.
+						 */
+						r2004.value = oam.element[spr_ev.index][spr_ev.byte_OAM];
+						/* l'unica differenza nei cicli pari e' lo 0 */
+						if (spr_ev.timing == 0) {
+							/*
+							 * calcolo la differenza tra la posizione
+							 * iniziale dello sprite e la posizione Y
+							 * del pixel che sto renderizzando. Se e'
+							 * inferiore a 8 o 16 (dipende dalla dimensione
+							 * dello sprite) allora puo' essere disegnato.
+							 */
+							spr_ev.range = ppu.screen_y - r2004.value;
+							/*
+							 * se sono nel range e lo sprite ha una
+							 * posizione Y inferiore o uguale a 0xEF,
+							 * vuol dire che sono al nono sprite.
+							 */
+							if ((r2004.value <= 0xEF) && (spr_ev.range < r2000.size_spr)) {
+								/* setto il bit 5 (overflow) del $2002 */
+								r2002.sprite_overflow = 0x20;
+								r2002.race.sprite_overflow = TRUE;
+								/*
+								 * devo esaminare i 3 byte
+								 * consequenziali a questo.
+								 */
+								spr_ev.evaluate = TRUE;
+							}
+						}
+						/* continuo a esaminare lo sprite */
+						spr_ev.timing++;
+					}
+				/*
+				 * se ho esaminato tutti i 4 byte del nono allora
+				 * devo riprendere a esaminare le coordinate Y degli
+				 * sprites.
+				 */
+				} else if (spr_ev.evaluate == PPU_OVERFLOW_SPR) {
+					/* in caso di overflow dell'indice degli sprite ... */
+					if (++spr_ev.index == 64) {
+						/* ...azzero l'indice... */
+						spr_ev.index = 0;
+						/* ...e passo alla fase 4... */
+						spr_ev.phase = 4;
+					}
+					/* leggo la coordinata Y dello sprite in esame */
+					r2004.value = oam.element[spr_ev.index][YC];
+					/* continuo a esaminare lo sprite */
+					spr_ev.timing++;
+				/*
+				 * sto esaminando il nono sprite e devo farlo controllando
+				 * i 3 byte dell'OAM successivi a quello che ho considerato
+				 * come coordinata Y anche se questi finiscono nell'elemento
+				 * dell'OAM successivo.
+				 */
+				} else if (spr_ev.evaluate == TRUE) {
+					/* incremento l'indice del byte da leggere */
+					if (++spr_ev.byte_OAM == 4) {
+						/*
+						 * c'e' la possibilita' che finisca
+						 * nell'elemento dell'OAM successivo.
+						 */
+						spr_ev.byte_OAM = 0;
+						/* in caso di overflow dell'indice degli sprite ... */
+						if (++spr_ev.index == 64) {
+							/* ...azzero l'indice... */
+							spr_ev.index = 0;
+							/* ...e passo alla fase 4... */
+							spr_ev.phase = 4;
+							/*
+							 * l'ho imposto a 0 perche' in uscita da
+							 * questo if sara' aumentato.
+							 */
+							spr_ev.timing = 0;
+						}
+					}
+					/*
+					 * leggo il byte successivo (in caso di passaggio
+					 * alla fase 4 questo corrispondera' alla coordinata Y
+					 * dello sprite 0
+					 */
+					r2004.value = oam.element[spr_ev.index][spr_ev.byte_OAM];
+					/* continuo a esaminare lo sprite */
+					spr_ev.timing++;
+				}
+			/* cicli dispari */
+			} else {
+				/* leggo la coordinata Y dello sprite in esame */
+				r2004.value = oam.ele_plus[spr_ev.index_plus][YC];
+				/* se sto esaminando il nono sprite... */
+				if (spr_ev.evaluate == TRUE) {
+					/* ...e sono nell'ultimo ciclo...*/
+					if (spr_ev.timing == 7) {
+						/* ...indico la nuova modalita'... */
+						spr_ev.evaluate = PPU_OVERFLOW_SPR;
+						/* ...passo al prossimo sprite.. */
+						spr_ev.timing = 0;
+						/*
+						 * ...anche se devo riesaminare questo
+						 * stesso sprite (ricordo che incremento
+						 * index al timing = 0).
+						 */
+						spr_ev.index--;
+					} else {
+						/* ... e non sono nell'ultimo ciclo,
+						 * continuo a esaminare lo sprite.
+						 */
+						spr_ev.timing++;
+					}
+				} else {
+					/*
+					 * se non sono nel nono sprite
+					 * allora passo al prossimo.
+					 */
+					spr_ev.timing = 0;
+				}
+			}
+/* ------------------------------------------- FASE 4 ---------------------------------------- */
+		/* e' composto solo da due cicli (0 e 1) */
+		} else if (spr_ev.phase == 4) {
+			/* ciclo 0 */
+			if (spr_ev.timing == 0) {
+				/* in caso di overflow dell'indice degli sprite ... */
+				if (++spr_ev.index == 64) {
+					/* ...azzero l'indice */
+					spr_ev.index = 0;
+				}
+				/* leggo la coordinata Y dello sprite OAM in esame */
+				r2004.value = oam.element[spr_ev.index][YC];
+				/* passo al ciclo successivo */
+				spr_ev.timing = 1;
+				/* ciclo 1 */
+			} else {
+				/* leggo la coordinata Y dello sprite in esame */
+				r2004.value = oam.ele_plus[spr_ev.index_plus][YC];
+				/* passo al prossimo sprite */
+				spr_ev.timing = 0;
+			}
+		}
+	}
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -47,24 +47,36 @@ void map_init_FDS(void) {
 	/* setto il flag di disabilitazione dell'irq */
 	irq.inhibit = cpu.im;
 }
+void map_init_NSF_FDS(void) {
+	memset(&fds, 0x00, sizeof(fds));
+
+	fds.drive.enabled_snd_reg = 0x02;
+}
 void extcl_cpu_every_cycle_FDS(void) {
 	WORD data;
 
-	if (fds.drive.irq_timer_delay && !(--fds.drive.irq_timer_delay)) {
-		fds.drive.irq_timer_high = 0x01;
-		irq.high |= FDS_TIMER_IRQ;
+	/* IRQ handler */
+	if (fds.drive.enabled_dsk_reg && fds.drive.irq_timer_enabled) {
+		if (fds.drive.irq_timer_counter) {
+			fds.drive.irq_timer_counter--;
+		}
+		if (!fds.drive.irq_timer_counter) {
+			if (fds.drive.irq_timer_reload_enabled) {
+				fds.drive.irq_timer_counter = fds.drive.irq_timer_reload;
+			} else {
+				fds.drive.irq_timer_enabled = FALSE;
+			}
+			fds.drive.irq_timer_high = 0x01;
+			irq.high |= FDS_TIMER_IRQ;
+		}
 	}
 
-	/* IRQ handler */
-	if (fds.drive.irq_timer_enabled && fds.drive.irq_timer_counter &&
-			!(--fds.drive.irq_timer_counter)) {
-		if (fds.drive.irq_timer_reload_enabled) {
-			fds.drive.irq_timer_counter = fds.drive.irq_timer_reload;
-		} else {
-			fds.drive.irq_timer_enabled = FALSE;
+	/* se c'e' un delay aspetto */
+	if (fds.side.change.delay > 0) {
+		if (!(--fds.side.change.delay)) {
+			fds_disk_op(FDS_DISK_SELECT_AND_INSERT, fds.side.change.new_side);
 		}
-		/* il solito delay */
-		fds.drive.irq_timer_delay = 1;
+		return;
 	}
 
 	/* no disco, no party */

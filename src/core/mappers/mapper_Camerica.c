@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ void map_init_Camerica(void) {
 			break;
 	}
 }
-void extcl_cpu_wr_mem_Camerica_BF9093(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Camerica_BF9093(UNUSED(WORD address), BYTE value) {
 	control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 	map_prg_rom_8k_update();

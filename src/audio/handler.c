@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,32 +16,22 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "snd.h"
+#include "audio/snd.h"
 #include "clock.h"
 #include "fps.h"
 
-static void INLINE snd_frequency(double factor);
-
 BYTE snd_handler(void) {
-	if (SNDCACHE->bytes_available >= snd.buffer.size) {
+	if (snd.cache->bytes_available >= snd.buffer.size) {
 		return (EXIT_ERROR);
 	} else if (fps.fast_forward == FALSE) {
-		if (SNDCACHE->bytes_available < snd.buffer.limit.low) {
-			snd_frequency(0.7f);
-		} else if ((SNDCACHE->bytes_available > snd.buffer.limit.high)) {
-			snd_frequency(2.0f);
-		} else {
-			snd_frequency(1.0f);
+		double landmark = snd.buffer.limit.low;
+		double percent = ((((double)snd.cache->bytes_available) / landmark) * 100.0f) - 100.0f;
+		double factor = 1.0f + ((((1.0f / (double)machine.fps) / 100.0f) * 1.0f) * percent);
+
+		if (snd.factor != factor) {
+			fps_machine_ms(factor)
+			snd.factor = factor;
 		}
 	}
-
 	return (EXIT_OK);
 }
-
-static void INLINE snd_frequency(double factor) {
-	if (snd.factor != factor) {
-		fps_machine_ms(factor)
-		snd.factor = factor;
-	}
-}
-

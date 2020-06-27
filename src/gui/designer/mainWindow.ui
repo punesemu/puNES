@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mainWindow</class>
+ <widget class="QMainWindow" name="mainWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>304</width>
+    <height>312</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string notr="true">FHorse</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>304</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="tearOffEnabled">
+     <bool>false</bool>
+    </property>
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <widget class="QMenu" name="menu_Recent_Roms">
+     <property name="title">
+      <string>&amp;Recent Roms</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/icon/icons/recent_roms.svg</normaloff>:/icon/icons/recent_roms.svg</iconset>
+     </property>
+    </widget>
+    <addaction name="action_Open"/>
+    <addaction name="menu_Recent_Roms"/>
+    <addaction name="separator"/>
+    <addaction name="action_Apply_Patch"/>
+    <addaction name="separator"/>
+    <addaction name="action_Open_working_folder"/>
+    <addaction name="separator"/>
+    <addaction name="action_Quit"/>
+   </widget>
+   <widget class="QMenu" name="menu_NES">
+    <property name="title">
+     <string>&amp;NES</string>
+    </property>
+    <widget class="QMenu" name="menu_Disk_Side">
+     <property name="title">
+      <string>&amp;Disk Side</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/icon/icons/disk_side.svg</normaloff>:/icon/icons/disk_side.svg</iconset>
+     </property>
+     <addaction name="action_Disk_1_side_A"/>
+     <addaction name="action_Disk_1_side_B"/>
+     <addaction name="action_Disk_2_side_A"/>
+     <addaction name="action_Disk_2_side_B"/>
+     <addaction name="action_Disk_3_side_A"/>
+     <addaction name="action_Disk_3_side_B"/>
+     <addaction name="action_Disk_4_side_A"/>
+     <addaction name="action_Disk_4_side_B"/>
+     <addaction name="separator"/>
+     <addaction name="action_Switch_sides"/>
+    </widget>
+    <addaction name="action_Turn_Off"/>
+    <addaction name="action_Hard_Reset"/>
+    <addaction name="action_Soft_Reset"/>
+    <addaction name="separator"/>
+    <addaction name="action_Insert_Coin"/>
+    <addaction name="separator"/>
+    <addaction name="menu_Disk_Side"/>
+    <addaction name="action_Eject_Insert_Disk"/>
+    <addaction name="separator"/>
+    <addaction name="action_Start_Stop_WAV_recording"/>
+    <addaction name="separator"/>
+    <addaction name="action_Fullscreen"/>
+    <addaction name="action_Save_Screenshot"/>
+    <addaction name="action_Save_Unaltered_NES_screen"/>
+    <addaction name="action_Pause"/>
+    <addaction name="action_Fast_Forward"/>
+    <addaction name="action_Toggle_GUI_in_window"/>
+   </widget>
+   <widget class="QMenu" name="menu_Settings">
+    <property name="title">
+     <string>Setti&amp;ngs</string>
+    </property>
+    <addaction name="action_General"/>
+    <addaction name="action_Video"/>
+    <addaction name="action_Audio"/>
+    <addaction name="action_Input"/>
+    <addaction name="action_PPU"/>
+    <addaction name="action_Cheats"/>
+   </widget>
+   <widget class="QMenu" name="menu_State">
+    <property name="title">
+     <string>S&amp;tate</string>
+    </property>
+    <addaction name="action_Save_state"/>
+    <addaction name="action_Load_state"/>
+    <addaction name="separator"/>
+    <addaction name="action_Increment_slot"/>
+    <addaction name="action_Decrement_slot"/>
+    <addaction name="separator"/>
+    <addaction name="action_State_Slot_0"/>
+    <addaction name="action_State_Slot_1"/>
+    <addaction name="action_State_Slot_2"/>
+    <addaction name="action_State_Slot_3"/>
+    <addaction name="action_State_Slot_4"/>
+    <addaction name="action_State_Slot_5"/>
+    <addaction name="action_State_Slot_6"/>
+    <addaction name="action_State_Slot_7"/>
+    <addaction name="action_State_Slot_8"/>
+    <addaction name="action_State_Slot_9"/>
+    <addaction name="separator"/>
+    <addaction name="action_State_Save_to_file"/>
+    <addaction name="action_State_Load_from_file"/>
+   </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_About"/>
+   </widget>
+   <widget class="QMenu" name="menu_Tools">
+    <property name="title">
+     <string>Too&amp;ls</string>
+    </property>
+    <addaction name="action_Vs_System"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_NES"/>
+   <addaction name="menu_Settings"/>
+   <addaction name="menu_Tools"/>
+   <addaction name="menu_State"/>
+   <addaction name="menu_Help"/>
+  </widget>
+  <action name="action_Open">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/open.svg</normaloff>:/icon/icons/open.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open</string>
+   </property>
+  </action>
+  <action name="action_Quit">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/exit.svg</normaloff>:/icon/icons/exit.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="action_Toggle_GUI_in_window">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/toggle_gui.svg</normaloff>:/icon/icons/toggle_gui.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Toggle GUI in window</string>
+   </property>
+  </action>
+  <action name="action_Hard_Reset">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/hard_reset.svg</normaloff>:/icon/icons/hard_reset.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Hard Reset</string>
+   </property>
+  </action>
+  <action name="action_Soft_Reset">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/soft_reset.svg</normaloff>:/icon/icons/soft_reset.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Soft Reset</string>
+   </property>
+  </action>
+  <action name="action_Eject_Insert_Disk">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/eject.svg</normaloff>:/icon/icons/eject.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Eject/Insert Disk</string>
+   </property>
+  </action>
+  <action name="action_Disk_1_side_A">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 1 side A</string>
+   </property>
+  </action>
+  <action name="action_Disk_1_side_B">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 1 side B</string>
+   </property>
+  </action>
+  <action name="action_Disk_2_side_A">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 2 side A</string>
+   </property>
+  </action>
+  <action name="action_Disk_2_side_B">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 2 side B</string>
+   </property>
+  </action>
+  <action name="action_Disk_3_side_A">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 3 side A</string>
+   </property>
+  </action>
+  <action name="action_Disk_3_side_B">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 3 side B</string>
+   </property>
+  </action>
+  <action name="action_Disk_4_side_A">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 4 side A</string>
+   </property>
+  </action>
+  <action name="action_Disk_4_side_B">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 4 side B</string>
+   </property>
+  </action>
+  <action name="action_Switch_sides">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/switch_sides.svg</normaloff>:/icon/icons/switch_sides.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Switch sides</string>
+   </property>
+  </action>
+  <action name="action_Fullscreen">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/fullscreen.svg</normaloff>:/icon/icons/fullscreen.svg</iconset>
+   </property>
+   <property name="text">
+    <string>F&amp;ullscreen</string>
+   </property>
+  </action>
+  <action name="action_Game_Genie">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Game Genie Rom Mode</string>
+   </property>
+  </action>
+  <action name="action_Save_state">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
+   </property>
+   <property name="text">
+    <string>S&amp;ave state</string>
+   </property>
+  </action>
+  <action name="action_Load_state">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
+   </property>
+   <property name="text">
+    <string>L&amp;oad state</string>
+   </property>
+  </action>
+  <action name="action_Increment_slot">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/state_inc.svg</normaloff>:/icon/icons/state_inc.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Increment slot</string>
+   </property>
+  </action>
+  <action name="action_Decrement_slot">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/state_dec.svg</normaloff>:/icon/icons/state_dec.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Decrement slot</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_0">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;0</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;1</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;2</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;3</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;4</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_5">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;5</string>
+   </property>
+  </action>
+  <action name="action_About">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/about.svg</normaloff>:/icon/icons/about.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="action_State_Save_to_file">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save to file</string>
+   </property>
+  </action>
+  <action name="action_State_Load_from_file">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Load from file</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_6">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;6</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_7">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;7</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_8">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;8</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_9">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;9</string>
+   </property>
+  </action>
+  <action name="action_Cheats_List">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Cheats List Mode</string>
+   </property>
+  </action>
+  <action name="action_Cheats_Editor">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/cheat_editor.svg</normaloff>:/icon/icons/cheat_editor.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Cheats &amp;Editor</string>
+   </property>
+  </action>
+  <action name="action_Cheats_Disabled">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Disabled</string>
+   </property>
+  </action>
+  <action name="action_Fast_Forward">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/fast_forward.svg</normaloff>:/icon/icons/fast_forward.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Fast Forward</string>
+   </property>
+  </action>
+  <action name="action_Pause">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/pause.svg</normaloff>:/icon/icons/pause.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Pause</string>
+   </property>
+  </action>
+  <action name="action_Save_Screenshot">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/screenshot.svg</normaloff>:/icon/icons/screenshot.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Save Screens&amp;hot</string>
+   </property>
+  </action>
+  <action name="action_Insert_Coin">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/insert_coins.svg</normaloff>:/icon/icons/insert_coins.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Insert Coin</string>
+   </property>
+  </action>
+  <action name="action_Vs_System">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Vs System Controls</string>
+   </property>
+  </action>
+  <action name="action_Open_working_folder">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/home.svg</normaloff>:/icon/icons/home.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open working folder</string>
+   </property>
+  </action>
+  <action name="action_Turn_Off">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/turn_off.svg</normaloff>:/icon/icons/turn_off.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Turn Off</string>
+   </property>
+  </action>
+  <action name="action_Start_Stop_WAV_recording">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/wav_start.svg</normaloff>:/icon/icons/wav_start.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Start/Stop &amp;WAV recording</string>
+   </property>
+  </action>
+  <action name="action_Apply_Patch">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/patch.svg</normaloff>:/icon/icons/patch.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Apply IPS/BPS/XDELTA Patch</string>
+   </property>
+  </action>
+  <action name="action_Video">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/video.svg</normaloff>:/icon/icons/video.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Video</string>
+   </property>
+  </action>
+  <action name="action_Audio">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/audio.svg</normaloff>:/icon/icons/audio.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Audio</string>
+   </property>
+  </action>
+  <action name="action_Input">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/input.svg</normaloff>:/icon/icons/input.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Input</string>
+   </property>
+  </action>
+  <action name="action_General">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/general.svg</normaloff>:/icon/icons/general.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;General</string>
+   </property>
+  </action>
+  <action name="action_PPU">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/ppu.svg</normaloff>:/icon/icons/ppu.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;PPU</string>
+   </property>
+  </action>
+  <action name="action_Cheats">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/cheat.svg</normaloff>:/icon/icons/cheat.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Cheats</string>
+   </property>
+  </action>
+  <action name="action_Save_Unaltered_NES_screen">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/screenshot_unaltered.svg</normaloff>:/icon/icons/screenshot_unaltered.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Save Unalte&amp;red NES screen</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

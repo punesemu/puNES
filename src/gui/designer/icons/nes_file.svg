@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="256px"
+   height="256px"
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="SVGRoot"
+   inkscape:version="0.92.2 2405546, 2018-03-11"
+   sodipodi:docname="disegno.svg">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2"
+     inkscape:cx="139.17976"
+     inkscape:cy="143.14318"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1004"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:grid-bbox="true" />
+  <defs
+     id="defs167" />
+  <metadata
+     id="metadata170">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Livello 1">
+    <g
+       transform="matrix(0.04654545,0,0,0.04654545,-269.96361,-661.15433)"
+       id="g61"
+       class="Group">
+      <g
+         id="g63"
+         class="com.sun.star.drawing.CustomShape">
+        <g
+           id="id4">
+          <path
+             inkscape:connector-curvature="0"
+             style="fill:#c0392b;stroke:none"
+             id="path66"
+             d="M 8550,18100 H 5800 v -2500 h 5500 v 2500 z" />
+        </g>
+      </g>
+      <g
+         id="g68"
+         class="com.sun.star.drawing.PolyPolygonShape">
+        <g
+           id="id5">
+          <path
+             inkscape:connector-curvature="0"
+             style="fill:#f1c40f;stroke:none"
+             id="path71"
+             d="m 6300,17600 v -1500 h 2000 v 500 h 2500 v 1000 H 8300 7800 Z" />
+        </g>
+      </g>
+      <g
+         id="g73"
+         class="com.sun.star.drawing.LineShape">
+        <g
+           id="id6">
+          <path
+             inkscape:connector-curvature="0"
+             style="fill:none;stroke:#000000;stroke-width:300;stroke-linejoin:round"
+             id="path76"
+             d="m 7100,16400 v 1000" />
+        </g>
+      </g>
+      <g
+         id="g78"
+         class="com.sun.star.drawing.LineShape">
+        <g
+           id="id7">
+          <path
+             inkscape:connector-curvature="0"
+             style="fill:none;stroke:#000000;stroke-width:300;stroke-linejoin:round"
+             id="path81"
+             d="M 7600,16900 H 6600" />
+        </g>
+      </g>
+      <g
+         id="g83"
+         class="com.sun.star.drawing.CustomShape">
+        <g
+           id="id8">
+          <path
+             inkscape:connector-curvature="0"
+             style="fill:#000000;stroke:none"
+             id="path86"
+             d="m 9550,16900 c 142,0 250,108 250,250 0,142 -108,250 -250,250 -142,0 -250,-108 -250,-250 0,-142 108,-250 250,-250 z m -250,0 z m 501,501 z" />
+        </g>
+      </g>
+      <g
+         id="g88"
+         class="com.sun.star.drawing.CustomShape">
+        <g
+           id="id9">
+          <path
+             inkscape:connector-curvature="0"
+             style="fill:#000000;stroke:none"
+             id="path91"
+             d="m 10250,16901 c 142,0 250,108 250,250 0,142 -108,250 -250,250 -142,0 -250,-108 -250,-250 0,-142 108,-250 250,-250 z m -250,0 z m 501,501 z" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

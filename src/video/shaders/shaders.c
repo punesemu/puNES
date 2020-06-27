@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@
 #include <string.h>
 #include "shaders.h"
 #include "shdcode.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "conf.h"
 #include "cgp.h"
 
-#define SHDCODE(index) (char *) shader_code[index].code
+#define SHDCODE(index) (char *)shader_code[index].code
 #define LUTCODE(index) lut_resource[index].code
 #define SPALIAS(a) strncpy(sp->alias, a, sizeof(sp->alias))
 #define LPPATH(a) strncpy(lp->path, LUTCODE(a), sizeof(lp->path))
@@ -40,6 +40,8 @@ static void lp_set_default(_lut_pass *lp);
 static void ps_set_default(_param_shd *ps);
 static void se_soft_stretch(void);
 
+_shader_effect shader_effect;
+
 BYTE shaders_set(int shader) {
 	_shader_effect *se = &shader_effect;
 	_shader_pass *sp = NULL;
@@ -53,7 +55,7 @@ BYTE shaders_set(int shader) {
 	shader_se_set_default(&shader_effect);
 
 	switch (shader) {
-		case NO_FILTER:
+		case NO_SHADER:
 			shdpass();
 			sp->code = SHDCODE(shc_no_filter);
 			se_soft_stretch();
@@ -126,7 +128,7 @@ BYTE shaders_set(int shader) {
 		int index = se->pass - 1;
 
 		_shdpass(index);
-		if 	((type->x != SHADER_SCALE_DEFAULT) || (type->y != SHADER_SCALE_DEFAULT)) {
+		if ((type->x != SHADER_SCALE_DEFAULT) || (type->y != SHADER_SCALE_DEFAULT)) {
 			se->pass++;
 			_shdpass(index + 1);
 			sp_set_default(sp);
@@ -146,7 +148,7 @@ BYTE shaders_set(int shader) {
 	return (EXIT_OK);
 }
 void shader_se_set_default(_shader_effect *se) {
-	int i;
+	unsigned int i;
 
 	se->type = MS_MEM;
 
@@ -200,8 +202,7 @@ static void ps_set_default(_param_shd *ps) {
 	memset(ps, 0x00, sizeof(_param_shd));
 }
 static void se_soft_stretch(void) {
-	if ((shader_effect.sp[shader_effect.pass - 1].linear == TEXTURE_LINEAR_ENAB) ||
-			!(cfg->interpolation || gfx.PSS)) {
+	if ((shader_effect.sp[shader_effect.pass - 1].linear == TEXTURE_LINEAR_ENAB) || !(cfg->interpolation || gfx.PSS)) {
 		return;
 	}
 
@@ -210,8 +211,8 @@ static void se_soft_stretch(void) {
 
 		shader_effect.sp[shader_effect.pass - 1].code = SHDCODE(shc_no_filter);
 		shader_effect.sp[shader_effect.pass - 1].linear = TEXTURE_LINEAR_DISAB;
-		shader_effect.sp[shader_effect.pass - 1].sc.scale.x = (float) cfg->scale;
-		shader_effect.sp[shader_effect.pass - 1].sc.scale.y = (float) cfg->scale;
+		shader_effect.sp[shader_effect.pass - 1].sc.scale.x = (float)cfg->scale;
+		shader_effect.sp[shader_effect.pass - 1].sc.scale.y = (float)cfg->scale;
 		shader_effect.sp[shader_effect.pass - 1].sc.type.x = SHADER_SCALE_INPUT;
 		shader_effect.sp[shader_effect.pass - 1].sc.type.y = SHADER_SCALE_INPUT;
 	}

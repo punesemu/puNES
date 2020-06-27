@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,10 +20,6 @@
 #define MAPPER_219_H_
 
 #include "common.h"
-
-struct _m219 {
-	BYTE reg[3];
-} m219;
 
 void map_init_219(void);
 void extcl_cpu_wr_mem_219(WORD address, BYTE value);

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,9 +22,15 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static void INLINE m53_update_6000(void);
+INLINE static void m53_update_6000(void);
 
-BYTE *prg_6000;
+struct _m53 {
+	BYTE reg[2];
+	BYTE prg_6000;
+} m53;
+struct _m53tmp {
+	BYTE *prg_6000;
+} m53tmp;
 
 void map_init_53(void) {
 	EXTCL_CPU_WR_MEM(53);
@@ -94,12 +100,12 @@ void extcl_cpu_wr_mem_53(WORD address, BYTE value) {
 	}
 	map_prg_rom_8k_update();
 }
-BYTE extcl_cpu_rd_mem_53(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_53(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {
 		return (openbus);
 	}
 
-	return (prg_6000[address & 0x1FFF]);
+	return (m53tmp.prg_6000[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_53(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m53.reg);
@@ -112,7 +118,7 @@ BYTE extcl_save_mapper_53(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE m53_update_6000(void) {
+INLINE static void m53_update_6000(void) {
 	BYTE chip;
 
 	if (info.prg.chips > 1) {
@@ -121,10 +127,10 @@ static void INLINE m53_update_6000(void) {
 
 		m53.prg_6000 = ((m53.reg[0] << 4) & 0x30) | 0x0F;
 		_control_bank(m53.prg_6000, info.prg.rom[chip].max.banks_8k)
-		prg_6000 = prg_chip_byte_pnt(chip, m53.prg_6000 << 13);
+		m53tmp.prg_6000 = prg_chip_byte_pnt(chip, m53.prg_6000 << 13);
 	} else {
 		m53.prg_6000 = (((m53.reg[0] << 4) & 0xF0) | 0x0F) + 4;
 		_control_bank(m53.prg_6000, info.prg.rom[0].max.banks_8k)
-		prg_6000 = prg_chip_byte_pnt(0, m53.prg_6000 << 13);
+		m53tmp.prg_6000 = prg_chip_byte_pnt(0, m53.prg_6000 << 13);
 	}
 }

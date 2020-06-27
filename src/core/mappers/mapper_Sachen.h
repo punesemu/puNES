@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,18 +36,6 @@ enum {
 	SA74374A,
 	SA74374B,
 };
-
-struct _sa8259 {
-	BYTE ctrl;
-	BYTE reg[8];
-} sa8259;
-struct _tcu02 {
-	BYTE reg;
-} tcu02;
-struct _sa74374x {
-	BYTE reg;
-	BYTE chr_rom_8k_bank;
-} sa74374x;
 
 static const char pokeriiichr[2][41] = {
 	"5066c2d12ff2ac45ef395d3a4353e897fce19f78",

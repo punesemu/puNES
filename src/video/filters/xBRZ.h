@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,10 @@
 #define XBRZ_H_
 
 #include "common.h"
-#include "gfx.h"
+
+void xBRZ_init(void);
+void xBRZ(void);
+void xBRZ_mt(void);
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -28,11 +31,8 @@
 #define EXTERNC
 #endif
 
-void xBRZ_init(void);
-gfx_filter_function(xBRZ);
-
-EXTERNC void xbrz_scale(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette,
-        int no_overscan_width, int startx, int width, int height);
+EXTERNC void xbrz_scale(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette, int width, int height);
+EXTERNC void xbrz_scale_mt(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette, int width, int height);
 
 #undef EXTERNC
 

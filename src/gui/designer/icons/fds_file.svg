@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg" xmlns:ns1="http://sozi.baierouge.fr" xmlns:xlink="http://www.w3.org/1999/xlink" id="svg2" sodipodi:docname="Diskette_5_1-4.svg" inkscape:export-filename="C:\Documents and Settings\fuerer_g\Desktop\x\Diskette_5_1-4.png" viewBox="0 0 500 500" inkscape:export-xdpi="145.14" version="1.1" inkscape:export-ydpi="145.14" inkscape:version="0.48.2 r9819">
+  <title id="title3028">5.25" Disk</title>
+  <sodipodi:namedview id="base" bordercolor="#666666" inkscape:pageshadow="2" inkscape:window-y="124" pagecolor="#ffffff" inkscape:window-height="762" inkscape:window-maximized="0" inkscape:zoom="0.98994949" inkscape:window-x="1714" showgrid="false" borderopacity="1.0" inkscape:current-layer="layer1" inkscape:cx="263.1442" inkscape:cy="248.33937" inkscape:showpageshadow="false" inkscape:window-width="1052" showborder="false" inkscape:pageopacity="0.0" inkscape:document-units="px"/>
+  <g id="layer1" inkscape:label="Ebene 1" inkscape:groupmode="layer" transform="translate(0 -552.36)">
+    <g id="g3059">
+      <path id="path3052" d="m253.06 17.219c-128.72 0-233.06 104.43-233.06 233.12s104.34 233 233.06 233 233.06-104.31 233.06-233-104.34-233.12-233.06-233.12zm-3.09 181.78c29.65 0 53.69 23.98 53.69 53.53s-24.04 53.5-53.69 53.5-53.69-23.95-53.69-53.5 24.04-53.53 53.69-53.53z" style="fill-rule:evenodd;fill:#000000" transform="translate(0 552.36)"/>
+      <g id="g3055">
+        <path id="rect3024" style="fill:#666666" transform="translate(0 552.36)" d="m7.75 0c-4.2983 0-7.75 3.4352-7.75 7.7188v484.56c0 4.28 3.4517 7.72 7.75 7.72h181.94v-0.06c0-3.37 3.1-6.1 6.93-6.1 3.84 0 6.94 2.73 6.94 6.1v0.06h90.06v-0.06c0-3.37 3.11-6.1 6.94-6.1 3.84 0 6.94 2.73 6.94 6.1v0.06h184.75c4.3 0 7.75-3.44 7.75-7.72v-353.59h-13.38c-0.95 0-1.74-0.77-1.74-1.72v-18.88c0-0.95 0.79-1.71 1.74-1.71h13.38v-108.66c0-4.2848-3.45-7.72-7.75-7.72h-484.5zm242.22 176.12c42.33 0 76.62 34.23 76.62 76.41 0 42.19-34.29 76.38-76.62 76.38s-76.66-34.19-76.66-76.38c0-42.18 34.33-76.41 76.66-76.41zm95.22 85.13c6.12 0 11.09 4.96 11.09 11.06s-4.97 11.03-11.09 11.03-11.1-4.93-11.1-11.03 4.98-11.06 11.1-11.06zm-95.81 93.13c13.81 0 24.93 11.34 24.93 25.43v73.41c0 14.09-11.12 25.44-24.93 25.44-13.82 0-24.94-11.35-24.94-25.44v-73.41c0-14.09 11.12-25.43 24.94-25.43z"/>
+        <rect id="rect3050" style="fill:#ffffff" rx="8" ry="8" height="120" width="240" y="572.36" x="23"/>
+      </g>
+    </g>
+    <path id="path3026" style="opacity:0;stroke-width:.6" inkscape:connector-curvature="0" d="m3.8241 498.09c-0.9146-0.7-2.1379-2.55-2.7185-4.11-1.4822-3.99-1.4775-484.05 0.0048-488.3 0.5832-1.6777 2.1956-3.5638 3.5831-4.1959 1.8631-0.84895 66.116-1.1494 245.79-1.1494h243.26l2.6616 2.0936 2.6616 2.0936v55.485 55.485h-6.4423c-4.2843 0-6.8348 0.4729-7.614 1.4118-0.76177 0.91787-1.0701 4.8936-0.88131 11.364l0.29037 9.9524 7.3236 0.29679 7.3236 0.2968v178.25c0 176.9-0.0153 178.26-2.0203 180.27-1.9911 1.9911-3.3672 2.0203-95.054 2.0203h-93.034l-2.8309-3.0304c-1.7923-1.9186-3.8306-3.0305-5.5558-3.0305s-3.7636 1.1118-5.5558 3.0305l-2.8309 3.0304h-43.459-43.459l-3.0305-3.0304c-1.8571-1.8571-4.077-3.0305-5.7333-3.0305-1.7007 0-3.7525 1.1237-5.5338 3.0305l-2.8309 3.0304h-91.326c-71.5 0-91.686-0.27411-92.988-1.2627zm253.88-19.95c5.2089-1.447 11.963-7.6823 14.709-13.579l2.3781-5.1069v-42.931-42.931l-2.3781-5.1069c-2.746-5.897-9.4998-12.132-14.709-13.579-5.6489-1.5693-14.277-1.1657-18.776 0.8783-5.3196 2.4165-10.398 7.5844-13.021 13.251-2.0345 4.3952-2.1094 6.0812-2.1094 47.489 0 41.407 0.0749 43.093 2.1094 47.488 2.6229 5.6664 7.701 10.834 13.021 13.251 4.4995 2.044 13.127 2.4476 18.776 0.8783zm14.581-151.58c27.69-8.5912 47.663-30.477 53.706-58.852 1.8754-8.8054 1.2827-26.444-1.194-35.535-7.0828-25.999-27.866-46.594-54.743-54.247-10.255-2.9201-28.8-3.1141-38.671-0.40436-29.643 8.1376-49.314 27.974-56.698 57.176-1.836 7.2603-2.072 10.376-1.6044 21.177 0.59616 13.769 2.1881 20.276 7.6445 31.245 10.321 20.748 29.625 35.672 53.174 41.111 8.9138 2.0585 29.216 1.1756 38.386-1.6694zm79.4-44.672c6.177-4.1532 7.0498-12.607 1.8394-17.818-6.7398-6.7398-18.267-3.0544-19.79 6.3268-1.6923 10.428 9.1795 17.388 17.95 11.491zm-94.507-144.62 2.4795-2.4795v-54.404c0-52.814-0.0584-54.466-1.999-56.549-1.1426-1.2264-3.8474-2.4101-6.3134-2.7628-2.3729-0.33941-53.736-0.48234-114.14-0.31763l-109.82 0.287-2.301 2.3-2.301 2.3-0.288 52.753c-0.15876 29.014-0.03962 53.763 0.26477 54.998 0.30438 1.2347 1.5428 3.1666 2.752 4.2932 2.1815 2.0324 3.0784 2.0483 115.7 2.0483h113.5l2.4795-2.4795z" transform="translate(0 552.36)"/>
+  </g>
+  <metadata>
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>Floppy 5.25" #2</dc:title>
+        <dc:date>2013-02-04T04:48:15</dc:date>
+        <dc:description>Updated Disk.\nDisk is now a disk inside the case has openings.\nDisk and case are grouped.</dc:description>
+        <dc:source>https://openclipart.org/detail/174801/floppy-5.25-2-by-gilu-174801</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Gilu</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>5 1/4</rdf:li>
+            <rdf:li>5.25</rdf:li>
+            <rdf:li>Floppy</rdf:li>
+            <rdf:li>diskette</rdf:li>
+            <rdf:li>floppy disk</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

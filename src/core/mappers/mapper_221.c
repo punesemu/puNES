@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,10 @@
 		0x07 : (m221.reg[1] & 0x06) | 0x1 : m221.reg[1]);\
 	control_bank(info.prg.rom[0].max.banks_16k)\
 	map_prg_rom_8k(2, 2, value)
+
+struct _m221 {
+	BYTE reg[2];
+} m221;
 
 void map_init_221(void) {
 	EXTCL_CPU_WR_MEM(221);

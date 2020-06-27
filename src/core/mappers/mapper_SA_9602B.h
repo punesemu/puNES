@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,11 +20,6 @@
 #define MAPPER_SA_9602B_H_
 
 #include "common.h"
-
-struct _sa9602b {
-	WORD prg_chip[4];
-	WORD prg_map[4];
-} sa9602b;
 
 void map_init_SA_9602B(void);
 void extcl_cpu_wr_mem_SA_9602B(WORD address, BYTE value);

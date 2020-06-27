@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,9 @@
 #include "info.h"
 #include "mem_map.h"
 
-BYTE type;
+struct _hentmp {
+	BYTE type;
+} hentmp;
 
 void map_init_Hen(BYTE model) {
 	switch (model) {
@@ -38,11 +40,11 @@ void map_init_Hen(BYTE model) {
 		map_prg_rom_8k(4, 0, 0);
 	}
 
-	type = model;
+	hentmp.type = model;
 }
 
-void extcl_cpu_wr_mem_Hen_177(WORD address, BYTE value) {
-	if (type != HEN_FANKONG) {
+void extcl_cpu_wr_mem_Hen_177(UNUSED(WORD address), BYTE value) {
+	if (hentmp.type != HEN_FANKONG) {
 		if (value & 0x20) {
 			mirroring_H();
 		} else {

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE m197_update_chr(void);
+INLINE static void m197_update_chr(void);
 
 #define m197_swap_chr_1k(a, b)\
 	chr1k = m197.chr_map[b];\
@@ -62,6 +62,10 @@ static void INLINE m197_update_chr(void);
 			m197.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;\
 			break;\
 	}
+
+struct _m197 {
+	WORD chr_map[8];
+} m197;
 
 void map_init_197(void) {
 	EXTCL_CPU_WR_MEM(197);
@@ -120,7 +124,7 @@ BYTE extcl_save_mapper_197(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE m197_update_chr(void) {
+INLINE static void m197_update_chr(void) {
 	WORD value;
 	DBWORD bank;
 

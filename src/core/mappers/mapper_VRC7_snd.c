@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -244,45 +244,46 @@ typedef struct {
 	_slot slot[6 * 2];
 } _opll;
 
-static void INLINE slot_reset(_slot *slot, int type);
-static void INLINE make_tables(uint32_t c, uint32_t r);
-static void INLINE internal_refresh(void);
-static void INLINE set_instrument(uint8_t i, uint8_t inst);
-static void INLINE update_ampm(void);
-static int32_t INLINE min(int32_t i, int32_t j);
-static int32_t INLINE lin2db(double d);
-static uint32_t INLINE calc_eg_dphase(_slot * slot);
-static void INLINE slot_on(_slot *slot);
-static void INLINE slot_off(_slot *slot);
-static void INLINE key_on(int32_t i);
-static void INLINE key_off(int32_t i);
-static void INLINE set_sustine(int32_t c, int32_t sustine);
-static void INLINE set_volume(int32_t c, int32_t volume);
-static void INLINE set_fnumber(int32_t c, int32_t fnum);
-static void INLINE set_block(int32_t c, int32_t block);
-static void INLINE update_key_status(void);
-static int32_t INLINE calc(void);
-static void INLINE calc_phase(_slot *slot, int32_t lfo);
-static void INLINE calc_envelope(_slot *slot, int32_t lfo);
-static int32_t INLINE calc_slot_car(_slot *slot, int32_t fm);
-static int32_t INLINE calc_slot_mod(_slot *slot);
+INLINE static void slot_reset(_slot *slot, int type);
+INLINE static void make_tables(uint32_t c, uint32_t r);
+INLINE static void internal_refresh(void);
+INLINE static void set_instrument(uint8_t i, uint8_t inst);
+INLINE static void update_ampm(void);
+INLINE static int32_t min(int32_t i, int32_t j);
+INLINE static int32_t lin2db(double d);
+INLINE static uint32_t calc_eg_dphase(_slot * slot);
+INLINE static void slot_on(_slot *slot);
+INLINE static void slot_off(_slot *slot);
+INLINE static void key_on(int32_t i);
+INLINE static void key_off(int32_t i);
+INLINE static void set_sustine(int32_t c, int32_t sustine);
+INLINE static void set_volume(int32_t c, int32_t volume);
+INLINE static void set_fnumber(int32_t c, int32_t fnum);
+INLINE static void set_block(int32_t c, int32_t block);
+INLINE static void update_key_status(void);
+INLINE static int32_t calc(void);
+INLINE static void calc_phase(_slot *slot, int32_t lfo);
+INLINE static void calc_envelope(_slot *slot, int32_t lfo);
+INLINE static int32_t calc_slot_car(_slot *slot, int32_t fm);
+INLINE static int32_t calc_slot_mod(_slot *slot);
 
+// VRC7 instruments, March 15, 2019 dumped by Nuke.YKT
 static const unsigned char default_inst[15][8] = {
-	{0x03, 0x21, 0x04, 0x06, 0x8D, 0xF2, 0x42, 0x17}, // Violin
-	{0x13, 0x41, 0x05, 0x0E, 0x99, 0x96, 0x63, 0x12}, // Guitar
-	{0x31, 0x11, 0x10, 0x0A, 0xF0, 0x9C, 0x32, 0x02}, // Piano
-	{0x21, 0x61, 0x1D, 0x07, 0x9F, 0x64, 0x20, 0x27}, // Flute
-	{0x22, 0x21, 0x1E, 0x06, 0xF0, 0x76, 0x08, 0x28}, // Clarinet
-	{0x02, 0x01, 0x06, 0x00, 0xF0, 0xF2, 0x03, 0x95}, // Oboe
-	{0x21, 0x61, 0x1C, 0x07, 0x82, 0x81, 0x16, 0x07}, // Trumpet
-	{0x23, 0x21, 0x1A, 0x17, 0xEF, 0x82, 0x25, 0x15}, // Organ
-	{0x25, 0x11, 0x1F, 0x00, 0x86, 0x41, 0x20, 0x11}, // Horn
-	{0x85, 0x01, 0x1F, 0x0F, 0xE4, 0xA2, 0x11, 0x12}, // Synthesizer
-	{0x07, 0xC1, 0x2B, 0x45, 0xB4, 0xF1, 0x24, 0xF4}, // Harpsichord
-	{0x61, 0x23, 0x11, 0x06, 0x96, 0x96, 0x13, 0x16}, // Vibraphone
-	{0x01, 0x02, 0xD3, 0x05, 0x82, 0xA2, 0x31, 0x51}, // Synthesizer Bass
-	{0x61, 0x22, 0x0D, 0x02, 0xC3, 0x7F, 0x24, 0x05}, // Acoustic Bass
-	{0x21, 0x62, 0x0E, 0x00, 0xA1, 0xA0, 0x44, 0x17}  // Electric Guitar
+	{0x03, 0x21, 0x05, 0x06, 0xE8, 0x81, 0x42, 0x27}, // Violin
+	{0x13, 0x41, 0x14, 0x0D, 0xD8, 0xF6, 0x23, 0x12}, // Guitar
+	{0x11, 0x11, 0x08, 0x08, 0xFA, 0xB2, 0x20, 0x12}, // Piano
+	{0x31, 0x61, 0x0C, 0x07, 0xA8, 0x64, 0x61, 0x27}, // Flute
+	{0x32, 0x21, 0x1E, 0x06, 0xE1, 0x76, 0x01, 0x28}, // Clarinet
+	{0x02, 0x01, 0x06, 0x00, 0xA3, 0xE2, 0xF4, 0xF4}, // Oboe
+	{0x21, 0x61, 0x1D, 0x07, 0x82, 0x81, 0x11, 0x07}, // Trumpet
+	{0x23, 0x21, 0x22, 0x17, 0xA2, 0x72, 0x01, 0x17}, // Organ
+	{0x35, 0x11, 0x25, 0x00, 0x40, 0x73, 0x72, 0x01}, // Horn
+	{0xB5, 0x01, 0x0F, 0x0F, 0xA8, 0xA5, 0x51, 0x02}, // Synthesizer
+	{0x17, 0xC1, 0x24, 0x07, 0xF8, 0xF8, 0x22, 0x12}, // Harpsichord
+	{0x71, 0x23, 0x11, 0x06, 0x65, 0x74, 0x18, 0x16}, // Vibraphone
+	{0x01, 0x02, 0xD3, 0x05, 0xC9, 0x95, 0x03, 0x02}, // Synthesizer Bass
+	{0x61, 0x63, 0x0C, 0x00, 0x94, 0xC0, 0x33, 0xF6}, // Acoustic Bass
+	{0x21, 0x72, 0x0D, 0x00, 0xC1, 0xD5, 0x56, 0x06}  // Electric Guitar
 };
 /* Input clock */
 static uint32_t clk = 844451141;
@@ -352,8 +353,8 @@ void opll_reset(uint32_t clk, uint32_t rate) {
 		initialized = TRUE;
 	}
 
-	opll.real_step = (uint32_t) ((1 << 31) / rate);
-	opll.opll_step = (uint32_t) ((1 << 31) / (clk / 72));
+	opll.real_step = (uint32_t)((1 << 31) / rate);
+	opll.opll_step = (uint32_t)((1 << 31) / (clk / 72));
 	opll.opll_time = 0;
 }
 void opll_write_reg(uint32_t reg, uint8_t value) {
@@ -558,13 +559,12 @@ SWORD opll_calc(void) {
 	}
 
 	opll.opll_time -= opll.real_step;
-	opll.out = ((double) opll.next * (opll.opll_step - opll.opll_time)
-			+ (double) opll.prev * opll.opll_time) / opll.opll_step;
+	opll.out = ((double)opll.next * (opll.opll_step - opll.opll_time) + (double)opll.prev * opll.opll_time) / opll.opll_step;
 
-	return ((int16_t) opll.out);
+	return ((int16_t)opll.out);
 }
 
-static void INLINE slot_reset(_slot *slot, int type) {
+INLINE static void slot_reset(_slot *slot, int type) {
 	slot->type = type;
 	slot->sintbl = waveform[0];
 	slot->phase = 0;
@@ -584,7 +584,7 @@ static void INLINE slot_reset(_slot *slot, int type) {
 	slot->pgout = 0;
 	slot->egout = 0;
 }
-static void INLINE make_tables(uint32_t c, uint32_t r) {
+INLINE static void make_tables(uint32_t c, uint32_t r) {
 	int32_t i;
 
 	if (c != clk) {
@@ -592,18 +592,15 @@ static void INLINE make_tables(uint32_t c, uint32_t r) {
 
 		/* Table for Pitch Modulator */
 		for (i = 0; i < PM_PG_WIDTH; i++) {
-			pmtable[i] = (int32_t)((double) PM_AMP * pow(2.0, (double) PM_DEPTH *
-					sin(2.0 * PI * i / PM_PG_WIDTH) / 1200));
+			pmtable[i] = (int32_t)((double)PM_AMP * pow(2.0, (double)PM_DEPTH * sin(2.0 * PI * i / PM_PG_WIDTH) / 1200));
 		}
 		/* Table for Amp Modulator */
 		for (i = 0; i < AM_PG_WIDTH; i++) {
-			amtable[i] = (int32_t)((double) AM_DEPTH / 2 / DB_STEP * (1.0 +
-					sin(2.0 * PI * i / PM_PG_WIDTH)));
+			amtable[i] = (int32_t)((double)AM_DEPTH / 2 / DB_STEP * (1.0 + sin(2.0 * PI * i / PM_PG_WIDTH)));
 		}
 		/* Table for dB(0 -- (1<<DB_BITS)-1) to Liner(0 -- DB2LIN_AMP_WIDTH) */
 		for (i = 0; i < DB_MUTE + DB_MUTE; i++) {
-			DB2LIN_TABLE[i] = (int16_t)((double) ((1 << DB2LIN_AMP_BITS) - 1) *
-					pow(10.0, -(double) i * DB_STEP / 20));
+			DB2LIN_TABLE[i] = (int16_t)((double)((1 << DB2LIN_AMP_BITS) - 1) * pow(10.0, -(double)i * DB_STEP / 20));
 			if (i >= DB_MUTE) {
 				DB2LIN_TABLE[i] = 0;
 			}
@@ -612,8 +609,7 @@ static void INLINE make_tables(uint32_t c, uint32_t r) {
 		/* Table for AR to LogCurve. */
 		AR_ADJUST_TABLE[0] = (1 << EG_BITS);
 		for (i = 1; i < 128; i++) {
-			AR_ADJUST_TABLE[i] = (uint16_t)((double) (1 << EG_BITS) - 1 - (1 << EG_BITS) *
-					log((double) i) / log(128.0));
+			AR_ADJUST_TABLE[i] = (uint16_t)((double)(1 << EG_BITS) - 1 - (1 << EG_BITS) * log((double)i) / log(128.0));
 		}
 		/* Table of Ttl */
 		{
@@ -640,8 +636,7 @@ static void INLINE make_tables(uint32_t c, uint32_t r) {
 								if (tmp <= 0) {
 									tllTable[fnum][block][TL][KL] = TL2EG(TL);
 								} else {
-									tllTable[fnum][block][TL][KL] = (uint32_t)(
-											(tmp >> (3 - KL)) / EG_STEP) + TL2EG(TL);
+									tllTable[fnum][block][TL][KL] = (uint32_t)((tmp >> (3 - KL)) / EG_STEP) + TL2EG(TL);
 								}
 							}
 						}
@@ -668,14 +663,13 @@ static void INLINE make_tables(uint32_t c, uint32_t r) {
 		}
 		/* Sin Table */
 		for (i = 0; i < PG_WIDTH / 4; i++) {
-			waveform[fullsintable][i] = (uint16_t) lin2db(sin(2.0 * PI * i / PG_WIDTH));
+			waveform[fullsintable][i] = (uint16_t)lin2db(sin(2.0 * PI * i / PG_WIDTH));
 		}
 		for (i = 0; i < PG_WIDTH / 4; i++) {
 			waveform[fullsintable][PG_WIDTH / 2 - 1 - i] = waveform[fullsintable][i];
 		}
 		for (i = 0; i < PG_WIDTH / 2; i++) {
-			waveform[fullsintable][PG_WIDTH / 2 + i] = (uint16_t) (DB_MUTE + DB_MUTE
-				+ waveform[fullsintable][i]);
+			waveform[fullsintable][PG_WIDTH / 2 + i] = (uint16_t)(DB_MUTE + DB_MUTE + waveform[fullsintable][i]);
 		}
 		for (i = 0; i < PG_WIDTH / 2; i++) {
 			waveform[halfsintable][i] = waveform[fullsintable][i];
@@ -691,7 +685,7 @@ static void INLINE make_tables(uint32_t c, uint32_t r) {
 		internal_refresh();
 	}
 }
-static void INLINE internal_refresh(void) {
+INLINE static void internal_refresh(void) {
 	/* Phase increment counter table */
 	{
 		uint32_t fnum, block, ML;
@@ -705,8 +699,7 @@ static void INLINE internal_refresh(void) {
 		for (fnum = 0; fnum < 512; fnum++) {
 			for (block = 0; block < 8; block++) {
 				for (ML = 0; ML < 16; ML++) {
-					dphaseTable[fnum][block][ML] =
-							rate_adjust(((fnum * mltable[ML]) << block) >> (20 - DP_BITS));
+					dphaseTable[fnum][block][ML] = rate_adjust(((fnum * mltable[ML]) << block) >> (20 - DP_BITS));
 				}
 			}
 		}
@@ -725,8 +718,7 @@ static void INLINE internal_refresh(void) {
 				} else if (RM == 15) {
 					attacktable[RM][RL] = EG_DP_WIDTH;
 				} else {
-					attacktable[RM][RL] = (uint32_t) ((double) (1 << EG_DP_BITS) /
-							(attacktime[RM][RL] * 3579545 / 72000));
+					attacktable[RM][RL] = (uint32_t)((double)(1 << EG_DP_BITS) / (attacktime[RM][RL] * 3579545 / 72000));
 				}
 
 			}
@@ -750,7 +742,7 @@ static void INLINE internal_refresh(void) {
 #ifdef USE_SPEC_ENV_SPEED
 						dphaseARTable[AR][Rks] = rate_adjust(attacktable[RM][RL]);
 #else
-						dphaseARTable[AR][Rks] = rate_adjust((3 * (RL + 4) << (RM + 1)));
+						dphaseARTable[AR][Rks] = rate_adjust(((uint32_t)(3 * (RL + 4) << (RM + 1))));
 #endif
 						break;
 				}
@@ -769,8 +761,7 @@ static void INLINE internal_refresh(void) {
 				if (RM == 0) {
 					decaytable[RM][RL] = 0;
 				} else {
-					decaytable[RM][RL] = (uint32_t) ((double) (1 << EG_DP_BITS) /
-							(decaytime[RM][RL] * 3579545 / 72000));
+					decaytable[RM][RL] = (uint32_t)((double)(1 << EG_DP_BITS) / (decaytime[RM][RL] * 3579545 / 72000));
 				}
 			}
 		}
@@ -791,7 +782,7 @@ static void INLINE internal_refresh(void) {
 #ifdef USE_SPEC_ENV_SPEED
 						dphaseDRTable[DR][Rks] = rate_adjust(decaytable[RM][RL]);
 #else
-						dphaseDRTable[DR][Rks] = rate_adjust((RL + 4) << (RM - 1));
+						dphaseDRTable[DR][Rks] = rate_adjust(((uint32_t)(RL + 4) << (RM - 1)));
 #endif
 						break;
 				}
@@ -799,10 +790,10 @@ static void INLINE internal_refresh(void) {
 		}
 	}
 
-	pm_dphase = (uint32_t) rate_adjust(PM_SPEED * PM_DP_WIDTH / (clk / 72));
-	am_dphase = (uint32_t) rate_adjust(AM_SPEED * AM_DP_WIDTH / (clk / 72));
+	pm_dphase = (uint32_t)rate_adjust(PM_SPEED * PM_DP_WIDTH / (clk / 72));
+	am_dphase = (uint32_t)rate_adjust(AM_SPEED * AM_DP_WIDTH / (clk / 72));
 }
-static void INLINE set_instrument(uint8_t i, uint8_t inst) {
+INLINE static void set_instrument(uint8_t i, uint8_t inst) {
 	const uint8_t *src;
 	_patch *modp, *carp;
 
@@ -852,13 +843,13 @@ static void INLINE set_instrument(uint8_t i, uint8_t inst) {
 	carp->RR = (src[7] & 0xF);
 }
 /* Update AM, PM unit */
-static void INLINE update_ampm(void) {
+INLINE static void update_ampm(void) {
 	opll.pm_phase = (opll.pm_phase + pm_dphase) & (PM_DP_WIDTH - 1);
 	opll.am_phase = (opll.am_phase + am_dphase) & (AM_DP_WIDTH - 1);
 	opll.lfo_am = amtable[HIGHBITS (opll.am_phase, AM_DP_BITS - AM_PG_BITS)];
 	opll.lfo_pm = pmtable[HIGHBITS (opll.pm_phase, PM_DP_BITS - PM_PG_BITS)];
 }
-static int32_t INLINE min(int32_t i, int32_t j) {
+INLINE static int32_t min(int32_t i, int32_t j) {
 	if (i < j) {
 		return (i);
 	} else {
@@ -866,14 +857,14 @@ static int32_t INLINE min(int32_t i, int32_t j) {
 	}
 }
 /* Liner(+0.0 - +1.0) to dB((1<<DB_BITS) - 1 -- 0) */
-static int32_t INLINE lin2db(double d) {
+INLINE static int32_t lin2db(double d) {
 	if (d == 0) {
 		return (DB_MUTE - 1);
 	} else {
-		return min(-(int32_t) (20.0 * log10(d) / DB_STEP), DB_MUTE - 1); /* 0 -- 127 */
+		return min(-(int32_t)(20.0 * log10(d) / DB_STEP), DB_MUTE - 1); /* 0 -- 127 */
 	}
 }
-static uint32_t INLINE calc_eg_dphase(_slot * slot) {
+INLINE static uint32_t calc_eg_dphase(_slot * slot) {
 	switch (slot->eg_mode) {
 		case ATTACK:
 			return (dphaseARTable[slot->patch.AR][slot->rks]);
@@ -898,21 +889,20 @@ static uint32_t INLINE calc_eg_dphase(_slot * slot) {
 	}
 }
 /* Slot key on	*/
-static void INLINE slot_on(_slot *slot) {
+INLINE static void slot_on(_slot *slot) {
 	slot->eg_mode = ATTACK;
 	slot->eg_phase = 0;
 	slot->phase = 0;
 }
 /* Slot key off */
-static void INLINE slot_off(_slot *slot) {
+INLINE static void slot_off(_slot *slot) {
 	if (slot->eg_mode == ATTACK) {
-		slot->eg_phase = EXPAND_BITS(AR_ADJUST_TABLE[HIGHBITS(slot->eg_phase,
-				EG_DP_BITS - EG_BITS)], EG_BITS, EG_DP_BITS);
+		slot->eg_phase = EXPAND_BITS(AR_ADJUST_TABLE[HIGHBITS(slot->eg_phase, EG_DP_BITS - EG_BITS)], EG_BITS, EG_DP_BITS);
 	}
 	slot->eg_mode = RLEASE;
 }
 /* Channel key on */
-static void INLINE key_on(int32_t i) {
+INLINE static void key_on(int32_t i) {
 	if (!opll.slot_on_flag[i * 2]) {
 		slot_on(MOD(i));
 	}
@@ -922,41 +912,41 @@ static void INLINE key_on(int32_t i) {
 	opll.key_status[i] = 1;
 }
 /* Channel key off */
-static void INLINE key_off(int32_t i) {
+INLINE static void key_off(int32_t i) {
 	if (opll.slot_on_flag[i * 2 + 1]) {
 		slot_off(CAR(i));
 	}
 	opll.key_status[i] = 0;
 }
 /* Set sustine parameter */
-static void INLINE set_sustine(int32_t c, int32_t sustine) {
+INLINE static void set_sustine(int32_t c, int32_t sustine) {
 	CAR(c)->sustine = sustine;
 	if (MOD(c)->type) {
 		MOD(c)->sustine = sustine;
 	}
 }
 /* Volume : 6bit ( Volume register << 2 ) */
-static void INLINE set_volume(int32_t c, int32_t volume) {
+INLINE static void set_volume(int32_t c, int32_t volume) {
 	CAR(c)->volume = volume;
 }
 /* Set F-Number ( fnum : 9bit ) */
-static void INLINE set_fnumber(int32_t c, int32_t fnum) {
+INLINE static void set_fnumber(int32_t c, int32_t fnum) {
 	CAR(c)->fnum = fnum;
 	MOD(c)->fnum = fnum;
 }
 /* Set Block data (block : 3bit ) */
-static void INLINE set_block(int32_t c, int32_t block) {
+INLINE static void set_block(int32_t c, int32_t block) {
 	CAR(c)->block = block;
 	MOD(c)->block = block;
 }
-static void INLINE update_key_status(void) {
+INLINE static void update_key_status(void) {
 	int ch;
 
 	for (ch = 0; ch < 6; ch++) {
 		opll.slot_on_flag[ch * 2] = opll.slot_on_flag[ch * 2 + 1] = (opll.hi_freq[ch]) & 0x10;
 	}
 }
-static int32_t INLINE calc(void) {
+INLINE static int32_t calc(void) {
 	int32_t inst = 0, i;
 
 	update_ampm();
@@ -975,7 +965,7 @@ static int32_t INLINE calc(void) {
 	return (inst);
 }
 /* PG */
-static void INLINE calc_phase(_slot *slot, int32_t lfo) {
+INLINE static void calc_phase(_slot *slot, int32_t lfo) {
 	if (slot->patch.PM) {
 		slot->phase += (slot->dphase * lfo) >> PM_AMP_BITS;
 	} else {
@@ -985,7 +975,7 @@ static void INLINE calc_phase(_slot *slot, int32_t lfo) {
 	slot->pgout = HIGHBITS(slot->phase, DP_BASE_BITS);
 }
 /* EG */
-static void calc_envelope(_slot *slot, int32_t lfo) {
+INLINE static void calc_envelope(_slot *slot, int32_t lfo) {
 
 #define S2E(x) (SL2EG((int32_t)(x/SL_STEP))<<(EG_DP_BITS-EG_BITS))
 
@@ -1061,20 +1051,19 @@ static void calc_envelope(_slot *slot, int32_t lfo) {
 	slot->egout = egout;
 }
 /* CARRIOR */
-static int32_t INLINE calc_slot_car(_slot *slot, int32_t fm) {
+INLINE static int32_t calc_slot_car(_slot *slot, int32_t fm) {
 	slot->output[1] = slot->output[0];
 
 	if (slot->egout >= (DB_MUTE - 1)) {
 		slot->output[0] = 0;
 	} else {
-		slot->output[0] = DB2LIN_TABLE[slot->sintbl[(slot->pgout + wave2_8pi(fm)) & (PG_WIDTH - 1)]
-			+ slot->egout];
+		slot->output[0] = DB2LIN_TABLE[slot->sintbl[(slot->pgout + wave2_8pi(fm)) & (PG_WIDTH - 1)] + slot->egout];
 	}
 
 	return (slot->output[1] + slot->output[0]) >> 1;
 }
 /* MODULATOR */
-static int32_t INLINE calc_slot_mod(_slot *slot) {
+INLINE static int32_t calc_slot_mod(_slot *slot) {
 	int32_t fm;
 
 	slot->output[1] = slot->output[0];
@@ -1083,8 +1072,7 @@ static int32_t INLINE calc_slot_mod(_slot *slot) {
 		slot->output[0] = 0;
 	} else if (slot->patch.FB != 0) {
 		fm = wave2_4pi(slot->feedback) >> (7 - slot->patch.FB);
-		slot->output[0] = DB2LIN_TABLE[slot->sintbl[(slot->pgout + fm) & (PG_WIDTH - 1)]
-			+ slot->egout];
+		slot->output[0] = DB2LIN_TABLE[slot->sintbl[(slot->pgout + fm) & (PG_WIDTH - 1)] + slot->egout];
 	} else {
 		slot->output[0] = DB2LIN_TABLE[slot->sintbl[slot->pgout] + slot->egout];
 	}

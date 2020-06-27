@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,8 +22,6 @@
 #include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
-
-BYTE min, max;
 
 #define waixing_swap_chr_bank_1k(src, dst)\
 {\
@@ -67,8 +65,8 @@ BYTE min, max;
 }
 
 #define waixing_type_ACDE_chr_1k(a)\
-	if ((value >= min) && (value <= max)) {\
-		chr.bank_1k[a] = &chr.extra.data[(value - min) << 10];\
+	if ((value >= waixingtmp.min) && (value <= waixingtmp.max)) {\
+		chr.bank_1k[a] = &chr.extra.data[(value - waixingtmp.min) << 10];\
 	} else {\
 		chr.bank_1k[a] = chr_chip_byte_pnt(0, value << 10);\
 	}
@@ -436,6 +434,17 @@ BYTE min, max;
 	}\
 }
 
+struct _waixing {
+	WORD prg_map[4];
+	WORD chr_map[8];
+	BYTE reg;
+	WORD ctrl[8];
+} waixing;
+struct _waixingtmp {
+	BYTE min;
+	BYTE max;
+} waixingtmp;
+
 void map_init_Waixing(BYTE model) {
 	switch (model) {
 		case WPSX:
@@ -486,17 +495,17 @@ void map_init_Waixing(BYTE model) {
 		case WTD:
 		case WTE:
 			if (model == WTA) {
-				min = 0x08;
-				max = 0x09;
+				waixingtmp.min = 0x08;
+				waixingtmp.max = 0x09;
 			} else if (model == WTC) {
-				min = 0x08;
-				max = 0x0B;
+				waixingtmp.min = 0x08;
+				waixingtmp.max = 0x0B;
 			} else if (model == WTD) {
-				min = 0x00;
-				max = 0x01;
+				waixingtmp.min = 0x00;
+				waixingtmp.max = 0x01;
 			} else if (model == WTE) {
-				min = 0x00;
-				max = 0x03;
+				waixingtmp.min = 0x00;
+				waixingtmp.max = 0x03;
 			}
 			EXTCL_CPU_WR_MEM(Waixing_type_ACDE);
 			EXTCL_SAVE_MAPPER(Waixing_type_ACDE);
@@ -529,8 +538,8 @@ void map_init_Waixing(BYTE model) {
 					for (i = 0; i < 8; i++) {
 						waixing.chr_map[i] = i;
 
-						if ((waixing.chr_map[i] >= min) && (waixing.chr_map[i] <= max)) {
-							chr.bank_1k[i] = &chr.extra.data[(waixing.chr_map[i] - min) << 10];
+						if ((waixing.chr_map[i] >= waixingtmp.min) && (waixing.chr_map[i] <= waixingtmp.max)) {
+							chr.bank_1k[i] = &chr.extra.data[(waixing.chr_map[i] - waixingtmp.min) << 10];
 						}
 					}
 				}
@@ -757,8 +766,8 @@ BYTE extcl_save_mapper_Waixing_type_ACDE(BYTE mode, BYTE slot, FILE *fp) {
 		BYTE i;
 
 		for (i = 0; i < 8; i++) {
-			if ((waixing.chr_map[i] >= min) && (waixing.chr_map[i] <= max)) {
-				chr.bank_1k[i] = &chr.extra.data[(waixing.chr_map[i] - min) << 10];
+			if ((waixing.chr_map[i] >= waixingtmp.min) && (waixing.chr_map[i] <= waixingtmp.max)) {
+				chr.bank_1k[i] = &chr.extra.data[(waixing.chr_map[i] - waixingtmp.min) << 10];
 			}
 		}
 	}
@@ -768,7 +777,7 @@ BYTE extcl_save_mapper_Waixing_type_ACDE(BYTE mode, BYTE slot, FILE *fp) {
 void extcl_wr_chr_Waixing_type_ACDE(WORD address, BYTE value) {
 	const BYTE slot = address >> 10;
 
-	if ((waixing.chr_map[slot] >= min) && (waixing.chr_map[slot] <= max)) {
+	if ((waixing.chr_map[slot] >= waixingtmp.min) && (waixing.chr_map[slot] <= waixingtmp.max)) {
 		chr.bank_1k[slot][address & 0x3FF] = value;
 	}
 }

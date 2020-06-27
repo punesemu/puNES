@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE m187_update_prg(void);
-static void INLINE m187_update_chr(void);
+INLINE static void m187_update_prg(void);
+INLINE static void m187_update_chr(void);
 
 #define m187_swap_chr_1k(a, b)\
 	chr1k = m187.chr_map[b];\
@@ -77,6 +77,11 @@ static void INLINE m187_update_chr(void);
 			break;\
 	}
 
+struct _m187 {
+	BYTE reg[8];
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m187;
 static const BYTE vlu187[4] = { 0x83, 0x83, 0x42, 0x00 };
 
 void map_init_187(void) {
@@ -151,7 +156,7 @@ void extcl_cpu_wr_mem_187(WORD address, BYTE value) {
 		m187_update_chr();
 	}
 }
-BYTE extcl_cpu_rd_mem_187(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_187(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x5000) || (address > 0x5FFF)) {
 		return (openbus);
 	}
@@ -167,7 +172,7 @@ BYTE extcl_save_mapper_187(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE m187_update_prg(void) {
+INLINE static void m187_update_prg(void) {
 	BYTE value;
 
 	if (m187.reg[0] & 0x80) {
@@ -205,7 +210,7 @@ static void INLINE m187_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE m187_update_chr(void) {
+INLINE static void m187_update_chr(void) {
 	BYTE i;
 	WORD value;
 

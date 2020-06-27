@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 #ifndef CHEAT_H_
 #define CHEAT_H_
 
-#include <stdio.h>
 #include "common.h"
 #include "mappers/mapper_GameGenie.h"
 
@@ -51,6 +50,22 @@ typedef struct _type_cheat {
 	int counter;
 	_cheat cheat[CL_CHEATS];
 } _type_cheat;
+typedef struct _gamegenie {
+	uTCHAR *rom;
+	uTCHAR *patch;
+	BYTE phase;
+	BYTE rom_present;
+	BYTE value;
+	BYTE counter;
+	_cheat cheat[GG_CHEATS];
+} _gamegenie;
+typedef struct _cheats_list {
+	_type_cheat rom;
+	_type_cheat ram;
+} _cheats_list;
+
+extern _gamegenie gamegenie;
+extern _cheats_list cheats_list;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -58,26 +73,15 @@ typedef struct _type_cheat {
 #define EXTERNC
 #endif
 
-EXTERNC struct _gamegenie {
-	BYTE phase;
-	BYTE rom_present;
-	BYTE value;
-	BYTE counter;
-	_cheat cheat[GG_CHEATS];
-} gamegenie;
-EXTERNC struct _cheats_list {
-	_type_cheat rom;
-	_type_cheat ram;
-} cheats_list;
-
 EXTERNC void gamegenie_init(void);
+EXTERNC void gamegenie_quit(void);
 EXTERNC void gamegenie_reset(void);
-EXTERNC void gamegenie_check_rom_present(BYTE print_message);
-EXTERNC FILE *gamegenie_load_rom(FILE *fp);
+EXTERNC void gamegenie_free_paths(void);
+EXTERNC uTCHAR *gamegenie_check_rom_present(BYTE print_message);
+EXTERNC void gamegenie_load_rom(void *rom_mem);
 
 EXTERNC void cheatslist_init(void);
 EXTERNC void cheatslist_read_game_cheats(void);
-EXTERNC void cheatslist_save_game_cheats(void);
 EXTERNC void cheatslist_blank(void);
 EXTERNC void cheatslist_quit(void);
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,7 +21,12 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-BYTE *ac08_prg_6000;
+struct _ac08 {
+	BYTE reg;
+} ac08;
+struct _ac08tmp {
+	BYTE *prg_6000;
+} ac08tmp;
 
 void map_init_AC08(void) {
 	EXTCL_CPU_WR_MEM(AC08);
@@ -56,7 +61,7 @@ void extcl_cpu_wr_mem_AC08(WORD address, BYTE value) {
 			value = value & 0x0F;
 		}
 		control_bank(info.prg.rom[0].max.banks_8k)
-		ac08_prg_6000 = prg_chip_byte_pnt(0, value << 13);
+		ac08tmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
 		ac08.reg = value;
 		return;
 	}
@@ -70,9 +75,9 @@ void extcl_cpu_wr_mem_AC08(WORD address, BYTE value) {
 		return;
 	}
 }
-BYTE extcl_cpu_rd_mem_AC08(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_AC08(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (ac08_prg_6000[address & 0x1FFF]);
+		return (ac08tmp.prg_6000[address & 0x1FFF]);
 	}
 	return (openbus);
 }
@@ -80,7 +85,7 @@ BYTE extcl_save_mapper_AC08(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ac08.reg);
 
 	if (mode == SAVE_SLOT_READ) {
-		ac08_prg_6000 = prg_chip_byte_pnt(0, ac08.reg << 13);
+		ac08tmp.prg_6000 = prg_chip_byte_pnt(0, ac08.reg << 13);
 	}
 
 	return (EXIT_OK);

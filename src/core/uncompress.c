@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,14 +16,16 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <stdlib.h>
+#include <string.h>
 #include <libgen.h>
-#include "uncompress.h"
+#if defined (__OpenBSD__)
+#include <stdio.h>
+#endif
 #include "info.h"
-#include "conf.h"
-#include "cheat.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
-#if defined (__linux__)
+#if defined (__unix__)
 #define MINIZ_NO_ARCHIVE_WRITING_APIS
 #define MINIZ_NO_TIME
 #include "miniz.h"
@@ -31,195 +33,385 @@
 #undef MINIZ_NO_ARCHIVE_WRITING_APIS
 #endif
 
-BYTE (*uncomp_control_in_archive)(void);
-BYTE (*uncomp_file_from_archive)(_uncomp_file_data *file);
-BYTE (*uncomp_name_file_compress)(_uncomp_file_data *file);
-#if defined (__linux__)
-/* zip */
-BYTE uncomp_zip_control_in_archive(void);
-BYTE uncomp_zip_file_from_archive(_uncomp_file_data *file);
-BYTE uncomp_zip_name_file_compress(_uncomp_file_data *file);
+static uTCHAR *uncompress_storage_index_file_name(uint32_t index);
+
+static BYTE (*uncompress_examine_archive)(_uncompress_archive *archive);
+static BYTE (*uncompress_extract_from_archive)(_uncompress_archive *archive, uint32_t selected, BYTE type);
+static uTCHAR *(*uncompress_item_file_name)(_uncompress_archive *archive, uint32_t selected, BYTE type);
+
+#if defined (__unix__)
+// zip
+static BYTE mz_zip_examine_archive(_uncompress_archive *archive);
+static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t selected, BYTE type);
+static uTCHAR *mz_zip_item_file_name(_uncompress_archive *archive, uint32_t selected, BYTE type);
 #endif
 
-BYTE uncomp_init(void) {
+_uncompress_storage uncstorage;
+
+BYTE uncompress_init(void) {
 	l7z_init();
 
-	memset(&uncomp, 0x00, sizeof(uncomp));
+	uncstorage.count = 0;
+	uncstorage.item = NULL;
 
 	return (EXIT_OK);
 }
-void uncomp_quit(void) {
+void uncompress_quit(void) {
+	uint32_t i;
+
 	l7z_quit();
 
-	uncomp_remove();
-}
-BYTE uncomp_ctrl(uTCHAR *ext) {
-	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
-		return (EXIT_OK);
+	for (i = 0; i < uncstorage.count; i++) {
+		_uncompress_storage_item *sitem = &uncstorage.item[i];
+
+		free(sitem->archive);
+		uremove(sitem->file);
+		free(sitem->file);
 	}
 
-	/* azzero singolarmente i campi della struttura uncomp */
-	uncomp.files_founded = 0;
-	uncomp.file = NULL;
-	umemset(uncomp.compress_archive, 0x00, usizeof(uncomp.compress_archive));
-	umemset(uncomp.buffer, 0x00, usizeof(uncomp.buffer));
+	if (uncstorage.item) {
+		free(uncstorage.item);
+	}
+}
+
+_uncompress_archive *uncompress_archive_alloc(uTCHAR *file, BYTE *rc) {
+	_uncompress_archive *archive;
+	uTCHAR *ext;
+	uint32_t size;
+
+	// rintraccio l'ultimo '.' nel nome
+	if ((ext = ustrrchr(file, uL('.'))) == NULL) {
+		(*rc) = UNCOMPRESS_EXIT_IS_NOT_COMP;
+		return (NULL);
+	}
 
 	if ((l7z_present() == TRUE) && (l7z_control_ext(ext) == EXIT_OK)){
-		uncomp_control_in_archive = l7z_control_in_archive;
-		uncomp_file_from_archive = l7z_file_from_archive;
-		uncomp_name_file_compress = l7z_name_file_compress;
-#if defined (__linux__)
+		uncompress_examine_archive = l7z_examine_archive;
+		uncompress_extract_from_archive = l7z_extract_from_archive;
+		uncompress_item_file_name = l7z_item_file_name;
+#if defined (__unix__)
 	} else if (!ustrcasecmp(ext, uL(".zip"))) {
-		uncomp_control_in_archive = uncomp_zip_control_in_archive;
-		uncomp_file_from_archive = uncomp_zip_file_from_archive;
-		uncomp_name_file_compress = uncomp_zip_name_file_compress;
+		uncompress_examine_archive = mz_zip_examine_archive;
+		uncompress_extract_from_archive = mz_zip_extract_from_archive;
+		uncompress_item_file_name = mz_zip_item_file_name;
 #endif
 	} else {
-		return (EXIT_OK);
+		(*rc) = UNCOMPRESS_EXIT_IS_NOT_COMP;
+		return (NULL);
 	}
 
-	if (uncomp_control_in_archive() == EXIT_ERROR) {
-		return (EXIT_ERROR);
+	if (!(archive = (_uncompress_archive *)malloc(sizeof(_uncompress_archive)))) {
+		(*rc) = UNCOMPRESS_EXIT_ERROR_ON_UNCOMP;
+		return (NULL);
 	}
 
-	switch (uncomp.files_founded) {
-		case 0:
-			break;
-		case 1:
-			uncomp_file_from_archive(&uncomp.file[0]);
-			break;
-		default: {
-			int selected = gui_uncompress_selection_dialog();
+	archive->file = NULL;
 
-			if (selected != UNCOMP_NO_FILE_SELECTED) {
-				uncomp_file_from_archive(&uncomp.file[selected]);
-			}
-			break;
-		}
+	size = ustrlen(file) + 1;
+	if (!(archive->file = (uTCHAR *)malloc(sizeof(uTCHAR) * size))) {
+		uncompress_archive_free(archive);
+		(*rc) = UNCOMPRESS_EXIT_ERROR_ON_UNCOMP;
+		return (NULL);
+	}
+	umemset(archive->file, 0x00, size);
+	ustrcpy(archive->file, file);
+
+	archive->rom.count = 0;
+	archive->rom.storage_index = UNCOMPRESS_NO_FILE_SELECTED;
+
+	archive->patch.count = 0;
+	archive->patch.storage_index = UNCOMPRESS_NO_FILE_SELECTED;
+
+	archive->list.count = 0;
+	archive->list.item = NULL;
+
+	if (((*rc) = uncompress_examine_archive(archive)) != UNCOMPRESS_EXIT_OK) {
+		uncompress_archive_free(archive);
+		return (NULL);
 	}
 
-	return (EXIT_OK);
+	return (archive);
 }
-BYTE uncomp_name_file(_uncomp_file_data *file) {
-	return (uncomp_name_file_compress(file));
-}
-
-void uncomp_remove(void) {
-	if ((cfg->cheat_mode == GAMEGENIE_MODE) &&
-			((gamegenie.phase == GG_LOAD_ROM) || (gamegenie.phase == GG_LOAD_GAMEGENIE))) {
+void uncompress_archive_free(_uncompress_archive *archive) {
+	if (archive == NULL) {
 		return;
 	}
 
-	if (uncomp.file != NULL) {
-		free(uncomp.file);
-		uncomp.file = NULL;
+	if (archive->file) {
+		free(archive->file);
+		archive->file = NULL;
 	}
 
-	if (info.uncompress_rom == TRUE) {
-		uremove(uncomp.uncompress_file);
-		umemset(uncomp.uncompress_file, 0x00, usizeof(uncomp.uncompress_file));
+	if (archive->list.item) {
+		free(archive->list.item);
+		archive->list.item = NULL;
 	}
 
-	info.uncompress_rom = FALSE;
+	free(archive);
 }
+uint32_t uncompress_archive_counter(_uncompress_archive *archive, BYTE type) {
+	switch (type) {
+		case UNCOMPRESS_TYPE_ROM:
+			return (archive->rom.count);
+		case UNCOMPRESS_TYPE_PATCH:
+			return (archive->patch.count);
+		default:
+		case UNCOMPRESS_TYPE_ALL:
+			return (archive->list.count);
+	}
+}
+BYTE uncompress_archive_extract_file(_uncompress_archive *archive, BYTE type) {
+	BYTE rc = UNCOMPRESS_EXIT_ERROR_ON_UNCOMP;
+	uint32_t selected = 0;
 
-#if defined (__linux__)
-BYTE uncomp_zip_control_in_archive(void) {
-	mz_zip_archive zip_archive;
-	int a, mode;
+	switch (uncompress_archive_counter(archive, type)) {
+		case 0:
+			rc = UNCOMPRESS_EXIT_IS_COMP_BUT_NO_ITEMS;
+			break;
+		case 1:
+			rc = uncompress_extract_from_archive(archive, selected, type);
+			break;
+		default:
+			selected = gui_uncompress_selection_dialog(archive, type);
 
-	memset(&zip_archive, 0, sizeof(zip_archive));
-
-	if (!mz_zip_reader_init_file(&zip_archive, info.rom_file, 0)) {
-		fprintf(stderr, "mz_zip_reader_init_file() failed!\n");
-		return (EXIT_ERROR);
+			if (selected == UNCOMPRESS_NO_FILE_SELECTED) {
+				rc = UNCOMPRESS_EXIT_IS_COMP_BUT_NOT_SELECTED;
+			} else {
+				rc = uncompress_extract_from_archive(archive, selected, type);
+			}
+			break;
 	}
 
-	for (mode = UNCOMP_CTRL_FILE_COUNT_ROMS; mode <= UNCOMP_CTRL_FILE_SAVE_DATA; mode++) {
-		uncomp.files_founded = 0;
+	return (rc);
+}
+_uncompress_archive_item *uncompress_archive_find_item(_uncompress_archive *archive, uint32_t selected, BYTE type) {
+	uint32_t i, index = 0;
 
-		for (a = 0; a < (int) mz_zip_reader_get_num_files(&zip_archive); a++) {
-			mz_zip_archive_file_stat file_stat;
-			int b;
+	for (i = 0; i < archive->list.count; i++) {
+		_uncompress_archive_item *aitem = &archive->list.item[i];
 
-			if (!mz_zip_reader_file_stat(&zip_archive, a, &file_stat)) {
-				fprintf(stderr, "mz_zip_reader_file_stat() failed!\n");
-				mz_zip_reader_end(&zip_archive);
-				return (EXIT_ERROR);
-			}
-
-			// se e' una directory continuo
-			if (mz_zip_reader_is_file_a_directory(&zip_archive, a)) {
-				continue;
-			}
-
-			for (b = 0; b < LENGTH(format_supported); b++) {
-				char *ext = strrchr(file_stat.m_filename, '.');
-
-				if ((ext != NULL) && (strcasecmp(ext, format_supported[b].ext) == 0)) {
-					if (mode == UNCOMP_CTRL_FILE_SAVE_DATA) {
-						uncomp.file[uncomp.files_founded].num = file_stat.m_file_index;
-						uncomp.file[uncomp.files_founded].format = format_supported[b].id;
-					}
-					uncomp.files_founded++;
-					break;
-				}
-			}
+		if ((type != UNCOMPRESS_TYPE_ALL) && (aitem->type != type)) {
+			continue;
 		}
 
-		if ((mode == UNCOMP_CTRL_FILE_COUNT_ROMS) && (uncomp.files_founded > 0)) {
-			uncomp.file = (_uncomp_file_data *) malloc(
-				uncomp.files_founded * sizeof(_uncomp_file_data));
+		if (index == selected) {
+			return (aitem);
+		}
+
+		index++;
+	}
+	return (NULL);
+}
+uTCHAR *uncompress_archive_extracted_file_name(_uncompress_archive *archive, BYTE type) {
+	uint32_t selected;
+
+	switch (type) {
+		default:
+		case UNCOMPRESS_TYPE_ALL:
+		case UNCOMPRESS_TYPE_ROM:
+			type = UNCOMPRESS_TYPE_ROM;
+			selected = archive->rom.storage_index;
+			break;
+		case UNCOMPRESS_TYPE_PATCH:
+			selected = archive->patch.storage_index;
+			break;
+	}
+
+	if (selected == UNCOMPRESS_NO_FILE_SELECTED) {
+		return (NULL);
+	}
+
+	return (uncompress_storage_index_file_name(selected));
+}
+uTCHAR *uncompress_archive_file_name(_uncompress_archive *archive, uint32_t selected, BYTE type) {
+	return (uncompress_item_file_name(archive, selected, type));
+}
+
+uTCHAR *uncompress_storage_archive_name(uTCHAR *file) {
+	uint32_t i;
+
+	for (i = 0; i < uncstorage.count; i++) {
+		_uncompress_storage_item *sitem = &uncstorage.item[i];
+
+		if (ustrcmp(file, sitem->file) == 0) {
+			return (sitem->archive);
 		}
 	}
 
-	mz_zip_reader_end(&zip_archive);
-
-	return (EXIT_OK);
+	return (NULL);
 }
-BYTE uncomp_zip_file_from_archive(_uncomp_file_data *file) {
-	mz_zip_archive zip_archive;
+uint32_t uncompress_storage_add_to_list(_uncompress_archive *archive, _uncompress_archive_item *aitem, uTCHAR *file) {
+	_uncompress_storage_item *sitem, *si = NULL;
+	BYTE found = FALSE;
+	uint32_t i;
 
-	memset(&zip_archive, 0, sizeof(zip_archive));
+	for (i = 0; i < uncstorage.count; i++) {
+		si = &uncstorage.item[i];
 
-	if (!mz_zip_reader_init_file(&zip_archive, info.rom_file, 0)) {
-		fprintf(stderr, "mz_zip_reader_init_file() failed!\n");
-		return (EXIT_ERROR);
+		if (ustrcmp(file, si->file) == 0) {
+			found = TRUE;
+			break;
+		}
 	}
 
-	mz_zip_reader_get_filename(&zip_archive, file->num, uncomp.buffer, sizeof(uncomp.buffer));
-
-	snprintf(uncomp.uncompress_file, sizeof(uncomp.uncompress_file), "%s" TMP_FOLDER "/%s",
-		info.base_folder, basename(uncomp.buffer));
-
-	if (mz_zip_reader_extract_to_file(&zip_archive, file->num, uncomp.uncompress_file, 0)) {
-		strncpy(uncomp.compress_archive, info.rom_file, sizeof(uncomp.compress_archive));
-		strncpy(info.rom_file, uncomp.uncompress_file, sizeof(info.rom_file));
-		info.uncompress_rom = TRUE;
+	if (found == FALSE) {
+		uncstorage.item = (_uncompress_storage_item *)realloc(uncstorage.item,
+			(uncstorage.count + 1) * sizeof(_uncompress_storage_item));
+		sitem = &uncstorage.item[uncstorage.count];
+		memset(sitem, 0x00, sizeof(_uncompress_storage_item));
+		i = uncstorage.count;
+		uncstorage.count++;
 	} else {
-		fprintf(stderr, "unzip file failed!\n");
+		sitem = si;
 	}
 
-	// Close the archive, freeing any resources it was using
-	mz_zip_reader_end(&zip_archive);
+	sitem->type = aitem->type;
+	sitem->archive = emu_ustrncpy(sitem->archive, archive->file);
+	sitem->file = emu_ustrncpy(sitem->file, file);
+	sitem->index = aitem->index;
 
-	return (EXIT_OK);
+	return (i);
 }
-BYTE uncomp_zip_name_file_compress(_uncomp_file_data *file) {
-	mz_zip_archive zip_archive;
 
-	memset(&zip_archive, 0, sizeof(zip_archive));
+static uTCHAR *uncompress_storage_index_file_name(uint32_t index) {
+	_uncompress_storage_item *sitem = &uncstorage.item[index];
 
-	if (!mz_zip_reader_init_file(&zip_archive, info.rom_file, 0)) {
-		fprintf(stderr, "mz_zip_reader_init_file() failed!\n");
-		return (EXIT_ERROR);
+	if (index >= uncstorage.count) {
+		return (NULL);
 	}
 
-	mz_zip_reader_get_filename(&zip_archive, file->num, uncomp.buffer, sizeof(uncomp.buffer));
+	return (sitem->file);
+}
+
+#if defined (__unix__)
+static BYTE mz_zip_examine_archive(_uncompress_archive *archive) {
+	mz_zip_archive mzarchive;
+	unsigned int a;
+
+	memset(&mzarchive, 0x00, sizeof(mzarchive));
+
+	if (!mz_zip_reader_init_file(&mzarchive, archive->file, 0)) {
+		fprintf(stderr, "mz_zip_reader_init_file() failed!\n");
+		return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
+	}
+
+	for (a = 0; a < mz_zip_reader_get_num_files(&mzarchive); a++) {
+		mz_zip_archive_file_stat file_stat;
+		unsigned int b;
+
+		if (!mz_zip_reader_file_stat(&mzarchive, a, &file_stat)) {
+			fprintf(stderr, "mz_zip_reader_file_stat() failed!\n");
+			mz_zip_reader_end(&mzarchive);
+			return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
+		}
+
+		// se e' una directory continuo
+		if (mz_zip_reader_is_file_a_directory(&mzarchive, a)) {
+			continue;
+		}
+
+		for (b = 0; b < LENGTH(uncompress_exts); b++) {
+			char *ext = strrchr(file_stat.m_filename, '.');
+
+			if ((ext != NULL) && (strcasecmp(ext, (uTCHAR *)uncompress_exts[b].e) == 0)) {
+				_uncompress_archive_items_list *list = &archive->list;
+
+				if (uncompress_exts[b].type == UNCOMPRESS_TYPE_ROM) {
+					archive->rom.count++;
+				} else if (uncompress_exts[b].type == UNCOMPRESS_TYPE_PATCH) {
+					archive->patch.count++;
+				} else {
+					continue;
+				}
+
+				list->item = (_uncompress_archive_item *)realloc(list->item,
+					(list->count + 1) * sizeof(_uncompress_archive_item));
+
+				{
+					_uncompress_archive_item *aitem = &list->item[list->count];
+
+					aitem->type = uncompress_exts[b].type;
+					aitem->index = file_stat.m_file_index;
+				}
+
+				list->count++;
+				break;
+			}
+		}
+	}
+
+	mz_zip_reader_end(&mzarchive);
+
+	return (UNCOMPRESS_EXIT_OK);
+}
+static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t selected, BYTE type) {
+	mz_zip_archive mzarchive;
+	uTCHAR file[LENGTH_FILE_NAME_LONG];
+	_uncompress_archive_item *aitem;
+
+	if ((aitem = uncompress_archive_find_item(archive, selected, type)) == NULL) {
+		return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
+	}
+
+	memset(&mzarchive, 0x00, sizeof(mzarchive));
+
+	if (!mz_zip_reader_init_file(&mzarchive, archive->file, 0)) {
+		fprintf(stderr, "mz_zip_reader_init_file() failed!\n");
+		return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
+	}
+
+	mz_zip_reader_get_filename(&mzarchive, aitem->index, file, sizeof(file));
+
+	snprintf(file, sizeof(file), "%s" TMP_FOLDER "/%s", info.base_folder, basename(file));
+
+	if (!mz_zip_reader_extract_to_file(&mzarchive, aitem->index, file, 0)) {
+		fprintf(stderr, "unzip file failed!\n");
+		// Close the archive, freeing any resources it was using
+		mz_zip_reader_end(&mzarchive);
+		return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
+	}
+
+	{
+		uint32_t storage_index = uncompress_storage_add_to_list(archive, aitem, file);
+
+		switch (type) {
+			default:
+			case UNCOMPRESS_TYPE_ALL:
+			case UNCOMPRESS_TYPE_ROM:
+				archive->rom.storage_index = storage_index;
+				break;
+			case UNCOMPRESS_TYPE_PATCH:
+				archive->patch.storage_index = storage_index;
+				break;
+		}
+	}
 
 	// Close the archive, freeing any resources it was using
-	mz_zip_reader_end(&zip_archive);
+	mz_zip_reader_end(&mzarchive);
 
-	return (EXIT_OK);
+	return (UNCOMPRESS_EXIT_OK);
+}
+static uTCHAR *mz_zip_item_file_name(_uncompress_archive *archive, uint32_t selected, BYTE type) {
+	static uTCHAR file[LENGTH_FILE_NAME_LONG];
+	mz_zip_archive mzarchive;
+	_uncompress_archive_item *aitem;
+
+	if ((aitem = uncompress_archive_find_item(archive, selected, type)) == NULL) {
+		return (NULL);
+	}
+
+	memset(&mzarchive, 0x00, sizeof(mzarchive));
+
+	if (!mz_zip_reader_init_file(&mzarchive, archive->file, 0)) {
+		fprintf(stderr, "mz_zip_reader_init_file() failed!\n");
+		return (NULL);
+	}
+
+	mz_zip_reader_get_filename(&mzarchive, aitem->index, file, sizeof(file));
+
+	// Close the archive, freeing any resources it was using
+	mz_zip_reader_end(&mzarchive);
+
+	return (file);
 }
 #endif

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,10 +29,6 @@ enum {
 	CNROM_26NCE27NCE,
 	BAD_INES_TETRIS_BPS = 20
 };
-
-struct _cnrom_2627 {
-	BYTE chr_rd_enable;
-} cnrom_2627;
 
 void map_init_CNROM();
 void extcl_cpu_wr_mem_CNROM(WORD address, BYTE value);

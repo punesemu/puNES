@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 #include "info.h"
 #include "mem_map.h"
 #include "cpu.h"
-#include "apu.h"
 #include "save_slot.h"
 
 #define n163_prg_rom_8k_update(slot)\
@@ -31,7 +30,7 @@
 #define _n163_nmt_update(slot)\
 	ntbl.bank_1k[slot] = chr_chip_byte_pnt(0, n163.nmt_bank[slot][1])
 #define n163_nmt_update(slot)\
-	if (hardwired) {\
+	if (namcotmp.hardwired) {\
 		return;\
 	}\
 	if (value >= 0xE0) {\
@@ -50,8 +49,7 @@
 	if (n163.ch[channel].freq != freq) {\
 		n163.ch[channel].freq = freq;\
 		if (n163.ch[channel].freq) {\
-			n163.ch[channel].cycles_reload = (0xF0000 * (8 - n163.snd_ch_start))\
-				/ n163.ch[channel].freq;\
+			n163.ch[channel].cycles_reload = (15 * 65536 * (8 - n163.snd_ch_start)) / n163.ch[channel].freq;\
 			n163.ch[channel].cycles = n163.ch[channel].cycles_reload;\
 		}\
 	}\
@@ -64,11 +62,22 @@
 	_n163_ch_freq((n163.ch[channel].freq & 0x3FF00) | value, channel)
 
 #define n3425_nmt_update()\
-	if (type == N3425) {\
+	if (namcotmp.type == N3425) {\
 		ntbl.bank_1k[n3425.bank_to_update >> 1] = &ntbl.data[((value >> 5) & 0x01) << 10];\
 	}
 
-BYTE hardwired, type;
+struct _n3425 {
+	BYTE bank_to_update;
+} n3425;
+struct _n3446 {
+	BYTE bank_to_update;
+	BYTE prg_rom_mode;
+} n3446;
+_n163 n163;
+struct _namcotmp {
+	BYTE hardwired;
+	BYTE type;
+} namcotmp;
 
 void map_init_Namco(BYTE model) {
 	switch (model) {
@@ -96,15 +105,15 @@ void map_init_Namco(BYTE model) {
 			}
 
 			info.mapper.extend_wr = TRUE;
-			hardwired = FALSE;
+			namcotmp.hardwired = FALSE;
 
 			switch (info.id) {
 				case NAMCO_HARD_WIRED_V:
-					hardwired = TRUE;
+					namcotmp.hardwired = TRUE;
 					mirroring_V();
 					break;
 				case NAMCO_HARD_WIRED_H:
-					hardwired = TRUE;
+					namcotmp.hardwired = TRUE;
 					mirroring_H();
 					break;
 				case MINDSEEKER:
@@ -144,7 +153,15 @@ void map_init_Namco(BYTE model) {
 			break;
 	}
 
-	type = model;
+	namcotmp.type = model;
+}
+void map_init_NSF_Namco(BYTE model) {
+	memset(&n163, 0x00, sizeof(n163));
+
+	n163.snd_ch_start = 7;
+	n163.snd_auto_inc = 1;
+
+	namcotmp.type = model;
 }
 
 void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value) {
@@ -154,22 +171,17 @@ void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value) {
 
 	switch (address & 0xF800) {
 		case 0x4800: {
-			const BYTE index = address << 1;
-
 			n163.snd_ram[n163.snd_adr] = value;
 
 			{
-				BYTE a;
+				const BYTE index = n163.snd_adr << 1;
 
-				/* taglio le frequenze troppo basse */
-				n163.snd_wave[index] = ((a = (value & 0x0F)) < 0x08 ? 0x08 : a);
-				n163.snd_wave[index + 1] = ((a = (value & 0xF0)) < 0x80 ? 0x08 : a >> 4);
+				n163.snd_wave[index + 0] = (value & 0x0F);
+				n163.snd_wave[index + 1] = (value >> 4);
 			}
 
 			if (n163.snd_adr >= 0x40) {
-				const BYTE chan = (n163.snd_adr - 0x40) >> 3;
-
-				n163.ch[chan].active = FALSE;
+				const BYTE chan = (n163.snd_adr >> 3) & 0x07;
 
 				switch (n163.snd_adr & 0x7) {
 					case 0x00:
@@ -179,7 +191,7 @@ void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value) {
 						n163_ch_freq_middle(chan);
 						break;
 					case 0x04: {
-						const BYTE length = (8 - ((value >> 2) & 0x07)) << 2;
+						const WORD length = (64 - (value >> 2)) << 2;
 
 						n163_ch_freq_high(chan);
 
@@ -208,6 +220,9 @@ void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value) {
 						}
 						break;
 				}
+
+				n163.ch[chan].active = FALSE;
+
 				/* se sono vere queste condizioni allora il canale e' attivo */
 				if (n163.ch[chan].enabled && n163.ch[chan].freq && n163.ch[chan].volume) {
 					n163.ch[chan].active = TRUE;
@@ -283,7 +298,7 @@ void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_Namco_163(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Namco_163(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x4800) || (address >= 0x6000)) {
 		return (openbus);
 	}
@@ -347,15 +362,11 @@ void extcl_apu_tick_Namco_163(void) {
 	BYTE i;
 
 	for (i = n163.snd_ch_start; i < 8; i++) {
-		if ((n163.ch[i].active) && !(--n163.ch[i].cycles)) {
-
-			n163.ch[i].output = n163.snd_wave[(n163.ch[i].address + n163.ch[i].step) & 0xFF];
-
+		if (n163.ch[i].active && !(--n163.ch[i].cycles)) {
+			n163.ch[i].step = (n163.ch[i].step + 1) % n163.ch[i].length;
+			n163.ch[i].output = (n163.snd_wave[(n163.ch[i].address + n163.ch[i].step) & 0xFF] - 8) *
+					n163.ch[i].volume;
 			n163.ch[i].cycles = n163.ch[i].cycles_reload;
-
-			if (++n163.ch[i].step == n163.ch[i].length) {
-				n163.ch[i].step = 0;
-			}
 		}
 	}
 }
@@ -364,7 +375,7 @@ void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
 	switch (address & 0xA001) {
 		case 0x8000:
 			n3425.bank_to_update = value & 0x07;
-			if (type == N3453) {
+			if (namcotmp.type == N3453) {
 				if (value & 0x40) {
 					mirroring_SCR1();
 				} else {

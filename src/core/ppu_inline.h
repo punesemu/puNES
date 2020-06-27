@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@
 
 #include "external_calls.h"
 
-static BYTE INLINE ppu_rd_mem(WORD address);
+INLINE static BYTE ppu_rd_mem(WORD address);
 
-static BYTE INLINE ppu_rd_mem(WORD address) {
+INLINE static BYTE ppu_rd_mem(WORD address) {
 	if (extcl_rd_ppu) {
 		/*
 		 * utilizzato dalle mappers :
@@ -35,6 +35,7 @@ static BYTE INLINE ppu_rd_mem(WORD address) {
 	address &= 0x3FFF;
 
 	if (address < 0x2000) {
+		address &= 0x1FFF;
 		if (extcl_rd_chr) {
 			/*
 			 * utilizzato dalle mappers :
@@ -56,7 +57,7 @@ static BYTE INLINE ppu_rd_mem(WORD address) {
 		}
 		return (ntbl.bank_1k[address >> 10][address & 0x3FF]);
 	}
-	return (palette.color[address & 0x1F]);
+	return (mmap_palette.color[address & 0x1F]);
 }
 
 #endif /* PPU_INLINE_H_ */

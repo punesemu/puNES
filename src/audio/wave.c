@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "wave.h"
-#include "snd.h"
+#include "audio/snd.h"
 #include "info.h"
-#include "text.h"
+#include "gui.h"
 
 struct _wav {
 	FILE *outfile;
@@ -42,7 +42,7 @@ BYTE wave_open(uTCHAR *filename, int samples) {
 		return (EXIT_ERROR);
 	}
 
-	snd_playback_lock(SNDCACHE);
+	snd_thread_pause();
 
 	if ((wav.outfile = ufopen(filename, uL("wb"))) == NULL) {
 		free(wav.buffer);
@@ -105,14 +105,16 @@ BYTE wave_open(uTCHAR *filename, int samples) {
 
 	info.wave_in_record = TRUE;
 
-	text_add_line_info(1, "start wav recording");
+	gui_overlay_info_append_msg_precompiled(0, NULL);
 
-	snd_playback_unlock(SNDCACHE);
+	snd_thread_continue();
 
 	return (EXIT_OK);
 }
 void wave_close(void) {
-	snd_playback_lock(SNDCACHE);
+	if (snd.cache) {
+		snd_thread_pause();
+	}
 
 	if (wav.outfile) {
 		long int actual_size;
@@ -141,7 +143,8 @@ void wave_close(void) {
 		fclose(wav.outfile);
 		wav.outfile = NULL;
 
-		text_add_line_info(1, "stop wav recording");
+		gui_overlay_info_append_msg_precompiled(1, NULL);
+
 	}
 
 	if (wav.buffer) {
@@ -151,7 +154,9 @@ void wave_close(void) {
 
 	info.wave_in_record = FALSE;
 
-	snd_playback_unlock(SNDCACHE);
+	if (snd.cache) {
+		snd_thread_continue();
+	}
 }
 void wave_write(SWORD *data, int samples) {
 	SWORD *src = data;

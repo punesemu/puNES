@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,10 +22,6 @@
 #include "common.h"
 
 enum _bmc70in1_type { BMC70IN1, BMC70IN1B };
-
-struct _bmc70in1 {
-	WORD reg[3];
-} bmc70in1;
 
 void map_init_BMC70IN1(BYTE type);
 void extcl_cpu_wr_mem_BMC70IN1(WORD address, BYTE value);

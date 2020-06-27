@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,6 +37,11 @@
 	asder_chr_ctrl_bank(new_value, info.chr.rom[0].max.banks_1k)\
 	bank = new_value << 10;\
 	chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank)
+
+struct _asder {
+	BYTE address;
+	BYTE reg[8];
+} asder;
 
 void map_init_Ntdec(BYTE model) {
 	switch (model) {

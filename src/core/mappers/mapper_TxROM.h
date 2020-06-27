@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,11 +22,6 @@
 #include "common.h"
 
 enum { TKSROM, TLSROM, TQROM };
-
-struct _txrom {
-	BYTE delay;
-	uint32_t chr[8][2];
-} txrom;
 
 void map_init_TxROM(BYTE model);
 

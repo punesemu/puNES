@@ -19,6 +19,7 @@
  */
 
 #include "video/filters/hqx.h"
+#include "palette.h"
 #define _HQ2X_
 #include "video/filters/hqx_inline.h"
 #undef  _HQ2X_

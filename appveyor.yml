@@ -1,0 +1,157 @@
+version: 2.0.{build}
+branches:
+  only:
+  - master
+skip_tags: true
+skip_branch_with_pr: true
+image: Visual Studio 2017
+init:
+- ps: >-
+    # Set "build version number" to "short-commit-hash"
+
+    Update-AppveyorBuild -Version "wip.$($env:APPVEYOR_REPO_COMMIT.substring(0,7)).$env:APPVEYOR_BUILD_NUMBER"
+build_script:
+- cmd: >-
+    set ORIGPATH=%PATH%
+
+    set MSYS2_ARCH=x86_64
+
+    set MSYSTEM=MINGW64
+
+    set MINGW_HOME=C:\msys64\mingw64
+
+    set MSYS_HOME=C:\msys64
+
+    PATH %MINGW_HOME%\bin;%MSYS_HOME%\usr\bin;%ORIGPATH%
+
+
+    bash -lc "pacman -Sy --noconfirm pacman"
+
+    bash -lc "pacman -Syu --noconfirm"
+
+    bash -lc "pacman -Syu --noconfirm"
+
+
+    set CHERE_INVOKING=yes
+
+    mkdir c:\tmp
+
+    mkdir c:\tmp\x64dll
+
+    mkdir c:\tmp\x32dll
+
+
+    cd %APPVEYOR_BUILD_FOLDER%
+
+    bash -lc "wget --no-check-cert -O /c/tmp/qt5_5.15.0_x86_64.7z 'https://www.dropbox.com/s/xd9dq7dr713ao95/qt5_5.15.0_x86_64.7z?dl=1' 1>/dev/null 2>&1"
+
+    7z x c:\tmp\qt5_5.15.0_x86_64.7z -oC:\msys64\mingw64 > NUL
+
+    bash -lc "wget --no-check-cert -O /c/tmp/puNES_x86_64_dlls.zip 'https://www.dropbox.com/s/yt5bgacnwexdghs/puNES_x86_64_dlls.zip?dl=1' 1>/dev/null 2>&1"
+
+    7z x c:\tmp\puNES_x86_64_dlls.zip -oC:\tmp\x64dll> NUL
+
+    bash -lc "mkdir wips"
+
+    bash -lc "mkdir -p build/x64/d3d9"
+
+    bash -lc "mkdir -p build/x64/opengl"
+
+    bash -lc "set pwd"
+
+    bash -lc "env"
+
+    bash -lc "./autogen.sh"
+
+    cd build\x64\d3d9
+
+    bash -lc "WIPS_VERSION=true CPPFLAGS='-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse' CFLAGS='' CXXFLAGS='' ../../../configure --with-d3d9"
+
+    bash -lc "make"
+
+    bash -lc "strip src/punes.exe"
+
+    cd ..
+
+    cd opengl
+
+    bash -lc "WIPS_VERSION=true CPPFLAGS='-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse' CFLAGS='' CXXFLAGS='' ../../../configure --with-opengl"
+
+    bash -lc "make"
+
+    bash -lc "strip src/punes.exe"
+
+
+    set MSYS2_ARCH=i686
+
+    set MSYSTEM=MINGW32
+
+    set MINGW_HOME=C:\msys64\mingw32
+
+    set MSYS_HOME=C:\msys64
+
+    PATH %MINGW_HOME%\bin;%MSYS_HOME%\usr\bin;%ORIGPATH%
+
+    cd %APPVEYOR_BUILD_FOLDER%
+
+    bash -lc "wget --no-check-cert -O /c/tmp/qt5_5.6.3_i686.7z 'https://www.dropbox.com/s/tc6wy8vpitkdlm1/qt5_5.6.3_i686.7z?dl=1' 1>/dev/null 2>&1"
+
+    7z x c:\tmp\qt5_5.6.3_i686.7z -oC:\msys64\mingw32 > NUL
+
+    bash -lc "wget --no-check-cert -O /c/tmp/puNES_i686_dlls.zip 'https://www.dropbox.com/s/7afebuhjy06n9uh/puNES_i686_dlls.zip?dl=1' 1>/dev/null 2>&1"
+
+    7z x c:\tmp\puNES_i686_dlls.zip -oC:\tmp\x32dll> NUL
+
+    bash -lc "mkdir -p build/x32/d3d9"
+
+    bash -lc "mkdir -p build/x32/opengl"
+
+    cd build\x32\d3d9
+
+    bash -lc "WIPS_VERSION=true CPPFLAGS='-O3 -mmmx -msse -msse2 -mfpmath=sse' CFLAGS='' CXXFLAGS='-Wno-deprecated-copy' ../../../configure --with-d3d9"
+
+    bash -lc "make"
+
+    bash -lc "strip src/punes.exe"
+
+    cd ..
+
+    cd opengl
+
+    bash -lc "WIPS_VERSION=true CPPFLAGS='-O3 -mmmx -msse -msse2 -mfpmath=sse' CFLAGS='' CXXFLAGS='-Wno-deprecated-copy' ../../../configure --with-opengl"
+
+    bash -lc "make"
+
+    bash -lc "strip src/punes.exe"
+
+
+    cd c:\tmp\x64dll
+
+    cp %APPVEYOR_BUILD_FOLDER%\build\x64\d3d9\src\punes.exe .
+
+    7z.exe a %APPVEYOR_BUILD_FOLDER%\punes64.wip.d3d9.zip *.* > NUL
+
+    cp %APPVEYOR_BUILD_FOLDER%\build\x64\opengl\src\punes.exe .
+
+    7z.exe a %APPVEYOR_BUILD_FOLDER%\punes64.wip.opengl.zip *.* > NUL
+
+    cd c:\tmp\x32dll
+
+    cp %APPVEYOR_BUILD_FOLDER%\build\x32\d3d9\src\punes.exe .
+
+    7z.exe a %APPVEYOR_BUILD_FOLDER%\punes32.wip.d3d9.zip *.* > NUL
+
+    cp %APPVEYOR_BUILD_FOLDER%\build\x32\opengl\src\punes.exe .
+
+    7z.exe a %APPVEYOR_BUILD_FOLDER%\punes32.wip.opengl.zip *.* > NUL
+test: off
+artifacts:
+- path: punes64.wip.d3d9.zip
+  name: punes64.wip.d3d9.zip
+- path: punes64.wip.opengl.zip
+  name: punes64.wip.opengl.zip
+- path: punes32.wip.d3d9.zip
+  name: punes32.wip.d3d9.zip
+- path: punes32.wip.opengl.zip
+  name: punes32.wip.opengl.zip
+deploy: off

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,7 +21,10 @@
 
 #include "common.h"
 
+enum gxrom_types { GXROM_NOBC = 20 };
+
 void map_init_GxROM(void);
 void extcl_cpu_wr_mem_GxROM(WORD address, BYTE value);
+void extcl_cpu_wr_mem_GxROM_noBC(WORD address, BYTE value);
 
 #endif /* MAPPER_GXROM_H_ */

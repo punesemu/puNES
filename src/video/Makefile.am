@@ -1,5 +1,8 @@
 noinst_LIBRARIES = libvideo.a
 libvideo_a_SOURCES = \
+	gfx.h \
+	gfx_thread.c \
+	gfx_thread.h \
 	effects/pause.c \
 	effects/pause.h \
 	effects/tv_noise.c \
@@ -25,19 +28,20 @@ libvideo_a_SOURCES = \
 
 if WITH_OPENGL
 libvideo_a_SOURCES += \
-	sdl/gfx.c \
-	sdl/opengl.c \
-	sdl/opengl.h \
-	sdl/sdl_wid.h \
-	sdl/shdcode.h \
-	sdl/glew/glew.c \
-	sdl/glew/glew.h \
-	sdl/glew/glxew.h \
-	sdl/glew/wglew.h
+	opengl/gfx.c \
+	opengl/opengl.c \
+	opengl/opengl.h \
+	opengl/shdcode.h \
+	opengl/glew/glew.c \
+	opengl/glew/glew.h \
+	opengl/glew/glxew.h \
+	opengl/glew/wglew.h
 endif
 
 if WITH_D3D9
 libvideo_a_SOURCES += \
+	d3d9/d3d9.c \
+	d3d9/d3d9.h \
 	d3d9/gfx.c \
 	d3d9/shdcode.h
 endif

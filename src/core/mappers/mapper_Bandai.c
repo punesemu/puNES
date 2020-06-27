@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,9 +24,21 @@
 #include "ppu.h"
 #include "save_slot.h"
 
+enum {
+	MODE_IDLE,
+	MODE_DATA,
+	MODE_ADDRESS,
+	MODE_READ,
+	MODE_WRITE,
+	MODE_ACK,
+	MODE_NOT_ACK,
+	MODE_ACK_WAIT,
+	MODE_MAX
+};
+
 #define b161x02x74_chr_4k_update()\
-	value = (save & 0x04) | b161x02x74.chr_rom_bank;\
-	control_bank(chr_ram_4k_max)\
+	value = (save & 0x04) | (b161x02x74.chr_rom_bank & 0x03);\
+	control_bank(bandaitmp.chr_ram_4k_max)\
 	b161x02x74.chr_rom_bank = value;\
 	bank = value << 12;\
 	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);\
@@ -34,7 +46,7 @@
 	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);\
 	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);\
 	value = (save & 0x04) | 0x03;\
-	control_bank(chr_ram_4k_max)\
+	control_bank(bandaitmp.chr_ram_4k_max)\
 	bank = value << 12;\
 	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);\
 	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);\
@@ -44,6 +56,7 @@
 {\
 	const BYTE value = (b161x02x74.chr_rom_bank & 0x04) | ((adr >> 8) & 0x03);\
 	const DBWORD bank = value << 12;\
+	b161x02x74.chr_rom_bank = value;\
 	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);\
 	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);\
 	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);\
@@ -65,25 +78,41 @@
 	save_slot_ele(mode, slot, epr.rw);\
 	save_slot_ele(mode, slot, epr.output)
 
+typedef struct _FCGXeeprom {
+	BYTE eeprom[256];
+	WORD size;
+	BYTE mode;
+	BYTE next;
+	BYTE bit;
+	BYTE address;
+	BYTE data;
+	BYTE scl;
+	BYTE sda;
+	BYTE rw;
+	BYTE output;
+} _FCGXeeprom;
+
 void e24C0x_set(BYTE scl, BYTE sda, _FCGXeeprom *eeprom);
 
-enum {
-	MODE_IDLE,
-	MODE_DATA,
-	MODE_ADDRESS,
-	MODE_READ,
-	MODE_WRITE,
-	MODE_ACK,
-	MODE_NOT_ACK,
-	MODE_ACK_WAIT,
-	MODE_MAX
-};
-
-WORD chr_ram_4k_max;
-BYTE type;
+struct _b161x02x74 {
+	BYTE chr_rom_bank;
+} b161x02x74;
+struct _FCGX {
+	BYTE reg[8];
+	BYTE enabled;
+	WORD count;
+	WORD reload;
+	BYTE delay;
+	_FCGXeeprom e0;
+	_FCGXeeprom e1;
+} FCGX;
+struct _bandaitmp {
+	BYTE type;
+	WORD chr_ram_4k_max;
+} bandaitmp;
 
 void map_init_Bandai(BYTE model) {
-	chr_ram_4k_max = info.chr.rom[0].banks_4k - 1;
+	bandaitmp.chr_ram_4k_max = info.chr.rom[0].banks_4k - 1;
 
 	switch (model) {
 		case B161X02X74:
@@ -161,7 +190,7 @@ void map_init_Bandai(BYTE model) {
 			break;
 	}
 
-	type = model;
+	bandaitmp.type = model;
 }
 
 void extcl_cpu_wr_mem_Bandai_161x02x74(WORD address, BYTE value) {
@@ -180,7 +209,7 @@ BYTE extcl_save_mapper_Bandai_161x02x74(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_update_r2006_Bandai_161x02x74(WORD new_r2006, WORD old_r2006) {
+void extcl_update_r2006_Bandai_161x02x74(WORD new_r2006, UNUSED(WORD old_r2006)) {
 	if ((new_r2006 >= 0x2000) && ((new_r2006 & 0x03FF) < 0x03C0)) {
 		b16x02x74_r2006(new_r2006)
 	}
@@ -233,7 +262,7 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 
 				value = FCGX.reg[slot];
 			}
-			if (type == DATACH) {
+			if (bandaitmp.type == DATACH) {
 				datach_set_scl((value << 2) & 0x20);
 			}
 			if (!mapper.write_vram) {
@@ -281,14 +310,14 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 		case 0x800D:
 			if (FCGX.e0.size) {
 				e24C0x_set(value & 0x20, value & 0x40, &FCGX.e0);
-				if (type == DATACH) {
+				if (bandaitmp.type == DATACH) {
 					datach_set_sda(value & 0x40);
 				}
 			}
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_Bandai_FCGX(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Bandai_FCGX(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (!FCGX.e0.size || (address < 0x6000)) {
 		return (openbus);
 	}
@@ -296,7 +325,7 @@ BYTE extcl_cpu_rd_mem_Bandai_FCGX(WORD address, BYTE openbus, BYTE before) {
 	if (address & 0x0100) {
 		BYTE value = FCGX.e0.output;
 
-		if (type == DATACH) {
+		if (bandaitmp.type == DATACH) {
 			value &= FCGX.e1.output;
 		}
 		return (value);

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 #include <math.h>
-#include "snd.h"
+#include "audio/snd.h"
 #include "audio/panning.h"
 #include "audio/channels.h"
 
@@ -32,6 +32,7 @@ static struct _panning {
 
 BYTE ch_stereo_panning_init(void) {
 	audio_channels_quit = ch_stereo_panning_quit;
+	audio_channels_reset = ch_stereo_panning_reset;
 	audio_channels_tick = ch_stereo_panning_tick;
 
 	snd.channels = 2;
@@ -45,14 +46,15 @@ BYTE ch_stereo_panning_init(void) {
 	return (EXIT_OK);
 }
 void ch_stereo_panning_quit(void) {}
+void ch_stereo_panning_reset(void) {}
 void ch_stereo_panning_tick(SWORD value) {
-	float mixer = (float) value / 65535.0f;
+	float mixer = (float)value / 65535.0f;
 
 	// sinistro
-	(*SNDCACHE->write++) = (panning.sq * (panning.cs - panning.si) * mixer) * 65535.0f;
+	(*snd.cache->write++) = (panning.sq * (panning.cs - panning.si) * mixer) * 65535.0f;
 	// destro
-	(*SNDCACHE->write++) = (panning.sq * (panning.cs + panning.si) * mixer) * 65535.0f;
+	(*snd.cache->write++) = (panning.sq * (panning.cs + panning.si) * mixer) * 65535.0f;
 
-	SNDCACHE->samples_available++;
-	SNDCACHE->bytes_available += (2 * sizeof(*SNDCACHE->write));
+	snd.cache->samples_available++;
+	snd.cache->bytes_available += (2 * sizeof(*snd.cache->write));
 }

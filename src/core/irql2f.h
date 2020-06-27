@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ enum {
 	IRQL2F_PENDING = 0x80
 };
 
-typedef struct {
+typedef struct _irql2f {
 	BYTE present;
 	BYTE enable;
 	BYTE counter;
@@ -38,7 +38,7 @@ typedef struct {
 	BYTE pending;
 } _irql2f;
 
-_irql2f irql2f;
+extern _irql2f irql2f;
 
 void irql2f_tick(void);
 

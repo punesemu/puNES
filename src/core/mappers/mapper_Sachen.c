@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,22 @@
 	sa74374x.chr_rom_8k_bank = value;\
 }
 
-BYTE type, shift, ored[3];
+struct _sa8259 {
+	BYTE ctrl;
+	BYTE reg[8];
+} sa8259;
+struct _tcu02 {
+	BYTE reg;
+} tcu02;
+struct _sa74374x {
+	BYTE reg;
+	BYTE chr_rom_8k_bank;
+} sa74374x;
+struct _sachentmp {
+	BYTE type;
+	BYTE shift;
+	BYTE ored[3];
+} sachentmp;
 
 void map_init_Sachen(BYTE model) {
 	switch (model) {
@@ -76,22 +91,22 @@ void map_init_Sachen(BYTE model) {
 
 			switch (model) {
 				case SA8259A:
-					shift = 1;
-					ored[0] = 1;
-					ored[1] = 0;
-					ored[2] = 1;
+					sachentmp.shift = 1;
+					sachentmp.ored[0] = 1;
+					sachentmp.ored[1] = 0;
+					sachentmp.ored[2] = 1;
 					break;
 				case SA8259B:
-					shift = 0;
-					ored[0] = 0;
-					ored[1] = 0;
-					ored[2] = 0;
+					sachentmp.shift = 0;
+					sachentmp.ored[0] = 0;
+					sachentmp.ored[1] = 0;
+					sachentmp.ored[2] = 0;
 					break;
 				case SA8259C:
-					shift = 2;
-					ored[0] = 1;
-					ored[1] = 2;
-					ored[2] = 3;
+					sachentmp.shift = 2;
+					sachentmp.ored[0] = 1;
+					sachentmp.ored[1] = 2;
+					sachentmp.ored[2] = 3;
 					break;
 				case SA8259D:
 					if (!mapper.write_vram) {
@@ -181,10 +196,10 @@ void map_init_Sachen(BYTE model) {
 		}
 	}
 
-	type = model;
+	sachentmp.type = model;
 }
 
-void extcl_cpu_wr_mem_Sachen_sa0036(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sachen_sa0036(UNUSED(WORD address), BYTE value) {
 	DBWORD bank;
 
 	value >>= 7;
@@ -270,7 +285,7 @@ void extcl_cpu_wr_mem_Sachen_sa8259x(WORD address, BYTE value) {
 					if (!mapper.write_vram) {
 						DBWORD bank;
 
-						if (type == SA8259D) {
+						if (sachentmp.type == SA8259D) {
 
 							value = sa8259.reg[0] & 0x07;
 							control_bank(info.chr.rom[0].max.banks_1k)
@@ -287,36 +302,35 @@ void extcl_cpu_wr_mem_Sachen_sa8259x(WORD address, BYTE value) {
 							bank = value << 10;
 							chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
 
-							value = (sa8259.reg[3] & 0x07) | ((sa8259.reg[4] << 2) & 0x10)
-									| ((sa8259.reg[6] << 3) & 0x08);
+							value = (sa8259.reg[3] & 0x07) | ((sa8259.reg[4] << 2) & 0x10) | ((sa8259.reg[6] << 3) & 0x08);
 							control_bank(info.chr.rom[0].max.banks_1k)
 							bank = value << 10;
 							chr.bank_1k[3] = chr_chip_byte_pnt(0, bank);
 						} else {
 							const BYTE high = (sa8259.reg[4] << 3) & 0x38;
 
-							value = (high | (sa8259.reg[0] & 0x07)) << shift;
+							value = (high | (sa8259.reg[0] & 0x07)) << sachentmp.shift;
 							control_bank(info.chr.rom[0].max.banks_2k)
 							bank = value << 11;
 							chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 							chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
 
 							value = ((high | (sa8259.reg[(sa8259.reg[7] & 0x01) ? 0 : 1] & 0x07))
-									<< shift) | ored[0];
+								<< sachentmp.shift) | sachentmp.ored[0];
 							control_bank(info.chr.rom[0].max.banks_2k)
 							bank = value << 11;
 							chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
 							chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0400);
 
 							value = ((high | (sa8259.reg[(sa8259.reg[7] & 0x01) ? 0 : 2] & 0x07))
-									<< shift) | ored[1];
+								<< sachentmp.shift) | sachentmp.ored[1];
 							control_bank(info.chr.rom[0].max.banks_2k)
 							bank = value << 11;
 							chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
 							chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
 
 							value = ((high | (sa8259.reg[(sa8259.reg[7] & 0x01) ? 0 : 3] & 0x07))
-									<< shift) | ored[2];
+								<< sachentmp.shift) | sachentmp.ored[2];
 							control_bank(info.chr.rom[0].max.banks_2k)
 							bank = value << 11;
 							chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
@@ -336,10 +350,8 @@ BYTE extcl_save_mapper_Sachen_sa8259x(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void extcl_cpu_wr_mem_Sachen_tca01(WORD address, BYTE value) {
-	return;
-}
-BYTE extcl_cpu_rd_mem_Sachen_tca01(WORD address, BYTE openbus, BYTE before) {
+void extcl_cpu_wr_mem_Sachen_tca01(UNUSED(WORD address), UNUSED(BYTE value)) {}
+BYTE extcl_cpu_rd_mem_Sachen_tca01(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x4100) || (address > 0x5FFF)) {
 		return (openbus);
 	}
@@ -404,7 +416,7 @@ void extcl_cpu_wr_mem_Sachen_tcu02(WORD address, BYTE value) {
 		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
 	}
 }
-BYTE extcl_cpu_rd_mem_Sachen_tcu02(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Sachen_tcu02(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x4100) || (address > 0x5FFF)) {
 		return (openbus);
 	}

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,13 +20,8 @@
 #define SCALE_H_
 
 #include "common.h"
-#include "gfx.h"
-#include "palette.h"
 
-gfx_filter_function(scale_surface);
-void scale_surface1x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix);
-void scale_surface2x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix);
-void scale_surface3x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix);
-void scale_surface4x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix);
+void scale_surface(void);
+void scale_surface_screenshoot_1x(uint32_t pitch, void *pix);
 
 #endif /* SCALE_H_ */

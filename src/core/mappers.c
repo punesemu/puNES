@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,10 +25,12 @@
 #include "irqA12.h"
 #include "irql2f.h"
 #include "tas.h"
-#include "text.h"
 #include "uncompress.h"
 #include "unif.h"
 #include "gui.h"
+
+_trainer trainer;
+_mapper mapper;
 
 BYTE map_init(void) {
 	BYTE i;
@@ -143,6 +145,9 @@ BYTE map_init(void) {
 		case 28:
 			map_init_28();
 			break;
+		case 30:
+			map_init_UxROM(UNROM_BK2);
+			break;
 		case 31:
 			map_init_31();
 			break;
@@ -157,6 +162,9 @@ BYTE map_init(void) {
 			break;
 		case 35:
 			map_init_SC_127();
+			break;
+		case 36:
+			map_init_36();
 			break;
 		case 37:
 			map_init_37();
@@ -198,7 +206,7 @@ BYTE map_init(void) {
 			map_init_51();
 			break;
 		case 52:
-			map_init_52();
+			map_init_52(info.mapper.submapper);
 			break;
 		case 53:
 			map_init_53();
@@ -288,7 +296,9 @@ BYTE map_init(void) {
 			map_init_83();
 			break;
 		case 85:
-			if (info.mapper.submapper == VRC7A) {
+			if (info.mapper.submapper == VRC7UNL) {
+				map_init_VRC7UNL();
+			} else if (info.mapper.submapper == VRC7A) {
 				map_init_VRC7(VRC7A);
 			} else {
 				map_init_VRC7(VRC7B);
@@ -506,11 +516,7 @@ BYTE map_init(void) {
 			}
 			break;
 		case 178:
-			if (info.mapper.submapper != DEFAULT) {
-				map_init_178(info.mapper.submapper);
-			} else {
-				map_init_178(MAP178);
-			}
+			map_init_178(info.mapper.submapper);
 			break;
 		case 180:
 			map_init_UxROM(UNROM180);
@@ -696,11 +702,14 @@ BYTE map_init(void) {
 			map_init_254();
 			break;
 		default:
-			text_add_line_info(1, "[yellow]Mapper %d not supported", info.mapper.id);
+			gui_overlay_info_append_msg_precompiled(11, NULL);
 			fprintf(stderr, "Mapper not supported\n");
 			EXTCL_CPU_WR_MEM(0);
 			break;
 		/* casi speciali */
+		case NSF_MAPPER:
+			map_init_NSF();
+			break;
 		case FDS_MAPPER:
 			map_init_FDS();
 			break;
@@ -929,6 +938,14 @@ BYTE map_init(void) {
 					// Super24in1SC03
 					map_init_Super24in1();
 					break;
+				case 55:
+					// EDU2000
+					map_init_EDU2000();
+					break;
+				case 56:
+					// DREAMTECH01
+					map_init_DREAMTECH01();
+					break;
 			}
 			break;
 	}
@@ -1016,7 +1033,7 @@ BYTE map_prg_chip_malloc(BYTE index, size_t size, BYTE set_value) {
 	prg_chip_size(index) = size;
 	info.prg.chips++;
 
-	if ((prg_chip(index) = (BYTE *) malloc(size))) {
+	if ((prg_chip(index) = (BYTE *)malloc(size))) {
 		memset(prg_chip(index), set_value, size);
 	} else {
 		fprintf(stderr, "Out of memory\n");
@@ -1067,34 +1084,28 @@ void map_prg_ram_init(void) {
 	 * se non ci sono stati settaggi particolari della mapper
 	 * e devono esserci banchi di PRG Ram extra allora li assegno.
 	 */
-	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) && info.prg.ram.banks_8k_plus
-			&& !prg.ram_plus) {
+	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) && info.prg.ram.banks_8k_plus && !prg.ram_plus) {
 		/* alloco la memoria necessaria */
-		prg.ram_plus = (BYTE *) malloc(prg_ram_plus_size());
+		prg.ram_plus = (BYTE *)malloc(prg_ram_plus_size());
 		/* inizializzo */
 		memset(prg.ram_plus, 0x00, prg_ram_plus_size());
 		/* gli 8k iniziali */
 		prg.ram_plus_8k = &prg.ram_plus[0];
 		/* controllo se la rom ha una RAM PRG battery packed */
-		if (info.prg.ram.bat.banks && !tas.type) {
-			uTCHAR prg_ram_file[LENGTH_FILE_NAME_MID], basename[255], *fl, *last_dot;
+		if (info.prg.ram.bat.banks && (tas.type == NOTAS)) {
+			uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG], basename[255], *fl, *last_dot;
 			FILE *fp;
 
-			/* copio il nome del file nella variabile */
-			if (info.uncompress_rom == TRUE) {
-				fl = uncomp.uncompress_file;
-			} else {
-				fl = info.rom_file;
-			}
+			fl = info.rom.file;
 
 			gui_utf_basename(fl, basename, usizeof(basename));
-			usnprintf(prg_ram_file, usizeof(prg_ram_file),
-					uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
+			usnprintf(prg_ram_file, usizeof(prg_ram_file), uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
 
 			/* rintraccio l'ultimo '.' nel nome */
-			last_dot = ustrrchr(prg_ram_file, uL('.'));
-			/* elimino l'estensione */
-			*last_dot = 0x00;
+			if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {
+				/* elimino l'estensione */
+				(*last_dot) = 0x00;
+			}
 			/* aggiungo l'estensione prb */
 			ustrcat(prg_ram_file, uL(".prb"));
 			/* provo ad aprire il file */
@@ -1109,7 +1120,18 @@ void map_prg_ram_init(void) {
 				fclose(fp);
 			}
 		}
+	} else if ((info.reset >= HARD) && info.prg.ram.banks_8k_plus) {
+		int i;
+
+		for (i = 0; i < info.prg.ram.banks_8k_plus; i++) {
+			if (info.prg.ram.bat.banks && (i >= info.prg.ram.bat.start) &&
+				(i < (info.prg.ram.bat.start + info.prg.ram.bat.banks))) {
+				continue;
+			}
+			memset(prg.ram_plus + (i * 0x2000), 0x00, 0x2000);
+		}
 	}
+
 	if (info.trainer) {
 		BYTE *here = prg.ram.data;
 
@@ -1123,7 +1145,7 @@ void map_prg_ram_init(void) {
 BYTE map_prg_ram_malloc(WORD size) {
 	prg.ram.size = size;
 
-	if (!(prg.ram.data = (BYTE *) malloc(prg.ram.size))) {
+	if (!(prg.ram.data = (BYTE *)malloc(prg.ram.size))) {
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
@@ -1142,24 +1164,19 @@ void map_prg_ram_memset(void) {
 void map_prg_ram_battery_save(void) {
 	/* se c'e' della PRG Ram battery packed la salvo in un file */
 	if (info.prg.ram.bat.banks) {
-		uTCHAR prg_ram_file[LENGTH_FILE_NAME_MID], basename[255], *fl, *last_dot;
+		uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG], basename[255], *fl, *last_dot;
 		FILE *fp;
 
-		/* copio il nome del file nella variabile */
-		if (info.uncompress_rom == TRUE) {
-			fl = uncomp.uncompress_file;
-		} else {
-			fl = info.rom_file;
-		}
+		fl = info.rom.file;
 
 		gui_utf_basename(fl, basename, usizeof(basename));
-		usnprintf(prg_ram_file, usizeof(prg_ram_file),
-				uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
+		usnprintf(prg_ram_file, usizeof(prg_ram_file), uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
 
 		/* rintraccio l'ultimo '.' nel nome */
-		last_dot = ustrrchr(prg_ram_file, uL('.'));
-		/* elimino l'estensione */
-		*last_dot = 0x00;
+		if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {
+			/* elimino l'estensione */
+			(*last_dot) = 0x00;
+		}
 		/* aggiungo l'estensione prb */
 		ustrcat(prg_ram_file, uL(".prb"));
 		/* apro il file */
@@ -1188,7 +1205,7 @@ BYTE map_chr_chip_malloc(BYTE index, size_t size, BYTE set_value) {
 	chr_chip_size(index) = size;
 	info.chr.chips++;
 
-	if ((chr_chip(index) = (BYTE *) malloc(size))) {
+	if ((chr_chip(index) = (BYTE *)malloc(size))) {
 		memset(chr_chip(index), set_value, size);
 	} else {
 		fprintf(stderr, "Out of memory\n");
@@ -1231,7 +1248,7 @@ BYTE map_chr_ram_extra_init(uint32_t size) {
 			chr.extra.size = 0;
 		}
 		/* alloco la CHR Ram extra */
-		if (!(chr.extra.data = (BYTE *) malloc(size))) {
+		if (!(chr.extra.data = (BYTE *)malloc(size))) {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
@@ -1248,25 +1265,25 @@ void map_chr_ram_extra_reset(void) {
 }
 void map_set_banks_max_prg(BYTE chip) {
 	info.prg.rom[chip].max.banks_32k = (info.prg.rom[chip].banks_16k == 1) ? 0 :
-			((info.prg.rom[chip].banks_16k >> 1) ? (info.prg.rom[chip].banks_16k >> 1) - 1 : 0);
+		((info.prg.rom[chip].banks_16k >> 1) ? (info.prg.rom[chip].banks_16k >> 1) - 1 : 0);
 	info.prg.rom[chip].max.banks_16k =
-			info.prg.rom[chip].banks_16k ? info.prg.rom[chip].banks_16k - 1 : 0;
+		info.prg.rom[chip].banks_16k ? info.prg.rom[chip].banks_16k - 1 : 0;
 	info.prg.rom[chip].max.banks_8k =
-			info.prg.rom[chip].banks_8k ?  info.prg.rom[chip].banks_8k - 1 : 0;
-	info.prg.rom[chip].max.banks_8k_before_last =\
-			(info.prg.rom[chip].banks_8k > 1) ? info.prg.rom[chip].banks_8k - 2 : 0;
+		info.prg.rom[chip].banks_8k ? info.prg.rom[chip].banks_8k - 1 : 0;
+	info.prg.rom[chip].max.banks_8k_before_last =
+		(info.prg.rom[chip].banks_8k > 1) ? info.prg.rom[chip].banks_8k - 2 : 0;
 	info.prg.rom[chip].max.banks_4k =
-			(info.prg.rom[chip].banks_8k << 1) ? (info.prg.rom[chip].banks_8k << 1) - 1 : 0;
+		((info.prg.rom[chip].banks_8k << 1) != 0) ? (info.prg.rom[chip].banks_8k << 1) - 1 : 0;
 	info.prg.rom[chip].max.banks_2k =
-			(info.prg.rom[chip].banks_8k << 2) ? (info.prg.rom[chip].banks_8k << 2) - 1 : 0;
+		((info.prg.rom[chip].banks_8k << 2) != 0) ? (info.prg.rom[chip].banks_8k << 2) - 1 : 0;
 }
 void map_set_banks_max_chr(BYTE chip) {
 	info.chr.rom[chip].max.banks_8k =
-			info.chr.rom[chip].banks_8k ? info.chr.rom[chip].banks_8k - 1 : 0;
+		info.chr.rom[chip].banks_8k ? info.chr.rom[chip].banks_8k - 1 : 0;
 	info.chr.rom[chip].max.banks_4k =
-			info.chr.rom[chip].banks_4k ? info.chr.rom[chip].banks_4k - 1 : 0;
+		info.chr.rom[chip].banks_4k ? info.chr.rom[chip].banks_4k - 1 : 0;
 	info.chr.rom[chip].max.banks_2k =
-			(info.chr.rom[chip].banks_1k >> 1) ? (info.chr.rom[chip].banks_1k >> 1) - 1 : 0;
+		((info.chr.rom[chip].banks_1k >> 1) != 0) ? (info.chr.rom[chip].banks_1k >> 1) - 1 : 0;
 	info.chr.rom[chip].max.banks_1k =
-			info.chr.rom[chip].banks_1k ? info.chr.rom[chip].banks_1k - 1 : 0;
+		info.chr.rom[chip].banks_1k ? info.chr.rom[chip].banks_1k - 1 : 0;
 }

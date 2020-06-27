@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 #include "ppu_inline.h"
 #include "clock.h"
 #include "cpu_inline.h"
-#include "text.h"
 
 enum cpu_opcode_type { RD_OP, WR_OP };
 
@@ -205,7 +204,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	_IRQ(cpu.SR | 0x10)
 #define PHP\
 	tick_hw(1);\
-	ASS_SR;\
+	assemble_SR();\
 	_PSH(cpu.SR | 0x10);
 /* CMP, CPX, CPY */
 #define CMP(x, reg)\
@@ -350,8 +349,6 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	SF(x);\
 	ZF(x)
 #define ZF(x) cpu.zf = !x << 1
-#define ASS_SR cpu.SR = (cpu.sf | cpu.of | 0x20 | cpu.bf | cpu.df |\
-		cpu.im | cpu.zf | cpu.cf)
 
 /* ----------------------------------------------------------------------
  *  varie ed eventuali
@@ -470,12 +467,14 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define _SUB\
 	{\
 	WORD A;\
-	if (FALSE && cpu.df) {\
+	/*if (FALSE && cpu.df) {\
 		WORD AL = (cpu.AR & 0x0F) - (cpu.openbus & 0x0F) - !cpu.cf;\
 		if (AL < 0) { AL = ((AL - 0x06) & 0x0F) - 0x10; }\
 		A = (cpu.AR & 0xF0) - (cpu.openbus & 0xF0) + AL;\
 		if (A < 0) { A -= 0x60; }\
-	} else { A = cpu.AR - cpu.openbus - !cpu.cf; }\
+	} else {*/\
+		A = cpu.AR - cpu.openbus - !cpu.cf;\
+	/*}*/\
 	cpu.cf = (A < 0x100 ? 1 : 0);\
 	cpu.of = (((cpu.AR ^ cpu.openbus) & 0x80) & ((cpu.AR ^ A) & 0x80) ? 0x40 : 0);\
 	cpu.AR = (BYTE) A;\
@@ -490,7 +489,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	if (nmi.high) {\
 		flagNMI = TRUE;\
 	}\
-	ASS_SR;\
+	assemble_SR();\
 	_PSH(flags);\
 	cpu.im = irq.inhibit = 0x04;\
 	if (flagNMI) {\
@@ -509,7 +508,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	nmi.high = nmi.delay = FALSE;\
 	tick_hw(1);\
 	_PSP;\
-	ASS_SR;\
+	assemble_SR();\
 	_PSH(cpu.SR & 0xEF);\
 	cpu.im = irq.inhibit = 0x04;\
 	cpu.PC = lend_word(INT_NMI, FALSE, TRUE);
@@ -559,6 +558,10 @@ static const BYTE table_opcode_cycles[256] = {
 /*F*/ 2, 5, 0, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7  /*F*/
 /*    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F     */
 };
+
+_cpu cpu;
+_irq irq;
+_nmi nmi;
 
 void cpu_exe_op(void) {
 	cpu.opcode = FALSE;
@@ -855,7 +858,6 @@ void cpu_exe_op(void) {
 	case 0x98: IMP(RD_OP, _RSZ(cpu.AR = cpu.YR;, cpu.AR)) break;         // TYA
 
 	/* illegal opcodes */
-#if !defined (ILLEGAL)
 	case 0x0B:                                                           // AAC #IMM
 	case 0x2B: IMP(RD_OP, AAC) break;                                    // AAC #IMM
 
@@ -968,7 +970,6 @@ void cpu_exe_op(void) {
 	case 0x93: IDY(WR_OP, AXA(_AXAIDY(tmp))) break;                      // AXA ($IND),Y
 	case 0xBB: ABX(RD_OP, _CYW(LAS), cpu.YR) break;                      // LAS $ABS,Y
 	case 0x9B: ABX(WR_OP, XAS, cpu.YR) break;                            // XAS $ABS,Y
-#endif
 
 	case 0x02: // JAM
 	case 0x12: // JAM
@@ -984,13 +985,11 @@ void cpu_exe_op(void) {
 	case 0xF2: // JAM
 	default:
 		if (!info.no_rom && !info.first_illegal_opcode) {
-			fprintf(stderr, "Alert: PC = %04X, CODEOP = %02X \n", (cpu.PC - 1), cpu.opcode);
-			text_add_line_info(1, "[red]Illegal Opcode 0x%02X at 0x%04X", cpu.opcode, (cpu.PC - 1));
+			fprintf(stderr, "Alert: PC = 0x%04X, CODEOP = 0x%02X \n", (cpu.PC - 1), cpu.opcode);
+			gui_overlay_info_append_msg_precompiled(4, NULL);
 			info.first_illegal_opcode = TRUE;
 		}
 		cpu.cycles = 0;
-		//info.stop = TRUE;
-		//info.execute_cpu = FALSE;
 		break;
 	case 0x100: IMP(RD_OP, NMI) break;                                   // NMI
 	case 0x200: IMP(RD_OP, IRQ(cpu.SR & 0xEF)) break;                    // IRQ
@@ -1046,6 +1045,13 @@ void cpu_turn_on(void) {
 			 */
 			memset(mmcpu.ram, 0xFF, sizeof(mmcpu.ram));
 
+			/*
+			 * questo workaround serve solo per
+			 * 2nd2006.nes e 256inc.nes
+			 */
+			if (info.mapper.id == 0) {
+				mmcpu.ram[0x000] = 0x00;
+			}
 			mmcpu.ram[0x008] = 0xF7;
 			mmcpu.ram[0x009] = 0xEF;
 			mmcpu.ram[0x00A] = 0xDF;

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 
 BYTE ch_mono_init(void);
 void ch_mono_quit(void);
+void ch_mono_reset(void);
 void ch_mono_tick(SWORD value);
 
 #endif /* CHANNELS_MONO_H_ */

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@
 #include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
+
+INLINE static void vrc6_update_chr_and_mirroring(void);
 
 /* vecchia versione
 #define vcr6_square_tick(square)\
@@ -47,12 +49,11 @@
 				vrc6.square.output = vrc6.square.volume;\
 			}\
 		}\
-		vrc6.square.clocked = TRUE;\
+		vrc6.clocked = TRUE;\
 	}\
 	if (!vrc6.square.enabled) {\
 		vrc6.square.output = 0;\
 	}
-
 #define vrc6_square_saveslot(square)\
 	save_slot_ele(mode, slot, square.enabled);\
 	save_slot_ele(mode, slot, square.duty);\
@@ -63,7 +64,11 @@
 	save_slot_ele(mode, slot, square.frequency);\
 	save_slot_ele(mode, slot, square.output)
 
-BYTE type, delay;
+_vrc6 vrc6;
+struct _vrc6tmp {
+	BYTE type;
+	BYTE delay;
+} vrc6tmp;
 
 const WORD table_VRC6[2][4] = {
 	{0x0000, 0x0001, 0x0002, 0x0003},
@@ -94,12 +99,24 @@ void map_init_VRC6(BYTE revision) {
 	vrc6.S4.timer = 1;
 	vrc6.S4.duty = 1;
 	vrc6.saw.timer = 1;
-	delay = 1;
+	vrc6tmp.delay = 1;
 
-	type = revision;
+	vrc6tmp.type = revision;
+}
+
+void map_init_NSF_VRC6(BYTE revision) {
+	memset(&vrc6, 0x00, sizeof(vrc6));
+
+	vrc6.S3.timer = 1;
+	vrc6.S3.duty = 1;
+	vrc6.S4.timer = 1;
+	vrc6.S4.duty = 1;
+	vrc6.saw.timer = 1;
+
+	vrc6tmp.type = revision;
 }
 void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
-	address = (address & 0xF000) | table_VRC6[type][(address & 0x0003)];
+	address = (address & 0xF000) | table_VRC6[vrc6tmp.type][(address & 0x0003)];
 
 	switch (address) {
 		case 0x8000:
@@ -144,23 +161,10 @@ void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 			vrc6.saw.frequency = (vrc6.saw.frequency & 0x00FF) | ((value & 0x0F) << 8);
 			vrc6.saw.enabled = value & 0x80;
 			return;
-		case 0xB003: {
-			switch ((value >> 2) & 0x03) {
-				case 0:
-					mirroring_V();
-					break;
-				case 1:
-					mirroring_H();
-					break;
-				case 2:
-					mirroring_SCR0();
-					break;
-				case 3:
-					mirroring_SCR1();
-					break;
-			}
+		case 0xB003:
+			vrc6.b003 = value;
+			vrc6_update_chr_and_mirroring();
 			return;
-		}
 		case 0xC000:
 		case 0xC001:
 		case 0xC002:
@@ -170,36 +174,36 @@ void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 			map_prg_rom_8k_update();
 			return;
 		case 0xD000:
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[0] = chr_chip_byte_pnt(0, value << 10);
+			vrc6.chr_map[0] = value;
+			vrc6_update_chr_and_mirroring();
 			return;
 		case 0xD001:
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[1] = chr_chip_byte_pnt(0, value << 10);
+			vrc6.chr_map[1] = value;
+			vrc6_update_chr_and_mirroring();
 			return;
 		case 0xD002:
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[2] = chr_chip_byte_pnt(0, value << 10);
+			vrc6.chr_map[2] = value;
+			vrc6_update_chr_and_mirroring();
 			return;
 		case 0xD003:
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
+			vrc6.chr_map[3] = value;
+			vrc6_update_chr_and_mirroring();
 			return;
 		case 0xE000:
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[4] = chr_chip_byte_pnt(0, value << 10);
+			vrc6.chr_map[4] = value;
+			vrc6_update_chr_and_mirroring();
 			return;
 		case 0xE001:
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[5] = chr_chip_byte_pnt(0, value << 10);
+			vrc6.chr_map[5] = value;
+			vrc6_update_chr_and_mirroring();
 			return;
 		case 0xE002:
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[6] = chr_chip_byte_pnt(0, value << 10);
+			vrc6.chr_map[6] = value;
+			vrc6_update_chr_and_mirroring();
 			return;
 		case 0xE003:
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[7] = chr_chip_byte_pnt(0, value << 10);
+			vrc6.chr_map[7] = value;
+			vrc6_update_chr_and_mirroring();
 			return;
 		case 0xF000:
 			vrc6.reload = value;
@@ -242,6 +246,15 @@ BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, vrc6.saw.frequency);
 	save_slot_ele(mode, slot, vrc6.saw.output);
 
+	if (save_slot.version >= 18) {
+		save_slot_ele(mode, slot, vrc6.mode)
+		save_slot_ele(mode, slot, vrc6.chr_map)
+
+		if (mode == SAVE_SLOT_READ) {
+			vrc6_update_chr_and_mirroring();
+		}
+	}
+
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_VRC6(void) {
@@ -267,7 +280,7 @@ void extcl_cpu_every_cycle_VRC6(void) {
 	}
 
 	vrc6.count = vrc6.reload;
-	vrc6.delay = delay;
+	vrc6.delay = vrc6tmp.delay;
 }
 void extcl_apu_tick_VRC6(void) {
 	vcr6_square_tick(S3)
@@ -275,7 +288,7 @@ void extcl_apu_tick_VRC6(void) {
 
 	if (--vrc6.saw.timer == 0) {
 		vrc6.saw.timer = vrc6.saw.frequency + 1;
-		vrc6.saw.clocked = TRUE;
+		vrc6.clocked = TRUE;
 
 		if (vrc6.saw.step && !(vrc6.saw.step & 0x01)) {
 			vrc6.saw.internal += vrc6.saw.accumulator;
@@ -286,5 +299,309 @@ void extcl_apu_tick_VRC6(void) {
 		if (vrc6.saw.enabled) {
 			vrc6.saw.output = vrc6.saw.internal;
 		}
+	}
+}
+
+INLINE static void vrc6_update_chr_and_mirroring(void) {
+	DBWORD bank;
+	BYTE value;
+
+	// [$B003] & $07 →   0, 6, or 7 | 1 or 5 | 2, 3, or 4
+	// Nametable bank             Register used
+	// $2000-$23FF           R6        R4         R6
+	// $2400-$27FF           R6        R5         R7
+	// $2800-$2BFF           R7        R6         R6
+	// $2C00-$2FFF           R7        R7         R7
+
+	// [$B003] & $03 →   0 | 1 | 2 or 3
+	//   CHR bank      Register used
+	// $0000-$03FF      R0  R0    R0
+	// $0400-$07FF      R1  R0    R1
+	// $0800-$0BFF      R2  R1    R2
+	// $0C00-$0FFF      R3  R1    R3
+	// $1000-$13FF      R4  R2    R4
+	// $1400-$17FF      R5  R2    R4
+	// $1800-$1BFF      R6  R3    R5
+	// $1C00-$1FFF      R7  R3    R5
+
+	// Mirroring
+	if (!(vrc6.b003 & 0x10)) {
+		switch (vrc6.b003 & 0x2F) {
+			case 0x20:
+			case 0x27:
+				mirroring_V();
+				break;
+			case 0x24:
+			case 0x23:
+				mirroring_H();
+				break;
+			case 0x28:
+			case 0x2F:
+				mirroring_SCR0();
+				break;
+			case 0x2C:
+			case 0x2B:
+				mirroring_SCR1();
+				break;
+			default:
+				switch (vrc6.b003 & 0x07) {
+					case 0x00:
+					case 0x06:
+					case 0x07:
+						ntbl.bank_1k[0] = ntbl.bank_1k[1] = &ntbl.data[(vrc6.chr_map[6] & 0x01) << 10];
+						ntbl.bank_1k[2] = ntbl.bank_1k[3] = &ntbl.data[(vrc6.chr_map[7] & 0x01) << 10];
+						break;
+					case 0x01:
+					case 0x05:
+						ntbl.bank_1k[0] = &ntbl.data[(vrc6.chr_map[4] & 0x01) << 10];
+						ntbl.bank_1k[1] = &ntbl.data[(vrc6.chr_map[5] & 0x01) << 10];
+						ntbl.bank_1k[2] = &ntbl.data[(vrc6.chr_map[6] & 0x01) << 10];
+						ntbl.bank_1k[3] = &ntbl.data[(vrc6.chr_map[7] & 0x01) << 10];
+						break;
+					case 0x02:
+					case 0x03:
+					case 0x04:
+						ntbl.bank_1k[0] = ntbl.bank_1k[2] = &ntbl.data[(vrc6.chr_map[6] & 0x01) << 10];
+						ntbl.bank_1k[1] = ntbl.bank_1k[3] = &ntbl.data[(vrc6.chr_map[7] & 0x01) << 10];
+						break;
+				}
+				break;
+		}
+	} else {
+		switch (vrc6.b003 & 0x2F) {
+			case 0x20:
+			case 0x27:
+				value = vrc6.chr_map[6] >> 1;
+				control_bank(info.chr.rom[0].max.banks_2k)
+				bank = value << 11;
+				ntbl.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+				ntbl.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x400);
+
+				value = vrc6.chr_map[7] >> 1;
+				control_bank(info.chr.rom[0].max.banks_2k)
+				bank = value << 11;
+				ntbl.bank_1k[2] = chr_chip_byte_pnt(0, bank);
+				ntbl.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x400);
+				break;
+			case 0x24:
+			case 0x23:
+				value = vrc6.chr_map[6] >> 1;
+				control_bank(info.chr.rom[0].max.banks_2k)
+				bank = value << 11;
+				ntbl.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+				ntbl.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x400);
+
+				value = vrc6.chr_map[7] >> 1;
+				control_bank(info.chr.rom[0].max.banks_2k)
+				bank = value << 11;
+				ntbl.bank_1k[1] = chr_chip_byte_pnt(0, bank);
+				ntbl.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x400);
+				break;
+			case 0x28:
+			case 0x2F:
+				value = vrc6.chr_map[6] >> 1;
+				control_bank(info.chr.rom[0].max.banks_2k)
+				bank = value << 11;
+				ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_chip_byte_pnt(0, bank);
+
+				value = vrc6.chr_map[7] >> 1;
+				control_bank(info.chr.rom[0].max.banks_2k)
+				bank = value << 11;
+				ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, bank);
+				break;
+			case 0x2C:
+			case 0x2B:
+				value = vrc6.chr_map[6] >> 1;
+				control_bank(info.chr.rom[0].max.banks_2k)
+				bank = value << 11;
+				ntbl.bank_1k[0] = ntbl.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x400);
+
+				value = vrc6.chr_map[7] >> 1;
+				control_bank(info.chr.rom[0].max.banks_2k)
+				bank = value << 11;
+				ntbl.bank_1k[1] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x400);
+				break;
+			default:
+				switch (vrc6.b003 & 0x07) {
+					case 0x00:
+					case 0x06:
+					case 0x07:
+						value = vrc6.chr_map[6];
+						control_bank(info.chr.rom[0].max.banks_1k)
+						ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_chip_byte_pnt(0, value << 10);
+
+						value = vrc6.chr_map[7];
+						control_bank(info.chr.rom[0].max.banks_1k)
+						ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
+						break;
+					case 0x01:
+					case 0x05:
+						value = vrc6.chr_map[4];
+						control_bank(info.chr.rom[0].max.banks_1k)
+						ntbl.bank_1k[0] = chr_chip_byte_pnt(0, value << 10);
+
+						value = vrc6.chr_map[5];
+						control_bank(info.chr.rom[0].max.banks_1k)
+						ntbl.bank_1k[1] = chr_chip_byte_pnt(0, value << 10);
+
+						value = vrc6.chr_map[6];
+						control_bank(info.chr.rom[0].max.banks_1k)
+						ntbl.bank_1k[2] = chr_chip_byte_pnt(0, value << 10);
+
+						value = vrc6.chr_map[7];
+						control_bank(info.chr.rom[0].max.banks_1k)
+						ntbl.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
+						break;
+					case 0x02:
+					case 0x03:
+					case 0x04:
+						value = vrc6.chr_map[6];
+						control_bank(info.chr.rom[0].max.banks_1k)
+						ntbl.bank_1k[0] = ntbl.bank_1k[2] = chr_chip_byte_pnt(0, value << 10);
+
+						value = vrc6.chr_map[7];
+						control_bank(info.chr.rom[0].max.banks_1k)
+						ntbl.bank_1k[1] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
+						break;
+				}
+				break;
+			}
+	}
+
+	// [$B003] & $03 →  0 | 1 | 2 or 3
+	//  CHR bank      Register used
+	// $0000-$03FF     R0  R0    R0
+	// $0400-$07FF     R1  R0    R1
+	// $0800-$0BFF     R2  R1    R2
+	// $0C00-$0FFF     R3  R1    R3
+	// $1000-$13FF     R4  R2    R4
+	// $1400-$17FF     R5  R2    R4
+	// $1800-$1BFF     R6  R3    R5
+	// $1C00-$1FFF     R7  R3    R5
+
+	// CHR
+	switch (vrc6.b003 & 0x03) {
+		case 0:
+			value = vrc6.chr_map[0];
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[0] = chr_chip_byte_pnt(0, value << 10);
+
+			value = vrc6.chr_map[1];
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[1] = chr_chip_byte_pnt(0, value << 10);
+
+			value = vrc6.chr_map[2];
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[2] = chr_chip_byte_pnt(0, value << 10);
+
+			value = vrc6.chr_map[3];
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
+
+			value = vrc6.chr_map[4];
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[4] = chr_chip_byte_pnt(0, value << 10);
+
+			value = vrc6.chr_map[5];
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[5] = chr_chip_byte_pnt(0, value << 10);
+
+			value = vrc6.chr_map[6];
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[6] = chr_chip_byte_pnt(0, value << 10);
+
+			value = vrc6.chr_map[7];
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[7] = chr_chip_byte_pnt(0, value << 10);
+			break;
+		case 1:
+			if (vrc6.b003 & 0x20) {
+				value = vrc6.chr_map[0] >> 1;
+				control_bank(info.chr.rom[0].max.banks_2k)
+				bank = value << 11;
+				chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
+
+				value = vrc6.chr_map[1] >> 1;
+				control_bank(info.chr.rom[0].max.banks_2k)
+				bank = value << 11;
+				chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0400);
+
+				value = vrc6.chr_map[2] >> 1;
+				control_bank(info.chr.rom[0].max.banks_2k)
+				bank = value << 11;
+				chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
+
+				value = vrc6.chr_map[3] >> 1;
+				control_bank(info.chr.rom[0].max.banks_2k)
+				bank = value << 11;
+				chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0400);
+			} else {
+				value = vrc6.chr_map[0];
+				control_bank(info.chr.rom[0].max.banks_1k)
+				bank = value << 10;
+				chr.bank_1k[0] = chr.bank_1k[1] = chr_chip_byte_pnt(0, bank);
+
+				value = vrc6.chr_map[1];
+				control_bank(info.chr.rom[0].max.banks_1k)
+				bank = value << 10;
+				chr.bank_1k[2] = chr.bank_1k[3] = chr_chip_byte_pnt(0, bank);
+
+				value = vrc6.chr_map[2];
+				control_bank(info.chr.rom[0].max.banks_1k)
+				bank = value << 10;
+				chr.bank_1k[4] = chr.bank_1k[5] = chr_chip_byte_pnt(0, bank);
+
+				value = vrc6.chr_map[3];
+				control_bank(info.chr.rom[0].max.banks_1k)
+				bank = value << 10;
+				chr.bank_1k[6] = chr.bank_1k[7] = chr_chip_byte_pnt(0, bank);
+			}
+			break;
+		case 2:
+		case 3:
+			value = vrc6.chr_map[0];
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[0] = chr_chip_byte_pnt(0, value << 10);
+
+			value = vrc6.chr_map[1];
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[1] = chr_chip_byte_pnt(0, value << 10);
+
+			value = vrc6.chr_map[2];
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[2] = chr_chip_byte_pnt(0, value << 10);
+
+			value = vrc6.chr_map[3];
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
+
+			if (vrc6.b003 & 0x20) {
+				value = vrc6.chr_map[4] >> 1;
+				control_bank(info.chr.rom[0].max.banks_2k)
+				bank = value << 11;
+				chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
+
+				value = vrc6.chr_map[5] >> 1;
+				control_bank(info.chr.rom[0].max.banks_2k)
+				bank = value << 11;
+				chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0400);
+			} else {
+				value = vrc6.chr_map[4];
+				control_bank(info.chr.rom[0].max.banks_1k)
+				bank = value << 10;
+				chr.bank_1k[4] = chr.bank_1k[5] = chr_chip_byte_pnt(0, bank);
+
+				value = vrc6.chr_map[5];
+				control_bank(info.chr.rom[0].max.banks_1k)
+				bank = value << 10;
+				chr.bank_1k[6] = chr.bank_1k[7] = chr_chip_byte_pnt(0, bank);
+			}
+			break;
 	}
 }

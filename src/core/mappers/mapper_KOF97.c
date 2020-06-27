@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ void map_init_KOF97(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[1] = (BYTE *) &mmc3;
+	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	memset(&mmc3, 0x00, sizeof(mmc3));
@@ -45,18 +45,22 @@ void extcl_cpu_wr_mem_KOF97(WORD address, BYTE value) {
 	if (address == 0x9000) {
 		address = 0x8001;
 	} else if (address == 0xA000) {
-		address = 0x8000;
+		kof97_fix_value();
 	} else if (address == 0xD000) {
 		address = 0xC001;
 	} else if (address == 0xF000) {
 		address = 0xE001;
 	}
 
-	switch (address & 0xE001) {
+	switch (address & 0xF001) {
 		case 0x8000:
 		case 0x8001:
+		case 0x9000:
+		case 0x9001:
 		case 0xC000:
 		case 0xC001:
+		case 0xD000:
+		case 0xD001:
 		case 0xE000:
 		case 0xE001:
 			kof97_fix_value();

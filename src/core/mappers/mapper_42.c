@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,15 @@
 #include "mem_map.h"
 #include "save_slot.h"
 #include "cpu.h"
+
+struct _m42 {
+	WORD rom_map_to;
+	BYTE *prg_8k_6000;
+	struct _m42_irq {
+		BYTE active;
+		uint32_t count;
+	} irq;
+} m42;
 
 void map_init_42(void) {
 	EXTCL_CPU_WR_MEM(42);
@@ -74,7 +83,7 @@ void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_42(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_42(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address > 0x5FFF) && (address < 0x8000)) {
 		return (m42.prg_8k_6000[address & 0x1FFF]);
 	}

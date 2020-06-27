@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -137,27 +137,25 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 	 * risultante e' troppo alta (oltre i 20 kHz,\
 	 * quindi non udibile), percio' la taglio.\
 	 */\
+	TR.output = triangle_duty[TR.sequencer];\
 	if (TR.timer < 2) {\
 		TR.output = triangle_duty[8];\
-	} else {\
-		TR.output = triangle_duty[TR.sequencer];\
 	}
 #define noise_output()\
 	envelope_volume(NS)\
+	NS.output = 0;\
 	if (NS.length.value && !(NS.shift & 0x0001)) {\
 		NS.output = NS.volume;\
-	} else {\
-		NS.output = 0;\
 	}
 #define dmc_output()\
 	DMC.output = DMC.counter & 0x7F
 /* tick */
-#define square_tick(square, swap)\
+#define square_tick(square, swap, type)\
 	if (!(--square.frequency)) {\
 		square_output(square, swap)\
 		square.frequency = (square.timer + 1) << 1;\
 		square.sequencer = (square.sequencer + 1) & 0x07;\
-		square.clocked = TRUE;\
+		type.clocked = TRUE;\
 	}
 #define triangle_tick()\
 	if (!(--TR.frequency)) {\
@@ -165,7 +163,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 		if (TR.length.value && TR.linear.value) {\
 			TR.sequencer = (TR.sequencer + 1) & 0x1F;\
 			triangle_output()\
-			TR.clocked = TRUE;\
+			apu.clocked = TRUE;\
 		}\
 	}
 #define noise_tick()\
@@ -178,7 +176,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 		NS.shift &= 0x7FFF;\
 		noise_output()\
 		NS.frequency = noise_timer[apu.type][NS.timer];\
-		NS.clocked = TRUE;\
+		apu.clocked = TRUE;\
 	}
 #define dmc_tick()\
 	if (!(--DMC.frequency)) {\
@@ -206,7 +204,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 			}\
 		}\
 		DMC.frequency = dmc_rate[apu.type][DMC.rate_index];\
-		DMC.clocked = TRUE;\
+		apu.clocked = TRUE;\
 	}\
 	if (DMC.empty && DMC.remain) {\
 		BYTE tick = 4;\
@@ -227,6 +225,8 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 			} else {\
 				DMC.buffer = prg_chip_byte(0, DMC.address & 0x1FFF);\
 			}\
+		} else if (nsf.enabled == TRUE) {\
+			DMC.buffer = nsf_prg_rom_rd(DMC.address);\
 		} else {\
 			DMC.buffer = prg_rom_rd(DMC.address);\
 			if (info.mapper.extend_rd) {\
@@ -257,28 +257,6 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 
 #define apu_change_step(index)\
 	apu.cycles += apuPeriod[apu.mode][apu.type][index]
-#if defined (VECCHIA_GESTIONE_JITTER)
-#define r4017_jitter()\
-	r4017.value = (r4017.jitter.value & 0xC0);\
-	/*\
-	 * se il bit 7 e' a zero, devo attivare la\
-	 * modalita' NTSC, se a uno quella PAL.\
-	 */\
-	if (r4017.value & 0x80) {\
-		apu.mode = APU_48HZ;\
-	} else {\
-		apu.mode = APU_60HZ;\
-	}\
-	if (r4017.value & 0x40) {\
-		/* azzero il bit 6 del $4015 */\
-		r4015.value &= 0xBF;\
-		/* disabilito l'IRQ del frame counter */\
-		irq.high &= ~APU_IRQ;\
-	}\
-	/* riavvio il frame audio */\
-	apu.step = apu.cycles = 0;\
-	apu_change_step(apu.step)
-#else
 #define r4017_jitter(apc)\
 	r4017.value = (r4017.jitter.value & 0xC0);\
 	r4017.reset_frame_delay = 1;\
@@ -310,7 +288,6 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 		apu.step = apu.cycles = 0;\
 		apu_change_step(apu.step);\
 	}
-#endif
 #define square_reg0(square)\
 	/* duty */\
 	square.duty = value >> 6;\
@@ -346,9 +323,10 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 	square.envelope.enabled = TRUE;\
 	/* timer (high 3 bits) */\
 	square.timer = (square.timer & 0x00FF) | ((value & 0x07) << 8);\
+	/*The correct behaviour is to reset the duty cycle sequencers but not the clock dividers*/\
+	/*square.frequency = 1;*/\
 	/* sequencer */\
-	square.sequencer = 0;\
-	square.frequency = 1
+	square.sequencer = 0
 #define init_nla_table(p, t)\
 {\
 	WORD i;\
@@ -362,7 +340,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 	}\
 }
 #define _apu_channel_volume_adjust(ch, index)\
-	(ch * cfg->apu.channel[index])
+	((ch * cfg->apu.channel[index]) * ch_gain_ptnd(index))
 #define s1_out\
 	_apu_channel_volume_adjust(S1.output, APU_S1)
 #define s2_out\
@@ -373,38 +351,45 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 	_apu_channel_volume_adjust(NS.output, APU_NS)
 #define dmc_out\
 	_apu_channel_volume_adjust(DMC.output, APU_DMC)
-#define extra_out(out)\
-	_apu_channel_volume_adjust(out, APU_EXTRA)
+#define extra_out(ch)\
+	(ch * cfg->apu.channel[APU_EXTRA])
 #define pulse_output()\
-	(nla_table.pulse[s1_out] * ch_gain_ptnd(APU_S1)) +\
-	(nla_table.pulse[s2_out] * ch_gain_ptnd(APU_S2))
+	nla_table.pulse[(int) (s1_out + s2_out)]
 #define tnd_output()\
-	(nla_table.tnd[(tr_out * 3)] * ch_gain_ptnd(APU_TR)) +\
-	(nla_table.tnd[(ns_out * 2)] * ch_gain_ptnd(APU_NS)) +\
-	(nla_table.tnd[dmc_out] * ch_gain_ptnd(APU_DMC))
+	nla_table.tnd[(int) ((tr_out * 3) + (ns_out * 2) + dmc_out)]
 
-typedef struct {
+typedef struct _config_apu {
 	BYTE channel[APU_MASTER + 1];
 	double volume[APU_MASTER + 1];
 } _config_apu;
-typedef struct {
+typedef struct _nla_table {
+	SWORD pulse[32];
+	SWORD tnd[203];
+} _nla_table;
+typedef struct _apu {
 	BYTE mode;
 	BYTE type;
 	BYTE step;
 	BYTE length_clocked;
 	BYTE DMC;
 	SWORD cycles;
+
+	/* ------------------------------------------------------- */
+	/* questi valori non e' necessario salvarli nei savestates */
+	/* ------------------------------------------------------- */
+	/* */ BYTE clocked;                                     /* */
+	/* ------------------------------------------------------- */
 } _apu;
-typedef struct {
+typedef struct _r4011 {
 	BYTE value;
 	DBWORD frames;
 	DBWORD cycles;
 	SWORD output;
 } _r4011;
-typedef struct {
+typedef struct _r4015 {
 	BYTE value;
 } _r4015;
-typedef struct {
+typedef struct _r4017 {
 	BYTE value;
 	struct _r4017_litter {
 		BYTE value;
@@ -412,14 +397,14 @@ typedef struct {
 	} jitter;
 	BYTE reset_frame_delay;
 } _r4017;
-typedef struct {
+typedef struct _envelope {
 	BYTE enabled;
 	BYTE divider;
 	BYTE counter;
 	BYTE constant_volume;
 	SBYTE delay;
 } _envelope;
-typedef struct {
+typedef struct _sweep {
 	BYTE enabled;
 	BYTE negate;
 	BYTE divider;
@@ -428,17 +413,17 @@ typedef struct {
 	BYTE silence;
 	SBYTE delay;
 } _sweep;
-typedef struct {
+typedef struct _length_counter {
 	BYTE value;
 	BYTE enabled;
 	BYTE halt;
 } _length_counter;
-typedef struct {
+typedef struct _linear_counter {
 	BYTE value;
 	BYTE reload;
 	BYTE halt;
 } _linear_counter;
-typedef struct {
+typedef struct _apuSquare {
 	/* timer */
 	DBWORD timer;
 	/* ogni quanti cicli devo generare un output */
@@ -457,14 +442,8 @@ typedef struct {
 	_length_counter length;
 	/* output */
 	SWORD output;
-
-/* ------------------------------------------------------- */
-/* questi valori non e' necessario salvarli nei savestates */
-/* ------------------------------------------------------- */
-/* */ BYTE clocked;                                     /* */
-/* ------------------------------------------------------- */
 } _apuSquare;
-typedef struct {
+typedef struct _apuTriangle {
 	/* timer */
 	DBWORD timer;
 	/* ogni quanti cicli devo generare un output */
@@ -477,14 +456,8 @@ typedef struct {
 	BYTE sequencer;
 	/* output */
 	SWORD output;
-
-/* ------------------------------------------------------- */
-/* questi valori non e' necessario salvarli nei savestates */
-/* ------------------------------------------------------- */
-/* */ BYTE clocked;                                     /* */
-/* ------------------------------------------------------- */
 } _apuTriangle;
-typedef struct {
+typedef struct _apuNoise {
 	/* timer */
 	DBWORD timer;
 	/* ogni quanti cicli devo generare un output */
@@ -503,14 +476,8 @@ typedef struct {
 	BYTE sequencer;
 	/* output */
 	SWORD output;
-
-/* ------------------------------------------------------- */
-/* questi valori non e' necessario salvarli nei savestates */
-/* ------------------------------------------------------- */
-/* */ BYTE clocked;                                     /* */
-/* ------------------------------------------------------- */
 } _apuNoise;
-typedef struct {
+typedef struct _apuDMC {
 	/* ogni quanti cicli devo generare un output */
 	WORD frequency;
 
@@ -538,33 +505,7 @@ typedef struct {
 
 	/* misc */
 	BYTE tick_type;
-
-/* ------------------------------------------------------- */
-/* questi valori non e' necessario salvarli nei savestates */
-/* ------------------------------------------------------- */
-/* */ BYTE clocked;                                     /* */
-/* ------------------------------------------------------- */
 }  _apuDMC;
-
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _nla_table {
-	SWORD pulse[32];
-	SWORD tnd[203];
-} nla_table;
-
-EXTERNC _apu apu;
-EXTERNC _r4011 r4011;
-EXTERNC _r4015 r4015;
-EXTERNC _r4017 r4017;
-EXTERNC _apuSquare S1, S2;
-EXTERNC _apuTriangle TR;
-EXTERNC _apuNoise NS;
-EXTERNC _apuDMC DMC;
 
 /* apuPeriod[mode][type][cycles] */
 static const WORD apuPeriod[2][3][7] = {
@@ -608,7 +549,7 @@ static const WORD apuPeriod[2][3][7] = {
 	}
 };
 
-/* la tabella con i valori da caricare nel lenght counter del canale */
+/* la tabella con i valori da caricare nel length counter del canale */
 static const BYTE length_table[32] = {
 	0x0A, 0xFE, 0x14, 0x02, 0x28, 0x04, 0x50, 0x06,
 	0xA0, 0x08, 0x3C, 0x0A, 0x0E, 0x0C, 0x1A, 0x0E,
@@ -618,17 +559,17 @@ static const BYTE length_table[32] = {
 
 static const BYTE square_duty[2][4][8] = {
 	{
-		{ 0,  1,  0,  0,  0,  0,  0,  0},
-		{ 0,  1,  1,  0,  0,  0,  0,  0},
-		{ 0,  1,  1,  1,  1,  0,  0,  0},
-		{ 1,  0,  0,  1,  1,  1,  1,  1}
+		{ 1,  0,  0,  0,  0,  0,  0,  0},
+		{ 1,  1,  0,  0,  0,  0,  0,  0},
+		{ 1,  1,  1,  1,  0,  0,  0,  0},
+		{ 0,  0,  1,  1,  1,  1,  1,  1}
 	},
 	{
-		{ 0,  1,  0,  0,  0,  0,  0,  0},
-		{ 0,  1,  1,  1,  1,  0,  0,  0},
-		{ 0,  1,  1,  0,  0,  0,  0,  0},
-		{ 1,  0,  0,  1,  1,  1,  1,  1}
-	}
+		{ 1,  0,  0,  0,  0,  0,  0,  0},
+		{ 1,  1,  1,  1,  0,  0,  0,  0},
+		{ 1,  1,  0,  0,  0,  0,  0,  0},
+		{ 0,  0,  1,  1,  1,  1,  1,  1}
+	},
 };
 
 static const BYTE triangle_duty[32] = {
@@ -668,7 +609,23 @@ static const WORD dmc_rate[3][16] = {
 	}
 };
 
-EXTERNC void apu_tick(SWORD cycles_cpu, BYTE *hwtick);
+extern _nla_table nla_table;
+extern _apu apu;
+extern _r4011 r4011;
+extern _r4015 r4015;
+extern _r4017 r4017;
+extern _apuSquare S1, S2;
+extern _apuTriangle TR;
+extern _apuNoise NS;
+extern _apuDMC DMC;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC void apu_tick(BYTE *hwtick);
 EXTERNC void apu_turn_on(void);
 
 #undef EXTERNC

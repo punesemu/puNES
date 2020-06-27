@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,31 +26,6 @@ enum {
 	MAP116_TYPE_B,
 	MAP116_TYPE_C
 };
-
-struct _m116 {
-	BYTE mode;
-
-	struct {
-		WORD chr[8];
-		WORD prg[4];
-		BYTE nmt;
-		BYTE padding;
-	} mode0;
-	struct {
-		WORD banks[10];
-		BYTE ctrl;
-		BYTE nmt;
-	} mode1;
-	struct {
-		BYTE reg[4];
-		BYTE buffer;
-		BYTE shifter;
-		BYTE padding[2];
-	} mode2;
-
-	WORD prg_map[4];
-	WORD chr_map[8];
-} m116;
 
 void map_init_116(void);
 

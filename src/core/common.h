@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ typedef signed int SDBWORD;
 #define BIOS_FOLDER    "/bios"
 #define DIFF_FOLDER    "/diff"
 #define PERGAME_FOLDER "/pgs"
+#define SHDPAR_FOLDER  "/shp"
 #define SAVE_FOLDER    "/save"
 #define TMP_FOLDER     "/tmp"
 #define PRB_FOLDER     "/prb"
@@ -54,16 +55,16 @@ enum reset_type {
 /* le dimesioni dello screen da renderizzare */
 enum screen_dimension { SCR_LINES = 240, SCR_ROWS = 256 };
 enum type_of_system_info { HEADER, DATABASE };
-enum header_type { iNES_1_0, NES_2_0, UNIF_FORMAT, FDS_FORMAT };
-enum lenght_file_name_type {
+enum header_type { iNES_1_0, NES_2_0, UNIF_FORMAT, FDS_FORMAT, NSF_FORMAT, NSFE_FORMAT };
+enum length_file_name_type {
 	LENGTH_FILE_NAME      = 512,
 	LENGTH_FILE_NAME_MID  = 1024,
 	LENGTH_FILE_NAME_LONG = 2048,
-	LENGTH_FILE_NAME_MAX = 4096
+	LENGTH_FILE_NAME_MAX  = 4096
 };
 enum forced_mirroring { UNK_HORIZONTAL, UNK_VERTICAL };
 enum max_chips_rom { MAX_CHIPS = 8 };
-enum languages { LNG_ENGLISH, LNG_ITALIAN, LNG_RUSSIAN };
+enum languages { LNG_ENGLISH, LNG_ITALIAN, LNG_RUSSIAN, LNG_SPANISH, LNG_HUNGARIAN, LNG_TURKISH, LNG_PORTUGUESEBR };
 enum database_mode {
 	NODIPSWITCH = 0xFF00,
 	NOEXTRA = 0x0000,
@@ -71,8 +72,10 @@ enum database_mode {
 	CHRRAM32K = 0x0002,
 	CHRRAM256K = 0x0004
 };
+enum toolbar { TLB_TOP, TLB_RIGHT, TLB_BOTTOM, TLB_LEFT };
 
 #define LENGTH(x) (sizeof(x)/sizeof(*(x)))
+#define UNUSED(var) var __attribute__((unused))
 
 #if defined (DEBUG)
 #define INLINE

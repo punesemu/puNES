@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,10 +22,16 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static void INLINE ks7037_update(void);
+INLINE static void ks7037_update(void);
 
-BYTE *ks7037_prg_7000;
-BYTE *ks7037_prg_B000;
+struct _ks7037 {
+	BYTE ind;
+	BYTE reg[8];
+} ks7037;
+struct _ks7037tmp {
+	BYTE *prg_7000;
+	BYTE *prg_B000;
+} ks7037tmp;
 
 void map_init_KS7037(void) {
 	EXTCL_AFTER_MAPPER_INIT(KS7037);
@@ -60,7 +66,7 @@ void extcl_cpu_wr_mem_KS7037(WORD address, BYTE value) {
 			return;
 		case 0xB000:
 		case 0xB001:
-			ks7037_prg_B000[address & 0x0FFF] = value;
+			ks7037tmp.prg_B000[address & 0x0FFF] = value;
 			return;
 		case 0x8000:
 		case 0x9000:
@@ -81,16 +87,16 @@ void extcl_cpu_wr_mem_KS7037(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_KS7037(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_KS7037(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	switch (address & 0xF000) {
 		case 0x6000:
 			return (prg.ram_plus_8k[address & 0x0FFF]);
 		case 0x7000:
-			return (ks7037_prg_7000[address & 0x0FFF]);
+			return (ks7037tmp.prg_7000[address & 0x0FFF]);
 		case 0xA000:
 			return (prg.rom_8k[1][address & 0x0FFF]);
 		case 0xB000:
-			return (ks7037_prg_B000[address & 0x0FFF]);
+			return (ks7037tmp.prg_B000[address & 0x0FFF]);
 	}
 	return (openbus);
 }
@@ -105,13 +111,13 @@ BYTE extcl_save_mapper_KS7037(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE ks7037_update(void) {
+INLINE static void ks7037_update(void) {
 	WORD value;
 
 	// 0x7000
 	value = 0x0F;
 	control_bank(info.prg.rom[0].max.banks_4k)
-	ks7037_prg_7000 = prg_chip_byte_pnt(0, value << 12);
+	ks7037tmp.prg_7000 = prg_chip_byte_pnt(0, value << 12);
 
 	// 0x8000 - 0x9000
 	value = ks7037.reg[6];
@@ -125,7 +131,7 @@ static void INLINE ks7037_update(void) {
 	prg.rom_8k[1] = prg_chip_byte_pnt(prg.rom_chip[0], value << 12);
 
 	// 0xB000
-	ks7037_prg_B000 = &prg.ram_plus_8k[1 << 12];
+	ks7037tmp.prg_B000 = &prg.ram_plus_8k[1 << 12];
 
 	// 0xC000 - 0xD000
 	value = ks7037.reg[7];

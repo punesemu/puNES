@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@
 #ifndef CLOCK_H_
 #define CLOCK_H_
 
+#include "common.h"
+
 typedef struct {
 	WORD type;                      /* il tipo di formato */
 	BYTE fps;                       /* il framerate */
@@ -33,7 +35,7 @@ typedef struct {
 	BYTE ppu_divide;                /* il divisore del master clock per ottenere il PPU clock */
 	BYTE ppu_for_1_cycle_cpu;       /* numero di cicli PPU che servono per avere un ciclo CPU */
 	SDBWORD ppu_cyles_permit_write; /* i cicli CPU dall'avvio/reset prima di
-                                     * poter scrivere nei registri della PPU */
+	                                 * poter scrivere nei registri della PPU */
 	BYTE ppu_openbus_frames;        /* frames per il decadimento di un bit openbus del PPU */
 	BYTE cpu_divide;                /* CPU clock e' 12 volte piu' lento del master clock */
 	double cpu_hz;                  /* CPU clock (master_hz / cpu_divide) */
@@ -104,14 +106,6 @@ static const _machine machinedb[] = {
 	}
 };
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC _machine machine;
-
-#undef EXTERNC
+extern _machine machine;
 
 #endif /* CLOCK_H_ */

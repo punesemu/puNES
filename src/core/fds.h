@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ enum fds_disk_operations {
 	 */
 	FDS_DISK_SELECT,
 	FDS_DISK_SELECT_AND_INSERT,
-	FDS_DISK_TIMELINE_SELECT
+	FDS_DISK_SELECT_FROM_REWIND
 };
 enum fds_block_type {
 	BL_DISK_INFO = 1,
@@ -50,17 +50,11 @@ enum fds_misc {
 	FDS_DISK_CRC_CHAR2 = 0x01AA
 };
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _fds {
-	/* generali */
-	struct {
+typedef struct _fds {
+	// generali
+	struct _fds_info {
 		BYTE enabled;
-		FILE *fp;
+		BYTE *data;
 		FILE *diff;
 		BYTE total_sides;
 		BYTE type;
@@ -68,29 +62,33 @@ EXTERNC struct _fds {
 		uint32_t sides_size[20];
 		BYTE last_operation;
 	} info;
-	/* side */
-	struct {
-		struct {
+	// side
+	struct _fds_side {
+		struct _fds_side_block_1 {
 			uint32_t position;
 		} block_1;
-		struct {
+		struct _fds_side_block_2 {
 			uint32_t position;
 			BYTE tot_files;
 		} block_2;
-		struct {
-			struct {
+		struct _fds_side_file {
+			struct _fds_side_file_block_3 {
 				uint32_t position;
 				uint32_t length;
 			} block_3;
-			struct {
+			struct _fds_side_file_block_4 {
 				uint32_t position;
 			} block_4;
 		} file[0xFF];
+		struct _fds_side_change {
+			BYTE new_side;
+			uint32_t delay;
+		} change;
 		WORD *data;
 		uint32_t counted_files;
 	} side;
-	/* le variabili da salvare nei savestate */
-	struct {
+	// le variabili da salvare nei savestate
+	struct _fds_drive {
 		uint32_t disk_position;
 		uint32_t delay;
 		BYTE disk_ejected;
@@ -128,9 +126,9 @@ EXTERNC struct _fds {
 		/* per usi futuri */
 		BYTE filler[30];
 	} drive;
-	/* snd */
-	struct {
-		struct {
+	// snd
+	struct _fds_snd {
+		struct _fds_snd_wave {
 			BYTE data[64];
 			BYTE writable;
 			BYTE volume;
@@ -144,17 +142,17 @@ EXTERNC struct _fds {
 		/* */ BYTE clocked;                                     /* */
 		/* ------------------------------------------------------- */
 		} wave;
-		struct {
+		struct _fds_snd_envelope {
 			BYTE speed;
 			BYTE disabled;
 		} envelope;
-		struct {
+		struct _fds_snd_main {
 			BYTE silence;
 			WORD frequency;
 
 			SWORD output;
 		} main;
-		struct {
+		struct _fds_snd_volume {
 			BYTE speed;
 			BYTE mode;
 			BYTE increase;
@@ -162,7 +160,7 @@ EXTERNC struct _fds {
 			BYTE gain;
 			uint32_t counter;
 		} volume;
-		struct {
+		struct _fds_snd_sweep {
 			SBYTE bias;
 			BYTE mode;
 			BYTE increase;
@@ -171,7 +169,7 @@ EXTERNC struct _fds {
 			BYTE gain;
 			uint32_t counter;
 		} sweep;
-		struct {
+		struct _fds_snd_modulation {
 			SBYTE data[64];
 			WORD frequency;
 			BYTE disabled;
@@ -181,7 +179,15 @@ EXTERNC struct _fds {
 			SWORD mod;
 		} modulation;
 	} snd;
-} fds;
+} _fds;
+
+extern _fds fds;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC void fds_init(void);
 EXTERNC void fds_quit(void);

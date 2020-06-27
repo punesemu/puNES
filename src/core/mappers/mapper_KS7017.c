@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,14 @@
 #include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
+
+struct _ks7017 {
+	BYTE reg;
+	struct _ks7017_irq {
+		BYTE active;
+		WORD count;
+	} irq;
+} ks7017;
 
 void map_init_KS7017(void) {
 	EXTCL_CPU_WR_MEM(KS7017);
@@ -72,7 +80,7 @@ void extcl_cpu_wr_mem_KS7017(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_KS7017(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_KS7017(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address == 0x4030) {
 		openbus = (irq.high & EXT_IRQ) ? 1 : 0;
 		irq.high &= ~EXT_IRQ;

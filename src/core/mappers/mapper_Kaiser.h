@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,18 +27,6 @@ enum {
 	KS7058,
 	KS7022
 };
-
-struct _ks202 {
-	BYTE enabled;
-	WORD count;
-	WORD reload;
-	BYTE delay;
-	BYTE reg;
-	BYTE *prg_ram_rd;
-} ks202;
-struct _ks7022 {
-	BYTE reg;
-} ks7022;
 
 void map_init_Kaiser(BYTE model);
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,14 +21,12 @@
 
 #include <time.h>
 
-double high_resolution_ms(void);
-int __nsleep(const struct timespec *req, struct timespec *rem);
+static double high_resolution_ms(void);
+static int __nsleep(const struct timespec *req, struct timespec *rem);
 
 void gui_init(int *argc, char **argv) {
-	//setenv("QT_NO_GLIB", "1", 1);
-
 	memset(&gui, 0, sizeof(gui));
-	memset(&qt, 0, sizeof(qt));
+	qt = {};
 
 	qt.app = new QApplication((*argc), argv);
 
@@ -65,10 +63,8 @@ void gui_init(int *argc, char **argv) {
 				fprintf(stderr, "INFO: Path too long. Truncated.\n");
 				info.portable = FALSE;
 			} else {
-				/*
-				 * I don't know why, but the string this readlink() function
-				 * returns is appended with a '@'.
-				 */
+				// I don't know why, but the string this readlink() function
+				// returns is appended with a '@'.
 				if (path[length] == '@') {
 					path[length] = 0;
 				}
@@ -79,36 +75,35 @@ void gui_init(int *argc, char **argv) {
 		}
  	}
 
-	gettimeofday(&gui.counterStart, NULL);
+	gettimeofday(&gui.counterStart, nullptr);
 	gui_get_ms = high_resolution_ms;
 }
 void gui_sleep(double ms) {
-	struct timespec req = { 0 }, rem = { 0 };
+	struct timespec req = {}, rem = {};
 	time_t sec;
 
 	if (ms <= 0) {
 		return;
 	}
 
-	sec = (time_t) (ms / 1000.0f);
-	ms = ms - ((double) sec * 1000.0f);
+	sec = (time_t)(ms / 1000.0f);
+	ms = ms - ((double)sec * 1000.0f);
 	req.tv_sec = sec;
 	req.tv_nsec = ms * 1000000L;
 	__nsleep(&req, &rem);
 }
 int gui_screen_id(void) {
-	int wid = qt.screen->winId();
+	int wid = qt.screen->wogl->winId();
 
 	return (wid);
 }
 
-double high_resolution_ms(void) {
+static double high_resolution_ms(void) {
 	struct timeval time;
-
 	double elapsed_seconds;
 	double elapsed_useconds;
 
-	gettimeofday(&time, NULL);
+	gettimeofday(&time, nullptr);
 
 	elapsed_seconds  = time.tv_sec  - gui.counterStart.tv_sec;
 	elapsed_useconds = time.tv_usec - gui.counterStart.tv_usec;
@@ -116,7 +111,7 @@ double high_resolution_ms(void) {
 	//return ((elapsed_seconds * 1000) + (elapsed_useconds / 1000.0f) + 0.5f);
 	return ((elapsed_seconds * 1000.0f) + (elapsed_useconds / 1000.0f));
 }
-int __nsleep(const struct timespec *req, struct timespec *rem) {
+static int __nsleep(const struct timespec *req, struct timespec *rem) {
 	struct timespec temp_rem;
 
 	if (nanosleep(req, rem) == -1) {
