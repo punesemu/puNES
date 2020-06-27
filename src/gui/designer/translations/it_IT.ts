@@ -1093,7 +1093,7 @@
     </message>
     <message>
       <source>Pause</source>
-      <translation type="unfinished">Pause</translation>
+      <translation>Pausa</translation>
     </message>
     <message>
       <source>Fast forward (from 1x to 8x)</source>
@@ -1105,7 +1105,7 @@
     </message>
     <message>
       <source>Play</source>
-      <translation type="unfinished">Play</translation>
+      <translation>Play</translation>
     </message>
     <message>
       <source>Rewind</source>
@@ -1116,15 +1116,15 @@
     <name>wdgRotateScreen</name>
     <message>
       <source>Rotate the screen 90 degrees to the Right</source>
-      <translation type="unfinished">Rotate the screen 90 degrees to the Right</translation>
+      <translation>Ruota lo schermo di 90 gradi verso destra</translation>
     </message>
     <message>
       <source>Rotate the screen 90 degrees to the left</source>
-      <translation type="unfinished">Rotate the screen 90 degrees to the left</translation>
+      <translation>Ruota lo schermo di 90 gradi verso sinistra</translation>
     </message>
     <message>
       <source>Current degree of rotation</source>
-      <translation type="unfinished">Current degree of rotation</translation>
+      <translation>Grado di rotazione attuale</translation>
     </message>
     <message>
       <source>Rotate Screen</source>
@@ -2070,27 +2070,27 @@
     </message>
     <message>
       <source>Screen rotation</source>
-      <translation type="unfinished">Screen rotation</translation>
+      <translation>Rotazione dello schermo</translation>
     </message>
     <message>
       <source>0 degrees</source>
-      <translation type="unfinished">0 degrees</translation>
+      <translation>0 gradi</translation>
     </message>
     <message>
       <source>90 degrees</source>
-      <translation type="unfinished">90 degrees</translation>
+      <translation>90 gradi</translation>
     </message>
     <message>
       <source>180 degrees</source>
-      <translation type="unfinished">180 degrees</translation>
+      <translation>180 gradi</translation>
     </message>
     <message>
       <source>270 degrees</source>
-      <translation type="unfinished">270 degrees</translation>
+      <translation>270 gradi</translation>
     </message>
     <message>
       <source>Also rotate the text on screen</source>
-      <translation type="unfinished">Also rotate the text on screen</translation>
+      <translation>Ruota anche il testo sullo schermo</translation>
     </message>
   </context>
   <context>
@@ -2105,11 +2105,11 @@
     </message>
     <message>
       <source>Save state</source>
-      <translation type="unfinished">Save state</translation>
+      <translation>Salva stato</translation>
     </message>
     <message>
       <source>Save/Load State</source>
-      <translation type="unfinished">Save/Load State</translation>
+      <translation>Salva/Carica Stato</translation>
     </message>
     <message>
       <source>Slot state</source>
