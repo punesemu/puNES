@@ -1358,7 +1358,7 @@ void mainWindow::s_help(void) {
 }
 
 void mainWindow::s_ff_draw_screen(void) {
-	if (info.pause || rwnd.active) {
+	if (info.no_rom | info.turn_off | info.pause | rwnd.active) {
 		return;
 	}
 
