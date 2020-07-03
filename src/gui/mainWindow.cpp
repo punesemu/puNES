@@ -377,6 +377,10 @@ void mainWindow::make_reset(int type) {
 		}
 	}
 
+	// nel caso il timer dell'update dello screen
+	// del fast forward sia attivo, lo fermo.
+	ff->stop();
+
 	if (emu_reset(type)) {
 		s_quit();
 	}
@@ -1354,6 +1358,21 @@ void mainWindow::s_help(void) {
 }
 
 void mainWindow::s_ff_draw_screen(void) {
+	if (info.pause || rwnd.active) {
+		return;
+	}
+
+	switch (debugger.mode) {
+		case DBG_STEP:
+		case DBG_BREAKPOINT:
+			return;
+		case DBG_GO:
+			if (debugger.breakframe == TRUE) {
+				return;
+			}
+			break;
+	}
+
 	gfx_draw_screen();
 }
 void mainWindow::s_fullscreen(bool state) {
