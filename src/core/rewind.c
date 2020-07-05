@@ -308,6 +308,12 @@ void rewind_init_operation(void) {
 	gui_update();
 
 	gfx_thread_continue();
+
+	// eseguo un rewind iniziale posizionandomi
+	// sullo stesso frame iniziale. Mi serve
+	// per aggiornare lo screen dopo il passaggio
+	// dal doublebuffer al singlebuffer.
+	rewind_frames(0);
 }
 void rewind_close_operation(void) {
 	gfx_thread_pause();
@@ -463,8 +469,6 @@ static BYTE _rewind_frames(int32_t frames_to_rewind, BYTE exec_last_frame) {
 		if (cursor > rwint.count.snaps) {
 			return (EXIT_ERROR);
 		}
-	} else {
-		return (EXIT_ERROR);
 	}
 
 	chunk = cursor / REWIND_SNAPS_FOR_CHUNK;
