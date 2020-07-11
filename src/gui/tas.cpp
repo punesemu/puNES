@@ -207,7 +207,7 @@ void tas_header_FM2(uTCHAR *file) {
 }
 void tas_read_FM2(void) {
 	unsigned int start;
-	char line[256], *sep;
+	char line[256], *sep, *saveptr;
 
 	tas.count = tas.index = 0;
 
@@ -224,7 +224,7 @@ void tas_read_FM2(void) {
 
 		start++;
 
-		sep = strtok(line + start, "|");
+		sep = strtok_r(line + start, "|", &saveptr);
 
 		tas.il[tas.count].state = atoi(sep);
 
@@ -232,7 +232,7 @@ void tas_read_FM2(void) {
 			BYTE a, b;
 
 			for (a = PORT1; a <= PORT2; a++) {
-				sep = strtok(NULL, "|");
+				sep = strtok_r(NULL, "|", &saveptr);
 
 				if (port[a].type == CTRL_STANDARD) {
 					for (b = 0; b < 8; b++) {
@@ -243,15 +243,15 @@ void tas_read_FM2(void) {
 						}
 					}
 				} else if (port[a].type == CTRL_ZAPPER) {
-					char *space;
+					char *space, *last;
 
-					space = strtok(sep, " ");
+					space = strtok_r(sep, " ", &last);
 					tas.il[tas.count].port[a][0] = QString::fromUtf8(space).simplified().toUInt();
-					space = strtok(NULL, " ");
+					space = strtok_r(NULL, " ", &last);
 					tas.il[tas.count].port[a][1] = QString::fromUtf8(space).simplified().toUInt();
-					space = strtok(NULL, " ");
+					space = strtok_r(NULL, " ", &last);
 					tas.il[tas.count].port[a][2] = QString::fromUtf8(space).simplified().toUInt();
-					space = strtok(NULL, " ");
+					space = strtok_r(NULL, " ", &last);
 					tas.il[tas.count].port[a][3] = QString::fromUtf8(space).simplified().toUInt();
 				}
 			}
