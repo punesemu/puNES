@@ -29,7 +29,6 @@ typedef struct _debugger {
 	BYTE breakframe;
 } _debugger;
 typedef struct _debugger_breakpoint {
-
 } _debugger_breakpoint;
 
 extern _debugger debugger;

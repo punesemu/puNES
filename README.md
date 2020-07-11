@@ -3,8 +3,8 @@
 [![Gentoo package](https://repology.org/badge/version-for-repo/gentoo/punes.svg)](https://repology.org/project/punes/versions)
 [![AUR package](https://repology.org/badge/version-for-repo/aur/punes.svg)](https://repology.org/project/punes/versions)
 [![SlackBuilds package](https://repology.org/badge/version-for-repo/slackbuilds/punes.svg)](https://repology.org/project/punes/versions)
-[![Funtoo 1.4 package](https://repology.org/badge/version-for-repo/funtoo_1.4/punes.svg)](https://repology.org/project/punes/versions)
 [![Rosa 2019.1 package](https://repology.org/badge/version-for-repo/rosa_2019_1/punes.svg)](https://repology.org/project/punes/versions)
+[![LiGurOS 20.7 package](https://repology.org/badge/version-for-repo/liguros_20_7/punes.svg)](https://repology.org/project/punes/versions)
 [![Wikidata package](https://repology.org/badge/version-for-repo/wikidata/punes.svg)](https://repology.org/project/punes/versions)
 
 Description
@@ -12,7 +12,7 @@ Description
 
 Nintendo Entertaiment System emulator
 
-WIP Builds ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![Build status](https://ci.appveyor.com/api/projects/status/t820vxmvtvbfbll7?svg=true)](https://ci.appveyor.com/project/punesemu/punes)
+WIP Builds ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://ci.appveyor.com/api/projects/status/t820vxmvtvbfbll7?svg=true)](https://ci.appveyor.com/project/punesemu/punes) 
 -----------
 always updated to the last commit:
 * Windows 32 bit : [`OpenGL`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes32.wip.opengl.zip) - [`D3D9`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes32.wip.d3d9.zip)

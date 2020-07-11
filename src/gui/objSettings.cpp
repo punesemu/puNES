@@ -861,16 +861,19 @@ void objSet::after_the_defaults() {
 	overscan.borders = &overscan_borders[0];
 }
 
-void objSet::oscan_val_to_int(int index, _overscan_borders *ob) {
-	if (index == SET_OVERSCAN_BRD_NTSC) {
-		oscan_default(ob, NTSC);
+void objSet::oscan_default(_overscan_borders *ob, BYTE mode) {
+	QStringList def;
+
+	if (mode == NTSC) {
+		def = uQString(set->cfg[SET_OVERSCAN_BRD_NTSC].def).split(",");
 	} else {
-		oscan_default(ob, PAL);
+		def = uQString(set->cfg[SET_OVERSCAN_BRD_PAL].def).split(",");
 	}
 
-	oscan_val_to_int(index, ob, uQStringCD(val.at(index)));
-
-	val.replace(index, oscan_val(ob));
+	ob->up = def.at(0).toInt();
+	ob->down = def.at(1).toInt();
+	ob->left = def.at(2).toInt();
+	ob->right = def.at(3).toInt();
 }
 void objSet::oscan_val_to_int(UNUSED(int index), _overscan_borders *ob, const uTCHAR *buffer) {
 	QStringList splitted = uQString(buffer).split(",");
@@ -888,19 +891,16 @@ void objSet::oscan_val_to_int(UNUSED(int index), _overscan_borders *ob, const uT
 		ob->right = splitted.at(3).toInt();
 	}
 }
-void objSet::oscan_default(_overscan_borders *ob, BYTE mode) {
-	QStringList def;
-
-	if (mode == NTSC) {
-		def = uQString(set->cfg[SET_OVERSCAN_BRD_NTSC].def).split(",");
+void objSet::oscan_val_to_int(int index, _overscan_borders *ob) {
+	if (index == SET_OVERSCAN_BRD_NTSC) {
+		oscan_default(ob, NTSC);
 	} else {
-		def = uQString(set->cfg[SET_OVERSCAN_BRD_PAL].def).split(",");
+		oscan_default(ob, PAL);
 	}
 
-	ob->up = def.at(0).toInt();
-	ob->down = def.at(1).toInt();
-	ob->left = def.at(2).toInt();
-	ob->right = def.at(3).toInt();
+	oscan_val_to_int(index, ob, uQStringCD(val.at(index)));
+
+	val.replace(index, oscan_val(ob));
 }
 QString objSet::oscan_val(_overscan_borders *ob) {
 	return (QString("%1,").arg(ob->up) +

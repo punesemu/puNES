@@ -96,9 +96,6 @@ void dlgSettings::update_tab_general(void) {
 void dlgSettings::update_tab_video(void) {
 	widget_Settings_Video->update_widget();
 }
-void dlgSettings::update_tab_audio(void) {
-	widget_Settings_Audio->update_widget();
-}
 void dlgSettings::update_tab_input(void) {
 	widget_Settings_Input->update_widget();
 }
@@ -107,6 +104,10 @@ void dlgSettings::update_tab_ppu(void) {
 }
 void dlgSettings::update_tab_cheats(void) {
 	widget_Settings_Cheats->update_widget();
+}
+
+void dlgSettings::update_tab_audio(void) {
+	widget_Settings_Audio->update_widget();
 }
 
 void dlgSettings::s_save_settings(UNUSED(bool checked)) {

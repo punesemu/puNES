@@ -47,12 +47,12 @@ class dlgSettings : public QDialog, public Ui::dlgSettings {
 	private:
 		void update_tab_general(void);
 		void update_tab_video(void);
-	public:
-		void update_tab_audio(void);
-	private:
 		void update_tab_input(void);
 		void update_tab_ppu(void);
 		void update_tab_cheats(void);
+
+	public:
+		void update_tab_audio(void);
 
 	private slots:
 		void s_save_settings(bool checked);

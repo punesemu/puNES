@@ -214,7 +214,6 @@ void wdgSettingsVideo::update_widget(void) {
 		srotation_set();
 		checkBox_Text_Rotation->setChecked(cfg->text_rotation);
 	}
-
 }
 void wdgSettingsVideo::change_rom(void) {
 	oscan_brd_mode_set();

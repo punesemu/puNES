@@ -794,7 +794,6 @@ void overlayWidgetInputPort::draw_snes_mouse(QPainter *painter) {
 	if (old.mouse.right) {
 		painter->drawImage(11, 5, snes_mouse.button);
 	}
-
 }
 void overlayWidgetInputPort::draw_arkanoid_paddle(QPainter *painter) {
 	painter->drawImage(0, 0, arkanoid_paddle.tile);

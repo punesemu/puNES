@@ -52,17 +52,19 @@ class objSettings : public QSettings {
 		virtual void rd(void);
 		virtual void rd(QString group);
 		virtual void rd_key(int index);
+
 	private:
 		void rd_key(QString group, int index);
 
 	public:
 		void wr(void);
 		void wr(QString group);
-	protected:
-		virtual void wr_key(int index);
+
 	private:
 		void wr_key(QString group, int index);
+
 	protected:
+		virtual void wr_key(int index);
 		virtual void wr_all_keys(void);
 
 	public:
@@ -86,12 +88,12 @@ class objSet : public objSettings {
 		virtual void fr_cfg(QString group);
 		virtual void after_the_defaults(void);
 
+	public:
+		void oscan_default(_overscan_borders *ob, BYTE mode);
+		void oscan_val_to_int(int index, _overscan_borders *ob, const uTCHAR *buffer);
+
 	private:
 		void oscan_val_to_int(int index, _overscan_borders *ob);
-	public:
-		void oscan_val_to_int(int index, _overscan_borders *ob, const uTCHAR *buffer);
-		void oscan_default(_overscan_borders *ob, BYTE mode);
-	private:
 		QString oscan_val(_overscan_borders *ob);
 
 	private:
@@ -140,6 +142,7 @@ class objInp : public objSettings {
 		static QString kbd_keyval_to_name(const DBWORD value);
 		static DBWORD kbd_keyval_decode(QKeyEvent *keyEvent);
 		void set_kbd_joy_default(_port *port, int index, int mode);
+
 	private:
 		int kbd_val_to_int(int index);
 		void kbd_rd(int index, int pIndex);
