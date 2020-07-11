@@ -105,6 +105,7 @@ class objSet : public objSettings {
 
 	public:
 		double val_to_double(WORD round, const uTCHAR *buffer);
+
 	private:
 		double val_to_double(int index, WORD round);
 		void double_to_val(int index, double value);
