@@ -2121,7 +2121,7 @@
     </message>
     <message>
       <source>Load state</source>
-      <translation type="unfinished">Load state</translation>
+      <translation>Загрузить сохраненную игру</translation>
     </message>
   </context>
 </TS>
