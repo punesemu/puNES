@@ -32,7 +32,7 @@
     </message>
     <message>
       <source>PPU</source>
-      <translation type="unfinished">PPU</translation>
+      <translation>PPU</translation>
     </message>
     <message>
       <source>Cheats</source>
@@ -87,7 +87,7 @@
     </message>
     <message>
       <source>Original</source>
-      <translation type="unfinished">Original</translation>
+      <translation>Original</translation>
     </message>
     <message>
       <source>3rd-party</source>
@@ -127,7 +127,7 @@
     </message>
     <message>
       <source>ID</source>
-      <translation type="unfinished">ID</translation>
+      <translation>ID</translation>
     </message>
     <message>
       <source>Up</source>
@@ -135,7 +135,7 @@
     </message>
     <message>
       <source>A</source>
-      <translation type="unfinished">A</translation>
+      <translation>A</translation>
     </message>
     <message>
       <source>Down</source>
@@ -151,23 +151,23 @@
     </message>
     <message>
       <source>Start</source>
-      <translation type="unfinished">Start</translation>
+      <translation>Start</translation>
     </message>
     <message>
       <source>Turbo B</source>
-      <translation type="unfinished">Turbo B</translation>
+      <translation>Turbo B</translation>
     </message>
     <message>
       <source>Select</source>
-      <translation type="unfinished">Select</translation>
+      <translation>Select</translation>
     </message>
     <message>
       <source>Turbo A</source>
-      <translation type="unfinished">Turbo A</translation>
+      <translation>Turbo A</translation>
     </message>
     <message>
       <source>B</source>
-      <translation type="unfinished">B</translation>
+      <translation>B</translation>
     </message>
     <message>
       <source>Right</source>
@@ -187,7 +187,7 @@
     </message>
     <message>
       <source>Joystick</source>
-      <translation type="unfinished">Joystick</translation>
+      <translation>Joystick</translation>
     </message>
     <message>
       <source>Misc</source>
@@ -230,7 +230,7 @@
     </message>
     <message>
       <source>OK</source>
-      <translation type="unfinished">OK</translation>
+      <translation>OK</translation>
     </message>
     <message>
       <source>None</source>
@@ -265,35 +265,35 @@
     </message>
     <message>
       <source>4</source>
-      <translation type="unfinished">4</translation>
+      <translation>4</translation>
     </message>
     <message>
       <source>5</source>
-      <translation type="unfinished">5</translation>
+      <translation>5</translation>
     </message>
     <message>
       <source>6</source>
-      <translation type="unfinished">6</translation>
+      <translation>6</translation>
     </message>
     <message>
       <source>7</source>
-      <translation type="unfinished">7</translation>
+      <translation>7</translation>
     </message>
     <message>
       <source>8</source>
-      <translation type="unfinished">8</translation>
+      <translation>8</translation>
     </message>
     <message>
       <source>3</source>
-      <translation type="unfinished">3</translation>
+      <translation>3</translation>
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>1</source>
-      <translation type="unfinished">1</translation>
+      <translation>1</translation>
     </message>
     <message>
       <source>Defaults Game Dip Switches</source>
@@ -380,11 +380,11 @@
     </message>
     <message>
       <source>&amp;Hard Reset</source>
-      <translation type="unfinished">&amp;Hard Reset</translation>
+      <translation>&amp;Hard Reset</translation>
     </message>
     <message>
       <source>&amp;Soft Reset</source>
-      <translation type="unfinished">&amp;Soft Reset</translation>
+      <translation>&amp;Soft Reset</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert Disk</source>
@@ -460,23 +460,23 @@
     </message>
     <message>
       <source>Slot &amp;0</source>
-      <translation type="unfinished">Slot &amp;0</translation>
+      <translation>Slot &amp;0</translation>
     </message>
     <message>
       <source>Slot &amp;1</source>
-      <translation type="unfinished">Slot &amp;1</translation>
+      <translation>Slot &amp;1</translation>
     </message>
     <message>
       <source>Slot &amp;2</source>
-      <translation type="unfinished">Slot &amp;2</translation>
+      <translation>Slot &amp;2</translation>
     </message>
     <message>
       <source>Slot &amp;3</source>
-      <translation type="unfinished">Slot &amp;3</translation>
+      <translation>Slot &amp;3</translation>
     </message>
     <message>
       <source>Slot &amp;4</source>
-      <translation type="unfinished">Slot &amp;4</translation>
+      <translation>Slot &amp;4</translation>
     </message>
     <message>
       <source>Slot &amp;5</source>
@@ -488,19 +488,19 @@
     </message>
     <message>
       <source>Slot &amp;6</source>
-      <translation type="unfinished">Slot &amp;6</translation>
+      <translation>Slot &amp;6</translation>
     </message>
     <message>
       <source>Slot &amp;7</source>
-      <translation type="unfinished">Slot &amp;7</translation>
+      <translation>Slot &amp;7</translation>
     </message>
     <message>
       <source>Slot &amp;8</source>
-      <translation type="unfinished">Slot &amp;8</translation>
+      <translation>Slot &amp;8</translation>
     </message>
     <message>
       <source>Slot &amp;9</source>
-      <translation type="unfinished">Slot &amp;9</translation>
+      <translation>Slot &amp;9</translation>
     </message>
     <message>
       <source>&amp;Cheats List Mode</source>
@@ -548,7 +548,7 @@
     </message>
     <message>
       <source>&amp;NES</source>
-      <translation type="unfinished">&amp;NES</translation>
+      <translation>&amp;NES</translation>
     </message>
     <message>
       <source>&amp;Disk Side</source>
@@ -560,11 +560,11 @@
     </message>
     <message>
       <source>&amp;Video</source>
-      <translation type="unfinished">&amp;Video</translation>
+      <translation>&amp;Vídeo</translation>
     </message>
     <message>
       <source>&amp;Audio</source>
-      <translation type="unfinished">&amp;Audio</translation>
+      <translation>&amp;Áudio</translation>
     </message>
     <message>
       <source>&amp;Input</source>
@@ -576,7 +576,7 @@
     </message>
     <message>
       <source>&amp;PPU</source>
-      <translation type="unfinished">&amp;PPU</translation>
+      <translation>&amp;PPU</translation>
     </message>
     <message>
       <source>S&amp;tate</source>
@@ -668,7 +668,7 @@
     </message>
     <message>
       <source>Widgets</source>
-      <translation type="unfinished">Widgets</translation>
+      <translation>Widgets</translation>
     </message>
   </context>
   <context>
@@ -691,112 +691,112 @@
     <message>
       <source>start wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">start wav recording</translation>
+      <translation>iniciar gravação em &amp;WAV</translation>
     </message>
     <message>
       <source>stop wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">stop wav recording</translation>
+      <translation>parar gravação em &amp;WAV</translation>
     </message>
     <message>
       <source>[red]Game Genie rom not found[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]Game Genie rom not found[normal]</translation>
+      <translation>[red]ROM Game Genie não encontrada[normal]</translation>
     </message>
     <message>
       <source>[red]error loading Game Genie rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error loading Game Genie rom[normal]</translation>
+      <translation>[red]Erro ao carregar a ROM do Game Genie[normal]</translation>
     </message>
     <message>
       <source>[red]Illegal Opcode[normal] [yellow]0x%1[normal] at [yellow]0x%2[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]Illegal Opcode[normal] [yellow]0x%1[normal] at [yellow]0x%2[normal]</translation>
+      <translation>[red]Opcode ilegal[normal] [yellow]0x%1[normal] a [yellow]0x%2[normal]</translation>
     </message>
     <message>
       <source>[red]error loading rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error loading rom[normal]</translation>
+      <translation>[red]erro ao carregar a ROM[normal]</translation>
     </message>
     <message>
       <source>[red]FDS bios not found[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]FDS bios not found[normal]</translation>
+      <translation>[red]BIOS FDS não encontrada[normal]</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</translation>
+      <translation>disco [cyan]%1[normal] lado [cyan]%2[normal] [yellow]ejetado[normal]</translation>
     </message>
     <message>
       <source>you must [yellow]eject[normal] disk first</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">you must [yellow]eject[normal] disk first</translation>
+      <translation>você precisa [yellow]ejetar[normal] o disco primeiro</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</translation>
+      <translation>disco [cyan]%1[normal] lado [cyan]%2[normal] [green]inserido[normal]</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [brown]selected[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">disk [cyan]%1[normal] side [cyan]%2[normal] [brown]selected[normal]</translation>
+      <translation>disco [cyan]%1[normal] lado [cyan]%2[normal] [brown]selecionado[normal]</translation>
     </message>
     <message>
       <source>[yellow]mapper[normal] [brown]%1[normal] [yellow]not supported[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[yellow]mapper[normal] [brown]%1[normal] [yellow]not supported[normal]</translation>
+      <translation>[yellow]mapper[normal] [brown]%1[normal] [yellow]não suportado[normal]</translation>
     </message>
     <message>
       <source>[red]error loading patch file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error loading patch file[normal]</translation>
+      <translation>[red]erro ao carregar o arquivo de patch[normal]</translation>
     </message>
     <message>
       <source>[yellow]save is impossible in Game Genie menu[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[yellow]save is impossible in Game Genie menu[normal]</translation>
+      <translation>[yellow]não é possível salvar no menu do Game Genie[normal]</translation>
     </message>
     <message>
       <source>[yellow]movie playback interrupted[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[yellow]movie playback interrupted[normal]</translation>
+      <translation>[yellow]reprodução de filme interrompida[normal]</translation>
     </message>
     <message>
       <source>[red]error[normal] loading state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] loading state</translation>
+      <translation>[red]erro[normal] ao carregar estado</translation>
     </message>
     <message>
       <source>[red]state file is not for this rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]state file is not for this rom[normal]</translation>
+      <translation>[red]arquivo de estado não é para esta ROM[normal]</translation>
     </message>
     <message>
       <source>[green]%1[normal] cheat active</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[green]%1[normal] cheat active</translation>
+      <translation>[green]%1[normal] trapaça ativada</translation>
     </message>
     <message>
       <source>[green]%1[normal] cheats active</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[green]%1[normal] cheats active</translation>
+      <translation>[green]%1[normal] trapaças ativadas</translation>
     </message>
     <message>
       <source>overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
+      <translation>overclock ativado [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
     </message>
     <message>
       <source>[yellow]silence, the movie has begun[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[yellow]silence, the movie has begun[normal]</translation>
+      <translation>[yellow]silêncio, o filme começou[normal]</translation>
     </message>
     <message>
       <source>The End</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">The End</translation>
+      <translation>FIM</translation>
     </message>
     <message>
       <source>switched to [green]%1[normal]</source>
@@ -837,31 +837,31 @@
     </message>
     <message>
       <source>Square 1</source>
-      <translation type="unfinished">Square 1</translation>
+      <translation>Square 1</translation>
     </message>
     <message>
       <source>DMC</source>
-      <translation type="unfinished">DMC</translation>
+      <translation>DMC</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Noise</translation>
     </message>
     <message>
       <source>Square 2</source>
-      <translation type="unfinished">Square 2</translation>
+      <translation>Square 2</translation>
     </message>
     <message>
       <source>Extra</source>
-      <translation type="unfinished">Extra</translation>
+      <translation>Extra</translation>
     </message>
     <message>
       <source>Master</source>
-      <translation type="unfinished">Master</translation>
+      <translation>Master</translation>
     </message>
     <message>
       <source>Triangle</source>
-      <translation type="unfinished">Triangle</translation>
+      <translation>Triangle</translation>
     </message>
     <message>
       <source>active</source>
@@ -869,7 +869,7 @@
     </message>
     <message>
       <source>volume</source>
-      <translation type="unfinished">volume</translation>
+      <translation>volume</translation>
     </message>
     <message>
       <source>Active all</source>
@@ -944,11 +944,11 @@
     </message>
     <message>
       <source>Pro Action Rocky</source>
-      <translation type="unfinished">Pro Action Rocky</translation>
+      <translation>Pro Action Rocky</translation>
     </message>
     <message>
       <source>Game Genie</source>
-      <translation type="unfinished">Game Genie</translation>
+      <translation>Game Genie</translation>
     </message>
     <message>
       <source>Submit</source>
@@ -1038,7 +1038,7 @@
     </message>
     <message>
       <source>PPU</source>
-      <translation type="unfinished">PPU</translation>
+      <translation>PPU</translation>
     </message>
     <message>
       <source>Val</source>
@@ -1066,7 +1066,7 @@
     </message>
     <message>
       <source>HTML</source>
-      <translation type="unfinished">HTML</translation>
+      <translation>HTML</translation>
     </message>
     <message>
       <source>Reset color</source>
@@ -1139,23 +1139,23 @@
     </message>
     <message>
       <source>48000</source>
-      <translation type="unfinished">48000</translation>
+      <translation>48000</translation>
     </message>
     <message>
       <source>44100</source>
-      <translation type="unfinished">44100</translation>
+      <translation>44100</translation>
     </message>
     <message>
       <source>22050</source>
-      <translation type="unfinished">22050</translation>
+      <translation>22050</translation>
     </message>
     <message>
       <source>11025</source>
-      <translation type="unfinished">11025</translation>
+      <translation>11025</translation>
     </message>
     <message>
       <source>0</source>
-      <translation type="unfinished">0</translation>
+      <translation>0</translation>
     </message>
     <message>
       <source>1 (Default)</source>
@@ -1163,11 +1163,11 @@
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>3</source>
-      <translation type="unfinished">3</translation>
+      <translation>3</translation>
     </message>
     <message>
       <source>4</source>
@@ -1389,15 +1389,15 @@
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>NTSC</translation>
     </message>
     <message>
       <source>PAL</source>
-      <translation type="unfinished">PAL</translation>
+      <translation>PAL</translation>
     </message>
     <message>
       <source>Dendy</source>
-      <translation type="unfinished">Dendy</translation>
+      <translation>Dendy</translation>
     </message>
     <message>
       <source>System Roms</source>
@@ -1441,7 +1441,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Outros</translation>
     </message>
     <message>
       <source>Settings</source>
@@ -1501,7 +1501,7 @@
     </message>
     <message>
       <source>Portuguese (Brazil)</source>
-      <translation type="unfinished">Portuguese (Brazil)</translation>
+      <translation>Português (Brasil)</translation>
     </message>
   </context>
   <context>
@@ -1516,7 +1516,7 @@
     </message>
     <message>
       <source>Zapper</source>
-      <translation type="unfinished">Zapper</translation>
+      <translation>Zapper</translation>
     </message>
     <message>
       <source>Snes Mouse</source>
@@ -1524,11 +1524,11 @@
     </message>
     <message>
       <source>Arkanoid Paddle</source>
-      <translation type="unfinished">Arkanoid Paddle</translation>
+      <translation>Arkanoid Paddle</translation>
     </message>
     <message>
       <source>Oeka Kids Tablet</source>
-      <translation type="unfinished">Oeka Kids Tablet</translation>
+      <translation>Oeka Kids Tablet</translation>
     </message>
     <message>
       <source>Default</source>
@@ -1568,19 +1568,19 @@
     </message>
     <message>
       <source>Joystick ID</source>
-      <translation type="unfinished">Joystick ID</translation>
+      <translation>ID do Joystick</translation>
     </message>
     <message>
       <source>NES</source>
-      <translation type="unfinished">NES</translation>
+      <translation>NES</translation>
     </message>
     <message>
       <source>Famicom</source>
-      <translation type="unfinished">Famicom</translation>
+      <translation>Famicom</translation>
     </message>
     <message>
       <source>Four Score</source>
-      <translation type="unfinished">Four Score</translation>
+      <translation>Four Score</translation>
     </message>
     <message>
       <source>Misc</source>
@@ -1640,7 +1640,7 @@
     </message>
     <message>
       <source>Joystick</source>
-      <translation type="unfinished">Joystick</translation>
+      <translation>Joystick</translation>
     </message>
     <message>
       <source>Unset all</source>
@@ -1651,27 +1651,27 @@
     <name>wdgSettingsPPU</name>
     <message>
       <source>PPU Settings</source>
-      <translation type="unfinished">PPU Settings</translation>
+      <translation>Configurações da PPU</translation>
     </message>
     <message>
       <source>Disable 7bit Sample Control</source>
-      <translation type="unfinished">Disable 7bit Sample Control</translation>
+      <translation>Desativar Controle de Amostra 7bit</translation>
     </message>
     <message>
       <source>Reset Lag Counter</source>
-      <translation type="unfinished">Reset Lag Counter</translation>
+      <translation>Zerar Contador de Lag</translation>
     </message>
     <message>
       <source>VBlank Lines</source>
-      <translation type="unfinished">VBlank Lines</translation>
+      <translation>VBlank Lines</translation>
     </message>
     <message>
       <source>Postrender Lines</source>
-      <translation type="unfinished">Postrender Lines</translation>
+      <translation>Postrender Lines</translation>
     </message>
     <message>
       <source>Overclock</source>
-      <translation type="unfinished">Overclock</translation>
+      <translation>Overclock</translation>
     </message>
     <message>
       <source>Sprites and background</source>
@@ -1698,11 +1698,11 @@
     <name>wdgSettingsVideo</name>
     <message>
       <source>GLSL &amp;soft stretch</source>
-      <translation type="unfinished">GLSL &amp;soft stretch</translation>
+      <translation>GLSL &amp;soft stretch</translation>
     </message>
     <message>
       <source>HLSL &amp;soft stretch</source>
-      <translation type="unfinished">HLSL &amp;soft stretch</translation>
+      <translation>HLSL &amp;soft stretch</translation>
     </message>
     <message>
       <source>[Select a file]</source>
@@ -1738,27 +1738,27 @@
     </message>
     <message>
       <source>1x</source>
-      <translation type="unfinished">1x</translation>
+      <translation>1x</translation>
     </message>
     <message>
       <source>2x</source>
-      <translation type="unfinished">2x</translation>
+      <translation>2x</translation>
     </message>
     <message>
       <source>3x</source>
-      <translation type="unfinished">3x</translation>
+      <translation>3x</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation type="unfinished">4x</translation>
+      <translation>4x</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation type="unfinished">5x</translation>
+      <translation>5x</translation>
     </message>
     <message>
       <source>6x</source>
-      <translation type="unfinished">6x</translation>
+      <translation>6x</translation>
     </message>
     <message>
       <source>Scale</source>
@@ -1778,11 +1778,11 @@
     </message>
     <message>
       <source>1:1</source>
-      <translation type="unfinished">1:1</translation>
+      <translation>1:1</translation>
     </message>
     <message>
       <source>5:4</source>
-      <translation type="unfinished">5:4</translation>
+      <translation>5:4</translation>
     </message>
     <message>
       <source>8:7 (NTSC TV)</source>
@@ -1814,11 +1814,11 @@
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>NTSC</translation>
     </message>
     <message>
       <source>PAL/Dendy</source>
-      <translation type="unfinished">PAL/Dendy</translation>
+      <translation>PAL/Dendy</translation>
     </message>
     <message>
       <source>Right</source>
@@ -1850,7 +1850,7 @@
     </message>
     <message>
       <source>Overscan</source>
-      <translation type="unfinished">Overscan</translation>
+      <translation>Overscan</translation>
     </message>
     <message>
       <source>No Shaders</source>
@@ -1858,11 +1858,11 @@
     </message>
     <message>
       <source>CRT Dotmask</source>
-      <translation type="unfinished">CRT Dotmask</translation>
+      <translation>Máscara de CRT</translation>
     </message>
     <message>
       <source>CRT Scanlines</source>
-      <translation type="unfinished">CRT Scanlines</translation>
+      <translation>Scanlines de CRT</translation>
     </message>
     <message>
       <source>CRT With Curve</source>
@@ -1878,7 +1878,7 @@
     </message>
     <message>
       <source>NTSC 2Phase Composite</source>
-      <translation type="unfinished">NTSC 2Phase Composite</translation>
+      <translation>NTSC 2Phase Composite</translation>
     </message>
     <message>
       <source>Old TV</source>
@@ -1894,47 +1894,47 @@
     </message>
     <message>
       <source>Scale2X</source>
-      <translation type="unfinished">Scale2X</translation>
+      <translation>Scale2X</translation>
     </message>
     <message>
       <source>Scale3X</source>
-      <translation type="unfinished">Scale3X</translation>
+      <translation>Scale3X</translation>
     </message>
     <message>
       <source>Scale4X</source>
-      <translation type="unfinished">Scale4X</translation>
+      <translation>Scale4X</translation>
     </message>
     <message>
       <source>Hq2X</source>
-      <translation type="unfinished">Hq2X</translation>
+      <translation>Hq2X</translation>
     </message>
     <message>
       <source>Hq3X</source>
-      <translation type="unfinished">Hq3X</translation>
+      <translation>Hq3X</translation>
     </message>
     <message>
       <source>Hq4X</source>
-      <translation type="unfinished">Hq4X</translation>
+      <translation>Hq4X</translation>
     </message>
     <message>
       <source>xBRZ 2X</source>
-      <translation type="unfinished">xBRZ 2X</translation>
+      <translation>xBRZ 2X</translation>
     </message>
     <message>
       <source>xBRZ 3X</source>
-      <translation type="unfinished">xBRZ 3X</translation>
+      <translation>xBRZ 3X</translation>
     </message>
     <message>
       <source>xBRZ 4X</source>
-      <translation type="unfinished">xBRZ 4X</translation>
+      <translation>xBRZ 4X</translation>
     </message>
     <message>
       <source>xBRZ 5X</source>
-      <translation type="unfinished">xBRZ 5X</translation>
+      <translation>xBRZ 5X</translation>
     </message>
     <message>
       <source>xBRZ 6X</source>
-      <translation type="unfinished">xBRZ 6X</translation>
+      <translation>xBRZ 6X</translation>
     </message>
     <message>
       <source>NTSC Composite</source>
@@ -1942,15 +1942,15 @@
     </message>
     <message>
       <source>NTSC S-Video</source>
-      <translation type="unfinished">NTSC S-Video</translation>
+      <translation>NTSC S-Video</translation>
     </message>
     <message>
       <source>NTSC RGB</source>
-      <translation type="unfinished">NTSC RGB</translation>
+      <translation>NTSC RGB</translation>
     </message>
     <message>
       <source>Shaders</source>
-      <translation type="unfinished">Shaders</translation>
+      <translation>Shaders</translation>
     </message>
     <message>
       <source>Load from a file</source>
@@ -1970,11 +1970,11 @@
     </message>
     <message>
       <source>PAL</source>
-      <translation type="unfinished">PAL</translation>
+      <translation>PAL</translation>
     </message>
     <message>
       <source>Sony CXA2025AS US</source>
-      <translation type="unfinished">Sony CXA2025AS US</translation>
+      <translation>Sony CXA2025AS US</translation>
     </message>
     <message>
       <source>Firebrandx Nostalgia (FBX)</source>
@@ -1982,7 +1982,7 @@
     </message>
     <message>
       <source>Firebrandx YUV</source>
-      <translation type="unfinished">Firebrandx YUV</translation>
+      <translation>Firebrandx YUV</translation>
     </message>
     <message>
       <source>Monochrome</source>
@@ -1994,7 +1994,7 @@
     </message>
     <message>
       <source>Editor</source>
-      <translation type="unfinished">Editor</translation>
+      <translation>Editor</translation>
     </message>
     <message>
       <source>Palette</source>
@@ -2002,27 +2002,27 @@
     </message>
     <message>
       <source>xBRZ 2X Multithreading</source>
-      <translation type="unfinished">xBRZ 2X Multithreading</translation>
+      <translation>xBRZ 2X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 3X Multithreading</source>
-      <translation type="unfinished">xBRZ 3X Multithreading</translation>
+      <translation>xBRZ 3X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 4X Multithreading</source>
-      <translation type="unfinished">xBRZ 4X Multithreading</translation>
+      <translation>xBRZ 4X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 5X Multithreading</source>
-      <translation type="unfinished">xBRZ 5X Multithreading</translation>
+      <translation>xBRZ 5X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 6X Multithreading</source>
-      <translation type="unfinished">xBRZ 6X Multithreading</translation>
+      <translation>xBRZ 6X Multithreading</translation>
     </message>
     <message>
       <source>VSync</source>
-      <translation type="unfinished">VSync</translation>
+      <translation>VSync</translation>
     </message>
     <message>
       <source>Interpolation</source>
@@ -2105,23 +2105,23 @@
     </message>
     <message>
       <source>Slot %1</source>
-      <translation type="unfinished">Slot %1</translation>
+      <translation>Slot %1</translation>
     </message>
     <message>
       <source>Save state</source>
-      <translation type="unfinished">Save state</translation>
+      <translation>Salvar estado</translation>
     </message>
     <message>
       <source>Save/Load State</source>
-      <translation type="unfinished">Save/Load State</translation>
+      <translation>Salvar/Carregar Estado</translation>
     </message>
     <message>
       <source>Slot state</source>
-      <translation type="unfinished">Slot state</translation>
+      <translation>Estado do Slot</translation>
     </message>
     <message>
       <source>Load state</source>
-      <translation type="unfinished">Load state</translation>
+      <translation>Carregar estado</translation>
     </message>
   </context>
 </TS>
