@@ -664,11 +664,11 @@
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
-      <translation type="unfinished">Save Unalte&amp;red NES screen</translation>
+      <translation>Változatlan NES képe&amp;rnyő mentése</translation>
     </message>
     <message>
       <source>Widgets</source>
-      <translation type="unfinished">Widgets</translation>
+      <translation>Elemek</translation>
     </message>
   </context>
   <context>
@@ -691,142 +691,142 @@
     <message>
       <source>start wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">start wav recording</translation>
+      <translation>wav felvétel elindítása</translation>
     </message>
     <message>
       <source>stop wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">stop wav recording</translation>
+      <translation>wav felvétel megállítása</translation>
     </message>
     <message>
       <source>[red]Game Genie rom not found[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]Game Genie rom not found[normal]</translation>
+      <translation>[red]Game Genie ROM nem található[normal]</translation>
     </message>
     <message>
       <source>[red]error loading Game Genie rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error loading Game Genie rom[normal]</translation>
+      <translation>[red]hiba Game Genie ROM betöltése közben[normal]</translation>
     </message>
     <message>
       <source>[red]Illegal Opcode[normal] [yellow]0x%1[normal] at [yellow]0x%2[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]Illegal Opcode[normal] [yellow]0x%1[normal] at [yellow]0x%2[normal]</translation>
+      <translation>[red]Érvénytelen utasítás[normal] [yellow]0x%1[normal] itt [yellow]0x%2[normal]</translation>
     </message>
     <message>
       <source>[red]error loading rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error loading rom[normal]</translation>
+      <translation>[red]hiba ROM betöltése közben[normal]</translation>
     </message>
     <message>
       <source>[red]FDS bios not found[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]FDS bios not found[normal]</translation>
+      <translation>[red]FDS BIOS nem található[normal]</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</translation>
+      <translation>lemez [cyan]%1[normal] [cyan]%2[normal]. oldala [yellow]kiadva[normal]</translation>
     </message>
     <message>
       <source>you must [yellow]eject[normal] disk first</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">you must [yellow]eject[normal] disk first</translation>
+      <translation>előbb [yellow]vedd ki[normal] a lemezt</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</translation>
+      <translation>lemez [cyan]%1[normal] [cyan]%2[normal]. oldala [green]behelyezve[normal]</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [brown]selected[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">disk [cyan]%1[normal] side [cyan]%2[normal] [brown]selected[normal]</translation>
+      <translation>lemez [cyan]%1[normal] [cyan]%2[normal]. oldala [green]kiválasztva[normal]</translation>
     </message>
     <message>
       <source>[yellow]mapper[normal] [brown]%1[normal] [yellow]not supported[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[yellow]mapper[normal] [brown]%1[normal] [yellow]not supported[normal]</translation>
+      <translation>a [yellow]mapper[normal] [brown]%1[normal] [yellow]nincs támogatva[normal]</translation>
     </message>
     <message>
       <source>[red]error loading patch file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error loading patch file[normal]</translation>
+      <translation>[red]hiba patchfájl betöltése közben[normal]</translation>
     </message>
     <message>
       <source>[yellow]save is impossible in Game Genie menu[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[yellow]save is impossible in Game Genie menu[normal]</translation>
+      <translation>[yellow]a mentés lehetetlen a Game Genie menüben[normal]</translation>
     </message>
     <message>
       <source>[yellow]movie playback interrupted[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[yellow]movie playback interrupted[normal]</translation>
+      <translation>[yellow]filmlejátszás megszakítva[normal]</translation>
     </message>
     <message>
       <source>[red]error[normal] loading state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] loading state</translation>
+      <translation>[red]hiba[normal] állás betöltése közben</translation>
     </message>
     <message>
       <source>[red]state file is not for this rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]state file is not for this rom[normal]</translation>
+      <translation>[red]az állás nem ehhez a ROM-hoz való[normal]</translation>
     </message>
     <message>
       <source>[green]%1[normal] cheat active</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[green]%1[normal] cheat active</translation>
+      <translation>[green]%1[normal] csalás aktív</translation>
     </message>
     <message>
       <source>[green]%1[normal] cheats active</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[green]%1[normal] cheats active</translation>
+      <translation>[green]%1[normal] csalás aktív</translation>
     </message>
     <message>
       <source>overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
+      <translation>órajelhúzás bekapcsolva [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
     </message>
     <message>
       <source>[yellow]silence, the movie has begun[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[yellow]silence, the movie has begun[normal]</translation>
+      <translation>[yellow]csend, a film elindult[normal]</translation>
     </message>
     <message>
       <source>The End</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">The End</translation>
+      <translation>Vége</translation>
     </message>
     <message>
       <source>switched to [green]%1[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">switched to [green]%1[normal]</translation>
+      <translation>átváltva ide: [green]%1[normal]</translation>
     </message>
     <message>
       <source>[red]error on game genie rom file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on game genie rom file[normal]</translation>
+      <translation>[red]hiba a Game Genie ROM-ban[normal]</translation>
     </message>
     <message>
       <source>[red]error on FDS bios file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on FDS bios file[normal]</translation>
+      <translation>[red]hiba az FDS BIOS fájlban[normal]</translation>
     </message>
     <message>
       <source>[red]error on shader file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on shader file[normal]</translation>
+      <translation>[red]hiba a shader fájlban[normal]</translation>
     </message>
     <message>
       <source>[red]error on palette file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on palette file[normal]</translation>
+      <translation>[red]hiba a palettafájlban[normal]</translation>
     </message>
     <message>
       <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</translation>
+      <translation>[red]hibák[normal] a shaderben, használd a [green]&apos;Nincs shader&apos;[normal]-t</translation>
     </message>
   </context>
   <context>
@@ -1085,50 +1085,50 @@
     <name>wdgRewind</name>
     <message>
       <source>Forward (single frame)</source>
-      <translation type="unfinished">Forward (single frame)</translation>
+      <translation>Előre (egy képkocka)</translation>
     </message>
     <message>
       <source>Rewind (single frame)</source>
-      <translation type="unfinished">Rewind (single frame)</translation>
+      <translation>Vissza (egy képkocka)</translation>
     </message>
     <message>
       <source>Pause</source>
-      <translation type="unfinished">Pause</translation>
+      <translation>Szünet</translation>
     </message>
     <message>
       <source>Fast forward (from 1x to 8x)</source>
-      <translation type="unfinished">Fast forward (from 1x to 8x)</translation>
+      <translation>Gyors előretekerés (1x-8x)</translation>
     </message>
     <message>
       <source>Fast rewind (from 1x to 8x)</source>
-      <translation type="unfinished">Fast rewind (from 1x to 8x)</translation>
+      <translation>Gyors visszatekerés (1x-8x)</translation>
     </message>
     <message>
       <source>Play</source>
-      <translation type="unfinished">Play</translation>
+      <translation>Lejátszás</translation>
     </message>
     <message>
       <source>Rewind</source>
-      <translation type="unfinished">Rewind</translation>
+      <translation>Visszatekerés</translation>
     </message>
   </context>
   <context>
     <name>wdgRotateScreen</name>
     <message>
       <source>Rotate the screen 90 degrees to the Right</source>
-      <translation type="unfinished">Rotate the screen 90 degrees to the Right</translation>
+      <translation>Képernyő forgatása 90 fokkal jobbra</translation>
     </message>
     <message>
       <source>Rotate the screen 90 degrees to the left</source>
-      <translation type="unfinished">Rotate the screen 90 degrees to the left</translation>
+      <translation>Képernyő forgatása 90 fokkal balra</translation>
     </message>
     <message>
       <source>Current degree of rotation</source>
-      <translation type="unfinished">Current degree of rotation</translation>
+      <translation>Forgatás jelenleg</translation>
     </message>
     <message>
       <source>Rotate Screen</source>
-      <translation type="unfinished">Rotate Screen</translation>
+      <translation>Képernyő forgatása</translation>
     </message>
   </context>
   <context>
@@ -1501,7 +1501,7 @@
     </message>
     <message>
       <source>Portuguese (Brazil)</source>
-      <translation type="unfinished">Portuguese (Brazil)</translation>
+      <translation>Portugál (Brazília)</translation>
     </message>
   </context>
   <context>
@@ -1644,7 +1644,7 @@
     </message>
     <message>
       <source>Unset all</source>
-      <translation type="unfinished">Unset all</translation>
+      <translation>Beállítások visszavonása</translation>
     </message>
   </context>
   <context>
@@ -2074,27 +2074,27 @@
     </message>
     <message>
       <source>Screen rotation</source>
-      <translation type="unfinished">Screen rotation</translation>
+      <translation>Képernyő forgatása</translation>
     </message>
     <message>
       <source>0 degrees</source>
-      <translation type="unfinished">0 degrees</translation>
+      <translation>0 fok</translation>
     </message>
     <message>
       <source>90 degrees</source>
-      <translation type="unfinished">90 degrees</translation>
+      <translation>90 fok</translation>
     </message>
     <message>
       <source>180 degrees</source>
-      <translation type="unfinished">180 degrees</translation>
+      <translation>180 fok</translation>
     </message>
     <message>
       <source>270 degrees</source>
-      <translation type="unfinished">270 degrees</translation>
+      <translation>270 fok</translation>
     </message>
     <message>
       <source>Also rotate the text on screen</source>
-      <translation type="unfinished">Also rotate the text on screen</translation>
+      <translation>A szöveget is forgassa a képernyőn</translation>
     </message>
   </context>
   <context>
@@ -2109,19 +2109,19 @@
     </message>
     <message>
       <source>Save state</source>
-      <translation type="unfinished">Save state</translation>
+      <translation>Állás mentése</translation>
     </message>
     <message>
       <source>Save/Load State</source>
-      <translation type="unfinished">Save/Load State</translation>
+      <translation>Állás töltése/mentése</translation>
     </message>
     <message>
       <source>Slot state</source>
-      <translation type="unfinished">Slot state</translation>
+      <translation>Állás</translation>
     </message>
     <message>
       <source>Load state</source>
-      <translation type="unfinished">Load state</translation>
+      <translation>Állás töltése</translation>
     </message>
   </context>
 </TS>
