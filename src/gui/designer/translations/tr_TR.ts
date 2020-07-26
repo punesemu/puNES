@@ -48,7 +48,7 @@
     </message>
     <message>
       <source>Rewind Mode On/Off</source>
-      <translation type="unfinished">Rewind Mode On/Off</translation>
+      <translation>Geri Sarma Modunu Aç/Kapat</translation>
     </message>
     <message>
       <source>Rewind Step Backward</source>
@@ -64,11 +64,11 @@
     </message>
     <message>
       <source>Rewind Play</source>
-      <translation type="unfinished">Rewind Play</translation>
+      <translation>Geri Sarma Oynat</translation>
     </message>
     <message>
       <source>Rewind Pause</source>
-      <translation type="unfinished">Rewind Pause</translation>
+      <translation>Geri Sarma Durdur</translation>
     </message>
     <message>
       <source>Rewind Fast Backward</source>
@@ -368,7 +368,7 @@
     </message>
     <message>
       <source>portable version</source>
-      <translation type="unfinished">portable version</translation>
+      <translation>taşınabilir sürüm</translation>
     </message>
     <message>
       <source>&amp;Open</source>
@@ -668,7 +668,7 @@
     </message>
     <message>
       <source>Widgets</source>
-      <translation type="unfinished">Widgets</translation>
+      <translation>Araçlar</translation>
     </message>
   </context>
   <context>
@@ -691,12 +691,12 @@
     <message>
       <source>start wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">start wav recording</translation>
+      <translation>wav kaydını başlat</translation>
     </message>
     <message>
       <source>stop wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">stop wav recording</translation>
+      <translation>wav kaydını durdur</translation>
     </message>
     <message>
       <source>[red]Game Genie rom not found[normal]</source>
@@ -796,7 +796,7 @@
     <message>
       <source>The End</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">The End</translation>
+      <translation>Son</translation>
     </message>
     <message>
       <source>switched to [green]%1[normal]</source>
