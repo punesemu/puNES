@@ -664,7 +664,7 @@
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
-      <translation>Сохранить экран NES без изменени&amp;й</translation>
+      <translation>Сделать скриншот без фильтров</translation>
     </message>
     <message>
       <source>Widgets</source>
