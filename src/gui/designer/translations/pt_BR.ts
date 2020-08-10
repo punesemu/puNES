@@ -1116,19 +1116,19 @@
     <name>wdgRotateScreen</name>
     <message>
       <source>Rotate the screen 90 degrees to the Right</source>
-      <translation type="unfinished">Rotate the screen 90 degrees to the Right</translation>
+      <translation>Girar a tela 90 graus para a direita</translation>
     </message>
     <message>
       <source>Rotate the screen 90 degrees to the left</source>
-      <translation type="unfinished">Rotate the screen 90 degrees to the left</translation>
+      <translation>Girar a tela 90 graus para a esquerda</translation>
     </message>
     <message>
       <source>Current degree of rotation</source>
-      <translation type="unfinished">Current degree of rotation</translation>
+      <translation>Grau de rotação atual</translation>
     </message>
     <message>
       <source>Rotate Screen</source>
-      <translation type="unfinished">Rotate Screen</translation>
+      <translation>Girar Tela</translation>
     </message>
   </context>
   <context>
@@ -1171,27 +1171,27 @@
     </message>
     <message>
       <source>4</source>
-      <translation type="unfinished">4</translation>
+      <translation>4</translation>
     </message>
     <message>
       <source>5</source>
-      <translation type="unfinished">5</translation>
+      <translation>5</translation>
     </message>
     <message>
       <source>6</source>
-      <translation type="unfinished">6</translation>
+      <translation>6</translation>
     </message>
     <message>
       <source>7</source>
-      <translation type="unfinished">7</translation>
+      <translation>7</translation>
     </message>
     <message>
       <source>8</source>
-      <translation type="unfinished">8</translation>
+      <translation>8</translation>
     </message>
     <message>
       <source>9</source>
-      <translation type="unfinished">9</translation>
+      <translation>9</translation>
     </message>
     <message>
       <source>Sample Rate</source>
@@ -1203,7 +1203,7 @@
     </message>
     <message>
       <source>Mono</source>
-      <translation type="unfinished">Mono</translation>
+      <translation>Mono</translation>
     </message>
     <message>
       <source>Stereo Delay</source>
@@ -1231,23 +1231,23 @@
     </message>
     <message>
       <source>5%</source>
-      <translation type="unfinished">5%</translation>
+      <translation>5%</translation>
     </message>
     <message>
       <source>10%</source>
-      <translation type="unfinished">10%</translation>
+      <translation>10%</translation>
     </message>
     <message>
       <source>15%</source>
-      <translation type="unfinished">15%</translation>
+      <translation>15%</translation>
     </message>
     <message>
       <source>20%</source>
-      <translation type="unfinished">20%</translation>
+      <translation>20%</translation>
     </message>
     <message>
       <source>25%</source>
-      <translation type="unfinished">25%</translation>
+      <translation>25%</translation>
     </message>
     <message>
       <source>30% (Default)</source>
@@ -1255,59 +1255,59 @@
     </message>
     <message>
       <source>35%</source>
-      <translation type="unfinished">35%</translation>
+      <translation>35%</translation>
     </message>
     <message>
       <source>40%</source>
-      <translation type="unfinished">40%</translation>
+      <translation>40%</translation>
     </message>
     <message>
       <source>45%</source>
-      <translation type="unfinished">45%</translation>
+      <translation>45%</translation>
     </message>
     <message>
       <source>50%</source>
-      <translation type="unfinished">50%</translation>
+      <translation>50%</translation>
     </message>
     <message>
       <source>55%</source>
-      <translation type="unfinished">55%</translation>
+      <translation>55%</translation>
     </message>
     <message>
       <source>60%</source>
-      <translation type="unfinished">60%</translation>
+      <translation>60%</translation>
     </message>
     <message>
       <source>65%</source>
-      <translation type="unfinished">65%</translation>
+      <translation>65%</translation>
     </message>
     <message>
       <source>70%</source>
-      <translation type="unfinished">70%</translation>
+      <translation>70%</translation>
     </message>
     <message>
       <source>75%</source>
-      <translation type="unfinished">75%</translation>
+      <translation>75%</translation>
     </message>
     <message>
       <source>80%</source>
-      <translation type="unfinished">80%</translation>
+      <translation>80%</translation>
     </message>
     <message>
       <source>85%</source>
-      <translation type="unfinished">85%</translation>
+      <translation>85%</translation>
     </message>
     <message>
       <source>90%</source>
-      <translation type="unfinished">90%</translation>
+      <translation>90%</translation>
     </message>
     <message>
       <source>95%</source>
-      <translation type="unfinished">95%</translation>
+      <translation>95%</translation>
     </message>
     <message>
       <source>100%</source>
-      <translation type="unfinished">100%</translation>
+      <translation>100%</translation>
     </message>
     <message>
       <source>APU Channels</source>
@@ -1373,15 +1373,15 @@
     </message>
     <message>
       <source>3x</source>
-      <translation type="unfinished">3x</translation>
+      <translation>3x</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation type="unfinished">4x</translation>
+      <translation>4x</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation type="unfinished">5x</translation>
+      <translation>5x</translation>
     </message>
     <message>
       <source>Auto</source>
