@@ -801,32 +801,32 @@
     <message>
       <source>switched to [green]%1[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">switched to [green]%1[normal]</translation>
+      <translation>alterado para [green]%1[normal]</translation>
     </message>
     <message>
       <source>[red]error on game genie rom file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on game genie rom file[normal]</translation>
+      <translation>[red]erro no arquivo de ROM do Game Genie[normal]</translation>
     </message>
     <message>
       <source>[red]error on FDS bios file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on FDS bios file[normal]</translation>
+      <translation>[red]erro no aquivo de BIOS FDS[normal]</translation>
     </message>
     <message>
       <source>[red]error on shader file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on shader file[normal]</translation>
+      <translation>[red]erro no arquivo de shader[normal]</translation>
     </message>
     <message>
       <source>[red]error on palette file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on palette file[normal]</translation>
+      <translation>[red]erro no arquivo de paleta[normal]</translation>
     </message>
     <message>
       <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</translation>
+      <translation>[red]erros[normal] na shader, use [green]&apos;Sem Shader&apos;[normal]</translation>
     </message>
   </context>
   <context>
@@ -1003,7 +1003,7 @@
     </message>
     <message>
       <source>Submit warning</source>
-      <translation type="unfinished">Submit warning</translation>
+      <translation>Aviso</translation>
     </message>
     <message>
       <source>The code is invalid</source>
@@ -1085,31 +1085,31 @@
     <name>wdgRewind</name>
     <message>
       <source>Forward (single frame)</source>
-      <translation type="unfinished">Forward (single frame)</translation>
+      <translation>Avançar (um frame)</translation>
     </message>
     <message>
       <source>Rewind (single frame)</source>
-      <translation type="unfinished">Rewind (single frame)</translation>
+      <translation>Retroceder (um frame)</translation>
     </message>
     <message>
       <source>Pause</source>
-      <translation type="unfinished">Pause</translation>
+      <translation>Pausar</translation>
     </message>
     <message>
       <source>Fast forward (from 1x to 8x)</source>
-      <translation type="unfinished">Fast forward (from 1x to 8x)</translation>
+      <translation>Avanço rápido (de 1x até 8x)</translation>
     </message>
     <message>
       <source>Fast rewind (from 1x to 8x)</source>
-      <translation type="unfinished">Fast rewind (from 1x to 8x)</translation>
+      <translation>Retrocesso rápido (de 1x até 8x)</translation>
     </message>
     <message>
       <source>Play</source>
-      <translation type="unfinished">Play</translation>
+      <translation>Reproduzir</translation>
     </message>
     <message>
       <source>Rewind</source>
-      <translation type="unfinished">Rewind</translation>
+      <translation>Retroceder</translation>
     </message>
   </context>
   <context>
@@ -1128,7 +1128,7 @@
     </message>
     <message>
       <source>Rotate Screen</source>
-      <translation>Girar Tela</translation>
+      <translation>Girar a Tela</translation>
     </message>
   </context>
   <context>
@@ -1207,11 +1207,11 @@
     </message>
     <message>
       <source>Stereo Delay</source>
-      <translation type="unfinished">Stereo Delay</translation>
+      <translation>Atraso de Estéreo</translation>
     </message>
     <message>
       <source>Stereo Panning</source>
-      <translation type="unfinished">Stereo Panning</translation>
+      <translation>Estéreo Panorâmico</translation>
     </message>
     <message>
       <source>Channels Delay</source>
@@ -1315,7 +1315,7 @@
     </message>
     <message>
       <source>Swap Duty Cycles</source>
-      <translation type="unfinished">Swap Duty Cycles</translation>
+      <translation>Inverter Ciclos de Trabalho</translation>
     </message>
     <message>
       <source>Enable Audio</source>
