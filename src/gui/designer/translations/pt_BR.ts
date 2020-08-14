@@ -1109,7 +1109,7 @@
     </message>
     <message>
       <source>Rewind</source>
-      <translation>Retroceder</translation>
+      <translation>Rebobinar</translation>
     </message>
   </context>
   <context>
