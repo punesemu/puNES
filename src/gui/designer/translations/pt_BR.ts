@@ -1097,11 +1097,11 @@
     </message>
     <message>
       <source>Fast forward (from 1x to 8x)</source>
-      <translation>Avanço rápido (de 1x até 8x)</translation>
+      <translation>Avançar rápido (de 1x até 8x)</translation>
     </message>
     <message>
       <source>Fast rewind (from 1x to 8x)</source>
-      <translation>Retrocesso rápido (de 1x até 8x)</translation>
+      <translation>Retroceder rápido (de 1x até 8x)</translation>
     </message>
     <message>
       <source>Play</source>
