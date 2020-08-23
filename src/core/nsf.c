@@ -71,7 +71,8 @@ enum nsf_text_curtain {
 };
 enum nsf_options {
 	NSF_OPTION_PLAYLIST,
-	NSF_OPTION_FADEOUT
+	NSF_OPTION_FADEOUT,
+	NSF_OPTION_REVERSE_BITS_DPCM
 };
 enum nsf_gui {
 	NSF_GUI_WC = 22,
@@ -83,7 +84,7 @@ enum nsf_gui {
 	NSF_GUI_COMMANDS,
 	NSF_GUI_COMMANDS_W = (NSF_GUI_WC * NSF_GUI_COMMANDS) + 2,
 	NSF_GUI_COMMANDS_X = (SCR_ROWS - NSF_GUI_COMMANDS_W) >> 1,
-	NSF_GUI_COMMANDS_Y = dospf(7) - 4,
+	NSF_GUI_COMMANDS_Y = dospf(6) - 4,
 	NSF_GUI_COMMANDS_H = dospf(2),
 
 	NSF_GUI_INFO_SONG_LINES = 3,
@@ -118,7 +119,7 @@ enum nsf_header { NSF_HEADER_LENGTH = 128 };
 
 typedef struct _nsf_option_data {
 	int x, y;
-	char txt[10];
+	char txt[20];
 	BYTE direction;
 	int x1, x2;
 } _nsf_option_data;
@@ -144,8 +145,9 @@ static void nsf_text_curtain_add_line(_nsf_text_curtain *curtain, const char *fm
 static void nsf_reset_song_variables(void);
 
 static _nsf_option_data nsf_options_data[] = {
-	{ 12,            NSF_GUI_EFFECT_Y - dospf(5), "Playlist", FALSE, -1, -1 },
-	{ SCR_ROWS - 12, NSF_GUI_EFFECT_Y - dospf(5), "Fadeout",  TRUE,  -1, -1 },
+	{ 4,            NSF_GUI_EFFECT_Y - dospf(6) - 4, "Playlist",          FALSE, -1, -1 },
+	{ SCR_ROWS - 4, NSF_GUI_EFFECT_Y - dospf(6) - 4, "Fadeout",           TRUE,  -1, -1 },
+	{ 4,            NSF_GUI_EFFECT_Y - dospf(5) + 1, "Reverse bits DPCM", FALSE, -1, -1 },
 };
 
 void nsf_init(void) {
@@ -465,7 +467,7 @@ void nsf_after_load_rom(void) {
 	nsf.draw_mask_frames = 2;
 
 	nsf.scroll_info_nsf.x = 0;
-	nsf.scroll_info_nsf.y = dospf(3);
+	nsf.scroll_info_nsf.y = dospf(2);
 	nsf.scroll_info_nsf.rows = SCR_ROWS / dospf(1);
 	nsf.scroll_info_nsf.reload = 150;
 	nsf.scroll_info_nsf.velocity = 4;
@@ -834,18 +836,16 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 #define nsf_c_y1() (y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 1)
 #define nsf_c_y2() (nsf_c_y1() + (dospf(1) * 2) - 1)
 
-	if (info.format != NSFE_FORMAT) {
-		return;
-	}
+	if (info.format == NSFE_FORMAT) {
+		x = NSF_GUI_INFO_SONG_X;
+		y = NSF_GUI_INFO_SONG_Y;
+		w = NSF_GUI_INFO_SONG_W;
+		h = NSF_GUI_INFO_SONG_H;
 
-	x = NSF_GUI_INFO_SONG_X;
-	y = NSF_GUI_INFO_SONG_Y;
-	w = NSF_GUI_INFO_SONG_W;
-	h = NSF_GUI_INFO_SONG_H;
-
-	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
-		nsf.options.visual_duration = !nsf.options.visual_duration;
-		return;
+		if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
+			nsf.options.visual_duration = !nsf.options.visual_duration;
+			return;
+		}
 	}
 
 #undef nsf_c_x1
@@ -858,30 +858,43 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 #define nsf_c_y1() (y)
 #define nsf_c_y2() (nsf_c_y1() + h)
 
-	x = nsf_options_data[NSF_OPTION_PLAYLIST].x1;
-	y = nsf_options_data[NSF_OPTION_PLAYLIST].y;
-	w = nsf_options_data[NSF_OPTION_PLAYLIST].x2 - nsf_options_data[NSF_OPTION_PLAYLIST].x1;
-	h = NSF_GUI_OPTIONS_BOX_SIDE;
+	if (info.format == NSFE_FORMAT) {
+		x = nsf_options_data[NSF_OPTION_PLAYLIST].x1;
+		y = nsf_options_data[NSF_OPTION_PLAYLIST].y;
+		w = nsf_options_data[NSF_OPTION_PLAYLIST].x2 - nsf_options_data[NSF_OPTION_PLAYLIST].x1;
+		h = NSF_GUI_OPTIONS_BOX_SIDE;
 
-	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
-		BYTE current = nsf.songs.current;
+		if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
+			BYTE current = nsf.songs.current;
 
-		cfg->nsf_player_nsfe_playlist = !cfg->nsf_player_nsfe_playlist;
-		nsf_change_current_song(NSF_RESTART_SONG);
-		if (nsf.songs.current != current) {
-			nsf.routine.INT_NMI = 2;
-			nsf.state |= NSF_CHANGE_SONG;
+			cfg->nsf_player_nsfe_playlist = !cfg->nsf_player_nsfe_playlist;
+			nsf_change_current_song(NSF_RESTART_SONG);
+			if (nsf.songs.current != current) {
+				nsf.routine.INT_NMI = 2;
+				nsf.state |= NSF_CHANGE_SONG;
+			}
+			return;
 		}
-		return;
+
+		x = nsf_options_data[NSF_OPTION_FADEOUT].x1;
+		y = nsf_options_data[NSF_OPTION_FADEOUT].y;
+		w = nsf_options_data[NSF_OPTION_FADEOUT].x2 - nsf_options_data[NSF_OPTION_FADEOUT].x1;
+		h = NSF_GUI_OPTIONS_BOX_SIDE;
+
+		if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
+			cfg->nsf_player_nsfe_fadeout = !cfg->nsf_player_nsfe_fadeout;
+			return;
+		}
 	}
 
-	x = nsf_options_data[NSF_OPTION_FADEOUT].x1;
-	y = nsf_options_data[NSF_OPTION_FADEOUT].y;
-	w = nsf_options_data[NSF_OPTION_FADEOUT].x2 - nsf_options_data[NSF_OPTION_FADEOUT].x1;
+	x = nsf_options_data[NSF_OPTION_REVERSE_BITS_DPCM].x1;
+	y = nsf_options_data[NSF_OPTION_REVERSE_BITS_DPCM].y;
+	w = nsf_options_data[NSF_OPTION_REVERSE_BITS_DPCM].x2 - nsf_options_data[NSF_OPTION_REVERSE_BITS_DPCM].x1;
 	h = NSF_GUI_OPTIONS_BOX_SIDE;
 
 	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
-		cfg->nsf_player_nsfe_fadeout = !cfg->nsf_player_nsfe_fadeout;
+		cfg->reverse_bits_dpcm = !cfg->reverse_bits_dpcm;
+		gui_update_dset();
 		return;
 	}
 
@@ -1252,12 +1265,12 @@ static void nsf_draw_controls(void) {
 	// titolo nsf - artista - copyright
 	{
 		if (nsf.draw_mask_frames) {
-			dos_hline(0, dospf(2), SCR_ROWS, doscolor(DOS_BROWN));
+			dos_hline(0, dospf(1), SCR_ROWS, doscolor(DOS_BROWN));
 			if (info.format == NSFE_FORMAT) {
-				dos_text(DOS_CENTER, dospf(2) - 4, " [yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
+				dos_text(DOS_CENTER, dospf(1) - 4, " [yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
 					" [bck][yellow][blue]NSFe[normal][bck][black] Player ");
 			} else {
-				dos_text(DOS_CENTER, dospf(2) - 4, " [yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
+				dos_text(DOS_CENTER, dospf(1) - 4, " [yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
 					" [bck][yellow][blue]NSF[normal][bck][black] Player ");
 			}
 		}
@@ -1273,8 +1286,8 @@ static void nsf_draw_controls(void) {
 		wc = NSF_GUI_WC;
 
 		if (nsf.draw_mask_frames) {
-			dos_hline(0, dospf(5), SCR_ROWS, doscolor(DOS_BROWN));
-			dos_text(DOS_CENTER, dospf(5) - 4, " [red]Controls ");
+			dos_hline(0, dospf(4), SCR_ROWS, doscolor(DOS_BROWN));
+			dos_text(DOS_CENTER, dospf(4) - 4, " [red]Controls ");
 
 			dos_box(x, y, w, h, doscolor(DOS_NORMAL), doscolor(DOS_NORMAL), doscolor(DOS_GRAY));
 			dos_hline(x + 1, y + 1, w - 2, 0x002D);
@@ -1587,20 +1600,16 @@ static void nsf_draw_controls(void) {
 		}
 	}
 
-	// nsfe opzioni
+	// opzioni
 	{
 		if (nsf.draw_mask_frames) {
-			if (info.format == NSFE_FORMAT) {
-				dos_hline(0, NSF_GUI_EFFECT_Y - dospf(6), SCR_ROWS, doscolor(DOS_BROWN));
-				dos_text(DOS_CENTER, NSF_GUI_EFFECT_Y - dospf(6) - 4, " [red]NSFE Options ");
-			} else {
-				dos_hline(0, NSF_GUI_EFFECT_Y - dospf(6), SCR_ROWS, 0x002D);
-				dos_text(DOS_CENTER, NSF_GUI_EFFECT_Y - dospf(6) - 4, " [gray]NSFE Options ");
-			}
+			dos_hline(0, NSF_GUI_EFFECT_Y - dospf(7), SCR_ROWS, doscolor(DOS_BROWN));
+			dos_text(DOS_CENTER, NSF_GUI_EFFECT_Y - dospf(7) - 4, " [red]Options ");
 		}
 
 		nsf_print_option(&nsf_options_data[NSF_OPTION_PLAYLIST], (info.format == NSFE_FORMAT), cfg->nsf_player_nsfe_playlist);
 		nsf_print_option(&nsf_options_data[NSF_OPTION_FADEOUT], (info.format == NSFE_FORMAT), cfg->nsf_player_nsfe_fadeout);
+		nsf_print_option(&nsf_options_data[NSF_OPTION_REVERSE_BITS_DPCM], TRUE, cfg->reverse_bits_dpcm);
 	}
 
 	// info

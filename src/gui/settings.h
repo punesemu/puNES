@@ -85,6 +85,7 @@ enum set_element {
 	SET_SAMPLERATE,
 	SET_CHANNELS,
 	SET_STEREO_DELAY,
+	SET_REVERSE_BITS_DPCM,
 	SET_SWAP_DUTY,
 	SET_AUDIO,
 	SET_GUI_OPEN_PATH,
@@ -783,6 +784,12 @@ static const _settings main_cfg[] = {
 		uL("# possible values: [5 - 100]"),
 		uL("-d, --stereo-delay        stereo effect delay   : [5 - 100]"),
 		{0, NULL}
+	},
+	{
+		uL("audio"), uL("reverse bits of DPCM"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --reverse-bits-dpcm   reverse bits of dpcm  : yes, no"),
+		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("audio"), uL("swap duty cycles (Famicom clone chip audio emulation)"), uL("no"),

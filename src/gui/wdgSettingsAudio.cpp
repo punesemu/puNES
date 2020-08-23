@@ -36,6 +36,7 @@ wdgSettingsAudio::wdgSettingsAudio(QWidget *parent) : QWidget(parent) {
 
 	widget_APU_Channels->line_APU_Channels->hide();
 
+	connect(checkBox_Reverse_bits_DPCM, SIGNAL(clicked(bool)), this, SLOT(s_reverse_bits_dpcm(bool)));
 	connect(checkBox_Swap_Duty_Cycles, SIGNAL(clicked(bool)), this, SLOT(s_swap_duty_cycles(bool)));
 	connect(checkBox_Enable_Audio, SIGNAL(clicked(bool)), this, SLOT(s_enable_audio(bool)));
 }
@@ -92,6 +93,7 @@ void wdgSettingsAudio::update_widget(void) {
 
 	widget_APU_Channels->update_widget();
 
+	checkBox_Reverse_bits_DPCM->setChecked(cfg->reverse_bits_dpcm);
 	checkBox_Swap_Duty_Cycles->setChecked(cfg->swap_duty);
 	checkBox_Enable_Audio->setChecked(cfg->apu.channel[APU_MASTER]);
 }
@@ -263,6 +265,12 @@ void wdgSettingsAudio::s_channels_delay(int index) {
 	ch_stereo_delay_set();
 	emu_thread_continue();
 	gui_update();
+}
+void wdgSettingsAudio::s_reverse_bits_dpcm(UNUSED(bool checked)) {
+	emu_thread_pause();
+	cfg->reverse_bits_dpcm = !cfg->reverse_bits_dpcm;
+	emu_thread_continue();
+	update_widget();
 }
 void wdgSettingsAudio::s_swap_duty_cycles(UNUSED(bool checked)) {
 	emu_thread_pause();

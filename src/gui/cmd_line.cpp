@@ -18,6 +18,7 @@
 
 #include <QtWidgets/QMessageBox>
 #include <QtCore/QFileInfo>
+#include "dlgCmdLineHelp.hpp"
 #include "info.h"
 #include "settings.h"
 #include "cmd_line.h"
@@ -66,6 +67,7 @@ static struct _cl_option {
 	{ "samplerate",            req_arg, "l"},
 	{ "channels",              req_arg, "c"},
 	{ "stereo-delay",          req_arg, "d"},
+	{ "reverse-bits-dpcm",     req_arg,  0 },
 	{ "swap-duty",             req_arg,  0 },
 	{ "swap-emphasis",         req_arg,  0 },
 	{ "gamegenie",             req_arg, "g"},
@@ -145,7 +147,9 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 		switch (opt) {
 			case 0:
 				// long options
-				if (key == "swap-duty") {
+				if (key == "reverse-bits-dpcm") {
+					set_int(cfg_from_file.reverse_bits_dpcm, SET_REVERSE_BITS_DPCM);
+				} else if (key == "swap-duty") {
 					set_int(cfg_from_file.swap_duty, SET_SWAP_DUTY);
 				} else if (key == "swap-emphasis") {
 					set_int(cfg_from_file.disable_swap_emphasis_pal, SET_SWAP_EMPHASIS_PAL);
@@ -294,124 +298,8 @@ BYTE cmd_line_check_portable(int argc, uTCHAR **argv) {
 }
 
 static void usage(QString name) {
-	QMessageBox *box = new QMessageBox();
-	uTCHAR *usage_string;
-	const uTCHAR *istructions = {
-			uL("Usage: %1 [options] file...\n\n")
-			uL("Options:\n")
-			uL("-h, --help                print this help\n")
-			uL("-V, --version             print the version\n")
-			uL("    --portable            start in portable mode\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-#if defined (WITH_OPENGL)
-			uL("" uPERCENTs "\n")
-#endif
-	};
-
-	usage_string = (uTCHAR *)malloc(1024 * 9);
-	usnprintf(usage_string, 1024 * 9, istructions,
-			main_cfg[SET_MODE].hlp,
-			main_cfg[SET_SCALE].hlp,
-			main_cfg[SET_PAR].hlp,
-			main_cfg[SET_PAR_SOFT_STRETCH].hlp,
-			main_cfg[SET_OVERSCAN_BLACK_BORDERS].hlp,
-			main_cfg[SET_OVERSCAN_BLACK_BORDERS_FSCR].hlp,
-			main_cfg[SET_OVERSCAN_DEFAULT].hlp,
-			main_cfg[SET_FILTER].hlp,
-			main_cfg[SET_NTSC_FORMAT].hlp,
-			main_cfg[SET_SHADER].hlp,
-			main_cfg[SET_PALETTE].hlp,
-			main_cfg[SET_SWAP_EMPHASIS_PAL].hlp,
-			main_cfg[SET_VSYNC].hlp,
-			main_cfg[SET_INTERPOLATION].hlp,
-			main_cfg[SET_TEXT_ON_SCREEN].hlp,
-			main_cfg[SET_INPUT_DISPLAY].hlp,
-			main_cfg[SET_DISABLE_TV_NOISE].hlp,
-			main_cfg[SET_DISABLE_SEPIA_PAUSE].hlp,
-#if defined (WITH_OPENGL)
-			main_cfg[SET_DISABLE_SRGB_FBO].hlp,
-#endif
-			main_cfg[SET_OVERSCAN_BRD_NTSC].hlp,
-			main_cfg[SET_OVERSCAN_BRD_PAL].hlp,
-			main_cfg[SET_FULLSCREEN].hlp,
-			main_cfg[SET_FULLSCREEN_IN_WINDOW].hlp,
-			main_cfg[SET_INTEGER_FULLSCREEN].hlp,
-			main_cfg[SET_STRETCH_FULLSCREEN].hlp,
-			main_cfg[SET_SCREEN_ROTATION].hlp,
-			main_cfg[SET_AUDIO_OUTPUT_DEVICE].hlp,
-			main_cfg[SET_AUDIO].hlp,
-			main_cfg[SET_AUDIO_BUFFER_FACTOR].hlp,
-			main_cfg[SET_SAMPLERATE].hlp,
-			main_cfg[SET_CHANNELS].hlp,
-			main_cfg[SET_STEREO_DELAY].hlp,
-			main_cfg[SET_SWAP_DUTY].hlp,
-			main_cfg[SET_HIDE_SPRITES].hlp,
-			main_cfg[SET_HIDE_BACKGROUND].hlp,
-			main_cfg[SET_UNLIMITED_SPRITES].hlp,
-			main_cfg[SET_BCK_PAUSE].hlp,
-			main_cfg[SET_CHEAT_MODE].hlp,
-			main_cfg[SET_GUI_LANGUAGE].hlp,
-			main_cfg[SET_REWIND_MINUTES].hlp
-	);
-
-	if (box->font().pointSize() > 9) {
-		QFont font;
-
-		font.setPointSize(9);
-		box->setFont(font);
-	}
-
-	box->setAttribute(Qt::WA_DeleteOnClose);
-	box->setWindowTitle(uQString(uL("" NAME)));
-
-	box->setWindowModality(Qt::WindowModal);
-
-	// monospace
-	box->setText("<pre>" + uQString(usage_string).arg(name) + "</pre>");
-
-	box->setStandardButtons(QMessageBox::Ok);
-	box->setDefaultButton(QMessageBox::Ok);
+	dlgCmdLineHelp *box = new dlgCmdLineHelp(0, name);
 
 	box->show();
 	box->exec();
-
-	free(usage_string);
 }

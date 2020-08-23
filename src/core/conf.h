@@ -37,6 +37,7 @@ typedef struct _config {
 	BYTE channels_mode;
 	double stereo_delay;
 	BYTE audio_buffer_factor;
+	BYTE reverse_bits_dpcm;
 	BYTE swap_duty;
 	BYTE rewind_minutes;
 	BYTE ff_velocity;

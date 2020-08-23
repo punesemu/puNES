@@ -52,6 +52,7 @@ class wdgSettingsAudio : public QWidget, public Ui::wdgSettingsAudio {
 		void s_sample_rate(int index);
 		void s_channels(int index);
 		void s_channels_delay(int index);
+		void s_reverse_bits_dpcm(bool checked);
 		void s_swap_duty_cycles(bool checked);
 		void s_enable_audio(bool checked);
 };

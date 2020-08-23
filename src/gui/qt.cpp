@@ -245,6 +245,9 @@ void gui_update(void) {
 
 	gui.in_update = FALSE;
 }
+void gui_update_dset(void) {
+	qt.dset->update_dialog();
+}
 void gui_update_gps_settings(void) {
 	qt.dset->change_rom();
 }

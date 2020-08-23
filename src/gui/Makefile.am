@@ -1,6 +1,8 @@
 resources.cpp: designer/resources.qrc $(TRADUCTION_QM)
 	$(RCC) $(srcdir)/designer/resources.qrc -name resources -o $@
 
+dlgCmdLineHelp.moc: dlgCmdLineHelp.hpp
+	$(MOC) $(srcdir)/dlgCmdLineHelp.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgSettings.moc: dlgSettings.hpp
 	$(MOC) $(srcdir)/dlgSettings.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgStdPad.moc: dlgStdPad.hpp
@@ -54,6 +56,8 @@ wdgToolBar.moc: wdgToolBar.hpp
 
 mainWindow.hh: designer/mainWindow.ui
 	$(UIC) $(srcdir)/designer/mainWindow.ui -o $@
+dlgCmdLineHelp.hh: designer/dlgCmdLineHelp.ui
+	$(UIC) $(srcdir)/designer/dlgCmdLineHelp.ui -o $@
 dlgSettings.hh: designer/dlgSettings.ui
 	$(UIC) $(srcdir)/designer/dlgSettings.ui -o $@
 dlgStdPad.hh: designer/dlgStdPad.ui
@@ -135,6 +139,7 @@ BUILT_SOURCES = \
 	resources.cpp
 
 BUILT_SOURCES += \
+	dlgCmdLineHelp.moc \
 	dlgSettings.moc \
 	dlgStdPad.moc \
 	dlgUncomp.moc \
@@ -161,6 +166,7 @@ BUILT_SOURCES += \
 
 BUILT_SOURCES += \
 	mainWindow.hh \
+	dlgCmdLineHelp.hh \
 	dlgSettings.hh \
 	dlgStdPad.hh \
 	dlgUncomp.hh \
@@ -185,6 +191,8 @@ libgui_a_SOURCES = \
 	cgp.h \
 	cmd_line.cpp \
 	cmd_line.h \
+	dlgCmdLineHelp.cpp \
+	dlgCmdLineHelp.hpp \
 	dlgSettings.cpp \
 	dlgSettings.hpp \
 	dlgStdPad.cpp \
