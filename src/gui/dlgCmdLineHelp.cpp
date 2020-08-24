@@ -127,7 +127,7 @@ dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, QString name) : QDialog(parent) 
 	setupUi(this);
 
 	setAttribute(Qt::WA_DeleteOnClose);
-	setWindowTitle(uQString(uL("" NAME " ")) + tr("Command Line Help"));
+	setWindowTitle(uQString(uL("" NAME " Command Line Help")));
 
 	if (font().pointSize() > 9) {
 		QFont font;
