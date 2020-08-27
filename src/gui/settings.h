@@ -816,13 +816,13 @@ static const _settings main_cfg[] = {
 		{0, NULL}
 	},
 	{
-		uL("GUI"), uL("last position of window"), uL("0,0"),
+		uL("GUI"), uL("last position of window"), uL("80, 80"),
 		uL("# possible values: [X],[Y]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		uL("GUI"), uL("last position of settings"), uL("0,0"),
+		uL("GUI"), uL("last position of settings"), uL("80, 80"),
 		uL("# possible values: [X],[Y]"),
 		NULL,
 		{0, NULL}
