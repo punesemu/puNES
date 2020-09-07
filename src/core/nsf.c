@@ -99,9 +99,7 @@ enum nsf_gui {
 	NSF_GUI_EFFECT_H = 50,
 	NSF_GUI_EFFECT_X = (SCR_ROWS - NSF_GUI_EFFECT_W) / 2,
 	NSF_GUI_EFFECT_Y = SCR_LINES - NSF_GUI_EFFECT_H,
-	NSF_GUI_EFFECT_BARS = 30,
-	NSF_GUI_EFFECT_BARS_HF = 2000,
-	NSF_GUI_EFFECT_BARS_LF = 0,
+	NSF_GUI_EFFECT_BARS = 60,
 	NSF_GUI_EFFECT_BARS_W = SCR_ROWS - 16,
 	NSF_GUI_EFFECT_BARS_H = NSF_GUI_EFFECT_H,
 	NSF_GUI_EFFECT_BARS_X = (SCR_ROWS - NSF_GUI_EFFECT_BARS_W) / 2,
@@ -489,13 +487,13 @@ void nsf_after_load_rom(void) {
 	nsf.curtain_info.rows = SCR_ROWS / dospf(1);
 	nsf_text_curtain(&nsf.curtain_info, NSF_TEXT_CURTAIN_INIT);
 
-	nsf_text_curtain_add_line(&nsf.curtain_info, "Pad commands");
-	nsf_text_curtain_add_line(&nsf.curtain_info, "[yellow]Right [gray]: [green]Next Song");
-	nsf_text_curtain_add_line(&nsf.curtain_info, "[yellow]Left [gray]: [green]Restart[gray]/[green]Previous Song");
-	nsf_text_curtain_add_line(&nsf.curtain_info, "[yellow]Button A [gray]: [green]Stop");
-	nsf_text_curtain_add_line(&nsf.curtain_info, "[yellow]Start [gray]: [green]Play[gray]/[green]Pause");
-	nsf_text_curtain_add_line(&nsf.curtain_info, "[yellow]Select [gray]: [green]Change Effect");
-	nsf_text_curtain_add_line(&nsf.curtain_info, "or use the mouse");
+	nsf_text_curtain_add_line(&nsf.curtain_info, "-Pad commands-");
+	nsf_text_curtain_add_line(&nsf.curtain_info, "[yellow][right][gray] : [green]Next Song");
+	nsf_text_curtain_add_line(&nsf.curtain_info, "[yellow][left][gray] : [green]Restart[gray]/[green]Previous Song");
+	nsf_text_curtain_add_line(&nsf.curtain_info, "[yellow][up][normal] or [yellow][down][gray] : [green]Change Effect");
+	nsf_text_curtain_add_line(&nsf.curtain_info, "[yellow]Button [a][gray] : [green]Stop");
+	nsf_text_curtain_add_line(&nsf.curtain_info, "[yellow][start1][start2][start3][gray] : [green]Play[gray]/[green]Pause");
+	nsf_text_curtain_add_line(&nsf.curtain_info, "or use the mouse [lmouse]");
 }
 void nsf_init_tune(void) {
 	WORD i;
@@ -718,18 +716,24 @@ void nsf_main_screen_event(void) {
 				break;
 		}
 		port[PORT1].data[START] = RELEASED;
-	} else if (port[PORT1].data[SELECT] == PRESSED) {
-		cfg->nsf_player_effect++;
-		if (cfg->nsf_player_effect >= NSF_EFFECTS) {
-			cfg->nsf_player_effect = 0;
-		}
-		port[PORT1].data[SELECT] = RELEASED;
 	} else if (port[PORT1].data[BUT_A] == PRESSED) {
 		nsf.state = NSF_STOP;
 		nsf.timers.update_only_diff = TRUE;
 		nsf.timers.song = 0;
 		port[PORT1].data[BUT_A] = RELEASED;
 		reset = TRUE;
+	} else if (port[PORT1].data[UP] == PRESSED) {
+		cfg->nsf_player_effect++;
+		if (cfg->nsf_player_effect >= NSF_EFFECTS) {
+			cfg->nsf_player_effect = 0;
+		}
+		port[PORT1].data[UP] = RELEASED;
+	} else if (port[PORT1].data[DOWN] == PRESSED) {
+		cfg->nsf_player_effect--;
+		if (cfg->nsf_player_effect > NSF_EFFECTS) {
+			cfg->nsf_player_effect = NSF_EFFECTS - 1;
+		}
+		port[PORT1].data[DOWN] = RELEASED;
 	} else if (port[PORT1].data[LEFT] == PRESSED) {
 		if (nsf.state & NSF_PAUSE) {
 			nsf.state = NSF_STOP;
@@ -810,7 +814,7 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 #undef nsf_c_y1
 #undef nsf_c_y2
 
-#define nsf_c_x1() (nsf.effect_coords.x1)
+#define nsf_c_x1() (nsf.effect_coords.x2 / 2)
 #define nsf_c_x2() (nsf.effect_coords.x2)
 #define nsf_c_y1() (nsf.effect_coords.y1)
 #define nsf_c_y2() (nsf.effect_coords.y2)
@@ -821,8 +825,29 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 	h = NSF_GUI_EFFECT_H;
 
 	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
-		port->data[SELECT] = PRESSED;
-		nsf.timers.button[SELECT] = 0;
+		port->data[UP] = PRESSED;
+		nsf.timers.button[UP] = 0;
+		return;
+	}
+
+#undef nsf_c_x1
+#undef nsf_c_x2
+#undef nsf_c_y1
+#undef nsf_c_y2
+
+#define nsf_c_x1() (nsf.effect_coords.x1)
+#define nsf_c_x2() (nsf.effect_coords.x2 / 2)
+#define nsf_c_y1() (nsf.effect_coords.y1)
+#define nsf_c_y2() (nsf.effect_coords.y2)
+
+	x = NSF_GUI_EFFECT_X;
+	y = NSF_GUI_EFFECT_Y;
+	w = NSF_GUI_EFFECT_W;
+	h = NSF_GUI_EFFECT_H;
+
+	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
+		port->data[DOWN] = PRESSED;
+		nsf.timers.button[DOWN] = 0;
 		return;
 	}
 
@@ -907,6 +932,9 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 void nsf_effect(void) {
 	switch (cfg->nsf_player_effect) {
 		case NSF_EFFECT_BARS:
+			nsf_effect_bars();
+			break;
+		case NSF_EFFECT_BARS_MIXED:
 			nsf_effect_bars();
 			break;
 		case NSF_EFFECT_RAW:
@@ -1066,8 +1094,8 @@ static void nsf_effect_hanning_window(BYTE solid) {
 }
 static void nsf_effect_bars(void) {
 	int x, y, count, len, y_last = nsf.effect_bars_coords.y2 - 5;
-	const float high_freq = NSF_GUI_EFFECT_BARS_HF, low_freq = NSF_GUI_EFFECT_BARS_LF;
-	float bars = NSF_GUI_EFFECT_BARS, bar[NSF_GUI_EFFECT_BARS];
+	float bars = cfg->nsf_player_effect == NSF_EFFECT_BARS ? NSF_GUI_EFFECT_BARS : NSF_GUI_EFFECT_BARS * 2;
+	float bar[(int)bars];
 	SWORD *buffer = NULL;
 
 	if (nsf.timers.effect <= NSF_TIME_EFFECT_UPDATE) {
@@ -1097,7 +1125,11 @@ static void nsf_effect_bars(void) {
 		kiss_fft_cfg fft_cfg;
 
 		for (count = 0; count < len; count++) {
-			fft_in[count].r = 0.5f * (1.0f - cos((2.0f * M_PI * count) / (len - 1))) * ((float)buffer[count] / 16384.0f);
+			if (cfg->nsf_player_effect == NSF_EFFECT_BARS_MIXED) {
+				fft_in[count].r = 6.5f * ((float)buffer[count] / 16384.0f);
+			} else {
+				fft_in[count].r = 6.5f * (1.0f - cos((2.0f * M_PI * count) / (len - 1))) * ((float)buffer[count] / 16384.0f);
+			}
 			fft_in[count].i = 0;
 		}
 
@@ -1106,39 +1138,42 @@ static void nsf_effect_bars(void) {
 		}
 
 		if ((fft_cfg = kiss_fft_alloc(len, 0, NULL, NULL)) != NULL) {
+			int index = (bars / 2), last_index = 999;
+
 			kiss_fft(fft_cfg, fft_in, fft_out);
 			free(fft_cfg);
 
 			for (count = 0; count <= (len / 2); count++) {
-				float frequency = (float)(count * snd.samplerate) / len;
+				const float band_width = (len / 2) / bars, multiplier = 0.17f;
 				float magnitude, amplitude;
-				const float band_width = (high_freq - low_freq) / bars;
-				const float multiplier = 0.17f;
+				int tmp;
 
-				int index;
+				tmp = (count / band_width);
 
-				if ((frequency < low_freq) || (frequency >= high_freq)) {
-					continue;
-				}
-
-				index = (frequency - low_freq) / band_width;
-				if ((index < 0) || (index >= bars)) {
-					continue;
-				}
-
-				if ((count > 0) && (count < len / 2)) {
-					magnitude = sqrt(fft_out[count].r * fft_out[count].r + fft_out[count].i * fft_out[count].i);
+				if (cfg->nsf_player_effect == NSF_EFFECT_BARS_MIXED) {
+					if (last_index != tmp) {
+						if (tmp & 0x1) {
+							index += tmp;
+						} else {
+							index -= tmp;
+						}
+						last_index = tmp;
+					}
 				} else {
-					magnitude = sqrt(fft_out[count].r * fft_out[count].r);
+					index = last_index = tmp;
 				}
+
+				magnitude = sqrt(fft_out[count].r * fft_out[count].r + fft_out[count].i * fft_out[count].i);
 
 				amplitude = multiplier * log(magnitude);
 				if (amplitude < 0.0f) {
 					amplitude = 0.0f;
 				}
-				if (amplitude > 1.0f) {
-					amplitude = 1.0f;
+
+				if (amplitude > 0.70f) {
+					amplitude /= 1.50f;
 				}
+
 				if (amplitude > bar[index]) {
 					bar[index] = amplitude;
 				}

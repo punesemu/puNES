@@ -315,9 +315,9 @@ static const _opt opt_off_on[] = {
 	{NULL, uL("on") , TRUE},
 };
 static const _opt opt_mode[] = {
-	{uL("Auto"),  uL("auto") , AUTO},
-	{uL("NTSC"),  uL("ntsc") , NTSC},
-	{uL("PAL") ,  uL("pal")  , PAL},
+	{uL("Auto") , uL("auto") , AUTO},
+	{uL("NTSC") , uL("ntsc") , NTSC},
+	{uL("PAL")  , uL("pal")  , PAL},
 	{uL("Dendy"), uL("dendy"), DENDY}
 };
 static const _opt opt_ff_velocity[] = {
@@ -327,8 +327,8 @@ static const _opt opt_ff_velocity[] = {
 	{NULL, uL("5x"), FF_5X}
 };
 static const _opt opt_screen_rotation[] = {
-	{NULL, uL("0"), ROTATE_0},
-	{NULL, uL("90"), ROTATE_90},
+	{NULL, uL("0")  , ROTATE_0},
+	{NULL, uL("90") , ROTATE_90},
 	{NULL, uL("180"), ROTATE_180},
 	{NULL, uL("270"), ROTATE_270}
 };
@@ -352,24 +352,24 @@ static const _opt opt_oscan[] = {
 	{NULL, uL("default"), OSCAN_DEFAULT}
 };
 static const _opt opt_filter[] = {
-	{uL("no filter")            , uL("none")        , NO_FILTER},
-	{uL("Scale2X")              , uL("scale2x")     , SCALE2X},
-	{uL("Scale3X")              , uL("scale3x")     , SCALE3X},
-	{uL("Scale4X")              , uL("scale4x")     , SCALE4X},
-	{uL("Hq2X")                 , uL("hq2x")        , HQ2X},
-	{uL("Hq3X")                 , uL("hq3x")        , HQ3X},
-	{uL("Hq4X")                 , uL("hq4x")        , HQ4X},
-	{uL("NTSC")                 , uL("ntsc")        , NTSC_FILTER},
-	{uL("xBRZ 2x")              , uL("xbrz2x")      , XBRZ2X},
-	{uL("xBRZ 3x")              , uL("xbrz3x")      , XBRZ3X},
-	{uL("xBRZ 4x")              , uL("xbrz4x")      , XBRZ4X},
-	{uL("xBRZ 5x")              , uL("xbrz5x")      , XBRZ5X},
-	{uL("xBRZ 6x")              , uL("xbrz6x")      , XBRZ6X},
-	{uL("xBRZ 2x MT")           , uL("xbrz2mtx")    , XBRZ2XMT},
-	{uL("xBRZ 3x MT")           , uL("xbrz3xmt")    , XBRZ3XMT},
-	{uL("xBRZ 4x MT")           , uL("xbrz4xmt")    , XBRZ4XMT},
-	{uL("xBRZ 5x MT")           , uL("xbrz5xmt")    , XBRZ5XMT},
-	{uL("xBRZ 6x MT")           , uL("xbrz6xmt")    , XBRZ6XMT},
+	{uL("no filter") , uL("none")    , NO_FILTER},
+	{uL("Scale2X")   , uL("scale2x") , SCALE2X},
+	{uL("Scale3X")   , uL("scale3x") , SCALE3X},
+	{uL("Scale4X")   , uL("scale4x") , SCALE4X},
+	{uL("Hq2X")      , uL("hq2x")    , HQ2X},
+	{uL("Hq3X")      , uL("hq3x")    , HQ3X},
+	{uL("Hq4X")      , uL("hq4x")    , HQ4X},
+	{uL("NTSC")      , uL("ntsc")    , NTSC_FILTER},
+	{uL("xBRZ 2x")   , uL("xbrz2x")  , XBRZ2X},
+	{uL("xBRZ 3x")   , uL("xbrz3x")  , XBRZ3X},
+	{uL("xBRZ 4x")   , uL("xbrz4x")  , XBRZ4X},
+	{uL("xBRZ 5x")   , uL("xbrz5x")  , XBRZ5X},
+	{uL("xBRZ 6x")   , uL("xbrz6x")  , XBRZ6X},
+	{uL("xBRZ 2x MT"), uL("xbrz2mtx"), XBRZ2XMT},
+	{uL("xBRZ 3x MT"), uL("xbrz3xmt"), XBRZ3XMT},
+	{uL("xBRZ 4x MT"), uL("xbrz4xmt"), XBRZ4XMT},
+	{uL("xBRZ 5x MT"), uL("xbrz5xmt"), XBRZ5XMT},
+	{uL("xBRZ 6x MT"), uL("xbrz6xmt"), XBRZ6XMT},
 };
 static const _opt opt_ntsc[] = {
 	{uL("Composite"), uL("composite"), COMPOSITE},
@@ -398,16 +398,16 @@ static const _opt opt_palette[] = {
 	{uL("Firebrandx YUV")   , uL("frbyuv"), PALETTE_FRBX_YUV}
 };
 static const _opt opt_audio_buffer_factor[] = {
-	{NULL, uL("0"),  0},
-	{NULL, uL("1"),  1},
-	{NULL, uL("2"),  2},
-	{NULL, uL("3"),  3},
-	{NULL, uL("4"),  4},
-	{NULL, uL("5"),  5},
-	{NULL, uL("6"),  6},
-	{NULL, uL("7"),  7},
-	{NULL, uL("8"),  8},
-	{NULL, uL("9"),  9},
+	{NULL, uL("0") , 0},
+	{NULL, uL("1") , 1},
+	{NULL, uL("2") , 2},
+	{NULL, uL("3") , 3},
+	{NULL, uL("4") , 4},
+	{NULL, uL("5") , 5},
+	{NULL, uL("6") , 6},
+	{NULL, uL("7") , 7},
+	{NULL, uL("8") , 8},
+	{NULL, uL("9") , 9},
 	{NULL, uL("10"), 10},
 	{NULL, uL("11"), 11},
 	{NULL, uL("12"), 12},
@@ -422,45 +422,46 @@ static const _opt opt_samplerate[] = {
 	{NULL, uL("11025"), S11025}
 };
 static const _opt opt_channels[] = {
-	{NULL, uL("mono"),    CH_MONO},
-	{NULL, uL("delay"),   CH_STEREO_DELAY},
+	{NULL, uL("mono")   , CH_MONO},
+	{NULL, uL("delay")  , CH_STEREO_DELAY},
 	{NULL, uL("panning"), CH_STEREO_PANNING},
 };
 static const _opt opt_cheat_mode[] = {
-	{NULL, uL("disabled"),   NOCHEAT_MODE},
-	{NULL, uL("gamegenie"),  GAMEGENIE_MODE},
+	{NULL, uL("disabled")  , NOCHEAT_MODE},
+	{NULL, uL("gamegenie") , GAMEGENIE_MODE},
 	{NULL, uL("cheatslist"), CHEATSLIST_MODE}
 };
 static const _opt opt_rewind[] = {
-	{NULL, uL("disabled"), RWND_0_MINUTES},
-	{NULL, uL("2"), RWND_2_MINUTES},
-	{NULL, uL("5"), RWND_5_MINUTES},
-	{NULL, uL("15"), RWND_15_MINUTES},
-	{NULL, uL("30"), RWND_30_MINUTES},
-	{NULL, uL("60"), RWND_60_MINUTES},
+	{NULL, uL("disabled") , RWND_0_MINUTES},
+	{NULL, uL("2")        , RWND_2_MINUTES},
+	{NULL, uL("5")        , RWND_5_MINUTES},
+	{NULL, uL("15")       , RWND_15_MINUTES},
+	{NULL, uL("30")       , RWND_30_MINUTES},
+	{NULL, uL("60")       , RWND_60_MINUTES},
 	{NULL, uL("unlimited"), RWND_UNLIMITED_MINUTES}
 };
 static const _opt opt_languages[] = {
-	{NULL, uL("english"), LNG_ENGLISH},
-	{NULL, uL("italian"), LNG_ITALIAN},
-	{NULL, uL("russian"), LNG_RUSSIAN},
-	{NULL, uL("spanish"), LNG_SPANISH},
-	{NULL, uL("hungarian"), LNG_HUNGARIAN},
-	{NULL, uL("turkish"), LNG_TURKISH},
+	{NULL, uL("english")   , LNG_ENGLISH},
+	{NULL, uL("italian")   , LNG_ITALIAN},
+	{NULL, uL("russian")   , LNG_RUSSIAN},
+	{NULL, uL("spanish")   , LNG_SPANISH},
+	{NULL, uL("hungarian") , LNG_HUNGARIAN},
+	{NULL, uL("turkish")   , LNG_TURKISH},
 	{NULL, uL("portuguese"), LNG_PORTUGUESEBR}
 };
 static const _opt opt_nsf_player_effect[] = {
-	{NULL, uL("bars"),     NSF_EFFECT_BARS},
-	{NULL, uL("raw"), NSF_EFFECT_RAW},
-	{NULL, uL("raw full"), NSF_EFFECT_RAW_FULL},
-	{NULL, uL("hanning"), NSF_EFFECT_HANNING},
+	{NULL, uL("bars")       , NSF_EFFECT_BARS},
+	{NULL, uL("bars mixed") , NSF_EFFECT_BARS_MIXED},
+	{NULL, uL("raw")        , NSF_EFFECT_RAW},
+	{NULL, uL("raw full")   , NSF_EFFECT_RAW_FULL},
+	{NULL, uL("hanning")    , NSF_EFFECT_HANNING},
 	{NULL, uL("hannig full"), NSF_EFFECT_HANNING_FULL}
 };
 static const _opt opt_toolbar_area[] = {
-	{NULL, uL("top"), TLB_TOP},
-	{NULL, uL("left"), TLB_LEFT},
+	{NULL, uL("top")   , TLB_TOP},
+	{NULL, uL("left")  , TLB_LEFT},
 	{NULL, uL("bottom"), TLB_BOTTOM},
-	{NULL, uL("right"), TLB_RIGHT}
+	{NULL, uL("right") , TLB_RIGHT}
 };
 
 static const _opt opt_slot_pgs[] = {
@@ -473,25 +474,25 @@ static const _opt opt_slot_pgs[] = {
 };
 
 static const _opt opt_controller_mode[] = {
-	{NULL, uL("nes"),        CTRL_MODE_NES},
-	{NULL, uL("famicom"),    CTRL_MODE_FAMICOM},
+	{NULL, uL("nes")       , CTRL_MODE_NES},
+	{NULL, uL("famicom")   , CTRL_MODE_FAMICOM},
 	{NULL, uL("four score"), CTRL_MODE_FOUR_SCORE}
 };
 static const _opt opt_expansion[] = {
-	{NULL, uL("standard"),         CTRL_STANDARD},
-	{NULL, uL("zapper"),           CTRL_ZAPPER},
-	{NULL, uL("arkanoid paddle"),  CTRL_ARKANOID_PADDLE},
+	{NULL, uL("standard")        , CTRL_STANDARD},
+	{NULL, uL("zapper")          , CTRL_ZAPPER},
+	{NULL, uL("arkanoid paddle") , CTRL_ARKANOID_PADDLE},
 	{NULL, uL("oeka kids tablet"), CTRL_OEKA_KIDS_TABLET}
 };
 static const _opt opt_controller[] = {
-	{NULL, uL("disable"),    CTRL_DISABLED},
-	{NULL, uL("standard"),   CTRL_STANDARD},
-	{NULL, uL("zapper"),     CTRL_ZAPPER},
-	{NULL, uL("snes mouse"), CTRL_SNES_MOUSE},
+	{NULL, uL("disable")        , CTRL_DISABLED},
+	{NULL, uL("standard")       , CTRL_STANDARD},
+	{NULL, uL("zapper")         , CTRL_ZAPPER},
+	{NULL, uL("snes mouse")     , CTRL_SNES_MOUSE},
 	{NULL, uL("arkanoid paddle"), CTRL_ARKANOID_PADDLE}
 };
 static const _opt opt_pad_type[] = {
-	{NULL, uL("auto"),     CTRL_PAD_AUTO},
+	{NULL, uL("auto")    , CTRL_PAD_AUTO},
 	{NULL, uL("original"), CTRL_PAD_ORIGINAL},
 	{NULL, uL("3rdparty"), CTRL_PAD_3RD_PARTY},
 };
@@ -908,7 +909,7 @@ static const _settings main_cfg[] = {
 	},
 	{
 		uL("player"), uL("effect"), uL("bars"),
-		uL("# possible values: bars, raw, raw full, hanning, hanning full"),
+		uL("# possible values: bars, bars mixed, raw, raw full, hanning, hanning full"),
 		NULL,
 		{LENGTH(opt_nsf_player_effect), opt_nsf_player_effect}
 	},

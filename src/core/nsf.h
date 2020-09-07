@@ -54,6 +54,7 @@ enum nsf_routine_bytes {
 };
 enum nsf_effect_types {
 	NSF_EFFECT_BARS,
+	NSF_EFFECT_BARS_MIXED,
 	NSF_EFFECT_RAW,
 	NSF_EFFECT_RAW_FULL,
 	NSF_EFFECT_HANNING,
