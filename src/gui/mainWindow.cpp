@@ -236,11 +236,13 @@ void mainWindow::closeEvent(QCloseEvent *event) {
 	// ad un'altro, quindi salvo la posizione solo se sono sul monitor 0;
 	if (qApp->desktop()->screenNumber(this) == 0) {
 		if (cfg->fullscreen == NO_FULLSCR) {
-			cfg->last_pos.x = geometry().x();
-			cfg->last_pos.y = geometry().y();
+			cfg->lg.x = geometry().x();
+			cfg->lg.y = geometry().y();
 		}
-		cfg->last_pos_settings.x = dlgsettings->geom.x();
-		cfg->last_pos_settings.y = dlgsettings->geom.y();
+		cfg->lg_settings.x = dlgsettings->geom.x();
+		cfg->lg_settings.y = dlgsettings->geom.y();
+		cfg->lg_settings.w = dlgsettings->geom.width();
+		cfg->lg_settings.h = dlgsettings->geom.height();
 	}
 
 	settings_save_GUI();

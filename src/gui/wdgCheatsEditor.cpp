@@ -26,6 +26,7 @@
 
 #define COLOR_GG    Qt::cyan
 #define COLOR_ROCKY Qt::yellow
+#define COLOR_MEM   QColor(252, 215, 248)
 
 enum cheat_table_rows {
 	CR_ACTIVE,
@@ -40,14 +41,19 @@ enum cheat_table_rows {
 wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 	objch = ((objCheat *)gui_objcheat_get_ptr());
 	new_cheat = false;
+	in_populate_cheat_table = false;
 
 	setupUi(this);
 
-	tableWidget_Cheats->setColumnCount(tableWidget_Cheats->columnCount() + 1);
-	tableWidget_Cheats->setColumnHidden(CR_ENABLED_COMPARE, true);
-	tableWidget_Cheats->horizontalHeaderItem(CR_DESCRIPTION)->setTextAlignment(Qt::AlignLeft);
+	cheat_tableview_resize();
 
 	connect(tableWidget_Cheats, SIGNAL(itemSelectionChanged()), this, SLOT(s_cheat_item()));
+	connect(tableWidget_Cheats->model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)),
+		this, SLOT(s_table_data_changed(const QModelIndex &, const QModelIndex &, const QVector<int> & )));
+	connect(tableWidget_Cheats->model(),
+		SIGNAL(layoutChanged(const QList<QPersistentModelIndex> &, QAbstractItemModel::LayoutChangeHint)), this,
+		SLOT(s_table_layout_changed(const QList<QPersistentModelIndex> &, QAbstractItemModel::LayoutChangeHint)));
+
 	connect(pushButton_Hide_Show_Tools, SIGNAL(clicked(bool)), this, SLOT(s_hide_show_tools(bool)));
 	connect(pushButton_Import_Cheats, SIGNAL(clicked(bool)), this, SLOT(s_import(bool)));
 	connect(pushButton_Export_Cheats, SIGNAL(clicked(bool)), this, SLOT(s_export(bool)));
@@ -66,6 +72,7 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 		connect(grp, SIGNAL(buttonClicked(int)), this, SLOT(s_grp_type_cheat(int)));
 	}
 
+	lineEdit_Ram->setStyleSheet("QLineEdit{background: #FCD7F8;}");
 	lineEdit_GG->setStyleSheet("QLineEdit{background: cyan;}");
 	lineEdit_ProAR->setStyleSheet("QLineEdit{background: yellow;}");
 
@@ -96,6 +103,7 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 		int w;
 
 		w = lineEdit_GG->fontMetrics().size(0, "0000000000").width() + 10;
+		lineEdit_Ram->setFixedWidth(w);
 		lineEdit_GG->setFixedWidth(w);
 		lineEdit_ProAR->setFixedWidth(w);
 	}
@@ -136,6 +144,8 @@ void wdgCheatsEditor::hide_tools_widgets(bool state) {
 void wdgCheatsEditor::populate_cheat_table(void) {
 	int i;
 
+	in_populate_cheat_table = true;
+
 	for (i = 1; i < tableWidget_Cheats->rowCount(); i++) {
 		tableWidget_Cheats->removeRow(i);
 	}
@@ -145,6 +155,8 @@ void wdgCheatsEditor::populate_cheat_table(void) {
 	for (i = 0; i < objch->cheats.count(); i++) {
 		insert_cheat_row(i);
 	}
+
+	in_populate_cheat_table = false;
 }
 
 chl_map wdgCheatsEditor::extract_cheat_from_row(int row) {
@@ -195,7 +207,6 @@ void wdgCheatsEditor::insert_cheat_row(int row) {
 	}
 
 	col = new QTableWidgetItem();
-	col->setTextAlignment(Qt::AlignLeft);
 	tableWidget_Cheats->setItem(row, CR_DESCRIPTION, col);
 
 	col = new QTableWidgetItem();
@@ -215,7 +226,7 @@ void wdgCheatsEditor::insert_cheat_row(int row) {
 	tableWidget_Cheats->setItem(row, CR_COMPARE, col);
 
 	col = new QTableWidgetItem();
-	col->setTextAlignment(Qt::AlignLeft);
+	col->setTextAlignment(Qt::AlignCenter);
 	tableWidget_Cheats->setItem(row, CR_ENABLED_COMPARE, col);
 
 	update_cheat_row(row, &cheat);
@@ -231,8 +242,10 @@ void wdgCheatsEditor::update_cheat_row(int row, chl_map *cheat) {
 		active->setChecked(false);
 		tableWidget_Cheats->item(row, CR_ACTIVE)->setText("0");
 	}
-	tableWidget_Cheats->resizeColumnToContents(CR_ACTIVE);
 	active->blockSignals(false);
+
+	tableWidget_Cheats->item(row, CR_DESCRIPTION)->setText((*cheat)["description"]);
+	tableWidget_Cheats->item(row, CR_DESCRIPTION)->setToolTip((*cheat)["description"]);
 
 	if ((*cheat)["genie"] != "-") {
 		tableWidget_Cheats->item(row, CR_CODE)->setText((*cheat)["genie"]);
@@ -242,22 +255,58 @@ void wdgCheatsEditor::update_cheat_row(int row, chl_map *cheat) {
 		tableWidget_Cheats->item(row, CR_CODE)->setBackground(COLOR_ROCKY);
 	} else {
 		tableWidget_Cheats->item(row, CR_CODE)->setText("-");
+		tableWidget_Cheats->item(row, CR_CODE)->setBackground(COLOR_MEM);
 	}
-	tableWidget_Cheats->resizeColumnToContents(CR_CODE);
 
 	tableWidget_Cheats->item(row, CR_ADDRESS)->setText((*cheat)["address"]);
-	tableWidget_Cheats->resizeColumnToContents(CR_ADDRESS);
-
 	tableWidget_Cheats->item(row, CR_VALUE)->setText((*cheat)["value"]);
-	tableWidget_Cheats->resizeColumnToContents(CR_VALUE);
-
 	tableWidget_Cheats->item(row, CR_COMPARE)->setText((*cheat)["compare"]);
-	tableWidget_Cheats->resizeColumnToContents(CR_COMPARE);
-
-	tableWidget_Cheats->item(row, CR_DESCRIPTION)->setText((*cheat)["description"]);
-	tableWidget_Cheats->resizeColumnToContents(CR_DESCRIPTION);
-
 	tableWidget_Cheats->item(row, CR_ENABLED_COMPARE)->setText((*cheat)["enabled_compare"]);
+
+	update_color_row(row, (*cheat)["enabled"].toInt() == 1);
+}
+void wdgCheatsEditor::update_color_row(int row, bool active) {
+	QBrush brush = QBrush(QColor::fromRgb(255, 255, 255, 0));
+	int i = 0;
+
+	if (active == 1) {
+		brush = QBrush(QColor::fromRgb(214, 255, 182, 255));
+	}
+
+	for (i = 0; i < tableWidget_Cheats->columnCount(); i++) {
+		if (i == CR_CODE) {
+			continue;
+		}
+		tableWidget_Cheats->item(row, i)->setBackground(brush);
+	}
+}
+
+void wdgCheatsEditor::cheat_tableview_resize(void) {
+    QHeaderView *hv = tableWidget_Cheats->horizontalHeader();
+
+    tableWidget_Cheats->setColumnCount(tableWidget_Cheats->columnCount() + 1);
+	tableWidget_Cheats->setColumnHidden(CR_ENABLED_COMPARE, true);
+
+	// setto la dimensione del font
+	{
+		QFont f = tableWidget_Cheats->font();
+		int pointsize = f.pointSize() - 1;
+
+		if (pointsize >= 8) {
+			f.setPointSize(pointsize);
+			tableWidget_Cheats->setFont(f);
+		}
+	}
+
+	// setto il resizeMode delle colonne
+    hv->setSectionResizeMode(QHeaderView::Stretch);
+
+    hv->setSectionResizeMode(CR_ACTIVE, QHeaderView::ResizeToContents);
+    hv->setSectionResizeMode(CR_DESCRIPTION, QHeaderView::Stretch);
+    hv->setSectionResizeMode(CR_CODE, QHeaderView::ResizeToContents);
+    hv->setSectionResizeMode(CR_ADDRESS, QHeaderView::ResizeToContents);
+    hv->setSectionResizeMode(CR_VALUE, QHeaderView::ResizeToContents);
+    hv->setSectionResizeMode(CR_COMPARE, QHeaderView::ResizeToContents);
 }
 
 void wdgCheatsEditor::populate_edit_widgets(int row) {
@@ -387,35 +436,55 @@ void wdgCheatsEditor::change_active_compare_state(bool state) {
 	}
 }
 
+void wdgCheatsEditor::s_table_data_changed(const QModelIndex &topLeft, UNUSED(const QModelIndex &bottomRight),
+	UNUSED(const QVector<int> &roles)) {
+
+	if (in_populate_cheat_table == true) {
+		return;
+	}
+
+	if (topLeft.column() == CR_ACTIVE) {
+		update_color_row(topLeft.row(), (tableWidget_Cheats->item(topLeft.row(), CR_ACTIVE)->text() == "1"));
+	}
+}
+void wdgCheatsEditor::s_table_layout_changed(UNUSED(const QList<QPersistentModelIndex> &sourceParents),
+	UNUSED(QAbstractItemModel::LayoutChangeHint hint)) {
+	int i;
+
+	for (i = 0; i < tableWidget_Cheats->rowCount(); i++) {
+		update_color_row(i, (tableWidget_Cheats->item(i, CR_ACTIVE)->text() == "1"));
+	}
+}
 void wdgCheatsEditor::s_cheat_item(void) {
 	set_edit_widget();
 	set_edit_buttons();
 	populate_edit_widgets(tableWidget_Cheats->currentRow());
 }
 void wdgCheatsEditor::s_cheat_item_state(int state) {
-	QWidget *widget;
-	int i;
+	int a;
 
-	for (i = 0; i < tableWidget_Cheats->rowCount(); i++) {
-		widget = tableWidget_Cheats->cellWidget(i, CR_ACTIVE);
+	for (a = 0; a < tableWidget_Cheats->rowCount(); a++) {
+		QWidget *widget = tableWidget_Cheats->cellWidget(a, CR_ACTIVE);
 
 		if (widget->objectName() == ((QObject *)sender())->parent()->objectName()) {
-			tableWidget_Cheats->selectRow(i);
+			tableWidget_Cheats->selectRow(a);
 			if (state == Qt::Checked) {
-				tableWidget_Cheats->item(i, CR_ACTIVE)->setText("1");
+				tableWidget_Cheats->item(a, CR_ACTIVE)->setText("1");
 			} else {
-				tableWidget_Cheats->item(i, CR_ACTIVE)->setText("0");
+				tableWidget_Cheats->item(a, CR_ACTIVE)->setText("0");
 			}
 			break;
 		}
 	}
 
 	{
-		chl_map cheat = extract_cheat_from_row(i);
+		chl_map cheat = extract_cheat_from_row(a);
+		int b;
 
-		if ((i = objch->find_cheat(&cheat, true)) != -1) {
-			cheat["enabled"] = tableWidget_Cheats->item(i, CR_ACTIVE)->text();
-			objch->cheats.replace(i, cheat);
+		if ((b = objch->find_cheat(&cheat, true)) != -1) {
+			cheat["enabled"] = tableWidget_Cheats->item(a, CR_ACTIVE)->text();
+
+			objch->cheats.replace(b, cheat);
 			objch->save_game_cheats();
 		}
 	}

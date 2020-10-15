@@ -22,10 +22,10 @@
 #include "apu.h"
 #include "input.h"
 
-typedef struct _last_pos {
-	int x;
-	int y;
-} _last_pos;
+typedef struct _last_geometry {
+	int x, y;
+	int w, h;
+} _last_geometry;
 typedef struct _toolbar {
 	BYTE area;
 	BYTE hidden;
@@ -98,8 +98,8 @@ typedef struct _config {
 	uTCHAR audio_output[100];
 	uTCHAR audio_input[100];
 
-	_last_pos last_pos;
-	_last_pos last_pos_settings;
+	_last_geometry lg;
+	_last_geometry lg_settings;
 	_toolbar toolbar;
 } _config;
 

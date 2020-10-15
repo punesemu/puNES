@@ -17,6 +17,9 @@
    <iconset resource="resources.qrc">
     <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
   </property>
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_dlgSettings">
    <item>
     <widget class="QTabWidget" name="tabWidget_Settings">

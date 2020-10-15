@@ -34,7 +34,7 @@ class wdgSettingsGeneral : public QWidget, public Ui::wdgSettingsGeneral {
 		void showEvent(QShowEvent *event);
 
 	public:
-		void retranslateUi(QWidget *wdgSettingsInput);
+		void retranslateUi(QWidget *wdgSettingsGeneral);
 		void update_widget(void);
 
 	private:

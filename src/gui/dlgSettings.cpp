@@ -22,8 +22,10 @@
 dlgSettings::dlgSettings(QWidget *parent) : QDialog(parent) {
 	setupUi(this);
 
-	geom.setX(cfg->last_pos_settings.x);
-	geom.setY(cfg->last_pos_settings.y);
+	geom.setX(cfg->lg_settings.x);
+	geom.setY(cfg->lg_settings.y);
+	geom.setWidth(cfg->lg_settings.w);
+	geom.setHeight(cfg->lg_settings.h);
 
 	connect(pushButton_Save_Settings, SIGNAL(clicked(bool)), this, SLOT(s_save_settings(bool)));
 	connect(pushButton_Close_Settings, SIGNAL(clicked(bool)), this, SLOT(s_close_settings(bool)));
@@ -31,7 +33,6 @@ dlgSettings::dlgSettings(QWidget *parent) : QDialog(parent) {
 	widget_Settings_Cheats->widget_Cheats_Editor->pushButton_Hide_Show_Tools->setVisible(false);
 
 	adjustSize();
-	setFixedSize(size());
 
 	installEventFilter(this);
 }

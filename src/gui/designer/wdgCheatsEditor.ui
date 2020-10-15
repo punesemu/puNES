@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>496</width>
-    <height>440</height>
+    <width>704</width>
+    <height>564</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -100,9 +100,6 @@
         <property name="selectionBehavior">
          <enum>QAbstractItemView::SelectRows</enum>
         </property>
-        <property name="showGrid">
-         <bool>false</bool>
-        </property>
         <property name="sortingEnabled">
          <bool>true</bool>
         </property>
@@ -113,14 +110,11 @@
          <number>6</number>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>100</number>
-        </attribute>
-        <attribute name="horizontalHeaderStretchLastSection">
-         <bool>true</bool>
+         <number>120</number>
         </attribute>
         <column>
          <property name="text">
-          <string>Active</string>
+          <string/>
          </property>
         </column>
         <column>
@@ -132,20 +126,32 @@
          <property name="text">
           <string>Code</string>
          </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
         </column>
         <column>
          <property name="text">
           <string>Address</string>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
          </property>
         </column>
         <column>
          <property name="text">
           <string>Value</string>
          </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
         </column>
         <column>
          <property name="text">
           <string>Compare</string>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
          </property>
         </column>
        </widget>
@@ -266,6 +272,12 @@
              </item>
              <item row="2" column="1">
               <widget class="QLineEdit" name="lineEdit_ProAR">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="maxLength">
                 <number>8</number>
                </property>
@@ -287,8 +299,30 @@
              </item>
              <item row="1" column="1">
               <widget class="QLineEdit" name="lineEdit_GG">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="maxLength">
                 <number>8</number>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="lineEdit_Ram">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maxLength">
+                <number>8</number>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -336,6 +370,12 @@
         </item>
         <item>
          <widget class="QFrame" name="frame_Buttons">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>
@@ -347,6 +387,12 @@
             <layout class="QGridLayout" name="gridLayout_Edit_Buttons">
              <item row="1" column="0">
               <widget class="QPushButton" name="pushButton_Submit_Cheat">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string>Submit</string>
                </property>
@@ -354,6 +400,12 @@
              </item>
              <item row="0" column="0">
               <widget class="QPushButton" name="pushButton_New_Cheat">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string>New</string>
                </property>
@@ -361,6 +413,12 @@
              </item>
              <item row="2" column="0">
               <widget class="QPushButton" name="pushButton_Remove_Cheat">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string>Remove</string>
                </property>
@@ -368,6 +426,12 @@
              </item>
              <item row="3" column="0">
               <widget class="QPushButton" name="pushButton_Cancel_Cheat">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string>Cancel</string>
                </property>

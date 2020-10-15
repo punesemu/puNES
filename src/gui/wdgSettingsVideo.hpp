@@ -41,7 +41,7 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void showEvent(QShowEvent *event);
 
 	public:
-		void retranslateUi(QWidget *wdgSettingsInput);
+		void retranslateUi(QWidget *wdgSettingsVideo);
 		void update_widget(void);
 		void change_rom(void);
 

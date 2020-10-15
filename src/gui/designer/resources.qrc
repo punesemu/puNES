@@ -1,6 +1,7 @@
 <RCC>
   <qresource prefix="icon">
     <file>icons/rotate_left.svg</file>
+    <file>icons/circuit_board.svg</file>
     <file>icons/rotate_right.svg</file>
     <file>icons/screenshot_unaltered.svg</file>
     <file>icons/keyboard.svg</file>
@@ -9,6 +10,8 @@
     <file>icons/flag_hungary.svg</file>
     <file>icons/flag_spain.svg</file>
     <file>icons/window_close.svg</file>
+    <file>icons/settings_wrench.svg</file>
+    <file>icons/game_controller.svg</file>
     <file>icons/rwnd_step_forward.svg</file>
     <file>icons/rwnd_step_backward.svg</file>
     <file>icons/rwnd_fast_backward.svg</file>

@@ -42,6 +42,17 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 
 	setupUi(this);
 
+	// setto la dimensione del font
+	{
+		QFont f = tableWidget_Shortcuts->font();
+		int pointsize = f.pointSize() - 1;
+
+		if (pointsize >= 8) {
+			f.setPointSize(pointsize);
+			tableWidget_Shortcuts->setFont(f);
+		}
+	}
+
 	for (i = PORT1; i < PORT_MAX; i++) {
 		input.cport[i].id = i + 1;
 		input.cport[i].port = &port[i];
@@ -96,6 +107,16 @@ void wdgSettingsInput::changeEvent(QEvent *event) {
 	}
 }
 void wdgSettingsInput::showEvent(QShowEvent *event) {
+	int dim = label_cm->size().height() - 10;
+
+	icon_cm->setPixmap(QIcon(":/icon/icons/mode.svg").pixmap(dim, dim));
+	icon_cp1->setPixmap(QIcon(":/icon/icons/game_controller.svg").pixmap(dim, dim));
+	icon_cp2->setPixmap(QIcon(":/icon/icons/game_controller.svg").pixmap(dim, dim));
+	icon_cp3->setPixmap(QIcon(":/icon/icons/game_controller.svg").pixmap(dim, dim));
+	icon_cp4->setPixmap(QIcon(":/icon/icons/game_controller.svg").pixmap(dim, dim));
+	icon_exp->setPixmap(QIcon(":/icon/icons/circuit_board.svg").pixmap(dim, dim));
+	icon_joy_ID->setPixmap(QIcon(":/icon/icons/input_config.svg").pixmap(dim, dim));
+
 	mainwin->shcjoy_stop();
 
 	QWidget::showEvent(event);
@@ -459,6 +480,7 @@ void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
 					joy_mode = true;
 				}
 
+				icon_joy_ID->setEnabled(joy_mode);
 				label_joy_ID->setEnabled(joy_mode);
 				comboBox_joy_ID->setEnabled(joy_mode);
 
@@ -492,6 +514,7 @@ void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
 
 				ports_end_misc_set_enabled(false);
 
+				icon_joy_ID->setEnabled(false);
 				label_joy_ID->setEnabled(false);
 				comboBox_joy_ID->setEnabled(false);
 
@@ -547,7 +570,7 @@ void wdgSettingsInput::shortcuts_tableview_resize(void) {
 	w += tableWidget_Shortcuts->verticalScrollBar()->sizeHint().width() + 24;
 
 	h = tableWidget_Shortcuts->horizontalHeader()->height() + 2;
-	for (i = 0; i < 6; i++) {
+	for (i = 0; i < 3; i++) {
 		h += tableWidget_Shortcuts->rowHeight(i);
 	}
 
@@ -556,6 +579,13 @@ void wdgSettingsInput::shortcuts_tableview_resize(void) {
 	tableWidget_Shortcuts->removeRow(SET_MAX_NUM_SC);
 }
 void wdgSettingsInput::ports_end_misc_set_enabled(bool mode) {
+	icon_cm->setEnabled(mode);
+	icon_cp1->setEnabled(mode);
+	icon_cp2->setEnabled(mode);
+	icon_cp3->setEnabled(mode);
+	icon_cp4->setEnabled(mode);
+	icon_exp->setEnabled(mode);
+
 	label_cm->setEnabled(mode);
 	label_cp1->setEnabled(mode);
 	label_cp2->setEnabled(mode);
@@ -605,6 +635,8 @@ void wdgSettingsInput::expansion_port_set(void) {
 			comboBox_exp->setEnabled(true);
 			break;
 	}
+	icon_exp->setEnabled(comboBox_exp->isEnabled());
+	label_exp->setEnabled(comboBox_exp->isEnabled());
 }
 void wdgSettingsInput::controller_ports_set(void) {
 	int i, index;
@@ -648,6 +680,7 @@ void wdgSettingsInput::controller_ports_set(void) {
 		}
 
 		if ((i >= PORT3) && (i <= PORT4)) {
+			QLabel *ic = findChild<QLabel *>(QString("icon_cp%1").arg(ctrl_in->id));
 			QLabel *lb = findChild<QLabel *>(QString("label_cp%1").arg(ctrl_in->id));
 
 			switch (cfg->input.controller_mode) {
@@ -663,6 +696,7 @@ void wdgSettingsInput::controller_ports_set(void) {
 					break;
 			}
 
+			ic->setEnabled(mode);
 			lb->setEnabled(mode);
 			cb->setEnabled(mode);
 

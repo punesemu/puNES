@@ -91,7 +91,7 @@ enum set_element {
 	SET_GUI_OPEN_PATH,
 	SET_GUI_OPEN_PATCH_PATH,
 	SET_GUI_LAST_POSITION,
-	SET_GUI_LAST_POSITION_SETTINGS,
+	SET_GUI_LAST_GEOMETRY_SETTINGS,
 	SET_GUI_LANGUAGE,
 	SET_GUI_TOOLBAR_AREA,
 	SET_GUI_TOOLBAR_HIDDEN,
@@ -823,8 +823,8 @@ static const _settings main_cfg[] = {
 		{0, NULL}
 	},
 	{
-		uL("GUI"), uL("last position of settings"), uL("80, 80"),
-		uL("# possible values: [X],[Y]"),
+		uL("GUI"), uL("last geometry of settings"), uL("80, 80, 0, 0"),
+		uL("# possible values: [X],[Y],[W],[H]"),
 		NULL,
 		{0, NULL}
 	},

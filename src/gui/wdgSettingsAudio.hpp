@@ -34,7 +34,7 @@ class wdgSettingsAudio : public QWidget, public Ui::wdgSettingsAudio {
 		void showEvent(QShowEvent *event);
 
 	public:
-		void retranslateUi(QWidget *wdgSettingsInput);
+		void retranslateUi(QWidget *wdgSettingsAudio);
 		void update_widget(void);
 
 	private:

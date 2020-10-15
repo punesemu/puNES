@@ -138,15 +138,15 @@ BYTE gui_create(void) {
 		int screenNumber = qApp->desktop()->screenNumber(qt.mwin);
 		QRect geometry = QGuiApplication::screens().at(screenNumber)->geometry();
 
-		if ((cfg->last_pos.x == 0) || cfg->last_pos.x > geometry.width()) {
-			cfg->last_pos.x = 80;
-			cfg->last_pos_settings.x = 80;
+		if ((cfg->lg.x == 0) || cfg->lg.x > geometry.width()) {
+			cfg->lg.x = 80;
+			cfg->lg_settings.x = 80;
 		}
-		if ((cfg->last_pos.y == 0) || cfg->last_pos.y > geometry.height()) {
-			cfg->last_pos.y = 80;
-			cfg->last_pos_settings.y = 80;
+		if ((cfg->lg.y == 0) || cfg->lg.y > geometry.height()) {
+			cfg->lg.y = 80;
+			cfg->lg_settings.y = 80;
 		}
-		qt.mwin->setGeometry(cfg->last_pos.x, cfg->last_pos.y, 0, 0);
+		qt.mwin->setGeometry(cfg->lg.x, cfg->lg.y, 0, 0);
 	}
 
 	qt.mwin->show();

@@ -729,8 +729,8 @@ void objSet::to_cfg(QString group) {
 	if ((group == "GUI") || (group == "all")) {
 		cpy_utchar_to_val(SET_GUI_OPEN_PATH, gui.last_open_path);
 		cpy_utchar_to_val(SET_GUI_OPEN_PATCH_PATH, gui.last_open_patch_path);
-		val.replace(SET_GUI_LAST_POSITION, lastpos_val(&cfg_from_file.last_pos));
-		val.replace(SET_GUI_LAST_POSITION_SETTINGS, lastpos_val(&cfg_from_file.last_pos_settings));
+		val.replace(SET_GUI_LAST_POSITION, last_geometry_val(&cfg_from_file.lg));
+		val.replace(SET_GUI_LAST_GEOMETRY_SETTINGS, last_geometry_val(&cfg_from_file.lg_settings));
 		int_to_val(SET_GUI_LANGUAGE, cfg_from_file.language);
 		int_to_val(SET_GUI_TOOLBAR_AREA, cfg_from_file.toolbar.area);
 		int_to_val(SET_GUI_TOOLBAR_HIDDEN, cfg_from_file.toolbar.hidden);
@@ -820,8 +820,8 @@ void objSet::fr_cfg(QString group) {
 	if ((group == "GUI") || (group == "all")) {
 		cpy_val_to_utchar(SET_GUI_OPEN_PATH, gui.last_open_path, usizeof(gui.last_open_path));
 		cpy_val_to_utchar(SET_GUI_OPEN_PATCH_PATH, gui.last_open_patch_path, usizeof(gui.last_open_patch_path));
-		lastpos_val_to_int(SET_GUI_LAST_POSITION, &cfg_from_file.last_pos);
-		lastpos_val_to_int(SET_GUI_LAST_POSITION_SETTINGS, &cfg_from_file.last_pos_settings);
+		last_geometry_val_to_int(SET_GUI_LAST_POSITION, &cfg_from_file.lg);
+		last_geometry_val_to_int(SET_GUI_LAST_GEOMETRY_SETTINGS, &cfg_from_file.lg_settings);
 		cfg_from_file.language = val_to_int(SET_GUI_LANGUAGE);
 		cfg_from_file.toolbar.area = val_to_int(SET_GUI_TOOLBAR_AREA);
 		cfg_from_file.toolbar.hidden = val_to_int(SET_GUI_TOOLBAR_HIDDEN);
@@ -983,20 +983,26 @@ double objSet::val_to_double(int index, WORD round) {
 void objSet::double_to_val(int index, double value) {
 	val.replace(index, QString().setNum((int) (value * 100.0f)));
 }
-void objSet::lastpos_val_to_int(int index, _last_pos *last_pos) {
+void objSet::last_geometry_val_to_int(int index, _last_geometry *lg) {
 	QStringList splitted = QString(val.at(index)).split(",");
 
 	if (splitted.count() >= 1) {
-		last_pos->x = splitted.at(0).toInt();
+		lg->x = splitted.at(0).toInt();
 	}
 	if (splitted.count() >= 2) {
-		last_pos->y = splitted.at(1).toInt();
+		lg->y = splitted.at(1).toInt();
+	}
+	if (splitted.count() >= 3) {
+		lg->w = splitted.at(2).toInt();
+	}
+	if (splitted.count() >= 4) {
+		lg->h = splitted.at(3).toInt();
 	}
 
-	val.replace(index, lastpos_val(last_pos));
+	val.replace(index, last_geometry_val(lg));
 }
-QString objSet::lastpos_val(_last_pos *last_pos) {
-	return (QString("%1,").arg(last_pos->x) + QString("%1").arg(last_pos->y));
+QString objSet::last_geometry_val(_last_geometry *lg) {
+	return (QString("%1,").arg(lg->x) + QString("%1,").arg(lg->y) + QString("%1,").arg(lg->w) + QString("%1").arg(lg->h));
 }
 
 // ---------------------------------------- Per game -------------------------------------
