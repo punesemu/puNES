@@ -274,10 +274,12 @@ void wdgCheatsEditor::update_color_row(int row, bool active) {
 	}
 
 	for (i = 0; i < tableWidget_Cheats->columnCount(); i++) {
-		if (i == CR_CODE) {
+		QTableWidgetItem *item = tableWidget_Cheats->item(row, i);
+
+		if (!item || (i == CR_CODE)) {
 			continue;
 		}
-		tableWidget_Cheats->item(row, i)->setBackground(brush);
+		item->setBackground(brush);
 	}
 }
 
