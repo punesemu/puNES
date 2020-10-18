@@ -367,7 +367,7 @@ int32_t rewind_calculate_snap_cursor(int factor, BYTE direction) {
 }
 
 INLINE static BYTE rewind_is_disabled(void) {
-	return((info.no_rom | info.turn_off) || (cfg->rewind_minutes == RWND_0_MINUTES));
+	return ((info.no_rom | info.turn_off) || (cfg->rewind_minutes == RWND_0_MINUTES));
 }
 INLINE static void rewind_increment_count_chunks(void) {
 	if (++rwint.index.chunk == rwint.chunks_for_segment) {

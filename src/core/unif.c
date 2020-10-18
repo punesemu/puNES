@@ -194,7 +194,7 @@ BYTE unif_load_rom(void) {
 		rom.size = ftell(fp);
 		fseek(fp, 0L, SEEK_SET);
 
-		if ((rom.data = (BYTE *) malloc(rom.size)) == NULL) {
+		if ((rom.data = (BYTE *)malloc(rom.size)) == NULL) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}

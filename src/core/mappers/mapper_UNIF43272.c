@@ -58,7 +58,7 @@ BYTE extcl_cpu_rd_mem_UNIF43272(WORD address, BYTE openbus, UNUSED(BYTE before))
 	}
 	if (unif43272.address & 0x0400) {
 		address &= 0x00FE;
-		return(prg_rom_rd(address));
+		return (prg_rom_rd(address));
 	}
 	return (openbus);
 }

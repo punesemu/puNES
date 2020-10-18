@@ -300,7 +300,7 @@ char *emu_file2string(const uTCHAR *path) {
 	len = ftell(fd);
 	fseek(fd, 0, SEEK_SET);
 
-	if (!(str = (char *) malloc(len * sizeof(char)))) {
+	if (!(str = (char *)malloc(len * sizeof(char)))) {
 		fclose(fd);
 		ufprintf(stderr, uL("OPENGL: Can't malloc space for '" uPERCENTs "'\n"), path);
 		return (NULL);
@@ -986,7 +986,7 @@ uTCHAR *emu_rand_str(void) {
 	}
 	dest[usizeof(dest) - 1] = '\0';
 
-	return((uTCHAR *)&dest);
+	return ((uTCHAR *)&dest);
 }
 void emu_ctrl_doublebuffer(void) {
 	switch (info.format) {

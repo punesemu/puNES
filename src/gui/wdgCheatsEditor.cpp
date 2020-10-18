@@ -179,7 +179,7 @@ chl_map wdgCheatsEditor::extract_cheat_from_row(int row) {
 		cheat["rocky"] = tableWidget_Cheats->item(row, CR_CODE)->text();
 	}
 
-	return(cheat);
+	return (cheat);
 }
 void wdgCheatsEditor::insert_cheat_row(int row) {
 	chl_map cheat = objch->cheats.at(row);

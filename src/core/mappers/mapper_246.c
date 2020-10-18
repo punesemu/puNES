@@ -58,5 +58,5 @@ BYTE extcl_cpu_rd_mem_246(WORD address, BYTE openbus, BYTE before) {
 		return (openbus);
 	}
 
-	return(before);
+	return (before);
 }

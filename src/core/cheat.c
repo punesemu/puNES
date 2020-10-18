@@ -157,7 +157,7 @@ void gamegenie_load_rom(void *rom_mem) {
 	size = ftell(fp);
 	fseek(fp, 0L, SEEK_SET);
 
-	if ((gg_rom_mem = (BYTE *) malloc(size)) == NULL) {
+	if ((gg_rom_mem = (BYTE *)malloc(size)) == NULL) {
 		fclose(fp);
 		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file) - 1);
 		gamegenie_free_paths();
