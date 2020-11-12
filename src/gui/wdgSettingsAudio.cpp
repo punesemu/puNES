@@ -280,11 +280,7 @@ void wdgSettingsAudio::s_swap_duty_cycles(UNUSED(bool checked)) {
 }
 void wdgSettingsAudio::s_enable_audio(UNUSED(bool checked)) {
 	emu_thread_pause();
-	if ((cfg->apu.channel[APU_MASTER] = !cfg->apu.channel[APU_MASTER])) {
-		snd_playback_start();
-	} else {
-		snd_playback_stop();
-	}
+	cfg->apu.channel[APU_MASTER] = !cfg->apu.channel[APU_MASTER];
 	emu_thread_continue();
 	update_widget();
 }

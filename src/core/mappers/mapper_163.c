@@ -156,7 +156,7 @@ BYTE extcl_save_mapper_163(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m163.chr_mode);
 
 	if (mode == SAVE_SLOT_READ) {
-		switch(m163.chr_mode) {
+		switch (m163.chr_mode) {
 			case 0:
 				chr.bank_1k[0] = chr_chip_byte_pnt(0, 0x0000);
 				chr.bank_1k[1] = chr_chip_byte_pnt(0, 0x0400);

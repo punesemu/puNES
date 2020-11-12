@@ -1,17 +1,25 @@
 <RCC>
   <qresource prefix="icon">
     <file>icons/rotate_left.svg</file>
+    <file>icons/recording.svg</file>
+    <file>icons/recording_quality.svg</file>
+    <file>icons/film.svg</file>
+    <file>icons/recording_format.svg</file>
     <file>icons/circuit_board.svg</file>
     <file>icons/rotate_right.svg</file>
     <file>icons/screenshot_unaltered.svg</file>
+    <file>icons/resolution.svg</file>
     <file>icons/keyboard.svg</file>
     <file>icons/flag_turkey.svg</file>
+    <file>icons/width.svg</file>
+    <file>icons/height.svg</file>
     <file>icons/toggle_gui.svg</file>
     <file>icons/flag_hungary.svg</file>
     <file>icons/flag_spain.svg</file>
     <file>icons/window_close.svg</file>
     <file>icons/settings_wrench.svg</file>
     <file>icons/game_controller.svg</file>
+    <file>icons/recording_red.svg</file>
     <file>icons/rwnd_step_forward.svg</file>
     <file>icons/rwnd_step_backward.svg</file>
     <file>icons/rwnd_fast_backward.svg</file>
@@ -92,6 +100,7 @@
     <file>pics/overlay_oeka_kids_tablet.png</file>
     <file>pics/overlay_controller_port2.png</file>
     <file>pics/overlay_controller_port3.png</file>
+    <file>pics/punes.svg</file>
     <file>pics/overlay_controller_port4.png</file>
     <file>pics/overlay_controller_port5.png</file>
     <file>pics/overlay_arkanoid_paddle_button.png</file>

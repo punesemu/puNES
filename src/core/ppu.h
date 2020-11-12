@@ -149,6 +149,7 @@ typedef struct _ppu {
 }  _ppu;
 typedef struct _screen_buffer {
 	BYTE ready;
+	uint64_t frame;
 	WORD *data;
 	WORD *line[SCR_LINES];
 } _screen_buffer;

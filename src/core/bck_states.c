@@ -58,7 +58,7 @@
 			break;\
 	}
 #define bck_states_on_pos(_mode, _mem, _data, _index, _size_buf)\
-	switch(mode) {\
+	switch (mode) {\
 		case BCK_STATES_OP_SAVE_ON_MEM: {\
 			bank = 0;\
 			bank = end - start;\

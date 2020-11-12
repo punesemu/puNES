@@ -87,6 +87,18 @@ typedef struct _config {
 
 	_config_input input;
 	_config_apu apu;
+#if defined (WITH_FFMPEG)
+	struct _config_recording {
+		BYTE audio_format;
+		BYTE video_format;
+		BYTE quality;
+		BYTE use_emu_resolution;
+		BYTE follow_rotation;
+		BYTE output_resolution;
+		int output_custom_w;
+		int output_custom_h;
+	} recording;
+#endif
 
 	uTCHAR shader_file[LENGTH_FILE_NAME_LONG];
 	uTCHAR palette_file[LENGTH_FILE_NAME_LONG];
@@ -94,6 +106,10 @@ typedef struct _config {
 	uTCHAR gg_rom_file[LENGTH_FILE_NAME_LONG];
 	uTCHAR fds_bios_file[LENGTH_FILE_NAME_LONG];
 	uTCHAR last_import_cheat_path[LENGTH_FILE_NAME_LONG];
+#if defined (WITH_FFMPEG)
+	uTCHAR last_rec_audio_path[LENGTH_FILE_NAME_LONG];
+	uTCHAR last_rec_video_path[LENGTH_FILE_NAME_LONG];
+#endif
 
 	uTCHAR audio_output[100];
 	uTCHAR audio_input[100];

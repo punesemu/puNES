@@ -25,6 +25,11 @@
 #include "conf.h"
 #include "ppu.h"
 #include "overscan.h"
+#include "video/gfx_thread.h"
+#include "emu_thread.h"
+#if defined (WITH_FFMPEG)
+#include "recording.h"
+#endif
 
 #define _SCR_ROWS_BRD\
 	((float)(SCR_ROWS - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
@@ -38,7 +43,7 @@
 static void d3d9_shader_cg_error_handler(void);
 static BYTE d3d9_device_create(UINT width, UINT height);
 static void d3d9_context_delete(void);
-static void d3d9_screenshot(void);
+INLINE static void d3d9_read_front_buffer(void);
 static BYTE d3d9_texture_create(_texture *texture, UINT index);
 static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h, BOOL overlay);
 static BYTE d3d9_texture_lut_create(_lut *lut, UINT index);
@@ -54,7 +59,7 @@ static void d3d9_vertex_buffer_set(_shader *shd,  _viewport *vp, _texture_rect *
 INLINE static void d3d9_viewport_set(DWORD x, DWORD y, DWORD w, DWORD h);
 INLINE D3DTEXTUREFILTERTYPE d3d9_shader_filter(UINT type);
 INLINE static void d3d9_shader_params_overlay_set(_shader *shd);
-INLINE static void d3d9_shader_param_set(const _texture *texture, UINT fcountmod, UINT fcount);
+INLINE static void d3d9_shader_param_set(const _texture *texture, UINT sindex, UINT fcountmod, UINT fcount);
 
 _d3d9 d3d9;
 
@@ -211,6 +216,46 @@ BYTE d3d9_init(void) {
 	gfx.bit_per_pixel = d3d9.adapter->bit_per_pixel;
 
 	return (EXIT_OK);
+}
+void d3d9_quit(void) {
+	d3d9_context_delete();
+
+	{
+		UINT i;
+
+		for (i = 0; i < d3d9.adapters_in_use; i++) {
+			_d3d9_adapter *dev = D3D9_ADAPTER(i);
+
+			if (dev->dev) {
+				IDirect3DDevice9_Release(dev->dev);
+				dev->dev = NULL;
+			}
+		}
+	}
+
+	if (d3d9.d3d) {
+		IDirect3D9_Release(d3d9.d3d);
+		d3d9.d3d = NULL;
+	}
+
+	if (d3d9.array) {
+		free(d3d9.array);
+		d3d9.array = d3d9.adapter = NULL;
+	}
+
+	if (d3d9.screenshot.srfc.s) {
+		IDirect3DSurface9_Release(d3d9.screenshot.srfc.s);
+		d3d9.screenshot.srfc.s = NULL;
+		d3d9.screenshot.zone.w = 0;
+		d3d9.screenshot.zone.h = 0;
+	}
+
+	if (d3d9.screenshot.zone.s) {
+		IDirect3DSurface9_Release(d3d9.screenshot.zone.s);
+		d3d9.screenshot.zone.s = NULL;
+		d3d9.screenshot.zone.w = 0;
+		d3d9.screenshot.zone.h = 0;
+	}
 }
 BYTE d3d9_context_create(void) {
 	D3DXMATRIX identity;
@@ -516,13 +561,41 @@ BYTE d3d9_context_create(void) {
 	return (EXIT_OK);
 }
 void d3d9_draw_scene(void) {
-	const _texture_simple *scrtex = &d3d9.screen.tex[d3d9.screen.index];
+	const _texture_simple *scrtex;
 	LPDIRECT3DSURFACE9 back_buffer;
-	UINT i;
+	UINT sindex, i;
 
-	if (gui.start == FALSE) {
+	if ((gui.start == FALSE) || (gfx.frame.in_draw == gfx.frame.filtered)) {
 		return;
 	}
+
+	gfx_thread_lock();
+
+	sindex = d3d9.screen.index;
+	scrtex = &d3d9.screen.tex[sindex];
+
+	// aggiorno la texture dello schermo
+	if (overscan.enabled) {
+		POINT point;
+		RECT rect;
+
+		rect.left = overscan.borders->left * gfx.filter.width_pixel;
+		rect.top = overscan.borders->up * gfx.filter.factor;
+		rect.right = scrtex->rect.base.w - (overscan.borders->right * gfx.filter.width_pixel);
+		rect.bottom = scrtex->rect.base.h - (overscan.borders->down * gfx.filter.factor);
+
+		point.x = rect.left;
+		point.y = rect.top;
+
+		IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, &rect, scrtex->map0, &point);
+	} else {
+		IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, NULL, scrtex->map0, NULL);
+	}
+
+	gfx.frame.in_draw = gfx.frame.filtered;
+	d3d9.screen.index = ((d3d9.screen.index + 1) % d3d9.screen.in_use);
+
+	gfx_thread_unlock();
 
 	IDirect3DDevice9_GetRenderTarget(d3d9.adapter->dev, 0, &back_buffer);
 
@@ -566,7 +639,7 @@ void d3d9_draw_scene(void) {
 
 		IDirect3DDevice9_SetVertexDeclaration(d3d9.adapter->dev, texture->shader.vd);
 
-		d3d9_shader_param_set(texture, sp->frame_count_mod, ppu.frames);
+		d3d9_shader_param_set(texture, sindex, sp->frame_count_mod, ppu.frames);
 
 		IDirect3DDevice9_BeginScene(d3d9.adapter->dev);
 		IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLESTRIP, 0, 2);
@@ -574,8 +647,6 @@ void d3d9_draw_scene(void) {
 	}
 
 	IDirect3DSurface9_Release(back_buffer);
-
-	d3d9.screen.index = ((d3d9.screen.index + 1) % d3d9.screen.in_use);
 
 	if (d3d9.feedback.in_use) {
 		LPDIRECT3DTEXTURE9 data = d3d9.feedback.tex.data;
@@ -623,50 +694,24 @@ void d3d9_draw_scene(void) {
 	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, NULL);
 
 	// swap buffers
-	{
-		if (IDirect3DDevice9_Present(d3d9.adapter->dev, &d3d9.viewp, NULL, NULL, NULL) == D3DERR_DEVICELOST) {
-			if (IDirect3DDevice9_TestCooperativeLevel(d3d9.adapter->dev) == D3DERR_DEVICENOTRESET) {
-				emu_pause(TRUE);
-
-				if (d3d9_context_create() == EXIT_ERROR) {
-					fprintf(stderr, "D3D9 : Unable to initialize d3d context\n");
-				}
-
-				emu_pause(FALSE);
+	if (IDirect3DDevice9_Present(d3d9.adapter->dev, &d3d9.viewp, NULL, NULL, NULL) == D3DERR_DEVICELOST) {
+		if (IDirect3DDevice9_TestCooperativeLevel(d3d9.adapter->dev) == D3DERR_DEVICENOTRESET) {
+			emu_thread_pause();
+			if (d3d9_context_create() == EXIT_ERROR) {
+				fprintf(stderr, "D3D9 : Unable to initialize d3d context\n");
 			}
-		}
-
-		// screenshot
-		if (gfx.screenshot.save == TRUE) {
-			d3d9_screenshot();
-			gfx.screenshot.save = FALSE;
-		}
-	}
-}
-void d3d9_quit(void) {
-	d3d9_context_delete();
-
-	{
-		UINT i;
-
-		for (i = 0; i < d3d9.adapters_in_use; i++) {
-			_d3d9_adapter *dev = D3D9_ADAPTER(i);
-
-			if (dev->dev) {
-				IDirect3DDevice9_Release(dev->dev);
-				dev->dev = NULL;
-			}
+			emu_thread_continue();
 		}
 	}
 
-	if (d3d9.d3d) {
-		IDirect3D9_Release(d3d9.d3d);
-		d3d9.d3d = NULL;
-	}
-
-	if (d3d9.array) {
-		free(d3d9.array);
-		d3d9.array = d3d9.adapter = NULL;
+#if defined (WITH_FFMPEG)
+	// screenshot e video recording
+	if (info.recording_is_a_video | info.screenshot) {
+#else
+	// screenshot
+	if (info.screenshot) {
+#endif
+		d3d9_read_front_buffer();
 	}
 }
 
@@ -833,56 +878,132 @@ static void d3d9_context_delete(void) {
 		d3d9.adapter->dev = NULL;
 	}
 }
-static void d3d9_screenshot(void) {
-	if (gfx.screenshot.type == SCRSH_STANDARD) {
-		IDirect3DSurface9 *back_buffer, *surface;
+INLINE static void d3d9_read_front_buffer(void) {
+	int w, h;
 
-		if (IDirect3DDevice9_GetBackBuffer(d3d9.adapter->dev, 0, 0, D3DBACKBUFFER_TYPE_MONO, &back_buffer) == D3D_OK) {
-			D3DSURFACE_DESC sd;
-
-			IDirect3DSurface9_GetDesc(back_buffer, &sd);
-
-			if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev, sd.Width,
-				sd.Height, sd.Format, D3DPOOL_SYSTEMMEM, &surface, NULL) == D3D_OK) {
-				if (IDirect3DDevice9_GetRenderTargetData(d3d9.adapter->dev, back_buffer, surface) == D3D_OK) {
-					D3DLOCKED_RECT lrect;
-
-					if (overscan.enabled && ((!cfg->fullscreen && !cfg->oscan_black_borders) ||
-						(cfg->fullscreen && !cfg->oscan_black_borders_fscr))) {
-						int w = d3d9.viewp.right - d3d9.viewp.left;
-						int h = d3d9.viewp.bottom - d3d9.viewp.top;
-						IDirect3DSurface9 *zone;
-
-						if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
-							w, h, sd.Format, D3DPOOL_DEFAULT, &zone, NULL) == D3D_OK) {
-							if (IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, surface, &d3d9.viewp, zone, NULL) == D3D_OK) {
-								IDirect3DSurface9_LockRect(zone, &lrect, NULL, 0);
-								gui_save_screenshot(w, h, lrect.pBits, FALSE);
-								IDirect3DSurface9_UnlockRect(zone);
-							}
-							IDirect3DSurface9_Release(zone);
-						}
-					} else {
-						IDirect3DSurface9_LockRect(surface, &lrect, NULL, 0);
-						gui_save_screenshot(sd.Width, sd.Height, lrect.pBits, FALSE);
-						IDirect3DSurface9_UnlockRect(surface);
-					}
-				}
-				IDirect3DSurface9_Release(surface);
-			}
-			IDirect3DSurface9_Release(back_buffer);
-		}
-	} else {
+	if (info.screenshot == SCRSH_ORIGINAL_SIZE) {
 		void *buffer;
+		int stride;
 
-		if ((buffer = malloc(SCR_ROWS * SCR_LINES * sizeof(uint32_t))) == NULL) {
-			return;
+		w = SCR_ROWS;
+		h = SCR_LINES;
+		stride = w * sizeof(uint32_t);
+
+		if ((buffer = malloc(stride * SCR_LINES))) {
+			emu_thread_pause();
+			scale_surface_screenshoot_1x(stride, buffer);
+			gui_save_screenshot(SCR_ROWS, SCR_LINES, stride, buffer, FALSE);
+			free(buffer);
+			emu_thread_continue();
 		}
-		emu_pause(TRUE);
-		scale_surface_screenshoot_1x(SCR_ROWS * sizeof(uint32_t), buffer);
-		gui_save_screenshot(SCR_ROWS, SCR_LINES, buffer, FALSE);
-		free(buffer);
-		emu_pause(FALSE);
+		info.screenshot = SCRSH_NONE;
+	}
+
+#if defined (WITH_FFMPEG)
+	if (info.recording_is_a_video | info.screenshot) {
+#else
+	if (info.screenshot) {
+#endif
+		IDirect3DSurface9 *bbuf = NULL, *srflock = NULL;
+		RECT *viewp = NULL;
+		D3DSURFACE_DESC sd;
+		BYTE use_zone = FALSE;
+
+		if (IDirect3DDevice9_GetBackBuffer(d3d9.adapter->dev, 0, 0, D3DBACKBUFFER_TYPE_MONO, &bbuf) != D3D_OK) {
+			goto d3d9_read_front_buffer_end;
+		}
+
+		IDirect3DSurface9_GetDesc(bbuf, &sd);
+
+		w = sd.Width;
+		h = sd.Height;
+
+		if ((d3d9.screenshot.srfc.s == NULL) || (d3d9.screenshot.srfc.w != w) || (d3d9.screenshot.srfc.h != h)) {
+			if (d3d9.screenshot.srfc.s) {
+				IDirect3DSurface9_Release(d3d9.screenshot.srfc.s);
+				d3d9.screenshot.srfc.s = NULL;
+			}
+			if (d3d9.screenshot.zone.s) {
+				IDirect3DSurface9_Release(d3d9.screenshot.zone.s);
+				d3d9.screenshot.zone.s = NULL;
+			}
+
+			d3d9.screenshot.srfc.w = w;
+			d3d9.screenshot.srfc.h = h;
+
+			if ((d3d9.screenshot.walign32 = (int)w) % 32) {
+				d3d9.screenshot.walign32 = (w / 32) + 1;
+				d3d9.screenshot.walign32 *= 32;
+			}
+			d3d9.screenshot.stride = d3d9.screenshot.walign32 * sizeof(uint32_t);
+
+			if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
+				w, h, sd.Format, D3DPOOL_SYSTEMMEM, &d3d9.screenshot.srfc.s, NULL) != D3D_OK) {
+				goto d3d9_read_front_buffer_end;
+			}
+		}
+
+		if (IDirect3DDevice9_GetRenderTargetData(d3d9.adapter->dev, bbuf, d3d9.screenshot.srfc.s) != D3D_OK) {
+			goto d3d9_read_front_buffer_end;
+		}
+
+		if (overscan.enabled && ((!cfg->fullscreen && !cfg->oscan_black_borders) ||
+			(cfg->fullscreen && !cfg->oscan_black_borders_fscr))) {
+			use_zone = TRUE;
+
+			w = d3d9.viewp.right - d3d9.viewp.left;
+			h = d3d9.viewp.bottom - d3d9.viewp.top;
+
+			viewp = &d3d9.viewp;
+		} else if (w != d3d9.screenshot.walign32) {
+			use_zone = TRUE;
+		} else {
+			srflock = d3d9.screenshot.srfc.s;
+		}
+
+		if (use_zone == TRUE) {
+			if ((d3d9.screenshot.zone.s == NULL) || (d3d9.screenshot.zone.h != h)) {
+				if (d3d9.screenshot.zone.s) {
+					IDirect3DSurface9_Release(d3d9.screenshot.zone.s);
+					d3d9.screenshot.zone.s = NULL;
+				}
+
+				d3d9.screenshot.zone.h = h;
+
+				if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
+					d3d9.screenshot.walign32, h, sd.Format, D3DPOOL_DEFAULT, &d3d9.screenshot.zone.s, NULL) != D3D_OK) {
+					goto d3d9_read_front_buffer_end;
+				}
+			}
+			if (IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev,
+				d3d9.screenshot.srfc.s, viewp, d3d9.screenshot.zone.s, NULL) != D3D_OK) {
+				goto d3d9_read_front_buffer_end;
+			}
+			srflock = d3d9.screenshot.zone.s;
+		}
+
+		{
+			D3DLOCKED_RECT lrect;
+
+			IDirect3DSurface9_LockRect(srflock, &lrect, NULL, 0);
+#if defined (WITH_FFMPEG)
+			if (info.recording_is_a_video) {
+				recording_video_frame(w, h, d3d9.screenshot.stride, lrect.pBits);
+			}
+			if (info.screenshot == SCRSH_STANDARD) {
+				gui_save_screenshot(w, h, d3d9.screenshot.stride, lrect.pBits, FALSE);
+			}
+#else
+			gui_save_screenshot(w, h, d3d9.screenshot.stride, lrect.pBits, FALSE);
+#endif
+			IDirect3DSurface9_UnlockRect(srflock);
+		}
+
+		d3d9_read_front_buffer_end:
+		if (bbuf) {
+			IDirect3DSurface9_Release(bbuf);
+		}
+		info.screenshot = SCRSH_NONE;
 	}
 }
 static BYTE d3d9_texture_create(_texture *texture, UINT index) {
@@ -1769,7 +1890,7 @@ INLINE static void d3d9_shader_params_overlay_set(_shader *shd) {
 		IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, i, shd->quad, 0, sizeof(_vertex_buffer));
 	}
 }
-INLINE static void d3d9_shader_param_set(const _texture *texture, UINT fcountmod, UINT fcount) {
+INLINE static void d3d9_shader_param_set(const _texture *texture, UINT sindex, UINT fcountmod, UINT fcount) {
 	const _shader *shd = &texture->shader;
 	UINT i, index;
 
@@ -1874,7 +1995,7 @@ INLINE static void d3d9_shader_param_set(const _texture *texture, UINT fcountmod
 		// ORIG.texture
 		if (shd->uni.orig.f.texture) {
 			index = cgGetParameterResourceIndex(shd->uni.orig.f.texture);
-			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, index, (IDirect3DBaseTexture9 * )d3d9.screen.tex[d3d9.screen.index].data);
+			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, index, (IDirect3DBaseTexture9 * )d3d9.screen.tex[sindex].data);
 			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MINFILTER, D3DTEXF_POINT);
 			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSU, D3DTADDRESS_BORDER);
@@ -1882,23 +2003,23 @@ INLINE static void d3d9_shader_param_set(const _texture *texture, UINT fcountmod
 		}
 		// ORIG.video_size
 		if (shd->uni.orig.v.video_size) {
-			cgD3D9SetUniform(shd->uni.orig.v.video_size, &d3d9.screen.tex[d3d9.screen.index].shader.info.video_size);
+			cgD3D9SetUniform(shd->uni.orig.v.video_size, &d3d9.screen.tex[sindex].shader.info.video_size);
 		}
 		if (shd->uni.orig.f.video_size) {
-			cgD3D9SetUniform(shd->uni.orig.f.video_size, &d3d9.screen.tex[d3d9.screen.index].shader.info.video_size);
+			cgD3D9SetUniform(shd->uni.orig.f.video_size, &d3d9.screen.tex[sindex].shader.info.video_size);
 		}
 		// ORIG.texture_size
 		if (shd->uni.orig.v.texture_size) {
-			cgD3D9SetUniform(shd->uni.orig.v.texture_size, &d3d9.screen.tex[d3d9.screen.index].shader.info.texture_size);
+			cgD3D9SetUniform(shd->uni.orig.v.texture_size, &d3d9.screen.tex[sindex].shader.info.texture_size);
 		}
 		if (shd->uni.orig.f.texture_size) {
-			cgD3D9SetUniform(shd->uni.orig.f.texture_size, &d3d9.screen.tex[d3d9.screen.index].shader.info.texture_size);
+			cgD3D9SetUniform(shd->uni.orig.f.texture_size, &d3d9.screen.tex[sindex].shader.info.texture_size);
 		}
 		// ORIG.tex_coord
 		if (shd->uni.orig.v.tex_coord) {
 			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev,
 				shd->attribs.attrib[cgGetParameterResourceIndex(shd->uni.orig.v.tex_coord)],
-				d3d9.screen.tex[d3d9.screen.index].shader.quad, 0, sizeof(_vertex_buffer));
+				d3d9.screen.tex[sindex].shader.quad, 0, sizeof(_vertex_buffer));
 		}
 	}
 
@@ -1940,7 +2061,7 @@ INLINE static void d3d9_shader_param_set(const _texture *texture, UINT fcountmod
 
 	// PREV
 	{
-		INT circle_index = d3d9.screen.index - 1;
+		INT circle_index = sindex - 1;
 
 		for (i = 0; i < (d3d9.screen.in_use - 1); i++) {
 			if (circle_index < 0) {

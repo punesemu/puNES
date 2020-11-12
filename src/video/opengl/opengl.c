@@ -23,12 +23,16 @@
 #include <unistd.h>
 #include "opengl.h"
 #include "video/gfx_thread.h"
+#include "emu_thread.h"
 #include "overscan.h"
 #include "info.h"
 #include "conf.h"
 #include "emu.h"
 #include "ppu.h"
 #include "gui.h"
+#if defined (WITH_FFMPEG)
+#include "recording.h"
+#endif
 
 #define MAT_ELEM_4X4(mat, r, c) ((mat).data[4 * (c) + (r)])
 #define BUFFER_OFFSET(i) ((char *)(i))
@@ -44,8 +48,7 @@
 	(float)SCR_LINES
 
 static void opengl_context_delete(void);
-static void opengl_screenshot(void);
-
+INLINE static void opengl_read_front_buffer(void);
 static BYTE opengl_glew_init(void);
 static BYTE opengl_texture_create(_texture *texture, GLuint index);
 static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLuint h, BYTE overlay);
@@ -68,7 +71,7 @@ INLINE static void opengl_shader_params_overlay_set(_shader *shd);
 
 // glsl
 static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, const uTCHAR *path);
-INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcountmod, GLuint fcount);
+INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint sindex, GLuint fcountmod, GLuint fcount);
 INLINE static void opengl_shader_glsl_disable_attrib(void);
 // cg
 #if defined (WITH_OPENGL_CG)
@@ -80,7 +83,7 @@ static void opengl_shader_cg_clstate_ctrl(CGparameter *dst, CGparameter *param, 
 static void opengl_shader_cg_param2f_ctrl(CGparameter *dst, CGparameter *param, const char *semantic);
 static void opengl_shader_cg_uni_texture_clear(_shader_uniforms_tex_cg *sut);
 static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_prg_cg *prg, char *fmt, ...);
-INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint fcountmod, GLuint fcount);
+INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint sindex, GLuint fcountmod, GLuint fcount);
 INLINE static void opengl_shader_cg_disable_stpm(void);
 #endif
 
@@ -150,6 +153,12 @@ BYTE opengl_init(void) {
 void opengl_quit(void) {
 	gui_wdgopengl_make_current();
 	opengl_context_delete();
+	if (opengl.screenshot.rgb) {
+		free(opengl.screenshot.rgb);
+		opengl.screenshot.rgb = NULL;
+		opengl.screenshot.w = 0;
+		opengl.screenshot.h = 0;
+	}
 }
 BYTE opengl_context_create(void) {
 	GLuint i, w, h;
@@ -530,14 +539,19 @@ void opengl_draw_scene(void) {
 #if defined (WITH_OPENGL_CG)
 	static GLuint prev_type = MS_MEM;
 #endif
-	const _texture_simple *scrtex = &opengl.screen.tex[opengl.screen.index];
+	const _texture_simple *scrtex;
 	GLuint offset_x = 0, offset_y = 0;
 	GLuint w = opengl.surface.w, h = opengl.surface.h;
-	GLuint i;
+	GLuint sindex, i;
 
-	if (gui.start == FALSE) {
+	if ((gui.start == FALSE) || (gfx.frame.in_draw == gfx.frame.filtered)) {
 		return;
 	}
+
+	gfx_thread_lock();
+
+	sindex = opengl.screen.index;
+	scrtex = &opengl.screen.tex[sindex];
 
 	// screen
 	glBindTexture(GL_TEXTURE_2D, scrtex->id);
@@ -551,12 +565,15 @@ void opengl_draw_scene(void) {
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, opengl.surface.w);
 	glPixelStorei(GL_UNPACK_SKIP_PIXELS, offset_x);
 	glPixelStorei(GL_UNPACK_SKIP_ROWS, offset_y);
-	gfx_thread_lock();
 	glTexSubImage2D(GL_TEXTURE_2D, 0, offset_x, offset_y, w, h, TI_FRM, TI_TYPE, opengl.surface.pixels);
-	gfx_thread_unlock();
 	glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 	glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+
+	gfx.frame.in_draw = gfx.frame.filtered;
+	opengl.screen.index = ((opengl.screen.index + 1) % opengl.screen.in_use);
+
+	gfx_thread_unlock();
 
 	if (opengl.supported_fbo.srgb && !cfg->disable_srgb_fbo) {
 		glEnable(GL_FRAMEBUFFER_SRGB);
@@ -607,12 +624,12 @@ void opengl_draw_scene(void) {
 				cgGLEnableProfile(opengl.cg.profile.f);
 				cgGLEnableProfile(opengl.cg.profile.v);
 
-				opengl_shader_cg_params_set(texture, sp->frame_count_mod, ppu.frames);
+				opengl_shader_cg_params_set(texture, sindex, sp->frame_count_mod, ppu.frames);
 			}
 #endif
 		} else {
 			glUseProgram(texture->shader.glslp.prg);
-			opengl_shader_glsl_params_set(&texture->shader, sp->frame_count_mod, ppu.frames);
+			opengl_shader_glsl_params_set(&texture->shader, sindex, sp->frame_count_mod, ppu.frames);
 		}
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
@@ -633,8 +650,6 @@ void opengl_draw_scene(void) {
 		prev_type = texture->shader.type;
 #endif
 	}
-
-	opengl.screen.index = ((opengl.screen.index + 1) % opengl.screen.in_use);
 
 	if (opengl.feedback.in_use) {
 		GLuint fbo = opengl.feedback.tex.fbo;
@@ -674,10 +689,14 @@ void opengl_draw_scene(void) {
 #endif
 	}
 
+#if defined (WITH_FFMPEG)
+	// screenshot e video recording
+	if (info.recording_is_a_video | info.screenshot) {
+#else
 	// screenshot
-	if (gfx.screenshot.save == TRUE) {
-		opengl_screenshot();
-		gfx.screenshot.save = FALSE;
+	if (info.screenshot) {
+#endif
+		opengl_read_front_buffer();
 	}
 }
 
@@ -778,35 +797,77 @@ static void opengl_context_delete(void) {
 
 	info.sRGB_FBO_in_use = FALSE;
 }
-static void opengl_screenshot(void) {
+INLINE static void opengl_read_front_buffer(void) {
 	float w, h;
-	void *buffer;
 
-	if (gfx.screenshot.type == SCRSH_STANDARD) {
-		w = opengl.video_mode.w * gfx.device_pixel_ratio;
-		h = opengl.video_mode.h * gfx.device_pixel_ratio;
-		glReadBuffer(GL_FRONT);
-		if ((buffer = malloc(w * h * 4)) == NULL) {
-			return;
-		}
-		glPixelStorei(GL_PACK_ALIGNMENT, 1);
-		glReadPixels(0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
-		gui_save_screenshot(w, h, buffer, TRUE);
-		free(buffer);
-	} else {
+	if (info.screenshot == SCRSH_ORIGINAL_SIZE) {
+		void *buffer;
+		int stride;
+
 		w = SCR_ROWS;
 		h = SCR_LINES;
-		if ((buffer = malloc(w * h * sizeof(uint32_t))) == NULL) {
-			return;
+		stride = w * sizeof(uint32_t);
+
+		if ((buffer = malloc(stride * h))) {
+			emu_thread_pause();
+			scale_surface_screenshoot_1x(stride, buffer);
+			gui_save_screenshot(w, h, stride, buffer, FALSE);
+			free(buffer);
+			emu_thread_continue();
 		}
-		emu_pause(TRUE);
-		scale_surface_screenshoot_1x(w * sizeof(uint32_t), buffer);
-		gui_save_screenshot(w, h, buffer, FALSE);
-		free(buffer);
-		emu_pause(FALSE);
+		info.screenshot = SCRSH_NONE;
+	}
+
+#if defined (WITH_FFMPEG)
+	if (info.recording_is_a_video | info.screenshot) {
+#else
+	if (info.screenshot) {
+#endif
+		w = opengl.video_mode.w * gfx.device_pixel_ratio;
+		h = opengl.video_mode.h * gfx.device_pixel_ratio;
+
+		if ((opengl.screenshot.rgb == NULL) || (opengl.screenshot.w != w) || (opengl.screenshot.h != h)) {
+			if (opengl.screenshot.rgb) {
+				free(opengl.screenshot.rgb);
+				opengl.screenshot.rgb = NULL;
+			}
+
+			opengl.screenshot.w = w;
+			opengl.screenshot.h = h;
+
+			if ((opengl.screenshot.walign32 = (int)w) % 32) {
+				opengl.screenshot.walign32 = (w / 32) + 1;
+				opengl.screenshot.walign32 *= 32;
+			}
+			opengl.screenshot.stride = opengl.screenshot.walign32 * sizeof(uint32_t);
+
+			if ((opengl.screenshot.rgb = malloc(opengl.screenshot.stride * h)) == NULL) {
+				info.screenshot = SCRSH_NONE;
+				opengl.screenshot.rgb = NULL;
+				return;
+			}
+		}
+
+		glReadBuffer(GL_FRONT);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, w);
+		glReadPixels(0, 0, opengl.screenshot.walign32, h, GL_BGRA, GL_UNSIGNED_BYTE, opengl.screenshot.rgb);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+
+#if defined (WITH_FFMPEG)
+		if (info.recording_is_a_video) {
+			recording_video_frame(w, h, opengl.screenshot.stride, opengl.screenshot.rgb);
+		}
+		if (info.screenshot == SCRSH_STANDARD) {
+			gui_save_screenshot(w, h, opengl.screenshot.stride, opengl.screenshot.rgb, TRUE);
+			info.screenshot = SCRSH_NONE;
+		}
+#else
+		gui_save_screenshot(w, h, opengl.screenshot.stride, opengl.screenshot.rgb, TRUE);
+		info.screenshot = SCRSH_NONE;
+#endif
 	}
 }
-
 static BYTE opengl_glew_init(void) {
 	GLenum err;
 
@@ -1483,7 +1544,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 
 	return (EXIT_OK);
 }
-INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcountmod, GLuint fcount) {
+INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint sindex, GLuint fcountmod, GLuint fcount) {
 	GLuint i, buffer_index = 0, texture_index = 1;
 
 	if (shd->glslp.uni.mvp >= 0) {
@@ -1564,15 +1625,15 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 	// ORIG
 	if (shd->glslp.uni.orig.texture >= 0) {
 		glActiveTexture(GL_TEXTURE0 + texture_index);
-		glBindTexture(GL_TEXTURE_2D, opengl.screen.tex[opengl.screen.index].id);
+		glBindTexture(GL_TEXTURE_2D, opengl.screen.tex[sindex].id);
 		glUniform1i(shd->glslp.uni.orig.texture, texture_index);
 		texture_index++;
 	}
 	if (shd->glslp.uni.orig.input_size >= 0) {
-		glUniform2fv(shd->glslp.uni.orig.input_size, 1, opengl.screen.tex[opengl.screen.index].shader.info.input_size);
+		glUniform2fv(shd->glslp.uni.orig.input_size, 1, opengl.screen.tex[sindex].shader.info.input_size);
 	}
 	if (shd->glslp.uni.orig.texture_size >= 0) {
-		glUniform2fv(shd->glslp.uni.orig.texture_size, 1, opengl.screen.tex[opengl.screen.index].shader.info.texture_size);
+		glUniform2fv(shd->glslp.uni.orig.texture_size, 1, opengl.screen.tex[sindex].shader.info.texture_size);
 	}
 	if (shd->glslp.uni.orig.tex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.orig.tex_coord);
@@ -1582,7 +1643,7 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 	}
 	// PREV (uso le stesse tex_coord di ORIG)
 	{
-		GLint circle_index = opengl.screen.index - 1;
+		GLint circle_index = sindex - 1;
 
 		for (i = 0; i < (opengl.screen.in_use - 1); i++) {
 			if (circle_index < 0) {
@@ -1912,7 +1973,7 @@ static void opengl_shader_cg_clstate_ctrl(CGparameter *dst, CGparameter *param, 
 
 	cgGLEnableClientState((*param));
 
-	switch(cgGetError()) {
+	switch (cgGetError()) {
 		case CG_NO_ERROR:
 			(*dst) = (*param);
 			cgGLDisableClientState((*param));
@@ -1930,7 +1991,7 @@ static void opengl_shader_cg_param2f_ctrl(CGparameter *dst, CGparameter *param, 
 
 	cgGLSetParameter2f((*param), 1.0f, 1.0f);
 
-	switch(cgGetError()) {
+	switch (cgGetError()) {
 		case CG_NO_ERROR:
 			(*dst) = (*param);
 			break;
@@ -1985,7 +2046,7 @@ static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_p
 		opengl_shader_cg_clstate_ctrl(&sut->v.tex_coord, &param, buff);
 	}
 }
-INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint fcountmod, GLuint fcount) {
+INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint sindex, GLuint fcountmod, GLuint fcount) {
 	GLuint i, buffer_index = 0;
 	const _shader *shd = &texture->shader;
 
@@ -2108,31 +2169,31 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 	{
 		// ORIG.texture
 		if (shd->cgp.uni.orig.f.texture) {
-			cgGLSetTextureParameter(shd->cgp.uni.orig.f.texture, opengl.screen.tex[opengl.screen.index].id);
+			cgGLSetTextureParameter(shd->cgp.uni.orig.f.texture, opengl.screen.tex[sindex].id);
 			cgGLEnableTextureParameter(shd->cgp.uni.orig.f.texture);
 			opengl.cg.params.param[opengl.cg.params.count++] = shd->cgp.uni.orig.f.texture;
 		}
 		// ORIG.video_size
 		if (shd->cgp.uni.orig.v.video_size) {
 			cgGLSetParameter2f(shd->cgp.uni.orig.v.video_size,
-				opengl.screen.tex[opengl.screen.index].shader.info.input_size[0],
-				opengl.screen.tex[opengl.screen.index].shader.info.input_size[1]);
+				opengl.screen.tex[sindex].shader.info.input_size[0],
+				opengl.screen.tex[sindex].shader.info.input_size[1]);
 		}
 		if (shd->cgp.uni.orig.f.video_size) {
 			cgGLSetParameter2f(shd->cgp.uni.orig.f.video_size,
-				opengl.screen.tex[opengl.screen.index].shader.info.input_size[0],
-				opengl.screen.tex[opengl.screen.index].shader.info.input_size[1]);
+				opengl.screen.tex[sindex].shader.info.input_size[0],
+				opengl.screen.tex[sindex].shader.info.input_size[1]);
 		}
 		// ORIG.texture_size
 		if (shd->cgp.uni.orig.v.texture_size) {
 			cgGLSetParameter2f(shd->cgp.uni.orig.v.texture_size,
-				opengl.screen.tex[opengl.screen.index].shader.info.texture_size[0],
-				opengl.screen.tex[opengl.screen.index].shader.info.texture_size[1]);
+				opengl.screen.tex[sindex].shader.info.texture_size[0],
+				opengl.screen.tex[sindex].shader.info.texture_size[1]);
 		}
 		if (shd->cgp.uni.orig.f.texture_size) {
 			cgGLSetParameter2f(shd->cgp.uni.orig.f.texture_size,
-				opengl.screen.tex[opengl.screen.index].shader.info.texture_size[0],
-				opengl.screen.tex[opengl.screen.index].shader.info.texture_size[1]);
+				opengl.screen.tex[sindex].shader.info.texture_size[0],
+				opengl.screen.tex[sindex].shader.info.texture_size[1]);
 		}
 		// ORIG.tex_coord
 		if (shd->cgp.uni.orig.v.tex_coord) {
@@ -2144,7 +2205,7 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 	}
 	// PREV (uso le stesse tex_coord di ORIG)
 	{
-		GLint circle_index = opengl.screen.index - 1;
+		GLint circle_index = sindex - 1;
 
 		for (i = 0; i < (opengl.screen.in_use - 1); i++) {
 			if (circle_index < 0) {

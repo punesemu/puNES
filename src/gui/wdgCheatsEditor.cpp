@@ -284,9 +284,9 @@ void wdgCheatsEditor::update_color_row(int row, bool active) {
 }
 
 void wdgCheatsEditor::cheat_tableview_resize(void) {
-    QHeaderView *hv = tableWidget_Cheats->horizontalHeader();
+	QHeaderView *hv = tableWidget_Cheats->horizontalHeader();
 
-    tableWidget_Cheats->setColumnCount(tableWidget_Cheats->columnCount() + 1);
+	tableWidget_Cheats->setColumnCount(tableWidget_Cheats->columnCount() + 1);
 	tableWidget_Cheats->setColumnHidden(CR_ENABLED_COMPARE, true);
 
 	// setto la dimensione del font
@@ -301,14 +301,14 @@ void wdgCheatsEditor::cheat_tableview_resize(void) {
 	}
 
 	// setto il resizeMode delle colonne
-    hv->setSectionResizeMode(QHeaderView::Stretch);
+	hv->setSectionResizeMode(QHeaderView::Stretch);
 
-    hv->setSectionResizeMode(CR_ACTIVE, QHeaderView::ResizeToContents);
-    hv->setSectionResizeMode(CR_DESCRIPTION, QHeaderView::Stretch);
-    hv->setSectionResizeMode(CR_CODE, QHeaderView::ResizeToContents);
-    hv->setSectionResizeMode(CR_ADDRESS, QHeaderView::ResizeToContents);
-    hv->setSectionResizeMode(CR_VALUE, QHeaderView::ResizeToContents);
-    hv->setSectionResizeMode(CR_COMPARE, QHeaderView::ResizeToContents);
+	hv->setSectionResizeMode(CR_ACTIVE, QHeaderView::ResizeToContents);
+	hv->setSectionResizeMode(CR_DESCRIPTION, QHeaderView::Stretch);
+	hv->setSectionResizeMode(CR_CODE, QHeaderView::ResizeToContents);
+	hv->setSectionResizeMode(CR_ADDRESS, QHeaderView::ResizeToContents);
+	hv->setSectionResizeMode(CR_VALUE, QHeaderView::ResizeToContents);
+	hv->setSectionResizeMode(CR_COMPARE, QHeaderView::ResizeToContents);
 }
 
 void wdgCheatsEditor::populate_edit_widgets(int row) {
@@ -440,7 +440,6 @@ void wdgCheatsEditor::change_active_compare_state(bool state) {
 
 void wdgCheatsEditor::s_table_data_changed(const QModelIndex &topLeft, UNUSED(const QModelIndex &bottomRight),
 	UNUSED(const QVector<int> &roles)) {
-
 	if (in_populate_cheat_table == true) {
 		return;
 	}
@@ -563,7 +562,7 @@ void wdgCheatsEditor::s_grp_type_cheat(int id) {
 		hexSpinBox_Address->setRange(0x8000, 0xFFFF);
 	}
 
-	switch(id) {
+	switch (id) {
 		case 0:
 			lineEdit_GG->setEnabled(false);
 			lineEdit_ProAR->setEnabled(false);

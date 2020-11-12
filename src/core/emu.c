@@ -34,6 +34,8 @@
 #include "mem_map.h"
 #include "ppu.h"
 #include "video/gfx.h"
+#include "video/gfx_thread.h"
+#include "emu_thread.h"
 #include "sha1.h"
 #include "database.h"
 #include "version.h"
@@ -50,7 +52,6 @@
 #include "opengl.h"
 #endif
 #include "gui.h"
-#include "video/effects/pause.h"
 #include "video/effects/tv_noise.h"
 
 #define RS_SCALE (1.0f / (1.0f + RAND_MAX))
@@ -62,7 +63,6 @@
 INLINE static void emu_frame_started(void);
 INLINE static void emu_frame_finished(void);
 INLINE static void emu_frame_sleep(void);
-INLINE static void emu_frame_pause_sleep(void);
 
 static BYTE emu_ctrl_if_rom_exist(void);
 static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file);
@@ -79,6 +79,10 @@ void emu_quit(void) {
 	if (cfg->save_on_exit) {
 		settings_save();
 	}
+
+#if defined (WITH_FFMPEG)
+	recording_quit();
+#endif
 
 	map_quit();
 
@@ -110,14 +114,10 @@ BYTE emu_frame(void) {
 	gui_control_visible_cursor();
 
 	// eseguo un frame dell'emulatore
-	if (info.no_rom | info.turn_off) {
+	if (info.no_rom) {
 		tv_noise_effect();
 		gfx_draw_screen();
-		emu_frame_pause_sleep();
-		return (EXIT_OK);
-	} else if (info.pause) {
-		gfx_draw_screen();
-		emu_frame_pause_sleep();
+		emu_frame_sleep();
 		return (EXIT_OK);
 	} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 		BYTE i;
@@ -170,14 +170,10 @@ BYTE emu_frame_debugger(void) {
 
 	if (info.frame_status == FRAME_FINISHED) {
 		if (debugger.mode == DBG_GO) {
-			if (info.no_rom | info.turn_off) {
+			if (info.no_rom) {
 				tv_noise_effect();
 				gfx_draw_screen();
-				emu_frame_pause_sleep();
-				return (EXIT_OK);
-			} else if (info.pause) {
-				gfx_draw_screen();
-				emu_frame_pause_sleep();
+				emu_frame_sleep();
 				return (EXIT_OK);
 			} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 				BYTE i;
@@ -316,6 +312,8 @@ char *emu_file2string(const uTCHAR *path) {
 }
 BYTE emu_load_rom(void) {
 	BYTE recent_roms_permit_add = TRUE;
+
+	gui_egds_stop_unnecessary();
 
 	elaborate_rom_file:
 	info.no_rom = FALSE;
@@ -711,6 +709,9 @@ BYTE emu_turn_on(void) {
 	// fps
 	fps_init();
 
+	// setto l'fps del timer ext_gfx_draw_screen
+	gui_egds_set_fps();
+
 	// gestione sonora
 	if (snd_init()) {
 		return (EXIT_ERROR);
@@ -754,9 +755,13 @@ BYTE emu_turn_on(void) {
 }
 void emu_pause(BYTE mode) {
 	if (mode == TRUE) {
-		info.pause++;
+		if (++info.pause == 1) {
+			gui_egds_start_pause();
+		}
 	} else {
-		if (--info.pause < 0) {
+		if (--info.pause == 0) {
+			gui_egds_stop_pause();
+		} else if (info.pause < 0) {
 			info.pause = 0;
 		}
 	}
@@ -774,13 +779,10 @@ BYTE emu_reset(BYTE type) {
 		return (EXIT_OK);
 	}
 
-	emu_pause(TRUE);
-
 	gui_wdgrewind_play();
 
 	if (type == CHANGE_ROM) {
 		if (emu_ctrl_if_rom_exist() == EXIT_ERROR) {
-			emu_pause(FALSE);
 			return (EXIT_OK);
 		}
 	}
@@ -852,12 +854,8 @@ BYTE emu_reset(BYTE type) {
 	if (info.no_rom) {
 		info.reset = FALSE;
 		if (info.pause_from_gui == TRUE) {
-			info.pause_from_gui = FALSE;
-			emu_pause(FALSE);
+			emu_pause((info.pause_from_gui = FALSE));
 		}
-
-		emu_pause(FALSE);
-
 		return (EXIT_OK);
 	}
 
@@ -879,6 +877,8 @@ BYTE emu_reset(BYTE type) {
 	fps_init();
 
 	if (info.reset >= CHANGE_ROM) {
+		gui_egds_set_fps();
+
 		if (snd_playback_start()) {
 			return (EXIT_ERROR);
 		}
@@ -922,11 +922,8 @@ BYTE emu_reset(BYTE type) {
 	}
 
 	if (info.pause_from_gui == TRUE) {
-		info.pause_from_gui = FALSE;
-		emu_pause(FALSE);
+		emu_pause((info.pause_from_gui = FALSE));
 	}
-
-	emu_pause(FALSE);
 
 	return (EXIT_OK);
 }
@@ -989,6 +986,8 @@ uTCHAR *emu_rand_str(void) {
 	return ((uTCHAR *)&dest);
 }
 void emu_ctrl_doublebuffer(void) {
+	gfx_thread_pause();
+
 	switch (info.format) {
 		default:
 		case iNES_1_0:
@@ -1024,6 +1023,8 @@ void emu_ctrl_doublebuffer(void) {
 			}
 			break;
 	}
+
+	gfx_thread_continue();
 }
 void emu_frame_input_and_rewind(void) {
 	// controllo se ci sono eventi di input
@@ -1135,20 +1136,6 @@ INLINE static void emu_frame_sleep(void) {
 		fps.frame.expected_end = gui_get_ms();
 	}
 	fps.frame.expected_end += fps.frame.estimated_ms;
-}
-INLINE static void emu_frame_pause_sleep(void) {
-	double diff;
-	double now = gui_get_ms();
-	const double estimated_ms = (1000.0f / 30.f);
-
-	diff = fps_pause.expected_end - now;
-
-	if (diff > 0) {
-		gui_sleep(diff);
-	} else {
-		fps_pause.expected_end = gui_get_ms();
-	}
-	fps_pause.expected_end += estimated_ms;
 }
 
 static BYTE emu_ctrl_if_rom_exist(void) {

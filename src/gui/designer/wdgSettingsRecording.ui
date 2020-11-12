@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>wdgSettingsRecording</class>
+ <widget class="QWidget" name="wdgSettingsRecording">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>574</width>
+    <height>370</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Recording Settings</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QGridLayout" name="gridLayout_Recording">
+     <item row="7" column="3">
+      <widget class="QLabel" name="icon_Output_Custom_Height">
+       <property name="text">
+        <string notr="true">Custom Height icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="4">
+      <widget class="QLabel" name="label_Output_Custom_Height">
+       <property name="text">
+        <string>Custom Height</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="icon_Output_Resolution">
+       <property name="text">
+        <string notr="true">Output Resolution icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="icon_Output_Audio_Format">
+       <property name="text">
+        <string notr="true">Output Audio Format icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="icon_Output_Custom_Width">
+       <property name="text">
+        <string notr="true">Custom Width icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="icon_Output_Quality">
+       <property name="text">
+        <string notr="true">Output Quality icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="label_Output_Video_Format">
+       <property name="text">
+        <string>Output Video Format</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLabel" name="label_Output_Custom_Width">
+       <property name="text">
+        <string>Custom Width</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <widget class="QLineEdit" name="lineEdit_Output_Custom_Width">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maxLength">
+        <number>8</number>
+       </property>
+       <property name="readOnly">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="label_Output_Quality">
+       <property name="text">
+        <string>Output Quality</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="label_Output_Audio_Format">
+       <property name="text">
+        <string>Output Audio Format</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="icon_Output_Video_Format">
+       <property name="text">
+        <string notr="true">Output Video Format icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLabel" name="label_Output_Resolution">
+       <property name="text">
+        <string>Output Resolution</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="5">
+      <widget class="QLineEdit" name="lineEdit_Output_Custom_Height">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maxLength">
+        <number>8</number>
+       </property>
+       <property name="readOnly">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="2" colspan="4">
+      <widget class="QComboBox" name="comboBox_Output_Resolution">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>Custom</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>256 x 240  (1:1)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>292 x 240  (8:7 NTSC TV)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>320 x 240  (5:4)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>354 x 240  (11:8 PAL TV)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>512 x 480  (1:1)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>584 x 480  (8:7 NTSC TV)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>640 x 480  (5:4)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>708 x 480  (11:8 PAL TV)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>768 x 720  (1:1)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>876 x 720  (8:7 NTSC TV)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>960 x 720  (5:4)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1064 x 720  (11:8 PAL TV)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1024 x 960  (1:1)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1170 x 960  (8:7 NTSC TV)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1280 x 960  (5:4)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1418 x 960  (11:8 PAL TV)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1280 x 720</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1920 x 1080</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="8" column="0" colspan="6">
+      <widget class="QCheckBox" name="checkBox_Use_emu_resolution">
+       <property name="text">
+        <string>Use the emulator resolution</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0" colspan="6">
+      <widget class="QCheckBox" name="checkBox_Follow_rotation">
+       <property name="text">
+        <string>Follow screen rotation</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2" colspan="4">
+      <widget class="QComboBox" name="comboBox_Output_Audio_Format">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2" colspan="4">
+      <widget class="QComboBox" name="comboBox_Output_Video_Format">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2" colspan="4">
+      <widget class="QComboBox" name="comboBox_Output_Quality">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>Low</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Medium</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>High</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="6">
+      <layout class="QHBoxLayout" name="horizontalLayout_Audio_recording_settings">
+       <item>
+        <widget class="QLabel" name="label_Audio_recording_settings">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Audio recording settings</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_Audio_recording_settings">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="0" colspan="6">
+      <layout class="QHBoxLayout" name="horizontalLayout_Video_recording_settings">
+       <item>
+        <widget class="QLabel" name="label_Video_recording_settings">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Video recording settings</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_Video_recording_settings">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="5" column="0" colspan="6">
+      <widget class="Line" name="line_Output_Resolution">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_settings">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>185</width>
+       <height>219</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

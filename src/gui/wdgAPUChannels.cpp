@@ -108,14 +108,6 @@ void wdgAPUChannels::s_apu_ch_checkbox(UNUSED(bool checked)) {
 	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
 	cfg_from_file.apu.channel[index] = !cfg_from_file.apu.channel[index];
-
-	if (index == APU_MASTER) {
-		if (cfg->apu.channel[APU_MASTER]) {
-			snd_playback_start();
-		} else {
-			snd_playback_stop();
-		}
-	}
 	gui_apu_channels_widgets_update();
 }
 void wdgAPUChannels::s_apu_ch_slider(int value) {

@@ -110,6 +110,15 @@ EXTERNC void gui_update(void);
 EXTERNC void gui_update_dset(void);
 EXTERNC void gui_update_gps_settings(void);
 
+EXTERNC void gui_egds_set_fps(void);
+EXTERNC void gui_egds_stop_unnecessary(void);
+EXTERNC void gui_egds_start_pause(void);
+EXTERNC void gui_egds_stop_pause(void);
+EXTERNC void gui_egds_start_rwnd(void);
+EXTERNC void gui_egds_stop_rwnd(void);
+
+EXTERNC void gui_update_recording_widget(void);
+
 EXTERNC void gui_fullscreen(void);
 EXTERNC void gui_save_slot(BYTE slot);
 
@@ -177,17 +186,20 @@ EXTERNC uint32_t gui_color(BYTE a, BYTE r, BYTE g, BYTE b);
 #endif
 
 EXTERNC BYTE gui_load_lut(void *l, const uTCHAR *path);
-EXTERNC void gui_save_screenshot(int w, int h, char *buffer, BYTE flip);
+EXTERNC void gui_save_screenshot(int w, int h, int stride, char *buffer, BYTE flip);
 
 EXTERNC void gui_utf_printf(const uTCHAR *fmt, ...);
 EXTERNC void gui_utf_dirname(uTCHAR *path, uTCHAR *dst, size_t len);
 EXTERNC void gui_utf_basename(uTCHAR *path, uTCHAR *dst, size_t len);
 EXTERNC int gui_utf_strcasecmp(uTCHAR *s0, uTCHAR *s1);
 
+EXTERNC unsigned int gui_hardware_concurrency(void);
+
 EXTERNC void gui_init(int *argc, char **argv);
 EXTERNC void gui_sleep(double ms);
 #if defined (_WIN32)
 EXTERNC HWND gui_screen_id(void);
+EXTERNC char *gui_dup_wchar_to_utf8(uTCHAR *w);
 #else
 EXTERNC int gui_screen_id(void);
 #endif

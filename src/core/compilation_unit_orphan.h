@@ -30,6 +30,7 @@ void (*tas_header)(uTCHAR *file);
 void (*tas_read)(void);
 void (*tas_frame)(void);
 void (*tas_rewind)(int32_t frames_to_rewind);
+void (*tas_restart_from_begin)(void);
 
 #include "gui.h"
 _gui gui;

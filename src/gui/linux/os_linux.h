@@ -53,8 +53,9 @@ void gui_init(int *argc, char **argv) {
 		}
 
 		if (info.portable) {
+			const uTCHAR procselfexe[20] = "proc/self/exe";
 			uTCHAR path[usizeof(info.base_folder)];
-			int length = readlink("/proc/self/exe", uPTCHAR(path), usizeof(path));
+			int length = readlink(procselfexe, uPTCHAR(path), usizeof(path));
 
 			if (length < 0) {
 				fprintf(stderr, "INFO: Error resolving symlink /proc/self/exe.\n");

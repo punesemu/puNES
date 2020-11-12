@@ -67,8 +67,10 @@ typedef struct _info {
 	BYTE pause_from_gui;
 	BYTE on_cfg;
 	BYTE first_illegal_opcode;
-	BYTE wave_in_record;
+	BYTE recording_on_air;
+	BYTE recording_is_a_video;
 	BYTE cpu_rw_extern;
+	BYTE screenshot;
 #if defined (WITH_OPENGL)
 	BYTE sRGB_FBO_in_use;
 #endif

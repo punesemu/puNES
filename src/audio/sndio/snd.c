@@ -32,6 +32,7 @@
 #include "audio/channels.h"
 #include "gui.h"
 #include "wave.h"
+#include "rewind.h"
 
 enum snd_thread_actions {
 	ST_UNINITIALIZED,
@@ -186,10 +187,6 @@ void snd_thread_unlock(void) {
 }
 
 BYTE snd_playback_start(void) {
-	if (!cfg->apu.channel[APU_MASTER]) {
-		return (EXIT_OK);
-	}
-
 	snd_thread_pause();
 
 	// come prima cosa blocco eventuali riproduzioni
@@ -434,7 +431,7 @@ static void *sndio_thread_loop(UNUSED(void *data)) {
 		avail = snd.period.samples;
 		len = avail * snd.channels * sizeof(*cbd.write);
 
-		if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE) || (fps.fast_forward == TRUE)) {
+		if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps.fast_forward | !snd.buffer.start) {
 			sndio_wr_buf((void *)cbd.silence, len);
 		} else if (cbd.bytes_available < len) {
 			sndio_wr_buf((void *)cbd.silence, len);

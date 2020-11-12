@@ -57,7 +57,7 @@
 enum fullscreen_type { NO_FULLSCR, FULLSCR, FULLSCR_IN_WINDOW };
 enum scale_type { X1 = 1, X2, X3, X4, X5, X6 };
 enum par_type { PAR11, PAR54, PAR87, PAR118 };
-enum screenshot_type { SCRSH_STANDARD, SCRSH_ORIGINAL_SIZE };
+enum screenshot_type { SCRSH_NONE, SCRSH_STANDARD, SCRSH_ORIGINAL_SIZE };
 enum filters_type {
 	NO_FILTER,
 	SCALE2X,
@@ -117,10 +117,11 @@ typedef struct _gfx {
 	uint32_t *palette;
 	uTCHAR last_shader_file[LENGTH_FILE_NAME_LONG];
 	_viewport vp;
-	struct _gfx_screenshot {
-		BYTE save;
-		BYTE type;
-	} screenshot;
+	struct _gfx_frame {
+		uint64_t totals;
+		uint64_t filtered;
+		uint64_t in_draw;
+	} frame;
 	struct _gfx_filter {
 		void (*func)(void);
 

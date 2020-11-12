@@ -231,6 +231,12 @@ typedef struct _opengl {
 		} profile;
 	} cg;
 #endif
+	struct _screenshot {
+		void *rgb;
+		int stride;
+		int w, h;
+		int walign32;
+	} screenshot;
 } _opengl;
 
 extern _opengl opengl;

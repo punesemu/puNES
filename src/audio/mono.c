@@ -20,6 +20,9 @@
 #include "audio/snd.h"
 #include "audio/mono.h"
 #include "audio/channels.h"
+#if defined (WITH_FFMPEG)
+#include "recording.h"
+#endif
 
 BYTE ch_mono_init(void) {
 	audio_channels_quit = ch_mono_quit;
@@ -37,4 +40,10 @@ void ch_mono_tick(SWORD value) {
 
 	snd.cache->samples_available++;
 	snd.cache->bytes_available += sizeof(*snd.cache->write);
+
+#if defined (WITH_FFMPEG)
+	if (info.recording_on_air) {
+		recording_audio_tick(&value);
+	}
+#endif
 }

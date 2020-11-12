@@ -41,7 +41,7 @@ enum save_slot_mode { SAVE_SLOT_SAVE, SAVE_SLOT_READ, SAVE_SLOT_COUNT, SAVE_SLOT
 		return (EXIT_ERROR);\
 	}
 #define save_slot_int(mode, slot, value)\
-	switch(mode) {\
+	switch (mode) {\
 		case SAVE_SLOT_SAVE: {\
 			uint32_t uint32 = value;\
 			save_slot_ele(mode, slot, uint32);\
@@ -58,7 +58,7 @@ enum save_slot_mode { SAVE_SLOT_SAVE, SAVE_SLOT_READ, SAVE_SLOT_COUNT, SAVE_SLOT
 			break;\
 	}
 #define save_slot_pos(mode, slot, start, end)\
-	switch(mode) {\
+	switch (mode) {\
 		case SAVE_SLOT_SAVE: {\
 			uint32_t bank = 0;\
 			bank = end - start;\

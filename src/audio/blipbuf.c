@@ -30,6 +30,7 @@
 #include "audio/blip_buf.h"
 #include "audio/blipbuf.h"
 #include "info.h"
+#include "rewind.h"
 
 enum blbuf_misc { master_vol = 65536 / 15 };
 
@@ -184,7 +185,7 @@ void audio_reset_blipbuf(void) {
 	blipbuf.samples.count = 0;
 }
 void audio_apu_tick_blipbuf(void) {
-	if (!blipbuf.wave || !cfg->apu.channel[APU_MASTER] || fps.fast_forward) {
+	if ((!blipbuf.wave) | fps.fast_forward | rwnd.active) {
 		return;
 	}
 
@@ -203,7 +204,7 @@ void audio_apu_tick_blipbuf(void) {
 	blipbuf.counter++;
 }
 void audio_end_frame_blipbuf(void) {
-	if (!blipbuf.wave || !cfg->apu.channel[APU_MASTER] || fps.fast_forward) {
+	if ((!blipbuf.wave) | fps.fast_forward | rwnd.active) {
 		if (snd.cache) {
 			snd.cache->write = snd.cache->start;
 			snd.cache->read = (SBYTE *)snd.cache->start;
@@ -241,8 +242,11 @@ void audio_end_frame_blipbuf(void) {
 		}
 
 		for (i = 0; i < blipbuf.samples.count; i++) {
-			SWORD data = (blipbuf.samples.data[i] * apu_pre_amp) * cfg->apu.volume[APU_MASTER];
+			static SWORD data = 0;
 
+			if (cfg->apu.channel[APU_MASTER]) {
+				data = ((blipbuf.samples.data[i] * apu_pre_amp) * cfg->apu.volume[APU_MASTER]);
+			}
 			audio_channels_tick(data);
 
 			if (snd.cache->write == (SWORD *)snd.cache->end) {

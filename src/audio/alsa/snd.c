@@ -28,6 +28,7 @@
 #include "audio/channels.h"
 #include "gui.h"
 #include "wave.h"
+#include "rewind.h"
 
 #define SND_LIST_DEVICES_V1
 
@@ -206,10 +207,6 @@ void snd_thread_unlock(void) {
 
 BYTE snd_playback_start(void) {
 	int rc;
-
-	if (!cfg->apu.channel[APU_MASTER]) {
-		return (EXIT_OK);
-	}
 
 	snd_thread_pause();
 
@@ -855,7 +852,7 @@ static void *alsa_thread_loop(UNUSED(void *data)) {
 		avail = (avail > snd.period.samples ? snd.period.samples : avail);
 		len = avail * snd.channels * sizeof(*cbd.write);
 
-		if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE) || (fps.fast_forward == TRUE)) {
+		if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps.fast_forward | !snd.buffer.start) {
 			alsa_wr_buf((void *)cbd.silence, avail);
 		} else if (cbd.bytes_available < len) {
 			alsa_wr_buf((void *)cbd.silence, avail);

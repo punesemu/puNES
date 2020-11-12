@@ -131,6 +131,9 @@ void gfx_thread_continue(void) {
 
 	if (gfx_thread.pause_calls == 0) {
 		while (gfx_thread.in_run == GT_FALSE) {
+			if (info.stop == TRUE) {
+				break;
+			}
 			gui_sleep(1);
 		}
 	}

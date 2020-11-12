@@ -169,6 +169,7 @@ BYTE gui_create(void) {
 	// sull'inglese, non viene emesso nessun QEvent::LanguageChangen non permettendo
 	// di tradurre correttamente i bottoni degli shortcuts nel wdgSettingsInput.
 	QEvent event(QEvent::LanguageChange);
+
 	QApplication::sendEvent(qt.mwin, &event);
 	QApplication::sendEvent(qt.dset, &event);
 	QApplication::sendEvent(overlay.widget, &event);
@@ -250,6 +251,31 @@ void gui_update_dset(void) {
 }
 void gui_update_gps_settings(void) {
 	qt.dset->change_rom();
+}
+
+void gui_egds_set_fps(void) {
+	qt.mwin->egds->set_fps();
+}
+void gui_egds_stop_unnecessary(void) {
+	if (gui.start == TRUE) {
+		qt.mwin->egds->stop_unnecessary();
+	}
+}
+void gui_egds_start_pause(void) {
+	qt.mwin->egds->start_pause();
+}
+void gui_egds_stop_pause(void) {
+	qt.mwin->egds->stop_pause();
+}
+void gui_egds_start_rwnd(void) {
+	qt.mwin->egds->start_rwnd();
+}
+void gui_egds_stop_rwnd(void) {
+	qt.mwin->egds->stop_rwnd();
+}
+
+void gui_update_recording_widget(void) {
+	qt.mwin->update_recording_widgets();
 }
 
 void gui_fullscreen(void) {
@@ -526,10 +552,10 @@ BYTE gui_load_lut(void *l, const uTCHAR *path) {
 
 	return (EXIT_OK);
 }
-void gui_save_screenshot(int w, int h, char *buffer, BYTE flip) {
+void gui_save_screenshot(int w, int h, int stride, char *buffer, BYTE flip) {
 	QString basename = QString(uQString(info.base_folder)) + QString(SCRSHT_FOLDER) + "/"
 		+ QFileInfo(uQString(info.rom.file)).completeBaseName();
-	QImage screenshot = QImage((uchar *)buffer, w, h, QImage::Format_RGB32);
+	QImage screenshot = QImage((uchar *)buffer, w, h, stride, QImage::Format_RGB32);
 	QFile file;
 	uint count;
 
@@ -580,6 +606,12 @@ void gui_utf_basename(uTCHAR *path, uTCHAR *dst, size_t len) {
 int gui_utf_strcasecmp(uTCHAR *s0, uTCHAR *s1) {
 	return (QString::compare(uQString(s0), uQString(s1), Qt::CaseInsensitive));
 }
+
+#if !defined (_WIN32)
+unsigned int gui_hardware_concurrency(void) {
+	return (std::thread::hardware_concurrency());
+}
+#endif
 
 #if defined (__linux__)
 #include "os_linux.h"

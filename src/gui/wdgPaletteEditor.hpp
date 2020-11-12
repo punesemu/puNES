@@ -45,13 +45,13 @@ class wdgPaletteWall : public QWidget {
 		QSize sizeHint(void) const;
 
 	private:
-		void resizeEvent(QResizeEvent *e);
-		void paintEvent(QPaintEvent *e);
-		void mousePressEvent(QMouseEvent *e);
-		void mouseReleaseEvent(QMouseEvent *e);
-		void keyPressEvent(QKeyEvent *e);
-		void focusInEvent(QFocusEvent *e);
-		void focusOutEvent(QFocusEvent *e);
+		void resizeEvent(QResizeEvent *event);
+		void paintEvent(QPaintEvent *event);
+		void mousePressEvent(QMouseEvent *event);
+		void mouseReleaseEvent(QMouseEvent *event);
+		void keyPressEvent(QKeyEvent *event);
+		void focusInEvent(QFocusEvent *event);
+		void focusOutEvent(QFocusEvent *event);
 
 	public:
 		int count(void);
@@ -101,7 +101,7 @@ class wdgColorToChange : public wdgPaletteWall {
 		~wdgColorToChange();
 
 	private:
-		void resizeEvent(QResizeEvent *e);
+		void resizeEvent(QResizeEvent *event);
 
 	public:
 		int palette_index(int row, int col);
@@ -118,7 +118,7 @@ class wdgHtmlName : public QLineEdit {
 		void focus_out(void);
 
 	private:
-		void focusOutEvent(QFocusEvent *e);
+		void focusOutEvent(QFocusEvent *event);
 };
 
 #include "wdgPaletteEditor.hh"

@@ -31,6 +31,9 @@
 #include "nsf.h"
 #include "rewind.h"
 #include "palette.h"
+#if defined (WITH_FFMPEG)
+#include "recording.h"
+#endif
 
 #if defined (_WIN32)
 #define NEWLINE "\r\n"
@@ -108,6 +111,18 @@ enum set_element {
 	SET_NSF_PLAYER_EFFECT,
 	SET_NSF_PLAYER_NSFE_PLAYLIST,
 	SET_NSF_PLAYER_NSFE_FADEOUT,
+#if defined (WITH_FFMPEG)
+	SET_REC_AUDIO_FORMAT,
+	SET_REC_VIDEO_FORMAT,
+	SET_REC_QUALITY,
+	SET_REC_OUTPUT_RESOLUTION,
+	SET_REC_OUTPUT_CUSTOM_WIDTH,
+	SET_REC_OUTPUT_CUSTOM_HEIGHT,
+	SET_REC_USE_EMU_RESOLUTION,
+	SET_REC_FOLLOW_ROTATION,
+	SET_LAST_REC_AUDIO_PATH,
+	SET_LAST_REC_VIDEO_PATH,
+#endif
 };
 enum pgs_element {
 	SET_PGS_SLOT,
@@ -128,7 +143,10 @@ enum inp_element {
 	SET_INP_SC_INSERT_COIN,
 	SET_INP_SC_SWITCH_SIDES,
 	SET_INP_SC_EJECT_DISK,
-	SET_INP_SC_WAV,
+	SET_INP_SC_REC_AUDIO,
+#if defined (WITH_FFMPEG)
+	SET_INP_SC_REC_VIDEO,
+#endif
 	SET_INP_SC_FULLSCREEN,
 	SET_INP_SC_SCREENSHOT,
 	SET_INP_SC_SCREENSHOT_1X,
@@ -457,6 +475,53 @@ static const _opt opt_nsf_player_effect[] = {
 	{NULL, uL("hanning")    , NSF_EFFECT_HANNING},
 	{NULL, uL("hannig full"), NSF_EFFECT_HANNING_FULL}
 };
+#if defined (WITH_FFMPEG)
+static const _opt opt_recording_audio_format[] = {
+	{NULL, uL("mp3")  , REC_FORMAT_AUDIO_MP3},
+	{NULL, uL("aac")  , REC_FORMAT_AUDIO_AAC},
+	{NULL, uL("flac") , REC_FORMAT_AUDIO_FLAC},
+	{NULL, uL("ogg")  , REC_FORMAT_AUDIO_OGG},
+	{NULL, uL("wav")  , REC_FORMAT_AUDIO_WAV}
+};
+static const _opt opt_recording_video_format[] = {
+	{NULL, uL("mpeg1"), REC_FORMAT_VIDEO_MPG_MPEG1},
+	{NULL, uL("mpeg2"), REC_FORMAT_VIDEO_MPG_MPEG2},
+	{NULL, uL("mpeg4"), REC_FORMAT_VIDEO_MP4_MPEG4},
+	{NULL, uL("h264") , REC_FORMAT_VIDEO_MP4_H264},
+	{NULL, uL("hevc") , REC_FORMAT_VIDEO_MKV_HEVC},
+	{NULL, uL("webm") , REC_FORMAT_VIDEO_WEB_WEBM},
+	{NULL, uL("wmv")  , REC_FORMAT_VIDEO_AVI_WMV},
+	{NULL, uL("ffv")  , REC_FORMAT_VIDEO_AVI_FFV},
+	{NULL, uL("raw")  , REC_FORMAT_VIDEO_AVI_RAW}
+};
+static const _opt opt_recording_quality[] = {
+	{NULL, uL("low")   , REC_QUALITY_LOW},
+	{NULL, uL("medium"), REC_QUALITY_MEDIUM},
+	{NULL, uL("high")  , REC_QUALITY_HIGH}
+};
+static const _opt opt_recording_output_resolution[] = {
+	{NULL, uL("custom")   , REC_RES_CUSTOM},
+	{NULL, uL("256x240")  , REC_RES_256x240},
+	{NULL, uL("292x240")  , REC_RES_292x240},
+	{NULL, uL("320x240")  , REC_RES_320x240},
+	{NULL, uL("354x240")  , REC_RES_354x240},
+	{NULL, uL("512x480")  , REC_RES_512x480},
+	{NULL, uL("584x480")  , REC_RES_584x480},
+	{NULL, uL("640x480")  , REC_RES_640x480},
+	{NULL, uL("708x480")  , REC_RES_708x480},
+	{NULL, uL("768x720")  , REC_RES_768x720},
+	{NULL, uL("876x720")  , REC_RES_876x720},
+	{NULL, uL("960x720")  , REC_RES_960x720},
+	{NULL, uL("1064x720") , REC_RES_1064x720},
+	{NULL, uL("1024x960") , REC_RES_1024x960},
+	{NULL, uL("1170x960") , REC_RES_1170x960},
+	{NULL, uL("1280x960") , REC_RES_1280x960},
+	{NULL, uL("1418x960") , REC_RES_1418x960},
+	{NULL, uL("1280x720") , REC_RES_1280x720},
+	{NULL, uL("1920x1080"), REC_RES_1920x1080}
+};
+#endif
+
 static const _opt opt_toolbar_area[] = {
 	{NULL, uL("top")   , TLB_TOP},
 	{NULL, uL("left")  , TLB_LEFT},
@@ -547,8 +612,8 @@ static const _settings main_cfg[] = {
 		{0, NULL}
 	},
 	{
-		uL("system"), uL("last cheats file"), NULL,
-		uL("# possible values: [PATH/NAME]"),
+		uL("system"), uL("last cheats path"), NULL,
+		uL("# possible values: [PATH]"),
 		NULL,
 		{0, NULL}
 	},
@@ -924,7 +989,71 @@ static const _settings main_cfg[] = {
 		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+#if defined (WITH_FFMPEG)
+	{
+		uL("recording"), uL("audio format"), uL("wav"),
+		uL("# possible values: wav, mp3, aac, flac, ogg"),
+		NULL,
+		{LENGTH(opt_recording_audio_format), opt_recording_audio_format}
+	},
+	{
+		uL("recording"), uL("video format"), uL("mpeg1"),
+		uL("# possible values: mpeg1, mpeg2, mpeg4, h264, hevc, webm, wvm, ffv, raw"),
+		NULL,
+		{LENGTH(opt_recording_video_format), opt_recording_video_format}
+	},
+	{
+		uL("recording"), uL("quality"), uL("medium"),
+		uL("# possible values: low, medium, high"),
+		NULL,
+		{LENGTH(opt_recording_quality), opt_recording_quality}
+	},
+	{
+		uL("recording"), uL("output resolution"), uL("512x480"),
+		uL("# possible values: custom, 256x240, 292x240, 320x240, 354x240, 512x480, 584x480, 640x480," NEWLINE)
+		uL("#                  708x480, 768x720, 876x720, 1064x720, 1024x960, 1170x960, 1280x960, 1418x960," NEWLINE)
+		uL("#                  1280x720, 1920x1080"),
+		NULL,
+		{LENGTH(opt_recording_output_resolution), opt_recording_output_resolution}
+	},
+	{
+		uL("recording"), uL("output custom width"), uL("512"),
+		uL("# possible values: [256 - 2048]"),
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("recording"), uL("output custom height"), uL("480"),
+		uL("# possible values: [240 - 2048]"),
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("recording"), uL("use emu resolution"), uL("no"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("recording"), uL("follow rotation"), uL("yes"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("recording"), uL("last audio recording path"), NULL,
+		uL("# possible values: [PATH]"),
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("recording"), uL("last video recording path"), NULL,
+		uL("# possible values: [PATH]"),
+		NULL,
+		{0, NULL}
 	}
+#endif
 };
 
 static const _settings pgs_cfg[] = {
@@ -979,51 +1108,54 @@ static const _settings pgs_cfg[] = {
 };
 
 static const _settings inp_cfg[] = {
-	{uL("shortcuts"), uL("open"),                        uL("Alt+O,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("quit"),                        uL("Alt+Q,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("turn off"),                    uL("Alt+R,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("hard reset"),                  uL("F11,NULL"),        NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("soft reset"),                  uL("F12,NULL"),        NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("insert coin"),                 uL("8,NULL"),          NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("switch sides"),                uL("Alt+S,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("eject disk"),                  uL("Alt+E,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("start or stop WAV recording"), uL("Alt+V,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("video fullscreen"),            uL("Alt+Return,NULL"), NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("save screenshot"),             uL("Alt+X,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("save unalterd nes screen"),    uL("Alt+Z,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("pause"),                       uL("Pause,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("fast forward"),                uL("Tab,NULL"),        NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("toggle gui in window"),        uL("Alt+G,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("mode pal"),                    uL("F6,NULL"),         NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("mode ntsc"),                   uL("F7,NULL"),         NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("mode dendy"),                  uL("F8,NULL"),         NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("mode auto"),                   uL("F9,NULL"),         NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("scale 1x"),                    uL("Alt+1,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("scale 2x"),                    uL("Alt+2,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("scale 3x"),                    uL("Alt+3,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("scale 4x"),                    uL("Alt+4,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("scale 5x"),                    uL("Alt+5,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("scale 6x"),                    uL("Alt+6,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("video interpolation"),         uL("0,NULL"),          NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("integer scaling fullscreen"),  uL("Alt+L,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("stretch fullscreen"),          uL("Alt+P,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("audio enable"),                uL("Alt+A,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("save settings"),               uL("Alt+W,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("save state"),                  uL("F1,NULL"),         NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("load state"),                  uL("F4,NULL"),         NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("increment state slot"),        uL("F3,NULL"),         NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("decrement state slot"),        uL("F2,NULL"),         NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("start or stop rewind mode"),   uL("Ctrl+Left,NULL"),  NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("rewind step backward"),        uL("Left,NULL"),       NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("rewind step forward"),         uL("Right,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("rewind fast backward"),        uL("Down,NULL"),       NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("rewind fast forward"),         uL("Up,NULL"),         NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("rewind play"),                 uL("Del,NULL"),        NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("rewind pause"),                uL("PgDown,NULL"),     NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("open"),                          uL("Alt+O,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("quit"),                          uL("Alt+Q,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("turn off"),                      uL("Alt+R,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("hard reset"),                    uL("F11,NULL"),        NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("soft reset"),                    uL("F12,NULL"),        NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("insert coin"),                   uL("8,NULL"),          NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("switch sides"),                  uL("Alt+S,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("eject disk"),                    uL("Alt+E,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("start or stop audio recording"), uL("CTRL+A,NULL"),      NULL, NULL, {0, NULL}},
+#if defined (WITH_FFMPEG)
+	{uL("shortcuts"), uL("start or stop video recording"), uL("CTRL+V,NULL"),      NULL, NULL, {0, NULL}},
+#endif
+	{uL("shortcuts"), uL("video fullscreen"),              uL("Alt+Return,NULL"), NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("save screenshot"),               uL("Alt+X,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("save unalterd nes screen"),      uL("Alt+Z,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("pause"),                         uL("Pause,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("fast forward"),                  uL("Tab,NULL"),        NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("toggle gui in window"),          uL("Alt+G,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("mode pal"),                      uL("F6,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("mode ntsc"),                     uL("F7,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("mode dendy"),                    uL("F8,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("mode auto"),                     uL("F9,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("scale 1x"),                      uL("Alt+1,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("scale 2x"),                      uL("Alt+2,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("scale 3x"),                      uL("Alt+3,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("scale 4x"),                      uL("Alt+4,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("scale 5x"),                      uL("Alt+5,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("scale 6x"),                      uL("Alt+6,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("video interpolation"),           uL("0,NULL"),          NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("integer scaling fullscreen"),    uL("Alt+L,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("stretch fullscreen"),            uL("Alt+P,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("audio enable"),                  uL("Alt+A,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("save settings"),                 uL("Alt+W,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("save state"),                    uL("F1,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("load state"),                    uL("F4,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("increment state slot"),          uL("F3,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("decrement state slot"),          uL("F2,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("start or stop rewind mode"),     uL("Ctrl+Left,NULL"),  NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("rewind step backward"),          uL("Left,NULL"),       NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("rewind step forward"),           uL("Right,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("rewind fast backward"),          uL("Down,NULL"),       NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("rewind fast forward"),           uL("Up,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("rewind play"),                   uL("Del,NULL"),        NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("rewind pause"),                  uL("PgDown,NULL"),     NULL, NULL, {0, NULL}},
 #if defined (_WIN32)
-	{uL("shortcuts"), uL("joystick GUID"),               uL("NULL"),            NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("joystick GUID"),                 uL("NULL"),            NULL, NULL, {0, NULL}},
 #else
-	{uL("shortcuts"), uL("joystick Id"),                 uL("NULL"),            NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("joystick Id"),                   uL("NULL"),            NULL, NULL, {0, NULL}},
 #endif
 	{
 		uL("expansion port"), uL("expansion port"), uL("standard"),

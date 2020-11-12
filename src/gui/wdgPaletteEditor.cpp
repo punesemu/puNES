@@ -56,14 +56,14 @@ QSize wdgPaletteWall::sizeHint() const {
 	return (grid_size().boundedTo(QSize(640, 480)));
 }
 
-void wdgPaletteWall::resizeEvent(QResizeEvent *e) {
-	QSize s = e->size();
+void wdgPaletteWall::resizeEvent(QResizeEvent *event) {
+	QSize s = event->size();
 
 	cellw = s.width() / ncols;
 	cellh = s.height() / nrows;
 }
-void wdgPaletteWall::paintEvent(QPaintEvent *e) {
-	QRect r = e->rect();
+void wdgPaletteWall::paintEvent(QPaintEvent *event) {
+	QRect r = event->rect();
 	int cx = r.x();
 	int cy = r.y();
 	int ch = r.height();
@@ -107,13 +107,13 @@ void wdgPaletteWall::paintEvent(QPaintEvent *e) {
 		}
 	}
 }
-void wdgPaletteWall::mousePressEvent(QMouseEvent *e) {
+void wdgPaletteWall::mousePressEvent(QMouseEvent *event) {
 	// The current cell marker is set to the cell the mouse is pressed in
-	QPoint pos = e->pos();
+	QPoint pos = event->pos();
 
 	set_current(row_at(pos.y()), column_at(pos.x()));
 }
-void wdgPaletteWall::mouseReleaseEvent(UNUSED(QMouseEvent *e)) {
+void wdgPaletteWall::mouseReleaseEvent(UNUSED(QMouseEvent *event)) {
 	// The current cell marker is set to the cell the mouse is clicked in
 	set_selected(curRow, curCol);
 }
@@ -147,11 +147,11 @@ void wdgPaletteWall::keyPressEvent(QKeyEvent* e) {
 			return;
 	}
 }
-void wdgPaletteWall::focusInEvent(UNUSED(QFocusEvent *e)) {
+void wdgPaletteWall::focusInEvent(UNUSED(QFocusEvent *event)) {
 	update_cell(curRow, curCol);
 	emit current_changed(curRow, curCol);
 }
-void wdgPaletteWall::focusOutEvent(UNUSED(QFocusEvent *e)) {
+void wdgPaletteWall::focusOutEvent(UNUSED(QFocusEvent *event)) {
 	update_cell(curRow, curCol);
 }
 
@@ -347,8 +347,8 @@ wdgColorToChange::wdgColorToChange(QWidget *parent) : wdgPaletteWall(parent) {
 }
 wdgColorToChange::~wdgColorToChange() {};
 
-void wdgColorToChange::resizeEvent(QResizeEvent *e) {
-	QSize s = e->size();
+void wdgColorToChange::resizeEvent(QResizeEvent *event) {
+	QSize s = event->size();
 
 	cellw = s.width();
 	cellh = s.height();
@@ -377,8 +377,8 @@ void wdgColorToChange::set_current(int row, int col) {
 wdgHtmlName::wdgHtmlName(QWidget *parent) : QLineEdit(parent) {}
 wdgHtmlName::~wdgHtmlName() {}
 
-void wdgHtmlName::focusOutEvent(QFocusEvent *e) {
-	QLineEdit::focusOutEvent(e);
+void wdgHtmlName::focusOutEvent(QFocusEvent *event) {
+	QLineEdit::focusOutEvent(event);
 	emit focus_out();
 }
 

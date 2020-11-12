@@ -39,7 +39,7 @@
 _gfx gfx;
 
 BYTE gfx_init(void) {
-	gfx.screenshot.save = FALSE;
+	info.screenshot = SCRSH_NONE;
 
 	gui_screen_info();
 
@@ -444,11 +444,13 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 }
 void gfx_draw_screen(void) {
 	if (gfx_thread_public.filtering == TRUE) {
+		gfx.frame.totals++;
 		fps.frames_skipped++;
 		return;
 	}
 
 	screen.rd = screen.wr;
+	screen.rd->frame = gfx.frame.totals++;
 	screen.last_completed_wr = screen.wr;
 
 	if (info.doublebuffer == TRUE) {
@@ -533,6 +535,8 @@ void gfx_apply_filter(void) {
 
 	gfx_thread_lock();
 
+	gfx.frame.filtered = screen.rd->frame;
+
 	// applico l'effetto desiderato
 	gfx.filter.data.pitch = opengl.surface.pitch;
 	gfx.filter.data.pix = opengl.surface.pixels;
@@ -540,6 +544,13 @@ void gfx_apply_filter(void) {
 	gfx.filter.data.height = opengl.surface.h;
 	gfx.filter.func();
 
+	// posso trovarmi nella situazione in cui applico il filtro ad un frame quando ancora
+	// (per molteplici motivi) non ho ancora finito di disegnare il frame precedente. Il gui_screen_update
+	// mettere in coda un'altro update che verrebbe eseguito sempre sullo stesso frame disegnandolo
+	// a video due volte.
+	if ((gfx.frame.filtered - gfx.frame.in_draw) != 2) {
+		gui_screen_update();
+	}
+
 	gfx_thread_unlock();
-	gui_screen_update();
 }

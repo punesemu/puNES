@@ -120,7 +120,7 @@ void wdgScreen::dragEnterEvent(QDragEnterEvent *event) {
 	}
 }
 void wdgScreen::dropEvent(QDropEvent *event) {
-	foreach (const QUrl &url, event->mimeData()->urls()){
+	foreach (const QUrl &url, event->mimeData()->urls()) {
 		QFileInfo fileinfo(url.toLocalFile());
 		_uncompress_archive *archive;
 		BYTE is_rom = FALSE, is_patch = FALSE, rc;

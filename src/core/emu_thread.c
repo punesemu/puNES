@@ -97,6 +97,9 @@ void emu_thread_continue(void) {
 
 	if (emu_thread.pause_calls == 0) {
 		while (emu_thread.in_run == ET_FALSE) {
+			if (info.stop == TRUE) {
+				break;
+			}
 			gui_sleep(1);
 		}
 	}

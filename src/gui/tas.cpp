@@ -47,6 +47,7 @@ BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 		tas_read = tas_read_FM2;
 		tas_frame = tas_frame_FM2;
 		tas_rewind = tas_rewind_FM2;
+		tas_restart_from_begin = tas_restart_from_begin_FM2;
 	}
 
 	if (tas.type != NOTAS) {
@@ -335,4 +336,21 @@ void tas_rewind_FM2(int32_t frames_to_rewind) {
 
 	tas.frame = frames;
 	tas.index = snaps;
+}
+void tas_restart_from_begin_FM2(void) {
+	if (tas.type != NOTAS) {
+		tsint.count = 0;
+		tsint.file_byte_il.clear();
+		tsint.index = 0;
+
+		tas.frame = 0;
+
+		fseek(tas.fp, 0, SEEK_SET);
+
+		tas_read();
+
+		tsint.index = 0;
+		tas.index = -1;
+		tas.frame = -1;
+	}
 }

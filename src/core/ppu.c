@@ -942,7 +942,7 @@ void ppu_tick(void) {
 			ppu_overclock_update();
 			// azzero il flag del DMC dell'overclock
 			overclock.DMC_in_use = FALSE;
-			/* incremento il contatore dei frames */
+			/* incremento il contatore ppu dei frames */
 			ppu.frames++;
 			/* azzero frame_y */
 			ppu.frame_y = 0;
@@ -1028,6 +1028,7 @@ BYTE ppu_turn_on(void) {
 				BYTE b;
 
 				sb->ready = FALSE;
+				sb->frame = 0;
 
 				if (sb->data) {
 					free(sb->data);

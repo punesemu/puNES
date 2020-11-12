@@ -53,7 +53,7 @@ wdgToolBar::wdgToolBar(QWidget *parent) : QToolBar(parent) {
 
 	setHidden(cfg->toolbar.hidden);
 
-	switch(cfg->toolbar.area) {
+	switch (cfg->toolbar.area) {
 		default:
 		case TLB_TOP:
 			area = Qt::TopToolBarArea;
@@ -145,7 +145,7 @@ void wdgToolBar::s_toplevel_changed(UNUSED(bool toplevel)) {
 
 	area = mainwin->toolBarArea(this);
 
-	switch(area) {
+	switch (area) {
 		default:
 		case Qt::TopToolBarArea:
 			cfg->toolbar.area = TLB_TOP;

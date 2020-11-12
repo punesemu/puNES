@@ -35,6 +35,45 @@
 #include "wdgStatusBar.hpp"
 #include "wdgToolBar.hpp"
 
+class timerEgds : public QTimer {
+		Q_OBJECT
+
+	private:
+		enum with_emu_pause {
+			EGDS_PAUSE,
+			EGDS_TURN_OFF,
+			EGDS_TOTALS
+		};
+		struct _calls {
+			int count;
+		} calls[EGDS_TOTALS];
+
+	public:
+		timerEgds(QObject *parent = 0);
+		~timerEgds();
+
+	public:
+		void set_fps(void);
+		void stop_unnecessary(void);
+		void start_pause(void);
+		void stop_pause(void);
+		void start_rwnd(void);
+		void stop_rwnd(void);
+		void start_ff(void);
+		void stop_ff(void);
+		void start_turn_off(void);
+		void stop_turn_off(void);
+
+	private:
+		void _start(void);
+		void _start_with_emu_thread_pause(enum with_emu_pause type);
+		void _stop(BYTE is_necessary);
+		void _stop_with_emu_thread_continue(enum with_emu_pause type, BYTE is_necessary);
+		void _etc(enum with_emu_pause type);
+
+	private slots:
+		void s_draw_screen(void);
+};
 class mainWindow : public QMainWindow, public Ui::mainWindow {
 		Q_OBJECT
 
@@ -65,23 +104,24 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 				QAction *step_forward;
 			} rwnd;
 		} qaction_shcut;
+		// ext_gfx_draw_screen
+		timerEgds *egds;
+		wdgScreen *screen;
+		wdgStatusBar *statusbar;
+		wdgToolBar *toolbar;
+
+	private:
 		struct _shcjoy {
 			bool enabled;
 			QTimer *timer;
 			_js_sch sch;
 			DBWORD shortcut[SET_MAX_NUM_SC];
 		} shcjoy;
-		QTimer *ff;
-		wdgScreen *screen;
-		wdgStatusBar *statusbar;
-		wdgToolBar *toolbar;
-
-	private:
 		QShortcut *shortcut[SET_MAX_NUM_SC];
-		QRect geom;
 		QTranslator *translator;
 		QTranslator *qtTranslator;
 		bool toggle_gui_in_window;
+		QRect geom;
 
 	public:
 		mainWindow();
@@ -108,6 +148,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 
 	public:
 		void update_window(void);
+		void update_recording_widgets(void);
 		void set_language(int lang);
 		void shcjoy_start(void);
 		void shcjoy_stop(void);
@@ -136,6 +177,10 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void ctrl_disk_side(QAction *action);
 		int is_shortcut(const QKeyEvent *event);
 
+	public slots:
+		void s_set_fullscreen(void);
+		void s_set_vs_window(void);
+
 	private slots:
 		void s_open(void);
 		void s_apply_patch(void);
@@ -147,10 +192,10 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_insert_coin(void);
 		void s_disk_side(void);
 		void s_eject_disk(void);
-		void s_start_stop_wave(void);
-	public slots:
-		void s_set_fullscreen(void);
-	private slots:
+		void s_start_stop_audio_recording(void);
+#if defined (WITH_FFMPEG)
+		void s_start_stop_video_recording(void);
+#endif
 		void s_save_screenshot(void);
 		void s_save_screenshot_1x(void);
 		void s_pause(void);
@@ -162,13 +207,9 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_state_save_slot_set(void);
 		void s_state_save_file(void);
 		void s_state_load_file(void);
-	public slots:
-		void s_set_vs_window(void);
-	private slots:
 		void s_help(void);
 
 	private slots:
-		void s_ff_draw_screen(void);
 		void s_fullscreen(bool state);
 		void s_shcjoy_read_timer(void);
 

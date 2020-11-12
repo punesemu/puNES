@@ -55,7 +55,7 @@ void map_init_83(void) {
 
 	sync_83();
 
-	switch(info.id) {
+	switch (info.id) {
 		case MAP83_REG0:
 			m83.dip = 0;
 			break;

@@ -32,6 +32,10 @@ dlgSettings::dlgSettings(QWidget *parent) : QDialog(parent) {
 
 	widget_Settings_Cheats->widget_Cheats_Editor->pushButton_Hide_Show_Tools->setVisible(false);
 
+#if !defined (WITH_FFMPEG)
+	tabWidget_Settings->removeTab(6);
+#endif
+
 	adjustSize();
 
 	installEventFilter(this);

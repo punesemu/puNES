@@ -28,8 +28,7 @@ class wdgRewind : public QWidget, public Ui::wdgRewind {
 	Q_OBJECT
 
 	private:
-		QTimer *loop;
-		double step_timer;
+		double step_autorepeat_timer;
 
 	public:
 		wdgRewind(QWidget *parent = 0);
@@ -40,7 +39,8 @@ class wdgRewind : public QWidget, public Ui::wdgRewind {
 		void paintEvent(QPaintEvent *event);
 
 	public:
-		bool step_timer_control(void);
+		bool step_autorepeat_timer_control(void);
+		bool egds_rewind(void);
 
 	private:
 		void set_enable_backward(BYTE mode);
@@ -50,7 +50,6 @@ class wdgRewind : public QWidget, public Ui::wdgRewind {
 		void change_factor(int *factor);
 
 	private slots:
-		void s_loop(void);
 		void s_fast_backward(bool checked);
 		void s_step_backward(bool checked);
 		void s_play(bool checked);

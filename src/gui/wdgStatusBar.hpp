@@ -27,8 +27,6 @@
 #include "common.h"
 
 class infoStatusBar : public QWidget {
-	Q_OBJECT
-
 	private:
 		QHBoxLayout *hbox;
 		QLabel *label;
@@ -40,11 +38,39 @@ class infoStatusBar : public QWidget {
 	public:
 		void update_label(void);
 };
-class wdgStatusBar : public QStatusBar {
+class recStatusBar : public QFrame {
 	Q_OBJECT
 
+	private:
+		QLabel *icon;
+		QLabel *desc;
+		QTimer *timer;
+
 	public:
-		infoStatusBar *infosb;
+		recStatusBar(QWidget *parent = 0);
+		~recStatusBar();
+
+	protected:
+		void changeEvent(QEvent *event);
+		void closeEvent(QCloseEvent *event);
+		void mousePressEvent(QMouseEvent *event);
+
+	signals:
+		void et_blink_icon(void);
+
+	private:
+		void desc_text(void);
+		void icon_pixmap(QIcon::Mode mode);
+
+	private slots:
+		void s_et_blink_icon(void);
+		void s_blink_icon(void);
+		void s_context_menu(const QPoint& pos);
+};
+class wdgStatusBar : public QStatusBar {
+	public:
+		infoStatusBar *info;
+		recStatusBar *rec;
 
 	public:
 		wdgStatusBar(QWidget *parent);
@@ -52,6 +78,7 @@ class wdgStatusBar : public QStatusBar {
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event);
+		void showEvent(QShowEvent *event);
 
 	public:
 		void update_statusbar(void);

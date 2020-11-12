@@ -43,6 +43,8 @@ wdgSettingsInput.moc: wdgSettingsInput.hpp
 	$(MOC) $(srcdir)/wdgSettingsInput.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgSettingsPPU.moc: wdgSettingsPPU.hpp
 	$(MOC) $(srcdir)/wdgSettingsPPU.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+wdgSettingsRecording.moc: wdgSettingsRecording.hpp
+	$(MOC) $(srcdir)/wdgSettingsRecording.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@	
 wdgSettingsVideo.moc: wdgSettingsVideo.hpp
 	$(MOC) $(srcdir)/wdgSettingsVideo.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgScreen.moc: wdgScreen.hpp
@@ -88,6 +90,8 @@ wdgSettingsInput.hh: designer/wdgSettingsInput.ui
 	$(UIC) $(srcdir)/designer/wdgSettingsInput.ui -o $@
 wdgSettingsPPU.hh: designer/wdgSettingsPPU.ui
 	$(UIC) $(srcdir)/designer/wdgSettingsPPU.ui -o $@
+wdgSettingsRecording.hh: designer/wdgSettingsRecording.ui
+	$(UIC) $(srcdir)/designer/wdgSettingsRecording.ui -o $@
 wdgSettingsVideo.hh: designer/wdgSettingsVideo.ui
 	$(UIC) $(srcdir)/designer/wdgSettingsVideo.ui -o $@
 wdgState.hh: designer/wdgState.ui
@@ -158,6 +162,7 @@ BUILT_SOURCES += \
 	wdgSettingsGeneral.moc \
 	wdgSettingsInput.moc \
 	wdgSettingsPPU.moc \
+	wdgSettingsRecording.moc \
 	wdgSettingsVideo.moc \
 	wdgScreen.moc \
 	wdgState.moc \
@@ -182,6 +187,7 @@ BUILT_SOURCES += \
 	wdgSettingsGeneral.hh \
 	wdgSettingsInput.hh \
 	wdgSettingsPPU.hh \
+	wdgSettingsRecording.hh \
 	wdgSettingsVideo.hh \
 	wdgState.hh
 
@@ -237,6 +243,8 @@ libgui_a_SOURCES = \
 	wdgSettingsInput.hpp \
 	wdgSettingsPPU.cpp \
 	wdgSettingsPPU.hpp \
+	wdgSettingsRecording.cpp \
+	wdgSettingsRecording.hpp \
 	wdgSettingsVideo.cpp \
 	wdgSettingsVideo.hpp \
 	wdgScreen.cpp \

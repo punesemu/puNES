@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>515</width>
-    <height>283</height>
+    <width>596</width>
+    <height>286</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,9 +23,6 @@
   <layout class="QVBoxLayout" name="verticalLayout_dlgSettings">
    <item>
     <widget class="QTabWidget" name="tabWidget_Settings">
-     <property name="currentIndex">
-      <number>5</number>
-     </property>
      <widget class="QWidget" name="tab_General">
       <attribute name="icon">
        <iconset resource="resources.qrc">
@@ -110,6 +107,20 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_Recording">
+      <attribute name="icon">
+       <iconset resource="resources.qrc">
+        <normaloff>:/icon/icons/recording.svg</normaloff>:/icon/icons/recording.svg</iconset>
+      </attribute>
+      <attribute name="title">
+       <string>Recording</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="wdgSettingsRecording" name="widget_Settings_Recording" native="true"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>
@@ -175,6 +186,12 @@
    <class>wdgSettingsCheats</class>
    <extends>QWidget</extends>
    <header>wdgSettingsCheats.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>wdgSettingsRecording</class>
+   <extends>QWidget</extends>
+   <header>wdgSettingsRecording.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

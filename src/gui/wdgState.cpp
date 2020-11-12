@@ -45,11 +45,11 @@ void wdgState::changeEvent(QEvent *event) {
 	}
 }
 void wdgState::paintEvent(UNUSED(QPaintEvent *event)) {
-    QStyleOption opt;
-    QPainter p(this);
+	QStyleOption opt;
+	QPainter p(this);
 
-    opt.init(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+	opt.init(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 void wdgState::retranslateUi(wdgState *wdgState) {

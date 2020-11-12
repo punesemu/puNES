@@ -134,7 +134,7 @@ void wdgSettingsInput::hideEvent(QHideEvent *event) {
 
 	mainwin->shcjoy_start();
 
-	if (shcut.no_other_buttons == true){
+	if (shcut.no_other_buttons == true) {
 		shcut.timeout.seconds = 0;
 		s_input_timeout();
 	}
@@ -396,13 +396,26 @@ void wdgSettingsInput::shortcut_update_text(QAction *action, int index) {
 	int row = index - SET_INP_SC_OPEN;
 
 	// action
-	if (index == SET_INP_SC_WAV) {
-		tableWidget_Shortcuts->item(row, 0)->setText(tr("Start/Stop WAV"));
-		tableWidget_Shortcuts->item(row, 0)->setToolTip(tr("Start/Stop WAV"));
+#if defined (WITH_FFMPEG)
+	if (index == SET_INP_SC_REC_AUDIO) {
+		tableWidget_Shortcuts->item(row, 0)->setText(tr("Start/Stop AUDIO recording"));
+		tableWidget_Shortcuts->item(row, 0)->setToolTip(tr("Start/Stop AUDIO recording"));
+	} else if (index == SET_INP_SC_REC_VIDEO) {
+		tableWidget_Shortcuts->item(row, 0)->setText(tr("Start/Stop VIDEO recording"));
+		tableWidget_Shortcuts->item(row, 0)->setToolTip(tr("Start/Stop VIDEO recording"));
 	} else {
 		tableWidget_Shortcuts->item(row, 0)->setText(text.at(0));
 		tableWidget_Shortcuts->item(row, 0)->setToolTip(text.at(0));
 	}
+#else
+	if (index == SET_INP_SC_REC_AUDIO) {
+		tableWidget_Shortcuts->item(row, 0)->setText(tr("Start/Stop WAV recording"));
+		tableWidget_Shortcuts->item(row, 0)->setToolTip(tr("Start/Stop WAV recording"));
+	} else {
+		tableWidget_Shortcuts->item(row, 0)->setText(text.at(0));
+		tableWidget_Shortcuts->item(row, 0)->setToolTip(text.at(0));
+	}
+#endif
 
 	// keyboard
 	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QPushButton *>("value")->setText(shcut.text[KEYBOARD].at(row));
@@ -721,7 +734,10 @@ void wdgSettingsInput::shortcuts_set(void) {
 	shortcut_update_text(mainwin->action_Insert_Coin, SET_INP_SC_INSERT_COIN);
 	shortcut_update_text(mainwin->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
 	shortcut_update_text(mainwin->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
-	shortcut_update_text(mainwin->action_Start_Stop_WAV_recording, SET_INP_SC_WAV);
+	shortcut_update_text(mainwin->action_Start_Stop_Audio_recording, SET_INP_SC_REC_AUDIO);
+#if defined (WITH_FFMPEG)
+	shortcut_update_text(mainwin->action_Start_Stop_Video_recording, SET_INP_SC_REC_VIDEO);
+#endif
 	shortcut_update_text(mainwin->action_Fullscreen, SET_INP_SC_FULLSCREEN);
 	shortcut_update_text(mainwin->action_Save_Screenshot, SET_INP_SC_SCREENSHOT);
 	shortcut_update_text(mainwin->action_Save_Unaltered_NES_screen, SET_INP_SC_SCREENSHOT_1X);

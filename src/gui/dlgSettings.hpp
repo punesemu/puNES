@@ -50,6 +50,7 @@ class dlgSettings : public QDialog, public Ui::dlgSettings {
 		void update_tab_input(void);
 		void update_tab_ppu(void);
 		void update_tab_cheats(void);
+		void update_tab_recording(void);
 
 	public:
 		void update_tab_audio(void);

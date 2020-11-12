@@ -299,8 +299,6 @@ void rewind_init_operation(void) {
 	gfx_thread_pause();
 	ppu_draw_screen_pause();
 
-	snd_playback_stop();
-
 	rwint.snap_cursor = rwint.count.snaps;
 
 	rwnd.active = TRUE;
@@ -324,8 +322,6 @@ void rewind_close_operation(void) {
 	rwnd.active = FALSE;
 	emu_ctrl_doublebuffer();
 	gui_update();
-
-	snd_playback_start();
 
 	ppu_draw_screen_continue();
 	gfx_thread_continue();
