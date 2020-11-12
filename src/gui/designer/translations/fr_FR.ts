@@ -9,6 +9,17 @@
     </message>
   </context>
   <context>
+    <name>dlgCmdLineHelp</name>
+    <message>
+      <source>Close</source>
+      <translation type="unfinished">Close</translation>
+    </message>
+    <message>
+      <source>Command Line Help</source>
+      <translation type="unfinished">Command Line Help</translation>
+    </message>
+  </context>
+  <context>
     <name>dlgSettings</name>
     <message>
       <source>Settings</source>
@@ -73,6 +84,10 @@
     <message>
       <source>Rewind Fast Backward</source>
       <translation type="unfinished">Rewind Fast Backward</translation>
+    </message>
+    <message>
+      <source>Recording</source>
+      <translation type="unfinished">Recording</translation>
     </message>
   </context>
   <context>
@@ -603,10 +618,6 @@
       <translation type="unfinished">UNIF rom files</translation>
     </message>
     <message>
-      <source>Start/Stop &amp;WAV recording</source>
-      <translation type="unfinished">Start/Stop &amp;WAV recording</translation>
-    </message>
-    <message>
       <source>Stop &amp;WAV recording</source>
       <translation type="unfinished">Stop &amp;WAV recording</translation>
     </message>
@@ -669,6 +680,34 @@
     <message>
       <source>Widgets</source>
       <translation type="unfinished">Widgets</translation>
+    </message>
+    <message>
+      <source>Start &amp;AUDIO recording</source>
+      <translation type="unfinished">Start &amp;AUDIO recording</translation>
+    </message>
+    <message>
+      <source>Start &amp;VIDEO recording</source>
+      <translation type="unfinished">Start &amp;VIDEO recording</translation>
+    </message>
+    <message>
+      <source>Stop &amp;AUDIO recording</source>
+      <translation type="unfinished">Stop &amp;AUDIO recording</translation>
+    </message>
+    <message>
+      <source>Stop &amp;VIDEO recording</source>
+      <translation type="unfinished">Stop &amp;VIDEO recording</translation>
+    </message>
+    <message>
+      <source>Start/Stop &amp;AUDIO recording</source>
+      <translation type="unfinished">Start/Stop &amp;AUDIO recording</translation>
+    </message>
+    <message>
+      <source>&amp;Recording</source>
+      <translation type="unfinished">&amp;Recording</translation>
+    </message>
+    <message>
+      <source>Start/Stop &amp;VIDEO recording</source>
+      <translation type="unfinished">Start/Stop &amp;VIDEO recording</translation>
     </message>
   </context>
   <context>
@@ -830,6 +869,17 @@
     </message>
   </context>
   <context>
+    <name>recStatusBar</name>
+    <message>
+      <source>Audio</source>
+      <translation type="unfinished">Audio</translation>
+    </message>
+    <message>
+      <source>Video</source>
+      <translation type="unfinished">Video</translation>
+    </message>
+  </context>
+  <context>
     <name>wdgAPUChannels</name>
     <message>
       <source>APU Channels</source>
@@ -893,10 +943,6 @@
     <message>
       <source>Cheats List</source>
       <translation type="unfinished">Cheats List</translation>
-    </message>
-    <message>
-      <source>Active</source>
-      <translation type="unfinished">Active</translation>
     </message>
     <message>
       <source>Description</source>
@@ -1079,6 +1125,37 @@
     <message>
       <source>Reset palette</source>
       <translation type="unfinished">Reset palette</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgRecGetSaveFileName</name>
+    <message>
+      <source>Record AUDIO on file</source>
+      <translation type="unfinished">Record AUDIO on file</translation>
+    </message>
+    <message>
+      <source>Output Quality</source>
+      <translation type="unfinished">Output Quality</translation>
+    </message>
+    <message>
+      <source>Low</source>
+      <translation type="unfinished">Low</translation>
+    </message>
+    <message>
+      <source>Medium</source>
+      <translation type="unfinished">Medium</translation>
+    </message>
+    <message>
+      <source>High</source>
+      <translation type="unfinished">High</translation>
+    </message>
+    <message>
+      <source>Record VIDEO on file</source>
+      <translation type="unfinished">Record VIDEO on file</translation>
+    </message>
+    <message>
+      <source>Not supported</source>
+      <translation type="unfinished">Not supported</translation>
     </message>
   </context>
   <context>
@@ -1321,6 +1398,10 @@
       <source>Enable Audio</source>
       <translation type="unfinished">Enable Audio</translation>
     </message>
+    <message>
+      <source>Reverse bits of DPCM</source>
+      <translation type="unfinished">Reverse bits of DPCM</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsCheats</name>
@@ -1539,10 +1620,6 @@
       <translation type="unfinished">Unset</translation>
     </message>
     <message>
-      <source>Start/Stop WAV</source>
-      <translation type="unfinished">Start/Stop WAV</translation>
-    </message>
-    <message>
       <source>No usable device</source>
       <translation type="unfinished">No usable device</translation>
     </message>
@@ -1646,6 +1723,18 @@
       <source>Unset all</source>
       <translation type="unfinished">Unset all</translation>
     </message>
+    <message>
+      <source>Start/Stop AUDIO recording</source>
+      <translation type="unfinished">Start/Stop AUDIO recording</translation>
+    </message>
+    <message>
+      <source>Start/Stop VIDEO recording</source>
+      <translation type="unfinished">Start/Stop VIDEO recording</translation>
+    </message>
+    <message>
+      <source>Start/Stop WAV recording</source>
+      <translation type="unfinished">Start/Stop WAV recording</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsPPU</name>
@@ -1692,6 +1781,215 @@
     <message>
       <source>Hide Background</source>
       <translation type="unfinished">Hide Background</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgSettingsRecording</name>
+    <message>
+      <source>MPEG 1 Video (*.mpg *.mpeg)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">MPEG 1 Video (*.mpg *.mpeg)</translation>
+    </message>
+    <message>
+      <source>MPEG 2 Video (*.mpg *.mpeg)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">MPEG 2 Video (*.mpg *.mpeg)</translation>
+    </message>
+    <message>
+      <source>MPEG 4 Video (*.mp4)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">MPEG 4 Video (*.mp4)</translation>
+    </message>
+    <message>
+      <source>MPEG H264 Video (*.mp4)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">MPEG H264 Video (*.mp4)</translation>
+    </message>
+    <message>
+      <source>High Efficiency Video Codec (*.mkv)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">High Efficiency Video Codec (*.mkv)</translation>
+    </message>
+    <message>
+      <source>WebM Video (*.webm)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">WebM Video (*.webm)</translation>
+    </message>
+    <message>
+      <source>Windows Media Video (*.wmv)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">Windows Media Video (*.wmv)</translation>
+    </message>
+    <message>
+      <source>AVI FF Video (*.avi)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">AVI FF Video (*.avi)</translation>
+    </message>
+    <message>
+      <source>AVI Video (*.avi)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">AVI Video (*.avi)</translation>
+    </message>
+    <message>
+      <source>WAV Audio (*.wav)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">WAV Audio (*.wav)</translation>
+    </message>
+    <message>
+      <source>MP3 Audio (*.mp3)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">MP3 Audio (*.mp3)</translation>
+    </message>
+    <message>
+      <source>AAC Audio (*.aac)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">AAC Audio (*.aac)</translation>
+    </message>
+    <message>
+      <source>Flac Audio (*.flac)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">Flac Audio (*.flac)</translation>
+    </message>
+    <message>
+      <source>Ogg Audio (*.ogg)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">Ogg Audio (*.ogg)</translation>
+    </message>
+    <message>
+      <source>Not supported</source>
+      <translation type="unfinished">Not supported</translation>
+    </message>
+    <message>
+      <source>Custom Height</source>
+      <translation type="unfinished">Custom Height</translation>
+    </message>
+    <message>
+      <source>Output Video Format</source>
+      <translation type="unfinished">Output Video Format</translation>
+    </message>
+    <message>
+      <source>Custom Width</source>
+      <translation type="unfinished">Custom Width</translation>
+    </message>
+    <message>
+      <source>Output Quality</source>
+      <translation type="unfinished">Output Quality</translation>
+    </message>
+    <message>
+      <source>Output Audio Format</source>
+      <translation type="unfinished">Output Audio Format</translation>
+    </message>
+    <message>
+      <source>Output Resolution</source>
+      <translation type="unfinished">Output Resolution</translation>
+    </message>
+    <message>
+      <source>Custom</source>
+      <translation type="unfinished">Custom</translation>
+    </message>
+    <message>
+      <source>256 x 240  (1:1)</source>
+      <translation type="unfinished">256 x 240  (1:1)</translation>
+    </message>
+    <message>
+      <source>292 x 240  (8:7 NTSC TV)</source>
+      <translation type="unfinished">292 x 240  (8:7 NTSC TV)</translation>
+    </message>
+    <message>
+      <source>320 x 240  (5:4)</source>
+      <translation type="unfinished">320 x 240  (5:4)</translation>
+    </message>
+    <message>
+      <source>354 x 240  (11:8 PAL TV)</source>
+      <translation type="unfinished">354 x 240  (11:8 PAL TV)</translation>
+    </message>
+    <message>
+      <source>512 x 480  (1:1)</source>
+      <translation type="unfinished">512 x 480  (1:1)</translation>
+    </message>
+    <message>
+      <source>584 x 480  (8:7 NTSC TV)</source>
+      <translation type="unfinished">584 x 480  (8:7 NTSC TV)</translation>
+    </message>
+    <message>
+      <source>640 x 480  (5:4)</source>
+      <translation type="unfinished">640 x 480  (5:4)</translation>
+    </message>
+    <message>
+      <source>708 x 480  (11:8 PAL TV)</source>
+      <translation type="unfinished">708 x 480  (11:8 PAL TV)</translation>
+    </message>
+    <message>
+      <source>768 x 720  (1:1)</source>
+      <translation type="unfinished">768 x 720  (1:1)</translation>
+    </message>
+    <message>
+      <source>876 x 720  (8:7 NTSC TV)</source>
+      <translation type="unfinished">876 x 720  (8:7 NTSC TV)</translation>
+    </message>
+    <message>
+      <source>960 x 720  (5:4)</source>
+      <translation type="unfinished">960 x 720  (5:4)</translation>
+    </message>
+    <message>
+      <source>1064 x 720  (11:8 PAL TV)</source>
+      <translation type="unfinished">1064 x 720  (11:8 PAL TV)</translation>
+    </message>
+    <message>
+      <source>1024 x 960  (1:1)</source>
+      <translation type="unfinished">1024 x 960  (1:1)</translation>
+    </message>
+    <message>
+      <source>1170 x 960  (8:7 NTSC TV)</source>
+      <translation type="unfinished">1170 x 960  (8:7 NTSC TV)</translation>
+    </message>
+    <message>
+      <source>1280 x 960  (5:4)</source>
+      <translation type="unfinished">1280 x 960  (5:4)</translation>
+    </message>
+    <message>
+      <source>1418 x 960  (11:8 PAL TV)</source>
+      <translation type="unfinished">1418 x 960  (11:8 PAL TV)</translation>
+    </message>
+    <message>
+      <source>1280 x 720</source>
+      <translation type="unfinished">1280 x 720</translation>
+    </message>
+    <message>
+      <source>1920 x 1080</source>
+      <translation type="unfinished">1920 x 1080</translation>
+    </message>
+    <message>
+      <source>Use the emulator resolution</source>
+      <translation type="unfinished">Use the emulator resolution</translation>
+    </message>
+    <message>
+      <source>Follow screen rotation</source>
+      <translation type="unfinished">Follow screen rotation</translation>
+    </message>
+    <message>
+      <source>Low</source>
+      <translation type="unfinished">Low</translation>
+    </message>
+    <message>
+      <source>Medium</source>
+      <translation type="unfinished">Medium</translation>
+    </message>
+    <message>
+      <source>High</source>
+      <translation type="unfinished">High</translation>
+    </message>
+    <message>
+      <source>Audio recording settings</source>
+      <translation type="unfinished">Audio recording settings</translation>
+    </message>
+    <message>
+      <source>Video recording settings</source>
+      <translation type="unfinished">Video recording settings</translation>
+    </message>
+    <message>
+      <source>Recording Settings</source>
+      <translation type="unfinished">Recording Settings</translation>
     </message>
   </context>
   <context>
