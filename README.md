@@ -221,7 +221,7 @@ where `[...]` are the other necessary options.
 -----------
 
 #### FFmpeg
-It is always possible to disable audio/video recording support by specifying the `configure` parameter `--disable-ffmpeg`.
+It is always possible to disable audio/video recording support by specifying the `configure` parameter `--without-ffmpeg`.
 
 Supported audio recording formats:
 * WAV Audio
@@ -241,4 +241,4 @@ Supported video recording formats:
 * AVI FF Video
 * AVI Video
 
-(*) Supported if compiled in FFmpeg.
+(*) if compiled in FFmpeg.

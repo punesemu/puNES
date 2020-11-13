@@ -138,5 +138,6 @@ src/extra/p7zip_9.20.1/CPP/CPP
 src/extra/7z922/C/C
 src/extra/7z922/CPP/CPP
 src/gui/designer/translations/*.qm
+!src/extra/windows/ffmpeg/src/*
 !src/extra/windows/ffmpeg/lib/*.a
 !src/extra/windows/ffmpeg/lib.x64/*.a

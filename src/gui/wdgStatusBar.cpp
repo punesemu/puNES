@@ -23,6 +23,7 @@
 #include "mainWindow.hpp"
 #include "conf.h"
 #include "patcher.h"
+#include "recording.h"
 
 // -------------------------------- Statusbar -----------------------------------------
 

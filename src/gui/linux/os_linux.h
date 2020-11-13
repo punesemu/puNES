@@ -53,22 +53,14 @@ void gui_init(int *argc, char **argv) {
 		}
 
 		if (info.portable) {
-			const uTCHAR procselfexe[20] = "proc/self/exe";
 			uTCHAR path[usizeof(info.base_folder)];
-			int length = readlink(procselfexe, uPTCHAR(path), usizeof(path));
+			int length = readlink("/proc/self/exe", uPTCHAR(path), usizeof(path) - 1);
 
 			if (length < 0) {
 				fprintf(stderr, "INFO: Error resolving symlink /proc/self/exe.\n");
 				info.portable = FALSE;
-			} else if (length >= (signed int) usizeof(info.base_folder)) {
-				fprintf(stderr, "INFO: Path too long. Truncated.\n");
-				info.portable = FALSE;
 			} else {
-				// I don't know why, but the string this readlink() function
-				// returns is appended with a '@'.
-				if (path[length] == '@') {
-					path[length] = 0;
-				}
+				path[length] = 0;
 				gui_utf_dirname(path, info.base_folder, usizeof(info.base_folder));
 			}
 		} else {
