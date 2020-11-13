@@ -1202,7 +1202,8 @@ void mainWindow::s_start_stop_audio_recording(void) {
 #else
 	if (info.recording_on_air == FALSE) {
 		QStringList filters;
-		QString file;
+		QString file, dir;
+		QFileInfo rom = QFileInfo(uQString(info.rom.file));
 
 		emu_pause(TRUE);
 
@@ -1212,9 +1213,14 @@ void mainWindow::s_start_stop_audio_recording(void) {
 		filters[0].append(" (*.wav *.WAV)");
 		filters[1].append(" (*.*)");
 
+		if (ustrlen(cfg->last_rec_audio_path) == 0) {
+			dir = rom.dir().absolutePath();
+		} else {
+			dir = uQString(cfg->last_rec_audio_path);
+		}
+
 		file = QFileDialog::getSaveFileName(this, tr("Record sound"),
-			QFileInfo(uQString(info.rom.file)).completeBaseName(),
-			filters.join(";;"));
+			dir + "/" + rom.completeBaseName(), filters.join(";;"));
 
 		if (file.isNull() == false) {
 			QFileInfo fileinfo(file);
@@ -1223,6 +1229,8 @@ void mainWindow::s_start_stop_audio_recording(void) {
 				fileinfo.setFile(QString(file) + ".wav");
 			}
 
+			umemset(cfg->last_rec_audio_path, 0x00, usizeof(cfg->last_rec_audio_path));
+			ustrncpy(cfg->last_rec_audio_path, uQStringCD(fileinfo.absolutePath()), usizeof(cfg->last_rec_audio_path) - 1);
 			wave_open(uQStringCD(fileinfo.absoluteFilePath()), snd.samplerate * 5);
 		}
 

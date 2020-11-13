@@ -107,9 +107,9 @@ typedef struct _config {
 	uTCHAR fds_bios_file[LENGTH_FILE_NAME_LONG];
 	uTCHAR last_import_cheat_path[LENGTH_FILE_NAME_LONG];
 #if defined (WITH_FFMPEG)
-	uTCHAR last_rec_audio_path[LENGTH_FILE_NAME_LONG];
 	uTCHAR last_rec_video_path[LENGTH_FILE_NAME_LONG];
 #endif
+	uTCHAR last_rec_audio_path[LENGTH_FILE_NAME_LONG];
 
 	uTCHAR audio_output[100];
 	uTCHAR audio_input[100];

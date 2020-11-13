@@ -299,7 +299,11 @@ QString wdgRecGetSaveFileName::audio_get_save_file_name(void) {
 	selectFile(uQString(info.rom.file));
 	// ... e poi la directory. Facendo il contrario imposterebbe come directory
 	// il path precedente il nome (quantomeno capita nella versione windows).
-	setDirectory(uQString(cfg->last_rec_audio_path));
+	if (ustrlen(cfg->last_rec_audio_path) == 0) {
+		setDirectory(QFileInfo(uQString(info.rom.file)).dir().absolutePath());
+	} else {
+		setDirectory(uQString(cfg->last_rec_audio_path));
+	}
 
 	if ((cb_file_types = init_file_types(REC_FORMAT_AUDIO_WAV, REC_FORMAT_AUDIO_TOTAL, rec_cfg.audio_format))) {
 		connect(cb_file_types, SIGNAL(activated(int)), this, SLOT(s_output_audio_format(int)));
@@ -335,7 +339,11 @@ QString wdgRecGetSaveFileName::video_get_save_file_name(void) {
 	selectFile(uQString(info.rom.file));
 	// ... e poi la directory. Facendo il contrario imposterebbe come directory
 	// il path precedente il nome (quantomeno capita nella versione windows).
-	setDirectory(uQString(cfg->last_rec_video_path));
+	if (ustrlen(cfg->last_rec_video_path) == 0) {
+		setDirectory(QFileInfo(uQString(info.rom.file)).dir().absolutePath());
+	} else {
+		setDirectory(uQString(cfg->last_rec_video_path));
+	}
 
 	if ((cb_file_types = init_file_types(REC_FORMAT_VIDEO_MPG_MPEG1, REC_FORMAT_VIDEO_TOTAL, rec_cfg.video_format))) {
 		connect(cb_file_types, SIGNAL(activated(int)), this, SLOT(s_output_video_format(int)));

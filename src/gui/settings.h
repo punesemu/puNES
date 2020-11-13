@@ -120,9 +120,9 @@ enum set_element {
 	SET_REC_OUTPUT_CUSTOM_HEIGHT,
 	SET_REC_USE_EMU_RESOLUTION,
 	SET_REC_FOLLOW_ROTATION,
-	SET_LAST_REC_AUDIO_PATH,
 	SET_LAST_REC_VIDEO_PATH,
 #endif
+	SET_LAST_REC_AUDIO_PATH
 };
 enum pgs_element {
 	SET_PGS_SLOT,
@@ -1042,18 +1042,18 @@ static const _settings main_cfg[] = {
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		uL("recording"), uL("last audio recording path"), NULL,
-		uL("# possible values: [PATH]"),
-		NULL,
-		{0, NULL}
-	},
-	{
 		uL("recording"), uL("last video recording path"), NULL,
 		uL("# possible values: [PATH]"),
 		NULL,
 		{0, NULL}
-	}
+	},
 #endif
+	{
+		uL("recording"), uL("last audio recording path"), NULL,
+		uL("# possible values: [PATH]"),
+		NULL,
+		{0, NULL}
+	}
 };
 
 static const _settings pgs_cfg[] = {
