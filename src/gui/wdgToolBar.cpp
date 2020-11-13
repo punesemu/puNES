@@ -112,7 +112,7 @@ void wdgToolBar::update_toolbar(void) {
 	rotate->update_widget();
 }
 void wdgToolBar::set_hide_without_signal(bool mode) {
-	if (cfg->toolbar.hidden == true) {
+	if (cfg->toolbar.hidden == TRUE) {
 		mode = false;
 	}
 	blockSignals(true);
@@ -166,6 +166,10 @@ void wdgToolBar::s_toplevel_changed(UNUSED(bool toplevel)) {
 	}
 }
 void wdgToolBar::s_visibility_changed(bool visibility) {
+	if (info.stop == TRUE) {
+		return;
+	}
+
 	if (mouse_pressed == false) {
 		if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
 			emu_thread_pause();
