@@ -336,7 +336,7 @@ BYTE unif_load_rom(void) {
 						return (EXIT_ERROR);
 					}
 				} else if (strncmp(unif.chunk.id, "MIRR", 4) == 0) {
-					if(unif_MIRR(&rom, phase) == EXIT_ERROR) {
+					if (unif_MIRR(&rom, phase) == EXIT_ERROR) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}

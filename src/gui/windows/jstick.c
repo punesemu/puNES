@@ -1195,7 +1195,7 @@ static void js_close(_jstick_device *jdev) {
 			free(jdev->axis_info);
 			jdev->axis_info = NULL;
 		}
-		if(jdev->button_offsets) {
+		if (jdev->button_offsets) {
 			free(jdev->button_offsets);
 			jdev->button_offsets = NULL;
 		}

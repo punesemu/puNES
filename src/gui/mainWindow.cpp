@@ -81,7 +81,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
 	setStatusBar(statusbar);
 
-	toolbar->setObjectName(QString::fromUtf8("toolbar"));
+	toolbar->setObjectName("toolbar");
 	toolbar->setWindowTitle(tr("Widgets"));
 	addToolBar(toolbar->area, toolbar);
 
@@ -689,7 +689,7 @@ void mainWindow::connect_shortcut(QAction *action, int index) {
 		QStringList text = action->text().split('\t');
 
 		action->setShortcut(QKeySequence((*sc)));
-		if((*sc) == "NULL") {
+		if ((*sc) == "NULL") {
 			action->setText(text.at(0));
 		} else {
 			action->setText(text.at(0) + '\t' + (*sc));
@@ -712,7 +712,7 @@ void mainWindow::connect_shortcut(QAction *action, int index, const char *member
 		// connetto il nuovo
 		connect(shortcut[index], SIGNAL(activated()), this, member);
 
-		if((*sc) == "NULL") {
+		if ((*sc) == "NULL") {
 			action->setText(text.at(0));
 		} else {
 			action->setText(text.at(0) + '\t' + (*sc));
@@ -1445,8 +1445,8 @@ void mainWindow::s_help(void) {
 
 	about->setWindowModality(Qt::WindowModal);
 
-	about->setWindowIcon(QIcon(QString::fromUtf8(":/icon/icons/application.png")));
-	about->setIconPixmap(QPixmap(QString::fromUtf8(":/pics/pics/pushpin.png")));
+	about->setWindowIcon(QIcon(":/icon/icons/application.png"));
+	about->setIconPixmap(QPixmap(":/pics/pics/pushpin.png"));
 
 	text.append("<center><h2>" + QString(NAME) + " ");
 	if (info.portable) {

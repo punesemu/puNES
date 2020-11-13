@@ -289,7 +289,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	widget = new QWidget(this);
 	layout = new QHBoxLayout(widget);
 	btext = new QPushButton(this);
-	btext->setObjectName(QString::fromUtf8("value"));
+	btext->setObjectName("value");
 	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 	btext->setProperty("myValue", QVariant(row));
 	btext->setProperty("myType", QVariant(KEYBOARD));
@@ -297,7 +297,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	layout->addWidget(btext);
 	connect(btext, SIGNAL(clicked(bool)), this, SLOT(s_shortcut(bool)));
 	bicon = new QPushButton(this);
-	bicon->setObjectName(QString::fromUtf8("default"));
+	bicon->setObjectName("default");
 	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	bicon->setIcon(QIcon(":/icon/icons/default.svg"));
 	bicon->setToolTip(tr("Default"));
@@ -305,7 +305,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	connect(bicon, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_keyb_default(bool)));
 	layout->addWidget(bicon);
 	bicon = new QPushButton(this);
-	bicon->setObjectName(QString::fromUtf8("unset"));
+	bicon->setObjectName("unset");
 	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	bicon->setIcon(QIcon(":/icon/icons/trash.svg"));
 	bicon->setToolTip(tr("Unset"));
@@ -325,7 +325,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	widget = new QWidget(this);
 	layout = new QHBoxLayout(widget);
 	btext = new QPushButton(this);
-	btext->setObjectName(QString::fromUtf8("value"));
+	btext->setObjectName("value");
 	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 	btext->setProperty("myValue", QVariant(row));
 	btext->setProperty("myType", QVariant(JOYSTICK));
@@ -333,7 +333,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	connect(btext, SIGNAL(clicked(bool)), this, SLOT(s_shortcut(bool)));
 	layout->addWidget(btext);
 	bicon = new QPushButton(this);
-	bicon->setObjectName(QString::fromUtf8("unset"));
+	bicon->setObjectName("unset");
 	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	bicon->setIcon(QIcon(":/icon/icons/trash.svg"));
 	bicon->setToolTip(tr("Unset"));
