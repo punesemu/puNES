@@ -1421,7 +1421,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 					ptr++;
 				}
 			} else {
-				strncpy(version, "#version 130\n", sizeof(version) - 1);
+				strncpy(version, "#version 120\n", sizeof(version) - 1);
 			}
 		}
 	}

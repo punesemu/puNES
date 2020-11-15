@@ -284,7 +284,7 @@ BYTE emu_file_exist(const uTCHAR *file) {
 }
 char *emu_file2string(const uTCHAR *path) {
 	FILE *fd;
-	long len, r;
+	size_t len;
 	char *str;
 
 	if (!(fd = ufopen(path, uL("r")))) {
@@ -304,7 +304,9 @@ char *emu_file2string(const uTCHAR *path) {
 
 	memset(str, 0x00, len + 1);
 
-	r = fread(str, sizeof(char), len, fd);
+	if (fread(str, sizeof(char), len, fd) < len) {
+		str = NULL;
+	}
 
 	fclose(fd);
 
