@@ -1386,8 +1386,9 @@ INLINE static void opengl_shader_params_overlay_set(_shader *shd) {
 
 // glsl
 static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, const uTCHAR *path) {
-	const GLchar *src[3];
+	const GLchar *src[4];
 	char alias_define[MAX_PASS * 128];
+	char version[128];
 	GLuint i, vrt, frg;
 	GLint success = 0;
 
@@ -1395,8 +1396,34 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 		return (EXIT_ERROR_SHADER);
 	}
 
+	memset(version, 0x00, sizeof(version));
+
 	if (path && path[0]) {
+		unsigned int i;
+		char *ptr;
+
 		code = emu_file2string(path);
+
+		// la direttiva #version deve essere sempre la prima riga
+		{
+			ptr = strstr(code, "#version ");
+
+			if (ptr) {
+				for (i = 0; i < (sizeof(version) - 1); i++) {
+					(*(version + i)) = (*ptr);
+					if (((*ptr) == '\r') && ((*(ptr + 1)) == '\n')) {
+						(*(version + i + 1)) = '\n';
+						break;
+					} else if ((*ptr) == '\n') {
+						break;
+					}
+					(*ptr) = ' ';
+					ptr++;
+				}
+			} else {
+				strncpy(version, "#version 130\n", sizeof(version) - 1);
+			}
+		}
 	}
 
 	// program
@@ -1423,13 +1450,13 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 		}
 	}
 
-	src[1] = alias_define;
-	src[2] = code;
-
 	// vertex
-	src[0] = "#define VERTEX\n#define PARAMETER_UNIFORM\n";
+	src[0] = version;
+	src[1] = "#define VERTEX\n#define PARAMETER_UNIFORM\n";
+	src[2] = alias_define;
+	src[3] = code;
 	vrt = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vrt, 3, src, NULL);
+	glShaderSource(vrt, 4, src, NULL);
 	glCompileShader(vrt);
 #if !defined (RELEASE)
 	opengl_shader_print_log(vrt, FALSE);
@@ -1446,9 +1473,9 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 	glDeleteShader(vrt);
 
 	// fragment
-	src[0] = "#define FRAGMENT\n#define PARAMETER_UNIFORM\n";
+	src[1] = "#define FRAGMENT\n#define PARAMETER_UNIFORM\n";
 	frg = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(frg, 3, src, NULL);
+	glShaderSource(frg, 4, src, NULL);
 	glCompileShader(frg);
 #if !defined (RELEASE)
 	opengl_shader_print_log(frg, FALSE);

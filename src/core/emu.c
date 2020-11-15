@@ -296,15 +296,15 @@ char *emu_file2string(const uTCHAR *path) {
 	len = ftell(fd);
 	fseek(fd, 0, SEEK_SET);
 
-	if (!(str = (char *)malloc(len * sizeof(char)))) {
+	if (!(str = (char *)malloc((len + 1) * sizeof(char)))) {
 		fclose(fd);
 		ufprintf(stderr, uL("OPENGL: Can't malloc space for '" uPERCENTs "'\n"), path);
 		return (NULL);
 	}
 
-	r = fread(str, sizeof(char), len, fd);
+	memset(str, 0x00, len + 1);
 
-	str[r - 1] = '\0';
+	r = fread(str, sizeof(char), len, fd);
 
 	fclose(fd);
 
