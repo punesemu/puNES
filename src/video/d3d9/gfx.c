@@ -255,6 +255,8 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		palette = cfg->palette;
 	}
 	if ((palette != cfg->palette) || info.on_cfg || force_palette) {
+		int i;
+
 		if (palette == PALETTE_FILE) {
 			if (ustrlen(cfg->palette_file) != 0) {
 				if (palette_load_from_file(cfg->palette_file) == EXIT_ERROR) {
@@ -288,6 +290,14 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				break;
 			case PALETTE_GREEN:
 				rgb_modifier(NULL, palette_RGB.noswap, 0x00, -0x20, 0x20, -0x20);
+				break;
+			case PALETTE_RAW:
+				for (i = 0; i < 512; i++) {
+					palette_RGB.noswap[i].r = ((i & 0x0F) * 255 / 15);
+					palette_RGB.noswap[i].g = (((i >> 4) & 0x03) * 255 / 3);
+					palette_RGB.noswap[i].b = (((i >> 6) & 0x07) * 255 / 7);
+				}
+				ntsc_set(NULL, cfg->ntsc_format, FALSE, 0, (BYTE *)palette_RGB.noswap, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_FILE:
 				break;

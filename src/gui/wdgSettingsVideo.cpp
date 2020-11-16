@@ -534,8 +534,11 @@ void wdgSettingsVideo::palette_set(void) {
 		case PALETTE_GREEN:
 			palette = 6;
 			break;
-		case PALETTE_FILE:
+		case PALETTE_RAW:
 			palette = 7;
+			break;
+		case PALETTE_FILE:
+			palette = 8;
 			break;
 	}
 
@@ -899,6 +902,9 @@ void wdgSettingsVideo::s_palette(int index) {
 			palette = PALETTE_GREEN;
 			break;
 		case 7:
+			palette = PALETTE_RAW;
+			break;
+		case 8:
 			palette = PALETTE_FILE;
 			break;
 	}

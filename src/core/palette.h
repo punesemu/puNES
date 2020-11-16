@@ -31,7 +31,8 @@ enum palettes_types {
 	PALETTE_GREEN,
 	PALETTE_FILE,
 	PALETTE_FRBX_NOSTALGIA,
-	PALETTE_FRBX_YUV
+	PALETTE_FRBX_YUV,
+	PALETTE_RAW
 };
 
 typedef struct _color_RGB {

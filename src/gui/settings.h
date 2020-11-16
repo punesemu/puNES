@@ -330,7 +330,7 @@ static const _opt opt_no_yes[] = {
 };
 static const _opt opt_off_on[] = {
 	{NULL, uL("off"), FALSE},
-	{NULL, uL("on") , TRUE},
+	{NULL, uL("on") , TRUE}
 };
 static const _opt opt_mode[] = {
 	{uL("Auto") , uL("auto") , AUTO},
@@ -387,7 +387,7 @@ static const _opt opt_filter[] = {
 	{uL("xBRZ 3x MT"), uL("xbrz3xmt"), XBRZ3XMT},
 	{uL("xBRZ 4x MT"), uL("xbrz4xmt"), XBRZ4XMT},
 	{uL("xBRZ 5x MT"), uL("xbrz5xmt"), XBRZ5XMT},
-	{uL("xBRZ 6x MT"), uL("xbrz6xmt"), XBRZ6XMT},
+	{uL("xBRZ 6x MT"), uL("xbrz6xmt"), XBRZ6XMT}
 };
 static const _opt opt_ntsc[] = {
 	{uL("Composite"), uL("composite"), COMPOSITE},
@@ -413,7 +413,8 @@ static const _opt opt_palette[] = {
 	{uL("Green")            , uL("green") , PALETTE_GREEN},
 	{uL("Extern")           , uL("file")  , PALETTE_FILE},
 	{uL("Firebrandx Nstlg") , uL("frbnst"), PALETTE_FRBX_NOSTALGIA},
-	{uL("Firebrandx YUV")   , uL("frbyuv"), PALETTE_FRBX_YUV}
+	{uL("Firebrandx YUV")   , uL("frbyuv"), PALETTE_FRBX_YUV},
+	{uL("Raw")              , uL("raw")   , PALETTE_RAW}
 };
 static const _opt opt_audio_buffer_factor[] = {
 	{NULL, uL("0") , 0},
@@ -442,7 +443,7 @@ static const _opt opt_samplerate[] = {
 static const _opt opt_channels[] = {
 	{NULL, uL("mono")   , CH_MONO},
 	{NULL, uL("delay")  , CH_STEREO_DELAY},
-	{NULL, uL("panning"), CH_STEREO_PANNING},
+	{NULL, uL("panning"), CH_STEREO_PANNING}
 };
 static const _opt opt_cheat_mode[] = {
 	{NULL, uL("disabled")  , NOCHEAT_MODE},
@@ -559,7 +560,7 @@ static const _opt opt_controller[] = {
 static const _opt opt_pad_type[] = {
 	{NULL, uL("auto")    , CTRL_PAD_AUTO},
 	{NULL, uL("original"), CTRL_PAD_ORIGINAL},
-	{NULL, uL("3rdparty"), CTRL_PAD_3RD_PARTY},
+	{NULL, uL("3rdparty"), CTRL_PAD_3RD_PARTY}
 };
 
 static const _settings main_cfg[] = {
@@ -680,10 +681,12 @@ static const _settings main_cfg[] = {
 		uL("video"), uL("filter"), uL("none"),
 		uL("# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE)
 		uL("#                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x," NEWLINE)
-		uL("#                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt, ntsc"),
+		uL("#                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt" NEWLINE)
+		uL("#                  ntsc"),
 		uL("-i, --filter              filter to apply       : nofilter, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE)
 		uL("                                                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x," NEWLINE)
-		uL("                                                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt, ntsc"),
+		uL("                                                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt" NEWLINE)
+		uL("                                                  ntsc"),
 		{LENGTH(opt_filter), opt_filter}
 	},
 	{
@@ -709,7 +712,8 @@ static const _settings main_cfg[] = {
 	{
 		uL("video"), uL("palette"), uL("ntsc"),
 		uL("# possible values: pal, ntsc, sony, frbyuv, frbuns, mono, green, file"),
-		uL("-p, --palette             type of palette       : pal, ntsc, sony, frbyuv, frbuns, mono, green, file"),
+		uL("-p, --palette             type of palette       : pal, ntsc, sony, frbyuv, frbuns, mono, " NEWLINE)
+		uL("                                                : green, raw, file"),
 		{LENGTH(opt_palette), opt_palette}
 	},
 	{

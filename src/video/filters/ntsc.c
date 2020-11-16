@@ -103,9 +103,9 @@ void ntsc_set(nes_ntsc_t *ntsc_in, BYTE effect, BYTE color, BYTE *palette_base, 
 	}
 
 	//burst_phase ^= 1;
-	/*if ( setup.merge_fields ) {
-	 burst_phase = 0;
-	 }*/
+	//if ( setup.merge_fields ) {
+	//	burst_phase = 0;
+	//}
 	//format[effect].merge_fields = merge_fields;
 	format[effect].decoder_matrix = 0;
 	format[effect].saturation = 0;

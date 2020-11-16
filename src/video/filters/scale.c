@@ -24,7 +24,7 @@
 
 INLINE static void scale_surface1x(uint32_t *palette, uint32_t pitch, void *pix);
 
-static struct _scl {
+struct _scl {
 	WORD sx;
 	WORD sy;
 	WORD oy;

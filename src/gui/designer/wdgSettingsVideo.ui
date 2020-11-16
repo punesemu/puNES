@@ -1253,6 +1253,11 @@
            </item>
            <item>
             <property name="text">
+             <string>Raw</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>From File</string>
             </property>
            </item>
