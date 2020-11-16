@@ -194,6 +194,11 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		force_scale = TRUE;
 		// indico che devo cambiare il video mode
 		set_mode = TRUE;
+
+		// questo serve nel caso della paletta raw
+		if (((filter == NTSC_FILTER) || (cfg->filter == NTSC_FILTER)) && (filter != cfg->filter)) {
+			force_palette = TRUE;
+		}
 	}
 
 	/* shader */
@@ -297,7 +302,9 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 					palette_RGB.noswap[i].g = (((i >> 4) & 0x03) * 255 / 3);
 					palette_RGB.noswap[i].b = (((i >> 6) & 0x07) * 255 / 7);
 				}
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, 0, (BYTE *)palette_RGB.noswap, (BYTE *)palette_RGB.noswap);
+				if (filter == NTSC_FILTER) {
+					ntsc_set(NULL, cfg->ntsc_format, FALSE, 0, (BYTE *)palette_RGB.noswap, (BYTE *)palette_RGB.noswap);
+				}
 				break;
 			case PALETTE_FILE:
 				break;
