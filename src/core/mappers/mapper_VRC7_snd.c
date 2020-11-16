@@ -354,7 +354,7 @@ void opll_reset(uint32_t clk, uint32_t rate) {
 	}
 
 	opll.real_step = (uint32_t)((1 << 31) / rate);
-	opll.opll_step = (uint32_t)((1 << 31) / (clk / 72));
+	opll.opll_step = (uint32_t)((1 << 31) / (clk / 83));
 	opll.opll_time = 0;
 }
 void opll_write_reg(uint32_t reg, uint8_t value) {
