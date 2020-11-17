@@ -418,8 +418,7 @@ void gui_decode_all_input_events(void) {
 
 	// keyboard
 	if (qt.screen->events.keyb.count()) {
-		for (QList<_wdgScreen_keyboard_event>::iterator e = qt.screen->events.keyb.begin(); e != qt.screen->events.keyb.end(); ++e)
-		{
+		for (QList<_wdgScreen_keyboard_event>::iterator e = qt.screen->events.keyb.begin(); e != qt.screen->events.keyb.end(); ++e) {
 			_wdgScreen_keyboard_event &event = *e;
 
 			for (BYTE i = PORT1; i < PORT_MAX; i++) {
@@ -434,8 +433,7 @@ void gui_decode_all_input_events(void) {
 
 	// mouse
 	if (qt.screen->events.mouse.count()) {
-		for (QList<_wdgScreen_mouse_event>::iterator e = qt.screen->events.mouse.begin(); e != qt.screen->events.mouse.end(); ++e)
-		{
+		for (QList<_wdgScreen_mouse_event>::iterator e = qt.screen->events.mouse.begin(); e != qt.screen->events.mouse.end(); ++e) {
 			_wdgScreen_mouse_event &event = *e;
 
 			if ((event.type == QEvent::MouseButtonPress) || (event.type == QEvent::MouseButtonDblClick)) {

@@ -32,19 +32,35 @@ INLINE static void input_read_mouse_coords(int *x, int *y) {
 	switch (cfg->screen_rotation) {
 		default:
 		case ROTATE_0:
-			(*x) = mx;
+			if (cfg->hflip_screen) {
+				(*x) = SCR_ROWS - mx;
+			} else {
+				(*x) = mx;
+			}
 			(*y) = my;
 			break;
 		case ROTATE_90:
-			(*x) = my;
+			if (cfg->hflip_screen) {
+				(*x) = SCR_ROWS - my;
+			} else {
+				(*x) = my;
+			}
 			(*y) = SCR_LINES - mx;
 			break;
 		case ROTATE_180:
-			(*x) = SCR_ROWS - mx;
+			if (cfg->hflip_screen) {
+				(*x) = mx;
+			} else {
+				(*x) = SCR_ROWS - mx;
+			}
 			(*y) = SCR_LINES - my;
 			break;
 		case ROTATE_270:
-			(*x) = SCR_ROWS - my;
+			if (cfg->hflip_screen) {
+				(*x) = my;
+			} else {
+				(*x) = SCR_ROWS - my;
+			}
 			(*y) = mx;
 			break;
 	}
