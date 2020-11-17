@@ -573,7 +573,7 @@ void wdgPaletteEditor::s_palette_reset(UNUSED(bool checked)) {
 		set_internal_color(i, qrgb, false);
 	}
 
-	// forzo la'aggiornamento dell'intera paletta.
+	// forzo l'aggiornamento dell'intera paletta.
 	set_internal_color(0, widget_Palette_Wall->color_at(0), true);
 
 	widget_Color_Selected->update_cell(0, 0);

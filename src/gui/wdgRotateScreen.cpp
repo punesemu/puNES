@@ -81,6 +81,7 @@ void wdgRotateScreen::s_rotate_to_left(UNUSED(bool checked)) {
 	}
 	emu_thread_pause();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	gui_set_focus();
 	emu_thread_continue();
 }
 void wdgRotateScreen::s_rotate_to_right(UNUSED(bool checked)) {
@@ -89,5 +90,6 @@ void wdgRotateScreen::s_rotate_to_right(UNUSED(bool checked)) {
 	}
 	emu_thread_pause();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	gui_set_focus();
 	emu_thread_continue();
 }
