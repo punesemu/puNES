@@ -452,15 +452,17 @@ void wdgPaletteEditor::set_sliders_spins_lineedit(void) {
 	lineEdit_Html_Name->setText(qrgb.name().toUpper());
 	lineEdit_Html_Name->blockSignals(false);
 }
-void wdgPaletteEditor::set_internal_color(int index, QColor qrgb) {
+void wdgPaletteEditor::set_internal_color(int index, QColor qrgb, bool update_palette) {
 	_color_RGB *rgb = &palette_RGB.noswap[index];
 
 	rgb->r = qrgb.red();
 	rgb->g = qrgb.green();
 	rgb->b = qrgb.blue();
 
-	ntsc_set(NULL, cfg->ntsc_format, 0, (BYTE *)palette_RGB.noswap, 0, (BYTE *)palette_RGB.noswap);
-	gfx_palette_update();
+	if (update_palette) {
+		ntsc_set(NULL, cfg->ntsc_format, 0, (BYTE *)palette_RGB.noswap, 0, (BYTE *)palette_RGB.noswap);
+		gfx_palette_update();
+	}
 }
 
 void wdgPaletteEditor::s_first_paint(void) {
@@ -497,7 +499,7 @@ void wdgPaletteEditor::s_slider_and_spin(int i) {
 		qrgb.setHsv(h, s, i);
 	}
 
-	set_internal_color(index, qrgb);
+	set_internal_color(index, qrgb, true);
 
 	widget_Palette_Wall->update_cell_color(index, qrgb);
 	widget_Color_Selected->update_cell_color(0, qrgb);
@@ -514,7 +516,7 @@ void wdgPaletteEditor::s_html(void) {
 
 	qrgb.setNamedColor(lineEdit_Html_Name->text());
 
-	set_internal_color(index, qrgb);
+	set_internal_color(index, qrgb, true);
 
 	widget_Palette_Wall->update_cell_color(index, qrgb);
 	widget_Color_Selected->update_cell_color(0, qrgb);
@@ -527,7 +529,7 @@ void wdgPaletteEditor::s_color_reset(UNUSED(bool checked)) {
 	widget_Palette_Wall->color_reset(index);
 	qrgb = widget_Palette_Wall->color_at(index);
 
-	set_internal_color(index, qrgb);
+	set_internal_color(index, qrgb, true);
 
 	widget_Color_Selected->update_cell(0, 0);
 	set_sliders_spins_lineedit();
@@ -568,8 +570,11 @@ void wdgPaletteEditor::s_palette_reset(UNUSED(bool checked)) {
 	for (i = 0; i < widget_Palette_Wall->count(); i++) {
 		QColor qrgb = widget_Palette_Wall->color_at(i);
 
-		set_internal_color(i, qrgb);
+		set_internal_color(i, qrgb, false);
 	}
+
+	// forzo la'aggiornamento dell'intera paletta.
+	set_internal_color(0, widget_Palette_Wall->color_at(0), true);
 
 	widget_Color_Selected->update_cell(0, 0);
 	set_sliders_spins_lineedit();

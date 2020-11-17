@@ -137,7 +137,7 @@ class wdgPaletteEditor : public QWidget, public Ui::wdgPaletteEditor {
 		void set_slider(QSlider *slider, int value);
 		void set_spin(QSpinBox *spin, int value);
 		void set_sliders_spins_lineedit(void);
-		void set_internal_color(int index, QColor qrgb);
+		void set_internal_color(int index, QColor qrgb, bool update_palette);
 
 	private slots:
 		void s_first_paint(void);
