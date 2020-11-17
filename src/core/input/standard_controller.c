@@ -56,10 +56,14 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 		switch (cfg->screen_rotation) {
 			default:
 			case ROTATE_0:
+				if (cfg->hflip_screen) {
+					left = &port->data[RIGHT];
+					right = &port->data[LEFT];
+				}
 				break;
 			case ROTATE_90:
-				left = &port->data[UP];
-				right = &port->data[DOWN];
+				left = &port->data[DOWN];
+				right = &port->data[UP];
 				if (cfg->hflip_screen) {
 					up = &port->data[RIGHT];
 					down = &port->data[LEFT];
@@ -80,8 +84,8 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 				down = &port->data[UP];
 				break;
 			case ROTATE_270:
-				left = &port->data[DOWN];
-				right = &port->data[UP];
+				left = &port->data[UP];
+				right = &port->data[DOWN];
 				if (cfg->hflip_screen) {
 					up = &port->data[LEFT];
 					down = &port->data[RIGHT];
