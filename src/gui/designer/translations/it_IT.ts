@@ -2394,6 +2394,10 @@
       <source>Also rotate the text on screen</source>
       <translation>Ruota anche il testo sullo schermo</translation>
     </message>
+    <message>
+      <source>Raw</source>
+      <translation type="unfinished">Raw</translation>
+    </message>
   </context>
   <context>
     <name>wdgState</name>
