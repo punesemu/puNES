@@ -823,7 +823,7 @@ static const _settings main_cfg[] = {
 		{LENGTH(opt_screen_rotation), opt_screen_rotation}
 	},
 	{
-		uL("video"), uL("input rotation"), uL("no"),
+		uL("video"), uL("input rotation"), uL("yes"),
 		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
