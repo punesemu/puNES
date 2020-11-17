@@ -238,9 +238,19 @@ void nes_ntsc_init( nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup )
 				/* blue tends to overflow, so clamp it */
 				nes_ntsc_rgb_t rgb = PACK_RGB( r, g, (b < 0x3E0 ? b: 0x3E0) );
 				
-				if ( setup->palette_out )
-					RGB_PALETTE_OUT( rgb, &setup->palette_out [pointer * 3]);
-					//RGB_PALETTE_OUT( rgb, &setup->palette_out [entry * 3] );
+				if ( setup->palette_out ) {
+					if (setup->palette) {
+						setup->palette_out[(pointer * 3) + 0] = setup->palette[(entry * 3) + 0];
+						setup->palette_out[(pointer * 3) + 1] = setup->palette[(entry * 3) + 1];
+						setup->palette_out[(pointer * 3) + 2] = setup->palette[(entry * 3) + 2];
+					} else if (setup->base_palette && (entry <= 0x3F)) {
+						setup->palette_out[(pointer * 3) + 0] = setup->base_palette[(entry * 3) + 0];
+						setup->palette_out[(pointer * 3) + 1] = setup->base_palette[(entry * 3) + 1];
+						setup->palette_out[(pointer * 3) + 2] = setup->base_palette[(entry * 3) + 2];
+					} else {
+						RGB_PALETTE_OUT( rgb, &setup->palette_out [pointer * 3]);
+					}
+				}
 				
 				if ( ntsc )
 				{
