@@ -96,6 +96,8 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void s_integer_in_fullscreen(bool checked);
 		void s_stretch_in_fullscreen(bool checked);
 		void s_screen_rotation(int index);
+		void s_horizontal_flip_screen(bool checked);
+		void s_input_rotation(bool checked);
 		void s_text_rotation(bool checked);
 };
 

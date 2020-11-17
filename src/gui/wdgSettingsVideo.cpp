@@ -103,6 +103,8 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Stretch_in_fullscreen, SIGNAL(clicked(bool)), this, SLOT(s_stretch_in_fullscreen(bool)));
 
 	connect(comboBox_Screen_Rotation, SIGNAL(activated(int)), this, SLOT(s_screen_rotation(int)));
+	connect(checkBox_Horizontal_Flip_Screen, SIGNAL(clicked(bool)), this, SLOT(s_horizontal_flip_screen(bool)));
+	connect(checkBox_Input_Rotation, SIGNAL(clicked(bool)), this, SLOT(s_input_rotation(bool)));
 	connect(checkBox_Text_Rotation, SIGNAL(clicked(bool)), this, SLOT(s_text_rotation(bool)));
 
 	tabWidget_Video->setCurrentIndex(0);
@@ -212,6 +214,8 @@ void wdgSettingsVideo::update_widget(void) {
 
 	{
 		srotation_set();
+		checkBox_Horizontal_Flip_Screen->setChecked(cfg->hflip_screen);
+		checkBox_Input_Rotation->setChecked(cfg->input_rotation);
 		checkBox_Text_Rotation->setChecked(cfg->text_rotation);
 	}
 }
@@ -1015,6 +1019,17 @@ void wdgSettingsVideo::s_screen_rotation(int index) {
 	emu_thread_pause();
 	cfg->screen_rotation = rotation;
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
+}
+void wdgSettingsVideo::s_horizontal_flip_screen(UNUSED(bool checked)) {
+	emu_thread_pause();
+	cfg->hflip_screen = !cfg->hflip_screen;
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
+}
+void wdgSettingsVideo::s_input_rotation(UNUSED(bool checked)) {
+	emu_thread_pause();
+	cfg->input_rotation = !cfg->input_rotation;
 	emu_thread_continue();
 }
 void wdgSettingsVideo::s_text_rotation(UNUSED(bool checked)) {

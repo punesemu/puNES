@@ -355,6 +355,8 @@ BYTE d3d9_context_create(void) {
 			}
 
 			if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
+				float left = cfg->hflip_screen ? (float)overscan.borders->right : (float)overscan.borders->left;
+				float right = cfg->hflip_screen ? (float)overscan.borders->left : (float)overscan.borders->right;
 				float brd_l_x, brd_r_x, brd_u_y, brd_d_y;
 				float ratio_x, ratio_y;
 
@@ -364,28 +366,28 @@ BYTE d3d9_context_create(void) {
 				switch (cfg->screen_rotation) {
 					default:
 					case ROTATE_0:
-						brd_l_x = (float)overscan.borders->left * ratio_x;
-						brd_r_x = (float)overscan.borders->right * ratio_x;
+						brd_l_x = left * ratio_x;
+						brd_r_x = right * ratio_x;
 						brd_u_y = (float)overscan.borders->up * ratio_y;
 						brd_d_y = (float)overscan.borders->down * ratio_y;
 						break;
 					case ROTATE_90:
 						brd_l_x = (float)overscan.borders->down * ratio_y;
 						brd_r_x = (float)overscan.borders->up * ratio_y;
-						brd_u_y = (float)overscan.borders->left * ratio_x;
-						brd_d_y = (float)overscan.borders->right * ratio_x;
+						brd_u_y = left * ratio_x;
+						brd_d_y = right * ratio_x;
 						break;
 					case ROTATE_180:
-						brd_l_x = (float)overscan.borders->right * ratio_x;
-						brd_r_x = (float)overscan.borders->left * ratio_x;
+						brd_l_x = right * ratio_x;
+						brd_r_x = left * ratio_x;
 						brd_u_y = (float)overscan.borders->down * ratio_y;
 						brd_d_y = (float)overscan.borders->up * ratio_y;
 						break;
 					case ROTATE_270:
 						brd_l_x = (float)overscan.borders->up * ratio_y;
 						brd_r_x = (float)overscan.borders->down * ratio_y;
-						brd_u_y = (float)overscan.borders->right * ratio_x;
-						brd_d_y = (float)overscan.borders->left * ratio_x;
+						brd_u_y = right * ratio_x;
+						brd_d_y = left * ratio_x;
 						break;
 				}
 
@@ -402,7 +404,11 @@ BYTE d3d9_context_create(void) {
 		} else {
 			if (overscan.enabled && !cfg->oscan_black_borders) {
 				BYTE h = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
-					overscan.borders->right : overscan.borders->left;
+					cfg->hflip_screen ? overscan.borders->left : overscan.borders->right :
+					cfg->hflip_screen ? overscan.borders->right : overscan.borders->left;
+
+				//BYTE h = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
+				//	overscan.borders->right : overscan.borders->left;
 				BYTE v = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_180) ?
 					overscan.borders->down : overscan.borders->up;
 
@@ -1721,14 +1727,17 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 	return (EXIT_OK);
 }
 static void d3d9_vertex_buffer_set(_shader *shd, _viewport *vp, _texture_rect *prev, BYTE last_pass) {
-	D3DXMATRIX proj, ortho, rot;
 	FLOAT u = (FLOAT)prev->base.w / prev->w;
 	FLOAT v = (FLOAT)prev->base.h / prev->h;
+	FLOAT rotation = 0, u0 = 0.0f, u1 = u;
 	void *buffer;
-	float rotation = 0;
 	UINT i;
 
 	if (last_pass == TRUE) {
+		if (cfg->hflip_screen) {
+			u0 = u;
+			u1 = 0.0f;
+		}
 		switch (cfg->screen_rotation) {
 			case ROTATE_90:
 				rotation = 270.0f;
@@ -1745,7 +1754,7 @@ static void d3d9_vertex_buffer_set(_shader *shd, _viewport *vp, _texture_rect *p
 	shd->vb[0].x = 0.0f;
 	shd->vb[0].y = vp->h;
 	shd->vb[0].z = 0.5f;
-	shd->vb[0].u = 0.0f;
+	shd->vb[0].u = u0;
 	shd->vb[0].v = 0.0f;
 	shd->vb[0].lut_u = 0.0f;
 	shd->vb[0].lut_v = 0.0f;
@@ -1757,7 +1766,7 @@ static void d3d9_vertex_buffer_set(_shader *shd, _viewport *vp, _texture_rect *p
 	shd->vb[1].x = vp->w;
 	shd->vb[1].y = vp->h;
 	shd->vb[1].z = 0.5f;
-	shd->vb[1].u = u;
+	shd->vb[1].u = u1;
 	shd->vb[1].v = 0.0f;
 	shd->vb[1].lut_u = 1.0f;
 	shd->vb[1].lut_v = 0.0f;
@@ -1769,7 +1778,7 @@ static void d3d9_vertex_buffer_set(_shader *shd, _viewport *vp, _texture_rect *p
 	shd->vb[2].x = 0.0f;
 	shd->vb[2].y = 0.0f;
 	shd->vb[2].z = 0.5f;
-	shd->vb[2].u = 0.0f;
+	shd->vb[2].u = u0;
 	shd->vb[2].v = v;
 	shd->vb[2].lut_u = 0.0f;
 	shd->vb[2].lut_v = 1.0f;
@@ -1781,7 +1790,7 @@ static void d3d9_vertex_buffer_set(_shader *shd, _viewport *vp, _texture_rect *p
 	shd->vb[3].x = vp->w;
 	shd->vb[3].y = 0.0f;
 	shd->vb[3].z = 0.5f;
-	shd->vb[3].u = u;
+	shd->vb[3].u = u1;
 	shd->vb[3].v = v;
 	shd->vb[3].lut_u = 1.0f;
 	shd->vb[3].lut_v = 1.0f;
@@ -1797,16 +1806,21 @@ static void d3d9_vertex_buffer_set(_shader *shd, _viewport *vp, _texture_rect *p
 		shd->vb[i].y += 0.5f;
 	}
 
-	IDirect3DVertexBuffer9_Lock(shd->quad, 0, 0, (void**) &buffer, 0);
+	IDirect3DVertexBuffer9_Lock(shd->quad, 0, 0, (void**)&buffer, 0);
 	memcpy(buffer, shd->vb, sizeof(shd->vb));
 	IDirect3DVertexBuffer9_Unlock(shd->quad);
 
-	D3DXMatrixOrthoOffCenterLH(&ortho, 0, vp->w, 0, vp->h, 0, 1);
-	D3DXMatrixIdentity(&rot);
-	D3DXMatrixRotationZ(&rot, rotation * (M_PI / 180.0f));
+	{
+		D3DXMATRIX proj, ortho, rotz;
 
-	D3DXMatrixMultiply(&proj, &ortho, &rot);
-	D3DXMatrixTranspose(&shd->mvp, &proj);
+		D3DXMatrixOrthoOffCenterLH(&ortho, 0, vp->w, 0, vp->h, 0, 1);
+
+		D3DXMatrixIdentity(&rotz);
+		D3DXMatrixRotationZ(&rotz, rotation * (M_PI / 180.0f));
+
+		D3DXMatrixMultiply(&proj, &ortho, &rotz);
+		D3DXMatrixTranspose(&shd->mvp, &proj);
+	}
 }
 static CGparameter d3d9_cg_find_param(CGparameter prm, const char *name) {
 	UINT i;

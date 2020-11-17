@@ -81,7 +81,9 @@ enum set_element {
 	SET_FULLSCREEN_IN_WINDOW,
 	SET_INTEGER_FULLSCREEN,
 	SET_STRETCH_FULLSCREEN,
+	SET_HORIZONTAL_FLIP_SCREEN,
 	SET_SCREEN_ROTATION,
+	SET_INPUT_ROTATION,
 	SET_TEXT_ROTATION,
 	SET_AUDIO_OUTPUT_DEVICE,
 	SET_AUDIO_BUFFER_FACTOR,
@@ -809,10 +811,22 @@ static const _settings main_cfg[] = {
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
+		uL("video"), uL("horizontal flip screen"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --hflip-screen         horizontal flip      : yes, no"),
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
 		uL("video"), uL("screen rotation"), uL("0"),
 		uL("# possible values: 0, 90, 180, 270"),
 		uL("    --screen-rotation     degree scrn rotation  : 0, 90, 180, 270"),
 		{LENGTH(opt_screen_rotation), opt_screen_rotation}
+	},
+	{
+		uL("video"), uL("input rotation"), uL("no"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("video"), uL("text rotation"), uL("no"),

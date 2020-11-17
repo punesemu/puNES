@@ -61,6 +61,7 @@ static struct _cl_option {
 	{ "fullscreen",            req_arg, "u"},
 	{ "int-scl-fullscreen",    req_arg, "r"},
 	{ "stretch-fullscreen",    req_arg, "t"},
+	{ "hflip-screen",          req_arg,  0 },
 	{ "screen-rotation",       req_arg,  0 },
 	{ "audio",                 req_arg, "a"},
 	{ "audio-buffer-factor",   req_arg, "b"},
@@ -157,8 +158,10 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 					// l'ho gia' controllato quindi qui non faccio niente
 				} else if (key == "txt-on-screen") {
 					set_int(cfg_from_file.txt_on_screen, SET_TEXT_ON_SCREEN);
+				} else if (key == "hflip-screen") {
+					set_int(cfg_from_file.hflip_screen, SET_HORIZONTAL_FLIP_SCREEN);
 				} else if (key == "screen-rotation") {
-					set_int(cfg_from_file.txt_on_screen, SET_TEXT_ON_SCREEN);
+					set_int(cfg_from_file.screen_rotation, SET_SCREEN_ROTATION);
 				} else if (key == "input-display") {
 					set_int(cfg_from_file.input_display, SET_INPUT_DISPLAY);
 				} else if (key == "disable-tv-noise") {

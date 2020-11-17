@@ -94,35 +94,75 @@ static const _vertex_buffer vb_upright[4] = {
 	{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
 	{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
 };
-static const _vertex_buffer vb_flipped[ROTATE_MAX][4] = {
+static const _vertex_buffer vb_flipped[ROTATE_MAX][2][4] = {
 	// 0
 	{
-		{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } }
+		// NFL
+		{
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } }
+		},
+		// YFL
+		{
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		}
 	},
 	// 90
 	{
-		{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		// NFL
+		{
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		},
+		// YFL
+		{
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		},
 	},
 	// 180
 	{
-		{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		// NFL
+		{
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		},
+		// YFL
+		{
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		},
 	},
 	// 270
 	{
-		{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-	},
+		// NFL
+		{
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		},
+		// YFL
+		{
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		},
+	}
 };
 
 _opengl opengl;
@@ -272,6 +312,8 @@ BYTE opengl_context_create(void) {
 			}
 
 			if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
+				float left = cfg->hflip_screen ? (float)overscan.borders->right : (float)overscan.borders->left;
+				float right = cfg->hflip_screen ? (float)overscan.borders->left : (float)overscan.borders->right;
 				float brd_l_x, brd_r_x, brd_u_y, brd_d_y;
 				float ratio_x, ratio_y;
 
@@ -281,28 +323,28 @@ BYTE opengl_context_create(void) {
 				switch (cfg->screen_rotation) {
 					default:
 					case ROTATE_0:
-						brd_l_x = (float)overscan.borders->left * ratio_x;
-						brd_r_x = (float)overscan.borders->right * ratio_x;
+						brd_l_x = left * ratio_x;
+						brd_r_x = right * ratio_x;
 						brd_u_y = (float)overscan.borders->up * ratio_y;
 						brd_d_y = (float)overscan.borders->down * ratio_y;
 						break;
 					case ROTATE_90:
 						brd_l_x = (float)overscan.borders->down * ratio_y;
 						brd_r_x = (float)overscan.borders->up * ratio_y;
-						brd_u_y = (float)overscan.borders->left * ratio_x;
-						brd_d_y = (float)overscan.borders->right * ratio_x;
+						brd_u_y = left * ratio_x;
+						brd_d_y = right * ratio_x;
 						break;
 					case ROTATE_180:
-						brd_l_x = (float)overscan.borders->right * ratio_x;
-						brd_r_x = (float)overscan.borders->left * ratio_x;
+						brd_l_x = right * ratio_x;
+						brd_r_x = left * ratio_x;
 						brd_u_y = (float)overscan.borders->down * ratio_y;
 						brd_d_y = (float)overscan.borders->up * ratio_y;
 						break;
 					case ROTATE_270:
 						brd_l_x = (float)overscan.borders->up * ratio_y;
 						brd_r_x = (float)overscan.borders->down * ratio_y;
-						brd_u_y = (float)overscan.borders->right * ratio_x;
-						brd_d_y = (float)overscan.borders->left * ratio_x;
+						brd_u_y = right * ratio_x;
+						brd_d_y = left * ratio_x;
 						break;
 				}
 
@@ -314,7 +356,8 @@ BYTE opengl_context_create(void) {
 		} else {
 			if (overscan.enabled && !cfg->oscan_black_borders) {
 				BYTE h = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_180) ?
-					overscan.borders->right : overscan.borders->left;
+					cfg->hflip_screen ? overscan.borders->left : overscan.borders->right :
+					cfg->hflip_screen ? overscan.borders->right : overscan.borders->left;
 				BYTE v = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
 					overscan.borders->up : overscan.borders->down;
 
@@ -458,9 +501,9 @@ BYTE opengl_context_create(void) {
 		glGenBuffers(1, &shd->vbo);
 
 		if (cfg->text_rotation == FALSE) {
-			memcpy(shd->vb, vb_flipped[ROTATE_0], sizeof(vb_upright));
+			memcpy(shd->vb, vb_flipped[ROTATE_0][0], sizeof(vb_upright));
 		} else {
-			memcpy(shd->vb, vb_flipped[cfg->screen_rotation], sizeof(vb_upright));
+			memcpy(shd->vb, vb_flipped[cfg->screen_rotation][cfg->hflip_screen], sizeof(vb_upright));
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, shd->vbo);
@@ -920,7 +963,7 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 	}
 
 	if (index == shader_effect.last_pass) {
-		vb = vb_flipped[cfg->screen_rotation];
+		vb = vb_flipped[cfg->screen_rotation][cfg->hflip_screen];
 		sc->scale.x = 1.0f;
 		sc->scale.y = 1.0f;
 		sc->type.x = SHADER_SCALE_VIEWPORT;
@@ -1096,7 +1139,7 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 	shd->info.texture_size[0] = (GLfloat)rect->w;
 	shd->info.texture_size[1] = (GLfloat)rect->h;
 
-	memcpy(shd->vb, vb_flipped[ROTATE_0], sizeof(vb_upright));
+	memcpy(shd->vb, vb_flipped[ROTATE_0][0], sizeof(vb_upright));
 
 	opengl_vertex_buffer_set(&shd->vb[0], rect);
 

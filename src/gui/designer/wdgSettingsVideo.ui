@@ -266,7 +266,7 @@
               </font>
              </property>
              <property name="text">
-              <string>Screen rotation</string>
+              <string>Horizontal Flip and Screen Rotation</string>
              </property>
             </widget>
            </item>
@@ -310,9 +310,23 @@
           </widget>
          </item>
          <item>
+          <widget class="QCheckBox" name="checkBox_Horizontal_Flip_Screen">
+           <property name="text">
+            <string>Horizontal flip</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_Input_Rotation">
+           <property name="text">
+            <string>Flip/Rotate the controller input</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QCheckBox" name="checkBox_Text_Rotation">
            <property name="text">
-            <string>Also rotate the text on screen</string>
+            <string>Flip/Rotate the text on screen</string>
            </property>
           </widget>
          </item>
@@ -340,7 +354,9 @@
         <zorder>checkBox_Stretch_in_fullscreen</zorder>
         <zorder>checkBox_Use_integer_scaling_in_fullscreen</zorder>
         <zorder>comboBox_Screen_Rotation</zorder>
+        <zorder>checkBox_Horizontal_Flip_Screen</zorder>
         <zorder>checkBox_Text_Rotation</zorder>
+        <zorder>checkBox_Input_Rotation</zorder>
        </widget>
        <widget class="QWidget" name="tab_PAR">
         <attribute name="icon">

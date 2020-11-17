@@ -2371,10 +2371,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Screen rotation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>0 degrees</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2391,11 +2387,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Also rotate the text on screen</source>
+        <source>Raw</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Raw</source>
+        <source>Horizontal Flip and Screen Rotation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Horizontal flip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flip/Rotate the controller input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flip/Rotate the text on screen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
