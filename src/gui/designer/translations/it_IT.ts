@@ -2371,10 +2371,6 @@
       <translation>Usa ridimensionamento non frazionato a schermo intero</translation>
     </message>
     <message>
-      <source>Screen rotation</source>
-      <translation>Rotazione dello schermo</translation>
-    </message>
-    <message>
       <source>0 degrees</source>
       <translation>0 gradi</translation>
     </message>
@@ -2391,12 +2387,24 @@
       <translation>270 gradi</translation>
     </message>
     <message>
-      <source>Also rotate the text on screen</source>
-      <translation>Ruota anche il testo sullo schermo</translation>
-    </message>
-    <message>
       <source>Raw</source>
       <translation type="unfinished">Raw</translation>
+    </message>
+    <message>
+      <source>Horizontal Flip and Screen Rotation</source>
+      <translation type="unfinished">Horizontal Flip and Screen Rotation</translation>
+    </message>
+    <message>
+      <source>Horizontal flip</source>
+      <translation type="unfinished">Horizontal flip</translation>
+    </message>
+    <message>
+      <source>Flip/Rotate the controller input</source>
+      <translation type="unfinished">Flip/Rotate the controller input</translation>
+    </message>
+    <message>
+      <source>Flip/Rotate the text on screen</source>
+      <translation type="unfinished">Flip/Rotate the text on screen</translation>
     </message>
   </context>
   <context>
