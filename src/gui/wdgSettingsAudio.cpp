@@ -96,6 +96,8 @@ void wdgSettingsAudio::update_widget(void) {
 	checkBox_Reverse_bits_DPCM->setChecked(cfg->reverse_bits_dpcm);
 	checkBox_Swap_Duty_Cycles->setChecked(cfg->swap_duty);
 	checkBox_Enable_Audio->setChecked(cfg->apu.channel[APU_MASTER]);
+
+	settings_set_enabled(!info.recording_on_air);
 }
 
 void wdgSettingsAudio::output_devices_init(void) {
@@ -125,7 +127,6 @@ void wdgSettingsAudio::output_devices_init(void) {
 		}
 	}
 }
-
 void wdgSettingsAudio::audio_buffer_factor_set(void) {
 	comboBox_Buffer_Size_factor->setCurrentIndex(cfg->audio_buffer_factor);
 }
@@ -172,6 +173,27 @@ void wdgSettingsAudio::channels_delay_set(void) {
 	int delay = ((cfg->stereo_delay * 100) / 5) - 1;
 
 	comboBox_Channels_Delay->setCurrentIndex(delay);
+}
+void wdgSettingsAudio::settings_set_enabled(bool mode) {
+	icon_Output_Devices->setEnabled(mode);
+	label_Output_Devices->setEnabled(mode);
+	comboBox_Output_Devices->setEnabled(mode);
+
+	icon_Buffer_Size_factor->setEnabled(mode);
+	label_Buffer_Size_factor->setEnabled(mode);
+	comboBox_Buffer_Size_factor->setEnabled(mode);
+
+	icon_Sample_Rate->setEnabled(mode);
+	label_Sample_Rate->setEnabled(mode);
+	comboBox_Sample_Rate->setEnabled(mode);
+
+	icon_Channels->setEnabled(mode);
+	label_Channels->setEnabled(mode);
+	comboBox_Channels->setEnabled(mode);
+
+	icon_Channels_Delay->setEnabled(mode);
+	label_Channels_Delay->setEnabled(mode);
+	comboBox_Channels_Delay->setEnabled(mode);
 }
 
 void wdgSettingsAudio::s_output_devices(int index) {

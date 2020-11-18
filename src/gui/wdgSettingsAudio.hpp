@@ -39,12 +39,11 @@ class wdgSettingsAudio : public QWidget, public Ui::wdgSettingsAudio {
 
 	private:
 		void output_devices_init(void);
-
-	private:
 		void audio_buffer_factor_set(void);
 		void sample_rate_set(void);
 		void channels_set(void);
 		void channels_delay_set(void);
+		void settings_set_enabled(bool mode);
 
 	private slots:
 		void s_output_devices(int index);

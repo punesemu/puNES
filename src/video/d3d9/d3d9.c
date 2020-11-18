@@ -406,9 +406,6 @@ BYTE d3d9_context_create(void) {
 				BYTE h = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
 					cfg->hflip_screen ? overscan.borders->left : overscan.borders->right :
 					cfg->hflip_screen ? overscan.borders->right : overscan.borders->left;
-
-				//BYTE h = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
-				//	overscan.borders->right : overscan.borders->left;
 				BYTE v = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_180) ?
 					overscan.borders->down : overscan.borders->up;
 

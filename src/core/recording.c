@@ -249,6 +249,7 @@ void recording_start(uTCHAR *filename, int format) {
 	info.recording_is_a_video = (info.recording_on_air == TRUE) && (ffmpeg.format_type == REC_FORMAT_VIDEO);
 
 	gui_update_recording_widget();
+	gui_apu_channels_widgets_update();
 
 	recording_start_end:
 	gfx_thread_continue();
@@ -301,6 +302,7 @@ void recording_finish(BYTE from_quit) {
 	ffmpeg.format_type = REC_FORMAT_NONE;
 
 	gui_update_recording_widget();
+	gui_apu_channels_widgets_update();
 
 	if (from_quit == FALSE) {
 		gfx_thread_continue();
