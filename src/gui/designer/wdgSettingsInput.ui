@@ -10,6 +10,9 @@
     <height>594</height>
    </rect>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>Input Settings</string>
   </property>
@@ -458,6 +461,25 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboBox_cm</tabstop>
+  <tabstop>comboBox_exp</tabstop>
+  <tabstop>comboBox_cp1</tabstop>
+  <tabstop>pushButton_cp1</tabstop>
+  <tabstop>comboBox_cp2</tabstop>
+  <tabstop>pushButton_cp2</tabstop>
+  <tabstop>comboBox_cp3</tabstop>
+  <tabstop>pushButton_cp3</tabstop>
+  <tabstop>comboBox_cp4</tabstop>
+  <tabstop>pushButton_cp4</tabstop>
+  <tabstop>checkBox_Permit_updown</tabstop>
+  <tabstop>checkBox_Hide_Zapper_cursor</tabstop>
+  <tabstop>comboBox_joy_ID</tabstop>
+  <tabstop>tableWidget_Shortcuts</tabstop>
+  <tabstop>pushButton_Shortcut_unset_all</tabstop>
+  <tabstop>pushButton_Shortcut_reset</tabstop>
+  <tabstop>pushButton_Input_reset</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

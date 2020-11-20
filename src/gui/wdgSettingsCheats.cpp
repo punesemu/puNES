@@ -24,6 +24,8 @@
 wdgSettingsCheats::wdgSettingsCheats(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
+	setFocusProxy(comboBox_Cheats_Mode);
+
 	connect(comboBox_Cheats_Mode, SIGNAL(activated(int)), this, SLOT(s_cheat_mode(int)));
 }
 wdgSettingsCheats::~wdgSettingsCheats() {}

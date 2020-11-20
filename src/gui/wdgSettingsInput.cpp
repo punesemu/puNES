@@ -42,6 +42,8 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 
 	setupUi(this);
 
+	setFocusProxy(comboBox_cm);
+
 	// setto la dimensione del font
 	{
 		QFont f = tableWidget_Shortcuts->font();

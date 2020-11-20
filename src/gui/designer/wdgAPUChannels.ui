@@ -6,9 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>198</width>
-    <height>205</height>
+    <width>168</width>
+    <height>206</height>
    </rect>
+  </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
   </property>
   <property name="windowTitle">
    <string>APU Channels</string>
@@ -362,6 +365,25 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>checkBox_Master</tabstop>
+  <tabstop>horizontalSlider_Master</tabstop>
+  <tabstop>checkBox_Square1</tabstop>
+  <tabstop>horizontalSlider_Square1</tabstop>
+  <tabstop>checkBox_Square2</tabstop>
+  <tabstop>horizontalSlider_Square2</tabstop>
+  <tabstop>checkBox_Triangle</tabstop>
+  <tabstop>horizontalSlider_Triangle</tabstop>
+  <tabstop>checkBox_Noise</tabstop>
+  <tabstop>horizontalSlider_Noise</tabstop>
+  <tabstop>checkBox_DMC</tabstop>
+  <tabstop>horizontalSlider_DMC</tabstop>
+  <tabstop>checkBox_Extra</tabstop>
+  <tabstop>horizontalSlider_Extra</tabstop>
+  <tabstop>pushButton_APU_Channels_active_all</tabstop>
+  <tabstop>pushButton_APU_Channels_disable_all</tabstop>
+  <tabstop>pushButton_APU_Channels_reset</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

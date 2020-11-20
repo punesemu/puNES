@@ -10,6 +10,9 @@
     <height>370</height>
    </rect>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>Recording Settings</string>
   </property>
@@ -398,6 +401,16 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboBox_Output_Audio_Format</tabstop>
+  <tabstop>comboBox_Output_Video_Format</tabstop>
+  <tabstop>comboBox_Output_Quality</tabstop>
+  <tabstop>comboBox_Output_Resolution</tabstop>
+  <tabstop>lineEdit_Output_Custom_Width</tabstop>
+  <tabstop>lineEdit_Output_Custom_Height</tabstop>
+  <tabstop>checkBox_Use_emu_resolution</tabstop>
+  <tabstop>checkBox_Follow_rotation</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

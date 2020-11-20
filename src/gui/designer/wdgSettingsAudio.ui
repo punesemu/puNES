@@ -7,8 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>387</width>
-    <height>430</height>
+    <height>401</height>
    </rect>
+  </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
   </property>
   <property name="windowTitle">
    <string notr="true">wdgSettingsAudio</string>
@@ -472,6 +475,17 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>comboBox_Output_Devices</tabstop>
+  <tabstop>comboBox_Buffer_Size_factor</tabstop>
+  <tabstop>comboBox_Sample_Rate</tabstop>
+  <tabstop>comboBox_Channels</tabstop>
+  <tabstop>comboBox_Channels_Delay</tabstop>
+  <tabstop>widget_APU_Channels</tabstop>
+  <tabstop>checkBox_Reverse_bits_DPCM</tabstop>
+  <tabstop>checkBox_Swap_Duty_Cycles</tabstop>
+  <tabstop>checkBox_Enable_Audio</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

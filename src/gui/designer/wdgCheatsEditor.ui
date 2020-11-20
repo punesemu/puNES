@@ -6,9 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>704</width>
-    <height>564</height>
+    <width>491</width>
+    <height>516</height>
    </rect>
+  </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
   </property>
   <property name="windowTitle">
    <string>Cheats Editor</string>
@@ -80,7 +83,7 @@
          </sizepolicy>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::StrongFocus</enum>
         </property>
         <property name="horizontalScrollBarPolicy">
          <enum>Qt::ScrollBarAsNeeded</enum>
@@ -312,11 +315,17 @@
              </item>
              <item row="0" column="1">
               <widget class="QLineEdit" name="lineEdit_Ram">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
                </property>
                <property name="maxLength">
                 <number>8</number>
@@ -449,6 +458,24 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tableWidget_Cheats</tabstop>
+  <tabstop>pushButton_Hide_Show_Tools</tabstop>
+  <tabstop>pushButton_Import_Cheats</tabstop>
+  <tabstop>pushButton_Export_Cheats</tabstop>
+  <tabstop>pushButton_Clear_All_Cheats</tabstop>
+  <tabstop>lineEdit_Description</tabstop>
+  <tabstop>radioButton_CPU_Ram</tabstop>
+  <tabstop>radioButton_GG</tabstop>
+  <tabstop>lineEdit_GG</tabstop>
+  <tabstop>radioButton_ProAR</tabstop>
+  <tabstop>lineEdit_ProAR</tabstop>
+  <tabstop>checkBox_Compare</tabstop>
+  <tabstop>pushButton_New_Cheat</tabstop>
+  <tabstop>pushButton_Submit_Cheat</tabstop>
+  <tabstop>pushButton_Remove_Cheat</tabstop>
+  <tabstop>pushButton_Cancel_Cheat</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

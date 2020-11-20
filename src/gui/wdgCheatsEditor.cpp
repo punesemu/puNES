@@ -45,6 +45,8 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 
 	setupUi(this);
 
+	setFocusProxy(tableWidget_Cheats);
+
 	cheat_tableview_resize();
 
 	connect(tableWidget_Cheats, SIGNAL(itemSelectionChanged()), this, SLOT(s_cheat_item()));
@@ -711,6 +713,8 @@ void wdgCheatsEditor::s_cancel(UNUSED(bool checked)) {
 
 	s_cheat_item();
 }
+
+// ----------------------------------------------------------------------------------------------
 
 hexSpinBox::hexSpinBox(QWidget *parent, int dgts = 4) : QSpinBox(parent) {
 	digits = dgts;

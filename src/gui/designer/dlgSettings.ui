@@ -23,6 +23,9 @@
   <layout class="QVBoxLayout" name="verticalLayout_dlgSettings">
    <item>
     <widget class="QTabWidget" name="tabWidget_Settings">
+     <property name="currentIndex">
+      <number>6</number>
+     </property>
      <widget class="QWidget" name="tab_General">
       <attribute name="icon">
        <iconset resource="resources.qrc">
@@ -195,6 +198,18 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tabWidget_Settings</tabstop>
+  <tabstop>widget_Settings_General</tabstop>
+  <tabstop>widget_Settings_Video</tabstop>
+  <tabstop>widget_Settings_Audio</tabstop>
+  <tabstop>widget_Settings_Input</tabstop>
+  <tabstop>widget_Settings_PPU</tabstop>
+  <tabstop>widget_Settings_Cheats</tabstop>
+  <tabstop>widget_Settings_Recording</tabstop>
+  <tabstop>pushButton_Save_Settings</tabstop>
+  <tabstop>pushButton_Close_Settings</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

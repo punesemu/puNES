@@ -82,6 +82,10 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>pushButton_left</tabstop>
+  <tabstop>pushButton_right</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>394</width>
+    <width>248</width>
     <height>261</height>
    </rect>
   </property>
@@ -486,6 +486,22 @@
    <header>wdgPaletteEditor.hpp</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>horizontalSlider_Red</tabstop>
+  <tabstop>spinBox_Red</tabstop>
+  <tabstop>horizontalSlider_Green</tabstop>
+  <tabstop>spinBox_Green</tabstop>
+  <tabstop>horizontalSlider_Blue</tabstop>
+  <tabstop>spinBox_Blue</tabstop>
+  <tabstop>horizontalSlider_Hue</tabstop>
+  <tabstop>spinBox_Hue</tabstop>
+  <tabstop>horizontalSlider_Sat</tabstop>
+  <tabstop>spinBox_Sat</tabstop>
+  <tabstop>horizontalSlider_Val</tabstop>
+  <tabstop>spinBox_Val</tabstop>
+  <tabstop>lineEdit_Html_Name</tabstop>
+  <tabstop>pushButton_Palette_save</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

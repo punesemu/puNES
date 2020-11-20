@@ -27,6 +27,8 @@
 wdgSettingsGeneral::wdgSettingsGeneral(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
+	setFocusProxy(comboBox_Mode);
+
 	connect(comboBox_Mode, SIGNAL(activated(int)), this, SLOT(s_mode(int)));
 	connect(comboBox_Fast_Forward_velocity, SIGNAL(activated(int)), this, SLOT(s_fast_forward_velocity(int)));
 	connect(comboBox_Rewind_minutes, SIGNAL(activated(int)), this, SLOT(s_rewind_minutes(int)));

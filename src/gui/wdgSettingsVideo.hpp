@@ -51,23 +51,24 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void par_set(void);
 		void oscan_set(void);
 		void oscan_def_value_set(void);
-		void oscan_brd_mode_set(void);
 		void oscan_brd_set(void);
 		void sfilter_set(void);
 		void shader_set(void);
 		void shader_param_set(void);
 		void palette_set(void);
+		bool call_gfx_set_screen(int mtype);
+		void spinbox_set_value(QSpinBox *spn, int value);
+		void pushbutton_set_checked(QPushButton *btn, bool mode);
 
 	public slots:
 		void s_scale(int index);
 	private slots:
-		void s_par(int index);
+		void s_par(bool checked);
 		void s_par_stretch(bool checked);
-		void s_oscan(int index);
-		void s_oscan_def_value(int index);
+		void s_oscan(bool checked);
+		void s_oscan_def_value(bool checked);
 		void s_oscan_brd_black_w(bool checked);
 		void s_oscan_brd_black_f(bool checked);
-		void s_oscan_brd_mode(int index);
 		void s_oscan_spinbox(int i);
 		void s_oscan_reset(bool checked);
 		void s_sfilter(int index);
@@ -95,7 +96,7 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void s_fullscreen_in_window(bool checked);
 		void s_integer_in_fullscreen(bool checked);
 		void s_stretch_in_fullscreen(bool checked);
-		void s_screen_rotation(int index);
+		void s_screen_rotation(bool checked);
 		void s_horizontal_flip_screen(bool checked);
 		void s_input_rotation(bool checked);
 		void s_text_rotation(bool checked);

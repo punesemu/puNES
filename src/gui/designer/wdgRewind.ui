@@ -152,6 +152,14 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>toolButton_Fast_Backward</tabstop>
+  <tabstop>toolButton_Step_Backward</tabstop>
+  <tabstop>toolButton_Play</tabstop>
+  <tabstop>toolButton_Pause</tabstop>
+  <tabstop>toolButton_Step_Forward</tabstop>
+  <tabstop>toolButton_Fast_Forward</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

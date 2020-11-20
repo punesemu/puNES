@@ -27,6 +27,8 @@
 wdgSettingsPPU::wdgSettingsPPU(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
+	setFocusProxy(checkBox_Hide_Sprites);
+
 	spinBox_VB_Slines->setRange(0, 1000);
 	spinBox_Postrender_Slines->setRange(0, 1000);
 

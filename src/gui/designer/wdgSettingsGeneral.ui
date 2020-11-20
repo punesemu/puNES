@@ -10,6 +10,9 @@
     <height>608</height>
    </rect>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>General Settings</string>
   </property>
@@ -460,6 +463,19 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboBox_Mode</tabstop>
+  <tabstop>comboBox_Fast_Forward_velocity</tabstop>
+  <tabstop>comboBox_Rewind_minutes</tabstop>
+  <tabstop>comboBox_Language</tabstop>
+  <tabstop>pushButton_Game_Genie_rom_file</tabstop>
+  <tabstop>pushButton_Game_Genie_rom_file_clear</tabstop>
+  <tabstop>pushButton_FDS_Bios</tabstop>
+  <tabstop>pushButton_FDS_Bios_clear</tabstop>
+  <tabstop>checkBox_Save_battery_every_tot</tabstop>
+  <tabstop>checkBox_Pause_when_in_background</tabstop>
+  <tabstop>checkBox_Save_settings_on_exit</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

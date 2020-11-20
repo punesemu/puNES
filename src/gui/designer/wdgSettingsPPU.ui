@@ -10,6 +10,9 @@
     <height>311</height>
    </rect>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>PPU Settings</string>
   </property>
@@ -228,6 +231,16 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>checkBox_Hide_Sprites</tabstop>
+  <tabstop>checkBox_Hide_Background</tabstop>
+  <tabstop>checkBox_Unlimited_Sprites</tabstop>
+  <tabstop>checkBox_PPU_Overclock</tabstop>
+  <tabstop>checkBox_Disable_DMC_Control</tabstop>
+  <tabstop>spinBox_VB_Slines</tabstop>
+  <tabstop>spinBox_Postrender_Slines</tabstop>
+  <tabstop>pushButton_Reset_Lag_Counter</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

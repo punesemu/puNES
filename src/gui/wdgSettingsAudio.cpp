@@ -26,6 +26,8 @@
 wdgSettingsAudio::wdgSettingsAudio(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
+	setFocusProxy(comboBox_Output_Devices);
+
 #if !defined (__OpenBSD__)
 	connect(comboBox_Output_Devices, SIGNAL(activated(int)), this, SLOT(s_output_devices(int)));
 #endif

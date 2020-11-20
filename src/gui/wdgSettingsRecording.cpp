@@ -59,6 +59,8 @@ static const char *format_description[REC_FORMAT_TOTAL] = {
 wdgSettingsRecording::wdgSettingsRecording(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
+	setFocusProxy(comboBox_Output_Audio_Format);
+
 #if defined (WITH_FFMPEG)
 	output_format_init();
 
