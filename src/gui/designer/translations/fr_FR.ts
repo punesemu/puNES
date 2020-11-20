@@ -2107,10 +2107,6 @@
       <translation type="unfinished">Default Value</translation>
     </message>
     <message>
-      <source>Overscan borders</source>
-      <translation type="unfinished">Overscan borders</translation>
-    </message>
-    <message>
       <source>NTSC</source>
       <translation type="unfinished">NTSC</translation>
     </message>
@@ -2391,10 +2387,6 @@
       <translation type="unfinished">Raw</translation>
     </message>
     <message>
-      <source>Horizontal Flip and Screen Rotation</source>
-      <translation type="unfinished">Horizontal Flip and Screen Rotation</translation>
-    </message>
-    <message>
       <source>Horizontal flip</source>
       <translation type="unfinished">Horizontal flip</translation>
     </message>
@@ -2405,6 +2397,18 @@
     <message>
       <source>Flip/Rotate the text on screen</source>
       <translation type="unfinished">Flip/Rotate the text on screen</translation>
+    </message>
+    <message>
+      <source>Per-Game Overscan Setting</source>
+      <translation type="unfinished">Per-Game Overscan Setting</translation>
+    </message>
+    <message>
+      <source>Horizontal Flip and Rotation</source>
+      <translation type="unfinished">Horizontal Flip and Rotation</translation>
+    </message>
+    <message>
+      <source>Screen</source>
+      <translation type="unfinished">Screen</translation>
     </message>
   </context>
   <context>
