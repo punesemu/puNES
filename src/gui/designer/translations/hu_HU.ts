@@ -2063,10 +2063,6 @@
       <translation>Skálázás</translation>
     </message>
     <message>
-      <source>Settings</source>
-      <translation>Beállítások</translation>
-    </message>
-    <message>
       <source>** To apply this change restart is needed **</source>
       <translation>** Ennek a változtatásnak az alkalmazásához az emulátor újraindítása szükséges **</translation>
     </message>
