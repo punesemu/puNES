@@ -44,6 +44,7 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void retranslateUi(QWidget *wdgSettingsVideo);
 		void update_widget(void);
 		void change_rom(void);
+		void shcut_scale(int scale);
 
 	private:
 		void scale_set(void);
@@ -60,9 +61,8 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void spinbox_set_value(QSpinBox *spn, int value);
 		void pushbutton_set_checked(QPushButton *btn, bool mode);
 
-	public slots:
-		void s_scale(int index);
 	private slots:
+		void s_scale(bool checked);
 		void s_par(bool checked);
 		void s_par_stretch(bool checked);
 		void s_oscan(bool checked);

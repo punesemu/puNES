@@ -92,7 +92,7 @@ void dlgSettings::shcut_mode(int mode) {
 	widget_Settings_General->s_mode(mode);
 }
 void dlgSettings::shcut_scale(int scale) {
-	widget_Settings_Video->s_scale(scale);
+	widget_Settings_Video->shcut_scale(scale + 1);
 }
 
 void dlgSettings::update_tab_general(void) {

@@ -52,16 +52,29 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 
 	setupUi(this);
 
-	setFocusProxy(comboBox_Scale);
+	setFocusProxy(tabWidget_Video);
 
+	widget_Scale_xx->setStyleSheet(styled_button);
 	groupBox_Oscan_pergame_setting->setStyleSheet(title_bold + styled_button);
 	groupBox_Oscan_def_value->setStyleSheet(title_bold + styled_button);
 	groupBox_Oscan_NTSC_brd->setStyleSheet(title_bold);
 	groupBox_Oscan_PAL_brd->setStyleSheet(title_bold);
-	groupBox_PAR->setStyleSheet("QGroupBox { font-weight: bold; }" + styled_button);
-	groupBox_Screen_Rotation->setStyleSheet("QGroupBox { font-weight: bold; }" + styled_button);
+	groupBox_PAR->setStyleSheet(title_bold + styled_button);
+	groupBox_Screen_Rotation->setStyleSheet(title_bold + styled_button);
 
-	connect(comboBox_Scale, SIGNAL(activated(int)), this, SLOT(s_scale(int)));
+	pushButton_Scale_1x->setProperty("mtype", QVariant(X1));
+	pushButton_Scale_2x->setProperty("mtype", QVariant(X2));
+	pushButton_Scale_3x->setProperty("mtype", QVariant(X3));
+	pushButton_Scale_4x->setProperty("mtype", QVariant(X4));
+	pushButton_Scale_5x->setProperty("mtype", QVariant(X5));
+	pushButton_Scale_6x->setProperty("mtype", QVariant(X6));
+
+	connect(pushButton_Scale_1x, SIGNAL(toggled(bool)), this, SLOT(s_scale(bool)));
+	connect(pushButton_Scale_2x, SIGNAL(toggled(bool)), this, SLOT(s_scale(bool)));
+	connect(pushButton_Scale_3x, SIGNAL(toggled(bool)), this, SLOT(s_scale(bool)));
+	connect(pushButton_Scale_4x, SIGNAL(toggled(bool)), this, SLOT(s_scale(bool)));
+	connect(pushButton_Scale_5x, SIGNAL(toggled(bool)), this, SLOT(s_scale(bool)));
+	connect(pushButton_Scale_6x, SIGNAL(toggled(bool)), this, SLOT(s_scale(bool)));
 
 	pushButton_Oscan_pergame_setting_on->setProperty("mtype", QVariant(OSCAN_ON));
 	pushButton_Oscan_pergame_setting_off->setProperty("mtype", QVariant(OSCAN_OFF));
@@ -196,25 +209,27 @@ void wdgSettingsVideo::changeEvent(QEvent *event) {
 	}
 }
 void wdgSettingsVideo::showEvent(UNUSED(QShowEvent *event)) {
-	int dim = label_Scale->size().height() - 10;
+	//int dim = label_Scale->size().height() - 10;
 
-	icon_Scale->setPixmap(QIcon(":/icon/icons/scale.svg").pixmap(dim, dim));
+	//icon_Scale->setPixmap(QIcon(":/icon/icons/scale.svg").pixmap(dim, dim));
 }
 
 void wdgSettingsVideo::retranslateUi(QWidget *wdgSettingsVideo) {
 	Ui::wdgSettingsVideo::retranslateUi(wdgSettingsVideo);
-	mainwin->qaction_shcut.scale_1x->setText(comboBox_Scale->itemText(0));
-	mainwin->qaction_shcut.scale_2x->setText(comboBox_Scale->itemText(1));
-	mainwin->qaction_shcut.scale_3x->setText(comboBox_Scale->itemText(2));
-	mainwin->qaction_shcut.scale_4x->setText(comboBox_Scale->itemText(3));
-	mainwin->qaction_shcut.scale_5x->setText(comboBox_Scale->itemText(4));
-	mainwin->qaction_shcut.scale_6x->setText(comboBox_Scale->itemText(5));
+	mainwin->qaction_shcut.scale_1x->setText(pushButton_Scale_1x->text());
+	mainwin->qaction_shcut.scale_2x->setText(pushButton_Scale_1x->text());
+	mainwin->qaction_shcut.scale_3x->setText(pushButton_Scale_1x->text());
+	mainwin->qaction_shcut.scale_4x->setText(pushButton_Scale_1x->text());
+	mainwin->qaction_shcut.scale_5x->setText(pushButton_Scale_1x->text());
+	mainwin->qaction_shcut.scale_6x->setText(pushButton_Scale_1x->text());
 	mainwin->qaction_shcut.interpolation->setText(checkBox_Interpolation->text());
 	mainwin->qaction_shcut.integer_in_fullscreen->setText(checkBox_Use_integer_scaling_in_fullscreen->text());
 	mainwin->qaction_shcut.stretch_in_fullscreen->setText(checkBox_Stretch_in_fullscreen->text());
 	update_widget();
 }
 void wdgSettingsVideo::update_widget(void) {
+	scale_set();
+
 	{
 		oscan_set();
 		oscan_def_value_set();
@@ -294,9 +309,56 @@ void wdgSettingsVideo::update_widget(void) {
 void wdgSettingsVideo::change_rom(void) {
 	update_widget();
 }
+void wdgSettingsVideo::shcut_scale(int scale) {
+	switch (scale) {
+		case X1:
+			pushButton_Scale_1x->toggled(true);
+			break;
+		case X2:
+			pushButton_Scale_2x->toggled(true);
+			break;
+		case X3:
+			pushButton_Scale_3x->toggled(true);
+			break;
+		case X4:
+			pushButton_Scale_4x->toggled(true);
+			break;
+		case X5:
+			pushButton_Scale_5x->toggled(true);
+			break;
+		case X6:
+			pushButton_Scale_6x->toggled(true);
+			break;
+	}
+}
 
 void wdgSettingsVideo::scale_set(void) {
-	comboBox_Scale->setCurrentIndex(cfg->scale - 1);
+	pushbutton_set_checked(pushButton_Scale_1x, false);
+	pushbutton_set_checked(pushButton_Scale_2x, false);
+	pushbutton_set_checked(pushButton_Scale_3x, false);
+	pushbutton_set_checked(pushButton_Scale_4x, false);
+	pushbutton_set_checked(pushButton_Scale_5x, false);
+	pushbutton_set_checked(pushButton_Scale_6x, false);
+	switch (cfg->scale) {
+		case X1:
+			pushbutton_set_checked(pushButton_Scale_1x, true);
+			break;
+		case X2:
+			pushbutton_set_checked(pushButton_Scale_2x, true);
+			break;
+		case X3:
+			pushbutton_set_checked(pushButton_Scale_3x, true);
+			break;
+		case X4:
+			pushbutton_set_checked(pushButton_Scale_4x, true);
+			break;
+		case X5:
+			pushbutton_set_checked(pushButton_Scale_5x, true);
+			break;
+		case X6:
+			pushbutton_set_checked(pushButton_Scale_6x, true);
+			break;
+	}
 }
 void wdgSettingsVideo::oscan_set(void) {
 	pushbutton_set_checked(pushButton_Oscan_pergame_setting_on, false);
@@ -652,16 +714,19 @@ void wdgSettingsVideo::pushbutton_set_checked(QPushButton *btn, bool mode) {
 	btn->blockSignals(false);
 }
 
-void wdgSettingsVideo::s_scale(int index) {
-	int scale = index + 1;
+void wdgSettingsVideo::s_scale(bool checked) {
+	if (checked) {
+		int scale = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
 
-	if (cfg->fullscreen) {
-		return;
+		if ((cfg->fullscreen) || (scale == cfg->scale)) {
+			return;
+		}
+
+		emu_thread_pause();
+		gfx_set_screen(scale, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+		emu_thread_continue();
 	}
-
-	emu_thread_pause();
-	gfx_set_screen(scale, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-	emu_thread_continue();
+	scale_set();
 }
 void wdgSettingsVideo::s_par(bool checked) {
 	if (checked) {

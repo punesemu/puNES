@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>511</width>
-    <height>634</height>
+    <width>552</width>
+    <height>608</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -31,24 +31,16 @@
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout_Video">
-     <item row="1" column="0">
-      <widget class="QLabel" name="icon_Scale">
-       <property name="text">
-        <string notr="true">Scale icon</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="label_Scale">
-       <property name="text">
-        <string>Scale</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0" colspan="3">
+     <item row="1" column="0" colspan="2">
       <widget class="QTabWidget" name="tabWidget_Video">
+       <property name="tabPosition">
+        <enum>QTabWidget::East</enum>
+       </property>
+       <property name="tabShape">
+        <enum>QTabWidget::Rounded</enum>
+       </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="tab_Video_Misc">
         <attribute name="icon">
@@ -216,6 +208,127 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_Video_settings">
+           <item>
+            <widget class="QLabel" name="label_Video_settings">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Scale</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line_Video_settings">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_Scale">
+           <item>
+            <widget class="QWidget" name="widget_Scale_xx" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_Scale_xx">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>11</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>11</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QPushButton" name="pushButton_Scale_1x">
+                <property name="text">
+                 <string>1x</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_Scale_2x">
+                <property name="text">
+                 <string>2x</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_Scale_3x">
+                <property name="text">
+                 <string>3x</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_Scale_4x">
+                <property name="text">
+                 <string>4x</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_Scale_5x">
+                <property name="text">
+                 <string>5x</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_Scale_6x">
+                <property name="text">
+                 <string>6x</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
           <layout class="QHBoxLayout" name="horizontalLayout_Screen_Oscan">
            <item>
             <widget class="QLabel" name="label_Screen_Oscan">
@@ -266,6 +379,9 @@
                <widget class="QGroupBox" name="groupBox_Oscan_pergame_setting">
                 <property name="title">
                  <string>Per-Game Overscan Setting</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
                 </property>
                 <property name="flat">
                  <bool>true</bool>
@@ -330,6 +446,9 @@
                 <property name="title">
                  <string>Default Value</string>
                 </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_4">
                  <property name="spacing">
                   <number>0</number>
@@ -363,6 +482,9 @@
              <widget class="QGroupBox" name="groupBox_Oscan_NTSC_brd">
               <property name="title">
                <string>NTSC</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
               <layout class="QGridLayout" name="gridLayout_Oscan_NTSC_brd">
                <item row="1" column="2">
@@ -482,6 +604,9 @@
              <widget class="QGroupBox" name="groupBox_Oscan_PAL_brd">
               <property name="title">
                <string>PAL/Dendy</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
               <layout class="QGridLayout" name="gridLayout_Oscan_PAL_brd">
                <item row="1" column="2">
@@ -643,7 +768,10 @@
              <property name="title">
               <string>Pixel Aspect Ratio</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_5">
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_PAR">
               <item row="1" column="0">
                <widget class="QCheckBox" name="checkBox_PAR_Soft_Stretch">
                 <property name="text">
@@ -725,7 +853,10 @@
              <property name="title">
               <string>Horizontal Flip and Rotation</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_2">
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_Screen_Rotation">
               <item row="2" column="0" colspan="3">
                <widget class="QCheckBox" name="checkBox_Input_Rotation">
                 <property name="text">
@@ -823,60 +954,148 @@
          <string>Filters</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_Video_Filters">
-         <item row="2" column="0" colspan="3">
-          <widget class="QComboBox" name="comboBox_Shaders">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
+         <item row="9" column="0" colspan="3">
+          <layout class="QHBoxLayout" name="horizontalLayout_Filters_misc">
+           <item>
+            <widget class="QLabel" name="label_Filters_misc">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Misc</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line_Filters_misc">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="3" column="0">
+          <widget class="QPushButton" name="pushButton_Shaders_file">
+           <property name="text">
+            <string>Load from a file</string>
            </property>
-           <item>
-            <property name="text">
-             <string>No Shaders</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>CRT Dotmask</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>CRT Scanlines</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>CRT With Curve</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Emboss</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Noise</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>NTSC 2Phase Composite</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Old TV</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>From File</string>
-            </property>
-           </item>
+           <property name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
+           </property>
           </widget>
+         </item>
+         <item row="10" column="0">
+          <widget class="QCheckBox" name="checkBox_Disable_sRGB_FBO">
+           <property name="text">
+            <string>Disable sRGB FBO</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1" colspan="2">
+          <layout class="QHBoxLayout" name="horizontalLayout_Shaders_file">
+           <item>
+            <widget class="QLineEdit" name="lineEdit_Shaders_file">
+             <property name="focusPolicy">
+              <enum>Qt::NoFocus</enum>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_Shaders_file_clear">
+             <property name="icon">
+              <iconset resource="resources.qrc">
+               <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="11" column="0" colspan="3">
+          <spacer name="verticalSpacer_Video_Filters">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="6" column="0" colspan="3">
+          <layout class="QHBoxLayout" name="horizontalLayout_Shader_Parameters">
+           <item>
+            <widget class="QLabel" name="label_Shader_Parameters">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Shader Parameters</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line_Shader_Parameters">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0" colspan="3">
+          <layout class="QHBoxLayout" name="horizontalLayout_Shaders">
+           <item>
+            <widget class="QLabel" name="label_Shaders">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Shaders</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line_Shaders">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item row="0" column="0" colspan="3">
           <widget class="QComboBox" name="comboBox_Software_Filters">
@@ -988,57 +1207,71 @@
            </item>
           </widget>
          </item>
-         <item row="1" column="0" colspan="3">
-          <layout class="QHBoxLayout" name="horizontalLayout_Shaders">
-           <item>
-            <widget class="QLabel" name="label_Shaders">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Shaders</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="Line" name="line_Shaders">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-          </layout>
+         <item row="8" column="0" colspan="3">
+          <widget class="QPushButton" name="pushButton_Shader_Parameters_reset_alls">
+           <property name="text">
+            <string>Reset paramaters to defaults</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
+           </property>
+          </widget>
          </item>
-         <item row="3" column="1" colspan="2">
-          <layout class="QHBoxLayout" name="horizontalLayout_Shaders_file">
+         <item row="2" column="0" colspan="3">
+          <widget class="QComboBox" name="comboBox_Shaders">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <item>
-            <widget class="QLineEdit" name="lineEdit_Shaders_file">
-             <property name="focusPolicy">
-              <enum>Qt::NoFocus</enum>
-             </property>
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
+            <property name="text">
+             <string>No Shaders</string>
+            </property>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_Shaders_file_clear">
-             <property name="icon">
-              <iconset resource="resources.qrc">
-               <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
-             </property>
-            </widget>
+            <property name="text">
+             <string>CRT Dotmask</string>
+            </property>
            </item>
-          </layout>
+           <item>
+            <property name="text">
+             <string>CRT Scanlines</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>CRT With Curve</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Emboss</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Noise</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>NTSC 2Phase Composite</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Old TV</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>From File</string>
+            </property>
+           </item>
+          </widget>
          </item>
          <item row="7" column="0" colspan="3">
           <widget class="QTableWidget" name="tableWidget_Shader_Parameters">
@@ -1054,108 +1287,6 @@
            <attribute name="horizontalHeaderVisible">
             <bool>false</bool>
            </attribute>
-          </widget>
-         </item>
-         <item row="9" column="0" colspan="3">
-          <layout class="QHBoxLayout" name="horizontalLayout_Filters_misc">
-           <item>
-            <widget class="QLabel" name="label_Filters_misc">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Misc</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="Line" name="line_Filters_misc">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="3" column="0">
-          <widget class="QPushButton" name="pushButton_Shaders_file">
-           <property name="text">
-            <string>Load from a file</string>
-           </property>
-           <property name="icon">
-            <iconset resource="resources.qrc">
-             <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0" colspan="3">
-          <layout class="QHBoxLayout" name="horizontalLayout_Shader_Parameters">
-           <item>
-            <widget class="QLabel" name="label_Shader_Parameters">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Shader Parameters</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="Line" name="line_Shader_Parameters">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="11" column="0" colspan="3">
-          <spacer name="verticalSpacer_Video_Filters">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="10" column="0">
-          <widget class="QCheckBox" name="checkBox_Disable_sRGB_FBO">
-           <property name="text">
-            <string>Disable sRGB FBO</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0" colspan="3">
-          <widget class="QPushButton" name="pushButton_Shader_Parameters_reset_alls">
-           <property name="text">
-            <string>Reset paramaters to defaults</string>
-           </property>
-           <property name="icon">
-            <iconset resource="resources.qrc">
-             <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
-           </property>
           </widget>
          </item>
         </layout>
@@ -1344,76 +1475,6 @@
        </widget>
       </widget>
      </item>
-     <item row="0" column="0" colspan="3">
-      <layout class="QHBoxLayout" name="horizontalLayout_Video_settings">
-       <item>
-        <widget class="QLabel" name="label_Video_settings">
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Settings</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="Line" name="line_Video_settings">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="1" column="2">
-      <widget class="QComboBox" name="comboBox_Scale">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <item>
-        <property name="text">
-         <string>1x</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2x</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>3x</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>4x</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>5x</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>6x</string>
-        </property>
-       </item>
-      </widget>
-     </item>
     </layout>
    </item>
   </layout>
@@ -1427,7 +1488,6 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>comboBox_Scale</tabstop>
   <tabstop>tabWidget_Video</tabstop>
   <tabstop>checkBox_Vsync</tabstop>
   <tabstop>checkBox_Interpolation</tabstop>
@@ -1439,6 +1499,12 @@
   <tabstop>checkBox_Fullscreen_in_window</tabstop>
   <tabstop>checkBox_Use_integer_scaling_in_fullscreen</tabstop>
   <tabstop>checkBox_Stretch_in_fullscreen</tabstop>
+  <tabstop>pushButton_Scale_1x</tabstop>
+  <tabstop>pushButton_Scale_2x</tabstop>
+  <tabstop>pushButton_Scale_3x</tabstop>
+  <tabstop>pushButton_Scale_4x</tabstop>
+  <tabstop>pushButton_Scale_5x</tabstop>
+  <tabstop>pushButton_Scale_6x</tabstop>
   <tabstop>pushButton_Oscan_pergame_setting_on</tabstop>
   <tabstop>pushButton_Oscan_pergame_setting_off</tabstop>
   <tabstop>pushButton_Oscan_pergame_setting_use_def</tabstop>
@@ -1446,13 +1512,13 @@
   <tabstop>pushButton_Oscan_def_value_off</tabstop>
   <tabstop>spinBox_Oscan_NTSC_brd_up</tabstop>
   <tabstop>spinBox_Oscan_NTSC_brd_down</tabstop>
-  <tabstop>spinBox_Oscan_NTSC_brd_left</tabstop>
-  <tabstop>spinBox_Oscan_NTSC_brd_right</tabstop>
-  <tabstop>pushButton_Oscan_NTSC_brd_reset</tabstop>
   <tabstop>spinBox_Oscan_PAL_brd_up</tabstop>
   <tabstop>spinBox_Oscan_PAL_brd_down</tabstop>
+  <tabstop>spinBox_Oscan_NTSC_brd_left</tabstop>
+  <tabstop>spinBox_Oscan_NTSC_brd_right</tabstop>
   <tabstop>spinBox_Oscan_PAL_brd_left</tabstop>
   <tabstop>spinBox_Oscan_PAL_brd_right</tabstop>
+  <tabstop>pushButton_Oscan_NTSC_brd_reset</tabstop>
   <tabstop>pushButton_Oscan_PAL_brd_reset</tabstop>
   <tabstop>checkBox_Oscan_brd_black_window</tabstop>
   <tabstop>checkBox_Oscan_brd_black_flscreen</tabstop>

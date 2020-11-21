@@ -2063,10 +2063,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>** To apply this change restart is needed **</source>
         <translation type="unfinished"></translation>
     </message>
