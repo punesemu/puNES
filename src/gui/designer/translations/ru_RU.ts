@@ -2063,10 +2063,6 @@
       <translation>Масштаб</translation>
     </message>
     <message>
-      <source>Settings</source>
-      <translation>Настройки</translation>
-    </message>
-    <message>
       <source>** To apply this change restart is needed **</source>
       <translation>** Требуется перезагрузка для принятия изменений **</translation>
     </message>
