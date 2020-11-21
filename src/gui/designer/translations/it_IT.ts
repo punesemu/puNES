@@ -2063,10 +2063,6 @@
       <translation>Fattore di Scala</translation>
     </message>
     <message>
-      <source>Settings</source>
-      <translation>Configurazione</translation>
-    </message>
-    <message>
       <source>** To apply this change restart is needed **</source>
       <translation>** Per applicare questa modifica è necessario un riavvio **</translation>
     </message>
