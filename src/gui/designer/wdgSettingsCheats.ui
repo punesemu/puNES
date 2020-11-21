@@ -34,6 +34,13 @@
      <item row="0" column="0" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout_Cheats_settings">
        <item>
+        <widget class="QLabel" name="icon_Cheats_settings">
+         <property name="text">
+          <string notr="true">Settings icon</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_Cheats_settings">
          <property name="font">
           <font>

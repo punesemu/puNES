@@ -103,6 +103,13 @@
      <item row="0" column="0" colspan="3">
       <layout class="QHBoxLayout" name="horizontalLayout_Audio_settings">
        <item>
+        <widget class="QLabel" name="icon_Audio_settings">
+         <property name="text">
+          <string notr="true">Settings icon</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_Audio_settings">
          <property name="font">
           <font>
@@ -237,6 +244,13 @@
      </item>
      <item row="6" column="0" colspan="3">
       <layout class="QHBoxLayout" name="horizontalLayout_APU_Channels">
+       <item>
+        <widget class="QLabel" name="icon_APU_Channels">
+         <property name="text">
+          <string notr="true">APU Channels icon</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QLabel" name="label_APU_Channels">
          <property name="font">
@@ -429,7 +443,14 @@
      <item row="8" column="0" colspan="3">
       <layout class="QHBoxLayout" name="horizontalLayout_Audio_misc">
        <item>
-        <widget class="QLabel" name="label_Audio_Misc">
+        <widget class="QLabel" name="icon_Audio_misc">
+         <property name="text">
+          <string notr="true">Misc icon</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_Audio_misc">
          <property name="font">
           <font>
            <weight>75</weight>
@@ -442,7 +463,7 @@
         </widget>
        </item>
        <item>
-        <widget class="Line" name="line_Audio_Misc">
+        <widget class="Line" name="line_Audio_misc">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>

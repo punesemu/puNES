@@ -31,6 +31,7 @@ class wdgSettingsPPU : public QWidget, public Ui::wdgSettingsPPU {
 
 	protected:
 		void changeEvent(QEvent *event);
+		void showEvent(QShowEvent *event);
 
 	public:
 		void update_widget(void);

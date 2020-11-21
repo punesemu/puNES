@@ -54,12 +54,15 @@ void wdgSettingsGeneral::changeEvent(QEvent *event) {
 	}
 }
 void wdgSettingsGeneral::showEvent(UNUSED(QShowEvent *event)) {
-	int dim = label_Mode->size().height() - 10;
+	int dim = fontMetrics().height();
 
+	icon_General_settings->setPixmap(QIcon(":/icon/icons/settings.svg").pixmap(dim, dim));
 	icon_Mode->setPixmap(QIcon(":/icon/icons/mode.svg").pixmap(dim, dim));
 	icon_Fast_Forward_velocity->setPixmap(QIcon(":/icon/icons/fast_forward.svg").pixmap(dim, dim));
 	icon_Rewind_minutes->setPixmap(QIcon(":/icon/icons/rewind.svg").pixmap(dim, dim));
 	icon_Language->setPixmap(QIcon(":/icon/icons/language.svg").pixmap(dim, dim));
+	icon_System_Roms->setPixmap(QIcon(":/icon/icons/microprocessor.svg").pixmap(dim, dim));
+	icon_General_misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
 }
 
 void wdgSettingsGeneral::retranslateUi(QWidget *wdgSettingsGeneral) {

@@ -55,6 +55,14 @@ void wdgSettingsPPU::changeEvent(QEvent *event) {
 		QWidget::changeEvent(event);
 	}
 }
+void wdgSettingsPPU::showEvent(QShowEvent *event) {
+	int dim = fontMetrics().height();
+
+	icon_Sprites_and_background->setPixmap(QIcon(":/icon/icons/background.svg").pixmap(dim, dim));
+	icon_PPU_Overclock->setPixmap(QIcon(":/icon/icons/speedometer.svg").pixmap(dim, dim));
+
+	QWidget::showEvent(event);
+}
 
 void wdgSettingsPPU::update_widget(void) {
 	checkBox_Hide_Sprites->setChecked(cfg->hide_sprites);

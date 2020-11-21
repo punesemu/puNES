@@ -143,9 +143,16 @@
       </widget>
      </item>
      <item row="7" column="0" colspan="4">
-      <layout class="QHBoxLayout" name="horizontalLayout_Input_Misc">
+      <layout class="QHBoxLayout" name="horizontalLayout_Input_misc">
        <item>
-        <widget class="QLabel" name="label_Input_Misc">
+        <widget class="QLabel" name="icon_Input_misc">
+         <property name="text">
+          <string notr="true">Misc icon</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_Input_misc">
          <property name="font">
           <font>
            <weight>75</weight>
@@ -158,7 +165,7 @@
         </widget>
        </item>
        <item>
-        <widget class="Line" name="line_Input_Misc">
+        <widget class="Line" name="line_Input_misc">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -218,6 +225,13 @@
      </item>
      <item row="0" column="0" colspan="4">
       <layout class="QHBoxLayout" name="horizontalLayout_Ports">
+       <item>
+        <widget class="QLabel" name="icon_Ports">
+         <property name="text">
+          <string notr="true">Ports icon</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QLabel" name="label_Ports">
          <property name="font">
@@ -355,6 +369,13 @@
      </item>
      <item row="10" column="0" colspan="4">
       <layout class="QHBoxLayout" name="horizontalLayout_Shortcuts">
+       <item>
+        <widget class="QLabel" name="icon_Shortcuts">
+         <property name="text">
+          <string notr="true">Shortcuts icon</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QLabel" name="label_Shortcuts">
          <property name="font">

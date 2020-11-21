@@ -52,15 +52,18 @@ void wdgSettingsAudio::changeEvent(QEvent *event) {
 	}
 }
 void wdgSettingsAudio::showEvent(UNUSED(QShowEvent *event)) {
-	int dim = label_Output_Devices->size().height() - 10;
+	int dim = fontMetrics().height();
 
 	output_devices_init();
 
+	icon_Audio_settings->setPixmap(QIcon(":/icon/icons/settings.svg").pixmap(dim, dim));
 	icon_Output_Devices->setPixmap(QIcon(":/icon/icons/audio_output.svg").pixmap(dim, dim));
 	icon_Buffer_Size_factor->setPixmap(QIcon(":/icon/icons/buffer_size.svg").pixmap(dim, dim));
 	icon_Sample_Rate->setPixmap(QIcon(":/icon/icons/samplerate.svg").pixmap(dim, dim));
 	icon_Channels->setPixmap(QIcon(":/icon/icons/channels.svg").pixmap(dim, dim));
 	icon_Channels_Delay->setPixmap(QIcon(":/icon/icons/stereo_delay.svg").pixmap(dim, dim));
+	icon_APU_Channels->setPixmap(QIcon(":/icon/icons/volume.svg").pixmap(dim, dim));
+	icon_Audio_misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
 }
 
 void wdgSettingsAudio::retranslateUi(QWidget *wdgSettingsAudio) {

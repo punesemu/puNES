@@ -59,8 +59,8 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 	groupBox_Oscan_def_value->setStyleSheet(title_bold + styled_button);
 	groupBox_Oscan_NTSC_brd->setStyleSheet(title_bold);
 	groupBox_Oscan_PAL_brd->setStyleSheet(title_bold);
-	groupBox_PAR->setStyleSheet(title_bold + styled_button);
-	groupBox_Screen_Rotation->setStyleSheet(title_bold + styled_button);
+	frame_PAR->setStyleSheet(styled_button);
+	frame_Screen_Rotation->setStyleSheet(styled_button);
 
 	pushButton_Scale_1x->setProperty("mtype", QVariant(X1));
 	pushButton_Scale_2x->setProperty("mtype", QVariant(X2));
@@ -209,19 +209,30 @@ void wdgSettingsVideo::changeEvent(QEvent *event) {
 	}
 }
 void wdgSettingsVideo::showEvent(UNUSED(QShowEvent *event)) {
-	//int dim = label_Scale->size().height() - 10;
+	int dim = fontMetrics().height();
 
-	//icon_Scale->setPixmap(QIcon(":/icon/icons/scale.svg").pixmap(dim, dim));
+	icon_Misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
+	icon_Screen_Scale->setPixmap(QIcon(":/icon/icons/scale.svg").pixmap(dim, dim));
+	icon_Screen_Oscan->setPixmap(QIcon(":/icon/icons/overscan.svg").pixmap(dim, dim));
+	icon_Screen_PAR->setPixmap(QIcon(":/icon/icons/pixel_aspect_ratio.svg").pixmap(dim, dim));
+	icon_Screen_Rotation->setPixmap(QIcon(":/icon/icons/switch_sides.svg").pixmap(dim, dim));
+	icon_Software_Filters->setPixmap(QIcon(":/icon/icons/cpu_filter.svg").pixmap(dim, dim));
+	icon_Shaders->setPixmap(QIcon(":/icon/icons/shader.svg").pixmap(dim, dim));
+	icon_Shaders_Parameters->setPixmap(QIcon(":/icon/icons/shaders_parameters.svg").pixmap(dim, dim));
+	icon_Filters_misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
+	icon_Palette->setPixmap(QIcon(":/icon/icons/palette.svg").pixmap(dim, dim));
+	icon_Palette_editor->setPixmap(QIcon(":/icon/icons/color_picker.svg").pixmap(dim, dim));
+	icon_Palette_misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
 }
 
 void wdgSettingsVideo::retranslateUi(QWidget *wdgSettingsVideo) {
 	Ui::wdgSettingsVideo::retranslateUi(wdgSettingsVideo);
 	mainwin->qaction_shcut.scale_1x->setText(pushButton_Scale_1x->text());
-	mainwin->qaction_shcut.scale_2x->setText(pushButton_Scale_1x->text());
-	mainwin->qaction_shcut.scale_3x->setText(pushButton_Scale_1x->text());
-	mainwin->qaction_shcut.scale_4x->setText(pushButton_Scale_1x->text());
-	mainwin->qaction_shcut.scale_5x->setText(pushButton_Scale_1x->text());
-	mainwin->qaction_shcut.scale_6x->setText(pushButton_Scale_1x->text());
+	mainwin->qaction_shcut.scale_2x->setText(pushButton_Scale_2x->text());
+	mainwin->qaction_shcut.scale_3x->setText(pushButton_Scale_3x->text());
+	mainwin->qaction_shcut.scale_4x->setText(pushButton_Scale_4x->text());
+	mainwin->qaction_shcut.scale_5x->setText(pushButton_Scale_5x->text());
+	mainwin->qaction_shcut.scale_6x->setText(pushButton_Scale_6x->text());
 	mainwin->qaction_shcut.interpolation->setText(checkBox_Interpolation->text());
 	mainwin->qaction_shcut.integer_in_fullscreen->setText(checkBox_Use_integer_scaling_in_fullscreen->text());
 	mainwin->qaction_shcut.stretch_in_fullscreen->setText(checkBox_Stretch_in_fullscreen->text());

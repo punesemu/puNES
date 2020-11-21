@@ -31,6 +31,7 @@ class wdgSettingsCheats : public QWidget, public Ui::wdgSettingsCheats {
 
 	private:
 		void changeEvent(QEvent *event);
+		void showEvent(QShowEvent *event);
 
 	public:
 		void retranslateUi(QWidget *wdgSettingsCheats);

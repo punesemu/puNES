@@ -47,6 +47,13 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_Cheat_List_Editor">
         <item>
+         <widget class="QLabel" name="icon_Cheat_List_Editor">
+          <property name="text">
+           <string notr="true">Cheats List icon</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QLabel" name="label_Cheat_List_Editor">
           <property name="font">
            <font>
@@ -211,6 +218,13 @@
       </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_Editor_Tools">
+        <item>
+         <widget class="QLabel" name="icon_Editor_Tools">
+          <property name="text">
+           <string notr="true">Editor Tools icon</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QLabel" name="label_Editor_Tools">
           <property name="font">

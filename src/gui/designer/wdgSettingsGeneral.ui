@@ -34,6 +34,13 @@
      <item row="5" column="0" colspan="3">
       <layout class="QHBoxLayout" name="horizontalLayout_System_Roms">
        <item>
+        <widget class="QLabel" name="icon_System_Roms">
+         <property name="text">
+          <string notr="true">System Roms icon</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_System_Roms">
          <property name="font">
           <font>
@@ -244,6 +251,13 @@
      <item row="7" column="0" colspan="3">
       <layout class="QHBoxLayout" name="horizontalLayout_General_misc">
        <item>
+        <widget class="QLabel" name="icon_General_misc">
+         <property name="text">
+          <string notr="true">Misc icon</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_General_misc">
          <property name="font">
           <font>
@@ -294,6 +308,13 @@
      </item>
      <item row="0" column="0" colspan="3">
       <layout class="QHBoxLayout" name="horizontalLayout_General_settings">
+       <item>
+        <widget class="QLabel" name="icon_General_settings">
+         <property name="text">
+          <string notr="true">Settings icon</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QLabel" name="label_General_settings">
          <property name="font">

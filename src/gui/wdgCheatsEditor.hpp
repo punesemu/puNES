@@ -63,6 +63,7 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 
 	protected:
 		void changeEvent(QEvent *event);
+		void showEvent(QShowEvent *event);
 
 	public:
 		void hide_tools_widgets(bool state);

@@ -314,6 +314,13 @@
      <item row="0" column="0" colspan="6">
       <layout class="QHBoxLayout" name="horizontalLayout_Audio_recording_settings">
        <item>
+        <widget class="QLabel" name="icon_Audio_recording_settings">
+         <property name="text">
+          <string notr="true">Audio recording settings icon</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_Audio_recording_settings">
          <property name="font">
           <font>
@@ -343,6 +350,13 @@
      </item>
      <item row="2" column="0" colspan="6">
       <layout class="QHBoxLayout" name="horizontalLayout_Video_recording_settings">
+       <item>
+        <widget class="QLabel" name="icon_Video_recording_settings">
+         <property name="text">
+          <string notr="true">Video recording settings icon</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QLabel" name="label_Video_recording_settings">
          <property name="font">

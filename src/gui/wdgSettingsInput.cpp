@@ -109,14 +109,17 @@ void wdgSettingsInput::changeEvent(QEvent *event) {
 	}
 }
 void wdgSettingsInput::showEvent(QShowEvent *event) {
-	int dim = label_cm->size().height() - 10;
+	int dim = fontMetrics().height();
 
+	icon_Ports->setPixmap(QIcon(":/icon/icons/Rs_232_Female.svg").pixmap(dim, dim));
 	icon_cm->setPixmap(QIcon(":/icon/icons/mode.svg").pixmap(dim, dim));
+	icon_exp->setPixmap(QIcon(":/icon/icons/circuit_board.svg").pixmap(dim, dim));
 	icon_cp1->setPixmap(QIcon(":/icon/icons/game_controller.svg").pixmap(dim, dim));
 	icon_cp2->setPixmap(QIcon(":/icon/icons/game_controller.svg").pixmap(dim, dim));
 	icon_cp3->setPixmap(QIcon(":/icon/icons/game_controller.svg").pixmap(dim, dim));
 	icon_cp4->setPixmap(QIcon(":/icon/icons/game_controller.svg").pixmap(dim, dim));
-	icon_exp->setPixmap(QIcon(":/icon/icons/circuit_board.svg").pixmap(dim, dim));
+	icon_Input_misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
+	icon_Shortcuts->setPixmap(QIcon(":/icon/icons/shortcuts.svg").pixmap(dim, dim));
 	icon_joy_ID->setPixmap(QIcon(":/icon/icons/input_config.svg").pixmap(dim, dim));
 
 	mainwin->shcjoy_stop();
