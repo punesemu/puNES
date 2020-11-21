@@ -2063,10 +2063,6 @@
       <translation>Escala</translation>
     </message>
     <message>
-      <source>Settings</source>
-      <translation>Configurações</translation>
-    </message>
-    <message>
       <source>** To apply this change restart is needed **</source>
       <translation>** É necessário reiniciar para aplicar essa alteração **</translation>
     </message>
