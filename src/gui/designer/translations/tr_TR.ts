@@ -2063,10 +2063,6 @@
       <translation>Ölçek</translation>
     </message>
     <message>
-      <source>Settings</source>
-      <translation>Ayarlar</translation>
-    </message>
-    <message>
       <source>** To apply this change restart is needed **</source>
       <translation>** Bu değişikliği uygulamak için yeniden başlatma gerekir **</translation>
     </message>
