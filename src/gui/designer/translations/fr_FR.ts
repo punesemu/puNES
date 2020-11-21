@@ -2063,10 +2063,6 @@
       <translation type="unfinished">Scale</translation>
     </message>
     <message>
-      <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
-    </message>
-    <message>
       <source>** To apply this change restart is needed **</source>
       <translation type="unfinished">** To apply this change restart is needed **</translation>
     </message>
