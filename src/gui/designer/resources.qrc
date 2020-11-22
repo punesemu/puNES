@@ -3,17 +3,21 @@
     <file>icons/rotate_left.svg</file>
     <file>icons/recording.svg</file>
     <file>icons/recording_quality.svg</file>
-    <file>icons/background.svg</file>
     <file>icons/microphone.svg</file>
     <file>icons/shaders_parameters.svg</file>
     <file>icons/film.svg</file>
+    <file>icons/game_controller.svg</file>
+    <file>icons/stereo_delay.svg</file>
+    <file>icons/audio_output.svg</file>
     <file>icons/camera.svg</file>
     <file>icons/recording_format.svg</file>
+    <file>icons/background.svg</file>
+    <file>icons/channels.svg</file>
     <file>icons/volume.svg</file>
     <file>icons/circuit_board.svg</file>
     <file>icons/settings.svg</file>
     <file>icons/rotate_right.svg</file>
-    <file>icons/game_controller.svg</file>
+    <file>icons/buffer_size.svg</file>
     <file>icons/Rs_232_Female.svg</file>
     <file>icons/pencil.svg</file>
     <file>icons/shortcuts.svg</file>
@@ -51,14 +55,12 @@
     <file>icons/wav_start.svg</file>
     <file>icons/wav_stop.svg</file>
     <file>icons/screenshot.svg</file>
-    <file>icons/audio_output.svg</file>
     <file>icons/turn_on.svg</file>
     <file>icons/patch.svg</file>
     <file>icons/turn_off.svg</file>
     <file>icons/insert_coins.svg</file>
     <file>icons/ppu.svg</file>
     <file>icons/cpu_filter.svg</file>
-    <file>icons/buffer_size.svg</file>
     <file>icons/fast_forward.svg</file>
     <file>icons/application.png</file>
     <file>icons/flag_italy.svg</file>
@@ -74,8 +76,6 @@
     <file>icons/state_dec.svg</file>
     <file>icons/state_inc.svg</file>
     <file>icons/input_config.svg</file>
-    <file>icons/stereo_delay.svg</file>
-    <file>icons/channels.svg</file>
     <file>icons/samplerate.svg</file>
     <file>icons/fullscreen.svg</file>
     <file>icons/load.svg</file>
