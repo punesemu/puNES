@@ -38,7 +38,7 @@ How to Compile
 * [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
 * [nvidia-cg](https://developer.nvidia.com/cg-toolkit)
 * [alsa](https://www.alsa-project.org)
-* (optional) [ffmpeg libraries](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
+* (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
 #### Compilation of puNES
 ```bash
 git clone https://github.com/punesemu/punes
@@ -72,7 +72,7 @@ to start the emulator
 #### Dependencies
 * [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
-* (optional) [ffmpeg libraries](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
+* (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
 #### Compilation of puNES
 ```bash
 git clone https://github.com/punesemu/punes
@@ -92,7 +92,7 @@ where `[...]` are the other necessary options.
 #### Dependencies
 * [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
-* (optional) [ffmpeg libraries](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
+* (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
 #### Compilation of puNES
 ```bash
 git clone https://github.com/punesemu/punes
@@ -222,6 +222,7 @@ where `[...]` are the other necessary options.
 
 #### FFmpeg
 It is always possible to disable audio/video recording support by specifying the `configure` parameter `--without-ffmpeg`.
+If the installed version is lower than 4.0 the support will be disabled automatically.
 
 Supported audio recording formats:
 * WAV Audio

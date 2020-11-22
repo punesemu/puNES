@@ -468,7 +468,7 @@ AM_COND_IF([WITH_FFMPEG], [
 			],
 		)
 	])
-	PKG_CHECK_MODULES(ffmpeg, [libavcodec libavutil libavformat libswscale libswresample], [
+	PKG_CHECK_MODULES(ffmpeg, [libavcodec >= 58.18.100 libavutil >= 56.14.100 libavformat >= 58.12.100 libswscale >= 5.1.100 libswresample >= 3.1.100], [
 		CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_FFMPEG"
 		my_CPPFLAGS="${my_CPPFLAGS} ${ffmpeg_CFLAGS}"
 		my_LIBS="${my_LIBS} ${ffmpeg_LIBS}"
