@@ -5,6 +5,7 @@
     <file>icons/recording_quality.svg</file>
     <file>icons/background.svg</file>
     <file>icons/microphone.svg</file>
+    <file>icons/shaders_parameters.svg</file>
     <file>icons/film.svg</file>
     <file>icons/camera.svg</file>
     <file>icons/recording_format.svg</file>
@@ -12,6 +13,7 @@
     <file>icons/circuit_board.svg</file>
     <file>icons/settings.svg</file>
     <file>icons/rotate_right.svg</file>
+    <file>icons/game_controller.svg</file>
     <file>icons/Rs_232_Female.svg</file>
     <file>icons/pencil.svg</file>
     <file>icons/shortcuts.svg</file>
@@ -21,7 +23,6 @@
     <file>icons/layers.svg</file>
     <file>icons/cheats_list.svg</file>
     <file>icons/resolution.svg</file>
-    <file>icons/shaders_parameters.svg</file>
     <file>icons/keyboard.svg</file>
     <file>icons/flag_turkey.svg</file>
     <file>icons/width.svg</file>
@@ -32,7 +33,6 @@
     <file>icons/flag_spain.svg</file>
     <file>icons/window_close.svg</file>
     <file>icons/settings_wrench.svg</file>
-    <file>icons/game_controller.svg</file>
     <file>icons/recording_red.svg</file>
     <file>icons/rwnd_step_forward.svg</file>
     <file>icons/rwnd_step_backward.svg</file>

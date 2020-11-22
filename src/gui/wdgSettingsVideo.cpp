@@ -36,15 +36,15 @@ enum wdgSettingsVideo_shader_parameter_colums {
 
 static QString styled_button(
 "QPushButton {"
-"   margin: 0; padding: 2px; border: 2px groove gray;"
+"	margin: 0; padding: 2px; border: 2px groove gray;"
 "}"
 "QPushButton:checked {"
-"   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
-"                              stop: 0 #aaabae, stop: 1 #f6f7fa);"
+"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #aaabae, stop: 1 #f6f7fa);"
+"	color: black;"
 "}");
 static QString title_bold(
 "QGroupBox {"
-"   font-weight: bold;"
+"	font-weight: bold;"
 "}");
 
 wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
@@ -213,7 +213,7 @@ void wdgSettingsVideo::showEvent(UNUSED(QShowEvent *event)) {
 
 	icon_Misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
 	icon_Screen_Scale->setPixmap(QIcon(":/icon/icons/scale.svg").pixmap(dim, dim));
-	icon_Screen_Oscan->setPixmap(QIcon(":/icon/icons/overscan.svg").pixmap(dim, dim));
+	icon_Screen_Oscan->setPixmap(QIcon(":/icon/icons/overscan_set_borders.svg").pixmap(dim, dim));
 	icon_Screen_PAR->setPixmap(QIcon(":/icon/icons/pixel_aspect_ratio.svg").pixmap(dim, dim));
 	icon_Screen_Rotation->setPixmap(QIcon(":/icon/icons/switch_sides.svg").pixmap(dim, dim));
 	icon_Software_Filters->setPixmap(QIcon(":/icon/icons/cpu_filter.svg").pixmap(dim, dim));
