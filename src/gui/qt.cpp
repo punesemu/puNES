@@ -43,6 +43,10 @@ Q_IMPORT_PLUGIN(QJpegPlugin)
 Q_IMPORT_PLUGIN(QSvgPlugin)
 #endif
 #endif
+#if !defined (_WIN32)
+// mi serve per il std::thread::hardware_concurrency() del gui_hardware_concurrency.
+#include <thread>
+#endif
 #include <stdlib.h>
 #include <unistd.h>
 #include <libgen.h>
