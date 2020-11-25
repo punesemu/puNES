@@ -240,18 +240,14 @@ void mainWindow::closeEvent(QCloseEvent *event) {
 
 	shcjoy_stop();
 
-	// in linux non posso spostare tramite le qt una finestra da un monitor
-	// ad un'altro, quindi salvo la posizione solo se sono sul monitor 0;
-	if (qApp->desktop()->screenNumber(this) == 0) {
-		if (cfg->fullscreen == NO_FULLSCR) {
-			cfg->lg.x = geometry().x();
-			cfg->lg.y = geometry().y();
-		}
-		cfg->lg_settings.x = dlgsettings->geom.x();
-		cfg->lg_settings.y = dlgsettings->geom.y();
-		cfg->lg_settings.w = dlgsettings->geom.width();
-		cfg->lg_settings.h = dlgsettings->geom.height();
+	if (cfg->fullscreen == NO_FULLSCR) {
+		cfg->lg.x = geometry().x();
+		cfg->lg.y = geometry().y();
 	}
+	cfg->lg_settings.x = dlgsettings->geom.x();
+	cfg->lg_settings.y = dlgsettings->geom.y();
+	cfg->lg_settings.w = dlgsettings->geom.width();
+	cfg->lg_settings.h = dlgsettings->geom.height();
 
 	settings_save_GUI();
 
