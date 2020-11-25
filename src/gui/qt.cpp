@@ -139,8 +139,7 @@ BYTE gui_create(void) {
 	gfx.device_pixel_ratio = qt.screen->devicePixelRatioF();
 
 	{
-		int screenNumber = qApp->desktop()->screenNumber(qt.mwin);
-		QRect geometry = QGuiApplication::screens().at(screenNumber)->geometry();
+		QRect geometry = QGuiApplication::primaryScreen()->virtualGeometry();
 
 		if ((cfg->lg.x == 0) || cfg->lg.x > geometry.width()) {
 			cfg->lg.x = 80;
