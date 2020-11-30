@@ -87,7 +87,7 @@
     </message>
     <message>
       <source>Recording</source>
-      <translation>Grabando</translation>
+      <translation>Grabación</translation>
     </message>
   </context>
   <context>
@@ -703,7 +703,7 @@
     </message>
     <message>
       <source>&amp;Recording</source>
-      <translation>&amp;Grabando</translation>
+      <translation>&amp;Grabación</translation>
     </message>
     <message>
       <source>Start/Stop &amp;VIDEO recording</source>
@@ -1788,72 +1788,72 @@
     <message>
       <source>MPEG 1 Video (*.mpg *.mpeg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG 1 Video (*.mpg *.mpeg)</translation>
+      <translation>Vídeo MPEG 1 (*.mpg *.mpeg)</translation>
     </message>
     <message>
       <source>MPEG 2 Video (*.mpg *.mpeg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG 2 Video (*.mpg *.mpeg)</translation>
+      <translation>Vídeo MPEG 2 (*.mpg *.mpeg)</translation>
     </message>
     <message>
       <source>MPEG 4 Video (*.mp4)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG 4 Video (*.mp4)</translation>
+      <translation>Vídeo MPEG 4 (*.mp4)</translation>
     </message>
     <message>
       <source>MPEG H264 Video (*.mp4)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG H264 Video (*.mp4)</translation>
+      <translation>Vídeo MPEG H264 (*.mp4)</translation>
     </message>
     <message>
       <source>High Efficiency Video Codec (*.mkv)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">High Efficiency Video Codec (*.mkv)</translation>
+      <translation>Códec de vídeo de alta eficiencia (*.mkv)</translation>
     </message>
     <message>
       <source>WebM Video (*.webm)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">WebM Video (*.webm)</translation>
+      <translation>Vídeo WebM (*.webm)</translation>
     </message>
     <message>
       <source>Windows Media Video (*.wmv)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Windows Media Video (*.wmv)</translation>
+      <translation>Vídeo de Windows Media (*.wmv)</translation>
     </message>
     <message>
       <source>AVI FF Video (*.avi)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">AVI FF Video (*.avi)</translation>
+      <translation>Vídeo AVI FF (*.avi)</translation>
     </message>
     <message>
       <source>AVI Video (*.avi)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">AVI Video (*.avi)</translation>
+      <translation>Vídeo AVI (*.avi)</translation>
     </message>
     <message>
       <source>WAV Audio (*.wav)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">WAV Audio (*.wav)</translation>
+      <translation>Audio WAV (*.wav)</translation>
     </message>
     <message>
       <source>MP3 Audio (*.mp3)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MP3 Audio (*.mp3)</translation>
+      <translation>Audio MP3 (*.mp3)</translation>
     </message>
     <message>
       <source>AAC Audio (*.aac)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">AAC Audio (*.aac)</translation>
+      <translation>Audio AAC (*.aac)</translation>
     </message>
     <message>
       <source>Flac Audio (*.flac)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Flac Audio (*.flac)</translation>
+      <translation>Audio Flac (*.flac)</translation>
     </message>
     <message>
       <source>Ogg Audio (*.ogg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Ogg Audio (*.ogg)</translation>
+      <translation>Audio Ogg (*.ogg)</translation>
     </message>
     <message>
       <source>Not supported</source>
@@ -1865,7 +1865,7 @@
     </message>
     <message>
       <source>Output Video Format</source>
-      <translation type="unfinished">Output Video Format</translation>
+      <translation>Formato de salida de vídeo</translation>
     </message>
     <message>
       <source>Custom Width</source>
@@ -1873,15 +1873,15 @@
     </message>
     <message>
       <source>Output Quality</source>
-      <translation type="unfinished">Output Quality</translation>
+      <translation>Calidad de salida</translation>
     </message>
     <message>
       <source>Output Audio Format</source>
-      <translation type="unfinished">Output Audio Format</translation>
+      <translation>Formato de salida de audio</translation>
     </message>
     <message>
       <source>Output Resolution</source>
-      <translation type="unfinished">Output Resolution</translation>
+      <translation>Resolución de salida</translation>
     </message>
     <message>
       <source>Custom</source>
@@ -1933,11 +1933,11 @@
     </message>
     <message>
       <source>1064 x 720  (11:8 PAL TV)</source>
-      <translation type="unfinished">1064 x 720  (11:8 PAL TV)</translation>
+      <translation>1064 x 720  (11:8 TV PAL)</translation>
     </message>
     <message>
       <source>1024 x 960  (1:1)</source>
-      <translation type="unfinished">1024 x 960  (1:1)</translation>
+      <translation>1024 x 960  (1:1)</translation>
     </message>
     <message>
       <source>1170 x 960  (8:7 NTSC TV)</source>
