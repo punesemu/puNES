@@ -16,7 +16,7 @@
     </message>
     <message>
       <source>Command Line Help</source>
-      <translation type="unfinished">Command Line Help</translation>
+      <translation>Ayuda de línea de comandos</translation>
     </message>
   </context>
   <context>
@@ -683,23 +683,23 @@
     </message>
     <message>
       <source>Start &amp;AUDIO recording</source>
-      <translation type="unfinished">Start &amp;AUDIO recording</translation>
+      <translation>Iniciar grabación de &amp;AUDIO</translation>
     </message>
     <message>
       <source>Start &amp;VIDEO recording</source>
-      <translation type="unfinished">Start &amp;VIDEO recording</translation>
+      <translation>Iniciar grabación de &amp;VÍDEO</translation>
     </message>
     <message>
       <source>Stop &amp;AUDIO recording</source>
-      <translation type="unfinished">Stop &amp;AUDIO recording</translation>
+      <translation>Detener grabación de &amp;AUDIO</translation>
     </message>
     <message>
       <source>Stop &amp;VIDEO recording</source>
-      <translation type="unfinished">Stop &amp;VIDEO recording</translation>
+      <translation>Detener grabación de &amp;VÍDEO</translation>
     </message>
     <message>
       <source>Start/Stop &amp;AUDIO recording</source>
-      <translation type="unfinished">Start/Stop &amp;AUDIO recording</translation>
+      <translation>Iniciar/detener grabación de &amp;AUDIO</translation>
     </message>
     <message>
       <source>&amp;Recording</source>
@@ -707,7 +707,7 @@
     </message>
     <message>
       <source>Start/Stop &amp;VIDEO recording</source>
-      <translation type="unfinished">Start/Stop &amp;VIDEO recording</translation>
+      <translation>Iniciar/detener grabación de &amp;VÍDEO</translation>
     </message>
   </context>
   <context>
@@ -1135,7 +1135,7 @@
     </message>
     <message>
       <source>Output Quality</source>
-      <translation type="unfinished">Output Quality</translation>
+      <translation>Calidad de salida</translation>
     </message>
     <message>
       <source>Low</source>
@@ -1155,7 +1155,7 @@
     </message>
     <message>
       <source>Not supported</source>
-      <translation type="unfinished">Not supported</translation>
+      <translation>No soportado</translation>
     </message>
   </context>
   <context>
@@ -1400,7 +1400,7 @@
     </message>
     <message>
       <source>Reverse bits of DPCM</source>
-      <translation type="unfinished">Reverse bits of DPCM</translation>
+      <translation>Bits invertidos de DPCM</translation>
     </message>
   </context>
   <context>
@@ -1725,15 +1725,15 @@
     </message>
     <message>
       <source>Start/Stop AUDIO recording</source>
-      <translation type="unfinished">Start/Stop AUDIO recording</translation>
+      <translation>Iniciar/detener grabación de AUDIO</translation>
     </message>
     <message>
       <source>Start/Stop VIDEO recording</source>
-      <translation type="unfinished">Start/Stop VIDEO recording</translation>
+      <translation>Iniciar/detener grabación de VÍDEO</translation>
     </message>
     <message>
       <source>Start/Stop WAV recording</source>
-      <translation type="unfinished">Start/Stop WAV recording</translation>
+      <translation>Iniciar/detener grabación de WAV</translation>
     </message>
   </context>
   <context>
@@ -1857,11 +1857,11 @@
     </message>
     <message>
       <source>Not supported</source>
-      <translation type="unfinished">Not supported</translation>
+      <translation>No soportado</translation>
     </message>
     <message>
       <source>Custom Height</source>
-      <translation type="unfinished">Custom Height</translation>
+      <translation>Altura personalizada</translation>
     </message>
     <message>
       <source>Output Video Format</source>
@@ -1869,7 +1869,7 @@
     </message>
     <message>
       <source>Custom Width</source>
-      <translation type="unfinished">Custom Width</translation>
+      <translation>Anchura personalizada</translation>
     </message>
     <message>
       <source>Output Quality</source>
@@ -1965,7 +1965,7 @@
     </message>
     <message>
       <source>Follow screen rotation</source>
-      <translation type="unfinished">Follow screen rotation</translation>
+      <translation>Seguir rotación de la pantalla</translation>
     </message>
     <message>
       <source>Low</source>
@@ -2380,27 +2380,27 @@
     </message>
     <message>
       <source>Raw</source>
-      <translation type="unfinished">Raw</translation>
+      <translation>Raw</translation>
     </message>
     <message>
       <source>Horizontal flip</source>
-      <translation type="unfinished">Horizontal flip</translation>
+      <translation>Volteo horizontal</translation>
     </message>
     <message>
       <source>Flip/Rotate the controller input</source>
-      <translation type="unfinished">Flip/Rotate the controller input</translation>
+      <translation>Voltear/girar entrada del control</translation>
     </message>
     <message>
       <source>Flip/Rotate the text on screen</source>
-      <translation type="unfinished">Flip/Rotate the text on screen</translation>
+      <translation>Voltear/rotar texto en la pantalla</translation>
     </message>
     <message>
       <source>Per-Game Overscan Setting</source>
-      <translation type="unfinished">Per-Game Overscan Setting</translation>
+      <translation>Configuración de superposición por juego</translation>
     </message>
     <message>
       <source>Horizontal Flip and Rotation</source>
-      <translation type="unfinished">Horizontal Flip and Rotation</translation>
+      <translation>Volteo y rotación horizontal</translation>
     </message>
     <message>
       <source>Screen</source>
