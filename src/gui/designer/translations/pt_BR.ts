@@ -12,11 +12,11 @@
     <name>dlgCmdLineHelp</name>
     <message>
       <source>Close</source>
-      <translation type="unfinished">Close</translation>
+      <translation>Fechar</translation>
     </message>
     <message>
       <source>Command Line Help</source>
-      <translation type="unfinished">Command Line Help</translation>
+      <translation>Ajuda da Linha de Comando</translation>
     </message>
   </context>
   <context>
@@ -87,7 +87,7 @@
     </message>
     <message>
       <source>Recording</source>
-      <translation type="unfinished">Recording</translation>
+      <translation>Gravação</translation>
     </message>
   </context>
   <context>
