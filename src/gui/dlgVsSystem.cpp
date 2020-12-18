@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtWidgets/QDesktopWidget>
 #include <QtGui/QScreen>
 #include "dlgVsSystem.moc"
 #include "mainWindow.hpp"

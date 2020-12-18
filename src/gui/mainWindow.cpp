@@ -18,11 +18,15 @@
 
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
 #include <QtWidgets/QDesktopWidget>
+#else
+#include <QtGui/QWindow>
+#endif
+#include <QtGui/QScreen>
 #include <QtCore/QDateTime>
 #include <QtCore/QUrl>
 #include <QtGui/QDesktopServices>
-#include <QtGui/QScreen>
 #include <libgen.h>
 #include "mainWindow.moc"
 #include "dlgSettings.hpp"
@@ -68,6 +72,8 @@ mainWindow::mainWindow() : QMainWindow() {
 
 	geom.setX(100);
 	geom.setY(100);
+	mgeom.setX(0);
+	mgeom.setY(0);
 
 	screen = new wdgScreen(centralwidget);
 	statusbar = new wdgStatusBar(this);
@@ -555,15 +561,18 @@ bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) {
 	return (true);
 }
 void mainWindow::update_gfx_monitor_dimension(void) {
-	int screenNumber = qApp->desktop()->screenNumber(this);
-	QRect g;
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+	QScreen *screen = QGuiApplication::screens().at(qApp->desktop()->screenNumber(this));
+#else
+	QScreen *screen = windowHandle()->screen();
+#endif
 
 	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
 		bool toolbar_is_hidden = toolbar->isHidden() | toolbar->isFloating();
 
-		g = QGuiApplication::screens().at(screenNumber)->availableGeometry();
-		gfx.w[MONITOR] = g.width() - (frameGeometry().width() - geometry().width());
-		gfx.h[MONITOR] = g.height() - (frameGeometry().height() - geometry().height());
+		mgeom = screen->availableGeometry();
+		gfx.w[MONITOR] = mgeom.width() - (frameGeometry().width() - geometry().width());
+		gfx.h[MONITOR] = mgeom.height() - (frameGeometry().height() - geometry().height());
 
 		if (toolbar->orientation() == Qt::Vertical) {
 			gfx.w[MONITOR] -= (toolbar_is_hidden ? 0 : toolbar->sizeHint().width());
@@ -574,9 +583,9 @@ void mainWindow::update_gfx_monitor_dimension(void) {
 		gfx.h[MONITOR] -= (menubar->isHidden() ? 0 : menubar->sizeHint().height());
 		gfx.h[MONITOR] -= (statusbar->isHidden() ? 0 : statusbar->sizeHint().height());
 	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
-		g = QGuiApplication::screens().at(screenNumber)->geometry();
-		gfx.w[MONITOR] = g.width();
-		gfx.h[MONITOR] = g.height();
+		mgeom = screen->geometry();
+		gfx.w[MONITOR] = mgeom.width();
+		gfx.h[MONITOR] = mgeom.height();
 	}
 }
 
@@ -930,7 +939,7 @@ void mainWindow::s_set_fullscreen(void) {
 
 			update_gfx_monitor_dimension();
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
-			move(QPoint(0, 0));
+			move(mgeom.x(), mgeom.y());
 		} else {
 			gfx.type_of_fscreen_in_use = FULLSCR;
 

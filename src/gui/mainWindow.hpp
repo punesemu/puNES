@@ -121,7 +121,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		QTranslator *translator;
 		QTranslator *qtTranslator;
 		bool toggle_gui_in_window;
-		QRect geom;
+		QRect geom, mgeom;
 
 	public:
 		mainWindow();
