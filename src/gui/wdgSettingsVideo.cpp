@@ -440,6 +440,9 @@ void wdgSettingsVideo::srotation_set(void) {
 	} else {
 		pushbutton_set_checked(pushButton_Screen_Rotation_270d, true);
 	}
+	checkBox_Horizontal_Flip_Screen->blockSignals(true);
+	checkBox_Horizontal_Flip_Screen->setChecked(cfg->hflip_screen);
+	checkBox_Horizontal_Flip_Screen->blockSignals(false);
 }
 void wdgSettingsVideo::sfilter_set(void) {
 	int filter = 0;

@@ -32,6 +32,7 @@ wdgRotateScreen::wdgRotateScreen(QWidget *parent) : QWidget(parent) {
 
 	connect(pushButton_left, SIGNAL(clicked(bool)), this, SLOT(s_rotate_to_left(bool)));
 	connect(pushButton_right, SIGNAL(clicked(bool)), this, SLOT(s_rotate_to_right(bool)));
+	connect(pushButton_flip, SIGNAL(toggled(bool)), this, SLOT(s_flip(bool)));
 
 	label_desc->setFixedWidth(QLabel("00000").sizeHint().width());
 }
@@ -73,6 +74,9 @@ void wdgRotateScreen::update_widget(void) {
 			break;
 	}
 	label_desc->setText(desc);
+	pushButton_flip->blockSignals(true);
+	pushButton_flip->setChecked(cfg->hflip_screen);
+	pushButton_flip->blockSignals(false);
 }
 
 void wdgRotateScreen::s_rotate_to_left(UNUSED(bool checked)) {
@@ -89,6 +93,13 @@ void wdgRotateScreen::s_rotate_to_right(UNUSED(bool checked)) {
 		cfg->screen_rotation = ROTATE_0;
 	}
 	emu_thread_pause();
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	gui_set_focus();
+	emu_thread_continue();
+}
+void wdgRotateScreen::s_flip(UNUSED(bool checked)) {
+	emu_thread_pause();
+	cfg->hflip_screen = !cfg->hflip_screen;
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	gui_set_focus();
 	emu_thread_continue();
