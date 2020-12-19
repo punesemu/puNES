@@ -1204,7 +1204,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Rotate Screen</source>
+        <source>Rotate Screen :</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2404,6 +2404,30 @@
     </message>
     <message>
         <source>Screen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shaders icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shaders Parameters icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Software Filters icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Software Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Editor icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Palette icon</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
