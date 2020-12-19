@@ -1204,8 +1204,8 @@
       <translation>Grado de rotación actual</translation>
     </message>
     <message>
-      <source>Rotate Screen</source>
-      <translation>Rotar pantalla</translation>
+      <source>Rotate Screen :</source>
+      <translation type="unfinished">Rotate Screen :</translation>
     </message>
   </context>
   <context>
@@ -2405,6 +2405,30 @@
     <message>
       <source>Screen</source>
       <translation>Pantalla</translation>
+    </message>
+    <message>
+      <source>Shaders icon</source>
+      <translation type="unfinished">Shaders icon</translation>
+    </message>
+    <message>
+      <source>Shaders Parameters icon</source>
+      <translation type="unfinished">Shaders Parameters icon</translation>
+    </message>
+    <message>
+      <source>Software Filters icon</source>
+      <translation type="unfinished">Software Filters icon</translation>
+    </message>
+    <message>
+      <source>Software Filters</source>
+      <translation type="unfinished">Software Filters</translation>
+    </message>
+    <message>
+      <source>Editor icon</source>
+      <translation type="unfinished">Editor icon</translation>
+    </message>
+    <message>
+      <source>Palette icon</source>
+      <translation type="unfinished">Palette icon</translation>
     </message>
   </context>
   <context>
