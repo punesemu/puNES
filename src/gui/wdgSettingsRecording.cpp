@@ -157,13 +157,8 @@ void wdgSettingsRecording::update_widget(void) {
 	lineEdit_Output_Custom_Height->setEnabled(mode);
 	lineEdit_Output_Custom_Height->setText(QString("%1").arg(cfg->recording.output_custom_h));
 
-	checkBox_Use_emu_resolution->blockSignals(true);
-	checkBox_Use_emu_resolution->setChecked(cfg->recording.use_emu_resolution);
-	checkBox_Use_emu_resolution->blockSignals(false);
-
-	checkBox_Follow_rotation->blockSignals(true);
-	checkBox_Follow_rotation->setChecked(cfg->recording.follow_rotation);
-	checkBox_Follow_rotation->blockSignals(false);
+	qtHelper::checkbox_set_checked(checkBox_Use_emu_resolution, cfg->recording.use_emu_resolution);
+	qtHelper::checkbox_set_checked(checkBox_Follow_rotation, cfg->recording.follow_rotation);
 }
 
 void wdgSettingsRecording::combobox_format_init(QComboBox *cb,  int start, int end) {

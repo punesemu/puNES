@@ -22,6 +22,7 @@
 #include <QtGui/QPainter>
 #include <QtWidgets/QMenu>
 #include "wdgPaletteEditor.moc"
+#include "mainWindow.hpp"
 #include "common.h"
 #include "palette.h"
 #include "mem_map.h"
@@ -419,34 +420,24 @@ void wdgPaletteEditor::palette_changed(void) {
 	update();
 }
 
-void wdgPaletteEditor::set_slider(QSlider *slider, int value) {
-	slider->blockSignals(true);
-	slider->setValue(value);
-	slider->blockSignals(false);
-}
-void wdgPaletteEditor::set_spin(QSpinBox *spin, int value) {
-	spin->blockSignals(true);
-	spin->setValue(value);
-	spin->blockSignals(false);
-}
 void wdgPaletteEditor::set_sliders_spins_lineedit(void) {
 	QColor qrgb = widget_Palette_Wall->color_at(widget_Color_Selected->color);
 
-	set_slider(horizontalSlider_Hue, qrgb.hue());
-	set_slider(horizontalSlider_Sat, qrgb.saturation());
-	set_slider(horizontalSlider_Val, qrgb.value());
+	qtHelper::slider_set_value(horizontalSlider_Hue, qrgb.hue());
+	qtHelper::slider_set_value(horizontalSlider_Sat, qrgb.saturation());
+	qtHelper::slider_set_value(horizontalSlider_Val, qrgb.value());
 
-	set_spin(spinBox_Hue, qrgb.hue());
-	set_spin(spinBox_Sat, qrgb.saturation());
-	set_spin(spinBox_Val, qrgb.value());
+	qtHelper::spinbox_set_value(spinBox_Hue, qrgb.hue());
+	qtHelper::spinbox_set_value(spinBox_Sat, qrgb.saturation());
+	qtHelper::spinbox_set_value(spinBox_Val, qrgb.value());
 
-	set_slider(horizontalSlider_Red, qrgb.red());
-	set_slider(horizontalSlider_Green, qrgb.green());
-	set_slider(horizontalSlider_Blue, qrgb.blue());
+	qtHelper::slider_set_value(horizontalSlider_Red, qrgb.red());
+	qtHelper::slider_set_value(horizontalSlider_Green, qrgb.green());
+	qtHelper::slider_set_value(horizontalSlider_Blue, qrgb.blue());
 
-	set_spin(spinBox_Red, qrgb.red());
-	set_spin(spinBox_Green, qrgb.green());
-	set_spin(spinBox_Blue, qrgb.blue());
+	qtHelper::spinbox_set_value(spinBox_Red, qrgb.red());
+	qtHelper::spinbox_set_value(spinBox_Green, qrgb.green());
+	qtHelper::spinbox_set_value(spinBox_Blue, qrgb.blue());
 
 	lineEdit_Html_Name->blockSignals(true);
 	lineEdit_Html_Name->setText(qrgb.name().toUpper());

@@ -115,9 +115,7 @@ void wdgToolBar::set_hide_without_signal(bool mode) {
 	if (cfg->toolbar.hidden == TRUE) {
 		mode = false;
 	}
-	blockSignals(true);
-	setVisible(mode);
-	blockSignals(false);
+	qtHelper::widget_set_visible(this, mode);
 }
 void wdgToolBar::rotate_setVisible(bool visible) {
 	if (action_rotate.separator) {

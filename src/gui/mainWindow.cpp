@@ -23,6 +23,7 @@
 #else
 #include <QtGui/QWindow>
 #endif
+#include <QtWidgets/QSpinBox>
 #include <QtGui/QScreen>
 #include <QtCore/QDateTime>
 #include <QtCore/QUrl>
@@ -1853,4 +1854,32 @@ void timerEgds::s_draw_screen(void) {
 #endif
 		gfx_draw_screen();
 	}
+}
+
+// ----------------------------------------------------------------------------------------------
+
+void qtHelper::widget_set_visible(void *wdg, bool mode) {
+	((QWidget *)wdg)->blockSignals(true);
+	((QWidget *)wdg)->setVisible(mode);
+	((QWidget *)wdg)->blockSignals(false);
+}
+void qtHelper::pushbutton_set_checked(void *btn, bool mode) {
+	((QPushButton *)btn)->blockSignals(true);
+	((QPushButton *)btn)->setChecked(mode);
+	((QPushButton *)btn)->blockSignals(false);
+}
+void qtHelper::checkbox_set_checked(void *cbox, bool mode) {
+	((QCheckBox *)cbox)->blockSignals(true);
+	((QCheckBox *)cbox)->setChecked(mode);
+	((QCheckBox *)cbox)->blockSignals(false);
+}
+void qtHelper::slider_set_value(void *slider, int value) {
+	((QSlider *)slider)->blockSignals(true);
+	((QSlider *)slider)->setValue(value);
+	((QSlider *)slider)->blockSignals(false);
+}
+void qtHelper::spinbox_set_value(void *sbox, int value) {
+	((QSpinBox *)sbox)->blockSignals(true);
+	((QSpinBox *)sbox)->setValue(value);
+	((QSpinBox *)sbox)->blockSignals(false);
 }

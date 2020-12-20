@@ -35,6 +35,14 @@
 #include "wdgStatusBar.hpp"
 #include "wdgToolBar.hpp"
 
+class qtHelper {
+	public:
+		static void widget_set_visible(void *wdg, bool mode);
+		static void pushbutton_set_checked(void *btn, bool mode);
+		static void checkbox_set_checked(void *cbox, bool mode);
+		static void slider_set_value(void *slider, int value);
+		static void spinbox_set_value(void *sbox, int value);
+};
 class timerEgds : public QTimer {
 		Q_OBJECT
 

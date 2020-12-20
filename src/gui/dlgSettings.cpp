@@ -89,7 +89,7 @@ void dlgSettings::change_rom(void) {
 	widget_Settings_Video->change_rom();
 }
 void dlgSettings::shcut_mode(int mode) {
-	widget_Settings_General->s_mode(mode);
+	widget_Settings_General->shcut_mode(mode);
 }
 void dlgSettings::shcut_scale(int scale) {
 	widget_Settings_Video->shcut_scale(scale + 1);

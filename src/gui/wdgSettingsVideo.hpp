@@ -58,8 +58,6 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void shader_param_set(void);
 		void palette_set(void);
 		bool call_gfx_set_screen(int mtype);
-		void spinbox_set_value(QSpinBox *spn, int value);
-		void pushbutton_set_checked(QPushButton *btn, bool mode);
 
 	private slots:
 		void s_scale(bool checked);

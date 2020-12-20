@@ -29,6 +29,20 @@
 #include "uncompress.h"
 #include "jstick.h"
 
+#define button_stylesheet()\
+	"QPushButton {"\
+	"	margin: 0; padding: 2px; border: 2px groove gray;"\
+	"}"\
+	"QPushButton:checked {"\
+	"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #aaabae, stop: 1 #f6f7fa);"\
+	"	color: black;"\
+	"}"
+#define group_title_bold_stylesheet()\
+	"QGroupBox {"\
+	"	font-weight: bold;"\
+	"}"
+#define group_title_and_button_stylesheet()\
+	group_title_bold_stylesheet() button_stylesheet()
 #define tools_stylesheet()\
 	"QGroupBox {"\
 	"	border-radius: 10px;"\

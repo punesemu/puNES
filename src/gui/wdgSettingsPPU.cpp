@@ -17,6 +17,7 @@
  */
 
 #include "wdgSettingsPPU.moc"
+#include "mainWindow.hpp"
 #include "emu_thread.h"
 #include "tas.h"
 #include "ppu.h"
@@ -76,16 +77,12 @@ void wdgSettingsPPU::update_widget(void) {
 	label_VB_Slines->setEnabled(cfg->ppu_overclock);
 
 	spinBox_VB_Slines->setEnabled(cfg->ppu_overclock);
-	spinBox_VB_Slines->blockSignals(true);
-	spinBox_VB_Slines->setValue(cfg->extra_vb_scanlines);
-	spinBox_VB_Slines->blockSignals(false);
+	qtHelper::spinbox_set_value(spinBox_VB_Slines, cfg->extra_vb_scanlines);
 
 	label_Postrender_Slines->setEnabled(cfg->ppu_overclock);
 
 	spinBox_Postrender_Slines->setEnabled(cfg->ppu_overclock);
-	spinBox_Postrender_Slines->blockSignals(true);
-	spinBox_Postrender_Slines->setValue(cfg->extra_pr_scanlines);
-	spinBox_Postrender_Slines->blockSignals(false);
+	qtHelper::spinbox_set_value(spinBox_Postrender_Slines, cfg->extra_pr_scanlines);
 
 	lag_counter_update();
 }

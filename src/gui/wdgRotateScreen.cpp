@@ -74,9 +74,7 @@ void wdgRotateScreen::update_widget(void) {
 			break;
 	}
 	label_desc->setText(desc);
-	pushButton_flip->blockSignals(true);
-	pushButton_flip->setChecked(cfg->hflip_screen);
-	pushButton_flip->blockSignals(false);
+	qtHelper::pushbutton_set_checked(pushButton_flip, cfg->hflip_screen);
 }
 
 void wdgRotateScreen::s_rotate_to_left(UNUSED(bool checked)) {
