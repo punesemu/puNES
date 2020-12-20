@@ -93,6 +93,7 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		void s_expansion_port(int index);
 		void s_controller_port(int index);
 		void s_controller_port_setup(bool checked);
+		void s_input_reset(bool checked);
 		void s_permit_updown_leftright(bool checked);
 		void s_hide_zapper_cursor(bool checked);
 		void s_joy_id(int index);
@@ -102,7 +103,6 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		void s_shortcut_keyb_default(bool checked);
 		void s_shortcut_keyb_unset(bool checked);
 		void s_shortcut_joy_unset(bool checked);
-		void s_input_reset(bool checked);
 		void s_input_timeout(void);
 		void s_joy_read_timer(void);
 };

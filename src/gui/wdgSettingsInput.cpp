@@ -41,7 +41,7 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 
 	setupUi(this);
 
-	setFocusProxy(comboBox_cm);
+	setFocusProxy(tabWidget_Input);
 
 	// setto la dimensione del font
 	{
@@ -70,6 +70,8 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 	connect(comboBox_cp3, SIGNAL(activated(int)), this, SLOT(s_controller_port(int)));
 	connect(comboBox_cp4, SIGNAL(activated(int)), this, SLOT(s_controller_port(int)));
 
+	connect(pushButton_Input_reset, SIGNAL(clicked(bool)), this, SLOT(s_input_reset(bool)));
+
 	connect(checkBox_Permit_updown, SIGNAL(clicked(bool)), this, SLOT(s_permit_updown_leftright(bool)));
 	connect(checkBox_Hide_Zapper_cursor, SIGNAL(clicked(bool)), this, SLOT(s_hide_zapper_cursor(bool)));
 
@@ -78,8 +80,6 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 	connect(pushButton_Shortcut_unset_all, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_unset_all(bool)));
 	connect(pushButton_Shortcut_reset, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_reset(bool)));
 
-	connect(pushButton_Input_reset, SIGNAL(clicked(bool)), this, SLOT(s_input_reset(bool)));
-
 	shcut.timeout.timer = new QTimer(this);
 	connect(shcut.timeout.timer, SIGNAL(timeout(void)), this, SLOT(s_input_timeout(void)));
 
@@ -87,6 +87,8 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 	connect(shcut.joy.timer, SIGNAL(timeout(void)), this, SLOT(s_joy_read_timer(void)));
 
 	shortcuts_tableview_resize();
+
+	tabWidget_Input->setCurrentIndex(0);
 }
 wdgSettingsInput::~wdgSettingsInput() {}
 
@@ -826,6 +828,16 @@ void wdgSettingsInput::s_controller_port_setup(UNUSED(bool checked)) {
 			break;
 	}
 }
+void wdgSettingsInput::s_input_reset(UNUSED(bool checked)) {
+	_array_pointers_port array;
+
+	for (int i = PORT1; i < PORT_MAX; i++) {
+		array.port[i] = input.cport[i].port;
+	}
+
+	settings_inp_all_default(&cfg->input, &array);
+	update_widget();
+}
 void wdgSettingsInput::s_permit_updown_leftright(UNUSED(bool checked)) {
 	cfg->input.permit_updown_leftright = !cfg->input.permit_updown_leftright;
 }
@@ -907,6 +919,10 @@ void wdgSettingsInput::s_shortcut_unset_all(UNUSED(bool checked)) {
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 }
 void wdgSettingsInput::s_shortcut_reset(UNUSED(bool checked)) {
+	js_set_id(&cfg->input.shcjoy_id, name_to_jsn(uL("NULL")));
+
+	comboBox_joy_ID->setCurrentIndex(comboBox_joy_ID->count() - 1);
+
 	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
 		shcut.text[KEYBOARD].replace(i, uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
 		settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(i), i + SET_INP_SC_OPEN, KEYBOARD);
@@ -941,30 +957,6 @@ void wdgSettingsInput::s_shortcut_joy_unset(UNUSED(bool checked)) {
 	shcut.text[JOYSTICK].replace(row, "NULL");
 	tableWidget_Shortcuts->cellWidget(row, 2)->findChild<QPushButton *>("value")->setText("NULL");
 	settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(row), row + SET_INP_SC_OPEN, JOYSTICK);
-}
-void wdgSettingsInput::s_input_reset(UNUSED(bool checked)) {
-	_array_pointers_port array;
-
-	for (int i = PORT1; i < PORT_MAX; i++) {
-		array.port[i] = input.cport[i].port;
-	}
-
-	settings_inp_all_default(&cfg->input, &array);
-
-	js_set_id(&cfg->input.shcjoy_id, name_to_jsn(uL("NULL")));
-
-	comboBox_joy_ID->setCurrentIndex(comboBox_joy_ID->count() - 1);
-	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
-		shcut.text[KEYBOARD].replace(i, uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
-		settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(i), i + SET_INP_SC_OPEN, KEYBOARD);
-
-		shcut.text[JOYSTICK].replace(i, uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(JOYSTICK));
-		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(i), i + SET_INP_SC_OPEN, JOYSTICK);
-	}
-
-	mainwin->shortcuts();
-	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
-	update_widget();
 }
 void wdgSettingsInput::s_input_timeout(void) {
 	input_info_print(tr("Press a key (ESC for the previous value \"%1\") - timeout in %2").arg(shcut.text[shcut.type].at(shcut.row),

@@ -102,9 +102,8 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 	connect(pushButton_Cancel_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_cancel(bool)));
 
 	{
-		int w;
+		int w = QLabel("0000000000").sizeHint().width() + 10;
 
-		w = lineEdit_GG->fontMetrics().size(0, "0000000000").width() + 10;
 		lineEdit_Ram->setFixedWidth(w);
 		lineEdit_GG->setFixedWidth(w);
 		lineEdit_ProAR->setFixedWidth(w);

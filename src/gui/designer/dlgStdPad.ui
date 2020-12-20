@@ -20,7 +20,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox_controller">
      <property name="title">
-      <string notr="true">GroupBox</string>
+      <string notr="true">Controller</string>
      </property>
      <property name="flat">
       <bool>true</bool>
