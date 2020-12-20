@@ -1449,10 +1449,6 @@
       <translation>Configurações Gerais</translation>
     </message>
     <message>
-      <source>2x (Default)</source>
-      <translation>2x (Padrão)</translation>
-    </message>
-    <message>
       <source>3x</source>
       <translation>3x</translation>
     </message>
@@ -1541,30 +1537,6 @@
       <translation>Minutos de rewind</translation>
     </message>
     <message>
-      <source>Disabled</source>
-      <translation>Desabilitado</translation>
-    </message>
-    <message>
-      <source>2 minutes</source>
-      <translation>2 minutos</translation>
-    </message>
-    <message>
-      <source>5 minutes</source>
-      <translation>5 minutos</translation>
-    </message>
-    <message>
-      <source>15 minutes (Default)</source>
-      <translation>15 minutos (Padrão)</translation>
-    </message>
-    <message>
-      <source>30 minutes</source>
-      <translation>30 minutos</translation>
-    </message>
-    <message>
-      <source>Unlimited</source>
-      <translation>Ilimitado</translation>
-    </message>
-    <message>
       <source>Spanish</source>
       <translation>Espanhol</translation>
     </message>
@@ -1573,16 +1545,44 @@
       <translation>Húngaro</translation>
     </message>
     <message>
-      <source>60 minutes</source>
-      <translation>60 minutos</translation>
-    </message>
-    <message>
       <source>Turkish</source>
       <translation>Turco</translation>
     </message>
     <message>
       <source>Portuguese (Brazil)</source>
       <translation>Português (Brasil)</translation>
+    </message>
+    <message>
+      <source>Off</source>
+      <translation type="unfinished">Off</translation>
+    </message>
+    <message>
+      <source>2</source>
+      <translation type="unfinished">2</translation>
+    </message>
+    <message>
+      <source>5</source>
+      <translation type="unfinished">5</translation>
+    </message>
+    <message>
+      <source>15</source>
+      <translation type="unfinished">15</translation>
+    </message>
+    <message>
+      <source>30</source>
+      <translation type="unfinished">30</translation>
+    </message>
+    <message>
+      <source>60</source>
+      <translation type="unfinished">60</translation>
+    </message>
+    <message>
+      <source>Unlim.</source>
+      <translation type="unfinished">Unlim.</translation>
+    </message>
+    <message>
+      <source>2x</source>
+      <translation type="unfinished">2x</translation>
     </message>
   </context>
   <context>
