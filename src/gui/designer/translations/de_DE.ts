@@ -1449,10 +1449,6 @@
       <translation type="unfinished">General Settings</translation>
     </message>
     <message>
-      <source>2x (Default)</source>
-      <translation type="unfinished">2x (Default)</translation>
-    </message>
-    <message>
       <source>3x</source>
       <translation type="unfinished">3x</translation>
     </message>
@@ -1541,30 +1537,6 @@
       <translation type="unfinished">Rewind minutes</translation>
     </message>
     <message>
-      <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
-    </message>
-    <message>
-      <source>2 minutes</source>
-      <translation type="unfinished">2 minutes</translation>
-    </message>
-    <message>
-      <source>5 minutes</source>
-      <translation type="unfinished">5 minutes</translation>
-    </message>
-    <message>
-      <source>15 minutes (Default)</source>
-      <translation type="unfinished">15 minutes (Default)</translation>
-    </message>
-    <message>
-      <source>30 minutes</source>
-      <translation type="unfinished">30 minutes</translation>
-    </message>
-    <message>
-      <source>Unlimited</source>
-      <translation type="unfinished">Unlimited</translation>
-    </message>
-    <message>
       <source>Spanish</source>
       <translation type="unfinished">Spanish</translation>
     </message>
@@ -1573,16 +1545,44 @@
       <translation type="unfinished">Hungarian</translation>
     </message>
     <message>
-      <source>60 minutes</source>
-      <translation type="unfinished">60 minutes</translation>
-    </message>
-    <message>
       <source>Turkish</source>
       <translation type="unfinished">Turkish</translation>
     </message>
     <message>
       <source>Portuguese (Brazil)</source>
       <translation type="unfinished">Portuguese (Brazil)</translation>
+    </message>
+    <message>
+      <source>Off</source>
+      <translation type="unfinished">Off</translation>
+    </message>
+    <message>
+      <source>2</source>
+      <translation type="unfinished">2</translation>
+    </message>
+    <message>
+      <source>5</source>
+      <translation type="unfinished">5</translation>
+    </message>
+    <message>
+      <source>15</source>
+      <translation type="unfinished">15</translation>
+    </message>
+    <message>
+      <source>30</source>
+      <translation type="unfinished">30</translation>
+    </message>
+    <message>
+      <source>60</source>
+      <translation type="unfinished">60</translation>
+    </message>
+    <message>
+      <source>Unlim.</source>
+      <translation type="unfinished">Unlim.</translation>
+    </message>
+    <message>
+      <source>2x</source>
+      <translation type="unfinished">2x</translation>
     </message>
   </context>
   <context>
