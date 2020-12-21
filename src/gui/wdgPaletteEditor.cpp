@@ -388,6 +388,8 @@ void wdgHtmlName::focusOutEvent(QFocusEvent *event) {
 wdgPaletteEditor::wdgPaletteEditor(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
+	setFocusProxy(widget_Palette_Wall);
+
 	connect(widget_Palette_Wall, SIGNAL(selected(int, int)), this, SLOT(s_palette_wall(int, int)));
 	connect(widget_Palette_Wall, SIGNAL(first_paint(void)), this, SLOT(s_first_paint(void)));
 	connect(widget_Palette_PPU, SIGNAL(selected(int, int)), this, SLOT(s_palette_ppu(int, int)));

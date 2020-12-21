@@ -86,7 +86,11 @@
       </widget>
      </item>
      <item row="7" column="0" colspan="4">
-      <widget class="wdgAPUChannels" name="widget_APU_Channels" native="true"/>
+      <widget class="wdgAPUChannels" name="widget_APU_Channels" native="true">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
+      </widget>
      </item>
      <item row="1" column="1">
       <widget class="QLabel" name="label_Output_Devices">
@@ -149,7 +153,7 @@
         <item>
          <widget class="QPushButton" name="pushButton_Samplarate_48000">
           <property name="text">
-           <string>48.0kHz</string>
+           <string>48.0 kHz</string>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -159,7 +163,7 @@
         <item>
          <widget class="QPushButton" name="pushButton_Samplarate_44100">
           <property name="text">
-           <string>44.1kHz</string>
+           <string>44.1 kHz</string>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -169,7 +173,7 @@
         <item>
          <widget class="QPushButton" name="pushButton_Samplarate_22050">
           <property name="text">
-           <string>22.05kHz</string>
+           <string>22.05 kHz</string>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -179,7 +183,7 @@
         <item>
          <widget class="QPushButton" name="pushButton_Samplarate_11025">
           <property name="text">
-           <string>11.025kHz</string>
+           <string>11.025 kHz</string>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -249,7 +253,7 @@
      <item row="3" column="3">
       <widget class="QLabel" name="label_Buffer_Size_factor_value">
        <property name="text">
-        <string>10</string>
+        <string notr="true">10</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -296,7 +300,7 @@
      <item row="5" column="3">
       <widget class="QLabel" name="label_Channels_Delay_value">
        <property name="text">
-        <string>100%</string>
+        <string notr="true">100%</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -449,6 +453,15 @@
  </customwidgets>
  <tabstops>
   <tabstop>comboBox_Output_Devices</tabstop>
+  <tabstop>pushButton_Samplarate_48000</tabstop>
+  <tabstop>pushButton_Samplarate_44100</tabstop>
+  <tabstop>pushButton_Samplarate_22050</tabstop>
+  <tabstop>pushButton_Samplarate_11025</tabstop>
+  <tabstop>horizontalSlider_Buffer_Size_factor</tabstop>
+  <tabstop>pushButton_Channels_Mono</tabstop>
+  <tabstop>pushButton_Channels_Stereo_Delay</tabstop>
+  <tabstop>pushButton_Channels_Stereo_Panning</tabstop>
+  <tabstop>horizontalSlider_Channels_Delay</tabstop>
   <tabstop>widget_APU_Channels</tabstop>
   <tabstop>checkBox_Reverse_bits_DPCM</tabstop>
   <tabstop>checkBox_Swap_Duty_Cycles</tabstop>

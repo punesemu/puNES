@@ -89,7 +89,7 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		void shortcuts_set(void);
 
 	private slots:
-		void s_controller_mode(int index);
+		void s_controller_mode(bool checked);
 		void s_expansion_port(int index);
 		void s_controller_port(int index);
 		void s_controller_port_setup(bool checked);

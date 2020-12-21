@@ -43,12 +43,13 @@ class wdgSettingsRecording : public QWidget, public Ui::wdgSettingsRecording {
 		void combobox_format_init(QComboBox *cb, int start, int end);
 		void output_format_init(void);
 		void output_resolution_init(void);
+		void output_quality_set(void);
 		int output_custom_control(int actual, int min, int max, int def);
 
 	private slots:
 		void s_output_audio_format(int index);
 		void s_output_video_format(int index);
-		void s_output_quality(int index);
+		void s_output_quality(bool checked);
 		void s_output_resolution(int index);
 		void s_output_custom_width(void);
 		void s_output_custom_height(void);

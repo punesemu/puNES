@@ -1215,62 +1215,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>48000</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>44100</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>22050</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>11025</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>1 (Default)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>5</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>6</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>7</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>8</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>9</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Sample Rate</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1307,86 +1251,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>5%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>10%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>15%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>20%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>25%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>30% (Default)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>35%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>40%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>45%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>50%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>55%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>60%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>65%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>70%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>75%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>80%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>85%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>90%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>95%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>100%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>APU Channels</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1400,6 +1264,22 @@
     </message>
     <message>
         <source>Reverse bits of DPCM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>48.0 kHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>44.1 kHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>22.05 kHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>11.025 kHz</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1640,10 +1520,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Setup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Joystick ID</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1733,6 +1609,10 @@
     </message>
     <message>
         <source>Start/Stop WAV recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Standard Pads on Port3 and Port4</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2239,14 +2119,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Shaders</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Load from a file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Shader Parameters</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2407,27 +2279,31 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Shaders icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Shaders Parameters icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Software Filters icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Software Filters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Editor icon</source>
+        <source>Shader</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Palette icon</source>
+        <source>Shader File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPU Shaders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Palette Selection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Palette File</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

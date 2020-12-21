@@ -347,6 +347,7 @@ void wdgSettingsVideo::scale_set(void) {
 		case X1:
 			qtHelper::pushbutton_set_checked(pushButton_Scale_1x, true);
 			break;
+		default:
 		case X2:
 			qtHelper::pushbutton_set_checked(pushButton_Scale_2x, true);
 			break;
@@ -372,6 +373,7 @@ void wdgSettingsVideo::oscan_set(void) {
 		case OSCAN_ON:
 			qtHelper::pushbutton_set_checked(pushButton_Oscan_pergame_setting_on, true);
 			break;
+		default:
 		case OSCAN_OFF:
 			qtHelper::pushbutton_set_checked(pushButton_Oscan_pergame_setting_off, true);
 			break;
@@ -409,14 +411,20 @@ void wdgSettingsVideo::par_set(void) {
 	qtHelper::pushbutton_set_checked(pushButton_PAR_54, false);
 	qtHelper::pushbutton_set_checked(pushButton_PAR_87, false);
 	qtHelper::pushbutton_set_checked(pushButton_PAR_118, false);
-	if (cfg->pixel_aspect_ratio == PAR11) {
-		qtHelper::pushbutton_set_checked(pushButton_PAR_11, true);
-	} else if (cfg->pixel_aspect_ratio == PAR54) {
-		qtHelper::pushbutton_set_checked(pushButton_PAR_54, true);
-	} else if (cfg->pixel_aspect_ratio == PAR87) {
-		qtHelper::pushbutton_set_checked(pushButton_PAR_87, true);
-	} else {
-		qtHelper::pushbutton_set_checked(pushButton_PAR_118, true);
+	switch (cfg->pixel_aspect_ratio) {
+		default:
+		case PAR11:
+			qtHelper::pushbutton_set_checked(pushButton_PAR_11, true);
+			break;
+		case PAR54:
+			qtHelper::pushbutton_set_checked(pushButton_PAR_54, true);
+			break;
+		case PAR87:
+			qtHelper::pushbutton_set_checked(pushButton_PAR_87, true);
+			break;
+		case PAR118:
+			qtHelper::pushbutton_set_checked(pushButton_PAR_118, true);
+			break;
 	}
 }
 void wdgSettingsVideo::srotation_set(void) {
@@ -424,14 +432,20 @@ void wdgSettingsVideo::srotation_set(void) {
 	qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_90d, false);
 	qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_180d, false);
 	qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_270d, false);
-	if (cfg->screen_rotation == ROTATE_0) {
-		qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_0d, true);
-	} else if (cfg->screen_rotation == ROTATE_90) {
-		qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_90d, true);
-	} else if (cfg->screen_rotation == ROTATE_180) {
-		qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_180d, true);
-	} else {
-		qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_270d, true);
+	switch (cfg->screen_rotation) {
+		default:
+		case ROTATE_0:
+			qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_0d, true);
+			break;
+		case ROTATE_90:
+			qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_90d, true);
+			break;
+		case ROTATE_180:
+			qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_180d, true);
+			break;
+		case ROTATE_270:
+			qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_270d, true);
+			break;
 	}
 	qtHelper::checkbox_set_checked(checkBox_Horizontal_Flip_Screen, cfg->hflip_screen);
 }

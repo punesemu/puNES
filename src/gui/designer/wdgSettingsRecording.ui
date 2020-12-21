@@ -286,31 +286,6 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="2" colspan="4">
-      <widget class="QComboBox" name="comboBox_Output_Quality">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <item>
-        <property name="text">
-         <string>Low</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Medium</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>High</string>
-        </property>
-       </item>
-      </widget>
-     </item>
      <item row="0" column="0" colspan="6">
       <layout class="QHBoxLayout" name="horizontalLayout_Audio_recording_settings">
        <item>
@@ -398,6 +373,63 @@
        </property>
       </widget>
      </item>
+     <item row="4" column="2" colspan="4">
+      <widget class="QWidget" name="widget_Output_Quality" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_cm">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="pushButton_Output_Quality_low">
+          <property name="text">
+           <string>Low</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_Output_Quality_medium">
+          <property name="text">
+           <string>Medium</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_Output_Quality_high">
+          <property name="text">
+           <string>High</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -418,7 +450,6 @@
  <tabstops>
   <tabstop>comboBox_Output_Audio_Format</tabstop>
   <tabstop>comboBox_Output_Video_Format</tabstop>
-  <tabstop>comboBox_Output_Quality</tabstop>
   <tabstop>comboBox_Output_Resolution</tabstop>
   <tabstop>lineEdit_Output_Custom_Width</tabstop>
   <tabstop>lineEdit_Output_Custom_Height</tabstop>

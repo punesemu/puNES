@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>173</width>
-    <height>64</height>
+    <width>342</width>
+    <height>54</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -31,6 +31,13 @@
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout_Cheats">
+     <item row="2" column="0" colspan="2">
+      <widget class="wdgCheatsEditor" name="widget_Cheats_Editor" native="true">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="0" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout_Cheats_settings">
        <item>
@@ -69,32 +76,61 @@
       </layout>
      </item>
      <item row="1" column="0" colspan="2">
-      <widget class="QComboBox" name="comboBox_Cheats_Mode">
+      <widget class="QWidget" name="widget_Cheats_Mode" native="true">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <item>
-        <property name="text">
-         <string>Disabled</string>
+       <layout class="QHBoxLayout" name="horizontalLayout_cm">
+        <property name="spacing">
+         <number>0</number>
         </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Game Genie Rom Mode</string>
+        <property name="leftMargin">
+         <number>0</number>
         </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Cheats List Mode</string>
+        <property name="topMargin">
+         <number>0</number>
         </property>
-       </item>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="pushButton_Cheats_Mode_disabled">
+          <property name="text">
+           <string>Disabled</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_Cheats_Mode_gg">
+          <property name="text">
+           <string>Game Genie Rom Mode</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_Cheats_Mode_list">
+          <property name="text">
+           <string>Cheats List Mode</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
-     </item>
-     <item row="2" column="0" colspan="2">
-      <widget class="wdgCheatsEditor" name="widget_Cheats_Editor" native="true"/>
      </item>
     </layout>
    </item>
@@ -108,6 +144,12 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>pushButton_Cheats_Mode_disabled</tabstop>
+  <tabstop>pushButton_Cheats_Mode_gg</tabstop>
+  <tabstop>pushButton_Cheats_Mode_list</tabstop>
+  <tabstop>widget_Cheats_Editor</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

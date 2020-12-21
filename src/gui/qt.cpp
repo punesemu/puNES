@@ -255,6 +255,20 @@ void gui_update_gps_settings(void) {
 	qt.dset->change_rom();
 }
 
+void gui_update_ppu_hacks_widgets(void) {
+	qt.dset->widget_Settings_PPU->update_widget();
+}
+void gui_update_apu_channels_widgets(void) {
+	qt.dset->update_tab_audio();
+}
+void gui_update_recording_widgets(void) {
+	qt.mwin->update_recording_widgets();
+}
+
+void gui_update_recording_tab(void) {
+	qt.dset->update_tab_recording();
+}
+
 void gui_egds_set_fps(void) {
 	qt.mwin->egds->set_fps();
 }
@@ -274,10 +288,6 @@ void gui_egds_start_rwnd(void) {
 }
 void gui_egds_stop_rwnd(void) {
 	qt.mwin->egds->stop_rwnd();
-}
-
-void gui_update_recording_widget(void) {
-	qt.mwin->update_recording_widgets();
 }
 
 void gui_fullscreen(void) {
@@ -500,14 +510,6 @@ void gui_vs_system_insert_coin(void) {
 	if (vs_system.enabled == TRUE) {
 		qt.vssystem->insert_coin(1);
 	}
-}
-
-void gui_apu_channels_widgets_update(void) {
-	qt.dset->update_tab_audio();
-}
-
-void gui_ppu_hacks_widgets_update(void) {
-	qt.dset->widget_Settings_PPU->update_widget();
 }
 
 #if defined (WITH_OPENGL)

@@ -84,14 +84,14 @@ void wdgAPUChannels::s_apu_ch_checkbox(UNUSED(bool checked)) {
 	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
 	cfg_from_file.apu.channel[index] = !cfg_from_file.apu.channel[index];
-	gui_apu_channels_widgets_update();
+	gui_update_apu_channels_widgets();
 }
 void wdgAPUChannels::s_apu_ch_slider(int value) {
 	int index = QVariant(((QSlider *)sender())->property("myIndex")).toInt();
 
 	cfg->apu.volume[index] = (double)value / 100.0f;
 	volume_update_label(index, value);
-	gui_apu_channels_widgets_update();
+	gui_update_apu_channels_widgets();
 }
 void wdgAPUChannels::s_apu_ch_toggle_all(UNUSED(bool checked)) {
 	int mode = QVariant(((QPushButton *)sender())->property("myIndex")).toInt();
@@ -110,5 +110,5 @@ void wdgAPUChannels::s_apu_ch_toggle_all(UNUSED(bool checked)) {
 		cfg->apu.channel[i] = mode;
 	}
 
-	gui_apu_channels_widgets_update();
+	gui_update_apu_channels_widgets();
 }

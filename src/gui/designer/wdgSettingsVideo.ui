@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="focusPolicy">
-   <enum>Qt::StrongFocus</enum>
+   <enum>Qt::TabFocus</enum>
   </property>
   <property name="windowTitle">
    <string>Video Settings</string>
@@ -92,6 +92,9 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_Scale_xx">
             <property name="spacing">
@@ -1079,7 +1082,7 @@
          <item>
           <widget class="QLabel" name="icon_Software_Filters">
            <property name="text">
-            <string>Software Filters icon</string>
+            <string notr="true">Software Filters icon</string>
            </property>
           </widget>
          </item>
@@ -1116,7 +1119,7 @@
          <item>
           <widget class="QLabel" name="icon_GPU_Shaders">
            <property name="text">
-            <string>GPU Shaders icon</string>
+            <string notr="true">GPU Shaders icon</string>
            </property>
           </widget>
          </item>
@@ -1153,7 +1156,7 @@
          <item>
           <widget class="QLabel" name="icon_Shaders_Parameters">
            <property name="text">
-            <string>Shaders Parameters icon</string>
+            <string notr="true">Shaders Parameters icon</string>
            </property>
           </widget>
          </item>
@@ -1285,7 +1288,7 @@
          <item>
           <widget class="QLabel" name="icon_Palette_Selection">
            <property name="text">
-            <string>Palette Selection icon</string>
+            <string notr="true">Palette Selection icon</string>
            </property>
           </widget>
          </item>
@@ -1325,7 +1328,11 @@
         </widget>
        </item>
        <item row="4" column="0" colspan="3">
-        <widget class="wdgPaletteEditor" name="widget_Palette_Editor" native="true"/>
+        <widget class="wdgPaletteEditor" name="widget_Palette_Editor" native="true">
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+        </widget>
        </item>
        <item row="5" column="0" colspan="3">
         <layout class="QHBoxLayout" name="horizontalLayout_Palette_misc">
@@ -1409,7 +1416,7 @@
          <item>
           <widget class="QLabel" name="icon_Palette_editor">
            <property name="text">
-            <string>Editor icon</string>
+            <string notr="true">Editor icon</string>
            </property>
           </widget>
          </item>
@@ -1707,6 +1714,65 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tabWidget_Video</tabstop>
+  <tabstop>pushButton_Scale_1x</tabstop>
+  <tabstop>pushButton_Scale_2x</tabstop>
+  <tabstop>pushButton_Scale_3x</tabstop>
+  <tabstop>pushButton_Scale_4x</tabstop>
+  <tabstop>pushButton_Scale_5x</tabstop>
+  <tabstop>pushButton_Scale_6x</tabstop>
+  <tabstop>pushButton_Oscan_pergame_setting_on</tabstop>
+  <tabstop>pushButton_Oscan_pergame_setting_off</tabstop>
+  <tabstop>pushButton_Oscan_pergame_setting_use_def</tabstop>
+  <tabstop>pushButton_Oscan_def_value_on</tabstop>
+  <tabstop>pushButton_Oscan_def_value_off</tabstop>
+  <tabstop>spinBox_Oscan_NTSC_brd_up</tabstop>
+  <tabstop>spinBox_Oscan_NTSC_brd_down</tabstop>
+  <tabstop>spinBox_Oscan_NTSC_brd_left</tabstop>
+  <tabstop>spinBox_Oscan_NTSC_brd_right</tabstop>
+  <tabstop>pushButton_Oscan_NTSC_brd_reset</tabstop>
+  <tabstop>spinBox_Oscan_PAL_brd_up</tabstop>
+  <tabstop>spinBox_Oscan_PAL_brd_down</tabstop>
+  <tabstop>spinBox_Oscan_PAL_brd_left</tabstop>
+  <tabstop>spinBox_Oscan_PAL_brd_right</tabstop>
+  <tabstop>pushButton_Oscan_PAL_brd_reset</tabstop>
+  <tabstop>checkBox_Oscan_brd_black_window</tabstop>
+  <tabstop>checkBox_Oscan_brd_black_flscreen</tabstop>
+  <tabstop>pushButton_PAR_11</tabstop>
+  <tabstop>pushButton_PAR_54</tabstop>
+  <tabstop>pushButton_PAR_87</tabstop>
+  <tabstop>pushButton_PAR_118</tabstop>
+  <tabstop>checkBox_PAR_Soft_Stretch</tabstop>
+  <tabstop>pushButton_Screen_Rotation_0d</tabstop>
+  <tabstop>pushButton_Screen_Rotation_90d</tabstop>
+  <tabstop>pushButton_Screen_Rotation_270d</tabstop>
+  <tabstop>pushButton_Screen_Rotation_180d</tabstop>
+  <tabstop>checkBox_Horizontal_Flip_Screen</tabstop>
+  <tabstop>checkBox_Input_Rotation</tabstop>
+  <tabstop>checkBox_Text_Rotation</tabstop>
+  <tabstop>comboBox_Software_Filters</tabstop>
+  <tabstop>comboBox_Shaders</tabstop>
+  <tabstop>pushButton_Shaders_file</tabstop>
+  <tabstop>pushButton_Shaders_file_clear</tabstop>
+  <tabstop>pushButton_Shader_Parameters_reset_alls</tabstop>
+  <tabstop>checkBox_Disable_sRGB_FBO</tabstop>
+  <tabstop>comboBox_Palette</tabstop>
+  <tabstop>pushButton_Palette_file</tabstop>
+  <tabstop>pushButton_Palette_file_clear</tabstop>
+  <tabstop>widget_Palette_Editor</tabstop>
+  <tabstop>checkBox_Disable_emphasis_swap_PAL</tabstop>
+  <tabstop>checkBox_Vsync</tabstop>
+  <tabstop>checkBox_Interpolation</tabstop>
+  <tabstop>checkBox_Text_on_screen</tabstop>
+  <tabstop>checkBox_Show_FPS</tabstop>
+  <tabstop>checkBox_Input_display</tabstop>
+  <tabstop>checkBox_Disable_TV_noise_emulation</tabstop>
+  <tabstop>checkBox_Disable_sepia_color_on_pause</tabstop>
+  <tabstop>checkBox_Fullscreen_in_window</tabstop>
+  <tabstop>checkBox_Use_integer_scaling_in_fullscreen</tabstop>
+  <tabstop>checkBox_Stretch_in_fullscreen</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

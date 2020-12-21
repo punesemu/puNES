@@ -43,6 +43,8 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 
 	setFocusProxy(tabWidget_Input);
 
+	widget_cm->setStyleSheet(button_stylesheet());
+
 	// setto la dimensione del font
 	{
 		QFont f = tableWidget_Shortcuts->font();
@@ -63,7 +65,14 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 
 	controller_ports_init();
 
-	connect(comboBox_cm, SIGNAL(activated(int)), this, SLOT(s_controller_mode(int)));
+	pushButton_cm_nes->setProperty("mtype", QVariant(CTRL_MODE_NES));
+	pushButton_cm_famicom->setProperty("mtype", QVariant(CTRL_MODE_FAMICOM));
+	pushButton_cm_fscore->setProperty("mtype", QVariant(CTRL_MODE_FOUR_SCORE));
+
+	connect(pushButton_cm_nes, SIGNAL(toggled(bool)), this, SLOT(s_controller_mode(bool)));
+	connect(pushButton_cm_famicom, SIGNAL(toggled(bool)), this, SLOT(s_controller_mode(bool)));
+	connect(pushButton_cm_fscore, SIGNAL(toggled(bool)), this, SLOT(s_controller_mode(bool)));
+
 	connect(comboBox_exp, SIGNAL(activated(int)), this, SLOT(s_expansion_port(int)));
 	connect(comboBox_cp1, SIGNAL(activated(int)), this, SLOT(s_controller_port(int)));
 	connect(comboBox_cp2, SIGNAL(activated(int)), this, SLOT(s_controller_port(int)));
@@ -150,6 +159,7 @@ void wdgSettingsInput::hideEvent(QHideEvent *event) {
 
 void wdgSettingsInput::retranslateUi(QWidget *wdgSettingsInput) {
 	Ui::wdgSettingsInput::retranslateUi(wdgSettingsInput);
+	controller_ports_init();
 	update_widget();
 }
 void wdgSettingsInput::update_widget(void) {
@@ -166,7 +176,7 @@ void wdgSettingsInput::update_widget(void) {
 
 void wdgSettingsInput::controller_ports_init(void) {
 	// NES-001
-	static const _cb_ports ctrl_mode_nes[] {
+	_cb_ports ctrl_mode_nes[] {
 		{ tr("Disabled"),        CTRL_DISABLED },
 		{ tr("Standard Pad"),    CTRL_STANDARD },
 		{ tr("Zapper"),          CTRL_ZAPPER   },
@@ -174,24 +184,24 @@ void wdgSettingsInput::controller_ports_init(void) {
 		{ tr("Arkanoid Paddle"), CTRL_ARKANOID_PADDLE }
 	};
 	// Famicom
-	static const _cb_ports ctrl_mode_famicom_expansion_port[] {
-		{ tr("Standard Pad"),     CTRL_STANDARD },
-		{ tr("Zapper"),           CTRL_ZAPPER   },
-		{ tr("Arkanoid Paddle"),  CTRL_ARKANOID_PADDLE },
-		{ tr("Oeka Kids Tablet"), CTRL_OEKA_KIDS_TABLET }
+	_cb_ports ctrl_mode_famicom_expansion_port[] {
+		{ tr("Standard Pads on Port3 and Port4"), CTRL_STANDARD },
+		{ tr("Zapper"),                           CTRL_ZAPPER   },
+		{ tr("Arkanoid Paddle"),                  CTRL_ARKANOID_PADDLE },
+		{ tr("Oeka Kids Tablet"),                 CTRL_OEKA_KIDS_TABLET }
 	};
-	static const _cb_ports ctrl_mode_famicom_ports1[] {
+	_cb_ports ctrl_mode_famicom_ports1[] {
 		{ tr("Disabled"),        CTRL_DISABLED },
 		{ tr("Standard Pad"),    CTRL_STANDARD },
 		{ tr("Snes Mouse"),      CTRL_SNES_MOUSE }
 	};
-	static const _cb_ports ctrl_mode_famicom_ports2[] {
+	_cb_ports ctrl_mode_famicom_ports2[] {
 		{ tr("Disabled"),        CTRL_DISABLED },
 		{ tr("Standard Pad"),    CTRL_STANDARD },
 		{ tr("Snes Mouse"),      CTRL_SNES_MOUSE }
 	};
 	// Four Scoure
-	static const _cb_ports ctrl_mode_four_score[] {
+	_cb_ports ctrl_mode_four_score[] {
 		{ tr("Disabled"),        CTRL_DISABLED },
 		{ tr("Standard Pad"),    CTRL_STANDARD }
 	};
@@ -612,7 +622,7 @@ void wdgSettingsInput::ports_end_misc_set_enabled(bool mode) {
 	label_cp4->setEnabled(mode);
 	label_exp->setEnabled(mode);
 
-	comboBox_cm->setEnabled(mode);
+	widget_cm->setEnabled(mode);
 	comboBox_cp1->setEnabled(mode);
 	comboBox_cp2->setEnabled(mode);
 	comboBox_cp3->setEnabled(mode);
@@ -634,7 +644,21 @@ void wdgSettingsInput::input_info_print(QString txt) {
 }
 
 void wdgSettingsInput::controller_mode_set(void) {
-	comboBox_cm->setCurrentIndex(cfg->input.controller_mode);
+	qtHelper::pushbutton_set_checked(pushButton_cm_nes, false);
+	qtHelper::pushbutton_set_checked(pushButton_cm_famicom, false);
+	qtHelper::pushbutton_set_checked(pushButton_cm_fscore, false);
+	switch (cfg->input.controller_mode) {
+		default:
+		case CTRL_MODE_NES:
+			qtHelper::pushbutton_set_checked(pushButton_cm_nes, true);
+			break;
+		case CTRL_MODE_FAMICOM:
+			qtHelper::pushbutton_set_checked(pushButton_cm_famicom, true);
+			break;
+		case CTRL_MODE_FOUR_SCORE:
+			qtHelper::pushbutton_set_checked(pushButton_cm_fscore, true);
+			break;
+	}
 }
 void wdgSettingsInput::expansion_port_set(void) {
 	int index;
@@ -778,12 +802,20 @@ void wdgSettingsInput::shortcuts_set(void) {
 	shortcut_update_text(mainwin->qaction_shcut.rwnd.pause, SET_INP_SC_RWND_PAUSE);
 }
 
-void wdgSettingsInput::s_controller_mode(int index) {
-	emu_thread_pause();
-	cfg->input.controller_mode = index;
-	controller_ports_init();
-	input_init(SET_CURSOR);
-	emu_thread_continue();
+void wdgSettingsInput::s_controller_mode(bool checked) {
+	if (checked) {
+		int mode = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+
+		if (cfg->input.controller_mode == mode) {
+			return;
+		}
+
+		emu_thread_pause();
+		cfg->input.controller_mode = mode;
+		controller_ports_init();
+		input_init(SET_CURSOR);
+		emu_thread_continue();
+	}
 	update_widget();
 }
 void wdgSettingsInput::s_expansion_port(int index) {

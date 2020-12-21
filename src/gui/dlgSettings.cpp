@@ -84,6 +84,7 @@ void dlgSettings::update_dialog(void) {
 	update_tab_input();
 	update_tab_ppu();
 	update_tab_cheats();
+	update_tab_recording();
 }
 void dlgSettings::change_rom(void) {
 	widget_Settings_Video->change_rom();
@@ -113,6 +114,11 @@ void dlgSettings::update_tab_cheats(void) {
 
 void dlgSettings::update_tab_audio(void) {
 	widget_Settings_Audio->update_widget();
+}
+void dlgSettings::update_tab_recording(void) {
+#if defined (WITH_FFMPEG)
+	widget_Settings_Recording->update_widget();
+#endif
 }
 
 void dlgSettings::s_save_settings(UNUSED(bool checked)) {

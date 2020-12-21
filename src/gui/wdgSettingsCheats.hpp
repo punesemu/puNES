@@ -42,7 +42,7 @@ class wdgSettingsCheats : public QWidget, public Ui::wdgSettingsCheats {
 		void cheat_editor_control(void);
 
 	private slots:
-		void s_cheat_mode(int index);
+		void s_cheat_mode(bool checked);
 };
 
 #endif /* WDGSETTINGSCHEATS_HPP_ */
