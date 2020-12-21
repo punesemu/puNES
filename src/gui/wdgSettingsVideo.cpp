@@ -201,13 +201,18 @@ void wdgSettingsVideo::showEvent(UNUSED(QShowEvent *event)) {
 	icon_Misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
 	icon_Screen_Scale->setPixmap(QIcon(":/icon/icons/scale.svg").pixmap(dim, dim));
 	icon_Screen_Oscan->setPixmap(QIcon(":/icon/icons/overscan_set_borders.svg").pixmap(dim, dim));
-	icon_Screen_PAR->setPixmap(QIcon(":/icon/icons/pixel_aspect_ratio.svg").pixmap(dim, dim));
+	icon_Screen_PAR->setPixmap(QIcon(":/icon/icons/pixel.svg").pixmap(dim, dim));
 	icon_Screen_Rotation->setPixmap(QIcon(":/icon/icons/switch_sides.svg").pixmap(dim, dim));
-	icon_Software_Filters->setPixmap(QIcon(":/icon/icons/cpu_filter.svg").pixmap(dim, dim));
-	icon_Shaders->setPixmap(QIcon(":/icon/icons/shader.svg").pixmap(dim, dim));
+	icon_Software_Filters->setPixmap(QIcon(":/icon/icons/graphic_design.svg").pixmap(dim, dim));
+	icon_Filter->setPixmap(QIcon(":/icon/icons/chip.svg").pixmap(dim, dim));
+	icon_GPU_Shaders->setPixmap(QIcon(":/icon/icons/cube.svg").pixmap(dim, dim));
+	icon_Shader->setPixmap(QIcon(":/icon/icons/360_view.svg").pixmap(dim, dim));
+	icon_Shader_file->setPixmap(QIcon(":/icon/icons/paper.svg").pixmap(dim, dim));
 	icon_Shaders_Parameters->setPixmap(QIcon(":/icon/icons/shaders_parameters.svg").pixmap(dim, dim));
 	icon_Filters_misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
-	icon_Palette->setPixmap(QIcon(":/icon/icons/palette.svg").pixmap(dim, dim));
+	icon_Palette_Selection->setPixmap(QIcon(":/icon/icons/palette.svg").pixmap(dim, dim));
+	icon_Palette->setPixmap(QIcon(":/icon/icons/palettes_list.svg").pixmap(dim, dim));
+	icon_Palette_file->setPixmap(QIcon(":/icon/icons/paper.svg").pixmap(dim, dim));
 	icon_Palette_editor->setPixmap(QIcon(":/icon/icons/color_picker.svg").pixmap(dim, dim));
 	icon_Palette_misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
 }

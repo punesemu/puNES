@@ -1,24 +1,32 @@
 <RCC>
   <qresource prefix="icon">
     <file>icons/rotate_left.svg</file>
+    <file>icons/misc.svg</file>
+    <file>icons/pixel.svg</file>
+    <file>icons/monitor_screen.svg</file>
     <file>icons/recording.svg</file>
     <file>icons/recording_quality.svg</file>
+    <file>icons/360_view.svg</file>
     <file>icons/microphone.svg</file>
-    <file>icons/shaders_parameters.svg</file>
     <file>icons/state_inc.svg</file>
+    <file>icons/chip.svg</file>
+    <file>icons/shader.svg</file>
+    <file>icons/graphic_design.svg</file>
     <file>icons/settings.svg</file>
     <file>icons/film.svg</file>
     <file>icons/game_controller.svg</file>
+    <file>icons/palettes_list.svg</file>
+    <file>icons/paper.svg</file>
+    <file>icons/shaders_parameters.svg</file>
     <file>icons/stereo_delay.svg</file>
     <file>icons/audio_output.svg</file>
     <file>icons/camera.svg</file>
     <file>icons/recording_format.svg</file>
     <file>icons/height.svg</file>
-    <file>icons/cpu_filter.svg</file>
     <file>icons/state_dec.svg</file>
+    <file>icons/cube.svg</file>
     <file>icons/width.svg</file>
     <file>icons/shortcuts.svg</file>
-    <file>icons/misc.svg</file>
     <file>icons/background.svg</file>
     <file>icons/bios.svg</file>
     <file>icons/channels.svg</file>
@@ -81,14 +89,11 @@
     <file>icons/fullscreen.svg</file>
     <file>icons/load.svg</file>
     <file>icons/general.svg</file>
-    <file>icons/shader.svg</file>
     <file>icons/save.svg</file>
     <file>icons/palette.svg</file>
     <file>icons/overscan_set_borders.svg</file>
     <file>icons/audio.svg</file>
     <file>icons/overscan_default.svg</file>
-    <file>icons/overscan.svg</file>
-    <file>icons/pixel_aspect_ratio.svg</file>
     <file>icons/scale.svg</file>
     <file>icons/video.svg</file>
     <file>icons/soft_reset.svg</file>
