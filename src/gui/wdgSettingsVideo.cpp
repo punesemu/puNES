@@ -720,8 +720,8 @@ void wdgSettingsVideo::s_scale(bool checked) {
 		emu_thread_pause();
 		gfx_set_screen(scale, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 		emu_thread_continue();
-		scale_set();
 	}
+	scale_set();
 }
 void wdgSettingsVideo::s_par(bool checked) {
 	if (checked) {
@@ -735,8 +735,8 @@ void wdgSettingsVideo::s_par(bool checked) {
 		cfg->pixel_aspect_ratio = par;
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 		emu_thread_continue();
-		update_widget();
 	}
+	update_widget();
 }
 void wdgSettingsVideo::s_par_stretch(UNUSED(bool checked)) {
 	emu_thread_pause();
@@ -751,8 +751,8 @@ void wdgSettingsVideo::s_oscan(bool checked) {
 		settings_pgs_save();
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 		emu_thread_continue();
-		oscan_set();
 	}
+	oscan_set();
 }
 void wdgSettingsVideo::s_oscan_def_value(bool checked) {
 	if (checked) {
@@ -762,8 +762,8 @@ void wdgSettingsVideo::s_oscan_def_value(bool checked) {
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 		}
 		emu_thread_continue();
-		oscan_def_value_set();
 	}
+	oscan_def_value_set();
 }
 void wdgSettingsVideo::s_oscan_brd_black_w(UNUSED(bool checked)) {
 	emu_thread_pause();
@@ -819,7 +819,7 @@ void wdgSettingsVideo::s_oscan_reset(UNUSED(bool checked)) {
 	emu_thread_continue();
 }
 void wdgSettingsVideo::s_sfilter(int index) {
-	int filter = index;
+	DBWORD filter = index, ntsc_format = cfg->ntsc_format;
 
 	switch (filter) {
 		default:
@@ -888,6 +888,10 @@ void wdgSettingsVideo::s_sfilter(int index) {
 			break;
 	}
 
+	if ((cfg->filter == filter) && (cfg->ntsc_format == ntsc_format)) {
+		return;
+	}
+
 	emu_thread_pause();
 	gfx_set_screen(NO_CHANGE, filter, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 	if (cfg->filter == NTSC_FILTER) {
@@ -897,7 +901,7 @@ void wdgSettingsVideo::s_sfilter(int index) {
 	emu_thread_continue();
 }
 void wdgSettingsVideo::s_shader(int index) {
-	int shader = index;
+	DBWORD shader = index;
 
 	switch (shader) {
 		default:
@@ -928,6 +932,10 @@ void wdgSettingsVideo::s_shader(int index) {
 		case 8:
 			shader = SHADER_FILE;
 			break;
+	}
+
+	if (cfg->shader == shader) {
+		return;
 	}
 
 	emu_thread_pause();
@@ -1068,6 +1076,10 @@ void wdgSettingsVideo::s_palette(int index) {
 			break;
 	}
 
+	if (cfg->palette == palette) {
+		return;
+	}
+
 	emu_thread_pause();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, palette, FALSE, FALSE);
 	widget_Palette_Editor->palette_changed();
@@ -1176,8 +1188,8 @@ void wdgSettingsVideo::s_screen_rotation(bool checked) {
 		cfg->screen_rotation = rotation;
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 		emu_thread_continue();
-		srotation_set();
 	}
+	srotation_set();
 }
 void wdgSettingsVideo::s_horizontal_flip_screen(UNUSED(bool checked)) {
 	emu_thread_pause();

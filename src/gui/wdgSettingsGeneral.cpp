@@ -262,7 +262,7 @@ void wdgSettingsGeneral::language_set(void) {
 }
 
 void wdgSettingsGeneral::s_mode(bool checked) {
-	if (checked == true) {
+	if (checked) {
 		int mode = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
 		bool reset = true;
 
@@ -311,15 +311,14 @@ void wdgSettingsGeneral::s_mode(bool checked) {
 			// controllo la paletta da utilizzare (per lo swap dell'emphasis del rosso e del verde in caso
 			// di PAL e DENDY) quando cambio regione.
 			gfx_palette_update();
-		} else {
-			mode_set();
 		}
 
 		emu_thread_continue();
 	}
+	mode_set();
 }
 void wdgSettingsGeneral::s_fast_forward_velocity(bool checked) {
-	if (checked == true) {
+	if (checked) {
 		int velocity = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
 
 		if (cfg->ff_velocity == velocity) {
@@ -335,11 +334,11 @@ void wdgSettingsGeneral::s_fast_forward_velocity(bool checked) {
 				emu_thread_continue();
 			}
 		}
-		update_widget();
 	}
+	update_widget();
 }
 void wdgSettingsGeneral::s_rewind_minutes(bool checked) {
-	if (checked == true) {
+	if (checked) {
 		int minutes = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
 
 		if (minutes == cfg->rewind_minutes) {
@@ -349,9 +348,9 @@ void wdgSettingsGeneral::s_rewind_minutes(bool checked) {
 		emu_thread_pause();
 		cfg->rewind_minutes = minutes;
 		rewind_init();
-		gui_update();
 		emu_thread_continue();
 	}
+	gui_update();
 }
 void wdgSettingsGeneral::s_language(int index) {
 	int lang = index;
