@@ -1205,7 +1205,7 @@
     </message>
     <message>
       <source>Rotate Screen :</source>
-      <translation type="unfinished">Rotate Screen :</translation>
+      <translation>Rotar pantalla:</translation>
     </message>
   </context>
   <context>
@@ -1554,35 +1554,35 @@
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>Apagado</translation>
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>5</source>
-      <translation type="unfinished">5</translation>
+      <translation>5</translation>
     </message>
     <message>
       <source>15</source>
-      <translation type="unfinished">15</translation>
+      <translation>15</translation>
     </message>
     <message>
       <source>30</source>
-      <translation type="unfinished">30</translation>
+      <translation>30</translation>
     </message>
     <message>
       <source>60</source>
-      <translation type="unfinished">60</translation>
+      <translation>60</translation>
     </message>
     <message>
       <source>Unlim.</source>
-      <translation type="unfinished">Unlim.</translation>
+      <translation>Ilimitado</translation>
     </message>
     <message>
       <source>2x</source>
-      <translation type="unfinished">2x</translation>
+      <translation>2x</translation>
     </message>
   </context>
   <context>
@@ -2408,27 +2408,27 @@
     </message>
     <message>
       <source>Shaders icon</source>
-      <translation type="unfinished">Shaders icon</translation>
+      <translation>Icono de sombreados</translation>
     </message>
     <message>
       <source>Shaders Parameters icon</source>
-      <translation type="unfinished">Shaders Parameters icon</translation>
+      <translation>Icono de parámetros de sombreados</translation>
     </message>
     <message>
       <source>Software Filters icon</source>
-      <translation type="unfinished">Software Filters icon</translation>
+      <translation>Icono de filtros por software</translation>
     </message>
     <message>
       <source>Software Filters</source>
-      <translation type="unfinished">Software Filters</translation>
+      <translation>Filtros por software</translation>
     </message>
     <message>
       <source>Editor icon</source>
-      <translation type="unfinished">Editor icon</translation>
+      <translation>Icono del editor</translation>
     </message>
     <message>
       <source>Palette icon</source>
-      <translation type="unfinished">Palette icon</translation>
+      <translation>Icono de la paleta</translation>
     </message>
   </context>
   <context>
