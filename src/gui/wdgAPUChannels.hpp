@@ -35,6 +35,9 @@ class wdgAPUChannels : public QWidget, public Ui::wdgAPUChannels {
 	public:
 		void update_widget(void);
 
+	private:
+		void volume_update_label(int type, int value);
+
 	private slots:
 		void s_apu_ch_checkbox(bool checked);
 		void s_apu_ch_slider(int value);
