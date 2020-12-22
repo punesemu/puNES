@@ -1215,62 +1215,6 @@
       <translation>Kimeneti eszközök</translation>
     </message>
     <message>
-      <source>48000</source>
-      <translation>48000 Hz</translation>
-    </message>
-    <message>
-      <source>44100</source>
-      <translation>44100 Hz</translation>
-    </message>
-    <message>
-      <source>22050</source>
-      <translation>22050 Hz</translation>
-    </message>
-    <message>
-      <source>11025</source>
-      <translation>11025 Hz</translation>
-    </message>
-    <message>
-      <source>0</source>
-      <translation>0</translation>
-    </message>
-    <message>
-      <source>1 (Default)</source>
-      <translation>1 (Alap)</translation>
-    </message>
-    <message>
-      <source>2</source>
-      <translation>2</translation>
-    </message>
-    <message>
-      <source>3</source>
-      <translation>3</translation>
-    </message>
-    <message>
-      <source>4</source>
-      <translation>4</translation>
-    </message>
-    <message>
-      <source>5</source>
-      <translation>5</translation>
-    </message>
-    <message>
-      <source>6</source>
-      <translation>6</translation>
-    </message>
-    <message>
-      <source>7</source>
-      <translation>7</translation>
-    </message>
-    <message>
-      <source>8</source>
-      <translation>8</translation>
-    </message>
-    <message>
-      <source>9</source>
-      <translation>9</translation>
-    </message>
-    <message>
       <source>Sample Rate</source>
       <translation>Mintavételezési ráta</translation>
     </message>
@@ -1307,86 +1251,6 @@
       <translation>Csatornák</translation>
     </message>
     <message>
-      <source>5%</source>
-      <translation>5%</translation>
-    </message>
-    <message>
-      <source>10%</source>
-      <translation>10%</translation>
-    </message>
-    <message>
-      <source>15%</source>
-      <translation>15%</translation>
-    </message>
-    <message>
-      <source>20%</source>
-      <translation>20%</translation>
-    </message>
-    <message>
-      <source>25%</source>
-      <translation>25%</translation>
-    </message>
-    <message>
-      <source>30% (Default)</source>
-      <translation>30% (Alap)</translation>
-    </message>
-    <message>
-      <source>35%</source>
-      <translation>35%</translation>
-    </message>
-    <message>
-      <source>40%</source>
-      <translation>40%</translation>
-    </message>
-    <message>
-      <source>45%</source>
-      <translation>45%</translation>
-    </message>
-    <message>
-      <source>50%</source>
-      <translation>50%</translation>
-    </message>
-    <message>
-      <source>55%</source>
-      <translation>55%</translation>
-    </message>
-    <message>
-      <source>60%</source>
-      <translation>60%</translation>
-    </message>
-    <message>
-      <source>65%</source>
-      <translation>65%</translation>
-    </message>
-    <message>
-      <source>70%</source>
-      <translation>70%</translation>
-    </message>
-    <message>
-      <source>75%</source>
-      <translation>75%</translation>
-    </message>
-    <message>
-      <source>80%</source>
-      <translation>80%</translation>
-    </message>
-    <message>
-      <source>85%</source>
-      <translation>85%</translation>
-    </message>
-    <message>
-      <source>90%</source>
-      <translation>90%</translation>
-    </message>
-    <message>
-      <source>95%</source>
-      <translation>95%</translation>
-    </message>
-    <message>
-      <source>100%</source>
-      <translation>100%</translation>
-    </message>
-    <message>
       <source>APU Channels</source>
       <translation>APU Csatornák</translation>
     </message>
@@ -1401,6 +1265,22 @@
     <message>
       <source>Reverse bits of DPCM</source>
       <translation type="unfinished">Reverse bits of DPCM</translation>
+    </message>
+    <message>
+      <source>48.0 kHz</source>
+      <translation type="unfinished">48.0 kHz</translation>
+    </message>
+    <message>
+      <source>44.1 kHz</source>
+      <translation type="unfinished">44.1 kHz</translation>
+    </message>
+    <message>
+      <source>22.05 kHz</source>
+      <translation type="unfinished">22.05 kHz</translation>
+    </message>
+    <message>
+      <source>11.025 kHz</source>
+      <translation type="unfinished">11.025 kHz</translation>
     </message>
   </context>
   <context>
@@ -1640,10 +1520,6 @@
       <translation>Beviteli beállítások</translation>
     </message>
     <message>
-      <source>Setup</source>
-      <translation>Beállítás</translation>
-    </message>
-    <message>
       <source>Joystick ID</source>
       <translation>Joystick azonosító</translation>
     </message>
@@ -1734,6 +1610,10 @@
     <message>
       <source>Start/Stop WAV recording</source>
       <translation type="unfinished">Start/Stop WAV recording</translation>
+    </message>
+    <message>
+      <source>Standard Pads on Port3 and Port4</source>
+      <translation type="unfinished">Standard Pads on Port3 and Port4</translation>
     </message>
   </context>
   <context>
@@ -2239,14 +2119,6 @@
       <translation>NTSC RGB</translation>
     </message>
     <message>
-      <source>Shaders</source>
-      <translation>Shaderek</translation>
-    </message>
-    <message>
-      <source>Load from a file</source>
-      <translation>Betöltés fájlból</translation>
-    </message>
-    <message>
       <source>Shader Parameters</source>
       <translation>Shader paraméterei</translation>
     </message>
@@ -2407,28 +2279,32 @@
       <translation type="unfinished">Screen</translation>
     </message>
     <message>
-      <source>Shaders icon</source>
-      <translation type="unfinished">Shaders icon</translation>
-    </message>
-    <message>
-      <source>Shaders Parameters icon</source>
-      <translation type="unfinished">Shaders Parameters icon</translation>
-    </message>
-    <message>
-      <source>Software Filters icon</source>
-      <translation type="unfinished">Software Filters icon</translation>
-    </message>
-    <message>
       <source>Software Filters</source>
       <translation type="unfinished">Software Filters</translation>
     </message>
     <message>
-      <source>Editor icon</source>
-      <translation type="unfinished">Editor icon</translation>
+      <source>Shader</source>
+      <translation type="unfinished">Shader</translation>
     </message>
     <message>
-      <source>Palette icon</source>
-      <translation type="unfinished">Palette icon</translation>
+      <source>Shader File</source>
+      <translation type="unfinished">Shader File</translation>
+    </message>
+    <message>
+      <source>Filter</source>
+      <translation type="unfinished">Filter</translation>
+    </message>
+    <message>
+      <source>GPU Shaders</source>
+      <translation type="unfinished">GPU Shaders</translation>
+    </message>
+    <message>
+      <source>Palette Selection</source>
+      <translation type="unfinished">Palette Selection</translation>
+    </message>
+    <message>
+      <source>Palette File</source>
+      <translation type="unfinished">Palette File</translation>
     </message>
   </context>
   <context>
