@@ -1215,62 +1215,6 @@
       <translation>Dispositivos de salida</translation>
     </message>
     <message>
-      <source>48000</source>
-      <translation>48000</translation>
-    </message>
-    <message>
-      <source>44100</source>
-      <translation>44100</translation>
-    </message>
-    <message>
-      <source>22050</source>
-      <translation>22050</translation>
-    </message>
-    <message>
-      <source>11025</source>
-      <translation>11025</translation>
-    </message>
-    <message>
-      <source>0</source>
-      <translation>0</translation>
-    </message>
-    <message>
-      <source>1 (Default)</source>
-      <translation>1 (predeterminado)</translation>
-    </message>
-    <message>
-      <source>2</source>
-      <translation>2</translation>
-    </message>
-    <message>
-      <source>3</source>
-      <translation>3</translation>
-    </message>
-    <message>
-      <source>4</source>
-      <translation>4</translation>
-    </message>
-    <message>
-      <source>5</source>
-      <translation>5</translation>
-    </message>
-    <message>
-      <source>6</source>
-      <translation>6</translation>
-    </message>
-    <message>
-      <source>7</source>
-      <translation>7</translation>
-    </message>
-    <message>
-      <source>8</source>
-      <translation>8</translation>
-    </message>
-    <message>
-      <source>9</source>
-      <translation>9</translation>
-    </message>
-    <message>
       <source>Sample Rate</source>
       <translation>Frecuencia de muestreo</translation>
     </message>
@@ -1307,86 +1251,6 @@
       <translation>Canales</translation>
     </message>
     <message>
-      <source>5%</source>
-      <translation>5 %</translation>
-    </message>
-    <message>
-      <source>10%</source>
-      <translation>10 %</translation>
-    </message>
-    <message>
-      <source>15%</source>
-      <translation>15 %</translation>
-    </message>
-    <message>
-      <source>20%</source>
-      <translation>20 %</translation>
-    </message>
-    <message>
-      <source>25%</source>
-      <translation>25 %</translation>
-    </message>
-    <message>
-      <source>30% (Default)</source>
-      <translation>30 % (predeterminado)</translation>
-    </message>
-    <message>
-      <source>35%</source>
-      <translation>35 %</translation>
-    </message>
-    <message>
-      <source>40%</source>
-      <translation>40 %</translation>
-    </message>
-    <message>
-      <source>45%</source>
-      <translation>45 %</translation>
-    </message>
-    <message>
-      <source>50%</source>
-      <translation>50 %</translation>
-    </message>
-    <message>
-      <source>55%</source>
-      <translation>55 %</translation>
-    </message>
-    <message>
-      <source>60%</source>
-      <translation>60 %</translation>
-    </message>
-    <message>
-      <source>65%</source>
-      <translation>65 %</translation>
-    </message>
-    <message>
-      <source>70%</source>
-      <translation>70 %</translation>
-    </message>
-    <message>
-      <source>75%</source>
-      <translation>75 %</translation>
-    </message>
-    <message>
-      <source>80%</source>
-      <translation>80 %</translation>
-    </message>
-    <message>
-      <source>85%</source>
-      <translation>85 %</translation>
-    </message>
-    <message>
-      <source>90%</source>
-      <translation>90 %</translation>
-    </message>
-    <message>
-      <source>95%</source>
-      <translation>95 %</translation>
-    </message>
-    <message>
-      <source>100%</source>
-      <translation>100 %</translation>
-    </message>
-    <message>
       <source>APU Channels</source>
       <translation>Canales APU</translation>
     </message>
@@ -1401,6 +1265,22 @@
     <message>
       <source>Reverse bits of DPCM</source>
       <translation>Bits invertidos de DPCM</translation>
+    </message>
+    <message>
+      <source>48.0 kHz</source>
+      <translation>48.0 kHz</translation>
+    </message>
+    <message>
+      <source>44.1 kHz</source>
+      <translation>44.1 kHz</translation>
+    </message>
+    <message>
+      <source>22.05 kHz</source>
+      <translation>44.1 kHz</translation>
+    </message>
+    <message>
+      <source>11.025 kHz</source>
+      <translation>11.025 kHz</translation>
     </message>
   </context>
   <context>
@@ -1640,10 +1520,6 @@
       <translation>Configuración de entrada</translation>
     </message>
     <message>
-      <source>Setup</source>
-      <translation>Configurar</translation>
-    </message>
-    <message>
       <source>Joystick ID</source>
       <translation>ID del Joystick</translation>
     </message>
@@ -1734,6 +1610,10 @@
     <message>
       <source>Start/Stop WAV recording</source>
       <translation>Iniciar/detener grabación de WAV</translation>
+    </message>
+    <message>
+      <source>Standard Pads on Port3 and Port4</source>
+      <translation>Pads estándar en puerto 3 y puerto 4</translation>
     </message>
   </context>
   <context>
@@ -2239,14 +2119,6 @@
       <translation>NTSC RGB</translation>
     </message>
     <message>
-      <source>Shaders</source>
-      <translation>Sombreados</translation>
-    </message>
-    <message>
-      <source>Load from a file</source>
-      <translation>Cargar desde un archivo</translation>
-    </message>
-    <message>
       <source>Shader Parameters</source>
       <translation>Parámetros del sombreado</translation>
     </message>
@@ -2407,28 +2279,32 @@
       <translation>Pantalla</translation>
     </message>
     <message>
-      <source>Shaders icon</source>
-      <translation>Icono de sombreados</translation>
-    </message>
-    <message>
-      <source>Shaders Parameters icon</source>
-      <translation>Icono de parámetros de sombreados</translation>
-    </message>
-    <message>
-      <source>Software Filters icon</source>
-      <translation>Icono de filtros por software</translation>
-    </message>
-    <message>
       <source>Software Filters</source>
       <translation>Filtros por software</translation>
     </message>
     <message>
-      <source>Editor icon</source>
-      <translation>Icono del editor</translation>
+      <source>Shader</source>
+      <translation>Sombreado</translation>
     </message>
     <message>
-      <source>Palette icon</source>
-      <translation>Icono de la paleta</translation>
+      <source>Shader File</source>
+      <translation>Archivo de sombreado</translation>
+    </message>
+    <message>
+      <source>Filter</source>
+      <translation>Filtro</translation>
+    </message>
+    <message>
+      <source>GPU Shaders</source>
+      <translation>Sombreados por GPU</translation>
+    </message>
+    <message>
+      <source>Palette Selection</source>
+      <translation>Selección de paleta</translation>
+    </message>
+    <message>
+      <source>Palette File</source>
+      <translation>Archivo de paleta</translation>
     </message>
   </context>
   <context>
