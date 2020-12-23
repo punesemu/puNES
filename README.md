@@ -199,14 +199,7 @@ The executable `punes.exe` is in the `src` directory but in order to run it you 
 * cg.dll
 * cgD3D9.dll (only for D3D9 version)
 * cgGL.dll (only for OpenGL version)
-* libmp3lame-0.dll
-* libogg-0.dll
-* libspeex-1.dll
-* libvorbis-0.dll
-* libvorbisenc-2.dll
 * libwinpthread-1.dll
-* libx264-161.dll
-* libx265.dll
 * swresample-3.dll
 * swscale-5.dll
 
