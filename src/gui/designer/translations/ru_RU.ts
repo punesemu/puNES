@@ -12,11 +12,11 @@
     <name>dlgCmdLineHelp</name>
     <message>
       <source>Close</source>
-      <translation type="unfinished">Close</translation>
+      <translation>Закрыть</translation>
     </message>
     <message>
       <source>Command Line Help</source>
-      <translation type="unfinished">Command Line Help</translation>
+      <translation>Справка по командной строке</translation>
     </message>
   </context>
   <context>
@@ -87,7 +87,7 @@
     </message>
     <message>
       <source>Recording</source>
-      <translation type="unfinished">Recording</translation>
+      <translation>Запись</translation>
     </message>
   </context>
   <context>
@@ -683,31 +683,31 @@
     </message>
     <message>
       <source>Start &amp;AUDIO recording</source>
-      <translation type="unfinished">Start &amp;AUDIO recording</translation>
+      <translation>Начать запись &amp;АУДИО</translation>
     </message>
     <message>
       <source>Start &amp;VIDEO recording</source>
-      <translation type="unfinished">Start &amp;VIDEO recording</translation>
+      <translation>Начать запись &amp;ВИДЕО</translation>
     </message>
     <message>
       <source>Stop &amp;AUDIO recording</source>
-      <translation type="unfinished">Stop &amp;AUDIO recording</translation>
+      <translation>Остановить запись &amp;АУДИО</translation>
     </message>
     <message>
       <source>Stop &amp;VIDEO recording</source>
-      <translation type="unfinished">Stop &amp;VIDEO recording</translation>
+      <translation>Остановить запись &amp;ВИДЕО</translation>
     </message>
     <message>
       <source>Start/Stop &amp;AUDIO recording</source>
-      <translation type="unfinished">Start/Stop &amp;AUDIO recording</translation>
+      <translation>Начать/Остановить запись &amp;АУДИО</translation>
     </message>
     <message>
       <source>&amp;Recording</source>
-      <translation type="unfinished">&amp;Recording</translation>
+      <translation>&amp;Запись</translation>
     </message>
     <message>
       <source>Start/Stop &amp;VIDEO recording</source>
-      <translation type="unfinished">Start/Stop &amp;VIDEO recording</translation>
+      <translation>Начать/Остановить запись &amp;ВИДЕО</translation>
     </message>
   </context>
   <context>
@@ -872,11 +872,11 @@
     <name>recStatusBar</name>
     <message>
       <source>Audio</source>
-      <translation type="unfinished">Audio</translation>
+      <translation>Аудио</translation>
     </message>
     <message>
       <source>Video</source>
-      <translation type="unfinished">Video</translation>
+      <translation>Видео</translation>
     </message>
   </context>
   <context>
@@ -1131,31 +1131,31 @@
     <name>wdgRecGetSaveFileName</name>
     <message>
       <source>Record AUDIO on file</source>
-      <translation type="unfinished">Record AUDIO on file</translation>
+      <translation>Записать АУДИО в файл</translation>
     </message>
     <message>
       <source>Output Quality</source>
-      <translation type="unfinished">Output Quality</translation>
+      <translation>Качество вывода</translation>
     </message>
     <message>
       <source>Low</source>
-      <translation type="unfinished">Low</translation>
+      <translation>Низкое</translation>
     </message>
     <message>
       <source>Medium</source>
-      <translation type="unfinished">Medium</translation>
+      <translation>Среднее</translation>
     </message>
     <message>
       <source>High</source>
-      <translation type="unfinished">High</translation>
+      <translation>Высокое</translation>
     </message>
     <message>
       <source>Record VIDEO on file</source>
-      <translation type="unfinished">Record VIDEO on file</translation>
+      <translation>Записать ВИДЕО в файл</translation>
     </message>
     <message>
       <source>Not supported</source>
-      <translation type="unfinished">Not supported</translation>
+      <translation>Не поддерживается</translation>
     </message>
   </context>
   <context>
@@ -1205,7 +1205,7 @@
     </message>
     <message>
       <source>Rotate Screen :</source>
-      <translation type="unfinished">Rotate Screen :</translation>
+      <translation>Поворот Экрана :</translation>
     </message>
   </context>
   <context>
@@ -1264,23 +1264,23 @@
     </message>
     <message>
       <source>Reverse bits of DPCM</source>
-      <translation type="unfinished">Reverse bits of DPCM</translation>
+      <translation>Обратные биты ДИКМ</translation>
     </message>
     <message>
       <source>48.0 kHz</source>
-      <translation type="unfinished">48.0 kHz</translation>
+      <translation>48.0 кГц</translation>
     </message>
     <message>
       <source>44.1 kHz</source>
-      <translation type="unfinished">44.1 kHz</translation>
+      <translation>44.1 кГц</translation>
     </message>
     <message>
       <source>22.05 kHz</source>
-      <translation type="unfinished">22.05 kHz</translation>
+      <translation>22.05 кГц</translation>
     </message>
     <message>
       <source>11.025 kHz</source>
-      <translation type="unfinished">11.025 kHz</translation>
+      <translation>11.025 кГц</translation>
     </message>
   </context>
   <context>
@@ -1434,35 +1434,35 @@
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>Выкл.</translation>
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>5</source>
-      <translation type="unfinished">5</translation>
+      <translation>5</translation>
     </message>
     <message>
       <source>15</source>
-      <translation type="unfinished">15</translation>
+      <translation>15</translation>
     </message>
     <message>
       <source>30</source>
-      <translation type="unfinished">30</translation>
+      <translation>30</translation>
     </message>
     <message>
       <source>60</source>
-      <translation type="unfinished">60</translation>
+      <translation>60</translation>
     </message>
     <message>
       <source>Unlim.</source>
-      <translation type="unfinished">Unlim.</translation>
+      <translation>Беск.</translation>
     </message>
     <message>
       <source>2x</source>
-      <translation type="unfinished">2x</translation>
+      <translation>2x</translation>
     </message>
   </context>
   <context>
@@ -1601,19 +1601,19 @@
     </message>
     <message>
       <source>Start/Stop AUDIO recording</source>
-      <translation type="unfinished">Start/Stop AUDIO recording</translation>
+      <translation>Начать/Остановить запись &amp;АУДИО</translation>
     </message>
     <message>
       <source>Start/Stop VIDEO recording</source>
-      <translation type="unfinished">Start/Stop VIDEO recording</translation>
+      <translation>Начать/Остановить запись &amp;ВИДЕО</translation>
     </message>
     <message>
       <source>Start/Stop WAV recording</source>
-      <translation type="unfinished">Start/Stop WAV recording</translation>
+      <translation>Начать/Остановить запись &amp;WAV</translation>
     </message>
     <message>
       <source>Standard Pads on Port3 and Port4</source>
-      <translation type="unfinished">Standard Pads on Port3 and Port4</translation>
+      <translation>Стандартные контроллеры на Портах 3 и 4</translation>
     </message>
   </context>
   <context>
@@ -1668,208 +1668,208 @@
     <message>
       <source>MPEG 1 Video (*.mpg *.mpeg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG 1 Video (*.mpg *.mpeg)</translation>
+      <translation>MPEG 1 (*.mpg *.mpeg)</translation>
     </message>
     <message>
       <source>MPEG 2 Video (*.mpg *.mpeg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG 2 Video (*.mpg *.mpeg)</translation>
+      <translation>MPEG 2 (*.mpg *.mpeg)</translation>
     </message>
     <message>
       <source>MPEG 4 Video (*.mp4)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG 4 Video (*.mp4)</translation>
+      <translation>MPEG 4 (*.mp4)</translation>
     </message>
     <message>
       <source>MPEG H264 Video (*.mp4)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG H264 Video (*.mp4)</translation>
+      <translation>MPEG H264 (*.mp4)</translation>
     </message>
     <message>
       <source>High Efficiency Video Codec (*.mkv)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">High Efficiency Video Codec (*.mkv)</translation>
+      <translation>HEVC (*.mkv)</translation>
     </message>
     <message>
       <source>WebM Video (*.webm)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">WebM Video (*.webm)</translation>
+      <translation>WebM (*.webm)</translation>
     </message>
     <message>
       <source>Windows Media Video (*.wmv)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Windows Media Video (*.wmv)</translation>
+      <translation>Windows Media (*.wmv)</translation>
     </message>
     <message>
       <source>AVI FF Video (*.avi)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">AVI FF Video (*.avi)</translation>
+      <translation>AVI FF (*.avi)</translation>
     </message>
     <message>
       <source>AVI Video (*.avi)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">AVI Video (*.avi)</translation>
+      <translation>AVI (*.avi)</translation>
     </message>
     <message>
       <source>WAV Audio (*.wav)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">WAV Audio (*.wav)</translation>
+      <translation>WAV (*.wav)</translation>
     </message>
     <message>
       <source>MP3 Audio (*.mp3)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MP3 Audio (*.mp3)</translation>
+      <translation>MP3 (*.mp3)</translation>
     </message>
     <message>
       <source>AAC Audio (*.aac)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">AAC Audio (*.aac)</translation>
+      <translation>AAC (*.aac)</translation>
     </message>
     <message>
       <source>Flac Audio (*.flac)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Flac Audio (*.flac)</translation>
+      <translation>Flac (*.flac)</translation>
     </message>
     <message>
       <source>Ogg Audio (*.ogg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Ogg Audio (*.ogg)</translation>
+      <translation>Ogg (*.ogg)</translation>
     </message>
     <message>
       <source>Not supported</source>
-      <translation type="unfinished">Not supported</translation>
+      <translation>Не поддерживается</translation>
     </message>
     <message>
       <source>Custom Height</source>
-      <translation type="unfinished">Custom Height</translation>
+      <translation>Высота</translation>
     </message>
     <message>
       <source>Output Video Format</source>
-      <translation type="unfinished">Output Video Format</translation>
+      <translation>Формат вывода видео</translation>
     </message>
     <message>
       <source>Custom Width</source>
-      <translation type="unfinished">Custom Width</translation>
+      <translation>Ширина</translation>
     </message>
     <message>
       <source>Output Quality</source>
-      <translation type="unfinished">Output Quality</translation>
+      <translation>Качество вывода</translation>
     </message>
     <message>
       <source>Output Audio Format</source>
-      <translation type="unfinished">Output Audio Format</translation>
+      <translation>Формат вывода аудио</translation>
     </message>
     <message>
       <source>Output Resolution</source>
-      <translation type="unfinished">Output Resolution</translation>
+      <translation>Выходное разрешение</translation>
     </message>
     <message>
       <source>Custom</source>
-      <translation type="unfinished">Custom</translation>
+      <translation>Пользовательское</translation>
     </message>
     <message>
       <source>256 x 240  (1:1)</source>
-      <translation type="unfinished">256 x 240  (1:1)</translation>
+      <translation>256 х 240 (1:1)</translation>
     </message>
     <message>
       <source>292 x 240  (8:7 NTSC TV)</source>
-      <translation type="unfinished">292 x 240  (8:7 NTSC TV)</translation>
+      <translation>292 х 240 (8:7 NTSC TV)</translation>
     </message>
     <message>
       <source>320 x 240  (5:4)</source>
-      <translation type="unfinished">320 x 240  (5:4)</translation>
+      <translation>320 х 240 (5:4)</translation>
     </message>
     <message>
       <source>354 x 240  (11:8 PAL TV)</source>
-      <translation type="unfinished">354 x 240  (11:8 PAL TV)</translation>
+      <translation>354 х 240 (11:8 PAL TV)</translation>
     </message>
     <message>
       <source>512 x 480  (1:1)</source>
-      <translation type="unfinished">512 x 480  (1:1)</translation>
+      <translation>512 х 480 (1:1)</translation>
     </message>
     <message>
       <source>584 x 480  (8:7 NTSC TV)</source>
-      <translation type="unfinished">584 x 480  (8:7 NTSC TV)</translation>
+      <translation>584 х 480 (8:7 NTSC TV)</translation>
     </message>
     <message>
       <source>640 x 480  (5:4)</source>
-      <translation type="unfinished">640 x 480  (5:4)</translation>
+      <translation>640 х 480 (5:4)</translation>
     </message>
     <message>
       <source>708 x 480  (11:8 PAL TV)</source>
-      <translation type="unfinished">708 x 480  (11:8 PAL TV)</translation>
+      <translation>708 x 480 (11:8 PAL TV)</translation>
     </message>
     <message>
       <source>768 x 720  (1:1)</source>
-      <translation type="unfinished">768 x 720  (1:1)</translation>
+      <translation>768 х 720 (1:1)</translation>
     </message>
     <message>
       <source>876 x 720  (8:7 NTSC TV)</source>
-      <translation type="unfinished">876 x 720  (8:7 NTSC TV)</translation>
+      <translation>876 x 720 (8:7 NTSC TV)</translation>
     </message>
     <message>
       <source>960 x 720  (5:4)</source>
-      <translation type="unfinished">960 x 720  (5:4)</translation>
+      <translation>960 х 720 (5:4)</translation>
     </message>
     <message>
       <source>1064 x 720  (11:8 PAL TV)</source>
-      <translation type="unfinished">1064 x 720  (11:8 PAL TV)</translation>
+      <translation>1064 x 720 (11:8 PAL TV)</translation>
     </message>
     <message>
       <source>1024 x 960  (1:1)</source>
-      <translation type="unfinished">1024 x 960  (1:1)</translation>
+      <translation>1024 х 960 (1:1)</translation>
     </message>
     <message>
       <source>1170 x 960  (8:7 NTSC TV)</source>
-      <translation type="unfinished">1170 x 960  (8:7 NTSC TV)</translation>
+      <translation>1170 x 960 (8:7 NTSC TV)</translation>
     </message>
     <message>
       <source>1280 x 960  (5:4)</source>
-      <translation type="unfinished">1280 x 960  (5:4)</translation>
+      <translation>1280 x 960 (5:4)</translation>
     </message>
     <message>
       <source>1418 x 960  (11:8 PAL TV)</source>
-      <translation type="unfinished">1418 x 960  (11:8 PAL TV)</translation>
+      <translation>1418 х 960 (11:8 PAL TV)</translation>
     </message>
     <message>
       <source>1280 x 720</source>
-      <translation type="unfinished">1280 x 720</translation>
+      <translation>1280 x 720</translation>
     </message>
     <message>
       <source>1920 x 1080</source>
-      <translation type="unfinished">1920 x 1080</translation>
+      <translation>1920 х 1080</translation>
     </message>
     <message>
       <source>Use the emulator resolution</source>
-      <translation type="unfinished">Use the emulator resolution</translation>
+      <translation>Использовать разрешение эмулятора</translation>
     </message>
     <message>
       <source>Follow screen rotation</source>
-      <translation type="unfinished">Follow screen rotation</translation>
+      <translation>Учитывать поворот экрана</translation>
     </message>
     <message>
       <source>Low</source>
-      <translation type="unfinished">Low</translation>
+      <translation>Низкое</translation>
     </message>
     <message>
       <source>Medium</source>
-      <translation type="unfinished">Medium</translation>
+      <translation>Среднее</translation>
     </message>
     <message>
       <source>High</source>
-      <translation type="unfinished">High</translation>
+      <translation>Высокое</translation>
     </message>
     <message>
       <source>Audio recording settings</source>
-      <translation type="unfinished">Audio recording settings</translation>
+      <translation>Настройки записи аудио</translation>
     </message>
     <message>
       <source>Video recording settings</source>
-      <translation type="unfinished">Video recording settings</translation>
+      <translation>Настройки записи видео</translation>
     </message>
     <message>
       <source>Recording Settings</source>
-      <translation type="unfinished">Recording Settings</translation>
+      <translation>Настройки записи</translation>
     </message>
   </context>
   <context>
@@ -2252,59 +2252,59 @@
     </message>
     <message>
       <source>Raw</source>
-      <translation type="unfinished">Raw</translation>
+      <translation>Исх.</translation>
     </message>
     <message>
       <source>Horizontal flip</source>
-      <translation type="unfinished">Horizontal flip</translation>
+      <translation>Отразить по горизонтали</translation>
     </message>
     <message>
       <source>Flip/Rotate the controller input</source>
-      <translation type="unfinished">Flip/Rotate the controller input</translation>
+      <translation>Отразить/Повернуть кнопки управления</translation>
     </message>
     <message>
       <source>Flip/Rotate the text on screen</source>
-      <translation type="unfinished">Flip/Rotate the text on screen</translation>
+      <translation>Отразить/Повернуть экранный текст</translation>
     </message>
     <message>
       <source>Per-Game Overscan Setting</source>
-      <translation type="unfinished">Per-Game Overscan Setting</translation>
+      <translation>Внутриигровые настройки вылетов развертки</translation>
     </message>
     <message>
       <source>Horizontal Flip and Rotation</source>
-      <translation type="unfinished">Horizontal Flip and Rotation</translation>
+      <translation>Горизонтальное отражение и Вращение</translation>
     </message>
     <message>
       <source>Screen</source>
-      <translation type="unfinished">Screen</translation>
+      <translation>Экран</translation>
     </message>
     <message>
       <source>Software Filters</source>
-      <translation type="unfinished">Software Filters</translation>
+      <translation>Программные фильтры</translation>
     </message>
     <message>
       <source>Shader</source>
-      <translation type="unfinished">Shader</translation>
+      <translation>Шейдер</translation>
     </message>
     <message>
       <source>Shader File</source>
-      <translation type="unfinished">Shader File</translation>
+      <translation>Файл шейдера</translation>
     </message>
     <message>
       <source>Filter</source>
-      <translation type="unfinished">Filter</translation>
+      <translation>Фильтр</translation>
     </message>
     <message>
       <source>GPU Shaders</source>
-      <translation type="unfinished">GPU Shaders</translation>
+      <translation>Шейдеры GPU</translation>
     </message>
     <message>
       <source>Palette Selection</source>
-      <translation type="unfinished">Palette Selection</translation>
+      <translation>Выбор палитры</translation>
     </message>
     <message>
       <source>Palette File</source>
-      <translation type="unfinished">Palette File</translation>
+      <translation>Файл палитры</translation>
     </message>
   </context>
   <context>
