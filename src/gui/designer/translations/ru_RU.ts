@@ -1193,11 +1193,11 @@
     <name>wdgRotateScreen</name>
     <message>
       <source>Rotate the screen 90 degrees to the Right</source>
-      <translation>Повернуть экран на 90 градусов вправо</translation>
+      <translation>Повернуть экран на 90 градусов по часовой стрелке</translation>
     </message>
     <message>
       <source>Rotate the screen 90 degrees to the left</source>
-      <translation>Повернуть экран на 90 градусов влево</translation>
+      <translation>Повернуть экран на 90 градусов против часовой стрелки</translation>
     </message>
     <message>
       <source>Current degree of rotation</source>
@@ -1205,7 +1205,7 @@
     </message>
     <message>
       <source>Rotate Screen :</source>
-      <translation>Поворот Экрана :</translation>
+      <translation>Поворот экрана :</translation>
     </message>
   </context>
   <context>
@@ -1698,7 +1698,7 @@
     <message>
       <source>Windows Media Video (*.wmv)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>Windows Media (*.wmv)</translation>
+      <translation>Windows Media Video (*.wmv)</translation>
     </message>
     <message>
       <source>AVI FF Video (*.avi)</source>
@@ -2272,7 +2272,7 @@
     </message>
     <message>
       <source>Horizontal Flip and Rotation</source>
-      <translation>Горизонтальное отражение и Вращение</translation>
+      <translation>Вращение и горизонтальное отражение</translation>
     </message>
     <message>
       <source>Screen</source>
@@ -2323,7 +2323,7 @@
     </message>
     <message>
       <source>Save/Load State</source>
-      <translation>Сохранить/Загрузить Игру</translation>
+      <translation>Сохранить/Загрузить игру</translation>
     </message>
     <message>
       <source>Slot state</source>
