@@ -1228,11 +1228,11 @@
     </message>
     <message>
       <source>Stereo Delay</source>
-      <translation>Задержка стерео</translation>
+      <translation>Стерео (Задержка)</translation>
     </message>
     <message>
       <source>Stereo Panning</source>
-      <translation>Панорамирование стерео</translation>
+      <translation>Стерео (Панорамирование)</translation>
     </message>
     <message>
       <source>Channels Delay</source>
@@ -2228,7 +2228,7 @@
     </message>
     <message>
       <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
-      <translation>Отключить обмен Красного и Зеленого для PAL/Dendy</translation>
+      <translation>Убрать переключение Красного и Зеленого оттенков для PAL/Dendy</translation>
     </message>
     <message>
       <source>Use integer scaling in fullscreen</source>
