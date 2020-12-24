@@ -9,6 +9,17 @@
     </message>
   </context>
   <context>
+    <name>dlgCmdLineHelp</name>
+    <message>
+      <source>Close</source>
+      <translation>Bezár</translation>
+    </message>
+    <message>
+      <source>Command Line Help</source>
+      <translation>Parancssori súgó</translation>
+    </message>
+  </context>
+  <context>
     <name>dlgSettings</name>
     <message>
       <source>Settings</source>
@@ -73,6 +84,10 @@
     <message>
       <source>Rewind Fast Backward</source>
       <translation>Visszatekerés Gyorsan hátra</translation>
+    </message>
+    <message>
+      <source>Recording</source>
+      <translation>Felvétel</translation>
     </message>
   </context>
   <context>
@@ -603,10 +618,6 @@
       <translation>UNIF ROM fájlok</translation>
     </message>
     <message>
-      <source>Start/Stop &amp;WAV recording</source>
-      <translation>WAV felvétel elindítása/megállítása (&amp;W)</translation>
-    </message>
-    <message>
       <source>Stop &amp;WAV recording</source>
       <translation>WAV felvétel megállítása (&amp;W)</translation>
     </message>
@@ -669,6 +680,34 @@
     <message>
       <source>Widgets</source>
       <translation>Elemek</translation>
+    </message>
+    <message>
+      <source>Start &amp;AUDIO recording</source>
+      <translation>&amp;A Hangfelvétel elindítása</translation>
+    </message>
+    <message>
+      <source>Start &amp;VIDEO recording</source>
+      <translation>&amp;Videófelvétel elindítása</translation>
+    </message>
+    <message>
+      <source>Stop &amp;AUDIO recording</source>
+      <translation>&amp;A Hangfelvétel leállítása</translation>
+    </message>
+    <message>
+      <source>Stop &amp;VIDEO recording</source>
+      <translation>&amp;Videófelvétel leállítása</translation>
+    </message>
+    <message>
+      <source>Start/Stop &amp;AUDIO recording</source>
+      <translation>&amp;A Hangfelvétel elindítása/leállítása</translation>
+    </message>
+    <message>
+      <source>&amp;Recording</source>
+      <translation>&amp;R Felvétel</translation>
+    </message>
+    <message>
+      <source>Start/Stop &amp;VIDEO recording</source>
+      <translation>&amp;Videófelvétel elindítása/leállítása</translation>
     </message>
   </context>
   <context>
@@ -830,6 +869,17 @@
     </message>
   </context>
   <context>
+    <name>recStatusBar</name>
+    <message>
+      <source>Audio</source>
+      <translation>Hang</translation>
+    </message>
+    <message>
+      <source>Video</source>
+      <translation>Videó</translation>
+    </message>
+  </context>
+  <context>
     <name>wdgAPUChannels</name>
     <message>
       <source>APU Channels</source>
@@ -893,10 +943,6 @@
     <message>
       <source>Cheats List</source>
       <translation>Csaláslista</translation>
-    </message>
-    <message>
-      <source>Active</source>
-      <translation>Aktív</translation>
     </message>
     <message>
       <source>Description</source>
@@ -1082,6 +1128,37 @@
     </message>
   </context>
   <context>
+    <name>wdgRecGetSaveFileName</name>
+    <message>
+      <source>Record AUDIO on file</source>
+      <translation>Hangfelvétel fájlba</translation>
+    </message>
+    <message>
+      <source>Output Quality</source>
+      <translation>Kimeneti minőség</translation>
+    </message>
+    <message>
+      <source>Low</source>
+      <translation>Alacsony</translation>
+    </message>
+    <message>
+      <source>Medium</source>
+      <translation>Közepes</translation>
+    </message>
+    <message>
+      <source>High</source>
+      <translation>Magas</translation>
+    </message>
+    <message>
+      <source>Record VIDEO on file</source>
+      <translation>Videófelvétel fájlba</translation>
+    </message>
+    <message>
+      <source>Not supported</source>
+      <translation>Nem támogatott</translation>
+    </message>
+  </context>
+  <context>
     <name>wdgRewind</name>
     <message>
       <source>Forward (single frame)</source>
@@ -1127,8 +1204,8 @@
       <translation>Forgatás jelenleg</translation>
     </message>
     <message>
-      <source>Rotate Screen</source>
-      <translation>Képernyő forgatása</translation>
+      <source>Rotate Screen :</source>
+      <translation>Képernyő forgatása:</translation>
     </message>
   </context>
   <context>
@@ -1136,62 +1213,6 @@
     <message>
       <source>Output Devices</source>
       <translation>Kimeneti eszközök</translation>
-    </message>
-    <message>
-      <source>48000</source>
-      <translation>48000 Hz</translation>
-    </message>
-    <message>
-      <source>44100</source>
-      <translation>44100 Hz</translation>
-    </message>
-    <message>
-      <source>22050</source>
-      <translation>22050 Hz</translation>
-    </message>
-    <message>
-      <source>11025</source>
-      <translation>11025 Hz</translation>
-    </message>
-    <message>
-      <source>0</source>
-      <translation>0</translation>
-    </message>
-    <message>
-      <source>1 (Default)</source>
-      <translation>1 (Alap)</translation>
-    </message>
-    <message>
-      <source>2</source>
-      <translation>2</translation>
-    </message>
-    <message>
-      <source>3</source>
-      <translation>3</translation>
-    </message>
-    <message>
-      <source>4</source>
-      <translation>4</translation>
-    </message>
-    <message>
-      <source>5</source>
-      <translation>5</translation>
-    </message>
-    <message>
-      <source>6</source>
-      <translation>6</translation>
-    </message>
-    <message>
-      <source>7</source>
-      <translation>7</translation>
-    </message>
-    <message>
-      <source>8</source>
-      <translation>8</translation>
-    </message>
-    <message>
-      <source>9</source>
-      <translation>9</translation>
     </message>
     <message>
       <source>Sample Rate</source>
@@ -1230,86 +1251,6 @@
       <translation>Csatornák</translation>
     </message>
     <message>
-      <source>5%</source>
-      <translation>5%</translation>
-    </message>
-    <message>
-      <source>10%</source>
-      <translation>10%</translation>
-    </message>
-    <message>
-      <source>15%</source>
-      <translation>15%</translation>
-    </message>
-    <message>
-      <source>20%</source>
-      <translation>20%</translation>
-    </message>
-    <message>
-      <source>25%</source>
-      <translation>25%</translation>
-    </message>
-    <message>
-      <source>30% (Default)</source>
-      <translation>30% (Alap)</translation>
-    </message>
-    <message>
-      <source>35%</source>
-      <translation>35%</translation>
-    </message>
-    <message>
-      <source>40%</source>
-      <translation>40%</translation>
-    </message>
-    <message>
-      <source>45%</source>
-      <translation>45%</translation>
-    </message>
-    <message>
-      <source>50%</source>
-      <translation>50%</translation>
-    </message>
-    <message>
-      <source>55%</source>
-      <translation>55%</translation>
-    </message>
-    <message>
-      <source>60%</source>
-      <translation>60%</translation>
-    </message>
-    <message>
-      <source>65%</source>
-      <translation>65%</translation>
-    </message>
-    <message>
-      <source>70%</source>
-      <translation>70%</translation>
-    </message>
-    <message>
-      <source>75%</source>
-      <translation>75%</translation>
-    </message>
-    <message>
-      <source>80%</source>
-      <translation>80%</translation>
-    </message>
-    <message>
-      <source>85%</source>
-      <translation>85%</translation>
-    </message>
-    <message>
-      <source>90%</source>
-      <translation>90%</translation>
-    </message>
-    <message>
-      <source>95%</source>
-      <translation>95%</translation>
-    </message>
-    <message>
-      <source>100%</source>
-      <translation>100%</translation>
-    </message>
-    <message>
       <source>APU Channels</source>
       <translation>APU Csatornák</translation>
     </message>
@@ -1320,6 +1261,26 @@
     <message>
       <source>Enable Audio</source>
       <translation>Hang engedélyezése</translation>
+    </message>
+    <message>
+      <source>Reverse bits of DPCM</source>
+      <translation>DPCM bitjeinek megfordítása</translation>
+    </message>
+    <message>
+      <source>48.0 kHz</source>
+      <translation>48.0 kHz</translation>
+    </message>
+    <message>
+      <source>44.1 kHz</source>
+      <translation>44.1 kHz</translation>
+    </message>
+    <message>
+      <source>22.05 kHz</source>
+      <translation>22.05 kHz</translation>
+    </message>
+    <message>
+      <source>11.025 kHz</source>
+      <translation>11.025 kHz</translation>
     </message>
   </context>
   <context>
@@ -1366,10 +1327,6 @@
     <message>
       <source>General Settings</source>
       <translation>Általános beállítások</translation>
-    </message>
-    <message>
-      <source>2x (Default)</source>
-      <translation>2x (Alap)</translation>
     </message>
     <message>
       <source>3x</source>
@@ -1460,30 +1417,6 @@
       <translation>Visszatekerhető percek</translation>
     </message>
     <message>
-      <source>Disabled</source>
-      <translation>Letiltva</translation>
-    </message>
-    <message>
-      <source>2 minutes</source>
-      <translation>2 perc</translation>
-    </message>
-    <message>
-      <source>5 minutes</source>
-      <translation>5 perc</translation>
-    </message>
-    <message>
-      <source>15 minutes (Default)</source>
-      <translation>15 perc (Alap)</translation>
-    </message>
-    <message>
-      <source>30 minutes</source>
-      <translation>30 perc</translation>
-    </message>
-    <message>
-      <source>Unlimited</source>
-      <translation>Korlátlan</translation>
-    </message>
-    <message>
       <source>Spanish</source>
       <translation>Spanyol</translation>
     </message>
@@ -1492,16 +1425,44 @@
       <translation>Magyar</translation>
     </message>
     <message>
-      <source>60 minutes</source>
-      <translation>60 perc</translation>
-    </message>
-    <message>
       <source>Turkish</source>
       <translation>Török</translation>
     </message>
     <message>
       <source>Portuguese (Brazil)</source>
       <translation>Portugál (Brazília)</translation>
+    </message>
+    <message>
+      <source>Off</source>
+      <translation>Ki</translation>
+    </message>
+    <message>
+      <source>2</source>
+      <translation>2</translation>
+    </message>
+    <message>
+      <source>5</source>
+      <translation>5</translation>
+    </message>
+    <message>
+      <source>15</source>
+      <translation>15</translation>
+    </message>
+    <message>
+      <source>30</source>
+      <translation>30</translation>
+    </message>
+    <message>
+      <source>60</source>
+      <translation>60</translation>
+    </message>
+    <message>
+      <source>Unlim.</source>
+      <translation>Végtelen</translation>
+    </message>
+    <message>
+      <source>2x</source>
+      <translation>2x</translation>
     </message>
   </context>
   <context>
@@ -1539,10 +1500,6 @@
       <translation>Beállítatlan</translation>
     </message>
     <message>
-      <source>Start/Stop WAV</source>
-      <translation>WAV felvétel indítása/megállítása</translation>
-    </message>
-    <message>
       <source>No usable device</source>
       <translation>Nincs használható eszköz</translation>
     </message>
@@ -1561,10 +1518,6 @@
     <message>
       <source>Input Settings</source>
       <translation>Beviteli beállítások</translation>
-    </message>
-    <message>
-      <source>Setup</source>
-      <translation>Beállítás</translation>
     </message>
     <message>
       <source>Joystick ID</source>
@@ -1646,6 +1599,22 @@
       <source>Unset all</source>
       <translation>Beállítások visszavonása</translation>
     </message>
+    <message>
+      <source>Start/Stop AUDIO recording</source>
+      <translation>Hangfelvétel elindítása/leállítása</translation>
+    </message>
+    <message>
+      <source>Start/Stop VIDEO recording</source>
+      <translation>Videófelvétel elindítása/leállítása</translation>
+    </message>
+    <message>
+      <source>Start/Stop WAV recording</source>
+      <translation>WAV-felvétel elindítása/leállítása</translation>
+    </message>
+    <message>
+      <source>Standard Pads on Port3 and Port4</source>
+      <translation>Szabvány pad-ek a Port 3-on és Port 4-en</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsPPU</name>
@@ -1692,6 +1661,215 @@
     <message>
       <source>Hide Background</source>
       <translation>Háttér eltüntetése</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgSettingsRecording</name>
+    <message>
+      <source>MPEG 1 Video (*.mpg *.mpeg)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>MPEG 1 Videó (*.mpg *.mpeg)</translation>
+    </message>
+    <message>
+      <source>MPEG 2 Video (*.mpg *.mpeg)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>MPEG 2 Videó (*.mpg *.mpeg)</translation>
+    </message>
+    <message>
+      <source>MPEG 4 Video (*.mp4)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>MPEG 4 Videó (*.mp4)</translation>
+    </message>
+    <message>
+      <source>MPEG H264 Video (*.mp4)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>MPEG H264 Videó (*.mp4)</translation>
+    </message>
+    <message>
+      <source>High Efficiency Video Codec (*.mkv)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>Nagy hatékonyságú videókodek (*.mkv)</translation>
+    </message>
+    <message>
+      <source>WebM Video (*.webm)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>WebM Videó (*.webm)</translation>
+    </message>
+    <message>
+      <source>Windows Media Video (*.wmv)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>Windows Media Videó (*.wmv)</translation>
+    </message>
+    <message>
+      <source>AVI FF Video (*.avi)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>AVI FF Videó (*.avi)</translation>
+    </message>
+    <message>
+      <source>AVI Video (*.avi)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>AVI Videó (*.avi)</translation>
+    </message>
+    <message>
+      <source>WAV Audio (*.wav)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>WAV Audió (*.wav)</translation>
+    </message>
+    <message>
+      <source>MP3 Audio (*.mp3)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>MP3 Hang (*.mp3)</translation>
+    </message>
+    <message>
+      <source>AAC Audio (*.aac)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>AAC Hang (*.aac)</translation>
+    </message>
+    <message>
+      <source>Flac Audio (*.flac)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>Flac Hang (*.flac)</translation>
+    </message>
+    <message>
+      <source>Ogg Audio (*.ogg)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>Ogg Hang (*.ogg)</translation>
+    </message>
+    <message>
+      <source>Not supported</source>
+      <translation>Nem támogatott</translation>
+    </message>
+    <message>
+      <source>Custom Height</source>
+      <translation>Egyéni magasság</translation>
+    </message>
+    <message>
+      <source>Output Video Format</source>
+      <translation>Kimeneti videóformátum</translation>
+    </message>
+    <message>
+      <source>Custom Width</source>
+      <translation>Egyéni szélesség</translation>
+    </message>
+    <message>
+      <source>Output Quality</source>
+      <translation>Kiemeneti minőség</translation>
+    </message>
+    <message>
+      <source>Output Audio Format</source>
+      <translation>Kimeneti hangformátum</translation>
+    </message>
+    <message>
+      <source>Output Resolution</source>
+      <translation>Kimeneti felbontás</translation>
+    </message>
+    <message>
+      <source>Custom</source>
+      <translation>Egyéni</translation>
+    </message>
+    <message>
+      <source>256 x 240  (1:1)</source>
+      <translation>256 x 240  (1:1)</translation>
+    </message>
+    <message>
+      <source>292 x 240  (8:7 NTSC TV)</source>
+      <translation>292 x 240  (8:7 NTSC TV)</translation>
+    </message>
+    <message>
+      <source>320 x 240  (5:4)</source>
+      <translation>320 x 240  (5:4)</translation>
+    </message>
+    <message>
+      <source>354 x 240  (11:8 PAL TV)</source>
+      <translation>354 x 240  (11:8 PAL TV)</translation>
+    </message>
+    <message>
+      <source>512 x 480  (1:1)</source>
+      <translation>512 x 480  (1:1)</translation>
+    </message>
+    <message>
+      <source>584 x 480  (8:7 NTSC TV)</source>
+      <translation>584 x 480  (8:7 NTSC TV)</translation>
+    </message>
+    <message>
+      <source>640 x 480  (5:4)</source>
+      <translation>640 x 480  (5:4)</translation>
+    </message>
+    <message>
+      <source>708 x 480  (11:8 PAL TV)</source>
+      <translation>708 x 480  (11:8 PAL TV)</translation>
+    </message>
+    <message>
+      <source>768 x 720  (1:1)</source>
+      <translation>768 x 720  (1:1)</translation>
+    </message>
+    <message>
+      <source>876 x 720  (8:7 NTSC TV)</source>
+      <translation>876 x 720  (8:7 NTSC TV)</translation>
+    </message>
+    <message>
+      <source>960 x 720  (5:4)</source>
+      <translation>960 x 720  (5:4)</translation>
+    </message>
+    <message>
+      <source>1064 x 720  (11:8 PAL TV)</source>
+      <translation>1064 x 720  (11:8 PAL TV)</translation>
+    </message>
+    <message>
+      <source>1024 x 960  (1:1)</source>
+      <translation>1024 x 960  (1:1)</translation>
+    </message>
+    <message>
+      <source>1170 x 960  (8:7 NTSC TV)</source>
+      <translation>1170 x 960  (8:7 NTSC TV)</translation>
+    </message>
+    <message>
+      <source>1280 x 960  (5:4)</source>
+      <translation>1280 x 960  (5:4)</translation>
+    </message>
+    <message>
+      <source>1418 x 960  (11:8 PAL TV)</source>
+      <translation>1418 x 960  (11:8 PAL TV)</translation>
+    </message>
+    <message>
+      <source>1280 x 720</source>
+      <translation>1280 x 720</translation>
+    </message>
+    <message>
+      <source>1920 x 1080</source>
+      <translation>1920 x 1080</translation>
+    </message>
+    <message>
+      <source>Use the emulator resolution</source>
+      <translation>Emulátor felbontásának használata</translation>
+    </message>
+    <message>
+      <source>Follow screen rotation</source>
+      <translation>Képernyő forgatásának követése</translation>
+    </message>
+    <message>
+      <source>Low</source>
+      <translation>Alacsony</translation>
+    </message>
+    <message>
+      <source>Medium</source>
+      <translation>Közepes</translation>
+    </message>
+    <message>
+      <source>High</source>
+      <translation>Magas</translation>
+    </message>
+    <message>
+      <source>Audio recording settings</source>
+      <translation>Hangfelvétel beállításai</translation>
+    </message>
+    <message>
+      <source>Video recording settings</source>
+      <translation>Videófelvétel beállításai</translation>
+    </message>
+    <message>
+      <source>Recording Settings</source>
+      <translation>Felvétel beállításai</translation>
     </message>
   </context>
   <context>
@@ -1765,10 +1943,6 @@
       <translation>Skálázás</translation>
     </message>
     <message>
-      <source>Settings</source>
-      <translation>Beállítások</translation>
-    </message>
-    <message>
       <source>** To apply this change restart is needed **</source>
       <translation>** Ennek a változtatásnak az alkalmazásához az emulátor újraindítása szükséges **</translation>
     </message>
@@ -1807,10 +1981,6 @@
     <message>
       <source>Default Value</source>
       <translation>Alapérték</translation>
-    </message>
-    <message>
-      <source>Overscan borders</source>
-      <translation>Overscan keretek</translation>
     </message>
     <message>
       <source>NTSC</source>
@@ -1949,14 +2119,6 @@
       <translation>NTSC RGB</translation>
     </message>
     <message>
-      <source>Shaders</source>
-      <translation>Shaderek</translation>
-    </message>
-    <message>
-      <source>Load from a file</source>
-      <translation>Betöltés fájlból</translation>
-    </message>
-    <message>
       <source>Shader Parameters</source>
       <translation>Shader paraméterei</translation>
     </message>
@@ -2073,10 +2235,6 @@
       <translation>Egész alapú skálázás teljes képernyőn</translation>
     </message>
     <message>
-      <source>Screen rotation</source>
-      <translation>Képernyő forgatása</translation>
-    </message>
-    <message>
       <source>0 degrees</source>
       <translation>0 fok</translation>
     </message>
@@ -2093,8 +2251,60 @@
       <translation>270 fok</translation>
     </message>
     <message>
-      <source>Also rotate the text on screen</source>
-      <translation>A szöveget is forgassa a képernyőn</translation>
+      <source>Raw</source>
+      <translation>Nyers</translation>
+    </message>
+    <message>
+      <source>Horizontal flip</source>
+      <translation>Vízszintes megfordítás</translation>
+    </message>
+    <message>
+      <source>Flip/Rotate the controller input</source>
+      <translation>Kontroller bemenetének megfordítása/elforgatása</translation>
+    </message>
+    <message>
+      <source>Flip/Rotate the text on screen</source>
+      <translation>A képernyőn lévő szövegek megfordítása/elforgatása</translation>
+    </message>
+    <message>
+      <source>Per-Game Overscan Setting</source>
+      <translation>Játékonkénti Overscan beállítása</translation>
+    </message>
+    <message>
+      <source>Horizontal Flip and Rotation</source>
+      <translation>Vízszintes megfordítás és elforgatás</translation>
+    </message>
+    <message>
+      <source>Screen</source>
+      <translation>Képernyő</translation>
+    </message>
+    <message>
+      <source>Software Filters</source>
+      <translation>Szoftveres szűrők</translation>
+    </message>
+    <message>
+      <source>Shader</source>
+      <translation>Shader</translation>
+    </message>
+    <message>
+      <source>Shader File</source>
+      <translation>Shaderfájl</translation>
+    </message>
+    <message>
+      <source>Filter</source>
+      <translation>Szűrő</translation>
+    </message>
+    <message>
+      <source>GPU Shaders</source>
+      <translation>GPU Shaderek</translation>
+    </message>
+    <message>
+      <source>Palette Selection</source>
+      <translation>Palettakiválasztás</translation>
+    </message>
+    <message>
+      <source>Palette File</source>
+      <translation>Palettafájl</translation>
     </message>
   </context>
   <context>
