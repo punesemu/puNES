@@ -1193,11 +1193,11 @@
     <name>wdgRotateScreen</name>
     <message>
       <source>Rotate the screen 90 degrees to the Right</source>
-      <translation>Повернуть экран на 90 градусов вправо</translation>
+      <translation>Повернуть экран на 90 градусов по часовой стрелке</translation>
     </message>
     <message>
       <source>Rotate the screen 90 degrees to the left</source>
-      <translation>Повернуть экран на 90 градусов влево</translation>
+      <translation>Повернуть экран на 90 градусов против часовой стрелки</translation>
     </message>
     <message>
       <source>Current degree of rotation</source>
@@ -1205,7 +1205,7 @@
     </message>
     <message>
       <source>Rotate Screen :</source>
-      <translation>Поворот Экрана :</translation>
+      <translation>Поворот экрана :</translation>
     </message>
   </context>
   <context>
@@ -1228,11 +1228,11 @@
     </message>
     <message>
       <source>Stereo Delay</source>
-      <translation>Задержка стерео</translation>
+      <translation>Стерео (Задержка)</translation>
     </message>
     <message>
       <source>Stereo Panning</source>
-      <translation>Панорамирование стерео</translation>
+      <translation>Стерео (Панорамирование)</translation>
     </message>
     <message>
       <source>Channels Delay</source>
@@ -1698,7 +1698,7 @@
     <message>
       <source>Windows Media Video (*.wmv)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>Windows Media (*.wmv)</translation>
+      <translation>Windows Media Video (*.wmv)</translation>
     </message>
     <message>
       <source>AVI FF Video (*.avi)</source>
@@ -2228,7 +2228,7 @@
     </message>
     <message>
       <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
-      <translation>Отключить обмен Красного и Зеленого для PAL/Dendy</translation>
+      <translation>Убрать переключение Красного и Зеленого оттенков для PAL/Dendy</translation>
     </message>
     <message>
       <source>Use integer scaling in fullscreen</source>
@@ -2272,7 +2272,7 @@
     </message>
     <message>
       <source>Horizontal Flip and Rotation</source>
-      <translation>Горизонтальное отражение и Вращение</translation>
+      <translation>Вращение и горизонтальное отражение</translation>
     </message>
     <message>
       <source>Screen</source>
@@ -2323,7 +2323,7 @@
     </message>
     <message>
       <source>Save/Load State</source>
-      <translation>Сохранить/Загрузить Игру</translation>
+      <translation>Сохранить/Загрузить игру</translation>
     </message>
     <message>
       <source>Slot state</source>
