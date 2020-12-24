@@ -117,6 +117,7 @@ void wdgSettingsRecording::showEvent(UNUSED(QShowEvent *event)) {
 
 void wdgSettingsRecording::retranslateUi(QWidget *wdgSettingsRecording) {
 	Ui::wdgSettingsRecording::retranslateUi(wdgSettingsRecording);
+	output_format_init();
 	update_widget();
 }
 void wdgSettingsRecording::update_widget(void) {

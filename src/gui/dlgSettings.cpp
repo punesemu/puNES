@@ -36,8 +36,6 @@ dlgSettings::dlgSettings(QWidget *parent) : QDialog(parent) {
 	tabWidget_Settings->removeTab(6);
 #endif
 
-	adjustSize();
-
 	installEventFilter(this);
 }
 dlgSettings::~dlgSettings() {}
