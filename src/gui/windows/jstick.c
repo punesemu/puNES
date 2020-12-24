@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -1195,7 +1195,7 @@ static void js_close(_jstick_device *jdev) {
 			free(jdev->axis_info);
 			jdev->axis_info = NULL;
 		}
-		if(jdev->button_offsets) {
+		if (jdev->button_offsets) {
 			free(jdev->button_offsets);
 			jdev->button_offsets = NULL;
 		}

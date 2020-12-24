@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>122</width>
+    <width>128</width>
     <height>45</height>
    </rect>
   </property>
@@ -26,21 +26,20 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="1" column="2">
-    <widget class="QPushButton" name="pushButton_right">
-     <property name="toolTip">
-      <string>Rotate the screen 90 degrees to the Right</string>
+   <item row="2" column="0" colspan="2">
+    <widget class="QLabel" name="label_title">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
      </property>
      <property name="text">
-      <string notr="true"/>
+      <string>Rotate Screen :</string>
      </property>
-     <property name="icon">
-      <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rotate_right.svg</normaloff>:/icon/icons/rotate_right.svg</iconset>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="3" column="0">
     <widget class="QPushButton" name="pushButton_left">
      <property name="toolTip">
       <string>Rotate the screen 90 degrees to the left</string>
@@ -54,7 +53,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="2" column="2">
     <widget class="QLabel" name="label_desc">
      <property name="toolTip">
       <string>Current degree of rotation</string>
@@ -67,21 +66,42 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="3">
-    <widget class="QLabel" name="label_title">
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
+   <item row="3" column="1">
+    <widget class="QPushButton" name="pushButton_right">
+     <property name="toolTip">
+      <string>Rotate the screen 90 degrees to the Right</string>
      </property>
      <property name="text">
-      <string>Rotate Screen</string>
+      <string notr="true"/>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/icon/icons/rotate_right.svg</normaloff>:/icon/icons/rotate_right.svg</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QPushButton" name="pushButton_flip">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/icon/icons/switch_sides.svg</normaloff>:/icon/icons/switch_sides.svg</iconset>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>pushButton_left</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

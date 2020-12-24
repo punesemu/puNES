@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@
 	map_prg_rom_8k_update();\
 }
 #define m116_A_update_prg()\
-	switch(m116.mode & 0x03) {\
+	switch (m116.mode & 0x03) {\
 		case 0:\
 			m116_A_update_prg_mode0()\
 			break;\
@@ -132,7 +132,7 @@
 			m116.mode2.reg[1] | 0x01);\
 }
 #define m116_A_update_chr()\
-	switch(m116.mode & 0x03) {\
+	switch (m116.mode & 0x03) {\
 		case 0:\
 			m116_A_update_chr_mode0()\
 			break;\
@@ -172,7 +172,7 @@
 			break;\
 	}
 #define m116_A_update_mirroring()\
-	switch(m116.mode & 0x03) {\
+	switch (m116.mode & 0x03) {\
 		case 0:\
 			m116_A_update_mirroring_mode0()\
 			break;\

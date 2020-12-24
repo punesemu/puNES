@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ BYTE extcl_cpu_rd_mem_UNIF43272(WORD address, BYTE openbus, UNUSED(BYTE before))
 	}
 	if (unif43272.address & 0x0400) {
 		address &= 0x00FE;
-		return(prg_rom_rd(address));
+		return (prg_rom_rd(address));
 	}
 	return (openbus);
 }

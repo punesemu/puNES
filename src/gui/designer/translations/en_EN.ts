@@ -9,6 +9,17 @@
     </message>
 </context>
 <context>
+    <name>dlgCmdLineHelp</name>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Command Line Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>dlgSettings</name>
     <message>
         <source>Settings</source>
@@ -72,6 +83,10 @@
     </message>
     <message>
         <source>Rewind Fast Backward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -603,10 +618,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Start/Stop &amp;WAV recording</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Stop &amp;WAV recording</source>
         <translation type="unfinished"></translation>
     </message>
@@ -668,6 +679,34 @@
     </message>
     <message>
         <source>Widgets</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start &amp;AUDIO recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start &amp;VIDEO recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop &amp;AUDIO recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop &amp;VIDEO recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start/Stop &amp;AUDIO recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start/Stop &amp;VIDEO recording</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -830,6 +869,17 @@
     </message>
 </context>
 <context>
+    <name>recStatusBar</name>
+    <message>
+        <source>Audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>wdgAPUChannels</name>
     <message>
         <source>APU Channels</source>
@@ -892,10 +942,6 @@
     </message>
     <message>
         <source>Cheats List</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Active</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1082,6 +1128,37 @@
     </message>
 </context>
 <context>
+    <name>wdgRecGetSaveFileName</name>
+    <message>
+        <source>Record AUDIO on file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output Quality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Medium</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>High</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Record VIDEO on file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not supported</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>wdgRewind</name>
     <message>
         <source>Forward (single frame)</source>
@@ -1127,7 +1204,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Rotate Screen</source>
+        <source>Rotate Screen :</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1135,62 +1212,6 @@
     <name>wdgSettingsAudio</name>
     <message>
         <source>Output Devices</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>48000</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>44100</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>22050</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>11025</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>1 (Default)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>5</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>6</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>7</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>8</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>9</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1230,86 +1251,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>5%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>10%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>15%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>20%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>25%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>30% (Default)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>35%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>40%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>45%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>50%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>55%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>60%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>65%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>70%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>75%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>80%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>85%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>90%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>95%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>100%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>APU Channels</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1319,6 +1260,26 @@
     </message>
     <message>
         <source>Enable Audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reverse bits of DPCM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>48.0 kHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>44.1 kHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>22.05 kHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>11.025 kHz</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1365,10 +1326,6 @@
     </message>
     <message>
         <source>General Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2x (Default)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1460,30 +1417,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2 minutes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>5 minutes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>15 minutes (Default)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>30 minutes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unlimited</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Spanish</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1492,15 +1425,43 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>60 minutes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Turkish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Portuguese (Brazil)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>15</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>30</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>60</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlim.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2x</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1539,10 +1500,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Start/Stop WAV</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No usable device</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1560,10 +1517,6 @@
     </message>
     <message>
         <source>Input Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Setup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1646,6 +1599,22 @@
         <source>Unset all</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Start/Stop AUDIO recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start/Stop VIDEO recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start/Stop WAV recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Standard Pads on Port3 and Port4</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>wdgSettingsPPU</name>
@@ -1691,6 +1660,215 @@
     </message>
     <message>
         <source>Hide Background</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>wdgSettingsRecording</name>
+    <message>
+        <source>MPEG 1 Video (*.mpg *.mpeg)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MPEG 2 Video (*.mpg *.mpeg)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MPEG 4 Video (*.mp4)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MPEG H264 Video (*.mp4)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>High Efficiency Video Codec (*.mkv)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WebM Video (*.webm)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows Media Video (*.wmv)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AVI FF Video (*.avi)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AVI Video (*.avi)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WAV Audio (*.wav)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MP3 Audio (*.mp3)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AAC Audio (*.aac)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flac Audio (*.flac)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ogg Audio (*.ogg)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not supported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output Video Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output Quality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output Audio Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output Resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>256 x 240  (1:1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>292 x 240  (8:7 NTSC TV)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>320 x 240  (5:4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>354 x 240  (11:8 PAL TV)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>512 x 480  (1:1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>584 x 480  (8:7 NTSC TV)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>640 x 480  (5:4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>708 x 480  (11:8 PAL TV)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>768 x 720  (1:1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>876 x 720  (8:7 NTSC TV)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>960 x 720  (5:4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1064 x 720  (11:8 PAL TV)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1024 x 960  (1:1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1170 x 960  (8:7 NTSC TV)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1280 x 960  (5:4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1418 x 960  (11:8 PAL TV)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1280 x 720</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1920 x 1080</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use the emulator resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Follow screen rotation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Medium</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>High</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio recording settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video recording settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recording Settings</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1765,10 +1943,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>** To apply this change restart is needed **</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1806,10 +1980,6 @@
     </message>
     <message>
         <source>Default Value</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Overscan borders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1949,14 +2119,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Shaders</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Load from a file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Shader Parameters</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2073,10 +2235,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Screen rotation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>0 degrees</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2093,7 +2251,59 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Also rotate the text on screen</source>
+        <source>Raw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Horizontal flip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flip/Rotate the controller input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flip/Rotate the text on screen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Per-Game Overscan Setting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Horizontal Flip and Rotation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Software Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shader</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shader File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPU Shaders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Palette Selection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Palette File</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

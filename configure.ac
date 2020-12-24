@@ -34,6 +34,11 @@ AC_ARG_WITH([opengl-nvidia-cg],
 		[Build with support for Nvidia CG Toolkit for OpenGL (only linux) @<:@default: yes@:>@)]
 	),
 	[with_opengl_nvidia_cg=$withval], [with_opengl_nvidia_cg=yes])
+AC_ARG_WITH([ffmpeg],
+	AS_HELP_STRING([--with-ffmpeg],
+		[Build with support for FFmpeg [autodetect] @<:@default: yes@:>@]
+	),
+	[with_ffmpeg=$enableval], [with_ffmpeg=yes])
 
 AC_ARG_ENABLE([release],
 	AS_HELP_STRING([--disable-release],
@@ -143,6 +148,7 @@ AM_CONDITIONAL(ENAB_RELEASE,[test "x$enable_release" = xyes])
 AM_CONDITIONAL(WITH_D3D9,[test "x$with_d3d9" = xyes])
 AM_CONDITIONAL(WITH_OPENGL,[test "x$with_opengl" = xyes])
 AM_CONDITIONAL(WITH_OPENGL_CG,[test "x$with_opengl_nvidia_cg" = xyes])
+AM_CONDITIONAL(WITH_FFMPEG,[test "x$with_ffmpeg" = xyes])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
@@ -449,6 +455,29 @@ void blah(){
 		AC_MSG_ERROR([libsdnio.so not found])
 	])
 ])
+
+# ffmpeg
+AM_COND_IF([WITH_FFMPEG], [
+	AM_COND_IF([WINDOWS], [
+		AS_CASE(["$host_cpu"],
+			[i?86], [
+				PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:${TOP_SRCDIR}/src/extra/windows/ffmpeg/lib/pkgconfig"
+			],
+			[x86_64], [
+				PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:${TOP_SRCDIR}/src/extra/windows/ffmpeg/lib.x64/pkgconfig"
+			],
+		)
+	])
+	PKG_CHECK_MODULES(ffmpeg, [libavcodec >= 58.18.100 libavutil >= 56.14.100 libavformat >= 58.12.100 libswscale >= 5.1.100 libswresample >= 3.1.100], [
+		CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_FFMPEG"
+		my_CPPFLAGS="${my_CPPFLAGS} ${ffmpeg_CFLAGS}"
+		my_LIBS="${my_LIBS} ${ffmpeg_LIBS}"
+	], [
+		with_ffmpeg=no
+	])
+])
+AM_CONDITIONAL(WITH_FFMPEG,[test "x$with_ffmpeg" = xyes])
+AC_SUBST([WITH_FFMPEG])
 
 # BSD gamepads
 AS_CASE(["$host_os"],

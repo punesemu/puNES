@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -55,6 +55,7 @@ extern void (*tas_header)(uTCHAR *file);
 extern void (*tas_read)(void);
 extern void (*tas_frame)(void);
 extern void (*tas_rewind)(int32_t frames_to_rewind);
+extern void (*tas_restart_from_begin)(void);
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -69,6 +70,7 @@ EXTERNC void tas_header_FM2(uTCHAR *file);
 EXTERNC void tas_read_FM2(void);
 EXTERNC void tas_frame_FM2(void);
 EXTERNC void tas_rewind_FM2(int32_t frames_to_rewind);
+EXTERNC void tas_restart_from_begin_FM2(void);
 
 #undef EXTERNC
 

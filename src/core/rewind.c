@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -299,8 +299,6 @@ void rewind_init_operation(void) {
 	gfx_thread_pause();
 	ppu_draw_screen_pause();
 
-	snd_playback_stop();
-
 	rwint.snap_cursor = rwint.count.snaps;
 
 	rwnd.active = TRUE;
@@ -324,8 +322,6 @@ void rewind_close_operation(void) {
 	rwnd.active = FALSE;
 	emu_ctrl_doublebuffer();
 	gui_update();
-
-	snd_playback_start();
 
 	ppu_draw_screen_continue();
 	gfx_thread_continue();
@@ -367,7 +363,7 @@ int32_t rewind_calculate_snap_cursor(int factor, BYTE direction) {
 }
 
 INLINE static BYTE rewind_is_disabled(void) {
-	return((info.no_rom | info.turn_off) || (cfg->rewind_minutes == RWND_0_MINUTES));
+	return ((info.no_rom | info.turn_off) || (cfg->rewind_minutes == RWND_0_MINUTES));
 }
 INLINE static void rewind_increment_count_chunks(void) {
 	if (++rwint.index.chunk == rwint.chunks_for_segment) {

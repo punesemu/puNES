@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -209,7 +209,7 @@ BYTE ines_load_rom(void) {
 		} else {
 			vs_system.enabled = TRUE;
 
-			switch(vs_system.ppu) {
+			switch (vs_system.ppu) {
 				case RP2C03B:
 				case RP2C03G:
 				case RP2C04:
@@ -244,7 +244,7 @@ BYTE ines_load_rom(void) {
 					break;
 			}
 
-			switch(vs_system.special_mode.type) {
+			switch (vs_system.special_mode.type) {
 				case VS_SM_Normal:
 				default:
 					vs_system.special_mode.r5e0x = NULL;

@@ -83,7 +83,8 @@
     <addaction name="menu_Disk_Side"/>
     <addaction name="action_Eject_Insert_Disk"/>
     <addaction name="separator"/>
-    <addaction name="action_Start_Stop_WAV_recording"/>
+    <addaction name="action_Start_Stop_Audio_recording"/>
+    <addaction name="action_Start_Stop_Video_recording"/>
     <addaction name="separator"/>
     <addaction name="action_Fullscreen"/>
     <addaction name="action_Save_Screenshot"/>
@@ -102,6 +103,7 @@
     <addaction name="action_Input"/>
     <addaction name="action_PPU"/>
     <addaction name="action_Cheats"/>
+    <addaction name="action_Recording"/>
    </widget>
    <widget class="QMenu" name="menu_State">
     <property name="title">
@@ -529,13 +531,13 @@
     <string>&amp;Turn Off</string>
    </property>
   </action>
-  <action name="action_Start_Stop_WAV_recording">
+  <action name="action_Start_Stop_Audio_recording">
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/icon/icons/wav_start.svg</normaloff>:/icon/icons/wav_start.svg</iconset>
+     <normaloff>:/icon/icons/nsf_file.svg</normaloff>:/icon/icons/nsf_file.svg</iconset>
    </property>
    <property name="text">
-    <string>Start/Stop &amp;WAV recording</string>
+    <string>Start/Stop &amp;AUDIO recording</string>
    </property>
   </action>
   <action name="action_Apply_Patch">
@@ -608,6 +610,24 @@
    </property>
    <property name="text">
     <string>Save Unalte&amp;red NES screen</string>
+   </property>
+  </action>
+  <action name="action_Recording">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/recording.svg</normaloff>:/icon/icons/recording.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Recording</string>
+   </property>
+  </action>
+  <action name="action_Start_Stop_Video_recording">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/film.svg</normaloff>:/icon/icons/film.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Start/Stop &amp;VIDEO recording</string>
    </property>
   </action>
  </widget>

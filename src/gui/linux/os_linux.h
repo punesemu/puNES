@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -54,20 +54,13 @@ void gui_init(int *argc, char **argv) {
 
 		if (info.portable) {
 			uTCHAR path[usizeof(info.base_folder)];
-			int length = readlink("/proc/self/exe", uPTCHAR(path), usizeof(path));
+			int length = readlink("/proc/self/exe", uPTCHAR(path), usizeof(path) - 1);
 
 			if (length < 0) {
 				fprintf(stderr, "INFO: Error resolving symlink /proc/self/exe.\n");
 				info.portable = FALSE;
-			} else if (length >= (signed int) usizeof(info.base_folder)) {
-				fprintf(stderr, "INFO: Path too long. Truncated.\n");
-				info.portable = FALSE;
 			} else {
-				// I don't know why, but the string this readlink() function
-				// returns is appended with a '@'.
-				if (path[length] == '@') {
-					path[length] = 0;
-				}
+				path[length] = 0;
 				gui_utf_dirname(path, info.base_folder, usizeof(info.base_folder));
 			}
 		} else {

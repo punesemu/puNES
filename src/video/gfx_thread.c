@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -131,6 +131,9 @@ void gfx_thread_continue(void) {
 
 	if (gfx_thread.pause_calls == 0) {
 		while (gfx_thread.in_run == GT_FALSE) {
+			if (info.stop == TRUE) {
+				break;
+			}
 			gui_sleep(1);
 		}
 	}

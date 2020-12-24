@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>394</width>
+    <width>248</width>
     <height>261</height>
    </rect>
   </property>
@@ -398,9 +398,6 @@
          <bold>false</bold>
         </font>
        </property>
-       <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
-       </property>
        <property name="text">
         <string>Reset color</string>
        </property>
@@ -413,10 +410,18 @@
     </layout>
    </item>
    <item row="3" column="0" colspan="2">
-    <widget class="wdgPalettePPU" name="widget_Palette_PPU" native="true"/>
+    <widget class="wdgPalettePPU" name="widget_Palette_PPU" native="true">
+     <property name="focusPolicy">
+      <enum>Qt::TabFocus</enum>
+     </property>
+    </widget>
    </item>
    <item row="0" column="0" colspan="2">
-    <widget class="wdgPaletteWall" name="widget_Palette_Wall" native="true"/>
+    <widget class="wdgPaletteWall" name="widget_Palette_Wall" native="true">
+     <property name="focusPolicy">
+      <enum>Qt::TabFocus</enum>
+     </property>
+    </widget>
    </item>
    <item row="6" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_buttons">
@@ -446,9 +451,6 @@
        <weight>50</weight>
        <bold>false</bold>
       </font>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
      </property>
      <property name="text">
       <string>Reset palette</string>
@@ -486,6 +488,26 @@
    <header>wdgPaletteEditor.hpp</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>widget_Palette_Wall</tabstop>
+  <tabstop>pushButton_Palette_reset</tabstop>
+  <tabstop>widget_Palette_PPU</tabstop>
+  <tabstop>horizontalSlider_Red</tabstop>
+  <tabstop>spinBox_Red</tabstop>
+  <tabstop>horizontalSlider_Green</tabstop>
+  <tabstop>spinBox_Green</tabstop>
+  <tabstop>horizontalSlider_Blue</tabstop>
+  <tabstop>spinBox_Blue</tabstop>
+  <tabstop>horizontalSlider_Hue</tabstop>
+  <tabstop>spinBox_Hue</tabstop>
+  <tabstop>horizontalSlider_Sat</tabstop>
+  <tabstop>spinBox_Sat</tabstop>
+  <tabstop>horizontalSlider_Val</tabstop>
+  <tabstop>spinBox_Val</tabstop>
+  <tabstop>pushButton_Color_reset</tabstop>
+  <tabstop>lineEdit_Html_Name</tabstop>
+  <tabstop>pushButton_Palette_save</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,16 +22,19 @@
 dlgSettings::dlgSettings(QWidget *parent) : QDialog(parent) {
 	setupUi(this);
 
-	geom.setX(cfg->last_pos_settings.x);
-	geom.setY(cfg->last_pos_settings.y);
+	geom.setX(cfg->lg_settings.x);
+	geom.setY(cfg->lg_settings.y);
+	geom.setWidth(cfg->lg_settings.w);
+	geom.setHeight(cfg->lg_settings.h);
 
 	connect(pushButton_Save_Settings, SIGNAL(clicked(bool)), this, SLOT(s_save_settings(bool)));
 	connect(pushButton_Close_Settings, SIGNAL(clicked(bool)), this, SLOT(s_close_settings(bool)));
 
 	widget_Settings_Cheats->widget_Cheats_Editor->pushButton_Hide_Show_Tools->setVisible(false);
 
-	adjustSize();
-	setFixedSize(size());
+#if !defined (WITH_FFMPEG)
+	tabWidget_Settings->removeTab(6);
+#endif
 
 	installEventFilter(this);
 }
@@ -79,15 +82,16 @@ void dlgSettings::update_dialog(void) {
 	update_tab_input();
 	update_tab_ppu();
 	update_tab_cheats();
+	update_tab_recording();
 }
 void dlgSettings::change_rom(void) {
 	widget_Settings_Video->change_rom();
 }
 void dlgSettings::shcut_mode(int mode) {
-	widget_Settings_General->s_mode(mode);
+	widget_Settings_General->shcut_mode(mode);
 }
 void dlgSettings::shcut_scale(int scale) {
-	widget_Settings_Video->s_scale(scale);
+	widget_Settings_Video->shcut_scale(scale + 1);
 }
 
 void dlgSettings::update_tab_general(void) {
@@ -108,6 +112,11 @@ void dlgSettings::update_tab_cheats(void) {
 
 void dlgSettings::update_tab_audio(void) {
 	widget_Settings_Audio->update_widget();
+}
+void dlgSettings::update_tab_recording(void) {
+#if defined (WITH_FFMPEG)
+	widget_Settings_Recording->update_widget();
+#endif
 }
 
 void dlgSettings::s_save_settings(UNUSED(bool checked)) {

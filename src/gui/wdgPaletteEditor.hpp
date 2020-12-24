@@ -1,4 +1,5 @@
-/*  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+/*
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -45,13 +46,13 @@ class wdgPaletteWall : public QWidget {
 		QSize sizeHint(void) const;
 
 	private:
-		void resizeEvent(QResizeEvent *e);
-		void paintEvent(QPaintEvent *e);
-		void mousePressEvent(QMouseEvent *e);
-		void mouseReleaseEvent(QMouseEvent *e);
-		void keyPressEvent(QKeyEvent *e);
-		void focusInEvent(QFocusEvent *e);
-		void focusOutEvent(QFocusEvent *e);
+		void resizeEvent(QResizeEvent *event);
+		void paintEvent(QPaintEvent *event);
+		void mousePressEvent(QMouseEvent *event);
+		void mouseReleaseEvent(QMouseEvent *event);
+		void keyPressEvent(QKeyEvent *event);
+		void focusInEvent(QFocusEvent *event);
+		void focusOutEvent(QFocusEvent *event);
 
 	public:
 		int count(void);
@@ -101,7 +102,7 @@ class wdgColorToChange : public wdgPaletteWall {
 		~wdgColorToChange();
 
 	private:
-		void resizeEvent(QResizeEvent *e);
+		void resizeEvent(QResizeEvent *event);
 
 	public:
 		int palette_index(int row, int col);
@@ -118,7 +119,7 @@ class wdgHtmlName : public QLineEdit {
 		void focus_out(void);
 
 	private:
-		void focusOutEvent(QFocusEvent *e);
+		void focusOutEvent(QFocusEvent *event);
 };
 
 #include "wdgPaletteEditor.hh"
@@ -134,10 +135,8 @@ class wdgPaletteEditor : public QWidget, public Ui::wdgPaletteEditor {
 		void palette_changed(void);
 
 	private:
-		void set_slider(QSlider *slider, int value);
-		void set_spin(QSpinBox *spin, int value);
 		void set_sliders_spins_lineedit(void);
-		void set_internal_color(int index, QColor qrgb);
+		void set_internal_color(int index, QColor qrgb, bool update_palette);
 
 	private slots:
 		void s_first_paint(void);

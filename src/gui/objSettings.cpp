@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -711,7 +711,9 @@ void objSet::to_cfg(QString group) {
 		int_to_val(SET_FULLSCREEN_IN_WINDOW, cfg_from_file.fullscreen_in_window);
 		int_to_val(SET_INTEGER_FULLSCREEN, cfg_from_file.integer_scaling);
 		int_to_val(SET_STRETCH_FULLSCREEN, cfg_from_file.stretch);
+		int_to_val(SET_HORIZONTAL_FLIP_SCREEN, cfg_from_file.hflip_screen);
 		int_to_val(SET_SCREEN_ROTATION, cfg_from_file.screen_rotation);
+		int_to_val(SET_INPUT_ROTATION, cfg_from_file.input_rotation);
 		int_to_val(SET_TEXT_ROTATION, cfg_from_file.text_rotation);
 	}
 
@@ -721,6 +723,7 @@ void objSet::to_cfg(QString group) {
 		int_to_val(SET_SAMPLERATE, cfg_from_file.samplerate);
 		int_to_val(SET_CHANNELS, cfg_from_file.channels_mode);
 		double_to_val(SET_STEREO_DELAY, cfg_from_file.stereo_delay);
+		int_to_val(SET_REVERSE_BITS_DPCM, cfg_from_file.reverse_bits_dpcm);
 		int_to_val(SET_SWAP_DUTY, cfg_from_file.swap_duty);
 		int_to_val(SET_AUDIO, cfg_from_file.apu.channel[APU_MASTER]);
 	}
@@ -728,8 +731,8 @@ void objSet::to_cfg(QString group) {
 	if ((group == "GUI") || (group == "all")) {
 		cpy_utchar_to_val(SET_GUI_OPEN_PATH, gui.last_open_path);
 		cpy_utchar_to_val(SET_GUI_OPEN_PATCH_PATH, gui.last_open_patch_path);
-		val.replace(SET_GUI_LAST_POSITION, lastpos_val(&cfg_from_file.last_pos));
-		val.replace(SET_GUI_LAST_POSITION_SETTINGS, lastpos_val(&cfg_from_file.last_pos_settings));
+		val.replace(SET_GUI_LAST_POSITION, last_geometry_val(&cfg_from_file.lg));
+		val.replace(SET_GUI_LAST_GEOMETRY_SETTINGS, last_geometry_val(&cfg_from_file.lg_settings));
 		int_to_val(SET_GUI_LANGUAGE, cfg_from_file.language);
 		int_to_val(SET_GUI_TOOLBAR_AREA, cfg_from_file.toolbar.area);
 		int_to_val(SET_GUI_TOOLBAR_HIDDEN, cfg_from_file.toolbar.hidden);
@@ -755,6 +758,21 @@ void objSet::to_cfg(QString group) {
 		int_to_val(SET_NSF_PLAYER_EFFECT, cfg_from_file.nsf_player_effect);
 		int_to_val(SET_NSF_PLAYER_NSFE_PLAYLIST, cfg_from_file.nsf_player_nsfe_playlist);
 		int_to_val(SET_NSF_PLAYER_NSFE_FADEOUT, cfg_from_file.nsf_player_nsfe_fadeout);
+	}
+
+	if ((group == "recording") || (group == "all")) {
+#if defined (WITH_FFMPEG)
+		int_to_val(SET_REC_AUDIO_FORMAT, cfg_from_file.recording.audio_format);
+		int_to_val(SET_REC_VIDEO_FORMAT, cfg_from_file.recording.video_format);
+		int_to_val(SET_REC_QUALITY, cfg_from_file.recording.quality);
+		int_to_val(SET_REC_OUTPUT_RESOLUTION, cfg_from_file.recording.output_resolution);
+		int_to_val(SET_REC_OUTPUT_CUSTOM_WIDTH, cfg_from_file.recording.output_custom_w);
+		int_to_val(SET_REC_OUTPUT_CUSTOM_HEIGHT, cfg_from_file.recording.output_custom_h);
+		int_to_val(SET_REC_USE_EMU_RESOLUTION, cfg_from_file.recording.use_emu_resolution);
+		int_to_val(SET_REC_FOLLOW_ROTATION, cfg_from_file.recording.follow_rotation);
+		cpy_utchar_to_val(SET_LAST_REC_VIDEO_PATH, cfg_from_file.last_rec_video_path);
+#endif
+		cpy_utchar_to_val(SET_LAST_REC_AUDIO_PATH, cfg_from_file.last_rec_audio_path);
 	}
 }
 void objSet::fr_cfg(QString group) {
@@ -801,7 +819,9 @@ void objSet::fr_cfg(QString group) {
 		cfg_from_file.fullscreen_in_window = val_to_int(SET_FULLSCREEN_IN_WINDOW);
 		cfg_from_file.integer_scaling = val_to_int(SET_INTEGER_FULLSCREEN);
 		cfg_from_file.stretch = val_to_int(SET_STRETCH_FULLSCREEN);
+		cfg_from_file.hflip_screen = val_to_int(SET_HORIZONTAL_FLIP_SCREEN);
 		cfg_from_file.screen_rotation = val_to_int(SET_SCREEN_ROTATION);
+		cfg_from_file.input_rotation = val_to_int(SET_INPUT_ROTATION);
 		cfg_from_file.text_rotation = val_to_int(SET_TEXT_ROTATION);
 	}
 
@@ -811,6 +831,7 @@ void objSet::fr_cfg(QString group) {
 		cfg_from_file.samplerate = val_to_int(SET_SAMPLERATE);
 		cfg_from_file.channels_mode = val_to_int(SET_CHANNELS);
 		cfg_from_file.stereo_delay = val_to_double(SET_STEREO_DELAY, 5);
+		cfg_from_file.reverse_bits_dpcm = val_to_int(SET_REVERSE_BITS_DPCM);
 		cfg_from_file.swap_duty = val_to_int(SET_SWAP_DUTY);
 		cfg_from_file.apu.channel[APU_MASTER] = val_to_int(SET_AUDIO);
 	}
@@ -818,8 +839,8 @@ void objSet::fr_cfg(QString group) {
 	if ((group == "GUI") || (group == "all")) {
 		cpy_val_to_utchar(SET_GUI_OPEN_PATH, gui.last_open_path, usizeof(gui.last_open_path));
 		cpy_val_to_utchar(SET_GUI_OPEN_PATCH_PATH, gui.last_open_patch_path, usizeof(gui.last_open_patch_path));
-		lastpos_val_to_int(SET_GUI_LAST_POSITION, &cfg_from_file.last_pos);
-		lastpos_val_to_int(SET_GUI_LAST_POSITION_SETTINGS, &cfg_from_file.last_pos_settings);
+		last_geometry_val_to_int(SET_GUI_LAST_POSITION, &cfg_from_file.lg);
+		last_geometry_val_to_int(SET_GUI_LAST_GEOMETRY_SETTINGS, &cfg_from_file.lg_settings);
 		cfg_from_file.language = val_to_int(SET_GUI_LANGUAGE);
 		cfg_from_file.toolbar.area = val_to_int(SET_GUI_TOOLBAR_AREA);
 		cfg_from_file.toolbar.hidden = val_to_int(SET_GUI_TOOLBAR_HIDDEN);
@@ -845,6 +866,21 @@ void objSet::fr_cfg(QString group) {
 		cfg_from_file.nsf_player_effect = val_to_int(SET_NSF_PLAYER_EFFECT);
 		cfg_from_file.nsf_player_nsfe_playlist = val_to_int(SET_NSF_PLAYER_NSFE_PLAYLIST);
 		cfg_from_file.nsf_player_nsfe_fadeout = val_to_int(SET_NSF_PLAYER_NSFE_FADEOUT);
+	}
+
+	if ((group == "recording") || (group == "all")) {
+#if defined (WITH_FFMPEG)
+		cfg_from_file.recording.audio_format = val_to_int(SET_REC_AUDIO_FORMAT);
+		cfg_from_file.recording.video_format = val_to_int(SET_REC_VIDEO_FORMAT);
+		cfg_from_file.recording.quality = val_to_int(SET_REC_QUALITY);
+		cfg_from_file.recording.output_resolution = val_to_int(SET_REC_OUTPUT_RESOLUTION);
+		cfg_from_file.recording.output_custom_w = val_to_int(SET_REC_OUTPUT_CUSTOM_WIDTH);
+		cfg_from_file.recording.output_custom_h = val_to_int(SET_REC_OUTPUT_CUSTOM_HEIGHT);
+		cfg_from_file.recording.use_emu_resolution = val_to_int(SET_REC_USE_EMU_RESOLUTION);
+		cfg_from_file.recording.follow_rotation = val_to_int(SET_REC_FOLLOW_ROTATION);
+		cpy_val_to_utchar(SET_LAST_REC_VIDEO_PATH, cfg_from_file.last_rec_video_path, usizeof(cfg_from_file.last_rec_video_path));
+#endif
+		cpy_val_to_utchar(SET_LAST_REC_AUDIO_PATH, cfg_from_file.last_rec_audio_path, usizeof(cfg_from_file.last_rec_audio_path));
 	}
 }
 void objSet::after_the_defaults() {
@@ -981,20 +1017,26 @@ double objSet::val_to_double(int index, WORD round) {
 void objSet::double_to_val(int index, double value) {
 	val.replace(index, QString().setNum((int) (value * 100.0f)));
 }
-void objSet::lastpos_val_to_int(int index, _last_pos *last_pos) {
+void objSet::last_geometry_val_to_int(int index, _last_geometry *lg) {
 	QStringList splitted = QString(val.at(index)).split(",");
 
 	if (splitted.count() >= 1) {
-		last_pos->x = splitted.at(0).toInt();
+		lg->x = splitted.at(0).toInt();
 	}
 	if (splitted.count() >= 2) {
-		last_pos->y = splitted.at(1).toInt();
+		lg->y = splitted.at(1).toInt();
+	}
+	if (splitted.count() >= 3) {
+		lg->w = splitted.at(2).toInt();
+	}
+	if (splitted.count() >= 4) {
+		lg->h = splitted.at(3).toInt();
 	}
 
-	val.replace(index, lastpos_val(last_pos));
+	val.replace(index, last_geometry_val(lg));
 }
-QString objSet::lastpos_val(_last_pos *last_pos) {
-	return (QString("%1,").arg(last_pos->x) + QString("%1").arg(last_pos->y));
+QString objSet::last_geometry_val(_last_geometry *lg) {
+	return (QString("%1,").arg(lg->x) + QString("%1,").arg(lg->y) + QString("%1,").arg(lg->w) + QString("%1").arg(lg->h));
 }
 
 // ---------------------------------------- Per game -------------------------------------

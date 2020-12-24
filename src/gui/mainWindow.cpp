@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,11 +18,16 @@
 
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
 #include <QtWidgets/QDesktopWidget>
+#else
+#include <QtGui/QWindow>
+#endif
+#include <QtWidgets/QSpinBox>
+#include <QtGui/QScreen>
 #include <QtCore/QDateTime>
 #include <QtCore/QUrl>
 #include <QtGui/QDesktopServices>
-#include <QtGui/QScreen>
 #include <libgen.h>
 #include "mainWindow.moc"
 #include "dlgSettings.hpp"
@@ -38,7 +43,12 @@
 #include "vs_system.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
+#include "tas.h"
+#include "video/effects/tv_noise.h"
 #include "debugger.h"
+#if defined (WITH_FFMPEG)
+#include "recording.h"
+#endif
 
 #if defined (_WIN32) || defined (_WIN64)
 #if defined (_WIN64)
@@ -63,6 +73,8 @@ mainWindow::mainWindow() : QMainWindow() {
 
 	geom.setX(100);
 	geom.setY(100);
+	mgeom.setX(0);
+	mgeom.setY(0);
 
 	screen = new wdgScreen(centralwidget);
 	statusbar = new wdgStatusBar(this);
@@ -76,7 +88,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
 	setStatusBar(statusbar);
 
-	toolbar->setObjectName(QString::fromUtf8("toolbar"));
+	toolbar->setObjectName("toolbar");
 	toolbar->setWindowTitle(tr("Widgets"));
 	addToolBar(toolbar->area, toolbar);
 
@@ -145,13 +157,16 @@ mainWindow::mainWindow() : QMainWindow() {
 	connect(this, SIGNAL(et_vs_reset()), this, SLOT(s_et_vs_reset()));
 	connect(this, SIGNAL(et_external_control_windows_show()), this, SLOT(s_et_external_control_windows_show()));
 
-	ff = new QTimer(this);
-	connect(ff, SIGNAL(timeout()), this, SLOT(s_ff_draw_screen()));
+	egds = new timerEgds(this);
 
 	shcjoy_start();
 
 	connect_menu_signals();
 	shortcuts();
+
+#if !defined (WITH_FFMPEG)
+	action_Recording->setVisible(false);
+#endif
 
 	adjustSize();
 	setFixedSize(size());
@@ -232,16 +247,14 @@ void mainWindow::closeEvent(QCloseEvent *event) {
 
 	shcjoy_stop();
 
-	// in linux non posso spostare tramite le qt una finestra da un monitor
-	// ad un'altro, quindi salvo la posizione solo se sono sul monitor 0;
-	if (qApp->desktop()->screenNumber(this) == 0) {
-		if (cfg->fullscreen == NO_FULLSCR) {
-			cfg->last_pos.x = geometry().x();
-			cfg->last_pos.y = geometry().y();
-		}
-		cfg->last_pos_settings.x = dlgsettings->geom.x();
-		cfg->last_pos_settings.y = dlgsettings->geom.y();
+	if (cfg->fullscreen == NO_FULLSCR) {
+		cfg->lg.x = geometry().x();
+		cfg->lg.y = geometry().y();
 	}
+	cfg->lg_settings.x = dlgsettings->geom.x();
+	cfg->lg_settings.y = dlgsettings->geom.y();
+	cfg->lg_settings.w = dlgsettings->geom.width();
+	cfg->lg_settings.h = dlgsettings->geom.height();
 
 	settings_save_GUI();
 
@@ -266,6 +279,67 @@ void mainWindow::update_window(void) {
 
 	toolbar->update_toolbar();
 	statusbar->update_statusbar();
+}
+void mainWindow::update_recording_widgets(void) {
+#if defined (WITH_FFMPEG)
+	QIcon ia = QIcon(":/icon/icons/nsf_file.svg"), iv = QIcon(":/icon/icons/film.svg");
+	QString sa = tr("Start &AUDIO recording"), sv = tr("Start &VIDEO recording");
+	bool audio = false, video = false;
+	QString *sc;
+
+	emit statusbar->rec->et_blink_icon();
+
+	if ((info.no_rom | info.turn_off | rwnd.active) == FALSE) {
+		if (info.recording_on_air == TRUE) {
+			if (recording_format_type() == REC_FORMAT_AUDIO) {
+				audio = true;
+				video = false;
+				sa = tr("Stop &AUDIO recording");
+				ia = QIcon(":/icon/icons/wav_stop.svg");
+			} else {
+				audio = false;
+				video = true;
+				sv = tr("Stop &VIDEO recording");
+				iv = QIcon(":/icon/icons/wav_stop.svg");
+			}
+		} else {
+			audio = true;
+			video = true;
+		}
+	}
+
+	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_REC_AUDIO, KEYBOARD);
+	action_Start_Stop_Audio_recording->setEnabled(audio);
+	action_Start_Stop_Audio_recording->setText(sa + '\t' + (*sc));
+	action_Start_Stop_Audio_recording->setIcon(ia);
+
+	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_REC_VIDEO, KEYBOARD);
+	action_Start_Stop_Video_recording->setEnabled(video);
+	action_Start_Stop_Video_recording->setText(sv + '\t' + (*sc));
+	action_Start_Stop_Video_recording->setIcon(iv);
+#else
+	QIcon ia = QIcon(":/icon/icons/wav_start.svg");
+	QString sa = tr("Start &WAV recording");
+	bool audio = false;
+	QString *sc;
+
+	emit statusbar->rec->et_blink_icon();
+
+	if ((info.no_rom | info.turn_off | rwnd.active) == FALSE) {
+		audio = true;
+		if (info.recording_on_air) {
+			sa = tr("Stop &WAV recording");
+			ia = QIcon(":/icon/icons/wav_stop.svg");
+		}
+	}
+
+	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_REC_AUDIO, KEYBOARD);
+	action_Start_Stop_Audio_recording->setEnabled(audio);
+	action_Start_Stop_Audio_recording->setText(sa + '\t' + (*sc));
+	action_Start_Stop_Audio_recording->setIcon(ia);
+
+	action_Start_Stop_Video_recording->setVisible(false);
+#endif
 }
 void mainWindow::set_language(int lang) {
 	QString lng = "en", file = "en_EN", dir = ":/tr/translations";
@@ -379,7 +453,7 @@ void mainWindow::make_reset(int type) {
 
 	// nel caso il timer dell'update dello screen
 	// del fast forward sia attivo, lo fermo.
-	ff->stop();
+	egds->stop_ff();
 
 	if (emu_reset(type)) {
 		s_quit();
@@ -392,13 +466,22 @@ void mainWindow::make_reset(int type) {
 	// dopo un reset la pause e' automaticamente disabilitata quindi faccio
 	// un aggiornamento del submenu NES per avere la voce correttamente settata.
 	update_menu_nes();
+
+	// il reset manuale, quindi al di fuori del "filmato", lo fa ricominciare
+	if (type <= HARD) {
+		if (tas.type != NOTAS) {
+			tas_restart_from_begin();
+		}
+	}
 }
 void mainWindow::change_rom(const uTCHAR *rom) {
+	emu_thread_pause();
 	info.rom.from_load_menu = emu_ustrncpy(info.rom.from_load_menu, (uTCHAR *)rom);
 	gamegenie_reset();
 	gamegenie_free_paths();
 	make_reset(CHANGE_ROM);
 	gui_update();
+	emu_thread_continue();
 }
 void mainWindow::state_save_slot_set(int slot, bool on_video) {
 	if (info.no_rom | info.turn_off) {
@@ -410,7 +493,7 @@ void mainWindow::state_save_slot_set(int slot, bool on_video) {
 	}
 }
 void mainWindow::shortcuts(void) {
-	// se non voglio che gli shortcut funzionino durante il fullscreen, basta
+	// se non voglio che gli shortcuts funzionino durante il fullscreen, basta
 	// utilizzare lo shortcut associato al QAction. In questo modo quando nascondero'
 	// la barra del menu, automaticamente questi saranno disabilitati.
 
@@ -424,7 +507,10 @@ void mainWindow::shortcuts(void) {
 	connect_shortcut(action_Insert_Coin, SET_INP_SC_INSERT_COIN, SLOT(s_insert_coin()));
 	connect_shortcut(action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
 	connect_shortcut(action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
-	connect_shortcut(action_Start_Stop_WAV_recording, SET_INP_SC_WAV, SLOT(s_start_stop_wave()));
+	connect_shortcut(action_Start_Stop_Audio_recording, SET_INP_SC_REC_AUDIO, SLOT(s_start_stop_audio_recording()));
+#if defined (WITH_FFMPEG)
+	connect_shortcut(action_Start_Stop_Video_recording, SET_INP_SC_REC_VIDEO, SLOT(s_start_stop_video_recording()));
+#endif
 	connect_shortcut(action_Fullscreen, SET_INP_SC_FULLSCREEN, SLOT(s_set_fullscreen()));
 	connect_shortcut(action_Save_Screenshot, SET_INP_SC_SCREENSHOT, SLOT(s_save_screenshot()));
 	connect_shortcut(action_Save_Unaltered_NES_screen, SET_INP_SC_SCREENSHOT_1X, SLOT(s_save_screenshot_1x()));
@@ -476,15 +562,18 @@ bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) {
 	return (true);
 }
 void mainWindow::update_gfx_monitor_dimension(void) {
-	int screenNumber = qApp->desktop()->screenNumber(this);
-	QRect g;
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+	QScreen *screen = QGuiApplication::screens().at(qApp->desktop()->screenNumber(this));
+#else
+	QScreen *screen = windowHandle()->screen();
+#endif
 
 	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
 		bool toolbar_is_hidden = toolbar->isHidden() | toolbar->isFloating();
 
-		g = QGuiApplication::screens().at(screenNumber)->availableGeometry();
-		gfx.w[MONITOR] = g.width() - (frameGeometry().width() - geometry().width());
-		gfx.h[MONITOR] = g.height() - (frameGeometry().height() - geometry().height());
+		mgeom = screen->availableGeometry();
+		gfx.w[MONITOR] = mgeom.width() - (frameGeometry().width() - geometry().width());
+		gfx.h[MONITOR] = mgeom.height() - (frameGeometry().height() - geometry().height());
 
 		if (toolbar->orientation() == Qt::Vertical) {
 			gfx.w[MONITOR] -= (toolbar_is_hidden ? 0 : toolbar->sizeHint().width());
@@ -495,9 +584,9 @@ void mainWindow::update_gfx_monitor_dimension(void) {
 		gfx.h[MONITOR] -= (menubar->isHidden() ? 0 : menubar->sizeHint().height());
 		gfx.h[MONITOR] -= (statusbar->isHidden() ? 0 : statusbar->sizeHint().height());
 	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
-		g = QGuiApplication::screens().at(screenNumber)->geometry();
-		gfx.w[MONITOR] = g.width();
-		gfx.h[MONITOR] = g.height();
+		mgeom = screen->geometry();
+		gfx.w[MONITOR] = mgeom.width();
+		gfx.h[MONITOR] = mgeom.height();
 	}
 }
 
@@ -522,7 +611,10 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Disk_4_side_B, 7, SLOT(s_disk_side()));
 	connect_action(action_Switch_sides, 0xFFF, SLOT(s_disk_side()));
 	connect_action(action_Eject_Insert_Disk, SLOT(s_eject_disk()));
-	connect_action(action_Start_Stop_WAV_recording, SLOT(s_start_stop_wave()));
+	connect_action(action_Start_Stop_Audio_recording, SLOT(s_start_stop_audio_recording()));
+#if defined (WITH_FFMPEG)
+	connect_action(action_Start_Stop_Video_recording, SLOT(s_start_stop_video_recording()));
+#endif
 	connect_action(action_Fullscreen, SLOT(s_set_fullscreen()));
 	connect_action(action_Save_Screenshot, SLOT(s_save_screenshot()));
 	connect_action(action_Save_Unaltered_NES_screen, SLOT(s_save_screenshot_1x()));
@@ -537,6 +629,7 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Input, 3, SLOT(s_open_settings()));
 	connect_action(action_PPU, 4, SLOT(s_open_settings()));
 	connect_action(action_Cheats, 5, SLOT(s_open_settings()));
+	connect_action(action_Recording, 6, SLOT(s_open_settings()));
 
 	// State/[Save state, Load State]
 	connect_action(action_Save_state, SAVE, SLOT(s_state_save_slot_action()));
@@ -601,11 +694,11 @@ void mainWindow::connect_shortcut(QAction *action, int index) {
 	if (sc->isEmpty() == false) {
 		QStringList text = action->text().split('\t');
 
-		action->setShortcut(QKeySequence((QString)(*sc)));
-		if((*sc) == "NULL") {
+		action->setShortcut(QKeySequence((*sc)));
+		if ((*sc) == "NULL") {
 			action->setText(text.at(0));
 		} else {
-			action->setText(text.at(0) + '\t' + (QString)(*sc));
+			action->setText(text.at(0) + '\t' + (*sc));
 		}
 	}
 }
@@ -616,7 +709,7 @@ void mainWindow::connect_shortcut(QAction *action, int index, const char *member
 		QStringList text = action->text().split('\t');
 		QVariant value = action->property("myValue");
 
-		shortcut[index]->setKey(QKeySequence((QString)(*sc)));
+		shortcut[index]->setKey(QKeySequence((*sc)));
 		if (!value.isNull()) {
 			shortcut[index]->setProperty("myValue", value);
 		}
@@ -625,10 +718,10 @@ void mainWindow::connect_shortcut(QAction *action, int index, const char *member
 		// connetto il nuovo
 		connect(shortcut[index], SIGNAL(activated()), this, member);
 
-		if((*sc) == "NULL") {
+		if ((*sc) == "NULL") {
 			action->setText(text.at(0));
 		} else {
-			action->setText(text.at(0) + '\t' + (QString)(*sc));
+			action->setText(text.at(0) + '\t' + (*sc));
 		}
 	}
 }
@@ -681,10 +774,10 @@ void mainWindow::update_menu_nes(void) {
 	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TURN_OFF, KEYBOARD);
 
 	if (info.turn_off) {
-		action_Turn_Off->setText(tr("&Turn On") + '\t' + ((QString)*sc));
+		action_Turn_Off->setText(tr("&Turn On") + '\t' + (*sc));
 		action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_on.svg"));
 	} else {
-		action_Turn_Off->setText(tr("&Turn Off") + '\t' + ((QString)*sc));
+		action_Turn_Off->setText(tr("&Turn Off") + '\t' + (*sc));
 		action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_off.svg"));
 	}
 
@@ -712,9 +805,9 @@ void mainWindow::update_menu_nes(void) {
 
 	if (fds.info.enabled && (rwnd.active == FALSE)) {
 		if (fds.drive.disk_ejected) {
-			action_Eject_Insert_Disk->setText(tr("&Insert disk") + '\t' + ((QString)*sc));
+			action_Eject_Insert_Disk->setText(tr("&Insert disk") + '\t' + (*sc));
 		} else {
-			action_Eject_Insert_Disk->setText(tr("&Eject disk") + '\t' + ((QString)*sc));
+			action_Eject_Insert_Disk->setText(tr("&Eject disk") + '\t' + (*sc));
 		}
 
 		menu_Disk_Side->setEnabled(true);
@@ -728,27 +821,12 @@ void mainWindow::update_menu_nes(void) {
 		ctrl_disk_side(action_Disk_4_side_B);
 		action_Eject_Insert_Disk->setEnabled(true);
 	} else {
-		action_Eject_Insert_Disk->setText(tr("&Eject/Insert disk") + '\t' + ((QString)*sc));
+		action_Eject_Insert_Disk->setText(tr("&Eject/Insert disk") + '\t' + (*sc));
 		menu_Disk_Side->setEnabled(false);
 		action_Eject_Insert_Disk->setEnabled(false);
 	}
 
-	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_WAV, KEYBOARD);
-
-	if (info.no_rom | info.turn_off | rwnd.active) {
-		action_Start_Stop_WAV_recording->setEnabled(false);
-		action_Start_Stop_WAV_recording->setText(tr("Start/Stop &WAV recording") + '\t' + ((QString)*sc));
-		action_Start_Stop_WAV_recording->setIcon(QIcon(":/icon/icons/wav_start.svg"));
-	} else {
-		action_Start_Stop_WAV_recording->setEnabled(true);
-		if (info.wave_in_record) {
-			action_Start_Stop_WAV_recording->setText(tr("Stop &WAV recording") + '\t' + ((QString)*sc));
-			action_Start_Stop_WAV_recording->setIcon(QIcon(":/icon/icons/wav_stop.svg"));
-		} else {
-			action_Start_Stop_WAV_recording->setText(tr("Start &WAV recording") + '\t' + ((QString)*sc));
-			action_Start_Stop_WAV_recording->setIcon(QIcon(":/icon/icons/wav_start.svg"));
-		}
-	}
+	update_recording_widgets();
 
 	if ((info.pause_from_gui == TRUE) && (rwnd.active == FALSE)) {
 		action_Pause->setChecked(true);
@@ -844,6 +922,65 @@ int mainWindow::is_shortcut(const QKeyEvent *event) {
 	}
 
 	return (-1);
+}
+
+void mainWindow::s_set_fullscreen(void) {
+	if (gui.in_update) {
+		return;
+	}
+
+	emu_thread_pause();
+
+	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
+		gfx.scale_before_fscreen = cfg->scale;
+		geom = geometry();
+
+		if (cfg->fullscreen_in_window == TRUE) {
+			gfx.type_of_fscreen_in_use = FULLSCR_IN_WINDOW;
+
+			update_gfx_monitor_dimension();
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
+			move(mgeom.x(), mgeom.y());
+		} else {
+			gfx.type_of_fscreen_in_use = FULLSCR;
+
+			update_gfx_monitor_dimension();
+			menuWidget()->setVisible(false);
+			statusbar->setVisible(false);
+			toolbar->set_hide_without_signal(false);
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
+
+			// su alcune macchine, il fullscreen non avviene perche'
+			// la dimensione della finestra e' fissa e le qt non riescono
+			// a sbloccarla.
+			setMinimumSize(QSize(0, 0));
+			setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+
+			emit fullscreen(true);
+		}
+	} else {
+		if (gfx.type_of_fscreen_in_use == FULLSCR) {
+			emit fullscreen(false);
+
+			menuWidget()->setVisible(toggle_gui_in_window);
+			statusbar->setVisible(toggle_gui_in_window);
+			toolbar->set_hide_without_signal(toggle_gui_in_window);
+		}
+
+		setGeometry(geom);
+		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
+
+		gfx.type_of_fscreen_in_use = NO_FULLSCR;
+	}
+
+	emu_thread_continue();
+
+	gui_external_control_windows_show();
+	gui_set_focus();
+}
+void mainWindow::s_set_vs_window(void) {
+	ext_win.vs_system = !ext_win.vs_system;
+	gui_external_control_windows_show();
 }
 
 void mainWindow::s_open(void) {
@@ -980,8 +1117,11 @@ void mainWindow::s_quit(void) {
 void mainWindow::s_turn_on_off(void) {
 	info.turn_off = !info.turn_off;
 
-	if (!info.turn_off) {
+	if (info.turn_off) {
+		egds->start_turn_off();
+	} else {
 		make_reset(HARD);
+		egds->stop_turn_off();
 	}
 
 	emu_ctrl_doublebuffer();
@@ -1039,10 +1179,37 @@ void mainWindow::s_eject_disk(void) {
 	emu_thread_continue();
 	update_menu_nes();
 }
-void mainWindow::s_start_stop_wave(void) {
-	if (info.wave_in_record == FALSE) {
-		QStringList filters;
+void mainWindow::s_start_stop_audio_recording(void) {
+	if (info.no_rom) {
+		return;
+	}
+
+#if defined (WITH_FFMPEG)
+	if (info.recording_on_air == FALSE) {
+		wdgRecGetSaveFileName *fd = new wdgRecGetSaveFileName(this);
 		QString file;
+
+		emu_pause(TRUE);
+
+		file = fd->audio_get_save_file_name();
+
+		if (file.isNull() == false) {
+			QFileInfo fileinfo = QFileInfo(file);
+
+			umemset(cfg->last_rec_audio_path, 0x00, usizeof(cfg->last_rec_audio_path));
+			ustrncpy(cfg->last_rec_audio_path, uQStringCD(fileinfo.absolutePath()), usizeof(cfg->last_rec_audio_path) - 1);
+			recording_start(uQStringCD(file), cfg->recording.audio_format);
+		}
+
+		emu_pause(FALSE);
+	} else if (recording_format_type() == REC_FORMAT_AUDIO) {
+		recording_finish(FALSE);
+	}
+#else
+	if (info.recording_on_air == FALSE) {
+		QStringList filters;
+		QString file, dir;
+		QFileInfo rom = QFileInfo(uQString(info.rom.file));
 
 		emu_pause(TRUE);
 
@@ -1052,9 +1219,14 @@ void mainWindow::s_start_stop_wave(void) {
 		filters[0].append(" (*.wav *.WAV)");
 		filters[1].append(" (*.*)");
 
+		if (ustrlen(cfg->last_rec_audio_path) == 0) {
+			dir = rom.dir().absolutePath();
+		} else {
+			dir = uQString(cfg->last_rec_audio_path);
+		}
+
 		file = QFileDialog::getSaveFileName(this, tr("Record sound"),
-			QFileInfo(uQString(info.rom.file)).completeBaseName(),
-			filters.join(";;"));
+			dir + "/" + rom.completeBaseName(), filters.join(";;"));
 
 		if (file.isNull() == false) {
 			QFileInfo fileinfo(file);
@@ -1063,6 +1235,8 @@ void mainWindow::s_start_stop_wave(void) {
 				fileinfo.setFile(QString(file) + ".wav");
 			}
 
+			umemset(cfg->last_rec_audio_path, 0x00, usizeof(cfg->last_rec_audio_path));
+			ustrncpy(cfg->last_rec_audio_path, uQStringCD(fileinfo.absolutePath()), usizeof(cfg->last_rec_audio_path) - 1);
 			wave_open(uQStringCD(fileinfo.absoluteFilePath()), snd.samplerate * 5);
 		}
 
@@ -1071,68 +1245,41 @@ void mainWindow::s_start_stop_wave(void) {
 		wave_close();
 	}
 	update_menu_nes();
+#endif
 }
-void mainWindow::s_set_fullscreen(void) {
-	if (gui.in_update) {
+#if defined (WITH_FFMPEG)
+void mainWindow::s_start_stop_video_recording(void) {
+	if (info.no_rom) {
 		return;
 	}
 
-	emu_thread_pause();
+	if (info.recording_on_air == FALSE) {
+		wdgRecGetSaveFileName *fd = new wdgRecGetSaveFileName(this);
+		QString file;
 
-	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
-		gfx.scale_before_fscreen = cfg->scale;
-		geom = geometry();
+		emu_pause(TRUE);
 
-		if (cfg->fullscreen_in_window == TRUE) {
-			gfx.type_of_fscreen_in_use = FULLSCR_IN_WINDOW;
+		file = fd->video_get_save_file_name();
 
-			update_gfx_monitor_dimension();
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
-			move(QPoint(0, 0));
-		} else {
-			gfx.type_of_fscreen_in_use = FULLSCR;
+		if (file.isNull() == false) {
+			QFileInfo fileinfo = QFileInfo(file);
 
-			update_gfx_monitor_dimension();
-			menuWidget()->setVisible(false);
-			statusbar->setVisible(false);
-			toolbar->set_hide_without_signal(false);
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
-
-			// su alcune macchine, il fullscreen non avviene perche'
-			// la dimensione della finestra e' fissa e le qt non riescono
-			// a sbloccarla.
-			setMinimumSize(QSize(0, 0));
-			setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-
-			emit fullscreen(true);
-		}
-	} else {
-		if (gfx.type_of_fscreen_in_use == FULLSCR) {
-			emit fullscreen(false);
-
-			menuWidget()->setVisible(toggle_gui_in_window);
-			statusbar->setVisible(toggle_gui_in_window);
-			toolbar->set_hide_without_signal(toggle_gui_in_window);
+			umemset(cfg->last_rec_video_path, 0x00, usizeof(cfg->last_rec_video_path));
+			ustrncpy(cfg->last_rec_video_path, uQStringCD(fileinfo.absolutePath()), usizeof(cfg->last_rec_video_path) - 1);
+			recording_start(uQStringCD(file), cfg->recording.video_format);
 		}
 
-		setGeometry(geom);
-		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
-
-		gfx.type_of_fscreen_in_use = NO_FULLSCR;
+		emu_pause(FALSE);
+	} else if (recording_format_type() == REC_FORMAT_VIDEO) {
+		recording_finish(FALSE);
 	}
-
-	emu_thread_continue();
-
-	gui_external_control_windows_show();
-	gui_set_focus();
 }
+#endif
 void mainWindow::s_save_screenshot(void) {
-	gfx.screenshot.save = TRUE;
-	gfx.screenshot.type = SCRSH_STANDARD;
+	info.screenshot = SCRSH_STANDARD;
 }
 void mainWindow::s_save_screenshot_1x(void) {
-	gfx.screenshot.save = TRUE;
-	gfx.screenshot.type = SCRSH_ORIGINAL_SIZE;
+	info.screenshot = SCRSH_ORIGINAL_SIZE;
 }
 void mainWindow::s_pause(void) {
 	emu_thread_pause();
@@ -1145,11 +1292,11 @@ void mainWindow::s_fast_forward(void) {
 	if (nsf.enabled == FALSE) {
 		emu_thread_pause();
 		if (fps.fast_forward == FALSE) {
-			ff->start(1000.0f / (double)machine.fps);
+			egds->start_ff();
 			fps_fast_forward();
 		} else {
-			ff->stop();
 			fps_normalize();
+			egds->stop_ff();
 		}
 		emu_thread_continue();
 		update_menu_nes();
@@ -1300,10 +1447,6 @@ void mainWindow::s_state_load_file(void) {
 
 	emu_thread_continue();
 }
-void mainWindow::s_set_vs_window(void) {
-	ext_win.vs_system = !ext_win.vs_system;
-	gui_external_control_windows_show();
-}
 void mainWindow::s_help(void) {
 	QDateTime compiled = QDateTime::fromString(COMPILED, "MMddyyyyhhmmss");
 	QMessageBox *about = new QMessageBox(this);
@@ -1316,8 +1459,8 @@ void mainWindow::s_help(void) {
 
 	about->setWindowModality(Qt::WindowModal);
 
-	about->setWindowIcon(QIcon(QString::fromUtf8(":/icon/icons/application.png")));
-	about->setIconPixmap(QPixmap(QString::fromUtf8(":/pics/pics/pushpin.png")));
+	about->setWindowIcon(QIcon(":/icon/icons/application.png"));
+	about->setIconPixmap(QPixmap(":/pics/pics/pushpin.png"));
 
 	text.append("<center><h2>" + QString(NAME) + " ");
 	if (info.portable) {
@@ -1357,24 +1500,6 @@ void mainWindow::s_help(void) {
 	emu_pause(FALSE);
 }
 
-void mainWindow::s_ff_draw_screen(void) {
-	if (info.no_rom | info.turn_off | info.pause | rwnd.active) {
-		return;
-	}
-
-	switch (debugger.mode) {
-		case DBG_STEP:
-		case DBG_BREAKPOINT:
-			return;
-		case DBG_GO:
-			if (debugger.breakframe == TRUE) {
-				return;
-			}
-			break;
-	}
-
-	gfx_draw_screen();
-}
 void mainWindow::s_fullscreen(bool state) {
 	if (state == true) {
 		showFullScreen();
@@ -1418,9 +1543,14 @@ void mainWindow::s_shcjoy_read_timer(void) {
 						case SET_INP_SC_EJECT_DISK:
 							action_Eject_Insert_Disk->trigger();
 							break;
-						case SET_INP_SC_WAV:
-							action_Start_Stop_WAV_recording->trigger();
+						case SET_INP_SC_REC_AUDIO:
+							action_Start_Stop_Audio_recording->trigger();
 							break;
+#if defined (WITH_FFMPEG)
+						case SET_INP_SC_REC_VIDEO:
+							action_Start_Stop_Video_recording->trigger();
+							break;
+#endif
 						case SET_INP_SC_FULLSCREEN:
 							action_Fullscreen->trigger();
 							break;
@@ -1561,7 +1691,7 @@ void mainWindow::s_shcut_rwnd_step_backward(void) {
 	if (rwnd.active == FALSE) {
 		return;
 	}
-	if (toolbar->rewind->step_timer_control()) {
+	if (toolbar->rewind->step_autorepeat_timer_control()) {
 		toolbar->rewind->toolButton_Step_Backward->click();
 	}
 }
@@ -1569,7 +1699,7 @@ void mainWindow::s_shcut_rwnd_step_forward(void) {
 	if (rwnd.active == FALSE) {
 		return;
 	}
-	if (toolbar->rewind->step_timer_control()) {
+	if (toolbar->rewind->step_autorepeat_timer_control()) {
 		toolbar->rewind->toolButton_Step_Forward->click();
 	}
 }
@@ -1608,4 +1738,148 @@ void mainWindow::s_et_vs_reset(void) {
 }
 void mainWindow::s_et_external_control_windows_show(void) {
 	gui_external_control_windows_show();
+}
+
+// ----------------------------------------------------------------------------------------------
+
+timerEgds::timerEgds(QObject *parent) : QTimer(parent) {
+	int i;
+
+	for (i = 0 ; i < EGDS_TOTALS; i++) {
+		calls[i].count = 0;
+	}
+
+	connect(this, SIGNAL(timeout()), this, SLOT(s_draw_screen()));
+}
+timerEgds::~timerEgds() {}
+
+void timerEgds::set_fps(void) {
+	if (isActive() == true) {
+		stop();
+	}
+	setInterval(1000.0f / (double)machine.fps);
+}
+void timerEgds::stop_unnecessary(void) {
+	_etc(EGDS_TURN_OFF);
+	stop_turn_off();
+}
+void timerEgds::start_pause(void) {
+	_start_with_emu_thread_pause(EGDS_PAUSE);
+}
+void timerEgds::stop_pause(void) {
+	_stop_with_emu_thread_continue(EGDS_PAUSE, FALSE | rwnd.active | fps.fast_forward | info.turn_off);
+}
+void timerEgds::start_rwnd(void) {
+	_start();
+}
+void timerEgds::stop_rwnd(void) {
+	_stop((!!info.pause) | FALSE | fps.fast_forward | info.turn_off);
+}
+void timerEgds::start_ff(void) {
+	_start();
+}
+void timerEgds::stop_ff(void) {
+	_stop((!!info.pause) | rwnd.active | FALSE | info.turn_off);
+}
+void timerEgds::start_turn_off(void) {
+	_start_with_emu_thread_pause(EGDS_TURN_OFF);
+}
+void timerEgds::stop_turn_off(void) {
+	_stop_with_emu_thread_continue(EGDS_TURN_OFF, (!!info.pause) | rwnd.active |fps.fast_forward | FALSE);
+}
+
+void timerEgds::_start(void) {
+	if (isActive() == false) {
+		start();
+	}
+}
+void timerEgds::_start_with_emu_thread_pause(enum with_emu_pause type) {
+	calls[type].count++;
+	emu_thread_pause();
+	_start();
+}
+void timerEgds::_stop(BYTE is_necessary) {
+	if (is_necessary) {
+		return;
+	}
+	stop();
+}
+void timerEgds::_stop_with_emu_thread_continue(enum with_emu_pause type, BYTE is_necessary) {
+	calls[type].count--;
+	emu_thread_continue();
+	_stop(is_necessary);
+}
+void timerEgds::_etc(enum with_emu_pause type) {
+	int i;
+
+	for (i = 0 ; i < calls[type].count; i++) {
+		emu_thread_continue();
+	}
+}
+
+void timerEgds::s_draw_screen(void) {
+	bool ret = false;
+
+	if (info.no_rom) {
+		return;
+	}
+
+	if (info.turn_off) {
+		ret = true;
+		tv_noise_effect();
+	} else if (info.pause) {
+		ret = true;
+	} else if (rwnd.active) {
+		ret = mainwin->toolbar->rewind->egds_rewind();
+	} else if (fps.fast_forward) {
+		ret = true;
+
+		switch (debugger.mode) {
+			case DBG_STEP:
+			case DBG_BREAKPOINT:
+				return;
+			case DBG_GO:
+				if (debugger.breakframe == TRUE) {
+					return;
+				}
+				break;
+		}
+	}
+
+	if (ret == true) {
+#if defined (WITH_FFMPEG)
+		if (info.recording_on_air == TRUE) {
+			recording_audio_silenced_frame();
+		}
+#endif
+		gfx_draw_screen();
+	}
+}
+
+// ----------------------------------------------------------------------------------------------
+
+void qtHelper::widget_set_visible(void *wdg, bool mode) {
+	((QWidget *)wdg)->blockSignals(true);
+	((QWidget *)wdg)->setVisible(mode);
+	((QWidget *)wdg)->blockSignals(false);
+}
+void qtHelper::pushbutton_set_checked(void *btn, bool mode) {
+	((QPushButton *)btn)->blockSignals(true);
+	((QPushButton *)btn)->setChecked(mode);
+	((QPushButton *)btn)->blockSignals(false);
+}
+void qtHelper::checkbox_set_checked(void *cbox, bool mode) {
+	((QCheckBox *)cbox)->blockSignals(true);
+	((QCheckBox *)cbox)->setChecked(mode);
+	((QCheckBox *)cbox)->blockSignals(false);
+}
+void qtHelper::slider_set_value(void *slider, int value) {
+	((QSlider *)slider)->blockSignals(true);
+	((QSlider *)slider)->setValue(value);
+	((QSlider *)slider)->blockSignals(false);
+}
+void qtHelper::spinbox_set_value(void *sbox, int value) {
+	((QSpinBox *)sbox)->blockSignals(true);
+	((QSpinBox *)sbox)->setValue(value);
+	((QSpinBox *)sbox)->blockSignals(false);
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -103,9 +103,9 @@ void ntsc_set(nes_ntsc_t *ntsc_in, BYTE effect, BYTE color, BYTE *palette_base, 
 	}
 
 	//burst_phase ^= 1;
-	/*if ( setup.merge_fields ) {
-	 burst_phase = 0;
-	 }*/
+	//if ( setup.merge_fields ) {
+	//	burst_phase = 0;
+	//}
 	//format[effect].merge_fields = merge_fields;
 	format[effect].decoder_matrix = 0;
 	format[effect].saturation = 0;

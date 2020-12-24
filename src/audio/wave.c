@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -103,7 +103,8 @@ BYTE wave_open(uTCHAR *filename, int samples) {
 	// Subchunk2Size
 	fseek(wav.outfile, 4, SEEK_CUR);
 
-	info.wave_in_record = TRUE;
+	info.recording_on_air = TRUE;
+	info.recording_is_a_video = FALSE;
 
 	gui_overlay_info_append_msg_precompiled(0, NULL);
 
@@ -152,7 +153,8 @@ void wave_close(void) {
 		wav.buffer = NULL;
 	}
 
-	info.wave_in_record = FALSE;
+	info.recording_on_air = FALSE;
+	info.recording_is_a_video = FALSE;
 
 	if (snd.cache) {
 		snd_thread_continue();

@@ -1,21 +1,62 @@
 <RCC>
   <qresource prefix="icon">
     <file>icons/rotate_left.svg</file>
+    <file>icons/misc.svg</file>
+    <file>icons/pixel.svg</file>
+    <file>icons/monitor_screen.svg</file>
+    <file>icons/recording.svg</file>
+    <file>icons/recording_quality.svg</file>
+    <file>icons/360_view.svg</file>
+    <file>icons/microphone.svg</file>
+    <file>icons/state_inc.svg</file>
+    <file>icons/chip.svg</file>
+    <file>icons/shader.svg</file>
+    <file>icons/graphic_design.svg</file>
+    <file>icons/settings.svg</file>
+    <file>icons/film.svg</file>
+    <file>icons/game_controller.svg</file>
+    <file>icons/palettes_list.svg</file>
+    <file>icons/paper.svg</file>
+    <file>icons/shaders_parameters.svg</file>
+    <file>icons/stereo_delay.svg</file>
+    <file>icons/audio_output.svg</file>
+    <file>icons/camera.svg</file>
+    <file>icons/recording_format.svg</file>
+    <file>icons/height.svg</file>
+    <file>icons/state_dec.svg</file>
+    <file>icons/cube.svg</file>
+    <file>icons/width.svg</file>
+    <file>icons/shortcuts.svg</file>
+    <file>icons/background.svg</file>
+    <file>icons/bios.svg</file>
+    <file>icons/channels.svg</file>
+    <file>icons/volume.svg</file>
+    <file>icons/circuit_board.svg</file>
     <file>icons/rotate_right.svg</file>
+    <file>icons/buffer_size.svg</file>
+    <file>icons/Rs_232_Female.svg</file>
+    <file>icons/pencil.svg</file>
+    <file>icons/speedometer.svg</file>
     <file>icons/screenshot_unaltered.svg</file>
+    <file>icons/color_picker.svg</file>
+    <file>icons/layers.svg</file>
+    <file>icons/cheats_list.svg</file>
+    <file>icons/resolution.svg</file>
     <file>icons/keyboard.svg</file>
     <file>icons/flag_turkey.svg</file>
+    <file>icons/microprocessor.svg</file>
     <file>icons/toggle_gui.svg</file>
     <file>icons/flag_hungary.svg</file>
     <file>icons/flag_spain.svg</file>
     <file>icons/window_close.svg</file>
+    <file>icons/settings_wrench.svg</file>
+    <file>icons/recording_red.svg</file>
     <file>icons/rwnd_step_forward.svg</file>
     <file>icons/rwnd_step_backward.svg</file>
     <file>icons/rwnd_fast_backward.svg</file>
     <file>icons/rwnd_fast_forward.svg</file>
     <file>icons/rwnd_pause.svg</file>
     <file>icons/rwnd_play.svg</file>
-    <file>icons/misc.svg</file>
     <file>icons/home.svg</file>
     <file>icons/nsf_file.svg</file>
     <file>icons/rewind.svg</file>
@@ -26,14 +67,11 @@
     <file>icons/wav_start.svg</file>
     <file>icons/wav_stop.svg</file>
     <file>icons/screenshot.svg</file>
-    <file>icons/audio_output.svg</file>
     <file>icons/turn_on.svg</file>
     <file>icons/patch.svg</file>
     <file>icons/turn_off.svg</file>
     <file>icons/insert_coins.svg</file>
     <file>icons/ppu.svg</file>
-    <file>icons/cpu_filter.svg</file>
-    <file>icons/buffer_size.svg</file>
     <file>icons/fast_forward.svg</file>
     <file>icons/application.png</file>
     <file>icons/flag_italy.svg</file>
@@ -46,23 +84,16 @@
     <file>icons/input.svg</file>
     <file>icons/cheat.svg</file>
     <file>icons/about.svg</file>
-    <file>icons/state_dec.svg</file>
-    <file>icons/state_inc.svg</file>
     <file>icons/input_config.svg</file>
-    <file>icons/stereo_delay.svg</file>
-    <file>icons/channels.svg</file>
     <file>icons/samplerate.svg</file>
     <file>icons/fullscreen.svg</file>
     <file>icons/load.svg</file>
     <file>icons/general.svg</file>
-    <file>icons/shader.svg</file>
     <file>icons/save.svg</file>
     <file>icons/palette.svg</file>
     <file>icons/overscan_set_borders.svg</file>
     <file>icons/audio.svg</file>
     <file>icons/overscan_default.svg</file>
-    <file>icons/overscan.svg</file>
-    <file>icons/pixel_aspect_ratio.svg</file>
     <file>icons/scale.svg</file>
     <file>icons/video.svg</file>
     <file>icons/soft_reset.svg</file>
@@ -89,6 +120,7 @@
     <file>pics/overlay_oeka_kids_tablet.png</file>
     <file>pics/overlay_controller_port2.png</file>
     <file>pics/overlay_controller_port3.png</file>
+    <file>pics/punes.svg</file>
     <file>pics/overlay_controller_port4.png</file>
     <file>pics/overlay_controller_port5.png</file>
     <file>pics/overlay_arkanoid_paddle_button.png</file>

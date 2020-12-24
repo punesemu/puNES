@@ -278,6 +278,20 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>pushButton_Left_Coin</tabstop>
+  <tabstop>pushButton_Right_Coin</tabstop>
+  <tabstop>pushButton_Service_Coin</tabstop>
+  <tabstop>checkBox_ds1</tabstop>
+  <tabstop>checkBox_ds2</tabstop>
+  <tabstop>checkBox_ds3</tabstop>
+  <tabstop>checkBox_ds4</tabstop>
+  <tabstop>checkBox_ds5</tabstop>
+  <tabstop>checkBox_ds6</tabstop>
+  <tabstop>checkBox_ds7</tabstop>
+  <tabstop>checkBox_ds8</tabstop>
+  <tabstop>pushButton_Defaults_Dip_Switches</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

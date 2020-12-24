@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ INLINE static void scale2x(WORD **screen_index, uint32_t *palette, uint32_t pitc
 INLINE static void scale3x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
 INLINE static void scale4x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
 
-static struct _scl2x {
+struct _scl2x {
 	WORD sx;
 	WORD sy;
 	WORD oy;
@@ -66,7 +66,7 @@ static struct _scl2x {
 	WORD rows;
 	WORD lines;
 } scl2x;
-static struct _s4x_buffer {
+struct _s4x_buffer {
 	uint32_t w, h;
 	uint32_t pitch;
 	uint32_t size;

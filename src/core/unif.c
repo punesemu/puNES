@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -194,7 +194,7 @@ BYTE unif_load_rom(void) {
 		rom.size = ftell(fp);
 		fseek(fp, 0L, SEEK_SET);
 
-		if ((rom.data = (BYTE *) malloc(rom.size)) == NULL) {
+		if ((rom.data = (BYTE *)malloc(rom.size)) == NULL) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
@@ -336,7 +336,7 @@ BYTE unif_load_rom(void) {
 						return (EXIT_ERROR);
 					}
 				} else if (strncmp(unif.chunk.id, "MIRR", 4) == 0) {
-					if(unif_MIRR(&rom, phase) == EXIT_ERROR) {
+					if (unif_MIRR(&rom, phase) == EXIT_ERROR) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}

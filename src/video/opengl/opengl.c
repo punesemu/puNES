@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,12 +23,16 @@
 #include <unistd.h>
 #include "opengl.h"
 #include "video/gfx_thread.h"
+#include "emu_thread.h"
 #include "overscan.h"
 #include "info.h"
 #include "conf.h"
 #include "emu.h"
 #include "ppu.h"
 #include "gui.h"
+#if defined (WITH_FFMPEG)
+#include "recording.h"
+#endif
 
 #define MAT_ELEM_4X4(mat, r, c) ((mat).data[4 * (c) + (r)])
 #define BUFFER_OFFSET(i) ((char *)(i))
@@ -44,8 +48,7 @@
 	(float)SCR_LINES
 
 static void opengl_context_delete(void);
-static void opengl_screenshot(void);
-
+INLINE static void opengl_read_front_buffer(void);
 static BYTE opengl_glew_init(void);
 static BYTE opengl_texture_create(_texture *texture, GLuint index);
 static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLuint h, BYTE overlay);
@@ -68,7 +71,7 @@ INLINE static void opengl_shader_params_overlay_set(_shader *shd);
 
 // glsl
 static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, const uTCHAR *path);
-INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcountmod, GLuint fcount);
+INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint sindex, GLuint fcountmod, GLuint fcount);
 INLINE static void opengl_shader_glsl_disable_attrib(void);
 // cg
 #if defined (WITH_OPENGL_CG)
@@ -80,7 +83,7 @@ static void opengl_shader_cg_clstate_ctrl(CGparameter *dst, CGparameter *param, 
 static void opengl_shader_cg_param2f_ctrl(CGparameter *dst, CGparameter *param, const char *semantic);
 static void opengl_shader_cg_uni_texture_clear(_shader_uniforms_tex_cg *sut);
 static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_prg_cg *prg, char *fmt, ...);
-INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint fcountmod, GLuint fcount);
+INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint sindex, GLuint fcountmod, GLuint fcount);
 INLINE static void opengl_shader_cg_disable_stpm(void);
 #endif
 
@@ -91,35 +94,75 @@ static const _vertex_buffer vb_upright[4] = {
 	{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
 	{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
 };
-static const _vertex_buffer vb_flipped[ROTATE_MAX][4] = {
+static const _vertex_buffer vb_flipped[ROTATE_MAX][2][4] = {
 	// 0
 	{
-		{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } }
+		// NFL
+		{
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } }
+		},
+		// YFL
+		{
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		}
 	},
 	// 90
 	{
-		{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		// NFL
+		{
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		},
+		// YFL
+		{
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		},
 	},
 	// 180
 	{
-		{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		// NFL
+		{
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		},
+		// YFL
+		{
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		},
 	},
 	// 270
 	{
-		{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-		{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-	},
+		// NFL
+		{
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		},
+		// YFL
+		{
+			{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+			{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		},
+	}
 };
 
 _opengl opengl;
@@ -150,6 +193,12 @@ BYTE opengl_init(void) {
 void opengl_quit(void) {
 	gui_wdgopengl_make_current();
 	opengl_context_delete();
+	if (opengl.screenshot.rgb) {
+		free(opengl.screenshot.rgb);
+		opengl.screenshot.rgb = NULL;
+		opengl.screenshot.w = 0;
+		opengl.screenshot.h = 0;
+	}
 }
 BYTE opengl_context_create(void) {
 	GLuint i, w, h;
@@ -263,6 +312,8 @@ BYTE opengl_context_create(void) {
 			}
 
 			if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
+				float left = cfg->hflip_screen ? (float)overscan.borders->right : (float)overscan.borders->left;
+				float right = cfg->hflip_screen ? (float)overscan.borders->left : (float)overscan.borders->right;
 				float brd_l_x, brd_r_x, brd_u_y, brd_d_y;
 				float ratio_x, ratio_y;
 
@@ -272,28 +323,28 @@ BYTE opengl_context_create(void) {
 				switch (cfg->screen_rotation) {
 					default:
 					case ROTATE_0:
-						brd_l_x = (float)overscan.borders->left * ratio_x;
-						brd_r_x = (float)overscan.borders->right * ratio_x;
+						brd_l_x = left * ratio_x;
+						brd_r_x = right * ratio_x;
 						brd_u_y = (float)overscan.borders->up * ratio_y;
 						brd_d_y = (float)overscan.borders->down * ratio_y;
 						break;
 					case ROTATE_90:
 						brd_l_x = (float)overscan.borders->down * ratio_y;
 						brd_r_x = (float)overscan.borders->up * ratio_y;
-						brd_u_y = (float)overscan.borders->left * ratio_x;
-						brd_d_y = (float)overscan.borders->right * ratio_x;
+						brd_u_y = left * ratio_x;
+						brd_d_y = right * ratio_x;
 						break;
 					case ROTATE_180:
-						brd_l_x = (float)overscan.borders->right * ratio_x;
-						brd_r_x = (float)overscan.borders->left * ratio_x;
+						brd_l_x = right * ratio_x;
+						brd_r_x = left * ratio_x;
 						brd_u_y = (float)overscan.borders->down * ratio_y;
 						brd_d_y = (float)overscan.borders->up * ratio_y;
 						break;
 					case ROTATE_270:
 						brd_l_x = (float)overscan.borders->up * ratio_y;
 						brd_r_x = (float)overscan.borders->down * ratio_y;
-						brd_u_y = (float)overscan.borders->right * ratio_x;
-						brd_d_y = (float)overscan.borders->left * ratio_x;
+						brd_u_y = right * ratio_x;
+						brd_d_y = left * ratio_x;
 						break;
 				}
 
@@ -305,7 +356,8 @@ BYTE opengl_context_create(void) {
 		} else {
 			if (overscan.enabled && !cfg->oscan_black_borders) {
 				BYTE h = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_180) ?
-					overscan.borders->right : overscan.borders->left;
+					cfg->hflip_screen ? overscan.borders->left : overscan.borders->right :
+					cfg->hflip_screen ? overscan.borders->right : overscan.borders->left;
 				BYTE v = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
 					overscan.borders->up : overscan.borders->down;
 
@@ -449,9 +501,9 @@ BYTE opengl_context_create(void) {
 		glGenBuffers(1, &shd->vbo);
 
 		if (cfg->text_rotation == FALSE) {
-			memcpy(shd->vb, vb_flipped[ROTATE_0], sizeof(vb_upright));
+			memcpy(shd->vb, vb_flipped[ROTATE_0][0], sizeof(vb_upright));
 		} else {
-			memcpy(shd->vb, vb_flipped[cfg->screen_rotation], sizeof(vb_upright));
+			memcpy(shd->vb, vb_flipped[cfg->screen_rotation][cfg->hflip_screen], sizeof(vb_upright));
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, shd->vbo);
@@ -530,14 +582,19 @@ void opengl_draw_scene(void) {
 #if defined (WITH_OPENGL_CG)
 	static GLuint prev_type = MS_MEM;
 #endif
-	const _texture_simple *scrtex = &opengl.screen.tex[opengl.screen.index];
+	const _texture_simple *scrtex;
 	GLuint offset_x = 0, offset_y = 0;
 	GLuint w = opengl.surface.w, h = opengl.surface.h;
-	GLuint i;
+	GLuint sindex, i;
 
-	if (gui.start == FALSE) {
+	if ((gui.start == FALSE) || (gfx.frame.in_draw == gfx.frame.filtered)) {
 		return;
 	}
+
+	gfx_thread_lock();
+
+	sindex = opengl.screen.index;
+	scrtex = &opengl.screen.tex[sindex];
 
 	// screen
 	glBindTexture(GL_TEXTURE_2D, scrtex->id);
@@ -551,12 +608,15 @@ void opengl_draw_scene(void) {
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, opengl.surface.w);
 	glPixelStorei(GL_UNPACK_SKIP_PIXELS, offset_x);
 	glPixelStorei(GL_UNPACK_SKIP_ROWS, offset_y);
-	gfx_thread_lock();
 	glTexSubImage2D(GL_TEXTURE_2D, 0, offset_x, offset_y, w, h, TI_FRM, TI_TYPE, opengl.surface.pixels);
-	gfx_thread_unlock();
 	glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 	glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+
+	gfx.frame.in_draw = gfx.frame.filtered;
+	opengl.screen.index = ((opengl.screen.index + 1) % opengl.screen.in_use);
+
+	gfx_thread_unlock();
 
 	if (opengl.supported_fbo.srgb && !cfg->disable_srgb_fbo) {
 		glEnable(GL_FRAMEBUFFER_SRGB);
@@ -607,12 +667,12 @@ void opengl_draw_scene(void) {
 				cgGLEnableProfile(opengl.cg.profile.f);
 				cgGLEnableProfile(opengl.cg.profile.v);
 
-				opengl_shader_cg_params_set(texture, sp->frame_count_mod, ppu.frames);
+				opengl_shader_cg_params_set(texture, sindex, sp->frame_count_mod, ppu.frames);
 			}
 #endif
 		} else {
 			glUseProgram(texture->shader.glslp.prg);
-			opengl_shader_glsl_params_set(&texture->shader, sp->frame_count_mod, ppu.frames);
+			opengl_shader_glsl_params_set(&texture->shader, sindex, sp->frame_count_mod, ppu.frames);
 		}
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
@@ -633,8 +693,6 @@ void opengl_draw_scene(void) {
 		prev_type = texture->shader.type;
 #endif
 	}
-
-	opengl.screen.index = ((opengl.screen.index + 1) % opengl.screen.in_use);
 
 	if (opengl.feedback.in_use) {
 		GLuint fbo = opengl.feedback.tex.fbo;
@@ -674,10 +732,14 @@ void opengl_draw_scene(void) {
 #endif
 	}
 
+#if defined (WITH_FFMPEG)
+	// screenshot e video recording
+	if (info.recording_is_a_video | info.screenshot) {
+#else
 	// screenshot
-	if (gfx.screenshot.save == TRUE) {
-		opengl_screenshot();
-		gfx.screenshot.save = FALSE;
+	if (info.screenshot) {
+#endif
+		opengl_read_front_buffer();
 	}
 }
 
@@ -778,35 +840,77 @@ static void opengl_context_delete(void) {
 
 	info.sRGB_FBO_in_use = FALSE;
 }
-static void opengl_screenshot(void) {
+INLINE static void opengl_read_front_buffer(void) {
 	float w, h;
-	void *buffer;
 
-	if (gfx.screenshot.type == SCRSH_STANDARD) {
-		w = opengl.video_mode.w * gfx.device_pixel_ratio;
-		h = opengl.video_mode.h * gfx.device_pixel_ratio;
-		glReadBuffer(GL_FRONT);
-		if ((buffer = malloc(w * h * 4)) == NULL) {
-			return;
-		}
-		glPixelStorei(GL_PACK_ALIGNMENT, 1);
-		glReadPixels(0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
-		gui_save_screenshot(w, h, buffer, TRUE);
-		free(buffer);
-	} else {
+	if (info.screenshot == SCRSH_ORIGINAL_SIZE) {
+		void *buffer;
+		int stride;
+
 		w = SCR_ROWS;
 		h = SCR_LINES;
-		if ((buffer = malloc(w * h * sizeof(uint32_t))) == NULL) {
-			return;
+		stride = w * sizeof(uint32_t);
+
+		if ((buffer = malloc(stride * h))) {
+			emu_thread_pause();
+			scale_surface_screenshoot_1x(stride, buffer);
+			gui_save_screenshot(w, h, stride, buffer, FALSE);
+			free(buffer);
+			emu_thread_continue();
 		}
-		emu_pause(TRUE);
-		scale_surface_screenshoot_1x(w * sizeof(uint32_t), buffer);
-		gui_save_screenshot(w, h, buffer, FALSE);
-		free(buffer);
-		emu_pause(FALSE);
+		info.screenshot = SCRSH_NONE;
+	}
+
+#if defined (WITH_FFMPEG)
+	if (info.recording_is_a_video | info.screenshot) {
+#else
+	if (info.screenshot) {
+#endif
+		w = opengl.video_mode.w * gfx.device_pixel_ratio;
+		h = opengl.video_mode.h * gfx.device_pixel_ratio;
+
+		if ((opengl.screenshot.rgb == NULL) || (opengl.screenshot.w != w) || (opengl.screenshot.h != h)) {
+			if (opengl.screenshot.rgb) {
+				free(opengl.screenshot.rgb);
+				opengl.screenshot.rgb = NULL;
+			}
+
+			opengl.screenshot.w = w;
+			opengl.screenshot.h = h;
+
+			if ((opengl.screenshot.walign32 = (int)w) % 32) {
+				opengl.screenshot.walign32 = (w / 32) + 1;
+				opengl.screenshot.walign32 *= 32;
+			}
+			opengl.screenshot.stride = opengl.screenshot.walign32 * sizeof(uint32_t);
+
+			if ((opengl.screenshot.rgb = malloc(opengl.screenshot.stride * h)) == NULL) {
+				info.screenshot = SCRSH_NONE;
+				opengl.screenshot.rgb = NULL;
+				return;
+			}
+		}
+
+		glReadBuffer(GL_FRONT);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, w);
+		glReadPixels(0, 0, opengl.screenshot.walign32, h, GL_BGRA, GL_UNSIGNED_BYTE, opengl.screenshot.rgb);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+
+#if defined (WITH_FFMPEG)
+		if (info.recording_is_a_video) {
+			recording_video_frame(w, h, opengl.screenshot.stride, opengl.screenshot.rgb);
+		}
+		if (info.screenshot == SCRSH_STANDARD) {
+			gui_save_screenshot(w, h, opengl.screenshot.stride, opengl.screenshot.rgb, TRUE);
+			info.screenshot = SCRSH_NONE;
+		}
+#else
+		gui_save_screenshot(w, h, opengl.screenshot.stride, opengl.screenshot.rgb, TRUE);
+		info.screenshot = SCRSH_NONE;
+#endif
 	}
 }
-
 static BYTE opengl_glew_init(void) {
 	GLenum err;
 
@@ -859,7 +963,7 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 	}
 
 	if (index == shader_effect.last_pass) {
-		vb = vb_flipped[cfg->screen_rotation];
+		vb = vb_flipped[cfg->screen_rotation][cfg->hflip_screen];
 		sc->scale.x = 1.0f;
 		sc->scale.y = 1.0f;
 		sc->type.x = SHADER_SCALE_VIEWPORT;
@@ -1035,7 +1139,7 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 	shd->info.texture_size[0] = (GLfloat)rect->w;
 	shd->info.texture_size[1] = (GLfloat)rect->h;
 
-	memcpy(shd->vb, vb_flipped[ROTATE_0], sizeof(vb_upright));
+	memcpy(shd->vb, vb_flipped[ROTATE_0][0], sizeof(vb_upright));
 
 	opengl_vertex_buffer_set(&shd->vb[0], rect);
 
@@ -1325,8 +1429,9 @@ INLINE static void opengl_shader_params_overlay_set(_shader *shd) {
 
 // glsl
 static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, const uTCHAR *path) {
-	const GLchar *src[3];
+	const GLchar *src[4];
 	char alias_define[MAX_PASS * 128];
+	char version[128];
 	GLuint i, vrt, frg;
 	GLint success = 0;
 
@@ -1334,8 +1439,34 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 		return (EXIT_ERROR_SHADER);
 	}
 
+	memset(version, 0x00, sizeof(version));
+
 	if (path && path[0]) {
+		unsigned int i;
+		char *ptr;
+
 		code = emu_file2string(path);
+
+		// la direttiva #version deve essere sempre la prima riga
+		{
+			ptr = strstr(code, "#version ");
+
+			if (ptr) {
+				for (i = 0; i < (sizeof(version) - 1); i++) {
+					(*(version + i)) = (*ptr);
+					if (((*ptr) == '\r') && ((*(ptr + 1)) == '\n')) {
+						(*(version + i + 1)) = '\n';
+						break;
+					} else if ((*ptr) == '\n') {
+						break;
+					}
+					(*ptr) = ' ';
+					ptr++;
+				}
+			} else {
+				strncpy(version, "#version 130\n", sizeof(version) - 1);
+			}
+		}
 	}
 
 	// program
@@ -1362,13 +1493,13 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 		}
 	}
 
-	src[1] = alias_define;
-	src[2] = code;
-
 	// vertex
-	src[0] = "#define VERTEX\n#define PARAMETER_UNIFORM\n";
+	src[0] = version;
+	src[1] = "#define VERTEX\n#define PARAMETER_UNIFORM\n";
+	src[2] = alias_define;
+	src[3] = code;
 	vrt = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vrt, 3, src, NULL);
+	glShaderSource(vrt, 4, src, NULL);
 	glCompileShader(vrt);
 #if !defined (RELEASE)
 	opengl_shader_print_log(vrt, FALSE);
@@ -1385,9 +1516,9 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 	glDeleteShader(vrt);
 
 	// fragment
-	src[0] = "#define FRAGMENT\n#define PARAMETER_UNIFORM\n";
+	src[1] = "#define FRAGMENT\n#define PARAMETER_UNIFORM\n";
 	frg = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(frg, 3, src, NULL);
+	glShaderSource(frg, 4, src, NULL);
 	glCompileShader(frg);
 #if !defined (RELEASE)
 	opengl_shader_print_log(frg, FALSE);
@@ -1483,7 +1614,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 
 	return (EXIT_OK);
 }
-INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcountmod, GLuint fcount) {
+INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint sindex, GLuint fcountmod, GLuint fcount) {
 	GLuint i, buffer_index = 0, texture_index = 1;
 
 	if (shd->glslp.uni.mvp >= 0) {
@@ -1564,15 +1695,15 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 	// ORIG
 	if (shd->glslp.uni.orig.texture >= 0) {
 		glActiveTexture(GL_TEXTURE0 + texture_index);
-		glBindTexture(GL_TEXTURE_2D, opengl.screen.tex[opengl.screen.index].id);
+		glBindTexture(GL_TEXTURE_2D, opengl.screen.tex[sindex].id);
 		glUniform1i(shd->glslp.uni.orig.texture, texture_index);
 		texture_index++;
 	}
 	if (shd->glslp.uni.orig.input_size >= 0) {
-		glUniform2fv(shd->glslp.uni.orig.input_size, 1, opengl.screen.tex[opengl.screen.index].shader.info.input_size);
+		glUniform2fv(shd->glslp.uni.orig.input_size, 1, opengl.screen.tex[sindex].shader.info.input_size);
 	}
 	if (shd->glslp.uni.orig.texture_size >= 0) {
-		glUniform2fv(shd->glslp.uni.orig.texture_size, 1, opengl.screen.tex[opengl.screen.index].shader.info.texture_size);
+		glUniform2fv(shd->glslp.uni.orig.texture_size, 1, opengl.screen.tex[sindex].shader.info.texture_size);
 	}
 	if (shd->glslp.uni.orig.tex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.orig.tex_coord);
@@ -1582,7 +1713,7 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 	}
 	// PREV (uso le stesse tex_coord di ORIG)
 	{
-		GLint circle_index = opengl.screen.index - 1;
+		GLint circle_index = sindex - 1;
 
 		for (i = 0; i < (opengl.screen.in_use - 1); i++) {
 			if (circle_index < 0) {
@@ -1912,7 +2043,7 @@ static void opengl_shader_cg_clstate_ctrl(CGparameter *dst, CGparameter *param, 
 
 	cgGLEnableClientState((*param));
 
-	switch(cgGetError()) {
+	switch (cgGetError()) {
 		case CG_NO_ERROR:
 			(*dst) = (*param);
 			cgGLDisableClientState((*param));
@@ -1930,7 +2061,7 @@ static void opengl_shader_cg_param2f_ctrl(CGparameter *dst, CGparameter *param, 
 
 	cgGLSetParameter2f((*param), 1.0f, 1.0f);
 
-	switch(cgGetError()) {
+	switch (cgGetError()) {
 		case CG_NO_ERROR:
 			(*dst) = (*param);
 			break;
@@ -1985,7 +2116,7 @@ static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_p
 		opengl_shader_cg_clstate_ctrl(&sut->v.tex_coord, &param, buff);
 	}
 }
-INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint fcountmod, GLuint fcount) {
+INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint sindex, GLuint fcountmod, GLuint fcount) {
 	GLuint i, buffer_index = 0;
 	const _shader *shd = &texture->shader;
 
@@ -2108,31 +2239,31 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 	{
 		// ORIG.texture
 		if (shd->cgp.uni.orig.f.texture) {
-			cgGLSetTextureParameter(shd->cgp.uni.orig.f.texture, opengl.screen.tex[opengl.screen.index].id);
+			cgGLSetTextureParameter(shd->cgp.uni.orig.f.texture, opengl.screen.tex[sindex].id);
 			cgGLEnableTextureParameter(shd->cgp.uni.orig.f.texture);
 			opengl.cg.params.param[opengl.cg.params.count++] = shd->cgp.uni.orig.f.texture;
 		}
 		// ORIG.video_size
 		if (shd->cgp.uni.orig.v.video_size) {
 			cgGLSetParameter2f(shd->cgp.uni.orig.v.video_size,
-				opengl.screen.tex[opengl.screen.index].shader.info.input_size[0],
-				opengl.screen.tex[opengl.screen.index].shader.info.input_size[1]);
+				opengl.screen.tex[sindex].shader.info.input_size[0],
+				opengl.screen.tex[sindex].shader.info.input_size[1]);
 		}
 		if (shd->cgp.uni.orig.f.video_size) {
 			cgGLSetParameter2f(shd->cgp.uni.orig.f.video_size,
-				opengl.screen.tex[opengl.screen.index].shader.info.input_size[0],
-				opengl.screen.tex[opengl.screen.index].shader.info.input_size[1]);
+				opengl.screen.tex[sindex].shader.info.input_size[0],
+				opengl.screen.tex[sindex].shader.info.input_size[1]);
 		}
 		// ORIG.texture_size
 		if (shd->cgp.uni.orig.v.texture_size) {
 			cgGLSetParameter2f(shd->cgp.uni.orig.v.texture_size,
-				opengl.screen.tex[opengl.screen.index].shader.info.texture_size[0],
-				opengl.screen.tex[opengl.screen.index].shader.info.texture_size[1]);
+				opengl.screen.tex[sindex].shader.info.texture_size[0],
+				opengl.screen.tex[sindex].shader.info.texture_size[1]);
 		}
 		if (shd->cgp.uni.orig.f.texture_size) {
 			cgGLSetParameter2f(shd->cgp.uni.orig.f.texture_size,
-				opengl.screen.tex[opengl.screen.index].shader.info.texture_size[0],
-				opengl.screen.tex[opengl.screen.index].shader.info.texture_size[1]);
+				opengl.screen.tex[sindex].shader.info.texture_size[0],
+				opengl.screen.tex[sindex].shader.info.texture_size[1]);
 		}
 		// ORIG.tex_coord
 		if (shd->cgp.uni.orig.v.tex_coord) {
@@ -2144,7 +2275,7 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 	}
 	// PREV (uso le stesse tex_coord di ORIG)
 	{
-		GLint circle_index = opengl.screen.index - 1;
+		GLint circle_index = sindex - 1;
 
 		for (i = 0; i < (opengl.screen.in_use - 1); i++) {
 			if (circle_index < 0) {

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ wdgToolBar::wdgToolBar(QWidget *parent) : QToolBar(parent) {
 
 	setHidden(cfg->toolbar.hidden);
 
-	switch(cfg->toolbar.area) {
+	switch (cfg->toolbar.area) {
 		default:
 		case TLB_TOP:
 			area = Qt::TopToolBarArea;
@@ -112,12 +112,10 @@ void wdgToolBar::update_toolbar(void) {
 	rotate->update_widget();
 }
 void wdgToolBar::set_hide_without_signal(bool mode) {
-	if (cfg->toolbar.hidden == true) {
+	if (cfg->toolbar.hidden == TRUE) {
 		mode = false;
 	}
-	blockSignals(true);
-	setVisible(mode);
-	blockSignals(false);
+	qtHelper::widget_set_visible(this, mode);
 }
 void wdgToolBar::rotate_setVisible(bool visible) {
 	if (action_rotate.separator) {
@@ -145,7 +143,7 @@ void wdgToolBar::s_toplevel_changed(UNUSED(bool toplevel)) {
 
 	area = mainwin->toolBarArea(this);
 
-	switch(area) {
+	switch (area) {
 		default:
 		case Qt::TopToolBarArea:
 			cfg->toolbar.area = TLB_TOP;
@@ -166,6 +164,10 @@ void wdgToolBar::s_toplevel_changed(UNUSED(bool toplevel)) {
 	}
 }
 void wdgToolBar::s_visibility_changed(bool visibility) {
+	if (info.stop == TRUE) {
+		return;
+	}
+
 	if (mouse_pressed == false) {
 		if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
 			emu_thread_pause();

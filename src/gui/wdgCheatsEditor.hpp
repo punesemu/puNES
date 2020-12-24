@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -55,6 +55,7 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 		hexSpinBox *hexSpinBox_Address;
 		hexSpinBox *hexSpinBox_Value;
 		hexSpinBox *hexSpinBox_Compare;
+		bool in_populate_cheat_table;
 
 	public:
 		wdgCheatsEditor(QWidget *parent = 0);
@@ -62,6 +63,7 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 
 	protected:
 		void changeEvent(QEvent *event);
+		void showEvent(QShowEvent *event);
 
 	public:
 		void hide_tools_widgets(bool state);
@@ -71,8 +73,10 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 		chl_map extract_cheat_from_row(int row);
 		void insert_cheat_row(int row);
 		void update_cheat_row(int row, chl_map *cheat);
+		void update_color_row(int row, bool active);
 
 	private:
+		void cheat_tableview_resize(void);
 		void populate_edit_widgets(int row);
 		void clear_edit_widgets(void);
 		void set_edit_widget(void);
@@ -81,6 +85,8 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 		void change_active_compare_state(bool state);
 
 	private slots:
+		void s_table_data_changed(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
+		void s_table_layout_changed(const QList<QPersistentModelIndex> &sourceParents, QAbstractItemModel::LayoutChangeHint hint);
 		void s_cheat_item(void);
 		void s_cheat_item_state(int state);
 		void s_import(bool checked);

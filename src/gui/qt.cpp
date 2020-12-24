@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QMessageBox>
 #include <QtGui/QImage>
 #include <QtCore/QDir>
@@ -42,6 +41,10 @@ Q_IMPORT_PLUGIN(QJpegPlugin)
 #if defined (QT_PLUGIN_QSVG)
 Q_IMPORT_PLUGIN(QSvgPlugin)
 #endif
+#endif
+#if !defined (_WIN32)
+// mi serve per il std::thread::hardware_concurrency() del gui_hardware_concurrency.
+#include <thread>
 #endif
 #include <stdlib.h>
 #include <unistd.h>
@@ -135,18 +138,17 @@ BYTE gui_create(void) {
 	gfx.device_pixel_ratio = qt.screen->devicePixelRatioF();
 
 	{
-		int screenNumber = qApp->desktop()->screenNumber(qt.mwin);
-		QRect geometry = QGuiApplication::screens().at(screenNumber)->geometry();
+		QRect geometry = QGuiApplication::primaryScreen()->virtualGeometry();
 
-		if (cfg->last_pos.x > geometry.width()) {
-			cfg->last_pos.x = 0;
-			cfg->last_pos_settings.x = 0;
+		if ((cfg->lg.x == 0) || cfg->lg.x > geometry.width()) {
+			cfg->lg.x = 80;
+			cfg->lg_settings.x = 80;
 		}
-		if (cfg->last_pos.y > geometry.height()) {
-			cfg->last_pos.x = 0;
-			cfg->last_pos_settings.y = 0;
+		if ((cfg->lg.y == 0) || cfg->lg.y > geometry.height()) {
+			cfg->lg.y = 80;
+			cfg->lg_settings.y = 80;
 		}
-		qt.mwin->setGeometry(cfg->last_pos.x, cfg->last_pos.y, 0, 0);
+		qt.mwin->setGeometry(cfg->lg.x, cfg->lg.y, 0, 0);
 	}
 
 	qt.mwin->show();
@@ -169,6 +171,7 @@ BYTE gui_create(void) {
 	// sull'inglese, non viene emesso nessun QEvent::LanguageChangen non permettendo
 	// di tradurre correttamente i bottoni degli shortcuts nel wdgSettingsInput.
 	QEvent event(QEvent::LanguageChange);
+
 	QApplication::sendEvent(qt.mwin, &event);
 	QApplication::sendEvent(qt.dset, &event);
 	QApplication::sendEvent(overlay.widget, &event);
@@ -245,8 +248,46 @@ void gui_update(void) {
 
 	gui.in_update = FALSE;
 }
+void gui_update_dset(void) {
+	qt.dset->update_dialog();
+}
 void gui_update_gps_settings(void) {
 	qt.dset->change_rom();
+}
+
+void gui_update_ppu_hacks_widgets(void) {
+	qt.dset->widget_Settings_PPU->update_widget();
+}
+void gui_update_apu_channels_widgets(void) {
+	qt.dset->update_tab_audio();
+}
+void gui_update_recording_widgets(void) {
+	qt.mwin->update_recording_widgets();
+}
+
+void gui_update_recording_tab(void) {
+	qt.dset->update_tab_recording();
+}
+
+void gui_egds_set_fps(void) {
+	qt.mwin->egds->set_fps();
+}
+void gui_egds_stop_unnecessary(void) {
+	if (gui.start == TRUE) {
+		qt.mwin->egds->stop_unnecessary();
+	}
+}
+void gui_egds_start_pause(void) {
+	qt.mwin->egds->start_pause();
+}
+void gui_egds_stop_pause(void) {
+	qt.mwin->egds->stop_pause();
+}
+void gui_egds_start_rwnd(void) {
+	qt.mwin->egds->start_rwnd();
+}
+void gui_egds_stop_rwnd(void) {
+	qt.mwin->egds->stop_rwnd();
 }
 
 void gui_fullscreen(void) {
@@ -389,8 +430,7 @@ void gui_decode_all_input_events(void) {
 
 	// keyboard
 	if (qt.screen->events.keyb.count()) {
-		for (QList<_wdgScreen_keyboard_event>::iterator e = qt.screen->events.keyb.begin(); e != qt.screen->events.keyb.end(); ++e)
-		{
+		for (QList<_wdgScreen_keyboard_event>::iterator e = qt.screen->events.keyb.begin(); e != qt.screen->events.keyb.end(); ++e) {
 			_wdgScreen_keyboard_event &event = *e;
 
 			for (BYTE i = PORT1; i < PORT_MAX; i++) {
@@ -405,8 +445,7 @@ void gui_decode_all_input_events(void) {
 
 	// mouse
 	if (qt.screen->events.mouse.count()) {
-		for (QList<_wdgScreen_mouse_event>::iterator e = qt.screen->events.mouse.begin(); e != qt.screen->events.mouse.end(); ++e)
-		{
+		for (QList<_wdgScreen_mouse_event>::iterator e = qt.screen->events.mouse.begin(); e != qt.screen->events.mouse.end(); ++e) {
 			_wdgScreen_mouse_event &event = *e;
 
 			if ((event.type == QEvent::MouseButtonPress) || (event.type == QEvent::MouseButtonDblClick)) {
@@ -473,14 +512,6 @@ void gui_vs_system_insert_coin(void) {
 	}
 }
 
-void gui_apu_channels_widgets_update(void) {
-	qt.dset->update_tab_audio();
-}
-
-void gui_ppu_hacks_widgets_update(void) {
-	qt.dset->widget_Settings_PPU->update_widget();
-}
-
 #if defined (WITH_OPENGL)
 void gui_wdgopengl_make_current(void) {
 	if (gui.start == TRUE) {
@@ -523,10 +554,10 @@ BYTE gui_load_lut(void *l, const uTCHAR *path) {
 
 	return (EXIT_OK);
 }
-void gui_save_screenshot(int w, int h, char *buffer, BYTE flip) {
+void gui_save_screenshot(int w, int h, int stride, char *buffer, BYTE flip) {
 	QString basename = QString(uQString(info.base_folder)) + QString(SCRSHT_FOLDER) + "/"
 		+ QFileInfo(uQString(info.rom.file)).completeBaseName();
-	QImage screenshot = QImage((uchar *)buffer, w, h, QImage::Format_RGB32);
+	QImage screenshot = QImage((uchar *)buffer, w, h, stride, QImage::Format_RGB32);
 	QFile file;
 	uint count;
 
@@ -577,6 +608,12 @@ void gui_utf_basename(uTCHAR *path, uTCHAR *dst, size_t len) {
 int gui_utf_strcasecmp(uTCHAR *s0, uTCHAR *s1) {
 	return (QString::compare(uQString(s0), uQString(s1), Qt::CaseInsensitive));
 }
+
+#if !defined (_WIN32)
+unsigned int gui_hardware_concurrency(void) {
+	return (std::thread::hardware_concurrency());
+}
+#endif
 
 #if defined (__linux__)
 #include "os_linux.h"

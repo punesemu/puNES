@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@ void map_init_RT_01(void) {
 	info.mapper.extend_rd = TRUE;
 }
 BYTE extcl_cpu_rd_mem_RT_01(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if(((address >= 0xCE80) && (address < 0xCF00)) || ((address >= 0xFE80) && (address < 0xFF00))) {
-		return 0xF2 | (rand() & 0x0D);
+	if (((address >= 0xCE80) && (address < 0xCF00)) || ((address >= 0xFE80) && (address < 0xFF00))) {
+		return (0xF2 | (rand() & 0x0D));
 	}
 	return (openbus);
 }

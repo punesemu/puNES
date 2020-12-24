@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -231,6 +231,12 @@ typedef struct _opengl {
 		} profile;
 	} cg;
 #endif
+	struct _screenshot {
+		void *rgb;
+		int stride;
+		int w, h;
+		int walign32;
+	} screenshot;
 } _opengl;
 
 extern _opengl opengl;

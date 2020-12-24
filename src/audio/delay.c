@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,9 @@
 #include "audio/delay.h"
 #include "audio/channels.h"
 #include "conf.h"
+#if defined (WITH_FFMPEG)
+#include "recording.h"
+#endif
 
 enum delay_channels { CH_LEFT, CH_RIGHT };
 
@@ -113,14 +116,16 @@ void ch_stereo_delay_reset(void) {
 	delay.bck.write = delay.bck.start;
 }
 void ch_stereo_delay_tick(SWORD value) {
+	SWORD actual[2] = { value, delay.ptr[CH_RIGHT][delay.pos] };
+
 	// sinistro
-	(*snd.cache->write++) = value;
+	(*snd.cache->write++) = actual[0];
 
 	// salvo il dato nel buffer del canale sinistro
-	delay.ptr[CH_LEFT][delay.pos] = value;
+	delay.ptr[CH_LEFT][delay.pos] = actual[0];
 
 	// scrivo nel frame audio il canale destro ritardato rispetto al canale sinistro
-	(*snd.cache->write++) = delay.ptr[CH_RIGHT][delay.pos];
+	(*snd.cache->write++) = actual[1];
 
 	// swappo i buffers dei canali
 	if (++delay.pos >= delay.max_pos) {
@@ -131,7 +136,7 @@ void ch_stereo_delay_tick(SWORD value) {
 		delay.pos = 0;
 	}
 
-	(*delay.bck.write++) = value;
+	(*delay.bck.write++) = actual[0];
 
 	if (delay.bck.write >= (SWORD *)delay.bck.end) {
 		delay.bck.write = delay.bck.start;
@@ -139,6 +144,12 @@ void ch_stereo_delay_tick(SWORD value) {
 
 	snd.cache->samples_available++;
 	snd.cache->bytes_available += (2 * sizeof(*snd.cache->write));
+
+#if defined (WITH_FFMPEG)
+	if (info.recording_on_air == TRUE) {
+		recording_audio_tick(&actual[0]);
+	}
+#endif
 }
 void ch_stereo_delay_set(void) {
 	SWORD *here;

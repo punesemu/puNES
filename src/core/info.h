@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -67,8 +67,10 @@ typedef struct _info {
 	BYTE pause_from_gui;
 	BYTE on_cfg;
 	BYTE first_illegal_opcode;
-	BYTE wave_in_record;
+	BYTE recording_on_air;
+	BYTE recording_is_a_video;
 	BYTE cpu_rw_extern;
+	BYTE screenshot;
 #if defined (WITH_OPENGL)
 	BYTE sRGB_FBO_in_use;
 #endif

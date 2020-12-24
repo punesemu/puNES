@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,9 @@
 #include "recent_roms.h"
 #include "patcher.h"
 #include "ppu.h"
+#if defined (WITH_FFMPEG)
+#include "recording.h"
+#endif
 
 #if defined (_WIN32)
 int WINAPI WinMain(UNUSED(HINSTANCE hInstance), UNUSED(HINSTANCE hPrevInstance), UNUSED(PSTR szCmdLine), UNUSED(int iCmdShow)) {
@@ -126,6 +129,10 @@ int main(int argc, char **argv) {
 
 	recent_roms_init();
 	recent_roms_parse();
+
+#if defined (WITH_FFMPEG)
+	recording_init();
+#endif
 
 	uncompress_init();
 

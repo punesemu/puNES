@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -354,7 +354,7 @@ void opll_reset(uint32_t clk, uint32_t rate) {
 	}
 
 	opll.real_step = (uint32_t)((1 << 31) / rate);
-	opll.opll_step = (uint32_t)((1 << 31) / (clk / 72));
+	opll.opll_step = (uint32_t)((1 << 31) / (clk / 83));
 	opll.opll_time = 0;
 }
 void opll_write_reg(uint32_t reg, uint8_t value) {

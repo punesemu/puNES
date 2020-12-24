@@ -75,6 +75,12 @@ libcore_a_SOURCES = \
 	version.h\
 	vs_system.h
 
+if WITH_FFMPEG
+libcore_a_SOURCES += \
+	recording.c \
+	recording.h
+endif
+
 libcore_a_SOURCES += \
 	input/arkanoid.h \
 	input/arkanoid.c \

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -140,6 +140,10 @@ typedef struct _d3d9_adapter {
 	BOOL dynamic_texture;
 	BOOL texture_square_only;
 } _d3d9_adapter;
+typedef struct _scrshot_surface {
+	IDirect3DSurface9 *s;
+	int w, h;
+} _scrshot_surface;
 typedef struct _d3d9 {
 	LPDIRECT3D9 d3d;
 
@@ -147,29 +151,34 @@ typedef struct _d3d9 {
 
 	UINT adapters_on_system;
 	UINT adapters_in_use;
+
 	_d3d9_adapter *array, *adapter;
+
+	_texture_simple overlay;
+	_texture texture[MAX_PASS + 1];
+	_lut lut[MAX_PASS];
+
+	RECT viewp;
 
 	struct _d3d9_screen {
 		UINT in_use;
 		UINT index;
 		_texture_simple tex[MAX_PREV + 1];
 	} screen;
-
 	struct _d3d9_video_mode {
 		UINT w;
 		UINT h;
 	} video_mode;
-
 	struct _feedback {
 		uint8_t in_use;
 		_texture tex;
 	} feedback;
-
-	RECT viewp;
-
-	_texture_simple overlay;
-	_texture texture[MAX_PASS + 1];
-	_lut lut[MAX_PASS];
+	struct _screenshot {
+		_scrshot_surface srfc;
+		_scrshot_surface zone;
+		int stride;
+		int walign32;
+	} screenshot;
 } _d3d9;
 
 extern _d3d9 d3d9;

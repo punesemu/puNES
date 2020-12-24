@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -149,6 +149,7 @@ typedef struct _ppu {
 }  _ppu;
 typedef struct _screen_buffer {
 	BYTE ready;
+	uint64_t frame;
 	WORD *data;
 	WORD *line[SCR_LINES];
 } _screen_buffer;

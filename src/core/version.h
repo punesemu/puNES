@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@
 #define VER1        "0"
 #define VER1_INT    0
 
-#define VER2        "106"
-#define VER2_INT    106
+#define VER2        "107"
+#define VER2_INT    107
 
 #if defined (RELEASE) && !defined (WITH_GIT_INFO)
 #define VERSION     VER1 "." VER2

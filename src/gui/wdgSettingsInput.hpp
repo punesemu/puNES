@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -89,10 +89,11 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		void shortcuts_set(void);
 
 	private slots:
-		void s_controller_mode(int index);
+		void s_controller_mode(bool checked);
 		void s_expansion_port(int index);
 		void s_controller_port(int index);
 		void s_controller_port_setup(bool checked);
+		void s_input_reset(bool checked);
 		void s_permit_updown_leftright(bool checked);
 		void s_hide_zapper_cursor(bool checked);
 		void s_joy_id(int index);
@@ -102,7 +103,6 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		void s_shortcut_keyb_default(bool checked);
 		void s_shortcut_keyb_unset(bool checked);
 		void s_shortcut_joy_unset(bool checked);
-		void s_input_reset(bool checked);
 		void s_input_timeout(void);
 		void s_joy_read_timer(void);
 };

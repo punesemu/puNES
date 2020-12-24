@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,27 +39,109 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 
 	setupUi(this);
 
-	connect(comboBox_Scale, SIGNAL(activated(int)), this, SLOT(s_scale(int)));
-	connect(comboBox_PAR, SIGNAL(activated(int)), this, SLOT(s_par(int)));
-	connect(checkBox_PAR_Soft_Stretch, SIGNAL(clicked(bool)), this, SLOT(s_par_stretch(bool)));
+	setFocusProxy(tabWidget_Video);
 
-	connect(comboBox_Oscan, SIGNAL(activated(int)), this, SLOT(s_oscan(int)));
-	connect(comboBox_Oscan_def_value, SIGNAL(activated(int)), this, SLOT(s_oscan_def_value(int)));
-	connect(comboBox_Oscan_brd_mode, SIGNAL(activated(int)), this, SLOT(s_oscan_brd_mode(int)));
+	widget_Scale_xx->setStyleSheet(button_stylesheet());
+	groupBox_Oscan_pergame_setting->setStyleSheet(group_title_and_button_stylesheet());
+	groupBox_Oscan_def_value->setStyleSheet(group_title_and_button_stylesheet());
+	groupBox_Oscan_NTSC_brd->setStyleSheet(group_title_bold_stylesheet());
+	groupBox_Oscan_PAL_brd->setStyleSheet(group_title_bold_stylesheet());
+	frame_PAR->setStyleSheet(button_stylesheet());
+	frame_Screen_Rotation->setStyleSheet(button_stylesheet());
+
+	pushButton_Scale_1x->setProperty("mtype", QVariant(X1));
+	pushButton_Scale_2x->setProperty("mtype", QVariant(X2));
+	pushButton_Scale_3x->setProperty("mtype", QVariant(X3));
+	pushButton_Scale_4x->setProperty("mtype", QVariant(X4));
+	pushButton_Scale_5x->setProperty("mtype", QVariant(X5));
+	pushButton_Scale_6x->setProperty("mtype", QVariant(X6));
+
+	connect(pushButton_Scale_1x, SIGNAL(toggled(bool)), this, SLOT(s_scale(bool)));
+	connect(pushButton_Scale_2x, SIGNAL(toggled(bool)), this, SLOT(s_scale(bool)));
+	connect(pushButton_Scale_3x, SIGNAL(toggled(bool)), this, SLOT(s_scale(bool)));
+	connect(pushButton_Scale_4x, SIGNAL(toggled(bool)), this, SLOT(s_scale(bool)));
+	connect(pushButton_Scale_5x, SIGNAL(toggled(bool)), this, SLOT(s_scale(bool)));
+	connect(pushButton_Scale_6x, SIGNAL(toggled(bool)), this, SLOT(s_scale(bool)));
+
+	pushButton_Oscan_pergame_setting_on->setProperty("mtype", QVariant(OSCAN_ON));
+	pushButton_Oscan_pergame_setting_off->setProperty("mtype", QVariant(OSCAN_OFF));
+	pushButton_Oscan_pergame_setting_use_def->setProperty("mtype", QVariant(OSCAN_DEFAULT));
+
+	connect(pushButton_Oscan_pergame_setting_on, SIGNAL(toggled(bool)), this, SLOT(s_oscan(bool)));
+	connect(pushButton_Oscan_pergame_setting_off, SIGNAL(toggled(bool)), this, SLOT(s_oscan(bool)));
+	connect(pushButton_Oscan_pergame_setting_use_def, SIGNAL(toggled(bool)), this, SLOT(s_oscan(bool)));
+
+	pushButton_Oscan_def_value_on->setProperty("mtype", QVariant(OSCAN_ON));
+	pushButton_Oscan_def_value_off->setProperty("mtype", QVariant(OSCAN_OFF));
+
+	connect(pushButton_Oscan_def_value_on, SIGNAL(toggled(bool)), this, SLOT(s_oscan_def_value(bool)));
+	connect(pushButton_Oscan_def_value_off, SIGNAL(toggled(bool)), this, SLOT(s_oscan_def_value(bool)));
+
 	{
-		spinBox_Oscan_brd_up->setRange(OVERSCAN_BORDERS_MIN, OVERSCAN_BORDERS_MAX);
-		spinBox_Oscan_brd_down->setRange(OVERSCAN_BORDERS_MIN, OVERSCAN_BORDERS_MAX);
-		spinBox_Oscan_brd_left->setRange(OVERSCAN_BORDERS_MIN, OVERSCAN_BORDERS_MAX);
-		spinBox_Oscan_brd_right->setRange(OVERSCAN_BORDERS_MIN, OVERSCAN_BORDERS_MAX);
+		spinBox_Oscan_NTSC_brd_up->setProperty("mtype", QVariant(0));
+		spinBox_Oscan_NTSC_brd_down->setProperty("mtype", QVariant(0));
+		spinBox_Oscan_NTSC_brd_left->setProperty("mtype", QVariant(0));
+		spinBox_Oscan_NTSC_brd_right->setProperty("mtype", QVariant(0));
 
-		connect(spinBox_Oscan_brd_up, SIGNAL(valueChanged(int)), this, SLOT(s_oscan_spinbox(int)));
-		connect(spinBox_Oscan_brd_down, SIGNAL(valueChanged(int)), this, SLOT(s_oscan_spinbox(int)));
-		connect(spinBox_Oscan_brd_left, SIGNAL(valueChanged(int)), this, SLOT(s_oscan_spinbox(int)));
-		connect(spinBox_Oscan_brd_right, SIGNAL(valueChanged(int)), this, SLOT(s_oscan_spinbox(int)));
+		spinBox_Oscan_NTSC_brd_up->setRange(OVERSCAN_BORDERS_MIN, OVERSCAN_BORDERS_MAX);
+		spinBox_Oscan_NTSC_brd_down->setRange(OVERSCAN_BORDERS_MIN, OVERSCAN_BORDERS_MAX);
+		spinBox_Oscan_NTSC_brd_left->setRange(OVERSCAN_BORDERS_MIN, OVERSCAN_BORDERS_MAX);
+		spinBox_Oscan_NTSC_brd_right->setRange(OVERSCAN_BORDERS_MIN, OVERSCAN_BORDERS_MAX);
+
+		connect(spinBox_Oscan_NTSC_brd_up, SIGNAL(valueChanged(int)), this, SLOT(s_oscan_spinbox(int)));
+		connect(spinBox_Oscan_NTSC_brd_down, SIGNAL(valueChanged(int)), this, SLOT(s_oscan_spinbox(int)));
+		connect(spinBox_Oscan_NTSC_brd_left, SIGNAL(valueChanged(int)), this, SLOT(s_oscan_spinbox(int)));
+		connect(spinBox_Oscan_NTSC_brd_right, SIGNAL(valueChanged(int)), this, SLOT(s_oscan_spinbox(int)));
+
+		pushButton_Oscan_NTSC_brd_reset->setProperty("mtype", QVariant(0));
+
+		connect(pushButton_Oscan_NTSC_brd_reset, SIGNAL(clicked(bool)), this, SLOT(s_oscan_reset(bool)));
+
+		spinBox_Oscan_PAL_brd_up->setProperty("mtype", QVariant(1));
+		spinBox_Oscan_PAL_brd_down->setProperty("mtype", QVariant(1));
+		spinBox_Oscan_PAL_brd_left->setProperty("mtype", QVariant(1));
+		spinBox_Oscan_PAL_brd_right->setProperty("mtype", QVariant(1));
+
+		spinBox_Oscan_PAL_brd_up->setRange(OVERSCAN_BORDERS_MIN, OVERSCAN_BORDERS_MAX);
+		spinBox_Oscan_PAL_brd_down->setRange(OVERSCAN_BORDERS_MIN, OVERSCAN_BORDERS_MAX);
+		spinBox_Oscan_PAL_brd_left->setRange(OVERSCAN_BORDERS_MIN, OVERSCAN_BORDERS_MAX);
+		spinBox_Oscan_PAL_brd_right->setRange(OVERSCAN_BORDERS_MIN, OVERSCAN_BORDERS_MAX);
+
+		connect(spinBox_Oscan_PAL_brd_up, SIGNAL(valueChanged(int)), this, SLOT(s_oscan_spinbox(int)));
+		connect(spinBox_Oscan_PAL_brd_down, SIGNAL(valueChanged(int)), this, SLOT(s_oscan_spinbox(int)));
+		connect(spinBox_Oscan_PAL_brd_left, SIGNAL(valueChanged(int)), this, SLOT(s_oscan_spinbox(int)));
+		connect(spinBox_Oscan_PAL_brd_right, SIGNAL(valueChanged(int)), this, SLOT(s_oscan_spinbox(int)));
+
+		pushButton_Oscan_PAL_brd_reset->setProperty("mtype", QVariant(1));
+
+		connect(pushButton_Oscan_PAL_brd_reset, SIGNAL(clicked(bool)), this, SLOT(s_oscan_reset(bool)));
 	}
-	connect(pushButton_Oscan_brd_reset, SIGNAL(clicked(bool)), this, SLOT(s_oscan_reset(bool)));
 	connect(checkBox_Oscan_brd_black_window, SIGNAL(clicked(bool)), this, SLOT(s_oscan_brd_black_w(bool)));
 	connect(checkBox_Oscan_brd_black_flscreen, SIGNAL(clicked(bool)), this, SLOT(s_oscan_brd_black_f(bool)));
+
+	pushButton_PAR_11->setProperty("mtype", QVariant(PAR11));
+	pushButton_PAR_54->setProperty("mtype", QVariant(PAR54));
+	pushButton_PAR_87->setProperty("mtype", QVariant(PAR87));
+	pushButton_PAR_118->setProperty("mtype", QVariant(PAR118));
+
+	connect(pushButton_PAR_11, SIGNAL(toggled(bool)), this, SLOT(s_par(bool)));
+	connect(pushButton_PAR_54, SIGNAL(toggled(bool)), this, SLOT(s_par(bool)));
+	connect(pushButton_PAR_87, SIGNAL(toggled(bool)), this, SLOT(s_par(bool)));
+	connect(pushButton_PAR_118, SIGNAL(toggled(bool)), this, SLOT(s_par(bool)));
+	connect(checkBox_PAR_Soft_Stretch, SIGNAL(clicked(bool)), this, SLOT(s_par_stretch(bool)));
+
+	pushButton_Screen_Rotation_0d->setProperty("mtype", QVariant(ROTATE_0));
+	pushButton_Screen_Rotation_90d->setProperty("mtype", QVariant(ROTATE_90));
+	pushButton_Screen_Rotation_180d->setProperty("mtype", QVariant(ROTATE_180));
+	pushButton_Screen_Rotation_270d->setProperty("mtype", QVariant(ROTATE_270));
+
+	connect(pushButton_Screen_Rotation_0d, SIGNAL(toggled(bool)), this, SLOT(s_screen_rotation(bool)));
+	connect(pushButton_Screen_Rotation_90d, SIGNAL(toggled(bool)), this, SLOT(s_screen_rotation(bool)));
+	connect(pushButton_Screen_Rotation_180d, SIGNAL(toggled(bool)), this, SLOT(s_screen_rotation(bool)));
+	connect(pushButton_Screen_Rotation_270d, SIGNAL(toggled(bool)), this, SLOT(s_screen_rotation(bool)));
+	connect(checkBox_Horizontal_Flip_Screen, SIGNAL(clicked(bool)), this, SLOT(s_horizontal_flip_screen(bool)));
+	connect(checkBox_Input_Rotation, SIGNAL(clicked(bool)), this, SLOT(s_input_rotation(bool)));
+	connect(checkBox_Text_Rotation, SIGNAL(clicked(bool)), this, SLOT(s_text_rotation(bool)));
 
 	connect(comboBox_Software_Filters, SIGNAL(activated(int)), this, SLOT(s_sfilter(int)));
 	connect(comboBox_Shaders, SIGNAL(activated(int)), this, SLOT(s_shader(int)));
@@ -102,9 +184,6 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Use_integer_scaling_in_fullscreen, SIGNAL(clicked(bool)), this, SLOT(s_integer_in_fullscreen(bool)));
 	connect(checkBox_Stretch_in_fullscreen, SIGNAL(clicked(bool)), this, SLOT(s_stretch_in_fullscreen(bool)));
 
-	connect(comboBox_Screen_Rotation, SIGNAL(activated(int)), this, SLOT(s_screen_rotation(int)));
-	connect(checkBox_Text_Rotation, SIGNAL(clicked(bool)), this, SLOT(s_text_rotation(bool)));
-
 	tabWidget_Video->setCurrentIndex(0);
 }
 wdgSettingsVideo::~wdgSettingsVideo() {}
@@ -117,22 +196,35 @@ void wdgSettingsVideo::changeEvent(QEvent *event) {
 	}
 }
 void wdgSettingsVideo::showEvent(UNUSED(QShowEvent *event)) {
-	int dim = label_Scale->size().height() - 10;
+	int dim = fontMetrics().height();
 
-	icon_Scale->setPixmap(QIcon(":/icon/icons/scale.svg").pixmap(dim, dim));
-	icon_Oscan_dev_value->setPixmap(QIcon(":/icon/icons/overscan_default.svg").pixmap(dim, dim));
-	icon_Oscan_brd->setPixmap(QIcon(":/icon/icons/overscan_set_borders.svg").pixmap(dim, dim));
-	icon_Shaders->setPixmap(QIcon(":/icon/icons/shader.svg").pixmap(dim, dim));
+	icon_Misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
+	icon_Screen_Scale->setPixmap(QIcon(":/icon/icons/scale.svg").pixmap(dim, dim));
+	icon_Screen_Oscan->setPixmap(QIcon(":/icon/icons/overscan_set_borders.svg").pixmap(dim, dim));
+	icon_Screen_PAR->setPixmap(QIcon(":/icon/icons/pixel.svg").pixmap(dim, dim));
+	icon_Screen_Rotation->setPixmap(QIcon(":/icon/icons/switch_sides.svg").pixmap(dim, dim));
+	icon_Software_Filters->setPixmap(QIcon(":/icon/icons/graphic_design.svg").pixmap(dim, dim));
+	icon_Filter->setPixmap(QIcon(":/icon/icons/chip.svg").pixmap(dim, dim));
+	icon_GPU_Shaders->setPixmap(QIcon(":/icon/icons/cube.svg").pixmap(dim, dim));
+	icon_Shader->setPixmap(QIcon(":/icon/icons/360_view.svg").pixmap(dim, dim));
+	icon_Shader_file->setPixmap(QIcon(":/icon/icons/paper.svg").pixmap(dim, dim));
+	icon_Shaders_Parameters->setPixmap(QIcon(":/icon/icons/shaders_parameters.svg").pixmap(dim, dim));
+	icon_Filters_misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
+	icon_Palette_Selection->setPixmap(QIcon(":/icon/icons/palette.svg").pixmap(dim, dim));
+	icon_Palette->setPixmap(QIcon(":/icon/icons/palettes_list.svg").pixmap(dim, dim));
+	icon_Palette_file->setPixmap(QIcon(":/icon/icons/paper.svg").pixmap(dim, dim));
+	icon_Palette_editor->setPixmap(QIcon(":/icon/icons/color_picker.svg").pixmap(dim, dim));
+	icon_Palette_misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
 }
 
 void wdgSettingsVideo::retranslateUi(QWidget *wdgSettingsVideo) {
 	Ui::wdgSettingsVideo::retranslateUi(wdgSettingsVideo);
-	mainwin->qaction_shcut.scale_1x->setText(comboBox_Scale->itemText(0));
-	mainwin->qaction_shcut.scale_2x->setText(comboBox_Scale->itemText(1));
-	mainwin->qaction_shcut.scale_3x->setText(comboBox_Scale->itemText(2));
-	mainwin->qaction_shcut.scale_4x->setText(comboBox_Scale->itemText(3));
-	mainwin->qaction_shcut.scale_5x->setText(comboBox_Scale->itemText(4));
-	mainwin->qaction_shcut.scale_6x->setText(comboBox_Scale->itemText(5));
+	mainwin->qaction_shcut.scale_1x->setText(pushButton_Scale_1x->text());
+	mainwin->qaction_shcut.scale_2x->setText(pushButton_Scale_2x->text());
+	mainwin->qaction_shcut.scale_3x->setText(pushButton_Scale_3x->text());
+	mainwin->qaction_shcut.scale_4x->setText(pushButton_Scale_4x->text());
+	mainwin->qaction_shcut.scale_5x->setText(pushButton_Scale_5x->text());
+	mainwin->qaction_shcut.scale_6x->setText(pushButton_Scale_6x->text());
 	mainwin->qaction_shcut.interpolation->setText(checkBox_Interpolation->text());
 	mainwin->qaction_shcut.integer_in_fullscreen->setText(checkBox_Use_integer_scaling_in_fullscreen->text());
 	mainwin->qaction_shcut.stretch_in_fullscreen->setText(checkBox_Stretch_in_fullscreen->text());
@@ -140,6 +232,15 @@ void wdgSettingsVideo::retranslateUi(QWidget *wdgSettingsVideo) {
 }
 void wdgSettingsVideo::update_widget(void) {
 	scale_set();
+
+	{
+		oscan_set();
+		oscan_def_value_set();
+		oscan_brd_set();
+
+		checkBox_Oscan_brd_black_window->setChecked(cfg->oscan_black_borders);
+		checkBox_Oscan_brd_black_flscreen->setChecked(cfg->oscan_black_borders_fscr);
+	}
 
 	{
 #if defined (WITH_OPENGL)
@@ -156,9 +257,9 @@ void wdgSettingsVideo::update_widget(void) {
 		}
 
 		if (cfg->filter == NTSC_FILTER) {
-			tab_PAR->setEnabled(false);
+			widget_Oscan->setEnabled(false);
 		} else {
-			tab_PAR->setEnabled(true);
+			widget_Oscan->setEnabled(true);
 			if (cfg->pixel_aspect_ratio != PAR11) {
 				checkBox_PAR_Soft_Stretch->setEnabled(true);
 			} else {
@@ -168,12 +269,10 @@ void wdgSettingsVideo::update_widget(void) {
 	}
 
 	{
-		oscan_set();
-		oscan_def_value_set();
-		oscan_brd_set();
-
-		checkBox_Oscan_brd_black_window->setChecked(cfg->oscan_black_borders);
-		checkBox_Oscan_brd_black_flscreen->setChecked(cfg->oscan_black_borders_fscr);
+		srotation_set();
+		checkBox_Horizontal_Flip_Screen->setChecked(cfg->hflip_screen);
+		checkBox_Input_Rotation->setChecked(cfg->input_rotation);
+		checkBox_Text_Rotation->setChecked(cfg->text_rotation);
 	}
 
 	{
@@ -182,6 +281,7 @@ void wdgSettingsVideo::update_widget(void) {
 #if defined (WITH_OPENGL)
 		checkBox_Disable_sRGB_FBO->setChecked(cfg->disable_srgb_fbo);
 #else
+		icon_Filters_misc->setVisible(false);
 		label_Filters_misc->setVisible(false);
 		line_Filters_misc->setVisible(false);
 		checkBox_Disable_sRGB_FBO->setVisible(false);
@@ -209,77 +309,145 @@ void wdgSettingsVideo::update_widget(void) {
 	checkBox_Fullscreen_in_window->setChecked(cfg->fullscreen_in_window);
 	checkBox_Use_integer_scaling_in_fullscreen->setChecked(cfg->integer_scaling);
 	checkBox_Stretch_in_fullscreen->setChecked(cfg->stretch);
-
-	{
-		srotation_set();
-		checkBox_Text_Rotation->setChecked(cfg->text_rotation);
-	}
 }
 void wdgSettingsVideo::change_rom(void) {
-	oscan_brd_mode_set();
 	update_widget();
+}
+void wdgSettingsVideo::shcut_scale(int scale) {
+	switch (scale) {
+		case X1:
+			pushButton_Scale_1x->toggled(true);
+			break;
+		case X2:
+			pushButton_Scale_2x->toggled(true);
+			break;
+		case X3:
+			pushButton_Scale_3x->toggled(true);
+			break;
+		case X4:
+			pushButton_Scale_4x->toggled(true);
+			break;
+		case X5:
+			pushButton_Scale_5x->toggled(true);
+			break;
+		case X6:
+			pushButton_Scale_6x->toggled(true);
+			break;
+	}
 }
 
 void wdgSettingsVideo::scale_set(void) {
-	comboBox_Scale->setCurrentIndex(cfg->scale - 1);
-}
-void wdgSettingsVideo::srotation_set(void) {
-	comboBox_Screen_Rotation->setCurrentIndex(cfg->screen_rotation);
-}
-void wdgSettingsVideo::par_set(void) {
-	comboBox_PAR->setCurrentIndex(cfg->pixel_aspect_ratio);
+	qtHelper::pushbutton_set_checked(pushButton_Scale_1x, false);
+	qtHelper::pushbutton_set_checked(pushButton_Scale_2x, false);
+	qtHelper::pushbutton_set_checked(pushButton_Scale_3x, false);
+	qtHelper::pushbutton_set_checked(pushButton_Scale_4x, false);
+	qtHelper::pushbutton_set_checked(pushButton_Scale_5x, false);
+	qtHelper::pushbutton_set_checked(pushButton_Scale_6x, false);
+	switch (cfg->scale) {
+		case X1:
+			qtHelper::pushbutton_set_checked(pushButton_Scale_1x, true);
+			break;
+		default:
+		case X2:
+			qtHelper::pushbutton_set_checked(pushButton_Scale_2x, true);
+			break;
+		case X3:
+			qtHelper::pushbutton_set_checked(pushButton_Scale_3x, true);
+			break;
+		case X4:
+			qtHelper::pushbutton_set_checked(pushButton_Scale_4x, true);
+			break;
+		case X5:
+			qtHelper::pushbutton_set_checked(pushButton_Scale_5x, true);
+			break;
+		case X6:
+			qtHelper::pushbutton_set_checked(pushButton_Scale_6x, true);
+			break;
+	}
 }
 void wdgSettingsVideo::oscan_set(void) {
-	int oscan = 0;
-
+	qtHelper::pushbutton_set_checked(pushButton_Oscan_pergame_setting_on, false);
+	qtHelper::pushbutton_set_checked(pushButton_Oscan_pergame_setting_off, false);
+	qtHelper::pushbutton_set_checked(pushButton_Oscan_pergame_setting_use_def, false);
 	switch (cfg->oscan) {
 		case OSCAN_ON:
-			oscan = 2;
+			qtHelper::pushbutton_set_checked(pushButton_Oscan_pergame_setting_on, true);
 			break;
+		default:
 		case OSCAN_OFF:
-			oscan = 1;
+			qtHelper::pushbutton_set_checked(pushButton_Oscan_pergame_setting_off, true);
 			break;
 		case OSCAN_DEFAULT:
-			oscan = 0;
+			qtHelper::pushbutton_set_checked(pushButton_Oscan_pergame_setting_use_def, true);
 			break;
 	}
-
-	comboBox_Oscan->setCurrentIndex(oscan);
 }
 void wdgSettingsVideo::oscan_def_value_set(void) {
-	comboBox_Oscan_def_value->setCurrentIndex(cfg->oscan_default);
-}
-void wdgSettingsVideo::oscan_brd_mode_set(void) {
-	int mode = 0;
-
-	if (machine.type == NTSC) {
-		mode = 0;
+	qtHelper::pushbutton_set_checked(pushButton_Oscan_def_value_on, false);
+	qtHelper::pushbutton_set_checked(pushButton_Oscan_def_value_off, false);
+	if (cfg->oscan_default == OSCAN_ON) {
+		qtHelper::pushbutton_set_checked(pushButton_Oscan_def_value_on, true);
 	} else {
-		mode = 1;
+		qtHelper::pushbutton_set_checked(pushButton_Oscan_def_value_off, true);
 	}
-
-	comboBox_Oscan_brd_mode->setCurrentIndex(mode);
 }
 void wdgSettingsVideo::oscan_brd_set(void) {
 	_overscan_borders *borders;
 
-	borders = &overscan_borders[comboBox_Oscan_brd_mode->currentIndex()];
+	borders = &overscan_borders[0];
+	qtHelper::spinbox_set_value(spinBox_Oscan_NTSC_brd_up, borders->up);
+	qtHelper::spinbox_set_value(spinBox_Oscan_NTSC_brd_down, borders->down);
+	qtHelper::spinbox_set_value(spinBox_Oscan_NTSC_brd_left, borders->left);
+	qtHelper::spinbox_set_value(spinBox_Oscan_NTSC_brd_right, borders->right);
 
-	spinBox_Oscan_brd_up->blockSignals(true);
-	spinBox_Oscan_brd_up->setValue(borders->up);
-	spinBox_Oscan_brd_up->blockSignals(false);
-
-	spinBox_Oscan_brd_down->blockSignals(true);
-	spinBox_Oscan_brd_down->setValue(borders->down);
-	spinBox_Oscan_brd_down->blockSignals(false);
-
-	spinBox_Oscan_brd_left->blockSignals(true);
-	spinBox_Oscan_brd_left->setValue(borders->left);
-	spinBox_Oscan_brd_left->blockSignals(false);
-
-	spinBox_Oscan_brd_right->blockSignals(true);
-	spinBox_Oscan_brd_right->setValue(borders->right);
-	spinBox_Oscan_brd_right->blockSignals(false);
+	borders = &overscan_borders[1];
+	qtHelper::spinbox_set_value(spinBox_Oscan_PAL_brd_up, borders->up);
+	qtHelper::spinbox_set_value(spinBox_Oscan_PAL_brd_down, borders->down);
+	qtHelper::spinbox_set_value(spinBox_Oscan_PAL_brd_left, borders->left);
+	qtHelper::spinbox_set_value(spinBox_Oscan_PAL_brd_right, borders->right);
+}
+void wdgSettingsVideo::par_set(void) {
+	qtHelper::pushbutton_set_checked(pushButton_PAR_11, false);
+	qtHelper::pushbutton_set_checked(pushButton_PAR_54, false);
+	qtHelper::pushbutton_set_checked(pushButton_PAR_87, false);
+	qtHelper::pushbutton_set_checked(pushButton_PAR_118, false);
+	switch (cfg->pixel_aspect_ratio) {
+		default:
+		case PAR11:
+			qtHelper::pushbutton_set_checked(pushButton_PAR_11, true);
+			break;
+		case PAR54:
+			qtHelper::pushbutton_set_checked(pushButton_PAR_54, true);
+			break;
+		case PAR87:
+			qtHelper::pushbutton_set_checked(pushButton_PAR_87, true);
+			break;
+		case PAR118:
+			qtHelper::pushbutton_set_checked(pushButton_PAR_118, true);
+			break;
+	}
+}
+void wdgSettingsVideo::srotation_set(void) {
+	qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_0d, false);
+	qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_90d, false);
+	qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_180d, false);
+	qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_270d, false);
+	switch (cfg->screen_rotation) {
+		default:
+		case ROTATE_0:
+			qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_0d, true);
+			break;
+		case ROTATE_90:
+			qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_90d, true);
+			break;
+		case ROTATE_180:
+			qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_180d, true);
+			break;
+		case ROTATE_270:
+			qtHelper::pushbutton_set_checked(pushButton_Screen_Rotation_270d, true);
+			break;
+	}
+	qtHelper::checkbox_set_checked(checkBox_Horizontal_Flip_Screen, cfg->hflip_screen);
 }
 void wdgSettingsVideo::sfilter_set(void) {
 	int filter = 0;
@@ -534,37 +702,54 @@ void wdgSettingsVideo::palette_set(void) {
 		case PALETTE_GREEN:
 			palette = 6;
 			break;
-		case PALETTE_FILE:
+		case PALETTE_RAW:
 			palette = 7;
+			break;
+		case PALETTE_FILE:
+			palette = 8;
 			break;
 	}
 
 	comboBox_Palette->setCurrentIndex(palette);
 }
-
-void wdgSettingsVideo::s_scale(int index) {
-	int scale = index + 1;
-
-	if (cfg->fullscreen) {
-		return;
+bool wdgSettingsVideo::call_gfx_set_screen(int mtype) {
+	if (mtype == 0) {
+		if (machine.type == NTSC) {
+			return (true);
+		}
+	} else if (machine.type != NTSC) {
+		return (true);
 	}
-
-	emu_thread_pause();
-	gfx_set_screen(scale, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-	emu_thread_continue();
+	return (false);
 }
-void wdgSettingsVideo::s_par(int index) {
-	int par = index;
 
-	if (cfg->pixel_aspect_ratio == par) {
-		return;
+void wdgSettingsVideo::s_scale(bool checked) {
+	if (checked) {
+		int scale = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+
+		if ((cfg->fullscreen) || (scale == cfg->scale)) {
+			return;
+		}
+
+		emu_thread_pause();
+		gfx_set_screen(scale, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+		emu_thread_continue();
 	}
+	scale_set();
+}
+void wdgSettingsVideo::s_par(bool checked) {
+	if (checked) {
+		int par = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
 
-	emu_thread_pause();
-	cfg->pixel_aspect_ratio = par;
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
-	emu_thread_continue();
+		if (cfg->pixel_aspect_ratio == par) {
+			return;
+		}
 
+		emu_thread_pause();
+		cfg->pixel_aspect_ratio = par;
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+		emu_thread_continue();
+	}
 	update_widget();
 }
 void wdgSettingsVideo::s_par_stretch(UNUSED(bool checked)) {
@@ -573,34 +758,26 @@ void wdgSettingsVideo::s_par_stretch(UNUSED(bool checked)) {
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	emu_thread_continue();
 }
-void wdgSettingsVideo::s_oscan(int index) {
-	int oscan = index;
-
-	switch (oscan) {
-		case 2:
-			oscan = OSCAN_ON;
-			break;
-		case 1:
-			oscan = OSCAN_OFF;
-			break;
-		case 0:
-			oscan = OSCAN_DEFAULT;
-			break;
+void wdgSettingsVideo::s_oscan(bool checked) {
+	if (checked) {
+		emu_thread_pause();
+		cfg->oscan = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		settings_pgs_save();
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+		emu_thread_continue();
 	}
-
-	emu_thread_pause();
-	cfg->oscan = oscan;
-	settings_pgs_save();
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
-	emu_thread_continue();
+	oscan_set();
 }
-void wdgSettingsVideo::s_oscan_def_value(int index) {
-	int def = index;
-
-	emu_thread_pause();
-	cfg->oscan_default = def;
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
-	emu_thread_continue();
+void wdgSettingsVideo::s_oscan_def_value(bool checked) {
+	if (checked) {
+		emu_thread_pause();
+		cfg->oscan_default = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		if (cfg->oscan == OSCAN_DEFAULT) {
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+		}
+		emu_thread_continue();
+	}
+	oscan_def_value_set();
 }
 void wdgSettingsVideo::s_oscan_brd_black_w(UNUSED(bool checked)) {
 	emu_thread_pause();
@@ -618,44 +795,45 @@ void wdgSettingsVideo::s_oscan_brd_black_f(UNUSED(bool checked)) {
 	}
 	emu_thread_continue();
 }
-void wdgSettingsVideo::s_oscan_brd_mode(UNUSED(int index)) {
-	oscan_brd_set();
-}
 void wdgSettingsVideo::s_oscan_spinbox(int i) {
+	int mtype = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
 	QString name = ((QSpinBox *)sender())->objectName();
 	_overscan_borders *borders;
 
-	borders = &overscan_borders[comboBox_Oscan_brd_mode->currentIndex()];
+	borders = &overscan_borders[mtype];
 
-	if (name == "spinBox_Oscan_brd_up") {
+	if (name.contains("brd_up") == true) {
 		borders->up = i;
-	} else if (name == "spinBox_Oscan_brd_down") {
+	} else if (name.contains("brd_down") == true) {
 		borders->down = i;
-	} else if (name == "spinBox_Oscan_brd_left") {
+	} else if (name.contains("brd_left") == true) {
 		borders->left = i;
-	} else if (name == "spinBox_Oscan_brd_right") {
+	} else if (name.contains("brd_right") == true) {
 		borders->right = i;
 	}
 
 	emu_thread_pause();
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	if (call_gfx_set_screen(mtype)) {
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	}
 	emu_thread_continue();
 }
 void wdgSettingsVideo::s_oscan_reset(UNUSED(bool checked)) {
+	int mtype = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
 	_overscan_borders *borders;
-	int mode;
 
-	mode = comboBox_Oscan_brd_mode->currentIndex();
-	borders = &overscan_borders[mode];
+	borders = &overscan_borders[mtype];
 
 	emu_thread_pause();
-	settings_set_overscan_default(borders, mode + NTSC);
+	settings_set_overscan_default(borders, mtype + NTSC);
 	oscan_brd_set();
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	if (call_gfx_set_screen(mtype)) {
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	}
 	emu_thread_continue();
 }
 void wdgSettingsVideo::s_sfilter(int index) {
-	int filter = index;
+	DBWORD filter = index, ntsc_format = cfg->ntsc_format;
 
 	switch (filter) {
 		default:
@@ -724,6 +902,10 @@ void wdgSettingsVideo::s_sfilter(int index) {
 			break;
 	}
 
+	if ((cfg->filter == filter) && (cfg->ntsc_format == ntsc_format)) {
+		return;
+	}
+
 	emu_thread_pause();
 	gfx_set_screen(NO_CHANGE, filter, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 	if (cfg->filter == NTSC_FILTER) {
@@ -733,7 +915,7 @@ void wdgSettingsVideo::s_sfilter(int index) {
 	emu_thread_continue();
 }
 void wdgSettingsVideo::s_shader(int index) {
-	int shader = index;
+	DBWORD shader = index;
 
 	switch (shader) {
 		default:
@@ -764,6 +946,10 @@ void wdgSettingsVideo::s_shader(int index) {
 		case 8:
 			shader = SHADER_FILE;
 			break;
+	}
+
+	if (cfg->shader == shader) {
+		return;
 	}
 
 	emu_thread_pause();
@@ -840,9 +1026,7 @@ void wdgSettingsVideo::s_shader_param_spin(double d) {
 	QSlider *slider = tableWidget_Shader_Parameters->cellWidget(row, WSV_SP_SLIDER)->findChild<QSlider *>("slider");
 
 	pshd->value = (float)d;
-	slider->blockSignals(true);
-	slider->setValue(((float)slider->maximum() / (pshd->max - pshd->min)) * (pshd->value - pshd->min));
-	slider->blockSignals(false);
+	qtHelper::slider_set_value(slider, ((float)slider->maximum() / (pshd->max - pshd->min)) * (pshd->value - pshd->min));
 
 	if (pshd->value == pshd->initial) {
 		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setForeground(shdp_brush.fg);
@@ -899,8 +1083,15 @@ void wdgSettingsVideo::s_palette(int index) {
 			palette = PALETTE_GREEN;
 			break;
 		case 7:
+			palette = PALETTE_RAW;
+			break;
+		case 8:
 			palette = PALETTE_FILE;
 			break;
+	}
+
+	if (cfg->palette == palette) {
+		return;
 	}
 
 	emu_thread_pause();
@@ -999,16 +1190,30 @@ void wdgSettingsVideo::s_stretch_in_fullscreen(UNUSED(bool checked)) {
 	}
 	emu_thread_continue();
 }
-void wdgSettingsVideo::s_screen_rotation(int index) {
-	int rotation = index;
+void wdgSettingsVideo::s_screen_rotation(bool checked) {
+	if (checked) {
+		int rotation = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
 
-	if (rotation == cfg->screen_rotation) {
-		return;
+		if (rotation == cfg->screen_rotation) {
+			return;
+		}
+
+		emu_thread_pause();
+		cfg->screen_rotation = rotation;
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+		emu_thread_continue();
 	}
-
+	srotation_set();
+}
+void wdgSettingsVideo::s_horizontal_flip_screen(UNUSED(bool checked)) {
 	emu_thread_pause();
-	cfg->screen_rotation = rotation;
+	cfg->hflip_screen = !cfg->hflip_screen;
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
+}
+void wdgSettingsVideo::s_input_rotation(UNUSED(bool checked)) {
+	emu_thread_pause();
+	cfg->input_rotation = !cfg->input_rotation;
 	emu_thread_continue();
 }
 void wdgSettingsVideo::s_text_rotation(UNUSED(bool checked)) {

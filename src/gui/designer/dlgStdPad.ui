@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>457</width>
-    <height>642</height>
+    <height>644</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox_controller">
      <property name="title">
-      <string notr="true">GroupBox</string>
+      <string notr="true">Controller</string>
      </property>
      <property name="flat">
       <bool>true</bool>
@@ -1323,10 +1323,6 @@
   <tabstop>pushButton_kbd_Sequence</tabstop>
   <tabstop>pushButton_kbd_Unset_all</tabstop>
   <tabstop>pushButton_kbd_Defaults</tabstop>
-  <tabstop>horizontalSlider_TurboA</tabstop>
-  <tabstop>horizontalSlider_TurboB</tabstop>
-  <tabstop>pushButton_Apply</tabstop>
-  <tabstop>pushButton_Discard</tabstop>
   <tabstop>comboBox_joy_ID</tabstop>
   <tabstop>pushButton_joy_Up</tabstop>
   <tabstop>pushButton_joy_unset_Up</tabstop>
@@ -1351,6 +1347,11 @@
   <tabstop>pushButton_joy_Sequence</tabstop>
   <tabstop>pushButton_joy_Unset_all</tabstop>
   <tabstop>pushButton_joy_Defaults</tabstop>
+  <tabstop>comboBox_Controller_type</tabstop>
+  <tabstop>horizontalSlider_TurboA</tabstop>
+  <tabstop>horizontalSlider_TurboB</tabstop>
+  <tabstop>pushButton_Apply</tabstop>
+  <tabstop>pushButton_Discard</tabstop>
  </tabstops>
  <resources>
   <include location="resources.qrc"/>

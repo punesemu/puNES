@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include <QtGui/QPainter>
 #include <QtWidgets/QMenu>
 #include "wdgPaletteEditor.moc"
+#include "mainWindow.hpp"
 #include "common.h"
 #include "palette.h"
 #include "mem_map.h"
@@ -56,14 +57,14 @@ QSize wdgPaletteWall::sizeHint() const {
 	return (grid_size().boundedTo(QSize(640, 480)));
 }
 
-void wdgPaletteWall::resizeEvent(QResizeEvent *e) {
-	QSize s = e->size();
+void wdgPaletteWall::resizeEvent(QResizeEvent *event) {
+	QSize s = event->size();
 
 	cellw = s.width() / ncols;
 	cellh = s.height() / nrows;
 }
-void wdgPaletteWall::paintEvent(QPaintEvent *e) {
-	QRect r = e->rect();
+void wdgPaletteWall::paintEvent(QPaintEvent *event) {
+	QRect r = event->rect();
 	int cx = r.x();
 	int cy = r.y();
 	int ch = r.height();
@@ -107,13 +108,13 @@ void wdgPaletteWall::paintEvent(QPaintEvent *e) {
 		}
 	}
 }
-void wdgPaletteWall::mousePressEvent(QMouseEvent *e) {
+void wdgPaletteWall::mousePressEvent(QMouseEvent *event) {
 	// The current cell marker is set to the cell the mouse is pressed in
-	QPoint pos = e->pos();
+	QPoint pos = event->pos();
 
 	set_current(row_at(pos.y()), column_at(pos.x()));
 }
-void wdgPaletteWall::mouseReleaseEvent(UNUSED(QMouseEvent *e)) {
+void wdgPaletteWall::mouseReleaseEvent(UNUSED(QMouseEvent *event)) {
 	// The current cell marker is set to the cell the mouse is clicked in
 	set_selected(curRow, curCol);
 }
@@ -147,11 +148,11 @@ void wdgPaletteWall::keyPressEvent(QKeyEvent* e) {
 			return;
 	}
 }
-void wdgPaletteWall::focusInEvent(UNUSED(QFocusEvent *e)) {
+void wdgPaletteWall::focusInEvent(UNUSED(QFocusEvent *event)) {
 	update_cell(curRow, curCol);
 	emit current_changed(curRow, curCol);
 }
-void wdgPaletteWall::focusOutEvent(UNUSED(QFocusEvent *e)) {
+void wdgPaletteWall::focusOutEvent(UNUSED(QFocusEvent *event)) {
 	update_cell(curRow, curCol);
 }
 
@@ -347,8 +348,8 @@ wdgColorToChange::wdgColorToChange(QWidget *parent) : wdgPaletteWall(parent) {
 }
 wdgColorToChange::~wdgColorToChange() {};
 
-void wdgColorToChange::resizeEvent(QResizeEvent *e) {
-	QSize s = e->size();
+void wdgColorToChange::resizeEvent(QResizeEvent *event) {
+	QSize s = event->size();
 
 	cellw = s.width();
 	cellh = s.height();
@@ -377,8 +378,8 @@ void wdgColorToChange::set_current(int row, int col) {
 wdgHtmlName::wdgHtmlName(QWidget *parent) : QLineEdit(parent) {}
 wdgHtmlName::~wdgHtmlName() {}
 
-void wdgHtmlName::focusOutEvent(QFocusEvent *e) {
-	QLineEdit::focusOutEvent(e);
+void wdgHtmlName::focusOutEvent(QFocusEvent *event) {
+	QLineEdit::focusOutEvent(event);
 	emit focus_out();
 }
 
@@ -386,6 +387,8 @@ void wdgHtmlName::focusOutEvent(QFocusEvent *e) {
 
 wdgPaletteEditor::wdgPaletteEditor(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
+
+	setFocusProxy(widget_Palette_Wall);
 
 	connect(widget_Palette_Wall, SIGNAL(selected(int, int)), this, SLOT(s_palette_wall(int, int)));
 	connect(widget_Palette_Wall, SIGNAL(first_paint(void)), this, SLOT(s_first_paint(void)));
@@ -419,48 +422,40 @@ void wdgPaletteEditor::palette_changed(void) {
 	update();
 }
 
-void wdgPaletteEditor::set_slider(QSlider *slider, int value) {
-	slider->blockSignals(true);
-	slider->setValue(value);
-	slider->blockSignals(false);
-}
-void wdgPaletteEditor::set_spin(QSpinBox *spin, int value) {
-	spin->blockSignals(true);
-	spin->setValue(value);
-	spin->blockSignals(false);
-}
 void wdgPaletteEditor::set_sliders_spins_lineedit(void) {
 	QColor qrgb = widget_Palette_Wall->color_at(widget_Color_Selected->color);
 
-	set_slider(horizontalSlider_Hue, qrgb.hue());
-	set_slider(horizontalSlider_Sat, qrgb.saturation());
-	set_slider(horizontalSlider_Val, qrgb.value());
+	qtHelper::slider_set_value(horizontalSlider_Hue, qrgb.hue());
+	qtHelper::slider_set_value(horizontalSlider_Sat, qrgb.saturation());
+	qtHelper::slider_set_value(horizontalSlider_Val, qrgb.value());
 
-	set_spin(spinBox_Hue, qrgb.hue());
-	set_spin(spinBox_Sat, qrgb.saturation());
-	set_spin(spinBox_Val, qrgb.value());
+	qtHelper::spinbox_set_value(spinBox_Hue, qrgb.hue());
+	qtHelper::spinbox_set_value(spinBox_Sat, qrgb.saturation());
+	qtHelper::spinbox_set_value(spinBox_Val, qrgb.value());
 
-	set_slider(horizontalSlider_Red, qrgb.red());
-	set_slider(horizontalSlider_Green, qrgb.green());
-	set_slider(horizontalSlider_Blue, qrgb.blue());
+	qtHelper::slider_set_value(horizontalSlider_Red, qrgb.red());
+	qtHelper::slider_set_value(horizontalSlider_Green, qrgb.green());
+	qtHelper::slider_set_value(horizontalSlider_Blue, qrgb.blue());
 
-	set_spin(spinBox_Red, qrgb.red());
-	set_spin(spinBox_Green, qrgb.green());
-	set_spin(spinBox_Blue, qrgb.blue());
+	qtHelper::spinbox_set_value(spinBox_Red, qrgb.red());
+	qtHelper::spinbox_set_value(spinBox_Green, qrgb.green());
+	qtHelper::spinbox_set_value(spinBox_Blue, qrgb.blue());
 
 	lineEdit_Html_Name->blockSignals(true);
 	lineEdit_Html_Name->setText(qrgb.name().toUpper());
 	lineEdit_Html_Name->blockSignals(false);
 }
-void wdgPaletteEditor::set_internal_color(int index, QColor qrgb) {
+void wdgPaletteEditor::set_internal_color(int index, QColor qrgb, bool update_palette) {
 	_color_RGB *rgb = &palette_RGB.noswap[index];
 
 	rgb->r = qrgb.red();
 	rgb->g = qrgb.green();
 	rgb->b = qrgb.blue();
 
-	ntsc_set(NULL, cfg->ntsc_format, 0, (BYTE *)palette_RGB.noswap, 0, (BYTE *)palette_RGB.noswap);
-	gfx_palette_update();
+	if (update_palette) {
+		ntsc_set(NULL, cfg->ntsc_format, 0, (BYTE *)palette_RGB.noswap, 0, (BYTE *)palette_RGB.noswap);
+		gfx_palette_update();
+	}
 }
 
 void wdgPaletteEditor::s_first_paint(void) {
@@ -497,7 +492,7 @@ void wdgPaletteEditor::s_slider_and_spin(int i) {
 		qrgb.setHsv(h, s, i);
 	}
 
-	set_internal_color(index, qrgb);
+	set_internal_color(index, qrgb, true);
 
 	widget_Palette_Wall->update_cell_color(index, qrgb);
 	widget_Color_Selected->update_cell_color(0, qrgb);
@@ -514,7 +509,7 @@ void wdgPaletteEditor::s_html(void) {
 
 	qrgb.setNamedColor(lineEdit_Html_Name->text());
 
-	set_internal_color(index, qrgb);
+	set_internal_color(index, qrgb, true);
 
 	widget_Palette_Wall->update_cell_color(index, qrgb);
 	widget_Color_Selected->update_cell_color(0, qrgb);
@@ -527,7 +522,7 @@ void wdgPaletteEditor::s_color_reset(UNUSED(bool checked)) {
 	widget_Palette_Wall->color_reset(index);
 	qrgb = widget_Palette_Wall->color_at(index);
 
-	set_internal_color(index, qrgb);
+	set_internal_color(index, qrgb, true);
 
 	widget_Color_Selected->update_cell(0, 0);
 	set_sliders_spins_lineedit();
@@ -568,8 +563,11 @@ void wdgPaletteEditor::s_palette_reset(UNUSED(bool checked)) {
 	for (i = 0; i < widget_Palette_Wall->count(); i++) {
 		QColor qrgb = widget_Palette_Wall->color_at(i);
 
-		set_internal_color(i, qrgb);
+		set_internal_color(i, qrgb, false);
 	}
+
+	// forzo l'aggiornamento dell'intera paletta.
+	set_internal_color(0, widget_Palette_Wall->color_at(0), true);
 
 	widget_Color_Selected->update_cell(0, 0);
 	set_sliders_spins_lineedit();

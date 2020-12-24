@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -41,9 +41,10 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void showEvent(QShowEvent *event);
 
 	public:
-		void retranslateUi(QWidget *wdgSettingsInput);
+		void retranslateUi(QWidget *wdgSettingsVideo);
 		void update_widget(void);
 		void change_rom(void);
+		void shcut_scale(int scale);
 
 	private:
 		void scale_set(void);
@@ -51,23 +52,21 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void par_set(void);
 		void oscan_set(void);
 		void oscan_def_value_set(void);
-		void oscan_brd_mode_set(void);
 		void oscan_brd_set(void);
 		void sfilter_set(void);
 		void shader_set(void);
 		void shader_param_set(void);
 		void palette_set(void);
+		bool call_gfx_set_screen(int mtype);
 
-	public slots:
-		void s_scale(int index);
 	private slots:
-		void s_par(int index);
+		void s_scale(bool checked);
+		void s_par(bool checked);
 		void s_par_stretch(bool checked);
-		void s_oscan(int index);
-		void s_oscan_def_value(int index);
+		void s_oscan(bool checked);
+		void s_oscan_def_value(bool checked);
 		void s_oscan_brd_black_w(bool checked);
 		void s_oscan_brd_black_f(bool checked);
-		void s_oscan_brd_mode(int index);
 		void s_oscan_spinbox(int i);
 		void s_oscan_reset(bool checked);
 		void s_sfilter(int index);
@@ -95,7 +94,9 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void s_fullscreen_in_window(bool checked);
 		void s_integer_in_fullscreen(bool checked);
 		void s_stretch_in_fullscreen(bool checked);
-		void s_screen_rotation(int index);
+		void s_screen_rotation(bool checked);
+		void s_horizontal_flip_screen(bool checked);
+		void s_input_rotation(bool checked);
 		void s_text_rotation(bool checked);
 };
 

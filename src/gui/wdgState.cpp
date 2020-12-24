@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -45,11 +45,11 @@ void wdgState::changeEvent(QEvent *event) {
 	}
 }
 void wdgState::paintEvent(UNUSED(QPaintEvent *event)) {
-    QStyleOption opt;
-    QPainter p(this);
+	QStyleOption opt;
+	QPainter p(this);
 
-    opt.init(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+	opt.init(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 void wdgState::retranslateUi(wdgState *wdgState) {

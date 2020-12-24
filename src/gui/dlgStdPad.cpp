@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -49,6 +49,9 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 	setupUi(this);
 
 	js_update_detected_devices();
+
+	groupBox_controller->setStyleSheet(group_title_bold_stylesheet());
+	groupBox_Misc->setStyleSheet(group_title_bold_stylesheet());
 
 	groupBox_controller->setTitle(tr("Controller %1 : Standard Pad").arg(cfg_port->id));
 	tabWidget_kbd_joy->setCurrentIndex(JOYSTICK);
@@ -116,6 +119,13 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 		comboBox_Controller_type->addItem(tr("3rd-party"));
 		comboBox_Controller_type->setCurrentIndex(data.cfg.port->type_pad);
 		connect(comboBox_Controller_type, SIGNAL(activated(int)), this, SLOT(s_combobox_controller_type_activated(int)));
+	}
+
+	{
+		int w = QLabel("00").sizeHint().width();
+
+		label_value_slider_TurboA->setFixedWidth(w);
+		label_value_slider_TurboB->setFixedWidth(w);
 	}
 
 	for (int i = TURBOA; i <= TURBOB; i++) {

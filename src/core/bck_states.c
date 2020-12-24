@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@
 			break;\
 	}
 #define bck_states_on_pos(_mode, _mem, _data, _index, _size_buf)\
-	switch(mode) {\
+	switch (mode) {\
 		case BCK_STATES_OP_SAVE_ON_MEM: {\
 			bank = 0;\
 			bank = end - start;\

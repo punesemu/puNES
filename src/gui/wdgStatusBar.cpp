@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #include "mainWindow.hpp"
 #include "conf.h"
 #include "patcher.h"
+#include "recording.h"
 
 // -------------------------------- Statusbar -----------------------------------------
 
@@ -34,10 +35,13 @@ wdgStatusBar::wdgStatusBar(QWidget *parent) : QStatusBar(parent) {
 	layout()->setMargin(0);
 	layout()->setSpacing(0);
 
-	//setStyleSheet("QStatusBar::item { border: 1px solid; border-radius: 1px; } ");
+	//setStyleSheet("QStatusBar::item { border: 1px solid; border-radius: 3px; } ");
 
-	infosb = new infoStatusBar(this);
-	addWidget(infosb);
+	info = new infoStatusBar(this);
+	addWidget(info, 1);
+
+	rec = new recStatusBar(this);
+	addWidget(rec, 0);
 
 	installEventFilter(this);
 }
@@ -50,13 +54,16 @@ bool wdgStatusBar::eventFilter(QObject *obj, QEvent *event) {
 
 	return (QObject::eventFilter(obj, event));
 }
+void wdgStatusBar::showEvent(QShowEvent *event) {
+	rec->setFixedHeight(info->height());
+	QStatusBar::showEvent(event);
+}
 
 void wdgStatusBar::update_statusbar(void) {
-	infosb->update_label();
+	info->update_label();
 }
 void wdgStatusBar::update_width(int w) {
 	setFixedWidth(w);
-	infosb->setFixedWidth(w);
 }
 
 // ---------------------------------- Info --------------------------------------------
@@ -105,4 +112,116 @@ void infoStatusBar::update_label(void) {
 		}
 		label->setToolTip(fileinfo.filePath());
 	}
+}
+
+// ----------------------------------- Rec --------------------------------------------
+
+recStatusBar::recStatusBar(QWidget *parent) : QFrame(parent) {
+	QHBoxLayout *layout = new QHBoxLayout();
+
+	setFrameShape(QFrame::Panel);
+	setFrameShadow(QFrame::Sunken);
+
+	layout->setContentsMargins(QMargins(0,0,0,0));
+	layout->setMargin(0);
+
+	desc = new QLabel();
+	layout->addWidget(desc);
+
+	icon = new QLabel();
+	layout->addWidget(icon);
+
+	setLayout(layout);
+
+	timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(s_blink_icon()));
+	connect(this, SIGNAL(et_blink_icon()), this, SLOT(s_et_blink_icon()));
+
+	setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(s_context_menu(const QPoint&)));
+}
+recStatusBar::~recStatusBar() {}
+
+void recStatusBar::changeEvent(QEvent *event) {
+	if (event->type() == QEvent::LanguageChange) {
+		desc_text();
+	} else {
+		QWidget::changeEvent(event);
+	}
+}
+void recStatusBar::closeEvent(QCloseEvent *event) {
+	timer->stop();
+	QWidget::closeEvent(event);
+}
+void recStatusBar::mousePressEvent(QMouseEvent *event) {
+	if (event->button() == Qt::LeftButton) {
+#if defined (WITH_FFMPEG)
+		if (desc->text() == tr("Audio")) {
+			mainwin->action_Start_Stop_Audio_recording->trigger();
+		} else {
+			mainwin->action_Start_Stop_Video_recording->trigger();
+		}
+#else
+		mainwin->action_Start_Stop_Audio_recording->trigger();
+#endif
+	}
+}
+
+void recStatusBar::desc_text(void) {
+	static BYTE last_type = REC_FORMAT_AUDIO;
+
+	if (info.recording_on_air) {
+#if defined (WITH_FFMPEG)
+		last_type = recording_format_type();
+#endif
+		desc->setEnabled(true);
+	} else {
+		desc->setEnabled(false);
+	}
+
+	if (last_type == REC_FORMAT_AUDIO) {
+		desc->setText(tr("Audio"));
+#if defined (WITH_FFMPEG)
+	} else {
+		desc->setText(tr("Video"));
+#endif
+	}
+}
+void recStatusBar::icon_pixmap(QIcon::Mode mode) {
+	icon->setPixmap(QIcon(":/icon/icons/recording_red.svg").pixmap(height(), height() - 4,  mode));
+}
+
+void recStatusBar::s_et_blink_icon(void) {
+	if (info.recording_on_air) {
+		if (timer->isActive() == false) {
+			desc_text();
+			timer->start(500);
+		}
+	} else {
+		timer->stop();
+		desc_text();
+		icon_pixmap(QIcon::Disabled);
+	}
+}
+void recStatusBar::s_blink_icon(void) {
+	QIcon::Mode mode = QIcon::Disabled;
+	static bool state = true;
+
+	if (info.recording_on_air) {
+		if (state) {
+			mode = QIcon::Normal;
+		}
+		state = !state;
+	}
+	icon_pixmap(mode);
+}
+void recStatusBar::s_context_menu(const QPoint &pos) {
+	QPoint global_pos = mapToGlobal(pos);
+	QMenu menu;
+
+	menu.addAction(mainwin->action_Start_Stop_Audio_recording);
+#if defined (WITH_FFMPEG)
+	menu.addAction(mainwin->action_Start_Stop_Video_recording);
+#endif
+	menu.exec(global_pos);
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,8 +34,9 @@ class wdgSettingsGeneral : public QWidget, public Ui::wdgSettingsGeneral {
 		void showEvent(QShowEvent *event);
 
 	public:
-		void retranslateUi(QWidget *wdgSettingsInput);
+		void retranslateUi(QWidget *wdgSettingsGeneral);
 		void update_widget(void);
+		void shcut_mode(int mode);
 
 	private:
 		void mode_set(void);
@@ -43,11 +44,10 @@ class wdgSettingsGeneral : public QWidget, public Ui::wdgSettingsGeneral {
 		void rewind_minutes_set(void);
 		void language_set(void);
 
-	public slots:
-		void s_mode(int index);
 	private slots:
-		void s_fast_forward_velocity(int index);
-		void s_rewind_minutes(int index);
+		void s_mode(bool checked);
+		void s_fast_forward_velocity(bool checked);
+		void s_rewind_minutes(bool checked);
 		void s_language(int index);
 		void s_game_genie_rom_file(bool checked);
 		void s_game_genie_rom_file_clear(bool checked);

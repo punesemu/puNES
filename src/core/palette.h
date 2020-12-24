@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,7 +31,8 @@ enum palettes_types {
 	PALETTE_GREEN,
 	PALETTE_FILE,
 	PALETTE_FRBX_NOSTALGIA,
-	PALETTE_FRBX_YUV
+	PALETTE_FRBX_YUV,
+	PALETTE_RAW
 };
 
 typedef struct _color_RGB {

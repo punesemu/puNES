@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,24 +34,24 @@ class wdgSettingsAudio : public QWidget, public Ui::wdgSettingsAudio {
 		void showEvent(QShowEvent *event);
 
 	public:
-		void retranslateUi(QWidget *wdgSettingsInput);
+		void retranslateUi(QWidget *wdgSettingsAudio);
 		void update_widget(void);
 
 	private:
 		void output_devices_init(void);
-
-	private:
-		void audio_buffer_factor_set(void);
 		void sample_rate_set(void);
+		void audio_buffer_factor_set(void);
 		void channels_set(void);
 		void channels_delay_set(void);
+		void settings_set_enabled(bool mode);
 
 	private slots:
 		void s_output_devices(int index);
-		void s_audio_buffer_factor(int index);
-		void s_sample_rate(int index);
-		void s_channels(int index);
-		void s_channels_delay(int index);
+		void s_sample_rate(bool checked);
+		void s_audio_buffer_factor(int value);
+		void s_channels(bool checked);
+		void s_channels_delay(int value);
+		void s_reverse_bits_dpcm(bool checked);
 		void s_swap_duty_cycles(bool checked);
 		void s_enable_audio(bool checked);
 };

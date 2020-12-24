@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -131,6 +131,22 @@ HWND gui_screen_id(void) {
 #endif
 
 	return (wid);
+}
+char *gui_dup_wchar_to_utf8(uTCHAR *w) {
+	int len = WideCharToMultiByte(CP_UTF8, 0, w, -1, 0, 0, 0, 0);
+	char *s = NULL;
+
+	if ((s = (char *)malloc(len))) {
+		WideCharToMultiByte(CP_UTF8, 0, w, -1, s, len, 0, 0);
+	}
+
+	return (s);
+}
+unsigned int gui_hardware_concurrency(void) {
+	SYSTEM_INFO sysinfo;
+
+	GetSystemInfo(&sysinfo);
+	return (sysinfo.dwNumberOfProcessors);
 }
 
 static double high_resolution_ms(void) {

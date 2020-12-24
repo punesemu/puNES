@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@
 _gfx gfx;
 
 BYTE gfx_init(void) {
-	gfx.screenshot.save = FALSE;
+	info.screenshot = SCRSH_NONE;
 
 	gui_screen_info();
 
@@ -257,6 +257,8 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		palette = cfg->palette;
 	}
 	if ((palette != cfg->palette) || info.on_cfg || force_palette) {
+		int i;
+
 		if (palette == PALETTE_FILE) {
 			if (ustrlen(cfg->palette_file) != 0) {
 				if (palette_load_from_file(cfg->palette_file) == EXIT_ERROR) {
@@ -290,6 +292,14 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				break;
 			case PALETTE_GREEN:
 				rgb_modifier(NULL, palette_RGB.noswap, 0x00, -0x20, 0x20, -0x20);
+				break;
+			case PALETTE_RAW:
+				for (i = 0; i < 512; i++) {
+					palette_RGB.noswap[i].r = ((i & 0x0F) * 255 / 15);
+					palette_RGB.noswap[i].g = (((i >> 4) & 0x03) * 255 / 3);
+					palette_RGB.noswap[i].b = (((i >> 6) & 0x07) * 255 / 7);
+				}
+				ntsc_set(NULL, cfg->ntsc_format, FALSE, 0, (BYTE *)palette_RGB.noswap, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_FILE:
 				break;
@@ -444,11 +454,13 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 }
 void gfx_draw_screen(void) {
 	if (gfx_thread_public.filtering == TRUE) {
+		gfx.frame.totals++;
 		fps.frames_skipped++;
 		return;
 	}
 
 	screen.rd = screen.wr;
+	screen.rd->frame = gfx.frame.totals++;
 	screen.last_completed_wr = screen.wr;
 
 	if (info.doublebuffer == TRUE) {
@@ -533,6 +545,8 @@ void gfx_apply_filter(void) {
 
 	gfx_thread_lock();
 
+	gfx.frame.filtered = screen.rd->frame;
+
 	// applico l'effetto desiderato
 	gfx.filter.data.pitch = opengl.surface.pitch;
 	gfx.filter.data.pix = opengl.surface.pixels;
@@ -540,6 +554,13 @@ void gfx_apply_filter(void) {
 	gfx.filter.data.height = opengl.surface.h;
 	gfx.filter.func();
 
+	// posso trovarmi nella situazione in cui applico il filtro ad un frame quando ancora
+	// (per molteplici motivi) non ho ancora finito di disegnare il frame precedente. Il gui_screen_update
+	// mettere in coda un'altro update che verrebbe eseguito sempre sullo stesso frame disegnandolo
+	// a video due volte.
+	if ((gfx.frame.filtered - gfx.frame.in_draw) != 2) {
+		gui_screen_update();
+	}
+
 	gfx_thread_unlock();
-	gui_screen_update();
 }

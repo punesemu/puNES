@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,6 +34,9 @@ class wdgAPUChannels : public QWidget, public Ui::wdgAPUChannels {
 
 	public:
 		void update_widget(void);
+
+	private:
+		void volume_update_label(int type, int value);
 
 	private slots:
 		void s_apu_ch_checkbox(bool checked);

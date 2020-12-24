@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -2819,6 +2819,8 @@ static const _dbelement dblist[] = {
 	{"16c6c4fb02e9ee1eee286b21ef35d09f4eadb408", 21, VRC4C, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Ganbare Goemon Gaiden 2 - Tenka no Zaihou (J) [b2].nes Traduction v101 */
 	{"e8a7c35c793288bf9c0161c3edd49c825c8f7981", 21, VRC4C, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Ganbare Goemon Gaiden 2 - Tenka no Zaihou (Spanish).nes */
+	{"9eb76760cfffad74b8ff1157ef0059208c07946b", 21, VRC4C, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 	/* 2-in-1 - Yuu Yuu + Dragonball Z [p1][!].nes */
 	{"4097d5a814308e39d592466b60b64862699cc22a", 23, VRC4BMC, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
@@ -2932,6 +2934,10 @@ static const _dbelement dblist[] = {
 	/* Gradius II (J) (VC).nes */
 	{"cf97e13a30b688eafdd0509b63e0228ea2185a25", 25, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+	/* AxelayNES.nes */
+	{"ab210c819a69026ec4d0ebcae630ecfc56669b9b", 27, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* AxelayNES.nes */
+	{"dd8a615289e5508640a8c21922e3eddb272917d6", 27, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* World Hero (Unl)(TV System Select)[!].nes */
 	{"0b351c586130ad0ae6203144136b6e199fa5ae20", 27, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 

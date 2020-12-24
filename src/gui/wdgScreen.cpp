@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -120,7 +120,7 @@ void wdgScreen::dragEnterEvent(QDragEnterEvent *event) {
 	}
 }
 void wdgScreen::dropEvent(QDropEvent *event) {
-	foreach (const QUrl &url, event->mimeData()->urls()){
+	foreach (const QUrl &url, event->mimeData()->urls()) {
 		QFileInfo fileinfo(url.toLocalFile());
 		_uncompress_archive *archive;
 		BYTE is_rom = FALSE, is_patch = FALSE, rc;

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ void map_init_83(void) {
 
 	sync_83();
 
-	switch(info.id) {
+	switch (info.id) {
 		case MAP83_REG0:
 			m83.dip = 0;
 			break;

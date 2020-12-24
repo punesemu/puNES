@@ -1,4 +1,4 @@
-/*  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+/*  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -54,6 +54,7 @@ enum nsf_routine_bytes {
 };
 enum nsf_effect_types {
 	NSF_EFFECT_BARS,
+	NSF_EFFECT_BARS_MIXED,
 	NSF_EFFECT_RAW,
 	NSF_EFFECT_RAW_FULL,
 	NSF_EFFECT_HANNING,

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,10 +22,10 @@
 #include "apu.h"
 #include "input.h"
 
-typedef struct _last_pos {
-	int x;
-	int y;
-} _last_pos;
+typedef struct _last_geometry {
+	int x, y;
+	int w, h;
+} _last_geometry;
 typedef struct _toolbar {
 	BYTE area;
 	BYTE hidden;
@@ -37,6 +37,7 @@ typedef struct _config {
 	BYTE channels_mode;
 	double stereo_delay;
 	BYTE audio_buffer_factor;
+	BYTE reverse_bits_dpcm;
 	BYTE swap_duty;
 	BYTE rewind_minutes;
 	BYTE ff_velocity;
@@ -63,7 +64,9 @@ typedef struct _config {
 	BYTE interpolation;
 	BYTE cheat_mode;
 	BYTE txt_on_screen;
+	BYTE hflip_screen;
 	BYTE screen_rotation;
+	BYTE input_rotation;
 	BYTE text_rotation;
 	BYTE show_fps;
 	BYTE input_display;
@@ -86,6 +89,18 @@ typedef struct _config {
 
 	_config_input input;
 	_config_apu apu;
+#if defined (WITH_FFMPEG)
+	struct _config_recording {
+		BYTE audio_format;
+		BYTE video_format;
+		BYTE quality;
+		BYTE use_emu_resolution;
+		BYTE follow_rotation;
+		BYTE output_resolution;
+		int output_custom_w;
+		int output_custom_h;
+	} recording;
+#endif
 
 	uTCHAR shader_file[LENGTH_FILE_NAME_LONG];
 	uTCHAR palette_file[LENGTH_FILE_NAME_LONG];
@@ -93,12 +108,16 @@ typedef struct _config {
 	uTCHAR gg_rom_file[LENGTH_FILE_NAME_LONG];
 	uTCHAR fds_bios_file[LENGTH_FILE_NAME_LONG];
 	uTCHAR last_import_cheat_path[LENGTH_FILE_NAME_LONG];
+#if defined (WITH_FFMPEG)
+	uTCHAR last_rec_video_path[LENGTH_FILE_NAME_LONG];
+#endif
+	uTCHAR last_rec_audio_path[LENGTH_FILE_NAME_LONG];
 
 	uTCHAR audio_output[100];
 	uTCHAR audio_input[100];
 
-	_last_pos last_pos;
-	_last_pos last_pos_settings;
+	_last_geometry lg;
+	_last_geometry lg_settings;
 	_toolbar toolbar;
 } _config;
 

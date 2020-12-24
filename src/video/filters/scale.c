@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 
 INLINE static void scale_surface1x(uint32_t *palette, uint32_t pitch, void *pix);
 
-static struct _scl {
+struct _scl {
 	WORD sx;
 	WORD sy;
 	WORD oy;

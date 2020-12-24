@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,55 +16,33 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtWidgets/QDesktopWidget>
 #include "wdgAPUChannels.moc"
 #include "dlgSettings.hpp"
 #include "audio/snd.h"
 #include "conf.h"
 #include "gui.h"
 
+static const char channels_desc[7][15] = { "Square1",  "Square2", "Triangle", "Noise", "DMC", "Extra", "Master" };
+
 wdgAPUChannels::wdgAPUChannels(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
-	horizontalSlider_Master->setRange(0, 100);
-	horizontalSlider_Square1->setRange(0, 100);
-	horizontalSlider_Square2->setRange(0, 100);
-	horizontalSlider_Triangle->setRange(0, 100);
-	horizontalSlider_Noise->setRange(0, 100);
-	horizontalSlider_DMC->setRange(0, 100);
-	horizontalSlider_Extra->setRange(0, 100);
+	setFocusProxy(checkBox_Master);
 
-	horizontalSlider_Master->setProperty("myIndex", QVariant(APU_MASTER));
-	horizontalSlider_Square1->setProperty("myIndex", QVariant(APU_S1));
-	horizontalSlider_Square2->setProperty("myIndex", QVariant(APU_S2));
-	horizontalSlider_Triangle->setProperty("myIndex", QVariant(APU_TR));
-	horizontalSlider_Noise->setProperty("myIndex", QVariant(APU_NS));
-	horizontalSlider_DMC->setProperty("myIndex", QVariant(APU_DMC));
-	horizontalSlider_Extra->setProperty("myIndex", QVariant(APU_EXTRA));
+	for (int i = APU_S1; i <= APU_MASTER; i++) {
+		QCheckBox *cbox = findChild<QCheckBox *>("checkBox_" + QString(channels_desc[i]));
+		QSlider *slider = findChild<QSlider *>("horizontalSlider_" + QString(channels_desc[i]));
+		QLabel *label = findChild<QLabel *>("label_value_slider_" + QString(channels_desc[i]));
 
-	connect(horizontalSlider_Master, SIGNAL(valueChanged(int)), this, SLOT(s_apu_ch_slider(int)));
-	connect(horizontalSlider_Square1, SIGNAL(valueChanged(int)), this, SLOT(s_apu_ch_slider(int)));
-	connect(horizontalSlider_Square2, SIGNAL(valueChanged(int)), this, SLOT(s_apu_ch_slider(int)));
-	connect(horizontalSlider_Triangle, SIGNAL(valueChanged(int)), this, SLOT(s_apu_ch_slider(int)));
-	connect(horizontalSlider_Noise, SIGNAL(valueChanged(int)), this, SLOT(s_apu_ch_slider(int)));
-	connect(horizontalSlider_DMC, SIGNAL(valueChanged(int)), this, SLOT(s_apu_ch_slider(int)));
-	connect(horizontalSlider_Extra, SIGNAL(valueChanged(int)), this, SLOT(s_apu_ch_slider(int)));
+		cbox->setProperty("myIndex", QVariant(i));
+		connect(cbox, SIGNAL(clicked(bool)), this, SLOT(s_apu_ch_checkbox(bool)));
 
-	checkBox_Master->setProperty("myIndex", QVariant(APU_MASTER));
-	checkBox_Square1->setProperty("myIndex", QVariant(APU_S1));
-	checkBox_Square2->setProperty("myIndex", QVariant(APU_S2));
-	checkBox_Triangle->setProperty("myIndex", QVariant(APU_TR));
-	checkBox_Noise->setProperty("myIndex", QVariant(APU_NS));
-	checkBox_DMC->setProperty("myIndex", QVariant(APU_DMC));
-	checkBox_Extra->setProperty("myIndex", QVariant(APU_EXTRA));
+		slider->setRange(0, 100);
+		slider->setProperty("myIndex", QVariant(i));
+		connect(slider, SIGNAL(valueChanged(int)), this, SLOT(s_apu_ch_slider(int)));
 
-	connect(checkBox_Master, SIGNAL(clicked(bool)), this, SLOT(s_apu_ch_checkbox(bool)));
-	connect(checkBox_Square1, SIGNAL(clicked(bool)), this, SLOT(s_apu_ch_checkbox(bool)));
-	connect(checkBox_Square2, SIGNAL(clicked(bool)), this, SLOT(s_apu_ch_checkbox(bool)));
-	connect(checkBox_Triangle, SIGNAL(clicked(bool)), this, SLOT(s_apu_ch_checkbox(bool)));
-	connect(checkBox_Noise, SIGNAL(clicked(bool)), this, SLOT(s_apu_ch_checkbox(bool)));
-	connect(checkBox_DMC, SIGNAL(clicked(bool)), this, SLOT(s_apu_ch_checkbox(bool)));
-	connect(checkBox_Extra, SIGNAL(clicked(bool)), this, SLOT(s_apu_ch_checkbox(bool)));
+		label->setFixedWidth(QLabel("000").sizeHint().width());
+	}
 
 	pushButton_APU_Channels_active_all->setProperty("myIndex", QVariant(TRUE));
 	pushButton_APU_Channels_disable_all->setProperty("myIndex", QVariant(FALSE));
@@ -87,42 +65,33 @@ void wdgAPUChannels::changeEvent(QEvent *event) {
 }
 
 void wdgAPUChannels::update_widget(void) {
-	checkBox_Master->setChecked(cfg->apu.channel[APU_MASTER]);
-	checkBox_Square1->setChecked(cfg->apu.channel[APU_S1]);
-	checkBox_Square2->setChecked(cfg->apu.channel[APU_S2]);
-	checkBox_Triangle->setChecked(cfg->apu.channel[APU_TR]);
-	checkBox_Noise->setChecked(cfg->apu.channel[APU_NS]);
-	checkBox_DMC->setChecked(cfg->apu.channel[APU_DMC]);
-	checkBox_Extra->setChecked(cfg->apu.channel[APU_EXTRA]);
+	for (int i = APU_S1; i <= APU_MASTER; i++) {
+		QSlider *slider = findChild<QSlider *>("horizontalSlider_" + QString(channels_desc[i]));
+		QCheckBox *cbox = findChild<QCheckBox *>("checkBox_" + QString(channels_desc[i]));
 
-	horizontalSlider_Master->setValue(cfg->apu.volume[APU_MASTER] * 100);
-	horizontalSlider_Square1->setValue(cfg->apu.volume[APU_S1] * 100);
-	horizontalSlider_Square2->setValue(cfg->apu.volume[APU_S2] * 100);
-	horizontalSlider_Triangle->setValue(cfg->apu.volume[APU_TR] * 100);
-	horizontalSlider_Noise->setValue(cfg->apu.volume[APU_NS] * 100);
-	horizontalSlider_DMC->setValue(cfg->apu.volume[APU_DMC] * 100);
-	horizontalSlider_Extra->setValue(cfg->apu.volume[APU_EXTRA] * 100);
+		cbox->setChecked(cfg->apu.channel[i]);
+		slider->setValue(cfg->apu.volume[i] * 100);
+	}
+}
+
+void wdgAPUChannels::volume_update_label(int type, int value) {
+	QLabel *label = findChild<QLabel *>("label_value_slider_" + QString(channels_desc[type]));
+
+	label->setText(QString("%1").arg(value, 3));
 }
 
 void wdgAPUChannels::s_apu_ch_checkbox(UNUSED(bool checked)) {
 	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
 	cfg_from_file.apu.channel[index] = !cfg_from_file.apu.channel[index];
-
-	if (index == APU_MASTER) {
-		if (cfg->apu.channel[APU_MASTER]) {
-			snd_playback_start();
-		} else {
-			snd_playback_stop();
-		}
-	}
-	gui_apu_channels_widgets_update();
+	gui_update_apu_channels_widgets();
 }
 void wdgAPUChannels::s_apu_ch_slider(int value) {
 	int index = QVariant(((QSlider *)sender())->property("myIndex")).toInt();
 
 	cfg->apu.volume[index] = (double)value / 100.0f;
-	gui_apu_channels_widgets_update();
+	volume_update_label(index, value);
+	gui_update_apu_channels_widgets();
 }
 void wdgAPUChannels::s_apu_ch_toggle_all(UNUSED(bool checked)) {
 	int mode = QVariant(((QPushButton *)sender())->property("myIndex")).toInt();
@@ -141,5 +110,5 @@ void wdgAPUChannels::s_apu_ch_toggle_all(UNUSED(bool checked)) {
 		cfg->apu.channel[i] = mode;
 	}
 
-	gui_apu_channels_widgets_update();
+	gui_update_apu_channels_widgets();
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 #include "input/standard_controller.h"
 #include "conf.h"
 #include "gui.h"
+#include "video/gfx.h"
 #include "tas.h"
 
 INLINE static void input_turbo_buttons_standard_controller(_port *port);
@@ -44,9 +45,59 @@ void input_add_event_standard_controller(BYTE index) {
 	input_turbo_buttons_standard_controller(&port[index]);
 }
 BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), DBWORD event, BYTE type, _port *port) {
+	BYTE *left = &port->data[LEFT], *right = &port->data[RIGHT];
+	BYTE *up = &port->data[UP], *down = &port->data[DOWN];
+
 	if (tas.type) {
 		return (EXIT_OK);
-	} else if (event == port->input[type][BUT_A]) {
+	}
+
+	if ((cfg->screen_rotation | cfg->hflip_screen) && cfg->input_rotation) {
+		switch (cfg->screen_rotation) {
+			default:
+			case ROTATE_0:
+				if (cfg->hflip_screen) {
+					left = &port->data[RIGHT];
+					right = &port->data[LEFT];
+				}
+				break;
+			case ROTATE_90:
+				left = &port->data[DOWN];
+				right = &port->data[UP];
+				if (cfg->hflip_screen) {
+					up = &port->data[RIGHT];
+					down = &port->data[LEFT];
+				} else {
+					up = &port->data[LEFT];
+					down = &port->data[RIGHT];
+				}
+				break;
+			case ROTATE_180:
+				if (cfg->hflip_screen) {
+					left = &port->data[LEFT];
+					right = &port->data[RIGHT];
+				} else {
+					left = &port->data[RIGHT];
+					right = &port->data[LEFT];
+				}
+				up = &port->data[DOWN];
+				down = &port->data[UP];
+				break;
+			case ROTATE_270:
+				left = &port->data[UP];
+				right = &port->data[DOWN];
+				if (cfg->hflip_screen) {
+					up = &port->data[LEFT];
+					down = &port->data[RIGHT];
+				} else {
+					up = &port->data[RIGHT];
+					down = &port->data[LEFT];
+				}
+				break;
+		}
+	}
+
+	if (event == port->input[type][BUT_A]) {
 		if (!port->turbo[TURBOA].active) {
 			port->data[BUT_A] = mode;
 		}
@@ -63,31 +114,31 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 		port->data[START] = mode;
 		return (EXIT_OK);
 	} else if (event == port->input[type][UP]) {
-		port->data[UP] = mode;
+		(*up) = mode;
 		// non possono essere premuti contemporaneamente
 		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
-			port->data[DOWN] = RELEASED;
+			(*down) = RELEASED;
 		}
 		return (EXIT_OK);
 	} else if (event == port->input[type][DOWN]) {
-		port->data[DOWN] = mode;
+		(*down) = mode;
 		// non possono essere premuti contemporaneamente
 		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
-			port->data[UP] = RELEASED;
+			(*up) = RELEASED;
 		}
 		return (EXIT_OK);
 	} else if (event == port->input[type][LEFT]) {
-		port->data[LEFT] = mode;
+		(*left) = mode;
 		// non possono essere premuti contemporaneamente
 		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
-			port->data[RIGHT] = RELEASED;
+			(*right) = RELEASED;
 		}
 		return (EXIT_OK);
 	} else if (event == port->input[type][RIGHT]) {
-		port->data[RIGHT] = mode;
+		(*right) = mode;
 		// non possono essere premuti contemporaneamente
 		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
-			port->data[LEFT] = RELEASED;
+			(*left) = RELEASED;
 		}
 		return (EXIT_OK);
 	} else if (event == port->input[type][TRB_A]) {
@@ -138,4 +189,3 @@ INLINE static void input_turbo_buttons_standard_controller(_port *port) {
 		}
 	}
 }
-

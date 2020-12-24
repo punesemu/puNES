@@ -1,0 +1,115 @@
+----------------------------------------------
+zlib 1.2.11
+
+32-bit
+CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar RANLIB=i686-w64-mingw32-ranlib ./configure --prefix=/tmp/thirdparty --static
+
+64-bit
+CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar RANLIB=x86_64-w64-mingw32-ranlib ./configure --prefix=/tmp/thirdparty --static
+
+----------------------------------------------
+libiconv 1.16
+
+32-bit
+./configure --prefix=/tmp/thirdparty --host=i686-w64-mingw32 --disable-shared --enable-static
+
+64-bit
+./configure --prefix=/tmp/thirdparty --host=x86_64-w64-mingw32 --disable-shared --enable-static
+
+----------------------------------------------
+lame svn-r6474
+
+32-bit
+CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=i686-w64-mingw32 --disable-shared --enable-static --enable-nasm --disable-decoder --disable-libmpg123  --disable-frontend
+
+64-bit
+CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=x86_64-w64-mingw32 --disable-shared --enable-static --enable-nasm --disable-decoder --disable-libmpg123  --disable-frontend
+
+----------------------------------------------
+speex 1.2.0
+
+32-bit:
+CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=i686-w64-mingw32 --enable-sse --enable-static --disable-shared
+
+64-bit:
+CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=x86_64-w64-mingw32 --enable-sse --enable-static --disable-shared
+
+----------------------------------------------
+libogg 1.3.4
+
+32-bit:
+CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=i686-w64-mingw32 --enable-static --disable-shared
+
+64-bit:
+CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=x86_64-w64-mingw32 --enable-static --disable-shared
+
+----------------------------------------------
+libvorbis 1.3.7
+
+32-bit:
+CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=i686-w64-mingw32 --enable-static --disable-shared --disable-oggtest --with-ogg=/root/src/ffmpeg/x32/usr
+
+64-bit:
+CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=x86_64-w64-mingw32 --enable-sse --enable-static --disable-shared --with-ogg=/root/src/ffmpeg/x64/usr
+
+----------------------------------------------
+x264 git-db0d4177
+
+32-bit
+./configure --prefix=/tmp/thirdparty --host=i686-w64-mingw32 --cross-prefix=i686-w64-mingw32- --disable-cli --enable-static --disable-avs --disable-swscale --disable-lavf --disable-ffms --disable-gpac --disable-lsmash --extra-cflags="-O3" --extra-ldflags="-static-libgcc -static"
+
+64-bit
+./configure --prefix=/tmp/thirdparty --host=x86_64-w64-mingw32 --cross-prefix=x86_64-w64-mingw32- --disable-cli --enable-static --disable-avs --disable-swscale --disable-lavf --disable-ffms --disable-gpac --disable-lsmash --extra-cflags="-O3" --extra-ldflags="-static-libgcc -static"
+
+----------------------------------------------
+dav1d 0.7.1
+
+32-bit
+meson build32 --prefix /tmp/thirdparty --buildtype release --default-library static --cross-file package/crossfiles/i686-w64-mingw32.meson
+ninja -C build32
+
+64-bit
+meson build64 --prefix /tmp/thirdparty --buildtype release --default-library static --cross-file package/crossfiles/x86_64-w64-mingw32.meson
+ninja -C build64
+
+----------------------------------------------
+x265 3.2.1
+
+32-bit
+printf '
+SET(CMAKE_SYSTEM_NAME Windows)
+SET(CMAKE_C_COMPILER i686-w64-mingw32-gcc)
+SET(CMAKE_CXX_COMPILER i686-w64-mingw32-g++)
+SET(CMAKE_RC_COMPILER i686-w64-mingw32-windres)
+SET(CMAKE_RANLIB i686-w64-mingw32-ranlib)
+SET(CMAKE_ASM_YASM_COMPILER yasm)
+SET(CMAKE_CXX_FLAGS "-static-libgcc -static-libstdc++ -static -O3 -s")
+SET(CMAKE_C_FLAGS "-static-libgcc -static-libstdc++ -static -O3 -s")
+SET(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "-static-libgcc -static-libstdc++ -static -O3 -s")
+SET(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "-static-libgcc -static-libstdc++ -static -O3 -s")
+' >build/msys/toolchain-i686-w64-mingw32.cmake
+cmake -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/msys/toolchain-i686-w64-mingw32.cmake -DENABLE_SHARED=OFF -DENABLE_CLI=OFF source
+
+64-bit
+printf '
+SET(CMAKE_SYSTEM_NAME Windows)
+SET(CMAKE_C_COMPILER x86_64-w64-mingw32-gcc)
+SET(CMAKE_CXX_COMPILER x86_64-w64-mingw32-g++)
+SET(CMAKE_RC_COMPILER x86_64-w64-mingw32-windres)
+SET(CMAKE_RANLIB x86_64-w64-mingw32-ranlib)
+SET(CMAKE_ASM_YASM_COMPILER yasm)
+SET(CMAKE_CXX_FLAGS "-static-libgcc -static-libstdc++ -static -O3 -s")
+SET(CMAKE_C_FLAGS "-static-libgcc -static-libstdc++ -static -O3 -s")
+SET(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "-static-libgcc -static-libstdc++ -static -O3 -s")
+SET(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "-static-libgcc -static-libstdc++ -static -O3 -s")
+' >build/msys/toolchain-x86_64-w64-mingw32.cmake
+cmake -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/msys/toolchain-x86_64-w64-mingw32.cmake -DENABLE_SHARED=OFF -DENABLE_CLI=OFF source
+
+----------------------------------------------
+libvpx 1.9.0
+
+32-bit
+CFLAGS="-O3" CXXFLAGS="-O3" CROSS=i686-w64-mingw32- ./configure --prefix=/tmp/thirdparty --target=x86-win32-gcc --disable-examples --disable-tools --enable-runtime-cpu-detect --enable-static --disable-shared
+
+64-bit
+CFLAGS="-O3" CXXFLAGS="-O3" CROSS=x86_64-w64-mingw32- ./configure --prefix=/tmp/thirdparty --target=x86_64-win64-gcc --disable-examples --disable-tools --enable-runtime-cpu-detect --enable-static --disable-shared

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@ _uncompress_archive *uncompress_archive_alloc(uTCHAR *file, BYTE *rc) {
 		return (NULL);
 	}
 
-	if ((l7z_present() == TRUE) && (l7z_control_ext(ext) == EXIT_OK)){
+	if ((l7z_present() == TRUE) && (l7z_control_ext(ext) == EXIT_OK)) {
 		uncompress_examine_archive = l7z_examine_archive;
 		uncompress_extract_from_archive = l7z_extract_from_archive;
 		uncompress_item_file_name = l7z_item_file_name;

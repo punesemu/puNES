@@ -4,7 +4,7 @@
 [![AUR package](https://repology.org/badge/version-for-repo/aur/punes.svg)](https://repology.org/project/punes/versions)
 [![SlackBuilds package](https://repology.org/badge/version-for-repo/slackbuilds/punes.svg)](https://repology.org/project/punes/versions)
 [![Rosa 2019.1 package](https://repology.org/badge/version-for-repo/rosa_2019_1/punes.svg)](https://repology.org/project/punes/versions)
-[![LiGurOS 20.7 package](https://repology.org/badge/version-for-repo/liguros_20_7/punes.svg)](https://repology.org/project/punes/versions)
+[![LiGurOS 21.1 package](https://repology.org/badge/version-for-repo/liguros_21_1/punes.svg)](https://repology.org/project/punes/versions)
 [![Wikidata package](https://repology.org/badge/version-for-repo/wikidata/punes.svg)](https://repology.org/project/punes/versions)
 
 Description
@@ -33,12 +33,12 @@ How to Compile
 * [OpenBSD](#openbsd)
 * [Windows](#windows)
 
-### Linux
------------
+## Linux
 #### Dependencies
 * [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
 * [nvidia-cg](https://developer.nvidia.com/cg-toolkit)
 * [alsa](https://www.alsa-project.org)
+* (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
 #### Compilation of puNES
 ```bash
 git clone https://github.com/punesemu/punes
@@ -54,11 +54,25 @@ If you need the debug version then you need to replace the `./configure` command
 CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" ./configure --disable-release [...]
 ```
 where `[...]` are the other necessary options.
-### FreeBSD
------------
+#### Example on how to compile on Ubuntu 20.10
+```bash
+sudo apt-get install git autotools-dev autoconf build-essential pkg-config libasound2-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev nvidia-cg-toolkit
+sudo apt-get install libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev
+git clone https://github.com/punesemu/puNES
+cd puNES
+./autogen.sh
+./configure
+make
+```
+to start the emulator
+```bash
+./src/punes
+```
+## FreeBSD
 #### Dependencies
 * [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
+* (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
 #### Compilation of puNES
 ```bash
 git clone https://github.com/punesemu/punes
@@ -74,11 +88,11 @@ If you need the debug version then you need to replace the `./configure` command
 CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" CC=cc CXX=c++ ./configure --disable-release [...]
 ```
 where `[...]` are the other necessary options.
-### OpenBSD
------------
+## OpenBSD
 #### Dependencies
 * [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
+* (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
 #### Compilation of puNES
 ```bash
 git clone https://github.com/punesemu/punes
@@ -94,8 +108,7 @@ If you need the debug version then you need to replace the `./configure` command
 CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" CC=cc CXX=c++ ./configure --disable-release [...]
 ```
 where `[...]` are the other necessary options.
-### Windows
------------
+## Windows
 #### Dependencies
 * [Qt5](https://www.qt.io) with OpenGL support (5.6.3 is the last if you want the support for Windows XP)
 #### Development Environment installation
@@ -179,21 +192,47 @@ otherwise :
 make
 ```
 The executable `punes.exe` is in the `src` directory but in order to run it you need the following dlls:
-##### D3D9 version :
 * 7z.dl
+* avcodec-58.dll
+* avformat-58.dll
+* avutil-56.dll
 * cg.dll
-* cgD3D9.dll
+* cgD3D9.dll (only for D3D9 version)
+* cgGL.dll (only for OpenGL version)
 * libwinpthread-1.dll
-##### OpenGL version :
-* 7z.dll
-* cg.dll
-* cgGL.dll
-* libwinpthread-1.dll
+* swresample-3.dll
+* swscale-5.dll
 
-that you can download here : [`64bit`](https://www.dropbox.com/s/yt5bgacnwexdghs/puNES_x86_64_dlls.zip?dl=1) version or [`32bit`](https://www.dropbox.com/s/7afebuhjy06n9uh/puNES_i686_dlls.zip?dl=1) version.
+that you can download here : [`64bit`](https://www.dropbox.com/s/7e01vzhmc4k5ead/puNES_x86_64_dlls.zip?dl=1) version or [`32bit`](https://www.dropbox.com/s/xaspmjmczkg1zjt/puNES_i686_dlls.zip?dl=1) version.
 #### Windows Debug version
 If you need the debug version then you need to replace the `./configure` command of the previous examples with the following:
 ```bash
 CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" ./configure --disable-release [...]
 ```
 where `[...]` are the other necessary options.
+
+-----------
+
+#### FFmpeg
+It is always possible to disable audio/video recording support by specifying the `configure` parameter `--without-ffmpeg`.
+If the installed version is lower than 4.0 the support will be disabled automatically.
+
+Supported audio recording formats:
+* WAV Audio
+* MP3 Audio ([lame](https://xiph.org/vorbis/)) (*)
+* AAC Audio
+* Flac Audio
+* Ogg Audio ([vorbis](https://xiph.org/vorbis/)) (*)
+
+Supported video recording formats:
+* MPEG 1 Video
+* MPEG 2 Video
+* MPEG 4 Video
+* MPEG H264 Video ([libx264](https://www.videolan.org/developers/x264.html)) (*)
+* High Efficiency Video Codec ([libx265](https://www.videolan.org/developers/x265.html)) (*)
+* WebM Video ([libvpx](https://www.webmproject.org/code)) (*)
+* Windows Media Video
+* AVI FF Video
+* AVI Video
+
+(*) if compiled in FFmpeg.

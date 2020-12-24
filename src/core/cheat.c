@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -157,7 +157,7 @@ void gamegenie_load_rom(void *rom_mem) {
 	size = ftell(fp);
 	fseek(fp, 0L, SEEK_SET);
 
-	if ((gg_rom_mem = (BYTE *) malloc(size)) == NULL) {
+	if ((gg_rom_mem = (BYTE *)malloc(size)) == NULL) {
 		fclose(fp);
 		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file) - 1);
 		gamegenie_free_paths();

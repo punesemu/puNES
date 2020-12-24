@@ -1,6 +1,8 @@
 resources.cpp: designer/resources.qrc $(TRADUCTION_QM)
 	$(RCC) $(srcdir)/designer/resources.qrc -name resources -o $@
 
+dlgCmdLineHelp.moc: dlgCmdLineHelp.hpp
+	$(MOC) $(srcdir)/dlgCmdLineHelp.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgSettings.moc: dlgSettings.hpp
 	$(MOC) $(srcdir)/dlgSettings.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgStdPad.moc: dlgStdPad.hpp
@@ -41,6 +43,8 @@ wdgSettingsInput.moc: wdgSettingsInput.hpp
 	$(MOC) $(srcdir)/wdgSettingsInput.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgSettingsPPU.moc: wdgSettingsPPU.hpp
 	$(MOC) $(srcdir)/wdgSettingsPPU.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+wdgSettingsRecording.moc: wdgSettingsRecording.hpp
+	$(MOC) $(srcdir)/wdgSettingsRecording.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@	
 wdgSettingsVideo.moc: wdgSettingsVideo.hpp
 	$(MOC) $(srcdir)/wdgSettingsVideo.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgScreen.moc: wdgScreen.hpp
@@ -54,6 +58,8 @@ wdgToolBar.moc: wdgToolBar.hpp
 
 mainWindow.hh: designer/mainWindow.ui
 	$(UIC) $(srcdir)/designer/mainWindow.ui -o $@
+dlgCmdLineHelp.hh: designer/dlgCmdLineHelp.ui
+	$(UIC) $(srcdir)/designer/dlgCmdLineHelp.ui -o $@
 dlgSettings.hh: designer/dlgSettings.ui
 	$(UIC) $(srcdir)/designer/dlgSettings.ui -o $@
 dlgStdPad.hh: designer/dlgStdPad.ui
@@ -84,6 +90,8 @@ wdgSettingsInput.hh: designer/wdgSettingsInput.ui
 	$(UIC) $(srcdir)/designer/wdgSettingsInput.ui -o $@
 wdgSettingsPPU.hh: designer/wdgSettingsPPU.ui
 	$(UIC) $(srcdir)/designer/wdgSettingsPPU.ui -o $@
+wdgSettingsRecording.hh: designer/wdgSettingsRecording.ui
+	$(UIC) $(srcdir)/designer/wdgSettingsRecording.ui -o $@
 wdgSettingsVideo.hh: designer/wdgSettingsVideo.ui
 	$(UIC) $(srcdir)/designer/wdgSettingsVideo.ui -o $@
 wdgState.hh: designer/wdgState.ui
@@ -135,6 +143,7 @@ BUILT_SOURCES = \
 	resources.cpp
 
 BUILT_SOURCES += \
+	dlgCmdLineHelp.moc \
 	dlgSettings.moc \
 	dlgStdPad.moc \
 	dlgUncomp.moc \
@@ -153,6 +162,7 @@ BUILT_SOURCES += \
 	wdgSettingsGeneral.moc \
 	wdgSettingsInput.moc \
 	wdgSettingsPPU.moc \
+	wdgSettingsRecording.moc \
 	wdgSettingsVideo.moc \
 	wdgScreen.moc \
 	wdgState.moc \
@@ -161,6 +171,7 @@ BUILT_SOURCES += \
 
 BUILT_SOURCES += \
 	mainWindow.hh \
+	dlgCmdLineHelp.hh \
 	dlgSettings.hh \
 	dlgStdPad.hh \
 	dlgUncomp.hh \
@@ -176,6 +187,7 @@ BUILT_SOURCES += \
 	wdgSettingsGeneral.hh \
 	wdgSettingsInput.hh \
 	wdgSettingsPPU.hh \
+	wdgSettingsRecording.hh \
 	wdgSettingsVideo.hh \
 	wdgState.hh
 
@@ -185,6 +197,8 @@ libgui_a_SOURCES = \
 	cgp.h \
 	cmd_line.cpp \
 	cmd_line.h \
+	dlgCmdLineHelp.cpp \
+	dlgCmdLineHelp.hpp \
 	dlgSettings.cpp \
 	dlgSettings.hpp \
 	dlgStdPad.cpp \
@@ -229,6 +243,8 @@ libgui_a_SOURCES = \
 	wdgSettingsInput.hpp \
 	wdgSettingsPPU.cpp \
 	wdgSettingsPPU.hpp \
+	wdgSettingsRecording.cpp \
+	wdgSettingsRecording.hpp \
 	wdgSettingsVideo.cpp \
 	wdgSettingsVideo.hpp \
 	wdgScreen.cpp \

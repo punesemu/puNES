@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -97,6 +97,9 @@ void emu_thread_continue(void) {
 
 	if (emu_thread.pause_calls == 0) {
 		while (emu_thread.in_run == ET_FALSE) {
+			if (info.stop == TRUE) {
+				break;
+			}
 			gui_sleep(1);
 		}
 	}

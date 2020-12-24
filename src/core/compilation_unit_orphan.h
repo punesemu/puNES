@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ void (*tas_header)(uTCHAR *file);
 void (*tas_read)(void);
 void (*tas_frame)(void);
 void (*tas_rewind)(int32_t frames_to_rewind);
+void (*tas_restart_from_begin)(void);
 
 #include "gui.h"
 _gui gui;

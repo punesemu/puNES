@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,16 +30,11 @@ enum wdgrewind_misc {
 };
 
 wdgRewind::wdgRewind(QWidget *parent) : QWidget(parent) {
-	loop = new QTimer(this);
-	loop->setInterval(1000 / 6);
-
-	step_timer = gui_get_ms();
+	step_autorepeat_timer = gui_get_ms();
 
 	setupUi(this);
 
 	gridLayout->setHorizontalSpacing(SPACING);
-
-	connect(loop, SIGNAL(timeout()), this, SLOT(s_loop()));
 
 	connect(toolButton_Fast_Backward, SIGNAL(clicked(bool)), this, SLOT(s_fast_backward(bool)));
 	connect(toolButton_Step_Backward, SIGNAL(clicked(bool)), this, SLOT(s_step_backward(bool)));
@@ -82,18 +77,39 @@ void wdgRewind::changeEvent(QEvent *event) {
 	}
 }
 void wdgRewind::paintEvent(UNUSED(QPaintEvent *event)) {
-    QStyleOption opt;
-    QPainter p(this);
+	QStyleOption opt;
+	QPainter p(this);
 
-    opt.init(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+	opt.init(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-bool wdgRewind::step_timer_control(void) {
-	if ((gui_get_ms() - step_timer) < WDGRWND_AUTOREPEAT_TIMER_STEP) {
+bool wdgRewind::step_autorepeat_timer_control(void) {
+	if ((gui_get_ms() - step_autorepeat_timer) < WDGRWND_AUTOREPEAT_TIMER_STEP) {
 		return (false);
 	}
 	return (true);
+}
+bool wdgRewind::egds_rewind(void) {
+	if (rwnd.active == TRUE) {
+		int factor = rwnd.direction == RWND_BACKWARD ? rwnd.factor.backward : rwnd.factor.forward;
+
+		if (rwnd.action != RWND_ACT_PAUSE) {
+			rewind_frames(rewind_calculate_snap_cursor(factor, rwnd.direction));
+			set_enable_backward(!rewind_is_first_snap());
+			if (rewind_is_first_snap()) {
+				rwnd.action = RWND_ACT_PAUSE;
+				toolButton_Pause->click();
+			}
+			set_enable_forward(!rewind_is_last_snap());
+			if (rewind_is_last_snap()) {
+				rwnd.action = RWND_ACT_PAUSE;
+				toolButton_Pause->click();
+			}
+		}
+		return (true);
+	}
+	return (false);
 }
 
 void wdgRewind::set_enable_backward(BYTE mode) {
@@ -116,7 +132,7 @@ void wdgRewind::first_backward(void) {
 		rwnd.factor.backward = 0;
 		rwnd.factor.forward = 0;
 	} else {
-		loop->stop();
+		gui_egds_stop_rwnd();
 	}
 }
 void wdgRewind::change_factor(int *factor) {
@@ -146,27 +162,6 @@ void wdgRewind::change_factor(int *factor) {
 	}
 }
 
-void wdgRewind::s_loop(void) {
-	if (rwnd.active == TRUE) {
-		int factor = rwnd.direction == RWND_BACKWARD ? rwnd.factor.backward : rwnd.factor.forward;
-
-		if (rwnd.action != RWND_ACT_PAUSE) {
-			rewind_frames(rewind_calculate_snap_cursor(factor, rwnd.direction));
-			set_enable_backward(!rewind_is_first_snap());
-			if (rewind_is_first_snap()) {
-				rwnd.action = RWND_ACT_PAUSE;
-				toolButton_Pause->click();
-			}
-			set_enable_forward(!rewind_is_last_snap());
-			if (rewind_is_last_snap()) {
-				rwnd.action = RWND_ACT_PAUSE;
-				toolButton_Pause->click();
-			}
-		}
-		gfx_draw_screen();
-	}
-}
-
 void wdgRewind::s_fast_backward(UNUSED(bool checked)) {
 	first_backward();
 	rwnd.action = RWND_ACT_FAST_BACKWARD;
@@ -178,10 +173,10 @@ void wdgRewind::s_fast_backward(UNUSED(bool checked)) {
 	change_factor(&rwnd.factor.backward);
 	rwnd.direction = RWND_BACKWARD;
 	rwnd.factor.forward = 0;
-	loop->start();
+	gui_egds_start_rwnd();
 }
 void wdgRewind::s_step_backward(UNUSED(bool checked)) {
-	if (step_timer_control() == false) {
+	if (step_autorepeat_timer_control() == false) {
 		return;
 	}
 	first_backward();
@@ -198,14 +193,14 @@ void wdgRewind::s_step_backward(UNUSED(bool checked)) {
 		toolButton_Step_Backward->setChecked(true);
 		toolButton_Pause->setChecked(false);
 	}
-	step_timer = gui_get_ms();
+	step_autorepeat_timer = gui_get_ms();
 }
 void wdgRewind::s_play(UNUSED(bool checked)) {
 	rwnd.action = RWND_ACT_PLAY;
 	if (rwnd.active == FALSE) {
 		return;
 	}
-	loop->stop();
+	gui_egds_stop_rwnd();
 	set_enable_backward(true);
 	set_enable_forward(false);
 	toolButton_Step_Backward->setChecked(false);
@@ -228,17 +223,16 @@ void wdgRewind::s_pause(UNUSED(bool checked)) {
 	toolButton_Fast_Forward->setChecked(false);
 	set_enable_backward(!rewind_is_first_snap());
 	set_enable_forward(!rewind_is_last_snap());
-	gfx_draw_screen();
 	toolButton_Pause->setChecked(true);
-	loop->start();
+	gui_egds_start_rwnd();
 }
 void wdgRewind::s_step_forward(UNUSED(bool checked)) {
-	if ((rwnd.active == FALSE) || (step_timer_control() == false)) {
+	if ((rwnd.active == FALSE) || (step_autorepeat_timer_control() == false)) {
 		// il forward funziona solo dopo che si
 		// e' fatto un po' di backward.
 		return;
 	}
-	loop->stop();
+	gui_egds_stop_rwnd();
 	rwnd.action = RWND_ACT_STEP_FORWARD;
 	rewind_frames(1);
 	rwnd.factor.backward = 0;
@@ -252,7 +246,7 @@ void wdgRewind::s_step_forward(UNUSED(bool checked)) {
 		toolButton_Step_Forward->setChecked(true);
 		toolButton_Pause->setChecked(false);
 	}
-	step_timer = gui_get_ms();
+	step_autorepeat_timer = gui_get_ms();
 }
 void wdgRewind::s_fast_forward(UNUSED(bool checked)) {
 	if (rwnd.active == FALSE) {
@@ -260,7 +254,7 @@ void wdgRewind::s_fast_forward(UNUSED(bool checked)) {
 		// e' fatto un po' di backward.
 		return;
 	}
-  	loop->stop();
+	gui_egds_stop_rwnd();
 	rwnd.action = RWND_ACT_FAST_FORWARD;
 	toolButton_Step_Backward->setChecked(false);
 	toolButton_Step_Forward->setChecked(false);
@@ -270,7 +264,7 @@ void wdgRewind::s_fast_forward(UNUSED(bool checked)) {
 	change_factor(&rwnd.factor.forward);
 	rwnd.direction = RWND_FORWARD;
 	rwnd.factor.backward = 0;
-	loop->start();
+	gui_egds_start_rwnd();
 }
 void wdgRewind::s_step_released(void) {
 	((QToolButton *)sender())->setChecked(true);

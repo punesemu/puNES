@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,9 +27,48 @@
 wdgSettingsGeneral::wdgSettingsGeneral(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
-	connect(comboBox_Mode, SIGNAL(activated(int)), this, SLOT(s_mode(int)));
-	connect(comboBox_Fast_Forward_velocity, SIGNAL(activated(int)), this, SLOT(s_fast_forward_velocity(int)));
-	connect(comboBox_Rewind_minutes, SIGNAL(activated(int)), this, SLOT(s_rewind_minutes(int)));
+	setFocusProxy(widget_Mode);
+
+	widget_Mode->setStyleSheet(button_stylesheet());
+	widget_Fast_Forward_velocity->setStyleSheet(button_stylesheet());
+	widget_Rewind_minutes->setStyleSheet(button_stylesheet());
+
+	pushButton_Mode_Auto->setProperty("mtype", QVariant(AUTO));
+	pushButton_Mode_NTSC->setProperty("mtype", QVariant(NTSC));
+	pushButton_Mode_PAL->setProperty("mtype", QVariant(PAL));
+	pushButton_Mode_Dendy->setProperty("mtype", QVariant(DENDY));
+
+	connect(pushButton_Mode_Auto, SIGNAL(toggled(bool)), this, SLOT(s_mode(bool)));
+	connect(pushButton_Mode_NTSC, SIGNAL(toggled(bool)), this, SLOT(s_mode(bool)));
+	connect(pushButton_Mode_PAL, SIGNAL(toggled(bool)), this, SLOT(s_mode(bool)));
+	connect(pushButton_Mode_Dendy, SIGNAL(toggled(bool)), this, SLOT(s_mode(bool)));
+
+	pushButton_FF_2x->setProperty("mtype", QVariant(FF_2X));
+	pushButton_FF_3x->setProperty("mtype", QVariant(FF_3X));
+	pushButton_FF_4x->setProperty("mtype", QVariant(FF_4X));
+	pushButton_FF_5x->setProperty("mtype", QVariant(FF_5X));
+
+	connect(pushButton_FF_2x, SIGNAL(toggled(bool)), this, SLOT(s_fast_forward_velocity(bool)));
+	connect(pushButton_FF_3x, SIGNAL(toggled(bool)), this, SLOT(s_fast_forward_velocity(bool)));
+	connect(pushButton_FF_4x, SIGNAL(toggled(bool)), this, SLOT(s_fast_forward_velocity(bool)));
+	connect(pushButton_FF_5x, SIGNAL(toggled(bool)), this, SLOT(s_fast_forward_velocity(bool)));
+
+	pushButton_Rwn_off->setProperty("mtype", QVariant(RWND_0_MINUTES));
+	pushButton_Rwn_2->setProperty("mtype", QVariant(RWND_2_MINUTES));
+	pushButton_Rwn_5->setProperty("mtype", QVariant(RWND_5_MINUTES));
+	pushButton_Rwn_15->setProperty("mtype", QVariant(RWND_15_MINUTES));
+	pushButton_Rwn_30->setProperty("mtype", QVariant(RWND_30_MINUTES));
+	pushButton_Rwn_60->setProperty("mtype", QVariant(RWND_60_MINUTES));
+	pushButton_Rwn_unlimited->setProperty("mtype", QVariant(RWND_UNLIMITED_MINUTES));
+
+	connect(pushButton_Rwn_off, SIGNAL(toggled(bool)), this, SLOT(s_rewind_minutes(bool)));
+	connect(pushButton_Rwn_2, SIGNAL(toggled(bool)), this, SLOT(s_rewind_minutes(bool)));
+	connect(pushButton_Rwn_5, SIGNAL(toggled(bool)), this, SLOT(s_rewind_minutes(bool)));
+	connect(pushButton_Rwn_15, SIGNAL(toggled(bool)), this, SLOT(s_rewind_minutes(bool)));
+	connect(pushButton_Rwn_30, SIGNAL(toggled(bool)), this, SLOT(s_rewind_minutes(bool)));
+	connect(pushButton_Rwn_60, SIGNAL(toggled(bool)), this, SLOT(s_rewind_minutes(bool)));
+	connect(pushButton_Rwn_unlimited, SIGNAL(toggled(bool)), this, SLOT(s_rewind_minutes(bool)));
+
 	connect(comboBox_Language, SIGNAL(activated(int)), this, SLOT(s_language(int)));
 
 	connect(pushButton_Game_Genie_rom_file, SIGNAL(clicked(bool)), this, SLOT(s_game_genie_rom_file(bool)));
@@ -52,20 +91,25 @@ void wdgSettingsGeneral::changeEvent(QEvent *event) {
 	}
 }
 void wdgSettingsGeneral::showEvent(UNUSED(QShowEvent *event)) {
-	int dim = label_Mode->size().height() - 10;
+	int dim = fontMetrics().height();
 
+	icon_General_settings->setPixmap(QIcon(":/icon/icons/settings.svg").pixmap(dim, dim));
 	icon_Mode->setPixmap(QIcon(":/icon/icons/mode.svg").pixmap(dim, dim));
 	icon_Fast_Forward_velocity->setPixmap(QIcon(":/icon/icons/fast_forward.svg").pixmap(dim, dim));
 	icon_Rewind_minutes->setPixmap(QIcon(":/icon/icons/rewind.svg").pixmap(dim, dim));
 	icon_Language->setPixmap(QIcon(":/icon/icons/language.svg").pixmap(dim, dim));
+	icon_System_Roms->setPixmap(QIcon(":/icon/icons/microprocessor.svg").pixmap(dim, dim));
+	icon_General_misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
+	icon_Game_Genie_rom_file->setPixmap(QIcon(":/icon/icons/bios.svg").pixmap(dim, dim));
+	icon_FDS_Bios->setPixmap(QIcon(":/icon/icons/bios.svg").pixmap(dim, dim));
 }
 
 void wdgSettingsGeneral::retranslateUi(QWidget *wdgSettingsGeneral) {
 	Ui::wdgSettingsGeneral::retranslateUi(wdgSettingsGeneral);
-	mainwin->qaction_shcut.mode_auto->setText(comboBox_Mode->itemText(0));
-	mainwin->qaction_shcut.mode_ntsc->setText(comboBox_Mode->itemText(1));
-	mainwin->qaction_shcut.mode_pal->setText(comboBox_Mode->itemText(2));
-	mainwin->qaction_shcut.mode_dendy->setText(comboBox_Mode->itemText(3));
+	mainwin->qaction_shcut.mode_auto->setText(pushButton_Mode_Auto->text());
+	mainwin->qaction_shcut.mode_ntsc->setText(pushButton_Mode_NTSC->text());
+	mainwin->qaction_shcut.mode_pal->setText(pushButton_Mode_PAL->text());
+	mainwin->qaction_shcut.mode_dendy->setText(pushButton_Mode_Dendy->text());
 	update_widget();
 }
 void wdgSettingsGeneral::update_widget(void) {
@@ -94,33 +138,97 @@ void wdgSettingsGeneral::update_widget(void) {
 	checkBox_Pause_when_in_background->setChecked(cfg->bck_pause);
 	checkBox_Save_settings_on_exit->setChecked(cfg->save_on_exit);
 }
+void wdgSettingsGeneral::shcut_mode(int mode) {
+	switch (mode) {
+		case AUTO:
+			pushButton_Mode_Auto->toggled(true);
+			break;
+		case NTSC:
+			pushButton_Mode_NTSC->toggled(true);
+			break;
+		case PAL:
+			pushButton_Mode_PAL->toggled(true);
+			break;
+		case DENDY:
+			pushButton_Mode_Dendy->toggled(true);
+			break;
+	}
+}
 
 void wdgSettingsGeneral::mode_set(void) {
-	comboBox_Mode->setCurrentIndex(cfg->mode);
+	qtHelper::pushbutton_set_checked(pushButton_Mode_Auto, false);
+	qtHelper::pushbutton_set_checked(pushButton_Mode_NTSC, false);
+	qtHelper::pushbutton_set_checked(pushButton_Mode_PAL, false);
+	qtHelper::pushbutton_set_checked(pushButton_Mode_Dendy, false);
+	switch (cfg->mode) {
+		default:
+		case AUTO:
+			qtHelper::pushbutton_set_checked(pushButton_Mode_Auto, true);
+			break;
+		case NTSC:
+			qtHelper::pushbutton_set_checked(pushButton_Mode_NTSC, true);
+			break;
+		case PAL:
+			qtHelper::pushbutton_set_checked(pushButton_Mode_PAL, true);
+			break;
+		case DENDY:
+			qtHelper::pushbutton_set_checked(pushButton_Mode_Dendy, true);
+			break;
+	}
 }
 void wdgSettingsGeneral::fast_forward_velocity_set(void) {
-	int velocity = 0;
-
+	qtHelper::pushbutton_set_checked(pushButton_FF_2x, false);
+	qtHelper::pushbutton_set_checked(pushButton_FF_3x, false);
+	qtHelper::pushbutton_set_checked(pushButton_FF_4x, false);
+	qtHelper::pushbutton_set_checked(pushButton_FF_5x, false);
 	switch (cfg->ff_velocity) {
 		default:
 		case FF_2X:
-			velocity = 0;
+			qtHelper::pushbutton_set_checked(pushButton_FF_2x, true);
 			break;
 		case FF_3X:
-			velocity = 1;
+			qtHelper::pushbutton_set_checked(pushButton_FF_3x, true);
 			break;
 		case FF_4X:
-			velocity = 2;
+			qtHelper::pushbutton_set_checked(pushButton_FF_4x, true);
 			break;
 		case FF_5X:
-			velocity = 3;
+			qtHelper::pushbutton_set_checked(pushButton_FF_5x, true);
 			break;
 	}
-
-	comboBox_Fast_Forward_velocity->setCurrentIndex(velocity);
 }
 void wdgSettingsGeneral::rewind_minutes_set(void) {
-	comboBox_Rewind_minutes->setCurrentIndex(cfg->rewind_minutes);
+	qtHelper::pushbutton_set_checked(pushButton_Rwn_off, false);
+	qtHelper::pushbutton_set_checked(pushButton_Rwn_2, false);
+	qtHelper::pushbutton_set_checked(pushButton_Rwn_5, false);
+	qtHelper::pushbutton_set_checked(pushButton_Rwn_15, false);
+	qtHelper::pushbutton_set_checked(pushButton_Rwn_30, false);
+	qtHelper::pushbutton_set_checked(pushButton_Rwn_60, false);
+	qtHelper::pushbutton_set_checked(pushButton_Rwn_unlimited, false);
+	switch (cfg->rewind_minutes) {
+		default:
+		case RWND_0_MINUTES:
+			qtHelper::pushbutton_set_checked(pushButton_Rwn_off, true);
+			break;
+		case RWND_2_MINUTES:
+			qtHelper::pushbutton_set_checked(pushButton_Rwn_2, true);
+			break;
+		case RWND_5_MINUTES:
+			qtHelper::pushbutton_set_checked(pushButton_Rwn_5, true);
+			break;
+		case RWND_15_MINUTES:
+			qtHelper::pushbutton_set_checked(pushButton_Rwn_15, true);
+			break;
+		case RWND_30_MINUTES:
+			qtHelper::pushbutton_set_checked(pushButton_Rwn_30, true);
+			break;
+		case RWND_60_MINUTES:
+			qtHelper::pushbutton_set_checked(pushButton_Rwn_60, true);
+			break;
+		case RWND_UNLIMITED_MINUTES:
+			qtHelper::pushbutton_set_checked(pushButton_Rwn_unlimited, true);
+			break;
+	}
 }
 void wdgSettingsGeneral::language_set(void) {
 	int lang = 0;
@@ -153,107 +261,96 @@ void wdgSettingsGeneral::language_set(void) {
 	comboBox_Language->setCurrentIndex(lang);
 }
 
-void wdgSettingsGeneral::s_mode(int index) {
-	int mode = index;
-	bool reset = true;
+void wdgSettingsGeneral::s_mode(bool checked) {
+	if (checked) {
+		int mode = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+		bool reset = true;
 
-	if (mode == cfg->mode) {
-		return;
+		if (cfg->mode == mode) {
+			return;
+		}
+
+		emu_thread_pause();
+
+		cfg->mode = mode;
+
+		if (cfg->mode == AUTO) {
+			if (info.no_rom) {
+				mode = NTSC;
+			} else {
+				switch (info.machine[DATABASE]) {
+					case NTSC:
+					case PAL:
+					case DENDY:
+						mode = info.machine[DATABASE];
+						break;
+					case DEFAULT:
+						mode = info.machine[HEADER];
+						break;
+					default:
+						mode = NTSC;
+						break;
+				}
+			}
+		}
+
+		// se la nuova modalita' e' identica a quella attuale
+		// non e' necessario fare un reset.
+		if (mode == machine.type) {
+			reset = FALSE;
+		}
+
+		machine = machinedb[mode - 1];
+
+		if (reset) {
+			QString ascii = uQString(opt_mode[machine.type].lname);
+
+			gui_overlay_info_append_msg_precompiled(22, (void *)&ascii);
+			emu_reset(CHANGE_MODE);
+			emu_frame_input_and_rewind();
+			// controllo la paletta da utilizzare (per lo swap dell'emphasis del rosso e del verde in caso
+			// di PAL e DENDY) quando cambio regione.
+			gfx_palette_update();
+		}
+
+		emu_thread_continue();
 	}
+	mode_set();
+}
+void wdgSettingsGeneral::s_fast_forward_velocity(bool checked) {
+	if (checked) {
+		int velocity = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
 
-	emu_thread_pause();
+		if (cfg->ff_velocity == velocity) {
+			return;
+		}
 
-	cfg->mode = mode;
+		cfg->ff_velocity = velocity;
 
-	if (cfg->mode == AUTO) {
-		if (info.no_rom) {
-			mode = NTSC;
-		} else {
-			switch (info.machine[DATABASE]) {
-				case NTSC:
-				case PAL:
-				case DENDY:
-					mode = info.machine[DATABASE];
-					break;
-				case DEFAULT:
-					mode = info.machine[HEADER];
-					break;
-				default:
-					mode = NTSC;
-					break;
+		if (nsf.enabled == FALSE) {
+			if (fps.fast_forward == TRUE) {
+				emu_thread_pause();
+				fps_fast_forward();
+				emu_thread_continue();
 			}
 		}
 	}
-
-	// se la nuova modalita' e' identica a quella attuale
-	// non e' necessario fare un reset.
-	if (mode == machine.type) {
-		reset = FALSE;
-	}
-
-	machine = machinedb[mode - 1];
-
-	if (reset) {
-		QString ascii = uQString(opt_mode[machine.type].lname);
-
-		gui_overlay_info_append_msg_precompiled(22, (void *)&ascii);
-
-		emu_reset(CHANGE_MODE);
-
-		emu_frame_input_and_rewind();
-
-		// controllo la paletta da utilizzare (per lo swap dell'emphasis del rosso e del verde in caso
-		// di PAL e DENDY) quando cambio regione.
-		gfx_palette_update();
-	}
-
-	emu_thread_continue();
-}
-void wdgSettingsGeneral::s_fast_forward_velocity(int index) {
-	int velocity = index;
-
-	switch (velocity) {
-		case 0:
-			velocity = FF_2X;
-			break;
-		case 1:
-			velocity = FF_3X;
-			break;
-		case 2:
-			velocity = FF_4X;
-			break;
-		case 3:
-			velocity = FF_5X;
-			break;
-	}
-
-	if (cfg->ff_velocity == velocity) {
-		return;
-	}
-
-	cfg->ff_velocity = velocity;
 	update_widget();
-
-	if (nsf.enabled == FALSE) {
-		if (fps.fast_forward == TRUE) {
-			emu_thread_pause();
-			fps_fast_forward();
-			emu_thread_continue();
-		}
-	}
 }
-void wdgSettingsGeneral::s_rewind_minutes(int index) {
-	int minutes = index;
+void wdgSettingsGeneral::s_rewind_minutes(bool checked) {
+	if (checked) {
+		int minutes = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
 
-	if (minutes == cfg->rewind_minutes) {
-		return;
+		if (minutes == cfg->rewind_minutes) {
+			return;
+		}
+
+		emu_thread_pause();
+		cfg->rewind_minutes = minutes;
+		rewind_init();
+		emu_thread_continue();
 	}
-
-	emu_thread_pause();
-	cfg->rewind_minutes = minutes;
-	rewind_init();
 	gui_update();
-	emu_thread_continue();
 }
 void wdgSettingsGeneral::s_language(int index) {
 	int lang = index;

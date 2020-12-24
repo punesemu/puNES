@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 #include "fps.h"
 #include "clock.h"
 #include "wave.h"
+#include "rewind.h"
 #if defined (DEBUG)
 #define __inline
 #else
@@ -221,10 +222,6 @@ void snd_thread_unlock(void) {
 }
 
 BYTE snd_playback_start(void) {
-	if (!cfg->apu.channel[APU_MASTER]) {
-		return (EXIT_OK);
-	}
-
 	// come prima cosa blocco eventuali riproduzioni
 	snd_playback_stop();
 
@@ -612,7 +609,7 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 
 	if (snd_thread.action == ST_STOP) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
-	} else if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE) ||(fps.fast_forward == TRUE)) {
+	} else if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps.fast_forward | !snd.buffer.start) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
 	} else if (cbd.bytes_available < len) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);

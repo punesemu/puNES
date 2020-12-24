@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -109,8 +109,8 @@ class objSet : public objSettings {
 	private:
 		double val_to_double(int index, WORD round);
 		void double_to_val(int index, double value);
-		void lastpos_val_to_int(int index, _last_pos *last_pos);
-		QString lastpos_val(_last_pos *last_pos);
+		void last_geometry_val_to_int(int index, _last_geometry *lg);
+		QString last_geometry_val(_last_geometry *lg);
 };
 
 class objPgs : public objSettings {

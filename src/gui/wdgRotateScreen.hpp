@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ class wdgRotateScreen : public QWidget, public Ui::wdgRotateScreen {
 	private slots:
 		void s_rotate_to_left(bool checked);
 		void s_rotate_to_right(bool checked);
+		void s_flip(bool checked);
 };
 
 #endif /* WDGROTATESCREEN_HPP_ */

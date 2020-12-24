@@ -6,9 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>496</width>
-    <height>440</height>
+    <width>491</width>
+    <height>516</height>
    </rect>
+  </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
   </property>
   <property name="windowTitle">
    <string>Cheats Editor</string>
@@ -43,6 +46,13 @@
       </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_Cheat_List_Editor">
+        <item>
+         <widget class="QLabel" name="icon_Cheat_List_Editor">
+          <property name="text">
+           <string notr="true">Cheats List icon</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QLabel" name="label_Cheat_List_Editor">
           <property name="font">
@@ -80,7 +90,7 @@
          </sizepolicy>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::StrongFocus</enum>
         </property>
         <property name="horizontalScrollBarPolicy">
          <enum>Qt::ScrollBarAsNeeded</enum>
@@ -100,9 +110,6 @@
         <property name="selectionBehavior">
          <enum>QAbstractItemView::SelectRows</enum>
         </property>
-        <property name="showGrid">
-         <bool>false</bool>
-        </property>
         <property name="sortingEnabled">
          <bool>true</bool>
         </property>
@@ -113,14 +120,11 @@
          <number>6</number>
         </property>
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>100</number>
-        </attribute>
-        <attribute name="horizontalHeaderStretchLastSection">
-         <bool>true</bool>
+         <number>120</number>
         </attribute>
         <column>
          <property name="text">
-          <string>Active</string>
+          <string/>
          </property>
         </column>
         <column>
@@ -132,20 +136,32 @@
          <property name="text">
           <string>Code</string>
          </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
         </column>
         <column>
          <property name="text">
           <string>Address</string>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
          </property>
         </column>
         <column>
          <property name="text">
           <string>Value</string>
          </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
+         </property>
         </column>
         <column>
          <property name="text">
           <string>Compare</string>
+         </property>
+         <property name="textAlignment">
+          <set>AlignCenter</set>
          </property>
         </column>
        </widget>
@@ -202,6 +218,13 @@
       </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_Editor_Tools">
+        <item>
+         <widget class="QLabel" name="icon_Editor_Tools">
+          <property name="text">
+           <string notr="true">Editor Tools icon</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QLabel" name="label_Editor_Tools">
           <property name="font">
@@ -266,6 +289,12 @@
              </item>
              <item row="2" column="1">
               <widget class="QLineEdit" name="lineEdit_ProAR">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="maxLength">
                 <number>8</number>
                </property>
@@ -287,8 +316,36 @@
              </item>
              <item row="1" column="1">
               <widget class="QLineEdit" name="lineEdit_GG">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="maxLength">
                 <number>8</number>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="lineEdit_Ram">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
+               </property>
+               <property name="maxLength">
+                <number>8</number>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -336,6 +393,12 @@
         </item>
         <item>
          <widget class="QFrame" name="frame_Buttons">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>
@@ -347,6 +410,12 @@
             <layout class="QGridLayout" name="gridLayout_Edit_Buttons">
              <item row="1" column="0">
               <widget class="QPushButton" name="pushButton_Submit_Cheat">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string>Submit</string>
                </property>
@@ -354,6 +423,12 @@
              </item>
              <item row="0" column="0">
               <widget class="QPushButton" name="pushButton_New_Cheat">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string>New</string>
                </property>
@@ -361,6 +436,12 @@
              </item>
              <item row="2" column="0">
               <widget class="QPushButton" name="pushButton_Remove_Cheat">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string>Remove</string>
                </property>
@@ -368,6 +449,12 @@
              </item>
              <item row="3" column="0">
               <widget class="QPushButton" name="pushButton_Cancel_Cheat">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string>Cancel</string>
                </property>
@@ -385,6 +472,24 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tableWidget_Cheats</tabstop>
+  <tabstop>pushButton_Hide_Show_Tools</tabstop>
+  <tabstop>pushButton_Import_Cheats</tabstop>
+  <tabstop>pushButton_Export_Cheats</tabstop>
+  <tabstop>pushButton_Clear_All_Cheats</tabstop>
+  <tabstop>lineEdit_Description</tabstop>
+  <tabstop>radioButton_CPU_Ram</tabstop>
+  <tabstop>radioButton_GG</tabstop>
+  <tabstop>lineEdit_GG</tabstop>
+  <tabstop>radioButton_ProAR</tabstop>
+  <tabstop>lineEdit_ProAR</tabstop>
+  <tabstop>checkBox_Compare</tabstop>
+  <tabstop>pushButton_New_Cheat</tabstop>
+  <tabstop>pushButton_Submit_Cheat</tabstop>
+  <tabstop>pushButton_Remove_Cheat</tabstop>
+  <tabstop>pushButton_Cancel_Cheat</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

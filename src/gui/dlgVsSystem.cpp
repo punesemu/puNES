@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtWidgets/QDesktopWidget>
 #include <QtGui/QScreen>
 #include "dlgVsSystem.moc"
 #include "mainWindow.hpp"
@@ -128,10 +127,9 @@ void dlgVsSystem::changeEvent(QEvent *event) {
 }
 
 int dlgVsSystem::update_pos(int startY) {
-	int screenNumber = qApp->desktop()->screenNumber(parentWidget());
 	int x = parentWidget()->pos().x() + parentWidget()->frameGeometry().width();
 	int y = parentWidget()->geometry().y() + startY;
-	QRect g = QGuiApplication::screens().at(screenNumber)->geometry();
+	QRect g = QGuiApplication::primaryScreen()->virtualGeometry();
 
 	if ((x + frameGeometry().width() - g.left()) > g.width()) {
 		x = parentWidget()->pos().x() - frameGeometry().width();

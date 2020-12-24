@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2021 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  */
 
 #include "wdgSettingsPPU.moc"
+#include "mainWindow.hpp"
 #include "emu_thread.h"
 #include "tas.h"
 #include "ppu.h"
@@ -26,6 +27,8 @@
 
 wdgSettingsPPU::wdgSettingsPPU(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
+
+	setFocusProxy(checkBox_Hide_Sprites);
 
 	spinBox_VB_Slines->setRange(0, 1000);
 	spinBox_Postrender_Slines->setRange(0, 1000);
@@ -53,6 +56,14 @@ void wdgSettingsPPU::changeEvent(QEvent *event) {
 		QWidget::changeEvent(event);
 	}
 }
+void wdgSettingsPPU::showEvent(QShowEvent *event) {
+	int dim = fontMetrics().height();
+
+	icon_Sprites_and_background->setPixmap(QIcon(":/icon/icons/background.svg").pixmap(dim, dim));
+	icon_PPU_Overclock->setPixmap(QIcon(":/icon/icons/speedometer.svg").pixmap(dim, dim));
+
+	QWidget::showEvent(event);
+}
 
 void wdgSettingsPPU::update_widget(void) {
 	checkBox_Hide_Sprites->setChecked(cfg->hide_sprites);
@@ -66,16 +77,12 @@ void wdgSettingsPPU::update_widget(void) {
 	label_VB_Slines->setEnabled(cfg->ppu_overclock);
 
 	spinBox_VB_Slines->setEnabled(cfg->ppu_overclock);
-	spinBox_VB_Slines->blockSignals(true);
-	spinBox_VB_Slines->setValue(cfg->extra_vb_scanlines);
-	spinBox_VB_Slines->blockSignals(false);
+	qtHelper::spinbox_set_value(spinBox_VB_Slines, cfg->extra_vb_scanlines);
 
 	label_Postrender_Slines->setEnabled(cfg->ppu_overclock);
 
 	spinBox_Postrender_Slines->setEnabled(cfg->ppu_overclock);
-	spinBox_Postrender_Slines->blockSignals(true);
-	spinBox_Postrender_Slines->setValue(cfg->extra_pr_scanlines);
-	spinBox_Postrender_Slines->blockSignals(false);
+	qtHelper::spinbox_set_value(spinBox_Postrender_Slines, cfg->extra_pr_scanlines);
 
 	lag_counter_update();
 }
