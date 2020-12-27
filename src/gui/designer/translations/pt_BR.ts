@@ -709,6 +709,11 @@
       <source>Start/Stop &amp;VIDEO recording</source>
       <translation>Iniciar/Parar gravação de &amp;VIDEO</translation>
     </message>
+    <message>
+      <source>Slot %1 never used</source>
+      <extracomment>Refers to the unused save slot. Important: Do not translate the &quot;%1&quot;.</extracomment>
+      <translation type="unfinished">Slot %1 never used</translation>
+    </message>
   </context>
   <context>
     <name>objCheat</name>
@@ -1613,7 +1618,7 @@
     </message>
     <message>
       <source>Standard Pads on Port3 and Port4</source>
-      <translation type="unfinished">Standard Pads on Port3 and Port4</translation>
+      <translation>Controles Padrões nas Portas 3 e 4</translation>
     </message>
   </context>
   <context>
@@ -2280,31 +2285,31 @@
     </message>
     <message>
       <source>Software Filters</source>
-      <translation type="unfinished">Software Filters</translation>
+      <translation>Filtros de Software</translation>
     </message>
     <message>
       <source>Shader</source>
-      <translation type="unfinished">Shader</translation>
+      <translation>Shader</translation>
     </message>
     <message>
       <source>Shader File</source>
-      <translation type="unfinished">Shader File</translation>
+      <translation>Arquivo de Shader</translation>
     </message>
     <message>
       <source>Filter</source>
-      <translation type="unfinished">Filter</translation>
+      <translation>Filtro</translation>
     </message>
     <message>
       <source>GPU Shaders</source>
-      <translation type="unfinished">GPU Shaders</translation>
+      <translation>GPU Shaders</translation>
     </message>
     <message>
       <source>Palette Selection</source>
-      <translation type="unfinished">Palette Selection</translation>
+      <translation>Seleção de Paleta</translation>
     </message>
     <message>
       <source>Palette File</source>
-      <translation type="unfinished">Palette File</translation>
+      <translation>Arquivo de Paleta</translation>
     </message>
   </context>
   <context>
@@ -2312,10 +2317,6 @@
     <message>
       <source>Save/Load Slot Box</source>
       <translation>Slot Salvar/Carregar</translation>
-    </message>
-    <message>
-      <source>Slot %1</source>
-      <translation>Slot %1</translation>
     </message>
     <message>
       <source>Save state</source>
