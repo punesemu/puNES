@@ -52,31 +52,6 @@ BYTE gfx_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	// inizializzo l'ntsc che utilizzero' non solo
-	// come filtro ma anche nel gfx_set_screen() per
-	// generare la paletta dei colori.
-	if (ntsc_init(0, 0, 0, 0, 0) == EXIT_ERROR) {
-		MessageBox(NULL, "Unable to initialize palette", "Error!", MB_ICONEXCLAMATION | MB_OK);
-		return (EXIT_ERROR);
-	}
-
-	// mi alloco una zona di memoria dove conservare la
-	// paletta nel formato di visualizzazione.
-	if (!(gfx.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
-		MessageBox(NULL, "Unable to allocate the palette", "Error!", MB_ICONEXCLAMATION | MB_OK);
-		return (EXIT_ERROR);
-	}
-
-	if (pause_init() == EXIT_ERROR) {
-		MessageBox(NULL, "pause initialization failed", "Error!", MB_ICONEXCLAMATION | MB_OK);
-		return (EXIT_ERROR);
-	}
-
-	if (tv_noise_init() == EXIT_ERROR) {
-		MessageBox(NULL, "tv_noise initialization failed", "Error!", MB_ICONEXCLAMATION | MB_OK);
-		return (EXIT_ERROR);
-	}
-
 	// casi particolari provenienti dal settings_file_parse() e cmd_line_parse()
 	if (cfg->fullscreen == FULLSCR) {
 		gfx.scale_before_fscreen = cfg->scale;
@@ -107,6 +82,33 @@ void gfx_quit(void) {
 	}
 
 	d3d9_quit();
+}
+BYTE gfx_palette_init(void) {
+	// inizializzo l'ntsc che utilizzero' non solo
+	// come filtro ma anche nel gfx_set_screen() per
+	// generare la paletta dei colori.
+	if (ntsc_init(0, 0, 0, 0, 0) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+
+	// mi alloco una zona di memoria dove conservare la
+	// paletta nel formato di visualizzazione.
+	if (!(gfx.palette = (uint32_t *)malloc(NUM_COLORS * sizeof(uint32_t)))) {
+		fprintf(stderr, "Unable to allocate the palette\n");
+		return (EXIT_ERROR);
+	}
+
+	if (pause_init() == EXIT_ERROR) {
+		fprintf(stderr, "pause initialization failed\n");
+		return (EXIT_ERROR);
+	}
+
+	if (tv_noise_init() == EXIT_ERROR) {
+		fprintf(stderr, "tv_noise initialization failed\n");
+		return (EXIT_ERROR);
+	}
+
+	return (EXIT_OK);
 }
 void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette, BYTE force_scale, BYTE force_palette) {
 	BYTE set_mode;

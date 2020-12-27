@@ -658,6 +658,10 @@ BYTE emu_turn_on(void) {
 	nsf_init();
 	fds_init();
 
+	if (gfx_palette_init()) {
+		return (EXIT_ERROR);
+	}
+
 	// carico la rom in memoria
 	{
 		emu_ctrl_if_rom_exist();

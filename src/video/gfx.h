@@ -148,6 +148,7 @@ extern _gfx gfx;
 
 EXTERNC BYTE gfx_init(void);
 EXTERNC void gfx_quit(void);
+EXTERNC BYTE gfx_palette_init(void);
 EXTERNC void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette, BYTE force_scale, BYTE force_palette);
 EXTERNC void gfx_draw_screen(void);
 
