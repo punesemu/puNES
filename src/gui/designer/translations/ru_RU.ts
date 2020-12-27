@@ -712,7 +712,7 @@
     <message>
       <source>Slot %1 never used</source>
       <extracomment>Refers to the unused save slot. Important: Do not translate the &quot;%1&quot;.</extracomment>
-      <translation type="unfinished">Slot %1 never used</translation>
+      <translation>Слот %1 не используется</translation>
     </message>
   </context>
   <context>
