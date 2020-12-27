@@ -28,6 +28,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QUrl>
 #include <QtGui/QDesktopServices>
+#include <QtCore/QBuffer>
 #include <libgen.h>
 #include "mainWindow.moc"
 #include "dlgSettings.hpp"
@@ -264,6 +265,7 @@ void mainWindow::closeEvent(QCloseEvent *event) {
 void mainWindow::retranslateUi(mainWindow *mainWindow) {
 	Ui::mainWindow::retranslateUi(mainWindow);
 	shortcuts();
+	save_slot_count_load();
 	update_window();
 }
 
@@ -589,6 +591,26 @@ void mainWindow::update_gfx_monitor_dimension(void) {
 		gfx.h[MONITOR] = mgeom.height();
 	}
 }
+void mainWindow::set_save_slot_tooltip(BYTE slot, char *buffer) {
+	QAction *action = findChild<QAction *>(QString("action_State_Slot_%1").arg(slot));
+	QString tooltip;
+
+	if (buffer) {
+		QImage image = QImage((uchar *)buffer, SCR_ROWS, SCR_LINES, SCR_ROWS * sizeof(uint32_t), QImage::Format_RGB32);
+		QByteArray data;
+		QBuffer png(&data);
+
+		image = image.scaled(SCR_ROWS * 2, SCR_LINES * 2, Qt::KeepAspectRatio);
+		image.save(&png, "PNG", 100);
+		tooltip = QString("<img src='data:image/png;base64, %1'>").arg(QString(data.toBase64()));
+	} else {
+		//: Refers to the unused save slot. Important: Do not translate the "%1".
+		tooltip = tr("Slot %1 never used").arg(slot);
+	}
+
+	action->setToolTip(tooltip);
+	toolbar->state->set_tooltip(slot, tooltip);
+}
 
 void mainWindow::connect_menu_signals(void) {
 	// File
@@ -858,41 +880,29 @@ void mainWindow::update_menu_state(void) {
 
 	action_Save_state->setEnabled(state);
 	action_Load_state->setEnabled(state);
+	action_Increment_slot->setEnabled(state);
+	action_Decrement_slot->setEnabled(state);
+
+	for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
+		QAction *a = findChild<QAction *>(QString("action_State_Slot_%1").arg(i));
+		QString used = " *";
+		QString txt = a->text().replace(used, "");
+
+		if (i == save_slot.slot) {
+			a->setChecked(true);
+		}
+
+		if (save_slot.state[i]) {
+			a->setText(txt + used);
+		} else {
+			a->setText(txt);
+		}
+
+		a->setEnabled(state);
+	}
+
 	action_State_Save_to_file->setEnabled(state);
 	action_State_Load_from_file->setEnabled(state);
-
-	switch (save_slot.slot) {
-		case 0:
-			action_State_Slot_0->setChecked(true);
-			break;
-		case 1:
-			action_State_Slot_1->setChecked(true);
-			break;
-		case 2:
-			action_State_Slot_2->setChecked(true);
-			break;
-		case 3:
-			action_State_Slot_3->setChecked(true);
-			break;
-		case 4:
-			action_State_Slot_4->setChecked(true);
-			break;
-		case 5:
-			action_State_Slot_5->setChecked(true);
-			break;
-		case 6:
-			action_State_Slot_6->setChecked(true);
-			break;
-		case 7:
-			action_State_Slot_7->setChecked(true);
-			break;
-		case 8:
-			action_State_Slot_8->setChecked(true);
-			break;
-		case 9:
-			action_State_Slot_9->setChecked(true);
-			break;
-	}
 }
 
 void mainWindow::ctrl_disk_side(QAction *action) {
@@ -1342,6 +1352,7 @@ void mainWindow::s_state_save_slot_action(void) {
 		save_slot_load(save_slot.slot);
 	}
 	emu_thread_continue();
+	update_window();
 }
 void mainWindow::s_state_save_slot_incdec(void) {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();

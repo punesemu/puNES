@@ -100,7 +100,7 @@ class in_stream: public C7ZipInStream {
 				return (EXIT_ERROR);
 			}
 
-			result = fseek(m_pFile, (long) offset, seekOrigin);
+			result = fseek(m_pFile, (long)offset, seekOrigin);
 
 			if (!result) {
 				if (newPosition) {

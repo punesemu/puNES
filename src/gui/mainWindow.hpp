@@ -167,6 +167,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void shortcuts(void);
 		bool is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event);
 		void update_gfx_monitor_dimension(void);
+		void set_save_slot_tooltip(BYTE slot, char *buffer);
 
 	private:
 		void connect_menu_signals(void);

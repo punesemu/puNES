@@ -235,6 +235,10 @@ void gui_set_window_size(void) {
 	qt.mwin->statusbar->update_width(w);
 }
 
+void gui_set_save_slot_tooltip(BYTE slot, char *buffer) {
+	qt.mwin->set_save_slot_tooltip(slot, buffer);
+}
+
 void gui_update(void) {
 	uTCHAR title[255];
 

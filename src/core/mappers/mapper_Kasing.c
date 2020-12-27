@@ -203,16 +203,16 @@ BYTE extcl_save_mapper_Kasing(BYTE mode, BYTE slot, FILE *fp) {
 	}
 	save_slot_ele(mode, slot, kasing.prg_high);
 	if (save_slot.version < 6) {
-		if (mode == SAVE_SLOT_READ) {
-			BYTE old_prg_rom_bank[4], i;
+		BYTE old_prg_rom_bank[4];
 
-			save_slot_ele(mode, slot, old_prg_rom_bank)
+		save_slot_ele(mode, slot, old_prg_rom_bank)
+
+		if (mode == SAVE_SLOT_READ) {
+			BYTE i;
 
 			for (i = 0; i < 4; i++) {
 				kasing.prg_rom_bank[i] = old_prg_rom_bank[i];
 			}
-		} else if (mode == SAVE_SLOT_COUNT) {
-			save_slot.tot_size[slot] += sizeof(BYTE) * 4;
 		}
 	} else {
 		save_slot_ele(mode, slot, kasing.prg_rom_bank);

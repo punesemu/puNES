@@ -55,16 +55,21 @@ void wdgState::paintEvent(UNUSED(QPaintEvent *event)) {
 void wdgState::retranslateUi(wdgState *wdgState) {
 	QStyle *pStyle = style();
 	QStyleOptionComboBox opt;
+	QRect rc;
 
 	Ui::wdgState::retranslateUi(wdgState);
 
 	for (int i = 0; i < SAVE_SLOTS; i++) {
-		slotComboBox_slot->setItemText(i, tr("Slot %1").arg(i));
+		slotComboBox_slot->setItemText(i, QString("%1").arg(i));
 	}
 
 	opt.initFrom(this);
-	QRect rc = pStyle->subControlRect(QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxArrow, this);
+	rc = pStyle->subControlRect(QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxArrow, this);
 	slotComboBox_slot->setFixedWidth(QLabel(slotComboBox_slot->itemText(0)).sizeHint().width() + 12 + rc.width());
+}
+
+void wdgState::set_tooltip(int slot, QString tooltip) {
+	slotComboBox_slot->setItemData(slot, tooltip, Qt::ToolTipRole);
 }
 
 void wdgState::s_save_clicked(UNUSED(bool checked)) {
@@ -104,18 +109,23 @@ slotComboBox::slotComboBox(QWidget *parent) : QComboBox(parent) {
 	sid = new slotItemDelegate(this);
 
 	for (int i = 0; i < SAVE_SLOTS; i++) {
-		addItem(QString("Slot %1").arg(i));
+		addItem(QString("%1").arg(i));
 	}
+
+	connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(s_index_changed(int)));
 
 	installEventFilter(parent);
 	setItemDelegate(sid);
 }
 slotComboBox::~slotComboBox() {}
+
 void slotComboBox::paintEvent(UNUSED(QPaintEvent *event)) {
 	QStylePainter painter(this);
+	QStyleOptionComboBox opt;
+	QCommonStyle cstyle;
+	QRect editRect;
 
 	// disegno il frame del combobox
-	QStyleOptionComboBox opt;
 	initStyleOption(&opt);
 	painter.drawComplexControl(QStyle::CC_ComboBox, opt);
 
@@ -127,8 +137,7 @@ void slotComboBox::paintEvent(UNUSED(QPaintEvent *event)) {
 		((const wdgState *)parent())->pushButton_load->setEnabled(true);
 	}
 
-	QCommonStyle cstyle;
-	QRect editRect = cstyle.subControlRect(QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxEditField, this);
+	editRect = cstyle.subControlRect(QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxEditField, this);
 
 	painter.save();
 	painter.setClipRect(editRect);
@@ -138,6 +147,13 @@ void slotComboBox::paintEvent(UNUSED(QPaintEvent *event)) {
 			opt.palette, opt.state & QStyle::State_Enabled, opt.currentText);
 	}
 	painter.restore();
+}
 
-	//painter.drawControl(QStyle::CE_ComboBoxLabel, opt);
+void slotComboBox::setCurrentIndex(int index) {
+	s_index_changed(index);
+	QComboBox::setCurrentIndex(index);
+}
+
+void slotComboBox::s_index_changed(int index) {
+	setToolTip(itemData(index, Qt::ToolTipRole).toString());
 }

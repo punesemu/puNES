@@ -41,40 +41,39 @@ enum save_slot_mode { SAVE_SLOT_SAVE, SAVE_SLOT_READ, SAVE_SLOT_COUNT, SAVE_SLOT
 		return (EXIT_ERROR);\
 	}
 #define save_slot_int(mode, slot, value)\
+{\
+	uint32_t uint32 = 0;\
 	switch (mode) {\
-		case SAVE_SLOT_SAVE: {\
-			uint32_t uint32 = value;\
+		case SAVE_SLOT_SAVE:\
+			uint32 = value;\
 			save_slot_ele(mode, slot, uint32);\
 			break;\
-		}\
-		case SAVE_SLOT_READ: {\
-			uint32_t uint32 = 0;\
+		case SAVE_SLOT_READ:\
 			save_slot_ele(mode, slot, uint32);\
 			value = uint32;\
 			break;\
-		}\
 		case SAVE_SLOT_COUNT:\
-			save_slot.tot_size[slot] += sizeof(uint32_t);\
+			save_slot_ele(mode, slot, uint32);\
 			break;\
-	}
+	}\
+}
 #define save_slot_pos(mode, slot, start, end)\
+{\
+	uint32_t bank = 0;\
 	switch (mode) {\
-		case SAVE_SLOT_SAVE: {\
-			uint32_t bank = 0;\
+		case SAVE_SLOT_SAVE:\
 			bank = end - start;\
 			save_slot_ele(mode, slot, bank);\
 			break;\
-		}\
-		case SAVE_SLOT_READ: {\
-			uint32_t bank = 0;\
+		case SAVE_SLOT_READ:\
 			save_slot_ele(mode, slot, bank);\
 			end = start + bank;\
 			break;\
-		}\
 		case SAVE_SLOT_COUNT:\
-			save_slot.tot_size[slot] += sizeof(uint32_t);\
+			save_slot_ele(mode, slot, bank);\
 			break;\
-	}
+	}\
+}
 #define save_slot_square(square, slot)\
 	save_slot_ele(mode, slot, square.timer)\
 	save_slot_ele(mode, slot, square.frequency);\

@@ -99,15 +99,13 @@ void wdgToolBar::update_toolbar(void) {
 		rwnd = false;
 	} else {
 		state->setEnabled(true);
+		state->slotComboBox_slot->setCurrentIndex(save_slot.slot);
+		state->update();
 
 		if (cfg->rewind_minutes == RWND_0_MINUTES) {
 			rwnd = false;
 		}
-
-		state->slotComboBox_slot->setCurrentIndex(save_slot.slot);
-		state->update();
 	}
-
 	rewind->setEnabled(rwnd);
 	rotate->update_widget();
 }

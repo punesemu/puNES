@@ -1245,11 +1245,9 @@ void overlayWidgetSaveSlot::paintEvent(QPaintEvent *event) {
 }
 
 void overlayWidgetSaveSlot::enable_overlay(BYTE operation) {
-	//if (cfg->fullscreen == FULLSCR) {
-		save_slot_operation = operation;
-		fade_out_start_timer();
-		enabled = TRUE;
-	//}
+	save_slot_operation = operation;
+	fade_out_start_timer();
+	enabled = TRUE;
 }
 
 void overlayWidgetSaveSlot::draw_slots(QPainter *painter) {

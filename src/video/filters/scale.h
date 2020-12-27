@@ -23,5 +23,6 @@
 
 void scale_surface(void);
 void scale_surface_screenshoot_1x(uint32_t pitch, void *pix);
+void scale_surface_preview_1x(void *sb, uint32_t pitch, void *pix);
 
 #endif /* SCALE_H_ */

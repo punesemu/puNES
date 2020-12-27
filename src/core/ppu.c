@@ -127,6 +127,7 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 		spl[spenv.tmp_spr_plus].h_byte = (inv_chr[ppu_rd_mem(sadr | 0x08)] << 1);\
 	}
 
+static BYTE ppu_alloc_screen_buffer(_screen_buffer *sb);
 INLINE static void ppu_oam_evaluation(void);
 
 static const BYTE inv_chr[256] = {
@@ -198,7 +199,13 @@ void ppu_quit(void) {
 
 		if (sb->data) {
 			free(sb->data);
+			sb->data = NULL;
 		}
+	}
+
+	if (screen.preview.data) {
+		free(screen.preview.data);
+		screen.preview.data = NULL;
 	}
 }
 
@@ -1024,27 +1031,12 @@ BYTE ppu_turn_on(void) {
 			screen.last_completed_wr = screen.wr;
 
 			for (a = 0; a < 2; a++) {
-				_screen_buffer *sb = &screen.buff[a];
-				BYTE b;
-
-				sb->ready = FALSE;
-				sb->frame = 0;
-
-				if (sb->data) {
-					free(sb->data);
-				}
-
-				if (!(sb->data = (WORD *)malloc(screen_size()))) {
-					fprintf(stderr, "Out of memory\n");
+				if (ppu_alloc_screen_buffer(&screen.buff[a]) == EXIT_ERROR) {
 					return (EXIT_ERROR);
 				}
-				/*
-			 	* creo una tabella di indici che puntano
-			 	* all'inizio di ogni linea dello screen.
-			 	*/
-				for (b = 0; b < SCR_LINES; b++) {
-					sb->line[b] = (WORD *)(sb->data + (b * SCR_ROWS));
-				}
+			}
+			if (ppu_alloc_screen_buffer(&screen.preview) == EXIT_ERROR) {
+				return (EXIT_ERROR);
 			}
 			/*
 			 * tabella di indici che puntano ad ogni
@@ -1148,6 +1140,30 @@ void ppu_draw_screen_continue_ctrl_count(int *count) {
 	(*count) = 0;
 }
 
+static BYTE ppu_alloc_screen_buffer(_screen_buffer *sb) {
+	BYTE b;
+
+	sb->ready = FALSE;
+	sb->frame = 0;
+
+	if (sb->data) {
+		free(sb->data);
+	}
+
+	if (!(sb->data = (WORD *)malloc(screen_size()))) {
+		fprintf(stderr, "Out of memory\n");
+		return (EXIT_ERROR);
+	}
+	/*
+	 * creo una tabella di indici che puntano
+	 * all'inizio di ogni linea dello screen.
+	 */
+	for (b = 0; b < SCR_LINES; b++) {
+		sb->line[b] = (WORD *)(sb->data + (b * SCR_ROWS));
+	}
+
+	return (EXIT_OK);
+}
 INLINE static void ppu_oam_evaluation(void) {
 /* ------------------------------- CONTROLLO SPRITE SCANLINE+1 ------------------------------- */
 	if (ppu.frame_x < 64) {

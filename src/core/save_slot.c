@@ -17,6 +17,7 @@
  */
 
 #include <libgen.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -39,6 +40,7 @@
 
 #define SAVE_VERSION 23
 
+static void preview_image(BYTE slot, _screen_buffer *sb);
 static uTCHAR *name_slot_file(BYTE slot);
 
 _save_slot save_slot;
@@ -70,7 +72,7 @@ BYTE save_slot_save(BYTE slot) {
 
 	fflush(fp);
 
-	// aggiorno la posizione della preview e il totalsize
+	// aggiorno l'immagine della preview e il totalsize
 	save_slot_operation(SAVE_SLOT_COUNT, slot, fp);
 
 	save_slot.state[slot] = TRUE;
@@ -170,6 +172,8 @@ void save_slot_count_load(void) {
 
 			save_slot_operation(SAVE_SLOT_COUNT, i, fp);
 			fclose(fp);
+		} else {
+			gui_set_save_slot_tooltip(i, NULL);
 		}
 	}
 
@@ -194,14 +198,27 @@ BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size,
 		case SAVE_SLOT_SAVE:
 			bytes = fwrite(src, size, 1, fp);
 			save_slot.tot_size[slot] += size;
+			if (preview == TRUE) {
+				preview_image(slot, screen.rd);
+			}
 			break;
 		case SAVE_SLOT_READ:
 			bytes = fread(src, size, 1, fp);
-			if ((bytes != 1) && (preview == FALSE)) {
+			save_slot.tot_size[slot] += size;
+			if (bytes != 1) {
 				return (EXIT_ERROR);
 			}
 			break;
 		case SAVE_SLOT_COUNT:
+			if (preview == TRUE) {
+				size_t pos = ftell(fp);
+
+				fseek(fp, save_slot.tot_size[slot], SEEK_SET);
+				if (fread(screen.preview.data, size, 1, fp) == 1) {
+					preview_image(slot, &screen.preview);
+				}
+				fseek(fp, pos, SEEK_SET);
+			}
 			save_slot.tot_size[slot] += size;
 			break;
 	}
@@ -214,9 +231,9 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	fseek(fp, 0L, SEEK_SET);
 
 	save_slot.version = SAVE_VERSION;
+	save_slot.tot_size[slot] = 0;
 
 	if (mode == SAVE_SLOT_COUNT) {
-		save_slot.tot_size[slot] = 0;
 		// forzo la lettura perche' devo sapere la
 		// versione del file di salvataggio e le informazioni
 		// della rom.
@@ -250,7 +267,6 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 			save_slot_ele(mode, slot, save_slot.sha1sum.chr.string)
 		}
 	} else {
-		save_slot.tot_size[slot] = 0;
 		save_slot_int(mode, slot, save_slot.version)
 		if (save_slot.version < 16) {
 			_save_slot_ele(mode, slot, info.rom.file, 1024)
@@ -479,14 +495,12 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	// la compatibilita' con i vecchi salvataggi faccio questa
 	// conversione.
 	if (save_slot.version < 7) {
+		DBWORD old_nsshift;
+
+		save_slot_ele(mode, slot, old_nsshift)
+
 		if (mode == SAVE_SLOT_READ) {
-			DBWORD old_nsshift;
-
-			save_slot_ele(mode, slot, old_nsshift)
-
 			NS.shift = old_nsshift;
-		} else if (mode == SAVE_SLOT_COUNT) {
-			save_slot.tot_size[slot] += sizeof(DBWORD);
 		}
 	} else {
 		save_slot_ele(mode, slot, NS.shift)
@@ -598,23 +612,22 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	for (i = 0; i < LENGTH(oam.ele_plus); i++) {
 		save_slot_pos(mode, slot, oam.plus, oam.ele_plus[i])
 	}
-
 	// mapper
 	save_slot_ele(mode, slot, mapper.mirroring)
 	// ho portato da BYTE a WORD mapper.rom_map_to e per mantenere
 	// la compatibilita' con i vecchi salvataggi faccio questa
 	// conversione.
 	if (save_slot.version < 2) {
-		if (mode == SAVE_SLOT_READ) {
-			BYTE old_romMapTo[4], i;
+		BYTE old_romMapTo[4];
 
-			save_slot_ele(mode, slot, old_romMapTo)
+		save_slot_ele(mode, slot, old_romMapTo)
+
+		if (mode == SAVE_SLOT_READ) {
+			BYTE i;
 
 			for (i = 0; i < 4; i++) {
 				mapper.rom_map_to[i] = old_romMapTo[i];
 			}
-		} else if (mode == SAVE_SLOT_COUNT) {
-			save_slot.tot_size[slot] += sizeof(BYTE) * 4;
 		}
 	} else {
 		save_slot_ele(mode, slot, mapper.rom_map_to)
@@ -753,6 +766,16 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
+static void preview_image(BYTE slot, _screen_buffer *sb) {
+	int stride = SCR_ROWS * sizeof(uint32_t);
+	void *buffer;
+
+	if ((buffer = malloc(stride * SCR_LINES))) {
+		scale_surface_preview_1x(sb, stride, buffer);
+		gui_set_save_slot_tooltip(slot, buffer);
+		free(buffer);
+	}
+}
 static uTCHAR *name_slot_file(BYTE slot) {
 	static uTCHAR file[LENGTH_FILE_NAME_LONG];
 	uTCHAR ext[10], bname[255], *last_dot, *fl = NULL;

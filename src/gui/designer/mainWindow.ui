@@ -109,6 +109,9 @@
     <property name="title">
      <string>S&amp;tate</string>
     </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
     <addaction name="action_Save_state"/>
     <addaction name="action_Load_state"/>
     <addaction name="separator"/>

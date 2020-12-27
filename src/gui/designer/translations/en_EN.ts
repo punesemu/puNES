@@ -709,6 +709,11 @@
         <source>Start/Stop &amp;VIDEO recording</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Slot %1 never used</source>
+        <extracomment>Refers to the unused save slot. Important: Do not translate the &quot;%1&quot;.</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>objCheat</name>
@@ -2311,10 +2316,6 @@
     <name>wdgState</name>
     <message>
         <source>Save/Load Slot Box</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Slot %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

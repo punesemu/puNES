@@ -129,6 +129,8 @@ EXTERNC void gui_start(void);
 EXTERNC void gui_set_video_mode(void);
 EXTERNC void gui_set_window_size(void);
 
+EXTERNC void gui_set_save_slot_tooltip(BYTE slot, char *buffer);
+
 EXTERNC void gui_update(void);
 EXTERNC void gui_update_dset(void);
 EXTERNC void gui_update_gps_settings(void);
