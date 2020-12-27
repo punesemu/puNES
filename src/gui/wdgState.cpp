@@ -63,6 +63,8 @@ void wdgState::retranslateUi(wdgState *wdgState) {
 		slotComboBox_slot->setItemText(i, QString("%1").arg(i));
 	}
 
+	slotComboBox_slot->setCurrentIndex(slotComboBox_slot->currentIndex());
+
 	opt.initFrom(this);
 	rc = pStyle->subControlRect(QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxArrow, this);
 	slotComboBox_slot->setFixedWidth(QLabel(slotComboBox_slot->itemText(0)).sizeHint().width() + 12 + rc.width());
