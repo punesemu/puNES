@@ -709,6 +709,11 @@
       <source>Start/Stop &amp;VIDEO recording</source>
       <translation>Iniciar/Parar gravação de &amp;VIDEO</translation>
     </message>
+    <message>
+      <source>Slot %1 never used</source>
+      <extracomment>Refers to the unused save slot. Important: Do not translate the &quot;%1&quot;.</extracomment>
+      <translation>Slot %1 nunca usado</translation>
+    </message>
   </context>
   <context>
     <name>objCheat</name>
@@ -1205,7 +1210,7 @@
     </message>
     <message>
       <source>Rotate Screen :</source>
-      <translation type="unfinished">Rotate Screen :</translation>
+      <translation>Girar a Tela :</translation>
     </message>
   </context>
   <context>
@@ -1268,19 +1273,19 @@
     </message>
     <message>
       <source>48.0 kHz</source>
-      <translation type="unfinished">48.0 kHz</translation>
+      <translation>48.0 kHz</translation>
     </message>
     <message>
       <source>44.1 kHz</source>
-      <translation type="unfinished">44.1 kHz</translation>
+      <translation>44.1 kHz</translation>
     </message>
     <message>
       <source>22.05 kHz</source>
-      <translation type="unfinished">22.05 kHz</translation>
+      <translation>22.05 kHz</translation>
     </message>
     <message>
       <source>11.025 kHz</source>
-      <translation type="unfinished">11.025 kHz</translation>
+      <translation>11.025 kHz</translation>
     </message>
   </context>
   <context>
@@ -1434,35 +1439,35 @@
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>Desligado</translation>
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>5</source>
-      <translation type="unfinished">5</translation>
+      <translation>5</translation>
     </message>
     <message>
       <source>15</source>
-      <translation type="unfinished">15</translation>
+      <translation>15</translation>
     </message>
     <message>
       <source>30</source>
-      <translation type="unfinished">30</translation>
+      <translation>30</translation>
     </message>
     <message>
       <source>60</source>
-      <translation type="unfinished">60</translation>
+      <translation>60</translation>
     </message>
     <message>
       <source>Unlim.</source>
-      <translation type="unfinished">Unlim.</translation>
+      <translation>Ilimitado</translation>
     </message>
     <message>
       <source>2x</source>
-      <translation type="unfinished">2x</translation>
+      <translation>2x</translation>
     </message>
   </context>
   <context>
@@ -1613,7 +1618,7 @@
     </message>
     <message>
       <source>Standard Pads on Port3 and Port4</source>
-      <translation type="unfinished">Standard Pads on Port3 and Port4</translation>
+      <translation>Controles Padrões nas Portas 3 e 4</translation>
     </message>
   </context>
   <context>
@@ -2280,31 +2285,31 @@
     </message>
     <message>
       <source>Software Filters</source>
-      <translation type="unfinished">Software Filters</translation>
+      <translation>Filtros de Software</translation>
     </message>
     <message>
       <source>Shader</source>
-      <translation type="unfinished">Shader</translation>
+      <translation>Shader</translation>
     </message>
     <message>
       <source>Shader File</source>
-      <translation type="unfinished">Shader File</translation>
+      <translation>Arquivo de Shader</translation>
     </message>
     <message>
       <source>Filter</source>
-      <translation type="unfinished">Filter</translation>
+      <translation>Filtro</translation>
     </message>
     <message>
       <source>GPU Shaders</source>
-      <translation type="unfinished">GPU Shaders</translation>
+      <translation>GPU Shaders</translation>
     </message>
     <message>
       <source>Palette Selection</source>
-      <translation type="unfinished">Palette Selection</translation>
+      <translation>Seleção de Paleta</translation>
     </message>
     <message>
       <source>Palette File</source>
-      <translation type="unfinished">Palette File</translation>
+      <translation>Arquivo de Paleta</translation>
     </message>
   </context>
   <context>
@@ -2312,10 +2317,6 @@
     <message>
       <source>Save/Load Slot Box</source>
       <translation>Slot Salvar/Carregar</translation>
-    </message>
-    <message>
-      <source>Slot %1</source>
-      <translation>Slot %1</translation>
     </message>
     <message>
       <source>Save state</source>

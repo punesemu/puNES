@@ -709,6 +709,11 @@
       <source>Start/Stop &amp;VIDEO recording</source>
       <translation>&amp;VIDEO kaydını başlat/durdur</translation>
     </message>
+    <message>
+      <source>Slot %1 never used</source>
+      <extracomment>Refers to the unused save slot. Important: Do not translate the &quot;%1&quot;.</extracomment>
+      <translation>Slot %1 hiç kullanılmadı</translation>
+    </message>
   </context>
   <context>
     <name>objCheat</name>
@@ -2312,10 +2317,6 @@
     <message>
       <source>Save/Load Slot Box</source>
       <translation>Kaydet/Yükle Yuva Kutusu</translation>
-    </message>
-    <message>
-      <source>Slot %1</source>
-      <translation>Yuva %1</translation>
     </message>
     <message>
       <source>Save state</source>
