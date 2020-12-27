@@ -932,7 +932,7 @@
     </message>
     <message>
       <source>Disable all</source>
-      <translation>Desabilitar todos</translation>
+      <translation>Desativar todos</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
@@ -1210,14 +1210,14 @@
     </message>
     <message>
       <source>Rotate Screen :</source>
-      <translation>Girar a Tela :</translation>
+      <translation>Rotação da Tela:</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsAudio</name>
     <message>
       <source>Output Devices</source>
-      <translation>Dispositivos de Saida</translation>
+      <translation>Dispositivos de Saída</translation>
     </message>
     <message>
       <source>Sample Rate</source>
@@ -1419,7 +1419,7 @@
     </message>
     <message>
       <source>Rewind minutes</source>
-      <translation>Minutos de rewind</translation>
+      <translation>Minutos de rebobinagem</translation>
     </message>
     <message>
       <source>Spanish</source>
