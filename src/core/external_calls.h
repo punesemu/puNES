@@ -69,12 +69,12 @@ extern void (*extcl_cpu_wr_r4016)(BYTE value);
 // PPU
 // viene chiamata sempre, ad ogni ciclo della PPU
 extern void (*extcl_ppu_000_to_34x)(void);
-// viene chiamata se (!ppu.vblank && (ppu.screen_y < SCR_LINES))
+// viene chiamata se (!ppu.vblank && (ppu.screen_y < SCR_ROWS))
 // quindi per essere sicuri di essere durante il rendering della PPU
 // nella funzione devo controllare anche se r2001.visible non e' a zero.
 extern void (*extcl_ppu_000_to_255)(void);
 // vengono chiamate solo se la PPU e' in fase di rendering
-// (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_LINES))
+// (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_ROWS))
 extern void (*extcl_ppu_256_to_319)(void);
 extern void (*extcl_ppu_320_to_34x)(void);
 // viene chiamata ogni volta viene modificato ppu.screen_y

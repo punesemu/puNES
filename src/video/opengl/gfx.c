@@ -136,8 +136,8 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	{
 		overscan.enabled = cfg->oscan;
 
-		gfx.rows = SCR_ROWS;
-		gfx.lines = SCR_LINES;
+		gfx.rows = SCR_COLUMNS;
+		gfx.lines = SCR_ROWS;
 
 		if (overscan.enabled == OSCAN_DEFAULT) {
 			overscan.enabled = cfg->oscan_default;
@@ -220,7 +220,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	}
 	if ((scale != cfg->scale) || info.on_cfg || force_scale) {
 		if (filter == NTSC_FILTER) {
-			width = gfx.w[PASS0] = gfx.w[NO_OVERSCAN] = NES_NTSC_OUT_WIDTH(SCR_ROWS);
+			width = gfx.w[PASS0] = gfx.w[NO_OVERSCAN] = NES_NTSC_OUT_WIDTH(SCR_COLUMNS);
 			gfx.filter.width_pixel = (float)nes_ntsc_out_chunk / (float)nes_ntsc_in_chunk;
 			if (overscan.enabled) {
 				width -= ((float)(overscan.borders->left + overscan.borders->right) * gfx.filter.width_pixel);
@@ -237,8 +237,8 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 			}
 		} else {
 			width = gfx.rows * scale;
-			gfx.w[NO_OVERSCAN] = SCR_ROWS * scale;
-			gfx.w[PASS0] = SCR_ROWS * gfx.filter.factor;
+			gfx.w[NO_OVERSCAN] = SCR_COLUMNS * scale;
+			gfx.w[PASS0] = SCR_COLUMNS * gfx.filter.factor;
 			gfx.filter.width_pixel = gfx.filter.factor;
 			gfx.width_pixel = scale;
 		}
@@ -246,8 +246,8 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 
 		height = gfx.lines * scale;
 		gfx.h[CURRENT] = height;
-		gfx.h[NO_OVERSCAN] = SCR_LINES * scale;
-		gfx.h[PASS0] = SCR_LINES * gfx.filter.factor;
+		gfx.h[NO_OVERSCAN] = SCR_ROWS * scale;
+		gfx.h[PASS0] = SCR_ROWS * gfx.filter.factor;
 
 		set_mode = TRUE;
 	}
@@ -406,7 +406,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				if (overscan.enabled && !cfg->oscan_black_borders) {
 					float brd = 0;
 
-					brd = (float)gfx.w[VIDEO_MODE] / (float)SCR_ROWS;
+					brd = (float)gfx.w[VIDEO_MODE] / (float)SCR_COLUMNS;
 					brd *= (overscan.borders->right + overscan.borders->left);
 
 					gfx.w[VIDEO_MODE] -= brd;
@@ -436,11 +436,11 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	// essere (256 x 240). Mi serve per calcolarmi la posizione del puntatore
 	// dello zapper.
 	if (cfg->fullscreen) {
-		gfx.w_pr = (float)gfx.vp.w / (float)SCR_ROWS;
-		gfx.h_pr = (float)gfx.vp.h / (float)SCR_LINES;
+		gfx.w_pr = (float)gfx.vp.w / (float)SCR_COLUMNS;
+		gfx.h_pr = (float)gfx.vp.h / (float)SCR_ROWS;
 	} else {
-		gfx.w_pr = (float)(gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio) / (float)SCR_ROWS;
-		gfx.h_pr = (float)gfx.h[NO_OVERSCAN] / (float)SCR_LINES;
+		gfx.w_pr = (float)(gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio) / (float)SCR_COLUMNS;
+		gfx.h_pr = (float)gfx.h[NO_OVERSCAN] / (float)SCR_ROWS;
 	}
 
 	gfx_thread_continue();

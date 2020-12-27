@@ -169,7 +169,7 @@ void hq4x_32_rb(WORD *screen, void *pix, uint32_t *palette) {
 	BYTE k;
 	SWORD prev_line, next_line;
 	WORD w[10];
-	WORD spL = SCR_ROWS;
+	WORD spL = SCR_COLUMNS;
 	WORD srb = spL * sizeof(WORD);
 	WORD dpL = hqnx.dst_rows * 4;
 	WORD drb = dpL * sizeof(uint32_t);

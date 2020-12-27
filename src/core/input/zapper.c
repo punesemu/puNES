@@ -54,13 +54,13 @@ void input_rd_zapper(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 		}
 	}
 
-	if ((x_zapper <= 0) || (x_zapper >= SCR_ROWS) || (y_zapper <= 0) || (y_zapper >= SCR_LINES)) {
+	if ((x_zapper <= 0) || (x_zapper >= SCR_COLUMNS) || (y_zapper <= 0) || (y_zapper >= SCR_ROWS)) {
 		zapper[nport].data |= 0x08;
 		(*value) |= zapper[nport].data;
 		return;
 	}
 
-	if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_LINES)) {
+	if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) {
 		for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 			if (y_rect < 0) {
 				continue;
@@ -120,10 +120,10 @@ void input_rd_zapper_vs(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 		}
 	}
 
-	if ((x_zapper <= 0) || (x_zapper >= SCR_ROWS) || (y_zapper <= 0) || (y_zapper >= SCR_LINES)) {
+	if ((x_zapper <= 0) || (x_zapper >= SCR_COLUMNS) || (y_zapper <= 0) || (y_zapper >= SCR_ROWS)) {
 		light = 0;
 	} else {
-		if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_LINES)) {
+		if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) {
 			for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 				if (y_rect < 0) {
 					continue;

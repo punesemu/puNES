@@ -25,7 +25,7 @@ enum ppu_sprite_byte { YC, TL, AT, XC };
 enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
 enum ppu_scanline_cycles { SHORT_SLINE_CYCLES = 340, SLINE_CYCLES };
 
-#define screen_size() (SCR_LINES * SCR_ROWS) * sizeof(WORD)
+#define screen_size() (SCR_ROWS * SCR_COLUMNS) * sizeof(WORD)
 #define _ppu_spr_adr(sprite, epl, spl, sadr)\
 {\
 	BYTE flip_v;\
@@ -151,7 +151,7 @@ typedef struct _screen_buffer {
 	BYTE ready;
 	uint64_t frame;
 	WORD *data;
-	WORD *line[SCR_LINES];
+	WORD *line[SCR_ROWS];
 } _screen_buffer;
 typedef struct _screen {
 	BYTE index;

@@ -70,11 +70,11 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 
 	if (x >= DOS_CENTER) {
 		if (x == DOS_CENTER) {
-			x = (SCR_ROWS - w) >> 1;
+			x = (SCR_COLUMNS - w) >> 1;
 		} else if (x == DOS_LEFT) {
 			x = 0;
 		} else if (x == DOS_RIGHT) {
-			x = SCR_ROWS - w;
+			x = SCR_COLUMNS - w;
 		}
 		if (x < 0) {
 			x = 0;
@@ -82,11 +82,11 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 	}
 	if (y >= DOS_CENTER) {
 		if (y == DOS_CENTER) {
-			y = SCR_LINES >> 1;
+			y = SCR_ROWS >> 1;
 		} else if (y == DOS_UP) {
 			y = 0;
 		} else if (y == DOS_DOWN) {
-			y = SCR_LINES - 8;
+			y = SCR_ROWS - 8;
 		}
 		if (y < 0) {
 			y = 0;
@@ -95,7 +95,7 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 
 	i = 0;
 
-	for (pixels = x; pixels < SCR_ROWS;) {
+	for (pixels = x; pixels < SCR_COLUMNS;) {
 		unsigned int font_x = 0, font_y = 0;
 		int xl = 0, xr = 0;
 		char ch = ' ';
@@ -149,7 +149,7 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 		if (last_char) {
 			xr = r;
 		}
-		if ((pixels += (8 - xl - xr)) > SCR_ROWS) {
+		if ((pixels += (8 - xl - xr)) > SCR_COLUMNS) {
 			break;
 		}
 
@@ -677,7 +677,7 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 			for (y1 = 0; y1 < 8; y1++) {
 				char *list = font_8x8[font_y] + font_x + xl;
 
-				if ((y + y1) >= SCR_LINES) {
+				if ((y + y1) >= SCR_ROWS) {
 					break;
 				} else if ((t >= 0) && ((y + y1) < (y + t))) {
 					font_y++;
@@ -688,7 +688,7 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 				}
 
 				for (x1 = 0; x1 < (8 - xl - xr); x1++) {
-					if ((x + x1) >= SCR_ROWS) {
+					if ((x + x1) >= SCR_COLUMNS) {
 						break;
 					}
 
@@ -761,11 +761,11 @@ void dos_vline(int x, int y, int h, WORD color) {
 
 	if (x >= DOS_CENTER) {
 		if (x == DOS_CENTER) {
-			x = (SCR_ROWS - 1) >> 1;
+			x = (SCR_COLUMNS - 1) >> 1;
 		} else if (x == DOS_LEFT) {
 			x = 0;
 		} else if (x == DOS_RIGHT) {
-			x = SCR_ROWS - 1;
+			x = SCR_COLUMNS - 1;
 		}
 		if (x < 0) {
 			x = 0;
@@ -773,11 +773,11 @@ void dos_vline(int x, int y, int h, WORD color) {
 	}
 	if (y >= DOS_CENTER) {
 		if (y == DOS_CENTER) {
-			y = (SCR_LINES - h) >> 1;
+			y = (SCR_ROWS - h) >> 1;
 		} else if (y == DOS_UP) {
 			y = 0;
 		} else if (y == DOS_DOWN) {
-			y = SCR_LINES - h;
+			y = SCR_ROWS - h;
 		}
 		if (y < 0) {
 			y = 0;
@@ -785,10 +785,10 @@ void dos_vline(int x, int y, int h, WORD color) {
 	}
 
 	for (y1 = 0; y1 < h; y1++) {
-		if ((y + y1) >= SCR_LINES) {
+		if ((y + y1) >= SCR_ROWS) {
 			break;
 		}
-		if (x >= SCR_ROWS) {
+		if (x >= SCR_COLUMNS) {
 			break;
 		}
 		screen.wr->line[y + y1][x] = color;
@@ -799,11 +799,11 @@ void dos_hline(int x, int y, int w, WORD color) {
 
 	if (x >= DOS_CENTER) {
 		if (x == DOS_CENTER) {
-			x = (SCR_ROWS - w) >> 1;
+			x = (SCR_COLUMNS - w) >> 1;
 		} else if (x == DOS_LEFT) {
 			x = 0;
 		} else if (x == DOS_RIGHT) {
-			x = SCR_ROWS - w;
+			x = SCR_COLUMNS - w;
 		}
 		if (x < 0) {
 			x = 0;
@@ -811,11 +811,11 @@ void dos_hline(int x, int y, int w, WORD color) {
 	}
 	if (y >= DOS_CENTER) {
 		if (y == DOS_CENTER) {
-			y = (SCR_LINES - 1) >> 1;
+			y = (SCR_ROWS - 1) >> 1;
 		} else if (y == DOS_UP) {
 			y = 0;
 		} else if (y == DOS_DOWN) {
-			y = SCR_LINES - 1;
+			y = SCR_ROWS - 1;
 		}
 		if (y < 0) {
 			y = 0;
@@ -823,10 +823,10 @@ void dos_hline(int x, int y, int w, WORD color) {
 	}
 
 	for (x1 = 0; x1 < w; x1++) {
-		if (y >= SCR_LINES) {
+		if (y >= SCR_ROWS) {
 			break;
 		}
-		if ((x + x1) >= SCR_ROWS) {
+		if ((x + x1) >= SCR_COLUMNS) {
 			break;
 		}
 		screen.wr->line[y][x + x1] = color;
@@ -838,11 +838,11 @@ void dos_box(int x, int y, int w, int h, WORD color1, WORD color2, WORD bck) {
 
 	if (x >= DOS_CENTER) {
 		if (x == DOS_CENTER) {
-			x = (SCR_ROWS - w) >> 1;
+			x = (SCR_COLUMNS - w) >> 1;
 		} else if (x == DOS_LEFT) {
 			x = 0;
 		} else if (x == DOS_RIGHT) {
-			x = SCR_ROWS - w;
+			x = SCR_COLUMNS - w;
 		}
 		if (x < 0) {
 			x = 0;
@@ -850,11 +850,11 @@ void dos_box(int x, int y, int w, int h, WORD color1, WORD color2, WORD bck) {
 	}
 	if (y >= DOS_CENTER) {
 		if (y == DOS_CENTER) {
-			y = (SCR_LINES - h) >> 1;
+			y = (SCR_ROWS - h) >> 1;
 		} else if (y == DOS_UP) {
 			y = 0;
 		} else if (y == DOS_DOWN) {
-			y = SCR_LINES - h;
+			y = SCR_ROWS - h;
 		}
 		if (y < 0) {
 			y = 0;

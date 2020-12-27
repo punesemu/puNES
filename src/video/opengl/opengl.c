@@ -38,14 +38,14 @@
 #define BUFFER_OFFSET(i) ((char *)(i))
 #define BUFFER_VB_OFFSET(a, i) ((char *)&a + (i))
 
+#define _SCR_COLUMNS_BRD\
+	((float)(SCR_COLUMNS - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
 #define _SCR_ROWS_BRD\
-	((float)(SCR_ROWS - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
-#define _SCR_LINES_BRD\
-	(float)(SCR_LINES - (overscan.borders->up + overscan.borders->down))
+	(float)(SCR_ROWS - (overscan.borders->up + overscan.borders->down))
+#define _SCR_COLUMNS_NOBRD\
+	((float)SCR_COLUMNS * gfx.pixel_aspect_ratio)
 #define _SCR_ROWS_NOBRD\
-	((float)SCR_ROWS * gfx.pixel_aspect_ratio)
-#define _SCR_LINES_NOBRD\
-	(float)SCR_LINES
+	(float)SCR_ROWS
 
 static void opengl_context_delete(void);
 INLINE static void opengl_read_front_buffer(void);
@@ -286,9 +286,9 @@ BYTE opengl_context_create(void) {
 
 		if (cfg->fullscreen) {
 			int mw = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
-				_SCR_LINES_NOBRD : _SCR_ROWS_NOBRD;
+				_SCR_ROWS_NOBRD : _SCR_COLUMNS_NOBRD;
 			int mh = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
-				_SCR_ROWS_NOBRD : _SCR_LINES_NOBRD;
+				_SCR_COLUMNS_NOBRD : _SCR_ROWS_NOBRD;
 
 			if (!cfg->stretch) {
 				if (cfg->integer_scaling) {
@@ -466,8 +466,8 @@ BYTE opengl_context_create(void) {
 			ow = gfx.w[VIDEO_MODE] / div;
 			oh = gfx.h[VIDEO_MODE] / div;
 		} else {
-			ow = _SCR_ROWS_NOBRD * 2;
-			oh = _SCR_LINES_NOBRD * 2;
+			ow = _SCR_COLUMNS_NOBRD * 2;
+			oh = _SCR_ROWS_NOBRD * 2;
 		}
 
 		if (gfx.w[VIDEO_MODE] < ow) {
@@ -847,8 +847,8 @@ INLINE static void opengl_read_front_buffer(void) {
 		void *buffer;
 		int stride;
 
-		w = SCR_ROWS;
-		h = SCR_LINES;
+		w = SCR_COLUMNS;
+		h = SCR_ROWS;
 		stride = w * sizeof(uint32_t);
 
 		if ((buffer = malloc(stride * h))) {

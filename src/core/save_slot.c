@@ -767,10 +767,10 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 static void preview_image(BYTE slot, _screen_buffer *sb) {
-	int stride = SCR_ROWS * sizeof(uint32_t);
+	int stride = SCR_COLUMNS * sizeof(uint32_t);
 	void *buffer;
 
-	if ((buffer = malloc(stride * SCR_LINES))) {
+	if ((buffer = malloc(stride * SCR_ROWS))) {
 		scale_surface_preview_1x(sb, stride, buffer);
 		gui_set_save_slot_tooltip(slot, buffer);
 		free(buffer);

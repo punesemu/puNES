@@ -81,8 +81,8 @@ void scaleNx(void) {
 	scl2x.sx = 0;
 	scl2x.sy = 0;
 	scl2x.oy = 0;
-	scl2x.lines = SCR_LINES;
-	scl2x.rows = SCR_ROWS;
+	scl2x.lines = SCR_ROWS;
+	scl2x.rows = SCR_COLUMNS;
 	scl2x.startx = 0;
 
 	if (gfx.filter.factor == 2) {
@@ -90,8 +90,8 @@ void scaleNx(void) {
 	} else if (gfx.filter.factor == 3) {
 		scale3x(screen.rd->line, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
 	} else if (gfx.filter.factor == 4) {
-		scl4x_buffer.w = SCR_ROWS * 2;
-		scl4x_buffer.h = SCR_LINES * 2;
+		scl4x_buffer.w = SCR_COLUMNS * 2;
+		scl4x_buffer.h = SCR_ROWS * 2;
 		scl4x_buffer.pitch = scl4x_buffer.w * sizeof(uint32_t);
 		scl4x_buffer.size = scl4x_buffer.pitch * scl4x_buffer.h;
 		scale4x(screen.rd->line, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);

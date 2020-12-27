@@ -83,33 +83,33 @@ enum nsf_gui {
 	NSF_GUI_COMMANDS_NEXT,
 	NSF_GUI_COMMANDS,
 	NSF_GUI_COMMANDS_W = (NSF_GUI_WC * NSF_GUI_COMMANDS) + 2,
-	NSF_GUI_COMMANDS_X = (SCR_ROWS - NSF_GUI_COMMANDS_W) >> 1,
+	NSF_GUI_COMMANDS_X = (SCR_COLUMNS - NSF_GUI_COMMANDS_W) >> 1,
 	NSF_GUI_COMMANDS_Y = dospf(6) - 4,
 	NSF_GUI_COMMANDS_H = dospf(2),
 
 	NSF_GUI_INFO_SONG_LINES = 3,
-	NSF_GUI_INFO_SONG_W = (SCR_ROWS - dospf(3) - dospf(3)) + 4,
-	NSF_GUI_INFO_SONG_X = (SCR_ROWS - NSF_GUI_INFO_SONG_W) >> 1,
+	NSF_GUI_INFO_SONG_W = (SCR_COLUMNS - dospf(3) - dospf(3)) + 4,
+	NSF_GUI_INFO_SONG_X = (SCR_COLUMNS - NSF_GUI_INFO_SONG_W) >> 1,
 	NSF_GUI_INFO_SONG_Y = NSF_GUI_COMMANDS_Y + NSF_GUI_COMMANDS_H - 1,
 	NSF_GUI_INFO_SONG_H = (dospf(NSF_GUI_INFO_SONG_LINES) * 2),
 	NSF_GUI_INFO_SONG_TITLE_ROW = 26,
 
 	NSF_GUI_EFFECT_BOOKMARK_W = 12,
-	NSF_GUI_EFFECT_W = SCR_ROWS,
+	NSF_GUI_EFFECT_W = SCR_COLUMNS,
 	NSF_GUI_EFFECT_H = 50,
-	NSF_GUI_EFFECT_X = (SCR_ROWS - NSF_GUI_EFFECT_W) / 2,
-	NSF_GUI_EFFECT_Y = SCR_LINES - NSF_GUI_EFFECT_H,
+	NSF_GUI_EFFECT_X = (SCR_COLUMNS - NSF_GUI_EFFECT_W) / 2,
+	NSF_GUI_EFFECT_Y = SCR_ROWS - NSF_GUI_EFFECT_H,
 	NSF_GUI_EFFECT_BARS = 60,
-	NSF_GUI_EFFECT_BARS_W = SCR_ROWS - 16,
+	NSF_GUI_EFFECT_BARS_W = SCR_COLUMNS - 16,
 	NSF_GUI_EFFECT_BARS_H = NSF_GUI_EFFECT_H,
-	NSF_GUI_EFFECT_BARS_X = (SCR_ROWS - NSF_GUI_EFFECT_BARS_W) / 2,
-	NSF_GUI_EFFECT_BARS_Y = SCR_LINES - NSF_GUI_EFFECT_BARS_H,
+	NSF_GUI_EFFECT_BARS_X = (SCR_COLUMNS - NSF_GUI_EFFECT_BARS_W) / 2,
+	NSF_GUI_EFFECT_BARS_Y = SCR_ROWS - NSF_GUI_EFFECT_BARS_H,
 
 	NSF_GUI_OPTIONS_Y = NSF_GUI_EFFECT_Y - dospf(5),
 	NSF_GUI_OPTIONS_BOX_SIDE = 10,
 	NSF_GUI_OPTIONS_BOX_SPACE = 4,
 	NSF_GUI_OPTIONS_PLAYLIST_X = 12,
-	NSF_GUI_OPTIONS_FADEOUT_X = SCR_ROWS - NSF_GUI_OPTIONS_PLAYLIST_X,
+	NSF_GUI_OPTIONS_FADEOUT_X = SCR_COLUMNS - NSF_GUI_OPTIONS_PLAYLIST_X,
 
 	NSF_GUI__Y = NSF_GUI_EFFECT_Y - dospf(5),
 };
@@ -143,9 +143,9 @@ static void nsf_text_curtain_add_line(_nsf_text_curtain *curtain, const char *fm
 static void nsf_reset_song_variables(void);
 
 static _nsf_option_data nsf_options_data[] = {
-	{ 4,            NSF_GUI_EFFECT_Y - dospf(6) - 4, "Playlist",          FALSE, -1, -1 },
-	{ SCR_ROWS - 4, NSF_GUI_EFFECT_Y - dospf(6) - 4, "Fadeout",           TRUE,  -1, -1 },
-	{ 4,            NSF_GUI_EFFECT_Y - dospf(5) + 1, "Reverse bits DPCM", FALSE, -1, -1 },
+	{ 4,               NSF_GUI_EFFECT_Y - dospf(6) - 4, "Playlist",          FALSE, -1, -1 },
+	{ SCR_COLUMNS - 4, NSF_GUI_EFFECT_Y - dospf(6) - 4, "Fadeout",           TRUE,  -1, -1 },
+	{ 4,               NSF_GUI_EFFECT_Y - dospf(5) + 1, "Reverse bits DPCM", FALSE, -1, -1 },
 };
 
 void nsf_init(void) {
@@ -466,7 +466,7 @@ void nsf_after_load_rom(void) {
 
 	nsf.scroll_info_nsf.x = 0;
 	nsf.scroll_info_nsf.y = dospf(2);
-	nsf.scroll_info_nsf.rows = SCR_ROWS / dospf(1);
+	nsf.scroll_info_nsf.rows = SCR_COLUMNS / dospf(1);
 	nsf.scroll_info_nsf.reload = 150;
 	nsf.scroll_info_nsf.velocity = 4;
 	nsf_text_scroll_set_buffer(&nsf.scroll_info_nsf, "[cyan]%s[normal] - [yellow]%s[normal] - %s",
@@ -484,7 +484,7 @@ void nsf_after_load_rom(void) {
 	nsf.curtain_info.borders.right = -1;
 	nsf.curtain_info.borders.bottom = 0;
 	nsf.curtain_info.borders.top = -1;
-	nsf.curtain_info.rows = SCR_ROWS / dospf(1);
+	nsf.curtain_info.rows = SCR_COLUMNS / dospf(1);
 	nsf_text_curtain(&nsf.curtain_info, NSF_TEXT_CURTAIN_INIT);
 
 	nsf_text_curtain_add_line(&nsf.curtain_info, "-Pad commands-");
@@ -960,14 +960,14 @@ static void nsf_effect_set_coords(_nsf_effect_coords *coords, int x, int y, int 
 	if (coords->x1 < 0) {
 		coords->x1 = 0;
 	}
-	if (coords->x2 > SCR_ROWS) {
-		coords->x2 = SCR_ROWS - 1;
+	if (coords->x2 > SCR_COLUMNS) {
+		coords->x2 = SCR_COLUMNS - 1;
 	}
 	if (coords->y1 < 0) {
 		coords->y1 = 0;
 	}
-	if (coords->y2 > SCR_LINES) {
-		coords->y2 = SCR_LINES - 1;
+	if (coords->y2 > SCR_ROWS) {
+		coords->y2 = SCR_ROWS - 1;
 	}
 	coords->w = (coords->x2 - coords->x1) + 1;
 	coords->h = (coords->y2 - coords->y1) + 1;
@@ -1300,7 +1300,7 @@ static void nsf_draw_controls(void) {
 	// titolo nsf - artista - copyright
 	{
 		if (nsf.draw_mask_frames) {
-			dos_hline(0, dospf(1), SCR_ROWS, doscolor(DOS_BROWN));
+			dos_hline(0, dospf(1), SCR_COLUMNS, doscolor(DOS_BROWN));
 			if (info.format == NSFE_FORMAT) {
 				dos_text(DOS_CENTER, dospf(1) - 4, " [yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
 					" [bck][yellow][blue]NSFe[normal][bck][black] Player ");
@@ -1321,7 +1321,7 @@ static void nsf_draw_controls(void) {
 		wc = NSF_GUI_WC;
 
 		if (nsf.draw_mask_frames) {
-			dos_hline(0, dospf(4), SCR_ROWS, doscolor(DOS_BROWN));
+			dos_hline(0, dospf(4), SCR_COLUMNS, doscolor(DOS_BROWN));
 			dos_text(DOS_CENTER, dospf(4) - 4, " [red]Controls ");
 
 			dos_box(x, y, w, h, doscolor(DOS_NORMAL), doscolor(DOS_NORMAL), doscolor(DOS_GRAY));
@@ -1638,7 +1638,7 @@ static void nsf_draw_controls(void) {
 	// opzioni
 	{
 		if (nsf.draw_mask_frames) {
-			dos_hline(0, NSF_GUI_EFFECT_Y - dospf(7), SCR_ROWS, doscolor(DOS_BROWN));
+			dos_hline(0, NSF_GUI_EFFECT_Y - dospf(7), SCR_COLUMNS, doscolor(DOS_BROWN));
 			dos_text(DOS_CENTER, NSF_GUI_EFFECT_Y - dospf(7) - 4, " [red]Options ");
 		}
 
@@ -1650,7 +1650,7 @@ static void nsf_draw_controls(void) {
 	// info
 	{
 		if (nsf.draw_mask_frames) {
-			dos_hline(0, NSF_GUI_EFFECT_Y - dospf(3), SCR_ROWS, doscolor(DOS_BROWN));
+			dos_hline(0, NSF_GUI_EFFECT_Y - dospf(3), SCR_COLUMNS, doscolor(DOS_BROWN));
 			dos_text(DOS_CENTER, NSF_GUI_EFFECT_Y - dospf(3) - 4, " [red]Info ");
 		}
 
@@ -1659,7 +1659,7 @@ static void nsf_draw_controls(void) {
 
 	// indicatore effetto
 	{
-		int w = (SCR_ROWS - (NSF_EFFECTS * (NSF_GUI_EFFECT_BOOKMARK_W + 2))) / 2;
+		int w = (SCR_COLUMNS - (NSF_EFFECTS * (NSF_GUI_EFFECT_BOOKMARK_W + 2))) / 2;
 
 		if (nsf.draw_mask_frames) {
 			dos_hline(0, NSF_GUI_EFFECT_Y - 1, w - 1, doscolor(DOS_BROWN));

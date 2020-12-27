@@ -40,7 +40,7 @@ void ntsc_surface(void) {
 		gfx.filter.data.palette = (void *)ntsc;
 	}
 
-	nes_ntsc_blit((nes_ntsc_t *)gfx.filter.data.palette, screen.rd->data, SCR_ROWS, burst_phase, SCR_ROWS, SCR_LINES,
+	nes_ntsc_blit((nes_ntsc_t *)gfx.filter.data.palette, screen.rd->data, SCR_COLUMNS, burst_phase, SCR_COLUMNS, SCR_ROWS,
 		gfx.filter.data.pix, gfx.filter.data.pitch);
 
 	for (y = ((gfx.filter.data.height / gfx.filter.factor) - 1); --y >= 0;) {

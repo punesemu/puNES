@@ -41,7 +41,7 @@
 #define mod_cycles_op(op, vl) cpu.cycles op vl
 #define r2006_during_rendering()\
 	if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) &&\
-		(ppu.screen_y < SCR_LINES)) {\
+		(ppu.screen_y < SCR_ROWS)) {\
 		_r2006_during_rendering()\
 	} else {\
 		r2006.value += r2000.r2006_inc;\
@@ -365,7 +365,7 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 				value = r2004.value;
 			}
 		} else {
-			if (r2001.visible && (ppu.screen_y < SCR_LINES)) {
+			if (r2001.visible && (ppu.screen_y < SCR_ROWS)) {
 				value = r2004.value;
 			}
 		}
@@ -446,7 +446,7 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 				 * Tengen (Rambo)
 				 */
 				if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) &&
-						(ppu.screen_y < SCR_LINES)) {
+						(ppu.screen_y < SCR_ROWS)) {
 					extcl_update_r2006(r2006.value & 0x2FFF, old_r2006);
 				} else {
 					extcl_update_r2006(r2006.value, old_r2006);
@@ -1075,7 +1075,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * bitsNT       %0000 00NN
 		 * tmp_vram      %---- NN-- ---- ----
 		 */
-		if ((ppu.frame_x == 257) && (!ppu.vblank && (!r2001.spr_visible && r2001.bck_visible) && (ppu.screen_y < SCR_LINES))) {
+		if ((ppu.frame_x == 257) && (!ppu.vblank && (!r2001.spr_visible && r2001.bck_visible) && (ppu.screen_y < SCR_ROWS))) {
 			/*
 			 * gestione della condizione di race del $2000 al dot 257
 			 * https://forums.nesdev.com/viewtopic.php?f=3&t=18113
@@ -1103,7 +1103,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * (premuto il tasto start due volte ed avviato il gioco, una riga
 		 * piu' scura sfarfalla nello schermo).
 		 */
-		if (((ppu.frame_x >= 253) && (ppu.frame_x <= 255)) && (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_LINES))) {
+		if (((ppu.frame_x >= 253) && (ppu.frame_x <= 255)) && (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_ROWS))) {
 			r2006_end_scanline();
 		}
 
@@ -1295,7 +1295,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		ppu.openbus = value;
 		ppu_openbus_wr_all();
 
-		if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_LINES)) {
+		if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) {
 			ppu_wr_mem(ppu.rnd_adr, ppu.rnd_adr & 0x00FF);
 			_r2006_during_rendering()
 		} else {

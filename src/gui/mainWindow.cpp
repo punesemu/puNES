@@ -596,11 +596,11 @@ void mainWindow::set_save_slot_tooltip(BYTE slot, char *buffer) {
 	QString tooltip;
 
 	if (buffer) {
-		QImage image = QImage((uchar *)buffer, SCR_ROWS, SCR_LINES, SCR_ROWS * sizeof(uint32_t), QImage::Format_RGB32);
+		QImage image = QImage((uchar *)buffer, SCR_COLUMNS, SCR_ROWS, SCR_COLUMNS * sizeof(uint32_t), QImage::Format_RGB32);
 		QByteArray data;
 		QBuffer png(&data);
 
-		image = image.scaled(SCR_ROWS * 2, SCR_LINES * 2, Qt::KeepAspectRatio);
+		image = image.scaled(SCR_COLUMNS * 2, SCR_ROWS * 2, Qt::KeepAspectRatio);
 		image.save(&png, "PNG", 100);
 		tooltip = QString("<img src='data:image/png;base64, %1'>").arg(QString(data.toBase64()));
 	} else {

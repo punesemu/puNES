@@ -25,7 +25,7 @@ void irql2f_tick(void) {
 		return;
 	}
 
-	if (ppu.screen_y == (SCR_LINES - 1)) {
+	if (ppu.screen_y == (SCR_ROWS - 1)) {
 		irql2f.in_frame = FALSE;
 		return;
 	}

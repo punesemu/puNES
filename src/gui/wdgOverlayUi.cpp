@@ -826,13 +826,13 @@ void overlayWidgetInputPort::draw_mouse_coords(QPainter *painter) {
 	input_read_mouse_coords(&x, &y);
 	if (x < 0) {
 		x = 0;
-	} else if (x >= SCR_ROWS) {
-		x = SCR_ROWS - 1;
+	} else if (x >= SCR_COLUMNS) {
+		x = SCR_COLUMNS - 1;
 	}
 	if (y < 0) {
 		y = 0;
-	} else if (y > SCR_LINES - 1) {
-		y = SCR_LINES -1;
+	} else if (y > SCR_ROWS - 1) {
+		y = SCR_ROWS -1;
 	}
 	painter->setPen(Qt::white);
 	painter->drawText(20, 26, QString("x: %1").arg(x, 3));

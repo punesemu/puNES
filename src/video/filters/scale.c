@@ -38,8 +38,8 @@ void scale_surface(void) {
 	scl.sx = 0;
 	scl.sy = 0;
 	scl.oy = 0;
-	scl.lines = SCR_LINES;
-	scl.rows = SCR_ROWS;
+	scl.lines = SCR_ROWS;
+	scl.rows = SCR_COLUMNS;
 	scl.startx = 0;
 
 	scale_surface1x(screen.rd, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
@@ -48,8 +48,8 @@ void scale_surface_screenshoot_1x(uint32_t pitch, void *pix) {
 	scl.sx = 0;
 	scl.sy = 0;
 	scl.oy = 0;
-	scl.lines = SCR_LINES;
-	scl.rows = SCR_ROWS;
+	scl.lines = SCR_ROWS;
+	scl.rows = SCR_COLUMNS;
 	scl.startx = 0;
 
 	scale_surface1x(screen.rd, (uint32_t *)gfx.filter.data.palette, pitch, pix);
@@ -58,8 +58,8 @@ void scale_surface_preview_1x(void *sb, uint32_t pitch, void *pix) {
 	scl.sx = 0;
 	scl.sy = 0;
 	scl.oy = 0;
-	scl.lines = SCR_LINES;
-	scl.rows = SCR_ROWS;
+	scl.lines = SCR_ROWS;
+	scl.rows = SCR_COLUMNS;
 	scl.startx = 0;
 
 	scale_surface1x((_screen_buffer *)sb, gfx.palette, pitch, pix);

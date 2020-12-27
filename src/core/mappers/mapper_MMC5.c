@@ -435,7 +435,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			if ((address >= 0x5C00) && (address < 0x6000)) {
 				address &= 0x03FF;
 				if (mmc5.ext_mode < MODE2) {
-					if (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) {
+					if (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_ROWS)) {
 						mmc5.ext_ram[address] = value;
 					} else {
 						mmc5.ext_ram[address] = 0;
@@ -584,7 +584,7 @@ void extcl_ppu_320_to_34x_MMC5(void) {
 
 	if (mmc5.split) {
 		mmc5.split_x = 0x1F;
-		if (ppu.screen_y == SCR_LINES - 1) {
+		if (ppu.screen_y == SCR_ROWS - 1) {
 			mmc5.split_y = mmc5.split_scrl - 1;
 		} else {
 			if (mmc5.split_y < 239) {
