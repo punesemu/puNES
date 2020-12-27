@@ -709,6 +709,11 @@
       <source>Start/Stop &amp;VIDEO recording</source>
       <translation>&amp;Videófelvétel elindítása/leállítása</translation>
     </message>
+    <message>
+      <source>Slot %1 never used</source>
+      <extracomment>Refers to the unused save slot. Important: Do not translate the &quot;%1&quot;.</extracomment>
+      <translation type="unfinished">Slot %1 never used</translation>
+    </message>
   </context>
   <context>
     <name>objCheat</name>
@@ -2312,10 +2317,6 @@
     <message>
       <source>Save/Load Slot Box</source>
       <translation>Mentés/Töltés doboz</translation>
-    </message>
-    <message>
-      <source>Slot %1</source>
-      <translation>Mentéshely %1</translation>
     </message>
     <message>
       <source>Save state</source>
