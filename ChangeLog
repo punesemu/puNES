@@ -1,4 +1,95 @@
 Changelog:
+0.107
+- Updated translation from Crowdin (thx to Алексей Тимонин, MS-PC, tch_oscomp, Ömercan Kömür, Matheus).
+- Redesigned settings GUI.
+- Added an option to flip the screen horizontally (even when rotated).
+- Added an option to make the input (keyboard and controller) "follow" the orientation of the screen.
+  Try to replay your favorite games in this mode, you will find it fun. (Thx to eugene-s-nesdev for the idea).
+- Added "AxelayNES" Demo to the database.
+- Added spanish traslation of Ganbare Goemon Gaiden 2 to the database.
+- Added an option to reverse bits of DPCM (also in the NSF player).
+  To understand what "reverse" is for, take a look at this post http://forums.nesdev.com/viewtopic.php?f=2&t=20308.
+- Added the preview of the last screen image of the saved states.
+  Now it is always possible view the screen of the saved states when you move the mouse between the various
+  Slots in the "State" menu (slots with the available preview will be marked with a "*"). It's also available in the
+  combobox of the toolbar widget.The preview will be displayed as a tooltip.
+- Added, thanks to the FFMPEG libraries, the ability to create video and audio files of the game session.
+  The supported video formats are:
+  * MPEG 1 Video
+  * MPEG 2 Video
+  * MPEG 4 Video
+  * MPEG H264 Video
+  * High Efficiency Video Codec
+  * WebM Video
+  * Windows Media Video
+  * AVI FF Video
+  * AVI Video
+  The supported audio formats are:
+  * WAV Audio
+  * MP3 Audio
+  * AAC Audio
+  * Flac Audio
+  * Ogg Audio
+  The parameters relating to the recording are available in the configuration GUI.
+  It's possible to start a recording through the keyboard shortcuts (CTRL+A for audio and CTRL+V for video)
+  also from the widget located at the bottom right of the statusbar. Clicking on it with the left mouse button will
+  start the last type of registration, with the right button a context menu where you can select what to start.
+  Once the recording has started, you can stop it either with the same shortcuts with which it was started or by
+  clicking on the statusbar widget.
+  The emulator will always remember the last used settings.
+- Added "Raw" palette. To understand what this palette is, I use the explanation found on
+  Emulation General Wiki https://emulation.gametechwiki.com/index.php/Famicom_Color_Palette :
+  "option to output the raw chroma, level, and emphasis from the PPU through the RGB color channels.
+  This by itself produces an image with completely bizarre colors, but this can be decoded by shaders
+  to generate actual colors, the main examples being GTU-Famicom and nes-color-decoder".
+  So it's usable with all shaders that support it:
+  cgwg-famicom-geom.glsl, gtu-famicom.glsl or ntsc-nes.glsl that you find  in the
+  libretro glsl-shaders repository https://github.com/libretro/glsl-shaders.
+  P.s. this works with OpenGL version.
+- Fixed compatibility with GLSL shaders (like MMJ_Cel_Shader.glslp or all crt-royale.glslp series).
+  You can find this shader at glsl-shaders https://github.com/libretro/glsl-shaders and
+  common-shaders https://github.com/libretro/common-shaders.
+- Fixed VRC7 sound pitch.
+- Fixed saving of window position in a multi-monitor setup (thx to baraclese for the patch).
+- Fixed the restoration of the hidden state of the toolbar widgets.
+- NSF/NSFe player. Added a new effect and revised the "bars" effect. It's now possible to move between the
+  various effects using the up and down of the pad or by clicking on the right or left side of the effect viewer.
+  Changed the help text explaining the pad commands.
+- Redesigned the command line help display.
+- On a computer where the amulator had never been started, at the first run it was started in the top left but
+  hiding the window frame preventing it from moving or closing. Fixed.
+- Now the settings window is resizable.
+- Fixed several bugs in the Cheat Editor and in the Input Settings.
+  Cheat Editor:
+  * Fixed a possible crash that occurs when entering a new cheat.
+  * Fixed several table display errors.
+  * Active cheats are now easily identifiable thanks to a different color.
+  * Fixed a bug that did not activate the selected cheat correctly.
+  * Cheat description tooltip.
+  Input settings:
+  * Minor cosmetic changes.
+- Fixed many many many other bugs.
+
+0.106
+- Added support for FreeBSD (thx to TCH68k for for the initial patch, his tests and his support).
+- Overlay screen redesigned and rewritten.
+- Added an option to rotate the screen.
+- Added Nuke.YKT VRC7 patch dump.
+- Added Brasilian translation (thx to Matheus on Crowdin).
+- Updated translation from Crowdin (thx to Алексей Тимонин, MS-PC, tch_oscomp, Ömercan Kömür).
+- Input management reorganized.
+- Added homebrew "Neon Genesis Evangelion: Third Impact" and "Fire Hawk (PAL)[!].nes" to the database.
+- Added traslation of Ganbare Goemon Gaiden 2 to the database.
+- Added a shortcut to save a screenshot of unaltered NES screen (#90).
+- Now you can also disable keyboard shortcuts.
+- Fixed warning compilation with QT 5.15.
+- Fixed  compilation errors with the GCC -fno-common option (GCC 10).
+- Fixed compilation with recent MSYS2.
+- Fixed possible audio interruption (Windows).
+- Fixed the support for the RAR archive.
+- Fixed a possible crash when drag the window onto another monitor (Windows).
+- Fixed many many many other bugs.
+
 0.105
 - Added Spanish translation (thx to MS-PC on Crowdin).
 - Added Hungarian translation (thx to tch_oscomp on Crowdin).
