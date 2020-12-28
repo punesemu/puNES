@@ -465,6 +465,7 @@ void mainWindow::make_reset(int type) {
 
 	emu_thread_continue();
 
+	update_menu_file();
 	// dopo un reset la pause e' automaticamente disabilitata quindi faccio
 	// un aggiornamento del submenu NES per avere la voce correttamente settata.
 	update_menu_nes();
@@ -501,6 +502,10 @@ void mainWindow::shortcuts(void) {
 
 	// File
 	connect_shortcut(action_Open, SET_INP_SC_OPEN, SLOT(s_open()));
+	connect_shortcut(action_Start_Stop_Audio_recording, SET_INP_SC_REC_AUDIO, SLOT(s_start_stop_audio_recording()));
+#if defined (WITH_FFMPEG)
+	connect_shortcut(action_Start_Stop_Video_recording, SET_INP_SC_REC_VIDEO, SLOT(s_start_stop_video_recording()));
+#endif
 	connect_shortcut(action_Quit, SET_INP_SC_QUIT, SLOT(s_quit()));
 	// NES
 	connect_shortcut(action_Turn_Off, SET_INP_SC_TURN_OFF, SLOT(s_turn_on_off()));
@@ -509,10 +514,6 @@ void mainWindow::shortcuts(void) {
 	connect_shortcut(action_Insert_Coin, SET_INP_SC_INSERT_COIN, SLOT(s_insert_coin()));
 	connect_shortcut(action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
 	connect_shortcut(action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
-	connect_shortcut(action_Start_Stop_Audio_recording, SET_INP_SC_REC_AUDIO, SLOT(s_start_stop_audio_recording()));
-#if defined (WITH_FFMPEG)
-	connect_shortcut(action_Start_Stop_Video_recording, SET_INP_SC_REC_VIDEO, SLOT(s_start_stop_video_recording()));
-#endif
 	connect_shortcut(action_Fullscreen, SET_INP_SC_FULLSCREEN, SLOT(s_set_fullscreen()));
 	connect_shortcut(action_Save_Screenshot, SET_INP_SC_SCREENSHOT, SLOT(s_save_screenshot()));
 	connect_shortcut(action_Save_Unaltered_NES_screen, SET_INP_SC_SCREENSHOT_1X, SLOT(s_save_screenshot_1x()));
@@ -616,6 +617,10 @@ void mainWindow::connect_menu_signals(void) {
 	// File
 	connect_action(action_Open, SLOT(s_open()));
 	connect_action(action_Apply_Patch, SLOT(s_apply_patch()));
+	connect_action(action_Start_Stop_Audio_recording, SLOT(s_start_stop_audio_recording()));
+#if defined (WITH_FFMPEG)
+	connect_action(action_Start_Stop_Video_recording, SLOT(s_start_stop_video_recording()));
+#endif
 	connect_action(action_Open_working_folder, SLOT(s_open_working_folder()));
 	connect_action(action_Quit, SLOT(s_quit()));
 	// NES
@@ -633,10 +638,6 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Disk_4_side_B, 7, SLOT(s_disk_side()));
 	connect_action(action_Switch_sides, 0xFFF, SLOT(s_disk_side()));
 	connect_action(action_Eject_Insert_Disk, SLOT(s_eject_disk()));
-	connect_action(action_Start_Stop_Audio_recording, SLOT(s_start_stop_audio_recording()));
-#if defined (WITH_FFMPEG)
-	connect_action(action_Start_Stop_Video_recording, SLOT(s_start_stop_video_recording()));
-#endif
 	connect_action(action_Fullscreen, SLOT(s_set_fullscreen()));
 	connect_action(action_Save_Screenshot, SLOT(s_save_screenshot()));
 	connect_action(action_Save_Unaltered_NES_screen, SLOT(s_save_screenshot_1x()));
@@ -755,6 +756,8 @@ void mainWindow::update_menu_file(void) {
 		action_Apply_Patch->setEnabled(true);
 	}
 
+	update_recording_widgets();
+
 	// recent roms
 	if (recent_roms_count() > 0) {
 		int i;
@@ -847,8 +850,6 @@ void mainWindow::update_menu_nes(void) {
 		menu_Disk_Side->setEnabled(false);
 		action_Eject_Insert_Disk->setEnabled(false);
 	}
-
-	update_recording_widgets();
 
 	if ((info.pause_from_gui == TRUE) && (rwnd.active == FALSE)) {
 		action_Pause->setChecked(true);
@@ -1254,7 +1255,7 @@ void mainWindow::s_start_stop_audio_recording(void) {
 	} else {
 		wave_close();
 	}
-	update_menu_nes();
+	update_menu_file();
 #endif
 }
 #if defined (WITH_FFMPEG)
@@ -1533,6 +1534,14 @@ void mainWindow::s_shcjoy_read_timer(void) {
 						case SET_INP_SC_OPEN:
 							action_Open->trigger();
 							break;
+						case SET_INP_SC_REC_AUDIO:
+							action_Start_Stop_Audio_recording->trigger();
+							break;
+#if defined (WITH_FFMPEG)
+						case SET_INP_SC_REC_VIDEO:
+							action_Start_Stop_Video_recording->trigger();
+							break;
+#endif
 						case SET_INP_SC_QUIT:
 							action_Quit->trigger();
 							break;
@@ -1554,14 +1563,6 @@ void mainWindow::s_shcjoy_read_timer(void) {
 						case SET_INP_SC_EJECT_DISK:
 							action_Eject_Insert_Disk->trigger();
 							break;
-						case SET_INP_SC_REC_AUDIO:
-							action_Start_Stop_Audio_recording->trigger();
-							break;
-#if defined (WITH_FFMPEG)
-						case SET_INP_SC_REC_VIDEO:
-							action_Start_Stop_Video_recording->trigger();
-							break;
-#endif
 						case SET_INP_SC_FULLSCREEN:
 							action_Fullscreen->trigger();
 							break;

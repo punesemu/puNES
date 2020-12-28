@@ -47,6 +47,9 @@
     <addaction name="separator"/>
     <addaction name="action_Apply_Patch"/>
     <addaction name="separator"/>
+    <addaction name="action_Start_Stop_Audio_recording"/>
+    <addaction name="action_Start_Stop_Video_recording"/>
+    <addaction name="separator"/>
     <addaction name="action_Open_working_folder"/>
     <addaction name="separator"/>
     <addaction name="action_Quit"/>
@@ -82,9 +85,6 @@
     <addaction name="separator"/>
     <addaction name="menu_Disk_Side"/>
     <addaction name="action_Eject_Insert_Disk"/>
-    <addaction name="separator"/>
-    <addaction name="action_Start_Stop_Audio_recording"/>
-    <addaction name="action_Start_Stop_Video_recording"/>
     <addaction name="separator"/>
     <addaction name="action_Fullscreen"/>
     <addaction name="action_Save_Screenshot"/>

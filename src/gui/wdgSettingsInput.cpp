@@ -757,6 +757,10 @@ void wdgSettingsInput::shortcuts_set(void) {
 	}
 
 	shortcut_update_text(mainwin->action_Open, SET_INP_SC_OPEN);
+	shortcut_update_text(mainwin->action_Start_Stop_Audio_recording, SET_INP_SC_REC_AUDIO);
+#if defined (WITH_FFMPEG)
+	shortcut_update_text(mainwin->action_Start_Stop_Video_recording, SET_INP_SC_REC_VIDEO);
+#endif
 	shortcut_update_text(mainwin->action_Quit, SET_INP_SC_QUIT);
 	shortcut_update_text(mainwin->action_Turn_Off, SET_INP_SC_TURN_OFF);
 	shortcut_update_text(mainwin->action_Hard_Reset, SET_INP_SC_HARD_RESET);
@@ -764,10 +768,6 @@ void wdgSettingsInput::shortcuts_set(void) {
 	shortcut_update_text(mainwin->action_Insert_Coin, SET_INP_SC_INSERT_COIN);
 	shortcut_update_text(mainwin->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
 	shortcut_update_text(mainwin->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
-	shortcut_update_text(mainwin->action_Start_Stop_Audio_recording, SET_INP_SC_REC_AUDIO);
-#if defined (WITH_FFMPEG)
-	shortcut_update_text(mainwin->action_Start_Stop_Video_recording, SET_INP_SC_REC_VIDEO);
-#endif
 	shortcut_update_text(mainwin->action_Fullscreen, SET_INP_SC_FULLSCREEN);
 	shortcut_update_text(mainwin->action_Save_Screenshot, SET_INP_SC_SCREENSHOT);
 	shortcut_update_text(mainwin->action_Save_Unaltered_NES_screen, SET_INP_SC_SCREENSHOT_1X);
