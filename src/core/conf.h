@@ -91,6 +91,7 @@ typedef struct _config {
 	_config_apu apu;
 #if defined (WITH_FFMPEG)
 	struct _config_recording {
+		BYTE last_type;
 		BYTE audio_format;
 		BYTE video_format;
 		BYTE quality;

@@ -168,23 +168,19 @@ void recStatusBar::mousePressEvent(QMouseEvent *event) {
 }
 
 void recStatusBar::desc_text(void) {
-	static BYTE last_type = REC_FORMAT_AUDIO;
-
-	if (info.recording_on_air) {
 #if defined (WITH_FFMPEG)
-		last_type = recording_format_type();
+	if (cfg->recording.last_type == REC_FORMAT_AUDIO) {
+		desc->setText(tr("Audio"));
+	} else {
+		desc->setText(tr("Video"));
+	}
+#else
+	desc->setText(tr("Audio"));
 #endif
+	if (info.recording_on_air) {
 		desc->setEnabled(true);
 	} else {
 		desc->setEnabled(false);
-	}
-
-	if (last_type == REC_FORMAT_AUDIO) {
-		desc->setText(tr("Audio"));
-#if defined (WITH_FFMPEG)
-	} else {
-		desc->setText(tr("Video"));
-#endif
 	}
 }
 void recStatusBar::icon_pixmap(QIcon::Mode mode) {

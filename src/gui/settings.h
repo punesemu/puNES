@@ -100,6 +100,11 @@ enum set_element {
 	SET_GUI_LANGUAGE,
 	SET_GUI_TOOLBAR_AREA,
 	SET_GUI_TOOLBAR_HIDDEN,
+#if defined (WITH_FFMPEG)
+	SET_GUI_REC_LAST_TYPE,
+	SET_GUI_REC_LAST_VIDEO_PATH,
+#endif
+	SET_GUI_REC_LAST_AUDIO_PATH,
 	SET_APU_MASTER,
 	SET_APU_SQUARE1,
 	SET_APU_SQUARE2,
@@ -121,10 +126,8 @@ enum set_element {
 	SET_REC_OUTPUT_CUSTOM_WIDTH,
 	SET_REC_OUTPUT_CUSTOM_HEIGHT,
 	SET_REC_USE_EMU_RESOLUTION,
-	SET_REC_FOLLOW_ROTATION,
-	SET_LAST_REC_VIDEO_PATH,
+	SET_REC_FOLLOW_ROTATION
 #endif
-	SET_LAST_REC_AUDIO_PATH
 };
 enum pgs_element {
 	SET_PGS_SLOT,
@@ -479,6 +482,10 @@ static const _opt opt_nsf_player_effect[] = {
 	{NULL, uL("hannig full"), NSF_EFFECT_HANNING_FULL}
 };
 #if defined (WITH_FFMPEG)
+static const _opt opt_recording_format_type[] = {
+	{NULL, uL("video")  , REC_FORMAT_VIDEO},
+	{NULL, uL("audio")  , REC_FORMAT_AUDIO}
+};
 static const _opt opt_recording_audio_format[] = {
 	{NULL, uL("mp3")  , REC_FORMAT_AUDIO_MP3},
 	{NULL, uL("aac")  , REC_FORMAT_AUDIO_AAC},
@@ -930,6 +937,26 @@ static const _settings main_cfg[] = {
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
+#if defined (WITH_FFMPEG)
+	{
+		uL("GUI"), uL("last recording type"), uL("audio"),
+		uL("# possible values: video, audio"),
+		NULL,
+		{LENGTH(opt_recording_format_type), opt_recording_format_type}
+	},
+	{
+		uL("GUI"), uL("last video recording path"), NULL,
+		uL("# possible values: [PATH]"),
+		NULL,
+		{0, NULL}
+	},
+#endif
+	{
+		uL("GUI"), uL("last audio recording path"), NULL,
+		uL("# possible values: [PATH]"),
+		NULL,
+		{0, NULL}
+	},
 	{
 		uL("apu channels"), uL("master"), uL("on,100"),
 		uL("# possible values: [on, off],[0 - 100]"),
@@ -1058,20 +1085,8 @@ static const _settings main_cfg[] = {
 		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
-	},
-	{
-		uL("recording"), uL("last video recording path"), NULL,
-		uL("# possible values: [PATH]"),
-		NULL,
-		{0, NULL}
-	},
-#endif
-	{
-		uL("recording"), uL("last audio recording path"), NULL,
-		uL("# possible values: [PATH]"),
-		NULL,
-		{0, NULL}
 	}
+#endif
 };
 
 static const _settings pgs_cfg[] = {
