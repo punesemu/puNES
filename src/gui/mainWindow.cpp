@@ -1494,6 +1494,7 @@ void mainWindow::s_help(void) {
 	about->setText(text);
 
 	text = "<center>" + QString(COPYRUTF8) + "</center>\n";
+	text.append("<center><a href=\"" + QString(GITLAB) + "\">" + "GitLab Page</a></center>");
 	text.append("<center><a href=\"" + QString(GITHUB) + "\">" + "GitHub Page</a></center>");
 	text.append("<center><a href=\"" + QString(WEBSITE) + "\">" + "NesDev Forum</a></center>");
 	text.append("<center>" + QString("-") + "</center>\n");
