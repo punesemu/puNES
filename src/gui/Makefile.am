@@ -121,6 +121,10 @@ $(srcdir)/designer/translations/pt_BR.qm: designer/translations/pt_BR.ts
 	$(LRELEASE) -silent $(srcdir)/designer/translations/pt_BR.ts -qm $@
 $(srcdir)/designer/translations/qt_pt.qm: designer/translations/qt_pt.ts
 	$(LRELEASE) -silent $(srcdir)/designer/translations/qt_pt.ts -qm $@
+$(srcdir)/designer/translations/zh_CN.qm: designer/translations/zh_CN.ts
+	$(LRELEASE) -silent $(srcdir)/designer/translations/zh_CN.ts -qm $@
+$(srcdir)/designer/translations/qt_zh_CN.qm: designer/translations/qt_zh_CN.ts
+	$(LRELEASE) -silent $(srcdir)/designer/translations/qt_zh_CN.ts -qm $@
 
 clean-local:
 	rm -f resources.cpp *.{hh,moc} $(srcdir)/designer/translations/*.qm
@@ -137,7 +141,9 @@ TRADUCTION_QM = \
 	$(srcdir)/designer/translations/ru_RU.qm \
 	$(srcdir)/designer/translations/qt_ru.qm \
 	$(srcdir)/designer/translations/pt_BR.qm \
-	$(srcdir)/designer/translations/qt_pt.qm
+	$(srcdir)/designer/translations/qt_pt.qm \
+	$(srcdir)/designer/translations/zh_CN.qm \
+	$(srcdir)/designer/translations/qt_zh_CN.qm
 
 BUILT_SOURCES = \
 	resources.cpp
@@ -211,6 +217,8 @@ libgui_a_SOURCES = \
 	mainWindow.hpp \
 	objCheat.cpp \
 	objCheat.hpp \
+	objDatabase.cpp \
+	objDatabase.hpp \
 	objSettings.cpp \
 	objSettings.hpp \
 	qt.cpp \

@@ -320,6 +320,15 @@
        </property>
        <item>
         <property name="text">
+         <string>Chinese Simplified</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/flag_china.svg</normaloff>:/icon/icons/flag_china.svg</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>English</string>
         </property>
         <property name="icon">

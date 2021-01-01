@@ -16,6 +16,7 @@
     <file>icons/film.svg</file>
     <file>icons/game_controller.svg</file>
     <file>icons/palettes_list.svg</file>
+    <file>icons/flag_china.svg</file>
     <file>icons/paper.svg</file>
     <file>icons/shaders_parameters.svg</file>
     <file>icons/stereo_delay.svg</file>
@@ -164,5 +165,7 @@
     <file>translations/qt_ru.qm</file>
     <file>translations/pt_BR.qm</file>
     <file>translations/qt_pt.qm</file>
+    <file>translations/zh_CN.qm</file>
+    <file>translations/qt_zh_CN.qm</file>
   </qresource>
 </RCC>

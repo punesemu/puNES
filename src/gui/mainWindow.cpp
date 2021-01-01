@@ -389,6 +389,10 @@ void mainWindow::set_language(int lang) {
 			lng = "en";
 			file = "tr_TR";
 			break;
+		case LNG_CHINESE_SIMPLIFIED:
+			lng = "zh_CN";
+			file = "zh_CN";
+			break;
 		case LNG_ENGLISH:
 		default:
 			break;

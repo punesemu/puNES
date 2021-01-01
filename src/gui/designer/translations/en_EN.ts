@@ -1469,6 +1469,10 @@
         <source>2x</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Chinese Simplified</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>wdgSettingsInput</name>
