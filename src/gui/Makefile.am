@@ -217,8 +217,6 @@ libgui_a_SOURCES = \
 	mainWindow.hpp \
 	objCheat.cpp \
 	objCheat.hpp \
-	objDatabase.cpp \
-	objDatabase.hpp \
 	objSettings.cpp \
 	objSettings.hpp \
 	qt.cpp \
