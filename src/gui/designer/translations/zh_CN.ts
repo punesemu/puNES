@@ -1469,6 +1469,10 @@
       <source>2x</source>
       <translation>2 倍</translation>
     </message>
+    <message>
+      <source>Chinese Simplified</source>
+      <translation>简体中文</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
