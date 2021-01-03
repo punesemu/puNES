@@ -45,7 +45,7 @@ void map_init_31(void) {
 	info.mapper.extend_rd = TRUE;
 }
 void extcl_cpu_wr_mem_31(WORD address, BYTE value) {
-	if ((address < 0x5000) && (address > 0x5FFF)) {
+	if ((address < 0x5000) || (address > 0x5FFF)) {
 		return;
 	}
 	m31.regs[address & 0x0007] = value;

@@ -54,10 +54,10 @@
 #include "gui.h"
 #include "video/effects/tv_noise.h"
 
-#define RS_SCALE (1.0f / (1.0f + RAND_MAX))
+#define RS_SCALE (1.0f / (1.0f + (float)RAND_MAX))
 
 #if defined (DEBUG)
-	WORD PCBREAK = 0xC425;
+WORD PCBREAK = 0xC425;
 #endif
 
 INLINE static void emu_frame_started(void);

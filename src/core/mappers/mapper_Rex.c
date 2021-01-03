@@ -140,7 +140,7 @@ void extcl_cpu_wr_mem_Rex_dbz(WORD address, BYTE value) {
 	extcl_cpu_wr_mem_MMC3(address, value);
 }
 BYTE extcl_cpu_rd_mem_Rex_dbz(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address >= 0x4100) || (address < 0x6000)) {
+	if ((address >= 0x4100) && (address < 0x6000)) {
 		/* TODO:
 		 * se disabilito questo return ed avvio la rom,
 		 * il testo non sara' piu' in cinese ma in inglese.
