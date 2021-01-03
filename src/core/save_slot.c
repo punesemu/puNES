@@ -32,6 +32,8 @@
 #include "bck_states.h"
 #include "rewind.h"
 #include "video/gfx.h"
+#include "video/gfx_thread.h"
+#include "emu_thread.h"
 #include "gui.h"
 #include "tas.h"
 #include "fds.h"
@@ -155,6 +157,9 @@ void save_slot_count_load(void) {
 	uTCHAR *file;
 	BYTE i;
 
+	emu_thread_pause();
+	gfx_thread_pause();
+
 	for (i = 0; i < SAVE_SLOTS; i++) {
 		save_slot.tot_size[i] = 0;
 
@@ -190,6 +195,9 @@ void save_slot_count_load(void) {
 	}
 
 	gui_save_slot(save_slot.slot);
+
+	gfx_thread_continue();
+	emu_thread_continue();
 }
 BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size, FILE *fp, BYTE preview) {
 	DBWORD bytes;
