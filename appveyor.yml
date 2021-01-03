@@ -10,6 +10,8 @@ init:
     # Set "build version number" to "short-commit-hash"
 
     Update-AppveyorBuild -Version "wip.$($env:APPVEYOR_REPO_COMMIT.substring(0,7)).$env:APPVEYOR_BUILD_NUMBER"
+on_failure:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 build_script:
 - cmd: >-
     set ORIGPATH=%PATH%
