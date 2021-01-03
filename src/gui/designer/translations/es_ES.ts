@@ -1471,7 +1471,7 @@
     </message>
     <message>
       <source>Chinese Simplified</source>
-      <translation type="unfinished">Chinese Simplified</translation>
+      <translation>Chino simplificado</translation>
     </message>
   </context>
   <context>
