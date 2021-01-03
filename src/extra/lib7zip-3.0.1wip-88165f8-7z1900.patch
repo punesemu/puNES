@@ -1,0 +1,11 @@
+diff -upr 7z1900/CPP/Common/MyVector.h 7z1900.new/CPP/Common/MyVector.h
+--- 7z1900/CPP/Common/MyVector.h	2017-01-24 10:50:24.000000000 +0100
++++ 7z1900.new/CPP/Common/MyVector.h	2021-01-03 10:05:13.344133335 +0100
+@@ -4,6 +4,7 @@
+ #define __COMMON_MY_VECTOR_H
+ 
+ #include <string.h>
++#include "Common.h"
+ 
+ template <class T>
+ class CRecordVector

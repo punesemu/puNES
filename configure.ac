@@ -189,11 +189,12 @@ AS_IF([test "x$PKG_CONFIG" = "xno"], [
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h float.h inttypes.h limits.h stddef.h stdint.h stdlib.h string.h strings.h sys/ioctl.h sys/time.h unistd.h utime.h])
 
-AX_CXX_COMPILE_STDCXX_11([noext])
+AX_CXX_COMPILE_STDCXX_14([noext])
 
 OLD_CFLAGS="$CFLAGS"
 OLD_LIBS="$LIBS"
 
+# git
 AM_CONDITIONAL(USE_GIT_INFO,[test x$WIPS_VERSION = xtrue])
 AM_COND_IF([ENAB_RELEASE], [
 	AM_COND_IF([USE_GIT_INFO], [
@@ -208,6 +209,12 @@ AM_COND_IF([ENAB_RELEASE], [
 AM_CONDITIONAL(WITH_GIT,[test "x$GIT" != xno])
 AM_COND_IF([WITH_GIT], [
 	CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_GIT_INFO"
+])
+
+# cmake
+AC_CHECK_PROG(CMAKE, cmake, yes)
+AS_IF([test "x$CMAKE" != xyes], [
+	AC_MSG_ERROR([Please install cmake before configuring.])
 ])
 
 # Checks for libraries.
@@ -621,20 +628,21 @@ AM_CONDITIONAL(HAVE_WINDRES, [test x$WINDRES != xno])
 AC_SUBST(WINDRES)
 
 # lib7zip
-LIB7ZIP_SRC="lib7zip-1.6.5"
-LIB7ZIP_P7ZIP="p7zip_9.20.1"
-LIB7ZIP_7Z="7z922"
+LIB7ZIP_SRC="lib7zip-88165f8"
+LIB7ZIP_P7ZIP="p7zip_16.02"
+LIB7ZIP_7Z="7z1900"
 AM_COND_IF([WINDOWS], [
 	export P7ZIP_SOURCE_DIR="${TOP_SRCDIR}/src/extra/${LIB7ZIP_7Z}"
 ], [
 	export P7ZIP_SOURCE_DIR="${TOP_SRCDIR}/src/extra/${LIB7ZIP_P7ZIP}"
 ])
 #AC_CONFIG_COMMANDS_PRE([])
-AC_CONFIG_SUBDIRS([src/extra/lib7zip-1.6.5])
-LIB7ZIP_LIBS="${TOP_BUILDDIR}src/extra/${LIB7ZIP_SRC}/Lib7Zip/lib7zip.a"
+AC_CONFIG_SUBDIRS([src/extra/lib7zip-88165f8])
+LIB7ZIP_LIBS="${TOP_BUILDDIR}src/extra/${LIB7ZIP_SRC}/src/lib7zip.a"
 AC_SUBST(LIB7ZIP_SRC)
 AC_SUBST(LIB7ZIP_LIBS)
 
+# xdelta
 AC_CONFIG_SUBDIRS([src/extra/xdelta-3.1.0])
 
 # The End

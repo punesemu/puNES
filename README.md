@@ -38,6 +38,7 @@ How to Compile
 * [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
 * [nvidia-cg](https://developer.nvidia.com/cg-toolkit)
 * [alsa](https://www.alsa-project.org)
+* [cmake](https://cmake.org)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
 #### Compilation of puNES
 ```bash
@@ -56,7 +57,7 @@ CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" ./configure --disable-release [...]
 where `[...]` are the other necessary options.
 #### Example on how to compile on Ubuntu 20.10
 ```bash
-sudo apt-get install git autotools-dev autoconf build-essential pkg-config libasound2-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev nvidia-cg-toolkit
+sudo apt-get install git cmake autotools-dev autoconf build-essential pkg-config libasound2-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev nvidia-cg-toolkit
 sudo apt-get install libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev
 git clone https://github.com/punesemu/puNES
 cd puNES
@@ -72,6 +73,7 @@ to start the emulator
 #### Dependencies
 * [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
+* [cmake](https://cmake.org)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
 #### Compilation of puNES
 ```bash
@@ -92,6 +94,7 @@ where `[...]` are the other necessary options.
 #### Dependencies
 * [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
+* [cmake](https://cmake.org)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
 #### Compilation of puNES
 ```bash
@@ -120,7 +123,7 @@ pacman -Syu
 3. close the MSYS2 window and run it again from Start menu
 ```bash
 pacman -Su
-pacman -S base-devel git wget p7zip unzip
+pacman -S base-devel git wget p7zip unzip mingw-w64-i686-cmake mingw-w64-x86_64-cmake
 pacman -S perl ruby python2 mingw-w64-i686-toolchain mingw-w64-x86_64-toolchain
 exit
 ```
