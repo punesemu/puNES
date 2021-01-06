@@ -2315,6 +2315,10 @@
       <source>Palette File</source>
       <translation type="unfinished">Palette File</translation>
     </message>
+    <message>
+      <source>Show frames and lags counters</source>
+      <translation type="unfinished">Show frames and lags counters</translation>
+    </message>
   </context>
   <context>
     <name>wdgState</name>
