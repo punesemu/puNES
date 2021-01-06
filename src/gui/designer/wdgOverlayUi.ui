@@ -201,6 +201,16 @@
       </widget>
      </item>
      <item>
+      <widget class="overlayWidgetFrame" name="overlayFrame" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>20</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="overlayWidgetFPS" name="overlayFPS" native="true">
        <property name="minimumSize">
         <size>
@@ -253,6 +263,12 @@
   </customwidget>
   <customwidget>
    <class>overlayWidgetInfo</class>
+   <extends>QWidget</extends>
+   <header>wdgOverlayUi.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>overlayWidgetFrame</class>
    <extends>QWidget</extends>
    <header>wdgOverlayUi.hpp</header>
    <container>1</container>

@@ -177,6 +177,7 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Interpolation, SIGNAL(clicked(bool)), this, SLOT(s_interpolation(bool)));
 	connect(checkBox_Text_on_screen, SIGNAL(clicked(bool)), this, SLOT(s_text_on_screen(bool)));
 	connect(checkBox_Show_FPS, SIGNAL(clicked(bool)), this, SLOT(s_show_fps(bool)));
+	connect(checkBox_Show_frames_and_lags, SIGNAL(clicked(bool)), this, SLOT(s_show_frames_and_lags(bool)));
 	connect(checkBox_Input_display, SIGNAL(clicked(bool)), this, SLOT(s_input_display(bool)));
 	connect(checkBox_Disable_TV_noise_emulation, SIGNAL(clicked(bool)), this, SLOT(s_disable_tv_noise(bool)));
 	connect(checkBox_Disable_sepia_color_on_pause, SIGNAL(clicked(bool)), this, SLOT(s_disable_sepia(bool)));
@@ -303,6 +304,7 @@ void wdgSettingsVideo::update_widget(void) {
 	checkBox_Interpolation->setChecked(cfg->interpolation);
 	checkBox_Text_on_screen->setChecked(cfg->txt_on_screen);
 	checkBox_Show_FPS->setChecked(cfg->show_fps);
+	checkBox_Show_frames_and_lags->setChecked(cfg->show_frames_and_lags);
 	checkBox_Input_display->setChecked(cfg->input_display);
 	checkBox_Disable_TV_noise_emulation->setChecked(cfg->disable_tv_noise);
 	checkBox_Disable_sepia_color_on_pause->setChecked(cfg->disable_sepia_color);
@@ -1157,6 +1159,10 @@ void wdgSettingsVideo::s_text_on_screen(UNUSED(bool checked)) {
 }
 void wdgSettingsVideo::s_show_fps(UNUSED(bool checked)) {
 	cfg->show_fps = !cfg->show_fps;
+	gui_overlay_update();
+}
+void wdgSettingsVideo::s_show_frames_and_lags(UNUSED(bool checked)) {
+	cfg->show_frames_and_lags = !cfg->show_frames_and_lags;
 	gui_overlay_update();
 }
 void wdgSettingsVideo::s_input_display(UNUSED(bool checked)) {

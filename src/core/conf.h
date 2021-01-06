@@ -69,6 +69,7 @@ typedef struct _config {
 	BYTE input_rotation;
 	BYTE text_rotation;
 	BYTE show_fps;
+	BYTE show_frames_and_lags;
 	BYTE input_display;
 	BYTE disable_tv_noise;
 	BYTE disable_sepia_color;

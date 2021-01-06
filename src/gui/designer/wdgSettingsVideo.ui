@@ -1626,6 +1626,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="checkBox_Show_frames_and_lags">
+         <property name="text">
+          <string>Show frames and lags counters</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QCheckBox" name="checkBox_Show_FPS">
          <property name="text">
           <string>Show FPS</string>
@@ -1697,6 +1704,7 @@
       <zorder>checkBox_Fullscreen_in_window</zorder>
       <zorder>checkBox_Stretch_in_fullscreen</zorder>
       <zorder>checkBox_Use_integer_scaling_in_fullscreen</zorder>
+      <zorder>checkBox_Show_frames_and_lags</zorder>
      </widget>
     </widget>
    </item>

@@ -71,6 +71,7 @@ enum set_element {
 	SET_INTERPOLATION,
 	SET_TEXT_ON_SCREEN,
 	SET_SHOW_FPS,
+	SET_SHOW_FRAMES_AND_LAGS,
 	SET_INPUT_DISPLAY,
 	SET_DISABLE_TV_NOISE,
 	SET_DISABLE_SEPIA_PAUSE,
@@ -759,6 +760,12 @@ static const _settings main_cfg[] = {
 	},
 	{
 		uL("video"), uL("show fps"), uL("no"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("video"), uL("show frames and lags counters"), uL("no"),
 		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}

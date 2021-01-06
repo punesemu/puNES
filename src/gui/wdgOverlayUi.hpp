@@ -25,6 +25,7 @@
 #include <QtWidgets/QLabel>
 #include <QtGui/QPaintEvent>
 #include <QtGui/QPainter>
+#include <QtGui/QTextDocument>
 #include "common.h"
 #include "clock.h"
 
@@ -87,6 +88,7 @@ class overlayWidget : public QWidget {
 		void fade_out_animation(void);
 		void fade_out_start_timer(void);
 		void fade_out_tick_timer(void);
+		QString color_string(QString string, QColor color);
 
 	public slots:
 		virtual void s_fade_in_finished(void);
@@ -110,6 +112,29 @@ class overlayWidgetFPS : public overlayWidget {
 		void update_widget(void);
 		BYTE is_to_redraw(void);
 		void update_old_value(void);
+};
+class overlayWidgetFrame : public overlayWidget {
+	private:
+		struct _old_values {
+			uint32_t actual_frame;
+		} old;
+		QTextDocument td;
+
+	public:
+		overlayWidgetFrame(QWidget *parent);
+		~overlayWidgetFrame();
+
+	protected:
+		QSize sizeHint() const;
+		void paintEvent(QPaintEvent *event);
+
+	public:
+		void update_widget(void);
+		BYTE is_to_redraw(void);
+		void update_old_value(void);
+
+	private:
+		void info(void);
 };
 class overlayWidgetFloppy : public overlayWidget {
 	private:
@@ -205,6 +230,7 @@ class overlayWidgetRewind : public overlayWidget {
 			QImage forward;
 			QImage fforward;
 		} act;
+		QTextDocument td;
 		QFont led;
 
 	protected:
@@ -270,7 +296,6 @@ class overlayWidgetRewind : public overlayWidget {
 		void update_widget(void);
 		BYTE is_to_redraw(void);
 		void update_old_value(void);
-		QString color_string(QString string, QColor color);
 		QString seconds_to_string(_infotime *itime, _infotime::_measure max, QColor color);
 		void draw_command(QPainter *painter);
 		void draw_corner_bar_info(QPainter *painter);
@@ -286,9 +311,6 @@ class overlayWidgetRewind : public overlayWidget {
 		QImage svg_to_image(QString resource);
 };
 class overlayWidgetTAS : public overlayWidgetRewind {
-	private:
-		QColor lag_color;
-
 	public:
 		overlayWidgetTAS(QWidget *parent);
 		~overlayWidgetTAS();

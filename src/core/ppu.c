@@ -68,7 +68,7 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 		 * inferiore a 8 (per questo uso il WORD, per\
 		 * avere risultati unsigned).\
 		 */\
-		if ((WORD) (ppu.frame_x - sp[a].x_C) < 8) {\
+		if ((WORD)(ppu.frame_x - sp[a].x_C) < 8) {\
 			/*\
 			 * se il bit 2 del $2001 e' a 0 vuol dire\
 			 * che e' abilitato il clipping degli sprite\
