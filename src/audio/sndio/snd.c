@@ -400,11 +400,7 @@ static void *sndio_thread_loop(UNUSED(void *data)) {
 		{
 			int nfds, event, rc;
 
-			if ((nfds = sio_pollfd(sndio.playback, sndio.pfds, POLLOUT)) <= 0) {
-				fprintf(stderr, "sio_pollfd() failed\n");
-				continue;
-			}
-
+			nfds = sio_pollfd(sndio.playback, sndio.pfds, POLLOUT);
 			rc = poll(sndio.pfds, nfds, 1);
 
 			if (rc == 0) {
