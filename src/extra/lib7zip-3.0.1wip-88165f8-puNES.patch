@@ -630,3 +630,18 @@ diff -upr --new-file lib7zip-88165f8/src/OSFunctions_UnixLike.cpp lib7zip-88165f
    lib_search_pathlist.push_back(".");
  
    for(std::vector<const char *>::iterator lib_search_pathlistIt = lib_search_pathlist.begin();
+diff -upr lib7zip-88165f8/src/7ZipObjectPtrArray.cpp lib7zip-88165f8.new/src/7ZipObjectPtrArray.cpp
+--- lib7zip-88165f8/src/7ZipObjectPtrArray.cpp	2021-01-10 10:42:30.246719957 +0100
++++ lib7zip-88165f8.new/src/7ZipObjectPtrArray.cpp	2021-01-10 10:36:46.333284887 +0100
+@@ -18,9 +18,9 @@ void C7ZipObjectPtrArray::clear()
+ {
+     if (m_bAutoRelease)
+     {
+-        for(C7ZipObjectPtrArray::iterator it = begin(); it != end(); it ++)
++        for(C7ZipObjectPtrArray::iterator it = begin(); it != end();)
+         {
+-            delete *it;
++            it = erase(it);
+         }
+     }
+ 
