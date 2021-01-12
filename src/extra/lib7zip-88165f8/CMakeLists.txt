@@ -72,3 +72,5 @@ endif()
 
 ADD_SUBDIRECTORY(src)
 #ADD_SUBDIRECTORY(test)
+
+INSTALL(CODE "MESSAGE(\"Nothing to install.\")")

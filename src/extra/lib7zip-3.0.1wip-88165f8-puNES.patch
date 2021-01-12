@@ -1,13 +1,13 @@
 diff -upr --new-file lib7zip-88165f8/CMakeLists.txt lib7zip-88165f8.new/CMakeLists.txt
---- lib7zip-88165f8/CMakeLists.txt	2020-12-04 07:18:38.000000000 +0100
-+++ lib7zip-88165f8.new/CMakeLists.txt	2021-01-03 14:21:52.741379932 +0100
+--- lib7zip-88165f8/CMakeLists.txt	2021-01-12 19:26:15.951642318 +0100
++++ lib7zip-88165f8.new/CMakeLists.txt	2021-01-12 19:05:42.197002306 +0100
 @@ -1,4 +1,4 @@
 -CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 +CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
  
  CMAKE_POLICY(
      SET CMP0048 NEW
-@@ -39,27 +39,36 @@ SET(P7ZIP_INCLUDE_PATH   "${P7ZIP_SOURCE
+@@ -39,27 +39,38 @@ SET(P7ZIP_INCLUDE_PATH   "${P7ZIP_SOURCE
  
  
  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -49,6 +49,8 @@ diff -upr --new-file lib7zip-88165f8/CMakeLists.txt lib7zip-88165f8.new/CMakeLis
  ADD_SUBDIRECTORY(src)
 -ADD_SUBDIRECTORY(test)
 +#ADD_SUBDIRECTORY(test)
++
++INSTALL(CODE "MESSAGE(\"Nothing to install.\")")
 diff -upr --new-file lib7zip-88165f8/configure lib7zip-88165f8.new/configure
 --- lib7zip-88165f8/configure	1970-01-01 01:00:00.000000000 +0100
 +++ lib7zip-88165f8.new/configure	2021-01-03 14:21:25.564784721 +0100
@@ -409,7 +411,7 @@ diff -upr --new-file lib7zip-88165f8/configure lib7zip-88165f8.new/configure
 +#eval "${CMAKE_CMD}" "${TOP_SRCDIR}" -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DBUILD_SHARED_LIB="OFF" -DP7ZIP_SOURCE_DIR="${P7ZIP_SOURCE_DIR}" ${CMAKE_ARGS}
 +eval "${CMAKE_CMD}" "${TOP_SRCDIR}" -DBUILD_SHARED_LIB="OFF" -DP7ZIP_SOURCE_DIR="${P7ZIP_SOURCE_DIR}" ${CMAKE_ARGS}
 diff -upr --new-file lib7zip-88165f8/src/7ZipFormatInfo.cpp lib7zip-88165f8.new/src/7ZipFormatInfo.cpp
---- lib7zip-88165f8/src/7ZipFormatInfo.cpp	2020-12-04 07:18:38.000000000 +0100
+--- lib7zip-88165f8/src/7ZipFormatInfo.cpp	2021-01-12 19:26:15.952642307 +0100
 +++ lib7zip-88165f8.new/src/7ZipFormatInfo.cpp	2021-01-03 00:42:29.846122454 +0100
 @@ -4,6 +4,7 @@
  #endif
@@ -419,8 +421,23 @@ diff -upr --new-file lib7zip-88165f8/src/7ZipFormatInfo.cpp lib7zip-88165f8.new/
  #include "CPP/7zip/Archive/IArchive.h"
  #include "CPP/Windows/PropVariant.h"
  #include "CPP/Common/MyCom.h"
+diff -upr --new-file lib7zip-88165f8/src/7ZipObjectPtrArray.cpp lib7zip-88165f8.new/src/7ZipObjectPtrArray.cpp
+--- lib7zip-88165f8/src/7ZipObjectPtrArray.cpp	2021-01-12 19:26:15.952642307 +0100
++++ lib7zip-88165f8.new/src/7ZipObjectPtrArray.cpp	2021-01-10 10:44:50.905247488 +0100
+@@ -18,9 +18,9 @@ void C7ZipObjectPtrArray::clear()
+ {
+     if (m_bAutoRelease)
+     {
+-        for(C7ZipObjectPtrArray::iterator it = begin(); it != end(); it ++)
++        for(C7ZipObjectPtrArray::iterator it = begin(); it != end();)
+         {
+-            delete *it;
++            it = erase(it);
+         }
+     }
+ 
 diff -upr --new-file lib7zip-88165f8/src/CMakeLists.txt lib7zip-88165f8.new/src/CMakeLists.txt
---- lib7zip-88165f8/src/CMakeLists.txt	2020-12-04 07:18:38.000000000 +0100
+--- lib7zip-88165f8/src/CMakeLists.txt	2021-01-12 19:26:15.952642307 +0100
 +++ lib7zip-88165f8.new/src/CMakeLists.txt	2021-01-03 00:37:26.541375126 +0100
 @@ -7,6 +7,10 @@ SET(lib7zip_src
  7ZipCodecInfo.h             7ZipFormatInfo.h            7zipLibrary.cpp             OSFunctions_OS2.h
@@ -583,7 +600,7 @@ diff -upr --new-file lib7zip-88165f8/src/GUIDs.h lib7zip-88165f8.new/src/GUIDs.h
 +}
 +}
 diff -upr --new-file lib7zip-88165f8/src/HelperFuncs.cpp lib7zip-88165f8.new/src/HelperFuncs.cpp
---- lib7zip-88165f8/src/HelperFuncs.cpp	2020-12-04 07:18:38.000000000 +0100
+--- lib7zip-88165f8/src/HelperFuncs.cpp	2021-01-12 19:26:15.952642307 +0100
 +++ lib7zip-88165f8.new/src/HelperFuncs.cpp	2021-01-03 10:31:14.579102801 +0100
 @@ -2,10 +2,12 @@
  #include "config.h"
@@ -599,7 +616,7 @@ diff -upr --new-file lib7zip-88165f8/src/HelperFuncs.cpp lib7zip-88165f8.new/src
  #if !defined(_WIN32) && !defined(_OS2)
  #include "CPP/myWindows/StdAfx.h"
 diff -upr --new-file lib7zip-88165f8/src/OSFunctions_UnixLike.cpp lib7zip-88165f8.new/src/OSFunctions_UnixLike.cpp
---- lib7zip-88165f8/src/OSFunctions_UnixLike.cpp	2020-12-04 07:18:38.000000000 +0100
+--- lib7zip-88165f8/src/OSFunctions_UnixLike.cpp	2021-01-12 19:26:15.952642307 +0100
 +++ lib7zip-88165f8.new/src/OSFunctions_UnixLike.cpp	2021-01-02 10:33:15.354579270 +0100
 @@ -122,13 +122,13 @@ int myselect(const struct dirent * pDir
    {
@@ -630,18 +647,3 @@ diff -upr --new-file lib7zip-88165f8/src/OSFunctions_UnixLike.cpp lib7zip-88165f
    lib_search_pathlist.push_back(".");
  
    for(std::vector<const char *>::iterator lib_search_pathlistIt = lib_search_pathlist.begin();
-diff -upr lib7zip-88165f8/src/7ZipObjectPtrArray.cpp lib7zip-88165f8.new/src/7ZipObjectPtrArray.cpp
---- lib7zip-88165f8/src/7ZipObjectPtrArray.cpp	2021-01-10 10:42:30.246719957 +0100
-+++ lib7zip-88165f8.new/src/7ZipObjectPtrArray.cpp	2021-01-10 10:36:46.333284887 +0100
-@@ -18,9 +18,9 @@ void C7ZipObjectPtrArray::clear()
- {
-     if (m_bAutoRelease)
-     {
--        for(C7ZipObjectPtrArray::iterator it = begin(); it != end(); it ++)
-+        for(C7ZipObjectPtrArray::iterator it = begin(); it != end();)
-         {
--            delete *it;
-+            it = erase(it);
-         }
-     }
- 
