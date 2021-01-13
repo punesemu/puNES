@@ -2317,7 +2317,7 @@
     </message>
     <message>
       <source>Show frames and lags counters</source>
-      <translation type="unfinished">Show frames and lags counters</translation>
+      <translation>Mostrar fotogramas y contadores de retardos</translation>
     </message>
   </context>
   <context>
