@@ -1471,7 +1471,7 @@
     </message>
     <message>
       <source>Chinese Simplified</source>
-      <translation type="unfinished">Chinese Simplified</translation>
+      <translation>Chinês Simplificado</translation>
     </message>
   </context>
   <context>
@@ -2317,7 +2317,7 @@
     </message>
     <message>
       <source>Show frames and lags counters</source>
-      <translation type="unfinished">Show frames and lags counters</translation>
+      <translation>Mostrar quadros e contadores de lag</translation>
     </message>
   </context>
   <context>
