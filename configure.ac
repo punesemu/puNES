@@ -38,7 +38,7 @@ AC_ARG_WITH([ffmpeg],
 	AS_HELP_STRING([--with-ffmpeg],
 		[Build with support for FFmpeg [autodetect] @<:@default: yes@:>@]
 	),
-	[with_ffmpeg=$enableval], [with_ffmpeg=yes])
+	[with_ffmpeg=$withval], [with_ffmpeg=yes])
 
 AC_ARG_ENABLE([release],
 	AS_HELP_STRING([--disable-release],
