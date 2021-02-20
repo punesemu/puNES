@@ -4,7 +4,7 @@
 [![AUR package](https://repology.org/badge/version-for-repo/aur/punes.svg)](https://repology.org/project/punes/versions)
 [![SlackBuilds package](https://repology.org/badge/version-for-repo/slackbuilds/punes.svg)](https://repology.org/project/punes/versions)
 [![Rosa 2019.1 package](https://repology.org/badge/version-for-repo/rosa_2019_1/punes.svg)](https://repology.org/project/punes/versions)
-[![LiGurOS 21.1 package](https://repology.org/badge/version-for-repo/liguros_21_1/punes.svg)](https://repology.org/project/punes/versions)
+[![LiGurOS stable package](https://repology.org/badge/version-for-repo/liguros_stable/punes.svg)](https://repology.org/project/punes/versions)
 [![Wikidata package](https://repology.org/badge/version-for-repo/wikidata/punes.svg)](https://repology.org/project/punes/versions)
 
 Description

@@ -84,6 +84,7 @@ typedef struct _turbo_button {
 	BYTE frequency;
 	BYTE active;
 	BYTE counter;
+	BYTE mode;
 } _turbo_button;
 typedef struct _port {
 	BYTE type;

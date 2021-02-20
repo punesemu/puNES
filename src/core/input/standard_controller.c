@@ -142,29 +142,15 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 		}
 		return (EXIT_OK);
 	} else if (event == port->input[type][TRB_A]) {
+		port->turbo[TURBOA].mode = mode;
 		if (mode == PRESSED) {
-			//if (!(port->turbo[TURBOA].active = !port->turbo[TURBOA].active)) {
-			//	port->data[BUT_A] = RELEASED;
-			//	port->turbo[TURBOA].counter = 0;
-			//}
 			port->turbo[TURBOA].active = TRUE;
-		} else {
-			port->turbo[TURBOA].active = FALSE;
-			port->data[BUT_A] = RELEASED;
-			port->turbo[TURBOA].counter = 0;
 		}
 		return (EXIT_OK);
 	} else if (event == port->input[type][TRB_B]) {
+		port->turbo[TURBOB].mode = mode;
 		if (mode == PRESSED) {
-			//if (!(port->turbo[TURBOB].active = !port->turbo[TURBOB].active)) {
-			//	port->data[BUT_B] = RELEASED;
-			//	port->turbo[TURBOB].counter = 0;
-			//}
 			port->turbo[TURBOB].active = TRUE;
-		} else {
-			port->turbo[TURBOB].active = FALSE;
-			port->data[BUT_B] = RELEASED;
-			port->turbo[TURBOB].counter = 0;
 		}
 		return (EXIT_OK);
 	}
@@ -172,19 +158,21 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 }
 
 INLINE static void input_turbo_buttons_standard_controller(_port *port) {
-	if (port->turbo[TURBOA].active) {
+	if ((port->turbo[TURBOA].mode == PRESSED) || (port->turbo[TURBOA].active)) {
 		if (++port->turbo[TURBOA].counter == port->turbo[TURBOA].frequency) {
 			port->data[BUT_A] = PRESSED;
 		} else if (port->turbo[TURBOA].counter > port->turbo[TURBOA].frequency) {
 			port->data[BUT_A] = RELEASED;
+			port->turbo[TURBOA].active = FALSE;
 			port->turbo[TURBOA].counter = 0;
 		}
 	}
-	if (port->turbo[TURBOB].active) {
+	if ((port->turbo[TURBOB].mode == PRESSED) || (port->turbo[TURBOB].active)) {
 		if (++port->turbo[TURBOB].counter == port->turbo[TURBOB].frequency) {
 			port->data[BUT_B] = PRESSED;
 		} else if (port->turbo[TURBOB].counter > port->turbo[TURBOB].frequency) {
 			port->data[BUT_B] = RELEASED;
+			port->turbo[TURBOB].active = FALSE;
 			port->turbo[TURBOB].counter = 0;
 		}
 	}
