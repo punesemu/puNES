@@ -769,7 +769,11 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		}
 	}
 
-	save_slot_mem(mode, slot, screen.rd->data, screen_size(), TRUE)
+    if (slot == SAVE_SLOT_FILE) {
+       save_slot_mem(mode, slot, screen.rd->data, screen_size(), FALSE);
+    } else {
+       save_slot_mem(mode, slot, screen.rd->data, screen_size(), TRUE);
+    }
 
 	return (EXIT_OK);
 }
