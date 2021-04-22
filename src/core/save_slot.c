@@ -769,11 +769,8 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		}
 	}
 
-    if (slot == SAVE_SLOT_FILE) {
-       save_slot_mem(mode, slot, screen.rd->data, screen_size(), FALSE);
-    } else {
-       save_slot_mem(mode, slot, screen.rd->data, screen_size(), TRUE);
-    }
+	// in caso di save slot file non devo visualizzare nessuna preview (thx Brandon Enright for the report and for the fix).
+	save_slot_mem(mode, slot, screen.rd->data, screen_size(), slot == SAVE_SLOT_FILE ? FALSE : TRUE)
 
 	return (EXIT_OK);
 }
