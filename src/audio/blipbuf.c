@@ -346,7 +346,7 @@ static void apu_tick_blipbuf_VRC6(void) {
 }
 static void apu_tick_blipbuf_VRC7(void) {
 	if (++blipbuf.vrc7.period == blipbuf.vrc7.min_period) {
-		blipbuf.output = extra_out(opll_calc()) * (5.0f * cfg->apu.volume[APU_EXTRA]);
+		blipbuf.output = extra_out(opll_calc()) * (32.0f * cfg->apu.volume[APU_EXTRA]);
 		update_tick_extra_blbuf(vrc7, 0);
 	}
 }

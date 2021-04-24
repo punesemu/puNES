@@ -371,10 +371,6 @@ BYTE snd_playback_start(void) {
 		}
 	}
 
-	if (extcl_snd_playback_start) {
-		extcl_snd_playback_start((WORD)snd.samplerate);
-	}
-
 	audio_channels_init_mode();
 
 	audio_init_blipbuf();

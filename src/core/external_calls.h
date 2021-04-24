@@ -52,8 +52,6 @@
 #define EXTCL_IRQ_A12_CLOCK(n) extcl_irq_A12_clock = extcl_irq_A12_clock_##n
 // battery
 #define EXTCL_BATTERY_IO(n) extcl_battery_io = extcl_battery_io_##n
-// snd
-#define EXTCL_SND_PLAYBACK_START(n) extcl_snd_playback_start = extcl_snd_playback_start_##n
 // audio
 #define EXTCL_AUDIO_SAMPLES_MOD(n) extcl_audio_samples_mod = extcl_audio_samples_mod_##n
 
@@ -101,8 +99,6 @@ extern void (*extcl_apu_tick)(void);
 extern void (*extcl_irq_A12_clock)(void);
 // battery
 extern void (*extcl_battery_io)(BYTE mode, FILE *fp);
-// snd
-extern void (*extcl_snd_playback_start)(WORD samplarate);
 // audio
 extern void (*extcl_audio_samples_mod)(SWORD *samples, int count);
 

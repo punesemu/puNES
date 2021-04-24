@@ -40,7 +40,7 @@
 #include "nsf.h"
 #include "cheat.h"
 
-#define SAVE_VERSION 23
+#define SAVE_VERSION 24
 
 static void preview_image(BYTE slot, _screen_buffer *sb);
 static uTCHAR *name_slot_file(BYTE slot);

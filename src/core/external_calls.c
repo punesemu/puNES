@@ -62,8 +62,6 @@ void (*extcl_apu_tick)(void);
 void (*extcl_irq_A12_clock)(void);
 // battery
 void (*extcl_battery_io)(BYTE mode, FILE *fp);
-// snd
-void (*extcl_snd_playback_start)(WORD samplarate);
 // audio
 void (*extcl_audio_samples_mod)(SWORD *samples, int count);
 
@@ -98,8 +96,6 @@ void extcl_init(void) {
 	extcl_irq_A12_clock = NULL;
 	/* battery */
 	extcl_battery_io = NULL;
-	/* snd */
-	extcl_snd_playback_start = NULL;
 	/* audio */
 	extcl_audio_samples_mod = NULL;
 }

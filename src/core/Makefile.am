@@ -482,6 +482,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_VRC7.h \
 	mappers/mapper_VRC7_snd.c \
 	mappers/mapper_VRC7_snd.h \
+	mappers/opll.c \
+	mappers/opll.h \
 	mappers/mapper_Vs.c \
 	mappers/mapper_Vs.h \
 	mappers/mapper_Waixing.c \

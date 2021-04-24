@@ -22,8 +22,9 @@
 #include <stdio.h>
 #include "common.h"
 
-void opll_reset(uint32_t clk, uint32_t rate);
+void opll_reset();
 void opll_write_reg(uint32_t reg, uint8_t value);
+void opll_update(void);
 BYTE opll_save(BYTE mode, BYTE slot, FILE *fp);
 SWORD opll_calc(void);
 

@@ -300,10 +300,6 @@ BYTE snd_playback_start(void) {
 		memset(cbd.silence, 0x00, snd.period.size);
 	}
 
-	if (extcl_snd_playback_start) {
-		extcl_snd_playback_start((WORD)snd.samplerate);
-	}
-
 	audio_channels_init_mode();
 
 	audio_init_blipbuf();
