@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.13])
 
-AC_INIT([puNES], [1.0])
+AC_INIT([puNES],[1.0])
 
 # Detect the canonical host and target build environment
 AC_CANONICAL_HOST
@@ -505,7 +505,7 @@ AS_CASE(["$host_os"],
 
 		have_usbhid=no
 		AC_MSG_CHECKING([for usbhid])
-		AC_TRY_COMPILE([
+		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 			#include <sys/types.h>
 			#if defined(HAVE_USB_H)
 			#include <usb.h>
@@ -524,19 +524,19 @@ AS_CASE(["$host_os"],
 			#elif defined(HAVE_LIBUSBHID_H)
 			#include <libusbhid.h>
 			#endif
-		], [
+		]], [[
 			struct report_desc *repdesc;
 			struct usb_ctl_report *repbuf;
 			hid_kind_t hidkind;
-		], [
+		]])],[
 			have_usbhid=yes
-		])
+		],[])
 		AC_MSG_RESULT([$have_usbhid])
 
 		AS_IF([test "x$have_usbhid" = xyes], [
 			have_usbhid_ucr_data=no
 			AC_MSG_CHECKING([for ucr_data member of usb_ctl_report])
-			AC_TRY_COMPILE([
+			AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 				#include <sys/types.h>
 				#if defined(HAVE_USB_H)
 				#include <usb.h>
@@ -555,12 +555,12 @@ AS_CASE(["$host_os"],
 				#elif defined(HAVE_LIBUSBHID_H)
 				#include <libusbhid.h>
 				#endif
-			], [
+			]], [[
 				struct usb_ctl_report buf;
 				if (buf.ucr_data) { }
-			], [
+			]])],[
 				have_usbhid_ucr_data=yes
-			])
+			],[])
 			AS_IF([test "x$have_usbhid_ucr_data" = xyes], [
 				CUSTOMDEFINES="${CUSTOMDEFINES} -DUSBHID_UCR_DATA"
 			])
@@ -568,7 +568,7 @@ AS_CASE(["$host_os"],
 
 			have_usbhid_new=no
 			AC_MSG_CHECKING([for new usbhid API])
-			AC_TRY_COMPILE([
+			AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 				#include <sys/types.h>
 				#if defined(HAVE_USB_H)
 				#include <usb.h>
@@ -587,12 +587,12 @@ AS_CASE(["$host_os"],
 				#elif defined(HAVE_LIBUSBHID_H)
 				#include <libusbhid.h>
 				#endif
-			], [
+			]], [[
 				report_desc_t d;
 				hid_start_parse(d, 1, 1);
-			], [
+			]])],[
 				have_usbhid_new=yes
-			])
+			],[])
 			AS_IF([test "x$have_usbhid_new" = xyes], [
 				CUSTOMDEFINES="${CUSTOMDEFINES} -DUSBHID_NEW"
 			])
@@ -600,13 +600,13 @@ AS_CASE(["$host_os"],
 
 			have_machine_joystick=no
 			AC_MSG_CHECKING([for struct joystick in machine/joystick.h])
-			AC_TRY_COMPILE([
+			AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 				#include <machine/joystick.h>
-			], [
+			]], [[
 				struct joystick t;
-			], [
+			]])],[
 				have_machine_joystick=yes
-			])
+			],[])
 			AS_IF([test "x$have_machine_joystick" = xyes], [
 				CUSTOMDEFINES="${CUSTOMDEFINES} -DUSBHID_MACHINE_JOYSTICK"
 			])

@@ -46,12 +46,12 @@ xdelta3checksum_SOURCES = $(common_SOURCES) \
 # not automatically built or run.  Install Go-1.5.x or later, add
 # `pwd`/go in $GOPATH, and (cd go/src && go run regtest.go).
 # TODO(jmacd): replace hard-coded path names in regtest.go w/ flags.
-GOLANG_SOURCES = \
-	go/src/xdelta/test.go \
-	go/src/xdelta/rstream.go \
-	go/src/xdelta/tgroup.go \
-	go/src/xdelta/run.go \
-	go/src/regtest.go
+#GOLANG_SOURCES = \
+#	go/src/xdelta/test.go \
+#	go/src/xdelta/rstream.go \
+#	go/src/xdelta/tgroup.go \
+#	go/src/xdelta/run.go \
+#	go/src/regtest.go
 
 # Note: for extra sanity checks, enable -Wconversion. Note there
 # are a lot of false positives.
