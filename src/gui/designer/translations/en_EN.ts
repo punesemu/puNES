@@ -378,10 +378,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Anyway, thank you all for the love and the help.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>portable version</source>
         <translation type="unfinished"></translation>
     </message>
@@ -655,10 +651,6 @@
     </message>
     <message>
         <source>Open IPS/BPS/XDELTA Patch</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

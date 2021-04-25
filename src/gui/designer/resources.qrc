@@ -5,6 +5,7 @@
     <file>icons/pixel.svg</file>
     <file>icons/monitor_screen.svg</file>
     <file>icons/recording.svg</file>
+    <file>icons/application.png</file>
     <file>icons/recording_quality.svg</file>
     <file>icons/360_view.svg</file>
     <file>icons/microphone.svg</file>
@@ -74,7 +75,6 @@
     <file>icons/insert_coins.svg</file>
     <file>icons/ppu.svg</file>
     <file>icons/fast_forward.svg</file>
-    <file>icons/application.png</file>
     <file>icons/flag_italy.svg</file>
     <file>icons/flag_brazil.svg</file>
     <file>icons/flag_russia.svg</file>
@@ -113,15 +113,14 @@
     <file>pics/Nes_controller.svg</file>
     <file>pics/btn_donateCC_LG.gif</file>
     <file>pics/overlay_controller.png</file>
-    <file>pics/pushpin.png</file>
     <file>pics/overlay_controller_left.png</file>
     <file>pics/overlay_controller_exp_port.png</file>
     <file>pics/overlay_controller_b.png</file>
+    <file>pics/punes_banner.png</file>
     <file>pics/overlay_controller_port1.png</file>
     <file>pics/overlay_oeka_kids_tablet.png</file>
     <file>pics/overlay_controller_port2.png</file>
     <file>pics/overlay_controller_port3.png</file>
-    <file>pics/punes.svg</file>
     <file>pics/overlay_controller_port4.png</file>
     <file>pics/overlay_controller_port5.png</file>
     <file>pics/overlay_arkanoid_paddle_button.png</file>

@@ -1476,7 +1476,7 @@ void mainWindow::s_help(void) {
 	about->setWindowModality(Qt::WindowModal);
 
 	about->setWindowIcon(QIcon(":/icon/icons/application.png"));
-	about->setIconPixmap(QPixmap(":/pics/pics/pushpin.png"));
+	about->setIconPixmap(QPixmap(":/pics/pics/punes_banner.png"));
 
 	text.append("<center><h2>" + QString(NAME) + " ");
 	if (info.portable) {
@@ -1501,10 +1501,6 @@ void mainWindow::s_help(void) {
 	text.append("<center><a href=\"" + QString(GITLAB) + "\">" + "GitLab Page</a></center>");
 	text.append("<center><a href=\"" + QString(GITHUB) + "\">" + "GitHub Page</a></center>");
 	text.append("<center><a href=\"" + QString(WEBSITE) + "\">" + "NesDev Forum</a></center>");
-	text.append("<center>" + QString("-") + "</center>\n");
-	text.append("<center>" + tr("If you like the emulator and you want to support it's development or would you pay for a beer at the programmer") + "</center>\n");
-	text.append("<center><a href=\"" + QString(DONATE) + "\">" + "<img src=\":/pics/pics/btn_donate_SM.gif\">" + "</a></center>\n");
-	text.append("<center>" + tr("Anyway, thank you all for the love and the help.") + "</center>");
 
 	about->setInformativeText(text);
 
