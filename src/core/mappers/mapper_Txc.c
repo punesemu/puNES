@@ -41,7 +41,7 @@ void map_init_Txc(BYTE model) {
 			EXTCL_PPU_256_TO_319(MMC3);
 			EXTCL_PPU_320_TO_34X(MMC3);
 			EXTCL_UPDATE_R2006(MMC3);
-			mapper.internal_struct[0] = (BYTE *) &mmc3;
+			mapper.internal_struct[0] = (BYTE *)&mmc3;
 			mapper.internal_struct_size[0] = sizeof(mmc3);
 
 			info.mapper.extend_wr = TRUE;
@@ -64,7 +64,7 @@ void map_init_Txc(BYTE model) {
 			EXTCL_CPU_WR_MEM(Txc_t22211x);
 			EXTCL_CPU_RD_MEM(Txc_t22211x);
 			EXTCL_SAVE_MAPPER(Txc_t22211x);
-			mapper.internal_struct[0] = (BYTE *) &t22211x;
+			mapper.internal_struct[0] = (BYTE *)&t22211x;
 			mapper.internal_struct_size[0] = sizeof(t22211x);
 
 			info.mapper.extend_wr = TRUE;

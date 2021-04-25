@@ -158,7 +158,7 @@ uTCHAR *js_name_device(int dev) {
 
 	close(fd);
 
-	return((uTCHAR *) name);
+	return((uTCHAR *)name);
 }
 BYTE js_read_event(_js_event *event, _js *joy) {
 	SWORD bytes;
@@ -183,10 +183,10 @@ uTCHAR *js_to_name(const DBWORD val, const _js_element *list, const DBWORD lengt
 	for (index = 0; index < length; index++) {
 		if (val == list[index].value) {
 			ustrncpy(str, list[index].name, usizeof(str));
-			return ((uTCHAR *) str);
+			return ((uTCHAR *)str);
 		}
 	}
-	return ((uTCHAR *) list[0].name);
+	return ((uTCHAR *)list[0].name);
 }
 DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD length) {
 	DBWORD js = 0;

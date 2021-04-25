@@ -36,7 +36,7 @@ void map_init_42(void) {
 	EXTCL_CPU_RD_MEM(42);
 	EXTCL_SAVE_MAPPER(42);
 	EXTCL_CPU_EVERY_CYCLE(42);
-	mapper.internal_struct[0] = (BYTE *) &m42;
+	mapper.internal_struct[0] = (BYTE *)&m42;
 	mapper.internal_struct_size[0] = sizeof(m42);
 
 	map_prg_rom_8k(4, 0, (info.prg.rom[0].banks_16k >> 1) - 1);

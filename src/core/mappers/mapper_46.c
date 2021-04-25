@@ -30,7 +30,7 @@ struct _m46 {
 void map_init_46(void) {
 	EXTCL_CPU_WR_MEM(46);
 	EXTCL_SAVE_MAPPER(46);
-	mapper.internal_struct[0] = (BYTE *) &m46;
+	mapper.internal_struct[0] = (BYTE *)&m46;
 	mapper.internal_struct_size[0] = sizeof(m46);
 
 	if (info.reset >= HARD) {

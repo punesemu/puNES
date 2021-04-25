@@ -355,7 +355,7 @@ BYTE nsfe_INFO(_rom_mem *rom, BYTE phase) {
 	}
 
 	if (phase == NSFE_READ) {
-		if (!(nsf.info_song = (_nsf_info_song *) malloc(nsf.songs.total * sizeof(_nsf_info_song)))) {
+		if (!(nsf.info_song = (_nsf_info_song *)malloc(nsf.songs.total * sizeof(_nsf_info_song)))) {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}

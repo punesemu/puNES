@@ -182,13 +182,13 @@ int recent_roms_count(void) {
 	return (recent_roms_list.count);
 }
 const char *recent_roms_item(int index) {
-	return ((const char *) recent_roms_list.item[index].constData());
+	return ((const char *)recent_roms_list.item[index].constData());
 }
 int recent_roms_item_size(int index) {
 	return (recent_roms_list.item[index].length());
 }
 const char *recent_roms_current(void) {
-	return ((const char *) recent_roms_list.current.constData());
+	return ((const char *)recent_roms_list.current.constData());
 }
 int recent_roms_current_size(void) {
 	return (recent_roms_list.current.length());

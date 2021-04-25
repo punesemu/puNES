@@ -120,7 +120,7 @@ void map_init_Bandai(BYTE model) {
 			EXTCL_SAVE_MAPPER(Bandai_161x02x74);
 			EXTCL_UPDATE_R2006(Bandai_161x02x74);
 			EXTCL_RD_NMT(Bandai_161x02x74);
-			mapper.internal_struct[0] = (BYTE *) &b161x02x74;
+			mapper.internal_struct[0] = (BYTE *)&b161x02x74;
 			mapper.internal_struct_size[0] = sizeof(b161x02x74);
 
 			if (info.reset >= HARD) {
@@ -145,7 +145,7 @@ void map_init_Bandai(BYTE model) {
 			EXTCL_SAVE_MAPPER(Bandai_FCGX);
 			EXTCL_BATTERY_IO(Bandai_FCGX);
 			EXTCL_CPU_EVERY_CYCLE(Bandai_FCGX);
-			mapper.internal_struct[0] = (BYTE *) &FCGX;
+			mapper.internal_struct[0] = (BYTE *)&FCGX;
 			mapper.internal_struct_size[0] = sizeof(FCGX);
 
 			info.mapper.extend_wr = TRUE;

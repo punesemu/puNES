@@ -60,7 +60,7 @@ void map_init_Irem(BYTE model) {
 		case G101:
 			EXTCL_CPU_WR_MEM(Irem_G101);
 			EXTCL_SAVE_MAPPER(Irem_G101);
-			mapper.internal_struct[0] = (BYTE *) &irem_G101;
+			mapper.internal_struct[0] = (BYTE *)&irem_G101;
 			mapper.internal_struct_size[0] = sizeof(irem_G101);
 
 			if (info.reset >= HARD) {
@@ -80,7 +80,7 @@ void map_init_Irem(BYTE model) {
 			EXTCL_CPU_WR_MEM(Irem_H3000);
 			EXTCL_SAVE_MAPPER(Irem_H3000);
 			EXTCL_CPU_EVERY_CYCLE(Irem_H3000);
-			mapper.internal_struct[0] = (BYTE *) &irem_H3000;
+			mapper.internal_struct[0] = (BYTE *)&irem_H3000;
 			mapper.internal_struct_size[0] = sizeof(irem_H3000);
 
 			if (info.reset >= HARD) {
@@ -91,7 +91,7 @@ void map_init_Irem(BYTE model) {
 			EXTCL_CPU_WR_MEM(Irem_LROG017);
 			EXTCL_SAVE_MAPPER(Irem_LROG017);
 			EXTCL_WR_CHR(Irem_LROG017);
-			mapper.internal_struct[0] = (BYTE *) &irem_LROG017;
+			mapper.internal_struct[0] = (BYTE *)&irem_LROG017;
 			mapper.internal_struct_size[0] = sizeof(irem_LROG017);
 
 			/* utilizza 0x1800 di CHR RAM extra */

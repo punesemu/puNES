@@ -45,7 +45,7 @@ void map_init_Kaiser(BYTE model) {
 			}
 			EXTCL_SAVE_MAPPER(Kaiser_ks202);
 			EXTCL_CPU_EVERY_CYCLE(Kaiser_ks202);
-			mapper.internal_struct[0] = (BYTE *) &ks202;
+			mapper.internal_struct[0] = (BYTE *)&ks202;
 			mapper.internal_struct_size[0] = sizeof(ks202);
 
 			if (model == KS7032) {
@@ -69,7 +69,7 @@ void map_init_Kaiser(BYTE model) {
 			EXTCL_CPU_WR_MEM(Kaiser_ks7022);
 			EXTCL_CPU_RD_MEM(Kaiser_ks7022);
 			EXTCL_SAVE_MAPPER(Kaiser_ks7022);
-			mapper.internal_struct[0] = (BYTE *) &ks7022;
+			mapper.internal_struct[0] = (BYTE *)&ks7022;
 			mapper.internal_struct_size[0] = sizeof(ks7022);
 
 			info.mapper.extend_rd = TRUE;

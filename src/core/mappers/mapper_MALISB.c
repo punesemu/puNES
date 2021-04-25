@@ -95,9 +95,9 @@ void map_init_MALISB(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *) &malisb;
+	mapper.internal_struct[0] = (BYTE *)&malisb;
 	mapper.internal_struct_size[0] = sizeof(malisb);
-	mapper.internal_struct[1] = (BYTE *) &mmc3;
+	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	memset(&malisb, 0x00, sizeof(malisb));

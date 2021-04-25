@@ -82,7 +82,7 @@ void map_init_105(void) {
 	EXTCL_CPU_WR_MEM(105);
 	EXTCL_SAVE_MAPPER(105);
 	EXTCL_CPU_EVERY_CYCLE(105);
-	mapper.internal_struct[0] = (BYTE *) &m105;
+	mapper.internal_struct[0] = (BYTE *)&m105;
 	mapper.internal_struct_size[0] = sizeof(m105);
 
 	m105tmp.counter_must_reach = M105_DIPSWITCH << 25;

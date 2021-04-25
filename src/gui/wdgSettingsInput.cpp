@@ -241,7 +241,7 @@ void wdgSettingsInput::controller_ports_init(void) {
 	controller_port_init(comboBox_cp4, &input.cport[3], (void *)ctrl_mode_four_score, LENGTH(ctrl_mode_four_score));
 }
 void wdgSettingsInput::controller_port_init(QComboBox *cb, _cfg_port *cfg_port, void *list, int length) {
-	_cb_ports *cbp = (_cb_ports *) list;
+	_cb_ports *cbp = (_cb_ports *)list;
 	int i;
 
 	cb->clear();
@@ -717,7 +717,7 @@ void wdgSettingsInput::controller_ports_set(void) {
 				break;
 			case CTRL_STANDARD:
 				pb->setEnabled(true);
-				pb->setProperty("myPointer", QVariant::fromValue(((void *) ctrl_in)));
+				pb->setProperty("myPointer", QVariant::fromValue(((void *)ctrl_in)));
 				connect(pb, SIGNAL(clicked(bool)), this, SLOT(s_controller_port_setup(bool)));
 				break;
 		}

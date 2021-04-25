@@ -40,7 +40,7 @@ void map_init_222(void) {
 	EXTCL_UPDATE_R2006(MMC3);
 	EXTCL_IRQ_A12_CLOCK(222);
 
-	mapper.internal_struct[0] = (BYTE *) &m222;
+	mapper.internal_struct[0] = (BYTE *)&m222;
 	mapper.internal_struct_size[0] = sizeof(m222);
 
 	memset(&m222, 0x00, sizeof(m222));

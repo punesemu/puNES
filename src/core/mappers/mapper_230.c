@@ -28,7 +28,7 @@ struct _m230 {
 void map_init_230(void) {
 	EXTCL_CPU_WR_MEM(230);
 	EXTCL_SAVE_MAPPER(230);
-	mapper.internal_struct[0] = (BYTE *) &m230;
+	mapper.internal_struct[0] = (BYTE *)&m230;
 	mapper.internal_struct_size[0] = sizeof(m230);
 
 	if (info.reset >= HARD) {

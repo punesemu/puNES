@@ -87,7 +87,7 @@ void map_init_Namco(BYTE model) {
 			EXTCL_SAVE_MAPPER(Namco_163);
 			EXTCL_CPU_EVERY_CYCLE(Namco_163);
 			EXTCL_APU_TICK(Namco_163);
-			mapper.internal_struct[0] = (BYTE *) &n163;
+			mapper.internal_struct[0] = (BYTE *)&n163;
 			mapper.internal_struct_size[0] = sizeof(n163);
 
 			if (info.reset >= HARD) {
@@ -128,7 +128,7 @@ void map_init_Namco(BYTE model) {
 		case N3453:
 			EXTCL_CPU_WR_MEM(Namco_3425);
 			EXTCL_SAVE_MAPPER(Namco_3425);
-			mapper.internal_struct[0] = (BYTE *) &n3425;
+			mapper.internal_struct[0] = (BYTE *)&n3425;
 			mapper.internal_struct_size[0] = sizeof(n3425);
 
 			if (info.reset >= HARD) {
@@ -142,7 +142,7 @@ void map_init_Namco(BYTE model) {
 		case N3446:
 			EXTCL_CPU_WR_MEM(Namco_3446);
 			EXTCL_SAVE_MAPPER(Namco_3446);
-			mapper.internal_struct[0] = (BYTE *) &n3446;
+			mapper.internal_struct[0] = (BYTE *)&n3446;
 			mapper.internal_struct_size[0] = sizeof(n3446);
 
 			if (info.reset >= HARD) {

@@ -221,7 +221,7 @@ void wdgSettingsAudio::s_output_devices(int index) {
 	QString id = uQString(cfg->audio_output);
 
 	if (id != id_new) {
-		ustrncpy(cfg->audio_output, (uTCHAR *) snd_list.playback.devices[index].id, usizeof(cfg->audio_output) - 1);
+		ustrncpy(cfg->audio_output, (uTCHAR *)snd_list.playback.devices[index].id, usizeof(cfg->audio_output) - 1);
 		emu_thread_pause();
 		snd_playback_start();
 		emu_thread_continue();

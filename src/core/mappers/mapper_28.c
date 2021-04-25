@@ -39,7 +39,7 @@ void map_init_28(void) {
 	EXTCL_CPU_WR_MEM(28);
 	EXTCL_CPU_RD_MEM(28);
 	EXTCL_SAVE_MAPPER(28);
-	mapper.internal_struct[0] = (BYTE *) &m28;
+	mapper.internal_struct[0] = (BYTE *)&m28;
 	mapper.internal_struct_size[0] = sizeof(m28);
 
 	if (info.reset >= HARD) {

@@ -80,7 +80,7 @@ void map_init_VRC6(BYTE revision) {
 	EXTCL_SAVE_MAPPER(VRC6);
 	EXTCL_CPU_EVERY_CYCLE(VRC6);
 	EXTCL_APU_TICK(VRC6);
-	mapper.internal_struct[0] = (BYTE *) &vrc6;
+	mapper.internal_struct[0] = (BYTE *)&vrc6;
 	mapper.internal_struct_size[0] = sizeof(vrc6);
 
 	if (info.reset >= HARD) {

@@ -48,7 +48,7 @@ const WORD shift_VRC2[2][4] = {
 void map_init_VRC2(BYTE revision) {
 	EXTCL_CPU_WR_MEM(VRC2);
 	EXTCL_SAVE_MAPPER(VRC2);
-	mapper.internal_struct[0] = (BYTE *) &vrc2;
+	mapper.internal_struct[0] = (BYTE *)&vrc2;
 	mapper.internal_struct_size[0] = sizeof(vrc2);
 
 	if (info.reset >= HARD) {

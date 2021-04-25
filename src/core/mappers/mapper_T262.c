@@ -31,7 +31,7 @@ struct _t262 {
 void map_init_T262(void) {
 	EXTCL_CPU_WR_MEM(T262);
 	EXTCL_SAVE_MAPPER(T262);
-	mapper.internal_struct[0] = (BYTE *) &t262;
+	mapper.internal_struct[0] = (BYTE *)&t262;
 	mapper.internal_struct_size[0] = sizeof(t262);
 
 	memset(&t262, 0x00, sizeof(t262));

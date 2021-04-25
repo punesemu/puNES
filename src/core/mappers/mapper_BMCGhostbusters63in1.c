@@ -39,7 +39,7 @@ void map_init_BMCGHOSTBUSTERS63IN1(void) {
 		EXTCL_WR_CHR(BMCGHOSTBUSTERS63IN1);
 	}
 
-	mapper.internal_struct[0] = (BYTE *) &bmcghostbusters63in1;
+	mapper.internal_struct[0] = (BYTE *)&bmcghostbusters63in1;
 	mapper.internal_struct_size[0] = sizeof(bmcghostbusters63in1);
 
 	memset(&bmcghostbusters63in1, 0x00, sizeof(bmcghostbusters63in1));

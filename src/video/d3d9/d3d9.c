@@ -1362,10 +1362,10 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const uTCHAR *path, const 
 		if (ugetcwd(base, usizeof(base)) == NULL) { ; };
 
 		umemset(dname, 0x00, usizeof(dname));
-		gui_utf_dirname((uTCHAR *) path, dname, usizeof(buffer) - 1);
+		gui_utf_dirname((uTCHAR *)path, dname, usizeof(buffer) - 1);
 
 		umemset(buffer, 0x00, usizeof(buffer));
-		gui_utf_basename((uTCHAR *) path, buffer, usizeof(buffer) - 1);
+		gui_utf_basename((uTCHAR *)path, buffer, usizeof(buffer) - 1);
 		memset(bname, 0x00, sizeof(bname));
 		wcstombs(bname, buffer, sizeof(bname) - 1);
 	}

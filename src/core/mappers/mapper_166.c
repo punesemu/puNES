@@ -28,7 +28,7 @@ struct _m166 {
 void map_init_166(void) {
 	EXTCL_CPU_WR_MEM(166);
 	EXTCL_SAVE_MAPPER(166);
-	mapper.internal_struct[0] = (BYTE *) &m166;
+	mapper.internal_struct[0] = (BYTE *)&m166;
 	mapper.internal_struct_size[0] = sizeof(m166);
 
 	memset(&m166, 0x00, sizeof(m166));

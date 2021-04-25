@@ -36,7 +36,7 @@ void map_init_KS7017(void) {
 	EXTCL_CPU_RD_MEM(KS7017);
 	EXTCL_SAVE_MAPPER(KS7017);
 	EXTCL_CPU_EVERY_CYCLE(KS7017);
-	mapper.internal_struct[0] = (BYTE *) &ks7017;
+	mapper.internal_struct[0] = (BYTE *)&ks7017;
 	mapper.internal_struct_size[0] = sizeof(ks7017);
 
 	memset(&ks7017, 0x00, sizeof(ks7017));

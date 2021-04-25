@@ -131,9 +131,9 @@ void map_init_Tengen(BYTE model) {
 			EXTCL_UPDATE_R2006(Tengen_Rambo);
 			EXTCL_IRQ_A12_CLOCK(Tengen_Rambo);
 			EXTCL_CPU_EVERY_CYCLE(Tengen_Rambo);
-			mapper.internal_struct[0] = (BYTE *) &tengen_rambo;
+			mapper.internal_struct[0] = (BYTE *)&tengen_rambo;
 			mapper.internal_struct_size[0] = sizeof(tengen_rambo);
-			mapper.internal_struct[1] = (BYTE *) &irqA12;
+			mapper.internal_struct[1] = (BYTE *)&irqA12;
 			mapper.internal_struct_size[1] = sizeof(irqA12);
 
 			if (info.reset >= HARD) {

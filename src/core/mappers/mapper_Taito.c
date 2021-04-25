@@ -70,7 +70,7 @@ void map_init_Taito(BYTE model) {
 			EXTCL_CPU_RD_MEM(Taito_X1005);
 			EXTCL_SAVE_MAPPER(Taito_X1005);
 			EXTCL_BATTERY_IO(Taito_X1005);
-			mapper.internal_struct[0] = (BYTE *) &taito_X1005;
+			mapper.internal_struct[0] = (BYTE *)&taito_X1005;
 			mapper.internal_struct_size[0] = sizeof(taito_X1005);
 
 			info.mapper.extend_wr = TRUE;
@@ -97,7 +97,7 @@ void map_init_Taito(BYTE model) {
 		case X1017:
 			EXTCL_CPU_WR_MEM(Taito_X1017);
 			EXTCL_SAVE_MAPPER(Taito_X1017);
-			mapper.internal_struct[0] = (BYTE *) &taito_X1017;
+			mapper.internal_struct[0] = (BYTE *)&taito_X1017;
 			mapper.internal_struct_size[0] = sizeof(taito_X1017);
 
 			info.mapper.extend_wr = TRUE;

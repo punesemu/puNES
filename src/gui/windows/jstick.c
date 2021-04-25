@@ -45,7 +45,7 @@ enum joy_misc {
 	JOY_MAX_BUTTONS = 32
 };
 
-#define JDEV ((_jstick_device *) joy->jdev)
+#define JDEV ((_jstick_device *)joy->jdev)
 #define INPUT_QUEUE_SIZE 32
 #define XINPUT_GAMEPAD_GUIDE 0x400
 #define JOY_AXIS_SENSIBILITY 0.45f
@@ -623,7 +623,7 @@ BYTE js_is_this(BYTE dev, GUID *guid) {
 	return (js_guidcmp(guid, &jstick.jdd.devices[dev].guid));
 }
 BYTE js_is_null(GUID *guid) {
-	return (js_guidcmp(guid, (GUID *) &IID_ZeroGUID));
+	return (js_guidcmp(guid, (GUID *)&IID_ZeroGUID));
 }
 void js_set_id(GUID *guid, int dev) {
 	if (dev >= (int)jstick.jdd.count) {
@@ -647,10 +647,10 @@ uTCHAR *js_to_name(const DBWORD val, const _js_element *list, const DBWORD lengt
 	for (index = 0; index < length; index++) {
 		if (val == list[index].value) {
 			ustrncpy(str, list[index].name, usizeof(str));
-			return ((uTCHAR *) str);
+			return ((uTCHAR *)str);
 		}
 	}
-	return ((uTCHAR *) list[0].name);
+	return ((uTCHAR *)list[0].name);
 }
 DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD length) {
 	DBWORD js = 0;
@@ -1239,7 +1239,7 @@ static BOOL js_is_xinput_dev(const GUID *pGuidProductFromDirectInput, _jstick_ra
 	unsigned int i;
 
 	for (i = 0; i < LENGTH(s_XInputProductGUID); i++) {
-		if (js_guidcmp((GUID *) pGuidProductFromDirectInput, (GUID *) s_XInputProductGUID[i]) == TRUE) {
+		if (js_guidcmp((GUID *)pGuidProductFromDirectInput, (GUID *)s_XInputProductGUID[i]) == TRUE) {
 			return (TRUE);
 		}
 	}
@@ -1266,7 +1266,7 @@ static BOOL js_is_xinput_dev(const GUID *pGuidProductFromDirectInput, _jstick_ra
 	return (FALSE);
 }
 static BOOL CALLBACK cb_enum_dev(LPCDIDEVICEINSTANCEW instance, LPVOID context) {
-	_jstick_raw_devices *raw = (_jstick_raw_devices *) context;
+	_jstick_raw_devices *raw = (_jstick_raw_devices *)context;
 	_jstick_device *jdev, *jdevs;
 
 	if ((jdevs = (_jstick_device *)realloc(jstick.jdd.devices, (jstick.jdd.count + 1) * sizeof(_jstick_device)))) {

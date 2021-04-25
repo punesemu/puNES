@@ -36,7 +36,7 @@ void map_init_VRC3(void) {
 	EXTCL_CPU_WR_MEM(VRC3);
 	EXTCL_SAVE_MAPPER(VRC3);
 	EXTCL_CPU_EVERY_CYCLE(VRC3);
-	mapper.internal_struct[0] = (BYTE *) &vrc3;
+	mapper.internal_struct[0] = (BYTE *)&vrc3;
 	mapper.internal_struct_size[0] = sizeof(vrc3);
 
 	info.prg.ram.banks_8k_plus = 1;

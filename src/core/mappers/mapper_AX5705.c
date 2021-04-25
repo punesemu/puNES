@@ -40,7 +40,7 @@ struct _ax5705 {
 void map_init_AX5705(void) {
 	EXTCL_CPU_WR_MEM(AX5705);
 	EXTCL_SAVE_MAPPER(AX5705);
-	mapper.internal_struct[0] = (BYTE *) &ax5705;
+	mapper.internal_struct[0] = (BYTE *)&ax5705;
 	mapper.internal_struct_size[0] = sizeof(ax5705);
 
 	if (info.reset >= HARD) {

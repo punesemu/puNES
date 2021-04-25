@@ -34,7 +34,7 @@ struct _bmc64in1norepeat {
 void map_init_BMC64IN1NOREPEAT(void) {
 	EXTCL_CPU_WR_MEM(BMC64IN1NOREPEAT);
 	EXTCL_SAVE_MAPPER(BMC64IN1NOREPEAT);
-	mapper.internal_struct[0] = (BYTE *) &bmc64in1norepeat;
+	mapper.internal_struct[0] = (BYTE *)&bmc64in1norepeat;
 	mapper.internal_struct_size[0] = sizeof(bmc64in1norepeat);
 
 	memset(&bmc64in1norepeat, 0x00, sizeof(bmc64in1norepeat));

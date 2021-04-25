@@ -32,7 +32,7 @@ void map_init_AC08(void) {
 	EXTCL_CPU_WR_MEM(AC08);
 	EXTCL_CPU_RD_MEM(AC08);
 	EXTCL_SAVE_MAPPER(AC08);
-	mapper.internal_struct[0] = (BYTE *) &ac08;
+	mapper.internal_struct[0] = (BYTE *)&ac08;
 	mapper.internal_struct_size[0] = sizeof(ac08);
 
 	ac08.reg = 0;

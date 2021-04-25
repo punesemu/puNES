@@ -43,7 +43,7 @@ void map_init_YOKO(void) {
 	EXTCL_CPU_RD_MEM(YOKO);
 	EXTCL_SAVE_MAPPER(YOKO);
 	EXTCL_CPU_EVERY_CYCLE(YOKO);
-	mapper.internal_struct[0] = (BYTE *) &yoko;
+	mapper.internal_struct[0] = (BYTE *)&yoko;
 	mapper.internal_struct_size[0] = sizeof(yoko);
 
 	if (info.reset >= HARD) {

@@ -32,7 +32,7 @@ void map_init_182(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *) &mmc3;
+	mapper.internal_struct[0] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[0] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
