@@ -378,10 +378,6 @@
       <translation>Compilado</translation>
     </message>
     <message>
-      <source>Anyway, thank you all for the love and the help.</source>
-      <translation>De todos modos, gracias a todos por el cariño y la ayuda.</translation>
-    </message>
-    <message>
       <source>portable version</source>
       <translation>versión portable</translation>
     </message>
@@ -656,10 +652,6 @@
     <message>
       <source>Open IPS/BPS/XDELTA Patch</source>
       <translation>Abrir parche IPS/BPS/XDELTA</translation>
-    </message>
-    <message>
-      <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-      <translation>Si te gusta el emulador y quieres apoyar su desarrollo o pagarías una cerveza para el programador</translation>
     </message>
     <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
