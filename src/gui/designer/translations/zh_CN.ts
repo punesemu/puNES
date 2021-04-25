@@ -378,10 +378,6 @@
       <translation>已编译</translation>
     </message>
     <message>
-      <source>Anyway, thank you all for the love and the help.</source>
-      <translation>我们十分感谢您对我们的帮助。</translation>
-    </message>
-    <message>
       <source>portable version</source>
       <translation>移动版</translation>
     </message>
@@ -656,10 +652,6 @@
     <message>
       <source>Open IPS/BPS/XDELTA Patch</source>
       <translation>打开 IPS/BPS/XDELTA 补丁</translation>
-    </message>
-    <message>
-      <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-      <translation>如果您喜欢这个模拟器，并希望支持开发者继续开发</translation>
     </message>
     <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
