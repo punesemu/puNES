@@ -378,10 +378,6 @@
       <translation>Forgatva</translation>
     </message>
     <message>
-      <source>Anyway, thank you all for the love and the help.</source>
-      <translation>Mindenesetre köszi a szeretetért és a segítségért.</translation>
-    </message>
-    <message>
       <source>portable version</source>
       <translation>hordozható verzió</translation>
     </message>
@@ -656,10 +652,6 @@
     <message>
       <source>Open IPS/BPS/XDELTA Patch</source>
       <translation>IPS/BPS/XDELTA patch megnyitása</translation>
-    </message>
-    <message>
-      <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-      <translation>Ha tetszik az emulátor és szeretnéd támogatni a fejlesztését, vagy fizetnél egy sört a programozónak</translation>
     </message>
     <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
