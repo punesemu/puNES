@@ -480,19 +480,23 @@ static void ffmpeg_fstream_close(_ffmpeg_stream *fs) {
 	}
 }
 INLINE static BYTE ffmpeg_stream_write_frame(_ffmpeg_stream *fs) {
+	AVPacket *pkt = av_packet_alloc();
+	BYTE rc = EXIT_OK;
 	int ret = 0;
 
-	while (ret >= 0) {
-		AVPacket pkt = { 0 };
+	if (pkt == NULL) {
+		return (EXIT_ERROR);
+	}
 
-		av_init_packet(&pkt);
-		ret = avcodec_receive_packet(fs->avcc, &pkt);
+	while (ret >= 0) {
+		ret = avcodec_receive_packet(fs->avcc, pkt);
 
 		if (ret == AVERROR(EAGAIN)) {
 			continue;
 		}
 		if (ret == AVERROR_EOF) {
-			return (EXIT_ERROR);
+			rc = EXIT_ERROR;
+			break;
 		}
 		if (ret < 0) {
 			if (fs->avc->type == AVMEDIA_TYPE_VIDEO) {
@@ -500,14 +504,15 @@ INLINE static BYTE ffmpeg_stream_write_frame(_ffmpeg_stream *fs) {
 			} else {
 				fprintf(stderr, "Error encoding audio frame : %s.\n", ffmpeg_av_make_error_string(ret));
 			}
-			return (EXIT_ERROR);
+			rc = EXIT_ERROR;
+			break;
 		}
 
-		av_packet_rescale_ts(&pkt, fs->avcc->time_base, fs->avs->time_base);
-		pkt.stream_index = fs->avs->index;
+		av_packet_rescale_ts(pkt, fs->avcc->time_base, fs->avs->time_base);
+		pkt->stream_index = fs->avs->index;
 
 		ffmpeg_thread_lock();
-		ret = av_interleaved_write_frame(ffmpeg.format_ctx, &pkt);
+		ret = av_interleaved_write_frame(ffmpeg.format_ctx, pkt);
 		ffmpeg_thread_unlock();
 
 		if (ret < 0) {
@@ -516,11 +521,12 @@ INLINE static BYTE ffmpeg_stream_write_frame(_ffmpeg_stream *fs) {
 			} else {
 				fprintf(stderr, "Error while writing audio frame : %s.\n", ffmpeg_av_make_error_string(ret));
 			}
-			return (EXIT_ERROR);
+			rc = EXIT_ERROR;
+			break;
 		}
 	}
-
-	return (EXIT_OK);
+	av_packet_free(&pkt);
+	return (rc);
 }
 
 static char *ffmpeg_av_make_error_string(int retcode) {
