@@ -22,10 +22,8 @@
 #include <libavutil/imgutils.h>
 #include <libavutil/opt.h>
 #include <libswscale/swscale.h>
-#if defined (__unix__)
-#include <pthread.h>
-#endif
 #include "recording.h"
+#include "thread_def.h"
 #include "emu_thread.h"
 #include "video/gfx_thread.h"
 #include "video/gfx.h"
@@ -114,11 +112,7 @@ struct _ffmpeg {
 	int format_type;
 	AVFormatContext *format_ctx;
 
-#if defined (__unix__)
-	pthread_mutex_t lock;
-#elif defined (_WIN32)
-	HANDLE lock;
-#endif
+	thread_mutex_t lock;
 
 	// video
 	_ffmpeg_stream video;
@@ -177,29 +171,16 @@ void recording_init(void) {
 		}
 	}
 
-#if defined (__unix__)
-	if (pthread_mutex_init(&ffmpeg.lock, NULL) != 0) {
+	if (thread_mutex_init_error(ffmpeg.lock)) {
 		fprintf(stderr, "Unable to allocate the recording mutex\n");
 		return;
 	}
-#elif defined (_WIN32)
-	if ((ffmpeg.lock = CreateSemaphore(NULL, 1, 2, NULL)) == NULL) {
-		fprintf(stderr, "Unable to allocate the recording mutex\n");
-		return;
-	}
-#endif
 }
 void recording_quit(void) {
 	if (info.recording_on_air) {
 		recording_finish(TRUE);
 	}
-#if defined (__unix__)
-	pthread_mutex_destroy(&ffmpeg.lock);
-#elif defined (_WIN32)
-	if (ffmpeg.lock) {
-		CloseHandle(ffmpeg.lock);
-	}
-#endif
+	thread_mutex_destroy(ffmpeg.lock);
 }
 
 void recording_start(uTCHAR *filename, int format) {
@@ -421,18 +402,10 @@ void recording_decode_output_resolution(int *w, int *h) {
 // Misc ---------------------------------------------------------------------------------------------------
 
 INLINE static void ffmpeg_thread_lock(void) {
-#if defined (__unix__)
-	pthread_mutex_lock(&ffmpeg.lock);
-#elif defined (_WIN32)
-	WaitForSingleObject((HANDLE **)ffmpeg.lock, INFINITE);
-#endif
+	thread_mutex_lock(ffmpeg.lock);
 }
 INLINE static void ffmpeg_thread_unlock(void) {
-#if defined (__unix__)
-	pthread_mutex_unlock(&ffmpeg.lock);
-#elif defined (_WIN32)
-	ReleaseSemaphore((HANDLE **)ffmpeg.lock, 1, NULL);
-#endif
+	thread_mutex_unlock(ffmpeg.lock);
 }
 
 static void ffmpeg_fstream_set_default(_ffmpeg_stream *stream) {

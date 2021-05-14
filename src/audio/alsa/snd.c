@@ -17,8 +17,8 @@
  */
 
 #include <string.h>
-#include <pthread.h>
 #include <alsa/asoundlib.h>
+#include "thread_def.h"
 #include "info.h"
 #include "audio/snd.h"
 #include "clock.h"
@@ -47,8 +47,8 @@ typedef struct _alsa {
 	snd_pcm_sframes_t (*snd_readi)(snd_pcm_t *pcm, const void *buffer, snd_pcm_uframes_t size);
 } _alsa;
 typedef struct _snd_thread {
-	pthread_t thread;
-	pthread_mutex_t lock;
+	thread_t thread;
+	thread_mutex_t lock;
 
 	BYTE first;
 
@@ -74,7 +74,7 @@ static void alsa_hwparams_print(snd_pcm_hw_params_t *hwp);
 static BYTE alsa_playback_hwparams_set(void);
 static BYTE alsa_playback_swparams_set(void);
 
-static void *alsa_thread_loop(void *data);
+static thread_funct(alsa_thread_loop, void *data);
 INLINE static BYTE alsa_xrun_recovery(snd_pcm_t *handle, int err);
 INLINE static void alsa_wr_buf(void *buffer, snd_pcm_sframes_t avail);
 
@@ -99,22 +99,15 @@ BYTE snd_init(void) {
 
 	snd_list_devices();
 
-	{
-		int rc;
-
-		// creo il lock
-		if (pthread_mutex_init(&snd_thread.lock, NULL) != 0) {
-			fprintf(stderr, "Unable to allocate the mutex\n");
-			return (EXIT_ERROR);
-		}
-
-		snd_thread.action = ST_PAUSE;
-
-		if ((rc = pthread_create(&snd_thread.thread, NULL, alsa_thread_loop, NULL))) {
-			fprintf(stderr, "Error - pthread_create() return code: %d\n", rc);
-			return (EXIT_ERROR);
-		}
+	// creo il lock
+	if (thread_mutex_init_error(snd_thread.lock)) {
+		fprintf(stderr, "Unable to allocate the snd mutex\n");
+		return (EXIT_ERROR);
 	}
+
+	// creo il thread audio
+	snd_thread.action = ST_PAUSE;
+	thread_create(snd_thread.thread, alsa_thread_loop, NULL);
 
 	// apro e avvio la riproduzione
 	if (snd_playback_start()) {
@@ -129,9 +122,8 @@ void snd_quit(void) {
 
 	if (snd_thread.action != ST_UNINITIALIZED) {
 		snd_thread.action = ST_STOP;
-
-		pthread_join(snd_thread.thread, NULL);
-		pthread_mutex_destroy(&snd_thread.lock);
+		thread_join(snd_thread.thread);
+		thread_mutex_destroy(snd_thread.lock);
 		memset(&snd_thread, 0x00, sizeof(_snd_thread));
 	}
 
@@ -199,10 +191,10 @@ void snd_thread_continue(void) {
 }
 
 void snd_thread_lock(void) {
-	pthread_mutex_lock(&snd_thread.lock);
+	thread_mutex_lock(snd_thread.lock);
 }
 void snd_thread_unlock(void) {
-	pthread_mutex_unlock(&snd_thread.lock);
+	thread_mutex_unlock(snd_thread.lock);
 }
 
 BYTE snd_playback_start(void) {
@@ -788,7 +780,7 @@ static BYTE alsa_playback_swparams_set(void) {
 	return (EXIT_OK);
 }
 
-static void *alsa_thread_loop(UNUSED(void *data)) {
+static thread_funct(alsa_thread_loop, UNUSED(void *data)) {
 	snd_pcm_sframes_t avail;
 	snd_pcm_state_t state;
 	int32_t len;
@@ -901,7 +893,7 @@ static void *alsa_thread_loop(UNUSED(void *data)) {
 #endif
  	}
 
-	pthread_exit((void *)EXIT_OK);
+	thread_funct_return();
 }
 INLINE static BYTE alsa_xrun_recovery(snd_pcm_t *handle, int err) {
 	if (err == -EPIPE) {

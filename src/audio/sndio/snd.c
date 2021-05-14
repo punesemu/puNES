@@ -21,7 +21,7 @@
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
-#include <pthread.h>
+#include "thread_def.h"
 #include <sndio.h>
 #include "info.h"
 #include "audio/snd.h"
@@ -46,8 +46,8 @@ typedef struct _sndio {
 	struct pollfd *pfds;
 } _sndio;
 typedef struct _snd_thread {
-	pthread_t thread;
-	pthread_mutex_t lock;
+	thread_t thread;
+	thread_mutex_t lock;
 
 	BYTE action;
 	BYTE in_run;
@@ -60,7 +60,7 @@ typedef struct _snd_thread {
 
 static void _snd_playback_stop(void);
 
-static void *sndio_thread_loop(void *data);
+static thread_funct(sndio_thread_loop, void *data);
 INLINE static void sndio_wr_buf(void *buffer, uint32_t avail);
 
 static _snd_thread snd_thread;
@@ -82,22 +82,15 @@ BYTE snd_init(void) {
 	snd_apu_tick = NULL;
 	snd_end_frame = NULL;
 
-	{
-		int rc;
-
-		// creo il lock
-		if (pthread_mutex_init(&snd_thread.lock, NULL) != 0) {
-			fprintf(stderr, "Unable to allocate the mutex\n");
-			return (EXIT_ERROR);
-		}
-
-		snd_thread.action = ST_PAUSE;
-
-		if ((rc = pthread_create(&snd_thread.thread, NULL, sndio_thread_loop, NULL))) {
-			fprintf(stderr, "Error - pthread_create() return code: %d\n", rc);
-			return (EXIT_ERROR);
-		}
+	// creo il lock
+	if (thread_mutex_init(snd_thread.lock) != 0) {
+		fprintf(stderr, "Unable to allocate the snd mutex\n");
+		return (EXIT_ERROR);
 	}
+
+	// creo il thread audio
+	snd_thread.action = ST_PAUSE;
+	thread_create(snd_thread.thread, sndio_thread_loop, NULL);
 
 	// apro e avvio la riproduzione
 	if (snd_playback_start()) {
@@ -112,9 +105,8 @@ void snd_quit(void) {
 
 	if (snd_thread.action != ST_UNINITIALIZED) {
 		snd_thread.action = ST_STOP;
-
-		pthread_join(snd_thread.thread, NULL);
-		pthread_mutex_destroy(&snd_thread.lock);
+		thread_join(snd_thread.thread);
+		thread_mutex_destroy(snd_thread.lock);
 		memset(&snd_thread, 0x00, sizeof(_snd_thread));
 	}
 
@@ -180,10 +172,10 @@ void snd_thread_continue(void) {
 }
 
 void snd_thread_lock(void) {
-	pthread_mutex_lock(&snd_thread.lock);
+	thread_mutex_lock(snd_thread.lock);
 }
 void snd_thread_unlock(void) {
-	pthread_mutex_unlock(&snd_thread.lock);
+	thread_mutex_unlock(snd_thread.lock);
 }
 
 BYTE snd_playback_start(void) {
@@ -374,7 +366,7 @@ static void _snd_playback_stop(void) {
 	}
 }
 
-static void *sndio_thread_loop(UNUSED(void *data)) {
+static thread_funct(sndio_thread_loop, UNUSED(void *data)) {
 	int32_t avail, len;
 
 #if !defined (RELEASE)
@@ -476,7 +468,7 @@ static void *sndio_thread_loop(UNUSED(void *data)) {
 #endif
  	}
 
-	pthread_exit((void *)EXIT_OK);
+	thread_funct_return();
 }
 
 INLINE static void sndio_wr_buf(void *buffer, uint32_t avail) {

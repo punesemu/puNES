@@ -25,6 +25,7 @@
 #include <windows.h>
 #include <dinput.h>
 #include <xinput.h>
+#include "thread_def.h"
 #include "jstick.h"
 #include "conf.h"
 
@@ -309,7 +310,7 @@ const DIDATAFORMAT c_dfDIJoystick2 = {
 };
 struct _jstick {
 	_jstick_devices_detected jdd;
-	HANDLE lock;
+	thread_mutex_t lock;
 	double ts_update_devices;
 
 	// DirectInput
@@ -367,7 +368,7 @@ void js_init(BYTE first_time) {
 #pragma GCC diagnostic pop
 #endif
 #endif
-		jstick.lock = CreateSemaphore(NULL, 1, 2, NULL);
+		thread_mutex_init(jstick.lock);
 	}
 
 	js_lock();
@@ -394,10 +395,7 @@ void js_quit(BYTE last_time) {
 		if (jstick.xinput) {
 			FreeLibrary(jstick.xinput);
 		}
-		if (jstick.lock) {
-			CloseHandle(jstick.lock);
-			jstick.lock = NULL;
-		}
+		thread_mutex_destroy(jstick.lock);
 	}
 }
 void js_update_detected_devices(void) {
@@ -1457,8 +1455,8 @@ INLINE static DBWORD js_update_pov(_js *joy, _port *port, joy_states st, BYTE in
 	return (event);
 }
 INLINE static void js_lock(void) {
-	WaitForSingleObject(jstick.lock, INFINITE);
+	thread_mutex_lock(jstick.lock);
 }
 INLINE static void js_unlock(void) {
-	ReleaseSemaphore(jstick.lock, 1, NULL);
+	thread_mutex_unlock(jstick.lock);
 }

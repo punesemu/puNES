@@ -22,9 +22,9 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
-#include <pthread.h>
 #include <sys/stat.h>
 #include <sys/param.h>
+#include "thread_def.h"
 #include "gui.h"
 #include "conf.h"
 
@@ -204,7 +204,7 @@ static const struct _js_special {
 #endif
 static struct _jstick {
 	double ts_update_devices;
-	pthread_mutex_t lock;
+	thread_mutex_t lock;
 	struct _usb_devices_detected {
 		int count;
 		_usb_hid_device **devices;
@@ -222,9 +222,8 @@ void js_init(BYTE first_time) {
 
 	if (first_time) {
 		memset(&jstick, 0x00, sizeof(jstick));
-
-		if (pthread_mutex_init(&jstick.lock, NULL) != 0) {
-			fprintf(stderr, "Unable to allocate the thread mutex\n");
+		if (thread_mutex_init_error(jstick.lock)) {
+			fprintf(stderr, "Unable to allocate the js mutex\n");
 		}
 	}
 
@@ -246,7 +245,7 @@ void js_quit(BYTE last_time) {
 	}
 
 	if (last_time) {
-		pthread_mutex_destroy(&jstick.lock);
+		thread_mutex_destroy(jstick.lock);
 	}
 }
 void js_update_detected_devices(void) {
@@ -1382,8 +1381,8 @@ INLINE static int js_usage_to_axis(unsigned int usage) {
 }
 
 INLINE static void js_lock(void) {
-	pthread_mutex_lock(&jstick.lock);
+	thread_mutex_lock(jstick.lock);
 }
 INLINE static void js_unlock(void) {
-	pthread_mutex_unlock(&jstick.lock);
+	thread_mutex_unlock(jstick.lock);
 }

@@ -16,12 +16,10 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#if defined (__unix__)
-#include <pthread.h>
-#endif
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "thread_def.h"
 #include "video/gfx_thread.h"
 #include "video/gfx.h"
 #include "info.h"
@@ -30,26 +28,11 @@
 #include "fps.h"
 #include "gui.h"
 
-enum gfx_thread_states {
-	GT_UNINITIALIZED,
-	GT_FALSE,
-	GT_TRUE
-};
-
-#if defined (__unix__)
-static void *gfx_thread_loop(void *arg);
-#elif defined (_WIN32)
-static DWORD WINAPI gfx_thread_loop(void *arg);
-#endif
+static thread_funct(gfx_thread_loop, void *arg);
 
 struct _gfx_thread {
-#if defined (__unix__)
-	pthread_t *thread;
-	pthread_mutex_t lock;
-#elif defined (_WIN32)
-	HANDLE thread;
-	HANDLE lock;
-#endif
+	thread_t thread;
+	thread_mutex_t lock;
 	BYTE in_run;
 	int pause_calls;
 } gfx_thread;
@@ -59,69 +42,41 @@ _gfx_thread_public gfx_thread_public;
 BYTE gfx_thread_init(void) {
 	memset(&gfx_thread_public, 0x00, sizeof(gfx_thread_public));
 	memset(&gfx_thread, 0x00, sizeof(gfx_thread));
-
-#if defined (__unix__)
-	if (pthread_mutex_init(&gfx_thread.lock, NULL) != 0) {
-		fprintf(stderr, "Unable to allocate the emu mutex\n");
+	if (thread_mutex_init_error(gfx_thread.lock)) {
+		fprintf(stderr, "Unable to allocate the gfx mutex\n");
 		return (EXIT_ERROR);
 	}
-	gfx_thread.thread = malloc(sizeof(pthread_t));
-	pthread_create(gfx_thread.thread, NULL, gfx_thread_loop, NULL);
-#elif defined (_WIN32)
-	if ((gfx_thread.lock = CreateSemaphore(NULL, 1, 2, NULL)) == NULL) {
-		fprintf(stderr, "Unable to allocate the emu mutex\n");
-		return (EXIT_ERROR);
-	}
-	gfx_thread.thread = CreateThread(NULL, 0, gfx_thread_loop, NULL, 0, 0);
-#endif
+	thread_create(gfx_thread.thread, gfx_thread_loop, NULL);
 	return (EXIT_OK);
 }
 void gfx_thread_quit(void) {
-#if defined (__unix__)
 	if (gfx_thread.thread) {
-		pthread_join((*gfx_thread.thread), NULL);
-		free(gfx_thread.thread);
+		thread_join(gfx_thread.thread);
+		thread_free(gfx_thread.thread);
 	}
-	pthread_mutex_destroy(&gfx_thread.lock);
-#elif defined (_WIN32)
-	if (gfx_thread.thread) {
-		WaitForSingleObject(gfx_thread.thread, INFINITE);
-		CloseHandle(gfx_thread.thread);
-	}
-	if (gfx_thread.lock) {
-		CloseHandle(gfx_thread.lock);
-	}
-#endif
+	thread_mutex_destroy(gfx_thread.lock);
 }
 
 void gfx_thread_lock(void) {
-#if defined (__unix__)
-	pthread_mutex_lock(&gfx_thread.lock);
-#elif defined (_WIN32)
-	WaitForSingleObject((HANDLE **)gfx_thread.lock, INFINITE);
-#endif
+	thread_mutex_lock(gfx_thread.lock);
 }
 void gfx_thread_unlock(void) {
-#if defined (__unix__)
-	pthread_mutex_unlock(&gfx_thread.lock);
-#elif defined (_WIN32)
-	ReleaseSemaphore((HANDLE **)gfx_thread.lock, 1, NULL);
-#endif
+	thread_mutex_unlock(gfx_thread.lock);
 }
 
 void gfx_thread_pause(void) {
-	if (gfx_thread.in_run == GT_UNINITIALIZED) {
+	if (gfx_thread.in_run == TH_UNINITIALIZED) {
 		return;
 	}
 
 	gfx_thread.pause_calls++;
 
-	while (gfx_thread.in_run == GT_TRUE) {
+	while (gfx_thread.in_run == TH_TRUE) {
 		gui_sleep(1);
 	}
 }
 void gfx_thread_continue(void) {
-	if (gfx_thread.in_run == GT_UNINITIALIZED) {
+	if (gfx_thread.in_run == TH_UNINITIALIZED) {
 		return;
 	}
 
@@ -130,7 +85,7 @@ void gfx_thread_continue(void) {
 	}
 
 	if (gfx_thread.pause_calls == 0) {
-		while (gfx_thread.in_run == GT_FALSE) {
+		while (gfx_thread.in_run == TH_FALSE) {
 			if (info.stop == TRUE) {
 				break;
 			}
@@ -139,19 +94,15 @@ void gfx_thread_continue(void) {
 	}
 }
 
-#if defined (__unix__)
-static void *gfx_thread_loop(UNUSED(void *arg)) {
-#elif defined (_WIN32)
-static DWORD WINAPI gfx_thread_loop(UNUSED(void *arg)) {
-#endif
+static thread_funct(gfx_thread_loop, UNUSED(void *arg)) {
 	while (info.stop == FALSE) {
 		if (gfx_thread.pause_calls) {
-			gfx_thread.in_run = GT_FALSE;
+			gfx_thread.in_run = TH_FALSE;
 			gui_sleep(1);
 			continue;
 		}
 
-		gfx_thread.in_run = GT_TRUE;
+		gfx_thread.in_run = TH_TRUE;
 
 		if (screen.rd->ready == FALSE) {
 			gui_sleep(1);
@@ -164,11 +115,7 @@ static DWORD WINAPI gfx_thread_loop(UNUSED(void *arg)) {
 		gfx_thread_public.filtering = FALSE;
 	}
 
-	gfx_thread.in_run = GT_FALSE;
+	gfx_thread.in_run = TH_FALSE;
 
-#if defined (__unix__)
-	return (NULL);
-#elif defined (_WIN32)
-	return (0);
-#endif
+	thread_funct_return();
 }

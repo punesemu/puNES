@@ -17,6 +17,7 @@
  */
 
 #include "audio/snd.h"
+#include "thread_def.h"
 #include "emu.h"
 #include "info.h"
 #include "conf.h"
@@ -61,7 +62,7 @@ static void STDMETHODCALLTYPE OnLoopEnd(IXAudio2VoiceCallback *callback, void *p
 static void STDMETHODCALLTYPE OnVoiceError(IXAudio2VoiceCallback *callback, void* pBufferContext, HRESULT Error);
 
 static struct _snd_thread {
-	HANDLE lock;
+	thread_mutex_t lock;
 
 	BYTE action;
 	BYTE in_run;
@@ -111,7 +112,7 @@ BYTE snd_init(void) {
 	snd_apu_tick = NULL;
 	snd_end_frame = NULL;
 
-	if ((snd_thread.lock = CreateSemaphore(NULL, 1, 2, NULL)) == NULL) {
+	if (thread_mutex_init_error(snd_thread.lock)) {
 		MessageBox(NULL,
 			"ATTENTION: Unable to create XAudio2 semaphore.\n",
 			"Error!",
@@ -164,10 +165,7 @@ void snd_quit(void) {
 
 	snd_playback_stop();
 
-	if (snd_thread.lock) {
-		CloseHandle(snd_thread.lock);
-		snd_thread.lock = NULL;
-	}
+	thread_mutex_destroy(snd_thread.lock);
 
 	if (ds8.ds8) {
 		FreeLibrary(ds8.ds8);
@@ -215,10 +213,10 @@ void snd_thread_continue(void) {
 }
 
 void snd_thread_lock(void) {
-	WaitForSingleObject(snd_thread.lock, INFINITE);
+	thread_mutex_lock(snd_thread.lock);
 }
 void snd_thread_unlock(void) {
-	ReleaseSemaphore(snd_thread.lock, 1, NULL);
+	thread_mutex_unlock(snd_thread.lock);
 }
 
 BYTE snd_playback_start(void) {
