@@ -1463,7 +1463,7 @@
     </message>
     <message>
       <source>Chinese Simplified</source>
-      <translation type="unfinished">Chinese Simplified</translation>
+      <translation>简体中文</translation>
     </message>
   </context>
   <context>
@@ -2309,7 +2309,7 @@
     </message>
     <message>
       <source>Show frames and lags counters</source>
-      <translation type="unfinished">Show frames and lags counters</translation>
+      <translation>Показывать счетчики кадров и лага</translation>
     </message>
   </context>
   <context>
