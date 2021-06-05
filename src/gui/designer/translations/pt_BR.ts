@@ -1183,7 +1183,7 @@
     </message>
     <message>
       <source>Rewind</source>
-      <translation>Rebobinar</translation>
+      <translation>Retroceder</translation>
     </message>
   </context>
   <context>
@@ -1411,7 +1411,7 @@
     </message>
     <message>
       <source>Rewind minutes</source>
-      <translation>Minutos de rebobinagem</translation>
+      <translation>Minutos de retrocesso</translation>
     </message>
     <message>
       <source>Spanish</source>
