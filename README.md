@@ -206,7 +206,7 @@ The executable `punes.exe` is in the `src` directory but in order to run it you 
 * swresample-3.dll
 * swscale-5.dll
 
-that you can download here : [`64bit`](https://www.dropbox.com/s/7e01vzhmc4k5ead/puNES_x86_64_dlls.zip?dl=1) version or [`32bit`](https://www.dropbox.com/s/xaspmjmczkg1zjt/puNES_i686_dlls.zip?dl=1) version.
+that you can download here : [`64bit`](https://www.dropbox.com/s/d632cjezybz6a74/puNES_x86_64_dlls.zip?dl=1) version or [`32bit`](https://www.dropbox.com/s/xaspmjmczkg1zjt/puNES_i686_dlls.zip?dl=1) version.
 #### Windows Debug version
 If you need the debug version then you need to replace the `./configure` command of the previous examples with the following:
 ```bash

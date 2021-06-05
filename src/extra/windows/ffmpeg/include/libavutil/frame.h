@@ -192,6 +192,12 @@ enum AVFrameSideDataType {
      * uuid_iso_iec_11578 followed by AVFrameSideData.size - 16 bytes of user_data_payload_byte.
      */
     AV_FRAME_DATA_SEI_UNREGISTERED,
+
+    /**
+     * Film grain parameters for a frame, described by AVFilmGrainParams.
+     * Must be present for every frame which should have film grain applied.
+     */
+    AV_FRAME_DATA_FILM_GRAIN_PARAMS,
 };
 
 enum AVActiveFormatDescription {
@@ -214,7 +220,11 @@ enum AVActiveFormatDescription {
 typedef struct AVFrameSideData {
     enum AVFrameSideDataType type;
     uint8_t *data;
+#if FF_API_BUFFER_SIZE_T
     int      size;
+#else
+    size_t   size;
+#endif
     AVDictionary *metadata;
     AVBufferRef *buf;
 } AVFrameSideData;
@@ -907,7 +917,11 @@ AVBufferRef *av_frame_get_plane_buffer(AVFrame *frame, int plane);
  */
 AVFrameSideData *av_frame_new_side_data(AVFrame *frame,
                                         enum AVFrameSideDataType type,
+#if FF_API_BUFFER_SIZE_T
                                         int size);
+#else
+                                        size_t size);
+#endif
 
 /**
  * Add a new side data to a frame from an existing AVBufferRef

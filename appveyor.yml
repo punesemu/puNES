@@ -45,7 +45,7 @@ build_script:
 
     7z x c:\tmp\qt5_5.15.0_x86_64.7z -oC:\msys64\mingw64 > NUL
 
-    bash -lc "wget --no-check-cert -O /c/tmp/puNES_x86_64_dlls.zip 'https://www.dropbox.com/s/7e01vzhmc4k5ead/puNES_x86_64_dlls.zip?dl=1' 1>/dev/null 2>&1"
+    bash -lc "wget --no-check-cert -O /c/tmp/puNES_x86_64_dlls.zip 'https://www.dropbox.com/s/d632cjezybz6a74/puNES_x86_64_dlls.zip?dl=1' 1>/dev/null 2>&1"
 
     7z x c:\tmp\puNES_x86_64_dlls.zip -oC:\tmp\x64dll> NUL
 
