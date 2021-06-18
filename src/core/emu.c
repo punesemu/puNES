@@ -305,9 +305,16 @@ char *emu_file2string(const uTCHAR *path) {
 	memset(str, 0x00, len + 1);
 
 	if (fread(str, sizeof(char), len, fd) < len) {
-		str = NULL;
+		if(feof(fd))
+		{
+			ufprintf(stderr, uL("OPENGL: EOF intercepted before the end of the '" uPERCENTs "'\n"), path);
+		}
+		if (ferror(fd)) {
+			ufprintf(stderr, uL("OPENGL: Error in reading from '" uPERCENTs "'\n"), path);
+			free(str);
+			str = NULL;
+		}
 	}
-
 	fclose(fd);
 
 	return (str);

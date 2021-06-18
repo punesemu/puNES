@@ -205,7 +205,7 @@ void gui_overlay_blit(void) {
 	for (overlayWidget *ele : wdgs) {
 		overlay_wdg_clear((void *)ele, NULL);
 	}
-	// 2 - seconda cancellazione con preparazione immaggini
+	// 2 - seconda cancellazione con preparazione immagini
 	for (overlayWidget *ele : wdgs) {
 		overlay_wdg_blit((void *)ele);
 	}

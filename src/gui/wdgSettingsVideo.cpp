@@ -595,7 +595,7 @@ void wdgSettingsVideo::shader_param_set(void) {
 
 		{
 			QWidget *widget = new QWidget(this);
-			QHBoxLayout* layout = new QHBoxLayout(widget);
+			QHBoxLayout *layout = new QHBoxLayout(widget);
 			QSlider *slider = new QSlider(widget);
 			double steps = (pshd->max -pshd->min) / pshd->step;
 
@@ -618,7 +618,7 @@ void wdgSettingsVideo::shader_param_set(void) {
 
 		{
 			QWidget *widget = new QWidget(this);
-			QHBoxLayout* layout = new QHBoxLayout(widget);
+			QHBoxLayout *layout = new QHBoxLayout(widget);
 			QDoubleSpinBox *spin = new QDoubleSpinBox(widget);
 
 			widget->setObjectName("widget_spin");
@@ -643,7 +643,7 @@ void wdgSettingsVideo::shader_param_set(void) {
 
 		{
 			QWidget *widget = new QWidget(this);
-			QHBoxLayout* layout = new QHBoxLayout(widget);
+			QHBoxLayout *layout = new QHBoxLayout(widget);
 			QPushButton *def = new QPushButton(widget) ;
 
 			widget->setObjectName("widget_button");

@@ -213,8 +213,6 @@ BYTE opengl_context_create(void) {
 	glDisable(GL_DITHER);
 	glDisable(GL_BLEND);
 
-	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
 	glEnable(GL_TEXTURE_2D);
 
 	opengl_context_delete();
@@ -674,7 +672,15 @@ void opengl_draw_scene(void) {
 			glUseProgram(texture->shader.glslp.prg);
 			opengl_shader_glsl_params_set(&texture->shader, sindex, sp->frame_count_mod, ppu.frames);
 		}
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+		if (i == shader_effect.last_pass) {
+			glBlendFunc(GL_ONE , GL_ONE);
+			glEnable(GL_BLEND);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			glDisable(GL_BLEND);
+		} else {
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		}
 
 		if (texture->shader.type == MS_CGP) {
 #if defined (WITH_OPENGL_CG)
@@ -723,6 +729,7 @@ void opengl_draw_scene(void) {
 		opengl_shader_filter(TEXTURE_LINEAR_ENAB, TRUE, FALSE, &mag, &min);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		glDisable(GL_BLEND);
@@ -1448,7 +1455,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 		code = emu_file2string(path);
 
 		// la direttiva #version deve essere sempre la prima riga
-		{
+		if (code) {
 			ptr = strstr(code, "#version ");
 
 			if (ptr) {

@@ -1592,25 +1592,34 @@ void objShp::rd(QString group) {
 			continue;
 		}
 
-		rd_key(param);
+		rd_key(pshd, param);
 		param++;
 	}
 	fr_cfg(group);
 }
-void objShp::rd_key(int index) {
-	_param_shd *pshd = &shader_effect.param[index];
+void objShp::rd_key(void *pshd, int index) {
+	_param_shd *p = (_param_shd *)pshd;
 
-	val.replace(index, value(QString(pshd->desc), QVariant(pshd->initial)).toString());
+	val.replace(index, value(QString(p->desc), QVariant(p->initial)).toString());
 }
 
-void objShp::wr_key(int index) {
-	_param_shd *pshd = &shader_effect.param[index];
+void objShp::wr_key(void *pshd, int index) {
+	_param_shd *p = (_param_shd *)pshd;
 
-	setValue(QString(pshd->desc), val.at(index));
+	setValue(QString(p->desc), val.at(index));
 }
 void objShp::wr_all_keys(void) {
-	for (int i = 0; i < val.count(); i++) {
-		wr_key(i);
+	int i, param = 0;
+
+	for (i = 0; i < shader_effect.params; i++) {
+		_param_shd *pshd = &shader_effect.param[i];
+
+		if (!pshd->desc[0] | (param >= val.count())) {
+			continue;
+		}
+
+		wr_key(pshd, param);
+		param++;
 	}
 	sync();
 }

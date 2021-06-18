@@ -140,9 +140,8 @@ BYTE cgp_parse(const uTCHAR *file) {
 			} else if (QString::compare(value, "mirrored_repeat", Qt::CaseInsensitive) == 0) {
 				sp->wrap = TEXTURE_WRAP_MIRRORED_REPEAT;
 			} else {
-				fprintf(stderr, "[CGP] : Invalid %s attribute.\n", qPrintable(key));
-				delete(set);
-				return (EXIT_ERROR);
+				fprintf(stderr, "[CGP] : Invalid %s attribute. Using default value.\n", qPrintable(key));
+				sp->wrap = TEXTURE_WRAP_BORDER;
 			}
 		}
 
@@ -251,6 +250,10 @@ BYTE cgp_parse(const uTCHAR *file) {
 		foreach (const QString &ele, list) {
 			_lut_pass *lp;
 
+			if (!ele.length()) {
+				continue;
+			}
+
 			finded = false;
 
 			for (i = 0; i < se.luts; i++) {
@@ -306,9 +309,8 @@ BYTE cgp_parse(const uTCHAR *file) {
 				} else if (QString::compare(value, "mirrored_repeat", Qt::CaseInsensitive) == 0) {
 					lp->wrap = TEXTURE_WRAP_MIRRORED_REPEAT;
 				} else {
-					fprintf(stderr, "[CGP] : Invalid %s attribute.\n", qPrintable(key));
-					delete(set);
-					return (EXIT_ERROR);
+					fprintf(stderr, "[CGP] : Invalid %s attribute. Using default value.\n", qPrintable(key));
+					lp->wrap = TEXTURE_WRAP_BORDER;
 				}
 			}
 		}
@@ -342,7 +344,14 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 			// value
 			if (cgp_value(set, ele, value) == FALSE) {
-				prm->value = value.toFloat();
+				QString qfloat;
+
+				for (const QChar c : qAsConst(value)) {
+					if (c.isDigit() || (c == '.') || (c == ',')) {
+						qfloat.append(c);
+					}
+				}
+				prm->value = qfloat.toFloat();
 			}
 		}
 	}
@@ -353,14 +362,17 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 	return (EXIT_OK);
 }
-void cgp_pragma_param(char *code, const uTCHAR *path) {
+BYTE cgp_pragma_param(char *code, const uTCHAR *path) {
 	QTextStream stream(code);
 	QFile file(uQString(path));
 	QString line;
 	_param_shd param;
 
 	if (path && path[0]) {
-		file.open(QIODevice::ReadOnly);
+		if (file.open(QIODevice::ReadOnly) == false) {
+			ufprintf(stderr, uL("CGP: Can't open file '" uPERCENTs "'\n"), path);
+			return (EXIT_ERROR);
+		}
 		stream.setDevice(&file);
 	}
 
@@ -432,6 +444,7 @@ void cgp_pragma_param(char *code, const uTCHAR *path) {
 	if (file.isOpen()) {
 		file.close();
 	}
+	return (EXIT_OK);
 }
 
 static bool cgp_value(QSettings *set, QString key, QString &value) {

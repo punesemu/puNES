@@ -378,8 +378,10 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		if (shaders_set(shader) == EXIT_ERROR) {
 			umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
 			if (old_shader == shader) {
+				fprintf(stderr, "OPENGL: Error on loading the shader, switch to \"No shader\"\n");
 				shader = NO_SHADER;
 			} else {
+				fprintf(stderr, "OPENGL: Error on loading the shader, switch to previous shader\n");
 				shader = old_shader;
 			}
 			goto gfx_set_screen_start;
@@ -423,7 +425,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				break;
 			case EXIT_ERROR_SHADER:
 				gui_overlay_info_append_msg_precompiled(27, NULL);
-				fprintf(stderr, "OPENGL: Error on loading the shaders, switch to \"No shader\"\n");
+				fprintf(stderr, "OPENGL: Error on loading the shader, switch to \"No shader\"\n");
 				umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
 				shader = NO_SHADER;
 				goto gfx_set_screen_start;

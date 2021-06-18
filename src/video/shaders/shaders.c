@@ -142,7 +142,9 @@ BYTE shaders_set(int shader) {
 	// pragma parameters
 	for (i = 0; i < se->pass; i++) {
 		_shdpass(i);
-		cgp_pragma_param(sp->code, sp->path);
+		if (cgp_pragma_param(sp->code, sp->path) == EXIT_ERROR) {
+			return (EXIT_ERROR);
+		}
 	}
 
 	return (EXIT_OK);

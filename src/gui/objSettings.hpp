@@ -179,10 +179,10 @@ class objShp : public objSettings {
 	protected:
 		void rd(void);
 		void rd(QString group);
-		void rd_key(int index);
+		void rd_key(void *pshd, int index);
 
 	protected:
-		void wr_key(int index);
+		void wr_key(void *pshd, int index);
 		void wr_all_keys(void);
 
 	private:

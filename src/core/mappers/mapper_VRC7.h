@@ -46,6 +46,6 @@ void extcl_apu_tick_VRC7(void);
 void map_init_VRC7UNL(void);
 void extcl_cpu_wr_mem_VRC7UNL(WORD address, BYTE value);
 BYTE extcl_save_mapper_VRC7UNL(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_VRC7UNL(void);;
+void extcl_cpu_every_cycle_VRC7UNL(void);
 
 #endif /* MAPPER_VRC7_H_ */
