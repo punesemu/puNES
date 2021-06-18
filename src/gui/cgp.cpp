@@ -344,9 +344,10 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 			// value
 			if (cgp_value(set, ele, value) == FALSE) {
+				const QString cvalue = value;
 				QString qfloat;
 
-				for (const QChar c : qAsConst(value)) {
+				for (QChar c : cvalue) {
 					if (c.isDigit() || (c == '.') || (c == ',')) {
 						qfloat.append(c);
 					}
