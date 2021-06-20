@@ -158,18 +158,20 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 }
 
 INLINE static void input_turbo_buttons_standard_controller(_port *port) {
-	if ((port->turbo[TURBOA].mode == PRESSED) || (port->turbo[TURBOA].active)) {
+	if ((port->turbo[TURBOA].mode == PRESSED) || port->turbo[TURBOA].active) {
 		if (++port->turbo[TURBOA].counter == port->turbo[TURBOA].frequency) {
 			port->data[BUT_A] = PRESSED;
+			port->turbo[TURBOA].active = TRUE;
 		} else if (port->turbo[TURBOA].counter > port->turbo[TURBOA].frequency) {
 			port->data[BUT_A] = RELEASED;
 			port->turbo[TURBOA].active = FALSE;
 			port->turbo[TURBOA].counter = 0;
 		}
 	}
-	if ((port->turbo[TURBOB].mode == PRESSED) || (port->turbo[TURBOB].active)) {
+	if ((port->turbo[TURBOB].mode == PRESSED) || port->turbo[TURBOB].active) {
 		if (++port->turbo[TURBOB].counter == port->turbo[TURBOB].frequency) {
 			port->data[BUT_B] = PRESSED;
+			port->turbo[TURBOB].active = TRUE;
 		} else if (port->turbo[TURBOB].counter > port->turbo[TURBOB].frequency) {
 			port->data[BUT_B] = RELEASED;
 			port->turbo[TURBOB].active = FALSE;
