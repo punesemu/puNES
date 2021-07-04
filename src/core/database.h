@@ -4063,6 +4063,8 @@ static const _dbelement dblist[] = {
 	{"39ee2d598b084c88de7ac467ad65e4049c3db5e4", GAMEGENIE_MAPPER, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ----------------------------------------- Unif ----------------------------------------- */
+	/* Boogerman II - The Final Adventure (Rex-Soft) [!].nes */
+	{"28805e433ca0ad1505058085667b889a8a7b967f", UNIF_MAPPER, 20, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Mi Hun Che (Ch)(full copyrights)[!].nes */
 	{"5421c38840e5fbef1140f1f8cfe42b5dc7b8096c", UNIF_MAPPER, 30, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Mi Hun Che (Ch)(replaced copyrights)[p1][!].nes */
