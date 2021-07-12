@@ -789,6 +789,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 
 	return (FALSE);
 }
+
 /* ------------------------------------ WRITE ROUTINE ------------------------------------------ */
 
 void cpu_wr_mem(WORD address, BYTE value) {
@@ -2076,6 +2077,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 
 	return (FALSE);
 }
+
 /* ------------------------------------ MISC ROUTINE ------------------------------------------- */
 
 INLINE static WORD lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw) {
@@ -2183,6 +2185,7 @@ INLINE static void tick_hw(BYTE value) {
 		goto tick_hw_start;
 	}
 }
+
 /* --------------------------------------------------------------------------------------------- */
 
 #endif /* CPU_INLINE_H_ */

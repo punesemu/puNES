@@ -26,6 +26,12 @@ libvideo_a_SOURCES = \
 	shaders/shaders.c \
 	shaders/shaders.h
 
+if USE_FULLSCREEN_RESFREQ
+libvideo_a_SOURCES += \
+	gfx_monitor.c \
+	gfx_monitor.h
+endif
+
 if WITH_OPENGL
 libvideo_a_SOURCES += \
 	opengl/gfx.c \

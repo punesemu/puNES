@@ -1543,8 +1543,156 @@
       <attribute name="title">
        <string>Misc</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_Video_Misc">
-       <item>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="10" column="0">
+        <widget class="QLabel" name="icon_Fullscreen_resolution">
+         <property name="text">
+          <string notr="true">Resolution icon</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="4">
+        <layout class="QHBoxLayout" name="horizontalLayout_Vsync">
+         <item>
+          <widget class="QCheckBox" name="checkBox_Vsync">
+           <property name="text">
+            <string>VSync</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_Vsync">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>** To apply this change restart is needed **</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="11" column="3">
+        <widget class="QLabel" name="label_Fullscreen_adaptive_rrate_note_asterisk">
+         <property name="text">
+          <string notr="true">*</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="3">
+        <widget class="QLabel" name="label_Fullscreen_resolution_note_asterisk">
+         <property name="text">
+          <string notr="true">*</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="4">
+        <widget class="QCheckBox" name="checkBox_Text_on_screen">
+         <property name="text">
+          <string>Text on screen</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="0" colspan="3">
+        <widget class="QCheckBox" name="checkBox_Fullscreen_adaptive_rrate">
+         <property name="text">
+          <string>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="0" colspan="4">
+        <widget class="QCheckBox" name="checkBox_Stretch_in_fullscreen">
+         <property name="text">
+          <string>Stretch in fullscreen</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0" colspan="4">
+        <widget class="QCheckBox" name="checkBox_Show_frames_and_lags">
+         <property name="text">
+          <string>Show frames and lags counters</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="3">
+        <widget class="QCheckBox" name="checkBox_Show_FPS">
+         <property name="text">
+          <string>Show FPS</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0" colspan="4">
+        <layout class="QHBoxLayout" name="horizontalLayout_Fullscreen">
+         <item>
+          <widget class="QLabel" name="icon_Fullscreen">
+           <property name="text">
+            <string notr="true">Fullscreen icon</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_Fullscreen">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+             <kerning>false</kerning>
+            </font>
+           </property>
+           <property name="text">
+            <string>Fullscreen</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_Fullscreen">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="19" column="0" colspan="4">
+        <widget class="QLabel" name="label_Fullscreen_resolution_note">
+         <property name="text">
+          <string>* applied if supported by the monitor</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="0" colspan="4">
+        <widget class="QCheckBox" name="checkBox_Use_integer_scaling_in_fullscreen">
+         <property name="text">
+          <string>Use integer scaling</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0" colspan="4">
+        <widget class="QCheckBox" name="checkBox_Input_display">
+         <property name="text">
+          <string>Input display</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="4">
         <layout class="QHBoxLayout" name="horizontalLayout_Misc">
          <item>
           <widget class="QLabel" name="icon_Misc">
@@ -1581,110 +1729,44 @@
          </item>
         </layout>
        </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_Vsync">
-         <item>
-          <widget class="QCheckBox" name="checkBox_Vsync">
-           <property name="text">
-            <string>VSync</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_Vsync">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>** To apply this change restart is needed **</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_Interpolation">
-         <property name="text">
-          <string>Interpolation</string>
+       <item row="10" column="2">
+        <widget class="QComboBox" name="comboBox_Fullscreen_resolution">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_Text_on_screen">
-         <property name="text">
-          <string>Text on screen</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_Show_frames_and_lags">
-         <property name="text">
-          <string>Show frames and lags counters</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_Show_FPS">
-         <property name="text">
-          <string>Show FPS</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_Input_display">
-         <property name="text">
-          <string>Input display</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_Disable_TV_noise_emulation">
-         <property name="text">
-          <string>Disable TV noise emulation when turned off</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_Disable_sepia_color_on_pause">
-         <property name="text">
-          <string>Disable sepia color on pause</string>
-         </property>
-        </widget>
-       </item>
-       <item>
+       <item row="12" column="0" colspan="4">
         <widget class="QCheckBox" name="checkBox_Fullscreen_in_window">
          <property name="text">
           <string>Fullscreen in window</string>
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_Use_integer_scaling_in_fullscreen">
+       <item row="8" column="0" colspan="4">
+        <widget class="QCheckBox" name="checkBox_Disable_sepia_color_on_pause">
          <property name="text">
-          <string>Use integer scaling in fullscreen</string>
+          <string>Disable sepia color on pause</string>
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_Stretch_in_fullscreen">
+       <item row="2" column="0" colspan="4">
+        <widget class="QCheckBox" name="checkBox_Interpolation">
          <property name="text">
-          <string>Stretch in fullscreen</string>
+          <string>Interpolation</string>
          </property>
         </widget>
        </item>
-       <item>
+       <item row="18" column="0" colspan="4">
         <spacer name="verticalSpacer_Video_Misc">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -1694,6 +1776,20 @@
          </property>
         </spacer>
        </item>
+       <item row="7" column="0" colspan="4">
+        <widget class="QCheckBox" name="checkBox_Disable_TV_noise_emulation">
+         <property name="text">
+          <string>Disable TV noise emulation when turned off</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <widget class="QLabel" name="label_Fullscreen_resolution">
+         <property name="text">
+          <string>Preferred resolution </string>
+         </property>
+        </widget>
+       </item>
       </layout>
       <zorder>checkBox_Interpolation</zorder>
       <zorder>checkBox_Text_on_screen</zorder>
@@ -1701,10 +1797,17 @@
       <zorder>checkBox_Input_display</zorder>
       <zorder>checkBox_Disable_TV_noise_emulation</zorder>
       <zorder>checkBox_Disable_sepia_color_on_pause</zorder>
-      <zorder>checkBox_Fullscreen_in_window</zorder>
-      <zorder>checkBox_Stretch_in_fullscreen</zorder>
-      <zorder>checkBox_Use_integer_scaling_in_fullscreen</zorder>
       <zorder>checkBox_Show_frames_and_lags</zorder>
+      <zorder>checkBox_Use_integer_scaling_in_fullscreen</zorder>
+      <zorder>checkBox_Stretch_in_fullscreen</zorder>
+      <zorder>label_Fullscreen_resolution_note</zorder>
+      <zorder>icon_Fullscreen_resolution</zorder>
+      <zorder>label_Fullscreen_resolution</zorder>
+      <zorder>comboBox_Fullscreen_resolution</zorder>
+      <zorder>checkBox_Fullscreen_in_window</zorder>
+      <zorder>label_Fullscreen_resolution_note_asterisk</zorder>
+      <zorder>checkBox_Fullscreen_adaptive_rrate</zorder>
+      <zorder>label_Fullscreen_adaptive_rrate_note_asterisk</zorder>
      </widget>
     </widget>
    </item>
@@ -1719,7 +1822,6 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>tabWidget_Video</tabstop>
   <tabstop>pushButton_Scale_1x</tabstop>
   <tabstop>pushButton_Scale_2x</tabstop>
   <tabstop>pushButton_Scale_3x</tabstop>
@@ -1761,9 +1863,6 @@
   <tabstop>checkBox_Input_display</tabstop>
   <tabstop>checkBox_Disable_TV_noise_emulation</tabstop>
   <tabstop>checkBox_Disable_sepia_color_on_pause</tabstop>
-  <tabstop>checkBox_Fullscreen_in_window</tabstop>
-  <tabstop>checkBox_Use_integer_scaling_in_fullscreen</tabstop>
-  <tabstop>checkBox_Stretch_in_fullscreen</tabstop>
  </tabstops>
  <resources>
   <include location="resources.qrc"/>

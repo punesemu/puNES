@@ -25,6 +25,9 @@
 #include "clock.h"
 #include "shaders.h"
 #include "settings.h"
+#if defined (FULLSCREEN_RESFREQ)
+#include "video/gfx_monitor.h"
+#endif
 
 enum wdgSettingsVideo_shader_parameter_colums {
 	WSV_SP_DESC,
@@ -184,6 +187,19 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Fullscreen_in_window, SIGNAL(clicked(bool)), this, SLOT(s_fullscreen_in_window(bool)));
 	connect(checkBox_Use_integer_scaling_in_fullscreen, SIGNAL(clicked(bool)), this, SLOT(s_integer_in_fullscreen(bool)));
 	connect(checkBox_Stretch_in_fullscreen, SIGNAL(clicked(bool)), this, SLOT(s_stretch_in_fullscreen(bool)));
+#if defined (FULLSCREEN_RESFREQ)
+	gfx_monitor_enum_monitors();
+	connect(checkBox_Fullscreen_adaptive_rrate, SIGNAL(clicked(bool)), this, SLOT(s_adaptive_rrate(bool)));
+	connect(comboBox_Fullscreen_resolution, SIGNAL(activated(int)), this, SLOT(s_resolution(int)));
+#else
+	icon_Fullscreen_resolution->hide();
+	label_Fullscreen_resolution->hide();
+	comboBox_Fullscreen_resolution->hide();
+	label_Fullscreen_resolution_note_asterisk->hide();
+	checkBox_Fullscreen_adaptive_rrate->hide();
+	label_Fullscreen_adaptive_rrate_note_asterisk->hide();
+	label_Fullscreen_resolution_note->hide();
+#endif
 
 	tabWidget_Video->setCurrentIndex(0);
 }
@@ -216,6 +232,10 @@ void wdgSettingsVideo::showEvent(UNUSED(QShowEvent *event)) {
 	icon_Palette_file->setPixmap(QIcon(":/icon/icons/paper.svg").pixmap(dim, dim));
 	icon_Palette_editor->setPixmap(QIcon(":/icon/icons/color_picker.svg").pixmap(dim, dim));
 	icon_Palette_misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
+	icon_Fullscreen->setPixmap(QIcon(":/icon/icons/fullscreen.svg").pixmap(dim, dim));
+#if defined (FULLSCREEN_RESFREQ)
+	icon_Fullscreen_resolution->setPixmap(QIcon(":/icon/icons/resolution.svg").pixmap(dim, dim));
+#endif
 }
 
 void wdgSettingsVideo::retranslateUi(QWidget *wdgSettingsVideo) {
@@ -311,6 +331,11 @@ void wdgSettingsVideo::update_widget(void) {
 	checkBox_Fullscreen_in_window->setChecked(cfg->fullscreen_in_window);
 	checkBox_Use_integer_scaling_in_fullscreen->setChecked(cfg->integer_scaling);
 	checkBox_Stretch_in_fullscreen->setChecked(cfg->stretch);
+#if defined (FULLSCREEN_RESFREQ)
+	checkBox_Fullscreen_adaptive_rrate->setEnabled(!checkBox_Fullscreen_in_window->isChecked());
+	checkBox_Fullscreen_adaptive_rrate->setChecked(cfg->adaptive_rrate);
+	resolution_set();
+#endif
 }
 void wdgSettingsVideo::change_rom(void) {
 	update_widget();
@@ -714,6 +739,30 @@ void wdgSettingsVideo::palette_set(void) {
 
 	comboBox_Palette->setCurrentIndex(palette);
 }
+#if defined (FULLSCREEN_RESFREQ)
+void wdgSettingsVideo::resolution_set(void) {
+	bool finded = false;
+	int i;
+
+	comboBox_Fullscreen_resolution->clear();
+	comboBox_Fullscreen_resolution->addItem(tr("Desktop resolution"));
+
+	for (i = 0; i < monitor.nres; i++) {
+		_monitor_resolution *mr = &monitor.resolutions[i];
+
+		comboBox_Fullscreen_resolution->addItem(QString("%0x%1").arg(mr->w).arg(mr->h));
+
+		if ((mr->w == cfg->fullscreen_res_w) && (mr->h == cfg->fullscreen_res_h)) {
+			finded = true;
+			comboBox_Fullscreen_resolution->setCurrentIndex(i + 1);
+		}
+	}
+
+	if ((cfg->fullscreen_res_w == -1) || (cfg->fullscreen_res_h == -1) || (finded == false)) {
+		comboBox_Fullscreen_resolution->setCurrentIndex(0);
+	}
+}
+#endif
 bool wdgSettingsVideo::call_gfx_set_screen(int mtype) {
 	if (mtype == 0) {
 		if (machine.type == NTSC) {
@@ -1177,6 +1226,7 @@ void wdgSettingsVideo::s_disable_sepia(UNUSED(bool checked)) {
 }
 void wdgSettingsVideo::s_fullscreen_in_window(UNUSED(bool checked)) {
 	cfg->fullscreen_in_window = !cfg->fullscreen_in_window;
+	update_widget();
 }
 void wdgSettingsVideo::s_integer_in_fullscreen(UNUSED(bool checked)) {
 	emu_thread_pause();
@@ -1196,6 +1246,21 @@ void wdgSettingsVideo::s_stretch_in_fullscreen(UNUSED(bool checked)) {
 	}
 	emu_thread_continue();
 }
+#if defined (FULLSCREEN_RESFREQ)
+void wdgSettingsVideo::s_adaptive_rrate(UNUSED(bool checked)) {
+	cfg->adaptive_rrate = !cfg->adaptive_rrate;
+	update_widget();
+}
+void wdgSettingsVideo::s_resolution(int index) {
+	QString res = comboBox_Fullscreen_resolution->itemText(index);
+
+	if (index == 0) {
+		cfg->fullscreen_res_w = cfg->fullscreen_res_h = -1;
+	} else {
+		settings_resolution_val_to_int(&cfg->fullscreen_res_w, &cfg->fullscreen_res_h, uQStringCD(res));
+	}
+}
+#endif
 void wdgSettingsVideo::s_screen_rotation(bool checked) {
 	if (checked) {
 		int rotation = QVariant(((QPushButton *)sender())->property("mtype")).toInt();

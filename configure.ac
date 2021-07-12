@@ -463,6 +463,29 @@ void blah(){
 	])
 ])
 
+# Management fullscreen resolution and auto frequency
+AS_CASE(["$host_os"],
+	[linux*|*bsd*], [
+		PKG_CHECK_MODULES(FULLSCRFREQ, [x11 xrandr], [
+			my_CPPFLAGS="${my_CPPFLAGS} ${FULLSCRFREQ_CFLAGS}"
+			my_LIBS="${my_LIBS} ${FULLSCRFREQ_LIBS}"
+			FULLSCREEN_RESFREQ="yes"
+		], [
+			AC_MSG_RESULT([fullscreen resolution and auto frequency disabled])
+			FULLSCREEN_RESFREQ="no"
+		])
+	],
+	[mingw32*|msys], [
+		FULLSCREEN_RESFREQ="yes"
+	], [
+		FULLSCREEN_RESFREQ="no"
+	]
+)
+AM_CONDITIONAL(USE_FULLSCREEN_RESFREQ,[test "x$FULLSCREEN_RESFREQ" != xno])
+AM_COND_IF([USE_FULLSCREEN_RESFREQ], [
+	CUSTOMDEFINES="${CUSTOMDEFINES} -DFULLSCREEN_RESFREQ"
+])
+
 # ffmpeg
 AM_COND_IF([WITH_FFMPEG], [
 	AM_COND_IF([WINDOWS], [

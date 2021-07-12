@@ -153,7 +153,7 @@ BYTE gui_create(void) {
 
 	qt.mwin->show();
 
-	qt.dset = new dlgSettings();
+	qt.dset = new dlgSettings(qt.mwin);
 	overlay.widget = new wdgOverlayUi();
 
 	memset(&ext_win, 0x00, sizeof(ext_win));
@@ -298,7 +298,7 @@ void gui_fullscreen(void) {
 	// se l'emulatore si avvia in fullscreen modalita' finestra, senza questo ritardo
 	// e' possibile che le QT mi passino informazioni non corrette sulle dimensioni del
 	// desktop e che le decorazioni della finestra non appaiano correttamente (problema
-	// riscontrato sotto Linux).
+	// riscontrato sotto Linux e BSD).
 	QTimer::singleShot(250, qt.mwin, SLOT(s_set_fullscreen()));
 }
 void gui_save_slot(BYTE slot) {
@@ -406,6 +406,16 @@ void gui_control_visible_cursor(void) {
 
 void *gui_mainwindow_get_ptr(void) {
 	return ((void *)qt.mwin);
+}
+void gui_mainwindow_coords(int *x, int *y, BYTE use_center) {
+	// Use the center of the window to determine what screen it's on
+	if (use_center) {
+		(*x) = qt.mwin->geometry().x() + (qt.mwin->geometry().width() / 2);
+		(*y) = qt.mwin->geometry().y() + (qt.mwin->geometry().height() / 2);
+	} else {
+		(*x) = qt.mwin->geometry().x();
+		(*y) = qt.mwin->geometry().y();
+	}
 }
 
 void *gui_wdgrewind_get_ptr(void) {

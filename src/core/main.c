@@ -34,6 +34,9 @@
 #if defined (WITH_FFMPEG)
 #include "recording.h"
 #endif
+#if defined (FULLSCREEN_RESFREQ)
+#include "video/gfx_monitor.h"
+#endif
 
 #if defined (_WIN32)
 int WINAPI WinMain(UNUSED(HINSTANCE hInstance), UNUSED(HINSTANCE hPrevInstance), UNUSED(PSTR szCmdLine), UNUSED(int iCmdShow)) {
@@ -108,6 +111,10 @@ int main(int argc, char **argv) {
 
 #if defined (__NETPLAY__)
 	netplay_init();
+#endif
+
+#if defined (FULLSCREEN_RESFREQ)
+	gfx_monitor_init();
 #endif
 
 	patcher_init();

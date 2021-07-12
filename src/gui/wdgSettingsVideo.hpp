@@ -57,6 +57,9 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void shader_set(void);
 		void shader_param_set(void);
 		void palette_set(void);
+#if defined (FULLSCREEN_RESFREQ)
+		void resolution_set(void);
+#endif
 		bool call_gfx_set_screen(int mtype);
 
 	private slots:
@@ -95,6 +98,10 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void s_fullscreen_in_window(bool checked);
 		void s_integer_in_fullscreen(bool checked);
 		void s_stretch_in_fullscreen(bool checked);
+#if defined (FULLSCREEN_RESFREQ)
+		void s_adaptive_rrate(bool checked);
+		void s_resolution(int index);
+#endif
 		void s_screen_rotation(bool checked);
 		void s_horizontal_flip_screen(bool checked);
 		void s_input_rotation(bool checked);

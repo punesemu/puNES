@@ -50,6 +50,9 @@
 #if defined (WITH_FFMPEG)
 #include "recording.h"
 #endif
+#if defined (FULLSCREEN_RESFREQ)
+#include "video/gfx_monitor.h"
+#endif
 
 #if defined (_WIN32) || defined (_WIN64)
 #if defined (_WIN64)
@@ -84,6 +87,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	qtTranslator = new QTranslator();
 	shcjoy.timer = new QTimer(this);
 	toggle_gui_in_window = true;
+	fullscreen_in_window_dekstop_resolution = false;
 
 	setWindowIcon(QIcon(":icon/icons/application.png"));
 	setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
@@ -237,6 +241,11 @@ void mainWindow::moveEvent(QMoveEvent *event) {
 }
 void mainWindow::resizeEvent(QResizeEvent *event) {
 	if (gui.start == TRUE) {
+		if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
+			mgeom = QRect(0, 0, event->size().width(), event->size().height());
+			update_gfx_monitor_dimension();
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
+		}
 		gui_external_control_windows_update_pos();
 	}
 	QMainWindow::resizeEvent(event);
@@ -569,18 +578,11 @@ bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) {
 	return (true);
 }
 void mainWindow::update_gfx_monitor_dimension(void) {
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-	QScreen *screen = QGuiApplication::screens().at(qApp->desktop()->screenNumber(this));
-#else
-	QScreen *screen = windowHandle()->screen();
-#endif
-
 	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
 		bool toolbar_is_hidden = toolbar->isHidden() | toolbar->isFloating();
 
-		mgeom = screen->availableGeometry();
-		gfx.w[MONITOR] = mgeom.width() - (frameGeometry().width() - geometry().width());
-		gfx.h[MONITOR] = mgeom.height() - (frameGeometry().height() - geometry().height());
+		gfx.w[MONITOR] = mgeom.width();
+		gfx.h[MONITOR] = mgeom.height();
 
 		if (toolbar->orientation() == Qt::Vertical) {
 			gfx.w[MONITOR] -= (toolbar_is_hidden ? 0 : toolbar->sizeHint().width());
@@ -591,7 +593,7 @@ void mainWindow::update_gfx_monitor_dimension(void) {
 		gfx.h[MONITOR] -= (menubar->isHidden() ? 0 : menubar->sizeHint().height());
 		gfx.h[MONITOR] -= (statusbar->isHidden() ? 0 : statusbar->sizeHint().height());
 	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
-		mgeom = screen->geometry();
+		mgeom = win_handle_screen()->geometry();
 		gfx.w[MONITOR] = mgeom.width();
 		gfx.h[MONITOR] = mgeom.height();
 	}
@@ -938,8 +940,26 @@ int mainWindow::is_shortcut(const QKeyEvent *event) {
 
 	return (-1);
 }
+QScreen *mainWindow::win_handle_screen(void) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+	QScreen *screen = QGuiApplication::screens().at(qApp->desktop()->screenNumber(this));
+#else
+	QScreen *screen = windowHandle()->screen();
+#endif
+
+	return (screen);
+}
+void mainWindow::reset_min_max_size(void) {
+	// su alcune macchine, il fullscreen non avviene perche'
+	// la dimensione della finestra e' fissa e le qt non riescono
+	// a sbloccarla.
+	setMinimumSize(QSize(0, 0));
+	setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+}
 
 void mainWindow::s_set_fullscreen(void) {
+	BYTE delay = FALSE;
+
 	if (gui.in_update) {
 		return;
 	}
@@ -949,49 +969,36 @@ void mainWindow::s_set_fullscreen(void) {
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
 		gfx.scale_before_fscreen = cfg->scale;
 		geom = geometry();
-
-		if (cfg->fullscreen_in_window == TRUE) {
-			gfx.type_of_fscreen_in_use = FULLSCR_IN_WINDOW;
-
-			update_gfx_monitor_dimension();
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
-			move(mgeom.x(), mgeom.y());
-		} else {
-			gfx.type_of_fscreen_in_use = FULLSCR;
-
-			update_gfx_monitor_dimension();
-			menuWidget()->setVisible(false);
-			statusbar->setVisible(false);
-			toolbar->set_hide_without_signal(false);
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
-
-			// su alcune macchine, il fullscreen non avviene perche'
-			// la dimensione della finestra e' fissa e le qt non riescono
-			// a sbloccarla.
-			setMinimumSize(QSize(0, 0));
-			setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-
-			emit fullscreen(true);
+		if (cfg->fullscreen_in_window == FALSE) {
+			hide();
+#if defined (FULLSCREEN_RESFREQ)
+			delay = gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, FALSE);
+#endif
 		}
 	} else {
 		if (gfx.type_of_fscreen_in_use == FULLSCR) {
-			emit fullscreen(false);
-
-			menuWidget()->setVisible(toggle_gui_in_window);
-			statusbar->setVisible(toggle_gui_in_window);
-			toolbar->set_hide_without_signal(toggle_gui_in_window);
+			hide();
+#if defined (FULLSCREEN_RESFREQ)
+#if defined(_WIN32)
+			// su alcuni monitor se il s_prepare_fullscreen e' eseguito dopo il delay, non viene
+			// ripristinata correttamente la finestra non visualizzando la cornice di windows.
+			gfx_monitor_restore_res();
+#else
+			// su Linux e BSD e' importante il delay per i motivi spiegati sotto.
+			delay = gfx_monitor_restore_res();
+#endif
+#endif
 		}
-
-		setGeometry(geom);
-		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
-
-		gfx.type_of_fscreen_in_use = NO_FULLSCR;
 	}
-
-	emu_thread_continue();
-
-	gui_external_control_windows_show();
-	gui_set_focus();
+	if (delay == TRUE) {
+		// se avvio la modalita' fullscreen dopo un cambio di risoluzione, senza questo ritardo
+		// e' possibile che le QT mi passino informazioni non corrette sulle dimensioni del
+		// desktop e che le decorazioni della finestra non appaiano correttamente (problema
+		// riscontrato sotto Linux e BSD).
+		QTimer::singleShot(250, this, SLOT(s_prepare_fullscreen(void)));
+	} else {
+		s_prepare_fullscreen();
+	}
 }
 void mainWindow::s_set_vs_window(void) {
 	ext_win.vs_system = !ext_win.vs_system;
@@ -1513,12 +1520,80 @@ void mainWindow::s_help(void) {
 	emu_pause(FALSE);
 }
 
+void mainWindow::s_prepare_fullscreen(void) {
+	if (gui.in_update) {
+		return;
+	}
+
+	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
+		reset_min_max_size();
+		if (cfg->fullscreen_in_window == TRUE) {
+			QRect sgeom;
+
+			gfx.type_of_fscreen_in_use = FULLSCR_IN_WINDOW;
+#if defined (_WIN32)
+			// lo showMaximized sotto windows non considera la presenza della barra delle applicazioni
+			// cercando di impostare una dimensione falsata percio' ridimensiono la finestra manualmente.
+			fullscreen_in_window_dekstop_resolution = false;
+			sgeom = win_handle_screen()->availableGeometry();
+#else
+			fullscreen_in_window_dekstop_resolution = true;
+#endif
+#if defined (FULLSCREEN_RESFREQ)
+			{
+				QScreen *screen = win_handle_screen();
+
+				if ((cfg->fullscreen_res_w >= 0) && (cfg->fullscreen_res_h >= 0) &&
+					((cfg->fullscreen_res_w != screen->availableGeometry().width()) ||
+					(cfg->fullscreen_res_h != screen->availableGeometry().height()))) {
+					fullscreen_in_window_dekstop_resolution = false;
+					sgeom = QRect(geom.x(), geom.y(), cfg->fullscreen_res_w, cfg->fullscreen_res_h);
+				}
+			}
+#endif
+			if (fullscreen_in_window_dekstop_resolution == false) {
+				setGeometry(sgeom);
+			}
+		} else {
+			gfx.type_of_fscreen_in_use = FULLSCR;
+			update_gfx_monitor_dimension();
+			menuWidget()->setVisible(false);
+			statusbar->setVisible(false);
+			toolbar->set_hide_without_signal(false);
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
+		}
+		emit fullscreen(true);
+	} else {
+		if (gfx.type_of_fscreen_in_use == FULLSCR) {
+			menuWidget()->setVisible(toggle_gui_in_window);
+			statusbar->setVisible(toggle_gui_in_window);
+			toolbar->set_hide_without_signal(toggle_gui_in_window);
+		}
+		gfx.type_of_fscreen_in_use = NO_FULLSCR;
+		emit fullscreen(false);
+	}
+}
 void mainWindow::s_fullscreen(bool state) {
 	if (state == true) {
-		showFullScreen();
+		if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
+			if (fullscreen_in_window_dekstop_resolution == true) {
+				showMaximized();
+			} else {
+				show();
+			}
+		} else {
+			move(mgeom.x(), mgeom.y());
+			showFullScreen();
+		}
 	} else {
 		showNormal();
+		setGeometry(geom);
+		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
 	}
+
+	emu_thread_continue();
+
+	gui_external_control_windows_show();
 }
 void mainWindow::s_shcjoy_read_timer(void) {
 	if (shcjoy.enabled == false) {

@@ -283,6 +283,11 @@ libgui_a_SOURCES += \
 	linux/jstick.h \
 	linux/os_linux.h
 
+if USE_FULLSCREEN_RESFREQ
+libgui_a_SOURCES += \
+	linux/monitor.c
+endif
+
 AM_CXXFLAGS = -fPIC
 endif
 
@@ -291,6 +296,11 @@ libgui_a_SOURCES += \
 	bsd/jstick.c \
 	bsd/jstick.h \
 	bsd/os_bsd.h
+
+if USE_FULLSCREEN_RESFREQ
+libgui_a_SOURCES += \
+	linux/monitor.c
+endif
 
 AM_CXXFLAGS = -fPIC
 endif
@@ -301,4 +311,9 @@ libgui_a_SOURCES += \
 	windows/jstick.h \
 	windows/os_windows.h \
 	windows/win.h
+
+if USE_FULLSCREEN_RESFREQ
+libgui_a_SOURCES += \
+	windows/monitor.c
+endif
 endif

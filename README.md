@@ -3,7 +3,6 @@
 [![Gentoo package](https://repology.org/badge/version-for-repo/gentoo/punes.svg)](https://repology.org/project/punes/versions)
 [![AUR package](https://repology.org/badge/version-for-repo/aur/punes.svg)](https://repology.org/project/punes/versions)
 [![SlackBuilds package](https://repology.org/badge/version-for-repo/slackbuilds/punes.svg)](https://repology.org/project/punes/versions)
-[![Rosa 2019.1 package](https://repology.org/badge/version-for-repo/rosa_2019_1/punes.svg)](https://repology.org/project/punes/versions)
 [![LiGurOS stable package](https://repology.org/badge/version-for-repo/liguros_stable/punes.svg)](https://repology.org/project/punes/versions)
 [![Wikidata package](https://repology.org/badge/version-for-repo/wikidata/punes.svg)](https://repology.org/project/punes/versions)
 
@@ -12,7 +11,7 @@ Description
 
 Nintendo Entertaiment System emulator
 
-WIP Builds ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://ci.appveyor.com/api/projects/status/t820vxmvtvbfbll7?svg=true)](https://ci.appveyor.com/project/punesemu/punes) 
+WIP Builds ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://ci.appveyor.com/api/projects/status/t820vxmvtvbfbll7?svg=true)](https://ci.appveyor.com/project/punesemu/punes/history) 
 -----------
 always updated to the last commit:
 * Windows 32 bit : [`OpenGL`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes32.wip.opengl.zip) - [`D3D9`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes32.wip.d3d9.zip)
@@ -23,7 +22,7 @@ Note : 32 bit versions are Windows XP compatible.
 Support:
 -----------
 
-If you want pay a beer : [![Beerpay](https://beerpay.io/punesemu/puNES/badge.svg?style=beer)](https://beerpay.io/punesemu/puNES) or <span class="badge-paypal"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button" /></a></span>
+If you want pay a beer : <span class="badge-paypal"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button" /></a></span>
 
 How to Compile
 -----------
@@ -39,11 +38,12 @@ How to Compile
 * [nvidia-cg](https://developer.nvidia.com/cg-toolkit)
 * [alsa](https://www.alsa-project.org)
 * [cmake](https://cmake.org)
+* [libX11 and libXrandr](https://www.x.org)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
 #### Compilation of puNES
 ```bash
-git clone https://github.com/punesemu/punes
-cd punes
+git clone https://github.com/punesemu/puNES
+cd puNES
 ./autogen.sh
 ./configure
 make
@@ -55,9 +55,10 @@ If you need the debug version then you need to replace the `./configure` command
 CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" ./configure --disable-release [...]
 ```
 where `[...]` are the other necessary options.
-#### Example on how to compile on Ubuntu 20.10
+#### Example on how to compile on Ubuntu 21.04
 ```bash
-sudo apt-get install git cmake autotools-dev autoconf build-essential pkg-config libasound2-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev nvidia-cg-toolkit
+sudo apt-get install git cmake autotools-dev autoconf libtool build-essential pkg-config libasound2-dev
+sudo apt-get install qtbase5-dev qttools5-dev-tools libqt5svg5-dev nvidia-cg-toolkit libx11-dev libxrandr-dev 
 sudo apt-get install libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev
 git clone https://github.com/punesemu/puNES
 cd puNES
@@ -74,11 +75,12 @@ to start the emulator
 * [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
 * [cmake](https://cmake.org)
+* [libX11 and libXrandr](https://www.x.org)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
 #### Compilation of puNES
 ```bash
-git clone https://github.com/punesemu/punes
-cd punes
+git clone https://github.com/punesemu/puNES
+cd puNES
 ./autogen.sh
 CC=cc CXX=c++ ./configure
 make
@@ -95,11 +97,12 @@ where `[...]` are the other necessary options.
 * [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
 * [cmake](https://cmake.org)
+* [libX11 and libXrandr](https://www.x.org)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
 #### Compilation of puNES
 ```bash
-git clone https://github.com/punesemu/punes
-cd punes
+git clone https://github.com/punesemu/puNES
+cd puNES
 ./autogen.sh
 CC=cc CXX=c++ ./configure
 make
@@ -180,8 +183,8 @@ cd ..
 #### Compilation of puNES
 10. Now you have everything you need to compile correctly puNES
 ```bash
-git clone https://github.com/punesemu/punes
-cd punes
+git clone https://github.com/punesemu/puNES
+cd puNES
 ./autogen.sh
 ```
 if you want D3D9 version :

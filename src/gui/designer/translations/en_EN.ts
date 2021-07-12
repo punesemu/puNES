@@ -860,7 +860,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</source>
+        <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
         <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation type="unfinished"></translation>
     </message>
@@ -2232,10 +2237,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Use integer scaling in fullscreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>0 degrees</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2309,6 +2310,30 @@
     </message>
     <message>
         <source>Show frames and lags counters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Desktop resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fullscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>* applied if supported by the monitor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use integer scaling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preferred resolution </source>
         <translation type="unfinished"></translation>
     </message>
 </context>

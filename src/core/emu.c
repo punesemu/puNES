@@ -53,6 +53,9 @@
 #endif
 #include "gui.h"
 #include "video/effects/tv_noise.h"
+#if defined (FULLSCREEN_RESFREQ)
+#include "video/gfx_monitor.h"
+#endif
 
 #define RS_SCALE (1.0f / (1.0f + (float)RAND_MAX))
 
@@ -100,6 +103,10 @@ void emu_quit(void) {
 	gamegenie_quit();
 	uncompress_quit();
 	patcher_quit();
+
+#if defined (FULLSCREEN_RESFREQ)
+	gfx_monitor_quit();
+#endif
 
 	gui_quit();
 }
@@ -401,6 +408,12 @@ BYTE emu_load_rom(void) {
 
 		info.no_rom = TRUE;
 	}
+
+
+#if defined (FULLSCREEN_RESFREQ)
+	// mi salvo la vecchia modalita'
+	info.old_machine_type = machine.type;
+#endif
 
 	// setto il tipo di sistema
 	switch (cfg->mode) {
@@ -839,6 +852,14 @@ BYTE emu_reset(BYTE type) {
 	if ((info.reset == CHANGE_MODE) && (overscan_set_mode(machine.type) == TRUE)) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
+
+#if defined (FULLSCREEN_RESFREQ)
+	if ((gfx.type_of_fscreen_in_use == FULLSCR) &&
+		(cfg->adaptive_rrate == TRUE) &&
+		(info.old_machine_type != machine.type)) {
+		gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, TRUE);
+	}
+#endif
 
 	map_chr_bank_1k_reset();
 

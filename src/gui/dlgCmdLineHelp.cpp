@@ -76,6 +76,10 @@ dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, QString name) : QDialog(parent) 
 #if defined (WITH_OPENGL)
 			uL("" uPERCENTs "\n")
 #endif
+#if defined (FULLSCREEN_RESFREQ)
+			uL("" uPERCENTs "\n")
+			uL("" uPERCENTs "\n")
+#endif
 	};
 
 	usage_string = (uTCHAR *)malloc(1024 * 9);
@@ -107,6 +111,10 @@ dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, QString name) : QDialog(parent) 
 			main_cfg[SET_FULLSCREEN_IN_WINDOW].hlp,
 			main_cfg[SET_INTEGER_FULLSCREEN].hlp,
 			main_cfg[SET_STRETCH_FULLSCREEN].hlp,
+#if defined (FULLSCREEN_RESFREQ)
+			main_cfg[SET_ADAPTIVE_RRATE_FULLSCREEN].hlp,
+			main_cfg[SET_RESOLUTION_FULLSCREEN].hlp,
+#endif
 			main_cfg[SET_HORIZONTAL_FLIP_SCREEN].hlp,
 			main_cfg[SET_SCREEN_ROTATION].hlp,
 			main_cfg[SET_AUDIO_OUTPUT_DEVICE].hlp,

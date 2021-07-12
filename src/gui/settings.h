@@ -82,6 +82,10 @@ enum set_element {
 	SET_FULLSCREEN_IN_WINDOW,
 	SET_INTEGER_FULLSCREEN,
 	SET_STRETCH_FULLSCREEN,
+#if defined (FULLSCREEN_RESFREQ)
+	SET_ADAPTIVE_RRATE_FULLSCREEN,
+	SET_RESOLUTION_FULLSCREEN,
+#endif
 	SET_HORIZONTAL_FLIP_SCREEN,
 	SET_SCREEN_ROTATION,
 	SET_INPUT_ROTATION,
@@ -808,7 +812,7 @@ static const _settings main_cfg[] = {
 	{
 		uL("video"), uL("fullscreen in window"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --fullscreen-window   the next fullscreen   : yes, no"  NEWLINE)
+		uL("    --fullscreen-window   the next fullscreen   : yes, no" NEWLINE)
 		uL("                          will be performed by" NEWLINE)
 		uL("                          maximizing the window"),
 		{LENGTH(opt_no_yes), opt_no_yes}
@@ -825,6 +829,22 @@ static const _settings main_cfg[] = {
 		uL("-t, --stretch-fullscreen  stretch image         : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
+#if defined (FULLSCREEN_RESFREQ)
+	{
+		uL("video"), uL("adaptive refresh rate in fullscreen"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --adaptive-rrate      try to adapte the     : yes, no" NEWLINE)
+		uL("                          refresh rate to the rom"),
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("video"), uL("preferred fullscreen resolution"), NULL,
+		uL("# possible values: automatic, [width]x[height]"),
+		uL("    --fullscreen-res      fullscreen resolution : automatic, [width]x[height]" NEWLINE)
+		uL("                          if supported by the monitor"),
+		{0, NULL}
+	},
+#endif
 	{
 		uL("video"), uL("horizontal flip screen"), uL("no"),
 		uL("# possible values: yes, no"),
@@ -1403,6 +1423,9 @@ EXTERNC int settings_val_to_int(int index, const uTCHAR *buffer);
 EXTERNC double settings_val_to_double(WORD round, const uTCHAR *buffer);
 EXTERNC void settings_cpy_utchar_to_val(int index, uTCHAR *buffer);
 EXTERNC void settings_val_to_oscan(int index, _overscan_borders *ob, const uTCHAR *buffer);
+#if defined (FULLSCREEN_RESFREQ)
+EXTERNC void settings_resolution_val_to_int(int *w, int *h, const uTCHAR *buffer);
+#endif
 
 EXTERNC void *settings_inp_rd_sc(int index, int type);
 EXTERNC void settings_inp_wr_sc(void *str, int index, int type);

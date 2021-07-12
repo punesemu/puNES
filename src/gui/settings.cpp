@@ -71,6 +71,11 @@ void settings_cpy_utchar_to_val(int index, uTCHAR *buffer) {
 void settings_val_to_oscan(int index, _overscan_borders *ob, const uTCHAR *buffer) {
 	s.set->oscan_val_to_int(index, ob, buffer);
 }
+#if defined (FULLSCREEN_RESFREQ)
+void settings_resolution_val_to_int(int *w, int *h, const uTCHAR *buffer) {
+	s.set->resolution_val_to_int(w, h, buffer);
+}
+#endif
 
 void *settings_inp_rd_sc(int index, int type) {
 	return (s.inp->sc_val_to_qstring_pntr(index, type));

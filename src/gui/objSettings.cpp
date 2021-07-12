@@ -712,6 +712,10 @@ void objSet::to_cfg(QString group) {
 		int_to_val(SET_FULLSCREEN_IN_WINDOW, cfg_from_file.fullscreen_in_window);
 		int_to_val(SET_INTEGER_FULLSCREEN, cfg_from_file.integer_scaling);
 		int_to_val(SET_STRETCH_FULLSCREEN, cfg_from_file.stretch);
+#if defined (FULLSCREEN_RESFREQ)
+		int_to_val(SET_ADAPTIVE_RRATE_FULLSCREEN, cfg_from_file.adaptive_rrate);
+		val.replace(SET_RESOLUTION_FULLSCREEN, resolution_val(&cfg_from_file.fullscreen_res_w, &cfg_from_file.fullscreen_res_h));
+#endif
 		int_to_val(SET_HORIZONTAL_FLIP_SCREEN, cfg_from_file.hflip_screen);
 		int_to_val(SET_SCREEN_ROTATION, cfg_from_file.screen_rotation);
 		int_to_val(SET_INPUT_ROTATION, cfg_from_file.input_rotation);
@@ -824,6 +828,10 @@ void objSet::fr_cfg(QString group) {
 		cfg_from_file.fullscreen_in_window = val_to_int(SET_FULLSCREEN_IN_WINDOW);
 		cfg_from_file.integer_scaling = val_to_int(SET_INTEGER_FULLSCREEN);
 		cfg_from_file.stretch = val_to_int(SET_STRETCH_FULLSCREEN);
+#if defined (FULLSCREEN_RESFREQ)
+		cfg_from_file.adaptive_rrate = val_to_int(SET_ADAPTIVE_RRATE_FULLSCREEN);
+		resolution_val_to_int(SET_RESOLUTION_FULLSCREEN, &cfg_from_file.fullscreen_res_w, &cfg_from_file.fullscreen_res_h);
+#endif
 		cfg_from_file.hflip_screen = val_to_int(SET_HORIZONTAL_FLIP_SCREEN);
 		cfg_from_file.screen_rotation = val_to_int(SET_SCREEN_ROTATION);
 		cfg_from_file.input_rotation = val_to_int(SET_INPUT_ROTATION);
@@ -892,7 +900,14 @@ void objSet::fr_cfg(QString group) {
 #endif
 }
 void objSet::after_the_defaults() {
+	// setto il tipo di sistema
 	machine = machinedb[NTSC - 1];
+
+#if defined (FULLSCREEN_RESFREQ)
+	// setto la modalita'
+	info.old_machine_type = machine.type;
+#endif
+
 	gfx.scale_before_fscreen = cfg_from_file.scale;
 
 	save_slot.slot = 0;
@@ -952,6 +967,31 @@ QString objSet::oscan_val(_overscan_borders *ob) {
 		QString("%1,").arg(ob->left) +
 		QString("%1").arg(ob->right));
 }
+
+#if defined (FULLSCREEN_RESFREQ)
+void objSet::resolution_val_to_int(int index, int *w, int *h) {
+	resolution_val_to_int(w, h, uQStringCD(val.at(index)));
+
+	val.replace(index, resolution_val(w, h));
+}
+void objSet::resolution_val_to_int(int *w, int *h, const uTCHAR *buffer) {
+	QStringList splitted = uQString(buffer).toLower().split("x");
+
+	(*w) = -1;
+	(*h) = -1;
+
+	if (splitted.count() == 2) {
+		(*w) = splitted.at(0).toInt();
+		(*h) = splitted.at(1).toInt();
+	}
+}
+QString objSet::resolution_val(int *w, int *h) {
+	if (((*w) == -1) || ((*h) == -1)) {
+		return (QString("automatic"));
+	}
+	return (QString("%0x%1").arg((*w)).arg((*h)));
+}
+#endif
 
 int objSet::channel_convert_index(int index) {
 	switch (index) {

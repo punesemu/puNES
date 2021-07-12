@@ -31,6 +31,9 @@
 #include "version.h"
 #include "cpu.h"
 #include "ppu.h"
+#if defined (FULLSCREEN_RESFREQ)
+#include "video/gfx_monitor.h"
+#endif
 
 void overlay_wdg_clear(void *widget, void *qrect);
 void overlay_wdg_blit(void *widget);
@@ -91,7 +94,9 @@ static const char *info_messages_precompiled[] = {
 //: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
 /* 26 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[red]error on palette file[normal]"),
 //: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
-/* 27 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[red]errors[normal] on shader, use [green]'No shader'[normal]"),
+/* 27 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[red]errors[normal] on shader, use [green]'No shader'[cyan]"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 28 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]"),
 };
 
 static struct _shared_color {
@@ -136,7 +141,7 @@ void gui_overlay_info_emulator(void) {
 	overlayWidgetInfo::_append_msg(str);
 }
 void gui_overlay_info_append_msg_precompiled(int index, void *arg1) {
-	QString msg, a1, a2;
+	QString msg, a1, a2, a3;
 
 	if (index >= (int)LENGTH(info_messages_precompiled)) {
 		return;
@@ -174,6 +179,19 @@ void gui_overlay_info_append_msg_precompiled(int index, void *arg1) {
 		case 22:
 			a1 = (*(QString *)arg1);
 			msg = msg.arg(a1);
+			break;
+		case 28:
+			{
+				int w = 0, h = 0, rrate = 0;
+
+#if defined (FULLSCREEN_RESFREQ)
+				gfx_monitor_mode_in_use_resolutions(&w, &h, &rrate);
+#endif
+				a1 = QString("%1").arg(w);
+				a2 = QString("%1").arg(h);
+				a3 = QString("%1").arg(rrate);
+			}
+			msg = msg.arg(a1, a2, a3);
 			break;
 	}
 

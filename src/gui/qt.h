@@ -169,6 +169,7 @@ EXTERNC void gui_cursor_hide(BYTE hide);
 EXTERNC void gui_control_visible_cursor(void);
 
 EXTERNC void *gui_mainwindow_get_ptr(void);
+EXTERNC void gui_mainwindow_coords(int *x, int *y, BYTE use_center);
 
 EXTERNC void *gui_wdgrewind_get_ptr(void);
 EXTERNC void gui_wdgrewind_play(void);
@@ -228,6 +229,9 @@ EXTERNC char *gui_dup_wchar_to_utf8(uTCHAR *w);
 #else
 EXTERNC int gui_screen_id(void);
 #endif
+
+EXTERNC BYTE gui_monitor_enum_monitors(void);
+EXTERNC void gui_monitor_set_res(void *monitor_info, void *mode_info);
 
 #undef EXTERNC
 

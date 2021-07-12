@@ -129,6 +129,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		QTranslator *translator;
 		QTranslator *qtTranslator;
 		bool toggle_gui_in_window;
+		bool fullscreen_in_window_dekstop_resolution;
 		QRect geom, mgeom;
 
 	public:
@@ -185,6 +186,8 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 	private:
 		void ctrl_disk_side(QAction *action);
 		int is_shortcut(const QKeyEvent *event);
+		QScreen *win_handle_screen(void);
+		void reset_min_max_size(void);
 
 	public slots:
 		void s_set_fullscreen(void);
@@ -219,6 +222,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_help(void);
 
 	private slots:
+		void s_prepare_fullscreen(void);
 		void s_fullscreen(bool state);
 		void s_shcjoy_read_timer(void);
 

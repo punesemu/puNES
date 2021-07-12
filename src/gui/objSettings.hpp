@@ -96,6 +96,15 @@ class objSet : public objSettings {
 		void oscan_val_to_int(int index, _overscan_borders *ob);
 		QString oscan_val(_overscan_borders *ob);
 
+#if defined (FULLSCREEN_RESFREQ)
+	public:
+		void resolution_val_to_int(int *w, int *h, const uTCHAR *buffer);
+
+	private:
+		void resolution_val_to_int(int index, int *w, int *h);
+		QString resolution_val(int *w, int *h);
+#endif
+
 	private:
 		int channel_convert_index(int index);
 		void channel_decode(int index, QString val);
