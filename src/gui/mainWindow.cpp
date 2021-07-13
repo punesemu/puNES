@@ -977,8 +977,8 @@ void mainWindow::s_set_fullscreen(void) {
 	// che lascia la finestra disattivata. In caso di "Pause when in background" attivo
 	// il gui_control_pause_bck non riprende l'emulazione pensando appunto di essere in background.
 	no_gui_control_pause_bck = true;
- 	hide();
-	no_gui_control_pause_bck = false;
+
+	hide();
 
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
 		gfx.scale_before_fscreen = cfg->scale;
@@ -1609,6 +1609,8 @@ void mainWindow::s_fullscreen(bool state) {
 	emu_thread_continue();
 
 	gui_external_control_windows_show();
+
+	no_gui_control_pause_bck = false;
 }
 void mainWindow::s_shcjoy_read_timer(void) {
 	if (shcjoy.enabled == false) {

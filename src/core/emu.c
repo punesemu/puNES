@@ -105,6 +105,9 @@ void emu_quit(void) {
 	patcher_quit();
 
 #if defined (FULLSCREEN_RESFREQ)
+	if (gfx.type_of_fscreen_in_use == FULLSCR) {
+		gfx_monitor_restore_res();
+	}
 	gfx_monitor_quit();
 #endif
 
