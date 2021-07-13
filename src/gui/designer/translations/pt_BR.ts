@@ -59,7 +59,7 @@
     </message>
     <message>
       <source>Rewind Mode On/Off</source>
-      <translation>Modo Rebobinar Ligado/Desligado</translation>
+      <translation>Modo Retroceder Ativado/Desativado</translation>
     </message>
     <message>
       <source>Rewind Step Backward</source>
@@ -83,7 +83,7 @@
     </message>
     <message>
       <source>Rewind Fast Backward</source>
-      <translation>Rebobinar para trás</translation>
+      <translation>Retroceder Rápido</translation>
     </message>
     <message>
       <source>Recording</source>
@@ -378,10 +378,6 @@
       <translation>Compilado</translation>
     </message>
     <message>
-      <source>Anyway, thank you all for the love and the help.</source>
-      <translation>De qualquer forma, obrigado a todos pelo amor e ajuda.</translation>
-    </message>
-    <message>
       <source>portable version</source>
       <translation>versão portátil</translation>
     </message>
@@ -559,7 +555,7 @@
     </message>
     <message>
       <source>&amp;Recent Roms</source>
-      <translation>&amp;Roms Recentes</translation>
+      <translation>&amp;ROMs Recentes</translation>
     </message>
     <message>
       <source>&amp;NES</source>
@@ -656,10 +652,6 @@
     <message>
       <source>Open IPS/BPS/XDELTA Patch</source>
       <translation>Patch OPEN IPS/BPS/XDELTA</translation>
-    </message>
-    <message>
-      <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-      <translation>Se você gostou do emulador e deseja contribuir com seu desenvolvimento, ou apenas pagar uma cerveja para o programador</translation>
     </message>
     <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
@@ -830,7 +822,7 @@
     <message>
       <source>overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>overclock ativado [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
+      <translation>overclock habilitado [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
     </message>
     <message>
       <source>[yellow]silence, the movie has begun[normal]</source>
@@ -868,9 +860,14 @@
       <translation>[red]erro no arquivo de paleta[normal]</translation>
     </message>
     <message>
-      <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</source>
+      <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]erros[normal] na shader, use [green]&apos;Sem Shader&apos;[normal]</translation>
+      <translation type="unfinished">[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</translation>
+    </message>
+    <message>
+      <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</translation>
     </message>
   </context>
   <context>
@@ -1191,7 +1188,7 @@
     </message>
     <message>
       <source>Rewind</source>
-      <translation>Rebobinar</translation>
+      <translation>Retroceder</translation>
     </message>
   </context>
   <context>
@@ -1363,7 +1360,7 @@
     </message>
     <message>
       <source>System Roms</source>
-      <translation>Roms do Sistema</translation>
+      <translation>ROMs do Sistema</translation>
     </message>
     <message>
       <source>Mode</source>
@@ -1419,7 +1416,7 @@
     </message>
     <message>
       <source>Rewind minutes</source>
-      <translation>Minutos de rebobinagem</translation>
+      <translation>Minutos de retrocesso</translation>
     </message>
     <message>
       <source>Spanish</source>
@@ -1468,6 +1465,10 @@
     <message>
       <source>2x</source>
       <translation>2x</translation>
+    </message>
+    <message>
+      <source>Chinese Simplified</source>
+      <translation>Chinês Simplificado</translation>
     </message>
   </context>
   <context>
@@ -2236,10 +2237,6 @@
       <translation>Desabilitar troca de ênfase Vermelha e Verde para PAL/Dendy</translation>
     </message>
     <message>
-      <source>Use integer scaling in fullscreen</source>
-      <translation>Usar escalonamento com inteiros em tela cheia</translation>
-    </message>
-    <message>
       <source>0 degrees</source>
       <translation>0 graus</translation>
     </message>
@@ -2310,6 +2307,34 @@
     <message>
       <source>Palette File</source>
       <translation>Arquivo de Paleta</translation>
+    </message>
+    <message>
+      <source>Show frames and lags counters</source>
+      <translation>Mostrar quadros e contadores de lag</translation>
+    </message>
+    <message>
+      <source>Desktop resolution</source>
+      <translation type="unfinished">Desktop resolution</translation>
+    </message>
+    <message>
+      <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
+      <translation type="unfinished">Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
+    </message>
+    <message>
+      <source>Fullscreen</source>
+      <translation type="unfinished">Fullscreen</translation>
+    </message>
+    <message>
+      <source>* applied if supported by the monitor</source>
+      <translation type="unfinished">* applied if supported by the monitor</translation>
+    </message>
+    <message>
+      <source>Use integer scaling</source>
+      <translation type="unfinished">Use integer scaling</translation>
+    </message>
+    <message>
+      <source>Preferred resolution </source>
+      <translation type="unfinished">Preferred resolution </translation>
     </message>
   </context>
   <context>

@@ -378,10 +378,6 @@
       <translation>已编译</translation>
     </message>
     <message>
-      <source>Anyway, thank you all for the love and the help.</source>
-      <translation>我们十分感谢您对我们的帮助。</translation>
-    </message>
-    <message>
       <source>portable version</source>
       <translation>移动版</translation>
     </message>
@@ -658,10 +654,6 @@
       <translation>打开 IPS/BPS/XDELTA 补丁</translation>
     </message>
     <message>
-      <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-      <translation>如果您喜欢这个模拟器，并希望支持开发者继续开发</translation>
-    </message>
-    <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
       <translation>打 IPS/BPS/XDELTA 补丁(&amp;A)</translation>
     </message>
@@ -868,9 +860,14 @@
       <translation>[red]调色板文件错误[normal]</translation>
     </message>
     <message>
-      <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</source>
+      <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>着色器[red]错误[normal]，返回[green]无着色器[normal]状态</translation>
+      <translation type="unfinished">[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</translation>
+    </message>
+    <message>
+      <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</translation>
     </message>
   </context>
   <context>
@@ -1468,6 +1465,10 @@
     <message>
       <source>2x</source>
       <translation>2 倍</translation>
+    </message>
+    <message>
+      <source>Chinese Simplified</source>
+      <translation>简体中文</translation>
     </message>
   </context>
   <context>
@@ -2236,10 +2237,6 @@
       <translation>禁用 PAL/Dendy 红绿凸显互换</translation>
     </message>
     <message>
-      <source>Use integer scaling in fullscreen</source>
-      <translation>全屏整数倍缩放</translation>
-    </message>
-    <message>
       <source>0 degrees</source>
       <translation>0°</translation>
     </message>
@@ -2310,6 +2307,34 @@
     <message>
       <source>Palette File</source>
       <translation>调色板文件</translation>
+    </message>
+    <message>
+      <source>Show frames and lags counters</source>
+      <translation>显示帧数和延迟数</translation>
+    </message>
+    <message>
+      <source>Desktop resolution</source>
+      <translation type="unfinished">Desktop resolution</translation>
+    </message>
+    <message>
+      <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
+      <translation type="unfinished">Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
+    </message>
+    <message>
+      <source>Fullscreen</source>
+      <translation type="unfinished">Fullscreen</translation>
+    </message>
+    <message>
+      <source>* applied if supported by the monitor</source>
+      <translation type="unfinished">* applied if supported by the monitor</translation>
+    </message>
+    <message>
+      <source>Use integer scaling</source>
+      <translation type="unfinished">Use integer scaling</translation>
+    </message>
+    <message>
+      <source>Preferred resolution </source>
+      <translation type="unfinished">Preferred resolution </translation>
     </message>
   </context>
   <context>

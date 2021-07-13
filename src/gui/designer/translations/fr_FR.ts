@@ -378,10 +378,6 @@
       <translation type="unfinished">Compiled</translation>
     </message>
     <message>
-      <source>Anyway, thank you all for the love and the help.</source>
-      <translation type="unfinished">Anyway, thank you all for the love and the help.</translation>
-    </message>
-    <message>
       <source>portable version</source>
       <translation type="unfinished">portable version</translation>
     </message>
@@ -658,10 +654,6 @@
       <translation type="unfinished">Open IPS/BPS/XDELTA Patch</translation>
     </message>
     <message>
-      <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-      <translation type="unfinished">If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</translation>
-    </message>
-    <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
       <translation type="unfinished">&amp;Apply IPS/BPS/XDELTA Patch</translation>
     </message>
@@ -868,9 +860,14 @@
       <translation type="unfinished">[red]error on palette file[normal]</translation>
     </message>
     <message>
-      <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</source>
+      <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</translation>
+      <translation type="unfinished">[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</translation>
+    </message>
+    <message>
+      <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</translation>
     </message>
   </context>
   <context>
@@ -1468,6 +1465,10 @@
     <message>
       <source>2x</source>
       <translation type="unfinished">2x</translation>
+    </message>
+    <message>
+      <source>Chinese Simplified</source>
+      <translation type="unfinished">Chinese Simplified</translation>
     </message>
   </context>
   <context>
@@ -2236,10 +2237,6 @@
       <translation type="unfinished">Disable Red and Green emphasis swap for PAL/Dendy</translation>
     </message>
     <message>
-      <source>Use integer scaling in fullscreen</source>
-      <translation type="unfinished">Use integer scaling in fullscreen</translation>
-    </message>
-    <message>
       <source>0 degrees</source>
       <translation type="unfinished">0 degrees</translation>
     </message>
@@ -2310,6 +2307,34 @@
     <message>
       <source>Palette File</source>
       <translation type="unfinished">Palette File</translation>
+    </message>
+    <message>
+      <source>Show frames and lags counters</source>
+      <translation type="unfinished">Show frames and lags counters</translation>
+    </message>
+    <message>
+      <source>Desktop resolution</source>
+      <translation type="unfinished">Desktop resolution</translation>
+    </message>
+    <message>
+      <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
+      <translation type="unfinished">Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
+    </message>
+    <message>
+      <source>Fullscreen</source>
+      <translation type="unfinished">Fullscreen</translation>
+    </message>
+    <message>
+      <source>* applied if supported by the monitor</source>
+      <translation type="unfinished">* applied if supported by the monitor</translation>
+    </message>
+    <message>
+      <source>Use integer scaling</source>
+      <translation type="unfinished">Use integer scaling</translation>
+    </message>
+    <message>
+      <source>Preferred resolution </source>
+      <translation type="unfinished">Preferred resolution </translation>
     </message>
   </context>
   <context>
