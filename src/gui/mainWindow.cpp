@@ -88,6 +88,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	shcjoy.timer = new QTimer(this);
 	toggle_gui_in_window = true;
 	fullscreen_in_window_dekstop_resolution = false;
+	no_gui_control_pause_bck = false;
 
 	setWindowIcon(QIcon(":icon/icons/application.png"));
 	setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
@@ -218,7 +219,9 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 	switch (event->type()) {
 		case QEvent::WindowActivate:
 		case QEvent::WindowDeactivate:
-			gui_control_pause_bck(event->type());
+			if (!no_gui_control_pause_bck) {
+				gui_control_pause_bck(event->type());
+			}
 			break;
 		default:
 			break;
@@ -966,19 +969,26 @@ void mainWindow::s_set_fullscreen(void) {
 
 	emu_thread_pause();
 
+	// quando nascondo la finestra al momento dell'attivazione/disattivazione del
+	// fullscreen vengono eseguiti nell'ordine un
+	// QEvent::WindowActivate
+	// seguito da un
+	// QEvent::WindowDeactivate
+	// che lascia la finestra disattivata. In caso di "Pause when in background" attivo
+	// il gui_control_pause_bck non riprende l'emulazione pensando appunto di essere in background.
+	no_gui_control_pause_bck = true;
+ 	hide();
+	no_gui_control_pause_bck = false;
+
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
 		gfx.scale_before_fscreen = cfg->scale;
 		geom = geometry();
-		if (cfg->fullscreen_in_window == FALSE) {
-			hide();
 #if defined (FULLSCREEN_RESFREQ)
+		if (cfg->fullscreen_in_window == FALSE) {
 			delay = gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, FALSE);
-#endif
 		}
 	} else {
 		if (gfx.type_of_fscreen_in_use == FULLSCR) {
-			hide();
-#if defined (FULLSCREEN_RESFREQ)
 #if defined(_WIN32)
 			// su alcuni monitor se il s_prepare_fullscreen e' eseguito dopo il delay, non viene
 			// ripristinata correttamente la finestra non visualizzando la cornice di windows.
@@ -1582,8 +1592,13 @@ void mainWindow::s_fullscreen(bool state) {
 				show();
 			}
 		} else {
+#if defined(_WIN32)
 			move(mgeom.x(), mgeom.y());
 			showFullScreen();
+#else
+			showFullScreen();
+			move(mgeom.x(), mgeom.y());
+#endif
 		}
 	} else {
 		showNormal();

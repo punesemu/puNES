@@ -130,6 +130,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		QTranslator *qtTranslator;
 		bool toggle_gui_in_window;
 		bool fullscreen_in_window_dekstop_resolution;
+		bool no_gui_control_pause_bck;
 		QRect geom, mgeom;
 
 	public:
