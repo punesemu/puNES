@@ -997,8 +997,8 @@ void mainWindow::s_set_fullscreen(void) {
 			// su Linux e BSD e' importante il delay per i motivi spiegati sotto.
 			delay = gfx_monitor_restore_res();
 #endif
-#endif
 		}
+#endif
 	}
 	if (delay == TRUE) {
 		// se avvio la modalita' fullscreen dopo un cambio di risoluzione, senza questo ritardo
