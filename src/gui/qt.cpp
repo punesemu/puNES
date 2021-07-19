@@ -73,6 +73,8 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "d3d9.h"
 #endif
 
+static void gui_is_in_desktop(int *x, int *y);
+
 static struct _qt {
 	QApplication *app;
 	mainWindow *mwin;
@@ -137,19 +139,9 @@ BYTE gui_create(void) {
 
 	gfx.device_pixel_ratio = qt.screen->devicePixelRatioF();
 
-	{
-		QRect geometry = QGuiApplication::primaryScreen()->virtualGeometry();
-
-		if ((cfg->lg.x == 0) || cfg->lg.x > geometry.width()) {
-			cfg->lg.x = 80;
-			cfg->lg_settings.x = 80;
-		}
-		if ((cfg->lg.y == 0) || cfg->lg.y > geometry.height()) {
-			cfg->lg.y = 80;
-			cfg->lg_settings.y = 80;
-		}
-		qt.mwin->setGeometry(cfg->lg.x, cfg->lg.y, 0, 0);
-	}
+	gui_is_in_desktop(&cfg->lg.x, &cfg->lg.y);
+	gui_is_in_desktop(&cfg->lg_settings.x, &cfg->lg_settings.y);
+	qt.mwin->setGeometry(cfg->lg.x, cfg->lg.y, 0, 0);
 
 	qt.mwin->show();
 
@@ -636,3 +628,31 @@ unsigned int gui_hardware_concurrency(void) {
 #elif defined (_WIN32)
 #include "os_windows.h"
 #endif
+
+static void gui_is_in_desktop(int *x, int *y) {
+	QList<QScreen *> screens = QGuiApplication::screens();
+	int i, x_min = 0, x_max = 0, y_min = 0, y_max = 0;
+
+	for (i = 0; i < screens.count(); i++) {
+		QRect g = screens[i]->availableGeometry();
+
+		if (g.x() < x_min) {
+			x_min = g.x();
+		}
+		if ((g.x() + g.width()) > x_max) {
+			x_max = g.x() + g.width();
+		}
+		if (g.y() < y_min) {
+			y_min = g.y();
+		}
+		if ((g.y() + g.height()) > y_max) {
+			y_max = g.y() + g.height();
+		}
+	}
+	if (((*x) == 0) || ((*x) < x_min) || ((*x) > x_max)) {
+		(*x) = 80;
+	}
+	if (((*y) == 0) || ((*y) < y_min) || ((*y) > y_max)) {
+		(*y) = 80;
+	}
+}
