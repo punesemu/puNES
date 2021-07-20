@@ -89,6 +89,10 @@
         <source>Recording</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Toggle the Menu Bar in Fullscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>dlgStdPad</name>
@@ -1518,10 +1522,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Input Settings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1619,6 +1619,10 @@
     </message>
     <message>
         <source>Standard Pads on Port3 and Port4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Press a key - timeout in %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

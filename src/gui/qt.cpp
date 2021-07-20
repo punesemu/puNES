@@ -210,8 +210,6 @@ void gui_set_window_size(void) {
 	int w = qt.screen->width(), h = qt.screen->height();
 	bool toolbar = qt.mwin->toolbar->isHidden() | qt.mwin->toolbar->isFloating();
 
-	w = qt.screen->width();
-
 	if (qt.mwin->toolbar->orientation() == Qt::Vertical) {
 		w += (toolbar ? 0 : qt.mwin->toolbar->sizeHint().width());
 	} else {
@@ -221,10 +219,27 @@ void gui_set_window_size(void) {
 	h += (qt.mwin->menubar->isHidden() ? 0 : qt.mwin->menubar->sizeHint().height());
 	h += (qt.mwin->statusbar->isHidden() ? 0 : qt.mwin->statusbar->sizeHint().height());
 
+#if defined (_WIN32) && defined(WITH_OPENGL)
+		// when a window is using an OpenGL based surface and is appearing in full screen mode,
+		// problems can occur with other top-level windows which are part of the application. Due
+		// to limitations of the Windows DWM, compositing is not handled correctly for OpenGL based
+		// windows when going into full screen mode. As a result, other top-level windows are not
+		// placed on top of the full screen window when they are made visible. For example, menus
+		// may not appear correctly, or dialogs fail to show up.
+		// https://doc.qt.io/qt-5/windows-issues.html#fullscreen-opengl-based-windows
+		// https://bugreports.qt.io/browse/QTBUG-49258
+		// https://bugreports.qt.io/browse/QTBUG-47156
+		// come workaround incremento di 1 l'altezza del mainWindow e non utilizzo il
+		// showFullScreen ma lo simulo.
+		if (gfx.type_of_fscreen_in_use == FULLSCR) {
+			h += 1;
+		}
+#endif
+
 	qt.mwin->setFixedSize(QSize(w, h));
 
 	qt.mwin->menubar->setFixedWidth(w);
-	qt.mwin->statusbar->update_width(w);
+	qt.mwin->statusbar->setFixedWidth(w);
 }
 
 void gui_set_save_slot_tooltip(BYTE slot, char *buffer) {

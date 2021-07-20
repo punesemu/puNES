@@ -100,6 +100,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			QAction *interpolation;
 			QAction *integer_in_fullscreen;
 			QAction *stretch_in_fullscreen;
+			QAction *toggle_menubar_in_fullscreen;
 			QAction *audio_enable;
 			QAction *save_settings;
 			struct _qaction_shcut_extern_rwnd {
@@ -125,10 +126,13 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			_js_sch sch;
 			DBWORD shortcut[SET_MAX_NUM_SC];
 		} shcjoy;
+		struct _visibility {
+			bool menubar;
+			bool toolbars;
+		} visibility;
 		QShortcut *shortcut[SET_MAX_NUM_SC];
 		QTranslator *translator;
 		QTranslator *qtTranslator;
-		bool toggle_gui_in_window;
 		bool fullscreen_in_window_dekstop_resolution;
 		bool no_gui_control_pause_bck;
 		QRect geom, mgeom;
@@ -170,6 +174,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		bool is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event);
 		void update_gfx_monitor_dimension(void);
 		void set_save_slot_tooltip(BYTE slot, char *buffer);
+		void toggle_toolbars(void);
 
 	private:
 		void connect_menu_signals(void);
@@ -242,6 +247,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_shcut_rwnd_pause(void);
 		void s_shcut_rwnd_fast_forward(void);
 		void s_shcut_rwnd_step_forward(void);
+		void s_shcut_toggle_menubar(void);
 
 	private slots:
 		void s_et_gg_reset(void);

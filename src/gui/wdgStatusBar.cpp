@@ -62,9 +62,6 @@ void wdgStatusBar::showEvent(QShowEvent *event) {
 void wdgStatusBar::update_statusbar(void) {
 	info->update_label();
 }
-void wdgStatusBar::update_width(int w) {
-	setFixedWidth(w);
-}
 
 // ---------------------------------- Info --------------------------------------------
 

@@ -453,7 +453,7 @@ bool wdgSettingsInput::shortcut_keypressEvent(QKeyEvent *event) {
 			return (true);
 		}
 
-		if (event->key() != Qt::Key_Escape) {
+		if ((event->key() != Qt::Key_Escape) || (event->modifiers() != Qt::MetaModifier)) {
 			QString key = QKeySequence(event->key()).toString(QKeySequence::PortableText);
 
 			switch (event->modifiers()) {
@@ -476,8 +476,7 @@ bool wdgSettingsInput::shortcut_keypressEvent(QKeyEvent *event) {
 			mainwin->shortcuts();
 		}
 	} else {
-		// quando sto configurando il joystick, l'unico input da tastiera che accetto e' l'escape
-		if (event->key() != Qt::Key_Escape) {
+		if ((event->key() != Qt::Key_Escape) || (event->modifiers() != Qt::MetaModifier)) {
 			return (true);
 		}
 		shcut.joy.timer->stop();
@@ -787,6 +786,7 @@ void wdgSettingsInput::shortcuts_set(void) {
 	shortcut_update_text(mainwin->qaction_shcut.interpolation, SET_INP_SC_INTERPOLATION);
 	shortcut_update_text(mainwin->qaction_shcut.integer_in_fullscreen, SET_INP_SC_INTEGER_FULLSCREEN);
 	shortcut_update_text(mainwin->qaction_shcut.stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN);
+	shortcut_update_text(mainwin->qaction_shcut.toggle_menubar_in_fullscreen, SET_INP_SC_TOGGLE_MENUBAR_IN_FULLSCREEN);
 	shortcut_update_text(mainwin->qaction_shcut.audio_enable, SET_INP_SC_AUDIO_ENABLE);
 	shortcut_update_text(mainwin->qaction_shcut.save_settings, SET_INP_SC_SAVE_SETTINGS);
 	shortcut_update_text(mainwin->action_Save_state, SET_INP_SC_SAVE_STATE);
@@ -991,11 +991,10 @@ void wdgSettingsInput::s_shortcut_joy_unset(UNUSED(bool checked)) {
 	settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(row), row + SET_INP_SC_OPEN, JOYSTICK);
 }
 void wdgSettingsInput::s_input_timeout(void) {
-	input_info_print(tr("Press a key (ESC for the previous value \"%1\") - timeout in %2").arg(shcut.text[shcut.type].at(shcut.row),
-		QString::number(shcut.timeout.seconds--)));
+	input_info_print(tr("Press a key - timeout in %1").arg(QString::number(shcut.timeout.seconds--)));
 
 	if (shcut.timeout.seconds < 0) {
-		QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Escape, Qt::NoModifier);
+		QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Escape, Qt::MetaModifier);
 
 		QCoreApplication::postEvent(shcut.bp, event);
 	}

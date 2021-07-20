@@ -32,6 +32,7 @@
 #include <libgen.h>
 #include "mainWindow.moc"
 #include "dlgSettings.hpp"
+#include "wdgMenuBar.hpp"
 #include "common.h"
 #include "emu_thread.h"
 #include "clock.h"
@@ -86,14 +87,17 @@ mainWindow::mainWindow() : QMainWindow() {
 	translator = new QTranslator();
 	qtTranslator = new QTranslator();
 	shcjoy.timer = new QTimer(this);
-	toggle_gui_in_window = true;
 	fullscreen_in_window_dekstop_resolution = false;
 	no_gui_control_pause_bck = false;
+	visibility.menubar = true;
+	visibility.toolbars = true;
 
 	setWindowIcon(QIcon(":icon/icons/application.png"));
 	setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
 	setStatusBar(statusbar);
 
+	// non voglio visualizzare il contexmenu del menu per nascondere la toolbar
+	setContextMenuPolicy(Qt::NoContextMenu);
 	toolbar->setObjectName("toolbar");
 	toolbar->setWindowTitle(tr("Widgets"));
 	addToolBar(toolbar->area, toolbar);
@@ -116,6 +120,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	qaction_shcut.interpolation = new QAction(this);
 	qaction_shcut.integer_in_fullscreen = new QAction(this);
 	qaction_shcut.stretch_in_fullscreen = new QAction(this);
+	qaction_shcut.toggle_menubar_in_fullscreen = new QAction(this);
 	qaction_shcut.audio_enable = new QAction(this);
 	qaction_shcut.save_settings = new QAction(this);
 	qaction_shcut.rwnd.active = new QAction(this);
@@ -178,6 +183,9 @@ mainWindow::mainWindow() : QMainWindow() {
 	setFixedSize(size());
 
 	installEventFilter(this);
+
+	toolbar->setHidden(cfg->toolbar.hidden);
+	statusbar->setHidden(cfg->toolbar.hidden);
 
 	set_language(cfg->language);
 }
@@ -562,6 +570,7 @@ void mainWindow::shortcuts(void) {
 	// State/[Incremente slot, Decrement slot]
 	connect_shortcut(action_Increment_slot, SET_INP_SC_INC_SLOT, SLOT(s_state_save_slot_incdec()));
 	connect_shortcut(action_Decrement_slot, SET_INP_SC_DEC_SLOT, SLOT(s_state_save_slot_incdec()));
+
 	// Rewind operations
 	connect_shortcut(qaction_shcut.rwnd.active, SET_INP_SC_RWND_ACTIVE_MODE, SLOT(s_shcut_rwnd_active_deactive_mode()));
 	connect_shortcut(qaction_shcut.rwnd.step_backward, SET_INP_SC_RWND_STEP_BACKWARD, SLOT(s_shcut_rwnd_step_backward()));
@@ -570,6 +579,9 @@ void mainWindow::shortcuts(void) {
 	connect_shortcut(qaction_shcut.rwnd.fast_forward, SET_INP_SC_RWND_FAST_FORWARD, SLOT(s_shcut_rwnd_fast_forward()));
 	connect_shortcut(qaction_shcut.rwnd.play, SET_INP_SC_RWND_PLAY, SLOT(s_shcut_rwnd_play()));
 	connect_shortcut(qaction_shcut.rwnd.pause, SET_INP_SC_RWND_PAUSE, SLOT(s_shcut_rwnd_pause()));
+
+	// Toggle Menubar
+	connect_shortcut(qaction_shcut.toggle_menubar_in_fullscreen, SET_INP_SC_TOGGLE_MENUBAR_IN_FULLSCREEN, SLOT(s_shcut_toggle_menubar()));
 }
 bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) {
 	int shcut = is_shortcut(event);
@@ -620,6 +632,18 @@ void mainWindow::set_save_slot_tooltip(BYTE slot, char *buffer) {
 
 	action->setToolTip(tooltip);
 	toolbar->state->set_tooltip(slot, tooltip);
+}
+void mainWindow::toggle_toolbars(void) {
+	bool visibility = !toolbar->isVisible();
+
+	emu_thread_pause();
+
+	toolbar->setVisible(visibility);
+	statusbar->setVisible(visibility);
+	update_gfx_monitor_dimension();
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+
+	emu_thread_continue();
 }
 
 void mainWindow::connect_menu_signals(void) {
@@ -703,6 +727,7 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(qaction_shcut.interpolation, SLOT(s_shcut_interpolation()));
 	connect_action(qaction_shcut.integer_in_fullscreen, SLOT(s_shcut_integer_in_fullscreen()));
 	connect_action(qaction_shcut.stretch_in_fullscreen, SLOT(s_shcut_stretch_in_fullscreen()));
+	connect_action(qaction_shcut.toggle_menubar_in_fullscreen, SLOT(s_shcut_toggle_menubar()));
 	connect_action(qaction_shcut.audio_enable, SLOT(s_shcut_audio_enable()));
 	connect_action(qaction_shcut.save_settings, SLOT(s_shcut_save_settings()));
 	connect_action(qaction_shcut.rwnd.active, SLOT(s_shcut_rwnd_active_deactive_mode()));
@@ -962,6 +987,7 @@ void mainWindow::reset_min_max_size(void) {
 
 void mainWindow::s_set_fullscreen(void) {
 	BYTE delay = FALSE;
+	bool startfs = false;
 
 	if (gui.in_update) {
 		return;
@@ -978,9 +1004,15 @@ void mainWindow::s_set_fullscreen(void) {
 	// il gui_control_pause_bck non riprende l'emulazione pensando appunto di essere in background.
 	no_gui_control_pause_bck = true;
 
+	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
+		startfs = true;
+		visibility.menubar = menubar->isVisible();
+		visibility.toolbars = toolbar->isVisible();
+	}
+
 	hide();
 
-	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
+	if (startfs) {
 		gfx.scale_before_fscreen = cfg->scale;
 		geom = geometry();
 #if defined (FULLSCREEN_RESFREQ)
@@ -1005,7 +1037,10 @@ void mainWindow::s_set_fullscreen(void) {
 		// e' possibile che le QT mi passino informazioni non corrette sulle dimensioni del
 		// desktop e che le decorazioni della finestra non appaiano correttamente (problema
 		// riscontrato sotto Linux e BSD).
-		QTimer::singleShot(250, this, SLOT(s_prepare_fullscreen(void)));
+		// Usare un delay di 1000 ms perche' sotto windows (versione OpenGL) non mi crea problemi
+		// quando viene visualizzata la menu bar. Con un valore inferiore, quando effettuo lo switch
+		// a risoluzioni basse, non mi visualizza i submenu.
+		QTimer::singleShot(1000, this, SLOT(s_prepare_fullscreen(void)));
 	} else {
 		s_prepare_fullscreen();
 	}
@@ -1335,16 +1370,24 @@ void mainWindow::s_fast_forward(void) {
 	}
 }
 void mainWindow::s_toggle_gui_in_window(void) {
+	bool visibility;
+
 	if (gfx.type_of_fscreen_in_use == FULLSCR) {
 		return;
 	}
+
 	emu_thread_pause();
-	toggle_gui_in_window = !toggle_gui_in_window;
-	menuWidget()->setVisible(toggle_gui_in_window);
-	statusbar->setVisible(toggle_gui_in_window);
-	toolbar->set_hide_without_signal(toggle_gui_in_window);
+
+	visibility = !menubar->isVisible();
+	menubar->setVisible(visibility);
+	if (visibility == true) {
+		visibility = !cfg->toolbar.hidden;
+	}
+	toolbar->setVisible(visibility);
+	statusbar->setVisible(visibility);
 	update_gfx_monitor_dimension();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+
 	emu_thread_continue();
 }
 void mainWindow::s_open_settings(void) {
@@ -1567,24 +1610,30 @@ void mainWindow::s_prepare_fullscreen(void) {
 		} else {
 			gfx.type_of_fscreen_in_use = FULLSCR;
 			update_gfx_monitor_dimension();
-			menuWidget()->setVisible(false);
+			menubar->setVisible(false);
+			toolbar->setVisible(false);
 			statusbar->setVisible(false);
-			toolbar->set_hide_without_signal(false);
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 		}
 		emit fullscreen(true);
 	} else {
 		if (gfx.type_of_fscreen_in_use == FULLSCR) {
-			menuWidget()->setVisible(toggle_gui_in_window);
-			statusbar->setVisible(toggle_gui_in_window);
-			toolbar->set_hide_without_signal(toggle_gui_in_window);
+			menubar->setVisible(visibility.menubar);
+			statusbar->setVisible(visibility.toolbars);
+			toolbar->setVisible(visibility.toolbars);
 		}
-		gfx.type_of_fscreen_in_use = NO_FULLSCR;
 		emit fullscreen(false);
 	}
 }
 void mainWindow::s_fullscreen(bool state) {
+#if defined (_WIN32)
+	static Qt::WindowFlags window_flags = windowFlags();
+#endif
+
 	if (state == true) {
+#if defined (_WIN32)
+		window_flags = windowFlags();
+#endif
 		if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
 			if (fullscreen_in_window_dekstop_resolution == true) {
 				showMaximized();
@@ -1592,15 +1641,32 @@ void mainWindow::s_fullscreen(bool state) {
 				show();
 			}
 		} else {
-#if defined(_WIN32)
-			move(mgeom.x(), mgeom.y());
-			showFullScreen();
+#if defined (_WIN32)
+			// when a window is using an OpenGL based surface and is appearing in full screen mode,
+			// problems can occur with other top-level windows which are part of the application. Due
+			// to limitations of the Windows DWM, compositing is not handled correctly for OpenGL based
+			// windows when going into full screen mode. As a result, other top-level windows are not
+			// placed on top of the full screen window when they are made visible. For example, menus
+			// may not appear correctly, or dialogs fail to show up.
+			// https://doc.qt.io/qt-5/windows-issues.html#fullscreen-opengl-based-windows
+			// https://bugreports.qt.io/browse/QTBUG-49258
+			// https://bugreports.qt.io/browse/QTBUG-47156
+			// come workaround incremento di 1 l'altezza del mainWindow e non utilizzo il
+			// showFullScreen ma lo simulo. E' molto importante che in s_set_fullscreen il delay sia di
+			// almeno 1000 ms.
+			move(mgeom.x() - (geometry().x() - x()), mgeom.y() - (geometry().y() - y()));
+			setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+			showNormal();
 #else
 			showFullScreen();
 			move(mgeom.x(), mgeom.y());
 #endif
 		}
 	} else {
+		gfx.type_of_fscreen_in_use = NO_FULLSCR;
+#if defined (_WIN32)
+		setWindowFlags(window_flags);
+#endif
 		showNormal();
 		setGeometry(geom);
 		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
@@ -1712,6 +1778,9 @@ void mainWindow::s_shcjoy_read_timer(void) {
 							break;
 						case SET_INP_SC_STRETCH_FULLSCREEN:
 							qaction_shcut.stretch_in_fullscreen->trigger();
+							break;
+						case SET_INP_SC_TOGGLE_MENUBAR_IN_FULLSCREEN:
+							qaction_shcut.toggle_menubar_in_fullscreen->trigger();
 							break;
 						case SET_INP_SC_AUDIO_ENABLE:
 							qaction_shcut.audio_enable->trigger();
@@ -1831,6 +1900,17 @@ void mainWindow::s_shcut_rwnd_pause(void) {
 		return;
 	}
 	toolbar->rewind->toolButton_Pause->click();
+}
+void mainWindow::s_shcut_toggle_menubar(void) {
+	if (cfg->fullscreen != FULLSCR) {
+		return;
+	}
+
+	emu_thread_pause();
+
+	menubar->setVisible(!menubar->isVisible());
+
+	emu_thread_continue();
 }
 
 void mainWindow::s_et_gg_reset(void) {

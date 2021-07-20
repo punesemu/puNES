@@ -17,7 +17,7 @@
    <string notr="true">FHorse</string>
   </property>
   <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar">
+  <widget class="wdgMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -634,6 +634,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>wdgMenuBar</class>
+   <extends>QMenuBar</extends>
+   <header>wdgMenuBar.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="resources.qrc"/>
  </resources>

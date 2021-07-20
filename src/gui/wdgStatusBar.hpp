@@ -82,7 +82,6 @@ class wdgStatusBar : public QStatusBar {
 
 	public:
 		void update_statusbar(void);
-		void update_width(int w);
 };
 
 #endif /* WDGSTATUSBAR_HPP_ */

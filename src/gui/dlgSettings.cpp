@@ -66,6 +66,8 @@ void dlgSettings::hideEvent(QHideEvent *event) {
 
 void dlgSettings::retranslateUi(QDialog *dlgSettings) {
 	Ui::dlgSettings::retranslateUi(dlgSettings);
+
+	// Rewind operations
 	mainwin->qaction_shcut.save_settings->setText(pushButton_Save_Settings->text());
 	mainwin->qaction_shcut.rwnd.active->setText(tr("Rewind Mode On/Off"));
 	mainwin->qaction_shcut.rwnd.step_backward->setText(tr("Rewind Step Backward"));
@@ -74,6 +76,9 @@ void dlgSettings::retranslateUi(QDialog *dlgSettings) {
 	mainwin->qaction_shcut.rwnd.fast_forward->setText(tr("Rewind Fast Forward"));
 	mainwin->qaction_shcut.rwnd.play->setText(tr("Rewind Play"));
 	mainwin->qaction_shcut.rwnd.pause->setText(tr("Rewind Pause"));
+
+	// Toggle Menubar
+	mainwin->qaction_shcut.toggle_menubar_in_fullscreen->setText(tr("Toggle the Menu Bar in Fullscreen"));
 }
 void dlgSettings::update_dialog(void) {
 	update_tab_general();

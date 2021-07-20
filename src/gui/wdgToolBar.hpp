@@ -56,14 +56,12 @@ class wdgToolBar : public QToolBar {
 
 	public:
 		void update_toolbar(void);
-		void set_hide_without_signal(bool mode);
 		void rotate_setVisible(bool visible);
 		void state_setVisible(bool visible);
 		void rewind_setVisible(bool visible);
 
 	private slots:
 		void s_toplevel_changed(bool toplevel);
-		void s_visibility_changed(bool visibility);
 };
 
 #endif /* WDGTOOLBAR_HPP_ */

@@ -176,6 +176,7 @@ enum inp_element {
 	SET_INP_SC_INTERPOLATION,
 	SET_INP_SC_INTEGER_FULLSCREEN,
 	SET_INP_SC_STRETCH_FULLSCREEN,
+	SET_INP_SC_TOGGLE_MENUBAR_IN_FULLSCREEN,
 	SET_INP_SC_AUDIO_ENABLE,
 	SET_INP_SC_SAVE_SETTINGS,
 	SET_INP_SC_SAVE_STATE,
@@ -1179,9 +1180,9 @@ static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("insert coin"),                   uL("8,NULL"),          NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("switch sides"),                  uL("Alt+S,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("eject disk"),                    uL("Alt+E,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("start or stop audio recording"), uL("CTRL+A,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("start or stop audio recording"), uL("CTRL+A,NULL"),     NULL, NULL, {0, NULL}},
 #if defined (WITH_FFMPEG)
-	{uL("shortcuts"), uL("start or stop video recording"), uL("CTRL+V,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("start or stop video recording"), uL("CTRL+V,NULL"),     NULL, NULL, {0, NULL}},
 #endif
 	{uL("shortcuts"), uL("video fullscreen"),              uL("Alt+Return,NULL"), NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("save screenshot"),               uL("Alt+X,NULL"),      NULL, NULL, {0, NULL}},
@@ -1202,6 +1203,7 @@ static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("video interpolation"),           uL("0,NULL"),          NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("integer scaling fullscreen"),    uL("Alt+L,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("stretch fullscreen"),            uL("Alt+P,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("toggle menubar in fullscreen"),  uL("Alt+M,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("audio enable"),                  uL("Alt+A,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("save settings"),                 uL("Alt+W,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("save state"),                    uL("F1,NULL"),         NULL, NULL, {0, NULL}},

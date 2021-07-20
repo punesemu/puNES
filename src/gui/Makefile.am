@@ -231,6 +231,8 @@ libgui_a_SOURCES = \
 	wdgAPUChannels.hpp \
 	wdgCheatsEditor.cpp \
 	wdgCheatsEditor.hpp \
+	wdgMenuBar.cpp \
+	wdgMenuBar.hpp \
 	wdgOverlayUi.cpp \
 	wdgOverlayUi.hpp \
 	wdgPaletteEditor.cpp \

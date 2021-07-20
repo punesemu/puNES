@@ -51,8 +51,6 @@ wdgToolBar::wdgToolBar(QWidget *parent) : QToolBar(parent) {
 	action_rewind.separator = addSeparator();
 	action_rewind.widget = addWidget(rewind);
 
-	setHidden(cfg->toolbar.hidden);
-
 	switch (cfg->toolbar.area) {
 		default:
 		case TLB_TOP:
@@ -70,7 +68,6 @@ wdgToolBar::wdgToolBar(QWidget *parent) : QToolBar(parent) {
 	}
 
 	connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(s_toplevel_changed(bool)));
-	connect(this, SIGNAL(visibilityChanged(bool)), this, SLOT(s_visibility_changed(bool)));
 
 	installEventFilter(this);
 }
@@ -109,12 +106,7 @@ void wdgToolBar::update_toolbar(void) {
 	rewind->setEnabled(rwnd);
 	rotate->update_widget();
 }
-void wdgToolBar::set_hide_without_signal(bool mode) {
-	if (cfg->toolbar.hidden == TRUE) {
-		mode = false;
-	}
-	qtHelper::widget_set_visible(this, mode);
-}
+
 void wdgToolBar::rotate_setVisible(bool visible) {
 	if (action_rotate.separator) {
 		action_rotate.separator->setVisible(visible);
@@ -159,22 +151,5 @@ void wdgToolBar::s_toplevel_changed(UNUSED(bool toplevel)) {
 
 	if (mouse_pressed == false) {
 		gui_set_window_size();
-	}
-}
-void wdgToolBar::s_visibility_changed(bool visibility) {
-	if (info.stop == TRUE) {
-		return;
-	}
-
-	if (mouse_pressed == false) {
-		if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
-			emu_thread_pause();
-			mainwin->update_gfx_monitor_dimension();
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
-			emu_thread_continue();
-		} else {
-			gui_set_window_size();
-		}
-		cfg->toolbar.hidden = (BYTE)!visibility;
 	}
 }
