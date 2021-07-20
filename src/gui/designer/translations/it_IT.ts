@@ -89,6 +89,10 @@
       <source>Recording</source>
       <translation>Registrazione</translation>
     </message>
+    <message>
+      <source>Toggle the Menu Bar in Fullscreen</source>
+      <translation type="unfinished">Toggle the Menu Bar in Fullscreen</translation>
+    </message>
   </context>
   <context>
     <name>dlgStdPad</name>
@@ -1518,10 +1522,6 @@
       <translation>Errore nella lettura della configurazione del controller</translation>
     </message>
     <message>
-      <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
-      <translation>Premi un tasto (ESC per il valore precedente &quot;%1&quot;) - timeout in %2</translation>
-    </message>
-    <message>
       <source>Input Settings</source>
       <translation>Configurazione Input</translation>
     </message>
@@ -1620,6 +1620,10 @@
     <message>
       <source>Standard Pads on Port3 and Port4</source>
       <translation>Pads Standard su Port3 e Port4</translation>
+    </message>
+    <message>
+      <source>Press a key - timeout in %1</source>
+      <translation type="unfinished">Press a key - timeout in %1</translation>
     </message>
   </context>
   <context>
