@@ -1405,6 +1405,7 @@ void mainWindow::s_open_settings(void) {
 	dlgsettings->tabWidget_Settings->setCurrentIndex(index);
 	dlgsettings->setGeometry(dlgsettings->geom);
 	dlgsettings->show();
+	dlgsettings->activateWindow();
 }
 void mainWindow::s_state_save_slot_action(void) {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -1568,6 +1569,7 @@ void mainWindow::s_help(void) {
 	about->setDefaultButton(QMessageBox::Ok);
 
 	about->show();
+	about->activateWindow();
 	about->exec();
 
 	emu_pause(FALSE);
