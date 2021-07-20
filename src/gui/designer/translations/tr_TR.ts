@@ -89,6 +89,10 @@
       <source>Recording</source>
       <translation>Kayıt</translation>
     </message>
+    <message>
+      <source>Toggle the Menu Bar in Fullscreen</source>
+      <translation type="unfinished">Toggle the Menu Bar in Fullscreen</translation>
+    </message>
   </context>
   <context>
     <name>dlgStdPad</name>
@@ -1518,10 +1522,6 @@
       <translation>Denetleyici yapılandırmalarını okuma hatası</translation>
     </message>
     <message>
-      <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
-      <translation>Bir tuşa basın (&quot;%1&quot; önceki değere dönmek için ESC basın) - %2 içinde zamanaşımı</translation>
-    </message>
-    <message>
       <source>Input Settings</source>
       <translation>Giriş ayarları</translation>
     </message>
@@ -1620,6 +1620,10 @@
     <message>
       <source>Standard Pads on Port3 and Port4</source>
       <translation>Port3 ve Port4'teki Standart Kumandalar</translation>
+    </message>
+    <message>
+      <source>Press a key - timeout in %1</source>
+      <translation type="unfinished">Press a key - timeout in %1</translation>
     </message>
   </context>
   <context>
