@@ -89,6 +89,10 @@
       <source>Recording</source>
       <translation>Felvétel</translation>
     </message>
+    <message>
+      <source>Toggle the Menu Bar in Fullscreen</source>
+      <translation type="unfinished">Toggle the Menu Bar in Fullscreen</translation>
+    </message>
   </context>
   <context>
     <name>dlgStdPad</name>
@@ -1518,10 +1522,6 @@
       <translation>Hiba a kontrollerek beállításának olvasásakor</translation>
     </message>
     <message>
-      <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
-      <translation>Nyomj egy gombot (ESC-et az előző értékhez: &quot;%1&quot;) - kihagyás %2 mp múlva</translation>
-    </message>
-    <message>
       <source>Input Settings</source>
       <translation>Beviteli beállítások</translation>
     </message>
@@ -1620,6 +1620,10 @@
     <message>
       <source>Standard Pads on Port3 and Port4</source>
       <translation>Szabvány pad-ek a Port 3-on és Port 4-en</translation>
+    </message>
+    <message>
+      <source>Press a key - timeout in %1</source>
+      <translation type="unfinished">Press a key - timeout in %1</translation>
     </message>
   </context>
   <context>
