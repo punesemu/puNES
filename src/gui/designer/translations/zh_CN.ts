@@ -89,6 +89,10 @@
       <source>Recording</source>
       <translation>录制</translation>
     </message>
+    <message>
+      <source>Toggle the Menu Bar in Fullscreen</source>
+      <translation type="unfinished">Toggle the Menu Bar in Fullscreen</translation>
+    </message>
   </context>
   <context>
     <name>dlgStdPad</name>
@@ -1518,10 +1522,6 @@
       <translation>读取控制器配置时错误</translation>
     </message>
     <message>
-      <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
-      <translation>请按键 (按 ESC 恢复成 &quot;%1&quot;) - 剩余 %2 秒</translation>
-    </message>
-    <message>
       <source>Input Settings</source>
       <translation>输入设置</translation>
     </message>
@@ -1620,6 +1620,10 @@
     <message>
       <source>Standard Pads on Port3 and Port4</source>
       <translation>接口 3、4 标准手柄</translation>
+    </message>
+    <message>
+      <source>Press a key - timeout in %1</source>
+      <translation type="unfinished">Press a key - timeout in %1</translation>
     </message>
   </context>
   <context>
