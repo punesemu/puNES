@@ -138,7 +138,7 @@
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
-      <translation>Presione una tecla (ESC para el valor anterior &quot;%1&quot;)</translation>
+      <translation>Presiona una tecla (ESC para el valor anterior &quot;%1&quot;)</translation>
     </message>
     <message>
       <source>Standard Pad</source>
@@ -2318,7 +2318,7 @@
     </message>
     <message>
       <source>Desktop resolution</source>
-      <translation type="unfinished">Desktop resolution</translation>
+      <translation>Resolución del escritorio</translation>
     </message>
     <message>
       <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
@@ -2326,7 +2326,7 @@
     </message>
     <message>
       <source>Fullscreen</source>
-      <translation type="unfinished">Fullscreen</translation>
+      <translation>Pantalla completa</translation>
     </message>
     <message>
       <source>* applied if supported by the monitor</source>
@@ -2338,7 +2338,7 @@
     </message>
     <message>
       <source>Preferred resolution </source>
-      <translation type="unfinished">Preferred resolution </translation>
+      <translation>Resolución preferida</translation>
     </message>
   </context>
   <context>
