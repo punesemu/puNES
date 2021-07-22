@@ -91,7 +91,7 @@
     </message>
     <message>
       <source>Toggle the Menu Bar in Fullscreen</source>
-      <translation type="unfinished">Toggle the Menu Bar in Fullscreen</translation>
+      <translation>Cambiar barra de menú a pantalla completa</translation>
     </message>
   </context>
   <context>
@@ -866,12 +866,12 @@
     <message>
       <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</translation>
+      <translation>[red]errores[normal] en el sombreado, usar [green]&apos;Sin sombreados&apos;[cyan]</translation>
     </message>
     <message>
       <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</translation>
+      <translation>cambiar [cyan]%1x%2[normal] a [green]%3Hz[normal]</translation>
     </message>
   </context>
   <context>
@@ -1199,11 +1199,11 @@
     <name>wdgRotateScreen</name>
     <message>
       <source>Rotate the screen 90 degrees to the Right</source>
-      <translation>Rotar la pantalla 90 grados a la derecha</translation>
+      <translation>Rotar pantalla 90 grados a la derecha</translation>
     </message>
     <message>
       <source>Rotate the screen 90 degrees to the left</source>
-      <translation>Rotar la pantalla 90 grados a la izquierda</translation>
+      <translation>Rotar pantalla 90 grados a la izquierda</translation>
     </message>
     <message>
       <source>Current degree of rotation</source>
@@ -1623,7 +1623,7 @@
     </message>
     <message>
       <source>Press a key - timeout in %1</source>
-      <translation type="unfinished">Press a key - timeout in %1</translation>
+      <translation>Presiona una tecla - tiempo de espera en %1</translation>
     </message>
   </context>
   <context>
@@ -1851,7 +1851,7 @@
     </message>
     <message>
       <source>Use the emulator resolution</source>
-      <translation>Usar la resolución del emulador</translation>
+      <translation>Usar resolución del emulador</translation>
     </message>
     <message>
       <source>Follow screen rotation</source>
@@ -2322,7 +2322,7 @@
     </message>
     <message>
       <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
-      <translation type="unfinished">Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
+      <translation>Adaptar frecuencia de actualización a la región (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
     </message>
     <message>
       <source>Fullscreen</source>
@@ -2330,11 +2330,11 @@
     </message>
     <message>
       <source>* applied if supported by the monitor</source>
-      <translation type="unfinished">* applied if supported by the monitor</translation>
+      <translation>* se aplica si es compatible con el monitor</translation>
     </message>
     <message>
       <source>Use integer scaling</source>
-      <translation type="unfinished">Use integer scaling</translation>
+      <translation>Usar escala de enteros</translation>
     </message>
     <message>
       <source>Preferred resolution </source>
