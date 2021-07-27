@@ -51,6 +51,10 @@ BYTE gui_monitor_enum_monitors(void) {
 		XRRCrtcInfo *ci = XRRGetCrtcInfo(display, sr, sr->crtcs[crtc]);
 		int output;
 
+		if (ci == NULL) {
+			continue;
+		}
+
 		for (output = 0; output < ci->noutput; ++output) {
 			XRROutputInfo *oi = XRRGetOutputInfo(display, sr, ci->outputs[output]);
 
