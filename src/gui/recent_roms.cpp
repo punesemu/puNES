@@ -120,7 +120,11 @@ void recent_roms_parse(void) {
 	}
 
 	QTextStream in(&recent);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	in.setCodec("UTF-8");
+#else
+	in.setEncoding(QStringEncoder::Utf8);
+#endif
 
 	while (in.atEnd() == false) {
 		// elimino il ritorno a capo
@@ -164,7 +168,11 @@ void recent_roms_save(void) {
 	}
 
 	QTextStream out(&recent);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	out.setCodec("UTF-8");
+#else
+	out.setEncoding(QStringEncoder::Utf8);
+#endif
 	out.setGenerateByteOrderMark(false);
 
 	for (index = 0; index < RECENT_ROMS_MAX; index++) {

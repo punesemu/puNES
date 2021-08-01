@@ -26,7 +26,11 @@
 // nested #include nella versione Windows
 #include "win.h"
 #endif
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QtWidgets/QOpenGLWidget>
+#else
+#include <QtOpenGLWidgets/QOpenGLWidget>
+#endif
 #include <QtCore/QElapsedTimer>
 
 class wdgOpenGL : public QOpenGLWidget {

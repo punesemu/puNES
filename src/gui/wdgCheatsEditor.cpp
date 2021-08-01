@@ -745,7 +745,7 @@ hexSpinBox::hexSpinBox(QWidget *parent, int dgts = 4) : QSpinBox(parent) {
 
 	setFocusPolicy(Qt::StrongFocus);
 
-	validator = new QRegExpValidator(QRegExp("[0-9A-Fa-f]{1,8}"), this);
+	validator = new QRegularExpressionValidator(QRegularExpression("[0-9A-Fa-f]{1,8}"), this);
 
 	installEventFilter(this);
 }

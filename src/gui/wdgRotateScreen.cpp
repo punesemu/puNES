@@ -49,7 +49,7 @@ void wdgRotateScreen::paintEvent(UNUSED(QPaintEvent *event)) {
 	QStyleOption opt;
 	QPainter p(this);
 
-	opt.init(this);
+	opt.initFrom(this);
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 

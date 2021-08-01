@@ -32,7 +32,6 @@ wdgStatusBar::wdgStatusBar(QWidget *parent) : QStatusBar(parent) {
 	setSizeGripEnabled(false);
 
 	layout()->setContentsMargins(QMargins(0,0,0,0));
-	layout()->setMargin(0);
 	layout()->setSpacing(0);
 
 	//setStyleSheet("QStatusBar::item { border: 1px solid; border-radius: 3px; } ");
@@ -68,7 +67,6 @@ void wdgStatusBar::update_statusbar(void) {
 infoStatusBar::infoStatusBar(QWidget *parent) : QWidget(parent) {
 	hbox = new QHBoxLayout(this);
 	hbox->setContentsMargins(QMargins(0,0,0,0));
-	hbox->setMargin(0);
 	hbox->setSpacing(SPACING);
 
 	setLayout(hbox);
@@ -120,7 +118,6 @@ recStatusBar::recStatusBar(QWidget *parent) : QFrame(parent) {
 	setFrameShadow(QFrame::Sunken);
 
 	layout->setContentsMargins(QMargins(0,0,0,0));
-	layout->setMargin(0);
 
 	desc = new QLabel();
 	layout->addWidget(desc);

@@ -23,6 +23,9 @@
 #else
 #include <QtGui/QWindow>
 #endif
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QtGui/QActionGroup>
+#endif
 #include <QtWidgets/QSpinBox>
 #include <QtGui/QScreen>
 #include <QtCore/QDateTime>
@@ -961,7 +964,12 @@ int mainWindow::is_shortcut(const QKeyEvent *event) {
 	int i;
 
 	for (i = 0; i < SET_MAX_NUM_SC; i++) {
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 		if ((unsigned int)shortcut[i]->key()[0] == (event->key() | event->modifiers())) {
+#else
+		if (shortcut[i]->key()[0] == event->keyCombination()) {
+#endif
 			return (i);
 		}
 	}
@@ -1549,7 +1557,14 @@ void mainWindow::s_help(void) {
 	text.append("<center><h4>[<font color='#800000'>Commit " + QString(GIT_COUNT_COMMITS) + "</font> " + "<a href=\"https://github.com/punesemu/puNES/commit/" + QString(GIT_LAST_COMMIT_HASH) + "\">" + QString(GIT_LAST_COMMIT) + "</a>]</h4></center>");
 #endif
 	text.append("<center>" + tr("Nintendo Entertainment System Emulator") + "</center>");
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	text.append("<center>" + tr("Compiled") + " " + compiled.toString(Qt::DefaultLocaleShortDate) + " (" + QString(ENVIRONMENT));
+#else
+	text.append("<center>" + tr("Compiled") + " " + QLocale().toString(compiled, QLocale::ShortFormat) + " (" + QString(ENVIRONMENT));
+#endif
+
+
 #if defined (WITH_OPENGL)
 	text.append(", OpenGL)</center>");
 #elif defined (WITH_D3D9)

@@ -162,10 +162,10 @@ void objCheat::import_XML(QString file_XML) {
 			}
 
 			if (token == QXmlStreamReader::StartElement) {
-				if (xmlReader.name() == "cheats") {
+				if (xmlReader.name() == QString("cheats")) {
 					continue;
 				}
-				if (xmlReader.name() == "cheat") {
+				if (xmlReader.name() == QString("cheat")) {
 					chl_map cheat = parse_xml_cheat(xmlReader);
 
 					if ((cheat.count() > 0) && (find_cheat(&cheat, true) == -1)) {
@@ -188,7 +188,11 @@ void objCheat::import_CHT(QString file_CHT) {
 	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QTextStream in(file);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 		in.setCodec("UTF-8");
+#else
+		in.setEncoding(QStringEncoder::Utf8);
+#endif
 
 		while (!in.atEnd()) {
 			QStringList splitted = in.readLine().split(":");
@@ -263,9 +267,12 @@ void objCheat::save_XML(QString file_XML) {
 	if (!file->open(QIODevice::WriteOnly)) {
 		QMessageBox::warning(0, tr("Read only"), tr("The file is in read only mode"));
 	} else {
-		QXmlStreamWriter* xmlWriter = new QXmlStreamWriter(file);
+		QXmlStreamWriter *xmlWriter = new QXmlStreamWriter(file);
 
+		// with QT6 QXmlStreamWriter always encodes XML in UTF-8.
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 		xmlWriter->setCodec("UTF-8");
+#endif
 
 		xmlWriter->setAutoFormatting(true);
 
@@ -562,7 +569,7 @@ QString objCheat::encode_gg(_cheat *cheat) {
 chl_map objCheat::parse_xml_cheat(QXmlStreamReader &xml) {
 	chl_map cheat;
 
-	if (xml.tokenType() != QXmlStreamReader::StartElement && xml.name() == "cheat") {
+	if ((xml.tokenType() != QXmlStreamReader::StartElement) && (xml.name() == QString("cheat"))) {
 		return (cheat);
 	}
 
@@ -574,21 +581,21 @@ chl_map objCheat::parse_xml_cheat(QXmlStreamReader &xml) {
 
 	xml.readNext();
 
-	while (!(xml.tokenType() == QXmlStreamReader::EndElement && xml.name() == "cheat")) {
+	while (!((xml.tokenType() == QXmlStreamReader::EndElement) && (xml.name() == QString("cheat")))) {
 		if (xml.tokenType() == QXmlStreamReader::StartElement) {
-			if (xml.name() == "genie") {
+			if (xml.name() == QString("genie")) {
 				add_element_data_to_map(xml, cheat);
 			}
-			if (xml.name() == "rocky") {
+			if (xml.name() == QString("rocky")) {
 				add_element_data_to_map(xml, cheat);
 			}
-			if (xml.name() == "description") {
+			if (xml.name() == QString("description")) {
 				add_element_data_to_map(xml, cheat);
 			}
-			if (xml.name() == "address") {
+			if (xml.name() == QString("address")) {
 				add_element_data_to_map(xml, cheat);
 			}
-			if (xml.name() == "value") {
+			if (xml.name() == QString("value")) {
 				add_element_data_to_map(xml, cheat);
 			}
 		}

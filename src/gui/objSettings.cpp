@@ -18,6 +18,7 @@
 
 #include <QtCore/QStringList>
 #include <QtCore/QTextStream>
+#include <QtCore/QRegularExpression>
 #include "objSettings.moc"
 #include "clock.h"
 #include "save_slot.h"
@@ -1482,7 +1483,11 @@ void objInp::kbd_wr(int index, int pIndex) {
 	}
 }
 DBWORD objInp::kbd_name(QString name) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	DBWORD value = QKeySequence::fromString(name).operator[](0);
+#else
+	DBWORD value = QKeySequence::fromString(name).operator[](0).toCombined();
+#endif
 
 	for (unsigned int i = 0; i < LENGTH(kvSpecials); i++) {
 		if (name == kvSpecials[i].name) {
@@ -1677,7 +1682,11 @@ bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 	QTextStream in(&device);
 	const _list_settings *cfg = &list_settings[s.list];
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	in.setCodec("UTF-8");
+#else
+	in.setEncoding(QStringEncoder::Utf8);
+#endif
 
 	while (!in.atEnd()) {
 		QString line = in.readLine().remove("\n");
@@ -1694,7 +1703,7 @@ bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 			if (cfg->cfg) {
 				for (int b = 0; b < cfg->count; b++) {
 					// elimino eventuali spazi finali
-					key = QString(splitted.at(0)).replace(QRegExp("\\s*$"), "");
+					key = QString(splitted.at(0)).replace(QRegularExpression("\\s*$"), "");
 					if (key == uQString(cfg->cfg[b].key)) {
 						group = uQString(cfg->cfg[b].grp);
 						key_is_good = true;
@@ -1702,7 +1711,7 @@ bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 					}
 				}
 			} else {
-				key = QString(splitted.at(0)).replace(QRegExp("\\s*$"), "");
+				key = QString(splitted.at(0)).replace(QRegularExpression("\\s*$"), "");
 				key_is_good = true;
 			}
 
@@ -1728,7 +1737,11 @@ bool wr_cfg_file(QIODevice &device, const QSettings::SettingsMap &map) {
 	const _list_settings *cfg  = &list_settings[s.list];
 	int count_grp = 0;
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	out.setCodec("UTF-8");
+#else
+	out.setEncoding(QStringEncoder::Utf8);
+#endif
 	out.setGenerateByteOrderMark(false);
 
 	for (; iter != map.end(); ++iter) {

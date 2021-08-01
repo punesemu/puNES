@@ -78,7 +78,7 @@ void wdgPaletteWall::paintEvent(QPaintEvent *event) {
 	QRect rect(0, 0, cellw, cellh);
 	QStyleOption opt;
 
-	opt.init(this);
+	opt.initFrom(this);
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, p, this);
 
 	if (collast < 0 || collast >= ncols) {

@@ -31,6 +31,7 @@ class hexSpinBox : public QSpinBox {
 	private:
 		int digits;
 		bool no_prefix;
+		QRegularExpressionValidator *validator;
 
 	public:
 		hexSpinBox(QWidget *parent, int dgts);
@@ -41,9 +42,6 @@ class hexSpinBox : public QSpinBox {
 		QValidator::State validate(QString &text, int &pos) const;
 		int valueFromText(const QString &text) const;
 		QString textFromValue(int value) const;
-
-	private:
-		QRegExpValidator *validator;
 };
 
 class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {

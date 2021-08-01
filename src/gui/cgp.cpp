@@ -20,6 +20,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QTextStream>
 #include <QtCore/QFileInfo>
+#include <QtCore/QRegularExpression>
 #include "cgp.h"
 #include "shaders.h"
 
@@ -383,8 +384,7 @@ BYTE cgp_pragma_param(char *code, const uTCHAR *path) {
 		::memset(&param, 0x00, sizeof(_param_shd));
 
 		if (line.startsWith("#pragma parameter")) {
-			QRegExp rx("[-+]?[0-9]*(\\.[0-9]+)");
-			int i, count = 0, pos = 0;
+			int i, count = 0;
 			bool finded;
 
 			// sscanf non e' "locale indipendente" percio' lo utilizzo solo per
@@ -395,24 +395,30 @@ BYTE cgp_pragma_param(char *code, const uTCHAR *path) {
 				continue;
 			}
 
-			line = line.remove(QRegExp("#pragma parameter.*\""));
+			line = line.remove(QRegularExpression("#pragma parameter.*\""));
 
-			while ((pos = rx.indexIn(line, pos)) != -1) {
-				switch (count++) {
-					case 2:
-						param.initial = rx.cap(0).toFloat();
-						break;
-					case 3:
-						param.min = rx.cap(0).toFloat();
-						break;
-					case 4:
-						param.max = rx.cap(0).toFloat();
-						break;
-					case 5:
-						param.step = rx.cap(0).toFloat();
-						break;
+			{
+				QRegularExpression rx("[-+]?[0-9]*\\.[0-9]+");
+				QRegularExpressionMatchIterator iterator = rx.globalMatch(line);
+
+				while (iterator.hasNext()) {
+					QRegularExpressionMatch match = iterator.next();
+
+					switch (count++) {
+						case 2:
+							param.initial = match.captured(0).toFloat();
+							break;
+						case 3:
+							param.min = match.captured(0).toFloat();
+							break;
+						case 4:
+							param.max = match.captured(0).toFloat();
+							break;
+						case 5:
+							param.step = match.captured(0).toFloat();
+							break;
+					}
 				}
-				pos += rx.matchedLength();
 			}
 
 			if (count < 5) {
@@ -461,7 +467,11 @@ static bool cgp_value(QSettings *set, QString key, QString &value) {
 static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map) {
 	QTextStream in(&device);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	in.setCodec("UTF-8");
+#else
+	in.setEncoding(QStringEncoder::Utf8);
+#endif
 
 	while (!in.atEnd()) {
 		QString line = in.readLine();
@@ -474,11 +484,11 @@ static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map) {
 		QString key, value;
 
 		if (splitted.count() == 2) {
-			key = QString(splitted.at(0)).replace(QRegExp("\\s*$"), "");
+			key = QString(splitted.at(0)).replace(QRegularExpression("\\s*$"), "");
 			value = splitted.at(1).trimmed();
 			// rimuovo i commenti che possono esserci sulla riga
-			value = value.remove(QRegExp("#.*"));
-			value = value.remove(QRegExp("//.*"));
+			value = value.remove(QRegularExpression("#.*"));
+			value = value.remove(QRegularExpression("//.*"));
 			value = value.remove('"');
 			value = value.trimmed();
 

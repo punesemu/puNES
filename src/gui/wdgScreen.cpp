@@ -107,7 +107,7 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 		} else if (event->type() == QEvent::MouseMove) {
 			mouseEvent = ((QMouseEvent *)event);
 			events.mutex.lock();
-			events.mouse << _wdgScreen_mouse_event(event->type(), Qt::NoButton, mouseEvent->x(), mouseEvent->y());
+			events.mouse << _wdgScreen_mouse_event(event->type(), Qt::NoButton, mouseEvent->pos().x(), mouseEvent->pos().y());
 			events.mutex.unlock();
 		}
 	}

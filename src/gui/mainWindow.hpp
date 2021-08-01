@@ -21,7 +21,11 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QApplication>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QtWidgets/QShortcut>
+#else
+#include <QtGui/QShortcut>
+#endif
 #include <QtCore/QObject>
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
