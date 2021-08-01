@@ -93,7 +93,7 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 		void s_hide_show_tools(bool checked);
 
 	private slots:
-		void s_grp_type_cheat(int id);
+		void s_grp_type_cheat(QAbstractButton *button);
 		void s_line_to_upper(const QString &text);
 		void s_compare(int state);
 		void s_new(bool checked);

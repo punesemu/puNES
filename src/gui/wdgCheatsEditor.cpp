@@ -64,14 +64,15 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 	{
 		QButtonGroup *grp = new QButtonGroup(this);
 
-		grp->addButton(radioButton_CPU_Ram);
-		grp->setId(radioButton_CPU_Ram, 0);
-		grp->addButton(radioButton_GG);
-		grp->setId(radioButton_GG, 1);
-		grp->addButton(radioButton_ProAR);
-		grp->setId(radioButton_ProAR, 2);
+		radioButton_CPU_Ram->setProperty("myIndex", QVariant(0));
+		radioButton_GG->setProperty("myIndex", QVariant(1));
+		radioButton_ProAR->setProperty("myIndex", QVariant(2));
 
-		connect(grp, SIGNAL(buttonClicked(int)), this, SLOT(s_grp_type_cheat(int)));
+		grp->addButton(radioButton_CPU_Ram);
+		grp->addButton(radioButton_GG);
+		grp->addButton(radioButton_ProAR);
+
+		connect(grp, SIGNAL(buttonClicked(QAbstractButton *)), this, SLOT(s_grp_type_cheat(QAbstractButton *)));
 	}
 
 	lineEdit_Ram->setStyleSheet("QLineEdit{background: #FCD7F8;}");
@@ -561,8 +562,10 @@ void wdgCheatsEditor::s_clear_all(UNUSED(bool checked)) {
 	objch->save_game_cheats();
 }
 
-void wdgCheatsEditor::s_grp_type_cheat(int id) {
-	if (id == 0) {
+void wdgCheatsEditor::s_grp_type_cheat(QAbstractButton *button) {
+	int index = QVariant(button->property("myIndex")).toInt();
+
+	if (index == 0) {
 		frame_Raw_Value->setEnabled(true);
 		hexSpinBox_Address->setRange(0, 0x7FFF);
 		hexSpinBox_Address->setValue(0);
@@ -571,7 +574,7 @@ void wdgCheatsEditor::s_grp_type_cheat(int id) {
 		hexSpinBox_Address->setRange(0x8000, 0xFFFF);
 	}
 
-	switch (id) {
+	switch (index) {
 		case 0:
 			lineEdit_GG->setEnabled(false);
 			lineEdit_ProAR->setEnabled(false);
