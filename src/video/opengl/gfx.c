@@ -516,6 +516,10 @@ void gfx_overlay_blit(void *surface, _gfx_rect *rect) {
 		rect->h *= gfx.device_pixel_ratio;
 	}
 
+	if (((rect->x + rect->w) > opengl.overlay.rect.w) || ((rect->y + rect->h) > opengl.overlay.rect.h)) {
+		return;
+	}
+
 	glBindTexture(GL_TEXTURE_2D, opengl.overlay.id);
 	glPixelStoref(GL_UNPACK_ROW_LENGTH, rect->w);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, rect->x, rect->y, rect->w, rect->h, TI_FRM, TI_TYPE, surface);

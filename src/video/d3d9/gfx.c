@@ -540,7 +540,7 @@ void gfx_overlay_blit(void *surface, _gfx_rect *rect) {
 	unsigned char *psrc, *pdst;
 	int h;
 
-	if (cfg->txt_on_screen == FALSE) {
+	if (!cfg->txt_on_screen) {
 		return;
 	}
 
@@ -549,6 +549,10 @@ void gfx_overlay_blit(void *surface, _gfx_rect *rect) {
 		rect->y = round(rect->y * gfx.device_pixel_ratio);
 		rect->w = round(rect->w * gfx.device_pixel_ratio);
 		rect->h = round(rect->h * gfx.device_pixel_ratio);
+	}
+
+	if (((rect->x + rect->w) > d3d9.overlay.rect.w) || ((rect->y + rect->h) > d3d9.overlay.rect.h)) {
+		return;
 	}
 
 	dst.left = rect->x;
