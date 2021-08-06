@@ -91,7 +91,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	qtTranslator = new QTranslator();
 	shcjoy.timer = new QTimer(this);
 	fullscreen_in_window_dekstop_resolution = false;
-	no_gui_control_pause_bck = false;
+	setup_in_out_fullscreen = false;
 	visibility.menubar = true;
 	visibility.toolbars = true;
 
@@ -230,7 +230,7 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 	switch (event->type()) {
 		case QEvent::WindowActivate:
 		case QEvent::WindowDeactivate:
-			if (!no_gui_control_pause_bck) {
+			if (setup_in_out_fullscreen == false) {
 				gui_control_pause_bck(event->type());
 			}
 			break;
@@ -997,11 +997,9 @@ void mainWindow::s_set_fullscreen(void) {
 	BYTE delay = FALSE;
 	bool startfs = false;
 
-	if (gui.in_update) {
+	if (gui.in_update || setup_in_out_fullscreen) {
 		return;
 	}
-
-	emu_thread_pause();
 
 	// quando nascondo la finestra al momento dell'attivazione/disattivazione del
 	// fullscreen vengono eseguiti nell'ordine un
@@ -1010,7 +1008,9 @@ void mainWindow::s_set_fullscreen(void) {
 	// QEvent::WindowDeactivate
 	// che lascia la finestra disattivata. In caso di "Pause when in background" attivo
 	// il gui_control_pause_bck non riprende l'emulazione pensando appunto di essere in background.
-	no_gui_control_pause_bck = true;
+	setup_in_out_fullscreen = true;
+
+	emu_thread_pause();
 
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
 		startfs = true;
@@ -1693,7 +1693,7 @@ void mainWindow::s_fullscreen(bool state) {
 
 	gui_external_control_windows_show();
 
-	no_gui_control_pause_bck = false;
+	setup_in_out_fullscreen = false;
 }
 void mainWindow::s_shcjoy_read_timer(void) {
 	if (shcjoy.enabled == false) {
