@@ -1020,15 +1020,19 @@ void mainWindow::s_set_fullscreen(void) {
 		visibility.toolbars = toolbar->isVisible();
 	}
 
-	hide();
-
 	if (startfs) {
 		gfx.scale_before_fscreen = cfg->scale;
 		geom = geometry();
+		if (cfg->fullscreen_in_window == TRUE) {
+			hide();
+		} else {
+			reset_min_max_size();
+			setGeometry(geometry().x(), geometry().y(), 0, 0);
 #if defined (FULLSCREEN_RESFREQ)
-		if (cfg->fullscreen_in_window == FALSE) {
 			delay = gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, FALSE);
+#endif
 		}
+#if defined (FULLSCREEN_RESFREQ)
 	} else {
 		if (gfx.type_of_fscreen_in_use == FULLSCR) {
 #if defined(_WIN32)
@@ -1598,11 +1602,13 @@ void mainWindow::s_prepare_fullscreen(void) {
 	}
 
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
-		reset_min_max_size();
 		if (cfg->fullscreen_in_window == TRUE) {
 			QRect sgeom;
 
 			gfx.type_of_fscreen_in_use = FULLSCR_IN_WINDOW;
+
+			reset_min_max_size();
+
 #if defined (_WIN32)
 			// lo showMaximized sotto windows non considera la presenza della barra delle applicazioni
 			// cercando di impostare una dimensione falsata percio' ridimensiono la finestra manualmente.
@@ -1632,7 +1638,6 @@ void mainWindow::s_prepare_fullscreen(void) {
 			menubar->setVisible(false);
 			toolbar->setVisible(false);
 			statusbar->setVisible(false);
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 		}
 		emit fullscreen(true);
 	} else {
@@ -1660,6 +1665,7 @@ void mainWindow::s_fullscreen(bool state) {
 				show();
 			}
 		} else {
+			hide();
 #if defined (_WIN32)
 			// when a window is using an OpenGL based surface and is appearing in full screen mode,
 			// problems can occur with other top-level windows which are part of the application. Due
@@ -1680,6 +1686,7 @@ void mainWindow::s_fullscreen(bool state) {
 			showFullScreen();
 			move(mgeom.x(), mgeom.y());
 #endif
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 		}
 	} else {
 		gfx.type_of_fscreen_in_use = NO_FULLSCR;
