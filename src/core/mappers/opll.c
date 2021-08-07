@@ -456,6 +456,7 @@ static void OPLL_PreparePatch2(opll_t *chip) {
 static void OPLL_PhaseGenerate(opll_t *chip) {
     uint32_t ismod;
     uint32_t phase;
+    uint8_t rm_bit;
     uint16_t pg_out;
 
     chip->pg_phase[(chip->cycles + 17) % 18] = chip->pg_phase_next + chip->pg_inc;
@@ -487,7 +488,7 @@ static void OPLL_PhaseGenerate(opll_t *chip) {
         switch (chip->cycles) {
         case 13:
             /* HH */
-            uint8_t rm_bit = (chip->rm_hh_bit2 ^ chip->rm_hh_bit7)
+            rm_bit = (chip->rm_hh_bit2 ^ chip->rm_hh_bit7)
                    | (chip->rm_hh_bit3 ^ chip->rm_tc_bit5)
                    | (chip->rm_tc_bit3 ^ chip->rm_tc_bit5);
             pg_out = rm_bit << 9;
