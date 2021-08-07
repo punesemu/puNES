@@ -812,18 +812,20 @@ void mainWindow::update_menu_file(void) {
 
 			action->setText(QFileInfo(description).completeBaseName());
 
-			if (rom.suffix().isEmpty()) {
+			if (rom.suffix().isEmpty() ||
+				!QString::compare(rom.suffix(), "nes", Qt::CaseInsensitive) ||
+				!QString::compare(rom.suffix(), "unf", Qt::CaseInsensitive) ||
+				!QString::compare(rom.suffix(), "unif", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/nes_file.svg"));
+			} else if (!QString::compare(rom.suffix(), "nsf", Qt::CaseInsensitive) ||
+				!QString::compare(rom.suffix(), "nsfe", Qt::CaseInsensitive)) {
+				action->setIcon(QIcon(":/icon/icons/nsf_file.svg"));
 			} else if (!QString::compare(rom.suffix(), "fds", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/fds_file.svg"));
 			} else if (!QString::compare(rom.suffix(), "fm2", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/fm2_file.svg"));
-			} else if (!QString::compare(rom.suffix(), "nsf", Qt::CaseInsensitive)) {
-				action->setIcon(QIcon(":/icon/icons/nsf_file.svg"));
-			} else if (!QString::compare(rom.suffix(), "nsfe", Qt::CaseInsensitive)) {
-				action->setIcon(QIcon(":/icon/icons/nsf_file.svg"));
 			} else {
-				action->setIcon(QIcon(":/icon/icons/nes_file.svg"));
+				action->setIcon(QIcon(":/icon/icons/compressed_file.svg"));
 			}
 
 			action->setProperty("myValue", QVariant(i));
