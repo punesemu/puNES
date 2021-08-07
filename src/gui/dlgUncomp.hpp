@@ -38,6 +38,7 @@ class dlgUncomp : public QDialog, public Ui::dlgUncomp {
 		void closeEvent(QCloseEvent *event);
 
 	private slots:
+		void s_doubleclick(int row, int column);
 		void s_ok_clicked(bool checked);
 		void s_none_clicked(bool checked);
 };
