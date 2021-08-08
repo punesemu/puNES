@@ -1905,7 +1905,7 @@ void mainWindow::s_shcut_rwnd_pause(void) {
 	toolbar->rewind->toolButton_Pause->click();
 }
 void mainWindow::s_shcut_toggle_menubar(void) {
-	if (cfg->fullscreen != FULLSCR) {
+	if ((cfg->fullscreen != FULLSCR) || (gfx.type_of_fscreen_in_use != FULLSCR)) {
 		return;
 	}
 
