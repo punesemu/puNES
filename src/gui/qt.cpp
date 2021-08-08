@@ -418,30 +418,30 @@ void *gui_mainwindow_get_ptr(void) {
 }
 void gui_mainwindow_coords(int *x, int *y, BYTE border) {
 	switch (border) {
-		// top left
+		// top center
 		case 0:
+			(*x) = qt.mwin->geometry().x() + (qt.mwin->geometry().width() / 2);
+			(*y) = qt.mwin->geometry().y();
+			break;
+		// top left
+		case 1:
 			(*x) = qt.mwin->geometry().x();
 			(*y) = qt.mwin->geometry().y();
 			break;
 		// top right
-		case 1:
+		case 2:
 			(*x) = qt.mwin->geometry().x() + qt.mwin->geometry().width();
 			(*y) = qt.mwin->geometry().y();
 			break;
 		// bottom right
-		case 2:
+		case 3:
 			(*x) = qt.mwin->geometry().x() + qt.mwin->geometry().width();
 			(*y) = qt.mwin->geometry().y() + qt.mwin->geometry().height();
 			break;
 		// bottom left
-		case 3:
+		case 4:
 			(*x) = qt.mwin->geometry().x();
 			(*y) = qt.mwin->geometry().y() + qt.mwin->geometry().height();
-			break;
-		// center
-		case 4:
-			(*x) = qt.mwin->geometry().x() + (qt.mwin->geometry().width() / 2);
-			(*y) = qt.mwin->geometry().y() + (qt.mwin->geometry().height() / 2);
 			break;
 	}
 }
