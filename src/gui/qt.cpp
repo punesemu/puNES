@@ -447,7 +447,10 @@ void gui_mainwindow_coords(int *x, int *y, BYTE border) {
 }
 void gui_mainwindow_before_set_res(void) {
 	qt.mwin->reset_min_max_size();
-	qt.mwin->setGeometry(0, 0, 0, 0);
+	qt.mwin->menubar->setVisible(false);
+	qt.mwin->toolbar->setVisible(false);
+	qt.mwin->statusbar->setVisible(false);
+	qt.mwin->setGeometry(0, 0, 1, 1);
 }
 
 void *gui_wdgrewind_get_ptr(void) {

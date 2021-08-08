@@ -1045,10 +1045,10 @@ void mainWindow::s_set_fullscreen(void) {
 		// e' possibile che le QT mi passino informazioni non corrette sulle dimensioni del
 		// desktop e che le decorazioni della finestra non appaiano correttamente (problema
 		// riscontrato sotto Linux e BSD).
-		// Usare un delay di 900 ms perche' sotto windows (versione OpenGL) non mi crea problemi
+		// Usare un delay di 1000 ms perche' sotto windows (versione OpenGL) non mi crea problemi
 		// quando viene visualizzata la menu bar. Con un valore inferiore, quando effettuo lo switch
 		// a risoluzioni basse, non mi visualizza i submenu.
-		QTimer::singleShot(900, this, SLOT(s_fullscreen(void)));
+		QTimer::singleShot(1000, this, SLOT(s_fullscreen(void)));
 	} else {
 		s_fullscreen();
 	}
@@ -1649,7 +1649,7 @@ void mainWindow::s_fullscreen(void) {
 			// https://bugreports.qt.io/browse/QTBUG-47156
 			// come workaround incremento di 1 l'altezza del mainWindow e non utilizzo il
 			// showFullScreen ma lo simulo. E' molto importante che in s_set_fullscreen il delay sia di
-			// almeno 900 ms.
+			// almeno 1000 ms.
 			move(fs_geom.x() - (geometry().x() - x()), fs_geom.y() - (geometry().y() - y()));
 			setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 			showNormal();
