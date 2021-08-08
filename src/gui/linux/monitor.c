@@ -190,6 +190,20 @@ void gui_monitor_set_res(void *monitor_info, void *mode_info) {
 	XRRFreeScreenResources(sr);
 	XCloseDisplay(display);
 }
+void gui_monitor_get_current_x_y(void *monitor_info, int *x, int *y) {
+	_monitor_info *mi = (_monitor_info *)monitor_info;
+	Display *display = XOpenDisplay(NULL);
+	Window root = RootWindow(display, 0);
+	XRRScreenResources *sr = XRRGetScreenResourcesCurrent(display, root);
+	XRRCrtcInfo *ci = XRRGetCrtcInfo(display, sr, mi->crtc);
+
+	(*x) = ci->x;
+	(*y) = ci->y;
+
+	XRRFreeCrtcInfo(ci);
+	XRRFreeScreenResources(sr);
+	XCloseDisplay(display);
+}
 
 static void free_resources_on_err(XRRScreenResources *sr, XRRCrtcInfo *ci, XRROutputInfo *oi, Display *dpy) {
 	if (sr) {

@@ -416,15 +416,38 @@ void gui_control_visible_cursor(void) {
 void *gui_mainwindow_get_ptr(void) {
 	return ((void *)qt.mwin);
 }
-void gui_mainwindow_coords(int *x, int *y, BYTE use_center) {
-	// Use the center of the window to determine what screen it's on
-	if (use_center) {
-		(*x) = qt.mwin->geometry().x() + (qt.mwin->geometry().width() / 2);
-		(*y) = qt.mwin->geometry().y() + (qt.mwin->geometry().height() / 2);
-	} else {
-		(*x) = qt.mwin->geometry().x();
-		(*y) = qt.mwin->geometry().y();
+void gui_mainwindow_coords(int *x, int *y, BYTE border) {
+	switch (border) {
+		// top left
+		case 0:
+			(*x) = qt.mwin->geometry().x();
+			(*y) = qt.mwin->geometry().y();
+			break;
+		// top right
+		case 1:
+			(*x) = qt.mwin->geometry().x() + qt.mwin->geometry().width();
+			(*y) = qt.mwin->geometry().y();
+			break;
+		// bottom right
+		case 2:
+			(*x) = qt.mwin->geometry().x() + qt.mwin->geometry().width();
+			(*y) = qt.mwin->geometry().y() + qt.mwin->geometry().height();
+			break;
+		// bottom left
+		case 3:
+			(*x) = qt.mwin->geometry().x();
+			(*y) = qt.mwin->geometry().y() + qt.mwin->geometry().height();
+			break;
+		// center
+		case 4:
+			(*x) = qt.mwin->geometry().x() + (qt.mwin->geometry().width() / 2);
+			(*y) = qt.mwin->geometry().y() + (qt.mwin->geometry().height() / 2);
+			break;
 	}
+}
+void gui_mainwindow_before_set_res(void) {
+	qt.mwin->reset_min_max_size();
+	qt.mwin->setGeometry(0, 0, 0, 0);
 }
 
 void *gui_wdgrewind_get_ptr(void) {

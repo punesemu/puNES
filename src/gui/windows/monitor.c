@@ -127,7 +127,17 @@ void gui_monitor_set_res(void *monitor_info, void *mode_info) {
 	dm.dmBitsPerPel = mi->bits_per_pixel;
 	dm.dmDisplayFixedOutput = mi->fixed_output;
 
-	ChangeDisplaySettingsExW(mi->name, &dm, NULL, CDS_UPDATEREGISTRY, NULL);
+	ChangeDisplaySettingsExW(mi->name, &dm, NULL, CDS_FULLSCREEN | CDS_UPDATEREGISTRY, NULL);
+}
+void gui_monitor_get_current_x_y(void *monitor_info, int *x, int *y) {
+	_monitor_info *mi = (_monitor_info *)monitor_info;
+	DEVMODEW dm;
+
+	memset(&dm, 0x00, sizeof(dm));
+	EnumDisplaySettingsW(mi->name, ENUM_CURRENT_SETTINGS, &dm);
+
+	(*x) = dm.dmPosition.x;
+	(*y) = dm.dmPosition.y;
 }
 
 static uint8_t *get_edid(uTCHAR *device_id) {

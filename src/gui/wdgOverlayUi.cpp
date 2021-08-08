@@ -185,7 +185,7 @@ void gui_overlay_info_append_msg_precompiled(int index, void *arg1) {
 				int w = 0, h = 0, rrate = 0;
 
 #if defined (FULLSCREEN_RESFREQ)
-				gfx_monitor_mode_in_use_resolutions(&w, &h, &rrate);
+				gfx_monitor_mode_in_use_info(NULL, NULL, &w, &h, &rrate);
 #endif
 				a1 = QString("%1").arg(w);
 				a2 = QString("%1").arg(h);

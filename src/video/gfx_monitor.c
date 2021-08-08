@@ -126,7 +126,7 @@ void gfx_monitor_quit(void) {
 	free_resolutions();
 }
 void gfx_monitor_enum_monitors(void) {
-	int i, emu_x = 0, emu_y = 0;
+	int a, emu_x = 0, emu_y = 0;
 
 	gfx_monitor_quit();
 
@@ -135,15 +135,19 @@ void gfx_monitor_enum_monitors(void) {
 		return;
 	}
 
-	gui_mainwindow_coords(&emu_x, &emu_y, TRUE);
+	for (a = 0; (a < 5) && (monitor.active == -1); a++) {
+		int b;
 
-	for (i = 0; i < monitor.nmonitor; i++) {
-		_monitor_info *mi = &monitor.monitors[i];
+		gui_mainwindow_coords(&emu_x, &emu_y, a);
 
-		if ((emu_x >= mi->x) && (emu_x < (mi->x + mi->w)) && (emu_y >= mi->y) && (emu_y < (mi->y + mi->h))) {
-			mi->in_use = TRUE;
-			monitor.active = i;
-			break;
+		for (b = 0; b < monitor.nmonitor; b++) {
+			_monitor_info *mi = &monitor.monitors[b];
+
+			if ((emu_x >= mi->x) && (emu_x < (mi->x + mi->w)) && (emu_y >= mi->y) && (emu_y < (mi->y + mi->h))) {
+				mi->in_use = TRUE;
+				monitor.active = b;
+				break;
+			}
 		}
 	}
 
@@ -369,6 +373,7 @@ BYTE gfx_monitor_set_res(int w, int h, BYTE adaptive_rrate, BYTE is_change_mode)
 		ufprintf(stderr, uL("gfx_monitor: " uPERCENTs " switch to %dx%d, %fHz\n"),
 			mi->desc, mode_info_new->w, mode_info_new->h, mode_info_new->rrate);
 
+		gui_mainwindow_before_set_res();
 		gui_monitor_set_res((void *)mi, (void *)mode_info_new);
 
 		mi->mode_new = mode_new;
@@ -413,11 +418,9 @@ BYTE gfx_monitor_restore_res(void) {
 
 	return (TRUE);
 }
-void gfx_monitor_mode_in_use_resolutions(int *w, int *h, int *rrate) {
+void gfx_monitor_mode_in_use_info(int *x, int *y, int *w, int *h, int *rrate) {
 	_monitor_mode_info *mode_info;
 	_monitor_info *mi;
-
-	(*w) = (*h) = (*rrate) = 0;
 
 	if ((monitor.enabled == FALSE) || (monitor.active == -1)) {
 		return;
@@ -425,9 +428,19 @@ void gfx_monitor_mode_in_use_resolutions(int *w, int *h, int *rrate) {
 
 	mi = &monitor.monitors[monitor.active];
 	mode_info = &mi->modes[mi->mode_in_use];
-	(*w) = mode_info->w;
-	(*h) = mode_info->h;
-	(*rrate) = (int)mode_info->rounded_rrate;
+
+	if (x && y) {
+		gui_monitor_get_current_x_y(mi, x, y);
+	}
+	if (w) {
+		(*w) = mode_info->w;
+	}
+	if (h) {
+		(*h) = mode_info->h;
+	}
+	if (rrate) {
+		(*rrate) = (int)mode_info->rounded_rrate;
+	}
 }
 void gfx_monitor_edid_parse(const uint8_t *edid, _monitor_info *mi) {
  	mi->edid = NULL;
