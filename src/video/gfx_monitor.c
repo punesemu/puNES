@@ -633,6 +633,22 @@ static uTCHAR *make_display_name(const _monitor_edid *me) {
 		vendor = pnp_find_vendor(me->manufacturer_code);
 	}
 
+	if (!vendor) {
+		BYTE is_good = TRUE;
+		unsigned int i;
+
+		for (i = 0; i < (usizeof(me->manufacturer_code) - 1); i++) {
+			if (((me->manufacturer_code[i] < 'A') || (me->manufacturer_code[i] > 'Z')) &&
+				((me->manufacturer_code[i] < 'a') || (me->manufacturer_code[i] > 'z'))) {
+				is_good = FALSE;
+				break;
+			}
+		}
+		if (is_good) {
+			vendor = &me->manufacturer_code[0];
+		}
+	}
+
 	if (vendor) {
 		if (me && (me->w_mm != -1) && me->h_mm) {
 			w_mm = me->w_mm;
