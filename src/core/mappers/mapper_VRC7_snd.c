@@ -70,10 +70,14 @@ BYTE opll_save(BYTE mode, BYTE slot, FILE *fp) {
 
 		save_slot_ele(mode, slot, buffer);
 	} else {
+		opll_patch_t *patchrom = (opll_patch_t *)opll.chip.patchrom;
+
+		opll.chip.patchrom = NULL;
 		save_slot_ele(mode, slot, opll.chip);
 		save_slot_ele(mode, slot, opll.out);
 		save_slot_ele(mode, slot, opll.next);
 		save_slot_ele(mode, slot, opll.tick);
+		opll.chip.patchrom = patchrom;
 	}
 	return (EXIT_OK);
 }
