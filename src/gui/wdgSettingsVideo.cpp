@@ -225,7 +225,6 @@ void wdgSettingsVideo::showEvent(UNUSED(QShowEvent *event)) {
 	icon_GPU_Shaders->setPixmap(QIcon(":/icon/icons/cube.svg").pixmap(dim, dim));
 	icon_Shader->setPixmap(QIcon(":/icon/icons/360_view.svg").pixmap(dim, dim));
 	icon_Shader_file->setPixmap(QIcon(":/icon/icons/paper.svg").pixmap(dim, dim));
-	icon_Shaders_Parameters->setPixmap(QIcon(":/icon/icons/shaders_parameters.svg").pixmap(dim, dim));
 	icon_Filters_misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
 	icon_Palette_Selection->setPixmap(QIcon(":/icon/icons/palette.svg").pixmap(dim, dim));
 	icon_Palette->setPixmap(QIcon(":/icon/icons/palettes_list.svg").pixmap(dim, dim));
@@ -298,6 +297,7 @@ void wdgSettingsVideo::update_widget(void) {
 
 	{
 		sfilter_set();
+		widget_NTSC_Filter->update_widget();
 		shader_set();
 #if defined (WITH_OPENGL)
 		checkBox_Disable_sRGB_FBO->setChecked(cfg->disable_srgb_fbo);
@@ -960,8 +960,7 @@ void wdgSettingsVideo::s_sfilter(int index) {
 	emu_thread_pause();
 	gfx_set_screen(NO_CHANGE, filter, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 	if (cfg->filter == NTSC_FILTER) {
-		ntsc_set(NULL, cfg->ntsc_format, 0, 0, (BYTE *)palette_RGB.noswap, 0);
-		ntsc_set(NULL, cfg->ntsc_format, 0, 0, (BYTE *)palette_RGB.swapped, 0);
+		ntsc_effect_parameters_changed();
 	}
 	emu_thread_continue();
 }

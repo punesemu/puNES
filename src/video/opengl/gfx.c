@@ -89,7 +89,7 @@ BYTE gfx_palette_init(void) {
 	// inizializzo l'ntsc che utilizzero' non solo
 	// come filtro ma anche nel gfx_set_screen() per
 	// generare la paletta dei colori.
-	if (ntsc_init(0, 0, 0, 0, 0) == EXIT_ERROR) {
+	if (ntsc_init() == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}
 
@@ -116,6 +116,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	BYTE set_mode;
 	WORD width, height;
 	DBWORD old_shader = cfg->shader;
+	BYTE ntsc_update = FALSE;
 
 	gfx_thread_pause();
 
@@ -190,6 +191,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 			case NTSC_FILTER:
 				gfx.filter.func = ntsc_surface;
 				gfx.filter.factor = X2;
+				ntsc_update = TRUE;
 				break;
 		}
 		// forzo il controllo del fattore di scale
@@ -272,26 +274,26 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 						palette = PALETTE_SONY;
 					}
 				} else {
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_base_file, 0, (BYTE *)palette_RGB.noswap);
+					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_base_file, 0, (BYTE *)palette_RGB.noswap);
 				}
 			}
 		}
 
 		switch (palette) {
 			case PALETTE_PAL:
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_base_pal, 0, (BYTE *)palette_RGB.noswap);
+				ntsc_set(NULL, TRUE, 0, (BYTE *)palette_base_pal, 0, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_NTSC:
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, 0, 0, (BYTE *)palette_RGB.noswap);
+				ntsc_set(NULL, TRUE, 0, 0, 0, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_FRBX_NOSTALGIA:
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_firebrandx_nostalgia_FBX, 0, (BYTE *)palette_RGB.noswap);
+				ntsc_set(NULL, TRUE, 0, (BYTE *)palette_firebrandx_nostalgia_FBX, 0, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_FRBX_YUV:
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_firebrandx_YUV_v3, 0, (BYTE *)palette_RGB.noswap);
+				ntsc_set(NULL, TRUE, 0, (BYTE *)palette_firebrandx_YUV_v3, 0, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_GREEN:
-				rgb_modifier(NULL, palette_RGB.noswap, 0x00, -0x20, 0x20, -0x20);
+				ntsc_rgb_modifier(NULL, (BYTE *)palette_RGB.noswap, 0x00, -0x20, 0x20, -0x20);
 				break;
 			case PALETTE_RAW:
 				for (i = 0; i < 512; i++) {
@@ -299,12 +301,12 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 					palette_RGB.noswap[i].g = (((i >> 4) & 0x03) * 255 / 3);
 					palette_RGB.noswap[i].b = (((i >> 6) & 0x07) * 255 / 7);
 				}
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, 0, (BYTE *)palette_RGB.noswap, (BYTE *)palette_RGB.noswap);
+				ntsc_set(NULL, TRUE, 0, 0, (BYTE *)palette_RGB.noswap, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_FILE:
 				break;
 			default:
-				ntsc_set(NULL, cfg->ntsc_format, palette, 0, 0, (BYTE *)palette_RGB.noswap);
+				ntsc_set(NULL, TRUE, palette, 0, 0, (BYTE *)palette_RGB.noswap);
 				break;
 		}
 
@@ -314,16 +316,16 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				case RP2C03G:
 					break;
 				case RP2C04:
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_RP2C04_0001, 0, (BYTE *)palette_RGB.noswap);
+					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_RP2C04_0001, 0, (BYTE *)palette_RGB.noswap);
 					break;
 				case RP2C04_0002:
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_RP2C04_0002, 0, (BYTE *)palette_RGB.noswap);
+					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_RP2C04_0002, 0, (BYTE *)palette_RGB.noswap);
 					break;
 				case RP2C04_0003:
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_RP2C04_0003, 0, (BYTE *)palette_RGB.noswap);
+					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_RP2C04_0003, 0, (BYTE *)palette_RGB.noswap);
 					break;
 				case RP2C04_0004:
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_RP2C04_0004, 0, (BYTE *)palette_RGB.noswap);
+					ntsc_set(NULL, TRUE, 0, (BYTE *)palette_RP2C04_0004, 0, (BYTE *)palette_RGB.noswap);
 					break;
 				case RC2C03B:
 				case RC2C03C:
@@ -452,6 +454,10 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 
 	if (info.on_cfg == TRUE) {
 		info.on_cfg = FALSE;
+	}
+
+	if (ntsc_update == TRUE) {
+		ntsc_effect_parameters_changed();
 	}
 }
 void gfx_draw_screen(void) {

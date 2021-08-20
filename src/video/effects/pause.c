@@ -41,7 +41,7 @@ BYTE pause_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	rgb_modifier((nes_ntsc_t *)pause_effect.ntsc, pRGB, 0x1A, -0x0A, -0x0A, -0x30);
+	ntsc_rgb_modifier((nes_ntsc_t *)pause_effect.ntsc, (BYTE *)pRGB, 0x1A, -0x0A, -0x0A, -0x30);
 
 	for (i = 0; i < NUM_COLORS; i++) {
 		palette[i] = gfx_color(255, pRGB[i].r, pRGB[i].g, pRGB[i].b);

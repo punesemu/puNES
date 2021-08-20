@@ -62,6 +62,9 @@ enum set_element {
 	SET_OVERSCAN_BRD_PAL,
 	SET_FILTER,
 	SET_NTSC_FORMAT,
+	SET_NTSC_COMPOSITE_PARAM,
+	SET_NTSC_SVIDEO_PARAM,
+	SET_NTSC_RGB_PARAM,
 	SET_SHADER,
 	SET_FILE_SHADER,
 	SET_PALETTE,
@@ -710,6 +713,28 @@ static const _settings main_cfg[] = {
 		uL("# possible values: composite, svideo, rgb"),
 		uL("-n, --ntsc-format         format of ntsc filter : composite, svideo, rgb"),
 		{LENGTH(opt_ntsc), opt_ntsc}
+	},
+	{
+		uL("video"), uL("ntsc filter parameters composite"), uL("0,0,0,0,0,0,0,0,0,0,0,1,88"),
+		uL("# possible values: [hue       : -100/100],[saturation  : -100/100],[contrast      : -100/100]," NEWLINE)
+		uL("#                  [brightness: -100/100],[sharpness   : -100/100],[gamma         : -100/100]," NEWLINE)
+		uL("#                  [resolution: -100/100],[artifacts   : -100/100],[fringing      : -100/100]," NEWLINE)
+		uL("#                  [bleed     : -100/100],[merge fields:      0/1],[vertical blend:      0/1]," NEWLINE)
+		uL("#                  [scanline  :    0/100]"),
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("video"), uL("ntsc filter parameters svideo"), uL("0,0,0,0,20,0,20,-20,-20,0,0,1,88"),
+		NULL,
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("video"), uL("ntsc filter parameters rgb"), uL("0,0,0,0,20,0,70,-20,-20,-100,0,1,88"),
+		NULL,
+		NULL,
+		{0, NULL}
 	},
 	{
 		uL("video"), uL("shader"), uL("none"),

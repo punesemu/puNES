@@ -31,12 +31,14 @@
 #include "recording.h"
 #endif
 
+#define _SCR_COLUMNS_\
+	(cfg->filter == NTSC_FILTER ? NES_NTSC_OUT_WIDTH(SCR_COLUMNS) / 2: SCR_COLUMNS)
 #define _SCR_COLUMNS_BRD\
-	((float)(SCR_COLUMNS - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
+	((float)(_SCR_COLUMNS_ - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
 #define _SCR_ROWS_BRD\
 	(float)(SCR_ROWS - (overscan.borders->up + overscan.borders->down))
 #define _SCR_COLUMNS_NOBRD\
-	((float)SCR_COLUMNS * gfx.pixel_aspect_ratio)
+	((float)_SCR_COLUMNS_ * gfx.pixel_aspect_ratio)
 #define _SCR_ROWS_NOBRD\
 	(float)SCR_ROWS
 

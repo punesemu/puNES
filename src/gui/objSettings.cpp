@@ -16,6 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <math.h>
 #include <QtCore/QStringList>
 #include <QtCore/QTextStream>
 #include <QtCore/QRegularExpression>
@@ -24,6 +25,7 @@
 #include "save_slot.h"
 #include "emu.h"
 #include "shaders.h"
+#include "video/filters/ntsc.h"
 #if defined (__unix__)
 #define XK_MISCELLANY
 #include <X11/keysymdef.h>
@@ -693,6 +695,9 @@ void objSet::to_cfg(QString group) {
 		val.replace(SET_OVERSCAN_BRD_PAL, oscan_val(&overscan_borders[1]));
 		int_to_val(SET_FILTER, cfg_from_file.filter);
 		int_to_val(SET_NTSC_FORMAT, cfg_from_file.ntsc_format);
+		val.replace(SET_NTSC_COMPOSITE_PARAM, ntsc_val(&ntsc_filter.format[COMPOSITE]));
+		val.replace(SET_NTSC_SVIDEO_PARAM, ntsc_val(&ntsc_filter.format[SVIDEO]));
+		val.replace(SET_NTSC_RGB_PARAM, ntsc_val(&ntsc_filter.format[RGBMODE]));
 		int_to_val(SET_SHADER, cfg_from_file.shader);
 		cpy_utchar_to_val(SET_FILE_SHADER, cfg_from_file.shader_file);
 		int_to_val(SET_PALETTE, cfg_from_file.palette);
@@ -809,6 +814,9 @@ void objSet::fr_cfg(QString group) {
 		oscan_val_to_int(SET_OVERSCAN_BRD_PAL, &overscan_borders[1]);
 		cfg_from_file.filter = val_to_int(SET_FILTER);
 		cfg_from_file.ntsc_format = val_to_int(SET_NTSC_FORMAT);
+		ntsc_val_to_double(SET_NTSC_COMPOSITE_PARAM, &ntsc_filter.format[COMPOSITE]);
+		ntsc_val_to_double(SET_NTSC_SVIDEO_PARAM, &ntsc_filter.format[SVIDEO]);
+		ntsc_val_to_double(SET_NTSC_RGB_PARAM, &ntsc_filter.format[RGBMODE]);
 		cfg_from_file.shader = val_to_int(SET_SHADER);
 		cpy_val_to_utchar(SET_FILE_SHADER, cfg_from_file.shader_file, usizeof(cfg_from_file.shader_file));
 		cfg_from_file.palette = val_to_int(SET_PALETTE);
@@ -993,6 +1001,50 @@ QString objSet::resolution_val(int *w, int *h) {
 	return (QString("%0x%1").arg((*w)).arg((*h)));
 }
 #endif
+
+void objSet::ntsc_val_to_double(int index, void *ntsc_format) {
+	ntsc_val_to_double(ntsc_format, uQStringCD(val.at(index)));
+
+	val.replace(index, ntsc_val(ntsc_format));
+}
+void objSet::ntsc_val_to_double(void *ntsc_format, const uTCHAR *buffer) {
+	QStringList splitted = uQString(buffer).toLower().split(",");
+	nes_ntsc_setup_t *format = (nes_ntsc_setup_t *)ntsc_format;
+
+	if (splitted.count() == 13) {
+		format->hue = splitted.at(0).toDouble() / 100.0f;
+		format->saturation = splitted.at(1).toDouble() / 100.0f;
+		format->contrast = splitted.at(2).toDouble() / 100.0f;
+		format->brightness = splitted.at(3).toDouble() / 100.0f;
+		format->sharpness = splitted.at(4).toDouble() / 100.0f;
+		format->gamma = splitted.at(5).toDouble() / 100.0f;
+		format->resolution = splitted.at(6).toDouble() / 100.0f;
+		format->artifacts = splitted.at(7).toDouble() / 20.0f;
+		format->fringing = splitted.at(8).toDouble() / 20.0f;
+		format->bleed = splitted.at(9).toDouble() / 100.0f;
+		format->merge_fields = splitted.at(10).toInt() & 0x01;
+		format->vertical_blend = splitted.at(11).toInt() & 0x01;
+		format->scanline_intensity = splitted.at(12).toDouble() / 100.0f;
+	}
+}
+QString objSet::ntsc_val(void *ntsc_format) {
+	nes_ntsc_setup_t *format = (nes_ntsc_setup_t *)ntsc_format;
+
+	return (QString("%0,%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12").
+		arg(round(format->hue * 100)).
+		arg(round(format->saturation * 100)).
+		arg(round(format->contrast * 100)).
+		arg(round(format->brightness * 100)).
+		arg(round(format->sharpness * 100)).
+		arg(round(format->gamma * 100)).
+		arg(round(format->resolution * 100)).
+		arg(round(format->artifacts * 20)).
+		arg(round(format->fringing * 20)).
+		arg(round(format->bleed * 100)).
+		arg(round(format->merge_fields & 0x01)).
+		arg(round(format->vertical_blend & 0x01)).
+		arg(round(format->scanline_intensity * 100)));
+}
 
 int objSet::channel_convert_index(int index) {
 	switch (index) {

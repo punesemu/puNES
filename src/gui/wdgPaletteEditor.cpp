@@ -453,7 +453,7 @@ void wdgPaletteEditor::set_internal_color(int index, QColor qrgb, bool update_pa
 	rgb->b = qrgb.blue();
 
 	if (update_palette) {
-		ntsc_set(NULL, cfg->ntsc_format, 0, (BYTE *)palette_RGB.noswap, 0, (BYTE *)palette_RGB.noswap);
+		ntsc_set(NULL, TRUE, 0, (BYTE *)palette_RGB.noswap, 0, (BYTE *)palette_RGB.noswap);
 		gfx_palette_update();
 	}
 }

@@ -512,6 +512,7 @@ static void OPLL_PhaseGenerate(opll_t *chip) {
             break;
         default:
             pg_out = phase >> 9;
+            break;
         }
     } else {
         pg_out = phase >> 9;

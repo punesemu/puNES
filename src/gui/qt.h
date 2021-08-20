@@ -135,6 +135,7 @@ EXTERNC void gui_update(void);
 EXTERNC void gui_update_dset(void);
 EXTERNC void gui_update_gps_settings(void);
 
+EXTERNC void gui_update_ntsc_widgets(void);
 EXTERNC void gui_update_ppu_hacks_widgets(void);
 EXTERNC void gui_update_apu_channels_widgets(void);
 EXTERNC void gui_update_recording_widgets(void);

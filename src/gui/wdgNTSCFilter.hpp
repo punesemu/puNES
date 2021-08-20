@@ -16,48 +16,33 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef DLGSETTINGS_HPP_
-#define DLGSETTINGS_HPP_
+#ifndef WDGNTSCFILTER_HPP_
+#define WDGNTSCFILTER_HPP_
 
-#include <QtWidgets/QDialog>
-#include "dlgSettings.hh"
+#include <QtWidgets/QWidget>
+#include "wdgNTSCFilter.hh"
 
-class dlgSettings : public QDialog, public Ui::dlgSettings {
+class wdgNTSCFilter : public QWidget, public Ui::wdgNTSCFilter {
 		Q_OBJECT
 
 	public:
-		QRect geom;
-
-	public:
-		dlgSettings(QWidget *parent = 0);
-		~dlgSettings();
+		wdgNTSCFilter(QWidget *parent = 0);
+		~wdgNTSCFilter();
 
 	private:
-		bool eventFilter(QObject *obj, QEvent *event);
 		void changeEvent(QEvent *event);
-		void hideEvent(QHideEvent *event);
 
 	public:
-		void retranslateUi(QDialog *dlgSettings);
-		void update_dialog(void);
-		void change_rom(void);
-		void shcut_mode(int mode);
-		void shcut_scale(int scale);
+		void update_widget(void);
 
 	private:
-		void update_tab_general(void);
-		void update_tab_input(void);
-		void update_tab_ppu(void);
-		void update_tab_cheats(void);
-
-	public:
-		void update_tab_video(void);
-		void update_tab_audio(void);
-		void update_tab_recording(void);
+		void ntsc_update_paramaters(void);
+		void set_sliders_spins(void);
 
 	private slots:
-		void s_save_settings(bool checked);
-		void s_close_settings(bool checked);
+		void s_slider_spin_changed(int value);
+		void s_checkbox_changed(int state);
+		void s_reset(bool checked);
 };
 
-#endif /* DLGSETTINGS_HPP_ */
+#endif /* WDGNTSCFILTER_HPP_ */

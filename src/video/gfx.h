@@ -27,27 +27,6 @@
 #include "video/filters/xBRZ.h"
 
 #define FH_SHADERS_GEST
-#define change_color(plt, blck, index, color, operation)\
-	tmp = plt[index].color + operation;\
-	plt[index].color = (tmp < 0 ? blck : (tmp > 0xFF ? 0xFF : tmp))
-#define rgb_modifier(ntscin, plt, blck, red, green, blue)\
-	/* prima ottengo la paletta monocromatica */\
-	ntsc_set(ntscin, cfg->ntsc_format, PALETTE_MONO, 0, 0, (BYTE *)plt);\
-	/* quindi la modifico */\
-	{\
-		WORD i;\
-		SWORD tmp;\
-		for (i = 0; i < NUM_COLORS; i++) {\
-			/* rosso */\
-			change_color(plt, blck, i, r, red);\
-			/* green */\
-			change_color(plt, blck, i, g, green);\
-			/* blue */\
-			change_color(plt, blck, i, b, blue);\
-		}\
-	}\
-	/* ed infine utilizzo la nuova */\
-	ntsc_set(ntscin, cfg->ntsc_format, FALSE, 0, (BYTE *)plt, (BYTE *)plt)
 #if defined (__unix__)
 #define	gfx_os_color(r, g, b) gfx_color(0, r, g, b);
 #else

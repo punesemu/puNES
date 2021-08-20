@@ -106,6 +106,11 @@ class objSet : public objSettings {
 #endif
 
 	private:
+		void ntsc_val_to_double(int index, void *ntsc_format);
+		void ntsc_val_to_double(void *ntsc_format, const uTCHAR *buffer);
+		QString ntsc_val(void *ntsc_format);
+
+	private:
 		int channel_convert_index(int index);
 		void channel_decode(int index, QString val);
 		void channel_default(int index);

@@ -102,9 +102,6 @@ void dlgSettings::shcut_scale(int scale) {
 void dlgSettings::update_tab_general(void) {
 	widget_Settings_General->update_widget();
 }
-void dlgSettings::update_tab_video(void) {
-	widget_Settings_Video->update_widget();
-}
 void dlgSettings::update_tab_input(void) {
 	widget_Settings_Input->update_widget();
 }
@@ -115,6 +112,9 @@ void dlgSettings::update_tab_cheats(void) {
 	widget_Settings_Cheats->update_widget();
 }
 
+void dlgSettings::update_tab_video(void) {
+	widget_Settings_Video->update_widget();
+}
 void dlgSettings::update_tab_audio(void) {
 	widget_Settings_Audio->update_widget();
 }

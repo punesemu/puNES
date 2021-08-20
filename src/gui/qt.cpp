@@ -268,6 +268,9 @@ void gui_update_gps_settings(void) {
 	qt.dset->change_rom();
 }
 
+void gui_update_ntsc_widgets(void) {
+	qt.dset->update_tab_video();
+}
 void gui_update_ppu_hacks_widgets(void) {
 	qt.dset->widget_Settings_PPU->update_widget();
 }

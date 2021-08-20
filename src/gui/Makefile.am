@@ -21,6 +21,8 @@ wdgAPUChannels.moc: wdgAPUChannels.hpp
 	$(MOC) $(srcdir)/wdgAPUChannels.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgCheatsEditor.moc: wdgCheatsEditor.hpp
 	$(MOC) $(srcdir)/wdgCheatsEditor.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+wdgNTSCFilter.moc: wdgNTSCFilter.hpp
+	$(MOC) $(srcdir)/wdgNTSCFilter.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 if WITH_OPENGL
 wdgOpenGL.moc: wdgOpenGL.hpp
 	$(MOC) $(srcdir)/wdgOpenGL.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
@@ -72,6 +74,8 @@ wdgAPUChannels.hh: designer/wdgAPUChannels.ui
 	$(UIC) $(srcdir)/designer/wdgAPUChannels.ui -o $@
 wdgCheatsEditor.hh: designer/wdgCheatsEditor.ui
 	$(UIC) $(srcdir)/designer/wdgCheatsEditor.ui -o $@
+wdgNTSCFilter.hh: designer/wdgNTSCFilter.ui
+	$(UIC) $(srcdir)/designer/wdgNTSCFilter.ui -o $@
 wdgOverlayUi.hh: designer/wdgOverlayUi.ui
 	$(UIC) $(srcdir)/designer/wdgOverlayUi.ui -o $@
 wdgPaletteEditor.hh: designer/wdgPaletteEditor.ui
@@ -159,6 +163,7 @@ BUILT_SOURCES += \
 	objSettings.moc \
 	wdgAPUChannels.moc \
 	wdgCheatsEditor.moc \
+	wdgNTSCFilter.moc \
 	wdgOverlayUi.moc \
 	wdgPaletteEditor.moc \
 	wdgRewind.moc \
@@ -184,6 +189,7 @@ BUILT_SOURCES += \
 	dlgVsSystem.hh \
 	wdgAPUChannels.hh \
 	wdgCheatsEditor.hh \
+	wdgNTSCFilter.hh \
 	wdgOverlayUi.hh \
 	wdgPaletteEditor.hh \
 	wdgRewind.hh \
@@ -231,6 +237,8 @@ libgui_a_SOURCES = \
 	wdgAPUChannels.hpp \
 	wdgCheatsEditor.cpp \
 	wdgCheatsEditor.hpp \
+	wdgNTSCFilter.cpp \
+	wdgNTSCFilter.hpp \
 	wdgMenuBar.cpp \
 	wdgMenuBar.hpp \
 	wdgOverlayUi.cpp \
