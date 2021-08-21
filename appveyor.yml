@@ -96,7 +96,7 @@ build_script:
 
     7z x c:\tmp\qt5_5.6.3_i686.7z -oC:\msys64\mingw32 > NUL
 
-    bash -lc "wget --no-check-cert -O /c/tmp/puNES_i686_dlls.zip 'https://www.dropbox.com/s/xaspmjmczkg1zjt/puNES_i686_dlls.zip?dl=1' 1>/dev/null 2>&1"
+    bash -lc "wget --no-check-cert -O /c/tmp/puNES_i686_dlls.zip 'https://www.dropbox.com/s/ye00129nyacdl05/puNES_i686_dlls.zip?dl=1' 1>/dev/null 2>&1"
 
     7z x c:\tmp\puNES_i686_dlls.zip -oC:\tmp\x32dll> NUL
 
