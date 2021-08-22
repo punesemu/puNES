@@ -600,28 +600,40 @@
  <tabstops>
   <tabstop>horizontalSlider_Scanline</tabstop>
   <tabstop>spinBox_Scanline</tabstop>
+  <tabstop>pushButton_Scanline</tabstop>
   <tabstop>horizontalSlider_Hue</tabstop>
   <tabstop>spinBox_Hue</tabstop>
+  <tabstop>pushButton_Hue</tabstop>
   <tabstop>horizontalSlider_Saturation</tabstop>
   <tabstop>spinBox_Saturation</tabstop>
+  <tabstop>pushButton_Saturation</tabstop>
   <tabstop>horizontalSlider_Contrast</tabstop>
   <tabstop>spinBox_Contrast</tabstop>
+  <tabstop>pushButton_Contrast</tabstop>
   <tabstop>horizontalSlider_Brightness</tabstop>
   <tabstop>spinBox_Brightness</tabstop>
+  <tabstop>pushButton_Brightness</tabstop>
   <tabstop>horizontalSlider_Sharpness</tabstop>
   <tabstop>spinBox_Sharpness</tabstop>
+  <tabstop>pushButton_Sharpness</tabstop>
   <tabstop>horizontalSlider_Gamma</tabstop>
   <tabstop>spinBox_Gamma</tabstop>
+  <tabstop>pushButton_Gamma</tabstop>
   <tabstop>horizontalSlider_Resolution</tabstop>
   <tabstop>spinBox_Resolution</tabstop>
+  <tabstop>pushButton_Resolution</tabstop>
   <tabstop>horizontalSlider_Artifacts</tabstop>
   <tabstop>spinBox_Artifacts</tabstop>
+  <tabstop>pushButton_Artifacts</tabstop>
   <tabstop>horizontalSlider_Fringing</tabstop>
   <tabstop>spinBox_Fringing</tabstop>
+  <tabstop>pushButton_Fringing</tabstop>
   <tabstop>horizontalSlider_Bleed</tabstop>
   <tabstop>spinBox_Bleed</tabstop>
+  <tabstop>pushButton_Bleed</tabstop>
   <tabstop>checkBox_Merge_Fields</tabstop>
   <tabstop>checkBox_Vertical_Blend</tabstop>
+  <tabstop>pushButton_MFields_VBlend</tabstop>
   <tabstop>pushButton_NTSC_Parameters_reset</tabstop>
  </tabstops>
  <resources>
