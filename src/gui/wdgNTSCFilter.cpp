@@ -40,12 +40,16 @@ wdgNTSCFilter::wdgNTSCFilter(QWidget *parent) : QWidget(parent) {
 	for (i = 0; i < LENGTH(parameters_desc); i++) {
 		QSlider *slider = findChild<QSlider *>("horizontalSlider_" + QString(parameters_desc[i]));
 		QSpinBox *sbox = findChild<QSpinBox *>("spinBox_" + QString(parameters_desc[i]));
+		QPushButton *btn = findChild<QPushButton *>("pushButton_" + QString(parameters_desc[i]));
 
 		slider->setProperty("myIndex", QVariant(i));
 		connect(slider, SIGNAL(valueChanged(int)), this, SLOT(s_slider_spin_changed(int)));
 
 		sbox->setProperty("myIndex", QVariant(i));
 		connect(sbox, SIGNAL(valueChanged(int)), this, SLOT(s_slider_spin_changed(int)));
+
+		btn->setProperty("myIndex", QVariant(i));
+		connect(btn, SIGNAL(clicked(bool)), this, SLOT(s_default_value_clicked(bool)));
 	}
 
 	checkBox_Merge_Fields->setProperty("myIndex", QVariant(0));
@@ -54,6 +58,7 @@ wdgNTSCFilter::wdgNTSCFilter(QWidget *parent) : QWidget(parent) {
 	checkBox_Vertical_Blend->setProperty("myIndex", QVariant(1));
 	connect(checkBox_Vertical_Blend, SIGNAL(stateChanged(int)), this, SLOT(s_checkbox_changed(int)));
 
+	connect(pushButton_MFields_VBlend, SIGNAL(clicked(bool)), this, SLOT(s_default_value_mv_clicked(bool)));
 	connect(pushButton_NTSC_Parameters_reset, SIGNAL(clicked(bool)), this, SLOT(s_reset(bool)));
 
 	installEventFilter(this);
@@ -174,6 +179,18 @@ void wdgNTSCFilter::s_checkbox_changed(int state) {
 			format->vertical_blend = state > 0;
 			break;
 	}
+	ntsc_effect_parameters_changed();
+}
+void wdgNTSCFilter::s_default_value_clicked(UNUSED(bool checked)) {
+	int index = QVariant(((QObject *)sender())->property("myIndex")).toInt();
+
+	ntsc_effect_parameter_default(index);
+	gui_update_ntsc_widgets();
+	ntsc_effect_parameters_changed();
+}
+void wdgNTSCFilter::s_default_value_mv_clicked(UNUSED(bool checked)) {
+	ntsc_effect_parameter_mv_default();
+	gui_update_ntsc_widgets();
 	ntsc_effect_parameters_changed();
 }
 void wdgNTSCFilter::s_reset(UNUSED(bool checked)) {

@@ -45,6 +45,8 @@ EXTERNC void ntsc_set(nes_ntsc_t *ntsc, BYTE create_palette, BYTE color, BYTE *p
 EXTERNC void ntsc_rgb_modifier(nes_ntsc_t *ntsc, BYTE *palette, SWORD min, SWORD red, SWORD green, SWORD blue);
 EXTERNC void ntsc_effect_parameters_changed(void);
 EXTERNC void ntsc_effect_parameters_default(void);
+EXTERNC void ntsc_effect_parameter_default(int index);
+EXTERNC void ntsc_effect_parameter_mv_default(void);
 EXTERNC void ntsc_surface(void);
 
 #undef EXTERNC

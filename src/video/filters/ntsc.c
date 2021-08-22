@@ -129,6 +129,76 @@ void ntsc_effect_parameters_default(void) {
 			break;
 	}
 }
+void ntsc_effect_parameter_default(int index) {
+	nes_ntsc_setup_t *format;
+
+	switch (cfg->ntsc_format) {
+		default:
+		case COMPOSITE:
+			format = (nes_ntsc_setup_t *)&nes_ntsc_composite;
+			break;
+		case SVIDEO:
+			format = (nes_ntsc_setup_t *)&nes_ntsc_svideo;
+			break;
+		case RGBMODE:
+			format = (nes_ntsc_setup_t *)&nes_ntsc_rgb;
+			break;
+	}
+	switch (index) {
+		default:
+		case 0:
+			ntsc_filter.format[cfg->ntsc_format].hue = format->hue;
+			break;
+		case 1:
+			ntsc_filter.format[cfg->ntsc_format].saturation = format->saturation;
+			break;
+		case 2:
+			ntsc_filter.format[cfg->ntsc_format].contrast = format->contrast;
+			break;
+		case 3:
+			ntsc_filter.format[cfg->ntsc_format].brightness = format->brightness;
+			break;
+		case 4:
+			ntsc_filter.format[cfg->ntsc_format].sharpness = format->sharpness;
+			break;
+		case 5:
+			ntsc_filter.format[cfg->ntsc_format].gamma = format->gamma;
+			break;
+		case 6:
+			ntsc_filter.format[cfg->ntsc_format].resolution = format->resolution;
+			break;
+		case 7:
+			ntsc_filter.format[cfg->ntsc_format].artifacts = format->artifacts;
+			break;
+		case 8:
+			ntsc_filter.format[cfg->ntsc_format].fringing = format->fringing;
+			break;
+		case 9:
+			ntsc_filter.format[cfg->ntsc_format].bleed = format->bleed;
+			break;
+		case 10:
+			ntsc_filter.format[cfg->ntsc_format].scanline_intensity = format->scanline_intensity;
+			break;
+	}
+}
+void ntsc_effect_parameter_mv_default(void) {
+	nes_ntsc_setup_t *format;
+
+	switch (cfg->ntsc_format) {
+		default:
+		case COMPOSITE:
+			format = (nes_ntsc_setup_t *)&nes_ntsc_composite;
+			break;
+		case SVIDEO:
+			format = (nes_ntsc_setup_t *)&nes_ntsc_svideo;
+			break;
+		case RGBMODE:
+			format = (nes_ntsc_setup_t *)&nes_ntsc_rgb;
+			break;
+	}
+	ntsc_filter.format[cfg->ntsc_format].merge_fields = format->merge_fields;
+	ntsc_filter.format[cfg->ntsc_format].vertical_blend = format->vertical_blend;
+}
 void ntsc_surface(void) {
 	static int burst_count = 0, burst_phase = 0;
 	int y;

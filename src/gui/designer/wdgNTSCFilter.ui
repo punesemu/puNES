@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>446</width>
+    <width>413</width>
     <height>206</height>
    </rect>
   </property>
@@ -29,7 +29,7 @@
    <item row="4" column="0" colspan="3">
     <widget class="QPushButton" name="pushButton_NTSC_Parameters_reset">
      <property name="text">
-      <string>Reset to defaults</string>
+      <string>Reset paramaters to defaults</string>
      </property>
      <property name="icon">
       <iconset resource="resources.qrc">
@@ -39,16 +39,13 @@
    </item>
    <item row="1" column="2">
     <layout class="QGridLayout" name="gridLayout_parameters_2">
-     <item row="1" column="1">
-      <widget class="QSlider" name="horizontalSlider_Resolution">
-       <property name="minimum">
-        <number>-100</number>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_Artifacts">
+       <property name="text">
+        <string>Artifacts</string>
        </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -64,90 +61,14 @@
      </item>
      <item row="2" column="2">
       <widget class="QSpinBox" name="spinBox_Artifacts">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
        <property name="minimum">
         <number>-100</number>
        </property>
        <property name="maximum">
         <number>100</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QSlider" name="horizontalSlider_Gamma">
-       <property name="minimum">
-        <number>-100</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QSpinBox" name="spinBox_Gamma">
-       <property name="minimum">
-        <number>-100</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QSlider" name="horizontalSlider_Artifacts">
-       <property name="minimum">
-        <number>-100</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_Gamma">
-       <property name="text">
-        <string>Gamma</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_Resolution">
-       <property name="text">
-        <string>Resolution</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QSlider" name="horizontalSlider_Fringing">
-       <property name="minimum">
-        <number>-100</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_Bleed">
-       <property name="text">
-        <string>Bleed</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -164,18 +85,24 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="2">
-      <widget class="QSpinBox" name="spinBox_Fringing">
+     <item row="3" column="1">
+      <widget class="QSlider" name="horizontalSlider_Fringing">
        <property name="minimum">
         <number>-100</number>
        </property>
        <property name="maximum">
         <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
       <widget class="QSpinBox" name="spinBox_Resolution">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
        <property name="minimum">
         <number>-100</number>
        </property>
@@ -184,8 +111,24 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="2">
-      <widget class="QSpinBox" name="spinBox_Bleed">
+     <item row="1" column="1">
+      <widget class="QSlider" name="horizontalSlider_Resolution">
+       <property name="minimum">
+        <number>-100</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QSpinBox" name="spinBox_Gamma">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
        <property name="minimum">
         <number>-100</number>
        </property>
@@ -194,43 +137,41 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_Artifacts">
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_Resolution">
        <property name="text">
-        <string>Artifacts</string>
+        <string>Resolution</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
-     <item row="5" column="0" colspan="3">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QCheckBox" name="checkBox_Merge_Fields">
-         <property name="text">
-          <string>Merge Fields</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_Vertical_Blend">
-         <property name="layoutDirection">
-          <enum>Qt::RightToLeft</enum>
-         </property>
-         <property name="text">
-          <string>Vertical Blend</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_Gamma">
+       <property name="text">
+        <string>Gamma</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
      </item>
-    </layout>
-   </item>
-   <item row="1" column="0">
-    <layout class="QGridLayout" name="gridLayout_parameters_1">
-     <item row="5" column="1">
-      <widget class="QSlider" name="horizontalSlider_Sharpness">
+     <item row="2" column="1">
+      <widget class="QSlider" name="horizontalSlider_Artifacts">
+       <property name="minimum">
+        <number>-100</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSlider" name="horizontalSlider_Gamma">
        <property name="minimum">
         <number>-100</number>
        </property>
@@ -243,7 +184,10 @@
       </widget>
      </item>
      <item row="3" column="2">
-      <widget class="QSpinBox" name="spinBox_Contrast">
+      <widget class="QSpinBox" name="spinBox_Fringing">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
        <property name="minimum">
         <number>-100</number>
        </property>
@@ -252,8 +196,11 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="2">
-      <widget class="QSpinBox" name="spinBox_Sharpness">
+     <item row="4" column="2">
+      <widget class="QSpinBox" name="spinBox_Bleed">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
        <property name="minimum">
         <number>-100</number>
        </property>
@@ -262,13 +209,117 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_Scanline">
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_Bleed">
        <property name="text">
-        <string>Scanline</string>
+        <string>Bleed</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="pushButton_Gamma">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QPushButton" name="pushButton_Resolution">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QPushButton" name="pushButton_Artifacts">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QPushButton" name="pushButton_Fringing">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="3">
+      <widget class="QPushButton" name="pushButton_Bleed">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QCheckBox" name="checkBox_Merge_Fields">
+         <property name="text">
+          <string>MFields</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_Vertical_Blend">
+         <property name="layoutDirection">
+          <enum>Qt::RightToLeft</enum>
+         </property>
+         <property name="text">
+          <string>VBlend</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="5" column="3">
+      <widget class="QPushButton" name="pushButton_MFields_VBlend">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <layout class="QGridLayout" name="gridLayout_parameters_1">
+     <item row="1" column="1">
+      <widget class="QSlider" name="horizontalSlider_Hue">
+       <property name="minimum">
+        <number>-100</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -276,53 +327,6 @@
       <widget class="QLabel" name="label_Sharpness">
        <property name="text">
         <string>Sharpness</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_Hue">
-       <property name="text">
-        <string>Hue</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QSpinBox" name="spinBox_Hue">
-       <property name="minimum">
-        <number>-100</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QSpinBox" name="spinBox_Scanline">
-       <property name="maximum">
-        <number>100</number>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_Contrast">
-       <property name="text">
-        <string>Contrast</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_Saturation">
-       <property name="text">
-        <string>Saturation</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -339,49 +343,72 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_Hue">
+       <property name="text">
+        <string>Hue</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_Contrast">
+       <property name="text">
+        <string>Contrast</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QSpinBox" name="spinBox_Scanline">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2">
+      <widget class="QSpinBox" name="spinBox_Sharpness">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
+       <property name="minimum">
+        <number>-100</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QSpinBox" name="spinBox_Hue">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
+       <property name="minimum">
+        <number>-100</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
      <item row="2" column="2">
       <widget class="QSpinBox" name="spinBox_Saturation">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
        <property name="minimum">
         <number>-100</number>
        </property>
        <property name="maximum">
         <number>100</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QSlider" name="horizontalSlider_Scanline">
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QSlider" name="horizontalSlider_Contrast">
-       <property name="minimum">
-        <number>-100</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QSlider" name="horizontalSlider_Hue">
-       <property name="minimum">
-        <number>-100</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
@@ -390,6 +417,16 @@
        <property name="minimum">
         <number>-100</number>
        </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSlider" name="horizontalSlider_Scanline">
        <property name="maximum">
         <number>100</number>
        </property>
@@ -411,13 +448,141 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="2">
-      <widget class="QSpinBox" name="spinBox_Brightness">
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_Saturation">
+       <property name="text">
+        <string>Saturation</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QSlider" name="horizontalSlider_Contrast">
        <property name="minimum">
         <number>-100</number>
        </property>
        <property name="maximum">
         <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QSpinBox" name="spinBox_Brightness">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
+       <property name="minimum">
+        <number>-100</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QSpinBox" name="spinBox_Contrast">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
+       <property name="minimum">
+        <number>-100</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_Scanline">
+       <property name="text">
+        <string>Scanline</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QSlider" name="horizontalSlider_Sharpness">
+       <property name="minimum">
+        <number>-100</number>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="pushButton_Scanline">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QPushButton" name="pushButton_Hue">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QPushButton" name="pushButton_Saturation">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QPushButton" name="pushButton_Contrast">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="3">
+      <widget class="QPushButton" name="pushButton_Brightness">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="3">
+      <widget class="QPushButton" name="pushButton_Sharpness">
+       <property name="text">
+        <string notr="true"/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
        </property>
       </widget>
      </item>
