@@ -1689,22 +1689,22 @@ void objShp::rd(QString group) {
 			continue;
 		}
 
-		rd_key(pshd, param);
+		rd_pshd_key(pshd, param);
 		param++;
 	}
 	fr_cfg(group);
 }
-void objShp::rd_key(void *pshd, int index) {
+void objShp::rd_pshd_key(void *pshd, int index) {
 	_param_shd *p = (_param_shd *)pshd;
 
 	val.replace(index, value(QString(p->desc), QVariant(p->initial)).toString());
 }
-
-void objShp::wr_key(void *pshd, int index) {
+void objShp::wr_pshd_key(void *pshd, int index) {
 	_param_shd *p = (_param_shd *)pshd;
 
 	setValue(QString(p->desc), val.at(index));
 }
+
 void objShp::wr_all_keys(void) {
 	int i, param = 0;
 
@@ -1715,7 +1715,7 @@ void objShp::wr_all_keys(void) {
 			continue;
 		}
 
-		wr_key(pshd, param);
+		wr_pshd_key(pshd, param);
 		param++;
 	}
 	sync();

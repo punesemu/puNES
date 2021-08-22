@@ -76,7 +76,6 @@ class objSettings : public QSettings {
 		void int_to_val(int index, int value);
 		void cpy_val_to_utchar(int index, uTCHAR *dst, int length);
 };
-
 class objSet : public objSettings {
 	public:
 		objSet(Format f, QString file, int list_ele);
@@ -126,7 +125,6 @@ class objSet : public objSettings {
 		void last_geometry_val_to_int(int index, _last_geometry *lg);
 		QString last_geometry_val(_last_geometry *lg);
 };
-
 class objPgs : public objSettings {
 	public:
 		objPgs(Format f, QString file, int list_ele);
@@ -137,7 +135,6 @@ class objPgs : public objSettings {
 		void to_cfg(QString group);
 		void fr_cfg(QString group);
 };
-
 class objInp : public objSettings {
 	public:
 		objInp(Format f, QString file, int list_ele);
@@ -179,7 +176,6 @@ class objInp : public objSettings {
 	private:
 		int tb_delay_val_to_int(int index);
 };
-
 class objShp : public objSettings {
 	public:
 		objShp(Format f, QString file, int list_ele);
@@ -193,10 +189,12 @@ class objShp : public objSettings {
 	protected:
 		void rd(void);
 		void rd(QString group);
-		void rd_key(void *pshd, int index);
+
+	private:
+		void rd_pshd_key(void *pshd, int index);
+		void wr_pshd_key(void *pshd, int index);
 
 	protected:
-		void wr_key(void *pshd, int index);
 		void wr_all_keys(void);
 
 	private:
