@@ -104,7 +104,7 @@ EXTERNC void gfx_monitor_init(void);
 EXTERNC void gfx_monitor_quit(void);
 EXTERNC void gfx_monitor_enum_monitors(void);
 EXTERNC void gfx_monitor_enum_resolutions(void);
-EXTERNC BYTE gfx_monitor_set_res(int w, int h, BYTE adaptive_rrate, BYTE is_change_mode);
+EXTERNC BYTE gfx_monitor_set_res(int w, int h, BYTE adaptive_rrate, BYTE change_rom_mode);
 EXTERNC BYTE gfx_monitor_restore_res(void);
 EXTERNC void gfx_monitor_mode_in_use_info(int *x, int *y, int *w, int *h, int *rrate);
 EXTERNC void gfx_monitor_edid_parse(const uint8_t *edid, _monitor_info *mi);

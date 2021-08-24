@@ -148,7 +148,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void et_gg_reset(void);
 		void et_vs_reset(void);
 		void et_external_control_windows_show(void);
-		void fullscreen(bool state);
 
 	protected:
 #if defined (_WIN32)

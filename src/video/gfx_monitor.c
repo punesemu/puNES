@@ -277,13 +277,13 @@ void gfx_monitor_enum_resolutions(void) {
 		}
 	}
 }
-BYTE gfx_monitor_set_res(int w, int h, BYTE adaptive_rrate, BYTE is_change_mode) {
+BYTE gfx_monitor_set_res(int w, int h, BYTE adaptive_rrate, BYTE change_rom_mode) {
 	_monitor_mode_info *mode_info_org;
 	_monitor_info *mi;
 	double rrate;
 	int mode_new;
 
-	if (is_change_mode == FALSE) {
+	if (change_rom_mode == FALSE) {
 		gfx_monitor_enum_monitors();
 	}
 
@@ -373,7 +373,9 @@ BYTE gfx_monitor_set_res(int w, int h, BYTE adaptive_rrate, BYTE is_change_mode)
 		ufprintf(stderr, uL("gfx_monitor: " uPERCENTs " switch to %dx%d, %fHz\n"),
 			mi->desc, mode_info_new->w, mode_info_new->h, mode_info_new->rrate);
 
-		gui_mainwindow_before_set_res();
+		if (change_rom_mode == FALSE) {
+			gui_mainwindow_before_set_res();
+		}
 		gui_monitor_set_res((void *)mi, (void *)mode_info_new);
 
 		mi->mode_new = mode_new;

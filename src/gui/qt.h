@@ -173,7 +173,6 @@ EXTERNC void *gui_mainwindow_get_ptr(void);
 EXTERNC void gui_mainwindow_coords(int *x, int *y, BYTE border);
 EXTERNC void gui_mainwindow_before_set_res(void);
 
-
 EXTERNC void *gui_wdgrewind_get_ptr(void);
 EXTERNC void gui_wdgrewind_play(void);
 

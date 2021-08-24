@@ -165,9 +165,9 @@ mainWindow::mainWindow() : QMainWindow() {
 
 	connect(shcjoy.timer, SIGNAL(timeout()), this, SLOT(s_shcjoy_read_timer()));
 
-	connect(this, SIGNAL(et_gg_reset()), this, SLOT(s_et_gg_reset()));
-	connect(this, SIGNAL(et_vs_reset()), this, SLOT(s_et_vs_reset()));
-	connect(this, SIGNAL(et_external_control_windows_show()), this, SLOT(s_et_external_control_windows_show()));
+	connect(this, SIGNAL(et_gg_reset(void)), this, SLOT(s_et_gg_reset(void)));
+	connect(this, SIGNAL(et_vs_reset(void)), this, SLOT(s_et_vs_reset(void)));
+	connect(this, SIGNAL(et_external_control_windows_show(void)), this, SLOT(s_et_external_control_windows_show(void)));
 
 	egds = new timerEgds(this);
 
