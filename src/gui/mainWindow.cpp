@@ -333,12 +333,12 @@ void mainWindow::update_recording_widgets(void) {
 
 	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_REC_AUDIO, KEYBOARD);
 	action_Start_Stop_Audio_recording->setEnabled(audio);
-	action_Start_Stop_Audio_recording->setText(sa + '\t' + (*sc));
+	action_text(action_Start_Stop_Audio_recording, sa, sc);
 	action_Start_Stop_Audio_recording->setIcon(ia);
 
 	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_REC_VIDEO, KEYBOARD);
 	action_Start_Stop_Video_recording->setEnabled(video);
-	action_Start_Stop_Video_recording->setText(sv + '\t' + (*sc));
+	action_text(action_Start_Stop_Video_recording, sv, sc);
 	action_Start_Stop_Video_recording->setIcon(iv);
 #else
 	QIcon ia = QIcon(":/icon/icons/wav_start.svg");
@@ -358,7 +358,7 @@ void mainWindow::update_recording_widgets(void) {
 
 	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_REC_AUDIO, KEYBOARD);
 	action_Start_Stop_Audio_recording->setEnabled(audio);
-	action_Start_Stop_Audio_recording->setText(sa + '\t' + (*sc));
+	action_text(action_Start_Stop_Audio_recording, sa, sc);
 	action_Start_Stop_Audio_recording->setIcon(ia);
 
 	action_Start_Stop_Video_recording->setVisible(false);
@@ -768,11 +768,7 @@ void mainWindow::connect_shortcut(QAction *action, int index) {
 		QStringList text = action->text().split('\t');
 
 		action->setShortcut(QKeySequence((*sc)));
-		if ((*sc) == "NULL") {
-			action->setText(text.at(0));
-		} else {
-			action->setText(text.at(0) + '\t' + (*sc));
-		}
+		action_text(action, text.at(0), sc);
 	}
 }
 void mainWindow::connect_shortcut(QAction *action, int index, const char *member) {
@@ -791,11 +787,7 @@ void mainWindow::connect_shortcut(QAction *action, int index, const char *member
 		// connetto il nuovo
 		connect(shortcut[index], SIGNAL(activated()), this, member);
 
-		if ((*sc) == "NULL") {
-			action->setText(text.at(0));
-		} else {
-			action->setText(text.at(0) + '\t' + (*sc));
-		}
+		action_text(action, text.at(0), sc);
 	}
 }
 
@@ -851,10 +843,10 @@ void mainWindow::update_menu_nes(void) {
 	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TURN_OFF, KEYBOARD);
 
 	if (info.turn_off) {
-		action_Turn_Off->setText(tr("&Turn On") + '\t' + (*sc));
+		action_text(action_Turn_Off, tr("&Turn On"), sc);
 		action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_on.svg"));
 	} else {
-		action_Turn_Off->setText(tr("&Turn Off") + '\t' + (*sc));
+		action_text(action_Turn_Off, tr("&Turn Off"), sc);
 		action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_off.svg"));
 	}
 
@@ -882,9 +874,9 @@ void mainWindow::update_menu_nes(void) {
 
 	if (fds.info.enabled && (rwnd.active == FALSE)) {
 		if (fds.drive.disk_ejected) {
-			action_Eject_Insert_Disk->setText(tr("&Insert disk") + '\t' + (*sc));
+			action_text(action_Eject_Insert_Disk, tr("&Insert disk"), sc);
 		} else {
-			action_Eject_Insert_Disk->setText(tr("&Eject disk") + '\t' + (*sc));
+			action_text(action_Eject_Insert_Disk, tr("&Eject disk"), sc);
 		}
 
 		menu_Disk_Side->setEnabled(true);
@@ -898,7 +890,7 @@ void mainWindow::update_menu_nes(void) {
 		ctrl_disk_side(action_Disk_4_side_B);
 		action_Eject_Insert_Disk->setEnabled(true);
 	} else {
-		action_Eject_Insert_Disk->setText(tr("&Eject/Insert disk") + '\t' + (*sc));
+		action_text(action_Eject_Insert_Disk, tr("&Eject/Insert disk"), sc);
 		menu_Disk_Side->setEnabled(false);
 		action_Eject_Insert_Disk->setEnabled(false);
 	}
@@ -958,6 +950,13 @@ void mainWindow::update_menu_state(void) {
 	action_State_Load_from_file->setEnabled(state);
 }
 
+void mainWindow::action_text(QAction *action, QString description, QString *shortcut) {
+	if ((*shortcut) == "NULL") {
+		action->setText(description);
+	} else {
+		action->setText(description + '\t' + (*shortcut));
+	}
+}
 void mainWindow::ctrl_disk_side(QAction *action) {
 	int side = QVariant(action->property("myValue")).toInt();
 

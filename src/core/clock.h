@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-typedef struct {
+typedef struct _machine {
 	WORD type;                      /* il tipo di formato */
 	BYTE fps;                       /* il framerate */
 	double base_hz;                 /* il clock di base (Hz) */

@@ -193,6 +193,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void update_menu_state(void);
 
 	private:
+		void action_text(QAction *action, QString description, QString *shortcut);
 		void ctrl_disk_side(QAction *action);
 		int is_shortcut(const QKeyEvent *event);
 		QScreen *win_handle_screen(void);
