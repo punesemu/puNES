@@ -128,7 +128,7 @@ _recording_format_info recording_format_info[REC_FORMAT_TOTAL] = {
 	{ FALSE, "mpeg"    , { "mpg" , "mpeg", "end" } , REC_FORMAT_VIDEO, NULL, { "mpeg2video", "end" } },
 	{ FALSE, "mp4"     , { "mp4" , "end" }         , REC_FORMAT_VIDEO, NULL, { "mpeg4", "msmpeg4", "libxvid", "end" } },
 	{ FALSE, "mp4"     , { "mp4" , "end" }         , REC_FORMAT_VIDEO, NULL, { "h264_nvenc", "libx264", "h264_omx", "end" } },
-	{ FALSE, "matroska", { "mkv" , "end" }         , REC_FORMAT_VIDEO, NULL, { "hevc_nvenc", "hevc_vaapi", "libx265", "end" } },
+	{ FALSE, "matroska", { "mkv" , "end" }         , REC_FORMAT_VIDEO, NULL, { "hevc_nvenc", "libx265", "end" } },
 	{ FALSE, "webm"    , { "webm", "end" }         , REC_FORMAT_VIDEO, NULL, { "libvpx-vp9", "libvpx", "end" } },
 	{ FALSE, "avi"     , { "wmv" , "end" }         , REC_FORMAT_VIDEO, NULL, { "wmv2", "wmv1", "end" } },
 	{ FALSE, "avi"     , { "avi" , "end" }         , REC_FORMAT_VIDEO, NULL, { "ffv1", "end" } },
@@ -957,7 +957,7 @@ static BYTE ffmpeg_video_add_stream_format_hevc(void) {
 		break;
 		case REC_QUALITY_HIGH:
 			vbr = 90;
-			av_dict_set(&opts, "profile", "2", 0);
+			dst_pixel_format = AV_PIX_FMT_YUV444P;
 			break;
 	}
 
@@ -970,11 +970,17 @@ static BYTE ffmpeg_video_add_stream_format_hevc(void) {
 		// https://trac.ffmpeg.org/wiki/Encode/H.265
 		av_dict_set(&opts, "preset", "ultrafast", 0);
 		av_dict_set(&opts, "tune", "zerolatency", 0);
+		if (cfg->recording.quality == REC_QUALITY_HIGH) {
+			av_dict_set(&opts, "profile", "main444-12", 0);
+		}
 		// configuro il constant rate factor
 		ffmpeg_video_set_opt_vbr(opts, "crf", vbr);
 	} else if ((strcmp(video->avc->name, "hevc_nvenc") == 0)) {
 		av_dict_set(&opts, "preset", "3", 0);
 		av_dict_set(&opts, "zerolatency", "1", 0);
+		if (cfg->recording.quality == REC_QUALITY_HIGH) {
+			av_dict_set(&opts, "profile", "2", 0);
+		}
 		av_dict_set(&opts, "rc", "0", 0);
 		ffmpeg_video_set_opt_vbr(opts, "qp", vbr);
 	}
