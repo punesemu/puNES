@@ -39,6 +39,9 @@ wdgStatusBar::wdgStatusBar(QWidget *parent) : QStatusBar(parent) {
 	info = new infoStatusBar(this);
 	addWidget(info, 1);
 
+	alg = new alignmentStatusBar(this);
+	addWidget(alg, 0);
+
 	rec = new recStatusBar(this);
 	addWidget(rec, 0);
 
@@ -59,6 +62,7 @@ void wdgStatusBar::showEvent(QShowEvent *event) {
 }
 
 void wdgStatusBar::update_statusbar(void) {
+	alg->update_label();
 	info->update_label();
 }
 
@@ -99,30 +103,59 @@ void infoStatusBar::update_label(void) {
 		label->setToolTip("");
 	} else {
 		QFileInfo fileinfo = QFileInfo(uQString(rom));
+		QString base = "";
 
 		if (patch == TRUE) {
-			label->setText("*" + fileinfo.fileName());
-		} else {
-			label->setText(fileinfo.fileName());
+			base += "*";
 		}
+		label->setText(base + fileinfo.fileName());
 		label->setToolTip(fileinfo.filePath());
 	}
 }
 
-// ----------------------------------- Rec --------------------------------------------
+// ----------------------------- Alignment CPU PPU ------------------------------------
 
-recStatusBar::recStatusBar(QWidget *parent) : QFrame(parent) {
-	QHBoxLayout *layout = new QHBoxLayout();
+alignmentStatusBar::alignmentStatusBar(QWidget *parent) : QFrame(parent) {
+	QHBoxLayout *layout = new QHBoxLayout(this);
 
 	setFrameShape(QFrame::Panel);
 	setFrameShadow(QFrame::Sunken);
 
 	layout->setContentsMargins(QMargins(0,0,0,0));
 
-	desc = new QLabel();
+	label = new QLabel(this);
+	label->setText("c00p0");
+	label->setEnabled(false);
+	layout->addWidget(label);
+
+	setLayout(layout);
+
+}
+alignmentStatusBar::~alignmentStatusBar() {}
+
+void alignmentStatusBar::update_label(void) {
+	if (cfg->ppu_alignment == PPU_ALIGMENT_DEFAULT) {
+		hide();
+	} else {
+		label->setText(QString("c%0p%1").arg(ppu_alignment.cpu, 2, 'd', 0, '0').arg(ppu_alignment.ppu));
+		show();
+	}
+}
+
+// ----------------------------------- Rec --------------------------------------------
+
+recStatusBar::recStatusBar(QWidget *parent) : QFrame(parent) {
+	QHBoxLayout *layout = new QHBoxLayout(this);
+
+	setFrameShape(QFrame::Panel);
+	setFrameShadow(QFrame::Sunken);
+
+	layout->setContentsMargins(QMargins(0,0,0,0));
+
+	desc = new QLabel(this);
 	layout->addWidget(desc);
 
-	icon = new QLabel();
+	icon = new QLabel(this);
 	layout->addWidget(icon);
 
 	setLayout(layout);

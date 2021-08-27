@@ -45,6 +45,8 @@ wdgSettingsPPU::wdgSettingsPPU(QWidget *parent) : QWidget(parent) {
 
 	connect(pushButton_Reset_Lag_Counter, SIGNAL(clicked(bool)), this, SLOT(s_lag_counter_reset(bool)));
 
+	connect(comboBox_CPUPPU_Alignment, SIGNAL(activated(int)), this, SLOT(s_cpuppu_aligment(int)));
+
 	installEventFilter(this);
 }
 wdgSettingsPPU::~wdgSettingsPPU() {}
@@ -61,6 +63,7 @@ void wdgSettingsPPU::showEvent(QShowEvent *event) {
 
 	icon_Sprites_and_background->setPixmap(QIcon(":/icon/icons/background.svg").pixmap(dim, dim));
 	icon_PPU_Overclock->setPixmap(QIcon(":/icon/icons/speedometer.svg").pixmap(dim, dim));
+	icon_PPU_Advanced->setPixmap(QIcon(":/icon/icons/chip.svg").pixmap(dim, dim));
 
 	QWidget::showEvent(event);
 }
@@ -83,6 +86,8 @@ void wdgSettingsPPU::update_widget(void) {
 
 	spinBox_Postrender_Slines->setEnabled(cfg->ppu_overclock);
 	qtHelper::spinbox_set_value(spinBox_Postrender_Slines, cfg->extra_pr_scanlines);
+
+	comboBox_CPUPPU_Alignment->setCurrentIndex(cfg->ppu_alignment);
 
 	lag_counter_update();
 }
@@ -145,4 +150,14 @@ void wdgSettingsPPU::s_lag_counter_reset(UNUSED(bool checked)) {
 	emu_thread_continue();
 	lag_counter_update();
 	update_widget();
+}
+void wdgSettingsPPU::s_cpuppu_aligment(int index) {
+	if (cfg->ppu_alignment == index) {
+		return;
+	} else if (index == PPU_ALIGMENT_INC_AT_RESET) {
+		ppu_alignment_reset();
+	}
+	cfg->ppu_alignment = index;
+	update_widget();
+	gui_update_status_bar();
 }

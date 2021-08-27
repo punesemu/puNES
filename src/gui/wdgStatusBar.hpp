@@ -67,9 +67,23 @@ class recStatusBar : public QFrame {
 		void s_blink_icon(void);
 		void s_context_menu(const QPoint& pos);
 };
+class alignmentStatusBar : public QFrame {
+	Q_OBJECT
+
+	private:
+		QLabel *label;
+
+	public:
+		alignmentStatusBar(QWidget *parent = 0);
+		~alignmentStatusBar();
+
+	public:
+		void update_label(void);
+};
 class wdgStatusBar : public QStatusBar {
 	public:
 		infoStatusBar *info;
+		alignmentStatusBar *alg;
 		recStatusBar *rec;
 
 	public:

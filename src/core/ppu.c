@@ -29,6 +29,8 @@
 #include "irql2f.h"
 #include "conf.h"
 #include "fps.h"
+#include "emu.h"
+#include "gui.h"
 
 enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 
@@ -127,6 +129,7 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 		spl[spenv.tmp_spr_plus].h_byte = (inv_chr[ppu_rd_mem(sadr | 0x08)] << 1);\
 	}
 
+static void ppu_alignment_init(void);
 static BYTE ppu_alloc_screen_buffer(_screen_buffer *sb);
 INLINE static void ppu_oam_evaluation(void);
 
@@ -186,6 +189,7 @@ _spr sprite_unl[56], sprite_plus_unl[56];
 _tile tile_render, tile_fetch;
 _ppu_sclines ppu_sclines;
 _overclock overclock;
+_ppu_alignment ppu_alignment;
 
 void ppu_init(void) {
 	memset(&screen, 0x00, sizeof(screen));
@@ -1051,6 +1055,7 @@ BYTE ppu_turn_on(void) {
 			for (a = 0; a < 56; ++a) {
 				oam.ele_plus_unl[a] = &oam.plus_unl[(a * 4)];
 			}
+			ppu_alignment_reset();
 		}
 		/* reinizializzazione completa della PPU */
 		{
@@ -1079,6 +1084,7 @@ BYTE ppu_turn_on(void) {
 			/* e paletta dei colori */
 			memcpy(mmap_palette.color, palette_init, sizeof(mmap_palette.color));
 		}
+		ppu_alignment_init();
 	} else {
 		memset(&r2000, 0x00, sizeof(r2000));
 		memset(&r2001, 0x00, sizeof(r2001));
@@ -1140,6 +1146,40 @@ void ppu_draw_screen_continue_ctrl_count(int *count) {
 	(*count) = 0;
 }
 
+void ppu_alignment_reset(void) {
+	ppu_alignment.count.cpu = 0;
+	ppu_alignment.count.ppu = 0;
+}
+
+static void ppu_alignment_init(void) {
+	switch (cfg->ppu_alignment) {
+		default:
+		case PPU_ALIGMENT_DEFAULT:
+			ppu_alignment.cpu = 0;
+			ppu_alignment.ppu = 1;
+			break;
+		case PPU_ALIGMENT_RANDOMIZE:
+			ppu_alignment.cpu = emu_irand(100) % machine.cpu_divide;
+			ppu_alignment.ppu = emu_irand(100) % machine.ppu_divide;
+			break;
+		case PPU_ALIGMENT_INC_AT_RESET:
+			ppu_alignment.cpu = ppu_alignment.count.cpu;
+			ppu_alignment.ppu = ppu_alignment.count.ppu;
+			break;
+	}
+
+	ppu.cycles = (ppu_alignment.cpu + (-ppu_alignment.ppu + 1)) % machine.cpu_divide;
+
+	if (cfg->ppu_alignment == PPU_ALIGMENT_INC_AT_RESET) {
+		if ((ppu_alignment.count.cpu = (ppu_alignment.count.cpu + 1) % machine.cpu_divide) == 0) {
+			ppu_alignment.count.ppu = (ppu_alignment.count.ppu + 1) % machine.ppu_divide;
+		}
+	}
+
+	if (gui.start == TRUE) {
+		gui_update_status_bar();
+	}
+}
 static BYTE ppu_alloc_screen_buffer(_screen_buffer *sb) {
 	BYTE b;
 

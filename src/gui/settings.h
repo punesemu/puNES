@@ -31,6 +31,7 @@
 #include "nsf.h"
 #include "rewind.h"
 #include "palette.h"
+#include "ppu.h"
 #if defined (WITH_FFMPEG)
 #include "recording.h"
 #endif
@@ -123,6 +124,7 @@ enum set_element {
 	SET_HIDE_SPRITES,
 	SET_HIDE_BACKGROUND,
 	SET_UNLIMITED_SPRITES,
+	SET_PPU_ALIGNMENT,
 	SET_NSF_PLAYER_EFFECT,
 	SET_NSF_PLAYER_NSFE_PLAYLIST,
 	SET_NSF_PLAYER_NSFE_FADEOUT,
@@ -541,7 +543,11 @@ static const _opt opt_recording_output_resolution[] = {
 	{NULL, uL("1920x1080"), REC_RES_1920x1080}
 };
 #endif
-
+static const _opt opt_cpuppu_aligment[] = {
+	{NULL, uL("default")           , PPU_ALIGMENT_DEFAULT},
+	{NULL, uL("randomize")         , PPU_ALIGMENT_RANDOMIZE},
+	{NULL, uL("increment at reset"), PPU_ALIGMENT_INC_AT_RESET}
+};
 static const _opt opt_toolbar_area[] = {
 	{NULL, uL("top")   , TLB_TOP},
 	{NULL, uL("left")  , TLB_LEFT},
@@ -1072,6 +1078,12 @@ static const _settings main_cfg[] = {
 		uL("# possible values: yes, no"),
 		uL("    --unlimited-sprites                         : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("ppu"), uL("cpu ppu alignment"), uL("default"),
+		uL("# possible values: default, randomize, increment at reset"),
+		NULL,
+		{LENGTH(opt_cpuppu_aligment), opt_cpuppu_aligment}
 	},
 	{
 		uL("player"), uL("effect"), uL("bars"),

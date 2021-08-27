@@ -768,6 +768,7 @@ void objSet::to_cfg(QString group) {
 		int_to_val(SET_HIDE_SPRITES, cfg_from_file.hide_sprites);
 		int_to_val(SET_HIDE_BACKGROUND, cfg_from_file.hide_background);
 		int_to_val(SET_UNLIMITED_SPRITES, cfg_from_file.unlimited_sprites);
+		int_to_val(SET_PPU_ALIGNMENT, cfg_from_file.ppu_alignment);
 	}
 
 	if ((group == "nsf player") || (group == "all")) {
@@ -887,6 +888,7 @@ void objSet::fr_cfg(QString group) {
 		cfg_from_file.hide_sprites = val_to_int(SET_HIDE_SPRITES);
 		cfg_from_file.hide_background = val_to_int(SET_HIDE_BACKGROUND);
 		cfg_from_file.unlimited_sprites = val_to_int(SET_UNLIMITED_SPRITES);
+		cfg_from_file.ppu_alignment = val_to_int(SET_PPU_ALIGNMENT);
 	}
 
 	if ((group == "nsf player") || (group == "all")) {
@@ -1101,10 +1103,10 @@ double objSet::val_to_double(WORD round, const uTCHAR *buffer) {
 	double ret = 0;
 
 	if (round > 0) {
-		value = emu_round_WORD(value, round);\
+		value = emu_round_WORD(value, round);
 	}
 
-	ret = ((double) value) / 100.0f;
+	ret = ((double)value) / 100.0f;
 
 	if (ret > 1.0f) {
 		ret = 1.0f;
@@ -1116,7 +1118,7 @@ double objSet::val_to_double(int index, WORD round) {
 	return (val_to_double(round, uQStringCD(val.at(index))));
 }
 void objSet::double_to_val(int index, double value) {
-	val.replace(index, QString().setNum((int) (value * 100.0f)));
+	val.replace(index, QString().setNum((int)(value * 100.0f)));
 }
 void objSet::last_geometry_val_to_int(int index, _last_geometry *lg) {
 	QStringList splitted = QString(val.at(index)).split(",");
@@ -1428,7 +1430,7 @@ DBWORD objInp::kbd_keyval_decode(QKeyEvent *keyEvent) {
 #define EXTENDED_KEY_MASK 0x01000000
 #define LSHIFT_MASK       0x2A
 #define RSHIFT_MASK       0X36
-	bool extended = (bool) (keyEvent->nativeModifiers() & EXTENDED_KEY_MASK);
+	bool extended = (bool)(keyEvent->nativeModifiers() & EXTENDED_KEY_MASK);
 
 	switch (native) {
 		case VK_CONTROL:

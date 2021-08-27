@@ -46,6 +46,7 @@ class wdgSettingsPPU : public QWidget, public Ui::wdgSettingsPPU {
 		void s_overclock_vb_slines(int i);
 		void s_overclock_pr_slines(int i);
 		void s_lag_counter_reset(bool checked);
+		void s_cpuppu_aligment(int index);
 };
 
 #endif /* WDGSETTINGSPPU_HPP_ */

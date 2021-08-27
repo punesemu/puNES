@@ -267,6 +267,9 @@ void gui_update_dset(void) {
 void gui_update_gps_settings(void) {
 	qt.dset->change_rom();
 }
+void gui_update_status_bar(void) {
+	qt.mwin->statusbar->update_statusbar();
+}
 
 void gui_update_ntsc_widgets(void) {
 	qt.dset->update_tab_video();

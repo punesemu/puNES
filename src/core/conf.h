@@ -81,6 +81,7 @@ typedef struct _config {
 	WORD dipswitch;
 	BYTE ppu_overclock;
 	BYTE ppu_overclock_dmc_control_disabled;
+	BYTE ppu_alignment;
 	WORD extra_vb_scanlines;
 	WORD extra_pr_scanlines;
 	BYTE save_battery_ram_file;
