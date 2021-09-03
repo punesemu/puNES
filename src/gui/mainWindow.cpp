@@ -486,6 +486,13 @@ void mainWindow::make_reset(int type) {
 		s_quit();
 	}
 
+	// il reset manuale, quindi al di fuori del "filmato", lo fa ricominciare
+	if (type <= HARD) {
+		if (tas.type != NOTAS) {
+			tas_restart_from_begin();
+		}
+	}
+
 	emu_frame_input_and_rewind();
 
 	emu_thread_continue();
@@ -494,13 +501,6 @@ void mainWindow::make_reset(int type) {
 	// dopo un reset la pause e' automaticamente disabilitata quindi faccio
 	// un aggiornamento del submenu NES per avere la voce correttamente settata.
 	update_menu_nes();
-
-	// il reset manuale, quindi al di fuori del "filmato", lo fa ricominciare
-	if (type <= HARD) {
-		if (tas.type != NOTAS) {
-			tas_restart_from_begin();
-		}
-	}
 }
 void mainWindow::change_rom(const uTCHAR *rom) {
 	emu_thread_pause();
