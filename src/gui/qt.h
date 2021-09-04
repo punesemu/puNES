@@ -141,6 +141,7 @@ EXTERNC void gui_update_ppu_hacks_widgets(void);
 EXTERNC void gui_update_apu_channels_widgets(void);
 EXTERNC void gui_update_recording_widgets(void);
 
+EXTERNC void gui_update_fds_menu(void);
 EXTERNC void gui_update_recording_tab(void);
 
 EXTERNC void gui_egds_set_fps(void);

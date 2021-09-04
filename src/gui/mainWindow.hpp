@@ -199,6 +199,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void set_save_slot_tooltip(BYTE slot, char *buffer);
 		void toggle_toolbars(void);
 		void reset_min_max_size(void);
+		void update_fds_menu(void);
 
 	private:
 		void connect_menu_signals(void);

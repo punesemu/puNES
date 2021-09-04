@@ -669,6 +669,32 @@ void mainWindow::reset_min_max_size(void) {
 	setMinimumSize(QSize(0, 0));
 	setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
 }
+void mainWindow::update_fds_menu(void) {
+	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
+
+	if (fds.info.enabled && (rwnd.active == FALSE)) {
+		if (fds.drive.disk_ejected) {
+			action_text(action_Eject_Insert_Disk, tr("&Insert disk"), sc);
+		} else {
+			action_text(action_Eject_Insert_Disk, tr("&Eject disk"), sc);
+		}
+
+		menu_Disk_Side->setEnabled(true);
+		ctrl_disk_side(action_Disk_1_side_A);
+		ctrl_disk_side(action_Disk_1_side_B);
+		ctrl_disk_side(action_Disk_2_side_A);
+		ctrl_disk_side(action_Disk_2_side_B);
+		ctrl_disk_side(action_Disk_3_side_A);
+		ctrl_disk_side(action_Disk_3_side_B);
+		ctrl_disk_side(action_Disk_4_side_A);
+		ctrl_disk_side(action_Disk_4_side_B);
+		action_Eject_Insert_Disk->setEnabled(true);
+	} else {
+		action_text(action_Eject_Insert_Disk, tr("&Eject/Insert disk"), sc);
+		menu_Disk_Side->setEnabled(false);
+		action_Eject_Insert_Disk->setEnabled(false);
+	}
+}
 
 void mainWindow::connect_menu_signals(void) {
 	// File
@@ -882,30 +908,7 @@ void mainWindow::update_menu_nes(void) {
 		action_Insert_Coin->setEnabled(false);
 	}
 
-	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
-
-	if (fds.info.enabled && (rwnd.active == FALSE)) {
-		if (fds.drive.disk_ejected) {
-			action_text(action_Eject_Insert_Disk, tr("&Insert disk"), sc);
-		} else {
-			action_text(action_Eject_Insert_Disk, tr("&Eject disk"), sc);
-		}
-
-		menu_Disk_Side->setEnabled(true);
-		ctrl_disk_side(action_Disk_1_side_A);
-		ctrl_disk_side(action_Disk_1_side_B);
-		ctrl_disk_side(action_Disk_2_side_A);
-		ctrl_disk_side(action_Disk_2_side_B);
-		ctrl_disk_side(action_Disk_3_side_A);
-		ctrl_disk_side(action_Disk_3_side_B);
-		ctrl_disk_side(action_Disk_4_side_A);
-		ctrl_disk_side(action_Disk_4_side_B);
-		action_Eject_Insert_Disk->setEnabled(true);
-	} else {
-		action_text(action_Eject_Insert_Disk, tr("&Eject/Insert disk"), sc);
-		menu_Disk_Side->setEnabled(false);
-		action_Eject_Insert_Disk->setEnabled(false);
-	}
+	update_fds_menu();
 
 	if ((info.pause_from_gui == TRUE) && (rwnd.active == FALSE)) {
 		action_Pause->setChecked(true);

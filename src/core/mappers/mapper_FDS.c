@@ -167,6 +167,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 			if (--fds.auto_insert.delay.dummy == 0) {
 				fds.auto_insert.delay.dummy = -1;
 				fds_disk_op(FDS_DISK_INSERT, 0, TRUE);
+				gui_update_fds_menu();
 			}
 			max_speed = _max_speed & (fds.auto_insert.delay.dummy > 0);
 		} else if (fds.auto_insert.delay.side > 0) {
@@ -175,6 +176,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 				fds.side.change.new_side = fds.auto_insert.new_side;
 				fds.side.change.delay = FDS_OP_SIDE_DELAY;
 				fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
+				gui_update_fds_menu();
 			}
 			max_speed = _max_speed & (fds.auto_insert.delay.side > 0);
 		}
@@ -184,6 +186,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 			fds.auto_insert.r4032.checks = 0;
 			fds.auto_insert.delay.dummy = FDS_OP_SIDE_DELAY;
 			fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
+			gui_update_fds_menu();
 			max_speed = _max_speed;
 		}
 #undef _max_speed
@@ -215,6 +218,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 	if (fds.side.change.delay > 0) {
 		if (!(--fds.side.change.delay)) {
 			fds_disk_op(FDS_DISK_SELECT_AND_INSERT, fds.side.change.new_side, FALSE);
+			gui_update_fds_menu();
 		}
 		return;
 	}

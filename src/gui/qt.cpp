@@ -284,6 +284,9 @@ void gui_update_recording_widgets(void) {
 	qt.mwin->update_recording_widgets();
 }
 
+void gui_update_fds_menu(void) {
+	qt.mwin->update_fds_menu();
+}
 void gui_update_recording_tab(void) {
 	qt.dset->update_tab_recording();
 }
