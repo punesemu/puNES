@@ -415,7 +415,7 @@ static thread_funct(sndio_thread_loop, UNUSED(void *data)) {
 		avail = snd.period.samples;
 		len = avail * snd.channels * sizeof(*cbd.write);
 
-		if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps.fast_forward | !snd.buffer.start) {
+		if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps_fast_forward_enabled() | !snd.buffer.start) {
 			sndio_wr_buf((void *)cbd.silence, len);
 		} else if (cbd.bytes_available < len) {
 			sndio_wr_buf((void *)cbd.silence, len);
@@ -457,8 +457,8 @@ static thread_funct(sndio_thread_loop, UNUSED(void *data)) {
 				len,
 				cbd.samples_available,
 				cbd.bytes_available,
-				fps.frames_emu_too_long,
-				fps.frames_skipped,
+				fps.info.emu_too_long,
+				fps.info.skipped,
 				snd.overlap,
 				snd.out_of_sync,
 				(int)fps.gfx,

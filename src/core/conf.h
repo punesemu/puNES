@@ -73,6 +73,9 @@ typedef struct _config {
 	BYTE input_display;
 	BYTE disable_tv_noise;
 	BYTE disable_sepia_color;
+	BYTE fds_disk1sideA_at_reset;
+	BYTE fds_switch_side_automatically;
+	BYTE fds_fast_forward;
 #if defined (WITH_OPENGL)
 	BYTE disable_srgb_fbo;
 #endif

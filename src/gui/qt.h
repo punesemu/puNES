@@ -181,6 +181,9 @@ EXTERNC void gui_emit_et_gg_reset(void);
 EXTERNC void gui_emit_et_vs_reset(void);
 EXTERNC void gui_emit_et_external_control_windows_show(void);
 
+EXTERNC void gui_max_speed_start(void);
+EXTERNC void gui_max_speed_stop(void);
+
 EXTERNC void gui_decode_all_input_events(void);
 
 EXTERNC void gui_screen_update(void);

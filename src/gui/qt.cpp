@@ -476,6 +476,19 @@ void gui_emit_et_external_control_windows_show(void) {
 	emit qt.mwin->et_external_control_windows_show();
 }
 
+void gui_max_speed_start(void) {
+	if (fps.max_speed == TRUE) {
+		return;
+	}
+	qt.mwin->qaction_extern.max_speed.start->only_one_trigger();
+}
+void gui_max_speed_stop(void) {
+	if (fps.max_speed == FALSE) {
+		return;
+	}
+	qt.mwin->qaction_extern.max_speed.stop->only_one_trigger();
+}
+
 void gui_decode_all_input_events(void) {
 	if (!qt.screen->events.keyb.count() && !qt.screen->events.mouse.count()) {
 		return;

@@ -21,20 +21,25 @@
 
 #include "common.h"
 
-enum ff_velocity_values { FF_2X = 2, FF_3X, FF_4X, FF_5X };
+enum ff_velocity_values { FF_2X = 2, FF_3X, FF_4X, FF_5X, FF_MAX_SPEED = FF_5X };
 
 #define fps_machine_ms(factor)\
-	machine.ms_frame = fps.frame.estimated_ms = (1000.0f / (double)machine.fps) * factor;
+	machine.ms_frame = fps.frame.estimated_ms = (1000.0f / (double)machine.fps) * factor
+#define fps_fast_forward_enabled()\
+	(fps.fast_forward | fps.max_speed)
 
 typedef struct _fps {
 	double gfx;
-	uint8_t fast_forward;
-	uint32_t frames_skipped;
-	uint32_t frames_emu_too_long;
-	struct _frame {
+	BYTE fast_forward;
+	BYTE max_speed;
+	struct _fps_frame {
 		double estimated_ms;
 		double expected_end;
 	} frame;
+	struct _fps_info {
+		uint32_t skipped;
+		uint32_t emu_too_long;
+	} info;
 } _fps;
 
 extern _fps fps;
@@ -46,8 +51,14 @@ extern _fps fps;
 #endif
 
 EXTERNC void fps_init(void);
-EXTERNC void fps_fast_forward(void);
-EXTERNC void fps_normalize(void);
+
+EXTERNC void fps_fast_forward_estimated_ms(void);
+EXTERNC void fps_fast_forward_start(void);
+EXTERNC void fps_fast_forward_stop(void);
+
+EXTERNC void fps_max_speed_estimated_ms(void);
+EXTERNC void fps_max_speed_start(void);
+EXTERNC void fps_max_speed_stop(void);
 
 #undef EXTERNC
 

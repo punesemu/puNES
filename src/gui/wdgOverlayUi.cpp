@@ -97,6 +97,10 @@ static const char *info_messages_precompiled[] = {
 /* 27 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[red]errors[normal] on shader, use [green]'No shader'[cyan]"),
 //: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
 /* 28 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 29 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 30 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[red]error[normal] loading state [cyan]%1[normal], file is corrupted"),
 };
 
 static struct _shared_color {
@@ -168,6 +172,8 @@ void gui_overlay_info_append_msg_precompiled(int index, void *arg1) {
 			break;
 		case 17:
 		case 18:
+		case 29:
+		case 30:
 			a1 = QString("%1").arg(*(int *)arg1);
 			msg = msg.arg(a1);
 			break;
@@ -180,8 +186,7 @@ void gui_overlay_info_append_msg_precompiled(int index, void *arg1) {
 			a1 = (*(QString *)arg1);
 			msg = msg.arg(a1);
 			break;
-		case 28:
-			{
+		case 28: {
 				int w = 0, h = 0, rrate = 0;
 
 #if defined (FULLSCREEN_RESFREQ)

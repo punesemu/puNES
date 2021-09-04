@@ -185,7 +185,7 @@ void audio_reset_blipbuf(void) {
 	blipbuf.samples.count = 0;
 }
 void audio_apu_tick_blipbuf(void) {
-	if ((!blipbuf.wave) | fps.fast_forward | rwnd.active) {
+	if ((!blipbuf.wave) | fps_fast_forward_enabled() | rwnd.active) {
 		return;
 	}
 
@@ -204,7 +204,7 @@ void audio_apu_tick_blipbuf(void) {
 	blipbuf.counter++;
 }
 void audio_end_frame_blipbuf(void) {
-	if ((!blipbuf.wave) | fps.fast_forward | rwnd.active) {
+	if ((!blipbuf.wave) | fps_fast_forward_enabled() | rwnd.active) {
 		if (snd.cache) {
 			snd.cache->write = snd.cache->start;
 			snd.cache->read = (SBYTE *)snd.cache->start;

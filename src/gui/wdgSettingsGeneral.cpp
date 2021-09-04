@@ -77,6 +77,10 @@ wdgSettingsGeneral::wdgSettingsGeneral(QWidget *parent) : QWidget(parent) {
 	connect(pushButton_FDS_Bios, SIGNAL(clicked(bool)), this, SLOT(s_fds_bios_file(bool)));
 	connect(pushButton_FDS_Bios_clear, SIGNAL(clicked(bool)), this, SLOT(s_fds_bios_file_clear(bool)));
 
+	connect(checkBox_FDS_disk1sideA_at_reset, SIGNAL(clicked(bool)), this, SLOT(s_fds_disk1sideA_at_reset(bool)));
+	connect(checkBox_FDS_switch_side_automatically, SIGNAL(clicked(bool)), this, SLOT(s_fds_switch_side_automatically(bool)));
+	connect(checkBox_FDS_fast_forward, SIGNAL(clicked(bool)), this, SLOT(s_fds_fast_forward(bool)));
+
 	connect(checkBox_Save_battery_every_tot, SIGNAL(clicked(bool)), this, SLOT(s_save_battery_every_tot(bool)));
 	connect(checkBox_Pause_when_in_background, SIGNAL(clicked(bool)), this, SLOT(s_pause_in_background(bool)));
 	connect(checkBox_Save_settings_on_exit, SIGNAL(clicked(bool)), this, SLOT(s_save_settings_on_exit(bool)));
@@ -99,6 +103,7 @@ void wdgSettingsGeneral::showEvent(UNUSED(QShowEvent *event)) {
 	icon_Rewind_minutes->setPixmap(QIcon(":/icon/icons/rewind.svg").pixmap(dim, dim));
 	icon_Language->setPixmap(QIcon(":/icon/icons/language.svg").pixmap(dim, dim));
 	icon_System_Roms->setPixmap(QIcon(":/icon/icons/microprocessor.svg").pixmap(dim, dim));
+	icon_General_FDS->setPixmap(QIcon(":/icon/icons/fds_file.svg").pixmap(dim, dim));
 	icon_General_misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
 	icon_Game_Genie_rom_file->setPixmap(QIcon(":/icon/icons/bios.svg").pixmap(dim, dim));
 	icon_FDS_Bios->setPixmap(QIcon(":/icon/icons/bios.svg").pixmap(dim, dim));
@@ -133,6 +138,10 @@ void wdgSettingsGeneral::update_widget(void) {
 		lineEdit_FDS_Bios->setEnabled(false);
 		lineEdit_FDS_Bios->setText(tr("[Select a file]"));
 	}
+
+	checkBox_FDS_disk1sideA_at_reset->setChecked(cfg->fds_disk1sideA_at_reset);
+	checkBox_FDS_switch_side_automatically->setChecked(cfg->fds_switch_side_automatically);
+	checkBox_FDS_fast_forward->setChecked(cfg->fds_fast_forward);
 
 	checkBox_Save_battery_every_tot->setChecked(cfg->save_battery_ram_file);
 	checkBox_Pause_when_in_background->setChecked(cfg->bck_pause);
@@ -339,7 +348,7 @@ void wdgSettingsGeneral::s_fast_forward_velocity(bool checked) {
 		if (nsf.enabled == FALSE) {
 			if (fps.fast_forward == TRUE) {
 				emu_thread_pause();
-				fps_fast_forward();
+				fps_fast_forward_estimated_ms();
 				emu_thread_continue();
 			}
 		}
@@ -455,6 +464,21 @@ void wdgSettingsGeneral::s_fds_bios_file(UNUSED(bool checked)) {
 void wdgSettingsGeneral::s_fds_bios_file_clear(UNUSED(bool checked)) {
 	umemset(cfg->fds_bios_file, 0x00, usizeof(cfg->fds_bios_file));
 	update_widget();
+}
+void wdgSettingsGeneral::s_fds_disk1sideA_at_reset(UNUSED(bool checked)) {
+	emu_thread_pause();
+	cfg->fds_disk1sideA_at_reset = !cfg->fds_disk1sideA_at_reset;
+	emu_thread_continue();
+}
+void wdgSettingsGeneral::s_fds_switch_side_automatically(UNUSED(bool checked)) {
+	emu_thread_pause();
+	cfg->fds_switch_side_automatically = !cfg->fds_switch_side_automatically;
+	emu_thread_continue();
+}
+void wdgSettingsGeneral::s_fds_fast_forward(UNUSED(bool checked)) {
+	emu_thread_pause();
+	cfg->fds_fast_forward = !cfg->fds_fast_forward;
+	emu_thread_continue();
 }
 void wdgSettingsGeneral::s_save_battery_every_tot(UNUSED(bool checked)) {
 	emu_thread_pause();

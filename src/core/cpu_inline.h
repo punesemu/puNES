@@ -117,6 +117,16 @@ INLINE static void tick_hw(BYTE value);
 
 /* ------------------------------------ READ ROUTINE ------------------------------------------- */
 
+BYTE cpu_rd_mem_dbg(WORD address) {
+	BYTE cpu_openbus = cpu.openbus;
+	BYTE read;
+
+	info.disable_tick_hw = TRUE;
+	read = cpu_rd_mem(address, FALSE);
+	cpu.openbus = cpu_openbus;
+	info.disable_tick_hw = FALSE;
+	return (read);
+}
 BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 	if (info.cpu_rw_extern) {
 		if (nsf.enabled == TRUE) {
@@ -445,8 +455,7 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 				 * Taito (TC0190FMCPAL16R4)
 				 * Tengen (Rambo)
 				 */
-				if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) &&
-						(ppu.screen_y < SCR_ROWS)) {
+				if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) {
 					extcl_update_r2006(r2006.value & 0x2FFF, old_r2006);
 				} else {
 					extcl_update_r2006(r2006.value, old_r2006);
@@ -651,7 +660,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 		/* leggo */
-		cpu.openbus = prg_chip_byte(0, address & 0x1FFF);
+		cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus, cpu.openbus);
 		return (TRUE);
 	}
 	if (address >= 0x6000) {
@@ -737,6 +746,16 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			} else if (!fds.drive.scan) {
 				cpu.openbus |= 0x02;
 			}
+
+			if (fds_auto_insert_enabled()) {
+				if ((ppu.frames - fds.auto_insert.r4032.frames) < 100) {
+					fds.auto_insert.r4032.checks++;
+				} else {
+					fds.auto_insert.r4032.checks = 0;
+				}
+				fds.auto_insert.r4032.frames = ppu.frames;
+			}
+
 			return (TRUE);
 		}
 		if (address == 0x4033) {
@@ -2103,6 +2122,10 @@ INLINE static WORD lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw
 	return (newAdr);
 }
 INLINE static void tick_hw(BYTE value) {
+	if (info.disable_tick_hw) {
+		return;
+	}
+
 	tick_hw_start:
 	if (nsf.enabled == TRUE) {
 		if (nsf.made_tick) {

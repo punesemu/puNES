@@ -73,6 +73,8 @@ class timerEgds : public QTimer {
 		void stop_rwnd(void);
 		void start_ff(void);
 		void stop_ff(void);
+		void start_max_speed(void);
+		void stop_max_speed(void);
 		void start_turn_off(void);
 		void stop_turn_off(void);
 
@@ -85,6 +87,19 @@ class timerEgds : public QTimer {
 
 	private slots:
 		void s_draw_screen(void);
+};
+class actionOneTrigger : public QAction {
+	public:
+		unsigned int count;
+		QMutex mutex;
+
+	public:
+		actionOneTrigger(QObject *parent = 0);
+		~actionOneTrigger();
+
+	public:
+		void only_one_trigger(void);
+		void reset_count(void);
 };
 class mainWindow : public QMainWindow, public Ui::mainWindow {
 		Q_OBJECT
@@ -117,6 +132,12 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 				QAction *step_forward;
 			} rwnd;
 		} qaction_shcut;
+		struct _qaction_extern {
+			struct _qaction_extern_max_speed {
+				actionOneTrigger *start;
+				actionOneTrigger *stop;
+			} max_speed;
+		} qaction_extern;
 		// ext_gfx_draw_screen
 		timerEgds *egds;
 		wdgScreen *screen;
@@ -221,6 +242,8 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_save_screenshot_1x(void);
 		void s_pause(void);
 		void s_fast_forward(void);
+		void s_max_speed_start(void);
+		void s_max_speed_stop(void);
 		void s_toggle_gui_in_window(void);
 		void s_open_settings(void);
 		void s_state_save_slot_action(void);

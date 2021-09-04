@@ -128,6 +128,9 @@ enum set_element {
 	SET_NSF_PLAYER_EFFECT,
 	SET_NSF_PLAYER_NSFE_PLAYLIST,
 	SET_NSF_PLAYER_NSFE_FADEOUT,
+	SET_FDS_DISK1SIDEA_AT_RESET,
+	SET_FDS_SWITCH_SIDE_AUTOMATICALLY,
+	SET_FDS_FAST_FORWARD,
 #if defined (WITH_FFMPEG)
 	SET_REC_AUDIO_FORMAT,
 	SET_REC_VIDEO_FORMAT,
@@ -1099,6 +1102,24 @@ static const _settings main_cfg[] = {
 	},
 	{
 		uL("player"), uL("enable fadeout song"), uL("yes"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("fds"), uL("disk 1 sida A at reset"), uL("yes"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("fds"), uL("switch the side automatically"), uL("yes"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("fds"), uL("fast forward on bios and switch side"), uL("yes"),
 		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}

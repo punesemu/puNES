@@ -40,7 +40,7 @@
 #include "nsf.h"
 #include "cheat.h"
 
-#define SAVE_VERSION 24
+#define SAVE_VERSION 25
 
 static void preview_image(BYTE slot, _screen_buffer *sb);
 static uTCHAR *name_slot_file(BYTE slot);
@@ -125,8 +125,7 @@ BYTE save_slot_load(BYTE slot) {
 	if (slot == SAVE_SLOT_FILE) {
 		save_slot_operation(SAVE_SLOT_COUNT, slot, fp);
 
-		if (memcmp(info.sha1sum.prg.value, save_slot.sha1sum.prg.value,
-			sizeof(info.sha1sum.prg.value)) != 0) {
+		if (memcmp(info.sha1sum.prg.value, save_slot.sha1sum.prg.value, sizeof(info.sha1sum.prg.value)) != 0) {
 			gui_overlay_info_append_msg_precompiled(16, NULL);
 			fprintf(stderr, "state file is not for this rom.\n");
 			rewind_save_state_snap(BCK_STATES_OP_READ_FROM_MEM);
@@ -136,6 +135,9 @@ BYTE save_slot_load(BYTE slot) {
 	}
 
 	if (save_slot_operation(SAVE_SLOT_READ, slot, fp)) {
+		int corrupted = slot;
+
+		gui_overlay_info_append_msg_precompiled(30, &corrupted);
 		fprintf(stderr, "error loading state, corrupted file.\n");
 		rewind_save_state_snap(BCK_STATES_OP_READ_FROM_MEM);
 		fclose(fp);
@@ -206,6 +208,7 @@ BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size,
 		case SAVE_SLOT_SAVE:
 			bytes = fwrite(src, size, 1, fp);
 			save_slot.tot_size[slot] += size;
+			fflush(fp);
 			if (preview == TRUE) {
 				preview_image(slot, screen.rd);
 			}
@@ -750,6 +753,22 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 			save_slot_ele(mode, slot, fds.snd.modulation.index)
 			save_slot_ele(mode, slot, fds.snd.modulation.counter)
 			save_slot_ele(mode, slot, fds.snd.modulation.mod)
+
+			if (save_slot.version >= 25) {
+				save_slot_ele(mode, slot, fds.auto_insert.r4032.frames)
+				save_slot_ele(mode, slot, fds.auto_insert.r4032.checks)
+
+				save_slot_ele(mode, slot, fds.auto_insert.delay.eject)
+				save_slot_ele(mode, slot, fds.auto_insert.delay.dummy)
+				save_slot_ele(mode, slot, fds.auto_insert.delay.side)
+
+				save_slot_ele(mode, slot, fds.auto_insert.rE445.in_run)
+				save_slot_ele(mode, slot, fds.auto_insert.rE445.count)
+
+				save_slot_ele(mode, slot, fds.auto_insert.disabled)
+				save_slot_ele(mode, slot, fds.auto_insert.new_side)
+				save_slot_ele(mode, slot, fds.auto_insert.in_game)
+			}
 		}
 
 		if (save_slot.version >= 19) {
@@ -764,7 +783,7 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		// in caso di ripristino di una salvataggio, se era caricato
 		// un'altro side del disco, devo ricaricarlo.
 		if ((mode == SAVE_SLOT_READ) && (old_side_inserted != fds.drive.side_inserted)) {
-			fds_disk_op(FDS_DISK_SELECT_FROM_REWIND, fds.drive.side_inserted);
+			fds_disk_op(FDS_DISK_SELECT_FROM_REWIND, fds.drive.side_inserted, FALSE);
 			gui_update();
 		}
 	}

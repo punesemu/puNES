@@ -133,6 +133,10 @@ mainWindow::mainWindow() : QMainWindow() {
 	qaction_shcut.rwnd.play = new QAction(this);
 	qaction_shcut.rwnd.pause = new QAction(this);
 
+	// qaction esterni
+	qaction_extern.max_speed.start = new actionOneTrigger(this);
+	qaction_extern.max_speed.stop = new actionOneTrigger(this);
+
 	{
 		QActionGroup *grp;
 
@@ -478,13 +482,17 @@ void mainWindow::make_reset(int type) {
 		}
 	}
 
-	// nel caso il timer dell'update dello screen
-	// del fast forward sia attivo, lo fermo.
-	egds->stop_ff();
-
 	if (emu_reset(type)) {
 		s_quit();
 	}
+
+	// nel caso il timer dell'update dello screen del fast forward (o del max speed) sia attivo, lo fermo.
+	egds->stop_ff();
+	egds->stop_max_speed();
+
+	// resetto i contatori
+	qaction_extern.max_speed.start->reset_count();
+	qaction_extern.max_speed.stop->reset_count();
 
 	// il reset manuale, quindi al di fuori del "filmato", lo fa ricominciare
 	if (type <= HARD) {
@@ -753,6 +761,10 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(qaction_shcut.rwnd.fast_forward, SLOT(s_shcut_rwnd_fast_forward()));
 	connect_action(qaction_shcut.rwnd.play, SLOT(s_shcut_rwnd_play()));
 	connect_action(qaction_shcut.rwnd.pause, SLOT(s_shcut_rwnd_pause()));
+
+	// external
+	connect_action(qaction_extern.max_speed.start, SLOT(s_max_speed_start()));
+	connect_action(qaction_extern.max_speed.stop, SLOT(s_max_speed_stop()));
 }
 void mainWindow::connect_action(QAction *action, const char *member) {
 	connect(action, SIGNAL(triggered()), this, member);
@@ -1232,11 +1244,11 @@ void mainWindow::s_disk_side(void) {
 	if (fds.drive.disk_ejected) {
 		fds.side.change.new_side = 0xFF;
 		fds.side.change.delay = 0;
-		fds_disk_op(FDS_DISK_SELECT, side);
+		fds_disk_op(FDS_DISK_SELECT, side, FALSE);
 	} else {
 		fds.side.change.new_side = side;
-		fds.side.change.delay = 3000000;
-		fds_disk_op(FDS_DISK_EJECT, 0);
+		fds.side.change.delay = FDS_OP_SIDE_DELAY;
+		fds_disk_op(FDS_DISK_EJECT, 0, FALSE);
 	}
 
 	emu_thread_continue();
@@ -1246,9 +1258,9 @@ void mainWindow::s_disk_side(void) {
 void mainWindow::s_eject_disk(void) {
 	emu_thread_pause();
 	if (!fds.drive.disk_ejected) {
-		fds_disk_op(FDS_DISK_EJECT, 0);
+		fds_disk_op(FDS_DISK_EJECT, 0, FALSE);
 	} else {
-		fds_disk_op(FDS_DISK_INSERT, 0);
+		fds_disk_op(FDS_DISK_INSERT, 0, FALSE);
 	}
 	emu_thread_continue();
 	update_menu_nes();
@@ -1367,14 +1379,34 @@ void mainWindow::s_fast_forward(void) {
 		emu_thread_pause();
 		if (fps.fast_forward == FALSE) {
 			egds->start_ff();
-			fps_fast_forward();
+			fps_fast_forward_start();
 		} else {
-			fps_normalize();
+			fps_fast_forward_stop();
 			egds->stop_ff();
 		}
 		emu_thread_continue();
 		update_menu_nes();
 	}
+}
+void mainWindow::s_max_speed_start(void) {
+	qaction_extern.max_speed.start->reset_count();
+	if (fps.max_speed == TRUE) {
+		return;
+	}
+	emu_thread_pause();
+	egds->start_max_speed();
+	fps_max_speed_start();
+	emu_thread_continue();
+}
+void mainWindow::s_max_speed_stop(void) {
+	qaction_extern.max_speed.stop->reset_count();
+	if (fps.max_speed == FALSE) {
+		return;
+	}
+	emu_thread_pause();
+	fps_max_speed_stop();
+	egds->stop_max_speed();
+	emu_thread_continue();
 }
 void mainWindow::s_toggle_gui_in_window(void) {
 	bool visibility;
@@ -1929,6 +1961,26 @@ void mainWindow::s_et_external_control_windows_show(void) {
 
 // ----------------------------------------------------------------------------------------------
 
+actionOneTrigger::actionOneTrigger(QObject *parent) : QAction(parent) {
+	count = 0;
+}
+actionOneTrigger::~actionOneTrigger() {}
+
+void actionOneTrigger::only_one_trigger(void) {
+	mutex.lock();
+	if (count++ == 0) {
+		trigger();
+	}
+	mutex.unlock();
+}
+void actionOneTrigger::reset_count(void) {
+	mutex.lock();
+	count = 0;
+	mutex.unlock();
+}
+
+// ----------------------------------------------------------------------------------------------
+
 timerEgds::timerEgds(QObject *parent) : QTimer(parent) {
 	int i;
 
@@ -1954,25 +2006,31 @@ void timerEgds::start_pause(void) {
 	_start_with_emu_thread_pause(EGDS_PAUSE);
 }
 void timerEgds::stop_pause(void) {
-	_stop_with_emu_thread_continue(EGDS_PAUSE, FALSE | rwnd.active | fps.fast_forward | info.turn_off);
+	_stop_with_emu_thread_continue(EGDS_PAUSE, FALSE | rwnd.active | fps_fast_forward_enabled() | info.turn_off);
 }
 void timerEgds::start_rwnd(void) {
 	_start();
 }
 void timerEgds::stop_rwnd(void) {
-	_stop((!!info.pause) | FALSE | fps.fast_forward | info.turn_off);
+	_stop((!!info.pause) | FALSE | fps_fast_forward_enabled() | info.turn_off);
 }
 void timerEgds::start_ff(void) {
 	_start();
 }
 void timerEgds::stop_ff(void) {
-	_stop((!!info.pause) | rwnd.active | FALSE | info.turn_off);
+	_stop((!!info.pause) | rwnd.active | FALSE | fps.max_speed | info.turn_off);
+}
+void timerEgds::start_max_speed(void) {
+	_start();
+}
+void timerEgds::stop_max_speed(void) {
+	_stop((!!info.pause) | rwnd.active | fps.fast_forward | FALSE | info.turn_off);
 }
 void timerEgds::start_turn_off(void) {
 	_start_with_emu_thread_pause(EGDS_TURN_OFF);
 }
 void timerEgds::stop_turn_off(void) {
-	_stop_with_emu_thread_continue(EGDS_TURN_OFF, (!!info.pause) | rwnd.active |fps.fast_forward | FALSE);
+	_stop_with_emu_thread_continue(EGDS_TURN_OFF, (!!info.pause) | rwnd.active | fps_fast_forward_enabled() | FALSE);
 }
 
 void timerEgds::_start(void) {
@@ -2018,7 +2076,7 @@ void timerEgds::s_draw_screen(void) {
 		ret = true;
 	} else if (rwnd.active) {
 		ret = mainwin->toolbar->rewind->egds_rewind();
-	} else if (fps.fast_forward) {
+	} else if (fps_fast_forward_enabled()) {
 		ret = true;
 
 		switch (debugger.mode) {

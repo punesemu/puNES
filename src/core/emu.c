@@ -1161,15 +1161,14 @@ INLINE static void emu_frame_finished(void) {
 	r4011.frames++;
 }
 INLINE static void emu_frame_sleep(void) {
-	double diff;
-	double now = gui_get_ms();
+	double diff, now = gui_get_ms();
 
 	diff = fps.frame.expected_end - now;
 
 	if (diff > 0) {
 		gui_sleep(diff);
 	} else {
-		fps.frames_emu_too_long++;
+		fps.info.emu_too_long++;
 		fps.frame.expected_end = gui_get_ms();
 	}
 	fps.frame.expected_end += fps.frame.estimated_ms;

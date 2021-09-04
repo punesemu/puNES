@@ -463,7 +463,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 void gfx_draw_screen(void) {
 	if (gfx_thread_public.filtering == TRUE) {
 		gfx.frame.totals++;
-		fps.frames_skipped++;
+		fps.info.skipped++;
 		return;
 	}
 

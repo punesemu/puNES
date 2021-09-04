@@ -289,7 +289,7 @@ void ppu_tick(void) {
 				/* setto a 0 il bit 5, 6 ed il 7 del $2002 */
 				r2002.sprite_overflow = r2002.sprite0_hit = r2002.vblank = ppu.vblank = FALSE;
 				// serve assolutamente per la corretta lettura delle coordinate del puntatore zapper
-				if ((info.zapper_is_present == TRUE) && (fps.fast_forward == FALSE)) {
+				if ((info.zapper_is_present == TRUE) && (fps_fast_forward_enabled() == FALSE)) {
 					memset((BYTE *)screen.wr->data, 0, screen_size());
 				}
 			} else if ((ppu.frame_x == (SHORT_SLINE_CYCLES - 1)) && (machine.type == NTSC)) {

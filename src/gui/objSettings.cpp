@@ -684,6 +684,12 @@ void objSet::to_cfg(QString group) {
 		int_to_val(SET_SAVE_SETTINGS_ON_EXIT, cfg_from_file.save_on_exit);
 	}
 
+	if ((group == "fds") || (group == "all")) {
+		int_to_val(SET_FDS_DISK1SIDEA_AT_RESET, cfg_from_file.fds_disk1sideA_at_reset);
+		int_to_val(SET_FDS_SWITCH_SIDE_AUTOMATICALLY, cfg_from_file.fds_switch_side_automatically);
+		int_to_val(SET_FDS_FAST_FORWARD, cfg_from_file.fds_fast_forward);
+	}
+
 	if ((group == "video") || (group == "all")) {
 		int_to_val(SET_SCALE, cfg_from_file.scale);
 		int_to_val(SET_PAR, cfg_from_file.pixel_aspect_ratio);
@@ -802,6 +808,12 @@ void objSet::fr_cfg(QString group) {
 		cpy_val_to_utchar(SET_FILE_FDS_BIOS, cfg_from_file.fds_bios_file, usizeof(cfg_from_file.fds_bios_file));
 		cpy_val_to_utchar(SET_LAST_IMPORT_CHEAT_PATH, cfg_from_file.last_import_cheat_path, usizeof(cfg_from_file.last_import_cheat_path));
 		cfg_from_file.save_on_exit = val_to_int(SET_SAVE_SETTINGS_ON_EXIT);
+	}
+
+	if ((group == "fds") || (group == "all")) {
+		cfg_from_file.fds_disk1sideA_at_reset = val_to_int(SET_FDS_DISK1SIDEA_AT_RESET);
+		cfg_from_file.fds_switch_side_automatically = val_to_int(SET_FDS_SWITCH_SIDE_AUTOMATICALLY);
+		cfg_from_file.fds_fast_forward = val_to_int(SET_FDS_FAST_FORWARD);
 	}
 
 	if ((group == "video") || (group == "all")) {

@@ -603,7 +603,7 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 
 	if (snd_thread.action == ST_STOP) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
-	} else if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps.fast_forward | !snd.buffer.start) {
+	} else if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps_fast_forward_enabled() | !snd.buffer.start) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
 	} else if (cbd.bytes_available < len) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
@@ -624,7 +624,7 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 		cbd.samples_available -= avail;
 
 #if !defined (RELEASE)
-		if (((void*)cbd.write > (void*)cbd.read) && ((void*)cbd.write < (void*)(cbd.read + len))) {
+		if (((void *)cbd.write > (void *)cbd.read) && ((void *)cbd.write < (void *)(cbd.read + len))) {
 			snd.overlap++;
 		}
 #endif
@@ -648,8 +648,8 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 			len,
 			cbd.samples_available,
 			cbd.bytes_available,
-			fps.frames_emu_too_long,
-			fps.frames_skipped,
+			fps.info.emu_too_long,
+			fps.info.skipped,
 			snd.overlap,
 			snd.out_of_sync,
 			(int)fps.gfx,
