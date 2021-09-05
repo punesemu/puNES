@@ -34,6 +34,7 @@
 #include <QtCore/QBuffer>
 #include <libgen.h>
 #include "mainWindow.moc"
+#include "extra/singleapplication/singleapplication.h"
 #include "dlgSettings.hpp"
 #include "wdgMenuBar.hpp"
 #include "common.h"
@@ -168,6 +169,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	}
 
 	connect(shcjoy.timer, SIGNAL(timeout()), this, SLOT(s_shcjoy_read_timer()));
+    connect(qApp, SIGNAL(receivedMessage(quint32, QByteArray)), this, SLOT(s_received_message(quint32, QByteArray)));
 
 	connect(this, SIGNAL(et_gg_reset(void)), this, SLOT(s_et_gg_reset(void)));
 	connect(this, SIGNAL(et_vs_reset(void)), this, SLOT(s_et_vs_reset(void)));
@@ -1864,6 +1866,18 @@ void mainWindow::s_shcjoy_read_timer(void) {
 			}
 		}
 	}
+}
+void mainWindow::s_received_message(UNUSED(quint32 instanceId), QByteArray message) {
+	QFileInfo fileinfo(message);
+
+	emu_pause(TRUE);
+
+	if (fileinfo.exists()) {
+		change_rom(uQStringCD(fileinfo.absoluteFilePath()));
+		ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()), usizeof(gui.last_open_path) - 1);
+	}
+
+	emu_pause(FALSE);
 }
 
 void mainWindow::s_shcut_mode(void) {

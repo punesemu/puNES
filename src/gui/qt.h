@@ -122,7 +122,9 @@ extern double (*gui_get_ms)(void);
 #define EXTERNC
 #endif
 
+EXTERNC void gui_init(int *argc, char **argv);
 EXTERNC void gui_quit(void);
+EXTERNC BYTE gui_control_instance(void);
 EXTERNC BYTE gui_create(void);
 EXTERNC void gui_start(void);
 
@@ -228,7 +230,7 @@ EXTERNC int gui_utf_strcasecmp(uTCHAR *s0, uTCHAR *s1);
 
 EXTERNC unsigned int gui_hardware_concurrency(void);
 
-EXTERNC void gui_init(int *argc, char **argv);
+EXTERNC void gui_init_os(void);
 EXTERNC void gui_sleep(double ms);
 #if defined (_WIN32)
 EXTERNC HWND gui_screen_id(void);

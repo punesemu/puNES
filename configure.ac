@@ -243,7 +243,7 @@ AM_COND_IF([WINDOWS], [
 AM_COND_IF([WINDOWS], [
 	OLD_PKG_CONFIG="$PKG_CONFIG"
 	PKG_CONFIG="$PKG_CONFIG --static"
-	PKG_CHECK_MODULES(QT5, [Qt5Core Qt5Gui Qt5Widgets Qt5Svg], [
+	PKG_CHECK_MODULES(QT5, [Qt5Core Qt5Gui Qt5Widgets Qt5Network Qt5Svg], [
 		MOC="`$PKG_CONFIG --variable=host_bins Qt5Core`/moc"
 		RCC="`$PKG_CONFIG --variable=host_bins Qt5Core`/rcc"
 		UIC="`$PKG_CONFIG --variable=host_bins Qt5Core`/uic"
@@ -355,7 +355,7 @@ AM_COND_IF([WINDOWS], [
 		AC_MSG_ERROR([libqsvg.a not found])
 	])
 ], [
-	PKG_CHECK_MODULES(QT5, [Qt5Core Qt5Gui Qt5Widgets Qt5Svg], [
+	PKG_CHECK_MODULES(QT5, [Qt5Core Qt5Gui Qt5Widgets Qt5Network Qt5Svg], [
 		MOC="`$PKG_CONFIG --variable=host_bins Qt5Core`/moc"
 		RCC="`$PKG_CONFIG --variable=host_bins Qt5Core`/rcc"
 		UIC="`$PKG_CONFIG --variable=host_bins Qt5Core`/uic"

@@ -84,6 +84,7 @@ wdgSettingsGeneral::wdgSettingsGeneral(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Save_battery_every_tot, SIGNAL(clicked(bool)), this, SLOT(s_save_battery_every_tot(bool)));
 	connect(checkBox_Pause_when_in_background, SIGNAL(clicked(bool)), this, SLOT(s_pause_in_background(bool)));
 	connect(checkBox_Save_settings_on_exit, SIGNAL(clicked(bool)), this, SLOT(s_save_settings_on_exit(bool)));
+	connect(checkBox_Multiple_instances, SIGNAL(clicked(bool)), this, SLOT(s_multiple_settings(bool)));
 }
 wdgSettingsGeneral::~wdgSettingsGeneral() {}
 
@@ -146,6 +147,7 @@ void wdgSettingsGeneral::update_widget(void) {
 	checkBox_Save_battery_every_tot->setChecked(cfg->save_battery_ram_file);
 	checkBox_Pause_when_in_background->setChecked(cfg->bck_pause);
 	checkBox_Save_settings_on_exit->setChecked(cfg->save_on_exit);
+	checkBox_Multiple_instances->setChecked(cfg->multiple_instances);
 }
 void wdgSettingsGeneral::shcut_mode(int mode) {
 	switch (mode) {
@@ -493,4 +495,7 @@ void wdgSettingsGeneral::s_pause_in_background(UNUSED(bool checked)) {
 }
 void wdgSettingsGeneral::s_save_settings_on_exit(UNUSED(bool checked)) {
 	cfg->save_on_exit = !cfg->save_on_exit;
+}
+void wdgSettingsGeneral::s_multiple_settings(UNUSED(bool checked)) {
+	cfg->multiple_instances = !cfg->multiple_instances;
 }

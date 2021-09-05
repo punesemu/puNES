@@ -52,6 +52,8 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #if defined (WITH_OPENGL)
 #include "opengl.h"
 #endif
+#include "singleapplication.moc"
+#include "singleapplication_p.moc"
 #include "mainWindow.hpp"
 #include "objCheat.hpp"
 #include "dlgSettings.hpp"
@@ -76,7 +78,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 static void gui_is_in_desktop(int *x, int *y);
 
 static struct _qt {
-	QApplication *app;
+	SingleApplication *app;
 	mainWindow *mwin;
 	wdgScreen *screen;
 	objCheat *objch;
@@ -112,7 +114,31 @@ class appEventFilter: public QObject {
 		}
 };
 
+void gui_init(int *argc, char **argv) {
+	QFlags<SingleApplication::Mode> mode = SingleApplication::Mode::ExcludeAppVersion | SingleApplication::Mode::ExcludeAppPath;
+
+	memset(&gui, 0, sizeof(gui));
+	qt = {};
+	qt.app = new SingleApplication((*argc), argv, true, mode);
+
+	info.gui = TRUE;
+	gui.in_update = FALSE;
+	gui.main_win_lfp = 0;
+
+	gui_init_os();
+}
 void gui_quit(void) {}
+BYTE gui_control_instance(void) {
+	if (qt.app->isSecondary() && (cfg->multiple_instances == FALSE)) {
+		if (info.rom.file[0]) {
+			qt.app->sendMessage(uQString(info.rom.file).toUtf8());
+			gui_sleep(450);
+		}
+		qt.app->exit(0);
+		return (EXIT_ERROR);
+	}
+	return (EXIT_OK);
+}
 BYTE gui_create(void) {
 #if defined (WITH_OPENGL)
 	QSurfaceFormat fmt;
@@ -177,7 +203,7 @@ void gui_start(void) {
 	fps.frame.expected_end = gui_get_ms() + machine.ms_frame;
 	gfx_thread_continue();
 	emu_thread_continue();
-	qApp->exec();
+	qt.app->exec();
 }
 
 void gui_set_video_mode(void) {
@@ -594,7 +620,7 @@ unsigned int gui_wdgopengl_framebuffer_id(void) {
 }
 
 void gui_screen_info(void) {
-	gfx.bit_per_pixel = qApp->primaryScreen()->depth();
+	gfx.bit_per_pixel = qt.app->primaryScreen()->depth();
 }
 
 uint32_t gui_color(BYTE a, BYTE r, BYTE g, BYTE b) {

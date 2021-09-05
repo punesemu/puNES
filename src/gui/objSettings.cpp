@@ -758,6 +758,7 @@ void objSet::to_cfg(QString group) {
 		cpy_utchar_to_val(SET_GUI_REC_LAST_VIDEO_PATH, cfg_from_file.last_rec_video_path);
 #endif
 		cpy_utchar_to_val(SET_GUI_REC_LAST_AUDIO_PATH, cfg_from_file.last_rec_audio_path);
+		int_to_val(SET_GUI_MULTIPLE_INSTANCES, cfg_from_file.multiple_instances);
 	}
 
 	if ((group == "apu channels") || (group == "all")) {
@@ -884,6 +885,7 @@ void objSet::fr_cfg(QString group) {
 		cpy_val_to_utchar(SET_GUI_REC_LAST_VIDEO_PATH, cfg_from_file.last_rec_video_path, usizeof(cfg_from_file.last_rec_video_path));
 #endif
 		cpy_val_to_utchar(SET_GUI_REC_LAST_AUDIO_PATH, cfg_from_file.last_rec_audio_path, usizeof(cfg_from_file.last_rec_audio_path));
+		cfg_from_file.multiple_instances = val_to_int(SET_GUI_MULTIPLE_INSTANCES);
 	}
 
 	if ((group == "apu channels") || (group == "all")) {

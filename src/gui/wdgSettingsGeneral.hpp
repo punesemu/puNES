@@ -59,6 +59,7 @@ class wdgSettingsGeneral : public QWidget, public Ui::wdgSettingsGeneral {
 		void s_save_battery_every_tot(bool checked);
 		void s_pause_in_background(bool checked);
 		void s_save_settings_on_exit(bool checked);
+		void s_multiple_settings(bool checked);
 };
 
 #endif /* WDGSETTINGSGENERAL_HPP_ */

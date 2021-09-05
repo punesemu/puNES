@@ -22,22 +22,12 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <time.h>
-
 #include <stdio.h>
 
 static double high_resolution_ms(void);
 static int __nsleep(const struct timespec *req, struct timespec *rem);
 
-void gui_init(int *argc, char **argv) {
-	memset(&gui, 0, sizeof(gui));
-	qt = {};
-
-	qt.app = new QApplication((*argc), argv);
-
-	info.gui = TRUE;
-	gui.in_update = FALSE;
-	gui.main_win_lfp = 0;
-
+void gui_init_os(void) {
 	// cerco la HOME e imposto la directory base
 	{
 		gui.home = getenv("HOME");

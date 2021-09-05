@@ -34,7 +34,7 @@ How to Compile
 
 ## Linux
 #### Dependencies
-* [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
+* [Qt5](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [nvidia-cg](https://developer.nvidia.com/cg-toolkit)
 * [alsa](https://www.alsa-project.org)
 * [cmake](https://cmake.org)
@@ -72,7 +72,7 @@ to start the emulator
 ```
 ## FreeBSD
 #### Dependencies
-* [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
+* [Qt5](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
 * [cmake](https://cmake.org)
 * [libX11 and libXrandr](https://www.x.org)
@@ -94,7 +94,7 @@ CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" CC=cc CXX=c++ ./configure --disable-re
 where `[...]` are the other necessary options.
 ## OpenBSD
 #### Dependencies
-* [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
+* [Qt5](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
 * [cmake](https://cmake.org)
 * [libX11 and libXrandr](https://www.x.org)

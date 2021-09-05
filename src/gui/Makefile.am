@@ -17,6 +17,10 @@ objCheat.moc: objCheat.hpp
 	$(MOC) $(srcdir)/objCheat.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 objSettings.moc: objSettings.hpp
 	$(MOC) $(srcdir)/objSettings.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+singleapplication.moc: ../extra/singleapplication/singleapplication.h
+	$(MOC) $(srcdir)/../extra/singleapplication/singleapplication.h $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+singleapplication_p.moc: ../extra/singleapplication/singleapplication_p.h
+	$(MOC) $(srcdir)/../extra/singleapplication/singleapplication_p.h $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgAPUChannels.moc: wdgAPUChannels.hpp
 	$(MOC) $(srcdir)/wdgAPUChannels.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgCheatsEditor.moc: wdgCheatsEditor.hpp
@@ -161,6 +165,8 @@ BUILT_SOURCES += \
 	mainWindow.moc \
 	objCheat.moc \
 	objSettings.moc \
+	singleapplication.moc \
+	singleapplication_p.moc \
 	wdgAPUChannels.moc \
 	wdgCheatsEditor.moc \
 	wdgNTSCFilter.moc \
@@ -205,6 +211,10 @@ BUILT_SOURCES += \
 
 noinst_LIBRARIES = libgui.a
 libgui_a_SOURCES = \
+	../extra/singleapplication/singleapplication.cpp \
+	../extra/singleapplication/singleapplication.h \
+	../extra/singleapplication/singleapplication_p.cpp \
+	../extra/singleapplication/singleapplication_p.h \
 	cgp.cpp \
 	cgp.h \
 	cmd_line.cpp \

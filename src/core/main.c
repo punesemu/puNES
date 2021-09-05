@@ -48,8 +48,8 @@ int main(int argc, char **argv) {
 	setlocale(LC_CTYPE, "");
 
 	memset(&debugger, 0x00, sizeof(debugger));
-
 	memset(&info, 0x00, sizeof(info));
+
 	info.no_rom = TRUE;
 	info.doublebuffer = TRUE;
 	info.machine[HEADER] = info.machine[DATABASE] = DEFAULT;
@@ -109,14 +109,6 @@ int main(int argc, char **argv) {
 	emu_find_tmp_dir();
 #endif
 
-#if defined (__NETPLAY__)
-	netplay_init();
-#endif
-
-#if defined (FULLSCREEN_RESFREQ)
-	gfx_monitor_init();
-#endif
-
 	patcher_init();
 
 	gamegenie_init();
@@ -124,15 +116,27 @@ int main(int argc, char **argv) {
 	gui_overlay_info_init();
 	gui_overlay_info_emulator();
 
-	// tratto il file di configurazione ed
-	// i parametri passati dalla riga di comando.
+	// tratto il file di configurazione ed i parametri passati dalla riga di comando.
 	settings_init();
 	if (cmd_line_parse(argc, argv) == EXIT_ERROR) {
 		emu_quit();
 		return (EXIT_SUCCESS);
 	}
 
+	if (gui_control_instance() == EXIT_ERROR) {
+		emu_quit();
+		return (EXIT_SUCCESS);
+	}
+
 	ufprintf(stderr, uL("INFO: path " uPERCENTs "\n"), info.base_folder);
+
+#if defined (__NETPLAY__)
+	netplay_init();
+#endif
+
+#if defined (FULLSCREEN_RESFREQ)
+	gfx_monitor_init();
+#endif
 
 	recent_roms_init();
 	recent_roms_parse();

@@ -114,6 +114,7 @@ enum set_element {
 	SET_GUI_REC_LAST_VIDEO_PATH,
 #endif
 	SET_GUI_REC_LAST_AUDIO_PATH,
+	SET_GUI_MULTIPLE_INSTANCES,
 	SET_APU_MASTER,
 	SET_APU_SQUARE1,
 	SET_APU_SQUARE2,
@@ -1021,6 +1022,12 @@ static const _settings main_cfg[] = {
 		uL("# possible values: [PATH]"),
 		NULL,
 		{0, NULL}
+	},
+	{
+		uL("GUI"), uL("allow multiple instances of the emulator"), uL("no"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("apu channels"), uL("master"), uL("on,100"),

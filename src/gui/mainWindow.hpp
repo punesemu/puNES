@@ -257,6 +257,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 	private slots:
 		void s_fullscreen(void);
 		void s_shcjoy_read_timer(void);
+		void s_received_message(quint32 instanceId, QByteArray message);
 
 	private slots:
 		void s_shcut_mode(void);

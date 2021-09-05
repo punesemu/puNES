@@ -24,16 +24,7 @@
 static double high_resolution_ms(void);
 static int __nsleep(const struct timespec *req, struct timespec *rem);
 
-void gui_init(int *argc, char **argv) {
-	memset(&gui, 0, sizeof(gui));
-	qt = {};
-
-	qt.app = new QApplication((*argc), argv);
-
-	info.gui = TRUE;
-	gui.in_update = FALSE;
-	gui.main_win_lfp = 0;
-
+void gui_init_os(void) {
 	/*
 	// cerco il numero dei cores
 	{
