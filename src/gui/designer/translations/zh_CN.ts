@@ -873,6 +873,16 @@
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
       <translation type="unfinished">switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</translation>
     </message>
+    <message>
+      <source>[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</translation>
+    </message>
+    <message>
+      <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]error[normal] loading state [cyan]%1[normal], file is corrupted</translation>
+    </message>
   </context>
   <context>
     <name>recStatusBar</name>
@@ -1068,6 +1078,69 @@
     <message>
       <source>A description must be entered</source>
       <translation>请输入描述</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgNTSCFilter</name>
+    <message>
+      <source>Form</source>
+      <translation type="unfinished">Form</translation>
+    </message>
+    <message>
+      <source>Reset paramaters to defaults</source>
+      <translation type="unfinished">Reset paramaters to defaults</translation>
+    </message>
+    <message>
+      <source>Artifacts</source>
+      <translation type="unfinished">Artifacts</translation>
+    </message>
+    <message>
+      <source>Fringing</source>
+      <translation type="unfinished">Fringing</translation>
+    </message>
+    <message>
+      <source>Resolution</source>
+      <translation type="unfinished">Resolution</translation>
+    </message>
+    <message>
+      <source>Gamma</source>
+      <translation type="unfinished">Gamma</translation>
+    </message>
+    <message>
+      <source>Bleed</source>
+      <translation type="unfinished">Bleed</translation>
+    </message>
+    <message>
+      <source>MFields</source>
+      <translation type="unfinished">MFields</translation>
+    </message>
+    <message>
+      <source>VBlend</source>
+      <translation type="unfinished">VBlend</translation>
+    </message>
+    <message>
+      <source>Sharpness</source>
+      <translation type="unfinished">Sharpness</translation>
+    </message>
+    <message>
+      <source>Brightness</source>
+      <translation type="unfinished">Brightness</translation>
+    </message>
+    <message>
+      <source>Hue</source>
+      <translation type="unfinished">Hue</translation>
+    </message>
+    <message>
+      <source>Contrast</source>
+      <translation type="unfinished">Contrast</translation>
+    </message>
+    <message>
+      <source>Saturation</source>
+      <translation type="unfinished">Saturation</translation>
+    </message>
+    <message>
+      <source>Scanline</source>
+      <translation type="unfinished">Scanline</translation>
     </message>
   </context>
   <context>
@@ -1474,6 +1547,26 @@
       <source>Chinese Simplified</source>
       <translation>简体中文</translation>
     </message>
+    <message>
+      <source>Insert disk 1 side A at power-up/reset</source>
+      <translation type="unfinished">Insert disk 1 side A at power-up/reset</translation>
+    </message>
+    <message>
+      <source>Famicom Disk System</source>
+      <translation type="unfinished">Famicom Disk System</translation>
+    </message>
+    <message>
+      <source>Use fast forward when loading the BIOS or disk/side</source>
+      <translation type="unfinished">Use fast forward when loading the BIOS or disk/side</translation>
+    </message>
+    <message>
+      <source>Switch the disk/side automatically</source>
+      <translation type="unfinished">Switch the disk/side automatically</translation>
+    </message>
+    <message>
+      <source>Allow multiple instances of the emulator</source>
+      <translation type="unfinished">Allow multiple instances of the emulator</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
@@ -1671,6 +1764,26 @@
     <message>
       <source>Hide Background</source>
       <translation>隐藏背景</translation>
+    </message>
+    <message>
+      <source>Advanced</source>
+      <translation type="unfinished">Advanced</translation>
+    </message>
+    <message>
+      <source>Default</source>
+      <translation type="unfinished">Default</translation>
+    </message>
+    <message>
+      <source>Randomize (Not recommended)</source>
+      <translation type="unfinished">Randomize (Not recommended)</translation>
+    </message>
+    <message>
+      <source>Increment  at every hard reset (Not recommended)</source>
+      <translation type="unfinished">Increment  at every hard reset (Not recommended)</translation>
+    </message>
+    <message>
+      <source>Power up/reset CPU/PPU Alignment</source>
+      <translation type="unfinished">Power up/reset CPU/PPU Alignment</translation>
     </message>
   </context>
   <context>
@@ -2127,10 +2240,6 @@
     <message>
       <source>NTSC RGB</source>
       <translation>NTSC RGB</translation>
-    </message>
-    <message>
-      <source>Shader Parameters</source>
-      <translation>着色器参数</translation>
     </message>
     <message>
       <source>Reset paramaters to defaults</source>
