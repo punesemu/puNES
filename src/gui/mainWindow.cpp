@@ -1875,6 +1875,15 @@ void mainWindow::s_received_message(UNUSED(quint32 instanceId), QByteArray messa
 	if (fileinfo.exists()) {
 		change_rom(uQStringCD(fileinfo.absoluteFilePath()));
 		ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()), usizeof(gui.last_open_path) - 1);
+		if (windowState() & Qt::WindowMinimized) {
+			setWindowState(windowState() & ~Qt::WindowMinimized);
+		}
+		raise();
+#if defined (_WIN32)
+		QApplication::setActiveWindow(this);
+#else
+		activateWindow();
+#endif
 	}
 
 	emu_pause(FALSE);
