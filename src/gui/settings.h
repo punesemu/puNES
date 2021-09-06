@@ -140,8 +140,9 @@ enum set_element {
 	SET_REC_OUTPUT_CUSTOM_WIDTH,
 	SET_REC_OUTPUT_CUSTOM_HEIGHT,
 	SET_REC_USE_EMU_RESOLUTION,
-	SET_REC_FOLLOW_ROTATION
+	SET_REC_FOLLOW_ROTATION,
 #endif
+	SET_ONLYCMDLINE_HIDDEN_GUI
 };
 enum pgs_element {
 	SET_PGS_SLOT,
@@ -1181,8 +1182,15 @@ static const _settings main_cfg[] = {
 		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
-	}
+	},
 #endif
+	// opzioni da sola riga di comando
+	{
+		NULL, NULL, NULL,
+		NULL,
+		uL("    --hidden-gui          start with hidden GUI"),
+		{0, NULL}
+	},
 };
 
 static const _settings pgs_cfg[] = {

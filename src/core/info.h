@@ -126,6 +126,7 @@ typedef struct _info {
 	WORD CPU_PC_before;
 	BYTE zapper_is_present;
 	BYTE disable_tick_hw;
+	BYTE start_with_hidden_gui;
 #if defined (FULLSCREEN_RESFREQ)
 	BYTE old_machine_type;
 #endif

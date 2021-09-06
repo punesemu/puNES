@@ -99,7 +99,8 @@ static struct _cl_option {
 	{ "audio-output-device",   req_arg,  0 },
 	{ "shader",                req_arg,  0 },
 	{ "overscan-blk-brd",      req_arg,  0 },
-	{ "rewind-minutes",        req_arg,  0 }
+	{ "rewind-minutes",        req_arg,  0 },
+	{ "hidden-gui",            no_arg,   0 }
 };
 
 BYTE cmd_line_parse(int argc, uTCHAR **argv) {
@@ -212,6 +213,8 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 				} else if (key == "fullscreen-res") {
 					settings_resolution_val_to_int(&cfg_from_file.fullscreen_res_w, &cfg_from_file.fullscreen_res_h, oarg);
 #endif
+				} else if (key == "hidden-gui") {
+						info.start_with_hidden_gui = TRUE;
 				}
 				break;
 			case 'a':

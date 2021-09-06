@@ -565,12 +565,14 @@ void objSettings::rd(QString group) {
 	fr_cfg(group);
 }
 void objSettings::rd_key(int index) {
-	beginGroup(uQString(set->cfg[index].grp));
-	val.replace(index, value(uQString(set->cfg[index].key), uQString(set->cfg[index].def)).toString());
-	endGroup();
+	if (set->cfg[index].grp) {
+		beginGroup(uQString(set->cfg[index].grp));
+		val.replace(index, value(uQString(set->cfg[index].key), uQString(set->cfg[index].def)).toString());
+		endGroup();
+	}
 }
 void objSettings::rd_key(QString group, int index) {
-	if (uQString(set->cfg[index].grp) == group) {
+	if (set->cfg[index].grp && (uQString(set->cfg[index].grp) == group)) {
 		rd_key(index);
 	}
 }
@@ -583,15 +585,17 @@ void objSettings::wr(QString group) {
 	to_cfg(group);
 	wr_all_keys();
 }
-void objSettings::wr_key(QString group, int index) {
-	if (uQString(set->cfg[index].grp) == group) {
-		wr_key(index);
+void objSettings::wr_key(int index) {
+	if (set->cfg[index].grp) {
+		beginGroup(uQString(set->cfg[index].grp));
+		setValue(uQString(set->cfg[index].key), val.at(index));
+		endGroup();
 	}
 }
-void objSettings::wr_key(int index) {
-	beginGroup(uQString(set->cfg[index].grp));
-	setValue(uQString(set->cfg[index].key), val.at(index));
-	endGroup();
+void objSettings::wr_key(QString group, int index) {
+	if (set->cfg[index].grp && (uQString(set->cfg[index].grp) == group)) {
+		wr_key(index);
+	}
 }
 void objSettings::wr_all_keys(void) {
 	s.list = listEle;

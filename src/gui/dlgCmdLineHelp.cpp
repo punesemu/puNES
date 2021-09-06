@@ -80,6 +80,7 @@ dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, QString name) : QDialog(parent) 
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
 #endif
+			uL("" uPERCENTs "\n")
 	};
 
 	usage_string = (uTCHAR *)malloc(1024 * 9);
@@ -131,7 +132,8 @@ dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, QString name) : QDialog(parent) 
 			main_cfg[SET_BCK_PAUSE].hlp,
 			main_cfg[SET_CHEAT_MODE].hlp,
 			main_cfg[SET_GUI_LANGUAGE].hlp,
-			main_cfg[SET_REWIND_MINUTES].hlp
+			main_cfg[SET_REWIND_MINUTES].hlp,
+			main_cfg[SET_ONLYCMDLINE_HIDDEN_GUI].hlp
 	);
 
 	setupUi(this);
