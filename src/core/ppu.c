@@ -271,7 +271,7 @@ void ppu_tick(void) {
 				// utilizzato dalle mappers :
 				// MMC3
 				// Rex (DBZ)
-				// Taito (TC0190FMCPAL16R4)
+				// Taito (TC0690)
 				// Tengen (Rambo)
 				extcl_update_r2006(r2006.value, old_r2006);
 			}

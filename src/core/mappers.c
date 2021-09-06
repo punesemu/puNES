@@ -196,6 +196,9 @@ BYTE map_init(void) {
 		case 47:
 			map_init_47();
 			break;
+		case 48:
+			map_init_Taito(TC0690);
+			break;
 		case 49:
 			map_init_49();
 			break;

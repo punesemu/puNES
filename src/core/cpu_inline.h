@@ -452,7 +452,7 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 				 * utilizzato dalle mappers :
 				 * MMC3
 				 * Rex (DBZ)
-				 * Taito (TC0190FMCPAL16R4)
+				 * Taito (TC0690)
 				 * Tengen (Rambo)
 				 */
 				if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) {
@@ -1328,7 +1328,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			  * utilizzato dalle mappers :
 			  * MMC3
 			  * Rex (DBZ)
-			  * Taito (TC0190FMCPAL16R4)
+			  * Taito (TC0690)
 			  * Tengen (Rambo)
 			  */
 			extcl_update_r2006(r2006.value, old_r2006);

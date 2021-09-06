@@ -2949,28 +2949,6 @@ static const _dbelement dblist[] = {
 	/* Major League (J).nes */
 	{"31a87d67d66bb28d2b8e4134173b5e264737635f", 32, G101B, MAJORLEAGUE, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* -------------------------------------- Taito ------------------------------------------- */
-	/* Bakushou!! Jinsei Gekijou 2 (J) [b3].nes */
-	{"47a379fb7607c589df9f591a7be4359620627d2c", 33, TC0190FMCPAL16R4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Bakushou!! Jinsei Gekijou 3 (J) [o1].nes */
-	{"4961e8c599137438c14c27ebb0392c840be308a1", 33, TC0190FMCPAL16R4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Bubble Bobble 2 (J).nes */
-	{"d64e1006c7db5e2e605451f2db659e217619b9a5", 33, TC0190FMCPAL16R4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Don Doko Don 2 (J) [o1].nes */
-	{"ea1d369fd6ce689db1456752b1dc90fe2a4138da", 33, TC0190FMCPAL16R4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Don Doko Don 2 (J) [t1].nes */
-	{"e4ba09274a63d9ad39b2280455b2661356af4c6a", 33, TC0190FMCPAL16R4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Don Doko Don 2 (J) [t2].nes */
-	{"25bc3c723f108280b8f64f3f3356143beadb67cc", 33, TC0190FMCPAL16R4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Don Doko Don 2 (J) [t3].nes */
-	{"b01cc8c170812896b9242181a71632cd5bdc4305", 33, TC0190FMCPAL16R4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Captain Saver (J).nes */
-	{"17a2f568f1d9f380b17b1aa3516e901b22668f35", 33, TC0190FMCPAL16R4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Flintstones, The - The Rescue of Dino & Hoppy (J).nes */
-	{"0609d3fa46bde957636afe28645422a52231f676", 33, TC0190FMCPAL16R4, BAD_INES_FLINJ, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Jetsons, The - Cogswell's Caper! (J).nes */
-	{"77e12ce848192a51309393136c4a240c729ddb30", 33, TC0190FMCPAL16R4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-
 /* -------------------------------------- BxROM ------------------------------------------- */
 	/* Bio Senshi Dan - Increaser Tono Tatakai (J) [hM34].nes */
 	{"26b9209aed037a3df48c16ef0e490e4686f3df8c", 34, AVENINA001, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
@@ -3044,6 +3022,26 @@ static const _dbelement dblist[] = {
 /* ------------------------------------- mapper 45 ---------------------------------------- */
 	/* Kunio 8-in-1 [p1][!].nes */
 	{"b80dca69c0943fea309d3cc0bf34d6bfc38e29c9", 45, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* -------------------------------------- Taito ------------------------------------------- */
+	/* Bakushou!! Jinsei Gekijou 3 (J) [o1].nes */
+	{"4961e8c599137438c14c27ebb0392c840be308a1", 48, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Bubble Bobble 2 (J).nes */
+	{"d64e1006c7db5e2e605451f2db659e217619b9a5", 48, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Don Doko Don 2 (J) [o1].nes */
+	{"ea1d369fd6ce689db1456752b1dc90fe2a4138da", 48, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Don Doko Don 2 (J) [t1].nes */
+	{"e4ba09274a63d9ad39b2280455b2661356af4c6a", 48, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Don Doko Don 2 (J) [t2].nes */
+	{"25bc3c723f108280b8f64f3f3356143beadb67cc", 48, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Don Doko Don 2 (J) [t3].nes */
+	{"b01cc8c170812896b9242181a71632cd5bdc4305", 48, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Captain Saver (J).nes */
+	{"17a2f568f1d9f380b17b1aa3516e901b22668f35", 48, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Flintstones, The - The Rescue of Dino & Hoppy (J).nes */
+	{"0609d3fa46bde957636afe28645422a52231f676", 48, DEFAULT, BAD_INES_FLINJ, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Jetsons, The - Cogswell's Caper! (J).nes */
+	{"77e12ce848192a51309393136c4a240c729ddb30", 48, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- mapper 52 ---------------------------------------- */
 	/* Mario 7-in-1 [p1][!].nes */
