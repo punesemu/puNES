@@ -9,7 +9,16 @@
 Description
 -----------
 
-Nintendo Entertaiment System emulator
+Nintendo Entertaiment System emulator.
+
+<img src="https://user-images.githubusercontent.com/6733770/132254118-274ce7e6-c96b-44c5-986a-c3b2c2acd005.png" width="300">
+
+
+Configuration
+-----------
+Rename the executable to `punes_p.exe` if you want to run it in portable mode. 
+
+To see a list of available command-line options, start puNES with the `-h`argument.
 
 WIP Builds ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://ci.appveyor.com/api/projects/status/t820vxmvtvbfbll7?svg=true)](https://ci.appveyor.com/project/punesemu/punes/history) 
 -----------
