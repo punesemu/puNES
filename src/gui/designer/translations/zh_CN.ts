@@ -1778,12 +1778,12 @@
       <translation type="unfinished">Randomize (Not recommended)</translation>
     </message>
     <message>
-      <source>Increment  at every hard reset (Not recommended)</source>
-      <translation type="unfinished">Increment  at every hard reset (Not recommended)</translation>
-    </message>
-    <message>
       <source>Power up/reset CPU/PPU Alignment</source>
       <translation type="unfinished">Power up/reset CPU/PPU Alignment</translation>
+    </message>
+    <message>
+      <source>Increment at every hard reset (Not recommended)</source>
+      <translation type="unfinished">Increment at every hard reset (Not recommended)</translation>
     </message>
   </context>
   <context>
