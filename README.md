@@ -3,11 +3,14 @@
 </p>  
 <h3 align="center">Qt-based Nintendo Entertaiment System emulator and NSF/NSFe Music Player</h3>
 
-[![Gentoo package](https://repology.org/badge/version-for-repo/gentoo/punes.svg)](https://repology.org/project/punes/versions)
-[![AUR package](https://repology.org/badge/version-for-repo/aur/punes.svg)](https://repology.org/project/punes/versions)
-[![SlackBuilds package](https://repology.org/badge/version-for-repo/slackbuilds/punes.svg)](https://repology.org/project/punes/versions)
-[![LiGurOS stable package](https://repology.org/badge/version-for-repo/liguros_stable/punes.svg)](https://repology.org/project/punes/versions)
-[![Wikidata package](https://repology.org/badge/version-for-repo/wikidata/punes.svg)](https://repology.org/project/punes/versions)
+<p align="center">
+  <a href="https://repology.org/project/punes/versions">
+    <img src="https://repology.org/badge/version-for-repo/gentoo/punes.svg" alt="Gentoo package"/>
+    <img src="https://repology.org/badge/version-for-repo/aur/punes.svg" alt="AUR package]"/>
+    <img src="https://repology.org/badge/version-for-repo/slackbuilds/punes.svg" alt="SlackBuilds package"/>
+    <img src="https://repology.org/badge/version-for-repo/liguros_stable/punes.svg" alt="LiGurOS stable package"/>
+    <img src="https://repology.org/badge/version-for-repo/wikidata/punes.svg" alt="Wikidata package"/>
+</p>
 
 :keyboard: Configuration
 -----------
@@ -16,7 +19,7 @@ Examples: `punes.exe -> punes_p.exe` or `punes64.exe -> punes64_p.exe`
 
 To see a list of available command-line options, start puNES with the `-h` argument.
 
-:floppy_disk: WIP Builds
+:floppy_disk: Work in Progress (WIP) Builds
 -----------
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://ci.appveyor.com/api/projects/status/t820vxmvtvbfbll7?svg=true)](https://ci.appveyor.com/project/punesemu/punes/history)  
 
@@ -35,9 +38,10 @@ If you want pay a beer : <span class="badge-paypal"><a href="https://www.paypal.
 -----------
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/14859058/132306008-dcf5eff7-6233-4f23-9b2a-cf1cc2fb32c6.png" width="400" alt="puNES main window"/>
-  <img src="https://user-images.githubusercontent.com/14859058/132307736-9478e89b-ddaf-4df8-a894-b633cdd464fb.png" width="400" alt="puNES General Settings"/>
-  <img src="https://user-images.githubusercontent.com/14859058/132307786-8b50b3d9-551b-4fdc-a522-a94466195eb2.png" width="400" alt="puNES Video Filters Settings"/>
+  <img src="https://user-images.githubusercontent.com/14859058/132306008-dcf5eff7-6233-4f23-9b2a-cf1cc2fb32c6.png" width="450" alt="puNES main window"/>
+  <img src="https://user-images.githubusercontent.com/14859058/132349777-470b91f9-f6d2-4d23-a7f6-320bf97c0a16.png" width="450" alt="puNES NSFE Player"/>
+  <img src="https://user-images.githubusercontent.com/14859058/132307736-9478e89b-ddaf-4df8-a894-b633cdd464fb.png" width="450" alt="puNES General Settings"/>
+  <img src="https://user-images.githubusercontent.com/14859058/132307786-8b50b3d9-551b-4fdc-a522-a94466195eb2.png" width="450" alt="puNES Video Filters Settings"/>
 </p>
 
 :information_source: How to Compile
