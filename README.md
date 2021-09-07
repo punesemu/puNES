@@ -38,10 +38,10 @@ If you want pay a beer : <span class="badge-paypal"><a href="https://www.paypal.
 -----------
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/14859058/132306008-dcf5eff7-6233-4f23-9b2a-cf1cc2fb32c6.png" width="450" alt="puNES main window"/>
-  <img src="https://user-images.githubusercontent.com/14859058/132349777-470b91f9-f6d2-4d23-a7f6-320bf97c0a16.png" width="450" alt="puNES NSFE Player"/>
-  <img src="https://user-images.githubusercontent.com/14859058/132307736-9478e89b-ddaf-4df8-a894-b633cdd464fb.png" width="450" alt="puNES General Settings"/>
-  <img src="https://user-images.githubusercontent.com/14859058/132307786-8b50b3d9-551b-4fdc-a522-a94466195eb2.png" width="450" alt="puNES Video Filters Settings"/>
+  <img src="https://user-images.githubusercontent.com/14859058/132306008-dcf5eff7-6233-4f23-9b2a-cf1cc2fb32c6.png" width="400" alt="puNES main window"/>
+  <img src="https://user-images.githubusercontent.com/14859058/132349777-470b91f9-f6d2-4d23-a7f6-320bf97c0a16.png" width="400" alt="puNES NSFE Player"/>
+  <img src="https://user-images.githubusercontent.com/14859058/132307736-9478e89b-ddaf-4df8-a894-b633cdd464fb.png" width="400" alt="puNES General Settings"/>
+  <img src="https://user-images.githubusercontent.com/14859058/132307786-8b50b3d9-551b-4fdc-a522-a94466195eb2.png" width="400" alt="puNES Video Filters Settings"/>
 </p>
 
 :information_source: How to Compile
