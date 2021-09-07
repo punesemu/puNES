@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://user-images.githubusercontent.com/14859058/132302943-a466d3d5-75c2-4bac-b0b2-7f0aeb8c058d.png" alt="puNES"/><br>
 </p>  
-<h3 align="center">Qt-based Nintendo Entertaiment System emulator and NSF/NSFe Music Player</h3>
+<h3 align="center">Qt-based Nintendo Entertainment System emulator and NSF/NSFe Music Player</h3>
 
 <p align="center">
   <a href="https://repology.org/project/punes/versions">
@@ -32,7 +32,7 @@ Note : 32 bit versions are Windows XP compatible.
 :beer: Support
 -----------
 
-If you want pay a beer : <span class="badge-paypal"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button" /></a></span>
+If you want buy me a beer : <span class="badge-paypal"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button" /></a></span>
 
 :camera_flash: Screenshots
 -----------
