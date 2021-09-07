@@ -1778,11 +1778,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Increment  at every hard reset (Not recommended)</source>
+        <source>Power up/reset CPU/PPU Alignment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Power up/reset CPU/PPU Alignment</source>
+        <source>Increment at every hard reset (Not recommended)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
