@@ -31,12 +31,10 @@ Note : 32 bit versions are Windows XP compatible.
 
 :beer: Support
 -----------
-
 If you want buy me a beer : <span class="badge-paypal"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button" /></a></span>
 
-:camera_flash: Screenshots
+:camera: Screenshots
 -----------
-
 <p align="center">
   <img src="https://user-images.githubusercontent.com/14859058/132306008-dcf5eff7-6233-4f23-9b2a-cf1cc2fb32c6.png" width="400" alt="puNES main window"/>
   <img src="https://user-images.githubusercontent.com/14859058/132349777-470b91f9-f6d2-4d23-a7f6-320bf97c0a16.png" width="400" alt="puNES NSFE Player"/>
