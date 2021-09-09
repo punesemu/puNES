@@ -67,6 +67,7 @@ INLINE static void emu_frame_started(void);
 INLINE static void emu_frame_finished(void);
 INLINE static void emu_frame_sleep(void);
 
+static void emu_cpu_initial_cycles(void);
 static BYTE emu_ctrl_if_rom_exist(void);
 static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file);
 static void emu_recent_roms_add(BYTE *add, uTCHAR *file);
@@ -217,11 +218,12 @@ BYTE emu_frame_debugger(void) {
 	if (debugger.mode == DBG_GO) {
 		// posso passare dal DBG_GO al DBG_STEP durante l'esecuzione di un frame intero
 		while ((info.frame_status == FRAME_STARTED) && (debugger.mode == DBG_GO)) {
-			if (debugger.breakpoint == cpu.PC) {
+			if ((debugger.breakpoint == cpu.PC) && (debugger.breakpoint_after_step == FALSE)) {
 				debugger.mode = DBG_BREAKPOINT;
 				//gui_dlgdebugger_click_step();
 				break;
 			} else {
+				debugger.breakpoint_after_step = FALSE;
 				info.CPU_PC_before = cpu.PC;
 				cpu_exe_op();
 			}
@@ -752,17 +754,8 @@ BYTE emu_turn_on(void) {
 
 	save_slot_count_load();
 
-	// emulo i 9 cicli iniziali
-	{
-		BYTE i;
-		for (i = 0; i < 8; i++) {
-			if (info.mapper.id != NSF_MAPPER) {
-				ppu_tick();
-			}
-			apu_tick(NULL);
-			cpu.odd_cycle = !cpu.odd_cycle;
-		}
-	}
+	// ritardo della CPU
+	emu_cpu_initial_cycles();
 
 	ext_win.vs_system = vs_system.enabled;
 	if (vs_system.enabled == TRUE) {
@@ -922,17 +915,7 @@ BYTE emu_reset(BYTE type) {
 	}
 
 	// ritardo della CPU
-	{
-		BYTE i;
-
-		for (i = 0; i < 8; i++) {
-			if (info.mapper.id != NSF_MAPPER) {
-				ppu_tick();
-			}
-			apu_tick(NULL);
-			cpu.odd_cycle = !cpu.odd_cycle;
-		}
-	}
+	emu_cpu_initial_cycles();
 
 	if (vs_system.enabled == TRUE) {
 		if (type >= HARD) {
@@ -1174,6 +1157,17 @@ INLINE static void emu_frame_sleep(void) {
 	fps.frame.expected_end += fps.frame.estimated_ms;
 }
 
+static void emu_cpu_initial_cycles(void) {
+	BYTE i;
+
+	for (i = 0; i < 8; i++) {
+		if (info.mapper.id != NSF_MAPPER) {
+			ppu_tick();
+		}
+		apu_tick(NULL);
+		cpu.odd_cycle = !cpu.odd_cycle;
+	}
+}
 static BYTE emu_ctrl_if_rom_exist(void) {
 	uTCHAR file[LENGTH_FILE_NAME_LONG];
 	BYTE found = FALSE;

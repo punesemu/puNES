@@ -26,6 +26,7 @@ enum debugger_mode { DBG_NODBG, DBG_GO, DBG_STEP, DBG_BREAKPOINT, DBG_SLEEP };
 typedef struct _debugger {
 	BYTE mode;
 	WORD breakpoint;
+	WORD breakpoint_after_step;
 	BYTE breakframe;
 } _debugger;
 typedef struct _debugger_breakpoint {
