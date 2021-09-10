@@ -1868,7 +1868,15 @@ void mainWindow::s_shcjoy_read_timer(void) {
 	}
 }
 void mainWindow::s_received_message(UNUSED(quint32 instanceId), QByteArray message) {
-	QFileInfo fileinfo(message);
+	secondary_instance.mutex.lock();
+	secondary_instance.message = QString(message);
+	secondary_instance.mutex.unlock();
+	QTimer::singleShot(100, this, SLOT(s_exec_message(void)));
+}
+void mainWindow::s_exec_message(void) {
+	secondary_instance.mutex.lock();
+	QFileInfo fileinfo(secondary_instance.message);
+	secondary_instance.mutex.unlock();
 
 	emu_pause(TRUE);
 
@@ -1888,6 +1896,9 @@ void mainWindow::s_received_message(UNUSED(quint32 instanceId), QByteArray messa
 
 	emu_pause(FALSE);
 }
+
+
+
 
 void mainWindow::s_shcut_mode(void) {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();

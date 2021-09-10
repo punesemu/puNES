@@ -155,6 +155,10 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			bool menubar;
 			bool toolbars;
 		} visibility;
+		struct _secondary_instance {
+			QMutex mutex;
+			QString message;
+		} secondary_instance;
 		QShortcut *shortcut[SET_MAX_NUM_SC];
 		QTranslator *translator;
 		QTranslator *qtTranslator;
@@ -258,6 +262,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_fullscreen(void);
 		void s_shcjoy_read_timer(void);
 		void s_received_message(quint32 instanceId, QByteArray message);
+		void s_exec_message(void);
 
 	private slots:
 		void s_shcut_mode(void);

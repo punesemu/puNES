@@ -131,12 +131,19 @@ void gui_quit(void) {}
 BYTE gui_control_instance(void) {
 	if (qt.app->isSecondary() && (cfg->multiple_instances == FALSE)) {
 		if (info.rom.file[0]) {
+			unsigned int count = 0;
+
 #if defined (_WIN32)
 			// https://github.com/itay-grudev/SingleApplication/blob/master/Windows.md
 			AllowSetForegroundWindow(DWORD(qt.app->primaryPid()));
 #endif
-			qt.app->sendMessage(uQString(info.rom.file).toUtf8());
-			gui_sleep(450);
+			do {
+				if (qt.app->sendMessage(uQString(info.rom.file).toUtf8()) == true) {
+					break;
+				}
+				gui_sleep(20);
+				count++;
+			} while (count < 10);
 		}
 		qt.app->exit(0);
 		return (EXIT_ERROR);
