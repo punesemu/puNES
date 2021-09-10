@@ -161,7 +161,7 @@ void map_init_Sunsoft(BYTE model) {
 				memset(&fm7, 0x00, sizeof(fm7));
 			}
 
-			if (info.format == iNES_1_0) {
+			if ((info.format == iNES_1_0) || !info.prg.ram.banks_8k_plus) {
 				info.prg.ram.banks_8k_plus = 1;
 
 				if ((info.id == BARCODEWORLD) || (info.id == DODGEDANPEI2)) {
