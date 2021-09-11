@@ -1100,11 +1100,11 @@
     </message>
     <message>
       <source>Resolution</source>
-      <translation type="unfinished">Resolution</translation>
+      <translation>Разрешение</translation>
     </message>
     <message>
       <source>Gamma</source>
-      <translation type="unfinished">Gamma</translation>
+      <translation>Гамма</translation>
     </message>
     <message>
       <source>Bleed</source>
@@ -1120,11 +1120,11 @@
     </message>
     <message>
       <source>Sharpness</source>
-      <translation type="unfinished">Sharpness</translation>
+      <translation>Резкость</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Яркость</translation>
     </message>
     <message>
       <source>Hue</source>
@@ -1132,11 +1132,11 @@
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Контраст</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Насыщенность</translation>
     </message>
     <message>
       <source>Scanline</source>
@@ -1771,7 +1771,7 @@
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>По умолчанию</translation>
     </message>
     <message>
       <source>Randomize (Not recommended)</source>
@@ -2431,7 +2431,7 @@
     </message>
     <message>
       <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
-      <translation type="unfinished">Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
+      <translation>Адаптировать частоту обновления к региону (PAL/Dendy 50Гц, NTSC 60Гц)</translation>
     </message>
     <message>
       <source>Fullscreen</source>
@@ -2439,15 +2439,15 @@
     </message>
     <message>
       <source>* applied if supported by the monitor</source>
-      <translation type="unfinished">* applied if supported by the monitor</translation>
+      <translation>* применяется, если поддерживается монитором</translation>
     </message>
     <message>
       <source>Use integer scaling</source>
-      <translation type="unfinished">Use integer scaling</translation>
+      <translation>Использовать целочисленное масштабирование</translation>
     </message>
     <message>
       <source>Preferred resolution </source>
-      <translation type="unfinished">Preferred resolution </translation>
+      <translation>Предпочитаемое разрешение</translation>
     </message>
   </context>
   <context>
