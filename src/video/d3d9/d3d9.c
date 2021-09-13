@@ -32,7 +32,7 @@
 #endif
 
 #define _SCR_COLUMNS_\
-	(cfg->filter == NTSC_FILTER ? NES_NTSC_OUT_WIDTH(SCR_COLUMNS) / 2: SCR_COLUMNS)
+	(cfg->filter == NTSC_FILTER ? NES_NTSC_OUT_WIDTH(SCR_COLUMNS) / 2 : SCR_COLUMNS)
 #define _SCR_COLUMNS_BRD\
 	((float)(_SCR_COLUMNS_ - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
 #define _SCR_ROWS_BRD\

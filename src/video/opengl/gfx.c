@@ -377,6 +377,12 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	{
 		gfx.PSS = ((cfg->pixel_aspect_ratio != PAR11) && cfg->PAR_soft_stretch) ? TRUE : FALSE;
 
+		// su alcune schede video, se non applico un soft stretch con l'NTSC_FILTER, l'immagine viene
+		// sporcata nel triangolo in alto a sinistra soprattutto con le scanlines ben visibili.
+		if (cfg->filter == NTSC_FILTER) {
+			gfx.PSS = TRUE;
+		}
+
 		if (shaders_set(shader) == EXIT_ERROR) {
 			umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
 			if (old_shader == shader) {
