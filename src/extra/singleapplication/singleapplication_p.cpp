@@ -479,8 +479,8 @@ void SingleApplicationPrivate::readInitMessageBody( QLocalSocket *sock )
     info.stage = StageConnectedHeader;
 
     if( connectionType == NewInstance ||
-        ( connectionType == SecondaryInstance &&
-          options & SingleApplication::Mode::SecondaryNotification ) )
+        ( ( connectionType == SecondaryInstance ) &&
+          ( options & SingleApplication::Mode::SecondaryNotification ) ) )
     {
         Q_EMIT q->instanceStarted();
     }
