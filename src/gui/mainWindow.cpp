@@ -505,12 +505,12 @@ void mainWindow::make_reset(int type) {
 
 	emu_frame_input_and_rewind();
 
-	emu_thread_continue();
-
 	update_menu_file();
 	// dopo un reset la pause e' automaticamente disabilitata quindi faccio
 	// un aggiornamento del submenu NES per avere la voce correttamente settata.
 	update_menu_nes();
+
+	emu_thread_continue();
 }
 void mainWindow::change_rom(const uTCHAR *rom) {
 	emu_thread_pause();
@@ -1206,6 +1206,8 @@ void mainWindow::s_quit(void) {
 	close();
 }
 void mainWindow::s_turn_on_off(void) {
+	emu_thread_pause();
+
 	info.turn_off = !info.turn_off;
 
 	if (info.turn_off) {
@@ -1219,6 +1221,8 @@ void mainWindow::s_turn_on_off(void) {
 
 	update_menu_nes();
 	update_menu_state();
+
+	emu_thread_continue();
 }
 void mainWindow::s_make_reset(void) {
 	int type = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -1897,9 +1901,6 @@ void mainWindow::s_exec_message(void) {
 	emu_pause(FALSE);
 }
 
-
-
-
 void mainWindow::s_shcut_mode(void) {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
@@ -1985,12 +1986,16 @@ void mainWindow::s_shcut_toggle_menubar(void) {
 }
 
 void mainWindow::s_et_gg_reset(void) {
+	emu_thread_pause();
 	make_reset(CHANGE_ROM);
 	gamegenie.phase = GG_FINISH;
+	emu_thread_continue();
 }
 void mainWindow::s_et_vs_reset(void) {
+	emu_thread_pause();
 	vs_system.watchdog.reset = FALSE;
 	make_reset(RESET);
+	emu_thread_continue();
 }
 void mainWindow::s_et_external_control_windows_show(void) {
 	gui_external_control_windows_show();
@@ -2087,8 +2092,9 @@ void timerEgds::_stop(BYTE is_necessary) {
 	stop();
 }
 void timerEgds::_stop_with_emu_thread_continue(enum with_emu_pause type, BYTE is_necessary) {
-	calls[type].count--;
-	emu_thread_continue();
+	if (calls[type].count && (--calls[type].count == 0)) {
+		emu_thread_continue();
+	}
 	_stop(is_necessary);
 }
 void timerEgds::_etc(enum with_emu_pause type) {
