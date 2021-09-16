@@ -1386,14 +1386,11 @@ QSize overlayWidgetSaveSlot::sizeHint() const {
 		return (QSize(width, height_row_slot + ((width / ratio) / (11.0f / 8.0f))));
 	} else {
 		switch (rows) {
-			case 2:
+			default:
 				width = 100;
 				break;
 			case 3:
 				width = 130;
-				break;
-			case 4:
-				width = 100;
 				break;
 		}
 		return (QSize((width * columns) + hpadtot(), ((width / ratio) * rows) + hpadtot()));
