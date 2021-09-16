@@ -284,8 +284,14 @@ void gui_set_window_size(void) {
 	qt.mwin->statusbar->setFixedWidth(w);
 }
 
-void gui_set_save_slot_tooltip(BYTE slot, char *buffer) {
-	qt.mwin->set_save_slot_tooltip(slot, buffer);
+void gui_state_save_slot_set(BYTE slot, BYTE on_video) {
+	if (slot >= SAVE_SLOTS) {
+		slot = SAVE_SLOTS - 1;
+	}
+	qt.mwin->state_save_slot_set(slot, on_video);
+}
+void gui_state_save_slot_set_tooltip(BYTE slot, char *buffer) {
+	qt.mwin->state_save_slot_set_tooltip(slot, buffer);
 }
 
 void gui_update(void) {
@@ -358,12 +364,6 @@ void gui_fullscreen(void) {
 	// desktop e che le decorazioni della finestra non appaiano correttamente (problema
 	// riscontrato sotto Linux e BSD).
 	QTimer::singleShot(250, qt.mwin, SLOT(s_set_fullscreen()));
-}
-void gui_save_slot(BYTE slot) {
-	if (slot >= SAVE_SLOTS) {
-		slot = SAVE_SLOTS - 1;
-	}
-	qt.mwin->state_save_slot_set(slot, FALSE);
 }
 
 void gui_print_usage(char *usage) {
@@ -559,7 +559,8 @@ void gui_decode_all_input_events(void) {
 		for (QList<_wdgScreen_mouse_event>::iterator e = qt.screen->events.mouse.begin(); e != qt.screen->events.mouse.end(); ++e) {
 			_wdgScreen_mouse_event &event = *e;
 
-			if ((event.type == QEvent::MouseButtonPress) || (event.type == QEvent::MouseButtonDblClick)) {
+			if ((event.type == QEvent::MouseButtonPress) ||
+				(event.type == QEvent::MouseButtonDblClick)) {
 				if (event.button == Qt::LeftButton) {
 					gmouse.left = TRUE;
 				} else if (event.button == Qt::RightButton) {

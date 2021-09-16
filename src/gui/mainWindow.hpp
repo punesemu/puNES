@@ -196,11 +196,12 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void control_visible_cursor(void);
 		void make_reset(int type);
 		void change_rom(const uTCHAR *rom);
-		void state_save_slot_set(int slot, bool on_video);
 		void shortcuts(void);
 		bool is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event);
 		void update_gfx_monitor_dimension(void);
-		void set_save_slot_tooltip(BYTE slot, char *buffer);
+		QAction *state_save_slot_action(BYTE slot);
+		void state_save_slot_set(int slot, bool on_video);
+		void state_save_slot_set_tooltip(BYTE slot, char *buffer);
 		void toggle_toolbars(void);
 		void reset_min_max_size(void);
 		void update_fds_menu(void);

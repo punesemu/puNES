@@ -98,8 +98,9 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 			events.mutex.unlock();
 		}
 	} else if ((tas.type == NOTAS) && (rwnd.active == FALSE)) {
-		if ((event->type() == QEvent::MouseButtonPress) || (event->type() == QEvent::MouseButtonRelease) ||
-				(event->type() == QEvent::MouseButtonDblClick)) {
+		if ((event->type() == QEvent::MouseButtonPress) ||
+			(event->type() == QEvent::MouseButtonRelease) ||
+			(event->type() == QEvent::MouseButtonDblClick)) {
 			mouseEvent = ((QMouseEvent *)event);
 			events.mutex.lock();
 			events.mouse << _wdgScreen_mouse_event(event->type(), mouseEvent->button(), 0, 0);

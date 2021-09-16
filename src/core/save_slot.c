@@ -180,7 +180,8 @@ void save_slot_count_load(void) {
 			save_slot_operation(SAVE_SLOT_COUNT, i, fp);
 			fclose(fp);
 		} else {
-			gui_set_save_slot_tooltip(i, NULL);
+			gui_overlay_slot_preview(i, NULL, NULL);
+			gui_state_save_slot_set_tooltip(i, NULL);
 		}
 	}
 
@@ -196,7 +197,7 @@ void save_slot_count_load(void) {
 		}
 	}
 
-	gui_save_slot(save_slot.slot);
+	gui_state_save_slot_set(save_slot.slot, FALSE);
 
 	gfx_thread_continue();
 	emu_thread_continue();
@@ -800,7 +801,8 @@ static void preview_image(BYTE slot, _screen_buffer *sb) {
 
 	if ((buffer = malloc(stride * SCR_ROWS))) {
 		scale_surface_preview_1x(sb, stride, buffer);
-		gui_set_save_slot_tooltip(slot, buffer);
+		gui_overlay_slot_preview(slot, buffer, name_slot_file(slot));
+		gui_state_save_slot_set_tooltip(slot, buffer);
 		free(buffer);
 	}
 }
@@ -827,9 +829,9 @@ static uTCHAR *name_slot_file(BYTE slot) {
 	usnprintf(file, usizeof(file), uL("" uPERCENTs SAVE_FOLDER "/" uPERCENTs), info.base_folder, bname);
 
 	if (nsf.enabled == TRUE) {
-		usnprintf(ext, usizeof(ext), uL(".n%02d"), slot);
+		usnprintf(ext, usizeof(ext), uL(".n%02X"), slot);
 	} else {
-		usnprintf(ext, usizeof(ext), uL(".p%02d"), slot);
+		usnprintf(ext, usizeof(ext), uL(".p%02X"), slot);
 	}
 
 	// rintraccio l'ultimo '.' nel nome

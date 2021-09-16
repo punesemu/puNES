@@ -69,6 +69,7 @@
 #define wdgrewind ((wdgRewind *)gui_wdgrewind_get_ptr())
 #define dlgsettings ((dlgSettings *)gui_dlgsettings_get_ptr())
 #define objcheat ((objCheat *)gui_objcheat_get_ptr())
+#define wdgoverlayui ((wdgOverlayUi *)gui_wdgoverlayui_get_ptr())
 
 typedef struct _gui {
 #if defined (_WIN32)
@@ -131,7 +132,8 @@ EXTERNC void gui_start(void);
 EXTERNC void gui_set_video_mode(void);
 EXTERNC void gui_set_window_size(void);
 
-EXTERNC void gui_set_save_slot_tooltip(BYTE slot, char *buffer);
+EXTERNC void gui_state_save_slot_set(BYTE slot, BYTE on_video);
+EXTERNC void gui_state_save_slot_set_tooltip(BYTE slot, char *buffer);
 
 EXTERNC void gui_update(void);
 EXTERNC void gui_update_dset(void);
@@ -154,7 +156,6 @@ EXTERNC void gui_egds_start_rwnd(void);
 EXTERNC void gui_egds_stop_rwnd(void);
 
 EXTERNC void gui_fullscreen(void);
-EXTERNC void gui_save_slot(BYTE slot);
 
 EXTERNC void gui_print_usage(char *usage);
 EXTERNC int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type);
@@ -191,6 +192,7 @@ EXTERNC void gui_decode_all_input_events(void);
 
 EXTERNC void gui_screen_update(void);
 
+EXTERNC void *gui_wdgoverlayui_get_ptr(void);
 EXTERNC void gui_overlay_update(void);
 EXTERNC BYTE gui_overlay_is_updated(void);
 EXTERNC void gui_overlay_enable_save_slot(BYTE mode);
@@ -199,6 +201,7 @@ EXTERNC void gui_overlay_info_init(void);
 EXTERNC void gui_overlay_info_emulator(void);
 EXTERNC void gui_overlay_info_append_msg_precompiled(int index, void *arg1);
 EXTERNC void gui_overlay_blit(void);
+EXTERNC void gui_overlay_slot_preview(int slot, void *buffer, uTCHAR *file);
 
 EXTERNC void *gui_dlgsettings_get_ptr(void);
 

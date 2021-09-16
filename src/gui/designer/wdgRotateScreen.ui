@@ -32,7 +32,7 @@
       <enum>QFrame::NoFrame</enum>
      </property>
      <property name="text">
-      <string>Rotate Screen :</string>
+      <string>Degrees</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

@@ -6,15 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>171</width>
+    <width>200</width>
     <height>45</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string notr="true">wdgState</string>
@@ -35,7 +29,40 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="1" column="0">
+   <item row="0" column="3">
+    <widget class="QPushButton" name="pushButton_load">
+     <property name="toolTip">
+      <string>Load state</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <widget class="QLabel" name="label_title">
+     <property name="text">
+      <string>Save/Load State</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="4">
+    <widget class="stateBar" name="wdgStateBar" native="true">
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
     <widget class="QPushButton" name="pushButton_save">
      <property name="toolTip">
       <string>Save state</string>
@@ -49,49 +76,20 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="3">
-    <widget class="QLabel" name="label_title">
-     <property name="text">
-      <string>Save/Load State</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="slotComboBox" name="slotComboBox_slot">
-     <property name="toolTip">
-      <string>Slot state</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QPushButton" name="pushButton_load">
-     <property name="toolTip">
-      <string>Load state</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>slotComboBox</class>
-   <extends>QComboBox</extends>
-   <header>wdgState.hpp</header>
+   <class>stateBar</class>
+   <extends>QWidget</extends>
+   <header location="global">wdgState.hpp</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>pushButton_save</tabstop>
+  <tabstop>pushButton_load</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

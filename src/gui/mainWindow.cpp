@@ -37,6 +37,7 @@
 #include "extra/singleapplication/singleapplication.h"
 #include "dlgSettings.hpp"
 #include "wdgMenuBar.hpp"
+#include "wdgOverlayUi.hpp"
 #include "common.h"
 #include "emu_thread.h"
 #include "clock.h"
@@ -166,6 +167,8 @@ mainWindow::mainWindow() : QMainWindow() {
 		grp->addAction(action_State_Slot_7);
 		grp->addAction(action_State_Slot_8);
 		grp->addAction(action_State_Slot_9);
+		grp->addAction(action_State_Slot_A);
+		grp->addAction(action_State_Slot_B);
 	}
 
 	connect(shcjoy.timer, SIGNAL(timeout()), this, SLOT(s_shcjoy_read_timer()));
@@ -521,15 +524,6 @@ void mainWindow::change_rom(const uTCHAR *rom) {
 	gui_update();
 	emu_thread_continue();
 }
-void mainWindow::state_save_slot_set(int slot, bool on_video) {
-	if (info.no_rom | info.turn_off) {
-		return;
-	}
-	save_slot.slot = slot;
-	if (on_video == true) {
-		gui_overlay_enable_save_slot(SAVE_SLOT_INCDEC);
-	}
-}
 void mainWindow::shortcuts(void) {
 	// se non voglio che gli shortcuts funzionino durante il fullscreen, basta
 	// utilizzare lo shortcut associato al QAction. In questo modo quando nascondero'
@@ -632,25 +626,68 @@ void mainWindow::update_gfx_monitor_dimension(void) {
 		gfx.h[MONITOR] = fs_geom.height();
 	}
 }
-void mainWindow::set_save_slot_tooltip(BYTE slot, char *buffer) {
-	QAction *action = findChild<QAction *>(QString("action_State_Slot_%1").arg(slot));
+QAction *mainWindow::state_save_slot_action(BYTE slot) {
+	return (findChild<QAction *>(QString("action_State_Slot_%1").arg(QString::number(slot, 16).toUpper())));
+}
+void mainWindow::state_save_slot_set(int slot, bool on_video) {
+	if (info.no_rom | info.turn_off) {
+		return;
+	}
+	save_slot.slot = slot;
+	if (on_video == true) {
+		gui_overlay_enable_save_slot(SAVE_SLOT_INCDEC);
+	}
+}
+void mainWindow::state_save_slot_set_tooltip(BYTE slot, char *buffer) {
 	QString tooltip;
 
 	if (buffer) {
-		QImage image = QImage((uchar *)buffer, SCR_COLUMNS, SCR_ROWS, SCR_COLUMNS * sizeof(uint32_t), QImage::Format_RGB32);
+		static QPainter painter;
+		static QFont f;
+		static QRect rect;
+		static QPen pen;
+		QImage img = QImage((uchar *)buffer, SCR_COLUMNS, SCR_ROWS, SCR_COLUMNS * sizeof(uint32_t), QImage::Format_RGB32);
 		QByteArray data;
 		QBuffer png(&data);
+		int x, y, w, h;
+		double mul = 1.5f;
 
-		image = image.scaled(SCR_COLUMNS * 2, SCR_ROWS * 2, Qt::KeepAspectRatio);
-		image.save(&png, "PNG", 100);
+		img = img.scaled(SCR_COLUMNS * mul, SCR_ROWS * mul, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
+		// scrivo le info
+		w = img.rect().width();
+		h = wdgoverlayui->overlaySaveSlot->height_row_slot * mul;
+		x = 0;
+		y = 0;
+
+		rect.setRect(x, y, w, h);
+
+		f = font();
+		f.setPixelSize(h / mul);
+
+		painter.begin(&img);
+		painter.setOpacity(0.5);
+		painter.fillRect(rect, Qt::darkBlue);
+
+		pen.setColor(wdgoverlayui->overlaySaveSlot->color.info);
+		pen.setWidth(1);
+
+		painter.setFont(f);
+		painter.setOpacity(1.0);
+		painter.setPen(pen);
+		painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter,
+			wdgoverlayui->overlaySaveSlot->previews[save_slot.slot].fileinfo.lastModified().toString(Qt::SystemLocaleShortDate));
+
+		painter.end();
+
+		img.save(&png, "PNG", 10);
 		tooltip = QString("<img src='data:image/png;base64, %1'>").arg(QString(data.toBase64()));
 	} else {
 		//: Refers to the unused save slot. Important: Do not translate the "%1".
-		tooltip = tr("Slot %1 never used").arg(slot);
+		tooltip = tr("Slot %1 never used").arg(QString::number(slot, 16).toUpper());
 	}
 
-	action->setToolTip(tooltip);
-	toolbar->state->set_tooltip(slot, tooltip);
+	state_save_slot_action(slot)->setToolTip(tooltip);
 }
 void mainWindow::toggle_toolbars(void) {
 	bool visibility = !toolbar->isVisible();
@@ -756,6 +793,8 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_State_Slot_7, 7, SLOT(s_state_save_slot_set()));
 	connect_action(action_State_Slot_8, 8, SLOT(s_state_save_slot_set()));
 	connect_action(action_State_Slot_9, 9, SLOT(s_state_save_slot_set()));
+	connect_action(action_State_Slot_A, 10, SLOT(s_state_save_slot_set()));
+	connect_action(action_State_Slot_B, 11, SLOT(s_state_save_slot_set()));
 	// State/[Save to file, Load from file]
 	connect_action(action_State_Save_to_file, SLOT(s_state_save_file()));
 	connect_action(action_State_Load_from_file, SLOT(s_state_load_file()));
@@ -946,7 +985,7 @@ void mainWindow::update_menu_state(void) {
 	action_Decrement_slot->setEnabled(state);
 
 	for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
-		QAction *a = findChild<QAction *>(QString("action_State_Slot_%1").arg(i));
+		QAction *a = state_save_slot_action(i);
 		QString used = " *";
 		QString txt = a->text().replace(used, "");
 

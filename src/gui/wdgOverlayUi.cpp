@@ -16,18 +16,19 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <QtCore/QDateTime>
 #include <QtGui/QAbstractTextDocumentLayout>
-#include <QtWidgets/QGraphicsItem>
 #include <QtSvg/QSvgRenderer>
+#include <QtWidgets/QGraphicsItem>
 #include <time.h>
 #include "wdgOverlayUi.moc"
+#include "mainWindow.hpp"
 #include "fps.h"
 #include "tas.h"
 #include "input.h"
 #include "input/mouse.h"
 #include "fds.h"
 #include "rewind.h"
-#include "save_slot.h"
 #include "version.h"
 #include "cpu.h"
 #include "ppu.h"
@@ -109,6 +110,10 @@ static struct _shared_color {
 	QColor no_lag = QColor(30, 128, 0);
 } shared_color;
 _overlay_data overlay;
+
+void *gui_wdgoverlayui_get_ptr(void) {
+	return ((void *)overlay.widget);
+}
 
 void gui_overlay_update(void) {
 	if (overlay.widget) {
@@ -252,6 +257,21 @@ void gui_overlay_blit(void) {
 
 	overlay.widget->force_redraw = false;
 }
+void gui_overlay_slot_preview(int slot, void *buffer, uTCHAR *file) {
+	if (buffer) {
+		overlay.widget->overlaySaveSlot->previews[slot].image =
+			QImage((uchar*)buffer, SCR_COLUMNS, SCR_ROWS, SCR_COLUMNS * sizeof(uint32_t), QImage::Format_RGB32);
+		overlay.widget->overlaySaveSlot->previews[slot].image =
+			overlay.widget->overlaySaveSlot->previews[slot].image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+	} else {
+		overlay.widget->overlaySaveSlot->previews[slot].image = QImage();
+	}
+	if (file) {
+		overlay.widget->overlaySaveSlot->previews[slot].fileinfo = QFileInfo(uQString(file));
+	} else {
+		overlay.widget->overlaySaveSlot->previews[slot].fileinfo = QFileInfo();
+	}
+}
 
 void overlay_wdg_clear(void *widget, void *qrect) {
 	overlayWidget *wdg = (overlayWidget *)widget;
@@ -347,6 +367,16 @@ void wdgOverlayUi::changeEvent(QEvent *event) {
 void wdgOverlayUi::resizeEvent(QResizeEvent *event) {
 	uint32_t size = (((event->size().height() / 2) * event->size().width()) * 4) * gfx.device_pixel_ratio;
 
+	if (cfg->scale == X1) {
+		overlaySaveSlot->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+		verticalSpacer_slot_state_up->changeSize(0, 0, QSizePolicy::Minimum, QSizePolicy::Ignored);
+		verticalSpacer_slot_state_down->changeSize(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+	} else {
+		overlaySaveSlot->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+		verticalSpacer_slot_state_up->changeSize(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+		verticalSpacer_slot_state_down->changeSize(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+	}
+
 	if (clear) {
 		free(clear);
 	}
@@ -408,6 +438,7 @@ overlayWidget::overlayWidget(QWidget *parent) : QWidget(parent) {
 	fade_out.timer.seconds = 3;
 	enabled = false;
 	force_control_when_hidden = false;
+	always_visible = false;
 	radius = 5;
 
 	setMinimumSize(0, 0);
@@ -457,19 +488,23 @@ void overlayWidget::set_opacity(qreal opacity) {
 	this->opacity.effect->setOpacity(this->opacity.value);
 	setGraphicsEffect(this->opacity.effect);
 }
-void overlayWidget::draw_background(QPainter *painter) {
-	draw_background(painter, rect());
+void overlayWidget::draw_background(void) {
+	draw_background(rect());
 }
-void overlayWidget::draw_background(QPainter *painter, QRect rect) {
+void overlayWidget::draw_background(QRect rect) {
 	QPen pen;
 
 	pen.setWidth(1);
 	pen.setColor(base_color.fg);
-	painter->setPen(pen);
-	painter->setBrush(base_color.bg);
-	painter->drawRoundedRect(rect, radius, radius);
+	painter.setPen(pen);
+	painter.setBrush(base_color.bg);
+	painter.drawRoundedRect(rect, radius, radius);
 }
 void overlayWidget::fade_in_animation(void) {
+	if (always_visible == true) {
+		set_opacity(opacity.value);
+		return;
+	}
 	fade_in.animation->setDuration(500);
 	fade_in.animation->setStartValue(0);
 	fade_in.animation->setEndValue(opacity.value);
@@ -478,6 +513,10 @@ void overlayWidget::fade_in_animation(void) {
 	connect(fade_in.animation, SIGNAL(finished()), this, SLOT(s_fade_in_finished()));
 }
 void overlayWidget::fade_out_animation(void) {
+	if (always_visible == true) {
+		set_opacity(opacity.value);
+		return;
+	}
 	fade_out.animation->setDuration(1000);
 	fade_out.animation->setStartValue(opacity.value);
 	fade_out.animation->setEndValue(0);
@@ -520,14 +559,13 @@ QSize overlayWidgetFPS::sizeHint() const {
 	return (QSize(fontMetrics().size(0, "44 fps").width() + hpadtot(), minimum_eight()));
 }
 void overlayWidgetFPS::paintEvent(QPaintEvent *event) {
-	QPainter painter(this);
-
 	overlayWidget::paintEvent(event);
 
+	painter.begin(this);
 	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-
-	draw_background(&painter);
+	draw_background();
 	painter.drawText(rect(), Qt::AlignHCenter | Qt::AlignVCenter, QString("%1 fps").arg((int)old.fps));
+	painter.end();
 }
 
 void overlayWidgetFPS::update_widget(void) {
@@ -560,11 +598,11 @@ QSize overlayWidgetFloppy::sizeHint() const {
 	return (QSize(floppy.gray.size().width() + hpadtot(), minimum_eight()));
 }
 void overlayWidgetFloppy::paintEvent(QPaintEvent *event) {
-	QPainter painter(this);
 	QPoint coords = QPoint((rect().width() - floppy.gray.size().width()) / 2,(rect().height() - floppy.gray.size().height()) / 2);
 
 	overlayWidget::paintEvent(event);
 
+	painter.begin(this);
 	if ((fds.info.last_operation | fds.drive.disk_ejected)) {
 		if (fds.drive.disk_ejected) {
 			painter.drawImage(coords, floppy.gray);
@@ -579,6 +617,7 @@ void overlayWidgetFloppy::paintEvent(QPaintEvent *event) {
 			}
 		}
 	}
+	painter.end();
 }
 
 void overlayWidgetFloppy::update_widget(void) {
@@ -602,22 +641,22 @@ QSize overlayWidgetFrame::sizeHint() const {
 	return (QSize(td.size().width(), minimum_eight()));
 }
 void overlayWidgetFrame::paintEvent(QPaintEvent *event) {
-	QPainter painter(this);
-
 	overlayWidget::paintEvent(event);
 
+	painter.begin(this);
 	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-	draw_background(&painter);
+	draw_background();
 
 	{
-		QAbstractTextDocumentLayout::PaintContext ctx;
+		static QAbstractTextDocumentLayout::PaintContext ctx;
 
 		painter.translate(0.0f, (height() - td.size().height()) / 2.0f);
 
 		ctx.clip = rect();
 		td.documentLayout()->draw(&painter, ctx);
 	}
+	painter.end();
 }
 
 void overlayWidgetFrame::update_widget(void) {
@@ -687,29 +726,29 @@ overlayWidgetInputPort::overlayWidgetInputPort(QWidget *parent) : overlayWidget(
 overlayWidgetInputPort::~overlayWidgetInputPort() {}
 
 void overlayWidgetInputPort::paintEvent(QPaintEvent *event) {
-	QPainter painter(this);
-
 	overlayWidget::paintEvent(event);
 
+	painter.begin(this);
 	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
 	switch (type) {
 		case CTRL_STANDARD:
-			draw_std_controller(&painter);
+			draw_std_controller();
 			break;
 		case CTRL_ZAPPER:
-			draw_zapper(&painter);
+			draw_zapper();
 			break;
 		case CTRL_SNES_MOUSE:
-			draw_snes_mouse(&painter);
+			draw_snes_mouse();
 			break;
 		case CTRL_ARKANOID_PADDLE:
-			draw_arkanoid_paddle(&painter);
+			draw_arkanoid_paddle();
 			break;
 		case CTRL_OEKA_KIDS_TABLET:
-			draw_oeka_kids_tablet(&painter);
+			draw_oeka_kids_tablet();
 			break;
 	}
+	painter.end();
 }
 
 void overlayWidgetInputPort::update_widget(void) {
@@ -833,89 +872,89 @@ void overlayWidgetInputPort::set_nport(int nport) {
 	portx = QImage(QString(":/pics/pics/overlay_controller_port%1.png").arg(nport + 1));
 }
 
-void overlayWidgetInputPort::draw_std_controller(QPainter *painter) {
-	painter->drawImage(0, 0, std_controller.tile);
-	painter->drawImage(74, 1, portx);
+void overlayWidgetInputPort::draw_std_controller(void) {
+	painter.drawImage(0, 0, std_controller.tile);
+	painter.drawImage(74, 1, portx);
 
 	if (old.std_controller.data[UP] == PRESSED) {
-		painter->drawImage(12, 5, std_controller.up);
+		painter.drawImage(12, 5, std_controller.up);
 	}
 	if (old.std_controller.data[DOWN] == PRESSED) {
-		painter->drawImage(12, 17, std_controller.up);
+		painter.drawImage(12, 17, std_controller.up);
 	}
 	if (old.std_controller.data[LEFT] == PRESSED) {
-		painter->drawImage(5, 12, std_controller.left);
+		painter.drawImage(5, 12, std_controller.left);
 	}
 	if (old.std_controller.data[RIGHT] == PRESSED) {
-		painter->drawImage(16, 12, std_controller.left);
+		painter.drawImage(16, 12, std_controller.left);
 	}
 	if (old.std_controller.data[SELECT] == PRESSED) {
-		painter->drawImage(34, 18, std_controller.select);
+		painter.drawImage(34, 18, std_controller.select);
 	}
 	if (old.std_controller.data[START] == PRESSED) {
-		painter->drawImage(50, 18, std_controller.start);
+		painter.drawImage(50, 18, std_controller.start);
 	}
 	if (old.std_controller.data[BUT_B] == PRESSED) {
-		painter->drawImage(68, 14, std_controller.but_b);
+		painter.drawImage(68, 14, std_controller.but_b);
 	}
 	if (old.std_controller.data[BUT_A] == PRESSED) {
-		painter->drawImage(82, 14, std_controller.but_a);
+		painter.drawImage(82, 14, std_controller.but_a);
 	}
 }
-void overlayWidgetInputPort::draw_zapper(QPainter *painter) {
-	painter->drawImage(0, 0, zapper.tile);
+void overlayWidgetInputPort::draw_zapper(void) {
+	painter.drawImage(0, 0, zapper.tile);
 
 	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
-		painter->drawImage(61, 1, exp_port);
+		painter.drawImage(61, 1, exp_port);
 	} else {
-		painter->drawImage(74, 1, portx);
+		painter.drawImage(74, 1, portx);
 	}
 
-	draw_mouse_coords(painter);
+	draw_mouse_coords();
 
 	if (old.mouse.left) {
-		painter->drawImage(52, 2, zapper.bang);
+		painter.drawImage(52, 2, zapper.bang);
 	}
 }
-void overlayWidgetInputPort::draw_snes_mouse(QPainter *painter) {
-	painter->drawImage(0, 0, snes_mouse.tile);
-	painter->drawImage(74, 1, portx);
+void overlayWidgetInputPort::draw_snes_mouse(void) {
+	painter.drawImage(0, 0, snes_mouse.tile);
+	painter.drawImage(74, 1, portx);
 
-	draw_mouse_coords(painter);
+	draw_mouse_coords();
 
 	if (old.mouse.left) {
-		painter->drawImage(7, 5, snes_mouse.button);
+		painter.drawImage(7, 5, snes_mouse.button);
 	}
 	if (old.mouse.right) {
-		painter->drawImage(11, 5, snes_mouse.button);
+		painter.drawImage(11, 5, snes_mouse.button);
 	}
 }
-void overlayWidgetInputPort::draw_arkanoid_paddle(QPainter *painter) {
-	painter->drawImage(0, 0, arkanoid_paddle.tile);
+void overlayWidgetInputPort::draw_arkanoid_paddle(void) {
+	painter.drawImage(0, 0, arkanoid_paddle.tile);
 
 	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
-		painter->drawImage(61, 1, exp_port);
+		painter.drawImage(61, 1, exp_port);
 	} else {
-		painter->drawImage(74, 1, portx);
+		painter.drawImage(74, 1, portx);
 	}
 
-	painter->setPen(Qt::white);
-	painter->drawText(61, 26, QString("x: %1").arg(old.mouse.x));
+	painter.setPen(Qt::white);
+	painter.drawText(61, 26, QString("x: %1").arg(old.mouse.x));
 
 	if (old.mouse.left) {
-		painter->drawImage(8, 6, arkanoid_paddle.button);
+		painter.drawImage(8, 6, arkanoid_paddle.button);
 	}
 }
-void overlayWidgetInputPort::draw_oeka_kids_tablet(QPainter *painter) {
-	painter->drawImage(0, 0, oeka_kids_tablet.tile);
+void overlayWidgetInputPort::draw_oeka_kids_tablet(void) {
+	painter.drawImage(0, 0, oeka_kids_tablet.tile);
 
 	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
-		painter->drawImage(61, 1, exp_port);
+		painter.drawImage(61, 1, exp_port);
 	} else {
-		painter->drawImage(74, 1, portx);
+		painter.drawImage(74, 1, portx);
 	}
 }
-void overlayWidgetInputPort::draw_mouse_coords(QPainter *painter) {
+void overlayWidgetInputPort::draw_mouse_coords(void) {
 	int x, y;
 
 	input_read_mouse_coords(&x, &y);
@@ -929,9 +968,9 @@ void overlayWidgetInputPort::draw_mouse_coords(QPainter *painter) {
 	} else if (y > SCR_ROWS - 1) {
 		y = SCR_ROWS -1;
 	}
-	painter->setPen(Qt::white);
-	painter->drawText(20, 26, QString("x: %1").arg(x, 3));
-	painter->drawText(61, 26, QString("y: %1").arg(y, 3));
+	painter.setPen(Qt::white);
+	painter.drawText(20, 26, QString("x: %1").arg(x, 3));
+	painter.drawText(61, 26, QString("y: %1").arg(y, 3));
 }
 
 // overlayWidgetRewind -----------------------------------------------------------------------------------------------------------
@@ -962,16 +1001,16 @@ QSize overlayWidgetRewind::sizeHint() const {
 	return (QSize(100, minimum_eight()));
 }
 void overlayWidgetRewind::paintEvent(QPaintEvent *event) {
-	QPainter painter(this);
-
 	overlayWidget::paintEvent(event);
 
+	painter.begin(this);
 	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
 	info.width = width();
-	draw_background(&painter);
-	draw_command(&painter);
-	draw_corner_bar_info(&painter);
+	draw_background();
+	draw_command();
+	draw_corner_bar_info();
+	painter.end();
 }
 
 void overlayWidgetRewind::update_widget(void) {
@@ -1063,13 +1102,13 @@ QString overlayWidgetRewind::seconds_to_string(_infotime *itime, _infotime::_mea
 
 	return (txt);
 }
-void overlayWidgetRewind::draw_command(QPainter *painter) {
+void overlayWidgetRewind::draw_command(void) {
 	QRect icon, text;
 	QImage *image = NULL;
 	BYTE action = old.action;
 	QString desc;
 
-	painter->save();
+	painter.save();
 
 	if (rwnd.action == RWND_ACT_PAUSE) {
 		action = rwnd.action_before_pause;
@@ -1125,56 +1164,56 @@ void overlayWidgetRewind::draw_command(QPainter *painter) {
 		w = act.play.width();
 		h = act.play.height();
 		icon = QRect(x, y, w, h);
-		painter->drawImage(icon.topLeft(), (*image));
+		painter.drawImage(icon.topLeft(), (*image));
 
 		x = 0;
 		y = 0;
 		w = icon.x() - padding.h;
 		h = height();
-		painter->setFont(led);
-		text = painter->boundingRect(QRect(x, y, w, h), Qt::AlignRight | Qt::AlignVCenter, "PAUSE");
-		painter->drawText(text, Qt::AlignHCenter | Qt::AlignVCenter, desc);
+		painter.setFont(led);
+		text = painter.boundingRect(QRect(x, y, w, h), Qt::AlignRight | Qt::AlignVCenter, "PAUSE");
+		painter.drawText(text, Qt::AlignHCenter | Qt::AlignVCenter, desc);
 	}
 
 	info.width = text.x() - hpadtot();
 
-	painter->restore();
+	painter.restore();
 }
-void overlayWidgetRewind::draw_corner_bar_info(QPainter *painter) {
-	QPen pen = painter->pen();
+void overlayWidgetRewind::draw_corner_bar_info(void) {
+	static QRect qr;
+	QPen pen = painter.pen();
 	int vpad = 2, hpad = 3;
 	double max = this->max();
 	double min = this->min();
 	double value = this->value();
 	double step = value / (max - min);
-	QRect qr;
 
 	//percentuale
 	info.width -= padding.h;
-	painter->translate(padding.h, 0);
-	qr = painter->boundingRect(QRect(0, 0, info.width, height()), Qt::AlignLeft | Qt::AlignVCenter, "000%");
-	painter->setPen(base_color.fg);
-	painter->drawText(qr, Qt::AlignCenter, QString("%1%").arg((int)(100 * step)));
+	painter.translate(padding.h, 0);
+	qr = painter.boundingRect(QRect(0, 0, info.width, height()), Qt::AlignLeft | Qt::AlignVCenter, "000%");
+	painter.setPen(base_color.fg);
+	painter.drawText(qr, Qt::AlignCenter, QString("%1%").arg((int)(100 * step)));
 
 	// cornice
 	info.width -= (qr.width() + padding.h);
-	painter->translate(qr.width() + padding.h, 0);
-	painter->setBrush(color.corner);
-	painter->drawRoundedRect(QRect(0, 0, info.width, height()), radius, radius);
+	painter.translate(qr.width() + padding.h, 0);
+	painter.setBrush(color.corner);
+	painter.drawRoundedRect(QRect(0, 0, info.width, height()), radius, radius);
 
 	// barra
 	if (value > 0) {
-		qr = QRect(hpad, vpad, (info.width - (hpad * 2)) * step, height() - (vpad * 2));
-		painter->setPen(color.border_bar);
-		painter->setBrush(color.bar);
-		painter->drawRoundedRect(qr, radius, radius);
+		qr.setRect(hpad, vpad, (info.width - (hpad * 2)) * step, height() - (vpad * 2));
+		painter.setPen(color.border_bar);
+		painter.setBrush(color.bar);
+		painter.drawRoundedRect(qr, radius, radius);
 	}
 
 	info.width -= hpad;
-	painter->translate(hpad, 0);
+	painter.translate(hpad, 0);
 
 	{
-		QAbstractTextDocumentLayout::PaintContext ctx;
+		static QAbstractTextDocumentLayout::PaintContext ctx;
 
 		td.setHtml(info_long());
 
@@ -1182,10 +1221,10 @@ void overlayWidgetRewind::draw_corner_bar_info(QPainter *painter) {
 			td.setHtml(info_short());
 		}
 
-		painter->translate(0.0f, (height() - td.size().height()) / 2.0f);
+		painter.translate(0.0f, (height() - td.size().height()) / 2.0f);
 
 		ctx.clip = rect();
-		td.documentLayout()->draw(painter, ctx);
+		td.documentLayout()->draw(&painter, ctx);
 	}
 }
 
@@ -1314,23 +1353,66 @@ QString overlayWidgetTAS::info_short(void) {
 // overlaySaveSlot ---------------------------------------------------------------------------------------------------------------
 
 overlayWidgetSaveSlot::overlayWidgetSaveSlot(QWidget *parent) : overlayWidget(parent) {
+	color.x1.save = Qt::red;
+	color.x1.read = QColor(252, 45, 255);
+	color.x1.selected = Qt::black;
+	color.x1.text = Qt::black;
+	color.x1.text_not_used = Qt::gray;
+
+	color.no_preview = Qt::darkGray;
+	color.previw_opacity = Qt::black;
+	color.border = Qt::lightGray;
+	color.border_selected = Qt::white;
+	color.bar = Qt::black;
+	color.bar_selected = Qt::darkGreen;
+	color.slot = Qt::yellow;
+	color.info = Qt::white;
+
 	save_slot_operation = 0;
+	height_row_slot = 20;
+	rows = 3;
+	columns = ((SAVE_SLOTS % rows) == 0) ? SAVE_SLOTS / rows : (SAVE_SLOTS / rows) + 1;
+
+	set_opacity(0.93);
 };
 overlayWidgetSaveSlot::~overlayWidgetSaveSlot() {}
 
 QSize overlayWidgetSaveSlot::sizeHint() const {
-	return (QSize(254, 20));
+	double ratio = SCR_COLUMNS / SCR_ROWS;
+	int width;
+
+	if (cfg->scale == X1) {
+		width = SAVE_SLOTS * 15 + 2;
+		return (QSize(width, height_row_slot + ((width / ratio) / (11.0f / 8.0f))));
+	} else {
+		switch (rows) {
+			case 2:
+				width = 100;
+				break;
+			case 3:
+				width = 130;
+				break;
+			case 4:
+				width = 100;
+				break;
+		}
+		return (QSize((width * columns) + hpadtot(), ((width / ratio) * rows) + hpadtot()));
+	}
 }
 void overlayWidgetSaveSlot::paintEvent(QPaintEvent *event) {
-	QPainter painter(this);
-
 	overlayWidget::paintEvent(event);
 
+	painter.begin(this);
 	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-	draw_background(&painter);
-	draw_slots(&painter);
+	draw_background();
+	if (cfg->scale == X1) {
+		draw_slots_x1();
+	} else {
+		draw_slots();
+	}
 	fade_out_tick_timer();
+	painter.end();
 }
 
 void overlayWidgetSaveSlot::enable_overlay(BYTE operation) {
@@ -1339,60 +1421,230 @@ void overlayWidgetSaveSlot::enable_overlay(BYTE operation) {
 	enabled = TRUE;
 }
 
-void overlayWidgetSaveSlot::draw_slots(QPainter *painter) {
+void overlayWidgetSaveSlot::draw_slots_x1(void) {
 	int x, y, w, h, radius;
-	QFont font;
-	QPen pen;
+	int x1, y1;
+	static QFont f;
+	static QRect rect;
+	static QPen pen;
 
-	painter->save();
+	painter.save();
 
+	// disegno la riga di selezione dello slot
 	w = width() / SAVE_SLOTS;
-	h = height();
-	radius = h / 2.75;
-	x = (w / 2) + padding.h;
-	y = h / 2;
+	h = height_row_slot;
+	x1 = (w / 2) + padding.h;
+	y1 = h / 2;
 
-	for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
-		if (save_slot.state[i]) {
-			painter->setPen(Qt::NoPen);
-			painter->setBrush(QColor(80, 255, 87));
-			painter->drawEllipse(QPoint(x, y), radius, radius);
-		}
-		if (save_slot.slot == i) {
-			if (save_slot_operation == SAVE_SLOT_SAVE) {
-				painter->setPen(Qt::NoPen);
-				painter->setBrush(Qt::red);
-			} else if (save_slot_operation == SAVE_SLOT_READ) {
-				painter->setPen(Qt::NoPen);
-				painter->setBrush(QColor(252, 45, 255));
-			} else {
-				pen.setColor(Qt::black);
-				pen.setWidth(2);
-				painter->setPen(pen);
-				painter->setBrush(Qt::NoBrush);
-			}
-			painter->drawEllipse(QPoint(x, y), radius, radius);
-		}
-		x += w;
+	if ((x1 + (SAVE_SLOTS * w)) < width()) {
+		x1 += (width() - (x1 + (SAVE_SLOTS * w))) / 2;
 	}
 
-	x = (w / 2) + padding.h;
-	font.setPixelSize(height() / 2.0);
-	painter->setFont(font);
-	painter->setBrush(Qt::NoBrush);
+	radius = h / 3.0f;
 
 	for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
+		x = x1 + (i * w);
+		y = y1;
+
 		if (save_slot.state[i]) {
-			painter->setPen(Qt::black);
+			painter.setPen(Qt::NoPen);
+			painter.setBrush(QColor(80, 255, 87));
+			painter.drawEllipse(QPoint(x, y), radius, radius);
+		}
+	}
+
+	// disegno il cursore di selezione
+	{
+		x = x1 + (save_slot.slot * w);
+		y = y1;
+
+		if (save_slot_operation == SAVE_SLOT_SAVE) {
+			painter.setPen(Qt::NoPen);
+			painter.setBrush(color.x1.save);
+		} else if (save_slot_operation == SAVE_SLOT_READ) {
+			painter.setPen(Qt::NoPen);
+			painter.setBrush(color.x1.read);
 		} else {
-			painter->setPen(Qt::gray);
+			pen.setColor(color.x1.selected);
+			pen.setWidth(2);
+			painter.setPen(pen);
+			painter.setBrush(Qt::NoBrush);
 		}
-		QRect textRect(x - radius, y - radius, radius * 2, radius * 2);
-		painter->drawText(textRect, Qt::AlignCenter, QString::number(i));
-		x += w;
+		painter.drawEllipse(QPoint(x, y), radius, radius);
 	}
 
-	painter->restore();
+	f = font();
+	f.setPixelSize(h / 2.5);
+
+	painter.setFont(f);
+	painter.setBrush(Qt::NoBrush);
+
+	for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
+		x = x1 + (i * w);
+		y = y1;
+
+		rect.setRect(x - radius, y - radius, radius * 2, radius * 2);
+
+		if (save_slot.state[i]) {
+			painter.setPen(color.x1.text);
+		} else {
+			painter.setPen(color.x1.text_not_used);
+		}
+		painter.drawText(rect, Qt::AlignCenter, QString::number(i, 16).toUpper());
+	}
+
+	// disegno la preview
+	w = (width() - (2 * padding.h));
+	h = (height() - height_row_slot - (3 * padding.v));
+	x = padding.h;
+	y = height_row_slot + padding.v;
+
+	rect.setRect(x, y, w, h);
+
+	if (!previews[save_slot.slot].image.isNull()) {
+		painter.drawImage(rect, previews[save_slot.slot].image.scaled(w, h, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+	} else {
+		painter.setRenderHint(QPainter::Antialiasing, false);
+		painter.setPen(Qt::NoPen);
+		painter.setBrush(color.no_preview);
+		painter.drawRect(rect);
+	}
+
+	// disegno la riga in cui scrivere le info
+	rect.setRect(x, y, w, height_row_slot);
+
+	painter.setOpacity(0.8);
+	if (!previews[save_slot.slot].image.isNull()) {
+		painter.fillRect(rect, color.bar_selected);
+	}
+
+	// scrivo le info
+	f.setPixelSize(w / 12.0);
+
+	painter.setFont(f);
+	painter.setOpacity(1.0);
+
+	{
+		pen.setColor(color.info);
+		pen.setWidth(1);
+
+		painter.setPen(pen);
+		painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter,
+			previews[save_slot.slot].fileinfo.lastModified().toString(Qt::SystemLocaleShortDate));
+	}
+
+	painter.restore();
+}
+void overlayWidgetSaveSlot::draw_slots(void) {
+	int x, y, w, h;
+	static QFont f;
+	static QRect rect;
+	static QPen pen;
+
+	painter.save();
+
+	{
+		double ratio = SCR_COLUMNS / SCR_ROWS;
+		int x1, y1;
+
+		w = (width() - hpadtot()) / columns;
+		h = w / ratio;
+		x1 = padding.h;
+		y1 = padding.v;
+
+		if ((x1 + (columns * w)) < width()) {
+			x1 += (width() - (x1 + (columns * w))) / 2;
+		}
+		if ((y1 + (rows * h)) < height()) {
+			y1 += (height() - (y1 + (rows * h))) / 2;
+		}
+
+		for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
+			QString info;
+
+			x = x1 + ((i % columns) * w);
+			y = y1 + ((i / columns) * h);
+
+			rect.setRect(x, y, w, h);
+
+			// disegno la preview
+			if (!previews[i].image.isNull()) {
+				QImage img = previews[i].image.scaled(w, h, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+				static QPainter p;
+
+				if (i != save_slot.slot) {
+					p.begin(&img);
+					p.setOpacity(0.6);
+					p.fillRect(img.rect(), color.previw_opacity);
+					p.end();
+				}
+				painter.drawImage(rect, img);
+			} else {
+				painter.setRenderHint(QPainter::Antialiasing, false);
+				painter.setPen(Qt::NoPen);
+				painter.setBrush(color.no_preview);
+				painter.drawRect(rect);
+			}
+
+			// disegno il bordo
+			pen.setColor(color.border);
+			pen.setWidth(4);
+
+			painter.setPen(pen);
+			painter.setBrush(Qt::NoBrush);
+			painter.drawRect(rect);
+
+			// disegno la riga in cui scrivere le info
+			rect.setRect(x + 2, y, w - 4, height_row_slot);
+
+			painter.setOpacity(0.8);
+			if (i == save_slot.slot) {
+				painter.fillRect(rect, color.bar_selected);
+			} else {
+				painter.fillRect(rect, color.bar);
+			}
+
+			// scrivo le info
+			f = font();
+			f.setPixelSize(w / 12.0);
+
+			painter.setFont(f);
+			painter.setOpacity(1.0);
+
+			pen.setWidth(1);
+
+			{
+				pen.setColor(color.slot);
+				info = QString(" %0").arg(i, 1, 16).toUpper();
+				painter.setPen(pen);
+				painter.drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, info);
+			}
+
+			{
+				pen.setColor(color.info);
+				info = previews[i].fileinfo.lastModified().toString(Qt::SystemLocaleShortDate);
+				painter.setPen(pen);
+				painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter, info);
+			}
+		}
+
+		// disegno il cursore di selezione dello slot
+		{
+			x = x1 + ((save_slot.slot % columns) * w);
+			y = y1 + ((save_slot.slot / columns) * h);
+
+			rect.setRect(x, y, w, h);
+
+			pen.setColor(color.border_selected);
+			pen.setWidth(2);
+
+			painter.setPen(pen);
+			painter.setBrush(Qt::NoBrush);
+			painter.drawRect(rect);
+		}
+	}
+
+	painter.restore();
 }
 
 // overlayWidgetInfo -------------------------------------------------------------------------------------------------------------
@@ -1409,14 +1661,14 @@ QSize overlayWidgetInfo::sizeHint() const {
 }
 void overlayWidgetInfo::paintEvent(QPaintEvent *event) {
 	if (!isHidden() && overlay.info_actual_message.length()) {
-		QAbstractTextDocumentLayout::PaintContext ctx;
-		QFont f = QFont("ChronoType");
-		QPainter painter(this);
+		static const QFont f = QFont("ChronoType");
+		static QAbstractTextDocumentLayout::PaintContext ctx;
 		QTextDocument td;
 		int x, y, w, h;
 
 		overlayWidget::paintEvent(event);
 
+		painter.begin(this);
 		painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
 		td.setDefaultFont(f);
@@ -1426,12 +1678,14 @@ void overlayWidgetInfo::paintEvent(QPaintEvent *event) {
 		y = 0;
 		w = td.size().width();
 		h = height();
-		draw_background(&painter, QRect(x, y, w, h));
+		draw_background(QRect(x, y, w, h));
 
 		painter.translate(0, (height() - td.size().height()) / 2);
 
 		ctx.clip = rect();
 		td.documentLayout()->draw(&painter, ctx);
+
+		painter.end();
 	}
 
 	fade_out_tick_timer();
