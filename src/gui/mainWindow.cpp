@@ -618,8 +618,9 @@ void mainWindow::update_gfx_monitor_dimension(void) {
 		if (setup_in_out_fullscreen == true) {
 			int w, h, x, y;
 
-			gfx_monitor_mode_in_use_info(&x, &y, &w, &h, NULL);
-			fs_geom = QRect(x, y, w, h);
+			if (gfx_monitor_mode_in_use_info(&x, &y, &w, &h, NULL) == EXIT_OK) {
+				fs_geom = QRect(x, y, w, h);
+			}
 		}
 #endif
 		gfx.w[MONITOR] = fs_geom.width();

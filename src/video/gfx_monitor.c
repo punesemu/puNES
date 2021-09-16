@@ -420,12 +420,12 @@ BYTE gfx_monitor_restore_res(void) {
 
 	return (TRUE);
 }
-void gfx_monitor_mode_in_use_info(int *x, int *y, int *w, int *h, int *rrate) {
+BYTE gfx_monitor_mode_in_use_info(int *x, int *y, int *w, int *h, int *rrate) {
 	_monitor_mode_info *mode_info;
 	_monitor_info *mi;
 
 	if ((monitor.enabled == FALSE) || (monitor.active == -1)) {
-		return;
+		return (EXIT_ERROR);
 	}
 
 	mi = &monitor.monitors[monitor.active];
@@ -443,6 +443,7 @@ void gfx_monitor_mode_in_use_info(int *x, int *y, int *w, int *h, int *rrate) {
 	if (rrate) {
 		(*rrate) = (int)mode_info->rounded_rrate;
 	}
+	return (EXIT_OK);
 }
 void gfx_monitor_edid_parse(const uint8_t *edid, _monitor_info *mi) {
  	mi->edid = NULL;
