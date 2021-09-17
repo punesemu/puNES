@@ -125,7 +125,11 @@ void stateBar::paintEvent(UNUSED(QPaintEvent *event)) {
 			pen.setColor(Qt::black);
 		} else {
 			painter.fillRect(rect, palette().mid().color());
-			pen.setColor(palette().text().color());
+			if (isEnabled()) {
+				pen.setColor(palette().text().color());
+			} else {
+				pen.setColor(palette().brightText().color());
+			}
 		}
 
 		if (save_slot.slot == i) {
