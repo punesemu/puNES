@@ -676,8 +676,7 @@ void mainWindow::state_save_slot_set_tooltip(BYTE slot, char *buffer) {
 		painter.setFont(f);
 		painter.setOpacity(1.0);
 		painter.setPen(pen);
-		painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter,
-			wdgoverlayui->overlaySaveSlot->previews[save_slot.slot].fileinfo.lastModified().toString(Qt::SystemLocaleShortDate));
+		painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter, wdgoverlayui->overlaySaveSlot->date_and_time(slot));
 
 		painter.end();
 

@@ -369,6 +369,7 @@ class overlayWidgetSaveSlot : public overlayWidget {
 
 	public:
 		void enable_overlay(BYTE operation);
+		QString date_and_time(int slot);
 
 	private:
 		void draw_slots_x1(void);

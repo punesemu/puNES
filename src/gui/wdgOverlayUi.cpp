@@ -1417,6 +1417,9 @@ void overlayWidgetSaveSlot::enable_overlay(BYTE operation) {
 	fade_out_start_timer();
 	enabled = TRUE;
 }
+QString overlayWidgetSaveSlot::date_and_time(int slot) {
+	return (QLocale::system().toString(previews[slot].fileinfo.lastModified(), QLocale::ShortFormat));
+}
 
 void overlayWidgetSaveSlot::draw_slots_x1(void) {
 	int x, y, w, h, radius;
@@ -1518,17 +1521,13 @@ void overlayWidgetSaveSlot::draw_slots_x1(void) {
 	// scrivo le info
 	f.setPixelSize(w / 12.0);
 
+	pen.setColor(color.info);
+	pen.setWidth(1);
+
 	painter.setFont(f);
+	painter.setPen(pen);
 	painter.setOpacity(1.0);
-
-	{
-		pen.setColor(color.info);
-		pen.setWidth(1);
-
-		painter.setPen(pen);
-		painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter,
-			previews[save_slot.slot].fileinfo.lastModified().toString(Qt::SystemLocaleShortDate));
-	}
+	painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter, date_and_time(save_slot.slot));
 
 	painter.restore();
 }
@@ -1557,8 +1556,6 @@ void overlayWidgetSaveSlot::draw_slots(void) {
 		}
 
 		for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
-			QString info;
-
 			x = x1 + ((i % columns) * w);
 			y = y1 + ((i / columns) * h);
 
@@ -1605,24 +1602,18 @@ void overlayWidgetSaveSlot::draw_slots(void) {
 			f = font();
 			f.setPixelSize(w / 12.0);
 
+			pen.setWidth(1);
+
 			painter.setFont(f);
 			painter.setOpacity(1.0);
 
-			pen.setWidth(1);
+			pen.setColor(color.slot);
+			painter.setPen(pen);
+			painter.drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, QString(" %0").arg(i, 1, 16).toUpper());
 
-			{
-				pen.setColor(color.slot);
-				info = QString(" %0").arg(i, 1, 16).toUpper();
-				painter.setPen(pen);
-				painter.drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, info);
-			}
-
-			{
-				pen.setColor(color.info);
-				info = previews[i].fileinfo.lastModified().toString(Qt::SystemLocaleShortDate);
-				painter.setPen(pen);
-				painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter, info);
-			}
+			pen.setColor(color.info);
+			painter.setPen(pen);
+			painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter, date_and_time(i));
 		}
 
 		// disegno il cursore di selezione dello slot
