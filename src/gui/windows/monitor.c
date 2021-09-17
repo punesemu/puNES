@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include "video/gfx_monitor.h"
 
+static BYTE add_resolution_to_list(int mode, DEVMODEW *current_settings, DEVMODEW *dm, _monitor_info *mi);
 static uint8_t *get_edid(uTCHAR *device_id);
 
 BYTE gui_monitor_enum_monitors(void) {
@@ -74,36 +75,26 @@ BYTE gui_monitor_enum_monitors(void) {
 					(memset(&dm, 0x00, sizeof(dm)), dm.dmSize = sizeof(dm), EnumDisplaySettingsW(dd.DeviceName, mode, &dm)) != 0;
 					mode++)
 				{
-					_monitor_mode_info *mm = NULL, *list = NULL;
-
 					if ((mi->bits_per_pixel != dm.dmBitsPerPel) ||
 						(mi->fixed_output != dm.dmDisplayFixedOutput) ||
 						!dm.dmDisplayFrequency) {
 						continue;
 					}
-
-					list = (_monitor_mode_info *)realloc(mi->modes, (mi->nmodes + 1) * sizeof(_monitor_mode_info));
-					if (!list) {
+					if (add_resolution_to_list(mode, &current_settings, &dm, mi) == EXIT_ERROR) {
 						return (EXIT_ERROR);
 					}
-					mi->modes = list;
-					mm = &mi->modes[mi->nmodes];
-					memset(mm, 0x00, sizeof(_monitor_mode_info));
+				}
 
-					mm->id = mode;
-					mm->flags = dm.dmDisplayFlags;
-					mm->w = dm.dmPelsWidth;
-					mm->h = dm.dmPelsHeight;
-					mm->rrate = dm.dmDisplayFrequency;
-					mm->rounded_rrate = dm.dmDisplayFrequency;
-					if ((mm->flags == current_settings.dmDisplayFlags) &&
-						(mm->w == (int)current_settings.dmPelsWidth) &&
-						(mm->h == (int)current_settings.dmPelsHeight) &&
-						(mm->rrate == current_settings.dmDisplayFrequency)) {
-						mi->mode_org = mi->mode_in_use = mi->nmodes;
+				// se la risoluzione attuale non e' nella lista di quelle supportate dal monitor
+				// la salvo per ultima (VirtualBox con risoluzioni particolari).
+				if (mi->mode_org == -1) {
+					dm.dmDisplayFlags = current_settings.dmDisplayFlags;
+					dm.dmPelsWidth = current_settings.dmPelsWidth;
+					dm.dmPelsHeight = current_settings.dmPelsHeight;
+					dm.dmDisplayFrequency = current_settings.dmDisplayFrequency;
+					if (add_resolution_to_list(mode, &current_settings, &dm, mi) == EXIT_ERROR) {
+						return (EXIT_ERROR);
 					}
-
-					mi->nmodes++;
 				}
 
 				gfx_monitor_edid_parse(get_edid(ddm.DeviceID), mi);
@@ -140,6 +131,34 @@ void gui_monitor_get_current_x_y(void *monitor_info, int *x, int *y) {
 	(*y) = dm.dmPosition.y;
 }
 
+static BYTE add_resolution_to_list(int mode, DEVMODEW *current_settings, DEVMODEW *dm, _monitor_info *mi) {
+	_monitor_mode_info *mm = NULL, *list = NULL;
+
+	list = (_monitor_mode_info *)realloc(mi->modes, (mi->nmodes + 1) * sizeof(_monitor_mode_info));
+	if (!list) {
+		return (EXIT_ERROR);
+	}
+	mi->modes = list;
+	mm = &mi->modes[mi->nmodes];
+	memset(mm, 0x00, sizeof(_monitor_mode_info));
+
+	mm->id = mode;
+	mm->flags = dm->dmDisplayFlags;
+	mm->w = dm->dmPelsWidth;
+	mm->h = dm->dmPelsHeight;
+	mm->rrate = dm->dmDisplayFrequency;
+	mm->rounded_rrate = dm->dmDisplayFrequency;
+	if ((mm->flags == current_settings->dmDisplayFlags) &&
+		(mm->w == (int)current_settings->dmPelsWidth) &&
+		(mm->h == (int)current_settings->dmPelsHeight) &&
+		(mm->rrate == current_settings->dmDisplayFrequency)) {
+		mi->mode_org = mi->mode_in_use = mi->nmodes;
+	}
+
+	mi->nmodes++;
+
+	return (EXIT_OK);
+}
 static uint8_t *get_edid(uTCHAR *device_id) {
 	uTCHAR *s, model[24], str[MAX_PATH] = uL("SYSTEM\\CurrentControlSet\\Enum\\DISPLAY\\");
 	uint8_t *pedid = NULL;
