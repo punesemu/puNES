@@ -23,6 +23,7 @@
 #include "cpu.h"
 #include "ppu.h"
 #include "save_slot.h"
+#include "tas.h"
 
 enum {
 	MODE_IDLE,
@@ -354,33 +355,35 @@ void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp) {
 	}
 
 	if (FCGX.e0.size || FCGX.e1.size) {
-		if (FCGX.e0.size) {
-			if (mode == WR_BAT) {
-				if (fwrite(&FCGX.e0.eeprom[0], LENGTH(FCGX.e0.eeprom), 1, fp) < 1) {
-					fprintf(stderr, "error on write battery memory\n");
-				}
-			} else {
-				if (fread(&FCGX.e0.eeprom[0], LENGTH(FCGX.e0.eeprom), 1, fp) < 1) {
-					fprintf(stderr, "error on read battery memory\n");
+		if (tas.type == NOTAS) {
+			if (FCGX.e0.size) {
+				if (mode == WR_BAT) {
+					if (fwrite(&FCGX.e0.eeprom[0], LENGTH(FCGX.e0.eeprom), 1, fp) < 1) {
+						fprintf(stderr, "error on write battery memory\n");
+					}
+				} else {
+					if (fread(&FCGX.e0.eeprom[0], LENGTH(FCGX.e0.eeprom), 1, fp) < 1) {
+						fprintf(stderr, "error on read battery memory\n");
+					}
 				}
 			}
-		}
-		if (FCGX.e1.size) {
-			if (mode == WR_BAT) {
-				if (fwrite(&FCGX.e1.eeprom[0], LENGTH(FCGX.e1.eeprom), 1, fp) < 1) {
-					fprintf(stderr, "error on write battery memory\n");
-				}
-			} else {
-				if (fread(&FCGX.e1.eeprom[0], LENGTH(FCGX.e1.eeprom), 1, fp) < 1) {
-					fprintf(stderr, "error on read battery memory\n");
+			if (FCGX.e1.size) {
+				if (mode == WR_BAT) {
+					if (fwrite(&FCGX.e1.eeprom[0], LENGTH(FCGX.e1.eeprom), 1, fp) < 1) {
+						fprintf(stderr, "error on write battery memory\n");
+					}
+				} else {
+					if (fread(&FCGX.e1.eeprom[0], LENGTH(FCGX.e1.eeprom), 1, fp) < 1) {
+						fprintf(stderr, "error on read battery memory\n");
+					}
 				}
 			}
 		}
 	} else {
 		if (mode == WR_BAT) {
-			mapper_wr_battery_default();
+			map_bat_wr_default(fp);
 		} else {
-			mapper_rd_battery_default();
+			map_bat_rd_default(fp);
 			/*
 			 * ho notato che quando avvio per la prima volta
 			 * "Famicom Jump II - Saikyou no 7 Nin (J) [!].nes", se questa zona di memoria

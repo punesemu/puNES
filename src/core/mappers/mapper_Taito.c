@@ -24,6 +24,7 @@
 #include "ppu.h"
 #include "irqA12.h"
 #include "save_slot.h"
+#include "tas.h"
 
 struct _taito_X1005 {
 	BYTE ram[0x80];
@@ -337,7 +338,7 @@ BYTE extcl_save_mapper_Taito_X1005(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_battery_io_Taito_X1005(BYTE mode, FILE *fp) {
-	if (!fp) {
+	if (!fp || (tas.type != NOTAS)) {
 		return;
 	}
 
