@@ -21,6 +21,7 @@
 #include "wdgToolBar.hpp"
 #include "mainWindow.hpp"
 #include "save_slot.h"
+#include "tas.h"
 
 wdgState::wdgState(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
@@ -49,7 +50,7 @@ void wdgState::retranslateUi(wdgState *wdgState) {
 }
 
 void wdgState::update_widget(void) {
-	pushButton_load->setEnabled(save_slot.state[save_slot.slot]);
+	pushButton_load->setEnabled((tas.type == NOTAS) & save_slot.state[save_slot.slot]);
 	update();
 }
 
@@ -94,7 +95,6 @@ bool stateBar::eventFilter(QObject *obj, QEvent *event) {
 
 		if (slot != save_slot.slot) {
 			gui_state_save_slot_set(slot, TRUE);
-			emit et_slot_actived();
 		}
 	}
 	return (QWidget::eventFilter(obj, event));

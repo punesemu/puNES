@@ -33,9 +33,6 @@ class stateBar : public QWidget {
 		stateBar(QWidget *parent = 0);
 		~stateBar();
 
-	signals:
-		void et_slot_actived(void);
-
 	protected:
 		QSize sizeHint() const;
 		bool eventFilter(QObject *obj, QEvent *event);

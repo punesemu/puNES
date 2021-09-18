@@ -638,6 +638,7 @@ void mainWindow::state_save_slot_set(int slot, bool on_video) {
 	if (on_video == true) {
 		gui_overlay_enable_save_slot(SAVE_SLOT_INCDEC);
 	}
+	update_window();
 }
 void mainWindow::state_save_slot_set_tooltip(BYTE slot, char *buffer) {
 	QString tooltip;
@@ -980,7 +981,7 @@ void mainWindow::update_menu_state(void) {
 	}
 
 	action_Save_state->setEnabled(state);
-	action_Load_state->setEnabled(state);
+	action_Load_state->setEnabled(state && (tas.type == NOTAS) && save_slot.state[save_slot.slot]);
 	action_Increment_slot->setEnabled(state);
 	action_Decrement_slot->setEnabled(state);
 
@@ -1003,7 +1004,7 @@ void mainWindow::update_menu_state(void) {
 	}
 
 	action_State_Save_to_file->setEnabled(state);
-	action_State_Load_from_file->setEnabled(state);
+	action_State_Load_from_file->setEnabled(state && (tas.type == NOTAS));
 }
 
 void mainWindow::action_text(QAction *action, QString description, QString *shortcut) {
@@ -1523,13 +1524,11 @@ void mainWindow::s_state_save_slot_incdec(void) {
 		}
 	}
 	state_save_slot_set(new_slot, true);
-	update_window();
 }
 void mainWindow::s_state_save_slot_set(void) {
 	int slot = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	state_save_slot_set(slot, true);
-	update_window();
 }
 void mainWindow::s_state_save_file(void) {
 	QStringList filters;
