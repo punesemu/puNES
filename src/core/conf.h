@@ -44,6 +44,7 @@ typedef struct _config {
 	BYTE hide_sprites;
 	BYTE hide_background;
 	BYTE unlimited_sprites;
+	BYTE unlimited_sprites_auto;
 	BYTE scale;
 	BYTE fullscreen;
 	BYTE fullscreen_in_window;

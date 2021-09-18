@@ -41,6 +41,7 @@ class wdgSettingsPPU : public QWidget, public Ui::wdgSettingsPPU {
 		void s_hide_sprites(bool checked);
 		void s_hide_background(bool checked);
 		void s_unlimited_sprites(bool checked);
+		void s_unlimited_sprites_auto(bool checked);
 		void s_ppu_overclock(bool checked);
 		void s_disable_dmc_control(bool checked);
 		void s_overclock_vb_slines(int i);

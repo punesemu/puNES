@@ -36,6 +36,7 @@ wdgSettingsPPU::wdgSettingsPPU(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Hide_Sprites, SIGNAL(clicked(bool)), this, SLOT(s_hide_sprites(bool)));
 	connect(checkBox_Hide_Background, SIGNAL(clicked(bool)), this, SLOT(s_hide_background(bool)));
 	connect(checkBox_Unlimited_Sprites, SIGNAL(clicked(bool)), this, SLOT(s_unlimited_sprites(bool)));
+	connect(checkBox_Unlimited_Sprites_Auto, SIGNAL(clicked(bool)), this, SLOT(s_unlimited_sprites_auto(bool)));
 
 	connect(checkBox_PPU_Overclock, SIGNAL(clicked(bool)), this, SLOT(s_ppu_overclock(bool)));
 	connect(checkBox_Disable_DMC_Control, SIGNAL(clicked(bool)), this, SLOT(s_disable_dmc_control(bool)));
@@ -72,6 +73,9 @@ void wdgSettingsPPU::update_widget(void) {
 	checkBox_Hide_Sprites->setChecked(cfg->hide_sprites);
 	checkBox_Hide_Background->setChecked(cfg->hide_background);
 	checkBox_Unlimited_Sprites->setChecked(cfg->unlimited_sprites);
+	checkBox_Unlimited_Sprites_Auto->setEnabled(cfg->unlimited_sprites);
+	checkBox_Unlimited_Sprites_Auto->setChecked(cfg->unlimited_sprites_auto);
+
 	checkBox_PPU_Overclock->setChecked(cfg->ppu_overclock);
 
 	checkBox_Disable_DMC_Control->setChecked(cfg->ppu_overclock_dmc_control_disabled);
@@ -110,6 +114,12 @@ void wdgSettingsPPU::s_hide_background(UNUSED(bool checked)) {
 void wdgSettingsPPU::s_unlimited_sprites(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->unlimited_sprites = !cfg->unlimited_sprites;
+	emu_thread_continue();
+	update_widget();
+}
+void wdgSettingsPPU::s_unlimited_sprites_auto(UNUSED(bool checked)) {
+	emu_thread_pause();
+	cfg->unlimited_sprites_auto = !cfg->unlimited_sprites_auto;
 	emu_thread_continue();
 	update_widget();
 }

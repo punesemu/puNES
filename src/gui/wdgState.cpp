@@ -32,7 +32,6 @@ wdgState::wdgState(QWidget *parent) : QWidget(parent) {
 	pushButton_load->installEventFilter(this);
 
 	connect(pushButton_save, SIGNAL(clicked(bool)), this, SLOT(s_save_clicked(bool)));
-	connect(wdgStateBar, SIGNAL(et_slot_actived(void)), this, SLOT(s_slot_actived(void)));
 	connect(pushButton_load, SIGNAL(clicked(bool)), this, SLOT(s_load_clicked(bool)));
 }
 wdgState::~wdgState() {}

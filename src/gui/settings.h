@@ -125,6 +125,7 @@ enum set_element {
 	SET_HIDE_SPRITES,
 	SET_HIDE_BACKGROUND,
 	SET_UNLIMITED_SPRITES,
+	SET_UNLIMITED_SPRITES_AUTO,
 	SET_PPU_ALIGNMENT,
 	SET_NSF_PLAYER_EFFECT,
 	SET_NSF_PLAYER_NSFE_PLAYLIST,
@@ -1088,6 +1089,12 @@ static const _settings main_cfg[] = {
 		uL("ppu"), uL("unlimited sprites"), uL("no"),
 		uL("# possible values: yes, no"),
 		uL("    --unlimited-sprites                         : yes, no"),
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("ppu"), uL("unlimited sprites auto no glitch"), uL("yes"),
+		uL("# possible values: yes, no"),
+		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{

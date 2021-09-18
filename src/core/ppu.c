@@ -715,8 +715,7 @@ void ppu_tick(void) {
 							/* incremento l'indice temporaneo degli sprites */
 							if (++spr_ev.tmp_spr_plus == 8) {
 								// unlimited sprites
-								if ((cfg->unlimited_sprites == TRUE)
-									&& (spr_ev_unl.evaluate == TRUE)) {
+								if ((cfg->unlimited_sprites == TRUE) && (spr_ev_unl.evaluate == TRUE)) {
 									for (spr_ev_unl.tmp_spr_plus = 0;
 										spr_ev_unl.tmp_spr_plus < spr_ev_unl.count_plus;
 										spr_ev_unl.tmp_spr_plus++) {
@@ -1339,28 +1338,63 @@ INLINE static void ppu_oam_evaluation(void) {
 
 						// unlimited sprites
 						if (cfg->unlimited_sprites == TRUE) {
-							BYTE t2004;
+							// https://wiki.nesdev.com/w/index.php/Sprite_overflow_games (Use of excess sprites for masking effects)
+							// https://github.com/SourMesen/Mesen/issues/188
+							// start - thx to Sour
+							BYTE unlimited_sprites = TRUE;
 
-							spr_ev_unl.index = spr_ev.index + 1;
-							spr_ev_unl.count_plus = 0;
+							if (cfg->unlimited_sprites_auto == TRUE) {
+								BYTE count = 0,  max_count = 0;
+								WORD last_position = 0xFFFF;
+								int i;
 
-							for (; spr_ev_unl.index < 64; spr_ev_unl.index++) {
-								t2004 = oam.element[spr_ev_unl.index][YC];
+								for (i = 0; i < 64; i++) {
+									BYTE y = oam.element[i][YC];
+									WORD range = ppu.screen_y - y;
 
-								spr_ev_unl.range = ppu.screen_y - t2004;
+									if ((y <= 0xEF) && (range < r2000.size_spr)) {
+										WORD position = (y << 8) | oam.element[i][XC];
 
-								if ((t2004 <= 0xEF) && (spr_ev_unl.range < r2000.size_spr)) {
-									oam.ele_plus_unl[spr_ev_unl.count_plus][YC] = oam.element[spr_ev_unl.index][YC];
-									oam.ele_plus_unl[spr_ev_unl.count_plus][TL] = oam.element[spr_ev_unl.index][TL];
-									oam.ele_plus_unl[spr_ev_unl.count_plus][AT] = oam.element[spr_ev_unl.index][AT];
-									oam.ele_plus_unl[spr_ev_unl.count_plus][XC] = oam.element[spr_ev_unl.index][XC];
-									sprite_plus_unl[spr_ev_unl.count_plus].number = spr_ev_unl.index;
-									sprite_plus_unl[spr_ev_unl.count_plus].flip_v = spr_ev_unl.range;
-									spr_ev_unl.count_plus++;
+										if (position != last_position) {
+											if (count > max_count) {
+												max_count = count;
+											}
+											last_position = position;
+											count = 1;
+											continue;
+										}
+										count++;
+									}
 								}
+								unlimited_sprites = (count < 8) & (max_count < 8);
 							}
-							if (spr_ev_unl.count_plus) {
-								spr_ev_unl.evaluate = TRUE;
+							// end
+
+							if (unlimited_sprites) {
+								BYTE t2004;
+
+								spr_ev_unl.index = spr_ev.index + 1;
+								spr_ev_unl.count_plus = 0;
+
+								for (; spr_ev_unl.index < 64; spr_ev_unl.index++) {
+									t2004 = oam.element[spr_ev_unl.index][YC];
+
+									spr_ev_unl.range = ppu.screen_y - t2004;
+
+									if ((t2004 <= 0xEF) && (spr_ev_unl.range < r2000.size_spr)) {
+										oam.ele_plus_unl[spr_ev_unl.count_plus][YC] = oam.element[spr_ev_unl.index][YC];
+										oam.ele_plus_unl[spr_ev_unl.count_plus][TL] = oam.element[spr_ev_unl.index][TL];
+										oam.ele_plus_unl[spr_ev_unl.count_plus][AT] = oam.element[spr_ev_unl.index][AT];
+										oam.ele_plus_unl[spr_ev_unl.count_plus][XC] = oam.element[spr_ev_unl.index][XC];
+										sprite_plus_unl[spr_ev_unl.count_plus].number = spr_ev_unl.index;
+										sprite_plus_unl[spr_ev_unl.count_plus].flip_v = spr_ev_unl.range;
+										spr_ev_unl.count_plus++;
+									}
+								}
+								if (spr_ev_unl.count_plus) {
+									spr_ev_unl.evaluate = TRUE;
+								}
+
 							}
 						}
 					} else {

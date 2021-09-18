@@ -779,6 +779,7 @@ void objSet::to_cfg(QString group) {
 		int_to_val(SET_HIDE_SPRITES, cfg_from_file.hide_sprites);
 		int_to_val(SET_HIDE_BACKGROUND, cfg_from_file.hide_background);
 		int_to_val(SET_UNLIMITED_SPRITES, cfg_from_file.unlimited_sprites);
+		int_to_val(SET_UNLIMITED_SPRITES_AUTO, cfg_from_file.unlimited_sprites_auto);
 		int_to_val(SET_PPU_ALIGNMENT, cfg_from_file.ppu_alignment);
 	}
 
@@ -906,6 +907,7 @@ void objSet::fr_cfg(QString group) {
 		cfg_from_file.hide_sprites = val_to_int(SET_HIDE_SPRITES);
 		cfg_from_file.hide_background = val_to_int(SET_HIDE_BACKGROUND);
 		cfg_from_file.unlimited_sprites = val_to_int(SET_UNLIMITED_SPRITES);
+		cfg_from_file.unlimited_sprites_auto = val_to_int(SET_UNLIMITED_SPRITES_AUTO);
 		cfg_from_file.ppu_alignment = val_to_int(SET_PPU_ALIGNMENT);
 	}
 
