@@ -102,6 +102,10 @@ static const char *info_messages_precompiled[] = {
 /* 29 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]"),
 //: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
 /* 30 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[red]error[normal] loading state [cyan]%1[normal], file is corrupted"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 31 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "state [cyan]%1[normal] saved successfully"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 32 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "state [cyan]%1[normal] loaded successfully"),
 };
 
 static struct _shared_color {
@@ -179,6 +183,8 @@ void gui_overlay_info_append_msg_precompiled(int index, void *arg1) {
 		case 18:
 		case 29:
 		case 30:
+		case 31:
+		case 32:
 			a1 = QString("%1").arg(*(int *)arg1);
 			msg = msg.arg(a1);
 			break;
@@ -1414,8 +1420,15 @@ void overlayWidgetSaveSlot::paintEvent(QPaintEvent *event) {
 
 void overlayWidgetSaveSlot::enable_overlay(BYTE operation) {
 	save_slot_operation = operation;
-	fade_out_start_timer();
-	enabled = TRUE;
+
+	if (save_slot_operation == SAVE_SLOT_SAVE) {
+		gui_overlay_info_append_msg_precompiled(31, &save_slot.slot);
+	} else if (save_slot_operation == SAVE_SLOT_READ) {
+		gui_overlay_info_append_msg_precompiled(32, &save_slot.slot);
+	} else {
+		fade_out_start_timer();
+		enabled = TRUE;
+	}
 }
 QString overlayWidgetSaveSlot::date_and_time(int slot) {
 	return (QLocale::system().toString(previews[slot].fileinfo.lastModified(), QLocale::ShortFormat));
@@ -1458,18 +1471,11 @@ void overlayWidgetSaveSlot::draw_slots_x1(void) {
 		x = x1 + (save_slot.slot * w);
 		y = y1;
 
-		if (save_slot_operation == SAVE_SLOT_SAVE) {
-			painter.setPen(Qt::NoPen);
-			painter.setBrush(color.x1.save);
-		} else if (save_slot_operation == SAVE_SLOT_READ) {
-			painter.setPen(Qt::NoPen);
-			painter.setBrush(color.x1.read);
-		} else {
-			pen.setColor(color.x1.selected);
-			pen.setWidth(2);
-			painter.setPen(pen);
-			painter.setBrush(Qt::NoBrush);
-		}
+		pen.setColor(color.x1.selected);
+		pen.setWidth(2);
+		
+		painter.setPen(pen);
+		painter.setBrush(Qt::NoBrush);
 		painter.drawEllipse(QPoint(x, y), radius, radius);
 	}
 
