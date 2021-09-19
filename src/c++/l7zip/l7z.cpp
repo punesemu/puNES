@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <strings.h>
 #include "l7z.h"
-#include "extra/lib7zip-88165f8/src/lib7zip.h"
+#include "extra/lib7zip-53abfeb/src/lib7zip.h"
 #include "info.h"
 #include "gui.h"
 
