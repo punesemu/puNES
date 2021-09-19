@@ -1394,7 +1394,6 @@ INLINE static void ppu_oam_evaluation(void) {
 								if (spr_ev_unl.count_plus) {
 									spr_ev_unl.evaluate = TRUE;
 								}
-
 							}
 						}
 					} else {
