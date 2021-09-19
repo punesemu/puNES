@@ -407,6 +407,98 @@ diff -upNr lib7zip-53abfeb.org/configure lib7zip-53abfeb/configure
 +#eval "${CMAKE_CMD}" "${TOP_SRCDIR}" -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_INSTALL_LIBDIR="${LIBDIR}" ${CMAKE_ARGS}
 +#eval "${CMAKE_CMD}" "${TOP_SRCDIR}" -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DBUILD_SHARED_LIB="OFF" -DP7ZIP_SOURCE_DIR="${P7ZIP_SOURCE_DIR}" ${CMAKE_ARGS}
 +eval "${CMAKE_CMD}" "${TOP_SRCDIR}" -DBUILD_SHARED_LIB="OFF" -DP7ZIP_SOURCE_DIR="${P7ZIP_SOURCE_DIR}" ${CMAKE_ARGS}
+diff -upNr lib7zip-53abfeb.org/.gitignore lib7zip-53abfeb/.gitignore
+--- lib7zip-53abfeb.org/.gitignore	2021-05-26 22:04:41.000000000 +0200
++++ lib7zip-53abfeb/.gitignore	1970-01-01 01:00:00.000000000 +0100
+@@ -1,46 +0,0 @@
+-.*\.pbxuser
+-.*\.perspectivev.?
+-\.DS_Store
+-build$
+-linux-build$
+-\.svn
+-depcomp$
+-missing$
+-install-sh$
+-autom4te\.cache$
+-Makefile\.in$
+-aclocal\.m4$
+-\.deps$
+-config\.log$
+-configure$
+-config\.status$
+-Makefile$
+-includes/C$
+-includes/CPP$
+-.*\.o
+-.*\.a
+-.*\.lo
+-.*\.la
+-.*\.so\.?.*
+-m4/.*
+-libtool
+-config.guess
+-config.sub
+-ltmain.sh
+-# http://www.gnu.org/software/automake
+-
+-Makefile.in
+-
+-# http://www.gnu.org/software/autoconf
+-
+-/autom4te.cache
+-/aclocal.m4
+-/compile
+-/configure
+-/depcomp
+-/install-sh
+-/missing
+-/stamp-h1
+-/ar-lib
+-/m4
+-/build
+\ Manca newline alla fine del file
+diff -upNr lib7zip-53abfeb.org/.gitmodules lib7zip-53abfeb/.gitmodules
+--- lib7zip-53abfeb.org/.gitmodules	2021-05-26 22:04:41.000000000 +0200
++++ lib7zip-53abfeb/.gitmodules	1970-01-01 01:00:00.000000000 +0100
+@@ -1,3 +0,0 @@
+-[submodule "third_party/p7zip"]
+-	path = third_party/p7zip
+-	url = https://github.com/jinfeihan57/p7zip.git
+diff -upNr lib7zip-53abfeb.org/.hgignore lib7zip-53abfeb/.hgignore
+--- lib7zip-53abfeb.org/.hgignore	2021-05-26 22:04:41.000000000 +0200
++++ lib7zip-53abfeb/.hgignore	1970-01-01 01:00:00.000000000 +0100
+@@ -1,29 +0,0 @@
+-.*\.pbxuser
+-.*\.perspectivev.?
+-\.DS_Store
+-build$
+-linux-build$
+-\.svn
+-depcomp$
+-missing$
+-install-sh$
+-autom4te\.cache$
+-Makefile\.in$
+-aclocal\.m4$
+-\.deps$
+-config\.log$
+-configure$
+-config\.status$
+-Makefile$
+-includes/C$
+-includes/CPP$
+-.*\.o
+-.*\.a
+-.*\.lo
+-.*\.la
+-.*\.so\.?.*
+-m4/.*
+-libtool
+-config.guess
+-config.sub
+-ltmain.sh
+\ Manca newline alla fine del file
 diff -upNr lib7zip-53abfeb.org/src/7ZipFormatInfo.cpp lib7zip-53abfeb/src/7ZipFormatInfo.cpp
 --- lib7zip-53abfeb.org/src/7ZipFormatInfo.cpp	2021-05-26 22:04:41.000000000 +0200
 +++ lib7zip-53abfeb/src/7ZipFormatInfo.cpp	2021-09-19 14:20:56.671905670 +0200
