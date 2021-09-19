@@ -203,7 +203,7 @@ FORCE_INLINE int Lizard_decompress_LIZv1(
     /* last literals */
     length = ctx->literalsEnd - ctx->literalsPtr;
     cpy = op + length;
-    if ((ctx->literalsPtr+length != iend) || (cpy > oend)) { LIZARD_LOG_DECOMPRESS_LIZv1("14"); goto _output_error; }   /* Error : input must be consumed */
+    if ((length < 0) || (ctx->literalsPtr+length != iend) || (cpy > oend)) { LIZARD_LOG_DECOMPRESS_LIZv1("14"); goto _output_error; }   /* Error : input must be consumed */
     memcpy(op, ctx->literalsPtr, length);
     ctx->literalsPtr += length;
     op += length;
