@@ -710,6 +710,14 @@
         <extracomment>Refers to the unused save slot. Important: Do not translate the &quot;%1&quot;.</extracomment>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Slot &amp;A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slot &amp;B</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>objCheat</name>
@@ -880,6 +888,16 @@
     </message>
     <message>
         <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>state [cyan]%1[normal] saved successfully</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>state [cyan]%1[normal] loaded successfully</source>
         <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation type="unfinished"></translation>
     </message>
@@ -1283,7 +1301,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Rotate Screen :</source>
+        <source>Degrees</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1783,6 +1801,10 @@
     </message>
     <message>
         <source>Increment at every hard reset (Not recommended)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2462,10 +2484,6 @@
     </message>
     <message>
         <source>Save/Load State</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Slot state</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
