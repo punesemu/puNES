@@ -199,6 +199,7 @@ EXTERNC void gui_overlay_enable_save_slot(BYTE mode);
 EXTERNC void gui_overlay_set_size(int w, int h);
 EXTERNC void gui_overlay_info_init(void);
 EXTERNC void gui_overlay_info_emulator(void);
+EXTERNC void gui_overlay_info_append_subtitle(uTCHAR *msg);
 EXTERNC void gui_overlay_info_append_msg_precompiled(int index, void *arg1);
 EXTERNC void gui_overlay_blit(void);
 EXTERNC void gui_overlay_slot_preview(int slot, void *buffer, uTCHAR *file);

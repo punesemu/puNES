@@ -88,7 +88,7 @@ class overlayWidget : public QWidget {
 		void set_opacity(qreal opacity);
 		void draw_background(void);
 		void draw_background(QRect rect);
-		void fade_in_animation(void);
+		virtual void fade_in_animation(void);
 		void fade_out_animation(void);
 		void fade_out_start_timer(void);
 		void fade_out_tick_timer(void);
@@ -383,6 +383,7 @@ class overlayWidgetInfo : public overlayWidget {
 			QString name;
 			QString value;
 		} _tags;
+		bool new_management;
 
 	public:
 		overlayWidgetInfo(QWidget *parent);
@@ -394,8 +395,9 @@ class overlayWidgetInfo : public overlayWidget {
 
 	public:
 		BYTE is_to_redraw(void);
-		void append_msg(QString msg);
-		static void _append_msg(QString msg);
+		void fade_in_animation(void);
+		void append_msg(QString msg, BYTE alignment);
+		static void _append_msg(QString msg, BYTE alignment);
 		static QString decode_tags(QString string);
 
 	public slots:
@@ -426,13 +428,5 @@ class wdgOverlayUi : public QWidget, public Ui::wdgOverlayUi {
 		void retranslateUi(QWidget *wdgOverlayUi);
 		void update_widget(void);
 };
-
-typedef struct _overlay_data {
-	wdgOverlayUi *widget;
-	QList<QString> info_messages_to_draw;
-	QString info_actual_message = "";
-} _overlay_data;
-
-extern _overlay_data overlay;
 
 #endif /* WDGOVERLAYUI_HPP_ */

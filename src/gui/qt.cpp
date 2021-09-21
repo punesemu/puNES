@@ -84,6 +84,9 @@ static struct _qt {
 	objCheat *objch;
 	QImage qimage;
 
+	// widget dell'overlay
+	wdgOverlayUi *overlay;
+
 	// dialog del settaggio
 	dlgSettings *dset;
 
@@ -185,7 +188,7 @@ BYTE gui_create(void) {
 	qt.mwin->show();
 
 	qt.dset = new dlgSettings(qt.mwin);
-	overlay.widget = new wdgOverlayUi();
+	qt.overlay = new wdgOverlayUi();
 
 	memset(&ext_win, 0x00, sizeof(ext_win));
 	qt.vssystem = new dlgVsSystem(qt.mwin);
@@ -205,7 +208,7 @@ BYTE gui_create(void) {
 
 	QApplication::sendEvent(qt.mwin, &event);
 	QApplication::sendEvent(qt.dset, &event);
-	QApplication::sendEvent(overlay.widget, &event);
+	QApplication::sendEvent(qt.overlay, &event);
 
 	return (EXIT_OK);
 }
@@ -303,7 +306,7 @@ void gui_update(void) {
 	qt.mwin->setWindowTitle(uQString(title));
 	qt.mwin->update_window();
 	qt.dset->update_dialog();
-	overlay.widget->update_widget();
+	qt.overlay->update_widget();
 
 	gui.in_update = FALSE;
 }
@@ -590,6 +593,10 @@ void gui_screen_update(void) {
 	qt.screen->wd3d9->update();
 #endif
 	qt.dset->widget_Settings_Video->widget_Palette_Editor->widget_Palette_PPU->update();
+}
+
+void *gui_wdgoverlayui_get_ptr(void) {
+	return ((void *)qt.overlay);
 }
 
 void *gui_dlgsettings_get_ptr(void) {

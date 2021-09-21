@@ -17,6 +17,7 @@
  */
 
 #include <QtCore/QDateTime>
+#include <QtCore/QMutex>
 #include <QtGui/QAbstractTextDocumentLayout>
 #include <QtSvg/QSvgRenderer>
 #include <QtWidgets/QGraphicsItem>
@@ -36,6 +37,13 @@
 #include "video/gfx_monitor.h"
 #endif
 
+enum _overlay_info_alignment {
+	OVERLAY_INFO_LEFT,
+	OVERLAY_INFO_CENTER,
+	OVERLAY_INFO_RIGHT
+};
+
+void overlay_info_append_qstring(QString msg, BYTE alignment);
 void overlay_wdg_clear(void *widget, void *qrect);
 void overlay_wdg_blit(void *widget);
 
@@ -108,16 +116,26 @@ static const char *info_messages_precompiled[] = {
 /* 32 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "state [cyan]%1[normal] loaded successfully"),
 };
 
-static struct _shared_color {
+typedef struct _overlay_info_message {
+	QString msg;
+	BYTE alignment;
+} _overlay_info_message;
+
+struct _shared_color {
 	QColor rwnd_actual = QColor(Qt::blue);
 	QColor lag = Qt::red;
 	QColor no_lag = QColor(30, 128, 0);
 } shared_color;
-_overlay_data overlay;
+struct _overlay_data {
+	wdgOverlayUi *widget;
 
-void *gui_wdgoverlayui_get_ptr(void) {
-	return ((void *)overlay.widget);
-}
+	struct _overlay_data_info {
+		QMutex mutex;
+		QList<_overlay_info_message> messages_to_draw;
+		QString actual = "";
+		BYTE alignment;
+	} info;
+} overlay;
 
 void gui_overlay_update(void) {
 	if (overlay.widget) {
@@ -134,8 +152,9 @@ void gui_overlay_set_size(int w, int h) {
 	overlay.widget->setFixedSize(w, h);
 }
 void gui_overlay_info_init(void) {
-	overlay.info_actual_message = "";
-	overlay.info_messages_to_draw.clear();
+	overlay.info.actual = "";
+	overlay.info.alignment = OVERLAY_INFO_LEFT;
+	overlay.info.messages_to_draw.clear();
 }
 void gui_overlay_info_emulator(void) {
 	QString str = "";
@@ -151,7 +170,10 @@ void gui_overlay_info_emulator(void) {
 	str += " (by [cyan]FHorse[normal])";
 	str += " " + QString(VERSION);
 
-	overlayWidgetInfo::_append_msg(str);
+	overlayWidgetInfo::_append_msg(str, OVERLAY_INFO_LEFT);
+}
+void gui_overlay_info_append_subtitle(uTCHAR *msg) {
+	overlay_info_append_qstring(uQString(msg), OVERLAY_INFO_CENTER);
 }
 void gui_overlay_info_append_msg_precompiled(int index, void *arg1) {
 	QString msg, a1, a2, a3;
@@ -210,12 +232,7 @@ void gui_overlay_info_append_msg_precompiled(int index, void *arg1) {
 			msg = msg.arg(a1, a2, a3);
 			break;
 	}
-
-	if (overlay.widget) {
-		overlay.widget->overlayInfo->append_msg(msg);
-	} else {
-		overlayWidgetInfo::_append_msg(msg);
-	}
+	overlay_info_append_qstring(msg, OVERLAY_INFO_LEFT);
 }
 void gui_overlay_blit(void) {
 	overlayWidget *wdgs[] = {
@@ -279,6 +296,13 @@ void gui_overlay_slot_preview(int slot, void *buffer, uTCHAR *file) {
 	}
 }
 
+void overlay_info_append_qstring(QString msg, BYTE alignment) {
+	if (overlay.widget) {
+		overlay.widget->overlayInfo->append_msg(msg, alignment);
+	} else {
+		overlayWidgetInfo::_append_msg(msg, alignment);
+	}
+}
 void overlay_wdg_clear(void *widget, void *qrect) {
 	overlayWidget *wdg = (overlayWidget *)widget;
 	QRect *g = (QRect *)&wdg->geometry();
@@ -360,6 +384,8 @@ wdgOverlayUi::wdgOverlayUi(QWidget *parent) : QWidget(parent) {
 	overlayInputPort2->set_nport(1);
 	overlayInputPort3->set_nport(2);
 	overlayInputPort4->set_nport(3);
+
+	overlay.widget = this;
 }
 wdgOverlayUi::~wdgOverlayUi() {}
 
@@ -483,7 +509,7 @@ int overlayWidget::vpadtot(void) const {
 	return (padding.v * 2);
 }
 int overlayWidget::minimum_eight(void) const {
-	// 16 pixel e' l'altezza delle immagini;
+	// 16 pixel e' l'altezza delle immagini
 	int fm = fontMetrics().height() + vpadtot();
 	int px = 16 + vpadtot();
 
@@ -1647,6 +1673,7 @@ overlayWidgetInfo::overlayWidgetInfo(QWidget *parent) : overlayWidget(parent) {
 	base_color.bg = QColor(125, 125, 125);
 	base_color.bg = QColor(50, 50, 50);
 	force_control_when_hidden = true;
+	new_management = true;
 };
 overlayWidgetInfo::~overlayWidgetInfo() {}
 
@@ -1654,61 +1681,145 @@ QSize overlayWidgetInfo::sizeHint() const {
 	return (QSize(100, minimum_eight()));
 }
 void overlayWidgetInfo::paintEvent(QPaintEvent *event) {
-	if (!isHidden() && overlay.info_actual_message.length()) {
-		static const QFont f = QFont("ChronoType");
-		static QAbstractTextDocumentLayout::PaintContext ctx;
-		QTextDocument td;
-		int x, y, w, h;
+	if (!isHidden()) {
+		int alignment, len;
+		QString actual;
 
-		overlayWidget::paintEvent(event);
+		overlay.info.mutex.lock();
+		actual = overlay.info.actual;
+		len = overlay.info.actual.length();
+		alignment = overlay.info.alignment;
+		overlay.info.mutex.unlock();
 
-		painter.begin(this);
-		painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+		if (len) {
+			static const QFont f = QFont("ChronoType");
+			static QAbstractTextDocumentLayout::PaintContext ctx;
+			QTextDocument td;
+			int x, y, w, h;
 
-		td.setDefaultFont(f);
-		td.setHtml(overlay.info_actual_message);
+			overlayWidget::paintEvent(event);
 
-		x = 0;
-		y = 0;
-		w = td.size().width();
-		h = height();
-		draw_background(QRect(x, y, w, h));
+			painter.begin(this);
+			painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-		painter.translate(0, (height() - td.size().height()) / 2);
+			td.setDefaultFont(f);
+			td.setHtml(actual);
 
-		ctx.clip = rect();
-		td.documentLayout()->draw(&painter, ctx);
+			switch (alignment) {
+				default:
+				case OVERLAY_INFO_LEFT:
+					x = 0;
+					break;
+				case OVERLAY_INFO_CENTER:
+					x = (width() - td.size().width()) / 2;
+					break;
+				case OVERLAY_INFO_RIGHT:
+					x = (width() - td.size().width());
+					break;
+			}
+			y = 0;
+			w = td.size().width();
+			h = height();
 
-		painter.end();
+			draw_background(QRect(x, y, w, h));
+
+			painter.translate(x, (height() - td.size().height()) / 2);
+
+			ctx.clip = rect();
+			td.documentLayout()->draw(&painter, ctx);
+
+			painter.end();
+		}
 	}
 
 	fade_out_tick_timer();
 }
 
 BYTE overlayWidgetInfo::is_to_redraw(void) {
-	if (overlay.info_actual_message == "") {
+	// nuova gestione
+	if (new_management == true) {
+		QString actual;
+
+		if (overlay.info.messages_to_draw.length() > 0) {
+			overlay.info.mutex.lock();
+			overlay.info.alignment = overlay.info.messages_to_draw[0].alignment;
+			overlay.info.actual = overlay.info.messages_to_draw[0].msg;
+			overlay.info.mutex.unlock();
+			overlay.info.messages_to_draw.removeAt(0);
+			fade_in_animation();
+			enabled = true;
+			return (TRUE);
+		}
+
+		overlay.info.mutex.lock();
+		actual = overlay.info.actual;
+		overlay.info.mutex.unlock();
+
+		if ((actual != "") || (fade_out.timer.enabled == true)) {
+			return (TRUE);
+		}
+
+		enabled = false;
+		return (FALSE);
+	}
+
+	// vecchia gestione
+	if (overlay.info.actual == "") {
 		if (fade_out.timer.enabled == true) {
 			return (TRUE);
 		}
-		if (overlay.info_messages_to_draw.length() == 0) {
+		if (overlay.info.messages_to_draw.length() == 0) {
 			enabled = false;
 			return (FALSE);
 		}
-		overlay.info_actual_message = overlay.info_messages_to_draw[0];
-		overlay.info_messages_to_draw.removeAt(0);
+		overlay.info.mutex.lock();
+		overlay.info.alignment = overlay.info.messages_to_draw[0].alignment;
+		overlay.info.actual = overlay.info.messages_to_draw[0].msg;
+		overlay.info.messages_to_draw.removeAt(0);
+		overlay.info.mutex.unlock();
 		fade_in_animation();
 		enabled = true;
 	}
 	return (TRUE);
 }
-void overlayWidgetInfo::append_msg(QString msg) {
-	_append_msg(msg);
+void overlayWidgetInfo::fade_in_animation(void) {
+	// nuova gestione
+	if (new_management == true) {
+		QString actual;
+
+		if (always_visible == true) {
+			set_opacity(opacity.value);
+			return;
+		}
+
+		overlay.info.mutex.lock();
+		actual = overlay.info.actual;
+		overlay.info.mutex.unlock();
+
+		if (actual != "") {
+			s_fade_in_finished();
+			return;
+		}
+
+		fade_in.animation->setDuration(500);
+		fade_in.animation->setStartValue(0);
+		fade_in.animation->setEndValue(opacity.value);
+		fade_in.animation->setEasingCurve(QEasingCurve::InBack);
+		fade_in.animation->start();
+		connect(fade_in.animation, SIGNAL(finished()), this, SLOT(s_fade_in_finished()));
+		return;
+	}
+
+	// vecchia gestione
+	overlayWidget::fade_in_animation();
+}
+void overlayWidgetInfo::append_msg(QString msg, BYTE alignment) {
+	_append_msg(msg, alignment);
 	enabled = true;
 }
-
-void overlayWidgetInfo::_append_msg(QString msg) {
+void overlayWidgetInfo::_append_msg(QString msg, BYTE alignment) {
 	msg = decode_tags("[white]" + msg + "[normal]");
-	overlay.info_messages_to_draw.append(msg);
+	overlay.info.messages_to_draw.append(_overlay_info_message { msg, alignment });
 }
 QString overlayWidgetInfo::decode_tags(QString input) {
 	static const _tags tags[] = {
@@ -1761,6 +1872,9 @@ void overlayWidgetInfo::s_fade_in_finished(void) {
 	fade_out_start_timer();
 }
 void overlayWidgetInfo::s_fade_out_finished(void) {
-	overlay.info_actual_message = "";
+	overlay.info.mutex.lock();
+	overlay.info.alignment = OVERLAY_INFO_LEFT;
+	overlay.info.actual = "";
+	overlay.info.mutex.unlock();
 	set_opacity(opacity.value);
 }
