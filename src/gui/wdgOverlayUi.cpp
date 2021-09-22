@@ -37,13 +37,7 @@
 #include "video/gfx_monitor.h"
 #endif
 
-enum _overlay_info_alignment {
-	OVERLAY_INFO_LEFT,
-	OVERLAY_INFO_CENTER,
-	OVERLAY_INFO_RIGHT
-};
-
-void overlay_info_append_qstring(QString msg, BYTE alignment);
+void overlay_info_append_qstring(BYTE alignment, QString msg);
 void overlay_wdg_clear(void *widget, void *qrect);
 void overlay_wdg_blit(void *widget);
 
@@ -170,12 +164,15 @@ void gui_overlay_info_emulator(void) {
 	str += " (by [cyan]FHorse[normal])";
 	str += " " + QString(VERSION);
 
-	overlayWidgetInfo::_append_msg(str, OVERLAY_INFO_LEFT);
+	overlayWidgetInfo::_append_msg(OVERLAY_INFO_LEFT, str);
 }
 void gui_overlay_info_append_subtitle(uTCHAR *msg) {
-	overlay_info_append_qstring(uQString(msg), OVERLAY_INFO_CENTER);
+	overlay_info_append_qstring(OVERLAY_INFO_CENTER, uQString(msg));
 }
 void gui_overlay_info_append_msg_precompiled(int index, void *arg1) {
+	gui_overlay_info_append_msg_precompiled_with_alignment(OVERLAY_INFO_LEFT, index, arg1);
+}
+void gui_overlay_info_append_msg_precompiled_with_alignment(BYTE alignment, int index, void *arg1) {
 	QString msg, a1, a2, a3;
 
 	if (index >= (int)LENGTH(info_messages_precompiled)) {
@@ -232,7 +229,7 @@ void gui_overlay_info_append_msg_precompiled(int index, void *arg1) {
 			msg = msg.arg(a1, a2, a3);
 			break;
 	}
-	overlay_info_append_qstring(msg, OVERLAY_INFO_LEFT);
+	overlay_info_append_qstring(alignment, msg);
 }
 void gui_overlay_blit(void) {
 	overlayWidget *wdgs[] = {
@@ -296,11 +293,11 @@ void gui_overlay_slot_preview(int slot, void *buffer, uTCHAR *file) {
 	}
 }
 
-void overlay_info_append_qstring(QString msg, BYTE alignment) {
+void overlay_info_append_qstring(BYTE alignment, QString msg) {
 	if (overlay.widget) {
-		overlay.widget->overlayInfo->append_msg(msg, alignment);
+		overlay.widget->overlayInfo->append_msg(alignment, msg);
 	} else {
-		overlayWidgetInfo::_append_msg(msg, alignment);
+		overlayWidgetInfo::_append_msg(alignment, msg);
 	}
 }
 void overlay_wdg_clear(void *widget, void *qrect) {
@@ -472,12 +469,14 @@ overlayWidget::overlayWidget(QWidget *parent) : QWidget(parent) {
 	force_control_when_hidden = false;
 	always_visible = false;
 	radius = 5;
+	fade_in_duration = 500;
+	fade_out_duration = 700;
 
 	setMinimumSize(0, 0);
 	setAttribute(Qt::WA_OpaquePaintEvent);
 	setAutoFillBackground(false);
 
-	set_opacity(0.85);
+	set_opacity(0.92);
 }
 overlayWidget::~overlayWidget() {}
 
@@ -537,7 +536,7 @@ void overlayWidget::fade_in_animation(void) {
 		set_opacity(opacity.value);
 		return;
 	}
-	fade_in.animation->setDuration(500);
+	fade_in.animation->setDuration(fade_in_duration);
 	fade_in.animation->setStartValue(0);
 	fade_in.animation->setEndValue(opacity.value);
 	fade_in.animation->setEasingCurve(QEasingCurve::InBack);
@@ -549,7 +548,7 @@ void overlayWidget::fade_out_animation(void) {
 		set_opacity(opacity.value);
 		return;
 	}
-	fade_out.animation->setDuration(1000);
+	fade_out.animation->setDuration(fade_out_duration);
 	fade_out.animation->setStartValue(opacity.value);
 	fade_out.animation->setEndValue(0);
 	fade_out.animation->setEasingCurve(QEasingCurve::OutBack);
@@ -1404,8 +1403,6 @@ overlayWidgetSaveSlot::overlayWidgetSaveSlot(QWidget *parent) : overlayWidget(pa
 	height_row_slot = 20;
 	rows = 3;
 	columns = ((SAVE_SLOTS % rows) == 0) ? SAVE_SLOTS / rows : (SAVE_SLOTS / rows) + 1;
-
-	set_opacity(0.93);
 };
 overlayWidgetSaveSlot::~overlayWidgetSaveSlot() {}
 
@@ -1813,11 +1810,11 @@ void overlayWidgetInfo::fade_in_animation(void) {
 	// vecchia gestione
 	overlayWidget::fade_in_animation();
 }
-void overlayWidgetInfo::append_msg(QString msg, BYTE alignment) {
-	_append_msg(msg, alignment);
+void overlayWidgetInfo::append_msg(BYTE alignment, QString msg) {
+	_append_msg(alignment, msg);
 	enabled = true;
 }
-void overlayWidgetInfo::_append_msg(QString msg, BYTE alignment) {
+void overlayWidgetInfo::_append_msg(BYTE alignment, QString msg) {
 	msg = decode_tags("[white]" + msg + "[normal]");
 	overlay.info.messages_to_draw.append(_overlay_info_message { msg, alignment });
 }

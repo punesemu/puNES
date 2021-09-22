@@ -64,6 +64,8 @@ class overlayWidget : public QWidget {
 		_animation fade_in;
 		_animation fade_out;
 		double ms_last_draw;
+		int fade_in_duration;
+		int fade_out_duration;
 		bool enabled;
 		bool force_control_when_hidden;
 		bool always_visible;
@@ -396,8 +398,8 @@ class overlayWidgetInfo : public overlayWidget {
 	public:
 		BYTE is_to_redraw(void);
 		void fade_in_animation(void);
-		void append_msg(QString msg, BYTE alignment);
-		static void _append_msg(QString msg, BYTE alignment);
+		void append_msg(BYTE alignment, QString msg);
+		static void _append_msg(BYTE alignment, QString msg);
 		static QString decode_tags(QString string);
 
 	public slots:

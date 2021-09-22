@@ -219,11 +219,13 @@ void tas_header_FM2(uTCHAR *file) {
 				_tas_subtitle *ts = NULL, *list = NULL;
 
 				if ((list = (_tas_subtitle *)realloc(tsint.subtitles.list, (tsint.subtitles.nsubtitle + 1) * sizeof(_tas_subtitle)))) {
+					QString subtitle = "[yellow]" + match.captured(2) + "[normal]";
+
 					tsint.subtitles.list = list;
 					ts = &tsint.subtitles.list[tsint.subtitles.nsubtitle];
 					memset(ts, 0x00, sizeof(_tas_subtitle));
 					ts->frame = match.captured(1).toInt();
-					ts->string = emu_ustrncpy(ts->string, uQStringCD(match.captured(2)));
+					ts->string = emu_ustrncpy(ts->string, uQStringCD(subtitle));
 					tsint.subtitles.nsubtitle++;
 				};
 			}
@@ -307,13 +309,13 @@ void tas_frame_FM2(void) {
 
 	// il primo frame
 	if (!tas.frame) {
-		gui_overlay_info_append_msg_precompiled(20, NULL);
+		gui_overlay_info_append_msg_precompiled_with_alignment(OVERLAY_INFO_CENTER, 20, NULL);
 		//tas_increment_index()
 	}
 
 	if (++tas.frame >= tas.total) {
 		if (tas.frame == tas.total) {
-			gui_overlay_info_append_msg_precompiled(21, NULL);
+			gui_overlay_info_append_msg_precompiled_with_alignment(OVERLAY_INFO_CENTER, 21, NULL);
 		} else if (tas.frame == tas.total + 10) {
 			// nel tas_quit() eseguo il ripristino delle porte e l'input_init() solo che questo
 			// cambia lo stato delle pulsanti e in alcuni film (aglar-marblemadness.fm2)

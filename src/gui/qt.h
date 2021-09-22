@@ -29,6 +29,12 @@
 #include "uncompress.h"
 #include "jstick.h"
 
+enum _overlay_info_alignment {
+	OVERLAY_INFO_LEFT,
+	OVERLAY_INFO_CENTER,
+	OVERLAY_INFO_RIGHT
+};
+
 //	"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #aaabae);"
 
 #define button_stylesheet()\
@@ -201,6 +207,7 @@ EXTERNC void gui_overlay_info_init(void);
 EXTERNC void gui_overlay_info_emulator(void);
 EXTERNC void gui_overlay_info_append_subtitle(uTCHAR *msg);
 EXTERNC void gui_overlay_info_append_msg_precompiled(int index, void *arg1);
+EXTERNC void gui_overlay_info_append_msg_precompiled_with_alignment(BYTE alignment, int index, void *arg1);
 EXTERNC void gui_overlay_blit(void);
 EXTERNC void gui_overlay_slot_preview(int slot, void *buffer, uTCHAR *file);
 
