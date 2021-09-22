@@ -40,6 +40,7 @@ class wdgRotateScreen : public QWidget, public Ui::wdgRotateScreen {
 		void s_rotate_to_left(bool checked);
 		void s_rotate_to_right(bool checked);
 		void s_flip(bool checked);
+		void s_update_widget(void);
 };
 
 #endif /* WDGROTATESCREEN_HPP_ */
