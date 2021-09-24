@@ -18,10 +18,12 @@
 
 #include <QtCore/QDateTime>
 #include <QtCore/QMutex>
+#include <QtCore/QRegularExpression>
 #include <QtGui/QAbstractTextDocumentLayout>
 #include <QtSvg/QSvgRenderer>
 #include <QtWidgets/QGraphicsItem>
 #include <time.h>
+#include <math.h>
 #include "wdgOverlayUi.moc"
 #include "mainWindow.hpp"
 #include "fps.h"
@@ -371,6 +373,13 @@ wdgOverlayUi::wdgOverlayUi(QWidget *parent) : QWidget(parent) {
 
 	setupUi(this);
 
+	overlayInfo->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+	overlayFPS->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+	overlayFloppy->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+	overlayFrame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+	overlayRewind->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+	overlayTAS->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
 	setAttribute(Qt::WA_OpaquePaintEvent);
 
 	op->setOpacity(0.999999999);
@@ -467,10 +476,10 @@ overlayWidget::overlayWidget(QWidget *parent) : QWidget(parent) {
 	fade_out.timer.seconds = 3;
 	enabled = false;
 	force_control_when_hidden = false;
-	always_visible = false;
 	radius = 5;
 	fade_in_duration = 500;
 	fade_out_duration = 700;
+	always_visible = false;
 
 	setMinimumSize(0, 0);
 	setAttribute(Qt::WA_OpaquePaintEvent);
@@ -507,9 +516,9 @@ int overlayWidget::hpadtot(void) const {
 int overlayWidget::vpadtot(void) const {
 	return (padding.v * 2);
 }
-int overlayWidget::minimum_eight(void) const {
+int overlayWidget::minimum_eight(const QFont *f = NULL, int rows = 1) const {
 	// 16 pixel e' l'altezza delle immagini
-	int fm = fontMetrics().height() + vpadtot();
+	int fm = ((f ? QFontMetrics((*f)).height() : fontMetrics().height()) * rows) + vpadtot();
 	int px = 16 + vpadtot();
 
 	return (fm < px ? px : fm);
@@ -1667,15 +1676,18 @@ void overlayWidgetSaveSlot::draw_slots(void) {
 // overlayWidgetInfo -------------------------------------------------------------------------------------------------------------
 
 overlayWidgetInfo::overlayWidgetInfo(QWidget *parent) : overlayWidget(parent) {
+	font_info = QFont("ChronoType");
 	base_color.bg = QColor(125, 125, 125);
 	base_color.bg = QColor(50, 50, 50);
 	force_control_when_hidden = true;
 	new_management = true;
+	padding.h = 3;
+	sec_for_word = 0.375f;
 };
 overlayWidgetInfo::~overlayWidgetInfo() {}
 
 QSize overlayWidgetInfo::sizeHint() const {
-	return (QSize(100, minimum_eight()));
+	return (QSize(100, minimum_eight(NULL, 2)));
 }
 void overlayWidgetInfo::paintEvent(QPaintEvent *event) {
 	if (!isHidden()) {
@@ -1689,18 +1701,38 @@ void overlayWidgetInfo::paintEvent(QPaintEvent *event) {
 		overlay.info.mutex.unlock();
 
 		if (len) {
-			static const QFont f = QFont("ChronoType");
-			static QAbstractTextDocumentLayout::PaintContext ctx;
+			static const double font_height = QFontMetrics(font_info).height();
+		    static QTextOption to;
 			QTextDocument td;
-			int x, y, w, h;
+			int x, y, w, h, lines = 1;
 
 			overlayWidget::paintEvent(event);
 
 			painter.begin(this);
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-			td.setDefaultFont(f);
+		    to.setWrapMode(QTextOption::WordWrap);
+		    to.setAlignment(Qt::AlignHCenter);
+			td.setDefaultFont(font_info);
+			td.setDocumentMargin(0);
+		    td.setDefaultTextOption(to);
 			td.setHtml(actual);
+
+			if (td.size().width() > rect().width()) {
+				int i, divider = 20, piece = (rect().width() / divider);
+
+				for (i = 5; i < divider; i++) {
+					w = (piece * i) - hpadtot();
+					td.setTextWidth(w);
+					if ((td.size().height() / font_height) == 2) {
+						lines = 2;
+						break;
+					}
+				}
+			} else {
+				w = td.size().width();
+				td.setTextWidth(w);
+			}
 
 			switch (alignment) {
 				default:
@@ -1708,22 +1740,27 @@ void overlayWidgetInfo::paintEvent(QPaintEvent *event) {
 					x = 0;
 					break;
 				case OVERLAY_INFO_CENTER:
-					x = (width() - td.size().width()) / 2;
+					x = (rect().width() - td.size().width()) / 2;
 					break;
 				case OVERLAY_INFO_RIGHT:
-					x = (width() - td.size().width());
+					x = (rect().width() - td.size().width());
 					break;
 			}
-			y = 0;
-			w = td.size().width();
-			h = height();
+
+			w += hpadtot();
+
+			if (lines == 1) {
+				y = rect().height() / 2;
+				h = rect().height() / 2;
+			} else {
+				y = 0;
+				h = rect().height();
+			}
 
 			draw_background(QRect(x, y, w, h));
 
-			painter.translate(x, (height() - td.size().height()) / 2);
-
-			ctx.clip = rect();
-			td.documentLayout()->draw(&painter, ctx);
+			painter.translate(x + padding.h, y + padding.v + ((h - (font_height * lines)) / 2));
+			td.drawContents(&painter, QRect(0, 0, w, h));
 
 			painter.end();
 		}
@@ -1866,7 +1903,23 @@ QString overlayWidgetInfo::decode_tags(QString input) {
 }
 
 void overlayWidgetInfo::s_fade_in_finished(void) {
+	QTextDocument td;
+	QString actual;
+	int words, sec;
+
 	fade_out_start_timer();
+
+	overlay.info.mutex.lock();
+	actual = overlay.info.actual;
+	overlay.info.mutex.unlock();
+
+	td.setDefaultFont(font_info);
+	td.setDocumentMargin(0);
+	td.setHtml(actual);
+
+	words = td.toPlainText().split(QRegularExpression("(\\s|\\n|\\r)+")).count();
+	sec = ceil(sec_for_word * (double)words);
+	fade_out.timer.seconds = sec < 3 ? 3 : sec;
 }
 void overlayWidgetInfo::s_fade_out_finished(void) {
 	overlay.info.mutex.lock();

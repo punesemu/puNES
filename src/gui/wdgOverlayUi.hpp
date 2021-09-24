@@ -86,7 +86,7 @@ class overlayWidget : public QWidget {
 		void show_widget(void);
 		int hpadtot(void) const;
 		int vpadtot(void) const;
-		int minimum_eight(void) const;
+		int minimum_eight(const QFont *font, int rows) const;
 		void set_opacity(qreal opacity);
 		void draw_background(void);
 		void draw_background(QRect rect);
@@ -386,6 +386,8 @@ class overlayWidgetInfo : public overlayWidget {
 			QString value;
 		} _tags;
 		bool new_management;
+		double sec_for_word;
+		QFont font_info;
 
 	public:
 		overlayWidgetInfo(QWidget *parent);
