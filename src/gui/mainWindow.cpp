@@ -671,11 +671,16 @@ void mainWindow::state_save_slot_set_tooltip(BYTE slot, char *buffer) {
 		painter.setOpacity(0.5);
 		painter.fillRect(rect, Qt::darkBlue);
 
-		pen.setColor(wdgoverlayui->overlaySaveSlot->color.info);
 		pen.setWidth(1);
 
 		painter.setFont(f);
 		painter.setOpacity(1.0);
+
+		pen.setColor(wdgoverlayui->overlaySaveSlot->color.slot);
+		painter.setPen(pen);
+		painter.drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, QString(" %0").arg(slot, 1, 16).toUpper());
+
+		pen.setColor(wdgoverlayui->overlaySaveSlot->color.info);
 		painter.setPen(pen);
 		painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter, wdgoverlayui->overlaySaveSlot->date_and_time(slot));
 
