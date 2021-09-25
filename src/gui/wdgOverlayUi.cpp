@@ -403,7 +403,7 @@ void wdgOverlayUi::changeEvent(QEvent *event) {
 	}
 }
 void wdgOverlayUi::resizeEvent(QResizeEvent *event) {
-	uint32_t size = (((event->size().height() / 2) * event->size().width()) * 4) * gfx.device_pixel_ratio;
+	uint32_t size = ((event->size().height() * event->size().width()) * 4) * gfx.device_pixel_ratio;
 
 	if (cfg->scale == X1) {
 		overlaySaveSlot->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
