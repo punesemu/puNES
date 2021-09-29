@@ -36,8 +36,8 @@ If you want buy me a beer : <span class="badge-paypal"><a href="https://www.payp
 :camera: Screenshots
 -----------
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/14859058/132306008-dcf5eff7-6233-4f23-9b2a-cf1cc2fb32c6.png" width="400" alt="puNES main window"/>
-  <img src="https://user-images.githubusercontent.com/14859058/132349777-470b91f9-f6d2-4d23-a7f6-320bf97c0a16.png" width="400" alt="puNES NSFE Player"/>
+  <img src="https://user-images.githubusercontent.com/14859058/135350089-a74e0ccc-8521-4031-9511-7f5d34727dcb.png" width="400" alt="puNES main window"/>
+  <img src="https://user-images.githubusercontent.com/14859058/135350165-22b1418d-29ea-4482-8c0f-1dc5d076bf08.png" width="400" alt="puNES NSFE Player"/>
   <img src="https://user-images.githubusercontent.com/14859058/132307736-9478e89b-ddaf-4df8-a894-b633cdd464fb.png" width="400" alt="puNES General Settings"/>
   <img src="https://user-images.githubusercontent.com/14859058/132307786-8b50b3d9-551b-4fdc-a522-a94466195eb2.png" width="400" alt="puNES Video Filters Settings"/>
 </p>
