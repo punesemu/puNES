@@ -36,25 +36,29 @@ class objCheat : public QObject {
 		~objCheat();
 
 	public:
-		void read_game_cheats(void);
-		void save_game_cheats(void);
+		void read_game_cheats(QWidget *parent);
+		void save_game_cheats(QWidget *parent);
 		void clear_list(void);
 		void apply_cheats(void);
 		bool is_equal(int index, chl_map *find, bool dscription);
 		int find_cheat(chl_map *find, bool description);
-		void import_XML(QString file_XML);
+		void import_XML(QWidget *parent, QString file_XML);
 		void import_CHT(QString file_CHT);
-		void save_XML(QString file_XML);
-		void complete_gg(chl_map *cheat);
-		void complete_rocky(chl_map *cheat);
+		void save_XML(QWidget *parent, QString file_XML);
+
 		void complete_ram(chl_map *cheat);
+		bool decode_ram(chl_map ch, _cheat *cheat);
+
+		void complete_gg(chl_map *cheat);
+		QString encode_gg(_cheat *cheat);
+		bool decode_gg(QString code, _cheat *cheat);
+
+		void complete_rocky(chl_map *cheat);
+		bool decode_rocky(QString code, _cheat *cheat);
+		QString encode_rocky(_cheat *cheat);
 
 	private:
 		void complete_from_code(chl_map *cheat, _cheat *ch);
-		bool decode_gg(QString code, _cheat *cheat);
-		bool decode_rocky(QString code, _cheat *cheat);
-		bool decode_ram(chl_map ch, _cheat *cheat);
-		QString encode_gg(_cheat *cheat);
 
 		chl_map parse_xml_cheat(QXmlStreamReader &xml);
 		void add_element_data_to_map(QXmlStreamReader &xml, chl_map &map) const;

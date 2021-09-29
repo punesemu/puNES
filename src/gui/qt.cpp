@@ -448,7 +448,7 @@ void gui_objcheat_init(void) {
 	qt.objch->clear_list();
 }
 void gui_objcheat_read_game_cheats(void) {
-	qt.objch->read_game_cheats();
+	qt.objch->read_game_cheats(NULL);
 }
 
 void gui_cursor_init(void) {

@@ -19,15 +19,13 @@
 #ifndef WDGCHEATSEDITOR_HPP_
 #define WDGCHEATSEDITOR_HPP_
 
+#include <QtWidgets/QPushButton>
 #include <QtCore/QXmlStreamReader>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QSpinBox>
-#include "wdgCheatsEditor.hh"
 #include "objCheat.hpp"
 
 class hexSpinBox : public QSpinBox {
-		Q_OBJECT
-
 	private:
 		int digits;
 		bool no_prefix;
@@ -44,16 +42,21 @@ class hexSpinBox : public QSpinBox {
 		QString textFromValue(int value) const;
 };
 
+#include "wdgCheatsEditor.hh"
+
 class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 		Q_OBJECT
 
 	private:
 		bool new_cheat;
 		objCheat *objch;
+		QButtonGroup *grp;
 		hexSpinBox *hexSpinBox_Address;
 		hexSpinBox *hexSpinBox_Value;
 		hexSpinBox *hexSpinBox_Compare;
 		bool in_populate_cheat_table;
+		bool in_lineedit_text_changed;
+		bool disable_hexspinbox_value_changed;
 
 	public:
 		wdgCheatsEditor(QWidget *parent = 0);
@@ -74,30 +77,34 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 		void update_color_row(int row, bool active);
 
 	private:
+		void linedit_select_all(QLineEdit *le);
 		void cheat_tableview_resize(void);
+		void populate_gg_rocky_lineedit(bool control_widgets);
+		void populate_raw_edit(_cheat *cheat);
 		void populate_edit_widgets(int row);
 		void clear_edit_widgets(void);
 		void set_edit_widget(void);
 		void set_type_cheat_checkbox(chl_map *cheat);
 		void set_edit_buttons(void);
-		void change_active_compare_state(bool state);
 
 	private slots:
 		void s_table_data_changed(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
 		void s_table_layout_changed(const QList<QPersistentModelIndex> &sourceParents, QAbstractItemModel::LayoutChangeHint hint);
 		void s_cheat_item(void);
 		void s_cheat_item_state(int state);
+		void s_hide_show_tools(bool checked);
 		void s_import(bool checked);
 		void s_export(bool checked);
-		void s_clear_all(bool checked);
-		void s_hide_show_tools(bool checked);
+		void s_delete(bool checked);
+		void s_delete_all(bool checked);
 
 	private slots:
 		void s_grp_type_cheat(QAbstractButton *button);
-		void s_line_to_upper(const QString &text);
+		void s_gg_proar_text_edited(const QString &text);
+		void s_copy(bool checked);
+		void s_hexspinbox_value_changed(int i);
 		void s_compare(int state);
 		void s_new(bool checked);
-		void s_remove(bool checked);
 		void s_submit(bool checked);
 		void s_cancel(bool checked);
 };

@@ -34,7 +34,7 @@ class stateBar : public QWidget {
 		~stateBar();
 
 	protected:
-		QSize sizeHint() const;
+		QSize sizeHint(void) const;
 		bool eventFilter(QObject *obj, QEvent *event);
 		void paintEvent(QPaintEvent *event);
 

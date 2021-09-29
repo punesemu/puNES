@@ -28,25 +28,39 @@
 #define CHEATFILENAME uQString(info.base_folder) + QString(CHEAT_FOLDER) + "/" +\
 	QFileInfo(uQString(info.rom.file)).completeBaseName() + ".xml"
 
+static const QChar gg_table[] = {
+	'A', 'P', 'Z', 'L',
+	'G', 'I', 'T', 'Y',
+	'E', 'O', 'X', 'U',
+	'K', 'S', 'V', 'N'
+};
+static const DBWORD rocky_key = 0xFCBDD274;
+static const BYTE rocky_table[] = {
+	 3, 13, 14,  1,  6,  9,  5,  0,
+	12,  7,  2,  8, 10, 11,  4, 19,
+	21, 23, 22, 20, 17, 16, 18, 29,
+	31, 24, 26, 25, 30, 27, 28
+};
+
 objCheat::objCheat(QObject *parent) : QObject(parent) {
 	clear_list();
 }
 objCheat::~objCheat() {}
 
-void objCheat::read_game_cheats(void) {
+void objCheat::read_game_cheats(QWidget *parent) {
 	clear_list();
 
 	if (info.no_rom) {
 		return;
 	}
 
-	import_XML(CHEATFILENAME);
+	import_XML(parent, CHEATFILENAME);
 
 	if (cfg->cheat_mode == CHEATSLIST_MODE) {
 		apply_cheats();
 	}
 }
-void objCheat::save_game_cheats(void) {
+void objCheat::save_game_cheats(QWidget *parent) {
 	if (info.no_rom) {
 		return;
 	}
@@ -58,7 +72,7 @@ void objCheat::save_game_cheats(void) {
 		return;
 	}
 
-	save_XML(CHEATFILENAME);
+	save_XML(parent, CHEATFILENAME);
 }
 void objCheat::clear_list(void) {
 	if (cheats.count() > 0) {
@@ -148,7 +162,7 @@ int objCheat::find_cheat(chl_map *find, bool description) {
 
 	return (-1);
 }
-void objCheat::import_XML(QString file_XML) {
+void objCheat::import_XML(QWidget *parent, QString file_XML) {
 	QFile *file = new QFile(file_XML);
 
 	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -175,7 +189,7 @@ void objCheat::import_XML(QString file_XML) {
 			}
 		}
 		if (xmlReader.hasError()) {
-			QMessageBox::critical(0, tr("Error on reading the file"), xmlReader.errorString(), QMessageBox::Ok);
+			QMessageBox::critical(parent, tr("Error on reading the file"), xmlReader.errorString(), QMessageBox::Ok);
 		}
 		xmlReader.clear();
 
@@ -257,7 +271,7 @@ void objCheat::import_CHT(QString file_CHT) {
 		file->close();
 	}
 }
-void objCheat::save_XML(QString file_XML) {
+void objCheat::save_XML(QWidget *parent, QString file_XML) {
 	if (cheats.count() == 0) {
 		return;
 	}
@@ -265,7 +279,7 @@ void objCheat::save_XML(QString file_XML) {
 	QFile *file = new QFile(file_XML);
 
 	if (!file->open(QIODevice::WriteOnly)) {
-		QMessageBox::warning(0, tr("Read only"), tr("The file is in read only mode"));
+		QMessageBox::warning(parent, tr("Read only"), tr("The file is in read only mode"));
 	} else {
 		QXmlStreamWriter *xmlWriter = new QXmlStreamWriter(file);
 
@@ -323,27 +337,18 @@ void objCheat::save_XML(QString file_XML) {
 		file->close();
 	}
 }
-void objCheat::complete_gg(chl_map *cheat) {
-	_cheat ch;
 
-	if (decode_gg((*cheat)["genie"], &ch) == EXIT_ERROR) {
-		cheat->clear();
-		return;
+bool objCheat::decode_ram(chl_map ch, _cheat *cheat) {
+	bool ok;
+
+	cheat->address = ch["address"].toInt(&ok, 16);
+	cheat->replace = ch["value"].toInt(&ok, 16);
+	cheat->enabled_compare = ch["enabled_compare"].toInt();
+	if (ch["compare"] != "-") {
+		cheat->compare = ch["compare"].toInt(&ok, 16);
 	}
 
-	cheat->insert("rocky", "-");
-	complete_from_code(cheat, &ch);
-}
-void objCheat::complete_rocky(chl_map *cheat) {
-	_cheat ch;
-
-	if (decode_rocky((*cheat)["rocky"], &ch) == EXIT_ERROR) {
-		cheat->clear();
-		return;
-	}
-
-	cheat->insert("genie", "-");
-	complete_from_code(cheat, &ch);
+	return (EXIT_OK);
 }
 void objCheat::complete_ram(chl_map *cheat) {
 	if ((*cheat)["address"].isEmpty()) {
@@ -371,26 +376,20 @@ void objCheat::complete_ram(chl_map *cheat) {
 	cheat->insert("genie", "-");
 	cheat->insert("rocky", "-");
 }
-void objCheat::complete_from_code(chl_map *cheat, _cheat *ch) {
-	cheat->insert("address", QString("0x" + QString("%1").arg(ch->address, 4, 16, QChar('0')).toUpper()));
-	cheat->insert("value", QString( "0x" + QString("%1").arg(ch->replace, 2, 16, QChar('0')).toUpper()));
-	cheat->insert("enabled_compare", QString("%1").arg(ch->enabled_compare));
-	if (ch->enabled_compare) {
-		cheat->insert("compare", QString("0x" + QString("%1").arg(ch->compare, 2, 16, QChar('0')).toUpper()));
-	} else {
-		cheat->insert("compare", "-");
-	}
-}
-bool objCheat::decode_gg(QString code, _cheat *cheat) {
-	BYTE codes[8];
-	int length = code.length();
 
-	if (code.isEmpty() || ((length != 6) && (length != 8))) {
+bool objCheat::decode_gg(QString code, _cheat *cheat) {
+	QByteArray lat1 = code.toLower().toLatin1();
+	int len = lat1.length();
+	BYTE codes[8];
+
+	memset(cheat, 0x00, sizeof(_cheat));
+
+	if (code.isEmpty() || ((len != 6) && (len != 8))) {
 		return (EXIT_ERROR);
 	}
 
-	for (int i = 0; i < length; ++i) {
-		switch (code[i].toLower().toLatin1()) {
+	for (int i = 0; i < len; i++) {
+		switch (lat1.at(i)) {
 			case 'a':
 				codes[i] = 0x00;
 				break;
@@ -444,7 +443,7 @@ bool objCheat::decode_gg(QString code, _cheat *cheat) {
 		}
 
 		if ((i == 2) && !(codes[2] & 0x08)) {
-			length = 6;
+			len = 6;
 		}
 	}
 
@@ -460,7 +459,7 @@ bool objCheat::decode_gg(QString code, _cheat *cheat) {
 		(codes[1] & 0x01) << 4 | (codes[1] & 0x02) << 4 | (codes[1] & 0x04) << 4 |
 		(codes[0] & 0x08) << 4);
 
-	if (length == 8) {
+	if (len == 8) {
 		cheat->enabled_compare = TRUE;
 		cheat->replace |= codes[7] & 0x08;
 		cheat->compare = (
@@ -477,38 +476,70 @@ bool objCheat::decode_gg(QString code, _cheat *cheat) {
 
 	return (EXIT_OK);
 }
-bool objCheat::decode_rocky(QString code, _cheat *cheat) {
-	DBWORD input = 0, output = 0, key;
-	static const BYTE rocky_table[] = {
-		 3, 13, 14,  1,  6,  9,  5,  0,
-		12,  7,  2,  8, 10, 11,  4, 19,
-		21, 23, 22, 20, 17, 16, 18, 29,
-		31, 24, 26, 25, 30, 27, 28
+QString objCheat::encode_gg(_cheat *cheat) {
+	QString gg;
+	int i;
+
+	if (cheat->address < 0x8000) {
+		return ("-");
+	}
+
+	i = (cheat->enabled_compare ? 8 : 6);
+	const int codes[8] = {
+		(cheat->replace       & 0x07) | (cheat->replace >> 4 & 0x08),
+		(cheat->replace >> 4  & 0x07) | (cheat->address >> 4 & 0x08),
+		(cheat->address >> 4  & 0x07) | (cheat->enabled_compare ? 0x08 : 0x00),
+		(cheat->address >> 12 & 0x07) | (cheat->address      & 0x08),
+		(cheat->address       & 0x07) | (cheat->address >> 8 & 0x08),
+		(cheat->address >> 8  & 0x07) | ((cheat->enabled_compare ? cheat->compare : cheat->replace) & 0x08),
+		(cheat->enabled_compare ? ((cheat->compare & 0x07)      | (cheat->compare >> 4 & 0x08)) : 0),
+		(cheat->enabled_compare ? ((cheat->compare >> 4 & 0x07) | (cheat->replace      & 0x08)) : 0)
 	};
 
-	if (code.isEmpty()) {
+	for (int a = 0; a < i; a++) {
+		gg.append(gg_table[codes[a]]);
+	};
+
+	return (gg);
+}
+void objCheat::complete_gg(chl_map *cheat) {
+	_cheat ch;
+
+	if (decode_gg((*cheat)["genie"], &ch) == EXIT_ERROR) {
+		cheat->clear();
+		return;
+	}
+
+	cheat->insert("rocky", "-");
+	complete_from_code(cheat, &ch);
+}
+
+bool objCheat::decode_rocky(QString code, _cheat *cheat) {
+	DBWORD input = 0, output = 0, key = rocky_key;
+	QByteArray lat1 = code.toUpper().toLatin1();
+	int i, len = lat1.length();
+
+	memset(cheat, 0x00, sizeof(_cheat));
+
+	if (code.isEmpty() || (len != 8)) {
 		return (EXIT_ERROR);
 	}
 
-	for (int i = 0; i < 8; ++i) {
-		int character = (int) code[i ^ 7].toLatin1();
+	for (i = 0; i < 8; i++) {
+		char character = lat1.at(i ^ 7);
 		DBWORD num;
 
 		if (character >= '0' && character <= '9') {
 			num = character - '0';
 		} else if (character >= 'A' && character <= 'F') {
 			num = character - 'A' + 0x0A;
-		} else if (character >= 'a' && character <= 'f') {
-			num = character - 'a' + 0x0A;
 		} else {
 			return (EXIT_ERROR);
 		}
 		input |= num << (i * 4);
 	}
 
-	key = 0xFCBDD274;
-
-	for (DBWORD i = 31; i--; input <<= 1) {
+	for (i = 31; i--; input <<= 1) {
 		if ((key ^ input) & 0x80000000) {
 			output |= 0x00000001 << rocky_table[i];
 			key ^= 0xB8309722;
@@ -523,49 +554,57 @@ bool objCheat::decode_rocky(QString code, _cheat *cheat) {
 
 	return (EXIT_OK);
 }
-bool objCheat::decode_ram(chl_map ch, _cheat *cheat) {
-	bool ok;
+QString objCheat::encode_rocky(_cheat *cheat) {
+	DBWORD input, output = 0, key = rocky_key;
+	QString rocky;
+	int i;
 
-	cheat->address = ch["address"].toInt(&ok, 16);
-	cheat->replace = ch["value"].toInt(&ok, 16);
-	cheat->enabled_compare = ch["enabled_compare"].toInt();
-	if (ch["compare"] != "-") {
-		cheat->compare = ch["compare"].toInt(&ok, 16);
-	}
-
-	return (EXIT_OK);
-}
-QString objCheat::encode_gg(_cheat *cheat) {
-	QString gg;
-
-	if (cheat->address < 0x8000) {
+	if ((cheat->enabled_compare == FALSE) || (cheat->address < 0x8000)) {
 		return ("-");
 	}
 
-	int i = (cheat->enabled_compare ? 8 : 6);
-	const int codes[8] = {
-		(cheat->replace       & 0x07) | (cheat->replace >> 4 & 0x08),
-		(cheat->replace >> 4  & 0x07) | (cheat->address >> 4 & 0x08),
-		(cheat->address >> 4  & 0x07) | (cheat->enabled_compare ? 0x08 : 0x00),
-		(cheat->address >> 12 & 0x07) | (cheat->address      & 0x08),
-		(cheat->address       & 0x07) | (cheat->address >> 8 & 0x08),
-		(cheat->address >> 8  & 0x07) | ((cheat->enabled_compare ? cheat->compare : cheat->replace) & 0x08),
-		(cheat->enabled_compare ? ((cheat->compare & 0x07)      | (cheat->compare >> 4 & 0x08)) : 0),
-		(cheat->enabled_compare ? ((cheat->compare >> 4 & 0x07) | (cheat->replace      & 0x08)) : 0)
-	};
+	input = (cheat->address & 0x7FFF) | (cheat->compare << 16) | (cheat->replace << 24);
 
-	for (int a = 0; a < i; a++) {
-		static const QChar table[] = {
-			'A', 'P', 'Z', 'L',
-			'G', 'I', 'T', 'Y',
-			'E', 'O', 'X', 'U',
-			'K', 'S', 'V', 'N'
-		};
-		gg.append(table[codes[a]]);
-	};
+	for (i = 31; i--; key = key << 1 & 0xFFFFFFFF) {
+		const uint ctrl = input >> rocky_table[i] & 0x1;
 
-	return (gg);
+		output |= (key >> 31 ^ ctrl) << (i+1);
+		if (ctrl) {
+			key ^= 0xB8309722;
+		}
+	}
+
+	for (i = 8; i--;) {
+		const int value = (output >> (i * 4)) & 0xF;
+
+		rocky.append((value >= 0xA) ? (value - 0xA + 'A') : (value + '0'));
+	}
+
+	return (rocky);
 }
+void objCheat::complete_rocky(chl_map *cheat) {
+	_cheat ch;
+
+	if (decode_rocky((*cheat)["rocky"], &ch) == EXIT_ERROR) {
+		cheat->clear();
+		return;
+	}
+
+	cheat->insert("genie", "-");
+	complete_from_code(cheat, &ch);
+}
+
+void objCheat::complete_from_code(chl_map *cheat, _cheat *ch) {
+	cheat->insert("address", QString("0x" + QString("%1").arg(ch->address, 4, 16, QChar('0')).toUpper()));
+	cheat->insert("value", QString( "0x" + QString("%1").arg(ch->replace, 2, 16, QChar('0')).toUpper()));
+	cheat->insert("enabled_compare", QString("%1").arg(ch->enabled_compare));
+	if (ch->enabled_compare) {
+		cheat->insert("compare", QString("0x" + QString("%1").arg(ch->compare, 2, 16, QChar('0')).toUpper()));
+	} else {
+		cheat->insert("compare", "-");
+	}
+}
+
 chl_map objCheat::parse_xml_cheat(QXmlStreamReader &xml) {
 	chl_map cheat;
 
@@ -622,6 +661,11 @@ void objCheat::add_element_data_to_map(QXmlStreamReader &xml, chl_map &map) cons
 	xml.readNext();
 	if (xml.tokenType() != QXmlStreamReader::Characters) {
 		return;
+	}
+	if ((elementName == "genie") || (elementName == "rocky")) {
+		if (xml.text().isNull() || xml.text().isEmpty() || xml.text().toString() == "-") {
+			return;
+		}
 	}
 	map.insert(elementName, xml.text().toString());
 }

@@ -21,8 +21,6 @@
 #include "video/gfx.h"
 #include "ppu.h"
 
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define READINT24(x) ((x)[0] << 16 | (x)[1] << 8 | (x)[2])
 #define WRITEINT24(x, i)\
 	x[0] = i >> 16;\

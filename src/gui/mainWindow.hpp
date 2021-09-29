@@ -32,6 +32,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QTranslator>
 #include <QtCore/QPoint>
+#include <QtGui/QValidator>
 #include "settings.h"
 #include "jstick.h"
 #include "mainWindow.hh"
@@ -39,6 +40,14 @@
 #include "wdgStatusBar.hpp"
 #include "wdgToolBar.hpp"
 
+class toUpValidator: public QValidator {
+	public:
+		toUpValidator(QObject *parent = nullptr): QValidator(parent) {}
+		QValidator::State validate(QString &input, UNUSED(int &pos)) const override {
+			input = input.toUpper();
+			return (QValidator::Acceptable);
+		}
+};
 class qtHelper {
 	public:
 		static void widget_set_visible(void *wdg, bool mode);

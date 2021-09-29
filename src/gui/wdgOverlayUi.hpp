@@ -111,7 +111,7 @@ class overlayWidgetFPS : public overlayWidget {
 		~overlayWidgetFPS();
 
 	protected:
-		QSize sizeHint() const;
+		QSize sizeHint(void) const;
 		void paintEvent(QPaintEvent *event);
 
 	public:
@@ -131,7 +131,7 @@ class overlayWidgetFrame : public overlayWidget {
 		~overlayWidgetFrame();
 
 	protected:
-		QSize sizeHint() const;
+		QSize sizeHint(void) const;
 		void paintEvent(QPaintEvent *event);
 
 	public:
@@ -155,7 +155,7 @@ class overlayWidgetFloppy : public overlayWidget {
 		~overlayWidgetFloppy();
 
 	protected:
-		QSize sizeHint() const;
+		QSize sizeHint(void) const;
 		void paintEvent(QPaintEvent *event);
 
 	public:
@@ -295,7 +295,7 @@ class overlayWidgetRewind : public overlayWidget {
 		~overlayWidgetRewind();
 
 	protected:
-		QSize sizeHint() const;
+		QSize sizeHint(void) const;
 		void paintEvent(QPaintEvent *event);
 
 	public:
@@ -366,7 +366,7 @@ class overlayWidgetSaveSlot : public overlayWidget {
 		~overlayWidgetSaveSlot();
 
 	protected:
-		QSize sizeHint() const;
+		QSize sizeHint(void) const;
 		void paintEvent(QPaintEvent *event);
 
 	public:
@@ -394,7 +394,7 @@ class overlayWidgetInfo : public overlayWidget {
 		~overlayWidgetInfo();
 
 	protected:
-		QSize sizeHint() const;
+		QSize sizeHint(void) const;
 		void paintEvent(QPaintEvent *event);
 
 	public:

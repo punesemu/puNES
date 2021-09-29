@@ -5,8 +5,11 @@
     <file>icons/pixel.svg</file>
     <file>icons/monitor_screen.svg</file>
     <file>icons/recording.svg</file>
+    <file>icons/copy.svg</file>
     <file>icons/application.png</file>
+    <file>icons/undo.svg</file>
     <file>icons/recording_quality.svg</file>
+    <file>icons/add.svg</file>
     <file>icons/360_view.svg</file>
     <file>icons/microphone.svg</file>
     <file>icons/compressed_file.svg</file>
