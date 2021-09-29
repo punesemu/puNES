@@ -708,6 +708,7 @@ void wdgCheatsEditor::s_copy(UNUSED(bool checked)) {
 	QLineEdit *le;
 
 	switch (index) {
+		default:
 		case 0:
 			le = lineEdit_GG;
 			break;
@@ -770,7 +771,7 @@ void wdgCheatsEditor::s_submit(UNUSED(bool checked)) {
 	chl_map cheat;
 
 	if (lineEdit_Description->text().isEmpty()) {
-		QMessageBox::warning(0, tr("Submit warning"), tr("A description must be entered"));
+		QMessageBox::warning(this, tr("Submit warning"), tr("A description must be entered"));
 		return;
 	}
 
@@ -799,7 +800,7 @@ void wdgCheatsEditor::s_submit(UNUSED(bool checked)) {
 	}
 
 	if (cheat.count() == 0) {
-		QMessageBox::warning(0, tr("Submit warning"), tr("The code is invalid"));
+		QMessageBox::warning(this, tr("Submit warning"), tr("The code is invalid"));
 		switch (grp->checkedId()) {
 			default:
 			case 0:
@@ -835,7 +836,7 @@ void wdgCheatsEditor::s_submit(UNUSED(bool checked)) {
 			objch->cheats.replace(current, cheat);
 			update_cheat_row(current, &cheat);
 		} else {
-			QMessageBox::warning(0, tr("Submit warning"), tr("The cheat is already in the list"));
+			QMessageBox::warning(this, tr("Submit warning"), tr("The cheat is already in the list"));
 			submitted = false;
 		}
 	}

@@ -575,9 +575,9 @@ QString objCheat::encode_rocky(_cheat *cheat) {
 	}
 
 	for (i = 8; i--;) {
-		const int value = (output >> (i * 4)) & 0xF;
+		const char value = (output >> (i * 4)) & 0xF;
 
-		rocky.append((value >= 0xA) ? (value - 0xA + 'A') : (value + '0'));
+		rocky.append((value >= 0xA) ? (char)(value - 0xA + 'A') : (char)(value + '0'));
 	}
 
 	return (rocky);
