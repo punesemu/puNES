@@ -52,7 +52,7 @@ wdgPaletteWall::wdgPaletteWall(QWidget *parent) : QWidget(parent) {
 }
 wdgPaletteWall::~wdgPaletteWall() {};
 
-QSize wdgPaletteWall::sizeHint() const {
+QSize wdgPaletteWall::sizeHint(void) const {
 	ensurePolished();
 	return (grid_size().boundedTo(QSize(640, 480)));
 }

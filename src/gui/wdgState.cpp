@@ -74,7 +74,7 @@ stateBar::stateBar(QWidget *parent) : QWidget(parent) {
 }
 stateBar::~stateBar() {}
 
-QSize stateBar::sizeHint() const {
+QSize stateBar::sizeHint(void) const {
 	return (QSize(SAVE_SLOTS * 13, fontMetrics().boundingRect("Qqy").height()));
 }
 bool stateBar::eventFilter(QObject *obj, QEvent *event) {

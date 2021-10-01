@@ -595,7 +595,7 @@ void overlayWidget::s_fade_out_finished(void) {
 overlayWidgetFPS::overlayWidgetFPS(QWidget *parent) : overlayWidget(parent) {};
 overlayWidgetFPS::~overlayWidgetFPS() {}
 
-QSize overlayWidgetFPS::sizeHint() const {
+QSize overlayWidgetFPS::sizeHint(void) const {
 	return (QSize(fontMetrics().size(0, "44 fps").width() + hpadtot(), minimum_eight()));
 }
 void overlayWidgetFPS::paintEvent(QPaintEvent *event) {
@@ -634,7 +634,7 @@ overlayWidgetFloppy::overlayWidgetFloppy(QWidget *parent) : overlayWidget(parent
 };
 overlayWidgetFloppy::~overlayWidgetFloppy() {}
 
-QSize overlayWidgetFloppy::sizeHint() const {
+QSize overlayWidgetFloppy::sizeHint(void) const {
 	return (QSize(floppy.gray.size().width() + hpadtot(), minimum_eight()));
 }
 void overlayWidgetFloppy::paintEvent(QPaintEvent *event) {
@@ -677,7 +677,7 @@ overlayWidgetFrame::overlayWidgetFrame(QWidget *parent) : overlayWidget(parent) 
 };
 overlayWidgetFrame::~overlayWidgetFrame() {}
 
-QSize overlayWidgetFrame::sizeHint() const {
+QSize overlayWidgetFrame::sizeHint(void) const {
 	return (QSize(td.size().width(), minimum_eight()));
 }
 void overlayWidgetFrame::paintEvent(QPaintEvent *event) {
@@ -1037,7 +1037,7 @@ overlayWidgetRewind::overlayWidgetRewind(QWidget *parent) : overlayWidget(parent
 };
 overlayWidgetRewind::~overlayWidgetRewind() {}
 
-QSize overlayWidgetRewind::sizeHint() const {
+QSize overlayWidgetRewind::sizeHint(void) const {
 	return (QSize(100, minimum_eight()));
 }
 void overlayWidgetRewind::paintEvent(QPaintEvent *event) {
@@ -1412,27 +1412,29 @@ overlayWidgetSaveSlot::overlayWidgetSaveSlot(QWidget *parent) : overlayWidget(pa
 	height_row_slot = 20;
 	rows = 3;
 	columns = ((SAVE_SLOTS % rows) == 0) ? SAVE_SLOTS / rows : (SAVE_SLOTS / rows) + 1;
+	max_size = QSize(488, 370);
+
+	radius = 4;
+	padding.h = 4;
+	padding.v = 1;
 };
 overlayWidgetSaveSlot::~overlayWidgetSaveSlot() {}
 
-QSize overlayWidgetSaveSlot::sizeHint() const {
+QSize overlayWidgetSaveSlot::minimumSizeHint(void) const {
+	if (cfg->scale == X1) {
+		return (overlayWidget::minimumSizeHint());
+	}
+	return (max_size);
+}
+QSize overlayWidgetSaveSlot::sizeHint(void) const {
 	double ratio = SCR_COLUMNS / SCR_ROWS;
 	int width;
 
 	if (cfg->scale == X1) {
 		width = SAVE_SLOTS * 15 + 2;
 		return (QSize(width, height_row_slot + ((width / ratio) / (11.0f / 8.0f))));
-	} else {
-		switch (rows) {
-			default:
-				width = 100;
-				break;
-			case 3:
-				width = 130;
-				break;
-		}
-		return (QSize((width * columns) + hpadtot(), ((width / ratio) * rows) + hpadtot()));
 	}
+	return (max_size);
 }
 void overlayWidgetSaveSlot::paintEvent(QPaintEvent *event) {
 	overlayWidget::paintEvent(event);
@@ -1554,17 +1556,24 @@ void overlayWidgetSaveSlot::draw_slots_x1(void) {
 	painter.setOpacity(0.8);
 	if (!previews[save_slot.slot].image.isNull()) {
 		painter.fillRect(rect, color.bar_selected);
+	} else {
+		painter.fillRect(rect, color.bar);
 	}
 
 	// scrivo le info
 	f.setPixelSize(w / 12.0);
 
-	pen.setColor(color.info);
 	pen.setWidth(1);
 
 	painter.setFont(f);
-	painter.setPen(pen);
 	painter.setOpacity(1.0);
+
+	pen.setColor(color.slot);
+	painter.setPen(pen);
+	painter.drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, QString(" %0").arg(save_slot.slot, 1, 16).toUpper());
+
+	pen.setColor(color.info);
+	painter.setPen(pen);
 	painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter, date_and_time(save_slot.slot));
 
 	painter.restore();
@@ -1586,11 +1595,11 @@ void overlayWidgetSaveSlot::draw_slots(void) {
 		x1 = padding.h;
 		y1 = padding.v;
 
-		if ((x1 + (columns * w)) < width()) {
-			x1 += (width() - (x1 + (columns * w))) / 2;
+		if (((columns * w) + hpadtot()) < width()) {
+			x1 = (width() - (columns * w)) / 2;
 		}
-		if ((y1 + (rows * h)) < height()) {
-			y1 += (height() - (y1 + (rows * h))) / 2;
+		if (((rows * h) + vpadtot()) < height()) {
+			y1 = (height() - (rows * h)) / 2;
 		}
 
 		for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
@@ -1627,7 +1636,7 @@ void overlayWidgetSaveSlot::draw_slots(void) {
 			painter.drawRect(rect);
 
 			// disegno la riga in cui scrivere le info
-			rect.setRect(x + 2, y, w - 4, height_row_slot);
+			rect.setRect(x + (pen.width() / 2), y, w - pen.width(), height_row_slot);
 
 			painter.setOpacity(0.8);
 			if (i == save_slot.slot) {
@@ -1686,7 +1695,7 @@ overlayWidgetInfo::overlayWidgetInfo(QWidget *parent) : overlayWidget(parent) {
 };
 overlayWidgetInfo::~overlayWidgetInfo() {}
 
-QSize overlayWidgetInfo::sizeHint() const {
+QSize overlayWidgetInfo::sizeHint(void) const {
 	return (QSize(100, minimum_eight(NULL, 2)));
 }
 void overlayWidgetInfo::paintEvent(QPaintEvent *event) {

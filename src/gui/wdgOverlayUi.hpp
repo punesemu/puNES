@@ -336,6 +336,7 @@ class overlayWidgetSaveSlot : public overlayWidget {
 		BYTE save_slot_operation;
 		int rows;
 		int columns;
+		QSize max_size;
 
 	public:
 		struct _previews {
@@ -366,6 +367,7 @@ class overlayWidgetSaveSlot : public overlayWidget {
 		~overlayWidgetSaveSlot();
 
 	protected:
+		QSize minimumSizeHint(void) const;
 		QSize sizeHint(void) const;
 		void paintEvent(QPaintEvent *event);
 
