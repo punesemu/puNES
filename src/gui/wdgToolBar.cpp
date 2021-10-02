@@ -69,6 +69,8 @@ wdgToolBar::wdgToolBar(QWidget *parent) : QToolBar(parent) {
 
 	connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(s_toplevel_changed(bool)));
 
+	setStyleSheet(QString(toolbar_button_stylesheet()) + QString(toolbar_toolbutton_stylesheet()));
+
 	installEventFilter(this);
 }
 wdgToolBar::~wdgToolBar() {}

@@ -306,7 +306,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	layout = new QHBoxLayout(widget);
 	btext = new QPushButton(this);
 	btext->setObjectName("value");
-	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
 	btext->setProperty("myValue", QVariant(row));
 	btext->setProperty("myType", QVariant(KEYBOARD));
 	btext->installEventFilter(this);
@@ -314,7 +314,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	connect(btext, SIGNAL(clicked(bool)), this, SLOT(s_shortcut(bool)));
 	bicon = new QPushButton(this);
 	bicon->setObjectName("default");
-	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
 	bicon->setIcon(QIcon(":/icon/icons/default.svg"));
 	bicon->setToolTip(tr("Default"));
 	bicon->setProperty("myValue", QVariant(row));
@@ -322,7 +322,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	layout->addWidget(bicon);
 	bicon = new QPushButton(this);
 	bicon->setObjectName("unset");
-	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
 	bicon->setIcon(QIcon(":/icon/icons/trash.svg"));
 	bicon->setToolTip(tr("Unset"));
 	bicon->setProperty("myValue", QVariant(row));
@@ -342,7 +342,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	layout = new QHBoxLayout(widget);
 	btext = new QPushButton(this);
 	btext->setObjectName("value");
-	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
 	btext->setProperty("myValue", QVariant(row));
 	btext->setProperty("myType", QVariant(JOYSTICK));
 	btext->installEventFilter(this);
@@ -350,7 +350,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	layout->addWidget(btext);
 	bicon = new QPushButton(this);
 	bicon->setObjectName("unset");
-	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
 	bicon->setIcon(QIcon(":/icon/icons/trash.svg"));
 	bicon->setToolTip(tr("Unset"));
 	bicon->setProperty("myValue", QVariant(row));

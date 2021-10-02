@@ -55,15 +55,22 @@ wdgRewind::wdgRewind(QWidget *parent) : QWidget(parent) {
 	set_enable_play_pause_forward(FALSE);
 
 	{
-		QString style = "QToolButton:enabled { background-color: #99ff99 } QToolButton:disabled { background-color: #ff9999 } "\
-			"QToolButton:pressed { background-color: #00e68a } QToolButton:checked { background-color: #00e68a }";
+		QString style = "QToolButton:enabled {"\
+			"	background-color: #ACFFAC"\
+			"}"\
+			"QToolButton:disabled {"\
+			"	background-color: #FFCFCF"\
+			"}"\
+			"QToolButton:pressed {"\
+			"	margin :0; padding: 2px; border: 1px inset darkgray;"\
+			"	background-color: #00B300"\
+			"}"\
+			"QToolButton:checked { "\
+			"	margin :0; padding: 2px; border: 1px inset darkgray;"\
+			"	background-color: #00B300"
+			"}";
 
-		toolButton_Fast_Backward->setStyleSheet(style);
-		toolButton_Step_Backward->setStyleSheet(style);
-		toolButton_Play->setStyleSheet(style);
-		toolButton_Pause->setStyleSheet(style);
-		toolButton_Step_Forward->setStyleSheet(style);
-		toolButton_Fast_Forward->setStyleSheet(style);
+		setStyleSheet(style);
 	}
 
 	setFixedWidth(sizeHint().width());
