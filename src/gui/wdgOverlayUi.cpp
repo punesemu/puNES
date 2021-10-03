@@ -485,7 +485,7 @@ overlayWidget::overlayWidget(QWidget *parent) : QWidget(parent) {
 	setAttribute(Qt::WA_OpaquePaintEvent);
 	setAutoFillBackground(false);
 
-	set_opacity(0.92);
+	set_opacity(0.88);
 }
 overlayWidget::~overlayWidget() {}
 

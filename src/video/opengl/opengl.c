@@ -738,7 +738,7 @@ void opengl_draw_scene(void) {
 		opengl_shader_filter(TEXTURE_LINEAR_ENAB, TRUE, FALSE, &mag, &min);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
-		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFuncSeparate(GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 		glEnable(GL_BLEND);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		glDisable(GL_BLEND);
