@@ -36,8 +36,8 @@ If you want buy me a beer : <span class="badge-paypal"><a href="https://www.payp
 :camera: Screenshots
 -----------
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/14859058/135748545-42795bf1-b68c-4919-8ab2-8e2504e610b0.png" width="400" alt="puNES main window"/>
-  <img src="https://user-images.githubusercontent.com/14859058/135748557-fa28de24-beef-478e-a988-5cb3e8184fe8.png" width="400" alt="puNES NSFE Player"/>
+  <img src="https://user-images.githubusercontent.com/14859058/137119364-7dbf76e3-e330-45e2-8fb7-684f9bdadbf9.png" width="400" alt="puNES main window"/>
+  <img src="https://user-images.githubusercontent.com/14859058/137119383-d6577076-9029-4dbc-b1be-c4568d7c26b4.png" width="400" alt="puNES NSFE Player"/>
   <img src="https://user-images.githubusercontent.com/14859058/135748564-2096abfd-9a9d-48e7-b93e-0aefaa714451.png" width="400" alt="puNES Slot Preview"/>
   <img src="https://user-images.githubusercontent.com/14859058/135748722-ea73e6b3-db6b-4cf2-b13d-755ca4824975.png" width="400" alt="puNES General Settings"/>
   <img src="https://user-images.githubusercontent.com/14859058/135748725-567d679c-40da-4675-93fd-391698cfe237.png" width="400" alt="puNES Video Filters Settings"/>
