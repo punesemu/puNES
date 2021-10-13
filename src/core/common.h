@@ -29,8 +29,8 @@ typedef signed char SBYTE;
 typedef signed short SWORD;
 typedef signed int SDBWORD;
 
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define FHMAX(a, b) (((a) > (b)) ? (a) : (b))
+#define FHMIN(a, b) (((a) < (b)) ? (a) : (b))
 
 #define BIOS_FOLDER    "/bios"
 #define DIFF_FOLDER    "/diff"

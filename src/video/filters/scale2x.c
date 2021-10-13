@@ -104,18 +104,18 @@ INLINE static void scale2x(WORD **screen_index, uint32_t *palette, uint32_t pitc
 	uint32_t TW0, TW1, TW2;
 
 	for (; scl2x.sy < scl2x.lines; ++scl2x.sy) {
-		TH0 = MAX(0, scl2x.sy - 1);
+		TH0 = FHMAX(0, scl2x.sy - 1);
 		TH1 = scl2x.sy;
-		TH2 = MIN(scl2x.lines - 1, scl2x.sy + 1);
+		TH2 = FHMIN(scl2x.lines - 1, scl2x.sy + 1);
 		TH3 = ((scl2x.oy << 1) * dstpitch);
 		TH4 = TH3 + dstpitch;
 
 		scl2x.ox = 0;
 
 		for (scl2x.sx = scl2x.startx; scl2x.sx < scl2x.rows; ++scl2x.sx) {
-			TW0 = MAX(0, scl2x.sx - 1);
+			TW0 = FHMAX(0, scl2x.sx - 1);
 			TW1 = scl2x.sx;
-			TW2 = MIN(scl2x.rows - 1, scl2x.sx + 1);
+			TW2 = FHMIN(scl2x.rows - 1, scl2x.sx + 1);
 			B = screen_index[TH0][TW1];
 			D = screen_index[TH1][TW0];
 			E = screen_index[TH1][TW1];
@@ -142,9 +142,9 @@ INLINE static void scale3x(WORD **screen_index, uint32_t *palette, uint32_t pitc
 	uint32_t TW0, TW1, TW2;
 
 	for (; scl2x.sy < scl2x.lines; ++scl2x.sy) {
-		TH0 = MAX(0, scl2x.sy - 1);
+		TH0 = FHMAX(0, scl2x.sy - 1);
 		TH1 = scl2x.sy;
-		TH2 = MIN(scl2x.lines - 1, scl2x.sy + 1);
+		TH2 = FHMIN(scl2x.lines - 1, scl2x.sy + 1);
 		TH3 = (X3(scl2x.oy) * dstpitch);
 		TH4 = TH3 + dstpitch;
 		TH5 = TH3 + (dstpitch << 1);
@@ -152,9 +152,9 @@ INLINE static void scale3x(WORD **screen_index, uint32_t *palette, uint32_t pitc
 		scl2x.ox = 0;
 
 		for (scl2x.sx = scl2x.startx; scl2x.sx < scl2x.rows; ++scl2x.sx) {
-			TW0 = MAX(0, scl2x.sx - 1);
+			TW0 = FHMAX(0, scl2x.sx - 1);
 			TW1 = scl2x.sx;
-			TW2 = MIN(scl2x.rows - 1, scl2x.sx + 1);
+			TW2 = FHMIN(scl2x.rows - 1, scl2x.sx + 1);
 			B = screen_index[TH0][TW1];
 			D = screen_index[TH1][TW0];
 			E = screen_index[TH1][TW1];
@@ -206,17 +206,17 @@ INLINE static void scale4x(WORD **screen_index, uint32_t *palette, uint32_t pitc
 	height = scl4x_buffer.h;
 
 	for (y = 0; y < height; ++y) {
-		TH0 = (MAX(0, y - 1) * srcpitch);
+		TH0 = (FHMAX(0, y - 1) * srcpitch);
 		TH1 = (y * srcpitch);
-		TH2 = (MIN(height - 1, y + 1) * srcpitch);
+		TH2 = (FHMIN(height - 1, y + 1) * srcpitch);
 		TH3 = ((y << 1) * dstpitch);
 		TH4 = TH3 + dstpitch;
 		for (x = 0; x < width; ++x) {
 			uint32_t E0, E1, E2, E3, B, D, E, F, H;
 
-			TW0 = (MAX(0, x - 1) << 2);
+			TW0 = (FHMAX(0, x - 1) << 2);
 			TW1 = (x << 2);
-			TW2 = (MIN(width - 1, x + 1) << 2);
+			TW2 = (FHMIN(width - 1, x + 1) << 2);
 			B = *(uint32_t *)(srcpix + TH0 + TW1);
 			D = *(uint32_t *)(srcpix + TH1 + TW0);
 			E = *(uint32_t *)(srcpix + TH1 + TW1);
