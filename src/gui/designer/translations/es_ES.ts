@@ -712,11 +712,11 @@
     </message>
     <message>
       <source>Slot &amp;A</source>
-      <translation type="unfinished">Slot &amp;A</translation>
+      <translation>Ranura &amp;A</translation>
     </message>
     <message>
       <source>Slot &amp;B</source>
-      <translation type="unfinished">Slot &amp;B</translation>
+      <translation>Ranura &amp;B</translation>
     </message>
   </context>
   <context>
@@ -1118,7 +1118,7 @@
     </message>
     <message>
       <source>Resolution</source>
-      <translation type="unfinished">Resolution</translation>
+      <translation>Resolución</translation>
     </message>
     <message>
       <source>Gamma</source>
@@ -1785,7 +1785,7 @@
     </message>
     <message>
       <source>Advanced</source>
-      <translation type="unfinished">Advanced</translation>
+      <translation>Avanzado</translation>
     </message>
     <message>
       <source>Default</source>
