@@ -889,17 +889,17 @@
     <message>
       <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] loading state [cyan]%1[normal], file is corrupted</translation>
+      <translation>[red]error[normal] al cargar el estado [cyan]%1[normal], el archivo está dañado</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] saved successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">state [cyan]%1[normal] saved successfully</translation>
+      <translation>estado [cyan]%1[normal] guardado correctamente</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] loaded successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">state [cyan]%1[normal] loaded successfully</translation>
+      <translation>estado [cyan]%1[normal] cargado correctamente</translation>
     </message>
   </context>
   <context>
@@ -1106,11 +1106,11 @@
     </message>
     <message>
       <source>Reset paramaters to defaults</source>
-      <translation type="unfinished">Reset paramaters to defaults</translation>
+      <translation>Restablecer parámetros predeterminados</translation>
     </message>
     <message>
       <source>Artifacts</source>
-      <translation type="unfinished">Artifacts</translation>
+      <translation>Artefactos</translation>
     </message>
     <message>
       <source>Fringing</source>
@@ -1138,11 +1138,11 @@
     </message>
     <message>
       <source>Sharpness</source>
-      <translation type="unfinished">Sharpness</translation>
+      <translation>Nitidez</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Brillo</translation>
     </message>
     <message>
       <source>Hue</source>
@@ -1150,11 +1150,11 @@
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Contraste</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Saturación</translation>
     </message>
     <message>
       <source>Scanline</source>
@@ -1302,7 +1302,7 @@
     </message>
     <message>
       <source>Degrees</source>
-      <translation type="unfinished">Degrees</translation>
+      <translation>Grados</translation>
     </message>
   </context>
   <context>
@@ -1567,23 +1567,23 @@
     </message>
     <message>
       <source>Insert disk 1 side A at power-up/reset</source>
-      <translation type="unfinished">Insert disk 1 side A at power-up/reset</translation>
+      <translation>Insertar disco 1 lado A al encender/reiniciar</translation>
     </message>
     <message>
       <source>Famicom Disk System</source>
-      <translation type="unfinished">Famicom Disk System</translation>
+      <translation>Famicom Disk System</translation>
     </message>
     <message>
       <source>Use fast forward when loading the BIOS or disk/side</source>
-      <translation type="unfinished">Use fast forward when loading the BIOS or disk/side</translation>
+      <translation>Usar adelantar rápido al cargar la BIOS o el disco/lado</translation>
     </message>
     <message>
       <source>Switch the disk/side automatically</source>
-      <translation type="unfinished">Switch the disk/side automatically</translation>
+      <translation>Cambiar disco/lado automáticamente</translation>
     </message>
     <message>
       <source>Allow multiple instances of the emulator</source>
-      <translation type="unfinished">Allow multiple instances of the emulator</translation>
+      <translation>Permitir múltiples instancias del emulador</translation>
     </message>
   </context>
   <context>
@@ -1789,11 +1789,11 @@
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Predeterminado</translation>
     </message>
     <message>
       <source>Randomize (Not recommended)</source>
-      <translation type="unfinished">Randomize (Not recommended)</translation>
+      <translation>Aleatorizar (no recomendado)</translation>
     </message>
     <message>
       <source>Power up/reset CPU/PPU Alignment</source>
@@ -1801,11 +1801,11 @@
     </message>
     <message>
       <source>Increment at every hard reset (Not recommended)</source>
-      <translation type="unfinished">Increment at every hard reset (Not recommended)</translation>
+      <translation>Incrementar por cada reiniciar hardware (no recomendado)</translation>
     </message>
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
-      <translation type="unfinished">Automatically restores the limit when necessary to prevent graphical glitches</translation>
+      <translation>Restaura automáticamente el límite cuando es necesario para evitar fallas gráficas</translation>
     </message>
   </context>
   <context>
