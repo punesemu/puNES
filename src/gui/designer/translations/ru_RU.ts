@@ -1302,7 +1302,7 @@
     </message>
     <message>
       <source>Degrees</source>
-      <translation type="unfinished">Degrees</translation>
+      <translation>Градусы</translation>
     </message>
   </context>
   <context>
@@ -1785,7 +1785,7 @@
     </message>
     <message>
       <source>Advanced</source>
-      <translation type="unfinished">Advanced</translation>
+      <translation>Дополнительно</translation>
     </message>
     <message>
       <source>Default</source>
@@ -1793,11 +1793,11 @@
     </message>
     <message>
       <source>Randomize (Not recommended)</source>
-      <translation type="unfinished">Randomize (Not recommended)</translation>
+      <translation>Случайная (не рекомендуется)</translation>
     </message>
     <message>
       <source>Power up/reset CPU/PPU Alignment</source>
-      <translation type="unfinished">Power up/reset CPU/PPU Alignment</translation>
+      <translation>Регулировка включения/сброса CPU/PPU</translation>
     </message>
     <message>
       <source>Increment at every hard reset (Not recommended)</source>
