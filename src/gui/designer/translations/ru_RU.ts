@@ -1773,7 +1773,7 @@
     </message>
     <message>
       <source>Enable Extra Scanlines</source>
-      <translation>Включить дополнительные строки</translation>
+      <translation>Использовать дополнительные строки развертки</translation>
     </message>
     <message>
       <source>Hide Sprites</source>
@@ -2177,7 +2177,7 @@
     </message>
     <message>
       <source>CRT Scanlines</source>
-      <translation>ЭЛТ линии сканирования</translation>
+      <translation>ЭЛТ строки развертки</translation>
     </message>
     <message>
       <source>CRT With Curve</source>
