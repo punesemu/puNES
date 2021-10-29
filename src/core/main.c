@@ -161,8 +161,11 @@ int main(int argc, char **argv) {
 		return (EXIT_FAILURE);
 	}
 
+	js_scan_thread_init();
+
 	gui_start();
 
+	js_scan_thread_quit();
 	emu_thread_quit();
 	emu_quit();
 

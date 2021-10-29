@@ -50,13 +50,13 @@ class recStatusBar : public QFrame {
 		recStatusBar(QWidget *parent = 0);
 		~recStatusBar();
 
+	signals:
+		void et_blink_icon(void);
+
 	protected:
 		void changeEvent(QEvent *event);
 		void closeEvent(QCloseEvent *event);
 		void mousePressEvent(QMouseEvent *event);
-
-	signals:
-		void et_blink_icon(void);
 
 	private:
 		void desc_text(void);

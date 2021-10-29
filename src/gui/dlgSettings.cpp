@@ -18,6 +18,7 @@
 
 #include "dlgSettings.moc"
 #include "mainWindow.hpp"
+#include "conf.h"
 
 dlgSettings::dlgSettings(QWidget *parent) : QDialog(parent) {
 	setupUi(this);

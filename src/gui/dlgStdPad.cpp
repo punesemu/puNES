@@ -16,10 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#if defined (__linux__)
-#include <unistd.h>
-#include <fcntl.h>
-#endif
+#include <QtWidgets/QAbstractItemView>
 #include <QtSvg/QSvgRenderer>
 #include <QtGui/QPainter>
 #include "dlgStdPad.moc"
@@ -37,6 +34,8 @@ static const char std_pad_button[10][15] = {
 	"TurboA", "TurboB"
 };
 
+_joy_list joy_list;
+
 dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent) {
 	QFont f9;
 
@@ -44,18 +43,24 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 	f9.setWeight(QFont::Light);
 
 	memset(&data, 0x00, sizeof(data));
-	memcpy(&data.cfg, cfg_port, sizeof(_cfg_port));
+
+	data.cfg.id = cfg_port->id;
+	memcpy(&data.cfg.port, cfg_port->port, sizeof(_port));
 
 	setupUi(this);
-
-	js_update_detected_devices();
 
 	groupBox_controller->setStyleSheet(group_title_bold_stylesheet());
 	groupBox_Misc->setStyleSheet(group_title_bold_stylesheet());
 
 	groupBox_controller->setTitle(tr("Controller %1 : Standard Pad").arg(cfg_port->id));
 	tabWidget_kbd_joy->setCurrentIndex(JOYSTICK);
-	combo_id_init();
+
+	comboBox_kbd_ID->addItem(tr("Keyboard"));
+
+	joy_combo_init();
+
+	connect(comboBox_joy_ID, SIGNAL(activated(int)), this, SLOT(s_combobox_joy_activated(int)));
+	connect(comboBox_joy_ID, SIGNAL(currentIndexChanged(int)), this, SLOT(s_combobox_joy_index_changed(int)));
 
 	for (int a = KEYBOARD; a <= JOYSTICK; a++) {
 		QLineEdit *txt;
@@ -97,9 +102,9 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 			}
 
 			if (a == KEYBOARD) {
-				bt->setText(objInp::kbd_keyval_to_name(data.cfg.port->input[a][b]));
+				bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[a][b]));
 			} else {
-				bt->setText(uQString(jsv_to_name(data.cfg.port->input[a][b])));
+				bt->setText(uQString(js_joyval_to_name(js_jdev_index(), data.cfg.port.input[a][b])));
 			}
 
 			bt->installEventFilter(this);
@@ -117,7 +122,7 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 		comboBox_Controller_type->addItem(tr("Auto"));
 		comboBox_Controller_type->addItem(tr("Original"));
 		comboBox_Controller_type->addItem(tr("3rd-party"));
-		comboBox_Controller_type->setCurrentIndex(data.cfg.port->type_pad);
+		comboBox_Controller_type->setCurrentIndex(data.cfg.port.type_pad);
 		connect(comboBox_Controller_type, SIGNAL(activated(int)), this, SLOT(s_combobox_controller_type_activated(int)));
 	}
 
@@ -133,13 +138,14 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 
 		tb->setRange(1, TURBO_BUTTON_DELAY_MAX);
 		tb->setProperty("myTurbo", QVariant(i));
-		tb->setValue(data.cfg.port->turbo[i].frequency);
+		tb->setValue(data.cfg.port.turbo[i].frequency);
 		connect(tb, SIGNAL(valueChanged(int)), this, SLOT(s_slider_td_value_changed(int)));
 
-		td_update_label(i, data.cfg.port->turbo[i].frequency);
+		td_update_label(i, data.cfg.port.turbo[i].frequency);
 	}
 
 	pushButton_Apply->setProperty("myPointer", QVariant::fromValue(((void *)cfg_port)));
+
 	connect(pushButton_Apply, SIGNAL(clicked(bool)), this, SLOT(s_apply_clicked(bool)));
 	connect(pushButton_Discard, SIGNAL(clicked(bool)), this, SLOT(s_discard_clicked(bool)));
 
@@ -156,6 +162,8 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 
 	data.seq.timer = new QTimer(this);
 	connect(data.seq.timer, SIGNAL(timeout()), this, SLOT(s_pad_in_sequence_timer()));
+
+	connect(this, SIGNAL(et_update_joy_combo()), this, SLOT(s_et_update_joy_combo()));
 
 	installEventFilter(this);
 }
@@ -207,15 +215,11 @@ void dlgStdPad::closeEvent(QCloseEvent *event) {
 	data.joy.timer->stop();
 	data.seq.timer->stop();
 	data.seq.active = false;
-#if defined (__linux__)
-	if (data.joy.fd) {
-		::close(data.joy.fd);
-		data.joy.fd = 0;
-	}
-#endif
 
-	js_quit(FALSE);
-	js_init(FALSE);
+	if (data.exec_js_init) {
+		js_quit(FALSE);
+		js_init(FALSE);
+	}
 
 	mainwin->shcjoy_start();
 
@@ -237,15 +241,15 @@ bool dlgStdPad::keypress(QKeyEvent *event) {
 
 	if (type == KEYBOARD) {
 		if (event->key() != Qt::Key_Escape) {
-			data.cfg.port->input[type][vbutton] = objInp::kbd_keyval_decode(event);
+			data.cfg.port.input[type][vbutton] = objInp::kbd_keyval_decode(event);
 		}
-		data.bp->setText(objInp::kbd_keyval_to_name(data.cfg.port->input[type][vbutton]));
+		data.bp->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[type][vbutton]));
 	} else {
 		// quando sto configurando il joystick, l'unico input da tastiera
 		// che accetto e' l'escape.
 		if (event->key() == Qt::Key_Escape) {
 			data.joy.timer->stop();
-			data.bp->setText(uQString(jsv_to_name(data.cfg.port->input[type][vbutton])));
+			data.bp->setText(uQString(js_joyval_to_name(js_jdev_index(), data.cfg.port.input[type][vbutton])));
 		} else {
 			return (true);
 		}
@@ -261,7 +265,7 @@ bool dlgStdPad::keypress(QKeyEvent *event) {
 }
 void dlgStdPad::update_dialog(void) {
 	bool mode = false;
-	unsigned int joyId;
+	unsigned int joy_index;
 
 	if (data.seq.active == true) {
 		return;
@@ -283,7 +287,7 @@ void dlgStdPad::update_dialog(void) {
 	pushButton_kbd_Defaults->setEnabled(true);
 
 	// joystick
-	joyId = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
+	joy_index = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
 
 	if (comboBox_joy_ID->count() > 1) {
 		mode = true;
@@ -292,7 +296,7 @@ void dlgStdPad::update_dialog(void) {
 	label_joy_ID->setEnabled(mode);
 	comboBox_joy_ID->setEnabled(mode);
 
-	if ((comboBox_joy_ID->count() > 1) && (joyId != name_to_jsn(uL("NULL")))) {
+	if ((comboBox_joy_ID->count() > 1) && (joy_index != JS_NO_JOYSTICK)) {
 		mode = true;
 	} else {
 		mode = false;
@@ -309,54 +313,33 @@ void dlgStdPad::update_dialog(void) {
 	// misc
 	groupBox_Misc->setEnabled(true);
 }
-void dlgStdPad::combo_id_init(void) {
-	BYTE disabled_line = 0, count = 0, current_line = name_to_jsn(uL("NULL"));
+void dlgStdPad::joy_combo_init(void) {
+	BYTE current_index = 0, current_line = JS_NO_JOYSTICK;
+	int i;
 
-	comboBox_kbd_ID->addItem(tr("Keyboard"));
+	comboBox_joy_ID->blockSignals(true);
+	comboBox_joy_ID->clear();
 
-	for (int a = 0; a <= MAX_JOYSTICK; a++) {
-		BYTE id = a;
+	for (i = 0; i < joy_list.count; i++) {
+		_cb_ports *cb = &joy_list.ele[i];
 
-		if (a < MAX_JOYSTICK) {
-			if (js_is_connected(id) == EXIT_ERROR) {
-				continue;
-			}
-
-			if (js_is_this(id, &data.cfg.port->joy_id)) {
-				current_line = count;
-			}
-
-			comboBox_joy_ID->addItem(QString("js%1: ").arg(id) + uQString(js_name_device(id)));
-		} else {
-			if (count == 0) {
-				break;
-			}
-			comboBox_joy_ID->addItem(tr("Disabled"));
-			id = name_to_jsn(uL("NULL"));
-			disabled_line = count;
+		if (js_is_this(cb->index, &data.cfg.port.jguid)) {
+			current_line = i;
 		}
-
-		comboBox_joy_ID->setItemData(count, id);
-		count++;
+		comboBox_joy_ID->addItem(cb->desc);
+		comboBox_joy_ID->setItemData(i, cb->index);
 	}
 
-	if (count == 0) {
-		comboBox_joy_ID->addItem(tr("No usable device"));
-		tab_joy->setEnabled(false);
-	} else {
-		tab_joy->setEnabled(true);
-	}
-
-	if (count > 0) {
-		if (js_is_null(&data.cfg.port->joy_id) || (current_line == name_to_jsn(uL("NULL")))) {
-			comboBox_joy_ID->setCurrentIndex(disabled_line);
+	if (joy_list.count > 1) {
+		if (js_is_null(&data.cfg.port.jguid) || (current_line == JS_NO_JOYSTICK)) {
+			current_index = joy_list.disabled_line;
 		} else {
-			comboBox_joy_ID->setCurrentIndex(current_line);
+			current_index = current_line;
 		}
-		connect(comboBox_joy_ID, SIGNAL(activated(int)), this, SLOT(s_combobox_joy_activated(int)));
-	} else {
-		comboBox_joy_ID->setCurrentIndex(0);
 	}
+	comboBox_joy_ID->blockSignals(false);
+
+	comboBox_joy_ID->setCurrentIndex(current_index);
 
 	update_dialog();
 }
@@ -401,58 +384,52 @@ void dlgStdPad::js_press_event(void) {
 
 	type = data.vbutton / MAX_STD_PAD_BUTTONS;
 
-	if (js_is_null(&data.cfg.port->joy_id)) {
+	if (js_is_null(&data.cfg.port.jguid)) {
 		info_entry_print(type, tr("Select device first"));
 		update_dialog();
 		return;
 	}
 
-#if defined (__linux__)
-	{
-		_js_event jse;
-		ssize_t size = sizeof(jse);
-		char device[30];
-
-		::sprintf(device, "%s%d", JS_DEV_PATH, data.cfg.port->joy_id);
-		data.joy.fd = ::open(device, O_RDONLY | O_NONBLOCK);
-
-		if (data.joy.fd < 0) {
-			info_entry_print(type, tr("Error on open device %1").arg(device));
-			update_dialog();
-			return;
-		}
-
-		for (int i = 0; i < MAX_JOYSTICK; i++) {
-			if (::read(data.joy.fd, &jse, size) < 0) {
-				info_entry_print(type, tr("Error on reading controllers configurations"));
-			}
-		}
-
-		// svuoto il buffer iniziale
-		for (int i = 0; i < 10; i++) {
-			if (::read(data.joy.fd, &jse, size) < 0) {
-				;
-			}
-		}
-	}
-	data.joy.value = 0;
-	data.joy.timer->start(30);
-#else
 	data.joy.value = 0;
 	data.joy.timer->start(150);
-#endif
 }
 void dlgStdPad::td_update_label(int type, int value) {
 	QLabel *label = findChild<QLabel *>("label_value_slider_" + SPB(type + TRB_A));
 
 	label->setText(QString("%1").arg(value, 2));
 }
+int dlgStdPad::js_jdev_index(void) {
+	int jdev_index = -1;
+
+	if (comboBox_joy_ID->currentData().isValid()) {
+		jdev_index = comboBox_joy_ID->currentData().toInt();
+	}
+	return (jdev_index);
+}
 
 void dlgStdPad::s_combobox_joy_activated(int index) {
-	unsigned int id = ((QComboBox *)sender())->itemData(index).toInt();
+	unsigned int value = ((QComboBox *)sender())->itemData(index).toInt();
 
-	js_set_id(&data.cfg.port->joy_id, id);
+	if (comboBox_joy_ID->count() == 1) {
+		return;
+	}
+	js_guid_set(value, &data.cfg.port.jguid);
 	update_dialog();
+}
+void dlgStdPad::s_combobox_joy_index_changed(UNUSED(int index)) {
+	for (int a = KEYBOARD; a <= JOYSTICK; a++) {
+		QPushButton *bt;
+
+		for (int b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
+			bt = findChild<QPushButton *>("pushButton_" + SPT(a) + "_" + SPB(b));
+
+			if (a == KEYBOARD) {
+				bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[a][b]));
+			} else {
+				bt->setText(uQString(js_joyval_to_name(js_jdev_index(), data.cfg.port.input[a][b])));
+			}
+		}
+	}
 }
 void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
 	int vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
@@ -477,11 +454,10 @@ void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
 
 	if (type == KEYBOARD) {
 		info_entry_print(type, tr("Press a key (ESC for the previous value \"%1\")").arg(
-				objInp::kbd_keyval_to_name(data.cfg.port->input[type][vbutton])));
-
+			objInp::kbd_keyval_to_name(data.cfg.port.input[type][vbutton])));
 	} else {
 		info_entry_print(type, tr("Press a key (ESC for the previous value \"%1\")").arg(
-				uQString(jsv_to_name(data.cfg.port->input[type][vbutton]))));
+			uQString(js_joyval_to_name(js_jdev_index(), data.cfg.port.input[type][vbutton]))));
 		js_press_event();
 	}
 }
@@ -491,7 +467,7 @@ void dlgStdPad::s_unset_clicked(UNUSED(bool checked)) {
 
 	type = vbutton / MAX_STD_PAD_BUTTONS;
 	vbutton -= (type * MAX_STD_PAD_BUTTONS);
-	data.cfg.port->input[type][vbutton] = 0;
+	data.cfg.port.input[type][vbutton] = 0;
 
 	info_entry_print(type, "");
 
@@ -519,55 +495,50 @@ void dlgStdPad::s_defaults_clicked(UNUSED(bool checked)) {
 
 	info_entry_print(type, "");
 
-	settings_inp_port_default(data.cfg.port, data.cfg.id - 1, type);
+	settings_inp_port_default(&data.cfg.port, data.cfg.id - 1, type);
 
 	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 		QPushButton *bt = findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(i));
 
 		if (type == KEYBOARD) {
-			bt->setText(objInp::kbd_keyval_to_name(data.cfg.port->input[type][i]));
+			bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[type][i]));
 		} else {
-			bt->setText(uQString(jsv_to_name(data.cfg.port->input[type][i])));
+			bt->setText(uQString(js_joyval_to_name(js_jdev_index(), data.cfg.port.input[type][i])));
 		}
 	}
 }
 void dlgStdPad::s_combobox_controller_type_activated(int index) {
 	BYTE state = RELEASED;
 
-	data.cfg.port->type_pad = index;
+	data.cfg.port.type_pad = index;
 
-	if (((data.cfg.port->type_pad == CTRL_PAD_AUTO) && (machine.type != DENDY)) || (data.cfg.port->type_pad == CTRL_PAD_ORIGINAL)) {
+	if (((data.cfg.port.type_pad == CTRL_PAD_AUTO) && (machine.type != DENDY)) || (data.cfg.port.type_pad == CTRL_PAD_ORIGINAL)) {
 		state = PRESSED;
 	}
 
 	for (int b = 8; b < 24; b++) {
-		data.cfg.port->data[b] = state;
+		data.cfg.port.data[b] = state;
 	}
 }
 void dlgStdPad::s_slider_td_value_changed(int value) {
 	int type = QVariant(((QSlider *)sender())->property("myTurbo")).toInt();
 
-	data.cfg.port->turbo[type].frequency = value;
-	data.cfg.port->turbo[type].counter = 0;
+	data.cfg.port.turbo[type].frequency = value;
+	data.cfg.port.turbo[type].counter = 0;
 	td_update_label(type, value);
 }
 void dlgStdPad::s_pad_joy_read_timer(void) {
-	DBWORD value = js_read_in_dialog(&data.cfg.port->joy_id, data.joy.fd);
+	DBWORD value = js_jdev_read_in_dialog(&data.cfg.port.jguid);
 
-	if (data.joy.value && !value) {
+	if (data.joy.value && (data.joy.value != value)) {
 		unsigned int type, vbutton;
-
-#if defined (__linux__)
-		::close(data.joy.fd);
-		data.joy.fd = 0;
-#endif
 
 		type = data.vbutton / MAX_STD_PAD_BUTTONS;
 		vbutton = data.vbutton - (type * MAX_STD_PAD_BUTTONS);
 
 		info_entry_print(type, "");
-		data.cfg.port->input[type][vbutton] = data.joy.value;
-		data.bp->setText(uQString(jsv_to_name(data.joy.value)));
+		data.cfg.port.input[type][vbutton] = data.joy.value;
+		data.bp->setText(uQString(js_joyval_to_name(js_jdev_index(), data.joy.value)));
 		data.joy.timer->stop();
 
 		update_dialog();
@@ -605,10 +576,21 @@ void dlgStdPad::s_pad_in_sequence_timer(void) {
 void dlgStdPad::s_apply_clicked(UNUSED(bool checked)) {
 	_cfg_port *cfg_port = ((_cfg_port *)((QPushButton *)sender())->property("myPointer").value<void *>());
 
-	memcpy(cfg_port, &data.cfg, sizeof(_cfg_port));
+	data.exec_js_init = (cfg_port->id != data.cfg.id) | (memcmp(cfg_port->port, &data.cfg.port, sizeof(_port)) != 0);
+	cfg_port->id = data.cfg.id;
+	memcpy(cfg_port->port, &data.cfg.port, sizeof(_port));
 
 	close();
 }
 void dlgStdPad::s_discard_clicked(UNUSED(bool checked)) {
 	close();
+}
+
+void dlgStdPad::s_et_update_joy_combo(void) {
+	// se la combox e' aperta o sto configurando i pulsanti, non devo aggiornarne il contenuto
+	if ((comboBox_joy_ID->view()->isVisible() == false) &&
+		(data.seq.timer->isActive() == false) &&
+		(data.joy.timer->isActive() == false)) {
+		joy_combo_init();
+	}
 }

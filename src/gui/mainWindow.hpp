@@ -34,7 +34,7 @@
 #include <QtCore/QPoint>
 #include <QtGui/QValidator>
 #include "settings.h"
-#include "jstick.h"
+#include "os_jstick.h"
 #include "mainWindow.hh"
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"

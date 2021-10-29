@@ -66,16 +66,19 @@ enum port_controllers {
 	PORT_MAX
 };
 
+#if defined (_WIN32)
+typedef GUID _input_guid;
+#else
+typedef struct _input_guid {
+	BYTE data[16];
+} _input_guid;
+#endif
 typedef struct _config_input {
 	BYTE permit_updown_leftright;
 	BYTE hide_zapper_cursor;
 	BYTE controller_mode;
 	BYTE expansion;
-#if defined (_WIN32)
-	GUID shcjoy_id;
-#else
-	BYTE shcjoy_id;
-#endif
+	_input_guid jguid_sch;
 } _config_input;
 typedef struct _r4016 {
 	BYTE value;
@@ -88,11 +91,7 @@ typedef struct _turbo_button {
 } _turbo_button;
 typedef struct _port {
 	BYTE type;
-#if defined (_WIN32)
-	GUID joy_id;
-#else
-	BYTE joy_id;
-#endif
+	_input_guid jguid;
 
 	// decodifica tastiera e joystick
 	DBWORD input[2][24];

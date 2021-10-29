@@ -58,6 +58,7 @@ If you want buy me a beer : <span class="badge-paypal"><a href="https://www.payp
 * [nvidia-cg](https://developer.nvidia.com/cg-toolkit)
 * [alsa](https://www.alsa-project.org)
 * [cmake](https://cmake.org)
+* libudev
 * [libX11 and libXrandr](https://www.x.org)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
 #### Compilation of puNES

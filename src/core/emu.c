@@ -892,10 +892,6 @@ BYTE emu_reset(BYTE type) {
 	// controller
 	input_init(SET_CURSOR);
 
-	// joystick
-	js_quit(FALSE);
-	js_init(FALSE);
-
 	if (rewind_init()) {
 		return (EXIT_ERROR);
 	}

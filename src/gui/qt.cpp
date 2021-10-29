@@ -602,6 +602,9 @@ void *gui_wdgoverlayui_get_ptr(void) {
 void *gui_dlgsettings_get_ptr(void) {
 	return ((void *)qt.dset);
 }
+void gui_dlgsettings_input_update_joy_combo(void) {
+	qt.dset->widget_Settings_Input->update_joy_list();
+}
 
 void gui_external_control_windows_show(void) {
 	if (ext_win.vs_system && (cfg->fullscreen != FULLSCR)) {

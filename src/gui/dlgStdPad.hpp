@@ -23,7 +23,28 @@
 #include <QtCore/QTimer>
 #include <QtWidgets/QDialog>
 #include "dlgStdPad.hh"
-#include "wdgSettingsInput.hpp"
+#include "common.h"
+#include "input.h"
+
+typedef struct _cfg_port {
+	BYTE id;
+	_port *port;
+} _cfg_port;
+typedef struct _cfg_port_tmp {
+	BYTE id;
+	_port port;
+} _cfg_port_tmp;
+typedef struct _cb_ports {
+	QString desc;
+	int index;
+} _cb_ports;
+typedef struct _joy_list {
+	_cb_ports ele[MAX_JOYSTICK + 1];
+	int count;
+	int disabled_line;
+} _joy_list;
+
+extern _joy_list joy_list;
 
 class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		Q_OBJECT
@@ -31,7 +52,6 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 	private:
 		struct _data {
 			struct _joy {
-				int fd;
 				WORD value;
 				QTimer *timer;
 			} joy;
@@ -41,15 +61,19 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 				int counter;
 				QTimer *timer;
 			} seq;
-			bool no_other_buttons;
 			QPushButton *bp;
+			_cfg_port_tmp cfg;
+			bool no_other_buttons;
 			BYTE vbutton;
-			_cfg_port cfg;
+			BYTE exec_js_init;
 		} data;
 
 	public:
 		dlgStdPad(_cfg_port *cfg_port, QWidget *parent);
 		~dlgStdPad();
+
+	signals:
+		void et_update_joy_combo(void);
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event);
@@ -60,15 +84,17 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 	private:
 		bool keypress(QKeyEvent *event);
 		void update_dialog(void);
-		void combo_id_init(void);
+		void joy_combo_init(void);
 		void setEnable_tab_buttons(int type, bool mode);
 		void disable_tab_and_other(int type, int vbutton);
 		void info_entry_print(int type, QString txt);
 		void js_press_event(void);
 		void td_update_label(int type, int value);
+		int js_jdev_index(void);
 
 	private slots:
 		void s_combobox_joy_activated(int index);
+		void s_combobox_joy_index_changed(int index);
 		void s_input_clicked(bool checked);
 		void s_unset_clicked(bool checked);
 		void s_in_sequence_clicked(bool checked);
@@ -80,6 +106,9 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		void s_pad_in_sequence_timer(void);
 		void s_apply_clicked(bool checked);
 		void s_discard_clicked(bool checked);
+
+	private slots:
+		void s_et_update_joy_combo(void);
 };
 
 #endif /* DLGSTDPAD_HPP_ */

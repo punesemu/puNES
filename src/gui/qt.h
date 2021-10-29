@@ -235,6 +235,7 @@ EXTERNC void gui_wdgrewind_play(void);
 EXTERNC void gui_emit_et_gg_reset(void);
 EXTERNC void gui_emit_et_vs_reset(void);
 EXTERNC void gui_emit_et_external_control_windows_show(void);
+EXTERNC void gui_emit_et_input_update_combo(void);
 
 EXTERNC void gui_max_speed_start(void);
 EXTERNC void gui_max_speed_stop(void);
@@ -257,6 +258,7 @@ EXTERNC void gui_overlay_blit(void);
 EXTERNC void gui_overlay_slot_preview(int slot, void *buffer, uTCHAR *file);
 
 EXTERNC void *gui_dlgsettings_get_ptr(void);
+EXTERNC void gui_dlgsettings_input_update_joy_combo(void);
 
 EXTERNC void *gui_dlgdebugger_get_ptr(void);
 EXTERNC void gui_dlgdebugger_click_step(void);

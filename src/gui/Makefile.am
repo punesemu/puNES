@@ -299,8 +299,8 @@ endif
 
 if LINUX
 libgui_a_SOURCES += \
-	linux/jstick.c \
-	linux/jstick.h \
+	linux/os_jstick.c \
+	linux/os_jstick.h \
 	linux/os_linux.h
 
 if USE_FULLSCREEN_RESFREQ
@@ -313,8 +313,8 @@ endif
 
 if BSD
 libgui_a_SOURCES += \
-	bsd/jstick.c \
-	bsd/jstick.h \
+	bsd/os_jstick.c \
+	bsd/os_jstick.h \
 	bsd/os_bsd.h
 
 if USE_FULLSCREEN_RESFREQ
@@ -327,8 +327,8 @@ endif
 
 if WINDOWS
 libgui_a_SOURCES += \
-	windows/jstick.c \
-	windows/jstick.h \
+	windows/os_jstick.c \
+	windows/os_jstick.h \
 	windows/os_windows.h \
 	windows/win.h
 

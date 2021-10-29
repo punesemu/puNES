@@ -386,6 +386,18 @@ AS_IF([test "x$LRELEASE" = xno], [
 	AC_MSG_ERROR([Could not find lrelease binaries])
 ])
 
+# libudev
+AM_COND_IF([LINUX], [
+	AC_CHECK_HEADERS([libudev.h], [], [
+		AC_MSG_ERROR([udev support requested but libudev header not installed])
+	])
+	AC_CHECK_LIB(udev, main, [
+		my_LIBS="${my_LIBS} -ludev"
+	], [
+		AC_MSG_ERROR([libudev.so not found])
+	])
+])
+
 # OpenGL
 AM_COND_IF([WINDOWS], [
 	my_LIBS="${my_LIBS} -lopengl32"

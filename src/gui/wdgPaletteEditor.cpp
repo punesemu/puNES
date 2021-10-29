@@ -150,7 +150,7 @@ void wdgPaletteWall::keyPressEvent(QKeyEvent* e) {
 }
 void wdgPaletteWall::focusInEvent(UNUSED(QFocusEvent *event)) {
 	update_cell(curRow, curCol);
-	emit current_changed(curRow, curCol);
+	emit et_current_changed(curRow, curCol);
 }
 void wdgPaletteWall::focusOutEvent(UNUSED(QFocusEvent *event)) {
 	update_cell(curRow, curCol);
@@ -216,7 +216,7 @@ void wdgPaletteWall::set_current(int row, int col) {
 	curCol = col;
 	update_cell(oldRow, oldCol);
 	update_cell(curRow, curCol);
-	emit current_changed(curRow, curCol);
+	emit et_current_changed(curRow, curCol);
 }
 
 int wdgPaletteWall::row_at(int y) {
@@ -253,7 +253,7 @@ void wdgPaletteWall::set_selected(int row, int col) {
 	update_cell(selRow, selCol);
 
 	if (row >= 0) {
-		emit selected(row, col);
+		emit et_selected(row, col);
 	}
 
 	if (isVisible() && qobject_cast<QMenu*>(parentWidget())) {
@@ -299,7 +299,7 @@ void wdgPaletteWall::paint_cell_contents(QPainter *p, int row, int col, const QR
 		defaults.append(color);
 
 		if (colors.count() == (nrows * ncols)) {
-			emit first_paint();
+			emit et_first_paint();
 		}
 	}
 
@@ -365,7 +365,7 @@ void wdgColorToChange::set_current(int row, int col) {
 	update_cell(selRow, selCol);
 
 	if (row >= 0) {
-		emit selected(row, col);
+		emit et_selected(row, col);
 	}
 
 	if (isVisible() && qobject_cast<QMenu*>(parentWidget())) {
@@ -380,7 +380,7 @@ wdgHtmlName::~wdgHtmlName() {}
 
 void wdgHtmlName::focusOutEvent(QFocusEvent *event) {
 	QLineEdit::focusOutEvent(event);
-	emit focus_out();
+	emit et_focus_out();
 }
 
 // ----------------------------------------------------------------------------------------------
@@ -390,9 +390,9 @@ wdgPaletteEditor::wdgPaletteEditor(QWidget *parent) : QWidget(parent) {
 
 	setFocusProxy(widget_Palette_Wall);
 
-	connect(widget_Palette_Wall, SIGNAL(selected(int, int)), this, SLOT(s_palette_wall(int, int)));
-	connect(widget_Palette_Wall, SIGNAL(first_paint(void)), this, SLOT(s_first_paint(void)));
-	connect(widget_Palette_PPU, SIGNAL(selected(int, int)), this, SLOT(s_palette_ppu(int, int)));
+	connect(widget_Palette_Wall, SIGNAL(et_selected(int, int)), this, SLOT(s_palette_wall(int, int)));
+	connect(widget_Palette_Wall, SIGNAL(et_first_paint(void)), this, SLOT(s_first_paint(void)));
+	connect(widget_Palette_PPU, SIGNAL(et_selected(int, int)), this, SLOT(s_palette_ppu(int, int)));
 
 	connect(horizontalSlider_Red, SIGNAL(valueChanged(int)), this, SLOT(s_slider_and_spin(int)));
 	connect(horizontalSlider_Green, SIGNAL(valueChanged(int)), this, SLOT(s_slider_and_spin(int)));
@@ -408,7 +408,7 @@ wdgPaletteEditor::wdgPaletteEditor(QWidget *parent) : QWidget(parent) {
 	connect(spinBox_Sat, SIGNAL(valueChanged(int)), this, SLOT(s_slider_and_spin(int)));
 	connect(spinBox_Val, SIGNAL(valueChanged(int)), this, SLOT(s_slider_and_spin(int)));
 
-	connect(lineEdit_Html_Name, SIGNAL(focus_out(void)), this, SLOT(s_html(void)));
+	connect(lineEdit_Html_Name, SIGNAL(et_focus_out(void)), this, SLOT(s_html(void)));
 	connect(lineEdit_Html_Name, SIGNAL(returnPressed(void)), this, SLOT(s_html(void)));
 
 	connect(pushButton_Color_reset, SIGNAL(clicked(bool)), this, SLOT(s_color_reset(bool)));

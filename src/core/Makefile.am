@@ -39,6 +39,8 @@ libcore_a_SOURCES = \
 	irqA12.h \
 	irql2f.c \
 	irql2f.h \
+	jstick.h \
+	jstick.c \
 	main.h \
 	mappers.c \
 	mappers.h \
@@ -73,7 +75,7 @@ libcore_a_SOURCES = \
 	uncompress_selection.h \
 	unif.c \
 	unif.h \
-	version.h\
+	version.h \
 	vs_system.h
 
 if WITH_FFMPEG

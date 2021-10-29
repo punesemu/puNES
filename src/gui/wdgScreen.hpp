@@ -71,6 +71,10 @@ class wdgScreen : public QWidget {
 		wdgScreen(QWidget *parent);
 		~wdgScreen();
 
+	signals:
+		void et_cursor_set(void);
+		void et_cursor_hide(int hide);
+
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event);
 		void dragEnterEvent(QDragEnterEvent *event);
@@ -88,10 +92,6 @@ class wdgScreen : public QWidget {
 	private slots:
 		void s_cursor_set(void);
 		void s_cursor_hide(int hide);
-
-	signals:
-		void et_cursor_set(void);
-		void et_cursor_hide(int hide);
 };
 
 #endif /* WDGSCREEN_HPP_ */

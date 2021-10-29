@@ -166,12 +166,8 @@ class objInp : public objSettings {
 		int joy_val_to_int(int index);
 		void joy_rd(int index, int pIndex);
 		void joy_wr(int index, int pIndex);
-		int joyid_val_to_int(int index);
-		void joyid_int_to_val(int index, int id);
-#if defined (_WIN32)
-		void joyguid_val_to_guid(int index, GUID *guid);
-		void joyguid_guid_to_val(int index, GUID guid);
-#endif
+		void joy_val_to_guid(int index, _input_guid *guid);
+		void joy_guid_to_val(int index, _input_guid *guid);
 
 	private:
 		int tb_delay_val_to_int(int index);

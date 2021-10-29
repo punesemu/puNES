@@ -41,7 +41,7 @@ void input_rd_standard_controller(BYTE *value, BYTE nport, BYTE shift) {
 }
 
 void input_add_event_standard_controller(BYTE index) {
-	js_control(&js[index], &port[index]);
+	js_jdev_read_port(&js[index], &port[index]);
 	input_turbo_buttons_standard_controller(&port[index]);
 }
 BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), DBWORD event, BYTE type, _port *port) {

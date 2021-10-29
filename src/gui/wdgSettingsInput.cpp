@@ -17,20 +17,11 @@
  */
 
 #include <QtWidgets/QScrollBar>
-#if defined (__linux__)
-#include <unistd.h>
-#include <fcntl.h>
-#endif
 #include "wdgSettingsInput.moc"
 #include "mainWindow.hpp"
 #include "dlgSettings.hpp"
-#include "dlgStdPad.hpp"
 #include "emu_thread.h"
-
-typedef struct _cb_ports {
-	QString desc;
-	int value;
-} _cb_ports;
+#include "conf.h"
 
 enum page_input_shcut_mode { UPDATE_ALL, BUTTON_PRESSED, NO_ACTION = 255 };
 
@@ -38,6 +29,8 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 	int i = 0;
 
 	hide_from_setup_button = false;
+	last_control = gui_get_ms();
+	dlg_std_pad = NULL;
 
 	setupUi(this);
 
@@ -60,8 +53,6 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 		input.cport[i].id = i + 1;
 		input.cport[i].port = &port[i];
 	}
-
-	js_update_detected_devices();
 
 	controller_ports_init();
 
@@ -86,6 +77,8 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 
 	shortcuts_init();
 
+	connect(comboBox_joy_ID, SIGNAL(activated(int)), this, SLOT(s_joy_id(int)));
+
 	connect(pushButton_Shortcut_unset_all, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_unset_all(bool)));
 	connect(pushButton_Shortcut_reset, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_reset(bool)));
 
@@ -96,6 +89,8 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 	connect(shcut.joy.timer, SIGNAL(timeout(void)), this, SLOT(s_joy_read_timer(void)));
 
 	shortcuts_tableview_resize();
+
+	connect(this, SIGNAL(et_update_joy_combo()), this, SLOT(s_et_update_joy_combo()));
 
 	tabWidget_Input->setCurrentIndex(0);
 }
@@ -140,13 +135,6 @@ void wdgSettingsInput::hideEvent(QHideEvent *event) {
 	shcut.timeout.timer->stop();
 	shcut.joy.timer->stop();
 
-#if defined (__linux__)
-	if (shcut.joy.fd) {
-		::close(shcut.joy.fd);
-		shcut.joy.fd = 0;
-	}
-#endif
-
 	mainwin->shcjoy_start();
 
 	if (shcut.no_other_buttons == true) {
@@ -172,6 +160,15 @@ void wdgSettingsInput::update_widget(void) {
 
 	checkBox_Permit_updown->setChecked(cfg->input.permit_updown_leftright);
 	checkBox_Hide_Zapper_cursor->setChecked(cfg->input.hide_zapper_cursor);
+}
+void wdgSettingsInput::update_joy_list(void) {
+	double this_control = gui_get_ms();
+
+	if ((this_control - last_control) >= JS_MS_UPDATE_DETECT_DEVICE_DLG) {
+		last_control = this_control;
+		shortcut_joy_list_init();
+		emit et_update_joy_combo();
+	}
 }
 
 void wdgSettingsInput::controller_ports_init(void) {
@@ -231,7 +228,7 @@ void wdgSettingsInput::controller_ports_init(void) {
 	comboBox_exp->clear();
 	for (i = 0; i < LENGTH(ctrl_mode_famicom_expansion_port); i++) {
 		comboBox_exp->addItem(ctrl_mode_famicom_expansion_port[i].desc);
-		comboBox_exp->setItemData(i, ctrl_mode_famicom_expansion_port[i].value);
+		comboBox_exp->setItemData(i, ctrl_mode_famicom_expansion_port[i].index);
 	}
 
 	// Ports
@@ -249,7 +246,7 @@ void wdgSettingsInput::controller_port_init(QComboBox *cb, _cfg_port *cfg_port, 
 	for (i = 0; i < length; i++) {
 		QList<QVariant> type;
 
-		type.append(cbp[i].value);
+		type.append(cbp[i].index);
 		type.append(cfg_port->id - 1);
 		type.append(QVariant::fromValue(((void *)cfg_port)));
 
@@ -263,7 +260,6 @@ void wdgSettingsInput::shortcuts_init(void) {
 	f9.setPointSize(9);
 	f9.setWeight(QFont::Light);
 
-	shcut.joy.fd = 0;
 	shcut.no_other_buttons = false;
 
 	for (int a = 0; a < SET_MAX_NUM_SC; a++) {
@@ -273,7 +269,8 @@ void wdgSettingsInput::shortcuts_init(void) {
 		shortcut_init(a + SET_INP_SC_OPEN, NULL);
 	}
 
-	shortcut_joy_id_init();
+	shortcut_joy_list_init();
+	shortcut_joy_combo_init();
 
 	shcut.bckColor = tableWidget_Shortcuts->item(0, 0)->background();
 
@@ -360,52 +357,69 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	layout->setSpacing(0);
 	tableWidget_Shortcuts->setCellWidget(row, 2, widget);
 }
-void wdgSettingsInput::shortcut_joy_id_init(void) {
-	BYTE disabled_line = 0, count = 0, current_line = name_to_jsn(uL("NULL"));
-	int a;
+void wdgSettingsInput::shortcut_joy_list_init(void) {
+	int i;
+
+	for (i = 0; i <= MAX_JOYSTICK; i++) {
+		_cb_ports *cb = &joy_list.ele[i];
+
+		cb->desc = "";
+		cb->index = 0;
+	}
+	joy_list.count = 0;
+	joy_list.disabled_line = 0;
+
+	for (i = 0; i <= MAX_JOYSTICK; i++) {
+		_cb_ports *cb = &joy_list.ele[joy_list.count];
+		BYTE index = i;
+
+		if (i < MAX_JOYSTICK) {
+			if (js_is_connected(index) == FALSE) {
+				continue;
+			}
+			cb->desc = QString("js%1: ").arg(index) + uQString(js_jdev_desc(index));
+		} else {
+			if (joy_list.count == 0) {
+				break;
+			}
+			cb->desc = tr("Disabled");
+			index = JS_NO_JOYSTICK;
+			joy_list.disabled_line = joy_list.count;
+		}
+		cb->index = index;
+		joy_list.count++;
+	}
+
+	if (joy_list.count == 0) {
+		joy_list.ele[0].desc = tr("No usable device");
+		joy_list.count++;
+	}
+}
+void wdgSettingsInput::shortcut_joy_combo_init(void) {
+	BYTE current_index = 0, current_line = JS_NO_JOYSTICK;
+	int i;
 
 	comboBox_joy_ID->clear();
 
-	for (a = 0; a <= MAX_JOYSTICK; a++) {
-		BYTE id = a;
+	for (i = 0; i < joy_list.count; i++) {
+		_cb_ports *cb = &joy_list.ele[i];
 
-		if (a < MAX_JOYSTICK) {
-			if (js_is_connected(id) == EXIT_ERROR) {
-				continue;
-			}
-
-			if (js_is_this(id, &cfg->input.shcjoy_id)) {
-				current_line = count;
-			}
-
-			comboBox_joy_ID->addItem(QString("js%1: ").arg(id) + uQString(js_name_device(id)));
-		} else {
-			if (count == 0) {
-				break;
-			}
-			comboBox_joy_ID->addItem("Disabled");
-			id = name_to_jsn(uL("NULL"));
-			disabled_line = count;
+		if (js_is_this(cb->index, &cfg->input.jguid_sch)) {
+			current_line = i;
 		}
-
-		comboBox_joy_ID->setItemData(count, id);
-		count++;
+		comboBox_joy_ID->addItem(cb->desc);
+		comboBox_joy_ID->setItemData(i, cb->index);
 	}
 
-	if (count == 0) {
-		comboBox_joy_ID->addItem("No usable device");
-	}
-
-	if (count > 0) {
-		if (js_is_null(&cfg->input.shcjoy_id) || (current_line == name_to_jsn(uL("NULL")))) {
-			comboBox_joy_ID->setCurrentIndex(disabled_line);
+	if (joy_list.count > 1) {
+		if (js_is_null(&cfg->input.jguid_sch) || (current_line == JS_NO_JOYSTICK)) {
+			current_index = joy_list.disabled_line;
 		} else {
-			comboBox_joy_ID->setCurrentIndex(current_line);
+			current_index = current_line;
 		}
-		connect(comboBox_joy_ID, SIGNAL(activated(int)), this, SLOT(s_joy_id(int)));
-	} else {
-		comboBox_joy_ID->setCurrentIndex(0);
 	}
+
+	comboBox_joy_ID->setCurrentIndex(current_index);
 }
 void wdgSettingsInput::shortcut_update_text(QAction *action, int index) {
 	QStringList text = action->text().remove('&').split('\t');
@@ -502,7 +516,7 @@ void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
 			case UPDATE_ALL: {
 				QWidget *widget;
 				bool joy_mode = false;
-				BYTE joyId;
+				BYTE joy_index;
 
 				if (comboBox_joy_ID->count() > 1) {
 					joy_mode = true;
@@ -521,9 +535,9 @@ void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
 
 				tableWidget_Shortcuts->cellWidget(i, 1)->setEnabled(true);
 
-				joyId = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
+				joy_index = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
 
-				if ((comboBox_joy_ID->count() > 1) && (joyId != name_to_jsn(uL("NULL")))) {
+				if ((comboBox_joy_ID->count() > 1) && (joy_index != JS_NO_JOYSTICK)) {
 					joy_mode = true;
 				} else {
 					joy_mode = false;
@@ -538,7 +552,7 @@ void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
 			}
 			case BUTTON_PRESSED: {
 				QWidget *widget;
-				BYTE joyId;
+				BYTE joy_index;
 
 				ports_end_misc_set_enabled(false);
 
@@ -558,9 +572,9 @@ void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
 					tableWidget_Shortcuts->cellWidget(i, 1)->setEnabled(false);
 				}
 
-				joyId = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
+				joy_index = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
 
-				if ((comboBox_joy_ID->count() > 1) && (joyId != name_to_jsn(uL("NULL")))) {
+				if ((comboBox_joy_ID->count() > 1) && (joy_index != JS_NO_JOYSTICK)) {
 					if ((type == JOYSTICK) && (row == i)) {
 						widget = tableWidget_Shortcuts->cellWidget(i, 2);
 						widget->setEnabled(true);
@@ -846,16 +860,15 @@ void wdgSettingsInput::s_controller_port_setup(UNUSED(bool checked)) {
 		case CTRL_ZAPPER:
 			break;
 		case CTRL_STANDARD:
-			dlgStdPad *dlg = new dlgStdPad(cfg_port, this);
+			dlg_std_pad = new dlgStdPad(cfg_port, this);
 
 			hide_from_setup_button = true;
 			dlgsettings->hide();
-			dlg->exec();
+			dlg_std_pad->exec();
+			dlg_std_pad = NULL;
 			dlgsettings->show();
 			hide_from_setup_button = false;
-
-			shortcut_joy_id_init();
-			shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
+			s_et_update_joy_combo();
 			update_widget();
 			break;
 	}
@@ -877,9 +890,13 @@ void wdgSettingsInput::s_hide_zapper_cursor(UNUSED(bool checked)) {
 	cfg->input.hide_zapper_cursor = !cfg->input.hide_zapper_cursor;
 }
 void wdgSettingsInput::s_joy_id(int index) {
-	unsigned int id = ((QComboBox *)sender())->itemData(index).toInt();
+	unsigned int data = ((QComboBox *)sender())->itemData(index).toInt();
 
-	js_set_id(&cfg->input.shcjoy_id, id);
+	if (comboBox_joy_ID->count() == 1) {
+		return;
+	}
+
+	js_guid_set(data, &cfg->input.jguid_sch);
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 }
 void wdgSettingsInput::s_shortcut(UNUSED(bool checked)) {
@@ -903,38 +920,8 @@ void wdgSettingsInput::s_shortcut(UNUSED(bool checked)) {
 	s_input_timeout();
 
 	if (shcut.type == JOYSTICK) {
-#if defined (__linux__)
-		_js_event jse;
-		ssize_t size = sizeof(jse);
-		char device[30];
-
-		::sprintf(device, "%s%d", JS_DEV_PATH, cfg->input.shcjoy_id);
-		shcut.joy.fd = ::open(device, O_RDONLY | O_NONBLOCK);
-
-		if (shcut.joy.fd < 0) {
-			input_info_print(tr("Error on open device %1").arg(device));
-			update_widget();
-			return;
-		}
-
-		for (int i = 0; i < MAX_JOYSTICK; i++) {
-			if (::read(shcut.joy.fd, &jse, size) < 0) {
-				input_info_print(tr("Error on reading controllers configurations"));
-			}
-		}
-
-		// svuoto il buffer iniziale
-		for (int i = 0; i < 10; i++) {
-			if (::read(shcut.joy.fd, &jse, size) < 0) {
-				;
-			}
-		}
-		shcut.joy.value = 0;
-		shcut.joy.timer->start(30);
-#else
 		shcut.joy.value = 0;
 		shcut.joy.timer->start(150);
-#endif
 	}
 }
 void wdgSettingsInput::s_shortcut_unset_all(UNUSED(bool checked)) {
@@ -951,7 +938,7 @@ void wdgSettingsInput::s_shortcut_unset_all(UNUSED(bool checked)) {
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 }
 void wdgSettingsInput::s_shortcut_reset(UNUSED(bool checked)) {
-	js_set_id(&cfg->input.shcjoy_id, name_to_jsn(uL("NULL")));
+	js_guid_unset(&cfg->input.jguid_sch);
 
 	comboBox_joy_ID->setCurrentIndex(comboBox_joy_ID->count() - 1);
 
@@ -1000,14 +987,10 @@ void wdgSettingsInput::s_input_timeout(void) {
 	}
 }
 void wdgSettingsInput::s_joy_read_timer(void) {
-	DBWORD value = js_read_in_dialog(&cfg->input.shcjoy_id, shcut.joy.fd);
+	DBWORD value = js_jdev_read_in_dialog(&cfg->input.jguid_sch);
 
 	if (shcut.joy.value && !value) {
-#if defined (__linux__)
-		::close(shcut.joy.fd);
-		shcut.joy.fd = 0;
-#endif
-		shcut.text[JOYSTICK].replace(shcut.row, uQString(jsv_to_name(shcut.joy.value)));
+		shcut.text[JOYSTICK].replace(shcut.row, uQString(js_joyval_to_name(-1, shcut.joy.value)));
 		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(shcut.row), shcut.row + SET_INP_SC_OPEN, JOYSTICK);
 
 		shcut.timeout.timer->stop();
@@ -1021,4 +1004,16 @@ void wdgSettingsInput::s_joy_read_timer(void) {
 	}
 
 	shcut.joy.value = value;
+}
+
+void wdgSettingsInput::s_et_update_joy_combo(void) {
+	// se la combox e' aperta o sono in attessa di impostare uno shortcut, non devo aggiornarne il contenuto
+	if ((comboBox_joy_ID->view()->isVisible() == false) && (shcut.timeout.timer->isActive() == false) &&
+		(shcut.joy.timer->isActive() == false)) {
+		shortcut_joy_combo_init();
+		shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
+	}
+	if (dlg_std_pad) {
+		emit dlg_std_pad->et_update_joy_combo();
+	}
 }

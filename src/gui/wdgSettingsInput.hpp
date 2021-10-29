@@ -21,19 +21,12 @@
 
 #include <QtWidgets/QWidget>
 #include "wdgSettingsInput.hh"
-#include "conf.h"
-
-typedef struct {
-	BYTE id;
-	_port *port;
-} _cfg_port;
+#include "dlgStdPad.hpp"
 
 class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		Q_OBJECT
 
 	private:
-		bool hide_from_setup_button;
-
 		struct _input {
 			_cfg_port cport[PORT_MAX];
 		} input;
@@ -45,7 +38,6 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 			BYTE type;
 			BYTE row;
 			struct _joy {
-				int fd;
 				WORD value;
 				QTimer *timer;
 			} joy;
@@ -54,10 +46,16 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 				QTimer *timer;
 			} timeout;
 		} shcut;
+		bool hide_from_setup_button;
+		double last_control;
+		dlgStdPad *dlg_std_pad;
 
 	public:
 		wdgSettingsInput(QWidget *parent = 0);
 		~wdgSettingsInput();
+
+	signals:
+		void et_update_joy_combo(void);
 
 	private:
 		bool eventFilter(QObject *obj, QEvent *event);
@@ -68,13 +66,15 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 	public:
 		void retranslateUi(QWidget *wdgSettingsInput);
 		void update_widget(void);
+		void update_joy_list(void);
 
 	private:
 		void controller_ports_init(void);
 		void controller_port_init(QComboBox *cb, _cfg_port *cfg_port, void *list, int length);
 		void shortcuts_init(void);
 		void shortcut_init(int index, QString *string);
-		void shortcut_joy_id_init(void);
+		void shortcut_joy_list_init(void);
+		void shortcut_joy_combo_init(void);
 		void shortcut_update_text(QAction *action, int index);
 		bool shortcut_keypressEvent(QKeyEvent *event);
 		void shortcuts_update(int mode, int type, int row);
@@ -105,6 +105,9 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		void s_shortcut_joy_unset(bool checked);
 		void s_input_timeout(void);
 		void s_joy_read_timer(void);
+
+	private slots:
+		void s_et_update_joy_combo(void);
 };
 
 #endif /* WDGSETTINGSINPUT_HPP_ */

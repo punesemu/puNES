@@ -41,6 +41,7 @@
 #include "common.h"
 #include "emu_thread.h"
 #include "clock.h"
+#include "conf.h"
 #include "recent_roms.h"
 #include "fds.h"
 #include "patcher.h"
@@ -443,15 +444,15 @@ void mainWindow::set_language(int lang) {
 void mainWindow::shcjoy_start(void) {
 	shcjoy_stop();
 
-	if (js_is_null(&cfg->input.shcjoy_id)) {
+	if (js_is_null(&cfg->input.jguid_sch)) {
 		return;
 	}
 
 	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
-		shcjoy.shortcut[i] = name_to_jsv(uQStringCD(QString(*(QString *)settings_inp_rd_sc(i + SET_INP_SC_OPEN, JOYSTICK))));
+		shcjoy.shortcut[i] = js_joyval_from_name(uQStringCD(QString(*(QString *)settings_inp_rd_sc(i + SET_INP_SC_OPEN, JOYSTICK))));
 	}
 
-	js_shcut_init();
+	js_init_shcut();
 
 	shcjoy.enabled = true;
 	shcjoy.timer->start(13);
@@ -459,7 +460,6 @@ void mainWindow::shcjoy_start(void) {
 void mainWindow::shcjoy_stop(void) {
 	shcjoy.enabled = false;
 	shcjoy.timer->stop();
-	js_shcut_stop();
 }
 void mainWindow::control_visible_cursor(void) {
 	if ((nsf.enabled == FALSE) && (gmouse.hidden == FALSE) && (input_draw_target() == FALSE)) {
@@ -1769,7 +1769,7 @@ void mainWindow::s_shcjoy_read_timer(void) {
 		return;
 	}
 
-	if (js_shcut_read(&shcjoy.sch) == EXIT_OK) {
+	if (js_jdev_read_shcut(&shcjoy.sch) == EXIT_OK) {
 		int index;
 
 		for (index = 0; index < SET_MAX_NUM_SC; index++) {
