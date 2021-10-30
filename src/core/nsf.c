@@ -289,7 +289,7 @@ BYTE nsf_load_rom(void) {
 
 		{
 			char buffer[33];
-			char *auth, **dst;
+			char *auth, **dst = NULL;
 
 			if (!(nsf.info.auth = (char *)malloc((32 + 1) * 4))) {
 				fprintf(stderr, "Out of memory\n");
@@ -1744,7 +1744,7 @@ static char *nsf_print_number(unsigned int number, BYTE decimal, int color) {
 static char *nsf_print_time(double timer, BYTE mode, int color) {
 	BYTE i, is_normal = FALSE;
 	static char buff[300];
-	int tmp;
+	int tmp = 0;
 
 	for (i = 0; i < 4; i++) {
 		BYTE is_last = FALSE;

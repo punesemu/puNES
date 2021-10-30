@@ -49,6 +49,7 @@ int main(int argc, char **argv) {
 
 	memset(&debugger, 0x00, sizeof(debugger));
 	memset(&info, 0x00, sizeof(info));
+	memset(&jstick, 0x00, sizeof(jstick));
 
 	info.no_rom = TRUE;
 	info.doublebuffer = TRUE;

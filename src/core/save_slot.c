@@ -168,7 +168,7 @@ void save_slot_count_load(void) {
 		save_slot.state[i] = FALSE;
 		file = name_slot_file(i);
 
-		if (emu_file_exist(file) == EXIT_OK) {
+		if (file && (emu_file_exist(file) == EXIT_OK)) {
 			FILE *fp;
 
 			save_slot.state[i] = TRUE;

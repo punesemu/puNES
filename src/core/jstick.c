@@ -73,8 +73,10 @@ void js_quit(BYTE last_time) {
 			thread_mutex_lock(jdev->lock);
 			js_os_jdev_close(jdev);
 			thread_mutex_unlock(jdev->lock);
-			thread_join(jdev->thread);
-			thread_free(jdev->thread);
+			if (jdev->thread) {
+				thread_join(jdev->thread);
+				thread_free(jdev->thread);
+			}
 			thread_mutex_destroy(jdev->lock);
 		}
 		jstick.jdd.count = 0;
