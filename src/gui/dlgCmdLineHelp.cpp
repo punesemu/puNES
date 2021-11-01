@@ -27,7 +27,7 @@
 dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, QString name) : QDialog(parent) {
 	uTCHAR *usage_string;
 	const uTCHAR *istructions = {
-			uL("Usage: %1 [options] file...\n\n")
+			uL("Usage: %%1 [options] file...\n\n")
 			uL("Options:\n")
 			uL("-h, --help                print this help\n")
 			uL("-V, --version             print the version\n")

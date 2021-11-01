@@ -436,7 +436,7 @@ static thread_funct(sndio_thread_loop, UNUSED(void *data)) {
 			cbd.samples_available -= avail;
 
 #if !defined (RELEASE)
-			if (((void*)cbd.write > (void*)cbd.read) && ((void*)cbd.write < (void*)(cbd.read + len))) {
+			if (((void *)cbd.write > (void *)cbd.read) && ((void *)cbd.write < (void *)(cbd.read + len))) {
 				snd.overlap++;
 			}
 #endif
