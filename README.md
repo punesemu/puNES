@@ -76,9 +76,9 @@ If you need the debug version then you need to replace the `./configure` command
 CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" ./configure --disable-release [...]
 ```
 where `[...]` are the other necessary options.
-#### Example on how to compile on Ubuntu 21.04
+#### Example on how to compile on Ubuntu 21.10
 ```bash
-sudo apt-get install git cmake autotools-dev autoconf libtool build-essential pkg-config libasound2-dev
+sudo apt-get install git cmake autotools-dev autoconf libtool build-essential pkg-config libudev-dev libasound2-dev
 sudo apt-get install qtbase5-dev qttools5-dev-tools libqt5svg5-dev nvidia-cg-toolkit libx11-dev libxrandr-dev 
 sudo apt-get install libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev
 git clone https://github.com/punesemu/puNES

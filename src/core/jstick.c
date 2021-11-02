@@ -143,14 +143,15 @@ void js_guid_create(_js_device *jdev) {
 	(*(word + 0)) = jdev->usb.bustype - 500;
 	(*(word + 1)) = 0 - 100;
 	if (jdev->usb.vendor_id && jdev->usb.product_id) {
-	    (*(word + 2)) = jdev->usb.vendor_id;
-	    (*(word + 3)) = jdev->usb.vendor_id - 200;
+		(*(word + 2)) = jdev->usb.vendor_id;
+		(*(word + 3)) = jdev->usb.vendor_id - 200;
 		(*(word + 4)) = jdev->usb.product_id;
 		(*(word + 5)) = jdev->usb.product_id - 300;
 		(*(word + 6)) = jdev->usb.version;
 		(*(word + 7)) = jdev->usb.version - 400;
 	} else {
-	    strncpy((char *)word + 2, jdev->desc, sizeof(jdev->guid.data) - 4);
+		word += 2;
+		memcpy((char *)word, (char *)jdev->desc, sizeof(jdev->guid.data) - 4);
 	}
 }
 #endif

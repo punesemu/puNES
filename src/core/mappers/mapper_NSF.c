@@ -278,4 +278,3 @@ void extcl_apu_tick_NSF(void) {
 		extcl_apu_tick_Sunsoft_FM7();
 	}
 }
-
