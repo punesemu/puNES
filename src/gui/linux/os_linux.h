@@ -55,7 +55,7 @@ void gui_init_os(void) {
 				gui_utf_dirname(path, info.base_folder, usizeof(info.base_folder));
 			}
 		} else {
-			usnprintf(info.base_folder, usizeof(info.base_folder), uL("" uPERCENTs "/." NAME), gui.home);
+			usnprintf(info.base_folder, usizeof(info.base_folder), uL("" uPs("") "/." NAME), gui.home);
 		}
  	}
 

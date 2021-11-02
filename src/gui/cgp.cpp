@@ -372,7 +372,7 @@ BYTE cgp_pragma_param(char *code, const uTCHAR *path) {
 
 	if (path && path[0]) {
 		if (file.open(QIODevice::ReadOnly) == false) {
-			ufprintf(stderr, uL("CGP: Can't open file '" uPERCENTs "'\n"), path);
+			ufprintf(stderr, uL("CGP: Can't open file '" uPs("") "'\n"), path);
 			return (EXIT_ERROR);
 		}
 		stream.setDevice(&file);

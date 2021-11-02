@@ -208,7 +208,7 @@ void js_os_jdev_close(_js_device *jdev) {
 	if (jdev->present == TRUE) {
 		jstick.jdd.count--;
 #if defined (DEBUG)
-		ufprintf(stderr, uL("jstick disc. : slot%d \"" uPERCENTs "\" (%d)\n"),
+		ufprintf(stderr, uL("jstick disc. : slot%d \"" uPs("") "\" (%d)\n"),
 			jdev->index,
 			jdev->desc,
 			jstick.jdd.count);

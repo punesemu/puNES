@@ -273,7 +273,7 @@ void js_os_jdev_close(_js_device *jdev) {
 	if (jdev->present == TRUE) {
 		jstick.jdd.count--;
 #if defined (DEBUG)
-		ufprintf(stderr, uL("jstick disc. : slot%d \"" uPERCENTs "\" (%d)\n"),
+		ufprintf(stderr, uL("jstick disc. : slot%d \"" uPs("") "\" (%d)\n"),
 			jdev->index,
 			jdev->desc,
 			jstick.jdd.count);
@@ -506,9 +506,9 @@ INLINE static void usb_dev_info(_js_usb_hid_device *uhdev, struct usb_device_inf
 
 	if (size > 1) {
 		if (vendor == TRUE) {
-			usnprintf(uhdev->desc, size, uL("" uPERCENTs " " uPERCENTs), udi->udi_vendor, udi->udi_product);
+			usnprintf(uhdev->desc, size, uL("" uPs("") " " uPs("")), udi->udi_vendor, udi->udi_product);
 		} else {
-			usnprintf(uhdev->desc, size, uL("" uPERCENTs), udi->udi_product);
+			usnprintf(uhdev->desc, size, uL("" uPs("")), udi->udi_product);
 		}
 	}
 #endif

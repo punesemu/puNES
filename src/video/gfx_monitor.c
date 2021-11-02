@@ -370,7 +370,7 @@ BYTE gfx_monitor_set_res(int w, int h, BYTE adaptive_rrate, BYTE change_rom_mode
 	if (mode_new != -1) {
 		_monitor_mode_info *mode_info_new = &mi->modes[mode_new];
 
-		ufprintf(stderr, uL("gfx_monitor: " uPERCENTs " switch to %dx%d, %fHz\n"),
+		ufprintf(stderr, uL("gfx_monitor: " uPs("") " switch to %dx%d, %fHz\n"),
 			mi->desc, mode_info_new->w, mode_info_new->h, mode_info_new->rrate);
 
 		if (change_rom_mode == FALSE) {
@@ -406,7 +406,7 @@ BYTE gfx_monitor_restore_res(void) {
 
 	mode_info_org = &mi->modes[mi->mode_org];
 
-	ufprintf(stderr, uL("gfx_monitor: " uPERCENTs " restore to %dx%d, %fHz\n"),
+	ufprintf(stderr, uL("gfx_monitor: " uPs("") " restore to %dx%d, %fHz\n"),
 		mi->desc, mode_info_org->w, mode_info_org->h, mode_info_org->rrate);
 
 	gui_monitor_set_res((void *)mi, (void *)mode_info_org);
@@ -673,9 +673,9 @@ static uTCHAR *make_display_name(const _monitor_edid *me) {
 		}
 
 		if (inches > 0) {
-			usnprintf(buff, usizeof(buff), uL("" uPERCENTs " %d\""), vendor, inches);
+			usnprintf(buff, usizeof(buff), uL("" uPs("") " %d\""), vendor, inches);
 		} else if (vendor) {
-			usnprintf(buff, usizeof(buff), uL("" uPERCENTs), vendor);
+			usnprintf(buff, usizeof(buff), uL("" uPs("")), vendor);
 		}
 	}
 	return (buff);
@@ -710,13 +710,13 @@ static void print_info(void) {
 	for (a = 0; a < monitor.nmonitor; a++) {
 		_monitor_info *mi = &monitor.monitors[a];
 
-		ufprintf(stderr, uL("gfx_monitor : %d - " uPERCENTs " - %dx%d - %dx%d " uPERCENTs "\n"), a, !mi->desc[0] ? mi->name :  mi->desc,
+		ufprintf(stderr, uL("gfx_monitor : %d - " uPs("") " - %dx%d - %dx%d " uPs("") "\n"), a, !mi->desc[0] ? mi->name :  mi->desc,
 			mi->w, mi->h, mi->x, mi->y, mi->in_use ? uL("(puNES)") : uL(""));
 
 		for (b = 0; b < mi->nmodes; b++) {
 			_monitor_mode_info *mm = &mi->modes[b];
 
-			ufprintf(stderr, uL("\t%2d : %4dx%-4d    %10f %10f" uPERCENTs"\n"), b,
+			ufprintf(stderr, uL("\t%2d : %4dx%-4d    %10f %10f" uPs("")"\n"), b,
 				mm->w, mm->h,
 				mm->rrate, mm->rounded_rrate,
 				mi->modes[mi->mode_org].id == mm->id ? uL(" *") : uL(""));

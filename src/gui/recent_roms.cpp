@@ -213,6 +213,6 @@ static uTCHAR *recent_roms_file(void) {
 	static uTCHAR file[LENGTH_FILE_NAME_LONG];
 
 	umemset(file, 0x00, LENGTH_FILE_NAME_LONG);
-	usnprintf(file, usizeof(file), uL("" uPERCENTs "/" RECENT_ROMS_FILE), info.base_folder);
+	usnprintf(file, usizeof(file), uL("" uPs("") "/" RECENT_ROMS_FILE), info.base_folder);
 	return (file);
 }

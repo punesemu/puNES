@@ -300,7 +300,7 @@ char *emu_file2string(const uTCHAR *path) {
 	char *str;
 
 	if (!(fd = ufopen(path, uL("r")))) {
-		ufprintf(stderr, uL("OPENGL: Can't open file '" uPERCENTs "' for reading\n"), path);
+		ufprintf(stderr, uL("OPENGL: Can't open file '" uPs("") "' for reading\n"), path);
 		return (NULL);
 	}
 
@@ -310,7 +310,7 @@ char *emu_file2string(const uTCHAR *path) {
 
 	if (!(str = (char *)malloc((len + 1) * sizeof(char)))) {
 		fclose(fd);
-		ufprintf(stderr, uL("OPENGL: Can't malloc space for '" uPERCENTs "'\n"), path);
+		ufprintf(stderr, uL("OPENGL: Can't malloc space for '" uPs("") "'\n"), path);
 		return (NULL);
 	}
 
@@ -319,10 +319,10 @@ char *emu_file2string(const uTCHAR *path) {
 	if (fread(str, sizeof(char), len, fd) < len) {
 		if(feof(fd))
 		{
-			ufprintf(stderr, uL("OPENGL: EOF intercepted before the end of the '" uPERCENTs "'\n"), path);
+			ufprintf(stderr, uL("OPENGL: EOF intercepted before the end of the '" uPs("") "'\n"), path);
 		}
 		if (ferror(fd)) {
-			ufprintf(stderr, uL("OPENGL: Error in reading from '" uPERCENTs "'\n"), path);
+			ufprintf(stderr, uL("OPENGL: Error in reading from '" uPs("") "'\n"), path);
 			free(str);
 			str = NULL;
 		}
@@ -615,17 +615,17 @@ void emu_set_title(uTCHAR *title, int len) {
 	}
 
 	if (cfg->scale == X1) {
-		usnprintf(title, len, uL("" uPERCENTs " (" uPERCENTs), name, opt_mode[machine.type].lname);
+		usnprintf(title, len, uL("" uPs("") " (" uPs("")), name, opt_mode[machine.type].lname);
 	} else if (cfg->filter == NTSC_FILTER) {
 		usnprintf(title, len,
-				uL("" uPERCENTs " (" uPERCENTs ", " uPERCENTs ", " uPERCENTs ", "),
-				name, opt_mode[machine.type].lname,
-				opt_scale[cfg->scale - 1].sname, opt_ntsc[cfg->ntsc_format].lname);
+			uL("" uPs("") " (" uPs("") ", " uPs("") ", " uPs("") ", "),
+			name, opt_mode[machine.type].lname,
+			opt_scale[cfg->scale - 1].sname, opt_ntsc[cfg->ntsc_format].lname);
 	} else {
 		usnprintf(title, len,
-				uL("" uPERCENTs " (" uPERCENTs ", " uPERCENTs ", " uPERCENTs ", "),
-				name, opt_mode[machine.type].lname,
-				opt_scale[cfg->scale - 1].sname, opt_filter[cfg->filter].lname);
+			uL("" uPs("") " (" uPs("") ", " uPs("") ", " uPs("") ", "),
+			name, opt_mode[machine.type].lname,
+			opt_scale[cfg->scale - 1].sname, opt_filter[cfg->filter].lname);
 	}
 
 	if (cfg->scale != X1) {
@@ -1245,7 +1245,7 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 	ustrncpy(info.rom.file, file, usizeof(info.rom.file));
 
 	if (patcher_ctrl_if_exist(NULL) == EXIT_OK) {
-		ufprintf(stderr, uL("patch file : " uPERCENTs "\n"), patcher.file);
+		ufprintf(stderr, uL("patch file : " uPs("") "\n"), patcher.file);
 	}
 
 	return (EXIT_OK);
@@ -1278,7 +1278,7 @@ static BYTE emu_test_tmp_dir(const uTCHAR *tmp_dir) {
 	uTCHAR tmp_file[LENGTH_FILE_NAME_LONG];
 	int fp;
 
-	usnprintf(tmp_file, usizeof(tmp_file), uL("" uPERCENTs "/" NAME "-test_tmp_dir.XXXXXX"), tmp_dir);
+	usnprintf(tmp_file, usizeof(tmp_file), uL("" uPs("") "/" NAME "-test_tmp_dir.XXXXXX"), tmp_dir);
 
 	if ((fp = mkstemp(tmp_file)) < 0) {
 		return (EXIT_ERROR);

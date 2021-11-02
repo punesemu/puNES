@@ -374,14 +374,14 @@ void snd_list_devices(void) {
 	for (i = 0; i < snd_list.playback.count; i++) {
 		_snd_dev *dev = &snd_list.playback.devices[i];
 
-		printf(uL("  %3d : " uPERCENTs "\n"), i, (uTCHAR *)dev->id);
+		uprintf(uL("  %3d : " uPs("") "\n"), i, (uTCHAR *)dev->id);
 	}
 
 	printf("CAPTURE devices\n");
 	for (i = 0; i < snd_list.capture.count; i++) {
 		_snd_dev *dev = &snd_list.capture.devices[i];
 
-		printf(uL("  %3d : " uPERCENTs "\n"), i, (uTCHAR *)dev->id);
+		uprintf(uL("  %3d : " uPs("") "\n"), i, (uTCHAR *)dev->id);
 	}
 #endif
 }
@@ -474,14 +474,14 @@ void snd_list_devices(void) {
 	for (i = 0; i < snd_list.playback.count; i++) {
 		_snd_dev *dev = &snd_list.playback.devices[i];
 
-		printf(uL("  %3d : " uPERCENTs "\n"), i, dev->id);
+		uprintf(uL("  %3d : " uPs("") "\n"), i, dev->id);
 	}
 
 	printf("CAPTURE devices\n");
 	for (i = 0; i < snd_list.capture.count; i++) {
 		_snd_dev *dev = &snd_list.capture.devices[i];
 
-		printf(uL("  %3d : " uPERCENTs "\n"), i, dev->id);
+		uprintf(uL("  %3d : " uPs("") "\n"), i, dev->id);
 	}
 #endif
 }
@@ -566,7 +566,7 @@ static void alsa_enum_cards(_snd_list_dev *list, snd_pcm_stream_t stream) {
 				continue;
 			}
 
-			usnprintf(buf, usizeof(buf), uL("" uPERCENTs " : " uPERCENTs), card_name, id);
+			usnprintf(buf, usizeof(buf), uL("" uPs("") " : " uPs("")), card_name, id);
 			alsa_device_add(list, id, buf);
 		}
 

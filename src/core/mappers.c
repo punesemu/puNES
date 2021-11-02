@@ -1103,7 +1103,7 @@ void map_prg_ram_init(void) {
 			fl = info.rom.file;
 
 			gui_utf_basename(fl, basename, usizeof(basename));
-			usnprintf(prg_ram_file, usizeof(prg_ram_file), uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
+			usnprintf(prg_ram_file, usizeof(prg_ram_file), uL("" uPs("") PRB_FOLDER "/" uPs("")), info.base_folder, basename);
 
 			/* rintraccio l'ultimo '.' nel nome */
 			if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {
@@ -1174,7 +1174,7 @@ void map_prg_ram_battery_save(void) {
 		fl = info.rom.file;
 
 		gui_utf_basename(fl, basename, usizeof(basename));
-		usnprintf(prg_ram_file, usizeof(prg_ram_file), uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
+		usnprintf(prg_ram_file, usizeof(prg_ram_file), uL("" uPs("") PRB_FOLDER "/" uPs("")), info.base_folder, basename);
 
 		/* rintraccio l'ultimo '.' nel nome */
 		if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {

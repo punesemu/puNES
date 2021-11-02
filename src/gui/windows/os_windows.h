@@ -79,7 +79,7 @@ void gui_init_os(void) {
 			}
 			gui_utf_dirname(path, info.base_folder, usizeof(info.base_folder));
 		} else {
-			usnprintf(info.base_folder, usizeof(info.base_folder), uL("" uPERCENTs "/" NAME), gui.home);
+			usnprintf(info.base_folder, usizeof(info.base_folder), uL("" uPs("") "/" NAME), gui.home);
 		}
 
 		// directory temporanea del sistema operativo
@@ -90,7 +90,7 @@ void gui_init_os(void) {
 			ret = GetTempPathW(MAX_PATH, (LPWSTR)&tmp_path);
 
 			if ((ret > MAX_PATH) || (ret == 0)) {
-				usnprintf(tmp_path, sizeof(tmp_path), uL("" uPERCENTs TMP_FOLDER), info.base_folder);
+				usnprintf(tmp_path, sizeof(tmp_path), uL("" uPs("") TMP_FOLDER), info.base_folder);
 			}
 
 			gui.ostmp = (const uTCHAR *)&tmp_path;

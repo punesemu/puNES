@@ -666,15 +666,15 @@ void js_info_jdev(_js_device *jdev) {
 	unsigned int i, a;
 
 #if !defined (_WIN32)
-	ufprintf(stderr, uL("dev : " uPERCENTs "\n"), jdev->dev);
+	ufprintf(stderr, uL("dev : " uPs("") "\n"), jdev->dev);
 #endif
-	ufprintf(stderr, uL("dsc : " uPERCENTs "\n"), jdev->desc);
+	ufprintf(stderr, uL("dsc : " uPs("") "\n"), jdev->desc);
 	ufprintf(stderr, uL("usb : bustype %04x - vid:pid %04x:%04x - version %04x\n"),
 		jdev->usb.bustype,
 		jdev->usb.vendor_id,
 		jdev->usb.product_id,
 		jdev->usb.version);
-	ufprintf(stderr, uL("gid : " uPERCENTs "\n"), js_guid_to_string(&jdev->guid));
+	ufprintf(stderr, uL("gid : " uPs("") "\n"), js_guid_to_string(&jdev->guid));
 	for (i = 0; i < LENGTH(js_axs_type); i++) {
 		for (a = 0; a < js_axs_type[i]; a++) {
 			_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hats[a];
@@ -693,7 +693,7 @@ void js_info_jdev(_js_device *jdev) {
 		_js_button *jsx = &jdev->data.button[i];
 
 		if (jsx->used) {
-			ufprintf(stderr, uL("Btn: 0x%03x " uPERCENTs "\n"), jsx->offset, js_btn_joffset_to_name(jsx->offset));
+			ufprintf(stderr, uL("Btn: 0x%03x " uPs("") "\n"), jsx->offset, js_btn_joffset_to_name(jsx->offset));
 		}
 	}
 }

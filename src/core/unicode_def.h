@@ -33,7 +33,6 @@ typedef wchar_t uTCHAR;
 
 #define ustring wstring
 
-#define uPERCENTs "%ls"
 #define uPs(a) "%" a "ls"
 #define uL(string) L##string
 #define uPTCHAR(string) (wchar_t *)string
@@ -78,7 +77,6 @@ typedef char uTCHAR;
 
 #define ustring string
 
-#define uPERCENTs "%s"
 #define uPs(a) "%" a "s"
 #define uL(string) string
 #define uPTCHAR(string) (char *)string

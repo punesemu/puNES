@@ -179,7 +179,7 @@ BYTE fds_load_bios(void) {
 	// ordine di ricerca:
 
 	// 1) file specificato dall'utente
-	usnprintf(bios_file, usizeof(bios_file), uL("" uPERCENTs), cfg->fds_bios_file);
+	usnprintf(bios_file, usizeof(bios_file), uL("" uPs("")), cfg->fds_bios_file);
 	if ((bios = ufopen(bios_file, uL("rb")))) {
 		goto fds_load_bios_founded;
 	}
@@ -209,7 +209,7 @@ BYTE fds_load_bios(void) {
 	}
 
 	// 4) directory puNES/bios
-	usnprintf(bios_file, usizeof(bios_file), uL("" uPERCENTs BIOS_FOLDER "/" BIOSFILE), info.base_folder);
+	usnprintf(bios_file, usizeof(bios_file), uL("" uPs("") BIOS_FOLDER "/" BIOSFILE), info.base_folder);
 	if ((bios = ufopen(bios_file, uL("rb")))) {
 		goto fds_load_bios_founded;
 	}
@@ -456,7 +456,7 @@ void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 		uTCHAR ext[10], basename[255], *last_dot;
 
 		gui_utf_basename(info.rom.file, basename, usizeof(basename));
-		usnprintf(file, usizeof(file), uL("" uPERCENTs DIFF_FOLDER "/" uPERCENTs), info.base_folder, basename);
+		usnprintf(file, usizeof(file), uL("" uPs("") DIFF_FOLDER "/" uPs("")), info.base_folder, basename);
 		usnprintf(ext, usizeof(ext), uL(".dif"));
 
 		// rintraccio l'ultimo '.' nel nome
