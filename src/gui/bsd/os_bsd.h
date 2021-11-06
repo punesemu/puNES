@@ -42,7 +42,7 @@ void gui_init_os(void) {
 			int name[] = { CTL_KERN, KERN_PROC_CWD, 0 };
 
 			name[2] = getpid();
-			umemset(&path, 0x00, usizeof(path));
+			umemset(path, 0x00, usizeof(path));
 
 			if (sysctl(name, 3, &path, &len, NULL, 0) != 0) {
 				fprintf(stderr, "INFO: Error on sysctl.\n");

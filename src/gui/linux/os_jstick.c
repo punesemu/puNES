@@ -47,7 +47,7 @@ void js_os_quit(BYTE last_time) {
 }
 void js_os_jdev_init(_js_device *jdev) {
 	jdev->fd = -1;
-	umemset(&jdev->dev, 0x00, usizeof(jdev->dev));
+	umemset(jdev->dev, 0x00, usizeof(jdev->dev));
 }
 void js_os_jdev_open(_js_device *jdev, void *arg) {
 	unsigned long keybit[NBITS(KEY_CNT)] = { 0 };
@@ -191,6 +191,7 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 	}
 
 	js_jdev_type(jdev);
+	js_jdev_ctrl_desc(jdev);
 	js_guid_create(jdev);
 	jdev->is_xinput = js_jdev_is_xinput(jdev);
 	jdev->present = TRUE;

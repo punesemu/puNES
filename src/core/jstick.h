@@ -352,6 +352,7 @@ EXTERNC DBWORD js_joyval_from_name(const uTCHAR *name);
 
 EXTERNC void js_jdev_init(_js_device *jdev);
 EXTERNC void js_jdev_type(_js_device *jdev);
+EXTERNC void js_jdev_ctrl_desc(_js_device *jdev);
 EXTERNC BYTE js_jdev_is_xinput(_js_device *jdev);
 EXTERNC void js_jdev_scan(void);
 EXTERNC void js_jdev_update(_js *js, BYTE enable_decode, BYTE decode_index);

@@ -397,6 +397,20 @@ void js_jdev_type(_js_device *jdev) {
 		}
 	}
 }
+void js_jdev_ctrl_desc(_js_device *jdev) {
+	unsigned int i;
+
+	for (i = 0; i < LENGTH(js_gamepads_list); i++) {
+		if ((jdev->usb.vendor_id == js_gamepads_list[i].vendor_id) &&
+			(jdev->usb.product_id == js_gamepads_list[i].product_id)) {
+			if (js_gamepads_list[i].desc) {
+				umemset(jdev->desc, 0x00, usizeof(jdev->desc));
+				ustrncpy(jdev->desc, js_gamepads_list[i].desc, usizeof(jdev->desc) - 1);
+			}
+			return;
+		}
+	}
+}
 BYTE js_jdev_is_xinput(_js_device *jdev) {
 	if ((jdev->type == JS_SC_MS_XBOX_360_GAMEPAD) || (jdev->type == JS_SC_MS_XBOX_ONE_GAMEPAD) ||
 		(((jdev->usb.vendor_id == JS_USB_VENDOR_ID_VALVE) && (jdev->usb.product_id == JS_USB_PID_STEAM_VIRTUAL_GAMEPAD)))) {
@@ -423,23 +437,29 @@ void js_jdev_scan(void) {
 void js_jdev_update(_js *js, BYTE enable_decode, BYTE decode_index) {
 	thread_mutex_lock(js->lock);
 
-	js->jdev = NULL;
-	js->inited = FALSE;
-	js->input_decode_event = NULL;
+	if (!js->jdev) {
+		js->jdev = NULL;
+		js->inited = FALSE;
+		js->input_decode_event = NULL;
 
-	if (js_is_null(&js->guid) == FALSE) {
-		int i;
+		if (js_is_null(&js->guid) == FALSE) {
+			int i;
 
-		for (i = 0; i < MAX_JOYSTICK; i++) {
-			if (js_guid_cmp(&js->guid, &jstick.jdd.devices[i].guid) == TRUE) {
-				js->jdev = &jstick.jdd.devices[i];
-				js->inited = TRUE;
-				if (enable_decode) {
-					js->input_decode_event = port_funct[decode_index].input_decode_event;
+			for (i = 0; i < MAX_JOYSTICK; i++) {
+				if (js_guid_cmp(&js->guid, &jstick.jdd.devices[i].guid) == TRUE) {
+					js->jdev = &jstick.jdd.devices[i];
+					js->inited = TRUE;
+					if (enable_decode) {
+						js->input_decode_event = port_funct[decode_index].input_decode_event;
+					}
+					break;
 				}
-				break;
 			}
 		}
+	} else if (((_js_device *)js->jdev)->present == FALSE) {
+		js->jdev = NULL;
+		js->inited = FALSE;
+		js->input_decode_event = NULL;
 	}
 
 	thread_mutex_unlock(js->lock);
