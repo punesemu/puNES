@@ -160,6 +160,7 @@ void js_guid_unset(_input_guid *guid) {
 }
 void js_guid_set(int index, _input_guid *guid) {
 	if (index >= MAX_JOYSTICK) {
+		js_guid_unset(guid);
 		return;
 	}
 	memcpy(guid, &jstick.jdd.devices[index].guid, sizeof(_input_guid));
