@@ -71,7 +71,6 @@ void js_os_jdev_init(_js_device *jdev) {
 	jdev->report.size = 0;
 }
 void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
-	int hid_connected = 0;
 	struct hid_item hitem;
 	struct hid_data *hdata;
 	BYTE is_a_joystick = FALSE;
@@ -100,7 +99,7 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 			ustrncpy(jdev->desc, uL("Unknow"), usizeof(jdev->desc) - 1);
 		}
 #else
-		uhdev = &js_os.udd.devices[hid_connected];
+		uhdev = &js_os.udd.devices[jdev->index];
 #endif
 		if (uhdev) {
 			umemcpy(&jdev->desc, uhdev->desc, usizeof(jdev->desc) - 1);
@@ -248,8 +247,6 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 	}
 	hid_end_parse(hdata);
 
-	hid_connected++;
-
 	if ((is_a_joystick == FALSE) && ((jdev->info.axes == 0) && (jdev->info.buttons == 0) && (jdev->info.hats == 0))) {
 		fprintf(stderr, "%s: is not a joystick\n", jdev->dev);
 		js_os_jdev_close(jdev);
@@ -257,10 +254,11 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 	}
 
 	js_jdev_type(jdev);
-	js_jdev_ctrl_desc(jdev);
 	js_guid_create(jdev);
 	jdev->present = TRUE;
 	jstick.jdd.count++;
+
+	js_jdev_open_common(jdev);
 
 #if defined (DEBUG)
 	js_info_jdev(jdev);

@@ -25,6 +25,7 @@
 #if defined (WITH_D3D9)
 #include "d3d9.h"
 #endif
+#include "gui.h"
 
 #define CFGFILENAME "/puNES.cfg"
 #define INPFILENAME "/input.cfg"
@@ -32,6 +33,8 @@
 	QFileInfo(uQString(info.rom.file)).completeBaseName() + ".pgs"
 #define SHPFILENAME QString(SHDPAR_FOLDER) + "/" +\
 	QFileInfo(uQString(cfg->shader_file)).fileName() + ".shp"
+#define JSCFILENAME(ind) QString(JSC_FOLDER) + "/" +\
+	QFileInfo(uQString(js_guid_to_string(&jstick.jdd.devices[ind].guid)).remove('{').remove('}').remove('-')).fileName() + ".jsc"
 
 _emu_settings s;
 
@@ -87,7 +90,11 @@ void settings_inp_all_default(_config_input *config_input, _array_pointers_port 
 	s.inp->set_all_input_default(config_input, array);
 }
 void settings_inp_port_default(_port *port, int index, int mode) {
-	s.inp->set_kbd_joy_default(port, index, mode);
+	if (mode == KEYBOARD) {
+		s.inp->kbd_defaults(port, index);
+	} else {
+		s.jsc->jsc_defaults(port);
+	}
 }
 void settings_inp_save(void) {
 	s.list = LSET_INP;
@@ -175,4 +182,27 @@ void settings_shp_save(void) {
 		s.list = LSET_NONE;
 		s.shp->wr();
 	}
+}
+
+void settings_jsc_parse(int index) {
+	QString file;
+
+	if (s.jsc) {
+		delete(s.jsc);
+		s.jsc = NULL;
+	}
+
+	file = JSCFILENAME(index);
+
+	s.list = LSET_JSC;
+	s.jsc = new objJsc(s.cfg, file, LSET_JSC, index);
+}
+void settings_jsc_save(void) {
+	if (s.jsc) {
+		s.list = LSET_JSC;
+		s.jsc->wr();
+	}
+}
+int settings_jsc_deadzone_default(void) {
+	return (s.jsc->jsc_deadzone_default());
 }

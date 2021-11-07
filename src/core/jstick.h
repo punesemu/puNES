@@ -186,6 +186,9 @@ typedef struct _js_device {
 	BYTE index;
 	thread_mutex_t lock;
 	thread_t thread;
+	int deadzone;
+	// standard controller
+	DBWORD stdctrl[MAX_STD_PAD_BUTTONS];
 } _js_device;
 typedef struct _js {
 	BYTE inited;
@@ -352,13 +355,14 @@ EXTERNC DBWORD js_joyval_from_name(const uTCHAR *name);
 
 EXTERNC void js_jdev_init(_js_device *jdev);
 EXTERNC void js_jdev_type(_js_device *jdev);
-EXTERNC void js_jdev_ctrl_desc(_js_device *jdev);
+EXTERNC void js_jdev_open_common(_js_device *jdev);
 EXTERNC BYTE js_jdev_is_xinput(_js_device *jdev);
 EXTERNC void js_jdev_scan(void);
-EXTERNC void js_jdev_update(_js *js, BYTE enable_decode, BYTE decode_index);
+EXTERNC void js_jdev_update(_js *js, BYTE enable_decode, BYTE port_index);
 EXTERNC BYTE js_jdev_update_axs(_js_device *jdev, BYTE type, BYTE shcut, int index, DBWORD *value, BYTE *mode, float deadzone);
 EXTERNC BYTE js_jdev_update_btn(_js_device *jdev, BYTE shcut, int index, DBWORD *value, BYTE *mode);
 EXTERNC uTCHAR *js_jdev_desc(int dev);
+EXTERNC size_t js_jdev_sizeof_stdctrl(void);
 
 EXTERNC void js_jdev_read_port(_js *js, _port *port);
 EXTERNC BYTE js_jdev_read_shcut(_js_sch *js_sch);

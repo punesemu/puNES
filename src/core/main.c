@@ -105,6 +105,10 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "error on create screenshot folder\n");
 		return (EXIT_ERROR);
 	}
+	if (emu_make_dir(uL("" uPs("") JSC_FOLDER), info.base_folder)) {
+		fprintf(stderr, "error on create jsc folder\n");
+		return (EXIT_ERROR);
+	}
 
 #if defined (__unix__)
 	emu_find_tmp_dir();

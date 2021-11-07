@@ -202,11 +202,12 @@ enum inp_element {
 	SET_INP_SC_RWND_PLAY,
 	SET_INP_SC_RWND_PAUSE,
 
-	SET_INP_SC_JOYSTICK_ID,
+	SET_INP_SC_JOYSTICK_GUID,
 
 	SET_INP_EXPANSION_PORT,
 	SET_INP_P1_CONTROLLER,
 	SET_INP_P1_PAD_TYPE,
+	SET_INP_P1J_GUID,
 	SET_INP_P1K_A,
 	SET_INP_P1K_B,
 	SET_INP_P1K_SELECT,
@@ -217,22 +218,12 @@ enum inp_element {
 	SET_INP_P1K_RIGHT,
 	SET_INP_P1K_TURBOA,
 	SET_INP_P1K_TURBOB,
-	SET_INP_P1J_A,
-	SET_INP_P1J_B,
-	SET_INP_P1J_SELECT,
-	SET_INP_P1J_START,
-	SET_INP_P1J_UP,
-	SET_INP_P1J_DOWN,
-	SET_INP_P1J_LEFT,
-	SET_INP_P1J_RIGHT,
-	SET_INP_P1J_TURBOA,
-	SET_INP_P1J_TURBOB,
-	SET_INP_P1J_ID,
 	SET_INP_P1_TURBOA_DELAY,
 	SET_INP_P1_TURBOB_DELAY,
 
 	SET_INP_P2_CONTROLLER,
 	SET_INP_P2_PAD_TYPE,
+	SET_INP_P2J_GUID,
 	SET_INP_P2K_A,
 	SET_INP_P2K_B,
 	SET_INP_P2K_SELECT,
@@ -243,22 +234,12 @@ enum inp_element {
 	SET_INP_P2K_RIGHT,
 	SET_INP_P2K_TURBOA,
 	SET_INP_P2K_TURBOB,
-	SET_INP_P2J_A,
-	SET_INP_P2J_B,
-	SET_INP_P2J_SELECT,
-	SET_INP_P2J_START,
-	SET_INP_P2J_UP,
-	SET_INP_P2J_DOWN,
-	SET_INP_P2J_LEFT,
-	SET_INP_P2J_RIGHT,
-	SET_INP_P2J_TURBOA,
-	SET_INP_P2J_TURBOB,
-	SET_INP_P2J_ID,
 	SET_INP_P2_TURBOA_DELAY,
 	SET_INP_P2_TURBOB_DELAY,
 
 	SET_INP_P3_CONTROLLER,
 	SET_INP_P3_PAD_TYPE,
+	SET_INP_P3J_GUID,
 	SET_INP_P3K_A,
 	SET_INP_P3K_B,
 	SET_INP_P3K_SELECT,
@@ -269,22 +250,12 @@ enum inp_element {
 	SET_INP_P3K_RIGHT,
 	SET_INP_P3K_TURBOA,
 	SET_INP_P3K_TURBOB,
-	SET_INP_P3J_A,
-	SET_INP_P3J_B,
-	SET_INP_P3J_SELECT,
-	SET_INP_P3J_START,
-	SET_INP_P3J_UP,
-	SET_INP_P3J_DOWN,
-	SET_INP_P3J_LEFT,
-	SET_INP_P3J_RIGHT,
-	SET_INP_P3J_TURBOA,
-	SET_INP_P3J_TURBOB,
-	SET_INP_P3J_ID,
 	SET_INP_P3_TURBOA_DELAY,
 	SET_INP_P3_TURBOB_DELAY,
 
 	SET_INP_P4_CONTROLLER,
 	SET_INP_P4_PAD_TYPE,
+	SET_INP_P4J_GUID,
 	SET_INP_P4K_A,
 	SET_INP_P4K_B,
 	SET_INP_P4K_SELECT,
@@ -295,17 +266,6 @@ enum inp_element {
 	SET_INP_P4K_RIGHT,
 	SET_INP_P4K_TURBOA,
 	SET_INP_P4K_TURBOB,
-	SET_INP_P4J_A,
-	SET_INP_P4J_B,
-	SET_INP_P4J_SELECT,
-	SET_INP_P4J_START,
-	SET_INP_P4J_UP,
-	SET_INP_P4J_DOWN,
-	SET_INP_P4J_LEFT,
-	SET_INP_P4J_RIGHT,
-	SET_INP_P4J_TURBOA,
-	SET_INP_P4J_TURBOB,
-	SET_INP_P4J_ID,
 	SET_INP_P4_TURBOA_DELAY,
 	SET_INP_P4_TURBOB_DELAY,
 
@@ -313,13 +273,29 @@ enum inp_element {
 	SET_INP_LEFTRIGHT,
 	SET_INP_HIDE_ZAPPER_CURSOR
 };
+enum jsc_element {
+	SET_JSC_PAD_A,
+	SET_JSC_PAD_B,
+	SET_JSC_PAD_SELECT,
+	SET_JSC_PAD_START,
+	SET_JSC_PAD_UP,
+	SET_JSC_PAD_DOWN,
+	SET_JSC_PAD_LEFT,
+	SET_JSC_PAD_RIGHT,
+	SET_JSC_PAD_TURBOA,
+	SET_JSC_PAD_TURBOB,
+	SET_JSC_DEADZONE,
+	//SET_JSC_BUTTONS_ENABLED,
+	//SET_JSC_AXES_ENABLED,
+};
 
-enum set_num_shortcut { SET_MAX_NUM_SC = SET_INP_SC_JOYSTICK_ID - SET_INP_SC_OPEN};
+enum set_num_shortcut { SET_MAX_NUM_SC = SET_INP_SC_JOYSTICK_GUID - SET_INP_SC_OPEN};
 
 enum list_settings_element {
 	LSET_SET,
 	LSET_PGS,
 	LSET_INP,
+	LSET_JSC,
 	LSET_NONE
 };
 
@@ -1297,11 +1273,7 @@ static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("rewind fast forward"),           uL("Up,NULL"),         NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("rewind play"),                   uL("Del,NULL"),        NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("rewind pause"),                  uL("PgDown,NULL"),     NULL, NULL, {0, NULL}},
-#if defined (_WIN32)
 	{uL("shortcuts"), uL("joystick GUID"),                 uL("NULL"),            NULL, NULL, {0, NULL}},
-#else
-	{uL("shortcuts"), uL("joystick Id"),                   uL("NULL"),            NULL, NULL, {0, NULL}},
-#endif
 	{
 		uL("expansion port"), uL("expansion port"), uL("standard"),
 		uL("# possible values: standard, zapper, arkanoid paddle, oeka kids tablet"),
@@ -1320,6 +1292,7 @@ static const _settings inp_cfg[] = {
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
+	{uL("port 1"), uL("P1J GUID"),    uL("NULL"),        uL("# player 1 joystick"), NULL, {0, NULL}},
 	{uL("port 1"), uL("P1K A"),       uL("S"),           uL("# player 1 keyboard"), NULL, {0, NULL}},
 	{uL("port 1"), uL("P1K B"),       uL("A"),           NULL, NULL, {0, NULL}},
 	{uL("port 1"), uL("P1K Select"),  uL("Z"),           NULL, NULL, {0, NULL}},
@@ -1330,18 +1303,7 @@ static const _settings inp_cfg[] = {
 	{uL("port 1"), uL("P1K Right"),   uL("Right"),       NULL, NULL, {0, NULL}},
 	{uL("port 1"), uL("P1K TurboA"),  uL("W"),           NULL, NULL, {0, NULL}},
 	{uL("port 1"), uL("P1K TurboB"),  uL("Q"),           NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J A"),       uL("JB1"),         uL("# player 1 joystick"), NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J B"),       uL("JB0"),         NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J Select"),  uL("JB8"),         NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J Start"),   uL("JB9"),         NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J Up"),      uL("JA1MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1 TA Delay"), NULL,              NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1 TA Delay"), NULL,              uL("# player 1 turbo delays"), NULL, {0, NULL}},
 	{uL("port 1"), uL("P1 TB Delay"), NULL,              NULL, NULL, {0, NULL}},
 	{
 		uL("port 2"), uL("controller 2"), uL("disable"),
@@ -1355,6 +1317,7 @@ static const _settings inp_cfg[] = {
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
+	{uL("port 2"), uL("P2J GUID"),    uL("NULL"),        uL("# player 2 joystick"), NULL, {0, NULL}},
 	{uL("port 2"), uL("P2K A"),       uL("PgDown"),      uL("# player 2 keyboard"), NULL, {0, NULL}},
 	{uL("port 2"), uL("P2K B"),       uL("End"),         NULL, NULL, {0, NULL}},
 	{uL("port 2"), uL("P2K Select"),  uL("Ins"),         NULL, NULL, {0, NULL}},
@@ -1365,18 +1328,7 @@ static const _settings inp_cfg[] = {
 	{uL("port 2"), uL("P2K Right"),   uL("NumPad6"),     NULL, NULL, {0, NULL}},
 	{uL("port 2"), uL("P2K TurboA"),  uL("Home"),        NULL, NULL, {0, NULL}},
 	{uL("port 2"), uL("P2K TurboB"),  uL("PgUp"),        NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J A"),       uL("JB1"),         uL("# player 2 joystick"), NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J B"),       uL("JB0"),         NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J Select"),  uL("JB8"),         NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J Start"),   uL("JB9"),         NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J Up"),      uL("JA1MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2 TA Delay"), NULL,              NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2 TA Delay"), NULL,              uL("# player 2 turbo delays"), NULL, {0, NULL}},
 	{uL("port 2"), uL("P2 TB Delay"), NULL,              NULL, NULL, {0, NULL}},
 	{
 		uL("port 3"), uL("controller 3"), uL("disable"),
@@ -1390,6 +1342,7 @@ static const _settings inp_cfg[] = {
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
+	{uL("port 3"), uL("P3J GUID"),    uL("NULL"),        uL("# player 3 joystick"), NULL, {0, NULL}},
 	{uL("port 3"), uL("P3K A"),       uL("NULL"),        uL("# player 3 keyboard"), NULL, {0, NULL}},
 	{uL("port 3"), uL("P3K B"),       uL("NULL"),        NULL, NULL, {0, NULL}},
 	{uL("port 3"), uL("P3K Select"),  uL("NULL"),        NULL, NULL, {0, NULL}},
@@ -1400,18 +1353,7 @@ static const _settings inp_cfg[] = {
 	{uL("port 3"), uL("P3K Right"),   uL("NULL"),        NULL, NULL, {0, NULL}},
 	{uL("port 3"), uL("P3K TurboA"),  uL("NULL"),        NULL, NULL, {0, NULL}},
 	{uL("port 3"), uL("P3K TurboB"),  uL("NULL"),        NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J A"),       uL("JB1"),         uL("# player 3 joystick"), NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J B"),       uL("JB0"),         NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J Select"),  uL("JB8"),         NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J Start"),   uL("JB9"),         NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J Up"),      uL("JA1MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3 TA Delay"), NULL,              NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3 TA Delay"), NULL,              uL("# player 3 turbo delays"), NULL, {0, NULL}},
 	{uL("port 3"), uL("P3 TB Delay"), NULL,              NULL, NULL, {0, NULL}},
 	{
 		uL("port 4"), uL("controller 4"), uL("disable"),
@@ -1425,6 +1367,7 @@ static const _settings inp_cfg[] = {
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
+	{uL("port 4"), uL("P4J GUID"),    uL("NULL"),        uL("# player 4 joystick"), NULL, {0, NULL}},
 	{uL("port 4"), uL("P4K A"),       uL("NULL"),        uL("# player 4 keyboard"), NULL, {0, NULL}},
 	{uL("port 4"), uL("P4K B"),       uL("NULL"),        NULL, NULL, {0, NULL}},
 	{uL("port 4"), uL("P4K Select"),  uL("NULL"),        NULL, NULL, {0, NULL}},
@@ -1435,18 +1378,7 @@ static const _settings inp_cfg[] = {
 	{uL("port 4"), uL("P4K Right"),   uL("NULL"),        NULL, NULL, {0, NULL}},
 	{uL("port 4"), uL("P4K TurboA"),  uL("NULL"),        NULL, NULL, {0, NULL}},
 	{uL("port 4"), uL("P4K TurboB"),  uL("NULL"),        NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J A"),       uL("JB1"),         uL("# player 4 joystick"), NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J B"),       uL("JB0"),         NULL, NULL, {0, NULL} },
-	{uL("port 4"), uL("P4J Select"),  uL("JB8"),         NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J Start"),   uL("JB9"),         NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J Up"),      uL("JA1MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4 TA Delay"), NULL,              NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4 TA Delay"), NULL,              uL("# player 4 turbo delays"), NULL, {0, NULL}},
 	{uL("port 4"), uL("P4 TB Delay"), NULL,              NULL, NULL, {0, NULL}},
 	{
 		uL("system"), uL("controller mode"), uL("nes"),
@@ -1468,10 +1400,44 @@ static const _settings inp_cfg[] = {
 	}
 };
 
+static const _settings jsc_cfg[] = {
+	{uL("standard controller"), uL("A"),      uL("BTN02"),     NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("B"),      uL("BTN01"),     NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Select"), uL("BTN11"),     NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Start"),  uL("BTN12"),     NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Up"),     uL("AXS Y MIN"), NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Down"),   uL("AXS Y PLS"), NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Left"),   uL("AXS X MIN"), NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Right"),  uL("AXS X PLS"), NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("TurboA"), uL("BTN05"),     NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("TurboB"), uL("BTN04"),     NULL, NULL, {0, NULL}},
+	{
+		uL("system"), uL("Deadzone"), uL("40"),
+		NULL,
+		NULL,
+		{0, NULL}
+	},
+	/*
+	{
+		uL("system"), uL("Buttons enabled"), uL("0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF"),
+		NULL,
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("system"), uL("Axes enabled"), uL("0x00FFFFFF"),
+		NULL,
+		NULL,
+		{0, NULL}
+	}
+	*/
+};
+
 static const _list_settings list_settings[] = {
 	{main_cfg, LENGTH(main_cfg)},
 	{pgs_cfg, LENGTH(pgs_cfg)},
 	{inp_cfg, LENGTH(inp_cfg)},
+	{jsc_cfg, LENGTH(jsc_cfg)},
 	{NULL, 0},
 };
 
@@ -1504,6 +1470,10 @@ EXTERNC void settings_pgs_save(void);
 
 EXTERNC void settings_shp_parse(void);
 EXTERNC void settings_shp_save(void);
+
+EXTERNC void settings_jsc_parse(int index);
+EXTERNC void settings_jsc_save(void);
+EXTERNC int settings_jsc_deadzone_default(void);
 
 #undef EXTERNC
 

@@ -38,6 +38,7 @@ _joy_list joy_list;
 
 dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent) {
 	QFont f9;
+	int i;
 
 	f9.setPointSize(9);
 	f9.setWeight(QFont::Light);
@@ -57,16 +58,18 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 
 	comboBox_kbd_ID->addItem(tr("Keyboard"));
 
-	joy_combo_init();
-
 	connect(comboBox_joy_ID, SIGNAL(activated(int)), this, SLOT(s_combobox_joy_activated(int)));
 	connect(comboBox_joy_ID, SIGNAL(currentIndexChanged(int)), this, SLOT(s_combobox_joy_index_changed(int)));
+	connect(horizontalSlider_joy_Deadzone, SIGNAL(valueChanged(int)), this, SLOT(s_deadzone_slider_value_changed(int)));
 
-	for (int a = KEYBOARD; a <= JOYSTICK; a++) {
+	joy_combo_init();
+
+	for (i = KEYBOARD; i < INPUT_TYPES; i++) {
 		QLineEdit *txt;
 		QPushButton *bt;
+		int a;
 
-		txt = findChild<QLineEdit *>("lineEdit_" + SPT(a) + "_info");
+		txt = findChild<QLineEdit *>("lineEdit_" + SPT(i) + "_info");
 
 		if (txt->font().pointSize() > 9) {
 			txt->setFont(f9);
@@ -78,33 +81,33 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 			txt->setFixedHeight(h);
 		}
 
-		bt = findChild<QPushButton *>("pushButton_" + SPT(a) + "_Sequence");
-		bt->setProperty("myType", QVariant(a));
+		bt = findChild<QPushButton *>("pushButton_" + SPT(i) + "_Sequence");
+		bt->setProperty("myType", QVariant(i));
 		connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_in_sequence_clicked(bool)));
 
-		bt = findChild<QPushButton *>("pushButton_" + SPT(a) + "_Unset_all");
-		bt->setProperty("myType", QVariant(a));
+		bt = findChild<QPushButton *>("pushButton_" + SPT(i) + "_Unset_all");
+		bt->setProperty("myType", QVariant(i));
 		connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_unset_all_clicked(bool)));
 
-		bt = findChild<QPushButton *>("pushButton_" + SPT(a) + "_Defaults");
-		bt->setProperty("myType", QVariant(a));
+		bt = findChild<QPushButton *>("pushButton_" + SPT(i) + "_Defaults");
+		bt->setProperty("myType", QVariant(i));
 		connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_defaults_clicked(bool)));
 
-		for (int b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
-			int vbutton = b + (a * MAX_STD_PAD_BUTTONS);
+		for (a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
+			int vbutton = a + (i * MAX_STD_PAD_BUTTONS);
 			QPushButton *unset;
 
-			bt = findChild<QPushButton *>("pushButton_" + SPT(a) + "_" + SPB(b));
-			unset = findChild<QPushButton *>("pushButton_" + SPT(a) + "_unset_" + SPB(b));
+			bt = findChild<QPushButton *>("pushButton_" + SPT(i) + "_" + SPB(a));
+			unset = findChild<QPushButton *>("pushButton_" + SPT(i) + "_unset_" + SPB(a));
 
 			if (bt->font().pointSize() > 9) {
 				bt->setFont(f9);
 			}
 
-			if (a == KEYBOARD) {
-				bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[a][b]));
+			if (i == KEYBOARD) {
+				bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[i][a]));
 			} else {
-				bt->setText(uQString(js_joyval_to_name(js_jdev_index(), data.cfg.port.input[a][b])));
+				bt->setText(uQString(js_joyval_to_name(js_jdev_index(), data.cfg.port.input[i][a])));
 			}
 
 			bt->installEventFilter(this);
@@ -116,6 +119,12 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 		}
 	}
 	
+	label_kbd_Deadzone_value_slider->setText(QString("%1").arg(0, 2));
+	if (js_jdev_index() != 255) {
+		horizontalSlider_joy_Deadzone->setValue(jstick.jdd.devices[js_jdev_index()].deadzone);
+	}
+	connect(pushButton_joy_Deadzone, SIGNAL(clicked(bool)), this, SLOT(s_deadzone_default_clicked(bool)));
+
 	tabWidget_kbd_joy->adjustSize();
 
 	{
@@ -133,7 +142,7 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 		label_value_slider_TurboB->setFixedWidth(w);
 	}
 
-	for (int i = TURBOA; i <= TURBOB; i++) {
+	for (i = TURBOA; i <= TURBOB; i++) {
 		QSlider *tb = findChild<QSlider *>("horizontalSlider_" + SPB(i + TRB_A));
 
 		tb->setRange(1, TURBO_BUTTON_DELAY_MAX);
@@ -151,7 +160,6 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 
 	setAttribute(Qt::WA_DeleteOnClose);
 
-	adjustSize();
 	setFixedSize(size());
 
 	setFocusPolicy(Qt::StrongFocus);
@@ -286,6 +294,11 @@ void dlgStdPad::update_dialog(void) {
 	pushButton_kbd_Unset_all->setEnabled(true);
 	pushButton_kbd_Defaults->setEnabled(true);
 
+	label_kbd_Deadzone_slider->setEnabled(false);
+	horizontalSlider_kbd_Deadzone->setEnabled(false);
+	label_kbd_Deadzone_value_slider->setEnabled(false);
+	pushButton_kbd_Deadzone->setEnabled(false);
+
 	// joystick
 	joy_index = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
 
@@ -309,6 +322,11 @@ void dlgStdPad::update_dialog(void) {
 	pushButton_joy_Sequence->setEnabled(mode);
 	pushButton_joy_Unset_all->setEnabled(mode);
 	pushButton_joy_Defaults->setEnabled(mode);
+
+	label_joy_Deadzone_slider->setEnabled(mode);
+	horizontalSlider_joy_Deadzone->setEnabled(mode);
+	label_joy_Deadzone_value_slider->setEnabled(mode);
+	pushButton_joy_Deadzone->setEnabled(mode);
 
 	// misc
 	groupBox_Misc->setEnabled(true);
@@ -398,8 +416,11 @@ void dlgStdPad::td_update_label(int type, int value) {
 
 	label->setText(QString("%1").arg(value, 2));
 }
+void dlgStdPad::deadzone_update_label(int value) {
+	label_joy_Deadzone_value_slider->setText(QString("%1").arg(value, 2));
+}
 int dlgStdPad::js_jdev_index(void) {
-	int jdev_index = -1;
+	int jdev_index = 255;
 
 	if (comboBox_joy_ID->currentData().isValid()) {
 		jdev_index = comboBox_joy_ID->currentData().toInt();
@@ -408,25 +429,43 @@ int dlgStdPad::js_jdev_index(void) {
 }
 
 void dlgStdPad::s_combobox_joy_activated(int index) {
-	unsigned int value = ((QComboBox *)sender())->itemData(index).toInt();
+	unsigned int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
 
 	if (comboBox_joy_ID->count() == 1) {
 		return;
 	}
-	js_guid_set(value, &data.cfg.port.jguid);
+	js_guid_set(jdev_index, &data.cfg.port.jguid);
 	update_dialog();
 }
-void dlgStdPad::s_combobox_joy_index_changed(UNUSED(int index)) {
-	for (int a = KEYBOARD; a <= JOYSTICK; a++) {
-		QPushButton *bt;
+void dlgStdPad::s_combobox_joy_index_changed(int index) {
+	int a, jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
+	static int old_jdev_index = 255;
 
-		for (int b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
+	if (js_jdev_index() != old_jdev_index) {
+		if (jdev_index < MAX_JOYSTICK) {
+			_js_device *jdev = &jstick.jdd.devices[jdev_index];
+
+			data.deadzone = jdev->deadzone;
+			memcpy(data.cfg.port.input[JOYSTICK], jdev->stdctrl, js_jdev_sizeof_stdctrl());
+			horizontalSlider_joy_Deadzone->setValue(data.deadzone);
+		} else {
+			memset(data.cfg.port.input[JOYSTICK], 0x00, js_jdev_sizeof_stdctrl());
+			horizontalSlider_joy_Deadzone->setValue(0);
+		}
+		old_jdev_index = jdev_index;
+	}
+
+	for (a = KEYBOARD; a < INPUT_TYPES; a++) {
+		QPushButton *bt;
+		int b;
+
+		for (b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
 			bt = findChild<QPushButton *>("pushButton_" + SPT(a) + "_" + SPB(b));
 
 			if (a == KEYBOARD) {
 				bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[a][b]));
 			} else {
-				bt->setText(uQString(js_joyval_to_name(js_jdev_index(), data.cfg.port.input[a][b])));
+				bt->setText(uQString(js_joyval_to_name(jdev_index, data.cfg.port.input[a][b])));
 			}
 		}
 	}
@@ -491,13 +530,13 @@ void dlgStdPad::s_unset_all_clicked(UNUSED(bool checked)) {
 	}
 }
 void dlgStdPad::s_defaults_clicked(UNUSED(bool checked)) {
-	int type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
+	int i, type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
 
 	info_entry_print(type, "");
 
 	settings_inp_port_default(&data.cfg.port, data.cfg.id - 1, type);
 
-	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 		QPushButton *bt = findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(i));
 
 		if (type == KEYBOARD) {
@@ -506,18 +545,26 @@ void dlgStdPad::s_defaults_clicked(UNUSED(bool checked)) {
 			bt->setText(uQString(js_joyval_to_name(js_jdev_index(), data.cfg.port.input[type][i])));
 		}
 	}
+	horizontalSlider_joy_Deadzone->setValue(settings_jsc_deadzone_default());
+}
+void dlgStdPad::s_deadzone_slider_value_changed(int value) {
+	data.deadzone = value;
+	deadzone_update_label(value);
+}
+void dlgStdPad::s_deadzone_default_clicked(UNUSED(bool checked)) {
+	horizontalSlider_joy_Deadzone->setValue(settings_jsc_deadzone_default());
 }
 void dlgStdPad::s_combobox_controller_type_activated(int index) {
 	BYTE state = RELEASED;
+	int i;
 
 	data.cfg.port.type_pad = index;
 
 	if (((data.cfg.port.type_pad == CTRL_PAD_AUTO) && (machine.type != DENDY)) || (data.cfg.port.type_pad == CTRL_PAD_ORIGINAL)) {
 		state = PRESSED;
 	}
-
-	for (int b = 8; b < 24; b++) {
-		data.cfg.port.data[b] = state;
+	for (i = 8; i < INPUT_DECODE_COUNTS; i++) {
+		data.cfg.port.data[i] = state;
 	}
 }
 void dlgStdPad::s_slider_td_value_changed(int value) {
@@ -579,6 +626,15 @@ void dlgStdPad::s_apply_clicked(UNUSED(bool checked)) {
 	data.exec_js_init = (cfg_port->id != data.cfg.id) | (memcmp(cfg_port->port, &data.cfg.port, sizeof(_port)) != 0);
 	cfg_port->id = data.cfg.id;
 	memcpy(cfg_port->port, &data.cfg.port, sizeof(_port));
+
+	if (js_jdev_index() != 255) {
+		_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
+
+		settings_jsc_parse(jdev->index);
+		memcpy(jdev->stdctrl, data.cfg.port.input[JOYSTICK], js_jdev_sizeof_stdctrl());
+		jdev->deadzone = data.deadzone;
+		settings_jsc_save();
+	}
 
 	close();
 }

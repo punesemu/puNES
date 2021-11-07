@@ -501,8 +501,8 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 	}
 
 	if (jdev->present == TRUE) {
-		js_jdev_ctrl_desc(jdev);
 		jstick.jdd.count++;
+		js_jdev_open_common(jdev);
 	}
 }
 void js_os_jdev_close(_js_device *jdev) {

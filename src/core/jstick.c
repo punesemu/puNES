@@ -24,6 +24,9 @@
 #include "gui.h"
 #include "conf.h"
 #include "info.h"
+#include "settings.h"
+
+#define JSJDEV ((_js_device *)js->jdev)
 
 thread_funct(js_jdev_read_events_loop, void *arg);
 thread_funct(js_detection_loop, void *arg);
@@ -398,7 +401,7 @@ void js_jdev_type(_js_device *jdev) {
 		}
 	}
 }
-void js_jdev_ctrl_desc(_js_device *jdev) {
+void js_jdev_open_common(_js_device *jdev) {
 	unsigned int i;
 
 	for (i = 0; i < LENGTH(js_gamepads_list); i++) {
@@ -408,9 +411,10 @@ void js_jdev_ctrl_desc(_js_device *jdev) {
 				umemset(jdev->desc, 0x00, usizeof(jdev->desc));
 				ustrncpy(jdev->desc, js_gamepads_list[i].desc, usizeof(jdev->desc) - 1);
 			}
-			return;
+			break;
 		}
 	}
+	settings_jsc_parse(jdev->index);
 }
 BYTE js_jdev_is_xinput(_js_device *jdev) {
 	if ((jdev->type == JS_SC_MS_XBOX_360_GAMEPAD) || (jdev->type == JS_SC_MS_XBOX_ONE_GAMEPAD) ||
@@ -435,7 +439,10 @@ void js_jdev_scan(void) {
 		jstick.last_control = gui_get_ms();
 	}
 }
-void js_jdev_update(_js *js, BYTE enable_decode, BYTE decode_index) {
+void js_jdev_update(_js *js, BYTE enable_decode, BYTE port_index) {
+	_port *p = &port[port_index];
+	_port_funct *pf = &port_funct[port_index];
+
 	thread_mutex_lock(js->lock);
 
 	if (!js->jdev) {
@@ -451,16 +458,18 @@ void js_jdev_update(_js *js, BYTE enable_decode, BYTE decode_index) {
 					js->jdev = &jstick.jdd.devices[i];
 					js->inited = TRUE;
 					if (enable_decode) {
-						js->input_decode_event = port_funct[decode_index].input_decode_event;
+						memcpy(p->input[JOYSTICK], JSJDEV->stdctrl, js_jdev_sizeof_stdctrl());
+						js->input_decode_event = pf->input_decode_event;
 					}
 					break;
 				}
 			}
 		}
-	} else if (((_js_device *)js->jdev)->present == FALSE) {
+	} else if (JSJDEV->present == FALSE) {
 		js->jdev = NULL;
 		js->inited = FALSE;
 		js->input_decode_event = NULL;
+		memset(p->input[JOYSTICK], 0x00, js_jdev_sizeof_stdctrl());
 	}
 
 	thread_mutex_unlock(js->lock);
@@ -530,6 +539,9 @@ uTCHAR *js_jdev_desc(int dev) {
 	}
 	return (jstick.jdd.devices[dev].desc);
 }
+size_t js_jdev_sizeof_stdctrl(void) {
+	return (sizeof(jstick.jdd.devices[0].stdctrl));
+}
 
 void js_jdev_read_port(_js *js, _port *port) {
 	_js_device *jdev;
@@ -542,7 +554,7 @@ void js_jdev_read_port(_js *js, _port *port) {
 		thread_mutex_lock(jdev->lock);
 
 		if (jdev->present == TRUE) {
-			static float deadzone = (JS_AXIS_MAX / 100.0f) * 40.0f;
+			float deadzone = (JS_AXIS_MAX / 100.0f) * (float)jdev->deadzone;
 			unsigned int i, a;
 			DBWORD value = 0;
 			BYTE mode = 0;

@@ -153,21 +153,18 @@ class objInp : public objSettings {
 	public:
 		static QString kbd_keyval_to_name(const DBWORD value);
 		static DBWORD kbd_keyval_decode(QKeyEvent *keyEvent);
-		void set_kbd_joy_default(_port *port, int index, int mode);
+		void kbd_defaults(_port *port, int index);
 
 	private:
-		int kbd_val_to_int(int index);
 		void kbd_rd(int index, int pIndex);
 		void kbd_wr(int index, int pIndex);
-		DBWORD kbd_name(QString name);
+		DBWORD _kbd_keyval_from_name(QString name);
 		DBWORD kbd_keyval_from_name(int index, QString name);
+		int kbd_keyval_to_int(int index);
 
 	private:
-		int joy_val_to_int(int index);
-		void joy_rd(int index, int pIndex);
-		void joy_wr(int index, int pIndex);
-		void joy_val_to_guid(int index, _input_guid *guid);
-		void joy_guid_to_val(int index, _input_guid *guid);
+		void js_val_to_guid(int index, _input_guid *guid);
+		void js_guid_to_val(int index, _input_guid *guid);
 
 	private:
 		int tb_delay_val_to_int(int index);
@@ -197,6 +194,26 @@ class objShp : public objSettings {
 		double val_to_float(int index);
 		void float_to_val(int index, float value);
 };
+class objJsc : public objSettings {
+	private:
+		int jindex;
+
+	public:
+		objJsc(Format f, QString file, int list_ele, int index);
+		~objJsc();
+
+	protected:
+		void setup(void);
+		void to_cfg(QString group);
+		void fr_cfg(QString group);
+
+	public:
+		void jsc_defaults(_port *port);
+		int jsc_deadzone_default(void);
+
+	private:
+		int jsc_joyval_to_int(int index);
+};
 
 typedef struct _emu_settings {
 	QSettings::Format cfg;
@@ -204,6 +221,7 @@ typedef struct _emu_settings {
 	objInp *inp;
 	objPgs *pgs;
 	objShp *shp;
+	objJsc *jsc;
 	BYTE list;
 } _emu_settings;
 

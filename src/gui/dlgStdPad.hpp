@@ -66,6 +66,7 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 			bool no_other_buttons;
 			BYTE vbutton;
 			BYTE exec_js_init;
+			int deadzone;
 		} data;
 
 	public:
@@ -90,6 +91,7 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		void info_entry_print(int type, QString txt);
 		void js_press_event(void);
 		void td_update_label(int type, int value);
+		void deadzone_update_label(int value);
 		int js_jdev_index(void);
 
 	private slots:
@@ -100,6 +102,8 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		void s_in_sequence_clicked(bool checked);
 		void s_unset_all_clicked(bool checked);
 		void s_defaults_clicked(bool checked);
+		void s_deadzone_slider_value_changed(int value);
+		void s_deadzone_default_clicked(bool checked);
 		void s_combobox_controller_type_activated(int index);
 		void s_slider_td_value_changed(int value);
 		void s_pad_joy_read_timer(void);

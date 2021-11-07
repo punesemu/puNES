@@ -1216,9 +1216,8 @@ void objInp::to_cfg(QString group) {
 	if ((group == "port 1") || (group == "all")) {
 		int_to_val(SET_INP_P1_CONTROLLER, port[PORT1].type);
 		int_to_val(SET_INP_P1_PAD_TYPE, port[PORT1].type_pad);
+		js_guid_to_val(SET_INP_P1J_GUID, &port[PORT1].jguid);
 		kbd_wr(SET_INP_P1K_A, PORT1);
-		joy_wr(SET_INP_P1J_A, PORT1);
-		joy_guid_to_val(SET_INP_P1J_ID, &port[PORT1].jguid);
 		val.replace(SET_INP_P1_TURBOA_DELAY, QString::number(port[PORT1].turbo[TURBOA].frequency));
 		val.replace(SET_INP_P1_TURBOB_DELAY, QString::number(port[PORT1].turbo[TURBOB].frequency));
 	}
@@ -1226,9 +1225,8 @@ void objInp::to_cfg(QString group) {
 	if ((group == "port 2") || (group == "all")) {
 		int_to_val(SET_INP_P2_CONTROLLER, port[PORT2].type);
 		int_to_val(SET_INP_P2_PAD_TYPE, port[PORT2].type_pad);
+		js_guid_to_val(SET_INP_P2J_GUID, &port[PORT2].jguid);
 		kbd_wr(SET_INP_P2K_A, PORT2);
-		joy_wr(SET_INP_P2J_A, PORT2);
-		joy_guid_to_val(SET_INP_P2J_ID, &port[PORT2].jguid);
 		val.replace(SET_INP_P2_TURBOA_DELAY, QString::number(port[PORT2].turbo[TURBOA].frequency));
 		val.replace(SET_INP_P2_TURBOB_DELAY, QString::number(port[PORT2].turbo[TURBOB].frequency));
 	}
@@ -1236,9 +1234,8 @@ void objInp::to_cfg(QString group) {
 	if ((group == "port 3") || (group == "all")) {
 		int_to_val(SET_INP_P3_CONTROLLER, port[PORT3].type);
 		int_to_val(SET_INP_P3_PAD_TYPE, port[PORT3].type_pad);
+		js_guid_to_val(SET_INP_P3J_GUID, &port[PORT3].jguid);
 		kbd_wr(SET_INP_P3K_A, PORT3);
-		joy_wr(SET_INP_P3J_A, PORT3);
-		joy_guid_to_val(SET_INP_P3J_ID, &port[PORT3].jguid);
 		val.replace(SET_INP_P3_TURBOA_DELAY, QString::number(port[PORT3].turbo[TURBOA].frequency));
 		val.replace(SET_INP_P3_TURBOB_DELAY, QString::number(port[PORT3].turbo[TURBOB].frequency));
 	}
@@ -1246,9 +1243,8 @@ void objInp::to_cfg(QString group) {
 	if ((group == "port 4") || (group == "all")) {
 		int_to_val(SET_INP_P4_CONTROLLER, port[PORT4].type);
 		int_to_val(SET_INP_P4_PAD_TYPE, port[PORT4].type_pad);
+		js_guid_to_val(SET_INP_P4J_GUID, &port[PORT4].jguid);
 		kbd_wr(SET_INP_P4K_A, PORT4);
-		joy_wr(SET_INP_P4J_A, PORT4);
-		joy_guid_to_val(SET_INP_P4J_ID, &port[PORT4].jguid);
 		val.replace(SET_INP_P4_TURBOA_DELAY, QString::number(port[PORT4].turbo[TURBOA].frequency));
 		val.replace(SET_INP_P4_TURBOB_DELAY, QString::number(port[PORT4].turbo[TURBOB].frequency));
 	}
@@ -1260,7 +1256,7 @@ void objInp::to_cfg(QString group) {
 	}
 
 	if ((group == "shortcuts") || (group == "all")) {
-		joy_guid_to_val(SET_INP_SC_JOYSTICK_ID, &cfg_from_file.input.jguid_sch);
+		js_guid_to_val(SET_INP_SC_JOYSTICK_GUID, &cfg_from_file.input.jguid_sch);
 	}
 }
 void objInp::fr_cfg(QString group) {
@@ -1271,9 +1267,8 @@ void objInp::fr_cfg(QString group) {
 	if ((group == "port 1") || (group == "all")) {
 		port[PORT1].type = val_to_int(SET_INP_P1_CONTROLLER);
 		port[PORT1].type_pad = val_to_int(SET_INP_P1_PAD_TYPE);
+		js_val_to_guid(SET_INP_P1J_GUID, &port[PORT1].jguid);
 		kbd_rd(SET_INP_P1K_A, PORT1);
-		joy_rd(SET_INP_P1J_A, PORT1);
-		joy_val_to_guid(SET_INP_P1J_ID, &port[PORT1].jguid);
 		port[PORT1].turbo[TURBOA].frequency = tb_delay_val_to_int(SET_INP_P1_TURBOA_DELAY);
 		port[PORT1].turbo[TURBOB].frequency = tb_delay_val_to_int(SET_INP_P1_TURBOB_DELAY);
 	}
@@ -1281,9 +1276,8 @@ void objInp::fr_cfg(QString group) {
 	if ((group == "port 2") || (group == "all")) {
 		port[PORT2].type = val_to_int(SET_INP_P2_CONTROLLER);
 		port[PORT2].type_pad = val_to_int(SET_INP_P2_PAD_TYPE);
+		js_val_to_guid(SET_INP_P2J_GUID, &port[PORT2].jguid);
 		kbd_rd(SET_INP_P2K_A, PORT2);
-		joy_rd(SET_INP_P2J_A, PORT2);
-		joy_val_to_guid(SET_INP_P2J_ID, &port[PORT2].jguid);
 		port[PORT2].turbo[TURBOA].frequency = tb_delay_val_to_int(SET_INP_P2_TURBOA_DELAY);
 		port[PORT2].turbo[TURBOB].frequency = tb_delay_val_to_int(SET_INP_P2_TURBOB_DELAY);
 	}
@@ -1291,9 +1285,8 @@ void objInp::fr_cfg(QString group) {
 	if ((group == "port 3") || (group == "all")) {
 		port[PORT3].type = val_to_int(SET_INP_P3_CONTROLLER);
 		port[PORT3].type_pad = val_to_int(SET_INP_P3_PAD_TYPE);
+		js_val_to_guid(SET_INP_P3J_GUID, &port[PORT3].jguid);
 		kbd_rd(SET_INP_P3K_A, PORT3);
-		joy_rd(SET_INP_P3J_A, PORT3);
-		joy_val_to_guid(SET_INP_P3J_ID, &port[PORT3].jguid);
 		port[PORT3].turbo[TURBOA].frequency = tb_delay_val_to_int(SET_INP_P3_TURBOA_DELAY);
 		port[PORT3].turbo[TURBOB].frequency = tb_delay_val_to_int(SET_INP_P3_TURBOB_DELAY);
 	}
@@ -1301,9 +1294,8 @@ void objInp::fr_cfg(QString group) {
 	if ((group == "port 4") || (group == "all")) {
 		port[PORT4].type = val_to_int(SET_INP_P4_CONTROLLER);
 		port[PORT4].type_pad = val_to_int(SET_INP_P4_PAD_TYPE);
+		js_val_to_guid(SET_INP_P4J_GUID, &port[PORT4].jguid);
 		kbd_rd(SET_INP_P4K_A, PORT4);
-		joy_rd(SET_INP_P4J_A, PORT4);
-		joy_val_to_guid(SET_INP_P4J_ID, &port[PORT4].jguid);
 		port[PORT4].turbo[TURBOA].frequency = tb_delay_val_to_int(SET_INP_P4_TURBOA_DELAY);
 		port[PORT4].turbo[TURBOB].frequency = tb_delay_val_to_int(SET_INP_P4_TURBOB_DELAY);
 	}
@@ -1315,7 +1307,7 @@ void objInp::fr_cfg(QString group) {
 	}
 
 	if ((group == "shortcuts") || (group == "all")) {
-		joy_val_to_guid(SET_INP_SC_JOYSTICK_ID, &cfg_from_file.input.jguid_sch);
+		js_val_to_guid(SET_INP_SC_JOYSTICK_GUID, &cfg_from_file.input.jguid_sch);
 
 		// converto nel nuovo formato
 		for (int i = SET_INP_SC_OPEN; i < SET_INP_SC_OPEN + SET_MAX_NUM_SC; i++) {
@@ -1342,8 +1334,7 @@ void objInp::set_all_input_default(_config_input *config_input, _array_pointers_
 		port->type_pad = CTRL_PAD_AUTO;
 		port->turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
 		port->turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
-		set_kbd_joy_default(port, i, KEYBOARD);
-		set_kbd_joy_default(port, i, JOYSTICK);
+		kbd_defaults(port, i);
 	}
 }
 void *objInp::sc_val_to_qstring_pntr(int index, int type) {
@@ -1436,58 +1427,32 @@ DBWORD objInp::kbd_keyval_decode(QKeyEvent *keyEvent) {
 
 	return (key);
 }
-void objInp::set_kbd_joy_default(_port *port, int index, int mode) {
+void objInp::kbd_defaults(_port *port, int index) {
 	int pIndex = 0;
 
 	switch (index) {
 		case PORT1:
-			if (mode == KEYBOARD) {
-				pIndex = SET_INP_P1K_A;
-			} else {
-				pIndex = SET_INP_P1J_A;
-			}
+			pIndex = SET_INP_P1K_A;
 			break;
 		case PORT2:
-			if (mode == KEYBOARD) {
-				pIndex = SET_INP_P2K_A;
-			} else {
-				pIndex = SET_INP_P2J_A;
-			}
+			pIndex = SET_INP_P2K_A;
 			break;
 		case PORT3:
-			if (mode == KEYBOARD) {
-				pIndex = SET_INP_P3K_A;
-			} else {
-				pIndex = SET_INP_P3J_A;
-			}
+			pIndex = SET_INP_P3K_A;
 			break;
 		case PORT4:
-			if (mode == KEYBOARD) {
-				pIndex = SET_INP_P4K_A;
-			} else {
-				pIndex = SET_INP_P4J_A;
-			}
+			pIndex = SET_INP_P4K_A;
 			break;
 	}
 
 	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		if (mode == KEYBOARD) {
-			port->input[KEYBOARD][i] = kbd_keyval_from_name(pIndex + i, uQString(set->cfg[pIndex + i].def));
-		} else {
-			port->input[JOYSTICK][i] = js_joyval_from_name(set->cfg[pIndex + i].def);
-		}
+		port->input[KEYBOARD][i] = kbd_keyval_from_name(pIndex + i, uQString(set->cfg[pIndex + i].def));
 	}
 }
-int objInp::kbd_val_to_int(int index) {
-	if (val.at(index).isEmpty()) {
-		val.replace(index, uQString(set->cfg[index].def));
-	}
 
-	return (kbd_keyval_from_name(index, val.at(index)));
-}
 void objInp::kbd_rd(int index, int pIndex) {
 	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		port[pIndex].input[KEYBOARD][i] = kbd_val_to_int(index + i);
+		port[pIndex].input[KEYBOARD][i] = kbd_keyval_to_int(index + i);
 	}
 }
 void objInp::kbd_wr(int index, int pIndex) {
@@ -1495,7 +1460,7 @@ void objInp::kbd_wr(int index, int pIndex) {
 		val.replace(index + i, kbd_keyval_to_name(port[pIndex].input[KEYBOARD][i]));
 	}
 }
-DBWORD objInp::kbd_name(QString name) {
+DBWORD objInp::_kbd_keyval_from_name(QString name) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	DBWORD value = QKeySequence::fromString(name).operator[](0);
 #else
@@ -1514,30 +1479,21 @@ DBWORD objInp::kbd_name(QString name) {
 DBWORD objInp::kbd_keyval_from_name(int index, QString name) {
 	DBWORD value = 0;
 
-	if ((name != "NULL") && !(value = kbd_name(name))) {
-		value = kbd_name(uQString(set->cfg[index].def));
+	if ((name != "NULL") && !(value = _kbd_keyval_from_name(name))) {
+		value = _kbd_keyval_from_name(uQString(set->cfg[index].def));
 	}
 
 	return (value);
 }
-
-int objInp::joy_val_to_int(int index) {
+int objInp::kbd_keyval_to_int(int index) {
 	if (val.at(index).isEmpty()) {
 		val.replace(index, uQString(set->cfg[index].def));
 	}
-	return (js_joyval_from_name(uQStringCD(val.at(index))));
+
+	return (kbd_keyval_from_name(index, val.at(index)));
 }
-void objInp::joy_rd(int index, int pIndex) {
-	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		port[pIndex].input[JOYSTICK][i] = joy_val_to_int(index + i);
-	}
-}
-void objInp::joy_wr(int index, int pIndex) {
-	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		val.replace(index + i, uQString(js_joyval_to_name(-1, port[pIndex].input[JOYSTICK][i])));
-	}
-}
-void objInp::joy_val_to_guid(int index, _input_guid *guid) {
+
+void objInp::js_val_to_guid(int index, _input_guid *guid) {
 	if (val.at(index).isEmpty() || (val.at(index).count() != 38)) {
 		val.replace(index, uQString(set->cfg[index].def));
 		js_guid_unset(guid);
@@ -1545,7 +1501,7 @@ void objInp::joy_val_to_guid(int index, _input_guid *guid) {
 	}
 	js_guid_from_string(guid, uQStringCD(val.at(index)));
 }
-void objInp::joy_guid_to_val(int index, _input_guid *guid) {
+void objInp::js_guid_to_val(int index, _input_guid *guid) {
 	if (js_is_null(guid)) {
 		val.replace(index, uQString(uL("NULL")));
 	} else {
@@ -1673,6 +1629,55 @@ void objShp::float_to_val(int index, float value) {
 	val.replace(index, QString().setNum(value));
 }
 
+// ------------------------------------ Jstick/Gamepads ----------------------------------
+
+objJsc::objJsc(Format f, QString file, int list_ele, int index) : objSettings(f, file, list_ele) {
+	jindex = index;
+	setup();
+}
+objJsc::~objJsc() {}
+
+void objJsc::setup(void) {
+	rd();
+	wr();
+}
+void objJsc::to_cfg(UNUSED(QString group)) {
+	_js_device *jdev = &jstick.jdd.devices[jindex];
+	int i;
+
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+		val.replace(SET_JSC_PAD_A + i, uQString(js_joyval_to_name(-1, jdev->stdctrl[i])));
+	}
+	int_to_val(SET_JSC_DEADZONE, jdev->deadzone);
+}
+void objJsc::fr_cfg(UNUSED(QString group)) {
+	_js_device *jdev = &jstick.jdd.devices[jindex];
+	int i;
+
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+		jdev->stdctrl[i] = jsc_joyval_to_int(SET_JSC_PAD_A + i);
+	}
+	jdev->deadzone = val_to_int(SET_JSC_DEADZONE);
+}
+
+void objJsc::jsc_defaults(_port *port) {
+	int i;
+
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+		port->input[JOYSTICK][i] = js_joyval_from_name(set->cfg[SET_JSC_PAD_A + i].def);
+	}
+}
+int objJsc::jsc_deadzone_default(void) {
+	return (uQString(set->cfg[SET_JSC_DEADZONE].def).toInt());
+}
+
+int objJsc::jsc_joyval_to_int(int index) {
+	if (val.at(index).isEmpty()) {
+		val.replace(index, uQString(set->cfg[index].def));
+	}
+	return (js_joyval_from_name(uQStringCD(val.at(index))));
+}
+
 // ----------------------------------------- I/O------------------------------------------
 
 bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
@@ -1728,10 +1733,9 @@ bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 	return (true);
 }
 bool wr_cfg_file(QIODevice &device, const QSettings::SettingsMap &map) {
+	const _list_settings *cfg = &list_settings[s.list];
 	QTextStream out(&device);
-	QSettings::SettingsMap::const_iterator iter = map.begin();
-	QString group;
-	const _list_settings *cfg  = &list_settings[s.list];
+	QString last_group = "";
 	int count_grp = 0;
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -1741,37 +1745,32 @@ bool wr_cfg_file(QIODevice &device, const QSettings::SettingsMap &map) {
 #endif
 	out.setGenerateByteOrderMark(false);
 
-	for (; iter != map.end(); ++iter) {
-		if (iter.key().isEmpty() == false) {
-			QStringList splitted = iter.key().split("/");
-			QString key;
+	for (int i = 0; i < cfg->count; i++) {
+		QString group = uQString(cfg->cfg[i].grp);
+		QString key = uQString(cfg->cfg[i].key);
+		QString gkey = group.isNull() || group.isEmpty() ? key : group + '/' + key;
+		QString comment = uQString(cfg->cfg[i].cmt);
+		QSettings::SettingsMap::const_iterator iter = map.find(gkey);
+		BYTE is_group = FALSE;
 
-			if (cfg->cfg) {
-				key = splitted.at(1);
-
-				if (group != splitted.at(0)) {
-					group = splitted.at(0);
-					if (count_grp > 0) {
-						out << NEWLINE;
-					}
-					out << "[" << group.remove("\"") << "]" << NEWLINE;
-					count_grp++;
+		if (group != last_group) {
+			if (!group.isNull() && !group.isEmpty()) {
+				if (count_grp > 0) {
+					out << NEWLINE << NEWLINE;
 				}
-
-				for (int i = 0; i < cfg->count; i++) {
-					if (key == uQString(cfg->cfg[i].key)) {
-						if (!uQString(cfg->cfg[i].cmt).isEmpty()) {
-							out << uQString(cfg->cfg[i].cmt) << NEWLINE;
-						}
-						break;
-					}
-				}
-			} else {
-				key = iter.key();
+				out << "[" << group.remove("\"") << "]" << NEWLINE;
+				count_grp++;
+				last_group = group;
+				is_group = TRUE;
 			}
-
-			out << key << "=" << iter.value().toString() << NEWLINE;
 		}
+		if (iter == map.end()) {
+			continue;
+		}
+		if (!comment.isEmpty()) {
+			out << (is_group ? "" : NEWLINE) << comment << NEWLINE;
+		}
+		out << key << "=" << iter.value().toString() << NEWLINE;
 	}
 
 	return (true);

@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>457</width>
-    <height>644</height>
+    <height>686</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -608,6 +608,70 @@
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="Line" name="line_kbd_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_kbd_Deadzone">
+            <item row="0" column="3">
+             <widget class="QLabel" name="label_kbd_Deadzone_value_slider">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string notr="true">00</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QSlider" name="horizontalSlider_kbd_Deadzone">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="value">
+               <number>0</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_kbd_Deadzone_slider">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Deadzone</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="4">
+             <widget class="QPushButton" name="pushButton_kbd_Deadzone">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
          </layout>
         </widget>
         <widget class="QWidget" name="tab_joy">
@@ -1150,6 +1214,58 @@
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="Line" name="line_joy_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_joy_Deadzone">
+            <item row="0" column="3">
+             <widget class="QLabel" name="label_joy_Deadzone_value_slider">
+              <property name="text">
+               <string notr="true">00</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QSlider" name="horizontalSlider_joy_Deadzone">
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="value">
+               <number>0</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_joy_Deadzone_slider">
+              <property name="text">
+               <string>Deadzone</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="4">
+             <widget class="QPushButton" name="pushButton_joy_Deadzone">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
          </layout>
         </widget>
        </widget>
@@ -1318,6 +1434,8 @@
   <tabstop>pushButton_kbd_Sequence</tabstop>
   <tabstop>pushButton_kbd_Unset_all</tabstop>
   <tabstop>pushButton_kbd_Defaults</tabstop>
+  <tabstop>horizontalSlider_kbd_Deadzone</tabstop>
+  <tabstop>pushButton_kbd_Deadzone</tabstop>
   <tabstop>comboBox_joy_ID</tabstop>
   <tabstop>pushButton_joy_Up</tabstop>
   <tabstop>pushButton_joy_unset_Up</tabstop>
@@ -1342,6 +1460,8 @@
   <tabstop>pushButton_joy_Sequence</tabstop>
   <tabstop>pushButton_joy_Unset_all</tabstop>
   <tabstop>pushButton_joy_Defaults</tabstop>
+  <tabstop>horizontalSlider_joy_Deadzone</tabstop>
+  <tabstop>pushButton_joy_Deadzone</tabstop>
   <tabstop>comboBox_Controller_type</tabstop>
   <tabstop>horizontalSlider_TurboA</tabstop>
   <tabstop>horizontalSlider_TurboB</tabstop>

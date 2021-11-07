@@ -191,11 +191,12 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 	}
 
 	js_jdev_type(jdev);
-	js_jdev_ctrl_desc(jdev);
 	js_guid_create(jdev);
 	jdev->is_xinput = js_jdev_is_xinput(jdev);
 	jdev->present = TRUE;
 	jstick.jdd.count++;
+
+	js_jdev_open_common(jdev);
 
 #if defined (DEBUG)
 	js_info_jdev(jdev);
