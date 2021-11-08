@@ -445,9 +445,8 @@ void dlgStdPad::s_combobox_joy_index_changed(int index) {
 		if (jdev_index < MAX_JOYSTICK) {
 			_js_device *jdev = &jstick.jdd.devices[jdev_index];
 
-			data.deadzone = jdev->deadzone;
 			memcpy(data.cfg.port.input[JOYSTICK], jdev->stdctrl, js_jdev_sizeof_stdctrl());
-			horizontalSlider_joy_Deadzone->setValue(data.deadzone);
+			horizontalSlider_joy_Deadzone->setValue(jdev->deadzone);
 		} else {
 			memset(data.cfg.port.input[JOYSTICK], 0x00, js_jdev_sizeof_stdctrl());
 			horizontalSlider_joy_Deadzone->setValue(0);
@@ -545,7 +544,6 @@ void dlgStdPad::s_defaults_clicked(UNUSED(bool checked)) {
 			bt->setText(uQString(js_joyval_to_name(js_jdev_index(), data.cfg.port.input[type][i])));
 		}
 	}
-	horizontalSlider_joy_Deadzone->setValue(settings_jsc_deadzone_default());
 }
 void dlgStdPad::s_deadzone_slider_value_changed(int value) {
 	data.deadzone = value;
