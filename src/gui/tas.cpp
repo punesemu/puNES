@@ -238,6 +238,10 @@ void tas_header_FM2(uTCHAR *file) {
 		// nell'FCEUX viene saltato il primo vblank (flag ppudead)
 		info.r2002_jump_first_vblank = TRUE;
 		//if (tas.emu_version <= 9828) {
+			// in scumtron,meshuggah,feos,xipo,marx-ninjagaiden.fm2 (Ninja Ryukenden/Ninja Gaiden)
+			// impostare r2002_race_condition_disabled a TRUE fa si che nel filmato finale il castello
+			// non venga distrutto correttamente. Ovviamente giocando normalmente la rom questo bug non
+			// si presenta in quanto info.r2002_race_condition_disabled e' sempre impostato su FALSE.
 			info.r2002_race_condition_disabled = TRUE;
 			info.r4016_dmc_double_read_disabled = TRUE;
 		//}
