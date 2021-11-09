@@ -114,11 +114,11 @@
   </qresource>
   <qresource prefix="pics">
     <file>pics/btn_donate_SM.gif</file>
-    <file>pics/Nes_controller.svg</file>
     <file>pics/btn_donateCC_LG.gif</file>
     <file>pics/overlay_controller.png</file>
     <file>pics/overlay_controller_left.png</file>
     <file>pics/overlay_controller_exp_port.png</file>
+    <file>pics/Nes_controller.svg</file>
     <file>pics/overlay_controller_b.png</file>
     <file>pics/punes_banner.png</file>
     <file>pics/overlay_controller_port1.png</file>
