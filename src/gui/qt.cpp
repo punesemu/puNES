@@ -119,6 +119,7 @@ class appEventFilter: public QObject {
 
 void gui_init(int *argc, char **argv) {
 	QFlags<SingleApplication::Mode> mode = SingleApplication::Mode::ExcludeAppVersion | SingleApplication::Mode::ExcludeAppPath;
+	int i = 0;
 
 	memset(&gui, 0, sizeof(gui));
 	qt = {};
@@ -127,6 +128,10 @@ void gui_init(int *argc, char **argv) {
 	info.gui = TRUE;
 	gui.in_update = FALSE;
 	gui.main_win_lfp = 0;
+
+	for (i = 0; i < PORT_MAX; i++) {
+		gui.dlg_tabWidget_kbd_joy_index[i] = -1;
+	}
 
 	gui_init_os();
 }

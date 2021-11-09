@@ -23,6 +23,7 @@
 #include "mainWindow.hpp"
 #include "objSettings.hpp"
 #include "clock.h"
+#include "gui.h"
 
 #define SPT(ind) QString(std_pad_input_type[ind])
 #define SPB(ind) QString(std_pad_button[ind])
@@ -54,7 +55,6 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 	groupBox_Misc->setStyleSheet(group_title_bold_stylesheet());
 
 	groupBox_controller->setTitle(tr("Controller %1 : Standard Pad").arg(cfg_port->id));
-	tabWidget_kbd_joy->setCurrentIndex(JOYSTICK);
 
 	comboBox_kbd_ID->addItem(tr("Keyboard"));
 
@@ -173,6 +173,14 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 
 	connect(this, SIGNAL(et_update_joy_combo()), this, SLOT(s_et_update_joy_combo()));
 
+	if (joy_list.count < 2) {
+		tabWidget_kbd_joy->setCurrentIndex(KEYBOARD);
+	} else if (gui.dlg_tabWidget_kbd_joy_index[data.cfg.id] >= 0) {
+		tabWidget_kbd_joy->setCurrentIndex(gui.dlg_tabWidget_kbd_joy_index[data.cfg.id]);
+	} else {
+		tabWidget_kbd_joy->setCurrentIndex(JOYSTICK);
+	}
+
 	installEventFilter(this);
 }
 dlgStdPad::~dlgStdPad() {}
@@ -233,6 +241,8 @@ void dlgStdPad::closeEvent(QCloseEvent *event) {
 
 	data.no_other_buttons = false;
 	data.vbutton = 0;
+
+	gui.dlg_tabWidget_kbd_joy_index[data.cfg.id] = tabWidget_kbd_joy->currentIndex();
 
 	QDialog::closeEvent(event);
 }

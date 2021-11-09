@@ -134,7 +134,6 @@ typedef struct _gui {
 	const uTCHAR *ostmp;
 	struct timeval counterStart;
 #endif
-
 	uTCHAR last_open_path[LENGTH_FILE_NAME_MAX];
 	uTCHAR last_open_patch_path[LENGTH_FILE_NAME_MAX];
 
@@ -147,6 +146,7 @@ typedef struct _gui {
 	uint8_t main_win_lfp;
 
 	int dlg_rc;
+	int dlg_tabWidget_kbd_joy_index[PORT_MAX];
 } _gui;
 typedef struct _gui_mouse {
 	int x;
