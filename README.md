@@ -40,8 +40,9 @@ If you want buy me a beer : <span class="badge-paypal"><a href="https://www.payp
   <img src="https://user-images.githubusercontent.com/14859058/137119383-d6577076-9029-4dbc-b1be-c4568d7c26b4.png" width="400" alt="puNES NSFE Player"/>
   <img src="https://user-images.githubusercontent.com/14859058/135748564-2096abfd-9a9d-48e7-b93e-0aefaa714451.png" width="400" alt="puNES Slot Preview"/>
   <img src="https://user-images.githubusercontent.com/14859058/135748722-ea73e6b3-db6b-4cf2-b13d-755ca4824975.png" width="400" alt="puNES General Settings"/>
-  <img src="https://user-images.githubusercontent.com/14859058/135748725-567d679c-40da-4675-93fd-391698cfe237.png" width="400" alt="puNES Video Filters Settings"/>
+  <img src="https://user-images.githubusercontent.com/14859058/140854472-60a88023-e719-4637-9289-08991a367ddd.png" width="400" alt="puNES Video Filters Settings"/>
   <img src="https://user-images.githubusercontent.com/14859058/135748586-fe41d0d1-18d0-4c14-b7c4-4d6deacb4fbb.png" width="400" alt="puNES Cheat Editor"/>
+  <img src="https://user-images.githubusercontent.com/14859058/140857555-45cba8d5-3638-4c7c-8060-23564231dfca.png" width="400" alt="puNES Standard Controller Settings"/>
 </p>
 
 :information_source: How to Compile
