@@ -611,8 +611,7 @@ void wdgSettingsVideo::shader_param_set(void) {
 		col = new QTableWidgetItem();
 		col->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
 		col->setText(QString(pshd->desc));
-		tableWidget_Shader_Parameters->setItem(row, 0, col);
-		tableWidget_Shader_Parameters->resizeColumnToContents(0);
+		tableWidget_Shader_Parameters->setItem(row, WSV_SP_DESC, col);
 
 		if (pshd->value != pshd->initial) {
 			col->setBackground(Qt::yellow);
@@ -663,7 +662,6 @@ void wdgSettingsVideo::shader_param_set(void) {
 			layout->setContentsMargins(0, 0, 0, 0);
 			layout->setSpacing(0);
 			tableWidget_Shader_Parameters->setCellWidget(row, WSV_SP_SPIN, widget);
-			tableWidget_Shader_Parameters->resizeColumnToContents(WSV_SP_SPIN);
 		}
 
 		{
@@ -684,11 +682,16 @@ void wdgSettingsVideo::shader_param_set(void) {
 			layout->setContentsMargins(0, 0, 0, 0);
 			layout->setSpacing(0);
 			tableWidget_Shader_Parameters->setCellWidget(row, WSV_SP_BUTTON, widget);
-			tableWidget_Shader_Parameters->resizeColumnToContents(WSV_SP_BUTTON);
 		}
 
 		row++;
 	}
+
+	tableWidget_Shader_Parameters->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+	tableWidget_Shader_Parameters->horizontalHeader()->setSectionResizeMode(WSV_SP_DESC, QHeaderView::Stretch);
+	tableWidget_Shader_Parameters->horizontalHeader()->setSectionResizeMode(WSV_SP_SLIDER, QHeaderView::Fixed);
+	tableWidget_Shader_Parameters->horizontalHeader()->setSectionResizeMode(WSV_SP_SPIN, QHeaderView::ResizeToContents);
+	tableWidget_Shader_Parameters->horizontalHeader()->setSectionResizeMode(WSV_SP_BUTTON, QHeaderView::ResizeToContents);
 
 	if (row == 0) {
 		pushButton_Shader_Parameters_reset_alls->setEnabled(false);
