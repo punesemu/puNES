@@ -1781,6 +1781,7 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>tabWidget_Video</tabstop>
   <tabstop>pushButton_Scale_1x</tabstop>
   <tabstop>pushButton_Scale_2x</tabstop>
   <tabstop>pushButton_Scale_3x</tabstop>
@@ -1804,6 +1805,18 @@
   <tabstop>pushButton_Oscan_PAL_brd_reset</tabstop>
   <tabstop>checkBox_Oscan_brd_black_window</tabstop>
   <tabstop>checkBox_Oscan_brd_black_flscreen</tabstop>
+  <tabstop>pushButton_PAR_11</tabstop>
+  <tabstop>pushButton_PAR_54</tabstop>
+  <tabstop>pushButton_PAR_87</tabstop>
+  <tabstop>pushButton_PAR_118</tabstop>
+  <tabstop>checkBox_PAR_Soft_Stretch</tabstop>
+  <tabstop>pushButton_Screen_Rotation_0d</tabstop>
+  <tabstop>pushButton_Screen_Rotation_90d</tabstop>
+  <tabstop>pushButton_Screen_Rotation_270d</tabstop>
+  <tabstop>pushButton_Screen_Rotation_180d</tabstop>
+  <tabstop>checkBox_Horizontal_Flip_Screen</tabstop>
+  <tabstop>checkBox_Input_Rotation</tabstop>
+  <tabstop>checkBox_Text_Rotation</tabstop>
   <tabstop>comboBox_Software_Filters</tabstop>
   <tabstop>comboBox_Shaders</tabstop>
   <tabstop>pushButton_Shaders_file</tabstop>
@@ -1818,10 +1831,16 @@
   <tabstop>checkBox_Vsync</tabstop>
   <tabstop>checkBox_Interpolation</tabstop>
   <tabstop>checkBox_Text_on_screen</tabstop>
+  <tabstop>checkBox_Show_frames_and_lags</tabstop>
   <tabstop>checkBox_Show_FPS</tabstop>
   <tabstop>checkBox_Input_display</tabstop>
   <tabstop>checkBox_Disable_TV_noise_emulation</tabstop>
   <tabstop>checkBox_Disable_sepia_color_on_pause</tabstop>
+  <tabstop>comboBox_Fullscreen_resolution</tabstop>
+  <tabstop>checkBox_Fullscreen_adaptive_rrate</tabstop>
+  <tabstop>checkBox_Fullscreen_in_window</tabstop>
+  <tabstop>checkBox_Use_integer_scaling_in_fullscreen</tabstop>
+  <tabstop>checkBox_Stretch_in_fullscreen</tabstop>
  </tabstops>
  <resources>
   <include location="resources.qrc"/>

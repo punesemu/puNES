@@ -51,6 +51,8 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 
 	setupUi(this);
 
+	setFocusProxy(tabWidget_kbd_joy);
+
 	groupBox_controller->setStyleSheet(group_title_bold_stylesheet());
 	groupBox_Misc->setStyleSheet(group_title_bold_stylesheet());
 
@@ -95,9 +97,10 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 
 		for (a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
 			int vbutton = a + (i * MAX_STD_PAD_BUTTONS);
-			QPushButton *unset;
+			QPushButton *def, *unset;
 
 			bt = findChild<QPushButton *>("pushButton_" + SPT(i) + "_" + SPB(a));
+			def = findChild<QPushButton *>("pushButton_" + SPT(i) + "_default_" + SPB(a));
 			unset = findChild<QPushButton *>("pushButton_" + SPT(i) + "_unset_" + SPB(a));
 
 			if (bt->font().pointSize() > 9) {
@@ -112,9 +115,11 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 
 			bt->installEventFilter(this);
 			bt->setProperty("myVbutton", QVariant(vbutton));
+			def->setProperty("myVbutton", QVariant(vbutton));
 			unset->setProperty("myVbutton", QVariant(vbutton));
 
 			connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_input_clicked(bool)));
+			connect(def, SIGNAL(clicked(bool)), this, SLOT(s_default_clicked(bool)));
 			connect(unset, SIGNAL(clicked(bool)), this, SLOT(s_unset_clicked(bool)));
 		}
 	}
@@ -162,9 +167,6 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 
 	setFixedSize(size());
 
-	setFocusPolicy(Qt::StrongFocus);
-	groupBox_controller->setFocus(Qt::ActiveWindowFocusReason);
-
 	data.joy.timer = new QTimer(this);
 	connect(data.joy.timer, SIGNAL(timeout()), this, SLOT(s_pad_joy_read_timer()));
 
@@ -190,12 +192,13 @@ bool dlgStdPad::eventFilter(QObject *obj, QEvent *event) {
 	// che riguardano questo dialog.
 	switch (event->type()) {
 		case QEvent::KeyPress:
-			return (keypress((QKeyEvent *)event));
+			if (data.no_other_buttons == true) {
+				return (keypress((QKeyEvent *)event));
+			}
 			break;
 		default:
 			break;
 	}
-
 	return (QObject::eventFilter(obj, event));
 }
 void dlgStdPad::changeEvent(QEvent *event) {
@@ -249,10 +252,6 @@ void dlgStdPad::closeEvent(QCloseEvent *event) {
 
 bool dlgStdPad::keypress(QKeyEvent *event) {
 	int type, vbutton;
-
-	if (data.no_other_buttons == false) {
-		return (true);
-	}
 
 	type = data.vbutton / MAX_STD_PAD_BUTTONS;
 	vbutton = data.vbutton - (type * MAX_STD_PAD_BUTTONS);
@@ -372,11 +371,14 @@ void dlgStdPad::joy_combo_init(void) {
 	update_dialog();
 }
 void dlgStdPad::setEnable_tab_buttons(int type, bool mode) {
-	for (int a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
-		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(a))->setEnabled(mode);
-		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(a))->setStyleSheet("");
-		findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(a))->setEnabled(mode);
-		findChild<QPushButton *>("pushButton_" + SPT(type) + "_unset_" + SPB(a))->setEnabled(mode);
+	int i;
+
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(i))->setEnabled(mode);
+		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(i))->setStyleSheet("");
+		findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(i))->setEnabled(mode);
+		findChild<QPushButton *>("pushButton_" + SPT(type) + "_default_" + SPB(i))->setEnabled(mode);
+		findChild<QPushButton *>("pushButton_" + SPT(type) + "_unset_" + SPB(i))->setEnabled(mode);
 	}
 }
 void dlgStdPad::disable_tab_and_other(int type, int vbutton) {
@@ -480,8 +482,7 @@ void dlgStdPad::s_combobox_joy_index_changed(int index) {
 	}
 }
 void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
-	int vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
-	int type;
+	int type, vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
 
 	if (data.no_other_buttons == true) {
 		return;
@@ -509,9 +510,27 @@ void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
 		js_press_event();
 	}
 }
-void dlgStdPad::s_unset_clicked(UNUSED(bool checked)) {
-	int vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
-	int type;
+void dlgStdPad::s_default_clicked(UNUSED(bool checked)) {
+	int type, vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
+
+	type = vbutton / MAX_STD_PAD_BUTTONS;
+	vbutton -= (type * MAX_STD_PAD_BUTTONS);
+
+	info_entry_print(type, "");
+
+	settings_inp_port_button_default(vbutton, &data.cfg.port, data.cfg.id - 1, type);
+
+	{
+		QPushButton *bt = findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton));
+
+		if (type == KEYBOARD) {
+			bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[type][vbutton]));
+		} else {
+			bt->setText(uQString(js_joyval_to_name(js_jdev_index(), data.cfg.port.input[type][vbutton])));
+		}
+	}
+}void dlgStdPad::s_unset_clicked(UNUSED(bool checked)) {
+	int type, vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
 
 	type = vbutton / MAX_STD_PAD_BUTTONS;
 	vbutton -= (type * MAX_STD_PAD_BUTTONS);
@@ -530,11 +549,11 @@ void dlgStdPad::s_in_sequence_clicked(UNUSED(bool checked)) {
 	data.seq.timer->start(150);
 }
 void dlgStdPad::s_unset_all_clicked(UNUSED(bool checked)) {
-	int type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
+	int i, type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
 
 	info_entry_print(type, "");
 
-	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 		findChild<QPushButton *>("pushButton_" + SPT(type) + "_unset_" + SPB(i))->click();
 	}
 }
@@ -543,7 +562,7 @@ void dlgStdPad::s_defaults_clicked(UNUSED(bool checked)) {
 
 	info_entry_print(type, "");
 
-	settings_inp_port_default(&data.cfg.port, data.cfg.id - 1, type);
+	settings_inp_port_defaults(&data.cfg.port, data.cfg.id - 1, type);
 
 	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 		QPushButton *bt = findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(i));

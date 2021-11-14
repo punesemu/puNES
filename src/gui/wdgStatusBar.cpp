@@ -129,7 +129,6 @@ alignmentStatusBar::alignmentStatusBar(QWidget *parent) : QFrame(parent) {
 	layout->addWidget(label);
 
 	setLayout(layout);
-
 }
 alignmentStatusBar::~alignmentStatusBar() {}
 

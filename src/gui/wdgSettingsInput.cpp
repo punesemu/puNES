@@ -880,7 +880,7 @@ void wdgSettingsInput::s_input_reset(UNUSED(bool checked)) {
 		array.port[i] = input.cport[i].port;
 	}
 
-	settings_inp_all_default(&cfg->input, &array);
+	settings_inp_all_defaults(&cfg->input, &array);
 	update_widget();
 }
 void wdgSettingsInput::s_permit_updown_leftright(UNUSED(bool checked)) {

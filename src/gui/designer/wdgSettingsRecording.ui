@@ -450,6 +450,9 @@
  <tabstops>
   <tabstop>comboBox_Output_Audio_Format</tabstop>
   <tabstop>comboBox_Output_Video_Format</tabstop>
+  <tabstop>pushButton_Output_Quality_low</tabstop>
+  <tabstop>pushButton_Output_Quality_medium</tabstop>
+  <tabstop>pushButton_Output_Quality_high</tabstop>
   <tabstop>comboBox_Output_Resolution</tabstop>
   <tabstop>lineEdit_Output_Custom_Width</tabstop>
   <tabstop>lineEdit_Output_Custom_Height</tabstop>

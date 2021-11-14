@@ -86,14 +86,21 @@ void *settings_inp_rd_sc(int index, int type) {
 void settings_inp_wr_sc(void *str, int index, int type) {
 	s.inp->sc_qstring_pntr_to_val(str, index, type);
 }
-void settings_inp_all_default(_config_input *config_input, _array_pointers_port *array) {
-	s.inp->set_all_input_default(config_input, array);
+void settings_inp_all_defaults(_config_input *config_input, _array_pointers_port *array) {
+	s.inp->set_all_input_defaults(config_input, array);
 }
-void settings_inp_port_default(_port *port, int index, int mode) {
+void settings_inp_port_defaults(_port *port, int index, int mode) {
 	if (mode == KEYBOARD) {
 		s.inp->kbd_defaults(port, index);
 	} else {
 		s.jsc->jsc_defaults(port);
+	}
+}
+void settings_inp_port_button_default(int button, _port *port, int index, int mode) {
+	if (mode == KEYBOARD) {
+		s.inp->kbd_default(button, port, index);
+	} else {
+		s.jsc->jsc_default(button, port);
 	}
 }
 void settings_inp_save(void) {

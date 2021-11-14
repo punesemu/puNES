@@ -1320,7 +1320,7 @@ void objInp::fr_cfg(QString group) {
 	}
 }
 
-void objInp::set_all_input_default(_config_input *config_input, _array_pointers_port *array) {
+void objInp::set_all_input_defaults(_config_input *config_input, _array_pointers_port *array) {
 	config_input->permit_updown_leftright = FALSE;
 	config_input->hide_zapper_cursor = FALSE;
 	config_input->controller_mode = CTRL_MODE_NES;
@@ -1349,7 +1349,6 @@ void objInp::sc_qstring_pntr_to_val(void *str, int index, int type) {
 	split.replace(type, (QString(*(QString *)str)));
 	val.replace(index, QString("%1,%2").arg(split.at(KEYBOARD), split.at(JOYSTICK)));
 }
-
 QString objInp::kbd_keyval_to_name(const DBWORD value) {
 	bool ok = false;
 	int index = 0;
@@ -1427,7 +1426,7 @@ DBWORD objInp::kbd_keyval_decode(QKeyEvent *keyEvent) {
 
 	return (key);
 }
-void objInp::kbd_defaults(_port *port, int index) {
+void objInp::kbd_default(int button, _port *port, int index) {
 	int pIndex = 0;
 
 	switch (index) {
@@ -1445,8 +1444,13 @@ void objInp::kbd_defaults(_port *port, int index) {
 			break;
 	}
 
-	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		port->input[KEYBOARD][i] = kbd_keyval_from_name(pIndex + i, uQString(set->cfg[pIndex + i].def));
+	port->input[KEYBOARD][button] = kbd_keyval_from_name(pIndex + button, uQString(set->cfg[pIndex + button].def));
+}
+void objInp::kbd_defaults(_port *port, int index) {
+	int i;
+
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+		kbd_default(i, port, index);
 	}
 }
 
@@ -1660,11 +1664,14 @@ void objJsc::fr_cfg(UNUSED(QString group)) {
 	jdev->deadzone = val_to_int(SET_JSC_DEADZONE);
 }
 
+void objJsc::jsc_default(int button, _port *port) {
+	port->input[JOYSTICK][button] = js_joyval_from_name(set->cfg[SET_JSC_PAD_A + button].def);
+}
 void objJsc::jsc_defaults(_port *port) {
 	int i;
 
 	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		port->input[JOYSTICK][i] = js_joyval_from_name(set->cfg[SET_JSC_PAD_A + i].def);
+		jsc_default(i, port);
 	}
 }
 int objJsc::jsc_deadzone_default(void) {

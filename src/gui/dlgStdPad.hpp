@@ -98,6 +98,7 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		void s_combobox_joy_activated(int index);
 		void s_combobox_joy_index_changed(int index);
 		void s_input_clicked(bool checked);
+		void s_default_clicked(bool checked);
 		void s_unset_clicked(bool checked);
 		void s_in_sequence_clicked(bool checked);
 		void s_unset_all_clicked(bool checked);

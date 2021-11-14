@@ -1461,8 +1461,9 @@ EXTERNC void settings_resolution_val_to_int(int *w, int *h, const uTCHAR *buffer
 
 EXTERNC void *settings_inp_rd_sc(int index, int type);
 EXTERNC void settings_inp_wr_sc(void *str, int index, int type);
-EXTERNC void settings_inp_all_default(_config_input *config_input, _array_pointers_port *array);
-EXTERNC void settings_inp_port_default(_port *port, int index, int mode);
+EXTERNC void settings_inp_all_defaults(_config_input *config_input, _array_pointers_port *array);
+EXTERNC void settings_inp_port_defaults(_port *port, int index, int mode);
+EXTERNC void settings_inp_port_button_default(int button, _port *port, int index, int mode);
 EXTERNC void settings_inp_save(void);
 
 EXTERNC void settings_pgs_parse(void);

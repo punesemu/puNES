@@ -146,13 +146,12 @@ class objInp : public objSettings {
 		void fr_cfg(QString group);
 
 	public:
-		void set_all_input_default(_config_input *config_input, _array_pointers_port *array);
+		void set_all_input_defaults(_config_input *config_input, _array_pointers_port *array);
 		void *sc_val_to_qstring_pntr(int index, int type);
 		void sc_qstring_pntr_to_val(void *str, int index, int type);
-
-	public:
 		static QString kbd_keyval_to_name(const DBWORD value);
 		static DBWORD kbd_keyval_decode(QKeyEvent *keyEvent);
+		void kbd_default(int button, _port *port, int index);
 		void kbd_defaults(_port *port, int index);
 
 	private:
@@ -208,6 +207,7 @@ class objJsc : public objSettings {
 		void fr_cfg(QString group);
 
 	public:
+		void jsc_default(int button, _port *port);
 		void jsc_defaults(_port *port);
 		int jsc_deadzone_default(void);
 
