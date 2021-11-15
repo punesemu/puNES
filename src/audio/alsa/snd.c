@@ -213,6 +213,12 @@ BYTE snd_playback_start(void) {
 	audio_channels(cfg->channels_mode);
 
 	switch (cfg->samplerate) {
+		case S192000:
+			snd.samplerate = 192000;
+			break;
+		case S96000:
+			snd.samplerate = 96000;
+			break;
 		case S48000:
 			snd.samplerate = 48000;
 			break;

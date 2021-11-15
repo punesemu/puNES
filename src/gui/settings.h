@@ -433,10 +433,12 @@ static const _opt opt_audio_buffer_factor[] = {
 	{NULL, uL("15"), 15}
 };
 static const _opt opt_samplerate[] = {
-	{NULL, uL("48000"), S48000},
-	{NULL, uL("44100"), S44100},
-	{NULL, uL("22050"), S22050},
-	{NULL, uL("11025"), S11025}
+	{NULL, uL("192000"), S192000},
+	{NULL, uL("96000") , S96000},
+	{NULL, uL("48000") , S48000},
+	{NULL, uL("44100") , S44100},
+	{NULL, uL("22050") , S22050},
+	{NULL, uL("11025") , S11025}
 };
 static const _opt opt_channels[] = {
 	{NULL, uL("mono")   , CH_MONO},
@@ -902,8 +904,8 @@ static const _settings main_cfg[] = {
 	},
 	{
 		uL("audio"), uL("sample rate"), uL("44100"),
-		uL("# possible values: 48000, 44100, 22050, 11025"),
-		uL("-l, --samplerate          sample rate           : 48000, 44100, 22050, 11025"),
+		uL("# possible values: 192000, 96000, 48000, 44100, 22050, 11025"),
+		uL("-l, --samplerate          sample rate           : 192000, 96000, 48000, 44100, 22050, 11025"),
 		{LENGTH(opt_samplerate), opt_samplerate}
 	},
 	{

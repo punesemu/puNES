@@ -1153,11 +1153,11 @@ static BYTE ffmpeg_audio_add_stream(void) {
 		return (EXIT_ERROR);
 	}
 
-	audio->avcc->bit_rate = 128000;
 	audio->avcc->sample_fmt = ffmpeg_audio_select_sample_fmt(audio->avc);
 	audio->avcc->sample_rate = ffmpeg_audio_select_samplerate(audio->avc);
 	audio->avcc->channel_layout = ffmpeg_audio_select_channel_layout(audio->avc);
 	audio->avcc->channels = av_get_channel_layout_nb_channels(audio->avcc->channel_layout);
+	audio->avcc->bit_rate = audio->avcc->sample_rate < 96000 ? 256000 : 512000;
 
 	audio->avs->id = ffmpeg.format_ctx->nb_streams - 1;
 	audio->avs->time_base = (AVRational){ 1, audio->avcc->sample_rate };
@@ -1311,12 +1311,12 @@ static enum AVSampleFormat ffmpeg_audio_select_sample_fmt(const AVCodec *codec) 
 	const enum AVSampleFormat *p = codec->sample_fmts;
 
 	if (!p) {
-		return AV_SAMPLE_FMT_S16;
+		return (AV_SAMPLE_FMT_S16);
 	}
 
 	while ((*p) != AV_SAMPLE_FMT_NONE) {
 		if ((*p) == AV_SAMPLE_FMT_S16) {
-			return AV_SAMPLE_FMT_S16;
+			return (AV_SAMPLE_FMT_S16);
 		}
 		p++;
 	}
@@ -1327,7 +1327,14 @@ static int ffmpeg_audio_select_samplerate(const AVCodec *codec) {
 	const int *p;
 
 	if (!codec->supported_samplerates) {
-		return 44100;
+		switch(codec->id) {
+			case AV_CODEC_ID_FLAC:
+				return (snd.samplerate);
+			case AV_CODEC_ID_VORBIS:
+				return ((snd.samplerate == 48000) || (snd.samplerate == 44100) ? snd.samplerate : 44100);
+			default:
+				return (44100);
+		}
 	}
 
 	p = codec->supported_samplerates;
@@ -1353,7 +1360,7 @@ static int ffmpeg_audio_select_channel_layout(const AVCodec *codec) {
 	int best_nb_channels = 0;
 
 	if (!codec->channel_layouts) {
-		return AV_CH_LAYOUT_STEREO;
+		return (AV_CH_LAYOUT_STEREO);
 	}
 
 	p = codec->channel_layouts;

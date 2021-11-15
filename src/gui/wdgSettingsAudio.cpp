@@ -39,11 +39,15 @@ wdgSettingsAudio::wdgSettingsAudio(QWidget *parent) : QWidget(parent) {
 	connect(comboBox_Output_Devices, SIGNAL(activated(int)), this, SLOT(s_output_devices(int)));
 #endif
 
+	pushButton_Samplarate_192000->setProperty("mtype", QVariant(S192000));
+	pushButton_Samplarate_96000->setProperty("mtype", QVariant(S96000));
 	pushButton_Samplarate_48000->setProperty("mtype", QVariant(S48000));
 	pushButton_Samplarate_44100->setProperty("mtype", QVariant(S44100));
 	pushButton_Samplarate_22050->setProperty("mtype", QVariant(S22050));
 	pushButton_Samplarate_11025->setProperty("mtype", QVariant(S11025));
 
+	connect(pushButton_Samplarate_192000, SIGNAL(toggled(bool)), this, SLOT(s_sample_rate(bool)));
+	connect(pushButton_Samplarate_96000, SIGNAL(toggled(bool)), this, SLOT(s_sample_rate(bool)));
 	connect(pushButton_Samplarate_48000, SIGNAL(toggled(bool)), this, SLOT(s_sample_rate(bool)));
 	connect(pushButton_Samplarate_44100, SIGNAL(toggled(bool)), this, SLOT(s_sample_rate(bool)));
 	connect(pushButton_Samplarate_22050, SIGNAL(toggled(bool)), this, SLOT(s_sample_rate(bool)));
@@ -146,11 +150,19 @@ void wdgSettingsAudio::output_devices_init(void) {
 	}
 }
 void wdgSettingsAudio::sample_rate_set(void) {
+	qtHelper::pushbutton_set_checked(pushButton_Samplarate_192000, false);
+	qtHelper::pushbutton_set_checked(pushButton_Samplarate_96000, false);
 	qtHelper::pushbutton_set_checked(pushButton_Samplarate_48000, false);
 	qtHelper::pushbutton_set_checked(pushButton_Samplarate_44100, false);
 	qtHelper::pushbutton_set_checked(pushButton_Samplarate_22050, false);
 	qtHelper::pushbutton_set_checked(pushButton_Samplarate_11025, false);
 	switch (cfg->samplerate) {
+		case S192000:
+			qtHelper::pushbutton_set_checked(pushButton_Samplarate_192000, true);
+			break;
+		case S96000:
+			qtHelper::pushbutton_set_checked(pushButton_Samplarate_96000, true);
+			break;
 		case S48000:
 			qtHelper::pushbutton_set_checked(pushButton_Samplarate_48000, true);
 			break;
