@@ -28,11 +28,13 @@ dlgJsc::dlgJsc(QWidget *parent) : QDialog(parent) {
 	js_guid_unset(&guid);
 	timer = new QTimer(this);
 	mutex = new QMutex();
+	first_time = true;
 
 	setupUi(this);
 
 #if defined (_WIN32)
 	label_Device->setVisible(false);
+	label_Device_2points->setVisible(false);
 	label_Device_desc->setVisible(false);
 #endif
 
@@ -69,6 +71,7 @@ dlgJsc::dlgJsc(QWidget *parent) : QDialog(parent) {
 
 	connect(timer, SIGNAL(timeout()), this, SLOT(s_joy_read_timer()));
 
+	adjustSize();
 	setFixedSize(size());
 
 	installEventFilter(this);
@@ -89,7 +92,11 @@ bool dlgJsc::eventFilter(QObject *obj, QEvent *event) {
 }
 
 void dlgJsc::showEvent(QShowEvent *event) {
-	setGeometry(geom);
+	if (first_time == true) {
+		first_time = false;
+	} else {
+		setGeometry(geom);
+	}
 	joy_combo_init();
 	timer->start(50);
 	QDialog::showEvent(event);
@@ -132,8 +139,42 @@ void dlgJsc::joy_combo_init(void) {
 
 	comboBox_joy_ID->setCurrentIndex(current_index);
 
-	if ((current_index == 0) && (current_index != joy_list.disabled_line)) {
+	if (current_index == 0) {
 		emit comboBox_joy_ID->currentIndexChanged(current_index);
+	}
+}
+void dlgJsc::clear_all(void) {
+	unsigned int i;
+
+#if !defined (_WIN32)
+	label_Device->setText("");
+#endif
+	label_GUID->setText("");
+	label_USB->setText("");
+	label_Axes_line->setText("0 Axes, 0 Hats");
+	label_Buttons_line->setText("0 Buttons");
+
+	// disabilito tutto
+	for (i = 1; i < LENGTH(js_axs_joyval); i++) {
+		const uTCHAR *desc = js_axs_joyval[i].desc[2];
+		QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(desc));
+		QLabel *l = findChild<QLabel *>("label_" + uQString(desc));
+
+		if (cb) {
+			cb->setEnabled(false);
+			cb->setChecked(false);
+			l->setEnabled(false);
+			l->setText("0");
+		}
+	}
+	for (i = 1; i < LENGTH(js_btn_joyval); i++) {
+		QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(js_btn_joyval[i].desc[1]));
+
+		if (cb) {
+			cb->setEnabled(false);
+			cb->setChecked(false);
+			cb->setStyleSheet("");
+		}
 	}
 }
 void dlgJsc::update_info_lines(void) {
@@ -161,7 +202,7 @@ void dlgJsc::update_info_lines(void) {
 int dlgJsc::js_jdev_index(void) {
 	int jdev_index = 255;
 
-	if (comboBox_joy_ID->currentData().isValid()) {
+	if ((comboBox_joy_ID->count() > 1) && comboBox_joy_ID->currentData().isValid()) {
 		jdev_index = comboBox_joy_ID->currentData().toInt();
 	}
 	return (jdev_index);
@@ -268,45 +309,16 @@ void dlgJsc::s_combobox_joy_activated(int index) {
 	}
 	js_guid_set(jdev_index, &guid);
 }
-void dlgJsc::s_combobox_joy_index_changed(int index) {
-	int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
+void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
+	int jdev_index = js_jdev_index();
 	static int old_jdev_index = -1;
 
-	if (js_jdev_index() != old_jdev_index) {
+	if (jdev_index != old_jdev_index) {
 		unsigned int i, a;
 
 		mutex->lock();
 
-#if !defined (_WIN32)
-		label_Device->setText("");
-#endif
-		label_GUID->setText("");
-		label_USB->setText("");
-		label_Axes_line->setText("0 Axes, 0 Hats");
-		label_Buttons_line->setText("0 Buttons");
-
-		// disabilito tutto
-		for (i = 1; i < LENGTH(js_axs_joyval); i++) {
-			const uTCHAR *desc = js_axs_joyval[i].desc[2];
-			QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(desc));
-			QLabel *l = findChild<QLabel *>("label_" + uQString(desc));
-
-			if (cb) {
-				cb->setEnabled(false);
-				cb->setChecked(false);
-				l->setEnabled(false);
-				l->setText("0");
-			}
-		}
-		for (i = 1; i < LENGTH(js_btn_joyval); i++) {
-			QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(js_btn_joyval[i].desc[1]));
-
-			if (cb) {
-				cb->setEnabled(false);
-				cb->setChecked(false);
-				cb->setStyleSheet("");
-			}
-		}
+		clear_all();
 
 		if (jdev_index < MAX_JOYSTICK) {
 			_js_device *jdev = &jstick.jdd.devices[jdev_index];

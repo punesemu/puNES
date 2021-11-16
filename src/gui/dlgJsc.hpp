@@ -32,6 +32,7 @@ class dlgJsc : public QDialog, public Ui::dlgJsc {
 		QTimer *timer;
 		QMutex *mutex;
 		QRect geom;
+		bool first_time;
 
 	public:
 		dlgJsc(QWidget *parent = 0);
@@ -48,6 +49,7 @@ class dlgJsc : public QDialog, public Ui::dlgJsc {
 
 	private:
 		void joy_combo_init(void);
+		void clear_all(void);
 		void update_info_lines(void);
 		int js_jdev_index(void);
 		int axes_disabled(void);
