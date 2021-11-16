@@ -1328,9 +1328,14 @@ static int ffmpeg_audio_select_samplerate(const AVCodec *codec) {
 
 	if (!codec->supported_samplerates) {
 		switch(codec->id) {
+			case AV_CODEC_ID_PCM_S16LE:
+			case AV_CODEC_ID_PCM_S16BE:
+			case AV_CODEC_ID_PCM_S16LE_PLANAR:
+			case AV_CODEC_ID_PCM_S16BE_PLANAR:
+			case AV_CODEC_ID_PCM_F16LE:
 			case AV_CODEC_ID_FLAC:
 				return (snd.samplerate);
-			case AV_CODEC_ID_VORBIS:
+			case AV_CODEC_ID_VORBIS: // supporta solo i sample rate 48000 e 44100
 				return ((snd.samplerate == 48000) || (snd.samplerate == 44100) ? snd.samplerate : 44100);
 			default:
 				return (44100);
@@ -1360,7 +1365,19 @@ static int ffmpeg_audio_select_channel_layout(const AVCodec *codec) {
 	int best_nb_channels = 0;
 
 	if (!codec->channel_layouts) {
-		return (AV_CH_LAYOUT_STEREO);
+		switch(codec->id) {
+			case AV_CODEC_ID_PCM_S16LE:
+			case AV_CODEC_ID_PCM_S16BE:
+			case AV_CODEC_ID_PCM_S16LE_PLANAR:
+			case AV_CODEC_ID_PCM_S16BE_PLANAR:
+			case AV_CODEC_ID_PCM_F16LE:
+			case AV_CODEC_ID_AAC:
+			case AV_CODEC_ID_FLAC:
+			//case AV_CODEC_ID_VORBIS: // non supporta il mono
+				return ((cfg->channels_mode == CH_MONO) ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO);
+			default:
+				return (AV_CH_LAYOUT_STEREO);
+		}
 	}
 
 	p = codec->channel_layouts;
