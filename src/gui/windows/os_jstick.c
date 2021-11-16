@@ -718,7 +718,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 
 					if (jsx->used) {
 						float x, y;
-						int index;
+						int index = -1;
 
 						switch (jsx->offset_di8) {
 							case DIJOFS_POV(0):
@@ -734,10 +734,12 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 								index = 3;
 								break;
 						}
-						hat_to_xy(state.rgdwPOV[index], &x, &y);
-						js_axs_validate(jsx, x);
-						jsx = &jdev->data.hat[hat_index + 1];
-						js_axs_validate(jsx, y);
+						if (index != -1) {
+							hat_to_xy(state.rgdwPOV[index], &x, &y);
+							js_axs_validate(jsx, x);
+							jsx = &jdev->data.hat[hat_index + 1];
+							js_axs_validate(jsx, y);
+						}
 					}
 				}
 				// pulsanti
