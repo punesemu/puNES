@@ -213,6 +213,8 @@ class objJsc : public objSettings {
 
 	private:
 		int jsc_joyval_to_int(int index);
+		qulonglong val_to_ulonglong(int index);
+		void ulonglong_to_val(int index, qulonglong value);
 };
 
 typedef struct _emu_settings {

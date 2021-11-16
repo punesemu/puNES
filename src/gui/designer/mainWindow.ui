@@ -145,6 +145,7 @@
      <string>Too&amp;ls</string>
     </property>
     <addaction name="action_Vs_System"/>
+    <addaction name="action_Joypad_Gamepads_Debug"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_NES"/>
@@ -515,7 +516,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Vs System Controls</string>
+    <string>&amp;Vs System Controls</string>
    </property>
   </action>
   <action name="action_Open_working_folder">
@@ -649,6 +650,15 @@
    </property>
    <property name="text">
     <string>Slot &amp;B</string>
+   </property>
+  </action>
+  <action name="action_Joypad_Gamepads_Debug">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/game_controller.svg</normaloff>:/icon/icons/game_controller.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Joypad/Gamepad Debug</string>
    </property>
   </action>
  </widget>

@@ -3,6 +3,8 @@ resources.cpp: designer/resources.qrc $(TRADUCTION_QM)
 
 dlgCmdLineHelp.moc: dlgCmdLineHelp.hpp
 	$(MOC) $(srcdir)/dlgCmdLineHelp.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+dlgJsc.moc: dlgJsc.hpp
+	$(MOC) $(srcdir)/dlgJsc.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgSettings.moc: dlgSettings.hpp
 	$(MOC) $(srcdir)/dlgSettings.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgStdPad.moc: dlgStdPad.hpp
@@ -66,6 +68,8 @@ mainWindow.hh: designer/mainWindow.ui
 	$(UIC) $(srcdir)/designer/mainWindow.ui -o $@
 dlgCmdLineHelp.hh: designer/dlgCmdLineHelp.ui
 	$(UIC) $(srcdir)/designer/dlgCmdLineHelp.ui -o $@
+dlgJsc.hh: designer/dlgJsc.ui
+	$(UIC) $(srcdir)/designer/dlgJsc.ui -o $@
 dlgSettings.hh: designer/dlgSettings.ui
 	$(UIC) $(srcdir)/designer/dlgSettings.ui -o $@
 dlgStdPad.hh: designer/dlgStdPad.ui
@@ -158,6 +162,7 @@ BUILT_SOURCES = \
 
 BUILT_SOURCES += \
 	dlgCmdLineHelp.moc \
+	dlgJsc.moc \
 	dlgSettings.moc \
 	dlgStdPad.moc \
 	dlgUncomp.moc \
@@ -189,6 +194,7 @@ BUILT_SOURCES += \
 BUILT_SOURCES += \
 	mainWindow.hh \
 	dlgCmdLineHelp.hh \
+	dlgJsc.hh \
 	dlgSettings.hh \
 	dlgStdPad.hh \
 	dlgUncomp.hh \
@@ -221,6 +227,8 @@ libgui_a_SOURCES = \
 	cmd_line.h \
 	dlgCmdLineHelp.cpp \
 	dlgCmdLineHelp.hpp \
+	dlgJsc.cpp \
+	dlgJsc.hpp \
 	dlgSettings.cpp \
 	dlgSettings.hpp \
 	dlgStdPad.cpp \

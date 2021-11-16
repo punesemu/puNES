@@ -285,8 +285,8 @@ enum jsc_element {
 	SET_JSC_PAD_TURBOA,
 	SET_JSC_PAD_TURBOB,
 	SET_JSC_DEADZONE,
-	//SET_JSC_BUTTONS_ENABLED,
-	//SET_JSC_AXES_ENABLED,
+	SET_JSC_BUTTONS_ENABLED,
+	SET_JSC_AXES_ENABLED,
 };
 
 enum set_num_shortcut { SET_MAX_NUM_SC = SET_INP_SC_JOYSTICK_GUID - SET_INP_SC_OPEN};
@@ -1419,20 +1419,18 @@ static const _settings jsc_cfg[] = {
 		NULL,
 		{0, NULL}
 	},
-	/*
 	{
-		uL("system"), uL("Buttons enabled"), uL("0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF"),
+		uL("system"), uL("Buttons enabled"), uL("0xFFFFFFFFFFFFFFFF"),
 		NULL,
 		NULL,
 		{0, NULL}
 	},
 	{
-		uL("system"), uL("Axes enabled"), uL("0x00FFFFFF"),
+		uL("system"), uL("Axes enabled"), uL("0xFFFFFF"),
 		NULL,
 		NULL,
 		{0, NULL}
 	}
-	*/
 };
 
 static const _list_settings list_settings[] = {

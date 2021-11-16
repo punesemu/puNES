@@ -1645,23 +1645,77 @@ void objJsc::setup(void) {
 	rd();
 	wr();
 }
-void objJsc::to_cfg(UNUSED(QString group)) {
+void objJsc::to_cfg(QString group) {
 	_js_device *jdev = &jstick.jdd.devices[jindex];
-	int i;
+	unsigned int i;
 
-	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		val.replace(SET_JSC_PAD_A + i, uQString(js_joyval_to_name(-1, jdev->stdctrl[i])));
+	if ((group == "standard controller") || (group == "all")) {
+		for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+			val.replace(SET_JSC_PAD_A + i, uQString(js_joyval_to_name(-1, jdev->stdctrl[i])));
+		}
 	}
-	int_to_val(SET_JSC_DEADZONE, jdev->deadzone);
+	if ((group == "system") || (group == "all")) {
+		int_to_val(SET_JSC_DEADZONE, jdev->deadzone);
+		{
+			qulonglong buttons = 0;
+
+			for (i = 0; i < JS_MAX_BUTTONS; i++) {
+				_js_button *jsx = &jdev->data.button[i];
+				qulonglong enabled = jsx->enabled;
+
+				buttons |= (enabled << i);
+			}
+			ulonglong_to_val(SET_JSC_BUTTONS_ENABLED, buttons);
+		}
+		{
+			qulonglong axes = 0;
+			int axis = 0, hat = 0;
+
+			for (i = 1; i < LENGTH(js_axs_joyval); i++) {
+				_js_axis *jsx = (js_axs_joyval[i].offset >= ABS_HAT0X) && (js_axs_joyval[i].offset <= ABS_HAT3Y) ?
+					&jdev->data.hat[hat++] : &jdev->data.axis[axis++];
+				qulonglong enabled = jsx->enabled;
+
+				axes |= (enabled << (i - 1));
+			}
+			ulonglong_to_val(SET_JSC_AXES_ENABLED, axes);
+		}
+	}
 }
-void objJsc::fr_cfg(UNUSED(QString group)) {
+void objJsc::fr_cfg(QString group) {
 	_js_device *jdev = &jstick.jdd.devices[jindex];
-	int i;
+	unsigned int i;
 
-	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		jdev->stdctrl[i] = jsc_joyval_to_int(SET_JSC_PAD_A + i);
+	if ((group == "standard controller") || (group == "all")) {
+		for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+			jdev->stdctrl[i] = jsc_joyval_to_int(SET_JSC_PAD_A + i);
+		}
 	}
-	jdev->deadzone = val_to_int(SET_JSC_DEADZONE);
+	if ((group == "system") || (group == "all")) {
+		jdev->deadzone = val_to_int(SET_JSC_DEADZONE);
+		{
+			qulonglong buttons = val_to_ulonglong(SET_JSC_BUTTONS_ENABLED);
+
+			for (i = 0; i < JS_MAX_BUTTONS; i++) {
+				_js_button *jsx = &jdev->data.button[i];
+				qulonglong enabled = 1;
+
+				jsx->enabled = !!(buttons & (enabled << i));
+			}
+		}
+		{
+			qulonglong axes = val_to_ulonglong(SET_JSC_AXES_ENABLED);
+			int axis = 0, hat = 0;
+
+			for (i = 1; i < LENGTH(js_axs_joyval); i++) {
+				_js_axis *jsx = (js_axs_joyval[i].offset >= ABS_HAT0X) && (js_axs_joyval[i].offset <= ABS_HAT3Y) ?
+					&jdev->data.hat[hat++] : &jdev->data.axis[axis++];
+				qulonglong enabled = 1;
+
+				jsx->enabled = !!(axes & (enabled << (i - 1)));
+			}
+		}
+	}
 }
 
 void objJsc::jsc_default(int button, _port *port) {
@@ -1683,6 +1737,19 @@ int objJsc::jsc_joyval_to_int(int index) {
 		val.replace(index, uQString(set->cfg[index].def));
 	}
 	return (js_joyval_from_name(uQStringCD(val.at(index))));
+}
+unsigned long long objJsc::val_to_ulonglong(int index) {
+	bool ok;
+	qulonglong value = val.at(index).toULongLong(&ok, 16);
+
+	if (ok == false) {
+		val.replace(index, uQString(set->cfg[index].def));
+		value = val.at(index).toULongLong(&ok, 16);
+	}
+	return (value);
+}
+void objJsc::ulonglong_to_val(int index, qulonglong value) {
+	val.replace(index, QString("0x") + QString("%1").arg(value, 1, 16).toUpper());
 }
 
 // ----------------------------------------- I/O------------------------------------------

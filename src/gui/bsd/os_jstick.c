@@ -219,7 +219,7 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
  							_js_axis *jsx;
 
 							for (a = 0; a < 2; a++) {
-								jsx = &jdev->data.hats[index + a];
+								jsx = &jdev->data.hat[index + a];
 								jsx->used = TRUE;
 								jsx->offset = usage + a;
 								jsx->min = hitem.logical_minimum;
@@ -357,7 +357,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 						for (i = 0; i < JS_MAX_AXES; i++) {
 							_js_axis *jsx = &jdev->data.axis[i];
 
-							if ((jsx->offset == usage) && (jsx->used)) {
+							if ((jsx->offset == usage) && jsx->used) {
 								value = hid_get_data(REP_BUF_DATA(jdev->report), &hitem);
 								js_axs_validate(jsx, value);
 							}
@@ -370,7 +370,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 						for (i = 0; i < JS_MAX_BUTTONS; i++) {
 							_js_button *jsx = &jdev->data.button[i];
 
-							if ((jsx->offset == usage) && (jsx->used == TRUE)) {
+							if ((jsx->offset == usage) && jsx->used) {
 								value = hid_get_data(REP_BUF_DATA(jdev->report), &hitem);
 								jsx->value = !!value;
 							}
@@ -379,7 +379,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 					case HUG_HAT_SWITCH:
 						if (hat < jdev->info.hats) {
 							int index = hat * 2;
-							_js_axis *jsx = &jdev->data.hats[index];
+							_js_axis *jsx = &jdev->data.hat[index];
 
 							if (jsx->used) {
 								float x, y;
@@ -387,7 +387,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 								value = hid_get_data(REP_BUF_DATA(jdev->report), &hitem);
 								hat_to_xy(hid_get_data(REP_BUF_DATA(jdev->report), &hitem), &x, &y);
 								js_axs_validate(jsx, x);
-								jsx = &jdev->data.hats[index + 1];
+								jsx = &jdev->data.hat[index + 1];
 								js_axs_validate(jsx, y);
 							}
 						}
@@ -400,7 +400,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 				for (i = 0; i < JS_MAX_BUTTONS; i++) {
 					_js_button *jsx = &jdev->data.button[i];
 
-					if ((jsx->offset == usage) && (jsx->used == TRUE)) {
+					if ((jsx->offset == usage) && jsx->used) {
 						value = hid_get_data(REP_BUF_DATA(jdev->report), &hitem);
 						jsx->value = !!value;
 					}
@@ -414,9 +414,6 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 		js_os_jdev_close(jdev);
 		return;
 	}
-//#if defined (DEBUG)
-//	js_info_jdev_events(jdev);
-//#endif
 }
 
 INLINE static void usb_dev_scan(void) {

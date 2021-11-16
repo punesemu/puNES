@@ -59,6 +59,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "dlgSettings.hpp"
 #include "dlgUncomp.hpp"
 #include "dlgVsSystem.hpp"
+#include "dlgJsc.hpp"
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"
 #include "wdgSettingsVideo.hpp"
@@ -92,6 +93,7 @@ static struct _qt {
 
 	// controlli esterni
 	dlgVsSystem *vssystem;
+	dlgJsc *djsc;
 
 	// QObject che non mandano un pause quando in background
 	QList<QWidget *>no_bck_pause;
@@ -197,10 +199,12 @@ BYTE gui_create(void) {
 
 	memset(&ext_win, 0x00, sizeof(ext_win));
 	qt.vssystem = new dlgVsSystem(qt.mwin);
+	qt.djsc = new dlgJsc(qt.mwin);
 
 	qt.no_bck_pause.append(qt.mwin);
 	qt.no_bck_pause.append(qt.dset);
 	qt.no_bck_pause.append(qt.vssystem);
+	qt.no_bck_pause.append(qt.djsc);
 
 	gmouse.hidden = FALSE;
 	gmouse.timer = gui_get_ms();
@@ -609,6 +613,15 @@ void *gui_dlgsettings_get_ptr(void) {
 }
 void gui_dlgsettings_input_update_joy_combo(void) {
 	qt.dset->widget_Settings_Input->update_joy_list();
+}
+
+void *gui_dlgjsc_get_ptr(void) {
+	return ((void *)qt.djsc);
+}
+void gui_dlgjsc_emit_update_joy_combo(void) {
+	if (qt.djsc->isVisible()) {
+		emit qt.djsc->et_update_joy_combo();
+	}
 }
 
 void gui_external_control_windows_show(void) {

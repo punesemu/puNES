@@ -16,6 +16,10 @@
   <property name="windowTitle">
    <string>Standard Pad</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_Standard_pad">
    <item>
     <widget class="QGroupBox" name="groupBox_controller">

@@ -475,7 +475,7 @@ void js_jdev_update(_js *js, BYTE enable_decode, BYTE port_index) {
 	thread_mutex_unlock(js->lock);
 }
 BYTE js_jdev_update_axs(_js_device *jdev, BYTE type, BYTE shcut, int index, DBWORD *value, BYTE *mode, float deadzone) {
-	_js_axis *jsx = !type ? &jdev->data.axis[index] : &jdev->data.hats[index];
+	_js_axis *jsx = !type ? &jdev->data.axis[index] : &jdev->data.hat[index];
 	float *last_state = !type
 		? shcut ? &jdev->shcut.last_state.axis[index] : &jdev->port.last_state.axis[index]
 		: shcut ? &jdev->shcut.last_state.hats[index] : &jdev->port.last_state.hats[index];
@@ -561,9 +561,9 @@ void js_jdev_read_port(_js *js, _port *port) {
 
 			for (i = 0; i < LENGTH(js_axs_type); i++) {
 				for (a = 0; a < js_axs_type[i]; a++) {
-					_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hats[a];
+					_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
 
-					if (jsx->used == TRUE) {
+					if (jsx->used & jsx->enabled)  {
 						if (js_jdev_update_axs(jdev, i, FALSE, a, &value, &mode, deadzone) == EXIT_OK) {
 							if (value && js->input_decode_event) {
 								js->input_decode_event(mode, FALSE, value, JOYSTICK, port);
@@ -573,7 +573,9 @@ void js_jdev_read_port(_js *js, _port *port) {
 				}
 			}
 			for (i = 0; i < JS_MAX_BUTTONS; i++) {
-				if (jdev->data.button[i].used == TRUE) {
+				_js_button *jsx = &jdev->data.button[i];
+
+				if (jsx->used & jsx->enabled) {
 					if (js_jdev_update_btn(jdev, FALSE, i, &value, &mode) == EXIT_OK) {
 						if (value && js->input_decode_event) {
 							js->input_decode_event(mode, FALSE, value, JOYSTICK, port);
@@ -607,9 +609,9 @@ BYTE js_jdev_read_shcut(_js_sch *js_sch) {
 
 			for (i = 0; i < LENGTH(js_axs_type); i++) {
 				for (a = 0; a < js_axs_type[i]; a++) {
-					_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hats[a];
+					_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
 
-					if (jsx->used == TRUE) {
+					if (jsx->used & jsx->enabled) {
 						if (js_jdev_update_axs(jdev, i, TRUE, a, &value, &mode, deadzone) == EXIT_OK) {
 							if (value) {
 								js_sch->value = value;
@@ -622,7 +624,9 @@ BYTE js_jdev_read_shcut(_js_sch *js_sch) {
 			}
 			if (value == 0) {
 				for (i = 0; i < JS_MAX_BUTTONS; i++) {
-					if (jdev->data.button[i].used == TRUE) {
+					_js_button *jsx = &jdev->data.button[i];
+
+					if (jsx->used & jsx->enabled) {
 						if (js_jdev_update_btn(jdev, TRUE, i, &value, &mode) == EXIT_OK) {
 							if (value) {
 								js_sch->value = value;
@@ -663,9 +667,9 @@ DBWORD js_jdev_read_in_dialog(_input_guid *guid) {
 
 			for (i = 0; i < LENGTH(js_axs_type); i++) {
 				for (a = 0; a < js_axs_type[i]; a++) {
-					_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hats[a];
+					_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
 
-					if (jsx->used == TRUE) {
+					if (jsx->used & jsx->enabled) {
 						if ((jsx->value < (jsx->center - deadzone)) || (jsx->value > (jsx->center + deadzone))) {
 							value = js_axs_joyval_from_joyoffset(jsx->offset);
 							if (jsx->value > jsx->center) {
@@ -679,7 +683,7 @@ DBWORD js_jdev_read_in_dialog(_input_guid *guid) {
 				for (i = 0; i < JS_MAX_BUTTONS; i++) {
 					_js_button *jsx = &jdev->data.button[i];
 
-					if (jsx->used == TRUE) {
+					if (jsx->used & jsx->enabled) {
 						if (jsx->value) {
 							value = js_btn_joyval_from_joyoffset(jsx->offset);
 						}
@@ -710,7 +714,7 @@ void js_info_jdev(_js_device *jdev) {
 	ufprintf(stderr, uL("gid : " uPs("") "\n"), js_guid_to_string(&jdev->guid));
 	for (i = 0; i < LENGTH(js_axs_type); i++) {
 		for (a = 0; a < js_axs_type[i]; a++) {
-			_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hats[a];
+			_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
 
 			if (jsx->used) {
 				ufprintf(stderr, uL("Axs: 0x%.3x " uPs("-20") " { %6d %6d %6d %13f}\n"), jsx->offset,
@@ -729,29 +733,6 @@ void js_info_jdev(_js_device *jdev) {
 			ufprintf(stderr, uL("Btn: 0x%03x " uPs("") "\n"), jsx->offset, js_btn_joffset_to_name(jsx->offset));
 		}
 	}
-}
-void js_info_jdev_events(_js_device *jdev) {
-	int i;
-
-	fprintf(stderr, "%d [%d]: ", jdev->index, jdev->type);
-	for (i = 0; i < JS_MAX_AXES; i++) {
-		if (jdev->data.axis[i].used) {
-			fprintf(stderr, " %6d", jdev->data.axis[i].value);
-		}
-	}
-	for (i = 0; i < JS_MAX_HATS; i++) {
-		int index = i * 2;
-
-		if (jdev->data.hats[index].used) {
-			fprintf(stderr, " %6d %6d", jdev->data.hats[index].value, jdev->data.hats[index + 1].value);
-		}
-	}
-	for (i = 0; i < JS_MAX_BUTTONS; i++) {
-		if (jdev->data.button[i].used) {
-			fprintf(stderr, " %d", jdev->data.button[i].value);
-		}
-	}
-	fprintf(stderr, "\r");
 }
 #endif
 

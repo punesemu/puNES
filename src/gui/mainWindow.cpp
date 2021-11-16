@@ -36,6 +36,7 @@
 #include "mainWindow.moc"
 #include "extra/singleapplication/singleapplication.h"
 #include "dlgSettings.hpp"
+#include "dlgJsc.hpp"
 #include "wdgMenuBar.hpp"
 #include "wdgOverlayUi.hpp"
 #include "common.h"
@@ -804,6 +805,8 @@ void mainWindow::connect_menu_signals(void) {
 	// State/[Save to file, Load from file]
 	connect_action(action_State_Save_to_file, SLOT(s_state_save_file()));
 	connect_action(action_State_Load_from_file, SLOT(s_state_load_file()));
+	// Tools
+	connect_action(action_Joypad_Gamepads_Debug, SLOT(s_open_djsc()));
 	// Help/About
 	connect_action(action_About, SLOT(s_help()));
 
@@ -1614,6 +1617,9 @@ void mainWindow::s_state_load_file(void) {
 	}
 
 	emu_thread_continue();
+}
+void mainWindow::s_open_djsc(void) {
+	dlgjsc->show();
 }
 void mainWindow::s_help(void) {
 	QDateTime compiled = QDateTime::fromString(COMPILED, "MMddyyyyhhmmss");

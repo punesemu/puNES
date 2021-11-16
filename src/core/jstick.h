@@ -96,6 +96,7 @@ typedef struct _js_info {
 } _js_info;
 typedef struct _js_axis {
 	BYTE used;
+	BYTE enabled;
 	float min;
 	float max;
 	float scale;
@@ -117,6 +118,7 @@ typedef struct _js_axis {
 } _js_axis;
 typedef struct _js_button {
 	BYTE used;
+	BYTE enabled;
 	BYTE value;
 	DBWORD offset;
 #if defined (_WIN32)
@@ -125,7 +127,7 @@ typedef struct _js_button {
 } _js_button;
 typedef struct _js_data {
 	_js_axis axis[JS_MAX_AXES];
-	_js_axis hats[JS_MAX_HATS * 2];
+	_js_axis hat[JS_MAX_HATS * 2];
 	_js_button button[JS_MAX_BUTTONS];
 } _js_data;
 typedef struct _js_last_states {
@@ -370,7 +372,6 @@ EXTERNC DBWORD js_jdev_read_in_dialog(_input_guid *guid);
 
 #if defined (DEBUG)
 EXTERNC void js_info_jdev(_js_device *jdev);
-EXTERNC void js_info_jdev_events(_js_device *jdev);
 #endif
 
 EXTERNC void js_os_init(BYTE first_time);

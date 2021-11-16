@@ -141,7 +141,7 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 						_js_axis *jsx;
 
 						for (a = 0; a < 2; a++) {
-							jsx = &jdev->data.hats[index + a];
+							jsx = &jdev->data.hat[index + a];
 							jsx->used = TRUE;
 							jsx->offset = i + a;
 							jsx->min = absinfo.minimum;
@@ -303,7 +303,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 	// axes e hats
 	for (i = 0; i < LENGTH(js_axs_type); i++) {
 		for (a = 0; a < js_axs_type[i]; a++) {
-			_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hats[a];
+			_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
 
 			if (jsx->used) {
 				int rc = ioctl(jdev->fd, EVIOCGABS(jsx->offset), &absinfo);
@@ -329,7 +329,4 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 		js_os_jdev_close(jdev);
 		return;
 	}
-//#if defined (DEBUG)
-//	js_info_jdev_events(jdev);
-//#endif
 }

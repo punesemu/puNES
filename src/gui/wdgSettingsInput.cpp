@@ -1016,4 +1016,5 @@ void wdgSettingsInput::s_et_update_joy_combo(void) {
 	if (dlg_std_pad) {
 		emit dlg_std_pad->et_update_joy_combo();
 	}
+	gui_dlgjsc_emit_update_joy_combo();
 }

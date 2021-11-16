@@ -119,6 +119,7 @@ enum _overlay_info_alignment {
 #define mainwin ((mainWindow *)gui_mainwindow_get_ptr())
 #define wdgrewind ((wdgRewind *)gui_wdgrewind_get_ptr())
 #define dlgsettings ((dlgSettings *)gui_dlgsettings_get_ptr())
+#define dlgjsc ((dlgJsc *)gui_dlgjsc_get_ptr())
 #define objcheat ((objCheat *)gui_objcheat_get_ptr())
 #define wdgoverlayui ((wdgOverlayUi *)gui_wdgoverlayui_get_ptr())
 
@@ -259,6 +260,9 @@ EXTERNC void gui_overlay_slot_preview(int slot, void *buffer, uTCHAR *file);
 
 EXTERNC void *gui_dlgsettings_get_ptr(void);
 EXTERNC void gui_dlgsettings_input_update_joy_combo(void);
+
+EXTERNC void *gui_dlgjsc_get_ptr(void);
+EXTERNC void gui_dlgjsc_emit_update_joy_combo(void);
 
 EXTERNC void *gui_dlgdebugger_get_ptr(void);
 EXTERNC void gui_dlgdebugger_click_step(void);

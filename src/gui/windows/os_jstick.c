@@ -638,15 +638,15 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 					for (a = 0; a < LENGTH(js_axs_type); a++) {
 						for (b = 0; b < js_axs_type[a]; b++) {
 							int hat_index = b * 2;
-							_js_axis *jsx = !a ? &jdev->data.axis[b] : &jdev->data.hats[hat_index];
+							_js_axis *jsx = !a ? &jdev->data.axis[b] : &jdev->data.hat[hat_index];
 
-							if ((jsx->used) && (events[i].dwOfs == jsx->offset_di8)) {
+							if (jsx->used && (events[i].dwOfs == jsx->offset_di8)) {
 								if (jsx->is_hat) {
 									float x, y;
 
 									hat_to_xy(events[i].dwData, &x, &y);
 									js_axs_validate(jsx, x);
-									jsx = &jdev->data.hats[hat_index + 1];
+									jsx = &jdev->data.hat[hat_index + 1];
 									js_axs_validate(jsx, y);
 								} else {
 									js_axs_validate(jsx, events[i].dwData);
@@ -658,7 +658,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 					for (a = 0; a < JS_MAX_BUTTONS; a++) {
 						_js_button *jsx = &jdev->data.button[a];
 
-						if ((jsx->used) && (events[i].dwOfs == jsx->offset_di8)) {
+						if (jsx->used && (events[i].dwOfs == jsx->offset_di8)) {
 							jsx->value = !!events[i].dwData;
 						}
 					}
@@ -714,7 +714,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 				// hats
 				for (i = 0; i < JS_MAX_HATS; i++) {
 					int hat_index = i * 2;
-					_js_axis *jsx = &jdev->data.hats[hat_index];
+					_js_axis *jsx = &jdev->data.hat[hat_index];
 
 					if (jsx->used) {
 						float x, y;
@@ -736,7 +736,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 						}
 						hat_to_xy(state.rgdwPOV[index], &x, &y);
 						js_axs_validate(jsx, x);
-						jsx = &jdev->data.hats[hat_index + 1];
+						jsx = &jdev->data.hat[hat_index + 1];
 						js_axs_validate(jsx, y);
 					}
 				}
@@ -758,9 +758,6 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 		js_os_jdev_close(jdev);
 		return;
 	}
-//#if defined (DEBUG)
-//	js_info_jdev_events(jdev);
-//#endif
 }
 
 INLINE static void hat_to_xy(DWORD hat, float *x, float *y) {
@@ -826,7 +823,7 @@ static BOOL CALLBACK cb_enum_obj(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID con
 			int index = jdev->info.hats * 2;
 			_js_axis *jsx;
 
-			jsx = &jdev->data.hats[index];
+			jsx = &jdev->data.hat[index];
 			jsx->used = TRUE;
 			jsx->min = JS_AXIS_MIN;
 			jsx->max = JS_AXIS_MAX;
@@ -837,7 +834,7 @@ static BOOL CALLBACK cb_enum_obj(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID con
 			jsx->is_hat = TRUE;
 			jdev->info.axes++;
 
-			jsx = &jdev->data.hats[index + 1];
+			jsx = &jdev->data.hat[index + 1];
 			jsx->used = TRUE;
 			jsx->min = JS_AXIS_MIN;
 			jsx->max = JS_AXIS_MAX;
