@@ -138,6 +138,7 @@ void dlgJsc::joy_combo_init(void) {
 	comboBox_joy_ID->blockSignals(false);
 
 	comboBox_joy_ID->setCurrentIndex(current_index);
+	comboBox_joy_ID->setEnabled(comboBox_joy_ID->count() > 1);
 
 	if (current_index == 0) {
 		emit comboBox_joy_ID->currentIndexChanged(current_index);
