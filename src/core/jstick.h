@@ -33,7 +33,13 @@ enum _js_misc {
 	JS_MAX_BUTTONS = 64,
 	JS_AXIS_MIN = -32767,
 	JS_AXIS_MAX = 32767,
-	JS_NO_JOYSTICK = 0xFF
+	JS_NO_JOYSTICK = 0xFF,
+	JS_ABS_FIRST_HAT = ABS_HAT0X,
+#if defined (__OpenBSD__) || defined (__FreeBSD__)
+	JS_ABS_LAST_HAT = ABS_HAT1Y
+#else
+	JS_ABS_LAST_HAT = ABS_HAT3Y
+#endif
 };
 enum _js_button_enum {
 	JS_BUTTON_A,
@@ -248,7 +254,7 @@ static const _js_btn_joyval js_btn_joyval[] = {
 	{ 0x407, BTN_TR,              { uL("TR"),         uL("BTN08") } },
 	{ 0x408, BTN_TL2,             { uL("TL2"),        uL("BTN09") } },
 	{ 0x409, BTN_TR2,             { uL("TR2"),        uL("BTN10") } },
-	{ 0x40A, BTN_SELECT,          { uL("SELECT"),     uL("BTN11") } },
+	{ 0x40A, BTN_SELECT,          { uL("BACK"),       uL("BTN11") } },
 	{ 0x40B, BTN_START,           { uL("START"),      uL("BTN12") } },
 	{ 0x40C, BTN_MODE,            { uL("MODE"),       uL("BTN13") } },
 	{ 0x40D, BTN_THUMBL,          { uL("THUMBL"),     uL("BTN14") } },

@@ -1672,7 +1672,7 @@ void objJsc::to_cfg(QString group) {
 			int axis = 0, hat = 0;
 
 			for (i = 1; i < LENGTH(js_axs_joyval); i++) {
-				_js_axis *jsx = (js_axs_joyval[i].offset >= ABS_HAT0X) && (js_axs_joyval[i].offset <= ABS_HAT3Y) ?
+				_js_axis *jsx = (js_axs_joyval[i].offset >= JS_ABS_FIRST_HAT) && (js_axs_joyval[i].offset <= JS_ABS_LAST_HAT) ?
 					&jdev->data.hat[hat++] : &jdev->data.axis[axis++];
 				qulonglong enabled = jsx->enabled;
 
@@ -1708,7 +1708,7 @@ void objJsc::fr_cfg(QString group) {
 			int axis = 0, hat = 0;
 
 			for (i = 1; i < LENGTH(js_axs_joyval); i++) {
-				_js_axis *jsx = (js_axs_joyval[i].offset >= ABS_HAT0X) && (js_axs_joyval[i].offset <= ABS_HAT3Y) ?
+				_js_axis *jsx = (js_axs_joyval[i].offset >= JS_ABS_FIRST_HAT) && (js_axs_joyval[i].offset <= JS_ABS_LAST_HAT) ?
 					&jdev->data.hat[hat++] : &jdev->data.axis[axis++];
 				qulonglong enabled = 1;
 

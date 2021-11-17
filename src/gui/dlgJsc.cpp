@@ -38,13 +38,6 @@ dlgJsc::dlgJsc(QWidget *parent) : QDialog(parent) {
 	label_Device_desc->setVisible(false);
 #endif
 
-	if (font().pointSize() > 9) {
-		QFont font;
-
-		font.setPointSize(9);
-		setFont(font);
-	}
-
 	connect(this, SIGNAL(et_update_joy_combo()), this, SLOT(s_et_update_joy_combo()));
 
 	for (i = 1; i < LENGTH(js_axs_joyval); i++) {
