@@ -50,7 +50,8 @@ typedef struct _js_usb_hid_device {
 
 INLINE static void usb_dev_scan(void);
 INLINE static void usb_dev_info(_js_usb_hid_device *uhdev, struct usb_device_info *udi);
-INLINE static void hat_to_xy(SDBWORD hat, float *x, float *y);
+INLINE static void hat_validate(_js_device *jdev, int index, SDBWORD value);
+INLINE static void hat_to_xy(SDBWORD hat, SDBWORD *x, SDBWORD *y);
 
 struct _js_os {
 	struct _usb_devices_detected {
@@ -64,6 +65,8 @@ void js_os_quit(UNUSED(BYTE last_time)) {}
 void js_os_jdev_init(_js_device *jdev) {
 	jdev->fd = -1;
 	umemset(jdev->dev, 0x00, usizeof(jdev->dev));
+
+	jdev->hug_d_pad_state = 0;
 
 	jdev->repdesc = NULL;
 	jdev->report.buf = NULL;
@@ -198,18 +201,13 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 							jsx->scale = (float)(JS_AXIS_MAX - JS_AXIS_MIN) / (float)(jsx->max - jsx->min);
 							jdev->info.axes++;
 							continue;
-						case BTN_DPAD_UP:
-						case BTN_DPAD_DOWN:
-						case BTN_DPAD_LEFT:
-						case BTN_DPAD_RIGHT:
-							if (jdev->info.buttons < JS_MAX_BUTTONS) {
-								_js_button *jsx = &jdev->data.button[jdev->info.buttons];
-
-								jsx->used = TRUE;
-								jsx->offset = usage;
-								jdev->info.buttons++;
-							}
+						case HUG_D_PAD_UP:
+						case HUG_D_PAD_LEFT:
+						case HUG_D_PAD_RIGHT:
 							continue;
+						case HUG_D_PAD_DOWN:
+							usage = HUG_HAT_SWITCH;
+							break;
 						default:
 							break;
 					}
@@ -221,9 +219,9 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 							for (a = 0; a < 2; a++) {
 								jsx = &jdev->data.hat[index + a];
 								jsx->used = TRUE;
-								jsx->offset = usage + a;
-								jsx->min = hitem.logical_minimum;
-								jsx->max = hitem.logical_maximum;
+								jsx->offset = HUG_HAT_SWITCH + a | 0x800;
+								jsx->min = JS_AXIS_MIN;
+								jsx->max = JS_AXIS_MAX;
 								jsx->center = 0;
 								jsx->scale = (float)(JS_AXIS_MAX - JS_AXIS_MIN) / (float)(jsx->max - jsx->min);
 								jsx->is_hat = TRUE;
@@ -334,6 +332,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 		while (hid_get_item(hdata, &hitem) > 0) {
 			unsigned int usage = HID_USAGE(hitem.usage);
 			unsigned int page = HID_PAGE(hitem.usage);
+			BYTE read_hat_value = TRUE;
 			SDBWORD value;
 
 			if (hitem.kind != hid_input) {
@@ -341,9 +340,58 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 			}
 
 			if (page == HUP_GENERIC_DESKTOP) {
-				if (usage == HUG_HAT_SWITCH) {
-					continue;
+				if ((usage >= HUG_D_PAD_UP) && (usage <= HUG_D_PAD_LEFT)) {
+					value = !!hid_get_data(REP_BUF_DATA(jdev->report), &hitem);
+
+					if (usage == HUG_D_PAD_UP) {
+						jdev->hug_d_pad_state = (jdev->hug_d_pad_state & 0x0E) | (value << 0);
+					} else if (usage == HUG_D_PAD_DOWN) {
+						jdev->hug_d_pad_state = (jdev->hug_d_pad_state & 0x0D) | (value << 1);
+					} else if (usage == HUG_D_PAD_LEFT) {
+						jdev->hug_d_pad_state = (jdev->hug_d_pad_state & 0x0B) | (value << 2);
+					} else if (usage == HUG_D_PAD_RIGHT) {
+						jdev->hug_d_pad_state = (jdev->hug_d_pad_state & 0x07) | (value << 3);
+					}
+
+					switch (jdev->hug_d_pad_state) {
+						default:
+						case 0:
+							value = 0x0F;
+							break;
+						case 1:
+							value = JS_OS_HAT_UP;
+							break;
+						case 9:
+							value = JS_OS_HAT_UP_RIGHT;
+							break;
+						case 8:
+							value = JS_OS_HAT_RIGHT;
+							break;
+						case 10:
+							value = JS_OS_HAT_RIGHT_DOWN;
+							break;
+						case 2:
+							value = JS_OS_HAT_DOWN;
+							break;
+						case 6:
+							value = JS_OS_HAT_DOWN_LEFT;
+							break;
+						case 4:
+							value = JS_OS_HAT_LEFT;
+							break;
+						case 5:
+							value = JS_OS_HAT_LEFT_UP;
+							break;
+					}
+
+					if (usage == HUG_D_PAD_DOWN) {
+						read_hat_value = FALSE;
+						usage = HUG_HAT_SWITCH;
+					} else {
+						continue;
+					}
 				}
+
 				switch (usage) {
 					case ABS_X:
 					case ABS_Y:
@@ -363,35 +411,14 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 							}
 						}
 						continue;
-					case BTN_DPAD_UP:
-					case BTN_DPAD_DOWN:
-					case BTN_DPAD_LEFT:
-					case BTN_DPAD_RIGHT:
-						for (i = 0; i < JS_MAX_BUTTONS; i++) {
-							_js_button *jsx = &jdev->data.button[i];
-
-							if ((jsx->offset == usage) && jsx->used) {
-								value = hid_get_data(REP_BUF_DATA(jdev->report), &hitem);
-								jsx->value = !!value;
-							}
-						}
-						continue;
 					case HUG_HAT_SWITCH:
 						if (hat < jdev->info.hats) {
-							int index = hat * 2;
-							_js_axis *jsx = &jdev->data.hat[index];
-
-							if (jsx->used) {
-								float x, y;
-
+							if (read_hat_value) {
 								value = hid_get_data(REP_BUF_DATA(jdev->report), &hitem);
-								hat_to_xy(hid_get_data(REP_BUF_DATA(jdev->report), &hitem), &x, &y);
-								js_axs_validate(jsx, x);
-								jsx = &jdev->data.hat[index + 1];
-								js_axs_validate(jsx, y);
 							}
+							hat_validate(jdev, hat * 2, value);
+							hat++;
 						}
-						hat++;
 						continue;
 					default:
 						continue;
@@ -513,51 +540,51 @@ INLINE static void usb_dev_info(_js_usb_hid_device *uhdev, struct usb_device_inf
 	uhdev->product_id = udi->udi_productNo;
 	uhdev->version = udi->udi_releaseNo;
 }
-INLINE static void hat_to_xy(SDBWORD hat, float *x, float *y) {
-	static const int hat_map[] = {
-		JS_OS_HAT_UP,
-		JS_OS_HAT_UP_RIGHT,
-		JS_OS_HAT_RIGHT,
-		JS_OS_HAT_RIGHT_DOWN,
-		JS_OS_HAT_DOWN,
-		JS_OS_HAT_DOWN_LEFT,
-		JS_OS_HAT_LEFT,
-		JS_OS_HAT_LEFT_UP,
-	};
+INLINE static void hat_validate(_js_device *jdev, int index, SDBWORD value) {
+	_js_axis *jsx = &jdev->data.hat[index];
 
-	(*x) = (*y) = 0.0f;
+	if (jsx->used) {
+		SDBWORD x, y;
 
+		hat_to_xy(value, &x, &y);
+		js_axs_validate(jsx, x);
+		jsx = &jdev->data.hat[index + 1];
+		js_axs_validate(jsx, y);
+	}
+}
+INLINE static void hat_to_xy(SDBWORD hat, SDBWORD *x, SDBWORD *y) {
+	(*x) = (*y) = 0;
 	if ((hat & 0x000F) == 0x000F) {
 		return;
 	}
 	if ((hat & 0x07) == hat) {
-		switch (hat_map[hat]) {
+		switch (hat) {
 			case JS_OS_HAT_UP:
-				(*x) = JS_AXIS_MAX;
+				(*y) = JS_AXIS_MIN;
 				break;
 			case JS_OS_HAT_UP_RIGHT:
+				(*y) = JS_AXIS_MIN;
 				(*x) = JS_AXIS_MAX;
-				(*y) = JS_AXIS_MAX;
 				break;
 			case JS_OS_HAT_RIGHT:
-				(*y) = JS_AXIS_MAX;
+				(*x) = JS_AXIS_MAX;
 				break;
 			case JS_OS_HAT_RIGHT_DOWN:
-				(*x) = JS_AXIS_MIN;
+				(*x) = JS_AXIS_MAX;
 				(*y) = JS_AXIS_MAX;
 				break;
 			case JS_OS_HAT_DOWN:
-				(*x) = JS_AXIS_MIN;
+				(*y) = JS_AXIS_MAX;
 				break;
 			case JS_OS_HAT_DOWN_LEFT:
 				(*x) = JS_AXIS_MIN;
-				(*y) = JS_AXIS_MIN;
+				(*y) = JS_AXIS_MAX;
 				break;
 			case JS_OS_HAT_LEFT:
-				(*y) = JS_AXIS_MIN;
+				(*x) = JS_AXIS_MIN;
 				break;
 			case JS_OS_HAT_LEFT_UP:
-				(*x) = JS_AXIS_MAX;
+				(*x) = JS_AXIS_MIN;
 				(*y) = JS_AXIS_MIN;
 				break;
 		}

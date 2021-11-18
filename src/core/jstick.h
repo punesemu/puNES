@@ -35,11 +35,7 @@ enum _js_misc {
 	JS_AXIS_MAX = 32767,
 	JS_NO_JOYSTICK = 0xFF,
 	JS_ABS_FIRST_HAT = ABS_HAT0X,
-#if defined (__OpenBSD__) || defined (__FreeBSD__)
-	JS_ABS_LAST_HAT = ABS_HAT1Y
-#else
 	JS_ABS_LAST_HAT = ABS_HAT3Y
-#endif
 };
 enum _js_button_enum {
 	JS_BUTTON_A,
@@ -154,6 +150,7 @@ typedef struct _js_device {
 	int fd;
 	uTCHAR dev[30];
 #if defined (__OpenBSD__) || defined (__FreeBSD__)
+	SDBWORD hug_d_pad_state;
 	struct report_desc *repdesc;
 	struct _js_report {
 		int id;

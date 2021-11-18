@@ -69,14 +69,14 @@
 #define ABS_RZ              HUG_RZ
 #define ABS_THROTTLE        HUG_SLIDER
 #define ABS_WHEEL           HUG_WHEEL
-#define ABS_HAT0X           HUG_HAT_SWITCH
-#define ABS_HAT0Y           HUG_HAT_SWITCH + 1
-#define ABS_HAT1X           HUG_HAT_SWITCH + 2
-#define ABS_HAT1Y           HUG_HAT_SWITCH + 3
-#define ABS_HAT2X           0xFFFFFF
-#define ABS_HAT2Y           0xFFFFFF
-#define ABS_HAT3X           0xFFFFFF
-#define ABS_HAT3Y           0xFFFFFF
+#define ABS_HAT0X           (HUG_HAT_SWITCH + 0) | 0x800
+#define ABS_HAT0Y           (HUG_HAT_SWITCH + 1) | 0x800
+#define ABS_HAT1X           (HUG_HAT_SWITCH + 2) | 0x800
+#define ABS_HAT1Y           (HUG_HAT_SWITCH + 3) | 0x800
+#define ABS_HAT2X           (HUG_HAT_SWITCH + 4) | 0x800
+#define ABS_HAT2Y           (HUG_HAT_SWITCH + 5) | 0x800
+#define ABS_HAT3X           (HUG_HAT_SWITCH + 6) | 0x800
+#define ABS_HAT3Y           (HUG_HAT_SWITCH + 7) | 0x800
 #define ABS_RUDDER          HUG_DIAL
 #define ABS_GAS             0xFFFFFF
 #define ABS_BRAKE           0xFFFFFF
@@ -97,67 +97,67 @@
 #define BTN_MODE            9
 #define BTN_THUMBL          10
 #define BTN_THUMBR          11
-#define BTN_DPAD_UP         HUG_D_PAD_UP
-#define BTN_DPAD_DOWN       HUG_D_PAD_DOWN
-#define BTN_DPAD_LEFT       HUG_D_PAD_LEFT
-#define BTN_DPAD_RIGHT      HUG_D_PAD_RIGHT
-#define BTN_TL2             12
-#define BTN_TR2             13
-#define BTN_C               14
-#define BTN_Z               15
-#define BTN_TRIGGER         16
-#define BTN_THUMB           17
-#define BTN_THUMB2          18
-#define BTN_TOP             19
-#define BTN_TOP2            20
-#define BTN_PINKIE          21
-#define BTN_BASE            22
-#define BTN_BASE2           23
-#define BTN_BASE3           24
-#define BTN_BASE4           25
-#define BTN_BASE5           26
-#define BTN_BASE6           27
-#define BTN_DEAD            28
-#define BTN_TRIGGER_HAPPY   29
-#define BTN_TRIGGER_HAPPY1  30
-#define BTN_TRIGGER_HAPPY2  31
-#define BTN_TRIGGER_HAPPY3  32
-#define BTN_TRIGGER_HAPPY4  33
-#define BTN_TRIGGER_HAPPY5  34
-#define BTN_TRIGGER_HAPPY6  35
-#define BTN_TRIGGER_HAPPY7  36
-#define BTN_TRIGGER_HAPPY8  37
-#define BTN_TRIGGER_HAPPY9  38
-#define BTN_TRIGGER_HAPPY10 39
-#define BTN_TRIGGER_HAPPY11 40
-#define BTN_TRIGGER_HAPPY12 41
-#define BTN_TRIGGER_HAPPY13 42
-#define BTN_TRIGGER_HAPPY14 43
-#define BTN_TRIGGER_HAPPY15 44
-#define BTN_TRIGGER_HAPPY16 45
-#define BTN_TRIGGER_HAPPY17 46
-#define BTN_TRIGGER_HAPPY18 47
-#define BTN_TRIGGER_HAPPY19 48
-#define BTN_TRIGGER_HAPPY20 49
-#define BTN_TRIGGER_HAPPY21 50
-#define BTN_TRIGGER_HAPPY22 51
-#define BTN_TRIGGER_HAPPY23 52
-#define BTN_TRIGGER_HAPPY24 53
-#define BTN_TRIGGER_HAPPY25 54
-#define BTN_TRIGGER_HAPPY26 55
-#define BTN_TRIGGER_HAPPY27 56
-#define BTN_TRIGGER_HAPPY28 57
-#define BTN_TRIGGER_HAPPY29 58
-#define BTN_TRIGGER_HAPPY30 59
-#define BTN_TRIGGER_HAPPY31 60
-#define BTN_TRIGGER_HAPPY32 61
-#define BTN_TRIGGER_HAPPY33 62
-#define BTN_TRIGGER_HAPPY34 63
-#define BTN_TRIGGER_HAPPY35 64
-#define BTN_TRIGGER_HAPPY36 65
-#define BTN_TRIGGER_HAPPY37 66
-#define BTN_TRIGGER_HAPPY38 67
-#define BTN_TRIGGER_HAPPY39 68
-#define BTN_TRIGGER_HAPPY40 69
+#define BTN_DPAD_UP         12
+#define BTN_DPAD_DOWN       13
+#define BTN_DPAD_LEFT       14
+#define BTN_DPAD_RIGHT      15
+#define BTN_TL2             16
+#define BTN_TR2             17
+#define BTN_C               18
+#define BTN_Z               19
+#define BTN_TRIGGER         20
+#define BTN_THUMB           21
+#define BTN_THUMB2          22
+#define BTN_TOP             23
+#define BTN_TOP2            24
+#define BTN_PINKIE          25
+#define BTN_BASE            26
+#define BTN_BASE2           27
+#define BTN_BASE3           28
+#define BTN_BASE4           29
+#define BTN_BASE5           30
+#define BTN_BASE6           31
+#define BTN_DEAD            32
+#define BTN_TRIGGER_HAPPY   33
+#define BTN_TRIGGER_HAPPY1  34
+#define BTN_TRIGGER_HAPPY2  35
+#define BTN_TRIGGER_HAPPY3  36
+#define BTN_TRIGGER_HAPPY4  37
+#define BTN_TRIGGER_HAPPY5  38
+#define BTN_TRIGGER_HAPPY6  39
+#define BTN_TRIGGER_HAPPY7  40
+#define BTN_TRIGGER_HAPPY8  41
+#define BTN_TRIGGER_HAPPY9  42
+#define BTN_TRIGGER_HAPPY10 43
+#define BTN_TRIGGER_HAPPY11 44
+#define BTN_TRIGGER_HAPPY12 45
+#define BTN_TRIGGER_HAPPY13 46
+#define BTN_TRIGGER_HAPPY14 47
+#define BTN_TRIGGER_HAPPY15 48
+#define BTN_TRIGGER_HAPPY16 49
+#define BTN_TRIGGER_HAPPY17 50
+#define BTN_TRIGGER_HAPPY18 51
+#define BTN_TRIGGER_HAPPY19 52
+#define BTN_TRIGGER_HAPPY20 53
+#define BTN_TRIGGER_HAPPY21 54
+#define BTN_TRIGGER_HAPPY22 55
+#define BTN_TRIGGER_HAPPY23 56
+#define BTN_TRIGGER_HAPPY24 57
+#define BTN_TRIGGER_HAPPY25 58
+#define BTN_TRIGGER_HAPPY26 59
+#define BTN_TRIGGER_HAPPY27 60
+#define BTN_TRIGGER_HAPPY28 61
+#define BTN_TRIGGER_HAPPY29 62
+#define BTN_TRIGGER_HAPPY30 63
+#define BTN_TRIGGER_HAPPY31 64
+#define BTN_TRIGGER_HAPPY32 65
+#define BTN_TRIGGER_HAPPY33 66
+#define BTN_TRIGGER_HAPPY34 67
+#define BTN_TRIGGER_HAPPY35 68
+#define BTN_TRIGGER_HAPPY36 69
+#define BTN_TRIGGER_HAPPY37 70
+#define BTN_TRIGGER_HAPPY38 71
+#define BTN_TRIGGER_HAPPY39 72
+#define BTN_TRIGGER_HAPPY40 73
 
 #endif /* OS_JSTICK_H_ */
