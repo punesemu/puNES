@@ -157,6 +157,7 @@ void dlgJsc::clear_all(void) {
 		if (cb) {
 			cb->setEnabled(false);
 			cb->setChecked(false);
+			cb->setStyleSheet("");
 			l->setEnabled(false);
 			l->setText("0");
 		}
