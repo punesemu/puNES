@@ -83,7 +83,7 @@ typedef struct _js_raw_devices {
 	PRAWINPUTDEVICELIST list;
 } _js_raw_devices;
 
-INLINE static void hat_to_xy(DWORD hat, float *x, float *y);
+INLINE static void hat_to_xy(DWORD hat, SDBWORD *x, SDBWORD *y);
 
 static BOOL CALLBACK cb_enum_dev(LPCDIDEVICEINSTANCEW instance, LPVOID context);
 static BOOL CALLBACK cb_enum_obj(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID context);
@@ -416,7 +416,7 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 						jsx->offset = ABS_RX;
 						break;
 					case JS_XINPUT_STHUMBRY:
-						jsx->offset = ABS_RX;
+						jsx->offset = ABS_RY;
 						break;
 					case JS_XINPUT_BLEFTTRIGGER:
 						jsx->offset = ABS_Z;
@@ -642,7 +642,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 
 							if (jsx->used && (events[i].dwOfs == jsx->offset_di8)) {
 								if (jsx->is_hat) {
-									float x, y;
+									SDBWORD x, y;
 
 									hat_to_xy(events[i].dwData, &x, &y);
 									js_axs_validate(jsx, x);
@@ -717,7 +717,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 					_js_axis *jsx = &jdev->data.hat[hat_index];
 
 					if (jsx->used) {
-						float x, y;
+						SDBWORD x, y;
 						int index = -1;
 
 						switch (jsx->offset_di8) {
@@ -762,16 +762,16 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 	}
 }
 
-INLINE static void hat_to_xy(DWORD hat, float *x, float *y) {
+INLINE static void hat_to_xy(DWORD hat, SDBWORD *x, SDBWORD *y) {
 	if (LOWORD(hat) == 0xFFFF) {
-		(*x) = (*y) = 0.0f;
+		(*x) = (*y) = 0;
 	} else {
 		if ((hat > JS_OS_HAT_UP) && (hat < JS_OS_HAT_DOWN)) {
 			(*x) = JS_AXIS_MAX;
 		} else if (hat > JS_OS_HAT_DOWN) {
 			(*x) = JS_AXIS_MIN;
 		} else {
-			(*x) = 0.0f;
+			(*x) = 0;
 		}
 
 		if ((hat > JS_OS_HAT_LEFT) || (hat < JS_OS_HAT_RIGHT)) {
@@ -779,7 +779,7 @@ INLINE static void hat_to_xy(DWORD hat, float *x, float *y) {
 		} else if ((hat > JS_OS_HAT_RIGHT) && (hat < JS_OS_HAT_LEFT)) {
 			(*y) = JS_AXIS_MAX;
 		} else {
-			(*y) = 0.0f;
+			(*y) = 0;
 		}
 	}
 }
@@ -802,9 +802,9 @@ static BOOL CALLBACK cb_enum_dev(LPCDIDEVICEINSTANCEW instance, LPVOID context) 
 			}
 		}
 		if (jd) {
-			thread_mutex_lock(jdev->lock);
+			thread_mutex_lock(jd->lock);
 
-			js_jdev_init(jdev);
+			js_jdev_init(jd);
 
 			memcpy(&jd->guid, &instance->guidInstance, sizeof(_input_guid));
 			memcpy(&jd->product_guid, &instance->guidProduct, sizeof(GUID));
@@ -812,7 +812,7 @@ static BOOL CALLBACK cb_enum_dev(LPCDIDEVICEINSTANCEW instance, LPVOID context) 
 
 			js_os_jdev_open(jd, (void *)context);
 
-			thread_mutex_unlock(jdev->lock);
+			thread_mutex_unlock(jd->lock);
 		}
 	}
 	return (DIENUM_CONTINUE);
