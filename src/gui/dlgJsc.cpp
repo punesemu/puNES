@@ -158,6 +158,7 @@ void dlgJsc::clear_all(void) {
 			cb->setEnabled(false);
 			cb->setChecked(false);
 			cb->setStyleSheet("");
+			cb->setToolTip("");
 			l->setEnabled(false);
 			l->setText("0");
 		}
@@ -169,6 +170,7 @@ void dlgJsc::clear_all(void) {
 			cb->setEnabled(false);
 			cb->setChecked(false);
 			cb->setStyleSheet("");
+			cb->setToolTip("");
 		}
 	}
 }
@@ -243,6 +245,8 @@ int dlgJsc::buttons_disabled(void) {
 }
 
 void dlgJsc::s_joy_read_timer(void) {
+	static const QString scbg = "QCheckBox { background-color : #ACFFAC; }";
+	static const QString scbr = "QCheckBox { background-color : #FFCFCF; }";
 	int jdev_index = js_jdev_index();
 
 	mutex->lock();
@@ -266,7 +270,7 @@ void dlgJsc::s_joy_read_timer(void) {
 								QLabel *l = findChild<QLabel *>("label_" + uQString(desc));
 
 								if (cb) {
-									cb->setStyleSheet(jsx->enabled ? "" : "QCheckBox { background-color : #FFCFCF; }");
+									cb->setStyleSheet(jsx->enabled ? "" : scbr);
 									l->setText(jsx->enabled ? QString("%1").arg(jsx->value): "0");
 								}
 							}
@@ -283,9 +287,7 @@ void dlgJsc::s_joy_read_timer(void) {
 							QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(js_btn_joyval[a].desc[1]));
 
 							if (cb) {
-								cb->setStyleSheet(jsx->enabled ?
-									jsx->value ? "QCheckBox { background-color : #ACFFAC; }" : "" :
-									"QCheckBox { background-color : #FFCFCF; }");
+								cb->setStyleSheet(jsx->enabled ? (jsx->value ? scbg : "") : scbr);
 							}
 						}
 					}
@@ -346,6 +348,12 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 									cb->setEnabled(true);
 									cb->setChecked(jsx->enabled);
 									cb->setProperty("myIndex", QVariant((i << 8) | a));
+									cb->setToolTip(
+										QString("<tr><td>Offset</td><td>: </td><td align=\"right\">0x%1</td></tr>").arg(jsx->offset, 3, 16, QChar('0')) +
+										QString("<tr><td>Min</td><td>: </td><td align=\"right\">%1</td></tr>").arg(jsx->min) +
+										QString("<tr><td>Max</td><td>: </td><td align=\"right\">%1</td></tr>").arg(jsx->max) +
+										QString("<tr><td>Center</td><td>: </td><td align=\"right\">%1</td></tr>").arg(jsx->center) +
+										QString("<tr><td>Scale</td><td>: </td><td align=\"right\">%1</td></tr>").arg(jsx->scale));
 									l->setEnabled(true);
 								}
 							}
@@ -365,6 +373,7 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 								cb->setEnabled(true);
 								cb->setChecked(jsx->enabled);
 								cb->setProperty("myIndex", QVariant(i));
+								cb->setToolTip(QString("<tr><td>Offset</td><td>: </td><td align=\"right\">0x%1</td></tr>").arg(jsx->offset, 3, 16, QChar('0')));
 							}
 						}
 					}
