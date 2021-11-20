@@ -10,5 +10,5 @@ Requires:
 Requires.private: libavutil >= 56.70.100
 Conflicts:
 Libs: -L${libdir}  -lavcodec 
-Libs.private: -L./lib.x64 -lvpx -lm -L./lib.x64 -lvpx -lm -liconv -lm -L./lib.x64 -lz -lmp3lame -lm -L./lib.x64 -lspeex -L./lib.x64 -lvorbis -L./lib.x64 -logg -L./lib.x64 -lvorbisenc -L./lib.x64 -lx264 -L./lib.x64 -lx265 -lole32 -luser32
+Libs.private: -L./lib.x64 -lvpx -lm -L./lib.x64 -lvpx -lm -liconv -lm -L./lib.x64 -lz -lmp3lame -lm -L./lib.x64 -lopus -lm -L./lib.x64 -lspeex -L./lib.x64 -lvorbis -L./lib.x64 -logg -L./lib.x64 -lvorbisenc -L./lib.x64 -lx264 -L./lib.x64 -lx265 -lole32 -luser32
 Cflags: -I${includedir}

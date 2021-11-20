@@ -59,6 +59,15 @@ CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=i686-w64
 CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=x86_64-w64-mingw32 --enable-sse --enable-static --disable-shared --with-ogg=/root/src/ffmpeg/x64/usr
 
 ----------------------------------------------
+libopus 1.3.1
+
+32-bit:
+X86_SSE4_1_CFLAGS="" CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=i686-w64-mingw32 --enable-static --disable-shared
+
+64-bit:
+X86_SSE4_1_CFLAGS="" CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=x86_64-w64-mingw32 --enable-static --disable-shared
+
+----------------------------------------------
 x264 git-db0d4177
 
 32-bit

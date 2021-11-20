@@ -487,7 +487,8 @@ static const _opt opt_recording_audio_format[] = {
 	{NULL, uL("aac")  , REC_FORMAT_AUDIO_AAC},
 	{NULL, uL("flac") , REC_FORMAT_AUDIO_FLAC},
 	{NULL, uL("ogg")  , REC_FORMAT_AUDIO_OGG},
-	{NULL, uL("wav")  , REC_FORMAT_AUDIO_WAV}
+	{NULL, uL("wav")  , REC_FORMAT_AUDIO_WAV},
+	{NULL, uL("opus") , REC_FORMAT_AUDIO_OPUS}
 };
 static const _opt opt_recording_video_format[] = {
 	{NULL, uL("mpeg1"), REC_FORMAT_VIDEO_MPG_MPEG1},
@@ -1120,7 +1121,7 @@ static const _settings main_cfg[] = {
 #if defined (WITH_FFMPEG)
 	{
 		uL("recording"), uL("audio format"), uL("wav"),
-		uL("# possible values: wav, mp3, aac, flac, ogg"),
+		uL("# possible values: wav, mp3, aac, flac, ogg, opus"),
 		NULL,
 		{LENGTH(opt_recording_audio_format), opt_recording_audio_format}
 	},

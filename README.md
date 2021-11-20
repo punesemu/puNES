@@ -251,6 +251,7 @@ Supported audio recording formats:
 * AAC Audio
 * Flac Audio
 * Ogg Audio ([vorbis](https://xiph.org/vorbis/)) (*)
+* Opus Audio ([libopus](https://www.opus-codec.org)) (*)
 
 Supported video recording formats:
 * MPEG 1 Video

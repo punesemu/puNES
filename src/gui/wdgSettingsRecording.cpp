@@ -53,6 +53,8 @@ static const char *format_description[REC_FORMAT_TOTAL] = {
 /* REC_FORMAT_AUDIO_FLAC      */ QT_TRANSLATE_NOOP("wdgSettingsRecording", "Flac Audio (*.flac)"),
 //: Do not translate file extensions contained between parentheses [example: (*.mp3)]
 /* REC_FORMAT_AUDIO_OGG       */ QT_TRANSLATE_NOOP("wdgSettingsRecording", "Ogg Audio (*.ogg)"),
+//: Do not translate file extensions contained between parentheses [example: (*.mp3)]
+/* REC_FORMAT_AUDIO_OPUS      */ QT_TRANSLATE_NOOP("wdgSettingsRecording", "Opus Audio (*.opus)"),
 };
 #endif
 

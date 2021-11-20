@@ -138,6 +138,7 @@ _recording_format_info recording_format_info[REC_FORMAT_TOTAL] = {
 	{ FALSE, "adts"    , { "aac" , "end" }         , REC_FORMAT_AUDIO, NULL, { "aac", "end" } },
 	{ FALSE, "flac"    , { "flac", "end" }         , REC_FORMAT_AUDIO, NULL, { "flac", "end" } },
 	{ FALSE, "ogg"     , { "ogg" , "end" }         , REC_FORMAT_AUDIO, NULL, { "libvorbis", "end" } },
+	{ FALSE, "opus"    , { "opus", "end" }         , REC_FORMAT_AUDIO, NULL, { "libopus", "end" } }
 };
 
 void recording_init(void) {
@@ -666,6 +667,7 @@ static BYTE ffmpeg_video_add_stream(enum recording_format rf) {
 		case REC_FORMAT_AUDIO_AAC:
 		case REC_FORMAT_AUDIO_FLAC:
 		case REC_FORMAT_AUDIO_OGG:
+		case REC_FORMAT_AUDIO_OPUS:
 			ret = ffmpeg_video_add_stream_format_audio(rf);
 			break;
 		default:
@@ -1335,7 +1337,8 @@ static int ffmpeg_audio_select_samplerate(const AVCodec *codec) {
 			case AV_CODEC_ID_PCM_F16LE:
 			case AV_CODEC_ID_FLAC:
 				return (snd.samplerate);
-			case AV_CODEC_ID_VORBIS: // supporta solo i sample rate 48000 e 44100
+			case AV_CODEC_ID_VORBIS:
+				// supporta solo i sample rate 48000 e 44100
 				return ((snd.samplerate == 48000) || (snd.samplerate == 44100) ? snd.samplerate : 44100);
 			default:
 				return (44100);
@@ -1373,8 +1376,10 @@ static int ffmpeg_audio_select_channel_layout(const AVCodec *codec) {
 			case AV_CODEC_ID_PCM_F16LE:
 			case AV_CODEC_ID_AAC:
 			case AV_CODEC_ID_FLAC:
-			//case AV_CODEC_ID_VORBIS: // non supporta il mono
+			case AV_CODEC_ID_OPUS:
 				return ((cfg->channels_mode == CH_MONO) ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO);
+			// non supporta il mono
+			case AV_CODEC_ID_VORBIS:
 			default:
 				return (AV_CH_LAYOUT_STEREO);
 		}
