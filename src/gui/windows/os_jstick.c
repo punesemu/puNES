@@ -408,29 +408,34 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 				switch (i) {
 					case JS_XINPUT_STHUMBLX:
 						jsx->offset = ABS_X;
+						jsx->min = JS_XINPUT_AXIS_MIN;
+						jsx->max = JS_AXIS_MAX;
 						break;
 					case JS_XINPUT_STHUMBLY:
 						jsx->offset = ABS_Y;
+						jsx->min = -JS_AXIS_MAX;
+						jsx->max = -JS_XINPUT_AXIS_MIN;
 						break;
 					case JS_XINPUT_STHUMBRX:
 						jsx->offset = ABS_RX;
+						jsx->min = JS_XINPUT_AXIS_MIN;
+						jsx->max = JS_AXIS_MAX;
 						break;
 					case JS_XINPUT_STHUMBRY:
 						jsx->offset = ABS_RY;
+						jsx->min = -JS_AXIS_MAX;
+						jsx->max = -JS_XINPUT_AXIS_MIN;
 						break;
 					case JS_XINPUT_BLEFTTRIGGER:
 						jsx->offset = ABS_Z;
+						jsx->min = 0;
+						jsx->max = 255;
 						break;
 					case JS_XINPUT_BRIGHTTRIGGER:
 						jsx->offset = ABS_RZ;
+						jsx->min = 0;
+						jsx->max = 255;
 						break;
-				}
-				if ((i == JS_XINPUT_BLEFTTRIGGER) || (i == JS_XINPUT_BRIGHTTRIGGER)) {
-					jsx->min = 0;
-					jsx->max = 255;
-				} else {
-					jsx->min = JS_XINPUT_AXIS_MIN;
-					jsx->max = JS_AXIS_MAX;
 				}
 				jsx->used = TRUE;
 				jsx->center = 0;
@@ -587,10 +592,10 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 	jsx = &jdev->data.axis[index];\
 	js_axs_validate(jsx, value)
 			__js_axs_validate(JS_XINPUT_STHUMBLX, state.Gamepad.sThumbLX);
-			__js_axs_validate(JS_XINPUT_STHUMBLY, state.Gamepad.sThumbLY);
+			__js_axs_validate(JS_XINPUT_STHUMBLY, -state.Gamepad.sThumbLY);
 			__js_axs_validate(JS_XINPUT_BLEFTTRIGGER, state.Gamepad.bLeftTrigger);
 			__js_axs_validate(JS_XINPUT_STHUMBRX, state.Gamepad.sThumbRX);
-			__js_axs_validate(JS_XINPUT_STHUMBRY, state.Gamepad.sThumbRY);
+			__js_axs_validate(JS_XINPUT_STHUMBRY, -state.Gamepad.sThumbRY);
 			__js_axs_validate(JS_XINPUT_BRIGHTTRIGGER, state.Gamepad.bRightTrigger);
 #undef __js_axs_validate
 
