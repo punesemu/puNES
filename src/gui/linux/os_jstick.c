@@ -102,6 +102,9 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 		return;
 	}
 
+	js_jdev_type(jdev);
+	jdev->is_xinput = js_jdev_is_xinput(jdev);
+
 	if (ioctl(jdev->fd, EVIOCGBIT(EV_ABS, sizeof(absbit)), absbit) >= 0) {
 		// axes
 		for (i = 0; i < ABS_MAX; ++i) {
@@ -190,9 +193,7 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 		return;
 	}
 
-	js_jdev_type(jdev);
 	js_guid_create(jdev);
-	jdev->is_xinput = js_jdev_is_xinput(jdev);
 	jdev->present = TRUE;
 	jstick.jdd.count++;
 

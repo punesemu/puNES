@@ -121,6 +121,9 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 		return;
 	}
 
+	js_jdev_type(jdev);
+	jdev->is_xinput = js_jdev_is_xinput(jdev);
+
 #if defined (__FreeBSD__)
 	if ((jdev->report.id = hid_get_report_id(jdev->fd)) < 0) {
 		jdev->report.id = -1;
@@ -251,7 +254,6 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 		return;
 	}
 
-	js_jdev_type(jdev);
 	js_guid_create(jdev);
 	jdev->present = TRUE;
 	jstick.jdd.count++;
@@ -407,7 +409,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 
 							if ((jsx->offset == usage) && jsx->used) {
 								value = hid_get_data(REP_BUF_DATA(jdev->report), &hitem);
-								js_axs_validate(jsx, value);
+								js_axs_validate(jsx, ((jsx->offset == ABS_Y) || (jsx->offset == ABS_RY)) && jdev->is_xinput ? -value : value);
 							}
 						}
 						continue;

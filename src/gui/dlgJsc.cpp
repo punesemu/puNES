@@ -144,7 +144,7 @@ void dlgJsc::clear_all(void) {
 	label_Device->setText("");
 #endif
 	label_GUID->setText("");
-	label_USB->setText("");
+	label_Misc->setText("");
 	label_Axes_line->setText("0 Axes, 0 Hats");
 	label_Buttons_line->setText("0 Buttons");
 
@@ -324,11 +324,12 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 			label_Device->setText(QString(jdev->dev));
 #endif
 			label_GUID->setText(uQString(js_guid_to_string(&jdev->guid)));
-			label_USB->setText(QString("bustype %1 - vid:pid %2:%3 - version %4").
+			label_Misc->setText(QString("bustype %1 - vid:pid %2:%3 - version %4 - xinput %5").
 				arg(jdev->usb.bustype, 4, 16, QChar('0')).
 				arg(jdev->usb.vendor_id, 4, 16, QChar('0')).
 				arg(jdev->usb.product_id, 4, 16, QChar('0')).
-				arg(jdev->usb.version, 4, 16, QChar('0')));
+				arg(jdev->usb.version, 4, 16, QChar('0')).
+				arg(jdev->is_xinput ? "y" : "n"));
 
 			// abilito solo quello che serve
 			for (i = 0; i < LENGTH(js_axs_type); i++) {

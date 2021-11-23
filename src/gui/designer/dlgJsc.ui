@@ -84,10 +84,36 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout_info">
-     <item row="0" column="1">
-      <widget class="QLabel" name="label_Device_2points">
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_Misc_desc">
        <property name="text">
-        <string notr="true">:</string>
+        <string notr="true">MIsc</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_GUID">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string notr="true">GUID info</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="label_Misc">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string notr="true">Misc info</string>
        </property>
       </widget>
      </item>
@@ -98,29 +124,8 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_GUID_desc">
-       <property name="text">
-        <string notr="true">GUID</string>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="1">
-      <widget class="QLabel" name="label_USB_2points">
-       <property name="text">
-        <string notr="true">:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_USB_desc">
-       <property name="text">
-        <string notr="true">USB</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="label_GUID_2points">
+      <widget class="QLabel" name="label_Misc_2points">
        <property name="text">
         <string notr="true">:</string>
        </property>
@@ -139,29 +144,24 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="label_GUID">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+     <item row="1" column="1">
+      <widget class="QLabel" name="label_GUID_2points">
        <property name="text">
-        <string notr="true">GUID info</string>
+        <string notr="true">:</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="label_USB">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_Device_2points">
        <property name="text">
-        <string notr="true">USB info</string>
+        <string notr="true">:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_GUID_desc">
+       <property name="text">
+        <string notr="true">GUID</string>
        </property>
       </widget>
      </item>
