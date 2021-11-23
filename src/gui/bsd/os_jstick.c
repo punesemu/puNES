@@ -48,6 +48,7 @@ typedef struct _js_usb_hid_device {
 	unsigned int flags;
 } _js_usb_hid_device;
 
+INLINE static BYTE is_abs_y_xinput(_js_device *jdev, _js_axis *jsx);
 INLINE static void usb_dev_scan(void);
 INLINE static void usb_dev_info(_js_usb_hid_device *uhdev, struct usb_device_info *udi);
 INLINE static void hat_validate(_js_device *jdev, int index, SDBWORD value);
@@ -198,8 +199,8 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 							jsx = &jdev->data.axis[jdev->info.axes];
 							jsx->used = TRUE;
 							jsx->offset = usage;
-							jsx->min = hitem.logical_minimum;
-							jsx->max = hitem.logical_maximum;
+							jsx->min = is_abs_y_xinput(jdev, jsx) ? -hitem.logical_maximum : hitem.logical_minimum;
+							jsx->max = is_abs_y_xinput(jdev, jsx) ? -hitem.logical_minimum : hitem.logical_maximum;
 							jsx->center = 0;
 							jsx->scale = (float)(JS_AXIS_MAX - JS_AXIS_MIN) / (float)(jsx->max - jsx->min);
 							jdev->info.axes++;
@@ -409,7 +410,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 
 							if ((jsx->offset == usage) && jsx->used) {
 								value = hid_get_data(REP_BUF_DATA(jdev->report), &hitem);
-								js_axs_validate(jsx, ((jsx->offset == ABS_Y) || (jsx->offset == ABS_RY)) && jdev->is_xinput ? -value : value);
+								js_axs_validate(jsx, is_abs_y_xinput(jdev, jsx) ? -value : value);
 							}
 						}
 						continue;
@@ -445,6 +446,9 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 	}
 }
 
+INLINE static BYTE is_abs_y_xinput(_js_device *jdev, _js_axis *jsx) {
+	return (((jsx->offset == ABS_Y) || (jsx->offset == ABS_RY)) && jdev->is_xinput);
+}
 INLINE static void usb_dev_scan(void) {
 #if !defined (__FreeBSD__)
 	int i;
