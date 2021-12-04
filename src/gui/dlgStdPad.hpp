@@ -22,7 +22,7 @@
 #include <QtCore/QtGlobal>
 #include <QtCore/QTimer>
 #include <QtWidgets/QDialog>
-#include "dlgStdPad.hh"
+#include <QtWidgets/QPushButton>
 #include "common.h"
 #include "input.h"
 
@@ -46,6 +46,23 @@ typedef struct _joy_list {
 
 extern _joy_list joy_list;
 
+class pixmapButton: public QPushButton {
+	private:
+		QPixmap pixmap;
+
+	public:
+		pixmapButton(QWidget *parent);
+		~pixmapButton();
+
+	protected:
+		void paintEvent(QPaintEvent *e);
+
+	public:
+		void setPixmap(const QPixmap &pixmap);
+};
+
+#include "dlgStdPad.hh"
+
 class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		Q_OBJECT
 
@@ -61,13 +78,14 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 				int counter;
 				QTimer *timer;
 			} seq;
-			QPushButton *bp;
+			pixmapButton *bp;
 			_cfg_port_tmp cfg;
 			bool no_other_buttons;
 			BYTE vbutton;
 			BYTE exec_js_init;
 			int deadzone;
 		} data;
+		int last_js_index;
 
 	public:
 		dlgStdPad(_cfg_port *cfg_port, QWidget *parent);
@@ -92,6 +110,7 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		void js_press_event(void);
 		void td_update_label(int type, int value);
 		void deadzone_update_label(int value);
+		void js_pixmapButton(int index, DBWORD input, pixmapButton *bt);
 		int js_jdev_index(void);
 
 	private slots:

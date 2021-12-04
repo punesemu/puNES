@@ -31,6 +31,8 @@
 thread_funct(js_jdev_read_events_loop, void *arg);
 thread_funct(js_detection_loop, void *arg);
 
+const _js_db_device *js_search_in_db(int index);
+
 _js js[PORT_MAX], js_shcut;
 _jstick jstick;
 
@@ -219,7 +221,7 @@ void js_guid_from_string(_input_guid *guid, uTCHAR *string) {
 #endif
 }
 
-uTCHAR *js_axs_joffset_to_name(const DBWORD offset) {
+uTCHAR *js_axs_joyoffset_to_name(const DBWORD offset) {
 	static uTCHAR str[30];
 	unsigned int i;
 
@@ -258,6 +260,16 @@ DBWORD js_axs_joyval_from_name(const uTCHAR *name) {
 		}
 	}
 	return (0);
+}
+DBWORD js_axs_joyval_to_joyoffset(const DBWORD value) {
+	unsigned int i;
+
+	for (i = 0; i < LENGTH(js_axs_joyval); i++) {
+		if ((value & 0xFFFE) == js_axs_joyval[i].value) {
+			return (js_axs_joyval[i].offset);
+		}
+	}
+	return (0x0FF);
 }
 DBWORD js_axs_joyval_from_joyoffset(const DBWORD offset) {
 	unsigned int a;
@@ -303,37 +315,28 @@ void js_axs_validate(_js_axis *jsx, SDBWORD value) {
 	jsx->value = value;
 }
 
-uTCHAR *js_btn_joffset_to_name(const DBWORD offset) {
+uTCHAR *js_btn_joyoffset_to_name(const DBWORD offset) {
 	static uTCHAR str[30];
 	unsigned int i;
 
 	for (i = 0; i < LENGTH(js_btn_joyval); i++) {
 		if (offset == js_btn_joyval[i].offset) {
-			ustrncpy(str, js_btn_joyval[i].desc[1], usizeof(str) - 1);
+			ustrncpy(str, js_btn_joyval[i].desc, usizeof(str) - 1);
 			return ((uTCHAR *)str);
 		}
 	}
 	return ((uTCHAR *)js_axs_joyval[0].desc[0]);
 }
-uTCHAR *js_btn_joyval_to_name(int jdev_index, const DBWORD value) {
+uTCHAR *js_btn_joyval_to_name(const DBWORD value) {
 	static uTCHAR str[30];
 	unsigned int i;
 
-	if ((jdev_index == -1) || ((jdev_index >= 0) && (jdev_index < MAX_JOYSTICK))) {
-		_js_device *jdev = &jstick.jdd.devices[jdev_index];
-		int index = 1;
+	umemset(str, 0x00, usizeof(str));
 
-		if ((jdev_index >= 0) && (jdev->present == TRUE) && (jdev->is_xinput == TRUE)) {
-			index = 0;
-		}
-
-		umemset(str, 0x00, usizeof(str));
-
-		for (i = 0; i < LENGTH(js_btn_joyval); i++) {
-			if (value == js_btn_joyval[i].value) {
-				ustrncpy(str, js_btn_joyval[i].desc[index], usizeof(str) - 1);
-				return ((uTCHAR *)str);
-			}
+	for (i = 0; i < LENGTH(js_btn_joyval); i++) {
+		if (value == js_btn_joyval[i].value) {
+			ustrncpy(str, js_btn_joyval[i].desc, usizeof(str) - 1);
+			return ((uTCHAR *)str);
 		}
 	}
 	return ((uTCHAR *)js_btn_joyval[0].desc);
@@ -342,8 +345,18 @@ DBWORD js_btn_joyval_from_name(const uTCHAR *name) {
 	unsigned int i;
 
 	for (i = 0; i < LENGTH(js_btn_joyval); i++) {
-		if (!ustrcmp(name, js_btn_joyval[i].desc[0]) || !ustrcmp(name, js_btn_joyval[i].desc[1])) {
+		if (!ustrcmp(name, js_btn_joyval[i].desc)) {
 			return (js_btn_joyval[i].value);
+		}
+	}
+	return (0);
+}
+DBWORD js_btn_joyval_to_joyoffset(const DBWORD value) {
+	unsigned int i;
+
+	for (i = 0; i < LENGTH(js_btn_joyval); i++) {
+		if (value == js_btn_joyval[i].value) {
+			return (js_btn_joyval[i].offset);
 		}
 	}
 	return (0);
@@ -359,9 +372,9 @@ DBWORD js_btn_joyval_from_joyoffset(const DBWORD offset) {
 	return (0);
 }
 
-uTCHAR *js_joyval_to_name(int jdev_index, const DBWORD value) {
+uTCHAR *js_joyval_to_name(const DBWORD value) {
 	if (value & 0x400) {
-		return (js_btn_joyval_to_name(jdev_index, value));
+		return (js_btn_joyval_to_name(value));
 	}
 	return (js_axs_joyval_to_name(value));
 }
@@ -373,9 +386,82 @@ DBWORD js_joyval_from_name(const uTCHAR *name) {
 	}
 	return (js_btn_joyval_from_name(name));
 }
+DBWORD js_joyval_to_joyoffset(const DBWORD value) {
+	if (value & 0x400) {
+		return (js_btn_joyval_to_joyoffset(value));
+	}
+	return (js_axs_joyval_to_joyoffset(value));
+}
+
+DBWORD js_joyval_default(int index, int button) {
+	const _js_db_device *jdb = js_search_in_db(index);
+	const DBWORD *defaults = NULL;
+	DBWORD offset;
+	unsigned int i;
+
+	defaults = &jdb->std_pad_default[0];
+	offset = (*(defaults + button));
+
+	if (JS_IS_BTN_DEF(offset)) {
+		offset = JS_BTNABS_UNDEF(offset);
+
+		for (i = 0; i < LENGTH(js_btn_joyval); i++) {
+			if (offset == js_btn_joyval[i].offset) {
+				return (js_btn_joyval[i].value);
+			}
+		}
+		return (js_btn_joyval[0].offset);
+	} else {
+		DBWORD min = !!(offset & JS_ABS_DEF_BIT(1));
+
+		offset = JS_BTNABS_UNDEF(offset);
+		for (i = 0; i < LENGTH(js_axs_joyval); i++) {
+			if (offset == js_axs_joyval[i].offset) {
+				return (js_axs_joyval[i].value | min);
+			}
+		}
+		return (js_axs_joyval[0].offset);
+	}
+}
+void js_joyval_icon_and_desc(int index, DBWORD input, uTCHAR **icon, uTCHAR **desc) {
+	(*icon) = NULL;
+	(*desc) = NULL;
+
+	if ((index < MAX_JOYSTICK) && (jstick.jdd.devices[index].type != JS_SC_UNKNOWN)) {
+		const _js_db_device *jdb = js_search_in_db(index);
+		const _js_db_device_icon_desc *btn = &jdb->btn[0], *axs = &jdb->axs[0], *tid = NULL;
+		unsigned int i, len_btn = LENGTH(jdb->btn), len_axs = LENGTH(jdb->axs);
+		DBWORD offset;
+
+		if (input & 0x400) {
+			offset = js_joyval_to_joyoffset(input);
+			for (i = 0; i < len_btn; i++) {
+				tid = btn + i;
+				if (offset == tid->offset) {
+					break;
+				}
+			}
+		} else {
+			offset = js_joyval_to_joyoffset(input & ~0x01);
+			for (i = 0; i < len_axs; i += 2) {
+				tid = axs + i;
+				if (offset == tid->offset) {
+					tid = axs + (i + (input & 0x01));
+					break;
+				}
+			}
+		}
+		if (tid) {
+			(*icon) = (uTCHAR *)&tid->icon[0];
+			(*desc) = (uTCHAR *)&tid->desc[0];
+		}
+	} else {
+		(*desc) = js_joyval_to_name(input);
+	}
+}
 
 void js_jdev_init(_js_device *jdev) {
-	jdev->type = JS_SC_NONE;
+	jdev->type = JS_SC_UNKNOWN;
 	jdev->is_xinput = FALSE;
 
 	umemset(jdev->desc, 0x00, usizeof(jdev->desc));
@@ -706,7 +792,7 @@ void js_info_jdev(_js_device *jdev) {
 	ufprintf(stderr, uL("dev : " uPs("") "\n"), jdev->dev);
 #endif
 	ufprintf(stderr, uL("dsc : " uPs("") "\n"), jdev->desc);
-	ufprintf(stderr, uL("usb : bustype %04x - vid:pid %04x:%04x - version %04x\n"),
+	ufprintf(stderr, uL("usb : bustype %04X - vid:pid %04X:%04X - version %04X\n"),
 		jdev->usb.bustype,
 		jdev->usb.vendor_id,
 		jdev->usb.product_id,
@@ -718,7 +804,7 @@ void js_info_jdev(_js_device *jdev) {
 
 			if (jsx->used) {
 				ufprintf(stderr, uL("Axs: 0x%.3x " uPs("-20") " { %6d %6d %6d %13f}\n"), jsx->offset,
-					js_axs_joffset_to_name(jsx->offset),
+					js_axs_joyoffset_to_name(jsx->offset),
 					(int)jsx->min,
 					(int)jsx->max,
 					(int)jsx->center,
@@ -730,7 +816,7 @@ void js_info_jdev(_js_device *jdev) {
 		_js_button *jsx = &jdev->data.button[i];
 
 		if (jsx->used) {
-			ufprintf(stderr, uL("Btn: 0x%03x " uPs("") "\n"), jsx->offset, js_btn_joffset_to_name(jsx->offset));
+			ufprintf(stderr, uL("Btn: 0x%03x " uPs("") "\n"), jsx->offset, js_btn_joyoffset_to_name(jsx->offset));
 		}
 	}
 }
@@ -745,6 +831,7 @@ void js_scan_thread_quit(void) {
 		thread_free(jstick.thread);
 	}
 }
+
 
 thread_funct(js_jdev_read_events_loop, void *arg) {
 	_js_device *jdev = (_js_device *)arg;
@@ -774,4 +861,33 @@ thread_funct(js_detection_loop, UNUSED(void *arg)) {
 		gui_sleep(10);
 	}
 	thread_funct_return();
+}
+
+const _js_db_device *js_search_in_db(int index) {
+	const _js_db_device *jdb = &js_db_devices[0];
+	unsigned int i;
+
+	if (index < MAX_JOYSTICK) {
+		_js_device *jdev = &jstick.jdd.devices[index];
+
+		// cerco il default;
+		for (i = 0; i < LENGTH(js_db_devices); i++) {
+			const _js_db_device *db = &js_db_devices[i];
+
+			if ((db->type == jdev->type) && (db->is_default == TRUE)) {
+				jdb = db;
+				break;
+			}
+		}
+		// cerco il caso device specifico;
+		for (i = 0; i < LENGTH(js_db_devices); i++) {
+			const _js_db_device *db = &js_db_devices[i];
+
+			if ((db->type == jdev->type) && (db->vendor_id == jdev->usb.vendor_id) && (db->product_id == jdev->usb.product_id)) {
+				jdb = db;
+				break;
+			}
+		}
+	}
+	return (jdb);
 }

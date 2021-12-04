@@ -202,9 +202,11 @@ class objJsc : public objSettings {
 		~objJsc();
 
 	protected:
-		void setup(void);
 		void to_cfg(QString group);
 		void fr_cfg(QString group);
+
+	protected:
+		void rd_key(int index);
 
 	public:
 		void jsc_default(int button, _port *port);

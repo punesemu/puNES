@@ -264,6 +264,8 @@ EXTERNC void gui_dlgsettings_input_update_joy_combo(void);
 EXTERNC void *gui_dlgjsc_get_ptr(void);
 EXTERNC void gui_dlgjsc_emit_update_joy_combo(void);
 
+EXTERNC void gui_js_joyval_icon_desc(int index, DBWORD input, void *icon, void *desc);
+
 EXTERNC void *gui_dlgdebugger_get_ptr(void);
 EXTERNC void gui_dlgdebugger_click_step(void);
 

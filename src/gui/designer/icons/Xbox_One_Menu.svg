@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="128"
+   height="128"
+   viewBox="0 0 128 128"
+   version="1.1"
+   id="svg22"
+   sodipodi:docname="Xbox_One_Menu_2.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview24"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="6.275"
+     inkscape:cx="58.7251"
+     inkscape:cy="59.920319"
+     inkscape:window-width="2560"
+     inkscape:window-height="1366"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Rectangle_57" />
+  <defs
+     id="defs5">
+    <clipPath
+       id="clip-button_xbox_digital_menu_2">
+      <rect
+         width="120"
+         height="120"
+         id="rect2"
+         x="0"
+         y="0" />
+    </clipPath>
+  </defs>
+  <g
+     id="button_xbox_digital_menu_2"
+     clip-path="url(#clip-button_xbox_digital_menu_2)"
+     transform="matrix(1.7777778,0,0,1.7777778,-46.666667,-46.666667)">
+    <g
+       id="Rectangle_57"
+       data-name="Rectangle 57"
+       transform="translate(28,28)"
+       fill="#2a2a2a"
+       stroke="#ffffff"
+       stroke-width="4">
+      <rect
+         width="72"
+         height="72"
+         rx="36"
+         stroke="none"
+         id="rect7"
+         x="-1.75"
+         y="-1.75"
+         style="stroke-width:4.5" />
+    </g>
+    <g
+       id="Rectangle_58"
+       data-name="Rectangle 58"
+       transform="matrix(-1.125,0,0,-1.125,89.25,84.75)"
+       fill="none"
+       stroke="#5b5b5b"
+       stroke-width="4">
+      <rect
+         width="48"
+         height="48"
+         rx="24"
+         stroke="none"
+         id="rect12"
+         x="0"
+         y="0" />
+      <rect
+         x="-2"
+         y="-2"
+         width="52"
+         height="52"
+         rx="26"
+         fill="none"
+         id="rect14" />
+    </g>
+    <rect
+       id="Rectangle_59"
+       data-name="Rectangle 59"
+       width="63"
+       height="63"
+       rx="31.5"
+       transform="scale(-1)"
+       fill="#404040"
+       x="-93.75"
+       y="-93.75"
+       style="stroke-width:1.125" />
+    <rect
+       id="Rectangle_206"
+       data-name="Rectangle 206"
+       width="36"
+       height="4.5"
+       fill="#ffffff"
+       x="44.25"
+       y="46.5"
+       style="stroke-width:1.125" />
+    <rect
+       id="Rectangle_207"
+       data-name="Rectangle 207"
+       width="36"
+       height="4.5"
+       fill="#ffffff"
+       x="44.25"
+       y="57.75"
+       style="stroke-width:1.125" />
+    <rect
+       id="Rectangle_208"
+       data-name="Rectangle 208"
+       width="36"
+       height="4.5"
+       fill="#ffffff"
+       x="44.25"
+       y="69"
+       style="stroke-width:1.125" />
+  </g>
+</svg>

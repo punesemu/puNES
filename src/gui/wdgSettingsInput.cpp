@@ -990,7 +990,7 @@ void wdgSettingsInput::s_joy_read_timer(void) {
 	DBWORD value = js_jdev_read_in_dialog(&cfg->input.jguid_sch);
 
 	if (shcut.joy.value && !value) {
-		shcut.text[JOYSTICK].replace(shcut.row, uQString(js_joyval_to_name(-1, shcut.joy.value)));
+		shcut.text[JOYSTICK].replace(shcut.row, uQString(js_joyval_to_name(shcut.joy.value)));
 		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(shcut.row), shcut.row + SET_INP_SC_OPEN, JOYSTICK);
 
 		shcut.timeout.timer->stop();

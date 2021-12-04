@@ -22,8 +22,7 @@
 #include "common.h"
 #include "input.h"
 #include "thread_def.h"
-#include "os_jstick.h"
-#include "jstick_ids.h"
+#include "jstick_db.h"
 
 enum _js_misc {
 	JS_MS_UPDATE_DETECT_DEVICE = 1000,
@@ -82,7 +81,7 @@ typedef struct _js_axs_joyval {
 typedef struct _js_btn_joyval {
 	DBWORD value;
 	DBWORD offset;
-	uTCHAR desc[2][30];
+	uTCHAR desc[30];
 } _js_btn_joyval;
 typedef struct _js_sch {
 	DBWORD value;
@@ -240,80 +239,80 @@ static const _js_axs_joyval js_axs_joyval[] = {
 	{ 0x030, ABS_TOOL_WIDTH,      { uL("TWIDTH MIN"),   uL("TWIDTH PLS"),   uL("ABS_TOOL_WIDTH") } }
 };
 static const _js_btn_joyval js_btn_joyval[] = {
-	{ 0x000, 0x000,               { uL("NULL"),       uL("NULL")  } },
-	{ 0x400, BTN_A,               { uL("A"),          uL("BTN01") } },
-	{ 0x401, BTN_B,               { uL("B"),          uL("BTN02") } },
-	{ 0x402, BTN_C,               { uL("C"),          uL("BTN03") } },
-	{ 0x403, BTN_X,               { uL("X"),          uL("BTN04") } },
-	{ 0x404, BTN_Y,               { uL("Y"),          uL("BTN05") } },
-	{ 0x405, BTN_Z,               { uL("Z"),          uL("BTN06") } },
-	{ 0x406, BTN_TL,              { uL("TL"),         uL("BTN07") } },
-	{ 0x407, BTN_TR,              { uL("TR"),         uL("BTN08") } },
-	{ 0x408, BTN_TL2,             { uL("TL2"),        uL("BTN09") } },
-	{ 0x409, BTN_TR2,             { uL("TR2"),        uL("BTN10") } },
-	{ 0x40A, BTN_SELECT,          { uL("BACK"),       uL("BTN11") } },
-	{ 0x40B, BTN_START,           { uL("START"),      uL("BTN12") } },
-	{ 0x40C, BTN_MODE,            { uL("MODE"),       uL("BTN13") } },
-	{ 0x40D, BTN_THUMBL,          { uL("THUMBL"),     uL("BTN14") } },
-	{ 0x40E, BTN_THUMBR,          { uL("THUMBR"),     uL("BTN15") } },
-	{ 0x40F, BTN_DPAD_UP,         { uL("DPAD UP"),    uL("BTN16") } },
-	{ 0x410, BTN_DPAD_DOWN,       { uL("DPAD DOWN"),  uL("BTN17") } },
-	{ 0x411, BTN_DPAD_LEFT,       { uL("DPAD LEFT"),  uL("BTN18") } },
-	{ 0x412, BTN_DPAD_RIGHT,      { uL("DPAD RIGHT"), uL("BTN19") } },
-	{ 0x413, BTN_TRIGGER,         { uL("TRIGGER"),    uL("BTN20") } },
-	{ 0x414, BTN_THUMB,           { uL("THUMB"),      uL("BTN21") } },
-	{ 0x415, BTN_THUMB2,          { uL("THUMB2"),     uL("BTN22") } },
-	{ 0x416, BTN_TOP,             { uL("TOP"),        uL("BTN23") } },
-	{ 0x417, BTN_TOP2,            { uL("TOP2"),       uL("BTN24") } },
-	{ 0x418, BTN_PINKIE,          { uL("PINKIE"),     uL("BTN25") } },
-	{ 0x419, BTN_BASE,            { uL("BASE1"),      uL("BTN26") } },
-	{ 0x41A, BTN_BASE2,           { uL("BASE2"),      uL("BTN27") } },
-	{ 0x41B, BTN_BASE3,           { uL("BASE3"),      uL("BTN28") } },
-	{ 0x41C, BTN_BASE4,           { uL("BASE4"),      uL("BTN29") } },
-	{ 0x41D, BTN_BASE5,           { uL("BASE5"),      uL("BTN30") } },
-	{ 0x41E, BTN_BASE6,           { uL("BASE6"),      uL("BTN31") } },
-	{ 0x41F, BTN_DEAD,            { uL("DEAD"),       uL("BTN32") } },
-	{ 0x420, BTN_TRIGGER_HAPPY,   { uL("THAPPY"),     uL("BTN33") } },
-	{ 0x421, BTN_TRIGGER_HAPPY1,  { uL("THAPPY1"),    uL("BTN34") } },
-	{ 0x422, BTN_TRIGGER_HAPPY2,  { uL("THAPPY2"),    uL("BTN35") } },
-	{ 0x423, BTN_TRIGGER_HAPPY3,  { uL("THAPPY3"),    uL("BTN36") } },
-	{ 0x424, BTN_TRIGGER_HAPPY4,  { uL("THAPPY4"),    uL("BTN37") } },
-	{ 0x425, BTN_TRIGGER_HAPPY5,  { uL("THAPPY5"),    uL("BTN38") } },
-	{ 0x426, BTN_TRIGGER_HAPPY6,  { uL("THAPPY6"),    uL("BTN39") } },
-	{ 0x427, BTN_TRIGGER_HAPPY7,  { uL("THAPPY7"),    uL("BTN40") } },
-	{ 0x428, BTN_TRIGGER_HAPPY8,  { uL("THAPPY8"),    uL("BTN41") } },
-	{ 0x429, BTN_TRIGGER_HAPPY9,  { uL("THAPPY9"),    uL("BTN42") } },
-	{ 0x42A, BTN_TRIGGER_HAPPY10, { uL("THAPPY10"),   uL("BTN43") } },
-	{ 0x42B, BTN_TRIGGER_HAPPY11, { uL("THAPPY11"),   uL("BTN44") } },
-	{ 0x42C, BTN_TRIGGER_HAPPY12, { uL("THAPPY12"),   uL("BTN45") } },
-	{ 0x42D, BTN_TRIGGER_HAPPY13, { uL("THAPPY13"),   uL("BTN46") } },
-	{ 0x42E, BTN_TRIGGER_HAPPY14, { uL("THAPPY14"),   uL("BTN47") } },
-	{ 0x42F, BTN_TRIGGER_HAPPY15, { uL("THAPPY15"),   uL("BTN48") } },
-	{ 0x430, BTN_TRIGGER_HAPPY16, { uL("THAPPY16"),   uL("BTN49") } },
-	{ 0x431, BTN_TRIGGER_HAPPY17, { uL("THAPPY17"),   uL("BTN50") } },
-	{ 0x432, BTN_TRIGGER_HAPPY18, { uL("THAPPY18"),   uL("BTN51") } },
-	{ 0x433, BTN_TRIGGER_HAPPY19, { uL("THAPPY19"),   uL("BTN52") } },
-	{ 0x434, BTN_TRIGGER_HAPPY20, { uL("THAPPY20"),   uL("BTN53") } },
-	{ 0x435, BTN_TRIGGER_HAPPY21, { uL("THAPPY21"),   uL("BTN54") } },
-	{ 0x436, BTN_TRIGGER_HAPPY22, { uL("THAPPY22"),   uL("BTN55") } },
-	{ 0x437, BTN_TRIGGER_HAPPY23, { uL("THAPPY23"),   uL("BTN56") } },
-	{ 0x438, BTN_TRIGGER_HAPPY24, { uL("THAPPY24"),   uL("BTN57") } },
-	{ 0x439, BTN_TRIGGER_HAPPY25, { uL("THAPPY25"),   uL("BTN58") } },
-	{ 0x43A, BTN_TRIGGER_HAPPY26, { uL("THAPPY26"),   uL("BTN59") } },
-	{ 0x43B, BTN_TRIGGER_HAPPY27, { uL("THAPPY27"),   uL("BTN60") } },
-	{ 0x43C, BTN_TRIGGER_HAPPY28, { uL("THAPPY28"),   uL("BTN61") } },
-	{ 0x43D, BTN_TRIGGER_HAPPY29, { uL("THAPPY29"),   uL("BTN62") } },
-	{ 0x43E, BTN_TRIGGER_HAPPY30, { uL("THAPPY30"),   uL("BTN63") } },
-	{ 0x43F, BTN_TRIGGER_HAPPY31, { uL("THAPPY31"),   uL("BTN64") } },
-	{ 0x440, BTN_TRIGGER_HAPPY32, { uL("THAPPY32"),   uL("BTN65") } },
-	{ 0x441, BTN_TRIGGER_HAPPY33, { uL("THAPPY33"),   uL("BTN66") } },
-	{ 0x442, BTN_TRIGGER_HAPPY34, { uL("THAPPY34"),   uL("BTN67") } },
-	{ 0x443, BTN_TRIGGER_HAPPY35, { uL("THAPPY35"),   uL("BTN68") } },
-	{ 0x444, BTN_TRIGGER_HAPPY36, { uL("THAPPY36"),   uL("BTN69") } },
-	{ 0x445, BTN_TRIGGER_HAPPY37, { uL("THAPPY37"),   uL("BTN70") } },
-	{ 0x446, BTN_TRIGGER_HAPPY38, { uL("THAPPY38"),   uL("BTN71") } },
-	{ 0x447, BTN_TRIGGER_HAPPY39, { uL("THAPPY39"),   uL("BTN72") } },
-	{ 0x448, BTN_TRIGGER_HAPPY40, { uL("THAPPY40"),   uL("BTN73") } }
+	{ 0x000, 0x000,               uL("NULL")  },
+	{ 0x400, BTN_A,               uL("BTN01") },
+	{ 0x401, BTN_B,               uL("BTN02") },
+	{ 0x402, BTN_C,               uL("BTN03") },
+	{ 0x403, BTN_X,               uL("BTN04") },
+	{ 0x404, BTN_Y,               uL("BTN05") },
+	{ 0x405, BTN_Z,               uL("BTN06") },
+	{ 0x406, BTN_TL,              uL("BTN07") },
+	{ 0x407, BTN_TR,              uL("BTN08") },
+	{ 0x408, BTN_TL2,             uL("BTN09") },
+	{ 0x409, BTN_TR2,             uL("BTN10") },
+	{ 0x40A, BTN_SELECT,          uL("BTN11") },
+	{ 0x40B, BTN_START,           uL("BTN12") },
+	{ 0x40C, BTN_MODE,            uL("BTN13") },
+	{ 0x40D, BTN_THUMBL,          uL("BTN14") },
+	{ 0x40E, BTN_THUMBR,          uL("BTN15") },
+	{ 0x40F, BTN_DPAD_UP,         uL("BTN16") },
+	{ 0x410, BTN_DPAD_DOWN,       uL("BTN17") },
+	{ 0x411, BTN_DPAD_LEFT,       uL("BTN18") },
+	{ 0x412, BTN_DPAD_RIGHT,      uL("BTN19") },
+	{ 0x413, BTN_TRIGGER,         uL("BTN20") },
+	{ 0x414, BTN_THUMB,           uL("BTN21") },
+	{ 0x415, BTN_THUMB2,          uL("BTN22") },
+	{ 0x416, BTN_TOP,             uL("BTN23") },
+	{ 0x417, BTN_TOP2,            uL("BTN24") },
+	{ 0x418, BTN_PINKIE,          uL("BTN25") },
+	{ 0x419, BTN_BASE,            uL("BTN26") },
+	{ 0x41A, BTN_BASE2,           uL("BTN27") },
+	{ 0x41B, BTN_BASE3,           uL("BTN28") },
+	{ 0x41C, BTN_BASE4,           uL("BTN29") },
+	{ 0x41D, BTN_BASE5,           uL("BTN30") },
+	{ 0x41E, BTN_BASE6,           uL("BTN31") },
+	{ 0x41F, BTN_DEAD,            uL("BTN32") },
+	{ 0x420, BTN_TRIGGER_HAPPY,   uL("BTN33") },
+	{ 0x421, BTN_TRIGGER_HAPPY1,  uL("BTN34") },
+	{ 0x422, BTN_TRIGGER_HAPPY2,  uL("BTN35") },
+	{ 0x423, BTN_TRIGGER_HAPPY3,  uL("BTN36") },
+	{ 0x424, BTN_TRIGGER_HAPPY4,  uL("BTN37") },
+	{ 0x425, BTN_TRIGGER_HAPPY5,  uL("BTN38") },
+	{ 0x426, BTN_TRIGGER_HAPPY6,  uL("BTN39") },
+	{ 0x427, BTN_TRIGGER_HAPPY7,  uL("BTN40") },
+	{ 0x428, BTN_TRIGGER_HAPPY8,  uL("BTN41") },
+	{ 0x429, BTN_TRIGGER_HAPPY9,  uL("BTN42") },
+	{ 0x42A, BTN_TRIGGER_HAPPY10, uL("BTN43") },
+	{ 0x42B, BTN_TRIGGER_HAPPY11, uL("BTN44") },
+	{ 0x42C, BTN_TRIGGER_HAPPY12, uL("BTN45") },
+	{ 0x42D, BTN_TRIGGER_HAPPY13, uL("BTN46") },
+	{ 0x42E, BTN_TRIGGER_HAPPY14, uL("BTN47") },
+	{ 0x42F, BTN_TRIGGER_HAPPY15, uL("BTN48") },
+	{ 0x430, BTN_TRIGGER_HAPPY16, uL("BTN49") },
+	{ 0x431, BTN_TRIGGER_HAPPY17, uL("BTN50") },
+	{ 0x432, BTN_TRIGGER_HAPPY18, uL("BTN51") },
+	{ 0x433, BTN_TRIGGER_HAPPY19, uL("BTN52") },
+	{ 0x434, BTN_TRIGGER_HAPPY20, uL("BTN53") },
+	{ 0x435, BTN_TRIGGER_HAPPY21, uL("BTN54") },
+	{ 0x436, BTN_TRIGGER_HAPPY22, uL("BTN55") },
+	{ 0x437, BTN_TRIGGER_HAPPY23, uL("BTN56") },
+	{ 0x438, BTN_TRIGGER_HAPPY24, uL("BTN57") },
+	{ 0x439, BTN_TRIGGER_HAPPY25, uL("BTN58") },
+	{ 0x43A, BTN_TRIGGER_HAPPY26, uL("BTN59") },
+	{ 0x43B, BTN_TRIGGER_HAPPY27, uL("BTN60") },
+	{ 0x43C, BTN_TRIGGER_HAPPY28, uL("BTN61") },
+	{ 0x43D, BTN_TRIGGER_HAPPY29, uL("BTN62") },
+	{ 0x43E, BTN_TRIGGER_HAPPY30, uL("BTN63") },
+	{ 0x43F, BTN_TRIGGER_HAPPY31, uL("BTN64") },
+	{ 0x440, BTN_TRIGGER_HAPPY32, uL("BTN65") },
+	{ 0x441, BTN_TRIGGER_HAPPY33, uL("BTN66") },
+	{ 0x442, BTN_TRIGGER_HAPPY34, uL("BTN67") },
+	{ 0x443, BTN_TRIGGER_HAPPY35, uL("BTN68") },
+	{ 0x444, BTN_TRIGGER_HAPPY36, uL("BTN69") },
+	{ 0x445, BTN_TRIGGER_HAPPY37, uL("BTN70") },
+	{ 0x446, BTN_TRIGGER_HAPPY38, uL("BTN71") },
+	{ 0x447, BTN_TRIGGER_HAPPY39, uL("BTN72") },
+	{ 0x448, BTN_TRIGGER_HAPPY40, uL("BTN73") }
 };
 
 extern _js js[PORT_MAX], js_shcut;
@@ -344,19 +343,25 @@ EXTERNC BYTE js_guid_cmp(_input_guid *guid1, _input_guid *guid2);
 EXTERNC uTCHAR *js_guid_to_string(_input_guid *guid);
 EXTERNC void js_guid_from_string(_input_guid *guid, uTCHAR *string);
 
-EXTERNC uTCHAR *js_axs_joffset_to_name(const DBWORD offset);
+EXTERNC uTCHAR *js_axs_joyoffset_to_name(const DBWORD offset);
 EXTERNC uTCHAR *js_axs_joyval_to_name(const DBWORD value);
 EXTERNC DBWORD js_axs_joyval_from_name(const uTCHAR *name);
+EXTERNC DBWORD js_axs_joyval_to_joyoffset(const DBWORD value);
 EXTERNC DBWORD js_axs_joyval_from_joyoffset(const DBWORD offset);
 EXTERNC void js_axs_validate(_js_axis *jsx, SDBWORD value);
 
-EXTERNC uTCHAR *js_btn_joffset_to_name(const DBWORD offset);
-EXTERNC uTCHAR *js_btn_joyval_to_name(int jdev_index, const DBWORD value);
+EXTERNC uTCHAR *js_btn_joyoffset_to_name(const DBWORD offset);
+EXTERNC uTCHAR *js_btn_joyval_to_name(const DBWORD value);
 EXTERNC DBWORD js_btn_joyval_from_name(const uTCHAR *name);
+EXTERNC DBWORD js_btn_joyval_to_joyoffset(const DBWORD value);
 EXTERNC DBWORD js_btn_joyval_from_joyoffset(const DBWORD offset);
 
-EXTERNC uTCHAR *js_joyval_to_name(int jdev_index, const DBWORD value);
+EXTERNC uTCHAR *js_joyval_to_name(const DBWORD value);
 EXTERNC DBWORD js_joyval_from_name(const uTCHAR *name);
+EXTERNC DBWORD js_joyval_to_joyoffset(const DBWORD value);
+
+EXTERNC DBWORD js_joyval_default(int index, int button);
+EXTERNC void js_joyval_icon_and_desc(int index, DBWORD input, uTCHAR **icon, uTCHAR **desc);
 
 EXTERNC void js_jdev_init(_js_device *jdev);
 EXTERNC void js_jdev_type(_js_device *jdev);

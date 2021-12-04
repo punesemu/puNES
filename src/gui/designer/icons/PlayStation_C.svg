@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   version="1.1"
+   id="Capa_1"
+   x="0px"
+   y="0px"
+   width="128"
+   height="128"
+   viewBox="0 0 128 127.99999"
+   enable-background="new 0 0 19.996 19.995"
+   xml:space="preserve"
+   sodipodi:docname="PlayStation_C.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs3040" /><sodipodi:namedview
+   id="namedview3038"
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1.0"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   showgrid="false"
+   inkscape:zoom="4.7074267"
+   inkscape:cx="-43.654424"
+   inkscape:cy="9.5593629"
+   inkscape:window-width="2560"
+   inkscape:window-height="1366"
+   inkscape:window-x="0"
+   inkscape:window-y="24"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Capa_1" />
+<g
+   display="none"
+   id="g3016">
+	<path
+   display="inline"
+   fill="#cc3366"
+   d="m 158.14,70.903 c 23.665,0 42.917,19.252 42.917,42.917 0,23.664 -19.252,42.917 -42.917,42.917 -23.665,0 -42.918,-19.253 -42.918,-42.917 0,-23.664 19.253,-42.917 42.918,-42.917 m 0,-14 c -31.434,0 -56.918,25.483 -56.918,56.917 0,31.435 25.484,56.917 56.918,56.917 31.434,0 56.917,-25.482 56.917,-56.917 0,-31.433 -25.483,-56.917 -56.917,-56.917 z"
+   id="path3014" />
+</g>
+<g
+   id="g3035"
+   transform="scale(6.4012802)">
+	<g
+   id="g3031">
+		<linearGradient
+   id="SVGID_1_"
+   gradientUnits="userSpaceOnUse"
+   x1="9.9980001"
+   y1="0"
+   x2="9.9980001"
+   y2="17.896">
+			<stop
+   offset="0"
+   style="stop-color:#5B5B5F"
+   id="stop3018" />
+			<stop
+   offset="0.0231"
+   style="stop-color:#59595D"
+   id="stop3020" />
+			<stop
+   offset="0.4507"
+   style="stop-color:#333335"
+   id="stop3022" />
+			<stop
+   offset="0.7912"
+   style="stop-color:#1C1C1D"
+   id="stop3024" />
+			<stop
+   offset="1"
+   style="stop-color:#141414"
+   id="stop3026" />
+		</linearGradient>
+		<circle
+   fill="url(#SVGID_1_)"
+   cx="9.9980001"
+   cy="9.9980001"
+   r="9.9980001"
+   id="circle3029"
+   style="fill:url(#SVGID_1_)" />
+	</g>
+	<path
+   fill="#cc3333"
+   d="m 9.998,5.177 c 2.658,0 4.82,2.163 4.82,4.82 0,2.657 -2.162,4.82 -4.82,4.82 -2.658,0 -4.819,-2.163 -4.819,-4.82 0,-2.657 2.161,-4.82 4.819,-4.82 m 0,-1.884 c -3.703,0 -6.705,3.002 -6.705,6.705 0,3.703 3.002,6.705 6.705,6.705 3.704,0 6.706,-3.002 6.706,-6.705 0,-3.703 -3.002,-6.705 -6.706,-6.705 z"
+   id="path3033" />
+</g>
+</svg>

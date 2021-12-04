@@ -624,6 +624,15 @@ void gui_dlgjsc_emit_update_joy_combo(void) {
 	}
 }
 
+void gui_js_joyval_icon_desc(int index, DBWORD input, void *icon, void *desc) {
+	uTCHAR *uicon = NULL, *udesc = NULL;
+	QString *si = (QString *)icon, *sd = (QString *)desc;
+
+	js_joyval_icon_and_desc(index, input, &uicon, &udesc);
+	(*si) = uicon ? uQString(uicon) : "";
+	(*sd) = udesc ? uQString(udesc) : "";
+}
+
 void gui_external_control_windows_show(void) {
 	if (ext_win.vs_system && (cfg->fullscreen != FULLSCR)) {
 		qt.vssystem->update_dialog();

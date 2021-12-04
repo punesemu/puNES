@@ -17,6 +17,7 @@
  */
 
 #include <QtWidgets/QAbstractItemView>
+#include <QtCore/QBuffer>
 #include "dlgJsc.moc"
 #include "dlgStdPad.hpp"
 #include "settings.h"
@@ -51,7 +52,7 @@ dlgJsc::dlgJsc(QWidget *parent) : QDialog(parent) {
 		}
 	}
 	for (i = 1; i < LENGTH(js_btn_joyval); i++) {
-		QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(js_btn_joyval[i].desc[1]));
+		QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(js_btn_joyval[i].desc));
 
 		if (cb) {
 			connect(cb, SIGNAL(clicked(bool)), this, SLOT(s_button_cb_clicked(bool)));
@@ -145,6 +146,7 @@ void dlgJsc::clear_all(void) {
 #endif
 	label_GUID->setText("");
 	label_Misc->setText("");
+	label_Type->setText("");
 	label_Axes_line->setText("0 Axes, 0 Hats");
 	label_Buttons_line->setText("0 Buttons");
 
@@ -164,7 +166,7 @@ void dlgJsc::clear_all(void) {
 		}
 	}
 	for (i = 1; i < LENGTH(js_btn_joyval); i++) {
-		QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(js_btn_joyval[i].desc[1]));
+		QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(js_btn_joyval[i].desc));
 
 		if (cb) {
 			cb->setEnabled(false);
@@ -197,7 +199,7 @@ void dlgJsc::update_info_lines(void) {
 	label_Buttons_line->setText(tmp);
 }
 int dlgJsc::js_jdev_index(void) {
-	int jdev_index = 255;
+	int jdev_index = JS_NO_JOYSTICK;
 
 	if ((comboBox_joy_ID->count() > 1) && comboBox_joy_ID->currentData().isValid()) {
 		jdev_index = comboBox_joy_ID->currentData().toInt();
@@ -251,7 +253,7 @@ void dlgJsc::s_joy_read_timer(void) {
 
 	mutex->lock();
 
-	if (jdev_index != 255) {
+	if (jdev_index != JS_NO_JOYSTICK) {
 		if (jdev_index < MAX_JOYSTICK) {
 			_js_device *jdev = &jstick.jdd.devices[jdev_index];
 			unsigned int i, a;
@@ -284,7 +286,7 @@ void dlgJsc::s_joy_read_timer(void) {
 				if (jsx->used == TRUE) {
 					for (a = 1; a < LENGTH(js_btn_joyval); a++) {
 						if (jsx->offset == js_btn_joyval[a].offset) {
-							QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(js_btn_joyval[a].desc[1]));
+							QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(js_btn_joyval[a].desc));
 
 							if (cb) {
 								cb->setStyleSheet(jsx->enabled ? (jsx->value ? scbg : "") : scbr);
@@ -324,12 +326,31 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 			label_Device->setText(QString(jdev->dev));
 #endif
 			label_GUID->setText(uQString(js_guid_to_string(&jdev->guid)));
-			label_Misc->setText(QString("bustype %1 - vid:pid %2:%3 - version %4 - xinput %5").
-				arg(jdev->usb.bustype, 4, 16, QChar('0')).
-				arg(jdev->usb.vendor_id, 4, 16, QChar('0')).
-				arg(jdev->usb.product_id, 4, 16, QChar('0')).
-				arg(jdev->usb.version, 4, 16, QChar('0')).
-				arg(jdev->is_xinput ? "y" : "n"));
+			label_Misc->setText(QString("bustype %1 - vid:pid %2:%3 - version %4").
+				arg(QString("%1").arg(jdev->usb.bustype, 4, 16, QChar('0')).toUpper()).
+				arg(QString("%1").arg(jdev->usb.vendor_id, 4, 16, QLatin1Char('0')).toUpper()).
+				arg(QString("%1").arg(jdev->usb.product_id, 4, 16, QChar('0')).toUpper()).
+				arg(QString("%1").arg(jdev->usb.version, 4, 16, QChar('0')).toUpper()));
+			{
+				QString type;
+
+				switch (jdev->type) {
+					default:
+					case JS_SC_UNKNOWN:
+						type = "Unknown";
+						break;
+					case JS_SC_MS_XBOX_ONE_GAMEPAD:
+						type = "Xbox One";
+						break;
+					case JS_SC_MS_XBOX_360_GAMEPAD:
+						type = "Xbox 360";
+						break;
+					case JS_SC_SONY_PS4_GAMEPAD:
+						type = "Playstation 4";
+						break;
+				}
+				label_Type->setText(QString("%1 [xinput : %2]").arg(type).arg(jdev->is_xinput ? "y" : "n"));
+			}
 
 			// abilito solo quello che serve
 			for (i = 0; i < LENGTH(js_axs_type); i++) {
@@ -344,18 +365,52 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 								const uTCHAR *desc = js_axs_joyval[b].desc[2];
 								QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(desc));
 								QLabel *l = findChild<QLabel *>("label_" + uQString(desc));
+								QString ticon1, ticon2, tdesc1, tdesc2;
+
+								gui_js_joyval_icon_desc(jdev->index, js_axs_joyval[b].value + 0, &ticon1, &tdesc1);
+								gui_js_joyval_icon_desc(jdev->index, js_axs_joyval[b].value + 1, &ticon2, &tdesc2);
+
+								if ((ticon1 != "") && (ticon2 != "")) {
+									QByteArray byteArray;
+									QBuffer buffer(&byteArray);
+									QPixmap pixmap;
+									bool no_ticon2 = ticon1 == ticon2;
+
+									pixmap = QPixmap(ticon1).scaled(16, 16, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+									pixmap.save(&buffer, "PNG");
+									ticon1 = QString(" <html><img src=\"data:image/png;base64,") + byteArray.toBase64() + "\"/></hmtl>";
+
+									if (no_ticon2) {
+										ticon2 = "";
+										tdesc2 = "";
+									} else {
+										buffer.reset();
+										pixmap = QPixmap(ticon2).scaled(16, 16, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+										pixmap.save(&buffer, "PNG");
+										ticon2 = QString(" <html><img src=\"data:image/png;base64,") + byteArray.toBase64() + "\"/></hmtl>";
+									}
+								}
 
 								if (cb) {
-									cb->setEnabled(true);
-									cb->setChecked(jsx->enabled);
-									cb->setProperty("myIndex", QVariant((i << 8) | a));
-									cb->setToolTip(
+									QString tooltip =
 										QString("<tr><td>Offset</td><td>: </td><td align=\"right\">0x%1</td></tr>").arg(jsx->offset, 3, 16, QChar('0')) +
 										QString("<tr><td>Min</td><td>: </td><td align=\"right\">%1</td></tr>").arg(jsx->min) +
 										QString("<tr><td>Max</td><td>: </td><td align=\"right\">%1</td></tr>").arg(jsx->max) +
 										QString("<tr><td>Center</td><td>: </td><td align=\"right\">%1</td></tr>").arg(jsx->center) +
-										QString("<tr><td>Scale</td><td>: </td><td align=\"right\">%1</td></tr>").arg(jsx->scale));
+										QString("<tr><td>Scale</td><td>: </td><td align=\"right\">%1</td></tr>").arg(jsx->scale) +
+										((tdesc2 == "") ?
+											QString("<tr><td>Desc</td><td>: </td><td align=\"right\">%1</td></tr>").arg(tdesc1) :
+											QString("<tr><td>Desc</td><td>: </td><td align=\"right\">%1, %2</td></tr>").arg(tdesc1).arg(tdesc2)) +
+										((ticon2 == "") ?
+											((ticon1 == "") ? "" : QString("<tr><td>Image</td><td>: </td><td align=\"right\">%1</td></tr>").arg(ticon1)) :
+											QString("<tr><td>Image</td><td>: </td><td align=\"right\">%1, %2</td></tr>").arg(ticon1).arg(ticon2));
+
+									cb->setEnabled(true);
+									cb->setChecked(jsx->enabled);
+									cb->setProperty("myIndex", QVariant((i << 8) | a));
+									cb->setToolTip(tooltip);
 									l->setEnabled(true);
+									l->setToolTip(tooltip);
 								}
 							}
 						}
@@ -368,13 +423,28 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 				if (jsx->used == TRUE) {
 					for (a = 1; a < LENGTH(js_btn_joyval); a++) {
 						if (jsx->offset == js_btn_joyval[a].offset) {
-							QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(js_btn_joyval[a].desc[1]));
+							QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(js_btn_joyval[a].desc));
+							QString ticon, tdesc;
+
+							gui_js_joyval_icon_desc(jdev->index, js_btn_joyval[a].value, &ticon, &tdesc);
+
+							if (ticon != "") {
+								QPixmap pixmap = QPixmap(ticon).scaled(16, 16, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+								QByteArray byteArray;
+								QBuffer buffer(&byteArray);
+
+								pixmap.save(&buffer, "PNG");
+								ticon = QString(" <html><img src=\"data:image/png;base64,") + byteArray.toBase64() + "\"/></hmtl>";
+							}
 
 							if (cb) {
 								cb->setEnabled(true);
 								cb->setChecked(jsx->enabled);
 								cb->setProperty("myIndex", QVariant(i));
-								cb->setToolTip(QString("<tr><td>Offset</td><td>: </td><td align=\"right\">0x%1</td></tr>").arg(jsx->offset, 3, 16, QChar('0')));
+								cb->setToolTip(
+									QString("<tr><td>Offset</td><td>: </td><td align=\"right\">0x%1</td></tr>").arg(jsx->offset, 3, 16, QChar('0')) +
+									QString("<tr><td>Desc</td><td>: </td><td align=\"right\">%1</td></tr>").arg(tdesc) +
+									((ticon == "") ? "" : QString("<tr><td>Image</td><td>: </td><td align=\"right\">%1</td></tr>").arg(ticon)));
 							}
 						}
 					}
@@ -404,7 +474,7 @@ void dlgJsc::s_button_cb_clicked(UNUSED(bool checked)) {
 	update_info_lines();
 }
 void dlgJsc::s_save_clicked(UNUSED(bool checked)) {
-	if (js_jdev_index() != 255) {
+	if (js_jdev_index() != JS_NO_JOYSTICK) {
 		_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
 		unsigned int i, a;
 		_js_data data;

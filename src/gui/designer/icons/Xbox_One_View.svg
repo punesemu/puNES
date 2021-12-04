@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="128"
+   height="128"
+   viewBox="0 0 128 128"
+   version="1.1"
+   id="svg21"
+   sodipodi:docname="Xbox_One_View_2.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview23"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="6.275"
+     inkscape:cx="58.7251"
+     inkscape:cy="59.920319"
+     inkscape:window-width="2560"
+     inkscape:window-height="1366"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Rectangle_57" />
+  <defs
+     id="defs5">
+    <clipPath
+       id="clip-button_xbox_digital_view_2">
+      <rect
+         width="120"
+         height="120"
+         id="rect2"
+         x="0"
+         y="0" />
+    </clipPath>
+  </defs>
+  <g
+     id="button_xbox_digital_view_2"
+     clip-path="url(#clip-button_xbox_digital_view_2)"
+     transform="matrix(1.7777778,0,0,1.7777778,-46.666667,-46.666667)">
+    <g
+       id="Rectangle_57"
+       data-name="Rectangle 57"
+       transform="translate(28,28)"
+       fill="#2a2a2a"
+       stroke="#ffffff"
+       stroke-width="4">
+      <rect
+         width="72"
+         height="72"
+         rx="36"
+         stroke="none"
+         id="rect7"
+         x="-1.75"
+         y="-1.75"
+         style="stroke-width:4.5" />
+    </g>
+    <g
+       id="Rectangle_58"
+       data-name="Rectangle 58"
+       transform="matrix(-1.125,0,0,-1.125,89.25,84.75)"
+       fill="#404040"
+       stroke="#5b5b5b"
+       stroke-width="4">
+      <rect
+         width="48"
+         height="48"
+         rx="24"
+         stroke="none"
+         id="rect12"
+         x="0"
+         y="0" />
+      <rect
+         x="-2"
+         y="-2"
+         width="52"
+         height="52"
+         rx="26"
+         fill="none"
+         id="rect14" />
+    </g>
+    <rect
+       id="Rectangle_59"
+       data-name="Rectangle 59"
+       width="63"
+       height="63"
+       rx="31.5"
+       transform="scale(-1)"
+       fill="#404040"
+       x="-93.75"
+       y="-93.75"
+       style="stroke-width:1.125" />
+    <path
+       id="Subtraction_55"
+       data-name="Subtraction 55"
+       d="m 49.874999,65.624999 h -6.75 v -22.5 h 27 v 7.875 h -4.694625 v -3.13875 H 47.820749 v 13.02525 h 2.05425 v 4.73625 z"
+       fill="#ffffff"
+       style="stroke-width:1.125" />
+    <path
+       id="Subtraction_53"
+       data-name="Subtraction 53"
+       d="m 81.374999,77.999999 h -27 v -22.5 h 27 z m -22.5,-17.76375 v 13.026375 h 18 V 60.236249 Z"
+       fill="#ffffff"
+       style="stroke-width:1.125" />
+  </g>
+</svg>

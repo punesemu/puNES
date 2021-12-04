@@ -1404,16 +1404,16 @@ static const _settings inp_cfg[] = {
 };
 
 static const _settings jsc_cfg[] = {
-	{uL("standard controller"), uL("A"),      uL("BTN02"),     NULL, NULL, {0, NULL}},
-	{uL("standard controller"), uL("B"),      uL("BTN01"),     NULL, NULL, {0, NULL}},
-	{uL("standard controller"), uL("Select"), uL("BTN11"),     NULL, NULL, {0, NULL}},
-	{uL("standard controller"), uL("Start"),  uL("BTN12"),     NULL, NULL, {0, NULL}},
-	{uL("standard controller"), uL("Up"),     uL("AXS Y MIN"), NULL, NULL, {0, NULL}},
-	{uL("standard controller"), uL("Down"),   uL("AXS Y PLS"), NULL, NULL, {0, NULL}},
-	{uL("standard controller"), uL("Left"),   uL("AXS X MIN"), NULL, NULL, {0, NULL}},
-	{uL("standard controller"), uL("Right"),  uL("AXS X PLS"), NULL, NULL, {0, NULL}},
-	{uL("standard controller"), uL("TurboA"), uL("BTN05"),     NULL, NULL, {0, NULL}},
-	{uL("standard controller"), uL("TurboB"), uL("BTN04"),     NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("A"),      NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("B"),      NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Select"), NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Start"),  NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Up"),     NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Down"),   NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Left"),   NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Right"),  NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("TurboA"), NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("TurboB"), NULL, NULL, NULL, {0, NULL}},
 	{
 		uL("system"), uL("Deadzone"), uL("40"),
 		NULL,

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>457</width>
-    <height>696</height>
+    <width>539</width>
+    <height>712</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -54,9 +54,6 @@
       </item>
       <item>
        <widget class="QTabWidget" name="tabWidget_kbd_joy">
-        <property name="toolTip">
-         <string/>
-        </property>
         <property name="currentIndex">
          <number>0</number>
         </property>
@@ -142,12 +139,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_kbd_default_A">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -167,7 +174,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_kbd_unset_A">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -212,12 +219,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_kbd_default_Select">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -237,7 +254,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_kbd_unset_Select">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -282,12 +299,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_kbd_default_Left">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -307,7 +334,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_kbd_unset_Left">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -360,14 +387,24 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string notr="true">PushButton</string>
+                 <string notr="true">0000000000000</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_kbd_default_Start">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -387,7 +424,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_kbd_unset_Start">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -422,12 +459,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_kbd_default_B">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -447,7 +494,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_kbd_unset_B">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -482,12 +529,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_kbd_default_TurboA">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -507,7 +564,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_kbd_unset_TurboA">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -542,12 +599,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_kbd_default_TurboB">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -567,7 +634,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_kbd_unset_TurboB">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -602,12 +669,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_kbd_default_Right">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -627,7 +704,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_kbd_unset_Right">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -662,12 +739,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_kbd_default_Down">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -687,7 +774,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_kbd_unset_Down">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -780,14 +867,24 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string notr="true">PushButton</string>
+                 <string notr="true">0000000000000</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_kbd_default_Up">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -807,7 +904,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_kbd_unset_Up">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -829,12 +926,39 @@
            </layout>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_kbd_info">
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
+           <widget class="QLabel" name="label_kbd_info">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <property name="readOnly">
-             <bool>true</bool>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>24</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>24</height>
+             </size>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Box</enum>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::RichText</enum>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::NoTextInteraction</set>
             </property>
            </widget>
           </item>
@@ -1021,7 +1145,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_joy_Right">
+               <widget class="pixmapButton" name="pushButton_joy_Right">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1031,12 +1155,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_joy_default_Right">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1056,7 +1190,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_joy_unset_Right">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1081,7 +1215,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_joy_A">
+               <widget class="pixmapButton" name="pushButton_joy_A">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1091,12 +1225,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_joy_default_A">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1116,7 +1260,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_joy_unset_A">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1141,7 +1285,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_joy_Left">
+               <widget class="pixmapButton" name="pushButton_joy_Left">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1151,12 +1295,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_joy_default_Left">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1176,7 +1330,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_joy_unset_Left">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1221,7 +1375,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_joy_Up">
+               <widget class="pixmapButton" name="pushButton_joy_Up">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1229,14 +1383,24 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string notr="true">PushButton</string>
+                 <string notr="true">0000000000000</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_joy_default_Up">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1256,7 +1420,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_joy_unset_Up">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1301,7 +1465,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_joy_B">
+               <widget class="pixmapButton" name="pushButton_joy_B">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1311,12 +1475,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_joy_default_B">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1336,7 +1510,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_joy_unset_B">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1371,7 +1545,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_joy_TurboB">
+               <widget class="pixmapButton" name="pushButton_joy_TurboB">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1381,12 +1555,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_joy_default_TurboB">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1406,7 +1590,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_joy_unset_TurboB">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1431,7 +1615,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_joy_TurboA">
+               <widget class="pixmapButton" name="pushButton_joy_TurboA">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1441,12 +1625,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_joy_default_TurboA">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1466,7 +1660,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_joy_unset_TurboA">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1501,7 +1695,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_joy_Select">
+               <widget class="pixmapButton" name="pushButton_joy_Select">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1511,12 +1705,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_joy_default_Select">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1536,7 +1740,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_joy_unset_Select">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1561,7 +1765,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_joy_Start">
+               <widget class="pixmapButton" name="pushButton_joy_Start">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1569,14 +1773,24 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string notr="true">PushButton</string>
+                 <string notr="true">0000000000000</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_joy_default_Start">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1596,7 +1810,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_joy_unset_Start">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1631,7 +1845,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_joy_Down">
+               <widget class="pixmapButton" name="pushButton_joy_Down">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1641,12 +1855,22 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>21</width>
+                  <height>21</height>
+                 </size>
+                </property>
                </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_joy_default_Down">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1666,7 +1890,7 @@
               <item>
                <widget class="QPushButton" name="pushButton_joy_unset_Down">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1708,12 +1932,39 @@
            </layout>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_joy_info">
-            <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
+           <widget class="QLabel" name="label_joy_info">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <property name="readOnly">
-             <bool>true</bool>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>24</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>24</height>
+             </size>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Box</enum>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::RichText</enum>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::NoTextInteraction</set>
             </property>
            </widget>
           </item>
@@ -1915,6 +2166,12 @@
           </item>
           <item row="0" column="1">
            <widget class="QLabel" name="label_slider_TurboA">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Turbo A Delay</string>
             </property>
@@ -1958,9 +2215,15 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>pixmapButton</class>
+   <extends>QPushButton</extends>
+   <header>dlgStdPad.hpp</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>tabWidget_kbd_joy</tabstop>
-  <tabstop>comboBox_kbd_ID</tabstop>
   <tabstop>pushButton_kbd_Up</tabstop>
   <tabstop>pushButton_kbd_default_Up</tabstop>
   <tabstop>pushButton_kbd_unset_Up</tabstop>
@@ -1996,7 +2259,6 @@
   <tabstop>pushButton_kbd_Unset_all</tabstop>
   <tabstop>horizontalSlider_kbd_Deadzone</tabstop>
   <tabstop>pushButton_kbd_Deadzone</tabstop>
-  <tabstop>comboBox_joy_ID</tabstop>
   <tabstop>pushButton_joy_Up</tabstop>
   <tabstop>pushButton_joy_default_Up</tabstop>
   <tabstop>pushButton_joy_unset_Up</tabstop>

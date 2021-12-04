@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="128"
+   height="128"
+   viewBox="0 0 128 128"
+   version="1.1"
+   id="svg28"
+   sodipodi:docname="Xbox_One_A.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview30"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="6.275"
+     inkscape:cx="56.494024"
+     inkscape:cy="59.920319"
+     inkscape:window-width="2560"
+     inkscape:window-height="1366"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Button_-_XBOX_B" />
+  <defs
+     id="defs4">
+    <clipPath
+       id="clip-path">
+      <rect
+         id="Rectangle_73"
+         data-name="Rectangle 73"
+         width="120"
+         height="120"
+         x="0"
+         y="0" />
+    </clipPath>
+  </defs>
+  <g
+     id="button_xbox_digital_a_11"
+     clip-path="url(#clip-path)"
+     transform="matrix(1.2727026,0,0,1.2864515,-12.362156,-13.18709)">
+    <g
+       id="Button_-_XBOX_B"
+       data-name="Button - XBOX B"
+       clip-path="url(#clip-path)"
+       inkscape:label="Button_-_XBOX_A">
+      <g
+         id="Button_-_Base"
+         data-name="Button - Base"
+         transform="matrix(1.0931889,0,0,1.0815055,9.7133109,10.250748)">
+        <circle
+           id="Button_-_Base-2"
+           data-name="Button - Base"
+           cx="46"
+           cy="46"
+           r="46"
+           fill="#2a2a2a" />
+      </g>
+      <g
+         id="Button_-_Top"
+         data-name="Button - Top"
+         transform="matrix(1.0931889,0,0,1.0815055,14.086066,10.250748)">
+        <circle
+           id="Button_-_Top-2"
+           data-name="Button - Top"
+           cx="42"
+           cy="42"
+           r="42"
+           fill="#5b5b5b" />
+      </g>
+      <g
+         id="Button_-_Top-3"
+         data-name="Button - Top"
+         transform="matrix(1.0931889,0,0,1.0815055,14.086066,18.463701)">
+        <ellipse
+           id="Button_-_Top-4"
+           data-name="Button - Top"
+           cx="42"
+           cy="38"
+           rx="42"
+           ry="38"
+           transform="translate(0,0.406)"
+           fill="#404040" />
+      </g>
+      <path
+         id="Path_128"
+         data-name="Path 128"
+         d="M 70.737301,80.930916 67.681838,71.007021 H 52.318162 l -3.055463,9.923895 H 39.634984 L 54.508912,39.069083 H 65.433149 L 80.363923,80.930916 Z M 65.549027,63.593302 q -4.2372,-13.485291 -4.770677,-15.256797 -0.533476,-1.771506 -0.765232,-2.794612 -0.951074,3.650081 -5.44736,18.050327 z"
+         fill="#16d65d"
+         style="stroke-width:1.08733" />
+    </g>
+  </g>
+</svg>

@@ -1641,17 +1641,13 @@ objJsc::objJsc(Format f, QString file, int list_ele, int index) : objSettings(f,
 }
 objJsc::~objJsc() {}
 
-void objJsc::setup(void) {
-	rd();
-	wr();
-}
 void objJsc::to_cfg(QString group) {
 	_js_device *jdev = &jstick.jdd.devices[jindex];
 	unsigned int i;
 
 	if ((group == "standard controller") || (group == "all")) {
 		for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-			val.replace(SET_JSC_PAD_A + i, uQString(js_joyval_to_name(-1, jdev->stdctrl[i])));
+			val.replace(SET_JSC_PAD_A + i, uQString(js_joyval_to_name(jdev->stdctrl[i])));
 		}
 	}
 	if ((group == "system") || (group == "all")) {
@@ -1718,8 +1714,22 @@ void objJsc::fr_cfg(QString group) {
 	}
 }
 
+void objJsc::rd_key(int index) {
+	if (set->cfg[index].grp) {
+		beginGroup(uQString(set->cfg[index].grp));
+		if (index < MAX_STD_PAD_BUTTONS) {
+			DBWORD joyval = js_joyval_default(jindex, index);
+
+			val.replace(index, value(uQString(set->cfg[index].key), uQString(js_joyval_to_name(joyval))).toString());
+		} else {
+			val.replace(index, value(uQString(set->cfg[index].key), uQString(set->cfg[index].def)).toString());
+		}
+		endGroup();
+	}
+}
+
 void objJsc::jsc_default(int button, _port *port) {
-	port->input[JOYSTICK][button] = js_joyval_from_name(set->cfg[SET_JSC_PAD_A + button].def);
+	port->input[JOYSTICK][button] = js_joyval_default(jindex, button);
 }
 void objJsc::jsc_defaults(_port *port) {
 	int i;
@@ -1734,7 +1744,13 @@ int objJsc::jsc_deadzone_default(void) {
 
 int objJsc::jsc_joyval_to_int(int index) {
 	if (val.at(index).isEmpty()) {
-		val.replace(index, uQString(set->cfg[index].def));
+		if (index < MAX_STD_PAD_BUTTONS) {
+			DBWORD joyval = js_joyval_default(jindex, index);
+
+			val.replace(index, uQString(js_joyval_to_name(joyval)));
+		} else {
+			val.replace(index, uQString(set->cfg[index].def));
+		}
 	}
 	return (js_joyval_from_name(uQStringCD(val.at(index))));
 }
