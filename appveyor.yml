@@ -4,7 +4,7 @@ branches:
   - master
 skip_tags: true
 skip_branch_with_pr: true
-image: Visual Studio 2019
+image: Visual Studio 2022
 init:
 - ps: >-
     # Set "build version number" to "short-commit-hash"
@@ -65,7 +65,7 @@ build_script:
 
     bash -lc "WIPS_VERSION=true CPPFLAGS='-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse' CFLAGS='' CXXFLAGS='' ../../../configure --with-d3d9"
 
-    bash -lc "make"
+    bash -lc "make -j2"
 
     bash -lc "strip src/punes.exe"
 
@@ -75,7 +75,7 @@ build_script:
 
     bash -lc "WIPS_VERSION=true CPPFLAGS='-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse' CFLAGS='' CXXFLAGS='' ../../../configure --with-opengl"
 
-    bash -lc "make"
+    bash -lc "make -j2"
 
     bash -lc "strip src/punes.exe"
 
