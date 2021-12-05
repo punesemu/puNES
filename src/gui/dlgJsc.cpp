@@ -62,6 +62,7 @@ dlgJsc::dlgJsc(QWidget *parent) : QDialog(parent) {
 	connect(comboBox_joy_ID, SIGNAL(activated(int)), this, SLOT(s_combobox_joy_activated(int)));
 	connect(comboBox_joy_ID, SIGNAL(currentIndexChanged(int)), this, SLOT(s_combobox_joy_index_changed(int)));
 	connect(pushButton_Save, SIGNAL(clicked(bool)), this, SLOT(s_save_clicked(bool)));
+	connect(pushButton_CLose, SIGNAL(clicked(bool)), this, SLOT(s_close_clicked(bool)));
 
 	connect(timer, SIGNAL(timeout()), this, SLOT(s_joy_read_timer()));
 
@@ -498,6 +499,9 @@ void dlgJsc::s_save_clicked(UNUSED(bool checked)) {
 		}
 		settings_jsc_save();
 	}
+}
+void dlgJsc::s_close_clicked(UNUSED(bool checked)) {
+	close();
 }
 
 void dlgJsc::s_et_update_joy_combo(void) {

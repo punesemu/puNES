@@ -63,6 +63,7 @@ class dlgJsc : public QDialog, public Ui::dlgJsc {
 		void s_axis_cb_clicked(bool checked);
 		void s_button_cb_clicked(bool checked);
 		void s_save_clicked(bool checked);
+		void s_close_clicked(bool checked);
 
 	private slots:
 		void s_et_update_joy_combo(void);
