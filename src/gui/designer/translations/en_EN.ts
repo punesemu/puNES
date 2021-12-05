@@ -20,6 +20,13 @@
     </message>
 </context>
 <context>
+    <name>dlgJsc</name>
+    <message>
+        <source>Close Window</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>dlgSettings</name>
     <message>
         <source>Settings</source>
@@ -117,23 +124,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No usable device</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Select device first</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error on open device %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error on reading controllers configurations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -230,6 +221,18 @@
     </message>
     <message>
         <source>Discard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Press a key (ESC for the previous value &quot;%1&quot;%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deadzone</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -546,10 +549,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Vs System Controls</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Open working folder</source>
         <translation type="unfinished"></translation>
     </message>
@@ -716,6 +715,14 @@
     </message>
     <message>
         <source>Slot &amp;B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Vs System Controls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Joypad/Gamepad Debug</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1011,10 +1018,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear All</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Editor Tools</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1039,11 +1042,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remove</source>
+        <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cancel</source>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Game Genie</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Pro Action</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1364,19 +1383,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>48.0 kHz</source>
+        <source>192000</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>44.1 kHz</source>
+        <source>96000</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>22.05 kHz</source>
+        <source>48000</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>11.025 kHz</source>
+        <source>44100</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>22050</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>11025</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1622,14 +1649,6 @@
     </message>
     <message>
         <source>No usable device</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error on open device %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error on reading controllers configurations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2014,6 +2033,11 @@
     </message>
     <message>
         <source>Recording Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Opus Audio (*.opus)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
         <translation type="unfinished"></translation>
     </message>
 </context>
