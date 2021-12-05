@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru" sourcelanguage="en">
+<TS version="2.1" language="ru_RU" sourcelanguage="en">
   <context>
     <name>Settings</name>
     <message>
@@ -17,6 +17,13 @@
     <message>
       <source>Command Line Help</source>
       <translation>Справка по командной строке</translation>
+    </message>
+  </context>
+  <context>
+    <name>dlgJsc</name>
+    <message>
+      <source>Close Window</source>
+      <translation type="unfinished">Close Window</translation>
     </message>
   </context>
   <context>
@@ -117,24 +124,8 @@
       <translation>Клавиатура</translation>
     </message>
     <message>
-      <source>Disabled</source>
-      <translation>Отключено</translation>
-    </message>
-    <message>
-      <source>No usable device</source>
-      <translation>Нет доступных устройств</translation>
-    </message>
-    <message>
       <source>Select device first</source>
       <translation>Сперва выберите устройство</translation>
-    </message>
-    <message>
-      <source>Error on open device %1</source>
-      <translation>Ошибка открытия устройства: %1</translation>
-    </message>
-    <message>
-      <source>Error on reading controllers configurations</source>
-      <translation>Ошибка при чтении конфигурации контроллеров</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
@@ -231,6 +222,18 @@
     <message>
       <source>Discard</source>
       <translation>Отменить</translation>
+    </message>
+    <message>
+      <source>Press a key (ESC for the previous value &quot;%1&quot;%2)</source>
+      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;%2)</translation>
+    </message>
+    <message>
+      <source>Default</source>
+      <translation type="unfinished">Default</translation>
+    </message>
+    <message>
+      <source>Deadzone</source>
+      <translation type="unfinished">Deadzone</translation>
     </message>
   </context>
   <context>
@@ -546,10 +549,6 @@
       <translation>Вставить монету</translation>
     </message>
     <message>
-      <source>Vs System Controls</source>
-      <translation>Параметры VS System</translation>
-    </message>
-    <message>
       <source>&amp;Open working folder</source>
       <translation>Открыть &amp;рабочую папку</translation>
     </message>
@@ -717,6 +716,14 @@
     <message>
       <source>Slot &amp;B</source>
       <translation>Слот &amp;B</translation>
+    </message>
+    <message>
+      <source>&amp;Vs System Controls</source>
+      <translation type="unfinished">&amp;Vs System Controls</translation>
+    </message>
+    <message>
+      <source>&amp;Joypad/Gamepad Debug</source>
+      <translation type="unfinished">&amp;Joypad/Gamepad Debug</translation>
     </message>
   </context>
   <context>
@@ -1011,10 +1018,6 @@
       <translation>Экспорт</translation>
     </message>
     <message>
-      <source>Clear All</source>
-      <translation>Очистить всё</translation>
-    </message>
-    <message>
       <source>Editor Tools</source>
       <translation>Инструменты редактора</translation>
     </message>
@@ -1039,12 +1042,28 @@
       <translation>Новый чит</translation>
     </message>
     <message>
-      <source>Remove</source>
-      <translation>Удалить</translation>
-    </message>
-    <message>
       <source>Cancel</source>
       <translation>Отмена</translation>
+    </message>
+    <message>
+      <source>Delete</source>
+      <translation type="unfinished">Delete</translation>
+    </message>
+    <message>
+      <source>Delete All</source>
+      <translation type="unfinished">Delete All</translation>
+    </message>
+    <message>
+      <source>Copy</source>
+      <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+      <source>New Game Genie</source>
+      <translation type="unfinished">New Game Genie</translation>
+    </message>
+    <message>
+      <source>New Pro Action</source>
+      <translation type="unfinished">New Pro Action</translation>
     </message>
   </context>
   <context>
@@ -1364,20 +1383,28 @@
       <translation>Обратные биты ДИКМ</translation>
     </message>
     <message>
-      <source>48.0 kHz</source>
-      <translation>48.0 кГц</translation>
+      <source>192000</source>
+      <translation type="unfinished">192000</translation>
     </message>
     <message>
-      <source>44.1 kHz</source>
-      <translation>44.1 кГц</translation>
+      <source>96000</source>
+      <translation type="unfinished">96000</translation>
     </message>
     <message>
-      <source>22.05 kHz</source>
-      <translation>22.05 кГц</translation>
+      <source>48000</source>
+      <translation type="unfinished">48000</translation>
     </message>
     <message>
-      <source>11.025 kHz</source>
-      <translation>11.025 кГц</translation>
+      <source>44100</source>
+      <translation type="unfinished">44100</translation>
+    </message>
+    <message>
+      <source>22050</source>
+      <translation type="unfinished">22050</translation>
+    </message>
+    <message>
+      <source>11025</source>
+      <translation type="unfinished">11025</translation>
     </message>
   </context>
   <context>
@@ -1623,14 +1650,6 @@
     <message>
       <source>No usable device</source>
       <translation>Нет доступных устройств</translation>
-    </message>
-    <message>
-      <source>Error on open device %1</source>
-      <translation>Ошибка открытия устройства: %1</translation>
-    </message>
-    <message>
-      <source>Error on reading controllers configurations</source>
-      <translation>Ошибка при чтении конфигурации контроллеров</translation>
     </message>
     <message>
       <source>Input Settings</source>
@@ -2015,6 +2034,11 @@
     <message>
       <source>Recording Settings</source>
       <translation>Настройки записи</translation>
+    </message>
+    <message>
+      <source>Opus Audio (*.opus)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">Opus Audio (*.opus)</translation>
     </message>
   </context>
   <context>
