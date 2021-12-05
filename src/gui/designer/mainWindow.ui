@@ -512,8 +512,9 @@
    </property>
   </action>
   <action name="action_Vs_System">
-   <property name="checkable">
-    <bool>true</bool>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/insert_coins.svg</normaloff>:/icon/icons/insert_coins.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Vs System Controls</string>

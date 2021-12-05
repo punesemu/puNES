@@ -978,9 +978,7 @@ void mainWindow::update_menu_nes(void) {
 		action_Fast_Forward->setEnabled(false);
 	}
 }
-void mainWindow::update_menu_tools(void) {
-	action_Vs_System->setChecked(ext_win.vs_system);
-}
+void mainWindow::update_menu_tools(void) {}
 void mainWindow::update_menu_state(void) {
 	bool state = false;
 
