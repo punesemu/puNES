@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="de" sourcelanguage="en">
+<TS version="2.1" language="de_DE" sourcelanguage="en">
   <context>
     <name>Settings</name>
     <message>
@@ -17,6 +17,13 @@
     <message>
       <source>Command Line Help</source>
       <translation type="unfinished">Command Line Help</translation>
+    </message>
+  </context>
+  <context>
+    <name>dlgJsc</name>
+    <message>
+      <source>Close Window</source>
+      <translation type="unfinished">Close Window</translation>
     </message>
   </context>
   <context>
@@ -117,24 +124,8 @@
       <translation type="unfinished">Keyboard</translation>
     </message>
     <message>
-      <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
-    </message>
-    <message>
-      <source>No usable device</source>
-      <translation type="unfinished">No usable device</translation>
-    </message>
-    <message>
       <source>Select device first</source>
       <translation type="unfinished">Select device first</translation>
-    </message>
-    <message>
-      <source>Error on open device %1</source>
-      <translation type="unfinished">Error on open device %1</translation>
-    </message>
-    <message>
-      <source>Error on reading controllers configurations</source>
-      <translation type="unfinished">Error on reading controllers configurations</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
@@ -231,6 +222,18 @@
     <message>
       <source>Discard</source>
       <translation type="unfinished">Discard</translation>
+    </message>
+    <message>
+      <source>Press a key (ESC for the previous value &quot;%1&quot;%2)</source>
+      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;%2)</translation>
+    </message>
+    <message>
+      <source>Default</source>
+      <translation type="unfinished">Default</translation>
+    </message>
+    <message>
+      <source>Deadzone</source>
+      <translation type="unfinished">Deadzone</translation>
     </message>
   </context>
   <context>
@@ -546,10 +549,6 @@
       <translation type="unfinished">Insert Coin</translation>
     </message>
     <message>
-      <source>Vs System Controls</source>
-      <translation type="unfinished">Vs System Controls</translation>
-    </message>
-    <message>
       <source>&amp;Open working folder</source>
       <translation type="unfinished">&amp;Open working folder</translation>
     </message>
@@ -717,6 +716,14 @@
     <message>
       <source>Slot &amp;B</source>
       <translation type="unfinished">Slot &amp;B</translation>
+    </message>
+    <message>
+      <source>&amp;Vs System Controls</source>
+      <translation type="unfinished">&amp;Vs System Controls</translation>
+    </message>
+    <message>
+      <source>&amp;Joypad/Gamepad Debug</source>
+      <translation type="unfinished">&amp;Joypad/Gamepad Debug</translation>
     </message>
   </context>
   <context>
@@ -1011,10 +1018,6 @@
       <translation type="unfinished">Export</translation>
     </message>
     <message>
-      <source>Clear All</source>
-      <translation type="unfinished">Clear All</translation>
-    </message>
-    <message>
       <source>Editor Tools</source>
       <translation type="unfinished">Editor Tools</translation>
     </message>
@@ -1039,12 +1042,28 @@
       <translation type="unfinished">New</translation>
     </message>
     <message>
-      <source>Remove</source>
-      <translation type="unfinished">Remove</translation>
-    </message>
-    <message>
       <source>Cancel</source>
       <translation type="unfinished">Cancel</translation>
+    </message>
+    <message>
+      <source>Delete</source>
+      <translation type="unfinished">Delete</translation>
+    </message>
+    <message>
+      <source>Delete All</source>
+      <translation type="unfinished">Delete All</translation>
+    </message>
+    <message>
+      <source>Copy</source>
+      <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+      <source>New Game Genie</source>
+      <translation type="unfinished">New Game Genie</translation>
+    </message>
+    <message>
+      <source>New Pro Action</source>
+      <translation type="unfinished">New Pro Action</translation>
     </message>
   </context>
   <context>
@@ -1364,20 +1383,28 @@
       <translation type="unfinished">Reverse bits of DPCM</translation>
     </message>
     <message>
-      <source>48.0 kHz</source>
-      <translation type="unfinished">48.0 kHz</translation>
+      <source>192000</source>
+      <translation type="unfinished">192000</translation>
     </message>
     <message>
-      <source>44.1 kHz</source>
-      <translation type="unfinished">44.1 kHz</translation>
+      <source>96000</source>
+      <translation type="unfinished">96000</translation>
     </message>
     <message>
-      <source>22.05 kHz</source>
-      <translation type="unfinished">22.05 kHz</translation>
+      <source>48000</source>
+      <translation type="unfinished">48000</translation>
     </message>
     <message>
-      <source>11.025 kHz</source>
-      <translation type="unfinished">11.025 kHz</translation>
+      <source>44100</source>
+      <translation type="unfinished">44100</translation>
+    </message>
+    <message>
+      <source>22050</source>
+      <translation type="unfinished">22050</translation>
+    </message>
+    <message>
+      <source>11025</source>
+      <translation type="unfinished">11025</translation>
     </message>
   </context>
   <context>
@@ -1623,14 +1650,6 @@
     <message>
       <source>No usable device</source>
       <translation type="unfinished">No usable device</translation>
-    </message>
-    <message>
-      <source>Error on open device %1</source>
-      <translation type="unfinished">Error on open device %1</translation>
-    </message>
-    <message>
-      <source>Error on reading controllers configurations</source>
-      <translation type="unfinished">Error on reading controllers configurations</translation>
     </message>
     <message>
       <source>Input Settings</source>
@@ -2015,6 +2034,11 @@
     <message>
       <source>Recording Settings</source>
       <translation type="unfinished">Recording Settings</translation>
+    </message>
+    <message>
+      <source>Opus Audio (*.opus)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">Opus Audio (*.opus)</translation>
     </message>
   </context>
   <context>
