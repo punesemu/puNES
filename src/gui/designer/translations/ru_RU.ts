@@ -23,7 +23,7 @@
     <name>dlgJsc</name>
     <message>
       <source>Close Window</source>
-      <translation type="unfinished">Close Window</translation>
+      <translation>Закрыть окно</translation>
     </message>
   </context>
   <context>
@@ -225,15 +225,15 @@
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;%2)</source>
-      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;%2)</translation>
+      <translation>Нажмите клавишу (ESC, чтобы вернуть предыдущее значение &quot;%1&quot;%2)</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>По умолчанию</translation>
     </message>
     <message>
       <source>Deadzone</source>
-      <translation type="unfinished">Deadzone</translation>
+      <translation>Мертвая зона</translation>
     </message>
   </context>
   <context>
@@ -719,11 +719,11 @@
     </message>
     <message>
       <source>&amp;Vs System Controls</source>
-      <translation type="unfinished">&amp;Vs System Controls</translation>
+      <translation>Параметры &amp;VS System</translation>
     </message>
     <message>
       <source>&amp;Joypad/Gamepad Debug</source>
-      <translation type="unfinished">&amp;Joypad/Gamepad Debug</translation>
+      <translation>Отладка &amp;джойстика/геймпада</translation>
     </message>
   </context>
   <context>
@@ -1047,23 +1047,23 @@
     </message>
     <message>
       <source>Delete</source>
-      <translation type="unfinished">Delete</translation>
+      <translation>Удалить</translation>
     </message>
     <message>
       <source>Delete All</source>
-      <translation type="unfinished">Delete All</translation>
+      <translation>Удалить все</translation>
     </message>
     <message>
       <source>Copy</source>
-      <translation type="unfinished">Copy</translation>
+      <translation>Копировать</translation>
     </message>
     <message>
       <source>New Game Genie</source>
-      <translation type="unfinished">New Game Genie</translation>
+      <translation>Новый Game Genie</translation>
     </message>
     <message>
       <source>New Pro Action</source>
-      <translation type="unfinished">New Pro Action</translation>
+      <translation>Новый Pro Action</translation>
     </message>
   </context>
   <context>
@@ -1384,27 +1384,27 @@
     </message>
     <message>
       <source>192000</source>
-      <translation type="unfinished">192000</translation>
+      <translation>192000</translation>
     </message>
     <message>
       <source>96000</source>
-      <translation type="unfinished">96000</translation>
+      <translation>96000</translation>
     </message>
     <message>
       <source>48000</source>
-      <translation type="unfinished">48000</translation>
+      <translation>48000</translation>
     </message>
     <message>
       <source>44100</source>
-      <translation type="unfinished">44100</translation>
+      <translation>44100</translation>
     </message>
     <message>
       <source>22050</source>
-      <translation type="unfinished">22050</translation>
+      <translation>22050</translation>
     </message>
     <message>
       <source>11025</source>
-      <translation type="unfinished">11025</translation>
+      <translation>11025</translation>
     </message>
   </context>
   <context>
@@ -2038,7 +2038,7 @@
     <message>
       <source>Opus Audio (*.opus)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Opus Audio (*.opus)</translation>
+      <translation>Opus Audio (*.opus)</translation>
     </message>
   </context>
   <context>
