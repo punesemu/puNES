@@ -40,7 +40,7 @@
      <widget class="QWidget" name="tab_Ports">
       <attribute name="icon">
        <iconset resource="resources.qrc">
-        <normaloff>:/icon/icons/Rs_232_Female.svg</normaloff>:/icon/icons/Rs_232_Female.svg</iconset>
+        <normaloff>:/icon/icons/rs_232_female.svg</normaloff>:/icon/icons/rs_232_female.svg</iconset>
       </attribute>
       <attribute name="title">
        <string>Ports</string>

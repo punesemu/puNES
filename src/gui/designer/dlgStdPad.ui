@@ -141,7 +141,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -221,7 +221,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -301,7 +301,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -391,7 +391,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -461,7 +461,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -531,7 +531,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -601,7 +601,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -671,7 +671,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -741,7 +741,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -871,7 +871,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1157,7 +1157,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1227,7 +1227,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1297,7 +1297,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1387,7 +1387,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1477,7 +1477,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1557,7 +1557,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1627,7 +1627,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1707,7 +1707,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1777,7 +1777,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1857,7 +1857,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/Xbox_360_A.svg</normaloff>:/icon/icons/Xbox_360_A.svg</iconset>
+                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>

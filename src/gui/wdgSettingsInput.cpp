@@ -116,7 +116,7 @@ void wdgSettingsInput::changeEvent(QEvent *event) {
 void wdgSettingsInput::showEvent(QShowEvent *event) {
 	int dim = fontMetrics().height();
 
-	icon_Ports->setPixmap(QIcon(":/icon/icons/Rs_232_Female.svg").pixmap(dim, dim));
+	icon_Ports->setPixmap(QIcon(":/icon/icons/rs_232_female.svg").pixmap(dim, dim));
 	icon_cm->setPixmap(QIcon(":/icon/icons/mode.svg").pixmap(dim, dim));
 	icon_exp->setPixmap(QIcon(":/icon/icons/circuit_board.svg").pixmap(dim, dim));
 	icon_cp1->setPixmap(QIcon(":/icon/icons/game_controller.svg").pixmap(dim, dim));

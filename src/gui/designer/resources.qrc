@@ -1,61 +1,92 @@
 <RCC>
   <qresource prefix="icon">
     <file>resources.qrc</file>
-    <file>icons/Xbox_360_Start.svg</file>
-    <file>icons/Xbox_360_Back.svg</file>
-    <file>icons/Xbox_360_A.svg</file>
-    <file>icons/Xbox_One_Menu.svg</file>
-    <file>icons/Xbox_One_View.svg</file>
-    <file>icons/Xbox_360_X.svg</file>
-    <file>icons/Xbox_Left_Bumper.svg</file>
-    <file>icons/Xbox_360_Home.svg</file>
-    <file>icons/PlayStation_4_Tpad_Click.svg</file>
-    <file>icons/Xbox_One_B.svg</file>
-    <file>icons/Xbox_One_A.svg</file>
-    <file>icons/Xbox_One_X.svg</file>
-    <file>icons/Xbox_One_Y.svg</file>
-    <file>icons/Xbox_Left_Stick_Down.svg</file>
-    <file>icons/PlayStation_4_Dpad_Down.svg</file>
-    <file>icons/PlayStation_4_Dpad_Left.svg</file>
-    <file>icons/PlayStation_4_Dpad_Right.svg</file>
-    <file>icons/PlayStation_4_Dpad_Up.svg</file>
-    <file>icons/PlayStation_4_L1.svg</file>
-    <file>icons/PlayStation_4_L2.svg</file>
-    <file>icons/PlayStation_4_Options.svg</file>
-    <file>icons/PlayStation_4_R1.svg</file>
-    <file>icons/PlayStation_4_R2.svg</file>
-    <file>icons/PlayStation_4_Share.svg</file>
-    <file>icons/PlayStation_C.svg</file>
-    <file>icons/PlayStation_Home.svg</file>
-    <file>icons/PlayStation_S.svg</file>
-    <file>icons/PlayStation_T.svg</file>
-    <file>icons/PlayStation_X.svg</file>
-    <file>icons/Xbox_Left_Stick_Left.svg</file>
-    <file>icons/Xbox_Left_Stick_Right.svg</file>
-    <file>icons/Xbox_Left_Stick_Up.svg</file>
-    <file>icons/Xbox_Left_Trigger.svg</file>
-    <file>icons/Xbox_Right_Bumper.svg</file>
-    <file>icons/Xbox_Right_Stick_Down.svg</file>
-    <file>icons/Xbox_Right_Stick_Left.svg</file>
-    <file>icons/Xbox_Right_Stick_Right.svg</file>
-    <file>icons/Xbox_Right_Stick_Up.svg</file>
-    <file>icons/Xbox_Right_Trigger.svg</file>
-    <file>icons/Xbox_360_Y.svg</file>
-    <file>icons/Xbox_360_B.svg</file>
-    <file>icons/Xbox_Left_Stick_Click.png</file>
-    <file>icons/Xbox_Right_Stick_Click.png</file>
-    <file>icons/Xbox_360_Dpad_Up.png</file>
-    <file>icons/Xbox_360_Dpad_Right.png</file>
-    <file>icons/Xbox_360_Dpad_Left.png</file>
-    <file>icons/Xbox_360_Dpad_Down.png</file>
     <file>icons/rotate_left.svg</file>
     <file>icons/misc.svg</file>
     <file>icons/pixel.svg</file>
     <file>icons/monitor_screen.svg</file>
     <file>icons/copy.svg</file>
     <file>icons/recording.svg</file>
+    <file>icons/gamepad_stick_click.svg</file>
     <file>icons/application.png</file>
     <file>icons/undo.svg</file>
+    <file>icons/gamepad_xbox_lb.svg</file>
+    <file>icons/gamepad_playstation_4_dpad_down.svg</file>
+    <file>icons/gamepad_playstation_4_dpad_left.svg</file>
+    <file>icons/gamepad_playstation_4_dpad_right.svg</file>
+    <file>icons/gamepad_playstation_4_dpad_up.svg</file>
+    <file>icons/gamepad_playstation_4_l1.svg</file>
+    <file>icons/gamepad_playstation_4_l2.svg</file>
+    <file>icons/gamepad_playstation_4_options.svg</file>
+    <file>icons/gamepad_playstation_4_r1.svg</file>
+    <file>icons/gamepad_playstation_4_r2.svg</file>
+    <file>icons/gamepad_xbox_one_dpad_down.svg</file>
+    <file>icons/gamepad_xbox_one_dpad_left.svg</file>
+    <file>icons/gamepad_xbox_one_dpad_right.svg</file>
+    <file>icons/gamepad_xbox_one_dpad_up.svg</file>
+    <file>icons/gamepad_xbox_one_share.svg</file>
+    <file>icons/gamepad_steam_back.svg</file>
+    <file>icons/gamepad_steam_home.svg</file>
+    <file>icons/gamepad_steam_lb.svg</file>
+    <file>icons/gamepad_steam_left_grip.svg</file>
+    <file>icons/gamepad_steam_left_track_click.svg</file>
+    <file>icons/gamepad_steam_left_track_down.svg</file>
+    <file>icons/gamepad_steam_left_track_left.svg</file>
+    <file>icons/gamepad_steam_left_track_right.svg</file>
+    <file>icons/gamepad_steam_left_track_up.svg</file>
+    <file>icons/gamepad_steam_lt.svg</file>
+    <file>icons/gamepad_steam_rb.svg</file>
+    <file>icons/gamepad_steam_right_grip.svg</file>
+    <file>icons/gamepad_steam_right_track_click.svg</file>
+    <file>icons/gamepad_steam_right_track_down.svg</file>
+    <file>icons/gamepad_steam_right_track_left.svg</file>
+    <file>icons/gamepad_steam_right_track_right.svg</file>
+    <file>icons/gamepad_steam_right_track_up.svg</file>
+    <file>icons/gamepad_steam_rt.svg</file>
+    <file>icons/gamepad_steam_start.svg</file>
+    <file>icons/gamepad_xbox_360_dpad_down.svg</file>
+    <file>icons/gamepad_xbox_360_dpad_left.svg</file>
+    <file>icons/gamepad_xbox_360_dpad_right.svg</file>
+    <file>icons/gamepad_xbox_360_dpad_up.svg</file>
+    <file>icons/gamepad_xbox_left_stick_click.svg</file>
+    <file>icons/gamepad_xbox_right_stick_click.svg</file>
+    <file>icons/gamepad_stick_down.svg</file>
+    <file>icons/gamepad_stick_left.svg</file>
+    <file>icons/gamepad_stick_right.svg</file>
+    <file>icons/gamepad_stick_up.svg</file>
+    <file>icons/gamepad_playstation_4_share.svg</file>
+    <file>icons/gamepad_playstation_4_tpad_click.svg</file>
+    <file>icons/gamepad_playstation_c.svg</file>
+    <file>icons/gamepad_playstation_home.svg</file>
+    <file>icons/gamepad_playstation_s.svg</file>
+    <file>icons/gamepad_playstation_t.svg</file>
+    <file>icons/gamepad_playstation_x.svg</file>
+    <file>icons/gamepad_stick_down.svg</file>
+    <file>icons/gamepad_xbox_360_a.svg</file>
+    <file>icons/gamepad_xbox_360_b.svg</file>
+    <file>icons/gamepad_xbox_360_back.svg</file>
+    <file>icons/gamepad_xbox_360_home.svg</file>
+    <file>icons/gamepad_xbox_360_start.svg</file>
+    <file>icons/gamepad_xbox_360_x.svg</file>
+    <file>icons/gamepad_xbox_360_y.svg</file>
+    <file>icons/gamepad_xbox_left_stick_down.svg</file>
+    <file>icons/gamepad_xbox_lt.svg</file>
+    <file>icons/gamepad_xbox_rb.svg</file>
+    <file>icons/gamepad_xbox_rt.svg</file>
+    <file>icons/gamepad_xbox_left_stick_left.svg</file>
+    <file>icons/gamepad_xbox_left_stick_right.svg</file>
+    <file>icons/gamepad_xbox_left_stick_up.svg</file>
+    <file>icons/gamepad_xbox_one_a.svg</file>
+    <file>icons/gamepad_xbox_one_b.svg</file>
+    <file>icons/gamepad_xbox_one_menu.svg</file>
+    <file>icons/gamepad_xbox_one_view.svg</file>
+    <file>icons/gamepad_xbox_one_x.svg</file>
+    <file>icons/gamepad_xbox_one_y.svg</file>
+    <file>icons/rs_232_female.svg</file>
+    <file>icons/gamepad_xbox_right_stick_down.svg</file>
+    <file>icons/gamepad_xbox_right_stick_left.svg</file>
+    <file>icons/gamepad_xbox_right_stick_right.svg</file>
+    <file>icons/gamepad_xbox_right_stick_up.svg</file>
     <file>icons/recording_quality.svg</file>
     <file>icons/add.svg</file>
     <file>icons/360_view.svg</file>
@@ -88,7 +119,6 @@
     <file>icons/circuit_board.svg</file>
     <file>icons/rotate_right.svg</file>
     <file>icons/buffer_size.svg</file>
-    <file>icons/Rs_232_Female.svg</file>
     <file>icons/pencil.svg</file>
     <file>icons/speedometer.svg</file>
     <file>icons/screenshot_unaltered.svg</file>
