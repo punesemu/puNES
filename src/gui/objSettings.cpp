@@ -1728,16 +1728,6 @@ void objJsc::rd_key(int index) {
 	}
 }
 
-void objJsc::jsc_default(int button, _port *port) {
-	port->input[JOYSTICK][button] = js_joyval_default(jindex, button);
-}
-void objJsc::jsc_defaults(_port *port) {
-	int i;
-
-	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		jsc_default(i, port);
-	}
-}
 int objJsc::jsc_deadzone_default(void) {
 	return (uQString(set->cfg[SET_JSC_DEADZONE].def).toInt());
 }

@@ -93,14 +93,18 @@ void settings_inp_port_defaults(_port *port, int index, int mode) {
 	if (mode == KEYBOARD) {
 		s.inp->kbd_defaults(port, index);
 	} else {
-		s.jsc->jsc_defaults(port);
+		int i;
+
+		for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+			port->input[JOYSTICK][i] = js_joyval_default(index, i);
+		}
 	}
 }
 void settings_inp_port_button_default(int button, _port *port, int index, int mode) {
 	if (mode == KEYBOARD) {
 		s.inp->kbd_default(button, port, index);
 	} else {
-		s.jsc->jsc_default(button, port);
+		port->input[JOYSTICK][button] = js_joyval_default(index, button);
 	}
 }
 void settings_inp_save(void) {

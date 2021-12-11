@@ -509,14 +509,15 @@ void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
 	}
 }
 void dlgStdPad::s_default_clicked(UNUSED(bool checked)) {
-	int type, vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
+	int index, type, vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
 
 	type = vbutton / MAX_STD_PAD_BUTTONS;
 	vbutton -= (type * MAX_STD_PAD_BUTTONS);
+	index = type == KEYBOARD ? data.cfg.id - 1 : js_jdev_index();
 
 	info_entry_print(type, "");
 
-	settings_inp_port_button_default(vbutton, &data.cfg.port, data.cfg.id - 1, type);
+	settings_inp_port_button_default(vbutton, &data.cfg.port, index, type);
 
 	{
 		pixmapButton *bt = findChild<pixmapButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton));
@@ -524,7 +525,7 @@ void dlgStdPad::s_default_clicked(UNUSED(bool checked)) {
 		if (type == KEYBOARD) {
 			bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[type][vbutton]));
 		} else {
-			js_pixmapButton(js_jdev_index(), data.cfg.port.input[type][vbutton], bt);
+			js_pixmapButton(index, data.cfg.port.input[type][vbutton], bt);
 		}
 	}
 }
@@ -560,11 +561,13 @@ void dlgStdPad::s_unset_all_clicked(UNUSED(bool checked)) {
 	}
 }
 void dlgStdPad::s_defaults_clicked(UNUSED(bool checked)) {
-	int i, type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
+	int i, index, type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
+
+	index = type == KEYBOARD ? data.cfg.id - 1 : js_jdev_index();
 
 	info_entry_print(type, "");
 
-	settings_inp_port_defaults(&data.cfg.port, data.cfg.id - 1, type);
+	settings_inp_port_defaults(&data.cfg.port, index, type);
 
 	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 		pixmapButton *bt = findChild<pixmapButton *>("pushButton_" + SPT(type) + "_" + SPB(i));
@@ -572,7 +575,7 @@ void dlgStdPad::s_defaults_clicked(UNUSED(bool checked)) {
 		if (type == KEYBOARD) {
 			bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[type][i]));
 		} else {
-			js_pixmapButton(js_jdev_index(), data.cfg.port.input[type][i], bt);
+			js_pixmapButton(index, data.cfg.port.input[type][i], bt);
 		}
 	}
 }

@@ -209,8 +209,6 @@ class objJsc : public objSettings {
 		void rd_key(int index);
 
 	public:
-		void jsc_default(int button, _port *port);
-		void jsc_defaults(_port *port);
 		int jsc_deadzone_default(void);
 
 	private:
