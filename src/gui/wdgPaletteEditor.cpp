@@ -417,6 +417,14 @@ wdgPaletteEditor::wdgPaletteEditor(QWidget *parent) : QWidget(parent) {
 }
 wdgPaletteEditor::~wdgPaletteEditor() {}
 
+void wdgPaletteEditor::changeEvent(QEvent *event) {
+	if (event->type() == QEvent::LanguageChange) {
+		Ui::wdgPaletteEditor::retranslateUi(this);
+	} else {
+		QWidget::changeEvent(event);
+	}
+}
+
 void wdgPaletteEditor::palette_changed(void) {
 	widget_Palette_Wall->palette_changed();
 	update();

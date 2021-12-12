@@ -131,6 +131,9 @@ class wdgPaletteEditor : public QWidget, public Ui::wdgPaletteEditor {
 		wdgPaletteEditor(QWidget *parent = 0);
 		~wdgPaletteEditor();
 
+	protected:
+		void changeEvent(QEvent *event);
+
 	public:
 		void palette_changed(void);
 
