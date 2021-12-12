@@ -225,15 +225,15 @@
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;%2)</source>
-      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;%2)</translation>
+      <translation>Premi un tasto (ESC per il valore precedente &quot;%1&quot;%2)</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Predefinito</translation>
     </message>
     <message>
       <source>Deadzone</source>
-      <translation type="unfinished">Deadzone</translation>
+      <translation>Deadzone</translation>
     </message>
   </context>
   <context>
@@ -711,19 +711,19 @@
     </message>
     <message>
       <source>Slot &amp;A</source>
-      <translation type="unfinished">Slot &amp;A</translation>
+      <translation>Slot &amp;A</translation>
     </message>
     <message>
       <source>Slot &amp;B</source>
-      <translation type="unfinished">Slot &amp;B</translation>
+      <translation>Slot &amp;B</translation>
     </message>
     <message>
       <source>&amp;Vs System Controls</source>
-      <translation type="unfinished">&amp;Vs System Controls</translation>
+      <translation>Controlli &amp;Vs System</translation>
     </message>
     <message>
       <source>&amp;Joypad/Gamepad Debug</source>
-      <translation type="unfinished">&amp;Joypad/Gamepad Debug</translation>
+      <translation>Debug &amp;Joypad/Gamepad</translation>
     </message>
   </context>
   <context>
@@ -901,12 +901,12 @@
     <message>
       <source>state [cyan]%1[normal] saved successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">state [cyan]%1[normal] saved successfully</translation>
+      <translation>stato [cyan]%1[normal] salvato con successo</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] loaded successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">state [cyan]%1[normal] loaded successfully</translation>
+      <translation>stato [cyan]%1[normal] caricato con successo</translation>
     </message>
   </context>
   <context>
@@ -1141,7 +1141,7 @@
     </message>
     <message>
       <source>Gamma</source>
-      <translation type="unfinished">Gamma</translation>
+      <translation>Gamma</translation>
     </message>
     <message>
       <source>Bleed</source>
@@ -1161,7 +1161,7 @@
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Luminosità</translation>
     </message>
     <message>
       <source>Hue</source>
@@ -1169,15 +1169,15 @@
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Contrasto</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Saturazione</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Scanline</translation>
     </message>
   </context>
   <context>
@@ -1321,7 +1321,7 @@
     </message>
     <message>
       <source>Degrees</source>
-      <translation type="unfinished">Degrees</translation>
+      <translation>Gradi</translation>
     </message>
   </context>
   <context>
@@ -1384,27 +1384,27 @@
     </message>
     <message>
       <source>192000</source>
-      <translation type="unfinished">192000</translation>
+      <translation>192000</translation>
     </message>
     <message>
       <source>96000</source>
-      <translation type="unfinished">96000</translation>
+      <translation>96000</translation>
     </message>
     <message>
       <source>48000</source>
-      <translation type="unfinished">48000</translation>
+      <translation>48000</translation>
     </message>
     <message>
       <source>44100</source>
-      <translation type="unfinished">44100</translation>
+      <translation>44100</translation>
     </message>
     <message>
       <source>22050</source>
-      <translation type="unfinished">22050</translation>
+      <translation>22050</translation>
     </message>
     <message>
       <source>11025</source>
-      <translation type="unfinished">11025</translation>
+      <translation>11025</translation>
     </message>
   </context>
   <context>
@@ -1590,7 +1590,7 @@
     </message>
     <message>
       <source>Chinese Simplified</source>
-      <translation type="unfinished">Chinese Simplified</translation>
+      <translation>Cinese Semplificato</translation>
     </message>
     <message>
       <source>Insert disk 1 side A at power-up/reset</source>
@@ -1598,7 +1598,7 @@
     </message>
     <message>
       <source>Famicom Disk System</source>
-      <translation type="unfinished">Famicom Disk System</translation>
+      <translation>Famicom Disk System</translation>
     </message>
     <message>
       <source>Use fast forward when loading the BIOS or disk/side</source>
@@ -1753,7 +1753,7 @@
     </message>
     <message>
       <source>Press a key - timeout in %1</source>
-      <translation type="unfinished">Press a key - timeout in %1</translation>
+      <translation>Premi un tasto - timeout in %1</translation>
     </message>
   </context>
   <context>
@@ -2485,7 +2485,7 @@
     </message>
     <message>
       <source>* applied if supported by the monitor</source>
-      <translation type="unfinished">* applied if supported by the monitor</translation>
+      <translation>* applicato se supportato dal monitor</translation>
     </message>
     <message>
       <source>Use integer scaling</source>
@@ -2493,7 +2493,7 @@
     </message>
     <message>
       <source>Preferred resolution </source>
-      <translation type="unfinished">Preferred resolution </translation>
+      <translation>Risoluzione preferita </translation>
     </message>
   </context>
   <context>
