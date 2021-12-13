@@ -1120,10 +1120,6 @@
   <context>
     <name>wdgNTSCFilter</name>
     <message>
-      <source>Form</source>
-      <translation>Форма</translation>
-    </message>
-    <message>
       <source>Reset paramaters to defaults</source>
       <translation>Вернуть значения по умолчанию</translation>
     </message>
