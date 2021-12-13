@@ -881,17 +881,17 @@
     <message>
       <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</translation>
+      <translation>[red]errori[normal] nella shader, imposto [green]&apos;No shader&apos;[cyan]</translation>
     </message>
     <message>
       <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</translation>
+      <translation>cambio a [cyan]%1x%2[normal] a [green]%3Hz[normal]</translation>
     </message>
     <message>
       <source>[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</translation>
+      <translation>Trovati [cyan]%1[normal] lati con stesso ID, cambio [red]disabilitato[normal]</translation>
     </message>
     <message>
       <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
@@ -1047,15 +1047,15 @@
     </message>
     <message>
       <source>Delete</source>
-      <translation type="unfinished">Delete</translation>
+      <translation>Elimina</translation>
     </message>
     <message>
       <source>Delete All</source>
-      <translation type="unfinished">Delete All</translation>
+      <translation>Elimina Tutti</translation>
     </message>
     <message>
       <source>Copy</source>
-      <translation type="unfinished">Copy</translation>
+      <translation>Copia</translation>
     </message>
     <message>
       <source>New Game Genie</source>
@@ -1120,16 +1120,12 @@
   <context>
     <name>wdgNTSCFilter</name>
     <message>
-      <source>Form</source>
-      <translation type="unfinished">Form</translation>
-    </message>
-    <message>
       <source>Reset paramaters to defaults</source>
-      <translation type="unfinished">Reset paramaters to defaults</translation>
+      <translation>Predefiniti</translation>
     </message>
     <message>
       <source>Artifacts</source>
-      <translation type="unfinished">Artifacts</translation>
+      <translation>Artefatti</translation>
     </message>
     <message>
       <source>Fringing</source>
@@ -1137,7 +1133,7 @@
     </message>
     <message>
       <source>Resolution</source>
-      <translation type="unfinished">Resolution</translation>
+      <translation>Risoluzione</translation>
     </message>
     <message>
       <source>Gamma</source>
@@ -1145,19 +1141,19 @@
     </message>
     <message>
       <source>Bleed</source>
-      <translation type="unfinished">Bleed</translation>
+      <translation>Bleed</translation>
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Sharpness</source>
-      <translation type="unfinished">Sharpness</translation>
+      <translation>Nitidezza</translation>
     </message>
     <message>
       <source>Brightness</source>
@@ -1165,7 +1161,7 @@
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Hue</translation>
     </message>
     <message>
       <source>Contrast</source>
@@ -1594,7 +1590,7 @@
     </message>
     <message>
       <source>Insert disk 1 side A at power-up/reset</source>
-      <translation type="unfinished">Insert disk 1 side A at power-up/reset</translation>
+      <translation>Inserire il disco 1 lato A al power-up/reset</translation>
     </message>
     <message>
       <source>Famicom Disk System</source>
@@ -1602,15 +1598,15 @@
     </message>
     <message>
       <source>Use fast forward when loading the BIOS or disk/side</source>
-      <translation type="unfinished">Use fast forward when loading the BIOS or disk/side</translation>
+      <translation>Utilizzare il fast forward quando si carica il BIOS o il disco/lato</translation>
     </message>
     <message>
       <source>Switch the disk/side automatically</source>
-      <translation type="unfinished">Switch the disk/side automatically</translation>
+      <translation>Cambia automaticamente il disco/lato</translation>
     </message>
     <message>
       <source>Allow multiple instances of the emulator</source>
-      <translation type="unfinished">Allow multiple instances of the emulator</translation>
+      <translation>Consenti istanze multiple dell'emulatore</translation>
     </message>
   </context>
   <context>
@@ -1804,27 +1800,27 @@
     </message>
     <message>
       <source>Advanced</source>
-      <translation type="unfinished">Advanced</translation>
+      <translation>Avanzate</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Predefinito</translation>
     </message>
     <message>
       <source>Randomize (Not recommended)</source>
-      <translation type="unfinished">Randomize (Not recommended)</translation>
+      <translation>Casuale (Non consigliato)</translation>
     </message>
     <message>
       <source>Power up/reset CPU/PPU Alignment</source>
-      <translation type="unfinished">Power up/reset CPU/PPU Alignment</translation>
+      <translation>Allineamento CPU/PPU all'avvio/reset</translation>
     </message>
     <message>
       <source>Increment at every hard reset (Not recommended)</source>
-      <translation type="unfinished">Increment at every hard reset (Not recommended)</translation>
+      <translation>Incrementa ad ogni reset hard (Non consigliato)</translation>
     </message>
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
-      <translation type="unfinished">Automatically restores the limit when necessary to prevent graphical glitches</translation>
+      <translation>Ripristina automaticamente il limite quando necessario per evitare problemi grafici</translation>
     </message>
   </context>
   <context>
@@ -2038,7 +2034,7 @@
     <message>
       <source>Opus Audio (*.opus)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Opus Audio (*.opus)</translation>
+      <translation>Audio Opus (*.opus)</translation>
     </message>
   </context>
   <context>
@@ -2469,19 +2465,19 @@
     </message>
     <message>
       <source>Show frames and lags counters</source>
-      <translation type="unfinished">Show frames and lags counters</translation>
+      <translation>Mostra contatori dei frames e dei lags</translation>
     </message>
     <message>
       <source>Desktop resolution</source>
-      <translation type="unfinished">Desktop resolution</translation>
+      <translation>Risoluzione del desktop</translation>
     </message>
     <message>
       <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
-      <translation type="unfinished">Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
+      <translation>Adatta la frequenza di aggiornamento alla regione (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
     </message>
     <message>
       <source>Fullscreen</source>
-      <translation type="unfinished">Fullscreen</translation>
+      <translation>Schermo Intero</translation>
     </message>
     <message>
       <source>* applied if supported by the monitor</source>
