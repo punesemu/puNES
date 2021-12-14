@@ -23,7 +23,7 @@
     <name>dlgJsc</name>
     <message>
       <source>Close Window</source>
-      <translation type="unfinished">Close Window</translation>
+      <translation>Chiudi Finestra</translation>
     </message>
   </context>
   <context>
@@ -98,7 +98,7 @@
     </message>
     <message>
       <source>Toggle the Menu Bar in Fullscreen</source>
-      <translation type="unfinished">Toggle the Menu Bar in Fullscreen</translation>
+      <translation>Mostra/Nascondi la Barra dei Menu a schermo intero</translation>
     </message>
   </context>
   <context>
@@ -896,7 +896,7 @@
     <message>
       <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] loading state [cyan]%1[normal], file is corrupted</translation>
+      <translation>[red]errore[normal] nel caricamento dello stato [cyan]%1[normal], file corrotto</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] saved successfully</source>
@@ -1059,11 +1059,11 @@
     </message>
     <message>
       <source>New Game Genie</source>
-      <translation type="unfinished">New Game Genie</translation>
+      <translation>Nuovo Game Genie</translation>
     </message>
     <message>
       <source>New Pro Action</source>
-      <translation type="unfinished">New Pro Action</translation>
+      <translation>Nuovo Pro Action</translation>
     </message>
   </context>
   <context>
@@ -1129,7 +1129,7 @@
     </message>
     <message>
       <source>Fringing</source>
-      <translation type="unfinished">Fringing</translation>
+      <translation>Fringing</translation>
     </message>
     <message>
       <source>Resolution</source>
@@ -2485,7 +2485,7 @@
     </message>
     <message>
       <source>Use integer scaling</source>
-      <translation type="unfinished">Use integer scaling</translation>
+      <translation>Usa ridimensionamento non frazionato</translation>
     </message>
     <message>
       <source>Preferred resolution </source>
