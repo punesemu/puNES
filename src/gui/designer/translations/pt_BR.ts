@@ -682,19 +682,19 @@
     </message>
     <message>
       <source>Start &amp;VIDEO recording</source>
-      <translation>Iniciar gravação de &amp;VIDEO</translation>
+      <translation>Iniciar gravação de &amp;VÍDEO</translation>
     </message>
     <message>
       <source>Stop &amp;AUDIO recording</source>
-      <translation>Parar gravação de &amp;AUDIO</translation>
+      <translation>Parar gravação de &amp;ÁUDIO</translation>
     </message>
     <message>
       <source>Stop &amp;VIDEO recording</source>
-      <translation>Parar gravação de &amp;VIDEO</translation>
+      <translation>Parar gravação de &amp;VÍDEO</translation>
     </message>
     <message>
       <source>Start/Stop &amp;AUDIO recording</source>
-      <translation>Iniciar/Parar gravação de &amp;AUDIO</translation>
+      <translation>Iniciar/Parar gravação de &amp;ÁUDIO</translation>
     </message>
     <message>
       <source>&amp;Recording</source>
@@ -702,7 +702,7 @@
     </message>
     <message>
       <source>Start/Stop &amp;VIDEO recording</source>
-      <translation>Iniciar/Parar gravação de &amp;VIDEO</translation>
+      <translation>Iniciar/Parar gravação de &amp;VÍDEO</translation>
     </message>
     <message>
       <source>Slot %1 never used</source>
@@ -723,7 +723,7 @@
     </message>
     <message>
       <source>&amp;Joypad/Gamepad Debug</source>
-      <translation type="unfinished">&amp;Joypad/Gamepad Debug</translation>
+      <translation>Debug &amp;Joypad/Gamepad</translation>
     </message>
   </context>
   <context>
@@ -886,12 +886,12 @@
     <message>
       <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</translation>
+      <translation>trocar [cyan]%1x%2[normal] a [green]%3Hz[normal]</translation>
     </message>
     <message>
       <source>[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</translation>
+      <translation>Encontrado [cyan]%1[normal] lados com o mesmo ID, troca [red]desabilitada[normal]</translation>
     </message>
     <message>
       <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
@@ -1243,7 +1243,7 @@
     <name>wdgRecGetSaveFileName</name>
     <message>
       <source>Record AUDIO on file</source>
-      <translation>Gravar AUDIO em arquivo</translation>
+      <translation>Gravar ÁUDIO em arquivo</translation>
     </message>
     <message>
       <source>Output Quality</source>
@@ -1263,7 +1263,7 @@
     </message>
     <message>
       <source>Record VIDEO on file</source>
-      <translation>Gravar VIDEO em arquivo</translation>
+      <translation>Gravar VÍDEO em arquivo</translation>
     </message>
     <message>
       <source>Not supported</source>
@@ -1733,11 +1733,11 @@
     </message>
     <message>
       <source>Start/Stop AUDIO recording</source>
-      <translation>Iniciar/Parar gravação de &amp;AUDIO</translation>
+      <translation>Iniciar/Parar gravação de &amp;ÁUDIO</translation>
     </message>
     <message>
       <source>Start/Stop VIDEO recording</source>
-      <translation>Iniciar/Parar gravação de &amp;VIDEO</translation>
+      <translation>Iniciar/Parar gravação de &amp;VÍDEO</translation>
     </message>
     <message>
       <source>Start/Stop WAV recording</source>
