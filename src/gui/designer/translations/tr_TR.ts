@@ -98,7 +98,7 @@
     </message>
     <message>
       <source>Toggle the Menu Bar in Fullscreen</source>
-      <translation type="unfinished">Toggle the Menu Bar in Fullscreen</translation>
+      <translation>Menü Çubuğunu Tam Ekranda Değiştirin</translation>
     </message>
   </context>
   <context>
@@ -225,7 +225,7 @@
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;%2)</source>
-      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;%2)</translation>
+      <translation>Bir tuşa basın (önceki değer için ESC basın &quot;%1&quot;%2)</translation>
     </message>
     <message>
       <source>Default</source>
@@ -881,32 +881,32 @@
     <message>
       <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</translation>
+      <translation>[normal] gölgelendiricide [red]hatalar, [green]&apos; kullanın Gölgelendiric yok&apos;[cyan]</translation>
     </message>
     <message>
       <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</translation>
+      <translation>[green]%3Hz[normal] değerde [cyan]%1x%2[normal] geçiş yapın</translation>
     </message>
     <message>
       <source>[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</translation>
+      <translation>[cyan]%1[normal] ID tarafları bulundu, otomatik geçiş [kırmızı]devre dışı[normal]</translation>
     </message>
     <message>
       <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] loading state [cyan]%1[normal], file is corrupted</translation>
+      <translation>[red]hata[normal] yükleme durumu [cyan]%1[normal], dosya bozuk</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] saved successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">state [cyan]%1[normal] saved successfully</translation>
+      <translation>durum [cyan]%1[normal] başarıyla kaydedildi</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] loaded successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">state [cyan]%1[normal] loaded successfully</translation>
+      <translation>durum [cyan]%1[normal] başarıyla yüklendi</translation>
     </message>
   </context>
   <context>
@@ -1063,7 +1063,7 @@
     </message>
     <message>
       <source>New Pro Action</source>
-      <translation type="unfinished">New Pro Action</translation>
+      <translation>Yeni Pro Action</translation>
     </message>
   </context>
   <context>
@@ -1129,7 +1129,7 @@
     </message>
     <message>
       <source>Fringing</source>
-      <translation type="unfinished">Fringing</translation>
+      <translation>Fringing</translation>
     </message>
     <message>
       <source>Resolution</source>
@@ -1141,15 +1141,15 @@
     </message>
     <message>
       <source>Bleed</source>
-      <translation type="unfinished">Bleed</translation>
+      <translation>Bleed</translation>
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Sharpness</source>
@@ -1173,7 +1173,7 @@
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Scanline</translation>
     </message>
   </context>
   <context>
@@ -1317,7 +1317,7 @@
     </message>
     <message>
       <source>Degrees</source>
-      <translation type="unfinished">Degrees</translation>
+      <translation>Dereceler</translation>
     </message>
   </context>
   <context>
@@ -1590,7 +1590,7 @@
     </message>
     <message>
       <source>Insert disk 1 side A at power-up/reset</source>
-      <translation type="unfinished">Insert disk 1 side A at power-up/reset</translation>
+      <translation>Açılışta/yeni başlatmada disk 1 tarafını A'ya takın</translation>
     </message>
     <message>
       <source>Famicom Disk System</source>
@@ -1598,15 +1598,15 @@
     </message>
     <message>
       <source>Use fast forward when loading the BIOS or disk/side</source>
-      <translation type="unfinished">Use fast forward when loading the BIOS or disk/side</translation>
+      <translation>BIOS'u veya diski/diğer tarafını yüklerken hızlı ileri sarmayı kullanın</translation>
     </message>
     <message>
       <source>Switch the disk/side automatically</source>
-      <translation type="unfinished">Switch the disk/side automatically</translation>
+      <translation>Diski/diğer tarafını otomatik olarak değiştir</translation>
     </message>
     <message>
       <source>Allow multiple instances of the emulator</source>
-      <translation type="unfinished">Allow multiple instances of the emulator</translation>
+      <translation>Öykünücünün birden çok örneğine izin ver</translation>
     </message>
   </context>
   <context>
@@ -1749,7 +1749,7 @@
     </message>
     <message>
       <source>Press a key - timeout in %1</source>
-      <translation type="unfinished">Press a key - timeout in %1</translation>
+      <translation>Bir tuşa basın - zaman aşımına uğramasına %1 </translation>
     </message>
   </context>
   <context>
@@ -1812,15 +1812,15 @@
     </message>
     <message>
       <source>Power up/reset CPU/PPU Alignment</source>
-      <translation type="unfinished">Power up/reset CPU/PPU Alignment</translation>
+      <translation>CPU/PPU Hizalamasını aç/sıfırla</translation>
     </message>
     <message>
       <source>Increment at every hard reset (Not recommended)</source>
-      <translation type="unfinished">Increment at every hard reset (Not recommended)</translation>
+      <translation>Her donanım sıfırlamasında artış (Önerilmez)</translation>
     </message>
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
-      <translation type="unfinished">Automatically restores the limit when necessary to prevent graphical glitches</translation>
+      <translation>Grafik hatalarını önlemek için gerektiğinde sınırı otomatik olarak geri yükler</translation>
     </message>
   </context>
   <context>
@@ -2469,11 +2469,11 @@
     </message>
     <message>
       <source>Desktop resolution</source>
-      <translation type="unfinished">Desktop resolution</translation>
+      <translation>Masaüstü çözünürlüğü</translation>
     </message>
     <message>
       <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
-      <translation type="unfinished">Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
+      <translation>Yenileme hızını bölgeye göre uyarlayın (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
     </message>
     <message>
       <source>Fullscreen</source>
@@ -2481,7 +2481,7 @@
     </message>
     <message>
       <source>* applied if supported by the monitor</source>
-      <translation type="unfinished">* applied if supported by the monitor</translation>
+      <translation>* monitör tarafından destekleniyorsa uygulanır</translation>
     </message>
     <message>
       <source>Use integer scaling</source>
