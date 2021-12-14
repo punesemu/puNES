@@ -23,7 +23,7 @@
     <name>dlgJsc</name>
     <message>
       <source>Close Window</source>
-      <translation type="unfinished">Close Window</translation>
+      <translation>Pencereyi Kapat</translation>
     </message>
   </context>
   <context>
@@ -229,11 +229,11 @@
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Varsayılan</translation>
     </message>
     <message>
       <source>Deadzone</source>
-      <translation type="unfinished">Deadzone</translation>
+      <translation>Ölü bölge</translation>
     </message>
   </context>
   <context>
@@ -711,19 +711,19 @@
     </message>
     <message>
       <source>Slot &amp;A</source>
-      <translation type="unfinished">Slot &amp;A</translation>
+      <translation>Slot &amp;A</translation>
     </message>
     <message>
       <source>Slot &amp;B</source>
-      <translation type="unfinished">Slot &amp;B</translation>
+      <translation>Slot &amp;B</translation>
     </message>
     <message>
       <source>&amp;Vs System Controls</source>
-      <translation type="unfinished">&amp;Vs System Controls</translation>
+      <translation>&amp;Vs Sistem Kontrolleri</translation>
     </message>
     <message>
       <source>&amp;Joypad/Gamepad Debug</source>
-      <translation type="unfinished">&amp;Joypad/Gamepad Debug</translation>
+      <translation>&amp;Joypad/Gamepad Hata Ayıklama</translation>
     </message>
   </context>
   <context>
@@ -1047,19 +1047,19 @@
     </message>
     <message>
       <source>Delete</source>
-      <translation type="unfinished">Delete</translation>
+      <translation>Sil</translation>
     </message>
     <message>
       <source>Delete All</source>
-      <translation type="unfinished">Delete All</translation>
+      <translation>Hepsini Sil</translation>
     </message>
     <message>
       <source>Copy</source>
-      <translation type="unfinished">Copy</translation>
+      <translation>Kopyala</translation>
     </message>
     <message>
       <source>New Game Genie</source>
-      <translation type="unfinished">New Game Genie</translation>
+      <translation>Yeni Game Genie</translation>
     </message>
     <message>
       <source>New Pro Action</source>
@@ -1121,11 +1121,11 @@
     <name>wdgNTSCFilter</name>
     <message>
       <source>Reset paramaters to defaults</source>
-      <translation type="unfinished">Reset paramaters to defaults</translation>
+      <translation>Parametreleri varsayılana sıfırla</translation>
     </message>
     <message>
       <source>Artifacts</source>
-      <translation type="unfinished">Artifacts</translation>
+      <translation>Yapılar</translation>
     </message>
     <message>
       <source>Fringing</source>
@@ -1133,11 +1133,11 @@
     </message>
     <message>
       <source>Resolution</source>
-      <translation type="unfinished">Resolution</translation>
+      <translation>Çözünürlük</translation>
     </message>
     <message>
       <source>Gamma</source>
-      <translation type="unfinished">Gamma</translation>
+      <translation>Gama</translation>
     </message>
     <message>
       <source>Bleed</source>
@@ -1153,23 +1153,23 @@
     </message>
     <message>
       <source>Sharpness</source>
-      <translation type="unfinished">Sharpness</translation>
+      <translation>Netlik</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Parlaklık</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Hue</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Kontrast</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Doygunluk</translation>
     </message>
     <message>
       <source>Scanline</source>
@@ -1380,27 +1380,27 @@
     </message>
     <message>
       <source>192000</source>
-      <translation type="unfinished">192000</translation>
+      <translation>192000</translation>
     </message>
     <message>
       <source>96000</source>
-      <translation type="unfinished">96000</translation>
+      <translation>96000</translation>
     </message>
     <message>
       <source>48000</source>
-      <translation type="unfinished">48000</translation>
+      <translation>48000</translation>
     </message>
     <message>
       <source>44100</source>
-      <translation type="unfinished">44100</translation>
+      <translation>44100</translation>
     </message>
     <message>
       <source>22050</source>
-      <translation type="unfinished">22050</translation>
+      <translation>22050</translation>
     </message>
     <message>
       <source>11025</source>
-      <translation type="unfinished">11025</translation>
+      <translation>11025</translation>
     </message>
   </context>
   <context>
@@ -1594,7 +1594,7 @@
     </message>
     <message>
       <source>Famicom Disk System</source>
-      <translation type="unfinished">Famicom Disk System</translation>
+      <translation>Famicom Disk System</translation>
     </message>
     <message>
       <source>Use fast forward when loading the BIOS or disk/side</source>
@@ -1800,15 +1800,15 @@
     </message>
     <message>
       <source>Advanced</source>
-      <translation type="unfinished">Advanced</translation>
+      <translation>Gelişmiş</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Varsayılan</translation>
     </message>
     <message>
       <source>Randomize (Not recommended)</source>
-      <translation type="unfinished">Randomize (Not recommended)</translation>
+      <translation>Rastgele (Tavsiye edilmez)</translation>
     </message>
     <message>
       <source>Power up/reset CPU/PPU Alignment</source>
@@ -2034,7 +2034,7 @@
     <message>
       <source>Opus Audio (*.opus)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Opus Audio (*.opus)</translation>
+      <translation>Opus Audio (*.opus)</translation>
     </message>
   </context>
   <context>
@@ -2477,7 +2477,7 @@
     </message>
     <message>
       <source>Fullscreen</source>
-      <translation type="unfinished">Fullscreen</translation>
+      <translation>Tam ekran</translation>
     </message>
     <message>
       <source>* applied if supported by the monitor</source>
@@ -2485,11 +2485,11 @@
     </message>
     <message>
       <source>Use integer scaling</source>
-      <translation type="unfinished">Use integer scaling</translation>
+      <translation>Tamsayı ölçeklemeyi kullan</translation>
     </message>
     <message>
       <source>Preferred resolution </source>
-      <translation type="unfinished">Preferred resolution </translation>
+      <translation>Tercih Edilen Çözünürlük</translation>
     </message>
   </context>
   <context>
