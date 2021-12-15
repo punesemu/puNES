@@ -1187,7 +1187,7 @@
      <item>
       <widget class="QPushButton" name="pushButton_Save">
        <property name="text">
-        <string notr="true">Save Configuration</string>
+        <string>Save Configuration</string>
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
