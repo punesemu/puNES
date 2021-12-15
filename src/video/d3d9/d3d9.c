@@ -31,12 +31,14 @@
 #include "recording.h"
 #endif
 
+#define _SCR_COLUMNS_\
+	(cfg->filter == NTSC_FILTER ? NES_NTSC_OUT_WIDTH(SCR_COLUMNS) / 2 : SCR_COLUMNS)
 #define _SCR_COLUMNS_BRD\
-	((float)(SCR_COLUMNS - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
+	((float)(_SCR_COLUMNS_ - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
 #define _SCR_ROWS_BRD\
 	(float)(SCR_ROWS - (overscan.borders->up + overscan.borders->down))
 #define _SCR_COLUMNS_NOBRD\
-	((float)SCR_COLUMNS * gfx.pixel_aspect_ratio)
+	((float)_SCR_COLUMNS_ * gfx.pixel_aspect_ratio)
 #define _SCR_ROWS_NOBRD\
 	(float)SCR_ROWS
 
@@ -332,22 +334,29 @@ BYTE d3d9_context_create(void) {
 				_SCR_ROWS_NOBRD : _SCR_COLUMNS_NOBRD;
 			int mh = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
 				_SCR_COLUMNS_NOBRD : _SCR_ROWS_NOBRD;
+			float ratio = (float)mw / (float)mh, ratio_vm = (float)d3d9.video_mode.w / (float)d3d9.video_mode.h;
 
 			if (!cfg->stretch) {
 				if (cfg->integer_scaling) {
-					int mul = d3d9.video_mode.w > d3d9.video_mode.h ?
-						(d3d9.video_mode.h - (d3d9.video_mode.h % mh)) / mh :
-						(d3d9.video_mode.w - (d3d9.video_mode.w % mw)) / mw;
+					int factor = d3d9.video_mode.w > d3d9.video_mode.h
+						? ratio >= ratio_vm ? d3d9.video_mode.w / mw : d3d9.video_mode.h / mh
+						: ratio >= ratio_vm ? d3d9.video_mode.h / mh : d3d9.video_mode.w / mw;
 
-					vp->w = mw * mul;
-					vp->h = mh * mul;
+					vp->w = mw * factor;
+					vp->h = mh * factor;
 				} else {
-					float mul = (float)mw / (float)mh ;
-
 					if (d3d9.video_mode.w > d3d9.video_mode.h) {
-						vp->w = (int)((float)d3d9.video_mode.h * mul);
+						if (ratio >= ratio_vm) {
+							vp->h = (int)((float)d3d9.video_mode.w / ratio);
+						} else {
+							vp->w = (int)((float)d3d9.video_mode.h * ratio);
+						}
 					} else {
-						vp->h = (int)((float)d3d9.video_mode.w / mul);
+						if (ratio >= ratio_vm) {
+							vp->w = (int)((float)d3d9.video_mode.w * ratio);
+						} else {
+							vp->h = (int)((float)d3d9.video_mode.w / ratio);
+						}
 					}
 				}
 				vp->x = (d3d9.video_mode.w - vp->w) >> 1;
@@ -1362,10 +1371,10 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const uTCHAR *path, const 
 		if (ugetcwd(base, usizeof(base)) == NULL) { ; };
 
 		umemset(dname, 0x00, usizeof(dname));
-		gui_utf_dirname((uTCHAR *) path, dname, usizeof(buffer) - 1);
+		gui_utf_dirname((uTCHAR *)path, dname, usizeof(buffer) - 1);
 
 		umemset(buffer, 0x00, usizeof(buffer));
-		gui_utf_basename((uTCHAR *) path, buffer, usizeof(buffer) - 1);
+		gui_utf_basename((uTCHAR *)path, buffer, usizeof(buffer) - 1);
 		memset(bname, 0x00, sizeof(bname));
 		wcstombs(bname, buffer, sizeof(bname) - 1);
 	}

@@ -86,9 +86,9 @@ void hq3x_32_rb(WORD *screen, void *pix, uint32_t *palette) {
 	WORD srb = spL * sizeof(WORD);
 	WORD dpL = hqnx.dst_rows * 3;
 	WORD drb = dpL * sizeof(uint32_t);
-	uint32_t *dp = (uint32_t *) pix;
-	uint8_t *s_row_p = (uint8_t *) screen;
-	uint8_t *d_row_p = (uint8_t *) dp;
+	uint32_t *dp = (uint32_t *)pix;
+	uint8_t *s_row_p = (uint8_t *)screen;
+	uint8_t *d_row_p = (uint8_t *)dp;
 	uint32_t yuv1, yuv2;
 	uint32_t wrgb[10];
 
@@ -3119,9 +3119,9 @@ void hq3x_32_rb(WORD *screen, void *pix, uint32_t *palette) {
 		}
 
 		s_row_p += srb;
-		screen = (WORD *) s_row_p + hqnx.startx;
+		screen = (WORD *)s_row_p + hqnx.startx;
 
 		d_row_p += drb * 3;
-		dp = (uint32_t *) d_row_p;
+		dp = (uint32_t *)d_row_p;
 	}
 }

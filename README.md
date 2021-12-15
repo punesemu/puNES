@@ -1,48 +1,72 @@
-<h1>puNES</h1>
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/14859058/132302943-a466d3d5-75c2-4bac-b0b2-7f0aeb8c058d.png" alt="puNES"/><br>
+</p>  
+<h3 align="center">Qt-based Nintendo Entertainment System emulator and NSF/NSFe Music Player</h3>
 
-[![Gentoo package](https://repology.org/badge/version-for-repo/gentoo/punes.svg)](https://repology.org/project/punes/versions)
-[![AUR package](https://repology.org/badge/version-for-repo/aur/punes.svg)](https://repology.org/project/punes/versions)
-[![SlackBuilds package](https://repology.org/badge/version-for-repo/slackbuilds/punes.svg)](https://repology.org/project/punes/versions)
-[![Rosa 2019.1 package](https://repology.org/badge/version-for-repo/rosa_2019_1/punes.svg)](https://repology.org/project/punes/versions)
-[![LiGurOS 21.1 package](https://repology.org/badge/version-for-repo/liguros_21_1/punes.svg)](https://repology.org/project/punes/versions)
-[![Wikidata package](https://repology.org/badge/version-for-repo/wikidata/punes.svg)](https://repology.org/project/punes/versions)
+<p align="center">
+  <a href="https://repology.org/project/punes/versions">
+    <img src="https://repology.org/badge/version-for-repo/gentoo/punes.svg" alt="Gentoo package"/>
+    <img src="https://repology.org/badge/version-for-repo/aur/punes.svg" alt="AUR package]"/>
+    <img src="https://repology.org/badge/version-for-repo/slackbuilds/punes.svg" alt="SlackBuilds package"/>
+    <img src="https://repology.org/badge/version-for-repo/liguros_stable/punes.svg" alt="LiGurOS stable package"/>
+    <img src="https://repology.org/badge/version-for-repo/wikidata/punes.svg" alt="Wikidata package"/>
+</p>
 
-Description
+:keyboard: Configuration
 -----------
+To run it in portable mode, rename the executable by adding the suffix `_p`.  
+Examples: `punes.exe -> punes_p.exe` or `punes64.exe -> punes64_p.exe`
 
-Nintendo Entertaiment System emulator
+To see a list of available command-line options, start puNES with the `-h` argument.
 
-WIP Builds ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://ci.appveyor.com/api/projects/status/t820vxmvtvbfbll7?svg=true)](https://ci.appveyor.com/project/punesemu/punes) 
+:floppy_disk: Work in Progress (WIP) Builds
 -----------
-always updated to the last commit:
-* Windows 32 bit : [`OpenGL`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes32.wip.opengl.zip) - [`D3D9`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes32.wip.d3d9.zip)
-* Windows 64 bit : [`OpenGL`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes64.wip.opengl.zip) - [`D3D9`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes64.wip.d3d9.zip)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://ci.appveyor.com/api/projects/status/t820vxmvtvbfbll7?svg=true)](https://ci.appveyor.com/project/punesemu/punes/history)  
+
+These executables are always updated to the latest commit:
+* Windows 32 bit : :link:[`OpenGL`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes32.wip.opengl.zip) - :link:[`D3D9`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes32.wip.d3d9.zip)
+* Windows 64 bit : :link:[`OpenGL`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes64.wip.opengl.zip) - :link:[`D3D9`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes64.wip.d3d9.zip)
 
 Note : 32 bit versions are Windows XP compatible.
 
-Support:
+:beer: Support
+-----------
+If you want buy me a beer : <span class="badge-paypal"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button" /></a></span>
+
+:camera: Screenshots
+-----------
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/14859058/137119364-7dbf76e3-e330-45e2-8fb7-684f9bdadbf9.png" width="400" alt="puNES main window"/>
+  <img src="https://user-images.githubusercontent.com/14859058/142155318-22d86ae5-3a3f-486a-8ae8-e78c8eeabb2f.png" width="400" alt="puNES NSFE Player"/>
+  <img src="https://user-images.githubusercontent.com/14859058/135748564-2096abfd-9a9d-48e7-b93e-0aefaa714451.png" width="400" alt="puNES Slot Preview"/>
+  <img src="https://user-images.githubusercontent.com/14859058/135748722-ea73e6b3-db6b-4cf2-b13d-755ca4824975.png" width="400" alt="puNES General Settings"/>
+  <img src="https://user-images.githubusercontent.com/14859058/140854472-60a88023-e719-4637-9289-08991a367ddd.png" width="400" alt="puNES Video Filters Settings"/>
+  <img src="https://user-images.githubusercontent.com/14859058/135748586-fe41d0d1-18d0-4c14-b7c4-4d6deacb4fbb.png" width="400" alt="puNES Cheat Editor"/>
+  <img src="https://user-images.githubusercontent.com/14859058/144721127-6f6f68a1-7108-4d2f-9ef8-d7a8614705b8.png" width="400" alt="puNES Xbox360 Standard Controller Settings"/>
+  <img src="https://user-images.githubusercontent.com/14859058/144721153-08cf80ff-c9a5-4f92-958a-9315cbb93a2d.png" width="400" alt="puNES PS4 Standard Controller Settings"/>
+</p>
+
+:information_source: How to Compile
 -----------
 
-If you want pay a beer : [![Beerpay](https://beerpay.io/punesemu/puNES/badge.svg?style=beer)](https://beerpay.io/punesemu/puNES) or <span class="badge-paypal"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button" /></a></span>
+* :penguin: [Linux](#penguin-linux)
+* :smiling_imp: [FreeBSD](#smiling_imp-freebsd)
+* :blowfish: [OpenBSD](#blowfish-openbsd)
+* :computer: [Windows](#computer-windows)
 
-How to Compile
------------
-
-* [Linux](#linux)
-* [FreeBSD](#freebsd)
-* [OpenBSD](#openbsd)
-* [Windows](#windows)
-
-## Linux
+## :penguin: Linux
 #### Dependencies
-* [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
+* [Qt5](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [nvidia-cg](https://developer.nvidia.com/cg-toolkit)
 * [alsa](https://www.alsa-project.org)
-* (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
+* [cmake](https://cmake.org)
+* libudev
+* [libX11 and libXrandr](https://www.x.org)
+* (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
 #### Compilation of puNES
 ```bash
-git clone https://github.com/punesemu/punes
-cd punes
+git clone https://github.com/punesemu/puNES
+cd puNES
 ./autogen.sh
 ./configure
 make
@@ -54,9 +78,10 @@ If you need the debug version then you need to replace the `./configure` command
 CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" ./configure --disable-release [...]
 ```
 where `[...]` are the other necessary options.
-#### Example on how to compile on Ubuntu 20.10
+#### Example on how to compile on Ubuntu 21.10
 ```bash
-sudo apt-get install git autotools-dev autoconf build-essential pkg-config libasound2-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev nvidia-cg-toolkit
+sudo apt-get install git cmake autotools-dev autoconf libtool build-essential pkg-config libudev-dev libasound2-dev
+sudo apt-get install qtbase5-dev qttools5-dev-tools libqt5svg5-dev nvidia-cg-toolkit libx11-dev libxrandr-dev 
 sudo apt-get install libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev
 git clone https://github.com/punesemu/puNES
 cd puNES
@@ -68,15 +93,17 @@ to start the emulator
 ```bash
 ./src/punes
 ```
-## FreeBSD
+## :smiling_imp: FreeBSD
 #### Dependencies
-* [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
+* [Qt5](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
-* (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
+* [cmake](https://cmake.org)
+* [libX11 and libXrandr](https://www.x.org)
+* (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
 #### Compilation of puNES
 ```bash
-git clone https://github.com/punesemu/punes
-cd punes
+git clone https://github.com/punesemu/puNES
+cd puNES
 ./autogen.sh
 CC=cc CXX=c++ ./configure
 make
@@ -88,15 +115,17 @@ If you need the debug version then you need to replace the `./configure` command
 CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" CC=cc CXX=c++ ./configure --disable-release [...]
 ```
 where `[...]` are the other necessary options.
-## OpenBSD
+## :blowfish: OpenBSD 
 #### Dependencies
-* [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
+* [Qt5](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
-* (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#ffmpeg).
+* [cmake](https://cmake.org)
+* [libX11 and libXrandr](https://www.x.org)
+* (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
 #### Compilation of puNES
 ```bash
-git clone https://github.com/punesemu/punes
-cd punes
+git clone https://github.com/punesemu/puNES
+cd puNES
 ./autogen.sh
 CC=cc CXX=c++ ./configure
 make
@@ -108,7 +137,7 @@ If you need the debug version then you need to replace the `./configure` command
 CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" CC=cc CXX=c++ ./configure --disable-release [...]
 ```
 where `[...]` are the other necessary options.
-## Windows
+## :computer: Windows
 #### Dependencies
 * [Qt5](https://www.qt.io) with OpenGL support (5.6.3 is the last if you want the support for Windows XP)
 #### Development Environment installation
@@ -120,7 +149,7 @@ pacman -Syu
 3. close the MSYS2 window and run it again from Start menu
 ```bash
 pacman -Su
-pacman -S base-devel git wget p7zip unzip
+pacman -S base-devel git wget p7zip unzip mingw-w64-i686-cmake mingw-w64-x86_64-cmake
 pacman -S perl ruby python2 mingw-w64-i686-toolchain mingw-w64-x86_64-toolchain
 exit
 ```
@@ -177,8 +206,8 @@ cd ..
 #### Compilation of puNES
 10. Now you have everything you need to compile correctly puNES
 ```bash
-git clone https://github.com/punesemu/punes
-cd punes
+git clone https://github.com/punesemu/puNES
+cd puNES
 ./autogen.sh
 ```
 if you want D3D9 version :
@@ -203,7 +232,7 @@ The executable `punes.exe` is in the `src` directory but in order to run it you 
 * swresample-3.dll
 * swscale-5.dll
 
-that you can download here : [`64bit`](https://www.dropbox.com/s/7e01vzhmc4k5ead/puNES_x86_64_dlls.zip?dl=1) version or [`32bit`](https://www.dropbox.com/s/xaspmjmczkg1zjt/puNES_i686_dlls.zip?dl=1) version.
+that you can download here : :link:[`64bit`](https://www.dropbox.com/s/d632cjezybz6a74/puNES_x86_64_dlls.zip?dl=1) version or :link:[`32bit`](https://www.dropbox.com/s/ye00129nyacdl05/puNES_i686_dlls.zip?dl=1) version.
 #### Windows Debug version
 If you need the debug version then you need to replace the `./configure` command of the previous examples with the following:
 ```bash
@@ -213,7 +242,7 @@ where `[...]` are the other necessary options.
 
 -----------
 
-#### FFmpeg
+#### :movie_camera: FFmpeg
 It is always possible to disable audio/video recording support by specifying the `configure` parameter `--without-ffmpeg`.
 If the installed version is lower than 4.0 the support will be disabled automatically.
 
@@ -223,6 +252,7 @@ Supported audio recording formats:
 * AAC Audio
 * Flac Audio
 * Ogg Audio ([vorbis](https://xiph.org/vorbis/)) (*)
+* Opus Audio ([libopus](https://www.opus-codec.org)) (*)
 
 Supported video recording formats:
 * MPEG 1 Video

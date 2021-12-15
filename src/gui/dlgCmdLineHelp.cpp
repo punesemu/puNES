@@ -27,55 +27,60 @@
 dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, QString name) : QDialog(parent) {
 	uTCHAR *usage_string;
 	const uTCHAR *istructions = {
-			uL("Usage: %1 [options] file...\n\n")
+			uL("Usage: %%1 [options] file...\n\n")
 			uL("Options:\n")
 			uL("-h, --help                print this help\n")
 			uL("-V, --version             print the version\n")
 			uL("    --portable            start in portable mode\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
 #if defined (WITH_OPENGL)
-			uL("" uPERCENTs "\n")
+			uL("" uPs("") "\n")
 #endif
+#if defined (FULLSCREEN_RESFREQ)
+			uL("" uPs("") "\n")
+			uL("" uPs("") "\n")
+#endif
+			uL("" uPs("") "\n")
 	};
 
 	usage_string = (uTCHAR *)malloc(1024 * 9);
@@ -107,6 +112,10 @@ dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, QString name) : QDialog(parent) 
 			main_cfg[SET_FULLSCREEN_IN_WINDOW].hlp,
 			main_cfg[SET_INTEGER_FULLSCREEN].hlp,
 			main_cfg[SET_STRETCH_FULLSCREEN].hlp,
+#if defined (FULLSCREEN_RESFREQ)
+			main_cfg[SET_ADAPTIVE_RRATE_FULLSCREEN].hlp,
+			main_cfg[SET_RESOLUTION_FULLSCREEN].hlp,
+#endif
 			main_cfg[SET_HORIZONTAL_FLIP_SCREEN].hlp,
 			main_cfg[SET_SCREEN_ROTATION].hlp,
 			main_cfg[SET_AUDIO_OUTPUT_DEVICE].hlp,
@@ -123,7 +132,8 @@ dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, QString name) : QDialog(parent) 
 			main_cfg[SET_BCK_PAUSE].hlp,
 			main_cfg[SET_CHEAT_MODE].hlp,
 			main_cfg[SET_GUI_LANGUAGE].hlp,
-			main_cfg[SET_REWIND_MINUTES].hlp
+			main_cfg[SET_REWIND_MINUTES].hlp,
+			main_cfg[SET_ONLYCMDLINE_HIDDEN_GUI].hlp
 	);
 
 	setupUi(this);

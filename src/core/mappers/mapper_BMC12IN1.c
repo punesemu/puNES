@@ -29,7 +29,7 @@ struct _bmc12in1 {
 void map_init_BMC12IN1(void) {
 	EXTCL_CPU_WR_MEM(BMC12IN1);
 	EXTCL_SAVE_MAPPER(BMC12IN1);
-	mapper.internal_struct[0] = (BYTE *) &bmc12in1;
+	mapper.internal_struct[0] = (BYTE *)&bmc12in1;
 	mapper.internal_struct_size[0] = sizeof(bmc12in1);
 
 	memset(&bmc12in1, 0x00, sizeof(bmc12in1));

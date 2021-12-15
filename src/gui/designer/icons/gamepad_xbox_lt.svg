@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   version="1.1"
+   id="Capa_1"
+   x="0px"
+   y="0px"
+   width="128"
+   height="128"
+   viewBox="0 0 128 128"
+   enable-background="new 0 0 19 25.85"
+   xml:space="preserve"
+   sodipodi:docname="Xbox_Left_Trigger.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs43" /><sodipodi:namedview
+   id="namedview41"
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1.0"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   showgrid="false"
+   width="128px"
+   inkscape:zoom="1.8205996"
+   inkscape:cx="-98.044623"
+   inkscape:cy="59.870386"
+   inkscape:window-width="2560"
+   inkscape:window-height="1366"
+   inkscape:window-x="0"
+   inkscape:window-y="24"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Capa_1" />
+<g
+   id="g38"
+   transform="matrix(4.9511842,0,0,4.9511842,16.961275,0.00594421)">
+	<g
+   id="g30">
+		<linearGradient
+   id="SVGID_1_"
+   gradientUnits="userSpaceOnUse"
+   x1="9.5"
+   y1="0"
+   x2="9.5"
+   y2="25.8496">
+			<stop
+   offset="0"
+   style="stop-color:#5B5B5F"
+   id="stop2" />
+			<stop
+   offset="0.0231"
+   style="stop-color:#59595D"
+   id="stop4" />
+			<stop
+   offset="0.4507"
+   style="stop-color:#333335"
+   id="stop6" />
+			<stop
+   offset="0.7912"
+   style="stop-color:#1C1C1D"
+   id="stop8" />
+			<stop
+   offset="1"
+   style="stop-color:#141414"
+   id="stop10" />
+		</linearGradient>
+		<path
+   fill="url(#SVGID_1_)"
+   d="m 19,23.585 c 0,1.25 -1.014,2.265 -2.264,2.265 H 2.264 C 1.014,25.85 0,24.835 0,23.585 V 2.265 C 0,1.015 1.014,0 2.264,0 H 16.737 C 17.986,0 19,1.015 19,2.265 Z"
+   id="path13"
+   style="fill:url(#SVGID_1_)" />
+		<linearGradient
+   id="SVGID_2_"
+   gradientUnits="userSpaceOnUse"
+   x1="9.5"
+   y1="0"
+   x2="9.5"
+   y2="25.8496">
+			<stop
+   offset="0"
+   style="stop-color:#5B5B5F"
+   id="stop15" />
+			<stop
+   offset="0.0626"
+   style="stop-color:#535356"
+   id="stop17" />
+			<stop
+   offset="0.3018"
+   style="stop-color:#373739"
+   id="stop19" />
+			<stop
+   offset="0.5397"
+   style="stop-color:#242425"
+   id="stop21" />
+			<stop
+   offset="0.7739"
+   style="stop-color:#181818"
+   id="stop23" />
+			<stop
+   offset="1"
+   style="stop-color:#141414"
+   id="stop25" />
+		</linearGradient>
+		<path
+   fill="url(#SVGID_2_)"
+   d="m 16.736,1.51 c 0.416,0 0.754,0.338 0.754,0.755 v 21.32 c 0,0.416 -0.338,0.755 -0.754,0.755 H 2.264 C 1.848,24.34 1.51,24.001 1.51,23.585 V 2.265 C 1.51,1.848 1.848,1.51 2.264,1.51 h 14.472 m 0,-1.51 H 2.264 C 1.014,0 0,1.015 0,2.265 v 21.32 c 0,1.25 1.014,2.265 2.264,2.265 h 14.473 c 1.25,0 2.264,-1.015 2.264,-2.265 V 2.265 C 19,1.015 17.986,0 16.736,0 Z"
+   id="path28"
+   style="fill:url(#SVGID_2_)" />
+	</g>
+	<g
+   id="g36">
+		<polygon
+   fill="#ffffff"
+   points="5.705,8.677 3.627,8.677 3.627,17.173 9.729,17.173 9.729,15.316 5.705,15.316 "
+   id="polygon32" />
+		<polygon
+   fill="#ffffff"
+   points="15.373,10.473 15.373,8.677 8.393,8.677 8.393,10.473 10.838,10.473 10.838,17.173 12.916,17.173 12.916,10.473 "
+   id="polygon34" />
+	</g>
+</g>
+</svg>

@@ -35,7 +35,7 @@ void map_init_Whirlwind(void) {
 	EXTCL_CPU_WR_MEM(Whirlwind);
 	EXTCL_CPU_RD_MEM(Whirlwind);
 	EXTCL_SAVE_MAPPER(Whirlwind);
-	mapper.internal_struct[0] = (BYTE *) &whirlwind;
+	mapper.internal_struct[0] = (BYTE *)&whirlwind;
 	mapper.internal_struct_size[0] = sizeof(whirlwind);
 
 	info.prg.ram.banks_8k_plus = FALSE;

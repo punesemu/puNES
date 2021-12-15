@@ -27,7 +27,7 @@ struct _caltron {
 
 void map_init_Caltron(void) {
 	EXTCL_CPU_WR_MEM(Caltron);
-	mapper.internal_struct[0] = (BYTE *) &caltron;
+	mapper.internal_struct[0] = (BYTE *)&caltron;
 	mapper.internal_struct_size[0] = sizeof(caltron);
 
 	info.mapper.extend_wr = TRUE;

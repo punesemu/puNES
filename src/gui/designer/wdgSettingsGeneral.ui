@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>861</width>
-    <height>608</height>
+    <height>452</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -31,54 +31,99 @@
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout_General">
+     <item row="4" column="1">
+      <widget class="QLabel" name="label_Language">
+       <property name="text">
+        <string>Language</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QWidget" name="widget_Fast_Forward_velocity" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout_Fast_Forward_velocity">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="pushButton_FF_2x">
+          <property name="text">
+           <string>2x</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_FF_3x">
+          <property name="text">
+           <string>3x</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_FF_4x">
+          <property name="text">
+           <string>4x</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_FF_5x">
+          <property name="text">
+           <string>5x</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="15" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkBox_Save_settings_on_exit">
+       <property name="text">
+        <string>Save settings on exit</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLabel" name="label_FDS_Bios">
+       <property name="text">
+        <string>FDS Bios file</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkBox_FDS_disk1sideA_at_reset">
+       <property name="text">
+        <string>Insert disk 1 side A at power-up/reset</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="1">
       <widget class="QLabel" name="label_Mode">
        <property name="text">
         <string>Mode</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0" colspan="3">
-      <layout class="QHBoxLayout" name="horizontalLayout_System_Roms">
-       <item>
-        <widget class="QLabel" name="icon_System_Roms">
-         <property name="text">
-          <string notr="true">System Roms icon</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_System_Roms">
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>System Roms</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="Line" name="line_System_Roms">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="icon_Language">
-       <property name="text">
-        <string notr="true">Language icon</string>
        </property>
       </widget>
      </item>
@@ -173,128 +218,42 @@
        </layout>
       </widget>
      </item>
-     <item row="9" column="0" colspan="3">
-      <widget class="QCheckBox" name="checkBox_Save_battery_every_tot">
-       <property name="text">
-        <string>Save battery RAM file every 3 min.</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="icon_Mode">
-       <property name="text">
-        <string notr="true">Mode icon</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLabel" name="label_Rewind_minutes">
-       <property name="text">
-        <string>Rewind minutes</string>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="0" colspan="3">
-      <widget class="QCheckBox" name="checkBox_Pause_when_in_background">
-       <property name="text">
-        <string>Pause when in background</string>
-       </property>
-      </widget>
-     </item>
-     <item row="12" column="0" colspan="3">
-      <spacer name="verticalSpacer_page_General">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>42</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="icon_Fast_Forward_velocity">
-       <property name="text">
-        <string notr="true">Fast Forward velocity icon</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QWidget" name="widget_Mode" native="true">
-       <layout class="QHBoxLayout" name="horizontalLayout_Mode">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QPushButton" name="pushButton_Mode_Auto">
-          <property name="text">
-           <string>Auto</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_Mode_NTSC">
-          <property name="text">
-           <string>NTSC</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_Mode_PAL">
-          <property name="text">
-           <string>PAL</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_Mode_Dendy">
-          <property name="text">
-           <string>Dendy</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="label_Language">
-       <property name="text">
-        <string>Language</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="icon_Rewind_minutes">
-       <property name="text">
-        <string notr="true">Rewind minutes icon</string>
-       </property>
-      </widget>
+     <item row="0" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_General_settings">
+       <item>
+        <widget class="QLabel" name="icon_General_settings">
+         <property name="text">
+          <string notr="true">Settings icon</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_General_settings">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Settings</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_General_settings">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item row="2" column="1">
       <widget class="QLabel" name="label_Fast_Forward_velocity">
@@ -303,12 +262,103 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="icon_Game_Genie_rom_file">
+     <item row="2" column="0">
+      <widget class="QLabel" name="icon_Fast_Forward_velocity">
        <property name="text">
-        <string notr="true">Game Genie Rom icon</string>
+        <string notr="true">Fast Forward velocity icon</string>
        </property>
       </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLabel" name="label_Game_Genie_rom_file">
+       <property name="text">
+        <string>Game Genie Rom file</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkBox_Save_battery_every_tot">
+       <property name="text">
+        <string>Save battery RAM file every 3 min.</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_FDS_Bios">
+       <item>
+        <widget class="QLineEdit" name="lineEdit_FDS_Bios">
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_FDS_Bios">
+         <property name="text">
+          <string notr="true"/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_FDS_Bios_clear">
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="icon_Mode">
+       <property name="text">
+        <string notr="true">Mode icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_System_Roms">
+       <item>
+        <widget class="QLabel" name="icon_System_Roms">
+         <property name="text">
+          <string notr="true">System Roms icon</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_System_Roms">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>System Roms</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_System_Roms">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item row="4" column="2">
       <widget class="QComboBox" name="comboBox_Language">
@@ -392,91 +442,21 @@
        </item>
       </widget>
      </item>
-     <item row="6" column="2">
-      <layout class="QHBoxLayout" name="horizontalLayout_Game_Genie_rom_file">
-       <item>
-        <widget class="QLineEdit" name="lineEdit_Game_Genie_rom_file">
-         <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_Game_Genie_rom_file">
-         <property name="text">
-          <string notr="true"/>
-         </property>
-         <property name="icon">
-          <iconset resource="resources.qrc">
-           <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_Game_Genie_rom_file_clear">
-         <property name="icon">
-          <iconset resource="resources.qrc">
-           <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="11" column="0" colspan="3">
-      <widget class="QCheckBox" name="checkBox_Save_settings_on_exit">
+     <item row="7" column="0">
+      <widget class="QLabel" name="icon_FDS_Bios">
        <property name="text">
-        <string>Save settings on exit</string>
+        <string notr="true">FDS Bios file icon</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
-      <widget class="QLabel" name="label_Game_Genie_rom_file">
+     <item row="14" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkBox_Pause_when_in_background">
        <property name="text">
-        <string>Game Genie Rom file</string>
+        <string>Pause when in background</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0" colspan="3">
-      <layout class="QHBoxLayout" name="horizontalLayout_General_settings">
-       <item>
-        <widget class="QLabel" name="icon_General_settings">
-         <property name="text">
-          <string notr="true">Settings icon</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_General_settings">
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Settings</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="Line" name="line_General_settings">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="8" column="0" colspan="3">
+     <item row="12" column="0" colspan="3">
       <layout class="QHBoxLayout" name="horizontalLayout_General_misc">
        <item>
         <widget class="QLabel" name="icon_General_misc">
@@ -513,9 +493,60 @@
        </item>
       </layout>
      </item>
-     <item row="2" column="2">
-      <widget class="QWidget" name="widget_Fast_Forward_velocity" native="true">
-       <layout class="QHBoxLayout" name="horizontalLayout_Fast_Forward_velocity">
+     <item row="4" column="0">
+      <widget class="QLabel" name="icon_Language">
+       <property name="text">
+        <string notr="true">Language icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_General_FDS">
+       <item>
+        <widget class="QLabel" name="icon_General_FDS">
+         <property name="text">
+          <string notr="true">FDS icon</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_General_FDS">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Famicom Disk System</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_General_FDS">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="label_Rewind_minutes">
+       <property name="text">
+        <string>Rewind minutes</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QWidget" name="widget_Mode" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout_Mode">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -532,9 +563,9 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="pushButton_FF_2x">
+         <widget class="QPushButton" name="pushButton_Mode_Auto">
           <property name="text">
-           <string>2x</string>
+           <string>Auto</string>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -542,9 +573,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_FF_3x">
+         <widget class="QPushButton" name="pushButton_Mode_NTSC">
           <property name="text">
-           <string>3x</string>
+           <string>NTSC</string>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -552,9 +583,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_FF_4x">
+         <widget class="QPushButton" name="pushButton_Mode_PAL">
           <property name="text">
-           <string>4x</string>
+           <string>PAL</string>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -562,9 +593,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_FF_5x">
+         <widget class="QPushButton" name="pushButton_Mode_Dendy">
           <property name="text">
-           <string>5x</string>
+           <string>Dendy</string>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -574,24 +605,31 @@
        </layout>
       </widget>
      </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="icon_FDS_Bios">
+     <item row="6" column="0">
+      <widget class="QLabel" name="icon_Game_Genie_rom_file">
        <property name="text">
-        <string notr="true">FDS Bios file icon</string>
+        <string notr="true">Game Genie Rom icon</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="1">
-      <widget class="QLabel" name="label_FDS_Bios">
+     <item row="11" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkBox_FDS_fast_forward">
        <property name="text">
-        <string>FDS Bios file</string>
+        <string>Use fast forward when loading the BIOS or disk/side</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="2">
-      <layout class="QHBoxLayout" name="horizontalLayout_FDS_Bios">
+     <item row="10" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkBox_FDS_switch_side_automatically">
+       <property name="text">
+        <string>Switch the disk/side automatically</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_Game_Genie_rom_file">
        <item>
-        <widget class="QLineEdit" name="lineEdit_FDS_Bios">
+        <widget class="QLineEdit" name="lineEdit_Game_Genie_rom_file">
          <property name="focusPolicy">
           <enum>Qt::NoFocus</enum>
          </property>
@@ -601,7 +639,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_FDS_Bios">
+        <widget class="QPushButton" name="pushButton_Game_Genie_rom_file">
          <property name="text">
           <string notr="true"/>
          </property>
@@ -612,7 +650,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_FDS_Bios_clear">
+        <widget class="QPushButton" name="pushButton_Game_Genie_rom_file_clear">
          <property name="icon">
           <iconset resource="resources.qrc">
            <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
@@ -620,6 +658,33 @@
         </widget>
        </item>
       </layout>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="icon_Rewind_minutes">
+       <property name="text">
+        <string notr="true">Rewind minutes icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="17" column="0" colspan="3">
+      <spacer name="verticalSpacer_page_General">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>42</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="16" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkBox_Multiple_instances">
+       <property name="text">
+        <string>Allow multiple instances of the emulator</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -646,6 +711,9 @@
   <tabstop>pushButton_Game_Genie_rom_file_clear</tabstop>
   <tabstop>pushButton_FDS_Bios</tabstop>
   <tabstop>pushButton_FDS_Bios_clear</tabstop>
+  <tabstop>checkBox_FDS_disk1sideA_at_reset</tabstop>
+  <tabstop>checkBox_FDS_switch_side_automatically</tabstop>
+  <tabstop>checkBox_FDS_fast_forward</tabstop>
   <tabstop>checkBox_Save_battery_every_tot</tabstop>
   <tabstop>checkBox_Pause_when_in_background</tabstop>
   <tabstop>checkBox_Save_settings_on_exit</tabstop>

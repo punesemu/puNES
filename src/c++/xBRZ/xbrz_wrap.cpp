@@ -18,28 +18,23 @@
 
 #include "c++/xBRZ/xbrz_wrap.h"
 #include "c++/xBRZ/xbrz.h"
-#if defined (__unix__)
-#include <pthread.h>
+#include "thread_def.h"
+
+#if defined (WITH_D3D9)
+#define color_format xbrz::ColorFormat::ARGB
+#elif defined (WITH_OPENGL)
+#define color_format xbrz::ColorFormat::RGB
 #endif
 
 extern "C" void xbrz_scale(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette, int width, int height) {
-#if defined (WITH_D3D9)
-	xbrz::scale(factor, src, trg, palette, width, height, xbrz::ColorFormat::ARGB);
-#elif defined (WITH_OPENGL)
-	xbrz::scale(factor, src, trg, palette, width, height, xbrz::ColorFormat::RGB);
-#endif
+	xbrz::scale(factor, src, trg, palette, width, height, color_format);
 }
-
 extern "C" void xbrz_scale_mt(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette, int width, int height) {
-#if defined (__unix__)
-	pthread_t thread[XBRZ_NUM_SLICE];
-#elif defined (_WIN32)
-	HANDLE thread[XBRZ_NUM_SLICE];
-	DWORD id[XBRZ_NUM_SLICE];
-#endif
 	_xbrz_wrap param[XBRZ_NUM_SLICE];
+	thread_t thread[XBRZ_NUM_SLICE];
 	int i;
 
+	// creo i threads
 	for (i = 0; i < XBRZ_NUM_SLICE; i++) {
 		param[i].slice = i;
 		param[i].factor = factor;
@@ -48,26 +43,13 @@ extern "C" void xbrz_scale_mt(BYTE factor, const WORD *src, uint32_t *trg, uint3
 		param[i].palette = palette;
 		param[i].srcWidth = width;
 		param[i].srcHeight = height;
-	#if defined (WITH_D3D9)
-		param[i].colFmt = (int)xbrz::ColorFormat::ARGB;
-	#elif defined (WITH_OPENGL)
-		param[i].colFmt = (int)xbrz::ColorFormat::RGB;
-	#endif
-#if defined (__unix__)
-		pthread_create(&thread[i], NULL, xbrz::scale_mt, &param[i]);
-#elif defined (_WIN32)
-		thread[i] = CreateThread(NULL, 0, xbrz::scale_mt, &param[i], 0, &id[i]);
-#endif
+		param[i].colFmt = (int)color_format;
+		thread_create(thread[i], xbrz::scale_mt, &param[i]);
 	}
 
-#if defined (__unix__)
+	// attendo che i threads concludano
 	for (i = 0; i < XBRZ_NUM_SLICE; i++) {
-		pthread_join(thread[i], NULL);
+		thread_join(thread[i]);
+		thread_free(thread[i]);
 	}
-#elif defined (_WIN32)
-	WaitForMultipleObjects(XBRZ_NUM_SLICE, thread, TRUE, INFINITE);
-	for (i = 0; i < XBRZ_NUM_SLICE; i++) {
-		CloseHandle(thread[i]);
-	}
-#endif
 }

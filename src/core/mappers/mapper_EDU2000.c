@@ -31,7 +31,7 @@ void map_init_EDU2000(void) {
 	EXTCL_CPU_WR_MEM(EDU2000);
 	EXTCL_CPU_RD_MEM(EDU2000);
 	EXTCL_SAVE_MAPPER(EDU2000);
-	mapper.internal_struct[0] = (BYTE *) &edu2000;
+	mapper.internal_struct[0] = (BYTE *)&edu2000;
 	mapper.internal_struct_size[0] = sizeof(edu2000);
 
 	memset(&edu2000, 0x00, sizeof(edu2000));

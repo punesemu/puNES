@@ -39,7 +39,7 @@ void map_init_UNIFSMB2J(void) {
 	EXTCL_CPU_RD_MEM(UNIFSMB2J);
 	EXTCL_SAVE_MAPPER(UNIFSMB2J);
 	EXTCL_CPU_EVERY_CYCLE(UNIFSMB2J);
-	mapper.internal_struct[0] = (BYTE *) &unifsmb2j;
+	mapper.internal_struct[0] = (BYTE *)&unifsmb2j;
 	mapper.internal_struct_size[0] = sizeof(unifsmb2j);
 
 	memset(&unifsmb2j, 0x00, sizeof(unifsmb2j));

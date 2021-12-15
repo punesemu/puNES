@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>280</width>
-    <height>311</height>
+    <width>559</width>
+    <height>355</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -31,132 +31,28 @@
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout_PPU">
-     <item row="6" column="0">
-      <widget class="QCheckBox" name="checkBox_Disable_DMC_Control">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+     <item row="3" column="0">
+      <widget class="QCheckBox" name="checkBox_Unlimited_Sprites">
        <property name="layoutDirection">
         <enum>Qt::LeftToRight</enum>
        </property>
        <property name="text">
-        <string>Disable 7bit Sample Control</string>
+        <string>Unlimited Sprites</string>
        </property>
       </widget>
      </item>
-     <item row="8" column="0">
-      <layout class="QGridLayout" name="gridLayout_Overclock_lines">
-       <item row="0" column="1">
-        <widget class="QSpinBox" name="spinBox_VB_Slines">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="lineEdit_Lag_Counter">
-         <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QPushButton" name="pushButton_Reset_Lag_Counter">
-         <property name="text">
-          <string>Reset Lag Counter</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_VB_Slines">
-         <property name="minimumSize">
-          <size>
-           <width>145</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>VBlank Lines</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QSpinBox" name="spinBox_Postrender_Slines">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_Postrender_Slines">
-         <property name="text">
-          <string>Postrender Lines</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0" colspan="2">
-        <spacer name="verticalSpacer_page_PPU">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>58</width>
-           <height>37</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </item>
-     <item row="4" column="0">
-      <layout class="QHBoxLayout" name="horizontalLayout_PPU_Overclock">
-       <item>
-        <widget class="QLabel" name="icon_PPU_Overclock">
-         <property name="text">
-          <string notr="true">Overclock icon</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_PPU_Overclock">
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Overclock</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="Line" name="line_PPU_Overclock">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
+     <item row="10" column="0">
+      <spacer name="verticalSpacer_page_PPU">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>58</width>
+         <height>37</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item row="0" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_Sprites_and_background">
@@ -195,17 +91,17 @@
        </item>
       </layout>
      </item>
-     <item row="3" column="0">
-      <widget class="QCheckBox" name="checkBox_Unlimited_Sprites">
+     <item row="2" column="0">
+      <widget class="QCheckBox" name="checkBox_Hide_Background">
        <property name="layoutDirection">
         <enum>Qt::LeftToRight</enum>
        </property>
        <property name="text">
-        <string>Unlimited Sprites</string>
+        <string>Hide Background</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="0">
+     <item row="6" column="0">
       <widget class="QCheckBox" name="checkBox_PPU_Overclock">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -231,15 +127,218 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QCheckBox" name="checkBox_Hide_Background">
+     <item row="5" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_PPU_Overclock">
+       <item>
+        <widget class="QLabel" name="icon_PPU_Overclock">
+         <property name="text">
+          <string notr="true">Overclock icon</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_PPU_Overclock">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Overclock</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_PPU_Overclock">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="7" column="0">
+      <widget class="QCheckBox" name="checkBox_Disable_DMC_Control">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="layoutDirection">
         <enum>Qt::LeftToRight</enum>
        </property>
        <property name="text">
-        <string>Hide Background</string>
+        <string>Disable 7bit Sample Control</string>
        </property>
       </widget>
+     </item>
+     <item row="9" column="0">
+      <layout class="QGridLayout" name="gridLayout_Overclock_lines">
+       <item row="2" column="0">
+        <widget class="QPushButton" name="pushButton_Reset_Lag_Counter">
+         <property name="text">
+          <string>Reset Lag Counter</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_VB_Slines">
+         <property name="minimumSize">
+          <size>
+           <width>145</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>VBlank Lines</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QSpinBox" name="spinBox_VB_Slines">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="lineEdit_Lag_Counter">
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QSpinBox" name="spinBox_Postrender_Slines">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_Postrender_Slines">
+         <property name="text">
+          <string>Postrender Lines</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="2">
+        <layout class="QHBoxLayout" name="horizontalLayout_PPU_Advanced">
+         <item>
+          <widget class="QLabel" name="icon_PPU_Advanced">
+           <property name="text">
+            <string notr="true">Advanced icon</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_PPU_Advanced">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Advanced</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_PPU_Advanced">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="4" column="1">
+        <widget class="QComboBox" name="comboBox_CPUPPU_Alignment">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <item>
+          <property name="text">
+           <string>Default</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Randomize (Not recommended)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Increment at every hard reset (Not recommended)</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_CPUPPU_Alignment">
+         <property name="text">
+          <string>Power up/reset CPU/PPU Alignment</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="4" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_Unlimited_Sprites_Auto">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Automatically restores the limit when necessary to prevent graphical glitches</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>
@@ -249,11 +348,13 @@
   <tabstop>checkBox_Hide_Sprites</tabstop>
   <tabstop>checkBox_Hide_Background</tabstop>
   <tabstop>checkBox_Unlimited_Sprites</tabstop>
+  <tabstop>checkBox_Unlimited_Sprites_Auto</tabstop>
   <tabstop>checkBox_PPU_Overclock</tabstop>
   <tabstop>checkBox_Disable_DMC_Control</tabstop>
   <tabstop>spinBox_VB_Slines</tabstop>
   <tabstop>spinBox_Postrender_Slines</tabstop>
   <tabstop>pushButton_Reset_Lag_Counter</tabstop>
+  <tabstop>comboBox_CPUPPU_Alignment</tabstop>
  </tabstops>
  <resources/>
  <connections/>

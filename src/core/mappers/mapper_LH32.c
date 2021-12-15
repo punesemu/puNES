@@ -32,7 +32,7 @@ void map_init_LH32(void) {
 	EXTCL_CPU_WR_MEM(LH32);
 	EXTCL_CPU_RD_MEM(LH32);
 	EXTCL_SAVE_MAPPER(LH32);
-	mapper.internal_struct[0] = (BYTE *) &lh32;
+	mapper.internal_struct[0] = (BYTE *)&lh32;
 	mapper.internal_struct_size[0] = sizeof(lh32);
 
 	lh32.reg = 0;

@@ -24,16 +24,30 @@
 
 enum ntsc_mode { COMPOSITE, SVIDEO, RGBMODE };
 
+typedef struct _ntsc_filter {
+	nes_ntsc_setup_t format[3];
+	nes_ntsc_t *ntsc;
+} _ntsc_filter;
+
+extern _ntsc_filter ntsc_filter;
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
 
-EXTERNC void ntsc_surface(void);
-EXTERNC BYTE ntsc_init(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out);
+extern nes_ntsc_setup_t ntsc_format[3];
+
+EXTERNC BYTE ntsc_init(void);
 EXTERNC void ntsc_quit(void);
-EXTERNC void ntsc_set(nes_ntsc_t *ntsc_in, BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out);
+EXTERNC void ntsc_set(nes_ntsc_t *ntsc, BYTE create_palette, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out);
+EXTERNC void ntsc_rgb_modifier(nes_ntsc_t *ntsc, BYTE *palette, SWORD min, SWORD red, SWORD green, SWORD blue);
+EXTERNC void ntsc_effect_parameters_changed(void);
+EXTERNC void ntsc_effect_parameters_default(void);
+EXTERNC void ntsc_effect_parameter_default(int index);
+EXTERNC void ntsc_effect_parameter_mv_default(void);
+EXTERNC void ntsc_surface(void);
 
 #undef EXTERNC
 

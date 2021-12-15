@@ -66,7 +66,7 @@ void map_init_Ave(BYTE model) {
 			EXTCL_CPU_WR_MEM(Ave_D1012);
 			EXTCL_CPU_RD_MEM(Ave_D1012);
 			EXTCL_SAVE_MAPPER(Ave_D1012);
-			mapper.internal_struct[0] = (BYTE *) &ave_d1012;
+			mapper.internal_struct[0] = (BYTE *)&ave_d1012;
 			mapper.internal_struct_size[0] = sizeof(ave_d1012);
 
 			info.mapper.extend_rd = TRUE;

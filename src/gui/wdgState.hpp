@@ -19,37 +19,27 @@
 #ifndef WDGSTATE_HPP_
 #define WDGSTATE_HPP_
 
-#include <QtWidgets/QStyledItemDelegate>
-#include <QtWidgets/QComboBox>
+#include <QtWidgets/QWidget>
+#include <QtGui/QPaintEvent>
+#include <QtGui/QPainter>
 
-class slotItemDelegate : public QStyledItemDelegate {
-	Q_OBJECT
-
-	public:
-		slotItemDelegate(QObject *parent);
-		~slotItemDelegate();
-
-	protected:
-		void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-};
-class slotComboBox : public QComboBox {
+class stateBar : public QWidget {
 	Q_OBJECT
 
 	private:
-		slotItemDelegate *sid;
+		QPainter painter;
 
 	public:
-		slotComboBox(QWidget *parent = 0);
-		~slotComboBox();
+		stateBar(QWidget *parent = 0);
+		~stateBar();
 
 	protected:
+		QSize sizeHint(void) const;
+		bool eventFilter(QObject *obj, QEvent *event);
 		void paintEvent(QPaintEvent *event);
 
-	public:
-		void setCurrentIndex(int index);
-
-	private slots:
-		void s_index_changed(int index);
+	private:
+		int slot_at(QPoint pos);
 };
 
 #include "wdgState.hh"
@@ -63,17 +53,16 @@ class wdgState : public QWidget, public Ui::wdgState {
 
 	protected:
 		void changeEvent(QEvent *event);
-		void paintEvent(QPaintEvent *event);
-
-	public:
-		void set_tooltip(int slot, QString tooltip);
 
 	private:
 		void retranslateUi(wdgState *wdgState);
 
+	public:
+		void update_widget(void);
+
 	private slots:
+		void s_slot_actived(void);
 		void s_save_clicked(bool checked);
-		void s_slot_activated(int index);
 		void s_load_clicked(bool checked);
 };
 

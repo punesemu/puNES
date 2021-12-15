@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-enum snd_samplerate_mode { S44100, S22050, S11025, S48000 };
+enum snd_samplerate_mode { S44100, S22050, S11025, S48000, S96000, S192000 };
 
 typedef struct _snd_dev {
 	uTCHAR *desc;

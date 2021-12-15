@@ -243,6 +243,9 @@ enum AVCodecID {
     AV_CODEC_ID_AVS2,
     AV_CODEC_ID_PGX,
     AV_CODEC_ID_AVS3,
+    AV_CODEC_ID_MSP2,
+    AV_CODEC_ID_VVC,
+#define AV_CODEC_ID_H266 AV_CODEC_ID_VVC
 
     AV_CODEC_ID_Y41P = 0x8000,
     AV_CODEC_ID_AVRP,
@@ -302,6 +305,8 @@ enum AVCodecID {
     AV_CODEC_ID_IPU,
     AV_CODEC_ID_ARGO,
     AV_CODEC_ID_CRI,
+    AV_CODEC_ID_SIMBIOSIS_IMX,
+    AV_CODEC_ID_SGA_VIDEO,
 
     /* various PCM "codecs" */
     AV_CODEC_ID_FIRST_AUDIO = 0x10000,     ///< A dummy id pointing at the start of audio codecs
@@ -342,6 +347,7 @@ enum AVCodecID {
     AV_CODEC_ID_PCM_F16LE,
     AV_CODEC_ID_PCM_F24LE,
     AV_CODEC_ID_PCM_VIDC,
+    AV_CODEC_ID_PCM_SGA,
 
     /* various ADPCM codecs */
     AV_CODEC_ID_ADPCM_IMA_QT = 0x11000,

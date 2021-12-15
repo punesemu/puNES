@@ -31,6 +31,7 @@
 #include "nsf.h"
 #include "rewind.h"
 #include "palette.h"
+#include "ppu.h"
 #if defined (WITH_FFMPEG)
 #include "recording.h"
 #endif
@@ -62,6 +63,9 @@ enum set_element {
 	SET_OVERSCAN_BRD_PAL,
 	SET_FILTER,
 	SET_NTSC_FORMAT,
+	SET_NTSC_COMPOSITE_PARAM,
+	SET_NTSC_SVIDEO_PARAM,
+	SET_NTSC_RGB_PARAM,
 	SET_SHADER,
 	SET_FILE_SHADER,
 	SET_PALETTE,
@@ -71,6 +75,7 @@ enum set_element {
 	SET_INTERPOLATION,
 	SET_TEXT_ON_SCREEN,
 	SET_SHOW_FPS,
+	SET_SHOW_FRAMES_AND_LAGS,
 	SET_INPUT_DISPLAY,
 	SET_DISABLE_TV_NOISE,
 	SET_DISABLE_SEPIA_PAUSE,
@@ -81,6 +86,10 @@ enum set_element {
 	SET_FULLSCREEN_IN_WINDOW,
 	SET_INTEGER_FULLSCREEN,
 	SET_STRETCH_FULLSCREEN,
+#if defined (FULLSCREEN_RESFREQ)
+	SET_ADAPTIVE_RRATE_FULLSCREEN,
+	SET_RESOLUTION_FULLSCREEN,
+#endif
 	SET_HORIZONTAL_FLIP_SCREEN,
 	SET_SCREEN_ROTATION,
 	SET_INPUT_ROTATION,
@@ -105,6 +114,7 @@ enum set_element {
 	SET_GUI_REC_LAST_VIDEO_PATH,
 #endif
 	SET_GUI_REC_LAST_AUDIO_PATH,
+	SET_GUI_MULTIPLE_INSTANCES,
 	SET_APU_MASTER,
 	SET_APU_SQUARE1,
 	SET_APU_SQUARE2,
@@ -115,9 +125,14 @@ enum set_element {
 	SET_HIDE_SPRITES,
 	SET_HIDE_BACKGROUND,
 	SET_UNLIMITED_SPRITES,
+	SET_UNLIMITED_SPRITES_AUTO,
+	SET_PPU_ALIGNMENT,
 	SET_NSF_PLAYER_EFFECT,
 	SET_NSF_PLAYER_NSFE_PLAYLIST,
 	SET_NSF_PLAYER_NSFE_FADEOUT,
+	SET_FDS_DISK1SIDEA_AT_RESET,
+	SET_FDS_SWITCH_SIDE_AUTOMATICALLY,
+	SET_FDS_FAST_FORWARD,
 #if defined (WITH_FFMPEG)
 	SET_REC_AUDIO_FORMAT,
 	SET_REC_VIDEO_FORMAT,
@@ -126,8 +141,9 @@ enum set_element {
 	SET_REC_OUTPUT_CUSTOM_WIDTH,
 	SET_REC_OUTPUT_CUSTOM_HEIGHT,
 	SET_REC_USE_EMU_RESOLUTION,
-	SET_REC_FOLLOW_ROTATION
+	SET_REC_FOLLOW_ROTATION,
 #endif
+	SET_ONLYCMDLINE_HIDDEN_GUI
 };
 enum pgs_element {
 	SET_PGS_SLOT,
@@ -171,6 +187,7 @@ enum inp_element {
 	SET_INP_SC_INTERPOLATION,
 	SET_INP_SC_INTEGER_FULLSCREEN,
 	SET_INP_SC_STRETCH_FULLSCREEN,
+	SET_INP_SC_TOGGLE_MENUBAR_IN_FULLSCREEN,
 	SET_INP_SC_AUDIO_ENABLE,
 	SET_INP_SC_SAVE_SETTINGS,
 	SET_INP_SC_SAVE_STATE,
@@ -185,11 +202,12 @@ enum inp_element {
 	SET_INP_SC_RWND_PLAY,
 	SET_INP_SC_RWND_PAUSE,
 
-	SET_INP_SC_JOYSTICK_ID,
+	SET_INP_SC_JOYSTICK_GUID,
 
 	SET_INP_EXPANSION_PORT,
 	SET_INP_P1_CONTROLLER,
 	SET_INP_P1_PAD_TYPE,
+	SET_INP_P1J_GUID,
 	SET_INP_P1K_A,
 	SET_INP_P1K_B,
 	SET_INP_P1K_SELECT,
@@ -200,22 +218,12 @@ enum inp_element {
 	SET_INP_P1K_RIGHT,
 	SET_INP_P1K_TURBOA,
 	SET_INP_P1K_TURBOB,
-	SET_INP_P1J_A,
-	SET_INP_P1J_B,
-	SET_INP_P1J_SELECT,
-	SET_INP_P1J_START,
-	SET_INP_P1J_UP,
-	SET_INP_P1J_DOWN,
-	SET_INP_P1J_LEFT,
-	SET_INP_P1J_RIGHT,
-	SET_INP_P1J_TURBOA,
-	SET_INP_P1J_TURBOB,
-	SET_INP_P1J_ID,
 	SET_INP_P1_TURBOA_DELAY,
 	SET_INP_P1_TURBOB_DELAY,
 
 	SET_INP_P2_CONTROLLER,
 	SET_INP_P2_PAD_TYPE,
+	SET_INP_P2J_GUID,
 	SET_INP_P2K_A,
 	SET_INP_P2K_B,
 	SET_INP_P2K_SELECT,
@@ -226,22 +234,12 @@ enum inp_element {
 	SET_INP_P2K_RIGHT,
 	SET_INP_P2K_TURBOA,
 	SET_INP_P2K_TURBOB,
-	SET_INP_P2J_A,
-	SET_INP_P2J_B,
-	SET_INP_P2J_SELECT,
-	SET_INP_P2J_START,
-	SET_INP_P2J_UP,
-	SET_INP_P2J_DOWN,
-	SET_INP_P2J_LEFT,
-	SET_INP_P2J_RIGHT,
-	SET_INP_P2J_TURBOA,
-	SET_INP_P2J_TURBOB,
-	SET_INP_P2J_ID,
 	SET_INP_P2_TURBOA_DELAY,
 	SET_INP_P2_TURBOB_DELAY,
 
 	SET_INP_P3_CONTROLLER,
 	SET_INP_P3_PAD_TYPE,
+	SET_INP_P3J_GUID,
 	SET_INP_P3K_A,
 	SET_INP_P3K_B,
 	SET_INP_P3K_SELECT,
@@ -252,22 +250,12 @@ enum inp_element {
 	SET_INP_P3K_RIGHT,
 	SET_INP_P3K_TURBOA,
 	SET_INP_P3K_TURBOB,
-	SET_INP_P3J_A,
-	SET_INP_P3J_B,
-	SET_INP_P3J_SELECT,
-	SET_INP_P3J_START,
-	SET_INP_P3J_UP,
-	SET_INP_P3J_DOWN,
-	SET_INP_P3J_LEFT,
-	SET_INP_P3J_RIGHT,
-	SET_INP_P3J_TURBOA,
-	SET_INP_P3J_TURBOB,
-	SET_INP_P3J_ID,
 	SET_INP_P3_TURBOA_DELAY,
 	SET_INP_P3_TURBOB_DELAY,
 
 	SET_INP_P4_CONTROLLER,
 	SET_INP_P4_PAD_TYPE,
+	SET_INP_P4J_GUID,
 	SET_INP_P4K_A,
 	SET_INP_P4K_B,
 	SET_INP_P4K_SELECT,
@@ -278,17 +266,6 @@ enum inp_element {
 	SET_INP_P4K_RIGHT,
 	SET_INP_P4K_TURBOA,
 	SET_INP_P4K_TURBOB,
-	SET_INP_P4J_A,
-	SET_INP_P4J_B,
-	SET_INP_P4J_SELECT,
-	SET_INP_P4J_START,
-	SET_INP_P4J_UP,
-	SET_INP_P4J_DOWN,
-	SET_INP_P4J_LEFT,
-	SET_INP_P4J_RIGHT,
-	SET_INP_P4J_TURBOA,
-	SET_INP_P4J_TURBOB,
-	SET_INP_P4J_ID,
 	SET_INP_P4_TURBOA_DELAY,
 	SET_INP_P4_TURBOB_DELAY,
 
@@ -296,13 +273,29 @@ enum inp_element {
 	SET_INP_LEFTRIGHT,
 	SET_INP_HIDE_ZAPPER_CURSOR
 };
+enum jsc_element {
+	SET_JSC_PAD_A,
+	SET_JSC_PAD_B,
+	SET_JSC_PAD_SELECT,
+	SET_JSC_PAD_START,
+	SET_JSC_PAD_UP,
+	SET_JSC_PAD_DOWN,
+	SET_JSC_PAD_LEFT,
+	SET_JSC_PAD_RIGHT,
+	SET_JSC_PAD_TURBOA,
+	SET_JSC_PAD_TURBOB,
+	SET_JSC_DEADZONE,
+	SET_JSC_BUTTONS_ENABLED,
+	SET_JSC_AXES_ENABLED,
+};
 
-enum set_num_shortcut { SET_MAX_NUM_SC = SET_INP_SC_JOYSTICK_ID - SET_INP_SC_OPEN};
+enum set_num_shortcut { SET_MAX_NUM_SC = SET_INP_SC_JOYSTICK_GUID - SET_INP_SC_OPEN};
 
 enum list_settings_element {
 	LSET_SET,
 	LSET_PGS,
 	LSET_INP,
+	LSET_JSC,
 	LSET_NONE
 };
 
@@ -440,10 +433,12 @@ static const _opt opt_audio_buffer_factor[] = {
 	{NULL, uL("15"), 15}
 };
 static const _opt opt_samplerate[] = {
-	{NULL, uL("48000"), S48000},
-	{NULL, uL("44100"), S44100},
-	{NULL, uL("22050"), S22050},
-	{NULL, uL("11025"), S11025}
+	{NULL, uL("192000"), S192000},
+	{NULL, uL("96000") , S96000},
+	{NULL, uL("48000") , S48000},
+	{NULL, uL("44100") , S44100},
+	{NULL, uL("22050") , S22050},
+	{NULL, uL("11025") , S11025}
 };
 static const _opt opt_channels[] = {
 	{NULL, uL("mono")   , CH_MONO},
@@ -492,7 +487,8 @@ static const _opt opt_recording_audio_format[] = {
 	{NULL, uL("aac")  , REC_FORMAT_AUDIO_AAC},
 	{NULL, uL("flac") , REC_FORMAT_AUDIO_FLAC},
 	{NULL, uL("ogg")  , REC_FORMAT_AUDIO_OGG},
-	{NULL, uL("wav")  , REC_FORMAT_AUDIO_WAV}
+	{NULL, uL("wav")  , REC_FORMAT_AUDIO_WAV},
+	{NULL, uL("opus") , REC_FORMAT_AUDIO_OPUS}
 };
 static const _opt opt_recording_video_format[] = {
 	{NULL, uL("mpeg1"), REC_FORMAT_VIDEO_MPG_MPEG1},
@@ -532,7 +528,11 @@ static const _opt opt_recording_output_resolution[] = {
 	{NULL, uL("1920x1080"), REC_RES_1920x1080}
 };
 #endif
-
+static const _opt opt_cpuppu_aligment[] = {
+	{NULL, uL("default")           , PPU_ALIGMENT_DEFAULT},
+	{NULL, uL("randomize")         , PPU_ALIGMENT_RANDOMIZE},
+	{NULL, uL("increment at reset"), PPU_ALIGMENT_INC_AT_RESET}
+};
 static const _opt opt_toolbar_area[] = {
 	{NULL, uL("top")   , TLB_TOP},
 	{NULL, uL("left")  , TLB_LEFT},
@@ -706,6 +706,28 @@ static const _settings main_cfg[] = {
 		{LENGTH(opt_ntsc), opt_ntsc}
 	},
 	{
+		uL("video"), uL("ntsc filter parameters composite"), uL("0,0,0,0,0,0,0,0,0,0,0,1,88"),
+		uL("# possible values: [hue       : -100/100],[saturation  : -100/100],[contrast      : -100/100]," NEWLINE)
+		uL("#                  [brightness: -100/100],[sharpness   : -100/100],[gamma         : -100/100]," NEWLINE)
+		uL("#                  [resolution: -100/100],[artifacts   : -100/100],[fringing      : -100/100]," NEWLINE)
+		uL("#                  [bleed     : -100/100],[merge fields:      0/1],[vertical blend:      0/1]," NEWLINE)
+		uL("#                  [scanline  :    0/100]"),
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("video"), uL("ntsc filter parameters svideo"), uL("0,0,0,0,20,0,20,-20,-20,0,0,1,88"),
+		NULL,
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("video"), uL("ntsc filter parameters rgb"), uL("0,0,0,0,20,0,70,-20,-20,-100,0,1,88"),
+		NULL,
+		NULL,
+		{0, NULL}
+	},
+	{
 		uL("video"), uL("shader"), uL("none"),
 		uL("# possible values: none, crtdotmask, crtscanlines, crtcurve, emboss, noise," NEWLINE)
 		uL("#                  ntsc2phcomp, oldtv, file"),
@@ -764,6 +786,12 @@ static const _settings main_cfg[] = {
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
+		uL("video"), uL("show frames and lags counters"), uL("no"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
 		uL("video"), uL("input display"), uL("no"),
 		uL("# possible values: yes, no"),
 		uL("    --input-display       enable input gui      : yes, no"),
@@ -801,7 +829,7 @@ static const _settings main_cfg[] = {
 	{
 		uL("video"), uL("fullscreen in window"), uL("no"),
 		uL("# possible values: yes, no"),
-		uL("    --fullscreen-window   the next fullscreen   : yes, no"  NEWLINE)
+		uL("    --fullscreen-window   the next fullscreen   : yes, no" NEWLINE)
 		uL("                          will be performed by" NEWLINE)
 		uL("                          maximizing the window"),
 		{LENGTH(opt_no_yes), opt_no_yes}
@@ -818,6 +846,22 @@ static const _settings main_cfg[] = {
 		uL("-t, --stretch-fullscreen  stretch image         : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
+#if defined (FULLSCREEN_RESFREQ)
+	{
+		uL("video"), uL("adaptive refresh rate in fullscreen"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --adaptive-rrate      try to adapte the     : yes, no" NEWLINE)
+		uL("                          refresh rate to the rom"),
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("video"), uL("preferred fullscreen resolution"), NULL,
+		uL("# possible values: automatic, [width]x[height]"),
+		uL("    --fullscreen-res      fullscreen resolution : automatic, [width]x[height]" NEWLINE)
+		uL("                          if supported by the monitor"),
+		{0, NULL}
+	},
+#endif
 	{
 		uL("video"), uL("horizontal flip screen"), uL("no"),
 		uL("# possible values: yes, no"),
@@ -861,8 +905,8 @@ static const _settings main_cfg[] = {
 	},
 	{
 		uL("audio"), uL("sample rate"), uL("44100"),
-		uL("# possible values: 48000, 44100, 22050, 11025"),
-		uL("-l, --samplerate          sample rate           : 48000, 44100, 22050, 11025"),
+		uL("# possible values: 192000, 96000, 48000, 44100, 22050, 11025"),
+		uL("-l, --samplerate          sample rate           : 192000, 96000, 48000, 44100, 22050, 11025"),
 		{LENGTH(opt_samplerate), opt_samplerate}
 	},
 	{
@@ -961,6 +1005,12 @@ static const _settings main_cfg[] = {
 		{0, NULL}
 	},
 	{
+		uL("GUI"), uL("allow multiple instances of the emulator"), uL("no"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
 		uL("apu channels"), uL("master"), uL("on,100"),
 		uL("# possible values: [on, off],[0 - 100]"),
 		NULL,
@@ -1021,6 +1071,18 @@ static const _settings main_cfg[] = {
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
+		uL("ppu"), uL("unlimited sprites auto no glitch"), uL("yes"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("ppu"), uL("cpu ppu alignment"), uL("default"),
+		uL("# possible values: default, randomize, increment at reset"),
+		NULL,
+		{LENGTH(opt_cpuppu_aligment), opt_cpuppu_aligment}
+	},
+	{
 		uL("player"), uL("effect"), uL("bars"),
 		uL("# possible values: bars, bars mixed, raw, raw full, hanning, hanning full"),
 		NULL,
@@ -1038,10 +1100,28 @@ static const _settings main_cfg[] = {
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
+	{
+		uL("fds"), uL("disk 1 sida A at reset"), uL("yes"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("fds"), uL("switch the side automatically"), uL("yes"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("fds"), uL("fast forward on bios and switch side"), uL("yes"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
 #if defined (WITH_FFMPEG)
 	{
 		uL("recording"), uL("audio format"), uL("wav"),
-		uL("# possible values: wav, mp3, aac, flac, ogg"),
+		uL("# possible values: wav, mp3, aac, flac, ogg, opus"),
 		NULL,
 		{LENGTH(opt_recording_audio_format), opt_recording_audio_format}
 	},
@@ -1088,8 +1168,15 @@ static const _settings main_cfg[] = {
 		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
-	}
+	},
 #endif
+	// opzioni da sola riga di comando
+	{
+		NULL, NULL, NULL,
+		NULL,
+		uL("    --hidden-gui          start with hidden GUI"),
+		{0, NULL}
+	},
 };
 
 static const _settings pgs_cfg[] = {
@@ -1152,9 +1239,9 @@ static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("insert coin"),                   uL("8,NULL"),          NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("switch sides"),                  uL("Alt+S,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("eject disk"),                    uL("Alt+E,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("start or stop audio recording"), uL("CTRL+A,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("start or stop audio recording"), uL("CTRL+A,NULL"),     NULL, NULL, {0, NULL}},
 #if defined (WITH_FFMPEG)
-	{uL("shortcuts"), uL("start or stop video recording"), uL("CTRL+V,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("start or stop video recording"), uL("CTRL+V,NULL"),     NULL, NULL, {0, NULL}},
 #endif
 	{uL("shortcuts"), uL("video fullscreen"),              uL("Alt+Return,NULL"), NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("save screenshot"),               uL("Alt+X,NULL"),      NULL, NULL, {0, NULL}},
@@ -1175,6 +1262,7 @@ static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("video interpolation"),           uL("0,NULL"),          NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("integer scaling fullscreen"),    uL("Alt+L,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("stretch fullscreen"),            uL("Alt+P,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("toggle menubar in fullscreen"),  uL("Alt+M,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("audio enable"),                  uL("Alt+A,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("save settings"),                 uL("Alt+W,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("save state"),                    uL("F1,NULL"),         NULL, NULL, {0, NULL}},
@@ -1188,11 +1276,7 @@ static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("rewind fast forward"),           uL("Up,NULL"),         NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("rewind play"),                   uL("Del,NULL"),        NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("rewind pause"),                  uL("PgDown,NULL"),     NULL, NULL, {0, NULL}},
-#if defined (_WIN32)
 	{uL("shortcuts"), uL("joystick GUID"),                 uL("NULL"),            NULL, NULL, {0, NULL}},
-#else
-	{uL("shortcuts"), uL("joystick Id"),                   uL("NULL"),            NULL, NULL, {0, NULL}},
-#endif
 	{
 		uL("expansion port"), uL("expansion port"), uL("standard"),
 		uL("# possible values: standard, zapper, arkanoid paddle, oeka kids tablet"),
@@ -1211,6 +1295,7 @@ static const _settings inp_cfg[] = {
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
+	{uL("port 1"), uL("P1J GUID"),    uL("NULL"),        uL("# player 1 joystick"), NULL, {0, NULL}},
 	{uL("port 1"), uL("P1K A"),       uL("S"),           uL("# player 1 keyboard"), NULL, {0, NULL}},
 	{uL("port 1"), uL("P1K B"),       uL("A"),           NULL, NULL, {0, NULL}},
 	{uL("port 1"), uL("P1K Select"),  uL("Z"),           NULL, NULL, {0, NULL}},
@@ -1221,22 +1306,7 @@ static const _settings inp_cfg[] = {
 	{uL("port 1"), uL("P1K Right"),   uL("Right"),       NULL, NULL, {0, NULL}},
 	{uL("port 1"), uL("P1K TurboA"),  uL("W"),           NULL, NULL, {0, NULL}},
 	{uL("port 1"), uL("P1K TurboB"),  uL("Q"),           NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J A"),       uL("JB1"),         uL("# player 1 joystick"), NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J B"),       uL("JB0"),         NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J Select"),  uL("JB8"),         NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J Start"),   uL("JB9"),         NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J Up"),      uL("JA1MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-#if defined (_WIN32)
-	{uL("port 1"), uL("P1J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
-#else
-	{uL("port 1"), uL("P1J Id"),      uL("JOYSTICKID1"), NULL, NULL, {0, NULL}},
-#endif
-	{uL("port 1"), uL("P1 TA Delay"), NULL,              NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1 TA Delay"), NULL,              uL("# player 1 turbo delays"), NULL, {0, NULL}},
 	{uL("port 1"), uL("P1 TB Delay"), NULL,              NULL, NULL, {0, NULL}},
 	{
 		uL("port 2"), uL("controller 2"), uL("disable"),
@@ -1250,6 +1320,7 @@ static const _settings inp_cfg[] = {
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
+	{uL("port 2"), uL("P2J GUID"),    uL("NULL"),        uL("# player 2 joystick"), NULL, {0, NULL}},
 	{uL("port 2"), uL("P2K A"),       uL("PgDown"),      uL("# player 2 keyboard"), NULL, {0, NULL}},
 	{uL("port 2"), uL("P2K B"),       uL("End"),         NULL, NULL, {0, NULL}},
 	{uL("port 2"), uL("P2K Select"),  uL("Ins"),         NULL, NULL, {0, NULL}},
@@ -1260,22 +1331,7 @@ static const _settings inp_cfg[] = {
 	{uL("port 2"), uL("P2K Right"),   uL("NumPad6"),     NULL, NULL, {0, NULL}},
 	{uL("port 2"), uL("P2K TurboA"),  uL("Home"),        NULL, NULL, {0, NULL}},
 	{uL("port 2"), uL("P2K TurboB"),  uL("PgUp"),        NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J A"),       uL("JB1"),         uL("# player 2 joystick"), NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J B"),       uL("JB0"),         NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J Select"),  uL("JB8"),         NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J Start"),   uL("JB9"),         NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J Up"),      uL("JA1MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-#if defined (_WIN32)
-	{uL("port 2"), uL("P2J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
-#else
-	{uL("port 2"), uL("P2J Id"),      uL("JOYSTICKID2"), NULL, NULL, {0, NULL}},
-#endif
-	{uL("port 2"), uL("P2 TA Delay"), NULL,              NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2 TA Delay"), NULL,              uL("# player 2 turbo delays"), NULL, {0, NULL}},
 	{uL("port 2"), uL("P2 TB Delay"), NULL,              NULL, NULL, {0, NULL}},
 	{
 		uL("port 3"), uL("controller 3"), uL("disable"),
@@ -1289,6 +1345,7 @@ static const _settings inp_cfg[] = {
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
+	{uL("port 3"), uL("P3J GUID"),    uL("NULL"),        uL("# player 3 joystick"), NULL, {0, NULL}},
 	{uL("port 3"), uL("P3K A"),       uL("NULL"),        uL("# player 3 keyboard"), NULL, {0, NULL}},
 	{uL("port 3"), uL("P3K B"),       uL("NULL"),        NULL, NULL, {0, NULL}},
 	{uL("port 3"), uL("P3K Select"),  uL("NULL"),        NULL, NULL, {0, NULL}},
@@ -1299,22 +1356,7 @@ static const _settings inp_cfg[] = {
 	{uL("port 3"), uL("P3K Right"),   uL("NULL"),        NULL, NULL, {0, NULL}},
 	{uL("port 3"), uL("P3K TurboA"),  uL("NULL"),        NULL, NULL, {0, NULL}},
 	{uL("port 3"), uL("P3K TurboB"),  uL("NULL"),        NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J A"),       uL("JB1"),         uL("# player 3 joystick"), NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J B"),       uL("JB0"),         NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J Select"),  uL("JB8"),         NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J Start"),   uL("JB9"),         NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J Up"),      uL("JA1MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-#if defined (_WIN32)
-	{uL("port 3"), uL("P3J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
-#else
-	{uL("port 3"), uL("P3J Id"),      uL("NULL"),        NULL, NULL, {0, NULL}},
-#endif
-	{uL("port 3"), uL("P3 TA Delay"), NULL,              NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3 TA Delay"), NULL,              uL("# player 3 turbo delays"), NULL, {0, NULL}},
 	{uL("port 3"), uL("P3 TB Delay"), NULL,              NULL, NULL, {0, NULL}},
 	{
 		uL("port 4"), uL("controller 4"), uL("disable"),
@@ -1328,6 +1370,7 @@ static const _settings inp_cfg[] = {
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
+	{uL("port 4"), uL("P4J GUID"),    uL("NULL"),        uL("# player 4 joystick"), NULL, {0, NULL}},
 	{uL("port 4"), uL("P4K A"),       uL("NULL"),        uL("# player 4 keyboard"), NULL, {0, NULL}},
 	{uL("port 4"), uL("P4K B"),       uL("NULL"),        NULL, NULL, {0, NULL}},
 	{uL("port 4"), uL("P4K Select"),  uL("NULL"),        NULL, NULL, {0, NULL}},
@@ -1338,22 +1381,7 @@ static const _settings inp_cfg[] = {
 	{uL("port 4"), uL("P4K Right"),   uL("NULL"),        NULL, NULL, {0, NULL}},
 	{uL("port 4"), uL("P4K TurboA"),  uL("NULL"),        NULL, NULL, {0, NULL}},
 	{uL("port 4"), uL("P4K TurboB"),  uL("NULL"),        NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J A"),       uL("JB1"),         uL("# player 4 joystick"), NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J B"),       uL("JB0"),         NULL, NULL, {0, NULL} },
-	{uL("port 4"), uL("P4J Select"),  uL("JB8"),         NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J Start"),   uL("JB9"),         NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J Up"),      uL("JA1MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-#if defined (_WIN32)
-	{uL("port 4"), uL("P4J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
-#else
-	{uL("port 4"), uL("P4J Id"),      uL("NULL"),        NULL, NULL, {0, NULL}},
-#endif
-	{uL("port 4"), uL("P4 TA Delay"), NULL,              NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4 TA Delay"), NULL,              uL("# player 4 turbo delays"), NULL, {0, NULL}},
 	{uL("port 4"), uL("P4 TB Delay"), NULL,              NULL, NULL, {0, NULL}},
 	{
 		uL("system"), uL("controller mode"), uL("nes"),
@@ -1375,10 +1403,42 @@ static const _settings inp_cfg[] = {
 	}
 };
 
+static const _settings jsc_cfg[] = {
+	{uL("standard controller"), uL("A"),      NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("B"),      NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Select"), NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Start"),  NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Up"),     NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Down"),   NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Left"),   NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("Right"),  NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("TurboA"), NULL, NULL, NULL, {0, NULL}},
+	{uL("standard controller"), uL("TurboB"), NULL, NULL, NULL, {0, NULL}},
+	{
+		uL("system"), uL("Deadzone"), uL("40"),
+		NULL,
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("system"), uL("Buttons enabled"), uL("0xFFFFFFFFFFFFFFFF"),
+		NULL,
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("system"), uL("Axes enabled"), uL("0xFFFFFF"),
+		NULL,
+		NULL,
+		{0, NULL}
+	}
+};
+
 static const _list_settings list_settings[] = {
 	{main_cfg, LENGTH(main_cfg)},
 	{pgs_cfg, LENGTH(pgs_cfg)},
 	{inp_cfg, LENGTH(inp_cfg)},
+	{jsc_cfg, LENGTH(jsc_cfg)},
 	{NULL, 0},
 };
 
@@ -1396,11 +1456,15 @@ EXTERNC int settings_val_to_int(int index, const uTCHAR *buffer);
 EXTERNC double settings_val_to_double(WORD round, const uTCHAR *buffer);
 EXTERNC void settings_cpy_utchar_to_val(int index, uTCHAR *buffer);
 EXTERNC void settings_val_to_oscan(int index, _overscan_borders *ob, const uTCHAR *buffer);
+#if defined (FULLSCREEN_RESFREQ)
+EXTERNC void settings_resolution_val_to_int(int *w, int *h, const uTCHAR *buffer);
+#endif
 
 EXTERNC void *settings_inp_rd_sc(int index, int type);
 EXTERNC void settings_inp_wr_sc(void *str, int index, int type);
-EXTERNC void settings_inp_all_default(_config_input *config_input, _array_pointers_port *array);
-EXTERNC void settings_inp_port_default(_port *port, int index, int mode);
+EXTERNC void settings_inp_all_defaults(_config_input *config_input, _array_pointers_port *array);
+EXTERNC void settings_inp_port_defaults(_port *port, int index, int mode);
+EXTERNC void settings_inp_port_button_default(int button, _port *port, int index, int mode);
 EXTERNC void settings_inp_save(void);
 
 EXTERNC void settings_pgs_parse(void);
@@ -1408,6 +1472,10 @@ EXTERNC void settings_pgs_save(void);
 
 EXTERNC void settings_shp_parse(void);
 EXTERNC void settings_shp_save(void);
+
+EXTERNC void settings_jsc_parse(int index);
+EXTERNC void settings_jsc_save(void);
+EXTERNC int settings_jsc_deadzone_default(void);
 
 #undef EXTERNC
 

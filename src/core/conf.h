@@ -44,6 +44,7 @@ typedef struct _config {
 	BYTE hide_sprites;
 	BYTE hide_background;
 	BYTE unlimited_sprites;
+	BYTE unlimited_sprites_auto;
 	BYTE scale;
 	BYTE fullscreen;
 	BYTE fullscreen_in_window;
@@ -69,9 +70,13 @@ typedef struct _config {
 	BYTE input_rotation;
 	BYTE text_rotation;
 	BYTE show_fps;
+	BYTE show_frames_and_lags;
 	BYTE input_display;
 	BYTE disable_tv_noise;
 	BYTE disable_sepia_color;
+	BYTE fds_disk1sideA_at_reset;
+	BYTE fds_switch_side_automatically;
+	BYTE fds_fast_forward;
 #if defined (WITH_OPENGL)
 	BYTE disable_srgb_fbo;
 #endif
@@ -80,12 +85,19 @@ typedef struct _config {
 	WORD dipswitch;
 	BYTE ppu_overclock;
 	BYTE ppu_overclock_dmc_control_disabled;
+	BYTE ppu_alignment;
 	WORD extra_vb_scanlines;
 	WORD extra_pr_scanlines;
 	BYTE save_battery_ram_file;
+	BYTE multiple_instances;
 	BYTE nsf_player_effect;
 	BYTE nsf_player_nsfe_playlist;
 	BYTE nsf_player_nsfe_fadeout;
+#if defined (FULLSCREEN_RESFREQ)
+	BYTE adaptive_rrate;
+	int fullscreen_res_w;
+	int fullscreen_res_h;
+#endif
 
 	_config_input input;
 	_config_apu apu;

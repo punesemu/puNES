@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <strings.h>
 #include "l7z.h"
-#include "lib7zip.h"
+#include "extra/lib7zip-53abfeb/src/lib7zip.h"
 #include "info.h"
 #include "gui.h"
 
@@ -249,7 +249,7 @@ BYTE l7z_examine_archive(_uncompress_archive *archive) {
 	in_stream stream(archive->file);
 
 	if (!l7z.lib.OpenArchive(&stream, &c7zarchive)) {
-		ufprintf(stderr, uL("open archive " uPERCENTs " fail\n"), archive->file);
+		ufprintf(stderr, uL("open archive " uPs("") " fail\n"), archive->file);
 		return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
 	}
 
@@ -339,7 +339,7 @@ BYTE l7z_extract_from_archive(_uncompress_archive *archive, uint32_t selected, B
 	wcstombs((char *)file, item->GetFullPath().c_str(), sizeof(file) - 1);
 #endif
 	gui_utf_basename(file, basename, usizeof(basename));
-	usnprintf(file, usizeof(file), uL("" uPERCENTs TMP_FOLDER "/" uPERCENTs), info.base_folder, basename);
+	usnprintf(file, usizeof(file), uL("" uPs("") TMP_FOLDER "/" uPs("")), info.base_folder, basename);
 
 	{
 		out_stream o_stream(file);

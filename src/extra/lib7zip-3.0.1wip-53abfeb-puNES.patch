@@ -1,0 +1,738 @@
+diff -upNr lib7zip-53abfeb.org/CMakeLists.txt lib7zip-53abfeb/CMakeLists.txt
+--- lib7zip-53abfeb.org/CMakeLists.txt	2021-05-26 22:04:41.000000000 +0200
++++ lib7zip-53abfeb/CMakeLists.txt	2021-09-19 15:12:38.078043955 +0200
+@@ -1,4 +1,4 @@
+-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
++CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
+ 
+ CMAKE_POLICY(
+     SET CMP0048 NEW
+@@ -25,7 +25,7 @@ ENDIF()
+ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
+ 
+ OPTION(BUILD_SHARED_LIB "build shared library" OFF)
+-SET(P7ZIP_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/p7zip" CACHE PATH "pzip/7zip source code path")
++SET(P7ZIP_SOURCE_DIR "" CACHE PATH "pzip/7zip source code path")
+ 
+ IF (NOT IS_DIRECTORY ${P7ZIP_SOURCE_DIR})
+   MESSAGE(FATAL_ERROR "must proivde p7zip/7zip source path using -DP7ZIP_SOURCE_DIR")
+@@ -39,11 +39,14 @@ SET(P7ZIP_INCLUDE_PATH   "${P7ZIP_SOURCE
+ 
+ 
+ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+-  set(warnings -Wall -Wextra -Werror -Wno-unused-parameter)
+-  set(cxx_warnings -Wno-class-memaccess)
++  #set(warnings -Wall -Wextra -Werror -Wno-unused-parameter)
++  #set(cxx_warnings -Wno-class-memaccess)
++  set(warnings "")
++  set(cxx_warnings "")
+   set(no_undefined -Wl,--no-undefined)
+ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+-  set(warnings -Wall -Wextra -Werror -Wno-inconsistent-missing-override -Wno-unused-parameter)
++  #set(warnings -Wall -Wextra -Werror -Wno-inconsistent-missing-override -Wno-unused-parameter)
++  set(warnings "")
+   set(cxx_warnings "")
+   set(no_undefined -Wl,-undefined,error)
+ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+@@ -56,9 +59,12 @@ SET(CXX_STANDARD_REQUIRED OFF)
+ SET(CXX_EXTENSION NO)
+ 
+ if (NOT CONFIGURED_ONCE)
++if ("${CMAKE_C_PLATFORM_ID}" STREQUAL "MinGW")
++  ADD_COMPILE_OPTIONS(-DUNICODE -D_UNICODE -DWIN32)
++endif()
+ ADD_COMPILE_OPTIONS(-fPIC -std=c++14 ${warnings} ${cxx_warnings})
+ ADD_LINK_OPTIONS(${no_undefined})
+ endif()
+ 
+ ADD_SUBDIRECTORY(src)
+-ADD_SUBDIRECTORY(test)
++#ADD_SUBDIRECTORY(test)
+diff -upNr lib7zip-53abfeb.org/configure lib7zip-53abfeb/configure
+--- lib7zip-53abfeb.org/configure	1970-01-01 01:00:00.000000000 +0100
++++ lib7zip-53abfeb/configure	2021-09-19 15:06:57.196285060 +0200
+@@ -0,0 +1,355 @@
++#!/bin/sh
++
++# Autotools-style (./configure) wrapper for CMake
++# <https://github.com/nemequ/configure-cmake>
++#
++#   *** IMPORTANT ***
++#
++#   You must include the GNUInstallDirs module (which comes with
++#   CMake) in your project.  Just put "include (GNUInstallDirs)" in
++#   you CMakeLists.txt and you should be good.
++#
++# This script was originally written for Squash
++# <https://quixdb.github.io/squash/> by Evan Nemerson
++# <evan@nemerson.com>, but has been spun off into a separate
++# repository.  Please feel free to copy it into your own repository,
++# though I would appreciate it if you would post improvements, bugs,
++# feature requests, etc. to the issue tracker at
++# <https://github.com/nemequ/configure-cmake/issues>.
++#
++# To the extent possible under law, the author(s) hereby waive all
++# copyright and related or neighboring rights to this work.  For
++# details, see <https://creativecommons.org/publicdomain/zero/1.0/>
++
++TOP_SRCDIR="$(dirname $0)"
++
++if [ "${CMAKE_CMD}" = "" ]; then
++    CMAKE_CMD="cmake"
++fi
++
++if [ "x${MSYSTEM}" != "x" ]; then
++    CMAKE_CMD="$CMAKE_CMD -G \"MSYS Makefiles\""
++fi
++
++BUILD_TYPE="Debug"
++PREFIX=/usr/local
++LIBDIR=
++CMAKE_ARGS=
++
++if [ -e "${TOP_SRCDIR}/.configure-custom.sh" ]; then
++    . "${TOP_SRCDIR}/.configure-custom.sh"
++fi
++
++quote() {
++    echo "$1" | sed -e "s|'|'\\\\''|g; 1s/^/'/; \$s/\$/'/"
++}
++
++extract_var_string() {
++    VAR_NAME=$1
++    VAR_NAME=$(echo $1 | sed -e 's/[ \t]*$//')
++    if [ "x$2" != "x" ]; then
++        VAR_VALUE=$2
++    else
++        VAR_VALUE=yes
++    fi
++
++    if [ "x$3" != "x" ]; then
++        VAR_UC_NAME=$3
++    else
++        VAR_UC_NAME=$(echo "$1" | tr '[:lower:]' '[:upper:]' | tr -c '[:alnum:]' '_' | sed 's/_$//g')
++    fi
++}
++
++set_config_var() {
++    is_with=n
++    case "$1" in
++        "--enable-"*)
++            name="${1#--enable-}"
++            cfg="${ENABLE_VARS}"
++            ;;
++        "--disable-"*)
++            name="${1#--disable-}";
++            cfg="${DISABLE_VARS}";
++            ;;
++        "--with-"*)
++            # IFS="=" read -ra WITHARGS <<< "${1}"
++            name="${1#--with-}"
++            cfg="${WITH_VARS}"
++            is_with=y
++            ;;
++    esac
++
++    found=n
++    for varstring in $cfg; do
++        extract_var_string $(echo "${varstring}" | tr '|' ' ')
++        if [ "x$VAR_NAME" = "x$name" ]; then
++            found=y
++            break;
++        fi
++    done
++
++    if [ "$found" = "y" ]; then
++        if [ "x$is_with" = "xy" ]; then
++            CMAKE_ARGS="$CMAKE_ARGS -D${VAR_UC_NAME}=$(quote "$2")"
++        else
++            CMAKE_ARGS="$CMAKE_ARGS -D${VAR_UC_NAME}=$(quote "${VAR_VALUE}")"
++        fi
++    else
++        echo "Unknown parameter: ${1}"
++        exit 1
++    fi
++}
++
++prefix_to_offset() {
++    expr $(echo "${1}" | awk '{ print length }') + 1
++}
++
++print_help() {
++    cat <<EOF >&2
++  -h, --help              display this help and exit
++  --disable-debug         disable debugging mode
++  --pass-thru             pass remaining arguments through to CMake
++
++  --prefix=PREFIX         install architecture-independent files in PREFIX
++                          [$PREFIX]
++  --bindir=DIR            user executables [PREFIX/bin]
++  --sbindir=DIR           system admin executables [PREFIX/sbin]
++  --libexecdir=DIR        program executables [PREFIX/libexec]
++  --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
++  --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
++  --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
++  --libdir=DIR            object code libraries [PREFIX/lib]
++  --includedir=DIR        C header files [PREFIX/include]
++  --oldincludedir=DIR     C header files for non-gcc [/usr/include]
++  --datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]
++  --datadir=DIR           read-only architecture-independent data [DATAROOTDIR]
++  --infodir=DIR           info documentation [DATAROOTDIR/info]
++  --localedir=DIR         locale-dependent data [DATAROOTDIR/locale]
++  --mandir=DIR            man documentation [DATAROOTDIR/man]
++  --docdir=DIR            documentation root [DATAROOTDIR/doc/PROJECT_NAME]
++EOF
++
++    first=y
++    for varstring in ${ENABLE_VARS}; do
++        if [ $first = 'y' ]; then
++            echo ""
++            first=n
++        fi
++        extract_var_string $(echo "${varstring}" | tr '|' ' ')
++        var_doc_name="ENABLE_${VAR_UC_NAME}_DOC"
++        eval "docstring=\$$var_doc_name"
++        if [ "x${docstring}" = "x" ]; then
++            printf "  --enable-%-14s enable %s support\n" "${VAR_NAME}" "$(echo -n "${VAR_NAME}" | tr '-' ' ')"
++        else
++            printf "  --enable-%-14s %s\n" "${VAR_NAME}" "$docstring"
++        fi
++    done
++
++    first=y
++    for varstring in ${DISABLE_VARS}; do
++        if [ $first = 'y' ]; then
++            echo ""
++            first=n
++        fi
++        extract_var_string $(echo "${varstring}" | tr '|' ' ')
++        var_doc_name="DISABLE_${VAR_UC_NAME}_DOC"
++        eval "docstring=\$$var_doc_name"
++        if [ "x${docstring}" = "x" ]; then
++            printf "  --disable-%-13s disable %s support\n" "${VAR_NAME}" "$(echo -n "${VAR_NAME}" | tr '-' ' ')"
++        else
++            printf "  --disable-%-13s %s\n" "${VAR_NAME}" "$docstring"
++        fi
++    done
++
++    first=y
++    for varstring in ${WITH_VARS}; do
++        if [ $first = 'y' ]; then
++            echo ""
++            first=n
++        fi
++        extract_var_string $(echo "${varstring}" | tr '|' ' ')
++        var_doc_name="WITH_${VAR_UC_NAME}_DOC"
++        eval "docstring=\$$var_doc_name"
++        paraminfo="${VAR_NAME}=${VAR_VALUE}"
++        if [ "x${docstring}" = "x" ]; then
++            printf "  --with-%-16s enable %s support\n" "$paraminfo" "$(echo -n "${VAR_NAME}" | tr '-' ' ')"
++        else
++            printf "  --with-%-16s %s\n" "$paraminfo" "$docstring"
++        fi
++    done
++
++    exit 0
++}
++
++C_COMPILER=""
++CXX_COMPILER=""
++CROSS_HOST=""
++DEBUG_VERSION="no"
++
++while [ $# != 0 ]; do
++    case "$1" in
++        "--disable-release")
++            DEBUG_VERSION="yes";;
++    	"--host="*)
++            CROSS_HOST="${1#*=}-";;
++        "--prefix="*)
++            PREFIX="${1#*=}";;
++        "--prefix")
++            PREFIX="${2}"; shift;;
++        "--bindir="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_BINDIR=$(quote "${1#*=}")";;
++        "--bindir")
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_BINDIR=$(quote "$2")"; shift;;
++        "--sbindir="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_SBINDIR=$(quote "${1#*=}")";;
++        "--sbindir")
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_SBINDIR=$(quote "$2")"; shift;;
++        "--libexecdir="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_LIBEXECDIR=$(quote "${1#*=}")";;
++        "--libexecdir")
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_LIBEXECDIR=$(quote "$2")"; shift;;
++        "--sysconfdir="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_SYSCONFDIR=$(quote "${1#*=}")";;
++        "--sysconfdir")
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_SYSCONFDIR=$(quote "$2")"; shift;;
++        "--sharedstatedir="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_SHAREDSTATEDIR=$(quote "${1#*=}")";;
++        "--sharedstatedir")
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_SHAREDSTATEDIR=$(quote "$2")"; shift;;
++        "--localstatedir="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_LOCALSTATEDIR=$(quote "${1#*=}")";;
++        "--localstatedir")
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_LOCALSTATEDIR=$(quote "$2")"; shift;;
++        "--libdir="*)
++            LIBDIR="${1#*=}";;
++        "--libdir")
++            LIBDIR="${2}"; shift;;
++        "--includedir="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_INCLUDEDIR=$(quote "${1#*=}")";;
++        "--includedir")
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_INCLUDEDIR=$(quote "$2")"; shift;;
++        "--oldincludedir="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_OLDINCLUDEDIR=$(quote "${1#*=}")";;
++        "--oldincludedir")
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_OLDINCLUDEDIR=$(quote "$2")"; shift;;
++        "--datarootdir="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_DATAROOTDIR=$(quote "${1#*=}")";;
++        "--datarootdir")
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_DATAROOTDIR=$(quote "$2")"; shift;;
++        "--datadir="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_DATADIR=$(quote "${1#*=}")";;
++        "--datadir")
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_DATADIR=$(quote "$2")"; shift;;
++        "--infodir="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_INFODIR=$(quote "${1#*=}")";;
++        "--infodir")
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_INFODIR=$(quote "$2")"; shift;;
++        "--localedir="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_LOCALEDIR=$(quote "${1#*=}")";;
++        "--localedir")
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_LOCALEDIR=$(quote "$2")"; shift;;
++        "--mandir="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_MANDIR=$(quote "${1#*=}")";;
++        "--mandir")
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_MANDIR=$(quote "$2")"; shift;;
++        "--docdir="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_DOCDIR=$(quote "${1#*=}")";;
++        "--docdir")
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_INSTALL_DOCDIR=$(quote "$2")"; shift;;
++
++        "CC="*)
++	    C_COMPILER="$(quote "${1#*=}")";;
++        "CXX="*)
++	    CXX_COMPILER="$(quote "${1#*=}")";;
++        "CFLAGS="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_C_FLAGS=$(quote "${1#*=}")";;
++        "CXXFLAGS="*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_CXX_FLAGS=$(quote "${1#*=}")";;
++        "LDFLAGS="*)
++            LDFLAGS="$LDFLAGS ${1#*=}";;
++
++        "--help")
++            print_help;;
++        "-h")
++            print_help;;
++
++        # This flag is the only one which may be a bit surprising to
++        # people.  Autotools always builds with debugging symbols enabled
++        # (AFAIK), but for cmake you have to do -DCMAKE_BUILD_TYPE=Debug.
++        # Unfortunately this can change other things as well, so although
++        # I realize there is no --disable-debug flag I thought it would be
++        # prudent to support one here.
++        "--disable-debug")
++            #BUILD_TYPE="Release"
++	    ;;
++
++        "--pass-thru")
++            #while [ $# != 1 ]; do
++            #    shift;
++            #    CMAKE_ARGS="$CMAKE_ARGS $(quote "${1}")";
++            #done
++	    ;;
++
++        "--enable-"*)
++            #set_config_var "$1"
++            ;;
++
++        "--disable-"*)
++            #set_config_var "$1"
++            ;;
++
++        "--with-"*)
++            #name=$(echo "${1#--with-}" | awk '{split($1,v,"="); print v[1]}')
++            #case "${1}" in
++            #    "--with-${name}="*)
++            #        set_config_var "--with-${name}" "${1#--with-${name}=}";;
++            #    "--with-${name}")
++            #        set_config_var "$1" "$2";
++            #        shift;;
++            #esac
++            ;;
++
++        *)
++            #echo "$0: error: unrecognized option: \`$1'" >&2
++            #echo "Try \`$0 --help' for more information" >&2
++            #exit -1
++	    ;;
++    esac;
++    shift
++done
++
++if [ "x${CROSS_HOST}" != "x" ]; then
++    if [ "x${C_COMPILER}" = "x" ]; then
++        C_COMPILER="gcc"
++    fi 
++    if [ "x${CXX_COMPILER}" = "x" ]; then
++        CXX_COMPILER="g++"
++    fi 
++    case "${CROSS_HOST}" in
++        *mingw*)
++            CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_SYSTEM_NAME=Windows"
++            ;;
++    esac
++    CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_C_COMPILER=${CROSS_HOST}${C_COMPILER}"
++    CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_CXX_COMPILER=${CROSS_HOST}${CXX_COMPILER}"
++fi 
++
++if [ "x${DEBUG_VERSION}" == "xno" ]; then
++    CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_BUILD_TYPE=RELEASE"
++fi
++
++if [ "x${LIBDIR}" = "x" ]; then
++    LIBDIR="${PREFIX}/lib"
++fi
++
++# Unlike CFLAGS/CXXFLAGS/CC/CXX, LDFLAGS isn't handled by CMake, so we
++# need to parse it here.
++if [ "x${LDFLAGS}" != "x" ]; then
++    for varname in EXE MODULE SHARED STATIC; do
++        CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_${varname}_LINKER_FLAGS=$(quote "$LDFLAGS")"
++    done
++fi
++
++#eval "${CMAKE_CMD}" "${TOP_SRCDIR}" -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_INSTALL_LIBDIR="${LIBDIR}" ${CMAKE_ARGS}
++#eval "${CMAKE_CMD}" "${TOP_SRCDIR}" -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DBUILD_SHARED_LIB="OFF" -DP7ZIP_SOURCE_DIR="${P7ZIP_SOURCE_DIR}" ${CMAKE_ARGS}
++eval "${CMAKE_CMD}" "${TOP_SRCDIR}" -DBUILD_SHARED_LIB="OFF" -DP7ZIP_SOURCE_DIR="${P7ZIP_SOURCE_DIR}" ${CMAKE_ARGS}
+diff -upNr lib7zip-53abfeb.org/.gitignore lib7zip-53abfeb/.gitignore
+--- lib7zip-53abfeb.org/.gitignore	2021-05-26 22:04:41.000000000 +0200
++++ lib7zip-53abfeb/.gitignore	1970-01-01 01:00:00.000000000 +0100
+@@ -1,46 +0,0 @@
+-.*\.pbxuser
+-.*\.perspectivev.?
+-\.DS_Store
+-build$
+-linux-build$
+-\.svn
+-depcomp$
+-missing$
+-install-sh$
+-autom4te\.cache$
+-Makefile\.in$
+-aclocal\.m4$
+-\.deps$
+-config\.log$
+-configure$
+-config\.status$
+-Makefile$
+-includes/C$
+-includes/CPP$
+-.*\.o
+-.*\.a
+-.*\.lo
+-.*\.la
+-.*\.so\.?.*
+-m4/.*
+-libtool
+-config.guess
+-config.sub
+-ltmain.sh
+-# http://www.gnu.org/software/automake
+-
+-Makefile.in
+-
+-# http://www.gnu.org/software/autoconf
+-
+-/autom4te.cache
+-/aclocal.m4
+-/compile
+-/configure
+-/depcomp
+-/install-sh
+-/missing
+-/stamp-h1
+-/ar-lib
+-/m4
+-/build
+\ Manca newline alla fine del file
+diff -upNr lib7zip-53abfeb.org/.gitmodules lib7zip-53abfeb/.gitmodules
+--- lib7zip-53abfeb.org/.gitmodules	2021-05-26 22:04:41.000000000 +0200
++++ lib7zip-53abfeb/.gitmodules	1970-01-01 01:00:00.000000000 +0100
+@@ -1,3 +0,0 @@
+-[submodule "third_party/p7zip"]
+-	path = third_party/p7zip
+-	url = https://github.com/jinfeihan57/p7zip.git
+diff -upNr lib7zip-53abfeb.org/.hgignore lib7zip-53abfeb/.hgignore
+--- lib7zip-53abfeb.org/.hgignore	2021-05-26 22:04:41.000000000 +0200
++++ lib7zip-53abfeb/.hgignore	1970-01-01 01:00:00.000000000 +0100
+@@ -1,29 +0,0 @@
+-.*\.pbxuser
+-.*\.perspectivev.?
+-\.DS_Store
+-build$
+-linux-build$
+-\.svn
+-depcomp$
+-missing$
+-install-sh$
+-autom4te\.cache$
+-Makefile\.in$
+-aclocal\.m4$
+-\.deps$
+-config\.log$
+-configure$
+-config\.status$
+-Makefile$
+-includes/C$
+-includes/CPP$
+-.*\.o
+-.*\.a
+-.*\.lo
+-.*\.la
+-.*\.so\.?.*
+-m4/.*
+-libtool
+-config.guess
+-config.sub
+-ltmain.sh
+\ Manca newline alla fine del file
+diff -upNr lib7zip-53abfeb.org/src/7ZipFormatInfo.cpp lib7zip-53abfeb/src/7ZipFormatInfo.cpp
+--- lib7zip-53abfeb.org/src/7ZipFormatInfo.cpp	2021-05-26 22:04:41.000000000 +0200
++++ lib7zip-53abfeb/src/7ZipFormatInfo.cpp	2021-09-19 14:20:56.671905670 +0200
+@@ -4,6 +4,7 @@
+ #endif
+ 
+ #include "C/7zVersion.h"
++#include "CPP/Common/Common.h"
+ #include "CPP/7zip/Archive/IArchive.h"
+ #include "CPP/Windows/PropVariant.h"
+ #include "CPP/Common/MyCom.h"
+diff -upNr lib7zip-53abfeb.org/src/7ZipObjectPtrArray.cpp lib7zip-53abfeb/src/7ZipObjectPtrArray.cpp
+--- lib7zip-53abfeb.org/src/7ZipObjectPtrArray.cpp	2021-05-26 22:04:41.000000000 +0200
++++ lib7zip-53abfeb/src/7ZipObjectPtrArray.cpp	2021-09-19 14:21:44.925154586 +0200
+@@ -18,9 +18,9 @@ void C7ZipObjectPtrArray::clear()
+ {
+     if (m_bAutoRelease)
+     {
+-        for(C7ZipObjectPtrArray::iterator it = begin(); it != end(); it ++)
++        for(C7ZipObjectPtrArray::iterator it = begin(); it != end();)
+         {
+-            delete *it;
++            it = erase(it);
+         }
+     }
+ 
+diff -upNr lib7zip-53abfeb.org/src/CMakeLists.txt lib7zip-53abfeb/src/CMakeLists.txt
+--- lib7zip-53abfeb.org/src/CMakeLists.txt	2021-05-26 22:04:41.000000000 +0200
++++ lib7zip-53abfeb/src/CMakeLists.txt	2021-09-19 14:22:53.391507308 +0200
+@@ -7,6 +7,10 @@ SET(lib7zip_src
+ 7ZipCodecInfo.h             7ZipFormatInfo.h            7zipLibrary.cpp             OSFunctions_OS2.h
+ )
+ 
++if ("${CMAKE_C_PLATFORM_ID}" STREQUAL "MinGW")
++    SET(lib7zip_src ${lib7zip_src} GUIDs.h GUIDs.cpp)
++endif()
++
+ SET(lib7zip_NODIST_SOURCES ${P7ZIP_SOURCE_DIR}/CPP/Common/MyWindows.cpp
+ 			   ${P7ZIP_SOURCE_DIR}/CPP/Windows/PropVariant.cpp
+ )
+diff -upNr lib7zip-53abfeb.org/src/GUIDs.cpp lib7zip-53abfeb/src/GUIDs.cpp
+--- lib7zip-53abfeb.org/src/GUIDs.cpp	1970-01-01 01:00:00.000000000 +0100
++++ lib7zip-53abfeb/src/GUIDs.cpp	2021-09-19 14:27:46.632076949 +0200
+@@ -0,0 +1,2 @@
++#include <initguid.h>
++#include "GUIDs.h"
+diff -upNr lib7zip-53abfeb.org/src/GUIDs.h lib7zip-53abfeb/src/GUIDs.h
+--- lib7zip-53abfeb.org/src/GUIDs.h	1970-01-01 01:00:00.000000000 +0100
++++ lib7zip-53abfeb/src/GUIDs.h	2021-09-19 14:27:46.632076949 +0200
+@@ -0,0 +1,139 @@
++// This file is based on the following file from the LZMA SDK (http://www.7-zip.org/sdk.html):
++//   ./CPP/7zip/Guid.txt
++#pragma once
++
++
++namespace SevenZip
++{
++namespace intl
++{
++	// IStream.h
++
++	// {23170F69-40C1-278A-0000-000300010000}
++	DEFINE_GUID(IID_ISequentialInStream,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x03, 0x00, 0x01, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-0000-000300010000}
++	DEFINE_GUID(IID_ISequentialOutStream,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x03, 0x00, 0x02, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-0000-000300030000}
++	DEFINE_GUID(IID_IInStream,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x03, 0x00, 0x03, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-0000-000300040000}
++	DEFINE_GUID(IID_IOutStream,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x03, 0x00, 0x04, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-0000-000300060000}
++	DEFINE_GUID(IID_IStreamGetSize,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x03, 0x00, 0x06, 0x00, 0x00);
++
++	// ICoder.h
++	// {23170F69-40C1-278A-0000-000400040000}
++	DEFINE_GUID(IID_ICompressProgressInfo,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x04, 0x00, 0x04, 0x00, 0x00);
++
++    // {23170F69-40C1-278A-0000-000400600000}
++	DEFINE_GUID(IID_ICompressCodecsInfo,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x04, 0x00, 0x60, 0x00, 0x00);
++
++    // {23170F69-40C1-278A-0000-000400610000}
++	DEFINE_GUID(IID_ISetCompressCodecsInfo,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x04, 0x00, 0x61, 0x00, 0x00);
++
++	// IPassword.h
++
++	// {23170F69-40C1-278A-0000-000500100000}
++	DEFINE_GUID(IID_ICryptoGetTextPassword,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x05, 0x00, 0x10, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-0000-000500110000}
++	DEFINE_GUID(IID_ICryptoGetTextPassword2,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x05, 0x00, 0x11, 0x00, 0x00);
++
++	// IArchive.h
++
++	// {23170F69-40C1-278A-0000-000600030000}
++	DEFINE_GUID(IID_ISetProperties,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x06, 0x00, 0x03, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-0000-000600100000}
++	DEFINE_GUID(IID_IArchiveOpenCallback,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x06, 0x00, 0x10, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-0000-000600200000}
++	DEFINE_GUID(IID_IArchiveExtractCallback,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x06, 0x00, 0x20, 0x00, 0x00);
++
++    // {23170F69-40C1-278A-0000-000600300000}
++	DEFINE_GUID(IID_IArchiveOpenVolumeCallback,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x06, 0x00, 0x30, 0x00, 0x00);
++
++    // {23170F69-40C1-278A-0000-000600400000}
++	DEFINE_GUID(IID_IInArchiveGetStream,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x06, 0x00, 0x40, 0x00, 0x00);
++
++    // {23170F69-40C1-278A-0000-000600500000}
++	DEFINE_GUID(IID_IArchiveOpenSetSubArchiveName,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x06, 0x00, 0x50, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-0000-000600600000}
++	DEFINE_GUID(IID_IInArchive,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x06, 0x00, 0x60, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-0000-000600800000}
++	DEFINE_GUID(IID_IArchiveUpdateCallback,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x06, 0x00, 0x80, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-0000-000600820000}
++	DEFINE_GUID(IID_IArchiveUpdateCallback2,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x06, 0x00, 0x82, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-0000-000600A00000}
++	DEFINE_GUID(IID_IOutArchive,
++		0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x06, 0x00, 0xA0, 0x00, 0x00);
++
++	// Handler GUIDs
++
++	// {23170F69-40C1-278A-1000-000110010000}
++	DEFINE_GUID(CLSID_CFormatZip,
++		0x23170F69, 0x40C1, 0x278A, 0x10, 0x00, 0x00, 0x01, 0x10, 0x01, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-1000-000110020000}
++	DEFINE_GUID(CLSID_CFormatBZip2,
++		0x23170F69, 0x40C1, 0x278A, 0x10, 0x00, 0x00, 0x01, 0x10, 0x02, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-1000-000110030000}
++	DEFINE_GUID(CLSID_CFormatRar,
++		0x23170F69, 0x40C1, 0x278A, 0x10, 0x00, 0x00, 0x01, 0x10, 0x03, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-1000-000110070000}
++	DEFINE_GUID(CLSID_CFormat7z,
++		0x23170F69, 0x40C1, 0x278A, 0x10, 0x00, 0x00, 0x01, 0x10, 0x07, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-1000-000110080000}
++	DEFINE_GUID(CLSID_CFormatCab,
++		0x23170F69, 0x40C1, 0x278A, 0x10, 0x00, 0x00, 0x01, 0x10, 0x08, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-1000-0001100A0000}
++	DEFINE_GUID(CLSID_CFormatLzma,
++		0x23170F69, 0x40C1, 0x278A, 0x10, 0x00, 0x00, 0x01, 0x10, 0x0A, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-1000-0001100B0000}
++	DEFINE_GUID(CLSID_CFormatLzma86,
++		0x23170F69, 0x40C1, 0x278A, 0x10, 0x00, 0x00, 0x01, 0x10, 0x0B, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-1000-000110E70000}
++	DEFINE_GUID(CLSID_CFormatIso,
++		0x23170F69, 0x40C1, 0x278A, 0x10, 0x00, 0x00, 0x01, 0x10, 0xE7, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-1000-000110EE0000}
++	DEFINE_GUID(CLSID_CFormatTar,
++		0x23170F69, 0x40C1, 0x278A, 0x10, 0x00, 0x00, 0x01, 0x10, 0xEE, 0x00, 0x00);
++
++	// {23170F69-40C1-278A-1000-000110EF0000}
++	DEFINE_GUID(CLSID_CFormatGZip,
++		0x23170F69, 0x40C1, 0x278A, 0x10, 0x00, 0x00, 0x01, 0x10, 0xEF, 0x00, 0x00);
++}
++}
+diff -upNr lib7zip-53abfeb.org/src/HelperFuncs.cpp lib7zip-53abfeb/src/HelperFuncs.cpp
+--- lib7zip-53abfeb.org/src/HelperFuncs.cpp	2021-05-26 22:04:41.000000000 +0200
++++ lib7zip-53abfeb/src/HelperFuncs.cpp	2021-09-19 14:25:05.620215573 +0200
+@@ -2,10 +2,12 @@
+ #include "config.h"
+ #endif
+ 
++#if !defined(_WIN32)
+ #define BUILD_LIB7ZIP
+ #ifndef INITGUID
+ #define INITGUID
+ #endif
++#endif
+ 
+ #if !defined(_WIN32) && !defined(_OS2)
+ #include "CPP/myWindows/StdAfx.h"
+diff -upNr lib7zip-53abfeb.org/src/OSFunctions_UnixLike.cpp lib7zip-53abfeb/src/OSFunctions_UnixLike.cpp
+--- lib7zip-53abfeb.org/src/OSFunctions_UnixLike.cpp	2021-05-26 22:04:41.000000000 +0200
++++ lib7zip-53abfeb/src/OSFunctions_UnixLike.cpp	2021-09-19 14:26:54.366798374 +0200
+@@ -122,13 +122,13 @@ int myselect(const struct dirent * pDir
+   {
+     closedir( pTmpDir );
+ 
+-    (void)chdir( szEntryName );
++    (void)!chdir( szEntryName );
+ 
+     struct dirent **namelist = NULL;
+ 
+     scandir( ".",&namelist,myselect,alphasort );
+ 
+-    (void)chdir( ".." );
++    (void)!chdir( ".." );
+   }
+ 
+   return 0;
+@@ -180,6 +180,12 @@ HMODULE Load7ZLibrary(const wstring & na
+   lib_search_pathlist.push_back("/usr/lib");
+   lib_search_pathlist.push_back("/usr/lib/p7zip");
+   lib_search_pathlist.push_back("/usr/local/lib/p7zip");
++
++  lib_search_pathlist.push_back("/usr/local/lib64");
++  lib_search_pathlist.push_back("/usr/lib64");
++  lib_search_pathlist.push_back("/usr/lib64/p7zip");
++  lib_search_pathlist.push_back("/usr/local/lib64/p7zip");
++
+   lib_search_pathlist.push_back(".");
+ 
+   for(std::vector<const char *>::iterator lib_search_pathlistIt = lib_search_pathlist.begin();

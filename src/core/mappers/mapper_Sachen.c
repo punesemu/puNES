@@ -76,7 +76,7 @@ void map_init_Sachen(BYTE model) {
 		case SA8259D: {
 			EXTCL_CPU_WR_MEM(Sachen_sa8259x);
 			EXTCL_SAVE_MAPPER(Sachen_sa8259x);
-			mapper.internal_struct[0] = (BYTE *) &sa8259;
+			mapper.internal_struct[0] = (BYTE *)&sa8259;
 			mapper.internal_struct_size[0] = sizeof(sa8259);
 
 			info.mapper.extend_wr = TRUE;
@@ -140,7 +140,7 @@ void map_init_Sachen(BYTE model) {
 			EXTCL_CPU_WR_MEM(Sachen_tcu02);
 			EXTCL_CPU_RD_MEM(Sachen_tcu02);
 			EXTCL_SAVE_MAPPER(Sachen_tcu02);
-			mapper.internal_struct[0] = (BYTE *) &tcu02;
+			mapper.internal_struct[0] = (BYTE *)&tcu02;
 			mapper.internal_struct_size[0] = sizeof(tcu02);
 
 			info.mapper.extend_wr = TRUE;
@@ -183,7 +183,7 @@ void map_init_Sachen(BYTE model) {
 				EXTCL_CPU_WR_MEM(Sachen_sa74374b);
 			}
 			EXTCL_SAVE_MAPPER(Sachen_sa74374x);
-			mapper.internal_struct[0] = (BYTE *) &sa74374x;
+			mapper.internal_struct[0] = (BYTE *)&sa74374x;
 			mapper.internal_struct_size[0] = sizeof(sa74374x);
 
 			info.mapper.extend_wr = TRUE;

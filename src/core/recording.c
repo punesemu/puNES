@@ -22,10 +22,8 @@
 #include <libavutil/imgutils.h>
 #include <libavutil/opt.h>
 #include <libswscale/swscale.h>
-#if defined (__unix__)
-#include <pthread.h>
-#endif
 #include "recording.h"
+#include "thread_def.h"
 #include "emu_thread.h"
 #include "video/gfx_thread.h"
 #include "video/gfx.h"
@@ -114,11 +112,7 @@ struct _ffmpeg {
 	int format_type;
 	AVFormatContext *format_ctx;
 
-#if defined (__unix__)
-	pthread_mutex_t lock;
-#elif defined (_WIN32)
-	HANDLE lock;
-#endif
+	thread_mutex_t lock;
 
 	// video
 	_ffmpeg_stream video;
@@ -134,7 +128,7 @@ _recording_format_info recording_format_info[REC_FORMAT_TOTAL] = {
 	{ FALSE, "mpeg"    , { "mpg" , "mpeg", "end" } , REC_FORMAT_VIDEO, NULL, { "mpeg2video", "end" } },
 	{ FALSE, "mp4"     , { "mp4" , "end" }         , REC_FORMAT_VIDEO, NULL, { "mpeg4", "msmpeg4", "libxvid", "end" } },
 	{ FALSE, "mp4"     , { "mp4" , "end" }         , REC_FORMAT_VIDEO, NULL, { "h264_nvenc", "libx264", "h264_omx", "end" } },
-	{ FALSE, "matroska", { "mkv" , "end" }         , REC_FORMAT_VIDEO, NULL, { "hevc_nvenc", "hevc_vaapi", "libx265", "end" } },
+	{ FALSE, "matroska", { "mkv" , "end" }         , REC_FORMAT_VIDEO, NULL, { "hevc_nvenc", "libx265", "end" } },
 	{ FALSE, "webm"    , { "webm", "end" }         , REC_FORMAT_VIDEO, NULL, { "libvpx-vp9", "libvpx", "end" } },
 	{ FALSE, "avi"     , { "wmv" , "end" }         , REC_FORMAT_VIDEO, NULL, { "wmv2", "wmv1", "end" } },
 	{ FALSE, "avi"     , { "avi" , "end" }         , REC_FORMAT_VIDEO, NULL, { "ffv1", "end" } },
@@ -144,6 +138,7 @@ _recording_format_info recording_format_info[REC_FORMAT_TOTAL] = {
 	{ FALSE, "adts"    , { "aac" , "end" }         , REC_FORMAT_AUDIO, NULL, { "aac", "end" } },
 	{ FALSE, "flac"    , { "flac", "end" }         , REC_FORMAT_AUDIO, NULL, { "flac", "end" } },
 	{ FALSE, "ogg"     , { "ogg" , "end" }         , REC_FORMAT_AUDIO, NULL, { "libvorbis", "end" } },
+	{ FALSE, "opus"    , { "opus", "end" }         , REC_FORMAT_AUDIO, NULL, { "libopus", "end" } }
 };
 
 void recording_init(void) {
@@ -177,29 +172,16 @@ void recording_init(void) {
 		}
 	}
 
-#if defined (__unix__)
-	if (pthread_mutex_init(&ffmpeg.lock, NULL) != 0) {
+	if (thread_mutex_init_error(ffmpeg.lock)) {
 		fprintf(stderr, "Unable to allocate the recording mutex\n");
 		return;
 	}
-#elif defined (_WIN32)
-	if ((ffmpeg.lock = CreateSemaphore(NULL, 1, 2, NULL)) == NULL) {
-		fprintf(stderr, "Unable to allocate the recording mutex\n");
-		return;
-	}
-#endif
 }
 void recording_quit(void) {
 	if (info.recording_on_air) {
 		recording_finish(TRUE);
 	}
-#if defined (__unix__)
-	pthread_mutex_destroy(&ffmpeg.lock);
-#elif defined (_WIN32)
-	if (ffmpeg.lock) {
-		CloseHandle(ffmpeg.lock);
-	}
-#endif
+	thread_mutex_destroy(ffmpeg.lock);
 }
 
 void recording_start(uTCHAR *filename, int format) {
@@ -421,18 +403,10 @@ void recording_decode_output_resolution(int *w, int *h) {
 // Misc ---------------------------------------------------------------------------------------------------
 
 INLINE static void ffmpeg_thread_lock(void) {
-#if defined (__unix__)
-	pthread_mutex_lock(&ffmpeg.lock);
-#elif defined (_WIN32)
-	WaitForSingleObject((HANDLE **)ffmpeg.lock, INFINITE);
-#endif
+	thread_mutex_lock(ffmpeg.lock);
 }
 INLINE static void ffmpeg_thread_unlock(void) {
-#if defined (__unix__)
-	pthread_mutex_unlock(&ffmpeg.lock);
-#elif defined (_WIN32)
-	ReleaseSemaphore((HANDLE **)ffmpeg.lock, 1, NULL);
-#endif
+	thread_mutex_unlock(ffmpeg.lock);
 }
 
 static void ffmpeg_fstream_set_default(_ffmpeg_stream *stream) {
@@ -480,19 +454,23 @@ static void ffmpeg_fstream_close(_ffmpeg_stream *fs) {
 	}
 }
 INLINE static BYTE ffmpeg_stream_write_frame(_ffmpeg_stream *fs) {
+	AVPacket *pkt = av_packet_alloc();
+	BYTE rc = EXIT_OK;
 	int ret = 0;
 
-	while (ret >= 0) {
-		AVPacket pkt = { 0 };
+	if (pkt == NULL) {
+		return (EXIT_ERROR);
+	}
 
-		av_init_packet(&pkt);
-		ret = avcodec_receive_packet(fs->avcc, &pkt);
+	while (ret >= 0) {
+		ret = avcodec_receive_packet(fs->avcc, pkt);
 
 		if (ret == AVERROR(EAGAIN)) {
 			continue;
 		}
 		if (ret == AVERROR_EOF) {
-			return (EXIT_ERROR);
+			rc = EXIT_ERROR;
+			break;
 		}
 		if (ret < 0) {
 			if (fs->avc->type == AVMEDIA_TYPE_VIDEO) {
@@ -500,14 +478,15 @@ INLINE static BYTE ffmpeg_stream_write_frame(_ffmpeg_stream *fs) {
 			} else {
 				fprintf(stderr, "Error encoding audio frame : %s.\n", ffmpeg_av_make_error_string(ret));
 			}
-			return (EXIT_ERROR);
+			rc = EXIT_ERROR;
+			break;
 		}
 
-		av_packet_rescale_ts(&pkt, fs->avcc->time_base, fs->avs->time_base);
-		pkt.stream_index = fs->avs->index;
+		av_packet_rescale_ts(pkt, fs->avcc->time_base, fs->avs->time_base);
+		pkt->stream_index = fs->avs->index;
 
 		ffmpeg_thread_lock();
-		ret = av_interleaved_write_frame(ffmpeg.format_ctx, &pkt);
+		ret = av_interleaved_write_frame(ffmpeg.format_ctx, pkt);
 		ffmpeg_thread_unlock();
 
 		if (ret < 0) {
@@ -516,11 +495,12 @@ INLINE static BYTE ffmpeg_stream_write_frame(_ffmpeg_stream *fs) {
 			} else {
 				fprintf(stderr, "Error while writing audio frame : %s.\n", ffmpeg_av_make_error_string(ret));
 			}
-			return (EXIT_ERROR);
+			rc = EXIT_ERROR;
+			break;
 		}
 	}
-
-	return (EXIT_OK);
+	av_packet_free(&pkt);
+	return (rc);
 }
 
 static char *ffmpeg_av_make_error_string(int retcode) {
@@ -687,6 +667,7 @@ static BYTE ffmpeg_video_add_stream(enum recording_format rf) {
 		case REC_FORMAT_AUDIO_AAC:
 		case REC_FORMAT_AUDIO_FLAC:
 		case REC_FORMAT_AUDIO_OGG:
+		case REC_FORMAT_AUDIO_OPUS:
 			ret = ffmpeg_video_add_stream_format_audio(rf);
 			break;
 		default:
@@ -978,7 +959,7 @@ static BYTE ffmpeg_video_add_stream_format_hevc(void) {
 		break;
 		case REC_QUALITY_HIGH:
 			vbr = 90;
-			av_dict_set(&opts, "profile", "2", 0);
+			dst_pixel_format = AV_PIX_FMT_YUV444P;
 			break;
 	}
 
@@ -991,11 +972,17 @@ static BYTE ffmpeg_video_add_stream_format_hevc(void) {
 		// https://trac.ffmpeg.org/wiki/Encode/H.265
 		av_dict_set(&opts, "preset", "ultrafast", 0);
 		av_dict_set(&opts, "tune", "zerolatency", 0);
+		if (cfg->recording.quality == REC_QUALITY_HIGH) {
+			av_dict_set(&opts, "profile", "main444-12", 0);
+		}
 		// configuro il constant rate factor
 		ffmpeg_video_set_opt_vbr(opts, "crf", vbr);
 	} else if ((strcmp(video->avc->name, "hevc_nvenc") == 0)) {
 		av_dict_set(&opts, "preset", "3", 0);
 		av_dict_set(&opts, "zerolatency", "1", 0);
+		if (cfg->recording.quality == REC_QUALITY_HIGH) {
+			av_dict_set(&opts, "profile", "2", 0);
+		}
 		av_dict_set(&opts, "rc", "0", 0);
 		ffmpeg_video_set_opt_vbr(opts, "qp", vbr);
 	}
@@ -1168,11 +1155,11 @@ static BYTE ffmpeg_audio_add_stream(void) {
 		return (EXIT_ERROR);
 	}
 
-	audio->avcc->bit_rate = 128000;
 	audio->avcc->sample_fmt = ffmpeg_audio_select_sample_fmt(audio->avc);
 	audio->avcc->sample_rate = ffmpeg_audio_select_samplerate(audio->avc);
 	audio->avcc->channel_layout = ffmpeg_audio_select_channel_layout(audio->avc);
 	audio->avcc->channels = av_get_channel_layout_nb_channels(audio->avcc->channel_layout);
+	audio->avcc->bit_rate = audio->avcc->sample_rate < 96000 ? 256000 : 512000;
 
 	audio->avs->id = ffmpeg.format_ctx->nb_streams - 1;
 	audio->avs->time_base = (AVRational){ 1, audio->avcc->sample_rate };
@@ -1326,12 +1313,12 @@ static enum AVSampleFormat ffmpeg_audio_select_sample_fmt(const AVCodec *codec) 
 	const enum AVSampleFormat *p = codec->sample_fmts;
 
 	if (!p) {
-		return AV_SAMPLE_FMT_S16;
+		return (AV_SAMPLE_FMT_S16);
 	}
 
 	while ((*p) != AV_SAMPLE_FMT_NONE) {
 		if ((*p) == AV_SAMPLE_FMT_S16) {
-			return AV_SAMPLE_FMT_S16;
+			return (AV_SAMPLE_FMT_S16);
 		}
 		p++;
 	}
@@ -1342,7 +1329,20 @@ static int ffmpeg_audio_select_samplerate(const AVCodec *codec) {
 	const int *p;
 
 	if (!codec->supported_samplerates) {
-		return 44100;
+		switch(codec->id) {
+			case AV_CODEC_ID_PCM_S16LE:
+			case AV_CODEC_ID_PCM_S16BE:
+			case AV_CODEC_ID_PCM_S16LE_PLANAR:
+			case AV_CODEC_ID_PCM_S16BE_PLANAR:
+			case AV_CODEC_ID_PCM_F16LE:
+			case AV_CODEC_ID_FLAC:
+				return (snd.samplerate);
+			case AV_CODEC_ID_VORBIS:
+				// supporta solo i sample rate 48000 e 44100
+				return ((snd.samplerate == 48000) || (snd.samplerate == 44100) ? snd.samplerate : 44100);
+			default:
+				return (44100);
+		}
 	}
 
 	p = codec->supported_samplerates;
@@ -1368,7 +1368,21 @@ static int ffmpeg_audio_select_channel_layout(const AVCodec *codec) {
 	int best_nb_channels = 0;
 
 	if (!codec->channel_layouts) {
-		return AV_CH_LAYOUT_STEREO;
+		switch(codec->id) {
+			case AV_CODEC_ID_PCM_S16LE:
+			case AV_CODEC_ID_PCM_S16BE:
+			case AV_CODEC_ID_PCM_S16LE_PLANAR:
+			case AV_CODEC_ID_PCM_S16BE_PLANAR:
+			case AV_CODEC_ID_PCM_F16LE:
+			case AV_CODEC_ID_AAC:
+			case AV_CODEC_ID_FLAC:
+			case AV_CODEC_ID_OPUS:
+				return ((cfg->channels_mode == CH_MONO) ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO);
+			// non supporta il mono
+			case AV_CODEC_ID_VORBIS:
+			default:
+				return (AV_CH_LAYOUT_STEREO);
+		}
 	}
 
 	p = codec->channel_layouts;

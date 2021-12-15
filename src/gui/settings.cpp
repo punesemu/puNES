@@ -25,6 +25,7 @@
 #if defined (WITH_D3D9)
 #include "d3d9.h"
 #endif
+#include "gui.h"
 
 #define CFGFILENAME "/puNES.cfg"
 #define INPFILENAME "/input.cfg"
@@ -32,6 +33,8 @@
 	QFileInfo(uQString(info.rom.file)).completeBaseName() + ".pgs"
 #define SHPFILENAME QString(SHDPAR_FOLDER) + "/" +\
 	QFileInfo(uQString(cfg->shader_file)).fileName() + ".shp"
+#define JSCFILENAME(ind) QString(JSC_FOLDER) + "/" +\
+	QFileInfo(uQString(js_guid_to_string(&jstick.jdd.devices[ind].guid)).remove('{').remove('}').remove('-')).fileName() + ".jsc"
 
 _emu_settings s;
 
@@ -71,6 +74,11 @@ void settings_cpy_utchar_to_val(int index, uTCHAR *buffer) {
 void settings_val_to_oscan(int index, _overscan_borders *ob, const uTCHAR *buffer) {
 	s.set->oscan_val_to_int(index, ob, buffer);
 }
+#if defined (FULLSCREEN_RESFREQ)
+void settings_resolution_val_to_int(int *w, int *h, const uTCHAR *buffer) {
+	s.set->resolution_val_to_int(w, h, buffer);
+}
+#endif
 
 void *settings_inp_rd_sc(int index, int type) {
 	return (s.inp->sc_val_to_qstring_pntr(index, type));
@@ -78,11 +86,26 @@ void *settings_inp_rd_sc(int index, int type) {
 void settings_inp_wr_sc(void *str, int index, int type) {
 	s.inp->sc_qstring_pntr_to_val(str, index, type);
 }
-void settings_inp_all_default(_config_input *config_input, _array_pointers_port *array) {
-	s.inp->set_all_input_default(config_input, array);
+void settings_inp_all_defaults(_config_input *config_input, _array_pointers_port *array) {
+	s.inp->set_all_input_defaults(config_input, array);
 }
-void settings_inp_port_default(_port *port, int index, int mode) {
-	s.inp->set_kbd_joy_default(port, index, mode);
+void settings_inp_port_defaults(_port *port, int index, int mode) {
+	if (mode == KEYBOARD) {
+		s.inp->kbd_defaults(port, index);
+	} else {
+		int i;
+
+		for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+			port->input[JOYSTICK][i] = js_joyval_default(index, i);
+		}
+	}
+}
+void settings_inp_port_button_default(int button, _port *port, int index, int mode) {
+	if (mode == KEYBOARD) {
+		s.inp->kbd_default(button, port, index);
+	} else {
+		port->input[JOYSTICK][button] = js_joyval_default(index, button);
+	}
 }
 void settings_inp_save(void) {
 	s.list = LSET_INP;
@@ -170,4 +193,27 @@ void settings_shp_save(void) {
 		s.list = LSET_NONE;
 		s.shp->wr();
 	}
+}
+
+void settings_jsc_parse(int index) {
+	QString file;
+
+	if (s.jsc) {
+		delete(s.jsc);
+		s.jsc = NULL;
+	}
+
+	file = JSCFILENAME(index);
+
+	s.list = LSET_JSC;
+	s.jsc = new objJsc(s.cfg, file, LSET_JSC, index);
+}
+void settings_jsc_save(void) {
+	if (s.jsc) {
+		s.list = LSET_JSC;
+		s.jsc->wr();
+	}
+}
+int settings_jsc_deadzone_default(void) {
+	return (s.jsc->jsc_deadzone_default());
 }

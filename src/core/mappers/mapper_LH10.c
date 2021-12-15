@@ -39,7 +39,7 @@ void map_init_LH10(void) {
 	EXTCL_CPU_WR_MEM(LH10);
 	EXTCL_CPU_RD_MEM(LH10);
 	EXTCL_SAVE_MAPPER(LH10);
-	mapper.internal_struct[0] = (BYTE *) &lh10;
+	mapper.internal_struct[0] = (BYTE *)&lh10;
 	mapper.internal_struct_size[0] = sizeof(lh10);
 
 	memset(&lh10, 0x00, sizeof(lh10));

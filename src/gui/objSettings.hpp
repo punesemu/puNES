@@ -76,7 +76,6 @@ class objSettings : public QSettings {
 		void int_to_val(int index, int value);
 		void cpy_val_to_utchar(int index, uTCHAR *dst, int length);
 };
-
 class objSet : public objSettings {
 	public:
 		objSet(Format f, QString file, int list_ele);
@@ -96,6 +95,20 @@ class objSet : public objSettings {
 		void oscan_val_to_int(int index, _overscan_borders *ob);
 		QString oscan_val(_overscan_borders *ob);
 
+#if defined (FULLSCREEN_RESFREQ)
+	public:
+		void resolution_val_to_int(int *w, int *h, const uTCHAR *buffer);
+
+	private:
+		void resolution_val_to_int(int index, int *w, int *h);
+		QString resolution_val(int *w, int *h);
+#endif
+
+	private:
+		void ntsc_val_to_double(int index, void *ntsc_format);
+		void ntsc_val_to_double(void *ntsc_format, const uTCHAR *buffer);
+		QString ntsc_val(void *ntsc_format);
+
 	private:
 		int channel_convert_index(int index);
 		void channel_decode(int index, QString val);
@@ -112,7 +125,6 @@ class objSet : public objSettings {
 		void last_geometry_val_to_int(int index, _last_geometry *lg);
 		QString last_geometry_val(_last_geometry *lg);
 };
-
 class objPgs : public objSettings {
 	public:
 		objPgs(Format f, QString file, int list_ele);
@@ -123,7 +135,6 @@ class objPgs : public objSettings {
 		void to_cfg(QString group);
 		void fr_cfg(QString group);
 };
-
 class objInp : public objSettings {
 	public:
 		objInp(Format f, QString file, int list_ele);
@@ -135,37 +146,28 @@ class objInp : public objSettings {
 		void fr_cfg(QString group);
 
 	public:
-		void set_all_input_default(_config_input *config_input, _array_pointers_port *array);
+		void set_all_input_defaults(_config_input *config_input, _array_pointers_port *array);
 		void *sc_val_to_qstring_pntr(int index, int type);
 		void sc_qstring_pntr_to_val(void *str, int index, int type);
-
-	public:
 		static QString kbd_keyval_to_name(const DBWORD value);
 		static DBWORD kbd_keyval_decode(QKeyEvent *keyEvent);
-		void set_kbd_joy_default(_port *port, int index, int mode);
+		void kbd_default(int button, _port *port, int index);
+		void kbd_defaults(_port *port, int index);
 
 	private:
-		int kbd_val_to_int(int index);
 		void kbd_rd(int index, int pIndex);
 		void kbd_wr(int index, int pIndex);
-		DBWORD kbd_name(QString name);
+		DBWORD _kbd_keyval_from_name(QString name);
 		DBWORD kbd_keyval_from_name(int index, QString name);
+		int kbd_keyval_to_int(int index);
 
 	private:
-		int joy_val_to_int(int index);
-		void joy_rd(int index, int pIndex);
-		void joy_wr(int index, int pIndex);
-		int joyid_val_to_int(int index);
-		void joyid_int_to_val(int index, int id);
-#if defined (_WIN32)
-		void joyguid_val_to_guid(int index, GUID *guid);
-		void joyguid_guid_to_val(int index, GUID guid);
-#endif
+		void js_val_to_guid(int index, _input_guid *guid);
+		void js_guid_to_val(int index, _input_guid *guid);
 
 	private:
 		int tb_delay_val_to_int(int index);
 };
-
 class objShp : public objSettings {
 	public:
 		objShp(Format f, QString file, int list_ele);
@@ -179,15 +181,40 @@ class objShp : public objSettings {
 	protected:
 		void rd(void);
 		void rd(QString group);
-		void rd_key(int index);
+
+	private:
+		void rd_pshd_key(void *pshd, int index);
+		void wr_pshd_key(void *pshd, int index);
 
 	protected:
-		void wr_key(int index);
 		void wr_all_keys(void);
 
 	private:
 		double val_to_float(int index);
 		void float_to_val(int index, float value);
+};
+class objJsc : public objSettings {
+	private:
+		int jindex;
+
+	public:
+		objJsc(Format f, QString file, int list_ele, int index);
+		~objJsc();
+
+	protected:
+		void to_cfg(QString group);
+		void fr_cfg(QString group);
+
+	protected:
+		void rd_key(int index);
+
+	public:
+		int jsc_deadzone_default(void);
+
+	private:
+		int jsc_joyval_to_int(int index);
+		qulonglong val_to_ulonglong(int index);
+		void ulonglong_to_val(int index, qulonglong value);
 };
 
 typedef struct _emu_settings {
@@ -196,6 +223,7 @@ typedef struct _emu_settings {
 	objInp *inp;
 	objPgs *pgs;
 	objShp *shp;
+	objJsc *jsc;
 	BYTE list;
 } _emu_settings;
 

@@ -43,7 +43,7 @@ void map_init_CNROM() {
 	if ((info.id >= CNROM_26CE27CE) && (info.id <= CNROM_26NCE27NCE)) {
 		EXTCL_RD_CHR(CNROM);
 		EXTCL_SAVE_MAPPER(CNROM);
-		mapper.internal_struct[0] = (BYTE *) &cnrom_2627;
+		mapper.internal_struct[0] = (BYTE *)&cnrom_2627;
 		mapper.internal_struct_size[0] = sizeof(cnrom_2627);
 
 		memset(&cnrom_2627, 0x00, sizeof(cnrom_2627));

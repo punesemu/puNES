@@ -78,6 +78,7 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 
 	tableWidget_Selection->setCurrentCell(0, 0);
 
+	connect(tableWidget_Selection, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(s_doubleclick(int, int)));
 	connect(pushButton_Ok, SIGNAL(clicked(bool)), this, SLOT(s_ok_clicked(bool)));
 	connect(pushButton_None, SIGNAL(clicked(bool)), this, SLOT(s_none_clicked(bool)));
 
@@ -101,6 +102,10 @@ void dlgUncomp::closeEvent(QCloseEvent *event) {
 	QDialog::closeEvent(event);
 }
 
+void dlgUncomp::s_doubleclick(int row, UNUSED(int column)) {
+	selected = row;
+	close();
+}
 void dlgUncomp::s_ok_clicked(UNUSED(bool checked)) {
 	QModelIndexList indexList = tableWidget_Selection->selectionModel()->selectedIndexes();
 

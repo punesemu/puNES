@@ -1,5 +1,4 @@
-AC_INIT([Xdelta3], [3.1.0], [josh.macdonald@gmail.com], 
-	[xdelta3], [http://xdelta.org/])
+AC_INIT([Xdelta3],[3.1.0],[josh.macdonald@gmail.com],[xdelta3],[http://xdelta.org/])
 AC_PREREQ([2.68])
 AC_CONFIG_MACRO_DIR([m4])
 LT_INIT
@@ -16,7 +15,7 @@ AC_CHECK_SIZEOF(unsigned long long)
 
 AC_ARG_WITH(
     [liblzma],
-    [AC_HELP_STRING(
+    [AS_HELP_STRING(
         [--with-liblzma],
         [build with liblzma support @<:@default=autodetect@:>@])],
     [USE_LIBLZMA=$withval],

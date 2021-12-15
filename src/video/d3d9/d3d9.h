@@ -27,7 +27,7 @@
 #include "shaders.h"
 #include "video/gfx.h"
 
-#define D3D9_ADAPTER(i) (_d3d9_adapter *) ((BYTE *) d3d9.array + (i * sizeof(_d3d9_adapter)))
+#define D3D9_ADAPTER(i) (_d3d9_adapter *)((BYTE *)d3d9.array + (i * sizeof(_d3d9_adapter)))
 
 typedef struct _vertex_buffer {
 	// position

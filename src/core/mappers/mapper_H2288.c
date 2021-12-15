@@ -95,9 +95,9 @@ void map_init_H2288(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *) &h2288;
+	mapper.internal_struct[0] = (BYTE *)&h2288;
 	mapper.internal_struct_size[0] = sizeof(h2288);
-	mapper.internal_struct[1] = (BYTE *) &mmc3;
+	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	memset(&h2288, 0x00, sizeof(h2288));

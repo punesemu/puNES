@@ -31,7 +31,7 @@ void map_init_Active(void) {
 	EXTCL_CPU_WR_MEM(Active);
 	EXTCL_CPU_RD_MEM(Active);
 	EXTCL_SAVE_MAPPER(Active);
-	mapper.internal_struct[0] = (BYTE *) &active;
+	mapper.internal_struct[0] = (BYTE *)&active;
 	mapper.internal_struct_size[0] = sizeof(active);
 
 	info.mapper.extend_wr = TRUE;

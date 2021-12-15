@@ -124,7 +124,7 @@ void map_init_Sunsoft(BYTE model) {
 			EXTCL_CPU_WR_MEM(Sunsoft_S3);
 			EXTCL_SAVE_MAPPER(Sunsoft_S3);
 			EXTCL_CPU_EVERY_CYCLE(Sunsoft_S3);
-			mapper.internal_struct[0] = (BYTE *) &s3;
+			mapper.internal_struct[0] = (BYTE *)&s3;
 			mapper.internal_struct_size[0] = sizeof(s3);
 
 			if (info.reset >= HARD) {
@@ -134,7 +134,7 @@ void map_init_Sunsoft(BYTE model) {
 		case SUN4:
 			EXTCL_CPU_WR_MEM(Sunsoft_S4);
 			EXTCL_SAVE_MAPPER(Sunsoft_S4);
-			mapper.internal_struct[0] = (BYTE *) &s4;
+			mapper.internal_struct[0] = (BYTE *)&s4;
 			mapper.internal_struct_size[0] = sizeof(s4);
 
 			if (info.reset >= HARD) {
@@ -154,14 +154,14 @@ void map_init_Sunsoft(BYTE model) {
 			EXTCL_SAVE_MAPPER(Sunsoft_FM7);
 			EXTCL_CPU_EVERY_CYCLE(Sunsoft_FM7);
 			EXTCL_APU_TICK(Sunsoft_FM7);
-			mapper.internal_struct[0] = (BYTE *) &fm7;
+			mapper.internal_struct[0] = (BYTE *)&fm7;
 			mapper.internal_struct_size[0] = sizeof(fm7);
 
 			if (info.reset >= HARD) {
 				memset(&fm7, 0x00, sizeof(fm7));
 			}
 
-			if (info.format == iNES_1_0) {
+			if ((info.format == iNES_1_0) || !info.prg.ram.banks_8k_plus) {
 				info.prg.ram.banks_8k_plus = 1;
 
 				if ((info.id == BARCODEWORLD) || (info.id == DODGEDANPEI2)) {

@@ -1,0 +1,1308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dlgJsc</class>
+ <widget class="QDialog" name="dlgJsc">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>698</width>
+    <height>567</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string notr="true">Joypad/Gamepad Debug</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_joy_ID">
+     <item>
+      <widget class="QLabel" name="label_joy_ID">
+       <property name="text">
+        <string notr="true">ID</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox_joy_ID">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_Info_line">
+     <item>
+      <widget class="Line" name="line_Info_1">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_Info_line">
+       <property name="text">
+        <string notr="true">Info</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_Info_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout_info">
+     <item row="1" column="1">
+      <widget class="QLabel" name="label_GUID_2points">
+       <property name="text">
+        <string notr="true">:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_Device_2points">
+       <property name="text">
+        <string notr="true">:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_GUID_desc">
+       <property name="text">
+        <string notr="true">GUID</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="label_Misc_2points">
+       <property name="text">
+        <string notr="true">:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_GUID">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string notr="true">GUID info</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_Device">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string notr="true">Device info</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_Misc_desc">
+       <property name="text">
+        <string notr="true">MIsc</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_Device_desc">
+       <property name="text">
+        <string notr="true">Device</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="label_Misc">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string notr="true">Misc info</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_Type_desc">
+       <property name="text">
+        <string notr="true">Type</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="label_Type_2points">
+       <property name="text">
+        <string notr="true">:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QLabel" name="label_Type">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string notr="true">Type info</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_Axes_line">
+     <item>
+      <widget class="Line" name="line_Axes_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_Axes_line">
+       <property name="text">
+        <string notr="true">0 Axes, 0 Hats</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_Axes_1">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_ABS">
+     <item>
+      <layout class="QGridLayout" name="gridLayout_ABS1">
+       <item row="5" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_RZ">
+         <property name="text">
+          <string notr="true">Abs RZ :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_X">
+         <property name="text">
+          <string notr="true">Abs X :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="label_ABS_Z">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLabel" name="label_ABS_RZ">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLabel" name="label_ABS_RX">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_Y">
+         <property name="text">
+          <string notr="true">Abs Y :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_Z">
+         <property name="text">
+          <string notr="true">Abs Z :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLabel" name="label_ABS_RY">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_ABS_X">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="label_ABS_Y">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_RX">
+         <property name="text">
+          <string notr="true">Abs RX :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_RY">
+         <property name="text">
+          <string notr="true">Abs RY :</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line_ABS1">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QGridLayout" name="gridLayout_ABS2">
+       <item row="4" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_HAT1X">
+         <property name="text">
+          <string notr="true">Abs Hat1X :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="label_ABS_WHEEL">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="label_ABS_HAT0X">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_ABS_THROTTLE">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_HAT0X">
+         <property name="text">
+          <string notr="true">Abs Hat0X :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_HAT0Y">
+         <property name="text">
+          <string notr="true">Abs Hat0Y :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_WHEEL">
+         <property name="text">
+          <string notr="true">Abs Wheel :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_THROTTLE">
+         <property name="text">
+          <string notr="true">Abs Throttle :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_HAT1Y">
+         <property name="text">
+          <string notr="true">Abs Hat1Y :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLabel" name="label_ABS_HAT0Y">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLabel" name="label_ABS_HAT1X">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLabel" name="label_ABS_HAT1Y">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line_ABS2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QGridLayout" name="gridLayout_ABS3">
+       <item row="4" column="1">
+        <widget class="QLabel" name="label_ABS_RUDDER">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="label_ABS_HAT2Y">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_GAS">
+         <property name="text">
+          <string notr="true">Abs Gas :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_ABS_HAT2X">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_RUDDER">
+         <property name="text">
+          <string notr="true">Abs Rudder :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_HAT3X">
+         <property name="text">
+          <string notr="true">Abs Hat3X :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="label_ABS_HAT3X">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_HAT2Y">
+         <property name="text">
+          <string notr="true">Abs Hat2Y :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLabel" name="label_ABS_GAS">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_HAT3Y">
+         <property name="text">
+          <string notr="true">Abs Hat3Y :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_HAT2X">
+         <property name="text">
+          <string notr="true">Abs Hat2X :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLabel" name="label_ABS_HAT3Y">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line_ABS3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QGridLayout" name="gridLayout_ABS4">
+       <item row="4" column="1">
+        <widget class="QLabel" name="label_ABS_TILT_Y">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="label_ABS_PRESSURE">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_TOOL_WIDTH">
+         <property name="text">
+          <string notr="true">Abs TWidth :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_ABS_BRAKE">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_TILT_Y">
+         <property name="text">
+          <string notr="true">Abs Tilt Y :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_DISTANCE">
+         <property name="text">
+          <string notr="true">Abs Distance :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="label_ABS_DISTANCE">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_PRESSURE">
+         <property name="text">
+          <string notr="true">Abs Pressure :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLabel" name="label_ABS_TOOL_WIDTH">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_TILT_X">
+         <property name="text">
+          <string notr="true">Abs Tilt X :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="checkBox_ABS_BRAKE">
+         <property name="text">
+          <string notr="true">Abs Brake :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLabel" name="label_ABS_TILT_X">
+         <property name="text">
+          <string notr="true">-32767</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_Buttons_line">
+     <item>
+      <widget class="Line" name="line_Buttons_1">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_Buttons_line">
+       <property name="text">
+        <string notr="true">0 Buttons</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_Buttons_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout_BTN">
+     <item row="2" column="2">
+      <widget class="QCheckBox" name="checkBox_BTN25">
+       <property name="text">
+        <string notr="true">B25</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="9">
+      <widget class="QCheckBox" name="checkBox_BTN32">
+       <property name="text">
+        <string notr="true">B32</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QCheckBox" name="checkBox_BTN37">
+       <property name="text">
+        <string notr="true">B37</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="4">
+      <widget class="QCheckBox" name="checkBox_BTN38">
+       <property name="text">
+        <string notr="true">B38</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QCheckBox" name="checkBox_BTN14">
+       <property name="text">
+        <string notr="true">B14</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="7">
+      <widget class="QCheckBox" name="checkBox_BTN52">
+       <property name="text">
+        <string notr="true">B52</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="9">
+      <widget class="QCheckBox" name="checkBox_BTN54">
+       <property name="text">
+        <string notr="true">B54</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="6">
+      <widget class="QCheckBox" name="checkBox_BTN07">
+       <property name="text">
+        <string notr="true">B07</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="7">
+      <widget class="QCheckBox" name="checkBox_BTN19">
+       <property name="text">
+        <string notr="true">B19</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="8">
+      <widget class="QCheckBox" name="checkBox_BTN31">
+       <property name="text">
+        <string notr="true">B31</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QCheckBox" name="checkBox_BTN05">
+       <property name="text">
+        <string notr="true">B05</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QCheckBox" name="checkBox_BTN04">
+       <property name="text">
+        <string notr="true">B04</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="7">
+      <widget class="QCheckBox" name="checkBox_BTN30">
+       <property name="text">
+        <string notr="true">B30</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QCheckBox" name="checkBox_BTN45">
+       <property name="text">
+        <string notr="true">B45</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="9">
+      <widget class="QCheckBox" name="checkBox_BTN10">
+       <property name="text">
+        <string notr="true">B10</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QCheckBox" name="checkBox_BTN46">
+       <property name="text">
+        <string notr="true">B46</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QCheckBox" name="checkBox_BTN01">
+       <property name="text">
+        <string notr="true">B01</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QCheckBox" name="checkBox_BTN26">
+       <property name="text">
+        <string notr="true">B26</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="5">
+      <widget class="QCheckBox" name="checkBox_BTN17">
+       <property name="text">
+        <string notr="true">B17</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QCheckBox" name="checkBox_BTN15">
+       <property name="text">
+        <string notr="true">B15</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="9">
+      <widget class="QCheckBox" name="checkBox_BTN43">
+       <property name="text">
+        <string notr="true">B43</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="9">
+      <widget class="QCheckBox" name="checkBox_BTN21">
+       <property name="text">
+        <string notr="true">B21</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="10">
+      <widget class="QCheckBox" name="checkBox_BTN22">
+       <property name="text">
+        <string notr="true">B22</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="checkBox_BTN12">
+       <property name="text">
+        <string notr="true">B12</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QCheckBox" name="checkBox_BTN47">
+       <property name="text">
+        <string notr="true">B47</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="5">
+      <widget class="QCheckBox" name="checkBox_BTN39">
+       <property name="text">
+        <string notr="true">B39</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QCheckBox" name="checkBox_BTN34">
+       <property name="text">
+        <string notr="true">B34</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QCheckBox" name="checkBox_BTN35">
+       <property name="text">
+        <string notr="true">B35</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="10">
+      <widget class="QCheckBox" name="checkBox_BTN44">
+       <property name="text">
+        <string notr="true">B44</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="7">
+      <widget class="QCheckBox" name="checkBox_BTN08">
+       <property name="text">
+        <string notr="true">B08</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="6">
+      <widget class="QCheckBox" name="checkBox_BTN51">
+       <property name="text">
+        <string notr="true">B51</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QCheckBox" name="checkBox_BTN36">
+       <property name="text">
+        <string notr="true">B36</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QCheckBox" name="checkBox_BTN13">
+       <property name="text">
+        <string notr="true">B13</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="10">
+      <widget class="QCheckBox" name="checkBox_BTN11">
+       <property name="text">
+        <string notr="true">B11</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="8">
+      <widget class="QCheckBox" name="checkBox_BTN20">
+       <property name="text">
+        <string notr="true">B20</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="6">
+      <widget class="QCheckBox" name="checkBox_BTN18">
+       <property name="text">
+        <string notr="true">B18</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QCheckBox" name="checkBox_BTN24">
+       <property name="text">
+        <string notr="true">B24</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QCheckBox" name="checkBox_BTN16">
+       <property name="text">
+        <string notr="true">B16</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QCheckBox" name="checkBox_BTN03">
+       <property name="text">
+        <string notr="true">B03</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="8">
+      <widget class="QCheckBox" name="checkBox_BTN09">
+       <property name="text">
+        <string notr="true">B09</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="10">
+      <widget class="QCheckBox" name="checkBox_BTN55">
+       <property name="text">
+        <string notr="true">B55</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="6">
+      <widget class="QCheckBox" name="checkBox_BTN29">
+       <property name="text">
+        <string notr="true">B29</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="8">
+      <widget class="QCheckBox" name="checkBox_BTN42">
+       <property name="text">
+        <string notr="true">B42</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QCheckBox" name="checkBox_BTN27">
+       <property name="text">
+        <string notr="true">B27</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="3">
+      <widget class="QCheckBox" name="checkBox_BTN48">
+       <property name="text">
+        <string notr="true">B48</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="8">
+      <widget class="QCheckBox" name="checkBox_BTN53">
+       <property name="text">
+        <string notr="true">B53</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QCheckBox" name="checkBox_BTN23">
+       <property name="text">
+        <string notr="true">B23</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="6">
+      <widget class="QCheckBox" name="checkBox_BTN40">
+       <property name="text">
+        <string notr="true">B40</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="10">
+      <widget class="QCheckBox" name="checkBox_BTN33">
+       <property name="text">
+        <string notr="true">B33</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="7">
+      <widget class="QCheckBox" name="checkBox_BTN41">
+       <property name="text">
+        <string notr="true">B41</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QCheckBox" name="checkBox_BTN02">
+       <property name="text">
+        <string notr="true">B02</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="4">
+      <widget class="QCheckBox" name="checkBox_BTN49">
+       <property name="text">
+        <string notr="true">B49</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="5">
+      <widget class="QCheckBox" name="checkBox_BTN50">
+       <property name="text">
+        <string notr="true">B50</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QCheckBox" name="checkBox_BTN06">
+       <property name="text">
+        <string notr="true">B06</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="5">
+      <widget class="QCheckBox" name="checkBox_BTN28">
+       <property name="text">
+        <string notr="true">B28</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QCheckBox" name="checkBox_BTN56">
+       <property name="text">
+        <string notr="true">B56</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QCheckBox" name="checkBox_BTN57">
+       <property name="text">
+        <string notr="true">B57</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2">
+      <widget class="QCheckBox" name="checkBox_BTN58">
+       <property name="text">
+        <string notr="true">B58</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="3">
+      <widget class="QCheckBox" name="checkBox_BTN59">
+       <property name="text">
+        <string notr="true">B59</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="4">
+      <widget class="QCheckBox" name="checkBox_BTN60">
+       <property name="text">
+        <string notr="true">B60</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="5">
+      <widget class="QCheckBox" name="checkBox_BTN61">
+       <property name="text">
+        <string notr="true">B61</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="6">
+      <widget class="QCheckBox" name="checkBox_BTN62">
+       <property name="text">
+        <string notr="true">B62</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="7">
+      <widget class="QCheckBox" name="checkBox_BTN63">
+       <property name="text">
+        <string notr="true">B63</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="8">
+      <widget class="QCheckBox" name="checkBox_BTN64">
+       <property name="text">
+        <string notr="true">B64</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="Line" name="line_Save_Close">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_Save_Close">
+     <item>
+      <widget class="QPushButton" name="pushButton_Save">
+       <property name="text">
+        <string>Save Configuration</string>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_CLose">
+       <property name="text">
+        <string>Close Window</string>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/window_close.svg</normaloff>:/icon/icons/window_close.svg</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>comboBox_joy_ID</tabstop>
+  <tabstop>checkBox_ABS_X</tabstop>
+  <tabstop>checkBox_ABS_Y</tabstop>
+  <tabstop>checkBox_ABS_Z</tabstop>
+  <tabstop>checkBox_ABS_RX</tabstop>
+  <tabstop>checkBox_ABS_RY</tabstop>
+  <tabstop>checkBox_ABS_RZ</tabstop>
+  <tabstop>checkBox_ABS_THROTTLE</tabstop>
+  <tabstop>checkBox_ABS_WHEEL</tabstop>
+  <tabstop>checkBox_ABS_HAT0X</tabstop>
+  <tabstop>checkBox_ABS_HAT0Y</tabstop>
+  <tabstop>checkBox_ABS_HAT1X</tabstop>
+  <tabstop>checkBox_ABS_HAT1Y</tabstop>
+  <tabstop>checkBox_ABS_HAT2X</tabstop>
+  <tabstop>checkBox_ABS_HAT2Y</tabstop>
+  <tabstop>checkBox_ABS_HAT3X</tabstop>
+  <tabstop>checkBox_ABS_HAT3Y</tabstop>
+  <tabstop>checkBox_ABS_RUDDER</tabstop>
+  <tabstop>checkBox_ABS_GAS</tabstop>
+  <tabstop>checkBox_ABS_BRAKE</tabstop>
+  <tabstop>checkBox_ABS_PRESSURE</tabstop>
+  <tabstop>checkBox_ABS_DISTANCE</tabstop>
+  <tabstop>checkBox_ABS_TILT_X</tabstop>
+  <tabstop>checkBox_ABS_TILT_Y</tabstop>
+  <tabstop>checkBox_ABS_TOOL_WIDTH</tabstop>
+  <tabstop>checkBox_BTN01</tabstop>
+  <tabstop>checkBox_BTN02</tabstop>
+  <tabstop>checkBox_BTN03</tabstop>
+  <tabstop>checkBox_BTN04</tabstop>
+  <tabstop>checkBox_BTN05</tabstop>
+  <tabstop>checkBox_BTN06</tabstop>
+  <tabstop>checkBox_BTN07</tabstop>
+  <tabstop>checkBox_BTN08</tabstop>
+  <tabstop>checkBox_BTN09</tabstop>
+  <tabstop>checkBox_BTN10</tabstop>
+  <tabstop>checkBox_BTN11</tabstop>
+  <tabstop>checkBox_BTN12</tabstop>
+  <tabstop>checkBox_BTN13</tabstop>
+  <tabstop>checkBox_BTN14</tabstop>
+  <tabstop>checkBox_BTN15</tabstop>
+  <tabstop>checkBox_BTN16</tabstop>
+  <tabstop>checkBox_BTN17</tabstop>
+  <tabstop>checkBox_BTN18</tabstop>
+  <tabstop>checkBox_BTN19</tabstop>
+  <tabstop>checkBox_BTN20</tabstop>
+  <tabstop>checkBox_BTN21</tabstop>
+  <tabstop>checkBox_BTN22</tabstop>
+  <tabstop>checkBox_BTN23</tabstop>
+  <tabstop>checkBox_BTN24</tabstop>
+  <tabstop>checkBox_BTN25</tabstop>
+  <tabstop>checkBox_BTN26</tabstop>
+  <tabstop>checkBox_BTN27</tabstop>
+  <tabstop>checkBox_BTN28</tabstop>
+  <tabstop>checkBox_BTN29</tabstop>
+  <tabstop>checkBox_BTN30</tabstop>
+  <tabstop>checkBox_BTN31</tabstop>
+  <tabstop>checkBox_BTN32</tabstop>
+  <tabstop>checkBox_BTN33</tabstop>
+  <tabstop>checkBox_BTN34</tabstop>
+  <tabstop>checkBox_BTN35</tabstop>
+  <tabstop>checkBox_BTN36</tabstop>
+  <tabstop>checkBox_BTN37</tabstop>
+  <tabstop>checkBox_BTN38</tabstop>
+  <tabstop>checkBox_BTN39</tabstop>
+  <tabstop>checkBox_BTN40</tabstop>
+  <tabstop>checkBox_BTN41</tabstop>
+  <tabstop>checkBox_BTN42</tabstop>
+  <tabstop>checkBox_BTN43</tabstop>
+  <tabstop>checkBox_BTN44</tabstop>
+  <tabstop>checkBox_BTN45</tabstop>
+  <tabstop>checkBox_BTN46</tabstop>
+  <tabstop>checkBox_BTN47</tabstop>
+  <tabstop>checkBox_BTN48</tabstop>
+  <tabstop>checkBox_BTN49</tabstop>
+  <tabstop>checkBox_BTN50</tabstop>
+  <tabstop>checkBox_BTN51</tabstop>
+  <tabstop>checkBox_BTN52</tabstop>
+  <tabstop>checkBox_BTN53</tabstop>
+  <tabstop>checkBox_BTN54</tabstop>
+  <tabstop>checkBox_BTN55</tabstop>
+  <tabstop>checkBox_BTN56</tabstop>
+  <tabstop>checkBox_BTN57</tabstop>
+  <tabstop>checkBox_BTN58</tabstop>
+  <tabstop>checkBox_BTN59</tabstop>
+  <tabstop>checkBox_BTN60</tabstop>
+  <tabstop>checkBox_BTN61</tabstop>
+  <tabstop>checkBox_BTN62</tabstop>
+  <tabstop>checkBox_BTN63</tabstop>
+  <tabstop>checkBox_BTN64</tabstop>
+ </tabstops>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

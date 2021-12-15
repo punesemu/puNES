@@ -23,6 +23,9 @@
 #else
 #include <QtGui/QWindow>
 #endif
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QtGui/QActionGroup>
+#endif
 #include <QtWidgets/QSpinBox>
 #include <QtGui/QScreen>
 #include <QtCore/QDateTime>
@@ -31,10 +34,15 @@
 #include <QtCore/QBuffer>
 #include <libgen.h>
 #include "mainWindow.moc"
+#include "extra/singleapplication/singleapplication.h"
 #include "dlgSettings.hpp"
+#include "dlgJsc.hpp"
+#include "wdgMenuBar.hpp"
+#include "wdgOverlayUi.hpp"
 #include "common.h"
 #include "emu_thread.h"
 #include "clock.h"
+#include "conf.h"
 #include "recent_roms.h"
 #include "fds.h"
 #include "patcher.h"
@@ -49,6 +57,9 @@
 #include "debugger.h"
 #if defined (WITH_FFMPEG)
 #include "recording.h"
+#endif
+#if defined (FULLSCREEN_RESFREQ)
+#include "video/gfx_monitor.h"
 #endif
 
 #if defined (_WIN32) || defined (_WIN64)
@@ -72,10 +83,10 @@ enum state_save_enum { SAVE, LOAD };
 mainWindow::mainWindow() : QMainWindow() {
 	setupUi(this);
 
-	geom.setX(100);
-	geom.setY(100);
-	mgeom.setX(0);
-	mgeom.setY(0);
+	org_geom.setX(100);
+	org_geom.setY(100);
+	fs_geom.setX(0);
+	fs_geom.setY(0);
 
 	screen = new wdgScreen(centralwidget);
 	statusbar = new wdgStatusBar(this);
@@ -83,12 +94,16 @@ mainWindow::mainWindow() : QMainWindow() {
 	translator = new QTranslator();
 	qtTranslator = new QTranslator();
 	shcjoy.timer = new QTimer(this);
-	toggle_gui_in_window = true;
+	setup_in_out_fullscreen = false;
+	visibility.menubar = true;
+	visibility.toolbars = true;
 
 	setWindowIcon(QIcon(":icon/icons/application.png"));
 	setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
 	setStatusBar(statusbar);
 
+	// non voglio visualizzare il contexmenu del menu per nascondere la toolbar
+	setContextMenuPolicy(Qt::NoContextMenu);
 	toolbar->setObjectName("toolbar");
 	toolbar->setWindowTitle(tr("Widgets"));
 	addToolBar(toolbar->area, toolbar);
@@ -111,6 +126,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	qaction_shcut.interpolation = new QAction(this);
 	qaction_shcut.integer_in_fullscreen = new QAction(this);
 	qaction_shcut.stretch_in_fullscreen = new QAction(this);
+	qaction_shcut.toggle_menubar_in_fullscreen = new QAction(this);
 	qaction_shcut.audio_enable = new QAction(this);
 	qaction_shcut.save_settings = new QAction(this);
 	qaction_shcut.rwnd.active = new QAction(this);
@@ -120,6 +136,10 @@ mainWindow::mainWindow() : QMainWindow() {
 	qaction_shcut.rwnd.fast_forward = new QAction(this);
 	qaction_shcut.rwnd.play = new QAction(this);
 	qaction_shcut.rwnd.pause = new QAction(this);
+
+	// qaction esterni
+	qaction_extern.max_speed.start = new actionOneTrigger(this);
+	qaction_extern.max_speed.stop = new actionOneTrigger(this);
 
 	{
 		QActionGroup *grp;
@@ -149,14 +169,16 @@ mainWindow::mainWindow() : QMainWindow() {
 		grp->addAction(action_State_Slot_7);
 		grp->addAction(action_State_Slot_8);
 		grp->addAction(action_State_Slot_9);
+		grp->addAction(action_State_Slot_A);
+		grp->addAction(action_State_Slot_B);
 	}
 
-	connect(this, SIGNAL(fullscreen(bool)), this, SLOT(s_fullscreen(bool)));
 	connect(shcjoy.timer, SIGNAL(timeout()), this, SLOT(s_shcjoy_read_timer()));
+    connect(qApp, SIGNAL(receivedMessage(quint32, QByteArray)), this, SLOT(s_received_message(quint32, QByteArray)));
 
-	connect(this, SIGNAL(et_gg_reset()), this, SLOT(s_et_gg_reset()));
-	connect(this, SIGNAL(et_vs_reset()), this, SLOT(s_et_vs_reset()));
-	connect(this, SIGNAL(et_external_control_windows_show()), this, SLOT(s_et_external_control_windows_show()));
+	connect(this, SIGNAL(et_gg_reset(void)), this, SLOT(s_et_gg_reset(void)));
+	connect(this, SIGNAL(et_vs_reset(void)), this, SLOT(s_et_vs_reset(void)));
+	connect(this, SIGNAL(et_external_control_windows_show(void)), this, SLOT(s_et_external_control_windows_show(void)));
 
 	egds = new timerEgds(this);
 
@@ -173,6 +195,9 @@ mainWindow::mainWindow() : QMainWindow() {
 	setFixedSize(size());
 
 	installEventFilter(this);
+
+	toolbar->setHidden(cfg->toolbar.hidden);
+	statusbar->setHidden(cfg->toolbar.hidden);
 
 	set_language(cfg->language);
 }
@@ -214,7 +239,9 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 	switch (event->type()) {
 		case QEvent::WindowActivate:
 		case QEvent::WindowDeactivate:
-			gui_control_pause_bck(event->type());
+			if (setup_in_out_fullscreen == false) {
+				gui_control_pause_bck(event->type());
+			}
 			break;
 		default:
 			break;
@@ -237,6 +264,11 @@ void mainWindow::moveEvent(QMoveEvent *event) {
 }
 void mainWindow::resizeEvent(QResizeEvent *event) {
 	if (gui.start == TRUE) {
+		if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
+			fs_geom = QRect(0, 0, event->size().width(), event->size().height());
+			update_gfx_monitor_dimension();
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
+		}
 		gui_external_control_windows_update_pos();
 	}
 	QMainWindow::resizeEvent(event);
@@ -312,12 +344,12 @@ void mainWindow::update_recording_widgets(void) {
 
 	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_REC_AUDIO, KEYBOARD);
 	action_Start_Stop_Audio_recording->setEnabled(audio);
-	action_Start_Stop_Audio_recording->setText(sa + '\t' + (*sc));
+	action_text(action_Start_Stop_Audio_recording, sa, sc);
 	action_Start_Stop_Audio_recording->setIcon(ia);
 
 	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_REC_VIDEO, KEYBOARD);
 	action_Start_Stop_Video_recording->setEnabled(video);
-	action_Start_Stop_Video_recording->setText(sv + '\t' + (*sc));
+	action_text(action_Start_Stop_Video_recording, sv, sc);
 	action_Start_Stop_Video_recording->setIcon(iv);
 #else
 	QIcon ia = QIcon(":/icon/icons/wav_start.svg");
@@ -337,7 +369,7 @@ void mainWindow::update_recording_widgets(void) {
 
 	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_REC_AUDIO, KEYBOARD);
 	action_Start_Stop_Audio_recording->setEnabled(audio);
-	action_Start_Stop_Audio_recording->setText(sa + '\t' + (*sc));
+	action_text(action_Start_Stop_Audio_recording, sa, sc);
 	action_Start_Stop_Audio_recording->setIcon(ia);
 
 	action_Start_Stop_Video_recording->setVisible(false);
@@ -413,15 +445,15 @@ void mainWindow::set_language(int lang) {
 void mainWindow::shcjoy_start(void) {
 	shcjoy_stop();
 
-	if (js_is_null(&cfg->input.shcjoy_id)) {
+	if (js_is_null(&cfg->input.jguid_sch)) {
 		return;
 	}
 
 	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
-		shcjoy.shortcut[i] = name_to_jsv(uQStringCD(QString(*(QString *)settings_inp_rd_sc(i + SET_INP_SC_OPEN, JOYSTICK))));
+		shcjoy.shortcut[i] = js_joyval_from_name(uQStringCD(QString(*(QString *)settings_inp_rd_sc(i + SET_INP_SC_OPEN, JOYSTICK))));
 	}
 
-	js_shcut_init();
+	js_init_shcut();
 
 	shcjoy.enabled = true;
 	shcjoy.timer->start(13);
@@ -429,11 +461,10 @@ void mainWindow::shcjoy_start(void) {
 void mainWindow::shcjoy_stop(void) {
 	shcjoy.enabled = false;
 	shcjoy.timer->stop();
-	js_shcut_stop();
 }
 void mainWindow::control_visible_cursor(void) {
 	if ((nsf.enabled == FALSE) && (gmouse.hidden == FALSE) && (input_draw_target() == FALSE)) {
-		if (cfg->fullscreen == FULLSCR) {
+		if ((cfg->fullscreen == FULLSCR) && menubar->isHidden()) {
 			gui_cursor_hide(TRUE);
 		} else if ((gui_get_ms() - gmouse.timer) >= 2000) {
 			gui_cursor_hide(TRUE);
@@ -457,22 +488,17 @@ void mainWindow::make_reset(int type) {
 		}
 	}
 
-	// nel caso il timer dell'update dello screen
-	// del fast forward sia attivo, lo fermo.
-	egds->stop_ff();
-
 	if (emu_reset(type)) {
 		s_quit();
 	}
 
-	emu_frame_input_and_rewind();
+	// nel caso il timer dell'update dello screen del fast forward (o del max speed) sia attivo, lo fermo.
+	egds->stop_ff();
+	egds->stop_max_speed();
 
-	emu_thread_continue();
-
-	update_menu_file();
-	// dopo un reset la pause e' automaticamente disabilitata quindi faccio
-	// un aggiornamento del submenu NES per avere la voce correttamente settata.
-	update_menu_nes();
+	// resetto i contatori
+	qaction_extern.max_speed.start->reset_count();
+	qaction_extern.max_speed.stop->reset_count();
 
 	// il reset manuale, quindi al di fuori del "filmato", lo fa ricominciare
 	if (type <= HARD) {
@@ -480,6 +506,15 @@ void mainWindow::make_reset(int type) {
 			tas_restart_from_begin();
 		}
 	}
+
+	emu_frame_input_and_rewind();
+
+	update_menu_file();
+	// dopo un reset la pause e' automaticamente disabilitata quindi faccio
+	// un aggiornamento del submenu NES per avere la voce correttamente settata.
+	update_menu_nes();
+
+	emu_thread_continue();
 }
 void mainWindow::change_rom(const uTCHAR *rom) {
 	emu_thread_pause();
@@ -489,15 +524,6 @@ void mainWindow::change_rom(const uTCHAR *rom) {
 	make_reset(CHANGE_ROM);
 	gui_update();
 	emu_thread_continue();
-}
-void mainWindow::state_save_slot_set(int slot, bool on_video) {
-	if (info.no_rom | info.turn_off) {
-		return;
-	}
-	save_slot.slot = slot;
-	if (on_video == true) {
-		gui_overlay_enable_save_slot(SAVE_SLOT_INCDEC);
-	}
 }
 void mainWindow::shortcuts(void) {
 	// se non voglio che gli shortcuts funzionino durante il fullscreen, basta
@@ -550,6 +576,7 @@ void mainWindow::shortcuts(void) {
 	// State/[Incremente slot, Decrement slot]
 	connect_shortcut(action_Increment_slot, SET_INP_SC_INC_SLOT, SLOT(s_state_save_slot_incdec()));
 	connect_shortcut(action_Decrement_slot, SET_INP_SC_DEC_SLOT, SLOT(s_state_save_slot_incdec()));
+
 	// Rewind operations
 	connect_shortcut(qaction_shcut.rwnd.active, SET_INP_SC_RWND_ACTIVE_MODE, SLOT(s_shcut_rwnd_active_deactive_mode()));
 	connect_shortcut(qaction_shcut.rwnd.step_backward, SET_INP_SC_RWND_STEP_BACKWARD, SLOT(s_shcut_rwnd_step_backward()));
@@ -558,6 +585,9 @@ void mainWindow::shortcuts(void) {
 	connect_shortcut(qaction_shcut.rwnd.fast_forward, SET_INP_SC_RWND_FAST_FORWARD, SLOT(s_shcut_rwnd_fast_forward()));
 	connect_shortcut(qaction_shcut.rwnd.play, SET_INP_SC_RWND_PLAY, SLOT(s_shcut_rwnd_play()));
 	connect_shortcut(qaction_shcut.rwnd.pause, SET_INP_SC_RWND_PAUSE, SLOT(s_shcut_rwnd_pause()));
+
+	// Toggle Menubar
+	connect_shortcut(qaction_shcut.toggle_menubar_in_fullscreen, SET_INP_SC_TOGGLE_MENUBAR_IN_FULLSCREEN, SLOT(s_shcut_toggle_menubar()));
 }
 bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) {
 	int shcut = is_shortcut(event);
@@ -569,18 +599,11 @@ bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) {
 	return (true);
 }
 void mainWindow::update_gfx_monitor_dimension(void) {
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-	QScreen *screen = QGuiApplication::screens().at(qApp->desktop()->screenNumber(this));
-#else
-	QScreen *screen = windowHandle()->screen();
-#endif
-
 	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
 		bool toolbar_is_hidden = toolbar->isHidden() | toolbar->isFloating();
 
-		mgeom = screen->availableGeometry();
-		gfx.w[MONITOR] = mgeom.width() - (frameGeometry().width() - geometry().width());
-		gfx.h[MONITOR] = mgeom.height() - (frameGeometry().height() - geometry().height());
+		gfx.w[MONITOR] = fs_geom.width();
+		gfx.h[MONITOR] = fs_geom.height();
 
 		if (toolbar->orientation() == Qt::Vertical) {
 			gfx.w[MONITOR] -= (toolbar_is_hidden ? 0 : toolbar->sizeHint().width());
@@ -591,30 +614,132 @@ void mainWindow::update_gfx_monitor_dimension(void) {
 		gfx.h[MONITOR] -= (menubar->isHidden() ? 0 : menubar->sizeHint().height());
 		gfx.h[MONITOR] -= (statusbar->isHidden() ? 0 : statusbar->sizeHint().height());
 	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
-		mgeom = screen->geometry();
-		gfx.w[MONITOR] = mgeom.width();
-		gfx.h[MONITOR] = mgeom.height();
+		fs_geom = win_handle_screen()->geometry();
+#if defined (FULLSCREEN_RESFREQ)
+		if (setup_in_out_fullscreen == true) {
+			int w, h, x, y;
+
+			if (gfx_monitor_mode_in_use_info(&x, &y, &w, &h, NULL) == EXIT_OK) {
+				fs_geom = QRect(x, y, w, h);
+			}
+		}
+#endif
+		gfx.w[MONITOR] = fs_geom.width();
+		gfx.h[MONITOR] = fs_geom.height();
 	}
 }
-void mainWindow::set_save_slot_tooltip(BYTE slot, char *buffer) {
-	QAction *action = findChild<QAction *>(QString("action_State_Slot_%1").arg(slot));
+QAction *mainWindow::state_save_slot_action(BYTE slot) {
+	return (findChild<QAction *>(QString("action_State_Slot_%1").arg(QString::number(slot, 16).toUpper())));
+}
+void mainWindow::state_save_slot_set(int slot, bool on_video) {
+	if (info.no_rom | info.turn_off) {
+		return;
+	}
+	save_slot.slot = slot;
+	if (on_video == true) {
+		gui_overlay_enable_save_slot(SAVE_SLOT_INCDEC);
+	}
+	update_window();
+}
+void mainWindow::state_save_slot_set_tooltip(BYTE slot, char *buffer) {
 	QString tooltip;
 
 	if (buffer) {
-		QImage image = QImage((uchar *)buffer, SCR_COLUMNS, SCR_ROWS, SCR_COLUMNS * sizeof(uint32_t), QImage::Format_RGB32);
+		static QPainter painter;
+		static QFont f;
+		static QRect rect;
+		static QPen pen;
+		QImage img = QImage((uchar *)buffer, SCR_COLUMNS, SCR_ROWS, SCR_COLUMNS * sizeof(uint32_t), QImage::Format_RGB32);
 		QByteArray data;
 		QBuffer png(&data);
+		int x, y, w, h;
+		double mul = 1.5f;
 
-		image = image.scaled(SCR_COLUMNS * 2, SCR_ROWS * 2, Qt::KeepAspectRatio);
-		image.save(&png, "PNG", 100);
+		img = img.scaled(SCR_COLUMNS * mul, SCR_ROWS * mul, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
+		// scrivo le info
+		w = img.rect().width();
+		h = wdgoverlayui->overlaySaveSlot->height_row_slot * mul;
+		x = 0;
+		y = 0;
+
+		rect.setRect(x, y, w, h);
+
+		f = font();
+		f.setPixelSize(h / mul);
+
+		painter.begin(&img);
+		painter.setOpacity(0.5);
+		painter.fillRect(rect, Qt::darkBlue);
+
+		pen.setWidth(1);
+
+		painter.setFont(f);
+		painter.setOpacity(1.0);
+
+		pen.setColor(wdgoverlayui->overlaySaveSlot->color.slot);
+		painter.setPen(pen);
+		painter.drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, QString(" %0").arg(slot, 1, 16).toUpper());
+
+		pen.setColor(wdgoverlayui->overlaySaveSlot->color.info);
+		painter.setPen(pen);
+		painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter, wdgoverlayui->overlaySaveSlot->date_and_time(slot));
+
+		painter.end();
+
+		img.save(&png, "PNG", 10);
 		tooltip = QString("<img src='data:image/png;base64, %1'>").arg(QString(data.toBase64()));
 	} else {
 		//: Refers to the unused save slot. Important: Do not translate the "%1".
-		tooltip = tr("Slot %1 never used").arg(slot);
+		tooltip = tr("Slot %1 never used").arg(QString::number(slot, 16).toUpper());
 	}
 
-	action->setToolTip(tooltip);
-	toolbar->state->set_tooltip(slot, tooltip);
+	state_save_slot_action(slot)->setToolTip(tooltip);
+}
+void mainWindow::toggle_toolbars(void) {
+	bool visibility = !toolbar->isVisible();
+
+	emu_thread_pause();
+
+	toolbar->setVisible(visibility);
+	statusbar->setVisible(visibility);
+	update_gfx_monitor_dimension();
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+
+	emu_thread_continue();
+}
+void mainWindow::reset_min_max_size(void) {
+	// su alcune macchine, il fullscreen non avviene perche'
+	// la dimensione della finestra e' fissa e le qt non riescono
+	// a sbloccarla.
+	setMinimumSize(QSize(0, 0));
+	setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+}
+void mainWindow::update_fds_menu(void) {
+	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
+
+	if (fds.info.enabled && (rwnd.active == FALSE)) {
+		if (fds.drive.disk_ejected) {
+			action_text(action_Eject_Insert_Disk, tr("&Insert disk"), sc);
+		} else {
+			action_text(action_Eject_Insert_Disk, tr("&Eject disk"), sc);
+		}
+
+		menu_Disk_Side->setEnabled(true);
+		ctrl_disk_side(action_Disk_1_side_A);
+		ctrl_disk_side(action_Disk_1_side_B);
+		ctrl_disk_side(action_Disk_2_side_A);
+		ctrl_disk_side(action_Disk_2_side_B);
+		ctrl_disk_side(action_Disk_3_side_A);
+		ctrl_disk_side(action_Disk_3_side_B);
+		ctrl_disk_side(action_Disk_4_side_A);
+		ctrl_disk_side(action_Disk_4_side_B);
+		action_Eject_Insert_Disk->setEnabled(true);
+	} else {
+		action_text(action_Eject_Insert_Disk, tr("&Eject/Insert disk"), sc);
+		menu_Disk_Side->setEnabled(false);
+		action_Eject_Insert_Disk->setEnabled(false);
+	}
 }
 
 void mainWindow::connect_menu_signals(void) {
@@ -675,9 +800,13 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_State_Slot_7, 7, SLOT(s_state_save_slot_set()));
 	connect_action(action_State_Slot_8, 8, SLOT(s_state_save_slot_set()));
 	connect_action(action_State_Slot_9, 9, SLOT(s_state_save_slot_set()));
+	connect_action(action_State_Slot_A, 10, SLOT(s_state_save_slot_set()));
+	connect_action(action_State_Slot_B, 11, SLOT(s_state_save_slot_set()));
 	// State/[Save to file, Load from file]
 	connect_action(action_State_Save_to_file, SLOT(s_state_save_file()));
 	connect_action(action_State_Load_from_file, SLOT(s_state_load_file()));
+	// Tools
+	connect_action(action_Joypad_Gamepads_Debug, SLOT(s_open_djsc()));
 	// Help/About
 	connect_action(action_About, SLOT(s_help()));
 
@@ -698,6 +827,7 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(qaction_shcut.interpolation, SLOT(s_shcut_interpolation()));
 	connect_action(qaction_shcut.integer_in_fullscreen, SLOT(s_shcut_integer_in_fullscreen()));
 	connect_action(qaction_shcut.stretch_in_fullscreen, SLOT(s_shcut_stretch_in_fullscreen()));
+	connect_action(qaction_shcut.toggle_menubar_in_fullscreen, SLOT(s_shcut_toggle_menubar()));
 	connect_action(qaction_shcut.audio_enable, SLOT(s_shcut_audio_enable()));
 	connect_action(qaction_shcut.save_settings, SLOT(s_shcut_save_settings()));
 	connect_action(qaction_shcut.rwnd.active, SLOT(s_shcut_rwnd_active_deactive_mode()));
@@ -707,6 +837,10 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(qaction_shcut.rwnd.fast_forward, SLOT(s_shcut_rwnd_fast_forward()));
 	connect_action(qaction_shcut.rwnd.play, SLOT(s_shcut_rwnd_play()));
 	connect_action(qaction_shcut.rwnd.pause, SLOT(s_shcut_rwnd_pause()));
+
+	// external
+	connect_action(qaction_extern.max_speed.start, SLOT(s_max_speed_start()));
+	connect_action(qaction_extern.max_speed.stop, SLOT(s_max_speed_stop()));
 }
 void mainWindow::connect_action(QAction *action, const char *member) {
 	connect(action, SIGNAL(triggered()), this, member);
@@ -722,11 +856,7 @@ void mainWindow::connect_shortcut(QAction *action, int index) {
 		QStringList text = action->text().split('\t');
 
 		action->setShortcut(QKeySequence((*sc)));
-		if ((*sc) == "NULL") {
-			action->setText(text.at(0));
-		} else {
-			action->setText(text.at(0) + '\t' + (*sc));
-		}
+		action_text(action, text.at(0), sc);
 	}
 }
 void mainWindow::connect_shortcut(QAction *action, int index, const char *member) {
@@ -745,11 +875,7 @@ void mainWindow::connect_shortcut(QAction *action, int index, const char *member
 		// connetto il nuovo
 		connect(shortcut[index], SIGNAL(activated()), this, member);
 
-		if ((*sc) == "NULL") {
-			action->setText(text.at(0));
-		} else {
-			action->setText(text.at(0) + '\t' + (*sc));
-		}
+		action_text(action, text.at(0), sc);
 	}
 }
 
@@ -779,18 +905,20 @@ void mainWindow::update_menu_file(void) {
 
 			action->setText(QFileInfo(description).completeBaseName());
 
-			if (rom.suffix().isEmpty()) {
+			if (rom.suffix().isEmpty() ||
+				!QString::compare(rom.suffix(), "nes", Qt::CaseInsensitive) ||
+				!QString::compare(rom.suffix(), "unf", Qt::CaseInsensitive) ||
+				!QString::compare(rom.suffix(), "unif", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/nes_file.svg"));
+			} else if (!QString::compare(rom.suffix(), "nsf", Qt::CaseInsensitive) ||
+				!QString::compare(rom.suffix(), "nsfe", Qt::CaseInsensitive)) {
+				action->setIcon(QIcon(":/icon/icons/nsf_file.svg"));
 			} else if (!QString::compare(rom.suffix(), "fds", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/fds_file.svg"));
 			} else if (!QString::compare(rom.suffix(), "fm2", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/fm2_file.svg"));
-			} else if (!QString::compare(rom.suffix(), "nsf", Qt::CaseInsensitive)) {
-				action->setIcon(QIcon(":/icon/icons/nsf_file.svg"));
-			} else if (!QString::compare(rom.suffix(), "nsfe", Qt::CaseInsensitive)) {
-				action->setIcon(QIcon(":/icon/icons/nsf_file.svg"));
 			} else {
-				action->setIcon(QIcon(":/icon/icons/nes_file.svg"));
+				action->setIcon(QIcon(":/icon/icons/compressed_file.svg"));
 			}
 
 			action->setProperty("myValue", QVariant(i));
@@ -803,10 +931,10 @@ void mainWindow::update_menu_nes(void) {
 	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TURN_OFF, KEYBOARD);
 
 	if (info.turn_off) {
-		action_Turn_Off->setText(tr("&Turn On") + '\t' + (*sc));
+		action_text(action_Turn_Off, tr("&Turn On"), sc);
 		action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_on.svg"));
 	} else {
-		action_Turn_Off->setText(tr("&Turn Off") + '\t' + (*sc));
+		action_text(action_Turn_Off, tr("&Turn Off"), sc);
 		action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_off.svg"));
 	}
 
@@ -830,30 +958,7 @@ void mainWindow::update_menu_nes(void) {
 		action_Insert_Coin->setEnabled(false);
 	}
 
-	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
-
-	if (fds.info.enabled && (rwnd.active == FALSE)) {
-		if (fds.drive.disk_ejected) {
-			action_Eject_Insert_Disk->setText(tr("&Insert disk") + '\t' + (*sc));
-		} else {
-			action_Eject_Insert_Disk->setText(tr("&Eject disk") + '\t' + (*sc));
-		}
-
-		menu_Disk_Side->setEnabled(true);
-		ctrl_disk_side(action_Disk_1_side_A);
-		ctrl_disk_side(action_Disk_1_side_B);
-		ctrl_disk_side(action_Disk_2_side_A);
-		ctrl_disk_side(action_Disk_2_side_B);
-		ctrl_disk_side(action_Disk_3_side_A);
-		ctrl_disk_side(action_Disk_3_side_B);
-		ctrl_disk_side(action_Disk_4_side_A);
-		ctrl_disk_side(action_Disk_4_side_B);
-		action_Eject_Insert_Disk->setEnabled(true);
-	} else {
-		action_Eject_Insert_Disk->setText(tr("&Eject/Insert disk") + '\t' + (*sc));
-		menu_Disk_Side->setEnabled(false);
-		action_Eject_Insert_Disk->setEnabled(false);
-	}
+	update_fds_menu();
 
 	if ((info.pause_from_gui == TRUE) && (rwnd.active == FALSE)) {
 		action_Pause->setChecked(true);
@@ -873,9 +978,7 @@ void mainWindow::update_menu_nes(void) {
 		action_Fast_Forward->setEnabled(false);
 	}
 }
-void mainWindow::update_menu_tools(void) {
-	action_Vs_System->setChecked(ext_win.vs_system);
-}
+void mainWindow::update_menu_tools(void) {}
 void mainWindow::update_menu_state(void) {
 	bool state = false;
 
@@ -884,12 +987,12 @@ void mainWindow::update_menu_state(void) {
 	}
 
 	action_Save_state->setEnabled(state);
-	action_Load_state->setEnabled(state);
+	action_Load_state->setEnabled(state && (tas.type == NOTAS) && save_slot.state[save_slot.slot]);
 	action_Increment_slot->setEnabled(state);
 	action_Decrement_slot->setEnabled(state);
 
 	for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
-		QAction *a = findChild<QAction *>(QString("action_State_Slot_%1").arg(i));
+		QAction *a = state_save_slot_action(i);
 		QString used = " *";
 		QString txt = a->text().replace(used, "");
 
@@ -907,9 +1010,16 @@ void mainWindow::update_menu_state(void) {
 	}
 
 	action_State_Save_to_file->setEnabled(state);
-	action_State_Load_from_file->setEnabled(state);
+	action_State_Load_from_file->setEnabled(state && (tas.type == NOTAS));
 }
 
+void mainWindow::action_text(QAction *action, QString description, QString *shortcut) {
+	if ((*shortcut) == "NULL") {
+		action->setText(description);
+	} else {
+		action->setText(description + '\t' + (*shortcut));
+	}
+}
 void mainWindow::ctrl_disk_side(QAction *action) {
 	int side = QVariant(action->property("myValue")).toInt();
 
@@ -931,67 +1041,79 @@ int mainWindow::is_shortcut(const QKeyEvent *event) {
 	int i;
 
 	for (i = 0; i < SET_MAX_NUM_SC; i++) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 		if ((unsigned int)shortcut[i]->key()[0] == (event->key() | event->modifiers())) {
+#else
+		if (shortcut[i]->key()[0] == event->keyCombination()) {
+#endif
 			return (i);
 		}
 	}
 
 	return (-1);
 }
+QScreen *mainWindow::win_handle_screen(void) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+	QScreen *screen = QGuiApplication::screens().at(qApp->desktop()->screenNumber(this));
+#else
+	QScreen *screen = windowHandle()->screen();
+#endif
+
+	return (screen);
+}
 
 void mainWindow::s_set_fullscreen(void) {
-	if (gui.in_update) {
+	BYTE delay = FALSE;
+
+	if (gui.in_update || setup_in_out_fullscreen) {
 		return;
 	}
+
+	// quando nascondo la finestra al momento dell'attivazione/disattivazione del
+	// fullscreen vengono eseguiti nell'ordine un
+	// QEvent::WindowActivate
+	// seguito da un
+	// QEvent::WindowDeactivate
+	// che lascia la finestra disattivata. In caso di "Pause when in background" attivo
+	// il gui_control_pause_bck non riprende l'emulazione pensando appunto di essere in background.
+	setup_in_out_fullscreen = true;
 
 	emu_thread_pause();
 
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
 		gfx.scale_before_fscreen = cfg->scale;
-		geom = geometry();
-
-		if (cfg->fullscreen_in_window == TRUE) {
-			gfx.type_of_fscreen_in_use = FULLSCR_IN_WINDOW;
-
-			update_gfx_monitor_dimension();
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
-			move(mgeom.x(), mgeom.y());
-		} else {
-			gfx.type_of_fscreen_in_use = FULLSCR;
-
-			update_gfx_monitor_dimension();
-			menuWidget()->setVisible(false);
-			statusbar->setVisible(false);
-			toolbar->set_hide_without_signal(false);
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
-
-			// su alcune macchine, il fullscreen non avviene perche'
-			// la dimensione della finestra e' fissa e le qt non riescono
-			// a sbloccarla.
-			setMinimumSize(QSize(0, 0));
-			setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-
-			emit fullscreen(true);
+		org_geom = geometry();
+		visibility.menubar = menubar->isVisible();
+		visibility.toolbars = toolbar->isVisible();
+#if defined (FULLSCREEN_RESFREQ)
+		if (cfg->fullscreen_in_window == FALSE) {
+			delay = gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, FALSE);
 		}
 	} else {
 		if (gfx.type_of_fscreen_in_use == FULLSCR) {
-			emit fullscreen(false);
-
-			menuWidget()->setVisible(toggle_gui_in_window);
-			statusbar->setVisible(toggle_gui_in_window);
-			toolbar->set_hide_without_signal(toggle_gui_in_window);
+#if defined(_WIN32)
+			// su alcuni monitor se il s_prepare_fullscreen e' eseguito dopo il delay, non viene
+			// ripristinata correttamente la finestra non visualizzando la cornice di windows.
+			gfx_monitor_restore_res();
+#else
+			// su Linux e BSD e' importante il delay per i motivi spiegati sotto.
+			delay = gfx_monitor_restore_res();
+#endif
 		}
-
-		setGeometry(geom);
-		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
-
-		gfx.type_of_fscreen_in_use = NO_FULLSCR;
+#endif
 	}
-
-	emu_thread_continue();
-
-	gui_external_control_windows_show();
-	gui_set_focus();
+	if (delay == TRUE) {
+		// se avvio la modalita' fullscreen dopo un cambio di risoluzione, senza questo ritardo
+		// e' possibile che le QT mi passino informazioni non corrette sulle dimensioni del
+		// desktop e che le decorazioni della finestra non appaiano correttamente (problema
+		// riscontrato sotto Linux e BSD).
+		// Usare un delay di 1000 ms perche' sotto windows (versione OpenGL) non mi crea problemi
+		// quando viene visualizzata la menu bar. Con un valore inferiore, quando effettuo lo switch
+		// a risoluzioni basse, non mi visualizza i submenu.
+		QTimer::singleShot(1000, this, SLOT(s_fullscreen(void)));
+	} else {
+		s_fullscreen();
+	}
 }
 void mainWindow::s_set_vs_window(void) {
 	ext_win.vs_system = !ext_win.vs_system;
@@ -1130,6 +1252,8 @@ void mainWindow::s_quit(void) {
 	close();
 }
 void mainWindow::s_turn_on_off(void) {
+	emu_thread_pause();
+
 	info.turn_off = !info.turn_off;
 
 	if (info.turn_off) {
@@ -1143,6 +1267,8 @@ void mainWindow::s_turn_on_off(void) {
 
 	update_menu_nes();
 	update_menu_state();
+
+	emu_thread_continue();
 }
 void mainWindow::s_make_reset(void) {
 	int type = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -1173,11 +1299,11 @@ void mainWindow::s_disk_side(void) {
 	if (fds.drive.disk_ejected) {
 		fds.side.change.new_side = 0xFF;
 		fds.side.change.delay = 0;
-		fds_disk_op(FDS_DISK_SELECT, side);
+		fds_disk_op(FDS_DISK_SELECT, side, FALSE);
 	} else {
 		fds.side.change.new_side = side;
-		fds.side.change.delay = 3000000;
-		fds_disk_op(FDS_DISK_EJECT, 0);
+		fds.side.change.delay = FDS_OP_SIDE_DELAY;
+		fds_disk_op(FDS_DISK_EJECT, 0, FALSE);
 	}
 
 	emu_thread_continue();
@@ -1187,9 +1313,9 @@ void mainWindow::s_disk_side(void) {
 void mainWindow::s_eject_disk(void) {
 	emu_thread_pause();
 	if (!fds.drive.disk_ejected) {
-		fds_disk_op(FDS_DISK_EJECT, 0);
+		fds_disk_op(FDS_DISK_EJECT, 0, FALSE);
 	} else {
-		fds_disk_op(FDS_DISK_INSERT, 0);
+		fds_disk_op(FDS_DISK_INSERT, 0, FALSE);
 	}
 	emu_thread_continue();
 	update_menu_nes();
@@ -1308,26 +1434,54 @@ void mainWindow::s_fast_forward(void) {
 		emu_thread_pause();
 		if (fps.fast_forward == FALSE) {
 			egds->start_ff();
-			fps_fast_forward();
+			fps_fast_forward_start();
 		} else {
-			fps_normalize();
+			fps_fast_forward_stop();
 			egds->stop_ff();
 		}
 		emu_thread_continue();
 		update_menu_nes();
 	}
 }
-void mainWindow::s_toggle_gui_in_window(void) {
-	if (gfx.type_of_fscreen_in_use == FULLSCR) {
+void mainWindow::s_max_speed_start(void) {
+	qaction_extern.max_speed.start->reset_count();
+	if (fps.max_speed == TRUE) {
 		return;
 	}
 	emu_thread_pause();
-	toggle_gui_in_window = !toggle_gui_in_window;
-	menuWidget()->setVisible(toggle_gui_in_window);
-	statusbar->setVisible(toggle_gui_in_window);
-	toolbar->set_hide_without_signal(toggle_gui_in_window);
+	egds->start_max_speed();
+	fps_max_speed_start();
+	emu_thread_continue();
+}
+void mainWindow::s_max_speed_stop(void) {
+	qaction_extern.max_speed.stop->reset_count();
+	if (fps.max_speed == FALSE) {
+		return;
+	}
+	emu_thread_pause();
+	fps_max_speed_stop();
+	egds->stop_max_speed();
+	emu_thread_continue();
+}
+void mainWindow::s_toggle_gui_in_window(void) {
+	bool visibility;
+
+	if (gfx.type_of_fscreen_in_use == FULLSCR) {
+		return;
+	}
+
+	emu_thread_pause();
+
+	visibility = !menubar->isVisible();
+	menubar->setVisible(visibility);
+	if (visibility == true) {
+		visibility = !cfg->toolbar.hidden;
+	}
+	toolbar->setVisible(visibility);
+	statusbar->setVisible(visibility);
 	update_gfx_monitor_dimension();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+
 	emu_thread_continue();
 }
 void mainWindow::s_open_settings(void) {
@@ -1345,6 +1499,7 @@ void mainWindow::s_open_settings(void) {
 	dlgsettings->tabWidget_Settings->setCurrentIndex(index);
 	dlgsettings->setGeometry(dlgsettings->geom);
 	dlgsettings->show();
+	dlgsettings->activateWindow();
 }
 void mainWindow::s_state_save_slot_action(void) {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -1375,13 +1530,11 @@ void mainWindow::s_state_save_slot_incdec(void) {
 		}
 	}
 	state_save_slot_set(new_slot, true);
-	update_window();
 }
 void mainWindow::s_state_save_slot_set(void) {
 	int slot = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	state_save_slot_set(slot, true);
-	update_window();
 }
 void mainWindow::s_state_save_file(void) {
 	QStringList filters;
@@ -1463,6 +1616,9 @@ void mainWindow::s_state_load_file(void) {
 
 	emu_thread_continue();
 }
+void mainWindow::s_open_djsc(void) {
+	dlgjsc->show();
+}
 void mainWindow::s_help(void) {
 	QDateTime compiled = QDateTime::fromString(COMPILED, "MMddyyyyhhmmss");
 	QMessageBox *about = new QMessageBox(this);
@@ -1476,7 +1632,7 @@ void mainWindow::s_help(void) {
 	about->setWindowModality(Qt::WindowModal);
 
 	about->setWindowIcon(QIcon(":/icon/icons/application.png"));
-	about->setIconPixmap(QPixmap(":/pics/pics/pushpin.png"));
+	about->setIconPixmap(QPixmap(":/pics/pics/punes_banner.png"));
 
 	text.append("<center><h2>" + QString(NAME) + " ");
 	if (info.portable) {
@@ -1488,7 +1644,14 @@ void mainWindow::s_help(void) {
 	text.append("<center><h4>[<font color='#800000'>Commit " + QString(GIT_COUNT_COMMITS) + "</font> " + "<a href=\"https://github.com/punesemu/puNES/commit/" + QString(GIT_LAST_COMMIT_HASH) + "\">" + QString(GIT_LAST_COMMIT) + "</a>]</h4></center>");
 #endif
 	text.append("<center>" + tr("Nintendo Entertainment System Emulator") + "</center>");
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	text.append("<center>" + tr("Compiled") + " " + compiled.toString(Qt::DefaultLocaleShortDate) + " (" + QString(ENVIRONMENT));
+#else
+	text.append("<center>" + tr("Compiled") + " " + QLocale().toString(compiled, QLocale::ShortFormat) + " (" + QString(ENVIRONMENT));
+#endif
+
+
 #if defined (WITH_OPENGL)
 	text.append(", OpenGL)</center>");
 #elif defined (WITH_D3D9)
@@ -1501,10 +1664,6 @@ void mainWindow::s_help(void) {
 	text.append("<center><a href=\"" + QString(GITLAB) + "\">" + "GitLab Page</a></center>");
 	text.append("<center><a href=\"" + QString(GITHUB) + "\">" + "GitHub Page</a></center>");
 	text.append("<center><a href=\"" + QString(WEBSITE) + "\">" + "NesDev Forum</a></center>");
-	text.append("<center>" + QString("-") + "</center>\n");
-	text.append("<center>" + tr("If you like the emulator and you want to support it's development or would you pay for a beer at the programmer") + "</center>\n");
-	text.append("<center><a href=\"" + QString(DONATE) + "\">" + "<img src=\":/pics/pics/btn_donate_SM.gif\">" + "</a></center>\n");
-	text.append("<center>" + tr("Anyway, thank you all for the love and the help.") + "</center>");
 
 	about->setInformativeText(text);
 
@@ -1512,24 +1671,109 @@ void mainWindow::s_help(void) {
 	about->setDefaultButton(QMessageBox::Ok);
 
 	about->show();
+	about->activateWindow();
 	about->exec();
 
 	emu_pause(FALSE);
 }
 
-void mainWindow::s_fullscreen(bool state) {
-	if (state == true) {
-		showFullScreen();
-	} else {
-		showNormal();
+void mainWindow::s_fullscreen(void) {
+#if defined (_WIN32)
+	static Qt::WindowFlags window_flags = windowFlags();
+#endif
+
+	if (gui.in_update) {
+		return;
 	}
+
+	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
+#if defined (_WIN32)
+		window_flags = windowFlags();
+#endif
+		if (cfg->fullscreen_in_window == TRUE) {
+			QRect fs_win_geom = win_handle_screen()->availableGeometry();
+#if defined (_WIN32)
+			// lo showMaximized sotto windows non considera la presenza della barra delle applicazioni
+			// cercando di impostare una dimensione falsata percio' ridimensiono la finestra manualmente.
+			bool desktop_resolution = false;
+#else
+			bool desktop_resolution = true;
+#endif
+
+			gfx.type_of_fscreen_in_use = FULLSCR_IN_WINDOW;
+#if defined (FULLSCREEN_RESFREQ)
+			if ((cfg->fullscreen_res_w >= 0) && (cfg->fullscreen_res_h >= 0) &&
+				((cfg->fullscreen_res_w != win_handle_screen()->availableGeometry().width()) ||
+				(cfg->fullscreen_res_h != win_handle_screen()->availableGeometry().height()))) {
+				fs_win_geom = QRect(org_geom.x(), org_geom.y(), cfg->fullscreen_res_w, cfg->fullscreen_res_h);
+				desktop_resolution = false;
+			}
+#endif
+			hide();
+			if (desktop_resolution == true) {
+				showMaximized();
+			} else {
+				reset_min_max_size();
+				setGeometry(fs_win_geom);
+				show();
+			}
+		} else {
+			gfx.type_of_fscreen_in_use = FULLSCR;
+			update_gfx_monitor_dimension();
+			menubar->setVisible(false);
+			toolbar->setVisible(false);
+			statusbar->setVisible(false);
+			hide();
+#if defined (_WIN32)
+			// when a window is using an OpenGL based surface and is appearing in full screen mode,
+			// problems can occur with other top-level windows which are part of the application. Due
+			// to limitations of the Windows DWM, compositing is not handled correctly for OpenGL based
+			// windows when going into full screen mode. As a result, other top-level windows are not
+			// placed on top of the full screen window when they are made visible. For example, menus
+			// may not appear correctly, or dialogs fail to show up.
+			// https://doc.qt.io/qt-5/windows-issues.html#fullscreen-opengl-based-windows
+			// https://bugreports.qt.io/browse/QTBUG-49258
+			// https://bugreports.qt.io/browse/QTBUG-47156
+			// come workaround incremento di 1 l'altezza del mainWindow e non utilizzo il
+			// showFullScreen ma lo simulo. E' molto importante che in s_set_fullscreen il delay sia di
+			// almeno 1000 ms.
+			move(fs_geom.x() - (geometry().x() - x()), fs_geom.y() - (geometry().y() - y()));
+			setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+			showNormal();
+#else
+			move(fs_geom.x(), fs_geom.y());
+			showFullScreen();
+#endif
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
+		}
+	} else {
+		if (gfx.type_of_fscreen_in_use == FULLSCR) {
+			menubar->setVisible(visibility.menubar);
+			statusbar->setVisible(visibility.toolbars);
+			toolbar->setVisible(visibility.toolbars);
+		}
+		gfx.type_of_fscreen_in_use = NO_FULLSCR;
+		hide();
+#if defined (_WIN32)
+		setWindowFlags(window_flags);
+#endif
+		showNormal();
+		setGeometry(org_geom);
+		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
+	}
+
+	emu_thread_continue();
+
+	gui_external_control_windows_show();
+
+	setup_in_out_fullscreen = false;
 }
 void mainWindow::s_shcjoy_read_timer(void) {
 	if (shcjoy.enabled == false) {
 		return;
 	}
 
-	if (js_shcut_read(&shcjoy.sch) == EXIT_OK) {
+	if (js_jdev_read_shcut(&shcjoy.sch) == EXIT_OK) {
 		int index;
 
 		for (index = 0; index < SET_MAX_NUM_SC; index++) {
@@ -1625,6 +1869,9 @@ void mainWindow::s_shcjoy_read_timer(void) {
 						case SET_INP_SC_STRETCH_FULLSCREEN:
 							qaction_shcut.stretch_in_fullscreen->trigger();
 							break;
+						case SET_INP_SC_TOGGLE_MENUBAR_IN_FULLSCREEN:
+							qaction_shcut.toggle_menubar_in_fullscreen->trigger();
+							break;
 						case SET_INP_SC_AUDIO_ENABLE:
 							qaction_shcut.audio_enable->trigger();
 							break;
@@ -1670,6 +1917,35 @@ void mainWindow::s_shcjoy_read_timer(void) {
 			}
 		}
 	}
+}
+void mainWindow::s_received_message(UNUSED(quint32 instanceId), QByteArray message) {
+	secondary_instance.mutex.lock();
+	secondary_instance.message = QString(message);
+	secondary_instance.mutex.unlock();
+	QTimer::singleShot(100, this, SLOT(s_exec_message(void)));
+}
+void mainWindow::s_exec_message(void) {
+	secondary_instance.mutex.lock();
+	QFileInfo fileinfo(secondary_instance.message);
+	secondary_instance.mutex.unlock();
+
+	emu_pause(TRUE);
+
+	if (fileinfo.exists()) {
+		change_rom(uQStringCD(fileinfo.absoluteFilePath()));
+		ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()), usizeof(gui.last_open_path) - 1);
+		if (windowState() & Qt::WindowMinimized) {
+			setWindowState(windowState() & ~Qt::WindowMinimized);
+		}
+		raise();
+#if defined (_WIN32)
+		QApplication::setActiveWindow(this);
+#else
+		activateWindow();
+#endif
+	}
+
+	emu_pause(FALSE);
 }
 
 void mainWindow::s_shcut_mode(void) {
@@ -1744,17 +2020,52 @@ void mainWindow::s_shcut_rwnd_pause(void) {
 	}
 	toolbar->rewind->toolButton_Pause->click();
 }
+void mainWindow::s_shcut_toggle_menubar(void) {
+	if ((cfg->fullscreen != FULLSCR) || (gfx.type_of_fscreen_in_use != FULLSCR)) {
+		return;
+	}
+
+	emu_thread_pause();
+
+	menubar->setVisible(!menubar->isVisible());
+
+	emu_thread_continue();
+}
 
 void mainWindow::s_et_gg_reset(void) {
+	emu_thread_pause();
 	make_reset(CHANGE_ROM);
 	gamegenie.phase = GG_FINISH;
+	emu_thread_continue();
 }
 void mainWindow::s_et_vs_reset(void) {
+	emu_thread_pause();
 	vs_system.watchdog.reset = FALSE;
 	make_reset(RESET);
+	emu_thread_continue();
 }
 void mainWindow::s_et_external_control_windows_show(void) {
 	gui_external_control_windows_show();
+}
+
+// ----------------------------------------------------------------------------------------------
+
+actionOneTrigger::actionOneTrigger(QObject *parent) : QAction(parent) {
+	count = 0;
+}
+actionOneTrigger::~actionOneTrigger() {}
+
+void actionOneTrigger::only_one_trigger(void) {
+	mutex.lock();
+	if (count++ == 0) {
+		trigger();
+	}
+	mutex.unlock();
+}
+void actionOneTrigger::reset_count(void) {
+	mutex.lock();
+	count = 0;
+	mutex.unlock();
 }
 
 // ----------------------------------------------------------------------------------------------
@@ -1784,25 +2095,31 @@ void timerEgds::start_pause(void) {
 	_start_with_emu_thread_pause(EGDS_PAUSE);
 }
 void timerEgds::stop_pause(void) {
-	_stop_with_emu_thread_continue(EGDS_PAUSE, FALSE | rwnd.active | fps.fast_forward | info.turn_off);
+	_stop_with_emu_thread_continue(EGDS_PAUSE, FALSE | rwnd.active | fps_fast_forward_enabled() | info.turn_off);
 }
 void timerEgds::start_rwnd(void) {
 	_start();
 }
 void timerEgds::stop_rwnd(void) {
-	_stop((!!info.pause) | FALSE | fps.fast_forward | info.turn_off);
+	_stop((!!info.pause) | FALSE | fps_fast_forward_enabled() | info.turn_off);
 }
 void timerEgds::start_ff(void) {
 	_start();
 }
 void timerEgds::stop_ff(void) {
-	_stop((!!info.pause) | rwnd.active | FALSE | info.turn_off);
+	_stop((!!info.pause) | rwnd.active | FALSE | fps.max_speed | info.turn_off);
+}
+void timerEgds::start_max_speed(void) {
+	_start();
+}
+void timerEgds::stop_max_speed(void) {
+	_stop((!!info.pause) | rwnd.active | fps.fast_forward | FALSE | info.turn_off);
 }
 void timerEgds::start_turn_off(void) {
 	_start_with_emu_thread_pause(EGDS_TURN_OFF);
 }
 void timerEgds::stop_turn_off(void) {
-	_stop_with_emu_thread_continue(EGDS_TURN_OFF, (!!info.pause) | rwnd.active |fps.fast_forward | FALSE);
+	_stop_with_emu_thread_continue(EGDS_TURN_OFF, (!!info.pause) | rwnd.active | fps_fast_forward_enabled() | FALSE);
 }
 
 void timerEgds::_start(void) {
@@ -1822,8 +2139,9 @@ void timerEgds::_stop(BYTE is_necessary) {
 	stop();
 }
 void timerEgds::_stop_with_emu_thread_continue(enum with_emu_pause type, BYTE is_necessary) {
-	calls[type].count--;
-	emu_thread_continue();
+	if (calls[type].count && (--calls[type].count == 0)) {
+		emu_thread_continue();
+	}
 	_stop(is_necessary);
 }
 void timerEgds::_etc(enum with_emu_pause type) {
@@ -1848,7 +2166,7 @@ void timerEgds::s_draw_screen(void) {
 		ret = true;
 	} else if (rwnd.active) {
 		ret = mainwin->toolbar->rewind->egds_rewind();
-	} else if (fps.fast_forward) {
+	} else if (fps_fast_forward_enabled()) {
 		ret = true;
 
 		switch (debugger.mode) {

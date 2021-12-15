@@ -31,7 +31,7 @@ struct _m60 {
 void map_init_60(void) {
 	EXTCL_CPU_WR_MEM(60);
 	EXTCL_SAVE_MAPPER(60);
-	mapper.internal_struct[0] = (BYTE *) &m60;
+	mapper.internal_struct[0] = (BYTE *)&m60;
 	mapper.internal_struct_size[0] = sizeof(m60);
 
 	if (info.reset >= HARD) {
@@ -74,7 +74,7 @@ void map_init_60_vt5201(void) {
 	EXTCL_CPU_WR_MEM(60_vt5201);
 	EXTCL_CPU_RD_MEM(60_vt5201);
 	EXTCL_SAVE_MAPPER(60_vt5201);
-	mapper.internal_struct[0] = (BYTE *) &m60;
+	mapper.internal_struct[0] = (BYTE *)&m60;
 	mapper.internal_struct_size[0] = sizeof(m60);
 
 	extcl_cpu_wr_mem_60_vt5201(0x0000, 0);

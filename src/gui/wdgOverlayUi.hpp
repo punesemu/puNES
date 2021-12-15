@@ -19,14 +19,17 @@
 #ifndef WDGOVERLAYUI_HPP_
 #define WDGOVERLAYUI_HPP_
 
+#include <QtCore/QFileInfo>
 #include <QtCore/QPropertyAnimation>
 #include <QtWidgets/QGraphicsScene>
 #include <QtWidgets/QGraphicsOpacityEffect>
 #include <QtWidgets/QLabel>
 #include <QtGui/QPaintEvent>
 #include <QtGui/QPainter>
+#include <QtGui/QTextDocument>
 #include "common.h"
 #include "clock.h"
+#include "save_slot.h"
 
 class overlayWidget : public QWidget {
 	Q_OBJECT
@@ -61,9 +64,13 @@ class overlayWidget : public QWidget {
 		_animation fade_in;
 		_animation fade_out;
 		double ms_last_draw;
+		int fade_in_duration;
+		int fade_out_duration;
 		bool enabled;
 		bool force_control_when_hidden;
+		bool always_visible;
 		qreal radius;
+		QPainter painter;
 
 	public:
 		overlayWidget(QWidget *parent);
@@ -79,14 +86,15 @@ class overlayWidget : public QWidget {
 		void show_widget(void);
 		int hpadtot(void) const;
 		int vpadtot(void) const;
-		int minimum_eight(void) const;
+		int minimum_eight(const QFont *font, int rows) const;
 		void set_opacity(qreal opacity);
-		void draw_background(QPainter *painter);
-		void draw_background(QPainter *painter, QRect rect);
-		void fade_in_animation(void);
+		void draw_background(void);
+		void draw_background(QRect rect);
+		virtual void fade_in_animation(void);
 		void fade_out_animation(void);
 		void fade_out_start_timer(void);
 		void fade_out_tick_timer(void);
+		QString color_string(QString string, QColor color);
 
 	public slots:
 		virtual void s_fade_in_finished(void);
@@ -103,13 +111,36 @@ class overlayWidgetFPS : public overlayWidget {
 		~overlayWidgetFPS();
 
 	protected:
-		QSize sizeHint() const;
+		QSize sizeHint(void) const;
 		void paintEvent(QPaintEvent *event);
 
 	public:
 		void update_widget(void);
 		BYTE is_to_redraw(void);
 		void update_old_value(void);
+};
+class overlayWidgetFrame : public overlayWidget {
+	private:
+		struct _old_values {
+			uint32_t actual_frame;
+		} old;
+		QTextDocument td;
+
+	public:
+		overlayWidgetFrame(QWidget *parent);
+		~overlayWidgetFrame();
+
+	protected:
+		QSize sizeHint(void) const;
+		void paintEvent(QPaintEvent *event);
+
+	public:
+		void update_widget(void);
+		BYTE is_to_redraw(void);
+		void update_old_value(void);
+
+	private:
+		void info(void);
 };
 class overlayWidgetFloppy : public overlayWidget {
 	private:
@@ -124,7 +155,7 @@ class overlayWidgetFloppy : public overlayWidget {
 		~overlayWidgetFloppy();
 
 	protected:
-		QSize sizeHint() const;
+		QSize sizeHint(void) const;
 		void paintEvent(QPaintEvent *event);
 
 	public:
@@ -188,12 +219,12 @@ class overlayWidgetInputPort : public overlayWidget {
 		void set_nport(int nport);
 
 	private:
-		void draw_std_controller(QPainter *painter);
-		void draw_zapper(QPainter *painter);
-		void draw_snes_mouse(QPainter *painter);
-		void draw_arkanoid_paddle(QPainter *painter);
-		void draw_oeka_kids_tablet(QPainter *painter);
-		void draw_mouse_coords(QPainter *painter);
+		void draw_std_controller(void);
+		void draw_zapper(void);
+		void draw_snes_mouse(void);
+		void draw_arkanoid_paddle(void);
+		void draw_oeka_kids_tablet(void);
+		void draw_mouse_coords(void);
 };
 class overlayWidgetRewind : public overlayWidget {
 	private:
@@ -205,6 +236,7 @@ class overlayWidgetRewind : public overlayWidget {
 			QImage forward;
 			QImage fforward;
 		} act;
+		QTextDocument td;
 		QFont led;
 
 	protected:
@@ -263,17 +295,16 @@ class overlayWidgetRewind : public overlayWidget {
 		~overlayWidgetRewind();
 
 	protected:
-		QSize sizeHint() const;
+		QSize sizeHint(void) const;
 		void paintEvent(QPaintEvent *event);
 
 	public:
 		void update_widget(void);
 		BYTE is_to_redraw(void);
 		void update_old_value(void);
-		QString color_string(QString string, QColor color);
 		QString seconds_to_string(_infotime *itime, _infotime::_measure max, QColor color);
-		void draw_command(QPainter *painter);
-		void draw_corner_bar_info(QPainter *painter);
+		void draw_command(void);
+		void draw_corner_bar_info(void);
 
 	protected:
 		virtual int32_t min(void);
@@ -286,9 +317,6 @@ class overlayWidgetRewind : public overlayWidget {
 		QImage svg_to_image(QString resource);
 };
 class overlayWidgetTAS : public overlayWidgetRewind {
-	private:
-		QColor lag_color;
-
 	public:
 		overlayWidgetTAS(QWidget *parent);
 		~overlayWidgetTAS();
@@ -306,20 +334,50 @@ class overlayWidgetTAS : public overlayWidgetRewind {
 class overlayWidgetSaveSlot : public overlayWidget {
 	private:
 		BYTE save_slot_operation;
+		int rows;
+		int columns;
+		QSize max_size;
+
+	public:
+		struct _previews {
+			QImage image;
+			QFileInfo fileinfo;
+		} previews[SAVE_SLOTS];
+		struct _internal_colors {
+			struct _internal_colors_x1 {
+				QColor save;
+				QColor read;
+				QColor selected;
+				QColor text;
+				QColor text_not_used;
+			} x1;
+			QColor no_preview;
+			QColor previw_opacity;
+			QColor border;
+			QColor border_selected;
+			QColor bar;
+			QColor bar_selected;
+			QColor slot;
+			QColor info;
+		} color;
+		int height_row_slot;
 
 	public:
 		overlayWidgetSaveSlot(QWidget *parent);
 		~overlayWidgetSaveSlot();
 
 	protected:
-		QSize sizeHint() const;
+		QSize minimumSizeHint(void) const;
+		QSize sizeHint(void) const;
 		void paintEvent(QPaintEvent *event);
 
 	public:
 		void enable_overlay(BYTE operation);
+		QString date_and_time(int slot);
 
 	private:
-		void draw_slots(QPainter *painter);
+		void draw_slots_x1(void);
+		void draw_slots(void);
 };
 class overlayWidgetInfo : public overlayWidget {
 	Q_OBJECT
@@ -329,19 +387,23 @@ class overlayWidgetInfo : public overlayWidget {
 			QString name;
 			QString value;
 		} _tags;
+		bool new_management;
+		double sec_for_word;
+		QFont font_info;
 
 	public:
 		overlayWidgetInfo(QWidget *parent);
 		~overlayWidgetInfo();
 
 	protected:
-		QSize sizeHint() const;
+		QSize sizeHint(void) const;
 		void paintEvent(QPaintEvent *event);
 
 	public:
 		BYTE is_to_redraw(void);
-		void append_msg(QString msg);
-		static void _append_msg(QString msg);
+		void fade_in_animation(void);
+		void append_msg(BYTE alignment, QString msg);
+		static void _append_msg(BYTE alignment, QString msg);
 		static QString decode_tags(QString string);
 
 	public slots:
@@ -372,13 +434,5 @@ class wdgOverlayUi : public QWidget, public Ui::wdgOverlayUi {
 		void retranslateUi(QWidget *wdgOverlayUi);
 		void update_widget(void);
 };
-
-typedef struct _overlay_data {
-	wdgOverlayUi *widget;
-	QList<QString> info_messages_to_draw;
-	QString info_actual_message = "";
-} _overlay_data;
-
-extern _overlay_data overlay;
 
 #endif /* WDGOVERLAYUI_HPP_ */

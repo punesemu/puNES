@@ -16,16 +16,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#if defined (__linux__)
-#include <unistd.h>
-#include <fcntl.h>
-#endif
+#include <QtWidgets/QAbstractItemView>
 #include <QtSvg/QSvgRenderer>
 #include <QtGui/QPainter>
+#include <QtCore/QBuffer>
 #include "dlgStdPad.moc"
 #include "mainWindow.hpp"
 #include "objSettings.hpp"
 #include "clock.h"
+#include "gui.h"
 
 #define SPT(ind) QString(std_pad_input_type[ind])
 #define SPB(ind) QString(std_pad_button[ind])
@@ -37,87 +36,89 @@ static const char std_pad_button[10][15] = {
 	"TurboA", "TurboB"
 };
 
-dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent) {
-	QFont f9;
+_joy_list joy_list;
 
-	f9.setPointSize(9);
-	f9.setWeight(QFont::Light);
+dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent) {
+	int i;
 
 	memset(&data, 0x00, sizeof(data));
-	memcpy(&data.cfg, cfg_port, sizeof(_cfg_port));
+
+	last_js_index = MAX_JOYSTICK;
+
+	data.cfg.id = cfg_port->id;
+	memcpy(&data.cfg.port, cfg_port->port, sizeof(_port));
 
 	setupUi(this);
 
-	js_update_detected_devices();
+	setFocusProxy(tabWidget_kbd_joy);
 
 	groupBox_controller->setStyleSheet(group_title_bold_stylesheet());
 	groupBox_Misc->setStyleSheet(group_title_bold_stylesheet());
 
 	groupBox_controller->setTitle(tr("Controller %1 : Standard Pad").arg(cfg_port->id));
-	tabWidget_kbd_joy->setCurrentIndex(JOYSTICK);
-	combo_id_init();
 
-	for (int a = KEYBOARD; a <= JOYSTICK; a++) {
-		QLineEdit *txt;
+	comboBox_kbd_ID->addItem(tr("Keyboard"));
+
+	connect(comboBox_joy_ID, SIGNAL(activated(int)), this, SLOT(s_combobox_joy_activated(int)));
+	connect(comboBox_joy_ID, SIGNAL(currentIndexChanged(int)), this, SLOT(s_combobox_joy_index_changed(int)));
+	connect(horizontalSlider_joy_Deadzone, SIGNAL(valueChanged(int)), this, SLOT(s_deadzone_slider_value_changed(int)));
+
+	joy_combo_init();
+
+	for (i = KEYBOARD; i < INPUT_TYPES; i++) {
 		QPushButton *bt;
+		int a;
 
-		txt = findChild<QLineEdit *>("lineEdit_" + SPT(a) + "_info");
-
-		if (txt->font().pointSize() > 9) {
-			txt->setFont(f9);
-		}
-
-		{
-			int h = txt->fontMetrics().size(0, "IQygp").height() + 10;
-
-			txt->setFixedHeight(h);
-		}
-
-		bt = findChild<QPushButton *>("pushButton_" + SPT(a) + "_Sequence");
-		bt->setProperty("myType", QVariant(a));
+		bt = findChild<QPushButton *>("pushButton_" + SPT(i) + "_Sequence");
+		bt->setProperty("myType", QVariant(i));
 		connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_in_sequence_clicked(bool)));
 
-		bt = findChild<QPushButton *>("pushButton_" + SPT(a) + "_Unset_all");
-		bt->setProperty("myType", QVariant(a));
+		bt = findChild<QPushButton *>("pushButton_" + SPT(i) + "_Unset_all");
+		bt->setProperty("myType", QVariant(i));
 		connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_unset_all_clicked(bool)));
 
-		bt = findChild<QPushButton *>("pushButton_" + SPT(a) + "_Defaults");
-		bt->setProperty("myType", QVariant(a));
+		bt = findChild<QPushButton *>("pushButton_" + SPT(i) + "_Defaults");
+		bt->setProperty("myType", QVariant(i));
 		connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_defaults_clicked(bool)));
 
-		for (int b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
-			int vbutton = b + (a * MAX_STD_PAD_BUTTONS);
-			QPushButton *unset;
+		for (a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
+			int vbutton = a + (i * MAX_STD_PAD_BUTTONS);
+			QPushButton *def, *unset;
+			pixmapButton *pbt;
 
-			bt = findChild<QPushButton *>("pushButton_" + SPT(a) + "_" + SPB(b));
-			unset = findChild<QPushButton *>("pushButton_" + SPT(a) + "_unset_" + SPB(b));
+			pbt = findChild<pixmapButton *>("pushButton_" + SPT(i) + "_" + SPB(a));
+			def = findChild<QPushButton *>("pushButton_" + SPT(i) + "_default_" + SPB(a));
+			unset = findChild<QPushButton *>("pushButton_" + SPT(i) + "_unset_" + SPB(a));
 
-			if (bt->font().pointSize() > 9) {
-				bt->setFont(f9);
-			}
-
-			if (a == KEYBOARD) {
-				bt->setText(objInp::kbd_keyval_to_name(data.cfg.port->input[a][b]));
+			pbt->setIcon(QIcon(""));
+			if (i == KEYBOARD) {
+				pbt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[i][a]));
 			} else {
-				bt->setText(uQString(jsv_to_name(data.cfg.port->input[a][b])));
+				js_pixmapButton(js_jdev_index(), data.cfg.port.input[i][a], pbt);
 			}
 
-			bt->installEventFilter(this);
-			bt->setProperty("myVbutton", QVariant(vbutton));
+			pbt->installEventFilter(this);
+			pbt->setProperty("myVbutton", QVariant(vbutton));
+			def->setProperty("myVbutton", QVariant(vbutton));
 			unset->setProperty("myVbutton", QVariant(vbutton));
 
-			connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_input_clicked(bool)));
+			connect(pbt, SIGNAL(clicked(bool)), this, SLOT(s_input_clicked(bool)));
+			connect(def, SIGNAL(clicked(bool)), this, SLOT(s_default_clicked(bool)));
 			connect(unset, SIGNAL(clicked(bool)), this, SLOT(s_unset_clicked(bool)));
 		}
 	}
 	
-	tabWidget_kbd_joy->adjustSize();
+	label_kbd_Deadzone_value_slider->setText(QString("%1").arg(0, 2));
+	if (js_jdev_index() != JS_NO_JOYSTICK) {
+		horizontalSlider_joy_Deadzone->setValue(jstick.jdd.devices[js_jdev_index()].deadzone);
+	}
+	connect(pushButton_joy_Deadzone, SIGNAL(clicked(bool)), this, SLOT(s_deadzone_default_clicked(bool)));
 
 	{
 		comboBox_Controller_type->addItem(tr("Auto"));
 		comboBox_Controller_type->addItem(tr("Original"));
 		comboBox_Controller_type->addItem(tr("3rd-party"));
-		comboBox_Controller_type->setCurrentIndex(data.cfg.port->type_pad);
+		comboBox_Controller_type->setCurrentIndex(data.cfg.port.type_pad);
 		connect(comboBox_Controller_type, SIGNAL(activated(int)), this, SLOT(s_combobox_controller_type_activated(int)));
 	}
 
@@ -128,34 +129,41 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 		label_value_slider_TurboB->setFixedWidth(w);
 	}
 
-	for (int i = TURBOA; i <= TURBOB; i++) {
+	for (i = TURBOA; i <= TURBOB; i++) {
 		QSlider *tb = findChild<QSlider *>("horizontalSlider_" + SPB(i + TRB_A));
 
 		tb->setRange(1, TURBO_BUTTON_DELAY_MAX);
 		tb->setProperty("myTurbo", QVariant(i));
-		tb->setValue(data.cfg.port->turbo[i].frequency);
+		tb->setValue(data.cfg.port.turbo[i].frequency);
 		connect(tb, SIGNAL(valueChanged(int)), this, SLOT(s_slider_td_value_changed(int)));
 
-		td_update_label(i, data.cfg.port->turbo[i].frequency);
+		td_update_label(i, data.cfg.port.turbo[i].frequency);
 	}
 
 	pushButton_Apply->setProperty("myPointer", QVariant::fromValue(((void *)cfg_port)));
+
 	connect(pushButton_Apply, SIGNAL(clicked(bool)), this, SLOT(s_apply_clicked(bool)));
 	connect(pushButton_Discard, SIGNAL(clicked(bool)), this, SLOT(s_discard_clicked(bool)));
 
 	setAttribute(Qt::WA_DeleteOnClose);
 
-	adjustSize();
 	setFixedSize(size());
-
-	setFocusPolicy(Qt::StrongFocus);
-	groupBox_controller->setFocus(Qt::ActiveWindowFocusReason);
 
 	data.joy.timer = new QTimer(this);
 	connect(data.joy.timer, SIGNAL(timeout()), this, SLOT(s_pad_joy_read_timer()));
 
 	data.seq.timer = new QTimer(this);
 	connect(data.seq.timer, SIGNAL(timeout()), this, SLOT(s_pad_in_sequence_timer()));
+
+	connect(this, SIGNAL(et_update_joy_combo()), this, SLOT(s_et_update_joy_combo()));
+
+	if (joy_list.count < 2) {
+		tabWidget_kbd_joy->setCurrentIndex(KEYBOARD);
+	} else if (gui.dlg_tabWidget_kbd_joy_index[data.cfg.id] >= 0) {
+		tabWidget_kbd_joy->setCurrentIndex(gui.dlg_tabWidget_kbd_joy_index[data.cfg.id]);
+	} else {
+		tabWidget_kbd_joy->setCurrentIndex(JOYSTICK);
+	}
 
 	installEventFilter(this);
 }
@@ -166,12 +174,13 @@ bool dlgStdPad::eventFilter(QObject *obj, QEvent *event) {
 	// che riguardano questo dialog.
 	switch (event->type()) {
 		case QEvent::KeyPress:
-			return (keypress((QKeyEvent *)event));
+			if (data.no_other_buttons == true) {
+				return (keypress((QKeyEvent *)event));
+			}
 			break;
 		default:
 			break;
 	}
-
 	return (QObject::eventFilter(obj, event));
 }
 void dlgStdPad::changeEvent(QEvent *event) {
@@ -207,20 +216,18 @@ void dlgStdPad::closeEvent(QCloseEvent *event) {
 	data.joy.timer->stop();
 	data.seq.timer->stop();
 	data.seq.active = false;
-#if defined (__linux__)
-	if (data.joy.fd) {
-		::close(data.joy.fd);
-		data.joy.fd = 0;
-	}
-#endif
 
-	js_quit(FALSE);
-	js_init(FALSE);
+	if (data.exec_js_init) {
+		js_quit(FALSE);
+		js_init(FALSE);
+	}
 
 	mainwin->shcjoy_start();
 
 	data.no_other_buttons = false;
 	data.vbutton = 0;
+
+	gui.dlg_tabWidget_kbd_joy_index[data.cfg.id] = tabWidget_kbd_joy->currentIndex();
 
 	QDialog::closeEvent(event);
 }
@@ -228,24 +235,19 @@ void dlgStdPad::closeEvent(QCloseEvent *event) {
 bool dlgStdPad::keypress(QKeyEvent *event) {
 	int type, vbutton;
 
-	if (data.no_other_buttons == false) {
-		return (true);
-	}
-
 	type = data.vbutton / MAX_STD_PAD_BUTTONS;
 	vbutton = data.vbutton - (type * MAX_STD_PAD_BUTTONS);
 
 	if (type == KEYBOARD) {
 		if (event->key() != Qt::Key_Escape) {
-			data.cfg.port->input[type][vbutton] = objInp::kbd_keyval_decode(event);
+			data.cfg.port.input[type][vbutton] = objInp::kbd_keyval_decode(event);
 		}
-		data.bp->setText(objInp::kbd_keyval_to_name(data.cfg.port->input[type][vbutton]));
+		data.bp->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[type][vbutton]));
 	} else {
-		// quando sto configurando il joystick, l'unico input da tastiera
-		// che accetto e' l'escape.
+		// quando sto configurando il joystick, l'unico input da tastiera che accetto e' l'escape.
 		if (event->key() == Qt::Key_Escape) {
 			data.joy.timer->stop();
-			data.bp->setText(uQString(jsv_to_name(data.cfg.port->input[type][vbutton])));
+			js_pixmapButton(js_jdev_index(), data.cfg.port.input[type][vbutton], data.bp);
 		} else {
 			return (true);
 		}
@@ -261,7 +263,7 @@ bool dlgStdPad::keypress(QKeyEvent *event) {
 }
 void dlgStdPad::update_dialog(void) {
 	bool mode = false;
-	unsigned int joyId;
+	unsigned int joy_index;
 
 	if (data.seq.active == true) {
 		return;
@@ -276,14 +278,19 @@ void dlgStdPad::update_dialog(void) {
 
 	setEnable_tab_buttons(KEYBOARD, true);
 
-	lineEdit_kbd_info->setEnabled(true);
+	label_kbd_info->setEnabled(true);
 
 	pushButton_kbd_Sequence->setEnabled(true);
 	pushButton_kbd_Unset_all->setEnabled(true);
 	pushButton_kbd_Defaults->setEnabled(true);
 
+	label_kbd_Deadzone_slider->setEnabled(false);
+	horizontalSlider_kbd_Deadzone->setEnabled(false);
+	label_kbd_Deadzone_value_slider->setEnabled(false);
+	pushButton_kbd_Deadzone->setEnabled(false);
+
 	// joystick
-	joyId = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
+	joy_index = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
 
 	if (comboBox_joy_ID->count() > 1) {
 		mode = true;
@@ -292,7 +299,7 @@ void dlgStdPad::update_dialog(void) {
 	label_joy_ID->setEnabled(mode);
 	comboBox_joy_ID->setEnabled(mode);
 
-	if ((comboBox_joy_ID->count() > 1) && (joyId != name_to_jsn(uL("NULL")))) {
+	if ((comboBox_joy_ID->count() > 1) && (joy_index != JS_NO_JOYSTICK)) {
 		mode = true;
 	} else {
 		mode = false;
@@ -300,72 +307,59 @@ void dlgStdPad::update_dialog(void) {
 
 	setEnable_tab_buttons(JOYSTICK, mode);
 
-	lineEdit_joy_info->setEnabled(mode);
+	label_joy_info->setEnabled(mode);
 
 	pushButton_joy_Sequence->setEnabled(mode);
 	pushButton_joy_Unset_all->setEnabled(mode);
 	pushButton_joy_Defaults->setEnabled(mode);
 
+	label_joy_Deadzone_slider->setEnabled(mode);
+	horizontalSlider_joy_Deadzone->setEnabled(mode);
+	label_joy_Deadzone_value_slider->setEnabled(mode);
+	pushButton_joy_Deadzone->setEnabled(mode);
+
 	// misc
 	groupBox_Misc->setEnabled(true);
 }
-void dlgStdPad::combo_id_init(void) {
-	BYTE disabled_line = 0, count = 0, current_line = name_to_jsn(uL("NULL"));
+void dlgStdPad::joy_combo_init(void) {
+	BYTE current_index = 0, current_line = JS_NO_JOYSTICK;
+	int i;
 
-	comboBox_kbd_ID->addItem(tr("Keyboard"));
+	comboBox_joy_ID->blockSignals(true);
+	comboBox_joy_ID->clear();
 
-	for (int a = 0; a <= MAX_JOYSTICK; a++) {
-		BYTE id = a;
+	for (i = 0; i < joy_list.count; i++) {
+		_cb_ports *cb = &joy_list.ele[i];
 
-		if (a < MAX_JOYSTICK) {
-			if (js_is_connected(id) == EXIT_ERROR) {
-				continue;
-			}
-
-			if (js_is_this(id, &data.cfg.port->joy_id)) {
-				current_line = count;
-			}
-
-			comboBox_joy_ID->addItem(QString("js%1: ").arg(id) + uQString(js_name_device(id)));
-		} else {
-			if (count == 0) {
-				break;
-			}
-			comboBox_joy_ID->addItem(tr("Disabled"));
-			id = name_to_jsn(uL("NULL"));
-			disabled_line = count;
+		if (js_is_this(cb->index, &data.cfg.port.jguid)) {
+			current_line = i;
 		}
-
-		comboBox_joy_ID->setItemData(count, id);
-		count++;
+		comboBox_joy_ID->addItem(cb->desc);
+		comboBox_joy_ID->setItemData(i, cb->index);
 	}
 
-	if (count == 0) {
-		comboBox_joy_ID->addItem(tr("No usable device"));
-		tab_joy->setEnabled(false);
-	} else {
-		tab_joy->setEnabled(true);
-	}
-
-	if (count > 0) {
-		if (js_is_null(&data.cfg.port->joy_id) || (current_line == name_to_jsn(uL("NULL")))) {
-			comboBox_joy_ID->setCurrentIndex(disabled_line);
+	if (joy_list.count > 1) {
+		if (js_is_null(&data.cfg.port.jguid) || (current_line == JS_NO_JOYSTICK)) {
+			current_index = joy_list.disabled_line;
 		} else {
-			comboBox_joy_ID->setCurrentIndex(current_line);
+			current_index = current_line;
 		}
-		connect(comboBox_joy_ID, SIGNAL(activated(int)), this, SLOT(s_combobox_joy_activated(int)));
-	} else {
-		comboBox_joy_ID->setCurrentIndex(0);
 	}
+	comboBox_joy_ID->blockSignals(false);
+
+	comboBox_joy_ID->setCurrentIndex(current_index);
 
 	update_dialog();
 }
 void dlgStdPad::setEnable_tab_buttons(int type, bool mode) {
-	for (int a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
-		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(a))->setEnabled(mode);
-		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(a))->setStyleSheet("");
-		findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(a))->setEnabled(mode);
-		findChild<QPushButton *>("pushButton_" + SPT(type) + "_unset_" + SPB(a))->setEnabled(mode);
+	int i;
+
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(i))->setEnabled(mode);
+		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(i))->setStyleSheet("");
+		findChild<pixmapButton *>("pushButton_" + SPT(type) + "_" + SPB(i))->setEnabled(mode);
+		findChild<QPushButton *>("pushButton_" + SPT(type) + "_default_" + SPB(i))->setEnabled(mode);
+		findChild<QPushButton *>("pushButton_" + SPT(type) + "_unset_" + SPB(i))->setEnabled(mode);
 	}
 }
 void dlgStdPad::disable_tab_and_other(int type, int vbutton) {
@@ -378,12 +372,8 @@ void dlgStdPad::disable_tab_and_other(int type, int vbutton) {
 
 	setEnable_tab_buttons(type, false);
 	findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(vbutton))->setEnabled(true);
-	findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(vbutton))->setStyleSheet(
-			"background-color: cyan");
-	findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton))->setEnabled(true);
-
-	// info
-	//findChild<QPlainTextEdit *>("plainTextEdit_" + SPT(type) + "_info")->setEnabled(false);
+	findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(vbutton))->setStyleSheet("background-color: cyan");
+	findChild<pixmapButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton))->setEnabled(true);
 
 	// in sequence, unset all, default
 	findChild<QPushButton *>("pushButton_" + SPT(type) + "_Sequence")->setEnabled(false);
@@ -394,75 +384,96 @@ void dlgStdPad::disable_tab_and_other(int type, int vbutton) {
 	groupBox_Misc->setEnabled(false);
 }
 void dlgStdPad::info_entry_print(int type, QString txt) {
-	findChild<QLineEdit *>("lineEdit_" + SPT(type) + "_info")->setText(txt);
+	findChild<QLabel *>("label_" + SPT(type) + "_info")->setText(txt);
 }
 void dlgStdPad::js_press_event(void) {
 	unsigned int type;
 
 	type = data.vbutton / MAX_STD_PAD_BUTTONS;
 
-	if (js_is_null(&data.cfg.port->joy_id)) {
+	if (js_is_null(&data.cfg.port.jguid)) {
 		info_entry_print(type, tr("Select device first"));
 		update_dialog();
 		return;
 	}
 
-#if defined (__linux__)
-	{
-		_js_event jse;
-		ssize_t size = sizeof(jse);
-		char device[30];
-
-		::sprintf(device, "%s%d", JS_DEV_PATH, data.cfg.port->joy_id);
-		data.joy.fd = ::open(device, O_RDONLY | O_NONBLOCK);
-
-		if (data.joy.fd < 0) {
-			info_entry_print(type, tr("Error on open device %1").arg(device));
-			update_dialog();
-			return;
-		}
-
-		for (int i = 0; i < MAX_JOYSTICK; i++) {
-			if (::read(data.joy.fd, &jse, size) < 0) {
-				info_entry_print(type, tr("Error on reading controllers configurations"));
-			}
-		}
-
-		// svuoto il buffer iniziale
-		for (int i = 0; i < 10; i++) {
-			if (::read(data.joy.fd, &jse, size) < 0) {
-				;
-			}
-		}
-	}
-	data.joy.value = 0;
-	data.joy.timer->start(30);
-#else
 	data.joy.value = 0;
 	data.joy.timer->start(150);
-#endif
 }
 void dlgStdPad::td_update_label(int type, int value) {
 	QLabel *label = findChild<QLabel *>("label_value_slider_" + SPB(type + TRB_A));
 
 	label->setText(QString("%1").arg(value, 2));
 }
+void dlgStdPad::deadzone_update_label(int value) {
+	label_joy_Deadzone_value_slider->setText(QString("%1").arg(value, 2));
+}
+void dlgStdPad::js_pixmapButton(int index, DBWORD input, pixmapButton *bt) {
+	QString icon, desc;
+
+	gui_js_joyval_icon_desc(index, input, &icon, &desc);
+	bt->setIcon(QIcon());
+	bt->setPixmap(QPixmap(icon));
+	bt->setText(desc);
+}
+
+int dlgStdPad::js_jdev_index(void) {
+	int jdev_index = JS_NO_JOYSTICK;
+
+	if (comboBox_joy_ID->currentData().isValid()) {
+		jdev_index = comboBox_joy_ID->currentData().toInt();
+	}
+	return (jdev_index);
+}
 
 void dlgStdPad::s_combobox_joy_activated(int index) {
-	unsigned int id = ((QComboBox *)sender())->itemData(index).toInt();
+	unsigned int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
 
-	js_set_id(&data.cfg.port->joy_id, id);
+	if (comboBox_joy_ID->count() == 1) {
+		return;
+	}
+	js_guid_set(jdev_index, &data.cfg.port.jguid);
 	update_dialog();
 }
+void dlgStdPad::s_combobox_joy_index_changed(UNUSED(int index)) {
+	int a, jdev_index = js_jdev_index();
+
+	if (jdev_index != last_js_index) {
+		if (jdev_index < MAX_JOYSTICK) {
+			_js_device *jdev = &jstick.jdd.devices[jdev_index];
+
+			memcpy(data.cfg.port.input[JOYSTICK], jdev->stdctrl, js_jdev_sizeof_stdctrl());
+			horizontalSlider_joy_Deadzone->setValue(jdev->deadzone);
+		} else {
+			memset(data.cfg.port.input[JOYSTICK], 0x00, js_jdev_sizeof_stdctrl());
+			horizontalSlider_joy_Deadzone->setValue(0);
+		}
+		last_js_index = jdev_index;
+	}
+
+	for (a = KEYBOARD; a < INPUT_TYPES; a++) {
+		pixmapButton *bt;
+		int b;
+
+		for (b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
+			bt = findChild<pixmapButton *>("pushButton_" + SPT(a) + "_" + SPB(b));
+
+			if (a == KEYBOARD) {
+				bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[a][b]));
+			} else {
+				js_pixmapButton(jdev_index, data.cfg.port.input[a][b], bt);
+			}
+		}
+	}
+}
 void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
-	int vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
-	int type;
+	int type, vbutton = QVariant(((pixmapButton *)sender())->property("myVbutton")).toInt();
 
 	if (data.no_other_buttons == true) {
 		return;
 	}
 
-	data.bp = ((QPushButton *)sender());
+	data.bp = ((pixmapButton *)sender());
 	data.vbutton = vbutton;
 
 	type = vbutton / MAX_STD_PAD_BUTTONS;
@@ -471,31 +482,66 @@ void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
 	disable_tab_and_other(type, vbutton);
 
 	data.no_other_buttons = true;
+	data.bp->setPixmap(QPixmap(""));
 	data.bp->setText("...");
 
 	data.bp->setFocus(Qt::ActiveWindowFocusReason);
 
 	if (type == KEYBOARD) {
 		info_entry_print(type, tr("Press a key (ESC for the previous value \"%1\")").arg(
-				objInp::kbd_keyval_to_name(data.cfg.port->input[type][vbutton])));
-
+			objInp::kbd_keyval_to_name(data.cfg.port.input[type][vbutton])));
 	} else {
-		info_entry_print(type, tr("Press a key (ESC for the previous value \"%1\")").arg(
-				uQString(jsv_to_name(data.cfg.port->input[type][vbutton]))));
+		QString icon, desc;
+
+		gui_js_joyval_icon_desc(js_jdev_index(), data.cfg.port.input[type][vbutton], &icon, &desc);
+
+		if (icon != "") {
+			QPixmap pixmap = QPixmap(icon).scaled(16, 16, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+			QByteArray byteArray;
+			QBuffer buffer(&byteArray);
+
+			pixmap.save(&buffer, "PNG");
+			icon = QString(" <html><img src=\"data:image/png;base64,") + byteArray.toBase64() + "\"/></hmtl>";
+		}
+
+		info_entry_print(type, tr("Press a key (ESC for the previous value \"%1\"%2)").arg(desc).arg(icon));
 		js_press_event();
 	}
 }
-void dlgStdPad::s_unset_clicked(UNUSED(bool checked)) {
-	int vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
-	int type;
+void dlgStdPad::s_default_clicked(UNUSED(bool checked)) {
+	int index, type, vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
 
 	type = vbutton / MAX_STD_PAD_BUTTONS;
 	vbutton -= (type * MAX_STD_PAD_BUTTONS);
-	data.cfg.port->input[type][vbutton] = 0;
+	index = type == KEYBOARD ? data.cfg.id - 1 : js_jdev_index();
 
 	info_entry_print(type, "");
 
-	findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton))->setText("NULL");
+	settings_inp_port_button_default(vbutton, &data.cfg.port, index, type);
+
+	{
+		pixmapButton *bt = findChild<pixmapButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton));
+
+		if (type == KEYBOARD) {
+			bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[type][vbutton]));
+		} else {
+			js_pixmapButton(index, data.cfg.port.input[type][vbutton], bt);
+		}
+	}
+}
+void dlgStdPad::s_unset_clicked(UNUSED(bool checked)) {
+	int type, vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
+	pixmapButton *bt;
+
+	type = vbutton / MAX_STD_PAD_BUTTONS;
+	vbutton -= (type * MAX_STD_PAD_BUTTONS);
+	data.cfg.port.input[type][vbutton] = 0;
+
+	info_entry_print(type, "");
+
+	bt = findChild<pixmapButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton));
+	bt->setPixmap(QPixmap(""));
+	bt->setText("NULL");
 }
 void dlgStdPad::s_in_sequence_clicked(UNUSED(bool checked)) {
 	data.seq.type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
@@ -506,68 +552,72 @@ void dlgStdPad::s_in_sequence_clicked(UNUSED(bool checked)) {
 	data.seq.timer->start(150);
 }
 void dlgStdPad::s_unset_all_clicked(UNUSED(bool checked)) {
-	int type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
+	int i, type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
 
 	info_entry_print(type, "");
 
-	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 		findChild<QPushButton *>("pushButton_" + SPT(type) + "_unset_" + SPB(i))->click();
 	}
 }
 void dlgStdPad::s_defaults_clicked(UNUSED(bool checked)) {
-	int type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
+	int i, index, type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
+
+	index = type == KEYBOARD ? data.cfg.id - 1 : js_jdev_index();
 
 	info_entry_print(type, "");
 
-	settings_inp_port_default(data.cfg.port, data.cfg.id - 1, type);
+	settings_inp_port_defaults(&data.cfg.port, index, type);
 
-	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		QPushButton *bt = findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(i));
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+		pixmapButton *bt = findChild<pixmapButton *>("pushButton_" + SPT(type) + "_" + SPB(i));
 
 		if (type == KEYBOARD) {
-			bt->setText(objInp::kbd_keyval_to_name(data.cfg.port->input[type][i]));
+			bt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[type][i]));
 		} else {
-			bt->setText(uQString(jsv_to_name(data.cfg.port->input[type][i])));
+			js_pixmapButton(index, data.cfg.port.input[type][i], bt);
 		}
 	}
 }
+void dlgStdPad::s_deadzone_slider_value_changed(int value) {
+	data.deadzone = value;
+	deadzone_update_label(value);
+}
+void dlgStdPad::s_deadzone_default_clicked(UNUSED(bool checked)) {
+	horizontalSlider_joy_Deadzone->setValue(settings_jsc_deadzone_default());
+}
 void dlgStdPad::s_combobox_controller_type_activated(int index) {
 	BYTE state = RELEASED;
+	int i;
 
-	data.cfg.port->type_pad = index;
+	data.cfg.port.type_pad = index;
 
-	if (((data.cfg.port->type_pad == CTRL_PAD_AUTO) && (machine.type != DENDY)) || (data.cfg.port->type_pad == CTRL_PAD_ORIGINAL)) {
+	if (((data.cfg.port.type_pad == CTRL_PAD_AUTO) && (machine.type != DENDY)) || (data.cfg.port.type_pad == CTRL_PAD_ORIGINAL)) {
 		state = PRESSED;
 	}
-
-	for (int b = 8; b < 24; b++) {
-		data.cfg.port->data[b] = state;
+	for (i = 8; i < INPUT_DECODE_COUNTS; i++) {
+		data.cfg.port.data[i] = state;
 	}
 }
 void dlgStdPad::s_slider_td_value_changed(int value) {
 	int type = QVariant(((QSlider *)sender())->property("myTurbo")).toInt();
 
-	data.cfg.port->turbo[type].frequency = value;
-	data.cfg.port->turbo[type].counter = 0;
+	data.cfg.port.turbo[type].frequency = value;
+	data.cfg.port.turbo[type].counter = 0;
 	td_update_label(type, value);
 }
 void dlgStdPad::s_pad_joy_read_timer(void) {
-	DBWORD value = js_read_in_dialog(&data.cfg.port->joy_id, data.joy.fd);
+	DBWORD value = js_jdev_read_in_dialog(&data.cfg.port.jguid);
 
-	if (data.joy.value && !value) {
+	if (data.joy.value && (data.joy.value != value)) {
 		unsigned int type, vbutton;
-
-#if defined (__linux__)
-		::close(data.joy.fd);
-		data.joy.fd = 0;
-#endif
 
 		type = data.vbutton / MAX_STD_PAD_BUTTONS;
 		vbutton = data.vbutton - (type * MAX_STD_PAD_BUTTONS);
 
 		info_entry_print(type, "");
-		data.cfg.port->input[type][vbutton] = data.joy.value;
-		data.bp->setText(uQString(jsv_to_name(data.joy.value)));
+		data.cfg.port.input[type][vbutton] = data.joy.value;
+		js_pixmapButton(js_jdev_index(), data.cfg.port.input[type][vbutton], data.bp);
 		data.joy.timer->stop();
 
 		update_dialog();
@@ -579,13 +629,12 @@ void dlgStdPad::s_pad_joy_read_timer(void) {
 	data.joy.value = value;
 }
 void dlgStdPad::s_pad_in_sequence_timer(void) {
-	QPushButton *bt;
 	static int order[MAX_STD_PAD_BUTTONS] = {
 		UP,     DOWN,  LEFT,  RIGHT,
 		SELECT, START, BUT_A, BUT_B,
 		TRB_A,  TRB_B,
 	};
-
+	QPushButton *bt;
 
 	if (data.no_other_buttons == true) {
 		return;
@@ -598,17 +647,58 @@ void dlgStdPad::s_pad_in_sequence_timer(void) {
 		return;
 	}
 
-	bt = findChild<QPushButton *>("pushButton_" + SPT(data.seq.type) + "_" + SPB(order[data.seq.counter]));
+	bt = findChild<pixmapButton *>("pushButton_" + SPT(data.seq.type) + "_" + SPB(order[data.seq.counter]));
 	bt->setEnabled(true);
 	bt->click();
 }
 void dlgStdPad::s_apply_clicked(UNUSED(bool checked)) {
 	_cfg_port *cfg_port = ((_cfg_port *)((QPushButton *)sender())->property("myPointer").value<void *>());
 
-	memcpy(cfg_port, &data.cfg, sizeof(_cfg_port));
+	data.exec_js_init = (cfg_port->id != data.cfg.id) | (memcmp(cfg_port->port, &data.cfg.port, sizeof(_port)) != 0);
+	cfg_port->id = data.cfg.id;
+	memcpy(cfg_port->port, &data.cfg.port, sizeof(_port));
+
+	if (js_jdev_index() != JS_NO_JOYSTICK) {
+		_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
+
+		settings_jsc_parse(jdev->index);
+		memcpy(jdev->stdctrl, data.cfg.port.input[JOYSTICK], js_jdev_sizeof_stdctrl());
+		jdev->deadzone = data.deadzone;
+		settings_jsc_save();
+	}
 
 	close();
 }
 void dlgStdPad::s_discard_clicked(UNUSED(bool checked)) {
 	close();
+}
+
+void dlgStdPad::s_et_update_joy_combo(void) {
+	// se la combox e' aperta o sto configurando i pulsanti, non devo aggiornarne il contenuto
+	if ((comboBox_joy_ID->view()->isVisible() == false) &&
+		(data.seq.timer->isActive() == false) &&
+		(data.joy.timer->isActive() == false)) {
+		joy_combo_init();
+	}
+}
+
+// ----------------------------------------------------------------------------------------------
+
+pixmapButton::pixmapButton(QWidget *parent) : QPushButton(parent) {}
+pixmapButton::~pixmapButton() {}
+
+void pixmapButton::paintEvent(QPaintEvent *e) {
+	QPushButton::paintEvent(e);
+
+	if (!pixmap.isNull()) {
+		QPixmap img = pixmap.scaled(iconSize(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+		const int y = (height() - img.height()) / 2;
+		QPainter painter(this);
+
+		painter.drawPixmap(5, y, img);
+	}
+}
+
+void pixmapButton::setPixmap(const QPixmap &pixmap) {
+	this->pixmap = pixmap;
 }

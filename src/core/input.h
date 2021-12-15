@@ -53,7 +53,7 @@ enum controller_buttons {
 	MAX_STD_PAD_BUTTONS
 };
 enum turbo_buttons { TURBOA, TURBOB };
-enum input_types { KEYBOARD, JOYSTICK };
+enum input_types { KEYBOARD, JOYSTICK, INPUT_TYPES, INPUT_DECODE_COUNTS = 24 };
 enum button_states { RELEASED = 0x00, PRESSED = 0x01 };
 enum input_max_values { MAX_JOYSTICK = 16 };
 enum input_set_cursor { NO_SET_CURSOR = FALSE, SET_CURSOR = TRUE};
@@ -66,16 +66,19 @@ enum port_controllers {
 	PORT_MAX
 };
 
+#if defined (_WIN32)
+typedef GUID _input_guid;
+#else
+typedef struct _input_guid {
+	BYTE data[16];
+} _input_guid;
+#endif
 typedef struct _config_input {
 	BYTE permit_updown_leftright;
 	BYTE hide_zapper_cursor;
 	BYTE controller_mode;
 	BYTE expansion;
-#if defined (_WIN32)
-	GUID shcjoy_id;
-#else
-	BYTE shcjoy_id;
-#endif
+	_input_guid jguid_sch;
 } _config_input;
 typedef struct _r4016 {
 	BYTE value;
@@ -84,22 +87,19 @@ typedef struct _turbo_button {
 	BYTE frequency;
 	BYTE active;
 	BYTE counter;
+	BYTE mode;
 } _turbo_button;
 typedef struct _port {
 	BYTE type;
-#if defined (_WIN32)
-	GUID joy_id;
-#else
-	BYTE joy_id;
-#endif
+	_input_guid jguid;
 
 	// decodifica tastiera e joystick
-	DBWORD input[2][24];
+	DBWORD input[INPUT_TYPES][INPUT_DECODE_COUNTS];
 
 	// standard controller
 	BYTE type_pad;
 	BYTE index;
-	BYTE data[24];
+	BYTE data[INPUT_DECODE_COUNTS];
 	// turbo buttons
 	_turbo_button turbo[2];
 } _port;

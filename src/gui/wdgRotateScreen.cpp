@@ -16,6 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <QtWidgets/QStyleOption>
 #include <QtWidgets/QStylePainter>
 #include <QtWidgets/QCommonStyle>
 #include "wdgRotateScreen.moc"
@@ -49,32 +50,13 @@ void wdgRotateScreen::paintEvent(UNUSED(QPaintEvent *event)) {
 	QStyleOption opt;
 	QPainter p(this);
 
-	opt.init(this);
+	opt.initFrom(this);
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 void wdgRotateScreen::update_widget(void) {
-	QString desc;
-
-	switch (cfg->screen_rotation) {
-		default:
-			desc = "AAA";
-			break;
-		case ROTATE_0:
-			desc = "0°";
-			break;
-		case ROTATE_90:
-			desc = "90°";
-			break;
-		case ROTATE_180:
-			desc = "180°";
-			break;
-		case ROTATE_270:
-			desc = "270°";
-			break;
-	}
-	label_desc->setText(desc);
-	qtHelper::pushbutton_set_checked(pushButton_flip, cfg->hflip_screen);
+	// per prevenire uno sfarfallio (realmente fastidioso) eseguo l'update con 100ms di ritardo
+	QTimer::singleShot(100, this, SLOT(s_update_widget()));
 }
 
 void wdgRotateScreen::s_rotate_to_left(UNUSED(bool checked)) {
@@ -101,4 +83,27 @@ void wdgRotateScreen::s_flip(UNUSED(bool checked)) {
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	gui_set_focus();
 	emu_thread_continue();
+}
+void wdgRotateScreen::s_update_widget(void) {
+	QString desc;
+
+	switch (cfg->screen_rotation) {
+		default:
+			desc = "AAA";
+			break;
+		case ROTATE_0:
+			desc = "0°";
+			break;
+		case ROTATE_90:
+			desc = "90°";
+			break;
+		case ROTATE_180:
+			desc = "180°";
+			break;
+		case ROTATE_270:
+			desc = "270°";
+			break;
+	}
+	label_desc->setText(desc);
+	qtHelper::pushbutton_set_checked(pushButton_flip, cfg->hflip_screen);
 }

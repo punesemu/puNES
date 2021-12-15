@@ -120,7 +120,11 @@ void recent_roms_parse(void) {
 	}
 
 	QTextStream in(&recent);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	in.setCodec("UTF-8");
+#else
+	in.setEncoding(QStringEncoder::Utf8);
+#endif
 
 	while (in.atEnd() == false) {
 		// elimino il ritorno a capo
@@ -164,7 +168,11 @@ void recent_roms_save(void) {
 	}
 
 	QTextStream out(&recent);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	out.setCodec("UTF-8");
+#else
+	out.setEncoding(QStringEncoder::Utf8);
+#endif
 	out.setGenerateByteOrderMark(false);
 
 	for (index = 0; index < RECENT_ROMS_MAX; index++) {
@@ -182,13 +190,13 @@ int recent_roms_count(void) {
 	return (recent_roms_list.count);
 }
 const char *recent_roms_item(int index) {
-	return ((const char *) recent_roms_list.item[index].constData());
+	return ((const char *)recent_roms_list.item[index].constData());
 }
 int recent_roms_item_size(int index) {
 	return (recent_roms_list.item[index].length());
 }
 const char *recent_roms_current(void) {
-	return ((const char *) recent_roms_list.current.constData());
+	return ((const char *)recent_roms_list.current.constData());
 }
 int recent_roms_current_size(void) {
 	return (recent_roms_list.current.length());
@@ -205,6 +213,6 @@ static uTCHAR *recent_roms_file(void) {
 	static uTCHAR file[LENGTH_FILE_NAME_LONG];
 
 	umemset(file, 0x00, LENGTH_FILE_NAME_LONG);
-	usnprintf(file, usizeof(file), uL("" uPERCENTs "/" RECENT_ROMS_FILE), info.base_folder);
+	usnprintf(file, usizeof(file), uL("" uPs("") "/" RECENT_ROMS_FILE), info.base_folder);
 	return (file);
 }

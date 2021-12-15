@@ -34,7 +34,7 @@ void map_init_KS7016(void) {
 	EXTCL_CPU_WR_MEM(KS7016);
 	EXTCL_CPU_RD_MEM(KS7016);
 	EXTCL_SAVE_MAPPER(KS7016);
-	mapper.internal_struct[0] = (BYTE *) &ks7016;
+	mapper.internal_struct[0] = (BYTE *)&ks7016;
 	mapper.internal_struct_size[0] = sizeof(ks7016);
 
 	{

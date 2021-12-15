@@ -65,7 +65,7 @@ void map_init_VRC4(BYTE revision) {
 	EXTCL_CPU_WR_MEM(VRC4);
 	EXTCL_SAVE_MAPPER(VRC4);
 	EXTCL_CPU_EVERY_CYCLE(VRC4);
-	mapper.internal_struct[0] = (BYTE *) &vrc4;
+	mapper.internal_struct[0] = (BYTE *)&vrc4;
 	mapper.internal_struct_size[0] = sizeof(vrc4);
 
 	if (info.reset >= HARD) {

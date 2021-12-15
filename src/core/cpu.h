@@ -115,6 +115,7 @@ extern _nmi nmi;
 EXTERNC void cpu_exe_op(void);
 EXTERNC void cpu_init_PC(void);
 EXTERNC void cpu_turn_on(void);
+EXTERNC BYTE cpu_rd_mem_dbg(WORD address);
 EXTERNC BYTE cpu_rd_mem(WORD address, BYTE made_tick);
 EXTERNC void cpu_wr_mem(WORD address, BYTE value);
 

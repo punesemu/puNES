@@ -43,8 +43,8 @@ BYTE tv_noise_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	rgb_modifier((nes_ntsc_t *)turn_off_effect.ntsc, pRGB, 0x1A, -0x20, -0x30, -0x20);
-	//rgb_modifier((nes_ntsc_t *)turn_off_effect.ntsc, pRGB, 0x00, -0x20, -0x20, -0x20);
+	ntsc_rgb_modifier((nes_ntsc_t *)turn_off_effect.ntsc, (BYTE *)pRGB, 0x1A, -0x20, -0x30, -0x20);
+	//ntsc_rgb_modifier((nes_ntsc_t *)turn_off_effect.ntsc, (BYTE *)pRGB, 0x00, -0x20, -0x20, -0x20);
 
 	for (i = 0; i < NUM_COLORS; i++) {
 		palette[i] = gfx_color(255, pRGB[i].r, pRGB[i].g, pRGB[i].b);
@@ -79,6 +79,7 @@ void tv_noise_effect(void) {
 	for (y = 0; y < SCR_ROWS; y++) {
 		for (x = 0; x < SCR_COLUMNS; x++) {
 			WORD w = 7 + sin(x / 50000 + t0 / 7);
+
 			screen.wr->line[y][x] = emu_irand(16) * w;
 		}
 		t0 = (t0 + 1) % SCR_ROWS;

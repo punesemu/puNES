@@ -24,7 +24,7 @@
 #include "info.h"
 
 enum save_slot_misc {
-	SAVE_SLOTS = 10,
+	SAVE_SLOTS = 12,
 	SAVE_SLOTS_TOTAL = SAVE_SLOTS + 1, // include anche lo slot per il file
 	SAVE_SLOT_FILE = SAVE_SLOTS
 };

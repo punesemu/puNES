@@ -21,7 +21,7 @@
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
-#include <pthread.h>
+#include "thread_def.h"
 #include <sndio.h>
 #include "info.h"
 #include "audio/snd.h"
@@ -46,8 +46,8 @@ typedef struct _sndio {
 	struct pollfd *pfds;
 } _sndio;
 typedef struct _snd_thread {
-	pthread_t thread;
-	pthread_mutex_t lock;
+	thread_t thread;
+	thread_mutex_t lock;
 
 	BYTE action;
 	BYTE in_run;
@@ -60,7 +60,7 @@ typedef struct _snd_thread {
 
 static void _snd_playback_stop(void);
 
-static void *sndio_thread_loop(void *data);
+static thread_funct(sndio_thread_loop, void *data);
 INLINE static void sndio_wr_buf(void *buffer, uint32_t avail);
 
 static _snd_thread snd_thread;
@@ -82,22 +82,15 @@ BYTE snd_init(void) {
 	snd_apu_tick = NULL;
 	snd_end_frame = NULL;
 
-	{
-		int rc;
-
-		// creo il lock
-		if (pthread_mutex_init(&snd_thread.lock, NULL) != 0) {
-			fprintf(stderr, "Unable to allocate the mutex\n");
-			return (EXIT_ERROR);
-		}
-
-		snd_thread.action = ST_PAUSE;
-
-		if ((rc = pthread_create(&snd_thread.thread, NULL, sndio_thread_loop, NULL))) {
-			fprintf(stderr, "Error - pthread_create() return code: %d\n", rc);
-			return (EXIT_ERROR);
-		}
+	// creo il lock
+	if (thread_mutex_init(snd_thread.lock) != 0) {
+		fprintf(stderr, "Unable to allocate the snd mutex\n");
+		return (EXIT_ERROR);
 	}
+
+	// creo il thread audio
+	snd_thread.action = ST_PAUSE;
+	thread_create(snd_thread.thread, sndio_thread_loop, NULL);
 
 	// apro e avvio la riproduzione
 	if (snd_playback_start()) {
@@ -112,9 +105,8 @@ void snd_quit(void) {
 
 	if (snd_thread.action != ST_UNINITIALIZED) {
 		snd_thread.action = ST_STOP;
-
-		pthread_join(snd_thread.thread, NULL);
-		pthread_mutex_destroy(&snd_thread.lock);
+		thread_join(snd_thread.thread);
+		thread_mutex_destroy(snd_thread.lock);
 		memset(&snd_thread, 0x00, sizeof(_snd_thread));
 	}
 
@@ -180,10 +172,10 @@ void snd_thread_continue(void) {
 }
 
 void snd_thread_lock(void) {
-	pthread_mutex_lock(&snd_thread.lock);
+	thread_mutex_lock(snd_thread.lock);
 }
 void snd_thread_unlock(void) {
-	pthread_mutex_unlock(&snd_thread.lock);
+	thread_mutex_unlock(snd_thread.lock);
 }
 
 BYTE snd_playback_start(void) {
@@ -200,6 +192,12 @@ BYTE snd_playback_start(void) {
 	audio_channels(cfg->channels_mode);
 
 	switch (cfg->samplerate) {
+		case S192000:
+			snd.samplerate = 192000;
+			break;
+		case S96000:
+			snd.samplerate = 96000;
+			break;
 		case S48000:
 			snd.samplerate = 48000;
 			break;
@@ -289,10 +287,6 @@ BYTE snd_playback_start(void) {
 		memset(cbd.silence, 0x00, snd.period.size);
 	}
 
-	if (extcl_snd_playback_start) {
-		extcl_snd_playback_start((WORD)snd.samplerate);
-	}
-
 	audio_channels_init_mode();
 
 	audio_init_blipbuf();
@@ -378,7 +372,7 @@ static void _snd_playback_stop(void) {
 	}
 }
 
-static void *sndio_thread_loop(UNUSED(void *data)) {
+static thread_funct(sndio_thread_loop, UNUSED(void *data)) {
 	int32_t avail, len;
 
 #if !defined (RELEASE)
@@ -400,11 +394,7 @@ static void *sndio_thread_loop(UNUSED(void *data)) {
 		{
 			int nfds, event, rc;
 
-			if ((nfds = sio_pollfd(sndio.playback, sndio.pfds, POLLOUT)) <= 0) {
-				fprintf(stderr, "sio_pollfd() failed\n");
-				continue;
-			}
-
+			nfds = sio_pollfd(sndio.playback, sndio.pfds, POLLOUT);
 			rc = poll(sndio.pfds, nfds, 1);
 
 			if (rc == 0) {
@@ -431,7 +421,7 @@ static void *sndio_thread_loop(UNUSED(void *data)) {
 		avail = snd.period.samples;
 		len = avail * snd.channels * sizeof(*cbd.write);
 
-		if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps.fast_forward | !snd.buffer.start) {
+		if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps_fast_forward_enabled() | !snd.buffer.start) {
 			sndio_wr_buf((void *)cbd.silence, len);
 		} else if (cbd.bytes_available < len) {
 			sndio_wr_buf((void *)cbd.silence, len);
@@ -452,7 +442,7 @@ static void *sndio_thread_loop(UNUSED(void *data)) {
 			cbd.samples_available -= avail;
 
 #if !defined (RELEASE)
-			if (((void*)cbd.write > (void*)cbd.read) && ((void*)cbd.write < (void*)(cbd.read + len))) {
+			if (((void *)cbd.write > (void *)cbd.read) && ((void *)cbd.write < (void *)(cbd.read + len))) {
 				snd.overlap++;
 			}
 #endif
@@ -473,8 +463,8 @@ static void *sndio_thread_loop(UNUSED(void *data)) {
 				len,
 				cbd.samples_available,
 				cbd.bytes_available,
-				fps.frames_emu_too_long,
-				fps.frames_skipped,
+				fps.info.emu_too_long,
+				fps.info.skipped,
 				snd.overlap,
 				snd.out_of_sync,
 				(int)fps.gfx,
@@ -484,7 +474,7 @@ static void *sndio_thread_loop(UNUSED(void *data)) {
 #endif
  	}
 
-	pthread_exit((void *)EXIT_OK);
+	thread_funct_return();
 }
 
 INLINE static void sndio_wr_buf(void *buffer, uint32_t avail) {

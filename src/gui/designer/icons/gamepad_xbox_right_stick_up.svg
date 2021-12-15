@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   version="1.1"
+   id="Capa_1"
+   x="0px"
+   y="0px"
+   width="128"
+   height="128"
+   viewBox="0 0 128 128"
+   enable-background="new 0 0 20 20"
+   xml:space="preserve"
+   sodipodi:docname="Xbox_Right_Stick_Up.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs49" /><sodipodi:namedview
+   id="namedview47"
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1.0"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   showgrid="false"
+   inkscape:zoom="8.71875"
+   inkscape:cx="63.942652"
+   inkscape:cy="64"
+   inkscape:window-width="2560"
+   inkscape:window-height="1366"
+   inkscape:window-x="0"
+   inkscape:window-y="24"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="g40" />
+<g
+   id="g44">
+	<g
+   id="g40">
+		<g
+   id="g28"
+   transform="matrix(6.3983062,0,0,6.3983062,0,0.00540049)">
+			<linearGradient
+   id="SVGID_1_"
+   gradientUnits="userSpaceOnUse"
+   x1="10"
+   y1="0"
+   x2="10"
+   y2="17.900299">
+				<stop
+   offset="0"
+   style="stop-color:#5B5B5F"
+   id="stop2" />
+				<stop
+   offset="0.0231"
+   style="stop-color:#59595D"
+   id="stop4" />
+				<stop
+   offset="0.4507"
+   style="stop-color:#333335"
+   id="stop6" />
+				<stop
+   offset="0.7912"
+   style="stop-color:#1C1C1D"
+   id="stop8" />
+				<stop
+   offset="1"
+   style="stop-color:#141414"
+   id="stop10" />
+			</linearGradient>
+			<circle
+   fill="url(#SVGID_1_)"
+   cx="10"
+   cy="9.9989996"
+   r="10"
+   id="circle13"
+   style="fill:url(#SVGID_1_)" />
+			<linearGradient
+   id="SVGID_2_"
+   gradientUnits="userSpaceOnUse"
+   x1="0"
+   y1="10"
+   x2="20"
+   y2="10">
+				<stop
+   offset="0"
+   style="stop-color:#5B5B5F"
+   id="stop15" />
+				<stop
+   offset="0.0231"
+   style="stop-color:#59595D"
+   id="stop17" />
+				<stop
+   offset="0.4507"
+   style="stop-color:#333335"
+   id="stop19" />
+				<stop
+   offset="0.7912"
+   style="stop-color:#1C1C1D"
+   id="stop21" />
+				<stop
+   offset="1"
+   style="stop-color:#141414"
+   id="stop23" />
+			</linearGradient>
+			<path
+   fill="url(#SVGID_2_)"
+   d="m 10,2.399 c 4.191,0 7.6,3.409 7.6,7.6 0,4.191 -3.408,7.601 -7.6,7.601 -4.189,0 -7.6,-3.409 -7.6,-7.601 0,-4.19 3.411,-7.6 7.6,-7.6 M 10,0 C 4.477,0 0,4.477 0,9.999 0,15.522 4.477,20 10,20 15.523,20 20,15.522 20,9.999 20,4.477 15.523,0 10,0 Z"
+   id="path26"
+   style="fill:url(#SVGID_2_)" />
+		</g>
+		<g
+   id="g38"
+   transform="matrix(0,4.7987297,4.7987297,0,16.012703,3.4289776)">
+			<polygon
+   opacity="0.5"
+   fill="#ffffff"
+   points="10,5 12.008,2.925 10,2.925 7.994,2.925 "
+   id="polygon30"
+   style="display:none" />
+			<polygon
+   opacity="0.5"
+   fill="#ffffff"
+   points="17.076,7.993 15,10 17.076,12.006 17.076,10 "
+   id="polygon32"
+   style="display:none" />
+			<polygon
+   opacity="0.5"
+   fill="#ffffff"
+   points="2.926,7.993 2.926,10 2.926,12.006 5,10 "
+   id="polygon34"
+   style="display:none;fill:#ffffff;fill-opacity:1" />
+			<polygon
+   opacity="0.5"
+   fill="#ffffff"
+   points="10.002,15 7.994,17.075 10.002,17.075 12.008,17.075 "
+   id="polygon36"
+   style="display:none" />
+		<path
+   style="fill:#ffffff;fill-opacity:1;stroke-width:0.0542629"
+   d="M 4.5866949,9.9999999 V 14.058018 L 3.9491059,13.438603 C 3.5984317,13.097925 2.6564255,12.184696 1.8557592,11.409205 L 0.4,9.9992238 1.0151959,9.4014983 C 1.3535512,9.0727471 2.2955577,8.1598679 3.1085425,7.3728762 L 4.5866949,5.9419823 Z"
+   id="path5626" /></g>
+	</g>
+	<path
+   fill="#ffffff"
+   d="M 73.644504,91.526773 V 77.341728 c 0,-2.655297 -0.60144,-4.549196 -1.823517,-5.688095 -1.209279,-1.1325 -3.47428,-1.701949 -6.801399,-1.701949 H 52.747636 V 91.520375 H 41.550601 V 36.450153 h 27.9542 c 2.533728,0 4.849916,0.403094 6.922967,1.202881 2.073051,0.806187 3.851781,1.913094 5.348984,3.320721 1.484407,1.414026 2.636102,3.096781 3.435891,5.061061 0.799788,1.96428 1.202881,4.082119 1.202881,6.340721 0,2.988009 -0.697415,5.63051 -2.111441,7.921103 -1.414026,2.290594 -3.43589,3.909365 -6.097585,4.856315 2.437754,0.774195 4.158898,1.96428 5.189026,3.563857 1.023728,1.605974 1.535593,4.011737 1.535593,7.217289 v 15.59907 H 73.644504 Z M 52.747636,45.990028 V 60.67414 h 14.43458 c 3.09678,0 5.272204,-0.691017 6.545467,-2.073051 1.273263,-1.382034 1.913093,-3.122373 1.913093,-5.221017 0,-2.15623 -0.627034,-3.922162 -1.874703,-5.310595 -1.234874,-1.382035 -3.301527,-2.073051 -6.174366,-2.073051 H 52.747636 Z"
+   id="path42"
+   style="stroke-width:6.3983" />
+</g>
+</svg>

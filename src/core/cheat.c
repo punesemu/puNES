@@ -73,7 +73,7 @@ uTCHAR *gamegenie_check_rom_present(BYTE print_message) {
 	gamegenie.rom_present = FALSE;
 
 	// 1) file specificato dall'utente
-	usnprintf(gg_rom_file, usizeof(gg_rom_file), uL("" uPERCENTs), cfg->gg_rom_file);
+	usnprintf(gg_rom_file, usizeof(gg_rom_file), uL("" uPs("")), cfg->gg_rom_file);
 	if (emu_file_exist(gg_rom_file) == EXIT_OK) {
 		goto gamegenie_check_rom_present_founded;
 	}
@@ -103,7 +103,7 @@ uTCHAR *gamegenie_check_rom_present(BYTE print_message) {
 	}
 
 	// 4) directory puNES/bios
-	usnprintf(gg_rom_file, usizeof(gg_rom_file), uL("" uPERCENTs BIOS_FOLDER "/" GGFILE), info.base_folder);
+	usnprintf(gg_rom_file, usizeof(gg_rom_file), uL("" uPs("") BIOS_FOLDER "/" GGFILE), info.base_folder);
 	if (emu_file_exist(gg_rom_file) == EXIT_OK) {
 		goto gamegenie_check_rom_present_founded;
 	}

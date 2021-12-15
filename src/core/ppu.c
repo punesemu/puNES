@@ -29,6 +29,8 @@
 #include "irql2f.h"
 #include "conf.h"
 #include "fps.h"
+#include "emu.h"
+#include "gui.h"
 
 enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 
@@ -68,7 +70,7 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 		 * inferiore a 8 (per questo uso il WORD, per\
 		 * avere risultati unsigned).\
 		 */\
-		if ((WORD) (ppu.frame_x - sp[a].x_C) < 8) {\
+		if ((WORD)(ppu.frame_x - sp[a].x_C) < 8) {\
 			/*\
 			 * se il bit 2 del $2001 e' a 0 vuol dire\
 			 * che e' abilitato il clipping degli sprite\
@@ -127,6 +129,7 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 		spl[spenv.tmp_spr_plus].h_byte = (inv_chr[ppu_rd_mem(sadr | 0x08)] << 1);\
 	}
 
+static void ppu_alignment_init(void);
 static BYTE ppu_alloc_screen_buffer(_screen_buffer *sb);
 INLINE static void ppu_oam_evaluation(void);
 
@@ -186,6 +189,7 @@ _spr sprite_unl[56], sprite_plus_unl[56];
 _tile tile_render, tile_fetch;
 _ppu_sclines ppu_sclines;
 _overclock overclock;
+_ppu_alignment ppu_alignment;
 
 void ppu_init(void) {
 	memset(&screen, 0x00, sizeof(screen));
@@ -267,7 +271,7 @@ void ppu_tick(void) {
 				// utilizzato dalle mappers :
 				// MMC3
 				// Rex (DBZ)
-				// Taito (TC0190FMCPAL16R4)
+				// Taito (TC0690)
 				// Tengen (Rambo)
 				extcl_update_r2006(r2006.value, old_r2006);
 			}
@@ -285,7 +289,7 @@ void ppu_tick(void) {
 				/* setto a 0 il bit 5, 6 ed il 7 del $2002 */
 				r2002.sprite_overflow = r2002.sprite0_hit = r2002.vblank = ppu.vblank = FALSE;
 				// serve assolutamente per la corretta lettura delle coordinate del puntatore zapper
-				if ((info.zapper_is_present == TRUE) && (fps.fast_forward == FALSE)) {
+				if ((info.zapper_is_present == TRUE) && (fps_fast_forward_enabled() == FALSE)) {
 					memset((BYTE *)screen.wr->data, 0, screen_size());
 				}
 			} else if ((ppu.frame_x == (SHORT_SLINE_CYCLES - 1)) && (machine.type == NTSC)) {
@@ -711,8 +715,7 @@ void ppu_tick(void) {
 							/* incremento l'indice temporaneo degli sprites */
 							if (++spr_ev.tmp_spr_plus == 8) {
 								// unlimited sprites
-								if ((cfg->unlimited_sprites == TRUE)
-									&& (spr_ev_unl.evaluate == TRUE)) {
+								if ((cfg->unlimited_sprites == TRUE) && (spr_ev_unl.evaluate == TRUE)) {
 									for (spr_ev_unl.tmp_spr_plus = 0;
 										spr_ev_unl.tmp_spr_plus < spr_ev_unl.count_plus;
 										spr_ev_unl.tmp_spr_plus++) {
@@ -1051,6 +1054,7 @@ BYTE ppu_turn_on(void) {
 			for (a = 0; a < 56; ++a) {
 				oam.ele_plus_unl[a] = &oam.plus_unl[(a * 4)];
 			}
+			ppu_alignment_reset();
 		}
 		/* reinizializzazione completa della PPU */
 		{
@@ -1079,6 +1083,7 @@ BYTE ppu_turn_on(void) {
 			/* e paletta dei colori */
 			memcpy(mmap_palette.color, palette_init, sizeof(mmap_palette.color));
 		}
+		ppu_alignment_init();
 	} else {
 		memset(&r2000, 0x00, sizeof(r2000));
 		memset(&r2001, 0x00, sizeof(r2001));
@@ -1140,6 +1145,40 @@ void ppu_draw_screen_continue_ctrl_count(int *count) {
 	(*count) = 0;
 }
 
+void ppu_alignment_reset(void) {
+	ppu_alignment.count.cpu = 0;
+	ppu_alignment.count.ppu = 0;
+}
+
+static void ppu_alignment_init(void) {
+	switch (cfg->ppu_alignment) {
+		default:
+		case PPU_ALIGMENT_DEFAULT:
+			ppu_alignment.cpu = 0;
+			ppu_alignment.ppu = 1;
+			break;
+		case PPU_ALIGMENT_RANDOMIZE:
+			ppu_alignment.cpu = emu_irand(100) % machine.cpu_divide;
+			ppu_alignment.ppu = emu_irand(100) % machine.ppu_divide;
+			break;
+		case PPU_ALIGMENT_INC_AT_RESET:
+			ppu_alignment.cpu = ppu_alignment.count.cpu;
+			ppu_alignment.ppu = ppu_alignment.count.ppu;
+			break;
+	}
+
+	ppu.cycles = (ppu_alignment.cpu + (-ppu_alignment.ppu + 1)) % machine.cpu_divide;
+
+	if (cfg->ppu_alignment == PPU_ALIGMENT_INC_AT_RESET) {
+		if ((ppu_alignment.count.cpu = (ppu_alignment.count.cpu + 1) % machine.cpu_divide) == 0) {
+			ppu_alignment.count.ppu = (ppu_alignment.count.ppu + 1) % machine.ppu_divide;
+		}
+	}
+
+	if (gui.start == TRUE) {
+		gui_update_status_bar();
+	}
+}
 static BYTE ppu_alloc_screen_buffer(_screen_buffer *sb) {
 	BYTE b;
 
@@ -1299,28 +1338,62 @@ INLINE static void ppu_oam_evaluation(void) {
 
 						// unlimited sprites
 						if (cfg->unlimited_sprites == TRUE) {
-							BYTE t2004;
+							// https://wiki.nesdev.com/w/index.php/Sprite_overflow_games (Use of excess sprites for masking effects)
+							// https://github.com/SourMesen/Mesen/issues/188
+							// start - thx to Sour
+							BYTE unlimited_sprites = TRUE;
 
-							spr_ev_unl.index = spr_ev.index + 1;
-							spr_ev_unl.count_plus = 0;
+							if (cfg->unlimited_sprites_auto == TRUE) {
+								BYTE count = 0,  max_count = 0;
+								WORD last_position = 0xFFFF;
+								int i;
 
-							for (; spr_ev_unl.index < 64; spr_ev_unl.index++) {
-								t2004 = oam.element[spr_ev_unl.index][YC];
+								for (i = 0; i < 64; i++) {
+									BYTE y = oam.element[i][YC];
+									WORD range = ppu.screen_y - y;
 
-								spr_ev_unl.range = ppu.screen_y - t2004;
+									if ((y <= 0xEF) && (range < r2000.size_spr)) {
+										WORD position = (y << 8) | oam.element[i][XC];
 
-								if ((t2004 <= 0xEF) && (spr_ev_unl.range < r2000.size_spr)) {
-									oam.ele_plus_unl[spr_ev_unl.count_plus][YC] = oam.element[spr_ev_unl.index][YC];
-									oam.ele_plus_unl[spr_ev_unl.count_plus][TL] = oam.element[spr_ev_unl.index][TL];
-									oam.ele_plus_unl[spr_ev_unl.count_plus][AT] = oam.element[spr_ev_unl.index][AT];
-									oam.ele_plus_unl[spr_ev_unl.count_plus][XC] = oam.element[spr_ev_unl.index][XC];
-									sprite_plus_unl[spr_ev_unl.count_plus].number = spr_ev_unl.index;
-									sprite_plus_unl[spr_ev_unl.count_plus].flip_v = spr_ev_unl.range;
-									spr_ev_unl.count_plus++;
+										if (position != last_position) {
+											if (count > max_count) {
+												max_count = count;
+											}
+											last_position = position;
+											count = 1;
+											continue;
+										}
+										count++;
+									}
 								}
+								unlimited_sprites = (count < 8) & (max_count < 8);
 							}
-							if (spr_ev_unl.count_plus) {
-								spr_ev_unl.evaluate = TRUE;
+							// end
+
+							if (unlimited_sprites) {
+								BYTE t2004;
+
+								spr_ev_unl.index = spr_ev.index + 1;
+								spr_ev_unl.count_plus = 0;
+
+								for (; spr_ev_unl.index < 64; spr_ev_unl.index++) {
+									t2004 = oam.element[spr_ev_unl.index][YC];
+
+									spr_ev_unl.range = ppu.screen_y - t2004;
+
+									if ((t2004 <= 0xEF) && (spr_ev_unl.range < r2000.size_spr)) {
+										oam.ele_plus_unl[spr_ev_unl.count_plus][YC] = oam.element[spr_ev_unl.index][YC];
+										oam.ele_plus_unl[spr_ev_unl.count_plus][TL] = oam.element[spr_ev_unl.index][TL];
+										oam.ele_plus_unl[spr_ev_unl.count_plus][AT] = oam.element[spr_ev_unl.index][AT];
+										oam.ele_plus_unl[spr_ev_unl.count_plus][XC] = oam.element[spr_ev_unl.index][XC];
+										sprite_plus_unl[spr_ev_unl.count_plus].number = spr_ev_unl.index;
+										sprite_plus_unl[spr_ev_unl.count_plus].flip_v = spr_ev_unl.range;
+										spr_ev_unl.count_plus++;
+									}
+								}
+								if (spr_ev_unl.count_plus) {
+									spr_ev_unl.evaluate = TRUE;
+								}
 							}
 						}
 					} else {

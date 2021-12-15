@@ -22,22 +22,12 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <time.h>
-
 #include <stdio.h>
 
 static double high_resolution_ms(void);
 static int __nsleep(const struct timespec *req, struct timespec *rem);
 
-void gui_init(int *argc, char **argv) {
-	memset(&gui, 0, sizeof(gui));
-	qt = {};
-
-	qt.app = new QApplication((*argc), argv);
-
-	info.gui = TRUE;
-	gui.in_update = FALSE;
-	gui.main_win_lfp = 0;
-
+void gui_init_os(void) {
 	// cerco la HOME e imposto la directory base
 	{
 		gui.home = getenv("HOME");
@@ -52,7 +42,7 @@ void gui_init(int *argc, char **argv) {
 			int name[] = { CTL_KERN, KERN_PROC_CWD, 0 };
 
 			name[2] = getpid();
-			umemset(&path, 0x00, usizeof(path));
+			umemset(path, 0x00, usizeof(path));
 
 			if (sysctl(name, 3, &path, &len, NULL, 0) != 0) {
 				fprintf(stderr, "INFO: Error on sysctl.\n");
@@ -61,7 +51,7 @@ void gui_init(int *argc, char **argv) {
 				ustrncpy(info.base_folder, path, usizeof(info.base_folder));
 			}
 		} else {
-			usnprintf(info.base_folder, usizeof(info.base_folder), uL("" uPERCENTs "/." NAME), gui.home);
+			usnprintf(info.base_folder, usizeof(info.base_folder), uL("" uPs("") "/." NAME), gui.home);
 		}
  	}
 

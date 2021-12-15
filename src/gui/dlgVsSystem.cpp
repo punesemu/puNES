@@ -22,6 +22,7 @@
 #include "dlgSettings.hpp"
 #include "vs_system.h"
 #include "clock.h"
+#include "conf.h"
 #include "gui.h"
 
 dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {

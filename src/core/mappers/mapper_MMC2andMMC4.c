@@ -33,7 +33,7 @@ void map_init_MMC2and4(void) {
 	EXTCL_SAVE_MAPPER(MMC2and4);
 	EXTCL_AFTER_RD_CHR(MMC2and4);
 	EXTCL_UPDATE_R2006(MMC2and4);
-	mapper.internal_struct[0] = (BYTE *) &mmc2and4;
+	mapper.internal_struct[0] = (BYTE *)&mmc2and4;
 	mapper.internal_struct_size[0] = sizeof(mmc2and4);
 
 	if (info.reset >= HARD) {

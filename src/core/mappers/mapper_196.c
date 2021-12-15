@@ -57,9 +57,9 @@ void map_init_196(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *) &m196;
+	mapper.internal_struct[0] = (BYTE *)&m196;
 	mapper.internal_struct_size[0] = sizeof(m196);
-	mapper.internal_struct[1] = (BYTE *) &mmc3;
+	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	memset(&m196, 0x00, sizeof(m196));

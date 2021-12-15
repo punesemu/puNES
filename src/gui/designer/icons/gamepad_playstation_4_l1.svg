@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   version="1.1"
+   id="Capa_1"
+   x="0px"
+   y="0px"
+   width="128"
+   height="128"
+   viewBox="0 0 128 128"
+   enable-background="new 0 0 20.001 12.591"
+   xml:space="preserve"
+   sodipodi:docname="PlayStation_4_L1.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs923" /><sodipodi:namedview
+   id="namedview921"
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1.0"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   showgrid="false"
+   inkscape:zoom="3.737789"
+   inkscape:cx="-41.602134"
+   inkscape:cy="-18.460111"
+   inkscape:window-width="2560"
+   inkscape:window-height="1366"
+   inkscape:window-x="0"
+   inkscape:window-y="24"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Capa_1" />
+<g
+   id="g918"
+   transform="matrix(6.3998362,0,0,6.3998362,-5.3159769e-4,23.706631)">
+	<g
+   id="g902">
+		
+			<linearGradient
+   id="SVGID_1_"
+   gradientUnits="userSpaceOnUse"
+   x1="-975.36719"
+   y1="0"
+   x2="-975.36719"
+   y2="12.5918"
+   gradientTransform="translate(985.3672)">
+			<stop
+   offset="0"
+   style="stop-color:#5B5B5F"
+   id="stop874" />
+			<stop
+   offset="0.0231"
+   style="stop-color:#59595D"
+   id="stop876" />
+			<stop
+   offset="0.4507"
+   style="stop-color:#333335"
+   id="stop878" />
+			<stop
+   offset="0.7912"
+   style="stop-color:#1C1C1D"
+   id="stop880" />
+			<stop
+   offset="1"
+   style="stop-color:#141414"
+   id="stop882" />
+		</linearGradient>
+		<path
+   fill="url(#SVGID_1_)"
+   d="M 0.017,2.427 C 0.017,0.964 0.982,0 2.445,0 h 15.109 c 1.463,0 2.428,0.964 2.428,2.427 0,0 0.908,10.165 -9.966,10.165 C -0.86,12.591 0.017,2.427 0.017,2.427 Z"
+   id="path885"
+   style="fill:url(#SVGID_1_)" />
+		
+			<linearGradient
+   id="SVGID_2_"
+   gradientUnits="userSpaceOnUse"
+   x1="-208.5918"
+   y1="0"
+   x2="-208.5918"
+   y2="12.5918"
+   gradientTransform="matrix(-1,0,0,1,-198.5918,0)">
+			<stop
+   offset="0"
+   style="stop-color:#5B5B5F"
+   id="stop887" />
+			<stop
+   offset="0.0626"
+   style="stop-color:#535356"
+   id="stop889" />
+			<stop
+   offset="0.3018"
+   style="stop-color:#373739"
+   id="stop891" />
+			<stop
+   offset="0.5397"
+   style="stop-color:#242425"
+   id="stop893" />
+			<stop
+   offset="0.7739"
+   style="stop-color:#181818"
+   id="stop895" />
+			<stop
+   offset="1"
+   style="stop-color:#141414"
+   id="stop897" />
+		</linearGradient>
+		<path
+   fill="url(#SVGID_2_)"
+   d="m 2.445,1.464 h 15.109 c 0.658,0 0.965,0.307 0.965,0.963 v 0.064 l 0.004,0.066 c 0.004,0.031 0.281,3.756 -2.002,6.233 -1.43,1.551 -3.619,2.338 -6.505,2.338 -2.89,0 -5.082,-0.787 -6.518,-2.34 C 1.208,6.31 1.474,2.585 1.476,2.548 L 1.482,2.49 V 2.427 c 0,-0.656 0.305,-0.963 0.963,-0.963 M 2.445,0 C 0.982,0 0.017,0.964 0.017,2.427 c 0,0 -0.877,10.165 9.998,10.165 10.875,0 9.966,-10.165 9.966,-10.165 C 19.981,0.964 19.017,0 17.554,0 Z"
+   id="path900"
+   style="fill:url(#SVGID_2_)" />
+	</g>
+	<g
+   id="g916">
+		<g
+   id="g908">
+			<path
+   fill="#ffffff"
+   d="M 5.872,9.527 V 2.149 h 1.545 v 6.035 h 3.657 v 1.343 z"
+   id="path904" />
+			<path
+   fill="#ffffff"
+   d="M 11.138,9.593 H 5.806 v -7.51 h 1.676 v 6.035 h 3.656 z M 5.937,9.462 h 5.072 V 8.249 H 7.352 V 2.213 H 5.937 Z"
+   id="path906" />
+		</g>
+		<g
+   id="g914">
+			<path
+   fill="#ffffff"
+   d="m 12.685,9.527 v -5.1 H 11.173 V 3.426 c 0.318,0 0.586,-0.025 0.801,-0.078 0.215,-0.051 0.391,-0.131 0.527,-0.238 0.136,-0.107 0.24,-0.24 0.311,-0.4 0.07,-0.159 0.117,-0.346 0.139,-0.561 h 1.18 v 7.378 z"
+   id="path910" />
+			<path
+   fill="#ffffff"
+   d="M 14.194,9.593 H 12.62 V 4.492 h -1.512 v -1.13 h 0.064 c 0.313,0 0.576,-0.025 0.785,-0.076 0.205,-0.049 0.373,-0.125 0.504,-0.227 0.127,-0.101 0.225,-0.227 0.291,-0.375 0.066,-0.152 0.111,-0.334 0.133,-0.542 l 0.006,-0.059 h 1.303 z M 12.749,9.462 h 1.314 V 2.213 H 13.008 C 12.983,2.41 12.938,2.586 12.871,2.735 12.797,2.904 12.685,3.047 12.539,3.16 12.396,3.273 12.209,3.357 11.988,3.412 11.783,3.461 11.531,3.487 11.236,3.49 v 0.871 h 1.512 v 5.101 z"
+   id="path912" />
+		</g>
+	</g>
+</g>
+</svg>

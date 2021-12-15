@@ -1,5 +1,1 @@
-if WINDOWS
-AM_MAKEFLAGS = -j1
-endif
-
 SUBDIRS = $(LIB7ZIP_SRC)

@@ -38,12 +38,14 @@
 #define BUFFER_OFFSET(i) ((char *)(i))
 #define BUFFER_VB_OFFSET(a, i) ((char *)&a + (i))
 
+#define _SCR_COLUMNS_\
+	(cfg->filter == NTSC_FILTER ? NES_NTSC_OUT_WIDTH(SCR_COLUMNS) / 2 : SCR_COLUMNS)
 #define _SCR_COLUMNS_BRD\
-	((float)(SCR_COLUMNS - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
+	((float)(_SCR_COLUMNS_ - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
 #define _SCR_ROWS_BRD\
 	(float)(SCR_ROWS - (overscan.borders->up + overscan.borders->down))
 #define _SCR_COLUMNS_NOBRD\
-	((float)SCR_COLUMNS * gfx.pixel_aspect_ratio)
+	((float)_SCR_COLUMNS_ * gfx.pixel_aspect_ratio)
 #define _SCR_ROWS_NOBRD\
 	(float)SCR_ROWS
 
@@ -213,8 +215,6 @@ BYTE opengl_context_create(void) {
 	glDisable(GL_DITHER);
 	glDisable(GL_BLEND);
 
-	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
 	glEnable(GL_TEXTURE_2D);
 
 	opengl_context_delete();
@@ -289,22 +289,29 @@ BYTE opengl_context_create(void) {
 				_SCR_ROWS_NOBRD : _SCR_COLUMNS_NOBRD;
 			int mh = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
 				_SCR_COLUMNS_NOBRD : _SCR_ROWS_NOBRD;
+			float ratio = (float)mw / (float)mh, ratio_vm = (float)opengl.video_mode.w / (float)opengl.video_mode.h;
 
 			if (!cfg->stretch) {
 				if (cfg->integer_scaling) {
-					int mul = opengl.video_mode.w > opengl.video_mode.h ?
-						(opengl.video_mode.h - (opengl.video_mode.h % mh)) / mh :
-						(opengl.video_mode.w - (opengl.video_mode.w % mw)) / mw;
+					int factor = opengl.video_mode.w > opengl.video_mode.h
+						? ratio >= ratio_vm ? opengl.video_mode.w / mw : opengl.video_mode.h / mh
+						: ratio >= ratio_vm ? opengl.video_mode.h / mh : opengl.video_mode.w / mw;
 
-					vp->w = mw * mul;
-					vp->h = mh * mul;
+					vp->w = mw * factor;
+					vp->h = mh * factor;
 				} else {
-					float mul = (float)mw / (float)mh ;
-
 					if (opengl.video_mode.w > opengl.video_mode.h) {
-						vp->w = (int)((float)opengl.video_mode.h * mul);
+						if (ratio >= ratio_vm) {
+							vp->h = (int)((float)opengl.video_mode.w / ratio);
+						} else {
+							vp->w = (int)((float)opengl.video_mode.h * ratio);
+						}
 					} else {
-						vp->h = (int)((float)opengl.video_mode.w / mul);
+						if (ratio >= ratio_vm) {
+							vp->w = (int)((float)opengl.video_mode.w * ratio);
+						} else {
+							vp->h = (int)((float)opengl.video_mode.w / ratio);
+						}
 					}
 				}
 				vp->x = (opengl.video_mode.w - vp->w) >> 1;
@@ -674,7 +681,15 @@ void opengl_draw_scene(void) {
 			glUseProgram(texture->shader.glslp.prg);
 			opengl_shader_glsl_params_set(&texture->shader, sindex, sp->frame_count_mod, ppu.frames);
 		}
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+		if (i == shader_effect.last_pass) {
+			glBlendFunc(GL_ONE , GL_ONE);
+			glEnable(GL_BLEND);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			glDisable(GL_BLEND);
+		} else {
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		}
 
 		if (texture->shader.type == MS_CGP) {
 #if defined (WITH_OPENGL_CG)
@@ -723,6 +738,7 @@ void opengl_draw_scene(void) {
 		opengl_shader_filter(TEXTURE_LINEAR_ENAB, TRUE, FALSE, &mag, &min);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
+		glBlendFuncSeparate(GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 		glEnable(GL_BLEND);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		glDisable(GL_BLEND);
@@ -1448,7 +1464,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 		code = emu_file2string(path);
 
 		// la direttiva #version deve essere sempre la prima riga
-		{
+		if (code) {
 			ptr = strstr(code, "#version ");
 
 			if (ptr) {

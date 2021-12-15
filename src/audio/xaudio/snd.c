@@ -17,6 +17,7 @@
  */
 
 #include "audio/snd.h"
+#include "thread_def.h"
 #include "emu.h"
 #include "info.h"
 #include "conf.h"
@@ -61,7 +62,7 @@ static void STDMETHODCALLTYPE OnLoopEnd(IXAudio2VoiceCallback *callback, void *p
 static void STDMETHODCALLTYPE OnVoiceError(IXAudio2VoiceCallback *callback, void* pBufferContext, HRESULT Error);
 
 static struct _snd_thread {
-	HANDLE lock;
+	thread_mutex_t lock;
 
 	BYTE action;
 	BYTE in_run;
@@ -111,7 +112,7 @@ BYTE snd_init(void) {
 	snd_apu_tick = NULL;
 	snd_end_frame = NULL;
 
-	if ((snd_thread.lock = CreateSemaphore(NULL, 1, 2, NULL)) == NULL) {
+	if (thread_mutex_init_error(snd_thread.lock)) {
 		MessageBox(NULL,
 			"ATTENTION: Unable to create XAudio2 semaphore.\n",
 			"Error!",
@@ -164,10 +165,7 @@ void snd_quit(void) {
 
 	snd_playback_stop();
 
-	if (snd_thread.lock) {
-		CloseHandle(snd_thread.lock);
-		snd_thread.lock = NULL;
-	}
+	thread_mutex_destroy(snd_thread.lock);
 
 	if (ds8.ds8) {
 		FreeLibrary(ds8.ds8);
@@ -215,10 +213,10 @@ void snd_thread_continue(void) {
 }
 
 void snd_thread_lock(void) {
-	WaitForSingleObject(snd_thread.lock, INFINITE);
+	thread_mutex_lock(snd_thread.lock);
 }
 void snd_thread_unlock(void) {
-	ReleaseSemaphore(snd_thread.lock, 1, NULL);
+	thread_mutex_unlock(snd_thread.lock);
 }
 
 BYTE snd_playback_start(void) {
@@ -233,6 +231,12 @@ BYTE snd_playback_start(void) {
 	audio_channels(cfg->channels_mode);
 
 	switch (cfg->samplerate) {
+		case S192000:
+			snd.samplerate = 192000;
+			break;
+		case S96000:
+			snd.samplerate = 96000;
+			break;
 		case S48000:
 			snd.samplerate = 48000;
 			break;
@@ -369,10 +373,6 @@ BYTE snd_playback_start(void) {
 				MB_ICONEXCLAMATION | MB_OK);
 			goto snd_playback_start_error;
 		}
-	}
-
-	if (extcl_snd_playback_start) {
-		extcl_snd_playback_start((WORD)snd.samplerate);
 	}
 
 	audio_channels_init_mode();
@@ -609,7 +609,7 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 
 	if (snd_thread.action == ST_STOP) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
-	} else if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps.fast_forward | !snd.buffer.start) {
+	} else if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps_fast_forward_enabled() | !snd.buffer.start) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
 	} else if (cbd.bytes_available < len) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
@@ -630,7 +630,7 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 		cbd.samples_available -= avail;
 
 #if !defined (RELEASE)
-		if (((void*)cbd.write > (void*)cbd.read) && ((void*)cbd.write < (void*)(cbd.read + len))) {
+		if (((void *)cbd.write > (void *)cbd.read) && ((void *)cbd.write < (void *)(cbd.read + len))) {
 			snd.overlap++;
 		}
 #endif
@@ -654,8 +654,8 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 			len,
 			cbd.samples_available,
 			cbd.bytes_available,
-			fps.frames_emu_too_long,
-			fps.frames_skipped,
+			fps.info.emu_too_long,
+			fps.info.skipped,
 			snd.overlap,
 			snd.out_of_sync,
 			(int)fps.gfx,

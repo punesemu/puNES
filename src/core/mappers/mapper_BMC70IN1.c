@@ -34,7 +34,7 @@ void map_init_BMC70IN1(BYTE type) {
 	EXTCL_CPU_WR_MEM(BMC70IN1);
 	EXTCL_CPU_RD_MEM(BMC70IN1);
 	EXTCL_SAVE_MAPPER(BMC70IN1);
-	mapper.internal_struct[0] = (BYTE *) &bmc70in1;
+	mapper.internal_struct[0] = (BYTE *)&bmc70in1;
 	mapper.internal_struct_size[0] = sizeof(bmc70in1);
 
 	memset(&bmc70in1, 0x00, sizeof(bmc70in1));

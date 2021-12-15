@@ -157,11 +157,12 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_b
 		bck_states_on_struct(mode, fds.drive, data, (*index), (*size_buff));
 		bck_states_on_struct(mode, fds.snd, data, (*index), (*size_buff));
 		bck_states_on_struct(mode, fds.info.last_operation, data, (*index), (*size_buff));
+		bck_states_on_struct(mode, fds.auto_insert, data, (*index), (*size_buff));
 
 		// in caso di ripristino di una snapshot, se era caricato
 		// un'altro side del disco, devo ricaricarlo.
 		if ((mode == BCK_STATES_OP_READ_FROM_MEM) && (old_side_inserted != fds.drive.side_inserted)) {
-			fds_disk_op(FDS_DISK_SELECT_FROM_REWIND, fds.drive.side_inserted);
+			fds_disk_op(FDS_DISK_SELECT_FROM_REWIND, fds.drive.side_inserted, FALSE);
 			gui_update();
 		}
 	}

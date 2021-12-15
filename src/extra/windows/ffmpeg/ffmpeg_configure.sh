@@ -88,6 +88,7 @@ ${OPTIONS} \
 --enable-libx265 \
 --enable-libvpx \
 --enable-libvorbis \
+--enable-libopus \
 --enable-zlib \
 --enable-iconv \
 --arch="${arch}"

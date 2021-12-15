@@ -27,7 +27,7 @@ struct _fs304 {
 void map_init_FS304(void) {
 	EXTCL_CPU_WR_MEM(FS304);
 	EXTCL_SAVE_MAPPER(FS304);
-	mapper.internal_struct[0] = (BYTE *) &fs304;
+	mapper.internal_struct[0] = (BYTE *)&fs304;
 	mapper.internal_struct_size[0] = sizeof(fs304);
 
 	fs304.reg[0] = 3;

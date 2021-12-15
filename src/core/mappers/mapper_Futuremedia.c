@@ -37,7 +37,7 @@ void map_init_Futuremedia(void) {
 	EXTCL_UPDATE_R2006(MMC3);
 	EXTCL_IRQ_A12_CLOCK(Futuremedia);
 	EXTCL_CPU_EVERY_CYCLE(Futuremedia);
-	mapper.internal_struct[0] = (BYTE *) &futuremedia;
+	mapper.internal_struct[0] = (BYTE *)&futuremedia;
 	mapper.internal_struct_size[0] = sizeof(futuremedia);
 
 	memset(&futuremedia, 0x00, sizeof(futuremedia));

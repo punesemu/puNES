@@ -53,17 +53,21 @@
 #endif
 #include "gui.h"
 #include "video/effects/tv_noise.h"
+#if defined (FULLSCREEN_RESFREQ)
+#include "video/gfx_monitor.h"
+#endif
 
-#define RS_SCALE (1.0f / (1.0f + RAND_MAX))
+#define RS_SCALE (1.0f / (1.0f + (float)RAND_MAX))
 
 #if defined (DEBUG)
-	WORD PCBREAK = 0xC425;
+WORD PCBREAK = 0xC425;
 #endif
 
 INLINE static void emu_frame_started(void);
 INLINE static void emu_frame_finished(void);
 INLINE static void emu_frame_sleep(void);
 
+static void emu_cpu_initial_cycles(void);
 static BYTE emu_ctrl_if_rom_exist(void);
 static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file);
 static void emu_recent_roms_add(BYTE *add, uTCHAR *file);
@@ -100,6 +104,13 @@ void emu_quit(void) {
 	gamegenie_quit();
 	uncompress_quit();
 	patcher_quit();
+
+#if defined (FULLSCREEN_RESFREQ)
+	if (gfx.type_of_fscreen_in_use == FULLSCR) {
+		gfx_monitor_restore_res();
+	}
+	gfx_monitor_quit();
+#endif
 
 	gui_quit();
 }
@@ -207,11 +218,12 @@ BYTE emu_frame_debugger(void) {
 	if (debugger.mode == DBG_GO) {
 		// posso passare dal DBG_GO al DBG_STEP durante l'esecuzione di un frame intero
 		while ((info.frame_status == FRAME_STARTED) && (debugger.mode == DBG_GO)) {
-			if (debugger.breakpoint == cpu.PC) {
+			if ((debugger.breakpoint == cpu.PC) && (debugger.breakpoint_after_step == FALSE)) {
 				debugger.mode = DBG_BREAKPOINT;
 				//gui_dlgdebugger_click_step();
 				break;
 			} else {
+				debugger.breakpoint_after_step = FALSE;
 				info.CPU_PC_before = cpu.PC;
 				cpu_exe_op();
 			}
@@ -288,7 +300,7 @@ char *emu_file2string(const uTCHAR *path) {
 	char *str;
 
 	if (!(fd = ufopen(path, uL("r")))) {
-		ufprintf(stderr, uL("OPENGL: Can't open file '" uPERCENTs "' for reading\n"), path);
+		ufprintf(stderr, uL("OPENGL: Can't open file '" uPs("") "' for reading\n"), path);
 		return (NULL);
 	}
 
@@ -298,16 +310,23 @@ char *emu_file2string(const uTCHAR *path) {
 
 	if (!(str = (char *)malloc((len + 1) * sizeof(char)))) {
 		fclose(fd);
-		ufprintf(stderr, uL("OPENGL: Can't malloc space for '" uPERCENTs "'\n"), path);
+		ufprintf(stderr, uL("OPENGL: Can't malloc space for '" uPs("") "'\n"), path);
 		return (NULL);
 	}
 
 	memset(str, 0x00, len + 1);
 
 	if (fread(str, sizeof(char), len, fd) < len) {
-		str = NULL;
+		if(feof(fd))
+		{
+			ufprintf(stderr, uL("OPENGL: EOF intercepted before the end of the '" uPs("") "'\n"), path);
+		}
+		if (ferror(fd)) {
+			ufprintf(stderr, uL("OPENGL: Error in reading from '" uPs("") "'\n"), path);
+			free(str);
+			str = NULL;
+		}
 	}
-
 	fclose(fd);
 
 	return (str);
@@ -394,6 +413,12 @@ BYTE emu_load_rom(void) {
 
 		info.no_rom = TRUE;
 	}
+
+
+#if defined (FULLSCREEN_RESFREQ)
+	// mi salvo la vecchia modalita'
+	info.old_machine_type = machine.type;
+#endif
 
 	// setto il tipo di sistema
 	switch (cfg->mode) {
@@ -590,17 +615,17 @@ void emu_set_title(uTCHAR *title, int len) {
 	}
 
 	if (cfg->scale == X1) {
-		usnprintf(title, len, uL("" uPERCENTs " (" uPERCENTs), name, opt_mode[machine.type].lname);
+		usnprintf(title, len, uL("" uPs("") " (" uPs("")), name, opt_mode[machine.type].lname);
 	} else if (cfg->filter == NTSC_FILTER) {
 		usnprintf(title, len,
-				uL("" uPERCENTs " (" uPERCENTs ", " uPERCENTs ", " uPERCENTs ", "),
-				name, opt_mode[machine.type].lname,
-				opt_scale[cfg->scale - 1].sname, opt_ntsc[cfg->ntsc_format].lname);
+			uL("" uPs("") " (" uPs("") ", " uPs("") ", " uPs("") ", "),
+			name, opt_mode[machine.type].lname,
+			opt_scale[cfg->scale - 1].sname, opt_ntsc[cfg->ntsc_format].lname);
 	} else {
 		usnprintf(title, len,
-				uL("" uPERCENTs " (" uPERCENTs ", " uPERCENTs ", " uPERCENTs ", "),
-				name, opt_mode[machine.type].lname,
-				opt_scale[cfg->scale - 1].sname, opt_filter[cfg->filter].lname);
+			uL("" uPs("") " (" uPs("") ", " uPs("") ", " uPs("") ", "),
+			name, opt_mode[machine.type].lname,
+			opt_scale[cfg->scale - 1].sname, opt_filter[cfg->filter].lname);
 	}
 
 	if (cfg->scale != X1) {
@@ -729,17 +754,8 @@ BYTE emu_turn_on(void) {
 
 	save_slot_count_load();
 
-	// emulo i 9 cicli iniziali
-	{
-		BYTE i;
-		for (i = 0; i < 8; i++) {
-			if (info.mapper.id != NSF_MAPPER) {
-				ppu_tick();
-			}
-			apu_tick(NULL);
-			cpu.odd_cycle = !cpu.odd_cycle;
-		}
-	}
+	// ritardo della CPU
+	emu_cpu_initial_cycles();
 
 	ext_win.vs_system = vs_system.enabled;
 	if (vs_system.enabled == TRUE) {
@@ -833,6 +849,14 @@ BYTE emu_reset(BYTE type) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
 
+#if defined (FULLSCREEN_RESFREQ)
+	if ((gfx.type_of_fscreen_in_use == FULLSCR) &&
+		(cfg->adaptive_rrate == TRUE) &&
+		(info.old_machine_type != machine.type)) {
+		gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, TRUE);
+	}
+#endif
+
 	map_chr_bank_1k_reset();
 
 	if (info.reset >= HARD) {
@@ -868,10 +892,6 @@ BYTE emu_reset(BYTE type) {
 	// controller
 	input_init(SET_CURSOR);
 
-	// joystick
-	js_quit(FALSE);
-	js_init(FALSE);
-
 	if (rewind_init()) {
 		return (EXIT_ERROR);
 	}
@@ -891,17 +911,7 @@ BYTE emu_reset(BYTE type) {
 	}
 
 	// ritardo della CPU
-	{
-		BYTE i;
-
-		for (i = 0; i < 8; i++) {
-			if (info.mapper.id != NSF_MAPPER) {
-				ppu_tick();
-			}
-			apu_tick(NULL);
-			cpu.odd_cycle = !cpu.odd_cycle;
-		}
-	}
+	emu_cpu_initial_cycles();
 
 	if (vs_system.enabled == TRUE) {
 		if (type >= HARD) {
@@ -1130,20 +1140,30 @@ INLINE static void emu_frame_finished(void) {
 	r4011.frames++;
 }
 INLINE static void emu_frame_sleep(void) {
-	double diff;
-	double now = gui_get_ms();
+	double diff, now = gui_get_ms();
 
 	diff = fps.frame.expected_end - now;
 
 	if (diff > 0) {
 		gui_sleep(diff);
 	} else {
-		fps.frames_emu_too_long++;
+		fps.info.emu_too_long++;
 		fps.frame.expected_end = gui_get_ms();
 	}
 	fps.frame.expected_end += fps.frame.estimated_ms;
 }
 
+static void emu_cpu_initial_cycles(void) {
+	BYTE i;
+
+	for (i = 0; i < 8; i++) {
+		if (info.mapper.id != NSF_MAPPER) {
+			ppu_tick();
+		}
+		apu_tick(NULL);
+		cpu.odd_cycle = !cpu.odd_cycle;
+	}
+}
 static BYTE emu_ctrl_if_rom_exist(void) {
 	uTCHAR file[LENGTH_FILE_NAME_LONG];
 	BYTE found = FALSE;
@@ -1225,7 +1245,7 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 	ustrncpy(info.rom.file, file, usizeof(info.rom.file));
 
 	if (patcher_ctrl_if_exist(NULL) == EXIT_OK) {
-		ufprintf(stderr, uL("patch file : " uPERCENTs "\n"), patcher.file);
+		ufprintf(stderr, uL("patch file : " uPs("") "\n"), patcher.file);
 	}
 
 	return (EXIT_OK);
@@ -1258,7 +1278,7 @@ static BYTE emu_test_tmp_dir(const uTCHAR *tmp_dir) {
 	uTCHAR tmp_file[LENGTH_FILE_NAME_LONG];
 	int fp;
 
-	usnprintf(tmp_file, usizeof(tmp_file), uL("" uPERCENTs "/" NAME "-test_tmp_dir.XXXXXX"), tmp_dir);
+	usnprintf(tmp_file, usizeof(tmp_file), uL("" uPs("") "/" NAME "-test_tmp_dir.XXXXXX"), tmp_dir);
 
 	if ((fp = mkstemp(tmp_file)) < 0) {
 		return (EXIT_ERROR);

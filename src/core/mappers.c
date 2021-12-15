@@ -34,6 +34,7 @@ _mapper mapper;
 
 BYTE map_init(void) {
 	BYTE i;
+
 	/*
 	 * di default la routine di salvataggio
 	 * di una possibile struttura interna
@@ -195,6 +196,9 @@ BYTE map_init(void) {
 			break;
 		case 47:
 			map_init_47();
+			break;
+		case 48:
+			map_init_Taito(TC0690);
 			break;
 		case 49:
 			map_init_49();
@@ -1092,14 +1096,14 @@ void map_prg_ram_init(void) {
 		/* gli 8k iniziali */
 		prg.ram_plus_8k = &prg.ram_plus[0];
 		/* controllo se la rom ha una RAM PRG battery packed */
-		if (info.prg.ram.bat.banks && (tas.type == NOTAS)) {
+		if (info.prg.ram.bat.banks) {
 			uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG], basename[255], *fl, *last_dot;
 			FILE *fp;
 
 			fl = info.rom.file;
 
 			gui_utf_basename(fl, basename, usizeof(basename));
-			usnprintf(prg_ram_file, usizeof(prg_ram_file), uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
+			usnprintf(prg_ram_file, usizeof(prg_ram_file), uL("" uPs("") PRB_FOLDER "/" uPs("")), info.base_folder, basename);
 
 			/* rintraccio l'ultimo '.' nel nome */
 			if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {
@@ -1113,7 +1117,7 @@ void map_prg_ram_init(void) {
 			if (extcl_battery_io) {
 				extcl_battery_io(RD_BAT, fp);
 			} else {
-				mapper_rd_battery_default();
+				map_bat_rd_default(fp);
 			}
 			/* chiudo il file */
 			if (fp) {
@@ -1170,7 +1174,7 @@ void map_prg_ram_battery_save(void) {
 		fl = info.rom.file;
 
 		gui_utf_basename(fl, basename, usizeof(basename));
-		usnprintf(prg_ram_file, usizeof(prg_ram_file), uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
+		usnprintf(prg_ram_file, usizeof(prg_ram_file), uL("" uPs("") PRB_FOLDER "/" uPs("")), info.base_folder, basename);
 
 		/* rintraccio l'ultimo '.' nel nome */
 		if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {
@@ -1185,7 +1189,7 @@ void map_prg_ram_battery_save(void) {
 			if (extcl_battery_io) {
 				extcl_battery_io(WR_BAT, fp);
 			} else {
-				mapper_wr_battery_default();
+				map_bat_wr_default(fp);
 			}
 
 			/* forzo la scrittura del file */
@@ -1286,4 +1290,34 @@ void map_set_banks_max_chr(BYTE chip) {
 		((info.chr.rom[chip].banks_1k >> 1) != 0) ? (info.chr.rom[chip].banks_1k >> 1) - 1 : 0;
 	info.chr.rom[chip].max.banks_1k =
 		info.chr.rom[chip].banks_1k ? info.chr.rom[chip].banks_1k - 1 : 0;
+}
+void map_bat_rd_default(FILE *fp) {
+	BYTE bank;
+
+	/*
+	 * se non e' specificato da che banco di PRG ram inizia
+	 * la battery packed Ram, utilizzo sempre l'ultimo.
+	 */
+	if (info.prg.ram.bat.start == DEFAULT) {
+		bank = info.prg.ram.banks_8k_plus - info.prg.ram.bat.banks;
+	} else {
+		bank = info.prg.ram.bat.start;
+	}
+
+	prg.ram_battery = &prg.ram_plus[bank * 0x2000];
+
+	if ((tas.type == NOTAS) && fp) {
+		/* ne leggo il contenuto */
+		if (fread(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp) < 1) {
+			fprintf(stderr, "error on read battery memory\n");
+		}
+	}
+}
+void map_bat_wr_default(FILE *fp) {
+	/* ci scrivo i dati */
+	if (tas.type == NOTAS) {
+		if (fwrite(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp) < 1) {
+			fprintf(stderr, "error on write battery memory\n");
+		}
+	}
 }

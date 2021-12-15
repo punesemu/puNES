@@ -37,7 +37,7 @@ void map_init_SC_127(void) {
 	EXTCL_SAVE_MAPPER(SC_127);
 	EXTCL_PPU_256_TO_319(SC_127);
 
-	mapper.internal_struct[0] = (BYTE *) &sc127;
+	mapper.internal_struct[0] = (BYTE *)&sc127;
 	mapper.internal_struct_size[0] = sizeof(sc127);
 
 	memset(&sc127, 0x00, sizeof(sc127));

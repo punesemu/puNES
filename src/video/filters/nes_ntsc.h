@@ -39,6 +39,8 @@ typedef struct nes_ntsc_setup_t
 	unsigned char const* base_palette;/* optional 64-entry RGB palette in, 3 bytes per color */
 
 	int swapped;
+	int vertical_blend;
+	double scanline_intensity;
 } nes_ntsc_setup_t;
 
 /* Video format presets */

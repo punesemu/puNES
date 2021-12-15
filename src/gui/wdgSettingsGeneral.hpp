@@ -53,9 +53,13 @@ class wdgSettingsGeneral : public QWidget, public Ui::wdgSettingsGeneral {
 		void s_game_genie_rom_file_clear(bool checked);
 		void s_fds_bios_file(bool checked);
 		void s_fds_bios_file_clear(bool checked);
+		void s_fds_disk1sideA_at_reset(bool checked);
+		void s_fds_switch_side_automatically(bool checked);
+		void s_fds_fast_forward(bool checked);
 		void s_save_battery_every_tot(bool checked);
 		void s_pause_in_background(bool checked);
 		void s_save_settings_on_exit(bool checked);
+		void s_multiple_settings(bool checked);
 };
 
 #endif /* WDGSETTINGSGENERAL_HPP_ */

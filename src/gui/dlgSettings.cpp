@@ -18,6 +18,7 @@
 
 #include "dlgSettings.moc"
 #include "mainWindow.hpp"
+#include "conf.h"
 
 dlgSettings::dlgSettings(QWidget *parent) : QDialog(parent) {
 	setupUi(this);
@@ -66,6 +67,8 @@ void dlgSettings::hideEvent(QHideEvent *event) {
 
 void dlgSettings::retranslateUi(QDialog *dlgSettings) {
 	Ui::dlgSettings::retranslateUi(dlgSettings);
+
+	// Rewind operations
 	mainwin->qaction_shcut.save_settings->setText(pushButton_Save_Settings->text());
 	mainwin->qaction_shcut.rwnd.active->setText(tr("Rewind Mode On/Off"));
 	mainwin->qaction_shcut.rwnd.step_backward->setText(tr("Rewind Step Backward"));
@@ -74,6 +77,9 @@ void dlgSettings::retranslateUi(QDialog *dlgSettings) {
 	mainwin->qaction_shcut.rwnd.fast_forward->setText(tr("Rewind Fast Forward"));
 	mainwin->qaction_shcut.rwnd.play->setText(tr("Rewind Play"));
 	mainwin->qaction_shcut.rwnd.pause->setText(tr("Rewind Pause"));
+
+	// Toggle Menubar
+	mainwin->qaction_shcut.toggle_menubar_in_fullscreen->setText(tr("Toggle the Menu Bar in Fullscreen"));
 }
 void dlgSettings::update_dialog(void) {
 	update_tab_general();
@@ -97,9 +103,6 @@ void dlgSettings::shcut_scale(int scale) {
 void dlgSettings::update_tab_general(void) {
 	widget_Settings_General->update_widget();
 }
-void dlgSettings::update_tab_video(void) {
-	widget_Settings_Video->update_widget();
-}
 void dlgSettings::update_tab_input(void) {
 	widget_Settings_Input->update_widget();
 }
@@ -110,6 +113,9 @@ void dlgSettings::update_tab_cheats(void) {
 	widget_Settings_Cheats->update_widget();
 }
 
+void dlgSettings::update_tab_video(void) {
+	widget_Settings_Video->update_widget();
+}
 void dlgSettings::update_tab_audio(void) {
 	widget_Settings_Audio->update_widget();
 }

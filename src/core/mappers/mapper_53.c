@@ -36,7 +36,7 @@ void map_init_53(void) {
 	EXTCL_CPU_WR_MEM(53);
 	EXTCL_CPU_RD_MEM(53);
 	EXTCL_SAVE_MAPPER(53);
-	mapper.internal_struct[0] = (BYTE *) &m53;
+	mapper.internal_struct[0] = (BYTE *)&m53;
 	mapper.internal_struct_size[0] = sizeof(m53);
 
 	if (info.reset >= HARD) {

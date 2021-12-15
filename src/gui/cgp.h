@@ -28,7 +28,7 @@
 #endif
 
 EXTERNC BYTE cgp_parse(const uTCHAR *file);
-EXTERNC void cgp_pragma_param(char *code, const uTCHAR *path);
+EXTERNC BYTE cgp_pragma_param(char *code, const uTCHAR *path);
 
 #undef EXTERNC
 

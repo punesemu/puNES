@@ -87,8 +87,24 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_slot_state">
-     <item>
+    <layout class="QGridLayout" name="gridLayout_slot_state">
+     <item row="1" column="1">
+      <widget class="overlayWidgetSaveSlot" name="overlaySaveSlot" native="true"/>
+     </item>
+     <item row="2" column="0" colspan="3">
+      <spacer name="verticalSpacer_slot_state_down">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>282</width>
+         <height>230</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="0">
       <spacer name="horizontalSpacer_slot_state_0">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -101,17 +117,7 @@
        </property>
       </spacer>
      </item>
-     <item>
-      <widget class="overlayWidgetSaveSlot" name="overlaySaveSlot" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>100</width>
-         <height>15</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item>
+     <item row="1" column="2">
       <spacer name="horizontalSpacer_slot_state_1">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -124,30 +130,23 @@
        </property>
       </spacer>
      </item>
+     <item row="0" column="0" colspan="3">
+      <spacer name="verticalSpacer_slot_state_up">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
     </layout>
    </item>
    <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item>
-    <widget class="overlayWidgetInfo" name="overlayInfo" native="true">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>20</height>
-      </size>
-     </property>
-    </widget>
+    <widget class="overlayWidgetInfo" name="overlayInfo" native="true"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_bottom">
@@ -196,6 +195,16 @@
         <size>
          <width>16</width>
          <height>16</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="overlayWidgetFrame" name="overlayFrame" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>20</width>
+         <height>0</height>
         </size>
        </property>
       </widget>
@@ -253,6 +262,12 @@
   </customwidget>
   <customwidget>
    <class>overlayWidgetInfo</class>
+   <extends>QWidget</extends>
+   <header>wdgOverlayUi.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>overlayWidgetFrame</class>
    <extends>QWidget</extends>
    <header>wdgOverlayUi.hpp</header>
    <container>1</container>

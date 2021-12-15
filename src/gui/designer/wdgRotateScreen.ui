@@ -32,7 +32,7 @@
       <enum>QFrame::NoFrame</enum>
      </property>
      <property name="text">
-      <string>Rotate Screen :</string>
+      <string>Degrees</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -90,9 +90,6 @@
        <normaloff>:/icon/icons/switch_sides.svg</normaloff>:/icon/icons/switch_sides.svg</iconset>
      </property>
      <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="flat">
       <bool>true</bool>
      </property>
     </widget>

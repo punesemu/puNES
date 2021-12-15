@@ -25,6 +25,7 @@ enum { FDS_MAPPER = 0x1000 };
 
 void map_init_FDS(void);
 void map_init_NSF_FDS(void);
+BYTE extcl_cpu_rd_mem_FDS(WORD address, BYTE openbus, BYTE before);
 void extcl_cpu_every_cycle_FDS(void);
 void extcl_apu_tick_FDS(void);
 

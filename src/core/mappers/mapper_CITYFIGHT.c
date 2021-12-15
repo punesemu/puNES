@@ -44,7 +44,7 @@ void map_init_CITYFIGHT(void) {
 	EXTCL_CPU_WR_MEM(CITYFIGHT);
 	EXTCL_SAVE_MAPPER(CITYFIGHT);
 	EXTCL_CPU_EVERY_CYCLE(CITYFIGHT);
-	mapper.internal_struct[0] = (BYTE *) &cityfight;
+	mapper.internal_struct[0] = (BYTE *)&cityfight;
 	mapper.internal_struct_size[0] = sizeof(cityfight);
 
 	memset(&cityfight, 0x00, sizeof(cityfight));

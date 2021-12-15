@@ -32,13 +32,12 @@
 void map_init_NSF(void) {
 	BYTE internal_struct = 0;
 
-	EXTCL_SND_PLAYBACK_START(NSF);
 	EXTCL_SAVE_MAPPER(NSF);
 	EXTCL_LENGTH_CLOCK(NSF);
 	EXTCL_ENVELOPE_CLOCK(NSF);
 	EXTCL_APU_TICK(NSF);
 	EXTCL_AUDIO_SAMPLES_MOD(nsf);
-	mapper.internal_struct[internal_struct] = (BYTE *) &nsf;
+	mapper.internal_struct[internal_struct] = (BYTE *)&nsf;
 	mapper.internal_struct_size[internal_struct] = sizeof(nsf);
 	internal_struct++;
 
@@ -84,50 +83,50 @@ void map_init_NSF(void) {
 	nsf.draw_mask_frames = 2;
 
 	if (machine.type == NTSC) {
-		nsf.rate.reload = machine.cpu_hz / (1000000.0f / (double) nsf.play_speed.ntsc);
+		nsf.rate.reload = machine.cpu_hz / (1000000.0f / (double)nsf.play_speed.ntsc);
 	} else {
-		nsf.rate.reload = machine.cpu_hz / (1000000.0f / (double) nsf.play_speed.pal);
+		nsf.rate.reload = machine.cpu_hz / (1000000.0f / (double)nsf.play_speed.pal);
 	}
 
 	nsf.rate.count = nsf.rate.reload;
 
 	if (nsf.sound_chips.vrc6) {
-		mapper.internal_struct[internal_struct] = (BYTE *) &vrc6;
+		mapper.internal_struct[internal_struct] = (BYTE *)&vrc6;
 		mapper.internal_struct_size[internal_struct] = sizeof(vrc6);
 		internal_struct++;
 
 		map_init_NSF_VRC6(VRC6A);
 	}
 	if (nsf.sound_chips.vrc7) {
-		mapper.internal_struct[internal_struct] = (BYTE *) &vrc7;
+		mapper.internal_struct[internal_struct] = (BYTE *)&vrc7;
 		mapper.internal_struct_size[internal_struct] = sizeof(vrc7);
 		internal_struct++;
 
 		map_init_NSF_VRC7(VRC7A);
 	}
 	if (nsf.sound_chips.fds) {
-		mapper.internal_struct[internal_struct] = (BYTE *) &fds;
+		mapper.internal_struct[internal_struct] = (BYTE *)&fds;
 		mapper.internal_struct_size[internal_struct] = sizeof(fds);
 		internal_struct++;
 
 		map_init_NSF_FDS();
 	}
 	if (nsf.sound_chips.mmc5) {
-		mapper.internal_struct[internal_struct] = (BYTE *) &mmc5;
+		mapper.internal_struct[internal_struct] = (BYTE *)&mmc5;
 		mapper.internal_struct_size[internal_struct] = sizeof(mmc5);
 		internal_struct++;
 
 		map_init_NSF_MMC5();
 	}
 	if (nsf.sound_chips.namco163) {
-		mapper.internal_struct[internal_struct] = (BYTE *) &n163;
+		mapper.internal_struct[internal_struct] = (BYTE *)&n163;
 		mapper.internal_struct_size[internal_struct] = sizeof(n163);
 		internal_struct++;
 
 		map_init_NSF_Namco(N163);
 	}
 	if (nsf.sound_chips.sunsoft5b) {
-		mapper.internal_struct[internal_struct] = (BYTE *) &fm7;
+		mapper.internal_struct[internal_struct] = (BYTE *)&fm7;
 		mapper.internal_struct_size[internal_struct] = sizeof(fm7);
 		internal_struct++;
 
@@ -263,6 +262,9 @@ void extcl_apu_tick_NSF(void) {
 	if (nsf.sound_chips.vrc6) {
 		extcl_apu_tick_VRC6();
 	}
+	if (nsf.sound_chips.vrc7) {
+		extcl_apu_tick_VRC7();
+	}
 	if (nsf.sound_chips.fds) {
 		extcl_apu_tick_FDS();
 	}
@@ -274,10 +276,5 @@ void extcl_apu_tick_NSF(void) {
 	}
 	if (nsf.sound_chips.sunsoft5b) {
 		extcl_apu_tick_Sunsoft_FM7();
-	}
-}
-void extcl_snd_playback_start_NSF(WORD samplarate) {
-	if (nsf.sound_chips.vrc7) {
-		extcl_snd_playback_start_VRC7(samplarate);
 	}
 }

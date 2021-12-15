@@ -24,6 +24,7 @@
 enum ppu_sprite_byte { YC, TL, AT, XC };
 enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
 enum ppu_scanline_cycles { SHORT_SLINE_CYCLES = 340, SLINE_CYCLES };
+enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_INC_AT_RESET };
 
 #define screen_size() (SCR_ROWS * SCR_COLUMNS) * sizeof(WORD)
 #define _ppu_spr_adr(sprite, epl, spl, sadr)\
@@ -274,6 +275,14 @@ typedef struct _overclock {
 		WORD total;
 	} sclines;
 } _overclock;
+typedef struct _ppu_alignment {
+	struct _ppu_alignment_counter {
+		BYTE cpu;
+		BYTE ppu;
+	} count;
+	BYTE cpu;
+	BYTE ppu;
+}  _ppu_alignment;
 
 extern _ppu ppu;
 extern _screen screen;
@@ -290,6 +299,7 @@ extern _spr sprite_unl[56], sprite_plus_unl[56];
 extern _tile tile_render, tile_fetch;
 extern _ppu_sclines ppu_sclines;
 extern _overclock overclock;
+extern _ppu_alignment ppu_alignment;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -310,6 +320,8 @@ EXTERNC void ppu_draw_screen_continue(void);
 EXTERNC void ppu_draw_screen_pause_with_count(int *count);
 EXTERNC void ppu_draw_screen_continue_with_count(int *count);
 EXTERNC void ppu_draw_screen_continue_ctrl_count(int *count);
+
+EXTERNC void ppu_alignment_reset(void);
 
 #undef EXTERNC
 

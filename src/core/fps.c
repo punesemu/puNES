@@ -22,6 +22,11 @@
 #include "conf.h"
 #include "ppu.h"
 
+#define ff_estimated_ms()\
+	fps.frame.estimated_ms = 1000.0f / (double)(machine.fps * cfg->ff_velocity)
+#define max_estimated_ms()\
+	fps.frame.estimated_ms = 1000.0f / (double)(machine.fps * FF_MAX_SPEED)
+
 _fps fps;
 
 void fps_init(void) {
@@ -31,21 +36,68 @@ void fps_init(void) {
 		machine.fps = 50;
 	}
 
-	memset(&fps, 0x00, sizeof(fps));
+	memset(&fps.frame, 0x00, sizeof(fps.frame));
+	memset(&fps.info, 0x00, sizeof(fps.info));
+	fps.gfx = 0;
 
-	if (fps.fast_forward == FALSE) {
-		fps_machine_ms(1.0f)
+	if (fps_fast_forward_enabled() == FALSE) {
+		fps_machine_ms(1.0f);
 	}
 
-	fps_normalize();
+	fps_fast_forward_stop();
+	fps_max_speed_stop();
 }
-void fps_fast_forward(void) {
+
+void fps_fast_forward_estimated_ms(void) {
+	if (fps.fast_forward == TRUE) {
+		if (fps.max_speed == FALSE) {
+			ff_estimated_ms();
+		}
+	} else if (fps.max_speed == TRUE) {
+		max_estimated_ms();
+	} else {
+		fps.frame.estimated_ms = machine.ms_frame;
+	}
+}
+void fps_fast_forward_start(void) {
+	if (fps.fast_forward == TRUE) {
+		return;
+	}
 	ppu_draw_screen_pause();
 	fps.fast_forward = TRUE;
-	fps.frame.estimated_ms = (int)(1000.0f / (machine.fps * cfg->ff_velocity));
+	fps_fast_forward_estimated_ms();
 }
-void fps_normalize(void) {
-	fps.frame.estimated_ms = machine.ms_frame;
+void fps_fast_forward_stop(void) {
+	if (fps.fast_forward == FALSE) {
+		return;
+	}
 	fps.fast_forward = FALSE;
+	fps_fast_forward_estimated_ms();
+	ppu_draw_screen_continue();
+}
+
+void fps_max_speed_estimated_ms(void) {
+	if (fps.max_speed == TRUE) {
+		max_estimated_ms();
+	} else if (fps.fast_forward == TRUE) {
+		ff_estimated_ms();
+	} else {
+		fps.frame.estimated_ms = machine.ms_frame;
+	}
+}
+void fps_max_speed_start(void) {
+	if (fps.max_speed == TRUE) {
+		return;
+	}
+	ppu_draw_screen_pause();
+	fps.max_speed = TRUE;
+	fps_max_speed_estimated_ms();
+}
+void fps_max_speed_stop(void) {
+	if (fps.max_speed == FALSE) {
+		return;
+	}
+	fps.max_speed = FALSE;
+	fps_max_speed_estimated_ms();
 	ppu_draw_screen_continue();
 }

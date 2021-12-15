@@ -37,7 +37,7 @@ void map_init_163(void) {
 	EXTCL_CPU_RD_MEM(163);
 	EXTCL_PPU_UPDATE_SCREEN_Y(163);
 	EXTCL_SAVE_MAPPER(163);
-	mapper.internal_struct[0] = (BYTE *) &m163;
+	mapper.internal_struct[0] = (BYTE *)&m163;
 	mapper.internal_struct_size[0] = sizeof(m163);
 
 	memset(&m163, 0x00, sizeof(m163));

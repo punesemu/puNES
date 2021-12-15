@@ -219,10 +219,10 @@ BYTE rewind_init(void) {
 		};
 
 #if defined (__WIN32__)
-		usnprintf(rwint.file_name, usizeof(rwint.file_name), uL("" uPERCENTs uPERCENTs "_" uPERCENTs ".rwd"), gui.ostmp,
+		usnprintf(rwint.file_name, usizeof(rwint.file_name), uL("" uPs("") uPs("") "_" uPs("") ".rwd"), gui.ostmp,
 			basename, emu_rand_str());
 #else
-		usnprintf(rwint.file_name, usizeof(rwint.file_name), uL("" uPERCENTs "/" uPERCENTs "_" uPERCENTs ".rwd"), gui.ostmp,
+		usnprintf(rwint.file_name, usizeof(rwint.file_name), uL("" uPs("") "/" uPs("") "_" uPs("") ".rwd"), gui.ostmp,
 			basename, emu_rand_str());
 #endif
 

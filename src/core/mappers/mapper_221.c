@@ -39,7 +39,7 @@ struct _m221 {
 void map_init_221(void) {
 	EXTCL_CPU_WR_MEM(221);
 	EXTCL_SAVE_MAPPER(221);
-	mapper.internal_struct[0] = (BYTE *) &m221;
+	mapper.internal_struct[0] = (BYTE *)&m221;
 	mapper.internal_struct_size[0] = sizeof(m221);
 
 	if (info.reset >= HARD) {

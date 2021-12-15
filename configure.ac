@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.13])
 
-AC_INIT([puNES], [1.0])
+AC_INIT([puNES],[1.0])
 
 # Detect the canonical host and target build environment
 AC_CANONICAL_HOST
@@ -38,7 +38,7 @@ AC_ARG_WITH([ffmpeg],
 	AS_HELP_STRING([--with-ffmpeg],
 		[Build with support for FFmpeg [autodetect] @<:@default: yes@:>@]
 	),
-	[with_ffmpeg=$enableval], [with_ffmpeg=yes])
+	[with_ffmpeg=$withval], [with_ffmpeg=yes])
 
 AC_ARG_ENABLE([release],
 	AS_HELP_STRING([--disable-release],
@@ -189,11 +189,12 @@ AS_IF([test "x$PKG_CONFIG" = "xno"], [
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h float.h inttypes.h limits.h stddef.h stdint.h stdlib.h string.h strings.h sys/ioctl.h sys/time.h unistd.h utime.h])
 
-AX_CXX_COMPILE_STDCXX_11([noext])
+AX_CXX_COMPILE_STDCXX_14([noext])
 
 OLD_CFLAGS="$CFLAGS"
 OLD_LIBS="$LIBS"
 
+# git
 AM_CONDITIONAL(USE_GIT_INFO,[test x$WIPS_VERSION = xtrue])
 AM_COND_IF([ENAB_RELEASE], [
 	AM_COND_IF([USE_GIT_INFO], [
@@ -208,6 +209,12 @@ AM_COND_IF([ENAB_RELEASE], [
 AM_CONDITIONAL(WITH_GIT,[test "x$GIT" != xno])
 AM_COND_IF([WITH_GIT], [
 	CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_GIT_INFO"
+])
+
+# cmake
+AC_CHECK_PROG(CMAKE, cmake, yes)
+AS_IF([test "x$CMAKE" != xyes], [
+	AC_MSG_ERROR([Please install cmake before configuring.])
 ])
 
 # Checks for libraries.
@@ -236,7 +243,7 @@ AM_COND_IF([WINDOWS], [
 AM_COND_IF([WINDOWS], [
 	OLD_PKG_CONFIG="$PKG_CONFIG"
 	PKG_CONFIG="$PKG_CONFIG --static"
-	PKG_CHECK_MODULES(QT5, [Qt5Core Qt5Gui Qt5Widgets Qt5Svg], [
+	PKG_CHECK_MODULES(QT5, [Qt5Core Qt5Gui Qt5Widgets Qt5Network Qt5Svg], [
 		MOC="`$PKG_CONFIG --variable=host_bins Qt5Core`/moc"
 		RCC="`$PKG_CONFIG --variable=host_bins Qt5Core`/rcc"
 		UIC="`$PKG_CONFIG --variable=host_bins Qt5Core`/uic"
@@ -348,7 +355,7 @@ AM_COND_IF([WINDOWS], [
 		AC_MSG_ERROR([libqsvg.a not found])
 	])
 ], [
-	PKG_CHECK_MODULES(QT5, [Qt5Core Qt5Gui Qt5Widgets Qt5Svg], [
+	PKG_CHECK_MODULES(QT5, [Qt5Core Qt5Gui Qt5Widgets Qt5Network Qt5Svg], [
 		MOC="`$PKG_CONFIG --variable=host_bins Qt5Core`/moc"
 		RCC="`$PKG_CONFIG --variable=host_bins Qt5Core`/rcc"
 		UIC="`$PKG_CONFIG --variable=host_bins Qt5Core`/uic"
@@ -377,6 +384,18 @@ AS_IF([test "x$RCC" = xno], [
 ])
 AS_IF([test "x$LRELEASE" = xno], [
 	AC_MSG_ERROR([Could not find lrelease binaries])
+])
+
+# libudev
+AM_COND_IF([LINUX], [
+	AC_CHECK_HEADERS([libudev.h], [], [
+		AC_MSG_ERROR([udev support requested but libudev header not installed])
+	])
+	AC_CHECK_LIB(udev, main, [
+		my_LIBS="${my_LIBS} -ludev"
+	], [
+		AC_MSG_ERROR([libudev.so not found])
+	])
 ])
 
 # OpenGL
@@ -456,6 +475,29 @@ void blah(){
 	])
 ])
 
+# Management fullscreen resolution and auto frequency
+AS_CASE(["$host_os"],
+	[linux*|*bsd*], [
+		PKG_CHECK_MODULES(FULLSCRFREQ, [x11 xrandr], [
+			my_CPPFLAGS="${my_CPPFLAGS} ${FULLSCRFREQ_CFLAGS}"
+			my_LIBS="${my_LIBS} ${FULLSCRFREQ_LIBS}"
+			FULLSCREEN_RESFREQ="yes"
+		], [
+			AC_MSG_RESULT([fullscreen resolution and auto frequency disabled])
+			FULLSCREEN_RESFREQ="no"
+		])
+	],
+	[mingw32*|msys], [
+		FULLSCREEN_RESFREQ="yes"
+	], [
+		FULLSCREEN_RESFREQ="no"
+	]
+)
+AM_CONDITIONAL(USE_FULLSCREEN_RESFREQ,[test "x$FULLSCREEN_RESFREQ" != xno])
+AM_COND_IF([USE_FULLSCREEN_RESFREQ], [
+	CUSTOMDEFINES="${CUSTOMDEFINES} -DFULLSCREEN_RESFREQ"
+])
+
 # ffmpeg
 AM_COND_IF([WITH_FFMPEG], [
 	AM_COND_IF([WINDOWS], [
@@ -498,7 +540,7 @@ AS_CASE(["$host_os"],
 
 		have_usbhid=no
 		AC_MSG_CHECKING([for usbhid])
-		AC_TRY_COMPILE([
+		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 			#include <sys/types.h>
 			#if defined(HAVE_USB_H)
 			#include <usb.h>
@@ -517,19 +559,19 @@ AS_CASE(["$host_os"],
 			#elif defined(HAVE_LIBUSBHID_H)
 			#include <libusbhid.h>
 			#endif
-		], [
+		]], [[
 			struct report_desc *repdesc;
 			struct usb_ctl_report *repbuf;
 			hid_kind_t hidkind;
-		], [
+		]])],[
 			have_usbhid=yes
-		])
+		],[])
 		AC_MSG_RESULT([$have_usbhid])
 
 		AS_IF([test "x$have_usbhid" = xyes], [
 			have_usbhid_ucr_data=no
 			AC_MSG_CHECKING([for ucr_data member of usb_ctl_report])
-			AC_TRY_COMPILE([
+			AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 				#include <sys/types.h>
 				#if defined(HAVE_USB_H)
 				#include <usb.h>
@@ -548,12 +590,12 @@ AS_CASE(["$host_os"],
 				#elif defined(HAVE_LIBUSBHID_H)
 				#include <libusbhid.h>
 				#endif
-			], [
+			]], [[
 				struct usb_ctl_report buf;
 				if (buf.ucr_data) { }
-			], [
+			]])],[
 				have_usbhid_ucr_data=yes
-			])
+			],[])
 			AS_IF([test "x$have_usbhid_ucr_data" = xyes], [
 				CUSTOMDEFINES="${CUSTOMDEFINES} -DUSBHID_UCR_DATA"
 			])
@@ -561,7 +603,7 @@ AS_CASE(["$host_os"],
 
 			have_usbhid_new=no
 			AC_MSG_CHECKING([for new usbhid API])
-			AC_TRY_COMPILE([
+			AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 				#include <sys/types.h>
 				#if defined(HAVE_USB_H)
 				#include <usb.h>
@@ -580,12 +622,12 @@ AS_CASE(["$host_os"],
 				#elif defined(HAVE_LIBUSBHID_H)
 				#include <libusbhid.h>
 				#endif
-			], [
+			]], [[
 				report_desc_t d;
 				hid_start_parse(d, 1, 1);
-			], [
+			]])],[
 				have_usbhid_new=yes
-			])
+			],[])
 			AS_IF([test "x$have_usbhid_new" = xyes], [
 				CUSTOMDEFINES="${CUSTOMDEFINES} -DUSBHID_NEW"
 			])
@@ -593,13 +635,13 @@ AS_CASE(["$host_os"],
 
 			have_machine_joystick=no
 			AC_MSG_CHECKING([for struct joystick in machine/joystick.h])
-			AC_TRY_COMPILE([
+			AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 				#include <machine/joystick.h>
-			], [
+			]], [[
 				struct joystick t;
-			], [
+			]])],[
 				have_machine_joystick=yes
-			])
+			],[])
 			AS_IF([test "x$have_machine_joystick" = xyes], [
 				CUSTOMDEFINES="${CUSTOMDEFINES} -DUSBHID_MACHINE_JOYSTICK"
 			])
@@ -621,20 +663,20 @@ AM_CONDITIONAL(HAVE_WINDRES, [test x$WINDRES != xno])
 AC_SUBST(WINDRES)
 
 # lib7zip
-LIB7ZIP_SRC="lib7zip-1.6.5"
-LIB7ZIP_P7ZIP="p7zip_9.20.1"
-LIB7ZIP_7Z="7z922"
+LIB7ZIP_SRC="lib7zip-53abfeb"
+LIB7ZIP_P7ZIP="p7zip-17.04"
+LIB7ZIP_7Z="7z1900"
 AM_COND_IF([WINDOWS], [
 	export P7ZIP_SOURCE_DIR="${TOP_SRCDIR}/src/extra/${LIB7ZIP_7Z}"
 ], [
 	export P7ZIP_SOURCE_DIR="${TOP_SRCDIR}/src/extra/${LIB7ZIP_P7ZIP}"
 ])
-#AC_CONFIG_COMMANDS_PRE([])
-AC_CONFIG_SUBDIRS([src/extra/lib7zip-1.6.5])
-LIB7ZIP_LIBS="${TOP_BUILDDIR}src/extra/${LIB7ZIP_SRC}/Lib7Zip/lib7zip.a"
+AC_CONFIG_SUBDIRS([src/extra/lib7zip-53abfeb])
+LIB7ZIP_LIBS="${TOP_BUILDDIR}src/extra/${LIB7ZIP_SRC}/src/lib7zip.a"
 AC_SUBST(LIB7ZIP_SRC)
 AC_SUBST(LIB7ZIP_LIBS)
 
+# xdelta
 AC_CONFIG_SUBDIRS([src/extra/xdelta-3.1.0])
 
 # The End

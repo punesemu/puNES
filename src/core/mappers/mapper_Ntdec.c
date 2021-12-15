@@ -48,7 +48,7 @@ void map_init_Ntdec(BYTE model) {
 		case ASDER:
 			EXTCL_CPU_WR_MEM(Ntdec_asder);
 			EXTCL_SAVE_MAPPER(Ntdec_asder);
-			mapper.internal_struct[0] = (BYTE *) &asder;
+			mapper.internal_struct[0] = (BYTE *)&asder;
 			mapper.internal_struct_size[0] = sizeof(asder);
 
 			if (info.reset >= HARD) {

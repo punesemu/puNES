@@ -289,7 +289,7 @@ BYTE nsf_load_rom(void) {
 
 		{
 			char buffer[33];
-			char *auth, **dst;
+			char *auth, **dst = NULL;
 
 			if (!(nsf.info.auth = (char *)malloc((32 + 1) * 4))) {
 				fprintf(stderr, "Out of memory\n");
@@ -1743,8 +1743,8 @@ static char *nsf_print_number(unsigned int number, BYTE decimal, int color) {
 }
 static char *nsf_print_time(double timer, BYTE mode, int color) {
 	BYTE i, is_normal = FALSE;
-	static char buff[300], negative[300];
-	int tmp;
+	static char buff[300];
+	int tmp = 0;
 
 	for (i = 0; i < 4; i++) {
 		BYTE is_last = FALSE;
@@ -1782,20 +1782,24 @@ static char *nsf_print_time(double timer, BYTE mode, int color) {
 	}
 
 	if (mode == 1) {
-		unsigned int i;
-		int index_zero = 0;
+		static char negative[sizeof(buff)];
+		char tmp[sizeof(negative) + 1];
+		unsigned int i, index_zero = 0;
 
 		for (i = 0; i < strlen(buff); i++) {
 			if ((buff[i] < '1') || (buff[i] > '9')) {
 				if ((buff[i] == '0') || (buff[i] == ':')) {
 					index_zero = i;
-					continue;
 				}
 				continue;
 			}
+			snprintf(tmp, sizeof(tmp), "%s-%s", nsf_print_color(color), &buff[index_zero + 1]);
+			if ((index_zero + strlen(tmp)) >= sizeof(negative)) {
+				return (buff);
+			}
 			buff[index_zero] = 0;
-			strcpy(negative, buff);
-			sprintf(negative + index_zero, "%s-%s", nsf_print_color(color), &buff[index_zero + 1]);
+			strncpy(negative, buff, sizeof(negative));
+			strncpy(negative + index_zero, tmp, sizeof(negative) - index_zero);
 			return (negative);
 		}
 	}

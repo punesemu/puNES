@@ -56,7 +56,7 @@ void map_init_235(void) {
 	if (m235tmp.type != 3) {
 		EXTCL_CPU_RD_MEM(235);
 		EXTCL_SAVE_MAPPER(235);
-		mapper.internal_struct[0] = (BYTE *) &m235;
+		mapper.internal_struct[0] = (BYTE *)&m235;
 		mapper.internal_struct_size[0] = sizeof(m235);
 
 		info.mapper.extend_rd = TRUE;

@@ -21,20 +21,33 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QApplication>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QtWidgets/QShortcut>
+#else
+#include <QtGui/QShortcut>
+#endif
 #include <QtCore/QObject>
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
 #include <QtCore/QTimer>
 #include <QtCore/QTranslator>
 #include <QtCore/QPoint>
+#include <QtGui/QValidator>
 #include "settings.h"
-#include "jstick.h"
+#include "os_jstick.h"
 #include "mainWindow.hh"
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"
 #include "wdgToolBar.hpp"
 
+class toUpValidator: public QValidator {
+	public:
+		toUpValidator(QObject *parent = nullptr): QValidator(parent) {}
+		QValidator::State validate(QString &input, UNUSED(int &pos)) const override {
+			input = input.toUpper();
+			return (QValidator::Acceptable);
+		}
+};
 class qtHelper {
 	public:
 		static void widget_set_visible(void *wdg, bool mode);
@@ -69,6 +82,8 @@ class timerEgds : public QTimer {
 		void stop_rwnd(void);
 		void start_ff(void);
 		void stop_ff(void);
+		void start_max_speed(void);
+		void stop_max_speed(void);
 		void start_turn_off(void);
 		void stop_turn_off(void);
 
@@ -81,6 +96,19 @@ class timerEgds : public QTimer {
 
 	private slots:
 		void s_draw_screen(void);
+};
+class actionOneTrigger : public QAction {
+	public:
+		unsigned int count;
+		QMutex mutex;
+
+	public:
+		actionOneTrigger(QObject *parent = 0);
+		~actionOneTrigger();
+
+	public:
+		void only_one_trigger(void);
+		void reset_count(void);
 };
 class mainWindow : public QMainWindow, public Ui::mainWindow {
 		Q_OBJECT
@@ -100,6 +128,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			QAction *interpolation;
 			QAction *integer_in_fullscreen;
 			QAction *stretch_in_fullscreen;
+			QAction *toggle_menubar_in_fullscreen;
 			QAction *audio_enable;
 			QAction *save_settings;
 			struct _qaction_shcut_extern_rwnd {
@@ -112,6 +141,12 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 				QAction *step_forward;
 			} rwnd;
 		} qaction_shcut;
+		struct _qaction_extern {
+			struct _qaction_extern_max_speed {
+				actionOneTrigger *start;
+				actionOneTrigger *stop;
+			} max_speed;
+		} qaction_extern;
 		// ext_gfx_draw_screen
 		timerEgds *egds;
 		wdgScreen *screen;
@@ -125,11 +160,19 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			_js_sch sch;
 			DBWORD shortcut[SET_MAX_NUM_SC];
 		} shcjoy;
+		struct _visibility {
+			bool menubar;
+			bool toolbars;
+		} visibility;
+		struct _secondary_instance {
+			QMutex mutex;
+			QString message;
+		} secondary_instance;
 		QShortcut *shortcut[SET_MAX_NUM_SC];
 		QTranslator *translator;
 		QTranslator *qtTranslator;
-		bool toggle_gui_in_window;
-		QRect geom, mgeom;
+		bool setup_in_out_fullscreen;
+		QRect org_geom, fs_geom;
 
 	public:
 		mainWindow();
@@ -139,7 +182,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void et_gg_reset(void);
 		void et_vs_reset(void);
 		void et_external_control_windows_show(void);
-		void fullscreen(bool state);
 
 	protected:
 #if defined (_WIN32)
@@ -163,11 +205,15 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void control_visible_cursor(void);
 		void make_reset(int type);
 		void change_rom(const uTCHAR *rom);
-		void state_save_slot_set(int slot, bool on_video);
 		void shortcuts(void);
 		bool is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event);
 		void update_gfx_monitor_dimension(void);
-		void set_save_slot_tooltip(BYTE slot, char *buffer);
+		QAction *state_save_slot_action(BYTE slot);
+		void state_save_slot_set(int slot, bool on_video);
+		void state_save_slot_set_tooltip(BYTE slot, char *buffer);
+		void toggle_toolbars(void);
+		void reset_min_max_size(void);
+		void update_fds_menu(void);
 
 	private:
 		void connect_menu_signals(void);
@@ -183,8 +229,10 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void update_menu_state(void);
 
 	private:
+		void action_text(QAction *action, QString description, QString *shortcut);
 		void ctrl_disk_side(QAction *action);
 		int is_shortcut(const QKeyEvent *event);
+		QScreen *win_handle_screen(void);
 
 	public slots:
 		void s_set_fullscreen(void);
@@ -209,6 +257,8 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_save_screenshot_1x(void);
 		void s_pause(void);
 		void s_fast_forward(void);
+		void s_max_speed_start(void);
+		void s_max_speed_stop(void);
 		void s_toggle_gui_in_window(void);
 		void s_open_settings(void);
 		void s_state_save_slot_action(void);
@@ -216,11 +266,14 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_state_save_slot_set(void);
 		void s_state_save_file(void);
 		void s_state_load_file(void);
+		void s_open_djsc(void);
 		void s_help(void);
 
 	private slots:
-		void s_fullscreen(bool state);
+		void s_fullscreen(void);
 		void s_shcjoy_read_timer(void);
+		void s_received_message(quint32 instanceId, QByteArray message);
+		void s_exec_message(void);
 
 	private slots:
 		void s_shcut_mode(void);
@@ -237,6 +290,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_shcut_rwnd_pause(void);
 		void s_shcut_rwnd_fast_forward(void);
 		void s_shcut_rwnd_step_forward(void);
+		void s_shcut_toggle_menubar(void);
 
 	private slots:
 		void s_et_gg_reset(void);

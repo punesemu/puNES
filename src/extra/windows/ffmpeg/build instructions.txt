@@ -20,9 +20,15 @@ libiconv 1.16
 lame svn-r6474
 
 32-bit
+cd lame/libmp3lame
+patch -p2 <lame-dont-use-outdated-symbol-list.patch
+cd ..
 CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=i686-w64-mingw32 --disable-shared --enable-static --enable-nasm --disable-decoder --disable-libmpg123  --disable-frontend
 
 64-bit
+cd lame/libmp3lame
+patch -p2 <lame-dont-use-outdated-symbol-list.patch
+cd ..
 CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=x86_64-w64-mingw32 --disable-shared --enable-static --enable-nasm --disable-decoder --disable-libmpg123  --disable-frontend
 
 ----------------------------------------------
@@ -53,6 +59,15 @@ CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=i686-w64
 CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=x86_64-w64-mingw32 --enable-sse --enable-static --disable-shared --with-ogg=/root/src/ffmpeg/x64/usr
 
 ----------------------------------------------
+libopus 1.3.1
+
+32-bit:
+X86_SSE4_1_CFLAGS="" CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=i686-w64-mingw32 --enable-static --disable-shared
+
+64-bit:
+X86_SSE4_1_CFLAGS="" CFLAGS="-O3" CXXFLAGS="-O3" ./configure --prefix=/tmp/thirdparty --host=x86_64-w64-mingw32 --enable-static --disable-shared
+
+----------------------------------------------
 x264 git-db0d4177
 
 32-bit
@@ -67,10 +82,12 @@ dav1d 0.7.1
 32-bit
 meson build32 --prefix /tmp/thirdparty --buildtype release --default-library static --cross-file package/crossfiles/i686-w64-mingw32.meson
 ninja -C build32
+ninja -C build32 install
 
 64-bit
 meson build64 --prefix /tmp/thirdparty --buildtype release --default-library static --cross-file package/crossfiles/x86_64-w64-mingw32.meson
 ninja -C build64
+ninja -C build64 install
 
 ----------------------------------------------
 x265 3.2.1
@@ -89,6 +106,9 @@ SET(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "-static-libgcc -static-libstdc++ -static 
 SET(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "-static-libgcc -static-libstdc++ -static -O3 -s")
 ' >build/msys/toolchain-i686-w64-mingw32.cmake
 cmake -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/msys/toolchain-i686-w64-mingw32.cmake -DENABLE_SHARED=OFF -DENABLE_CLI=OFF source
+cp libx265.a /tmp/thirdparty/lib/.
+cp x265.pc /tmp/thirdparty/lib/pkgconfig/.
+cp source/x265.h x265_config.h /tmp/thirdparty/include/.
 
 64-bit
 printf '
@@ -104,12 +124,19 @@ SET(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "-static-libgcc -static-libstdc++ -static 
 SET(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "-static-libgcc -static-libstdc++ -static -O3 -s")
 ' >build/msys/toolchain-x86_64-w64-mingw32.cmake
 cmake -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=build/msys/toolchain-x86_64-w64-mingw32.cmake -DENABLE_SHARED=OFF -DENABLE_CLI=OFF source
+cp libx265.a /tmp/thirdparty/lib/.
+cp x265.pc /tmp/thirdparty/lib/pkgconfig/.
+cp source/x265.h x265_config.h /tmp/thirdparty/include/.
 
 ----------------------------------------------
 libvpx 1.9.0
 
 32-bit
+mkdir libvpx-1.9.0
+tar xvf libvpx-1.9.0.tar.gz
 CFLAGS="-O3" CXXFLAGS="-O3" CROSS=i686-w64-mingw32- ./configure --prefix=/tmp/thirdparty --target=x86-win32-gcc --disable-examples --disable-tools --enable-runtime-cpu-detect --enable-static --disable-shared
 
 64-bit
+mkdir libvpx-1.9.0
+tar xvf libvpx-1.9.0.tar.gz
 CFLAGS="-O3" CXXFLAGS="-O3" CROSS=x86_64-w64-mingw32- ./configure --prefix=/tmp/thirdparty --target=x86_64-win64-gcc --disable-examples --disable-tools --enable-runtime-cpu-detect --enable-static --disable-shared

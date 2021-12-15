@@ -52,11 +52,14 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #if defined (WITH_OPENGL)
 #include "opengl.h"
 #endif
+#include "singleapplication.moc"
+#include "singleapplication_p.moc"
 #include "mainWindow.hpp"
 #include "objCheat.hpp"
 #include "dlgSettings.hpp"
 #include "dlgUncomp.hpp"
 #include "dlgVsSystem.hpp"
+#include "dlgJsc.hpp"
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"
 #include "wdgSettingsVideo.hpp"
@@ -73,18 +76,24 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "d3d9.h"
 #endif
 
+static void gui_is_in_desktop(int *x, int *y);
+
 static struct _qt {
-	QApplication *app;
+	SingleApplication *app;
 	mainWindow *mwin;
 	wdgScreen *screen;
 	objCheat *objch;
 	QImage qimage;
+
+	// widget dell'overlay
+	wdgOverlayUi *overlay;
 
 	// dialog del settaggio
 	dlgSettings *dset;
 
 	// controlli esterni
 	dlgVsSystem *vssystem;
+	dlgJsc *djsc;
 
 	// QObject che non mandano un pause quando in background
 	QList<QWidget *>no_bck_pause;
@@ -98,7 +107,9 @@ class appEventFilter: public QObject {
 		bool eventFilter(QObject* object, QEvent* event) {
 			if (event->type() == QEvent::MouseMove) {
 				if (gmouse.hidden == TRUE) {
-					if ((input_draw_target() == TRUE) || (cfg->fullscreen != FULLSCR)) {
+					if ((input_draw_target() == TRUE) ||
+						(cfg->fullscreen != FULLSCR) ||
+						qt.mwin->menubar->isVisible()) {
 						gui_cursor_hide(FALSE);
 					}
 				}
@@ -108,7 +119,47 @@ class appEventFilter: public QObject {
 		}
 };
 
+void gui_init(int *argc, char **argv) {
+	QFlags<SingleApplication::Mode> mode = SingleApplication::Mode::ExcludeAppVersion | SingleApplication::Mode::ExcludeAppPath;
+	int i = 0;
+
+	memset(&gui, 0, sizeof(gui));
+	qt = {};
+	qt.app = new SingleApplication((*argc), argv, true, mode);
+
+	info.gui = TRUE;
+	gui.in_update = FALSE;
+	gui.main_win_lfp = 0;
+
+	for (i = 0; i < PORT_MAX; i++) {
+		gui.dlg_tabWidget_kbd_joy_index[i] = -1;
+	}
+
+	gui_init_os();
+}
 void gui_quit(void) {}
+BYTE gui_control_instance(void) {
+	if (qt.app->isSecondary() && (cfg->multiple_instances == FALSE)) {
+		if (info.rom.file[0]) {
+			unsigned int count = 0;
+
+#if defined (_WIN32)
+			// https://github.com/itay-grudev/SingleApplication/blob/master/Windows.md
+			AllowSetForegroundWindow(DWORD(qt.app->primaryPid()));
+#endif
+			do {
+				if (qt.app->sendMessage(uQString(info.rom.file).toUtf8()) == true) {
+					break;
+				}
+				gui_sleep(20);
+				count++;
+			} while (count < 10);
+		}
+		qt.app->exit(0);
+		return (EXIT_ERROR);
+	}
+	return (EXIT_OK);
+}
 BYTE gui_create(void) {
 #if defined (WITH_OPENGL)
 	QSurfaceFormat fmt;
@@ -137,31 +188,23 @@ BYTE gui_create(void) {
 
 	gfx.device_pixel_ratio = qt.screen->devicePixelRatioF();
 
-	{
-		QRect geometry = QGuiApplication::primaryScreen()->virtualGeometry();
-
-		if ((cfg->lg.x == 0) || cfg->lg.x > geometry.width()) {
-			cfg->lg.x = 80;
-			cfg->lg_settings.x = 80;
-		}
-		if ((cfg->lg.y == 0) || cfg->lg.y > geometry.height()) {
-			cfg->lg.y = 80;
-			cfg->lg_settings.y = 80;
-		}
-		qt.mwin->setGeometry(cfg->lg.x, cfg->lg.y, 0, 0);
-	}
+	gui_is_in_desktop(&cfg->lg.x, &cfg->lg.y);
+	gui_is_in_desktop(&cfg->lg_settings.x, &cfg->lg_settings.y);
+	qt.mwin->setGeometry(cfg->lg.x, cfg->lg.y, 0, 0);
 
 	qt.mwin->show();
 
-	qt.dset = new dlgSettings();
-	overlay.widget = new wdgOverlayUi();
+	qt.dset = new dlgSettings(qt.mwin);
+	qt.overlay = new wdgOverlayUi();
 
 	memset(&ext_win, 0x00, sizeof(ext_win));
 	qt.vssystem = new dlgVsSystem(qt.mwin);
+	qt.djsc = new dlgJsc(qt.mwin);
 
 	qt.no_bck_pause.append(qt.mwin);
 	qt.no_bck_pause.append(qt.dset);
 	qt.no_bck_pause.append(qt.vssystem);
+	qt.no_bck_pause.append(qt.djsc);
 
 	gmouse.hidden = FALSE;
 	gmouse.timer = gui_get_ms();
@@ -174,7 +217,7 @@ BYTE gui_create(void) {
 
 	QApplication::sendEvent(qt.mwin, &event);
 	QApplication::sendEvent(qt.dset, &event);
-	QApplication::sendEvent(overlay.widget, &event);
+	QApplication::sendEvent(qt.overlay, &event);
 
 	return (EXIT_OK);
 }
@@ -183,7 +226,10 @@ void gui_start(void) {
 	fps.frame.expected_end = gui_get_ms() + machine.ms_frame;
 	gfx_thread_continue();
 	emu_thread_continue();
-	qApp->exec();
+	if (info.start_with_hidden_gui) {
+		qt.mwin->action_Toggle_GUI_in_window->trigger();
+	}
+	qt.app->exec();
 }
 
 void gui_set_video_mode(void) {
@@ -218,8 +264,6 @@ void gui_set_window_size(void) {
 	int w = qt.screen->width(), h = qt.screen->height();
 	bool toolbar = qt.mwin->toolbar->isHidden() | qt.mwin->toolbar->isFloating();
 
-	w = qt.screen->width();
-
 	if (qt.mwin->toolbar->orientation() == Qt::Vertical) {
 		w += (toolbar ? 0 : qt.mwin->toolbar->sizeHint().width());
 	} else {
@@ -229,14 +273,37 @@ void gui_set_window_size(void) {
 	h += (qt.mwin->menubar->isHidden() ? 0 : qt.mwin->menubar->sizeHint().height());
 	h += (qt.mwin->statusbar->isHidden() ? 0 : qt.mwin->statusbar->sizeHint().height());
 
+#if defined (_WIN32) && defined(WITH_OPENGL)
+		// when a window is using an OpenGL based surface and is appearing in full screen mode,
+		// problems can occur with other top-level windows which are part of the application. Due
+		// to limitations of the Windows DWM, compositing is not handled correctly for OpenGL based
+		// windows when going into full screen mode. As a result, other top-level windows are not
+		// placed on top of the full screen window when they are made visible. For example, menus
+		// may not appear correctly, or dialogs fail to show up.
+		// https://doc.qt.io/qt-5/windows-issues.html#fullscreen-opengl-based-windows
+		// https://bugreports.qt.io/browse/QTBUG-49258
+		// https://bugreports.qt.io/browse/QTBUG-47156
+		// come workaround incremento di 1 l'altezza del mainWindow e non utilizzo il
+		// showFullScreen ma lo simulo.
+		if (gfx.type_of_fscreen_in_use == FULLSCR) {
+			h += 1;
+		}
+#endif
+
 	qt.mwin->setFixedSize(QSize(w, h));
 
 	qt.mwin->menubar->setFixedWidth(w);
-	qt.mwin->statusbar->update_width(w);
+	qt.mwin->statusbar->setFixedWidth(w);
 }
 
-void gui_set_save_slot_tooltip(BYTE slot, char *buffer) {
-	qt.mwin->set_save_slot_tooltip(slot, buffer);
+void gui_state_save_slot_set(BYTE slot, BYTE on_video) {
+	if (slot >= SAVE_SLOTS) {
+		slot = SAVE_SLOTS - 1;
+	}
+	qt.mwin->state_save_slot_set(slot, on_video);
+}
+void gui_state_save_slot_set_tooltip(BYTE slot, char *buffer) {
+	qt.mwin->state_save_slot_set_tooltip(slot, buffer);
 }
 
 void gui_update(void) {
@@ -248,7 +315,7 @@ void gui_update(void) {
 	qt.mwin->setWindowTitle(uQString(title));
 	qt.mwin->update_window();
 	qt.dset->update_dialog();
-	overlay.widget->update_widget();
+	qt.overlay->update_widget();
 
 	gui.in_update = FALSE;
 }
@@ -258,7 +325,13 @@ void gui_update_dset(void) {
 void gui_update_gps_settings(void) {
 	qt.dset->change_rom();
 }
+void gui_update_status_bar(void) {
+	qt.mwin->statusbar->update_statusbar();
+}
 
+void gui_update_ntsc_widgets(void) {
+	qt.dset->update_tab_video();
+}
 void gui_update_ppu_hacks_widgets(void) {
 	qt.dset->widget_Settings_PPU->update_widget();
 }
@@ -269,6 +342,9 @@ void gui_update_recording_widgets(void) {
 	qt.mwin->update_recording_widgets();
 }
 
+void gui_update_fds_menu(void) {
+	qt.mwin->update_fds_menu();
+}
 void gui_update_recording_tab(void) {
 	qt.dset->update_tab_recording();
 }
@@ -298,14 +374,8 @@ void gui_fullscreen(void) {
 	// se l'emulatore si avvia in fullscreen modalita' finestra, senza questo ritardo
 	// e' possibile che le QT mi passino informazioni non corrette sulle dimensioni del
 	// desktop e che le decorazioni della finestra non appaiano correttamente (problema
-	// riscontrato sotto Linux).
+	// riscontrato sotto Linux e BSD).
 	QTimer::singleShot(250, qt.mwin, SLOT(s_set_fullscreen()));
-}
-void gui_save_slot(BYTE slot) {
-	if (slot >= SAVE_SLOTS) {
-		slot = SAVE_SLOTS - 1;
-	}
-	qt.mwin->state_save_slot_set(slot, FALSE);
 }
 
 void gui_print_usage(char *usage) {
@@ -387,7 +457,7 @@ void gui_objcheat_init(void) {
 	qt.objch->clear_list();
 }
 void gui_objcheat_read_game_cheats(void) {
-	qt.objch->read_game_cheats();
+	qt.objch->read_game_cheats(NULL);
 }
 
 void gui_cursor_init(void) {
@@ -407,6 +477,42 @@ void gui_control_visible_cursor(void) {
 void *gui_mainwindow_get_ptr(void) {
 	return ((void *)qt.mwin);
 }
+void gui_mainwindow_coords(int *x, int *y, BYTE border) {
+	switch (border) {
+		// top center
+		case 0:
+			(*x) = qt.mwin->geometry().x() + (qt.mwin->geometry().width() / 2);
+			(*y) = qt.mwin->geometry().y();
+			break;
+		// top left
+		case 1:
+			(*x) = qt.mwin->geometry().x();
+			(*y) = qt.mwin->geometry().y();
+			break;
+		// top right
+		case 2:
+			(*x) = qt.mwin->geometry().x() + qt.mwin->geometry().width();
+			(*y) = qt.mwin->geometry().y();
+			break;
+		// bottom right
+		case 3:
+			(*x) = qt.mwin->geometry().x() + qt.mwin->geometry().width();
+			(*y) = qt.mwin->geometry().y() + qt.mwin->geometry().height();
+			break;
+		// bottom left
+		case 4:
+			(*x) = qt.mwin->geometry().x();
+			(*y) = qt.mwin->geometry().y() + qt.mwin->geometry().height();
+			break;
+	}
+}
+void gui_mainwindow_before_set_res(void) {
+	qt.mwin->reset_min_max_size();
+	qt.mwin->menubar->setVisible(false);
+	qt.mwin->toolbar->setVisible(false);
+	qt.mwin->statusbar->setVisible(false);
+	qt.mwin->setGeometry(0, 0, 1, 1);
+}
 
 void *gui_wdgrewind_get_ptr(void) {
 	return ((void *)qt.mwin->toolbar->rewind);
@@ -423,6 +529,19 @@ void gui_emit_et_vs_reset(void) {
 }
 void gui_emit_et_external_control_windows_show(void) {
 	emit qt.mwin->et_external_control_windows_show();
+}
+
+void gui_max_speed_start(void) {
+	if (fps.max_speed == TRUE) {
+		return;
+	}
+	qt.mwin->qaction_extern.max_speed.start->only_one_trigger();
+}
+void gui_max_speed_stop(void) {
+	if (fps.max_speed == FALSE) {
+		return;
+	}
+	qt.mwin->qaction_extern.max_speed.stop->only_one_trigger();
 }
 
 void gui_decode_all_input_events(void) {
@@ -452,7 +571,8 @@ void gui_decode_all_input_events(void) {
 		for (QList<_wdgScreen_mouse_event>::iterator e = qt.screen->events.mouse.begin(); e != qt.screen->events.mouse.end(); ++e) {
 			_wdgScreen_mouse_event &event = *e;
 
-			if ((event.type == QEvent::MouseButtonPress) || (event.type == QEvent::MouseButtonDblClick)) {
+			if ((event.type == QEvent::MouseButtonPress) ||
+				(event.type == QEvent::MouseButtonDblClick)) {
 				if (event.button == Qt::LeftButton) {
 					gmouse.left = TRUE;
 				} else if (event.button == Qt::RightButton) {
@@ -484,8 +604,33 @@ void gui_screen_update(void) {
 	qt.dset->widget_Settings_Video->widget_Palette_Editor->widget_Palette_PPU->update();
 }
 
+void *gui_wdgoverlayui_get_ptr(void) {
+	return ((void *)qt.overlay);
+}
+
 void *gui_dlgsettings_get_ptr(void) {
 	return ((void *)qt.dset);
+}
+void gui_dlgsettings_input_update_joy_combo(void) {
+	qt.dset->widget_Settings_Input->update_joy_list();
+}
+
+void *gui_dlgjsc_get_ptr(void) {
+	return ((void *)qt.djsc);
+}
+void gui_dlgjsc_emit_update_joy_combo(void) {
+	if (qt.djsc->isVisible()) {
+		emit qt.djsc->et_update_joy_combo();
+	}
+}
+
+void gui_js_joyval_icon_desc(int index, DBWORD input, void *icon, void *desc) {
+	uTCHAR *uicon = NULL, *udesc = NULL;
+	QString *si = (QString *)icon, *sd = (QString *)desc;
+
+	js_joyval_icon_and_desc(index, input, &uicon, &udesc);
+	(*si) = uicon ? uQString(uicon) : "";
+	(*sd) = udesc ? uQString(udesc) : "";
 }
 
 void gui_external_control_windows_show(void) {
@@ -527,7 +672,7 @@ unsigned int gui_wdgopengl_framebuffer_id(void) {
 }
 
 void gui_screen_info(void) {
-	gfx.bit_per_pixel = qApp->primaryScreen()->depth();
+	gfx.bit_per_pixel = qt.app->primaryScreen()->depth();
 }
 
 uint32_t gui_color(BYTE a, BYTE r, BYTE g, BYTE b) {
@@ -626,3 +771,31 @@ unsigned int gui_hardware_concurrency(void) {
 #elif defined (_WIN32)
 #include "os_windows.h"
 #endif
+
+static void gui_is_in_desktop(int *x, int *y) {
+	QList<QScreen *> screens = QGuiApplication::screens();
+	int i, x_min = 0, x_max = 0, y_min = 0, y_max = 0;
+
+	for (i = 0; i < screens.count(); i++) {
+		QRect g = screens[i]->availableGeometry();
+
+		if (g.x() < x_min) {
+			x_min = g.x();
+		}
+		if ((g.x() + g.width()) > x_max) {
+			x_max = g.x() + g.width();
+		}
+		if (g.y() < y_min) {
+			y_min = g.y();
+		}
+		if ((g.y() + g.height()) > y_max) {
+			y_max = g.y() + g.height();
+		}
+	}
+	if (((*x) == 0) || ((*x) < x_min) || ((*x) > x_max)) {
+		(*x) = 80;
+	}
+	if (((*y) == 0) || ((*y) < y_min) || ((*y) > y_max)) {
+		(*y) = 80;
+	}
+}

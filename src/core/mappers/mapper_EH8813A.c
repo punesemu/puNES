@@ -30,7 +30,7 @@ void map_init_EH8813A(void) {
 	EXTCL_CPU_WR_MEM(EH8813A);
 	EXTCL_CPU_RD_MEM(EH8813A);
 	EXTCL_SAVE_MAPPER(EH8813A);
-	mapper.internal_struct[0] = (BYTE *) &eh88131a;
+	mapper.internal_struct[0] = (BYTE *)&eh88131a;
 	mapper.internal_struct_size[0] = sizeof(eh88131a);
 
 	if (info.reset >= HARD) {

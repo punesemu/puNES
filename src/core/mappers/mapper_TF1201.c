@@ -46,7 +46,7 @@ void map_init_TF1201(void) {
 	EXTCL_PPU_320_TO_34X(MMC3);
 	//EXTCL_UPDATE_R2006(MMC3);
 	EXTCL_IRQ_A12_CLOCK(TF1201);
-	mapper.internal_struct[0] = (BYTE *) &tf1201;
+	mapper.internal_struct[0] = (BYTE *)&tf1201;
 	mapper.internal_struct_size[0] = sizeof(tf1201);
 
 	if (info.reset >= HARD) {

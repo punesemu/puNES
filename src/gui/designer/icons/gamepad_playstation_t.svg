@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   version="1.1"
+   id="Capa_1"
+   x="0px"
+   y="0px"
+   width="128"
+   height="128"
+   viewBox="0 0 128 128"
+   enable-background="new 0 0 20.083 20.082"
+   xml:space="preserve"
+   sodipodi:docname="PlayStation_T.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs3372" /><sodipodi:namedview
+   id="namedview3370"
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1.0"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   showgrid="false"
+   inkscape:zoom="37.496264"
+   inkscape:cx="9.8543151"
+   inkscape:cy="10.054335"
+   inkscape:window-width="2560"
+   inkscape:window-height="1366"
+   inkscape:window-x="0"
+   inkscape:window-y="24"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Capa_1" />
+<g
+   id="g3367"
+   transform="matrix(6.3732325,0,0,6.3732325,4.0197372e-7,0.00637013)">
+	<g
+   id="g3363">
+		<linearGradient
+   id="SVGID_1_"
+   gradientUnits="userSpaceOnUse"
+   x1="10.0415"
+   y1="0"
+   x2="10.0415"
+   y2="17.973801">
+			<stop
+   offset="0"
+   style="stop-color:#5B5B5F"
+   id="stop3350" />
+			<stop
+   offset="0.0231"
+   style="stop-color:#59595D"
+   id="stop3352" />
+			<stop
+   offset="0.4507"
+   style="stop-color:#333335"
+   id="stop3354" />
+			<stop
+   offset="0.7912"
+   style="stop-color:#1C1C1D"
+   id="stop3356" />
+			<stop
+   offset="1"
+   style="stop-color:#141414"
+   id="stop3358" />
+		</linearGradient>
+		<circle
+   fill="url(#SVGID_1_)"
+   cx="10.042"
+   cy="10.041"
+   r="10.042"
+   id="circle3361"
+   style="fill:url(#SVGID_1_)" />
+	</g>
+	<path
+   fill="#068c85"
+   d="m 10.042,5.904 1.924,3.333 1.925,3.333 H 10.042 6.192 L 8.116,9.237 10.042,5.904 m 0,-3.55 L 6.58,8.35 3.119,14.345 h 6.923 6.923 L 13.502,8.35 Z"
+   id="path3365" />
+</g>
+</svg>

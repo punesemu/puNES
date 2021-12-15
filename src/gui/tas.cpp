@@ -17,6 +17,7 @@
  */
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QRegularExpression>
 #include "tas.h"
 #include "emu.h"
 #include "info.h"
@@ -26,17 +27,26 @@
 
 #define tas_set_data_port_ctrlstd(prt, dt)\
 	prt.data[dt] = tas.il[tas.index].prt[dt]
-#define tas_increment_index()\
-	if (++tas.index == tas.count) {\
-		tas_read();\
-	}
 
-static _port tas_port_bck[PORT_MAX];
+INLINE static void tas_increment_index(void);
+
+typedef struct _tas_subtitle {
+	int frame;
+	uTCHAR *string;
+} _tas_subtitle;
+typedef struct _tas_subtitles {
+	int nsubtitle;
+	_tas_subtitle *list;
+} _tas_subtitles;
+
 struct _tas_internal {
 	unsigned int count;
-	QList<size_t> file_byte_il;
 	uint32_t index;
+	QList<size_t> file_byte_il;
+	QString comment_author;
+	_tas_subtitles subtitles;
 } tsint;
+static _port tas_port_bck[PORT_MAX];
 
 BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 	QString extension = uQString(ext);
@@ -51,14 +61,10 @@ BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 	}
 
 	if (tas.type != NOTAS) {
-		BYTE found = FALSE;
+		BYTE i, found = FALSE;
 
-		{
-			BYTE i;
-
-			for (i = PORT1; i < PORT_MAX; i++) {
-				memcpy(&tas_port_bck[i], &port[i], sizeof(_port));
-			}
+		for (i = PORT1; i < PORT_MAX; i++) {
+			memcpy(&tas_port_bck[i], &port[i], sizeof(_port));
 		}
 
 		umemset(tas.file, 0x00, usizeof(tas.file));
@@ -73,7 +79,6 @@ BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 		tas_header(file);
 
 		{
-			BYTE i;
 			const QString rom_ext[4] = { ".nes", ".NES", ".fds", ".FDS" };
 
 			for (i = 0; i < LENGTH(rom_ext); i++) {
@@ -102,7 +107,7 @@ BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 	return (EXIT_OK);
 }
 void tas_quit(void) {
-	BYTE i;
+	int i;
 
 	tas.type = NOTAS;
 
@@ -122,6 +127,21 @@ void tas_quit(void) {
 	input_init(NO_SET_CURSOR);
 
 	tsint.file_byte_il.clear();
+
+	// commenti
+	for (i = 0; i < tsint.subtitles.nsubtitle; i++) {
+		_tas_subtitle *ts = &tsint.subtitles.list[i];
+
+		if (ts->string) {
+			free(ts->string);
+			ts->string = NULL;
+		}
+	}
+	if (tsint.subtitles.list) {
+		free(tsint.subtitles.list);
+		tsint.subtitles.list = NULL;
+	}
+	tsint.subtitles.nsubtitle = 0;
 }
 
 void tas_header_FM2(uTCHAR *file) {
@@ -189,8 +209,27 @@ void tas_header_FM2(uTCHAR *file) {
 			if (port[PORT2].type == CTRL_ZAPPER) {
 				info.zapper_is_present = TRUE;
 			}
-		}
+		} else if (key.compare("comment author", Qt::CaseInsensitive) == 0) {
+			tsint.comment_author = value;
+		} else if (key.compare("subtitle", Qt::CaseInsensitive) == 0) {
+			QRegularExpression re("^\\s*(\\d+)\\s+(.*)$");
+			QRegularExpressionMatch match = re.match(value);
 
+			if (match.hasMatch()) {
+				_tas_subtitle *ts = NULL, *list = NULL;
+
+				if ((list = (_tas_subtitle *)realloc(tsint.subtitles.list, (tsint.subtitles.nsubtitle + 1) * sizeof(_tas_subtitle)))) {
+					QString subtitle = "[yellow]" + match.captured(2) + "[normal]";
+
+					tsint.subtitles.list = list;
+					ts = &tsint.subtitles.list[tsint.subtitles.nsubtitle];
+					memset(ts, 0x00, sizeof(_tas_subtitle));
+					ts->frame = match.captured(1).toInt();
+					ts->string = emu_ustrncpy(ts->string, uQStringCD(subtitle));
+					tsint.subtitles.nsubtitle++;
+				};
+			}
+		}
 		pos = ftell(tas.fp);
 	}
 
@@ -199,6 +238,10 @@ void tas_header_FM2(uTCHAR *file) {
 		// nell'FCEUX viene saltato il primo vblank (flag ppudead)
 		info.r2002_jump_first_vblank = TRUE;
 		//if (tas.emu_version <= 9828) {
+			// in scumtron,meshuggah,feos,xipo,marx-ninjagaiden.fm2 (Ninja Ryukenden/Ninja Gaiden)
+			// impostare r2002_race_condition_disabled a TRUE fa si che nel filmato finale il castello
+			// non venga distrutto correttamente. Ovviamente giocando normalmente la rom questo bug non
+			// si presenta in quanto info.r2002_race_condition_disabled e' sempre impostato su FALSE.
 			info.r2002_race_condition_disabled = TRUE;
 			info.r4016_dmc_double_read_disabled = TRUE;
 		//}
@@ -266,15 +309,17 @@ void tas_read_FM2(void) {
 	tsint.index++;
 }
 void tas_frame_FM2(void) {
+	int i;
+
 	// il primo frame
 	if (!tas.frame) {
-		gui_overlay_info_append_msg_precompiled(20, NULL);
+		gui_overlay_info_append_msg_precompiled_with_alignment(OVERLAY_INFO_CENTER, 20, NULL);
 		//tas_increment_index()
 	}
 
 	if (++tas.frame >= tas.total) {
 		if (tas.frame == tas.total) {
-			gui_overlay_info_append_msg_precompiled(21, NULL);
+			gui_overlay_info_append_msg_precompiled_with_alignment(OVERLAY_INFO_CENTER, 21, NULL);
 		} else if (tas.frame == tas.total + 10) {
 			// nel tas_quit() eseguo il ripristino delle porte e l'input_init() solo che questo
 			// cambia lo stato delle pulsanti e in alcuni film (aglar-marblemadness.fm2)
@@ -286,7 +331,17 @@ void tas_frame_FM2(void) {
 		return;
 	}
 
-	tas_increment_index()
+	// commenti
+	for (i = 0; i < tsint.subtitles.nsubtitle; i++) {
+		_tas_subtitle *ts = &tsint.subtitles.list[i];
+
+		if ((ts->frame == tas.frame) && ts->string) {
+			gui_overlay_info_append_subtitle(ts->string);
+		}
+	}
+
+	// il resto
+	tas_increment_index();
 
 	if (tas.il[tas.index].state > 0) {
 		if (tas.il[tas.index].state == 1) {
@@ -352,5 +407,11 @@ void tas_restart_from_begin_FM2(void) {
 		tsint.index = 0;
 		tas.index = -1;
 		tas.frame = -1;
+	}
+}
+
+INLINE static void tas_increment_index(void) {
+	if (++tas.index == tas.count) {
+		tas_read();
 	}
 }

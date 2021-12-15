@@ -32,7 +32,7 @@ void map_init_BB(void) {
 	EXTCL_CPU_WR_MEM(BB);
 	EXTCL_CPU_RD_MEM(BB);
 	EXTCL_SAVE_MAPPER(BB);
-	mapper.internal_struct[0] = (BYTE *) &bb;
+	mapper.internal_struct[0] = (BYTE *)&bb;
 	mapper.internal_struct_size[0] = sizeof(bb);
 
 	{

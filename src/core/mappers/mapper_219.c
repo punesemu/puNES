@@ -41,7 +41,7 @@ void map_init_219(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *) &m219;
+	mapper.internal_struct[0] = (BYTE *)&m219;
 	mapper.internal_struct_size[0] = sizeof(m219);
 
 	if (info.reset >= HARD) {
@@ -71,7 +71,7 @@ void extcl_cpu_wr_mem_219(WORD address, BYTE value) {
 
 			if (bank < 4) {
 				value = ((value >> 5) & 0x01) | ((value >> 3) & 0x02) | ((value >> 1) & 0x04) |
-		        		((value << 1) & 0x08);
+					((value << 1) & 0x08);
 				control_bank(info.prg.rom[0].max.banks_8k)
 				map_prg_rom_8k(1, bank ^ 0x03, value);
 				map_prg_rom_8k_update();

@@ -77,7 +77,7 @@ void map_init_Jaleco(BYTE model) {
 			EXTCL_CPU_WR_MEM(Jaleco_SS8806);
 			EXTCL_SAVE_MAPPER(Jaleco_SS8806);
 			EXTCL_CPU_EVERY_CYCLE(Jaleco_SS8806);
-			mapper.internal_struct[0] = (BYTE *) &ss8806;
+			mapper.internal_struct[0] = (BYTE *)&ss8806;
 			mapper.internal_struct_size[0] = sizeof(ss8806);
 
 			if (info.reset >= HARD) {

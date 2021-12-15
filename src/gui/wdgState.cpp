@@ -16,12 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtWidgets/QStylePainter>
-#include <QtWidgets/QCommonStyle>
+#include <QtWidgets/QToolTip>
 #include "wdgState.moc"
 #include "wdgToolBar.hpp"
 #include "mainWindow.hpp"
 #include "save_slot.h"
+#include "tas.h"
 
 wdgState::wdgState(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
@@ -32,7 +32,6 @@ wdgState::wdgState(QWidget *parent) : QWidget(parent) {
 	pushButton_load->installEventFilter(this);
 
 	connect(pushButton_save, SIGNAL(clicked(bool)), this, SLOT(s_save_clicked(bool)));
-	connect(slotComboBox_slot, SIGNAL(activated(int)), this, SLOT(s_slot_activated(int)));
 	connect(pushButton_load, SIGNAL(clicked(bool)), this, SLOT(s_load_clicked(bool)));
 }
 wdgState::~wdgState() {}
@@ -44,44 +43,22 @@ void wdgState::changeEvent(QEvent *event) {
 		QWidget::changeEvent(event);
 	}
 }
-void wdgState::paintEvent(UNUSED(QPaintEvent *event)) {
-	QStyleOption opt;
-	QPainter p(this);
-
-	opt.init(this);
-	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-}
 
 void wdgState::retranslateUi(wdgState *wdgState) {
-	QStyle *pStyle = style();
-	QStyleOptionComboBox opt;
-	QRect rc;
-
 	Ui::wdgState::retranslateUi(wdgState);
-
-	for (int i = 0; i < SAVE_SLOTS; i++) {
-		slotComboBox_slot->setItemText(i, QString("%1").arg(i));
-	}
-
-	slotComboBox_slot->setCurrentIndex(slotComboBox_slot->currentIndex());
-
-	opt.initFrom(this);
-	rc = pStyle->subControlRect(QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxArrow, this);
-	slotComboBox_slot->setFixedWidth(QLabel(slotComboBox_slot->itemText(0)).sizeHint().width() + 12 + rc.width());
 }
 
-void wdgState::set_tooltip(int slot, QString tooltip) {
-	slotComboBox_slot->setItemData(slot, tooltip, Qt::ToolTipRole);
+void wdgState::update_widget(void) {
+	pushButton_load->setEnabled((tas.type == NOTAS) & save_slot.state[save_slot.slot]);
+	update();
 }
 
+void wdgState::s_slot_actived(void) {
+	update_widget();
+}
 void wdgState::s_save_clicked(UNUSED(bool checked)) {
 	mainwin->action_Save_state->trigger();
-	update();
-	gui_set_focus();
-}
-void wdgState::s_slot_activated(int index) {
-	save_slot.slot = index;
-	gui_overlay_enable_save_slot(SAVE_SLOT_INCDEC);
+	update_widget();
 	gui_set_focus();
 }
 void wdgState::s_load_clicked(UNUSED(bool checked)) {
@@ -89,73 +66,98 @@ void wdgState::s_load_clicked(UNUSED(bool checked)) {
 	gui_set_focus();
 }
 
-// ---------------------------------- slotItemDelegate --------------------------------------------
+// ---------------------------------- stateBar --------------------------------------------
 
-slotItemDelegate::slotItemDelegate(QObject *parent) : QStyledItemDelegate(parent) {}
-slotItemDelegate::~slotItemDelegate() {}
+stateBar::stateBar(QWidget *parent) : QWidget(parent) {
+	setMouseTracking(true);
+	installEventFilter(this);
+}
+stateBar::~stateBar() {}
 
-void slotItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-	if (!save_slot.state[index.row()]) {
-		QStyleOptionViewItem opt = option;
+QSize stateBar::sizeHint(void) const {
+	return (QSize(SAVE_SLOTS * 13, fontMetrics().boundingRect("Qqy").height()));
+}
+bool stateBar::eventFilter(QObject *obj, QEvent *event) {
+	if (event->type() == QEvent::ToolTip) {
+		QHelpEvent *helpEvent = ((QHelpEvent *)event);
+		int slot = slot_at(helpEvent->pos());
 
-		opt.palette.setColor(QPalette::Text, Qt::gray);
-		QStyledItemDelegate::paint(painter, opt, index);
-	} else {
-		QStyledItemDelegate::paint(painter, option, index);
+		if (slot != -1) {
+			QToolTip::showText(helpEvent->globalPos(), mainwin->state_save_slot_action(slot)->toolTip());
+		} else {
+			QToolTip::hideText();
+			event->ignore();
+		}
+		return (true);
+	} else if (event->type() == QEvent::MouseButtonPress) {
+		DBWORD slot = slot_at(((QMouseEvent *)event)->pos());
+
+		if (slot != save_slot.slot) {
+			gui_state_save_slot_set(slot, TRUE);
+		}
 	}
+	return (QWidget::eventFilter(obj, event));
+}
+void stateBar::paintEvent(UNUSED(QPaintEvent *event)) {
+	static const int padding = 2;
+	static QPen pen;
+	static QRect rect;
+	int x, y, w, h;
+
+	painter.begin(this);
+
+	// disegno la riga di selezione dello slot
+	w = (width() / SAVE_SLOTS);
+	h = height();
+	x = 0;;
+	y = 0;
+
+	if ((x + (SAVE_SLOTS * w)) < width()) {
+		x += (width() - (x + (SAVE_SLOTS * w))) / 2;
+	}
+
+	for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
+		rect.setRect(x + (padding / 2), y, w - padding, h);
+
+		if (save_slot.state[i]) {
+			painter.fillRect(rect, Qt::green);
+			pen.setColor(Qt::black);
+		} else {
+			painter.fillRect(rect, palette().mid().color());
+			if (isEnabled()) {
+				pen.setColor(palette().text().color());
+			} else {
+				pen.setColor(palette().brightText().color());
+			}
+		}
+
+		if (save_slot.slot == i) {
+			painter.save();
+			painter.setOpacity(0.6);
+			if (save_slot.state[i]) {
+				painter.fillRect(rect, Qt::darkGreen);
+				pen.setColor(Qt::white);
+			} else {
+				painter.fillRect(rect, palette().highlight().color());
+				pen.setColor(palette().highlightedText().color());
+			}
+			painter.restore();
+		}
+
+		painter.setPen(pen);
+		painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter, QString::number(i, 16).toUpper());
+
+		x += w;
+	}
+
+	painter.end();
 }
 
-// ------------------------------------ slotComboBox ----------------------------------------------
+int stateBar::slot_at(QPoint pos) {
+	int slot = pos.x() / (width() / SAVE_SLOTS);
 
-slotComboBox::slotComboBox(QWidget *parent) : QComboBox(parent) {
-	sid = new slotItemDelegate(this);
-
-	for (int i = 0; i < SAVE_SLOTS; i++) {
-		addItem(QString("%1").arg(i));
+	if (slot < SAVE_SLOTS) {
+		return (slot);
 	}
-
-	connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(s_index_changed(int)));
-
-	installEventFilter(parent);
-	setItemDelegate(sid);
-}
-slotComboBox::~slotComboBox() {}
-
-void slotComboBox::paintEvent(UNUSED(QPaintEvent *event)) {
-	QStylePainter painter(this);
-	QStyleOptionComboBox opt;
-	QCommonStyle cstyle;
-	QRect editRect;
-
-	// disegno il frame del combobox
-	initStyleOption(&opt);
-	painter.drawComplexControl(QStyle::CC_ComboBox, opt);
-
-	// disegno il testo
-	if (!save_slot.state[currentIndex()]) {
-		painter.setPen(Qt::gray);
-		((const wdgState *)parent())->pushButton_load->setEnabled(false);
-	} else {
-		((const wdgState *)parent())->pushButton_load->setEnabled(true);
-	}
-
-	editRect = cstyle.subControlRect(QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxEditField, this);
-
-	painter.save();
-	painter.setClipRect(editRect);
-	if (!opt.currentText.isEmpty() && !opt.editable) {
-		cstyle.drawItemText(&painter, editRect.adjusted(1, 0, -1, 0),
-			cstyle.visualAlignment(opt.direction, Qt::AlignLeft | Qt::AlignVCenter),
-			opt.palette, opt.state & QStyle::State_Enabled, opt.currentText);
-	}
-	painter.restore();
-}
-
-void slotComboBox::setCurrentIndex(int index) {
-	s_index_changed(index);
-	QComboBox::setCurrentIndex(index);
-}
-
-void slotComboBox::s_index_changed(int index) {
-	setToolTip(itemData(index, Qt::ToolTipRole).toString());
+	return (-1);
 }

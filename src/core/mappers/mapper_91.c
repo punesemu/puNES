@@ -35,7 +35,7 @@ void map_init_91(void) {
 	EXTCL_CPU_WR_MEM(91);
 	EXTCL_SAVE_MAPPER(91);
 	EXTCL_PPU_256_TO_319(91);
-	mapper.internal_struct[0] = (BYTE *) &m91;
+	mapper.internal_struct[0] = (BYTE *)&m91;
 	mapper.internal_struct_size[0] = sizeof(m91);
 
 	memset(&m91, 0x00, sizeof(m91));

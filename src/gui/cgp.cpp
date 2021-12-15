@@ -20,6 +20,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QTextStream>
 #include <QtCore/QFileInfo>
+#include <QtCore/QRegularExpression>
 #include "cgp.h"
 #include "shaders.h"
 
@@ -140,9 +141,8 @@ BYTE cgp_parse(const uTCHAR *file) {
 			} else if (QString::compare(value, "mirrored_repeat", Qt::CaseInsensitive) == 0) {
 				sp->wrap = TEXTURE_WRAP_MIRRORED_REPEAT;
 			} else {
-				fprintf(stderr, "[CGP] : Invalid %s attribute.\n", qPrintable(key));
-				delete(set);
-				return (EXIT_ERROR);
+				fprintf(stderr, "[CGP] : Invalid %s attribute. Using default value.\n", qPrintable(key));
+				sp->wrap = TEXTURE_WRAP_BORDER;
 			}
 		}
 
@@ -251,6 +251,10 @@ BYTE cgp_parse(const uTCHAR *file) {
 		foreach (const QString &ele, list) {
 			_lut_pass *lp;
 
+			if (!ele.length()) {
+				continue;
+			}
+
 			finded = false;
 
 			for (i = 0; i < se.luts; i++) {
@@ -306,9 +310,8 @@ BYTE cgp_parse(const uTCHAR *file) {
 				} else if (QString::compare(value, "mirrored_repeat", Qt::CaseInsensitive) == 0) {
 					lp->wrap = TEXTURE_WRAP_MIRRORED_REPEAT;
 				} else {
-					fprintf(stderr, "[CGP] : Invalid %s attribute.\n", qPrintable(key));
-					delete(set);
-					return (EXIT_ERROR);
+					fprintf(stderr, "[CGP] : Invalid %s attribute. Using default value.\n", qPrintable(key));
+					lp->wrap = TEXTURE_WRAP_BORDER;
 				}
 			}
 		}
@@ -342,7 +345,15 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 			// value
 			if (cgp_value(set, ele, value) == FALSE) {
-				prm->value = value.toFloat();
+				const QString cvalue = value;
+				QString qfloat;
+
+				for (QChar c : cvalue) {
+					if (c.isDigit() || (c == '.') || (c == ',')) {
+						qfloat.append(c);
+					}
+				}
+				prm->value = qfloat.toFloat();
 			}
 		}
 	}
@@ -353,14 +364,17 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 	return (EXIT_OK);
 }
-void cgp_pragma_param(char *code, const uTCHAR *path) {
+BYTE cgp_pragma_param(char *code, const uTCHAR *path) {
 	QTextStream stream(code);
 	QFile file(uQString(path));
 	QString line;
 	_param_shd param;
 
 	if (path && path[0]) {
-		file.open(QIODevice::ReadOnly);
+		if (file.open(QIODevice::ReadOnly) == false) {
+			ufprintf(stderr, uL("CGP: Can't open file '" uPs("") "'\n"), path);
+			return (EXIT_ERROR);
+		}
 		stream.setDevice(&file);
 	}
 
@@ -370,8 +384,7 @@ void cgp_pragma_param(char *code, const uTCHAR *path) {
 		::memset(&param, 0x00, sizeof(_param_shd));
 
 		if (line.startsWith("#pragma parameter")) {
-			QRegExp rx("[-+]?[0-9]*(\\.[0-9]+)");
-			int i, count = 0, pos = 0;
+			int i, count = 0;
 			bool finded;
 
 			// sscanf non e' "locale indipendente" percio' lo utilizzo solo per
@@ -382,24 +395,30 @@ void cgp_pragma_param(char *code, const uTCHAR *path) {
 				continue;
 			}
 
-			line = line.remove(QRegExp("#pragma parameter.*\""));
+			line = line.remove(QRegularExpression("#pragma parameter.*\""));
 
-			while ((pos = rx.indexIn(line, pos)) != -1) {
-				switch (count++) {
-					case 2:
-						param.initial = rx.cap(0).toFloat();
-						break;
-					case 3:
-						param.min = rx.cap(0).toFloat();
-						break;
-					case 4:
-						param.max = rx.cap(0).toFloat();
-						break;
-					case 5:
-						param.step = rx.cap(0).toFloat();
-						break;
+			{
+				QRegularExpression rx("[-+]?[0-9]*\\.[0-9]+");
+				QRegularExpressionMatchIterator iterator = rx.globalMatch(line);
+
+				while (iterator.hasNext()) {
+					QRegularExpressionMatch match = iterator.next();
+
+					switch (count++) {
+						case 2:
+							param.initial = match.captured(0).toFloat();
+							break;
+						case 3:
+							param.min = match.captured(0).toFloat();
+							break;
+						case 4:
+							param.max = match.captured(0).toFloat();
+							break;
+						case 5:
+							param.step = match.captured(0).toFloat();
+							break;
+					}
 				}
-				pos += rx.matchedLength();
 			}
 
 			if (count < 5) {
@@ -432,6 +451,7 @@ void cgp_pragma_param(char *code, const uTCHAR *path) {
 	if (file.isOpen()) {
 		file.close();
 	}
+	return (EXIT_OK);
 }
 
 static bool cgp_value(QSettings *set, QString key, QString &value) {
@@ -447,7 +467,11 @@ static bool cgp_value(QSettings *set, QString key, QString &value) {
 static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map) {
 	QTextStream in(&device);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	in.setCodec("UTF-8");
+#else
+	in.setEncoding(QStringEncoder::Utf8);
+#endif
 
 	while (!in.atEnd()) {
 		QString line = in.readLine();
@@ -460,11 +484,11 @@ static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map) {
 		QString key, value;
 
 		if (splitted.count() == 2) {
-			key = QString(splitted.at(0)).replace(QRegExp("\\s*$"), "");
+			key = QString(splitted.at(0)).replace(QRegularExpression("\\s*$"), "");
 			value = splitted.at(1).trimmed();
 			// rimuovo i commenti che possono esserci sulla riga
-			value = value.remove(QRegExp("#.*"));
-			value = value.remove(QRegExp("//.*"));
+			value = value.remove(QRegularExpression("#.*"));
+			value = value.remove(QRegularExpression("//.*"));
 			value = value.remove('"');
 			value = value.trimmed();
 

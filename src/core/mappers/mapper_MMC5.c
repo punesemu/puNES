@@ -180,7 +180,7 @@ void map_init_MMC5(void) {
 	EXTCL_LENGTH_CLOCK(MMC5);
 	EXTCL_ENVELOPE_CLOCK(MMC5);
 	EXTCL_APU_TICK(MMC5);
-	mapper.internal_struct[0] = (BYTE *) &mmc5;
+	mapper.internal_struct[0] = (BYTE *)&mmc5;
 	mapper.internal_struct_size[0] = sizeof(mmc5);
 
 	if (info.reset >= HARD) {

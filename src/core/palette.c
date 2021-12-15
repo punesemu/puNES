@@ -27,7 +27,7 @@ void palette_save_on_file(const uTCHAR *file) {
 	FILE *fp;
 
 	if ((fp = ufopen(file, uL("wb"))) == NULL) {
-		ufprintf(stderr, uL("ERROR: Impossible save palette file " uPERCENTs "\n"), file);
+		ufprintf(stderr, uL("ERROR: Impossible save palette file " uPs("") "\n"), file);
 		return;
 	}
 
@@ -43,14 +43,14 @@ BYTE palette_load_from_file(const uTCHAR *file) {
 	memset((BYTE *)palette_base_file, 0x00, 64 * 3);
 
 	if ((fp = ufopen(file, uL("rb"))) == NULL) {
-		ufprintf(stderr, uL("ERROR: open file " uPERCENTs "\n"), file);
+		ufprintf(stderr, uL("ERROR: open file " uPs("") "\n"), file);
 		return (EXIT_ERROR);
 	}
 
 	fseek(fp, 0, SEEK_END);
 
 	if (ftell(fp) < (64 * 3)) {
-		ufprintf(stderr, uL("ERROR: read file " uPERCENTs "\n"), file);
+		ufprintf(stderr, uL("ERROR: read file " uPs("") "\n"), file);
 		fclose(fp);
 		return (EXIT_ERROR);
 	}

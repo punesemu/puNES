@@ -33,7 +33,7 @@ void map_init_168(void) {
 	EXTCL_CPU_WR_MEM(168);
 	EXTCL_SAVE_MAPPER(168);
 	EXTCL_WR_CHR(168);
-	mapper.internal_struct[0] = (BYTE *) &m168;
+	mapper.internal_struct[0] = (BYTE *)&m168;
 	mapper.internal_struct_size[0] = sizeof(m168);
 
 	{

@@ -31,7 +31,7 @@ void map_init_120(void) {
 	EXTCL_CPU_WR_MEM(120);
 	EXTCL_CPU_RD_MEM(120);
 	EXTCL_SAVE_MAPPER(120);
-	mapper.internal_struct[0] = (BYTE *) &m120;
+	mapper.internal_struct[0] = (BYTE *)&m120;
 	mapper.internal_struct_size[0] = sizeof(m120);
 
 	info.mapper.extend_wr = TRUE;

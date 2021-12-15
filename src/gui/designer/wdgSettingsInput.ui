@@ -40,7 +40,7 @@
      <widget class="QWidget" name="tab_Ports">
       <attribute name="icon">
        <iconset resource="resources.qrc">
-        <normaloff>:/icon/icons/Rs_232_Female.svg</normaloff>:/icon/icons/Rs_232_Female.svg</iconset>
+        <normaloff>:/icon/icons/rs_232_female.svg</normaloff>:/icon/icons/rs_232_female.svg</iconset>
       </attribute>
       <attribute name="title">
        <string>Ports</string>
@@ -353,7 +353,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QPushButton" name="pushButton_cm_fscore">
+             <widget class="QPushButton" name="pushButton_cm_nes">
               <property name="text">
                <string>NES</string>
               </property>
@@ -373,7 +373,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_cm_nes">
+             <widget class="QPushButton" name="pushButton_cm_fscore">
               <property name="text">
                <string>Four Score</string>
               </property>
@@ -552,9 +552,9 @@
  </widget>
  <tabstops>
   <tabstop>tabWidget_Input</tabstop>
-  <tabstop>pushButton_cm_fscore</tabstop>
-  <tabstop>pushButton_cm_famicom</tabstop>
   <tabstop>pushButton_cm_nes</tabstop>
+  <tabstop>pushButton_cm_famicom</tabstop>
+  <tabstop>pushButton_cm_fscore</tabstop>
   <tabstop>comboBox_exp</tabstop>
   <tabstop>comboBox_cp1</tabstop>
   <tabstop>pushButton_cp1</tabstop>

@@ -17,7 +17,7 @@
    <string notr="true">FHorse</string>
   </property>
   <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar">
+  <widget class="wdgMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -128,6 +128,8 @@
     <addaction name="action_State_Slot_7"/>
     <addaction name="action_State_Slot_8"/>
     <addaction name="action_State_Slot_9"/>
+    <addaction name="action_State_Slot_A"/>
+    <addaction name="action_State_Slot_B"/>
     <addaction name="separator"/>
     <addaction name="action_State_Save_to_file"/>
     <addaction name="action_State_Load_from_file"/>
@@ -143,6 +145,7 @@
      <string>Too&amp;ls</string>
     </property>
     <addaction name="action_Vs_System"/>
+    <addaction name="action_Joypad_Gamepads_Debug"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_NES"/>
@@ -509,11 +512,12 @@
    </property>
   </action>
   <action name="action_Vs_System">
-   <property name="checkable">
-    <bool>true</bool>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/insert_coins.svg</normaloff>:/icon/icons/insert_coins.svg</iconset>
    </property>
    <property name="text">
-    <string>Vs System Controls</string>
+    <string>&amp;Vs System Controls</string>
    </property>
   </action>
   <action name="action_Open_working_folder">
@@ -633,7 +637,39 @@
     <string>Start/Stop &amp;VIDEO recording</string>
    </property>
   </action>
+  <action name="action_State_Slot_A">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;A</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_B">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;B</string>
+   </property>
+  </action>
+  <action name="action_Joypad_Gamepads_Debug">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/game_controller.svg</normaloff>:/icon/icons/game_controller.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Joypad/Gamepad Debug</string>
+   </property>
+  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>wdgMenuBar</class>
+   <extends>QMenuBar</extends>
+   <header>wdgMenuBar.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="resources.qrc"/>
  </resources>

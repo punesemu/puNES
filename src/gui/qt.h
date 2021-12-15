@@ -29,11 +29,20 @@
 #include "uncompress.h"
 #include "jstick.h"
 
+enum _overlay_info_alignment {
+	OVERLAY_INFO_LEFT,
+	OVERLAY_INFO_CENTER,
+	OVERLAY_INFO_RIGHT
+};
+
 //	"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f6f7fa, stop: 1 #aaabae);"
 
 #define button_stylesheet()\
 	"QPushButton {"\
 	"	margin: 0; padding: 2px; border: 2px groove gray;"\
+	"}"\
+	"QPushButton:pressed {"\
+	"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #aaabae, stop: 1 #f6f7fa);"\
 	"}"\
 	"QPushButton:disabled {"\
 	"	color: gray;"\
@@ -64,11 +73,55 @@
 	"	subcontrol-position: top center;"\
 	"	padding: 0 0px;"\
 	"}"
+#define toolbar_button_stylesheet()\
+	"QPushButton {"\
+	"	margin :0; padding: 2px; border: 1px groove lightgray;"\
+	"}"\
+	"QPushButton:hover {"\
+	"	border: 1px groove darkgray;"\
+	"}"\
+	"QPushButton:pressed {"\
+	"	margin :0; padding: 2px; border: 1px inset darkgray;"\
+	"}"\
+	"QPushButton:disabled {"\
+	"	color: gray;"\
+	"}"\
+	"QPushButton:disabled:checked {"\
+	"	margin :0; padding: 2px; border: 1px inset darkgray;"\
+	"	color: gray;"\
+	"}"\
+	"QPushButton:checked {"\
+	"	margin :0; padding: 2px; border: 1px inset darkgray;"\
+	"	color: black;"\
+	"}"
+#define toolbar_toolbutton_stylesheet()\
+	"QToolButton {"\
+	"	margin :0; padding: 2px; border: 1px groove lightgray;"\
+	"}"\
+	"QToolButton:hover {"\
+	"	border: 1px groove darkgray;"\
+	"}"\
+	"QToolButton:pressed {"\
+	"	margin :0; padding: 2px; border: 1px inset darkgray;"\
+	"}"\
+	"QToolButton:disabled {"\
+	"	color: gray;"\
+	"}"\
+	"QToolButton:checked:disabled {"\
+	"	margin :0; padding: 2px; border: 1px inset darkgray;"\
+	"	color: gray;"\
+	"}"\
+	"QToolButton:checked {"\
+	"	margin :0; padding: 2px; border: 1px inset darkgray;"\
+	"	color: black;"\
+	"}"
 
 #define mainwin ((mainWindow *)gui_mainwindow_get_ptr())
 #define wdgrewind ((wdgRewind *)gui_wdgrewind_get_ptr())
 #define dlgsettings ((dlgSettings *)gui_dlgsettings_get_ptr())
+#define dlgjsc ((dlgJsc *)gui_dlgjsc_get_ptr())
 #define objcheat ((objCheat *)gui_objcheat_get_ptr())
+#define wdgoverlayui ((wdgOverlayUi *)gui_wdgoverlayui_get_ptr())
 
 typedef struct _gui {
 #if defined (_WIN32)
@@ -82,7 +135,6 @@ typedef struct _gui {
 	const uTCHAR *ostmp;
 	struct timeval counterStart;
 #endif
-
 	uTCHAR last_open_path[LENGTH_FILE_NAME_MAX];
 	uTCHAR last_open_patch_path[LENGTH_FILE_NAME_MAX];
 
@@ -95,6 +147,7 @@ typedef struct _gui {
 	uint8_t main_win_lfp;
 
 	int dlg_rc;
+	int dlg_tabWidget_kbd_joy_index[PORT_MAX];
 } _gui;
 typedef struct _gui_mouse {
 	int x;
@@ -122,23 +175,29 @@ extern double (*gui_get_ms)(void);
 #define EXTERNC
 #endif
 
+EXTERNC void gui_init(int *argc, char **argv);
 EXTERNC void gui_quit(void);
+EXTERNC BYTE gui_control_instance(void);
 EXTERNC BYTE gui_create(void);
 EXTERNC void gui_start(void);
 
 EXTERNC void gui_set_video_mode(void);
 EXTERNC void gui_set_window_size(void);
 
-EXTERNC void gui_set_save_slot_tooltip(BYTE slot, char *buffer);
+EXTERNC void gui_state_save_slot_set(BYTE slot, BYTE on_video);
+EXTERNC void gui_state_save_slot_set_tooltip(BYTE slot, char *buffer);
 
 EXTERNC void gui_update(void);
 EXTERNC void gui_update_dset(void);
 EXTERNC void gui_update_gps_settings(void);
+EXTERNC void gui_update_status_bar(void);
 
+EXTERNC void gui_update_ntsc_widgets(void);
 EXTERNC void gui_update_ppu_hacks_widgets(void);
 EXTERNC void gui_update_apu_channels_widgets(void);
 EXTERNC void gui_update_recording_widgets(void);
 
+EXTERNC void gui_update_fds_menu(void);
 EXTERNC void gui_update_recording_tab(void);
 
 EXTERNC void gui_egds_set_fps(void);
@@ -149,7 +208,6 @@ EXTERNC void gui_egds_start_rwnd(void);
 EXTERNC void gui_egds_stop_rwnd(void);
 
 EXTERNC void gui_fullscreen(void);
-EXTERNC void gui_save_slot(BYTE slot);
 
 EXTERNC void gui_print_usage(char *usage);
 EXTERNC int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type);
@@ -169,6 +227,8 @@ EXTERNC void gui_cursor_hide(BYTE hide);
 EXTERNC void gui_control_visible_cursor(void);
 
 EXTERNC void *gui_mainwindow_get_ptr(void);
+EXTERNC void gui_mainwindow_coords(int *x, int *y, BYTE border);
+EXTERNC void gui_mainwindow_before_set_res(void);
 
 EXTERNC void *gui_wdgrewind_get_ptr(void);
 EXTERNC void gui_wdgrewind_play(void);
@@ -176,21 +236,35 @@ EXTERNC void gui_wdgrewind_play(void);
 EXTERNC void gui_emit_et_gg_reset(void);
 EXTERNC void gui_emit_et_vs_reset(void);
 EXTERNC void gui_emit_et_external_control_windows_show(void);
+EXTERNC void gui_emit_et_input_update_combo(void);
+
+EXTERNC void gui_max_speed_start(void);
+EXTERNC void gui_max_speed_stop(void);
 
 EXTERNC void gui_decode_all_input_events(void);
 
 EXTERNC void gui_screen_update(void);
 
+EXTERNC void *gui_wdgoverlayui_get_ptr(void);
 EXTERNC void gui_overlay_update(void);
 EXTERNC BYTE gui_overlay_is_updated(void);
 EXTERNC void gui_overlay_enable_save_slot(BYTE mode);
 EXTERNC void gui_overlay_set_size(int w, int h);
 EXTERNC void gui_overlay_info_init(void);
 EXTERNC void gui_overlay_info_emulator(void);
+EXTERNC void gui_overlay_info_append_subtitle(uTCHAR *msg);
 EXTERNC void gui_overlay_info_append_msg_precompiled(int index, void *arg1);
+EXTERNC void gui_overlay_info_append_msg_precompiled_with_alignment(BYTE alignment, int index, void *arg1);
 EXTERNC void gui_overlay_blit(void);
+EXTERNC void gui_overlay_slot_preview(int slot, void *buffer, uTCHAR *file);
 
 EXTERNC void *gui_dlgsettings_get_ptr(void);
+EXTERNC void gui_dlgsettings_input_update_joy_combo(void);
+
+EXTERNC void *gui_dlgjsc_get_ptr(void);
+EXTERNC void gui_dlgjsc_emit_update_joy_combo(void);
+
+EXTERNC void gui_js_joyval_icon_desc(int index, DBWORD input, void *icon, void *desc);
 
 EXTERNC void *gui_dlgdebugger_get_ptr(void);
 EXTERNC void gui_dlgdebugger_click_step(void);
@@ -220,13 +294,19 @@ EXTERNC int gui_utf_strcasecmp(uTCHAR *s0, uTCHAR *s1);
 
 EXTERNC unsigned int gui_hardware_concurrency(void);
 
-EXTERNC void gui_init(int *argc, char **argv);
+EXTERNC void gui_init_os(void);
 EXTERNC void gui_sleep(double ms);
 #if defined (_WIN32)
 EXTERNC HWND gui_screen_id(void);
 EXTERNC char *gui_dup_wchar_to_utf8(uTCHAR *w);
 #else
 EXTERNC int gui_screen_id(void);
+#endif
+
+#if defined (FULLSCREEN_RESFREQ)
+EXTERNC BYTE gui_monitor_enum_monitors(void);
+EXTERNC void gui_monitor_set_res(void *monitor_info, void *mode_info);
+EXTERNC void gui_monitor_get_current_x_y(void *monitor_info, int *x, int *y);
 #endif
 
 #undef EXTERNC

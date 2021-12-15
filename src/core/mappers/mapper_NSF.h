@@ -24,7 +24,6 @@
 enum { NSF_MAPPER = 0x1003 };
 
 void map_init_NSF(void);
-void extcl_snd_playback_start_NSF(WORD samplarate);
 BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp);
 void extcl_length_clock_NSF(void);
 void extcl_envelope_clock_NSF(void);

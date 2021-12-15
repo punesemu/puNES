@@ -153,11 +153,11 @@ BYTE fds_load_rom(void) {
 
 	// conto le dimensioni dei vari sides
 	for (i = 0; i < fds.info.total_sides; i++) {
-		fds_disk_op(FDS_DISK_COUNT, i);
+		fds_disk_op(FDS_DISK_COUNT, i, FALSE);
 	}
 
 	// inserisco il primo
-	fds_disk_op(FDS_DISK_SELECT_AND_INSERT, 0);
+	fds_disk_op(FDS_DISK_SELECT_AND_INSERT, 0, FALSE);
 
 	info.cpu_rw_extern = TRUE;
 	fds.info.enabled = TRUE;
@@ -179,7 +179,7 @@ BYTE fds_load_bios(void) {
 	// ordine di ricerca:
 
 	// 1) file specificato dall'utente
-	usnprintf(bios_file, usizeof(bios_file), uL("" uPERCENTs), cfg->fds_bios_file);
+	usnprintf(bios_file, usizeof(bios_file), uL("" uPs("")), cfg->fds_bios_file);
 	if ((bios = ufopen(bios_file, uL("rb")))) {
 		goto fds_load_bios_founded;
 	}
@@ -209,7 +209,7 @@ BYTE fds_load_bios(void) {
 	}
 
 	// 4) directory puNES/bios
-	usnprintf(bios_file, usizeof(bios_file), uL("" uPERCENTs BIOS_FOLDER "/" BIOSFILE), info.base_folder);
+	usnprintf(bios_file, usizeof(bios_file), uL("" uPs("") BIOS_FOLDER "/" BIOSFILE), info.base_folder);
 	if ((bios = ufopen(bios_file, uL("rb")))) {
 		goto fds_load_bios_founded;
 	}
@@ -232,7 +232,7 @@ BYTE fds_load_bios(void) {
 
 	return (EXIT_OK);
 }
-void fds_disk_op(WORD type, BYTE side_to_insert) {
+void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 	BYTE buffer[DISK_SIDE_SIZE];
 	uint32_t position, size = 0, length = 0;
 
@@ -247,12 +247,15 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 			break;
 		case FDS_DISK_EJECT:
 			fds.drive.disk_ejected = TRUE;
-			gui_overlay_info_append_msg_precompiled(7, NULL);
-
+			if (quiet == FALSE) {
+				gui_overlay_info_append_msg_precompiled(7, NULL);
+			}
 			return;
 		case FDS_DISK_INSERT:
 			if (!fds.drive.disk_ejected) {
-				gui_overlay_info_append_msg_precompiled(8, NULL);
+				if (quiet == FALSE) {
+					gui_overlay_info_append_msg_precompiled(8, NULL);
+				}
 				return;
 			}
 
@@ -260,8 +263,9 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 			fds.drive.gap_ended = FALSE;
 
 			fds.drive.disk_ejected = FALSE;
-
-			gui_overlay_info_append_msg_precompiled(9, NULL);
+			if (quiet == FALSE) {
+				gui_overlay_info_append_msg_precompiled(9, NULL);
+			}
 			return;
 		case FDS_DISK_SELECT:
 		case FDS_DISK_SELECT_AND_INSERT:
@@ -432,11 +436,13 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 			break;
 		case FDS_DISK_SELECT_AND_INSERT:
 			type = FDS_DISK_INSERT;
+			fds.auto_insert.rE445.in_run = FALSE;
 			fds.side.change.new_side = 0xFF;
 			fds.drive.side_inserted = side_to_insert;
 			fds_diff_op(FDS_OP_READ, 0, 0);
 			goto fds_disk_op_start;
 		case FDS_DISK_SELECT:
+			fds.auto_insert.rE445.in_run = FALSE;
 			fds.side.change.new_side = 0xFF;
 			fds.drive.side_inserted = side_to_insert;
 			gui_overlay_info_append_msg_precompiled(10, NULL);
@@ -450,8 +456,8 @@ void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 		uTCHAR ext[10], basename[255], *last_dot;
 
 		gui_utf_basename(info.rom.file, basename, usizeof(basename));
-		usnprintf(file, usizeof(file), uL("" uPERCENTs DIFF_FOLDER "/" uPERCENTs), info.base_folder, basename);
-		usnprintf(ext, usizeof(ext), uL("dif"));
+		usnprintf(file, usizeof(file), uL("" uPs("") DIFF_FOLDER "/" uPs("")), info.base_folder, basename);
+		usnprintf(ext, usizeof(ext), uL(".dif"));
 
 		// rintraccio l'ultimo '.' nel nome
 		if ((last_dot = ustrrchr(file, uL('.')))) {

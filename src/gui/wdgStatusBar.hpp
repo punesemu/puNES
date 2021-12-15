@@ -50,13 +50,13 @@ class recStatusBar : public QFrame {
 		recStatusBar(QWidget *parent = 0);
 		~recStatusBar();
 
+	signals:
+		void et_blink_icon(void);
+
 	protected:
 		void changeEvent(QEvent *event);
 		void closeEvent(QCloseEvent *event);
 		void mousePressEvent(QMouseEvent *event);
-
-	signals:
-		void et_blink_icon(void);
 
 	private:
 		void desc_text(void);
@@ -67,9 +67,23 @@ class recStatusBar : public QFrame {
 		void s_blink_icon(void);
 		void s_context_menu(const QPoint& pos);
 };
+class alignmentStatusBar : public QFrame {
+	Q_OBJECT
+
+	private:
+		QLabel *label;
+
+	public:
+		alignmentStatusBar(QWidget *parent = 0);
+		~alignmentStatusBar();
+
+	public:
+		void update_label(void);
+};
 class wdgStatusBar : public QStatusBar {
 	public:
 		infoStatusBar *info;
+		alignmentStatusBar *alg;
 		recStatusBar *rec;
 
 	public:
@@ -82,7 +96,6 @@ class wdgStatusBar : public QStatusBar {
 
 	public:
 		void update_statusbar(void);
-		void update_width(int w);
 };
 
 #endif /* WDGSTATUSBAR_HPP_ */

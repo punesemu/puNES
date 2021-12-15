@@ -17,8 +17,8 @@
  */
 
 #include <string.h>
-#include <pthread.h>
 #include <alsa/asoundlib.h>
+#include "thread_def.h"
 #include "info.h"
 #include "audio/snd.h"
 #include "clock.h"
@@ -47,8 +47,8 @@ typedef struct _alsa {
 	snd_pcm_sframes_t (*snd_readi)(snd_pcm_t *pcm, const void *buffer, snd_pcm_uframes_t size);
 } _alsa;
 typedef struct _snd_thread {
-	pthread_t thread;
-	pthread_mutex_t lock;
+	thread_t thread;
+	thread_mutex_t lock;
 
 	BYTE first;
 
@@ -74,7 +74,7 @@ static void alsa_hwparams_print(snd_pcm_hw_params_t *hwp);
 static BYTE alsa_playback_hwparams_set(void);
 static BYTE alsa_playback_swparams_set(void);
 
-static void *alsa_thread_loop(void *data);
+static thread_funct(alsa_thread_loop, void *data);
 INLINE static BYTE alsa_xrun_recovery(snd_pcm_t *handle, int err);
 INLINE static void alsa_wr_buf(void *buffer, snd_pcm_sframes_t avail);
 
@@ -99,22 +99,15 @@ BYTE snd_init(void) {
 
 	snd_list_devices();
 
-	{
-		int rc;
-
-		// creo il lock
-		if (pthread_mutex_init(&snd_thread.lock, NULL) != 0) {
-			fprintf(stderr, "Unable to allocate the mutex\n");
-			return (EXIT_ERROR);
-		}
-
-		snd_thread.action = ST_PAUSE;
-
-		if ((rc = pthread_create(&snd_thread.thread, NULL, alsa_thread_loop, NULL))) {
-			fprintf(stderr, "Error - pthread_create() return code: %d\n", rc);
-			return (EXIT_ERROR);
-		}
+	// creo il lock
+	if (thread_mutex_init_error(snd_thread.lock)) {
+		fprintf(stderr, "Unable to allocate the snd mutex\n");
+		return (EXIT_ERROR);
 	}
+
+	// creo il thread audio
+	snd_thread.action = ST_PAUSE;
+	thread_create(snd_thread.thread, alsa_thread_loop, NULL);
 
 	// apro e avvio la riproduzione
 	if (snd_playback_start()) {
@@ -129,9 +122,8 @@ void snd_quit(void) {
 
 	if (snd_thread.action != ST_UNINITIALIZED) {
 		snd_thread.action = ST_STOP;
-
-		pthread_join(snd_thread.thread, NULL);
-		pthread_mutex_destroy(&snd_thread.lock);
+		thread_join(snd_thread.thread);
+		thread_mutex_destroy(snd_thread.lock);
 		memset(&snd_thread, 0x00, sizeof(_snd_thread));
 	}
 
@@ -199,10 +191,10 @@ void snd_thread_continue(void) {
 }
 
 void snd_thread_lock(void) {
-	pthread_mutex_lock(&snd_thread.lock);
+	thread_mutex_lock(snd_thread.lock);
 }
 void snd_thread_unlock(void) {
-	pthread_mutex_unlock(&snd_thread.lock);
+	thread_mutex_unlock(snd_thread.lock);
 }
 
 BYTE snd_playback_start(void) {
@@ -221,6 +213,12 @@ BYTE snd_playback_start(void) {
 	audio_channels(cfg->channels_mode);
 
 	switch (cfg->samplerate) {
+		case S192000:
+			snd.samplerate = 192000;
+			break;
+		case S96000:
+			snd.samplerate = 96000;
+			break;
 		case S48000:
 			snd.samplerate = 48000;
 			break;
@@ -298,10 +296,6 @@ BYTE snd_playback_start(void) {
 		memset(cbd.start, 0x00, snd.buffer.size);
 		// azzero completamente il buffer del silenzio
 		memset(cbd.silence, 0x00, snd.period.size);
-	}
-
-	if (extcl_snd_playback_start) {
-		extcl_snd_playback_start((WORD)snd.samplerate);
 	}
 
 	audio_channels_init_mode();
@@ -386,14 +380,14 @@ void snd_list_devices(void) {
 	for (i = 0; i < snd_list.playback.count; i++) {
 		_snd_dev *dev = &snd_list.playback.devices[i];
 
-		printf(uL("  %3d : " uPERCENTs "\n"), i, (uTCHAR *)dev->id);
+		uprintf(uL("  %3d : " uPs("") "\n"), i, (uTCHAR *)dev->id);
 	}
 
 	printf("CAPTURE devices\n");
 	for (i = 0; i < snd_list.capture.count; i++) {
 		_snd_dev *dev = &snd_list.capture.devices[i];
 
-		printf(uL("  %3d : " uPERCENTs "\n"), i, (uTCHAR *)dev->id);
+		uprintf(uL("  %3d : " uPs("") "\n"), i, (uTCHAR *)dev->id);
 	}
 #endif
 }
@@ -486,14 +480,14 @@ void snd_list_devices(void) {
 	for (i = 0; i < snd_list.playback.count; i++) {
 		_snd_dev *dev = &snd_list.playback.devices[i];
 
-		printf(uL("  %3d : " uPERCENTs "\n"), i, dev->id);
+		uprintf(uL("  %3d : " uPs("") "\n"), i, dev->id);
 	}
 
 	printf("CAPTURE devices\n");
 	for (i = 0; i < snd_list.capture.count; i++) {
 		_snd_dev *dev = &snd_list.capture.devices[i];
 
-		printf(uL("  %3d : " uPERCENTs "\n"), i, dev->id);
+		uprintf(uL("  %3d : " uPs("") "\n"), i, dev->id);
 	}
 #endif
 }
@@ -578,7 +572,7 @@ static void alsa_enum_cards(_snd_list_dev *list, snd_pcm_stream_t stream) {
 				continue;
 			}
 
-			usnprintf(buf, usizeof(buf), uL("" uPERCENTs " : " uPERCENTs), card_name, id);
+			usnprintf(buf, usizeof(buf), uL("" uPs("") " : " uPs("")), card_name, id);
 			alsa_device_add(list, id, buf);
 		}
 
@@ -792,7 +786,7 @@ static BYTE alsa_playback_swparams_set(void) {
 	return (EXIT_OK);
 }
 
-static void *alsa_thread_loop(UNUSED(void *data)) {
+static thread_funct(alsa_thread_loop, UNUSED(void *data)) {
 	snd_pcm_sframes_t avail;
 	snd_pcm_state_t state;
 	int32_t len;
@@ -852,7 +846,7 @@ static void *alsa_thread_loop(UNUSED(void *data)) {
 		avail = (avail > snd.period.samples ? snd.period.samples : avail);
 		len = avail * snd.channels * sizeof(*cbd.write);
 
-		if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps.fast_forward | !snd.buffer.start) {
+		if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps_fast_forward_enabled() | !snd.buffer.start) {
 			alsa_wr_buf((void *)cbd.silence, avail);
 		} else if (cbd.bytes_available < len) {
 			alsa_wr_buf((void *)cbd.silence, avail);
@@ -894,8 +888,8 @@ static void *alsa_thread_loop(UNUSED(void *data)) {
 				len,
 				cbd.samples_available,
 				cbd.bytes_available,
-				fps.frames_emu_too_long,
-				fps.frames_skipped,
+				fps.info.emu_too_long,
+				fps.info.skipped,
 				snd.overlap,
 				snd.out_of_sync,
 				(int)fps.gfx,
@@ -905,7 +899,7 @@ static void *alsa_thread_loop(UNUSED(void *data)) {
 #endif
  	}
 
-	pthread_exit((void *)EXIT_OK);
+	thread_funct_return();
 }
 INLINE static BYTE alsa_xrun_recovery(snd_pcm_t *handle, int err) {
 	if (err == -EPIPE) {

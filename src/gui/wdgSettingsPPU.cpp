@@ -36,6 +36,7 @@ wdgSettingsPPU::wdgSettingsPPU(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Hide_Sprites, SIGNAL(clicked(bool)), this, SLOT(s_hide_sprites(bool)));
 	connect(checkBox_Hide_Background, SIGNAL(clicked(bool)), this, SLOT(s_hide_background(bool)));
 	connect(checkBox_Unlimited_Sprites, SIGNAL(clicked(bool)), this, SLOT(s_unlimited_sprites(bool)));
+	connect(checkBox_Unlimited_Sprites_Auto, SIGNAL(clicked(bool)), this, SLOT(s_unlimited_sprites_auto(bool)));
 
 	connect(checkBox_PPU_Overclock, SIGNAL(clicked(bool)), this, SLOT(s_ppu_overclock(bool)));
 	connect(checkBox_Disable_DMC_Control, SIGNAL(clicked(bool)), this, SLOT(s_disable_dmc_control(bool)));
@@ -44,6 +45,8 @@ wdgSettingsPPU::wdgSettingsPPU(QWidget *parent) : QWidget(parent) {
 	connect(spinBox_Postrender_Slines, SIGNAL(valueChanged(int)), this, SLOT(s_overclock_pr_slines(int)));
 
 	connect(pushButton_Reset_Lag_Counter, SIGNAL(clicked(bool)), this, SLOT(s_lag_counter_reset(bool)));
+
+	connect(comboBox_CPUPPU_Alignment, SIGNAL(activated(int)), this, SLOT(s_cpuppu_aligment(int)));
 
 	installEventFilter(this);
 }
@@ -61,6 +64,7 @@ void wdgSettingsPPU::showEvent(QShowEvent *event) {
 
 	icon_Sprites_and_background->setPixmap(QIcon(":/icon/icons/background.svg").pixmap(dim, dim));
 	icon_PPU_Overclock->setPixmap(QIcon(":/icon/icons/speedometer.svg").pixmap(dim, dim));
+	icon_PPU_Advanced->setPixmap(QIcon(":/icon/icons/chip.svg").pixmap(dim, dim));
 
 	QWidget::showEvent(event);
 }
@@ -69,6 +73,9 @@ void wdgSettingsPPU::update_widget(void) {
 	checkBox_Hide_Sprites->setChecked(cfg->hide_sprites);
 	checkBox_Hide_Background->setChecked(cfg->hide_background);
 	checkBox_Unlimited_Sprites->setChecked(cfg->unlimited_sprites);
+	checkBox_Unlimited_Sprites_Auto->setEnabled(cfg->unlimited_sprites);
+	checkBox_Unlimited_Sprites_Auto->setChecked(cfg->unlimited_sprites_auto);
+
 	checkBox_PPU_Overclock->setChecked(cfg->ppu_overclock);
 
 	checkBox_Disable_DMC_Control->setChecked(cfg->ppu_overclock_dmc_control_disabled);
@@ -83,6 +90,8 @@ void wdgSettingsPPU::update_widget(void) {
 
 	spinBox_Postrender_Slines->setEnabled(cfg->ppu_overclock);
 	qtHelper::spinbox_set_value(spinBox_Postrender_Slines, cfg->extra_pr_scanlines);
+
+	comboBox_CPUPPU_Alignment->setCurrentIndex(cfg->ppu_alignment);
 
 	lag_counter_update();
 }
@@ -105,6 +114,12 @@ void wdgSettingsPPU::s_hide_background(UNUSED(bool checked)) {
 void wdgSettingsPPU::s_unlimited_sprites(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->unlimited_sprites = !cfg->unlimited_sprites;
+	emu_thread_continue();
+	update_widget();
+}
+void wdgSettingsPPU::s_unlimited_sprites_auto(UNUSED(bool checked)) {
+	emu_thread_pause();
+	cfg->unlimited_sprites_auto = !cfg->unlimited_sprites_auto;
 	emu_thread_continue();
 	update_widget();
 }
@@ -145,4 +160,14 @@ void wdgSettingsPPU::s_lag_counter_reset(UNUSED(bool checked)) {
 	emu_thread_continue();
 	lag_counter_update();
 	update_widget();
+}
+void wdgSettingsPPU::s_cpuppu_aligment(int index) {
+	if (cfg->ppu_alignment == index) {
+		return;
+	} else if (index == PPU_ALIGMENT_INC_AT_RESET) {
+		ppu_alignment_reset();
+	}
+	cfg->ppu_alignment = index;
+	update_widget();
+	gui_update_status_bar();
 }

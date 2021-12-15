@@ -85,7 +85,7 @@ struct _mmc1 {
 void map_init_MMC1(void) {
 	EXTCL_CPU_WR_MEM(MMC1);
 	EXTCL_SAVE_MAPPER(MMC1);
-	mapper.internal_struct[0] = (BYTE *) &mmc1;
+	mapper.internal_struct[0] = (BYTE *)&mmc1;
 	mapper.internal_struct_size[0] = sizeof(mmc1);
 
 	if (info.reset >= HARD) {

@@ -421,7 +421,7 @@ void map_init_116(void) {
 			EXTCL_PPU_256_TO_319(MMC3);
 			EXTCL_PPU_320_TO_34X(MMC3);
 			EXTCL_UPDATE_R2006(MMC3);
-			mapper.internal_struct[0] = (BYTE *) &m116;
+			mapper.internal_struct[0] = (BYTE *)&m116;
 			mapper.internal_struct_size[0] = sizeof(m116);
 
 			if (info.reset >= HARD) {
@@ -481,9 +481,9 @@ void map_init_116(void) {
 			EXTCL_PPU_256_TO_319(MMC3);
 			EXTCL_PPU_320_TO_34X(MMC3);
 			EXTCL_UPDATE_R2006(MMC3);
-			mapper.internal_struct[0] = (BYTE *) &m116;
+			mapper.internal_struct[0] = (BYTE *)&m116;
 			mapper.internal_struct_size[0] = sizeof(m116);
-			mapper.internal_struct[1] = (BYTE *) &mmc3;
+			mapper.internal_struct[1] = (BYTE *)&mmc3;
 			mapper.internal_struct_size[1] = sizeof(mmc3);
 
 			/* utilizza 0x2000 di CHR RAM extra */
@@ -520,9 +520,9 @@ void map_init_116(void) {
 			EXTCL_PPU_256_TO_319(MMC3);
 			EXTCL_PPU_320_TO_34X(MMC3);
 			EXTCL_UPDATE_R2006(MMC3);
-			mapper.internal_struct[0] = (BYTE *) &m116;
+			mapper.internal_struct[0] = (BYTE *)&m116;
 			mapper.internal_struct_size[0] = sizeof(m116);
-			mapper.internal_struct[1] = (BYTE *) &mmc3;
+			mapper.internal_struct[1] = (BYTE *)&mmc3;
 			mapper.internal_struct_size[1] = sizeof(mmc3);
 
 			if (info.reset >= HARD) {

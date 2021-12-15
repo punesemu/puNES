@@ -39,6 +39,8 @@ libcore_a_SOURCES = \
 	irqA12.h \
 	irql2f.c \
 	irql2f.h \
+	jstick.h \
+	jstick.c \
 	main.h \
 	mappers.c \
 	mappers.h \
@@ -67,12 +69,13 @@ libcore_a_SOURCES = \
 	save_slot.h \
 	sha1.c \
 	sha1.h \
+	thread_def.h \
 	uncompress.c \
 	uncompress.h \
 	uncompress_selection.h \
 	unif.c \
 	unif.h \
-	version.h\
+	version.h \
 	vs_system.h
 
 if WITH_FFMPEG
@@ -482,6 +485,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_VRC7.h \
 	mappers/mapper_VRC7_snd.c \
 	mappers/mapper_VRC7_snd.h \
+	mappers/opll.c \
+	mappers/opll.h \
 	mappers/mapper_Vs.c \
 	mappers/mapper_Vs.h \
 	mappers/mapper_Waixing.c \

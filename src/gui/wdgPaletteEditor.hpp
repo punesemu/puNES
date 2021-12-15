@@ -42,6 +42,11 @@ class wdgPaletteWall : public QWidget {
 		wdgPaletteWall(QWidget *parent = 0);
 		~wdgPaletteWall();
 
+	signals:
+		void et_first_paint(void);
+		void et_selected(int row, int col);
+		void et_current_changed(int row, int col);
+
 	public:
 		QSize sizeHint(void) const;
 
@@ -78,11 +83,6 @@ class wdgPaletteWall : public QWidget {
 		void set_selected(int row, int col);
 		void paint_cell(QPainter *p, int row, int col, const QRect &rect);
 		void paint_cell_contents(QPainter *p, int row, int col, const QRect &rect);
-
-	signals:
-		void first_paint(void);
-		void selected(int row, int col);
-		void current_changed(int row, int col);
 };
 class wdgPalettePPU : public wdgPaletteWall {
 	public:
@@ -116,7 +116,7 @@ class wdgHtmlName : public QLineEdit {
 		~wdgHtmlName();
 
 	signals:
-		void focus_out(void);
+		void et_focus_out(void);
 
 	private:
 		void focusOutEvent(QFocusEvent *event);
@@ -130,6 +130,9 @@ class wdgPaletteEditor : public QWidget, public Ui::wdgPaletteEditor {
 	public:
 		wdgPaletteEditor(QWidget *parent = 0);
 		~wdgPaletteEditor();
+
+	protected:
+		void changeEvent(QEvent *event);
 
 	public:
 		void palette_changed(void);

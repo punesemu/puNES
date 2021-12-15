@@ -227,31 +227,6 @@
 #define control_bank_with_AND(mask, max)\
 	_control_bank_with_AND(value, mask, max)
 #define prg_rom_rd(address) prg.rom_8k[(address >> 13) & 0x03][address & 0x1FFF]
-#define mapper_rd_battery_default()\
-{\
-	BYTE bank;\
-	/*\
-	 * se non e' specificato da che banco di PRG ram inizia\
-	 * la battery packed Ram, utilizzo sempre l'ultimo.\
-	 */\
-	if (info.prg.ram.bat.start == DEFAULT) {\
-		bank = info.prg.ram.banks_8k_plus - info.prg.ram.bat.banks;\
-	} else {\
-		bank = info.prg.ram.bat.start;\
-	}\
-	prg.ram_battery = &prg.ram_plus[bank * 0x2000];\
-	if (fp) {\
-		/* ne leggo il contenuto */\
-		if (fread(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp) < 1) {\
-			fprintf(stderr, "error on read battery memory\n");\
-		}\
-	}\
-}
-#define mapper_wr_battery_default()\
-	/* ci scrivo i dati */\
-	if (fwrite(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp) < 1) {\
-		fprintf(stderr, "error on write battery memory\n");\
-	}
 #define map_prg_rom_8k(banks_8k, at, value) map_prg_rom_8k_chip(banks_8k, at, value, 0)
 
 enum mappers_op_battery { RD_BAT, WR_BAT };
@@ -288,5 +263,7 @@ BYTE map_chr_ram_extra_init(uint32_t size);
 void map_chr_ram_extra_reset(void);
 void map_set_banks_max_prg(BYTE chip);
 void map_set_banks_max_chr(BYTE chip);
+void map_bat_wr_default(FILE *fp) ;
+void map_bat_rd_default(FILE *fp);
 
 #endif /* MAPPERS_H_ */

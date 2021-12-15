@@ -588,11 +588,6 @@ struct AVFilterLink {
     int channels;
 
     /**
-     * Link processing flags.
-     */
-    unsigned flags;
-
-    /**
      * Number of past frames sent through the link.
      */
     int64_t frame_count_in, frame_count_out;
@@ -686,7 +681,7 @@ void avfilter_link_free(AVFilterLink **link);
 attribute_deprecated
 int avfilter_link_get_channels(AVFilterLink *link);
 #endif
-
+#if FF_API_FILTER_LINK_SET_CLOSED
 /**
  * Set the closed field of a link.
  * @deprecated applications are not supposed to mess with links, they should
@@ -694,7 +689,7 @@ int avfilter_link_get_channels(AVFilterLink *link);
  */
 attribute_deprecated
 void avfilter_link_set_closed(AVFilterLink *link, int closed);
-
+#endif
 /**
  * Negotiate the media format, dimensions, etc of all inputs to a filter.
  *

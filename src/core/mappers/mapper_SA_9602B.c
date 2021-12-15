@@ -73,9 +73,9 @@ void map_init_SA_9602B(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *) &sa9602b;
+	mapper.internal_struct[0] = (BYTE *)&sa9602b;
 	mapper.internal_struct_size[0] = sizeof(sa9602b);
-	mapper.internal_struct[1] = (BYTE *) &mmc3;
+	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	memset(&sa9602b, 0x00, sizeof(sa9602b));

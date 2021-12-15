@@ -3,6 +3,8 @@ resources.cpp: designer/resources.qrc $(TRADUCTION_QM)
 
 dlgCmdLineHelp.moc: dlgCmdLineHelp.hpp
 	$(MOC) $(srcdir)/dlgCmdLineHelp.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+dlgJsc.moc: dlgJsc.hpp
+	$(MOC) $(srcdir)/dlgJsc.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgSettings.moc: dlgSettings.hpp
 	$(MOC) $(srcdir)/dlgSettings.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgStdPad.moc: dlgStdPad.hpp
@@ -17,10 +19,16 @@ objCheat.moc: objCheat.hpp
 	$(MOC) $(srcdir)/objCheat.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 objSettings.moc: objSettings.hpp
 	$(MOC) $(srcdir)/objSettings.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+singleapplication.moc: ../extra/singleapplication/singleapplication.h
+	$(MOC) $(srcdir)/../extra/singleapplication/singleapplication.h $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+singleapplication_p.moc: ../extra/singleapplication/singleapplication_p.h
+	$(MOC) $(srcdir)/../extra/singleapplication/singleapplication_p.h $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgAPUChannels.moc: wdgAPUChannels.hpp
 	$(MOC) $(srcdir)/wdgAPUChannels.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgCheatsEditor.moc: wdgCheatsEditor.hpp
 	$(MOC) $(srcdir)/wdgCheatsEditor.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+wdgNTSCFilter.moc: wdgNTSCFilter.hpp
+	$(MOC) $(srcdir)/wdgNTSCFilter.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 if WITH_OPENGL
 wdgOpenGL.moc: wdgOpenGL.hpp
 	$(MOC) $(srcdir)/wdgOpenGL.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
@@ -60,6 +68,8 @@ mainWindow.hh: designer/mainWindow.ui
 	$(UIC) $(srcdir)/designer/mainWindow.ui -o $@
 dlgCmdLineHelp.hh: designer/dlgCmdLineHelp.ui
 	$(UIC) $(srcdir)/designer/dlgCmdLineHelp.ui -o $@
+dlgJsc.hh: designer/dlgJsc.ui
+	$(UIC) $(srcdir)/designer/dlgJsc.ui -o $@
 dlgSettings.hh: designer/dlgSettings.ui
 	$(UIC) $(srcdir)/designer/dlgSettings.ui -o $@
 dlgStdPad.hh: designer/dlgStdPad.ui
@@ -72,6 +82,8 @@ wdgAPUChannels.hh: designer/wdgAPUChannels.ui
 	$(UIC) $(srcdir)/designer/wdgAPUChannels.ui -o $@
 wdgCheatsEditor.hh: designer/wdgCheatsEditor.ui
 	$(UIC) $(srcdir)/designer/wdgCheatsEditor.ui -o $@
+wdgNTSCFilter.hh: designer/wdgNTSCFilter.ui
+	$(UIC) $(srcdir)/designer/wdgNTSCFilter.ui -o $@
 wdgOverlayUi.hh: designer/wdgOverlayUi.ui
 	$(UIC) $(srcdir)/designer/wdgOverlayUi.ui -o $@
 wdgPaletteEditor.hh: designer/wdgPaletteEditor.ui
@@ -150,6 +162,7 @@ BUILT_SOURCES = \
 
 BUILT_SOURCES += \
 	dlgCmdLineHelp.moc \
+	dlgJsc.moc \
 	dlgSettings.moc \
 	dlgStdPad.moc \
 	dlgUncomp.moc \
@@ -157,8 +170,11 @@ BUILT_SOURCES += \
 	mainWindow.moc \
 	objCheat.moc \
 	objSettings.moc \
+	singleapplication.moc \
+	singleapplication_p.moc \
 	wdgAPUChannels.moc \
 	wdgCheatsEditor.moc \
+	wdgNTSCFilter.moc \
 	wdgOverlayUi.moc \
 	wdgPaletteEditor.moc \
 	wdgRewind.moc \
@@ -178,12 +194,14 @@ BUILT_SOURCES += \
 BUILT_SOURCES += \
 	mainWindow.hh \
 	dlgCmdLineHelp.hh \
+	dlgJsc.hh \
 	dlgSettings.hh \
 	dlgStdPad.hh \
 	dlgUncomp.hh \
 	dlgVsSystem.hh \
 	wdgAPUChannels.hh \
 	wdgCheatsEditor.hh \
+	wdgNTSCFilter.hh \
 	wdgOverlayUi.hh \
 	wdgPaletteEditor.hh \
 	wdgRewind.hh \
@@ -199,12 +217,18 @@ BUILT_SOURCES += \
 
 noinst_LIBRARIES = libgui.a
 libgui_a_SOURCES = \
+	../extra/singleapplication/singleapplication.cpp \
+	../extra/singleapplication/singleapplication.h \
+	../extra/singleapplication/singleapplication_p.cpp \
+	../extra/singleapplication/singleapplication_p.h \
 	cgp.cpp \
 	cgp.h \
 	cmd_line.cpp \
 	cmd_line.h \
 	dlgCmdLineHelp.cpp \
 	dlgCmdLineHelp.hpp \
+	dlgJsc.cpp \
+	dlgJsc.hpp \
 	dlgSettings.cpp \
 	dlgSettings.hpp \
 	dlgStdPad.cpp \
@@ -231,6 +255,10 @@ libgui_a_SOURCES = \
 	wdgAPUChannels.hpp \
 	wdgCheatsEditor.cpp \
 	wdgCheatsEditor.hpp \
+	wdgNTSCFilter.cpp \
+	wdgNTSCFilter.hpp \
+	wdgMenuBar.cpp \
+	wdgMenuBar.hpp \
 	wdgOverlayUi.cpp \
 	wdgOverlayUi.hpp \
 	wdgPaletteEditor.cpp \
@@ -279,26 +307,41 @@ endif
 
 if LINUX
 libgui_a_SOURCES += \
-	linux/jstick.c \
-	linux/jstick.h \
+	linux/os_jstick.c \
+	linux/os_jstick.h \
 	linux/os_linux.h
+
+if USE_FULLSCREEN_RESFREQ
+libgui_a_SOURCES += \
+	linux/monitor.c
+endif
 
 AM_CXXFLAGS = -fPIC
 endif
 
 if BSD
 libgui_a_SOURCES += \
-	bsd/jstick.c \
-	bsd/jstick.h \
+	bsd/os_jstick.c \
+	bsd/os_jstick.h \
 	bsd/os_bsd.h
+
+if USE_FULLSCREEN_RESFREQ
+libgui_a_SOURCES += \
+	linux/monitor.c
+endif
 
 AM_CXXFLAGS = -fPIC
 endif
 
 if WINDOWS
 libgui_a_SOURCES += \
-	windows/jstick.c \
-	windows/jstick.h \
+	windows/os_jstick.c \
+	windows/os_jstick.h \
 	windows/os_windows.h \
 	windows/win.h
+
+if USE_FULLSCREEN_RESFREQ
+libgui_a_SOURCES += \
+	windows/monitor.c
+endif
 endif

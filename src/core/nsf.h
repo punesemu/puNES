@@ -19,6 +19,7 @@
 #define NSF_H_
 
 #include "common.h"
+#include "input.h"
 
 #define nsf_prg_rom_rd(address) nsf.prg.rom_4k[(address >> 12) & 0x07][address & 0x0FFF]
 #define nsf_prg_rom_rd_6xxx(address) nsf.prg.rom_4k_6xxx[(address >> 12) & 0x01][address & 0x0FFF]
@@ -174,7 +175,7 @@ typedef struct _nsf {
 	} routine;
 	struct _nsf_timers {
 		BYTE update_only_diff;
-		double button[24];
+		double button[INPUT_DECODE_COUNTS];
 		double total_rom;
 		double song;
 		double fadeout;

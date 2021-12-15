@@ -32,13 +32,15 @@
 #include "bck_states.h"
 #include "rewind.h"
 #include "video/gfx.h"
+#include "video/gfx_thread.h"
+#include "emu_thread.h"
 #include "gui.h"
 #include "tas.h"
 #include "fds.h"
 #include "nsf.h"
 #include "cheat.h"
 
-#define SAVE_VERSION 23
+#define SAVE_VERSION 25
 
 static void preview_image(BYTE slot, _screen_buffer *sb);
 static uTCHAR *name_slot_file(BYTE slot);
@@ -123,8 +125,7 @@ BYTE save_slot_load(BYTE slot) {
 	if (slot == SAVE_SLOT_FILE) {
 		save_slot_operation(SAVE_SLOT_COUNT, slot, fp);
 
-		if (memcmp(info.sha1sum.prg.value, save_slot.sha1sum.prg.value,
-			sizeof(info.sha1sum.prg.value)) != 0) {
+		if (memcmp(info.sha1sum.prg.value, save_slot.sha1sum.prg.value, sizeof(info.sha1sum.prg.value)) != 0) {
 			gui_overlay_info_append_msg_precompiled(16, NULL);
 			fprintf(stderr, "state file is not for this rom.\n");
 			rewind_save_state_snap(BCK_STATES_OP_READ_FROM_MEM);
@@ -134,6 +135,9 @@ BYTE save_slot_load(BYTE slot) {
 	}
 
 	if (save_slot_operation(SAVE_SLOT_READ, slot, fp)) {
+		int corrupted = slot;
+
+		gui_overlay_info_append_msg_precompiled(30, &corrupted);
 		fprintf(stderr, "error loading state, corrupted file.\n");
 		rewind_save_state_snap(BCK_STATES_OP_READ_FROM_MEM);
 		fclose(fp);
@@ -155,13 +159,16 @@ void save_slot_count_load(void) {
 	uTCHAR *file;
 	BYTE i;
 
+	emu_thread_pause();
+	gfx_thread_pause();
+
 	for (i = 0; i < SAVE_SLOTS; i++) {
 		save_slot.tot_size[i] = 0;
 
 		save_slot.state[i] = FALSE;
 		file = name_slot_file(i);
 
-		if (emu_file_exist(file) == EXIT_OK) {
+		if (file && (emu_file_exist(file) == EXIT_OK)) {
 			FILE *fp;
 
 			save_slot.state[i] = TRUE;
@@ -173,7 +180,8 @@ void save_slot_count_load(void) {
 			save_slot_operation(SAVE_SLOT_COUNT, i, fp);
 			fclose(fp);
 		} else {
-			gui_set_save_slot_tooltip(i, NULL);
+			gui_overlay_slot_preview(i, NULL, NULL);
+			gui_state_save_slot_set_tooltip(i, NULL);
 		}
 	}
 
@@ -189,7 +197,10 @@ void save_slot_count_load(void) {
 		}
 	}
 
-	gui_save_slot(save_slot.slot);
+	gui_state_save_slot_set(save_slot.slot, FALSE);
+
+	gfx_thread_continue();
+	emu_thread_continue();
 }
 BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size, FILE *fp, BYTE preview) {
 	DBWORD bytes;
@@ -198,6 +209,7 @@ BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size,
 		case SAVE_SLOT_SAVE:
 			bytes = fwrite(src, size, 1, fp);
 			save_slot.tot_size[slot] += size;
+			fflush(fp);
 			if (preview == TRUE) {
 				preview_image(slot, screen.rd);
 			}
@@ -742,6 +754,22 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 			save_slot_ele(mode, slot, fds.snd.modulation.index)
 			save_slot_ele(mode, slot, fds.snd.modulation.counter)
 			save_slot_ele(mode, slot, fds.snd.modulation.mod)
+
+			if (save_slot.version >= 25) {
+				save_slot_ele(mode, slot, fds.auto_insert.r4032.frames)
+				save_slot_ele(mode, slot, fds.auto_insert.r4032.checks)
+
+				save_slot_ele(mode, slot, fds.auto_insert.delay.eject)
+				save_slot_ele(mode, slot, fds.auto_insert.delay.dummy)
+				save_slot_ele(mode, slot, fds.auto_insert.delay.side)
+
+				save_slot_ele(mode, slot, fds.auto_insert.rE445.in_run)
+				save_slot_ele(mode, slot, fds.auto_insert.rE445.count)
+
+				save_slot_ele(mode, slot, fds.auto_insert.disabled)
+				save_slot_ele(mode, slot, fds.auto_insert.new_side)
+				save_slot_ele(mode, slot, fds.auto_insert.in_game)
+			}
 		}
 
 		if (save_slot.version >= 19) {
@@ -756,12 +784,13 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		// in caso di ripristino di una salvataggio, se era caricato
 		// un'altro side del disco, devo ricaricarlo.
 		if ((mode == SAVE_SLOT_READ) && (old_side_inserted != fds.drive.side_inserted)) {
-			fds_disk_op(FDS_DISK_SELECT_FROM_REWIND, fds.drive.side_inserted);
+			fds_disk_op(FDS_DISK_SELECT_FROM_REWIND, fds.drive.side_inserted, FALSE);
 			gui_update();
 		}
 	}
 
-	save_slot_mem(mode, slot, screen.rd->data, screen_size(), TRUE)
+	// in caso di save slot file non devo visualizzare nessuna preview (thx Brandon Enright for the report and for the fix).
+	save_slot_mem(mode, slot, screen.rd->data, screen_size(), slot == SAVE_SLOT_FILE ? FALSE : TRUE)
 
 	return (EXIT_OK);
 }
@@ -772,7 +801,8 @@ static void preview_image(BYTE slot, _screen_buffer *sb) {
 
 	if ((buffer = malloc(stride * SCR_ROWS))) {
 		scale_surface_preview_1x(sb, stride, buffer);
-		gui_set_save_slot_tooltip(slot, buffer);
+		gui_overlay_slot_preview(slot, buffer, name_slot_file(slot));
+		gui_state_save_slot_set_tooltip(slot, buffer);
 		free(buffer);
 	}
 }
@@ -796,12 +826,12 @@ static uTCHAR *name_slot_file(BYTE slot) {
 	}
 
 	gui_utf_basename(fl, bname, usizeof(bname));
-	usnprintf(file, usizeof(file), uL("" uPERCENTs SAVE_FOLDER "/" uPERCENTs), info.base_folder, bname);
+	usnprintf(file, usizeof(file), uL("" uPs("") SAVE_FOLDER "/" uPs("")), info.base_folder, bname);
 
 	if (nsf.enabled == TRUE) {
-		usnprintf(ext, usizeof(ext), uL(".n%02d"), slot);
+		usnprintf(ext, usizeof(ext), uL(".n%02X"), slot);
 	} else {
-		usnprintf(ext, usizeof(ext), uL(".p%02d"), slot);
+		usnprintf(ext, usizeof(ext), uL(".p%02X"), slot);
 	}
 
 	// rintraccio l'ultimo '.' nel nome

@@ -16,21 +16,30 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <QtCore/QDateTime>
+#include <QtCore/QMutex>
+#include <QtCore/QRegularExpression>
 #include <QtGui/QAbstractTextDocumentLayout>
-#include <QtWidgets/QGraphicsItem>
 #include <QtSvg/QSvgRenderer>
+#include <QtWidgets/QGraphicsItem>
 #include <time.h>
+#include <math.h>
 #include "wdgOverlayUi.moc"
+#include "mainWindow.hpp"
 #include "fps.h"
 #include "tas.h"
 #include "input.h"
 #include "input/mouse.h"
 #include "fds.h"
 #include "rewind.h"
-#include "save_slot.h"
 #include "version.h"
 #include "cpu.h"
+#include "ppu.h"
+#if defined (FULLSCREEN_RESFREQ)
+#include "video/gfx_monitor.h"
+#endif
 
+void overlay_info_append_qstring(BYTE alignment, QString msg);
 void overlay_wdg_clear(void *widget, void *qrect);
 void overlay_wdg_blit(void *widget);
 
@@ -90,10 +99,39 @@ static const char *info_messages_precompiled[] = {
 //: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
 /* 26 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[red]error on palette file[normal]"),
 //: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
-/* 27 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[red]errors[normal] on shader, use [green]'No shader'[normal]"),
+/* 27 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[red]errors[normal] on shader, use [green]'No shader'[cyan]"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 28 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 29 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 30 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[red]error[normal] loading state [cyan]%1[normal], file is corrupted"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 31 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "state [cyan]%1[normal] saved successfully"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 32 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "state [cyan]%1[normal] loaded successfully"),
 };
 
-_overlay_data overlay;
+typedef struct _overlay_info_message {
+	QString msg;
+	BYTE alignment;
+} _overlay_info_message;
+
+struct _shared_color {
+	QColor rwnd_actual = QColor(Qt::blue);
+	QColor lag = Qt::red;
+	QColor no_lag = QColor(30, 128, 0);
+} shared_color;
+struct _overlay_data {
+	wdgOverlayUi *widget;
+
+	struct _overlay_data_info {
+		QMutex mutex;
+		QList<_overlay_info_message> messages_to_draw;
+		QString actual = "";
+		BYTE alignment;
+	} info;
+} overlay;
 
 void gui_overlay_update(void) {
 	if (overlay.widget) {
@@ -110,8 +148,9 @@ void gui_overlay_set_size(int w, int h) {
 	overlay.widget->setFixedSize(w, h);
 }
 void gui_overlay_info_init(void) {
-	overlay.info_actual_message = "";
-	overlay.info_messages_to_draw.clear();
+	overlay.info.actual = "";
+	overlay.info.alignment = OVERLAY_INFO_LEFT;
+	overlay.info.messages_to_draw.clear();
 }
 void gui_overlay_info_emulator(void) {
 	QString str = "";
@@ -127,10 +166,16 @@ void gui_overlay_info_emulator(void) {
 	str += " (by [cyan]FHorse[normal])";
 	str += " " + QString(VERSION);
 
-	overlayWidgetInfo::_append_msg(str);
+	overlayWidgetInfo::_append_msg(OVERLAY_INFO_LEFT, str);
+}
+void gui_overlay_info_append_subtitle(uTCHAR *msg) {
+	overlay_info_append_qstring(OVERLAY_INFO_CENTER, uQString(msg));
 }
 void gui_overlay_info_append_msg_precompiled(int index, void *arg1) {
-	QString msg, a1, a2;
+	gui_overlay_info_append_msg_precompiled_with_alignment(OVERLAY_INFO_LEFT, index, arg1);
+}
+void gui_overlay_info_append_msg_precompiled_with_alignment(BYTE alignment, int index, void *arg1) {
+	QString msg, a1, a2, a3;
 
 	if (index >= (int)LENGTH(info_messages_precompiled)) {
 		return;
@@ -157,6 +202,10 @@ void gui_overlay_info_append_msg_precompiled(int index, void *arg1) {
 			break;
 		case 17:
 		case 18:
+		case 29:
+		case 30:
+		case 31:
+		case 32:
 			a1 = QString("%1").arg(*(int *)arg1);
 			msg = msg.arg(a1);
 			break;
@@ -169,13 +218,20 @@ void gui_overlay_info_append_msg_precompiled(int index, void *arg1) {
 			a1 = (*(QString *)arg1);
 			msg = msg.arg(a1);
 			break;
-	}
+		case 28: {
+				int w = 0, h = 0, rrate = 0;
 
-	if (overlay.widget) {
-		overlay.widget->overlayInfo->append_msg(msg);
-	} else {
-		overlayWidgetInfo::_append_msg(msg);
+#if defined (FULLSCREEN_RESFREQ)
+				gfx_monitor_mode_in_use_info(NULL, NULL, &w, &h, &rrate);
+#endif
+				a1 = QString("%1").arg(w);
+				a2 = QString("%1").arg(h);
+				a3 = QString("%1").arg(rrate);
+			}
+			msg = msg.arg(a1, a2, a3);
+			break;
 	}
+	overlay_info_append_qstring(alignment, msg);
 }
 void gui_overlay_blit(void) {
 	overlayWidget *wdgs[] = {
@@ -184,6 +240,7 @@ void gui_overlay_blit(void) {
 		overlay.widget->overlayTAS,
 		overlay.widget->overlayFloppy,
 		overlay.widget->overlayFPS,
+		overlay.widget->overlayFrame,
 		overlay.widget->overlaySaveSlot,
 		overlay.widget->overlayInputPort1,
 		overlay.widget->overlayInputPort2,
@@ -198,7 +255,7 @@ void gui_overlay_blit(void) {
 	for (overlayWidget *ele : wdgs) {
 		overlay_wdg_clear((void *)ele, NULL);
 	}
-	// 2 - seconda cancellazione con preparazione immaggini
+	// 2 - seconda cancellazione con preparazione immagini
 	for (overlayWidget *ele : wdgs) {
 		overlay_wdg_blit((void *)ele);
 	}
@@ -222,7 +279,29 @@ void gui_overlay_blit(void) {
 
 	overlay.widget->force_redraw = false;
 }
+void gui_overlay_slot_preview(int slot, void *buffer, uTCHAR *file) {
+	if (buffer) {
+		overlay.widget->overlaySaveSlot->previews[slot].image =
+			QImage((uchar*)buffer, SCR_COLUMNS, SCR_ROWS, SCR_COLUMNS * sizeof(uint32_t), QImage::Format_RGB32);
+		overlay.widget->overlaySaveSlot->previews[slot].image =
+			overlay.widget->overlaySaveSlot->previews[slot].image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+	} else {
+		overlay.widget->overlaySaveSlot->previews[slot].image = QImage();
+	}
+	if (file) {
+		overlay.widget->overlaySaveSlot->previews[slot].fileinfo = QFileInfo(uQString(file));
+	} else {
+		overlay.widget->overlaySaveSlot->previews[slot].fileinfo = QFileInfo();
+	}
+}
 
+void overlay_info_append_qstring(BYTE alignment, QString msg) {
+	if (overlay.widget) {
+		overlay.widget->overlayInfo->append_msg(alignment, msg);
+	} else {
+		overlayWidgetInfo::_append_msg(alignment, msg);
+	}
+}
 void overlay_wdg_clear(void *widget, void *qrect) {
 	overlayWidget *wdg = (overlayWidget *)widget;
 	QRect *g = (QRect *)&wdg->geometry();
@@ -294,6 +373,13 @@ wdgOverlayUi::wdgOverlayUi(QWidget *parent) : QWidget(parent) {
 
 	setupUi(this);
 
+	overlayInfo->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+	overlayFPS->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+	overlayFloppy->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+	overlayFrame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+	overlayRewind->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+	overlayTAS->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
 	setAttribute(Qt::WA_OpaquePaintEvent);
 
 	op->setOpacity(0.999999999);
@@ -304,6 +390,8 @@ wdgOverlayUi::wdgOverlayUi(QWidget *parent) : QWidget(parent) {
 	overlayInputPort2->set_nport(1);
 	overlayInputPort3->set_nport(2);
 	overlayInputPort4->set_nport(3);
+
+	overlay.widget = this;
 }
 wdgOverlayUi::~wdgOverlayUi() {}
 
@@ -315,7 +403,17 @@ void wdgOverlayUi::changeEvent(QEvent *event) {
 	}
 }
 void wdgOverlayUi::resizeEvent(QResizeEvent *event) {
-	uint32_t size = (((event->size().height() / 2) * event->size().width()) * 4) * gfx.device_pixel_ratio;
+	uint32_t size = ((event->size().height() * event->size().width()) * 4) * gfx.device_pixel_ratio;
+
+	if (cfg->scale == X1) {
+		overlaySaveSlot->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+		verticalSpacer_slot_state_up->changeSize(0, 0, QSizePolicy::Minimum, QSizePolicy::Ignored);
+		verticalSpacer_slot_state_down->changeSize(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+	} else {
+		overlaySaveSlot->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+		verticalSpacer_slot_state_up->changeSize(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+		verticalSpacer_slot_state_down->changeSize(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+	}
 
 	if (clear) {
 		free(clear);
@@ -344,6 +442,7 @@ void wdgOverlayUi::update_widget(void) {
 
 	overlayInfo->update_widget();
 	overlayFPS->update_widget();
+	overlayFrame->update_widget();
 	overlayFloppy->update_widget();
 	overlayRewind->update_widget();
 	overlayTAS->update_widget();
@@ -378,12 +477,15 @@ overlayWidget::overlayWidget(QWidget *parent) : QWidget(parent) {
 	enabled = false;
 	force_control_when_hidden = false;
 	radius = 5;
+	fade_in_duration = 500;
+	fade_out_duration = 700;
+	always_visible = false;
 
 	setMinimumSize(0, 0);
 	setAttribute(Qt::WA_OpaquePaintEvent);
 	setAutoFillBackground(false);
 
-	set_opacity(0.85);
+	set_opacity(0.88);
 }
 overlayWidget::~overlayWidget() {}
 
@@ -414,9 +516,9 @@ int overlayWidget::hpadtot(void) const {
 int overlayWidget::vpadtot(void) const {
 	return (padding.v * 2);
 }
-int overlayWidget::minimum_eight(void) const {
-	// 16 pixel e' l'altezza delle immagini;
-	int fm = fontMetrics().height() + vpadtot();
+int overlayWidget::minimum_eight(const QFont *f = NULL, int rows = 1) const {
+	// 16 pixel e' l'altezza delle immagini
+	int fm = ((f ? QFontMetrics((*f)).height() : fontMetrics().height()) * rows) + vpadtot();
 	int px = 16 + vpadtot();
 
 	return (fm < px ? px : fm);
@@ -426,20 +528,24 @@ void overlayWidget::set_opacity(qreal opacity) {
 	this->opacity.effect->setOpacity(this->opacity.value);
 	setGraphicsEffect(this->opacity.effect);
 }
-void overlayWidget::draw_background(QPainter *painter) {
-	draw_background(painter, rect());
+void overlayWidget::draw_background(void) {
+	draw_background(rect());
 }
-void overlayWidget::draw_background(QPainter *painter, QRect rect) {
+void overlayWidget::draw_background(QRect rect) {
 	QPen pen;
 
 	pen.setWidth(1);
 	pen.setColor(base_color.fg);
-	painter->setPen(pen);
-	painter->setBrush(base_color.bg);
-	painter->drawRoundedRect(rect, radius, radius);
+	painter.setPen(pen);
+	painter.setBrush(base_color.bg);
+	painter.drawRoundedRect(rect, radius, radius);
 }
 void overlayWidget::fade_in_animation(void) {
-	fade_in.animation->setDuration(500);
+	if (always_visible == true) {
+		set_opacity(opacity.value);
+		return;
+	}
+	fade_in.animation->setDuration(fade_in_duration);
 	fade_in.animation->setStartValue(0);
 	fade_in.animation->setEndValue(opacity.value);
 	fade_in.animation->setEasingCurve(QEasingCurve::InBack);
@@ -447,7 +553,11 @@ void overlayWidget::fade_in_animation(void) {
 	connect(fade_in.animation, SIGNAL(finished()), this, SLOT(s_fade_in_finished()));
 }
 void overlayWidget::fade_out_animation(void) {
-	fade_out.animation->setDuration(1000);
+	if (always_visible == true) {
+		set_opacity(opacity.value);
+		return;
+	}
+	fade_out.animation->setDuration(fade_out_duration);
 	fade_out.animation->setStartValue(opacity.value);
 	fade_out.animation->setEndValue(0);
 	fade_out.animation->setEasingCurve(QEasingCurve::OutBack);
@@ -468,6 +578,9 @@ void overlayWidget::fade_out_tick_timer(void) {
 		fade_out_animation();
 	}
 }
+QString overlayWidget::color_string(QString string, QColor color) {
+	return ("<font color='" + color.name().toUpper() + "'>" + string + "</font>");
+}
 
 void overlayWidget::s_fade_in_finished(void) {
 	set_opacity(opacity.value);
@@ -482,18 +595,17 @@ void overlayWidget::s_fade_out_finished(void) {
 overlayWidgetFPS::overlayWidgetFPS(QWidget *parent) : overlayWidget(parent) {};
 overlayWidgetFPS::~overlayWidgetFPS() {}
 
-QSize overlayWidgetFPS::sizeHint() const {
+QSize overlayWidgetFPS::sizeHint(void) const {
 	return (QSize(fontMetrics().size(0, "44 fps").width() + hpadtot(), minimum_eight()));
 }
 void overlayWidgetFPS::paintEvent(QPaintEvent *event) {
-	QPainter painter(this);
-
 	overlayWidget::paintEvent(event);
 
+	painter.begin(this);
 	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-
-	draw_background(&painter);
+	draw_background();
 	painter.drawText(rect(), Qt::AlignHCenter | Qt::AlignVCenter, QString("%1 fps").arg((int)old.fps));
+	painter.end();
 }
 
 void overlayWidgetFPS::update_widget(void) {
@@ -522,15 +634,15 @@ overlayWidgetFloppy::overlayWidgetFloppy(QWidget *parent) : overlayWidget(parent
 };
 overlayWidgetFloppy::~overlayWidgetFloppy() {}
 
-QSize overlayWidgetFloppy::sizeHint() const {
+QSize overlayWidgetFloppy::sizeHint(void) const {
 	return (QSize(floppy.gray.size().width() + hpadtot(), minimum_eight()));
 }
 void overlayWidgetFloppy::paintEvent(QPaintEvent *event) {
-	QPainter painter(this);
 	QPoint coords = QPoint((rect().width() - floppy.gray.size().width()) / 2,(rect().height() - floppy.gray.size().height()) / 2);
 
 	overlayWidget::paintEvent(event);
 
+	painter.begin(this);
 	if ((fds.info.last_operation | fds.drive.disk_ejected)) {
 		if (fds.drive.disk_ejected) {
 			painter.drawImage(coords, floppy.gray);
@@ -545,6 +657,7 @@ void overlayWidgetFloppy::paintEvent(QPaintEvent *event) {
 			}
 		}
 	}
+	painter.end();
 }
 
 void overlayWidgetFloppy::update_widget(void) {
@@ -553,6 +666,67 @@ void overlayWidgetFloppy::update_widget(void) {
 	} else {
 		hide();
 	}
+}
+
+// overlayWidgetFrame --------------------------------------------------------------------------------------------------------------
+
+overlayWidgetFrame::overlayWidgetFrame(QWidget *parent) : overlayWidget(parent) {
+	old.actual_frame = 0;
+	td.setDefaultFont(font());
+	info();
+};
+overlayWidgetFrame::~overlayWidgetFrame() {}
+
+QSize overlayWidgetFrame::sizeHint(void) const {
+	return (QSize(td.size().width(), minimum_eight()));
+}
+void overlayWidgetFrame::paintEvent(QPaintEvent *event) {
+	overlayWidget::paintEvent(event);
+
+	painter.begin(this);
+	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+
+	draw_background();
+
+	{
+		static QAbstractTextDocumentLayout::PaintContext ctx;
+
+		painter.translate(0.0f, (height() - td.size().height()) / 2.0f);
+
+		ctx.clip = rect();
+		td.documentLayout()->draw(&painter, ctx);
+	}
+	painter.end();
+}
+
+void overlayWidgetFrame::update_widget(void) {
+	if (cfg->txt_on_screen & cfg->show_frames_and_lags & !rwnd.active & (tas.type == NOTAS)) {
+		show_widget();
+	} else {
+		hide();
+	}
+}
+BYTE overlayWidgetFrame::is_to_redraw(void) {
+	if (ppu.frames != old.actual_frame) {
+		info();
+		setMinimumWidth(td.size().width());
+		return (TRUE);
+	}
+	return (FALSE);
+}
+void overlayWidgetFrame::update_old_value(void) {
+	old.actual_frame = ppu.frames;
+}
+
+void overlayWidgetFrame::info(void) {
+	QString txt = "";
+
+	txt += color_string("F : ", base_color.fg);
+	txt += color_string(QString("%1").arg(old.actual_frame), tas.lag_actual_frame ? shared_color.lag : shared_color.rwnd_actual);
+	txt += color_string(" L : ", base_color.fg);
+	txt += color_string(QString("%1").arg(tas.total_lag_frames), tas.lag_actual_frame ? shared_color.lag : shared_color.no_lag);
+
+	td.setHtml(txt);
 }
 
 // overlayWidgetInputPort --------------------------------------------------------------------------------------------------------
@@ -592,29 +766,29 @@ overlayWidgetInputPort::overlayWidgetInputPort(QWidget *parent) : overlayWidget(
 overlayWidgetInputPort::~overlayWidgetInputPort() {}
 
 void overlayWidgetInputPort::paintEvent(QPaintEvent *event) {
-	QPainter painter(this);
-
 	overlayWidget::paintEvent(event);
 
+	painter.begin(this);
 	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
 	switch (type) {
 		case CTRL_STANDARD:
-			draw_std_controller(&painter);
+			draw_std_controller();
 			break;
 		case CTRL_ZAPPER:
-			draw_zapper(&painter);
+			draw_zapper();
 			break;
 		case CTRL_SNES_MOUSE:
-			draw_snes_mouse(&painter);
+			draw_snes_mouse();
 			break;
 		case CTRL_ARKANOID_PADDLE:
-			draw_arkanoid_paddle(&painter);
+			draw_arkanoid_paddle();
 			break;
 		case CTRL_OEKA_KIDS_TABLET:
-			draw_oeka_kids_tablet(&painter);
+			draw_oeka_kids_tablet();
 			break;
 	}
+	painter.end();
 }
 
 void overlayWidgetInputPort::update_widget(void) {
@@ -738,89 +912,89 @@ void overlayWidgetInputPort::set_nport(int nport) {
 	portx = QImage(QString(":/pics/pics/overlay_controller_port%1.png").arg(nport + 1));
 }
 
-void overlayWidgetInputPort::draw_std_controller(QPainter *painter) {
-	painter->drawImage(0, 0, std_controller.tile);
-	painter->drawImage(74, 1, portx);
+void overlayWidgetInputPort::draw_std_controller(void) {
+	painter.drawImage(0, 0, std_controller.tile);
+	painter.drawImage(74, 1, portx);
 
 	if (old.std_controller.data[UP] == PRESSED) {
-		painter->drawImage(12, 5, std_controller.up);
+		painter.drawImage(12, 5, std_controller.up);
 	}
 	if (old.std_controller.data[DOWN] == PRESSED) {
-		painter->drawImage(12, 17, std_controller.up);
+		painter.drawImage(12, 17, std_controller.up);
 	}
 	if (old.std_controller.data[LEFT] == PRESSED) {
-		painter->drawImage(5, 12, std_controller.left);
+		painter.drawImage(5, 12, std_controller.left);
 	}
 	if (old.std_controller.data[RIGHT] == PRESSED) {
-		painter->drawImage(16, 12, std_controller.left);
+		painter.drawImage(16, 12, std_controller.left);
 	}
 	if (old.std_controller.data[SELECT] == PRESSED) {
-		painter->drawImage(34, 18, std_controller.select);
+		painter.drawImage(34, 18, std_controller.select);
 	}
 	if (old.std_controller.data[START] == PRESSED) {
-		painter->drawImage(50, 18, std_controller.start);
+		painter.drawImage(50, 18, std_controller.start);
 	}
 	if (old.std_controller.data[BUT_B] == PRESSED) {
-		painter->drawImage(68, 14, std_controller.but_b);
+		painter.drawImage(68, 14, std_controller.but_b);
 	}
 	if (old.std_controller.data[BUT_A] == PRESSED) {
-		painter->drawImage(82, 14, std_controller.but_a);
+		painter.drawImage(82, 14, std_controller.but_a);
 	}
 }
-void overlayWidgetInputPort::draw_zapper(QPainter *painter) {
-	painter->drawImage(0, 0, zapper.tile);
+void overlayWidgetInputPort::draw_zapper(void) {
+	painter.drawImage(0, 0, zapper.tile);
 
 	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
-		painter->drawImage(61, 1, exp_port);
+		painter.drawImage(61, 1, exp_port);
 	} else {
-		painter->drawImage(74, 1, portx);
+		painter.drawImage(74, 1, portx);
 	}
 
-	draw_mouse_coords(painter);
+	draw_mouse_coords();
 
 	if (old.mouse.left) {
-		painter->drawImage(52, 2, zapper.bang);
+		painter.drawImage(52, 2, zapper.bang);
 	}
 }
-void overlayWidgetInputPort::draw_snes_mouse(QPainter *painter) {
-	painter->drawImage(0, 0, snes_mouse.tile);
-	painter->drawImage(74, 1, portx);
+void overlayWidgetInputPort::draw_snes_mouse(void) {
+	painter.drawImage(0, 0, snes_mouse.tile);
+	painter.drawImage(74, 1, portx);
 
-	draw_mouse_coords(painter);
+	draw_mouse_coords();
 
 	if (old.mouse.left) {
-		painter->drawImage(7, 5, snes_mouse.button);
+		painter.drawImage(7, 5, snes_mouse.button);
 	}
 	if (old.mouse.right) {
-		painter->drawImage(11, 5, snes_mouse.button);
+		painter.drawImage(11, 5, snes_mouse.button);
 	}
 }
-void overlayWidgetInputPort::draw_arkanoid_paddle(QPainter *painter) {
-	painter->drawImage(0, 0, arkanoid_paddle.tile);
+void overlayWidgetInputPort::draw_arkanoid_paddle(void) {
+	painter.drawImage(0, 0, arkanoid_paddle.tile);
 
 	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
-		painter->drawImage(61, 1, exp_port);
+		painter.drawImage(61, 1, exp_port);
 	} else {
-		painter->drawImage(74, 1, portx);
+		painter.drawImage(74, 1, portx);
 	}
 
-	painter->setPen(Qt::white);
-	painter->drawText(61, 26, QString("x: %1").arg(old.mouse.x));
+	painter.setPen(Qt::white);
+	painter.drawText(61, 26, QString("x: %1").arg(old.mouse.x));
 
 	if (old.mouse.left) {
-		painter->drawImage(8, 6, arkanoid_paddle.button);
+		painter.drawImage(8, 6, arkanoid_paddle.button);
 	}
 }
-void overlayWidgetInputPort::draw_oeka_kids_tablet(QPainter *painter) {
-	painter->drawImage(0, 0, oeka_kids_tablet.tile);
+void overlayWidgetInputPort::draw_oeka_kids_tablet(void) {
+	painter.drawImage(0, 0, oeka_kids_tablet.tile);
 
 	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
-		painter->drawImage(61, 1, exp_port);
+		painter.drawImage(61, 1, exp_port);
 	} else {
-		painter->drawImage(74, 1, portx);
+		painter.drawImage(74, 1, portx);
 	}
 }
-void overlayWidgetInputPort::draw_mouse_coords(QPainter *painter) {
+void overlayWidgetInputPort::draw_mouse_coords(void) {
 	int x, y;
 
 	input_read_mouse_coords(&x, &y);
@@ -834,9 +1008,9 @@ void overlayWidgetInputPort::draw_mouse_coords(QPainter *painter) {
 	} else if (y > SCR_ROWS - 1) {
 		y = SCR_ROWS -1;
 	}
-	painter->setPen(Qt::white);
-	painter->drawText(20, 26, QString("x: %1").arg(x, 3));
-	painter->drawText(61, 26, QString("y: %1").arg(y, 3));
+	painter.setPen(Qt::white);
+	painter.drawText(20, 26, QString("x: %1").arg(x, 3));
+	painter.drawText(61, 26, QString("y: %1").arg(y, 3));
 }
 
 // overlayWidgetRewind -----------------------------------------------------------------------------------------------------------
@@ -844,10 +1018,13 @@ void overlayWidgetInputPort::draw_mouse_coords(QPainter *painter) {
 overlayWidgetRewind::overlayWidgetRewind(QWidget *parent) : overlayWidget(parent) {
 	led = QFont("Digital Counter 7");
 
+	led.setPointSizeF(font().pointSizeF());
+	td.setDefaultFont(led);
+
 	color.corner = QColor(234, 234, 184);
 	color.border_bar = QColor(100, 100, 100);
 	color.bar = QColor(224, 255, 224);
-	color.actual = QColor(Qt::blue);
+	color.actual = shared_color.rwnd_actual;
 	color.total = QColor(128, 0, 0);
 	color.disabled = QColor(180, 180, 180);
 
@@ -860,20 +1037,20 @@ overlayWidgetRewind::overlayWidgetRewind(QWidget *parent) : overlayWidget(parent
 };
 overlayWidgetRewind::~overlayWidgetRewind() {}
 
-QSize overlayWidgetRewind::sizeHint() const {
+QSize overlayWidgetRewind::sizeHint(void) const {
 	return (QSize(100, minimum_eight()));
 }
 void overlayWidgetRewind::paintEvent(QPaintEvent *event) {
-	QPainter painter(this);
-
 	overlayWidget::paintEvent(event);
 
+	painter.begin(this);
 	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
 	info.width = width();
-	draw_background(&painter);
-	draw_command(&painter);
-	draw_corner_bar_info(&painter);
+	draw_background();
+	draw_command();
+	draw_corner_bar_info();
+	painter.end();
 }
 
 void overlayWidgetRewind::update_widget(void) {
@@ -901,9 +1078,6 @@ void overlayWidgetRewind::update_old_value(void) {
 	old.action_before_pause = rwnd.action_before_pause;
 	old.actual_frame = rewind_snap_cursor();
 	old.max_frames = rewind_count_snaps();
-}
-QString overlayWidgetRewind::color_string(QString string, QColor color) {
-	return ("<font color='" + color.name().toUpper() + "'>" + string + "</font>");
 }
 QString overlayWidgetRewind::seconds_to_string(_infotime *itime, _infotime::_measure max, QColor color) {
 	QColor disabled = this->color.disabled;
@@ -968,13 +1142,13 @@ QString overlayWidgetRewind::seconds_to_string(_infotime *itime, _infotime::_mea
 
 	return (txt);
 }
-void overlayWidgetRewind::draw_command(QPainter *painter) {
+void overlayWidgetRewind::draw_command(void) {
 	QRect icon, text;
 	QImage *image = NULL;
 	BYTE action = old.action;
 	QString desc;
 
-	painter->save();
+	painter.save();
 
 	if (rwnd.action == RWND_ACT_PAUSE) {
 		action = rwnd.action_before_pause;
@@ -1030,61 +1204,56 @@ void overlayWidgetRewind::draw_command(QPainter *painter) {
 		w = act.play.width();
 		h = act.play.height();
 		icon = QRect(x, y, w, h);
-		painter->drawImage(icon.topLeft(), (*image));
+		painter.drawImage(icon.topLeft(), (*image));
 
 		x = 0;
 		y = 0;
 		w = icon.x() - padding.h;
 		h = height();
-		painter->setFont(led);
-		text = painter->boundingRect(QRect(x, y, w, h), Qt::AlignRight | Qt::AlignVCenter, "PAUSE");
-		painter->drawText(text, Qt::AlignHCenter | Qt::AlignVCenter, desc);
+		painter.setFont(led);
+		text = painter.boundingRect(QRect(x, y, w, h), Qt::AlignRight | Qt::AlignVCenter, "PAUSE");
+		painter.drawText(text, Qt::AlignHCenter | Qt::AlignVCenter, desc);
 	}
 
 	info.width = text.x() - hpadtot();
 
-	painter->restore();
+	painter.restore();
 }
-void overlayWidgetRewind::draw_corner_bar_info(QPainter *painter) {
-	QPen pen = painter->pen();
+void overlayWidgetRewind::draw_corner_bar_info(void) {
+	static QRect qr;
+	QPen pen = painter.pen();
 	int vpad = 2, hpad = 3;
 	double max = this->max();
 	double min = this->min();
 	double value = this->value();
 	double step = value / (max - min);
-	QRect qr;
 
 	//percentuale
 	info.width -= padding.h;
-	painter->translate(padding.h, 0);
-	qr = painter->boundingRect(QRect(0, 0, info.width, height()), Qt::AlignLeft | Qt::AlignVCenter, "000%");
-	painter->setPen(base_color.fg);
-	painter->drawText(qr, Qt::AlignCenter, QString("%1%").arg((int)(100 * step)));
+	painter.translate(padding.h, 0);
+	qr = painter.boundingRect(QRect(0, 0, info.width, height()), Qt::AlignLeft | Qt::AlignVCenter, "000%");
+	painter.setPen(base_color.fg);
+	painter.drawText(qr, Qt::AlignCenter, QString("%1%").arg((int)(100 * step)));
 
 	// cornice
 	info.width -= (qr.width() + padding.h);
-	painter->translate(qr.width() + padding.h, 0);
-	painter->setBrush(color.corner);
-	painter->drawRoundedRect(QRect(0, 0, info.width, height()), radius, radius);
+	painter.translate(qr.width() + padding.h, 0);
+	painter.setBrush(color.corner);
+	painter.drawRoundedRect(QRect(0, 0, info.width, height()), radius, radius);
 
 	// barra
 	if (value > 0) {
-		qr = QRect(hpad, vpad, (info.width - (hpad * 2)) * step, height() - (vpad * 2));
-		painter->setPen(color.border_bar);
-		painter->setBrush(color.bar);
-		painter->drawRoundedRect(qr, radius, radius);
+		qr.setRect(hpad, vpad, (info.width - (hpad * 2)) * step, height() - (vpad * 2));
+		painter.setPen(color.border_bar);
+		painter.setBrush(color.bar);
+		painter.drawRoundedRect(qr, radius, radius);
 	}
 
 	info.width -= hpad;
-	painter->translate(hpad, 0);
+	painter.translate(hpad, 0);
 
 	{
-		QAbstractTextDocumentLayout::PaintContext ctx;
-		QTextDocument td;
-		QFont f = led;
-
-		f.setPointSizeF(font().pointSizeF());
-		td.setDefaultFont(f);
+		static QAbstractTextDocumentLayout::PaintContext ctx;
 
 		td.setHtml(info_long());
 
@@ -1092,10 +1261,10 @@ void overlayWidgetRewind::draw_corner_bar_info(QPainter *painter) {
 			td.setHtml(info_short());
 		}
 
-		painter->translate(0.0f, (height() - td.size().height()) / 2.0f);
+		painter.translate(0.0f, (height() - td.size().height()) / 2.0f);
 
 		ctx.clip = rect();
-		td.documentLayout()->draw(painter, ctx);
+		td.documentLayout()->draw(&painter, ctx);
 	}
 }
 
@@ -1152,7 +1321,6 @@ QImage overlayWidgetRewind::svg_to_image(QString resource) {
 overlayWidgetTAS::overlayWidgetTAS(QWidget *parent) : overlayWidgetRewind(parent) {
 	color.corner = QColor(211, 215, 207);
 	color.bar = Qt::white;
-	lag_color = Qt::red;
 };
 overlayWidgetTAS::~overlayWidgetTAS() {}
 
@@ -1200,11 +1368,11 @@ QString overlayWidgetTAS::info_long(void) {
 	txt += color_string("/", base_color.fg);
 	txt += seconds_to_string(&itmax, itmax.max, color.total);
 	txt += color_string(" (", base_color.fg);
-	txt += color_string(QString("%1").arg(old.actual_frame), tas.lag_actual_frame ? lag_color : color.actual);
+	txt += color_string(QString("%1").arg(old.actual_frame), tas.lag_actual_frame ? shared_color.lag : color.actual);
 	txt += color_string("/", base_color.fg);
 	txt += color_string(QString("%1").arg(old.max_frames), color.total);
 	txt += color_string(" [", base_color.fg);
-	txt += color_string(QString("%1").arg(tas.total_lag_frames), tas.lag_actual_frame ? lag_color : QColor(30, 128, 0));
+	txt += color_string(QString("%1").arg(tas.total_lag_frames), tas.lag_actual_frame ? shared_color.lag : shared_color.no_lag);
 	txt += color_string("])", base_color.fg);
 
 	return (txt);
@@ -1212,11 +1380,11 @@ QString overlayWidgetTAS::info_long(void) {
 QString overlayWidgetTAS::info_short(void) {
 	QString txt = "";
 
-	txt += color_string(QString("%1").arg(old.actual_frame), tas.lag_actual_frame ? lag_color : color.actual);
+	txt += color_string(QString("%1").arg(old.actual_frame), tas.lag_actual_frame ? shared_color.lag : color.actual);
 	txt += color_string("/", base_color.fg);
 	txt += color_string(QString("%1").arg(old.max_frames), color.total);
 	txt += color_string(" [", base_color.fg);
-	txt += color_string(QString("%1").arg(tas.total_lag_frames), tas.lag_actual_frame ? lag_color : color.actual);
+	txt += color_string(QString("%1").arg(tas.total_lag_frames), tas.lag_actual_frame ? shared_color.lag : color.actual);
 	txt += color_string("]", base_color.fg);
 
 	return (txt);
@@ -1225,153 +1393,476 @@ QString overlayWidgetTAS::info_short(void) {
 // overlaySaveSlot ---------------------------------------------------------------------------------------------------------------
 
 overlayWidgetSaveSlot::overlayWidgetSaveSlot(QWidget *parent) : overlayWidget(parent) {
+	color.x1.save = Qt::red;
+	color.x1.read = QColor(252, 45, 255);
+	color.x1.selected = Qt::black;
+	color.x1.text = Qt::black;
+	color.x1.text_not_used = Qt::gray;
+
+	color.no_preview = Qt::darkGray;
+	color.previw_opacity = Qt::black;
+	color.border = Qt::lightGray;
+	color.border_selected = Qt::white;
+	color.bar = Qt::black;
+	color.bar_selected = Qt::darkGreen;
+	color.slot = Qt::yellow;
+	color.info = Qt::white;
+
 	save_slot_operation = 0;
+	height_row_slot = 20;
+	rows = 3;
+	columns = ((SAVE_SLOTS % rows) == 0) ? SAVE_SLOTS / rows : (SAVE_SLOTS / rows) + 1;
+	max_size = QSize(488, 370);
+
+	radius = 4;
+	padding.h = 4;
+	padding.v = 1;
 };
 overlayWidgetSaveSlot::~overlayWidgetSaveSlot() {}
 
-QSize overlayWidgetSaveSlot::sizeHint() const {
-	return (QSize(254, 20));
+QSize overlayWidgetSaveSlot::minimumSizeHint(void) const {
+	if (cfg->scale == X1) {
+		return (overlayWidget::minimumSizeHint());
+	}
+	return (max_size);
+}
+QSize overlayWidgetSaveSlot::sizeHint(void) const {
+	double ratio = SCR_COLUMNS / SCR_ROWS;
+	int width;
+
+	if (cfg->scale == X1) {
+		width = SAVE_SLOTS * 15 + 2;
+		return (QSize(width, height_row_slot + ((width / ratio) / (11.0f / 8.0f))));
+	}
+	return (max_size);
 }
 void overlayWidgetSaveSlot::paintEvent(QPaintEvent *event) {
-	QPainter painter(this);
-
 	overlayWidget::paintEvent(event);
 
+	painter.begin(this);
 	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-	draw_background(&painter);
-	draw_slots(&painter);
+	draw_background();
+	if (cfg->scale == X1) {
+		draw_slots_x1();
+	} else {
+		draw_slots();
+	}
 	fade_out_tick_timer();
+	painter.end();
 }
 
 void overlayWidgetSaveSlot::enable_overlay(BYTE operation) {
 	save_slot_operation = operation;
-	fade_out_start_timer();
-	enabled = TRUE;
+
+	if (save_slot_operation == SAVE_SLOT_SAVE) {
+		gui_overlay_info_append_msg_precompiled(31, &save_slot.slot);
+	} else if (save_slot_operation == SAVE_SLOT_READ) {
+		gui_overlay_info_append_msg_precompiled(32, &save_slot.slot);
+	} else {
+		fade_out_start_timer();
+		enabled = TRUE;
+	}
+}
+QString overlayWidgetSaveSlot::date_and_time(int slot) {
+	return (QLocale::system().toString(previews[slot].fileinfo.lastModified(), QLocale::ShortFormat));
 }
 
-void overlayWidgetSaveSlot::draw_slots(QPainter *painter) {
+void overlayWidgetSaveSlot::draw_slots_x1(void) {
 	int x, y, w, h, radius;
-	QFont font;
-	QPen pen;
+	int x1, y1;
+	static QFont f;
+	static QRect rect;
+	static QPen pen;
 
-	painter->save();
+	painter.save();
 
+	// disegno la riga di selezione dello slot
 	w = width() / SAVE_SLOTS;
-	h = height();
-	radius = h / 2.75;
-	x = (w / 2) + padding.h;
-	y = h / 2;
+	h = height_row_slot;
+	x1 = (w / 2) + padding.h;
+	y1 = h / 2;
 
-	for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
-		if (save_slot.state[i]) {
-			painter->setPen(Qt::NoPen);
-			painter->setBrush(QColor(80, 255, 87));
-			painter->drawEllipse(QPoint(x, y), radius, radius);
-		}
-		if (save_slot.slot == i) {
-			if (save_slot_operation == SAVE_SLOT_SAVE) {
-				painter->setPen(Qt::NoPen);
-				painter->setBrush(Qt::red);
-			} else if (save_slot_operation == SAVE_SLOT_READ) {
-				painter->setPen(Qt::NoPen);
-				painter->setBrush(QColor(252, 45, 255));
-			} else {
-				pen.setColor(Qt::black);
-				pen.setWidth(2);
-				painter->setPen(pen);
-				painter->setBrush(Qt::NoBrush);
-			}
-			painter->drawEllipse(QPoint(x, y), radius, radius);
-		}
-		x += w;
+	if ((x1 + (SAVE_SLOTS * w)) < width()) {
+		x1 += (width() - (x1 + (SAVE_SLOTS * w))) / 2;
 	}
 
-	x = (w / 2) + padding.h;
-	font.setPixelSize(height() / 2.0);
-	painter->setFont(font);
-	painter->setBrush(Qt::NoBrush);
+	radius = h / 3.0f;
 
 	for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
+		x = x1 + (i * w);
+		y = y1;
+
 		if (save_slot.state[i]) {
-			painter->setPen(Qt::black);
+			painter.setPen(Qt::NoPen);
+			painter.setBrush(QColor(80, 255, 87));
+			painter.drawEllipse(QPoint(x, y), radius, radius);
+		}
+	}
+
+	// disegno il cursore di selezione
+	{
+		x = x1 + (save_slot.slot * w);
+		y = y1;
+
+		pen.setColor(color.x1.selected);
+		pen.setWidth(2);
+		
+		painter.setPen(pen);
+		painter.setBrush(Qt::NoBrush);
+		painter.drawEllipse(QPoint(x, y), radius, radius);
+	}
+
+	f = font();
+	f.setPixelSize(h / 2.5);
+
+	painter.setFont(f);
+	painter.setBrush(Qt::NoBrush);
+
+	for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
+		x = x1 + (i * w);
+		y = y1;
+
+		rect.setRect(x - radius, y - radius, radius * 2, radius * 2);
+
+		if (save_slot.state[i]) {
+			painter.setPen(color.x1.text);
 		} else {
-			painter->setPen(Qt::gray);
+			painter.setPen(color.x1.text_not_used);
 		}
-		QRect textRect(x - radius, y - radius, radius * 2, radius * 2);
-		painter->drawText(textRect, Qt::AlignCenter, QString::number(i));
-		x += w;
+		painter.drawText(rect, Qt::AlignCenter, QString::number(i, 16).toUpper());
 	}
 
-	painter->restore();
+	// disegno la preview
+	w = (width() - (2 * padding.h));
+	h = (height() - height_row_slot - (3 * padding.v));
+	x = padding.h;
+	y = height_row_slot + padding.v;
+
+	rect.setRect(x, y, w, h);
+
+	if (!previews[save_slot.slot].image.isNull()) {
+		painter.drawImage(rect, previews[save_slot.slot].image.scaled(w, h, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+	} else {
+		painter.setRenderHint(QPainter::Antialiasing, false);
+		painter.setPen(Qt::NoPen);
+		painter.setBrush(color.no_preview);
+		painter.drawRect(rect);
+	}
+
+	// disegno la riga in cui scrivere le info
+	rect.setRect(x, y, w, height_row_slot);
+
+	painter.setOpacity(0.8);
+	if (!previews[save_slot.slot].image.isNull()) {
+		painter.fillRect(rect, color.bar_selected);
+	} else {
+		painter.fillRect(rect, color.bar);
+	}
+
+	// scrivo le info
+	f.setPixelSize(w / 12.0);
+
+	pen.setWidth(1);
+
+	painter.setFont(f);
+	painter.setOpacity(1.0);
+
+	pen.setColor(color.slot);
+	painter.setPen(pen);
+	painter.drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, QString(" %0").arg(save_slot.slot, 1, 16).toUpper());
+
+	pen.setColor(color.info);
+	painter.setPen(pen);
+	painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter, date_and_time(save_slot.slot));
+
+	painter.restore();
+}
+void overlayWidgetSaveSlot::draw_slots(void) {
+	int x, y, w, h;
+	static QFont f;
+	static QRect rect;
+	static QPen pen;
+
+	painter.save();
+
+	{
+		double ratio = SCR_COLUMNS / SCR_ROWS;
+		int x1, y1;
+
+		w = (width() - hpadtot()) / columns;
+		h = w / ratio;
+		x1 = padding.h;
+		y1 = padding.v;
+
+		if (((columns * w) + hpadtot()) < width()) {
+			x1 = (width() - (columns * w)) / 2;
+		}
+		if (((rows * h) + vpadtot()) < height()) {
+			y1 = (height() - (rows * h)) / 2;
+		}
+
+		for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
+			x = x1 + ((i % columns) * w);
+			y = y1 + ((i / columns) * h);
+
+			rect.setRect(x, y, w, h);
+
+			// disegno la preview
+			if (!previews[i].image.isNull()) {
+				QImage img = previews[i].image.scaled(w, h, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+				static QPainter p;
+
+				if (i != save_slot.slot) {
+					p.begin(&img);
+					p.setOpacity(0.6);
+					p.fillRect(img.rect(), color.previw_opacity);
+					p.end();
+				}
+				painter.drawImage(rect, img);
+			} else {
+				painter.setRenderHint(QPainter::Antialiasing, false);
+				painter.setPen(Qt::NoPen);
+				painter.setBrush(color.no_preview);
+				painter.drawRect(rect);
+			}
+
+			// disegno il bordo
+			pen.setColor(color.border);
+			pen.setWidth(4);
+
+			painter.setPen(pen);
+			painter.setBrush(Qt::NoBrush);
+			painter.drawRect(rect);
+
+			// disegno la riga in cui scrivere le info
+			rect.setRect(x + (pen.width() / 2), y, w - pen.width(), height_row_slot);
+
+			painter.setOpacity(0.8);
+			if (i == save_slot.slot) {
+				painter.fillRect(rect, color.bar_selected);
+			} else {
+				painter.fillRect(rect, color.bar);
+			}
+
+			// scrivo le info
+			f = font();
+			f.setPixelSize(w / 12.0);
+
+			pen.setWidth(1);
+
+			painter.setFont(f);
+			painter.setOpacity(1.0);
+
+			pen.setColor(color.slot);
+			painter.setPen(pen);
+			painter.drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, QString(" %0").arg(i, 1, 16).toUpper());
+
+			pen.setColor(color.info);
+			painter.setPen(pen);
+			painter.drawText(rect, Qt::AlignHCenter | Qt::AlignVCenter, date_and_time(i));
+		}
+
+		// disegno il cursore di selezione dello slot
+		{
+			x = x1 + ((save_slot.slot % columns) * w);
+			y = y1 + ((save_slot.slot / columns) * h);
+
+			rect.setRect(x, y, w, h);
+
+			pen.setColor(color.border_selected);
+			pen.setWidth(2);
+
+			painter.setPen(pen);
+			painter.setBrush(Qt::NoBrush);
+			painter.drawRect(rect);
+		}
+	}
+
+	painter.restore();
 }
 
 // overlayWidgetInfo -------------------------------------------------------------------------------------------------------------
 
 overlayWidgetInfo::overlayWidgetInfo(QWidget *parent) : overlayWidget(parent) {
+	font_info = QFont("ChronoType");
 	base_color.bg = QColor(125, 125, 125);
 	base_color.bg = QColor(50, 50, 50);
 	force_control_when_hidden = true;
+	new_management = true;
+	padding.h = 3;
+	sec_for_word = 0.375f;
 };
 overlayWidgetInfo::~overlayWidgetInfo() {}
 
-QSize overlayWidgetInfo::sizeHint() const {
-	return (QSize(100, minimum_eight()));
+QSize overlayWidgetInfo::sizeHint(void) const {
+	return (QSize(100, minimum_eight(NULL, 2)));
 }
 void overlayWidgetInfo::paintEvent(QPaintEvent *event) {
-	if (!isHidden() && overlay.info_actual_message.length()) {
-		QAbstractTextDocumentLayout::PaintContext ctx;
-		QFont f = QFont("ChronoType");
-		QPainter painter(this);
-		QTextDocument td;
-		int x, y, w, h;
+	if (!isHidden()) {
+		int alignment, len;
+		QString actual;
 
-		overlayWidget::paintEvent(event);
+		overlay.info.mutex.lock();
+		actual = overlay.info.actual;
+		len = overlay.info.actual.length();
+		alignment = overlay.info.alignment;
+		overlay.info.mutex.unlock();
 
-		painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+		if (len) {
+			static const double font_height = QFontMetrics(font_info).height();
+		    static QTextOption to;
+			QTextDocument td;
+			int x, y, w, h, lines = 1;
 
-		td.setDefaultFont(f);
-		td.setHtml(overlay.info_actual_message);
+			overlayWidget::paintEvent(event);
 
-		x = 0;
-		y = 0;
-		w = td.size().width();
-		h = height();
-		draw_background(&painter, QRect(x, y, w, h));
+			painter.begin(this);
+			painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-		painter.translate(0, (height() - td.size().height()) / 2);
+		    to.setWrapMode(QTextOption::WordWrap);
+		    to.setAlignment(Qt::AlignHCenter);
+			td.setDefaultFont(font_info);
+			td.setDocumentMargin(0);
+		    td.setDefaultTextOption(to);
+			td.setHtml(actual);
 
-		ctx.clip = rect();
-		td.documentLayout()->draw(&painter, ctx);
+			if (td.size().width() > rect().width()) {
+				int i, divider = 20, piece = (rect().width() / divider);
+
+				for (i = 5; i < divider; i++) {
+					w = (piece * i) - hpadtot();
+					td.setTextWidth(w);
+					if ((td.size().height() / font_height) == 2) {
+						lines = 2;
+						break;
+					}
+				}
+			} else {
+				w = td.size().width();
+				td.setTextWidth(w);
+			}
+
+			switch (alignment) {
+				default:
+				case OVERLAY_INFO_LEFT:
+					x = 0;
+					break;
+				case OVERLAY_INFO_CENTER:
+					x = (rect().width() - td.size().width()) / 2;
+					break;
+				case OVERLAY_INFO_RIGHT:
+					x = (rect().width() - td.size().width());
+					break;
+			}
+
+			w += hpadtot();
+
+			if (lines == 1) {
+				y = rect().height() / 2;
+				h = rect().height() / 2;
+			} else {
+				y = 0;
+				h = rect().height();
+			}
+
+			draw_background(QRect(x, y, w, h));
+
+			painter.translate(x + padding.h, y + padding.v + ((h - (font_height * lines)) / 2));
+			td.drawContents(&painter, QRect(0, 0, w, h));
+
+			painter.end();
+		}
 	}
 
 	fade_out_tick_timer();
 }
 
 BYTE overlayWidgetInfo::is_to_redraw(void) {
-	if (overlay.info_actual_message == "") {
+	// nuova gestione
+	if (new_management == true) {
+		QString actual;
+
+		if (overlay.info.messages_to_draw.length() > 0) {
+			overlay.info.mutex.lock();
+			overlay.info.alignment = overlay.info.messages_to_draw[0].alignment;
+			overlay.info.actual = overlay.info.messages_to_draw[0].msg;
+			overlay.info.mutex.unlock();
+			overlay.info.messages_to_draw.removeAt(0);
+			fade_in_animation();
+			enabled = true;
+			return (TRUE);
+		}
+
+		overlay.info.mutex.lock();
+		actual = overlay.info.actual;
+		overlay.info.mutex.unlock();
+
+		if ((actual != "") || (fade_out.timer.enabled == true)) {
+			return (TRUE);
+		}
+
+		enabled = false;
+		return (FALSE);
+	}
+
+	// vecchia gestione
+	if (overlay.info.actual == "") {
 		if (fade_out.timer.enabled == true) {
 			return (TRUE);
 		}
-		if (overlay.info_messages_to_draw.length() == 0) {
+		if (overlay.info.messages_to_draw.length() == 0) {
 			enabled = false;
 			return (FALSE);
 		}
-		overlay.info_actual_message = overlay.info_messages_to_draw[0];
-		overlay.info_messages_to_draw.removeAt(0);
+		overlay.info.mutex.lock();
+		overlay.info.alignment = overlay.info.messages_to_draw[0].alignment;
+		overlay.info.actual = overlay.info.messages_to_draw[0].msg;
+		overlay.info.messages_to_draw.removeAt(0);
+		overlay.info.mutex.unlock();
 		fade_in_animation();
 		enabled = true;
 	}
 	return (TRUE);
 }
-void overlayWidgetInfo::append_msg(QString msg) {
-	_append_msg(msg);
+void overlayWidgetInfo::fade_in_animation(void) {
+	// nuova gestione
+	if (new_management == true) {
+		QString actual;
+
+		if (always_visible == true) {
+			set_opacity(opacity.value);
+			return;
+		}
+
+		overlay.info.mutex.lock();
+		actual = overlay.info.actual;
+		overlay.info.mutex.unlock();
+
+		if (actual != "") {
+			s_fade_in_finished();
+			return;
+		}
+
+		fade_in.animation->setDuration(500);
+		fade_in.animation->setStartValue(0);
+		fade_in.animation->setEndValue(opacity.value);
+		fade_in.animation->setEasingCurve(QEasingCurve::InBack);
+		fade_in.animation->start();
+		connect(fade_in.animation, SIGNAL(finished()), this, SLOT(s_fade_in_finished()));
+		return;
+	}
+
+	// vecchia gestione
+	overlayWidget::fade_in_animation();
+}
+void overlayWidgetInfo::append_msg(BYTE alignment, QString msg) {
+	_append_msg(alignment, msg);
 	enabled = true;
 }
-
-void overlayWidgetInfo::_append_msg(QString msg) {
+void overlayWidgetInfo::_append_msg(BYTE alignment, QString msg) {
 	msg = decode_tags("[white]" + msg + "[normal]");
-	overlay.info_messages_to_draw.append(msg);
+	overlay.info.messages_to_draw.append(_overlay_info_message { msg, alignment });
 }
 QString overlayWidgetInfo::decode_tags(QString input) {
 	static const _tags tags[] = {
@@ -1421,9 +1912,28 @@ QString overlayWidgetInfo::decode_tags(QString input) {
 }
 
 void overlayWidgetInfo::s_fade_in_finished(void) {
+	QTextDocument td;
+	QString actual;
+	int words, sec;
+
 	fade_out_start_timer();
+
+	overlay.info.mutex.lock();
+	actual = overlay.info.actual;
+	overlay.info.mutex.unlock();
+
+	td.setDefaultFont(font_info);
+	td.setDocumentMargin(0);
+	td.setHtml(actual);
+
+	words = td.toPlainText().split(QRegularExpression("(\\s|\\n|\\r)+")).count();
+	sec = ceil(sec_for_word * (double)words);
+	fade_out.timer.seconds = sec < 3 ? 3 : sec;
 }
 void overlayWidgetInfo::s_fade_out_finished(void) {
-	overlay.info_actual_message = "";
+	overlay.info.mutex.lock();
+	overlay.info.alignment = OVERLAY_INFO_LEFT;
+	overlay.info.actual = "";
+	overlay.info.mutex.unlock();
 	set_opacity(opacity.value);
 }

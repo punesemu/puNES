@@ -54,7 +54,8 @@
 AC_DEFUN([AX_CHECK_ALIGNED_ACCESS_REQUIRED],
 [AC_CACHE_CHECK([if pointers to integers require aligned access],
   [ax_cv_have_aligned_access_required],
-  [AC_TRY_RUN([
+  [AC_RUN_IFELSE(
+    [AC_LANG_SOURCE([[
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -72,7 +73,7 @@ int main()
   }
   return 0;
 }
-              ],
+             ]])],
      [ax_cv_have_aligned_access_required=yes],
      [ax_cv_have_aligned_access_required=no],
      [ax_cv_have_aligned_access_required=no])

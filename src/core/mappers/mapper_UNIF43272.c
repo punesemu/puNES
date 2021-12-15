@@ -29,7 +29,7 @@ void map_init_UNIF43272(void) {
 	EXTCL_CPU_WR_MEM(UNIF43272);
 	EXTCL_CPU_RD_MEM(UNIF43272);
 	EXTCL_SAVE_MAPPER(UNIF43272);
-	mapper.internal_struct[0] = (BYTE *) &unif43272;
+	mapper.internal_struct[0] = (BYTE *)&unif43272;
 	mapper.internal_struct_size[0] = sizeof(unif43272);
 
 	if (info.reset >= HARD) {

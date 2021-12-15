@@ -35,7 +35,7 @@ void map_init_UNIF8157(void) {
 	EXTCL_CPU_WR_MEM(UNIF8157);
 	EXTCL_CPU_RD_MEM(UNIF8157);
 	EXTCL_SAVE_MAPPER(UNIF8157);
-	mapper.internal_struct[0] = (BYTE *) &unif8157;
+	mapper.internal_struct[0] = (BYTE *)&unif8157;
 	mapper.internal_struct_size[0] = sizeof(unif8157);
 
 	memset(&unif8157, 0x00, sizeof(unif8157));

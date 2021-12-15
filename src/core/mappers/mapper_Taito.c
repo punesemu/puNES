@@ -24,6 +24,7 @@
 #include "ppu.h"
 #include "irqA12.h"
 #include "save_slot.h"
+#include "tas.h"
 
 struct _taito_X1005 {
 	BYTE ram[0x80];
@@ -39,38 +40,33 @@ struct _taitotmp {
 
 void map_init_Taito(BYTE model) {
 	switch (model) {
-		case TC0190FMC: {
-			switch (info.mapper.submapper) {
-				case TC0190FMCPAL16R4:
-					EXTCL_CPU_WR_MEM(Taito_TC0190FMCPAL16R4);
-					EXTCL_CPU_EVERY_CYCLE(MMC3);
-					EXTCL_PPU_000_TO_34X(Taito_TC0190FMCPAL16R4);
-					EXTCL_PPU_000_TO_255(Taito_TC0190FMCPAL16R4);
-					EXTCL_PPU_256_TO_319(Taito_TC0190FMCPAL16R4);
-					EXTCL_PPU_320_TO_34X(Taito_TC0190FMCPAL16R4);
-					EXTCL_UPDATE_R2006(MMC3);
-
-					if (info.reset >= HARD) {
-						memset(&irqA12, 0x00, sizeof(irqA12));
-					}
-					irqA12.present = TRUE;
-					irqA12_delay = 7;
-
-					mirroring_V();
-					break;
-				default:
-					EXTCL_CPU_WR_MEM(Taito_TC0190FMC);
-					break;
-			}
+		case TC0190FMC:
+			EXTCL_CPU_WR_MEM(Taito_TC0190FMC);
 			break;
-		}
+		case TC0690:
+			EXTCL_CPU_WR_MEM(Taito_TC0690);
+			EXTCL_CPU_EVERY_CYCLE(MMC3);
+			EXTCL_PPU_000_TO_34X(Taito_TC0690);
+			EXTCL_PPU_000_TO_255(Taito_TC0690);
+			EXTCL_PPU_256_TO_319(Taito_TC0690);
+			EXTCL_PPU_320_TO_34X(Taito_TC0690);
+			EXTCL_UPDATE_R2006(MMC3);
+
+			if (info.reset >= HARD) {
+				memset(&irqA12, 0x00, sizeof(irqA12));
+			}
+			irqA12.present = TRUE;
+			irqA12_delay = 7;
+
+			mirroring_V();
+			break;
 		case X1005A:
 		case X1005B:
 			EXTCL_CPU_WR_MEM(Taito_X1005);
 			EXTCL_CPU_RD_MEM(Taito_X1005);
 			EXTCL_SAVE_MAPPER(Taito_X1005);
 			EXTCL_BATTERY_IO(Taito_X1005);
-			mapper.internal_struct[0] = (BYTE *) &taito_X1005;
+			mapper.internal_struct[0] = (BYTE *)&taito_X1005;
 			mapper.internal_struct_size[0] = sizeof(taito_X1005);
 
 			info.mapper.extend_wr = TRUE;
@@ -92,19 +88,17 @@ void map_init_Taito(BYTE model) {
 			} else {
 				info.prg.ram.bat.banks = TRUE;
 			}
-
 			break;
 		case X1017:
 			EXTCL_CPU_WR_MEM(Taito_X1017);
 			EXTCL_SAVE_MAPPER(Taito_X1017);
-			mapper.internal_struct[0] = (BYTE *) &taito_X1017;
+			mapper.internal_struct[0] = (BYTE *)&taito_X1017;
 			mapper.internal_struct_size[0] = sizeof(taito_X1017);
 
 			info.mapper.extend_wr = TRUE;
 
 			info.prg.ram.banks_8k_plus = 1;
 			info.prg.ram.bat.banks = 1;
-
 			break;
 	}
 
@@ -165,7 +159,7 @@ void extcl_cpu_wr_mem_Taito_TC0190FMC(WORD address, BYTE value) {
 	}
 }
 
-void extcl_cpu_wr_mem_Taito_TC0190FMCPAL16R4(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Taito_TC0690(WORD address, BYTE value) {
 	DBWORD bank;
 
 	switch (address & 0xF003) {
@@ -234,18 +228,18 @@ void extcl_cpu_wr_mem_Taito_TC0190FMCPAL16R4(WORD address, BYTE value) {
 			return;
 	}
 }
-void extcl_ppu_000_to_34x_Taito_TC0190FMCPAL16R4(void) {
+void extcl_ppu_000_to_34x_Taito_TC0690(void) {
 	irqA12_RS();
 }
-void extcl_ppu_000_to_255_Taito_TC0190FMCPAL16R4(void) {
+void extcl_ppu_000_to_255_Taito_TC0690(void) {
 	if (r2001.visible) {
 		irqA12_SB();
 	}
 }
-void extcl_ppu_256_to_319_Taito_TC0190FMCPAL16R4(void) {
+void extcl_ppu_256_to_319_Taito_TC0690(void) {
 	irqA12_BS();
 }
-void extcl_ppu_320_to_34x_Taito_TC0190FMCPAL16R4(void) {
+void extcl_ppu_320_to_34x_Taito_TC0690(void) {
 	irqA12_SB();
 }
 
@@ -344,7 +338,7 @@ BYTE extcl_save_mapper_Taito_X1005(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_battery_io_Taito_X1005(BYTE mode, FILE *fp) {
-	if (!fp) {
+	if (!fp || (tas.type != NOTAS)) {
 		return;
 	}
 

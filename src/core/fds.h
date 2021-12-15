@@ -47,8 +47,11 @@ enum fds_misc {
 	FDS_DISK_GAP = 0x0100,
 	FDS_DISK_BLOCK_MARK = 0x0180,
 	FDS_DISK_CRC_CHAR1 = 0x0155,
-	FDS_DISK_CRC_CHAR2 = 0x01AA
+	FDS_DISK_CRC_CHAR2 = 0x01AA,
+	FDS_OP_SIDE_DELAY = 3000000
 };
+
+#define fds_auto_insert_enabled() (cfg->fds_switch_side_automatically & !fds.auto_insert.disabled)
 
 typedef struct _fds {
 	// generali
@@ -179,6 +182,25 @@ typedef struct _fds {
 			SWORD mod;
 		} modulation;
 	} snd;
+	// auto insert
+	struct _fds_auto_insert {
+		struct _fds_auto_insert_r4032 {
+			uint32_t frames;
+			uint32_t checks;
+		} r4032;
+		struct _fds_auto_insert_delay {
+			int32_t eject;
+			int32_t dummy;
+			int32_t side;
+		} delay;
+		struct _fds_auto_insert_rE445 {
+			BYTE in_run;
+			BYTE count;
+		} rE445;
+		BYTE disabled;
+		BYTE new_side;
+		BYTE in_game;
+	} auto_insert;
 } _fds;
 
 extern _fds fds;
@@ -193,7 +215,7 @@ EXTERNC void fds_init(void);
 EXTERNC void fds_quit(void);
 EXTERNC BYTE fds_load_rom(void);
 EXTERNC BYTE fds_load_bios(void);
-EXTERNC void fds_disk_op(WORD type, BYTE side_to_insert);
+EXTERNC void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet);
 EXTERNC void fds_diff_op(BYTE mode, uint32_t position, WORD value);
 
 #undef EXTERNC

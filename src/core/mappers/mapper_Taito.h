@@ -23,7 +23,7 @@
 
 enum {
 	TC0190FMC,
-	TC0190FMCPAL16R4,
+	TC0690,
 	X1005A,
 	X1005B,
 	X1017,
@@ -35,11 +35,11 @@ void map_init_Taito(BYTE model);
 
 void extcl_cpu_wr_mem_Taito_TC0190FMC(WORD address, BYTE value);
 
-void extcl_cpu_wr_mem_Taito_TC0190FMCPAL16R4(WORD address, BYTE value);
-void extcl_ppu_000_to_34x_Taito_TC0190FMCPAL16R4(void);
-void extcl_ppu_000_to_255_Taito_TC0190FMCPAL16R4(void);
-void extcl_ppu_256_to_319_Taito_TC0190FMCPAL16R4(void);
-void extcl_ppu_320_to_34x_Taito_TC0190FMCPAL16R4(void);
+void extcl_cpu_wr_mem_Taito_TC0690(WORD address, BYTE value);
+void extcl_ppu_000_to_34x_Taito_TC0690(void);
+void extcl_ppu_000_to_255_Taito_TC0690(void);
+void extcl_ppu_256_to_319_Taito_TC0690(void);
+void extcl_ppu_320_to_34x_Taito_TC0690(void);
 
 void extcl_cpu_wr_mem_Taito_X1005(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_Taito_X1005(WORD address, BYTE openbus, BYTE before);

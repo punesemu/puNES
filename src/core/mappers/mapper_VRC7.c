@@ -42,7 +42,8 @@ void map_init_VRC7(BYTE revision) {
 	EXTCL_CPU_WR_MEM(VRC7);
 	EXTCL_SAVE_MAPPER(VRC7);
 	EXTCL_CPU_EVERY_CYCLE(VRC7);
-	EXTCL_SND_PLAYBACK_START(VRC7);
+	EXTCL_APU_TICK(VRC7);
+
 	mapper.internal_struct[0] = (BYTE *)&vrc7;
 	mapper.internal_struct_size[0] = sizeof(vrc7);
 
@@ -65,6 +66,8 @@ void map_init_VRC7(BYTE revision) {
 	vrc7tmp.delay = 1;
 
 	vrc7tmp.type = revision;
+
+	opll_reset();
 }
 void map_init_NSF_VRC7(BYTE revision) {
 	memset(&vrc7, 0x00, sizeof(vrc7));
@@ -75,6 +78,8 @@ void map_init_NSF_VRC7(BYTE revision) {
 	}
 
 	vrc7tmp.type = revision;
+
+	opll_reset();
 }
 void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
 	address = (address & vrc7tmp.mask) | table_VRC7[vrc7tmp.type][(address & 0x0018) >> 3];
@@ -95,11 +100,14 @@ void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;
-		case 0x9001:   // 0x9010
+		case 0x9001:
+			// 0x9010
 			vrc7.reg = value;
+			opll_write_reg(0, value);
 			return;
-		case 0x9021:   // 0x9030
-			opll_write_reg(vrc7.reg, value);
+		case 0x9021:
+			// 0x9030
+			opll_write_reg(1, value);
 			return;
 		case 0xA000:
 			control_bank(info.chr.rom[0].max.banks_1k)
@@ -181,11 +189,7 @@ BYTE extcl_save_mapper_VRC7(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, vrc7.prescaler);
 	save_slot_ele(mode, slot, vrc7.delay);
 
-	if (opll_save(mode, slot, fp) == EXIT_ERROR) {
-		return (EXIT_ERROR);
-	}
-
-	return (EXIT_OK);
+	return (opll_save(mode, slot, fp));
 }
 void extcl_cpu_every_cycle_VRC7(void) {
 	if (vrc7.delay && !(--vrc7.delay)) {
@@ -212,8 +216,8 @@ void extcl_cpu_every_cycle_VRC7(void) {
 	vrc7.count = vrc7.reload;
 	vrc7.delay = vrc7tmp.delay;
 }
-void extcl_snd_playback_start_VRC7(WORD samplarate) {
-	opll_reset(3579545, samplarate);
+void extcl_apu_tick_VRC7(void) {
+	opll_update();
 }
 
 void map_init_VRC7UNL(void) {
