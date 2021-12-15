@@ -27,7 +27,7 @@
     </message>
     <message>
       <source>Save Configuration</source>
-      <translation type="unfinished">Save Configuration</translation>
+      <translation>Beállítások mentése</translation>
     </message>
   </context>
   <context>
@@ -1149,11 +1149,11 @@
     </message>
     <message>
       <source>MFields</source>
-      <translation>MFields</translation>
+      <translation>Félképösszevonás</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation>VBlend</translation>
+      <translation>Függőleges összemosás</translation>
     </message>
     <message>
       <source>Sharpness</source>
