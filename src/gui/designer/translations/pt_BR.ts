@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pt-BR" sourcelanguage="en">
+<TS version="2.1" language="pt_BR" sourcelanguage="en">
   <context>
     <name>Settings</name>
     <message>
@@ -17,6 +17,13 @@
     <message>
       <source>Command Line Help</source>
       <translation>Ajuda da Linha de Comando</translation>
+    </message>
+  </context>
+  <context>
+    <name>dlgJsc</name>
+    <message>
+      <source>Close Window</source>
+      <translation>Fechar Janela</translation>
     </message>
   </context>
   <context>
@@ -59,7 +66,7 @@
     </message>
     <message>
       <source>Rewind Mode On/Off</source>
-      <translation>Modo Rebobinar Ligado/Desligado</translation>
+      <translation>Modo Retroceder Ativado/Desativado</translation>
     </message>
     <message>
       <source>Rewind Step Backward</source>
@@ -83,11 +90,15 @@
     </message>
     <message>
       <source>Rewind Fast Backward</source>
-      <translation>Rebobinar para trás</translation>
+      <translation>Retroceder Rápido</translation>
     </message>
     <message>
       <source>Recording</source>
       <translation>Gravação</translation>
+    </message>
+    <message>
+      <source>Toggle the Menu Bar in Fullscreen</source>
+      <translation>Alternar a Barra de Menu em Tela Cheia</translation>
     </message>
   </context>
   <context>
@@ -113,24 +124,8 @@
       <translation>Teclado</translation>
     </message>
     <message>
-      <source>Disabled</source>
-      <translation>Desabilitado</translation>
-    </message>
-    <message>
-      <source>No usable device</source>
-      <translation>Nenhum dispositivo encontrado</translation>
-    </message>
-    <message>
       <source>Select device first</source>
       <translation>Selecione um dispositivo primeiro</translation>
-    </message>
-    <message>
-      <source>Error on open device %1</source>
-      <translation>Erro ao abrir dispositivo %1</translation>
-    </message>
-    <message>
-      <source>Error on reading controllers configurations</source>
-      <translation>Erro ao ler as configurações de controles</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
@@ -227,6 +222,18 @@
     <message>
       <source>Discard</source>
       <translation>Descartar</translation>
+    </message>
+    <message>
+      <source>Press a key (ESC for the previous value &quot;%1&quot;%2)</source>
+      <translation>Pressione uma tecla (ESC para o valor anterior &quot;%1&quot;%2)</translation>
+    </message>
+    <message>
+      <source>Default</source>
+      <translation>Padrão</translation>
+    </message>
+    <message>
+      <source>Deadzone</source>
+      <translation>Zona morta</translation>
     </message>
   </context>
   <context>
@@ -376,10 +383,6 @@
     <message>
       <source>Compiled</source>
       <translation>Compilado</translation>
-    </message>
-    <message>
-      <source>Anyway, thank you all for the love and the help.</source>
-      <translation>De qualquer forma, obrigado a todos pelo amor e ajuda.</translation>
     </message>
     <message>
       <source>portable version</source>
@@ -546,10 +549,6 @@
       <translation>Inserir Moeda</translation>
     </message>
     <message>
-      <source>Vs System Controls</source>
-      <translation>Controles modo Vs System</translation>
-    </message>
-    <message>
       <source>&amp;Open working folder</source>
       <translation>A&amp;brir diretório atual</translation>
     </message>
@@ -559,7 +558,7 @@
     </message>
     <message>
       <source>&amp;Recent Roms</source>
-      <translation>&amp;Roms Recentes</translation>
+      <translation>&amp;ROMs Recentes</translation>
     </message>
     <message>
       <source>&amp;NES</source>
@@ -658,10 +657,6 @@
       <translation>Patch OPEN IPS/BPS/XDELTA</translation>
     </message>
     <message>
-      <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-      <translation>Se você gostou do emulador e deseja contribuir com seu desenvolvimento, ou apenas pagar uma cerveja para o programador</translation>
-    </message>
-    <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
       <translation>&amp;Aplicar Patch IPS/BPS/XDELTA</translation>
     </message>
@@ -687,19 +682,19 @@
     </message>
     <message>
       <source>Start &amp;VIDEO recording</source>
-      <translation>Iniciar gravação de &amp;VIDEO</translation>
+      <translation>Iniciar gravação de &amp;VÍDEO</translation>
     </message>
     <message>
       <source>Stop &amp;AUDIO recording</source>
-      <translation>Parar gravação de &amp;AUDIO</translation>
+      <translation>Parar gravação de &amp;ÁUDIO</translation>
     </message>
     <message>
       <source>Stop &amp;VIDEO recording</source>
-      <translation>Parar gravação de &amp;VIDEO</translation>
+      <translation>Parar gravação de &amp;VÍDEO</translation>
     </message>
     <message>
       <source>Start/Stop &amp;AUDIO recording</source>
-      <translation>Iniciar/Parar gravação de &amp;AUDIO</translation>
+      <translation>Iniciar/Parar gravação de &amp;ÁUDIO</translation>
     </message>
     <message>
       <source>&amp;Recording</source>
@@ -707,12 +702,28 @@
     </message>
     <message>
       <source>Start/Stop &amp;VIDEO recording</source>
-      <translation>Iniciar/Parar gravação de &amp;VIDEO</translation>
+      <translation>Iniciar/Parar gravação de &amp;VÍDEO</translation>
     </message>
     <message>
       <source>Slot %1 never used</source>
       <extracomment>Refers to the unused save slot. Important: Do not translate the &quot;%1&quot;.</extracomment>
       <translation>Slot %1 nunca usado</translation>
+    </message>
+    <message>
+      <source>Slot &amp;A</source>
+      <translation>Slot &amp;A</translation>
+    </message>
+    <message>
+      <source>Slot &amp;B</source>
+      <translation>Slot &amp;B</translation>
+    </message>
+    <message>
+      <source>&amp;Vs System Controls</source>
+      <translation>Controles &amp;Vs System</translation>
+    </message>
+    <message>
+      <source>&amp;Joypad/Gamepad Debug</source>
+      <translation>Debug &amp;Joypad/Gamepad</translation>
     </message>
   </context>
   <context>
@@ -830,7 +841,7 @@
     <message>
       <source>overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>overclock ativado [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
+      <translation>overclock habilitado [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
     </message>
     <message>
       <source>[yellow]silence, the movie has begun[normal]</source>
@@ -868,9 +879,34 @@
       <translation>[red]erro no arquivo de paleta[normal]</translation>
     </message>
     <message>
-      <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</source>
+      <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]erros[normal] na shader, use [green]&apos;Sem Shader&apos;[normal]</translation>
+      <translation>[red]erros[normal] no shader, use [green]&apos;Sem shader&apos;[cyan]</translation>
+    </message>
+    <message>
+      <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation>trocar [cyan]%1x%2[normal] a [green]%3Hz[normal]</translation>
+    </message>
+    <message>
+      <source>[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation>Encontrado [cyan]%1[normal] lados com o mesmo ID, troca [red]desabilitada[normal]</translation>
+    </message>
+    <message>
+      <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation>[red]erro[normal] ao carregar estado [cyan]%1[normal], o arquivo está corrompido</translation>
+    </message>
+    <message>
+      <source>state [cyan]%1[normal] saved successfully</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation>Estado [cyan]%1[normal] salvo com sucesso</translation>
+    </message>
+    <message>
+      <source>state [cyan]%1[normal] loaded successfully</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation>estado [cyan]%1[normal] carregado com sucesso</translation>
     </message>
   </context>
   <context>
@@ -982,10 +1018,6 @@
       <translation>Exportar</translation>
     </message>
     <message>
-      <source>Clear All</source>
-      <translation>Limpar Tudo</translation>
-    </message>
-    <message>
       <source>Editor Tools</source>
       <translation>Ferramentas de Edição</translation>
     </message>
@@ -1010,12 +1042,28 @@
       <translation>Novo</translation>
     </message>
     <message>
-      <source>Remove</source>
-      <translation>Remover</translation>
-    </message>
-    <message>
       <source>Cancel</source>
       <translation>Cancelar</translation>
+    </message>
+    <message>
+      <source>Delete</source>
+      <translation>Excluir</translation>
+    </message>
+    <message>
+      <source>Delete All</source>
+      <translation>Excluir Todas</translation>
+    </message>
+    <message>
+      <source>Copy</source>
+      <translation>Copiar</translation>
+    </message>
+    <message>
+      <source>New Game Genie</source>
+      <translation>Novo Game Genie</translation>
+    </message>
+    <message>
+      <source>New Pro Action</source>
+      <translation>Novo Pro Action</translation>
     </message>
   </context>
   <context>
@@ -1067,6 +1115,65 @@
     <message>
       <source>A description must be entered</source>
       <translation>Uma descrição é obrigatória</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgNTSCFilter</name>
+    <message>
+      <source>Reset paramaters to defaults</source>
+      <translation>Redefinir parâmetros para os padrões</translation>
+    </message>
+    <message>
+      <source>Artifacts</source>
+      <translation>Artefatos</translation>
+    </message>
+    <message>
+      <source>Fringing</source>
+      <translation>Aberração</translation>
+    </message>
+    <message>
+      <source>Resolution</source>
+      <translation>Resolução</translation>
+    </message>
+    <message>
+      <source>Gamma</source>
+      <translation>Gamma</translation>
+    </message>
+    <message>
+      <source>Bleed</source>
+      <translation>Sangria</translation>
+    </message>
+    <message>
+      <source>MFields</source>
+      <translation>MFields</translation>
+    </message>
+    <message>
+      <source>VBlend</source>
+      <translation>VBlend</translation>
+    </message>
+    <message>
+      <source>Sharpness</source>
+      <translation>Nitidez</translation>
+    </message>
+    <message>
+      <source>Brightness</source>
+      <translation>Brilho</translation>
+    </message>
+    <message>
+      <source>Hue</source>
+      <translation>Matiz</translation>
+    </message>
+    <message>
+      <source>Contrast</source>
+      <translation>Contraste</translation>
+    </message>
+    <message>
+      <source>Saturation</source>
+      <translation>Saturação</translation>
+    </message>
+    <message>
+      <source>Scanline</source>
+      <translation>Scanline</translation>
     </message>
   </context>
   <context>
@@ -1136,7 +1243,7 @@
     <name>wdgRecGetSaveFileName</name>
     <message>
       <source>Record AUDIO on file</source>
-      <translation>Gravar AUDIO em arquivo</translation>
+      <translation>Gravar ÁUDIO em arquivo</translation>
     </message>
     <message>
       <source>Output Quality</source>
@@ -1156,7 +1263,7 @@
     </message>
     <message>
       <source>Record VIDEO on file</source>
-      <translation>Gravar VIDEO em arquivo</translation>
+      <translation>Gravar VÍDEO em arquivo</translation>
     </message>
     <message>
       <source>Not supported</source>
@@ -1191,7 +1298,7 @@
     </message>
     <message>
       <source>Rewind</source>
-      <translation>Rebobinar</translation>
+      <translation>Retroceder</translation>
     </message>
   </context>
   <context>
@@ -1209,8 +1316,8 @@
       <translation>Grau de rotação atual</translation>
     </message>
     <message>
-      <source>Rotate Screen :</source>
-      <translation>Rotação da Tela:</translation>
+      <source>Degrees</source>
+      <translation>Graus</translation>
     </message>
   </context>
   <context>
@@ -1272,20 +1379,28 @@
       <translation>Inverter bits de DPCM</translation>
     </message>
     <message>
-      <source>48.0 kHz</source>
-      <translation>48.0 kHz</translation>
+      <source>192000</source>
+      <translation>192000</translation>
     </message>
     <message>
-      <source>44.1 kHz</source>
-      <translation>44.1 kHz</translation>
+      <source>96000</source>
+      <translation>96000</translation>
     </message>
     <message>
-      <source>22.05 kHz</source>
-      <translation>22.05 kHz</translation>
+      <source>48000</source>
+      <translation>48000</translation>
     </message>
     <message>
-      <source>11.025 kHz</source>
-      <translation>11.025 kHz</translation>
+      <source>44100</source>
+      <translation>44100</translation>
+    </message>
+    <message>
+      <source>22050</source>
+      <translation>22050</translation>
+    </message>
+    <message>
+      <source>11025</source>
+      <translation>11025</translation>
     </message>
   </context>
   <context>
@@ -1363,7 +1478,7 @@
     </message>
     <message>
       <source>System Roms</source>
-      <translation>Roms do Sistema</translation>
+      <translation>ROMs do Sistema</translation>
     </message>
     <message>
       <source>Mode</source>
@@ -1419,7 +1534,7 @@
     </message>
     <message>
       <source>Rewind minutes</source>
-      <translation>Minutos de rebobinagem</translation>
+      <translation>Minutos de retrocesso</translation>
     </message>
     <message>
       <source>Spanish</source>
@@ -1469,6 +1584,30 @@
       <source>2x</source>
       <translation>2x</translation>
     </message>
+    <message>
+      <source>Chinese Simplified</source>
+      <translation>Chinês Simplificado</translation>
+    </message>
+    <message>
+      <source>Insert disk 1 side A at power-up/reset</source>
+      <translation>Inserir o disco 1 lado A ao ligar/reiniciar</translation>
+    </message>
+    <message>
+      <source>Famicom Disk System</source>
+      <translation>Famicom Disk System</translation>
+    </message>
+    <message>
+      <source>Use fast forward when loading the BIOS or disk/side</source>
+      <translation>Usar avanço rápido ao carregar a BIOS ou disco/lado</translation>
+    </message>
+    <message>
+      <source>Switch the disk/side automatically</source>
+      <translation>Alternar o disco/lado automaticamente</translation>
+    </message>
+    <message>
+      <source>Allow multiple instances of the emulator</source>
+      <translation>Permitir múltiplas instâncias do emulador</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
@@ -1507,18 +1646,6 @@
     <message>
       <source>No usable device</source>
       <translation>Nenhum dispositivo disponível</translation>
-    </message>
-    <message>
-      <source>Error on open device %1</source>
-      <translation>Erro ao abrir dispositivo %1</translation>
-    </message>
-    <message>
-      <source>Error on reading controllers configurations</source>
-      <translation>Erro ao ler a configuração dos controles</translation>
-    </message>
-    <message>
-      <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
-      <translation>Pressione uma tecla (ESC para valor anterior &quot;%1&quot;)  - %2 segundos restantes</translation>
     </message>
     <message>
       <source>Input Settings</source>
@@ -1606,11 +1733,11 @@
     </message>
     <message>
       <source>Start/Stop AUDIO recording</source>
-      <translation>Iniciar/Parar gravação de &amp;AUDIO</translation>
+      <translation>Iniciar/Parar gravação de &amp;ÁUDIO</translation>
     </message>
     <message>
       <source>Start/Stop VIDEO recording</source>
-      <translation>Iniciar/Parar gravação de &amp;VIDEO</translation>
+      <translation>Iniciar/Parar gravação de &amp;VÍDEO</translation>
     </message>
     <message>
       <source>Start/Stop WAV recording</source>
@@ -1619,6 +1746,10 @@
     <message>
       <source>Standard Pads on Port3 and Port4</source>
       <translation>Controles Padrões nas Portas 3 e 4</translation>
+    </message>
+    <message>
+      <source>Press a key - timeout in %1</source>
+      <translation>Pressione uma tecla - tempo restante: %1</translation>
     </message>
   </context>
   <context>
@@ -1666,6 +1797,30 @@
     <message>
       <source>Hide Background</source>
       <translation>Ocultar Fundo</translation>
+    </message>
+    <message>
+      <source>Advanced</source>
+      <translation>Avançado</translation>
+    </message>
+    <message>
+      <source>Default</source>
+      <translation>Padrão</translation>
+    </message>
+    <message>
+      <source>Randomize (Not recommended)</source>
+      <translation>Randomizar (Não recomendado)</translation>
+    </message>
+    <message>
+      <source>Power up/reset CPU/PPU Alignment</source>
+      <translation>Alinhamento da CPU/PPU ao ligar/reiniciar</translation>
+    </message>
+    <message>
+      <source>Increment at every hard reset (Not recommended)</source>
+      <translation>Incrementar a cada reinício (Não recomendado)</translation>
+    </message>
+    <message>
+      <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
+      <translation>Restaurar automaticamente o limite quando necessário para prevenir falhas gráficas</translation>
     </message>
   </context>
   <context>
@@ -1875,6 +2030,11 @@
     <message>
       <source>Recording Settings</source>
       <translation>Configurações de Gravação</translation>
+    </message>
+    <message>
+      <source>Opus Audio (*.opus)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>Áudio Opus  (*.opus)</translation>
     </message>
   </context>
   <context>
@@ -2124,10 +2284,6 @@
       <translation>NTSC RGB</translation>
     </message>
     <message>
-      <source>Shader Parameters</source>
-      <translation>Parâmetros de Shader</translation>
-    </message>
-    <message>
       <source>Reset paramaters to defaults</source>
       <translation>Redefinir parâmetros para os padrões</translation>
     </message>
@@ -2236,10 +2392,6 @@
       <translation>Desabilitar troca de ênfase Vermelha e Verde para PAL/Dendy</translation>
     </message>
     <message>
-      <source>Use integer scaling in fullscreen</source>
-      <translation>Usar escalonamento com inteiros em tela cheia</translation>
-    </message>
-    <message>
       <source>0 degrees</source>
       <translation>0 graus</translation>
     </message>
@@ -2311,6 +2463,34 @@
       <source>Palette File</source>
       <translation>Arquivo de Paleta</translation>
     </message>
+    <message>
+      <source>Show frames and lags counters</source>
+      <translation>Mostrar quadros e contadores de lag</translation>
+    </message>
+    <message>
+      <source>Desktop resolution</source>
+      <translation>Resolução da área de trabalho</translation>
+    </message>
+    <message>
+      <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
+      <translation>Adaptar a taxa de atualização para a região (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
+    </message>
+    <message>
+      <source>Fullscreen</source>
+      <translation>Tela cheia</translation>
+    </message>
+    <message>
+      <source>* applied if supported by the monitor</source>
+      <translation>* aplicado se suportado pelo monitor</translation>
+    </message>
+    <message>
+      <source>Use integer scaling</source>
+      <translation>Usar escala de inteiros</translation>
+    </message>
+    <message>
+      <source>Preferred resolution </source>
+      <translation>Resolução preferida </translation>
+    </message>
   </context>
   <context>
     <name>wdgState</name>
@@ -2325,10 +2505,6 @@
     <message>
       <source>Save/Load State</source>
       <translation>Salvar/Carregar Estado</translation>
-    </message>
-    <message>
-      <source>Slot state</source>
-      <translation>Estado do Slot</translation>
     </message>
     <message>
       <source>Load state</source>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="hu" sourcelanguage="en">
+<TS version="2.1" language="hu_HU" sourcelanguage="en">
   <context>
     <name>Settings</name>
     <message>
@@ -17,6 +17,13 @@
     <message>
       <source>Command Line Help</source>
       <translation>Parancssori súgó</translation>
+    </message>
+  </context>
+  <context>
+    <name>dlgJsc</name>
+    <message>
+      <source>Close Window</source>
+      <translation>Ablak bezárása</translation>
     </message>
   </context>
   <context>
@@ -89,6 +96,10 @@
       <source>Recording</source>
       <translation>Felvétel</translation>
     </message>
+    <message>
+      <source>Toggle the Menu Bar in Fullscreen</source>
+      <translation>Menüsáv ki/be teljes képernyőn</translation>
+    </message>
   </context>
   <context>
     <name>dlgStdPad</name>
@@ -113,24 +124,8 @@
       <translation>Billentyűzet</translation>
     </message>
     <message>
-      <source>Disabled</source>
-      <translation>Letiltva</translation>
-    </message>
-    <message>
-      <source>No usable device</source>
-      <translation>Nincs használható eszköz</translation>
-    </message>
-    <message>
       <source>Select device first</source>
       <translation>Előbb válassz eszközt</translation>
-    </message>
-    <message>
-      <source>Error on open device %1</source>
-      <translation>Hiba %1 eszköz megnyitásakor</translation>
-    </message>
-    <message>
-      <source>Error on reading controllers configurations</source>
-      <translation>Hiba a kontroller beállításainak olvasásakor</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
@@ -227,6 +222,18 @@
     <message>
       <source>Discard</source>
       <translation>Eldob</translation>
+    </message>
+    <message>
+      <source>Press a key (ESC for the previous value &quot;%1&quot;%2)</source>
+      <translation>Nyomj egy gombot (ESC az előző értékért &quot;%1&quot;%2)</translation>
+    </message>
+    <message>
+      <source>Default</source>
+      <translation>Alapértelmezett</translation>
+    </message>
+    <message>
+      <source>Deadzone</source>
+      <translation>Holttér</translation>
     </message>
   </context>
   <context>
@@ -376,10 +383,6 @@
     <message>
       <source>Compiled</source>
       <translation>Forgatva</translation>
-    </message>
-    <message>
-      <source>Anyway, thank you all for the love and the help.</source>
-      <translation>Mindenesetre köszi a szeretetért és a segítségért.</translation>
     </message>
     <message>
       <source>portable version</source>
@@ -546,10 +549,6 @@
       <translation>Érme bedobása</translation>
     </message>
     <message>
-      <source>Vs System Controls</source>
-      <translation>Vs rendszer vezérlése</translation>
-    </message>
-    <message>
       <source>&amp;Open working folder</source>
       <translation>Munkakönyvtár megnyitása (&amp;O)</translation>
     </message>
@@ -658,10 +657,6 @@
       <translation>IPS/BPS/XDELTA patch megnyitása</translation>
     </message>
     <message>
-      <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-      <translation>Ha tetszik az emulátor és szeretnéd támogatni a fejlesztését, vagy fizetnél egy sört a programozónak</translation>
-    </message>
-    <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
       <translation>IPS/BPS/XDELTA patch alkalmazása (&amp;A)</translation>
     </message>
@@ -713,6 +708,22 @@
       <source>Slot %1 never used</source>
       <extracomment>Refers to the unused save slot. Important: Do not translate the &quot;%1&quot;.</extracomment>
       <translation>A(z) %1 mentéshely nincs használva</translation>
+    </message>
+    <message>
+      <source>Slot &amp;A</source>
+      <translation>&amp;A slot</translation>
+    </message>
+    <message>
+      <source>Slot &amp;B</source>
+      <translation>&amp;B slot</translation>
+    </message>
+    <message>
+      <source>&amp;Vs System Controls</source>
+      <translation>&amp;Vs vezérlők</translation>
+    </message>
+    <message>
+      <source>&amp;Joypad/Gamepad Debug</source>
+      <translation>&amp;Joypad/Gamepad Hibakeresés</translation>
     </message>
   </context>
   <context>
@@ -868,9 +879,34 @@
       <translation>[red]hiba a palettafájlban[normal]</translation>
     </message>
     <message>
-      <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</source>
+      <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>[red]hibák[normal] a shaderben, használd a [green]&apos;Nincs shader&apos;[normal]-t</translation>
+      <translation>[red]hibák[normal] a shader-en, használd a [green]&apos;Nincs shader&apos;-t[cyan]</translation>
+    </message>
+    <message>
+      <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation>váltás [cyan]%1x%2[normal][green]%3Hz[normal]-en</translation>
+    </message>
+    <message>
+      <source>[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation>[cyan]%1[normal] ID oldalt találtam, autováltás [red]letiltva[normal]</translation>
+    </message>
+    <message>
+      <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation>[red]hiba[normal] állás betöltése közben [cyan]%1[normal], a fájl sérült</translation>
+    </message>
+    <message>
+      <source>state [cyan]%1[normal] saved successfully</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation>állás [cyan]%1[normal] sikeresen mentve</translation>
+    </message>
+    <message>
+      <source>state [cyan]%1[normal] loaded successfully</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation>állás [cyan]%1[normal] sikeresen betöltve</translation>
     </message>
   </context>
   <context>
@@ -982,10 +1018,6 @@
       <translation>Exportálás</translation>
     </message>
     <message>
-      <source>Clear All</source>
-      <translation>Minden törlése</translation>
-    </message>
-    <message>
       <source>Editor Tools</source>
       <translation>Szerkesztőeszközök</translation>
     </message>
@@ -1010,12 +1042,28 @@
       <translation>Új</translation>
     </message>
     <message>
-      <source>Remove</source>
-      <translation>Eltávolít</translation>
-    </message>
-    <message>
       <source>Cancel</source>
       <translation>Mégse</translation>
+    </message>
+    <message>
+      <source>Delete</source>
+      <translation>Töröl</translation>
+    </message>
+    <message>
+      <source>Delete All</source>
+      <translation>Mindet töröl</translation>
+    </message>
+    <message>
+      <source>Copy</source>
+      <translation>Másol</translation>
+    </message>
+    <message>
+      <source>New Game Genie</source>
+      <translation>Új Game Genie</translation>
+    </message>
+    <message>
+      <source>New Pro Action</source>
+      <translation>Új Pro Action</translation>
     </message>
   </context>
   <context>
@@ -1067,6 +1115,65 @@
     <message>
       <source>A description must be entered</source>
       <translation>A leírás kötelező</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgNTSCFilter</name>
+    <message>
+      <source>Reset paramaters to defaults</source>
+      <translation>Paraméterek alapértelmezettre visszaállítása</translation>
+    </message>
+    <message>
+      <source>Artifacts</source>
+      <translation>Képhibák</translation>
+    </message>
+    <message>
+      <source>Fringing</source>
+      <translation>Szellemkép</translation>
+    </message>
+    <message>
+      <source>Resolution</source>
+      <translation>Felbontás</translation>
+    </message>
+    <message>
+      <source>Gamma</source>
+      <translation>Gamma</translation>
+    </message>
+    <message>
+      <source>Bleed</source>
+      <translation>Színvérzés</translation>
+    </message>
+    <message>
+      <source>MFields</source>
+      <translation>MFields</translation>
+    </message>
+    <message>
+      <source>VBlend</source>
+      <translation>VBlend</translation>
+    </message>
+    <message>
+      <source>Sharpness</source>
+      <translation>Élesség</translation>
+    </message>
+    <message>
+      <source>Brightness</source>
+      <translation>Fényerő</translation>
+    </message>
+    <message>
+      <source>Hue</source>
+      <translation>Árnyalat</translation>
+    </message>
+    <message>
+      <source>Contrast</source>
+      <translation>Kontraszt</translation>
+    </message>
+    <message>
+      <source>Saturation</source>
+      <translation>Szaturáció</translation>
+    </message>
+    <message>
+      <source>Scanline</source>
+      <translation>Scanline</translation>
     </message>
   </context>
   <context>
@@ -1209,8 +1316,8 @@
       <translation>Forgatás jelenleg</translation>
     </message>
     <message>
-      <source>Rotate Screen :</source>
-      <translation>Képernyő forgatása:</translation>
+      <source>Degrees</source>
+      <translation>Fok</translation>
     </message>
   </context>
   <context>
@@ -1272,20 +1379,28 @@
       <translation>DPCM bitjeinek megfordítása</translation>
     </message>
     <message>
-      <source>48.0 kHz</source>
-      <translation>48.0 kHz</translation>
+      <source>192000</source>
+      <translation>192000</translation>
     </message>
     <message>
-      <source>44.1 kHz</source>
-      <translation>44.1 kHz</translation>
+      <source>96000</source>
+      <translation>96000</translation>
     </message>
     <message>
-      <source>22.05 kHz</source>
-      <translation>22.05 kHz</translation>
+      <source>48000</source>
+      <translation>48000</translation>
     </message>
     <message>
-      <source>11.025 kHz</source>
-      <translation>11.025 kHz</translation>
+      <source>44100</source>
+      <translation>44100</translation>
+    </message>
+    <message>
+      <source>22050</source>
+      <translation>22050</translation>
+    </message>
+    <message>
+      <source>11025</source>
+      <translation>11025</translation>
     </message>
   </context>
   <context>
@@ -1469,6 +1584,30 @@
       <source>2x</source>
       <translation>2x</translation>
     </message>
+    <message>
+      <source>Chinese Simplified</source>
+      <translation>Egyszerűsített kínai</translation>
+    </message>
+    <message>
+      <source>Insert disk 1 side A at power-up/reset</source>
+      <translation>1. lemez A oldalának behelyezése bekapcsoláskor/reset-kor</translation>
+    </message>
+    <message>
+      <source>Famicom Disk System</source>
+      <translation>Famicom Disk System</translation>
+    </message>
+    <message>
+      <source>Use fast forward when loading the BIOS or disk/side</source>
+      <translation>Gyors előretekerés használata, amikor a BIOS vagy lemezoldal töltődik</translation>
+    </message>
+    <message>
+      <source>Switch the disk/side automatically</source>
+      <translation>Lemezoldalak autováltása</translation>
+    </message>
+    <message>
+      <source>Allow multiple instances of the emulator</source>
+      <translation>Több példány engedélyezése az emulátorból</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
@@ -1507,18 +1646,6 @@
     <message>
       <source>No usable device</source>
       <translation>Nincs használható eszköz</translation>
-    </message>
-    <message>
-      <source>Error on open device %1</source>
-      <translation>Hiba %1 eszköz megnyitásakor</translation>
-    </message>
-    <message>
-      <source>Error on reading controllers configurations</source>
-      <translation>Hiba a kontrollerek beállításának olvasásakor</translation>
-    </message>
-    <message>
-      <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
-      <translation>Nyomj egy gombot (ESC-et az előző értékhez: &quot;%1&quot;) - kihagyás %2 mp múlva</translation>
     </message>
     <message>
       <source>Input Settings</source>
@@ -1620,6 +1747,10 @@
       <source>Standard Pads on Port3 and Port4</source>
       <translation>Szabvány pad-ek a Port 3-on és Port 4-en</translation>
     </message>
+    <message>
+      <source>Press a key - timeout in %1</source>
+      <translation>Üss le egy billentyűt - időtúllépés: %1</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsPPU</name>
@@ -1666,6 +1797,30 @@
     <message>
       <source>Hide Background</source>
       <translation>Háttér eltüntetése</translation>
+    </message>
+    <message>
+      <source>Advanced</source>
+      <translation>Haladó</translation>
+    </message>
+    <message>
+      <source>Default</source>
+      <translation>Alapértelmezett</translation>
+    </message>
+    <message>
+      <source>Randomize (Not recommended)</source>
+      <translation>Véletlenszerűsítés (Nem javasolt)</translation>
+    </message>
+    <message>
+      <source>Power up/reset CPU/PPU Alignment</source>
+      <translation>Bekapcsolás/reset CPU/PPU Összehangolás</translation>
+    </message>
+    <message>
+      <source>Increment at every hard reset (Not recommended)</source>
+      <translation>Inkrementálás minden hard resetnél (Nem javasolt)</translation>
+    </message>
+    <message>
+      <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
+      <translation>Automatikusan visszaállítja a korlátot ha szükséges, hogy megelőzze a grafikai hibákat</translation>
     </message>
   </context>
   <context>
@@ -1875,6 +2030,11 @@
     <message>
       <source>Recording Settings</source>
       <translation>Felvétel beállításai</translation>
+    </message>
+    <message>
+      <source>Opus Audio (*.opus)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation>Opus Audio (*.opus)</translation>
     </message>
   </context>
   <context>
@@ -2124,10 +2284,6 @@
       <translation>NTSC RGB</translation>
     </message>
     <message>
-      <source>Shader Parameters</source>
-      <translation>Shader paraméterei</translation>
-    </message>
-    <message>
       <source>Reset paramaters to defaults</source>
       <translation>Paraméterek alapértelmezettre visszaállítása</translation>
     </message>
@@ -2236,10 +2392,6 @@
       <translation>Vörös és zöld hangsúly cseréjének tiltása PAL/Dendy esetén</translation>
     </message>
     <message>
-      <source>Use integer scaling in fullscreen</source>
-      <translation>Egész alapú skálázás teljes képernyőn</translation>
-    </message>
-    <message>
       <source>0 degrees</source>
       <translation>0 fok</translation>
     </message>
@@ -2311,6 +2463,34 @@
       <source>Palette File</source>
       <translation>Palettafájl</translation>
     </message>
+    <message>
+      <source>Show frames and lags counters</source>
+      <translation>Mutasd a képkockák és akadások számlálóját</translation>
+    </message>
+    <message>
+      <source>Desktop resolution</source>
+      <translation>Asztal felbontása</translation>
+    </message>
+    <message>
+      <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
+      <translation>Frissítési ráta igazítása a régióhoz (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
+    </message>
+    <message>
+      <source>Fullscreen</source>
+      <translation>Teljes képernyő</translation>
+    </message>
+    <message>
+      <source>* applied if supported by the monitor</source>
+      <translation>* alkalmazása, ha a monitor támogatja</translation>
+    </message>
+    <message>
+      <source>Use integer scaling</source>
+      <translation>Egész alapú skálázás</translation>
+    </message>
+    <message>
+      <source>Preferred resolution </source>
+      <translation>Előnyben részesített felbontás</translation>
+    </message>
   </context>
   <context>
     <name>wdgState</name>
@@ -2325,10 +2505,6 @@
     <message>
       <source>Save/Load State</source>
       <translation>Állás töltése/mentése</translation>
-    </message>
-    <message>
-      <source>Slot state</source>
-      <translation>Állás</translation>
     </message>
     <message>
       <source>Load state</source>

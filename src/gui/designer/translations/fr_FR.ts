@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr" sourcelanguage="en">
+<TS version="2.1" language="fr_FR" sourcelanguage="en">
   <context>
     <name>Settings</name>
     <message>
@@ -17,6 +17,13 @@
     <message>
       <source>Command Line Help</source>
       <translation type="unfinished">Command Line Help</translation>
+    </message>
+  </context>
+  <context>
+    <name>dlgJsc</name>
+    <message>
+      <source>Close Window</source>
+      <translation type="unfinished">Close Window</translation>
     </message>
   </context>
   <context>
@@ -89,6 +96,10 @@
       <source>Recording</source>
       <translation type="unfinished">Recording</translation>
     </message>
+    <message>
+      <source>Toggle the Menu Bar in Fullscreen</source>
+      <translation type="unfinished">Toggle the Menu Bar in Fullscreen</translation>
+    </message>
   </context>
   <context>
     <name>dlgStdPad</name>
@@ -113,24 +124,8 @@
       <translation type="unfinished">Keyboard</translation>
     </message>
     <message>
-      <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
-    </message>
-    <message>
-      <source>No usable device</source>
-      <translation type="unfinished">No usable device</translation>
-    </message>
-    <message>
       <source>Select device first</source>
       <translation type="unfinished">Select device first</translation>
-    </message>
-    <message>
-      <source>Error on open device %1</source>
-      <translation type="unfinished">Error on open device %1</translation>
-    </message>
-    <message>
-      <source>Error on reading controllers configurations</source>
-      <translation type="unfinished">Error on reading controllers configurations</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
@@ -227,6 +222,18 @@
     <message>
       <source>Discard</source>
       <translation type="unfinished">Discard</translation>
+    </message>
+    <message>
+      <source>Press a key (ESC for the previous value &quot;%1&quot;%2)</source>
+      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;%2)</translation>
+    </message>
+    <message>
+      <source>Default</source>
+      <translation type="unfinished">Default</translation>
+    </message>
+    <message>
+      <source>Deadzone</source>
+      <translation type="unfinished">Deadzone</translation>
     </message>
   </context>
   <context>
@@ -376,10 +383,6 @@
     <message>
       <source>Compiled</source>
       <translation type="unfinished">Compiled</translation>
-    </message>
-    <message>
-      <source>Anyway, thank you all for the love and the help.</source>
-      <translation type="unfinished">Anyway, thank you all for the love and the help.</translation>
     </message>
     <message>
       <source>portable version</source>
@@ -546,10 +549,6 @@
       <translation type="unfinished">Insert Coin</translation>
     </message>
     <message>
-      <source>Vs System Controls</source>
-      <translation type="unfinished">Vs System Controls</translation>
-    </message>
-    <message>
       <source>&amp;Open working folder</source>
       <translation type="unfinished">&amp;Open working folder</translation>
     </message>
@@ -658,10 +657,6 @@
       <translation type="unfinished">Open IPS/BPS/XDELTA Patch</translation>
     </message>
     <message>
-      <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-      <translation type="unfinished">If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</translation>
-    </message>
-    <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
       <translation type="unfinished">&amp;Apply IPS/BPS/XDELTA Patch</translation>
     </message>
@@ -713,6 +708,22 @@
       <source>Slot %1 never used</source>
       <extracomment>Refers to the unused save slot. Important: Do not translate the &quot;%1&quot;.</extracomment>
       <translation type="unfinished">Slot %1 never used</translation>
+    </message>
+    <message>
+      <source>Slot &amp;A</source>
+      <translation type="unfinished">Slot &amp;A</translation>
+    </message>
+    <message>
+      <source>Slot &amp;B</source>
+      <translation type="unfinished">Slot &amp;B</translation>
+    </message>
+    <message>
+      <source>&amp;Vs System Controls</source>
+      <translation type="unfinished">&amp;Vs System Controls</translation>
+    </message>
+    <message>
+      <source>&amp;Joypad/Gamepad Debug</source>
+      <translation type="unfinished">&amp;Joypad/Gamepad Debug</translation>
     </message>
   </context>
   <context>
@@ -868,9 +879,34 @@
       <translation type="unfinished">[red]error on palette file[normal]</translation>
     </message>
     <message>
-      <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</source>
+      <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</translation>
+      <translation type="unfinished">[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</translation>
+    </message>
+    <message>
+      <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</translation>
+    </message>
+    <message>
+      <source>[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</translation>
+    </message>
+    <message>
+      <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]error[normal] loading state [cyan]%1[normal], file is corrupted</translation>
+    </message>
+    <message>
+      <source>state [cyan]%1[normal] saved successfully</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">state [cyan]%1[normal] saved successfully</translation>
+    </message>
+    <message>
+      <source>state [cyan]%1[normal] loaded successfully</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">state [cyan]%1[normal] loaded successfully</translation>
     </message>
   </context>
   <context>
@@ -982,10 +1018,6 @@
       <translation type="unfinished">Export</translation>
     </message>
     <message>
-      <source>Clear All</source>
-      <translation type="unfinished">Clear All</translation>
-    </message>
-    <message>
       <source>Editor Tools</source>
       <translation type="unfinished">Editor Tools</translation>
     </message>
@@ -1010,12 +1042,28 @@
       <translation type="unfinished">New</translation>
     </message>
     <message>
-      <source>Remove</source>
-      <translation type="unfinished">Remove</translation>
-    </message>
-    <message>
       <source>Cancel</source>
       <translation type="unfinished">Cancel</translation>
+    </message>
+    <message>
+      <source>Delete</source>
+      <translation type="unfinished">Delete</translation>
+    </message>
+    <message>
+      <source>Delete All</source>
+      <translation type="unfinished">Delete All</translation>
+    </message>
+    <message>
+      <source>Copy</source>
+      <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+      <source>New Game Genie</source>
+      <translation type="unfinished">New Game Genie</translation>
+    </message>
+    <message>
+      <source>New Pro Action</source>
+      <translation type="unfinished">New Pro Action</translation>
     </message>
   </context>
   <context>
@@ -1067,6 +1115,65 @@
     <message>
       <source>A description must be entered</source>
       <translation type="unfinished">A description must be entered</translation>
+    </message>
+  </context>
+  <context>
+    <name>wdgNTSCFilter</name>
+    <message>
+      <source>Reset paramaters to defaults</source>
+      <translation type="unfinished">Reset paramaters to defaults</translation>
+    </message>
+    <message>
+      <source>Artifacts</source>
+      <translation type="unfinished">Artifacts</translation>
+    </message>
+    <message>
+      <source>Fringing</source>
+      <translation type="unfinished">Fringing</translation>
+    </message>
+    <message>
+      <source>Resolution</source>
+      <translation type="unfinished">Resolution</translation>
+    </message>
+    <message>
+      <source>Gamma</source>
+      <translation type="unfinished">Gamma</translation>
+    </message>
+    <message>
+      <source>Bleed</source>
+      <translation type="unfinished">Bleed</translation>
+    </message>
+    <message>
+      <source>MFields</source>
+      <translation type="unfinished">MFields</translation>
+    </message>
+    <message>
+      <source>VBlend</source>
+      <translation type="unfinished">VBlend</translation>
+    </message>
+    <message>
+      <source>Sharpness</source>
+      <translation type="unfinished">Sharpness</translation>
+    </message>
+    <message>
+      <source>Brightness</source>
+      <translation type="unfinished">Brightness</translation>
+    </message>
+    <message>
+      <source>Hue</source>
+      <translation type="unfinished">Hue</translation>
+    </message>
+    <message>
+      <source>Contrast</source>
+      <translation type="unfinished">Contrast</translation>
+    </message>
+    <message>
+      <source>Saturation</source>
+      <translation type="unfinished">Saturation</translation>
+    </message>
+    <message>
+      <source>Scanline</source>
+      <translation type="unfinished">Scanline</translation>
     </message>
   </context>
   <context>
@@ -1209,8 +1316,8 @@
       <translation type="unfinished">Current degree of rotation</translation>
     </message>
     <message>
-      <source>Rotate Screen :</source>
-      <translation type="unfinished">Rotate Screen :</translation>
+      <source>Degrees</source>
+      <translation type="unfinished">Degrees</translation>
     </message>
   </context>
   <context>
@@ -1272,20 +1379,28 @@
       <translation type="unfinished">Reverse bits of DPCM</translation>
     </message>
     <message>
-      <source>48.0 kHz</source>
-      <translation type="unfinished">48.0 kHz</translation>
+      <source>192000</source>
+      <translation type="unfinished">192000</translation>
     </message>
     <message>
-      <source>44.1 kHz</source>
-      <translation type="unfinished">44.1 kHz</translation>
+      <source>96000</source>
+      <translation type="unfinished">96000</translation>
     </message>
     <message>
-      <source>22.05 kHz</source>
-      <translation type="unfinished">22.05 kHz</translation>
+      <source>48000</source>
+      <translation type="unfinished">48000</translation>
     </message>
     <message>
-      <source>11.025 kHz</source>
-      <translation type="unfinished">11.025 kHz</translation>
+      <source>44100</source>
+      <translation type="unfinished">44100</translation>
+    </message>
+    <message>
+      <source>22050</source>
+      <translation type="unfinished">22050</translation>
+    </message>
+    <message>
+      <source>11025</source>
+      <translation type="unfinished">11025</translation>
     </message>
   </context>
   <context>
@@ -1469,6 +1584,30 @@
       <source>2x</source>
       <translation type="unfinished">2x</translation>
     </message>
+    <message>
+      <source>Chinese Simplified</source>
+      <translation type="unfinished">Chinese Simplified</translation>
+    </message>
+    <message>
+      <source>Insert disk 1 side A at power-up/reset</source>
+      <translation type="unfinished">Insert disk 1 side A at power-up/reset</translation>
+    </message>
+    <message>
+      <source>Famicom Disk System</source>
+      <translation type="unfinished">Famicom Disk System</translation>
+    </message>
+    <message>
+      <source>Use fast forward when loading the BIOS or disk/side</source>
+      <translation type="unfinished">Use fast forward when loading the BIOS or disk/side</translation>
+    </message>
+    <message>
+      <source>Switch the disk/side automatically</source>
+      <translation type="unfinished">Switch the disk/side automatically</translation>
+    </message>
+    <message>
+      <source>Allow multiple instances of the emulator</source>
+      <translation type="unfinished">Allow multiple instances of the emulator</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
@@ -1507,18 +1646,6 @@
     <message>
       <source>No usable device</source>
       <translation type="unfinished">No usable device</translation>
-    </message>
-    <message>
-      <source>Error on open device %1</source>
-      <translation type="unfinished">Error on open device %1</translation>
-    </message>
-    <message>
-      <source>Error on reading controllers configurations</source>
-      <translation type="unfinished">Error on reading controllers configurations</translation>
-    </message>
-    <message>
-      <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
-      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</translation>
     </message>
     <message>
       <source>Input Settings</source>
@@ -1620,6 +1747,10 @@
       <source>Standard Pads on Port3 and Port4</source>
       <translation type="unfinished">Standard Pads on Port3 and Port4</translation>
     </message>
+    <message>
+      <source>Press a key - timeout in %1</source>
+      <translation type="unfinished">Press a key - timeout in %1</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsPPU</name>
@@ -1666,6 +1797,30 @@
     <message>
       <source>Hide Background</source>
       <translation type="unfinished">Hide Background</translation>
+    </message>
+    <message>
+      <source>Advanced</source>
+      <translation type="unfinished">Advanced</translation>
+    </message>
+    <message>
+      <source>Default</source>
+      <translation type="unfinished">Default</translation>
+    </message>
+    <message>
+      <source>Randomize (Not recommended)</source>
+      <translation type="unfinished">Randomize (Not recommended)</translation>
+    </message>
+    <message>
+      <source>Power up/reset CPU/PPU Alignment</source>
+      <translation type="unfinished">Power up/reset CPU/PPU Alignment</translation>
+    </message>
+    <message>
+      <source>Increment at every hard reset (Not recommended)</source>
+      <translation type="unfinished">Increment at every hard reset (Not recommended)</translation>
+    </message>
+    <message>
+      <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
+      <translation type="unfinished">Automatically restores the limit when necessary to prevent graphical glitches</translation>
     </message>
   </context>
   <context>
@@ -1875,6 +2030,11 @@
     <message>
       <source>Recording Settings</source>
       <translation type="unfinished">Recording Settings</translation>
+    </message>
+    <message>
+      <source>Opus Audio (*.opus)</source>
+      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+      <translation type="unfinished">Opus Audio (*.opus)</translation>
     </message>
   </context>
   <context>
@@ -2124,10 +2284,6 @@
       <translation type="unfinished">NTSC RGB</translation>
     </message>
     <message>
-      <source>Shader Parameters</source>
-      <translation type="unfinished">Shader Parameters</translation>
-    </message>
-    <message>
       <source>Reset paramaters to defaults</source>
       <translation type="unfinished">Reset paramaters to defaults</translation>
     </message>
@@ -2236,10 +2392,6 @@
       <translation type="unfinished">Disable Red and Green emphasis swap for PAL/Dendy</translation>
     </message>
     <message>
-      <source>Use integer scaling in fullscreen</source>
-      <translation type="unfinished">Use integer scaling in fullscreen</translation>
-    </message>
-    <message>
       <source>0 degrees</source>
       <translation type="unfinished">0 degrees</translation>
     </message>
@@ -2311,6 +2463,34 @@
       <source>Palette File</source>
       <translation type="unfinished">Palette File</translation>
     </message>
+    <message>
+      <source>Show frames and lags counters</source>
+      <translation type="unfinished">Show frames and lags counters</translation>
+    </message>
+    <message>
+      <source>Desktop resolution</source>
+      <translation type="unfinished">Desktop resolution</translation>
+    </message>
+    <message>
+      <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
+      <translation type="unfinished">Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
+    </message>
+    <message>
+      <source>Fullscreen</source>
+      <translation type="unfinished">Fullscreen</translation>
+    </message>
+    <message>
+      <source>* applied if supported by the monitor</source>
+      <translation type="unfinished">* applied if supported by the monitor</translation>
+    </message>
+    <message>
+      <source>Use integer scaling</source>
+      <translation type="unfinished">Use integer scaling</translation>
+    </message>
+    <message>
+      <source>Preferred resolution </source>
+      <translation type="unfinished">Preferred resolution </translation>
+    </message>
   </context>
   <context>
     <name>wdgState</name>
@@ -2325,10 +2505,6 @@
     <message>
       <source>Save/Load State</source>
       <translation type="unfinished">Save/Load State</translation>
-    </message>
-    <message>
-      <source>Slot state</source>
-      <translation type="unfinished">Slot state</translation>
     </message>
     <message>
       <source>Load state</source>
