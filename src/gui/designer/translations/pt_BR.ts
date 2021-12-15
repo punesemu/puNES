@@ -25,6 +25,10 @@
       <source>Close Window</source>
       <translation>Fechar Janela</translation>
     </message>
+    <message>
+      <source>Save Configuration</source>
+      <translation type="unfinished">Save Configuration</translation>
+    </message>
   </context>
   <context>
     <name>dlgSettings</name>
