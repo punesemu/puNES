@@ -27,7 +27,7 @@
     </message>
     <message>
       <source>Save Configuration</source>
-      <translation type="unfinished">Save Configuration</translation>
+      <translation>Salvar Configuração</translation>
     </message>
   </context>
   <context>
@@ -205,7 +205,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation>Outros</translation>
+      <translation>Opções Diversas</translation>
     </message>
     <message>
       <source>Controller type</source>
@@ -1356,7 +1356,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation>Miscelânea</translation>
+      <translation>Opções Diversas</translation>
     </message>
     <message>
       <source>Settings</source>
@@ -1522,7 +1522,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation>Outros</translation>
+      <translation>Opções Diversas</translation>
     </message>
     <message>
       <source>Settings</source>
@@ -1673,7 +1673,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation>Miscelânea</translation>
+      <translation>Opções Diversas</translation>
     </message>
     <message>
       <source>Expansion Port</source>
@@ -2117,7 +2117,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation>Miscelânea</translation>
+      <translation>Opções Diversas</translation>
     </message>
     <message>
       <source>1:1</source>
