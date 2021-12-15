@@ -25,6 +25,10 @@
       <source>Close Window</source>
       <translation>Chiudi Finestra</translation>
     </message>
+    <message>
+      <source>Save Configuration</source>
+      <translation>Salva Configurazione</translation>
+    </message>
   </context>
   <context>
     <name>dlgSettings</name>
@@ -1598,7 +1602,7 @@
     </message>
     <message>
       <source>Use fast forward when loading the BIOS or disk/side</source>
-      <translation>Utilizzare il fast forward quando si carica il BIOS o il disco/lato</translation>
+      <translation>Utilizza il fast forward quando si carica il BIOS o il disco/lato</translation>
     </message>
     <message>
       <source>Switch the disk/side automatically</source>
