@@ -25,6 +25,10 @@
       <source>Close Window</source>
       <translation>Закрыть окно</translation>
     </message>
+    <message>
+      <source>Save Configuration</source>
+      <translation type="unfinished">Save Configuration</translation>
+    </message>
   </context>
   <context>
     <name>dlgSettings</name>

@@ -25,6 +25,10 @@
       <source>Close Window</source>
       <translation>Fechar Janela</translation>
     </message>
+    <message>
+      <source>Save Configuration</source>
+      <translation>Salvar Configuração</translation>
+    </message>
   </context>
   <context>
     <name>dlgSettings</name>
@@ -201,7 +205,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation>Outros</translation>
+      <translation>Opções Diversas</translation>
     </message>
     <message>
       <source>Controller type</source>
@@ -1352,7 +1356,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation>Miscelânea</translation>
+      <translation>Opções Diversas</translation>
     </message>
     <message>
       <source>Settings</source>
@@ -1518,7 +1522,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation>Outros</translation>
+      <translation>Opções Diversas</translation>
     </message>
     <message>
       <source>Settings</source>
@@ -1669,7 +1673,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation>Miscelânea</translation>
+      <translation>Opções Diversas</translation>
     </message>
     <message>
       <source>Expansion Port</source>
@@ -2113,7 +2117,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation>Miscelânea</translation>
+      <translation>Opções Diversas</translation>
     </message>
     <message>
       <source>1:1</source>
