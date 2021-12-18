@@ -90,6 +90,12 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 			def = findChild<QPushButton *>("pushButton_" + SPT(i) + "_default_" + SPB(a));
 			unset = findChild<QPushButton *>("pushButton_" + SPT(i) + "_unset_" + SPB(a));
 
+			pbt->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
+			pbt->setMinimumHeight(fontMetrics().boundingRect("PJTIL").height() < (pbt->iconSize().height() + 6) ?
+				pbt->iconSize().height() + 6 :
+				fontMetrics().boundingRect("PJTIL").height());
+			pbt->setMinimumWidth(fontMetrics().size(0, "0000000000000000").width() + pbt->iconSize().width() + 2);
+
 			pbt->setIcon(QIcon(""));
 			if (i == KEYBOARD) {
 				pbt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[i][a]));
@@ -108,7 +114,10 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 		}
 	}
 	
+	label_kbd_Deadzone_value_slider->setFixedWidth(QLabel("00").sizeHint().width());
 	label_kbd_Deadzone_value_slider->setText(QString("%1").arg(0, 2));
+	label_joy_Deadzone_value_slider->setFixedWidth(QLabel("00").sizeHint().width());
+	label_joy_Deadzone_value_slider->setText(QString("%1").arg(0, 2));
 	if (js_jdev_index() != JS_NO_JOYSTICK) {
 		horizontalSlider_joy_Deadzone->setValue(jstick.jdd.devices[js_jdev_index()].deadzone);
 	}
@@ -146,8 +155,6 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 	connect(pushButton_Discard, SIGNAL(clicked(bool)), this, SLOT(s_discard_clicked(bool)));
 
 	setAttribute(Qt::WA_DeleteOnClose);
-
-	setFixedSize(size());
 
 	data.joy.timer = new QTimer(this);
 	connect(data.joy.timer, SIGNAL(timeout()), this, SLOT(s_pad_joy_read_timer()));
@@ -209,6 +216,9 @@ void dlgStdPad::showEvent(QShowEvent *event) {
 
 	image_pad->resize(image.size());
 	image_pad->setPixmap(QPixmap::fromImage(image, Qt::ColorOnly));
+
+	adjustSize();
+	setFixedSize(size());
 
 	QDialog::showEvent(event);
 }

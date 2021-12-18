@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>539</width>
-    <height>712</height>
+    <width>457</width>
+    <height>697</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -129,7 +129,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_kbd_A">
+               <widget class="pixmapButton" name="pushButton_kbd_A">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -138,10 +138,6 @@
                 </property>
                 <property name="text">
                  <string notr="true">PushButton</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -209,7 +205,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_kbd_Select">
+               <widget class="pixmapButton" name="pushButton_kbd_Select">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -218,10 +214,6 @@
                 </property>
                 <property name="text">
                  <string notr="true">PushButton</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -289,7 +281,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_kbd_Left">
+               <widget class="pixmapButton" name="pushButton_kbd_Left">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -298,10 +290,6 @@
                 </property>
                 <property name="text">
                  <string notr="true">PushButton</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -379,7 +367,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_kbd_Start">
+               <widget class="pixmapButton" name="pushButton_kbd_Start">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -387,11 +375,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string notr="true">0000000000000</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
+                 <string notr="true">PushButton</string>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -449,7 +433,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_kbd_B">
+               <widget class="pixmapButton" name="pushButton_kbd_B">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -458,10 +442,6 @@
                 </property>
                 <property name="text">
                  <string notr="true">PushButton</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -519,7 +499,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_kbd_TurboA">
+               <widget class="pixmapButton" name="pushButton_kbd_TurboA">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -528,10 +508,6 @@
                 </property>
                 <property name="text">
                  <string notr="true">PushButton</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -589,7 +565,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_kbd_TurboB">
+               <widget class="pixmapButton" name="pushButton_kbd_TurboB">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -598,10 +574,6 @@
                 </property>
                 <property name="text">
                  <string notr="true">PushButton</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -659,7 +631,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_kbd_Right">
+               <widget class="pixmapButton" name="pushButton_kbd_Right">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -668,10 +640,6 @@
                 </property>
                 <property name="text">
                  <string notr="true">PushButton</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -729,7 +697,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_kbd_Down">
+               <widget class="pixmapButton" name="pushButton_kbd_Down">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -738,10 +706,6 @@
                 </property>
                 <property name="text">
                  <string notr="true">PushButton</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -859,7 +823,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="pushButton_kbd_Up">
+               <widget class="pixmapButton" name="pushButton_kbd_Up">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -867,11 +831,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string notr="true">0000000000000</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
+                 <string notr="true">PushButton</string>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1020,6 +980,12 @@
               <property name="enabled">
                <bool>false</bool>
               </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string notr="true">00</string>
               </property>
@@ -1155,10 +1121,6 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
-                </property>
                 <property name="iconSize">
                  <size>
                   <width>21</width>
@@ -1225,10 +1187,6 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
-                </property>
                 <property name="iconSize">
                  <size>
                   <width>21</width>
@@ -1294,10 +1252,6 @@
                 </property>
                 <property name="text">
                  <string notr="true">PushButton</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1383,11 +1337,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string notr="true">0000000000000</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
+                 <string notr="true">PushButton</string>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1475,10 +1425,6 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
-                </property>
                 <property name="iconSize">
                  <size>
                   <width>21</width>
@@ -1555,10 +1501,6 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
-                </property>
                 <property name="iconSize">
                  <size>
                   <width>21</width>
@@ -1624,10 +1566,6 @@
                 </property>
                 <property name="text">
                  <string notr="true">PushButton</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1705,10 +1643,6 @@
                 <property name="text">
                  <string notr="true">PushButton</string>
                 </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
-                </property>
                 <property name="iconSize">
                  <size>
                   <width>21</width>
@@ -1773,11 +1707,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string notr="true">0000000000000</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
+                 <string notr="true">PushButton</string>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1854,10 +1784,6 @@
                 </property>
                 <property name="text">
                  <string notr="true">PushButton</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/gamepad_xbox_360_a.svg</normaloff>:/icon/icons/gamepad_xbox_360_a.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
