@@ -196,9 +196,15 @@ int wdgPaletteWall::palette_index(int row, int col) {
 	return (color_index(row, col));
 }
 void wdgPaletteWall::print_in_cell(QPainter *p, int row, int col, const QRect &rect) {
-	int pindex = palette_index(row, col);
+	QString pindex = QString("%1").arg(palette_index(row, col), 2, 16, QChar('0')).toUpper();
 
-	p->drawText(rect, Qt::AlignVCenter | Qt::AlignHCenter, QString("%1").arg(pindex, 2, 16, QChar('0')).toUpper());
+	if (rect.height() < fontMetrics().size(0, pindex).height()) {
+		QFont f = font();
+
+		f.setPixelSize(rect.height() - 2);
+		p->setFont(f);
+	}
+	p->drawText(rect, Qt::AlignVCenter | Qt::AlignHCenter, pindex);
 }
 void wdgPaletteWall::set_current(int row, int col) {
 	int oldRow = curRow;
@@ -330,11 +336,17 @@ int wdgPalettePPU::palette_index(int row, int col) {
 	return (mmap_palette.color[(row * ncols) + col]);
 }
 void wdgPalettePPU::print_in_cell(QPainter *p, int row, int col, const QRect &rect) {
-	int pindex = palette_index(row, col);
-	int index = color_index(row, col);
+	QString pindex = QString("%1").arg(palette_index(row, col), 2, 16, QChar('0')).toUpper();
+	QString index = QString("%1").arg(color_index(row, col), 2, 10, QChar('0')).toUpper();
 
-	p->drawText(rect, Qt::AlignBottom | Qt::AlignHCenter, QString("%1").arg(pindex, 2, 16, QChar('0')).toUpper());
-	p->drawText(rect, Qt::AlignTop | Qt::AlignHCenter, QString("%1").arg(index, 2, 10, QChar('0')).toUpper());
+	if (rect.height() < (fontMetrics().size(0, pindex).height() + fontMetrics().size(0, index).height())) {
+		QFont f = font();
+
+		f.setPixelSize((rect.height() / 2) - 2);
+		p->setFont(f);
+	}
+	p->drawText(rect, Qt::AlignBottom | Qt::AlignHCenter, pindex);
+	p->drawText(rect, Qt::AlignTop | Qt::AlignHCenter, index);
 }
 
 // ----------------------------------------------------------------------------------------------
