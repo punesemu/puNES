@@ -23,11 +23,11 @@
     <name>dlgJsc</name>
     <message>
       <source>Close Window</source>
-      <translation type="unfinished">Close Window</translation>
+      <translation>Cerrar ventana</translation>
     </message>
     <message>
       <source>Save Configuration</source>
-      <translation type="unfinished">Save Configuration</translation>
+      <translation>Guardar configuración</translation>
     </message>
   </context>
   <context>
@@ -229,15 +229,15 @@
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;%2)</source>
-      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;%2)</translation>
+      <translation>Presiona una tecla (ESC para el valor anterior &quot;%1&quot;%2)</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Predeterminado</translation>
     </message>
     <message>
       <source>Deadzone</source>
-      <translation type="unfinished">Deadzone</translation>
+      <translation>Zona muerta</translation>
     </message>
   </context>
   <context>
@@ -723,11 +723,11 @@
     </message>
     <message>
       <source>&amp;Vs System Controls</source>
-      <translation type="unfinished">&amp;Vs System Controls</translation>
+      <translation>&amp;Controles del sistema contra</translation>
     </message>
     <message>
       <source>&amp;Joypad/Gamepad Debug</source>
-      <translation type="unfinished">&amp;Joypad/Gamepad Debug</translation>
+      <translation>&amp;Depuración de Joypad/Gamepad</translation>
     </message>
   </context>
   <context>
@@ -895,7 +895,7 @@
     <message>
       <source>[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</translation>
+      <translation>[cyan]%1[normal] lados con ID encontrados, cambio automático [red]deshabilitado[normal]</translation>
     </message>
     <message>
       <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
@@ -1051,23 +1051,23 @@
     </message>
     <message>
       <source>Delete</source>
-      <translation type="unfinished">Delete</translation>
+      <translation>Eliminar</translation>
     </message>
     <message>
       <source>Delete All</source>
-      <translation type="unfinished">Delete All</translation>
+      <translation>Eliminar todo</translation>
     </message>
     <message>
       <source>Copy</source>
-      <translation type="unfinished">Copy</translation>
+      <translation>Copiar</translation>
     </message>
     <message>
       <source>New Game Genie</source>
-      <translation type="unfinished">New Game Genie</translation>
+      <translation>Nuevo Game Genie</translation>
     </message>
     <message>
       <source>New Pro Action</source>
-      <translation type="unfinished">New Pro Action</translation>
+      <translation>Nuevo Pro Action</translation>
     </message>
   </context>
   <context>
@@ -1133,7 +1133,7 @@
     </message>
     <message>
       <source>Fringing</source>
-      <translation type="unfinished">Fringing</translation>
+      <translation>Fluctuación</translation>
     </message>
     <message>
       <source>Resolution</source>
@@ -1141,19 +1141,19 @@
     </message>
     <message>
       <source>Gamma</source>
-      <translation type="unfinished">Gamma</translation>
+      <translation>Gama</translation>
     </message>
     <message>
       <source>Bleed</source>
-      <translation type="unfinished">Bleed</translation>
+      <translation>Sangre</translation>
     </message>
     <message>
       <source>MFields</source>
-      <translation type="unfinished">MFields</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Sharpness</source>
@@ -1165,7 +1165,7 @@
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Tono</translation>
     </message>
     <message>
       <source>Contrast</source>
@@ -1177,7 +1177,7 @@
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Líneas de escaneo</translation>
     </message>
   </context>
   <context>
@@ -1384,27 +1384,27 @@
     </message>
     <message>
       <source>192000</source>
-      <translation type="unfinished">192000</translation>
+      <translation>192000</translation>
     </message>
     <message>
       <source>96000</source>
-      <translation type="unfinished">96000</translation>
+      <translation>96000</translation>
     </message>
     <message>
       <source>48000</source>
-      <translation type="unfinished">48000</translation>
+      <translation>48000</translation>
     </message>
     <message>
       <source>44100</source>
-      <translation type="unfinished">44100</translation>
+      <translation>44100</translation>
     </message>
     <message>
       <source>22050</source>
-      <translation type="unfinished">22050</translation>
+      <translation>22050</translation>
     </message>
     <message>
       <source>11025</source>
-      <translation type="unfinished">11025</translation>
+      <translation>22050</translation>
     </message>
   </context>
   <context>
@@ -1816,7 +1816,7 @@
     </message>
     <message>
       <source>Power up/reset CPU/PPU Alignment</source>
-      <translation type="unfinished">Power up/reset CPU/PPU Alignment</translation>
+      <translation>Encender/reiniciar la alineación de CPU/PPU</translation>
     </message>
     <message>
       <source>Increment at every hard reset (Not recommended)</source>
@@ -2038,7 +2038,7 @@
     <message>
       <source>Opus Audio (*.opus)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Opus Audio (*.opus)</translation>
+      <translation>Audio Opus (*.opus)</translation>
     </message>
   </context>
   <context>

@@ -1602,7 +1602,7 @@
     </message>
     <message>
       <source>Use fast forward when loading the BIOS or disk/side</source>
-      <translation>Utilizza il fast forward quando si carica il BIOS o il disco/lato</translation>
+      <translation>Utilizza il fast forward durante caricamento BIOS o al cambio disco/lato</translation>
     </message>
     <message>
       <source>Switch the disk/side automatically</source>
