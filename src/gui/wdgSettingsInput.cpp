@@ -20,6 +20,7 @@
 #include "wdgSettingsInput.moc"
 #include "mainWindow.hpp"
 #include "dlgSettings.hpp"
+#include "dlgStdPad.hpp"
 #include "emu_thread.h"
 #include "conf.h"
 
@@ -78,6 +79,7 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 	shortcuts_init();
 
 	connect(comboBox_joy_ID, SIGNAL(activated(int)), this, SLOT(s_joy_id(int)));
+	connect(comboBox_joy_ID, SIGNAL(currentIndexChanged(int)), this, SLOT(s_joy_index_changed(int)));
 
 	connect(pushButton_Shortcut_unset_all, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_unset_all(bool)));
 	connect(pushButton_Shortcut_reset, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_reset(bool)));
@@ -274,8 +276,8 @@ void wdgSettingsInput::shortcuts_init(void) {
 
 	shcut.bckColor = tableWidget_Shortcuts->item(0, 0)->background();
 
-	if (lineEdit_Input_info->font().pointSize() > 9) {
-		lineEdit_Input_info->setFont(f9);
+	if (label_Input_info->font().pointSize() > 9) {
+		label_Input_info->setFont(f9);
 	}
 
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
@@ -285,7 +287,11 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	QTableWidgetItem *col;
 	QHBoxLayout *layout;
 	QWidget *widget;
-	QPushButton *btext, *bicon;
+	pixmapButton *btext;
+	QPushButton *bicon;
+	QFontMetrics fm = tableWidget_Shortcuts->fontMetrics();
+	int icon_size = 21;
+	int btexth = fm.boundingRect("Ppj0q").height() < (icon_size + 6) ? icon_size + 6 : fm.boundingRect("Ppj0q").height();
 
 	tableWidget_Shortcuts->insertRow(row);
 
@@ -301,9 +307,11 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	}
 	widget = new QWidget(this);
 	layout = new QHBoxLayout(widget);
-	btext = new QPushButton(this);
+	btext = new pixmapButton(this);
 	btext->setObjectName("value");
-	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+	btext->setIconSize(QSize(21, 21));
+	btext->setMinimumHeight(btexth);
 	btext->setProperty("myValue", QVariant(row));
 	btext->setProperty("myType", QVariant(KEYBOARD));
 	btext->installEventFilter(this);
@@ -337,9 +345,11 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	}
 	widget = new QWidget(this);
 	layout = new QHBoxLayout(widget);
-	btext = new QPushButton(this);
+	btext = new pixmapButton(this);
 	btext->setObjectName("value");
-	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+	btext->setIconSize(QSize(21, 21));
+	btext->setMinimumHeight(btexth);
 	btext->setProperty("myValue", QVariant(row));
 	btext->setProperty("myType", QVariant(JOYSTICK));
 	btext->installEventFilter(this);
@@ -396,9 +406,11 @@ void wdgSettingsInput::shortcut_joy_list_init(void) {
 	}
 }
 void wdgSettingsInput::shortcut_joy_combo_init(void) {
+	int i, last_index = comboBox_joy_ID->currentIndex();
+	QString last_text = comboBox_joy_ID->itemText(last_index);
 	BYTE current_index = 0, current_line = JS_NO_JOYSTICK;
-	int i;
 
+	comboBox_joy_ID->blockSignals(true);
 	comboBox_joy_ID->clear();
 
 	for (i = 0; i < joy_list.count; i++) {
@@ -419,7 +431,13 @@ void wdgSettingsInput::shortcut_joy_combo_init(void) {
 		}
 	}
 
+	comboBox_joy_ID->blockSignals(false);
+
 	comboBox_joy_ID->setCurrentIndex(current_index);
+
+	if ((last_index == current_index) && (last_text != comboBox_joy_ID->itemText(last_index))){
+		s_joy_index_changed(0);
+	}
 }
 void wdgSettingsInput::shortcut_update_text(QAction *action, int index) {
 	QStringList text = action->text().remove('&').split('\t');
@@ -448,10 +466,10 @@ void wdgSettingsInput::shortcut_update_text(QAction *action, int index) {
 #endif
 
 	// keyboard
-	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QPushButton *>("value")->setText(shcut.text[KEYBOARD].at(row));
+	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<pixmapButton *>("value")->setText(shcut.text[KEYBOARD].at(row));
 
 	// joystick
-	tableWidget_Shortcuts->cellWidget(row, 2)->findChild<QPushButton *>("value")->setText(shcut.text[JOYSTICK].at(row));
+	js_row_pixmapButton(row);
 }
 bool wdgSettingsInput::shortcut_keypressEvent(QKeyEvent *event) {
 	if (shcut.no_other_buttons == false) {
@@ -497,7 +515,7 @@ bool wdgSettingsInput::shortcut_keypressEvent(QKeyEvent *event) {
 	}
 
 	shcut.timeout.timer->stop();
-	input_info_print("");
+	info_entry_print("");
 
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 	update_widget();
@@ -507,7 +525,9 @@ bool wdgSettingsInput::shortcut_keypressEvent(QKeyEvent *event) {
 	return (true);
 }
 void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
-	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
+	int i;
+
+	for (i = 0; i < SET_MAX_NUM_SC; i++) {
 		if (shcut.text[KEYBOARD].at(i + SET_INP_SC_OPEN).isEmpty()) {
 			continue;
 		}
@@ -530,7 +550,7 @@ void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
 
 				widget = tableWidget_Shortcuts->cellWidget(i, 1);
 				widget->setEnabled(true);
-				widget->findChild<QPushButton *>("value")->setEnabled(true);
+				widget->findChild<pixmapButton *>("value")->setEnabled(true);
 				widget->findChild<QPushButton *>("default")->setEnabled(true);
 
 				tableWidget_Shortcuts->cellWidget(i, 1)->setEnabled(true);
@@ -545,7 +565,7 @@ void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
 
 				widget = tableWidget_Shortcuts->cellWidget(i, 2);
 				widget->setEnabled(joy_mode);
-				widget->findChild<QPushButton *>("value")->setEnabled(joy_mode);
+				widget->findChild<pixmapButton *>("value")->setEnabled(joy_mode);
 				widget->findChild<QPushButton *>("unset")->setEnabled(joy_mode);
 
 				break;
@@ -652,8 +672,29 @@ void wdgSettingsInput::ports_end_misc_set_enabled(bool mode) {
 
 	pushButton_Input_reset->setEnabled(mode);
 }
-void wdgSettingsInput::input_info_print(QString txt) {
-	lineEdit_Input_info->setText(txt);
+void wdgSettingsInput::info_entry_print(QString txt) {
+	label_Input_info->setText(txt);
+}
+void wdgSettingsInput::js_row_pixmapButton(int row) {
+	pixmapButton *pbt = tableWidget_Shortcuts->cellWidget(row, 2)->findChild<pixmapButton *>("value");
+
+	js_pixmapButton(js_jdev_index(), js_joyval_from_name(uQStringCD(shcut.text[JOYSTICK].at(row))), pbt);
+}
+void wdgSettingsInput::js_pixmapButton(int index, DBWORD input, pixmapButton *bt) {
+	QString icon, desc;
+
+	gui_js_joyval_icon_desc(index, input, &icon, &desc);
+	bt->setIcon(QIcon());
+	bt->setPixmap(QPixmap(icon));
+	bt->setText(desc == "" ? "NULL" : desc);
+}
+int wdgSettingsInput::js_jdev_index(void) {
+	int jdev_index = JS_NO_JOYSTICK;
+
+	if (comboBox_joy_ID->currentData().isValid()) {
+		jdev_index = comboBox_joy_ID->currentData().toInt();
+	}
+	return (jdev_index);
 }
 
 void wdgSettingsInput::controller_mode_set(void) {
@@ -899,6 +940,13 @@ void wdgSettingsInput::s_joy_id(int index) {
 	js_guid_set(data, &cfg->input.jguid_sch);
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 }
+void wdgSettingsInput::s_joy_index_changed(UNUSED(int index)) {
+	int i;
+
+	for (i = 0; i < SET_MAX_NUM_SC; i++) {
+		js_row_pixmapButton(i);
+	}
+}
 void wdgSettingsInput::s_shortcut(UNUSED(bool checked)) {
 	if (shcut.no_other_buttons == true) {
 		return;
@@ -906,11 +954,12 @@ void wdgSettingsInput::s_shortcut(UNUSED(bool checked)) {
 
 	shcut.type = QVariant(((QObject *)sender())->property("myType")).toInt();
 	shcut.row = QVariant(((QObject *)sender())->property("myValue")).toInt();
-	shcut.bp = ((QPushButton *)sender());
+	shcut.bp = ((pixmapButton *)sender());
 
 	shortcuts_update(BUTTON_PRESSED, shcut.type, shcut.row);
 
 	shcut.no_other_buttons = true;
+	shcut.bp->setPixmap(QPixmap(""));
 	shcut.bp->setText("...");
 
 	shcut.bp->setFocus(Qt::ActiveWindowFocusReason);
@@ -925,31 +974,35 @@ void wdgSettingsInput::s_shortcut(UNUSED(bool checked)) {
 	}
 }
 void wdgSettingsInput::s_shortcut_unset_all(UNUSED(bool checked)) {
-	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
+	int i;
+
+	for (i = 0; i < SET_MAX_NUM_SC; i++) {
 		shcut.text[KEYBOARD].replace(i, "NULL");
 		settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(i), i + SET_INP_SC_OPEN, KEYBOARD);
-		tableWidget_Shortcuts->cellWidget(i, 1)->findChild<QPushButton *>("value")->setText(shcut.text[KEYBOARD].at(i));
+		tableWidget_Shortcuts->cellWidget(i, 1)->findChild<pixmapButton *>("value")->setText(shcut.text[KEYBOARD].at(i));
 
 		shcut.text[JOYSTICK].replace(i, "NULL");
 		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(i), i + SET_INP_SC_OPEN, JOYSTICK);
-		tableWidget_Shortcuts->cellWidget(i, 2)->findChild<QPushButton *>("value")->setText(shcut.text[JOYSTICK].at(i));
+		js_row_pixmapButton(i);
 	}
 	mainwin->shortcuts();
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 }
 void wdgSettingsInput::s_shortcut_reset(UNUSED(bool checked)) {
+	int i;
+
 	js_guid_unset(&cfg->input.jguid_sch);
 
 	comboBox_joy_ID->setCurrentIndex(comboBox_joy_ID->count() - 1);
 
-	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
+	for (i = 0; i < SET_MAX_NUM_SC; i++) {
 		shcut.text[KEYBOARD].replace(i, uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
 		settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(i), i + SET_INP_SC_OPEN, KEYBOARD);
-		tableWidget_Shortcuts->cellWidget(i, 1)->findChild<QPushButton *>("value")->setText(shcut.text[KEYBOARD].at(i));
+		tableWidget_Shortcuts->cellWidget(i, 1)->findChild<pixmapButton *>("value")->setText(shcut.text[KEYBOARD].at(i));
 
 		shcut.text[JOYSTICK].replace(i, uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(JOYSTICK));
 		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(i), i + SET_INP_SC_OPEN, JOYSTICK);
-		tableWidget_Shortcuts->cellWidget(i, 2)->findChild<QPushButton *>("value")->setText(shcut.text[JOYSTICK].at(i));
+		js_row_pixmapButton(i);
 	}
 	mainwin->shortcuts();
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
@@ -958,7 +1011,7 @@ void wdgSettingsInput::s_shortcut_keyb_default(UNUSED(bool checked)) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	shcut.text[KEYBOARD].replace(row, uQString(inp_cfg[row + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
-	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QPushButton *>("value")->setText(shcut.text[KEYBOARD].at(row));
+	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<pixmapButton *>("value")->setText(shcut.text[KEYBOARD].at(row));
 	settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(row), row + SET_INP_SC_OPEN, KEYBOARD);
 	mainwin->shortcuts();
 }
@@ -966,7 +1019,7 @@ void wdgSettingsInput::s_shortcut_keyb_unset(UNUSED(bool checked)) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	shcut.text[KEYBOARD].replace(row, "NULL");
-	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QPushButton *>("value")->setText("NULL");
+	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<pixmapButton *>("value")->setText("NULL");
 	settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(row), row + SET_INP_SC_OPEN, KEYBOARD);
 	mainwin->shortcuts();
 }
@@ -974,11 +1027,11 @@ void wdgSettingsInput::s_shortcut_joy_unset(UNUSED(bool checked)) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	shcut.text[JOYSTICK].replace(row, "NULL");
-	tableWidget_Shortcuts->cellWidget(row, 2)->findChild<QPushButton *>("value")->setText("NULL");
+	js_row_pixmapButton(row);
 	settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(row), row + SET_INP_SC_OPEN, JOYSTICK);
 }
 void wdgSettingsInput::s_input_timeout(void) {
-	input_info_print(tr("Press a key - timeout in %1").arg(QString::number(shcut.timeout.seconds--)));
+	info_entry_print(tr("Press a key - timeout in %1").arg(QString::number(shcut.timeout.seconds--)));
 
 	if (shcut.timeout.seconds < 0) {
 		QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Escape, Qt::MetaModifier);
@@ -995,7 +1048,7 @@ void wdgSettingsInput::s_joy_read_timer(void) {
 
 		shcut.timeout.timer->stop();
 		shcut.joy.timer->stop();
-		input_info_print("");
+		info_entry_print("");
 
 		shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 		update_widget();
@@ -1008,7 +1061,8 @@ void wdgSettingsInput::s_joy_read_timer(void) {
 
 void wdgSettingsInput::s_et_update_joy_combo(void) {
 	// se la combox e' aperta o sono in attessa di impostare uno shortcut, non devo aggiornarne il contenuto
-	if ((comboBox_joy_ID->view()->isVisible() == false) && (shcut.timeout.timer->isActive() == false) &&
+	if ((comboBox_joy_ID->view()->isVisible() == false) &&
+		(shcut.timeout.timer->isActive() == false) &&
 		(shcut.joy.timer->isActive() == false)) {
 		shortcut_joy_combo_init();
 		shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);

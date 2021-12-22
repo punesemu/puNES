@@ -438,22 +438,38 @@
            </column>
           </widget>
          </item>
-         <item row="1" column="1">
-          <layout class="QHBoxLayout" name="horizontalLayout_joy_ID">
+         <item row="0" column="0" colspan="2">
+          <layout class="QHBoxLayout" name="horizontalLayout_Shortcuts">
            <item>
-            <widget class="QLabel" name="label_joy_ID">
+            <widget class="QLabel" name="icon_Shortcuts">
              <property name="text">
-              <string>Joystick ID</string>
+              <string notr="true">Shortcuts icon</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="comboBox_joy_ID">
+            <widget class="QLabel" name="label_Shortcuts">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Shortcuts</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line_Shortcuts">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
              </property>
             </widget>
            </item>
@@ -492,53 +508,61 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="0" colspan="2">
-          <layout class="QHBoxLayout" name="horizontalLayout_Shortcuts">
+         <item row="1" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_joy_ID">
            <item>
-            <widget class="QLabel" name="icon_Shortcuts">
+            <widget class="QLabel" name="label_joy_ID">
              <property name="text">
-              <string notr="true">Shortcuts icon</string>
+              <string>Joystick ID</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="label_Shortcuts">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Shortcuts</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="Line" name="line_Shortcuts">
+            <widget class="QComboBox" name="comboBox_joy_ID">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
             </widget>
            </item>
           </layout>
          </item>
          <item row="3" column="0" colspan="2">
-          <widget class="QLineEdit" name="lineEdit_Input_info">
-           <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
+          <widget class="QLabel" name="label_Input_info">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
-           <property name="acceptDrops">
-            <bool>false</bool>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>24</height>
+            </size>
            </property>
-           <property name="readOnly">
-            <bool>true</bool>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="text">
+            <string notr="true"/>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::RichText</enum>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::NoTextInteraction</set>
            </property>
           </widget>
          </item>

@@ -32,7 +32,7 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		} input;
 		struct _shcut {
 			QStringList text[2];
-			QPushButton *bp;
+			pixmapButton *bp;
 			QBrush bckColor;
 			bool no_other_buttons;
 			BYTE type;
@@ -80,7 +80,10 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		void shortcuts_update(int mode, int type, int row);
 		void shortcuts_tableview_resize(void);
 		void ports_end_misc_set_enabled(bool mode);
-		void input_info_print(QString txt);
+		void info_entry_print(QString txt);
+		void js_row_pixmapButton(int row);
+		void js_pixmapButton(int index, DBWORD input, pixmapButton *bt);
+		int js_jdev_index(void);
 
 	private:
 		void controller_mode_set(void);
@@ -97,6 +100,7 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		void s_permit_updown_leftright(bool checked);
 		void s_hide_zapper_cursor(bool checked);
 		void s_joy_id(int index);
+		void s_joy_index_changed(int index);
 		void s_shortcut(bool checked);
 		void s_shortcut_unset_all(bool checked);
 		void s_shortcut_reset(bool checked);
