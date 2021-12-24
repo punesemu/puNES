@@ -27,7 +27,7 @@
     </message>
     <message>
       <source>Save Configuration</source>
-      <translation type="unfinished">Save Configuration</translation>
+      <translation>Yapılandırmayı Kaydet</translation>
     </message>
   </context>
   <context>

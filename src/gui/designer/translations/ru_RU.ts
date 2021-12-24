@@ -27,7 +27,7 @@
     </message>
     <message>
       <source>Save Configuration</source>
-      <translation type="unfinished">Save Configuration</translation>
+      <translation>Сохранить конфигурацию</translation>
     </message>
   </context>
   <context>
