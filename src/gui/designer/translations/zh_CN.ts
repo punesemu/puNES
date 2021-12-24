@@ -1157,27 +1157,27 @@
     </message>
     <message>
       <source>Sharpness</source>
-      <translation type="unfinished">Sharpness</translation>
+      <translation>清晰度</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>亮度</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>色调</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>对比度</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>饱和度</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>扫描线</translation>
     </message>
   </context>
   <context>
@@ -1321,7 +1321,7 @@
     </message>
     <message>
       <source>Degrees</source>
-      <translation type="unfinished">Degrees</translation>
+      <translation>角度</translation>
     </message>
   </context>
   <context>
@@ -1594,23 +1594,23 @@
     </message>
     <message>
       <source>Insert disk 1 side A at power-up/reset</source>
-      <translation type="unfinished">Insert disk 1 side A at power-up/reset</translation>
+      <translation>启动/重设时插入磁盘 1 的 A 面</translation>
     </message>
     <message>
       <source>Famicom Disk System</source>
-      <translation type="unfinished">Famicom Disk System</translation>
+      <translation>Famicom 磁碟机</translation>
     </message>
     <message>
       <source>Use fast forward when loading the BIOS or disk/side</source>
-      <translation type="unfinished">Use fast forward when loading the BIOS or disk/side</translation>
+      <translation>快进载入 BIOS 和换面</translation>
     </message>
     <message>
       <source>Switch the disk/side automatically</source>
-      <translation type="unfinished">Switch the disk/side automatically</translation>
+      <translation>自动换面</translation>
     </message>
     <message>
       <source>Allow multiple instances of the emulator</source>
-      <translation type="unfinished">Allow multiple instances of the emulator</translation>
+      <translation>允许运行多个模拟器</translation>
     </message>
   </context>
   <context>
@@ -1753,7 +1753,7 @@
     </message>
     <message>
       <source>Press a key - timeout in %1</source>
-      <translation type="unfinished">Press a key - timeout in %1</translation>
+      <translation>请按键 - 剩余 %1 秒</translation>
     </message>
   </context>
   <context>
@@ -1804,27 +1804,27 @@
     </message>
     <message>
       <source>Advanced</source>
-      <translation type="unfinished">Advanced</translation>
+      <translation>高级</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>默认</translation>
     </message>
     <message>
       <source>Randomize (Not recommended)</source>
-      <translation type="unfinished">Randomize (Not recommended)</translation>
+      <translation>随机 (不推荐)</translation>
     </message>
     <message>
       <source>Power up/reset CPU/PPU Alignment</source>
-      <translation type="unfinished">Power up/reset CPU/PPU Alignment</translation>
+      <translation>开机/重设 CPU/PPU 对齐</translation>
     </message>
     <message>
       <source>Increment at every hard reset (Not recommended)</source>
-      <translation type="unfinished">Increment at every hard reset (Not recommended)</translation>
+      <translation>每次硬件重设时增加 (不推荐)</translation>
     </message>
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
-      <translation type="unfinished">Automatically restores the limit when necessary to prevent graphical glitches</translation>
+      <translation>必要时自动恢复限制以避免图像出问题</translation>
     </message>
   </context>
   <context>
@@ -2038,7 +2038,7 @@
     <message>
       <source>Opus Audio (*.opus)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Opus Audio (*.opus)</translation>
+      <translation>Opus 音频 (*.opus)</translation>
     </message>
   </context>
   <context>
@@ -2473,27 +2473,27 @@
     </message>
     <message>
       <source>Desktop resolution</source>
-      <translation type="unfinished">Desktop resolution</translation>
+      <translation>桌面分辨率</translation>
     </message>
     <message>
       <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
-      <translation type="unfinished">Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
+      <translation>刷新率适配地区 (PAL/Dendy 50Hz, NTSC 60Hz)</translation>
     </message>
     <message>
       <source>Fullscreen</source>
-      <translation type="unfinished">Fullscreen</translation>
+      <translation>全屏</translation>
     </message>
     <message>
       <source>* applied if supported by the monitor</source>
-      <translation type="unfinished">* applied if supported by the monitor</translation>
+      <translation>※生效与否取决于显示器支持</translation>
     </message>
     <message>
       <source>Use integer scaling</source>
-      <translation type="unfinished">Use integer scaling</translation>
+      <translation>整数倍缩放</translation>
     </message>
     <message>
       <source>Preferred resolution </source>
-      <translation type="unfinished">Preferred resolution </translation>
+      <translation>建议分辨率</translation>
     </message>
   </context>
   <context>
