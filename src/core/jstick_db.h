@@ -172,6 +172,106 @@ static const _js_db_device js_db_devices[] = {
 			{ ABS_HAT0Y,      uL(":/icon/icons/gamepad_xbox_one_dpad_down.svg"),       uL("DPAD DOWN") }
 		}
 	},
+	// Playstation 3
+	{
+		JS_SC_SONY_PS3_GAMEPAD,
+		TRUE,
+		JS_DB_NO_VENDOR_ID,
+		JS_DB_NO_PRODUCT_ID,
+#if defined (__linux__)
+		{
+			/* BUT_A  */ JS_BTN_DEF(BTN_B),
+			/* BUT_B  */ JS_BTN_DEF(BTN_A),
+			/* SELECT */ JS_BTN_DEF(BTN_SELECT),
+			/* START  */ JS_BTN_DEF(BTN_START),
+			/* UP     */ JS_ABS_DEF(ABS_Y, 0),
+			/* DOWN   */ JS_ABS_DEF(ABS_Y, 1),
+			/* LEFT   */ JS_ABS_DEF(ABS_X, 0),
+			/* RIGHT  */ JS_ABS_DEF(ABS_X, 1),
+			/* TRB_A  */ JS_BTN_DEF(BTN_X),
+			/* TRB_B  */ JS_BTN_DEF(BTN_Y)
+		},
+		{
+			{ BTN_A,          uL(":/icon/icons/gamepad_playstation_x.svg"),            uL("CROSS")     },
+			{ BTN_B,          uL(":/icon/icons/gamepad_playstation_c.svg"),            uL("CIRCLE")    },
+			{ BTN_Y,          uL(":/icon/icons/gamepad_playstation_s.svg"),            uL("SQUARE")    },
+			{ BTN_X,          uL(":/icon/icons/gamepad_playstation_t.svg"),            uL("TRIANGLE")  },
+			{ BTN_TL,         uL(":/icon/icons/gamepad_playstation_3_l1.svg"),         uL("L1")        },
+			{ BTN_TR,         uL(":/icon/icons/gamepad_playstation_3_r1.svg"),         uL("R1")        },
+			{ BTN_TL2,        uL(":/icon/icons/gamepad_playstation_3_l2.svg"),         uL("L2")        },
+			{ BTN_TR2,        uL(":/icon/icons/gamepad_playstation_3_r2.svg"),         uL("R2")        },
+			{ BTN_SELECT,     uL(":/icon/icons/gamepad_playstation_3_select.svg"),     uL("SELECT")    },
+			{ BTN_START,      uL(":/icon/icons/gamepad_playstation_3_start.svg"),      uL("START")     },
+			{ BTN_MODE,       uL(":/icon/icons/gamepad_playstation_home.svg"),         uL("HOME")      },
+			{ BTN_THUMBL,     uL(":/icon/icons/gamepad_xbox_left_stick_click.svg"),    uL("LS CLICK")  },
+			{ BTN_THUMBR,     uL(":/icon/icons/gamepad_xbox_right_stick_click.svg"),   uL("RS CLICK")  },
+			{ BTN_DPAD_UP,    uL(":/icon/icons/gamepad_playstation_3_dpad_up.svg"),    uL("DPAD UP")   },
+			{ BTN_DPAD_DOWN,  uL(":/icon/icons/gamepad_playstation_3_dpad_down.svg"),  uL("DPAD DOWN") },
+			{ BTN_DPAD_LEFT,  uL(":/icon/icons/gamepad_playstation_3_dpad_left.svg"),  uL("DPAD LEFT") },
+			{ BTN_DPAD_RIGHT, uL(":/icon/icons/gamepad_playstation_3_dpad_right.svg"), uL("DPAD RIGHT")}
+		},
+		{
+			{ ABS_X,          uL(":/icon/icons/gamepad_xbox_left_stick_left.svg"),     uL("LS LEFT")   },
+			{ ABS_X,          uL(":/icon/icons/gamepad_xbox_left_stick_right.svg"),    uL("LS RIGHT")  },
+			{ ABS_Y,          uL(":/icon/icons/gamepad_xbox_left_stick_up.svg"),       uL("LS UP")     },
+			{ ABS_Y,          uL(":/icon/icons/gamepad_xbox_left_stick_down.svg"),     uL("LS DOWN")   },
+			{ ABS_Z,          uL(":/icon/icons/gamepad_playstation_3_l2.svg"),         uL("L2")        },
+			{ ABS_Z,          uL(":/icon/icons/gamepad_playstation_3_l2.svg"),         uL("L2")        },
+			{ ABS_RX,         uL(":/icon/icons/gamepad_xbox_right_stick_left.svg"),    uL("RS LEFT")   },
+			{ ABS_RX,         uL(":/icon/icons/gamepad_xbox_right_stick_right.svg"),   uL("RS RIGHT")  },
+			{ ABS_RY,         uL(":/icon/icons/gamepad_xbox_right_stick_up.svg"),      uL("RS UP")     },
+			{ ABS_RY,         uL(":/icon/icons/gamepad_xbox_right_stick_down.svg"),    uL("RS DOWN")   },
+			{ ABS_RZ,         uL(":/icon/icons/gamepad_playstation_3_r2.svg"),         uL("R2")        },
+			{ ABS_RZ,         uL(":/icon/icons/gamepad_playstation_3_r2.svg"),         uL("R2")        },
+		}
+#else
+		{
+			/* BUT_A  */ JS_BTN_DEF(BTN_B),
+			/* BUT_B  */ JS_BTN_DEF(BTN_X),
+			/* SELECT */ JS_BTN_DEF(BTN_THUMBL),
+			/* START  */ JS_BTN_DEF(BTN_MODE),
+			/* UP     */ JS_ABS_DEF(ABS_Y, 0),
+			/* DOWN   */ JS_ABS_DEF(ABS_Y, 1),
+			/* LEFT   */ JS_ABS_DEF(ABS_X, 0),
+			/* RIGHT  */ JS_ABS_DEF(ABS_X, 1),
+			/* TRB_A  */ JS_BTN_DEF(BTN_A),
+			/* TRB_B  */ JS_BTN_DEF(BTN_Y)
+		},
+		{
+			{ BTN_X,          uL(":/icon/icons/gamepad_playstation_x.svg"),            uL("CROSS")     },
+			{ BTN_B,          uL(":/icon/icons/gamepad_playstation_c.svg"),            uL("CIRCLE")    },
+			{ BTN_Y,          uL(":/icon/icons/gamepad_playstation_s.svg"),            uL("SQUARE")    },
+			{ BTN_A,          uL(":/icon/icons/gamepad_playstation_t.svg"),            uL("TRIANGLE")  },
+			{ BTN_SELECT,     uL(":/icon/icons/gamepad_playstation_3_l1.svg"),         uL("L1")        },
+			{ BTN_START,      uL(":/icon/icons/gamepad_playstation_3_r1.svg"),         uL("R1")        },
+			{ BTN_TL,         uL(":/icon/icons/gamepad_playstation_3_l2.svg"),         uL("L2")        },
+			{ BTN_TR,         uL(":/icon/icons/gamepad_playstation_3_r2.svg"),         uL("R2")        },
+			{ BTN_THUMBL,     uL(":/icon/icons/gamepad_playstation_3_select.svg"),     uL("SELECT")    },
+			{ BTN_MODE,       uL(":/icon/icons/gamepad_playstation_3_start.svg"),      uL("START")     },
+			{ BTN_DPAD_DOWN,  uL(":/icon/icons/gamepad_playstation_home.svg"),         uL("HOME")      },
+			{ BTN_THUMBR,     uL(":/icon/icons/gamepad_xbox_left_stick_click.svg"),    uL("LS CLICK")  },
+			{ BTN_DPAD_UP,    uL(":/icon/icons/gamepad_xbox_right_stick_click.svg"),   uL("RS CLICK")  }
+		},
+		{
+			{ ABS_X,          uL(":/icon/icons/gamepad_xbox_left_stick_left.svg"),     uL("LS LEFT")   },
+			{ ABS_X,          uL(":/icon/icons/gamepad_xbox_left_stick_right.svg"),    uL("LS RIGHT")  },
+			{ ABS_Y,          uL(":/icon/icons/gamepad_xbox_left_stick_up.svg"),       uL("LS UP")     },
+			{ ABS_Y,          uL(":/icon/icons/gamepad_xbox_left_stick_down.svg"),     uL("LS DOWN")   },
+			{ ABS_RX,         uL(":/icon/icons/gamepad_playstation_3_l2.svg"),         uL("L2")        },
+			{ ABS_RX,         uL(":/icon/icons/gamepad_playstation_3_l2.svg"),         uL("L2")        },
+			{ ABS_Z,          uL(":/icon/icons/gamepad_xbox_right_stick_left.svg"),    uL("RS LEFT")   },
+			{ ABS_Z,          uL(":/icon/icons/gamepad_xbox_right_stick_right.svg"),   uL("RS RIGHT")  },
+			{ ABS_RZ,         uL(":/icon/icons/gamepad_xbox_right_stick_up.svg"),      uL("RS UP")     },
+			{ ABS_RZ,         uL(":/icon/icons/gamepad_xbox_right_stick_down.svg"),    uL("RS DOWN")   },
+			{ ABS_RY,         uL(":/icon/icons/gamepad_playstation_3_r2.svg"),         uL("R2")        },
+			{ ABS_RY,         uL(":/icon/icons/gamepad_playstation_3_r2.svg"),         uL("R2")        },
+			{ ABS_HAT0X,      uL(":/icon/icons/gamepad_playstation_3_dpad_left.svg"),  uL("DPAD LEFT") },
+			{ ABS_HAT0X,      uL(":/icon/icons/gamepad_playstation_3_dpad_right.svg"), uL("DPAD RIGHT")},
+			{ ABS_HAT0Y,      uL(":/icon/icons/gamepad_playstation_3_dpad_up.svg"),    uL("DPAD UP")   },
+			{ ABS_HAT0Y,      uL(":/icon/icons/gamepad_playstation_3_dpad_down.svg"),  uL("DPAD DOWN") }
+		}
+#endif
+	},
 	// Playstation 4
 	{
 		JS_SC_SONY_PS4_GAMEPAD,

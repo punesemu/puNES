@@ -884,9 +884,9 @@ static BOOL CALLBACK cb_enum_obj(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID con
 			jsx->offset = ABS_RZ;
 			jsx->offset_di8 = DIJOFS_RZ;
 		} else if (!memcmp(&instance->guidType, &GUID_Slider, sizeof(instance->guidType))) {
-			jsx = &jdev->data.axis[ABS_THROTTLE + jdev->info.sliders];
-			jsx->offset = ABS_THROTTLE + jdev->info.sliders;
-			jsx->offset_di8 = DIJOFS_SLIDER(jdev->info.sliders);
+			//jsx = &jdev->data.axis[ABS_THROTTLE + jdev->info.sliders];
+			//jsx->offset = ABS_THROTTLE + jdev->info.sliders;
+			//jsx->offset_di8 = DIJOFS_SLIDER(jdev->info.sliders);
 			jdev->info.sliders++;
 		} else {
 			finded = FALSE;

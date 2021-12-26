@@ -8,6 +8,16 @@
     <file>icons/copy.svg</file>
     <file>icons/recording.svg</file>
     <file>icons/gamepad_stick_click.svg</file>
+    <file>icons/gamepad_playstation_3_dpad_down.svg</file>
+    <file>icons/gamepad_playstation_3_dpad_left.svg</file>
+    <file>icons/gamepad_playstation_3_dpad_right.svg</file>
+    <file>icons/gamepad_playstation_3_dpad_up.svg</file>
+    <file>icons/gamepad_playstation_3_l1.svg</file>
+    <file>icons/gamepad_playstation_3_l2.svg</file>
+    <file>icons/gamepad_playstation_3_r1.svg</file>
+    <file>icons/gamepad_playstation_3_r2.svg</file>
+    <file>icons/gamepad_playstation_3_select.svg</file>
+    <file>icons/gamepad_playstation_3_start.svg</file>
     <file>icons/application.png</file>
     <file>icons/undo.svg</file>
     <file>icons/gamepad_xbox_lb.svg</file>
