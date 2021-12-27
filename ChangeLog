@@ -1,4 +1,90 @@
 Changelog:
+0.108
+- Updated translation from Crowdin (thx to Алексей Тимонин, MS-PC, tch_oscomp, Ömercan Kömür, Matheus).
+- Added Chinese translation (thx to owomomo).
+- Added an option to show frames and lags counters.
+- Rewritten the audio of the VRC7.
+  Implemented the project "Cycle-accurate emulation of Yamaha OPLL" of Nuke.YKT :
+  * https://github.com/nukeykt/Nuked-OPLL
+  Many thx to Nuke.YKT for his wonderful work.
+- Updated the icon and the banner of the info page.
+  * a big thank you to the papirus icon theme guys for letting me use
+    their icon (https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)
+  * thanks also to the unknown author of the banner who, unfortunately, I
+    was unable to identify.
+- Increased compatibility with OpenGL shaders.
+  Fixed many bugs and crashes that prevented some OpenGL shaders
+  (https://github.com/libretro/glsl-shaders) from loading and functioning correctly.
+- Implemented the ability to select the resolution of the fulscreen.
+- Added the option to automatically set the refresh rate based on the
+  region of the rom used (50/100Hz for PAL/Dendy roms, 60/120Hz for NTSC)
+  if the monitor supports them. The rewriting of the fullscreen management
+  allowed to correct some bugs present for a long time (for example under
+  Linux/BSD the fullscreen window did not always identify the real screen
+  size available because it did not take into account the various task
+  bars and menu bars).
+- Fixed initial positioning of the emulator window.
+  If, in a multi-monitor environment, the window is positioned on a
+  display that is no longer connected upon restart, the position may no
+  longer be valid and the emulator window may not be visible.
+- Implemented the ability to view the menu bar in fullscreen mode
+  through a configurable shortcut (default is ALT+M).
+- Implemented the double click management on the menu bar:
+  * left button hides toolbar and statusbar
+  * right button hides the whole gui (as when using the shortcut ALT+G "Toggle GUI in window").
+- Now it's possible to use the ESC as a shortcut.
+- The code is now QT6 compatible.
+- Added the ability to customize NTSC filters in video settings.
+- Fixed the aspect ratio of the NTSC filters in fullscreen mode.
+- Updated to FFmpeg 4.4.
+- Fixed video recording in HENC format at high quality.
+- Added support for the Opus audio format in audio recording.
+- Added an option to change CPU/PPU alignment at power-up/hard reset.
+- Added this 3 options for the Famicom Disk System
+  * "Insert disk 1 side A at power-up/reset"
+  * "Switch the disk/side automatically"
+  * "Use fast forward when loading the BIOS or disk/side"
+  in the "Settings->General". They are activated by default and do what is written in the description.
+- Now, by default, only one instance of the emulator is allowed to run.
+  To allow the execution of more instances it is necessary to enable the
+  new option in "Settings->General".
+- Added the management of the double click when selecting a rom from a compressed archive.
+  I honestly don't know why I haven't already implemented it.
+- Fixed inversion of controller mode NES/Four Score.
+- Added the cmd line option "--hidden-gui" to start the emulator with
+  hidden GUI (useful for frontends) and that it's also possible to do with
+  the shortcut ALT+G.
+- Rewritten overlay and widget for save slot selection and increased the number of slots to 12.
+- Added an option to re-enable the sprite limit when a game needs it (https://wiki.nesdev.com/w/index.php/Sprite_overflow_games).
+- Added support for subtitles of TAS videos. They will appear in the info bar with center alignment.
+- Rewritten the cheat editor to make it easier and more manageable.
+- Added sample rates of 96000 and 192000 and improved the selection of the
+  sample rate of audio codecs that don't provide information about those supported.
+- Rewritten the input management through gamepads and joysticks.
+  * Added multithreading management.
+  * In the Linux version added the dependency to libudev.
+  * Increased the emulation speed by 7-10%.
+  * Eliminated (especially in the windows version) blocks and slowdowns
+    of the emulation in the case of gamepads configured but not connected to
+    the start of the emulator.
+  * Uniformed the management of inputs on all the various ports.
+  * Separeted joystick/gamepads configuration from the port configuration,
+    now each gamepads will have its own configuration.
+  * Added an option to set the deadzone
+  * Added a new tool: "Joypad/Gamepad Debug". With this you can see the info
+    on the connected devices, it is also possible to disable the reading of
+    certain axes and buttons from the gamepad status reading routine. In addition
+    to debugging reasons, it is an option to be able to use gamepads that send
+    incorrect values on some axis or button while still allowing their use.
+  * Added automatic recognition of the type of gamepad with relative
+    configuration. Supported for now Steam Controller (only under Linux), 
+    Xbox 360 Controller and Playstation 3 (thx to Gianmarco Trentadue for for the donation) and 4
+    controllers which are the ones I had at my disposal. It should also work with Xbox One controllers but
+    I couldn't check it as I didn't have any.
+  * NOTICE : All buttons bindings will need to be reconfigured.
+- Fixed many many many other bugs.
+
+Changelog:
 0.107
 - Updated translation from Crowdin (thx to Алексей Тимонин, MS-PC, tch_oscomp, Ömercan Kömür, Matheus).
 - Redesigned settings GUI.
