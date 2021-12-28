@@ -854,9 +854,8 @@ static BOOL CALLBACK cb_enum_obj(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID con
 		}
 	} else if (instance->dwType & DIDFT_AXIS) {
 		DIPROPRANGE range;
-		DIPROPDWORD deadZone;
-		BYTE finded = TRUE;
-		_js_axis *jsx;
+		DIPROPDWORD deadzone;
+		_js_axis *jsx = NULL;
 		HRESULT rc;
 
 		if (!memcmp(&instance->guidType, &GUID_XAxis, sizeof(instance->guidType))) {
@@ -888,11 +887,9 @@ static BOOL CALLBACK cb_enum_obj(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID con
 			//jsx->offset = ABS_THROTTLE + jdev->info.sliders;
 			//jsx->offset_di8 = DIJOFS_SLIDER(jdev->info.sliders);
 			jdev->info.sliders++;
-		} else {
-			finded = FALSE;
 		}
 
-		if (finded) {
+		if (jsx) {
 			range.diph.dwSize = sizeof(range);
 			range.diph.dwHeaderSize = sizeof(range.diph);
 			range.diph.dwObj = instance->dwType;
@@ -904,12 +901,12 @@ static BOOL CALLBACK cb_enum_obj(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID con
 				fprintf(stderr, "IDIrectInputDevice8_SetProperty : 0x%X\n", (unsigned int)rc);
 			}
 
-			deadZone.diph.dwSize = sizeof(deadZone);
-			deadZone.diph.dwHeaderSize = sizeof(deadZone.diph);
-			deadZone.diph.dwObj = instance->dwType;
-			deadZone.diph.dwHow = DIPH_BYID;
-			deadZone.dwData = 0;
-			if ((rc = IDirectInputDevice8_SetProperty(JDEVIDID8W, DIPROP_DEADZONE, &deadZone.diph)) != DI_OK) {
+			deadzone.diph.dwSize = sizeof(deadzone);
+			deadzone.diph.dwHeaderSize = sizeof(deadzone.diph);
+			deadzone.diph.dwObj = instance->dwType;
+			deadzone.diph.dwHow = DIPH_BYID;
+			deadzone.dwData = 0;
+			if ((rc = IDirectInputDevice8_SetProperty(JDEVIDID8W, DIPROP_DEADZONE, &deadzone.diph)) != DI_OK) {
 				fprintf(stderr, "IDIrectInputDevice8_SetProperty : 0x%X\n", (unsigned int)rc);
 			}
 
