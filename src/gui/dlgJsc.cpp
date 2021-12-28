@@ -346,6 +346,9 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 					case JS_SC_MS_XBOX_360_GAMEPAD:
 						type = "Xbox 360";
 						break;
+					case JS_SC_SONY_PS3_GAMEPAD:
+						type = "Playstation 3";
+						break;
 					case JS_SC_SONY_PS4_GAMEPAD:
 						type = "Playstation 4";
 						break;
