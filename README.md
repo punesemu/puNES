@@ -59,7 +59,7 @@ If you want buy me a beer : <span class="badge-paypal"><a href="https://www.payp
 * [Qt5](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [nvidia-cg](https://developer.nvidia.com/cg-toolkit)
 * [alsa](https://www.alsa-project.org)
-* [cmake](https://cmake.org)
+* [cmake >= 3.13](https://cmake.org)
 * libudev
 * [libX11 and libXrandr](https://www.x.org)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
@@ -97,7 +97,7 @@ to start the emulator
 #### Dependencies
 * [Qt5](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
-* [cmake](https://cmake.org)
+* [cmake >= 3.13](https://cmake.org)
 * [libX11 and libXrandr](https://www.x.org)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
 #### Compilation of puNES
@@ -119,7 +119,7 @@ where `[...]` are the other necessary options.
 #### Dependencies
 * [Qt5](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
-* [cmake](https://cmake.org)
+* [cmake >= 3.13](https://cmake.org)
 * [libX11 and libXrandr](https://www.x.org)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
 #### Compilation of puNES
