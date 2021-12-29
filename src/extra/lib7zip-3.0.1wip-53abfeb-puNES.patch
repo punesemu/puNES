@@ -1,9 +1,9 @@
 diff -upNr lib7zip-53abfeb.org/CMakeLists.txt lib7zip-53abfeb/CMakeLists.txt
 --- lib7zip-53abfeb.org/CMakeLists.txt	2021-05-26 22:04:41.000000000 +0200
-+++ lib7zip-53abfeb/CMakeLists.txt	2021-09-19 15:12:38.078043955 +0200
++++ lib7zip-53abfeb/CMakeLists.txt	2021-12-29 18:32:06.823795378 +0100
 @@ -1,4 +1,4 @@
 -CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
++CMAKE_MINIMUM_REQUIRED(VERSION 3.13)
  
  CMAKE_POLICY(
      SET CMP0048 NEW
@@ -34,7 +34,7 @@ diff -upNr lib7zip-53abfeb.org/CMakeLists.txt lib7zip-53abfeb/CMakeLists.txt
    set(cxx_warnings "")
    set(no_undefined -Wl,-undefined,error)
  elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-@@ -56,9 +59,12 @@ SET(CXX_STANDARD_REQUIRED OFF)
+@@ -56,9 +59,14 @@ SET(CXX_STANDARD_REQUIRED OFF)
  SET(CXX_EXTENSION NO)
  
  if (NOT CONFIGURED_ONCE)
@@ -48,9 +48,11 @@ diff -upNr lib7zip-53abfeb.org/CMakeLists.txt lib7zip-53abfeb/CMakeLists.txt
  ADD_SUBDIRECTORY(src)
 -ADD_SUBDIRECTORY(test)
 +#ADD_SUBDIRECTORY(test)
++
++install(FILES dummy DESTINATION bin OPTIONAL)
 diff -upNr lib7zip-53abfeb.org/configure lib7zip-53abfeb/configure
 --- lib7zip-53abfeb.org/configure	1970-01-01 01:00:00.000000000 +0100
-+++ lib7zip-53abfeb/configure	2021-09-19 15:06:57.196285060 +0200
++++ lib7zip-53abfeb/configure	2021-12-29 18:31:54.871731271 +0100
 @@ -0,0 +1,355 @@
 +#!/bin/sh
 +
@@ -406,7 +408,7 @@ diff -upNr lib7zip-53abfeb.org/configure lib7zip-53abfeb/configure
 +
 +#eval "${CMAKE_CMD}" "${TOP_SRCDIR}" -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DCMAKE_INSTALL_LIBDIR="${LIBDIR}" ${CMAKE_ARGS}
 +#eval "${CMAKE_CMD}" "${TOP_SRCDIR}" -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DBUILD_SHARED_LIB="OFF" -DP7ZIP_SOURCE_DIR="${P7ZIP_SOURCE_DIR}" ${CMAKE_ARGS}
-+eval "${CMAKE_CMD}" "${TOP_SRCDIR}" -DBUILD_SHARED_LIB="OFF" -DP7ZIP_SOURCE_DIR="${P7ZIP_SOURCE_DIR}" ${CMAKE_ARGS}
++eval "${CMAKE_CMD}" "${TOP_SRCDIR}" -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DBUILD_SHARED_LIB="OFF" -DP7ZIP_SOURCE_DIR="${P7ZIP_SOURCE_DIR}" ${CMAKE_ARGS}
 diff -upNr lib7zip-53abfeb.org/.gitignore lib7zip-53abfeb/.gitignore
 --- lib7zip-53abfeb.org/.gitignore	2021-05-26 22:04:41.000000000 +0200
 +++ lib7zip-53abfeb/.gitignore	1970-01-01 01:00:00.000000000 +0100
@@ -501,7 +503,7 @@ diff -upNr lib7zip-53abfeb.org/.hgignore lib7zip-53abfeb/.hgignore
 \ Manca newline alla fine del file
 diff -upNr lib7zip-53abfeb.org/src/7ZipFormatInfo.cpp lib7zip-53abfeb/src/7ZipFormatInfo.cpp
 --- lib7zip-53abfeb.org/src/7ZipFormatInfo.cpp	2021-05-26 22:04:41.000000000 +0200
-+++ lib7zip-53abfeb/src/7ZipFormatInfo.cpp	2021-09-19 14:20:56.671905670 +0200
++++ lib7zip-53abfeb/src/7ZipFormatInfo.cpp	2021-12-29 18:31:45.681682054 +0100
 @@ -4,6 +4,7 @@
  #endif
  
@@ -512,7 +514,7 @@ diff -upNr lib7zip-53abfeb.org/src/7ZipFormatInfo.cpp lib7zip-53abfeb/src/7ZipFo
  #include "CPP/Common/MyCom.h"
 diff -upNr lib7zip-53abfeb.org/src/7ZipObjectPtrArray.cpp lib7zip-53abfeb/src/7ZipObjectPtrArray.cpp
 --- lib7zip-53abfeb.org/src/7ZipObjectPtrArray.cpp	2021-05-26 22:04:41.000000000 +0200
-+++ lib7zip-53abfeb/src/7ZipObjectPtrArray.cpp	2021-09-19 14:21:44.925154586 +0200
++++ lib7zip-53abfeb/src/7ZipObjectPtrArray.cpp	2021-12-29 18:31:45.681682054 +0100
 @@ -18,9 +18,9 @@ void C7ZipObjectPtrArray::clear()
  {
      if (m_bAutoRelease)
@@ -527,7 +529,7 @@ diff -upNr lib7zip-53abfeb.org/src/7ZipObjectPtrArray.cpp lib7zip-53abfeb/src/7Z
  
 diff -upNr lib7zip-53abfeb.org/src/CMakeLists.txt lib7zip-53abfeb/src/CMakeLists.txt
 --- lib7zip-53abfeb.org/src/CMakeLists.txt	2021-05-26 22:04:41.000000000 +0200
-+++ lib7zip-53abfeb/src/CMakeLists.txt	2021-09-19 14:22:53.391507308 +0200
++++ lib7zip-53abfeb/src/CMakeLists.txt	2021-12-29 18:31:45.681682054 +0100
 @@ -7,6 +7,10 @@ SET(lib7zip_src
  7ZipCodecInfo.h             7ZipFormatInfo.h            7zipLibrary.cpp             OSFunctions_OS2.h
  )
@@ -541,13 +543,13 @@ diff -upNr lib7zip-53abfeb.org/src/CMakeLists.txt lib7zip-53abfeb/src/CMakeLists
  )
 diff -upNr lib7zip-53abfeb.org/src/GUIDs.cpp lib7zip-53abfeb/src/GUIDs.cpp
 --- lib7zip-53abfeb.org/src/GUIDs.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ lib7zip-53abfeb/src/GUIDs.cpp	2021-09-19 14:27:46.632076949 +0200
++++ lib7zip-53abfeb/src/GUIDs.cpp	2021-12-29 18:31:45.681682054 +0100
 @@ -0,0 +1,2 @@
 +#include <initguid.h>
 +#include "GUIDs.h"
 diff -upNr lib7zip-53abfeb.org/src/GUIDs.h lib7zip-53abfeb/src/GUIDs.h
 --- lib7zip-53abfeb.org/src/GUIDs.h	1970-01-01 01:00:00.000000000 +0100
-+++ lib7zip-53abfeb/src/GUIDs.h	2021-09-19 14:27:46.632076949 +0200
++++ lib7zip-53abfeb/src/GUIDs.h	2021-12-29 18:31:45.681682054 +0100
 @@ -0,0 +1,139 @@
 +// This file is based on the following file from the LZMA SDK (http://www.7-zip.org/sdk.html):
 +//   ./CPP/7zip/Guid.txt
@@ -690,7 +692,7 @@ diff -upNr lib7zip-53abfeb.org/src/GUIDs.h lib7zip-53abfeb/src/GUIDs.h
 +}
 diff -upNr lib7zip-53abfeb.org/src/HelperFuncs.cpp lib7zip-53abfeb/src/HelperFuncs.cpp
 --- lib7zip-53abfeb.org/src/HelperFuncs.cpp	2021-05-26 22:04:41.000000000 +0200
-+++ lib7zip-53abfeb/src/HelperFuncs.cpp	2021-09-19 14:25:05.620215573 +0200
++++ lib7zip-53abfeb/src/HelperFuncs.cpp	2021-12-29 18:31:45.681682054 +0100
 @@ -2,10 +2,12 @@
  #include "config.h"
  #endif
@@ -706,7 +708,7 @@ diff -upNr lib7zip-53abfeb.org/src/HelperFuncs.cpp lib7zip-53abfeb/src/HelperFun
  #include "CPP/myWindows/StdAfx.h"
 diff -upNr lib7zip-53abfeb.org/src/OSFunctions_UnixLike.cpp lib7zip-53abfeb/src/OSFunctions_UnixLike.cpp
 --- lib7zip-53abfeb.org/src/OSFunctions_UnixLike.cpp	2021-05-26 22:04:41.000000000 +0200
-+++ lib7zip-53abfeb/src/OSFunctions_UnixLike.cpp	2021-09-19 14:26:54.366798374 +0200
++++ lib7zip-53abfeb/src/OSFunctions_UnixLike.cpp	2021-12-29 18:31:45.681682054 +0100
 @@ -122,13 +122,13 @@ int myselect(const struct dirent * pDir
    {
      closedir( pTmpDir );
