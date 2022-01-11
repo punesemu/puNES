@@ -24,8 +24,8 @@
 #define VER1        "0"
 #define VER1_INT    0
 
-#define VER2        "108"
-#define VER2_INT    108
+#define VER2        "109"
+#define VER2_INT    109
 
 #if defined (RELEASE) && !defined (WITH_GIT_INFO)
 #define VERSION     VER1 "." VER2
