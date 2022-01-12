@@ -393,6 +393,13 @@ void nes20_submapper(void) {
 					break;
 			}
 			break;
+		case 71:
+			switch (info.mapper.submapper) {
+				case 1:
+					info.mapper.submapper = BF9097;
+					break;
+			}
+			break;
 		case 78:
 			switch (info.mapper.submapper) {
 				case 3:
