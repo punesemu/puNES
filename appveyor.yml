@@ -29,6 +29,8 @@ build_script:
 
     bash -lc "pacman -Syu --noconfirm"
 
+    bash -lc "pacman -Sy  --noconfirm automake autoconf"
+
 
     set CHERE_INVOKING=yes
 
