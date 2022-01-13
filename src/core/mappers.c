@@ -112,6 +112,7 @@ BYTE map_init(void) {
 			map_init_Jaleco(SS8806);
 			break;
 		case 19:
+		case 210:
 			map_init_Namco(N163);
 			break;
 		case 21:

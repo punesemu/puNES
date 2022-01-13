@@ -246,9 +246,7 @@ BYTE unif_load_rom(void) {
 					return (EXIT_ERROR);
 				}
 
-#if !defined (RELEASE)
-				fprintf(stderr, "unif format\n");
-#endif
+				fprintf(stderr, "format : UNIF\n");
 
 				info.chr.rom[0].banks_8k = 0;
 				info.prg.chips = info.chr.chips = 0;
@@ -430,7 +428,7 @@ BYTE unif_MAPR(_rom_mem *rom, BYTE phase) {
 		}
 	}
 
-	printf("board : %s\n", unif.board);
+	fprintf(stderr, "board : %s\n", unif.board);
 
 	{
 		static WORD i;
@@ -454,9 +452,7 @@ BYTE unif_MAPR(_rom_mem *rom, BYTE phase) {
 		}
 	}
 
-#if !defined (RELEASE)
 	fprintf(stderr, "internal unif mapper : %u\n", unif.internal_mapper);
-#endif
 
 	return (EXIT_OK);
 }
@@ -490,7 +486,7 @@ BYTE unif_NAME(_rom_mem *rom, BYTE phase) {
 	}
 	rom->position += length;
 
-	printf("name : %s\n", unif.name);
+	fprintf(stderr, "name : %s\n", unif.name);
 
 	return (EXIT_OK);
 }
@@ -520,9 +516,7 @@ BYTE unif_PRG(_rom_mem *rom, BYTE phase) {
 		info.prg.rom[chip].banks_8k = info.prg.rom[chip].banks_16k * 2;
 		map_set_banks_max_prg(chip);
 
-#if !defined (RELEASE)
 		fprintf(stderr, "PRG chip %d : 8k rom = %u\n", chip, info.prg.rom[chip].banks_16k * 2);
-#endif
 	}
 
 	return (EXIT_OK);
@@ -557,9 +551,8 @@ BYTE unif_CHR(_rom_mem *rom, BYTE phase) {
 		if (chip == 0) {
 			map_chr_bank_1k_reset();
 		}
-#if !defined (RELEASE)
+
 		fprintf(stderr, "CHR chip %d : 4k vrom = %u\n", chip, info.chr.rom[chip].banks_4k);
-#endif
 	}
 
 	return (EXIT_OK);
@@ -668,7 +661,7 @@ BYTE unif_DINF(_rom_mem *rom, BYTE phase) {
 	unif.dumped.by[99] = 0;
 	unif.dumped.with[99] = 0;
 
-	printf("dumped by %s with %s on %s %d, %d\n", unif.dumped.by, unif.dumped.with,
+	fprintf(stderr, "dumped by %s with %s on %s %d, %d\n", unif.dumped.by, unif.dumped.with,
 		months[(unif.dumped.month - 1) % 12], unif.dumped.day, unif.dumped.year);
 
 	return (EXIT_OK);

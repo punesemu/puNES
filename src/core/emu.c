@@ -37,7 +37,8 @@
 #include "video/gfx_thread.h"
 #include "emu_thread.h"
 #include "sha1.h"
-#include "database.h"
+#include "mappers.h"
+#include "vs_system.h"
 #include "version.h"
 #include "conf.h"
 #include "save_slot.h"
@@ -382,12 +383,10 @@ BYTE emu_load_rom(void) {
 			goto elaborate_rom_file;
 		} else {
 			// carico la rom in memoria
-			if (ines_load_rom() == EXIT_OK) {
-				;
-			} else if (unif_load_rom() == EXIT_ERROR) {
+			if ((ines_load_rom() == EXIT_ERROR) && (unif_load_rom() == EXIT_ERROR)) {
 				info.rom.file[0] = 0;
 				gui_overlay_info_append_msg_precompiled(5, NULL);
-				fprintf(stderr, "error loading rom\n");
+				fprintf(stderr, "format non supported\n");
 				goto elaborate_rom_file;
 			}
 			emu_recent_roms_add(&recent_roms_permit_add, info.rom.file);
@@ -407,7 +406,7 @@ BYTE emu_load_rom(void) {
 		}
 
 		// PRG Rom
-		if (map_prg_chip_malloc(0, info.prg.rom[0].banks_16k * (16 * 1024), 0xEA) == EXIT_ERROR) {
+		if (map_prg_chip_malloc(0, info.prg.rom[0].banks_16k * 0x4000, 0xEA) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
 
@@ -451,152 +450,6 @@ BYTE emu_load_rom(void) {
 
 	if (nsf.enabled == FALSE) {
 		cheatslist_read_game_cheats();
-	}
-
-	return (EXIT_OK);
-}
-BYTE emu_search_in_database(void *rom_mem) {
-	_rom_mem *rom = (_rom_mem *)rom_mem;
-	size_t position;
-	WORD i;
-
-	// setto i default prima della ricerca
-	info.machine[DATABASE] = info.mapper.submapper = info.mirroring_db = info.id = DEFAULT;
-	info.extra_from_db = 0;
-	vs_system.ppu = vs_system.special_mode.type = DEFAULT;
-
-	// punto oltre l'header
-	if (info.trainer) {
-		position = (0x10 + sizeof(trainer.data));
-	} else {
-		position = 0x10;
-	}
-
-	if ((position + (info.prg.rom[0].banks_16k * 0x4000)) > rom->size) {
-		info.prg.rom[0].banks_16k = (rom->size - position) / 0x4000;
-		fprintf(stderr, "truncated PRG ROM\n");
-	}
-
-	// calcolo l'sha1 della PRG Rom
-	sha1_csum(rom->data + position, 0x4000 * info.prg.rom[0].banks_16k, info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
-	position += (info.prg.rom[0].banks_16k * 0x4000);
-
-	if (info.chr.rom[0].banks_8k) {
-		if ((position + (info.chr.rom[0].banks_8k * 0x2000)) > rom->size) {
-			info.chr.rom[0].banks_8k = (rom->size - position) / 0x2000;
-			fprintf(stderr, "truncated CHR ROM\n");
-		}
-
-		// calcolo anche l'sha1 della CHR rom
-		sha1_csum(rom->data + position, 0x2000 * info.chr.rom[0].banks_8k, info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
-		position += (info.chr.rom[0].banks_8k * 0x2000);
-	}
-
-	// cerco nel database
-	for (i = 0; i < LENGTH(dblist); i++) {
-		if (!(memcmp(dblist[i].sha1sum, info.sha1sum.prg.string, 40))) {
-			info.mapper.id = dblist[i].mapper;
-			info.mapper.submapper = dblist[i].submapper;
-			info.id = dblist[i].id;
-			info.machine[DATABASE] = dblist[i].machine;
-			info.mirroring_db = dblist[i].mirroring;
-			vs_system.ppu = dblist[i].vs_ppu;
-			vs_system.special_mode.type = dblist[i].vs_sm;
-			info.default_dipswitches = dblist[i].dipswitches;
-			info.extra_from_db = dblist[i].extra;
-			switch (info.mapper.id) {
-				case 1:
-					// Fix per Famicom Wars (J) [!] che ha l'header INES errato
-					if (info.id == BAD_YOSHI_U) {
-						info.chr.rom[0].banks_8k = 4;
-					} else if (info.id == MOWPC10) {
-						info.chr.rom[0].banks_8k = 0;
-					}
-					break;
-				case 2:
-					// Fix per "Best of the Best - Championship Karate (E) [!].nes"
-					// che ha l'header INES non corretto.
-					if (info.id == BAD_INES_BOTBE) {
-						info.prg.rom[0].banks_16k = 16;
-						info.chr.rom[0].banks_8k = 0;
-					}
-					break;
-				case 3:
-					// Fix per "Tetris (Bulletproof) (Japan).nes"
-					// che ha l'header INES non corretto.
-					if (info.id == BAD_INES_TETRIS_BPS) {
-						info.prg.rom[0].banks_16k = 2;
-						info.chr.rom[0].banks_8k = 2;
-					}
-					break;
-				case 7:
-					// Fix per "WWF Wrestlemania (E) [!].nes"
-					// che ha l'header INES non corretto.
-					if (info.id == BAD_INES_WWFWE) {
-						info.prg.rom[0].banks_16k = 8;
-						info.chr.rom[0].banks_8k = 0;
-					} else if (info.id == CSPC10) {
-						info.chr.rom[0].banks_8k = 0;
-					}
-					break;
-				case 10:
-					// Fix per Famicom Wars (J) [!] che ha l'header INES errato
-					if (info.id == BAD_INES_FWJ) {
-						info.chr.rom[0].banks_8k = 8;
-					}
-					break;
-				case 11:
-					// Fix per King Neptune's Adventure (Color Dreams) [!]
-					// che ha l'header INES errato
-					if (info.id == BAD_KING_NEPT) {
-						info.prg.rom[0].banks_16k = 4;
-						info.chr.rom[0].banks_8k = 4;
-					}
-					break;
-				case 33:
-					if (info.id == BAD_INES_FLINJ) {
-						info.chr.rom[0].banks_8k = 32;
-					}
-					break;
-				case 113:
-					if (info.id == BAD_INES_SWAUS) {
-						info.prg.rom[0].banks_16k = 1;
-						info.chr.rom[0].banks_8k = 2;
-					}
-					break;
-				case 191:
-					if (info.id == BAD_SUGOROQUEST) {
-						info.chr.rom[0].banks_8k = 16;
-					}
-					break;
-				case 235:
-					// 260-in-1 [p1][b1].nes ha un numero di prg_rom_16k_count
-					// pari a 256 (0x100) ed essendo un BYTE (0xFF) quello che l'INES
-					// utilizza per indicare in numero di 16k, nell'INES header sara'
-					// presente 0.
-					// 150-in-1 [a1][p1][!].nes ha lo stesso chsum del 260-in-1 [p1][b1].nes
-					// ma ha un numero di prg_rom_16k_count di 127.
-					if (!info.prg.rom[0].banks_16k) {
-						info.prg.rom[0].banks_16k = 256;
-					}
-					break;
-				case UNIF_MAPPER:
-					unif.internal_mapper = info.mapper.submapper;
-					break;
-
-			}
-			if (info.mirroring_db == UNK_VERTICAL) {
-				mirroring_V();
-			}
-			if (info.mirroring_db == UNK_HORIZONTAL) {
-				mirroring_H();
-			}
-			break;
-		}
-	}
-
-	if ((vs_system.ppu == DEFAULT) && (vs_system.special_mode.type == DEFAULT)) {
-		vs_system.ppu = vs_system.special_mode.type = 0;
 	}
 
 	return (EXIT_OK);

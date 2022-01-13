@@ -3865,7 +3865,7 @@ static const _dbelement dblist[] = {
 	/* 150-in-1 [a1][p1][!].nes (2MB) */ /* 260-in-1 [p1][b1].nes (4Mb) */
 	{"4692a622af6a3d79514bf3e5fb4e9fbe6c6080fc", 235, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* 260-in-1 [p1][!].nes (4MB) */
-	{"da39a3ee5e6b4b0d3255bfef95601890afd80709", 235, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"012fd90b213454b76608e018e70f89f1e166dc82", 235, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- mapper 241 --------------------------------------- */
 	/* Xing Ji Zheng Ba (Ch).nes */
@@ -4063,6 +4063,8 @@ static const _dbelement dblist[] = {
 /* ----------------------------------------- Unif ----------------------------------------- */
 	/* Boogerman II - The Final Adventure (Rex-Soft) [!].nes */
 	{"28805e433ca0ad1505058085667b889a8a7b967f", UNIF_MAPPER, 20, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Contra Fighter (Unl).nes */
+	{"8c525181c1a563beb82e648fa0ed02d8b986b952", UNIF_MAPPER, 21, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Mi Hun Che (Ch)(full copyrights)[!].nes */
 	{"5421c38840e5fbef1140f1f8cfe42b5dc7b8096c", UNIF_MAPPER, 30, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Mi Hun Che (Ch)(replaced copyrights)[p1][!].nes */

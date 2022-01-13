@@ -36,7 +36,6 @@ EXTERNC BYTE emu_make_dir(const uTCHAR *fmt, ...);
 EXTERNC BYTE emu_file_exist(const uTCHAR *file);
 EXTERNC char *emu_file2string(const uTCHAR *path);
 EXTERNC BYTE emu_load_rom(void);
-EXTERNC BYTE emu_search_in_database(void *rom_mem);
 EXTERNC void emu_set_title(uTCHAR *title, int len);
 EXTERNC BYTE emu_turn_on(void);
 EXTERNC void emu_pause(BYTE mode);
