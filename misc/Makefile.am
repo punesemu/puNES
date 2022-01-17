@@ -35,6 +35,6 @@ uninstall-icons:
 		rm -f $(DESTDIR)$(datadir)/icons/$$THEME/$$SIZE/$$CONTEXT/$$ICONFILE; \
 	done;
 
-install-data-local: install-icons update-icon-cache
+install-data-local: install-icons
 
-uninstall-local: uninstall-icons update-icon-cache
+uninstall-local: uninstall-icons
