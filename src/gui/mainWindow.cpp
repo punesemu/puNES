@@ -174,7 +174,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	}
 
 	connect(shcjoy.timer, SIGNAL(timeout()), this, SLOT(s_shcjoy_read_timer()));
-    connect(qApp, SIGNAL(receivedMessage(quint32, QByteArray)), this, SLOT(s_received_message(quint32, QByteArray)));
+	connect(qApp, SIGNAL(receivedMessage(quint32, QByteArray)), this, SLOT(s_received_message(quint32, QByteArray)));
 
 	connect(this, SIGNAL(et_gg_reset(void)), this, SLOT(s_et_gg_reset(void)));
 	connect(this, SIGNAL(et_vs_reset(void)), this, SLOT(s_et_vs_reset(void)));
@@ -1063,8 +1063,6 @@ QScreen *mainWindow::win_handle_screen(void) {
 }
 
 void mainWindow::s_set_fullscreen(void) {
-	BYTE delay = FALSE;
-
 	if (gui.in_update || setup_in_out_fullscreen) {
 		return;
 	}
@@ -1085,35 +1083,20 @@ void mainWindow::s_set_fullscreen(void) {
 		org_geom = geometry();
 		visibility.menubar = menubar->isVisible();
 		visibility.toolbars = toolbar->isVisible();
+		hide();
 #if defined (FULLSCREEN_RESFREQ)
 		if (cfg->fullscreen_in_window == FALSE) {
-			delay = gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, FALSE);
+			gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, FALSE);
 		}
 	} else {
+		hide();
 		if (gfx.type_of_fscreen_in_use == FULLSCR) {
-#if defined(_WIN32)
-			// su alcuni monitor se il s_prepare_fullscreen e' eseguito dopo il delay, non viene
-			// ripristinata correttamente la finestra non visualizzando la cornice di windows.
 			gfx_monitor_restore_res();
-#else
-			// su Linux e BSD e' importante il delay per i motivi spiegati sotto.
-			delay = gfx_monitor_restore_res();
-#endif
 		}
 #endif
 	}
-	if (delay == TRUE) {
-		// se avvio la modalita' fullscreen dopo un cambio di risoluzione, senza questo ritardo
-		// e' possibile che le QT mi passino informazioni non corrette sulle dimensioni del
-		// desktop e che le decorazioni della finestra non appaiano correttamente (problema
-		// riscontrato sotto Linux e BSD).
-		// Usare un delay di 1000 ms perche' sotto windows (versione OpenGL) non mi crea problemi
-		// quando viene visualizzata la menu bar. Con un valore inferiore, quando effettuo lo switch
-		// a risoluzioni basse, non mi visualizza i submenu.
-		QTimer::singleShot(1000, this, SLOT(s_fullscreen(void)));
-	} else {
-		s_fullscreen();
-	}
+
+	s_fullscreen();
 }
 void mainWindow::s_set_vs_window(void) {
 	ext_win.vs_system = !ext_win.vs_system;
@@ -1709,7 +1692,6 @@ void mainWindow::s_fullscreen(void) {
 				desktop_resolution = false;
 			}
 #endif
-			hide();
 			if (desktop_resolution == true) {
 				showMaximized();
 			} else {
@@ -1723,7 +1705,7 @@ void mainWindow::s_fullscreen(void) {
 			menubar->setVisible(false);
 			toolbar->setVisible(false);
 			statusbar->setVisible(false);
-			hide();
+			reset_min_max_size();
 #if defined (_WIN32)
 			// when a window is using an OpenGL based surface and is appearing in full screen mode,
 			// problems can occur with other top-level windows which are part of the application. Due
@@ -1753,7 +1735,6 @@ void mainWindow::s_fullscreen(void) {
 			toolbar->setVisible(visibility.toolbars);
 		}
 		gfx.type_of_fscreen_in_use = NO_FULLSCR;
-		hide();
 #if defined (_WIN32)
 		setWindowFlags(window_flags);
 #endif
