@@ -44,7 +44,6 @@
 
 static void d3d9_shader_cg_error_handler(void);
 static BYTE d3d9_device_create(UINT width, UINT height);
-static void d3d9_context_delete(void);
 INLINE static void d3d9_read_front_buffer(void);
 static BYTE d3d9_texture_create(_texture *texture, UINT index);
 static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h, BOOL overlay);
@@ -209,7 +208,21 @@ BYTE d3d9_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	d3d9.adapter = D3D9_ADAPTER(0);
+	{
+		HMONITOR monitor = MonitorFromWindow(gui_win_id(), MONITOR_DEFAULTTOPRIMARY);
+		UINT i;
+
+		d3d9.adapter = D3D9_ADAPTER(0);
+
+		for (i = 0; i < d3d9.adapters_in_use; i++) {
+			_d3d9_adapter *adapter = D3D9_ADAPTER(i);
+
+			if (monitor == IDirect3D9_GetAdapterMonitor(d3d9.d3d, adapter->id)) {
+				d3d9.adapter = adapter;
+			}
+		}
+	}
+
 	if (d3d9.adapter->hlsl_compliant == FALSE) {
 		MessageBox(NULL, "Adapter is not hlsl compliant", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
@@ -220,7 +233,7 @@ BYTE d3d9_init(void) {
 	return (EXIT_OK);
 }
 void d3d9_quit(void) {
-	d3d9_context_delete();
+	d3d9_context_delete(TRUE);
 
 	{
 		UINT i;
@@ -264,7 +277,9 @@ BYTE d3d9_context_create(void) {
 	WORD w, h;
 	UINT i;
 
-	d3d9_context_delete();
+	gfx_thread_lock();
+
+	d3d9_context_delete(FALSE);
 
 	if (!cfg->fullscreen && ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270))) {
 		d3d9.video_mode.w = gfx.h[VIDEO_MODE];
@@ -273,9 +288,6 @@ BYTE d3d9_context_create(void) {
 		d3d9.video_mode.w = gfx.w[VIDEO_MODE];
 		d3d9.video_mode.h = gfx.h[VIDEO_MODE];
 	}
-
-	d3d9.video_mode.w *= gfx.device_pixel_ratio;
-	d3d9.video_mode.h *= gfx.device_pixel_ratio;
 
 	if (overscan.enabled && (!cfg->oscan_black_borders && !cfg->fullscreen)) {
 		// visto che lavorero' con texture piu' grandi del video mode
@@ -287,13 +299,15 @@ BYTE d3d9_context_create(void) {
 		h = d3d9.video_mode.h;
 	}
 
-	if (d3d9_device_create(w, h) == EXIT_ERROR) {
-		d3d9_context_delete();
+	if (d3d9_device_create(w * gfx.device_pixel_ratio, h * gfx.device_pixel_ratio) == EXIT_ERROR) {
+		d3d9_context_delete(FALSE);
+		gfx_thread_unlock();
 		return (EXIT_ERROR);
 	}
 
 	if ((d3d9.cgctx = cgCreateContext()) == NULL) {
-		d3d9_context_delete();
+		d3d9_context_delete(FALSE);
+		gfx_thread_unlock();
 		return (EXIT_ERROR);
 	}
 
@@ -314,7 +328,8 @@ BYTE d3d9_context_create(void) {
 	// lut (devo farlo prima di elaborare le shaders)
 	for (i = 0; i < shader_effect.luts; i++) {
 		if (d3d9_texture_lut_create(&d3d9.lut[i], i) == EXIT_ERROR) {
-			d3d9_context_delete();
+			d3d9_context_delete(FALSE);
+			gfx_thread_unlock();
 			return (EXIT_ERROR_SHADER);
 		}
 	}
@@ -322,45 +337,47 @@ BYTE d3d9_context_create(void) {
 	// devo precalcolarmi il viewport finale
 	{
 		_viewport *vp = &gfx.vp;
-
-		vp->x = 0;
-		vp->y = 0;
-		vp->w = gfx.w[VIDEO_MODE] * gfx.device_pixel_ratio;
-		vp->h = gfx.h[VIDEO_MODE] * gfx.device_pixel_ratio;
+		float vmw = (float)d3d9.video_mode.w * gfx.device_pixel_ratio;
+		float vmh = (float)d3d9.video_mode.h * gfx.device_pixel_ratio;
 
 		// configuro l'aspect ratio del fullscreen
 		if (cfg->fullscreen) {
-			int mw = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
+			float mw = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
 				_SCR_ROWS_NOBRD : _SCR_COLUMNS_NOBRD;
-			int mh = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
+			float mh = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
 				_SCR_COLUMNS_NOBRD : _SCR_ROWS_NOBRD;
-			float ratio = (float)mw / (float)mh, ratio_vm = (float)d3d9.video_mode.w / (float)d3d9.video_mode.h;
+			float ratio = mw / mh, ratio_vm = vmw / vmh;
+
+			vp->x = 0;
+			vp->y = 0;
+			vp->w = (float)gfx.w[VIDEO_MODE] * gfx.device_pixel_ratio;
+			vp->h = (float)gfx.h[VIDEO_MODE] * gfx.device_pixel_ratio;
 
 			if (!cfg->stretch) {
 				if (cfg->integer_scaling) {
-					int factor = d3d9.video_mode.w > d3d9.video_mode.h
-						? ratio >= ratio_vm ? d3d9.video_mode.w / mw : d3d9.video_mode.h / mh
-						: ratio >= ratio_vm ? d3d9.video_mode.h / mh : d3d9.video_mode.w / mw;
+					int factor = vmw > vmh
+						? ratio >= ratio_vm ? vmw / mw : vmh / mh
+						: ratio >= ratio_vm ? vmh / mh : vmw / mw;
 
 					vp->w = mw * factor;
 					vp->h = mh * factor;
 				} else {
-					if (d3d9.video_mode.w > d3d9.video_mode.h) {
+					if (vmw > vmh) {
 						if (ratio >= ratio_vm) {
-							vp->h = (int)((float)d3d9.video_mode.w / ratio);
+							vp->h = vmw / ratio;
 						} else {
-							vp->w = (int)((float)d3d9.video_mode.h * ratio);
+							vp->w = vmh * ratio;
 						}
 					} else {
 						if (ratio >= ratio_vm) {
-							vp->w = (int)((float)d3d9.video_mode.w * ratio);
+							vp->w = vmw * ratio;
 						} else {
-							vp->h = (int)((float)d3d9.video_mode.w / ratio);
+							vp->h = vmw / ratio;
 						}
 					}
 				}
-				vp->x = (d3d9.video_mode.w - vp->w) >> 1;
-				vp->y = (d3d9.video_mode.h - vp->h) >> 1;
+				vp->x += (vmw - vp->w) / 2.0f;
+				vp->y += (vmh - vp->h) / 2.0f;
 			}
 
 			if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
@@ -369,8 +386,8 @@ BYTE d3d9_context_create(void) {
 				float brd_l_x, brd_r_x, brd_u_y, brd_d_y;
 				float ratio_x, ratio_y;
 
-				ratio_x = (float)vp->w / (float)mw;
-				ratio_y = (float)vp->h / (float)mh;
+				ratio_x = vp->w / mw;
+				ratio_y = vp->h / mh;
 
 				switch (cfg->screen_rotation) {
 					default:
@@ -402,30 +419,35 @@ BYTE d3d9_context_create(void) {
 
 				d3d9.viewp.left = brd_l_x;
 				d3d9.viewp.top = brd_u_y;
-				d3d9.viewp.right = d3d9.video_mode.w - brd_r_x;
-				d3d9.viewp.bottom = d3d9.video_mode.h - brd_d_y;
+				d3d9.viewp.right = vmw - brd_r_x;
+				d3d9.viewp.bottom = vmh - brd_d_y;
 			} else {
 				d3d9.viewp.left = 0;
 				d3d9.viewp.top = 0;
-				d3d9.viewp.right = d3d9.video_mode.w;
-				d3d9.viewp.bottom = d3d9.video_mode.h;
+				d3d9.viewp.right = vmw;
+				d3d9.viewp.bottom = vmh;
 			}
 		} else {
+			vp->x = 0;
+			vp->y = 0;
+			vp->w = gfx.w[VIDEO_MODE];
+			vp->h = gfx.h[VIDEO_MODE];
+
 			if (overscan.enabled && !cfg->oscan_black_borders) {
-				BYTE h = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
+				float h = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
 					cfg->hflip_screen ? overscan.borders->left : overscan.borders->right :
 					cfg->hflip_screen ? overscan.borders->right : overscan.borders->left;
-				BYTE v = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_180) ?
+				float v = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_180) ?
 					overscan.borders->down : overscan.borders->up;
 
-				vp->x = ((-h * gfx.width_pixel) * gfx.pixel_aspect_ratio) * gfx.device_pixel_ratio;
-				vp->y = (-v * cfg->scale) * gfx.device_pixel_ratio;
-				vp->w = (gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio) * gfx.device_pixel_ratio;
-				vp->h = gfx.h[NO_OVERSCAN] * gfx.device_pixel_ratio;
+				vp->x = ((-h * gfx.width_pixel) * gfx.pixel_aspect_ratio);
+				vp->y = -v * (float)cfg->scale;
+				vp->w = (float)gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio;
+				vp->h = (float)gfx.h[NO_OVERSCAN];
 			}
 
 			if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
-				int x = vp->x, w = vp->w;
+				float x = vp->x, w = vp->w;
 
 				vp->x = vp->y;
 				vp->y = x;
@@ -433,10 +455,15 @@ BYTE d3d9_context_create(void) {
 				vp->h = w;
 			}
 
+			vp->x *= gfx.device_pixel_ratio;
+			vp->y *= gfx.device_pixel_ratio;
+			vp->w *= gfx.device_pixel_ratio;
+			vp->h *= gfx.device_pixel_ratio;
+
 			d3d9.viewp.left = -vp->x;
 			d3d9.viewp.top = -vp->y;
-			d3d9.viewp.right = d3d9.video_mode.w + d3d9.viewp.left;
-			d3d9.viewp.bottom = d3d9.video_mode.h + d3d9.viewp.top;
+			d3d9.viewp.right = vmw + d3d9.viewp.left;
+			d3d9.viewp.bottom = vmh + d3d9.viewp.top;
 		}
 	}
 
@@ -445,12 +472,14 @@ BYTE d3d9_context_create(void) {
 		fprintf(stderr, "D3D9: Setting pass %d.\n", i);
 
 		if (d3d9_texture_create(&d3d9.texture[i], i) == EXIT_ERROR) {
-			d3d9_context_delete();
+			d3d9_context_delete(FALSE);
+			gfx_thread_unlock();
 			return (EXIT_ERROR);
 		}
 
 		if (d3d9_shader_init(i, &d3d9.texture[i].shader, shader_effect.sp[i].path, shader_effect.sp[i].code) == EXIT_ERROR) {
-			d3d9_context_delete();
+			d3d9_context_delete(FALSE);
+			gfx_thread_unlock();
 			return (EXIT_ERROR_SHADER);
 		}
 	}
@@ -481,7 +510,8 @@ BYTE d3d9_context_create(void) {
 		d3d9.feedback.in_use = TRUE;
 
 		if (d3d9_texture_create(&d3d9.feedback.tex, shader_effect.feedback_pass) == EXIT_ERROR) {
-			d3d9_context_delete();
+			d3d9_context_delete(FALSE);
+			gfx_thread_unlock();
 			return (EXIT_ERROR);
 		}
 	}
@@ -489,7 +519,9 @@ BYTE d3d9_context_create(void) {
 	// overlay
 	{
 		BYTE rotate = FALSE;
-		int ow, oh;
+		float ow, oh;
+		float vmw = gfx.w[VIDEO_MODE];
+		float vmh = gfx.h[VIDEO_MODE];
 
 		// setto il necessario per il blending
 		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_BLENDOP, D3DBLENDOP_ADD);
@@ -497,24 +529,30 @@ BYTE d3d9_context_create(void) {
 		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 		if (cfg->fullscreen) {
-			float div = (float)gfx.w[VIDEO_MODE] / 1024.0f;
+			float div;
+
+			if (!cfg->fullscreen_in_window) {
+				vmw *= gfx.device_pixel_ratio;
+				vmh *= gfx.device_pixel_ratio;
+			}
+			div = vmw / 1024.0f;
 
 			if (div < 1.0f) {
 				div = 1.0f;
 			}
 
-			ow = gfx.w[VIDEO_MODE] / div;
-			oh = gfx.h[VIDEO_MODE] / div;
+			ow = vmw / div;
+			oh = vmh / div;
 		} else {
 			ow = _SCR_COLUMNS_NOBRD * 2;
 			oh = _SCR_ROWS_NOBRD * 2;
 		}
 
-		if (gfx.w[VIDEO_MODE] < ow) {
-			ow = gfx.w[VIDEO_MODE];
+		if (vmw < ow) {
+			ow = vmw;
 		}
-		if (gfx.h[VIDEO_MODE] < oh) {
-			oh = gfx.h[VIDEO_MODE];
+		if (vmh < oh) {
+			oh = vmh;
 		}
 
 		if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
@@ -534,14 +572,15 @@ BYTE d3d9_context_create(void) {
 			oh = tmp;
 		}
 
-		d3d9_texture_simple_create(&d3d9.overlay, ow * gfx.device_pixel_ratio, oh * gfx.device_pixel_ratio, TRUE);
+		d3d9_texture_simple_create(&d3d9.overlay, ow, oh, TRUE);
 
 		gui_overlay_set_size(ow, oh);
 
 		fprintf(stderr, "D3D9: Setting overlay pass.\n");
 
 		if (d3d9_shader_init(0, &d3d9.overlay.shader, NULL, shader_code_blend()) == EXIT_ERROR) {
-			d3d9_context_delete();
+			d3d9_context_delete(FALSE);
+			gfx_thread_unlock();
 			return (EXIT_ERROR);
 		}
 	}
@@ -569,6 +608,8 @@ BYTE d3d9_context_create(void) {
 	}
 
 	umemcpy(gfx.last_shader_file, cfg->shader_file, usizeof(gfx.last_shader_file));
+
+	gfx_thread_unlock();
 
 	return (EXIT_OK);
 }
@@ -622,7 +663,7 @@ void d3d9_draw_scene(void) {
 		if (i == shader_effect.last_pass) {
 			IDirect3DDevice9_SetRenderTarget(d3d9.adapter->dev, 0, back_buffer);
 			// pulisco l'intero schermo
-			d3d9_viewport_set(0, 0, d3d9.video_mode.w, d3d9.video_mode.h);
+			d3d9_viewport_set(0, 0, d3d9.video_mode.w * gfx.device_pixel_ratio, d3d9.video_mode.h * gfx.device_pixel_ratio);
 		} else {
 			IDirect3DDevice9_SetRenderTarget(d3d9.adapter->dev, 0, texture->map0);
 			// pulisco l'fbo
@@ -772,8 +813,12 @@ static BYTE d3d9_device_create(UINT width, UINT height) {
 
 	return (EXIT_OK);
 }
-static void d3d9_context_delete(void) {
+void d3d9_context_delete(BYTE lock) {
 	UINT i;
+
+	if (lock == TRUE) {
+		gfx_thread_lock();
+	}
 
 	d3d9.screen.in_use = 0;
 	d3d9.screen.index = 0;
@@ -888,6 +933,10 @@ static void d3d9_context_delete(void) {
 	if (d3d9.adapter && d3d9.adapter->dev) {
 		IDirect3DDevice9_Release(d3d9.adapter->dev);
 		d3d9.adapter->dev = NULL;
+	}
+
+	if (lock == TRUE) {
+		gfx_thread_unlock();
 	}
 }
 INLINE static void d3d9_read_front_buffer(void) {

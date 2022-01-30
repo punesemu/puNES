@@ -77,6 +77,11 @@ int gui_screen_id(void) {
 
 	return (wid);
 }
+int gui_win_id(void) {
+	int wid = qt.mwin->winId();
+
+	return (wid);
+}
 
 static double high_resolution_ms(void) {
 	struct timeval time;

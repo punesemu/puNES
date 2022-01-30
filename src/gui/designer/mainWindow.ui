@@ -16,7 +16,7 @@
   <property name="windowTitle">
    <string notr="true">FHorse</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="central_widget"/>
   <widget class="wdgMenuBar" name="menubar">
    <property name="geometry">
     <rect>

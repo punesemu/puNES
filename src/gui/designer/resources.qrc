@@ -238,9 +238,6 @@
   </qresource>
   <qresource prefix="fonts">
     <file>fonts/Blocktopia.ttf</file>
-    <file>fonts/ChronoType.ttf</file>
-    <file>fonts/Rygarde.ttf</file>
-    <file>fonts/DigitalCounter7-AqDg.ttf</file>
   </qresource>
   <qresource prefix="tr">
     <file>translations/en_EN.qm</file>

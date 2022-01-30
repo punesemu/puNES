@@ -70,7 +70,7 @@ enum shader_type {
 	SHADER_LAST = SHADER_FILE,
 };
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT };
-enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE, PASS0 };
+enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE, PASS0, FSCR_RESIZE, TOT_GFX_INFO_TYPE };
 enum no_change { NO_CHANGE = 255 };
 enum gfx_rotate_type { ROTATE_0, ROTATE_90, ROTATE_180, ROTATE_270, ROTATE_MAX };
 
@@ -79,8 +79,8 @@ typedef struct _gfx_rect {
 	float w, h;
 } _gfx_rect;
 typedef struct _viewport {
-	int x, y;
-	int w, h;
+	float x, y;
+	float w, h;
 } _viewport;
 typedef struct _gfx {
 	BYTE PSS;
@@ -89,7 +89,7 @@ typedef struct _gfx {
 	BYTE bit_per_pixel;
 	float width_pixel;
 	WORD rows, lines;
-	SDBWORD w[5], h[5];
+	SDBWORD w[TOT_GFX_INFO_TYPE], h[TOT_GFX_INFO_TYPE];
 	float w_pr, h_pr;
 	float pixel_aspect_ratio;
 	float device_pixel_ratio;
@@ -127,23 +127,24 @@ extern _gfx gfx;
 
 EXTERNC BYTE gfx_init(void);
 EXTERNC void gfx_quit(void);
-EXTERNC BYTE gfx_palette_init(void);
 EXTERNC void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette, BYTE force_scale, BYTE force_palette);
 EXTERNC void gfx_draw_screen(void);
-
-#if defined (WITH_D3D9)
 EXTERNC void gfx_control_changed_adapter(void *monitor);
-#endif
-
-EXTERNC uint32_t gfx_color(BYTE alpha, BYTE r, BYTE g, BYTE b);
+EXTERNC BYTE gfx_palette_init(void);
 EXTERNC void gfx_palette_update(void);
-
+EXTERNC uint32_t gfx_color(BYTE alpha, BYTE r, BYTE g, BYTE b);
 EXTERNC void gfx_cursor_init(void);
 EXTERNC void gfx_cursor_set(void);
-
-EXTERNC void gfx_overlay_blit(void *surface, _gfx_rect *rect);
-
+EXTERNC void gfx_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ratio);
 EXTERNC void gfx_apply_filter(void);
+
+BYTE gfx_api_init(void);
+void gfx_api_quit(void);
+BYTE gfx_api_context_create(void);
+uint32_t gfx_api_color(BYTE a, BYTE r, BYTE g, BYTE b);
+void gfx_api_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ratio);
+void gfx_api_apply_filter(void);
+void gfx_api_control_changed_adapter(void *monitor);
 
 #undef EXTERNC
 

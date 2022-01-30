@@ -1,5 +1,6 @@
 noinst_LIBRARIES = libvideo.a
 libvideo_a_SOURCES = \
+	gfx.c \
 	gfx.h \
 	gfx_thread.c \
 	gfx_thread.h \
@@ -34,7 +35,7 @@ endif
 
 if WITH_OPENGL
 libvideo_a_SOURCES += \
-	opengl/gfx.c \
+	opengl/gfx_api.c \
 	opengl/opengl.c \
 	opengl/opengl.h \
 	opengl/shdcode.h \
@@ -48,6 +49,6 @@ if WITH_D3D9
 libvideo_a_SOURCES += \
 	d3d9/d3d9.c \
 	d3d9/d3d9.h \
-	d3d9/gfx.c \
+	d3d9/gfx_api.c \
 	d3d9/shdcode.h
 endif

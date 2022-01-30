@@ -80,6 +80,7 @@ class overlayWidget : public QWidget {
 		void paintEvent(QPaintEvent *event);
 
 	public:
+		virtual void update_dpr(void);
 		virtual void update_widget(void);
 		virtual BYTE is_to_redraw(void);
 		virtual void update_old_value(void);
@@ -89,12 +90,25 @@ class overlayWidget : public QWidget {
 		int minimum_eight(const QFont *font, int rows) const;
 		void set_opacity(qreal opacity);
 		void draw_background(void);
-		void draw_background(QRect rect);
+		void draw_background(QRectF rect);
 		virtual void fade_in_animation(void);
 		void fade_out_animation(void);
 		void fade_out_start_timer(void);
 		void fade_out_tick_timer(void);
 		QString color_string(QString string, QColor color);
+		qreal dpr_per_int(int integer) const;
+		qreal dpr_per_real(qreal real) const;
+		qreal dpr_int(int integer);
+		qreal dpr_real(qreal real);
+		QPointF dpr_point(int x, int y);
+		QPointF dpr_point(QPoint point);
+		QRectF dpr_rect(void);
+		qreal dpr_radius(void);
+		QImage dpr_image(QString path);
+		qreal dpr_text_real(qreal real);
+		QPointF dpr_text_point(QPointF point);
+		QRectF dpr_text_rect(QRectF rect);
+		qreal dpr_text_coord(qreal coord);
 
 	public slots:
 		virtual void s_fade_in_finished(void);
@@ -135,6 +149,7 @@ class overlayWidgetFrame : public overlayWidget {
 		void paintEvent(QPaintEvent *event);
 
 	public:
+		void update_dpr(void);
 		void update_widget(void);
 		BYTE is_to_redraw(void);
 		void update_old_value(void);
@@ -159,6 +174,7 @@ class overlayWidgetFloppy : public overlayWidget {
 		void paintEvent(QPaintEvent *event);
 
 	public:
+		void update_dpr(void);
 		void update_widget(void);
 };
 class overlayWidgetInputPort : public overlayWidget {
@@ -213,6 +229,7 @@ class overlayWidgetInputPort : public overlayWidget {
 		void paintEvent(QPaintEvent *event);
 
 	public:
+		void update_dpr(void);
 		void update_widget(void);
 		BYTE is_to_redraw(void);
 		void update_old_value(void);
@@ -287,7 +304,7 @@ class overlayWidgetRewind : public overlayWidget {
 			QColor disabled;
 		} color;
 		struct _info {
-			int width;
+			qreal width;
 		} info;
 
 	public:
@@ -299,6 +316,7 @@ class overlayWidgetRewind : public overlayWidget {
 		void paintEvent(QPaintEvent *event);
 
 	public:
+		void update_dpr(void);
 		void update_widget(void);
 		BYTE is_to_redraw(void);
 		void update_old_value(void);
@@ -360,20 +378,21 @@ class overlayWidgetSaveSlot : public overlayWidget {
 			QColor slot;
 			QColor info;
 		} color;
-		int height_row_slot;
+		qreal height_row_slot;
+		qreal dim_cell_x1;
 
 	public:
 		overlayWidgetSaveSlot(QWidget *parent);
 		~overlayWidgetSaveSlot();
 
 	protected:
-		QSize minimumSizeHint(void) const;
 		QSize sizeHint(void) const;
 		void paintEvent(QPaintEvent *event);
 
 	public:
-		void enable_overlay(BYTE operation);
+ 		void enable_overlay(BYTE operation);
 		QString date_and_time(int slot);
+		QSize calc_size(void);
 
 	private:
 		void draw_slots_x1(void);
@@ -400,6 +419,7 @@ class overlayWidgetInfo : public overlayWidget {
 		void paintEvent(QPaintEvent *event);
 
 	public:
+		void update_dpr(void);
 		BYTE is_to_redraw(void);
 		void fade_in_animation(void);
 		void append_msg(BYTE alignment, QString msg);
@@ -415,6 +435,9 @@ class overlayWidgetInfo : public overlayWidget {
 
 class wdgOverlayUi : public QWidget, public Ui::wdgOverlayUi {
 	Q_OBJECT
+
+	private:
+		QList<overlayWidget *> wdgs;
 
 	public:
 		void *clear;
@@ -432,7 +455,12 @@ class wdgOverlayUi : public QWidget, public Ui::wdgOverlayUi {
 
 	public:
 		void retranslateUi(QWidget *wdgOverlayUi);
+		void update_dpr(void);
 		void update_widget(void);
+		void overlay_blit(void);
+
+	private:
+		void wdg_clear(overlayWidget *wdg, QRect *qrect, qreal dpr);
 };
 
 #endif /* WDGOVERLAYUI_HPP_ */

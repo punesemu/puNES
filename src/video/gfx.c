@@ -19,9 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "opengl.h"
 #include "video/gfx_thread.h"
-#include "info.h"
 #include "conf.h"
 #include "clock.h"
 #include "ppu.h"
@@ -30,6 +28,7 @@
 #include "paldef.h"
 #include "vs_system.h"
 #include "settings.h"
+#include "shaders.h"
 #include "video/effects/pause.h"
 #include "video/effects/tv_noise.h"
 
@@ -38,22 +37,32 @@ _gfx gfx;
 BYTE gfx_init(void) {
 	info.screenshot = SCRSH_NONE;
 
+#if defined (WITH_OPENGL)
 	gui_screen_info();
+#endif
+
+#if defined (_WIN32)
+#define print_error(txt) MessageBox(NULL, txt, "Error!", MB_ICONEXCLAMATION | MB_OK)
+#else
+#define print_error(txt) fprintf(stderr, txt "\n")
+#endif
 
 	if (gui_create() == EXIT_ERROR) {
-		fprintf(stderr, "gui initialization failed\n");
+		print_error("GUI initialization failed");
 		return (EXIT_ERROR);
 	}
 
 	if (gfx_thread_init() == EXIT_ERROR) {
-		fprintf(stderr, "Unable to allocate the gfx thread\n");
+		print_error("Unable to allocate the gfx thread");
 		return (EXIT_ERROR);
 	}
 
-	if (opengl_init() == EXIT_ERROR) {
-		fprintf(stderr, "OpenGL not supported.\n");
+	if (gfx_api_init() == EXIT_ERROR) {
+		print_error("Unable to initiliazed GFX API");
 		return (EXIT_ERROR);
 	}
+
+#undef print_error
 
 	// casi particolari provenienti dal settings_file_parse() e cmd_line_parse()
 	if (cfg->fullscreen == FULLSCR) {
@@ -74,43 +83,17 @@ BYTE gfx_init(void) {
 void gfx_quit(void) {
 	gfx_thread_quit();
 
+	pause_quit();
+	tv_noise_quit();
+
+	ntsc_quit();
+
 	if (gfx.palette) {
 		free(gfx.palette);
 		gfx.palette = NULL;
 	}
 
-	pause_quit();
-	tv_noise_quit();
-
-	opengl_quit();
-	ntsc_quit();
-}
-BYTE gfx_palette_init(void) {
-	// inizializzo l'ntsc che utilizzero' non solo
-	// come filtro ma anche nel gfx_set_screen() per
-	// generare la paletta dei colori.
-	if (ntsc_init() == EXIT_ERROR) {
-		return (EXIT_ERROR);
-	}
-
-	// mi alloco una zona di memoria dove conservare la
-	// paletta nel formato di visualizzazione.
-	if (!(gfx.palette = (uint32_t *)malloc(NUM_COLORS * sizeof(uint32_t)))) {
-		fprintf(stderr, "Unable to allocate the palette\n");
-		return (EXIT_ERROR);
-	}
-
-	if (pause_init() == EXIT_ERROR) {
-		fprintf(stderr, "pause initialization failed\n");
-		return (EXIT_ERROR);
-	}
-
-	if (tv_noise_init() == EXIT_ERROR) {
-		fprintf(stderr, "tv_noise initialization failed\n");
-		return (EXIT_ERROR);
-	}
-
-	return (EXIT_OK);
+	gfx_api_quit();
 }
 void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette, BYTE force_scale, BYTE force_palette) {
 	BYTE set_mode;
@@ -423,22 +406,24 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				}
 			}
 
-			// faccio quello che serve prima del setvideo
-			gui_set_video_mode();
+			// se necessario cambio le dimensioni della finestra
+			gui_set_window_size();
 		}
 
-		switch (opengl_context_create()) {
+		gfx.device_pixel_ratio = gui_device_pixel_ratio();
+
+		switch (gfx_api_context_create()) {
 			case EXIT_ERROR:
-				fprintf(stderr, "OPENGL: Unable to initialize opengl context\n");
+				fprintf(stderr, "Unable to initialize opengl context\n");
+				gfx_thread_continue();
 				break;
 			case EXIT_ERROR_SHADER:
 				gui_overlay_info_append_msg_precompiled(27, NULL);
-				fprintf(stderr, "OPENGL: Error on loading the shader, switch to \"No shader\"\n");
+				fprintf(stderr, "Error on loading the shader, switch to \"No shader\"\n");
 				umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
 				shader = NO_SHADER;
 				goto gfx_set_screen_start;
 		}
-
 	}
 
 	// calcolo le proporzioni tra il disegnato a video (overscan e schermo
@@ -446,8 +431,8 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	// essere (256 x 240). Mi serve per calcolarmi la posizione del puntatore
 	// dello zapper.
 	if (cfg->fullscreen) {
-		gfx.w_pr = (float)gfx.vp.w / (float)SCR_COLUMNS;
-		gfx.h_pr = (float)gfx.vp.h / (float)SCR_ROWS;
+		gfx.w_pr = ((float)gfx.vp.w / gfx.device_pixel_ratio) / (float)SCR_COLUMNS;
+		gfx.h_pr = ((float)gfx.vp.h / gfx.device_pixel_ratio) / (float)SCR_ROWS;
 	} else {
 		gfx.w_pr = (float)(gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio) / (float)SCR_COLUMNS;
 		gfx.h_pr = (float)gfx.h[NO_OVERSCAN] / (float)SCR_ROWS;
@@ -458,12 +443,12 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	// setto il titolo della finestra
 	gui_update();
 
-	if (info.on_cfg == TRUE) {
-		info.on_cfg = FALSE;
-	}
-
 	if (ntsc_update == TRUE) {
 		ntsc_effect_parameters_changed();
+	}
+
+	if (info.on_cfg == TRUE) {
+		info.on_cfg = FALSE;
 	}
 }
 void gfx_draw_screen(void) {
@@ -486,9 +471,32 @@ void gfx_draw_screen(void) {
 		screen.rd->ready = TRUE;
 	}
 }
+BYTE gfx_palette_init(void) {
+	// inizializzo l'ntsc che utilizzero' non solo
+	// come filtro ma anche nel gfx_set_screen() per
+	// generare la paletta dei colori.
+	if (ntsc_init() == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
 
-uint32_t gfx_color(BYTE a, BYTE r, BYTE g, BYTE b) {
-	return (gui_color(a, r, g, b));
+	// mi alloco una zona di memoria dove conservare la
+	// paletta nel formato di visualizzazione.
+	if (!(gfx.palette = (uint32_t *)malloc(NUM_COLORS * sizeof(uint32_t)))) {
+		fprintf(stderr, "Unable to allocate the palette\n");
+		return (EXIT_ERROR);
+	}
+
+	if (pause_init() == EXIT_ERROR) {
+		fprintf(stderr, "Pause initialization failed");
+		return (EXIT_ERROR);
+	}
+
+	if (tv_noise_init() == EXIT_ERROR) {
+		fprintf(stderr, "tv_noise initialization failed");
+		return (EXIT_ERROR);
+	}
+
+	return (EXIT_OK);
 }
 void gfx_palette_update(void) {
 	WORD i;
@@ -507,37 +515,22 @@ void gfx_palette_update(void) {
 		gfx.palette[i] = gfx_os_color(palette_RGB.in_use[i].r, palette_RGB.in_use[i].g, palette_RGB.in_use[i].b);
 	}
 }
-
+uint32_t gfx_color(BYTE a, BYTE r, BYTE g, BYTE b) {
+	return (gfx_api_color(a, r, g, b));
+}
 void gfx_cursor_init(void) {
 	gui_cursor_init();
 	gui_cursor_set();
-}
+};
 void gfx_cursor_set(void) {
 	gui_cursor_set();
-}
-
-void gfx_overlay_blit(void *surface, _gfx_rect *rect) {
+};
+void gfx_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ratio) {
 	if (!cfg->txt_on_screen) {
 		return;
 	}
-
-	if (gfx.device_pixel_ratio != 1.0f) {
-		rect->x *= gfx.device_pixel_ratio;
-		rect->y *= gfx.device_pixel_ratio;
-		rect->w *= gfx.device_pixel_ratio;
-		rect->h *= gfx.device_pixel_ratio;
-	}
-
-	if (((rect->x + rect->w) > opengl.overlay.rect.w) || ((rect->y + rect->h) > opengl.overlay.rect.h)) {
-		return;
-	}
-
-	glBindTexture(GL_TEXTURE_2D, opengl.overlay.id);
-	glPixelStoref(GL_UNPACK_ROW_LENGTH, rect->w);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, rect->x, rect->y, rect->w, rect->h, TI_FRM, TI_TYPE, surface);
-	glPixelStoref(GL_UNPACK_ROW_LENGTH, 0);
+	gfx_api_overlay_blit(surface, rect, device_pixel_ratio);
 }
-
 void gfx_apply_filter(void) {
 	gfx.filter.data.palette = (void *)gfx.palette;
 
@@ -563,14 +556,7 @@ void gfx_apply_filter(void) {
 
 	gfx_thread_lock();
 
-	gfx.frame.filtered = screen.rd->frame;
-
-	// applico l'effetto desiderato
-	gfx.filter.data.pitch = opengl.surface.pitch;
-	gfx.filter.data.pix = opengl.surface.pixels;
-	gfx.filter.data.width = opengl.surface.w;
-	gfx.filter.data.height = opengl.surface.h;
-	gfx.filter.func();
+	gfx_api_apply_filter();
 
 	// posso trovarmi nella situazione in cui applico il filtro ad un frame quando ancora
 	// (per molteplici motivi) non ho ancora finito di disegnare il frame precedente. Il gui_screen_update
@@ -581,4 +567,7 @@ void gfx_apply_filter(void) {
 	}
 
 	gfx_thread_unlock();
+}
+void gfx_control_changed_adapter(void *monitor) {
+	gfx_api_control_changed_adapter(monitor);
 }

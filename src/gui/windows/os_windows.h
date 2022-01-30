@@ -122,6 +122,12 @@ HWND gui_screen_id(void) {
 
 	return (wid);
 }
+HWND gui_win_id(void) {
+	HWND wid = (HWND)qt.mwin->winId();
+
+	return (wid);
+}
+
 char *gui_dup_wchar_to_utf8(uTCHAR *w) {
 	int len = WideCharToMultiByte(CP_UTF8, 0, w, -1, 0, 0, 0, 0);
 	char *s = NULL;

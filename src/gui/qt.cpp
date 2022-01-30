@@ -123,6 +123,15 @@ void gui_init(int *argc, char **argv) {
 	QFlags<SingleApplication::Mode> mode = SingleApplication::Mode::ExcludeAppVersion | SingleApplication::Mode::ExcludeAppPath;
 	int i = 0;
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+	QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+	QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::Round);
+	//QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
+#endif
+
 	memset(&gui, 0, sizeof(gui));
 	qt = {};
 	qt.app = new SingleApplication((*argc), argv, true, mode);
@@ -176,17 +185,12 @@ BYTE gui_create(void) {
 #endif
 
 	QFontDatabase::addApplicationFont(":/fonts/fonts/Blocktopia.ttf");
-	QFontDatabase::addApplicationFont(":/fonts/fonts/ChronoType.ttf");
-	QFontDatabase::addApplicationFont(":/fonts/fonts/DigitalCounter7-AqDg.ttf");
-	QFontDatabase::addApplicationFont(":/fonts/fonts/Rygarde.ttf");
 
 	qt.mwin = new mainWindow();
 	qt.screen = qt.mwin->screen;
 	qt.objch->setParent(qt.mwin);
 
 	qt.app->installEventFilter(new appEventFilter());
-
-	gfx.device_pixel_ratio = qt.screen->devicePixelRatioF();
 
 	gui_is_in_desktop(&cfg->lg.x, &cfg->lg.y);
 	gui_is_in_desktop(&cfg->lg_settings.x, &cfg->lg_settings.y);
@@ -232,7 +236,40 @@ void gui_start(void) {
 	qt.app->exec();
 }
 
-void gui_set_video_mode(void) {
+void gui_overlay_renew(void) {
+	if (qt.overlay) {
+		delete qt.overlay;
+	}
+	qt.overlay = new wdgOverlayUi();
+}
+double gui_device_pixel_ratio(void) {
+	return (qt.mwin->win_handle_screen()->devicePixelRatio());
+}
+void gui_set_window_size(void) {
+	int w = gfx.w[VIDEO_MODE], h = gfx.h[VIDEO_MODE];
+	bool toolbar;
+
+#if defined (_WIN32)
+	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
+		return;
+	}
+#else
+#if QT_VERSION == QT_VERSION_CHECK(5, 12, 8)
+	if (gfx.type_of_fscreen_in_use == FULLSCR) {
+		return;
+	}
+#else
+	if (cfg->fullscreen) {
+		return;
+	}
+#endif
+#endif
+
+	if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
+		w = gfx.h[VIDEO_MODE];
+		h = gfx.w[VIDEO_MODE];
+	}
+
 	if (cfg->scale == X1) {
 		qt.mwin->toolbar->rotate_setVisible(false);
 		qt.mwin->toolbar->state_setVisible(false);
@@ -247,22 +284,7 @@ void gui_set_video_mode(void) {
 		qt.mwin->menu_Help->menuAction()->setVisible(true);
 	}
 
-	{
-		SDBWORD w = gfx.w[VIDEO_MODE], h = gfx.h[VIDEO_MODE];
-
-		if (!cfg->fullscreen && ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270))) {
-			w = gfx.h[VIDEO_MODE];
-			h = gfx.w[VIDEO_MODE];
-		}
-
-		qt.screen->setFixedSize(QSize(w, h));
-
-		gui_set_window_size();
-	}
-}
-void gui_set_window_size(void) {
-	int w = qt.screen->width(), h = qt.screen->height();
-	bool toolbar = qt.mwin->toolbar->isHidden() | qt.mwin->toolbar->isFloating();
+	toolbar = qt.mwin->toolbar->isHidden() | qt.mwin->toolbar->isFloating();
 
 	if (qt.mwin->toolbar->orientation() == Qt::Vertical) {
 		w += (toolbar ? 0 : qt.mwin->toolbar->sizeHint().width());
@@ -290,10 +312,13 @@ void gui_set_window_size(void) {
 	}
 #endif
 
+#if defined (_WIN32)
+	qt.mwin->resize(QSize(w, h));
+#else
 	qt.mwin->setFixedSize(QSize(w, h));
-
 	qt.mwin->menubar->setFixedWidth(w);
 	qt.mwin->statusbar->setFixedWidth(w);
+#endif
 }
 
 void gui_state_save_slot_set(BYTE slot, BYTE on_video) {

@@ -181,7 +181,7 @@ EXTERNC BYTE gui_control_instance(void);
 EXTERNC BYTE gui_create(void);
 EXTERNC void gui_start(void);
 
-EXTERNC void gui_set_video_mode(void);
+EXTERNC double gui_device_pixel_ratio(void);
 EXTERNC void gui_set_window_size(void);
 
 EXTERNC void gui_state_save_slot_set(BYTE slot, BYTE on_video);
@@ -246,6 +246,7 @@ EXTERNC void gui_decode_all_input_events(void);
 EXTERNC void gui_screen_update(void);
 
 EXTERNC void *gui_wdgoverlayui_get_ptr(void);
+EXTERNC void gui_overlay_renew(void);
 EXTERNC void gui_overlay_update(void);
 EXTERNC BYTE gui_overlay_is_updated(void);
 EXTERNC void gui_overlay_enable_save_slot(BYTE mode);
@@ -298,9 +299,11 @@ EXTERNC void gui_init_os(void);
 EXTERNC void gui_sleep(double ms);
 #if defined (_WIN32)
 EXTERNC HWND gui_screen_id(void);
+EXTERNC HWND gui_win_id(void);
 EXTERNC char *gui_dup_wchar_to_utf8(uTCHAR *w);
 #else
 EXTERNC int gui_screen_id(void);
+EXTERNC int gui_win_id(void);
 #endif
 
 #if defined (FULLSCREEN_RESFREQ)

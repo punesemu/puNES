@@ -105,7 +105,7 @@
       </spacer>
      </item>
      <item row="1" column="0">
-      <spacer name="horizontalSpacer_slot_state_0">
+      <spacer name="horizontalSpacer_slot_state_left">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -118,7 +118,7 @@
       </spacer>
      </item>
      <item row="1" column="2">
-      <spacer name="horizontalSpacer_slot_state_1">
+      <spacer name="horizontalSpacer_slot_state_right">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>

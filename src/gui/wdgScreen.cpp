@@ -50,6 +50,8 @@ wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 
 	setMouseTracking(true);
 
+	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
 	connect (this, SIGNAL(et_cursor_set()), this, SLOT(s_cursor_set()));
 	connect (this, SIGNAL(et_cursor_hide(int)), this, SLOT(s_cursor_hide(int)));
 
