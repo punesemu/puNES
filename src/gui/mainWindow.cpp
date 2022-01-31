@@ -1822,7 +1822,7 @@ void mainWindow::s_fullscreen(void) {
 		fullscreen_resize = false;
 		showNormal();
 		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
-		setGeometry(org_geom);
+		move(org_geom.x(), org_geom.y());
 	}
 
 	emu_thread_continue();
