@@ -525,12 +525,8 @@ int overlayWidget::vpadtot(void) const {
 }
 int overlayWidget::minimum_eight(const QFont *f = NULL, int rows = 1) const {
 	// 16 pixel e' l'altezza delle immagini
-	qreal fm = round(((dpr_per_int(f ? QFontMetrics((*f)).height() : fontMetrics().height()) * rows) + vpadtot()) / 2.0f) * 2.0f;
+	qreal fm = round(((dpr_per_int(f ? QFontMetrics((*f)).height() : fontMetrics().height()) * rows) + (vpadtot() * rows)) / 2.0f) * 2.0f;
 	qreal px = round((16.0f + vpadtot()) / 2.0f) * 2.0f;
-
-	if ((rows == 2) && (((int)fm / 2) & 0x01)) {
-		fm += 1;
-	}
 
 	return (fm < px ? px : fm);
 }
@@ -1342,8 +1338,8 @@ void overlayWidgetRewind::draw_corner_bar_info(void) {
 		painter.drawRoundedRect(qr, dpr_radius(), dpr_radius());
 	}
 
-	info.width -= hpad;
-	painter.translate(hpad, 0);
+	info.width -= (hpad * 4);
+	painter.translate(hpad * 2, 0);
 
 	{
 		static QAbstractTextDocumentLayout::PaintContext ctx;
@@ -1356,7 +1352,7 @@ void overlayWidgetRewind::draw_corner_bar_info(void) {
 
 		painter.translate(dpr_text_coord(0.0f), dpr_text_coord((dpr_rect().height() - td.size().height()) / 2.0f));
 
-		ctx.clip = dpr_rect();
+		ctx.clip = QRectF(0, 0, info.width, dpr_rect().height());
 		td.documentLayout()->draw(&painter, ctx);
 	}
 }
