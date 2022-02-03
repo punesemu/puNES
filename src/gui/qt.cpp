@@ -107,11 +107,7 @@ class appEventFilter: public QObject {
 		bool eventFilter(QObject* object, QEvent* event) {
 			if (event->type() == QEvent::MouseMove) {
 				if (gmouse.hidden == TRUE) {
-					if ((input_draw_target() == TRUE) ||
-						(cfg->fullscreen != FULLSCR) ||
-						qt.mwin->menubar->isVisible()) {
-						gui_cursor_hide(FALSE);
-					}
+					gui_cursor_hide(FALSE);
 				}
 				gmouse.timer = gui_get_ms();
 			}

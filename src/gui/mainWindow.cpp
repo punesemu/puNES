@@ -487,9 +487,7 @@ void mainWindow::shcjoy_stop(void) {
 }
 void mainWindow::control_visible_cursor(void) {
 	if ((nsf.enabled == FALSE) && (gmouse.hidden == FALSE) && (input_draw_target() == FALSE)) {
-		if ((cfg->fullscreen == FULLSCR) && menubar->isHidden()) {
-			gui_cursor_hide(TRUE);
-		} else if ((gui_get_ms() - gmouse.timer) >= 2000) {
+		if ((gui_get_ms() - gmouse.timer) >= 2000) {
 			gui_cursor_hide(TRUE);
 		}
 	}
