@@ -106,10 +106,10 @@ class appEventFilter: public QObject {
 
 		bool eventFilter(QObject* object, QEvent* event) {
 			if (event->type() == QEvent::MouseMove) {
+				gmouse.timer = gui_get_ms();
 				if (gmouse.hidden == TRUE) {
 					gui_cursor_hide(FALSE);
 				}
-				gmouse.timer = gui_get_ms();
 			}
 			return (QObject::eventFilter(object, event));
 		}
