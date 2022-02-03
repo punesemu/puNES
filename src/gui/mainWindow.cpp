@@ -1826,7 +1826,7 @@ void mainWindow::s_fullscreen(void) {
 	emu_thread_continue();
 
 	gui_external_control_windows_show();
-
+	screen->activateWindow();
 	setup_in_out_fullscreen = false;
 }
 void mainWindow::s_shcjoy_read_timer(void) {
