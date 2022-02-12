@@ -1,4 +1,18 @@
 Changelog:
+0.109 (Bug fixes release)
+- Fixed 'make install'.
+- Added support for mapper 210 and improved support for Nes 2.0 format.
+- Disabled creation of mimeinfo.cache with 'make install' (https://github.com/punesemu/puNES/issues/191).
+- With some DE if I don't reset the min and max size of the window with reset_min_max_size(),
+  the fullscreen is wrecked (https://github.com/punesemu/puNES/issues/186).
+- Improved high dpi support.
+  * Rewrote part of the overlay.
+  * Uniform font used in the overlay.
+  * Uniform graphics management between OpenGL and D3D9.
+- Fixed the shaders "NTSC 2Phase Composite" and "Old TV" in D3D9 version (https://github.com/punesemu/puNES/issues/188).
+- Sometimes the mouse cursor may not be visible. Fixed.
+- Entering or leaving the fullscreen could cause the window to lose focus. Fixed.
+
 0.108
 - Updated translation from Crowdin (thx to Алексей Тимонин, MS-PC, tch_oscomp, Ömercan Kömür, Matheus).
 - Added Chinese translation (thx to owomomo).
@@ -84,7 +98,6 @@ Changelog:
   * NOTICE : All buttons bindings will need to be reconfigured.
 - Fixed many many many other bugs.
 
-Changelog:
 0.107
 - Updated translation from Crowdin (thx to Алексей Тимонин, MS-PC, tch_oscomp, Ömercan Kömür, Matheus).
 - Redesigned settings GUI.
