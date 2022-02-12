@@ -747,6 +747,8 @@ static void ffmpeg_set_output_resolution(void) {
 	} else {
 		recording_decode_output_resolution(&ffmpeg.w, &ffmpeg.h);
 	}
+	ffmpeg.w *= gfx.device_pixel_ratio;
+	ffmpeg.h *= gfx.device_pixel_ratio;
 	if (cfg->recording.follow_rotation == TRUE) {
 		if (!cfg->fullscreen && ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270))) {
 			int tmp = ffmpeg.w;
@@ -757,7 +759,6 @@ static void ffmpeg_set_output_resolution(void) {
 	}
 	ffmpeg.w = (ffmpeg.w / 2) * 2;
 	ffmpeg.h = (ffmpeg.h / 2) * 2;
-
 }
 static int ffmpeg_video_group_of_picture_size(void) {
 	// http://www2.acti.com/download_file/Product/support/DesignSpec_Note_GOP_20091120.pdf
