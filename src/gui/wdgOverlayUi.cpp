@@ -273,6 +273,8 @@ void overlay_info_append_qstring(BYTE alignment, QString msg) {
 wdgOverlayUi::wdgOverlayUi(QWidget *parent) : QWidget(parent) {
 	QGraphicsOpacityEffect *op = new QGraphicsOpacityEffect(this);
 
+	setFont(QFont("Sans"));
+
 	clear = NULL;
 	force_redraw = false;
 	update_texture = FALSE;
