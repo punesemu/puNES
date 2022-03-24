@@ -972,7 +972,7 @@ static BYTE opengl_glew_init(void) {
 
 	glewExperimental = GL_TRUE;
 
-	if ((err = glewInit()) != GLEW_OK) {
+	if ((err = glewContextInit()) != GLEW_OK) {
 		fprintf(stderr, "OPENGL: %s\n", glewGetErrorString(err));
 	} else {
 		fprintf(stderr, "OPENGL: GPU %s (%s, %s)\n", glGetString(GL_RENDERER), glGetString(GL_VENDOR), glGetString(GL_VERSION));
