@@ -214,6 +214,14 @@ mainWindow::mainWindow() : QMainWindow() {
 	toolbar->setHidden(cfg->toolbar.hidden);
 	statusbar->setHidden(cfg->toolbar.hidden);
 
+	{
+		bool visibility = !info.start_with_hidden_gui;
+
+		menubar->setVisible(visibility);
+		toolbar->setVisible(visibility);
+		statusbar->setVisible(visibility);
+	}
+
 	set_language(cfg->language);
 }
 mainWindow::~mainWindow() {}

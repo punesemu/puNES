@@ -323,7 +323,11 @@ BYTE d3d9_context_create(void) {
 	IDirect3DDevice9_SetTransform(d3d9.adapter->dev, D3DTS_VIEW, &identity);
 
 	// screen
-	d3d9_texture_simple_create(&d3d9.screen.tex[0], w, h, FALSE);
+	if (d3d9_texture_simple_create(&d3d9.screen.tex[0], w, h, FALSE) == EXIT_ERROR) {
+		d3d9_context_delete(FALSE);
+		gfx_thread_unlock();
+		return (EXIT_ERROR);
+	}
 
 	// lut (devo farlo prima di elaborare le shaders)
 	for (i = 0; i < shader_effect.luts; i++) {
@@ -502,7 +506,11 @@ BYTE d3d9_context_create(void) {
 
 	// PREV
 	for (i = 1; i < d3d9.screen.in_use; i++) {
-		d3d9_texture_simple_create(&d3d9.screen.tex[i], w, h, FALSE);
+		if (d3d9_texture_simple_create(&d3d9.screen.tex[i], w, h, FALSE) == EXIT_ERROR) {
+			d3d9_context_delete(FALSE);
+			gfx_thread_unlock();
+			return (EXIT_ERROR);
+		}
 	}
 
 	// FEEDBACK
@@ -572,7 +580,11 @@ BYTE d3d9_context_create(void) {
 			oh = tmp;
 		}
 
-		d3d9_texture_simple_create(&d3d9.overlay, ow, oh, TRUE);
+		if (d3d9_texture_simple_create(&d3d9.overlay, ow, oh, TRUE) == EXIT_ERROR) {
+			d3d9_context_delete(FALSE);
+			gfx_thread_unlock();
+			return (EXIT_ERROR);
+		}
 
 		gui_overlay_set_size(ow, oh);
 

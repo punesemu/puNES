@@ -226,9 +226,6 @@ void gui_start(void) {
 	fps.frame.expected_end = gui_get_ms() + machine.ms_frame;
 	gfx_thread_continue();
 	emu_thread_continue();
-	if (info.start_with_hidden_gui) {
-		QTimer::singleShot(75, []() { qt.mwin->action_Toggle_GUI_in_window->trigger(); });
-	}
 	qt.app->exec();
 }
 
