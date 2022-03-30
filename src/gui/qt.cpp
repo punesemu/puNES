@@ -227,7 +227,7 @@ void gui_start(void) {
 	gfx_thread_continue();
 	emu_thread_continue();
 	if (info.start_with_hidden_gui) {
-		qt.mwin->action_Toggle_GUI_in_window->trigger();
+		QTimer::singleShot(75, []() { qt.mwin->action_Toggle_GUI_in_window->trigger(); });
 	}
 	qt.app->exec();
 }
