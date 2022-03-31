@@ -70,7 +70,7 @@ jobs:
 
       - name: 'extract ${{ matrix.env }} dll'
         working-directory: artifacts/tmp
-        run: 7z x puNES_${{ matrix.env }}_dlls.zip -o${{ GITHUB_WORKSPACE }}\artifacts\dll
+        run: 7z x puNES_${{ matrix.env }}_dlls.zip -o${{ github.workspace }}\artifacts\dll
 
       - name: 'autogen.sh'
         shell: msys2 {0}
