@@ -56,11 +56,16 @@ jobs:
           mkdir -p build/opengl
 
       - name: 'Download QT5 and DLLs'
+        shell: msys2 {0}
         working-directory: artifacts/tmp
         run: |
           wget --no-check-cert -O qt5_${{ matrix.qt5ver }}_${{ matrix.env }}.7z 'https://${{ matrix.url1 }}/qt5_${{ matrix.qt5ver }}_${{ matrix.env }}.7z?dl=1' 1>/dev/null 2>&1
-          7z x qt5_${{ matrix.qt5ver }}_${{ matrix.env }}.7z -oC:\msys64\${{ matrix.msystem }}
           wget --no-check-cert -O puNES_${{ matrix.env }}_dlls.zip 'https://${{ matrix.url2 }}/puNES_${{ matrix.env }}_dlls.zip?dl=1' 1>/dev/null 2>&1
+
+      - name: 'Extract QT5 and DLLs'
+        working-directory: artifacts/tmp
+        run: |
+          7z x qt5_${{ matrix.qt5ver }}_${{ matrix.env }}.7z -oC:\msys64\${{ matrix.msystem }}
           7z x puNES_${{ matrix.env }}_dlls.zip -o${{ github.workspace }}\artifacts\dll
 
       - name: 'autogen.sh'
