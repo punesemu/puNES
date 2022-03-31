@@ -21,8 +21,8 @@ jobs:
     runs-on: windows-latest
     env: 
       cxxflags: ${{ contains(matrix.bit, '64') && '' || '-Wno-deprecated-copy' }}
-      pdzip : punes${{ matrix.bit }}.wip.d3d9.zip
-      pozip : punes${{ matrix.bit }}.wip.opengl.zip
+      pdzip : punes${{ matrix.bit }}.wip.d3d9
+      pozip : punes${{ matrix.bit }}.wip.opengl
 
     steps:
       - name: 'Checkout'
@@ -94,18 +94,18 @@ jobs:
         working-directory: artifacts\dll
         run: |
           cp ..\..\build\d3d9\src\punes.exe .
-          7z.exe a ..\${{ env.pdzip }} *.*
+          7z.exe a ..\${{ env.pdzip }}.zip *.*
           cp ..\..\build\opengl\src\punes.exe .
-          7z.exe a ..\${{ env.pozip }} *.*
+          7z.exe a ..\${{ env.pozip }}.zip *.*
 
       - name: 'Upload D3D9 artifact'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.pdzip }}
-          path: artifacts\${{ env.pdzip }}
+          path: artifacts\${{ env.pdzip }}.zip
 
       - name: 'Upload OpenGL artifact'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.pozip }}
-          path: artifacts\${{ env.pozip }}
+          path: artifacts\${{ env.pozip }}.zip
