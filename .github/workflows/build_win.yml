@@ -31,7 +31,7 @@ jobs:
       - name: 'setup ${{ matrix.env }} msys2'
         uses: msys2/setup-msys2@v2
         with:
-          location: D:\
+          location: C:\
           msystem: ${{ matrix.msystem }}
           update: false
           install: >-
@@ -62,7 +62,7 @@ jobs:
 
       - name: extract qt5 static library
         working-directory: artifacts/tmp
-        run: 7z x qt5_${{ matrix.qt5ver }}_${{ matrix.env }}.7z -oD:\msys64\${{ matrix.msystem }}
+        run: 7z x qt5_${{ matrix.qt5ver }}_${{ matrix.env }}.7z -oC:\msys64\${{ matrix.msystem }}
 
       - name: 'download ${{ matrix.env }} dll'
         shell: msys2 {0}
