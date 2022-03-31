@@ -31,9 +31,10 @@ jobs:
       - name: 'setup ${{ matrix.env }} msys2'
         uses: msys2/setup-msys2@v2
         with:
+          release: false
           location: C:\
           msystem: ${{ matrix.msystem }}
-          update: false
+          update: true
           install: >-
             base-devel
             git
