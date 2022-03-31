@@ -40,11 +40,11 @@ jobs:
             wget
             p7zip
             unzip
-            cmake
             automake
             autoconf
             perl
             ruby
+            mingw-w64-${{ matrix.env }}-cmake
             mingw-w64-${{ matrix.env }}-toolchain
 
       - name: 'environment configuration'
