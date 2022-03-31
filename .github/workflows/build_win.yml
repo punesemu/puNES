@@ -32,8 +32,19 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.msystem }}
-          install: base-devel git wget p7zip unzip cmake automake autoconf perl ruby toolchain
           update: false
+          install: >-
+            - base-devel
+            - git
+            - wget
+            - p7zip
+            - unzip
+            - cmake
+            - automake
+            - autoconf
+            - perl
+            - ruby
+            - mingw-w64-${{ matrix.env }}-toolchain
 
       - name: 'environment configuration'
         shell: msys2 {0}
