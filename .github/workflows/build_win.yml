@@ -20,7 +20,7 @@ jobs:
     name: puNES ${{ matrix.env }}
     runs-on: windows-latest
     env:
-      cxxflags: ${{ contains(matrix.msystem, 'mingw64') && "" || "-Wno-deprecated-copy" }
+      cxxflags: ${{ contains(matrix.msystem, 'mingw64') && "" || "-Wno-deprecated-copy" }}
 
     steps:
       - name: 'checkout'
