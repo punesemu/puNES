@@ -21,8 +21,8 @@ jobs:
     runs-on: windows-latest
     env: 
       cxxflags: ${{ contains(matrix.bit, '64') && '' || '-Wno-deprecated-copy' }}
-      pdzip : punes${{ matrix.bit }}.wip.d3d9.zip
-      pozip : punes${{ matrix.bit }}.wip.opengl.zip
+      pdzip : punes${{ matrix.bit }}.wip.d3d9
+      pozip : punes${{ matrix.bit }}.wip.opengl
 
     steps:
       - name: 'Checkout'
