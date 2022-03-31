@@ -15,12 +15,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { msystem: mingw64, env: x86_64, qt5ver: 5.15.0, url1: www.dropbox.com/s/xd9dq7dr713ao95, url2: www.dropbox.com/s/d632cjezybz6a74 }
-          - { msystem: mingw32, env: i686,   qt5ver: 5.6.3,  url1: www.dropbox.com/s/tc6wy8vpitkdlm1, url2: www.dropbox.com/s/ye00129nyacdl05 }
-    name: Build puNES ${{ matrix.env }} (Windows)
+          - { msystem: mingw64, env: x86_64, bit: 64, qt5ver: 5.15.0, url1: www.dropbox.com/s/xd9dq7dr713ao95, url2: www.dropbox.com/s/d632cjezybz6a74 }
+          - { msystem: mingw32, env: i686,   bit: 32, qt5ver: 5.6.3,  url1: www.dropbox.com/s/tc6wy8vpitkdlm1, url2: www.dropbox.com/s/ye00129nyacdl05 }
+    name: Build puNES${{ matrix.bit }} (Windows)
     runs-on: windows-latest
     env:
-      cxxflags: ${{ contains(matrix.msystem, 'mingw64') && ' ' || '-Wno-deprecated-copy' }}
+      cxxflags: ${{ contains(matrix.bit, '64') && '' || '-Wno-deprecated-copy' }}
+      pdzip : punes${{ matrix.bit }}.wip.d3d9.zip
+      pozip : punes${{ matrix.bit }}.wip.opengl.zip
 
     steps:
       - name: 'Checkout'
@@ -92,18 +94,18 @@ jobs:
         working-directory: artifacts\dll
         run: |
           cp ..\..\build\d3d9\src\punes.exe .
-          7z.exe a ..\punes_${{ matrix.env }}_d3d9.wip.zip *.*
+          7z.exe a ..\${{ env.pdzip }} *.*
           cp ..\..\build\opengl\src\punes.exe .
-          7z.exe a ..\punes_${{ matrix.env }}_opengl.wip.zip *.*
+          7z.exe a ..\${{ env.pozip }} *.*
 
-      - name: 'Upload punes_${{ matrix.env }}_d3d9.wip.zip'
+      - name: 'Upload ${{ env.pdzip }}'
         uses: actions/upload-artifact@v3
         with:
-          name: punes_${{ matrix.env }}_d3d9.wip.zip
-          path: artifacts\punes_${{ matrix.env }}_d3d9.wip.zip
+          name: ${{ env.pdzip }}
+          path: artifacts\${{ env.pdzip }}
 
-      - name: 'Upload punes_${{ matrix.env }}_opengl.wip.zip'
+      - name: 'Upload ${{ env.pozip }}'
         uses: actions/upload-artifact@v3
         with:
-          name: punes_${{ matrix.env }}_opengl.wip.zip
-          path: artifacts\punes_${{ matrix.env }}_opengl.wip.zip
+          name: ${{ env.pozip }}
+          path: artifacts\${{ env.pozip }}
