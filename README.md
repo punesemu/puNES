@@ -5,11 +5,11 @@
 
 <p align="center">
   <a href="https://repology.org/project/punes/versions">
-    <img src="https://repology.org/badge/version-for-repo/gentoo/punes.svg" alt="Gentoo package"/>
-    <img src="https://repology.org/badge/version-for-repo/aur/punes.svg" alt="AUR package]"/>
-    <img src="https://repology.org/badge/version-for-repo/slackbuilds/punes.svg" alt="SlackBuilds package"/>
-    <img src="https://repology.org/badge/version-for-repo/liguros_stable/punes.svg" alt="LiGurOS stable package"/>
-    <img src="https://repology.org/badge/version-for-repo/wikidata/punes.svg" alt="Wikidata package"/>
+    <img src="https://repology.org/badge/version-for-repo/gentoo/punes.svg" alt="Gentoo"/>
+    <img src="https://repology.org/badge/version-for-repo/aur/punes.svg" alt="AUR]"/>
+    <img src="https://repology.org/badge/version-for-repo/slackbuilds/punes.svg" alt="SlackBuilds"/>
+    <img src="https://repology.org/badge/version-for-repo/nix_unstable/punes.svg" alt="Nixpkgs unstable"/>
+    <img src="https://repology.org/badge/version-for-repo/wikidata/punes.svg" alt="Wikidata"/>
 </p>
 
 :keyboard: Configuration
@@ -21,7 +21,7 @@ To see a list of available command-line options, start puNES with the `-h` argum
 
 :floppy_disk: Work in Progress (WIP) Builds
 -----------
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://ci.appveyor.com/api/projects/status/t820vxmvtvbfbll7?svg=true)](https://ci.appveyor.com/project/punesemu/punes/history)  
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://github.com/punesemu/puNES/actions/workflows/build_win.yml/badge.svg)](https://github.com/punesemu/puNES/actions)  
 
 These executables are always updated to the latest commit:
 * Windows 32 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build_win/master/punes32.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build_win/master/punes32.wip.d3d9.zip)
