@@ -97,9 +97,9 @@ jobs:
         working-directory: artifacts
         run: |
           cp dll/*.* d3d9/.
-          cp ../../build/d3d9/src/punes.exe d3d9/.
+          cp ../build/d3d9/src/punes.exe d3d9/.
           cp dll/*.* opengl/.
-          cp ../../build/opengl/src/punes.exe opengl/.
+          cp ../build/opengl/src/punes.exe opengl/.
 
       - name: 'Upload D3D9 artifact'
         uses: actions/upload-artifact@v3
