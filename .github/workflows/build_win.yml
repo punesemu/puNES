@@ -34,17 +34,17 @@ jobs:
           msystem: ${{ matrix.msystem }}
           update: false
           install: >-
-            - base-devel
-            - git
-            - wget
-            - p7zip
-            - unzip
-            - cmake
-            - automake
-            - autoconf
-            - perl
-            - ruby
-            - mingw-w64-${{ matrix.env }}-toolchain
+            base-devel
+            git
+            wget
+            p7zip
+            unzip
+            cmake
+            automake
+            autoconf
+            perl
+            ruby
+            mingw-w64-${{ matrix.env }}-toolchain
 
       - name: 'environment configuration'
         shell: msys2 {0}
