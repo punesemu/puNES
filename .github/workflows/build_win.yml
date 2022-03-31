@@ -32,7 +32,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.msystem }}
-          install: git wget base-devel automake autoconf cmake
+          install: base-devel git wget p7zip unzip cmake automake autoconf perl ruby toolchain
           update: false
 
       - name: 'environment configuration'
@@ -59,7 +59,7 @@ jobs:
 
       - name: 'extract ${{ matrix.env }} dll'
         working-directory: artifacts/tmp
-        run: 7z x puNES_${{ matrix.env }}_dlls.zip -o../dll
+        run: 7z x puNES_${{ matrix.env }}_dlls.zip -o..\dll
 
       - name: 'autogen.sh'
         shell: msys2 {0}
