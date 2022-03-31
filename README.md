@@ -24,8 +24,8 @@ To see a list of available command-line options, start puNES with the `-h` argum
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://github.com/punesemu/puNES/actions/workflows/build_win.yml/badge.svg)](https://github.com/punesemu/puNES/actions)  
 
 These executables are always updated to the latest commit:
-* Windows 32 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build_win/master/punes32.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build_win/master/punes32.wip.d3d9.zip)
-* Windows 64 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build_win/master/punes64.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build_win/master/punes64.wip.d3d9.zip)
+* Windows 32 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build/master/punes32.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build/master/punes32.wip.d3d9.zip)
+* Windows 64 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build/master/punes64.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build/master/punes64.wip.d3d9.zip)
 
 Note : 32 bit versions are Windows XP compatible.
 
