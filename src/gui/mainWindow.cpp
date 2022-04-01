@@ -950,6 +950,10 @@ void mainWindow::update_menu_file(void) {
 	if (recent_roms_count() > 0) {
 		int i;
 
+		foreach (QAction *action, menu_Recent_Roms->actions()) {
+			delete action;
+		}
+
 		menu_Recent_Roms->clear();
 
 		for (i = 0; i < RECENT_ROMS_MAX; i++) {
