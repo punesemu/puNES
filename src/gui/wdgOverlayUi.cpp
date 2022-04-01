@@ -131,6 +131,7 @@ struct _overlay_data {
 		BYTE alignment;
 	} info;
 } overlay;
+
 void gui_overlay_update(void) {
 	if (overlay.ui.widget) {
 		overlay.ui.widget->update_widget();

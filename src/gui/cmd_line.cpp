@@ -214,7 +214,7 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 					settings_resolution_val_to_int(&cfg_from_file.fullscreen_res_w, &cfg_from_file.fullscreen_res_h, oarg);
 #endif
 				} else if (key == "hidden-gui") {
-						info.start_with_hidden_gui = TRUE;
+					info.start_with_hidden_gui = TRUE;
 				}
 				break;
 			case 'a':

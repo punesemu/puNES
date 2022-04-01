@@ -832,7 +832,6 @@ void js_scan_thread_quit(void) {
 	}
 }
 
-
 thread_funct(js_jdev_read_events_loop, void *arg) {
 	_js_device *jdev = (_js_device *)arg;
 
