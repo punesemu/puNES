@@ -25,6 +25,7 @@
 #include "gfx_monitor.h"
 #include "clock.h"
 #include "pnp_vendor.h"
+#include "gfx.h"
 
 /*
  * Makefile (thx to https://github.com/vcrhonek/hwdata)
@@ -76,6 +77,7 @@ pnp_vendor.h: pnp.ids.orig
 #define edid_vendor_byte2(edid) (((edid[0x08] & 0x03) << 3) | ((edid[0x09] & 0xE0) >> 5)) + '@'
 #define edid_vendor_byte3(edid) ((edid[0x09] & 0x1F) >> 0) + '@'
 
+static void enum_resolutions(void);
 static void free_resolutions(void);
 static void edid_decode_lf_string(const uint8_t *s, int nchars, uTCHAR *result);
 static void edid_decode_check_sum(const uint8_t *edid, _monitor_edid *me);
@@ -156,126 +158,11 @@ void gfx_monitor_enum_monitors(void) {
 		return;
 	}
 
-	gfx_monitor_enum_resolutions();
+	enum_resolutions();
 
 #if !defined (RELEASE)
 	print_info();
 #endif
-}
-void gfx_monitor_enum_resolutions(void) {
-	_monitor_resolution *lmr = NULL;
-	int a, b, c, nres = 0;
-
-	free_resolutions();
-
-	// primo passaggio : identifico le risoluzioni univoche
-	for (a = 0; a < monitor.nmonitor; a++) {
-		_monitor_info *m = &monitor.monitors[a];
-
-		for (b = 0; b < m->nmodes; b++) {
-			_monitor_mode_info *mi = &m->modes[b];
-			BYTE finded = FALSE;
-
-			for (c = 0; c < nres; c++) {
-				_monitor_resolution *mr = &lmr[c];
-
-				if ((mr->w == mi->w) && (mr->h == mi->h)) {
-					finded = TRUE;
-					break;
-				}
-			}
-			if (finded == FALSE) {
-				_monitor_resolution *mr = NULL, *list = NULL;
-
-				list = (_monitor_resolution *)realloc(lmr, (nres + 1) * sizeof(_monitor_resolution));
-				if (!list) {
-					free(lmr);
-					return;
-				}
-				lmr = list;
-				mr = &lmr[nres];
-				memset(mr, 0x00, sizeof(_monitor_resolution));
-				nres++;
-
-				mr->w = mi->w;
-				mr->h = mi->h;
-			}
-		}
-	}
-
-	// secondo passaggio : identifico le risoluzioni comuni a tutti i monitors
-	for (a = 0; a < nres; a++) {
-		_monitor_resolution *res = &lmr[a];
-		int nmonitor = 0;
-
-		for (b = 0; b < monitor.nmonitor; b++) {
-			_monitor_info *m = &monitor.monitors[b];
-
-			for (c = 0; c < m->nmodes; c++) {
-				_monitor_mode_info *mi = &m->modes[c];
-
-				if ((res->w == mi->w) && (res->h == mi->h)) {
-					nmonitor++;
-					break;
-				}
-			}
-		}
-		if (nmonitor == monitor.nmonitor) {
-			_monitor_resolution *mr = NULL, *list = NULL;
-
-			list = (_monitor_resolution *)realloc(monitor.resolutions, (monitor.nres + 1) * sizeof(_monitor_resolution));
-			if (!list) {
-				free(lmr);
-				free_resolutions();
-				return;
-			}
-			monitor.resolutions = list;
-			mr = &monitor.resolutions[monitor.nres];
-			memset(mr, 0x00, sizeof(_monitor_resolution));
-			monitor.nres++;
-
-			mr->w = res->w;
-			mr->h = res->h;
-		}
-	}
-
-	free(lmr);
-
-	{
-		int index;
-
-		// ordino le risoluzioni dalle più alte alle più basse
-		// (windows me le da in ordine ascendente, linux in ordine discendente, openbsd in ordine sparso)
-		for (a = 0; a < monitor.nres - 1; a++) {
-			index = a;
-
-			// trovo la risoluzione piu' alta nella lista
-			for (b = a + 1; b < monitor.nres; b++) {
-				if (monitor.resolutions[b].w > monitor.resolutions[index].w) {
-					index = b;
-				} else if (monitor.resolutions[b].w == monitor.resolutions[index].w) {
-					if (monitor.resolutions[b].h > monitor.resolutions[index].h) {
-						index = b;
-					}
-				}
-			}
-
-			// cambio la risoluzione più elevata con il primo slot disponibile
-			{
-				_monitor_resolution *mi1 = &monitor.resolutions[index];
-				_monitor_resolution *mi2 = &monitor.resolutions[a];
-				_monitor_resolution tmp;
-
-				tmp.w = mi1->w;
-				tmp.h = mi1->h;
-
-				mi1->w = mi2->w;
-				mi1->h = mi2->h;
-				mi2->w = tmp.w;
-				mi2->h = tmp.h;
-			}
-		}
-	}
 }
 BYTE gfx_monitor_set_res(int w, int h, BYTE adaptive_rrate, BYTE change_rom_mode) {
 	_monitor_mode_info *mode_info_org;
@@ -446,29 +333,29 @@ BYTE gfx_monitor_mode_in_use_info(int *x, int *y, int *w, int *h, int *rrate) {
 	return (EXIT_OK);
 }
 void gfx_monitor_edid_parse(const uint8_t *edid, _monitor_info *mi) {
- 	mi->edid = NULL;
- 	memset(mi->desc, 0x00, sizeof(mi->desc));
+	mi->edid = NULL;
+	memset(mi->desc, 0x00, sizeof(mi->desc));
 
- 	if (edid != NULL) {
- 	 	_monitor_edid *me = (_monitor_edid *)malloc(sizeof(_monitor_edid));
+	if (edid != NULL) {
+		_monitor_edid *me = (_monitor_edid *)malloc(sizeof(_monitor_edid));
 
- 	 	memset(me, 0x00, sizeof(_monitor_edid));
+		memset(me, 0x00, sizeof(_monitor_edid));
 
- 	 	edid_decode_check_sum(edid, me);
+		edid_decode_check_sum(edid, me);
 
- 	 	if (edid_decode_header(edid)
- 	 		&& edid_decode_vendor_and_product_identification(edid, me)
- 	 		&& edid_decode_descriptors(edid, me)) {
- 	 		mi->edid = me;
- 	 	} else {
- 	 		free(me);
- 	 	}
+		if (edid_decode_header(edid)
+			&& edid_decode_vendor_and_product_identification(edid, me)
+			&& edid_decode_descriptors(edid, me)) {
+			mi->edid = me;
+		} else {
+			free(me);
+		}
 
- 	 	ustrncpy(mi->desc, make_display_name(me), usizeof(mi->desc));
- 	} else {
- 	 	ustrncpy(mi->desc, uL("Unknown Monitor"), usizeof(mi->desc));
- 	}
- }
+		ustrncpy(mi->desc, make_display_name(me), usizeof(mi->desc));
+	} else {
+		ustrncpy(mi->desc, uL("Unknown Monitor"), usizeof(mi->desc));
+	}
+}
 uTCHAR *gfx_monitor_edid_decode_model(const uint8_t *edid) {
 	static uTCHAR model[9];
 
@@ -485,6 +372,121 @@ uTCHAR *gfx_monitor_edid_decode_model(const uint8_t *edid) {
 	return (model);
 }
 
+static void enum_resolutions(void) {
+	_monitor_resolution *lmr = NULL;
+	int a, b, c, nres = 0;
+
+	free_resolutions();
+
+	// primo passaggio : identifico le risoluzioni univoche
+	for (a = 0; a < monitor.nmonitor; a++) {
+		_monitor_info *m = &monitor.monitors[a];
+
+		for (b = 0; b < m->nmodes; b++) {
+			_monitor_mode_info *mi = &m->modes[b];
+			BYTE finded = FALSE;
+
+			for (c = 0; c < nres; c++) {
+				_monitor_resolution *mr = &lmr[c];
+
+				if ((mr->w == mi->w) && (mr->h == mi->h)) {
+					finded = TRUE;
+					break;
+				}
+			}
+			if (finded == FALSE) {
+				_monitor_resolution *mr = NULL, *list = NULL;
+
+				list = (_monitor_resolution *)realloc(lmr, (nres + 1) * sizeof(_monitor_resolution));
+				if (!list) {
+					free(lmr);
+					return;
+				}
+				lmr = list;
+				mr = &lmr[nres];
+				memset(mr, 0x00, sizeof(_monitor_resolution));
+				nres++;
+
+				mr->w = mi->w;
+				mr->h = mi->h;
+			}
+		}
+	}
+
+	// secondo passaggio : identifico le risoluzioni comuni a tutti i monitors
+	for (a = 0; a < nres; a++) {
+		_monitor_resolution *res = &lmr[a];
+		int nmonitor = 0;
+
+		for (b = 0; b < monitor.nmonitor; b++) {
+			_monitor_info *m = &monitor.monitors[b];
+
+			for (c = 0; c < m->nmodes; c++) {
+				_monitor_mode_info *mi = &m->modes[c];
+
+				if ((res->w == mi->w) && (res->h == mi->h)) {
+					nmonitor++;
+					break;
+				}
+			}
+		}
+		if (nmonitor == monitor.nmonitor) {
+			_monitor_resolution *mr = NULL, *list = NULL;
+
+			list = (_monitor_resolution *)realloc(monitor.resolutions, (monitor.nres + 1) * sizeof(_monitor_resolution));
+			if (!list) {
+				free(lmr);
+				free_resolutions();
+				return;
+			}
+			monitor.resolutions = list;
+			mr = &monitor.resolutions[monitor.nres];
+			memset(mr, 0x00, sizeof(_monitor_resolution));
+			monitor.nres++;
+
+			mr->w = res->w;
+			mr->h = res->h;
+		}
+	}
+
+	free(lmr);
+
+	{
+		int index;
+
+		// ordino le risoluzioni dalle più alte alle più basse
+		// (windows me le da in ordine ascendente, linux in ordine discendente, openbsd in ordine sparso)
+		for (a = 0; a < monitor.nres - 1; a++) {
+			index = a;
+
+			// trovo la risoluzione piu' alta nella lista
+			for (b = a + 1; b < monitor.nres; b++) {
+				if (monitor.resolutions[b].w > monitor.resolutions[index].w) {
+					index = b;
+				} else if (monitor.resolutions[b].w == monitor.resolutions[index].w) {
+					if (monitor.resolutions[b].h > monitor.resolutions[index].h) {
+						index = b;
+					}
+				}
+			}
+
+			// cambio la risoluzione più elevata con il primo slot disponibile
+			{
+				_monitor_resolution *mi1 = &monitor.resolutions[index];
+				_monitor_resolution *mi2 = &monitor.resolutions[a];
+				_monitor_resolution tmp;
+
+				tmp.w = mi1->w;
+				tmp.h = mi1->h;
+
+				mi1->w = mi2->w;
+				mi1->h = mi2->h;
+				mi2->w = tmp.w;
+				mi2->h = tmp.h;
+			}
+		}
+	}
+}
 static void free_resolutions(void) {
 	monitor.nres = 0;
 	if (monitor.resolutions) {
@@ -734,6 +736,5 @@ static void print_info(void) {
 	} else {
 		ufprintf(stderr, uL("gfx_monitor : no valid resolution found\n"));
 	}
-
 }
 #endif
