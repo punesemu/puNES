@@ -246,7 +246,6 @@ EXTERNC void gui_decode_all_input_events(void);
 EXTERNC void gui_screen_update(void);
 
 EXTERNC void *gui_wdgoverlayui_get_ptr(void);
-EXTERNC void gui_overlay_renew(void);
 EXTERNC void gui_overlay_update(void);
 EXTERNC BYTE gui_overlay_is_updated(void);
 EXTERNC void gui_overlay_enable_save_slot(BYTE mode);

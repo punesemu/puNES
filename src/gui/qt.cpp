@@ -229,12 +229,6 @@ void gui_start(void) {
 	qt.app->exec();
 }
 
-void gui_overlay_renew(void) {
-	if (qt.overlay) {
-		delete qt.overlay;
-	}
-	qt.overlay = new wdgOverlayUi();
-}
 double gui_device_pixel_ratio(void) {
 	return (qt.mwin->win_handle_screen()->devicePixelRatio());
 }
