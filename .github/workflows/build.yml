@@ -17,7 +17,7 @@ jobs:
         include:
           - { msystem: mingw64, env: x86_64, bit: 64, qt5ver: 5.15.0, url1: www.dropbox.com/s/xd9dq7dr713ao95, url2: www.dropbox.com/s/d632cjezybz6a74 }
           - { msystem: mingw32, env: i686,   bit: 32, qt5ver: 5.6.3,  url1: www.dropbox.com/s/tc6wy8vpitkdlm1, url2: www.dropbox.com/s/ye00129nyacdl05 }
-    name: puNES ${{ matrix.bit }}bit (Windows)
+    name: Windows ${{ matrix.bit }}bit
     runs-on: windows-latest
     env:
       cxxflags: ${{ contains(matrix.bit, '64') && '' || '-Wno-deprecated-copy' }}
@@ -69,8 +69,8 @@ jobs:
       - name: 'Extract QT5 and DLLs'
         working-directory: artifacts/tmp
         run: |
-          7z x qt5_${{ matrix.qt5ver }}_${{ matrix.env }}.7z -oC:\msys64\${{ matrix.msystem }}
-          7z x puNES_${{ matrix.env }}_dlls.zip -o${{ github.workspace }}\artifacts\dll
+          7z x qt5_${{ matrix.qt5ver }}_${{ matrix.env }}.7z -oC:\msys64\${{ matrix.msystem }} > NUL
+          7z x puNES_${{ matrix.env }}_dlls.zip -o${{ github.workspace }}\artifacts\dll > NUL
 
       - name: 'autogen.sh'
         shell: msys2 {0}
