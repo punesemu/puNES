@@ -279,7 +279,12 @@ void gui_set_window_size(void) {
 		h += (toolbar ? 0 : qt.mwin->toolbar->sizeHint().height());
 	}
 
-	h += (qt.mwin->menubar->isHidden() ? 0 : qt.mwin->menubar->sizeHint().height());
+	// nella versione D3D9, con le shaders CRT, quando e' visibile il menu (le toolbars non influiscono) la shader
+	// non funziona correttamente, appare una riga al centro dell'immagine. Sembra quasi che l'altezza dello screen
+	// non venga applicata correttamente dalle QT ma che in presenza del menu venga ridotta di 1.
+	// Aumentare di 1 l'altrezza quando e' visibile mitiga il problema e non sembra influenzi in alcun modo
+	// anche la versione OpenGL.
+	h += (qt.mwin->menubar->isHidden() ? 0 : qt.mwin->menubar->sizeHint().height() + 1);
 	h += (qt.mwin->statusbar->isHidden() ? 0 : qt.mwin->statusbar->sizeHint().height());
 
 #if defined (_WIN32) && defined(WITH_OPENGL)
