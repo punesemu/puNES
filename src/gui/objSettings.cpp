@@ -1613,6 +1613,7 @@ void objShp::wr_pshd_key(void *pshd, int index) {
 void objShp::wr_all_keys(void) {
 	int i, param = 0;
 
+	s.list = listEle;
 	for (i = 0; i < shader_effect.params; i++) {
 		_param_shd *pshd = &shader_effect.param[i];
 
@@ -1824,6 +1825,18 @@ bool wr_cfg_file(QIODevice &device, const QSettings::SettingsMap &map) {
 	out.setEncoding(QStringEncoder::Utf8);
 #endif
 	out.setGenerateByteOrderMark(false);
+
+	if (s.list == LSET_NONE) {
+		QSettings::SettingsMap::const_iterator iter = map.begin();
+		
+		for (; iter != map.end(); ++iter) {
+			if (iter.key().isEmpty() == false) {
+				out << iter.key() << "=" << iter.value().toString() << NEWLINE;
+			}
+		}
+
+		return (true);
+	}
 
 	for (int i = 0; i < cfg->count; i++) {
 		QString group = uQString(cfg->cfg[i].grp);
