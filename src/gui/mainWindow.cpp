@@ -96,9 +96,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	qtTranslator = new QTranslator();
 	shcjoy.timer = new QTimer(this);
 	setup_in_out_fullscreen = false;
-#if !defined (_WIN32)
 	fullscreen_resize = false;
-#endif
 	visibility.menubar = true;
 	visibility.toolbars = true;
 
