@@ -276,10 +276,7 @@ void wdgSettingsVideo::update_widget(void) {
 			checkBox_PAR_Soft_Stretch->setChecked(false);
 		}
 
-		if (cfg->filter == NTSC_FILTER) {
-			widget_Oscan->setEnabled(false);
-		} else {
-			widget_Oscan->setEnabled(true);
+		if (cfg->filter != NTSC_FILTER) {
 			if (cfg->pixel_aspect_ratio != PAR11) {
 				checkBox_PAR_Soft_Stretch->setEnabled(true);
 			} else {
