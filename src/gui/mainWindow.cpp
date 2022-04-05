@@ -209,15 +209,12 @@ mainWindow::mainWindow() : QMainWindow() {
 
 	installEventFilter(this);
 
-	toolbar->setHidden(cfg->toolbar.hidden);
-	statusbar->setHidden(cfg->toolbar.hidden);
-
 	{
-		bool visibility = !info.start_with_hidden_gui;
+		bool visibile = !info.start_with_hidden_gui;
 
-		menubar->setVisible(visibility);
-		toolbar->setVisible(visibility);
-		statusbar->setVisible(visibility);
+		menubar->setVisible(visibile);
+		toolbar->setVisible(visibile ? !cfg->toolbar.hidden : false);
+		statusbar->setVisible(visibile ? !cfg->toolbar.hidden : false);
 	}
 
 	set_language(cfg->language);
