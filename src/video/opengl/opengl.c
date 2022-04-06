@@ -30,6 +30,7 @@
 #include "emu.h"
 #include "ppu.h"
 #include "gui.h"
+#include "palette.h"
 #if defined (WITH_FFMPEG)
 #include "recording.h"
 #endif
@@ -1203,8 +1204,12 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 	{
 		GLuint size = rect->w * rect->h * sizeof(uint32_t);
 		GLubyte *empty = malloc(size);
+		uint32_t clean_color = (cfg->palette == PALETTE_RAW) && (overlay == FALSE) ? 0x00FF0000 : 0x00;
+		int i;
 
-		memset(empty, 0x00, size);
+		for (i = 0; i < (rect->w * rect->h); i++) {
+			(*((uint32_t *)empty + i)) = clean_color;
+		}
 		glTexImage2D(GL_TEXTURE_2D, 0, TI_INTFRM, rect->w, rect->h, 0, TI_FRM, TI_TYPE, empty);
 		free(empty);
 	}

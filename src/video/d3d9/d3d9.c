@@ -27,6 +27,7 @@
 #include "overscan.h"
 #include "video/gfx_thread.h"
 #include "emu_thread.h"
+#include "palette.h"
 #if defined (WITH_FFMPEG)
 #include "recording.h"
 #endif
@@ -48,7 +49,7 @@ INLINE static void d3d9_read_front_buffer(void);
 static BYTE d3d9_texture_create(_texture *texture, UINT index);
 static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h, BOOL overlay);
 static BYTE d3d9_texture_lut_create(_lut *lut, UINT index);
-static void d3d9_surface_clean(LPDIRECT3DSURFACE9 *surface, UINT width, UINT height);
+static void d3d9_surface_clean(LPDIRECT3DSURFACE9 *surface, UINT width, UINT height, uint32_t color);
 static BYTE d3d9_shader_init(UINT pass, _shader *shd, const uTCHAR *path, const char *code);
 static void d3d9_shader_delete(_shader *shd);
 static void d3d9_shader_uniform_ctrl(CGparameter *dst, CGparameter *param, const char *semantic);
@@ -1200,7 +1201,7 @@ static BYTE d3d9_texture_create(_texture *texture, UINT index) {
 	IDirect3DTexture9_GetSurfaceLevel(texture->data, 0, &texture->map0);
 	// cancello la superficie map0 perche' alcuni driver (tipo intel) nella
 	// versione per windows XP non mi passano una superficia "pulita".
-	d3d9_surface_clean(&texture->map0, rect->w, rect->h);
+	d3d9_surface_clean(&texture->map0, rect->w, rect->h, 0);
 
 	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, (IDirect3DBaseTexture9 *)texture->data);
 	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_ADDRESSU, D3DTADDRESS_BORDER);
@@ -1210,6 +1211,7 @@ static BYTE d3d9_texture_create(_texture *texture, UINT index) {
 	return (EXIT_OK);
 }
 static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h, BOOL overlay) {
+	uint32_t clean_color = (cfg->palette == PALETTE_RAW) && (overlay == FALSE) ? 0x00FF0000 : 0x00;
 	_texture_rect *rect = &texture->rect;
 	_shader *shd = &texture->shader;
 	_viewport vp = { 0, 0, w, h };
@@ -1277,7 +1279,7 @@ static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h,
 	IDirect3DTexture9_GetSurfaceLevel(texture->data, 0, &texture->map0);
 	// cancello la superficie map0 perche' alcuni driver (tipo intel) nella
 	// versione per windows XP non mi passano una superficia "pulita".
-	d3d9_surface_clean(&texture->map0, rect->w, rect->h);
+	d3d9_surface_clean(&texture->map0, rect->w, rect->h, clean_color);
 
 	if (!overlay) {
 		// creo la superficie temporanea le cui dimensioni non devono essere "POWerate"
@@ -1293,7 +1295,7 @@ static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h,
 		}
 
 		// cancello la superficie
-		d3d9_surface_clean(&texture->offscreen, rect->base.w, rect->base.h);
+		d3d9_surface_clean(&texture->offscreen, rect->base.w, rect->base.h, clean_color);
 	} else {
 		texture->offscreen = NULL;
 	}
@@ -1395,7 +1397,7 @@ static BYTE d3d9_texture_lut_create(_lut *lut, UINT index) {
 
 	return (EXIT_OK);
 }
-static void d3d9_surface_clean(LPDIRECT3DSURFACE9 *surface, UINT width, UINT height) {
+static void d3d9_surface_clean(LPDIRECT3DSURFACE9 *surface, UINT width, UINT height, uint32_t color) {
 	D3DLOCKED_RECT lock_dst;
 
 	if (IDirect3DSurface9_LockRect((*surface), &lock_dst, NULL, D3DLOCK_DISCARD) == D3D_OK) {
@@ -1406,7 +1408,7 @@ static void d3d9_surface_clean(LPDIRECT3DSURFACE9 *surface, UINT width, UINT hei
 
 		for (h = 0; h < height; h++) {
 			for (w = 0; w < width; w++) {
-				(*(pbits + w)) = 0;
+				(*(pbits + w)) = color;
 			}
 			pbits += lock_dst.Pitch / (gfx.bit_per_pixel / 8);
 		}
