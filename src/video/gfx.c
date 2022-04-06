@@ -542,7 +542,7 @@ void gfx_apply_filter(void) {
 	if (info.no_rom | info.turn_off) {
 		if (cfg->filter == NTSC_FILTER) {
 			gfx.filter.data.palette = turn_off_effect.ntsc;
-		} else {
+		} else if (cfg->palette != PALETTE_RAW) {
 			gfx.filter.data.palette = (void *)turn_off_effect.palette;
 		}
 	} else if (info.pause) {
