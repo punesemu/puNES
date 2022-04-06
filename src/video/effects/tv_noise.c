@@ -95,4 +95,3 @@ void tv_noise_effect(void) {
 		}
 	}
 }
-
