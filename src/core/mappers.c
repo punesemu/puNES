@@ -710,6 +710,9 @@ BYTE map_init(void) {
 		case 254:
 			map_init_254();
 			break;
+		case 521:
+			map_init_DREAMTECH01();
+			break;
 		default:
 			gui_overlay_info_append_msg_precompiled(11, NULL);
 			fprintf(stderr, "Mapper not supported\n");
@@ -950,10 +953,6 @@ BYTE map_init(void) {
 				case 55:
 					// EDU2000
 					map_init_EDU2000();
-					break;
-				case 56:
-					// DREAMTECH01
-					map_init_DREAMTECH01();
 					break;
 			}
 			break;
