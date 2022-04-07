@@ -29,6 +29,9 @@ void map_init_UxROM(BYTE model) {
 		case UXROM:
 			EXTCL_CPU_WR_MEM(UxROM);
 			break;
+		case UXROMNBC:
+			EXTCL_CPU_WR_MEM(UxROM);
+			break;
 		case UNL1XROM:
 			EXTCL_CPU_WR_MEM(Unl1xROM);
 			break;
@@ -69,8 +72,10 @@ void map_init_UxROM(BYTE model) {
 }
 
 void extcl_cpu_wr_mem_UxROM(WORD address, BYTE value) {
-	/* bus conflict */
-	value &= prg_rom_rd(address);
+	if (info.mapper.submapper == UXROM) {
+		/* bus conflict */
+		value &= prg_rom_rd(address);
+	}
 
 	control_bank(info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 0, value);

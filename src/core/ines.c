@@ -549,7 +549,7 @@ void nes20_submapper(void) {
 			switch (info.mapper.submapper) {
 				case 0:
 				case 1:
-					info.mapper.submapper = UNLROM;
+					info.mapper.submapper = UXROMNBC;
 					break;
 				case 2:
 					info.mapper.submapper = UXROM;
