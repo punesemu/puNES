@@ -128,6 +128,8 @@ BYTE map_init(void) {
 				map_init_VRC4T230();
 			} else if (info.mapper.submapper == VRC4E) {
 				map_init_VRC4(VRC4E);
+			} else if (info.mapper.submapper == VRC4UNL) {
+				map_init_VRC4(VRC4UNL);
 			} else {
 				map_init_VRC2(VRC2B);
 			}
