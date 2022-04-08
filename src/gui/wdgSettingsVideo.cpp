@@ -1064,7 +1064,7 @@ void wdgSettingsVideo::s_shader_param_slider(int value) {
 	int index = QVariant(((QObject *)sender())->property("myIndex")).toInt();
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 	_param_shd *pshd = &shader_effect.param[index];
-	float remain = pshd->initial - (pshd->step * (float)((int)(pshd->initial / pshd->step)));
+	float remain = pshd->initial - (pshd->step * (pshd->initial / pshd->step));
 	float fvalue = pshd->min + ((pshd->step * (float)value) + remain);
 
 	tableWidget_Shader_Parameters->cellWidget(row, WSV_SP_SPIN)->findChild<QDoubleSpinBox *>("spin")->setValue((double)fvalue);

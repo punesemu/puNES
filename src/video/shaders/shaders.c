@@ -30,7 +30,7 @@
 #define LPNAME(a) strncpy(lp->name, a, sizeof(lp->name))
 #define PRMNAME(a) strncpy(prm->name, a, sizeof(prm->name))
 
-#define _shdpass(a) sp = &se->sp[a]; type = &sp->sc.type; scale = &sp->sc.scale //; abs = &sp->sc.abs
+#define _shdpass(a) sp = &se->sp[a]; type = &sp->sc.type; scale = &sp->sc.scale; abs = &sp->sc.abs
 #define shdpass() _shdpass(se->pass++)
 #define lutpass() lp = &se->lp[se->luts++]
 #define prmshd(a, b) prm = &se->param[se->params++]; PRMNAME(a); prm->value = b
@@ -47,7 +47,7 @@ BYTE shaders_set(int shader) {
 	_shader_pass *sp = NULL;
 	_xy_uint *type = NULL;
 	_xy_float *scale = NULL;
-	//_xy_uint *abs = NULL;
+	_xy_uint *abs = NULL;
 	//_lut_pass *lp = NULL;
 	//_param_shd *prm = NULL;
 	int i;
@@ -64,7 +64,13 @@ BYTE shaders_set(int shader) {
 			shdpass();
 			sp->code = SHDCODE(shc_crt_dotmask);
 			sp->linear = TEXTURE_LINEAR_DISAB;
-			se_soft_stretch();
+			type->x = SHADER_SCALE_ABSOLUTE;
+			type->y = SHADER_SCALE_ABSOLUTE;
+			abs->x = SCR_COLUMNS * 3;
+			abs->y = SCR_ROWS * 3;
+			shdpass();
+			sp->code = SHDCODE(shc_no_filter);
+			sp->linear = TEXTURE_LINEAR_ENAB;
 			break;
 		case SHADER_CRTSCANLINES:
 			shdpass();
@@ -75,17 +81,26 @@ BYTE shaders_set(int shader) {
 			shdpass();
 			sp->code = SHDCODE(shc_crt_crt_geom);
 			sp->linear = TEXTURE_LINEAR_DISAB;
+			sp->frame_count_mod = 0;
 			break;
 		case SHADER_EMBOSS:
 			shdpass();
 			sp->code = SHDCODE(shc_mudlord_emboss);
 			sp->linear = TEXTURE_LINEAR_DISAB;
+			type->x = SHADER_SCALE_ABSOLUTE;
+			type->y = SHADER_SCALE_ABSOLUTE;
+			abs->x = SCR_COLUMNS * cfg->scale;
+			abs->y = SCR_ROWS * cfg->scale;
 			se_soft_stretch();
 			break;
 		case SHADER_NOISE:
 			shdpass();
 			sp->code = SHDCODE(shc_mudlord_noise_mudlord);
 			sp->linear = TEXTURE_LINEAR_DISAB;
+			type->x = SHADER_SCALE_ABSOLUTE;
+			type->y = SHADER_SCALE_ABSOLUTE;
+			abs->x = SCR_COLUMNS * cfg->scale;
+			abs->y = SCR_ROWS * cfg->scale;
 			se_soft_stretch();
 			break;
 		case SHADER_NTSC2PHASECOMPOSITE:
@@ -115,6 +130,10 @@ BYTE shaders_set(int shader) {
 			shdpass();
 			sp->code = SHDCODE(shc_mudlord_oldtv);
 			sp->linear = TEXTURE_LINEAR_DISAB;
+			type->x = SHADER_SCALE_ABSOLUTE;
+			type->y = SHADER_SCALE_ABSOLUTE;
+			abs->x = SCR_COLUMNS * cfg->scale;
+			abs->y = SCR_ROWS * cfg->scale;
 			se_soft_stretch();
 			break;
 		case SHADER_FILE:
