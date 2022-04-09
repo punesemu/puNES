@@ -754,7 +754,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 						(fds.auto_insert.delay.eject == -1) &&
 						(fds.auto_insert.delay.dummy == -1)) {
 						fds.auto_insert.r4032.checks = 0;
-						fds.auto_insert.delay.eject = 0;
+						fds.auto_insert.delay.eject = FDS_OP_SIDE_DELAY;
 					}
 				} else {
 					fds.auto_insert.r4032.checks = 0;
