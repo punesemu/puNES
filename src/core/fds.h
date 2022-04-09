@@ -48,7 +48,9 @@ enum fds_misc {
 	FDS_DISK_BLOCK_MARK = 0x0180,
 	FDS_DISK_CRC_CHAR1 = 0x0155,
 	FDS_DISK_CRC_CHAR2 = 0x01AA,
-	FDS_OP_SIDE_DELAY = 3000000
+	FDS_OP_SIDE_DELAY = 3000000,
+	FDS_AUTOINSERT_OP_SIDE_DELAY = 1550000,
+	FDS_AUTOINSERT_R4032_MAX_CHECKS = 150
 };
 
 #define fds_auto_insert_enabled() (cfg->fds_switch_side_automatically & !fds.auto_insert.disabled)

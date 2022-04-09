@@ -749,7 +749,13 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 
 			if (fds_auto_insert_enabled()) {
 				if ((ppu.frames - fds.auto_insert.r4032.frames) < 100) {
-					fds.auto_insert.r4032.checks++;
+					if ((++fds.auto_insert.r4032.checks > FDS_AUTOINSERT_R4032_MAX_CHECKS) &&
+						(fds.auto_insert.delay.side == -1) &&
+						(fds.auto_insert.delay.eject == -1) &&
+						(fds.auto_insert.delay.dummy == -1)) {
+						fds.auto_insert.r4032.checks = 0;
+						fds.auto_insert.delay.eject = 0;
+					}
 				} else {
 					fds.auto_insert.r4032.checks = 0;
 				}

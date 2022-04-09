@@ -138,7 +138,7 @@ BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus), UNUSED(BYTE before
 					if (side != fds.drive.side_inserted) {
 						fds.auto_insert.rE445.in_run = TRUE;
 						fds.auto_insert.new_side = side;
-						fds.auto_insert.delay.side = FDS_OP_SIDE_DELAY;
+						fds.auto_insert.delay.side = FDS_AUTOINSERT_OP_SIDE_DELAY;
 					}
 					if (side > 0) {
 						fds.auto_insert.in_game = TRUE;
