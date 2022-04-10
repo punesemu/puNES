@@ -334,8 +334,10 @@ void extcl_cpu_every_cycle_FDS(void) {
 		//   visto che il controllo del r4032 e' mooooolto lento, l'eject forzato alla fine del disco
 		//   costringe la rom al richiamo della funzione del bios $E445.
 		// - Dandy (19xx)(Pony Canyon)(J).fds
-		//   dopo aver selezionato il nome del personaggio, puo' capitare che il disco sia disinserito a causa
-		//   di questo eject e che dia un "error 01" che comunque verra' subito corretto dall'insert seguente.
+		//   dopo aver selezionato il nome del personaggio, puo' capitare che il disco sia disinserito a causa di
+		//   di eject e che dia un "error 01" che comunque verra' subito corretto dall'insert automatico seguente.
+		// - Zelda no Densetsu - The Hyrule Fantasy (1986)(Nintendo)(J).fds
+		//   stesso discorso fatto per Dandy (19xx)(Pony Canyon)(J).fds.
 		fds.auto_insert.delay.eject = FDS_OP_SIDE_DELAY;
 	} else {
 		fds.drive.end_of_head = FALSE;

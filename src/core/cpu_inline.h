@@ -753,6 +753,12 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 						(fds.auto_insert.delay.side == -1) &&
 						(fds.auto_insert.delay.eject == -1) &&
 						(fds.auto_insert.delay.dummy == -1)) {
+						// FDS interessati :
+						// - Ao no Senritsu (1987)(Gakken)(J).fds
+						// - Bishojou SF Alien Battle (19xx)(Hacker International)(J)(Unl)[b].fds
+						// senza questo controllo entrambi gli fds potrebbero rimanere in attesa
+						// del cambio side senza che l'auto insert avvenga visto che l'END_OF_HEAD
+						// è stato raggiunto prima.
 						fds.auto_insert.r4032.checks = 0;
 						fds.auto_insert.delay.eject = FDS_OP_SIDE_DELAY;
 					}
