@@ -131,10 +131,17 @@ BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus), UNUSED(BYTE before
 						side = a;
 					}
 				}
-				if (count != 1) {
+				// casi :
+				// * count == 0
+				//   non faccio nulla ("Mr. Gold - Kinsan in the Space (19xx)()(J).fds")
+				// * count == 1
+				//   avvio il meccanismo di auto insert
+				// * count > 1
+				//   disabilito l'auto insert
+				if (count > 1) {
 					fds.auto_insert.disabled = TRUE;
 					gui_overlay_info_append_msg_precompiled(29, &count);
-				} else {
+				} else if (count == 1) {
 					if (side != fds.drive.side_inserted) {
 						fds.auto_insert.rE445.in_run = TRUE;
 						fds.auto_insert.new_side = side;
@@ -322,6 +329,13 @@ void extcl_cpu_every_cycle_FDS(void) {
 		fds.drive.gap_ended = FALSE;
 		fds.drive.delay = 900000;
 		fds.drive.motor_on = FALSE;
+		// FDS condizionati :
+		// - 19 Neunzehn (1988)(Soft Pro)(J).fds
+		//   visto che il controllo del r4032 e' mooooolto lento, l'eject forzato alla fine del disco
+		//   costringe la rom al richiamo della funzione del bios $E445.
+		// - Dandy (19xx)(Pony Canyon)(J).fds
+		//   dopo aver selezionato il nome del personaggio, puo' capitare che il disco sia disinserito a causa
+		//   di questo eject e che dia un "error 01" che comunque verra' subito corretto dall'insert seguente.
 		fds.auto_insert.delay.eject = FDS_OP_SIDE_DELAY;
 	} else {
 		fds.drive.end_of_head = FALSE;
