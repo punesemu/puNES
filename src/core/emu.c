@@ -811,7 +811,7 @@ int emu_power_of_two(int base) {
 	while (pot < base) {
 		pot <<= 1;
 	}
-	return (pot);
+	return (pot == 1 ? 2 : pot);
 }
 double emu_drand(void) {
 	double d;
