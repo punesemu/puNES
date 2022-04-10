@@ -329,7 +329,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 		fds.drive.gap_ended = FALSE;
 		fds.drive.delay = 900000;
 		fds.drive.motor_on = FALSE;
-		// FDS condizionati :
+		// FDS interessati :
 		// - 19 Neunzehn (1988)(Soft Pro)(J).fds
 		//   visto che il controllo del r4032 e' mooooolto lento, l'eject forzato alla fine del disco
 		//   costringe la rom al richiamo della funzione del bios $E445.
