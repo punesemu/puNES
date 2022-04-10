@@ -32,17 +32,6 @@
 #include "recording.h"
 #endif
 
-#define _SCR_COLUMNS_\
-	(cfg->filter == NTSC_FILTER ? NES_NTSC_OUT_WIDTH(SCR_COLUMNS) / 2 : SCR_COLUMNS)
-#define _SCR_COLUMNS_BRD\
-	((float)(_SCR_COLUMNS_ - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
-#define _SCR_ROWS_BRD\
-	(float)(SCR_ROWS - (overscan.borders->up + overscan.borders->down))
-#define _SCR_COLUMNS_NOBRD\
-	((float)_SCR_COLUMNS_ * gfx.pixel_aspect_ratio)
-#define _SCR_ROWS_NOBRD\
-	(float)SCR_ROWS
-
 static void d3d9_shader_cg_error_handler(void);
 static BYTE d3d9_device_create(UINT width, UINT height);
 INLINE static void d3d9_read_front_buffer(void);

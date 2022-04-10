@@ -8,7 +8,7 @@
 "*/\n"
 "\n"
 "// Parameter lines go here:\n"
-"#pragma parameter shadowMask \"Mask Style\" 3.0 0.0 4.0 1.0\n"
+"#pragma parameter shadowMask \"Mask Style\" 4.0 0.0 4.0 1.0\n"
 "#pragma parameter DOTMASK_STRENGTH \"CGWG Dot Mask Strength\" 0.2 0.0 1.0 0.01\n"
 "#pragma parameter maskDark \"Lottes maskDark\" 0.7 0.0 2.0 0.1\n"
 "#pragma parameter maskLight \"Lottes maskLight\" 1.2 0.0 2.0 0.1\n"

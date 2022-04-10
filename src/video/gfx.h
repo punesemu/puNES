@@ -74,6 +74,17 @@ enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE, PASS0, FSCR_RESI
 enum no_change { NO_CHANGE = 255 };
 enum gfx_rotate_type { ROTATE_0, ROTATE_90, ROTATE_180, ROTATE_270, ROTATE_MAX };
 
+#define _SCR_COLUMNS_\
+	(cfg->filter == NTSC_FILTER ? NES_NTSC_OUT_WIDTH(SCR_COLUMNS) / 2 : SCR_COLUMNS)
+#define _SCR_COLUMNS_BRD\
+	((float)(_SCR_COLUMNS_ - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
+#define _SCR_ROWS_BRD\
+	(float)(SCR_ROWS - (overscan.borders->up + overscan.borders->down))
+#define _SCR_COLUMNS_NOBRD\
+	((float)_SCR_COLUMNS_ * gfx.pixel_aspect_ratio)
+#define _SCR_ROWS_NOBRD\
+	(float)SCR_ROWS
+
 typedef struct _gfx_rect {
 	float x, y;
 	float w, h;

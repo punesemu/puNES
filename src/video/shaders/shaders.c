@@ -22,6 +22,7 @@
 #include "video/gfx.h"
 #include "conf.h"
 #include "cgp.h"
+#include "emu.h"
 
 #define SHDCODE(index) (char *)shader_code[index].code
 #define LUTCODE(index) lut_resource[index].code
@@ -66,8 +67,8 @@ BYTE shaders_set(int shader) {
 			sp->linear = TEXTURE_LINEAR_DISAB;
 			type->x = SHADER_SCALE_ABSOLUTE;
 			type->y = SHADER_SCALE_ABSOLUTE;
-			abs->x = SCR_COLUMNS * 3;
-			abs->y = SCR_ROWS * 3;
+			abs->x = _SCR_COLUMNS_NOBRD * 3;
+			abs->y = SCR_ROWS * 2;
 			shdpass();
 			sp->code = SHDCODE(shc_no_filter);
 			sp->linear = TEXTURE_LINEAR_ENAB;
@@ -89,8 +90,8 @@ BYTE shaders_set(int shader) {
 			sp->linear = TEXTURE_LINEAR_DISAB;
 			type->x = SHADER_SCALE_ABSOLUTE;
 			type->y = SHADER_SCALE_ABSOLUTE;
-			abs->x = SCR_COLUMNS * cfg->scale;
-			abs->y = SCR_ROWS * cfg->scale;
+			abs->x = _SCR_COLUMNS_NOBRD * emu_power_of_two(cfg->scale);
+			abs->y = SCR_ROWS * emu_power_of_two(cfg->scale);
 			se_soft_stretch();
 			break;
 		case SHADER_NOISE:
@@ -99,8 +100,8 @@ BYTE shaders_set(int shader) {
 			sp->linear = TEXTURE_LINEAR_DISAB;
 			type->x = SHADER_SCALE_ABSOLUTE;
 			type->y = SHADER_SCALE_ABSOLUTE;
-			abs->x = SCR_COLUMNS * cfg->scale;
-			abs->y = SCR_ROWS * cfg->scale;
+			abs->x = _SCR_COLUMNS_NOBRD * emu_power_of_two(cfg->scale);
+			abs->y = SCR_ROWS * emu_power_of_two(cfg->scale);
 			se_soft_stretch();
 			break;
 		case SHADER_NTSC2PHASECOMPOSITE:
@@ -132,8 +133,8 @@ BYTE shaders_set(int shader) {
 			sp->linear = TEXTURE_LINEAR_DISAB;
 			type->x = SHADER_SCALE_ABSOLUTE;
 			type->y = SHADER_SCALE_ABSOLUTE;
-			abs->x = SCR_COLUMNS * cfg->scale;
-			abs->y = SCR_ROWS * cfg->scale;
+			abs->x = _SCR_COLUMNS_NOBRD * emu_power_of_two(cfg->scale);
+			abs->y = SCR_ROWS * emu_power_of_two(cfg->scale);
 			se_soft_stretch();
 			break;
 		case SHADER_FILE:

@@ -39,17 +39,6 @@
 #define BUFFER_OFFSET(i) ((char *)(i))
 #define BUFFER_VB_OFFSET(a, i) ((char *)&a + (i))
 
-#define _SCR_COLUMNS_\
-	(cfg->filter == NTSC_FILTER ? NES_NTSC_OUT_WIDTH(SCR_COLUMNS) / 2 : SCR_COLUMNS)
-#define _SCR_COLUMNS_BRD\
-	((float)(_SCR_COLUMNS_ - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
-#define _SCR_ROWS_BRD\
-	(float)(SCR_ROWS - (overscan.borders->up + overscan.borders->down))
-#define _SCR_COLUMNS_NOBRD\
-	((float)_SCR_COLUMNS_ * gfx.pixel_aspect_ratio)
-#define _SCR_ROWS_NOBRD\
-	(float)SCR_ROWS
-
 static void opengl_context_delete(BYTE lock);
 INLINE static void opengl_read_front_buffer(void);
 static BYTE opengl_glew_init(void);
@@ -2248,10 +2237,10 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint s
 		}
 		// IN.frame_count
 		{
-			GLfloat fc = (GLfloat) fcount;
+			GLfloat fc = (GLfloat)fcount;
 
 			if (fcountmod) {
-				fc = (GLfloat) (fcount % fcountmod);
+				fc = (GLfloat)(fcount % fcountmod);
 			}
 
 			if (shd->cgp.uni.v.frame_count) {
