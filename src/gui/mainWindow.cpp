@@ -541,6 +541,9 @@ void mainWindow::make_reset(int type) {
 	emu_thread_continue();
 }
 void mainWindow::change_rom(const uTCHAR *rom) {
+	if (info.turn_off) {
+		s_turn_on_off();
+	}
 	emu_thread_pause();
 	info.rom.from_load_menu = emu_ustrncpy(info.rom.from_load_menu, (uTCHAR *)rom);
 	gamegenie_reset();
