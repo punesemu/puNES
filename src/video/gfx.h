@@ -26,7 +26,7 @@
 #include "video/filters/ntsc.h"
 #include "video/filters/xBRZ.h"
 
-#define FH_SHADERS_GEST
+//#define FH_SHADERS_GEST
 #if defined (__unix__)
 #define	gfx_os_color(r, g, b) gfx_color(0, r, g, b);
 #else
