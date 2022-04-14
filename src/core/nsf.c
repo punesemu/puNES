@@ -919,7 +919,7 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 
 	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
 		cfg->reverse_bits_dpcm = !cfg->reverse_bits_dpcm;
-		gui_update_dset();
+		gui_update_apu_channels_widgets();
 		return;
 	}
 
