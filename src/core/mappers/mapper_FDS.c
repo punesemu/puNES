@@ -33,7 +33,8 @@
 
 enum { TRANSFERED_8BIT = 0x02, END_OF_HEAD = 0x40 };
 
-static const BYTE volume_wave[4] = { 39, 26, 19, 15 };
+static const SBYTE modulation_table[8] = { 0, 1, 2, 4, 8, -4, -2, -1 };
+static const BYTE volume_wave[4] = { 36, 24, 17, 14 };
 
 void map_init_FDS(void) {
 	EXTCL_CPU_RD_MEM(FDS);
@@ -72,6 +73,8 @@ void map_init_FDS(void) {
 }
 void map_init_NSF_FDS(void) {
 	memset(&fds, 0x00, sizeof(fds));
+	fds.snd.modulation.counter = 0xFFFF;
+	fds.snd.wave.counter = 0xFFFF;
 
 	fds.drive.enabled_snd_reg = 0x02;
 }
@@ -346,106 +349,113 @@ void extcl_cpu_every_cycle_FDS(void) {
 	}
 }
 void extcl_apu_tick_FDS(void) {
-	SWORD freq;
+	int32_t freq = fds.snd.main.frequency;
 
-	/* volume unit */
-	if (fds.snd.volume.mode) {
-		fds.snd.volume.gain = fds.snd.volume.speed;
-	} else if (!fds.snd.envelope.disabled && fds.snd.envelope.speed) {
-		if (fds.snd.volume.counter) {
-			fds.snd.volume.counter--;
-		} else {
-			fds.snd.volume.counter = (fds.snd.envelope.speed << 3) * (fds.snd.volume.speed + 1);
-			if (fds.snd.volume.increase) {
-				if (fds.snd.volume.gain < 32) {
-					fds.snd.volume.gain++;
+	if (!fds.snd.envelope.disabled && !fds.snd.main.silence && (fds.snd.envelope.speed > 0)) {
+		// volume unit
+		if (!fds.snd.volume.mode) {
+			if (--fds.snd.volume.counter == 0) {
+				fds.snd.volume.counter = fds_reset_envelope_counter(volume);
+				if (fds.snd.volume.increase) {
+					if (fds.snd.volume.gain < 32) {
+						fds.snd.volume.gain++;
+					}
+				} else if (fds.snd.volume.gain) {
+					fds.snd.volume.gain--;
 				}
-			} else if (fds.snd.volume.gain) {
-				fds.snd.volume.gain--;
+			}
+		}
+		// sweep unit
+		if (!fds.snd.sweep.mode) {
+			if (--fds.snd.sweep.counter == 0) {
+				fds.snd.sweep.counter = fds_reset_envelope_counter(sweep);
+				if (fds.snd.sweep.increase) {
+					if (fds.snd.sweep.gain < 32) {
+						fds.snd.sweep.gain++;
+					}
+				} else if (fds.snd.sweep.gain) {
+					fds.snd.sweep.gain--;
+				}
 			}
 		}
 	}
 
-	/* sweep unit */
-	if (fds.snd.sweep.mode) {
-		fds.snd.sweep.gain = fds.snd.sweep.speed;
-	} else if (!fds.snd.envelope.disabled && fds.snd.envelope.speed) {
-		if (fds.snd.sweep.counter) {
-			fds.snd.sweep.counter--;
-		} else {
-			fds.snd.sweep.counter = (fds.snd.envelope.speed << 3) * (fds.snd.sweep.speed + 1);
-			if (fds.snd.sweep.increase) {
-				if (fds.snd.sweep.gain < 32) {
-					fds.snd.sweep.gain++;
-				}
-			} else if (fds.snd.sweep.gain) {
-				fds.snd.sweep.gain--;
-			}
-		}
-	}
-
-	/* modulation unit */
-	freq = fds.snd.main.frequency;
-
+	// modulation unit
 	if (!fds.snd.modulation.disabled && fds.snd.modulation.frequency) {
 		if ((fds.snd.modulation.counter -= fds.snd.modulation.frequency) < 0) {
-			SBYTE adj = fds.snd.modulation.data[fds.snd.modulation.index];
-			SWORD temp, temp2, a, d;
+			SBYTE adj = modulation_table[fds.snd.modulation.data[fds.snd.modulation.index]];
 
 			fds.snd.modulation.counter += 65536;
+			fds.snd.modulation.index = (fds.snd.modulation.index + 1) & 0x3F;
 
-			if (++fds.snd.modulation.index == 64) {
-				fds.snd.modulation.index = 0;
+			fds.snd.sweep.bias += ((BYTE)adj == 8 ? 0 : adj);
+			fds.snd.sweep.bias = fds_sweep_bias(fds.snd.sweep.bias);
+
+			/*
+			// vecchia gestione
+			{
+				SWORD temp, temp2, a, d;
+				temp = fds.snd.sweep.bias * ((fds.snd.sweep.gain < 32) ? fds.snd.sweep.gain : 32);
+
+				a = 64;
+				d = 0;
+
+				if (temp <= 0) {
+					d = 15;
+				} else if (temp < 3040) { //95 * 32
+					a = 66;
+					d = -31;
+				}
+
+				temp2 = a + (SBYTE)((temp - d) / 16 - a);
+
+				fds.snd.modulation.mod = freq * temp2 / 64;
 			}
+			*/
 
-			if (adj == -4) {
-				fds.snd.sweep.bias = 0;
-			} else {
-				fds.snd.sweep.bias += adj;
+			// from https://www.nesdev.org/wiki/FDS_audio
+			// and https://forums.nesdev.org/viewtopic.php?p=232662#p232662
+
+			// freq               = $4082/4083 (12-bit unsigned pitch value)
+			// fds.snd.sweep.bias = $4085 (7-bit signed mod counter)
+			// fds.snd.sweep.gain = $4084 (6-bit unsigned mod gain)
+			{
+				int32_t temp;
+
+				temp = fds.snd.sweep.bias * fds.snd.sweep.gain;
+				if ((temp & 0x0F) && !(temp & 0x800)) {
+					temp += 0x20;
+				}
+				temp += 0x400;
+				temp = (temp >> 4) & 0xFF;
+
+				temp = freq * temp;
+				temp >>= 6;
+				fds.snd.modulation.mod = temp;
 			}
-
-			temp = fds.snd.sweep.bias * ((fds.snd.sweep.gain < 32) ? fds.snd.sweep.gain : 32);
-
-			a = 64;
-			d = 0;
-
-			if (temp <= 0) {
-				d = 15;
-			} else if (temp < 3040) { //95 * 32
-				a = 66;
-				d = -31;
-			}
-
-			temp2 = a + (SBYTE)((temp - d) / 16 - a);
-
-			fds.snd.modulation.mod = freq * temp2 / 64;
 		}
-
 		if (freq) {
 			freq += fds.snd.modulation.mod;
 		}
 	}
 
-	/* main unit */
+	// main unit
 	if (fds.snd.main.silence) {
 		fds.snd.main.output = 0;
+		fds.snd.wave.index = 0;
 		return;
 	}
 
-	if (freq && !fds.snd.wave.writable) {
+	if ((freq > 0) && !fds.snd.wave.writable) {
 		if ((fds.snd.wave.counter -= freq) < 0) {
-			WORD level;
-
-			fds.snd.wave.counter += 65536;
-			level = (fds.snd.volume.gain < 32 ? fds.snd.volume.gain : 32) * volume_wave[fds.snd.wave.volume];
+			WORD level = (fds.snd.volume.gain < 32 ? fds.snd.volume.gain : 32) * volume_wave[fds.snd.wave.volume];
 
 			/* valore massimo dell'output (63 * (39 * 32)) = 78624 */
 			/*fds.snd.main.output = (fds.snd.wave.data[fds.snd.wave.index] * level) >> 4;*/
 			fds.snd.main.output = (fds.snd.wave.data[fds.snd.wave.index] * level) >> 3;
 
-			if (++fds.snd.wave.index == 64) {
-				fds.snd.wave.index = 0;
-			}
+			fds.snd.wave.counter += 65536;
+			fds.snd.wave.index = (fds.snd.wave.index + 1) & 0x3F;
 			fds.snd.wave.clocked = TRUE;
 		}
 	}

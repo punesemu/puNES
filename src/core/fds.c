@@ -45,6 +45,8 @@ _fds fds;
 
 void fds_init(void) {
 	memset(&fds, 0x00, sizeof(fds));
+	fds.snd.modulation.counter = 0xFFFF;
+	fds.snd.wave.counter = 0xFFFF;
 
 	fds.side.change.new_side = 0xFF;
 

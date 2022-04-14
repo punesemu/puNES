@@ -54,6 +54,8 @@ enum fds_misc {
 };
 
 #define fds_auto_insert_enabled() (cfg->fds_switch_side_automatically & !fds.auto_insert.disabled)
+#define fds_reset_envelope_counter(env) (fds.snd.envelope.speed << 3) * (fds.snd.env.speed + 1)
+#define fds_sweep_bias(val) (SBYTE)((val & 0x7F) << 1) / 2;
 
 typedef struct _fds {
 	// generali
