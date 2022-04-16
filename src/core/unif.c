@@ -92,6 +92,7 @@ static const _unif_board unif_boards[] = {
 	{"H2288", 123, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"VRC7", 85, NO_UNIF, VRC7UNL, DEFAULT, NOEXTRA},
 	{"DREAMTECH01", 521, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
+	{"COOLBOY", 268, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 
 	{"A65AS", NO_INES, 0, DEFAULT, DEFAULT, NOEXTRA},
 	{"MARIO1-MALEE2", NO_INES, 1, DEFAULT, DEFAULT, NOEXTRA},
@@ -122,7 +123,7 @@ static const _unif_board unif_boards[] = {
 	{"KS7013B", NO_INES, 26, DEFAULT, DEFAULT, NOEXTRA},
 	{"MTECH01", NO_INES, 27, DEFAULT, DEFAULT, NOEXTRA},
 	{"YOKO", NO_INES, 28, DEFAULT, DEFAULT, NOEXTRA},
-	{"SA-9602B", NO_INES, 29, DEFAULT, DEFAULT, CHRRAM32K},
+	{"SA-9602B", NO_INES, 29, DEFAULT, DEFAULT, NOEXTRA},
 	{"CC-21", NO_INES, 30, DEFAULT, DEFAULT, NOEXTRA},
 	{"LH32", NO_INES, 31, DEFAULT, DEFAULT, NOEXTRA},
 	{"NovelDiamond9999999in1", NO_INES, 32, DEFAULT, DEFAULT, NOEXTRA},
@@ -140,8 +141,8 @@ static const _unif_board unif_boards[] = {
 	{"LH10", NO_INES, 44, DEFAULT, DEFAULT, NOEXTRA},
 	{"RT-01", NO_INES, 45, DEFAULT, DEFAULT, NOEXTRA},
 	{"MALISB", NO_INES, 46, DEFAULT, DEFAULT, NOEXTRA},
-	{"BOY", NO_INES, 47, DEFAULT, DEFAULT, CHRRAM256K},
-	{"8-IN-1", NO_INES, 48, DEFAULT, DEFAULT, CHRRAM256K},
+	{"BOY", NO_INES, 47, DEFAULT, DEFAULT, NOEXTRA},
+	{"8-IN-1", NO_INES, 48, DEFAULT, DEFAULT, NOEXTRA},
 	{"HP898F", NO_INES, 49, DEFAULT, DEFAULT, NOEXTRA},
 	{"158B", NO_INES, 50, DEFAULT, DEFAULT, NOEXTRA},
 	{"810544-C-A1", NO_INES, 51, DEFAULT, DEFAULT, NOEXTRA},
@@ -350,16 +351,6 @@ BYTE unif_load_rom(void) {
 
 		if (!info.chr.rom[0].banks_1k) {
 			mapper.write_vram = TRUE;
-			if (info.extra_from_db & CHRRAM32K) {
-				info.chr.rom[0].banks_8k = 4;
-			} else if (info.extra_from_db & CHRRAM256K) {
-				info.chr.rom[0].banks_8k = 32;
-			} else {
-				info.chr.rom[0].banks_8k = 1;
-			}
-			info.chr.rom[0].banks_4k = info.chr.rom[0].banks_8k * 2;
-			info.chr.rom[0].banks_1k = info.chr.rom[0].banks_4k * 4;
-			map_set_banks_max_chr(0);
 		}
 
 		info.prg.max_chips = info.prg.chips - 1;

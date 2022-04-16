@@ -341,6 +341,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_CNROM.h \
 	mappers/mapper_ColorDreams.c \
 	mappers/mapper_ColorDreams.h \
+	mappers/mapper_Coolboy.c \
+	mappers/mapper_Coolboy.h \
 	mappers/mapper_CPROM.c \
 	mappers/mapper_CPROM.h \
 	mappers/mapper_DRAGONFIGHTER.c \

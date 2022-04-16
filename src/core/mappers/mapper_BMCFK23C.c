@@ -23,10 +23,10 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void prg_fix_BMCFK23CPW(BYTE value);
-static void prg_swap_BMCFK23CPW(WORD address, WORD value);
-static void chr_fix_BMCFK23CPW(BYTE value);
-static void chr_swap_BMCFK23CCW(WORD address, WORD value);
+INLINE static void prg_fix_BMCFK23CPW(BYTE value);
+INLINE static void prg_swap_BMCFK23CPW(WORD address, WORD value);
+INLINE static void chr_fix_BMCFK23CPW(BYTE value);
+INLINE static void chr_swap_BMCFK23CCW(WORD address, WORD value);
 
 struct _bmcfk23c {
 	uint32_t dipswitch;
@@ -41,6 +41,7 @@ struct _bmcfk23c {
 } bmcfk23c;
 
 void map_init_BMCFK23C(void) {
+	EXTCL_AFTER_MAPPER_INIT(BMCFK23C);
 	EXTCL_CPU_WR_MEM(BMCFK23C);
 	EXTCL_SAVE_MAPPER(BMCFK23C);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -103,13 +104,15 @@ void map_init_BMCFK23C(void) {
 		bmcfk23c.prg_mask = 0x7F >> prg_bonus;
 	}
 
-	prg_fix_BMCFK23CPW(mmc3.bank_to_update);
-	chr_fix_BMCFK23CPW(mmc3.bank_to_update);
-
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
+}
+void extcl_after_mapper_init_BMCFK23C(void) {
+	// posso farlo solo dopo il map_prg_ram_init();
+	prg_fix_BMCFK23CPW(mmc3.bank_to_update);
+	chr_fix_BMCFK23CPW(mmc3.bank_to_update);
 }
 void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
@@ -185,18 +188,10 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 					// check if it not interfer with other dumps
 					if (address == 0x8000) {
 						if (value == 0x46) {
-
-
 							fprintf(stderr, "0x%04X : 0x%02X\n", address, value);
-
-
 							value = 0x47;
 						} else if (value == 0x47) {
-
-
 							fprintf(stderr, "0x%04X : 0x%02X\n", address, value);
-
-
 							value = 0x46;
 						}
 					}
@@ -297,7 +292,7 @@ BYTE extcl_save_mapper_BMCFK23C(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void prg_fix_BMCFK23CPW(BYTE value) {
+INLINE static void prg_fix_BMCFK23CPW(BYTE value) {
 	if (value & 0x40) {
 		prg_swap_BMCFK23CPW(0x8000, ~1);
 		prg_swap_BMCFK23CPW(0xC000, bmcfk23c.mmc3[6]);
@@ -308,7 +303,7 @@ static void prg_fix_BMCFK23CPW(BYTE value) {
 	prg_swap_BMCFK23CPW(0xA000, bmcfk23c.mmc3[7]);
 	prg_swap_BMCFK23CPW(0xE000, ~0);
 }
-static void prg_swap_BMCFK23CPW(WORD address, WORD value) {
+INLINE static void prg_swap_BMCFK23CPW(WORD address, WORD value) {
 	if ((bmcfk23c.reg[0] & 0x07) == 0x04) {
 		value = bmcfk23c.reg[1] >> 1;
 		control_bank(info.prg.rom[0].max.banks_32k)
@@ -348,7 +343,7 @@ static void prg_swap_BMCFK23CPW(WORD address, WORD value) {
 	//setprg8r(0x10, 0x6000, A001B & 3);
 }
 
-static void chr_fix_BMCFK23CPW(BYTE value) {
+INLINE static void chr_fix_BMCFK23CPW(BYTE value) {
 	WORD cbase = (value & 0x80) << 5;
 
 	chr_swap_BMCFK23CCW(cbase ^ 0x0000, bmcfk23c.mmc3[0] & (~1));
@@ -361,7 +356,7 @@ static void chr_fix_BMCFK23CPW(BYTE value) {
 	chr_swap_BMCFK23CCW(cbase ^ 0x1800, bmcfk23c.mmc3[4]);
 	chr_swap_BMCFK23CCW(cbase ^ 0x1c00, bmcfk23c.mmc3[5]);
 }
-static void chr_swap_BMCFK23CCW(WORD address, WORD value) {
+INLINE static void chr_swap_BMCFK23CCW(WORD address, WORD value) {
 	DBWORD bank;
 
 	if (bmcfk23c.reg[0] & 0x40) {
@@ -424,4 +419,3 @@ static void chr_swap_BMCFK23CCW(WORD address, WORD value) {
 		}
 	}
 }
-

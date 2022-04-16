@@ -710,6 +710,9 @@ BYTE map_init(void) {
 		case 254:
 			map_init_254();
 			break;
+		case 268:
+			map_init_Coolboy(info.mapper.submapper == MINDKIDS ? MINDKIDS : COOLBOY);
+			break;
 		case 521:
 			map_init_DREAMTECH01();
 			break;
@@ -957,11 +960,35 @@ BYTE map_init(void) {
 			}
 			break;
 	}
+
+	// PRG
 	map_prg_rom_8k_update();
 	map_prg_ram_init();
+
+	// CHR
+	if (mapper.write_vram == TRUE) {
+		if (!info.chr.rom[0].banks_8k) {
+			if ((info.format == iNES_1_0) || (info.format == UNIF_FORMAT)) {
+				if (info.extra_from_db & CHRRAM32K) {
+					info.chr.rom[0].banks_8k = 4;
+				} else if (info.extra_from_db & CHRRAM256K) {
+					info.chr.rom[0].banks_8k = 32;
+				} else {
+					info.chr.rom[0].banks_8k = 1;
+				}
+			} else {
+				info.chr.rom[0].banks_8k = 1;
+			}
+		}
+		info.chr.rom[0].banks_4k = info.chr.rom[0].banks_8k * 2;
+		info.chr.rom[0].banks_1k = info.chr.rom[0].banks_4k * 4;
+		map_set_banks_max_chr(0);
+	}
 	if (map_chr_ram_init()) {
 		return (EXIT_ERROR);
 	}
+
+	// after mapper init
 	if (extcl_after_mapper_init) {
 		extcl_after_mapper_init();
 	}

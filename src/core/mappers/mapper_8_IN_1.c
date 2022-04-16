@@ -84,6 +84,7 @@ struct _m8in1 {
 } m8in1;
 
 void map_init_8_IN_1(void) {
+	EXTCL_AFTER_MAPPER_INIT(8_IN_1);
 	EXTCL_CPU_WR_MEM(8_IN_1);
 	EXTCL_SAVE_MAPPER(8_IN_1);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -101,25 +102,28 @@ void map_init_8_IN_1(void) {
 	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
-	{
-		BYTE i;
-
-		map_prg_rom_8k_reset();
-		map_chr_bank_1k_reset();
-
-		for (i = 0; i < 8; i++) {
-			if (i < 4) {
-				m8in1.prg_map[i] = mapper.rom_map_to[i];
-			}
-			m8in1.chr_map[i] = i;
-		}
-
-		m8in1_update_prg();
-		m8in1_update_chr();
+	if (mapper.write_vram == TRUE) {
+		info.chr.rom[0].banks_8k = 32;
 	}
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
+}
+void extcl_after_mapper_init_8_IN_1(void) {
+	BYTE i;
+
+	map_prg_rom_8k_reset();
+	map_chr_bank_1k_reset();
+
+	for (i = 0; i < 8; i++) {
+		if (i < 4) {
+			m8in1.prg_map[i] = mapper.rom_map_to[i];
+		}
+		m8in1.chr_map[i] = i;
+	}
+
+	m8in1_update_prg();
+	m8in1_update_chr();
 }
 void extcl_cpu_wr_mem_8_IN_1(WORD address, BYTE value) {
 	BYTE old_prg_rom_cfg = mmc3.prg_rom_cfg;

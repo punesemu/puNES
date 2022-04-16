@@ -82,6 +82,10 @@ void map_init_SA_9602B(void) {
 	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
+	if (mapper.write_vram == TRUE) {
+		info.chr.rom[0].banks_8k = 4;
+	}
+
 	{
 		BYTE i;
 

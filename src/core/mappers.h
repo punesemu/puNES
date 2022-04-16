@@ -33,6 +33,7 @@
 #include "mappers/mapper_CNROM.h"
 #include "mappers/mapper_AxROM.h"
 #include "mappers/mapper_ColorDreams.h"
+#include "mappers/mapper_Coolboy.h"
 #include "mappers/mapper_Camerica.h"
 #include "mappers/mapper_CPROM.h"
 #include "mappers/mapper_BxROM.h"

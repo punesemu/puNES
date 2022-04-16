@@ -283,28 +283,11 @@ BYTE ines_load_rom(void) {
 			if (info.format == NES_2_0) {
 				info.chr.rom[0].banks_8k = nes20_ram_size(ines.flags[FL11] & 0x0F);
 			}
-			if (!info.chr.rom[0].banks_8k) {
-				if (info.format == iNES_1_0) {
-					if (info.extra_from_db & CHRRAM32K) {
-						info.chr.rom[0].banks_8k = 4;
-					} else if (info.extra_from_db & CHRRAM256K) {
-						info.chr.rom[0].banks_8k = 32;
-					} else {
-						info.chr.rom[0].banks_8k = 1;
-					}
-				} else {
-					info.chr.rom[0].banks_8k = 1;
-				}
-			}
 		}
 
 		info.prg.rom[0].banks_8k = !info.prg.rom[0].banks_16k ? 1 : info.prg.rom[0].banks_16k * 2;
-		info.chr.rom[0].banks_4k = info.chr.rom[0].banks_8k * 2;
-		info.chr.rom[0].banks_1k = info.chr.rom[0].banks_4k * 4;
-
-		map_set_banks_max_prg(0);
-		map_set_banks_max_chr(0);
 		info.prg.chips = info.chr.chips = 0;
+		map_set_banks_max_prg(0);
 
 		// alloco la PRG Ram
 		if (map_prg_ram_malloc(0x2000) != EXIT_OK) {
@@ -628,6 +611,16 @@ void nes20_submapper(void) {
 			break;
 		case 210:
 			search_in_database();
+			break;
+		case 268:
+			switch (info.mapper.submapper) {
+				case 0:
+					info.mapper.submapper = COOLBOY;
+					break;
+				case 1:
+					info.mapper.submapper = MINDKIDS;
+					break;
+			}
 			break;
 	}
 }

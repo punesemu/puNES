@@ -24,6 +24,7 @@
 enum bmcfk23c_types { NOBMCFK23C, BMCFK23C_0 = 1, BMCFK23C_1 = 2, BMCFK23CA = 8 };
 
 void map_init_BMCFK23C(void);
+void extcl_after_mapper_init_BMCFK23C(void);
 void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value);
 void extcl_wr_chr_BMCFK23C(WORD address, BYTE value);
 BYTE extcl_save_mapper_BMCFK23C(BYTE mode, BYTE slot, FILE *fp);

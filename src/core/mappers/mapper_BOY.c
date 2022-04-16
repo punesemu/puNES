@@ -84,6 +84,7 @@ struct _boy {
 } boy;
 
 void map_init_BOY(void) {
+	EXTCL_AFTER_MAPPER_INIT(BOY);
 	EXTCL_CPU_WR_MEM(BOY);
 	EXTCL_SAVE_MAPPER(BOY);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -101,27 +102,30 @@ void map_init_BOY(void) {
 	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
-	{
-		BYTE i;
-
-		map_prg_rom_8k_reset();
-		map_chr_bank_1k_reset();
-
-		for (i = 0; i < 8; i++) {
-			if (i < 4) {
-				boy.prg_map[i] = mapper.rom_map_to[i];
-			}
-			boy.chr_map[i] = i;
-		}
-
-		boy_update_prg();
-		boy_update_chr();
+	if (mapper.write_vram == TRUE) {
+		info.chr.rom[0].banks_8k = 32;
 	}
 
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
+}
+void extcl_after_mapper_init_BOY(void) {
+	BYTE i;
+
+	map_prg_rom_8k_reset();
+	map_chr_bank_1k_reset();
+
+	for (i = 0; i < 8; i++) {
+		if (i < 4) {
+			boy.prg_map[i] = mapper.rom_map_to[i];
+		}
+		boy.chr_map[i] = i;
+	}
+
+	boy_update_prg();
+	boy_update_chr();
 }
 void extcl_cpu_wr_mem_BOY(WORD address, BYTE value) {
 	BYTE old_prg_rom_cfg = mmc3.prg_rom_cfg;

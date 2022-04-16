@@ -16,14 +16,16 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_BOY_H_
-#define MAPPER_BOY_H_
+#ifndef MAPPER_COOLBOY_H_
+#define MAPPER_COOLBOY_H_
 
 #include "common.h"
 
-void map_init_BOY(void);
-void extcl_after_mapper_init_BOY(void);
-void extcl_cpu_wr_mem_BOY(WORD address, BYTE value);
-BYTE extcl_save_mapper_BOY(BYTE mode, BYTE slot, FILE *fp);
+enum coolboy_types { COOLBOY, MINDKIDS };
 
-#endif /* MAPPER_BOY_H_ */
+void map_init_Coolboy(BYTE model);
+void extcl_after_mapper_init_Coolboy(void);
+void extcl_cpu_wr_mem_Coolboy(WORD address, BYTE value);
+BYTE extcl_save_mapper_Coolboy(BYTE mode, BYTE slot, FILE *fp);
+
+#endif /* MAPPER_COOLBOY_H_ */
