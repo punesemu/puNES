@@ -395,31 +395,6 @@ void gui_fullscreen(void) {
 	QTimer::singleShot(250, qt.mwin, SLOT(s_set_fullscreen()));
 }
 
-void gui_print_usage(char *usage) {
-	QMessageBox *box = new QMessageBox();
-
-	if (box->font().pointSize() > 9) {
-		QFont font;
-
-		font.setPointSize(9);
-		box->setFont(font);
-	}
-
-	box->setAttribute(Qt::WA_DeleteOnClose);
-	box->setWindowTitle(QString(NAME));
-
-	box->setWindowModality(Qt::WindowModal);
-
-	// monospace
-	box->setText("<pre>" + QString(usage) + "</pre>");
-
-	box->setStandardButtons(QMessageBox::Ok);
-	box->setDefaultButton(QMessageBox::Ok);
-
-	box->show();
-	box->exec();
-}
-
 int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type) {
 	dlgUncomp *dlg = new dlgUncomp(qt.mwin, (void *)archive, type);
 
