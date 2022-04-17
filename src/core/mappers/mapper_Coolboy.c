@@ -58,7 +58,7 @@ void map_init_Coolboy(BYTE model) {
 
 	coolboy.model = model;
 
-	if (mapper.write_vram == TRUE) {
+	if ((mapper.write_vram == TRUE) && !info.chr.rom[0].banks_8k) {
 		info.chr.rom[0].banks_8k = 32;
 	}
 
