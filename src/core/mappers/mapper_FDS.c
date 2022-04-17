@@ -57,9 +57,6 @@ void map_init_FDS(void) {
 
 	mapper.write_vram = TRUE;
 	info.chr.rom[0].banks_8k = 1;
-	info.chr.rom[0].banks_4k = info.chr.rom[0].banks_8k * 2;
-	info.chr.rom[0].banks_1k = info.chr.rom[0].banks_4k * 4;
-	map_set_banks_max_chr(0);
 
 	mirroring_H();
 
