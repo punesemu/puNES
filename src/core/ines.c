@@ -326,6 +326,9 @@ BYTE ines_load_rom(void) {
 				return (EXIT_ERROR);
 			}
 
+			info.chr.rom[0].banks_4k = info.chr.rom[0].banks_8k * 2;
+			info.chr.rom[0].banks_1k = info.chr.rom[0].banks_4k * 4;
+			map_set_banks_max_chr(0);
 			map_chr_bank_1k_reset();
 
 			if (info.format == NES_2_0) {
