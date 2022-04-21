@@ -21,18 +21,21 @@
 #include "info.h"
 #include "mem_map.h"
 #include "save_slot.h"
+#include "../../c++/crc/crc.h"
 
 INLINE static void m53_update_6000(void);
 
 struct _m53 {
 	BYTE reg[2];
-	BYTE prg_6000;
 } m53;
 struct _m53tmp {
 	BYTE *prg_6000;
+	BYTE eprom_first;
 } m53tmp;
 
 void map_init_53(void) {
+	const uint32_t EPROM_CRC = 0x63794E25;
+
 	EXTCL_CPU_WR_MEM(53);
 	EXTCL_CPU_RD_MEM(53);
 	EXTCL_SAVE_MAPPER(53);
@@ -41,15 +44,13 @@ void map_init_53(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m53, 0x00, sizeof(m53));
-
+		m53tmp.eprom_first = (prg.rom.size >= 0x8000) && (emu_crc32((void *)prg.rom.data, 0x8000) == EPROM_CRC);
 		extcl_cpu_wr_mem_53(0x6000, 0x00);
 	}
 
 	info.mapper.extend_wr = TRUE;
 }
 void extcl_cpu_wr_mem_53(WORD address, BYTE value) {
-	BYTE chip, tmp;
-
 	if (address < 0x6000) {
 		return;
 	}
@@ -69,34 +70,23 @@ void extcl_cpu_wr_mem_53(WORD address, BYTE value) {
 	m53_update_6000();
 
 	if (m53.reg[0] & 0x10) {
-		if (info.prg.chips > 1) {
-			chip = (m53.reg[0] >> 2) & 0x03;
-			_control_bank(chip, info.prg.max_chips)
+		WORD bank, tmp = (m53.reg[0] << 3) & 0x78;
 
-			tmp = (m53.reg[0] << 3) & 0x18;
+		bank = (tmp | (m53.reg[1] & 0x07)) + (m53tmp.eprom_first ? 0x02 : 0x00);
+		_control_bank(bank, info.prg.rom[0].max.banks_16k)
+		map_prg_rom_8k(2, 0, bank);
 
-			value = tmp | (m53.reg[1] & 0x07);
-			control_bank(info.prg.rom[chip].max.banks_16k)
-			map_prg_rom_8k_chip(2, 0, value, chip);
-
-			value = tmp | 0x07;
-			control_bank(info.prg.rom[chip].max.banks_16k)
-			map_prg_rom_8k_chip(2, 2, value, chip);
-		} else {
-			tmp = (m53.reg[0] << 3) & 0x78;
-
-			value = (tmp | (m53.reg[1] & 0x07)) + 2;
-			control_bank(info.prg.rom[0].max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-
-			value = (tmp | 0x07) + 2;
-			control_bank(info.prg.rom[0].max.banks_16k)
-			map_prg_rom_8k(2, 2, value);
-		}
-	} else if (info.prg.chips == 5) {
-		map_prg_rom_8k_chip(4, 0, 0, 4);
+		bank = (tmp | 0x07) + (m53tmp.eprom_first ? 0x02 : 0x00);
+		_control_bank(bank, info.prg.rom[0].max.banks_16k)
+		map_prg_rom_8k(2, 2, bank);
 	} else {
-		map_prg_rom_8k(4, 0, 0);
+		value = m53tmp.eprom_first ? 0x00 : 0x80;
+		control_bank(info.prg.rom[0].max.banks_16k)
+		map_prg_rom_8k(2, 0, value);
+
+		value = m53tmp.eprom_first ? 0x01 : 0x81;
+		control_bank(info.prg.rom[0].max.banks_16k)
+		map_prg_rom_8k(2, 2, value);
 	}
 	map_prg_rom_8k_update();
 }
@@ -109,9 +99,12 @@ BYTE extcl_cpu_rd_mem_53(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 }
 BYTE extcl_save_mapper_53(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m53.reg);
-	save_slot_ele(mode, slot, m53.prg_6000);
-
 	if (mode == SAVE_SLOT_READ) {
+		if (save_slot.version < 26) {
+			BYTE tmp;
+
+			save_slot_ele(mode, slot, tmp);
+		}
 		m53_update_6000();
 	}
 
@@ -119,18 +112,8 @@ BYTE extcl_save_mapper_53(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void m53_update_6000(void) {
-	BYTE chip;
+	WORD value = (((m53.reg[0] << 4) & 0xF0) | 0x0F) + (m53tmp.eprom_first ? 0x04 : 0x00);
 
-	if (info.prg.chips > 1) {
-		chip = (m53.reg[0] >> 2) & 0x03;
-		_control_bank(chip, info.prg.max_chips)
-
-		m53.prg_6000 = ((m53.reg[0] << 4) & 0x30) | 0x0F;
-		_control_bank(m53.prg_6000, info.prg.rom[chip].max.banks_8k)
-		m53tmp.prg_6000 = prg_chip_byte_pnt(chip, m53.prg_6000 << 13);
-	} else {
-		m53.prg_6000 = (((m53.reg[0] << 4) & 0xF0) | 0x0F) + 4;
-		_control_bank(m53.prg_6000, info.prg.rom[0].max.banks_8k)
-		m53tmp.prg_6000 = prg_chip_byte_pnt(0, m53.prg_6000 << 13);
-	}
+	control_bank(info.prg.rom[0].max.banks_8k)
+	m53tmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
 }

@@ -40,14 +40,11 @@ void map_init_AC08(void) {
 	extcl_cpu_wr_mem_AC08(0x8000, 0);
 
 	{
-		BYTE base, value;
+		BYTE value;
 
-		base = 1;
-		_control_bank(base, info.prg.max_chips)
-
-		value = 0;
-		control_bank(info.prg.rom[base].max.banks_32k)
-		map_prg_rom_8k_chip(4, 0, value, base);
+		value = ~1;
+		control_bank(info.prg.rom[0].max.banks_32k)
+		map_prg_rom_8k(4, 0, value);
 		map_prg_rom_8k_update();
 	}
 

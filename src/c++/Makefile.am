@@ -10,3 +10,10 @@ libcplus_a_SOURCES += \
 	xBRZ/xbrz.cpp \
 	xBRZ/xbrz.h \
 	xBRZ/xbrz_wrap.cpp
+
+libcplus_a_SOURCES += \
+	crc/crc.h \
+	crc/crc.cpp \
+	crc/Crc32.h \
+	crc/Crc32.cpp
+	

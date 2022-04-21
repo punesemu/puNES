@@ -16,35 +16,20 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "mappers.h"
-#include "mem_map.h"
-#include "info.h"
+#ifndef CRC_H_
+#define CRC_H_
 
-struct _gs2004tmp {
-	BYTE *prg_6000;
-} gs2004tmp;
+#include <stddef.h>
+#include "common.h"
 
-void map_init_GS_2004(void) {
-	EXTCL_CPU_WR_MEM(GS_2004);
-	EXTCL_CPU_RD_MEM(GS_2004);
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
-	{
-		BYTE value = 0xFF;
+EXTERNC uint32_t emu_crc32(const void *data, size_t length);
 
-		control_bank(info.prg.rom[0].max.banks_32k)
-		map_prg_rom_8k(4, 0, value);
-	}
+#undef EXTERNC
 
-	gs2004tmp.prg_6000 = prg_chip_byte_pnt(1, 0);
-}
-void extcl_cpu_wr_mem_GS_2004(UNUSED(WORD address), BYTE value) {
-	control_bank(info.prg.rom[0].max.banks_32k)
-	map_prg_rom_8k(4, 0, value);
-	map_prg_rom_8k_update();
-}
-BYTE extcl_cpu_rd_mem_GS_2004(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (gs2004tmp.prg_6000[address & 0x1FFF]);
-	}
-	return (openbus);
-}
+#endif /* CRC_H_ */

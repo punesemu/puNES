@@ -159,7 +159,6 @@ BYTE extcl_save_mapper_Coolboy(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-
 INLINE static void prg_fix_Coolboy(BYTE value) {
 	if (value & 0x40) {
 		prg_swap_Coolboy(0x8000, ~1);

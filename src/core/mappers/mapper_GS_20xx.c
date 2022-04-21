@@ -20,35 +20,37 @@
 #include "mem_map.h"
 #include "info.h"
 
-struct _gs2013tmp {
+struct _gs20xxtmp {
+	BYTE gs2004;
 	BYTE *prg_6000;
-} gs2013tmp;
+} gs20xxtmp;
 
-void map_init_GS_2013(void) {
-	EXTCL_CPU_WR_MEM(GS_2013);
-	EXTCL_CPU_RD_MEM(GS_2013);
+void map_init_GS_20xx(void) {
+	EXTCL_CPU_WR_MEM(GS_20xx);
+	EXTCL_CPU_RD_MEM(GS_20xx);
 
 	{
 		BYTE value;
 
-		value = 0xFF;
+		map_prg_rom_8k(4, 0, 0);
+		gs20xxtmp.gs2004 = (info.prg.rom[0].banks_8k != 0) && ((info.prg.rom[0].banks_8k & (info.prg.rom[0].banks_8k - 1)) == 0);
+		value = gs20xxtmp.gs2004 ? 0xFF : 0x1F;
 		control_bank(info.prg.rom[0].max.banks_8k)
-		gs2013tmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
+		gs20xxtmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
 	}
-
-	extcl_cpu_wr_mem_GS_2013(0x0000, 0xFF);
 }
-void extcl_cpu_wr_mem_GS_2013(UNUSED(WORD address), BYTE value) {
-	BYTE chip = (value >> 3) & 0x01;
-
-	_control_bank(chip, info.prg.max_chips)
-	control_bank(info.prg.rom[chip].max.banks_32k)
-	map_prg_rom_8k_chip(4, 0, value, chip);
+void extcl_cpu_wr_mem_GS_20xx(UNUSED(WORD address), BYTE value) {
+	if (gs20xxtmp.gs2004) {
+		control_bank(info.prg.rom[0].max.banks_32k)
+	} else {
+		control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_32k)
+	}
+	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 }
-BYTE extcl_cpu_rd_mem_GS_2013(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_GS_20xx(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (gs2013tmp.prg_6000[address & 0x1FFF]);
+		return (gs20xxtmp.prg_6000[address & 0x1FFF]);
 	}
 	return (openbus);
 }

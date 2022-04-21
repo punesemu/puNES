@@ -24,7 +24,7 @@
 
 struct _m42 {
 	WORD rom_map_to;
-	BYTE *prg_8k_6000;
+	BYTE *prg_6000;
 	struct _m42_irq {
 		BYTE active;
 		uint32_t count;
@@ -40,7 +40,7 @@ void map_init_42(void) {
 	mapper.internal_struct_size[0] = sizeof(m42);
 
 	map_prg_rom_8k(4, 0, (info.prg.rom[0].banks_16k >> 1) - 1);
-	m42.prg_8k_6000 = prg_chip_byte_pnt(0, 0 << 13);
+	m42.prg_6000 = prg_chip_byte_pnt(0, 0 << 13);
 }
 void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
 	switch (address & 0xE003) {
@@ -62,7 +62,7 @@ void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
 		case 0xE000:
 			control_bank(info.prg.rom[0].max.banks_8k)
 			m42.rom_map_to = value;
-			m42.prg_8k_6000 = prg_chip_byte_pnt(0, value << 13);
+			m42.prg_6000 = prg_chip_byte_pnt(0, value << 13);
 			return;
 		case 0xE001:
 			if (value == 0x00) {
@@ -84,19 +84,19 @@ void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_cpu_rd_mem_42(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address > 0x5FFF) && (address < 0x8000)) {
-		return (m42.prg_8k_6000[address & 0x1FFF]);
+	if ((address >= 0x6000) && (address <= 0x7FFF)) {
+		return (m42.prg_6000[address & 0x1FFF]);
 	}
 	return (openbus);
 }
 BYTE extcl_save_mapper_42(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m42.rom_map_to);
-	save_slot_ele(mode, slot, m42.prg_8k_6000);
+	save_slot_ele(mode, slot, m42.prg_6000);
 	save_slot_ele(mode, slot, m42.irq.active);
 	save_slot_ele(mode, slot, m42.irq.count);
 
 	if (mode == SAVE_SLOT_READ) {
-		m42.prg_8k_6000 = prg_chip_byte_pnt(0, m42.rom_map_to << 13);
+		m42.prg_6000 = prg_chip_byte_pnt(0, m42.rom_map_to << 13);
 	}
 
 	return (EXIT_OK);

@@ -366,7 +366,6 @@ BYTE nsfe_INFO(_rom_mem *rom, BYTE phase) {
 }
 BYTE nsfe_DATA(_rom_mem *rom, BYTE phase) {
 	int padding = nsf.adr.load & 0x0FFF;
-	int len_4k;
 
 	if (phase == NSFE_COUNT) {
 		if ((rom->position + nsfe.chunk.length) > rom->size) {
@@ -382,15 +381,11 @@ BYTE nsfe_DATA(_rom_mem *rom, BYTE phase) {
 		nsf.prg.banks_4k++;
 	}
 
-	len_4k = nsf.prg.banks_4k * 0x1000;
-
-	if (map_prg_chip_malloc(0, len_4k, 0x00) == EXIT_ERROR) {
+	if (map_prg_chip_malloc(nsf.prg.banks_4k * 0x1000, 0xF2) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}
 
-	memset(prg_chip(0), 0xF2, len_4k);
-
-	rom_mem_memcpy(prg_chip(0) + padding, rom, nsfe.chunk.length);
+	rom_mem_memcpy(prg.rom.data + padding, rom, nsfe.chunk.length);
 
 	nsf.prg.banks_4k--;
 

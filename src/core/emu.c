@@ -406,7 +406,7 @@ BYTE emu_load_rom(void) {
 		}
 
 		// PRG Rom
-		if (map_prg_chip_malloc(0, info.prg.rom[0].banks_16k * 0x4000, 0xEA) == EXIT_ERROR) {
+		if (map_prg_chip_malloc(info.prg.rom[0].banks_16k * 0x4000, 0xEA) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
 

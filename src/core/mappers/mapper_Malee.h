@@ -22,7 +22,6 @@
 #include "common.h"
 
 void map_init_malee(void);
-void extcl_cpu_wr_mem_malee(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_malee(WORD address, BYTE openbus, BYTE before);
 
 #endif /* MAPPER_MALEE_H_ */

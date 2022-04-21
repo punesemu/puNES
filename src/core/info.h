@@ -77,8 +77,10 @@ typedef struct _info {
 	_info_sh1sum sha1sum;
 	struct _info_chr {
 		WORD chips;
+		// da cancellare
 		WORD max_chips;
 		struct _info_chr_rom {
+			BYTE is_ram;
 			WORD banks_8k;
 			WORD banks_4k;
 			WORD banks_1k;
@@ -92,6 +94,7 @@ typedef struct _info {
 	} chr;
 	struct _info_prg {
 		WORD chips;
+		// da cancellare
 		WORD max_chips;
 		struct _info_prg_rom {
 			WORD banks_16k;

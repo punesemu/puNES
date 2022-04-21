@@ -56,17 +56,14 @@ BYTE extcl_save_mapper_T262(BYTE mode, BYTE slot, FILE *fp) {
 
 INLINE static void t262_update(BYTE value) {
 	BYTE bank = value & 0x07;
-	BYTE chip = t262.reg[0] >> 3;;
-
-	_control_bank(chip, info.prg.max_chips)
 
 	value = t262.reg[0] | bank;
-	control_bank(info.prg.rom[chip].max.banks_16k)
-	map_prg_rom_8k_chip(2, 0, value, chip);
+	control_bank(info.prg.rom[0].max.banks_16k)
+	map_prg_rom_8k(2, 0, value);
 
 	value = t262.reg[0] | (t262.reg[1] ? bank | t262.reg[4] : 7);
-	control_bank(info.prg.rom[chip].max.banks_16k)
-	map_prg_rom_8k_chip(2, 2, value, chip);
+	control_bank(info.prg.rom[0].max.banks_16k)
+	map_prg_rom_8k(2, 2, value);
 
 	map_prg_rom_8k_update();
 

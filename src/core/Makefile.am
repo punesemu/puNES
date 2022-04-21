@@ -363,10 +363,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_GameGenie.h \
 	mappers/mapper_GxROM.c \
 	mappers/mapper_GxROM.h \
-	mappers/mapper_GS_2004.c \
-	mappers/mapper_GS_2004.h \
-	mappers/mapper_GS_2013.c \
-	mappers/mapper_GS_2013.h \
+	mappers/mapper_GS_20xx.c \
+	mappers/mapper_GS_20xx.h \
 	mappers/mapper_H2288.c \
 	mappers/mapper_H2288.h \
 	mappers/mapper_Hen.c \

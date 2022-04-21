@@ -296,18 +296,18 @@ BYTE ines_load_rom(void) {
 		}
 
 		// alloco e carico la PRG Rom
-		if (map_prg_chip_malloc(0, info.prg.rom[0].banks_8k * 0x2000, 0x00) == EXIT_ERROR) {
+		if (map_prg_chip_malloc(info.prg.rom[0].banks_8k * 0x2000, 0x00) == EXIT_ERROR) {
 			free(rom.data);
 			return (EXIT_ERROR);
 		}
 
-		if (rom_mem_ctrl_memcpy(prg_chip(0), &rom, info.prg.rom[0].banks_8k * 0x2000) == EXIT_ERROR) {
+		if (rom_mem_ctrl_memcpy(prg.rom.data, &rom, prg.rom.size) == EXIT_ERROR) {
 			free(rom.data);
 			return (EXIT_ERROR);
 		}
 
 		if (info.format == NES_2_0) {
-			sha1_csum(prg_chip(0), info.prg.rom[0].banks_8k * 0x2000, info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
+			sha1_csum(prg.rom.data, prg.rom.size, info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
 		}
 
 		// se e' settato mapper.write_vram, vuol dire
@@ -316,12 +316,12 @@ BYTE ines_load_rom(void) {
 		// (perche' alcune mapper ne hanno 16k, altre 8k).
 		if (mapper.write_vram == FALSE) {
 			// alloco la CHR Rom
-			if (map_chr_chip_malloc(0, info.chr.rom[0].banks_8k * 0x2000, 0x00) == EXIT_ERROR) {
+			if (map_chr_chip_malloc(info.chr.rom[0].banks_8k * 0x2000, 0x00) == EXIT_ERROR) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
 
-			if (rom_mem_ctrl_memcpy(chr_chip(0), &rom, info.chr.rom[0].banks_8k * 0x2000) == EXIT_ERROR) { 
+			if (rom_mem_ctrl_memcpy(chr.rom.data, &rom, chr.rom.size) == EXIT_ERROR) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
@@ -332,13 +332,8 @@ BYTE ines_load_rom(void) {
 			map_chr_bank_1k_reset();
 
 			if (info.format == NES_2_0) {
-				sha1_csum(chr_chip(0), info.chr.rom[0].banks_8k * 0x2000, info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
+				sha1_csum(chr.rom.data, chr.rom.size, info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
 			}
-		}
-
-		info.prg.max_chips = info.prg.chips - 1;
-		if (info.chr.chips > 0) {
-			info.chr.max_chips = info.chr.chips - 1;
 		}
 
 		// la CHR ram extra
@@ -507,7 +502,7 @@ BYTE ines10_search_in_database(void *rom_mem) {
 
 		// calcolo l'sha1 della PRG Rom
 		sha1_csum(rom->data + position, len, info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
-		position += len;
+		position += (info.prg.rom[0].banks_16k * 0x4000);
 	}
 
 	if (info.chr.rom[0].banks_8k) {

@@ -25,11 +25,10 @@
 
 INLINE static void bmcghostbusters63in1_update_chr(void);
 
+static const BYTE bmcghostbusters63in1_chip[4] = { 0, 0, 1, 2 };
 struct _bmcghostbusters63in1 {
 	BYTE reg[2];
-	BYTE index;
 } bmcghostbusters63in1;
-static const BYTE bmcghostbusters63in1_chip[4] = { 0, 0, 1, 2 };
 
 void map_init_BMCGHOSTBUSTERS63IN1(void) {
 	EXTCL_CPU_WR_MEM(BMCGHOSTBUSTERS63IN1);
@@ -55,21 +54,19 @@ void extcl_cpu_wr_mem_BMCGHOSTBUSTERS63IN1(WORD address, BYTE value) {
 	BYTE chip;
 
 	bmcghostbusters63in1.reg[address & 0x01] = value;
-	bmcghostbusters63in1.index = ((bmcghostbusters63in1.reg[0] & 0x80) >> 7) |
-			((bmcghostbusters63in1.reg[1] & 0x01) << 1);
 
-	chip = bmcghostbusters63in1_chip[bmcghostbusters63in1.index];
-	_control_bank(chip, info.prg.max_chips)
+	chip = ((bmcghostbusters63in1.reg[0] & 0x80) >> 7) | ((bmcghostbusters63in1.reg[1] & 0x01) << 1);
+	chip = bmcghostbusters63in1_chip[chip];
 
 	if (bmcghostbusters63in1.reg[0] & 0x20) {
-		value = bmcghostbusters63in1.reg[0] & 0x1F;
-		control_bank(info.prg.rom[chip].max.banks_16k)
-		map_prg_rom_8k_chip(2, 0, value, chip);
-		map_prg_rom_8k_chip(2, 2, value, chip);
+		value = (chip << 5)| (bmcghostbusters63in1.reg[0] & 0x1F);
+		control_bank(info.prg.rom[0].max.banks_16k)
+		map_prg_rom_8k(2, 0, value);
+		map_prg_rom_8k(2, 2, value);
 	} else {
-		value = (bmcghostbusters63in1.reg[0] >> 1) & 0x0F;
-		control_bank(info.prg.rom[chip].max.banks_32k)
-		map_prg_rom_8k_chip(4, 0, value, chip);
+		value = (chip << 4) | ((bmcghostbusters63in1.reg[0] >> 1) & 0x0F);
+		control_bank(info.prg.rom[0].max.banks_32k)
+		map_prg_rom_8k(4, 0, value);
 	}
 	map_prg_rom_8k_update();
 
@@ -88,7 +85,11 @@ void extcl_cpu_wr_mem_BMCGHOSTBUSTERS63IN1(WORD address, BYTE value) {
 //}
 BYTE extcl_save_mapper_BMCGHOSTBUSTERS63IN1(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, bmcghostbusters63in1.reg);
-	save_slot_ele(mode, slot, bmcghostbusters63in1.index);
+	if ((mode == SAVE_SLOT_READ) && (save_slot.version < 26)) {
+		BYTE tmp;
+
+		save_slot_ele(mode, slot, tmp);
+	}
 	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
 
 	if (mode == SAVE_SLOT_READ) {

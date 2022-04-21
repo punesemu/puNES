@@ -40,7 +40,7 @@
 #include "nsf.h"
 #include "cheat.h"
 
-#define SAVE_VERSION 25
+#define SAVE_VERSION 26
 
 static void preview_image(BYTE slot, _screen_buffer *sb);
 static uTCHAR *name_slot_file(BYTE slot);
@@ -581,6 +581,7 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	for (i = 0; i < LENGTH(prg.rom_8k); i++) {
 		if (mode == SAVE_SLOT_SAVE) {
 			uint32_t bank = mapper.rom_map_to[i] << 13;
+
 			save_slot_int(mode, slot, bank)
 		} else {
 			if (save_slot.version >= 14) {
@@ -608,6 +609,7 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	for (i = 0; i < LENGTH(ntbl.bank_1k); i++) {
 		if (mode == SAVE_SLOT_SAVE) {
 			uint32_t diff = ntbl.bank_1k[i] - ntbl.data;
+
 			if (diff > 0x1000) {
 				tmp = 0;
 				save_slot_int(mode, slot, tmp)

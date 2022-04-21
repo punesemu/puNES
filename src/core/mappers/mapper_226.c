@@ -21,10 +21,15 @@
 #include "info.h"
 #include "mem_map.h"
 #include "save_slot.h"
+#include "../../c++/crc/crc.h"
 
 struct _m226 {
 	BYTE reg[2];
+	BYTE reset;
 } m226;
+struct _m226tmp {
+	BYTE reset_based;
+} m226tmp;
 
 void map_init_226(void) {
 	EXTCL_CPU_WR_MEM(226);
@@ -32,26 +37,36 @@ void map_init_226(void) {
 	mapper.internal_struct[0] = (BYTE *)&m226;
 	mapper.internal_struct_size[0] = sizeof(m226);
 
-	if (info.reset >= HARD) {
-		map_prg_rom_8k(4, 0, 0);
+	// 42-in-1 (Reset Based) [U][p1][!].unf
+	m226tmp.reset_based = (prg.rom.size == (1024 * 1024)) && (emu_crc32((void *)prg.rom.data, 1024 * 512) == 0xBE38DF65);
+
+	if (m226tmp.reset_based && (info.reset == RESET)) {
+		m226.reg[0] = 0;
+		m226.reg[1] = 0;
+		m226.reset ^= 1;
+	} else if (info.reset >= HARD) {
 		memset(&m226, 0x00, sizeof(m226));
 	}
+	extcl_cpu_wr_mem_226(0, m226.reg[0]);
 }
 void extcl_cpu_wr_mem_226(WORD address, BYTE value) {
 	BYTE bank;
 
 	m226.reg[address & 0x0001] = value;
 
-	bank = ((m226.reg[0] >> 1) & 0x0F) | ((m226.reg[0] >> 3) & 0x10) |
-			((m226.reg[1] << 5) & 0x20);
+	if (m226tmp.reset_based) {
+		bank = (m226.reg[0] & 0x1F) | (m226.reset << 5) | ((m226.reg[1] << 6) & 0x40);
+	} else {
+		bank = (m226.reg[0] & 0x1F) | ((m226.reg[0] >> 2) & 0x20) | ((m226.reg[1] << 6) & 0x40);
+	}
 
 	if (m226.reg[0] & 0x20) {
-		value = (bank << 1) | (m226.reg[0] & 0x01);
+		value = bank;
 		control_bank(info.prg.rom[0].max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k(2, 2, value);
 	} else {
-		value = bank;
+		value = bank >> 1;
 		control_bank(info.prg.rom[0].max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 	}
@@ -65,6 +80,9 @@ void extcl_cpu_wr_mem_226(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_226(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m226.reg);
+	if (save_slot.version >= 26) {
+		save_slot_ele(mode, slot, m226.reset);
+	}
 
 	return (EXIT_OK);
 }

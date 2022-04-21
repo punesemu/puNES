@@ -75,26 +75,14 @@ INLINE static void unif8157_update(BYTE value) {
 	BYTE bank = (unif8157.reg & 0x001C) >> 2;
 	BYTE lbank = (unif8157.reg & 0x0200) ? 7 : ((unif8157.reg & 0x80) ? bank : 0);
 
-	if (prg.chip[1].rom) {
-		base >>= 3;
-		_control_bank(base, info.prg.max_chips)
+	value = base | bank;
+	control_bank(info.prg.rom[0].max.banks_16k)
+ 	map_prg_rom_8k(2, 0, value);
 
-		value = bank;
- 		control_bank(info.prg.rom[base].max.banks_16k)
- 		map_prg_rom_8k_chip(2, 0, value, base);
+	value = base | lbank;
+	control_bank(info.prg.rom[0].max.banks_16k)
+	map_prg_rom_8k(2, 2, value);
 
- 		value = lbank;
- 		control_bank(info.prg.rom[base].max.banks_16k)
- 		map_prg_rom_8k_chip(2, 2, value, base);
-	} else {
-		value = base | bank;
-		control_bank(info.prg.rom[0].max.banks_16k)
-	 	map_prg_rom_8k(2, 0, value);
-
- 		value = base | lbank;
- 		control_bank(info.prg.rom[0].max.banks_16k)
- 		map_prg_rom_8k(2, 2, value);
-	}
 	map_prg_rom_8k_update();
 
 	if (unif8157.reg & 0x02) {

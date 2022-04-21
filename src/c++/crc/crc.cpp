@@ -16,13 +16,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_GS_2004_H_
-#define MAPPER_GS_2004_H_
+#include "crc.h"
+#include "Crc32.h"
 
-#include "common.h"
-
-void map_init_GS_2004(void);
-void extcl_cpu_wr_mem_GS_2004(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_GS_2004(WORD address, BYTE openbus, BYTE before);
-
-#endif /* MAPPER_GS_2004_H_ */
+uint32_t emu_crc32(const void *data, size_t length) {
+	return (crc32_fast(data, length));
+}

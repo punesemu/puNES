@@ -192,8 +192,7 @@
 #include "mappers/mapper_SHERO.h"
 #include "mappers/mapper_UNIFSMB2J.h"
 #include "mappers/mapper_AX5705.h"
-#include "mappers/mapper_GS_2004.h"
-#include "mappers/mapper_GS_2013.h"
+#include "mappers/mapper_GS_20xx.h"
 #include "mappers/mapper_KS7012.h"
 #include "mappers/mapper_KS7037.h"
 #include "mappers/mapper_KS7057.h"
@@ -248,8 +247,7 @@ extern _mapper mapper;
 
 BYTE map_init(void);
 void map_quit(void);
-BYTE map_prg_chip_malloc(BYTE index, size_t size, BYTE set_value);
-BYTE map_prg_chip_rd_byte(BYTE index, BYTE openbus, WORD address, WORD mask);
+BYTE map_prg_chip_malloc(size_t size, BYTE set_value);
 void map_prg_rom_8k_chip(BYTE banks_8k, BYTE at, WORD value, WORD chip);
 void map_prg_rom_8k_reset(void);
 void map_prg_rom_8k_update(void);
@@ -257,7 +255,7 @@ void map_prg_ram_init(void);
 BYTE map_prg_ram_malloc(WORD size);
 void map_prg_ram_memset(void);
 void map_prg_ram_battery_save(void);
-BYTE map_chr_chip_malloc(BYTE index, size_t size, BYTE set_value);
+BYTE map_chr_chip_malloc(size_t size, BYTE set_value);
 void map_chr_bank_1k_reset(void);
 BYTE map_chr_ram_init(void);
 BYTE map_chr_ram_extra_init(uint32_t size);

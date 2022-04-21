@@ -68,14 +68,15 @@ enum mirroring_type {
 	ntbl.bank_1k[2] = &ntbl.data[0];\
 	ntbl.bank_1k[3] = &ntbl.data[0x0400]
 
-#define prg_chip(chip_rom) prg.chip[chip_rom].rom
+#define prg_chip(chip_rom) prg.rom.data
 #define prg_chip_byte(chip_rom, index) prg_chip(chip_rom)[index]
 #define prg_chip_byte_pnt(chip_rom, index) &prg_chip_byte(chip_rom, index)
+#define prg_chip_data(chip_rom) prg.chip[chip_rom].data
 #define prg_chip_size(chip_rom) prg.chip[chip_rom].size
 
 #define prg_ram_plus_size() info.prg.ram.banks_8k_plus << 13
 
-#define chr_chip(chip_rom) chr.chip[chip_rom].rom
+#define chr_chip(chip_rom) chr.rom.data
 #define chr_chip_byte(chip_rom, index) chr_chip(chip_rom)[index]
 #define chr_chip_byte_pnt(chip_rom, index) &chr_chip_byte(chip_rom, index)
 #define chr_chip_size(chip_rom) chr.chip[chip_rom].size
@@ -86,9 +87,13 @@ typedef struct _mmcpu {
 	BYTE ram[0x800];   // Mirrored four times
 } _mmcpu;
 typedef struct _prg {
+	struct _prg_rom {
+		size_t size;
+		BYTE *data;
+	} rom;
 	struct _prg_chip {
 		size_t size;
-		BYTE *rom;
+		BYTE *data;
 	} chip[MAX_CHIPS];
 
 	WORD rom_chip[4];
@@ -104,9 +109,13 @@ typedef struct _prg {
 	BYTE *ram_battery; // Battery RAM
 } _prg;
 typedef struct _chr {
+	struct _chr_rom {
+		size_t size;
+		BYTE *data;
+	} rom;
 	struct _chr_chip {
 		size_t size;
-		BYTE *rom;
+		BYTE *data;
 	} chip[MAX_CHIPS];
 
 	WORD rom_chip[8];

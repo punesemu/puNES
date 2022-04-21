@@ -42,6 +42,7 @@ EXTERNC void emu_pause(BYTE mode);
 EXTERNC BYTE emu_reset(BYTE type);
 EXTERNC WORD emu_round_WORD(WORD number, WORD round);
 EXTERNC int emu_power_of_two(int base);
+EXTERNC int emu_strcicmp(char const *a, char const *b);
 EXTERNC double emu_drand(void);
 EXTERNC uTCHAR *emu_ustrncpy(uTCHAR *dst, uTCHAR *src);
 EXTERNC uTCHAR *emu_rand_str(void);

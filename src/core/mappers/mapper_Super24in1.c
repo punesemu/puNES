@@ -182,50 +182,39 @@ void extcl_wr_chr_Super24in1(WORD address, BYTE value) {
 }
 
 INLINE static void super24in1_update_prg(void) {
-	BYTE chip;
 	WORD value;
 
 	value = super24in1_prg_value(0);
-	chip = (value >> 6) & 0x0F;
-	_control_bank(chip, info.prg.max_chips)
-	control_bank(info.prg.rom[chip].max.banks_8k)
-	map_prg_rom_8k_chip(1, 0, value, chip);
+	control_bank(info.prg.rom[0].max.banks_8k)
+	map_prg_rom_8k(1, 0, value);
 
 	value = super24in1_prg_value(1);
-	chip = (value >> 6) & 0x0F;
-	_control_bank(chip, info.prg.max_chips)
-	control_bank(info.prg.rom[chip].max.banks_8k)
-	map_prg_rom_8k_chip(1, 1, value, chip);
+	control_bank(info.prg.rom[0].max.banks_8k)
+	map_prg_rom_8k(1, 1, value);
 
 	value = super24in1_prg_value(2);
-	chip = (value >> 6) & 0x0F;
-	_control_bank(chip, info.prg.max_chips)
-	control_bank(info.prg.rom[chip].max.banks_8k)
-	map_prg_rom_8k_chip(1, 2, value, chip);
+	control_bank(info.prg.rom[0].max.banks_8k)
+	map_prg_rom_8k(1, 2, value);
 
 	value = super24in1_prg_value(3);
-	chip = (value >> 6) & 0x0F;
-	_control_bank(chip, info.prg.max_chips)
-	control_bank(info.prg.rom[chip].max.banks_8k)
-	map_prg_rom_8k_chip(1, 3, value, chip);
+	control_bank(info.prg.rom[0].max.banks_8k)
+	map_prg_rom_8k(1, 3, value);
 
 	map_prg_rom_8k_update();
 }
 INLINE static void super24in1_update_chr(void) {
-	BYTE chip, i;
 	WORD value;
+	BYTE i;
 
 	for (i = 0; i < 8; i++) {
 		if (super24in1.reg[0] & 0x20) {
 			value = super24in1.chr_map[i];
-			control_bank(0x07)
+			control_bank(0xFF)
 			chr.bank_1k[i] = &chr.extra.data[i << 10];
 		} else {
 			value = super24in1.chr_map[i] | (super24in1.reg[2] << 3);
-			chip = (value >> 9) & 0x0F;
-			_control_bank(chip, info.chr.max_chips)
-			control_bank(info.chr.rom[chip].max.banks_1k)
-			chr.bank_1k[i] = chr_chip_byte_pnt(chip, value << 10);
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
 		}
 	}
 }

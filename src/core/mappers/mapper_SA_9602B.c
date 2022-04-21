@@ -31,12 +31,7 @@ INLINE static void sa9602b_update_prg(void);
 		mapper.rom_map_to[0] = sa9602b.prg_map[2];\
 		sa9602b.prg_map[0] = mapper.rom_map_to[0];\
 		sa9602b.prg_map[2] = mapper.rom_map_to[2];\
-		sa9602b.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom[0].max.banks_8k_before_last;\
-		prg.rom_chip[2] = sa9602b.prg_chip[0];\
-		prg.rom_chip[0] = sa9602b.prg_chip[2];\
-		sa9602b.prg_chip[0] = prg.rom_chip[0];\
-		sa9602b.prg_chip[2] = prg.rom_chip[2];\
-		sa9602b.prg_chip[mmc3.prg_rom_cfg ^ 0x02] = 0;\
+		sa9602b.prg_map[mmc3.prg_rom_cfg ^ 0x02] = 0x3E;\
 	}
 #define sa9602b_8001()\
 	switch (mmc3.bank_to_update) {\
@@ -46,21 +41,20 @@ INLINE static void sa9602b_update_prg(void);
 		case 3:\
 		case 4:\
 		case 5:\
-			value = value >> 6;\
-			control_bank(info.prg.max_chips)\
-			sa9602b.prg_chip[mmc3.prg_rom_cfg] = value;\
-			sa9602b.prg_chip[1] = value;\
+			sa9602b.reg[0] = value & 0xC0;\
+			sa9602b.prg_map[mmc3.prg_rom_cfg] = sa9602b.reg[0] | (sa9602b.prg_map[mmc3.prg_rom_cfg] & 0x3F);\
+			sa9602b.prg_map[1] = sa9602b.reg[0] | (sa9602b.prg_map[1] & 0x3F);\
 			break;\
 		case 6:\
-			sa9602b.prg_map[mmc3.prg_rom_cfg] = value & 0x3F;\
+			sa9602b.prg_map[mmc3.prg_rom_cfg] = sa9602b.reg[0] | (value & 0x3F);\
 			break;\
 		case 7:\
-			sa9602b.prg_map[1] = value & 0x3F;\
+			sa9602b.prg_map[1] = sa9602b.reg[0] | (value & 0x3F);\
 			break;\
 	}
 
 struct _sa9602b {
-	WORD prg_chip[4];
+	WORD reg[4]; // ex prg_chip[4]
 	WORD prg_map[4];
 } sa9602b;
 
@@ -86,16 +80,12 @@ void map_init_SA_9602B(void) {
 		info.chr.rom[0].banks_8k = 4;
 	}
 
-	{
-		BYTE i;
+	sa9602b.prg_map[0] = 0;
+	sa9602b.prg_map[1] = 1;
+	sa9602b.prg_map[2] = 0x3E;
+	sa9602b.prg_map[3] = 0x3F;
 
-		map_prg_rom_8k_reset();
-
-		for (i = 0; i < 4; i++) {
-			sa9602b.prg_chip[i] = prg.rom_chip[i];
-			sa9602b.prg_map[i] = mapper.rom_map_to[i];
-		}
-	}
+	sa9602b_update_prg();
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -120,7 +110,7 @@ void extcl_cpu_wr_mem_SA_9602B(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_SA_9602B(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, sa9602b.prg_chip);
+	save_slot_ele(mode, slot, sa9602b.reg);
 	save_slot_ele(mode, slot, sa9602b.prg_map);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
@@ -131,20 +121,20 @@ INLINE static void sa9602b_update_prg(void) {
 	WORD value;
 
 	value = sa9602b.prg_map[0];
-	control_bank(info.prg.rom[sa9602b.prg_chip[0]].max.banks_8k)
-	map_prg_rom_8k_chip(1, 0, value, sa9602b.prg_chip[0]);
+	control_bank(info.prg.rom[0].max.banks_8k)
+	map_prg_rom_8k(1, 0, value);
 
 	value = sa9602b.prg_map[1];
-	control_bank(info.prg.rom[sa9602b.prg_chip[1]].max.banks_8k)
-	map_prg_rom_8k_chip(1, 1, value, sa9602b.prg_chip[1]);
+	control_bank(info.prg.rom[0].max.banks_8k)
+	map_prg_rom_8k(1, 1, value);
 
 	value = sa9602b.prg_map[2];
-	control_bank(info.prg.rom[sa9602b.prg_chip[2]].max.banks_8k)
-	map_prg_rom_8k_chip(1, 2, value, sa9602b.prg_chip[2]);
+	control_bank(info.prg.rom[0].max.banks_8k)
+	map_prg_rom_8k(1, 2, value);
 
 	value = sa9602b.prg_map[3];
-	control_bank(info.prg.rom[sa9602b.prg_chip[3]].max.banks_8k)
-	map_prg_rom_8k_chip(1, 3, value, sa9602b.prg_chip[3]);
+	control_bank(info.prg.rom[0].max.banks_8k)
+	map_prg_rom_8k(1, 3, value);
 
 	map_prg_rom_8k_update();
 }

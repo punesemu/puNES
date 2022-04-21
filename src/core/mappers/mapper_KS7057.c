@@ -197,13 +197,13 @@ INLINE static void ks7057_update(void) {
 	value = 0x0D;
 	control_bank(info.prg.rom[0].max.banks_8k)
 	map_prg_rom_8k(1, 1, value);
-	prg.rom_8k[1] = prg_chip_byte_pnt(prg.rom_chip[0], mapper.rom_map_to[1] << 13);
+	prg.rom_8k[1] = prg_chip_byte_pnt(0, mapper.rom_map_to[1] << 13);
 
 	// 0xC000 - 0xD000
 	// 0xE000 - 0xF000
 	value = 7;
 	control_bank(info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 2, value);
-	prg.rom_8k[2] = prg_chip_byte_pnt(prg.rom_chip[0], mapper.rom_map_to[2] << 13);
-	prg.rom_8k[3] = prg_chip_byte_pnt(prg.rom_chip[0], mapper.rom_map_to[3] << 13);
+	prg.rom_8k[2] = prg_chip_byte_pnt(0, mapper.rom_map_to[2] << 13);
+	prg.rom_8k[3] = prg_chip_byte_pnt(0, mapper.rom_map_to[3] << 13);
 }

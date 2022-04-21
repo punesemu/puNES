@@ -415,7 +415,6 @@ BYTE nsf_load_rom(void) {
 
 		{
 			int padding = nsf.adr.load & 0x0FFF;
-			int len_4k;
 
 			nsf.prg.banks_4k = ((len + padding) / 0x1000);
 
@@ -423,16 +422,12 @@ BYTE nsf_load_rom(void) {
 				nsf.prg.banks_4k++;
 			}
 
-			len_4k = nsf.prg.banks_4k * 0x1000;
-
-			if (map_prg_chip_malloc(0, len_4k, 0x00) == EXIT_ERROR) {
+			if (map_prg_chip_malloc(nsf.prg.banks_4k * 0x1000, 0xF2) == EXIT_ERROR) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
 
-			memset(prg_chip(0), 0xF2, len_4k);
-
-			if (rom_mem_ctrl_memcpy(prg_chip(0) + padding, &rom, len) == EXIT_ERROR) {
+			if (rom_mem_ctrl_memcpy(prg.rom.data + padding, &rom, len) == EXIT_ERROR) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}

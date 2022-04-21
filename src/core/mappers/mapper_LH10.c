@@ -33,7 +33,6 @@ struct _lh10tmp {
 	BYTE *prg_C000;
 } lh10tmp;
 
-
 void map_init_LH10(void) {
 	EXTCL_AFTER_MAPPER_INIT(LH10);
 	EXTCL_CPU_WR_MEM(LH10);
@@ -120,13 +119,13 @@ INLINE static void lh10_update(void) {
 	value = lh10.reg[6];
 	control_bank(info.prg.rom[0].max.banks_8k)
 	map_prg_rom_8k(1, 0, value);
-	prg.rom_8k[0] = prg_chip_byte_pnt(prg.rom_chip[0], mapper.rom_map_to[0] << 13);
+	prg.rom_8k[0] = prg_chip_byte_pnt(0, mapper.rom_map_to[0] << 13);
 
 	// 0xA000 - 0xB000
 	value = lh10.reg[7];
 	control_bank(info.prg.rom[0].max.banks_8k)
 	map_prg_rom_8k(1, 1, value);
-	prg.rom_8k[1] = prg_chip_byte_pnt(prg.rom_chip[0], mapper.rom_map_to[1] << 13);
+	prg.rom_8k[1] = prg_chip_byte_pnt(0, mapper.rom_map_to[1] << 13);
 
 	// 0xC000 - 0xD000
 	lh10tmp.prg_C000 = &prg.ram_plus_8k[0];

@@ -123,12 +123,12 @@ INLINE static void ks7037_update(void) {
 	value = ks7037.reg[6];
 	control_bank(info.prg.rom[0].max.banks_8k)
 	map_prg_rom_8k(1, 0, value);
-	prg.rom_8k[0] = prg_chip_byte_pnt(prg.rom_chip[0], mapper.rom_map_to[0] << 13);
+	prg.rom_8k[0] = prg_chip_byte_pnt(0, mapper.rom_map_to[0] << 13);
 
 	// 0xA000
 	value = 0xFC;
 	control_bank(info.prg.rom[0].max.banks_4k)
-	prg.rom_8k[1] = prg_chip_byte_pnt(prg.rom_chip[0], value << 12);
+	prg.rom_8k[1] = prg_chip_byte_pnt(0, value << 12);
 
 	// 0xB000
 	ks7037tmp.prg_B000 = &prg.ram_plus_8k[1 << 12];
@@ -137,7 +137,7 @@ INLINE static void ks7037_update(void) {
 	value = ks7037.reg[7];
 	control_bank(info.prg.rom[0].max.banks_8k)
 	map_prg_rom_8k(1, 2, value);
-	prg.rom_8k[2] = prg_chip_byte_pnt(prg.rom_chip[0], mapper.rom_map_to[2] << 13);
+	prg.rom_8k[2] = prg_chip_byte_pnt(0, mapper.rom_map_to[2] << 13);
 
 	// mirroring
 	ntbl.bank_1k[0] = &ntbl.data[(ks7037.reg[2] & 0x01) * 0x400];

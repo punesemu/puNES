@@ -46,6 +46,10 @@ typedef struct _unif {
 		char id[4];
 		uint32_t length;
 	} chunk;
+	struct _unif_chips {
+		WORD prg;
+		WORD chr;
+	} chips;
 } _unif;
 
 extern _unif unif;

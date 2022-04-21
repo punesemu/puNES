@@ -23,6 +23,8 @@
 #include "cpu.h"
 #include "save_slot.h"
 
+INLINE static void prg_swap_UNIFSMB2J(void);
+
 struct _unifsmb2j {
 	BYTE reg;
 	struct _unifsmb2j_irq {
@@ -45,15 +47,14 @@ void map_init_UNIFSMB2J(void) {
 	memset(&unifsmb2j, 0x00, sizeof(unifsmb2j));
 
 	map_prg_rom_8k(4, 0, 0);
-	unifsmb2jtmp.prg_6000 = prg_chip_byte_pnt(1, unifsmb2j.reg << 13);
+	prg_swap_UNIFSMB2J();
 
 	info.mapper.extend_wr = TRUE;
 }
 void extcl_cpu_wr_mem_UNIFSMB2J(WORD address, BYTE value) {
 	if (address == 0x4027) {
 		unifsmb2j.reg = value & 0x01;
-		_control_bank(unifsmb2j.reg, info.prg.rom[1].max.banks_8k)
-		unifsmb2jtmp.prg_6000 = prg_chip_byte_pnt(1, unifsmb2j.reg << 13);
+		prg_swap_UNIFSMB2J();
 	} else if (address == 0x4068) {
 		unifsmb2j.irq.active = value & 0x01;
 		unifsmb2j.irq.count = 0;
@@ -74,7 +75,7 @@ BYTE extcl_save_mapper_UNIFSMB2J(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, unifsmb2j.irq.count);
 
 	if (mode == SAVE_SLOT_READ) {
-		unifsmb2jtmp.prg_6000 = prg_chip_byte_pnt(1, unifsmb2j.reg << 13);
+		prg_swap_UNIFSMB2J();
 	}
 
 	return (EXIT_OK);
@@ -88,4 +89,11 @@ void extcl_cpu_every_cycle_UNIFSMB2J(void) {
 			unifsmb2j.irq.active = 0;
 		}
 	}
+}
+
+INLINE static void prg_swap_UNIFSMB2J(void) {
+	BYTE value = 0x04 | unifsmb2j.reg;
+
+	control_bank(info.prg.rom[0].max.banks_8k)
+	unifsmb2jtmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
 }

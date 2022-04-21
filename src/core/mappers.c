@@ -713,6 +713,13 @@ BYTE map_init(void) {
 		case 268:
 			map_init_Coolboy(info.mapper.submapper == MINDKIDS ? MINDKIDS : COOLBOY);
 			break;
+		case 283:
+			map_init_GS_20xx();
+			break;
+		case 304:
+			// SMB2J
+			map_init_UNIFSMB2J();
+			break;
 		case 521:
 			map_init_DREAMTECH01();
 			break;
@@ -873,21 +880,9 @@ BYTE map_init(void) {
 					// SHERO
 					map_init_SHERO();
 					break;
-				case 35:
-					// SMB2J
-					map_init_UNIFSMB2J();
-					break;
 				case 36:
 					// AX5705
 					map_init_AX5705();
-					break;
-				case 37:
-					// GS-2004
-					map_init_GS_2004();
-					break;
-				case 38:
-					// GS-2013
-					map_init_GS_2013();
 					break;
 				case 39:
 					// KS7012
@@ -980,6 +975,7 @@ BYTE map_init(void) {
 				info.chr.rom[0].banks_8k = 1;
 			}
 		}
+		info.chr.rom[0].is_ram = TRUE;
 		info.chr.rom[0].banks_4k = info.chr.rom[0].banks_8k * 2;
 		info.chr.rom[0].banks_1k = info.chr.rom[0].banks_4k * 4;
 		map_set_banks_max_chr(0);
@@ -1005,18 +1001,11 @@ void map_quit(void) {
 	info.prg.ram.bat.start = DEFAULT;
 
 	/* PRG */
-	{
-		BYTE i;
-
-		for (i = 0; i < MAX_CHIPS; i++) {
-			if (prg_chip(i)) {
-				free(prg_chip(i));
-				prg_chip(i) = NULL;
-				prg_chip_size(i) = 0;
-			}
-		}
+	if (prg.rom.data) {
+		free(prg.rom.data);
+		prg.rom.data = NULL;
+		prg.rom.size = 0;
 	}
-	memset(&info.prg, 0x00, sizeof(info.prg));
 
 	if (prg.ram.data) {
 		free(prg.ram.data);
@@ -1032,18 +1021,11 @@ void map_quit(void) {
 	prg.ram_battery = NULL;
 
 	/* CHR */
-	{
-		BYTE i;
-
-		for (i = 0; i < MAX_CHIPS; i++) {
-			if (chr_chip(i)) {
-				free(chr_chip(i));
-				chr_chip(i) = NULL;
-				chr_chip_size(i) = 0;
-			}
-		}
+	if (chr.rom.data) {
+		free(chr.rom.data);
+		chr.rom.data = NULL;
+		chr.rom.size = 0;
 	}
-	memset(&info.chr, 0x00, sizeof(info.chr));
 
 	/* CHR extra */
 	if (chr.extra.data) {
@@ -1059,29 +1041,25 @@ void map_quit(void) {
 	mapper.write_vram = FALSE;
 }
 
-BYTE map_prg_chip_malloc(BYTE index, size_t size, BYTE set_value) {
-	if (prg_chip(index)) {
-		free(prg_chip(index));
-		prg_chip(index) = NULL;
+BYTE map_prg_chip_malloc(size_t size, BYTE set_value) {
+	if (prg.rom.data) {
+		free(prg.rom.data);
+		prg.rom.data = NULL;
+		prg.rom.size = 0;
 	}
 
-	prg_chip_size(index) = size;
-	info.prg.chips++;
-
-	if ((prg_chip(index) = (BYTE *)malloc(size))) {
-		memset(prg_chip(index), set_value, size);
+	if ((prg.rom.data = (BYTE *)malloc(size))) {
+		memset(prg.rom.data, set_value, size);
+		prg.rom.size = size;
 	} else {
+		free(prg.rom.data);
+		prg.rom.data = NULL;
+		prg.rom.size = 0;
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
 
 	return (EXIT_OK);
-}
-BYTE map_prg_chip_rd_byte(BYTE index, BYTE openbus, WORD address, WORD mask) {
-	if (prg_chip(index)) {
-		return (prg_chip_byte(1, address & mask));
-	}
-	return (openbus);
 }
 void map_prg_rom_8k_chip(BYTE banks_8k, BYTE at, WORD value, WORD chip) {
 	BYTE a;
@@ -1111,7 +1089,7 @@ void map_prg_rom_8k_update(void) {
 	BYTE i;
 
 	for (i = 0; i < 4; ++i) {
-		prg.rom_8k[i] = prg_chip_byte_pnt(prg.rom_chip[i], mapper.rom_map_to[i] << 13);
+		prg.rom_8k[i] = prg_chip_byte_pnt(0, mapper.rom_map_to[i] << 13);
 	}
 }
 void map_prg_ram_init(void) {
@@ -1231,18 +1209,20 @@ void map_prg_ram_battery_save(void) {
 		}
 	}
 }
-BYTE map_chr_chip_malloc(BYTE index, size_t size, BYTE set_value) {
-	if (chr_chip(index)) {
-		free(chr_chip(index));
-		chr_chip(index) = NULL;
+BYTE map_chr_chip_malloc(size_t size, BYTE set_value) {
+	if (chr.rom.data) {
+		free(chr.rom.data);
+		chr.rom.data = NULL;
+		chr.rom.size = 0;
 	}
 
-	chr_chip_size(index) = size;
-	info.chr.chips++;
-
-	if ((chr_chip(index) = (BYTE *)malloc(size))) {
-		memset(chr_chip(index), set_value, size);
+	if ((chr.rom.data = (BYTE *)malloc(size))) {
+		memset(chr.rom.data, set_value, size);
+		chr.rom.size = size;
 	} else {
+		free(chr.rom.data);
+		chr.rom.data = NULL;
+		chr.rom.size = 0;
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
@@ -1267,7 +1247,7 @@ BYTE map_chr_ram_init(void) {
 				free(chr_chip(0));
 			}
 			/* alloco la CHR Rom */
-			if (map_chr_chip_malloc(0, chr_ram_size(), 0x00) == EXIT_ERROR) {
+			if (map_chr_chip_malloc(chr_ram_size(), 0x00) == EXIT_ERROR) {
 				return (EXIT_ERROR);
 			}
 			map_chr_bank_1k_reset();

@@ -20,16 +20,21 @@
 #include "mappers.h"
 #include "mem_map.h"
 
+struct malee {
+	// da non salvare
+	BYTE *prg_6000;
+} malee;
+
 void map_init_malee(void) {
 	EXTCL_CPU_RD_MEM(malee);
 
 	map_prg_rom_8k(4, 0, 0);
-
+	malee.prg_6000 = (prg.rom.size == (0x8000 + 0x800)) ? prg.rom.data + 0x8000 : NULL;
 	mirroring_V();
 }
 BYTE extcl_cpu_rd_mem_malee(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x67FF)) {
-		return (map_prg_chip_rd_byte(1, openbus, address, 0x07FF));
+		return (malee.prg_6000 ? malee.prg_6000[address & 0x07FF] : openbus);
 	}
 	return (openbus);
 }
