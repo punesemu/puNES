@@ -1,6 +1,6 @@
 <p align="center">
   <img src="https://user-images.githubusercontent.com/14859058/132302943-a466d3d5-75c2-4bac-b0b2-7f0aeb8c058d.png" alt="puNES"/><br>
-</p>  
+</p>
 <h3 align="center">Qt-based Nintendo Entertainment System emulator and NSF/NSFe Music Player</h3>
 
 <p align="center">
@@ -14,14 +14,14 @@
 
 :keyboard: Configuration
 -----------
-To run it in portable mode, rename the executable by adding the suffix `_p`.  
+To run it in portable mode, rename the executable by adding the suffix `_p`.
 Examples: `punes.exe -> punes_p.exe` or `punes64.exe -> punes64_p.exe`
 
 To see a list of available command-line options, start puNES with the `-h` argument.
 
 :floppy_disk: Work in Progress (WIP) Builds
 -----------
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://github.com/punesemu/puNES/actions/workflows/build.yml/badge.svg)](https://github.com/punesemu/puNES/actions)  
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://github.com/punesemu/puNES/actions/workflows/build.yml/badge.svg)](https://github.com/punesemu/puNES/actions)
 
 These executables are always updated to the latest commit:
 * Windows 32 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build/master/punes32.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build/master/punes32.wip.d3d9.zip)
