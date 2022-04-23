@@ -1148,10 +1148,10 @@ void xbrz::scale(BYTE factor, const WORD* src, uint32_t* trg, uint32_t* palette,
 {
     _xbrz_wrap *p = (_xbrz_wrap *) param;
     int yFirst = (p->srcHeight / XBRZ_NUM_SLICE) + (p->srcHeight % 2);
-    uint32_t *output = p->trg;
+    //uint32_t *output = p->trg;
     int yLast = yFirst * (p->slice + 1);
 
-    output += yFirst * p->slice * p->factor * 4;
+    //output += yFirst * p->slice * p->factor * 4;
     yFirst *= p->slice;
 
     if ((p->slice + 1) == XBRZ_NUM_SLICE) {

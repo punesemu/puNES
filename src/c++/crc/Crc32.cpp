@@ -44,7 +44,19 @@
   #endif
 #else
   // defines __BYTE_ORDER as __LITTLE_ENDIAN or __BIG_ENDIAN
-  #include <sys/param.h>
+  #if defined (__OpenBSD__)
+    #include <endian.h>
+  #elif defined (__FreeBSD__)
+    #include <sys/endian.h>
+  #else
+    #include <sys/param.h>
+  #endif
+
+  #ifndef __BYTE_ORDER
+    #if defined(_BYTE_ORDER)
+      #define __BYTE_ORDER _BYTE_ORDER
+    #endif
+  #endif
 
   // intrinsics / prefetching
   #ifdef __GNUC__
