@@ -43,7 +43,7 @@ INLINE static void boy_update_chr(void);
 		mapper.rom_map_to[0] = boy.prg_map[2];\
 		boy.prg_map[0] = mapper.rom_map_to[0];\
 		boy.prg_map[2] = mapper.rom_map_to[2];\
-		boy.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom[0].max.banks_8k_before_last;\
+		boy.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
 	}
 #define boy_8001()\
 	switch (mmc3.bank_to_update) {\
@@ -102,8 +102,8 @@ void map_init_BOY(void) {
 	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
-	if ((mapper.write_vram == TRUE) && !info.chr.rom[0].banks_8k) {
-		info.chr.rom[0].banks_8k = 32;
+	if ((mapper.write_vram == TRUE) && !info.chr.rom.banks_8k) {
+		info.chr.rom.banks_8k = 32;
 	}
 
 	info.mapper.extend_wr = TRUE;
@@ -215,7 +215,7 @@ INLINE static void boy_update_prg(void) {
 			}
 			value = ((base << 4) & ~mask) | (value & mask) | emask | (i & 0x01);
 		}
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, i, value);
 	}
 	map_prg_rom_8k_update();
@@ -255,7 +255,7 @@ INLINE static void boy_update_chr(void) {
 			}
 			value = (value & mask) | (((boy.reg[0] & 0x08) << 4) & ~mask);
 		}
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[i] = chr_pnt(value << 10);
 	}
 }

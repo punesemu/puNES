@@ -41,10 +41,10 @@
 #define chr_rom_2k_swap(slot)\
 {\
 	DBWORD bank;\
-	control_bank(info.chr.rom[0].max.banks_2k)\
+	control_bank(info.chr.rom.max.banks_2k)\
 	bank = value << 11;\
-	chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank);\
-	chr.bank_1k[slot + 1] = chr_chip_byte_pnt(0, bank | 0x400);\
+	chr.bank_1k[slot] = chr_pnt(bank);\
+	chr.bank_1k[slot + 1] = chr_pnt(bank | 0x400);\
 }
 #define s4_mirroring()\
 	if (!s4.mode) {\
@@ -65,20 +65,20 @@
 	} else {\
 		switch (s4.mirroring & 0x03) {\
 		case 0:\
-			ntbl.bank_1k[0] = ntbl.bank_1k[2] = chr_chip_byte_pnt(0, s4.chr_nmt[0]);\
-			ntbl.bank_1k[1] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, s4.chr_nmt[1]);\
+			ntbl.bank_1k[0] = ntbl.bank_1k[2] = chr_pnt(s4.chr_nmt[0]);\
+			ntbl.bank_1k[1] = ntbl.bank_1k[3] = chr_pnt(s4.chr_nmt[1]);\
 			break;\
 		case 1:\
-			ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_chip_byte_pnt(0, s4.chr_nmt[0]);\
-			ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, s4.chr_nmt[1]);\
+			ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_pnt(s4.chr_nmt[0]);\
+			ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_pnt(s4.chr_nmt[1]);\
 			break;\
 		case 2:\
-			ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_chip_byte_pnt(0, s4.chr_nmt[0]);\
-			ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, s4.chr_nmt[0]);\
+			ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_pnt(s4.chr_nmt[0]);\
+			ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_pnt(s4.chr_nmt[0]);\
 			break;\
 		case 3:\
-			ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_chip_byte_pnt(0, s4.chr_nmt[1]);\
-			ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, s4.chr_nmt[1]);\
+			ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_pnt(s4.chr_nmt[1]);\
+			ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_pnt(s4.chr_nmt[1]);\
 			break;\
 		}\
 	}
@@ -196,20 +196,20 @@ void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value) {
 		const BYTE save = value;
 		DBWORD bank;
 
-		control_bank_with_AND(0x0F, info.chr.rom[0].max.banks_4k)
+		control_bank_with_AND(0x0F, info.chr.rom.max.banks_4k)
 		bank = value << 12;
-		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-		chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-		chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
+		chr.bank_1k[0] = chr_pnt(bank);
+		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
 
 		value = save >> 4;
-		control_bank(info.chr.rom[0].max.banks_4k)
+		control_bank(info.chr.rom.max.banks_4k)
 		bank = value << 12;
-		chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
-		chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
-		chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x0800);
-		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0C00);
+		chr.bank_1k[4] = chr_pnt(bank);
+		chr.bank_1k[5] = chr_pnt(bank | 0x0400);
+		chr.bank_1k[6] = chr_pnt(bank | 0x0800);
+		chr.bank_1k[7] = chr_pnt(bank | 0x0C00);
 
 	}
 }
@@ -227,21 +227,21 @@ void extcl_cpu_wr_mem_Sunsoft_S2(UNUSED(WORD address), BYTE value) {
 	}
 
 	value = (save >> 4) & 0x07;
-	control_bank(info.prg.rom[0].max.banks_16k)
+	control_bank(info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 	map_prg_rom_8k_update();
 
 	value = ((save & 0x80) >> 4) | (save & 0x07);
-	control_bank(info.chr.rom[0].max.banks_8k)
+	control_bank(info.chr.rom.max.banks_8k)
 	bank = value << 13;
-	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
-	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
-	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
-	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
-	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 
 void extcl_cpu_wr_mem_Sunsoft_S3(WORD address, BYTE value) {
@@ -275,7 +275,7 @@ void extcl_cpu_wr_mem_Sunsoft_S3(WORD address, BYTE value) {
 			mirroring(value)
 			return;
 		case 0xF800:
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -329,7 +329,7 @@ void extcl_cpu_wr_mem_Sunsoft_S4(WORD address, BYTE value) {
 			s4_mirroring()
 			return;
 		case 0xF000:
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -371,8 +371,8 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 				case 0x05:
 				case 0x06:
 				case 0x07:
-					control_bank(info.chr.rom[0].max.banks_1k)
-					chr.bank_1k[bank] = chr_chip_byte_pnt(0, value << 10);
+					control_bank(info.chr.rom.max.banks_1k)
+					chr.bank_1k[bank] = chr_pnt(value << 10);
 					return;
 				case 0x08: {
 					fm7.prg_ram_mode = value & 0x40;
@@ -382,9 +382,9 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 						case 0x80:
 							cpu.prg_ram_rd_active = TRUE;
 							cpu.prg_ram_wr_active = FALSE;
-							control_bank_with_AND(0x3F, info.prg.rom[0].max.banks_8k)
+							control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
 							fm7.prg_ram_address = value << 13;
-							prg.ram_plus_8k = prg_chip_byte_pnt(0, fm7.prg_ram_address);
+							prg.ram_plus_8k = prg_pnt(fm7.prg_ram_address);
 							return;
 						case 0x40:
 						case 0xC0:
@@ -400,7 +400,7 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 				case 0x09:
 				case 0x0A:
 				case 0x0B:
-					control_bank(info.prg.rom[0].max.banks_8k)
+					control_bank(info.prg.rom.max.banks_8k)
 					map_prg_rom_8k(1, (bank & 0x03) - 1, value);
 					map_prg_rom_8k_update();
 					return;
@@ -477,7 +477,7 @@ BYTE extcl_save_mapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, fm7.prg_ram_mode);
 	save_slot_ele(mode, slot, fm7.prg_ram_address);
 	if ((mode == SAVE_SLOT_READ) && !fm7.prg_ram_mode) {
-		prg.ram_plus_8k = prg_chip_byte_pnt(0, fm7.prg_ram_address);
+		prg.ram_plus_8k = prg_pnt(fm7.prg_ram_address);
 	}
 	save_slot_ele(mode, slot, fm7.irq_enable_trig);
 	save_slot_ele(mode, slot, fm7.irq_enable_count);

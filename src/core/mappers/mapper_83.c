@@ -191,52 +191,52 @@ INLINE static void sync_83(void) {
 		SDBWORD bank;
 
 		value = m83.reg[0];
-		control_bank(info.chr.rom[0].max.banks_2k)
+		control_bank(info.chr.rom.max.banks_2k)
 		bank = value << 11;
-		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
+		chr.bank_1k[0] = chr_pnt(bank);
+		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
 		value = m83.reg[1];
-		control_bank(info.chr.rom[0].max.banks_2k)
+		control_bank(info.chr.rom.max.banks_2k)
 		bank = value << 11;
-		chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
-		chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0400);
+		chr.bank_1k[2] = chr_pnt(bank);
+		chr.bank_1k[3] = chr_pnt(bank | 0x0400);
 		value = m83.reg[6];
-		control_bank(info.chr.rom[0].max.banks_2k)
+		control_bank(info.chr.rom.max.banks_2k)
 		bank = value << 11;
-		chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
-		chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
+		chr.bank_1k[4] = chr_pnt(bank);
+		chr.bank_1k[5] = chr_pnt(bank | 0x0400);
 		value = m83.reg[7];
-		control_bank(info.chr.rom[0].max.banks_2k)
+		control_bank(info.chr.rom.max.banks_2k)
 		bank = value << 11;
-		chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
-		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0400);
+		chr.bank_1k[6] = chr_pnt(bank);
+		chr.bank_1k[7] = chr_pnt(bank | 0x0400);
 	} else {
 		BYTE i;
 
 		for (i = 0; i < 8; i++) {
 			value = ((m83.bank << 4) & 0x0300) | m83.reg[i];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[i] = chr_pnt(value << 10);
 		}
 	}
 	if (m83.mode & 0x40) {
 		value = (m83.bank & 0x3F);
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		value = (m83.bank & 0x30) | 0x0F;
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 2, value);
 	} else {
 		value = m83.reg[8];
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 0, value);
 		value = m83.reg[9];
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 1, value);
 		value = m83.reg[10];
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 2, value);
-		map_prg_rom_8k(1, 3, info.prg.rom[0].max.banks_8k);
+		map_prg_rom_8k(1, 3, info.prg.rom.max.banks_8k);
 	}
 	map_prg_rom_8k_update();
 }

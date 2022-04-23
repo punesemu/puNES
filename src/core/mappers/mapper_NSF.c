@@ -151,14 +151,14 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 		if (nsf.sound_chips.fds) {
 			save_slot_pos(mode, slot, prg.ram.data, nsf.prg.rom_4k[i]);
 		} else {
-			save_slot_pos(mode, slot, prg_chip(0), nsf.prg.rom_4k[i]);
+			save_slot_pos(mode, slot, prg_rom(), nsf.prg.rom_4k[i]);
 		}
 	}
 	for (i = 0; i < LENGTH(nsf.prg.rom_4k_6xxx); i++) {
 		if (nsf.sound_chips.fds) {
 			save_slot_pos(mode, slot, prg.ram.data, nsf.prg.rom_4k_6xxx[i]);
 		} else {
-			save_slot_pos(mode, slot, prg_chip(0), nsf.prg.rom_4k_6xxx[i]);
+			save_slot_pos(mode, slot, prg_rom(), nsf.prg.rom_4k_6xxx[i]);
 		}
 	}
 

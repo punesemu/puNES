@@ -381,11 +381,10 @@ BYTE nsfe_DATA(_rom_mem *rom, BYTE phase) {
 		nsf.prg.banks_4k++;
 	}
 
-	if (map_prg_chip_malloc(nsf.prg.banks_4k * 0x1000, 0xF2) == EXIT_ERROR) {
+	if (map_prg_malloc(nsf.prg.banks_4k * 0x1000, 0xF2, TRUE) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}
-
-	rom_mem_memcpy(prg.rom.data + padding, rom, nsfe.chunk.length);
+	rom_mem_memcpy(prg_rom() + padding, rom, nsfe.chunk.length);
 
 	nsf.prg.banks_4k--;
 

@@ -26,13 +26,13 @@
 
 #define prg_rom_8k_update(slot, mask, shift)\
 	value = (mapper.rom_map_to[slot] & mask) | ((value & 0x0F) << shift);\
-	control_bank(info.prg.rom[0].max.banks_8k)\
+	control_bank(info.prg.rom.max.banks_8k)\
 	map_prg_rom_8k(1, slot, value);\
 	map_prg_rom_8k_update()
 #define chr_rom_1k_update(slot, mask, shift)\
 	value = (ss8806.chr_rom_bank[slot] & mask) | ((value & 0x0F) << shift);\
-	control_bank(info.chr.rom[0].max.banks_1k)\
-	chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);\
+	control_bank(info.chr.rom.max.banks_1k)\
+	chr.bank_1k[slot] = chr_pnt(value << 10);\
 	ss8806.chr_rom_bank[slot] = value
 
 struct _ss8806 {
@@ -118,16 +118,16 @@ void extcl_cpu_wr_mem_Jaleco_JF05(WORD address, BYTE value) {
 	}
 
 	value = (((value >> 1) & 0x1) | ((value << 1) & 0x2));
-	control_bank_with_AND(0x03, info.chr.rom[0].max.banks_8k)
+	control_bank_with_AND(0x03, info.chr.rom.max.banks_8k)
 	bank = value << 13;
-	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
-	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
-	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
-	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
-	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 
 void extcl_cpu_wr_mem_Jaleco_JF11(WORD address, BYTE value) {
@@ -139,21 +139,21 @@ void extcl_cpu_wr_mem_Jaleco_JF11(WORD address, BYTE value) {
 	}
 
 	value >>= 4;
-	control_bank_with_AND(0x03, info.prg.rom[0].max.banks_32k)
+	control_bank_with_AND(0x03, info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 
 	value = save;
-	control_bank_with_AND(0x0F, info.chr.rom[0].max.banks_8k)
+	control_bank_with_AND(0x0F, info.chr.rom.max.banks_8k)
 	bank = value << 13;
-	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
-	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
-	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
-	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
-	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 
 void extcl_cpu_wr_mem_Jaleco_JF13(WORD address, BYTE value) {
@@ -166,42 +166,42 @@ void extcl_cpu_wr_mem_Jaleco_JF13(WORD address, BYTE value) {
 	}
 
 	value >>= 4;
-	control_bank_with_AND(0x03, info.prg.rom[0].max.banks_32k)
+	control_bank_with_AND(0x03, info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 
 	value = ((save & 0x40) >> 4) | (save & 0x03);
-	control_bank(info.chr.rom[0].max.banks_8k)
+	control_bank(info.chr.rom.max.banks_8k)
 	bank = value << 13;
-	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
-	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
-	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
-	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
-	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 
 void extcl_cpu_wr_mem_Jaleco_JF16(WORD address, BYTE value) {
 	BYTE save = value &= prg_rom_rd(address);
 	DBWORD bank;
 
-	control_bank_with_AND(0x07, info.prg.rom[0].max.banks_16k)
+	control_bank_with_AND(0x07, info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 	map_prg_rom_8k_update();
 
 	value = save >> 4;
-	control_bank_with_AND(0x0F, info.chr.rom[0].max.banks_8k)
+	control_bank_with_AND(0x0F, info.chr.rom.max.banks_8k)
 	bank = value << 13;
-	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
-	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
-	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
-	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
-	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 
 	if (save & 0x08) {
 		mirroring_SCR1();
@@ -222,23 +222,23 @@ void extcl_cpu_wr_mem_Jaleco_JF17(WORD address, BYTE value) {
 	DBWORD bank;
 
 	if (save & 0x80) {
-		control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_16k)
+		control_bank_with_AND(0x0F, info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k_update();
 	}
 
 	if (save & 0x40) {
 		value = save;
-		control_bank_with_AND(0x0F, info.chr.rom[0].max.banks_8k)
+		control_bank_with_AND(0x0F, info.chr.rom.max.banks_8k)
 		bank = value << 13;
-		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-		chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-		chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
-		chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
-		chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
-		chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
-		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+		chr.bank_1k[0] = chr_pnt(bank);
+		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+		chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 	}
 
 	/* FIXME : aggiungere l'emulazione del D7756C */
@@ -250,23 +250,23 @@ void extcl_cpu_wr_mem_Jaleco_JF19(WORD address, BYTE value) {
 	DBWORD bank;
 
 	if (save & 0x80) {
-		control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_16k)
+		control_bank_with_AND(0x0F, info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 2, value);
 		map_prg_rom_8k_update();
 	}
 
 	if (save & 0x40) {
 		value = save;
-		control_bank_with_AND(0x0F, info.chr.rom[0].max.banks_8k)
+		control_bank_with_AND(0x0F, info.chr.rom.max.banks_8k)
 		bank = value << 13;
-		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-		chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-		chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
-		chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
-		chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
-		chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
-		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+		chr.bank_1k[0] = chr_pnt(bank);
+		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+		chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 	}
 
 	/* FIXME : aggiungere l'emulazione del D7756C */

@@ -29,7 +29,7 @@ void map_init_MTECH01(void) {
 		map_prg_rom_8k(2, 0, 0);
 
 		value = 8;
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 2, value);
 		map_prg_rom_8k_update();
 	}
@@ -39,7 +39,7 @@ void map_init_MTECH01(void) {
 void extcl_cpu_wr_mem_MTECH01(WORD address, BYTE value) {
 	if (address == 0x5020) {
 		value = value & 0x07;
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k_update();
 	}

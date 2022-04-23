@@ -34,31 +34,31 @@ void extcl_cpu_wr_mem_CC_21(WORD address, BYTE value) {
 		vl = value;
 	}
 
-	if (chr.chip[0].size == 8192) {
+	if (chr_size() == 8192) {
 		vl = vl & 0x01;
-		_control_bank(vl, info.chr.rom[0].max.banks_4k)
+		_control_bank(vl, info.chr.rom.max.banks_4k)
 		bank = vl << 12;
-		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-		chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-		chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
+		chr.bank_1k[0] = chr_pnt(bank);
+		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
 
-		chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
-		chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
-		chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x0800);
-		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0C00);
+		chr.bank_1k[4] = chr_pnt(bank);
+		chr.bank_1k[5] = chr_pnt(bank | 0x0400);
+		chr.bank_1k[6] = chr_pnt(bank | 0x0800);
+		chr.bank_1k[7] = chr_pnt(bank | 0x0C00);
 	} else {
 		vl = vl & 0x01;
-		_control_bank(vl, info.chr.rom[0].max.banks_8k)
+		_control_bank(vl, info.chr.rom.max.banks_8k)
 		bank = vl << 13;
-		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-		chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-		chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
-		chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
-		chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
-		chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
-		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+		chr.bank_1k[0] = chr_pnt(bank);
+		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+		chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 	}
 
 	if (vl & 0x01) {

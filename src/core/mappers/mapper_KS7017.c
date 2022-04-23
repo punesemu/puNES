@@ -45,7 +45,7 @@ void map_init_KS7017(void) {
 		BYTE value;
 
 		value = 2;
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 2, value);
 	}
 
@@ -62,7 +62,7 @@ void extcl_cpu_wr_mem_KS7017(WORD address, BYTE value) {
 		ks7017.reg =  ((address >> 4) & 0x04) | ((address & 0x0C) >> 2);
 	} else if ((address & 0xFF00) == 0x5100) {
 		value = ks7017.reg;
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k_update();
 	} else if (address == 0x4020) {

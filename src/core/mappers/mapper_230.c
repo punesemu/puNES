@@ -44,7 +44,7 @@ void map_init_230(void) {
 		mirroring_V();
 	} else {
 		map_prg_rom_8k(2, 0, 8);
-		map_prg_rom_8k(2, 2, info.prg.rom[0].max.banks_16k);
+		map_prg_rom_8k(2, 2, info.prg.rom.max.banks_16k);
 	}
 }
 void extcl_cpu_wr_mem_230(UNUSED(WORD address), BYTE value) {
@@ -52,11 +52,11 @@ void extcl_cpu_wr_mem_230(UNUSED(WORD address), BYTE value) {
 
 	if (!m230.mode) {
 		value = (save & 0x1F) + 0x08;
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 
 		value |= ((~save >> 5) & 0x01);
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 2, value);
 
 		if (save & 0x40) {
@@ -65,7 +65,7 @@ void extcl_cpu_wr_mem_230(UNUSED(WORD address), BYTE value) {
 			mirroring_H();
 		}
 	} else {
-		control_bank_with_AND(0x07, info.prg.rom[0].max.banks_16k)
+		control_bank_with_AND(0x07, info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 	}
 	map_prg_rom_8k_update();

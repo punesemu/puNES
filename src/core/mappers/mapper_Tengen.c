@@ -82,22 +82,22 @@ enum {
 			tengen_rambo_chr_2k_control(1, 2);\
 		}\
 	}\
-	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank[0] << 10);\
-	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank[1] << 10);\
-	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank[2] << 10);\
-	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank[3] << 10);\
-	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank[4] << 10);\
-	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank[5] << 10);\
-	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank[6] << 10);\
-	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank[7] << 10);\
+	chr.bank_1k[0] = chr_pnt(bank[0] << 10);\
+	chr.bank_1k[1] = chr_pnt(bank[1] << 10);\
+	chr.bank_1k[2] = chr_pnt(bank[2] << 10);\
+	chr.bank_1k[3] = chr_pnt(bank[3] << 10);\
+	chr.bank_1k[4] = chr_pnt(bank[4] << 10);\
+	chr.bank_1k[5] = chr_pnt(bank[5] << 10);\
+	chr.bank_1k[6] = chr_pnt(bank[6] << 10);\
+	chr.bank_1k[7] = chr_pnt(bank[7] << 10);\
 }
 #define tengen_rambo_chr_1k_control(chr_1k, bank_1k)\
 	value = tengen_rambo.chr[chr_1k];\
-	control_bank(info.chr.rom[0].max.banks_1k)\
+	control_bank(info.chr.rom.max.banks_1k)\
 	bank[bank_1k] = value
 #define tengen_rambo_chr_2k_control(chr_2k, bank_2k)\
 	value = tengen_rambo.chr[chr_2k] >> 1;\
-	control_bank(info.chr.rom[0].max.banks_2k)\
+	control_bank(info.chr.rom.max.banks_2k)\
 	bank[bank_2k] = value << 1;\
 	bank[bank_2k + 1] = bank[bank_2k] | 0x01
 
@@ -203,7 +203,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 						ntbl.bank_1k[tengen_rambo.reg_index - 2] = &ntbl.data[((value >> 7) ^ 0x01)
 							<< 10];
 					}
-					control_bank(info.chr.rom[0].max.banks_1k)
+					control_bank(info.chr.rom.max.banks_1k)
 					if (tengen_rambo.chr[tengen_rambo.reg_index] != value) {
 						tengen_rambo.chr[tengen_rambo.reg_index] = value;
 						tengen_rambo_chr_8k_update()
@@ -213,7 +213,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 				case 0x07: {
 					const BYTE index = tengen_rambo.reg_index & 0x01;
 
-					control_bank(info.prg.rom[0].max.banks_8k)
+					control_bank(info.prg.rom.max.banks_8k)
 					if (tengen_rambo.prg[index] != value) {
 						tengen_rambo.prg[index] = value;
 						tengen_rambo_prg_24k_update()
@@ -224,7 +224,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 				case 0x09: {
 					const BYTE index = tengen_rambo.reg_index - 0x02;
 
-					control_bank(info.chr.rom[0].max.banks_1k)
+					control_bank(info.chr.rom.max.banks_1k)
 					if (tengen_rambo.chr[index] != value) {
 						tengen_rambo.chr[index] = value;
 						tengen_rambo_chr_8k_update()
@@ -232,7 +232,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 					break;
 				}
 				case 0x0F:
-					control_bank(info.prg.rom[0].max.banks_8k)
+					control_bank(info.prg.rom.max.banks_8k)
 					if (tengen_rambo.prg[2] != value) {
 						tengen_rambo.prg[2] = value;
 						tengen_rambo_prg_24k_update()

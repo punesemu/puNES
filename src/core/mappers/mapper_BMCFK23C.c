@@ -306,11 +306,11 @@ INLINE static void prg_fix_BMCFK23CPW(BYTE value) {
 INLINE static void prg_swap_BMCFK23CPW(WORD address, WORD value) {
 	if ((bmcfk23c.reg[0] & 0x07) == 0x04) {
 		value = bmcfk23c.reg[1] >> 1;
-		control_bank(info.prg.rom[0].max.banks_32k)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 	} else if ((bmcfk23c.reg[0] & 0x07) == 0x03) {
 		value = bmcfk23c.reg[1];
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k(2, 2, value);
 	} else {
@@ -324,16 +324,16 @@ INLINE static void prg_swap_BMCFK23CPW(WORD address, WORD value) {
 			value &= bmcfk23c.prg_mask;
 		}
 
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 
 		if (bmcfk23c.reg[3] & 0x02) {
 			value = bmcfk23c.reg[4];
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 
 			value = bmcfk23c.reg[5];
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 3, value);
 		}
 	}
@@ -361,16 +361,16 @@ INLINE static void chr_swap_BMCFK23CCW(WORD address, WORD value) {
 
 	if (bmcfk23c.reg[0] & 0x40) {
 		value = bmcfk23c.reg[2] | bmcfk23c.unromchr;
-		control_bank(info.chr.rom[0].max.banks_8k)
+		control_bank(info.chr.rom.max.banks_8k)
 		bank = value << 13;
-		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-		chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-		chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
-		chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
-		chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
-		chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
-		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+		chr.bank_1k[0] = chr_pnt(bank);
+		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+		chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 
 		bmcfk23c.chr_map[0] = 0xFFFF;
 		bmcfk23c.chr_map[1] = 0xFFFF;
@@ -390,31 +390,31 @@ INLINE static void chr_swap_BMCFK23CCW(WORD address, WORD value) {
 		WORD base = (bmcfk23c.reg[2] & 0x7F) << 3;
 
 		value |= base;
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[address >> 10] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 		bmcfk23c.chr_map[address >> 10] = 0xFFFF;
 
 		if (bmcfk23c.reg[3] & 0x02) {
 			WORD cbase = (mmc3.bank_to_update & 0x80) >> 5;
 
 			value = base | bmcfk23c.mmc3[0];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[cbase ^ 0x00] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[cbase ^ 0x00] = chr_pnt(value << 10);
 			bmcfk23c.chr_map[cbase ^ 0x00] = 0xFFFF;
 
 			value = base | bmcfk23c.reg[6];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[cbase ^ 0x01] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[cbase ^ 0x01] = chr_pnt(value << 10);
 			bmcfk23c.chr_map[cbase ^ 0x01] = 0xFFFF;
 
 			value = base | bmcfk23c.mmc3[1];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[cbase ^ 0x02] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[cbase ^ 0x02] = chr_pnt(value << 10);
 			bmcfk23c.chr_map[cbase ^ 0x02] = 0xFFFF;
 
 			value = base | bmcfk23c.reg[7];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[cbase ^ 0x03] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[cbase ^ 0x03] = chr_pnt(value << 10);
 			bmcfk23c.chr_map[cbase ^ 0x03] = 0xFFFF;
 		}
 	}

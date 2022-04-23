@@ -32,7 +32,7 @@ void map_init_BS5(void) {
 		BYTE i;
 
 		for (i = 0; i < 4; i++) {
-			mapper.rom_map_to[i] = info.prg.rom[0].banks_8k - 1;
+			mapper.rom_map_to[i] = info.prg.rom.banks_8k - 1;
 		}
 	}
 
@@ -54,16 +54,16 @@ void extcl_cpu_wr_mem_BS5(WORD address, BYTE value) {
 
 			base <<= 1;
 			value = address & 0x1F;
-			control_bank(info.chr.rom[0].max.banks_2k)
+			control_bank(info.chr.rom.max.banks_2k)
 			bank = value << 11;
-			chr.bank_1k[base] = chr_chip_byte_pnt(0, bank);
-			chr.bank_1k[base | 0x01] = chr_chip_byte_pnt(0, bank | 0x0400);
+			chr.bank_1k[base] = chr_pnt(bank);
+			chr.bank_1k[base | 0x01] = chr_pnt(bank | 0x0400);
 			return;
 		}
 		case 0xA000:
 			if (address & (1 << (bs5tmp.reset + 4))) {
 				value = address & 0x0F;
-				control_bank(info.prg.rom[0].max.banks_8k)
+				control_bank(info.prg.rom.max.banks_8k)
 				map_prg_rom_8k(1, base, value);
 				map_prg_rom_8k_update();
 			}

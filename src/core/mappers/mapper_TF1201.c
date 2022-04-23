@@ -27,8 +27,8 @@
 
 #define chr_rom_1k_update(slot, mask, shift)\
 	value = (tf1201.chr_rom_bank[slot] & mask) | ((value & 0x0F) << shift);\
-	control_bank(info.chr.rom[0].max.banks_1k)\
-	chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);\
+	control_bank(info.chr.rom.max.banks_1k)\
+	chr.bank_1k[slot] = chr_pnt(value << 10);\
 	tf1201.chr_rom_bank[slot] = value
 
 struct _tf1201 {
@@ -73,13 +73,13 @@ void extcl_cpu_wr_mem_TF1201(WORD address, BYTE value) {
 
 	switch (address) {
 		case 0x8000:
-			control_bank_with_AND(0x1F, info.prg.rom[0].max.banks_8k)
+			control_bank_with_AND(0x1F, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, tf1201.swap_mode, value);
-			map_prg_rom_8k(1, 0x02 >> tf1201.swap_mode, info.prg.rom[0].max.banks_8k_before_last);
+			map_prg_rom_8k(1, 0x02 >> tf1201.swap_mode, info.prg.rom.max.banks_8k_before_last);
 			map_prg_rom_8k_update();
 			return;
 		case 0xA000:
-			control_bank_with_AND(0x1F, info.prg.rom[0].max.banks_8k)
+			control_bank_with_AND(0x1F, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;

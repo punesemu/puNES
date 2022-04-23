@@ -25,35 +25,35 @@
 
 #define m116_update_prg_8k(bnk, vl)\
 	tmp = vl;\
-	_control_bank(tmp, info.prg.rom[0].max.banks_8k)\
+	_control_bank(tmp, info.prg.rom.max.banks_8k)\
 	map_prg_rom_8k(1, bnk, tmp)
 #define m116_update_prg_16k(bnk, vl)\
 	tmp = vl;\
-	_control_bank(tmp, info.prg.rom[0].max.banks_16k)\
+	_control_bank(tmp, info.prg.rom.max.banks_16k)\
 	map_prg_rom_8k(2, bnk, tmp)
 #define m116_update_prg_32k(vl)\
 	tmp = vl;\
-	_control_bank(tmp, info.prg.rom[0].max.banks_32k)\
+	_control_bank(tmp, info.prg.rom.max.banks_32k)\
 	map_prg_rom_8k(4, 0, tmp)
 
 #define m116_update_chr_1k(bnk, vl)\
 	bank = vl;\
-	_control_bank(bank, info.chr.rom[0].max.banks_1k)\
-	chr.bank_1k[bnk] = chr_chip_byte_pnt(0, bank << 10)
+	_control_bank(bank, info.chr.rom.max.banks_1k)\
+	chr.bank_1k[bnk] = chr_pnt(bank << 10)
 #define m116_update_chr_2k(bnk, vl)\
 	bank = vl;\
-	_control_bank(bank, info.chr.rom[0].max.banks_2k)\
+	_control_bank(bank, info.chr.rom.max.banks_2k)\
 	bank <<= 11;\
-	chr.bank_1k[bnk       ] = chr_chip_byte_pnt(0, bank         );\
-	chr.bank_1k[bnk | 0x01] = chr_chip_byte_pnt(0, bank | 0x0400)
+	chr.bank_1k[bnk       ] = chr_pnt(bank         );\
+	chr.bank_1k[bnk | 0x01] = chr_pnt(bank | 0x0400)
 #define m116_update_chr_4k(bnk, vl)\
 	bank = vl;\
-	_control_bank(bank, info.chr.rom[0].max.banks_4k)\
+	_control_bank(bank, info.chr.rom.max.banks_4k)\
 	bank <<= 12;\
-	chr.bank_1k[bnk       ] = chr_chip_byte_pnt(0, bank         );\
-	chr.bank_1k[bnk | 0x01] = chr_chip_byte_pnt(0, bank | 0x0400);\
-	chr.bank_1k[bnk | 0x02] = chr_chip_byte_pnt(0, bank | 0x0800);\
-	chr.bank_1k[bnk | 0x03] = chr_chip_byte_pnt(0, bank | 0x0C00)
+	chr.bank_1k[bnk       ] = chr_pnt(bank         );\
+	chr.bank_1k[bnk | 0x01] = chr_pnt(bank | 0x0400);\
+	chr.bank_1k[bnk | 0x02] = chr_pnt(bank | 0x0800);\
+	chr.bank_1k[bnk | 0x03] = chr_pnt(bank | 0x0C00)
 
 #define m116_A_update_prg_mode0()\
 {\
@@ -190,7 +190,7 @@
 #define m116_B_chr_1k(a)\
 	m116.chr_map[a] = value;\
 	if (!(m116.mode & 0x02)) {\
-		chr.bank_1k[a] = chr_chip_byte_pnt(0, value << 10);\
+		chr.bank_1k[a] = chr_pnt(value << 10);\
 	}
 #define m116_B_swap_chr_bank_1k(src, dst)\
 {\
@@ -228,7 +228,7 @@
 		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, info.prg.rom[0].max.banks_8k_before_last);\
+		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, info.prg.rom.max.banks_8k_before_last);\
 		map_prg_rom_8k_update();\
 	}\
 }
@@ -236,31 +236,31 @@
 {\
 	switch (mmc3.bank_to_update) {\
 		case 0:\
-			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
 			m116_B_chr_1k(mmc3.chr_rom_cfg)\
 			value++;\
 			m116_B_chr_1k(mmc3.chr_rom_cfg | 0x01)\
 			return;\
 		case 1:\
-			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
 			m116_B_chr_1k(mmc3.chr_rom_cfg | 0x02)\
 			value++;\
 			m116_B_chr_1k(mmc3.chr_rom_cfg | 0x03)\
 			return;\
 		case 2:\
-			control_bank(info.chr.rom[0].max.banks_1k)\
+			control_bank(info.chr.rom.max.banks_1k)\
 			m116_B_chr_1k(mmc3.chr_rom_cfg ^ 0x04)\
 			return;\
 		case 3:\
-			control_bank(info.chr.rom[0].max.banks_1k)\
+			control_bank(info.chr.rom.max.banks_1k)\
 			m116_B_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x01)\
 			return;\
 		case 4:\
-			control_bank(info.chr.rom[0].max.banks_1k)\
+			control_bank(info.chr.rom.max.banks_1k)\
 			m116_B_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x02)\
 			return;\
 		case 5:\
-			control_bank(info.chr.rom[0].max.banks_1k)\
+			control_bank(info.chr.rom.max.banks_1k)\
 			m116_B_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x03)\
 			return;\
 	}\
@@ -307,12 +307,12 @@
 		p2 = m116.prg_map[2];\
 		m116.prg_map[0] = p2;\
 		m116.prg_map[2] = p0;\
-		m116.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom[0].max.banks_8k_before_last;\
+		m116.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
 		/*\
 		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, info.prg.rom[0].max.banks_8k_before_last);\
+		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, info.prg.rom.max.banks_8k_before_last);\
 		map_prg_rom_8k_update();\
 	}\
 }
@@ -327,9 +327,9 @@
 			m116.chr_map[slot + 1] = value + 1;\
 			m116_C_chr_1k(slot, value);\
 			bank &= 0xFFE;\
-			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
-			chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank << 10);\
-			chr.bank_1k[slot + 1] = chr_chip_byte_pnt(0, (bank + 1) << 10);\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
+			chr.bank_1k[slot] = chr_pnt(bank << 10);\
+			chr.bank_1k[slot + 1] = chr_pnt((bank + 1) << 10);\
 			return;\
 		case 1:\
 			slot = mmc3.chr_rom_cfg | 0x02;\
@@ -337,46 +337,46 @@
 			m116.chr_map[slot + 1] = value + 1;\
 			m116_C_chr_1k(slot, value);\
 			bank &= 0xFFE;\
-			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
-			chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank << 10);\
-			chr.bank_1k[slot + 1] = chr_chip_byte_pnt(0, (bank + 1) << 10);\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
+			chr.bank_1k[slot] = chr_pnt(bank << 10);\
+			chr.bank_1k[slot + 1] = chr_pnt((bank + 1) << 10);\
 			return;\
 		case 2:\
 			slot = mmc3.chr_rom_cfg ^ 0x04;\
 			m116.chr_map[slot] = value;\
 			m116_C_chr_1k(slot, value);\
-			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
-			chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank << 10);\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
+			chr.bank_1k[slot] = chr_pnt(bank << 10);\
 			return;\
 		case 3:\
 			slot = (mmc3.chr_rom_cfg ^ 0x04) | 0x01;\
 			m116.chr_map[slot] = value;\
 			m116_C_chr_1k(slot, value);\
-			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
-			chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank << 10);\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
+			chr.bank_1k[slot] = chr_pnt(bank << 10);\
 			return;\
 		case 4:\
 			slot = (mmc3.chr_rom_cfg ^ 0x04) | 0x02;\
 			m116.chr_map[slot] = value;\
 			m116_C_chr_1k(slot, value);\
-			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
-			chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank << 10);\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
+			chr.bank_1k[slot] = chr_pnt(bank << 10);\
 			return;\
 		case 5:\
 			slot = (mmc3.chr_rom_cfg ^ 0x04) | 0x03;\
 			m116.chr_map[slot] = value;\
 			m116_C_chr_1k(slot, value);\
-			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
-			chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank << 10);\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
+			chr.bank_1k[slot] = chr_pnt(bank << 10);\
 			return;\
 		case 6:\
-			control_bank(info.prg.rom[0].max.banks_8k)\
+			control_bank(info.prg.rom.max.banks_8k)\
 			m116.prg_map[mmc3.prg_rom_cfg] = value;\
 			map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);\
 			map_prg_rom_8k_update();\
 			return;\
 		case 7:\
-			control_bank(info.prg.rom[0].max.banks_8k)\
+			control_bank(info.prg.rom.max.banks_8k)\
 			m116.prg_map[1] = value;\
 			map_prg_rom_8k(1, 1, value);\
 			map_prg_rom_8k_update();\
@@ -746,14 +746,14 @@ void extcl_cpu_wr_mem_116_type_B(WORD address, BYTE value) {
 				chr.bank_1k[6] = &chr.extra.data[6 << 10];
 				chr.bank_1k[7] = &chr.extra.data[7 << 10];
 			} else {
-				chr.bank_1k[0] = chr_chip_byte_pnt(0, m116.chr_map[0] << 10);
-				chr.bank_1k[1] = chr_chip_byte_pnt(0, m116.chr_map[1] << 10);
-				chr.bank_1k[2] = chr_chip_byte_pnt(0, m116.chr_map[2] << 10);
-				chr.bank_1k[3] = chr_chip_byte_pnt(0, m116.chr_map[3] << 10);
-				chr.bank_1k[4] = chr_chip_byte_pnt(0, m116.chr_map[4] << 10);
-				chr.bank_1k[5] = chr_chip_byte_pnt(0, m116.chr_map[5] << 10);
-				chr.bank_1k[6] = chr_chip_byte_pnt(0, m116.chr_map[6] << 10);
-				chr.bank_1k[7] = chr_chip_byte_pnt(0, m116.chr_map[7] << 10);
+				chr.bank_1k[0] = chr_pnt(m116.chr_map[0] << 10);
+				chr.bank_1k[1] = chr_pnt(m116.chr_map[1] << 10);
+				chr.bank_1k[2] = chr_pnt(m116.chr_map[2] << 10);
+				chr.bank_1k[3] = chr_pnt(m116.chr_map[3] << 10);
+				chr.bank_1k[4] = chr_pnt(m116.chr_map[4] << 10);
+				chr.bank_1k[5] = chr_pnt(m116.chr_map[5] << 10);
+				chr.bank_1k[6] = chr_pnt(m116.chr_map[6] << 10);
+				chr.bank_1k[7] = chr_pnt(m116.chr_map[7] << 10);
 			}
 		}
 		return;
@@ -818,9 +818,9 @@ void extcl_cpu_wr_mem_116_type_C(WORD address, BYTE value) {
 				BYTE value = m116.chr_map[i];
 
 				m116_C_chr_1k(i, value);
-				chr.bank_1k[i] = chr_chip_byte_pnt(0, bank << 10);
+				chr.bank_1k[i] = chr_pnt(bank << 10);
 			} else {
-				chr.bank_1k[i] = chr_chip_byte_pnt(0, m116.mode0.chr[i] << 10);
+				chr.bank_1k[i] = chr_pnt(m116.mode0.chr[i] << 10);
 			}
 		}
 
@@ -859,13 +859,13 @@ void extcl_cpu_wr_mem_116_type_C(WORD address, BYTE value) {
 		m116.mode0.chr[address] = (m116.mode0.chr[address] & (0xF0 >> offset))
 			| ((value & 0x0F) << offset);
 
-		_control_bank(m116.mode0.chr[address], info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[address] = chr_chip_byte_pnt(0, m116.mode0.chr[address] << 10);
+		_control_bank(m116.mode0.chr[address], info.chr.rom.max.banks_1k)
+		chr.bank_1k[address] = chr_pnt(m116.mode0.chr[address] << 10);
 		return;
 	} else {
 		switch (address & 0xF003) {
 			case 0x8000:
-				control_bank(info.prg.rom[0].max.banks_8k)
+				control_bank(info.prg.rom.max.banks_8k)
 				if (m116.mode0.prg[0] != value) {
 					m116.mode0.prg[0] = value;
 					map_prg_rom_8k(1, 0, value);
@@ -883,7 +883,7 @@ void extcl_cpu_wr_mem_116_type_C(WORD address, BYTE value) {
 				}
 				return;
 			case 0xA000:
-				control_bank(info.prg.rom[0].max.banks_8k)
+				control_bank(info.prg.rom.max.banks_8k)
 				if (m116.mode0.prg[1] != value) {
 					m116.mode0.prg[1] = value;
 					map_prg_rom_8k(1, 1, value);

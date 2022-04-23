@@ -101,34 +101,34 @@ INLINE static void prg_setup_178(void) {
 	switch (m178.prg_mode) {
 		case 0:
 			value >>= 1;
-			control_bank(info.prg.rom[0].max.banks_32k)
+			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			break;
 		case 1:
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			if (m178tmp.model == M178EC32IN1) {
 				value = (m178.reg[1] << 3) | 0x07;
 			} else {
 				value = (m178.reg[1] << 3) | 0x07;
 			}
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 2, value);
 			break;
 		case 2:
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k(2, 2, value);
 			break;
 		case 3:
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			if (m178tmp.model == M178EC32IN1) {
 				value = (m178.reg[1] << 3) | 0x06 | ((m178.reg[0] & 0x01) << 1);
 			} else {
 				value = (m178.reg[1] << 3) | 0x06 | (m178.reg[0] & 0x01);
 			}
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 2, value);
 			break;
 	}

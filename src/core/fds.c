@@ -221,12 +221,12 @@ BYTE fds_load_bios(void) {
 	return (EXIT_ERROR);
 
 	fds_load_bios_founded:
-	if (map_prg_chip_malloc(0x2000, 0x00) == EXIT_ERROR) {
+	if (map_prg_malloc(0x2000, 0x00, TRUE) == EXIT_ERROR) {
 		fclose(bios);
 		return (EXIT_ERROR);
 	}
 
-	if (fread(prg.rom.data, prg.rom.size, 1, bios) < 1) {
+	if (fread(prg_rom(), prg_size(), 1, bios) < 1) {
 		fprintf(stderr, "error on reading fds bios\n");
 	}
 

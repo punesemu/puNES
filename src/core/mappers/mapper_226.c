@@ -38,7 +38,7 @@ void map_init_226(void) {
 	mapper.internal_struct_size[0] = sizeof(m226);
 
 	// 42-in-1 (Reset Based) [U][p1][!].unf
-	m226tmp.reset_based = (prg.rom.size == (1024 * 1024)) && (emu_crc32((void *)prg.rom.data, 1024 * 512) == 0xBE38DF65);
+	m226tmp.reset_based = (prg_size() == (1024 * 1024)) && (emu_crc32((void *)prg_rom(), 1024 * 512) == 0xBE38DF65);
 
 	if (m226tmp.reset_based && (info.reset == RESET)) {
 		m226.reg[0] = 0;
@@ -62,12 +62,12 @@ void extcl_cpu_wr_mem_226(WORD address, BYTE value) {
 
 	if (m226.reg[0] & 0x20) {
 		value = bank;
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k(2, 2, value);
 	} else {
 		value = bank >> 1;
-		control_bank(info.prg.rom[0].max.banks_32k)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 	}
 	map_prg_rom_8k_update();

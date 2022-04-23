@@ -34,7 +34,7 @@ void extcl_cpu_wr_mem_DREAMTECH01(WORD address, BYTE value) {
 		return;
 	}
 
-	control_bank_with_AND(0x07, info.prg.rom[0].max.banks_16k)
+	control_bank_with_AND(0x07, info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 	map_prg_rom_8k_update();
 }

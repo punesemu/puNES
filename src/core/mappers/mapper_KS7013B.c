@@ -38,7 +38,7 @@ void extcl_cpu_wr_mem_KS7013B(WORD address, BYTE value) {
 	}
 
 	if (address <= 0x7FFF) {
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k_update();
 		return;

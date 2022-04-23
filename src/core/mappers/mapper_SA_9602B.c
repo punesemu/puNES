@@ -76,8 +76,8 @@ void map_init_SA_9602B(void) {
 	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
-	if ((mapper.write_vram == TRUE) && !info.chr.rom[0].banks_8k) {
-		info.chr.rom[0].banks_8k = 4;
+	if ((mapper.write_vram == TRUE) && !info.chr.rom.banks_8k) {
+		info.chr.rom.banks_8k = 4;
 	}
 
 	sa9602b.prg_map[0] = 0;
@@ -121,19 +121,19 @@ INLINE static void sa9602b_update_prg(void) {
 	WORD value;
 
 	value = sa9602b.prg_map[0];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 0, value);
 
 	value = sa9602b.prg_map[1];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 1, value);
 
 	value = sa9602b.prg_map[2];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 2, value);
 
 	value = sa9602b.prg_map[3];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 3, value);
 
 	map_prg_rom_8k_update();

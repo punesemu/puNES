@@ -43,7 +43,7 @@ INLINE static void m8in1_update_chr(void);
 		mapper.rom_map_to[0] = m8in1.prg_map[2];\
 		m8in1.prg_map[0] = mapper.rom_map_to[0];\
 		m8in1.prg_map[2] = mapper.rom_map_to[2];\
-		m8in1.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom[0].max.banks_8k_before_last;\
+		m8in1.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
 	}
 #define m8in1_8001()\
 	switch (mmc3.bank_to_update) {\
@@ -102,8 +102,8 @@ void map_init_8_IN_1(void) {
 	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
-	if ((mapper.write_vram == TRUE) && !info.chr.rom[0].banks_8k) {
-		info.chr.rom[0].banks_8k = 32;
+	if ((mapper.write_vram == TRUE) && !info.chr.rom.banks_8k) {
+		info.chr.rom.banks_8k = 32;
 	}
 
 	irqA12.present = TRUE;
@@ -176,12 +176,12 @@ INLINE static void m8in1_update_prg(void) {
 
 		for (i = 0; i < 4; i++) {
 			value = ((m8in1.reg << 2) & 0x30) | (m8in1.prg_map[i] & 0x0F);
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, i, value);
 		}
 	} else {
 		value = m8in1.reg & 0x0F;
-		control_bank(info.prg.rom[0].max.banks_32k)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 	}
 	map_prg_rom_8k_update();
@@ -192,7 +192,7 @@ INLINE static void m8in1_update_chr(void) {
 
 	for (i = 0; i < 8; i++) {
 		value = ((m8in1.reg << 5) & 0x0180) | (m8in1.chr_map[i] & 0x7F);
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[i] = chr_pnt(value << 10);
 	}
 }

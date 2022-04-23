@@ -25,13 +25,13 @@
 
 #define kasing_swap_prg_rom_32k()\
 	value = kasing.prg_high;\
-	control_bank(info.prg.rom[0].max.banks_32k)\
+	control_bank(info.prg.rom.max.banks_32k)\
 	map_prg_rom_8k(4, 0, value)
 #define kasing_intercept_8001_prg(slot)\
 	if (kasing.prg_mode) {\
 		kasing_swap_prg_rom_32k();\
 	} else {\
-		control_bank(info.prg.rom[0].max.banks_8k)\
+		control_bank(info.prg.rom.max.banks_8k)\
 		map_prg_rom_8k(1, slot, value);\
 	}\
 	map_prg_rom_8k_update()
@@ -44,7 +44,7 @@
 #define kasing_chr_1k_update(slot)\
 {\
 	WORD tmp = (kasing.chr_high << 8) & 0x0100;\
-	chr.bank_1k[slot] = chr_chip_byte_pnt(0, (tmp | kasing.chr_rom_bank[slot]) << 10);\
+	chr.bank_1k[slot] = chr_pnt((tmp | kasing.chr_rom_bank[slot]) << 10);\
 }
 #define kasing_intercept_8001_chr(slot, val)\
 {\

@@ -394,11 +394,11 @@ BYTE emu_load_rom(void) {
 		}
 	} else if (info.gui) {
 		// impostazione primaria
-		info.prg.rom[0].banks_16k = info.chr.rom[0].banks_8k = 1;
+		info.prg.rom.banks_16k = info.chr.rom.banks_8k = 1;
 
-		info.prg.rom[0].banks_8k = info.prg.rom[0].banks_16k * 2;
-		info.chr.rom[0].banks_4k = info.chr.rom[0].banks_8k * 2;
-		info.chr.rom[0].banks_1k = info.chr.rom[0].banks_4k * 4;
+		info.prg.rom.banks_8k = info.prg.rom.banks_16k * 2;
+		info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
+		info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
 
 		// PRG Ram
 		if (map_prg_ram_malloc(0x2000) != EXIT_OK) {
@@ -406,7 +406,7 @@ BYTE emu_load_rom(void) {
 		}
 
 		// PRG Rom
-		if (map_prg_chip_malloc(info.prg.rom[0].banks_16k * 0x4000, 0xEA) == EXIT_ERROR) {
+		if (map_prg_malloc(info.prg.rom.banks_16k * 0x4000, 0xEA, TRUE) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
 

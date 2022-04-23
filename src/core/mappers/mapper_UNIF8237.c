@@ -51,17 +51,17 @@ INLINE static void unif8237a_update_chr(void);
 		mapper.rom_map_to[0] = unif8237.prg_map[2];\
 		unif8237.prg_map[0] = mapper.rom_map_to[0];\
 		unif8237.prg_map[2] = mapper.rom_map_to[2];\
-		unif8237.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom[0].max.banks_8k_before_last;\
+		unif8237.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
 	}
 #define unif8237_8001()\
 	switch (mmc3.bank_to_update) {\
 		case 0:\
-			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
 			unif8237.chr_map[mmc3.chr_rom_cfg] = value;\
 			unif8237.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
 			break;\
 		case 1:\
-			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
 			unif8237.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
 			unif8237.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
 			break;\
@@ -242,29 +242,29 @@ INLINE static void unif8237_update_prg(void) {
 
 			if (unif8237.reg[0] & 0x20) {
 				value = bnk1 >> 1;
-				control_bank(info.prg.rom[0].max.banks_32k)
+				control_bank(info.prg.rom.max.banks_32k)
 				map_prg_rom_8k(4, 0, value);
 			} else {
 				value = bnk1;
-				control_bank(info.prg.rom[0].max.banks_16k)
+				control_bank(info.prg.rom.max.banks_16k)
 				map_prg_rom_8k(2, 0, value);
 				map_prg_rom_8k(2, 2, value);
 			}
 		} else {
 			unif8237_prg_8k_a(unif8237.prg_map[0]);
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 
 			unif8237_prg_8k_a(unif8237.prg_map[1]);
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 
 			unif8237_prg_8k_a(unif8237.prg_map[2]);
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 
 			unif8237_prg_8k_a(unif8237.prg_map[3]);
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 3, value);
 		}
 	} else if (unif8237.reg[0] & 0x80) {
@@ -272,29 +272,29 @@ INLINE static void unif8237_update_prg(void) {
 
 		if (unif8237.reg[0] & 0x20) {
 			value = bnk >> 1;
-			control_bank(info.prg.rom[0].max.banks_32k)
+			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 		} else {
 			value = bnk;
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k(2, 2, value);
 		}
 	} else {
 		unif8237_prg_8k_b(unif8237.prg_map[0]);
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 0, value);
 
 		unif8237_prg_8k_b(unif8237.prg_map[1]);
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 1, value);
 
 		unif8237_prg_8k_b(unif8237.prg_map[2]);
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 2, value);
 
 		unif8237_prg_8k_b(unif8237.prg_map[3]);
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 3, value);
 	}
 	map_prg_rom_8k_update();
@@ -310,8 +310,8 @@ INLINE static void unif8237_update_chr(void) {
 		} else {
 			value = ((unif8237.reg[1] & 0x0C) << 6) | unif8237.chr_map[i];
 		}
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[i] = chr_pnt(value << 10);
 	}
 }
 INLINE static void unif8237a_update_prg(void) {
@@ -326,29 +326,29 @@ INLINE static void unif8237a_update_prg(void) {
 
 			if (unif8237.reg[0] & 0x20) {
 				value = bnk1 >> 1;
-				control_bank(info.prg.rom[0].max.banks_32k)
+				control_bank(info.prg.rom.max.banks_32k)
 				map_prg_rom_8k(4, 0, value);
 			} else {
 				value = bnk1;
-				control_bank(info.prg.rom[0].max.banks_16k)
+				control_bank(info.prg.rom.max.banks_16k)
 				map_prg_rom_8k(2, 0, value);
 				map_prg_rom_8k(2, 2, value);
 			}
 		} else {
 			unif8237a_prg_8k_a(unif8237.prg_map[0]);
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 
 			unif8237a_prg_8k_a(unif8237.prg_map[1]);
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 
 			unif8237a_prg_8k_a(unif8237.prg_map[2]);
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 
 			unif8237a_prg_8k_a(unif8237.prg_map[3]);
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 3, value);
 		}
 	} else if (unif8237.reg[0] & 0x80) {
@@ -357,29 +357,29 @@ INLINE static void unif8237a_update_prg(void) {
 
 		if (unif8237.reg[0] & 0x20) {
 			value = bnk >> 1;
-			control_bank(info.prg.rom[0].max.banks_32k)
+			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 		} else {
 			value = bnk;
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k(2, 2, value);
 		}
 	} else {
 		unif8237a_prg_8k_b(unif8237.prg_map[0]);
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 0, value);
 
 		unif8237a_prg_8k_b(unif8237.prg_map[1]);
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 1, value);
 
 		unif8237a_prg_8k_b(unif8237.prg_map[2]);
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 2, value);
 
 		unif8237a_prg_8k_b(unif8237.prg_map[3]);
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 3, value);
 	}
 	map_prg_rom_8k_update();
@@ -395,7 +395,7 @@ INLINE static void unif8237a_update_chr(void) {
 		} else {
 			value = ((unif8237.reg[1] & 0x0E) << 7) | unif8237.chr_map[i];
 		}
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[i] = chr_pnt(value << 10);
 	}
 }

@@ -234,7 +234,7 @@ BYTE unif_load_rom(void) {
 	info.mapper.submapper = DEFAULT;
 	info.mirroring_db = info.id = DEFAULT;
 	info.extra_from_db = 0;
-	info.chr.rom[0].banks_8k = 0;
+	info.chr.rom.banks_8k = 0;
 	info.prg.chips = info.chr.chips = 0;
 	vs_system.enabled = FALSE;
 
@@ -264,16 +264,15 @@ BYTE unif_load_rom(void) {
 						size += prg_chip_size(i);
 					}
 
-					if ((size == 0) || (map_prg_chip_malloc(size, 0x00) == EXIT_ERROR)) {
+					if ((size == 0) || (map_prg_malloc(size, 0x00, FALSE) == EXIT_ERROR)) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
 
-					info.prg.rom[0].banks_16k = prg.rom.size / 0x4000;
-					info.prg.rom[0].banks_8k = prg.rom.size / 0x2000;
-					map_set_banks_max_prg(0);
+					info.prg.rom.banks_16k = prg_size() / 0x4000;
+					info.prg.rom.banks_8k = prg_size() / 0x2000;
+					map_set_banks_max_prg();
 				}
-
 
 				// CHR
 				{
@@ -282,14 +281,14 @@ BYTE unif_load_rom(void) {
 					}
 
 					if (size > 0) {
-						if (map_chr_chip_malloc(size, 0x00) == EXIT_ERROR) {
+						if (map_chr_malloc(size, 0x00, FALSE) == EXIT_ERROR) {
 							free(rom.data);
 							return (EXIT_ERROR);
 						}
-						info.chr.rom[0].banks_8k = chr.rom.size / 0x2000;
-						info.chr.rom[0].banks_4k = chr.rom.size / 0x1000;
-						info.chr.rom[0].banks_1k = chr.rom.size / 0x0400;
-						map_set_banks_max_chr(0);
+						info.chr.rom.banks_8k = chr_size() / 0x2000;
+						info.chr.rom.banks_4k = chr_size() / 0x1000;
+						info.chr.rom.banks_1k = chr_size() / 0x0400;
+						map_set_banks_max_chr();
 
 						map_chr_bank_1k_reset();
 					}
@@ -392,7 +391,7 @@ BYTE unif_load_rom(void) {
 			}
 		}
 
-		if (!info.chr.rom[0].banks_1k) {
+		if (!info.chr.rom.banks_1k) {
 			mapper.write_vram = TRUE;
 		}
 
@@ -547,13 +546,13 @@ BYTE unif_PRG(_rom_mem *rom, BYTE phase) {
 		BYTE i;
 
 		unif.chips.prg++;
-		for (i = 0, prg.chip[chip].data = prg.rom.data; i < chip; i++) {
-			prg.chip[chip].data += prg_chip_size(i);
+		for (i = 0, prg_chip_rom(chip) = prg_rom(); i < chip; i++) {
+			prg_chip_rom(chip) += prg_chip_size(i);
 		}
-		rom_mem_memcpy(prg.chip[chip].data, rom, prg_chip_size(chip));
+		rom_mem_memcpy(prg_chip_rom(chip), rom, prg_chip_size(chip));
 		fprintf(stderr, "PRG chip %d : 8k rom = %lu [%ld, %08X]\n",
 			real_chip, (long unsigned)prg_chip_size(chip) / 0x2000, (long)prg_chip_size(chip),
-			emu_crc32((void *)prg.chip[chip].data, prg_chip_size(chip)));
+			emu_crc32((void *)prg_chip_rom(chip), prg_chip_size(chip)));
 	}
 
 	return (EXIT_OK);
@@ -578,13 +577,13 @@ BYTE unif_CHR(_rom_mem *rom, BYTE phase) {
 		BYTE i;
 
 		unif.chips.chr++;
-		for (i = 0, chr.chip[chip].data = chr.rom.data; i < chip; i++) {
-			chr.chip[chip].data += chr_chip_size(i);
+		for (i = 0, chr_chip_rom(chip) = chr_rom(); i < chip; i++) {
+			chr_chip_rom(chip) += chr_chip_size(i);
 		}
-		rom_mem_memcpy(chr.chip[chip].data, rom, chr_chip_size(chip));
+		rom_mem_memcpy(chr_chip_rom(chip), rom, chr_chip_size(chip));
 		fprintf(stderr, "CHR chip %d : 4k vrom = %lu [%ld, %08X]\n",
 			real_chip, (long unsigned)chr_chip_size(chip) / 0x1000, (long)chr_chip_size(chip),
-			emu_crc32((void *)chr.chip[chip].data, chr_chip_size(chip)));
+			emu_crc32((void *)chr_chip_rom(chip), chr_chip_size(chip)));
 	}
 
 	return (EXIT_OK);

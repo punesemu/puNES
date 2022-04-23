@@ -67,7 +67,7 @@ void extcl_cpu_wr_mem_252(WORD address, BYTE value) {
 		case 0x8004:
 		case 0x8008:
 		case 0x800C:
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -75,7 +75,7 @@ void extcl_cpu_wr_mem_252(WORD address, BYTE value) {
 		case 0xA004:
 		case 0xA008:
 		case 0xA00C:
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
@@ -101,13 +101,13 @@ void extcl_cpu_wr_mem_252(WORD address, BYTE value) {
 			shift = address & 0x04;
 
 			value = (m252.chr_map[i] & (0xF0 >> shift)) | ((value & 0x0F) << shift);
-			control_bank(info.chr.rom[0].max.banks_1k)
+			control_bank(info.chr.rom.max.banks_1k)
 			m252.chr_map[i] = value;
 
 			if ((value == 6) || (value == 7)) {
 				m252_chr_extra_1k(i);
 			} else {
-				chr.bank_1k[i] = chr_chip_byte_pnt(0, m252.chr_map[i] << 10);
+				chr.bank_1k[i] = chr_pnt(m252.chr_map[i] << 10);
 			}
 			return;
 		}

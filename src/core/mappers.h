@@ -227,7 +227,6 @@
 #define control_bank_with_AND(mask, max)\
 	_control_bank_with_AND(value, mask, max)
 #define prg_rom_rd(address) prg.rom_8k[(address >> 13) & 0x03][address & 0x1FFF]
-#define map_prg_rom_8k(banks_8k, at, value) map_prg_rom_8k_chip(banks_8k, at, value, 0)
 
 enum mappers_op_battery { RD_BAT, WR_BAT };
 
@@ -247,21 +246,21 @@ extern _mapper mapper;
 
 BYTE map_init(void);
 void map_quit(void);
-BYTE map_prg_chip_malloc(size_t size, BYTE set_value);
-void map_prg_rom_8k_chip(BYTE banks_8k, BYTE at, WORD value, WORD chip);
+BYTE map_prg_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom);
+void map_prg_rom_8k(BYTE banks_8k, BYTE at, WORD value);
 void map_prg_rom_8k_reset(void);
 void map_prg_rom_8k_update(void);
 void map_prg_ram_init(void);
 BYTE map_prg_ram_malloc(WORD size);
 void map_prg_ram_memset(void);
 void map_prg_ram_battery_save(void);
-BYTE map_chr_chip_malloc(size_t size, BYTE set_value);
+BYTE map_chr_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom);
 void map_chr_bank_1k_reset(void);
 BYTE map_chr_ram_init(void);
 BYTE map_chr_ram_extra_init(uint32_t size);
 void map_chr_ram_extra_reset(void);
-void map_set_banks_max_prg(BYTE chip);
-void map_set_banks_max_chr(BYTE chip);
+void map_set_banks_max_prg(void);
+void map_set_banks_max_chr(void);
 void map_bat_wr_default(FILE *fp) ;
 void map_bat_rd_default(FILE *fp);
 

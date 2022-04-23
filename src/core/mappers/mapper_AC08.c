@@ -43,7 +43,7 @@ void map_init_AC08(void) {
 		BYTE value;
 
 		value = ~1;
-		control_bank(info.prg.rom[0].max.banks_32k)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 		map_prg_rom_8k_update();
 	}
@@ -57,8 +57,8 @@ void extcl_cpu_wr_mem_AC08(WORD address, BYTE value) {
 		} else {
 			value = value & 0x0F;
 		}
-		control_bank(info.prg.rom[0].max.banks_8k)
-		ac08tmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
+		control_bank(info.prg.rom.max.banks_8k)
+		ac08tmp.prg_6000 = prg_pnt(value << 13);
 		ac08.reg = value;
 		return;
 	}
@@ -82,7 +82,7 @@ BYTE extcl_save_mapper_AC08(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ac08.reg);
 
 	if (mode == SAVE_SLOT_READ) {
-		ac08tmp.prg_6000 = prg_chip_byte_pnt(0, ac08.reg << 13);
+		ac08tmp.prg_6000 = prg_pnt(ac08.reg << 13);
 	}
 
 	return (EXIT_OK);

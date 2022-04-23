@@ -422,12 +422,12 @@ BYTE nsf_load_rom(void) {
 				nsf.prg.banks_4k++;
 			}
 
-			if (map_prg_chip_malloc(nsf.prg.banks_4k * 0x1000, 0xF2) == EXIT_ERROR) {
+			if (map_prg_malloc(nsf.prg.banks_4k * 0x1000, 0xF2, TRUE) == EXIT_ERROR) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
 
-			if (rom_mem_ctrl_memcpy(prg.rom.data + padding, &rom, len) == EXIT_ERROR) {
+			if (rom_mem_ctrl_memcpy(prg_rom() + padding, &rom, len) == EXIT_ERROR) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}

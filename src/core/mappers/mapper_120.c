@@ -40,7 +40,7 @@ void map_init_120(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m120, 0x00, sizeof(m120));
-		m120.prg_ram_rd = prg_chip(0);
+		m120.prg_ram_rd = prg_rom();
 		map_prg_rom_8k(4, 0, 2);
 	}
 }
@@ -50,8 +50,8 @@ void extcl_cpu_wr_mem_120(WORD address, BYTE value) {
 	}
 
 	if ((address & 0xE3C0) == 0x41C0) {
-		control_bank_with_AND(0x07, info.prg.rom[0].max.banks_8k)
-		m120.prg_ram_rd = prg_chip_byte_pnt(0, value << 13);
+		control_bank_with_AND(0x07, info.prg.rom.max.banks_8k)
+		m120.prg_ram_rd = prg_pnt(value << 13);
 	}
 }
 BYTE extcl_cpu_rd_mem_120(WORD address, BYTE openbus, UNUSED(BYTE before)) {
@@ -62,7 +62,7 @@ BYTE extcl_cpu_rd_mem_120(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	return (m120.prg_ram_rd[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_120(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_pos(mode, slot, prg_chip(0), m120.prg_ram_rd);
+	save_slot_pos(mode, slot, prg_rom(), m120.prg_ram_rd);
 
 	return (EXIT_OK);
 }

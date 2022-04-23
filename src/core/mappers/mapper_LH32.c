@@ -41,21 +41,21 @@ void map_init_LH32(void) {
 		BYTE value;
 
 		value = 0xFF - 3;
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 0, value);
 
 		value = 0xFF - 2;
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 1, value);
 
 		value = 0xFF;
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 3, value);
 
 		map_prg_rom_8k_update();
 	}
 
-	lh32tmp.prg_6000 = prg_chip_byte_pnt(0, lh32.reg << 13);
+	lh32tmp.prg_6000 = prg_pnt(lh32.reg << 13);
 
 	info.prg.ram.banks_8k_plus = 1;
 
@@ -65,8 +65,8 @@ void map_init_LH32(void) {
 }
 void extcl_cpu_wr_mem_LH32(WORD address, BYTE value) {
 	if (address == 0x6000) {
-		control_bank(info.prg.rom[0].max.banks_8k)
-		lh32tmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
+		control_bank(info.prg.rom.max.banks_8k)
+		lh32tmp.prg_6000 = prg_pnt(value << 13);
 		lh32.reg = value;
 		return;
 	} else if ((address & 0xE000) == 0xC000) {
@@ -86,7 +86,7 @@ BYTE extcl_save_mapper_LH32(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, lh32.reg);
 
 	if (mode == SAVE_SLOT_READ) {
-		lh32tmp.prg_6000 = prg_chip_byte_pnt(0, lh32.reg << 13);
+		lh32tmp.prg_6000 = prg_pnt(lh32.reg << 13);
 	}
 
 	return (EXIT_OK);

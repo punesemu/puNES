@@ -57,7 +57,7 @@ void extcl_cpu_wr_mem_UNIF8157(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_UNIF8157(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address >= 0x8000) {
-		if ((unif8157.reg & 0x0100) && (prg.chip[0].size < (1024 * 1024))) {
+		if ((unif8157.reg & 0x0100) && (prg_chip_size(0) < (1024 * 1024))) {
 			address = (address & 0xFFF0) + unif8157tmp.reset;
 			return (prg_rom_rd(address));
 		}
@@ -76,11 +76,11 @@ INLINE static void unif8157_update(BYTE value) {
 	BYTE lbank = (unif8157.reg & 0x0200) ? 7 : ((unif8157.reg & 0x80) ? bank : 0);
 
 	value = base | bank;
-	control_bank(info.prg.rom[0].max.banks_16k)
+	control_bank(info.prg.rom.max.banks_16k)
  	map_prg_rom_8k(2, 0, value);
 
 	value = base | lbank;
-	control_bank(info.prg.rom[0].max.banks_16k)
+	control_bank(info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, 2, value);
 
 	map_prg_rom_8k_update();

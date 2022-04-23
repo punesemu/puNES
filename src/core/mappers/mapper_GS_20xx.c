@@ -33,17 +33,17 @@ void map_init_GS_20xx(void) {
 		BYTE value;
 
 		map_prg_rom_8k(4, 0, 0);
-		gs20xxtmp.gs2004 = (info.prg.rom[0].banks_8k != 0) && ((info.prg.rom[0].banks_8k & (info.prg.rom[0].banks_8k - 1)) == 0);
+		gs20xxtmp.gs2004 = (info.prg.rom.banks_8k != 0) && ((info.prg.rom.banks_8k & (info.prg.rom.banks_8k - 1)) == 0);
 		value = gs20xxtmp.gs2004 ? 0xFF : 0x1F;
-		control_bank(info.prg.rom[0].max.banks_8k)
-		gs20xxtmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
+		control_bank(info.prg.rom.max.banks_8k)
+		gs20xxtmp.prg_6000 = prg_pnt(value << 13);
 	}
 }
 void extcl_cpu_wr_mem_GS_20xx(UNUSED(WORD address), BYTE value) {
 	if (gs20xxtmp.gs2004) {
-		control_bank(info.prg.rom[0].max.banks_32k)
+		control_bank(info.prg.rom.max.banks_32k)
 	} else {
-		control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_32k)
+		control_bank_with_AND(0x0F, info.prg.rom.max.banks_32k)
 	}
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();

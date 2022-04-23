@@ -177,35 +177,35 @@ INLINE static void shero_update_chr(void) {
 		WORD value;
 
 		value = ((shero.reg & 0x08) << 5) | (shero.chr_map[0] & 0xFF);
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[0] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[0] = chr_pnt(value << 10);
 
 		value = ((shero.reg & 0x08) << 5) | (shero.chr_map[1] & 0xFF);
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[1] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[1] = chr_pnt(value << 10);
 
 		value = ((shero.reg & 0x04) << 6) | (shero.chr_map[2] & 0xFF);
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[2] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[2] = chr_pnt(value << 10);
 
 		value = ((shero.reg & 0x04) << 6) | (shero.chr_map[3] & 0xFF);
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[3] = chr_pnt(value << 10);
 
 		value = ((shero.reg & 0x01) << 8) | (shero.chr_map[4] & 0xFF);
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[4] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[4] = chr_pnt(value << 10);
 
 		value = ((shero.reg & 0x01) << 8) | (shero.chr_map[5] & 0xFF);
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[5] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[5] = chr_pnt(value << 10);
 
 		value = ((shero.reg & 0x02) << 7) | (shero.chr_map[6] & 0xFF);
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[6] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[6] = chr_pnt(value << 10);
 
 		value = ((shero.reg & 0x02) << 7) | (shero.chr_map[7] & 0xFF);
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[7] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[7] = chr_pnt(value << 10);
 	}
 }

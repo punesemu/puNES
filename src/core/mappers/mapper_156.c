@@ -75,7 +75,7 @@ void extcl_cpu_wr_mem_156(WORD address, BYTE value) {
 			chr_setup_156();
 			return;
 		case 0xC010:
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -101,7 +101,7 @@ INLINE static void chr_setup_156(void) {
 
 	for (i = 0; i < 8; i++) {
 		value = (m156.chr.high[i] << 8) | m156.chr.low[i];
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[i] = chr_pnt(value << 10);
 	}
 }

@@ -72,7 +72,7 @@ INLINE static void sync_31(void) {
 
 	for (i = 0; i < 8; ++i) {
 		value = m31.regs[i];
-		control_bank(info.prg.rom[0].max.banks_4k);
-		m31.rom_4k[i] = prg_chip_byte_pnt(0, value << 12);
+		control_bank(info.prg.rom.max.banks_4k);
+		m31.rom_4k[i] = prg_pnt(value << 12);
 	}
 }

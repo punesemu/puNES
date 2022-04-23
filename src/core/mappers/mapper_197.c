@@ -40,12 +40,12 @@ INLINE static void m197_update_chr(void);
 #define m197_8001()\
 	switch (mmc3.bank_to_update) {\
 		case 0:\
-			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
 			m197.chr_map[mmc3.chr_rom_cfg] = value;\
 			m197.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
 			break;\
 		case 1:\
-			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
 			m197.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
 			m197.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
 			break;\
@@ -129,22 +129,22 @@ INLINE static void m197_update_chr(void) {
 	DBWORD bank;
 
 	value = m197.chr_map[0] >> 1;
-	control_bank(info.chr.rom[0].max.banks_4k)
+	control_bank(info.chr.rom.max.banks_4k)
 	bank = value << 12;
-	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
 
 	value = m197.chr_map[4];
-	control_bank(info.chr.rom[0].max.banks_2k)
+	control_bank(info.chr.rom.max.banks_2k)
 	bank = value << 11;
-	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
+	chr.bank_1k[4] = chr_pnt(bank);
+	chr.bank_1k[5] = chr_pnt(bank | 0x0400);
 
 	value = m197.chr_map[5];
-	control_bank(info.chr.rom[0].max.banks_2k)
+	control_bank(info.chr.rom.max.banks_2k)
 	bank = value << 11;
-	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0400);
+	chr.bank_1k[6] = chr_pnt(bank);
+	chr.bank_1k[7] = chr_pnt(bank | 0x0400);
 }

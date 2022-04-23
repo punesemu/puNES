@@ -46,7 +46,7 @@ void map_init_40(void) {
 		mapper.rom_map_to[2] = 0;
 	}
 
-	m40tmp.prg_6000 = prg_chip_byte_pnt(0, 6 << 13);
+	m40tmp.prg_6000 = prg_pnt(6 << 13);
 
 	mapper.rom_map_to[0] = 4;
 	mapper.rom_map_to[1] = 5;
@@ -69,7 +69,7 @@ void extcl_cpu_wr_mem_40(WORD address, BYTE value) {
 			m40.enabled = TRUE;
 			return;
 		case 0xE000:
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;

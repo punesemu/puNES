@@ -39,30 +39,30 @@ void map_init_42(void) {
 	mapper.internal_struct[0] = (BYTE *)&m42;
 	mapper.internal_struct_size[0] = sizeof(m42);
 
-	map_prg_rom_8k(4, 0, (info.prg.rom[0].banks_16k >> 1) - 1);
-	m42.prg_6000 = prg_chip_byte_pnt(0, 0 << 13);
+	map_prg_rom_8k(4, 0, (info.prg.rom.banks_16k >> 1) - 1);
+	m42.prg_6000 = prg_pnt(0 << 13);
 }
 void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
 	switch (address & 0xE003) {
 		case 0x8000: {
 			DBWORD bank;
 
-			control_bank(info.chr.rom[0].max.banks_8k)
+			control_bank(info.chr.rom.max.banks_8k)
 			bank = value << 13;
-			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-			chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
-			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
-			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
-			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
-			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+			chr.bank_1k[0] = chr_pnt(bank);
+			chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+			chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+			chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+			chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+			chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+			chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+			chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 			return;
 		}
 		case 0xE000:
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			m42.rom_map_to = value;
-			m42.prg_6000 = prg_chip_byte_pnt(0, value << 13);
+			m42.prg_6000 = prg_pnt(value << 13);
 			return;
 		case 0xE001:
 			if (value == 0x00) {
@@ -96,7 +96,7 @@ BYTE extcl_save_mapper_42(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m42.irq.count);
 
 	if (mode == SAVE_SLOT_READ) {
-		m42.prg_6000 = prg_chip_byte_pnt(0, m42.rom_map_to << 13);
+		m42.prg_6000 = prg_pnt(m42.rom_map_to << 13);
 	}
 
 	return (EXIT_OK);

@@ -58,8 +58,8 @@ void map_init_Coolboy(BYTE model) {
 
 	coolboy.model = model;
 
-	if ((mapper.write_vram == TRUE) && !info.chr.rom[0].banks_8k) {
-		info.chr.rom[0].banks_8k = 32;
+	if ((mapper.write_vram == TRUE) && !info.chr.rom.banks_8k) {
+		info.chr.rom.banks_8k = 32;
 	}
 
 	if (model == COOLBOY) {
@@ -204,7 +204,7 @@ INLINE static void prg_swap_Coolboy(WORD address, WORD value) {
 		value = ((base << 4) & ~mask) | (value & mask) | emask | ((address & 0x2000) >> 13);
 	}
 
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
@@ -257,6 +257,6 @@ INLINE static void chr_swap_Coolboy(WORD address, WORD value) {
 		value = (value & mask) | (((coolboy.reg[0] & 0x08) << 4) & ~mask);
 	}
 
-	control_bank(info.chr.rom[0].max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_chip_byte_pnt(0, value << 10);
+	control_bank(info.chr.rom.max.banks_1k)
+	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 }

@@ -148,52 +148,52 @@ INLINE static void yoko_update(void) {
 	}
 
 	value = yoko.reg[3];
-	control_bank(info.chr.rom[0].max.banks_2k)
+	control_bank(info.chr.rom.max.banks_2k)
 	bank = value << 11;
-	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
 	value = yoko.reg[4];
-	control_bank(info.chr.rom[0].max.banks_2k)
+	control_bank(info.chr.rom.max.banks_2k)
 	bank = value << 11;
-	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0400);
 	value = yoko.reg[5];
-	control_bank(info.chr.rom[0].max.banks_2k)
+	control_bank(info.chr.rom.max.banks_2k)
 	bank = value << 11;
-	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
+	chr.bank_1k[4] = chr_pnt(bank);
+	chr.bank_1k[5] = chr_pnt(bank | 0x0400);
 	value = yoko.reg[6];
-	control_bank(info.chr.rom[0].max.banks_2k)
+	control_bank(info.chr.rom.max.banks_2k)
 	bank = value << 11;
-	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0400);
+	chr.bank_1k[6] = chr_pnt(bank);
+	chr.bank_1k[7] = chr_pnt(bank | 0x0400);
 
 	if (yoko.mode & 0x10) {
 		BYTE base = (yoko.bank & 0x08) << 1;
 
 		value = (yoko.reg[0] & 0x0F) | base;
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 0, value);
 		value = (yoko.reg[1] & 0x0F) | base;
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 1, value);
 		value = (yoko.reg[2] & 0x0F) | base;
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 2, value);
 		value = 0x0F | base;
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 3, value);
 	} else {
 		if (yoko.mode & 0x08) {
 			value = yoko.bank >> 1;
-			control_bank(info.prg.rom[0].max.banks_32k)
+			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 		} else {
 			value = yoko.bank;
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			value = 0xFF;
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 2, value);
 		}
 	}

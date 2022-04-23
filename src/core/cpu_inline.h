@@ -1842,7 +1842,7 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 					control_bank(nsf.prg.banks_4k)
 					bank = address & 0x01;
 					nsf.prg.rom_4k_6xxx[bank] = &prg.ram.data[bank << 12];
-					memcpy(nsf.prg.rom_4k_6xxx[bank], prg_chip_byte_pnt(0, value << 12), 0x1000);
+					memcpy(nsf.prg.rom_4k_6xxx[bank], prg_pnt(value << 12), 0x1000);
 				}
 				return;
 			case 0x5FF8:
@@ -1857,10 +1857,10 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 				if (nsf.sound_chips.fds) {
 					bank = address & 0x07;
 					nsf.prg.rom_4k[bank] = &prg.ram.data[(bank + 2) << 12];
-					memcpy(nsf.prg.rom_4k[bank], prg_chip_byte_pnt(0, value << 12), 0x1000);
+					memcpy(nsf.prg.rom_4k[bank], prg_pnt(value << 12), 0x1000);
 				} else {
 					bank = address & 0x07;
-					nsf.prg.rom_4k[bank] = prg_chip_byte_pnt(0, value << 12);
+					nsf.prg.rom_4k[bank] = prg_pnt(value << 12);
 				}
 				return;
 		}

@@ -32,22 +32,22 @@ void extcl_cpu_wr_mem_190(WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x8000:
 			value = value & 0x07;
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			break;
 		case 0xA000: {
 			BYTE base = (address & 0x0003) << 1;
 			DBWORD bank;
 
-			control_bank(info.chr.rom[0].max.banks_2k)
+			control_bank(info.chr.rom.max.banks_2k)
 			bank = value << 11;
-			chr.bank_1k[base] = chr_chip_byte_pnt(0, bank);
-			chr.bank_1k[base | 0x01] = chr_chip_byte_pnt(0, bank | 0x0400);
+			chr.bank_1k[base] = chr_pnt(bank);
+			chr.bank_1k[base | 0x01] = chr_pnt(bank | 0x0400);
 			return;
 		}
 		case 0xC000:
 			value = 0x08 | (value & 0x07);
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			break;
 	}

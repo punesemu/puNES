@@ -29,7 +29,7 @@ void map_init_malee(void) {
 	EXTCL_CPU_RD_MEM(malee);
 
 	map_prg_rom_8k(4, 0, 0);
-	malee.prg_6000 = (prg.rom.size == (0x8000 + 0x800)) ? prg.rom.data + 0x8000 : NULL;
+	malee.prg_6000 = (prg_size() == (0x8000 + 0x800)) ? prg_rom() + 0x8000 : NULL;
 	mirroring_V();
 }
 BYTE extcl_cpu_rd_mem_malee(WORD address, BYTE openbus, UNUSED(BYTE before)) {

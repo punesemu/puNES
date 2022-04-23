@@ -45,28 +45,28 @@ void extcl_cpu_wr_mem_166(WORD address, BYTE value) {
 		base &= 0xFFFE;
 
 		bank = base;
-		_control_bank(bank, info.prg.rom[0].max.banks_16k)
+		_control_bank(bank, info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, bank);
 
 		bank = base | 0x0001;
-		_control_bank(bank, info.prg.rom[0].max.banks_16k)
+		_control_bank(bank, info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 2, bank);
 	} else {
 		if (m166.reg[1] & 0x04) {
 			bank = 0x001F;
-			_control_bank(bank, info.prg.rom[0].max.banks_16k)
+			_control_bank(bank, info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, bank);
 
 			bank = base;
-			_control_bank(bank, info.prg.rom[0].max.banks_16k)
+			_control_bank(bank, info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 2, bank);
 		} else {
 			bank = base;
-			_control_bank(bank, info.prg.rom[0].max.banks_16k)
+			_control_bank(bank, info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, bank);
 
 			bank = 0x0007;
-			_control_bank(bank, info.prg.rom[0].max.banks_16k)
+			_control_bank(bank, info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 2, bank);
 		}
 	}

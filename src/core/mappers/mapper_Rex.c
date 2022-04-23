@@ -32,7 +32,7 @@
 #define rex_dbz_chr_1k_update(slot)\
 {\
 	WORD tmp = (rex_dbz.chr_high << ((slot >= 4) ? 4 : 8)) & 0x0100;\
-	chr.bank_1k[slot] = chr_chip_byte_pnt(0, (tmp | rex_dbz.chr_rom_bank[slot]) << 10);\
+	chr.bank_1k[slot] = chr_pnt((tmp | rex_dbz.chr_rom_bank[slot]) << 10);\
 }
 #define rex_dbz_intercept_8001(slot, val)\
 {\

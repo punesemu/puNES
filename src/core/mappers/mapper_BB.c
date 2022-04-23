@@ -38,13 +38,13 @@ void map_init_BB(void) {
 	{
 		BYTE value = 0xFF;
 
-		control_bank(info.prg.rom[0].max.banks_32k)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 	}
 
 	bb.reg = 0xFF;
-	_control_bank(bb.reg, info.prg.rom[0].max.banks_8k)
-	bbtmp.prg_6000 = prg_chip_byte_pnt(0, bb.reg << 13);
+	_control_bank(bb.reg, info.prg.rom.max.banks_8k)
+	bbtmp.prg_6000 = prg_pnt(bb.reg << 13);
 }
 void extcl_cpu_wr_mem_BB(WORD address, BYTE value) {
 	BYTE save = value;
@@ -52,24 +52,24 @@ void extcl_cpu_wr_mem_BB(WORD address, BYTE value) {
 
 	if ((address & 0x9000) == 0x8000) {
 		value = value & 0x03;
-		control_bank(info.prg.rom[0].max.banks_8k)
-		bbtmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
+		control_bank(info.prg.rom.max.banks_8k)
+		bbtmp.prg_6000 = prg_pnt(value << 13);
 		bb.reg = value;
 		value = save;
 	} else {
 		value = value & 0x01;
 	}
 
-	control_bank(info.chr.rom[0].max.banks_8k);
+	control_bank(info.chr.rom.max.banks_8k);
 	bank = value << 13;
-	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
-	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
-	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
-	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
-	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 BYTE extcl_cpu_rd_mem_BB(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
@@ -81,7 +81,7 @@ BYTE extcl_save_mapper_BB(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, bb.reg);
 
 	if (mode == SAVE_SLOT_READ) {
-		bbtmp.prg_6000 = prg_chip_byte_pnt(0, bb.reg << 13);
+		bbtmp.prg_6000 = prg_pnt(bb.reg << 13);
 	}
 
 	return (EXIT_OK);

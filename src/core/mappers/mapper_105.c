@@ -138,7 +138,7 @@ void extcl_cpu_wr_mem_105(WORD address, BYTE value) {
 		 */
 		if (m105.prg.locked == FALSE) {
 			if (m105.prg.upper) {
-				map_prg_rom_8k(2, 2, m105.prg.upper | (info.prg.rom[0].max.banks_16k & 0x0F));
+				map_prg_rom_8k(2, 2, m105.prg.upper | (info.prg.rom.max.banks_16k & 0x0F));
 				map_prg_rom_8k_update();
 			}
 		}
@@ -229,7 +229,7 @@ INLINE static void swap_prg_rom_105(void) {
 		map_prg_rom_8k(4, 0, 0);
 	} else if (!m105.prg.upper) {
 		value = m105.prg.reg[0];
-		control_bank(info.prg.rom[0].max.banks_32k)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 	} else {
 		value = m105.prg.reg[1];
@@ -238,7 +238,7 @@ INLINE static void swap_prg_rom_105(void) {
 			case 1: {
 				BYTE bank;
 
-				control_bank_with_AND(0x0E, info.prg.rom[0].max.banks_16k)
+				control_bank_with_AND(0x0E, info.prg.rom.max.banks_16k)
 				bank = m105.prg.upper | value;
 				/* switch 32k at $8000, ignoring low bit of bank number */
 				map_prg_rom_8k(2, 0, bank);
@@ -246,16 +246,16 @@ INLINE static void swap_prg_rom_105(void) {
 				break;
 			}
 			case 2:
-				control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_16k)
+				control_bank_with_AND(0x0F, info.prg.rom.max.banks_16k)
 				/* fix first 16k bank at $8000 and switch 16 KB bank at $C000 */
 				map_prg_rom_8k(2, 0, m105.prg.upper);
 				map_prg_rom_8k(2, 2, m105.prg.upper | value);
 				break;
 			case 3:
-				control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_16k)
+				control_bank_with_AND(0x0F, info.prg.rom.max.banks_16k)
 				/* fix last 16k bank at $C000 and switch 16 KB bank at $8000 */
 				map_prg_rom_8k(2, 0, m105.prg.upper | value);
-				map_prg_rom_8k(2, 2, m105.prg.upper | (info.prg.rom[0].max.banks_16k & 0x0F));
+				map_prg_rom_8k(2, 2, m105.prg.upper | (info.prg.rom.max.banks_16k & 0x0F));
 				break;
 		}
 	}

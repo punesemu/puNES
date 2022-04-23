@@ -962,23 +962,23 @@ BYTE map_init(void) {
 
 	// CHR
 	if (mapper.write_vram == TRUE) {
-		if (!info.chr.rom[0].banks_8k) {
+		if (!info.chr.rom.banks_8k) {
 			if ((info.format == iNES_1_0) || (info.format == UNIF_FORMAT)) {
 				if (info.extra_from_db & CHRRAM32K) {
-					info.chr.rom[0].banks_8k = 4;
+					info.chr.rom.banks_8k = 4;
 				} else if (info.extra_from_db & CHRRAM256K) {
-					info.chr.rom[0].banks_8k = 32;
+					info.chr.rom.banks_8k = 32;
 				} else {
-					info.chr.rom[0].banks_8k = 1;
+					info.chr.rom.banks_8k = 1;
 				}
 			} else {
-				info.chr.rom[0].banks_8k = 1;
+				info.chr.rom.banks_8k = 1;
 			}
 		}
-		info.chr.rom[0].is_ram = TRUE;
-		info.chr.rom[0].banks_4k = info.chr.rom[0].banks_8k * 2;
-		info.chr.rom[0].banks_1k = info.chr.rom[0].banks_4k * 4;
-		map_set_banks_max_chr(0);
+		info.chr.rom.is_ram = TRUE;
+		info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
+		info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
+		map_set_banks_max_chr();
 	}
 	if (map_chr_ram_init()) {
 		return (EXIT_ERROR);
@@ -1001,10 +1001,10 @@ void map_quit(void) {
 	info.prg.ram.bat.start = DEFAULT;
 
 	/* PRG */
-	if (prg.rom.data) {
-		free(prg.rom.data);
-		prg.rom.data = NULL;
-		prg.rom.size = 0;
+	if (prg_rom()) {
+		free(prg_rom());
+		prg_rom() = NULL;
+		prg_size() = 0;
 	}
 
 	if (prg.ram.data) {
@@ -1021,10 +1021,10 @@ void map_quit(void) {
 	prg.ram_battery = NULL;
 
 	/* CHR */
-	if (chr.rom.data) {
-		free(chr.rom.data);
-		chr.rom.data = NULL;
-		chr.rom.size = 0;
+	if (chr_rom()) {
+		free(chr_rom());
+		chr_rom() = NULL;
+		chr_size() = 0;
 	}
 
 	/* CHR extra */
@@ -1041,55 +1041,52 @@ void map_quit(void) {
 	mapper.write_vram = FALSE;
 }
 
-BYTE map_prg_chip_malloc(size_t size, BYTE set_value) {
-	if (prg.rom.data) {
-		free(prg.rom.data);
-		prg.rom.data = NULL;
-		prg.rom.size = 0;
+BYTE map_prg_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom) {
+	if (prg_rom()) {
+		free(prg_rom());
+		prg_rom() = NULL;
+		prg_size() = 0;
 	}
 
-	if ((prg.rom.data = (BYTE *)malloc(size))) {
-		memset(prg.rom.data, set_value, size);
-		prg.rom.size = size;
+	if ((prg_rom() = (BYTE *)malloc(size))) {
+		memset(prg_rom(), set_value, size);
+		prg_size() = size;
 	} else {
-		free(prg.rom.data);
-		prg.rom.data = NULL;
-		prg.rom.size = 0;
+		free(prg_rom());
+		prg_rom() = NULL;
+		prg_size() = 0;
 		fprintf(stderr, "Out of memory\n");
-		return (EXIT_ERROR);
 	}
 
-	return (EXIT_OK);
+	if (init_chip0_rom) {
+		prg_chip_rom(0) = prg_rom();
+	}
+
+	return (prg_rom() ? EXIT_OK : EXIT_ERROR);
 }
-void map_prg_rom_8k_chip(BYTE banks_8k, BYTE at, WORD value, WORD chip) {
+void map_prg_rom_8k(BYTE banks_8k, BYTE at, WORD value) {
 	BYTE a;
 
 	/* se cerco di switchare 32k ma ho solo un banco da 16k esco */
-	if ((banks_8k == 4) && (info.prg.rom[chip].banks_16k <= 1)) {
+	if ((banks_8k == 4) && (info.prg.rom.banks_16k <= 1)) {
 		return;
 	}
 
 	for (a = 0; a < banks_8k; ++a) {
-		prg.rom_chip[at + a] = chip;
 		mapper.rom_map_to[at + a] = ((value * banks_8k) + a);
 	}
 }
 void map_prg_rom_8k_reset(void) {
-	prg.rom_chip[0] = 0;
-	prg.rom_chip[1] = 0;
-	prg.rom_chip[2] = 0;
-	prg.rom_chip[3] = 0;
-
 	mapper.rom_map_to[0] = 0;
 	mapper.rom_map_to[1] = 1;
-	mapper.rom_map_to[2] = info.prg.rom[prg.rom_chip[2]].banks_8k - 2;
-	mapper.rom_map_to[3] = info.prg.rom[prg.rom_chip[3]].banks_8k - 1;
+	mapper.rom_map_to[2] = info.prg.rom.banks_8k - 2;
+	mapper.rom_map_to[3] = info.prg.rom.banks_8k - 1;
 }
 void map_prg_rom_8k_update(void) {
 	BYTE i;
 
 	for (i = 0; i < 4; ++i) {
-		prg.rom_8k[i] = prg_chip_byte_pnt(0, mapper.rom_map_to[i] << 13);
+		prg.rom_8k[i] = prg_pnt(mapper.rom_map_to[i] << 13);
 	}
 }
 void map_prg_ram_init(void) {
@@ -1209,45 +1206,46 @@ void map_prg_ram_battery_save(void) {
 		}
 	}
 }
-BYTE map_chr_chip_malloc(size_t size, BYTE set_value) {
-	if (chr.rom.data) {
-		free(chr.rom.data);
-		chr.rom.data = NULL;
-		chr.rom.size = 0;
+BYTE map_chr_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom) {
+	if (chr_rom()) {
+		free(chr_rom());
+		chr_rom() = NULL;
+		chr_size() = 0;
 	}
 
-	if ((chr.rom.data = (BYTE *)malloc(size))) {
-		memset(chr.rom.data, set_value, size);
-		chr.rom.size = size;
+	if ((chr_rom() = (BYTE *)malloc(size))) {
+		memset(chr_rom(), set_value, size);
+		chr_size() = size;
 	} else {
-		free(chr.rom.data);
-		chr.rom.data = NULL;
-		chr.rom.size = 0;
+		free(chr_rom());
+		chr_rom() = NULL;
+		chr_size() = 0;
 		fprintf(stderr, "Out of memory\n");
-		return (EXIT_ERROR);
 	}
 
-	return (EXIT_OK);
+	if (init_chip0_rom) {
+		chr_chip_rom(0) = chr_rom();
+	}
+
+	return (prg_rom() ? EXIT_OK : EXIT_ERROR);
 }
 void map_chr_bank_1k_reset(void) {
 	BYTE bank1k, bnk;
 
 	for (bank1k = 0; bank1k < 8; ++bank1k) {
-		chr.rom_chip[bank1k] = 0;
-
 		bnk = bank1k;
-		_control_bank(bnk, info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[bank1k] = chr_chip_byte_pnt(0, bnk * 0x0400);
+		_control_bank(bnk, info.chr.rom.max.banks_1k)
+		chr.bank_1k[bank1k] = chr_pnt(bnk * 0x0400);
 	}
 }
 BYTE map_chr_ram_init(void) {
 	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
 		if (mapper.write_vram) {
-			if (chr_chip(0)) {
-				free(chr_chip(0));
+			if (chr_rom()) {
+				free(chr_rom());
 			}
 			/* alloco la CHR Rom */
-			if (map_chr_chip_malloc(chr_ram_size(), 0x00) == EXIT_ERROR) {
+			if (map_chr_malloc(chr_ram_size(), 0x00, TRUE) == EXIT_ERROR) {
 				return (EXIT_ERROR);
 			}
 			map_chr_bank_1k_reset();
@@ -1278,29 +1276,29 @@ void map_chr_ram_extra_reset(void) {
 		memset(chr.extra.data, 0x00, chr.extra.size);
 	}
 }
-void map_set_banks_max_prg(BYTE chip) {
-	info.prg.rom[chip].max.banks_32k = (info.prg.rom[chip].banks_16k == 1) ? 0 :
-		((info.prg.rom[chip].banks_16k >> 1) ? (info.prg.rom[chip].banks_16k >> 1) - 1 : 0);
-	info.prg.rom[chip].max.banks_16k =
-		info.prg.rom[chip].banks_16k ? info.prg.rom[chip].banks_16k - 1 : 0;
-	info.prg.rom[chip].max.banks_8k =
-		info.prg.rom[chip].banks_8k ? info.prg.rom[chip].banks_8k - 1 : 0;
-	info.prg.rom[chip].max.banks_8k_before_last =
-		(info.prg.rom[chip].banks_8k > 1) ? info.prg.rom[chip].banks_8k - 2 : 0;
-	info.prg.rom[chip].max.banks_4k =
-		((info.prg.rom[chip].banks_8k << 1) != 0) ? (info.prg.rom[chip].banks_8k << 1) - 1 : 0;
-	info.prg.rom[chip].max.banks_2k =
-		((info.prg.rom[chip].banks_8k << 2) != 0) ? (info.prg.rom[chip].banks_8k << 2) - 1 : 0;
+void map_set_banks_max_prg(void) {
+	info.prg.rom.max.banks_32k = (info.prg.rom.banks_16k == 1) ? 0 :
+		((info.prg.rom.banks_16k >> 1) ? (info.prg.rom.banks_16k >> 1) - 1 : 0);
+	info.prg.rom.max.banks_16k =
+		info.prg.rom.banks_16k ? info.prg.rom.banks_16k - 1 : 0;
+	info.prg.rom.max.banks_8k =
+		info.prg.rom.banks_8k ? info.prg.rom.banks_8k - 1 : 0;
+	info.prg.rom.max.banks_8k_before_last =
+		(info.prg.rom.banks_8k > 1) ? info.prg.rom.banks_8k - 2 : 0;
+	info.prg.rom.max.banks_4k =
+		((info.prg.rom.banks_8k << 1) != 0) ? (info.prg.rom.banks_8k << 1) - 1 : 0;
+	info.prg.rom.max.banks_2k =
+		((info.prg.rom.banks_8k << 2) != 0) ? (info.prg.rom.banks_8k << 2) - 1 : 0;
 }
-void map_set_banks_max_chr(BYTE chip) {
-	info.chr.rom[chip].max.banks_8k =
-		info.chr.rom[chip].banks_8k ? info.chr.rom[chip].banks_8k - 1 : 0;
-	info.chr.rom[chip].max.banks_4k =
-		info.chr.rom[chip].banks_4k ? info.chr.rom[chip].banks_4k - 1 : 0;
-	info.chr.rom[chip].max.banks_2k =
-		((info.chr.rom[chip].banks_1k >> 1) != 0) ? (info.chr.rom[chip].banks_1k >> 1) - 1 : 0;
-	info.chr.rom[chip].max.banks_1k =
-		info.chr.rom[chip].banks_1k ? info.chr.rom[chip].banks_1k - 1 : 0;
+void map_set_banks_max_chr(void) {
+	info.chr.rom.max.banks_8k =
+		info.chr.rom.banks_8k ? info.chr.rom.banks_8k - 1 : 0;
+	info.chr.rom.max.banks_4k =
+		info.chr.rom.banks_4k ? info.chr.rom.banks_4k - 1 : 0;
+	info.chr.rom.max.banks_2k =
+		((info.chr.rom.banks_1k >> 1) != 0) ? (info.chr.rom.banks_1k >> 1) - 1 : 0;
+	info.chr.rom.max.banks_1k =
+		info.chr.rom.banks_1k ? info.chr.rom.banks_1k - 1 : 0;
 }
 void map_bat_rd_default(FILE *fp) {
 	BYTE bank;

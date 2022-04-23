@@ -124,19 +124,19 @@ INLINE static void ks7032_update(void) {
 	WORD value;
 
 	value = ks7032.reg[4];
-	control_bank(info.prg.rom[0].max.banks_8k)
-	ks7032tmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
+	control_bank(info.prg.rom.max.banks_8k)
+	ks7032tmp.prg_6000 = prg_pnt(value << 13);
 
 	value = ks7032.reg[1];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 0, value);
 
 	value = ks7032.reg[2];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 1, value);
 
 	value = ks7032.reg[3];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 2, value);
 
 	map_prg_rom_8k_update();

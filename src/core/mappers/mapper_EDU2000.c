@@ -51,7 +51,7 @@ void extcl_cpu_wr_mem_EDU2000(UNUSED(WORD address), BYTE value) {
 
 	// 0x8000 - 0xF000
 	value = save & 0x1F;
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 
@@ -68,7 +68,7 @@ BYTE extcl_save_mapper_EDU2000(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, edu2000.reg);
 	save_slot_ele(mode, slot, edu2000.prg_ram_address);
 	if (mode == SAVE_SLOT_READ) {
-		prg.ram_plus_8k = prg_chip_byte_pnt(0, edu2000.prg_ram_address);
+		prg.ram_plus_8k = prg_pnt(edu2000.prg_ram_address);
 	}
 
 	return (EXIT_OK);

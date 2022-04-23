@@ -45,7 +45,7 @@ void extcl_cpu_wr_mem_AxROM(WORD address, BYTE value) {
 		mirroring_SCR1();
 	}
 
-	control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_32k)
+	control_bank_with_AND(0x0F, info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 }

@@ -574,35 +574,43 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		}
 	}
 
-	// e' fondamentale che il salvataggio avvenga qui
-	if (save_slot.version >= 14) {
-		save_slot_ele(mode, slot, prg.rom_chip)
-	}
-	for (i = 0; i < LENGTH(prg.rom_8k); i++) {
-		if (mode == SAVE_SLOT_SAVE) {
-			uint32_t bank = mapper.rom_map_to[i] << 13;
+	{
+		WORD rom_chip[4];
 
-			save_slot_int(mode, slot, bank)
-		} else {
-			if (save_slot.version >= 14) {
-				save_slot_pos(mode, slot, prg_chip(prg.rom_chip[i]), prg.rom_8k[i])
+		// e' fondamentale che il salvataggio avvenga qui
+		if ((save_slot.version >= 14) && (save_slot.version < 26)) {
+			save_slot_ele(mode, slot, rom_chip)
+		}
+		for (i = 0; i < LENGTH(prg.rom_8k); i++) {
+			if (mode == SAVE_SLOT_SAVE) {
+				uint32_t bank = mapper.rom_map_to[i] << 13;
+
+				save_slot_int(mode, slot, bank)
 			} else {
-				save_slot_pos(mode, slot, prg_chip(0), prg.rom_8k[i])
+				if ((save_slot.version >= 14) && (save_slot.version < 26)) {
+					save_slot_pos(mode, slot, prg_chip_rom(rom_chip[i]), prg.rom_8k[i])
+				} else {
+					save_slot_pos(mode, slot, prg_rom(), prg.rom_8k[i])
+				}
 			}
 		}
 	}
 	save_slot_int(mode, slot, mapper.write_vram)
 	if (mapper.write_vram) {
-		save_slot_mem(mode, slot, chr_chip(0), chr_ram_size(), FALSE)
+		save_slot_mem(mode, slot, chr_rom(), chr_ram_size(), FALSE)
 	}
-	if (save_slot.version >= 14) {
-		save_slot_ele(mode, slot, chr.rom_chip)
-	}
-	for (i = 0; i < LENGTH(chr.bank_1k); i++) {
-		if (save_slot.version >= 14) {
-			save_slot_pos(mode, slot, chr_chip(chr.rom_chip[i]), chr.bank_1k[i])
-		} else {
-			save_slot_pos(mode, slot, chr_chip(0), chr.bank_1k[i])
+	{
+		WORD rom_chip[8];
+
+		if ((save_slot.version >= 14) && (save_slot.version < 26)) {
+			save_slot_ele(mode, slot, rom_chip)
+		}
+		for (i = 0; i < LENGTH(chr.bank_1k); i++) {
+			if ((save_slot.version >= 14) && (save_slot.version < 26)) {
+				save_slot_pos(mode, slot, chr_chip_rom(rom_chip[i]), chr.bank_1k[i])
+			} else {
+				save_slot_pos(mode, slot, chr_rom(), chr.bank_1k[i])
+			}
 		}
 	}
 	save_slot_ele(mode, slot, ntbl.data)

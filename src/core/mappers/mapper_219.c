@@ -25,8 +25,8 @@
 
 #define m219_chr_1k(a, b)\
 	value = m219.reg[2] | ((save >> 1) | a);\
-	control_bank(info.chr.rom[0].max.banks_1k)\
-	chr.bank_1k[b] = chr_chip_byte_pnt(0, value << 10)
+	control_bank(info.chr.rom.max.banks_1k)\
+	chr.bank_1k[b] = chr_pnt(value << 10)
 
 struct _m219 {
 	BYTE reg[3];
@@ -72,7 +72,7 @@ void extcl_cpu_wr_mem_219(WORD address, BYTE value) {
 			if (bank < 4) {
 				value = ((value >> 5) & 0x01) | ((value >> 3) & 0x02) | ((value >> 1) & 0x04) |
 					((value << 1) & 0x08);
-				control_bank(info.prg.rom[0].max.banks_8k)
+				control_bank(info.prg.rom.max.banks_8k)
 				map_prg_rom_8k(1, bank ^ 0x03, value);
 				map_prg_rom_8k_update();
 			}

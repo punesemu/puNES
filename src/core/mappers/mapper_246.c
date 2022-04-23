@@ -41,17 +41,17 @@ void extcl_cpu_wr_mem_246(WORD address, BYTE value) {
 	reg = address & 0x07;
 
 	if (reg < 4) {
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, reg, value);
 		map_prg_rom_8k_update();
 		return;
 	}
 
 	slot = (reg - 4) << 1;
-	control_bank(info.chr.rom[0].max.banks_2k)
+	control_bank(info.chr.rom.max.banks_2k)
 	bank = value << 11;
-	chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[slot + 1] = chr_chip_byte_pnt(0, bank | 0x0400);
+	chr.bank_1k[slot] = chr_pnt(bank);
+	chr.bank_1k[slot + 1] = chr_pnt(bank | 0x0400);
 }
 BYTE extcl_cpu_rd_mem_246(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x6000) || (address > 0x67FF)) {

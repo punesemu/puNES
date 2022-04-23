@@ -36,7 +36,7 @@ struct _m235tmp {
 } m235tmp;
 
 void map_init_235(void) {
-	switch (info.prg.rom[0].banks_16k) {
+	switch (info.prg.rom.banks_16k) {
 		case 64:
 			m235tmp.type = 0;
 			break;
@@ -73,12 +73,12 @@ void extcl_cpu_wr_mem_235(WORD address, BYTE value) {
 
 	if (address & 0x0800) {
 		value = (bank << 1) | ((address >> 12) & 0x01);
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k(2, 2, value);
 	} else {
 		value = bank;
-		control_bank(info.prg.rom[0].max.banks_32k)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 	}
 	map_prg_rom_8k_update();

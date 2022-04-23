@@ -60,12 +60,12 @@ void extcl_cpu_wr_mem_BMCGHOSTBUSTERS63IN1(WORD address, BYTE value) {
 
 	if (bmcghostbusters63in1.reg[0] & 0x20) {
 		value = (chip << 5)| (bmcghostbusters63in1.reg[0] & 0x1F);
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k(2, 2, value);
 	} else {
 		value = (chip << 4) | ((bmcghostbusters63in1.reg[0] >> 1) & 0x0F);
-		control_bank(info.prg.rom[0].max.banks_32k)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 	}
 	map_prg_rom_8k_update();
@@ -113,13 +113,13 @@ INLINE static void bmcghostbusters63in1_update_chr(void) {
 		chr.bank_1k[6] = &chr.extra.data[0x1800];
 		chr.bank_1k[7] = &chr.extra.data[0x1C00];
 	} else {
-		chr.bank_1k[0] = chr_chip_byte_pnt(0, 0x0000);
-		chr.bank_1k[1] = chr_chip_byte_pnt(0, 0x0400);
-		chr.bank_1k[2] = chr_chip_byte_pnt(0, 0x0800);
-		chr.bank_1k[3] = chr_chip_byte_pnt(0, 0x0C00);
-		chr.bank_1k[4] = chr_chip_byte_pnt(0, 0x1000);
-		chr.bank_1k[5] = chr_chip_byte_pnt(0, 0x1400);
-		chr.bank_1k[6] = chr_chip_byte_pnt(0, 0x1800);
-		chr.bank_1k[7] = chr_chip_byte_pnt(0, 0x1C00);
+		chr.bank_1k[0] = chr_pnt(0x0000);
+		chr.bank_1k[1] = chr_pnt(0x0400);
+		chr.bank_1k[2] = chr_pnt(0x0800);
+		chr.bank_1k[3] = chr_pnt(0x0C00);
+		chr.bank_1k[4] = chr_pnt(0x1000);
+		chr.bank_1k[5] = chr_pnt(0x1400);
+		chr.bank_1k[6] = chr_pnt(0x1800);
+		chr.bank_1k[7] = chr_pnt(0x1C00);
 	}
 }

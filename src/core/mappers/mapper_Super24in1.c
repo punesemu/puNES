@@ -45,17 +45,17 @@ INLINE static void super24in1_update_chr(void);
 		mapper.rom_map_to[0] = super24in1.prg_map[2];\
 		super24in1.prg_map[0] = mapper.rom_map_to[0];\
 		super24in1.prg_map[2] = mapper.rom_map_to[2];\
-		super24in1.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom[0].max.banks_8k_before_last;\
+		super24in1.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
 	}
 #define super24in1_8001()\
 	switch (mmc3.bank_to_update) {\
 		case 0:\
-			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
 			super24in1.chr_map[mmc3.chr_rom_cfg] = value;\
 			super24in1.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
 			break;\
 		case 1:\
-			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
 			super24in1.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
 			super24in1.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
 			break;\
@@ -185,19 +185,19 @@ INLINE static void super24in1_update_prg(void) {
 	WORD value;
 
 	value = super24in1_prg_value(0);
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 0, value);
 
 	value = super24in1_prg_value(1);
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 1, value);
 
 	value = super24in1_prg_value(2);
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 2, value);
 
 	value = super24in1_prg_value(3);
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 3, value);
 
 	map_prg_rom_8k_update();
@@ -213,8 +213,8 @@ INLINE static void super24in1_update_chr(void) {
 			chr.bank_1k[i] = &chr.extra.data[i << 10];
 		} else {
 			value = super24in1.chr_map[i] | (super24in1.reg[2] << 3);
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[i] = chr_pnt(value << 10);
 		}
 	}
 }

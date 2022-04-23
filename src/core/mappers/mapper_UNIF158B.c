@@ -31,7 +31,7 @@ INLINE static void unif158b_update_prg(void);
 		mapper.rom_map_to[0] = unif158b.prg_map[2];\
 		unif158b.prg_map[0] = mapper.rom_map_to[0];\
 		unif158b.prg_map[2] = mapper.rom_map_to[2];\
-		unif158b.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom[0].max.banks_8k_before_last;\
+		unif158b.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
 	}
 #define unif158b_8001()\
 	switch (mmc3.bank_to_update) {\
@@ -134,28 +134,28 @@ INLINE static void unif158b_update_prg(void) {
 
 		if (unif158b.reg[0] & 0x20) {
 			value = value >> 1;
-			control_bank(info.prg.rom[0].max.banks_32k)
+			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 		} else {
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k(2, 2, value);
 		}
 	} else {
 		value = unif158b.prg_map[0];
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 0, value);
 
 		value = unif158b.prg_map[1];
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 1, value);
 
 		value = unif158b.prg_map[2];
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 2, value);
 
 		value = unif158b.prg_map[3];
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 3, value);
 	}
 	map_prg_rom_8k_update();

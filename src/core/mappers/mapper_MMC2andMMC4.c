@@ -42,7 +42,7 @@ void map_init_MMC2and4(void) {
 
 		/* MMC2 */
 		if (info.mapper.id == 9) {
-			mapper.rom_map_to[1] = info.prg.rom[0].banks_8k - 3;
+			mapper.rom_map_to[1] = info.prg.rom.banks_8k - 3;
 		}
 	}
 }
@@ -55,29 +55,29 @@ void extcl_cpu_wr_mem_MMC2and4(WORD address, BYTE value) {
 		case 0xA000:
 			if (info.mapper.id == 9) {
 				/* MMC2 */
-				control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_8k)
+				control_bank_with_AND(0x0F, info.prg.rom.max.banks_8k)
 				map_prg_rom_8k(1, 0, value);
 			} else {
 				/* MMC4 */
-				control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_16k)
+				control_bank_with_AND(0x0F, info.prg.rom.max.banks_16k)
 				map_prg_rom_8k(2, 0, value);
 			}
 			map_prg_rom_8k_update();
 			return;
 		case 0xB000:
-			control_bank_with_AND(0x1F, info.chr.rom[0].max.banks_4k)
+			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
 			mmc2and4.regs[0] = value;
 			break;
 		case 0xC000:
-			control_bank_with_AND(0x1F, info.chr.rom[0].max.banks_4k)
+			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
 			mmc2and4.regs[1] = value;
 			break;
 		case 0xD000:
-			control_bank_with_AND(0x1F, info.chr.rom[0].max.banks_4k)
+			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
 			mmc2and4.regs[2] = value;
 			break;
 		case 0xE000:
-			control_bank_with_AND(0x1F, info.chr.rom[0].max.banks_4k)
+			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
 			mmc2and4.regs[3] = value;
 			break;
 		case 0xF000:
@@ -89,15 +89,15 @@ void extcl_cpu_wr_mem_MMC2and4(WORD address, BYTE value) {
 			return;
 	}
 	tmp = mmc2and4.regs[mmc2and4.latch0] << 12;
-	chr.bank_1k[0] = chr_chip_byte_pnt(0, tmp);
-	chr.bank_1k[1] = chr_chip_byte_pnt(0, tmp | 0x0400);
-	chr.bank_1k[2] = chr_chip_byte_pnt(0, tmp | 0x0800);
-	chr.bank_1k[3] = chr_chip_byte_pnt(0, tmp | 0x0C00);
+	chr.bank_1k[0] = chr_pnt(tmp);
+	chr.bank_1k[1] = chr_pnt(tmp | 0x0400);
+	chr.bank_1k[2] = chr_pnt(tmp | 0x0800);
+	chr.bank_1k[3] = chr_pnt(tmp | 0x0C00);
 	tmp = mmc2and4.regs[mmc2and4.latch1] << 12;
-	chr.bank_1k[4] = chr_chip_byte_pnt(0, tmp);
-	chr.bank_1k[5] = chr_chip_byte_pnt(0, tmp | 0x0400);
-	chr.bank_1k[6] = chr_chip_byte_pnt(0, tmp | 0x0800);
-	chr.bank_1k[7] = chr_chip_byte_pnt(0, tmp | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(tmp);
+	chr.bank_1k[5] = chr_pnt(tmp | 0x0400);
+	chr.bank_1k[6] = chr_pnt(tmp | 0x0800);
+	chr.bank_1k[7] = chr_pnt(tmp | 0x0C00);
 }
 BYTE extcl_save_mapper_MMC2and4(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, mmc2and4.regs);
@@ -135,10 +135,10 @@ void extcl_after_rd_chr_MMC2and4(WORD address) {
 			return;
 	}
 	value <<= 12;
-	chr.bank_1k[0 | bank] = chr_chip_byte_pnt(0, value);
-	chr.bank_1k[1 | bank] = chr_chip_byte_pnt(0, value | 0x0400);
-	chr.bank_1k[2 | bank] = chr_chip_byte_pnt(0, value | 0x0800);
-	chr.bank_1k[3 | bank] = chr_chip_byte_pnt(0, value | 0x0C00);
+	chr.bank_1k[0 | bank] = chr_pnt(value);
+	chr.bank_1k[1 | bank] = chr_pnt(value | 0x0400);
+	chr.bank_1k[2 | bank] = chr_pnt(value | 0x0800);
+	chr.bank_1k[3 | bank] = chr_pnt(value | 0x0C00);
 }
 void extcl_update_r2006_MMC2and4(WORD new_r2006, UNUSED(WORD old_r2006)) {
 	extcl_after_rd_chr_MMC2and4(new_r2006);

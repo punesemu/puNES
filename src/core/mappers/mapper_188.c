@@ -30,7 +30,7 @@ void map_init_188(void) {
 		extcl_cpu_wr_mem_188(0x0000, 0x00);
 
 		value = 7;
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 2, value);
 	}
 }
@@ -38,16 +38,16 @@ void extcl_cpu_wr_mem_188(UNUSED(WORD address), BYTE value) {
 	if (value) {
 		if (value & 0x10) {
 			value = value & 0x07;
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 		} else {
 			value = 0x08 | (value & 0x07);
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 		}
 	} else {
-		value = 7 + (info.prg.rom[0].banks_16k >> 4);
-		control_bank(info.prg.rom[0].max.banks_16k)
+		value = 7 + (info.prg.rom.banks_16k >> 4);
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 	}
 	map_prg_rom_8k_update();

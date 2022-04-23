@@ -56,7 +56,7 @@ void map_init_FDS(void) {
 	}
 
 	mapper.write_vram = TRUE;
-	info.chr.rom[0].banks_8k = 1;
+	info.chr.rom.banks_8k = 1;
 
 	mirroring_H();
 
@@ -158,7 +158,7 @@ BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus), UNUSED(BYTE before
 			}
 		}
 	}
-	return (prg_chip_byte(0, address & 0x1FFF));
+	return (prg_byte(address & 0x1FFF));
 }
 void extcl_cpu_every_cycle_FDS(void) {
 	BYTE max_speed = cfg->fds_fast_forward & ((fds.drive.scan & tas.lag_actual_frame) | !fds.auto_insert.in_game);

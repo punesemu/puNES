@@ -41,16 +41,16 @@ void map_init_KS7016(void) {
 		BYTE value;
 
 		value = 12;
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 0, value);
 		value = 13;
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 1, value);
 		value = 14;
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 2, value);
 		value = 15;
-		control_bank(info.prg.rom[0].max.banks_8k)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 3, value);
 	}
 
@@ -99,6 +99,6 @@ INLINE static void ks7016_6000_update(void) {
 	WORD value;
 
 	value = ks7016.reg;
-	control_bank(info.prg.rom[0].max.banks_8k)
-	ks7016tmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
+	control_bank(info.prg.rom.max.banks_8k)
+	ks7016tmp.prg_6000 = prg_pnt(value << 13);
 }

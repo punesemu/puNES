@@ -94,6 +94,6 @@ void extcl_cpu_every_cycle_UNIFSMB2J(void) {
 INLINE static void prg_swap_UNIFSMB2J(void) {
 	BYTE value = 0x04 | unifsmb2j.reg;
 
-	control_bank(info.prg.rom[0].max.banks_8k)
-	unifsmb2jtmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
+	control_bank(info.prg.rom.max.banks_8k)
+	unifsmb2jtmp.prg_6000 = prg_pnt(value << 13);
 }

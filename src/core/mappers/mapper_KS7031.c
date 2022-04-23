@@ -132,94 +132,94 @@ INLINE static void ks7031_init_prg(void) {
 
 	// 0x8000
 	value = 15;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_8000 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_8000 = prg_pnt(value << 11);
 	// 0x8800
 	value = 14;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_8800 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_8800 = prg_pnt(value << 11);
 
 	// 0x9000
 	value = 13;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_9000 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_9000 = prg_pnt(value << 11);
 	// 0x9800
 	value = 12;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_9800 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_9800 = prg_pnt(value << 11);
 
 	// 0xA000
 	value = 11;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_A000 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_A000 = prg_pnt(value << 11);
 	// 0xA800
 	value = 10;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_A800 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_A800 = prg_pnt(value << 11);
 
 	// 0xB000
 	value = 9;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_B000 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_B000 = prg_pnt(value << 11);
 	// 0xB800
 	value = 8;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_B800 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_B800 = prg_pnt(value << 11);
 
 	// 0xC000
 	value = 7;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_C000 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_C000 = prg_pnt(value << 11);
 	// 0xC800
 	value = 6;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_C800 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_C800 = prg_pnt(value << 11);
 
 	// 0xD000
 	value = 5;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_D000 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_D000 = prg_pnt(value << 11);
 	// 0xD800
 	value = 4;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_D800 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_D800 = prg_pnt(value << 11);
 
 	// 0xE000
 	value = 3;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_E000 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_E000 = prg_pnt(value << 11);
 	// 0xE800
 	value = 2;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_E800 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_E800 = prg_pnt(value << 11);
 
 	// 0xF000
 	value = 1;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_F000 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_F000 = prg_pnt(value << 11);
 	// 0xF800
 	value = 0;
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_F800 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_F800 = prg_pnt(value << 11);
 }
 INLINE static void ks7031_update(void) {
 	WORD value;
 
 	// 0x6000
 	value = ks7031.reg[0];
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_6000 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_6000 = prg_pnt(value << 11);
 	// 0x6800
 	value = ks7031.reg[1];
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_6800 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_6800 = prg_pnt(value << 11);
 
 	// 0x7000
 	value = ks7031.reg[2];
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_7000 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_7000 = prg_pnt(value << 11);
 	// 0x7800
 	value = ks7031.reg[3];
-	control_bank(info.prg.rom[0].max.banks_2k)
-	ks7031tmp.prg_7800 = prg_chip_byte_pnt(0, value << 11);
+	control_bank(info.prg.rom.max.banks_2k)
+	ks7031tmp.prg_7800 = prg_pnt(value << 11);
 }

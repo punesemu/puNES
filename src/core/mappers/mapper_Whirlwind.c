@@ -43,7 +43,7 @@ void map_init_Whirlwind(void) {
 	if (info.reset >= HARD) {
 		memset(&whirlwind, 0x00, sizeof(whirlwind));
 
-		map_prg_rom_8k(4, 0, info.prg.rom[0].max.banks_32k);
+		map_prg_rom_8k(4, 0, info.prg.rom.max.banks_32k);
 	}
 
 	whirlwind_6000_update();
@@ -83,6 +83,6 @@ INLINE static void whirlwind_6000_update(void) {
 	WORD value;
 
 	value = whirlwind.reg;
-	control_bank(info.prg.rom[0].max.banks_8k)
-	whirlwindtmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
+	control_bank(info.prg.rom.max.banks_8k)
+	whirlwindtmp.prg_6000 = prg_pnt(value << 13);
 }

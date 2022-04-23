@@ -58,11 +58,11 @@ INLINE static void t262_update(BYTE value) {
 	BYTE bank = value & 0x07;
 
 	value = t262.reg[0] | bank;
-	control_bank(info.prg.rom[0].max.banks_16k)
+	control_bank(info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 
 	value = t262.reg[0] | (t262.reg[1] ? bank | t262.reg[4] : 7);
-	control_bank(info.prg.rom[0].max.banks_16k)
+	control_bank(info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, 2, value);
 
 	map_prg_rom_8k_update();

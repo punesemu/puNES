@@ -72,16 +72,16 @@ void extcl_cpu_wr_mem_28(WORD address, BYTE value) {
 			}
 
 			value &= 0x03;
-			control_bank(info.chr.rom[0].max.banks_8k)
+			control_bank(info.chr.rom.max.banks_8k)
 			bank = value << 13;
-			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-			chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
-			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
-			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
-			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
-			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+			chr.bank_1k[0] = chr_pnt(bank);
+			chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+			chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+			chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+			chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+			chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+			chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+			chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 			return;
 		}
 		case 1:
@@ -140,11 +140,11 @@ INLINE static void prg_setup_28(void) {
 	BYTE value;
 
 	value = calc_prg_bank_28(0x8000);
-	control_bank(info.prg.rom[0].max.banks_16k)
+	control_bank(info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 
 	value = calc_prg_bank_28(0xC000);
-	control_bank(info.prg.rom[0].max.banks_16k)
+	control_bank(info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, 2, value);
 
 	map_prg_rom_8k_update();

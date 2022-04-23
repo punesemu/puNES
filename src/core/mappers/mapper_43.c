@@ -25,15 +25,15 @@
 
 #define prg_5000_43()\
 	value = 8 << 1;\
-	control_bank(info.prg.rom[0].max.banks_4k)\
-	m43tmp.prg_5000 = prg_chip_byte_pnt(0, value << 12)
+	control_bank(info.prg.rom.max.banks_4k)\
+	m43tmp.prg_5000 = prg_pnt(value << 12)
 #define prg_6000_swap_43()\
 	value = m43.swap ? 0 : 2;\
-	control_bank(info.prg.rom[0].max.banks_8k)\
-	m43tmp.prg_6000 = prg_chip_byte_pnt(0, value << 13)
+	control_bank(info.prg.rom.max.banks_8k)\
+	m43tmp.prg_6000 = prg_pnt(value << 13)
 #define prg_E000_swap_43()\
 	value = m43.swap ? 8 : 9;\
-	control_bank(info.prg.rom[0].max.banks_8k)\
+	control_bank(info.prg.rom.max.banks_8k)\
 	map_prg_rom_8k(1, 3, value)
 
 struct _m43 {
@@ -77,7 +77,7 @@ void extcl_cpu_wr_mem_43(WORD address, BYTE value) {
 			static const BYTE regs[8] = { 4, 3, 5, 3, 6, 3, 7, 3 };
 
 			value = regs[value & 0x07];
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;

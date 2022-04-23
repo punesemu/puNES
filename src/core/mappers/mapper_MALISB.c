@@ -47,7 +47,7 @@ INLINE static void malisb_update_chr(void);
 		mapper.rom_map_to[0] = malisb.prg_map[2];\
 		malisb.prg_map[0] = mapper.rom_map_to[0];\
 		malisb.prg_map[2] = mapper.rom_map_to[2];\
-		malisb.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom[0].max.banks_8k_before_last;\
+		malisb.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
 	}
 #define malisb_8001()\
 	switch (mmc3.bank_to_update) {\
@@ -164,19 +164,19 @@ INLINE static void malisb_update_prg(void) {
 	WORD value;
 
 	value = malisb_prg_8k(malisb.prg_map[0]);
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 0, value);
 
 	value = malisb_prg_8k(malisb.prg_map[1]);
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 1, value);
 
 	value = malisb_prg_8k(malisb.prg_map[2]);
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 2, value);
 
 	value = malisb_prg_8k(malisb.prg_map[3]);
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 3, value);
 
 	map_prg_rom_8k_update();
@@ -187,7 +187,7 @@ INLINE static void malisb_update_chr(void) {
 
 	for (i = 0; i < 8; i++) {
 		value = malisb_chr_1k(malisb.chr_map[i]) | i;
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[i] = chr_pnt(value << 10);
 	}
 }

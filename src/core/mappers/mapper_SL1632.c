@@ -46,7 +46,7 @@ INLINE static void sl1632_update(void);
 		mapper.rom_map_to[0] = sl1632.mmc3.prg_map[2];\
 		sl1632.mmc3.prg_map[0] = mapper.rom_map_to[0];\
 		sl1632.mmc3.prg_map[2] = mapper.rom_map_to[2];\
-		sl1632.mmc3.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom[0].max.banks_8k_before_last;\
+		sl1632.mmc3.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
 	}
 #define sl1632_8001_mmc3()\
 	switch (mmc3.bank_to_update) {\
@@ -81,13 +81,13 @@ INLINE static void sl1632_update(void);
 	}
 #define sl1632_chr_1k_ns(i)\
 	tmp = (sl1632.chr_map[i] & 0xF0) | (value & 0x0F);\
-	_control_bank(tmp, info.chr.rom[0].max.banks_1k)\
-	chr.bank_1k[i] = chr_chip_byte_pnt(0, tmp << 10);\
+	_control_bank(tmp, info.chr.rom.max.banks_1k)\
+	chr.bank_1k[i] = chr_pnt(tmp << 10);\
 	sl1632.chr_map[i] = tmp
 #define sl1632_chr_1k_4s(i)\
 	tmp = (sl1632.chr_map[i] & (0xF0 >> 4)) | ((value & 0x0F) << 4);\
-	_control_bank(tmp, info.chr.rom[0].max.banks_1k)\
-	chr.bank_1k[i] = chr_chip_byte_pnt(0, tmp << 10);\
+	_control_bank(tmp, info.chr.rom.max.banks_1k)\
+	chr.bank_1k[i] = chr_pnt(tmp << 10);\
 	sl1632.chr_map[i] = tmp
 #define sl1632_mirroring(mr)\
 	if (mr) {\
@@ -191,7 +191,7 @@ void extcl_cpu_wr_mem_SL1632(WORD address, BYTE value) {
 
 		switch (address & 0xF003) {
 			case 0x8000:
-				control_bank(info.prg.rom[0].max.banks_8k)
+				control_bank(info.prg.rom.max.banks_8k)
 				map_prg_rom_8k(1, 0, value);
 				map_prg_rom_8k_update();
 				sl1632.prg_map[0] = value;
@@ -201,7 +201,7 @@ void extcl_cpu_wr_mem_SL1632(WORD address, BYTE value) {
 				sl1632_mirroring(sl1632.mirroring)
 				return;
 			case 0xA000:
-				control_bank(info.prg.rom[0].max.banks_8k)
+				control_bank(info.prg.rom.max.banks_8k)
 				map_prg_rom_8k(1, 1, value);
 				map_prg_rom_8k_update();
 				sl1632.prg_map[1] = value;
@@ -274,16 +274,16 @@ INLINE static void sl1632_update_mmc3(void) {
 	WORD value;
 
 	value = sl1632.mmc3.prg_map[0];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 0, value);
 	value = sl1632.mmc3.prg_map[1];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 1, value);
 	value = sl1632.mmc3.prg_map[2];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 2, value);
 	value = sl1632.mmc3.prg_map[3];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 3, value);
 	map_prg_rom_8k_update();
 
@@ -309,31 +309,31 @@ INLINE static void sl1632_update_chr_mmc3(void) {
 
 	for (i = 0; i < 8; i++) {
 		value = sl1632.mmc3.chr_map[i];
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[i] = chr_pnt(value << 10);
 	}
 }
 INLINE static void sl1632_update(void) {
 	BYTE i, value;
 
 	value = sl1632.prg_map[0];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 0, value);
 	value = sl1632.prg_map[1];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 1, value);
 	value = 0xFE;
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 2, value);
 	value = 0xFF;
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 3, value);
 	map_prg_rom_8k_update();
 
 	for (i = 0; i < 8; i++) {
 		value = sl1632.chr_map[i];
-		control_bank(info.chr.rom[0].max.banks_1k)
-		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[i] = chr_pnt(value << 10);
 	}
 
 	sl1632_mirroring(sl1632.mirroring)

@@ -40,7 +40,7 @@ void map_init_164(void) {
 	{
 		BYTE value = m164.prg;
 
-		control_bank(info.prg.rom[0].max.banks_32k)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 	}
 
@@ -51,14 +51,14 @@ void extcl_cpu_wr_mem_164(WORD address, BYTE value) {
 		case 0x5000:
 			m164.prg = (m164.prg & 0xF0) | (value & 0x0F);
 			value = m164.prg;
-			control_bank(info.prg.rom[0].max.banks_32k)
+			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x5100:
 			m164.prg = (m164.prg & 0x0F) | (value << 4);
 			value = m164.prg;
-			control_bank(info.prg.rom[0].max.banks_32k)
+			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -67,7 +67,7 @@ void extcl_cpu_wr_mem_164(WORD address, BYTE value) {
 			return;
 		case 0x5300:
 			value = m164.prg;
-			control_bank(info.prg.rom[0].max.banks_32k)
+			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 			return;

@@ -85,7 +85,7 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 		case 0x6001:
 			m114.prg_rom_switch = value >> 7;
 			if (m114.prg_rom_switch) {
-				control_bank_with_AND(0x1F, info.prg.rom[0].max.banks_16k)
+				control_bank_with_AND(0x1F, info.prg.rom.max.banks_16k)
 				map_prg_rom_8k(2, 0, value);
 				map_prg_rom_8k(2, 2, value);
 				map_prg_rom_8k_update();
@@ -110,7 +110,7 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 					BYTE p2 = m114.prg_rom_bank[2];
 					m114.prg_rom_bank[0] = p2;
 					m114.prg_rom_bank[2] = p0;
-					m114.prg_rom_bank[prg_rom_cfg ^ 0x02] = info.prg.rom[0].max.banks_8k_before_last;
+					m114.prg_rom_bank[prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;
 				}
 			} else {
 				m114_prg_rom_backup();

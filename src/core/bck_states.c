@@ -123,7 +123,7 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_b
 	}
 	bck_states_on_struct(mode, chr, data, (*index), (*size_buff));
 	if (mapper.write_vram) {
-		bck_states_on_mem(mode, chr_chip(0), chr_ram_size(), data, (*index), (*size_buff));
+		bck_states_on_mem(mode, chr_rom(), chr_ram_size(), data, (*index), (*size_buff));
 	}
 	if (chr.extra.size) {
 		bck_states_on_mem(mode, chr.extra.data, chr.extra.size, data, (*index), (*size_buff));

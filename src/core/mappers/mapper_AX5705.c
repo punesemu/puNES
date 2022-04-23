@@ -23,8 +23,8 @@
 #include "save_slot.h"
 
 #define _ax5705_chr_rom_1k_update(slot)\
-	control_bank(info.chr.rom[0].max.banks_1k)\
-	chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);\
+	control_bank(info.chr.rom.max.banks_1k)\
+	chr.bank_1k[slot] = chr_pnt(value << 10);\
 	ax5705.chr_map[slot] = value
 #define ax5705_chr_rom_1k_update_high(slot)\
 	value = (ax5705.chr_map[slot] & 0x0F) | ((((value & 0x04) >> 1) | ((value & 0x02) << 1) | (value & 0x09)) << 4);\
@@ -56,7 +56,7 @@ void extcl_cpu_wr_mem_AX5705(WORD address, BYTE value) {
 	switch (address & 0xF00F) {
 		case 0x8000:
 			value = ((value & 0x02) << 2) | ((value & 0x08) >> 2) | (value & 0x05);
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -69,7 +69,7 @@ void extcl_cpu_wr_mem_AX5705(WORD address, BYTE value) {
 			return;
 		case 0xA000:
 			value = ((value & 0x02) << 2) | ((value & 0x08) >> 2) | (value & 0x05);
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;

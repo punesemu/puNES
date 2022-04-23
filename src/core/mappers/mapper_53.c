@@ -44,7 +44,7 @@ void map_init_53(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m53, 0x00, sizeof(m53));
-		m53tmp.eprom_first = (prg.rom.size >= 0x8000) && (emu_crc32((void *)prg.rom.data, 0x8000) == EPROM_CRC);
+		m53tmp.eprom_first = (prg_size() >= 0x8000) && (emu_crc32((void *)prg_rom(), 0x8000) == EPROM_CRC);
 		extcl_cpu_wr_mem_53(0x6000, 0x00);
 	}
 
@@ -73,19 +73,19 @@ void extcl_cpu_wr_mem_53(WORD address, BYTE value) {
 		WORD bank, tmp = (m53.reg[0] << 3) & 0x78;
 
 		bank = (tmp | (m53.reg[1] & 0x07)) + (m53tmp.eprom_first ? 0x02 : 0x00);
-		_control_bank(bank, info.prg.rom[0].max.banks_16k)
+		_control_bank(bank, info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, bank);
 
 		bank = (tmp | 0x07) + (m53tmp.eprom_first ? 0x02 : 0x00);
-		_control_bank(bank, info.prg.rom[0].max.banks_16k)
+		_control_bank(bank, info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 2, bank);
 	} else {
 		value = m53tmp.eprom_first ? 0x00 : 0x80;
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 
 		value = m53tmp.eprom_first ? 0x01 : 0x81;
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 2, value);
 	}
 	map_prg_rom_8k_update();
@@ -114,6 +114,6 @@ BYTE extcl_save_mapper_53(BYTE mode, BYTE slot, FILE *fp) {
 INLINE static void m53_update_6000(void) {
 	WORD value = (((m53.reg[0] << 4) & 0xF0) | 0x0F) + (m53tmp.eprom_first ? 0x04 : 0x00);
 
-	control_bank(info.prg.rom[0].max.banks_8k)
-	m53tmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
+	control_bank(info.prg.rom.max.banks_8k)
+	m53tmp.prg_6000 = prg_pnt(value << 13);
 }

@@ -26,23 +26,23 @@
 {\
 	const BYTE save = value;\
 	DBWORD bank;\
-	if (info.prg.rom[0].max.banks_32k != 0xFFFF) {\
+	if (info.prg.rom.max.banks_32k != 0xFFFF) {\
 		value >>= 3;\
-		control_bank(info.prg.rom[0].max.banks_32k)\
+		control_bank(info.prg.rom.max.banks_32k)\
 		map_prg_rom_8k(4, 0, value);\
 		map_prg_rom_8k_update();\
 		value = save;\
 	}\
-	control_bank_with_AND(0x07, info.chr.rom[0].max.banks_8k)\
+	control_bank_with_AND(0x07, info.chr.rom.max.banks_8k)\
 	bank = value << 13;\
-	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);\
-	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);\
-	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);\
-	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);\
-	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);\
-	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);\
-	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);\
-	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);\
+	chr.bank_1k[0] = chr_pnt(bank);\
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);\
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);\
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);\
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);\
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);\
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);\
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);\
 }
 
 struct _ave_d1012 {
@@ -57,7 +57,7 @@ void map_init_Ave(BYTE model) {
 			info.mapper.extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
-				if (info.prg.rom[0].max.banks_32k != 0xFFFF) {
+				if (info.prg.rom.max.banks_32k != 0xFFFF) {
 					map_prg_rom_8k(4, 0, 0);
 				}
 			}
@@ -139,22 +139,22 @@ void extcl_cpu_wr_mem_Ave_D1012(WORD address, BYTE value) {
 	}
 
 	value = (ave_d1012.reg[0] & 0xE) | (ave_d1012.reg[(ave_d1012.reg[0] >> 6) & 0x1] & 0x1);
-	control_bank(info.prg.rom[0].max.banks_32k)
+	control_bank(info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 
 	value = ((ave_d1012.reg[0] << 2) & (((ave_d1012.reg[0] >> 4) & 0x4) ^ 0x3C))
 			| ((ave_d1012.reg[1] >> 4) & (((ave_d1012.reg[0] >> 4) & 0x4) | 0x3));
-	control_bank(info.chr.rom[0].max.banks_8k)
+	control_bank(info.chr.rom.max.banks_8k)
 	bank = value << 13;
-	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
-	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
-	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
-	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
-	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 BYTE extcl_cpu_rd_mem_Ave_D1012(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0xFF80) || (address > 0xFFF7)) {

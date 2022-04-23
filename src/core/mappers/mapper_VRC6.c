@@ -123,7 +123,7 @@ void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 		case 0x8001:
 		case 0x8002:
 		case 0x8003:
-			control_bank(info.prg.rom[0].max.banks_16k)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -169,7 +169,7 @@ void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 		case 0xC001:
 		case 0xC002:
 		case 0xC003:
-			control_bank(info.prg.rom[0].max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;
@@ -372,54 +372,54 @@ INLINE static void vrc6_update_chr_and_mirroring(void) {
 			case 0x20:
 			case 0x27:
 				value = vrc6.chr_map[6] >> 1;
-				control_bank(info.chr.rom[0].max.banks_2k)
+				control_bank(info.chr.rom.max.banks_2k)
 				bank = value << 11;
-				ntbl.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-				ntbl.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x400);
+				ntbl.bank_1k[0] = chr_pnt(bank);
+				ntbl.bank_1k[1] = chr_pnt(bank | 0x400);
 
 				value = vrc6.chr_map[7] >> 1;
-				control_bank(info.chr.rom[0].max.banks_2k)
+				control_bank(info.chr.rom.max.banks_2k)
 				bank = value << 11;
-				ntbl.bank_1k[2] = chr_chip_byte_pnt(0, bank);
-				ntbl.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x400);
+				ntbl.bank_1k[2] = chr_pnt(bank);
+				ntbl.bank_1k[3] = chr_pnt(bank | 0x400);
 				break;
 			case 0x24:
 			case 0x23:
 				value = vrc6.chr_map[6] >> 1;
-				control_bank(info.chr.rom[0].max.banks_2k)
+				control_bank(info.chr.rom.max.banks_2k)
 				bank = value << 11;
-				ntbl.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-				ntbl.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x400);
+				ntbl.bank_1k[0] = chr_pnt(bank);
+				ntbl.bank_1k[2] = chr_pnt(bank | 0x400);
 
 				value = vrc6.chr_map[7] >> 1;
-				control_bank(info.chr.rom[0].max.banks_2k)
+				control_bank(info.chr.rom.max.banks_2k)
 				bank = value << 11;
-				ntbl.bank_1k[1] = chr_chip_byte_pnt(0, bank);
-				ntbl.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x400);
+				ntbl.bank_1k[1] = chr_pnt(bank);
+				ntbl.bank_1k[3] = chr_pnt(bank | 0x400);
 				break;
 			case 0x28:
 			case 0x2F:
 				value = vrc6.chr_map[6] >> 1;
-				control_bank(info.chr.rom[0].max.banks_2k)
+				control_bank(info.chr.rom.max.banks_2k)
 				bank = value << 11;
-				ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_chip_byte_pnt(0, bank);
+				ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_pnt(bank);
 
 				value = vrc6.chr_map[7] >> 1;
-				control_bank(info.chr.rom[0].max.banks_2k)
+				control_bank(info.chr.rom.max.banks_2k)
 				bank = value << 11;
-				ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, bank);
+				ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_pnt(bank);
 				break;
 			case 0x2C:
 			case 0x2B:
 				value = vrc6.chr_map[6] >> 1;
-				control_bank(info.chr.rom[0].max.banks_2k)
+				control_bank(info.chr.rom.max.banks_2k)
 				bank = value << 11;
-				ntbl.bank_1k[0] = ntbl.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x400);
+				ntbl.bank_1k[0] = ntbl.bank_1k[2] = chr_pnt(bank | 0x400);
 
 				value = vrc6.chr_map[7] >> 1;
-				control_bank(info.chr.rom[0].max.banks_2k)
+				control_bank(info.chr.rom.max.banks_2k)
 				bank = value << 11;
-				ntbl.bank_1k[1] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x400);
+				ntbl.bank_1k[1] = ntbl.bank_1k[3] = chr_pnt(bank | 0x400);
 				break;
 			default:
 				switch (vrc6.b003 & 0x07) {
@@ -427,41 +427,41 @@ INLINE static void vrc6_update_chr_and_mirroring(void) {
 					case 0x06:
 					case 0x07:
 						value = vrc6.chr_map[6];
-						control_bank(info.chr.rom[0].max.banks_1k)
-						ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_chip_byte_pnt(0, value << 10);
+						control_bank(info.chr.rom.max.banks_1k)
+						ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_pnt(value << 10);
 
 						value = vrc6.chr_map[7];
-						control_bank(info.chr.rom[0].max.banks_1k)
-						ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
+						control_bank(info.chr.rom.max.banks_1k)
+						ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_pnt(value << 10);
 						break;
 					case 0x01:
 					case 0x05:
 						value = vrc6.chr_map[4];
-						control_bank(info.chr.rom[0].max.banks_1k)
-						ntbl.bank_1k[0] = chr_chip_byte_pnt(0, value << 10);
+						control_bank(info.chr.rom.max.banks_1k)
+						ntbl.bank_1k[0] = chr_pnt(value << 10);
 
 						value = vrc6.chr_map[5];
-						control_bank(info.chr.rom[0].max.banks_1k)
-						ntbl.bank_1k[1] = chr_chip_byte_pnt(0, value << 10);
+						control_bank(info.chr.rom.max.banks_1k)
+						ntbl.bank_1k[1] = chr_pnt(value << 10);
 
 						value = vrc6.chr_map[6];
-						control_bank(info.chr.rom[0].max.banks_1k)
-						ntbl.bank_1k[2] = chr_chip_byte_pnt(0, value << 10);
+						control_bank(info.chr.rom.max.banks_1k)
+						ntbl.bank_1k[2] = chr_pnt(value << 10);
 
 						value = vrc6.chr_map[7];
-						control_bank(info.chr.rom[0].max.banks_1k)
-						ntbl.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
+						control_bank(info.chr.rom.max.banks_1k)
+						ntbl.bank_1k[3] = chr_pnt(value << 10);
 						break;
 					case 0x02:
 					case 0x03:
 					case 0x04:
 						value = vrc6.chr_map[6];
-						control_bank(info.chr.rom[0].max.banks_1k)
-						ntbl.bank_1k[0] = ntbl.bank_1k[2] = chr_chip_byte_pnt(0, value << 10);
+						control_bank(info.chr.rom.max.banks_1k)
+						ntbl.bank_1k[0] = ntbl.bank_1k[2] = chr_pnt(value << 10);
 
 						value = vrc6.chr_map[7];
-						control_bank(info.chr.rom[0].max.banks_1k)
-						ntbl.bank_1k[1] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
+						control_bank(info.chr.rom.max.banks_1k)
+						ntbl.bank_1k[1] = ntbl.bank_1k[3] = chr_pnt(value << 10);
 						break;
 				}
 				break;
@@ -483,124 +483,124 @@ INLINE static void vrc6_update_chr_and_mirroring(void) {
 	switch (vrc6.b003 & 0x03) {
 		case 0:
 			value = vrc6.chr_map[0];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[0] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[0] = chr_pnt(value << 10);
 
 			value = vrc6.chr_map[1];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[1] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[1] = chr_pnt(value << 10);
 
 			value = vrc6.chr_map[2];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[2] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[2] = chr_pnt(value << 10);
 
 			value = vrc6.chr_map[3];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[3] = chr_pnt(value << 10);
 
 			value = vrc6.chr_map[4];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[4] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[4] = chr_pnt(value << 10);
 
 			value = vrc6.chr_map[5];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[5] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[5] = chr_pnt(value << 10);
 
 			value = vrc6.chr_map[6];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[6] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[6] = chr_pnt(value << 10);
 
 			value = vrc6.chr_map[7];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[7] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[7] = chr_pnt(value << 10);
 			break;
 		case 1:
 			if (vrc6.b003 & 0x20) {
 				value = vrc6.chr_map[0] >> 1;
-				control_bank(info.chr.rom[0].max.banks_2k)
+				control_bank(info.chr.rom.max.banks_2k)
 				bank = value << 11;
-				chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-				chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
+				chr.bank_1k[0] = chr_pnt(bank);
+				chr.bank_1k[1] = chr_pnt(bank | 0x0400);
 
 				value = vrc6.chr_map[1] >> 1;
-				control_bank(info.chr.rom[0].max.banks_2k)
+				control_bank(info.chr.rom.max.banks_2k)
 				bank = value << 11;
-				chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
-				chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0400);
+				chr.bank_1k[2] = chr_pnt(bank);
+				chr.bank_1k[3] = chr_pnt(bank | 0x0400);
 
 				value = vrc6.chr_map[2] >> 1;
-				control_bank(info.chr.rom[0].max.banks_2k)
+				control_bank(info.chr.rom.max.banks_2k)
 				bank = value << 11;
-				chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
-				chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
+				chr.bank_1k[4] = chr_pnt(bank);
+				chr.bank_1k[5] = chr_pnt(bank | 0x0400);
 
 				value = vrc6.chr_map[3] >> 1;
-				control_bank(info.chr.rom[0].max.banks_2k)
+				control_bank(info.chr.rom.max.banks_2k)
 				bank = value << 11;
-				chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
-				chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0400);
+				chr.bank_1k[6] = chr_pnt(bank);
+				chr.bank_1k[7] = chr_pnt(bank | 0x0400);
 			} else {
 				value = vrc6.chr_map[0];
-				control_bank(info.chr.rom[0].max.banks_1k)
+				control_bank(info.chr.rom.max.banks_1k)
 				bank = value << 10;
-				chr.bank_1k[0] = chr.bank_1k[1] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[0] = chr.bank_1k[1] = chr_pnt(bank);
 
 				value = vrc6.chr_map[1];
-				control_bank(info.chr.rom[0].max.banks_1k)
+				control_bank(info.chr.rom.max.banks_1k)
 				bank = value << 10;
-				chr.bank_1k[2] = chr.bank_1k[3] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[2] = chr.bank_1k[3] = chr_pnt(bank);
 
 				value = vrc6.chr_map[2];
-				control_bank(info.chr.rom[0].max.banks_1k)
+				control_bank(info.chr.rom.max.banks_1k)
 				bank = value << 10;
-				chr.bank_1k[4] = chr.bank_1k[5] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[4] = chr.bank_1k[5] = chr_pnt(bank);
 
 				value = vrc6.chr_map[3];
-				control_bank(info.chr.rom[0].max.banks_1k)
+				control_bank(info.chr.rom.max.banks_1k)
 				bank = value << 10;
-				chr.bank_1k[6] = chr.bank_1k[7] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[6] = chr.bank_1k[7] = chr_pnt(bank);
 			}
 			break;
 		case 2:
 		case 3:
 			value = vrc6.chr_map[0];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[0] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[0] = chr_pnt(value << 10);
 
 			value = vrc6.chr_map[1];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[1] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[1] = chr_pnt(value << 10);
 
 			value = vrc6.chr_map[2];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[2] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[2] = chr_pnt(value << 10);
 
 			value = vrc6.chr_map[3];
-			control_bank(info.chr.rom[0].max.banks_1k)
-			chr.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
+			control_bank(info.chr.rom.max.banks_1k)
+			chr.bank_1k[3] = chr_pnt(value << 10);
 
 			if (vrc6.b003 & 0x20) {
 				value = vrc6.chr_map[4] >> 1;
-				control_bank(info.chr.rom[0].max.banks_2k)
+				control_bank(info.chr.rom.max.banks_2k)
 				bank = value << 11;
-				chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
-				chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
+				chr.bank_1k[4] = chr_pnt(bank);
+				chr.bank_1k[5] = chr_pnt(bank | 0x0400);
 
 				value = vrc6.chr_map[5] >> 1;
-				control_bank(info.chr.rom[0].max.banks_2k)
+				control_bank(info.chr.rom.max.banks_2k)
 				bank = value << 11;
-				chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
-				chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0400);
+				chr.bank_1k[6] = chr_pnt(bank);
+				chr.bank_1k[7] = chr_pnt(bank | 0x0400);
 			} else {
 				value = vrc6.chr_map[4];
-				control_bank(info.chr.rom[0].max.banks_1k)
+				control_bank(info.chr.rom.max.banks_1k)
 				bank = value << 10;
-				chr.bank_1k[4] = chr.bank_1k[5] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[4] = chr.bank_1k[5] = chr_pnt(bank);
 
 				value = vrc6.chr_map[5];
-				control_bank(info.chr.rom[0].max.banks_1k)
+				control_bank(info.chr.rom.max.banks_1k)
 				bank = value << 10;
-				chr.bank_1k[6] = chr.bank_1k[7] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[6] = chr.bank_1k[7] = chr_pnt(bank);
 			}
 			break;
 	}

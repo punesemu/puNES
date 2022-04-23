@@ -52,7 +52,7 @@ void extcl_cpu_wr_mem_168(WORD address, BYTE value) {
 		BYTE save = value;
 
 		value = save >> 6;
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k_update();
 

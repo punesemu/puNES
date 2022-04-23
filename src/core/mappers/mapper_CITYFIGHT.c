@@ -25,8 +25,8 @@
 
 #define cityfight_chr_rom_1k(slot, vl)\
 	value = vl;\
-	control_bank(info.chr.rom[0].max.banks_1k)\
-	chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);\
+	control_bank(info.chr.rom.max.banks_1k)\
+	chr.bank_1k[slot] = chr_pnt(value << 10);\
 	cityfight.chr_map[slot] = value
 
 INLINE static void cityfight_prg_update(void);
@@ -171,12 +171,12 @@ INLINE static void cityfight_prg_update(void) {
 	BYTE value;
 
 	value = cityfight.reg[1] >> 2;
-	control_bank(info.prg.rom[0].max.banks_32k)
+	control_bank(info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 
 	if (!cityfight.reg[0]) {
 		value = cityfight.reg[1];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 2, value);
 	}
 

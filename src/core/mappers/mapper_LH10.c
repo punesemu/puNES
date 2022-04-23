@@ -112,20 +112,20 @@ INLINE static void lh10_update(void) {
 
 	// 0x6000 - 0x7000
 	value = 0xFE;
-	control_bank(info.prg.rom[0].max.banks_8k)
-	lh10tmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
+	control_bank(info.prg.rom.max.banks_8k)
+	lh10tmp.prg_6000 = prg_pnt(value << 13);
 
 	// 0x8000 - 0x9000
 	value = lh10.reg[6];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 0, value);
-	prg.rom_8k[0] = prg_chip_byte_pnt(0, mapper.rom_map_to[0] << 13);
+	prg.rom_8k[0] = prg_pnt(mapper.rom_map_to[0] << 13);
 
 	// 0xA000 - 0xB000
 	value = lh10.reg[7];
-	control_bank(info.prg.rom[0].max.banks_8k)
+	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 1, value);
-	prg.rom_8k[1] = prg_chip_byte_pnt(0, mapper.rom_map_to[1] << 13);
+	prg.rom_8k[1] = prg_pnt(mapper.rom_map_to[1] << 13);
 
 	// 0xC000 - 0xD000
 	lh10tmp.prg_C000 = &prg.ram_plus_8k[0];

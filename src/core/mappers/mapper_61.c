@@ -36,12 +36,12 @@ void extcl_cpu_wr_mem_61(WORD address, BYTE value) {
 
 	if (address & 0x0010) {
 		value = ((address << 1) & 0x1E) | ((address >> 5) & 0x01);
-		control_bank(info.prg.rom[0].max.banks_16k)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k(2, 2, value);
 	} else {
 		value = address & 0x0F;
-		control_bank(info.prg.rom[0].max.banks_32k)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 	}
 	map_prg_rom_8k_update();
