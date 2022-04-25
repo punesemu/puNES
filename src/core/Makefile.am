@@ -425,6 +425,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_NSF.h \
 	mappers/mapper_Ntdec.c \
 	mappers/mapper_Ntdec.h \
+	mappers/mapper_OneBus.c \
+	mappers/mapper_OneBus.h \
 	mappers/mapper_Rcm.c \
 	mappers/mapper_Rcm.h \
 	mappers/mapper_Rex.c \

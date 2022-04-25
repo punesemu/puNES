@@ -118,6 +118,7 @@ EXTERNC void cpu_turn_on(void);
 EXTERNC BYTE cpu_rd_mem_dbg(WORD address);
 EXTERNC BYTE cpu_rd_mem(WORD address, BYTE made_tick);
 EXTERNC void cpu_wr_mem(WORD address, BYTE value);
+EXTERNC void apu_wr_mem_mapper(WORD address, BYTE value);
 
 #undef EXTERNC
 

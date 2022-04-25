@@ -710,6 +710,9 @@ BYTE map_init(void) {
 		case 254:
 			map_init_254();
 			break;
+		case 256:
+			map_init_OneBus();
+			break;
 		case 268:
 			map_init_Coolboy(info.mapper.submapper == MINDKIDS ? MINDKIDS : COOLBOY);
 			break;
@@ -1279,26 +1282,18 @@ void map_chr_ram_extra_reset(void) {
 void map_set_banks_max_prg(void) {
 	info.prg.rom.max.banks_32k = (info.prg.rom.banks_16k == 1) ? 0 :
 		((info.prg.rom.banks_16k >> 1) ? (info.prg.rom.banks_16k >> 1) - 1 : 0);
-	info.prg.rom.max.banks_16k =
-		info.prg.rom.banks_16k ? info.prg.rom.banks_16k - 1 : 0;
-	info.prg.rom.max.banks_8k =
-		info.prg.rom.banks_8k ? info.prg.rom.banks_8k - 1 : 0;
-	info.prg.rom.max.banks_8k_before_last =
-		(info.prg.rom.banks_8k > 1) ? info.prg.rom.banks_8k - 2 : 0;
-	info.prg.rom.max.banks_4k =
-		((info.prg.rom.banks_8k << 1) != 0) ? (info.prg.rom.banks_8k << 1) - 1 : 0;
-	info.prg.rom.max.banks_2k =
-		((info.prg.rom.banks_8k << 2) != 0) ? (info.prg.rom.banks_8k << 2) - 1 : 0;
+	info.prg.rom.max.banks_16k = info.prg.rom.banks_16k ? info.prg.rom.banks_16k - 1 : 0;
+	info.prg.rom.max.banks_8k = info.prg.rom.banks_8k ? info.prg.rom.banks_8k - 1 : 0;
+	info.prg.rom.max.banks_8k_before_last = (info.prg.rom.banks_8k > 1) ? info.prg.rom.banks_8k - 2 : 0;
+	info.prg.rom.max.banks_4k = ((info.prg.rom.banks_8k << 1) != 0) ? (info.prg.rom.banks_8k << 1) - 1 : 0;
+	info.prg.rom.max.banks_2k = ((info.prg.rom.banks_8k << 2) != 0) ? (info.prg.rom.banks_8k << 2) - 1 : 0;
+	info.prg.rom.max.banks_1k = ((info.prg.rom.banks_8k << 3) != 0) ? (info.prg.rom.banks_8k << 3) - 1 : 0;
 }
 void map_set_banks_max_chr(void) {
-	info.chr.rom.max.banks_8k =
-		info.chr.rom.banks_8k ? info.chr.rom.banks_8k - 1 : 0;
-	info.chr.rom.max.banks_4k =
-		info.chr.rom.banks_4k ? info.chr.rom.banks_4k - 1 : 0;
-	info.chr.rom.max.banks_2k =
-		((info.chr.rom.banks_1k >> 1) != 0) ? (info.chr.rom.banks_1k >> 1) - 1 : 0;
-	info.chr.rom.max.banks_1k =
-		info.chr.rom.banks_1k ? info.chr.rom.banks_1k - 1 : 0;
+	info.chr.rom.max.banks_8k = info.chr.rom.banks_8k ? info.chr.rom.banks_8k - 1 : 0;
+	info.chr.rom.max.banks_4k = info.chr.rom.banks_4k ? info.chr.rom.banks_4k - 1 : 0;
+	info.chr.rom.max.banks_2k = ((info.chr.rom.banks_1k >> 1) != 0) ? (info.chr.rom.banks_1k >> 1) - 1 : 0;
+	info.chr.rom.max.banks_1k = info.chr.rom.banks_1k ? info.chr.rom.banks_1k - 1 : 0;
 }
 void map_bat_rd_default(FILE *fp) {
 	BYTE bank;

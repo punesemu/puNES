@@ -212,6 +212,7 @@
 #include "mappers/mapper_Super24in1.h"
 #include "mappers/mapper_EDU2000.h"
 #include "mappers/mapper_DREAMTECH01.h"
+#include "mappers/mapper_OneBus.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\

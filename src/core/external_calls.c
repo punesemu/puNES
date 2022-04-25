@@ -44,6 +44,8 @@ void (*extcl_ppu_update_screen_y)(void);
 void (*extcl_update_r2006)(WORD new_r2006, WORD old_r2006);
 // viene chiamata alla lettura del $2007 in cpu_inline.h
 void (*extcl_rd_r2007)(void);
+// vine chiamata in cpu_inline.h alla scrittura nei rigistri della ppu
+BYTE (*extcl_wr_ppu)(WORD address, BYTE *value);
 // vengono chiamate in ppu_inline.h
 void (*extcl_rd_ppu)(WORD address);
 BYTE (*extcl_rd_nmt)(WORD address);
@@ -55,6 +57,10 @@ void (*extcl_wr_nmt)(WORD address, BYTE value);
 // viene chiamato quando si tenta di scrivere nella CHR Ram
 void (*extcl_wr_chr)(WORD address, BYTE value);
 // APU
+// vine chiamata in cpu_inline.h alla scrittura nei rigistri della apu
+BYTE (*extcl_wr_apu)(WORD address, BYTE *value);
+// vine chiamata in cpu_inline.h alla lettura dei rigistri della apu
+BYTE (*extcl_rd_apu)(WORD address, BYTE openbus, BYTE before);
 void (*extcl_length_clock)(void);
 void (*extcl_envelope_clock)(void);
 void (*extcl_apu_tick)(void);
@@ -83,12 +89,15 @@ void extcl_init(void) {
 	extcl_update_r2006 = NULL;
 	extcl_rd_r2007 = NULL;
 	extcl_after_rd_chr = NULL;
+	extcl_wr_ppu = NULL;
 	extcl_rd_ppu = NULL;
 	extcl_rd_nmt = NULL;
 	extcl_rd_chr = NULL;
 	extcl_wr_nmt = NULL;
 	extcl_wr_chr = NULL;
 	/* APU */
+	extcl_wr_apu = NULL;
+	extcl_rd_apu = NULL;
 	extcl_length_clock = NULL;
 	extcl_envelope_clock = NULL;
 	extcl_apu_tick = NULL;

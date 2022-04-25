@@ -40,8 +40,7 @@
 
 #define mod_cycles_op(op, vl) cpu.cycles op vl
 #define r2006_during_rendering()\
-	if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) &&\
-		(ppu.screen_y < SCR_ROWS)) {\
+	if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) {\
 		_r2006_during_rendering()\
 	} else {\
 		r2006.value += r2000.r2006_inc;\
@@ -401,6 +400,7 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 			repeat = 3;
 		} else if (cpu.double_rd) {
 			WORD random = (WORD)emu_irand(10);
+
 			value = ppu_rd_mem(r2006.value - (r2000.r2006_inc << 1));
 			if (random > 5) {
 				r2007.value = ppu_rd_mem(r2006.value);
@@ -474,6 +474,7 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 }
 INLINE static BYTE apu_rd_reg(WORD address) {
 	BYTE value = cpu.openbus;
+	BYTE before = cpu.openbus;
 
 	if (address == 0x4015) {
 		/* azzero la varibile d'uscita */
@@ -518,6 +519,14 @@ INLINE static BYTE apu_rd_reg(WORD address) {
 	//} else {
 	//	fprintf(stderr, "Alert: Attempt to read APU port %04X\n", address);
 #endif
+	}
+
+	if (extcl_rd_apu) {
+		/*
+		 * utilizzato dalle mappers :
+		 * OneBus
+		 */
+		value = extcl_rd_apu(address, value, before);
 	}
 
 	return (value);
@@ -837,7 +846,7 @@ void cpu_wr_mem(WORD address, BYTE value) {
 		}
 	}
 
-	if (address <= 0x4017) {
+	if (address <= 0x403F) {
 		/* Ram */
 		if (address < 0x2000) {
 			/* eseguo un tick hardware */
@@ -847,6 +856,18 @@ void cpu_wr_mem(WORD address, BYTE value) {
 			return;
 		}
 		if (address < 0x4000) {
+			if (extcl_wr_ppu) {
+				/*
+				 * utilizzato dalle mappers :
+				 * OneBus
+				 */
+				if (extcl_wr_ppu(address, &value) == TRUE) {
+					/* eseguo un tick hardware */
+					tick_hw(1);
+					return;
+				}
+			}
+
 			address &= 0x2007;
 
 			// Vs. System
@@ -883,6 +904,19 @@ void cpu_wr_mem(WORD address, BYTE value) {
 			ppu_wr_reg(address, value);
 			return;
 		}
+
+		if (extcl_wr_apu) {
+			/*
+			 * utilizzato dalle mappers :
+			 * OneBus
+			 */
+			if (extcl_wr_apu(address, &value) == TRUE) {
+				/* eseguo un tick hardware */
+				tick_hw(1);
+				return;
+			}
+		}
+
 		/* Sprite memory */
 		if (address == 0x4014) {
 			DMC.tick_type = DMC_R4014;
@@ -990,6 +1024,9 @@ void cpu_wr_mem(WORD address, BYTE value) {
 	/* su questo devo fare qualche altro esperimento */
 	tick_hw(1);
 	return;
+}
+void apu_wr_mem_mapper(WORD address, BYTE value) {
+	apu_wr_reg(address, value);
 }
 INLINE static void ppu_wr_mem(WORD address, BYTE value) {
 	address &= 0x3FFF;

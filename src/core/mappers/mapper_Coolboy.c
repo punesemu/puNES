@@ -235,7 +235,7 @@ INLINE static void chr_swap_Coolboy(WORD address, WORD value) {
 					break;
 			}
 		}
-		value =  (value & 0x80 & mask) | ((((coolboy.reg[0] & 0x08) << 4) & ~mask)) | ((coolboy.reg[2] & 0x0F) << 3)
+		value = (value & 0x80 & mask) | ((((coolboy.reg[0] & 0x08) << 4) & ~mask)) | ((coolboy.reg[2] & 0x0F) << 3)
 			| ((address >> 10) & 0x07);
 	} else {
 		if (coolboy.reg[3] & 0x40) {

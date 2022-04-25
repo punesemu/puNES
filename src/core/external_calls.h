@@ -39,12 +39,15 @@
 #define EXTCL_UPDATE_R2006(n) extcl_update_r2006 = extcl_update_r2006_##n
 #define EXTCL_RD_R2007(n) extcl_rd_r2007 = extcl_rd_r2007_##n
 #define EXTCL_AFTER_RD_CHR(n) extcl_after_rd_chr = extcl_after_rd_chr_##n
+#define EXTCL_WR_PPU(n) extcl_wr_ppu = extcl_wr_ppu_##n
 #define EXTCL_RD_PPU(n) extcl_rd_ppu = extcl_rd_ppu_##n
 #define EXTCL_RD_NMT(n) extcl_rd_nmt = extcl_rd_nmt_##n
 #define EXTCL_RD_CHR(n) extcl_rd_chr = extcl_rd_chr_##n
 #define EXTCL_WR_NMT(n) extcl_wr_nmt = extcl_wr_nmt_##n
 #define EXTCL_WR_CHR(n) extcl_wr_chr = extcl_wr_chr_##n
 // APU
+#define EXTCL_WR_APU(n) extcl_wr_apu = extcl_wr_apu_##n
+#define EXTCL_RD_APU(n) extcl_rd_apu = extcl_rd_apu_##n
 #define EXTCL_LENGTH_CLOCK(n) extcl_length_clock = extcl_length_clock_##n
 #define EXTCL_ENVELOPE_CLOCK(n) extcl_envelope_clock = extcl_envelope_clock_##n
 #define EXTCL_APU_TICK(n) extcl_apu_tick = extcl_apu_tick_##n
@@ -81,6 +84,8 @@ extern void (*extcl_ppu_update_screen_y)(void);
 extern void (*extcl_update_r2006)(WORD new_r2006, WORD old_r2006);
 // viene chiamata alla lettura del $2007 in cpu_inline.h
 extern void (*extcl_rd_r2007)(void);
+// vine chiamata in cpu_inline.h alla scrittura nei rigistri della ppu
+extern BYTE (*extcl_wr_ppu)(WORD address, BYTE *value);
 // vengono chiamate in ppu_inline.h
 extern void (*extcl_rd_ppu)(WORD address);
 extern BYTE (*extcl_rd_nmt)(WORD address);
@@ -92,6 +97,10 @@ extern void (*extcl_wr_nmt)(WORD address, BYTE value);
 // viene chiamato quando si tenta di scrivere nella CHR Ram
 extern void (*extcl_wr_chr)(WORD address, BYTE value);
 // APU
+// vine chiamata in cpu_inline.h alla scrittura nei rigistri della apu
+extern BYTE (*extcl_wr_apu)(WORD address, BYTE *value);
+// vine chiamata in cpu_inline.h alla lettura dei rigistri della apu
+extern BYTE (*extcl_rd_apu)(WORD address, BYTE openbus, BYTE before);
 extern void (*extcl_length_clock)(void);
 extern void (*extcl_envelope_clock)(void);
 extern void (*extcl_apu_tick)(void);
