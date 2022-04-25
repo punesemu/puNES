@@ -75,7 +75,7 @@ void extcl_cpu_wr_mem_CITYFIGHT(WORD address, BYTE value) {
 		case 0x9008:
 		case 0x900C:
 			if (address & 0x0800) {
-				cpu_wr_mem(0x4011, (value & 0x0F) << 3);
+				apu_wr_mem_mapper(0x4011, (value & 0x0F) << 3);
 			} else {
 				cityfight.reg[1] = value & 0x0C;
 				cityfight_prg_update();
@@ -176,8 +176,8 @@ INLINE static void cityfight_prg_update(void) {
 
 	if (!cityfight.reg[0]) {
 		value = cityfight.reg[1];
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, value);
+		control_bank(info.prg.rom.max.banks_8k)
+		map_prg_rom_8k(1, 2, value);
 	}
 
 	map_prg_rom_8k_update();
