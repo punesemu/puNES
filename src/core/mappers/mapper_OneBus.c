@@ -104,8 +104,15 @@ void map_init_OneBus(void) {
 
 	if (info.format != NES_2_0) {
 		if (info.mapper.submapper == DEFAULT) {
-			if ((emu_crc32(prg_rom(), prg_size()) == 0x947AC898) || (emu_crc32(prg_rom(), prg_size()) == 0x1AB45228)) {
+			uint32_t crc32 = emu_crc32(prg_rom(), prg_size());
+
+			if ((crc32 == 0x947AC898) || (crc32 == 0x1AB45228)) {
 				info.mapper.submapper = ONEBUS_POWER_JOY_SUPERMAX;
+			} else if (crc32 == 0x1242DA7F) {
+				// alcuni giochi di questa roms non funzionano correttamente perche' utilizzano l'extended mode del VT03,
+				// lo si puo' notare dal fatto che viene settato il registro $2010 a 0x86 o 0x96 (ho dato un'occhiata al
+				// src/devices/video/ppu2c0x_vt.cpp del mame per capire il significato dei bits di questo registro).
+				info.mapper.submapper = ONEBUS_SPORTS_GAME;
 			}
 		}
 		if (info.prg.ram.banks_8k_plus == 0) {
@@ -125,9 +132,6 @@ void map_init_OneBus(void) {
 }
 void extcl_cpu_wr_mem_OneBus(WORD address, BYTE value) {
 	if ((address >= 0x4100) && (address <= 0x410F)) {
-
-		//fprintf(stderr, "CPU %04x:%04x\n", address, value);
-
 		switch (address & 0x000F) {
 			case 1:
 				onebus.reg.cpu[1] = value & 0xFE;
@@ -151,9 +155,6 @@ void extcl_cpu_wr_mem_OneBus(WORD address, BYTE value) {
 		return;
 	}
 	if (address >= 0x8000) {
-
-		//fprintf(stderr, "MMC %04x:%04x\n", address, value);
-
 		switch (address & 0xE001) {
 			case 0x8000:
 				onebus.reg.cpu[5] = (onebus.reg.cpu[5] & 0x38) | (value & 0xC7);
