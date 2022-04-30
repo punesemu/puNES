@@ -87,6 +87,7 @@ void map_init_BMCFK23C(void) {
 		uint32_t crc32 = emu_crc32(prg_rom(), prg_size());
 
 		if ((crc32 == 0x678DE5AA) || // 120-in-1 (Unl)[U].unf
+			(crc32 == 0xE6D869ED) || // 6-in-1 Rockman (Unl) [U][!].unf
 			(crc32 == 0xE79F157E) || // 23 Plus 222-in-1 (Unl) [U][!].unf
 			(crc32 == 0x7B766BC1) || // Super 24-in-1 [U][p1][!].unf
 			(crc32 == 0x6C979BAC) || // 10-in-1 Omake Game (FC Mobile)[!]
