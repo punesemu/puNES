@@ -21,11 +21,12 @@
 
 #include "common.h"
 
-enum bmcfk23c_types { NOBMCFK23C, BMCFK23C_0 = 1, BMCFK23C_1 = 2, BMCFK23CA = 8 };
+enum bmcfk23c_types { LP8002KB = 0, BMCFK23C = 1, FS005 = 2, JX9003B = 3, HST162 = 4, BMCFK23CNOCHRAM = 0x20 };
 
 void map_init_BMCFK23C(void);
 void extcl_after_mapper_init_BMCFK23C(void);
 void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_BMCFK23C(WORD address, BYTE openbus, BYTE before);
 void extcl_wr_chr_BMCFK23C(WORD address, BYTE value);
 BYTE extcl_save_mapper_BMCFK23C(BYTE mode, BYTE slot, FILE *fp);
 

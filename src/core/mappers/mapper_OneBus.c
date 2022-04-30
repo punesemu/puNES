@@ -109,9 +109,10 @@ void map_init_OneBus(void) {
 			if ((crc32 == 0x947AC898) || (crc32 == 0x1AB45228)) {
 				info.mapper.submapper = ONEBUS_POWER_JOY_SUPERMAX;
 			} else if (crc32 == 0x1242DA7F) {
-				// alcuni giochi di questa roms non funzionano correttamente perche' utilizzano l'extended mode del VT03,
-				// lo si puo' notare dal fatto che viene settato il registro $2010 a 0x86 o 0x96 (ho dato un'occhiata al
-				// src/devices/video/ppu2c0x_vt.cpp del mame per capire il significato dei bits di questo registro).
+				// "Sports Game 69-in-1 (Unl) [U][!].unf" e "DreamGEAR 75-in-1 (Unl) [U][!].unf"
+				// alcuni giochi (tipo SHARKS) di queste roms non funzionano correttamente perche' utilizzano l'extended mode
+				// del VT03, lo si puo' notare dal fatto che viene settato il registro $2010 a 0x86 o 0x96 (ho dato un'occhiata
+				// al src/devices/video/ppu2c0x_vt.cpp del mame per capire il significato dei bits di questo registro).
 				info.mapper.submapper = ONEBUS_SPORTS_GAME;
 			}
 		}
@@ -341,7 +342,7 @@ INLINE static void prg_fix_OneBus(void) {
 
 	value = block | (onebus.reg.cpu[prgreg[onebus.model][1]] & mask);
 	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1 ^ swap, value);
+	map_prg_rom_8k(1, 1, value);
 
 	value = block | ((BYTE)(onebus.reg.cpu[11] & 0x40 ? onebus.reg.cpu[9] : ~1) & mask);
 	control_bank(info.prg.rom.max.banks_8k)
@@ -349,7 +350,7 @@ INLINE static void prg_fix_OneBus(void) {
 
 	value = block | ((BYTE)(~0) & mask);
 	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3 ^ swap, value);
+	map_prg_rom_8k(1, 3, value);
 
 	map_prg_rom_8k_update();
 }

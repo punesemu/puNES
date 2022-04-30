@@ -510,11 +510,7 @@ BYTE map_init(void) {
 			map_init_Kaiser(KS7022);
 			break;
 		case 176:
-			if (info.id == NOBMCFK23C) {
-				map_init_176();
-			} else {
-				map_init_BMCFK23C();
-			}
+			map_init_BMCFK23C();
 			break;
 		case 177:
 			if (info.mapper.submapper != DEFAULT) {
@@ -947,10 +943,6 @@ BYTE map_init(void) {
 					// DRAGONFIGHTER
 					map_init_DRAGONFIGHTER();
 					break;
-				case 54:
-					// Super24in1SC03
-					map_init_Super24in1();
-					break;
 				case 55:
 					// EDU2000
 					map_init_EDU2000();
@@ -1230,7 +1222,7 @@ BYTE map_chr_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom) {
 		chr_chip_rom(0) = chr_rom();
 	}
 
-	return (prg_rom() ? EXIT_OK : EXIT_ERROR);
+	return (chr_rom() ? EXIT_OK : EXIT_ERROR);
 }
 void map_chr_bank_1k_reset(void) {
 	BYTE bank1k, bnk;
@@ -1270,6 +1262,10 @@ BYTE map_chr_ram_extra_init(uint32_t size) {
 		}
 		chr.extra.size = size;
 		memset(chr.extra.data, 0x00, chr.extra.size);
+		info.chr.ram.max.banks_8k = (chr.extra.size / 0x2000) ? (chr.extra.size / 0x2000) - 1 : 0;
+		info.chr.ram.max.banks_4k = (chr.extra.size / 0x1000) ? (chr.extra.size / 0x1000) - 1 : 0;
+		info.chr.ram.max.banks_2k = (chr.extra.size / 0x0800) ? (chr.extra.size / 0x0800) - 1 : 0;
+		info.chr.ram.max.banks_1k = (chr.extra.size / 0x0400) ? (chr.extra.size / 0x0400) - 1 : 0;
 	}
 
 	return (EXIT_OK);

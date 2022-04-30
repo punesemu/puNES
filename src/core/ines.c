@@ -34,6 +34,7 @@
 #include "patcher.h"
 #include "sha1.h"
 #include "database.h"
+#include "../../c++/crc/crc.h"
 
 void search_in_database(void);
 BYTE ines10_search_in_database(void *rom_mem);
@@ -111,6 +112,8 @@ BYTE ines_load_rom(void) {
 		info.prg.rom.banks_16k = rom.data[rom.position++];
 		info.chr.rom.banks_8k = rom.data[rom.position++];
 
+		info.chr.ram.banks_8k_plus = 0;
+
 		if (rom_mem_ctrl_memcpy(&ines.flags[0], &rom, TOTAL_FL) == EXIT_ERROR) {
 			free(rom.data);
 			return (EXIT_ERROR);
@@ -141,6 +144,8 @@ BYTE ines_load_rom(void) {
 
 			info.prg.ram.banks_8k_plus = nes20_ram_size(ines.flags[FL10] & 0x0F);
 			info.prg.ram.bat.banks = nes20_ram_size(ines.flags[FL10] >> 4);
+
+			info.chr.ram.banks_8k_plus = nes20_ram_size(ines.flags[FL11] & 0x0F);
 
 			if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
 				info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
@@ -282,6 +287,7 @@ BYTE ines_load_rom(void) {
 			mapper.write_vram = TRUE;
 			if (info.format == NES_2_0) {
 				info.chr.rom.banks_8k = nes20_ram_size(ines.flags[FL11] & 0x0F);
+				info.chr.ram.banks_8k_plus = 0;
 			}
 		}
 
@@ -352,8 +358,12 @@ BYTE ines_load_rom(void) {
 		if (info.mapper.id == 4098) {
 			fprintf(stderr, "internal unif mapper : %u\n", unif.internal_mapper);
 		}
-		fprintf(stderr, "PRG chip 0 : 8k rom = %u\n", info.prg.rom.banks_8k);
-		fprintf(stderr, "CHR chip 0 : 4k vrom = %u\n", info.chr.rom.banks_4k);
+		fprintf(stderr, "PRG : 8k rom = %lu [%ld, %08X]\n",
+			(long unsigned)prg_size() / 0x2000, (long)prg_size(),
+			emu_crc32((void *)prg_rom(), prg_size()));
+		fprintf(stderr, "CHR : 4k vrom = %lu [%ld, %08X]\n",
+			(long unsigned)chr_size() / 0x1000, (long)chr_size(),
+			emu_crc32((void *)chr_rom(), chr_size()));
 		fprintf(stderr, "sha1prg : %40s\n", info.sha1sum.prg.string);
 		fprintf(stderr, "sha1chr : %40s\n", info.sha1sum.chr.string);
 
@@ -604,6 +614,26 @@ void nes20_submapper(void) {
 					break;
 				case 2:
 					info.mapper.submapper = VRC7A;
+					break;
+			}
+			break;
+		case 176:
+			switch (info.mapper.submapper) {
+				default:
+				case 0:
+					info.mapper.submapper = LP8002KB;
+					break;
+				case 1:
+					info.mapper.submapper = BMCFK23C;
+					break;
+				case 2:
+					info.mapper.submapper = FS005;
+					break;
+				case 3:
+					info.mapper.submapper = JX9003B;
+					break;
+				case 4:
+					info.mapper.submapper = HST162;
 					break;
 			}
 			break;

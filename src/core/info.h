@@ -89,6 +89,19 @@ typedef struct _info {
 				WORD banks_1k;
 			} max;
 		} rom;
+		struct _info_chr_ram {
+			SWORD banks_8k_plus;
+			struct _info_chr_ram_max {
+				WORD banks_8k;
+				WORD banks_4k;
+				WORD banks_2k;
+				WORD banks_1k;
+			} max;
+			//struct _info_chr_ram_bat {
+			//	BYTE banks;
+			//	BYTE start;
+			//} bat;
+		} ram;
 	} chr;
 	struct _info_prg {
 		WORD chips;
