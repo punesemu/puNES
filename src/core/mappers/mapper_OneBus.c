@@ -249,7 +249,7 @@ void extcl_cpu_every_cycle_OneBus(void) {
 			} else {
 				WORD address = onebus.pcm.address | ((onebus.reg.apu[48] ^ 3) << 14);
 
-				apu_wr_mem_mapper(0x4011, (BYTE)(prg_rom_rd(address) >> 1));
+				apu_wr_mem_mapper(0x4011, (BYTE)(cpu_rd_mem_dbg(address) >> 1));
 				onebus.pcm.address++;
 				onebus.pcm.address &= 0x7FFF;
 			}
