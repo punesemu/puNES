@@ -670,6 +670,9 @@ BYTE map_init(void) {
 		case 235:
 			map_init_235();
 			break;
+		case 236:
+			map_init_BMC70IN1();
+			break;
 		case 240:
 			map_init_240();
 			break;
@@ -813,14 +816,6 @@ BYTE map_init(void) {
 				case 16:
 					// 64in1NoRepeat
 					map_init_BMC64IN1NOREPEAT();
-					break;
-				case 17:
-					// 70in1
-					map_init_BMC70IN1(BMC70IN1);
-					break;
-				case 18:
-					// 70in1
-					map_init_BMC70IN1(BMC70IN1B);
 					break;
 				case 19:
 					// KS7032

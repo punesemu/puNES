@@ -21,16 +21,16 @@
 #include "info.h"
 #include "mem_map.h"
 #include "save_slot.h"
+#include "../../c++/crc/crc.h"
 
 struct _bmc70in1 {
 	WORD reg[3];
 } bmc70in1;
 struct _bmc70in1tmp {
-	BYTE type;
 	BYTE reset;
 } bmc70in1tmp;
 
-void map_init_BMC70IN1(BYTE type) {
+void map_init_BMC70IN1(void) {
 	EXTCL_CPU_WR_MEM(BMC70IN1);
 	EXTCL_CPU_RD_MEM(BMC70IN1);
 	EXTCL_SAVE_MAPPER(BMC70IN1);
@@ -41,8 +41,12 @@ void map_init_BMC70IN1(BYTE type) {
 
 	map_chr_bank_1k_reset();
 
+	if (info.mapper.submapper == DEFAULT) {
+		info.mapper.submapper =
+		    (prg_size() == (1024 * 512)) && (emu_crc32((void *)prg_rom(), prg_size()) == 0x0BB4FD7A) ? BMC70IN1B : BMC70IN1;
+	}
 	if (info.reset >= HARD) {
-		if (type == BMC70IN1) {
+		if (info.mapper.submapper == BMC70IN1) {
 			bmc70in1tmp.reset = 0x0D;
 		} else {
 			bmc70in1tmp.reset = 0x06;
@@ -52,7 +56,6 @@ void map_init_BMC70IN1(BYTE type) {
 		bmc70in1tmp.reset = bmc70in1tmp.reset & 0x0F;
 	}
 
-	bmc70in1tmp.type = type;
 	info.mapper.extend_rd = TRUE;
 
 	extcl_cpu_wr_mem_BMC70IN1(0x0000, 0);
@@ -68,7 +71,7 @@ void extcl_cpu_wr_mem_BMC70IN1(WORD address, BYTE value) {
 			mirroring_V();
 		}
 
-		if (bmc70in1tmp.type == BMC70IN1B) {
+		if (info.mapper.submapper == BMC70IN1B) {
 			bmc70in1.reg[2] = (address & 0x03) << 3;
 		} else {
 			DBWORD bank;
