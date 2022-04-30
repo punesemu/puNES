@@ -718,6 +718,9 @@ BYTE map_init(void) {
 		case 283:
 			map_init_GS_20xx();
 			break;
+		case 300:
+			map_init_BMC190IN1();
+			break;
 		case 304:
 			// SMB2J
 			map_init_UNIFSMB2J();
