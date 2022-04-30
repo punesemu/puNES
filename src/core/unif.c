@@ -92,6 +92,7 @@ static const _unif_board unif_boards[] = {
 	{"FK23C", 176, NO_UNIF, BMCFK23C, DEFAULT, NOEXTRA},
 	{"FK23CA", 176, NO_UNIF, BMCFK23C, DEFAULT, NOEXTRA},
 	{"Super24in1SC03", 176, NO_UNIF, LP8002KB, DEFAULT, NOEXTRA},
+	{"N625092", 221, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"42in1ResetSwitch", 226, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"OneBus", 256, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"COOLBOY", 268, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
@@ -393,11 +394,9 @@ BYTE unif_load_rom(void) {
 			}
 		}
 
-		if (prg_size()) {
-			fprintf(stderr, "PRG : 8k rom = %lu [%ld, %08X]\n",
-				(long unsigned)prg_size() / 0x2000, (long)prg_size(),
-				emu_crc32((void *)prg_rom(), prg_size()));
-		}
+		fprintf(stderr, "PRG : 8k rom = %lu [%ld, %08X]\n",
+			(long unsigned)prg_size() / 0x2000, (long)prg_size(),
+			emu_crc32((void *)prg_rom(), prg_size()));
 		if (chr_size()) {
 			fprintf(stderr, "CHR : 4k vrom = %lu [%ld, %08X]\n",
 				(long unsigned)chr_size() / 0x1000, (long)chr_size(),

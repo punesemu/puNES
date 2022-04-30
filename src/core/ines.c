@@ -361,9 +361,11 @@ BYTE ines_load_rom(void) {
 		fprintf(stderr, "PRG : 8k rom = %lu [%ld, %08X]\n",
 			(long unsigned)prg_size() / 0x2000, (long)prg_size(),
 			emu_crc32((void *)prg_rom(), prg_size()));
-		fprintf(stderr, "CHR : 4k vrom = %lu [%ld, %08X]\n",
-			(long unsigned)chr_size() / 0x1000, (long)chr_size(),
-			emu_crc32((void *)chr_rom(), chr_size()));
+		if (chr_size()) {
+			fprintf(stderr, "CHR : 4k vrom = %lu [%ld, %08X]\n",
+				(long unsigned)chr_size() / 0x1000, (long)chr_size(),
+				emu_crc32((void *)chr_rom(), chr_size()));
+		}
 		fprintf(stderr, "sha1prg : %40s\n", info.sha1sum.prg.string);
 		fprintf(stderr, "sha1chr : %40s\n", info.sha1sum.chr.string);
 
