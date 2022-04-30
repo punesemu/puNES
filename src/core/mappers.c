@@ -709,6 +709,9 @@ BYTE map_init(void) {
 		case 256:
 			map_init_OneBus();
 			break;
+		case 266:
+			map_init_CITYFIGHT();
+			break;
 		case 268:
 			map_init_Coolboy(info.mapper.submapper == MINDKIDS ? MINDKIDS : COOLBOY);
 			break;
@@ -826,10 +829,6 @@ BYTE map_init(void) {
 				case 21:
 					// 603-5052
 					map_init_UNIF603_5052();
-					break;
-				case 22:
-					// CITYFIGHT
-					map_init_CITYFIGHT();
 					break;
 				case 23:
 					// BB
