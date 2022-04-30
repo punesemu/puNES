@@ -52,7 +52,7 @@ void extcl_cpu_wr_mem_BMC810544CA1(WORD address, BYTE value) {
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 
-	if (address & 0x0010) {
+	if (address & 0x0020) {
 		mirroring_H();
 	} else  {
 		mirroring_V();

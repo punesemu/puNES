@@ -709,6 +709,9 @@ BYTE map_init(void) {
 		case 256:
 			map_init_OneBus();
 			break;
+		case 261:
+			map_init_BMC810544CA1();
+			break;
 		case 266:
 			map_init_CITYFIGHT();
 			break;
@@ -722,7 +725,6 @@ BYTE map_init(void) {
 			map_init_BMC190IN1();
 			break;
 		case 304:
-			// SMB2J
 			map_init_UNIFSMB2J();
 			break;
 		case 521:
@@ -932,10 +934,6 @@ BYTE map_init(void) {
 				case 50:
 					// 158B
 					map_init_UNIF158B();
-					break;
-				case 51:
-					// 810544-C-A1
-					map_init_BMC810544CA1();
 					break;
 				case 52:
 					// KS7031
