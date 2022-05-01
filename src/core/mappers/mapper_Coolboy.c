@@ -215,7 +215,6 @@ INLINE static void chr_fix_Coolboy(BYTE value) {
 	chr_swap_Coolboy(cbase ^ 0x0400, coolboy.mmc3[0] |   1);
 	chr_swap_Coolboy(cbase ^ 0x0800, coolboy.mmc3[1] & (~1));
 	chr_swap_Coolboy(cbase ^ 0x0C00, coolboy.mmc3[1] |   1);
-
 	chr_swap_Coolboy(cbase ^ 0x1000, coolboy.mmc3[2]);
 	chr_swap_Coolboy(cbase ^ 0x1400, coolboy.mmc3[3]);
 	chr_swap_Coolboy(cbase ^ 0x1800, coolboy.mmc3[4]);

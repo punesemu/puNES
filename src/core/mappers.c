@@ -733,6 +733,9 @@ BYTE map_init(void) {
 		case 304:
 			map_init_UNIFSMB2J();
 			break;
+		case 322:
+			map_init_K3033();
+			break;
 		case 521:
 			map_init_DREAMTECH01();
 			break;

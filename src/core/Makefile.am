@@ -377,6 +377,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Irem.h \
 	mappers/mapper_Jaleco.c \
 	mappers/mapper_Jaleco.h \
+	mappers/mapper_K3033.c \
+	mappers/mapper_K3033.h \
 	mappers/mapper_Kaiser.c \
 	mappers/mapper_Kaiser.h \
 	mappers/mapper_Kasing.c \
