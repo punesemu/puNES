@@ -22,6 +22,7 @@
 #include "common.h"
 
 void map_init_BMC411120C(void);
+void extcl_after_mapper_init_BMC411120C(void);
 void extcl_cpu_wr_mem_BMC411120C(WORD address, BYTE value);
 BYTE extcl_save_mapper_BMC411120C(BYTE mode, BYTE slot, FILE *fp);
 
