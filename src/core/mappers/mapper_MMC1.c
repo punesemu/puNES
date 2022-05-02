@@ -64,23 +64,15 @@ enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 			value &= 0x01;\
 			break;\
 		}\
+		case FARIDSLROM:\
+			value |= mmc1.chr_upper;\
+			break;\
 		default:\
 			value &= 0x1F;\
 			break;\
 	}
 
-struct _mmc1 {
-	BYTE reg;
-	BYTE pos;
-	BYTE prg_mode;
-	BYTE chr_mode;
-	BYTE ctrl;
-	BYTE chr0;
-	BYTE chr1;
-	BYTE prg0;
-	BYTE reset;
-	BYTE prg_upper;
-} mmc1;
+_mmc1 mmc1;
 
 void map_init_MMC1(void) {
 	EXTCL_CPU_WR_MEM(MMC1);
@@ -109,6 +101,8 @@ void map_init_MMC1(void) {
 		}
 	}
 
+	mmc1.prg_mask = 0x0F;
+
 	switch (info.mapper.submapper) {
 		case SNROM:
 			/* SUROM usa 8k di PRG Ram */
@@ -126,6 +120,10 @@ void map_init_MMC1(void) {
 			/* SKROM usa 8k di PRG Ram */
 			info.prg.ram.banks_8k_plus = 1;
 			cpu.prg_ram_wr_active = cpu.prg_ram_rd_active = TRUE;
+			break;
+		case FARIDSLROM:
+			mmc1.prg_mask = 0x07;
+			info.mapper.extend_wr = TRUE;
 			break;
 		default:
 			break;
@@ -170,7 +168,9 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 		 * locking PRG ROM at $C000-$FFFF
 		 * to the last 16k bank.
 		 */
-		map_prg_rom_8k(2, 2, mmc1.prg_upper | (info.prg.rom.max.banks_16k & 0x0F));
+		value = mmc1.prg_upper | mmc1.prg_mask;
+		control_bank(info.prg.rom.max.banks_16k)
+		map_prg_rom_8k(2, 2, value);
 		map_prg_rom_8k_update();
 		return;
 	}
@@ -220,6 +220,9 @@ BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, mmc1.prg0);
 	save_slot_ele(mode, slot, mmc1.reset);
 	save_slot_ele(mode, slot, mmc1.prg_upper);
+	if (save_slot.version >= 27) {
+		save_slot_ele(mode, slot, mmc1.chr_upper);
+	}
 
 	return (EXIT_OK);
 }
@@ -254,27 +257,29 @@ INLINE static void swap_prg_rom_MMC1(void) {
 
 	switch (mmc1.prg_mode) {
 		case 0:
-		case 1: {
-			BYTE bank;
-
-			control_bank_with_AND(0x0E, info.prg.rom.max.banks_16k)
-			bank = mmc1.prg_upper | value;
+		case 1:
 			/* switch 32k at $8000, ignoring low bit of bank number */
-			map_prg_rom_8k(2, 0, bank);
-			map_prg_rom_8k(2, 2, bank + 1);
+			value = (mmc1.prg_upper | (value & mmc1.prg_mask)) >> 1;
+			control_bank(info.prg.rom.max.banks_32k)
+			map_prg_rom_8k(4, 0, value);
 			break;
-		}
 		case 2:
-			control_bank_with_AND(0x0F, info.prg.rom.max.banks_16k)
 			/* fix first 16k bank at $8000 and switch 16 KB bank at $C000 */
-			map_prg_rom_8k(2, 0, mmc1.prg_upper);
-			map_prg_rom_8k(2, 2, mmc1.prg_upper | value);
+			value = mmc1.prg_upper | (value & mmc1.prg_mask);
+			control_bank(info.prg.rom.max.banks_16k)
+			map_prg_rom_8k(2, 2, value);
+			value = mmc1.prg_upper;
+			control_bank(info.prg.rom.max.banks_16k)
+			map_prg_rom_8k(2, 0, value);
 			break;
 		case 3:
-			control_bank_with_AND(0x0F, info.prg.rom.max.banks_16k)
 			/* fix last 16k bank at $C000 and switch 16 KB bank at $8000 */
-			map_prg_rom_8k(2, 0, mmc1.prg_upper | value);
-			map_prg_rom_8k(2, 2, mmc1.prg_upper | (info.prg.rom.max.banks_16k & 0x0F));
+			value = mmc1.prg_upper | (value & mmc1.prg_mask);
+			control_bank(info.prg.rom.max.banks_16k)
+			map_prg_rom_8k(2, 0, value);
+			value = mmc1.prg_upper | mmc1.prg_mask;
+			control_bank(info.prg.rom.max.banks_16k)
+			map_prg_rom_8k(2, 2, value);
 			break;
 	}
 	map_prg_rom_8k_update();
@@ -305,8 +310,10 @@ INLINE static void swap_chr0_MMC1(void) {
 		return;
 	}
 
-	control_bank_with_AND(0x1E, info.chr.rom.max.banks_4k)
-	value <<= 12;
+	//control_bank_with_AND(0x1E, info.chr.rom.max.banks_4k)
+	value >>= 1;
+	control_bank(info.chr.rom.max.banks_8k)
+	value <<= 13;
 	chr.bank_1k[0] = chr_pnt(value);
 	chr.bank_1k[1] = chr_pnt(value | 0x0400);
 	chr.bank_1k[2] = chr_pnt(value | 0x0800);

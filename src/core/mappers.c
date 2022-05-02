@@ -742,6 +742,12 @@ BYTE map_init(void) {
 		case 322:
 			map_init_K3033();
 			break;
+		case 323:
+			map_init_FARIDSLROM8IN1();
+			break;
+		case 324:
+			map_init_FARIDUNROM8IN1();
+			break;
 		case 333:
 			map_init_8_IN_1();
 			break;
