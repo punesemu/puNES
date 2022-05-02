@@ -21,15 +21,8 @@
 
 #include "common.h"
 
-typedef struct _m205 {
-	BYTE reg[2];
-	WORD prg_map[4];
-	WORD chr_map[8];
-} _m205;
-
-extern _m205 m205;
-
 void map_init_205(void);
+void extcl_after_mapper_init_205(void);
 void extcl_cpu_wr_mem_205(WORD address, BYTE value);
 BYTE extcl_save_mapper_205(BYTE mode, BYTE slot, FILE *fp);
 

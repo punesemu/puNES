@@ -137,8 +137,8 @@ void map_init_UNIF8237(BYTE model) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *)&m205;
-	mapper.internal_struct_size[0] = sizeof(m205);
+	mapper.internal_struct[0] = (BYTE *)&unif8237;
+	mapper.internal_struct_size[0] = sizeof(unif8237);
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 

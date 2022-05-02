@@ -23,65 +23,18 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-INLINE static void m205_update_prg(void);
-INLINE static void m205_update_chr(void);
+INLINE static void prg_fix_205(BYTE value);
+INLINE static void prg_swap_205(WORD address, WORD value);
+INLINE static void chr_fix_205(BYTE value);
+INLINE static void chr_swap_205(WORD address, WORD value);
 
-#define m205_chr_1k(vl) value = ((m205.reg[0] & 0x30) << 3) | vl
-#define m205_prg_8k(vl) value = (m205.reg[0] & 0x30) | (vl & ((m205.reg[0] & 0xC0) ? 0x0F : 0x1F))
-#define m205_swap_chr_1k(a, b)\
-	chr1k = m205.chr_map[b];\
-	m205.chr_map[b] = m205.chr_map[a];\
-	m205.chr_map[a] = chr1k
-#define m205_8000()\
-	if (mmc3.chr_rom_cfg != old_chr_rom_cfg) {\
-		BYTE chr1k;\
-		m205_swap_chr_1k(0, 4);\
-		m205_swap_chr_1k(1, 5);\
-		m205_swap_chr_1k(2, 6);\
-		m205_swap_chr_1k(3, 7);\
-	}\
-	if (mmc3.prg_rom_cfg != old_prg_rom_cfg) {\
-		mapper.rom_map_to[2] = m205.prg_map[0];\
-		mapper.rom_map_to[0] = m205.prg_map[2];\
-		m205.prg_map[0] = mapper.rom_map_to[0];\
-		m205.prg_map[2] = mapper.rom_map_to[2];\
-		m205.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
-	}
-#define m205_8001()\
-	switch (mmc3.bank_to_update) {\
-		case 0:\
-			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
-			m205.chr_map[mmc3.chr_rom_cfg] = value;\
-			m205.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
-			break;\
-		case 1:\
-			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
-			m205.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
-			m205.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
-			break;\
-		case 2:\
-			m205.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;\
-			break;\
-		case 3:\
-			m205.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = value;\
-			break;\
-		case 4:\
-			m205.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = value;\
-			break;\
-		case 5:\
-			m205.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;\
-			break;\
-		case 6:\
-			m205.prg_map[mmc3.prg_rom_cfg] = value;\
-			break;\
-		case 7:\
-			m205.prg_map[1] = value;\
-			break;\
-	}
-
-_m205 m205;
+struct _m205 {
+	BYTE reg;
+	WORD mmc3[8];
+} m205;
 
 void map_init_205(void) {
+	EXTCL_AFTER_MAPPER_INIT(205);
 	EXTCL_CPU_WR_MEM(205);
 	EXTCL_SAVE_MAPPER(205);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -99,112 +52,140 @@ void map_init_205(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m205, 0x00, sizeof(m205));
 
-	{
-		BYTE i;
-
-		map_prg_rom_8k_reset();
-		map_chr_bank_1k_reset();
-
-		for (i = 0; i < 8; i++) {
-			if (i < 4) {
-				m205.prg_map[i] = mapper.rom_map_to[i];
-			}
-			m205.chr_map[i] = i;
-		}
-
-		m205_update_prg();
-		m205_update_chr();
-	}
+	m205.mmc3[0] = 0;
+	m205.mmc3[1] = 2;
+	m205.mmc3[2] = 4;
+	m205.mmc3[3] = 5;
+	m205.mmc3[4] = 6;
+	m205.mmc3[5] = 7;
+	m205.mmc3[6] = 0;
+	m205.mmc3[7] = 0;
 
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
+void extcl_after_mapper_init_205(void) {
+	prg_fix_205(mmc3.bank_to_update);
+	chr_fix_205(mmc3.bank_to_update);
+}
 void extcl_cpu_wr_mem_205(WORD address, BYTE value) {
+	if ((address >= 0x6000) && (address <= 0x6FFF)) {
+		if (cpu.prg_ram_wr_active) {
+			m205.reg = value;
+			prg_fix_205(mmc3.bank_to_update);
+			chr_fix_205(mmc3.bank_to_update);
+		}
+		return;
+	}
+	if ((address >= 0x7000) && (address <= 0x7FFF)) {
+		if (cpu.prg_ram_wr_active) {
+			m205.reg = value >> 4;
+			prg_fix_205(mmc3.bank_to_update);
+			chr_fix_205(mmc3.bank_to_update);
+		}
+		return;
+	}
 	if (address >= 0x8000) {
-		BYTE old_prg_rom_cfg = mmc3.prg_rom_cfg;
-		BYTE old_chr_rom_cfg = mmc3.chr_rom_cfg;
-
 		switch (address & 0xE001) {
 			case 0x8000:
-				extcl_cpu_wr_mem_MMC3(address, value);
-				m205_8000()
-				m205_update_prg();
-				m205_update_chr();
+				if ((value & 0x40) != (mmc3.bank_to_update & 0x40)) {
+					prg_fix_205(value);
+				}
+				if ((value & 0x80) != (mmc3.bank_to_update & 0x80)) {
+					chr_fix_205(value);
+				}
+				mmc3.bank_to_update = value;
 				return;
-			case 0x8001:
-				extcl_cpu_wr_mem_MMC3(address, value);
-				m205_8001()
-				m205_update_prg();
-				m205_update_chr();
+			case 0x8001: {
+				WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
+
+				m205.mmc3[mmc3.bank_to_update & 0x07] = value;
+
+				switch (mmc3.bank_to_update & 0x07) {
+					case 0:
+						chr_swap_205(cbase ^ 0x0000, value & (~1));
+						chr_swap_205(cbase ^ 0x0400, value | 1);
+						return;
+					case 1:
+						chr_swap_205(cbase ^ 0x0800, value & (~1));
+						chr_swap_205(cbase ^ 0x0C00, value | 1);
+						return;
+					case 2:
+						chr_swap_205(cbase ^ 0x1000, value);
+						return;
+					case 3:
+						chr_swap_205(cbase ^ 0x1400, value);
+						return;
+					case 4:
+						chr_swap_205(cbase ^ 0x1800, value);
+						return;
+					case 5:
+						chr_swap_205(cbase ^ 0x1C00, value);
+						return;
+					case 6:
+						if (mmc3.bank_to_update & 0x40) {
+							prg_swap_205(0xC000, value);
+						} else {
+							prg_swap_205(0x8000, value);
+						}
+						return;
+					case 7:
+						prg_swap_205(0xA000, value);
+						return;
+				}
 				return;
-			default:
-				extcl_cpu_wr_mem_MMC3(address, value);
-				return;
+			}
 		}
-	}
-
-	if (address < 0x6000) {
-		return;
-	}
-
-	if (address < 0x7000) {
-		if (m205.reg[1] == 0) {
-			m205.reg[0] = (value << 4) & 0xF0;
-			m205.reg[1] = address & 0x80;
-			m205_update_prg();
-			m205_update_chr();
-		}
-		return;
-	}
-
-	if (address < 0x8000) {
-		if (m205.reg[1] == 0) {
-			m205.reg[0] = value & 0xF0;
-			m205_update_prg();
-			m205_update_chr();
-		}
-		return;
+		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
 BYTE extcl_save_mapper_205(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m205.reg);
-	save_slot_ele(mode, slot, m205.prg_map);
-	save_slot_ele(mode, slot, m205.chr_map);
+	save_slot_ele(mode, slot, m205.mmc3);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
 }
 
-INLINE static void m205_update_prg(void) {
-	BYTE value;
+INLINE static void prg_fix_205(BYTE value) {
+	if (value & 0x40) {
+		prg_swap_205(0x8000, ~1);
+		prg_swap_205(0xC000, m205.mmc3[6]);
+	} else {
+		prg_swap_205(0x8000, m205.mmc3[6]);
+		prg_swap_205(0xC000, ~1);
+	}
+	prg_swap_205(0xA000, m205.mmc3[7]);
+	prg_swap_205(0xE000, ~0);
+}
+INLINE static void prg_swap_205(WORD address, WORD value) {
+	WORD base = (m205.reg & 0x03) << 4;
+	WORD mask = 0x1F >> ((m205.reg & 0x04) ? 1 : ((m205.reg & 0x02) >> 1));
 
-	m205_prg_8k(m205.prg_map[0]);
+	value = (base & ~mask) | (value & mask);
 	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, value);
-
-	m205_prg_8k(m205.prg_map[1]);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, value);
-
-	m205_prg_8k(m205.prg_map[2]);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, value);
-
-	m205_prg_8k(m205.prg_map[3]);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, value);
-
+	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-INLINE static void m205_update_chr(void) {
-	BYTE i;
-	WORD value;
+INLINE static void chr_fix_205(BYTE value) {
+	WORD cbase = (value & 0x80) << 5;
 
-	for (i = 0; i < 8; i++) {
-		m205_chr_1k(m205.chr_map[i]);
-		control_bank(info.chr.rom.max.banks_1k)
-		chr.bank_1k[i] = chr_pnt(value << 10);
-	}
+	chr_swap_205(cbase ^ 0x0000, m205.mmc3[0] & (~1));
+	chr_swap_205(cbase ^ 0x0400, m205.mmc3[0] |   1);
+	chr_swap_205(cbase ^ 0x0800, m205.mmc3[1] & (~1));
+	chr_swap_205(cbase ^ 0x0C00, m205.mmc3[1] |   1);
+	chr_swap_205(cbase ^ 0x1000, m205.mmc3[2]);
+	chr_swap_205(cbase ^ 0x1400, m205.mmc3[3]);
+	chr_swap_205(cbase ^ 0x1800, m205.mmc3[4]);
+	chr_swap_205(cbase ^ 0x1c00, m205.mmc3[5]);
+}
+INLINE static void chr_swap_205(WORD address, WORD value) {
+	WORD base = (m205.reg & 0x03) << 7;
+	WORD mask = 0xFF >> ((m205.reg & 0x04) ? 1 : ((m205.reg & 0x02) >> 1));
+
+	value = (base & ~mask) | (value & mask);
+	control_bank(info.chr.rom.max.banks_1k)
+	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 }
