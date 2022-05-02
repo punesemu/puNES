@@ -214,6 +214,7 @@
 #include "mappers/mapper_OneBus.h"
 #include "mappers/mapper_BMC190IN1.h"
 #include "mappers/mapper_K3033.h"
+#include "mappers/mapper_BMC830425C.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\
