@@ -742,6 +742,9 @@ BYTE map_init(void) {
 		case 322:
 			map_init_K3033();
 			break;
+		case 333:
+			map_init_8_IN_1();
+			break;
 		case 521:
 			map_init_DREAMTECH01();
 			break;
@@ -921,10 +924,6 @@ BYTE map_init(void) {
 				case 47:
 					// BOY
 					map_init_BOY();
-					break;
-				case 48:
-					// 8-IN-1
-					map_init_8_IN_1();
 					break;
 				case 49:
 					// HP898F

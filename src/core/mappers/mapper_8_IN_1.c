@@ -23,64 +23,14 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-INLINE static void m8in1_update_prg(void);
-INLINE static void m8in1_update_chr(void);
-
-#define m8in1_swap_chr_1k(a, b)\
-	chr1k = m8in1.chr_map[b];\
-	m8in1.chr_map[b] = m8in1.chr_map[a];\
-	m8in1.chr_map[a] = chr1k
-#define m8in1_8000()\
-	if (mmc3.chr_rom_cfg != old_chr_rom_cfg) {\
-		WORD chr1k;\
-		m8in1_swap_chr_1k(0, 4);\
-		m8in1_swap_chr_1k(1, 5);\
-		m8in1_swap_chr_1k(2, 6);\
-		m8in1_swap_chr_1k(3, 7);\
-	}\
-	if (mmc3.prg_rom_cfg != old_prg_rom_cfg) {\
-		mapper.rom_map_to[2] = m8in1.prg_map[0];\
-		mapper.rom_map_to[0] = m8in1.prg_map[2];\
-		m8in1.prg_map[0] = mapper.rom_map_to[0];\
-		m8in1.prg_map[2] = mapper.rom_map_to[2];\
-		m8in1.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
-	}
-#define m8in1_8001()\
-	switch (mmc3.bank_to_update) {\
-		case 0:\
-			value &= 0xFE;\
-			m8in1.chr_map[mmc3.chr_rom_cfg] = value;\
-			m8in1.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
-			break;\
-		case 1:\
-			value &= 0xFE;\
-			m8in1.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
-			m8in1.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
-			break;\
-		case 2:\
-			m8in1.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;\
-			break;\
-		case 3:\
-			m8in1.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = value;\
-			break;\
-		case 4:\
-			m8in1.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = value;\
-			break;\
-		case 5:\
-			m8in1.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;\
-			break;\
-		case 6:\
-			m8in1.prg_map[mmc3.prg_rom_cfg] = value;\
-			break;\
-		case 7:\
-			m8in1.prg_map[1] = value;\
-			break;\
-	}
+INLINE static void prg_fix_8_IN_1(BYTE value);
+INLINE static void prg_swap_8_IN_1(WORD address, WORD value);
+INLINE static void chr_fix_8_IN_1(BYTE value);
+INLINE static void chr_swap_8_IN_1(WORD address, WORD value);
 
 struct _m8in1 {
 	BYTE reg;
-	WORD prg_map[4];
-	WORD chr_map[8];
+	BYTE mmc3[8];
 } m8in1;
 
 void map_init_8_IN_1(void) {
@@ -102,6 +52,15 @@ void map_init_8_IN_1(void) {
 	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
+	m8in1.mmc3[0] = 0;
+	m8in1.mmc3[1] = 2;
+	m8in1.mmc3[2] = 4;
+	m8in1.mmc3[3] = 5;
+	m8in1.mmc3[4] = 6;
+	m8in1.mmc3[5] = 7;
+	m8in1.mmc3[6] = 0;
+	m8in1.mmc3[7] = 0;
+
 	if ((mapper.write_vram == TRUE) && !info.chr.rom.banks_8k) {
 		info.chr.rom.banks_8k = 32;
 	}
@@ -110,25 +69,10 @@ void map_init_8_IN_1(void) {
 	irqA12_delay = 1;
 }
 void extcl_after_mapper_init_8_IN_1(void) {
-	BYTE i;
-
-	map_prg_rom_8k_reset();
-	map_chr_bank_1k_reset();
-
-	for (i = 0; i < 8; i++) {
-		if (i < 4) {
-			m8in1.prg_map[i] = mapper.rom_map_to[i];
-		}
-		m8in1.chr_map[i] = i;
-	}
-
-	m8in1_update_prg();
-	m8in1_update_chr();
+	prg_fix_8_IN_1(mmc3.bank_to_update);
+	chr_fix_8_IN_1(mmc3.bank_to_update);
 }
 void extcl_cpu_wr_mem_8_IN_1(WORD address, BYTE value) {
-	BYTE old_prg_rom_cfg = mmc3.prg_rom_cfg;
-	BYTE old_chr_rom_cfg = mmc3.chr_rom_cfg;
-
 	switch (address & 0xF001) {
 		case 0x9000:
 		case 0x9001:
@@ -139,60 +83,103 @@ void extcl_cpu_wr_mem_8_IN_1(WORD address, BYTE value) {
 		case 0xF000:
 		case 0xF001:
 			m8in1.reg = value;
-			m8in1_update_prg();
-			m8in1_update_chr();
+			prg_fix_8_IN_1(mmc3.bank_to_update);
+			chr_fix_8_IN_1(mmc3.bank_to_update);
 			return;
 		case 0x8000:
-			extcl_cpu_wr_mem_MMC3(address, value);
-			m8in1_8000()
-			m8in1_update_prg();
-			m8in1_update_chr();
+			if ((value & 0x40) != (mmc3.bank_to_update & 0x40)) {
+				prg_fix_8_IN_1(value);
+			}
+			if ((value & 0x80) != (mmc3.bank_to_update & 0x80)) {
+				chr_fix_8_IN_1(value);
+			}
+			mmc3.bank_to_update = value;
 			return;
-		case 0x8001:
-			extcl_cpu_wr_mem_MMC3(address, value);
-			m8in1_8001()
-			m8in1_update_prg();
-			m8in1_update_chr();
+		case 0x8001: {
+			WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
+
+			m8in1.mmc3[mmc3.bank_to_update & 0x07] = value;
+
+			switch (mmc3.bank_to_update & 0x07) {
+				case 0:
+					chr_swap_8_IN_1(cbase ^ 0x0000, value & (~1));
+					chr_swap_8_IN_1(cbase ^ 0x0400, value | 1);
+					return;
+				case 1:
+					chr_swap_8_IN_1(cbase ^ 0x0800, value & (~1));
+					chr_swap_8_IN_1(cbase ^ 0x0C00, value | 1);
+					return;
+				case 2:
+					chr_swap_8_IN_1(cbase ^ 0x1000, value);
+					return;
+				case 3:
+					chr_swap_8_IN_1(cbase ^ 0x1400, value);
+					return;
+				case 4:
+					chr_swap_8_IN_1(cbase ^ 0x1800, value);
+					return;
+				case 5:
+					chr_swap_8_IN_1(cbase ^ 0x1C00, value);
+					return;
+				case 6:
+					if (mmc3.bank_to_update & 0x40) {
+						prg_swap_8_IN_1(0xC000, value);
+					} else {
+						prg_swap_8_IN_1(0x8000, value);
+					}
+					return;
+				case 7:
+					prg_swap_8_IN_1(0xA000, value);
+					return;
+			}
 			return;
-		default:
-			extcl_cpu_wr_mem_MMC3(address, value);
-			return;
+		}
 	}
+	extcl_cpu_wr_mem_MMC3(address, value);
 }
 BYTE extcl_save_mapper_8_IN_1(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m8in1.reg);
-	save_slot_ele(mode, slot, m8in1.prg_map);
-	save_slot_ele(mode, slot, m8in1.chr_map);
+	save_slot_ele(mode, slot, m8in1.mmc3);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
 }
 
-INLINE static void m8in1_update_prg(void) {
-	WORD value;
-
-	if (m8in1.reg & 0x10) {
-		BYTE i;
-
-		for (i = 0; i < 4; i++) {
-			value = ((m8in1.reg << 2) & 0x30) | (m8in1.prg_map[i] & 0x0F);
-			control_bank(info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, i, value);
-		}
+INLINE static void prg_fix_8_IN_1(BYTE value) {
+	if (value & 0x40) {
+		prg_swap_8_IN_1(0x8000, ~1);
+		prg_swap_8_IN_1(0xC000, m8in1.mmc3[6]);
 	} else {
-		value = m8in1.reg & 0x0F;
-		control_bank(info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, value);
+		prg_swap_8_IN_1(0x8000, m8in1.mmc3[6]);
+		prg_swap_8_IN_1(0xC000, ~1);
 	}
+	prg_swap_8_IN_1(0xA000, m8in1.mmc3[7]);
+	prg_swap_8_IN_1(0xE000, ~0);
+}
+INLINE static void prg_swap_8_IN_1(WORD address, WORD value) {
+	if (m8in1.reg & 0x10) {
+		value = ((m8in1.reg & 0x0C) << 2) | (value & 0x0F);
+	} else {
+		value = ((m8in1.reg & 0x0F) << 2) | ((address >> 13) & 0x03);
+	}
+	control_bank(info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-INLINE static void m8in1_update_chr(void) {
-	BYTE i;
-	WORD value;
+INLINE static void chr_fix_8_IN_1(BYTE value) {
+	WORD cbase = (value & 0x80) << 5;
 
-	for (i = 0; i < 8; i++) {
-		value = ((m8in1.reg << 5) & 0x0180) | (m8in1.chr_map[i] & 0x7F);
-		control_bank(info.chr.rom.max.banks_1k)
-		chr.bank_1k[i] = chr_pnt(value << 10);
-	}
+	chr_swap_8_IN_1(cbase ^ 0x0000, m8in1.mmc3[0] & (~1));
+	chr_swap_8_IN_1(cbase ^ 0x0400, m8in1.mmc3[0] |   1);
+	chr_swap_8_IN_1(cbase ^ 0x0800, m8in1.mmc3[1] & (~1));
+	chr_swap_8_IN_1(cbase ^ 0x0C00, m8in1.mmc3[1] |   1);
+	chr_swap_8_IN_1(cbase ^ 0x1000, m8in1.mmc3[2]);
+	chr_swap_8_IN_1(cbase ^ 0x1400, m8in1.mmc3[3]);
+	chr_swap_8_IN_1(cbase ^ 0x1800, m8in1.mmc3[4]);
+	chr_swap_8_IN_1(cbase ^ 0x1c00, m8in1.mmc3[5]);
+}
+INLINE static void chr_swap_8_IN_1(WORD address, WORD value) {
+	value = ((m8in1.reg & 0x0C) << 5) | (value & 0x7F);
+	control_bank(info.chr.rom.max.banks_1k)
+	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 }
