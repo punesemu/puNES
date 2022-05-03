@@ -439,6 +439,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_OneBus.h \
 	mappers/mapper_Rcm.c \
 	mappers/mapper_Rcm.h \
+	mappers/mapper_RESETTXROM.c \
+	mappers/mapper_RESETTXROM.h \
 	mappers/mapper_Rex.c \
 	mappers/mapper_Rex.h \
 	mappers/mapper_RT_01.c \

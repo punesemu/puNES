@@ -349,25 +349,36 @@ BYTE ines_load_rom(void) {
 			nes20_submapper();
 		}
 
+		fprintf(stderr, "\n");
 		if (info.format == NES_2_0) {
-			fprintf(stderr, "format : Nes 2.0\n");
+			fprintf(stderr, "format        : Nes 2.0\n");
 		} else {
-			fprintf(stderr, "format : iNES 1.0\n");
+			fprintf(stderr, "format        : iNES 1.0\n");
 		}
-		fprintf(stderr, "mapper : %u\n", info.mapper.id);
+		fprintf(stderr, "mapper        : %u\n", info.mapper.id);
 		if (info.mapper.id == 4098) {
-			fprintf(stderr, "internal unif mapper : %u\n", unif.internal_mapper);
+			fprintf(stderr, "unif mapper   : %u\n", unif.internal_mapper);
 		}
-		fprintf(stderr, "PRG : 8k rom = %lu [%ld, %08X]\n",
-			(long unsigned)prg_size() / 0x2000, (long)prg_size(),
-			emu_crc32((void *)prg_rom(), prg_size()));
+		if (info.mapper.submapper == DEFAULT) {
+			fprintf(stderr, "submapper     : DEFAULT\n");
+		} else {
+			fprintf(stderr, "submapper     : %u\n", info.mapper.submapper);
+		}
+		fprintf(stderr, "PRG 8k rom    : %-4lu [ %08X %ld ]\n",
+			(long unsigned)prg_size() / 0x2000,
+			emu_crc32((void *)prg_rom(), prg_size()),
+			(long)prg_size());
 		if (chr_size()) {
-			fprintf(stderr, "CHR : 4k vrom = %lu [%ld, %08X]\n",
-				(long unsigned)chr_size() / 0x1000, (long)chr_size(),
-				emu_crc32((void *)chr_rom(), chr_size()));
+			fprintf(stderr, "CHR 4k vrom   : %-4lu [ %08X %ld ]\n",
+				(long unsigned)chr_size() / 0x1000,
+				emu_crc32((void *)chr_rom(), chr_size()),
+				(long)chr_size());
 		}
-		fprintf(stderr, "sha1prg : %40s\n", info.sha1sum.prg.string);
-		fprintf(stderr, "sha1chr : %40s\n", info.sha1sum.chr.string);
+		fprintf(stderr, "sha1prg       : %40s\n", info.sha1sum.prg.string);
+		if (chr_size()) {
+			fprintf(stderr, "sha1chr       : %40s\n", info.sha1sum.chr.string);
+		}
+		fprintf(stderr, "\n");
 
 		free(rom.data);
 		return (EXIT_OK);

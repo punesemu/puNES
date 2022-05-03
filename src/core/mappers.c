@@ -736,6 +736,9 @@ BYTE map_init(void) {
 		case 304:
 			map_init_UNIFSMB2J();
 			break;
+		case 313:
+			map_init_RESETTXROM();
+			break;
 		case 320:
 			map_init_BMC830425C();
 			break;
