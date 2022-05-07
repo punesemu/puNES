@@ -733,6 +733,9 @@ BYTE map_init(void) {
 		case 287:
 			map_init_BMC411120C();
 			break;
+		case 289:
+			map_init_60311C();
+			break;
 		case 292:
 			map_init_DRAGONFIGHTER();
 			break;
