@@ -24,6 +24,11 @@ void map_init_227(void) {
 	EXTCL_CPU_WR_MEM(227);
 
 	extcl_cpu_wr_mem_227(0x8000, 0x00);
+
+	if (info.mapper.submapper == WAIXING_FW01) {
+		info.prg.ram.banks_8k_plus = 1;
+		info.prg.ram.bat.banks = TRUE;
+	}
 }
 void extcl_cpu_wr_mem_227(WORD address, BYTE value) {
 	BYTE bank = ((address >> 4) & 0x10) | ((address >> 3) & 0x0F);
