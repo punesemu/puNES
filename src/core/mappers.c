@@ -757,6 +757,9 @@ BYTE map_init(void) {
 		case 333:
 			map_init_8_IN_1();
 			break;
+		case 349:
+			map_init_BMCG146();
+			break;
 		case 521:
 			map_init_DREAMTECH01();
 			break;
@@ -796,10 +799,6 @@ BYTE map_init(void) {
 				case 4:
 					// 11160
 					map_init_BMC11160();
-					break;
-				case 5:
-					// G-146
-					map_init_BMCG146();
 					break;
 				case 6:
 					// 12-IN-1
