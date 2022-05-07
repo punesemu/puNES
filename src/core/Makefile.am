@@ -235,6 +235,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_36.h \
 	mappers/mapper_37.c \
 	mappers/mapper_37.h \
+	mappers/mapper_375.c \
+	mappers/mapper_375.h \
 	mappers/mapper_40.c \
 	mappers/mapper_40.h \
 	mappers/mapper_42.c \

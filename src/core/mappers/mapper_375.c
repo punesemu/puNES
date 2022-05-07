@@ -20,29 +20,28 @@
 #include "info.h"
 #include "mem_map.h"
 
-void map_init_227(void) {
-	EXTCL_CPU_WR_MEM(227);
+void map_init_375(void) {
+	EXTCL_CPU_WR_MEM(375);
 
-	extcl_cpu_wr_mem_227(0x8000, 0x00);
-
-	if (info.mapper.submapper == WAIXING_FW01) {
-		info.prg.ram.banks_8k_plus = 1;
-		info.prg.ram.bat.banks = TRUE;
-	}
+	extcl_cpu_wr_mem_375(0x8000, 0x00);
 }
-void extcl_cpu_wr_mem_227(WORD address, UNUSED(BYTE value)) {
-	WORD bank[2], base = ((address >> 2) & 0x1F) | ((address & 0x0100) >> 3);
+void extcl_cpu_wr_mem_375(WORD address, UNUSED(BYTE value)) {
+	WORD bank[2], base = ((address >> 2) & 0x1F) | ((address & 0x0100) >> 3) | ((address & 0x0400) >> 5);
 
 	if (address & 0x0080) {
 		bank[0] = base;
 		bank[1] = base + (address & 0x0001);
 	} else {
-		WORD mask = (address & 0x0001) ? 0x3E : 0xFF;
+		WORD mask = (address & 0x0001) ? 0x7E : 0xFF;
+
+		if (address & 0x0800) {
+			base = (value & 0x03) | ((address & 0x0060) >> 2) | ((address & 0x0100) >> 3) | ((address & 0x0400) >> 5);
+		}
 
 		bank[0] = base & mask;
 
 		if (!(address & 0x0200)) {
-			bank[1] = base & 0x38;
+			bank[1] = base & 0x78;
 		} else {
 			bank[1] = base | 0x07;
 		}

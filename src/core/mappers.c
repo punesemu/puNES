@@ -781,6 +781,9 @@ BYTE map_init(void) {
 		case 349:
 			map_init_BMCG146();
 			break;
+		case 375:
+			map_init_375();
+			break;
 		case 521:
 			map_init_DREAMTECH01();
 			break;
