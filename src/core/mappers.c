@@ -715,6 +715,9 @@ BYTE map_init(void) {
 		case 261:
 			map_init_BMC810544CA1();
 			break;
+		case 265:
+			map_init_T262();
+			break;
 		case 266:
 			map_init_CITYFIGHT();
 			break;
@@ -732,6 +735,9 @@ BYTE map_init(void) {
 			break;
 		case 292:
 			map_init_DRAGONFIGHTER();
+			break;
+		case 298:
+			map_init_TF1201();
 			break;
 		case 300:
 			map_init_BMC190IN1();
@@ -800,10 +806,6 @@ BYTE map_init(void) {
 					// MARIO1-MALEE2
 					map_init_malee();
 					break;
-				case 2:
-					// TF1021
-					map_init_TF1201();
-					break;
 				case 3:
 					// EH8813A
 					map_init_EH8813A();
@@ -815,10 +817,6 @@ BYTE map_init(void) {
 				case 6:
 					// 12-IN-1
 					map_init_BMC12IN1();
-					break;
-				case 8:
-					// T-262
-					map_init_T262();
 					break;
 				case 10:
 					// 8157
