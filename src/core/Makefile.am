@@ -411,6 +411,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_LH10.h \
 	mappers/mapper_LH32.c \
 	mappers/mapper_LH32.h \
+	mappers/mapper_LH51.c \
+	mappers/mapper_LH51.h \
 	mappers/mapper_Magic.c \
 	mappers/mapper_Magic.h \
 	mappers/mapper_Malee.c \

@@ -742,6 +742,12 @@ BYTE map_init(void) {
 		case 305:
 			map_init_KS7031();
 			break;
+		case 307:
+			map_init_KS7037();
+			break;
+		case 309:
+			map_init_LH51();
+			break;
 		case 313:
 			map_init_RESETTXROM();
 			break;
@@ -906,10 +912,6 @@ BYTE map_init(void) {
 				case 39:
 					// KS7012
 					map_init_KS7012();
-					break;
-				case 40:
-					// KS7037
-					map_init_KS7037();
 					break;
 				case 41:
 					// KS7057

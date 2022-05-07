@@ -218,6 +218,7 @@
 #include "mappers/mapper_FARIDSLROM8IN1.h"
 #include "mappers/mapper_FARIDUNROM8IN1.h"
 #include "mappers/mapper_RESETTXROM.h"
+#include "mappers/mapper_LH51.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\
