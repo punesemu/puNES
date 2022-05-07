@@ -103,18 +103,18 @@ void map_init_BMCFK23C(void) {
 	if (info.mapper.submapper == DEFAULT) {
 		info.mapper.submapper = LP8002KB;
 	}
-	if ((prg.rom.size == (1024 * 128)) && (chr.rom.size == (1024 * 64))) {
+	if ((prg_size() == (1024 * 128)) && (chr_size() == (1024 * 64))) {
 		info.mapper.submapper = BMCFK23C;
 	}
-	if ((prg.rom.size == (1024 * 256)) && (chr.rom.size == (1024 * 128))) {
+	if ((prg_size() == (1024 * 256)) && (chr_size() == (1024 * 128))) {
 		info.mapper.submapper = BMCFK23C;
 	}
-	if ((prg.rom.size == (1024 * 1024)) && (prg.rom.size == chr.rom.size)) {
+	if ((prg_size() == (1024 * 1024)) && (prg_size() == chr_size())) {
 		// (JY-224) 1998 97格鬥天王 激鬥篇 7-in-1.nes
 		bmcfk23c.prg_base = (crc32 == 0x6C574B50) ? 0x40 : 0x20;
 		info.mapper.submapper = BMCFK23C;
 	}
-	if (prg.rom.size >= (8192 * 1024)) {
+	if (prg_size() >= (8192 * 1024)) {
 		info.mapper.submapper = FS005;
 	}
 	if ((crc32 == 0x3655B7BC) || // New 4-in-1 Supergame (YH4239) [p1][U][!].unf

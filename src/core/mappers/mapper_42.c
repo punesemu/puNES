@@ -65,13 +65,10 @@ void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
 			m42.prg_6000 = prg_pnt(value << 13);
 			return;
 		case 0xE001:
-			if (value == 0x00) {
-				mirroring_H();
-				return;
-			}
 			if (value == 0x08) {
+				mirroring_H();
+			} else  {
 				mirroring_V();
-				return;
 			}
 			return;
 		case 0xE002:
