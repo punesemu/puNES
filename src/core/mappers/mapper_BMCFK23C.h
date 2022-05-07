@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-enum bmcfk23c_types { LP8002KB = 0, BMCFK23C = 1, FS005 = 2, JX9003B = 3, HST162 = 4, BMCFK23CNOCHRAM = 0x20 };
+enum bmcfk23c_types { LP8002KB = 0, BMCFK23C = 1, FS005 = 2, JX9003B = 3, HST162 = 4 };
 
 void map_init_BMCFK23C(void);
 void extcl_after_mapper_init_BMCFK23C(void);

@@ -730,6 +730,9 @@ BYTE map_init(void) {
 		case 287:
 			map_init_BMC411120C();
 			break;
+		case 292:
+			map_init_DRAGONFIGHTER();
+			break;
 		case 300:
 			map_init_BMC190IN1();
 			break;
@@ -945,10 +948,6 @@ BYTE map_init(void) {
 				case 52:
 					// KS7031
 					map_init_KS7031();
-					break;
-				case 53:
-					// DRAGONFIGHTER
-					map_init_DRAGONFIGHTER();
 					break;
 				case 55:
 					// EDU2000

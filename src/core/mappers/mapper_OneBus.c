@@ -331,7 +331,7 @@ void extcl_irq_A12_clock_OneBus(void) {
 
 INLINE static void prg_fix_OneBus(void) {
 	BYTE mode = onebus.reg.cpu[11] & 0x07;
-	BYTE mask = (mode == 0x07) ? (0xFF) : (0x3F >> mode);
+	BYTE mask = (mode == 0x07) ? 0xFF : (0x3F >> mode);
 	BYTE swap = (onebus.reg.cpu[5] & 0x40) >> 5;
 	WORD block = ((onebus.reg.cpu[0] & 0xF0) << 4) | (onebus.reg.cpu[10] & ~mask);
 	WORD value;
