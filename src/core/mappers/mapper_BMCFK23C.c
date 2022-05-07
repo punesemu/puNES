@@ -49,6 +49,8 @@ struct _bmcfk23c {
 static const BYTE prg_mask[8] = { 0x3F, 0x1F, 0x0F, 0x07, 0x03, 0x01, 0x00, 0x00 };
 
 void map_init_BMCFK23C(void) {
+	uint32_t crc32 = emu_crc32(prg_rom(), prg_size());
+
 	EXTCL_AFTER_MAPPER_INIT(BMCFK23C);
 	EXTCL_CPU_WR_MEM(BMCFK23C);
 	EXTCL_CPU_RD_MEM(BMCFK23C);
@@ -81,23 +83,45 @@ void map_init_BMCFK23C(void) {
 
 	if (info.format == NES_2_0) {
 		if (info.chr.ram.banks_8k_plus > 0) {
-			map_chr_ram_extra_init(info.chr.ram.banks_8k_plus * 1024);
+			map_chr_ram_extra_init(info.chr.ram.banks_8k_plus * 0x2000);
 		}
 	} else {
-		uint32_t crc32 = emu_crc32(prg_rom(), prg_size());
-
 		if ((crc32 == 0x678DE5AA) || // 120-in-1 (Unl)[U].unf
 			(crc32 == 0xE6D869ED) || // 6-in-1 Rockman (Unl) [U][!].unf
 			(crc32 == 0xE79F157E) || // 23 Plus 222-in-1 (Unl) [U][!].unf
 			(crc32 == 0x7B766BC1) || // Super 24-in-1 [U][p1][!].unf
-			(crc32 == 0x6C979BAC) || // 10-in-1 Omake Game (FC Mobile)[!]
+			(crc32 == 0x6C979BAC) || // 10-in-1 Omake Game (FC Mobile)[!].unf
 			(crc32 == 0xD14617D7)) { // He Jin Zhuang Bei 150-in-1 Real Game (Unl) [U][!].unf
-			map_chr_ram_extra_init(0x40000);
+			if (mapper.write_vram) {
+				info.chr.rom.banks_8k = 32;
+			} else {
+				map_chr_ram_extra_init(0x2000);
+			}
 		}
 	}
 
-	// Subtype 1, 1024 KiB PRG-ROM, 1024 KiB CHR-ROM: boot in second 512 KiB of PRG-ROM.
-	bmcfk23c.prg_base = ((prg.rom.size == 1024*1024) && (prg.rom.size == chr.rom.size)) ? 0x20 : 0;
+	if (info.mapper.submapper == DEFAULT) {
+		info.mapper.submapper = LP8002KB;
+	}
+	if ((prg.rom.size == (1024 * 128)) && (chr.rom.size == (1024 * 64))) {
+		info.mapper.submapper = BMCFK23C;
+	}
+	if ((prg.rom.size == (1024 * 256)) && (chr.rom.size == (1024 * 128))) {
+		info.mapper.submapper = BMCFK23C;
+	}
+	if ((prg.rom.size == (1024 * 1024)) && (prg.rom.size == chr.rom.size)) {
+		// (JY-224) 1998 97格鬥天王 激鬥篇 7-in-1.nes
+		bmcfk23c.prg_base = (crc32 == 0x6C574B50) ? 0x40 : 0x20;
+		info.mapper.submapper = BMCFK23C;
+	}
+	if (prg.rom.size >= (8192 * 1024)) {
+		info.mapper.submapper = FS005;
+	}
+	if ((crc32 == 0x3655B7BC) || // New 4-in-1 Supergame (YH4239) [p1][U][!].unf
+		(crc32 == 0x60C6D8CD) || // 9-in-1 (KY-9005) [p1][U][!].unf
+		(crc32 == 0x63A87C95)) { // 8-in-1 Supergame (KY8002) [p1][U].unf
+		info.mapper.submapper = LP8002KB;
+	}
 
 	info.prg.ram.banks_8k_plus = 4;
 
@@ -111,7 +135,8 @@ void extcl_after_mapper_init_BMCFK23C(void) {
 }
 void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 	if (address < 0x8000) {
-		if ((bmcfk23c.ram_outer_register_enable || !bmcfk23c.ram_register_enable) && ((address >= 0x5000) && (address <= 0x5FFF))) {
+		if (((address >= 0x5000) && (address <= 0x5FFF)) &&
+			(!bmcfk23c.ram_register_enable || bmcfk23c.ram_outer_register_enable)) {
 			WORD mask = 0x5010;
 
 			if ((address & mask) != mask) {
@@ -120,8 +145,8 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 			switch (address & 0x03) {
 				case 0:
 					bmcfk23c.cpu5xxx[0] = value;
-					if (info.mapper.submapper != LP8002KB) {
-						bmcfk23c.prg_base = (bmcfk23c.prg_base & ~0x180) | ((value & 0x80) << 1) | ((value & 0x08) << 4);
+					if (info.mapper.submapper == FS005) {
+						bmcfk23c.prg_base = (bmcfk23c.prg_base & ~0x0180) | ((value & 0x80) << 1) | ((value & 0x08) << 4);
 					}
 					break;
 				case 1:
@@ -131,8 +156,8 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 				case 2:
 					bmcfk23c.cpu5xxx[2] = value;
 					bmcfk23c.cnrom_chr_reg = 0;
-					if (info.mapper.submapper != LP8002KB) {
-						bmcfk23c.prg_base = (bmcfk23c.prg_base & ~0x200) | ((value & 0x40) << 3);
+					if (info.mapper.submapper == FS005) {
+						bmcfk23c.prg_base = (bmcfk23c.prg_base & ~0x0E00) | ((value & 0xC0) << 3) | ((value & 0x20) << 6);
 					}
 					break;
 				case 3:
@@ -142,58 +167,62 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 			state_fix_BMCFK23C();
 		} else {
 			if ((address >= 0x4000) && (address <= 0x5FFF)) {
-				if (bmcfk23c.ram_register_enable) {
+				if (bmcfk23c.ram_register_enable && cpu.prg_ram_wr_active) {
 					bmcfk23c.prg_4000[address & 0x1FFF] = value;
 				}
 			} else if ((address >= 0x6000) && (address <= 0x7FFF)) {
-				if (bmcfk23c.ram_register_enable | cpu.prg_ram_wr_active) {
+				if (bmcfk23c.ram_register_enable && cpu.prg_ram_wr_active) {
 					bmcfk23c.prg_6000[address & 0x1FFF] = value;
 				}
 			}
 			return;
 		}
 	} else {
-		if ((bmcfk23c.cpu5xxx[3] & 0x44) && ((address <= 0x9FFF) || (address >= 0xC000))) {
+		if (bmcfk23c.cpu5xxx[0] & 0x40) {
 			bmcfk23c.cnrom_chr_reg = value & 0x03;
-			state_fix_BMCFK23C();
+			chr_fix_BMCFK23C();
 		}
-		switch (address & 0xE001) {
+		switch (address & 0xE003) {
 			case 0x8000:
-				if ((prg.rom.size == 16384 * 1024) && ((value == 0x46) || (value == 0x47))) {
-					// Subtype 2, 16384 KiB PRG-ROM, no CHR-ROM: Like Subtype 0, but MMC3 registers $46 and $47 swapped.
+			case 0x8002:
+				// Subtype 2, 16384 KiB PRG-ROM, no CHR-ROM: Like Subtype 0, but MMC3 registers $46 and $47 swapped.
+				if ((info.mapper.submapper == FS005) && ((value == 0x46) || (value == 0x47))) {
 					value ^= 1;
 				}
 				bmcfk23c.cpu8xxx[0] = value;
 				state_fix_BMCFK23C();
 				break;
+			// Some multicart games depend on writes to $9FFF not doing anything as
+			// a result of the MMC3 address mask being $E003 rather than the standard $E001.
+			//case 0x8003:
 			case 0x8001: {
-				BYTE mask = bmcfk23c.cpu5xxx[3] & 0x02 ? 0x0F : 0x07;
-				BYTE reg = (bmcfk23c.cpu8xxx[0] & 0x0F) & mask;
+				BYTE reg = (bmcfk23c.cpu5xxx[3] & 0x02) && (bmcfk23c.cpu8xxx[0] & 0x08) ?
+					(0x08 | (bmcfk23c.cpu8xxx[0] & 0x03)) : bmcfk23c.cpu8xxx[0] & 0x07;
 
 				bmcfk23c.cpu8xxx[1] = value;
-				if (reg < 12) {
-					bmcfk23c.mmc3[reg] = value;
-					state_fix_BMCFK23C();
-				}
+				bmcfk23c.mmc3[reg] = value;
+				state_fix_BMCFK23C();
 				break;
 			}
 			case 0xA000:
+			case 0xA002:
 				bmcfk23c.cpu8xxx[2] = value;
 				state_fix_BMCFK23C();
 				break;
 			case 0xA001:
-				if ((value & 0x20) == 0) {
+			case 0xA003:
+				if (!(value & 0x20)) {
 					value &= 0xC0;
 				}
 				bmcfk23c.cpu8xxx[3] = value;
 				bmcfk23c.ram_register_enable = value & 0x20;
 				bmcfk23c.ram_outer_register_enable = value & 0x40;
 
-				switch ((value & 0x80) >> 7) {
+				switch (value & 0x80) {
 					case 0x00:
 						cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = FALSE;
 						break;
-					case 0x01:
+					case 0x80:
 						cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = TRUE;
 						break;
 				}
@@ -201,8 +230,12 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 				break;
 			case 0xC000:
 			case 0xC001:
+			case 0xC002:
+			case 0xC003:
 			case 0xE000:
 			case 0xE001:
+			case 0xE002:
+			case 0xE003:
 				extcl_cpu_wr_mem_MMC3(address, value);
 				break;
 		}
@@ -210,13 +243,14 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_BMCFK23C(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address < 0x8000) {
-		if (bmcfk23c.ram_outer_register_enable || !bmcfk23c.ram_register_enable) {
+		if (!bmcfk23c.ram_register_enable ||
+			(bmcfk23c.ram_outer_register_enable && ((address >= 0x5000) && (address <= 0x5FFF))))  {
 			return (openbus);
 		}
 		if ((address >= 0x4000) && (address <= 0x5FFF)) {
-			return (bmcfk23c.ram_register_enable ? bmcfk23c.prg_4000[address & 0x1FFF] : openbus);
+			return (bmcfk23c.ram_register_enable && cpu.prg_ram_rd_active ? bmcfk23c.prg_4000[address & 0x1FFF] : openbus);
 		} else if ((address >= 0x6000) && (address <= 0x7FFF)) {
-			return (bmcfk23c.ram_register_enable | cpu.prg_ram_wr_active ? bmcfk23c.prg_6000[address & 0x1FFF] : openbus);
+			return (bmcfk23c.ram_register_enable && cpu.prg_ram_rd_active ? bmcfk23c.prg_6000[address & 0x1FFF] : openbus);
 		}
 	}
 	return (openbus);
@@ -237,8 +271,11 @@ BYTE extcl_save_mapper_BMCFK23C(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_wr_chr_BMCFK23C(WORD address, BYTE value) {
-	if (chr_ram_BMCFK23C(value)) {
-		chr.bank_1k[address >> 10][address & 0x3FF] = value;
+	BYTE bank = address >> 10;
+
+	if (info.chr.rom.is_ram ||
+		((chr.bank_1k[bank] >= chr.extra.data) && (chr.bank_1k[bank] < (chr.extra.data + chr.extra.size)))) {
+		chr.bank_1k[bank][address & 0x3FF] = value;
 	}
 }
 
@@ -317,9 +354,10 @@ INLINE static void chr_fix_BMCFK23C(void) {
 	BYTE swap = 0;
 
 	if (bmcfk23c.cpu5xxx[0] & 0x40) {
-		WORD innerMask = bmcfk23c.cpu5xxx[3] & 0x44 ? (bmcfk23c.cpu5xxx[0] & 0x10 ? 1 : 3) : 0;
+		WORD mask = (info.mapper.submapper != LP8002KB) && !(bmcfk23c.cpu5xxx[0] & 0x20) ?
+			(bmcfk23c.cpu5xxx[0] & 0x10 ? 1 : 3) : 0;
 
-		outer = ((bmcfk23c.cnrom_chr_reg & innerMask) | bmcfk23c.cpu5xxx[2]) << 3;
+		outer = ((bmcfk23c.cnrom_chr_reg & mask) | bmcfk23c.cpu5xxx[2]) << 3;
 
 		bank[0] = outer | 0;
 		bank[1] = outer | 1;
@@ -343,18 +381,18 @@ INLINE static void chr_fix_BMCFK23C(void) {
 			bank[6] = outer | bmcfk23c.mmc3[4];
 			bank[7] = outer | bmcfk23c.mmc3[5];
 		} else {
-			BYTE innerMask = (bmcfk23c.cpu5xxx[0] & 0x10 ? 0x7F : 0xFF);
+			BYTE mask = (bmcfk23c.cpu5xxx[0] & 0x10 ? 0x7F : 0xFF);
 
-			outer &= ~innerMask;
+			outer &= ~mask;
 
-			bank[0] = outer | ((bmcfk23c.mmc3[0] & 0xFE) & innerMask);
-			bank[1] = outer | ((bmcfk23c.mmc3[0] | 0x01) & innerMask);
-			bank[2] = outer | ((bmcfk23c.mmc3[1] & 0xFE) & innerMask);
-			bank[3] = outer | ((bmcfk23c.mmc3[1] | 0x01) & innerMask);
-			bank[4] = outer | (bmcfk23c.mmc3[2] & innerMask);
-			bank[5] = outer | (bmcfk23c.mmc3[3] & innerMask);
-			bank[6] = outer | (bmcfk23c.mmc3[4] & innerMask);
-			bank[7] = outer | (bmcfk23c.mmc3[5] & innerMask);
+			bank[0] = outer | ((bmcfk23c.mmc3[0] & 0xFE) & mask);
+			bank[1] = outer | ((bmcfk23c.mmc3[0] | 0x01) & mask);
+			bank[2] = outer | ((bmcfk23c.mmc3[1] & 0xFE) & mask);
+			bank[3] = outer | ((bmcfk23c.mmc3[1] | 0x01) & mask);
+			bank[4] = outer | (bmcfk23c.mmc3[2] & mask);
+			bank[5] = outer | (bmcfk23c.mmc3[3] & mask);
+			bank[6] = outer | (bmcfk23c.mmc3[4] & mask);
+			bank[7] = outer | (bmcfk23c.mmc3[5] & mask);
 		}
 	}
 	chr_swap_BMCFK23C(0 ^ swap, bank[0]);
@@ -367,7 +405,7 @@ INLINE static void chr_fix_BMCFK23C(void) {
 	chr_swap_BMCFK23C(7 ^ swap, bank[7]);
 }
 INLINE static void chr_swap_BMCFK23C(BYTE slot, WORD value) {
-	if (chr_ram_BMCFK23C(value) && chr.extra.data) {
+	if (chr_ram_BMCFK23C(value)) {
 		control_bank(info.chr.ram.max.banks_1k)
 		chr.bank_1k[slot] = &chr.extra.data[value << 10];
 	} else {
@@ -376,8 +414,8 @@ INLINE static void chr_swap_BMCFK23C(BYTE slot, WORD value) {
 	}
 }
 INLINE static BYTE chr_ram_BMCFK23C(WORD value) {
-	return (info.chr.rom.is_ram || ((bmcfk23c.cpu5xxx[0] & 0x20) && (chr.extra.size > 0))
-		|| (bmcfk23c.ram_register_enable && (bmcfk23c.cpu8xxx[3] & 0x04) && (value <= 7)));
+	return (chr.extra.data && ((bmcfk23c.cpu5xxx[0] & 0x20) ||
+		(bmcfk23c.ram_register_enable && (bmcfk23c.cpu8xxx[3] & 0x04) && (value <= 7))));
 }
 INLINE static void mirroring_fix_BMCFK23C(void) {
 	// Single-screen mirroring is only available when the RAM Configuration Register is enabled ($A001.5).
