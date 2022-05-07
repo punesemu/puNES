@@ -28,14 +28,6 @@ struct _bs5mp {
 void map_init_BS5(void) {
 	EXTCL_CPU_WR_MEM(BS5);
 
-	{
-		BYTE i;
-
-		for (i = 0; i < 4; i++) {
-			mapper.rom_map_to[i] = info.prg.rom.banks_8k - 1;
-		}
-	}
-
 	if (info.reset >= HARD) {
 		bs5tmp.reset = 0;
 	} else if (info.reset == RESET) {
@@ -43,13 +35,28 @@ void map_init_BS5(void) {
 		bs5tmp.reset = bs5tmp.reset & 0x03;
 	}
 
+	{
+		BYTE i;
+
+		for (i = 0; i < 4; i++) {
+			BYTE value = 0x0F;
+
+			control_bank(info.prg.rom.max.banks_8k)
+			map_prg_rom_8k(1, i, value);
+
+			chr.bank_1k[(i << 1)] = chr_pnt(0);
+			chr.bank_1k[(i << 1) | 0x01] = chr_pnt(0x0400);
+		}
+	}
+
 	mirroring_V();
 }
 void extcl_cpu_wr_mem_BS5(WORD address, BYTE value) {
 	BYTE base = (address & 0x0C00) >> 10;
 
-	switch (address & 0xF000) {
-		case 0x8000: {
+	switch (address & 0x7000) {
+		case 0x0000:
+		case 0x1000: {
 			DBWORD bank;
 
 			base <<= 1;
@@ -60,7 +67,8 @@ void extcl_cpu_wr_mem_BS5(WORD address, BYTE value) {
 			chr.bank_1k[base | 0x01] = chr_pnt(bank | 0x0400);
 			return;
 		}
-		case 0xA000:
+		case 0x2000:
+		case 0x3000:
 			if (address & (1 << (bs5tmp.reset + 4))) {
 				value = address & 0x0F;
 				control_bank(info.prg.rom.max.banks_8k)
