@@ -739,6 +739,9 @@ BYTE map_init(void) {
 		case 304:
 			map_init_UNIFSMB2J();
 			break;
+		case 305:
+			map_init_KS7031();
+			break;
 		case 313:
 			map_init_RESETTXROM();
 			break;
@@ -943,10 +946,6 @@ BYTE map_init(void) {
 				case 50:
 					// 158B
 					map_init_UNIF158B();
-					break;
-				case 52:
-					// KS7031
-					map_init_KS7031();
 					break;
 				case 55:
 					// EDU2000
