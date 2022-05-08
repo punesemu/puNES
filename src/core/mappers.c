@@ -712,6 +712,9 @@ BYTE map_init(void) {
 		case 256:
 			map_init_OneBus();
 			break;
+		case 258:
+			map_init_UNIF158B();
+			break;
 		case 261:
 			map_init_BMC810544CA1();
 			break;
@@ -950,10 +953,6 @@ BYTE map_init(void) {
 				case 49:
 					// HP898F
 					map_init_BMCHP898F();
-					break;
-				case 50:
-					// 158B
-					map_init_UNIF158B();
 					break;
 				case 55:
 					// EDU2000

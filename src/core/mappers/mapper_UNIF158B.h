@@ -24,6 +24,5 @@
 void map_init_UNIF158B(void);
 void extcl_cpu_wr_mem_UNIF158B(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_UNIF158B(WORD address, BYTE openbus, BYTE before);
-BYTE extcl_save_mapper_UNIF158B(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_UNIF158B_H_ */
