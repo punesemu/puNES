@@ -775,6 +775,9 @@ BYTE map_init(void) {
 		case 325:
 			map_init_MALISB();
 			break;
+		case 332:
+			map_init_WS();
+			break;
 		case 333:
 			map_init_8_IN_1();
 			break;

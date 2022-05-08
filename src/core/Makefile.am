@@ -511,6 +511,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Waixing.h \
 	mappers/mapper_Whirlwind.c \
 	mappers/mapper_Whirlwind.h \
+	mappers/mapper_WS.c \
+	mappers/mapper_WS.h \
 	mappers/mapper_YOKO.c \
 	mappers/mapper_YOKO.h
 
