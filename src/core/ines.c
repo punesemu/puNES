@@ -630,6 +630,13 @@ void nes20_submapper(void) {
 					break;
 			}
 			break;
+		case 116:
+			switch (info.mapper.submapper) {
+				default:
+					info.mapper.submapper = MAP116_TYPE_A;
+					break;
+			}
+			break;
 		case 176:
 			switch (info.mapper.submapper) {
 				case 0:

@@ -75,7 +75,7 @@
 }
 #define m116_A_update_prg_mode2()\
 {\
-	BYTE tmp, bank = m116.mode2.reg[3] & 0x0F;\
+	BYTE tmp, bank = (m116.mode2.reg[3] >> m116.reg3_shift) & 0x0F;\
 	if (m116.mode2.reg[0] & 0x08) {\
 		m116_update_prg_16k(0, (m116.mode2.reg[0] & 0x04) ? bank : 0);\
 		m116_update_prg_16k(2, (m116.mode2.reg[0] & 0x04) ? 0x0F : bank);\
@@ -407,6 +407,9 @@ struct _m116 {
 
 	WORD prg_map[4];
 	WORD chr_map[8];
+
+	// da non salvare
+	BYTE reg3_shift;
 } m116;
 
 void map_init_116(void) {
@@ -470,6 +473,12 @@ void map_init_116(void) {
 
 			irqA12.present = TRUE;
 			irqA12_delay = 1;
+
+			// The Huang-2 chip differs from the Huang-1 chip in that the MMC1 PRG-ROM bank register is shifted by one bit
+			// to the left compared to what one would write to a normal MMC1, or to the Huang-1 in MMC1 mode. No submapper
+			// has been proposed yet for this behavior. In the meantime, the one game relying on this can be heuristically
+			// detected by having PRG-ROM and CHR-ROM sizes each of only 128 KiB.
+			m116.reg3_shift = ((prg_size() == (1024 * 128)) && (prg_size() == chr_size()) ? 1 : 0);
 			break;
 		case MAP116_TYPE_B:
 			EXTCL_CPU_WR_MEM(116_type_B);
