@@ -790,6 +790,9 @@ BYTE map_init(void) {
 		case 375:
 			map_init_375();
 			break;
+		case 513:
+			map_init_SA_9602B();
+			break;
 		case 521:
 			map_init_DREAMTECH01();
 			break;
@@ -893,10 +896,6 @@ BYTE map_init(void) {
 				case 28:
 					// YOKO
 					map_init_YOKO();
-					break;
-				case 29:
-					// SA-9602B
-					map_init_SA_9602B();
 					break;
 				case 30:
 					// CC-21
