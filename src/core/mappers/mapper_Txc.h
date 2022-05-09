@@ -27,8 +27,12 @@ void map_init_Txc(BYTE model);
 
 void extcl_cpu_wr_mem_Txc_tw(WORD address, BYTE value);
 
-void extcl_cpu_wr_mem_Txc_t22211x(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_Txc_t22211x(WORD address, BYTE openbus, BYTE before);
+void extcl_cpu_wr_mem_Txc_t22211ab(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Txc_t22211ab(WORD address, BYTE openbus, BYTE before);
+
+void extcl_cpu_wr_mem_Txc_t22211c(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Txc_t22211c(WORD address, BYTE openbus, BYTE before);
+
 BYTE extcl_save_mapper_Txc_t22211x(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_TXC_H_ */

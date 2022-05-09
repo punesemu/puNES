@@ -3443,6 +3443,8 @@ static const _dbelement dblist[] = {
 /* ---------------------------------- Txc (T22211A) --------------------------------------- */
 	/* Qi Wang - Chinese Chess (MGC-001) (Ch) [!].nes */
 	{"d293232ddbdeecd0d999652f02cb3ae2576cf251", 132, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Mahjong Block (MGC-008) [!].nes */
+	{"61112008249db3bbcdd624424560b8ca9ec5ea93", 132, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ---------------------------------- Sachen (SA72008) ------------------------------------ */
 	/* Jovial Race (Sachen) [a1][!].nes */

@@ -23,8 +23,13 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
+INLINE static BYTE output_Txc_t22211ab(void);
+INLINE static void chr_fix_Txc_t22211x(void);
+INLINE static BYTE reverse_D0D5_Txc_t22211c(BYTE value);
+
 struct _t22211x {
 	BYTE reg[4];
+	BYTE RRR;
 } t22211x;
 struct _txctmp {
 	BYTE type;
@@ -60,21 +65,37 @@ void map_init_Txc(BYTE model) {
 			break;
 		case T22211A:
 		case T22211B:
-		case T22211C:
-			EXTCL_CPU_WR_MEM(Txc_t22211x);
-			EXTCL_CPU_RD_MEM(Txc_t22211x);
+			// Jin Gwok Sei Chuen Saang (Ch) [U][!].unf
+			// 戰國四川省 (Zhànguó Sìchuān Shěng, original version of AVE's Tiles of Fate) is set to Mapper 132 in GoodNES 3.23b.
+			// That ROM image is actually a mapper hack with the PRG-ROM code unmodified but the CHR-ROM banks rearranged to work
+			// as Mapper 132; the correct mapper is INES Mapper 173. That mapper hack only works on certain
+			// emulators' implementation of Mapper 132, not on the above implementation based on studying the circuit board.
+			EXTCL_CPU_WR_MEM(Txc_t22211ab);
+			EXTCL_CPU_RD_MEM(Txc_t22211ab);
 			EXTCL_SAVE_MAPPER(Txc_t22211x);
 			mapper.internal_struct[0] = (BYTE *)&t22211x;
 			mapper.internal_struct_size[0] = sizeof(t22211x);
 
-			info.mapper.extend_wr = TRUE;
+			memset(&t22211x, 0x00, sizeof(t22211x));
 
-			if (info.reset >= HARD) {
-				memset(&t22211x, 0x00, sizeof(t22211x));
-				if (info.prg.rom.max.banks_32k != 0xFFFF) {
-					map_prg_rom_8k(4, 0, 0);
-				}
-			}
+			extcl_cpu_wr_mem_Txc_t22211ab(0x8000, 0x00);
+
+			info.mapper.extend_wr = TRUE;
+			break;
+		case T22211C:
+			EXTCL_CPU_WR_MEM(Txc_t22211c);
+			EXTCL_CPU_RD_MEM(Txc_t22211c);
+			EXTCL_SAVE_MAPPER(Txc_t22211x);
+			mapper.internal_struct[0] = (BYTE *)&t22211x;
+			mapper.internal_struct_size[0] = sizeof(t22211x);
+
+			memset(&t22211x, 0x00, sizeof(t22211x));
+			t22211x.reg[1] = 0x20;
+
+			map_prg_rom_8k(4, 0, 0);
+			extcl_cpu_wr_mem_Txc_t22211c(0x8000, 0x00);
+
+			info.mapper.extend_wr = TRUE;
 			break;
 	}
 
@@ -97,62 +118,150 @@ void extcl_cpu_wr_mem_Txc_tw(WORD address, BYTE value) {
 	map_prg_rom_8k_update();
 }
 
-void extcl_cpu_wr_mem_Txc_t22211x(WORD address, BYTE value) {
-	BYTE save = value;
+void extcl_cpu_wr_mem_Txc_t22211ab(WORD address, BYTE value) {
+	if ((address >= 0x4000) && (address <= 0x4FFF)) {
+		switch (address & 0x0103) {
+			case 0x0100:
+				t22211x.reg[0] = value;
+				if (t22211x.reg[3] & 0x01) {
+					t22211x.RRR = (t22211x.RRR + 1) & 0x07;
+				} else {
+					BYTE PPP = t22211x.reg[2] & 0x07;
 
-	if ((address >= 0x4100) && (address <= 0x4103)) {
-		t22211x.reg[address & 0x0003] = value;
-		return;
+					t22211x.RRR = (t22211x.reg[1] & 0x01) ? ~PPP : PPP;
+				}
+				break;
+			case 0x0101:
+				t22211x.reg[1] = value;
+				if (txctmp.type == T22211B) {
+					chr_fix_Txc_t22211x();
+				}
+				break;
+			case 0x0102:
+				t22211x.reg[2] = value;
+				break;
+			case 0x0103:
+				t22211x.reg[3] = value;
+				break;
+		}
 	}
 
 	if (address < 0x8000) {
 		return;
 	}
 
-	if (info.prg.rom.max.banks_32k != 0xFFFF) {
-		value = t22211x.reg[2] >> 2;
-		control_bank(info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, value);
-		map_prg_rom_8k_update();
+	value = (t22211x.RRR >> 2) & 0x01;
+	control_bank(info.prg.rom.max.banks_32k)
+	map_prg_rom_8k(4, 0, value);
+	map_prg_rom_8k_update();
+
+	chr_fix_Txc_t22211x();
+}
+BYTE extcl_cpu_rd_mem_Txc_t22211ab(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+	if (address == 0x4100) {
+		return ((openbus & 0xF0) | output_Txc_t22211ab());
 	}
+	return (openbus);
+}
 
-	{
-		DBWORD bank;
+void extcl_cpu_wr_mem_Txc_t22211c(WORD address, BYTE value) {
+	if ((address >= 0x4000) && (address <= 0x4FFF)) {
+		switch (address & 0x0103) {
+			case 0x0100:
+				//Write $4100:
+				// When Mode==1: Bits 0-3 of Register incremented by one, bits 4-5 unaffected.
+				// When Mode==0: Bits 0-5 of Register := Input, bits 0-3 being inverted if Invert==1.
+				t22211x.reg[0] = value;
 
-		if (txctmp.type == T22211B) {
-			value = (((save ^ t22211x.reg[2]) >> 3) & 0x02)
-				| (((save ^ t22211x.reg[2]) >> 5) & 0x01);
-		} else {
-			value = t22211x.reg[2];
+				if (t22211x.reg[3] & 0x20) {
+					t22211x.RRR = (t22211x.RRR & ~0x0F) | ((t22211x.RRR + 1) & 0x0F);
+				} else {
+					BYTE tmp = t22211x.reg[2] & 0x0F;
+
+					t22211x.RRR = (t22211x.reg[2] & 0x30) | ((t22211x.reg[1] & 0x20) ? ~tmp : tmp);
+				}
+				break;
+			case 0x0101:
+				// Write $4101: Invert := Written value bit 5.
+				t22211x.reg[1] = value;
+				break;
+			case 0x0102:
+				// Write $4102: Input := Written value bits 0-5. Note that the bit order D0-D5 is reversed.
+				t22211x.reg[2] = reverse_D0D5_Txc_t22211c(value);
+				break;
+			case 0x0103:
+				// Write $4103: Mode := Written value bit 5.
+				t22211x.reg[3] = value;
+				break;
 		}
-
-		control_bank(info.chr.rom.max.banks_8k)
-		bank = value << 13;
-
-		chr.bank_1k[0] = chr_pnt(bank);
-		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-		chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
-
-	}
-}
-BYTE extcl_cpu_rd_mem_Txc_t22211x(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if (address != 0x4100) {
-		return (openbus);
 	}
 
-	if (txctmp.type == T22211C) {
-		return ((t22211x.reg[1] ^ t22211x.reg[2]) | 0x41);
+	if (address < 0x8000) {
+		return;
+	}
+
+	chr_fix_Txc_t22211x();
+
+	// When writing to $8000-$FFFF, nametable mirroring is changed to
+	// Horizontal if Invert was clear, and to Vertical if Invert was set.
+	if (t22211x.reg[1] & 0x20) {
+		mirroring_V();
 	} else {
-		return ((t22211x.reg[1] ^ t22211x.reg[2]) | 0x40);
+		mirroring_H();
 	}
 }
+BYTE extcl_cpu_rd_mem_Txc_t22211c(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+	if ((address >= 0x4100) && (address <= 0x4103)) {
+		// Read $4100-$4103: [..RR RRRR]: Read Register. Bits 4-5 are inverted if Invert==1.
+		// Bits 6-7 are open bus. Note that the bit order D0-D5 is reversed.
+		return ((openbus & 0xC0) | reverse_D0D5_Txc_t22211c(t22211x.RRR));
+	}
+	return (openbus);
+}
+
 BYTE extcl_save_mapper_Txc_t22211x(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, t22211x.reg);
+	save_slot_ele(mode, slot, t22211x.RRR);
 
 	return (EXIT_OK);
+}
+
+INLINE static BYTE output_Txc_t22211ab(void) {
+	return (((t22211x.reg[2] & 0x08) ^ ((t22211x.reg[1] & 0x01) << 3)) | t22211x.RRR);
+}
+INLINE static BYTE reverse_D0D5_Txc_t22211c(BYTE value) {
+	BYTE count = sizeof(value) * 8 - 1;
+	BYTE reversed = value, save = value;
+
+	value <<= 2;
+	value >>= 1;
+	while (value) {
+		reversed <<= 1;
+		reversed |= value & 0x01;
+		value >>= 1;
+		count--;
+	}
+	reversed <<= count;
+	return (reversed |= save &  0xC0);
+}
+INLINE static void chr_fix_Txc_t22211x(void) {
+	DBWORD bank;
+
+	if (txctmp.type == T22211B) {
+		bank = (output_Txc_t22211ab() & 0x01) | (~(t22211x.reg[1] & 0x01) << 1);
+	} else {
+		bank = t22211x.RRR & 0x03;
+	}
+
+	_control_bank(bank, info.chr.rom.max.banks_8k)
+	bank = bank << 13;
+
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }

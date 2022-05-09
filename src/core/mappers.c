@@ -501,10 +501,10 @@ BYTE map_init(void) {
 			map_init_Kaiser(KS7058);
 			break;
 		case 172:
-			map_init_Txc(T22211B);
+			map_init_Txc(T22211C);
 			break;
 		case 173:
-			map_init_Txc(T22211C);
+			map_init_Txc(T22211B);
 			break;
 		case 175:
 			map_init_Kaiser(KS7022);
