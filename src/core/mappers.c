@@ -804,6 +804,9 @@ BYTE map_init(void) {
 		case 521:
 			map_init_DREAMTECH01();
 			break;
+		case 522:
+			map_init_LH10();
+			break;
 		default:
 			gui_overlay_info_append_msg_precompiled(11, NULL);
 			fprintf(stderr, "Mapper not supported\n");
@@ -940,10 +943,6 @@ BYTE map_init(void) {
 				case 43:
 					// KS7017
 					map_init_KS7017();
-					break;
-				case 44:
-					// LH10
-					map_init_LH10();
 					break;
 				case 45:
 					// RT-01
