@@ -897,10 +897,6 @@ BYTE map_init(void) {
 					// KS7013B
 					map_init_KS7013B();
 					break;
-				case 27:
-					// MTECH01
-					map_init_MTECH01();
-					break;
 				case 28:
 					// YOKO
 					map_init_YOKO();

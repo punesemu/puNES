@@ -22,19 +22,23 @@
 
 void map_init_DREAMTECH01(void) {
 	EXTCL_CPU_WR_MEM(DREAMTECH01);
-	info.mapper.extend_wr = TRUE;
 
-	//if (info.reset >= HARD) {
+	{
+		BYTE value;
+
 		map_prg_rom_8k(2, 0, 0);
-		map_prg_rom_8k(2, 0, 8);
-	//}
-}
-void extcl_cpu_wr_mem_DREAMTECH01(WORD address, BYTE value) {
-	if (address != 0x5020) {
-		return;
+		value = 8;
+		control_bank(info.prg.rom.max.banks_16k)
+		map_prg_rom_8k(2, 2, value);
 	}
 
-	control_bank_with_AND(0x07, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, value);
-	map_prg_rom_8k_update();
+	info.mapper.extend_wr = TRUE;
+}
+void extcl_cpu_wr_mem_DREAMTECH01(WORD address, BYTE value) {
+	if (address == 0x5020) {
+		value = value & 0x07;
+		control_bank(info.prg.rom.max.banks_16k)
+		map_prg_rom_8k(2, 0, value);
+		map_prg_rom_8k_update();
+	}
 }

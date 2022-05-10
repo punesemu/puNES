@@ -185,7 +185,6 @@
 #include "mappers/mapper_UNIF43272.h"
 #include "mappers/mapper_AC08.h"
 #include "mappers/mapper_KS7013B.h"
-#include "mappers/mapper_MTECH01.h"
 #include "mappers/mapper_YOKO.h"
 #include "mappers/mapper_SA_9602B.h"
 #include "mappers/mapper_CC_21.h"
