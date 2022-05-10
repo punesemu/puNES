@@ -443,6 +443,7 @@ struct _waixing {
 struct _waixingtmp {
 	BYTE min;
 	BYTE max;
+	BYTE model;
 } waixingtmp;
 
 void map_init_Waixing(BYTE model) {
@@ -543,6 +544,11 @@ void map_init_Waixing(BYTE model) {
 						}
 					}
 				}
+			}
+
+			// You Ling Xing Dong (Asia) (Unl).nes
+			if (info.crc32.prg == 0xFF93EFF0) {
+				mirroring_V();
 			}
 
 			irqA12.present = TRUE;
@@ -683,6 +689,7 @@ void map_init_Waixing(BYTE model) {
 			irqA12_delay = 1;
 			break;
 	}
+	waixingtmp.model = model;
 }
 
 void extcl_cpu_wr_mem_Waixing_PSx(WORD address, BYTE value) {
@@ -737,7 +744,7 @@ void extcl_cpu_wr_mem_Waixing_type_ACDE(WORD address, BYTE value) {
 			waixing_type_ACDE_8001()
 			break;
 		case 0xA000:
-			switch (value & 0x03) {
+			switch (value & (waixingtmp.model == WTC ? 0x01 : 0x03)) {
 				case 0:
 					mirroring_V();
 					return;
