@@ -22,7 +22,6 @@
 #include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
-#include "../../c++/crc/crc.h"
 
 INLINE static void state_fix_BMCFK23C(void);
 INLINE static void prg_fix_BMCFK23C(void);
@@ -49,8 +48,6 @@ struct _bmcfk23c {
 static const BYTE prg_mask[8] = { 0x3F, 0x1F, 0x0F, 0x07, 0x03, 0x01, 0x00, 0x00 };
 
 void map_init_BMCFK23C(void) {
-	uint32_t crc32 = emu_crc32(prg_rom(), prg_size());
-
 	EXTCL_AFTER_MAPPER_INIT(BMCFK23C);
 	EXTCL_CPU_WR_MEM(BMCFK23C);
 	EXTCL_CPU_RD_MEM(BMCFK23C);
@@ -86,12 +83,12 @@ void map_init_BMCFK23C(void) {
 			map_chr_ram_extra_init(info.chr.ram.banks_8k_plus * 0x2000);
 		}
 	} else {
-		if ((crc32 == 0x678DE5AA) || // 120-in-1 (Unl)[U].unf
-			(crc32 == 0xE6D869ED) || // 6-in-1 Rockman (Unl) [U][!].unf
-			(crc32 == 0xE79F157E) || // 23 Plus 222-in-1 (Unl) [U][!].unf
-			(crc32 == 0x7B766BC1) || // Super 24-in-1 [U][p1][!].unf
-			(crc32 == 0x6C979BAC) || // 10-in-1 Omake Game (FC Mobile)[!].unf
-			(crc32 == 0xD14617D7)) { // He Jin Zhuang Bei 150-in-1 Real Game (Unl) [U][!].unf
+		if ((info.crc32.prg == 0x678DE5AA) || // 120-in-1 (Unl)[U].unf
+			(info.crc32.prg == 0xE6D869ED) || // 6-in-1 Rockman (Unl) [U][!].unf
+			(info.crc32.prg == 0xE79F157E) || // 23 Plus 222-in-1 (Unl) [U][!].unf
+			(info.crc32.prg == 0x7B766BC1) || // Super 24-in-1 [U][p1][!].unf
+			(info.crc32.prg == 0x6C979BAC) || // 10-in-1 Omake Game (FC Mobile)[!].unf
+			(info.crc32.prg == 0xD14617D7)) { // He Jin Zhuang Bei 150-in-1 Real Game (Unl) [U][!].unf
 			if (mapper.write_vram) {
 				info.chr.rom.banks_8k = 32;
 			} else {
@@ -111,15 +108,15 @@ void map_init_BMCFK23C(void) {
 	}
 	if ((prg_size() == (1024 * 1024)) && (prg_size() == chr_size())) {
 		// (JY-224) 1998 97格鬥天王 激鬥篇 7-in-1.nes
-		bmcfk23c.prg_base = (crc32 == 0x6C574B50) ? 0x40 : 0x20;
+		bmcfk23c.prg_base = (info.crc32.prg == 0x6C574B50) ? 0x40 : 0x20;
 		info.mapper.submapper = BMCFK23C;
 	}
 	if (prg_size() >= (8192 * 1024)) {
 		info.mapper.submapper = FS005;
 	}
-	if ((crc32 == 0x3655B7BC) || // New 4-in-1 Supergame (YH4239) [p1][U][!].unf
-		(crc32 == 0x60C6D8CD) || // 9-in-1 (KY-9005) [p1][U][!].unf
-		(crc32 == 0x63A87C95)) { // 8-in-1 Supergame (KY8002) [p1][U].unf
+	if ((info.crc32.prg == 0x3655B7BC) || // New 4-in-1 Supergame (YH4239) [p1][U][!].unf
+		(info.crc32.prg == 0x60C6D8CD) || // 9-in-1 (KY-9005) [p1][U][!].unf
+		(info.crc32.prg == 0x63A87C95)) { // 8-in-1 Supergame (KY8002) [p1][U].unf
 		info.mapper.submapper = LP8002KB;
 	}
 

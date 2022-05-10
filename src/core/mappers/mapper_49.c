@@ -22,7 +22,6 @@
 #include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
-#include "../../c++/crc/crc.h"
 
 INLINE static void prg_fix_49(BYTE value);
 INLINE static void prg_swap_49(WORD address, WORD value);
@@ -56,7 +55,7 @@ void map_init_49(void) {
 	m49.reg = 0x01;
 
 	// [UNIF] street fighter ii game 4-in-1 (unl)[p1].unf
-	if (emu_crc32(prg_rom(), prg_size()) == 0x408EA235) {
+	if (info.crc32.prg == 0x408EA235) {
 		m49.reg = 0x41;
 	}
 

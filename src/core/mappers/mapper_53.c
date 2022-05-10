@@ -34,8 +34,6 @@ struct _m53tmp {
 } m53tmp;
 
 void map_init_53(void) {
-	const uint32_t EPROM_CRC = 0x63794E25;
-
 	EXTCL_CPU_WR_MEM(53);
 	EXTCL_CPU_RD_MEM(53);
 	EXTCL_SAVE_MAPPER(53);
@@ -44,7 +42,8 @@ void map_init_53(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m53, 0x00, sizeof(m53));
-		m53tmp.eprom_first = (prg_size() >= 0x8000) && (emu_crc32((void *)prg_rom(), 0x8000) == EPROM_CRC);
+		// Supervision 16-in-1 [U][p1][!].unf
+		m53tmp.eprom_first = (prg_size() >= 0x8000) && (emu_crc32((void *)prg_rom(), 0x8000) == 0x63794E25);
 		extcl_cpu_wr_mem_53(0x6000, 0x00);
 	}
 

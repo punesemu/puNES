@@ -33,6 +33,7 @@ struct _t22211x {
 } t22211x;
 struct _txctmp {
 	BYTE type;
+	BYTE Jin_Gwok_132;
 } txctmp;
 
 void map_init_Txc(BYTE model) {
@@ -65,11 +66,6 @@ void map_init_Txc(BYTE model) {
 			break;
 		case T22211A:
 		case T22211B:
-			// Jin Gwok Sei Chuen Saang (Ch) [U][!].unf
-			// 戰國四川省 (Zhànguó Sìchuān Shěng, original version of AVE's Tiles of Fate) is set to Mapper 132 in GoodNES 3.23b.
-			// That ROM image is actually a mapper hack with the PRG-ROM code unmodified but the CHR-ROM banks rearranged to work
-			// as Mapper 132; the correct mapper is INES Mapper 173. That mapper hack only works on certain
-			// emulators' implementation of Mapper 132, not on the above implementation based on studying the circuit board.
 			EXTCL_CPU_WR_MEM(Txc_t22211ab);
 			EXTCL_CPU_RD_MEM(Txc_t22211ab);
 			EXTCL_SAVE_MAPPER(Txc_t22211x);
@@ -78,9 +74,16 @@ void map_init_Txc(BYTE model) {
 
 			memset(&t22211x, 0x00, sizeof(t22211x));
 
+			info.mapper.extend_wr = TRUE;
+
 			extcl_cpu_wr_mem_Txc_t22211ab(0x8000, 0x00);
 
-			info.mapper.extend_wr = TRUE;
+			// Jin Gwok Sei Chuen Saang (Ch) [U][!].unf
+			// 戰國四川省 (Zhànguó Sìchuān Shěng, original version of AVE's Tiles of Fate) is set to Mapper 132 in GoodNES 3.23b.
+			// That ROM image is actually a mapper hack with the PRG-ROM code unmodified but the CHR-ROM banks rearranged to work
+			// as Mapper 132; the correct mapper is INES Mapper 173. That mapper hack only works on certain
+			// emulators' implementation of Mapper 132, not on the above implementation based on studying the circuit board.
+			txctmp.Jin_Gwok_132 = info.crc32.total == 0x2A5F4C5A;
 			break;
 		case T22211C:
 			EXTCL_CPU_WR_MEM(Txc_t22211c);
@@ -92,10 +95,9 @@ void map_init_Txc(BYTE model) {
 			memset(&t22211x, 0x00, sizeof(t22211x));
 			t22211x.reg[1] = 0x20;
 
-			map_prg_rom_8k(4, 0, 0);
-			extcl_cpu_wr_mem_Txc_t22211c(0x8000, 0x00);
-
 			info.mapper.extend_wr = TRUE;
+
+			extcl_cpu_wr_mem_Txc_t22211c(0x8000, 0x00);
 			break;
 	}
 
@@ -250,7 +252,7 @@ INLINE static void chr_fix_Txc_t22211x(void) {
 	if (txctmp.type == T22211B) {
 		bank = (output_Txc_t22211ab() & 0x01) | (~(t22211x.reg[1] & 0x01) << 1);
 	} else {
-		bank = t22211x.RRR & 0x03;
+		bank = (txctmp.Jin_Gwok_132 ? t22211x.reg[2] : t22211x.RRR) & 0x03;
 	}
 
 	_control_bank(bank, info.chr.rom.max.banks_8k)

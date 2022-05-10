@@ -21,7 +21,6 @@
 #include "info.h"
 #include "mem_map.h"
 #include "save_slot.h"
-#include "../../c++/crc/crc.h"
 
 struct _m226 {
 	BYTE reg[2];
@@ -38,7 +37,7 @@ void map_init_226(void) {
 	mapper.internal_struct_size[0] = sizeof(m226);
 
 	// 42-in-1 (Reset Based) [U][p1][!].unf
-	m226tmp.reset_based = (prg_size() == (1024 * 1024)) && (emu_crc32((void *)prg_rom(), 1024 * 512) == 0xBE38DF65);
+	m226tmp.reset_based = (prg_size() == (1024 * 1024)) && (info.crc32.prg == 0xBE38DF65);
 
 	if (m226tmp.reset_based && (info.reset == RESET)) {
 		m226.reg[0] = 0;

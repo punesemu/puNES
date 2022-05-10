@@ -21,7 +21,6 @@
 #include "info.h"
 #include "mem_map.h"
 #include "save_slot.h"
-#include "../../c++/crc/crc.h"
 
 struct _bmc70in1 {
 	WORD reg[3];
@@ -42,8 +41,8 @@ void map_init_BMC70IN1(void) {
 	map_chr_bank_1k_reset();
 
 	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper =
-		    (prg_size() == (1024 * 512)) && (emu_crc32((void *)prg_rom(), prg_size()) == 0x0BB4FD7A) ? BMC70IN1B : BMC70IN1;
+		// 800-in-1 [p1][U][!].unf
+		info.mapper.submapper = (prg_size() == (1024 * 512)) && (info.crc32.prg == 0x0BB4FD7A) ? BMC70IN1B : BMC70IN1;
 	}
 	if (info.reset >= HARD) {
 		if (info.mapper.submapper == BMC70IN1) {

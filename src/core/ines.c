@@ -364,15 +364,28 @@ BYTE ines_load_rom(void) {
 		} else {
 			fprintf(stderr, "submapper     : %u\n", info.mapper.submapper);
 		}
-		fprintf(stderr, "PRG 8k rom    : %-4lu [ %08X %ld ]\n",
-			(long unsigned)prg_size() / 0x2000,
-			emu_crc32((void *)prg_rom(), prg_size()),
-			(long)prg_size());
-		if (chr_size()) {
-			fprintf(stderr, "CHR 4k vrom   : %-4lu [ %08X %ld ]\n",
-				(long unsigned)chr_size() / 0x1000,
-				emu_crc32((void *)chr_rom(), chr_size()),
-				(long)chr_size());
+		{
+			size_t size = prg_size();
+
+			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
+
+			fprintf(stderr, "PRG 8k rom    : %-4lu [ %08X %ld ]\n",
+				(long unsigned)prg_size() / 0x2000,
+				info.crc32.prg,
+				(long)prg_size());
+
+			if (chr_size()) {
+				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
+				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.prg);
+				size += chr_size();
+
+				fprintf(stderr, "CHR 4k vrom   : %-4lu [ %08X %ld ]\n",
+					(long unsigned)chr_size() / 0x1000,
+					info.crc32.chr,
+					(long)chr_size());
+			}
+
+			fprintf(stderr, "CRC32         : %08X\n", info.crc32.total);
 		}
 		fprintf(stderr, "sha1prg       : %40s\n", info.sha1sum.prg.string);
 		if (chr_size()) {

@@ -75,6 +75,11 @@ typedef struct _info {
 	BYTE sRGB_FBO_in_use;
 #endif
 	_info_sh1sum sha1sum;
+	struct _info_crc32 {
+		uint32_t prg;
+		uint32_t chr;
+		uint32_t total;
+	} crc32;
 	struct _info_chr {
 		WORD chips;
 		struct _info_chr_rom {

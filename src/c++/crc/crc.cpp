@@ -22,3 +22,6 @@
 uint32_t emu_crc32(const void *data, size_t length) {
 	return (crc32_fast(data, length));
 }
+uint32_t emu_crc32_continue(const void *data, size_t length, uint32_t previuos) {
+	return (crc32_fast(data, length, previuos));
+}

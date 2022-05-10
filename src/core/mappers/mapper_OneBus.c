@@ -22,7 +22,6 @@
 #include "info.h"
 #include "irqA12.h"
 #include "save_slot.h"
-#include "../../c++/crc/crc.h"
 
 enum onebus_models {
 	ONEBUS_NORMAL,
@@ -104,11 +103,11 @@ void map_init_OneBus(void) {
 
 	if (info.format != NES_2_0) {
 		if (info.mapper.submapper == DEFAULT) {
-			uint32_t crc32 = emu_crc32(prg_rom(), prg_size());
 
-			if ((crc32 == 0x947AC898) || (crc32 == 0x1AB45228)) {
+			if ((info.crc32.prg == 0x947AC898) || // Power Joy Supermax 30-in-1 (Unl) [U][!].unf
+				(info.crc32.prg == 0x1AB45228)) { // Power Joy Supermax 60-in-1 (Unl) [U][!].unf
 				info.mapper.submapper = ONEBUS_POWER_JOY_SUPERMAX;
-			} else if (crc32 == 0x1242DA7F) {
+			} else if (info.crc32.prg == 0x1242DA7F) {
 				// "Sports Game 69-in-1 (Unl) [U][!].unf" e "DreamGEAR 75-in-1 (Unl) [U][!].unf"
 				// alcuni giochi (tipo SHARKS) di queste roms non funzionano correttamente perche' utilizzano l'extended mode
 				// del VT03, lo si puo' notare dal fatto che viene settato il registro $2010 a 0x86 o 0x96 (ho dato un'occhiata
