@@ -114,7 +114,6 @@ BYTE map_init(void) {
 			map_init_Jaleco(SS8806);
 			break;
 		case 19:
-		case 210:
 			map_init_Namco(N163);
 			break;
 		case 21:
@@ -276,7 +275,6 @@ BYTE map_init(void) {
 			map_init_Waixing(WTA);
 			break;
 		case 75:
-		case 151:
 			map_init_VRC1();
 			break;
 		case 76:
@@ -452,7 +450,9 @@ BYTE map_init(void) {
 		case 150:
 			map_init_Sachen(SA74374B);
 			break;
-		// la mapper 151 la tratto come la 75
+		case 151:
+			map_init_VRC1();
+			break;
 		case 152:
 			map_init_74x161x161x32(IC74X161X161X32B);
 			break;
@@ -522,6 +522,9 @@ BYTE map_init(void) {
 			break;
 		case 178:
 			map_init_178(info.mapper.submapper);
+			break;
+		case 179:
+			map_init_BMCFK23C();
 			break;
 		case 180:
 			map_init_UxROM(UNROM180);
@@ -605,6 +608,9 @@ BYTE map_init(void) {
 			break;
 		case 209:
 			map_init_90_209_211(MAP209);
+			break;
+		case 210:
+			map_init_Namco(N163);
 			break;
 		case 211:
 			map_init_90_209_211(MAP211);
