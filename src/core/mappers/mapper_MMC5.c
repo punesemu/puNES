@@ -608,7 +608,6 @@ void extcl_ppu_320_to_34x_MMC5(void) {
 	}
 }
 void extcl_rd_r2007_MMC5(void) {
-
 	// When 8x8 sprites are used, the registers from $5120-5127 ("set A") are used for everything
 	// (sprites, BG tiles, and reads from $2007 during vblank or forced blank).
 	// Registers $5128-512B ("set B") are unused.
@@ -617,7 +616,6 @@ void extcl_rd_r2007_MMC5(void) {
 	// reads from $2007 during vblank or forced blank are treated as sprite accesses
 	// (using bank set A) if the most recently written register was $5120-5127; and treated as
 	// BG accesses (using bank set B) if the most recently written register was $5128-512B
-
 
 	if (r2000.size_spr == 8) {
 		use_chr_s();
@@ -635,7 +633,7 @@ void extcl_after_rd_chr_MMC5(UNUSED(WORD address)) {
 	 * azzero il flag con cui indico se il tile era
 	 * nella regione dello split (questo indipendentemente
 	 * che lo fosse realmente o meno). In questo modo sono
-	 * che non rimanga settato quando in realta' non serve.
+	 * sicuro che non rimanga settato quando in realta' non serve.
 	 */
 	mmc5.split_in_reg = FALSE;
 }

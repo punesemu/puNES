@@ -4017,8 +4017,6 @@ static const _dbelement dblist[] = {
 	/* arbib.nes */
 	//{"bd7a98e6f4f5110aed84c7729d6530d9e7243486", 99, DEFAULT, DEFAULT, DEFAULT, DEFAULT, RP2C04, DEFAULT, 0x0000, NOEXTRA},
 
-
-
 	                                       /* Vs Dual System non supportato */
 	/* Baseball (VS) (Player 1 Mode) [a1].nes */
 	//{"01c426fa005426956ef45026a2259d5e736a9dc4", 0, DEFAULT, DEFAULT, DEFAULT, DEFAULT, RP2C03B, DEFAULT, NODIPSWITCH, NOEXTRA},
