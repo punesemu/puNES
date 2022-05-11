@@ -23,6 +23,8 @@
 
 void map_init_BMCNTD03(void) {
 	EXTCL_CPU_WR_MEM(BMCNTD03);
+
+	extcl_cpu_wr_mem_BMCNTD03(0x8000, 0x00);
 }
 void extcl_cpu_wr_mem_BMCNTD03(WORD address, BYTE value) {
 	BYTE base = (address & 0x7800) >> 10;

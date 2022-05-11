@@ -744,6 +744,9 @@ BYTE map_init(void) {
 		case 289:
 			map_init_60311C();
 			break;
+		case 290:
+			map_init_BMCNTD03();
+			break;
 		case 292:
 			map_init_DRAGONFIGHTER();
 			break;
@@ -846,10 +849,6 @@ BYTE map_init(void) {
 				case 1:
 					// MARIO1-MALEE2
 					map_init_malee();
-					break;
-				case 14:
-					// NTD-03
-					map_init_BMCNTD03();
 					break;
 				case 15:
 					// Ghostbusters63in1
