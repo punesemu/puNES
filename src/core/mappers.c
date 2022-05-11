@@ -795,6 +795,9 @@ BYTE map_init(void) {
 		case 333:
 			map_init_8_IN_1();
 			break;
+		case 348:
+			map_init_BMC830118C();
+			break;
 		case 349:
 			map_init_BMCG146();
 			break;
@@ -844,10 +847,6 @@ BYTE map_init(void) {
 				case 6:
 					// 12-IN-1
 					map_init_BMC12IN1();
-					break;
-				case 11:
-					// 830118C
-					map_init_BMC830118C();
 					break;
 				case 14:
 					// NTD-03
