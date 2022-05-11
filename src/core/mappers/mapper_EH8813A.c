@@ -22,6 +22,7 @@
 #include "save_slot.h"
 
 struct _eh8813a {
+	BYTE reg;
 	WORD address;
 	BYTE hwmode;
 } eh88131a;
@@ -33,14 +34,15 @@ void map_init_EH8813A(void) {
 	mapper.internal_struct[0] = (BYTE *)&eh88131a;
 	mapper.internal_struct_size[0] = sizeof(eh88131a);
 
-	if (info.reset >= HARD) {
-		eh88131a.address = 0;
-		eh88131a.hwmode = 0;
-	}
+	eh88131a.reg = 0;
+	eh88131a.address = 0;
 
 	if (info.reset == RESET) {
-		eh88131a.address = 0;
 		eh88131a.hwmode = (eh88131a.hwmode + 1) & 0x0F;
+	} else if (info.reset >= HARD) {
+		eh88131a.reg = 0;
+		eh88131a.address = 0;
+		eh88131a.hwmode = 0;
 	}
 
 	map_prg_rom_8k(4, 0, 0);
@@ -50,12 +52,35 @@ void map_init_EH8813A(void) {
 	info.mapper.extend_rd = TRUE;
 }
 void extcl_cpu_wr_mem_EH8813A(WORD address, BYTE value) {
-	if ((eh88131a.address & 0x100) == 0) {
-		DBWORD bank;
+	if (!(eh88131a.address & 0x100)) {
+		BYTE data = value;
 
 		eh88131a.address = address & 0x01FF;
+		eh88131a.reg = value;
 
-		value &= 0x0F;
+		if (data & 0x80) {
+			mirroring_H();
+		} else {
+			mirroring_V();
+		}
+
+		if (eh88131a.address & 0x80) {
+			data = address & 0x3F;
+			_control_bank(data, info.prg.rom.max.banks_16k)
+			map_prg_rom_8k(2, 0, data);
+			map_prg_rom_8k(2, 2, data);
+		} else {
+			data = (address & 0x3F) >> 1;
+			_control_bank(data, info.prg.rom.max.banks_32k)
+			map_prg_rom_8k(4, 0, data);
+		}
+		map_prg_rom_8k_update();
+	}
+
+	{
+		DBWORD bank;
+
+		value = (eh88131a.reg & 0x7C) | (value & 0x03);
 		control_bank(info.chr.rom.max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = chr_pnt(bank);
@@ -66,19 +91,6 @@ void extcl_cpu_wr_mem_EH8813A(WORD address, BYTE value) {
 		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
 		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
-
-		value = eh88131a.address & 0x07;
-
-		if (eh88131a.address & 0x80) {
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-			map_prg_rom_8k(2, 2, value);
-		} else {
-			value >>= 1;
-			control_bank(info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, value);
-		}
-		map_prg_rom_8k_update();
 	}
 }
 BYTE extcl_cpu_rd_mem_EH8813A(WORD address, BYTE openbus, UNUSED(BYTE before)) {
@@ -86,13 +98,13 @@ BYTE extcl_cpu_rd_mem_EH8813A(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 		return (openbus);
 	}
 
-	if (eh88131a.address & 0x40) {
+	if (eh88131a.address & 0x0040) {
 		address = (address & 0xFFF0) + eh88131a.hwmode;
 	}
-
 	return (prg_rom_rd(address));
 }
 BYTE extcl_save_mapper_EH8813A(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, eh88131a.reg);
 	save_slot_ele(mode, slot, eh88131a.address);
 	save_slot_ele(mode, slot, eh88131a.hwmode);
 

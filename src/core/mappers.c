@@ -801,6 +801,9 @@ BYTE map_init(void) {
 		case 513:
 			map_init_SA_9602B();
 			break;
+		case 519:
+			map_init_EH8813A();
+			break;
 		case 521:
 			map_init_DREAMTECH01();
 			break;
@@ -831,10 +834,6 @@ BYTE map_init(void) {
 				case 1:
 					// MARIO1-MALEE2
 					map_init_malee();
-					break;
-				case 3:
-					// EH8813A
-					map_init_EH8813A();
 					break;
 				case 4:
 					// 11160
