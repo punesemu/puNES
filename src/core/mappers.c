@@ -750,6 +750,9 @@ BYTE map_init(void) {
 		case 298:
 			map_init_TF1201();
 			break;
+		case 299:
+			map_init_BMC11160();
+			break;
 		case 300:
 			map_init_BMC190IN1();
 			break;
@@ -834,10 +837,6 @@ BYTE map_init(void) {
 				case 1:
 					// MARIO1-MALEE2
 					map_init_malee();
-					break;
-				case 4:
-					// 11160
-					map_init_BMC11160();
 					break;
 				case 6:
 					// 12-IN-1
