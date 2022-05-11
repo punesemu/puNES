@@ -789,6 +789,9 @@ BYTE map_init(void) {
 		case 325:
 			map_init_MALISB();
 			break;
+		case 331:
+			map_init_BMC12IN1();
+			break;
 		case 332:
 			map_init_WS();
 			break;
@@ -843,10 +846,6 @@ BYTE map_init(void) {
 				case 1:
 					// MARIO1-MALEE2
 					map_init_malee();
-					break;
-				case 6:
-					// 12-IN-1
-					map_init_BMC12IN1();
 					break;
 				case 14:
 					// NTD-03
