@@ -80,6 +80,8 @@ INLINE static void h2288_update_chr(void);
 			break;\
 	}
 
+static const BYTE vlu2288[8] = {0, 3, 1, 5, 6, 7, 2, 4};
+
 struct _h2288 {
 	BYTE reg[2];
 	WORD prg_map[4];
@@ -133,7 +135,7 @@ void extcl_cpu_wr_mem_H2288(WORD address, BYTE value) {
 
 		switch (address & 0xE001) {
 			case 0x8000:
-				extcl_cpu_wr_mem_MMC3(address, (value & 0xC0) | vlu114[value & 7]);
+				extcl_cpu_wr_mem_MMC3(address, (value & 0xC0) | vlu2288[value & 7]);
 				h2288_8000()
 				h2288_update_prg();
 				h2288_update_chr();

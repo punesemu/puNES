@@ -100,7 +100,6 @@
 #include "mappers/mapper_212.h"
 #include "mappers/mapper_213.h"
 #include "mappers/mapper_214.h"
-#include "mappers/mapper_215.h"
 #include "mappers/mapper_Rcm.h"
 #include "mappers/mapper_217.h"
 #include "mappers/mapper_222.h"

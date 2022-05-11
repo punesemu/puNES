@@ -3361,6 +3361,8 @@ static const _dbelement dblist[] = {
 	{"b1cc3ed04c610be18742a3fd78a8f27a597f8549", 113, DEFAULT, BAD_INES_SWAUS, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* --------------------------------------- 114 -------------------------------------------- */
+	/* Boogerman (Sugar Softec) (Unl) [!].nes */
+	{"3a0a145ac8dadf51f8310c952f352950e6e25acc", 114, M114_1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Lion King, The (Unl) (Mapper 114).nes */
 	{"d093664a551cd05f09cb28968429c4b42379d254", 114, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
@@ -3846,7 +3848,7 @@ static const _dbelement dblist[] = {
 
 /* ------------------------------------- mapper 215 --------------------------------------- */
 	/* Mortal Kombat 3 Extra 60 (Unl) [!].nes */
-	{"dc1e114d59afcdb2cf2927b830d94f42dd0ea547", 215, DEFAULT, M215_MK3E, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"dc1e114d59afcdb2cf2927b830d94f42dd0ea547", 215, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- mapper 216 --------------------------------------- */
 	/* Videopoker Bonza (Rev A)(R)[!].nes */

@@ -624,7 +624,7 @@ BYTE map_init(void) {
 			map_init_214();
 			break;
 		case 215:
-			map_init_215();
+			map_init_UNIF8237(info.mapper.submapper);
 			break;
 		case 216:
 			map_init_Rcm(GS2015);
@@ -851,14 +851,6 @@ BYTE map_init(void) {
 				case 11:
 					// 830118C
 					map_init_BMC830118C();
-					break;
-				case 12:
-					// 8237
-					map_init_UNIF8237(U8237);
-					break;
-				case 13:
-					// 8237A
-					map_init_UNIF8237(U8237A);
 					break;
 				case 14:
 					// NTD-03

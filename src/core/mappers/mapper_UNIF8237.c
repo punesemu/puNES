@@ -146,7 +146,7 @@ void map_init_UNIF8237(BYTE model) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&unif8237, 0x00, sizeof(unif8237));
 
-	unif8237tmp.model = model;
+	unif8237tmp.model = model == DEFAULT ? U8237 : model;
 
 	{
 		BYTE i;

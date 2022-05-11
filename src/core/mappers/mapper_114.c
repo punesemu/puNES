@@ -23,24 +23,26 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-#define m114_prg_rom_backup()\
-	m114.prg_rom_bank[0] = mapper.rom_map_to[0];\
-	m114.prg_rom_bank[1] = mapper.rom_map_to[1];\
-	m114.prg_rom_bank[2] = mapper.rom_map_to[2];\
-	m114.prg_rom_bank[3] = mapper.rom_map_to[3]
-#define m114_prg_rom_restore()\
-	mapper.rom_map_to[0] = m114.prg_rom_bank[0];\
-	mapper.rom_map_to[1] = m114.prg_rom_bank[1];\
-	mapper.rom_map_to[2] = m114.prg_rom_bank[2];\
-	mapper.rom_map_to[3] = m114.prg_rom_bank[3]
+INLINE static void prg_fix_114(BYTE value);
+INLINE static void prg_swap_114(WORD address, WORD value);
+INLINE static void chr_fix_114(BYTE value);
+INLINE static void chr_swap_114(WORD address, WORD value);
 
+static WORD m114_mmc3_adr[2][8] = {
+	{ 0xA001, 0xA000, 0x8000, 0xC000, 0x8001, 0xC001, 0xE000, 0xE001 },
+	{ 0xA001, 0x8001, 0x8000, 0xC001, 0xA000, 0xC000, 0xE000, 0xE001 }
+};
+static BYTE m114_r8000_idx[2][8] = {
+	{ 0, 3, 1, 5, 6, 7, 2, 4 },
+	{ 0, 2, 5, 3, 6, 1, 7, 4 },
+};
 struct _m114 {
-	BYTE prg_rom_switch;
-	BYTE mmc3_ctrl_change;
-	WORD prg_rom_bank[4];
+	BYTE reg[2];
+	WORD mmc3[8];
 } m114;
 
 void map_init_114(void) {
+	EXTCL_AFTER_MAPPER_INIT(114);
 	EXTCL_CPU_WR_MEM(114);
 	EXTCL_SAVE_MAPPER(114);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -54,110 +56,147 @@ void map_init_114(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	if (info.reset >= HARD) {
-		memset(&m114, 0x00, sizeof(m114));
-		memset(&mmc3, 0x00, sizeof(mmc3));
-		memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&mmc3, 0x00, sizeof(mmc3));
+	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&m114, 0x00, sizeof(m114));
 
-		{
-			BYTE i;
-
-			for (i = 0; i < 4; i++) {
-				m114.prg_rom_bank[i] = mapper.rom_map_to[i];
-			}
-		}
+	if (info.mapper.submapper == DEFAULT) {
+		info.mapper.submapper = 0;
 	}
+
+	m114.mmc3[0] = 0;
+	m114.mmc3[1] = 2;
+	m114.mmc3[2] = 4;
+	m114.mmc3[3] = 5;
+	m114.mmc3[4] = 6;
+	m114.mmc3[5] = 7;
+	m114.mmc3[6] = 0;
+	m114.mmc3[7] = 0;
 
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
+void extcl_after_mapper_init_114(void) {
+	prg_fix_114(mmc3.bank_to_update);
+	chr_fix_114(mmc3.bank_to_update);
+}
 void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
-	if (address < 0x5000) {
+	if ((address >= 0x6000) && (address <= 0x7FFF)) {
+		switch (address & 0x0001) {
+			case 0:
+				m114.reg[0] = value;
+				prg_fix_114(mmc3.bank_to_update);
+				break;
+			case 1:
+				m114.reg[1] = value;
+				chr_fix_114(mmc3.bank_to_update);
+				break;
+		}
 		return;
 	}
+	if (address >= 0x8000) {
+		WORD mmc_address = m114_mmc3_adr[info.mapper.submapper][((address & 0x6000) >> 12) | (address & 0x0001)];
 
-	switch (address & 0xE001) {
-		case 0x4000:
-		case 0x4001:
-		case 0x6000:
-		case 0x6001:
-			m114.prg_rom_switch = value >> 7;
-			if (m114.prg_rom_switch) {
-				control_bank_with_AND(0x1F, info.prg.rom.max.banks_16k)
-				map_prg_rom_8k(2, 0, value);
-				map_prg_rom_8k(2, 2, value);
-				map_prg_rom_8k_update();
-			} else {
-				m114_prg_rom_restore();
-				map_prg_rom_8k_update();
-			}
-			return;
-		case 0x8000:
-		case 0x8001:
-			extcl_cpu_wr_mem_MMC3(0xA000, value);
-			return;
-		case 0xA000:
-			value = (value & 0xC0) | vlu114[value & 0x07];
-			m114.mmc3_ctrl_change = TRUE;
-			extcl_cpu_wr_mem_MMC3(0x8000, value);
-			if (m114.prg_rom_switch) {
-				const BYTE prg_rom_cfg = (value & 0x40) >> 5;
-
-				if (mmc3.prg_rom_cfg != prg_rom_cfg) {
-					BYTE p0 = m114.prg_rom_bank[0];
-					BYTE p2 = m114.prg_rom_bank[2];
-					m114.prg_rom_bank[0] = p2;
-					m114.prg_rom_bank[2] = p0;
-					m114.prg_rom_bank[prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;
+		switch (mmc_address) {
+			case 0x8000:
+				if ((value & 0x40) != (mmc3.bank_to_update & 0x40)) {
+					prg_fix_114(value);
 				}
-			} else {
-				m114_prg_rom_backup();
+				if ((value & 0x80) != (mmc3.bank_to_update & 0x80)) {
+					chr_fix_114(value);
+				}
+				mmc3.bank_to_update = (value & 0xF8) | m114_r8000_idx[info.mapper.submapper][value & 0x07];
+				return;
+			case 0x8001: {
+				WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
+
+				m114.mmc3[mmc3.bank_to_update & 0x07] = value;
+
+				switch (mmc3.bank_to_update & 0x07) {
+					case 0:
+						chr_swap_114(cbase ^ 0x0000, value & (~1));
+						chr_swap_114(cbase ^ 0x0400, value | 1);
+						return;
+					case 1:
+						chr_swap_114(cbase ^ 0x0800, value & (~1));
+						chr_swap_114(cbase ^ 0x0C00, value | 1);
+						return;
+					case 2:
+						chr_swap_114(cbase ^ 0x1000, value);
+						return;
+					case 3:
+						chr_swap_114(cbase ^ 0x1400, value);
+						return;
+					case 4:
+						chr_swap_114(cbase ^ 0x1800, value);
+						return;
+					case 5:
+						chr_swap_114(cbase ^ 0x1C00, value);
+						return;
+					case 6:
+						if (mmc3.bank_to_update & 0x40) {
+							prg_swap_114(0xC000, value);
+						} else {
+							prg_swap_114(0x8000, value);
+						}
+						return;
+					case 7:
+						prg_swap_114(0xA000, value);
+						return;
+				}
+				return;
 			}
-			return;
-		case 0xA001:
-			irqA12.latch = value;
-			return;
-		case 0xC000:
-			if (m114.mmc3_ctrl_change && (!m114.prg_rom_switch || (mmc3.bank_to_update < 6))) {
-				m114.mmc3_ctrl_change = FALSE;
-				extcl_cpu_wr_mem_MMC3(0x8001, value);
-				m114_prg_rom_backup();
-			}
-			return;
-		case 0xC001:
-			irqA12.reload = TRUE;
-			irqA12.counter = 0;
-			return;
-		case 0xE000:
-			irqA12.enable = FALSE;
-			irq.high &= ~EXT_IRQ;
-			return;
-		case 0xE001:
-			irqA12.enable = TRUE;
-			return;
+		}
+		extcl_cpu_wr_mem_MMC3(mmc_address, value);
 	}
 }
 BYTE extcl_save_mapper_114(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m114.prg_rom_switch);
-	save_slot_ele(mode, slot, m114.mmc3_ctrl_change);
-	if (save_slot.version < 6) {
-		BYTE old_prg_rom_bank[4];
-
-		save_slot_ele(mode, slot, old_prg_rom_bank)
-
-		if (mode == SAVE_SLOT_READ) {
-			BYTE i;
-
-			for (i = 0; i < 4; i++) {
-				m114.prg_rom_bank[i] = old_prg_rom_bank[i];
-			}
-		}
-	} else {
-		save_slot_ele(mode, slot, m114.prg_rom_bank);
-	}
+	save_slot_ele(mode, slot, m114.reg);
+	save_slot_ele(mode, slot, m114.mmc3);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_114(BYTE value) {
+	if (value & 0x40) {
+		prg_swap_114(0x8000, ~1);
+		prg_swap_114(0xC000, m114.mmc3[6]);
+	} else {
+		prg_swap_114(0x8000, m114.mmc3[6]);
+		prg_swap_114(0xC000, ~1);
+	}
+	prg_swap_114(0xA000, m114.mmc3[7]);
+	prg_swap_114(0xE000, ~0);
+}
+INLINE static void prg_swap_114(WORD address, WORD value) {
+	if (m114.reg[0] & 0x80) {
+		value = ((m114.reg[0] & 0x0E) | (m114.reg[0] & 0x20 ? (address & 0x4000) >> 14 : m114.reg[0] & 0x01)) << 1;
+		value |= (address & 0x2000) >> 13;
+	}
+	control_bank(info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
+	map_prg_rom_8k_update();
+}
+INLINE static void chr_fix_114(BYTE value) {
+	WORD cbase = (value & 0x80) << 5;
+
+	chr_swap_114(cbase ^ 0x0000, m114.mmc3[0] & (~1));
+	chr_swap_114(cbase ^ 0x0400, m114.mmc3[0] |   1);
+	chr_swap_114(cbase ^ 0x0800, m114.mmc3[1] & (~1));
+	chr_swap_114(cbase ^ 0x0C00, m114.mmc3[1] |   1);
+	chr_swap_114(cbase ^ 0x1000, m114.mmc3[2]);
+	chr_swap_114(cbase ^ 0x1400, m114.mmc3[3]);
+	chr_swap_114(cbase ^ 0x1800, m114.mmc3[4]);
+	chr_swap_114(cbase ^ 0x1c00, m114.mmc3[5]);
+}
+INLINE static void chr_swap_114(WORD address, WORD value) {
+	WORD base = (m114.reg[1] & 0x01) << 8;
+	WORD mask = 0xFF;
+
+	value = (base & ~mask) | (value & mask);
+	control_bank(info.chr.rom.max.banks_1k)
+	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 }
