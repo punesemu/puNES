@@ -756,6 +756,9 @@ BYTE map_init(void) {
 		case 300:
 			map_init_BMC190IN1();
 			break;
+		case 301:
+			map_init_UNIF8157();
+			break;
 		case 304:
 			map_init_UNIFSMB2J();
 			break;
@@ -841,10 +844,6 @@ BYTE map_init(void) {
 				case 6:
 					// 12-IN-1
 					map_init_BMC12IN1();
-					break;
-				case 10:
-					// 8157
-					map_init_UNIF8157();
 					break;
 				case 11:
 					// 830118C
