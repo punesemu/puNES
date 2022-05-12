@@ -735,6 +735,9 @@ BYTE map_init(void) {
 		case 283:
 			map_init_GS_20xx();
 			break;
+		case 285:
+			map_init_A65AS();
+			break;
 		case 286:
 			map_init_BS5();
 			break;
@@ -842,10 +845,6 @@ BYTE map_init(void) {
 			break;
 		case UNIF_MAPPER:
 			switch (unif.internal_mapper) {
-				case 0:
-					// A65AS
-					map_init_A65AS();
-					break;
 				case 1:
 					// MARIO1-MALEE2
 					map_init_malee();
