@@ -21,7 +21,10 @@
 
 #include "common.h"
 
+enum mm14_types { M108_1 = 1, M108_2, M108_3, M108_4 };
+
 void map_init_Whirlwind(void);
+void extcl_after_mapper_init_Whirlwind(void);
 void extcl_cpu_wr_mem_Whirlwind(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_Whirlwind(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_Whirlwind(BYTE mode, BYTE slot, FILE *fp);

@@ -179,7 +179,6 @@
 #include "mappers/mapper_KOF97.h"
 #include "mappers/mapper_UNIF603_5052.h"
 #include "mappers/mapper_CITYFIGHT.h"
-#include "mappers/mapper_BB.h"
 #include "mappers/mapper_UNIF43272.h"
 #include "mappers/mapper_AC08.h"
 #include "mappers/mapper_KS7013B.h"
