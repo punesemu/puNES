@@ -203,8 +203,6 @@ libcore_a_SOURCES += \
 	mappers/mapper_230.h \
 	mappers/mapper_231.c \
 	mappers/mapper_231.h \
-	mappers/mapper_233.c \
-	mappers/mapper_233.h \
 	mappers/mapper_235.c \
 	mappers/mapper_235.h \
 	mappers/mapper_240.c \

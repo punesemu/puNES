@@ -645,7 +645,7 @@ BYTE map_init(void) {
 			map_init_225();
 			break;
 		case 226:
-			map_init_226();
+			map_init_226(M226);
 			break;
 		case 227:
 			map_init_227();
@@ -667,7 +667,7 @@ BYTE map_init(void) {
 			map_init_Camerica();
 			break;
 		case 233:
-			map_init_233();
+			map_init_226(M233);
 			break;
 		case 234:
 			map_init_Ave(D1012);

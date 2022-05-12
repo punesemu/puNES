@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-enum _m226_types { WAIXING_FW01 = 1 };
+enum _m227_types { WAIXING_FW01 = 1 };
 
 void map_init_227(void);
 void extcl_cpu_wr_mem_227(WORD address, BYTE value);

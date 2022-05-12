@@ -87,7 +87,6 @@
 #include "mappers/mapper_225.h"
 #include "mappers/mapper_226.h"
 #include "mappers/mapper_227.h"
-#include "mappers/mapper_233.h"
 #include "mappers/mapper_235.h"
 #include "mappers/mapper_221.h"
 #include "mappers/mapper_219.h"

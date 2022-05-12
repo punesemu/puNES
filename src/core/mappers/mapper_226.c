@@ -30,14 +30,14 @@ struct _m226tmp {
 	BYTE reset_based;
 } m226tmp;
 
-void map_init_226(void) {
+void map_init_226(BYTE model) {
 	EXTCL_CPU_WR_MEM(226);
 	EXTCL_SAVE_MAPPER(226);
 	mapper.internal_struct[0] = (BYTE *)&m226;
 	mapper.internal_struct_size[0] = sizeof(m226);
 
 	// 42-in-1 (Reset Based) [U][p1][!].unf
-	m226tmp.reset_based = (prg_size() == (1024 * 1024)) && (info.crc32.prg == 0xBE38DF65);
+	m226tmp.reset_based = model == M233;
 
 	if (m226tmp.reset_based && (info.reset == RESET)) {
 		m226.reg[0] = 0;

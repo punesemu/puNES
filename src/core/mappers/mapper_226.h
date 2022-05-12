@@ -21,7 +21,9 @@
 
 #include "common.h"
 
-void map_init_226(void);
+enum _m226_types { M226, M233 };
+
+void map_init_226(BYTE model);
 void extcl_cpu_wr_mem_226(WORD address, BYTE value);
 BYTE extcl_save_mapper_226(BYTE mode, BYTE slot, FILE *fp);
 
