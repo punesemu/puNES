@@ -424,7 +424,7 @@ BYTE map_init(void) {
 			map_init_Sachen(SA8259A);
 			break;
 		case 142:
-			map_init_Kaiser(KS7032);
+			map_init_KS7032();
 			break;
 		case 143:
 			map_init_Sachen(TCA01);
@@ -855,10 +855,6 @@ BYTE map_init(void) {
 				case 15:
 					// Ghostbusters63in1
 					map_init_BMCGHOSTBUSTERS63IN1();
-					break;
-				case 19:
-					// KS7032
-					map_init_KS7032();
 					break;
 				case 20:
 					// KOF97

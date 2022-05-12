@@ -23,14 +23,14 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-INLINE static void ks7032_update(void);
+INLINE static void prg_fix_KS7032(void);
 
 struct _ks7032 {
 	BYTE ind;
 	BYTE reg[8];
 	struct _ks7032_irq {
-		BYTE used;
-		BYTE active;
+		BYTE used; // non lo uso piu'
+		BYTE enabled;
 		WORD count;
 		WORD reload;
 	} irq;
@@ -49,42 +49,38 @@ void map_init_KS7032(void) {
 
 	memset(&ks7032, 0x00, sizeof(ks7032));
 
-	ks7032_update();
+	prg_fix_KS7032();
 }
 void extcl_cpu_wr_mem_KS7032(WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
-			ks7032.irq.used = 1;
-			ks7032.irq.count = (ks7032.irq.count & 0x000F) | (value & 0x0F);
-			irq.high &= ~EXT_IRQ;
+			ks7032.irq.reload = (ks7032.irq.reload & 0xFFF0) | (value & 0x0F);
 			return;
 		case 0x9000:
-			ks7032.irq.used = 1;
-			ks7032.irq.count = (ks7032.irq.count & 0x00F0) | (value << 4);
-			irq.high &= ~EXT_IRQ;
+			ks7032.irq.reload = (ks7032.irq.reload & 0xFF0F) | ((value & 0x0F) << 4);
 			return;
 		case 0xA000:
-			ks7032.irq.used = 1;
-			ks7032.irq.count = (ks7032.irq.count & 0x0F00) | (value << 8);
-			irq.high &= ~EXT_IRQ;
+			ks7032.irq.reload = (ks7032.irq.reload & 0xF0FF) | ((value & 0x0F) << 8);
 			return;
 		case 0xB000:
-			ks7032.irq.used = 1;
-			ks7032.irq.count = (ks7032.irq.count & 0xF000) | (value << 12);
-			irq.high &= ~EXT_IRQ;
+			ks7032.irq.reload = (ks7032.irq.reload & 0x0FFF) | ((value & 0x0F) << 12);
 			return;
 		case 0xC000:
-			if (ks7032.irq.used) {
-				ks7032.irq.active = 1;
-				irq.high &= ~EXT_IRQ;
+			ks7032.irq.enabled = value & 0x0F;
+			if (ks7032.irq.enabled) {
+				ks7032.irq.count = ks7032.irq.reload;
 			}
+			irq.high &= ~EXT_IRQ;
+			return;
+		case 0xD000:
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xE000:
-			ks7032.ind = value & 0x07;
+			ks7032.ind = value;
 			return;
 		case 0xF000:
-			ks7032.reg[ks7032.ind] = value;
-			ks7032_update();
+			ks7032.reg[ks7032.ind & 0x07] = value;
+			prg_fix_KS7032();
 			return;
 	}
 }
@@ -98,29 +94,29 @@ BYTE extcl_save_mapper_KS7032(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ks7032.ind);
 	save_slot_ele(mode, slot, ks7032.reg);
 	save_slot_ele(mode, slot, ks7032.irq.used);
-	save_slot_ele(mode, slot, ks7032.irq.active);
+	save_slot_ele(mode, slot, ks7032.irq.enabled);
 	save_slot_ele(mode, slot, ks7032.irq.count);
 	save_slot_ele(mode, slot, ks7032.irq.reload);
 
 	if (mode == SAVE_SLOT_READ) {
-		ks7032_update();
+		prg_fix_KS7032();
 	}
 
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_KS7032(void) {
-	if (!ks7032.irq.active) {
+	if (!ks7032.irq.enabled) {
 		return;
 	}
 
 	if (++ks7032.irq.count == 0xFFFF) {
-		ks7032.irq.active = ks7032.irq.count = 0;
+		ks7032.irq.count = ks7032.irq.reload;
 		irq.delay = TRUE;
 		irq.high |= EXT_IRQ;
 	}
 }
 
-INLINE static void ks7032_update(void) {
+INLINE static void prg_fix_KS7032(void) {
 	WORD value;
 
 	value = ks7032.reg[4];

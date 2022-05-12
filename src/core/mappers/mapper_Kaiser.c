@@ -38,24 +38,15 @@ struct _ks7022 {
 void map_init_Kaiser(BYTE model) {
 	switch (model) {
 		case KS202:
-		case KS7032:
 			EXTCL_CPU_WR_MEM(Kaiser_ks202);
-			if (model == KS7032) {
-				EXTCL_CPU_RD_MEM(Kaiser_ks202);
-			}
 			EXTCL_SAVE_MAPPER(Kaiser_ks202);
 			EXTCL_CPU_EVERY_CYCLE(Kaiser_ks202);
 			mapper.internal_struct[0] = (BYTE *)&ks202;
 			mapper.internal_struct_size[0] = sizeof(ks202);
 
-			if (model == KS7032) {
-				cpu.prg_ram_wr_active = FALSE;
-				cpu.prg_ram_rd_active = FALSE;
-			} else {
-				info.prg.ram.banks_8k_plus = 1;
-				cpu.prg_ram_wr_active = TRUE;
-				cpu.prg_ram_rd_active = TRUE;
-			}
+			info.prg.ram.banks_8k_plus = 1;
+			cpu.prg_ram_wr_active = TRUE;
+			cpu.prg_ram_rd_active = TRUE;
 
 			if (info.reset >= HARD) {
 				memset(&ks202, 0x00, sizeof(ks202));
