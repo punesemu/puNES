@@ -29,7 +29,6 @@ struct _ks7032 {
 	BYTE ind;
 	BYTE reg[8];
 	struct _ks7032_irq {
-		BYTE used; // non lo uso piu'
 		BYTE enabled;
 		WORD count;
 		WORD reload;
@@ -93,7 +92,6 @@ BYTE extcl_cpu_rd_mem_KS7032(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 BYTE extcl_save_mapper_KS7032(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ks7032.ind);
 	save_slot_ele(mode, slot, ks7032.reg);
-	save_slot_ele(mode, slot, ks7032.irq.used);
 	save_slot_ele(mode, slot, ks7032.irq.enabled);
 	save_slot_ele(mode, slot, ks7032.irq.count);
 	save_slot_ele(mode, slot, ks7032.irq.reload);
