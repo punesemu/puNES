@@ -780,6 +780,9 @@ BYTE map_init(void) {
 		case 313:
 			map_init_RESETTXROM();
 			break;
+		case 314:
+			map_init_BMC64IN1NOREPEAT();
+			break;
 		case 320:
 			map_init_BMC830425C();
 			break;
@@ -852,10 +855,6 @@ BYTE map_init(void) {
 				case 15:
 					// Ghostbusters63in1
 					map_init_BMCGHOSTBUSTERS63IN1();
-					break;
-				case 16:
-					// 64in1NoRepeat
-					map_init_BMC64IN1NOREPEAT();
 					break;
 				case 19:
 					// KS7032

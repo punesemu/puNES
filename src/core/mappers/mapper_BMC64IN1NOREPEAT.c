@@ -22,11 +22,6 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-INLINE static void bmc64in1norepeat_update_chr(void);
-
-#define bmc64in1norepeat_prg_8k()\
-	((bmc64in1norepeat.reg[1] & 0x1F) << 1) | ((bmc64in1norepeat.reg[1] >> 6) & 0x01);
-
 struct _bmc64in1norepeat {
 	BYTE reg[4];
 } bmc64in1norepeat;
@@ -48,31 +43,53 @@ void map_init_BMC64IN1NOREPEAT(void) {
 void extcl_cpu_wr_mem_BMC64IN1NOREPEAT(WORD address, BYTE value) {
 	if (address >= 0x8000) {
 		bmc64in1norepeat.reg[3] = value;
-	} else if ((address >= 0x5000) && (address <= 0x5003)) {
-		bmc64in1norepeat.reg[address & 0x03] = value;
+	} else if ((address >= 0x5000) && (address <= 0x5FFF)) {
+		switch (address & 0x5003) {
+			case 0x5000:
+			case 0x5001:
+			case 0x5002:
+				bmc64in1norepeat.reg[address & 0x03] = value;
+				break;
+		}
 	} else {
 		return;
 	}
 
 	if (bmc64in1norepeat.reg[0] & 0x80) {
 		if (bmc64in1norepeat.reg[1] & 0x80) {
-			value = bmc64in1norepeat.reg[1] & 0x1F;
+			value = bmc64in1norepeat.reg[1] & 0x3F;
 			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 		} else {
-			value = bmc64in1norepeat_prg_8k();
+			value = ((bmc64in1norepeat.reg[1] & 0x3F) << 1) | ((bmc64in1norepeat.reg[1] >> 6) & 0x01);
 			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k(2, 2, value);
 		}
 	} else {
-		value = bmc64in1norepeat_prg_8k();
+		value = ((bmc64in1norepeat.reg[1] << 1) & ~0x07) | (bmc64in1norepeat.reg[3] & 0x07);
+		control_bank(info.prg.rom.max.banks_16k)
+		map_prg_rom_8k(2, 0, value);
+		value = (bmc64in1norepeat.reg[1] << 1) | 0x07;
 		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 2, value);
 	}
 	map_prg_rom_8k_update();
 
-	bmc64in1norepeat_update_chr();
+	{
+		DBWORD bank = ((bmc64in1norepeat.reg[2] & 0x0F) << 2) | ((bmc64in1norepeat.reg[0] >> 1) & 0x03);
+
+		_control_bank(bank, info.chr.rom.max.banks_8k)
+		bank = bank << 13;
+		chr.bank_1k[0] = chr_pnt(bank);
+		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+		chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	}
 
 	if (bmc64in1norepeat.reg[0] & 0x20) {
 		mirroring_H();
@@ -84,20 +101,4 @@ BYTE extcl_save_mapper_BMC64IN1NOREPEAT(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, bmc64in1norepeat.reg);
 
 	return (EXIT_OK);
-}
-
-INLINE static void bmc64in1norepeat_update_chr(void) {
-	WORD value = (bmc64in1norepeat.reg[2] << 2) | ((bmc64in1norepeat.reg[0] >> 1) & 0x03);
-	DBWORD bank;
-
-	control_bank(info.chr.rom.max.banks_8k)
-	bank = value << 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
