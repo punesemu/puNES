@@ -723,6 +723,9 @@ BYTE map_init(void) {
 		case 261:
 			map_init_BMC810544CA1();
 			break;
+		case 263:
+			map_init_KOF97();
+			break;
 		case 265:
 			map_init_T262();
 			break;
@@ -855,10 +858,6 @@ BYTE map_init(void) {
 				case 15:
 					// Ghostbusters63in1
 					map_init_BMCGHOSTBUSTERS63IN1();
-					break;
-				case 20:
-					// KOF97
-					map_init_KOF97();
 					break;
 				case 21:
 					// 603-5052
