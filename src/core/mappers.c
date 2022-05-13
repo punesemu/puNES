@@ -792,6 +792,9 @@ BYTE map_init(void) {
 		case 305:
 			map_init_KS7031();
 			break;
+		case 306:
+			map_init_KS7016();
+			break;
 		case 307:
 			map_init_KS7037();
 			break;
@@ -903,10 +906,6 @@ BYTE map_init(void) {
 				case 30:
 					// CC-21
 					map_init_CC_21();
-					break;
-				case 42:
-					// KS7016
-					map_init_KS7016();
 					break;
 				case 43:
 					// KS7017
