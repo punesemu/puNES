@@ -858,6 +858,9 @@ BYTE map_init(void) {
 		case 527:
 			map_init_AX40G();
 			break;
+		case 530:
+			map_init_AX5705();
+			break;
 		default:
 			gui_overlay_info_append_msg_precompiled(11, NULL);
 			fprintf(stderr, "Mapper not supported\n");
@@ -894,10 +897,6 @@ BYTE map_init(void) {
 				case 30:
 					// CC-21
 					map_init_CC_21();
-					break;
-				case 36:
-					// AX5705
-					map_init_AX5705();
 					break;
 				case 39:
 					// KS7012
