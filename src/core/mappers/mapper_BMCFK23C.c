@@ -88,6 +88,7 @@ void map_init_BMCFK23C(void) {
 			(info.crc32.prg == 0xE79F157E) || // 23 Plus 222-in-1 (Unl) [U][!].unf
 			(info.crc32.prg == 0x7B766BC1) || // Super 24-in-1 [U][p1][!].unf
 			(info.crc32.prg == 0x6C979BAC) || // 10-in-1 Omake Game (FC Mobile)[!].unf
+			(info.crc32.prg == 0xC8238ADE) || // Super Rockman 6-in-1 (861234C Hack).unif
 			(info.crc32.prg == 0xD14617D7)) { // He Jin Zhuang Bei 150-in-1 Real Game (Unl) [U][!].unf
 			if (mapper.write_vram) {
 				info.chr.rom.banks_8k = 32;
