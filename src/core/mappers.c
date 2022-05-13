@@ -396,6 +396,9 @@ BYTE map_init(void) {
 		case 123:
 			map_init_H2288();
 			break;
+		case 125:
+			map_init_LH32();
+			break;
 		case 132:
 			map_init_Txc(T22211A);
 			break;
@@ -879,10 +882,6 @@ BYTE map_init(void) {
 				case 30:
 					// CC-21
 					map_init_CC_21();
-					break;
-				case 31:
-					// LH32
-					map_init_LH32();
 					break;
 				case 32:
 					// NovelDiamond9999999in1
