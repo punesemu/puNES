@@ -783,6 +783,9 @@ BYTE map_init(void) {
 		case 301:
 			map_init_UNIF8157();
 			break;
+		case 302:
+			map_init_KS7057();
+			break;
 		case 304:
 			map_init_UNIFSMB2J();
 			break;
@@ -900,10 +903,6 @@ BYTE map_init(void) {
 				case 30:
 					// CC-21
 					map_init_CC_21();
-					break;
-				case 41:
-					// KS7057
-					map_init_KS7057();
 					break;
 				case 42:
 					// KS7016
