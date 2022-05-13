@@ -22,6 +22,8 @@
 #include "common.h"
 
 void map_init_BMCHP898F(void);
+void extcl_after_mapper_init_BMCHP898F(void);
 void extcl_cpu_wr_mem_BMCHP898F(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_BMCHP898F(WORD address, BYTE openbus, BYTE before);
 
 #endif /* MAPPER_BMCHP898F_H_ */

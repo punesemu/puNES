@@ -813,6 +813,9 @@ BYTE map_init(void) {
 		case 314:
 			map_init_BMC64IN1NOREPEAT();
 			break;
+		case 319:
+			map_init_BMCHP898F();
+			break;
 		case 320:
 			map_init_BMC830425C();
 			break;
@@ -916,10 +919,6 @@ BYTE map_init(void) {
 				case 47:
 					// BOY
 					map_init_BOY();
-					break;
-				case 49:
-					// HP898F
-					map_init_BMCHP898F();
 					break;
 				case 55:
 					// EDU2000
