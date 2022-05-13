@@ -732,6 +732,9 @@ BYTE map_init(void) {
 		case 261:
 			map_init_BMC810544CA1();
 			break;
+		case 262:
+			map_init_SHERO();
+			break;
 		case 263:
 			map_init_KOF97();
 			break;
@@ -891,10 +894,6 @@ BYTE map_init(void) {
 				case 30:
 					// CC-21
 					map_init_CC_21();
-					break;
-				case 34:
-					// SHERO
-					map_init_SHERO();
 					break;
 				case 36:
 					// AX5705
