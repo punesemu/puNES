@@ -295,6 +295,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Agci.h \
 	mappers/mapper_Ave.c \
 	mappers/mapper_Ave.h \
+	mappers/mapper_AX40G.c \
+	mappers/mapper_AX40G.h \
 	mappers/mapper_AX5705.c \
 	mappers/mapper_AX5705.h \
 	mappers/mapper_AxROM.c \

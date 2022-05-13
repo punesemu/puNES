@@ -123,7 +123,7 @@ BYTE map_init(void) {
 			map_init_VRC4(info.mapper.submapper == DEFAULT ? VRC4A : info.mapper.submapper);
 			break;
 		case 22:
-			map_init_VRC2(VRC2A);
+			map_init_VRC2(VRC2A, 0x0F);
 			break;
 		case 23:
 			if (info.mapper.submapper == VRC4BMC) {
@@ -135,7 +135,7 @@ BYTE map_init(void) {
 			} else if (info.mapper.submapper == VRC4UNL) {
 				map_init_VRC4(VRC4UNL);
 			} else {
-				map_init_VRC2(VRC2B);
+				map_init_VRC2(VRC2B, 0x0F);
 			}
 			break;
 		case 24:
@@ -848,6 +848,9 @@ BYTE map_init(void) {
 			break;
 		case 522:
 			map_init_LH10();
+			break;
+		case 527:
+			map_init_AX40G();
 			break;
 		default:
 			gui_overlay_info_append_msg_precompiled(11, NULL);

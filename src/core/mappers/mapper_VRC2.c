@@ -33,11 +33,10 @@
 	value = (vrc2.chr_rom_bank[slot] & mask) | ((value & 0x0F) << (shift - vrc2tmp.type));\
 	_chr_rom_1k_update(slot)
 
-struct _vrc2 {
-	BYTE chr_rom_bank[8];
-} vrc2;
+_vrc2 vrc2;
 struct _vrc2tmp {
 	BYTE type;
+	BYTE prg_mask;
 } vrc2tmp;
 
 const WORD shift_VRC2[2][4] = {
@@ -45,7 +44,7 @@ const WORD shift_VRC2[2][4] = {
 	{0x0000, 0x0002, 0x0001, 0x0003}
 };
 
-void map_init_VRC2(BYTE revision) {
+void map_init_VRC2(BYTE revision, BYTE prg_mask) {
 	EXTCL_CPU_WR_MEM(VRC2);
 	EXTCL_SAVE_MAPPER(VRC2);
 	mapper.internal_struct[0] = (BYTE *)&vrc2;
@@ -61,6 +60,7 @@ void map_init_VRC2(BYTE revision) {
 	}
 
 	vrc2tmp.type = revision;
+	vrc2tmp.prg_mask = prg_mask;
 }
 void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
 	if (address < 0xB000) {
@@ -71,7 +71,7 @@ void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
 
 	switch (address) {
 		case 0x8000:
-			control_bank_with_AND(0x0F, info.prg.rom.max.banks_8k)
+			control_bank_with_AND(vrc2tmp.prg_mask, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -89,7 +89,7 @@ void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
 			return;
 		}
 		case 0xA000:
-			control_bank_with_AND(0x0F, info.prg.rom.max.banks_8k)
+			control_bank_with_AND(vrc2tmp.prg_mask, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;

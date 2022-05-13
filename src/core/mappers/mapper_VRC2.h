@@ -23,7 +23,13 @@
 
 enum { VRC2B, VRC2A };
 
-void map_init_VRC2(BYTE revision);
+typedef struct _vrc2 {
+	BYTE chr_rom_bank[8];
+} _vrc2;
+
+extern _vrc2 vrc2;
+
+void map_init_VRC2(BYTE revision, BYTE mask);
 void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value);
 BYTE extcl_save_mapper_VRC2(BYTE mode, BYTE slot, FILE *fp);
 
