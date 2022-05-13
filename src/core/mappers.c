@@ -783,6 +783,9 @@ BYTE map_init(void) {
 		case 309:
 			map_init_LH51();
 			break;
+		case 312:
+			map_init_KS7013B();
+			break;
 		case 313:
 			map_init_RESETTXROM();
 			break;
@@ -869,10 +872,6 @@ BYTE map_init(void) {
 				case 25:
 					// AC-08
 					map_init_AC08();
-					break;
-				case 26:
-					// KS7013B
-					map_init_KS7013B();
 					break;
 				case 28:
 					// YOKO
