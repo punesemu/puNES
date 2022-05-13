@@ -3860,6 +3860,10 @@ static const _dbelement dblist[] = {
 	/* Toy Story (Unl)[!].nes */
 	{"c9dc5e47cc22fe1c792ac194de033f8aa8e60a3e", 219, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* ------------------------------------- mapper 254 --------------------------------------- */
+	/* 魂斗罗7加难无敌版.nes */
+	{"f2fbaeae5f99d5128760946491f9ea7670287c04", 254, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* ------------------------------------- mapper 225 --------------------------------------- */
 	/* 52 Games [p1].nes */
 	{"512296fff80e4c6fc12a4c55c1af1854d12ab70d", 225, DEFAULT, BMC52IN1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},

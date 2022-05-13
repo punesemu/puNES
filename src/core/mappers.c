@@ -93,6 +93,9 @@ BYTE map_init(void) {
 		case 13:
 			map_init_CPROM();
 			break;
+		case 14:
+			map_init_SL1632();
+			break;
 		case 15:
 			map_init_Waixing(WPSX);
 			break;
@@ -882,10 +885,6 @@ BYTE map_init(void) {
 				case 30:
 					// CC-21
 					map_init_CC_21();
-					break;
-				case 33:
-					// SL1632
-					map_init_SL1632();
 					break;
 				case 34:
 					// SHERO
