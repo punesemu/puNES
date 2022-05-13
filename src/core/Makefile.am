@@ -431,8 +431,6 @@ libcore_a_SOURCES += \
 	mappers/mapper_MMC5.h \
 	mappers/mapper_Namco.c \
 	mappers/mapper_Namco.h \
-	mappers/mapper_NovelDiamond.c \
-	mappers/mapper_NovelDiamond.h \
 	mappers/mapper_NSF.c \
 	mappers/mapper_NSF.h \
 	mappers/mapper_Ntdec.c \

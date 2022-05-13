@@ -883,10 +883,6 @@ BYTE map_init(void) {
 					// CC-21
 					map_init_CC_21();
 					break;
-				case 32:
-					// NovelDiamond9999999in1
-					map_init_NovelDiamond();
-					break;
 				case 33:
 					// SL1632
 					map_init_SL1632();

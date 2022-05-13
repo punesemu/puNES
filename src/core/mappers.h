@@ -186,7 +186,6 @@
 #include "mappers/mapper_SA_9602B.h"
 #include "mappers/mapper_CC_21.h"
 #include "mappers/mapper_LH32.h"
-#include "mappers/mapper_NovelDiamond.h"
 #include "mappers/mapper_SL1632.h"
 #include "mappers/mapper_SHERO.h"
 #include "mappers/mapper_UNIFSMB2J.h"
