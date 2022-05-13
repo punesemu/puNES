@@ -828,6 +828,9 @@ BYTE map_init(void) {
 		case 333:
 			map_init_8_IN_1();
 			break;
+		case 346:
+			map_init_KS7012();
+			break;
 		case 348:
 			map_init_BMC830118C();
 			break;
@@ -897,10 +900,6 @@ BYTE map_init(void) {
 				case 30:
 					// CC-21
 					map_init_CC_21();
-					break;
-				case 39:
-					// KS7012
-					map_init_KS7012();
 					break;
 				case 41:
 					// KS7057
