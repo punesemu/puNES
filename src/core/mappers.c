@@ -729,6 +729,9 @@ BYTE map_init(void) {
 		case 263:
 			map_init_KOF97();
 			break;
+		case 264:
+			map_init_YOKO();
+			break;
 		case 265:
 			map_init_T262();
 			break;
@@ -872,10 +875,6 @@ BYTE map_init(void) {
 				case 25:
 					// AC-08
 					map_init_AC08();
-					break;
-				case 28:
-					// YOKO
-					map_init_YOKO();
 					break;
 				case 30:
 					// CC-21
