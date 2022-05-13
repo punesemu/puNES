@@ -163,18 +163,18 @@ void extcl_wr_chr_512(WORD address, BYTE value) {
 	}
 }
 void extcl_wr_nmt_512(WORD address, BYTE value) {
+	address &= 0x0FFF;
 	if (m512.reg == 1) {
-		m512.vram[address & 0x0FFF] = value;
+		m512.vram[address] = value;
 		return;
 	}
-	address &= 0x0FFF;
 	ntbl.bank_1k[address >> 10][address & 0x3FF] = value;
 }
 BYTE extcl_rd_nmt_512(WORD address) {
-	if (m512.reg == 1) {
-		return (m512.vram[address & 0x0FFF]);
-	}
 	address &= 0x0FFF;
+	if (m512.reg == 1) {
+		return (m512.vram[address]);
+	}
 	return (ntbl.bank_1k[address >> 10][address & 0x3FF]);
 }
 
