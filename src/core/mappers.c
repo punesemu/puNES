@@ -834,6 +834,9 @@ BYTE map_init(void) {
 		case 328:
 			map_init_RT_01();
 			break;
+		case 329:
+			map_init_EDU2000();
+			break;
 		case 331:
 			map_init_BMC12IN1();
 			break;
@@ -900,29 +903,25 @@ BYTE map_init(void) {
 					// MARIO1-MALEE2
 					map_init_malee();
 					break;
-				case 15:
+				case 2:
 					// Ghostbusters63in1
 					map_init_BMCGHOSTBUSTERS63IN1();
 					break;
-				case 24:
+				case 3:
 					// 43272
 					map_init_UNIF43272();
 					break;
-				case 25:
+				case 4:
 					// AC-08
 					map_init_AC08();
 					break;
-				case 30:
+				case 5:
 					// CC-21
 					map_init_CC_21();
 					break;
-				case 47:
+				case 6:
 					// BOY
 					map_init_BOY();
-					break;
-				case 55:
-					// EDU2000
-					map_init_EDU2000();
 					break;
 			}
 			break;
