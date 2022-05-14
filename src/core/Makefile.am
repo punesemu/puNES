@@ -339,6 +339,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_BOY.h \
 	mappers/mapper_BS5.c \
 	mappers/mapper_BS5.h \
+	mappers/mapper_BTL900218.c \
+	mappers/mapper_BTL900218.h \
 	mappers/mapper_BxROM.c \
 	mappers/mapper_BxROM.h \
 	mappers/mapper_Caltron.c \
