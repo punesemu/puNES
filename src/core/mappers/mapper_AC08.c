@@ -45,7 +45,6 @@ void map_init_AC08(void) {
 		value = ~1;
 		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
-		map_prg_rom_8k_update();
 	}
 
 	info.mapper.extend_wr = TRUE;

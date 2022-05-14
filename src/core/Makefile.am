@@ -305,6 +305,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_AxROM.h \
 	mappers/mapper_Bandai.c \
 	mappers/mapper_Bandai.h \
+	mappers/mapper_BJ56.c \
+	mappers/mapper_BJ56.h \
 	mappers/mapper_BMC11160.c \
 	mappers/mapper_BMC11160.h \
 	mappers/mapper_BMC12IN1.c \

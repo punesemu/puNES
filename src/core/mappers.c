@@ -876,6 +876,9 @@ BYTE map_init(void) {
 		case 522:
 			map_init_LH10();
 			break;
+		case 526:
+			map_init_BJ56();
+			break;
 		case 527:
 			map_init_AX40G();
 			break;
