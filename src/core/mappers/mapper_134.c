@@ -23,146 +23,23 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-#define m134_chr_1k(vl) bank = (m134.reg << 3 & 0x100) | vl
-#define m134_prg_8k(vl)	value = ((m134.reg << 4) & 0x20) | (vl & 0x1F)
-#define m134_chr_1k_update()\
-{\
-	BYTE i;\
-	for (i = 0; i < 8; i++) {\
-		WORD bank;\
-		m134_chr_1k(m134.chr_map[i]);\
-		_control_bank(bank, info.chr.rom.max.banks_1k)\
-		chr.bank_1k[i] = chr_pnt(bank << 10);\
-	}\
-}
-#define m134_prg_8k_update()\
-{\
-	BYTE i;\
-	for (i = 0; i < 4; i++) {\
-		m134_prg_8k(m134.prg_map[i]);\
-		control_bank(info.prg.rom.max.banks_8k)\
-		map_prg_rom_8k(1, i, value);\
-	}\
-	map_prg_rom_8k_update();\
-}
-#define m134_swap_chr_bank_1k(src, dst)\
-{\
-	BYTE *chr_bank_1k = chr.bank_1k[src];\
-	chr.bank_1k[src] = chr.bank_1k[dst];\
-	chr.bank_1k[dst] = chr_bank_1k;\
-	WORD map = m134.chr_map[src];\
-	m134.chr_map[src] = m134.chr_map[dst];\
-	m134.chr_map[dst] = map;\
-}
-#define m134_8000()\
-{\
-	const BYTE chr_rom_cfg_old = mmc3.chr_rom_cfg;\
-	const BYTE prg_rom_cfg_old = mmc3.prg_rom_cfg;\
-	mmc3.bank_to_update = value & 0x07;\
-	mmc3.prg_rom_cfg = (value & 0x40) >> 5;\
-	mmc3.chr_rom_cfg = (value & 0x80) >> 5;\
-	/*\
-	 * se il tipo di configurazione della chr cambia,\
-	 * devo swappare i primi 4 banchi con i secondi\
-	 * quattro.\
-	 */\
-	if (mmc3.chr_rom_cfg != chr_rom_cfg_old) {\
-		m134_swap_chr_bank_1k(0, 4)\
-		m134_swap_chr_bank_1k(1, 5)\
-		m134_swap_chr_bank_1k(2, 6)\
-		m134_swap_chr_bank_1k(3, 7)\
-	}\
-	if (mmc3.prg_rom_cfg != prg_rom_cfg_old) {\
-		WORD p0 = mapper.rom_map_to[0];\
-		WORD p2 = mapper.rom_map_to[2];\
-		mapper.rom_map_to[0] = p2;\
-		mapper.rom_map_to[2] = p0;\
-		p0 = m134.prg_map[0];\
-		p2 = m134.prg_map[2];\
-		m134.prg_map[0] = p2;\
-		m134.prg_map[2] = p0;\
-		m134.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
-		/*\
-		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
-		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
-		 */\
-		m134_prg_8k(info.prg.rom.max.banks_8k_before_last);\
-		control_bank(info.prg.rom.max.banks_8k)\
-		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, value);\
-		map_prg_rom_8k_update();\
-	}\
-}
-#define m134_8001()\
-{\
-	WORD bank;\
-	switch (mmc3.bank_to_update) {\
-		case 0:\
-			m134.chr_map[mmc3.chr_rom_cfg] = value;\
-			m134.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
-			m134_chr_1k(value);\
-			bank &= 0xFFE;\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg] = chr_pnt(bank << 10);\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = chr_pnt((bank + 1) << 10);\
-			return;\
-		case 1:\
-			m134.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
-			m134.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
-			m134_chr_1k(value);\
-			bank &= 0xFFE;\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = chr_pnt(bank << 10);\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = chr_pnt((bank + 1) << 10);\
-			return;\
-		case 2:\
-			m134.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;\
-			m134_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = chr_pnt(bank << 10);\
-			return;\
-		case 3:\
-			m134.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = value;\
-			m134_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = chr_pnt(bank << 10);\
-			return;\
-		case 4:\
-			m134.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = value;\
-			m134_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = chr_pnt(bank << 10);\
-			return;\
-		case 5:\
-			m134.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;\
-			m134_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = chr_pnt(bank << 10);\
-			return;\
-		case 6:\
-			m134.prg_map[mmc3.prg_rom_cfg] = value;\
-			m134_prg_8k(value);\
-			control_bank(info.prg.rom.max.banks_8k)\
-			map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);\
-			map_prg_rom_8k_update();\
-			return;\
-		case 7:\
-			m134.prg_map[1] = value;\
-			m134_prg_8k(value);\
-			control_bank(info.prg.rom.max.banks_8k)\
-			map_prg_rom_8k(1, 1, value);\
-			map_prg_rom_8k_update();\
-			return;\
-	}\
-}
+INLINE static void prg_fix_134(BYTE value);
+INLINE static void prg_swap_134(WORD address, WORD value);
+INLINE static void chr_fix_134(BYTE value);
+INLINE static void chr_swap_134(WORD address, WORD value);
 
 struct _m134 {
-	BYTE reg;
-	WORD prg_map[4];
-	WORD chr_map[8];
+	BYTE reg[4];
+	WORD mmc3[8];
 } m134;
+struct _m134tmp {
+	BYTE dipswitch;
+} m134tmp;
 
 void map_init_134(void) {
+	EXTCL_AFTER_MAPPER_INIT(134);
 	EXTCL_CPU_WR_MEM(134);
+	EXTCL_CPU_RD_MEM(134);
 	EXTCL_SAVE_MAPPER(134);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
@@ -179,56 +56,182 @@ void map_init_134(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m134, 0x00, sizeof(m134));
 
-	{
-		BYTE value, i;
-
-		map_prg_rom_8k_reset();
-		map_chr_bank_1k_reset();
-
-		for (i = 0; i < 8; i++) {
-			if (i < 4) {
-				m134.prg_map[i] = mapper.rom_map_to[i];
-			}
-			m134.chr_map[i] = i;
-		}
-
-		m134_prg_8k_update()
-		m134_chr_1k_update()
+	if (info.reset == RESET) {
+		m134tmp.dipswitch = (m134tmp.dipswitch + 1) & 0x0F;
+	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+		m134tmp.dipswitch = 0;
 	}
 
-	info.mapper.extend_wr = TRUE;
+	m134.mmc3[0] = 0;
+	m134.mmc3[1] = 2;
+	m134.mmc3[2] = 4;
+	m134.mmc3[3] = 5;
+	m134.mmc3[4] = 6;
+	m134.mmc3[5] = 7;
+	m134.mmc3[6] = 0;
+	m134.mmc3[7] = 0;
+
+	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
+void extcl_after_mapper_init_134(void) {
+	prg_fix_134(mmc3.bank_to_update);
+	chr_fix_134(mmc3.bank_to_update);
+}
 void extcl_cpu_wr_mem_134(WORD address, BYTE value) {
-	if (address > 0x7FFF) {
-		switch (address & 0xE001) {
-			case 0x8000:
-				m134_8000()
-				return;
-			case 0x8001:
-				m134_8001()
-				return;
+	if ((address >= 0x6000) && (address <= 0x7FFF)) {
+		if (cpu.prg_ram_wr_active) {
+			switch (address & 0x0003) {
+				case 0:
+					if (!(m134.reg[0] & 0x80)) {
+						m134.reg[0] = value;
+						prg_fix_134(mmc3.bank_to_update);
+						chr_fix_134(mmc3.bank_to_update);
+					}
+					break;
+				case 1:
+					if (!(m134.reg[0] & 0x80)) {
+						m134.reg[1] = value;
+						prg_fix_134(mmc3.bank_to_update);
+						chr_fix_134(mmc3.bank_to_update);
+					}
+					break;
+				case 2:
+					if (m134.reg[0] & 0x80) {
+						value = (m134.reg[2] & 0xFC) | (value & 0x03);
+					}
+					m134.reg[2] = value;
+					chr_fix_134(mmc3.bank_to_update);
+					break;
+				case 3:
+					if (!(m134.reg[0] & 0x80)) {
+						m134.reg[3] = value;
+					}
+					break;
+			}
 		}
-		extcl_cpu_wr_mem_MMC3(address, value);
 		return;
 	}
+	if (address >= 0x8000) {
+		switch (address & 0xE001) {
+			case 0x8000:
+				if ((value & 0x40) != (mmc3.bank_to_update & 0x40)) {
+					prg_fix_134(value);
+				}
+				if ((value & 0x80) != (mmc3.bank_to_update & 0x80)) {
+					chr_fix_134(value);
+				}
+				mmc3.bank_to_update = value;
+				return;
+			case 0x8001: {
+				WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
 
-	if (address == 0x6001) {
-		if (m134.reg != value) {
-			m134.reg = value;
+				m134.mmc3[mmc3.bank_to_update & 0x07] = value;
 
-			m134_prg_8k_update()
-			m134_chr_1k_update()
+				switch (mmc3.bank_to_update & 0x07) {
+					case 0:
+						chr_swap_134(cbase ^ 0x0000, value & (~1));
+						chr_swap_134(cbase ^ 0x0400, value | 1);
+						return;
+					case 1:
+						chr_swap_134(cbase ^ 0x0800, value & (~1));
+						chr_swap_134(cbase ^ 0x0C00, value | 1);
+						return;
+					case 2:
+						chr_swap_134(cbase ^ 0x1000, value);
+						return;
+					case 3:
+						chr_swap_134(cbase ^ 0x1400, value);
+						return;
+					case 4:
+						chr_swap_134(cbase ^ 0x1800, value);
+						return;
+					case 5:
+						chr_swap_134(cbase ^ 0x1C00, value);
+						return;
+					case 6:
+						if (m134.reg[1] & 0x80) {
+							prg_fix_134(mmc3.bank_to_update);
+						} else {
+							if (mmc3.bank_to_update & 0x40) {
+								prg_swap_134(0xC000, value);
+							} else {
+								prg_swap_134(0x8000, value);
+							}
+						}
+						return;
+					case 7:
+						prg_swap_134(0xA000, value);
+						return;
+				}
+				return;
+			}
 		}
+		extcl_cpu_wr_mem_MMC3(address, value);
 	}
+}
+BYTE extcl_cpu_rd_mem_134(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+	if ((address >= 0x8000) && (m134.reg[0] & 0x40)) {
+		return (m134tmp.dipswitch);
+	}
+	return (openbus);
 }
 BYTE extcl_save_mapper_134(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m134.reg);
-	save_slot_ele(mode, slot, m134.prg_map);
-	save_slot_ele(mode, slot, m134.chr_map);
+	save_slot_ele(mode, slot, m134.mmc3);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_134(BYTE value) {
+	if (value & 0x40) {
+		prg_swap_134(0x8000, ~1);
+		prg_swap_134(0xC000, m134.mmc3[6]);
+	} else {
+		prg_swap_134(0x8000, m134.mmc3[6]);
+		prg_swap_134(0xC000, ~1);
+	}
+	prg_swap_134(0xA000, m134.mmc3[7]);
+	prg_swap_134(0xE000, ~0);
+}
+INLINE static void prg_swap_134(WORD address, WORD value) {
+	WORD base = ((m134.reg[1] & 0x03) << 4) | ((m134.reg[0] & 0x10) << 2);
+	WORD mask = m134.reg[1] & 0x04 ? 0x0F: 0x1F;
+
+	// NROM mode
+	if (m134.reg[1] & 0x80) {
+		value = (m134.mmc3[6] & (m134.reg[1] & 0x08 ? 0xFE : 0xFC)) | ((address >> 13) & (m134.reg[1] & 0x08 ? 0x01 : 0x03));
+	}
+
+	value = (base & ~mask) | (value & mask);
+	control_bank(info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
+	map_prg_rom_8k_update();
+}
+INLINE static void chr_fix_134(BYTE value) {
+	WORD cbase = (value & 0x80) << 5;
+
+	chr_swap_134(cbase ^ 0x0000, m134.mmc3[0] & (~1));
+	chr_swap_134(cbase ^ 0x0400, m134.mmc3[0] |   1);
+	chr_swap_134(cbase ^ 0x0800, m134.mmc3[1] & (~1));
+	chr_swap_134(cbase ^ 0x0C00, m134.mmc3[1] |   1);
+	chr_swap_134(cbase ^ 0x1000, m134.mmc3[2]);
+	chr_swap_134(cbase ^ 0x1400, m134.mmc3[3]);
+	chr_swap_134(cbase ^ 0x1800, m134.mmc3[4]);
+	chr_swap_134(cbase ^ 0x1c00, m134.mmc3[5]);
+}
+INLINE static void chr_swap_134(WORD address, WORD value) {
+	WORD base = ((m134.reg[1] & 0x30) << 3) | ((m134.reg[0] & 0x20) << 4);
+	WORD mask = m134.reg[1] & 0x40 ? 0x7F: 0xFF;
+
+	if (m134.reg[0] & 0x08) {
+		value = ((m134.reg[2] & mask) << 3) | (address >> 10);
+	}
+
+	value = (base & ~mask) | (value & mask);
+	control_bank(info.chr.rom.max.banks_1k)
+	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 }
