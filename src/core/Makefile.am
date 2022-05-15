@@ -479,6 +479,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Tengen.h \
 	mappers/mapper_TF1201.c \
 	mappers/mapper_TF1201.h \
+	mappers/mapper_TH21311.c \
+	mappers/mapper_TH21311.h \
 	mappers/mapper_Txc.c \
 	mappers/mapper_Txc.h \
 	mappers/mapper_TxROM.c \
