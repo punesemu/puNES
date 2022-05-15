@@ -227,6 +227,7 @@
 #include "mappers/mapper_GN26.h"
 #include "mappers/mapper_KS7021A.h"
 #include "mappers/mapper_TH21311.h"
+#include "mappers/mapper_HP2018A.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\

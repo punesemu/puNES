@@ -391,6 +391,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Hen.h \
 	mappers/mapper_Hes.c \
 	mappers/mapper_Hes.h \
+	mappers/mapper_HP2018A.c \
+	mappers/mapper_HP2018A.h \
 	mappers/mapper_Irem.c \
 	mappers/mapper_Irem.h \
 	mappers/mapper_Jaleco.c \
