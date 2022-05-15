@@ -852,6 +852,9 @@ BYTE map_init(void) {
 		case 333:
 			map_init_8_IN_1();
 			break;
+		case 343:
+			map_init_RESETNROMXIN1();
+			break;
 		case 344:
 			map_init_GN26();
 			break;
