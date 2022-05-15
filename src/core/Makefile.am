@@ -379,6 +379,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_FS304.h \
 	mappers/mapper_GameGenie.c \
 	mappers/mapper_GameGenie.h \
+	mappers/mapper_GN26.c \
+	mappers/mapper_GN26.h \
 	mappers/mapper_GxROM.c \
 	mappers/mapper_GxROM.h \
 	mappers/mapper_GS_20xx.c \

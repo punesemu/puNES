@@ -846,6 +846,9 @@ BYTE map_init(void) {
 		case 333:
 			map_init_8_IN_1();
 			break;
+		case 344:
+			map_init_GN26();
+			break;
 		case 345:
 			map_init_L6IN1();
 			break;

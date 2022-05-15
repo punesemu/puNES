@@ -169,7 +169,7 @@ INLINE static void prg_swap_L6IN1(WORD address, WORD value) {
 	WORD base = (l6in1.reg & 0xC0) >> 2;
 	WORD mask = 0x0F;
 
-    // AxROM mode
+	// AxROM mode
 	if (!(l6in1.reg & 0x0C)) {
 		 base = ((base >> 2) | (l6in1.reg & 0x03)) << 2;
 		 value = ((address >> 13) & 0x03);
