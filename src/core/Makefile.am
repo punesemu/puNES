@@ -319,6 +319,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_BMC70IN1.h \
 	mappers/mapper_BMC830118C.c \
 	mappers/mapper_BMC830118C.h \
+	mappers/mapper_BMC830134C.c \
+	mappers/mapper_BMC830134C.h \
 	mappers/mapper_BMC830425C.c \
 	mappers/mapper_BMC830425C.h \
 	mappers/mapper_BMCFK23C.c \

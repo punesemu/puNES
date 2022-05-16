@@ -819,6 +819,9 @@ BYTE map_init(void) {
 		case 314:
 			map_init_BMC64IN1NOREPEAT();
 			break;
+		case 315:
+			map_init_BMC830134C();
+			break;
 		case 319:
 			map_init_BMCHP898F();
 			break;

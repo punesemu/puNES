@@ -229,6 +229,7 @@
 #include "mappers/mapper_TH21311.h"
 #include "mappers/mapper_HP2018A.h"
 #include "mappers/mapper_RESETNROMXIN1.h"
+#include "mappers/mapper_BMC830134C.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\
