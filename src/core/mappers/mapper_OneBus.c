@@ -313,7 +313,7 @@ BYTE extcl_rd_apu_OneBus(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	return (openbus);
 }
 void extcl_irq_A12_clock_OneBus(void) {
-    BYTE count = irqA12.counter;
+	BYTE count = irqA12.counter;
 
 	if (!count || irqA12.reload) {
 		irqA12.counter = onebus.reg.cpu[1];

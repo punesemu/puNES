@@ -198,12 +198,12 @@ INLINE static void chr_swap_L6IN1(WORD address, WORD value) {
 	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 }
 INLINE static void mirroring_fix_L6IN1(void) {
-    if (l6in1.reg & 0x20) {
-        if (l6in1.reg & 0x10) {
-        	mirroring_SCR1();
-    	} else {
-        	mirroring_SCR0();
-    	}
+	if (l6in1.reg & 0x20) {
+		if (l6in1.reg & 0x10) {
+			mirroring_SCR1();
+		} else {
+			mirroring_SCR0();
+		}
 	} else {
 		if (l6in1.mmc3_mirroring & 0x01) {
 			mirroring_H();

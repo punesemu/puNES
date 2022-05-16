@@ -39,9 +39,9 @@ void map_init_BMC830425C(void) {
 void extcl_cpu_wr_mem_BMC830425C(WORD address, BYTE value) {
 	BYTE outer, mode;
 
-    if ((address & 0x7FE0) == 0x70E0) {
-    	bmc830425c.reg = address & 0x1F;
-    }
+	if ((address & 0x7FE0) == 0x70E0) {
+		bmc830425c.reg = address & 0x1F;
+	}
 
 	outer = (bmc830425c.reg & 0x0F) << 3;
 	mode = !(bmc830425c.reg & 0x10) << 3 | 0x07;

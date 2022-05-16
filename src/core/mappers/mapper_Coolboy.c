@@ -172,9 +172,9 @@ INLINE static void prg_fix_Coolboy(BYTE value) {
 }
 INLINE static void prg_swap_Coolboy(WORD address, WORD value) {
 	uint32_t mask = ((0x3F | (coolboy.reg[1] & 0x40) | ((coolboy.reg[1] & 0x20) << 2)) ^ ((coolboy.reg[0] & 0x40) >> 2))
-	    ^ ((coolboy.reg[1] & 0x80) >> 2);
+		^ ((coolboy.reg[1] & 0x80) >> 2);
 	uint32_t base = ((coolboy.reg[0] & 0x07) >> 0) | ((coolboy.reg[1] & 0x10) >> 1) | ((coolboy.reg[1] & 0x0C) << 2)
-	    | ((coolboy.reg[0] & 0x30) << 2);
+		| ((coolboy.reg[0] & 0x30) << 2);
 
 	if ((coolboy.reg[3] & 0x40) && (value >= 0xFE) && !(mmc3.prg_rom_cfg != 0)) {
 		switch (address & 0xE000) {
