@@ -51,11 +51,12 @@ typedef struct _info {
 		BYTE extend_wr;
 		BYTE extend_rd;
 		BYTE ram_plus_op_controlled_by_mapper;
+		BYTE trainer;
+		BYTE misc_roms;
 	} mapper;
 	BYTE mirroring_db;
 	BYTE portable;
 	BYTE id;
-	BYTE trainer;
 	BYTE stop;
 	BYTE reset;
 	BYTE frame_status;
@@ -78,6 +79,7 @@ typedef struct _info {
 	struct _info_crc32 {
 		uint32_t prg;
 		uint32_t chr;
+		uint32_t misc;
 		uint32_t total;
 	} crc32;
 	struct _info_chr {

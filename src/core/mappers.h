@@ -157,6 +157,7 @@
 #include "mappers/mapper_375.h"
 #include "mappers/mapper_512.h"
 #include "mappers/mapper_185.h"
+#include "mappers/mapper_413.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"
@@ -254,12 +255,13 @@ typedef struct _mapper {
 	WORD rom_map_to[4];
 	BYTE *internal_struct[10];
 	WORD internal_struct_size[10];
+	BYTE trainer[512];
+	struct _misc_roms {
+		uint32_t size;
+		BYTE *data;
+	} misc_roms;
 } _mapper;
-typedef struct _trainer {
-	BYTE data[512];
-} _trainer;
 
-extern _trainer trainer;
 extern _mapper mapper;
 
 BYTE map_init(void);
@@ -277,6 +279,7 @@ void map_chr_bank_1k_reset(void);
 BYTE map_chr_ram_init(void);
 BYTE map_chr_ram_extra_init(uint32_t size);
 void map_chr_ram_extra_reset(void);
+BYTE map_misc_malloc(size_t size, BYTE set_value);
 void map_set_banks_max_prg(void);
 void map_set_banks_max_chr(void);
 void map_bat_wr_default(FILE *fp) ;

@@ -29,7 +29,6 @@
 #include "unif.h"
 #include "gui.h"
 
-_trainer trainer;
 _mapper mapper;
 
 BYTE map_init(void) {
@@ -879,6 +878,9 @@ BYTE map_init(void) {
 		case 375:
 			map_init_375();
 			break;
+		case 413:
+			map_init_413();
+			break;
 		case 512:
 			map_init_512();
 			break;
@@ -1034,6 +1036,12 @@ void map_quit(void) {
 
 	memset(chr.bank_1k, 0, sizeof(chr.bank_1k));
 
+	if (mapper.misc_roms.data) {
+		free(mapper.misc_roms.data);
+		mapper.misc_roms.size = 0;
+	}
+	mapper.misc_roms.data = NULL;
+
 	mirroring_V();
 
 	mapper.write_vram = FALSE;
@@ -1140,14 +1148,14 @@ void map_prg_ram_init(void) {
 		}
 	}
 
-	if (info.trainer) {
+	if (info.mapper.trainer) {
 		BYTE *here = prg.ram.data;
 
 		if (prg.ram_plus) {
 			here = prg.ram_plus;
 		}
 
-		memcpy(here + 0x1000, &trainer.data, sizeof(trainer.data));
+		memcpy(here + 0x1000, &mapper.trainer, sizeof(mapper.trainer));
 	}
 }
 BYTE map_prg_ram_malloc(WORD size) {
@@ -1277,6 +1285,25 @@ void map_chr_ram_extra_reset(void) {
 	if (chr.extra.data) {
 		memset(chr.extra.data, 0x00, chr.extra.size);
 	}
+}
+BYTE map_misc_malloc(size_t size, BYTE set_value) {
+	if (mapper.misc_roms.data) {
+		free(mapper.misc_roms.data);
+		mapper.misc_roms.data = NULL;
+		mapper.misc_roms.size = 0;
+	}
+
+	if ((mapper.misc_roms.data = (BYTE *)malloc(size))) {
+		memset(mapper.misc_roms.data, set_value, size);
+		mapper.misc_roms.size = size;
+	} else {
+		free(mapper.misc_roms.data);
+		mapper.misc_roms.data = NULL;
+		mapper.misc_roms.size = 0;
+		fprintf(stderr, "Out of memory\n");
+	}
+
+	return (mapper.misc_roms.data ? EXIT_OK : EXIT_ERROR);
 }
 void map_set_banks_max_prg(void) {
 	info.prg.rom.max.banks_32k = (info.prg.rom.banks_16k == 1) ? 0 :

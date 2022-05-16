@@ -155,6 +155,8 @@ BYTE ines_load_rom(void) {
 
 			vs_system.ppu = ines.flags[FL13] & 0x0F;
 			vs_system.special_mode.type = (ines.flags[FL13] >> 4) & 0x0F;
+
+			info.mapper.misc_roms = ines.flags[FL14] & 0x03;
 		} else {
 			// iNES 1.0
 			info.format = iNES_1_0;
@@ -188,7 +190,7 @@ BYTE ines_load_rom(void) {
 				break;
 		}
 
-		info.trainer = ines.flags[FL6] & 0x04;
+		info.mapper.trainer = ines.flags[FL6] & 0x04;
 
 		if (ines.flags[FL6] & 0x08) {
 			mirroring_FSCR();
@@ -274,13 +276,13 @@ BYTE ines_load_rom(void) {
 			vs_system.special_mode.index = 0;
 		}
 
-		if (info.trainer) {
-			if (rom_mem_ctrl_memcpy(&trainer.data, &rom, sizeof(trainer.data)) == EXIT_ERROR) { 
+		if (info.mapper.trainer) {
+			if (rom_mem_ctrl_memcpy(&mapper.trainer, &rom, sizeof(mapper.trainer)) == EXIT_ERROR) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
 		} else {
-			memset(&trainer.data, 0x00, sizeof(trainer.data));
+			memset(&mapper.trainer, 0x00, sizeof(mapper.trainer));
 		}
 
 		if (!info.chr.rom.banks_8k) {
@@ -342,6 +344,18 @@ BYTE ines_load_rom(void) {
 			}
 		}
 
+		if (info.mapper.misc_roms) {
+			if (map_misc_malloc(rom.size - rom.position, 0x00) == EXIT_ERROR) {
+				free(rom.data);
+				return (EXIT_ERROR);
+			}
+
+			if (rom_mem_ctrl_memcpy(mapper.misc_roms.data, &rom, mapper.misc_roms.size) == EXIT_ERROR) {
+				free(rom.data);
+				return (EXIT_ERROR);
+			}
+		}
+
 		// la CHR ram extra
 		memset(&chr.extra, 0x00, sizeof(chr.extra));
 
@@ -365,26 +379,31 @@ BYTE ines_load_rom(void) {
 			fprintf(stderr, "submapper     : %u\n", info.mapper.submapper);
 		}
 		{
-			size_t size = prg_size();
-
 			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
+			info.crc32.total = info.crc32.prg;
 
 			fprintf(stderr, "PRG 8k rom    : %-4lu [ %08X %ld ]\n",
 				(long unsigned)prg_size() / 0x2000,
 				info.crc32.prg,
 				(long)prg_size());
-
 			if (chr_size()) {
 				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
-				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.prg);
-				size += chr_size();
+				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.total);
 
 				fprintf(stderr, "CHR 4k vrom   : %-4lu [ %08X %ld ]\n",
 					(long unsigned)chr_size() / 0x1000,
 					info.crc32.chr,
 					(long)chr_size());
 			}
+			if (mapper.misc_roms.size) {
+				info.crc32.misc = emu_crc32((void *)mapper.misc_roms.data, mapper.misc_roms.size);
+				info.crc32.total = emu_crc32_continue((void *)mapper.misc_roms.data, mapper.misc_roms.size, info.crc32.total);
 
+				fprintf(stderr, "MSC ROMS      : %-4lu [ %08X %ld ]\n",
+					(long unsigned)info.mapper.misc_roms,
+					info.crc32.misc,
+					(long)mapper.misc_roms.size);
+			}
 			fprintf(stderr, "CRC32         : %08X\n", info.crc32.total);
 		}
 		fprintf(stderr, "sha1prg       : %40s\n", info.sha1sum.prg.string);
@@ -511,8 +530,8 @@ BYTE ines10_search_in_database(void *rom_mem) {
 	vs_system.ppu = vs_system.special_mode.type = DEFAULT;
 
 	// punto oltre l'header
-	if (info.trainer) {
-		position = (0x10 + sizeof(trainer.data));
+	if (info.mapper.trainer) {
+		position = (0x10 + sizeof(mapper.trainer));
 	} else {
 		position = 0x10;
 	}
