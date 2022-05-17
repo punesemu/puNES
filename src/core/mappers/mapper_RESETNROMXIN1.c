@@ -23,14 +23,13 @@
 
 void map_init_RESETNROMXIN1(void) {
 	EXTCL_CPU_WR_MEM(RESETNROMXIN1);
-	EXTCL_CPU_RD_MEM(RESETNROMXIN1);
 
 	if (info.reset >= HARD) {
-		extcl_cpu_wr_mem_RESETNROMXIN1(0x8000, 0xFF);
+		extcl_cpu_wr_mem_RESETNROMXIN1(0x8000, 0x00);
 	}
 }
 void extcl_cpu_wr_mem_RESETNROMXIN1(UNUSED(WORD address), BYTE value) {
-	DBWORD bank = value;
+	DBWORD bank = ~value;
 
 	if (info.mapper.submapper == 1) {
 		_control_bank(bank, info.prg.rom.max.banks_32k)
@@ -42,9 +41,9 @@ void extcl_cpu_wr_mem_RESETNROMXIN1(UNUSED(WORD address), BYTE value) {
 	}
 	map_prg_rom_8k_update();
 
-	bank = (value << 3);
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
+	bank = ~value;
+	_control_bank(bank, info.chr.rom.max.banks_8k)
+	bank <<= 13;
 	chr.bank_1k[0] = chr_pnt(bank | 0x0000);
 	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
 	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
@@ -60,10 +59,4 @@ void extcl_cpu_wr_mem_RESETNROMXIN1(UNUSED(WORD address), BYTE value) {
 	} else {
 		mirroring_V();
 	}
-}
-BYTE extcl_cpu_rd_mem_RESETNROMXIN1(WORD address, BYTE openbus, BYTE before) {
-	if (address < 0x6000) {
-		return (before);
-	}
-	return (openbus);
 }

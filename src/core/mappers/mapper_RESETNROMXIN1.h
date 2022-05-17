@@ -23,6 +23,5 @@
 
 void map_init_RESETNROMXIN1(void);
 void extcl_cpu_wr_mem_RESETNROMXIN1(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_RESETNROMXIN1(WORD address, BYTE openbus, BYTE before);
 
 #endif /* MAPPER_RESETNROMXIN1_H_ */
