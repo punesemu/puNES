@@ -473,6 +473,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_RT_01.h \
 	mappers/mapper_SA_9602B.c \
 	mappers/mapper_SA_9602B.h \
+	mappers/mapper_SA005A.c \
+	mappers/mapper_SA005A.h \
 	mappers/mapper_Sachen.c \
 	mappers/mapper_Sachen.h \
 	mappers/mapper_SC_127.c \
