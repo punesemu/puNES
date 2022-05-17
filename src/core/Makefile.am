@@ -403,12 +403,16 @@ libcore_a_SOURCES += \
 	mappers/mapper_Jaleco.h \
 	mappers/mapper_K3033.c \
 	mappers/mapper_K3033.h \
+	mappers/mapper_K3071.c \
+	mappers/mapper_K3071.h \
 	mappers/mapper_Kaiser.c \
 	mappers/mapper_Kaiser.h \
 	mappers/mapper_Kasing.c \
 	mappers/mapper_Kasing.h \
 	mappers/mapper_KOF97.c \
 	mappers/mapper_KOF97.h \
+	mappers/mapper_KS106C.c \
+	mappers/mapper_KS106C.h \
 	mappers/mapper_KS7012.c \
 	mappers/mapper_KS7012.h \
 	mappers/mapper_KS7013B.c \
