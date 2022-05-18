@@ -68,7 +68,7 @@ BYTE extcl_cpu_rd_mem_891227(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address & 0xE000) == 0x6000) {
 		return (bmc891227tmp.prg_6000[address & 0x1FFF]);
 	}
-    return (openbus);
+	return (openbus);
 }
 BYTE extcl_save_mapper_891227(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, bmc891227.reg);

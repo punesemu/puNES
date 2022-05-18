@@ -156,7 +156,7 @@ INLINE static void prg_swap_K3006(WORD address, WORD value) {
 	WORD base = (k3006.reg & 0x1F) << 1;
 	WORD mask = 0x0F;
 
-    // NROM mode
+	// NROM mode
 	if (!(k3006.reg & 0x20)) {
 		if ((k3006.reg & 0x06) == 0x06) {
 			base = base & 0xFC;
