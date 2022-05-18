@@ -80,12 +80,6 @@ INLINE static void prg_fix_CTC09(void) {
 		map_prg_rom_8k(4, 0, value);
 	}
 	map_prg_rom_8k_update();
-
-	if (ctc09.reg[1] & 0x20) {
-		mirroring_H();
-	} else {
-		mirroring_V();
-	}
 }
 INLINE static void chr_fix_CTC09(void) {
 	DBWORD bank = ctc09.reg[0] & 0x0F;
