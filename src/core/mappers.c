@@ -728,6 +728,9 @@ BYTE map_init(void) {
 		case 258:
 			map_init_UNIF158B();
 			break;
+		case 259:
+			map_init_F15();
+			break;
 		case 260:
 			map_init_HP2018A();
 			break;

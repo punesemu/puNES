@@ -371,6 +371,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_EDU2000.h \
 	mappers/mapper_EH8813A.c \
 	mappers/mapper_EH8813A.h \
+	mappers/mapper_F15.c \
+	mappers/mapper_F15.h \
 	mappers/mapper_FARIDSLROM8IN1.c \
 	mappers/mapper_FARIDSLROM8IN1.h \
 	mappers/mapper_FARIDUNROM8IN1.c \
