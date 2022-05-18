@@ -281,6 +281,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_74x161x161x32.h \
 	mappers/mapper_8_IN_1.c \
 	mappers/mapper_8_IN_1.h \
+	mappers/mapper_80013B.c \
+	mappers/mapper_80013B.h \
 	mappers/mapper_83.c \
 	mappers/mapper_83.h \
 	mappers/mapper_891227.c \
