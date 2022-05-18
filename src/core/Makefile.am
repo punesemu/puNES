@@ -401,6 +401,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Irem.h \
 	mappers/mapper_Jaleco.c \
 	mappers/mapper_Jaleco.h \
+	mappers/mapper_K3006.c \
+	mappers/mapper_K3006.h \
 	mappers/mapper_K3033.c \
 	mappers/mapper_K3033.h \
 	mappers/mapper_K3036.c \
