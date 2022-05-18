@@ -860,6 +860,9 @@ BYTE map_init(void) {
 		case 336:
 			map_init_K3046();
 			break;
+		case 337:
+			map_init_CTC12IN1();
+			break;
 		case 338:
 			map_init_SA005A();
 			break;

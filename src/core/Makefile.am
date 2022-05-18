@@ -363,6 +363,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Coolboy.h \
 	mappers/mapper_CPROM.c \
 	mappers/mapper_CPROM.h \
+	mappers/mapper_CTC12IN1.c \
+	mappers/mapper_CTC12IN1.h \
 	mappers/mapper_DRAGONFIGHTER.c \
 	mappers/mapper_DRAGONFIGHTER.h \
 	mappers/mapper_DREAMTECH01.c \
