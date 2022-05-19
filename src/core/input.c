@@ -198,7 +198,9 @@ void input_init(BYTE set_cursor) {
 
 			for (b = 0; b < LENGTH(port[a].data); b++) {
 				if (b < 8) {
-					port[a].data[b] = RELEASED;
+					if (info.reset >= HARD) {
+						port[a].data[b] = RELEASED;
+					}
 				} else {
 					port[a].data[b] = state;
 				}
