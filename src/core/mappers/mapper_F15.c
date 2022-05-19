@@ -179,7 +179,7 @@ INLINE static void chr_fix_F15(BYTE value) {
 	chr_swap_F15(cbase ^ 0x1000, f15.mmc3[2]);
 	chr_swap_F15(cbase ^ 0x1400, f15.mmc3[3]);
 	chr_swap_F15(cbase ^ 0x1800, f15.mmc3[4]);
-	chr_swap_F15(cbase ^ 0x1c00, f15.mmc3[5]);
+	chr_swap_F15(cbase ^ 0x1C00, f15.mmc3[5]);
 }
 INLINE static void chr_swap_F15(WORD address, WORD value) {
 	control_bank(info.chr.rom.max.banks_1k)

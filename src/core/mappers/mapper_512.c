@@ -204,7 +204,7 @@ INLINE static void chr_fix_512(BYTE value) {
 	chr_swap_512(cbase ^ 0x1000, m512.mmc3[2]);
 	chr_swap_512(cbase ^ 0x1400, m512.mmc3[3]);
 	chr_swap_512(cbase ^ 0x1800, m512.mmc3[4]);
-	chr_swap_512(cbase ^ 0x1c00, m512.mmc3[5]);
+	chr_swap_512(cbase ^ 0x1C00, m512.mmc3[5]);
 }
 INLINE static void chr_swap_512(WORD address, WORD value) {
 	if (m512.reg <= 1) {

@@ -191,7 +191,7 @@ INLINE static void chr_fix_L6IN1(BYTE value) {
 	chr_swap_L6IN1(cbase ^ 0x1000, l6in1.mmc3[2]);
 	chr_swap_L6IN1(cbase ^ 0x1400, l6in1.mmc3[3]);
 	chr_swap_L6IN1(cbase ^ 0x1800, l6in1.mmc3[4]);
-	chr_swap_L6IN1(cbase ^ 0x1c00, l6in1.mmc3[5]);
+	chr_swap_L6IN1(cbase ^ 0x1C00, l6in1.mmc3[5]);
 }
 INLINE static void chr_swap_L6IN1(WORD address, WORD value) {
 	control_bank(info.chr.rom.max.banks_1k)

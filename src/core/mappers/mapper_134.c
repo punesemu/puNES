@@ -221,7 +221,7 @@ INLINE static void chr_fix_134(BYTE value) {
 	chr_swap_134(cbase ^ 0x1000, m134.mmc3[2]);
 	chr_swap_134(cbase ^ 0x1400, m134.mmc3[3]);
 	chr_swap_134(cbase ^ 0x1800, m134.mmc3[4]);
-	chr_swap_134(cbase ^ 0x1c00, m134.mmc3[5]);
+	chr_swap_134(cbase ^ 0x1C00, m134.mmc3[5]);
 }
 INLINE static void chr_swap_134(WORD address, WORD value) {
 	WORD base = ((m134.reg[1] & 0x30) << 3) | ((m134.reg[0] & 0x20) << 4);

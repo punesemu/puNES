@@ -218,7 +218,7 @@ INLINE static void chr_fix_Coolboy(BYTE value) {
 	chr_swap_Coolboy(cbase ^ 0x1000, coolboy.mmc3[2]);
 	chr_swap_Coolboy(cbase ^ 0x1400, coolboy.mmc3[3]);
 	chr_swap_Coolboy(cbase ^ 0x1800, coolboy.mmc3[4]);
-	chr_swap_Coolboy(cbase ^ 0x1c00, coolboy.mmc3[5]);
+	chr_swap_Coolboy(cbase ^ 0x1C00, coolboy.mmc3[5]);
 }
 INLINE static void chr_swap_Coolboy(WORD address, WORD value) {
 	DBWORD mask = 0xFF ^ (coolboy.reg[0] & 0x80);

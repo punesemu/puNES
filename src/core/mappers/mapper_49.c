@@ -184,7 +184,7 @@ INLINE static void chr_fix_49(BYTE value) {
 	chr_swap_49(cbase ^ 0x1000, m49.mmc3[2]);
 	chr_swap_49(cbase ^ 0x1400, m49.mmc3[3]);
 	chr_swap_49(cbase ^ 0x1800, m49.mmc3[4]);
-	chr_swap_49(cbase ^ 0x1c00, m49.mmc3[5]);
+	chr_swap_49(cbase ^ 0x1C00, m49.mmc3[5]);
 }
 INLINE static void chr_swap_49(WORD address, WORD value) {
 	WORD base = (m49.reg & 0xC0) << 1;

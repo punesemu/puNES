@@ -211,7 +211,7 @@ INLINE static void chr_fix_RESETTXROM(BYTE value) {
 	chr_swap_RESETTXROM(cbase ^ 0x1000, resettxrom.mmc3[2]);
 	chr_swap_RESETTXROM(cbase ^ 0x1400, resettxrom.mmc3[3]);
 	chr_swap_RESETTXROM(cbase ^ 0x1800, resettxrom.mmc3[4]);
-	chr_swap_RESETTXROM(cbase ^ 0x1c00, resettxrom.mmc3[5]);
+	chr_swap_RESETTXROM(cbase ^ 0x1C00, resettxrom.mmc3[5]);
 }
 INLINE static void chr_swap_RESETTXROM(WORD address, WORD value) {
 	WORD base = resettxrom.reg << resettxrom.chr.outer;

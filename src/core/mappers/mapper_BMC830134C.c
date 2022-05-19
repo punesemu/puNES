@@ -187,7 +187,7 @@ INLINE static void chr_fix_BMC830134C(BYTE value) {
 	chr_swap_BMC830134C(cbase ^ 0x1000, bmc830134c.mmc3[2]);
 	chr_swap_BMC830134C(cbase ^ 0x1400, bmc830134c.mmc3[3]);
 	chr_swap_BMC830134C(cbase ^ 0x1800, bmc830134c.mmc3[4]);
-	chr_swap_BMC830134C(cbase ^ 0x1c00, bmc830134c.mmc3[5]);
+	chr_swap_BMC830134C(cbase ^ 0x1C00, bmc830134c.mmc3[5]);
 }
 INLINE static void chr_swap_BMC830134C(WORD address, WORD value) {
 	WORD base = (bmc830134c.reg & 0x01) << 8;

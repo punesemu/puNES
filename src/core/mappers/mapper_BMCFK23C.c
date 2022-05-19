@@ -269,11 +269,11 @@ BYTE extcl_save_mapper_BMCFK23C(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_wr_chr_BMCFK23C(WORD address, BYTE value) {
-	BYTE bank = address >> 10;
+	BYTE slot = address >> 10;
 
 	if (info.chr.rom.is_ram ||
-		((chr.bank_1k[bank] >= chr.extra.data) && (chr.bank_1k[bank] < (chr.extra.data + chr.extra.size)))) {
-		chr.bank_1k[bank][address & 0x3FF] = value;
+		((chr.bank_1k[slot] >= chr.extra.data) && (chr.bank_1k[slot] < (chr.extra.data + chr.extra.size)))) {
+		chr.bank_1k[slot][address & 0x3FF] = value;
 	}
 }
 

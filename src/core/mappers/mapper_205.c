@@ -179,7 +179,7 @@ INLINE static void chr_fix_205(BYTE value) {
 	chr_swap_205(cbase ^ 0x1000, m205.mmc3[2]);
 	chr_swap_205(cbase ^ 0x1400, m205.mmc3[3]);
 	chr_swap_205(cbase ^ 0x1800, m205.mmc3[4]);
-	chr_swap_205(cbase ^ 0x1c00, m205.mmc3[5]);
+	chr_swap_205(cbase ^ 0x1C00, m205.mmc3[5]);
 }
 INLINE static void chr_swap_205(WORD address, WORD value) {
 	WORD base = (m205.reg & 0x03) << 7;

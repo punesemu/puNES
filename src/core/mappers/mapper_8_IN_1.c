@@ -176,7 +176,7 @@ INLINE static void chr_fix_8_IN_1(BYTE value) {
 	chr_swap_8_IN_1(cbase ^ 0x1000, m8in1.mmc3[2]);
 	chr_swap_8_IN_1(cbase ^ 0x1400, m8in1.mmc3[3]);
 	chr_swap_8_IN_1(cbase ^ 0x1800, m8in1.mmc3[4]);
-	chr_swap_8_IN_1(cbase ^ 0x1c00, m8in1.mmc3[5]);
+	chr_swap_8_IN_1(cbase ^ 0x1C00, m8in1.mmc3[5]);
 }
 INLINE static void chr_swap_8_IN_1(WORD address, WORD value) {
 	value = ((m8in1.reg & 0x0C) << 5) | (value & 0x7F);

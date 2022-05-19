@@ -184,7 +184,7 @@ INLINE static void chr_fix_K3033(BYTE value) {
 	chr_swap_K3033(cbase ^ 0x1000, k3033.mmc3[2]);
 	chr_swap_K3033(cbase ^ 0x1400, k3033.mmc3[3]);
 	chr_swap_K3033(cbase ^ 0x1800, k3033.mmc3[4]);
-	chr_swap_K3033(cbase ^ 0x1c00, k3033.mmc3[5]);
+	chr_swap_K3033(cbase ^ 0x1C00, k3033.mmc3[5]);
 }
 INLINE static void chr_swap_K3033(WORD address, WORD value) {
 	BYTE mmc3_mode = k3033.reg & 0x0020;

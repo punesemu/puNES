@@ -182,7 +182,7 @@ INLINE static void chr_fix_K3006(BYTE value) {
 	chr_swap_K3006(cbase ^ 0x1000, k3006.mmc3[2]);
 	chr_swap_K3006(cbase ^ 0x1400, k3006.mmc3[3]);
 	chr_swap_K3006(cbase ^ 0x1800, k3006.mmc3[4]);
-	chr_swap_K3006(cbase ^ 0x1c00, k3006.mmc3[5]);
+	chr_swap_K3006(cbase ^ 0x1C00, k3006.mmc3[5]);
 }
 INLINE static void chr_swap_K3006(WORD address, WORD value) {
 	WORD base = (k3006.reg & 0x18) << 4;
