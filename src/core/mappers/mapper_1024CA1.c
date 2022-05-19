@@ -137,9 +137,13 @@ void extcl_cpu_wr_mem_1024CA1(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_1024CA1(BYTE mode, BYTE slot, FILE *fp) {
-	//save_slot_ele(mode, slot, m205.reg);
-	//save_slot_ele(mode, slot, m205.mmc3);
+	save_slot_ele(mode, slot, bmc1024ca1.reg);
+	save_slot_ele(mode, slot, bmc1024ca1.mmc3);
 	extcl_save_mapper_MMC3(mode, slot, fp);
+
+	if (mode == SAVE_SLOT_READ) {
+		chr_fix_1024CA1(mmc3.bank_to_update);
+	}
 
 	return (EXIT_OK);
 }
