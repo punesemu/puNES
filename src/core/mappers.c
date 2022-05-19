@@ -944,6 +944,9 @@ BYTE map_init(void) {
 		case 527:
 			map_init_AX40G();
 			break;
+		case 528:
+			map_init_831128C();
+			break;
 		case 530:
 			map_init_AX5705();
 			break;
