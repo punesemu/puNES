@@ -3205,10 +3205,6 @@ static const _dbelement dblist[] = {
 	{"1eddbad1f6f53dd403f8fc2e0512d540d6867200", 79, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------ Taito X1005 --------------------------------------- */
-	/* Fudou Myouou Den (J) [o1].nes */
-	{"aa4c51a72a5564447ef227dfa56511024cba625e", 80, X1005B, X1005_NO_BAT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Fudou Myouou Den (J) [t1].nes */
-	{"98d4590497829e8ee75379d5f1851af024209ae6", 80, X1005B, X1005_NO_BAT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Yamamura Misa Suspense - Kyouto Ryuu no Tera Satsujin Jiken (J).nes */
 	{"74683a411fcfa269d644a6caf5ab498dab356406", 80, DEFAULT, X1005_NO_BAT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
@@ -3223,7 +3219,6 @@ static const _dbelement dblist[] = {
 	{"3012891262def01890ff0b24dcc777ff5ed74c9b", 83, DEFAULT, MAP83_REG0, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* World Heroes 2 (Unl).nes */
 	{"4f9b4b225eb17982b306b676ed5a8b9cd4667701", 83, DEFAULT, MAP83_REG0, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-
 
 /* ---------------------------------------- VRC7 ------------------------------------------ */
 
@@ -3835,6 +3830,12 @@ static const _dbelement dblist[] = {
 /* ------------------------------------- Namco 3416 --------------------------------------- */
 	/* Dragon Buster II - Yami no Fuuin (J) [T+Eng1.0_PentarouZero].nes */
 	{"1575a2477c0b9e3884f3141e8c01f56fe2cc9ef0", 206, DEFAULT, DEFAULT, DEFAULT, UNK_VERTICAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ------------------------------------ Taito X1005 Modified ------------------------------ */
+	/* Fudou Myouou Den (J) [o1].nes */
+	{"aa4c51a72a5564447ef227dfa56511024cba625e", 207, DEFAULT, X1005_NO_BAT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Fudou Myouou Den (J) [t1].nes */
+	{"98d4590497829e8ee75379d5f1851af024209ae6", 207, DEFAULT, X1005_NO_BAT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- mapper 208 --------------------------------------- */
 	/* Street Fighter IV (Unl).nes */

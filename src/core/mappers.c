@@ -292,11 +292,7 @@ BYTE map_init(void) {
 			map_init_Ave(NINA06);
 			break;
 		case 80:
-			if (info.mapper.submapper == X1005B) {
-				map_init_Taito(X1005B);
-			} else {
-				map_init_Taito(X1005A);
-			}
+			map_init_Taito(X1005A);
 			break;
 		case 82:
 			map_init_Taito(X1017);
@@ -606,7 +602,9 @@ BYTE map_init(void) {
 		case 206:
 			map_init_Namco(N3416);
 			break;
-		// la mapper 207 la tratto come mapper 80
+		case 207:
+			map_init_Taito(X1005B);
+			break;
 		case 208:
 			map_init_208();
 			break;
