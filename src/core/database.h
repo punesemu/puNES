@@ -3051,11 +3051,15 @@ static const _dbelement dblist[] = {
 	/* Mario 7-in-1 [p1][!].nes */
 	{"4fe43bef9d9217881b7c8ece0007dc4cd830fbec", 52, MARIO7IN1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* ------------------------------------- mapper 59 ---------------------------------------- */
+	/* Menu_42_Game_[p]_[!]_by_Guyver.nes */
+	{"dd545b471abe0a158c1bdcc656138274adee7eae", 59, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* TN 95-in-1 (6-in-1) [p1].nes */
+	{"9a37bc3003f6629499fe86c7ca2487a74291bcff", 59, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* ------------------------------------- mapper 60 ---------------------------------------- */
 	/* Reset Based 4-in-1 [p1].nes */
-	{"8765e6ec43d4c767e2568ac55e35ed670dfa8730", 60, MAP60, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* TN 95-in-1 (6-in-1) [p1].nes */
-	{"9a37bc3003f6629499fe86c7ca2487a74291bcff", 60, MAP60_VT5201, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"8765e6ec43d4c767e2568ac55e35ed670dfa8730", 60, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- mapper 62 ---------------------------------------- */
 	/* Super 700-in-1 [p1][!].nes */

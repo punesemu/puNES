@@ -233,12 +233,11 @@ BYTE map_init(void) {
 		case 58:
 			map_init_58();
 			break;
+		case 59:
+			map_init_59();
+			break;
 		case 60:
-			if (info.mapper.submapper == MAP60_VT5201) {
-				map_init_60_vt5201();
-			} else {
-				map_init_60();
-			}
+			map_init_60();
 			break;
 		case 61:
 			map_init_61();
