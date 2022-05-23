@@ -69,6 +69,7 @@ void map_init_235(void) {
 }
 void extcl_cpu_wr_mem_235(WORD address, BYTE value) {
 	BYTE bank = slots[m235tmp.type][(address >> 8) & 0x03][0] | (address & 0x1F);
+
 	m235.openbus = slots[m235tmp.type][(address >> 8) & 0x03][1];
 
 	if (address & 0x0800) {

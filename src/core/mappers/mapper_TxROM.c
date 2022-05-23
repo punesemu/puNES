@@ -144,8 +144,7 @@ void extcl_cpu_wr_mem_TKSROM(WORD address, BYTE value) {
 				case 4:
 				case 5:
 					if (mmc3.chr_rom_cfg) {
-						ntbl.bank_1k[mmc3.bank_to_update - 2] = &ntbl.data[((value >> 7) ^ 0x01)
-							<< 10];
+						ntbl.bank_1k[mmc3.bank_to_update - 2] = &ntbl.data[((value >> 7) ^ 0x01) << 10];
 					}
 					break;
 			}

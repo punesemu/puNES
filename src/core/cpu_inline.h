@@ -1399,8 +1399,8 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		address = value << 8;
 		{
 			WORD index;
-			BYTE saveIRQ = irq.high;
-			BYTE saveCpuCycles = cpu.cycles;
+			BYTE save_irq = irq.high;
+			BYTE save_cpu_cycles = cpu.cycles;
 
 			if (info.r4014_precise_timing_disabled) {
 				mod_cycles_op(+=, 512);
@@ -1453,7 +1453,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			 * e non ci sono altri cicli dell'istruzione,
 			 * l'IRQ deve essere ritardato di una istruzione.
 			 */
-			if (irq.high && !(saveIRQ | saveCpuCycles)) {
+			if (irq.high && !(save_irq | save_cpu_cycles)) {
 				irq.delay = TRUE;
 			}
 		}
