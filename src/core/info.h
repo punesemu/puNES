@@ -41,6 +41,7 @@ typedef struct _info {
 	uTCHAR base_folder[LENGTH_FILE_NAME_MID];
 	struct _info_rom {
 		uTCHAR file[LENGTH_FILE_NAME_LONG];
+		uTCHAR change_rom[LENGTH_FILE_NAME_LONG];
 		uTCHAR *from_load_menu;
 	} rom;
 	BYTE format;
@@ -86,23 +87,23 @@ typedef struct _info {
 		WORD chips;
 		struct _info_chr_rom {
 			BYTE is_ram;
-			WORD banks_8k;
-			WORD banks_4k;
-			WORD banks_1k;
+			DBWORD banks_8k;
+			DBWORD banks_4k;
+			DBWORD banks_1k;
 			struct _info_chr_rom_max {
-				WORD banks_8k;
-				WORD banks_4k;
-				WORD banks_2k;
-				WORD banks_1k;
+				DBWORD banks_8k;
+				DBWORD banks_4k;
+				DBWORD banks_2k;
+				DBWORD banks_1k;
 			} max;
 		} rom;
 		struct _info_chr_ram {
 			SWORD banks_8k_plus;
 			struct _info_chr_ram_max {
-				WORD banks_8k;
-				WORD banks_4k;
-				WORD banks_2k;
-				WORD banks_1k;
+				DBWORD banks_8k;
+				DBWORD banks_4k;
+				DBWORD banks_2k;
+				DBWORD banks_1k;
 			} max;
 			//struct _info_chr_ram_bat {
 			//	BYTE banks;
@@ -113,16 +114,16 @@ typedef struct _info {
 	struct _info_prg {
 		WORD chips;
 		struct _info_prg_rom {
-			WORD banks_16k;
-			WORD banks_8k;
+			DBWORD banks_16k;
+			DBWORD banks_8k;
 			struct _info_prg_rom_max {
-				WORD banks_32k;
-				WORD banks_16k;
-				WORD banks_8k;
-				WORD banks_8k_before_last;
-				WORD banks_4k;
-				WORD banks_2k;
-				WORD banks_1k;
+				DBWORD banks_32k;
+				DBWORD banks_16k;
+				DBWORD banks_8k;
+				DBWORD banks_8k_before_last;
+				DBWORD banks_4k;
+				DBWORD banks_2k;
+				DBWORD banks_1k;
 			} max;
 		} rom;
 		struct _info_prg_ram {

@@ -345,6 +345,9 @@ BYTE emu_load_rom(void) {
 	fds_quit();
 	map_quit();
 
+	umemset(info.rom.file, 0x00, usizeof(info.rom.file));
+	ustrncpy(info.rom.file, info.rom.change_rom, usizeof(info.rom.file) - 1);
+
 	info.doublebuffer = TRUE;
 
 	if (info.rom.file[0]) {
@@ -1018,26 +1021,25 @@ static void emu_cpu_initial_cycles(void) {
 	}
 }
 static BYTE emu_ctrl_if_rom_exist(void) {
-	uTCHAR file[LENGTH_FILE_NAME_LONG];
 	BYTE found = FALSE;
 
-	umemset(file, 0x00, usizeof(file));
+	umemset(info.rom.change_rom, 0x00, usizeof(info.rom.change_rom));
 
 	if (info.rom.from_load_menu) {
-		ustrncpy(file, info.rom.from_load_menu, usizeof(file) - 1);
+		ustrncpy(info.rom.change_rom, info.rom.from_load_menu, usizeof(info.rom.change_rom) - 1);
 		free(info.rom.from_load_menu);
 		info.rom.from_load_menu = NULL;
 	} else if (gamegenie.rom) {
-		ustrncpy(file, gamegenie.rom, usizeof(file) - 1);
+		ustrncpy(info.rom.change_rom, gamegenie.rom, usizeof(info.rom.change_rom) - 1);
 	} else {
-		ustrncpy(file, info.rom.file, usizeof(file));
+		ustrncpy(info.rom.change_rom, info.rom.file, usizeof(info.rom.change_rom) - 1);
 	}
 
-	if (file[0]) {
+	if (info.rom.change_rom[0]) {
 		_uncompress_archive *archive;
 		BYTE rc;
 
-		archive = uncompress_archive_alloc(file, &rc);
+		archive = uncompress_archive_alloc(info.rom.change_rom, &rc);
 
 		if (rc == UNCOMPRESS_EXIT_OK) {
 			BYTE is_rom = FALSE, is_patch = FALSE;
@@ -1055,14 +1057,15 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 			if (is_rom) {
 				switch ((rc = uncompress_archive_extract_file(archive, UNCOMPRESS_TYPE_ROM))) {
 					case UNCOMPRESS_EXIT_OK:
-						ustrncpy(file, uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_ROM), usizeof(file) - 1);
+						ustrncpy(info.rom.change_rom, uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_ROM),
+							usizeof(info.rom.change_rom) - 1);
 						found = TRUE;
 						break;
 					case UNCOMPRESS_EXIT_ERROR_ON_UNCOMP:
 						break;
 					case UNCOMPRESS_EXIT_IS_COMP_BUT_NOT_SELECTED:
 					case UNCOMPRESS_EXIT_IS_COMP_BUT_NO_ITEMS:
-						ustrncpy(file, info.rom.file, usizeof(file));
+						ustrncpy(info.rom.change_rom, info.rom.file, usizeof(info.rom.change_rom) - 1);
 						break;
 					default:
 						break;
@@ -1091,11 +1094,10 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 	}
 
 	if (found == FALSE) {
+		umemset(info.rom.change_rom, 0x00, usizeof(info.rom.change_rom));
+		ustrncpy(info.rom.change_rom, info.rom.file, usizeof(info.rom.change_rom) - 1);
 		return (EXIT_ERROR);
 	}
-
-	umemset(info.rom.file, 0x00, usizeof(info.rom.file));
-	ustrncpy(info.rom.file, file, usizeof(info.rom.file));
 
 	if (patcher_ctrl_if_exist(NULL) == EXIT_OK) {
 		ufprintf(stderr, uL("patch file : " uPs("") "\n"), patcher.file);

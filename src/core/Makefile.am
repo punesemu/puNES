@@ -367,6 +367,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_ColorDreams.h \
 	mappers/mapper_Coolboy.c \
 	mappers/mapper_Coolboy.h \
+	mappers/mapper_Coolgirl.c \
+	mappers/mapper_Coolgirl.h \
 	mappers/mapper_CPROM.c \
 	mappers/mapper_CPROM.h \
 	mappers/mapper_CTC09.c \

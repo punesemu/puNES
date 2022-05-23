@@ -39,7 +39,7 @@
 void search_in_database(void);
 BYTE ines10_search_in_database(void *rom_mem);
 void nes20_submapper(void);
-void nes20_prg_chr_size(WORD *reg1, WORD *reg2, float divider);
+void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, float divider);
 BYTE nes20_ram_size(BYTE mode);
 
 _ines ines;
@@ -704,7 +704,7 @@ void nes20_submapper(void) {
 			break;
 	}
 }
-void nes20_prg_chr_size(WORD *reg1, WORD *reg2, float divider) {
+void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, float divider) {
 	if ((*reg1) & 0x0F00) {
 		int exponent = ((*reg1) & 0x00FC) >> 2;
 		float len = (size_t)pow(2, exponent) * ((((*reg1) & 0x0003) * 2) + 1);

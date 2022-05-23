@@ -70,7 +70,7 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 	} else if (gamegenie.patch) {
 		ustrncpy(file, gamegenie.patch, usizeof(file) - 1);
 	} else {
-		ustrncpy(file, info.rom.file, usizeof(file));
+		ustrncpy(file, info.rom.change_rom, usizeof(file));
 	}
 
 	if (file[0] == 0) {

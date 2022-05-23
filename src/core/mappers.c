@@ -882,6 +882,9 @@ BYTE map_init(void) {
 		case 341:
 			map_init_TJ03();
 			break;
+		case 342:
+			map_init_Coolgirl();
+			break;
 		case 343:
 			map_init_RESETNROMXIN1();
 			break;
@@ -1082,6 +1085,10 @@ void map_quit(void) {
 	mirroring_V();
 
 	mapper.write_vram = FALSE;
+
+	if (extcl_mapper_quit) {
+		extcl_mapper_quit();
+	}
 }
 
 BYTE map_prg_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom) {
@@ -1174,11 +1181,15 @@ void map_prg_ram_init(void) {
 			}
 		}
 	} else if ((info.reset >= HARD) && info.prg.ram.banks_8k_plus) {
-		int i;
+		int i, start;
 
+		if (info.prg.ram.bat.start == DEFAULT) {
+			start = info.prg.ram.banks_8k_plus - info.prg.ram.bat.banks;
+		} else {
+			start = info.prg.ram.bat.start;
+		}
 		for (i = 0; i < info.prg.ram.banks_8k_plus; i++) {
-			if (info.prg.ram.bat.banks && (i >= info.prg.ram.bat.start) &&
-				(i < (info.prg.ram.bat.start + info.prg.ram.bat.banks))) {
+			if (info.prg.ram.bat.banks && (i >= start) && (i < (start + info.prg.ram.bat.banks))) {
 				continue;
 			}
 			memset(prg.ram_plus + (i * 0x2000), 0x00, 0x2000);

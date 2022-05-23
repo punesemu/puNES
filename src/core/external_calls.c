@@ -20,6 +20,8 @@
 
 // viene chiamata dopo il map_init(), map_prg_ram_init() e map_chr_ram_init()
 void (*extcl_after_mapper_init)(void);
+// viene chiamata dal mapper_quit()
+void (*extcl_mapper_quit)(void);
 void (*extcl_cpu_wr_mem)(WORD address, BYTE value);
 BYTE (*extcl_cpu_rd_mem)(WORD address, BYTE openbus, BYTE before);
 BYTE (*extcl_save_mapper)(BYTE mode, BYTE slot, FILE *fp);
@@ -74,6 +76,7 @@ void (*extcl_audio_samples_mod)(SWORD *samples, int count);
 void extcl_init(void) {
 	/* Mappers */
 	extcl_after_mapper_init = NULL;
+	extcl_mapper_quit = NULL;
 	extcl_cpu_wr_mem = NULL;
 	extcl_cpu_rd_mem = NULL;
 	extcl_save_mapper = NULL;
