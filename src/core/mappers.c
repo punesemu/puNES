@@ -221,6 +221,9 @@ BYTE map_init(void) {
 		case 53:
 			map_init_53();
 			break;
+		case 55:
+			map_init_malee();
+			break;
 		case 56:
 			map_init_Kaiser(KS202);
 			break;
@@ -969,26 +972,22 @@ BYTE map_init(void) {
 		case UNIF_MAPPER:
 			switch (unif.internal_mapper) {
 				case 1:
-					// MARIO1-MALEE2
-					map_init_malee();
-					break;
-				case 2:
 					// Ghostbusters63in1
 					map_init_BMCGHOSTBUSTERS63IN1();
 					break;
-				case 3:
+				case 2:
 					// 43272
 					map_init_UNIF43272();
 					break;
-				case 4:
+				case 3:
 					// AC-08
 					map_init_AC08();
 					break;
-				case 5:
+				case 4:
 					// CC-21
 					map_init_CC_21();
 					break;
-				case 6:
+				case 5:
 					// BOY
 					map_init_BOY();
 					break;
