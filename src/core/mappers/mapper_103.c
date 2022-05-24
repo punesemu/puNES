@@ -35,7 +35,6 @@ void map_init_103(void) {
 	EXTCL_CPU_WR_MEM(103);
 	EXTCL_CPU_RD_MEM(103);
 	EXTCL_SAVE_MAPPER(103);
-	EXTCL_APU_TICK(103);
 	mapper.internal_struct[0] = (BYTE *)&m103;
 	mapper.internal_struct_size[0] = sizeof(m103);
 
