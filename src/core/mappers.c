@@ -245,6 +245,9 @@ BYTE map_init(void) {
 		case 62:
 			map_init_62();
 			break;
+		case 63:
+			map_init_63();
+			break;
 		case 64:
 			map_init_Tengen(TRAMBO);
 			break;

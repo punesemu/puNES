@@ -3065,6 +3065,10 @@ static const _dbelement dblist[] = {
 	/* Super 700-in-1 [p1][!].nes */
 	{"a00e37acea52eeebe94b066600fcbfe7a5cd880d", 62, SUPER700IN1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* ------------------------------------- mapper 63 ---------------------------------------- */
+	/* 82-in-1 (82AB Ghost of Charming Girl) (Unl) [o1].nes */
+	{"50cd94badca3cd6cddfa708f3c732183bce7b2f9", 63, 1, M63_ID_82IN1O1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* -------------------------------------- GxROM ------------------------------------------- */
 	/* Dragon Ball (E) (PRG0).nes */
 	{"b493bdd843627d63353f73b846d120723149d59d", 66, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},

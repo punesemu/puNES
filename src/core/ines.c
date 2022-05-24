@@ -489,6 +489,11 @@ void search_in_database(void) {
 						info.chr.rom.banks_8k = 32;
 					}
 					break;
+				case 63:
+					if (info.id == M63_ID_82IN1O1) {
+						info.prg.rom.banks_16k = 256;
+					}
+					break;
 				case 113:
 					if (info.id == BAD_INES_SWAUS) {
 						info.prg.rom.banks_16k = 1;

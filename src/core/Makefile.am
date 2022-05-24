@@ -279,6 +279,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_61.h \
 	mappers/mapper_62.c \
 	mappers/mapper_62.h \
+	mappers/mapper_63.c \
+	mappers/mapper_63.h \
 	mappers/mapper_74x138x161.c \
 	mappers/mapper_74x138x161.h \
 	mappers/mapper_74x161x161x32.c \
