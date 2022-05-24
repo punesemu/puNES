@@ -121,6 +121,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_1024CA1.h \
 	mappers/mapper_101.c \
 	mappers/mapper_101.h \
+	mappers/mapper_103.c \
+	mappers/mapper_103.h \
 	mappers/mapper_105.c \
 	mappers/mapper_105.h \
 	mappers/mapper_114.c \
