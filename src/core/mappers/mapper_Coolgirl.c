@@ -671,10 +671,6 @@ void extcl_battery_io_Coolgirl(BYTE mode, FILE *fp) {
 		}
 	}
 }
-
-
-
-
 void extcl_cpu_every_cycle_Coolgirl(void) {
 	switch (coolgirl.mapper) {
 		case 07:
@@ -1150,9 +1146,6 @@ INLINE static void flash_write_Coolgirl(WORD address, BYTE value) {
 		prg_fix_Coolgirl();
 	}
 }
-
-
-
 
 INLINE static void mapper00_cpu_wr_low(WORD address, BYTE value) {
 	// Mapper #342 - Coolgirl
