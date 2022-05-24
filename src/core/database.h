@@ -3107,15 +3107,13 @@ static const _dbelement dblist[] = {
 
 /* ------------------------------------- Camerica ----------------------------------------- */
 	/* Fire Hawk (PAL)[!].nes */
-	{"7b23cacd3a6864450561c546c052b6f7f348cf04", 71, BF9097, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"7b23cacd3a6864450561c546c052b6f7f348cf04", 71, 1, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Fire Hawk (Camerica) [b1].nes */
-	{"1b22f43bf366ebb4fda452ddf2fc9e980f9dd2f1", 71, BF9097, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"1b22f43bf366ebb4fda452ddf2fc9e980f9dd2f1", 71, 1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Fire Hawk (Camerica) [b2].nes */
-	{"b4ae7c551f1b81b89a3e7b1e344a39180a1f8ee3", 71, BF9097, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"b4ae7c551f1b81b89a3e7b1e344a39180a1f8ee3", 71, 1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Fire Hawk (Camerica) [o1].nes */
-	{"334781c830f135cf30a33e392d8aaa4afdc223f9", 71, BF9097, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Pegasus 5-in-1 (Golden Five) [o1].nes */
-	{"60fc5fa5b5accaf3aefeba73fc8bffd3c4dae558", 71, GOLDENFIVE, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"334781c830f135cf30a33e392d8aaa4afdc223f9", 71, 1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------ Waixing (WTA) ------------------------------------- */
 	/* Columbus - Ougon no Yoake (Ch).nes */
@@ -3330,6 +3328,10 @@ static const _dbelement dblist[] = {
 	{"32d71dd6c5a8d78a918fe1b9d6d6c4a570d9652d", 96, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, CHRRAM32K},
 	/* Oeka Kids - Anpanman to Oekaki Shiyou!! (J).nes */
 	{"2d95c59ccd0b3faed4b4e3e61ac2859352d59594", 96, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, CHRRAM32K},
+
+/* ------------------------------------- Camerica GoldenFIve ------------------------------ */
+	/* Pegasus 5-in-1 (Golden Five) [o1].nes */
+	{"60fc5fa5b5accaf3aefeba73fc8bffd3c4dae558", 104, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ----------------------------------- Ntdec (ASDER) -------------------------------------- */
 	/* Chik Bik Ji Jin - Saam Gwok Ji (CN-20) (Tw) [!].nes */
@@ -3876,10 +3878,6 @@ static const _dbelement dblist[] = {
 /* ------------------------------------- mapper 225 --------------------------------------- */
 	/* 52 Games [p1].nes */
 	{"512296fff80e4c6fc12a4c55c1af1854d12ab70d", 225, DEFAULT, BMC52IN1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-
-/* ----------------------------------- Camerica BF9096 ------------------------------------ */
-	/* Pegasus 4-in-1 (Unl) [!].nes */
-	{"40409fec8249efdb772e6ffb2dcd41860c6cca23", 232, DEFAULT, PEGASUS4IN1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- mapper 235 --------------------------------------- */
 	/* 150-in-1 [a1][p1][!].nes (2MB) */ /* 260-in-1 [p1][b1].nes (4Mb) */

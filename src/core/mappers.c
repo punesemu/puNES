@@ -359,6 +359,9 @@ BYTE map_init(void) {
 		case 103:
 			map_init_103();
 			break;
+		case 104:
+			map_init_Camerica_GoldenFive();
+			break;
 		case 105:
 			map_init_105();
 			break;
@@ -677,8 +680,7 @@ BYTE map_init(void) {
 			map_init_231();
 			break;
 		case 232:
-			info.mapper.submapper = BF9096;
-			map_init_Camerica();
+			map_init_Camerica_BF9096();
 			break;
 		case 233:
 			map_init_226(M233);
