@@ -365,6 +365,9 @@ BYTE map_init(void) {
 		case 105:
 			map_init_105();
 			break;
+		case 106:
+			map_init_106();
+			break;
 		case 107:
 			map_init_Magic();
 			break;
