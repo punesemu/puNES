@@ -2670,6 +2670,10 @@ static const _dbelement dblist[] = {
 	/* Volshebnaya Palitra (R) [!].nes */
 	{"e4414c160c7e91136c62d99154336035e5636eeb", 13, DEFAULT, DEFAULT, NTSC, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* ------------------------------------- mapper 15 ---------------------------------------- */
+	/* 168-in-1 [p1][!].nes */
+	{"123105a996b3f325e55b7080ddd83d4cf043e543", 15, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* ------------------------------------ Bandai FCGX --------------------------------------- */
 	/* Akuma-kun - Makai no Wana (J) [!].nes */
 	{"6f3bbce3d234a68747bcccfd3909c5edcf12c875", 16, FCGx, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
