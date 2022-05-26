@@ -135,6 +135,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_120.h \
 	mappers/mapper_121.c \
 	mappers/mapper_121.h \
+	mappers/mapper_126.c \
+	mappers/mapper_126.h \
 	mappers/mapper_134.c \
 	mappers/mapper_134.h \
 	mappers/mapper_156.c \

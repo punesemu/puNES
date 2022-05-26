@@ -419,6 +419,9 @@ BYTE map_init(void) {
 		case 125:
 			map_init_LH32();
 			break;
+		case 126:
+			map_init_126();
+			break;
 		case 132:
 			map_init_Txc(T22211A);
 			break;
