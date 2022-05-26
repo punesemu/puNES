@@ -46,7 +46,6 @@ INLINE static BYTE ppu_rd_mem(WORD address) {
 		return (chr.bank_1k[address >> 10][address & 0x3FF]);
 	}
 	if (address < 0x3F00) {
-		address &= 0x0FFF;
 		if (extcl_rd_nmt) {
 			/*
 			 * utilizzato dalle mappers :
@@ -55,6 +54,7 @@ INLINE static BYTE ppu_rd_mem(WORD address) {
 			 */
 			return (extcl_rd_nmt(address));
 		}
+		address &= 0x0FFF;
 		return (ntbl.bank_1k[address >> 10][address & 0x3FF]);
 	}
 	return (mmap_palette.color[address & 0x1F]);

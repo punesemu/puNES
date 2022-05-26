@@ -216,6 +216,7 @@ void extcl_update_r2006_Bandai_161x02x74(WORD new_r2006, UNUSED(WORD old_r2006))
 	}
 }
 BYTE extcl_rd_nmt_Bandai_161x02x74(WORD address) {
+	address &= 0x0FFF;
 	if ((address & 0x03FF) < 0x03C0) {
 		b16x02x74_r2006(address);
 	}

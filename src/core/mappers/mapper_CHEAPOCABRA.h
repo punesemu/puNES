@@ -16,34 +16,20 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_MMC1_H_
-#define MAPPER_MMC1_H_
+#ifndef MAPPER_CHEAPOCABRA_H_
+#define MAPPER_CHEAPOCABRA_H_
 
 #include "common.h"
 
-enum MMC1_types { SNROM, SOROM, SUROM, SXROM, SEROM = 5, SKROM = 6, SJROM = 7, FARIDSLROM = 8, M111 = 9, BAD_YOSHI_U = 20, MOWPC10 };
+void map_init_CHEAPOCABRA(void);
 
-typedef struct _mmc1 {
-	BYTE reg;
-	BYTE pos;
-	BYTE prg_mode;
-	BYTE chr_mode;
-	BYTE ctrl;
-	BYTE chr0;
-	BYTE chr1;
-	BYTE prg0;
-	BYTE reset;
-	BYTE prg_upper;
-	BYTE chr_upper;
+void extcl_after_mapper_init_CHEAPOCABRA_GTROM(void);
+void extcl_mapper_quit_CHEAPOCABRA_GTROM(void);
+void extcl_cpu_wr_mem_CHEAPOCABRA_GTROM(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_CHEAPOCABRA_GTROM(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_CHEAPOCABRA_GTROM(BYTE mode, BYTE slot, FILE *fp);
+void extcl_wr_nmt_CHEAPOCABRA_GTROM(WORD address, BYTE value);
+BYTE extcl_rd_nmt_CHEAPOCABRA_GTROM(WORD address);
+void extcl_battery_io_CHEAPOCABRA_GTROM(BYTE mode, FILE *fp);
 
-	// da non salvare
-	BYTE prg_mask;
-} _mmc1;
-
-extern _mmc1 mmc1;
-
-void map_init_MMC1(void);
-void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value);
-BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp);
-
-#endif /* MAPPER_MMC1_H_ */
+#endif /* MAPPER_CHEAPOCABRA_H_ */

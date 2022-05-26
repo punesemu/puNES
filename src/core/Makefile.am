@@ -369,6 +369,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Camerica.h \
 	mappers/mapper_CC_21.c \
 	mappers/mapper_CC_21.h \
+	mappers/mapper_CHEAPOCABRA.c \
+	mappers/mapper_CHEAPOCABRA.h \
 	mappers/mapper_CITYFIGHT.c \
 	mappers/mapper_CITYFIGHT.h \
 	mappers/mapper_CNROM.c \
@@ -559,8 +561,6 @@ libcore_a_SOURCES += \
 	mappers/mapper_VRC7.h \
 	mappers/mapper_VRC7_snd.c \
 	mappers/mapper_VRC7_snd.h \
-	mappers/opll.c \
-	mappers/opll.h \
 	mappers/mapper_Vs.c \
 	mappers/mapper_Vs.h \
 	mappers/mapper_Waixing.c \
@@ -570,7 +570,11 @@ libcore_a_SOURCES += \
 	mappers/mapper_WS.c \
 	mappers/mapper_WS.h \
 	mappers/mapper_YOKO.c \
-	mappers/mapper_YOKO.h
+	mappers/mapper_YOKO.h \
+	mappers/opll.c \
+	mappers/opll.h \
+	mappers/SST39SF040.c \
+	mappers/SST39SF040.h
 
 patcher_xdelta3_wrap.o: patcher_xdelta3_wrap.c patcher_xdelta3_wrap.h
 	${CC} -w ${DEFS} ${DEFAULT_INCLUDES} ${CFLAGS} -c -o $@ $<

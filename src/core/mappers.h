@@ -163,6 +163,7 @@
 #include "mappers/mapper_101.h"
 #include "mappers/mapper_103.h"
 #include "mappers/mapper_106.h"
+#include "mappers/mapper_CHEAPOCABRA.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"
@@ -293,6 +294,7 @@ void map_prg_ram_init(void);
 BYTE map_prg_ram_malloc(WORD size);
 void map_prg_ram_memset(void);
 void map_prg_ram_battery_save(void);
+void map_prg_ram_battery_load(void);
 BYTE map_chr_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom);
 void map_chr_bank_1k_reset(void);
 BYTE map_chr_ram_init(void);

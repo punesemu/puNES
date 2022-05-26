@@ -43,7 +43,7 @@ void map_init_UxROM(BYTE model) {
 
 			map_chr_ram_extra_init(0x2000 * 4);
 
-			// gestione mapper mirroring mapper 30
+			// gestione mirroring mapper 30
 			if ((info.format == iNES_1_0) || (info.format == iNES_1_0)) {
 				BYTE mirroring = (ines.flags[FL6] & 0x01) | ((ines.flags[FL6] & 0x08) >> 2);
 

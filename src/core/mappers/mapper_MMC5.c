@@ -663,7 +663,7 @@ BYTE extcl_rd_chr_MMC5(WORD address) {
 	return (chr_byte(index));
 }
 BYTE extcl_rd_nmt_MMC5(WORD address) {
-	BYTE nmt = address >> 10;
+	BYTE nmt = (address & 0x0FFF) >> 10;
 
 	if ((ntbl.bank_1k[nmt] == mmc5.ext_ram) && (mmc5.ext_mode > MODE1)) {
 		return (0);

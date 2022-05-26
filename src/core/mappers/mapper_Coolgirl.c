@@ -323,7 +323,7 @@ void map_init_Coolgirl(void) {
 	info.prg.ram.banks_8k_plus = 4;
 	info.prg.ram.bat.banks = 4;
 
-	if (info.reset == CHANGE_ROM) {
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		coolgirltmp.save_flash = (BYTE *)malloc(SAVE_FLASH_SIZE);
 		memset(coolgirltmp.save_flash, 0x00, SAVE_FLASH_SIZE);
 
@@ -852,7 +852,7 @@ INLINE static void prg_swap_8k_Coolgirl(BYTE flash, BYTE at, DBWORD value) {
 		pnt = coolgirltmp.save_flash;
 		control_bank(SAVE_FLASH_MAX_8K)
 	} else {
-		pnt = &prg.rom.data[0];
+		pnt = prg_rom();
 		control_bank(info.prg.rom.max.banks_8k)
 	}
 	map_prg_rom_8k(1, at, value);
@@ -865,7 +865,7 @@ INLINE static void prg_swap_16k_Coolgirl(BYTE flash, BYTE at, DBWORD value) {
 		pnt = coolgirltmp.save_flash;
 		control_bank(SAVE_FLASH_MAX_16K)
 	} else {
-		pnt = &prg.rom.data[0];
+		pnt = prg_rom();
 		control_bank(info.prg.rom.max.banks_16k)
 	}
 	map_prg_rom_8k(2, at, value);
@@ -880,7 +880,7 @@ INLINE static void prg_swap_32k_Coolgirl(BYTE flash, DBWORD value) {
 		pnt = coolgirltmp.save_flash;
 		control_bank(SAVE_FLASH_MAX_32K)
 	} else {
-		pnt = &prg.rom.data[0];
+		pnt = prg_rom();
 		control_bank(info.prg.rom.max.banks_32k)
 	}
 	map_prg_rom_8k(4, 0, value);

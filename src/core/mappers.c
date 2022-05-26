@@ -29,6 +29,8 @@
 #include "unif.h"
 #include "gui.h"
 
+void map_prg_ram_battery_file(uTCHAR *prg_ram_file);
+
 _mapper mapper;
 
 BYTE map_init(void) {
@@ -373,6 +375,9 @@ BYTE map_init(void) {
 			break;
 		case 108:
 			map_init_Whirlwind();
+			break;
+		case 111:
+			map_init_CHEAPOCABRA();
 			break;
 		case 112:
 			map_init_Ntdec(ASDER);
@@ -1152,6 +1157,8 @@ void map_prg_rom_8k_update(void) {
 	}
 }
 void map_prg_ram_init(void) {
+	BYTE executed_battery_io = FALSE;
+
 	/*
 	 * se non ci sono stati settaggi particolari della mapper
 	 * e devono esserci banchi di PRG Ram extra allora li assegno.
@@ -1164,34 +1171,9 @@ void map_prg_ram_init(void) {
 		/* gli 8k iniziali */
 		prg.ram_plus_8k = &prg.ram_plus[0];
 		/* controllo se la rom ha una RAM PRG battery packed */
-		if (info.prg.ram.bat.banks) {
-			uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG], basename[255], *fl, *last_dot;
-			FILE *fp;
-
-			fl = info.rom.file;
-
-			gui_utf_basename(fl, basename, usizeof(basename));
-			usnprintf(prg_ram_file, usizeof(prg_ram_file), uL("" uPs("") PRB_FOLDER "/" uPs("")), info.base_folder, basename);
-
-			/* rintraccio l'ultimo '.' nel nome */
-			if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {
-				/* elimino l'estensione */
-				(*last_dot) = 0x00;
-			}
-			/* aggiungo l'estensione prb */
-			ustrcat(prg_ram_file, uL(".prb"));
-			/* provo ad aprire il file */
-			fp = ufopen(prg_ram_file, uL("rb"));
-			if (extcl_battery_io) {
-				extcl_battery_io(RD_BAT, fp);
-			} else {
-				map_bat_rd_default(fp);
-			}
-			/* chiudo il file */
-			if (fp) {
-				fclose(fp);
-			}
-		}
+		map_prg_ram_battery_load();
+		// exectl_battery_io eseguito
+		executed_battery_io = TRUE;
 	} else if ((info.reset >= HARD) && info.prg.ram.banks_8k_plus) {
 		int i, start;
 
@@ -1207,14 +1189,17 @@ void map_prg_ram_init(void) {
 			memset(prg.ram_plus + (i * 0x2000), 0x00, 0x2000);
 		}
 	}
-
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		if (info.mapper.force_battery_io && extcl_battery_io && !executed_battery_io) {
+			map_prg_ram_battery_load();
+		}
+	}
 	if (info.mapper.trainer) {
 		BYTE *here = prg.ram.data;
 
 		if (prg.ram_plus) {
 			here = prg.ram_plus;
 		}
-
 		memcpy(here + 0x1000, &mapper.trainer, sizeof(mapper.trainer));
 	}
 }
@@ -1239,24 +1224,16 @@ void map_prg_ram_memset(void) {
 }
 void map_prg_ram_battery_save(void) {
 	/* se c'e' della PRG Ram battery packed la salvo in un file */
-	if (info.prg.ram.bat.banks) {
-		uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG], basename[255], *fl, *last_dot;
+	if (info.prg.ram.bat.banks || info.mapper.force_battery_io) {
+		uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG];
 		FILE *fp;
 
-		fl = info.rom.file;
+		// estraggo il nome del file
+		map_prg_ram_battery_file(&prg_ram_file[0]);
 
-		gui_utf_basename(fl, basename, usizeof(basename));
-		usnprintf(prg_ram_file, usizeof(prg_ram_file), uL("" uPs("") PRB_FOLDER "/" uPs("")), info.base_folder, basename);
-
-		/* rintraccio l'ultimo '.' nel nome */
-		if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {
-			/* elimino l'estensione */
-			(*last_dot) = 0x00;
-		}
-		/* aggiungo l'estensione prb */
-		ustrcat(prg_ram_file, uL(".prb"));
 		/* apro il file */
 		fp = ufopen(prg_ram_file, uL("wb"));
+
 		if (fp) {
 			if (extcl_battery_io) {
 				extcl_battery_io(WR_BAT, fp);
@@ -1266,8 +1243,29 @@ void map_prg_ram_battery_save(void) {
 
 			/* forzo la scrittura del file */
 			fflush(fp);
-
 			/* chiudo */
+			fclose(fp);
+		}
+	}
+}
+void map_prg_ram_battery_load(void) {
+	if (info.prg.ram.bat.banks || info.mapper.force_battery_io) {
+		uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG];
+		FILE *fp;
+
+		// estraggo il nome del file
+		map_prg_ram_battery_file(&prg_ram_file[0]);
+
+		/* provo ad aprire il file */
+		fp = ufopen(prg_ram_file, uL("rb"));
+
+		if (fp) {
+			if (extcl_battery_io) {
+				extcl_battery_io(RD_BAT, fp);
+			} else {
+				map_bat_rd_default(fp);
+			}
+			/* chiudo il file */
 			fclose(fp);
 		}
 	}
@@ -1410,4 +1408,21 @@ void map_bat_wr_default(FILE *fp) {
 			fprintf(stderr, "error on write battery memory\n");
 		}
 	}
+}
+
+void map_prg_ram_battery_file(uTCHAR *prg_ram_file) {
+	uTCHAR basename[255], *fl, *last_dot;
+
+	fl = info.rom.file;
+
+	gui_utf_basename(fl, basename, usizeof(basename));
+	usnprintf(prg_ram_file, LENGTH_FILE_NAME_LONG, uL("" uPs("") PRB_FOLDER "/" uPs("")), info.base_folder, basename);
+
+	/* rintraccio l'ultimo '.' nel nome */
+	if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {
+		/* elimino l'estensione */
+		(*last_dot) = 0x00;
+	}
+	/* aggiungo l'estensione prb */
+	ustrcat(prg_ram_file, uL(".prb"));
 }

@@ -67,6 +67,9 @@ enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 		case FARIDSLROM:\
 			value |= mmc1.chr_upper;\
 			break;\
+		case M111:\
+			value &= 0x3F;\
+			break;\
 		default:\
 			value &= 0x1F;\
 			break;\
@@ -125,6 +128,7 @@ void map_init_MMC1(void) {
 			mmc1.prg_mask = 0x07;
 			info.mapper.extend_wr = TRUE;
 			break;
+		case M111:
 		default:
 			break;
 	}
@@ -175,7 +179,12 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 		return;
 	}
 
-	mmc1.reg |= ((value & 0x01) << mmc1.pos);
+	if (info.mapper.submapper == M111) {
+		mmc1.reg = value;
+		mmc1.pos = 4;
+	} else {
+		mmc1.reg |= ((value & 0x01) << mmc1.pos);
+	}
 
 	if (mmc1.pos++ == 4) {
 		BYTE reg = (address >> 13) & 0x03;

@@ -54,6 +54,7 @@ typedef struct _info {
 		BYTE ram_plus_op_controlled_by_mapper;
 		BYTE trainer;
 		BYTE misc_roms;
+		BYTE force_battery_io;
 	} mapper;
 	BYTE mirroring_db;
 	BYTE portable;
