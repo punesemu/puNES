@@ -166,6 +166,7 @@
 #include "mappers/mapper_CHEAPOCABRA.h"
 #include "mappers/mapper_126.h"
 #include "mappers/mapper_198.h"
+#include "mappers/mapper_218.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"

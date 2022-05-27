@@ -197,6 +197,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_214.h \
 	mappers/mapper_217.c \
 	mappers/mapper_217.h \
+	mappers/mapper_218.c \
+	mappers/mapper_218.h \
 	mappers/mapper_219.c \
 	mappers/mapper_219.h \
 	mappers/mapper_221.c \
