@@ -675,6 +675,9 @@ BYTE map_init(void) {
 		case 222:
 			map_init_222();
 			break;
+		case 224:
+			map_init_Coolboy(MINDKIDS);
+			break;
 		case 225:
 			map_init_225();
 			break;

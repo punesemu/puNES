@@ -55,7 +55,6 @@ void extcl_wr_nmt_218(WORD address, BYTE value) {
 BYTE extcl_rd_nmt_218(WORD address) {
 	return (extcl_rd_chr_218((address & 0x0FFF) + 0x2000));
 }
-
 void extcl_wr_chr_218(WORD address, BYTE value) {
 	address = (address & 0x03FF) | ((address >> m218tmp.va10) << 10);
 	ntbl.data[address] = value;
