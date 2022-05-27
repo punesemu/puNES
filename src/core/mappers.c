@@ -756,6 +756,9 @@ BYTE map_init(void) {
 		case 254:
 			map_init_254();
 			break;
+		case 255:
+			map_init_225();
+			break;
 		case 256:
 			map_init_OneBus();
 			break;
