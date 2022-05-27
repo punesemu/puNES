@@ -34,5 +34,6 @@ void extcl_cpu_wr_mem_UNROM_180(WORD address, BYTE value);
 void extcl_cpu_wr_mem_UnlROM(WORD address, BYTE value);
 
 void extcl_cpu_wr_mem_UNROM_BK2(WORD address, BYTE value);
+BYTE extcl_save_mapper_UNROM_BK2(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_UXROM_H_ */

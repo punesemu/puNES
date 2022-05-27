@@ -149,6 +149,7 @@ BYTE extcl_save_mapper_512(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m512.reg);
 	save_slot_ele(mode, slot, m512.mmc3);
 	save_slot_ele(mode, slot, m512.vram);
+	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {

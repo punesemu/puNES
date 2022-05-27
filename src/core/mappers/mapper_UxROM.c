@@ -20,6 +20,9 @@
 #include "info.h"
 #include "mem_map.h"
 #include "ines.h"
+#include "save_slot.h"
+
+INLINE static void mirroring_fix_UNROM_BK2(void);
 
 void map_init_UxROM(BYTE model) {
 	switch (model) {
@@ -40,33 +43,11 @@ void map_init_UxROM(BYTE model) {
 			break;
 		case UNROM_BK2:
 			EXTCL_CPU_WR_MEM(UNROM_BK2);
+			EXTCL_SAVE_MAPPER(UNROM_BK2);
 
 			map_chr_ram_extra_init(0x2000 * 4);
 
-			// gestione mirroring mapper 30
-			if ((info.format == iNES_1_0) || (info.format == iNES_1_0)) {
-				BYTE mirroring = (ines.flags[FL6] & 0x01) | ((ines.flags[FL6] & 0x08) >> 2);
-
-				switch (mirroring) {
-					case 0:
-						mirroring_H();
-						break;
-					case 1:
-						mirroring_V();
-						break;
-					case 2:
-						mirroring_SCR0();
-						break;
-					case 3:
-						// 4-Screen, cartridge VRAM
-						ntbl.bank_1k[0] = &chr.extra.data[0x7000];
-						ntbl.bank_1k[1] = &chr.extra.data[0x7400];
-						ntbl.bank_1k[2] = &chr.extra.data[0x7800];
-						ntbl.bank_1k[3] = &chr.extra.data[0x7C00];
-						break;
-				}
-			}
-
+			mirroring_fix_UNROM_BK2();
 			break;
 	}
 }
@@ -125,4 +106,39 @@ void extcl_cpu_wr_mem_UNROM_BK2(UNUSED(WORD address), BYTE value) {
 	control_bank(info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 	map_prg_rom_8k_update();
+}
+BYTE extcl_save_mapper_UNROM_BK2(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
+
+	if (mode == SAVE_SLOT_READ) {
+		mirroring_fix_UNROM_BK2();
+	}
+
+	return (EXIT_OK);
+}
+
+INLINE static void mirroring_fix_UNROM_BK2(void) {
+	// gestione mirroring mapper 30
+	if ((info.format == iNES_1_0) || (info.format == iNES_1_0)) {
+		BYTE mirroring = (ines.flags[FL6] & 0x01) | ((ines.flags[FL6] & 0x08) >> 2);
+
+		switch (mirroring) {
+			case 0:
+				mirroring_H();
+				break;
+			case 1:
+				mirroring_V();
+				break;
+			case 2:
+				mirroring_SCR0();
+				break;
+			case 3:
+				// 4-Screen, cartridge VRAM
+				ntbl.bank_1k[0] = &chr.extra.data[0x7000];
+				ntbl.bank_1k[1] = &chr.extra.data[0x7400];
+				ntbl.bank_1k[2] = &chr.extra.data[0x7800];
+				ntbl.bank_1k[3] = &chr.extra.data[0x7C00];
+				break;
+		}
+	}
 }

@@ -261,6 +261,7 @@ BYTE extcl_save_mapper_BMCFK23C(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, bmcfk23c.ram_outer_register_enable);
 	save_slot_ele(mode, slot, bmcfk23c.mmc3);
 	save_slot_ele(mode, slot, bmcfk23c.prg_base);
+	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
 
 	if (mode == SAVE_SLOT_READ) {
 		state_fix_BMCFK23C();
