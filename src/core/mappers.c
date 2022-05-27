@@ -603,6 +603,9 @@ BYTE map_init(void) {
 		case 197:
 			map_init_197();
 			break;
+		case 198:
+			map_init_198();
+			break;
 		case 199:
 			map_init_Waixing(WTG);
 			break;
@@ -1254,7 +1257,22 @@ void map_prg_ram_battery_save(void) {
 void map_prg_ram_battery_load(void) {
 	if (info.prg.ram.bat.banks || info.mapper.force_battery_io) {
 		uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG];
+		BYTE bank;
 		FILE *fp;
+
+		if (info.prg.ram.bat.banks) {
+			/*
+			 * se non e' specificato da che banco di PRG ram inizia
+			 * la battery packed Ram, utilizzo sempre l'ultimo.
+			 */
+			if (info.prg.ram.bat.start == DEFAULT) {
+				bank = info.prg.ram.banks_8k_plus - info.prg.ram.bat.banks;
+			} else {
+				bank = info.prg.ram.bat.start;
+			}
+
+			prg.ram_battery = &prg.ram_plus[bank * 0x2000];
+		}
 
 		// estraggo il nome del file
 		map_prg_ram_battery_file(&prg_ram_file[0]);
@@ -1383,20 +1401,6 @@ void map_set_banks_max_chr(void) {
 	info.chr.rom.max.banks_1k = info.chr.rom.banks_1k ? info.chr.rom.banks_1k - 1 : 0;
 }
 void map_bat_rd_default(FILE *fp) {
-	BYTE bank;
-
-	/*
-	 * se non e' specificato da che banco di PRG ram inizia
-	 * la battery packed Ram, utilizzo sempre l'ultimo.
-	 */
-	if (info.prg.ram.bat.start == DEFAULT) {
-		bank = info.prg.ram.banks_8k_plus - info.prg.ram.bat.banks;
-	} else {
-		bank = info.prg.ram.bat.start;
-	}
-
-	prg.ram_battery = &prg.ram_plus[bank * 0x2000];
-
 	if ((tas.type == NOTAS) && fp) {
 		/* ne leggo il contenuto */
 		if (fread(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp) < 1) {
@@ -1407,8 +1411,12 @@ void map_bat_rd_default(FILE *fp) {
 void map_bat_wr_default(FILE *fp) {
 	/* ci scrivo i dati */
 	if (tas.type == NOTAS) {
-		if (fwrite(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp) < 1) {
-			fprintf(stderr, "error on write battery memory\n");
+
+		int pippo = fwrite(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp);
+		//if (fwrite(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp) < 1) {
+		if (pippo < 1) {
+			perror(NULL);
+			//fprintf(stderr, "error on write battery memory\n");
 		}
 	}
 }
