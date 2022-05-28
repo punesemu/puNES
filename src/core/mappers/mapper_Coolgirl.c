@@ -58,20 +58,20 @@ INLINE static void mapper31_cpu_wr_low(WORD address, BYTE value);
 INLINE static void mapper32_cpu_wr_low(WORD address, BYTE value);
 
 INLINE static void mapper01_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper02_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper03_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper04_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper05_cpu_wr_high(WORD address, BYTE value);
+INLINE static void mapper02_cpu_wr_high(BYTE value);
+INLINE static void mapper03_cpu_wr_high(BYTE value);
+INLINE static void mapper04_cpu_wr_high(BYTE value);
+INLINE static void mapper05_cpu_wr_high(BYTE value);
 INLINE static void mapper07_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper08_cpu_wr_high(WORD address, BYTE value);
+INLINE static void mapper08_cpu_wr_high(BYTE value);
 INLINE static void mapper09_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper10_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper11_cpu_wr_high(WORD address, BYTE value);
+INLINE static void mapper10_cpu_wr_high(BYTE value);
+INLINE static void mapper11_cpu_wr_high(BYTE value);
 INLINE static void mapper13_cpu_wr_high(WORD address, BYTE value);
 INLINE static void mapper14_cpu_wr_high(WORD address, BYTE value);
 INLINE static void mapper16_cpu_wr_high(WORD address, BYTE value);
 INLINE static void mapper17_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper18_cpu_wr_high(WORD address, BYTE value);
+INLINE static void mapper18_cpu_wr_high(BYTE value);
 INLINE static void mapper19_cpu_wr_high(WORD address, BYTE value);
 INLINE static void mapper20_cpu_wr_high(WORD address, BYTE value);
 INLINE static void mapper21_cpu_wr_high(WORD address, BYTE value);
@@ -81,16 +81,16 @@ INLINE static void mapper24_cpu_wr_high(WORD address, BYTE value);
 INLINE static void mapper25_cpu_wr_high(WORD address, BYTE value);
 INLINE static void mapper26_cpu_wr_high(WORD address, BYTE value);
 INLINE static void mapper29_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper30_cpu_wr_high(WORD address, BYTE value);
+INLINE static void mapper30_cpu_wr_high(BYTE value);
 INLINE static void mapper34_cpu_wr_high(WORD address, BYTE value);
 INLINE static void mapper35_cpu_wr_high(WORD address, BYTE value);
 INLINE static void mapper36_cpu_wr_high(WORD address, BYTE value);
-INLINE static void mapper37_cpu_wr_high(WORD address, BYTE value);
+INLINE static void mapper37_cpu_wr_high(BYTE value);
 
 INLINE static BYTE mapper06_cpu_rd(WORD address, BYTE openbus);
 INLINE static BYTE mapper13_cpu_rd(WORD address, BYTE openbus);
 INLINE static BYTE mapper15_cpu_rd(WORD address, BYTE openbus);
-INLINE static BYTE mapper35_cpu_rd(WORD address, BYTE openbus);
+INLINE static BYTE mapper35_cpu_rd(void);
 
 INLINE static void mapper07_cpu_every_cycle(void);
 INLINE static void mapper14_cpu_every_cycle(void);
@@ -409,31 +409,31 @@ void extcl_cpu_wr_mem_Coolgirl(WORD address, BYTE value) {
 			mapper01_cpu_wr_high(address, value);
 			break;
 		case 2:
-			mapper02_cpu_wr_high(address, value);
+			mapper02_cpu_wr_high(value);
 			break;
 		case 3:
-			mapper03_cpu_wr_high(address, value);
+			mapper03_cpu_wr_high(value);
 			break;
 		case 4:
-			mapper04_cpu_wr_high(address, value);
+			mapper04_cpu_wr_high(value);
 			break;
 		case 5:
-			mapper05_cpu_wr_high(address, value);
+			mapper05_cpu_wr_high(value);
 			break;
 		case 7:
 			mapper07_cpu_wr_high(address, value);
 			break;
 		case 8:
-			mapper08_cpu_wr_high(address, value);
+			mapper08_cpu_wr_high(value);
 			break;
 		case 9:
 			mapper09_cpu_wr_high(address, value);
 			break;
 		case 10:
-			mapper10_cpu_wr_high(address, value);
+			mapper10_cpu_wr_high(value);
 			break;
 		case 11:
-			mapper11_cpu_wr_high(address, value);
+			mapper11_cpu_wr_high(value);
 			break;
 		case 13:
 			mapper13_cpu_wr_high(address, value);
@@ -448,7 +448,7 @@ void extcl_cpu_wr_mem_Coolgirl(WORD address, BYTE value) {
 			mapper17_cpu_wr_high(address, value);
 			break;
 		case 18:
-			mapper18_cpu_wr_high(address, value);
+			mapper18_cpu_wr_high(value);
 			break;
 		case 19:
 			mapper19_cpu_wr_high(address, value);
@@ -478,7 +478,7 @@ void extcl_cpu_wr_mem_Coolgirl(WORD address, BYTE value) {
 			mapper29_cpu_wr_high(address, value);
 			break;
 		case 30:
-			mapper30_cpu_wr_high(address, value);
+			mapper30_cpu_wr_high(value);
 			break;
 		case 34:
 			mapper34_cpu_wr_high(address, value);
@@ -490,7 +490,7 @@ void extcl_cpu_wr_mem_Coolgirl(WORD address, BYTE value) {
 			mapper36_cpu_wr_high(address, value);
 			break;
 		case 37:
-			mapper37_cpu_wr_high(address, value);
+			mapper37_cpu_wr_high(value);
 			break;
 	}
 	state_fix_Coolgirl();
@@ -513,7 +513,7 @@ BYTE extcl_cpu_rd_mem_Coolgirl(WORD address, BYTE openbus, UNUSED(BYTE before)) 
 				case 15:
 					return (mapper15_cpu_rd(address, openbus));
 				case 35:
-					return (mapper35_cpu_rd(address, openbus));
+					return (mapper35_cpu_rd());
 			}
 			break;
 		case 0x6000:
@@ -1361,22 +1361,22 @@ INLINE static void mapper01_cpu_wr_high(WORD address, BYTE value) {
 		coolgirl.mirroring = 0x02 | ((value >> 4) & 0x01);
 	}
 }
-INLINE static void mapper02_cpu_wr_high(WORD, BYTE value) {
+INLINE static void mapper02_cpu_wr_high(BYTE value) {
 	// Mapper #3 - CNROM
 	coolgirl.chr.a = (coolgirl.chr.a & 0x07) | ((value & 0x1F) << 3);
 }
-INLINE static void mapper03_cpu_wr_high(WORD, BYTE value) {
+INLINE static void mapper03_cpu_wr_high(BYTE value) {
 	// Mapper #78 - Holy Diver
 	coolgirl.prg.a = (coolgirl.prg.a & 0xF1) | ((value & 0x07) << 1);
 	coolgirl.chr.a = (coolgirl.chr.a & 0x87) | ((value & 0xF0) >> 1);
 	coolgirl.mirroring = ((value >> 3) & 0x01) ^ 1;
 }
-INLINE static void mapper04_cpu_wr_high(WORD, BYTE value) {
+INLINE static void mapper04_cpu_wr_high(BYTE value) {
 	// Mapper #97 - Irem's TAM-S1
 	coolgirl.prg.a = (coolgirl.prg.a & 0xC1) | ((value & 0x1F) << 1);
 	coolgirl.mirroring = (value >> 7) ^ 0x01;
 }
-INLINE static void mapper05_cpu_wr_high(WORD, BYTE value) {
+INLINE static void mapper05_cpu_wr_high(BYTE value) {
 	// Mapper #93 - Sunsoft-2
 	coolgirl.prg.a = (coolgirl.prg.a & 0xF1) | ((value & 0x70) >> 3);
 	coolgirl.chr.can_write = value & 0x01;
@@ -1494,7 +1494,7 @@ INLINE static void mapper07_cpu_wr_high(WORD address, BYTE value) {
 			break;
 	}
 }
-INLINE static void mapper08_cpu_wr_high(WORD, BYTE value) {
+INLINE static void mapper08_cpu_wr_high(BYTE value) {
 	// Mapper #7 - AxROM, mapper #241 - BNROM
 	coolgirl.prg.a = (coolgirl.prg.a & 0xC3) | ((value & 0xF) << 2);
 	if (!(coolgirl.flags & 0x01)) {
@@ -1507,12 +1507,12 @@ INLINE static void mapper09_cpu_wr_high(WORD address, BYTE value) {
 	coolgirl.chr.a = (coolgirl.chr.a & 0x07) | ((address & 0x0007) << 5) | ((value & 0x03) << 3);
 	coolgirl.mirroring = (address >> 13) & 0x01;
 }
-INLINE static void mapper10_cpu_wr_high(WORD, BYTE value) {
+INLINE static void mapper10_cpu_wr_high(BYTE value) {
 	// Mapper #11 - ColorDreams
 	coolgirl.prg.a = (coolgirl.prg.a & 0xF3) | ((value & 0x03) << 2);
 	coolgirl.chr.a = (coolgirl.chr.a & 0x87) | ((value & 0xF0) >> 1);
 }
-INLINE static void mapper11_cpu_wr_high(WORD, BYTE value) {
+INLINE static void mapper11_cpu_wr_high(BYTE value) {
 	// Mapper #66 - GxROM
 	coolgirl.prg.a = (coolgirl.prg.a & 0xF3) | ((value & 0x30) >> 2);
 	coolgirl.chr.a = (coolgirl.chr.a & 0xE7) | ((value & 0x03) << 3);
@@ -1736,7 +1736,7 @@ INLINE static void mapper17_cpu_wr_high(WORD address, BYTE value) {
 			break;
 	}
 }
-INLINE static void mapper18_cpu_wr_high(WORD, BYTE value) {
+INLINE static void mapper18_cpu_wr_high(BYTE value) {
 	// Mapper #152
 	coolgirl.chr.a = (coolgirl.chr.a & 0x87) | ((value & 0x0F) << 3);
 	coolgirl.prg.a = (coolgirl.prg.a & 0xF1) | ((value & 0x70) >> 3);
@@ -2196,7 +2196,7 @@ INLINE static void mapper29_cpu_wr_high(WORD address, BYTE value) {
 		coolgirl.chr.a = (coolgirl.chr.a & 0x87) | ((value & 0x0F) << 3);
 	}
 }
-INLINE static void mapper30_cpu_wr_high(WORD, BYTE value) {
+INLINE static void mapper30_cpu_wr_high(BYTE value) {
 	// Mapper #70
 	coolgirl.prg.a = (coolgirl.prg.a & 0xE1) | ((value & 0xF0) >> 3);
 	coolgirl.chr.a = (coolgirl.chr.a & 0x87) | ((value & 0x0F) << 3);
@@ -2330,7 +2330,7 @@ INLINE static void mapper36_cpu_wr_high(WORD address, BYTE value) {
 		irq.high &= ~EXT_IRQ;
 	}
 }
-INLINE static void mapper37_cpu_wr_high(WORD, BYTE value) {
+INLINE static void mapper37_cpu_wr_high(BYTE value) {
 	// Mapper #89 - Sunsoft-2 chip on the Sunsoft-3 board
 	coolgirl.prg.a = (coolgirl.prg.a & 0xF1) | ((value & 0x70) >> 3);
 	coolgirl.chr.a = (coolgirl.chr.a & 0x87) | ((value & 0x80) >> 1) | ((value & 0x07) << 3);
@@ -2369,7 +2369,7 @@ INLINE static BYTE mapper15_cpu_rd(WORD address, BYTE openbus) {
 	}
 	return (openbus);
 }
-INLINE static BYTE mapper35_cpu_rd(WORD, BYTE) {
+INLINE static BYTE mapper35_cpu_rd(void) {
 	return (coolgirl.flags & 0x03);
 }
 
