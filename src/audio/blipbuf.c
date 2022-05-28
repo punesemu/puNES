@@ -65,6 +65,7 @@ static struct _blipbuf {
 	_blipbuf_group fm7;
 	_blipbuf_group vrc6;
 	_blipbuf_group vrc7;
+	_blipbuf_group dripgame;
 
 	struct _blipbuf_samples {
 		int count;
@@ -85,6 +86,7 @@ static void apu_tick_blipbuf_Namco_N163(void);
 static void apu_tick_blipbuf_Sunsoft_FM7(void);
 static void apu_tick_blipbuf_VRC6(void);
 static void apu_tick_blipbuf_VRC7(void);
+static void apu_tick_blipbuf_DRIPGAME(void);
 static void (*extra_audio_end_frame_blipbuf)(void);
 static void extra_audio_end_frame_blipbuf_NSF(void);
 static void extra_audio_end_frame_blipbuf_FDS(void);
@@ -93,6 +95,7 @@ static void extra_audio_end_frame_blipbuf_Namco_N163(void);
 static void extra_audio_end_frame_blipbuf_Sunsoft_FM7(void);
 static void extra_audio_end_frame_blipbuf_VRC6(void);
 static void extra_audio_end_frame_blipbuf_VRC7(void);
+static void extra_audio_end_frame_blipbuf_DRIPGAME(void);
 
 BYTE audio_init_blipbuf(void) {
 	memset(&blipbuf, 0, sizeof(blipbuf));
@@ -159,6 +162,12 @@ BYTE audio_init_blipbuf(void) {
 			extra_apu_tick_blipbuf = apu_tick_blipbuf_VRC7;
 			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_VRC7;
 			blipbuf.vrc7.min_period = snd.frequency;
+			break;
+		case 284:
+			/* DRIPGAME */
+			extra_apu_tick_blipbuf = apu_tick_blipbuf_DRIPGAME;
+			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_DRIPGAME;
+			blipbuf.dripgame.min_period = snd.frequency;
 			break;
 		default:
 			extra_apu_tick_blipbuf = NULL;
@@ -350,6 +359,13 @@ static void apu_tick_blipbuf_VRC7(void) {
 		update_tick_extra_blbuf(vrc7, 0);
 	}
 }
+static void apu_tick_blipbuf_DRIPGAME(void) {
+	if (++blipbuf.dripgame.period == blipbuf.dripgame.min_period) {
+		//blipbuf.output = ch_gain_ext(dripgame.channel[0].out, 1.0f) + ch_gain_ext(dripgame.channel[1].out, 1.0f);
+		blipbuf.output = ch_gain_ext(dripgame.channel[0].out, 1.0f) + ch_gain_ext(dripgame.channel[1].out, 1.0f);
+		update_tick_extra_blbuf(dripgame, 0);
+	}
+}
 
 /* --------------------------------------------------------------------------------------- */
 /*                            Extra Audio QUality End Frame                                */
@@ -391,4 +407,7 @@ static void extra_audio_end_frame_blipbuf_VRC6(void) {
 }
 static void extra_audio_end_frame_blipbuf_VRC7(void) {
 	blipbuf.vrc7.time -= blipbuf.counter;
+}
+static void extra_audio_end_frame_blipbuf_DRIPGAME(void) {
+	blipbuf.dripgame.time -= blipbuf.counter;
 }

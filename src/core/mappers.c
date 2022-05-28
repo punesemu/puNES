@@ -798,6 +798,9 @@ BYTE map_init(void) {
 		case 283:
 			map_init_GS_20xx();
 			break;
+		case 284:
+			map_init_DRIPGAME();
+			break;
 		case 285:
 			map_init_A65AS();
 			break;

@@ -255,6 +255,7 @@
 #include "mappers/mapper_1024CA1.h"
 #include "mappers/mapper_831128C.h"
 #include "mappers/mapper_Coolgirl.h"
+#include "mappers/mapper_DRIPGAME.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\

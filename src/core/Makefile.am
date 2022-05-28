@@ -399,6 +399,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_DRAGONFIGHTER.h \
 	mappers/mapper_DREAMTECH01.c \
 	mappers/mapper_DREAMTECH01.h \
+	mappers/mapper_DRIPGAME.c \
+	mappers/mapper_DRIPGAME.h \
 	mappers/mapper_EDU2000.c \
 	mappers/mapper_EDU2000.h \
 	mappers/mapper_EH8813A.c \
