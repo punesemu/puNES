@@ -795,6 +795,9 @@ BYTE map_init(void) {
 		case 268:
 			map_init_Coolboy(info.mapper.submapper == MINDKIDS ? MINDKIDS : COOLBOY);
 			break;
+		case 269:
+			map_init_269();
+			break;
 		case 274:
 			map_init_80013B();
 			break;
