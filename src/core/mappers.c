@@ -789,6 +789,9 @@ BYTE map_init(void) {
 		case 266:
 			map_init_CITYFIGHT();
 			break;
+		case 267:
+			map_init_267();
+			break;
 		case 268:
 			map_init_Coolboy(info.mapper.submapper == MINDKIDS ? MINDKIDS : COOLBOY);
 			break;
