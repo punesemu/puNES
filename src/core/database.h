@@ -3925,6 +3925,10 @@ static const _dbelement dblist[] = {
 	/* Fong Shen Bang - Zhu Lu Zhi Zhan (Ch) [T+Chi(Simp)20060423].nes */
 	{"991968732e6f4f2289f8e751539b02b8a9d4853f", 246, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* ------------------------------------- BMC-22026 ---------------------------------------- */
+	/* 4-in-1 (MGC-026, TXC, Idea-Tek).nes */
+	{"a612291ad4cd3a9a4dc8a3ff511a7c3f4979d0af", 271, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* -------------------------------------- VS System --------------------------------------- */
 	/* Battle City (VS) [p1][o1].nes */
 	{"3e9a70cb6e7118b1a3b5fb5354679a9fdfe567a0", 0, DEFAULT, DEFAULT, DEFAULT, DEFAULT, RP2C04, DEFAULT, 0x0005, NOEXTRA},
