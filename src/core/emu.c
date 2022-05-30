@@ -356,12 +356,14 @@ BYTE emu_load_rom(void) {
 		if (!ustrcasecmp(ext, uL(".fds"))) {
 			if (fds_load_rom() == EXIT_ERROR) {
 				info.rom.file[0] = 0;
+				info.rom.change_rom[0] = 0;
 				goto elaborate_rom_file;
 			}
 			emu_recent_roms_add(&recent_roms_permit_add, info.rom.file);
 		} else if (!ustrcasecmp(ext, uL(".nsf"))) {
 			if (nsf_load_rom() == EXIT_ERROR) {;
 				info.rom.file[0] = 0;
+				info.rom.change_rom[0] = 0;
 				gui_overlay_info_append_msg_precompiled(5, NULL);
 				fprintf(stderr, "error loading rom\n");
 				goto elaborate_rom_file;
@@ -370,6 +372,7 @@ BYTE emu_load_rom(void) {
 		} else if (!ustrcasecmp(ext, uL(".nsfe"))) {
 			if (nsfe_load_rom() == EXIT_ERROR) {;
 				info.rom.file[0] = 0;
+				info.rom.change_rom[0] = 0;
 				gui_overlay_info_append_msg_precompiled(5, NULL);
 				fprintf(stderr, "error loading rom\n");
 				goto elaborate_rom_file;
@@ -388,6 +391,7 @@ BYTE emu_load_rom(void) {
 			// carico la rom in memoria
 			if ((ines_load_rom() == EXIT_ERROR) && (unif_load_rom() == EXIT_ERROR)) {
 				info.rom.file[0] = 0;
+				info.rom.change_rom[0] = 0;
 				gui_overlay_info_append_msg_precompiled(5, NULL);
 				fprintf(stderr, "format non supported\n");
 				goto elaborate_rom_file;

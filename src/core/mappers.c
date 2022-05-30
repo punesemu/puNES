@@ -1002,6 +1002,9 @@ BYTE map_init(void) {
 		case 530:
 			map_init_AX5705();
 			break;
+		case 547:
+			map_init_KONAMIQTAI();
+			break;
 		default:
 			gui_overlay_info_append_msg_precompiled(11, NULL);
 			fprintf(stderr, "Mapper not supported\n");

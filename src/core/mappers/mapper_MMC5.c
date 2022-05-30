@@ -616,7 +616,6 @@ void extcl_rd_r2007_MMC5(void) {
 	// reads from $2007 during vblank or forced blank are treated as sprite accesses
 	// (using bank set A) if the most recently written register was $5120-5127; and treated as
 	// BG accesses (using bank set B) if the most recently written register was $5128-512B
-
 	if (r2000.size_spr == 8) {
 		use_chr_s();
 	} else {
