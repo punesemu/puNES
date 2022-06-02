@@ -107,6 +107,8 @@ void map_init_90_209_211(BYTE model) {
 			(info.crc32.prg == 0xEF3E7897) || // Tekken 2 (Unl) [T+Kor].nes
 			(info.crc32.prg == 0x859E81FC) || // Tekken 2 (Unl) [T+Kor][a1].nes
 			(info.crc32.prg == 0xD12E3F63) || // Popeye 2 - Travels in Persia (Unl) [!].nes
+			(info.crc32.prg == 0x73A9F3AE) || // 1996 Super Aladdin III 18-in-1 Series (JY-064).nes
+			(info.crc32.prg == 0xA0859966) || // 1996 Super Mortal Kombat III 18-in-1 Series (JY-062).nes
 			(info.crc32.prg == 0x2A268152)) { // Mortal Kombat 3 - Special 56 Peoples (Unl) [!].nes
 			m90_209_211tmp.dipswitch = m90_209_211tmp.dipswitch ? 0x00 : 0x080;
 		} else if (
@@ -120,6 +122,7 @@ void map_init_90_209_211(BYTE model) {
 			(info.crc32.prg == 0x642E8D63)) { // Tiny Toon Adventures 6 (Unl) [!].nes
 			m90_209_211tmp.dipswitch = 0x40;
 		} else if (
+			(info.crc32.prg == 0x73A9F3AE) || // 1996 Super Aladdin III 18-in-1 Series (JY-064).nes
 			(info.crc32.prg == 0xD12E3F63)) { // Popeye 2 - Travels in Persia (Unl) [!].nes
 			m90_209_211tmp.dipswitch = 0x80;
 		} else {
@@ -278,6 +281,7 @@ void extcl_cpu_wr_mem_90_209_211(WORD address, BYTE value) {
 						case MAP209:
 						case MAP211:
 						case MAP281:
+						case MAP282:
 							m90_209_211.nmt.extended_mode = !!(value & 0x20);
 							break;
 						case MAP90:
@@ -447,12 +451,19 @@ INLINE static void prg_setup_90_209_211(void) {
 	BYTE outer, mask;
 	WORD value;
 
-	if (m90_209_211tmp.model == MAP281) {
-		outer = ((m90_209_211.mode[3] & 0x03) << 5);
-		mask = 0x1F;
-	} else {
-		outer = ((m90_209_211.mode[3] & 0x06) << 5);
-		mask = 0x3F;
+	switch(m90_209_211tmp.model) {
+		case MAP281:
+			outer = ((m90_209_211.mode[3] & 0x03) << 5);
+			mask = 0x1F;
+			break;
+		case MAP282:
+			outer = ((m90_209_211.mode[3] & 0x06) << 4);
+			mask = 0x1F;
+			break;
+		default:
+			outer = ((m90_209_211.mode[3] & 0x06) << 5);
+			mask = 0x3F;
+			break;
 	}
 
 	switch (m90_209_211.mode[0] & 0x07) {
@@ -556,17 +567,20 @@ INLINE static void chr_setup_90_209_211(void) {
 	WORD outer = 0, mask = 0xFFFF;
 	DBWORD bank;
 
-	if (m90_209_211tmp.model == MAP281) {
-		outer = (m90_209_211.mode[3] & 0x03) << 8;
-		mask = 0xFF;
-	} else {
-		if (!(m90_209_211.mode[3] & 0x20)) {
-			outer = ((m90_209_211.mode[3] & 0x01) | ((m90_209_211.mode[3] & 0x18) >> 2)) << 8;
+	switch(m90_209_211tmp.model) {
+		case MAP281:
+			outer = (m90_209_211.mode[3] & 0x03) << 8;
 			mask = 0xFF;
-		} else {
-			outer = (m90_209_211.mode[3] & 0x18) << 6;
-			mask = 0x1FF;
-		}
+			break;
+		default:
+			if (!(m90_209_211.mode[3] & 0x20)) {
+				outer = ((m90_209_211.mode[3] & 0x01) | ((m90_209_211.mode[3] & 0x18) >> 2)) << 8;
+				mask = 0xFF;
+			} else {
+				outer = (m90_209_211.mode[3] & 0x18) << 6;
+				mask = 0x1FF;
+			}
+			break;
 	}
 
 	switch (m90_209_211.mode[0] & 0x18) {
@@ -664,17 +678,20 @@ INLINE static void nmt_setup_90_209_211(void) {
 	if (m90_209_211.nmt.extended_mode == TRUE) {
 		WORD outer, mask;
 
-		if (m90_209_211tmp.model == MAP281) {
-			outer = (m90_209_211.mode[3] & 0x03) << 8;
-			mask = 0xFF;
-		} else {
-			if (!(m90_209_211.mode[3] & 0x20)) {
-				outer = ((m90_209_211.mode[3] & 0x01) | ((m90_209_211.mode[3] & 0x18) >> 2)) << 8;
+		switch(m90_209_211tmp.model) {
+			case MAP281:
+				outer = (m90_209_211.mode[3] & 0x03) << 8;
 				mask = 0xFF;
-			} else {
-				outer = (m90_209_211.mode[3] & 0x18) << 6;
-				mask = 0x1FF;
-			}
+				break;
+			default:
+				if (!(m90_209_211.mode[3] & 0x20)) {
+					outer = ((m90_209_211.mode[3] & 0x01) | ((m90_209_211.mode[3] & 0x18) >> 2)) << 8;
+					mask = 0xFF;
+				} else {
+					outer = (m90_209_211.mode[3] & 0x18) << 6;
+					mask = 0x1FF;
+				}
+				break;
 		}
 
 		for (i = 0; i < 4; i++) {
