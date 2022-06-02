@@ -21,10 +21,11 @@
 
 #include "common.h"
 
-enum {
+enum _m90_209_211_types {
 	MAP90,
 	MAP209,
-	MAP211
+	MAP211,
+	MAP281
 };
 
 void map_init_90_209_211(BYTE model);
@@ -35,7 +36,6 @@ void extcl_cpu_every_cycle_90_209_211(void);
 void extcl_rd_ppu_90_209_211(WORD address);
 BYTE extcl_rd_chr_90_209_211(WORD address);
 void extcl_wr_nmt_90_209_211(WORD address, BYTE value);
-
 void extcl_ppu_000_to_255_90_209_211(void);
 void extcl_ppu_256_to_319_90_209_211(void);
 void extcl_ppu_320_to_34x_90_209_211(void);
