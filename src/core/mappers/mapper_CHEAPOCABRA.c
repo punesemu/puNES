@@ -50,7 +50,7 @@ void map_init_CHEAPOCABRA(void) {
 		EXTCL_WR_NMT(CHEAPOCABRA_GTROM);
 		EXTCL_RD_NMT(CHEAPOCABRA_GTROM);
 		EXTCL_BATTERY_IO(CHEAPOCABRA_GTROM);
-		mapper.internal_struct[0] = (BYTE*) &cheapocabra;
+		mapper.internal_struct[0] = (BYTE*)&cheapocabra;
 		mapper.internal_struct_size[0] = sizeof(cheapocabra);
 
 		if (info.reset >= HARD) {

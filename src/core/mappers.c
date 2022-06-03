@@ -848,6 +848,9 @@ BYTE map_init(void) {
 		case 295:
 			map_init_90_209_211(MAP295);
 			break;
+		case 297:
+			map_init_297();
+			break;
 		case 298:
 			map_init_TF1201();
 			break;

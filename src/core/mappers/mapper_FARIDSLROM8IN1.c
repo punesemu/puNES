@@ -41,8 +41,12 @@ void map_init_FARIDSLROM8IN1(void) {
 
 	memset(&faridslrom8in1, 0x00, sizeof(faridslrom8in1));
 
+	mmc1.prg_mask = 0x07;
+
 	map_prg_rom_8k(2, 0, 0);
 	map_prg_rom_8k(2, 2, 7);
+
+	info.mapper.extend_wr = TRUE;
 }
 void extcl_cpu_wr_mem_FARIDSLROM8IN1(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {

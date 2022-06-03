@@ -70,6 +70,9 @@ enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 		case M111:\
 			value &= 0x3F;\
 			break;\
+		case M297:\
+			value = mmc1.chr_upper | (value & 0x1F);\
+			break;\
 		default:\
 			value &= 0x1F;\
 			break;\
@@ -124,11 +127,6 @@ void map_init_MMC1(void) {
 			info.prg.ram.banks_8k_plus = 1;
 			cpu.prg_ram_wr_active = cpu.prg_ram_rd_active = TRUE;
 			break;
-		case FARIDSLROM:
-			mmc1.prg_mask = 0x07;
-			info.mapper.extend_wr = TRUE;
-			break;
-		case M111:
 		default:
 			break;
 	}
