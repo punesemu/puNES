@@ -992,6 +992,9 @@ BYTE map_init(void) {
 		case 413:
 			map_init_413();
 			break;
+		case 428:
+			map_init_428();
+			break;
 		case 438:
 			map_init_K3071();
 			break;
