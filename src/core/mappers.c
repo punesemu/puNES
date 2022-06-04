@@ -60,8 +60,8 @@ BYTE map_init(void) {
 		case 2:
 			if (info.mapper.submapper == UNLROM) {
 				map_init_UxROM(UNLROM);
-			} else if (info.mapper.submapper == UNROM_BK2) {
-				map_init_UxROM(UNROM_BK2);
+			} else if (info.mapper.submapper == UNROM512) {
+				map_init_UxROM(UNROM512);
 			} else if (info.mapper.submapper == UXROMNBC) {
 				map_init_UxROM(UXROMNBC);
 			} else {
@@ -163,7 +163,7 @@ BYTE map_init(void) {
 			map_init_28();
 			break;
 		case 30:
-			map_init_UxROM(UNROM_BK2);
+			map_init_UxROM(UNROM512);
 			break;
 		case 31:
 			map_init_31();

@@ -21,8 +21,8 @@
 
 #include "common.h"
 
-void sst39sf040_init(BYTE *data, size_t size);
-void sst39sf040_reset();
+void sst39sf040_init(BYTE *data, size_t size, BYTE manufacter_id, BYTE model_id, WORD adr1, WORD adr2, int sector_size);
+void sst39sf040_reset(void);
 void sst39sf040_write(DBWORD address, BYTE value);
 BYTE sst39sf040_read(DBWORD address);
 

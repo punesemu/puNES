@@ -16,13 +16,25 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
+#include <stdlib.h>
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
 #include "ines.h"
+#include "tas.h"
 #include "save_slot.h"
+#include "SST39SF040.h"
 
-INLINE static void mirroring_fix_UNROM_BK2(void);
+INLINE static void mirroring_fix_UNROM512(void);
+
+struct _unrom512 {
+	BYTE reg;
+} unrom512;
+struct _unrom512tmp {
+	BYTE mirroring;
+	BYTE *sst39sf040;
+} unrom512tmp;
 
 void map_init_UxROM(BYTE model) {
 	switch (model) {
@@ -41,13 +53,38 @@ void map_init_UxROM(BYTE model) {
 		case UNROM180:
 			EXTCL_CPU_WR_MEM(UNROM_180);
 			break;
-		case UNROM_BK2:
-			EXTCL_CPU_WR_MEM(UNROM_BK2);
-			EXTCL_SAVE_MAPPER(UNROM_BK2);
+		case UNROM512:
+			EXTCL_MAPPER_QUIT(UNROM512);
+			EXTCL_CPU_WR_MEM(UNROM512);
+			EXTCL_CPU_RD_MEM(UNROM512);
+			EXTCL_SAVE_MAPPER(UNROM512);
+			mapper.internal_struct[0] = (BYTE *)&unrom512;
+			mapper.internal_struct_size[0] = sizeof(unrom512);
 
-			map_chr_ram_extra_init(0x2000 * 4);
+			memset(&unrom512, 0x00, sizeof(unrom512));
 
-			mirroring_fix_UNROM_BK2();
+			// questa mapper non ha CHR ROM
+			if (info.format != NES_2_0) {
+				info.chr.rom.banks_8k = 4;
+			}
+
+			if (ines.flags[FL6] & 0x02) {
+				EXTCL_BATTERY_IO(UNROM512);
+				if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+					unrom512tmp.sst39sf040 = (BYTE *)malloc(prg_size());
+					sst39sf040_init(unrom512tmp.sst39sf040, prg_size(), 0xBF, 0xB7, 0x5555, 0x2AAA, 4096);
+					memcpy(unrom512tmp.sst39sf040, prg_rom(), prg_size());
+				}
+				info.mapper.force_battery_io = TRUE;
+			} else {
+				unrom512tmp.sst39sf040 = NULL;
+			}
+
+			unrom512tmp.mirroring = (ines.flags[FL6] & 0x01) | ((ines.flags[FL6] & 0x08) >> 2);
+			if ((info.crc32.prg == 0xF9B944CF)) {
+				unrom512tmp.mirroring = mirroring_V();
+			}
+			mirroring_fix_UNROM512();
 			break;
 	}
 }
@@ -84,61 +121,108 @@ void extcl_cpu_wr_mem_UnlROM(UNUSED(WORD address), BYTE value) {
 	map_prg_rom_8k_update();
 }
 
-void extcl_cpu_wr_mem_UNROM_BK2(UNUSED(WORD address), BYTE value) {
-	if (value & 0x80) {
-		mirroring_SCR1();
+void extcl_mapper_quit_UNROM512(void) {
+	if (unrom512tmp.sst39sf040) {
+		free(unrom512tmp.sst39sf040);
+		unrom512tmp.sst39sf040 = NULL;
 	}
-
-	{
-		DBWORD bank = ((value & 0x60) >> 5) << 13;
-
-		chr.bank_1k[0] = &chr.extra.data[bank];
-		chr.bank_1k[1] = &chr.extra.data[bank | 0x0400];
-		chr.bank_1k[2] = &chr.extra.data[bank | 0x0800];
-		chr.bank_1k[3] = &chr.extra.data[bank | 0x0C00];
-		chr.bank_1k[4] = &chr.extra.data[bank | 0x1000];
-		chr.bank_1k[5] = &chr.extra.data[bank | 0x1400];
-		chr.bank_1k[6] = &chr.extra.data[bank | 0x1800];
-		chr.bank_1k[7] = &chr.extra.data[bank | 0x1C00];
-	}
-
-	value &= 0x1F;
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, value);
-	map_prg_rom_8k_update();
 }
-BYTE extcl_save_mapper_UNROM_BK2(BYTE mode, BYTE slot, FILE *fp) {
+void extcl_cpu_wr_mem_UNROM512(UNUSED(WORD address), BYTE value) {
+	if (!(ines.flags[FL6] & 0x02) || (address >= 0xC000)) {
+		DBWORD bank;
+
+		unrom512.reg = value;
+
+		value = unrom512.reg & 0x1F;
+		control_bank(info.prg.rom.max.banks_16k)
+		map_prg_rom_8k(2, 0, value);
+		map_prg_rom_8k_update();
+
+		bank = (unrom512.reg & 0x60) >> 5;
+		_control_bank(bank, info.chr.rom.max.banks_8k)
+		bank <<= 13;
+		chr.bank_1k[0] = chr_pnt(bank);
+		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+		chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+
+		mirroring_fix_UNROM512();
+	} else {
+		sst39sf040_write(((unrom512.reg & 0x1F) << 14) | (address & 0x3FFF), value);
+	}
+}
+BYTE extcl_cpu_rd_mem_UNROM512(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+	switch (address & 0xF000) {
+		case 0x8000:
+		case 0x9000:
+		case 0xA000:
+		case 0xB000:
+			return (sst39sf040_read(((unrom512.reg & 0x1F) << 14) | (address & 0x3FFF)));
+	}
+	return (openbus);
+}
+BYTE extcl_save_mapper_UNROM512(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, unrom512.reg);
 	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
 
 	if (mode == SAVE_SLOT_READ) {
-		mirroring_fix_UNROM_BK2();
+		mirroring_fix_UNROM512();
 	}
 
 	return (EXIT_OK);
 }
+void extcl_battery_io_UNROM512(BYTE mode, FILE *fp) {
+	if (!fp || (tas.type != NOTAS)) {
+		return;
+	}
 
-INLINE static void mirroring_fix_UNROM_BK2(void) {
-	// gestione mirroring mapper 30
-	if ((info.format == iNES_1_0) || (info.format == iNES_1_0)) {
-		BYTE mirroring = (ines.flags[FL6] & 0x01) | ((ines.flags[FL6] & 0x08) >> 2);
-
-		switch (mirroring) {
-			case 0:
-				mirroring_H();
-				break;
-			case 1:
-				mirroring_V();
-				break;
-			case 2:
-				mirroring_SCR0();
-				break;
-			case 3:
-				// 4-Screen, cartridge VRAM
-				ntbl.bank_1k[0] = &chr.extra.data[0x7000];
-				ntbl.bank_1k[1] = &chr.extra.data[0x7400];
-				ntbl.bank_1k[2] = &chr.extra.data[0x7800];
-				ntbl.bank_1k[3] = &chr.extra.data[0x7C00];
-				break;
+	if (mode == WR_BAT) {
+		if (info.prg.ram.bat.banks) {
+			map_bat_wr_default(fp);
 		}
+		if (unrom512tmp.sst39sf040 && (fwrite(unrom512tmp.sst39sf040, prg_size(), 1, fp) < 1)) {
+			fprintf(stderr, "error on write flash chip\n");
+		}
+	} else {
+		if (info.prg.ram.bat.banks) {
+			map_bat_rd_default(fp);
+		}
+		if (unrom512tmp.sst39sf040 && (fread(unrom512tmp.sst39sf040, prg_size(), 1, fp) < 1)) {
+			fprintf(stderr, "error on read flash chip\n");
+		}
+	}
+}
+
+INLINE static void mirroring_fix_UNROM512(void) {
+	DBWORD bank;
+
+	switch (unrom512tmp.mirroring) {
+		case 0:
+			mirroring_H();
+			break;
+		case 1:
+			mirroring_V();
+			break;
+		case 2:
+			if (unrom512.reg & 0x80) {
+				mirroring_SCR1();
+			} else {
+				mirroring_SCR0();
+			}
+			break;
+		case 3:
+			// 4-Screen, cartridge VRAM
+			bank = 3;
+			_control_bank(bank, info.chr.rom.max.banks_8k)
+			bank <<= 13;
+			ntbl.bank_1k[0] = chr_pnt(bank | 0x1000);
+			ntbl.bank_1k[1] = chr_pnt(bank | 0x1400);
+			ntbl.bank_1k[2] = chr_pnt(bank | 0x1800);
+			ntbl.bank_1k[3] = chr_pnt(bank | 0x1C00);
+			break;
 	}
 }

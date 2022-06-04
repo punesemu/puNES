@@ -59,7 +59,7 @@ void map_init_CHEAPOCABRA(void) {
 
 		if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 			gtromtmp.sst39sf040 = (BYTE *)malloc(prg_size());
-			sst39sf040_init(gtromtmp.sst39sf040, prg_size());
+			sst39sf040_init(gtromtmp.sst39sf040, prg_size(), 0xBF, 0xB7, 0x5555, 0x2AAA, 4096);
 			memcpy(gtromtmp.sst39sf040, prg_rom(), prg_size());
 		}
 
@@ -148,7 +148,6 @@ BYTE extcl_rd_nmt_CHEAPOCABRA_GTROM(WORD address) {
 	//	return (gtromtmp.vram[address & 0x1FFF]);
 	//}
 }
-
 void extcl_battery_io_CHEAPOCABRA_GTROM(BYTE mode, FILE *fp) {
 	if (!fp || (tas.type != NOTAS)) {
 		return;
