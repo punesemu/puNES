@@ -483,6 +483,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_KS7017.h \
 	mappers/mapper_KS7021A.c \
 	mappers/mapper_KS7021A.h \
+	mappers/mapper_KS7030.c \
+	mappers/mapper_KS7030.h \
 	mappers/mapper_KS7031.c \
 	mappers/mapper_KS7031.h \
 	mappers/mapper_KS7032.c \

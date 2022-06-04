@@ -57,7 +57,7 @@ void extcl_after_mapper_init_428(void) {
 	chr_fix_428();
 	mirroring_fix_428();
 }
-void extcl_cpu_wr_mem_428(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_428(WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x6000:
 		case 0x7000:
