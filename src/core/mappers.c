@@ -986,6 +986,9 @@ BYTE map_init(void) {
 		case 352:
 			map_init_KS106C();
 			break;
+		case 353:
+			map_init_353();
+			break;
 		case 375:
 			map_init_375();
 			break;
