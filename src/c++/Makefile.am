@@ -16,4 +16,10 @@ libcplus_a_SOURCES += \
 	crc/crc.cpp \
 	crc/Crc32.h \
 	crc/Crc32.cpp
+
+libcplus_a_SOURCES += \
+	pic16c5x/pic16c5x.h \
+	pic16c5x/pic16c5x.cpp \
+	pic16c5x/pic16c5x_m.h \
+	pic16c5x/pic16c5x_m.cpp
 	

@@ -3929,6 +3929,14 @@ static const _dbelement dblist[] = {
 	/* 4-in-1 (MGC-026, TXC, Idea-Tek).nes */
 	{"a612291ad4cd3a9a4dc8a3ff511a7c3f4979d0af", 271, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* ------------------------------------- 3D-BLOCK ----------------------------------------- */
+	/* 3D Block (Hwang Shinwei) [!].nes */
+	{"56cba51568b0f1458aa7e0de6575d1225e40f7a1", 355, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Block Force.nes [nes2:0] */
+	{"d326485501ac08b5c3815bfd8dff3979c97556c6", 355, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Block Force (Hwang Shinwei).nes */
+	{"5de850b4e28c49ff9ed53def2a335d29b09387c2", 355, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* -------------------------------------- VS System --------------------------------------- */
 	/* Battle City (VS) [p1][o1].nes */
 	{"3e9a70cb6e7118b1a3b5fb5354679a9fdfe567a0", 0, DEFAULT, DEFAULT, DEFAULT, DEFAULT, RP2C04, DEFAULT, 0x0005, NOEXTRA},

@@ -267,6 +267,7 @@
 #include "mappers/mapper_KONAMIQTAI.h"
 #include "mappers/mapper_22026.h"
 #include "mappers/mapper_KS7030.h"
+#include "mappers/mapper_3DBLOCK.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\
