@@ -892,7 +892,7 @@ INLINE static void prg_swap_32k_Coolgirl(BYTE flash, DBWORD value) {
 INLINE static void chr_fix_Coolgirl(void) {
 	BYTE chr_shift = (coolgirl.mapper == 24) && (coolgirl.flags & 0x02);
 	DBWORD mask = (((((~coolgirl.chr.mask & 0x1F) + 1) * 0x2000) / 0x400) - 1) >> chr_shift;
-	DBWORD bank[7];
+	DBWORD bank[8];
 
 	switch (coolgirl.chr.mode & 0x07) {
 		default:

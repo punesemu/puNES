@@ -193,7 +193,7 @@ void extcl_cpu_wr_mem_TQROM(WORD address, BYTE value) {
 void extcl_wr_chr_TQROM(WORD address, BYTE value) {
 	const BYTE slot = address >> 10;
 
-	if (txrom.chr[slot]) {
+	if (txrom.chr[slot][0]) {
 		chr.bank_1k[slot][address & 0x3FF] = value;
 	}
 }

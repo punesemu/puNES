@@ -67,6 +67,7 @@ void extcl_cpu_wr_mem_237(WORD address, BYTE value) {
 		BYTE bank[2], outer = ((m237.reg[0] & 0x0004) << 3) | (m237.reg[1] & 0x18);
 
 		switch (m237.reg[1] & 0xC0) {
+			default:
 			case 0x00:
 				bank[0] = outer | (m237.reg[1] & 0x07);
 				bank[1] = outer | 0x07;
