@@ -992,6 +992,9 @@ BYTE map_init(void) {
 		case 355:
 			map_init_3DBLOCK();
 			break;
+		case 356:
+			map_init_356();
+			break;
 		case 375:
 			map_init_375();
 			break;
