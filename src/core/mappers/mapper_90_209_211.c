@@ -283,6 +283,7 @@ void extcl_cpu_wr_mem_90_209_211(WORD address, BYTE value) {
 						case MAP281:
 						case MAP282:
 						case MAP295:
+						case MAP358:
 							m90_209_211.nmt.extended_mode = !!(value & 0x20);
 							break;
 						case MAP90:
@@ -458,6 +459,7 @@ INLINE static void prg_setup_90_209_211(void) {
 			mask = 0x1F;
 			break;
 		case MAP282:
+		case MAP358:
 			outer = ((m90_209_211.mode[3] & 0x06) << 4);
 			mask = 0x1F;
 			break;
@@ -581,6 +583,15 @@ INLINE static void chr_setup_90_209_211(void) {
 			outer = (m90_209_211.mode[3] & 0x03) << 7;
 			mask = 0x7F;
 			break;
+		case MAP358:
+			if (!(m90_209_211.mode[3] & 0x20)) {
+				outer = ((m90_209_211.mode[3] & 0x01) | ((m90_209_211.mode[3] & 0x04) >> 1)) << 8;
+				mask = 0xFF;
+			} else {
+				outer = (m90_209_211.mode[3] & 0x04) << 7;
+				mask = 0x1FF;
+			}
+			break;
 		default:
 			if (!(m90_209_211.mode[3] & 0x20)) {
 				outer = ((m90_209_211.mode[3] & 0x01) | ((m90_209_211.mode[3] & 0x18) >> 2)) << 8;
@@ -695,6 +706,15 @@ INLINE static void nmt_setup_90_209_211(void) {
 			case MAP295:
 				outer = (m90_209_211.mode[3] & 0x03) << 7;
 				mask = 0x7F;
+				break;
+			case MAP358:
+				if (!(m90_209_211.mode[3] & 0x20)) {
+					outer = ((m90_209_211.mode[3] & 0x01) | ((m90_209_211.mode[3] & 0x18) >> 2)) << 8;
+					mask = 0xFF;
+				} else {
+					outer = (m90_209_211.mode[3] & 0x18) << 6;
+					mask = 0x1FF;
+				}
 				break;
 			default:
 				if (!(m90_209_211.mode[3] & 0x20)) {

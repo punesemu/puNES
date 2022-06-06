@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-enum _m90_209_211_types { MAP90, MAP209, MAP211, MAP281, MAP282, MAP295 };
+enum _m90_209_211_types { MAP90, MAP209, MAP211, MAP281, MAP282, MAP295, MAP358 };
 
 void map_init_90_209_211(BYTE model);
 void extcl_cpu_wr_mem_90_209_211(WORD address, BYTE value);
