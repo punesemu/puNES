@@ -95,7 +95,7 @@ void extcl_cpu_wr_mem_KONAMIQTAI(WORD address, BYTE value) {
 		case 0x7000:
 			konamiqtaitmp.prg_7000[address & 0x0FFF] = value;
 			break;
-		case 0xD000:
+		case 0xD000: {
 			BYTE reg = (address & 0x0F00) >> 8;
 
 			konamiqtai.reg[reg] = value;
@@ -136,6 +136,7 @@ void extcl_cpu_wr_mem_KONAMIQTAI(WORD address, BYTE value) {
 					break;
 			}
 			break;
+		}
 	}
 }
 BYTE extcl_cpu_rd_mem_KONAMIQTAI(WORD address, BYTE openbus, UNUSED(BYTE before)) {
