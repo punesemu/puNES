@@ -180,6 +180,7 @@
 #include "mappers/mapper_357.h"
 #include "mappers/mapper_359.h"
 #include "mappers/mapper_360.h"
+#include "mappers/mapper_361.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"
