@@ -182,6 +182,7 @@
 #include "mappers/mapper_360.h"
 #include "mappers/mapper_361.h"
 #include "mappers/mapper_372.h"
+#include "mappers/mapper_374.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"

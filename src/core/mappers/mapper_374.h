@@ -16,48 +16,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_MMC1_H_
-#define MAPPER_MMC1_H_
+#ifndef MAPPER_374_H_
+#define MAPPER_374_H_
 
 #include "common.h"
 
-enum MMC1_types {
-	SNROM,
-	SOROM,
-	SUROM,
-	SXROM,
-	SEROM = 5,
-	SKROM = 6,
-	SJROM = 7,
-	FARIDSLROM = 8,
-	MAP111 = 9,
-	MAP297 = 10,
-	MAP374 = 11,
-	BAD_YOSHI_U = 20,
-	MOWPC10
-};
+void map_init_374(void);
+void extcl_after_mapper_init_374(void);
+BYTE extcl_save_mapper_374(BYTE mode, BYTE slot, FILE *fp);
 
-typedef struct _mmc1 {
-	BYTE reg;
-	BYTE pos;
-	BYTE prg_mode;
-	BYTE chr_mode;
-	BYTE ctrl;
-	BYTE chr0;
-	BYTE chr1;
-	BYTE prg0;
-	BYTE reset;
-	BYTE prg_upper;
-	BYTE chr_upper;
-
-	// da non salvare
-	BYTE prg_mask;
-} _mmc1;
-
-extern _mmc1 mmc1;
-
-void map_init_MMC1(void);
-void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value);
-BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp);
-
-#endif /* MAPPER_MMC1_H_ */
+#endif /* MAPPER_374_H_ */

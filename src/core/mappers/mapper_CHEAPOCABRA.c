@@ -39,7 +39,7 @@ struct _gtromtmp {
 
 void map_init_CHEAPOCABRA(void) {
 	if (!mapper.write_vram) {
-		info.mapper.submapper = M111;
+		info.mapper.submapper = MAP111;
 		map_init_MMC1();
 	} else {
 		EXTCL_AFTER_MAPPER_INIT(CHEAPOCABRA_GTROM);

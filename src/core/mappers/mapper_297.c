@@ -30,7 +30,7 @@ struct _m297 {
 } m297;
 
 void map_init_297(void) {
-	info.mapper.submapper = M297;
+	info.mapper.submapper = MAP297;
 	map_init_MMC1();
 
 	EXTCL_AFTER_MAPPER_INIT(297);

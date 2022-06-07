@@ -54,6 +54,8 @@ void map_init_372(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m372, 0x00, sizeof(m372));
 
+	m372.reg[2] = 0x0F;
+
 	m372.mmc3[0] = 0;
 	m372.mmc3[1] = 2;
 	m372.mmc3[2] = 4;
