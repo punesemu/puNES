@@ -46,6 +46,7 @@ jobs:
             autoconf
             perl
             ruby
+            libtool
             mingw-w64-${{ matrix.env }}-cmake
             mingw-w64-${{ matrix.env }}-toolchain
 
