@@ -23,7 +23,6 @@
 
 INLINE static void prg_fix_374(void);
 INLINE static void chr_fix_374(void);
-INLINE static void mirroring_fix_374(void);
 
 struct _m374 {
 	BYTE index;
@@ -53,7 +52,6 @@ void map_init_374(void) {
 void extcl_after_mapper_init_374(void) {
 	prg_fix_374();
 	chr_fix_374();
-	mirroring_fix_374();
 }
 BYTE extcl_save_mapper_374(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m374.index);
@@ -89,12 +87,4 @@ INLINE static void chr_fix_374(void) {
 	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
-}
-INLINE static void mirroring_fix_374(void) {
-	//mirroring_V();
-
-
-
-
-
 }
