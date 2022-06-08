@@ -286,6 +286,7 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 						case MAP295:
 						case MAP358:
 						case MAP386:
+						case MAP387:
 							jyasic.nmt.extended_mode = !!(value & 0x20);
 							break;
 						case MAP90:
@@ -472,6 +473,10 @@ INLINE static void prg_setup_JYASIC(void) {
 		case MAP386:
 			outer = ((jyasic.mode[3] & 0x02) << 4) | ((jyasic.mode[3] & 0x08) << 3);
 			mask = 0x1F;
+			break;
+		case MAP387:
+			outer = ((jyasic.mode[3] & 0x02) << 3) | ((jyasic.mode[3] & 0x08) << 2);
+			mask = 0x0F;
 			break;
 		default:
 			outer = ((jyasic.mode[3] & 0x06) << 5);
@@ -719,6 +724,7 @@ INLINE static void ppu_setup_JYASIC(WORD *outer, WORD *mask) {
 			break;
 		case MAP358:
 		case MAP386:
+		case MAP387:
 			if (!(jyasic.mode[3] & 0x20)) {
 				(*outer) = ((jyasic.mode[3] & 0x01) | ((jyasic.mode[3] & 0x04) >> 1)) << 8;
 				(*mask) = 0xFF;
