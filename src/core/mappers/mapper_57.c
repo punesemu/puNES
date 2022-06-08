@@ -25,18 +25,53 @@
 struct _m57 {
 	BYTE reg[2];
 } m57;
+struct _m57tmp {
+	BYTE dipswitch;
+	BYTE mask;
+	BYTE start;
+	SBYTE op;
+} m57tmp;
 
 void map_init_57(void) {
 	EXTCL_CPU_WR_MEM(57);
+	EXTCL_CPU_RD_MEM(57);
 	EXTCL_SAVE_MAPPER(57);
 	mapper.internal_struct[0] = (BYTE *)&m57;
 	mapper.internal_struct_size[0] = sizeof(m57);
 
 	if (info.reset >= HARD) {
 		memset(&m57, 0x00, sizeof(m57));
-
-		extcl_cpu_wr_mem_57(0x8800, 0x00);
 	}
+
+	if (
+		(info.crc32.prg == 0xF77A2663) || // 4-in-1 (ES-Q803B_20210617) (Unl) [p1].nes
+		(info.crc32.prg == 0xDB6228A0)) { // 4-in-1_YH-4132.nes
+		m57tmp.mask = 0x01;
+		m57tmp.start = 0x01;
+		m57tmp.op = 1;
+	} else if (
+		(info.crc32.prg == 0xC74F9C72)) { // 1998 Series No. 10.nes
+		m57tmp.mask = 0x03;
+		m57tmp.start = 0x02;
+		m57tmp.op = -1;
+	} else if (
+		(info.crc32.prg == 0xA8930B3B)) { // 32-in-1 (42, 52, 62-in-1) (ABCARD-02) (Unl) [p1].nes
+		m57tmp.mask = 0x03;
+		m57tmp.start = 0x03;
+		m57tmp.op = -1;
+	} else {
+		m57tmp.mask = 0x03;
+		m57tmp.start = 0x00;
+		m57tmp.op = 1;
+	}
+
+	if (info.reset == RESET) {
+		m57tmp.dipswitch = (m57tmp.dipswitch + m57tmp.op) & m57tmp.mask;
+	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+		m57tmp.dipswitch = m57tmp.start;
+	}
+
+	extcl_cpu_wr_mem_57(0x8800, 0x00);
 }
 void extcl_cpu_wr_mem_57(WORD address, BYTE value) {
 	DBWORD bank;
@@ -77,6 +112,12 @@ void extcl_cpu_wr_mem_57(WORD address, BYTE value) {
 	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+}
+BYTE extcl_cpu_rd_mem_57(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+	if ((address >= 0x6000) && (address <= 0x6FFF)) {
+		return (m57tmp.dipswitch);
+	}
+	return (openbus);
 }
 BYTE extcl_save_mapper_57(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m57.reg);
