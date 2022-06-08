@@ -44,15 +44,17 @@ void map_init_BMC70IN1(void) {
 		// 800-in-1 [p1][U][!].unf
 		info.mapper.submapper = (prg_size() == (1024 * 512)) && (info.crc32.prg == 0x0BB4FD7A) ? BMC70IN1B : BMC70IN1;
 	}
-	if (info.reset >= HARD) {
-		if (info.mapper.submapper == BMC70IN1) {
+
+	if (info.reset == RESET) {
+		bmc70in1tmp.reset = (bmc70in1tmp.reset + 1) & 0x0F;
+	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+		if (info.crc32.prg == 0xF92EFDE7) { // 150-in-1.nes (mapper 390)
+			bmc70in1tmp.reset = 0x0B;
+		} else if (info.mapper.submapper == BMC70IN1) {
 			bmc70in1tmp.reset = 0x0D;
 		} else {
 			bmc70in1tmp.reset = 0x06;
 		}
-	} else if (info.reset == RESET) {
-		bmc70in1tmp.reset++;
-		bmc70in1tmp.reset = bmc70in1tmp.reset & 0x0F;
 	}
 
 	info.mapper.extend_rd = TRUE;
