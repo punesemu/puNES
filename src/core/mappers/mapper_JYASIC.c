@@ -290,6 +290,7 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 							jyasic.nmt.extended_mode = !!(value & 0x20);
 							break;
 						case MAP90:
+						case MAP388:
 						default:
 							jyasic.nmt.extended_mode = FALSE;
 							break;
@@ -297,7 +298,7 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 					jyasic.mode[index] = value;
 					break;
 				case 1:
-					if (jyasictmp.model == MAP90) {
+					if ((jyasictmp.model == MAP90) || (jyasictmp.model == MAP388)) {
 						value &= ~0x08;
 					}
 					jyasic.mode[index] = value;
@@ -458,16 +459,16 @@ INLINE static void prg_setup_JYASIC(void) {
 
 	switch(jyasictmp.model) {
 		case MAP281:
-			outer = ((jyasic.mode[3] & 0x03) << 5);
+			outer = (jyasic.mode[3] & 0x03) << 5;
 			mask = 0x1F;
 			break;
 		case MAP282:
 		case MAP358:
-			outer = ((jyasic.mode[3] & 0x06) << 4);
+			outer = (jyasic.mode[3] & 0x06) << 4;
 			mask = 0x1F;
 			break;
 		case MAP295:
-			outer = ((jyasic.mode[3] & 0x07) << 4);
+			outer = (jyasic.mode[3] & 0x07) << 4;
 			mask = 0x0F;
 			break;
 		case MAP386:
@@ -478,8 +479,12 @@ INLINE static void prg_setup_JYASIC(void) {
 			outer = ((jyasic.mode[3] & 0x02) << 3) | ((jyasic.mode[3] & 0x08) << 2);
 			mask = 0x0F;
 			break;
+		case MAP388:
+			outer = (jyasic.mode[3] & 0x0C) << 3;
+			mask = 0x1F;
+			break;
 		default:
-			outer = ((jyasic.mode[3] & 0x06) << 5);
+			outer = (jyasic.mode[3] & 0x06) << 5;
 			mask = 0x3F;
 			break;
 	}
@@ -730,6 +735,15 @@ INLINE static void ppu_setup_JYASIC(WORD *outer, WORD *mask) {
 				(*mask) = 0xFF;
 			} else {
 				(*outer) = (jyasic.mode[3] & 0x04) << 7;
+				(*mask) = 0x1FF;
+			}
+			break;
+		case MAP388:
+			if (!(jyasic.mode[3] & 0x20)) {
+				(*outer) = ((jyasic.mode[3] & 0x01) | ((jyasic.mode[3] & 0x02) >> 0)) << 8;
+				(*mask) = 0xFF;
+			} else {
+				(*outer) = (jyasic.mode[3] & 0x02) << 8;
 				(*mask) = 0x1FF;
 			}
 			break;

@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-enum _jyasic_types { MAP90, MAP209, MAP211, MAP281, MAP282, MAP295, MAP358, MAP386, MAP387 };
+enum _jyasic_types { MAP90, MAP209, MAP211, MAP281, MAP282, MAP295, MAP358, MAP386, MAP387, MAP388 };
 
 void map_init_JYASIC(BYTE model);
 void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value);
