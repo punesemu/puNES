@@ -16,24 +16,24 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_90_209_211_H_
-#define MAPPER_90_209_211_H_
+#ifndef MAPPER_JYASIC_H_
+#define MAPPER_JYASIC_H_
 
 #include "common.h"
 
-enum _m90_209_211_types { MAP90, MAP209, MAP211, MAP281, MAP282, MAP295, MAP358 };
+enum _jyasic_types { MAP90, MAP209, MAP211, MAP281, MAP282, MAP295, MAP358, MAP386 };
 
-void map_init_90_209_211(BYTE model);
-void extcl_cpu_wr_mem_90_209_211(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_90_209_211(WORD address, BYTE openbus, BYTE before);
-BYTE extcl_save_mapper_90_209_211(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_90_209_211(void);
-void extcl_rd_ppu_90_209_211(WORD address);
-BYTE extcl_rd_chr_90_209_211(WORD address);
-void extcl_wr_nmt_90_209_211(WORD address, BYTE value);
-void extcl_ppu_000_to_255_90_209_211(void);
-void extcl_ppu_256_to_319_90_209_211(void);
-void extcl_ppu_320_to_34x_90_209_211(void);
-void extcl_update_r2006_90_209_211(WORD new_r2006, WORD old_r2006);
+void map_init_JYASIC(BYTE model);
+void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_JYASIC(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_JYASIC(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_JYASIC(void);
+void extcl_rd_ppu_JYASIC(WORD address);
+BYTE extcl_rd_chr_JYASIC(WORD address);
+void extcl_wr_nmt_JYASIC(WORD address, BYTE value);
+void extcl_ppu_000_to_255_JYASIC(void);
+void extcl_ppu_256_to_319_JYASIC(void);
+void extcl_ppu_320_to_34x_JYASIC(void);
+void extcl_update_r2006_JYASIC(WORD new_r2006, WORD old_r2006);
 
-#endif /* MAPPER_90_209_211_H_ */
+#endif /* MAPPER_JYASIC_H_ */

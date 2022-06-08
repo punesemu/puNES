@@ -129,7 +129,7 @@
 #include "mappers/mapper_163.h"
 #include "mappers/mapper_164.h"
 #include "mappers/mapper_249.h"
-#include "mappers/mapper_90_209_211.h"
+#include "mappers/mapper_JYASIC.h"
 #include "mappers/mapper_83.h"
 #include "mappers/mapper_28.h"
 #include "mappers/mapper_42.h"

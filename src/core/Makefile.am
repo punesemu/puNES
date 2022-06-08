@@ -351,8 +351,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_831128C.h \
 	mappers/mapper_891227.c \
 	mappers/mapper_891227.h \
-	mappers/mapper_90_209_211.c \
-	mappers/mapper_90_209_211.h \
+	mappers/mapper_JYASIC.c \
+	mappers/mapper_JYASIC.h \
 	mappers/mapper_91.c \
 	mappers/mapper_91.h \
 	mappers/mapper_A65AS.c \

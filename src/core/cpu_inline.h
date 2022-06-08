@@ -1048,7 +1048,7 @@ INLINE static void ppu_wr_mem(WORD address, BYTE value) {
 		if (extcl_wr_nmt) {
 			/*
 			 * utilizzato dalle mappers :
-			 * 90_209_211
+			 * JYASIC
 			 */
 			extcl_wr_nmt(address, value);
 			return;

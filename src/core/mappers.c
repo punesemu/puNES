@@ -337,7 +337,7 @@ BYTE map_init(void) {
 			map_init_Sunsoft(SUN2B);
 			break;
 		case 90:
-			map_init_90_209_211(MAP90);
+			map_init_JYASIC(MAP90);
 			break;
 		case 91:
 			map_init_91();
@@ -645,13 +645,13 @@ BYTE map_init(void) {
 			map_init_208();
 			break;
 		case 209:
-			map_init_90_209_211(MAP209);
+			map_init_JYASIC(MAP209);
 			break;
 		case 210:
 			map_init_Namco(N163);
 			break;
 		case 211:
-			map_init_90_209_211(MAP211);
+			map_init_JYASIC(MAP211);
 			break;
 		case 212:
 			map_init_212();
@@ -813,10 +813,10 @@ BYTE map_init(void) {
 			map_init_80013B();
 			break;
 		case 281:
-			map_init_90_209_211(MAP281);
+			map_init_JYASIC(MAP281);
 			break;
 		case 282:
-			map_init_90_209_211(MAP282);
+			map_init_JYASIC(MAP282);
 			break;
 		case 283:
 			map_init_GS_20xx();
@@ -846,7 +846,7 @@ BYTE map_init(void) {
 			map_init_DRAGONFIGHTER();
 			break;
 		case 295:
-			map_init_90_209_211(MAP295);
+			map_init_JYASIC(MAP295);
 			break;
 		case 297:
 			map_init_297();
@@ -999,7 +999,7 @@ BYTE map_init(void) {
 			map_init_357();
 			break;
 		case 358:
-			map_init_90_209_211(MAP358);
+			map_init_JYASIC(MAP358);
 			break;
 		case 359:
 			map_init_359(MAP359);
@@ -1030,6 +1030,9 @@ BYTE map_init(void) {
 			break;
 		case 382:
 			map_init_382();
+			break;
+		case 386:
+			map_init_JYASIC(MAP386);
 			break;
 		case 399:
 			map_init_399();
