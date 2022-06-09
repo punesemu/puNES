@@ -1046,6 +1046,9 @@ BYTE map_init(void) {
 		case 390:
 			map_init_BMC70IN1();
 			break;
+		case 393:
+			map_init_393();
+			break;
 		case 399:
 			map_init_399();
 			break;

@@ -287,6 +287,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_382.h \
 	mappers/mapper_389.c \
 	mappers/mapper_389.h \
+	mappers/mapper_393.c \
+	mappers/mapper_393.h \
 	mappers/mapper_399.c \
 	mappers/mapper_399.h \
 	mappers/mapper_3DBLOCK.c \
