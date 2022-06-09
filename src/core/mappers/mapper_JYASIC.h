@@ -24,7 +24,7 @@
 enum _jyasic_types {
 	 MAP90, MAP209, MAP211, MAP281,
 	MAP282, MAP295, MAP358, MAP386,
-	MAP387, MAP388, MAP394 };
+	MAP387, MAP388, MAP394, MAP397 };
 
 typedef struct _jyasic {
 	BYTE mul[2];

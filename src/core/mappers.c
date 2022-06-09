@@ -1055,6 +1055,9 @@ BYTE map_init(void) {
 		case 396:
 			map_init_396();
 			break;
+		case 397:
+			map_init_JYASIC(MAP397);
+			break;
 		case 399:
 			map_init_399();
 			break;

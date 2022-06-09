@@ -43,6 +43,7 @@ INLINE static void irq_clock_prescaler_JYASIC(void);
 	ntbl.bank_1k[index] = &ntbl.data[value << 10];\
 	jyasic.nmt.write[index] = TRUE
 
+_jyasic jyasic;
 struct _jyasictmp {
 	BYTE model;
 	BYTE dipswitch;
@@ -51,8 +52,6 @@ struct _jyasictmp {
 		BYTE *rom_8k;
 	} m6000;
 } jyasictmp;
-
-_jyasic jyasic;
 
 void map_init_JYASIC(BYTE model) {
 	BYTE i;
@@ -264,6 +263,7 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 						case MAP386:
 						case MAP387:
 						case MAP394:
+						case MAP397:
 							jyasic.nmt.extended_mode = !!(value & 0x20);
 							break;
 						case MAP90:
@@ -468,6 +468,10 @@ INLINE static void prg_setup_JYASIC(void) {
 			break;
 		case MAP394:
 			outer = ((m394.reg[3] & 0x08) << 1) | ((m394.reg[1] & 0x01) << 5);
+			mask = 0x1F;
+			break;
+		case MAP397:
+			outer = ((jyasic.mode[3] & 0x07) << 4) & 0x70;
 			mask = 0x1F;
 			break;
 		default:
@@ -711,6 +715,7 @@ INLINE static void ppu_setup_JYASIC(WORD *outer, WORD *mask) {
 			(*mask) = 0xFF;
 			break;
 		case MAP295:
+		case MAP397:
 			(*outer) = (jyasic.mode[3] & 0x03) << 7;
 			(*mask) = 0x7F;
 			break;
