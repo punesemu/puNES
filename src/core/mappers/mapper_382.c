@@ -45,7 +45,7 @@ void extcl_cpu_wr_mem_382(WORD address, BYTE value) {
 	if (!(m382.reg[0] & 0x0020)) {
 		m382.reg[0] = address;
 	}
-    // bus conflict
+	// bus conflict
 	m382.reg[1] = value & prg_rom_rd(address);
 	prg_fix_382();
 	mirroring_fix_382();

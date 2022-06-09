@@ -152,10 +152,10 @@ void extcl_cpu_wr_mem_353(WORD address, BYTE value) {
 			}
 			return;
 		case 0xA000:
-	        if (m353.reg == 0) {
+			if (m353.reg == 0) {
 				return;
-	        }
-	        break;
+			}
+			break;
 		}
 	}
 	extcl_cpu_wr_mem_MMC3(address, value);

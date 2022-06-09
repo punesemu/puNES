@@ -33,17 +33,17 @@ void extcl_after_mapper_init_101(void) {
 }
 void extcl_cpu_wr_mem_101(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x6FFF)) {
-	    DBWORD bank = value;
+		DBWORD bank = value;
 
-	    _control_bank(bank, info.chr.rom.max.banks_8k)
-	    bank <<= 13;
-	    chr.bank_1k[0] = chr_pnt(bank | 0x0000);
-	    chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	    chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	    chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	    chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	    chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	    chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	    chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+		_control_bank(bank, info.chr.rom.max.banks_8k)
+		bank <<= 13;
+		chr.bank_1k[0] = chr_pnt(bank | 0x0000);
+		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+		chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 	}
 }

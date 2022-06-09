@@ -103,12 +103,12 @@ BYTE extcl_save_mapper_106(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_106(void) {
-    if (m106.irq.counter != 0xFFFF) {
-    	m106.irq.counter++;
-       if ((m106.irq.counter == 0xFFFF) && m106.irq.enabled) {
-    	   irq.high |= EXT_IRQ;
-       }
-    }
+	if (m106.irq.counter != 0xFFFF) {
+		m106.irq.counter++;
+		if ((m106.irq.counter == 0xFFFF) && m106.irq.enabled) {
+			irq.high |= EXT_IRQ;
+		}
+	}
 }
 
 INLINE static void prg_fix_106(void) {
