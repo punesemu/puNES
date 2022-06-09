@@ -21,8 +21,39 @@
 
 #include "common.h"
 
-enum _jyasic_types { MAP90, MAP209, MAP211, MAP281, MAP282, MAP295, MAP358, MAP386, MAP387, MAP388 };
+enum _jyasic_types {
+	 MAP90, MAP209, MAP211, MAP281,
+	MAP282, MAP295, MAP358, MAP386,
+	MAP387, MAP388, MAP394 };
 
+typedef struct _jyasic {
+	BYTE mul[2];
+	BYTE single_byte_ram;
+	BYTE add;
+	BYTE mode[4];
+	BYTE prg[4];
+	struct _jyasic_chr {
+		BYTE latch[2];
+		BYTE low[8];
+		BYTE high[8];
+	} chr;
+	struct _jyasic_nmt {
+		BYTE extended_mode;
+		WORD reg[4];
+		BYTE write[4];
+	} nmt;
+	struct _jyasic_irq {
+		BYTE active;
+		BYTE mode;
+		BYTE prescaler;
+		BYTE count;
+		BYTE xor_value;
+		BYTE pre_size;
+		BYTE premask;
+	} irq;
+} _jyasic;
+
+extern _jyasic jyasic;
 void map_init_JYASIC(BYTE model);
 void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_JYASIC(WORD address, BYTE openbus, BYTE before);
@@ -35,5 +66,7 @@ void extcl_ppu_000_to_255_JYASIC(void);
 void extcl_ppu_256_to_319_JYASIC(void);
 void extcl_ppu_320_to_34x_JYASIC(void);
 void extcl_update_r2006_JYASIC(WORD new_r2006, WORD old_r2006);
+
+void state_fix_JYASIC(void);
 
 #endif /* MAPPER_JYASIC_H_ */

@@ -179,7 +179,7 @@ INLINE static void prg_swap_372(WORD address, WORD value) {
 	WORD base = m372.reg[1] | ((m372.reg[2] & 0xC0) << 2);
 	WORD mask = ~m372.reg[3] & 0x3F;
 
-	value = base  | (value & mask);
+	value = base | (value & mask);
 	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
