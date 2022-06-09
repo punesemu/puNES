@@ -16,38 +16,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_VRC4_H_
-#define MAPPER_VRC4_H_
+#ifndef MAPPER_398_H_
+#define MAPPER_398_H_
 
 #include "common.h"
 
-enum { VRC4A, VRC4B, VRC4C, VRC4D, VRC4E, VRC4UNL, VRC4BMC, VRC4T230 };
+void map_init_398(void);
+void extcl_after_mapper_init_398(void);
+void extcl_cpu_wr_mem_398(WORD address, BYTE value);
+BYTE extcl_save_mapper_398(BYTE mode, BYTE slot, FILE *fp);
+BYTE extcl_rd_chr_398(WORD address);
 
-typedef struct _vrc4 {
-	WORD chr_rom_high_bank[8];
-	BYTE chr_rom_bank[8];
-	BYTE swap_mode;
-	BYTE irq_enabled;
-	BYTE irq_reload;
-	BYTE irq_mode;
-	BYTE irq_acknowledge;
-	BYTE irq_count;
-	WORD irq_prescaler;
-} _vrc4;
-
-extern _vrc4 vrc4;
-
-void map_init_VRC4(BYTE revision);
-void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value);
-BYTE extcl_save_mapper_VRC4(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_VRC4(void);
-
-void map_init_VRC4BMC(void);
-void extcl_cpu_wr_mem_VRC4BMC(WORD address, BYTE value);
-
-void map_init_VRC4T230(void);
-void extcl_cpu_wr_mem_VRC4T230(WORD address, BYTE value);
-
-WORD address_VRC4(WORD address);
-
-#endif /* MAPPER_VRC4_H_ */
+#endif /* MAPPER_398_H_ */

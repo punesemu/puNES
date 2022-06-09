@@ -35,17 +35,7 @@
 #define chr_rom_1k_update_low(slot)\
 	_chr_rom_1k_update(slot, 0xF0, 0)
 
-struct _vrc4 {
-	WORD chr_rom_high_bank[8];
-	BYTE chr_rom_bank[8];
-	BYTE swap_mode;
-	BYTE irq_enabled;
-	BYTE irq_reload;
-	BYTE irq_mode;
-	BYTE irq_acknowledge;
-	BYTE irq_count;
-	WORD irq_prescaler;
-} vrc4;
+_vrc4 vrc4;
 struct _vrc4tmp {
 	BYTE type;
 } vrc4tmp;
@@ -88,13 +78,9 @@ void map_init_VRC4(BYTE revision) {
 	vrc4tmp.type = revision;
 }
 void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
-	WORD tmp = address & 0xF000;
+	WORD tmp;
 
-	if ((tmp == 0x8000) || (tmp == 0xA000)) {
-		address &= 0xF000;
-	} else {
-		address = (address & 0xF000) | table_VRC4[vrc4tmp.type][(address & mask_VRC4[vrc4tmp.type]) >> shift_VRC4[vrc4tmp.type]];
-	}
+	address = address_VRC4(address);
 
 	switch (address) {
 		case 0x8000:
@@ -339,4 +325,14 @@ void extcl_cpu_wr_mem_VRC4T230(WORD address, BYTE value) {
 	}
 
 	extcl_cpu_wr_mem_VRC4(address, value);
+}
+
+WORD address_VRC4(WORD address) {
+	WORD tmp = address & 0xF000;
+
+	if ((tmp == 0x8000) || (tmp == 0xA000)) {
+		return (address & 0xF000);
+	} else {
+		return ((address & 0xF000) | table_VRC4[vrc4tmp.type][(address & mask_VRC4[vrc4tmp.type]) >> shift_VRC4[vrc4tmp.type]]);
+	}
 }
