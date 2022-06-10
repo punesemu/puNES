@@ -202,7 +202,7 @@ INLINE static void chr_swap_372(WORD address, WORD value) {
 		control_bank(info.chr.ram.max.banks_1k)
 		chr.bank_1k[address >> 10] = &chr.extra.data[value << 10];
 	} else {
-		WORD base = m372.reg[0] | (m372.reg[2] & 0xF0) <<4;
+		WORD base = m372.reg[0] | (m372.reg[2] & 0xF0) << 4;
 		WORD mask = 0xFF >> (~m372.reg[2] & 0x0F);
 
 		value = base | (value & mask);
