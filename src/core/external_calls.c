@@ -24,6 +24,7 @@ void (*extcl_after_mapper_init)(void);
 void (*extcl_mapper_quit)(void);
 void (*extcl_cpu_wr_mem)(WORD address, BYTE value);
 BYTE (*extcl_cpu_rd_mem)(WORD address, BYTE openbus, BYTE before);
+BYTE (*extcl_cpu_rd_ram)(WORD address, BYTE openbus, BYTE before);
 BYTE (*extcl_save_mapper)(BYTE mode, BYTE slot, FILE *fp);
 // CPU
 void (*extcl_cpu_every_cycle)(void);
@@ -79,6 +80,7 @@ void extcl_init(void) {
 	extcl_mapper_quit = NULL;
 	extcl_cpu_wr_mem = NULL;
 	extcl_cpu_rd_mem = NULL;
+	extcl_cpu_rd_ram = NULL;
 	extcl_save_mapper = NULL;
 	/* CPU */
 	extcl_cpu_every_cycle = NULL;

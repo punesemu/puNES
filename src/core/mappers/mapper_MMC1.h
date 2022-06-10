@@ -58,6 +58,7 @@ extern _mmc1 mmc1;
 
 void map_init_MMC1(void);
 void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value);
+BYTE extcl_cpu_rd_ram_MMC1(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_MMC1_H_ */

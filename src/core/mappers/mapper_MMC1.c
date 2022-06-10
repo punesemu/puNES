@@ -79,13 +79,31 @@ enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 			break;\
 	}
 
+// NTF2 System Cart (U) [!].nes
+static BYTE dipswitch_mmc1[] = { 0x07, 0xFD, 0x03, 0xFE };
 _mmc1 mmc1;
+struct _mmc1tmp {
+	BYTE index;
+	BYTE dipswitch;
+} mmc1tmp;
 
 void map_init_MMC1(void) {
 	EXTCL_CPU_WR_MEM(MMC1);
 	EXTCL_SAVE_MAPPER(MMC1);
 	mapper.internal_struct[0] = (BYTE *)&mmc1;
 	mapper.internal_struct_size[0] = sizeof(mmc1);
+
+	// NTF2 System Cart (U) [!].nes
+	if (info.crc32.prg == 0xAF8F7059) {
+		EXTCL_CPU_RD_RAM(MMC1);
+
+		if (info.reset == RESET) {
+			mmc1tmp.index = (mmc1tmp.index + 1) & 0x03;
+		} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+			mmc1tmp.index = 0;
+		}
+		mmc1tmp.dipswitch = dipswitch_mmc1[mmc1tmp.index];
+	}
 
 	if (info.reset >= HARD) {
 		memset(&mmc1, 0x00, sizeof(mmc1));
@@ -216,6 +234,12 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 		/* azzero posizione e registro temporaneo */
 		mmc1.pos = mmc1.reg = 0;
 	}
+}
+BYTE extcl_cpu_rd_ram_MMC1(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+	if ((address >= 0x1000) && (address <= 0x1FFF)) {
+		return (mmc1tmp.dipswitch);
+	}
+	return (openbus);
 }
 BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, mmc1.reg);

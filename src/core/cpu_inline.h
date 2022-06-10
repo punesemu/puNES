@@ -165,12 +165,18 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 	if (address <= 0x4017) {
 		/* Ram */
 		if (address < 0x2000) {
+			BYTE before = cpu.openbus;
+
 			/* eseguo un tick hardware */
 			if (made_tick) {
 				tick_hw(1);
 			}
 			/* leggo */
 			cpu.openbus = mmcpu.ram[address & 0x7FF];
+
+			if (extcl_cpu_rd_ram) {
+				cpu.openbus = extcl_cpu_rd_ram(address, cpu.openbus, before);
+			}
 
 			/* cheat */
 			cheat_cheatlist_ram_mode(address & 0x7FF);

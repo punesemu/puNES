@@ -27,6 +27,7 @@
 #define EXTCL_MAPPER_QUIT(n) extcl_mapper_quit = extcl_mapper_quit_##n
 #define EXTCL_CPU_WR_MEM(n) extcl_cpu_wr_mem = extcl_cpu_wr_mem_##n
 #define EXTCL_CPU_RD_MEM(n) extcl_cpu_rd_mem = extcl_cpu_rd_mem_##n
+#define EXTCL_CPU_RD_RAM(n) extcl_cpu_rd_ram = extcl_cpu_rd_ram_##n
 #define EXTCL_SAVE_MAPPER(n) extcl_save_mapper = extcl_save_mapper_##n
 // CPU
 #define EXTCL_CPU_EVERY_CYCLE(n) extcl_cpu_every_cycle = extcl_cpu_every_cycle_##n
@@ -65,6 +66,7 @@ extern void (*extcl_after_mapper_init)(void);
 extern void (*extcl_mapper_quit)(void);
 extern void (*extcl_cpu_wr_mem)(WORD address, BYTE value);
 extern BYTE (*extcl_cpu_rd_mem)(WORD address, BYTE openbus, BYTE before);
+extern BYTE (*extcl_cpu_rd_ram)(WORD address, BYTE openbus, BYTE before);
 extern BYTE (*extcl_save_mapper)(BYTE mode, BYTE slot, FILE *fp);
 // CPU
 extern void (*extcl_cpu_every_cycle)(void);
