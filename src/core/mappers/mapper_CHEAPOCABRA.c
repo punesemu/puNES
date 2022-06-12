@@ -47,6 +47,7 @@ void map_init_CHEAPOCABRA(void) {
 		EXTCL_CPU_WR_MEM(CHEAPOCABRA_GTROM);
 		EXTCL_CPU_RD_MEM(CHEAPOCABRA_GTROM);
 		EXTCL_SAVE_MAPPER(CHEAPOCABRA_GTROM);
+		EXTCL_CPU_EVERY_CYCLE(CHEAPOCABRA_GTROM);
 		EXTCL_WR_NMT(CHEAPOCABRA_GTROM);
 		EXTCL_RD_NMT(CHEAPOCABRA_GTROM);
 		EXTCL_BATTERY_IO(CHEAPOCABRA_GTROM);
@@ -59,8 +60,8 @@ void map_init_CHEAPOCABRA(void) {
 
 		if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 			gtromtmp.sst39sf040 = (BYTE *)malloc(prg_size());
-			sst39sf040_init(gtromtmp.sst39sf040, prg_size(), 0xBF, 0xB7, 0x5555, 0x2AAA, 4096);
 			memcpy(gtromtmp.sst39sf040, prg_rom(), prg_size());
+			sst39sf040_init(gtromtmp.sst39sf040, prg_size(), 0xBF, 0xB7, 0x5555, 0x2AAA, 4096);
 		}
 
 		info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks = 0;
@@ -99,7 +100,7 @@ void extcl_cpu_wr_mem_CHEAPOCABRA_GTROM(WORD address, BYTE value) {
 		case 0xD000:
 		case 0xE000:
 		case 0xF000:
-			sst39sf040_write(((cheapocabra.reg & 0x0F) << 15) | (address & 0x7FFF), value);
+			sst39sf040_write(address, value);
 			break;
 	}
 }
@@ -121,18 +122,22 @@ BYTE extcl_cpu_rd_mem_CHEAPOCABRA_GTROM(WORD address, BYTE openbus, UNUSED(BYTE 
 		case 0xD000:
 		case 0xE000:
 		case 0xF000:
-			return (sst39sf040_read(((cheapocabra.reg & 0x0F) << 15) | (address & 0x7FFF)));
+			return (sst39sf040_read(address));
 	}
 	return (openbus);
 }
 BYTE extcl_save_mapper_CHEAPOCABRA_GTROM(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, cheapocabra.reg);
+	sst39sf040_save_mapper(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
 		mirroring_fix_CHEAPOCABRA_GTROM();
 	}
 
 	return (EXIT_OK);
+}
+void extcl_cpu_every_cycle_CHEAPOCABRA_GTROM(void) {
+	sst39sf040_tick();
 }
 void extcl_wr_nmt_CHEAPOCABRA_GTROM(WORD address, BYTE value) {
 	//if (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_ROWS)) {

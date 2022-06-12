@@ -28,6 +28,7 @@ void extcl_mapper_quit_CHEAPOCABRA_GTROM(void);
 void extcl_cpu_wr_mem_CHEAPOCABRA_GTROM(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_CHEAPOCABRA_GTROM(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_CHEAPOCABRA_GTROM(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_CHEAPOCABRA_GTROM(void);
 void extcl_wr_nmt_CHEAPOCABRA_GTROM(WORD address, BYTE value);
 BYTE extcl_rd_nmt_CHEAPOCABRA_GTROM(WORD address);
 void extcl_battery_io_CHEAPOCABRA_GTROM(BYTE mode, FILE *fp);

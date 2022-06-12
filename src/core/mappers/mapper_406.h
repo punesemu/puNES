@@ -16,15 +16,24 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef SST39SF040_H_
-#define SST39SF040_H_
+#ifndef MAPPER_406
+#define MAPPER_406
 
 #include "common.h"
 
-void sst39sf040_init(BYTE *data, size_t size, BYTE manufacter_id, BYTE model_id, WORD adr1, WORD adr2, int sector_size);
-void sst39sf040_write(WORD address, BYTE value);
-BYTE sst39sf040_read(WORD address);
-void sst39sf040_tick(void);
-BYTE sst39sf040_save_mapper(BYTE mode, BYTE slot, FILE *fp);
+void map_init_406(void);
+void extcl_after_mapper_init_406(void);
+void extcl_mapper_quit_406(void);
+void extcl_cpu_wr_mem_406(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_406(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_406(BYTE mode, BYTE slot, FILE *fp);
+void extcl_battery_io_406(BYTE mode, FILE *fp);
 
-#endif /* SST39SF040_H_ */
+
+void extcl_cpu_every_cycle_406(void);
+
+
+void extcl_irq_A12_clock_406(void);
+
+
+#endif /* MAPPER_406 */

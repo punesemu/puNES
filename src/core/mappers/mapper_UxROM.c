@@ -58,6 +58,7 @@ void map_init_UxROM(BYTE model) {
 			EXTCL_CPU_WR_MEM(UNROM512);
 			EXTCL_CPU_RD_MEM(UNROM512);
 			EXTCL_SAVE_MAPPER(UNROM512);
+			EXTCL_CPU_EVERY_CYCLE(UNROM512);
 			mapper.internal_struct[0] = (BYTE *)&unrom512;
 			mapper.internal_struct_size[0] = sizeof(unrom512);
 
@@ -72,10 +73,11 @@ void map_init_UxROM(BYTE model) {
 				EXTCL_BATTERY_IO(UNROM512);
 				if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 					unrom512tmp.sst39sf040 = (BYTE *)malloc(prg_size());
-					sst39sf040_init(unrom512tmp.sst39sf040, prg_size(), 0xBF, 0xB7, 0x5555, 0x2AAA, 4096);
 					memcpy(unrom512tmp.sst39sf040, prg_rom(), prg_size());
+					sst39sf040_init(unrom512tmp.sst39sf040, prg_size(), 0xBF, 0xB7, 0x5555, 0x2AAA, 4096);
 				}
 				info.mapper.force_battery_io = TRUE;
+				info.mapper.extend_rd = TRUE;
 			} else {
 				unrom512tmp.sst39sf040 = NULL;
 			}
@@ -153,7 +155,7 @@ void extcl_cpu_wr_mem_UNROM512(UNUSED(WORD address), BYTE value) {
 
 		mirroring_fix_UNROM512();
 	} else {
-		sst39sf040_write(((unrom512.reg & 0x1F) << 14) | (address & 0x3FFF), value);
+		sst39sf040_write(address, value);
 	}
 }
 BYTE extcl_cpu_rd_mem_UNROM512(WORD address, BYTE openbus, UNUSED(BYTE before)) {
@@ -162,12 +164,13 @@ BYTE extcl_cpu_rd_mem_UNROM512(WORD address, BYTE openbus, UNUSED(BYTE before)) 
 		case 0x9000:
 		case 0xA000:
 		case 0xB000:
-			return (sst39sf040_read(((unrom512.reg & 0x1F) << 14) | (address & 0x3FFF)));
+			return (sst39sf040_read(address));
 	}
 	return (openbus);
 }
 BYTE extcl_save_mapper_UNROM512(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, unrom512.reg);
+	sst39sf040_save_mapper(mode, slot, fp);
 	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
 
 	if (mode == SAVE_SLOT_READ) {
@@ -175,6 +178,9 @@ BYTE extcl_save_mapper_UNROM512(BYTE mode, BYTE slot, FILE *fp) {
 	}
 
 	return (EXIT_OK);
+}
+void extcl_cpu_every_cycle_UNROM512(void) {
+	sst39sf040_tick();
 }
 void extcl_battery_io_UNROM512(BYTE mode, FILE *fp) {
 	if (!fp || (tas.type != NOTAS)) {
