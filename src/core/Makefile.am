@@ -313,6 +313,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_410.h \
 	mappers/mapper_411.c \
 	mappers/mapper_411.h \
+	mappers/mapper_412.c \
+	mappers/mapper_412.h \
 	mappers/mapper_3DBLOCK.c \
 	mappers/mapper_3DBLOCK.h \
 	mappers/mapper_40.c \

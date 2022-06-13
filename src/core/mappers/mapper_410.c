@@ -152,6 +152,10 @@ BYTE extcl_save_mapper_410(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m410.mmc3);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
+	if (mode == SAVE_SLOT_READ) {
+		chr_fix_410(mmc3.bank_to_update);
+	}
+
 	return (EXIT_OK);
 }
 void extcl_wr_chr_410(WORD address, BYTE value) {
