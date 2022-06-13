@@ -72,7 +72,7 @@ wdgSettingsAudio::wdgSettingsAudio(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Enable_Audio, SIGNAL(clicked(bool)), this, SLOT(s_enable_audio(bool)));
 
 	{
-		int w = QLabel("100%").sizeHint().width();
+		int w = QLabel("000000%").sizeHint().width();
 
 		label_Buffer_Size_factor_value->setFixedWidth(w);
 		label_Channels_Delay_value->setFixedWidth(w);

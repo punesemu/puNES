@@ -41,7 +41,7 @@ wdgAPUChannels::wdgAPUChannels(QWidget *parent) : QWidget(parent) {
 		slider->setProperty("myIndex", QVariant(i));
 		connect(slider, SIGNAL(valueChanged(int)), this, SLOT(s_apu_ch_slider(int)));
 
-		label->setFixedWidth(QLabel("000").sizeHint().width());
+		label->setFixedWidth(QLabel("000000").sizeHint().width());
 	}
 
 	pushButton_APU_Channels_active_all->setProperty("myIndex", QVariant(TRUE));
