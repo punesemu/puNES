@@ -183,7 +183,7 @@ INLINE static void prg_fix_401(BYTE value) {
 	prg_swap_401(0xE000, ~0);
 }
 INLINE static void prg_swap_401(WORD address, WORD value) {
-	WORD base = (m401.reg[1] & 0x1F)| (m401.reg[2] & 0x80) |
+	WORD base = (m401.reg[1] & 0x1F) | (m401.reg[2] & 0x80) |
 		(m401tmp.dipswitch & 0x02 ? m401.reg[2] & 0x20 : (m401.reg[1] & 0x40) >> 1) |
 		(m401tmp.dipswitch & 0x04 ? m401.reg[2] & 0x40 : (m401.reg[1] & 0x20) << 1);
 	WORD mask = ~m401.reg[3] & 0x1F;
