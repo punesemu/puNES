@@ -200,21 +200,36 @@ uTCHAR *js_guid_to_string(_input_guid *guid) {
 }
 void js_guid_from_string(_input_guid *guid, uTCHAR *string) {
 	int ret;
-
 #if defined (_WIN32)
+	unsigned long data1;
+	unsigned short data2, data3, data4, data5, data6, data7, data8, data9, data10, data11;
+
 	ret = usscanf(string, uL("{%8X-%4hX-%4hX-%2hX%2hX-%2hX%2hX%2hX%2hX%2hX%2hX}"),
-		&guid->Data1, &guid->Data2, &guid->Data3,
-		&guid->Data4[0], &guid->Data4[1], &guid->Data4[2],
-		&guid->Data4[3], &guid->Data4[4], &guid->Data4[5],
-		&guid->Data4[6], &guid->Data4[7]);
+		&data1, &data2, &data3, &data4,
+		&data5, &data6, &data7, &data8,
+		&data9, &data10, &data11);
 	if (ret != 11) {
 		js_guid_unset(guid);
+	} else {
+		guid->Data1 = data1;
+		guid->Data2 = data2;
+		guid->Data3 = data3;
+		guid->Data4[0] = data4;
+		guid->Data4[1] = data5;
+		guid->Data4[2] = data6;
+		guid->Data4[3] = data7;
+		guid->Data4[4] = data8;
+		guid->Data4[5] = data9;
+		guid->Data4[6] = data10;
+		guid->Data4[7] = data11;
 	}
 #else
 	WORD *word = (WORD *)guid;
 
-	ret = usscanf(string, uL("{%4hX%4hX-%4hX-%4hX-%4hX-%4hX%4hX%4hX}"), word + 0, word + 1, word + 2, word + 3,
-		word + 4, word + 5, word + 6, word + 7);
+	ret = usscanf(string, uL("{%4hX%4hX-%4hX-%4hX-%4hX-%4hX%4hX%4hX}"),
+		word + 0, word + 1, word + 2,
+		word + 3, word + 4, word + 5,
+		word + 6, word + 7);
 	if (ret != 8) {
 		js_guid_unset(guid);
 	}
