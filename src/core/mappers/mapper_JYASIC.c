@@ -75,7 +75,7 @@ void map_init_JYASIC(BYTE model) {
 		if (
 			(info.crc32.prg == 0x642E8D63) || // Tiny Toon Adventures 6 (Unl) [!].nes
 			(info.crc32.prg == 0x2572906E)) { // Final Fight 3 (Unl) [!].nes
-			jyasictmp.dipswitch = jyasictmp.dipswitch ? 0x00 : 0x040;
+			jyasictmp.dipswitch = jyasictmp.dipswitch ? 0x00 : 0x40;
 		} else if (
 			(info.crc32.prg == 0xCE4BA157) || // 45-in-1 (JY-120A) (Unl) [b1].nes
 			(info.crc32.prg == 0x3886BCF7) || // Aladdin (Unl).nes
@@ -86,10 +86,10 @@ void map_init_JYASIC(BYTE model) {
 			(info.crc32.prg == 0x73A9F3AE) || // 1996 Super Aladdin III 18-in-1 Series (JY-064).nes
 			(info.crc32.prg == 0xA0859966) || // 1996 Super Mortal Kombat III 18-in-1 Series (JY-062).nes
 			(info.crc32.prg == 0x2A268152)) { // Mortal Kombat 3 - Special 56 Peoples (Unl) [!].nes
-			jyasictmp.dipswitch = jyasictmp.dipswitch ? 0x00 : 0x080;
+			jyasictmp.dipswitch = jyasictmp.dipswitch ? 0x00 : 0x80;
 		} else if (
 			(info.crc32.prg == 0x826E8D77)) { // Donkey Kong Country 4 (Unl) [!].nes
-			jyasictmp.dipswitch = jyasictmp.dipswitch == 0x00 ? 0xC0 : jyasictmp.dipswitch == 0xC0 ? 0x080 : 0x00;
+			jyasictmp.dipswitch = jyasictmp.dipswitch == 0x00 ? 0xC0 : jyasictmp.dipswitch == 0xC0 ? 0x80 : 0x00;
 		} else {
 			jyasictmp.dipswitch = (jyasictmp.dipswitch + 0x40) & 0xC0;
 		}

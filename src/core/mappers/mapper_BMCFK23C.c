@@ -39,12 +39,31 @@ struct _bmcfk23c {
 	BYTE ram_outer_register_enable;
 	BYTE mmc3[12];
 	WORD prg_base;
-
-	// da non salvare
+} bmcfk23c;
+struct _bmcfk23ctmp {
+	BYTE select;
+	BYTE index;
+	WORD dipswitch;
 	BYTE *prg_4000;
 	BYTE *prg_6000;
-} bmcfk23c;
+} bmcfk23ctmp;
 
+static const WORD dipswitch_bmcfk23c[8] = { 0x010, 0x020, 0x040, 0x080, 0x100, 0x200, 0x400, 0x800 };
+static const SBYTE dipswitch_index_bmcfk23c[][8] = {
+	{ 0, -1, -1, -1, -1, -1, -1, -1 }, // 0
+	{ 0,  1, -1, -1, -1, -1, -1, -1 }, // 1
+	{ 6,  0,  1,  3,  4,  5,  2, -1 }, // 2
+	{ 0,  3,  6,  4,  1,  2,  5,  7 }, // 3
+	{ 0,  1,  3,  2, -1, -1, -1, -1 }, // 4
+	{ 0,  1,  2,  3, -1, -1, -1, -1 }, // 5
+	{ 3,  0,  6,  4,  1,  2,  5,  7 }, // 6
+	{ 0,  3,  6,  1,  4,  7,  2,  5 }, // 7
+	{ 0,  3,  6,  4,  1,  7,  5,  2 }, // 8
+	{ 0,  4,  1,  5,  2,  6,  3,  7 }, // 9
+	{ 6,  3,  0,  4,  5,  1,  2, -1 }, // 10
+	{ 3,  0,  6,  1,  4,  2,  5,  7 }, // 11
+	{ 0,  1,  2,  3,  4,  5,  6,  7 }, // 12
+};
 static const BYTE prg_mask[8] = { 0x3F, 0x1F, 0x0F, 0x07, 0x03, 0x01, 0x00, 0x00 };
 
 void map_init_BMCFK23C(void) {
@@ -121,6 +140,88 @@ void map_init_BMCFK23C(void) {
 		info.mapper.submapper = LP8002KB;
 	}
 
+	if (info.reset == RESET) {
+		do {
+			bmcfk23ctmp.index = (bmcfk23ctmp.index + 1) & 0x07;
+		} while (dipswitch_index_bmcfk23c[bmcfk23ctmp.select][bmcfk23ctmp.index] < 0);
+	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+		if (
+			(info.crc32.prg == 0x81907A3B) || // (KY-9006) 9-in-1 Super Game.nes
+			(info.crc32.prg == 0x26ABC25E) || // 9-in-1 - Pokemon Yellow (FK23C board)[p4][!].nes
+			(info.crc32.prg == 0xCFAE9BF7)) { // 6-in-1 - Spider Man 2 (FK23C board)[p4][!].nes
+			bmcfk23ctmp.select = 1;
+			bmcfk23ctmp.index = 0;
+		} else if (
+			(info.crc32.prg == 0xA3265AEE) || // Super Game 4-in-1 (6-in-1) (KT-3445AB_20210418) (Unl) [p1].nes
+			(info.crc32.prg == 0x324E55C4) || // Super Games 4-in-1(KT-3445AB_20201201) (Unl) [p1].nes
+			(info.crc32.prg == 0x0007E045)) { // Super Game 4-in-1 (6-in-1) (BS-8174) (Unl) [p1].nes
+			bmcfk23ctmp.select = 1;
+			bmcfk23ctmp.index = 1;
+		} else if (
+			(info.crc32.prg == 0xC08E77C1) || // 5-in-1 (19, 66, 90, 93, 113, 133, 200-in-1) (KD-1512_20210408) (Unl) [p1].nes
+			(info.crc32.prg == 0x613BBEE9) || // Super Game 15-in-1 (7, 80, 82, 102, 122, 160-in-1) (KD-6012) (Unl) [p1].nes
+		    (info.crc32.prg == 0x03CF81B4)) { // 16 in 1 (KD-1512).nes
+			bmcfk23ctmp.select = 2;
+			bmcfk23ctmp.index = 0;
+		} else if (
+			(info.crc32.prg == 0x30FF6159)) { // 15-in-1 (20, 25, 80, 99, 160, 210, 260-in-1) (BS-6008) (Unl) [p1].nes
+			bmcfk23ctmp.select = 3;
+			bmcfk23ctmp.index = 0;
+		} else if (
+			(info.crc32.prg == 0x2F3DB40D)) { // 17-in-1 (76000, 1000000, 9999999-in-1) (KD-6038) (Unl) [p1].nes
+			bmcfk23ctmp.select = 4;
+			bmcfk23ctmp.index = 0;
+		} else if (
+			(info.crc32.prg == 0xA9C3824E) || // Super Game 4-in-1 (8, 64, 128-in-1) (KT-8008) (Unl) [p1].nes
+			(info.crc32.prg == 0x55BEBFCB) || // 44-in-1 (Super Game KT-A) [p1][!].nes
+			(info.crc32.prg == 0x4D5C057A)) { // 19-in-1 (7600, 9999999, 999999999-in-1) (BS-8307) (Unl) [p1].nes
+			bmcfk23ctmp.select = 5;
+			bmcfk23ctmp.index = 0;
+		} else if (
+			(info.crc32.prg == 0x8052AA1E) || // (FK-014) 128-in-1.nes
+			(info.crc32.prg == 0xDF4E55F3)) { // 160-in-1.nes
+			bmcfk23ctmp.select = 6;
+			bmcfk23ctmp.index = 5;
+		} else if (
+			(info.crc32.prg == 0x8ACCE289) || // (FK-022) 178-in-1.nes
+			(info.crc32.prg == 0x7BF49FEE) || // (FK-021) 180-in-1.nes
+			(info.crc32.prg == 0xD2A7F82B)) { // (BS-6028) 180-in-1.nes
+			bmcfk23ctmp.select = 6;
+			bmcfk23ctmp.index = 6;
+		} else if (
+			(info.crc32.prg == 0x5507A5A8)) { // (FK-033) 52-in-1.nes
+			bmcfk23ctmp.select = 6;
+			bmcfk23ctmp.index = 3;
+		} else if (
+			(info.crc32.prg == 0x67F8DFE4) || // Super Game 4-in-1 (7, 30, 65, 111, 9999999-in-1) (KB-0306N-2_20201107) (Unl) [p1].nes
+			(info.crc32.prg == 0x48A64738) || // Super 4-in-1 (7, 60, 99, 111, 9999999-in-1) (KB-4016) (Unl) [p1].nes
+			(info.crc32.prg == 0xFDF94F9E)) { // Super 4-in-1 (7, 25, 28, 111, 9999999-in-1) (KB-4009) (Unl) [p1].nes
+			bmcfk23ctmp.select = 7;
+			bmcfk23ctmp.index = 0;
+		} else if (
+			(info.crc32.prg == 0x41252709)) { // Super Game 16-in-1 (19, 31, 51, 56, 112, 121, 126-in-1) (BS-6002) (Unl) [p1].nes
+			bmcfk23ctmp.select = 8;
+			bmcfk23ctmp.index = 0;
+		} else if (
+			(info.crc32.prg == 0xB2BC6FF8)) { // Super Game 16-in-1 (500, 9999999, 999999999-in-1) (FK037) (Unl) [p1].nes
+			bmcfk23ctmp.select = 9;
+			bmcfk23ctmp.index = 0;
+		} else if (
+			(info.crc32.prg == 0x8F1D2425)) { // Super Game 20-in-1 (6, 16, 36, 56, 99, 210-in-1) (KD-6026) (Unl) [p1].nes
+			bmcfk23ctmp.select = 10;
+			bmcfk23ctmp.index = 0;
+		} else if (
+			(info.crc32.prg == 0xDDA1E214)) { // Super Game 28-in-1 (15, 30, 36, 52, 160, 180, 255-in-1) (BS-6017) (Unl) [p1].nes
+			bmcfk23ctmp.select = 11;
+			bmcfk23ctmp.index = 0;
+		} else {
+			bmcfk23ctmp.select = 0;
+			bmcfk23ctmp.index = 0;
+		}
+	}
+
+	bmcfk23ctmp.dipswitch = dipswitch_bmcfk23c[dipswitch_index_bmcfk23c[bmcfk23ctmp.select][bmcfk23ctmp.index]];
+
 	info.prg.ram.banks_8k_plus = 4;
 
 	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
@@ -135,7 +236,7 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 	if (address < 0x8000) {
 		if (((address >= 0x5000) && (address <= 0x5FFF)) &&
 			(!bmcfk23c.ram_register_enable || bmcfk23c.ram_outer_register_enable)) {
-			WORD mask = 0x5010;
+			WORD mask = 0x5000 | bmcfk23ctmp.dipswitch;
 
 			if ((address & mask) != mask) {
 				return;
@@ -166,11 +267,11 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 		} else {
 			if ((address >= 0x4000) && (address <= 0x5FFF)) {
 				if (bmcfk23c.ram_register_enable && cpu.prg_ram_wr_active) {
-					bmcfk23c.prg_4000[address & 0x1FFF] = value;
+					bmcfk23ctmp.prg_4000[address & 0x1FFF] = value;
 				}
 			} else if ((address >= 0x6000) && (address <= 0x7FFF)) {
 				if (bmcfk23c.ram_register_enable && cpu.prg_ram_wr_active) {
-					bmcfk23c.prg_6000[address & 0x1FFF] = value;
+					bmcfk23ctmp.prg_6000[address & 0x1FFF] = value;
 				}
 			}
 			return;
@@ -246,9 +347,9 @@ BYTE extcl_cpu_rd_mem_BMCFK23C(WORD address, BYTE openbus, UNUSED(BYTE before)) 
 			return (openbus);
 		}
 		if ((address >= 0x4000) && (address <= 0x5FFF)) {
-			return (bmcfk23c.ram_register_enable && cpu.prg_ram_rd_active ? bmcfk23c.prg_4000[address & 0x1FFF] : openbus);
+			return (bmcfk23c.ram_register_enable && cpu.prg_ram_rd_active ? bmcfk23ctmp.prg_4000[address & 0x1FFF] : openbus);
 		} else if ((address >= 0x6000) && (address <= 0x7FFF)) {
-			return (bmcfk23c.ram_register_enable && cpu.prg_ram_rd_active ? bmcfk23c.prg_6000[address & 0x1FFF] : openbus);
+			return (bmcfk23c.ram_register_enable && cpu.prg_ram_rd_active ? bmcfk23ctmp.prg_6000[address & 0x1FFF] : openbus);
 		}
 	}
 	return (openbus);
@@ -261,6 +362,8 @@ BYTE extcl_save_mapper_BMCFK23C(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, bmcfk23c.ram_outer_register_enable);
 	save_slot_ele(mode, slot, bmcfk23c.mmc3);
 	save_slot_ele(mode, slot, bmcfk23c.prg_base);
+	save_slot_ele(mode, slot, bmcfk23ctmp.index);
+	save_slot_ele(mode, slot, bmcfk23ctmp.dipswitch);
 	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
 
 	if (mode == SAVE_SLOT_READ) {
@@ -345,8 +448,8 @@ INLINE static void prg_fix_BMCFK23C(void) {
 INLINE static void prg_ram_fix_BMCFK23C(void) {
 	WORD bank = (bmcfk23c.cpu8xxx[3] & 0x03);
 
-	bmcfk23c.prg_4000 = bmcfk23c.ram_register_enable ? prg.ram_plus_8k + (((bank + 1) & 0x03) << 13) : NULL;
-	bmcfk23c.prg_6000 = prg.ram_plus_8k + (bmcfk23c.ram_register_enable ? (bank << 13) : 0);
+	bmcfk23ctmp.prg_4000 = bmcfk23c.ram_register_enable ? prg.ram_plus_8k + (((bank + 1) & 0x03) << 13) : NULL;
+	bmcfk23ctmp.prg_6000 = prg.ram_plus_8k + (bmcfk23c.ram_register_enable ? (bank << 13) : 0);
 }
 INLINE static void chr_fix_BMCFK23C(void) {
 	WORD outer = 0, bank[8];
