@@ -60,7 +60,7 @@ void extcl_after_mapper_init_414(void) {
 	chr_fix_414();
 	mirroring_fix_414();
 }
-void extcl_cpu_wr_mem_414(WORD address, UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_414(WORD address, BYTE value) {
 	m414.reg[0] = address;
 	// bus conflict
 	m414.reg[1] = value & prg_rom_rd(address);
