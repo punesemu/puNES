@@ -39,7 +39,7 @@ void map_init_409(void) {
 void extcl_after_mapper_init_409(void) {
 	prg_fix_409();
 }
-void extcl_cpu_wr_mem_409(UNUSED(WORD address), UNUSED(BYTE value)) {
+void extcl_cpu_wr_mem_409(WORD address, UNUSED(BYTE value)) {
 	if ((address >= 0xC000) && (address <= 0xCFFF)) {
 		m409.reg = address;
 		prg_fix_409();

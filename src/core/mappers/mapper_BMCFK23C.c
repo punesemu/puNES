@@ -31,23 +31,6 @@ INLINE static void chr_swap_BMCFK23C(BYTE slot, WORD value);
 INLINE static BYTE chr_ram_BMCFK23C(WORD value);
 INLINE static void mirroring_fix_BMCFK23C(void);
 
-struct _bmcfk23c {
-	BYTE cpu5xxx[4];
-	BYTE cpu8xxx[4];
-	BYTE cnrom_chr_reg;
-	BYTE ram_register_enable;
-	BYTE ram_outer_register_enable;
-	BYTE mmc3[12];
-	WORD prg_base;
-} bmcfk23c;
-struct _bmcfk23ctmp {
-	BYTE select;
-	BYTE index;
-	WORD dipswitch;
-	BYTE *prg_4000;
-	BYTE *prg_6000;
-} bmcfk23ctmp;
-
 static const WORD dipswitch_bmcfk23c[8] = { 0x010, 0x020, 0x040, 0x080, 0x100, 0x200, 0x400, 0x800 };
 static const SBYTE dipswitch_index_bmcfk23c[][8] = {
 	{ 0, -1, -1, -1, -1, -1, -1, -1 }, // 0
@@ -65,6 +48,23 @@ static const SBYTE dipswitch_index_bmcfk23c[][8] = {
 	{ 0,  1,  2,  3,  4,  5,  6,  7 }, // 12
 };
 static const BYTE prg_mask[8] = { 0x3F, 0x1F, 0x0F, 0x07, 0x03, 0x01, 0x00, 0x00 };
+
+struct _bmcfk23c {
+	BYTE cpu5xxx[4];
+	BYTE cpu8xxx[4];
+	BYTE cnrom_chr_reg;
+	BYTE ram_register_enable;
+	BYTE ram_outer_register_enable;
+	BYTE mmc3[12];
+	WORD prg_base;
+} bmcfk23c;
+struct _bmcfk23ctmp {
+	BYTE select;
+	BYTE index;
+	WORD dipswitch;
+	BYTE *prg_4000;
+	BYTE *prg_6000;
+} bmcfk23ctmp;
 
 void map_init_BMCFK23C(void) {
 	EXTCL_AFTER_MAPPER_INIT(BMCFK23C);
