@@ -58,11 +58,6 @@ BYTE extcl_save_mapper_396(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_wr_chr_396(WORD address, BYTE value) {
-	if (m396.reg[2] & 0x20) {
-		chr.bank_1k[address >> 10][address & 0x3FF] = value;
-	}
-}
 
 INLINE static void prg_fix_396(void) {
 	WORD base = (m396.reg[1] & 0x07) << 3;
