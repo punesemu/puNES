@@ -25,20 +25,34 @@
 INLINE static void prg_fix_WS(void);
 INLINE static void chr_fix_WS(void);
 
+static const WORD dipswitch_ws[] = { 0x00, 0x40, 0x80 };
 struct _ws {
 	BYTE reg[3];
 } ws;
+struct _wstmp {
+	BYTE index;
+	BYTE dipswitch;
+} wstmp;
 
 void map_init_WS(void) {
 	EXTCL_AFTER_MAPPER_INIT(WS);
 	EXTCL_CPU_WR_MEM(WS);
+	EXTCL_CPU_RD_MEM(WS);
 	EXTCL_SAVE_MAPPER(WS);
 	mapper.internal_struct[0] = (BYTE *)&ws;
 	mapper.internal_struct_size[0] = sizeof(ws);
 
 	memset(&ws, 0x00, sizeof(ws));
 
-	info.mapper.extend_wr = TRUE;
+	if (info.reset == RESET) {
+		wstmp.index = (wstmp.index + 1) >= 3 ? 0 : wstmp.index + 1;
+	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+		wstmp.index = 0;
+	}
+
+	wstmp.dipswitch = dipswitch_ws[wstmp.index];
+
+	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
 }
 void extcl_after_mapper_init_WS(void) {
 	prg_fix_WS();
@@ -68,6 +82,14 @@ void extcl_cpu_wr_mem_WS(WORD address, UNUSED(BYTE value)) {
 			break;
 	}
 	return;
+}
+BYTE extcl_cpu_rd_mem_WS(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+	if (address >= 0x8000) {
+		if ((ws.reg[1] & 0xC0) & wstmp.dipswitch) {
+			return (0xFF);
+		}
+	}
+	return (openbus);
 }
 BYTE extcl_save_mapper_WS(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ws.reg);
