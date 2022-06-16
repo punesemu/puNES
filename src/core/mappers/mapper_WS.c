@@ -93,6 +93,8 @@ BYTE extcl_cpu_rd_mem_WS(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 }
 BYTE extcl_save_mapper_WS(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ws.reg);
+	save_slot_ele(mode, slot, wstmp.index);
+	save_slot_ele(mode, slot, wstmp.dipswitch);
 
 	return (EXIT_OK);
 }

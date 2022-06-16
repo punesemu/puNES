@@ -86,6 +86,7 @@ void map_init_45(void) {
 			m45tmp.select = 3;
 			m45tmp.index = 0;
 		} else {
+			m45tmp.select = 0;
 			m45tmp.index = 0;
 		}
 	}
@@ -220,6 +221,8 @@ BYTE extcl_save_mapper_45(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m45.index);
 	save_slot_ele(mode, slot, m45.reg);
 	save_slot_ele(mode, slot, m45.mmc3);
+	save_slot_ele(mode, slot, m45tmp.index);
+	save_slot_ele(mode, slot, m45tmp.dipswitch);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {

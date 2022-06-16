@@ -28,15 +28,25 @@ INLINE static void prg_swap_126(WORD address, WORD value);
 INLINE static void chr_fix_126(BYTE value);
 INLINE static void chr_swap_126(WORD address, WORD value);
 
+static const BYTE dipswitch_126[4] = { 0, 1, 2, 3 };
+static const SBYTE dipswitch_index_126[][4] = {
+	{ 0,  1,  2,  3 }, // 0
+	{ 0,  1, -1, -1 }, // 1
+	{ 0,  2,  3,  1 }, // 2
+};
+
 struct _m126 {
 	BYTE reg[4];
 	WORD mmc3[8];
 } m126;
 struct _m126tmp {
+	BYTE model;
+	BYTE select;
+	BYTE index;
 	BYTE dipswitch;
 } m126tmp;
 
-void map_init_126(void) {
+void map_init_126(BYTE model) {
 	EXTCL_AFTER_MAPPER_INIT(126);
 	EXTCL_CPU_WR_MEM(126);
 	EXTCL_CPU_RD_MEM(126);
@@ -66,15 +76,35 @@ void map_init_126(void) {
 	m126.mmc3[7] = 0;
 
 	if (info.reset == RESET) {
-		m126tmp.dipswitch = (m126tmp.dipswitch + 1) & 0x03;
+		do {
+			m126tmp.index = (m126tmp.index + 1) & 0x03;
+		} while (dipswitch_index_126[m126tmp.select][m126tmp.index] < 0);
 	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		m126tmp.dipswitch = 0;
+		if ((info.crc32.prg == 0xB1082DE6)) { // 1998 4000000-in-1 (BS-400 PCB).nes
+			m126tmp.select = 2;
+			m126tmp.index = 0;
+		} else if (
+			(info.crc32.prg == 0xA4AEEA4A) || // 3000000-in-1 (BS-300 PCB).nes
+			(info.crc32.prg == 0xB5EC8A0A)) { // 700000-in-1 (BS-400 PCB).nes
+			m126tmp.select = 1;
+			m126tmp.index = 0;
+		} else if (
+			(info.crc32.prg == 0xC6FDE109) || // Double Dragon 530-in-1.nes
+			(info.crc32.prg == 0x9E54027F)) { // (GD-106) 18-in-1.nes
+			m126tmp.select = 1;
+			m126tmp.index = 1;
+		} else {
+			m126tmp.select = 0;
+			m126tmp.index = 0;
+		}
 	}
+	m126tmp.dipswitch = dipswitch_126[dipswitch_index_126[m126tmp.select][m126tmp.index]];
+	m126tmp.model = model;
 
 	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
 
 	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	irqA12_delay = (m126tmp.model == MAP534) ? 2: 1;
 }
 void extcl_after_mapper_init_126(void) {
 	prg_fix_126(mmc3.bank_to_update);
@@ -89,7 +119,9 @@ void extcl_cpu_wr_mem_126(WORD address, BYTE value) {
 			prg_fix_126(mmc3.bank_to_update);
 			chr_fix_126(mmc3.bank_to_update);
 		} else if (reg == 2) {
-			m126.reg[2] = (m126.reg[2] & 0xFC) | (value & 0x03);
+			BYTE mask = 0x03 >> !!(m126.reg[2] & 0x10);
+
+			m126.reg[2] = (m126.reg[2] & ~mask) | (value & mask);
 			chr_fix_126(mmc3.bank_to_update);
 		}
 		return;
@@ -144,6 +176,12 @@ void extcl_cpu_wr_mem_126(WORD address, BYTE value) {
 				}
 				return;
 			}
+			case 0xC000:
+			case 0xC001:
+				if (m126tmp.model == MAP534) {
+					value ^= 0xFF;
+				}
+				break;
 		}
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
@@ -157,6 +195,8 @@ BYTE extcl_cpu_rd_mem_126(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 BYTE extcl_save_mapper_126(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m126.reg);
 	save_slot_ele(mode, slot, m126.mmc3);
+	save_slot_ele(mode, slot, m126tmp.index);
+	save_slot_ele(mode, slot, m126tmp.dipswitch);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
@@ -174,18 +214,25 @@ INLINE static void prg_fix_126(BYTE value) {
 	prg_swap_126(0xE000, ~0);
 }
 INLINE static void prg_swap_126(WORD address, WORD value) {
-	WORD base = ((m126.reg[0] & (0x06 | ((m126.reg[0] & 0x40) >> 6))) << 4) | ((m126.reg[0] & 0x10) << 3);
-	WORD mask = ((~m126.reg[0] >> 2) & 0x10) | 0x0F;
-	BYTE mode = m126.reg[3] & 0x03;
+	WORD base = ((m126.reg[0] & 0x30) << 3) | ((m126.reg[0] & 0x07) << 4);
+	WORD mask = ((~m126.reg[0] & 0x40) >> 2) | 0x0F;
 	BYTE bank = (address >> 13) & 0x03;
 
-	if (mode) {
-		mask = mode == 0x03 ? 0xFC : 0xFE;
-		value = (base | (m126.mmc3[6] & mask)) | (bank & ~mask);
-	} else {
-		value = base | (value & mask);
-	}
+    switch (m126.reg[3] & 0x03) {
+    	case 1:
+    	case 2:
+    		base = base | (m126.mmc3[6] & mask);
+    		mask = 0x01;
+    		value = bank & 0x01;
+    		break;
+    	case 3:
+    		base = base | (m126.mmc3[6] & mask);
+    		mask = 0x03;
+    		value = bank;
+    		break;
+    }
 
+	value = (base & ~mask) | (value & mask);
 	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, bank, value);
 	map_prg_rom_8k_update();
@@ -203,14 +250,15 @@ INLINE static void chr_fix_126(BYTE value) {
 	chr_swap_126(cbase ^ 0x1C00, m126.mmc3[5]);
 }
 INLINE static void chr_swap_126(WORD address, WORD value) {
-	WORD base = ((~m126.reg[0] & 0x0080) & m126.reg[2]) | (((m126.reg[0] << 4) & 0x0080) & m126.reg[0])
-		| ((m126.reg[0] << 3) & 0x0100) | ((m126.reg[0] << 5) & 0x0200);
-	WORD mask = 0x7F;
+	WORD base = m126tmp.model == MAP126 ?
+		((m126.reg[0] & 0x08) << 4) | ((m126.reg[0] & 0x20) << 3) | ((m126.reg[0] & 0x10) << 5) :
+		((m126.reg[0] & 0x38) << 4);
+	WORD mask = (~m126.reg[0] & 0x80) | 0x7F;
 
-	if (!(m126.reg[3] & 0x10)) {
-		mask = (m126.reg[0] & 0x80) - 1;
-	} else {
-		value = ((m126.reg[2] & 0x0F) << 3) | (address >> 10);
+	if (m126.reg[3] & 0x10) {
+		base = ((m126.reg[2] & (mask >> 3)) | (base >> 3)) << 3;
+		mask = 0x07;
+		value = address >> 10;
 	}
 
 	value = (base & ~mask) | (value & mask);

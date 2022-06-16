@@ -428,7 +428,7 @@ BYTE map_init(void) {
 			map_init_LH32();
 			break;
 		case 126:
-			map_init_126();
+			map_init_126(MAP126);
 			break;
 		case 132:
 			map_init_Txc(T22211A);
@@ -1109,6 +1109,9 @@ BYTE map_init(void) {
 		case 420:
 			map_init_420();
 			break;
+		case 422:
+			map_init_126(MAP422);
+			break;
 		case 428:
 			map_init_428();
 			break;
@@ -1147,6 +1150,9 @@ BYTE map_init(void) {
 			break;
 		case 530:
 			map_init_AX5705();
+			break;
+		case 534:
+			map_init_126(MAP534);
 			break;
 		case 541:
 			map_init_541();

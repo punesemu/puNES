@@ -78,6 +78,8 @@ BYTE extcl_cpu_rd_mem_414(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 }
 BYTE extcl_save_mapper_414(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m414.reg);
+	save_slot_ele(mode, slot, m414tmp.index);
+	save_slot_ele(mode, slot, m414tmp.dipswitch);
 
 	return (EXIT_OK);
 }

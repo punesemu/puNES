@@ -95,6 +95,8 @@ BYTE extcl_cpu_rd_mem_288(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 }
 BYTE extcl_save_mapper_288(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m288.reg);
+	save_slot_ele(mode, slot, m288tmp.index);
+	save_slot_ele(mode, slot, m288tmp.dipswitch);
 
 	return (EXIT_OK);
 }
