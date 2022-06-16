@@ -23,152 +23,32 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-#define m45_chr_1k(vl)\
-	bank = (m45.reg[0] | ((m45.reg[2] << 4) & 0x0F00))\
-		| ((m45.reg[2] & 0x08) ? vl & ((1 << ((m45.reg[2] & 0x07) + 1)) - 1) :\
-		m45.reg[2] ? 0 : vl)
-#define m45_prg_8k(vl) value = m45.reg[1] | (vl & ((m45.reg[3] & 0x3F) ^ 0x3F))
-#define m45_chr_1k_update()\
-{\
-	BYTE i;\
-	for (i = 0; i < 8; i++) {\
-		WORD bank;\
-		m45_chr_1k(m45.chr_map[i]);\
-		_control_bank(bank, info.chr.rom.max.banks_1k)\
-		chr.bank_1k[i] = chr_pnt(bank << 10);\
-	}\
-}
-#define m45_prg_8k_update()\
-{\
-	BYTE i;\
-	for (i = 0; i < 4; i++) {\
-		m45_prg_8k(m45.prg_map[i]);\
-		control_bank(info.prg.rom.max.banks_8k)\
-		map_prg_rom_8k(1, i, value);\
-	}\
-	map_prg_rom_8k_update();\
-}
-#define m45_swap_chr_bank_1k(src, dst)\
-{\
-	BYTE *chr_bank_1k = chr.bank_1k[src];\
-	chr.bank_1k[src] = chr.bank_1k[dst];\
-	chr.bank_1k[dst] = chr_bank_1k;\
-	WORD map = m45.chr_map[src];\
-	m45.chr_map[src] = m45.chr_map[dst];\
-	m45.chr_map[dst] = map;\
-}
-#define m45_8000()\
-{\
-	const BYTE chr_rom_cfg_old = mmc3.chr_rom_cfg;\
-	const BYTE prg_rom_cfg_old = mmc3.prg_rom_cfg;\
-	mmc3.bank_to_update = value & 0x07;\
-	mmc3.prg_rom_cfg = (value & 0x40) >> 5;\
-	mmc3.chr_rom_cfg = (value & 0x80) >> 5;\
-	/*\
-	 * se il tipo di configurazione della chr cambia,\
-	 * devo swappare i primi 4 banchi con i secondi\
-	 * quattro.\
-	 */\
-	if (mmc3.chr_rom_cfg != chr_rom_cfg_old) {\
-		m45_swap_chr_bank_1k(0, 4)\
-		m45_swap_chr_bank_1k(1, 5)\
-		m45_swap_chr_bank_1k(2, 6)\
-		m45_swap_chr_bank_1k(3, 7)\
-	}\
-	if (mmc3.prg_rom_cfg != prg_rom_cfg_old) {\
-		WORD p0 = mapper.rom_map_to[0];\
-		WORD p2 = mapper.rom_map_to[2];\
-		mapper.rom_map_to[0] = p2;\
-		mapper.rom_map_to[2] = p0;\
-		p0 = m45.prg_map[0];\
-		p2 = m45.prg_map[2];\
-		m45.prg_map[0] = p2;\
-		m45.prg_map[2] = p0;\
-		m45.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
-		/*\
-		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
-		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
-		 */\
-		m45_prg_8k(info.prg.rom.max.banks_8k_before_last);\
-		control_bank(info.prg.rom.max.banks_8k)\
-		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, value);\
-		map_prg_rom_8k_update();\
-	}\
-}
-#define m45_8001()\
-{\
-	WORD bank;\
-	switch (mmc3.bank_to_update) {\
-		case 0:\
-			m45.chr_map[mmc3.chr_rom_cfg] = value;\
-			m45.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
-			m45_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg] = chr_pnt(bank << 10);\
-			m45_chr_1k((value + 1));\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = chr_pnt(bank << 10);\
-			return;\
-		case 1:\
-			m45.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
-			m45.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
-			m45_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = chr_pnt(bank << 10);\
-			m45_chr_1k((value + 1));\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = chr_pnt(bank << 10);\
-			return;\
-		case 2:\
-			m45.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;\
-			m45_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = chr_pnt(bank << 10);\
-			return;\
-		case 3:\
-			m45.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = value;\
-			m45_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = chr_pnt(bank << 10);\
-			return;\
-		case 4:\
-			m45.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = value;\
-			m45_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = chr_pnt(bank << 10);\
-			return;\
-		case 5:\
-			m45.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;\
-			m45_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = chr_pnt(bank << 10);\
-			return;\
-		case 6:\
-			m45.prg_map[mmc3.prg_rom_cfg] = value;\
-			m45_prg_8k(value);\
-			control_bank(info.prg.rom.max.banks_8k)\
-			map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);\
-			map_prg_rom_8k_update();\
-			return;\
-		case 7:\
-			m45.prg_map[1] = value;\
-			m45_prg_8k(value);\
-			control_bank(info.prg.rom.max.banks_8k)\
-			map_prg_rom_8k(1, 1, value);\
-			map_prg_rom_8k_update();\
-			return;\
-	}\
-}
+INLINE static void prg_fix_45(BYTE value);
+INLINE static void prg_swap_45(WORD address, WORD value);
+INLINE static void chr_fix_45(BYTE value);
+INLINE static void chr_swap_45(WORD address, WORD value);
+
+static const BYTE dipswitch_45[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+static const SBYTE dipswitch_index_45[][8] = {
+	{ 0,  1,  2,  3,  4,  5,  6,  7 }, // 0
+	{ 0,  1,  2, -1, -1, -1, -1, -1 }, // 1
+	{ 0,  4,  3,  2, -1, -1, -1, -1 }, // 2
+	{ 0,  2, -1, -1, -1, -1, -1, -1 }, // 3
+};
 
 struct _m45 {
-	BYTE reg[4];
 	BYTE index;
-	BYTE read;
-	WORD prg_map[4];
-	WORD chr_map[8];
+	BYTE reg[4];
+	WORD mmc3[8];
 } m45;
+struct _m45tmp {
+	BYTE select;
+	BYTE index;
+	BYTE dipswitch;
+} m45tmp;
 
 void map_init_45(void) {
+	EXTCL_AFTER_MAPPER_INIT(45);
 	EXTCL_CPU_WR_MEM(45);
 	EXTCL_CPU_RD_MEM(45);
 	EXTCL_SAVE_MAPPER(45);
@@ -185,81 +65,212 @@ void map_init_45(void) {
 
 	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&m45, 0x00, sizeof(m45));
 
-	if (info.reset >= HARD) {
-		memset(&m45, 0x00, sizeof(m45));
-	} else if (info.reset == RESET) {
-		BYTE read = m45.read;
-
-		memset(&m45, 0x00, sizeof(m45));
-		m45.read = (read + 1) & 0x07;
-	}
-
-	{
-		BYTE value, i;
-
-		map_prg_rom_8k_reset();
-		map_chr_bank_1k_reset();
-
-		for (i = 0; i < 8; i++) {
-			if (i < 4) {
-				m45.prg_map[i] = mapper.rom_map_to[i];
-			}
-			m45.chr_map[i] = i;
+	if (info.reset == RESET) {
+		do {
+			m45tmp.index = (m45tmp.index + 1) & 0x07;
+		} while (dipswitch_index_45[m45tmp.select][m45tmp.index] < 0);
+	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+		if ((info.crc32.prg == 0x2011376B)) { // 98+1800000-in-1.nes
+			m45tmp.select = 2;
+			m45tmp.index = 0;
+		} else if (
+			(info.crc32.prg == 0x70EE2D30) || // Super 19-in-1 (329-JY818).nes
+			(info.crc32.prg == 0x07FDD349) || // Super 1000000-in-1 [p1][!].nes
+			(info.crc32.prg == 0x899AEB47)) { // Super 19-in-1 (329-JY819).nes
+			m45tmp.select = 1;
+			m45tmp.index = 0;
+		} else if (
+			(info.crc32.prg == 0x28E0CF3B)) { // Brain Series 12-in-1 [p1][!].nes
+			m45tmp.select = 3;
+			m45tmp.index = 0;
+		} else {
+			m45tmp.index = 0;
 		}
-
-		m45_prg_8k_update()
-		m45_chr_1k_update()
 	}
+	m45tmp.dipswitch = dipswitch_45[dipswitch_index_45[m45tmp.select][m45tmp.index]];
 
-	info.mapper.extend_wr = TRUE;
+	m45.reg[2] = 0x0F;
+
+	m45.mmc3[0] = 0;
+	m45.mmc3[1] = 2;
+	m45.mmc3[2] = 4;
+	m45.mmc3[3] = 5;
+	m45.mmc3[4] = 6;
+	m45.mmc3[5] = 7;
+	m45.mmc3[6] = 0;
+	m45.mmc3[7] = 0;
+
+	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
+void extcl_after_mapper_init_45(void) {
+	prg_fix_45(mmc3.bank_to_update);
+	chr_fix_45(mmc3.bank_to_update);
+}
 void extcl_cpu_wr_mem_45(WORD address, BYTE value) {
+	if ((address >= 0x6000) && (address <= 0x7FFF)) {
+		if (cpu.prg_ram_wr_active) {
+			if (address & 0x0001) {
+				m45.index = 0;
+				m45.reg[0] = m45.reg[1] = 0;
+				m45.reg[2] &= 0x0F;
+				m45.reg[3] ^= 0x40;
+			} else if (!(m45.reg[3] & 0x40)) {
+				m45.reg[m45.index] = value;
+				m45.index = (m45.index + 1) & 0x03;
+			}
+			prg_fix_45(mmc3.bank_to_update);
+			chr_fix_45(mmc3.bank_to_update);
+		}
+		return;
+	}
 	if (address >= 0x8000) {
 		switch (address & 0xE001) {
 			case 0x8000:
-				m45_8000()
+				if ((value & 0x40) != (mmc3.bank_to_update & 0x40)) {
+					prg_fix_45(value);
+				}
+				if ((value & 0x80) != (mmc3.bank_to_update & 0x80)) {
+					chr_fix_45(value);
+				}
+				mmc3.bank_to_update = value;
 				return;
-			case 0x8001:
-				m45_8001()
+			case 0x8001: {
+				WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
+
+				m45.mmc3[mmc3.bank_to_update & 0x07] = value;
+
+				switch (mmc3.bank_to_update & 0x07) {
+					case 0:
+						chr_swap_45(cbase ^ 0x0000, value & (~1));
+						chr_swap_45(cbase ^ 0x0400, value | 1);
+						return;
+					case 1:
+						chr_swap_45(cbase ^ 0x0800, value & (~1));
+						chr_swap_45(cbase ^ 0x0C00, value | 1);
+						return;
+					case 2:
+						chr_swap_45(cbase ^ 0x1000, value);
+						return;
+					case 3:
+						chr_swap_45(cbase ^ 0x1400, value);
+						return;
+					case 4:
+						chr_swap_45(cbase ^ 0x1800, value);
+						return;
+					case 5:
+						chr_swap_45(cbase ^ 0x1C00, value);
+						return;
+					case 6:
+						if (mmc3.bank_to_update & 0x40) {
+							prg_swap_45(0xC000, value);
+						} else {
+							prg_swap_45(0x8000, value);
+						}
+						return;
+					case 7:
+						prg_swap_45(0xA000, value);
+						return;
+				}
 				return;
+			}
 		}
 		extcl_cpu_wr_mem_MMC3(address, value);
-		return;
-	}
-
-	if (address >= 0x6000) {
-		if (!(m45.reg[3] & 0x40)) {
-			m45.reg[m45.index] = value;
-			m45.index = (m45.index + 1) & 0x03;
-
-			m45_prg_8k_update()
-			m45_chr_1k_update()
-		}
 	}
 }
 BYTE extcl_cpu_rd_mem_45(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		WORD adr = 1 << (m45.read + 4);
-
-		if (address & (adr | (adr - 1))) {
-			return (openbus | 0x01);
-		}
+	switch (address & 0xF000) {
+		case 0x5000:
+			if (~m45tmp.dipswitch & address) {
+				return (0x01);
+			} else {
+				return (0x00);
+			}
+			break;
+		case 0x8000:
+		case 0x9000:
+		case 0xA000:
+		case 0xB000:
+		case 0xC000:
+		case 0xD000:
+		case 0xE000:
+		case 0xF000:
+			switch (m45tmp.dipswitch) {
+				case 1:
+					return (m45.reg[1] & 0x80 ? 0xFF : openbus);
+				case 2:
+					return (m45.reg[2] & 0x40 ? 0xFF : openbus);
+				case 3:
+					return (m45.reg[1] & 0x40 ? 0xFF : openbus);
+				case 4:
+					return (m45.reg[2] & 0x20 ? 0xFF : openbus);
+				default:
+					return (openbus);
+			}
+			break;
+		default:
+			return (openbus);
 	}
-	return (openbus);
 }
 BYTE extcl_save_mapper_45(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m45.reg);
 	save_slot_ele(mode, slot, m45.index);
-	save_slot_ele(mode, slot, m45.prg_map);
-	save_slot_ele(mode, slot, m45.chr_map);
-	if (save_slot.version >= 15) {
-		save_slot_ele(mode, slot, m45.read);
-	}
+	save_slot_ele(mode, slot, m45.reg);
+	save_slot_ele(mode, slot, m45.mmc3);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
+	if (mode == SAVE_SLOT_READ) {
+		chr_fix_45(mmc3.bank_to_update);
+	}
+
 	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_45(BYTE value) {
+	if (value & 0x40) {
+		prg_swap_45(0x8000, ~1);
+		prg_swap_45(0xC000, m45.mmc3[6]);
+	} else {
+		prg_swap_45(0x8000, m45.mmc3[6]);
+		prg_swap_45(0xC000, ~1);
+	}
+	prg_swap_45(0xA000, m45.mmc3[7]);
+	prg_swap_45(0xE000, ~0);
+}
+INLINE static void prg_swap_45(WORD address, WORD value) {
+	WORD base = m45.reg[1] | ((m45.reg[2] & 0xC0) << 2);
+	WORD mask = ~m45.reg[3] & 0x3F;
+
+	value = base | (value & mask);
+	control_bank(info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
+	map_prg_rom_8k_update();
+}
+INLINE static void chr_fix_45(BYTE value) {
+	WORD cbase = (value & 0x80) << 5;
+
+	chr_swap_45(cbase ^ 0x0000, m45.mmc3[0] & (~1));
+	chr_swap_45(cbase ^ 0x0400, m45.mmc3[0] |   1);
+	chr_swap_45(cbase ^ 0x0800, m45.mmc3[1] & (~1));
+	chr_swap_45(cbase ^ 0x0C00, m45.mmc3[1] |   1);
+	chr_swap_45(cbase ^ 0x1000, m45.mmc3[2]);
+	chr_swap_45(cbase ^ 0x1400, m45.mmc3[3]);
+	chr_swap_45(cbase ^ 0x1800, m45.mmc3[4]);
+	chr_swap_45(cbase ^ 0x1C00, m45.mmc3[5]);
+}
+INLINE static void chr_swap_45(WORD address, WORD value) {
+	if (mapper.write_vram) {
+		value = address >> 10;
+		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	} else {
+		WORD base = m45.reg[0] | (m45.reg[2] & 0xF0) << 4;
+		WORD mask = 0xFF >> (~m45.reg[2] & 0x0F);
+
+		value = base | (value & mask);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	}
 }
