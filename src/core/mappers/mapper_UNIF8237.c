@@ -305,8 +305,7 @@ INLINE static void unif8237_update_chr(void) {
 
 	for (i = 0; i < 8; i++) {
 		if (unif8237.reg[0] & 0x40) {
-			value = ((unif8237.reg[1] & 0x0C) << 6) | (unif8237.chr_map[i] & 0x7F) |
-					((unif8237.reg[1] & 0x20) << 2);
+			value = ((unif8237.reg[1] & 0x0C) << 6) | (unif8237.chr_map[i] & 0x7F) | ((unif8237.reg[1] & 0x20) << 2);
 		} else {
 			value = ((unif8237.reg[1] & 0x0C) << 6) | unif8237.chr_map[i];
 		}
@@ -321,8 +320,7 @@ INLINE static void unif8237a_update_prg(void) {
 		BYTE bnk0 = (unif8237.reg[1] & 0x10);
 
 		if (unif8237.reg[0] & 0x80) {
-			BYTE bnk1 = ((unif8237.reg[1] & 0x03) << 4) | ((unif8237.reg[1] & 0x08) << 3)
-					| (unif8237.reg[0] & 0x07) | (bnk0 >> 1);
+			BYTE bnk1 = ((unif8237.reg[1] & 0x03) << 4) | ((unif8237.reg[1] & 0x08) << 3) | (unif8237.reg[0] & 0x07) | (bnk0 >> 1);
 
 			if (unif8237.reg[0] & 0x20) {
 				value = bnk1 >> 1;
@@ -352,8 +350,7 @@ INLINE static void unif8237a_update_prg(void) {
 			map_prg_rom_8k(1, 3, value);
 		}
 	} else if (unif8237.reg[0] & 0x80) {
-		BYTE bnk = ((unif8237.reg[1] & 0x03) << 4) | ((unif8237.reg[1] & 0x08) << 3)
-				| (unif8237.reg[0] & 0x0F);
+		BYTE bnk = ((unif8237.reg[1] & 0x03) << 4) | ((unif8237.reg[1] & 0x08) << 3) | (unif8237.reg[0] & 0x0F);
 
 		if (unif8237.reg[0] & 0x20) {
 			value = bnk >> 1;
@@ -390,8 +387,7 @@ INLINE static void unif8237a_update_chr(void) {
 
 	for (i = 0; i < 8; i++) {
 		if (unif8237.reg[0] & 0x40) {
-			value = ((unif8237.reg[1] & 0x0E) << 7) | (unif8237.chr_map[i] & 0x7F) |
-					((unif8237.reg[1] & 0x20) << 2);
+			value = ((unif8237.reg[1] & 0x0E) << 7) | (unif8237.chr_map[i] & 0x7F) | ((unif8237.reg[1] & 0x20) << 2);
 		} else {
 			value = ((unif8237.reg[1] & 0x0E) << 7) | unif8237.chr_map[i];
 		}

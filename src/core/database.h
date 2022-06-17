@@ -3864,6 +3864,8 @@ static const _dbelement dblist[] = {
 /* ------------------------------------- mapper 215 --------------------------------------- */
 	/* Mortal Kombat 3 Extra 60 (Unl) [!].nes */
 	{"dc1e114d59afcdb2cf2927b830d94f42dd0ea547", 215, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Golden Card 6-in-1 (Unl) [!].nes */
+	{"207fa25ae26ff797cae0fd40e7ec4d2c00e52497", 215, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- mapper 216 --------------------------------------- */
 	/* Videopoker Bonza (Rev A)(R)[!].nes */

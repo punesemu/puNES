@@ -24,7 +24,7 @@ INLINE static void prg_fix_429(void);
 INLINE static void chr_fix_429(void);
 
 struct _m429 {
-	WORD reg;
+	BYTE reg;
 } m429;
 
 void map_init_429(void) {

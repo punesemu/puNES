@@ -25,7 +25,7 @@ INLINE static void prg_fix_431(void);
 INLINE static void mirroring_fix_431(void);
 
 struct _m431 {
-	WORD reg[2];
+	BYTE reg[2];
 } m431;
 
 void map_init_431(void) {
