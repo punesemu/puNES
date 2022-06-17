@@ -22,10 +22,13 @@
 
 void map_init_212(void) {
 	EXTCL_CPU_WR_MEM(212);
+	EXTCL_CPU_RD_MEM(212);
 
 	if (info.reset >= HARD) {
-		extcl_cpu_wr_mem_212(0xFFFF, 0);
+		extcl_cpu_wr_mem_212(0x8000, 0xFF);
 	}
+
+	info.mapper.extend_rd = TRUE;
 }
 void extcl_cpu_wr_mem_212(WORD address, BYTE value) {
 	DBWORD bank;
@@ -62,4 +65,10 @@ void extcl_cpu_wr_mem_212(WORD address, BYTE value) {
 	} else {
 		mirroring_V();
 	}
+}
+BYTE extcl_cpu_rd_mem_212(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+	if ((address >= 0x6000) && (address <= 0x7FFF)) {
+		return (openbus | ((address & 0x10)? 0x00: 0x80));
+	}
+	return (openbus);
 }
