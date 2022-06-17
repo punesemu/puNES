@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-enum _m226_types { M226, M233 };
+enum _m226_types { MAP226, MAP233 };
 
 void map_init_226(BYTE model);
 void extcl_cpu_wr_mem_226(WORD address, BYTE value);

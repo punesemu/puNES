@@ -37,13 +37,13 @@ void map_init_226(BYTE model) {
 	mapper.internal_struct_size[0] = sizeof(m226);
 
 	// 42-in-1 (Reset Based) [U][p1][!].unf
-	m226tmp.reset_based = model == M233;
+	m226tmp.reset_based = model == MAP233;
 
 	if (m226tmp.reset_based && (info.reset == RESET)) {
 		m226.reg[0] = 0;
 		m226.reg[1] = 0;
 		m226.reset ^= 1;
-	} else if (info.reset >= HARD) {
+	} else {
 		memset(&m226, 0x00, sizeof(m226));
 	}
 	extcl_cpu_wr_mem_226(0, m226.reg[0]);
