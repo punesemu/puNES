@@ -3051,10 +3051,6 @@ static const _dbelement dblist[] = {
 	/* Jetsons, The - Cogswell's Caper! (J).nes */
 	{"77e12ce848192a51309393136c4a240c729ddb30", 48, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 52 ---------------------------------------- */
-	/* Mario 7-in-1 [p1][!].nes */
-	{"4fe43bef9d9217881b7c8ece0007dc4cd830fbec", 52, MARIO7IN1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-
 /* ------------------------------------- mapper 59 ---------------------------------------- */
 	/* Menu_42_Game_[p]_[!]_by_Guyver.nes */
 	{"dd545b471abe0a158c1bdcc656138274adee7eae", 59, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},

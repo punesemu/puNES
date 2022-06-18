@@ -226,7 +226,7 @@ BYTE map_init(void) {
 			map_init_51();
 			break;
 		case 52:
-			map_init_52(info.mapper.submapper);
+			map_init_52();
 			break;
 		case 53:
 			map_init_53();

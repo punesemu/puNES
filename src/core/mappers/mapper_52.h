@@ -21,9 +21,8 @@
 
 #include "common.h"
 
-enum { MARIO7IN1 };
-
-void map_init_52(BYTE type);
+void map_init_52(void);
+void extcl_after_mapper_init_52(void);
 void extcl_cpu_wr_mem_52(WORD address, BYTE value);
 BYTE extcl_save_mapper_52(BYTE mode, BYTE slot, FILE *fp);
 
