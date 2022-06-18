@@ -557,6 +557,7 @@ BYTE ines10_search_in_database(void *rom_mem) {
 
 		if ((position + len) > rom->size) {
 			info.prg.rom.banks_16k = (rom->size - position) / 0x4000;
+			len = !info.prg.rom.banks_16k ? 0x2000 : info.prg.rom.banks_16k * 0x4000;
 			fprintf(stderr, "truncated PRG ROM\n");
 		}
 
