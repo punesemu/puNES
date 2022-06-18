@@ -28,7 +28,7 @@ INLINE static void mirroring_fix_417(void);
 
 struct _m417 {
 	BYTE prg[3];
-	BYTE chr[7];
+	BYTE chr[8];
 	BYTE mir[4];
 	struct _m417_irq {
 		BYTE enable;
