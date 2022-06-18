@@ -22,8 +22,10 @@
 #include "common.h"
 
 void map_init_91(void);
+void extcl_after_mapper_init_91(void);
 void extcl_cpu_wr_mem_91(WORD address, BYTE value);
 BYTE extcl_save_mapper_91(BYTE mode, BYTE slot, FILE *fp);
 void extcl_ppu_256_to_319_91(void);
+void extcl_cpu_every_cycle_91(void);
 
 #endif /* MAPPER_91_H_ */
