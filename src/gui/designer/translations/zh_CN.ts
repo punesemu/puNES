@@ -330,7 +330,7 @@
     <name>mainWindow</name>
     <message>
       <source>&amp;Insert disk</source>
-      <translation>插入磁盘(&amp;L)</translation>
+      <translation>插入磁盘(&amp;I)</translation>
     </message>
     <message>
       <source>&amp;Eject disk</source>
@@ -474,7 +474,7 @@
     </message>
     <message>
       <source>&amp;Increment slot</source>
-      <translation>下一进度槽(&amp;L)</translation>
+      <translation>下一进度槽(&amp;I)</translation>
     </message>
     <message>
       <source>&amp;Decrement slot</source>
@@ -2045,11 +2045,11 @@
     <name>wdgSettingsVideo</name>
     <message>
       <source>GLSL &amp;soft stretch</source>
-      <translation>GLSL 柔和拉伸(&amp;s)</translation>
+      <translation>GL&amp;SL 柔和拉伸</translation>
     </message>
     <message>
       <source>HLSL &amp;soft stretch</source>
-      <translation>HLSL 柔和拉伸(&amp;s)</translation>
+      <translation>HL&amp;SL 柔和拉伸</translation>
     </message>
     <message>
       <source>[Select a file]</source>
