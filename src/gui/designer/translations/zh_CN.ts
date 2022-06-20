@@ -330,7 +330,7 @@
     <name>mainWindow</name>
     <message>
       <source>&amp;Insert disk</source>
-      <translation>插入磁盘(&amp;I)</translation>
+      <translation>插入磁盘(&amp;L)</translation>
     </message>
     <message>
       <source>&amp;Eject disk</source>
@@ -458,7 +458,7 @@
     </message>
     <message>
       <source>F&amp;ullscreen</source>
-      <translation>全屏(&amp;u)</translation>
+      <translation>全屏(&amp;U)</translation>
     </message>
     <message>
       <source>&amp;Game Genie Rom Mode</source>
@@ -466,15 +466,15 @@
     </message>
     <message>
       <source>S&amp;ave state</source>
-      <translation>保存进度(&amp;a)</translation>
+      <translation>保存进度(&amp;A)</translation>
     </message>
     <message>
       <source>L&amp;oad state</source>
-      <translation>载入进度(&amp;o)</translation>
+      <translation>载入进度(&amp;O)</translation>
     </message>
     <message>
       <source>&amp;Increment slot</source>
-      <translation>下一进度槽(&amp;I)</translation>
+      <translation>下一进度槽(&amp;L)</translation>
     </message>
     <message>
       <source>&amp;Decrement slot</source>
@@ -546,7 +546,7 @@
     </message>
     <message>
       <source>Save Screens&amp;hot</source>
-      <translation>截图(&amp;h)</translation>
+      <translation>截图(&amp;H)</translation>
     </message>
     <message>
       <source>Insert Coin</source>
@@ -574,7 +574,7 @@
     </message>
     <message>
       <source>Setti&amp;ngs</source>
-      <translation>设置(&amp;n)</translation>
+      <translation>设置(&amp;N)</translation>
     </message>
     <message>
       <source>&amp;Video</source>
@@ -598,7 +598,7 @@
     </message>
     <message>
       <source>S&amp;tate</source>
-      <translation>进度(&amp;t)</translation>
+      <translation>进度(&amp;T)</translation>
     </message>
     <message>
       <source>&amp;Help</source>
@@ -614,7 +614,7 @@
     </message>
     <message>
       <source>Too&amp;ls</source>
-      <translation>工具(&amp;l)</translation>
+      <translation>工具(&amp;L)</translation>
     </message>
     <message>
       <source>UNIF rom files</source>
@@ -674,7 +674,7 @@
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
-      <translation>保存原始截图(&amp;r)</translation>
+      <translation>保存原始截图(&amp;R)</translation>
     </message>
     <message>
       <source>Widgets</source>
