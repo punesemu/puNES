@@ -871,6 +871,7 @@ INLINE static void chr_fix_FFESMC(void) {
 		}
 	} else {
 		switch (ffesmc.mode.m1 & 0xE0) {
+			default:
 			case 0x00: // 0: UNROM
 			case 0x40: // 2: UOROM
 				bank[0] = 0;
