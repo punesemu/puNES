@@ -45,7 +45,7 @@ void extcl_after_mapper_init_396(void) {
 	mirroring_fix_396();
 }
 void extcl_cpu_wr_mem_396(WORD address, BYTE value) {
-	if ((address >= 0xA000) && (address <= 0xAFFF)) {
+	if ((address >= 0xA000) && (address <= 0xBFFF)) {
 		m396.reg[1] = value;
 	} else {
 		m396.reg[0] = value;
@@ -60,7 +60,7 @@ BYTE extcl_save_mapper_396(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_396(void) {
-	WORD base = (m396.reg[1] & 0x07) << 3;
+	WORD base = (m396.reg[1] & 0x0F) << 3;
 	BYTE value;
 
 	value = base | (m396.reg[0] & 0x07);
