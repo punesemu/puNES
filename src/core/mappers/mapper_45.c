@@ -114,16 +114,9 @@ void extcl_after_mapper_init_45(void) {
 }
 void extcl_cpu_wr_mem_45(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active) {
-			if (address & 0x0001) {
-				m45.index = 0;
-				m45.reg[0] = m45.reg[1] = 0;
-				m45.reg[2] &= 0x0F;
-				m45.reg[3] ^= 0x40;
-			} else if (!(m45.reg[3] & 0x40)) {
-				m45.reg[m45.index] = value;
-				m45.index = (m45.index + 1) & 0x03;
-			}
+		if ((cpu.prg_ram_wr_active) && !(m45.reg[3] & 0x40)) {
+			m45.reg[m45.index] = value;
+			m45.index = (m45.index + 1) & 0x03;
 			prg_fix_45(mmc3.bank_to_update);
 			chr_fix_45(mmc3.bank_to_update);
 		}
