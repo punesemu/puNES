@@ -211,6 +211,7 @@
 #include "mappers/mapper_432.h"
 #include "mappers/mapper_433.h"
 #include "mappers/mapper_FFESMC.h"
+#include "mappers/mapper_29.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"
