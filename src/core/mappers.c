@@ -77,10 +77,16 @@ BYTE map_init(void) {
 		case 5:
 			map_init_MMC5();
 			break;
+		case 6:
+			map_init_FFESMC();
+			break;
 		case 7:
 			map_init_AxROM();
 			break;
 			/* per MMC2 e MMC4 uso le stesse routine */
+		case 8:
+			map_init_FFESMC();
+			break;
 		case 9:
 		case 10:
 			map_init_MMC2and4();
@@ -114,6 +120,9 @@ BYTE map_init(void) {
 			}
 			break;
 		}
+		case 17:
+			map_init_FFESMC();
+			break;
 		case 18:
 			map_init_Jaleco(SS8806);
 			break;
@@ -1523,9 +1532,6 @@ void map_chr_bank_1k_reset(void) {
 BYTE map_chr_ram_init(void) {
 	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
 		if (mapper.write_vram) {
-			if (chr_rom()) {
-				free(chr_rom());
-			}
 			/* alloco la CHR Rom */
 			if (map_chr_malloc(chr_ram_size(), 0x00, TRUE) == EXIT_ERROR) {
 				return (EXIT_ERROR);

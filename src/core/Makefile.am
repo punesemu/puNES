@@ -501,6 +501,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_FARIDUNROM8IN1.h \
 	mappers/mapper_FDS.c \
 	mappers/mapper_FDS.h \
+	mappers/mapper_FFESMC.c \
+	mappers/mapper_FFESMC.h \
 	mappers/mapper_Futuremedia.c \
 	mappers/mapper_Futuremedia.h \
 	mappers/mapper_FS304.c \

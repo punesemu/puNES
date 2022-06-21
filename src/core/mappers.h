@@ -210,6 +210,7 @@
 #include "mappers/mapper_431.h"
 #include "mappers/mapper_432.h"
 #include "mappers/mapper_433.h"
+#include "mappers/mapper_FFESMC.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"
@@ -328,7 +329,7 @@ typedef struct _mapper {
 	WORD internal_struct_size[10];
 	BYTE trainer[512];
 	struct _misc_roms {
-		uint32_t size;
+		size_t size;
 		BYTE *data;
 	} misc_roms;
 } _mapper;
