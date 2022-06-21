@@ -160,7 +160,7 @@ void map_init_BMCFK23C(void) {
 		} else if (
 			(info.crc32.prg == 0xC08E77C1) || // 5-in-1 (19, 66, 90, 93, 113, 133, 200-in-1) (KD-1512_20210408) (Unl) [p1].nes
 			(info.crc32.prg == 0x613BBEE9) || // Super Game 15-in-1 (7, 80, 82, 102, 122, 160-in-1) (KD-6012) (Unl) [p1].nes
-		    (info.crc32.prg == 0x03CF81B4)) { // 16 in 1 (KD-1512).nes
+			(info.crc32.prg == 0x03CF81B4)) { // 16 in 1 (KD-1512).nes
 			bmcfk23ctmp.select = 2;
 			bmcfk23ctmp.index = 0;
 		} else if (

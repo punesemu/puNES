@@ -442,7 +442,7 @@ void map_init_FFESMC(void) {
 void extcl_after_mapper_init_FFESMC(void) {
 	prg_fix_FFESMC();
 	if (info.reset >= HARD) {
-	    WORD nmiHandler;
+		WORD nmiHandler;
 
 		nmiHandler = prg_rom_rd(0xFFFA) | (prg_rom_rd(0xFFFB) << 8);
 		if (nmiHandler == 0x5032) {

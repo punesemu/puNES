@@ -218,19 +218,19 @@ INLINE static void prg_swap_126(WORD address, WORD value) {
 	WORD mask = ((~m126.reg[0] & 0x40) >> 2) | 0x0F;
 	BYTE bank = (address >> 13) & 0x03;
 
-    switch (m126.reg[3] & 0x03) {
-    	case 1:
-    	case 2:
-    		base = base | (m126.mmc3[6] & mask);
-    		mask = 0x01;
-    		value = bank & 0x01;
-    		break;
-    	case 3:
-    		base = base | (m126.mmc3[6] & mask);
-    		mask = 0x03;
-    		value = bank;
-    		break;
-    }
+	switch (m126.reg[3] & 0x03) {
+		case 1:
+		case 2:
+			base = base | (m126.mmc3[6] & mask);
+			mask = 0x01;
+			value = bank & 0x01;
+			break;
+		case 3:
+			base = base | (m126.mmc3[6] & mask);
+			mask = 0x03;
+			value = bank;
+			break;
+	}
 
 	value = (base & ~mask) | (value & mask);
 	control_bank(info.prg.rom.max.banks_8k)
