@@ -1193,6 +1193,9 @@ BYTE map_init(void) {
 		case 547:
 			map_init_KONAMIQTAI();
 			break;
+		case 559:
+			map_init_559();
+			break;
 		default:
 			gui_overlay_info_append_msg_precompiled(11, NULL);
 			fprintf(stderr, "Mapper not supported\n");
