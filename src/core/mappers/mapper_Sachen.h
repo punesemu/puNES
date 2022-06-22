@@ -55,6 +55,8 @@ void extcl_cpu_wr_mem_Sachen_tca01(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_Sachen_tca01(WORD address, BYTE openbus, BYTE before);
 
 void extcl_cpu_wr_mem_Sachen_tcu01(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Sachen_tcu01(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_Sachen_tcu01(BYTE mode, BYTE slot, FILE *fp);
 
 void extcl_cpu_wr_mem_Sachen_tcu02(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_Sachen_tcu02(WORD address, BYTE openbus, BYTE before);

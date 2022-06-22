@@ -43,10 +43,10 @@ struct _sa8259 {
 	BYTE ctrl;
 	BYTE reg[8];
 } sa8259;
-struct _tcu02 {
+struct _tcu0x {
 	BYTE reg[4];
 	BYTE RRR;
-} tcu02;
+} tcu0x;
 struct _sa74374x {
 	BYTE reg;
 	BYTE chr_rom_8k_bank;
@@ -128,25 +128,29 @@ void map_init_Sachen(BYTE model) {
 			break;
 		case TCU01:
 			EXTCL_CPU_WR_MEM(Sachen_tcu01);
+			EXTCL_CPU_RD_MEM(Sachen_tcu01);
+			EXTCL_SAVE_MAPPER(Sachen_tcu01);
+			mapper.internal_struct[0] = (BYTE *)&tcu0x;
+			mapper.internal_struct_size[0] = sizeof(tcu0x);
+
+			memset(&tcu0x, 0x00, sizeof(tcu0x));
+
+			tcu0x.reg[1] = 0x01;
 
 			info.mapper.extend_wr = TRUE;
 
-			if (info.reset >= HARD) {
-				if (info.prg.rom.max.banks_32k != 0xFFFF) {
-					map_prg_rom_8k(4, 0, 0);
-				}
-			}
+			extcl_cpu_wr_mem_Sachen_tcu02(0x8000, 0x00);
 			break;
 		case TCU02:
 			EXTCL_CPU_WR_MEM(Sachen_tcu02);
 			EXTCL_CPU_RD_MEM(Sachen_tcu02);
 			EXTCL_SAVE_MAPPER(Sachen_tcu02);
-			mapper.internal_struct[0] = (BYTE *)&tcu02;
-			mapper.internal_struct_size[0] = sizeof(tcu02);
+			mapper.internal_struct[0] = (BYTE *)&tcu0x;
+			mapper.internal_struct_size[0] = sizeof(tcu0x);
 
-			memset(&tcu02, 0x00, sizeof(tcu02));
+			memset(&tcu0x, 0x00, sizeof(tcu0x));
 			
-			tcu02.reg[1] = 0x01;
+			tcu0x.reg[1] = 0x01;
 
 			info.mapper.extend_wr = TRUE;
 
@@ -367,23 +371,43 @@ BYTE extcl_cpu_rd_mem_Sachen_tca01(WORD address, BYTE openbus, UNUSED(BYTE befor
 }
 
 void extcl_cpu_wr_mem_Sachen_tcu01(WORD address, BYTE value) {
-	if (address < 0x4100) {
-		return;
+	if ((address >= 0x4000) && (address <= 0x5FFF)) {
+		switch (address & 0x0103) {
+			case 0x0100:
+				// Write $4100: When Mode==0: Bits 0-5 of Register := Input, bits 0-3 being inverted if Invert==1.
+				//              When Mode==1: Bits 0-3 of Register incremented by one, bits 4-5 unaffected.
+				tcu0x.reg[0] = value;
+
+				if (tcu0x.reg[3] & 0x01) {
+					tcu0x.RRR = (tcu0x.RRR & 0x30) | ((tcu0x.RRR + 1) & 0x0F);
+				} else {
+					tcu0x.RRR = (tcu0x.reg[2] & 0x30) | (((tcu0x.reg[1] & 0x01) ? ~tcu0x.reg[2] : tcu0x.reg[2]) & 0x0F);
+				}
+				break;
+			case 0x0101:
+				// Write $4101: Invert := Written value bit 2.
+				tcu0x.reg[1] = value >> 2;
+				break;
+			case 0x0102:
+				// Write $4102: Input := Written value bits 2-7.
+				tcu0x.reg[2] = value >> 2;
+				break;
+			case 0x0103:
+				// Write $4103: Mode := Written value bit 2.
+				tcu0x.reg[3] = value >> 2;
+				break;
+		}
 	}
 
-	if ((address & 0x0003) == 0x0002) {
-		const BYTE save = value;
+	value = ((tcu0x.RRR & 0x20) >> 4) | (tcu0x.RRR & 0x01);
+	control_bank(info.prg.rom.max.banks_32k)
+	map_prg_rom_8k(4, 0, value);
+	map_prg_rom_8k_update();
+
+	{
 		DBWORD bank;
 
-		if (info.prg.rom.max.banks_32k != 0xFFFF) {
-			value = ((value >> 6) & 0x02) | ((value >> 2) & 0x01);
-			control_bank(info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, value);
-			map_prg_rom_8k_update();
-			value = save;
-		}
-
-		value = (value >> 3);
+		value = (tcu0x.RRR >> 1) & 0x0F;
 		control_bank(info.chr.rom.max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = chr_pnt(bank);
@@ -396,37 +420,55 @@ void extcl_cpu_wr_mem_Sachen_tcu01(WORD address, BYTE value) {
 		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 	}
 }
+BYTE extcl_cpu_rd_mem_Sachen_tcu01(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+	if ((address >= 0x4000) && (address <= 0x5FFF)) {
+		if ((address & 0x103) == 0x0100) {
+			// Read $4100-$4103: [RRRR RR..]: Read Register (with its bits 0-5), connected to the CPU data bus bits 2-7.
+			// Register bits 4-5 (CPU bits 6-7) are inverted if Invert==1. CPU bits 0-1 are open bus.
+			return ((openbus & 0x03) |
+				((tcu0x.reg[1] & 0x01 ? ((tcu0x.RRR & 0x10) << 1) | ((tcu0x.RRR & 0x20) >> 1) : (tcu0x.RRR & 0x30)) |
+				(tcu0x.RRR & 0x0F) << 2));
+		}
+	}
+	return (openbus);
+}
+BYTE extcl_save_mapper_Sachen_tcu01(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, tcu0x.reg);
+	save_slot_ele(mode, slot, tcu0x.RRR);
+
+	return (EXIT_OK);
+}
 
 void extcl_cpu_wr_mem_Sachen_tcu02(WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x5FFF)) {
 		switch (address & 0x0103) {
 			case 0x0100:
-				//Write $4100: When Mode==0: Bits 0-5 of Register := Input, bits 0-3 being inverted if Invert==1.
+				// Write $4100: When Mode==0: Bits 0-5 of Register := Input, bits 0-3 being inverted if Invert==1.
 				//             When Mode==1: Bits 0-3 of Register incremented by one, bits 4-5 unaffected.
-				tcu02.reg[0] = value;
+				tcu0x.reg[0] = value;
 
-				if (tcu02.reg[3] & 0x01) {
-					tcu02.RRR = (tcu02.RRR & 0x30) | ((tcu02.RRR + 1) & 0x0F);
+				if (tcu0x.reg[3] & 0x01) {
+					tcu0x.RRR = (tcu0x.RRR & 0x30) | ((tcu0x.RRR + 1) & 0x0F);
 				} else {
-					tcu02.RRR = (tcu02.reg[2] & 0x30) | (((tcu02.reg[1] & 0x01) ? ~tcu02.reg[2] : tcu02.reg[2]) & 0x0F);
+					tcu0x.RRR = (tcu0x.reg[2] & 0x30) | (((tcu0x.reg[1] & 0x01) ? ~tcu0x.reg[2] : tcu0x.reg[2]) & 0x0F);
 				}
 				break;
 			case 0x0101:
 				// Write $4101: Invert := Written value bit 0.
-				tcu02.reg[1] = value;
+				tcu0x.reg[1] = value;
 				break;
 			case 0x0102:
 				// Write $4102: Input := Written value bits 0-5.
-				tcu02.reg[2] = value;
+				tcu0x.reg[2] = value;
 				break;
 			case 0x0103:
 				// Write $4103: Mode := Written value bit 0.
-				tcu02.reg[3] = value;
+				tcu0x.reg[3] = value;
 				break;
 		}
 	}
 
-	value = (tcu02.RRR >> 4) & 0x01;
+	value = (tcu0x.RRR >> 4) & 0x01;
 	control_bank(info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
@@ -434,7 +476,7 @@ void extcl_cpu_wr_mem_Sachen_tcu02(WORD address, BYTE value) {
 	{
 		DBWORD bank;
 
-		value = tcu02.RRR & 0x07;
+		value = tcu0x.RRR & 0x07;
 		control_bank(info.chr.rom.max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = chr_pnt(bank);
@@ -452,15 +494,15 @@ BYTE extcl_cpu_rd_mem_Sachen_tcu02(WORD address, BYTE openbus, UNUSED(BYTE befor
 		if ((address & 0x103) == 0x0100) {
 			// Read $4100-$4103: [..RR RRRR]: Read Register. Bits 4-5 are inverted if Invert==1. Bits 6-7 are open bus.
 			return ((openbus & 0xC0) |
-				(tcu02.reg[1] & 0x01 ? ((tcu02.RRR & 0x10) << 1) | ((tcu02.RRR & 0x20) >> 1) : (tcu02.RRR & 0x30)) |
-				(tcu02.RRR & 0x0F));
+				(tcu0x.reg[1] & 0x01 ? ((tcu0x.RRR & 0x10) << 1) | ((tcu0x.RRR & 0x20) >> 1) : (tcu0x.RRR & 0x30)) |
+				(tcu0x.RRR & 0x0F));
 		}
 	}
 	return (openbus);
 }
 BYTE extcl_save_mapper_Sachen_tcu02(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, tcu02.reg);
-	save_slot_ele(mode, slot, tcu02.RRR);
+	save_slot_ele(mode, slot, tcu0x.reg);
+	save_slot_ele(mode, slot, tcu0x.RRR);
 
 	return (EXIT_OK);
 }
