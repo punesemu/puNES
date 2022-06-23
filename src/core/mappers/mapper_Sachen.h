@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-enum {
+enum _sachen_types {
 	SA0036,
 	SA0037,
 	SA8259A,
@@ -35,11 +35,6 @@ enum {
 	SA72008,
 	SA74374A,
 	SA74374B,
-};
-
-static const char pokeriiichr[2][41] = {
-	"5066c2d12ff2ac45ef395d3a4353e897fce19f78",
-	"c6bf926ed14c21f1a5b64fbccf3288005ff54be5"
 };
 
 void map_init_Sachen(BYTE model);
@@ -66,8 +61,9 @@ void extcl_cpu_wr_mem_Sachen_sa72007(WORD address, BYTE value);
 
 void extcl_cpu_wr_mem_Sachen_sa72008(WORD address, BYTE value);
 
-void extcl_cpu_wr_mem_Sachen_sa74374a(WORD address, BYTE value);
-void extcl_cpu_wr_mem_Sachen_sa74374b(WORD address, BYTE value);
+void extcl_after_mapper_init_Sachen_sa74374x(void);
+void extcl_cpu_wr_mem_Sachen_sa74374x(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Sachen_sa74374x(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_Sachen_sa74374x(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_SACHEN_H_ */
