@@ -71,7 +71,6 @@
 #include "mappers/mapper_121.h"
 #include "mappers/mapper_156.h"
 #include "mappers/mapper_Kaiser.h"
-#include "mappers/mapper_176.h"
 #include "mappers/mapper_Hen.h"
 #include "mappers/mapper_178.h"
 #include "mappers/mapper_182.h"
