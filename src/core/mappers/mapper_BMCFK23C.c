@@ -267,6 +267,9 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 						bmcfk23c.prg_base = (bmcfk23c.prg_base & ~0x0E00) | ((value & 0xC0) << 3) | ((value & 0x20) << 6);
 					}
 					break;
+				case 3:
+					bmcfk23c.cpu5xxx[3] = value;
+					break;
 				case 5:
 					bmcfk23c.cpu5xxx[5] = value;
 					if (info.mapper.submapper == JX9003B) {
