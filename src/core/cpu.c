@@ -1006,6 +1006,9 @@ void cpu_init_PC(void) {
 
 	cfg->cheat_mode = NOCHEAT_MODE;
 	cpu.PC = (cpu_rd_mem(INT_RESET + 1, FALSE) << 8 | cpu_rd_mem(INT_RESET, FALSE));
+	if (extcl_cpu_init_pc) {
+		extcl_cpu_init_pc();
+	}
 	cfg->cheat_mode = save_cheat_mode;
 	cpu.openbus = save_cpu_openbus;
 }

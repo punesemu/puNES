@@ -27,6 +27,9 @@ BYTE (*extcl_cpu_rd_mem)(WORD address, BYTE openbus, BYTE before);
 BYTE (*extcl_cpu_rd_ram)(WORD address, BYTE openbus, BYTE before);
 BYTE (*extcl_save_mapper)(BYTE mode, BYTE slot, FILE *fp);
 // CPU
+// viene chimata quando di setta il cpu.PC
+void (*extcl_cpu_init_pc)(void);
+// viene chiamata ad ogni ciclo di cpu
 void (*extcl_cpu_every_cycle)(void);
 // viene chiamata ogni volta si scrive qualcosa nel registro $4016
 void (*extcl_cpu_wr_r4016)(BYTE value);
@@ -83,6 +86,7 @@ void extcl_init(void) {
 	extcl_cpu_rd_ram = NULL;
 	extcl_save_mapper = NULL;
 	/* CPU */
+	extcl_cpu_init_pc = NULL;
 	extcl_cpu_every_cycle = NULL;
 	extcl_cpu_wr_r4016 = NULL;
 	/* PPU */

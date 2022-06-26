@@ -116,8 +116,8 @@ INLINE static void prg_fix_416(void) {
 	_control_bank(bank, info.prg.rom.max.banks_8k)
 	m416tmp.prg_6000 = prg_pnt(bank << 13);
 
-    if (m416.reg[1] & 0x08) {
-    	bank = ((m416.reg[1] & 0x08) >> 1) | ((m416.reg[1] & 0x80) >> 6) | ((m416.reg[1] & 0x20) >> 5);
+	if (m416.reg[1] & 0x08) {
+		bank = ((m416.reg[1] & 0x08) >> 1) | ((m416.reg[1] & 0x80) >> 6) | ((m416.reg[1] & 0x20) >> 5);
 
 		if (m416.reg[1] & 0x80) {
 			bank >>= 1;

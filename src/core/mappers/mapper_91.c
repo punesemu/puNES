@@ -190,27 +190,27 @@ INLINE static void chr_fix_91(void) {
 	DBWORD bank;
 	WORD base = (m91.reg & 0x01) << 8;
 
-    bank = base | m91.chr[0];
+	bank = base | m91.chr[0];
 	_control_bank(bank, info.chr.rom.max.banks_2k)
-    bank <<= 11;
+	bank <<= 11;
 	chr.bank_1k[0] = chr_pnt(bank);
 	chr.bank_1k[1] = chr_pnt(bank | 0x400);
 
-    bank = base | m91.chr[1];
+	bank = base | m91.chr[1];
 	_control_bank(bank, info.chr.rom.max.banks_2k)
-    bank <<= 11;
+	bank <<= 11;
 	chr.bank_1k[2] = chr_pnt(bank);
 	chr.bank_1k[3] = chr_pnt(bank | 0x400);
 
-    bank = base | m91.chr[2];
+	bank = base | m91.chr[2];
 	_control_bank(bank, info.chr.rom.max.banks_2k)
-    bank <<= 11;
+	bank <<= 11;
 	chr.bank_1k[4] = chr_pnt(bank);
 	chr.bank_1k[5] = chr_pnt(bank | 0x400);
 
-    bank = base | m91.chr[3];
+	bank = base | m91.chr[3];
 	_control_bank(bank, info.chr.rom.max.banks_2k)
-    bank <<= 11;
+	bank <<= 11;
 	chr.bank_1k[6] = chr_pnt(bank);
 	chr.bank_1k[7] = chr_pnt(bank | 0x400);
 }

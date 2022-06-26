@@ -77,10 +77,16 @@ BYTE map_init(void) {
 		case 5:
 			map_init_MMC5();
 			break;
+		case 6:
+			map_init_FFESMC();
+			break;
 		case 7:
 			map_init_AxROM();
 			break;
 			/* per MMC2 e MMC4 uso le stesse routine */
+		case 8:
+			map_init_FFESMC();
+			break;
 		case 9:
 		case 10:
 			map_init_MMC2and4();
@@ -114,12 +120,18 @@ BYTE map_init(void) {
 			}
 			break;
 		}
+		case 17:
+			map_init_FFESMC();
+			break;
 		case 18:
 			map_init_Jaleco(SS8806);
 			break;
 		case 19:
 			map_init_Namco(N163);
 			break;
+		//
+		// mapper 20 e' l'FDS
+		//
 		case 21:
 			map_init_VRC4(info.mapper.submapper == DEFAULT ? VRC4A : info.mapper.submapper);
 			break;
@@ -161,6 +173,9 @@ BYTE map_init(void) {
 			break;
 		case 28:
 			map_init_28();
+			break;
+		case 29:
+			map_init_29();
 			break;
 		case 30:
 			map_init_UxROM(UNROM512);
@@ -1136,6 +1151,9 @@ BYTE map_init(void) {
 		case 513:
 			map_init_SA_9602B();
 			break;
+		case 516:
+			map_init_516();
+			break;
 		case 519:
 			map_init_EH8813A();
 			break;
@@ -1174,6 +1192,9 @@ BYTE map_init(void) {
 			break;
 		case 547:
 			map_init_KONAMIQTAI();
+			break;
+		case 559:
+			map_init_559();
 			break;
 		default:
 			gui_overlay_info_append_msg_precompiled(11, NULL);
@@ -1523,9 +1544,6 @@ void map_chr_bank_1k_reset(void) {
 BYTE map_chr_ram_init(void) {
 	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
 		if (mapper.write_vram) {
-			if (chr_rom()) {
-				free(chr_rom());
-			}
 			/* alloco la CHR Rom */
 			if (map_chr_malloc(chr_ram_size(), 0x00, TRUE) == EXIT_ERROR) {
 				return (EXIT_ERROR);

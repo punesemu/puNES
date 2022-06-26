@@ -47,10 +47,10 @@ static const SBYTE dipswitch_index_bmcfk23c[][8] = {
 	{ 3,  0,  6,  1,  4,  2,  5,  7 }, // 11
 	{ 0,  1,  2,  3,  4,  5,  6,  7 }, // 12
 };
-static const BYTE prg_mask[8] = { 0x3F, 0x1F, 0x0F, 0x07, 0x03, 0x01, 0x00, 0x00 };
+static const BYTE prg_mask[8] = { 0x3F, 0x1F, 0x0F, 0x07, 0x03, 0x01, 0x7F, 0xFF };
 
 struct _bmcfk23c {
-	BYTE cpu5xxx[4];
+	BYTE cpu5xxx[8];
 	BYTE cpu8xxx[4];
 	BYTE cnrom_chr_reg;
 	BYTE ram_register_enable;
@@ -131,13 +131,20 @@ void map_init_BMCFK23C(void) {
 		bmcfk23c.prg_base = (info.crc32.prg == 0x6C574B50) ? 0x40 : 0x20;
 		info.mapper.submapper = BMCFK23C;
 	}
-	if (prg_size() >= (8192 * 1024)) {
+	if (prg_size() >= (8192 * 1024) && mapper.write_vram) {
 		info.mapper.submapper = FS005;
+	}
+	if (prg_size() == (4096 * 1024) && mapper.write_vram) {
+		info.mapper.submapper = JX9003B;
 	}
 	if ((info.crc32.prg == 0x3655B7BC) || // New 4-in-1 Supergame (YH4239) [p1][U][!].unf
 		(info.crc32.prg == 0x60C6D8CD) || // 9-in-1 (KY-9005) [p1][U][!].unf
 		(info.crc32.prg == 0x63A87C95)) { // 8-in-1 Supergame (KY8002) [p1][U].unf
 		info.mapper.submapper = LP8002KB;
+	}
+
+	if (info.mapper.submapper == JX9003B) {
+		bmcfk23c.cpu5xxx[0] = 0x07;
 	}
 
 	if (info.reset == RESET) {
@@ -160,7 +167,7 @@ void map_init_BMCFK23C(void) {
 		} else if (
 			(info.crc32.prg == 0xC08E77C1) || // 5-in-1 (19, 66, 90, 93, 113, 133, 200-in-1) (KD-1512_20210408) (Unl) [p1].nes
 			(info.crc32.prg == 0x613BBEE9) || // Super Game 15-in-1 (7, 80, 82, 102, 122, 160-in-1) (KD-6012) (Unl) [p1].nes
-		    (info.crc32.prg == 0x03CF81B4)) { // 16 in 1 (KD-1512).nes
+			(info.crc32.prg == 0x03CF81B4)) { // 16 in 1 (KD-1512).nes
 			bmcfk23ctmp.select = 2;
 			bmcfk23ctmp.index = 0;
 		} else if (
@@ -241,7 +248,8 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 			if ((address & mask) != mask) {
 				return;
 			}
-			switch (address & 0x03) {
+
+			switch (address & (info.mapper.submapper == JX9003B ? 0x07 : 0x03)) {
 				case 0:
 					bmcfk23c.cpu5xxx[0] = value;
 					if (info.mapper.submapper == FS005) {
@@ -261,6 +269,15 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 					break;
 				case 3:
 					bmcfk23c.cpu5xxx[3] = value;
+					break;
+				case 5:
+					bmcfk23c.cpu5xxx[5] = value;
+					if (info.mapper.submapper == JX9003B) {
+						bmcfk23c.prg_base = (bmcfk23c.prg_base & 0x007F) | ((value & 0x0F) << 7);
+					}
+					break;
+				case 6:
+					bmcfk23c.cpu5xxx[6] = value;
 					break;
 			}
 			state_fix_BMCFK23C();
@@ -393,7 +410,9 @@ INLINE static void prg_fix_BMCFK23C(void) {
 	switch (bmcfk23c.cpu5xxx[0] & 0x07) {
 		case 0:
 		case 1:
-		case 2: {
+		case 2:
+		case 6:
+		case 7: {
 			BYTE swap = (bmcfk23c.cpu8xxx[0] & 0x40) >> 5;
 			WORD outer = (bmcfk23c.prg_base << 1);
 
@@ -461,6 +480,10 @@ INLINE static void chr_fix_BMCFK23C(void) {
 
 		outer = ((bmcfk23c.cnrom_chr_reg & mask) | bmcfk23c.cpu5xxx[2]) << 3;
 
+		if (info.mapper.submapper == JX9003B) {
+			outer |= ((bmcfk23c.cpu5xxx[6] & 0x0F) << 11);
+		}
+
 		bank[0] = outer | 0;
 		bank[1] = outer | 1;
 		bank[2] = outer | 2;
@@ -472,6 +495,10 @@ INLINE static void chr_fix_BMCFK23C(void) {
 	} else {
 		outer = bmcfk23c.cpu5xxx[2] << 3;
 		swap = (bmcfk23c.cpu8xxx[0] & 0x80) >> 5;
+
+		if (info.mapper.submapper == JX9003B) {
+			outer |= ((bmcfk23c.cpu5xxx[6] & 0x0F) << 11);
+		}
 
 		if (bmcfk23c.cpu5xxx[3] & 0x02) {
 			bank[0] = outer | bmcfk23c.mmc3[0];

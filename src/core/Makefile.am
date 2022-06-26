@@ -151,8 +151,6 @@ libcore_a_SOURCES += \
 	mappers/mapper_167.h \
 	mappers/mapper_168.c \
 	mappers/mapper_168.h \
-	mappers/mapper_176.c \
-	mappers/mapper_176.h \
 	mappers/mapper_178.c \
 	mappers/mapper_178.h \
 	mappers/mapper_182.c \
@@ -251,6 +249,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_28.h \
 	mappers/mapper_288.c \
 	mappers/mapper_288.h \
+	mappers/mapper_29.c \
+	mappers/mapper_29.h \
 	mappers/mapper_297.c \
 	mappers/mapper_297.h \
 	mappers/mapper_31.c \
@@ -361,12 +361,16 @@ libcore_a_SOURCES += \
 	mappers/mapper_51.h \
 	mappers/mapper_512.c \
 	mappers/mapper_512.h \
+	mappers/mapper_516.c \
+	mappers/mapper_516.h \
 	mappers/mapper_52.c \
 	mappers/mapper_52.h \
 	mappers/mapper_53.c \
 	mappers/mapper_53.h \
 	mappers/mapper_541.c \
 	mappers/mapper_541.h \
+	mappers/mapper_559.c \
+	mappers/mapper_559.h \
 	mappers/mapper_57.c \
 	mappers/mapper_57.h \
 	mappers/mapper_58.c \
@@ -501,6 +505,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_FARIDUNROM8IN1.h \
 	mappers/mapper_FDS.c \
 	mappers/mapper_FDS.h \
+	mappers/mapper_FFESMC.c \
+	mappers/mapper_FFESMC.h \
 	mappers/mapper_Futuremedia.c \
 	mappers/mapper_Futuremedia.h \
 	mappers/mapper_FS304.c \
