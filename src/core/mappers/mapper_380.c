@@ -84,7 +84,7 @@ void extcl_wr_chr_380(WORD address, BYTE value) {
 }
 
 INLINE static void prg_fix_380(void) {
-	WORD bank = ((m380.reg & 0x007C) >> 2);
+	WORD bank = (m380.reg & 0x007C) >> 2;
 	WORD bit0 = !(m380.reg & 0x0001);
 	WORD bit8 = (m380.reg & 0x0100) >> 8;
 	WORD bit9 = (m380.reg & 0x0200) >> 9;
