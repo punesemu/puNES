@@ -24,12 +24,17 @@
 #include "save_slot.h"
 
 INLINE static void prg_fix_452(void);
+INLINE static void prg_ram_fix_452(void);
 INLINE static void mirroring_fix_452(void);
 INLINE static BYTE prg_ram_452(WORD address);
 
 struct _m452 {
 	WORD reg[2];
 } m452;
+struct _m452tmp {
+	WORD adr1;
+	WORD adr2;
+} m452tmp;
 
 void map_init_452(void) {
 	EXTCL_AFTER_MAPPER_INIT(452);
@@ -49,6 +54,7 @@ void map_init_452(void) {
 }
 void extcl_after_mapper_init_452(void) {
 	prg_fix_452();
+	prg_ram_fix_452();
 	mirroring_fix_452();
 }
 void extcl_cpu_wr_mem_452(WORD address, BYTE value) {
@@ -56,6 +62,7 @@ void extcl_cpu_wr_mem_452(WORD address, BYTE value) {
 		m452.reg[0] = address;
 		m452.reg[1] = value;
 		prg_fix_452();
+		prg_ram_fix_452();
 		mirroring_fix_452();
 	}
 	if (prg_ram_452(address)) {
@@ -67,6 +74,10 @@ BYTE extcl_cpu_rd_mem_452(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 }
 BYTE extcl_save_mapper_452(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m452.reg);
+
+	if (mode == SAVE_SLOT_READ) {
+		prg_ram_fix_452();
+	}
 
 	return (EXIT_OK);
 }
@@ -103,8 +114,11 @@ INLINE static void prg_fix_452(void) {
 		map_prg_rom_8k(2, 0, bank);
 		map_prg_rom_8k(2, 2, 0);
 	}
-
 	map_prg_rom_8k_update();
+}
+INLINE static void prg_ram_fix_452(void) {
+	m452tmp.adr1 = 0x8000 | ((m452.reg[1] & 0x30) << 9);
+	m452tmp.adr2 = (m452.reg[1] & 0x0002) ? 0x8000 | (((m452.reg[1] & 0x30) ^ 0x20) << 9) : 0x0000;
 }
 INLINE static void mirroring_fix_452(void) {
 	if (m452.reg[1] & 0x0001) {
@@ -114,33 +128,7 @@ INLINE static void mirroring_fix_452(void) {
 	}
 }
 INLINE static BYTE prg_ram_452(WORD address) {
-	BYTE wram = FALSE;
+	WORD tmp = address & 0xE000;
 
-	switch (address & 0xF000) {
-		case 0x8000:
-		case 0x9000:
-			if (((m452.reg[1] & 0x30) == 0x00) || (((m452.reg[1] & 0x30) == 0x20) && (m452.reg[1] & 0x0002))) {
-				wram = TRUE;
-			}
-			break;
-		case 0xA000:
-		case 0xB000:
-			if (((m452.reg[1] & 0x30) == 0x10) || (((m452.reg[1] & 0x30) == 0x30) && (m452.reg[1] & 0x0002))) {
-				wram = TRUE;
-			}
-			break;
-		case 0xC000:
-		case 0xD000:
-			if (((m452.reg[1] & 0x30) == 0x20) || (((m452.reg[1] & 0x30) == 0x00) && (m452.reg[1] & 0x0002))) {
-				wram = TRUE;
-			}
-			break;
-		case 0xE000:
-		case 0xF000:
-			if (((m452.reg[1] & 0x30) == 0x30) || (((m452.reg[1] & 0x30) == 0x10) && (m452.reg[1] & 0x0002))) {
-				wram = TRUE;
-			}
-			break;
-	}
-	return (wram);
+	return ((tmp == m452tmp.adr1) || (tmp == m452tmp.adr2) ? TRUE : FALSE);
 }
