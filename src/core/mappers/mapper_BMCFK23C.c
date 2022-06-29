@@ -50,6 +50,7 @@ static const SBYTE dipswitch_index_bmcfk23c[][8] = {
 static const BYTE prg_mask[8] = { 0x3F, 0x1F, 0x0F, 0x07, 0x03, 0x01, 0x7F, 0xFF };
 
 struct _bmcfk23c {
+	BYTE cpu4800;
 	BYTE cpu5xxx[8];
 	BYTE cpu8xxx[4];
 	BYTE cnrom_chr_reg;
@@ -141,6 +142,9 @@ void map_init_BMCFK23C(void) {
 		(info.crc32.prg == 0x60C6D8CD) || // 9-in-1 (KY-9005) [p1][U][!].unf
 		(info.crc32.prg == 0x63A87C95)) { // 8-in-1 Supergame (KY8002) [p1][U].unf
 		info.mapper.submapper = LP8002KB;
+	}
+	if (info.crc32.prg == 0xB50D8FBC) { // Game 500-in-1.nes
+		info.mapper.submapper = HST162;
 	}
 
 	if (info.mapper.submapper == JX9003B) {
@@ -258,7 +262,11 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 					break;
 				case 1:
 					bmcfk23c.cpu5xxx[1] = value;
-					bmcfk23c.prg_base = (bmcfk23c.prg_base & ~0x7F) | (value & 0x7F);
+					if (info.mapper.submapper == HST162) {
+						bmcfk23c.prg_base = (bmcfk23c.prg_base & ~0x1F) | (value & 0x1F);
+					} else {
+						bmcfk23c.prg_base = (bmcfk23c.prg_base & ~0x7F) | (value & 0x7F);
+					}
 					break;
 				case 2:
 					bmcfk23c.cpu5xxx[2] = value;
@@ -283,7 +291,11 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 			state_fix_BMCFK23C();
 		} else {
 			if ((address >= 0x4000) && (address <= 0x5FFF)) {
-				if (bmcfk23c.ram_register_enable && cpu.prg_ram_wr_active) {
+				if ((address == 0x4800) && (info.mapper.submapper == HST162)) {
+					bmcfk23c.cpu4800 = value;
+					bmcfk23c.prg_base = (bmcfk23c.prg_base & 0x001F) | ((value & 0x3F) << 5);
+					prg_fix_BMCFK23C();
+				} else if (bmcfk23c.ram_register_enable && cpu.prg_ram_wr_active) {
 					bmcfk23ctmp.prg_4000[address & 0x1FFF] = value;
 				}
 			} else if ((address >= 0x6000) && (address <= 0x7FFF)) {
@@ -372,6 +384,7 @@ BYTE extcl_cpu_rd_mem_BMCFK23C(WORD address, BYTE openbus, UNUSED(BYTE before)) 
 	return (openbus);
 }
 BYTE extcl_save_mapper_BMCFK23C(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, bmcfk23c.cpu4800);
 	save_slot_ele(mode, slot, bmcfk23c.cpu5xxx);
 	save_slot_ele(mode, slot, bmcfk23c.cpu8xxx);
 	save_slot_ele(mode, slot, bmcfk23c.cnrom_chr_reg);
