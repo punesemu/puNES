@@ -333,6 +333,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_432.h \
 	mappers/mapper_433.c \
 	mappers/mapper_433.h \
+	mappers/mapper_434.c \
+	mappers/mapper_434.h \
 	mappers/mapper_3DBLOCK.c \
 	mappers/mapper_3DBLOCK.h \
 	mappers/mapper_40.c \
