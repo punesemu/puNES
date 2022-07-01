@@ -350,14 +350,15 @@ void gui_update_status_bar(void) {
 void gui_update_ntsc_widgets(void) {
 	qt.dset->update_tab_video();
 }
-void gui_update_ppu_hacks_widgets(void) {
-	qt.dset->widget_Settings_PPU->update_widget();
-}
 void gui_update_apu_channels_widgets(void) {
 	qt.dset->update_tab_audio();
 }
 void gui_update_recording_widgets(void) {
 	qt.mwin->update_recording_widgets();
+}
+
+void gui_update_ppu_hacks_lag_frames(void) {
+	qt.dset->widget_Settings_PPU->lag_counter_update();
 }
 
 void gui_update_fds_menu(void) {
