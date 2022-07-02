@@ -103,13 +103,11 @@ void wdgSettingsPPU::s_hide_sprites(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->hide_sprites = !cfg->hide_sprites;
 	emu_thread_continue();
-	update_widget();
 }
 void wdgSettingsPPU::s_hide_background(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->hide_background = !cfg->hide_background;
 	emu_thread_continue();
-	update_widget();
 }
 void wdgSettingsPPU::s_unlimited_sprites(UNUSED(bool checked)) {
 	emu_thread_pause();
@@ -121,7 +119,6 @@ void wdgSettingsPPU::s_unlimited_sprites_auto(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->unlimited_sprites_auto = !cfg->unlimited_sprites_auto;
 	emu_thread_continue();
-	update_widget();
 }
 void wdgSettingsPPU::s_ppu_overclock(UNUSED(bool checked)) {
 	emu_thread_pause();
@@ -136,7 +133,6 @@ void wdgSettingsPPU::s_disable_dmc_control(UNUSED(bool checked)) {
 	cfg->ppu_overclock_dmc_control_disabled = !cfg->ppu_overclock_dmc_control_disabled;
 	emu_thread_continue();
 	settings_pgs_save();
-	update_widget();
 }
 void wdgSettingsPPU::s_overclock_vb_slines(int i) {
 	emu_thread_pause();
@@ -144,7 +140,6 @@ void wdgSettingsPPU::s_overclock_vb_slines(int i) {
 	ppu_overclock(FALSE);
 	emu_thread_continue();
 	settings_pgs_save();
-	update_widget();
 }
 void wdgSettingsPPU::s_overclock_pr_slines(int i) {
 	emu_thread_pause();
@@ -152,14 +147,12 @@ void wdgSettingsPPU::s_overclock_pr_slines(int i) {
 	ppu_overclock(FALSE);
 	emu_thread_continue();
 	settings_pgs_save();
-	update_widget();
 }
 void wdgSettingsPPU::s_lag_counter_reset(UNUSED(bool checked)) {
 	emu_thread_pause();
 	tas.total_lag_frames = 0;
 	emu_thread_continue();
 	lag_counter_update();
-	update_widget();
 }
 void wdgSettingsPPU::s_cpuppu_aligment(int index) {
 	if (cfg->ppu_alignment == index) {
@@ -168,6 +161,5 @@ void wdgSettingsPPU::s_cpuppu_aligment(int index) {
 		ppu_alignment_reset();
 	}
 	cfg->ppu_alignment = index;
-	update_widget();
 	gui_update_status_bar();
 }

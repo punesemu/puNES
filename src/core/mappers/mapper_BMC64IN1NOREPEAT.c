@@ -36,21 +36,23 @@ void map_init_BMC64IN1NOREPEAT(void) {
 	bmc64in1norepeat.reg[0] = 0x80;
 	bmc64in1norepeat.reg[1] = 0x43;
 
-	extcl_cpu_wr_mem_BMC64IN1NOREPEAT(0x5003, bmc64in1norepeat.reg[3]);
+	extcl_cpu_wr_mem_BMC64IN1NOREPEAT(0x5001, bmc64in1norepeat.reg[1]);
 
 	info.mapper.extend_wr = TRUE;
 }
 void extcl_cpu_wr_mem_BMC64IN1NOREPEAT(WORD address, BYTE value) {
-	if (address >= 0x8000) {
-		bmc64in1norepeat.reg[3] = value;
-	} else if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		switch (address & 0x5003) {
-			case 0x5000:
-			case 0x5001:
-			case 0x5002:
-				bmc64in1norepeat.reg[address & 0x03] = value;
+	if ((address >= 0x5000) && (address <= 0x5FFF)) {
+		BYTE mask = (mapper.write_vram ? 0x01 : 0x03);
+
+		switch (address & mask) {
+			case 0:
+			case 1:
+			case 2:
+				bmc64in1norepeat.reg[address & mask] = value;
 				break;
 		}
+	} else if (address >= 0x8000) {
+		bmc64in1norepeat.reg[3] = value;
 	} else {
 		return;
 	}
@@ -61,13 +63,13 @@ void extcl_cpu_wr_mem_BMC64IN1NOREPEAT(WORD address, BYTE value) {
 			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 		} else {
-			value = ((bmc64in1norepeat.reg[1] & 0x3F) << 1) | ((bmc64in1norepeat.reg[1] >> 6) & 0x01);
+			value = ((bmc64in1norepeat.reg[1] & 0x3F) << 1) | ((bmc64in1norepeat.reg[1] & 0x40) >> 6);
 			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k(2, 2, value);
 		}
 	} else {
-		value = ((bmc64in1norepeat.reg[1] << 1) & ~0x07) | (bmc64in1norepeat.reg[3] & 0x07);
+		value = ((bmc64in1norepeat.reg[1] & 0x7C) << 1) | (bmc64in1norepeat.reg[3] & 0x07);
 		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		value = (bmc64in1norepeat.reg[1] << 1) | 0x07;
@@ -77,7 +79,7 @@ void extcl_cpu_wr_mem_BMC64IN1NOREPEAT(WORD address, BYTE value) {
 	map_prg_rom_8k_update();
 
 	{
-		DBWORD bank = ((bmc64in1norepeat.reg[2] & 0x0F) << 2) | ((bmc64in1norepeat.reg[0] >> 1) & 0x03);
+		DBWORD bank = ((bmc64in1norepeat.reg[2] & 0x0F) << 2) | ((bmc64in1norepeat.reg[0] & 0x06) >> 1);
 
 		_control_bank(bank, info.chr.rom.max.banks_8k)
 		bank = bank << 13;

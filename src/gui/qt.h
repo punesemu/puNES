@@ -193,9 +193,10 @@ EXTERNC void gui_update_gps_settings(void);
 EXTERNC void gui_update_status_bar(void);
 
 EXTERNC void gui_update_ntsc_widgets(void);
-EXTERNC void gui_update_ppu_hacks_widgets(void);
 EXTERNC void gui_update_apu_channels_widgets(void);
 EXTERNC void gui_update_recording_widgets(void);
+
+EXTERNC void gui_update_ppu_hacks_lag_frames(void);
 
 EXTERNC void gui_update_fds_menu(void);
 EXTERNC void gui_update_recording_tab(void);

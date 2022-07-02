@@ -83,6 +83,7 @@ BYTE extcl_save_mapper_398(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m398.prg);
 	save_slot_ele(mode, slot, m398.swap);
 	save_slot_ele(mode, slot, m398.chr_slot);
+	extcl_save_mapper_VRC4(mode, slot, fp);
 
 	return (EXIT_OK);
 }

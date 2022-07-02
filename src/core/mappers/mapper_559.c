@@ -95,6 +95,7 @@ BYTE extcl_save_mapper_559(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m559.prg);
 	save_slot_ele(mode, slot, m559.mir);
 	save_slot_ele(mode, slot, m559.swap);
+	extcl_save_mapper_VRC4(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
 		mirroring_fix_559();

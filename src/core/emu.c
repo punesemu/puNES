@@ -980,7 +980,7 @@ INLINE static void emu_frame_finished(void) {
 
 	if (tas.lag_actual_frame) {
 		tas.total_lag_frames++;
-		gui_update_ppu_hacks_widgets();
+		gui_update_ppu_hacks_lag_frames();
 	}
 
 	if (snd_end_frame) {

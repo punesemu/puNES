@@ -333,6 +333,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_432.h \
 	mappers/mapper_433.c \
 	mappers/mapper_433.h \
+	mappers/mapper_434.c \
+	mappers/mapper_434.h \
 	mappers/mapper_3DBLOCK.c \
 	mappers/mapper_3DBLOCK.h \
 	mappers/mapper_40.c \
@@ -345,10 +347,22 @@ libcore_a_SOURCES += \
 	mappers/mapper_428.h \
 	mappers/mapper_43.c \
 	mappers/mapper_43.h \
+	mappers/mapper_437.c \
+	mappers/mapper_437.h \
 	mappers/mapper_44.c \
 	mappers/mapper_44.h \
+	mappers/mapper_447.c \
+	mappers/mapper_447.h \
 	mappers/mapper_45.c \
 	mappers/mapper_45.h \
+	mappers/mapper_452.c \
+	mappers/mapper_452.h \
+	mappers/mapper_455.c \
+	mappers/mapper_455.h \
+	mappers/mapper_456.c \
+	mappers/mapper_456.h \
+	mappers/mapper_457.c \
+	mappers/mapper_457.h \
 	mappers/mapper_46.c \
 	mappers/mapper_46.h \
 	mappers/mapper_47.c \

@@ -16,18 +16,14 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_227_H_
-#define MAPPER_227_H_
+#ifndef MAPPER_434_H_
+#define MAPPER_434_H_
 
 #include "common.h"
 
-enum _m227_types { WAIXING_FW01 = 20 };
+void map_init_434(void);
+void extcl_after_mapper_init_434(void);
+void extcl_cpu_wr_mem_434(WORD address, BYTE value);
+BYTE extcl_save_mapper_434(BYTE mode, BYTE slot, FILE *fp);
 
-void map_init_227(void);
-void extcl_after_mapper_init_227(void);
-void extcl_cpu_wr_mem_227(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_227(WORD address, BYTE openbus, BYTE before);
-void extcl_wr_chr_227(WORD address, BYTE value);
-BYTE extcl_save_mapper_227(BYTE mode, BYTE slot, FILE *fp);
-
-#endif /* MAPPER_227_H_ */
+#endif /* MAPPER_434_H_ */

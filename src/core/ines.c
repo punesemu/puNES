@@ -46,7 +46,6 @@ _ines ines;
 
 BYTE ines_load_rom(void) {
 	_rom_mem rom;
-	BYTE tmp;
 
 	{
 		static const uTCHAR rom_ext[2][10] = { uL(".nes\0"), uL(".NES\0") };
@@ -109,6 +108,8 @@ BYTE ines_load_rom(void) {
 		(rom.data[rom.position++] == 'E') &&
 		(rom.data[rom.position++] == 'S') &&
 		(rom.data[rom.position++] == '\32')) {
+		BYTE cpu_timing;
+
 		info.prg.rom.banks_16k = rom.data[rom.position++];
 		info.chr.rom.banks_8k = rom.data[rom.position++];
 
@@ -151,7 +152,7 @@ BYTE ines_load_rom(void) {
 
 			info.chr.ram.banks_8k_plus = nes20_ram_size(ines.flags[FL11] & 0x0F);
 
-			tmp = ines.flags[FL12] & 0x01;
+			cpu_timing = ines.flags[FL12] & 0x03;
 
 			vs_system.ppu = ines.flags[FL13] & 0x0F;
 			vs_system.special_mode.type = (ines.flags[FL13] >> 4) & 0x0F;
@@ -168,10 +169,10 @@ BYTE ines_load_rom(void) {
 			// mask off the upper 4 bits of the mapper number or simply refuse to load the ROM.
 			if (ines.flags[FL12] | ines.flags[FL13] | ines.flags[FL14] | ines.flags[FL15]) {
 				info.mapper.id = ines.flags[FL6] >> 4;
-				tmp = 0;
+				cpu_timing = 0;
 			} else {
 				info.mapper.id = (ines.flags[FL7] & 0xF0) | (ines.flags[FL6] >> 4);
-				tmp = ines.flags[FL9] & 0x01;
+				cpu_timing = ines.flags[FL9] & 0x01;
 			}
 
 			info.prg.ram.bat.banks = (ines.flags[FL6] & 0x02) >> 1;
@@ -181,12 +182,17 @@ BYTE ines_load_rom(void) {
 			}
 		}
 
-		switch (tmp) {
+		switch (cpu_timing) {
+			default:
 			case 0:
+			case 2:
 				info.machine[HEADER] = NTSC;
 				break;
 			case 1:
 				info.machine[HEADER] = PAL;
+				break;
+			case 3:
+				info.machine[HEADER] = DENDY;
 				break;
 		}
 
