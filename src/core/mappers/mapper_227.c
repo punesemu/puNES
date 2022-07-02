@@ -116,13 +116,13 @@ INLINE static void prg_fix_227(void) {
 	//  ?       1       0     Switchable 16 KiB inner bank PPp at CPU $8000-$BFFF, mirrored at CPU $C000-$FFFF (NROM-128)
 	//  ?       1       1     Switchable 32 KiB inner bank PP at CPU $8000-$FFFF (NROM-256)
 
-    bank = outer | (bank & ~bit0);
-    _control_bank(bank, info.prg.rom.max.banks_16k)
-    map_prg_rom_8k(2, 0, bank);
+	bank = outer | (bank & ~bit0);
+	_control_bank(bank, info.prg.rom.max.banks_16k)
+	map_prg_rom_8k(2, 0, bank);
 
-    bank = bit7 ? bank | bit0 : outer | (7 * bit9);
-    _control_bank(bank, info.prg.rom.max.banks_16k)
-    map_prg_rom_8k(2, 2, bank);
+	bank = bit7 ? bank | bit0 : outer | (7 * bit9);
+	_control_bank(bank, info.prg.rom.max.banks_16k)
+	map_prg_rom_8k(2, 2, bank);
 
 	map_prg_rom_8k_update();
 }

@@ -45,7 +45,10 @@ void map_init_57(void) {
 
 	if (
 		(info.crc32.prg == 0xF77A2663) || // 4-in-1 (ES-Q803B_20210617) (Unl) [p1].nes
-		(info.crc32.prg == 0xDB6228A0)) { // 4-in-1_YH-4132.nes
+		(info.crc32.prg == 0xDB6228A0) || // 4-in-1_YH-4132.nes
+		(info.crc32.prg == 0x71B7EC3A) || // (YH-4131) Exciting Sport Turbo 4-in-1.nes
+		(info.crc32.prg == 0xEE722DE3) || // (YH-4135) Exciting Sport Turbo 4-in-1.nes
+		(info.crc32.prg == 0xD35D3D8F)) { // (YH-4136) Exciting Sport Turbo 4-in-1.nes
 		m57tmp.mask = 0x01;
 		m57tmp.start = 0x01;
 		m57tmp.op = 1;

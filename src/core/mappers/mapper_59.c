@@ -21,11 +21,18 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+static const SBYTE dipswitch_59[][4] = {
+	{  0,  1,  2,  3 }, // 0
+	{  0,  1,  2, -1 }, // 1
+};
+
 struct _m59 {
 	WORD reg;
 } m59;
 struct _m59tmp {
-	WORD jumper;
+	BYTE select;
+	BYTE index;
+	WORD dipswitch;
 } m59tmp;
 
 void map_init_59(void) {
@@ -37,11 +44,21 @@ void map_init_59(void) {
 
 	m59.reg = 0;
 
-	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		m59tmp.jumper = 0;
-	} else if (info.reset == RESET) {
-		m59tmp.jumper = (m59tmp.jumper + 1) & 0x03;
+	if (info.reset == RESET) {
+		do {
+			m59tmp.index = (m59tmp.index + 1) & 0x03;
+		} while (dipswitch_59[m59tmp.select][m59tmp.index] < 0);
+	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+		if (info.crc32.prg == 0xED831F98) { // (VT-104) 2000 Super Aladdin.nes
+			m59tmp.select = 1;
+			m59tmp.index = 0;
+		} else {
+			m59tmp.select = 0;
+			m59tmp.index = 0;
+		}
 	}
+
+	m59tmp.dipswitch = dipswitch_59[m59tmp.select][m59tmp.index];
 
 	info.mapper.extend_rd = TRUE;
 
@@ -88,12 +105,14 @@ void extcl_cpu_wr_mem_59(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_59(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x8000) && (m59.reg & 0x0100)) {
-		return ((openbus & 0xFC) | m59tmp.jumper);
+		return ((openbus & 0xFC) | m59tmp.dipswitch);
 	}
 	return (openbus);
 }
 BYTE extcl_save_mapper_59(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m59.reg);
+	save_slot_ele(mode, slot, m59tmp.index);
+	save_slot_ele(mode, slot, m59tmp.dipswitch);
 
 	return (EXIT_OK);
 }
