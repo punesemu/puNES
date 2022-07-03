@@ -1220,6 +1220,9 @@ BYTE map_init(void) {
 		case 559:
 			map_init_559();
 			break;
+		case 560:
+			map_init_560();
+			break;
 		default:
 			gui_overlay_info_append_msg_precompiled(11, NULL);
 			fprintf(stderr, "Mapper not supported\n");
