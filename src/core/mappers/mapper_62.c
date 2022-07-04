@@ -23,9 +23,7 @@
 void map_init_62(void) {
 	EXTCL_CPU_WR_MEM(62);
 
-	if (info.reset >= HARD) {
-		extcl_cpu_wr_mem_62(0x8000, 0x00);
-	}
+	extcl_cpu_wr_mem_62(0x8000, 0x00);
 }
 void extcl_cpu_wr_mem_62(WORD address, BYTE value) {
 	DBWORD bank;
@@ -34,15 +32,6 @@ void extcl_cpu_wr_mem_62(WORD address, BYTE value) {
 		mirroring_H();
 	} else  {
 		mirroring_V();
-	}
-
-	/*
-	 * workaround per far funzionare correttamente "Fancy Mario"
-	 * della rom "Super 700-in-1 [p1][!].nes" che non utilizza ne il mirroring
-	 * verticale ne quello orizzontale.
-	 */
-	if ((info.mapper.submapper == SUPER700IN1) && (address == 0x8790)) {
-		mirroring_FSCR();
 	}
 
 	value = ((address & 0x1F) << 2) | (value & 0x03);

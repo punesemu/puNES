@@ -998,6 +998,9 @@ BYTE map_init(void) {
 		case 350:
 			map_init_891227();
 			break;
+		case 351:
+			map_init_351();
+			break;
 		case 352:
 			map_init_KS106C();
 			break;
@@ -1216,6 +1219,9 @@ BYTE map_init(void) {
 			break;
 		case 559:
 			map_init_559();
+			break;
+		case 560:
+			map_init_560();
 			break;
 		default:
 			gui_overlay_info_append_msg_precompiled(11, NULL);
