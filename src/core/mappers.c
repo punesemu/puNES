@@ -1178,6 +1178,9 @@ BYTE map_init(void) {
 		case 516:
 			map_init_516();
 			break;
+		case 518:
+			map_init_518();
+			break;
 		case 519:
 			map_init_EH8813A();
 			break;
@@ -1208,11 +1211,11 @@ BYTE map_init(void) {
 		case 534:
 			map_init_126(MAP534);
 			break;
-		case 541:
-			map_init_541();
-			break;
 		case 540:
 			map_init_359(MAP540);
+			break;
+		case 541:
+			map_init_541();
 			break;
 		case 547:
 			map_init_KONAMIQTAI();
