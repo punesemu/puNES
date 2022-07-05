@@ -23,6 +23,8 @@
 #include "ppu.h"
 #include "save_slot.h"
 
+// TODO : aggiungere l'emulazione della tastiera.
+
 INLINE static void prg_fix_560(void);
 
 struct _m560 {
