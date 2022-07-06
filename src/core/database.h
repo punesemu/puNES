@@ -3883,6 +3883,10 @@ static const _dbelement dblist[] = {
 	/* 260-in-1 [p1][!].nes (4MB) */
 	{"012fd90b213454b76608e018e70f89f1e166dc82", 235, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* ------------------------------------- mapper 238 --------------------------------------- */
+	/* Contra Fighter (Unl).nes */
+	{"8c525181c1a563beb82e648fa0ed02d8b986b952", 238, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* ------------------------------------- mapper 241 --------------------------------------- */
 	/* Xing Ji Zheng Ba (Ch).nes */
 	{"3c72706af5998133ec6be703994c10466a094eab", 241, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
@@ -3918,6 +3922,14 @@ static const _dbelement dblist[] = {
 	{"cf7d9c2cbe6953f4fd15fc5b59ee19944914dc4e", 246, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Fong Shen Bang - Zhu Lu Zhi Zhan (Ch) [T+Chi(Simp)20060423].nes */
 	{"991968732e6f4f2289f8e751539b02b8a9d4853f", 246, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ---------------------------------------- SHERO ----------------------------------------- */
+	/* Street Heroes (Asia) (Unl).nes */
+	{"9500c52045909a239c21f15cdeda1782c7303f1e", 262, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ---------------------------------------- KOF97 ----------------------------------------- */
+	/* Boogerman II - The Final Adventure (Rex-Soft) [!].nes */
+	{"28805e433ca0ad1505058085667b889a8a7b967f", 263, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- BMC-22026 ---------------------------------------- */
 	/* 4-in-1 (MGC-026, TXC, Idea-Tek).nes */
@@ -4087,18 +4099,12 @@ static const _dbelement dblist[] = {
 	{"39ee2d598b084c88de7ac467ad65e4049c3db5e4", GAMEGENIE_MAPPER, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ----------------------------------------- Unif ----------------------------------------- */
-	/* Boogerman II - The Final Adventure (Rex-Soft) [!].nes */
-	{"28805e433ca0ad1505058085667b889a8a7b967f", UNIF_MAPPER, 20, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Contra Fighter (Unl).nes */
-	{"8c525181c1a563beb82e648fa0ed02d8b986b952", UNIF_MAPPER, 21, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Mi Hun Che (Ch)(full copyrights)[!].nes */
-	{"5421c38840e5fbef1140f1f8cfe42b5dc7b8096c", UNIF_MAPPER, 30, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"5421c38840e5fbef1140f1f8cfe42b5dc7b8096c", UNIF_MAPPER, 4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Mi Hun Che (Ch)(replaced copyrights)[p1][!].nes */
-	{"230f514c80b5dfbe6a86f3e24947ad34c0235835", UNIF_MAPPER, 30, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"230f514c80b5dfbe6a86f3e24947ad34c0235835", UNIF_MAPPER, 4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Super Car (Ch)(full copyrights)[!].nes */
-	{"31b3e7cfb2069ca9f52aa2f4c9ce295d722432cf", UNIF_MAPPER, 30, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Street Heroes (Asia) (Unl).nes */
-	{"9500c52045909a239c21f15cdeda1782c7303f1e", UNIF_MAPPER, 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"31b3e7cfb2069ca9f52aa2f4c9ce295d722432cf", UNIF_MAPPER, 4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 };
 
 #endif /* DATABASE_H_ */
