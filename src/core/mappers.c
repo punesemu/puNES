@@ -1208,6 +1208,9 @@ BYTE map_init(void) {
 		case 530:
 			map_init_AX5705();
 			break;
+		case 532:
+			map_init_Namco(CHINA_ER_SAN2);
+			break;
 		case 534:
 			map_init_126(MAP534);
 			break;

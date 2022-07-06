@@ -21,18 +21,27 @@
 
 #include "common.h"
 
-enum {
+enum _namco_types {
 	N163,
 	N3416,
 	N3425,
 	N3433,
 	N3446,
 	N3453,
+	CHINA_ER_SAN2,
 	NAMCO_HARD_WIRED_V,
 	NAMCO_HARD_WIRED_H,
 	MINDSEEKER
 };
 
+typedef struct _chinaersan2 {
+	BYTE enable;
+	BYTE ram[256];
+	struct _chinaersan2_font {
+		BYTE *data;
+		size_t size;
+	} font;
+} _chinaersan2;
 typedef struct _n163_snd_ch {
 	BYTE enabled;
 	BYTE active;
@@ -57,11 +66,13 @@ typedef struct _n163 {
 	_n163_snd_ch ch[8];
 } _n163;
 
+extern _chinaersan2 chinaersan2;
 extern _n163 n163;
 
 void map_init_Namco(BYTE model);
 void map_init_NSF_Namco(BYTE model);
 
+void extcl_mapper_quit_Namco_163(void);
 void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_Namco_163(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_Namco_163(BYTE mode, BYTE slot, FILE *fp);
@@ -73,5 +84,9 @@ BYTE extcl_save_mapper_Namco_3425(BYTE mode, BYTE slot, FILE *fp);
 
 void extcl_cpu_wr_mem_Namco_3446(WORD address, BYTE value);
 BYTE extcl_save_mapper_Namco_3446(BYTE mode, BYTE slot, FILE *fp);
+
+void chinaersan2_apply_font(void);
+BYTE chinaersan2_init(void);
+void chinaersan2_quit(void);
 
 #endif /* MAPPER_NAMCO_H_ */

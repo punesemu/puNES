@@ -113,6 +113,8 @@ void emu_quit(void) {
 	gfx_monitor_quit();
 #endif
 
+	chinaersan2_quit();
+
 	gui_quit();
 }
 BYTE emu_frame(void) {
