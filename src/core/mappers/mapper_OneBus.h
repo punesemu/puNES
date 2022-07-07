@@ -25,7 +25,7 @@ void map_init_OneBus(void);
 void extcl_cpu_wr_mem_OneBus(WORD address, BYTE value);
 BYTE extcl_save_mapper_OneBus(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_OneBus(void);
-BYTE extcl_wr_ppu_OneBus(WORD address, BYTE *value);
+BYTE extcl_wr_ppu_reg_OneBus(WORD address, BYTE *value);
 BYTE extcl_wr_apu_OneBus(WORD address, BYTE *value);
 BYTE extcl_rd_apu_OneBus(WORD address, BYTE openbus, BYTE before);
 void extcl_irq_A12_clock_OneBus(void);

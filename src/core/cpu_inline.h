@@ -862,12 +862,12 @@ void cpu_wr_mem(WORD address, BYTE value) {
 			return;
 		}
 		if (address < 0x4000) {
-			if (extcl_wr_ppu) {
+			if (extcl_wr_ppu_reg) {
 				/*
 				 * utilizzato dalle mappers :
 				 * OneBus
 				 */
-				if (extcl_wr_ppu(address, &value) == TRUE) {
+				if (extcl_wr_ppu_reg(address, &value) == TRUE) {
 					/* eseguo un tick hardware */
 					tick_hw(1);
 					return;

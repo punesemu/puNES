@@ -51,9 +51,9 @@ void (*extcl_update_r2006)(WORD new_r2006, WORD old_r2006);
 // viene chiamata alla lettura del $2007 in cpu_inline.h
 void (*extcl_rd_r2007)(void);
 // vine chiamata in cpu_inline.h alla scrittura nei rigistri della ppu
-BYTE (*extcl_wr_ppu)(WORD address, BYTE *value);
+BYTE (*extcl_wr_ppu_reg)(WORD address, BYTE *value);
 // vengono chiamate in ppu_inline.h
-void (*extcl_rd_ppu)(WORD address);
+void (*extcl_rd_ppu_mem)(WORD address);
 BYTE (*extcl_rd_nmt)(WORD address);
 BYTE (*extcl_rd_chr)(WORD address);
 // viene chiamata dopo il FETCHB e dopo il fetch dello sprite
@@ -98,8 +98,8 @@ void extcl_init(void) {
 	extcl_update_r2006 = NULL;
 	extcl_rd_r2007 = NULL;
 	extcl_after_rd_chr = NULL;
-	extcl_wr_ppu = NULL;
-	extcl_rd_ppu = NULL;
+	extcl_wr_ppu_reg = NULL;
+	extcl_rd_ppu_mem = NULL;
 	extcl_rd_nmt = NULL;
 	extcl_rd_chr = NULL;
 	extcl_wr_nmt = NULL;

@@ -59,7 +59,7 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_JYASIC(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_JYASIC(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_JYASIC(void);
-void extcl_rd_ppu_JYASIC(WORD address);
+void extcl_rd_ppu_mem_JYASIC(WORD address);
 BYTE extcl_rd_chr_JYASIC(WORD address);
 void extcl_wr_nmt_JYASIC(WORD address, BYTE value);
 void extcl_ppu_000_to_255_JYASIC(void);
