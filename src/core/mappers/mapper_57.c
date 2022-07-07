@@ -52,13 +52,11 @@ void map_init_57(void) {
 		m57tmp.mask = 0x01;
 		m57tmp.start = 0x01;
 		m57tmp.op = 1;
-	} else if (
-		(info.crc32.prg == 0xC74F9C72)) { // 1998 Series No. 10.nes
+	} else if (info.crc32.prg == 0xC74F9C72) { // 1998 Series No. 10.nes
 		m57tmp.mask = 0x03;
 		m57tmp.start = 0x02;
 		m57tmp.op = -1;
-	} else if (
-		(info.crc32.prg == 0xA8930B3B)) { // 32-in-1 (42, 52, 62-in-1) (ABCARD-02) (Unl) [p1].nes
+	} else if (info.crc32.prg == 0xA8930B3B) { // 32-in-1 (42, 52, 62-in-1) (ABCARD-02) (Unl) [p1].nes
 		m57tmp.mask = 0x03;
 		m57tmp.start = 0x03;
 		m57tmp.op = -1;

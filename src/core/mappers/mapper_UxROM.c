@@ -84,7 +84,7 @@ void map_init_UxROM(BYTE model) {
 
 			unrom512tmp.mirroring = (ines.flags[FL6] & 0x01) | ((ines.flags[FL6] & 0x08) >> 2);
 			// Adventures of Panzer, The (World) (Aftermarket) (Unl).nes
-			if ((info.crc32.prg == 0xF9B944CF)) {
+			if (info.crc32.prg == 0xF9B944CF) {
 				unrom512tmp.mirroring = MIRRORING_VERTICAL;
 			}
 			mirroring_fix_UNROM512();

@@ -78,7 +78,7 @@ void map_init_432(void) {
 			m432tmp.index = (m432tmp.index + 1) & 0x03;
 		} while (dipswitch_index_432[m432tmp.select][m432tmp.index] < 0);
 	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		if ((info.crc32.prg == 0xE736A4BE)) { // 160000000-in-1.nes
+		if (info.crc32.prg == 0xE736A4BE) { // 160000000-in-1.nes
 			m432tmp.select = 1;
 			m432tmp.index = 1;
 		} else {

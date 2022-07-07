@@ -80,7 +80,7 @@ void map_init_126(BYTE model) {
 			m126tmp.index = (m126tmp.index + 1) & 0x03;
 		} while (dipswitch_index_126[m126tmp.select][m126tmp.index] < 0);
 	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		if ((info.crc32.prg == 0xB1082DE6)) { // 1998 4000000-in-1 (BS-400 PCB).nes
+		if (info.crc32.prg == 0xB1082DE6) { // 1998 4000000-in-1 (BS-400 PCB).nes
 			m126tmp.select = 2;
 			m126tmp.index = 0;
 		} else if (

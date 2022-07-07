@@ -464,8 +464,6 @@ BYTE unif_load_rom(void) {
 		}
 
 		{
-			size_t size = prg_size();
-
 			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
 
 			fprintf(stderr, "PRG 8k rom    : %-4lu [ %08X %ld ]\n",
@@ -476,7 +474,6 @@ BYTE unif_load_rom(void) {
 			if (chr_size()) {
 				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
 				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.prg);
-				size += chr_size();
 
 				fprintf(stderr, "CHR 4k vrom   : %-4lu [ %08X %ld ]\n",
 					(long unsigned)chr_size() / 0x1000,
