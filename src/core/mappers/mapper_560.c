@@ -53,11 +53,9 @@ void map_init_560(void) {
 void extcl_after_mapper_init_560(void) {
 	prg_fix_560();
 }
-void extcl_cpu_wr_mem_560(WORD address, UNUSED(BYTE value)) {
-	if (address >= 0x8000) {
-		m560.reg = !m560.reg;
-		prg_fix_560();
-	}
+void extcl_cpu_wr_mem_560(UNUSED(WORD address), UNUSED(BYTE value)) {
+	m560.reg = !m560.reg;
+	prg_fix_560();
 }
 BYTE extcl_save_mapper_560(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m560.reg);
@@ -82,7 +80,6 @@ BYTE extcl_rd_nmt_560(WORD address) {
     m560.pa13 = TRUE;
     return (ntbl.bank_1k[(address & 0x0FFF) >> 10][address & 0x3FF]);
 }
-
 BYTE extcl_rd_chr_560(WORD address) {
 	WORD base = ((address >> 10) << 9) | ((address & 0x03F0) >> 1) | (address & 0x0007);
 
