@@ -238,7 +238,7 @@ INLINE static void chr_swap_353(WORD address, WORD value) {
 	}
 }
 INLINE static void mirroring_fix_353(void) {
-	if ((m353.reg == 0)) {
+	if (m353.reg == 0) {
 		 if (!(m353.mmc3[0] & 0x80)) {
 			mirroring_swap_353(0, m353.mmc3[0]);
 			mirroring_swap_353(1, m353.mmc3[0]);

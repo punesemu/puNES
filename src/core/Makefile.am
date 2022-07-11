@@ -353,6 +353,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_437.h \
 	mappers/mapper_44.c \
 	mappers/mapper_44.h \
+	mappers/mapper_442.c \
+	mappers/mapper_442.h \
 	mappers/mapper_447.c \
 	mappers/mapper_447.h \
 	mappers/mapper_45.c \
@@ -379,6 +381,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_512.h \
 	mappers/mapper_516.c \
 	mappers/mapper_516.h \
+	mappers/mapper_518.c \
+	mappers/mapper_518.h \
 	mappers/mapper_52.c \
 	mappers/mapper_52.h \
 	mappers/mapper_53.c \

@@ -142,8 +142,7 @@ BYTE map_init(void) {
 			if ((info.crc32.total == 0xE07163D9) || // Akumajou Special - Boku Dracula-kun (J) [b2].nes
 				(info.crc32.total == 0xC6D62814)) { // Akumajou Special - Boku Dracula-kun (J) [p1][t1].nes
 				info.mapper.submapper = VRC2B;
-			}
-			if ((info.crc32.total == 0xE2D14080)) { // Akumajou Special - Boku Dracula-kun (J) [p1][t1][b1].nes
+			} else if (info.crc32.total == 0xE2D14080) { // Akumajou Special - Boku Dracula-kun (J) [p1][t1][b1].nes
 				info.mapper.submapper = VRC4UNL;
 			}
 
@@ -1154,6 +1153,9 @@ BYTE map_init(void) {
 		case 438:
 			map_init_K3071();
 			break;
+		case 442:
+			map_init_442();
+			break;
 		case 447:
 			map_init_447();
 			break;
@@ -1177,6 +1179,9 @@ BYTE map_init(void) {
 			break;
 		case 516:
 			map_init_516();
+			break;
+		case 518:
+			map_init_518();
 			break;
 		case 519:
 			map_init_EH8813A();
@@ -1205,14 +1210,17 @@ BYTE map_init(void) {
 		case 530:
 			map_init_AX5705();
 			break;
+		case 532:
+			map_init_Namco(CHINA_ER_SAN2);
+			break;
 		case 534:
 			map_init_126(MAP534);
 			break;
-		case 541:
-			map_init_541();
-			break;
 		case 540:
 			map_init_359(MAP540);
+			break;
+		case 541:
+			map_init_541();
 			break;
 		case 547:
 			map_init_KONAMIQTAI();

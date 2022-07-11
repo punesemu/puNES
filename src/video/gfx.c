@@ -29,6 +29,7 @@
 #include "vs_system.h"
 #include "settings.h"
 #include "shaders.h"
+#include "mappers.h"
 #include "video/effects/pause.h"
 #include "video/effects/tv_noise.h"
 
@@ -457,6 +458,10 @@ void gfx_draw_screen(void) {
 		gfx.frame.totals++;
 		fps.info.skipped++;
 		return;
+	}
+
+	if (chinaersan2.enable) {
+		chinaersan2_apply_font();
 	}
 
 	screen.rd = screen.wr;

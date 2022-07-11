@@ -31,6 +31,7 @@
 #include "recent_roms.h"
 #include "patcher.h"
 #include "ppu.h"
+#include "mappers.h"
 #if defined (WITH_FFMPEG)
 #include "recording.h"
 #endif
@@ -50,6 +51,7 @@ int main(int argc, char **argv) {
 	memset(&debugger, 0x00, sizeof(debugger));
 	memset(&info, 0x00, sizeof(info));
 	memset(&jstick, 0x00, sizeof(jstick));
+	memset(&chinaersan2, 0x00, sizeof(chinaersan2));
 
 	info.no_rom = TRUE;
 	info.doublebuffer = TRUE;

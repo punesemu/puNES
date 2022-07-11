@@ -285,6 +285,9 @@ void ppu_tick(void) {
 			 * avviene al ciclo 341.
 			 */
 			if (ppu.frame_x == 0) {
+				if (chinaersan2.enable) {
+					memcpy(chinaersan2.ram, mmcpu.ram, 256);
+				}
 				ppu.screen_y = 0;
 				/* setto a 0 il bit 5, 6 ed il 7 del $2002 */
 				r2002.sprite_overflow = r2002.sprite0_hit = r2002.vblank = ppu.vblank = FALSE;

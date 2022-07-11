@@ -37,7 +37,7 @@ void map_init_394(void) {
 	EXTCL_CPU_WR_MEM(394);
 	EXTCL_SAVE_MAPPER(394);
 	EXTCL_CPU_EVERY_CYCLE(394);
-	EXTCL_RD_PPU(394);
+	EXTCL_RD_PPU_MEM(394);
 	EXTCL_RD_CHR(394);
 	EXTCL_WR_NMT(394);
 	EXTCL_PPU_000_TO_34X(394);
@@ -167,9 +167,9 @@ void extcl_cpu_every_cycle_394(void) {
 		extcl_cpu_every_cycle_MMC3();
 	}
 }
-void extcl_rd_ppu_394(WORD address) {
+void extcl_rd_ppu_mem_394(WORD address) {
 	if (m394.reg[1] & 0x10) {
-		extcl_rd_ppu_JYASIC(address);
+		extcl_rd_ppu_mem_JYASIC(address);
 	}
 }
 BYTE extcl_rd_chr_394(WORD address) {

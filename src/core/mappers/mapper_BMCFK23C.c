@@ -174,12 +174,10 @@ void map_init_BMCFK23C(void) {
 			(info.crc32.prg == 0x03CF81B4)) { // 16 in 1 (KD-1512).nes
 			bmcfk23ctmp.select = 2;
 			bmcfk23ctmp.index = 0;
-		} else if (
-			(info.crc32.prg == 0x30FF6159)) { // 15-in-1 (20, 25, 80, 99, 160, 210, 260-in-1) (BS-6008) (Unl) [p1].nes
+		} else if (info.crc32.prg == 0x30FF6159) { // 15-in-1 (20, 25, 80, 99, 160, 210, 260-in-1) (BS-6008) (Unl) [p1].nes
 			bmcfk23ctmp.select = 3;
 			bmcfk23ctmp.index = 0;
-		} else if (
-			(info.crc32.prg == 0x2F3DB40D)) { // 17-in-1 (76000, 1000000, 9999999-in-1) (KD-6038) (Unl) [p1].nes
+		} else if (info.crc32.prg == 0x2F3DB40D) { // 17-in-1 (76000, 1000000, 9999999-in-1) (KD-6038) (Unl) [p1].nes
 			bmcfk23ctmp.select = 4;
 			bmcfk23ctmp.index = 0;
 		} else if (
@@ -199,8 +197,7 @@ void map_init_BMCFK23C(void) {
 			(info.crc32.prg == 0xD2A7F82B)) { // (BS-6028) 180-in-1.nes
 			bmcfk23ctmp.select = 6;
 			bmcfk23ctmp.index = 6;
-		} else if (
-			(info.crc32.prg == 0x5507A5A8)) { // (FK-033) 52-in-1.nes
+		} else if (info.crc32.prg == 0x5507A5A8) { // (FK-033) 52-in-1.nes
 			bmcfk23ctmp.select = 6;
 			bmcfk23ctmp.index = 3;
 		} else if (
@@ -209,20 +206,16 @@ void map_init_BMCFK23C(void) {
 			(info.crc32.prg == 0xFDF94F9E)) { // Super 4-in-1 (7, 25, 28, 111, 9999999-in-1) (KB-4009) (Unl) [p1].nes
 			bmcfk23ctmp.select = 7;
 			bmcfk23ctmp.index = 0;
-		} else if (
-			(info.crc32.prg == 0x41252709)) { // Super Game 16-in-1 (19, 31, 51, 56, 112, 121, 126-in-1) (BS-6002) (Unl) [p1].nes
+		} else if (info.crc32.prg == 0x41252709) { // Super Game 16-in-1 (19, 31, 51, 56, 112, 121, 126-in-1) (BS-6002) (Unl) [p1].nes
 			bmcfk23ctmp.select = 8;
 			bmcfk23ctmp.index = 0;
-		} else if (
-			(info.crc32.prg == 0xB2BC6FF8)) { // Super Game 16-in-1 (500, 9999999, 999999999-in-1) (FK037) (Unl) [p1].nes
+		} else if (info.crc32.prg == 0xB2BC6FF8) { // Super Game 16-in-1 (500, 9999999, 999999999-in-1) (FK037) (Unl) [p1].nes
 			bmcfk23ctmp.select = 9;
 			bmcfk23ctmp.index = 0;
-		} else if (
-			(info.crc32.prg == 0x8F1D2425)) { // Super Game 20-in-1 (6, 16, 36, 56, 99, 210-in-1) (KD-6026) (Unl) [p1].nes
+		} else if (info.crc32.prg == 0x8F1D2425) { // Super Game 20-in-1 (6, 16, 36, 56, 99, 210-in-1) (KD-6026) (Unl) [p1].nes
 			bmcfk23ctmp.select = 10;
 			bmcfk23ctmp.index = 0;
-		} else if (
-			(info.crc32.prg == 0xDDA1E214)) { // Super Game 28-in-1 (15, 30, 36, 52, 160, 180, 255-in-1) (BS-6017) (Unl) [p1].nes
+		} else if (info.crc32.prg == 0xDDA1E214) { // Super Game 28-in-1 (15, 30, 36, 52, 160, 180, 255-in-1) (BS-6017) (Unl) [p1].nes
 			bmcfk23ctmp.select = 11;
 			bmcfk23ctmp.index = 0;
 		} else {

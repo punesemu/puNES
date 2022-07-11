@@ -60,7 +60,7 @@ void map_init_JYASIC(BYTE model) {
 	EXTCL_CPU_RD_MEM(JYASIC);
 	EXTCL_SAVE_MAPPER(JYASIC);
 	EXTCL_CPU_EVERY_CYCLE(JYASIC);
-	EXTCL_RD_PPU(JYASIC);
+	EXTCL_RD_PPU_MEM(JYASIC);
 	EXTCL_RD_CHR(JYASIC);
 	EXTCL_WR_NMT(JYASIC);
 	EXTCL_PPU_000_TO_255(JYASIC);
@@ -87,8 +87,7 @@ void map_init_JYASIC(BYTE model) {
 			(info.crc32.prg == 0xA0859966) || // 1996 Super Mortal Kombat III 18-in-1 Series (JY-062).nes
 			(info.crc32.prg == 0x2A268152)) { // Mortal Kombat 3 - Special 56 Peoples (Unl) [!].nes
 			jyasictmp.dipswitch = jyasictmp.dipswitch ? 0x00 : 0x80;
-		} else if (
-			(info.crc32.prg == 0x826E8D77)) { // Donkey Kong Country 4 (Unl) [!].nes
+		} else if (info.crc32.prg == 0x826E8D77) { // Donkey Kong Country 4 (Unl) [!].nes
 			jyasictmp.dipswitch = jyasictmp.dipswitch == 0x00 ? 0xC0 : jyasictmp.dipswitch == 0xC0 ? 0x80 : 0x00;
 		} else {
 			jyasictmp.dipswitch = (jyasictmp.dipswitch + 0x40) & 0xC0;
@@ -354,7 +353,7 @@ void extcl_cpu_every_cycle_JYASIC(void) {
 		irq_clock_prescaler_JYASIC();
 	}
 }
-void extcl_rd_ppu_JYASIC(UNUSED(WORD address)) {
+void extcl_rd_ppu_mem_JYASIC(UNUSED(WORD address)) {
 	if ((jyasic.irq.mode & 0x03) == 2) {
 		irq_clock_prescaler_JYASIC();
 	}

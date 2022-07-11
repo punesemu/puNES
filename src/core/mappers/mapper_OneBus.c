@@ -77,7 +77,7 @@ void map_init_OneBus(void) {
 	EXTCL_CPU_WR_MEM(OneBus);
 	EXTCL_SAVE_MAPPER(OneBus);
 	EXTCL_CPU_EVERY_CYCLE(OneBus);
-	EXTCL_WR_PPU(OneBus);
+	EXTCL_WR_PPU_REG(OneBus);
 	EXTCL_WR_APU(OneBus);
 	EXTCL_RD_APU(OneBus);
 	EXTCL_IRQ_A12_CLOCK(OneBus);
@@ -255,7 +255,7 @@ void extcl_cpu_every_cycle_OneBus(void) {
 		}
 	}
 }
-BYTE extcl_wr_ppu_OneBus(WORD address, BYTE *value) {
+BYTE extcl_wr_ppu_reg_OneBus(WORD address, BYTE *value) {
 	if ((address >= 0x2010) && (address <= 0x201F)) {
 		if (onebus.model == ONEBUS_WAIXING_VT02) {
 			if (address == 0x2016) {

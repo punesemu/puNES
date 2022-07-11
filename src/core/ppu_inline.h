@@ -24,12 +24,13 @@
 INLINE static BYTE ppu_rd_mem(WORD address);
 
 INLINE static BYTE ppu_rd_mem(WORD address) {
-	if (extcl_rd_ppu) {
+	if (extcl_rd_ppu_mem) {
 		/*
 		 * utilizzato dalle mappers :
-		 * 90_201_211
+		 * 394
+		 * JYASIC
 		 */
-		extcl_rd_ppu(address);
+		extcl_rd_ppu_mem(address);
 	}
 
 	address &= 0x3FFF;

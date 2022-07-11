@@ -16,12 +16,30 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_62_H_
-#define MAPPER_62_H_
+#ifndef MAPPER_518_H_
+#define MAPPER_518_H_
 
 #include "common.h"
 
-void map_init_62(void);
-void extcl_cpu_wr_mem_62(WORD address, BYTE value);
+typedef struct _m518 {
+	BYTE reg[2];
+	BYTE chr_bank;
+	struct _m518_dac {
+		BYTE out;
+		BYTE status;
+		int count;
+	} dac;
+} _m518;
 
-#endif /* MAPPER_62_H_ */
+extern _m518 m518;
+
+void map_init_518(void);
+void extcl_after_mapper_init_518(void);
+void extcl_cpu_wr_mem_518(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_518(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_518(BYTE mode, BYTE slot, FILE *fp);
+BYTE extcl_rd_nmt_518(WORD address);
+BYTE extcl_rd_chr_518(WORD address);
+void extcl_cpu_every_cycle_518(void);
+
+#endif /* MAPPER_518_H_ */

@@ -42,6 +42,7 @@ BYTE unif_TVCI(_rom_mem *rom, BYTE phase);
 BYTE unif_BATR(_rom_mem *rom, BYTE phase);
 BYTE unif_MIRR(_rom_mem *rom, BYTE phase);
 BYTE unif_DINF(_rom_mem *rom, BYTE phase);
+BYTE unif_FONT(_rom_mem *rom, BYTE phase);
 
 typedef struct _unif_board {
 	char board[50];
@@ -67,7 +68,6 @@ static const _unif_board unif_boards[] = {
 	{"TFROM", 4, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"ANROM", 7, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"SL1632", 14, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-	{"CHINA_ER_SAN2", 19, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"T-230", 23, NO_UNIF, VRC4T230, DEFAULT, NOEXTRA},
 	{"SC-127", 35, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"SuperHIK8in1", 45, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
@@ -192,6 +192,7 @@ static const _unif_board unif_boards[] = {
 	{"K-3010", 438, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"K-3071", 438, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"SA-9602B", 513, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
+	{"DANCE2000", 518, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"EH8813A", 519, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"DREAMTECH01", 521, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"LH10", 522, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
@@ -201,6 +202,7 @@ static const _unif_board unif_boards[] = {
 	{"AX-40G", 527, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"831128C", 528, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"AX5705", 530, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
+	{"CHINA_ER_SAN2", 532, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"82112C", 540, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"KONAMI-QTAI", 547, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 
@@ -366,6 +368,11 @@ BYTE unif_load_rom(void) {
 
 				// la CHR ram extra
 				memset(&chr.extra, 0x00, sizeof(chr.extra));
+
+				if (chinaersan2_init() != EXIT_OK) {
+					free(rom.data);
+					return (EXIT_ERROR);
+				}
 			}
 
 			while ((rom.position + sizeof(unif.chunk)) <= rom.size) {
@@ -441,6 +448,11 @@ BYTE unif_load_rom(void) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
+				} else if (strncasecmp(unif.chunk.id, "FONT", 4) == 0) {
+					if (unif_FONT(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else {
 					// ignoro il tipo di chunk non riconosciuto
 					if (unif_NONE(&rom, phase) == EXIT_ERROR) {
@@ -452,8 +464,6 @@ BYTE unif_load_rom(void) {
 		}
 
 		{
-			size_t size = prg_size();
-
 			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
 
 			fprintf(stderr, "PRG 8k rom    : %-4lu [ %08X %ld ]\n",
@@ -464,7 +474,6 @@ BYTE unif_load_rom(void) {
 			if (chr_size()) {
 				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
 				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.prg);
-				size += chr_size();
 
 				fprintf(stderr, "CHR 4k vrom   : %-4lu [ %08X %ld ]\n",
 					(long unsigned)chr_size() / 0x1000,
@@ -807,6 +816,23 @@ BYTE unif_DINF(_rom_mem *rom, BYTE phase) {
 
 	fprintf(stderr, "dumped by     : %s with %s on %s %d, %d\n", unif.dumped.by, unif.dumped.with,
 		months[(unif.dumped.month - 1) % 12], unif.dumped.day, unif.dumped.year);
+
+	return (EXIT_OK);
+}
+BYTE unif_FONT(_rom_mem *rom, BYTE phase) {
+	if (phase == UNIF_COUNT) {
+		if ((rom->position + unif.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		chinaersan2.font.size = 64 * 1024;
+		rom->position += unif.chunk.length;
+		return (EXIT_OK);
+	}
+
+	memset(chinaersan2.font.data, 0x00, chinaersan2.font.size);
+	rom_mem_memcpy(chinaersan2.font.data, rom,  unif.chunk.length > chinaersan2.font.size ?
+		chinaersan2.font.size : unif.chunk.length);
+	fprintf(stderr, "FONT          : %d\n", unif.chunk.length);
 
 	return (EXIT_OK);
 }

@@ -42,8 +42,8 @@
 #define EXTCL_UPDATE_R2006(n) extcl_update_r2006 = extcl_update_r2006_##n
 #define EXTCL_RD_R2007(n) extcl_rd_r2007 = extcl_rd_r2007_##n
 #define EXTCL_AFTER_RD_CHR(n) extcl_after_rd_chr = extcl_after_rd_chr_##n
-#define EXTCL_WR_PPU(n) extcl_wr_ppu = extcl_wr_ppu_##n
-#define EXTCL_RD_PPU(n) extcl_rd_ppu = extcl_rd_ppu_##n
+#define EXTCL_WR_PPU_REG(n) extcl_wr_ppu_reg = extcl_wr_ppu_reg_##n
+#define EXTCL_RD_PPU_MEM(n) extcl_rd_ppu_mem = extcl_rd_ppu_mem_##n
 #define EXTCL_RD_NMT(n) extcl_rd_nmt = extcl_rd_nmt_##n
 #define EXTCL_RD_CHR(n) extcl_rd_chr = extcl_rd_chr_##n
 #define EXTCL_WR_NMT(n) extcl_wr_nmt = extcl_wr_nmt_##n
@@ -94,9 +94,9 @@ extern void (*extcl_update_r2006)(WORD new_r2006, WORD old_r2006);
 // viene chiamata alla lettura del $2007 in cpu_inline.h
 extern void (*extcl_rd_r2007)(void);
 // vine chiamata in cpu_inline.h alla scrittura nei rigistri della ppu
-extern BYTE (*extcl_wr_ppu)(WORD address, BYTE *value);
+extern BYTE (*extcl_wr_ppu_reg)(WORD address, BYTE *value);
 // vengono chiamate in ppu_inline.h
-extern void (*extcl_rd_ppu)(WORD address);
+extern void (*extcl_rd_ppu_mem)(WORD address);
 extern BYTE (*extcl_rd_nmt)(WORD address);
 extern BYTE (*extcl_rd_chr)(WORD address);
 // viene chiamata dopo il FETCHB e dopo il fetch dello sprite

@@ -72,7 +72,7 @@ void map_init_45(void) {
 			m45tmp.index = (m45tmp.index + 1) & 0x07;
 		} while (dipswitch_index_45[m45tmp.select][m45tmp.index] < 0);
 	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		if ((info.crc32.prg == 0x2011376B)) { // 98+1800000-in-1.nes
+		if (info.crc32.prg == 0x2011376B) { // 98+1800000-in-1.nes
 			m45tmp.select = 2;
 			m45tmp.index = 0;
 		} else if (
@@ -81,8 +81,7 @@ void map_init_45(void) {
 			(info.crc32.prg == 0x899AEB47)) { // Super 19-in-1 (329-JY819).nes
 			m45tmp.select = 1;
 			m45tmp.index = 0;
-		} else if (
-			(info.crc32.prg == 0x28E0CF3B)) { // Brain Series 12-in-1 [p1][!].nes
+		} else if (info.crc32.prg == 0x28E0CF3B) { // Brain Series 12-in-1 [p1][!].nes
 			m45tmp.select = 3;
 			m45tmp.index = 0;
 		} else {
