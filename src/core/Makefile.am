@@ -115,6 +115,8 @@ libcore_a_SOURCES += \
 	../extra/kiss_fft130/kiss_fft.h
 
 libcore_a_SOURCES += \
+	mappers/EE93Cx6.c \
+	mappers/EE93Cx6.h \
 	mappers/mapper_0.c \
 	mappers/mapper_0.h \
 	mappers/mapper_1024CA1.c \
