@@ -486,6 +486,10 @@ BYTE unif_load_rom(void) {
 
 		fprintf(stderr, "\n");
 
+		if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
+			info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
+		}
+
 		if (!info.chr.rom.banks_1k) {
 			mapper.write_vram = TRUE;
 		}
