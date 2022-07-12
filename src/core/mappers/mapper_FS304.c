@@ -82,7 +82,6 @@ BYTE extcl_cpu_rd_mem_FS304(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	}
 	return (openbus);
 }
-
 BYTE extcl_save_mapper_FS304(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, fs304.reg);
 	save_slot_ele(mode, slot, fs304.pa9);
