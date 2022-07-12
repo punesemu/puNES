@@ -391,6 +391,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_53.h \
 	mappers/mapper_541.c \
 	mappers/mapper_541.h \
+	mappers/mapper_558.c \
+	mappers/mapper_558.h \
 	mappers/mapper_559.c \
 	mappers/mapper_559.h \
 	mappers/mapper_560.c \

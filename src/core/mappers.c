@@ -1225,6 +1225,9 @@ BYTE map_init(void) {
 		case 547:
 			map_init_KONAMIQTAI();
 			break;
+		case 558:
+			map_init_558();
+			break;
 		case 559:
 			map_init_559();
 			break;
