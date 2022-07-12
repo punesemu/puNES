@@ -65,7 +65,7 @@ void map_init_164(void) {
 		info.prg.ram.bat.banks = 1;
 	}
 
-	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
+	info.mapper.extend_wr = TRUE;
 }
 void extcl_after_mapper_init_164(void) {
 	prg_fix_164();

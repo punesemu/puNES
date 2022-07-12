@@ -51,7 +51,7 @@ void map_init_558(void) {
 		info.prg.ram.bat.banks = 1;
 	}
 
-	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
+	info.mapper.extend_wr = TRUE;
 }
 void extcl_after_mapper_init_558(void) {
 	prg_fix_558();
