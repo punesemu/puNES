@@ -44,9 +44,9 @@ void map_init_442(void) {
 	EXTCL_WR_NMT(442);
 	EXTCL_WR_CHR(442);
 	EXTCL_RD_CHR(442);
-    EXTCL_PPU_000_TO_255(442);
-    EXTCL_PPU_256_TO_319(442);
-    EXTCL_PPU_320_TO_34X(442);
+	EXTCL_PPU_000_TO_255(442);
+	EXTCL_PPU_256_TO_319(442);
+	EXTCL_PPU_320_TO_34X(442);
 	mapper.internal_struct[0] = (BYTE *)&m442;
 	mapper.internal_struct_size[0] = sizeof(m442);
 

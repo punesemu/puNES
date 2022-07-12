@@ -74,11 +74,11 @@ void extcl_wr_nmt_560(WORD address, BYTE value) {
 	ntbl.bank_1k[bank][address & 0x3FF] = value;
 }
 BYTE extcl_rd_nmt_560(WORD address) {
-    if (!m560.pa13) {
-    	m560.nmt_address = r2006.value;
-    }
-    m560.pa13 = TRUE;
-    return (ntbl.bank_1k[(address & 0x0FFF) >> 10][address & 0x3FF]);
+	if (!m560.pa13) {
+		m560.nmt_address = r2006.value;
+	}
+	m560.pa13 = TRUE;
+	return (ntbl.bank_1k[(address & 0x0FFF) >> 10][address & 0x3FF]);
 }
 BYTE extcl_rd_chr_560(WORD address) {
 	WORD base = ((address >> 10) << 9) | ((address & 0x03F0) >> 1) | (address & 0x0007);
