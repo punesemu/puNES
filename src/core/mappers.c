@@ -763,6 +763,10 @@ BYTE map_init(void) {
 		case 246:
 			map_init_246();
 			break;
+		case 248:
+			// stessa mapper della 115
+			map_init_Kasing();
+			break;
 		case 249:
 			map_init_249();
 			break;
