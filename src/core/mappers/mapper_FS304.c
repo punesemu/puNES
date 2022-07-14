@@ -138,7 +138,7 @@ void extcl_ppu_320_to_34x_FS304(void) {
 }
 
 INLINE static void prg_fix_FS304(void) {
-    WORD bank = ((fs304.reg[2] & 0x03) << 4) | (fs304.reg[0] & 0x0C);
+	WORD bank = ((fs304.reg[2] & 0x03) << 4) | (fs304.reg[0] & 0x0C);
 
 	// D~7654 3210
 	//   ---------
@@ -150,20 +150,20 @@ INLINE static void prg_fix_FS304(void) {
 	//         +--- PRG A16 mode:
 	//               0: PRG A16=1
 	//               1: PRG A16=$5000.1
-    switch (fs304.reg[3] & 0x05) {
-    	case 0x00:
-    		bank |= (0x02 | ((fs304.reg[1] & 0x02) >> 1));
-    		break;
-    	case 0x01:
-    		bank |= 0x03;
-    		break;
-    	case 0x04:
-    		bank |= ((fs304.reg[0] & 0x02) | ((fs304.reg[1] & 0x02) >> 1));
-    		break;
-    	case 0x05:
-    		bank |= (fs304.reg[0] & 0x03);
-    		break;
-    }
+	switch (fs304.reg[3] & 0x05) {
+	case 0x00:
+		bank |= (0x02 | ((fs304.reg[1] & 0x02) >> 1));
+		break;
+	case 0x01:
+		bank |= 0x03;
+		break;
+	case 0x04:
+		bank |= ((fs304.reg[0] & 0x02) | ((fs304.reg[1] & 0x02) >> 1));
+		break;
+	case 0x05:
+		bank |= (fs304.reg[0] & 0x03);
+		break;
+	}
 	_control_bank(bank, info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, bank);
 	map_prg_rom_8k_update();
