@@ -21,22 +21,15 @@
 
 #include "common.h"
 
-enum {
-	MAP116_TYPE_A,
-	MAP116_TYPE_B,
-	MAP116_TYPE_C
-};
-
 void map_init_116(void);
-
-void extcl_cpu_wr_mem_116_type_A(WORD address, BYTE value);
-BYTE extcl_save_mapper_116_type_A(BYTE mode, BYTE slot, FILE *fp);
-
-void extcl_cpu_wr_mem_116_type_B(WORD address, BYTE value);
-BYTE extcl_save_mapper_116_type_B(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_116_type_B(WORD address, BYTE value);
-
-void extcl_cpu_wr_mem_116_type_C(WORD address, BYTE value);
-BYTE extcl_save_mapper_116_type_C(BYTE mode, BYTE slot, FILE *fp);
+void extcl_after_mapper_init_116(void);
+void extcl_cpu_wr_mem_116(WORD address, BYTE value);
+BYTE extcl_save_mapper_116(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_116(void);
+void extcl_ppu_000_to_34x_116(void);
+void extcl_ppu_000_to_255_116(void);
+void extcl_ppu_256_to_319_116(void);
+void extcl_ppu_320_to_34x_116(void);
+void extcl_update_r2006_116(WORD new_r2006, WORD old_r2006);
 
 #endif /* MAPPER_116_H_ */

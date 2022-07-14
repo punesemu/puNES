@@ -129,9 +129,9 @@ BYTE map_init(void) {
 		case 19:
 			map_init_Namco(N163);
 			break;
-		//
 		// mapper 20 e' l'FDS
-		//
+		//case 20:
+		//	break;
 		case 21:
 			map_init_VRC4(info.mapper.submapper == DEFAULT ? VRC4A : info.mapper.submapper);
 			break;

@@ -63,11 +63,7 @@ void map_init_VRC2(BYTE revision, BYTE prg_mask) {
 	vrc2tmp.prg_mask = prg_mask;
 }
 void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
-	if (address < 0xB000) {
-		address &= 0xF000;
-	} else {
-		address = (address & 0xF000) | shift_VRC2[vrc2tmp.type][address & 0x0003];
-	}
+	address = address_VRC2(address);
 
 	switch (address) {
 		case 0x8000:
@@ -149,4 +145,12 @@ BYTE extcl_save_mapper_VRC2(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, vrc2.chr_rom_bank);
 
 	return (EXIT_OK);
+}
+
+WORD address_VRC2(WORD address) {
+	if (address < 0xB000) {
+		return (address & 0xF000);
+	} else {
+		return ((address & 0xF000) | shift_VRC2[vrc2tmp.type][address & 0x0003]);
+	}
 }
