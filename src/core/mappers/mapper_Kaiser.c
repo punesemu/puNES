@@ -182,26 +182,15 @@ void extcl_cpu_every_cycle_Kaiser_ks202(void) {
 }
 
 void extcl_cpu_wr_mem_Kaiser_ks7058(WORD address, BYTE value) {
+	BYTE slot = (address & 0x0001) << 2;
 	DBWORD bank;
 
-	switch (address & 0xF080) {
-		case 0xF000:
-			control_bank(info.chr.rom.max.banks_4k)
-			bank = value << 12;
-			chr.bank_1k[0] = chr_pnt(bank);
-			chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-			chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-			chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-			return;
-		case 0xF080:
-			control_bank(info.chr.rom.max.banks_4k)
-			bank = value << 12;
-			chr.bank_1k[4] = chr_pnt(bank);
-			chr.bank_1k[5] = chr_pnt(bank | 0x0400);
-			chr.bank_1k[6] = chr_pnt(bank | 0x0800);
-			chr.bank_1k[7] = chr_pnt(bank | 0x0C00);
-			return;
-	}
+	control_bank(info.chr.rom.max.banks_4k)
+	bank = value << 12;
+	chr.bank_1k[slot | 0] = chr_pnt(bank);
+	chr.bank_1k[slot | 1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[slot | 2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[slot | 3] = chr_pnt(bank | 0x0C00);
 }
 
 void extcl_cpu_wr_mem_Kaiser_ks7022(WORD address, BYTE value) {
