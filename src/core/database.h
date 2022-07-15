@@ -3810,6 +3810,8 @@ static const _dbelement dblist[] = {
 	{"bf8185a064c9d28765f56919551b6f5449d4417a", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Luo Ke Ren X (Sugoro Quest - Dice no Senshitachi) (Ch).nes */
 	{"f007a15c250297e1bd7d6287219fa94928afa759", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* 天神之剑: Waixing's Chinese translation of SNK's God Slayer/Crystalis */
+	{"5ab3419d0885f50207efa179f6c0c2f289d814b3", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ----------------------------------------- 196 ------------------------------------------ */
 	/* Street Fighter VI 16 Peoples (Unl)[!].nes */

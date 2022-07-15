@@ -617,7 +617,7 @@ BYTE map_init(void) {
 			map_init_Waixing(WTD);
 			break;
 		case 195:
-			map_init_Waixing(WTE);
+			map_init_195();
 			break;
 		case 196:
 			map_init_196();
