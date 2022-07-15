@@ -12,6 +12,33 @@
     <img src="https://repology.org/badge/version-for-repo/wikidata/punes.svg" alt="Wikidata"/>
 </p>
 
+:floppy_disk: Work in Progress (WIP) Builds
+-----------
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://github.com/punesemu/puNES/actions/workflows/build.yml/badge.svg)](https://github.com/punesemu/puNES/actions)
+
+These executables are always updated to the latest commit:
+* Windows 32 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build/master/punes32.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build/master/punes32.wip.d3d9.zip)
+* Windows 64 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build/master/punes64.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build/master/punes64.wip.d3d9.zip)
+
+Note : 32 bit versions are Windows XP compatible.
+
+:beer: Support
+-----------
+If you want buy me a beer : <span class="badge-paypal"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button" /></a></span>
+
+:camera: Screenshots
+-----------
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/14859058/153704977-bacb2e1a-7394-49f0-b29a-f1700d1e1991.png" width="400" alt="puNES main window"/>
+  <img src="https://user-images.githubusercontent.com/14859058/142155318-22d86ae5-3a3f-486a-8ae8-e78c8eeabb2f.png" width="400" alt="puNES NSFE Player"/>
+  <img src="https://user-images.githubusercontent.com/14859058/153705022-299874d6-e2f6-4a50-a394-a91cefe150a9.png" width="400" alt="puNES Slot Preview"/>
+  <img src="https://user-images.githubusercontent.com/14859058/135748722-ea73e6b3-db6b-4cf2-b13d-755ca4824975.png" width="400" alt="puNES General Settings"/>
+  <img src="https://user-images.githubusercontent.com/14859058/140854472-60a88023-e719-4637-9289-08991a367ddd.png" width="400" alt="puNES Video Filters Settings"/>
+  <img src="https://user-images.githubusercontent.com/14859058/135748586-fe41d0d1-18d0-4c14-b7c4-4d6deacb4fbb.png" width="400" alt="puNES Cheat Editor"/>
+  <img src="https://user-images.githubusercontent.com/14859058/146680023-2c40f991-67d2-4502-963f-39c8b5bfc4ca.png" width="400" alt="puNES Xbox360 Standard Controller Settings"/>
+  <img src="https://user-images.githubusercontent.com/14859058/146680033-5fc36150-c52f-494a-ba5c-9d7d675e43d6.png" width="400" alt="puNES PS4 Standard Controller Settings"/>
+</p>
+
 :keyboard: Configuration
 -----------
 To run it in portable mode, rename the executable by adding the suffix `_p`.
@@ -78,33 +105,6 @@ To see a list of available command-line options, start puNES with the `-h` argum
 :electric_plug: Unif
 -----------
 NROM, NROM-128, NROM-256, SLROM, UOROM, CNROM, TLROM, TBROM, TKROM, TFROM, ANROM, SL1632, SC-127, SuperHIK8in1, STREETFIGTER-GAME4IN1, Supervision16in1, MARIO1-MALEE2, T3H53, D1038, NTBROM, VRC7, TEK90, BB, H2288, LH32, 22211, SA-72008, Sachen-8259D, Sachen-8259B, Sachen-8259C, Sachen-8259A, KS7032, SA-NROM, SA-72007, SA-016-1M, TC-U01-1.5M, SA-0037, SA-0036, Sachen-74LS374N, FS304, FK23C, FK23CA, Super24in1SC03, WAIXING-FS005, NovelDiamond9999999in1, JC-016-2, 8237, 8237A, N625092, WAIXING-FW01, 42in1ResetSwitch, 70in1, 70in1B, 603-5052, OneBus, DANCE, 158B, F-15, HPXX, HP2018-A, 810544-C-A1, SHERO, KOF97, YOKO, T-262, CITYFIGHT, COOLBOY, MINDKIDS, 22026, 80013-B, GS-2004, GS-2013, A65AS, DRIPGAME, BS-5, 411120-C, K-3088, 60311C, NTD-03, DRAGONFIGHTER, TF1201, 11160, 190in1, 8157, KS7057, KS7017, SMB2J, KS7031, KS7016, KS7037, TH2131-1, LH51, KS7013B, RESET-TXROM, 64in1NoRepeat, 830134C, HP898F, 830425C-4391T, K-3033, FARID_SLROM_8-IN-1, FARID_UNROM_8-IN-1, MALISB, 10-24-C-A1, RT-01, EDU2000, 12-IN-1, WS, 8-IN-1, NEWSTAR-GRM070-8IN1, CTC-09, K-3046, CTC-12IN1, SA005-A, K-3006, K-3036, TJ-03, COOLGIRL, RESETNROM-XIN1, GN-26, L6IN1, KS7012, KS7030, 830118C, G-146, 891227, KS106C, 3D-BLOCK, SB-5013, 830752C, BS-400R, BS-4040R, K-3010, K-3071, SA-9602B, DANCE2000, EH8813A, DREAMTECH01, LH10, 900218, KS7021A, BJ-56, AX-40G, 831128C, T-230, AX5705, CHINA_ER_SAN2, 82112C, KONAMI-QTAI, Ghostbusters63in1, 43272, AC08, CC-21, BOY
-
-:floppy_disk: Work in Progress (WIP) Builds
------------
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://github.com/punesemu/puNES/actions/workflows/build.yml/badge.svg)](https://github.com/punesemu/puNES/actions)
-
-These executables are always updated to the latest commit:
-* Windows 32 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build/master/punes32.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build/master/punes32.wip.d3d9.zip)
-* Windows 64 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build/master/punes64.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build/master/punes64.wip.d3d9.zip)
-
-Note : 32 bit versions are Windows XP compatible.
-
-:beer: Support
------------
-If you want buy me a beer : <span class="badge-paypal"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button" /></a></span>
-
-:camera: Screenshots
------------
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/14859058/153704977-bacb2e1a-7394-49f0-b29a-f1700d1e1991.png" width="400" alt="puNES main window"/>
-  <img src="https://user-images.githubusercontent.com/14859058/142155318-22d86ae5-3a3f-486a-8ae8-e78c8eeabb2f.png" width="400" alt="puNES NSFE Player"/>
-  <img src="https://user-images.githubusercontent.com/14859058/153705022-299874d6-e2f6-4a50-a394-a91cefe150a9.png" width="400" alt="puNES Slot Preview"/>
-  <img src="https://user-images.githubusercontent.com/14859058/135748722-ea73e6b3-db6b-4cf2-b13d-755ca4824975.png" width="400" alt="puNES General Settings"/>
-  <img src="https://user-images.githubusercontent.com/14859058/140854472-60a88023-e719-4637-9289-08991a367ddd.png" width="400" alt="puNES Video Filters Settings"/>
-  <img src="https://user-images.githubusercontent.com/14859058/135748586-fe41d0d1-18d0-4c14-b7c4-4d6deacb4fbb.png" width="400" alt="puNES Cheat Editor"/>
-  <img src="https://user-images.githubusercontent.com/14859058/146680023-2c40f991-67d2-4502-963f-39c8b5bfc4ca.png" width="400" alt="puNES Xbox360 Standard Controller Settings"/>
-  <img src="https://user-images.githubusercontent.com/14859058/146680033-5fc36150-c52f-494a-ba5c-9d7d675e43d6.png" width="400" alt="puNES PS4 Standard Controller Settings"/>
-</p>
 
 :information_source: How to Compile
 -----------
