@@ -17,6 +17,7 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
 #include "input/snes_mouse.h"
 #include "input/mouse.h"
 
@@ -31,7 +32,7 @@ void input_init_snes_mouse(void) {
 }
 void input_wr_snes_mouse(BYTE *value, BYTE nport) {
 	if ((r4016.value & 0x01) && !((*value) & 0x01)) {
-		BYTE dx = 0x00, dy = 0x00;
+		BYTE dx, dy;
 		int gx, gy;
 		int x, y;
 
@@ -43,33 +44,23 @@ void input_wr_snes_mouse(BYTE *value, BYTE nport) {
 		snes_mouse[nport].lastx = x;
 		snes_mouse[nport].lasty = y;
 
-		if (gx < 0) {
-			dx = 0x80;
-			gx = -gx;
-		}
-		if (gy < 0) {
-			dy = 0x80;
-			gy = -gy;
-		}
+		gx = gx * (1 + snes_mouse[nport].sensitivity);
+		gy = gy * (1 + snes_mouse[nport].sensitivity);
 
-		gx += gx >> (2 - snes_mouse[nport].sensitivity);
-		gy += gy >> (2 - snes_mouse[nport].sensitivity);
+		dx = gx < 0 ? 0x80 : 0;
+		dy = gy < 0 ? 0x80 : 0;
 
-		if (gx > 127) {
-			gx = 127;
-		}
-		if (gy > 127) {
-			gy = 127;
-		}
+		gx = FHMIN(abs(gx), 127);
+		gy = FHMIN(abs(gy), 127);
 
-		gx |= dx;
-		gy |= dy;
+		dx |= (BYTE)gx;
+		dy |= (BYTE)gy;
 
 		snes_mouse[nport].latch =
-				(0x00 << 24) |
-				(((gmouse.right << 7) | (gmouse.left << 6) | (snes_mouse[nport].sensitivity << 4) | 0x01) << 16) |
-				((BYTE) gy << 8) |
-				((BYTE) gx << 0);
+			(0x00 << 24) |
+			(((gmouse.right << 7) | (gmouse.left << 6) | (snes_mouse[nport].sensitivity << 4) | 0x01) << 16) |
+			(dy << 8) |
+			(dx << 0);
 	}
 }
 void input_rd_snes_mouse(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {

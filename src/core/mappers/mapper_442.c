@@ -21,6 +21,7 @@
 #include "info.h"
 #include "mem_map.h"
 #include "ppu.h"
+#include "ppu_inline.h"
 #include "save_slot.h"
 
 // TODO : aggiungere l'emulazione della tastiera.
@@ -41,9 +42,11 @@ void map_init_442(void) {
 	EXTCL_CPU_WR_MEM(442);
 	EXTCL_SAVE_MAPPER(442);
 	EXTCL_WR_NMT(442);
-	EXTCL_RD_NMT(442);
 	EXTCL_WR_CHR(442);
 	EXTCL_RD_CHR(442);
+	EXTCL_PPU_000_TO_255(442);
+	EXTCL_PPU_256_TO_319(442);
+	EXTCL_PPU_320_TO_34X(442);
 	mapper.internal_struct[0] = (BYTE *)&m442;
 	mapper.internal_struct_size[0] = sizeof(m442);
 
@@ -71,29 +74,51 @@ BYTE extcl_save_mapper_442(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_wr_nmt_442(WORD address, BYTE value) {
-	mode1_bpp(r2006.value);
+	mode1_bpp(address);
 	ntbl.bank_1k[(address & 0x0FFF) >> 10][address & 0x3FF] = value;
 }
-BYTE extcl_rd_nmt_442(WORD address) {
-	mode1_bpp(r2006.value);
-	if ((m442.reg[0] & 0x80) && !m442.pa13) {
-		return (mode1_bpp_rd(r2006.value));
-	}
-    return (ntbl.bank_1k[(address & 0x0FFF) >> 10][address & 0x3FF]);
-}
-
 void extcl_wr_chr_442(WORD address, BYTE value) {
-	mode1_bpp(r2006.value);
+	mode1_bpp(address);
 	if (mapper.write_vram) {
 		chr.bank_1k[address >> 10][address & 0x3FF] = value;
 	}
 }
 BYTE extcl_rd_chr_442(WORD address) {
-	mode1_bpp(r2006.value);
 	if ((m442.reg[0] & 0x80) && !m442.pa13) {
-		return (mode1_bpp_rd(r2006.value));
+		return (mode1_bpp_rd(address));
 	}
 	return (chr.bank_1k[address >> 10][address & 0x3FF]);
+}
+void extcl_ppu_000_to_255_442(void) {
+	if (r2001.visible) {
+		extcl_ppu_320_to_34x_442();
+	}
+}
+void extcl_ppu_256_to_319_442(void) {
+	if ((ppu.frame_x & 0x0007) != 0x0003) {
+		return;
+	}
+
+	if ((!spr_ev.count_plus || (spr_ev.tmp_spr_plus == spr_ev.count_plus)) && (r2000.size_spr == 16)) {
+		ppu.spr_adr = r2000.spt_adr;
+	} else {
+		ppu_spr_adr((ppu.frame_x & 0x0038) >> 3);
+	}
+	mode1_bpp(ppu.spr_adr);
+}
+void extcl_ppu_320_to_34x_442(void) {
+	if ((ppu.frame_x & 0x0007) != 0x0003) {
+		return;
+	}
+
+	if (ppu.frame_x == 323) {
+		ppu_spr_adr(7);
+	}
+
+	ppu_bck_adr(r2000.bpt_adr, r2006.value);
+
+	mode1_bpp(0x2000 | (r2006.value & 0x0FFF));
+	mode1_bpp(ppu.bck_adr);
 }
 
 INLINE static void prg_fix_442(void) {

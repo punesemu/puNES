@@ -146,10 +146,6 @@ BYTE ines_load_rom(void) {
 			info.prg.ram.banks_8k_plus = nes20_ram_size(ines.flags[FL10] & 0x0F);
 			info.prg.ram.bat.banks = nes20_ram_size(ines.flags[FL10] >> 4);
 
-			if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
-				info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
-			}
-
 			info.chr.ram.banks_8k_plus = nes20_ram_size(ines.flags[FL11] & 0x0F);
 
 			cpu_timing = ines.flags[FL12] & 0x03;
@@ -176,10 +172,10 @@ BYTE ines_load_rom(void) {
 			}
 
 			info.prg.ram.bat.banks = (ines.flags[FL6] & 0x02) >> 1;
+		}
 
-			if (info.prg.ram.bat.banks) {
-				info.prg.ram.banks_8k_plus = 1;
-			}
+		if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
+			info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
 		}
 
 		switch (cpu_timing) {
@@ -664,13 +660,6 @@ void nes20_submapper(void) {
 					break;
 				case 2:
 					info.mapper.submapper = VRC7A;
-					break;
-			}
-			break;
-		case 116:
-			switch (info.mapper.submapper) {
-				default:
-					info.mapper.submapper = MAP116_TYPE_A;
 					break;
 			}
 			break;

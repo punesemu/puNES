@@ -46,7 +46,9 @@ void map_init_VRC4BMC(void);
 void extcl_cpu_wr_mem_VRC4BMC(WORD address, BYTE value);
 
 void map_init_VRC4T230(void);
+void extcl_after_mapper_init_VRC4T230(void);
 void extcl_cpu_wr_mem_VRC4T230(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_VRC4T230(WORD address, BYTE openbus, BYTE before);
 
 WORD address_VRC4(WORD address);
 

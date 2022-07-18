@@ -92,7 +92,6 @@ void map_init_Kasing(void) {
 		for (i = 0; i < 8; i++) {
 			kasing.chr_rom_bank[i] = i;
 		}
-
 	} else {
 		memset(&irqA12, 0x00, sizeof(irqA12));
 	}

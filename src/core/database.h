@@ -2670,6 +2670,10 @@ static const _dbelement dblist[] = {
 	/* Volshebnaya Palitra (R) [!].nes */
 	{"e4414c160c7e91136c62d99154336035e5636eeb", 13, DEFAULT, DEFAULT, NTSC, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* --------------------------------------- SL1632 ----------------------------------------- */
+	/* Samurai Spirits (Rex Soft).nes */
+	{"648dc9e5f3b4228aeb9d424f0ae4047cd946a736", 14, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* ------------------------------------- mapper 15 ---------------------------------------- */
 	/* 168-in-1 [p1][!].nes */
 	{"123105a996b3f325e55b7080ddd83d4cf043e543", 15, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
@@ -3379,18 +3383,6 @@ static const _dbelement dblist[] = {
 	/* Yuu Yuu Hakusho Final - Makai Saikyou Retsuden (English) (Unl).nes */
 	{"463d17f20ba0a9320e14cbe0bf58e74929ac4f58", 115, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* --------------------------------------- 116 -------------------------------------------- */
-	/* AV Mei Shao Nv Zhan Shi (Unl) [a1].nes */
-	{"893c9dd94677fe5b88a4d65adfd4245da14aa9f5", 116, MAP116_TYPE_A, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* AV Mei Shao Nv Zhan Shi (Unl).nes */
-	{"84a3afb5f556a8f14ec2a6dcaf4ff219992bb90a", 116, MAP116_TYPE_A, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Chuugoku Taitei (Sachen).nes */
-	{"32436a43d3c371ab7aa6bb5165f60ca5c006a60e", 116, MAP116_TYPE_B, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Samurai Spirits (Rex Soft).nes */
-	{"648dc9e5f3b4228aeb9d424f0ae4047cd946a736", 116, MAP116_TYPE_C, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Somari (NT-616) (Unl) [!].nes */
-	{"983250eb5b1ae54e7c78873e05c83dafc123f0b3", 116, MAP116_TYPE_A, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-
 /* ----------------------------------- Futuremedia ---------------------------------------- */
 	/* Crayon Shin-Chan (Ch) [!].nes */
 	{"1210ba78511cf727db940f558567999356f7248e", 117, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
@@ -3818,6 +3810,8 @@ static const _dbelement dblist[] = {
 	{"bf8185a064c9d28765f56919551b6f5449d4417a", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Luo Ke Ren X (Sugoro Quest - Dice no Senshitachi) (Ch).nes */
 	{"f007a15c250297e1bd7d6287219fa94928afa759", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* 天神之剑: Waixing's Chinese translation of SNK's God Slayer/Crystalis */
+	{"5ab3419d0885f50207efa179f6c0c2f289d814b3", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ----------------------------------------- 196 ------------------------------------------ */
 	/* Street Fighter VI 16 Peoples (Unl)[!].nes */
@@ -3942,6 +3936,10 @@ static const _dbelement dblist[] = {
 	{"d326485501ac08b5c3815bfd8dff3979c97556c6", 355, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Block Force (Hwang Shinwei).nes */
 	{"5de850b4e28c49ff9ed53def2a335d29b09387c2", 355, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ------------------------------------- mapper 512 --------------------------------------- */
+	/* Chuugoku Taitei (Sachen).nes */
+	{"32436a43d3c371ab7aa6bb5165f60ca5c006a60e", 512, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* -------------------------------------- VS System --------------------------------------- */
 	/* Battle City (VS) [p1][o1].nes */

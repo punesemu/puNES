@@ -129,9 +129,9 @@ BYTE map_init(void) {
 		case 19:
 			map_init_Namco(N163);
 			break;
-		//
 		// mapper 20 e' l'FDS
-		//
+		//case 20:
+		//	break;
 		case 21:
 			map_init_VRC4(info.mapper.submapper == DEFAULT ? VRC4A : info.mapper.submapper);
 			break;
@@ -617,7 +617,7 @@ BYTE map_init(void) {
 			map_init_Waixing(WTD);
 			break;
 		case 195:
-			map_init_Waixing(WTE);
+			map_init_195();
 			break;
 		case 196:
 			map_init_196();
@@ -762,6 +762,10 @@ BYTE map_init(void) {
 			break;
 		case 246:
 			map_init_246();
+			break;
+		case 248:
+			// stessa mapper della 115
+			map_init_Kasing();
 			break;
 		case 249:
 			map_init_249();
@@ -1069,6 +1073,9 @@ BYTE map_init(void) {
 		case 394:
 			map_init_394();
 			break;
+		case 395:
+			map_init_395();
+			break;
 		case 396:
 			map_init_396();
 			break;
@@ -1207,6 +1214,9 @@ BYTE map_init(void) {
 		case 528:
 			map_init_831128C();
 			break;
+		case 529:
+			map_init_VRC4T230();
+			break;
 		case 530:
 			map_init_AX5705();
 			break;
@@ -1216,6 +1226,14 @@ BYTE map_init(void) {
 		case 534:
 			map_init_126(MAP534);
 			break;
+		case 536:
+			// https://forums.nesdev.org/viewtopic.php?p=240335#p240335
+			map_init_195();
+			break;
+		case 537:
+			// https://forums.nesdev.org/viewtopic.php?p=240335#p240335
+			map_init_195();
+			break;
 		case 540:
 			map_init_359(MAP540);
 			break;
@@ -1224,6 +1242,12 @@ BYTE map_init(void) {
 			break;
 		case 547:
 			map_init_KONAMIQTAI();
+			break;
+		case 550:
+			map_init_550();
+			break;
+		case 558:
+			map_init_558();
 			break;
 		case 559:
 			map_init_559();

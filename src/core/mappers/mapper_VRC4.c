@@ -21,7 +21,9 @@
 #include "info.h"
 #include "mem_map.h"
 #include "cpu.h"
+#include "ines.h"
 #include "save_slot.h"
+#include "EE93Cx6.h"
 
 #define _chr_rom_1k_update(slot, mask, shift)\
 	value = (vrc4.chr_rom_bank[slot] & mask) | ((value & 0x0F) << shift);\
@@ -35,9 +37,14 @@
 #define chr_rom_1k_update_low(slot)\
 	_chr_rom_1k_update(slot, 0xF0, 0)
 
+INLINE static void prg_ram_fix_VRC4T230(void);
+INLINE static BYTE prg_ram_check_VRC4T230(void);
+
 _vrc4 vrc4;
 struct _vrc4tmp {
 	BYTE type;
+	BYTE *prg_6000;
+	BYTE cc93c56;
 } vrc4tmp;
 
 const BYTE shift_VRC4[7] = { 0x01, 0x00, 0x06, 0x02, 0x02, 0x00, 0x0A };
@@ -77,6 +84,7 @@ void map_init_VRC4(BYTE revision) {
 	}
 
 	vrc4tmp.type = revision;
+	vrc4tmp.cc93c56 = FALSE;
 }
 void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 	WORD tmp;
@@ -284,48 +292,127 @@ void extcl_cpu_wr_mem_VRC4BMC(WORD address, BYTE value) {
 void map_init_VRC4T230(void) {
 	map_init_VRC4(VRC4E);
 
+	EXTCL_AFTER_MAPPER_INIT(VRC4T230);
 	EXTCL_CPU_WR_MEM(VRC4T230);
+	EXTCL_CPU_RD_MEM(VRC4T230);
+
+	if (prg_ram_check_VRC4T230()) {
+		info.prg.ram.banks_8k_plus = 1;
+		info.prg.ram.bat.banks = 1;
+	}
+}
+void extcl_after_mapper_init_VRC4T230(void) {
+	if ((vrc4tmp.cc93c56 = prg_ram_check_VRC4T230())) {
+		ee93cx6_init(prg.ram_plus_8k, 256, 16);
+	}
+
+	prg_ram_fix_VRC4T230();
+
+	info.mapper.ram_plus_op_controlled_by_mapper = vrc4tmp.prg_6000 != NULL;
 }
 void extcl_cpu_wr_mem_VRC4T230(WORD address, BYTE value) {
-	if ((address >= 0x8000) && (address <= 0x8FFF)) {
+	if (address < 0x8000) {
+		switch (address & 0xF000) {
+			case 0x6000:
+			case 0x7000:
+				if (vrc4tmp.prg_6000) {
+					if (vrc4tmp.cc93c56 && (address >= 0x7F00)) {
+						return;
+					}
+					vrc4tmp.prg_6000[address & 0x1FFF] = value;
+				}
+				break;
+		}
 		return;
 	}
-	if ((address >= 0xA000) && (address <= 0xAFFF)) {
-		value = (mapper.rom_map_to[0] & 0x20) | ((value & 0x1F) << 1);
-		control_bank(info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, vrc4.swap_mode, value);
-
-		value = value | 0x01;
-		control_bank(info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 1, value);
-
-		map_prg_rom_8k_update();
-		return;
+	if (address & 0x0800) {
+		if (vrc4tmp.cc93c56) {
+			// D~[.... .ECD]
+			//          ||+- Serial Data Input to 93C56 EEPROM
+			//          |+-- Serial Clock to 93C56 EEPROM
+			//          +--- Chip Select to 93C56 EEPROM
+			ee93cx6_write((value & 0x04) >> 2, (value & 0x02) >> 1, value & 0x01);
+			return;
+		}
 	}
-	if ((address >= 0xB000) && (address <= 0xEFFF)) {
-		BYTE save = value << 2 & 0x20;
+	switch (address & 0xF000) {
+		case 0x8000:
+			break;
+		case 0xA000:
+			value = (mapper.rom_map_to[0] & 0x20) | ((value & 0x1F) << 1);
+			control_bank(info.prg.rom.max.banks_8k)
+			map_prg_rom_8k(1, vrc4.swap_mode, value);
 
-		value = (mapper.rom_map_to[0] & 0x3F) | save ;
-		control_bank(info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 0, value);
+			value = value | 0x01;
+			control_bank(info.prg.rom.max.banks_8k)
+			map_prg_rom_8k(1, 1, value);
 
-		value = (mapper.rom_map_to[1] & 0x3F) | save ;
-		control_bank(info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 1, value);
+			map_prg_rom_8k_update();
+			return;
+		case 0xB000:
+		case 0xC000:
+		case 0xD000:
+		case 0xE000: {
+			BYTE save = value << 2 & 0x20;
 
-		value = (mapper.rom_map_to[2] & 0x3F) | save ;
-		control_bank(info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 2, value);
+			value = (mapper.rom_map_to[0] & 0x3F) | save ;
+			control_bank(info.prg.rom.max.banks_8k)
+			map_prg_rom_8k(1, 0, value);
 
-		value = (mapper.rom_map_to[3] & 0x3F) | save ;
-		control_bank(info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 3, value);
+			value = (mapper.rom_map_to[1] & 0x3F) | save ;
+			control_bank(info.prg.rom.max.banks_8k)
+			map_prg_rom_8k(1, 1, value);
 
-		map_prg_rom_8k_update();
-		return;
+			value = (mapper.rom_map_to[2] & 0x3F) | save ;
+			control_bank(info.prg.rom.max.banks_8k)
+			map_prg_rom_8k(1, 2, value);
+
+			value = (mapper.rom_map_to[3] & 0x3F) | save ;
+			control_bank(info.prg.rom.max.banks_8k)
+			map_prg_rom_8k(1, 3, value);
+
+			map_prg_rom_8k_update();
+			return;
+		}
 	}
-
 	extcl_cpu_wr_mem_VRC4(address, value);
+}
+BYTE extcl_cpu_rd_mem_VRC4T230(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+	switch (address & 0xF000) {
+		case 0x5000:
+			if (vrc4tmp.cc93c56) {
+				return (ee93cx6_read() ? 0x01 : 0x00);
+			}
+			return (0x01);
+		case 0x6000:
+		case 0x7000:
+			if (vrc4tmp.prg_6000) {
+				if (vrc4tmp.cc93c56 && (address >= 0x7F00)) {
+					return (0xFF);
+				}
+				return (vrc4tmp.prg_6000[address & 0x1FFF]);
+			}
+			break;
+	}
+	return (openbus);
+}
+
+INLINE static void prg_ram_fix_VRC4T230(void) {
+	vrc4tmp.prg_6000 = prg.ram_plus_8k ? prg.ram_plus_8k + (vrc4tmp.cc93c56 == TRUE ? 256 : 0) : NULL;
+}
+INLINE static BYTE prg_ram_check_VRC4T230(void) {
+	if (info.format == NES_2_0) {
+		size_t ee_size = (ines.flags[FL10] & 0xF0) ? (64 << (ines.flags[FL10] >> 4)): 0;
+
+		if (ee_size == 256) {
+			return (TRUE);
+		}
+	} else {
+		if (info.prg.ram.banks_8k_plus && info.prg.ram.bat.banks) {
+			return (TRUE);
+		}
+	}
+	return (FALSE);
 }
 
 WORD address_VRC4(WORD address) {

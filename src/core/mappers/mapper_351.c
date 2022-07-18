@@ -267,7 +267,6 @@ INLINE static void chr_fix_351(void) {
 		} else if (m351.mapper == M351_MMC1) {
 			chr_fix_mmc1();
 		}
-
 	}
 }
 

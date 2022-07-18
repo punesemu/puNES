@@ -33,4 +33,6 @@ void map_init_VRC2(BYTE revision, BYTE mask);
 void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value);
 BYTE extcl_save_mapper_VRC2(BYTE mode, BYTE slot, FILE *fp);
 
+WORD address_VRC2(WORD address);
+
 #endif /* MAPPER_VRC2_H_ */

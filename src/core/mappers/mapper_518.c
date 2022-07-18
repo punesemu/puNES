@@ -41,9 +41,9 @@ void map_init_518(void) {
 	EXTCL_CPU_WR_MEM(518);
 	EXTCL_CPU_RD_MEM(518);
 	EXTCL_SAVE_MAPPER(518);
-    EXTCL_RD_NMT(518);
-    EXTCL_RD_CHR(518);
-    EXTCL_CPU_EVERY_CYCLE(518);
+	EXTCL_RD_NMT(518);
+	EXTCL_RD_CHR(518);
+	EXTCL_CPU_EVERY_CYCLE(518);
 	mapper.internal_struct[0] = (BYTE *)&m518;
 	mapper.internal_struct_size[0] = sizeof(m518);
 

@@ -115,6 +115,8 @@ libcore_a_SOURCES += \
 	../extra/kiss_fft130/kiss_fft.h
 
 libcore_a_SOURCES += \
+	mappers/EE93Cx6.c \
+	mappers/EE93Cx6.h \
 	mappers/mapper_0.c \
 	mappers/mapper_0.h \
 	mappers/mapper_1024CA1.c \
@@ -167,6 +169,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_188.h \
 	mappers/mapper_190.c \
 	mappers/mapper_190.h \
+	mappers/mapper_195.c \
+	mappers/mapper_195.h \
 	mappers/mapper_196.c \
 	mappers/mapper_196.h \
 	mappers/mapper_197.c \
@@ -293,6 +297,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_393.h \
 	mappers/mapper_394.c \
 	mappers/mapper_394.h \
+	mappers/mapper_395.c \
+	mappers/mapper_395.h \
 	mappers/mapper_396.c \
 	mappers/mapper_396.h \
 	mappers/mapper_398.c \
@@ -389,6 +395,10 @@ libcore_a_SOURCES += \
 	mappers/mapper_53.h \
 	mappers/mapper_541.c \
 	mappers/mapper_541.h \
+	mappers/mapper_550.c \
+	mappers/mapper_550.h \
+	mappers/mapper_558.c \
+	mappers/mapper_558.h \
 	mappers/mapper_559.c \
 	mappers/mapper_559.h \
 	mappers/mapper_560.c \
