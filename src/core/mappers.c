@@ -323,6 +323,9 @@ BYTE map_init(void) {
 		case 80:
 			map_init_Taito(X1005A);
 			break;
+		case 81:
+			map_init_81();
+			break;
 		case 82:
 			map_init_Taito(X1017);
 			break;
