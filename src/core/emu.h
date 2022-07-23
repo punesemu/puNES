@@ -48,6 +48,7 @@ EXTERNC uTCHAR *emu_ustrncpy(uTCHAR *dst, uTCHAR *src);
 EXTERNC uTCHAR *emu_rand_str(void);
 EXTERNC void emu_ctrl_doublebuffer(void);
 EXTERNC void emu_frame_input_and_rewind(void);
+EXTERNC void emu_info_rom(void);
 
 #if defined (__unix__)
 EXTERNC BYTE emu_find_tmp_dir(void);

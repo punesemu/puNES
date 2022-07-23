@@ -16,46 +16,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef UNIF_H_
-#define UNIF_H_
+#ifndef MAPPER_74_H_
+#define MAPPER_74_H_
 
 #include "common.h"
 
-enum unif_mapper { UNIF_MAPPER = 0x1002 };
-enum unif_no_types { NO_INES = 65535, NO_UNIF = 65535 };
+void map_init_74(void);
+void extcl_after_mapper_init_74(void);
+void extcl_cpu_wr_mem_74(WORD address, BYTE value);
+BYTE extcl_save_mapper_74(BYTE mode, BYTE slot, FILE *fp);
+void extcl_wr_chr_74(WORD address, BYTE value);
 
-typedef struct _unif {
-	BYTE finded;
-	WORD internal_mapper;
-	char board[64];
-	char *stripped_board;
-	char name[256];
-	BYTE mirroring;
-
-	struct _unif_dumped {
-		char by[100];
-		BYTE day;
-		BYTE month;
-		WORD year;
-		char with[100];
-	} dumped;
-	struct _unif_header {
-		char identification[4];
-		uint32_t revision;
-		BYTE expansion[24];
-	} header;
-	struct _unif_chunk {
-		char id[4];
-		uint32_t length;
-	} chunk;
-	struct _unif_chips {
-		WORD prg;
-		WORD chr;
-	} chips;
-} _unif;
-
-extern _unif unif;
-
-BYTE unif_load_rom(void);
-
-#endif /* UNIF_H_ */
+#endif /* MAPPER_74_H_ */

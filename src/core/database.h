@@ -2674,7 +2674,7 @@ static const _dbelement dblist[] = {
 	/* Samurai Spirits (Rex Soft).nes */
 	{"648dc9e5f3b4228aeb9d424f0ae4047cd946a736", 14, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 15 ---------------------------------------- */
+/* -------------------------------------------- 15 ---------------------------------------- */
 	/* 168-in-1 [p1][!].nes */
 	{"123105a996b3f325e55b7080ddd83d4cf043e543", 15, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
@@ -2953,7 +2953,7 @@ static const _dbelement dblist[] = {
 	/* World Hero (Unl)(TV System Select)[!].nes */
 	{"0b351c586130ad0ae6203144136b6e199fa5ae20", 27, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 30 ---------------------------------------- */
+/* -------------------------------------------- 30 ---------------------------------------- */
 	/* Battle Kid 2 - Mountain of Torment (U).nes */
 	{"dcd6870e0d5a79899dce11b975c8a16652fc7143", 30, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
@@ -3025,13 +3025,13 @@ static const _dbelement dblist[] = {
 	/* WWF WrestleMania Challenge (U) [b3].nes */
 	{"5cad070d0926f25941556c5274b5ac9ce9d1c6ef", 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 37 ---------------------------------------- */
+/* -------------------------------------------- 37 ---------------------------------------- */
 	/* Super Mario Bros. + Tetris + Nintendo World Cup (E) [b1].nes */
 	{"3fba4a79a0898ee9782243401fcdb88c61e999bd", 37, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Super Mario Bros. + Tetris + Nintendo World Cup (E) [!].nes */
 	{"1781381c95eadb7756186a5a52d3fb73e9cf51a6", 37, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 45 ---------------------------------------- */
+/* -------------------------------------------- 45 ---------------------------------------- */
 	/* Kunio 8-in-1 [p1][!].nes */
 	{"b80dca69c0943fea309d3cc0bf34d6bfc38e29c9", 45, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
@@ -3055,17 +3055,17 @@ static const _dbelement dblist[] = {
 	/* Jetsons, The - Cogswell's Caper! (J).nes */
 	{"77e12ce848192a51309393136c4a240c729ddb30", 48, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 59 ---------------------------------------- */
+/* -------------------------------------------- 59 ---------------------------------------- */
 	/* Menu_42_Game_[p]_[!]_by_Guyver.nes */
 	{"dd545b471abe0a158c1bdcc656138274adee7eae", 59, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* TN 95-in-1 (6-in-1) [p1].nes */
 	{"9a37bc3003f6629499fe86c7ca2487a74291bcff", 59, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 60 ---------------------------------------- */
+/* -------------------------------------------- 60 ---------------------------------------- */
 	/* Reset Based 4-in-1 [p1].nes */
 	{"8765e6ec43d4c767e2568ac55e35ed670dfa8730", 60, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 63 ---------------------------------------- */
+/* -------------------------------------------- 63 ---------------------------------------- */
 	/* 82-in-1 (82AB Ghost of Charming Girl) (Unl) [o1].nes */
 	{"50cd94badca3cd6cddfa708f3c732183bce7b2f9", 63, 1, M63_ID_82IN1O1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
@@ -3115,9 +3115,7 @@ static const _dbelement dblist[] = {
 	/* Fire Hawk (Camerica) [o1].nes */
 	{"334781c830f135cf30a33e392d8aaa4afdc223f9", 71, 1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------ Waixing (WTA) ------------------------------------- */
-	/* Columbus - Ougon no Yoake (Ch).nes */
-	{"4e90457b70e827d8277256ab55938e873ad2da3e", 74, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+/* -------------------------------------------- 74 ---------------------------------------- */
 	/* Di 4 Ci - Ji Qi Ren Dai Zhan (Ch).nes */
 	{"171fe225bbd3460f09531a55e2354df2a61129e4", 74, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Ji Jia Zhan Shi (Ch) [a4].nes */
@@ -3214,7 +3212,7 @@ static const _dbelement dblist[] = {
 	/* Yamamura Misa Suspense - Kyouto Ryuu no Tera Satsujin Jiken (J).nes */
 	{"74683a411fcfa269d644a6caf5ab498dab356406", 80, DEFAULT, X1005_NO_BAT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 83 ---------------------------------------- */
+/* -------------------------------------------- 83 ---------------------------------------- */
 	/* Dragon Ball Party [p1][!].nes */
 	{"af8df8dd9449d512c34deddee2a758ca46677bd5", 83, DEFAULT, MAP83_DGP, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Fatal Fury 2 (Unl) [a1].nes */
@@ -3703,7 +3701,7 @@ static const _dbelement dblist[] = {
 	/* San Guo Zhong Lie Zhuan (Ch).nes */
 	{"5437f45450954ef46b97e92517a9b48304772596", 178, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ----------------------------------- UxROM (UNROM_180) ------------------------------------ */
+/* ----------------------------------- UxROM (UNROM_180) ---------------------------------- */
 	/* Crazy Climber (J).nes */
 	{"003b7f1315f5ee0dc60c5f9d989ec8bab0811ed4", 180, DEFAULT, DEFAULT, DEFAULT, UNK_HORIZONTAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
@@ -3713,7 +3711,7 @@ static const _dbelement dblist[] = {
 	/* Super Donkey Kong (Unl) [o1].nes */
 	{"5e48932d61ac1c4e538afc6439cea2e5f2563600", 182, DEFAULT, DEFAULT, DEFAULT, UNK_VERTICAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- CNROM (CNFL) --------------------------------------- */
+/* ------------------------------------- CNROM (CNFL) ------------------------------------- */
 	/* Banana (J) [o1].nes */
 	{"73f05a931ad15639979907bc3ac4300138a7000e", 185, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Bird Week (J) [!].nes */
@@ -3761,11 +3759,11 @@ static const _dbelement dblist[] = {
 	/* Thunder Warrior (Unl).nes */
 	{"94003e3c42ae7f582f91c72a58689171872391c9", 189, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------ Waixing (WTB) ------------------------------------- */
+/* ----------------------------------------- 191 ------------------------------------------ */
 	/* Sugoro Quest - Dice no Senshitachi (Ch) [o1].nes */
 	{"03b517beb21a3dd4556a8ab520994385bbf681d6", 191, DEFAULT, BAD_SUGOROQUEST, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------ Waixing (WTC) ------------------------------------- */
+/* ----------------------------------------- 192 ------------------------------------------ */
 	/* You Ling Xing Dong (Ch).nes */
 	{"b0a171730179818628fa1ed8cebbaf8c3e690a69", 192, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Young Chivalry (Ch) [b3].nes */
@@ -3779,7 +3777,7 @@ static const _dbelement dblist[] = {
 	/* Fighting Hero (Unl).nes */
 	{"aaa96009f28d397e79e3a918918340eaadb85c66", 193, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------ Waixing (WTD) ------------------------------------- */
+/* ----------------------------------------- 194 ------------------------------------------ */
 	/* Dai-2-Ji - Super Robot Taisen (Ch) [a1].nes */
 	{"eb44718996c7fe12ef31b9f68dce0875c17cb6de", 194, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Dai-2-Ji - Super Robot Taisen (Ch) [a2].nes */
@@ -3787,7 +3785,7 @@ static const _dbelement dblist[] = {
 	/* Dai-2-Ji - Super Robot Taisen (Ch).nes */
 	{"2137ac90d5103a14b8390625a758bbe36f598502", 194, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------ Waixing (WTE) ------------------------------------- */
+/* ----------------------------------------- 195 ------------------------------------------ */
 	/* Captain Tsubasa Vol. II - Super Striker (Ch) [a1].nes */
 	{"5d68a7c5f3053f052fa9acab1ce3fe181da4c6ba", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Captain Tsubasa Vol. II - Super Striker (Ch) [a2].nes */
@@ -3812,6 +3810,8 @@ static const _dbelement dblist[] = {
 	{"f007a15c250297e1bd7d6287219fa94928afa759", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* 天神之剑: Waixing's Chinese translation of SNK's God Slayer/Crystalis */
 	{"5ab3419d0885f50207efa179f6c0c2f289d814b3", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Columbus - Ougon no Yoake (Ch).nes */
+	{"4e90457b70e827d8277256ab55938e873ad2da3e", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ----------------------------------------- 196 ------------------------------------------ */
 	/* Street Fighter VI 16 Peoples (Unl)[!].nes */
@@ -3837,57 +3837,57 @@ static const _dbelement dblist[] = {
 	/* Fudou Myouou Den (J) [t1].nes */
 	{"98d4590497829e8ee75379d5f1851af024209ae6", 207, DEFAULT, X1005_NO_BAT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 208 --------------------------------------- */
+/* -------------------------------------------- 208 --------------------------------------- */
 	/* Street Fighter IV (Unl).nes */
 	{"d7ec65c41ed88cb449f9afb898d2f2044992af45", 208, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 209 --------------------------------------- */
+/* -------------------------------------------- 209 --------------------------------------- */
 	/* Power Rangers III (Pirate Original).nes */
 	{"3c309516cb3a4b8ced49e1c7a2a7785fd573c6e5", 209, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Power Rangers IV (Pirate Original).nes */
 	{"3a5df16b1a08d72d75281e0b950e0fb4084b8a9b", 209, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 215 --------------------------------------- */
+/* -------------------------------------------- 215 --------------------------------------- */
 	/* Mortal Kombat 3 Extra 60 (Unl) [!].nes */
 	{"dc1e114d59afcdb2cf2927b830d94f42dd0ea547", 215, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Golden Card 6-in-1 (Unl) [!].nes */
 	{"207fa25ae26ff797cae0fd40e7ec4d2c00e52497", 215, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 216 --------------------------------------- */
+/* -------------------------------------------- 216 --------------------------------------- */
 	/* Videopoker Bonza (Rev A)(R)[!].nes */
 	{"e934d390fc7027bbaa30a8a659f98b5a66fac07d", 216, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Videopoker Bonza (Rev B)(R)[!].nes */
 	{"3dcad958c7c05a39629780a37e0edf00d8005b9f", 216, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 219 --------------------------------------- */
+/* -------------------------------------------- 219 --------------------------------------- */
 	/* Toy Story (Unl)[!].nes */
 	{"c9dc5e47cc22fe1c792ac194de033f8aa8e60a3e", 219, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 254 --------------------------------------- */
+/* -------------------------------------------- 254 --------------------------------------- */
 	/* 魂斗罗7加难无敌版.nes */
 	{"f2fbaeae5f99d5128760946491f9ea7670287c04", 254, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 225 --------------------------------------- */
+/* -------------------------------------------- 225 --------------------------------------- */
 	/* 52 Games [p1].nes */
 	{"512296fff80e4c6fc12a4c55c1af1854d12ab70d", 225, DEFAULT, BMC52IN1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 235 --------------------------------------- */
+/* -------------------------------------------- 235 --------------------------------------- */
 	/* 150-in-1 [a1][p1][!].nes (2MB) */ /* 260-in-1 [p1][b1].nes (4Mb) */
 	{"4692a622af6a3d79514bf3e5fb4e9fbe6c6080fc", 235, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* 260-in-1 [p1][!].nes (4MB) */
 	{"012fd90b213454b76608e018e70f89f1e166dc82", 235, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 238 --------------------------------------- */
+/* -------------------------------------------- 238 --------------------------------------- */
 	/* Contra Fighter (Unl).nes */
 	{"8c525181c1a563beb82e648fa0ed02d8b986b952", 238, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 241 --------------------------------------- */
+/* -------------------------------------------- 241 --------------------------------------- */
 	/* Xing Ji Zheng Ba (Ch).nes */
 	{"3c72706af5998133ec6be703994c10466a094eab", 241, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Education Computer 26-in-1 (R)[!].nes */
 	{"eea726f679d364e6805d48f923ddd21fe14d9f43", 241, DEFAULT, DEFAULT, DENDY, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 242 --------------------------------------- */
+/* -------------------------------------------- 242 --------------------------------------- */
 	/* Dragon Quest VIII (ES-1077) (Ch) [!].nes */
 	{"5d9d519b84e245891928f3482a42a071e4402b6c", 242, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Wai Xing Zhan Shi (Ch) [a1].nes */
@@ -3909,7 +3909,7 @@ static const _dbelement dblist[] = {
 	/* Yong Zhe Dou E Long - Dragon Quest VII (Ch) [b1].nes */
 	{"2d03f3105af3149cc070f7a72b868660cd905304", 245, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 246 --------------------------------------- */
+/* -------------------------------------------- 246 --------------------------------------- */
 	/* Fong Shen Bang - Zhu Lu Zhi Zhan (Ch) [a1].nes */
 	{"cfd1a846d35925066c6e2e7e8dbaafd3d17a61b9", 246, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Fong Shen Bang - Zhu Lu Zhi Zhan (Ch) [a2].nes */
@@ -3937,7 +3937,7 @@ static const _dbelement dblist[] = {
 	/* Block Force (Hwang Shinwei).nes */
 	{"5de850b4e28c49ff9ed53def2a335d29b09387c2", 355, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------- mapper 512 --------------------------------------- */
+/* -------------------------------------------- 512 --------------------------------------- */
 	/* Chuugoku Taitei (Sachen).nes */
 	{"32436a43d3c371ab7aa6bb5165f60ca5c006a60e", 512, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 

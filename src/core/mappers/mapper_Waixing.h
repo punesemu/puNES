@@ -23,11 +23,6 @@
 
 enum {
 	WPSX,
-	WTA,
-	WTB,
-	WTC,
-	WTD,
-	WTE,
 	WTG,
 	WTH,
 	SH2,
@@ -37,14 +32,6 @@ enum {
 void map_init_Waixing(BYTE model);
 
 void extcl_cpu_wr_mem_Waixing_PSx(WORD address, BYTE value);
-
-void extcl_cpu_wr_mem_Waixing_type_ACDE(WORD address, BYTE value);
-BYTE extcl_save_mapper_Waixing_type_ACDE(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_Waixing_type_ACDE(WORD address, BYTE value);
-
-void extcl_cpu_wr_mem_Waixing_type_B(WORD address, BYTE value);
-BYTE extcl_save_mapper_Waixing_type_B(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_Waixing_type_B(WORD address, BYTE value);
 
 void extcl_cpu_wr_mem_Waixing_type_G(WORD address, BYTE value);
 BYTE extcl_save_mapper_Waixing_type_G(BYTE mode, BYTE slot, FILE *fp);

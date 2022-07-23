@@ -49,6 +49,7 @@
 #include "nsfe.h"
 #include "patcher.h"
 #include "recent_roms.h"
+#include "../../c++/crc/crc.h"
 #if defined (WITH_OPENGL)
 #include "opengl.h"
 #endif
@@ -921,6 +922,210 @@ void emu_frame_input_and_rewind(void) {
 	}
 
 	rewind_snapshoot();
+}
+void emu_info_rom(void) {
+	if (info.format == NES_2_0) {
+		fprintf(stderr, "\nFORMAT        : Nes 2.0\n");
+	} else if (info.format == iNES_1_0) {
+		fprintf(stderr, "\nFORMAT        : iNES 1.0\n");
+	} else if (info.format == UNIF_FORMAT) {
+		fprintf(stderr, "\nFORMAT        : UNIF\n");
+	} else {
+		return;
+	}
+
+	if (info.format == UNIF_FORMAT) {
+		char *trimmed = &unif.board[0];
+		size_t i;
+
+		for (i = 0; i < strlen(unif.stripped_board); i++) {
+			if ((*unif.stripped_board) != ' ') {
+				break;
+			}
+			trimmed++;
+		}
+		fprintf(stderr, "UNIF board    : %s\n", trimmed);
+
+		if (strlen(unif.name) > 0) {
+			fprintf(stderr, "UNIF name     : %s\n", unif.name);
+		}
+
+		if (info.mapper.id == UNIF_MAPPER) {
+			fprintf(stderr, "UNIF mapper   : %u\n", unif.internal_mapper);
+		} else {
+			fprintf(stderr, "NES mapper    : %u\n", info.mapper.id);
+		}
+	} else {
+		fprintf(stderr, "NES mapper    : %u\n", info.mapper.id);
+	}
+
+	{
+		fprintf(stderr, "submapper     : ");
+
+		if (info.mapper.submapper == DEFAULT) {
+			fprintf(stderr, "DEFAULT\n");
+		} else {
+			fprintf(stderr, "%u\n", info.mapper.submapper);
+		}
+	}
+
+	if (info.format == UNIF_FORMAT) {
+		if (strlen(unif.dumped.by) > 0) {
+			fprintf(stderr, "dumped by     : %s", unif.dumped.by);
+
+			if (strlen(unif.dumped.with) > 0) {
+				fprintf(stderr, " with %s", unif.dumped.with);
+			}
+
+			if (unif.dumped.month && unif.dumped.day && unif.dumped.year) {
+				char *months[12] = {
+					"January",   "February", "March",    "April",
+					"May",       "June",     "July",     "August",
+					"September", "October",  "November", "December"
+				};
+
+				fprintf(stderr, " on %s %d, %d", months[(unif.dumped.month - 1) % 12], unif.dumped.day, unif.dumped.year);
+			}
+			printf("\n");
+		}
+
+		if (chinaersan2.font.data) {
+			fprintf(stderr, "EXT font      : %ld\n", chinaersan2.font.size);
+		}
+	}
+
+	{
+		fprintf(stderr, "mirroring     : ");
+
+		if (info.format == UNIF_FORMAT) {
+			switch (unif.mirroring) {
+				default:
+				case 0:
+					fprintf(stderr, "horizontal\n");
+					break;
+				case 1:
+					fprintf(stderr, "vertical\n");
+					break;
+				case 2:
+					fprintf(stderr, "scr0\n");
+					break;
+				case 3:
+					fprintf(stderr, "scr1\n");
+					break;
+				case 4:
+					fprintf(stderr, "4 screen\n");
+					break;
+				case 5:
+					fprintf(stderr, "controlled by the mapper\n");
+					break;
+			}
+		} else {
+			switch (mapper.mirroring) {
+				case MIRRORING_FOURSCR:
+					fprintf(stderr, "4 screen\n");
+					break;
+				case MIRRORING_VERTICAL:
+					fprintf(stderr, "vertical\n");
+					break;
+				case MIRRORING_HORIZONTAL:
+					fprintf(stderr, "horizontal\n");
+					break;
+			}
+		}
+	}
+
+	if (mapper.misc_roms.size) {
+		fprintf(stderr, "MISC rom      : %-4lu [ %08X %ld ]\n",
+			(long unsigned)info.mapper.misc_roms,
+			info.crc32.misc,
+			(long)mapper.misc_roms.size);
+	}
+
+	if (info.mapper.trainer) {
+		fprintf(stderr, "trainer       : yes\n");
+	}
+
+	if (info.prg.ram.banks_8k_plus) {
+		fprintf(stderr, "RAM PRG 8k    : %u", info.prg.ram.banks_8k_plus);
+		if (info.prg.ram.bat.banks) {
+			fprintf(stderr, " ( bat : %d - ", info.prg.ram.bat.banks);
+			if (info.prg.ram.bat.start == DEFAULT) {
+				fprintf(stderr, "DEFAULT )");
+			} else {
+				fprintf(stderr, "%d )", info.prg.ram.bat.start);
+			}
+		}
+		fprintf(stderr, "\n");
+	}
+
+	if (info.chr.ram.banks_8k_plus) {
+		fprintf(stderr, "RAM CHR 8k    : %-4u\n", info.chr.ram.banks_8k_plus);
+	}
+	if (chr.extra.data) {
+		fprintf(stderr, "RAM CHR extra : %ld\n", chr.extra.size);
+	}
+
+	{
+		info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
+		info.crc32.total = info.crc32.prg;
+
+		fprintf(stderr, "PRG 8k rom    : %-4lu [ %08X %ld ]\n",
+			(long unsigned)prg_size() / 0x2000,
+			info.crc32.prg,
+			(long)prg_size());
+
+		if (info.format == UNIF_FORMAT) {
+			if (unif.chips.prg > 1) {
+				BYTE chip;
+
+				for (chip = 0; chip < unif.chips.prg; chip++) {
+					fprintf(stderr, " |_8k chip %-2d : %-4lu [ %08X %ld ]\n",
+						chip, (long unsigned)prg_chip_size(chip) / 0x2000,
+						emu_crc32((void *)prg_chip_rom(chip), prg_chip_size(chip)),
+						(long)prg_chip_size(chip));
+				}
+			}
+		}
+
+		if (chr_size()) {
+			info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
+			info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.total);
+
+			fprintf(stderr, "CHR 4k vrom   : %-4lu [ %08X %ld ]\n",
+				(long unsigned)chr_size() / 0x1000,
+				info.crc32.chr,
+				(long)chr_size());
+		}
+
+		if (info.format == UNIF_FORMAT) {
+			if (unif.chips.chr > 1) {
+				BYTE chip;
+
+				for (chip = 0; chip < unif.chips.chr; chip++) {
+					fprintf(stderr, " |_4k chip %-2d : %-4lu [ %08X %ld ]\n",
+						chip, (long unsigned)chr_chip_size(chip) / 0x1000,
+						emu_crc32((void *)chr_chip_rom(chip), chr_chip_size(chip)),
+						(long)chr_chip_size(chip));
+				}
+			}
+		}
+
+		if (mapper.misc_roms.size) {
+			info.crc32.misc = emu_crc32((void *)mapper.misc_roms.data, mapper.misc_roms.size);
+			info.crc32.total = emu_crc32_continue((void *)mapper.misc_roms.data, mapper.misc_roms.size, info.crc32.total);
+		}
+
+		if (info.format == iNES_1_0) {
+			fprintf(stderr, "sha1prg       : %40s\n", info.sha1sum.prg.string);
+			if (chr_size()) {
+				fprintf(stderr, "shachr        : %40s\n", info.sha1sum.chr.string);
+			}
+		}
+
+		fprintf(stderr, "CRC32         : %08X\n", info.crc32.total);
+	}
+
+	fprintf(stderr, "\n");
 }
 
 #if defined (__unix__)

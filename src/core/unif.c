@@ -28,10 +28,8 @@
 #include "cheat.h"
 #include "vs_system.h"
 #include "patcher.h"
-#include "../../c++/crc/crc.h"
 
 enum unif_phase_type { UNIF_COUNT, UNIF_READ };
-enum unif_no_types { NO_INES = 65535, NO_UNIF = 65535 };
 
 BYTE unif_NONE(_rom_mem *rom, BYTE phase);
 BYTE unif_MAPR(_rom_mem *rom, BYTE phase);
@@ -317,9 +315,6 @@ BYTE unif_load_rom(void) {
 					return (EXIT_ERROR);
 				}
 
-				fprintf(stderr, "\n");
-				fprintf(stderr, "format        : UNIF\n");
-
 				// PRG
 				{
 					for (i = size = 0; i < info.prg.chips; i++) {
@@ -463,29 +458,6 @@ BYTE unif_load_rom(void) {
 			}
 		}
 
-		{
-			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
-
-			fprintf(stderr, "PRG 8k rom    : %-4lu [ %08X %ld ]\n",
-				(long unsigned)prg_size() / 0x2000,
-				info.crc32.prg,
-				(long)prg_size());
-
-			if (chr_size()) {
-				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
-				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.prg);
-
-				fprintf(stderr, "CHR 4k vrom   : %-4lu [ %08X %ld ]\n",
-					(long unsigned)chr_size() / 0x1000,
-					info.crc32.chr,
-					(long)chr_size());
-			}
-
-			fprintf(stderr, "CRC32         : %08X\n", info.crc32.total);
-		}
-
-		fprintf(stderr, "\n");
-
 		if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
 			info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
 		}
@@ -544,17 +516,14 @@ BYTE unif_MAPR(_rom_mem *rom, BYTE phase) {
 
 	{
 		static BYTE i;
-		char *trimmed;
 
 		unif.stripped_board = &unif.board[0];
-		trimmed = &unif.board[0];
 
 		for (i = 0; i < strlen(unif.stripped_board); i++) {
 			if ((*unif.stripped_board) != ' ') {
 				break;
 			}
 			unif.stripped_board++;
-			trimmed++;
 		}
 
 		for (i = 0; i < LENGTH(strip); i++) {
@@ -563,8 +532,6 @@ BYTE unif_MAPR(_rom_mem *rom, BYTE phase) {
 				break;
 			}
 		}
-
-		fprintf(stderr, "board         : %s\n", trimmed);
 	}
 
 	{
@@ -587,22 +554,6 @@ BYTE unif_MAPR(_rom_mem *rom, BYTE phase) {
 				break;
 			}
 		}
-	}
-
-	if (unif.internal_mapper == NO_UNIF) {
-		fprintf(stderr, "unif mapper   : UNDEF\n");
-	} else {
-		fprintf(stderr, "unif mapper   : %u\n", unif.internal_mapper);
-	}
-	if (info.mapper.id == UNIF_MAPPER) {
-		fprintf(stderr, "nes mapper    : UNDEF\n");
-	} else {
-		fprintf(stderr, "nes mapper    : %u\n", info.mapper.id);
-	}
-	if (info.mapper.submapper == DEFAULT) {
-		fprintf(stderr, "submapper     : DEFAULT\n");
-	} else {
-		fprintf(stderr, "submapper     : %u\n", info.mapper.submapper);
 	}
 
 	return (EXIT_OK);
@@ -637,12 +588,9 @@ BYTE unif_NAME(_rom_mem *rom, BYTE phase) {
 	}
 	rom->position += length;
 
-	fprintf(stderr, "name          : %s\n", unif.name);
-
 	return (EXIT_OK);
 }
 BYTE unif_PRG(_rom_mem *rom, BYTE phase) {
-	int real_chip = atoi(unif.chunk.id + 3);
 	int chip = unif.chips.prg;
 
 	if (chip >= MAX_CHIPS) {
@@ -665,16 +613,11 @@ BYTE unif_PRG(_rom_mem *rom, BYTE phase) {
 			prg_chip_rom(chip) += prg_chip_size(i);
 		}
 		rom_mem_memcpy(prg_chip_rom(chip), rom, prg_chip_size(chip));
-		fprintf(stderr, "PRG %d 8k rom  : %-4lu [ %08X %ld ]\n",
-			real_chip, (long unsigned)prg_chip_size(chip) / 0x2000,
-			emu_crc32((void *)prg_chip_rom(chip), prg_chip_size(chip)),
-			(long)prg_chip_size(chip));
 	}
 
 	return (EXIT_OK);
 }
 BYTE unif_CHR(_rom_mem *rom, BYTE phase) {
-	int real_chip = atoi(unif.chunk.id + 3);
 	int chip = unif.chips.chr;
 
 	if (chip >= MAX_CHIPS) {
@@ -697,10 +640,6 @@ BYTE unif_CHR(_rom_mem *rom, BYTE phase) {
 			chr_chip_rom(chip) += chr_chip_size(i);
 		}
 		rom_mem_memcpy(chr_chip_rom(chip), rom, chr_chip_size(chip));
-		fprintf(stderr, "CHR %d 4k vrom : %-4lu [ %08X %ld ]\n",
-			real_chip, (long unsigned)chr_chip_size(chip) / 0x1000,
-			emu_crc32((void *)chr_chip_rom(chip), chr_chip_size(chip)),
-			(long)chr_chip_size(chip));
 	}
 
 	return (EXIT_OK);
@@ -754,8 +693,6 @@ BYTE unif_BATR(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE unif_MIRR(_rom_mem *rom, BYTE phase) {
-	BYTE mirr;
-
 	if (phase == UNIF_COUNT) {
 		if ((rom->position + unif.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
@@ -764,47 +701,13 @@ BYTE unif_MIRR(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
-	mirr = 0;
+	unif.mirroring = 0;
 
-	rom_mem_memcpy(&mirr, rom, unif.chunk.length);
-
-	switch (mirr) {
-		default:
-		case 0:
-			mirroring_H();
-			fprintf(stderr, "mirroring     : horizontal\n");
-			break;
-		case 1:
-			mirroring_V();
-			fprintf(stderr, "mirroring     : vertical\n");
-			break;
-		case 2:
-			mirroring_SCR0();
-			fprintf(stderr, "mirroring     : scr0\n");
-			break;
-		case 3:
-			mirroring_SCR1();
-			fprintf(stderr, "mirroring     : scr1\n");
-			break;
-		case 4:
-			mirroring_FSCR();
-			fprintf(stderr, "mirroring     : 4 screen\n");
-			break;
-		case 5:
-			mirroring_H();
-			fprintf(stderr, "mirroring     : controlled by the mapper\n");
-			break;
-	}
+	rom_mem_memcpy(&unif.mirroring, rom, unif.chunk.length);
 
 	return (EXIT_OK);
 }
 BYTE unif_DINF(_rom_mem *rom, BYTE phase) {
-	char *months[12] = {
-		"January",   "February", "March",    "April",
-		"May",       "June",     "July",     "August",
-		"September", "October",  "November", "December"
-	};
-
 	if (phase == UNIF_COUNT) {
 		if ((rom->position + 204) > rom->size) {
 			return (EXIT_ERROR);
@@ -817,9 +720,6 @@ BYTE unif_DINF(_rom_mem *rom, BYTE phase) {
 
 	unif.dumped.by[99] = 0;
 	unif.dumped.with[99] = 0;
-
-	fprintf(stderr, "dumped by     : %s with %s on %s %d, %d\n", unif.dumped.by, unif.dumped.with,
-		months[(unif.dumped.month - 1) % 12], unif.dumped.day, unif.dumped.year);
 
 	return (EXIT_OK);
 }
@@ -836,7 +736,6 @@ BYTE unif_FONT(_rom_mem *rom, BYTE phase) {
 	memset(chinaersan2.font.data, 0x00, chinaersan2.font.size);
 	rom_mem_memcpy(chinaersan2.font.data, rom,  unif.chunk.length > chinaersan2.font.size ?
 		chinaersan2.font.size : unif.chunk.length);
-	fprintf(stderr, "FONT          : %d\n", unif.chunk.length);
 
 	return (EXIT_OK);
 }
