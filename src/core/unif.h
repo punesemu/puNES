@@ -21,7 +21,8 @@
 
 #include "common.h"
 
-enum { UNIF_MAPPER = 0x1002 };
+enum unif_mapper { UNIF_MAPPER = 0x1002 };
+enum unif_no_types { NO_INES = 65535, NO_UNIF = 65535 };
 
 typedef struct _unif {
 	BYTE finded;
@@ -29,6 +30,7 @@ typedef struct _unif {
 	char board[64];
 	char *stripped_board;
 	char name[256];
+	BYTE mirroring;
 
 	struct _unif_dumped {
 		char by[100];

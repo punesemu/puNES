@@ -34,7 +34,6 @@
 #include "patcher.h"
 #include "sha1.h"
 #include "database.h"
-#include "../../c++/crc/crc.h"
 
 void search_in_database(void);
 BYTE ines10_search_in_database(void *rom_mem);
@@ -364,55 +363,6 @@ BYTE ines_load_rom(void) {
 		if (info.format == NES_2_0) {
 			nes20_submapper();
 		}
-
-		fprintf(stderr, "\n");
-		if (info.format == NES_2_0) {
-			fprintf(stderr, "format        : Nes 2.0\n");
-		} else {
-			fprintf(stderr, "format        : iNES 1.0\n");
-		}
-		fprintf(stderr, "mapper        : %u\n", info.mapper.id);
-		if (info.mapper.id == 4098) {
-			fprintf(stderr, "unif mapper   : %u\n", unif.internal_mapper);
-		}
-		if (info.mapper.submapper == DEFAULT) {
-			fprintf(stderr, "submapper     : DEFAULT\n");
-		} else {
-			fprintf(stderr, "submapper     : %u\n", info.mapper.submapper);
-		}
-		{
-			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
-			info.crc32.total = info.crc32.prg;
-
-			fprintf(stderr, "PRG 8k rom    : %-4lu [ %08X %ld ]\n",
-				(long unsigned)prg_size() / 0x2000,
-				info.crc32.prg,
-				(long)prg_size());
-			if (chr_size()) {
-				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
-				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.total);
-
-				fprintf(stderr, "CHR 4k vrom   : %-4lu [ %08X %ld ]\n",
-					(long unsigned)chr_size() / 0x1000,
-					info.crc32.chr,
-					(long)chr_size());
-			}
-			if (mapper.misc_roms.size) {
-				info.crc32.misc = emu_crc32((void *)mapper.misc_roms.data, mapper.misc_roms.size);
-				info.crc32.total = emu_crc32_continue((void *)mapper.misc_roms.data, mapper.misc_roms.size, info.crc32.total);
-
-				fprintf(stderr, "MSC ROMS      : %-4lu [ %08X %ld ]\n",
-					(long unsigned)info.mapper.misc_roms,
-					info.crc32.misc,
-					(long)mapper.misc_roms.size);
-			}
-			fprintf(stderr, "CRC32         : %08X\n", info.crc32.total);
-		}
-		fprintf(stderr, "sha1prg       : %40s\n", info.sha1sum.prg.string);
-		if (chr_size()) {
-			fprintf(stderr, "sha1chr       : %40s\n", info.sha1sum.chr.string);
-		}
-		fprintf(stderr, "\n");
 
 		free(rom.data);
 		return (EXIT_OK);

@@ -60,11 +60,9 @@ void extcl_after_mapper_init_380(void) {
 	mirroring_fix_380();
 }
 void extcl_cpu_wr_mem_380(WORD address, UNUSED(BYTE value)) {
-	if (address >= 0x8000) {
-		m380.reg = address;
-		prg_fix_380();
-		mirroring_fix_380();
-	}
+	m380.reg = address;
+	prg_fix_380();
+	mirroring_fix_380();
 }
 BYTE extcl_cpu_rd_mem_380(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((info.mapper.submapper == 0) && (m380.reg & 0x0100) && (address >= 0x8000)) {

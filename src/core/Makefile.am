@@ -169,6 +169,12 @@ libcore_a_SOURCES += \
 	mappers/mapper_188.h \
 	mappers/mapper_190.c \
 	mappers/mapper_190.h \
+	mappers/mapper_191.c \
+	mappers/mapper_191.h \
+	mappers/mapper_192.c \
+	mappers/mapper_192.h \
+	mappers/mapper_194.c \
+	mappers/mapper_194.h \
 	mappers/mapper_195.c \
 	mappers/mapper_195.h \
 	mappers/mapper_196.c \
@@ -419,6 +425,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_62.h \
 	mappers/mapper_63.c \
 	mappers/mapper_63.h \
+	mappers/mapper_74.c \
+	mappers/mapper_74.h \
 	mappers/mapper_74x138x161.c \
 	mappers/mapper_74x138x161.h \
 	mappers/mapper_74x161x161x32.c \
@@ -427,6 +435,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_8_IN_1.h \
 	mappers/mapper_80013B.c \
 	mappers/mapper_80013B.h \
+	mappers/mapper_81.c \
+	mappers/mapper_81.h \
 	mappers/mapper_83.c \
 	mappers/mapper_83.h \
 	mappers/mapper_831128C.c \

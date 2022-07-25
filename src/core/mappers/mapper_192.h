@@ -16,14 +16,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_197_H_
-#define MAPPER_197_H_
+#ifndef MAPPER_192_H_
+#define MAPPER_192_H_
 
 #include "common.h"
 
-void map_init_197(void);
-void extcl_after_mapper_init_197(void);
-void extcl_cpu_wr_mem_197(WORD address, BYTE value);
-BYTE extcl_save_mapper_197(BYTE mode, BYTE slot, FILE *fp);
+void map_init_192(void);
+void extcl_after_mapper_init_192(void);
+void extcl_cpu_wr_mem_192(WORD address, BYTE value);
+BYTE extcl_save_mapper_192(BYTE mode, BYTE slot, FILE *fp);
+void extcl_wr_chr_192(WORD address, BYTE value);
 
-#endif /* MAPPER_197_H_ */
+#endif /* MAPPER_192_H_ */

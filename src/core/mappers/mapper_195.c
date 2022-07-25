@@ -40,7 +40,6 @@ static const BYTE masks[8] = {
 	/* $CA */ 0xFF,
 };
 struct _m195 {
-	BYTE reg;
 	WORD mmc3[8];
 	struct _m195_chr {
 		BYTE mask;
@@ -80,9 +79,7 @@ void map_init_195(void) {
 	m195.mmc3[6] = 0;
 	m195.mmc3[7] = 0;
 
-	if (!mapper.write_vram) {
-		map_chr_ram_extra_init(0x2000);
-	}
+	map_chr_ram_extra_init(0x2000);
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -141,13 +138,20 @@ void extcl_cpu_wr_mem_195(WORD address, BYTE value) {
 			}
 			return;
 		}
+		case 0xA001:
+			return;
 	}
 	extcl_cpu_wr_mem_MMC3(address, value);
 }
 BYTE extcl_save_mapper_195(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m195.reg);
 	save_slot_ele(mode, slot, m195.mmc3);
+	save_slot_ele(mode, slot, m195.chr.mask);
+	save_slot_ele(mode, slot, m195.chr.compare);
 	extcl_save_mapper_MMC3(mode, slot, fp);
+
+	if (mode == SAVE_SLOT_READ) {
+		chr_fix_195(mmc3.bank_to_update);
+	}
 
 	return (EXIT_OK);
 }
@@ -188,8 +192,7 @@ void extcl_wr_chr_195(WORD address, BYTE value) {
 		chr_fix_195(mmc3.bank_to_update);
 	}
 
-	if (info.chr.rom.is_ram ||
-		((chr.bank_1k[slot] >= chr.extra.data) && (chr.bank_1k[slot] < (chr.extra.data + chr.extra.size)))) {
+	if ((chr.bank_1k[slot] >= chr.extra.data) && (chr.bank_1k[slot] < (chr.extra.data + chr.extra.size))) {
 		chr.bank_1k[slot][address & 0x3FF] = value;
 	}
 }
@@ -206,9 +209,7 @@ INLINE static void prg_fix_195(BYTE value) {
 	prg_swap_195(0xE000, ~0);
 }
 INLINE static void prg_swap_195(WORD address, WORD value) {
-	WORD mask = 0x3F;
-
-	value &= mask;
+	value &= 0x3F;
 	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
@@ -228,7 +229,7 @@ INLINE static void chr_fix_195(BYTE value) {
 INLINE static void chr_swap_195(WORD address, WORD value) {
 	BYTE slot = address >> 10;
 
-	if (!info.chr.rom.is_ram && (value & m195.chr.mask) == m195.chr.compare) {
+	if ((value & m195.chr.mask) == m195.chr.compare) {
 		control_bank(info.chr.ram.max.banks_1k)
 		chr.bank_1k[slot] = &chr.extra.data[value << 10];
 	} else {

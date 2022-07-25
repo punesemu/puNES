@@ -1172,8 +1172,13 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 		// ma su alcune shader l'effetto e' piu'
 		// sgranato ("mudlord/emboss.h" e
 		// "antialiasing/fx-aa.h" sono un esempio)
-		rect->w = 1024;
-		rect->h = 1024;
+		if ((w > 1024) || (h > 1024)) {
+			rect->w = emu_power_of_two(rect->base.w);
+			rect->h = emu_power_of_two(rect->base.h);
+		} else {
+			rect->w = 1024;
+			rect->h = 1024;
+		}
 #endif
 	} else {
 		rect->w = rect->base.w;

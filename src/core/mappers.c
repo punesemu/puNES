@@ -303,7 +303,7 @@ BYTE map_init(void) {
 			map_init_VRC3();
 			break;
 		case 74:
-			map_init_Waixing(WTA);
+			map_init_74();
 			break;
 		case 75:
 			map_init_VRC1();
@@ -322,6 +322,9 @@ BYTE map_init(void) {
 			break;
 		case 80:
 			map_init_Taito(X1005A);
+			break;
+		case 81:
+			map_init_81();
 			break;
 		case 82:
 			map_init_Taito(X1017);
@@ -605,16 +608,16 @@ BYTE map_init(void) {
 			map_init_190();
 			break;
 		case 191:
-			map_init_Waixing(WTB);
+			map_init_191();
 			break;
 		case 192:
-			map_init_Waixing(WTC);
+			map_init_192();
 			break;
 		case 193:
 			map_init_Ntdec(FHERO);
 			break;
 		case 194:
-			map_init_Waixing(WTD);
+			map_init_194();
 			break;
 		case 195:
 			map_init_195();
@@ -1327,6 +1330,10 @@ BYTE map_init(void) {
 	// after mapper init
 	if (extcl_after_mapper_init) {
 		extcl_after_mapper_init();
+	}
+
+	if (info.reset == CHANGE_ROM) {
+		emu_info_rom();
 	}
 	return (EXIT_OK);
 }
