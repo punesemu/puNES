@@ -705,6 +705,28 @@ BYTE unif_MIRR(_rom_mem *rom, BYTE phase) {
 
 	rom_mem_memcpy(&unif.mirroring, rom, unif.chunk.length);
 
+	switch (unif.mirroring) {
+		default:
+		case 0:
+			mirroring_H();
+			break;
+		case 1:
+			mirroring_V();
+			break;
+		case 2:
+			mirroring_SCR0();
+			break;
+		case 3:
+			mirroring_SCR1();
+			break;
+		case 4:
+			mirroring_FSCR();
+			break;
+		case 5:
+			mirroring_H();
+			break;
+	}
+
 	return (EXIT_OK);
 }
 BYTE unif_DINF(_rom_mem *rom, BYTE phase) {
