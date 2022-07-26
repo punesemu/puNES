@@ -28,6 +28,7 @@
 #include "uncompress.h"
 #include "unif.h"
 #include "gui.h"
+#include "vs_system.h"
 
 void map_prg_ram_battery_file(uTCHAR *prg_ram_file);
 
@@ -1392,6 +1393,10 @@ void map_quit(void) {
 	mirroring_V();
 
 	mapper.write_vram = FALSE;
+
+	vs_system.ppu = vs_system.special_mode.type = 0;
+	info.mapper.ext_console_type = 0;
+	info.decimal_mode = FALSE;
 
 	if (extcl_mapper_quit) {
 		extcl_mapper_quit();

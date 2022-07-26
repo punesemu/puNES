@@ -149,8 +149,33 @@ BYTE ines_load_rom(void) {
 
 			cpu_timing = ines.flags[FL12] & 0x03;
 
-			vs_system.ppu = ines.flags[FL13] & 0x0F;
-			vs_system.special_mode.type = (ines.flags[FL13] >> 4) & 0x0F;
+			vs_system.ppu = vs_system.special_mode.type = 0;
+			vs_system.special_mode.type = 0;
+			info.decimal_mode = FALSE;
+
+			if ((ines.flags[FL7] & 0x03) == 0x01) {
+				info.mapper.ext_console_type = 1;
+				vs_system.ppu = ines.flags[FL13] & 0x0F;
+				vs_system.special_mode.type = ines.flags[FL13] >> 4;
+				info.decimal_mode = FALSE;
+			} else if ((ines.flags[FL7] & 0x03) == 0x03) {
+				info.mapper.ext_console_type = ines.flags[FL13] & 0x0F;
+
+				switch (info.mapper.ext_console_type) {
+					case 0:
+					case 1:
+					case 2:
+						vs_system.special_mode.type = info.mapper.ext_console_type;
+						break;
+					case 3:
+						// usato per esempio da :
+						// Othello (rev0).nes
+						info.decimal_mode = TRUE;
+						break;
+					default:
+						break;
+				}
+			}
 
 			info.mapper.misc_roms = ines.flags[FL14] & 0x03;
 		} else {

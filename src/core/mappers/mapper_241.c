@@ -20,6 +20,8 @@
 #include "info.h"
 #include "mem_map.h"
 
+//TODO : aggiungere l'emulazione della tastiera.
+
 void map_init_241(void) {
 	EXTCL_CPU_WR_MEM(241);
 	EXTCL_CPU_RD_MEM(241);

@@ -356,6 +356,15 @@ enum cpu_opcode_type { RD_OP, WR_OP };
  */
 #define _ADC _RSZ(_ADD, cpu.AR)
 /* NOTE : BCD Addiction
+ *   6502
+ * A Seq. 1
+ * C Seq. 1
+ * N Seq. 2
+ * V Seq. 2
+ * Z bin
+ *
+ * Seq. 1:
+ *
  * 1a. AL = (A & $0F) + (B & $0F) + C
  * 1b. If AL >= $0A, then AL = ((AL + $06) & $0F) + $10
  * 1c. A = (A & $F0) + (B & $F0) + AL
@@ -363,7 +372,12 @@ enum cpu_opcode_type { RD_OP, WR_OP };
  * 1e. If (A >= $A0), then A = A + $60
  * 1f. The accumulator result is the lower 8 bits of A
  * 1g. The carry result is 1 if A >= $100, and is 0 if A < $100
- * Common BCD an Binary
+ *
+ * Seq. 2:
+ *
+ * 2a. AL = (A & $0F) + (B & $0F) + C
+ * 2b. If AL >= $0A, then AL = ((AL + $06) & $0F) + $10
+ * 2c. A = (A & $F0) + (B & $F0) + AL, using signed (twos complement) arithmetic
  * 2e. The N flag result is 1 if bit 7 of A is 1, and is 0 if bit 7 if A is 0
  * 2f. The V flag result is 1 if A < -128 or A > 127, and is 0 if -128 <= A <= 127
  *
@@ -373,16 +387,15 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define _ADD\
 	{\
 	WORD A;\
-	if (FALSE && cpu.df) {\
-		WORD AL = (cpu.AR & 0x0F) + (cpu.openbus & 0x0F) + cpu.cf;\
+	if (info.decimal_mode && cpu.df) {\
+		BYTE AL = (cpu.AR & 0x0F) + (cpu.openbus & 0x0F) + cpu.cf;\
 		if (AL >= 0x0A) { AL = ((AL + 0x06) & 0x0F) + 0x10; }\
 		A = (cpu.AR & 0xF0) + (cpu.openbus & 0xF0) + AL;\
 		if (A >= 0xA0) { A += 0x60; }\
 	} else { A = cpu.AR + cpu.openbus + cpu.cf; }\
 	cpu.cf = (A > 0xFF ? 1 : 0);\
-	cpu.of = ((!((cpu.AR ^ cpu.openbus) & 0x80) &&\
-			((cpu.AR ^ A) & 0x80)) ? 0x40 : 0);\
-	cpu.AR = (BYTE) A;\
+	cpu.of = ((!((cpu.AR ^ cpu.openbus) & 0x80) && ((cpu.AR ^ A) & 0x80)) ? 0x40 : 0);\
+	cpu.AR = (BYTE)A;\
 	}
 #define _BSH(dst, bitmask, opr)\
 	cpu.cf = ((dst & bitmask) ? 1 : 0);\
@@ -455,29 +468,41 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	cpu.AR opr2 shift
 
 /* NOTE : BCD Subtraction
+ *   6502
+ * A Seq. 3
+ * C bin
+ * N bin
+ * V bin
+ * Z bin
+ *
+ * Seq. 3:
+ *
  * 3a. AL = (A & $0F) - (B & $0F) + C-1
  * 3b. If AL < 0, then AL = ((AL - $06) & $0F) - $10
  * 3c. A = (A & $F0) - (B & $F0) + AL
  * 3d. If A < 0, then A = A - $60
  * 3e. The accumulator result is the lower 8 bits of A
-
+ *
  * Importante!!! Nel NES il decimal mode non e' supportato ed inoltre
  * il codice per il decimal mode potrebbe essere buggato!!!!!!
  */
 #define _SUB\
 	{\
-	WORD A;\
-	/*if (FALSE && cpu.df) {\
-		WORD AL = (cpu.AR & 0x0F) - (cpu.openbus & 0x0F) - !cpu.cf;\
+	if (info.decimal_mode && cpu.df) {\
+		SWORD A; SWORD AL = (cpu.AR & 0x0F) - (cpu.openbus & 0x0F) + cpu.cf - 1;\
+		AL = (cpu.AR & 0x0F) - (cpu.openbus & 0x0F) + cpu.cf - 1;\
 		if (AL < 0) { AL = ((AL - 0x06) & 0x0F) - 0x10; }\
 		A = (cpu.AR & 0xF0) - (cpu.openbus & 0xF0) + AL;\
 		if (A < 0) { A -= 0x60; }\
-	} else {*/\
-		A = cpu.AR - cpu.openbus - !cpu.cf;\
-	/*}*/\
-	cpu.cf = (A < 0x100 ? 1 : 0);\
-	cpu.of = (((cpu.AR ^ cpu.openbus) & 0x80) & ((cpu.AR ^ A) & 0x80) ? 0x40 : 0);\
-	cpu.AR = (BYTE) A;\
+		cpu.cf = (A < 0x100 ? 1 : 0);\
+		cpu.of = (((cpu.AR ^ cpu.openbus) & 0x80) & ((cpu.AR ^ A) & 0x80) ? 0x40 : 0);\
+		cpu.AR = (BYTE)A;\
+	} else {\
+		WORD A = cpu.AR - cpu.openbus - !cpu.cf;\
+		cpu.cf = (A < 0x100 ? 1 : 0);\
+		cpu.of = (((cpu.AR ^ cpu.openbus) & 0x80) & ((cpu.AR ^ A) & 0x80) ? 0x40 : 0);\
+		cpu.AR = (BYTE)A;\
+	}\
 	}
 #define _WR0(reg) _WRX(adr0, reg);
 #define _WRX(dst, reg) cpu_wr_mem(dst, reg)

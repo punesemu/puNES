@@ -934,6 +934,57 @@ void emu_info_rom(void) {
 		return;
 	}
 
+	{
+		fprintf(stderr, "console type  : ");
+
+		switch (info.mapper.ext_console_type) {
+			case 0:
+				fprintf(stderr, "Regular NES/Famicom/Dendy\n");
+				break;
+			case 1:
+				fprintf(stderr, "Nintendo Vs. System\n");
+				break;
+			case 2:
+				fprintf(stderr, "Playchoice 10\n");
+				break;
+			case 3:
+				fprintf(stderr, "Regular Famiclone, but with CPU that supports Decimal Mode\n");
+				break;
+			case 4:
+				fprintf(stderr, "Regular NES/Famicom with EPSM module or plug-through cartridge [unsupported]\n");
+				break;
+			case 5:
+				fprintf(stderr, "V.R. Technology VT01 with red/cyan STN palette [unsupported]\n");
+				break;
+			case 6:
+				fprintf(stderr, "V.R. Technology VT02 [unsupported]\n");
+				break;
+			case 7:
+				fprintf(stderr, "V.R. Technology VT03 [unsupported]\n");
+				break;
+			case 8:
+				fprintf(stderr, "V.R. Technology VT09 [unsupported]\n");
+				break;
+			case 9:
+				fprintf(stderr, "V.R. Technology VT32 [unsupported]\n");
+				break;
+			case 10:
+				fprintf(stderr, "V.R. Technology VT369 [unsupported]\n");
+				break;
+			case 11:
+				fprintf(stderr, "UMC UM6578 [unsupported]\n");
+				break;
+			case 12:
+				fprintf(stderr, "Famicom Network System [unsupported]\n");
+				break;
+			case 13:
+			case 14:
+			case 15:
+				fprintf(stderr, "reserved\n");
+				break;
+		}
+	}
+
 	if (info.format == UNIF_FORMAT) {
 		char *trimmed = &unif.board[0];
 		size_t i;
