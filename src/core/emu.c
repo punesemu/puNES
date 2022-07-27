@@ -1117,9 +1117,6 @@ void emu_info_rom(void) {
 	}
 
 	{
-		info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
-		info.crc32.total = info.crc32.prg;
-
 		fprintf(stderr, "PRG 8k rom    : %-4lu [ %08X %ld ]\n",
 			(long unsigned)prg_size() / 0x2000,
 			info.crc32.prg,
@@ -1139,9 +1136,6 @@ void emu_info_rom(void) {
 		}
 
 		if (chr_size()) {
-			info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
-			info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.total);
-
 			fprintf(stderr, "CHR 4k vrom   : %-4lu [ %08X %ld ]\n",
 				(long unsigned)chr_size() / 0x1000,
 				info.crc32.chr,
@@ -1159,11 +1153,6 @@ void emu_info_rom(void) {
 						(long)chr_chip_size(chip));
 				}
 			}
-		}
-
-		if (mapper.misc_roms.size) {
-			info.crc32.misc = emu_crc32((void *)mapper.misc_roms.data, mapper.misc_roms.size);
-			info.crc32.total = emu_crc32_continue((void *)mapper.misc_roms.data, mapper.misc_roms.size, info.crc32.total);
 		}
 
 		if (info.format == iNES_1_0) {

@@ -28,6 +28,7 @@
 #include "cheat.h"
 #include "vs_system.h"
 #include "patcher.h"
+#include "../../c++/crc/crc.h"
 
 enum unif_phase_type { UNIF_COUNT, UNIF_READ };
 
@@ -455,6 +456,15 @@ BYTE unif_load_rom(void) {
 						return (EXIT_ERROR);
 					}
 				}
+			}
+		}
+
+		{
+			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
+
+			if (chr_size()) {
+				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
+				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.prg);
 			}
 		}
 
