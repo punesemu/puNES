@@ -30,10 +30,11 @@ INLINE static void chr_swap_45(WORD address, WORD value);
 
 static const BYTE dipswitch_45[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 static const SBYTE dipswitch_index_45[][8] = {
-	{ 0,  1,  2,  3,  4,  5,  6,  7 }, // 0
+	{ 0, -1, -1, -1, -1, -1, -1, -1 }, // 0
 	{ 0,  1,  2, -1, -1, -1, -1, -1 }, // 1
 	{ 0,  4,  3,  2, -1, -1, -1, -1 }, // 2
 	{ 0,  2, -1, -1, -1, -1, -1, -1 }, // 3
+	{ 0,  1,  2,  3,  4,  5,  6,  7 }, // 4
 };
 
 struct _m45 {
