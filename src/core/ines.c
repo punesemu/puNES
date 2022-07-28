@@ -228,6 +228,7 @@ BYTE ines_load_rom(void) {
 				mirroring_H();
 			}
 		}
+		info.mapper.mirroring = mapper.mirroring;
 
 		// inizializzo qui il writeVRAM per la mapper 96 perche'
 		// e' l'unica mapper che utilizza 32k di CHR Ram e che
@@ -394,7 +395,7 @@ BYTE ines_load_rom(void) {
 			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
 			info.crc32.total = info.crc32.prg;
 
-			if (chr_size()) {
+			if ((mapper.write_vram == FALSE) && chr_size()) {
 				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
 				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.total);
 			}

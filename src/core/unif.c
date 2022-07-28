@@ -711,11 +711,11 @@ BYTE unif_MIRR(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
-	unif.mirroring = 0;
+	info.mapper.mirroring = 0;
 
-	rom_mem_memcpy(&unif.mirroring, rom, unif.chunk.length);
+	rom_mem_memcpy(&info.mapper.mirroring, rom, unif.chunk.length);
 
-	switch (unif.mirroring) {
+	switch (info.mapper.mirroring) {
 		default:
 		case 0:
 			mirroring_H();

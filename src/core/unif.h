@@ -30,7 +30,6 @@ typedef struct _unif {
 	char board[64];
 	char *stripped_board;
 	char name[256];
-	BYTE mirroring;
 
 	struct _unif_dumped {
 		char by[100];

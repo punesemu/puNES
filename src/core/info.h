@@ -56,6 +56,7 @@ typedef struct _info {
 		BYTE misc_roms;
 		BYTE force_battery_io;
 		BYTE ext_console_type;
+		BYTE mirroring;
 	} mapper;
 	BYTE mirroring_db;
 	BYTE portable;

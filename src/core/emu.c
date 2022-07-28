@@ -1048,38 +1048,25 @@ void emu_info_rom(void) {
 	{
 		fprintf(stderr, "mirroring     : ");
 
-		if (info.format == UNIF_FORMAT) {
-			switch (unif.mirroring) {
-				default:
-				case 0:
-					fprintf(stderr, "horizontal\n");
-					break;
-				case 1:
-					fprintf(stderr, "vertical\n");
-					break;
-				case 2:
-					fprintf(stderr, "scr0\n");
-					break;
-				case 3:
-					fprintf(stderr, "scr1\n");
-					break;
-				case 4:
-					fprintf(stderr, "4 screen\n");
-					break;
-				case 5:
-					fprintf(stderr, "controlled by the mapper\n");
-					break;
-			}
+		if ((info.format == UNIF_FORMAT) && (info.mapper.mirroring == 5)) {
+			fprintf(stderr, "controlled by the mapper\n");
 		} else {
-			switch (mapper.mirroring) {
-				case MIRRORING_FOURSCR:
-					fprintf(stderr, "4 screen\n");
+			switch (info.mapper.mirroring) {
+				default:
+				case MIRRORING_HORIZONTAL:
+					fprintf(stderr, "horizontal\n");
 					break;
 				case MIRRORING_VERTICAL:
 					fprintf(stderr, "vertical\n");
 					break;
-				case MIRRORING_HORIZONTAL:
-					fprintf(stderr, "horizontal\n");
+				case MIRRORING_SINGLE_SCR0:
+					fprintf(stderr, "scr0\n");
+					break;
+				case MIRRORING_SINGLE_SCR1:
+					fprintf(stderr, "scr1\n");
+					break;
+				case MIRRORING_FOURSCR:
+					fprintf(stderr, "4 screen\n");
 					break;
 			}
 		}
@@ -1109,8 +1096,8 @@ void emu_info_rom(void) {
 		fprintf(stderr, "\n");
 	}
 
-	if (info.chr.ram.banks_8k_plus) {
-		fprintf(stderr, "RAM CHR 8k    : %-4u\n", info.chr.ram.banks_8k_plus);
+	if (mapper.write_vram || info.chr.ram.banks_8k_plus) {
+		fprintf(stderr, "RAM CHR 8k    : %-4u\n", info.chr.ram.banks_8k_plus + (mapper.write_vram ? info.chr.rom.banks_8k : 0));
 	}
 	if (chr.extra.data) {
 		fprintf(stderr, "RAM CHR extra : %ld\n", chr.extra.size);
@@ -1135,7 +1122,7 @@ void emu_info_rom(void) {
 			}
 		}
 
-		if (chr_size()) {
+		if ((mapper.write_vram == FALSE) && chr_size()) {
 			fprintf(stderr, "CHR 4k vrom   : %-4lu [ %08X %ld ]\n",
 				(long unsigned)chr_size() / 0x1000,
 				info.crc32.chr,
