@@ -258,7 +258,7 @@ INLINE static void chr_fix_45(BYTE value) {
 	chr_swap_45(cbase ^ 0x1C00, m45.mmc3[5]);
 }
 INLINE static void chr_swap_45(WORD address, WORD value) {
-	if (mapper.write_vram) {
+	if (mapper.write_vram && (info.chr.rom.max.banks_8k == 1)) {
 		value = address >> 10;
 		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 	} else {
