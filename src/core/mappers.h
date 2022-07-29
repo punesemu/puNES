@@ -234,6 +234,7 @@
 #include "mappers/mapper_192.h"
 #include "mappers/mapper_81.h"
 #include "mappers/mapper_543.h"
+#include "mappers/mapper_539.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"
