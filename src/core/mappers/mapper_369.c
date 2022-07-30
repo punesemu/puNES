@@ -22,7 +22,6 @@
 #include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
-#include "vs_system.h"
 
 INLINE static void prg_fix_369(void);
 INLINE static void prg_swap_369(WORD address, WORD value);
