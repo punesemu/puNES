@@ -46,7 +46,7 @@ void map_init_368(void) {
 
 	memset(&m368, 0x00, sizeof(m368));
 
-	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
+	info.mapper.extend_wr = TRUE;
 	info.mapper.ram_plus_op_controlled_by_mapper = TRUE;
 }
 void extcl_after_mapper_init_368(void) {
@@ -96,7 +96,7 @@ BYTE extcl_save_mapper_368(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_368(void) {
 	if (m368.irq.enable) {
-		m368.irq.counter =  (m368.irq.counter + 1) & 0x0FFF;
+		m368.irq.counter = (m368.irq.counter + 1) & 0x0FFF;
 		if (!m368.irq.counter) {
 			irq.high |= EXT_IRQ;
 		}
