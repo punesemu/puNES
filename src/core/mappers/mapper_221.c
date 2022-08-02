@@ -22,69 +22,115 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-#define m221_prg_16k_swap()\
-	value = ((m221.reg[0] >> 1) & 0x38) | ((m221.reg[0] & 0x01) ? (m221.reg[0] & 0x80) ?\
-		m221.reg[1] : (m221.reg[1] & 0x06) : m221.reg[1]);\
-	control_bank(info.prg.rom.max.banks_16k)\
-	map_prg_rom_8k(2, 0, value);\
-	value = ((m221.reg[0] >> 1) & 0x38) | ((m221.reg[0] & 0x01) ? (m221.reg[0] & 0x80) ?\
-		0x07 : (m221.reg[1] & 0x06) | 0x1 : m221.reg[1]);\
-	control_bank(info.prg.rom.max.banks_16k)\
-	map_prg_rom_8k(2, 2, value)
+INLINE static void prg_fix_221(void);
+INLINE static void mirroring_fix_221(void);
 
 struct _m221 {
-	BYTE reg[2];
+	WORD reg[2];
 } m221;
 
 void map_init_221(void) {
+	EXTCL_AFTER_MAPPER_INIT(221);
 	EXTCL_CPU_WR_MEM(221);
 	EXTCL_SAVE_MAPPER(221);
+	EXTCL_WR_CHR(221);
 	mapper.internal_struct[0] = (BYTE *)&m221;
 	mapper.internal_struct_size[0] = sizeof(m221);
 
 	if (info.reset >= HARD) {
 		memset(&m221, 0x00, sizeof(m221));
-		{
-			BYTE value;
-			m221_prg_16k_swap();
-		}
 	}
 }
+void extcl_after_mapper_init_221(void) {
+	prg_fix_221();
+	mirroring_fix_221();
+}
 void extcl_cpu_wr_mem_221(WORD address, BYTE value) {
-	BYTE reg;
-
 	switch (address & 0xF000) {
 		case 0x8000:
 		case 0x9000:
 		case 0xA000:
 		case 0xB000:
-			if (address & 0x0001) {
-				mirroring_H();
-			} else {
-				mirroring_V();
-			}
-
-			if (m221.reg[0] == (reg = (address >> 1) & 0xFF)) {
-				return;
-			}
-			m221.reg[0] = reg;
-			m221_prg_16k_swap();
+			// A~FEDC BA98 7654 3210
+			//   -------------------
+			//   10.. ..Bp OOO. ..PM
+			//          || |||    |+- Select nametable mirroring type
+			//          || |||    |    0: Vertical
+			//          || |||    |    1: Horizontal
+			//          || |||    +-- Select NROM-128/Other PRG-ROM modes
+			//          || |||         0: NROM-128 (Inner Bank selects 16 KiB PRG-ROM bank
+			//          || |||            at CPU $8000-$BFFF mirrored at CPU $C000-$FFFF)
+			//          || |||         1: Other mode (decided by bit 8)
+			//          || +++------- Select 128 KiB Outer PRG-ROM bank (PRG A17-A19)
+			//          |+----------- Select PRG-ROM mode if bit 1=1
+			//          |              0: NROM-128 (Inner Bank SHR 1 selects 32 KiB PRG-ROM
+			//          |                 bank at CPU $8000-$FFFF)
+			//          |              1: UNROM (Inner Bank selects 16 KiB PRG-ROM bank at
+			//          |                 CPU $8000-$BFFF, CPU $C000-$FFFF fixed to Inner Bank #7)
+			//          +------------ Select 1 MiB Outer PRG-ROM bank (PRG A20)
+			m221.reg[0] = address;
+			prg_fix_221();
+			mirroring_fix_221();
 			break;
 		case 0xC000:
 		case 0xD000:
 		case 0xE000:
 		case 0xF000:
-			if (m221.reg[1] == (reg = address & 0x07)) {
-				return;
-			}
-			m221.reg[1] = reg;
-			m221_prg_16k_swap();
+			// A~FEDC BA98 7654 3210
+			//   -------------------
+			//   11.. .... .... CIII
+			//                  |+++- 16/32 KiB (depending on PRG-ROM mode) Inner Bank number
+			//                  +---- Select CHR-RAM write-protection
+			//                         0: Disabled, CHR-RAM write-enabled
+			//                         1: Enabled, CHR-RAM write-protected
+			m221.reg[1] = address;
+			prg_fix_221();
 			break;
 	}
-	map_prg_rom_8k_update();
 }
 BYTE extcl_save_mapper_221(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m221.reg);
 
 	return (EXIT_OK);
+}
+void extcl_wr_chr_221(WORD address, BYTE value) {
+	if (mapper.write_vram && !(m221.reg[1] & 0x08)) {
+		chr.bank_1k[address >> 10][address & 0x3FF] = value;
+	}
+}
+
+INLINE static void prg_fix_221(void) {
+	WORD outer = ((m221.reg[0] & 0x200) >> 3) | ((m221.reg[0] & 0xE0) >> 2);
+	WORD inner = m221.reg[1] & 0x07;
+	WORD bank;
+
+	if (!(m221.reg[0] & 0x02)) {
+		bank = outer | inner;
+		_control_bank(bank, info.prg.rom.max.banks_16k)
+		map_prg_rom_8k(2, 0, bank);
+		map_prg_rom_8k(2, 2, bank);
+	} else {
+		if (m221.reg[0] & 0x100) {
+			bank = outer | inner;
+			_control_bank(bank, info.prg.rom.max.banks_16k)
+			map_prg_rom_8k(2, 0, bank);
+
+			bank = outer | 0x07;
+			_control_bank(bank, info.prg.rom.max.banks_16k)
+			map_prg_rom_8k(2, 2, bank);
+		} else {
+			bank = (outer | inner) >> 1;
+			_control_bank(bank, info.prg.rom.max.banks_32k)
+			map_prg_rom_8k(4, 0, bank);
+		}
+	}
+	map_prg_rom_8k_update();
+}
+
+INLINE static void mirroring_fix_221(void) {
+	if (m221.reg[0] & 0x01) {
+		mirroring_H();
+	} else {
+		mirroring_V();
+	}
 }
