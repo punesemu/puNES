@@ -40,13 +40,6 @@ void map_init_403(void) {
 
 	memset(&m403, 0x00, sizeof(m403));
 
-	// la versione di Tetris Family - 玩家 19-in-1 智瑟實典 (NO 1683).nes nell'headser setta il vs_system.ppu
-	ext_win.vs_system = FALSE;
-	vs_system.enabled = FALSE;
-	vs_system.special_mode.r5e0x = NULL;
-	vs_system.special_mode.index = 0;
-	vs_system.rc2c05.enabled = FALSE;
-
 	info.mapper.extend_wr = TRUE;
 }
 void extcl_after_mapper_init_403(void) {

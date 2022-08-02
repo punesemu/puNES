@@ -28,6 +28,7 @@
 #include "cheat.h"
 #include "vs_system.h"
 #include "patcher.h"
+#include "../../c++/crc/crc.h"
 
 enum unif_phase_type { UNIF_COUNT, UNIF_READ };
 
@@ -183,6 +184,7 @@ static const _unif_board unif_boards[] = {
 	{"KS106C", 352, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"3D-BLOCK", 355, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"SB-5013", 359, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
+	{"N49C-300", 369, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"830752C", 396, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"BS-400R", 422, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"BS-4040R", 422, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
@@ -458,6 +460,15 @@ BYTE unif_load_rom(void) {
 			}
 		}
 
+		{
+			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
+
+			if (chr_size()) {
+				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
+				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.prg);
+			}
+		}
+
 		if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
 			info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
 		}
@@ -701,9 +712,31 @@ BYTE unif_MIRR(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
-	unif.mirroring = 0;
+	info.mapper.mirroring = 0;
 
-	rom_mem_memcpy(&unif.mirroring, rom, unif.chunk.length);
+	rom_mem_memcpy(&info.mapper.mirroring, rom, unif.chunk.length);
+
+	switch (info.mapper.mirroring) {
+		default:
+		case 0:
+			mirroring_H();
+			break;
+		case 1:
+			mirroring_V();
+			break;
+		case 2:
+			mirroring_SCR0();
+			break;
+		case 3:
+			mirroring_SCR1();
+			break;
+		case 4:
+			mirroring_FSCR();
+			break;
+		case 5:
+			mirroring_H();
+			break;
+	}
 
 	return (EXIT_OK);
 }

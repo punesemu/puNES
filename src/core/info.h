@@ -55,6 +55,8 @@ typedef struct _info {
 		BYTE trainer;
 		BYTE misc_roms;
 		BYTE force_battery_io;
+		BYTE ext_console_type;
+		BYTE mirroring;
 	} mapper;
 	BYTE mirroring_db;
 	BYTE portable;
@@ -152,6 +154,7 @@ typedef struct _info {
 #if defined (FULLSCREEN_RESFREQ)
 	BYTE old_machine_type;
 #endif
+	BYTE decimal_mode;
 
 #if !defined (RELEASE)
 	BYTE snd_info;

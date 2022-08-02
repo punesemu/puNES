@@ -30,10 +30,11 @@ INLINE static void chr_swap_45(WORD address, WORD value);
 
 static const BYTE dipswitch_45[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 static const SBYTE dipswitch_index_45[][8] = {
-	{ 0,  1,  2,  3,  4,  5,  6,  7 }, // 0
+	{ 0, -1, -1, -1, -1, -1, -1, -1 }, // 0
 	{ 0,  1,  2, -1, -1, -1, -1, -1 }, // 1
 	{ 0,  4,  3,  2, -1, -1, -1, -1 }, // 2
 	{ 0,  2, -1, -1, -1, -1, -1, -1 }, // 3
+	{ 0,  1,  2,  3,  4,  5,  6,  7 }, // 4
 };
 
 struct _m45 {
@@ -257,7 +258,7 @@ INLINE static void chr_fix_45(BYTE value) {
 	chr_swap_45(cbase ^ 0x1C00, m45.mmc3[5]);
 }
 INLINE static void chr_swap_45(WORD address, WORD value) {
-	if (mapper.write_vram) {
+	if (mapper.write_vram && (info.chr.rom.max.banks_8k == 1)) {
 		value = address >> 10;
 		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 	} else {

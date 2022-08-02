@@ -934,6 +934,57 @@ void emu_info_rom(void) {
 		return;
 	}
 
+	{
+		fprintf(stderr, "console type  : ");
+
+		switch (info.mapper.ext_console_type) {
+			case 0:
+				fprintf(stderr, "Regular NES/Famicom/Dendy\n");
+				break;
+			case 1:
+				fprintf(stderr, "Nintendo Vs. System\n");
+				break;
+			case 2:
+				fprintf(stderr, "Playchoice 10\n");
+				break;
+			case 3:
+				fprintf(stderr, "Regular Famiclone, but with CPU that supports Decimal Mode\n");
+				break;
+			case 4:
+				fprintf(stderr, "Regular NES/Famicom with EPSM module or plug-through cartridge [unsupported]\n");
+				break;
+			case 5:
+				fprintf(stderr, "V.R. Technology VT01 with red/cyan STN palette [unsupported]\n");
+				break;
+			case 6:
+				fprintf(stderr, "V.R. Technology VT02 [unsupported]\n");
+				break;
+			case 7:
+				fprintf(stderr, "V.R. Technology VT03 [unsupported]\n");
+				break;
+			case 8:
+				fprintf(stderr, "V.R. Technology VT09 [unsupported]\n");
+				break;
+			case 9:
+				fprintf(stderr, "V.R. Technology VT32 [unsupported]\n");
+				break;
+			case 10:
+				fprintf(stderr, "V.R. Technology VT369 [unsupported]\n");
+				break;
+			case 11:
+				fprintf(stderr, "UMC UM6578 [unsupported]\n");
+				break;
+			case 12:
+				fprintf(stderr, "Famicom Network System [unsupported]\n");
+				break;
+			case 13:
+			case 14:
+			case 15:
+				fprintf(stderr, "reserved\n");
+				break;
+		}
+	}
+
 	if (info.format == UNIF_FORMAT) {
 		char *trimmed = &unif.board[0];
 		size_t i;
@@ -997,38 +1048,25 @@ void emu_info_rom(void) {
 	{
 		fprintf(stderr, "mirroring     : ");
 
-		if (info.format == UNIF_FORMAT) {
-			switch (unif.mirroring) {
-				default:
-				case 0:
-					fprintf(stderr, "horizontal\n");
-					break;
-				case 1:
-					fprintf(stderr, "vertical\n");
-					break;
-				case 2:
-					fprintf(stderr, "scr0\n");
-					break;
-				case 3:
-					fprintf(stderr, "scr1\n");
-					break;
-				case 4:
-					fprintf(stderr, "4 screen\n");
-					break;
-				case 5:
-					fprintf(stderr, "controlled by the mapper\n");
-					break;
-			}
+		if ((info.format == UNIF_FORMAT) && (info.mapper.mirroring == 5)) {
+			fprintf(stderr, "controlled by the mapper\n");
 		} else {
-			switch (mapper.mirroring) {
-				case MIRRORING_FOURSCR:
-					fprintf(stderr, "4 screen\n");
+			switch (info.mapper.mirroring) {
+				default:
+				case MIRRORING_HORIZONTAL:
+					fprintf(stderr, "horizontal\n");
 					break;
 				case MIRRORING_VERTICAL:
 					fprintf(stderr, "vertical\n");
 					break;
-				case MIRRORING_HORIZONTAL:
-					fprintf(stderr, "horizontal\n");
+				case MIRRORING_SINGLE_SCR0:
+					fprintf(stderr, "scr0\n");
+					break;
+				case MIRRORING_SINGLE_SCR1:
+					fprintf(stderr, "scr1\n");
+					break;
+				case MIRRORING_FOURSCR:
+					fprintf(stderr, "4 screen\n");
 					break;
 			}
 		}
@@ -1058,17 +1096,14 @@ void emu_info_rom(void) {
 		fprintf(stderr, "\n");
 	}
 
-	if (info.chr.ram.banks_8k_plus) {
-		fprintf(stderr, "RAM CHR 8k    : %-4u\n", info.chr.ram.banks_8k_plus);
+	if (mapper.write_vram || info.chr.ram.banks_8k_plus) {
+		fprintf(stderr, "RAM CHR 8k    : %-4u\n", info.chr.ram.banks_8k_plus + (mapper.write_vram ? info.chr.rom.banks_8k : 0));
 	}
 	if (chr.extra.data) {
 		fprintf(stderr, "RAM CHR extra : %ld\n", chr.extra.size);
 	}
 
 	{
-		info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
-		info.crc32.total = info.crc32.prg;
-
 		fprintf(stderr, "PRG 8k rom    : %-4lu [ %08X %ld ]\n",
 			(long unsigned)prg_size() / 0x2000,
 			info.crc32.prg,
@@ -1087,10 +1122,7 @@ void emu_info_rom(void) {
 			}
 		}
 
-		if (chr_size()) {
-			info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
-			info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.total);
-
+		if ((mapper.write_vram == FALSE) && chr_size()) {
 			fprintf(stderr, "CHR 4k vrom   : %-4lu [ %08X %ld ]\n",
 				(long unsigned)chr_size() / 0x1000,
 				info.crc32.chr,
@@ -1108,11 +1140,6 @@ void emu_info_rom(void) {
 						(long)chr_chip_size(chip));
 				}
 			}
-		}
-
-		if (mapper.misc_roms.size) {
-			info.crc32.misc = emu_crc32((void *)mapper.misc_roms.data, mapper.misc_roms.size);
-			info.crc32.total = emu_crc32_continue((void *)mapper.misc_roms.data, mapper.misc_roms.size, info.crc32.total);
 		}
 
 		if (info.format == iNES_1_0) {

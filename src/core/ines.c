@@ -34,6 +34,7 @@
 #include "patcher.h"
 #include "sha1.h"
 #include "database.h"
+#include "../../c++/crc/crc.h"
 
 void search_in_database(void);
 BYTE ines10_search_in_database(void *rom_mem);
@@ -149,8 +150,33 @@ BYTE ines_load_rom(void) {
 
 			cpu_timing = ines.flags[FL12] & 0x03;
 
-			vs_system.ppu = ines.flags[FL13] & 0x0F;
-			vs_system.special_mode.type = (ines.flags[FL13] >> 4) & 0x0F;
+			vs_system.ppu = vs_system.special_mode.type = 0;
+			vs_system.special_mode.type = 0;
+			info.decimal_mode = FALSE;
+
+			if ((ines.flags[FL7] & 0x03) == 0x01) {
+				info.mapper.ext_console_type = 1;
+				vs_system.ppu = ines.flags[FL13] & 0x0F;
+				vs_system.special_mode.type = ines.flags[FL13] >> 4;
+				info.decimal_mode = FALSE;
+			} else if ((ines.flags[FL7] & 0x03) == 0x03) {
+				info.mapper.ext_console_type = ines.flags[FL13] & 0x0F;
+
+				switch (info.mapper.ext_console_type) {
+					case 0:
+					case 1:
+					case 2:
+						vs_system.special_mode.type = info.mapper.ext_console_type;
+						break;
+					case 3:
+						// usato per esempio da :
+						// Othello (rev0).nes
+						info.decimal_mode = TRUE;
+						break;
+					default:
+						break;
+				}
+			}
 
 			info.mapper.misc_roms = ines.flags[FL14] & 0x03;
 		} else {
@@ -202,6 +228,7 @@ BYTE ines_load_rom(void) {
 				mirroring_H();
 			}
 		}
+		info.mapper.mirroring = mapper.mirroring;
 
 		// inizializzo qui il writeVRAM per la mapper 96 perche'
 		// e' l'unica mapper che utilizza 32k di CHR Ram e che
@@ -362,6 +389,20 @@ BYTE ines_load_rom(void) {
 
 		if (info.format == NES_2_0) {
 			nes20_submapper();
+		}
+
+		{
+			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
+			info.crc32.total = info.crc32.prg;
+
+			if ((mapper.write_vram == FALSE) && chr_size()) {
+				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
+				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.total);
+			}
+			if (mapper.misc_roms.size) {
+				info.crc32.misc = emu_crc32((void *)mapper.misc_roms.data, mapper.misc_roms.size);
+				info.crc32.total = emu_crc32_continue((void *)mapper.misc_roms.data, mapper.misc_roms.size, info.crc32.total);
+			}
 		}
 
 		free(rom.data);

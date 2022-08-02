@@ -28,6 +28,7 @@
 #include "uncompress.h"
 #include "unif.h"
 #include "gui.h"
+#include "vs_system.h"
 
 void map_prg_ram_battery_file(uTCHAR *prg_ram_file);
 
@@ -1034,6 +1035,15 @@ BYTE map_init(void) {
 		case 361:
 			map_init_361();
 			break;
+		case 368:
+			map_init_368();
+			break;
+		case 369:
+			map_init_369();
+			break;
+		case 370:
+			map_init_370();
+			break;
 		case 372:
 			map_init_372();
 			break;
@@ -1237,11 +1247,17 @@ BYTE map_init(void) {
 			// https://forums.nesdev.org/viewtopic.php?p=240335#p240335
 			map_init_195();
 			break;
+		case 539:
+			map_init_539();
+			break;
 		case 540:
 			map_init_359(MAP540);
 			break;
 		case 541:
 			map_init_541();
+			break;
+		case 543:
+			map_init_543();
 			break;
 		case 547:
 			map_init_KONAMIQTAI();
@@ -1392,6 +1408,10 @@ void map_quit(void) {
 	mirroring_V();
 
 	mapper.write_vram = FALSE;
+
+	vs_system.ppu = vs_system.special_mode.type = 0;
+	info.mapper.ext_console_type = 0;
+	info.decimal_mode = FALSE;
 
 	if (extcl_mapper_quit) {
 		extcl_mapper_quit();

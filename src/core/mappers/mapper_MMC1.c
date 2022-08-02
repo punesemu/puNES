@@ -73,7 +73,7 @@ enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 		case MAP297:\
 		case MAP374:\
 		case MAP404:\
-		value = mmc1.chr_upper | (value & 0x1F);\
+			value = mmc1.chr_upper | (value & 0x1F);\
 			break;\
 		default:\
 			value &= 0x1F;\

@@ -281,8 +281,14 @@ libcore_a_SOURCES += \
 	mappers/mapper_360.h \
 	mappers/mapper_361.c \
 	mappers/mapper_361.h \
+	mappers/mapper_368.c \
+	mappers/mapper_368.h \
+	mappers/mapper_369.c \
+	mappers/mapper_369.h \
 	mappers/mapper_37.c \
 	mappers/mapper_37.h \
+	mappers/mapper_370.c \
+	mappers/mapper_370.h \
 	mappers/mapper_372.c \
 	mappers/mapper_372.h \
 	mappers/mapper_374.c \
@@ -399,8 +405,12 @@ libcore_a_SOURCES += \
 	mappers/mapper_52.h \
 	mappers/mapper_53.c \
 	mappers/mapper_53.h \
+	mappers/mapper_539.c \
+	mappers/mapper_539.c \
 	mappers/mapper_541.c \
 	mappers/mapper_541.h \
+	mappers/mapper_543.c \
+	mappers/mapper_543.h \
 	mappers/mapper_550.c \
 	mappers/mapper_550.h \
 	mappers/mapper_558.c \

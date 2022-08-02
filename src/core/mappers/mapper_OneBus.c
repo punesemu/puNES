@@ -103,7 +103,6 @@ void map_init_OneBus(void) {
 
 	if (info.format != NES_2_0) {
 		if (info.mapper.submapper == DEFAULT) {
-
 			if ((info.crc32.prg == 0x947AC898) || // Power Joy Supermax 30-in-1 (Unl) [U][!].unf
 				(info.crc32.prg == 0x1AB45228)) { // Power Joy Supermax 60-in-1 (Unl) [U][!].unf
 				info.mapper.submapper = ONEBUS_POWER_JOY_SUPERMAX;
