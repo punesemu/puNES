@@ -815,8 +815,8 @@ WORD emu_round_WORD(WORD number, WORD round) {
 		return ((number - remainder) + round);
 	}
 }
-int emu_power_of_two(int base) {
-	int pot = 1;
+unsigned int emu_power_of_two(unsigned int base) {
+	unsigned int pot = 1;
 
 	while (pot < base) {
 		pot <<= 1;
@@ -938,43 +938,43 @@ void emu_info_rom(void) {
 		fprintf(stderr, "console type  : ");
 
 		switch (info.mapper.ext_console_type) {
-			case 0:
+			case REGULAR_NES:
 				fprintf(stderr, "Regular NES/Famicom/Dendy\n");
 				break;
-			case 1:
+			case VS_SYSTEM:
 				fprintf(stderr, "Nintendo Vs. System\n");
 				break;
-			case 2:
+			case PLAYCHOICE10:
 				fprintf(stderr, "Playchoice 10\n");
 				break;
-			case 3:
+			case FAMICLONE_DECIMAL_MODE:
 				fprintf(stderr, "Regular Famiclone, but with CPU that supports Decimal Mode\n");
 				break;
-			case 4:
+			case EPSM:
 				fprintf(stderr, "Regular NES/Famicom with EPSM module or plug-through cartridge [unsupported]\n");
 				break;
-			case 5:
+			case VT01:
 				fprintf(stderr, "V.R. Technology VT01 with red/cyan STN palette [unsupported]\n");
 				break;
-			case 6:
+			case VT02:
 				fprintf(stderr, "V.R. Technology VT02 [unsupported]\n");
 				break;
-			case 7:
+			case VT03:
 				fprintf(stderr, "V.R. Technology VT03 [unsupported]\n");
 				break;
-			case 8:
+			case VT09:
 				fprintf(stderr, "V.R. Technology VT09 [unsupported]\n");
 				break;
-			case 9:
+			case VT32:
 				fprintf(stderr, "V.R. Technology VT32 [unsupported]\n");
 				break;
-			case 10:
+			case VT369:
 				fprintf(stderr, "V.R. Technology VT369 [unsupported]\n");
 				break;
-			case 11:
+			case UMC_UM6578:
 				fprintf(stderr, "UMC UM6578 [unsupported]\n");
 				break;
-			case 12:
+			case FAMICOM_NETWORK_SYSTEM:
 				fprintf(stderr, "Famicom Network System [unsupported]\n");
 				break;
 			case 13:

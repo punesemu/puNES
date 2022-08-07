@@ -238,6 +238,8 @@
 #include "mappers/mapper_368.h"
 #include "mappers/mapper_369.h"
 #include "mappers/mapper_370.h"
+#include "mappers/mapper_256.h"
+#include "mappers/mapper_436.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"
@@ -290,7 +292,6 @@
 #include "mappers/mapper_DRAGONFIGHTER.h"
 #include "mappers/mapper_EDU2000.h"
 #include "mappers/mapper_DREAMTECH01.h"
-#include "mappers/mapper_OneBus.h"
 #include "mappers/mapper_BMC190IN1.h"
 #include "mappers/mapper_K3033.h"
 #include "mappers/mapper_BMC830425C.h"

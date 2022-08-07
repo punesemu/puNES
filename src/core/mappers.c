@@ -790,7 +790,7 @@ BYTE map_init(void) {
 			map_init_225();
 			break;
 		case 256:
-			map_init_OneBus();
+			map_init_256();
 			break;
 		case 258:
 			map_init_UNIF158B();
@@ -1166,6 +1166,9 @@ BYTE map_init(void) {
 			break;
 		case 434:
 			map_init_434();
+			break;
+		case 436:
+			map_init_436();
 			break;
 		case 437:
 			map_init_437();

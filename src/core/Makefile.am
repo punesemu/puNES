@@ -251,6 +251,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_253.h \
 	mappers/mapper_254.c \
 	mappers/mapper_254.h \
+	mappers/mapper_256.c \
+	mappers/mapper_256.h \
 	mappers/mapper_267.c \
 	mappers/mapper_267.h \
 	mappers/mapper_269.c \
@@ -355,6 +357,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_433.h \
 	mappers/mapper_434.c \
 	mappers/mapper_434.h \
+	mappers/mapper_436.c \
+	mappers/mapper_436.h \
 	mappers/mapper_3DBLOCK.c \
 	mappers/mapper_3DBLOCK.h \
 	mappers/mapper_40.c \
@@ -651,8 +655,6 @@ libcore_a_SOURCES += \
 	mappers/mapper_NSF.h \
 	mappers/mapper_Ntdec.c \
 	mappers/mapper_Ntdec.h \
-	mappers/mapper_OneBus.c \
-	mappers/mapper_OneBus.h \
 	mappers/mapper_Rcm.c \
 	mappers/mapper_Rcm.h \
 	mappers/mapper_RESETNROMXIN1.c \
@@ -731,10 +733,17 @@ libcore_a_SOURCES += \
 	mappers/mapper_WS.h \
 	mappers/mapper_YOKO.c \
 	mappers/mapper_YOKO.h \
+	mappers/OneBus.c \
+	mappers/OneBus.h \
 	mappers/opll.c \
 	mappers/opll.h \
+	mappers/serial_devices.cpp \
+	mappers/serial_devices.hpp \
+	mappers/serial_devices_interface.cpp \
+	mappers/serial_devices_interface.h \
 	mappers/SST39SF040.c \
 	mappers/SST39SF040.h
+	
 
 patcher_xdelta3_wrap.o: patcher_xdelta3_wrap.c patcher_xdelta3_wrap.h
 	${CC} -w ${DEFS} ${DEFAULT_INCLUDES} ${CFLAGS} -c -o $@ $<
