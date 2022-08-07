@@ -419,6 +419,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_543.h \
 	mappers/mapper_550.c \
 	mappers/mapper_550.h \
+	mappers/mapper_557.c \
+	mappers/mapper_557.h \
 	mappers/mapper_558.c \
 	mappers/mapper_558.h \
 	mappers/mapper_559.c \
@@ -651,6 +653,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_MMC3.h \
 	mappers/mapper_MMC5.c \
 	mappers/mapper_MMC5.h \
+	mappers/mapper_N118.c \
+	mappers/mapper_N118.h \
 	mappers/mapper_Namco.c \
 	mappers/mapper_Namco.h \
 	mappers/mapper_NSF.c \
