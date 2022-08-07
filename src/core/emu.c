@@ -1041,7 +1041,7 @@ void emu_info_rom(void) {
 		}
 
 		if (chinaersan2.font.data) {
-			fprintf(stderr, "EXT font      : %ld\n", chinaersan2.font.size);
+			fprintf(stderr, "EXT font      : %ld\n", (long)chinaersan2.font.size);
 		}
 	}
 
@@ -1100,7 +1100,7 @@ void emu_info_rom(void) {
 		fprintf(stderr, "RAM CHR 8k    : %-4u\n", info.chr.ram.banks_8k_plus + (mapper.write_vram ? info.chr.rom.banks_8k : 0));
 	}
 	if (chr.extra.data) {
-		fprintf(stderr, "RAM CHR extra : %ld\n", chr.extra.size);
+		fprintf(stderr, "RAM CHR extra : %ld\n", (long)chr.extra.size);
 	}
 
 	{
