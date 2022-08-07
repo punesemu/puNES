@@ -1250,6 +1250,9 @@ BYTE map_init(void) {
 			// https://forums.nesdev.org/viewtopic.php?p=240335#p240335
 			map_init_195();
 			break;
+		case 538:
+			map_init_538();
+			break;
 		case 539:
 			map_init_539();
 			break;

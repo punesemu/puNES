@@ -240,6 +240,7 @@
 #include "mappers/mapper_370.h"
 #include "mappers/mapper_256.h"
 #include "mappers/mapper_436.h"
+#include "mappers/mapper_538.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"
