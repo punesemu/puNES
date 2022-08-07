@@ -45,7 +45,7 @@ void extcl_after_mapper_init_221(void) {
 	prg_fix_221();
 	mirroring_fix_221();
 }
-void extcl_cpu_wr_mem_221(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_221(WORD address, UNUSED(BYTE value)) {
 	switch (address & 0xF000) {
 		case 0x8000:
 		case 0x9000:
