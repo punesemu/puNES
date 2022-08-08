@@ -16,18 +16,18 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_ONEBUS_H_
-#define MAPPER_ONEBUS_H_
+#include <string.h>
+#include "mappers.h"
+#include "mem_map.h"
+#include "OneBus.h"
 
-#include "common.h"
+void map_init_436(void) {
+	map_init_OneBus();
 
-void map_init_OneBus(void);
-void extcl_cpu_wr_mem_OneBus(WORD address, BYTE value);
-BYTE extcl_save_mapper_OneBus(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_OneBus(void);
-BYTE extcl_wr_ppu_reg_OneBus(WORD address, BYTE *value);
-BYTE extcl_wr_apu_OneBus(WORD address, BYTE *value);
-BYTE extcl_rd_apu_OneBus(WORD address, BYTE openbus, BYTE before);
-void extcl_irq_A12_clock_OneBus(void);
-
-#endif /* MAPPER_ONEBUS_H_ */
+	EXTCL_AFTER_MAPPER_INIT(436);
+}
+void extcl_after_mapper_init_436(void) {
+	prg_fix_8k_OneBus(0xF3FF, ((onebus.reg.cpu[0x00] & 0x40) << 5) | ((onebus.reg.cpu[0x0F] & 0x20) << 5));
+	chr_fix_OneBus(0x9FFF, ((onebus.reg.cpu[0x00] & 0x04) << 12) | ((onebus.reg.cpu[0x0F] & 0x20) << 8));
+	mirroring_fix_OneBus();
+}

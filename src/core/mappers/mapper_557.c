@@ -16,15 +16,25 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_221_H_
-#define MAPPER_221_H_
+#include "mappers.h"
+#include "mem_map.h"
 
-#include "common.h"
+INLINE static void mirroring_fix_557(void);
 
-void map_init_221(void);
-void extcl_after_mapper_init_221(void);
-void extcl_cpu_wr_mem_221(WORD address, BYTE value);
-BYTE extcl_save_mapper_221(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_221(WORD address, BYTE value);
+void map_init_557(void) {
+	map_init_N118();
 
-#endif /* MAPPER_221_H_ */
+	EXTCL_AFTER_MAPPER_INIT(557);
+}
+void extcl_after_mapper_init_557(void) {
+	prg_fix_N118(0x000F, 0x00);
+	mirroring_fix_557();
+}
+
+INLINE static void mirroring_fix_557(void) {
+	if (n118.reg[5] & 0x20) {
+		mirroring_H();
+	} else {
+		mirroring_V();
+	}
+}

@@ -49,6 +49,21 @@ enum false_value { FALSE, TRUE };
 enum exit_type { EXIT_OK, EXIT_ERROR };
 enum lower_value { LOWER, UPPER };
 enum machine_mode { AUTO, NTSC, PAL, DENDY, DEFAULT = 255 };
+enum console_type {
+	REGULAR_NES,
+	VS_SYSTEM,
+	PLAYCHOICE10,
+	FAMICLONE_DECIMAL_MODE,
+	EPSM,
+	VT01,
+	VT02,
+	VT03,
+	VT09,
+	VT32,
+	VT369,
+	UMC_UM6578,
+	FAMICOM_NETWORK_SYSTEM
+};
 enum reset_type {
 	RESET       = 0x10,
 	HARD        = 0x20,

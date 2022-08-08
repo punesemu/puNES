@@ -790,7 +790,7 @@ BYTE map_init(void) {
 			map_init_225();
 			break;
 		case 256:
-			map_init_OneBus();
+			map_init_256();
 			break;
 		case 258:
 			map_init_UNIF158B();
@@ -1167,6 +1167,9 @@ BYTE map_init(void) {
 		case 434:
 			map_init_434();
 			break;
+		case 436:
+			map_init_436();
+			break;
 		case 437:
 			map_init_437();
 			break;
@@ -1247,6 +1250,9 @@ BYTE map_init(void) {
 			// https://forums.nesdev.org/viewtopic.php?p=240335#p240335
 			map_init_195();
 			break;
+		case 538:
+			map_init_538();
+			break;
 		case 539:
 			map_init_539();
 			break;
@@ -1264,6 +1270,9 @@ BYTE map_init(void) {
 			break;
 		case 550:
 			map_init_550();
+			break;
+		case 557:
+			map_init_557();
 			break;
 		case 558:
 			map_init_558();
