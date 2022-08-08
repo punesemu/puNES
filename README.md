@@ -99,7 +99,7 @@ To see a list of available command-line options, start puNES with the `-h` argum
 |    |518 |519 |    |521 |522 |    |524 |525 |526 |527 |
 |528 |529 |530 |    |532 |    |534 |    |536 |537 |538 |
 |539 |540 |541 |    |543 |    |    |    |547 |    |    |
-|550 |    |    |    |    |    |    |557 |558 |559 |560 |
+|550 |    |    |    |    |    |556 |557 |558 |559 |560 |
 
 
 :electric_plug: Unif
