@@ -289,7 +289,7 @@ BYTE unif_load_rom(void) {
 
 	// setto i defaults
 	mirroring_H();
-	info.machine[HEADER] = NTSC;
+	info.machine[HEADER] = info.machine[DATABASE] = NTSC;
 	info.prg.ram.bat.banks = 0;
 	info.mapper.submapper = DEFAULT;
 	info.mirroring_db = info.id = DEFAULT;
@@ -675,10 +675,10 @@ BYTE unif_TVCI(_rom_mem *rom, BYTE phase) {
 	switch (tv) {
 		default:
 		case 0:
-			info.machine[HEADER] = NTSC;
+			info.machine[HEADER] = info.machine[DATABASE] = NTSC;
 			break;
 		case 1:
-			info.machine[HEADER] = PAL;
+			info.machine[HEADER] = info.machine[DATABASE] = PAL;
 			break;
 	}
 
