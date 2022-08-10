@@ -187,19 +187,27 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Fullscreen_in_window, SIGNAL(clicked(bool)), this, SLOT(s_fullscreen_in_window(bool)));
 	connect(checkBox_Use_integer_scaling_in_fullscreen, SIGNAL(clicked(bool)), this, SLOT(s_integer_in_fullscreen(bool)));
 	connect(checkBox_Stretch_in_fullscreen, SIGNAL(clicked(bool)), this, SLOT(s_stretch_in_fullscreen(bool)));
+
+	{
+		bool visible = false;
+
 #if defined (FULLSCREEN_RESFREQ)
-	gfx_monitor_enum_monitors();
-	connect(checkBox_Fullscreen_adaptive_rrate, SIGNAL(clicked(bool)), this, SLOT(s_adaptive_rrate(bool)));
-	connect(comboBox_Fullscreen_resolution, SIGNAL(activated(int)), this, SLOT(s_resolution(int)));
-#else
-	icon_Fullscreen_resolution->hide();
-	label_Fullscreen_resolution->hide();
-	comboBox_Fullscreen_resolution->hide();
-	label_Fullscreen_resolution_note_asterisk->hide();
-	checkBox_Fullscreen_adaptive_rrate->hide();
-	label_Fullscreen_adaptive_rrate_note_asterisk->hide();
-	label_Fullscreen_resolution_note->hide();
+		if (gfx.is_wayland == FALSE) {
+			visible = true;
+			gfx_monitor_enum_monitors();
+			connect(checkBox_Fullscreen_adaptive_rrate, SIGNAL(clicked(bool)), this, SLOT(s_adaptive_rrate(bool)));
+			connect(comboBox_Fullscreen_resolution, SIGNAL(activated(int)), this, SLOT(s_resolution(int)));
+		}
 #endif
+		icon_Fullscreen_resolution->setVisible(visible);
+		label_Fullscreen_resolution->setVisible(visible);
+		comboBox_Fullscreen_resolution->setVisible(visible);
+		label_Fullscreen_resolution_note_asterisk->setVisible(visible);
+		checkBox_Fullscreen_adaptive_rrate->setVisible(visible);
+		label_Fullscreen_adaptive_rrate_note_asterisk->setVisible(visible);
+		label_Fullscreen_resolution_note->setVisible(visible);
+		checkBox_Fullscreen_in_window->setVisible(gfx.is_wayland == FALSE);
+	}
 
 	tabWidget_Video->setCurrentIndex(0);
 }
@@ -329,9 +337,11 @@ void wdgSettingsVideo::update_widget(void) {
 	checkBox_Use_integer_scaling_in_fullscreen->setChecked(cfg->integer_scaling);
 	checkBox_Stretch_in_fullscreen->setChecked(cfg->stretch);
 #if defined (FULLSCREEN_RESFREQ)
-	checkBox_Fullscreen_adaptive_rrate->setEnabled(!checkBox_Fullscreen_in_window->isChecked());
-	checkBox_Fullscreen_adaptive_rrate->setChecked(cfg->adaptive_rrate);
-	resolution_set();
+	if (gfx.is_wayland == FALSE) {
+		checkBox_Fullscreen_adaptive_rrate->setEnabled(!checkBox_Fullscreen_in_window->isChecked());
+		checkBox_Fullscreen_adaptive_rrate->setChecked(cfg->adaptive_rrate);
+		resolution_set();
+	}
 #endif
 }
 void wdgSettingsVideo::change_rom(void) {

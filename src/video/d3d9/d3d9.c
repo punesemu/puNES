@@ -529,7 +529,7 @@ BYTE d3d9_context_create(void) {
 		if (cfg->fullscreen) {
 			float div;
 
-			if (!cfg->fullscreen_in_window) {
+			if ((gfx.is_wayland == FALSE) && !cfg->fullscreen_in_window) {
 				vmw *= gfx.device_pixel_ratio;
 				vmh *= gfx.device_pixel_ratio;
 			}
