@@ -93,8 +93,7 @@ void map_init_JYASIC(BYTE model) {
 			jyasictmp.dipswitch = (jyasictmp.dipswitch + 0x40) & 0xC0;
 		}
 	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		if (
-			(info.crc32.prg == 0x642E8D63)) { // Tiny Toon Adventures 6 (Unl) [!].nes
+		if (info.crc32.prg == 0x642E8D63) { // Tiny Toon Adventures 6 (Unl) [!].nes
 			jyasictmp.dipswitch = 0x40;
 		} else if (
 			(info.crc32.prg == 0x73A9F3AE) || // 1996 Super Aladdin III 18-in-1 Series (JY-064).nes

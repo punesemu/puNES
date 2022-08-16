@@ -1136,22 +1136,30 @@ void mainWindow::s_set_fullscreen(void) {
 		org_geom = geometry();
 		visibility.menubar = menubar->isVisible();
 		visibility.toolbars = toolbar->isVisible();
-		// muovo la finestra nell'angolo superiore del monitor, e' importante
-		// perche' in caso di cambio di risoluzione nell fullscreen, se posizionata
-		// nella parte destra del monitor potrebbe non essere visualizzata correttamente.
-		// E' importante che lo spostamento avvenga prima dell'hide().
-		if (cfg->fullscreen_in_window == FALSE) {
-			QRect mgeom = win_handle_screen()->geometry();
+		if (gfx.is_wayland == FALSE) {
+			// muovo la finestra nell'angolo superiore del monitor, e' importante
+			// perche' in caso di cambio di risoluzione nell fullscreen, se posizionata
+			// nella parte destra del monitor potrebbe non essere visualizzata correttamente.
+			// E' importante che lo spostamento avvenga prima dell'hide().
+			if (cfg->fullscreen_in_window == FALSE) {
+				QRect mgeom = win_handle_screen()->geometry();
 
-			move(mgeom.x() - (geometry().x() - x()), mgeom.y() - (geometry().y() - y()));
-		}
-		hide();
+				move(mgeom.x() - (geometry().x() - x()), mgeom.y() - (geometry().y() - y()));
+			}
+			hide();
 #if defined (FULLSCREEN_RESFREQ)
-		if (cfg->fullscreen_in_window == FALSE) {
-			delay = gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, FALSE);
+			if (cfg->fullscreen_in_window == FALSE) {
+				delay = gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, FALSE);
+			}
+#endif
 		}
+#if defined (FULLSCREEN_RESFREQ)
 	} else {
-		hide();
+		// su Fedora 35 (Wayland, Gnome 41.5 e QT 5.15.2) il Fullscreen non funziona e
+		// quello a finestra funziona solo se non eseguo l'hide().
+		if (gfx.is_wayland == FALSE) {
+			hide();
+		}
 		if (gfx.type_of_fscreen_in_use == FULLSCR) {
 			delay = gfx_monitor_restore_res();
 		}
@@ -1739,7 +1747,7 @@ void mainWindow::s_fullscreen(void) {
 #if defined (_WIN32)
 		window_flags = windowFlags();
 #endif
-		if (cfg->fullscreen_in_window == TRUE) {
+		if ((gfx.is_wayland == TRUE) || (cfg->fullscreen_in_window == TRUE)) {
 			QRect fs_win_geom = win_handle_screen()->availableGeometry();
 #if defined (_WIN32)
 			// lo showMaximized sotto windows non considera la presenza della barra delle applicazioni
@@ -1831,6 +1839,10 @@ void mainWindow::s_fullscreen(void) {
 		showNormal();
 		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
 		setGeometry(org_geom.x(), org_geom.y(), geometry().width(), geometry().height());
+		// al rientro dal fullscreen a finestra devo eseguire un update() ritardato per ridisignare correttamente la GUI.
+		if (gfx.is_wayland == TRUE) {
+			QTimer::singleShot(200, this, [this]() { update(); });
+		}
 	}
 
 	emu_thread_continue();

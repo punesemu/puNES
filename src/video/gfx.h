@@ -98,6 +98,7 @@ typedef struct _gfx {
 	BYTE scale_before_fscreen;
 	BYTE type_of_fscreen_in_use;
 	BYTE bit_per_pixel;
+	BYTE is_wayland;
 	float width_pixel;
 	WORD rows, lines;
 	SDBWORD w[TOT_GFX_INFO_TYPE], h[TOT_GFX_INFO_TYPE];

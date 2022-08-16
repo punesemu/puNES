@@ -45,7 +45,7 @@
       <attribute name="title">
        <string>Screen</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="verticalLayout_tab_screen">
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_Video_settings">
          <item>
@@ -236,7 +236,7 @@
               <property name="title">
                <string>Per-Game Overscan Setting</string>
               </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <layout class="QHBoxLayout" name="horizontalLayout_Oscan_pergame_setting">
                <property name="spacing">
                 <number>0</number>
                </property>
@@ -296,7 +296,7 @@
               <property name="title">
                <string>Default Value</string>
               </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <layout class="QHBoxLayout" name="horizontalLayout_Oscan_def_value">
                <property name="spacing">
                 <number>0</number>
                </property>
@@ -832,7 +832,7 @@
       <attribute name="title">
        <string>Filters</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_2">
+      <layout class="QGridLayout" name="gridLayout_tab_filters">
        <item row="2" column="0" colspan="3">
         <widget class="wdgNTSCFilter" name="widget_NTSC_Filter" native="true"/>
        </item>
@@ -1231,7 +1231,7 @@
       <attribute name="title">
        <string>Palette</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout">
+      <layout class="QGridLayout" name="gridLayout_tab_palette">
        <item row="0" column="0" colspan="3">
         <layout class="QHBoxLayout" name="horizontalLayout_Palette_Selection">
          <item>
@@ -1496,7 +1496,7 @@
       <attribute name="title">
        <string>Misc</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_3">
+      <layout class="QGridLayout" name="gridLayout_tab_video_misc">
        <item row="10" column="0">
         <widget class="QLabel" name="icon_Fullscreen_resolution">
          <property name="text">

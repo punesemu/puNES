@@ -666,6 +666,18 @@ unsigned int gui_wdgopengl_framebuffer_id(void) {
 }
 
 void gui_screen_info(void) {
+#if !defined (_WIN32)
+	const static char *cwdisplay = "WAYLAND_DISPLAY";
+#if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
+	QByteArray qbwdisplay = qgetenv(cwdisplay);
+
+	gfx.is_wayland = qbwdisplay.length() > 0 ? TRUE : FALSE;
+#else
+	gfx.is_wayland = qEnvironmentVariableIsSet(cwdisplay) ? TRUE : FALSE;
+#endif
+#else
+	gfx.is_wayland = FALSE;
+#endif
 	gfx.bit_per_pixel = qt.app->primaryScreen()->depth();
 }
 

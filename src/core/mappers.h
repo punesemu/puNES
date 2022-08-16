@@ -243,6 +243,8 @@
 #include "mappers/mapper_538.h"
 #include "mappers/mapper_N118.h"
 #include "mappers/mapper_557.h"
+#include "mappers/mapper_556.h"
+#include "mappers/mapper_554.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"

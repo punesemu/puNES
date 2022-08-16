@@ -132,6 +132,10 @@ void gfx_monitor_enum_monitors(void) {
 
 	gfx_monitor_quit();
 
+	if (gfx.is_wayland == TRUE) {
+		return;
+	}
+
 	if (gui_monitor_enum_monitors() == EXIT_ERROR) {
 		gfx_monitor_quit();
 		return;
@@ -174,7 +178,7 @@ BYTE gfx_monitor_set_res(int w, int h, BYTE adaptive_rrate, BYTE change_rom_mode
 		gfx_monitor_enum_monitors();
 	}
 
-	if ((monitor.enabled == FALSE) || (monitor.active == -1)) {
+	if ((gfx.is_wayland == TRUE) || (monitor.enabled == FALSE) || (monitor.active == -1)) {
 		return (FALSE);
 	}
 
@@ -281,7 +285,7 @@ BYTE gfx_monitor_restore_res(void) {
 	_monitor_mode_info *mode_info_org;
 	_monitor_info *mi;
 
-	if ((monitor.enabled == FALSE) || (monitor.active == -1)) {
+	if ((gfx.is_wayland == TRUE) || (monitor.enabled == FALSE) || (monitor.active == -1)) {
 		return (FALSE);
 	}
 
@@ -311,7 +315,7 @@ BYTE gfx_monitor_mode_in_use_info(int *x, int *y, int *w, int *h, int *rrate) {
 	_monitor_mode_info *mode_info;
 	_monitor_info *mi;
 
-	if ((monitor.enabled == FALSE) || (monitor.active == -1)) {
+	if ((gfx.is_wayland == TRUE) || (monitor.enabled == FALSE) || (monitor.active == -1)) {
 		return (EXIT_ERROR);
 	}
 

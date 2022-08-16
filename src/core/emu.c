@@ -1144,7 +1144,7 @@ void emu_info_rom(void) {
 
 		if (info.format == iNES_1_0) {
 			fprintf(stderr, "sha1prg       : %40s\n", info.sha1sum.prg.string);
-			if (chr_size()) {
+			if ((mapper.write_vram == FALSE) && chr_size()) {
 				fprintf(stderr, "shachr        : %40s\n", info.sha1sum.chr.string);
 			}
 		}
