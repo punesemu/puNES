@@ -6,6 +6,7 @@
     <file>icons/pixel.svg</file>
     <file>icons/monitor_screen.svg</file>
     <file>icons/copy.svg</file>
+    <file>icons/virtual_keyboard.svg</file>
     <file>icons/recording.svg</file>
     <file>icons/gamepad_stick_click.svg</file>
     <file>icons/gamepad_playstation_3_dpad_down.svg</file>
@@ -203,6 +204,7 @@
     <file>pics/btn_donate_SM.gif</file>
     <file>pics/btn_donateCC_LG.gif</file>
     <file>pics/overlay_controller.png</file>
+    <file>pics/overlay_family_basic_keyboard.png</file>
     <file>pics/overlay_controller_left.png</file>
     <file>pics/overlay_controller_exp_port.png</file>
     <file>pics/Nes_controller.svg</file>
