@@ -45,7 +45,7 @@ class hexSpinBox : public QSpinBox {
 #include "wdgCheatsEditor.hh"
 
 class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
-		Q_OBJECT
+	Q_OBJECT
 
 	private:
 		bool new_cheat;

@@ -24,7 +24,7 @@
 #include "dlgStdPad.hpp"
 
 class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
-		Q_OBJECT
+	Q_OBJECT
 
 	private:
 		struct _input {

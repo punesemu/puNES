@@ -24,7 +24,7 @@
 #include "wdgSettingsRecording.hh"
 
 class wdgSettingsRecording : public QWidget, public Ui::wdgSettingsRecording {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 		wdgSettingsRecording(QWidget *parent = 0);
@@ -60,7 +60,7 @@ class wdgSettingsRecording : public QWidget, public Ui::wdgSettingsRecording {
 // ----------------------------------------------------------------------------------------------
 
 class wdgRecGetSaveFileName: public QFileDialog {
-		Q_OBJECT
+	Q_OBJECT
 
 	private:
 		QLabel *label_Output_Quality;

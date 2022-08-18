@@ -23,7 +23,7 @@
 #include "wdgSettingsCheats.hh"
 
 class wdgSettingsCheats : public QWidget, public Ui::wdgSettingsCheats {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 		wdgSettingsCheats(QWidget *parent = 0);

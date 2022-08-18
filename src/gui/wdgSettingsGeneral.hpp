@@ -23,7 +23,7 @@
 #include "wdgSettingsGeneral.hh"
 
 class wdgSettingsGeneral : public QWidget, public Ui::wdgSettingsGeneral {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 		wdgSettingsGeneral(QWidget *parent = 0);

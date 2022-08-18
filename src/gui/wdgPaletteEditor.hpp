@@ -23,7 +23,7 @@
 #include <QtWidgets/QLineEdit>
 
 class wdgPaletteWall : public QWidget {
-		Q_OBJECT
+	Q_OBJECT
 
 	protected:
 		QList<QColor> colors;
@@ -125,7 +125,7 @@ class wdgHtmlName : public QLineEdit {
 #include "wdgPaletteEditor.hh"
 
 class wdgPaletteEditor : public QWidget, public Ui::wdgPaletteEditor {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 		wdgPaletteEditor(QWidget *parent = 0);

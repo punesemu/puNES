@@ -26,7 +26,7 @@ typedef QMap<QString, QString> chl_map;
 typedef QList<chl_map> chl_list;
 
 class objCheat : public QObject {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 		chl_list cheats;

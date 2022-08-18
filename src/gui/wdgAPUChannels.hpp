@@ -23,7 +23,7 @@
 #include "wdgAPUChannels.hh"
 
 class wdgAPUChannels : public QWidget, public Ui::wdgAPUChannels {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 		wdgAPUChannels(QWidget *parent = 0);

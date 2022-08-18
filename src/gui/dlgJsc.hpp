@@ -25,7 +25,7 @@
 #include "jstick.h"
 
 class dlgJsc : public QDialog, public Ui::dlgJsc {
-		Q_OBJECT
+	Q_OBJECT
 
 	private:
 		_input_guid guid;

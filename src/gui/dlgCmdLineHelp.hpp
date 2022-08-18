@@ -24,7 +24,7 @@
 #include "common.h"
 
 class dlgCmdLineHelp : public QDialog, public Ui::dlgCmdLineHelp {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 		dlgCmdLineHelp(QWidget *parent = 0, QString name = "");

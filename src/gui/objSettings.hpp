@@ -29,7 +29,7 @@
 #include "gui.h"
 
 class objSettings : public QSettings {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 		QStringList val;

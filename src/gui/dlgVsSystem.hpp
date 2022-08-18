@@ -23,7 +23,7 @@
 #include "dlgVsSystem.hh"
 
 class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 		bool in_update;
