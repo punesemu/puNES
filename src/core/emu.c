@@ -597,6 +597,9 @@ BYTE emu_turn_on(void) {
 		return (EXIT_ERROR);
 	}
 
+	// non viene eseguito nell'input_init() perche' la gui non e' ancora avviata quindi devo eseguirlo dopo il gfx_init().
+	gui_nes_keyboard();
+
 	// setto il cursore
 	gfx_cursor_init();
 

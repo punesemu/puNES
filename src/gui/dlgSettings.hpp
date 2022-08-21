@@ -23,7 +23,7 @@
 #include "dlgSettings.hh"
 
 class dlgSettings : public QDialog, public Ui::dlgSettings {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 		QRect geom;

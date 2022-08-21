@@ -754,6 +754,7 @@ void objSet::to_cfg(QString group) {
 		cpy_utchar_to_val(SET_GUI_OPEN_PATCH_PATH, gui.last_open_patch_path);
 		val.replace(SET_GUI_LAST_POSITION, last_geometry_val(&cfg_from_file.lg));
 		val.replace(SET_GUI_LAST_GEOMETRY_SETTINGS, last_geometry_val(&cfg_from_file.lg_settings));
+		val.replace(SET_GUI_LAST_GEOMETRY_NES_KEYBOARD, last_geometry_val(&cfg_from_file.lg_nes_keyboard));
 		int_to_val(SET_GUI_LANGUAGE, cfg_from_file.language);
 		int_to_val(SET_GUI_TOOLBAR_AREA, cfg_from_file.toolbar.area);
 		int_to_val(SET_GUI_TOOLBAR_HIDDEN, cfg_from_file.toolbar.hidden);
@@ -882,6 +883,7 @@ void objSet::fr_cfg(QString group) {
 		cpy_val_to_utchar(SET_GUI_OPEN_PATCH_PATH, gui.last_open_patch_path, usizeof(gui.last_open_patch_path));
 		last_geometry_val_to_int(SET_GUI_LAST_POSITION, &cfg_from_file.lg);
 		last_geometry_val_to_int(SET_GUI_LAST_GEOMETRY_SETTINGS, &cfg_from_file.lg_settings);
+		last_geometry_val_to_int(SET_GUI_LAST_GEOMETRY_NES_KEYBOARD, &cfg_from_file.lg_nes_keyboard);
 		cfg_from_file.language = val_to_int(SET_GUI_LANGUAGE);
 		cfg_from_file.toolbar.area = val_to_int(SET_GUI_TOOLBAR_AREA);
 		cfg_from_file.toolbar.hidden = val_to_int(SET_GUI_TOOLBAR_HIDDEN);

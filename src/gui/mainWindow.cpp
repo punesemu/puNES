@@ -37,6 +37,7 @@
 #include "extra/singleapplication/singleapplication.h"
 #include "dlgSettings.hpp"
 #include "dlgJsc.hpp"
+#include "dlgKeyboard.hpp"
 #include "wdgMenuBar.hpp"
 #include "wdgOverlayUi.hpp"
 #include "common.h"
@@ -141,6 +142,8 @@ mainWindow::mainWindow() : QMainWindow() {
 	qaction_shcut.integer_in_fullscreen = new QAction(this);
 	qaction_shcut.stretch_in_fullscreen = new QAction(this);
 	qaction_shcut.toggle_menubar_in_fullscreen = new QAction(this);
+	qaction_shcut.toggle_capture_input = new QAction(this);
+	qaction_shcut.toggle_nes_keyboard = new QAction(this);
 	qaction_shcut.audio_enable = new QAction(this);
 	qaction_shcut.save_settings = new QAction(this);
 	qaction_shcut.rwnd.active = new QAction(this);
@@ -310,10 +313,16 @@ void mainWindow::closeEvent(QCloseEvent *event) {
 		cfg->lg.x = geometry().x();
 		cfg->lg.y = geometry().y();
 	}
+
 	cfg->lg_settings.x = dlgsettings->geom.x();
 	cfg->lg_settings.y = dlgsettings->geom.y();
 	cfg->lg_settings.w = dlgsettings->geom.width();
 	cfg->lg_settings.h = dlgsettings->geom.height();
+
+	cfg->lg_nes_keyboard.x = dlgkeyb->geom.x();
+	cfg->lg_nes_keyboard.y = dlgkeyb->geom.y();
+	cfg->lg_nes_keyboard.w = dlgkeyb->geom.width();
+	cfg->lg_nes_keyboard.h = dlgkeyb->geom.height();
 
 	settings_save_GUI();
 
@@ -615,6 +624,15 @@ void mainWindow::shortcuts(void) {
 
 	// Toggle Menubar
 	connect_shortcut(qaction_shcut.toggle_menubar_in_fullscreen, SET_INP_SC_TOGGLE_MENUBAR_IN_FULLSCREEN, SLOT(s_shcut_toggle_menubar()));
+
+	// Nes Keyboard
+	connect_shortcut(qaction_shcut.toggle_capture_input, SET_INP_SC_TOGGLE_CAPTURE_INPUT, SLOT(s_shcut_toggle_capture_input()));
+	connect_shortcut(qaction_shcut.toggle_nes_keyboard, SET_INP_SC_TOGGLE_NES_KEYBOARD, SLOT(s_shcut_toggle_nes_keyboard()));
+
+	// aggiorno il tooltip del nesKeyboardStatusBar
+	if (gui.start) {
+		statusbar->update_statusbar();
+	}
 }
 bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) {
 	int shcut = is_shortcut(event);
@@ -771,32 +789,6 @@ QScreen *mainWindow::win_handle_screen(void) {
 
 	return (screen);
 }
-void mainWindow::update_fds_menu(void) {
-	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
-
-	if (fds.info.enabled && (rwnd.active == FALSE)) {
-		if (fds.drive.disk_ejected) {
-			action_text(action_Eject_Insert_Disk, tr("&Insert disk"), sc);
-		} else {
-			action_text(action_Eject_Insert_Disk, tr("&Eject disk"), sc);
-		}
-
-		menu_Disk_Side->setEnabled(true);
-		ctrl_disk_side(action_Disk_1_side_A);
-		ctrl_disk_side(action_Disk_1_side_B);
-		ctrl_disk_side(action_Disk_2_side_A);
-		ctrl_disk_side(action_Disk_2_side_B);
-		ctrl_disk_side(action_Disk_3_side_A);
-		ctrl_disk_side(action_Disk_3_side_B);
-		ctrl_disk_side(action_Disk_4_side_A);
-		ctrl_disk_side(action_Disk_4_side_B);
-		action_Eject_Insert_Disk->setEnabled(true);
-	} else {
-		action_text(action_Eject_Insert_Disk, tr("&Eject/Insert disk"), sc);
-		menu_Disk_Side->setEnabled(false);
-		action_Eject_Insert_Disk->setEnabled(false);
-	}
-}
 
 void mainWindow::connect_menu_signals(void) {
 	// File
@@ -862,6 +854,7 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_State_Save_to_file, SLOT(s_state_save_file()));
 	connect_action(action_State_Load_from_file, SLOT(s_state_load_file()));
 	// Tools
+	connect_action(action_Virtual_Keyboard, SLOT(s_open_dkeyb()));
 	connect_action(action_Joypad_Gamepads_Debug, SLOT(s_open_djsc()));
 	// Help/About
 	connect_action(action_About, SLOT(s_help()));
@@ -884,6 +877,8 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(qaction_shcut.integer_in_fullscreen, SLOT(s_shcut_integer_in_fullscreen()));
 	connect_action(qaction_shcut.stretch_in_fullscreen, SLOT(s_shcut_stretch_in_fullscreen()));
 	connect_action(qaction_shcut.toggle_menubar_in_fullscreen, SLOT(s_shcut_toggle_menubar()));
+	connect_action(qaction_shcut.toggle_capture_input, SLOT(s_shcut_toggle_capture_input()));
+	connect_action(qaction_shcut.toggle_nes_keyboard, SLOT(s_shcut_toggle_nes_keyboard()));
 	connect_action(qaction_shcut.audio_enable, SLOT(s_shcut_audio_enable()));
 	connect_action(qaction_shcut.save_settings, SLOT(s_shcut_save_settings()));
 	connect_action(qaction_shcut.rwnd.active, SLOT(s_shcut_rwnd_active_deactive_mode()));
@@ -1038,7 +1033,6 @@ void mainWindow::update_menu_nes(void) {
 		action_Fast_Forward->setEnabled(false);
 	}
 }
-void mainWindow::update_menu_tools(void) {}
 void mainWindow::update_menu_state(void) {
 	bool state = false;
 
@@ -1071,6 +1065,39 @@ void mainWindow::update_menu_state(void) {
 
 	action_State_Save_to_file->setEnabled(state);
 	action_State_Load_from_file->setEnabled(state && (tas.type == NOTAS));
+}
+
+void mainWindow::update_fds_menu(void) {
+	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
+
+	if (fds.info.enabled && (rwnd.active == FALSE)) {
+		if (fds.drive.disk_ejected) {
+			action_text(action_Eject_Insert_Disk, tr("&Insert disk"), sc);
+		} else {
+			action_text(action_Eject_Insert_Disk, tr("&Eject disk"), sc);
+		}
+
+		menu_Disk_Side->setEnabled(true);
+		ctrl_disk_side(action_Disk_1_side_A);
+		ctrl_disk_side(action_Disk_1_side_B);
+		ctrl_disk_side(action_Disk_2_side_A);
+		ctrl_disk_side(action_Disk_2_side_B);
+		ctrl_disk_side(action_Disk_3_side_A);
+		ctrl_disk_side(action_Disk_3_side_B);
+		ctrl_disk_side(action_Disk_4_side_A);
+		ctrl_disk_side(action_Disk_4_side_B);
+		action_Eject_Insert_Disk->setEnabled(true);
+	} else {
+		action_text(action_Eject_Insert_Disk, tr("&Eject/Insert disk"), sc);
+		menu_Disk_Side->setEnabled(false);
+		action_Eject_Insert_Disk->setEnabled(false);
+	}
+}
+void mainWindow::update_menu_tools(void) {
+	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TOGGLE_NES_KEYBOARD, KEYBOARD);
+
+	action_text(action_Virtual_Keyboard, tr("&Virtual Keyboard"), sc);
+	action_Virtual_Keyboard->setEnabled(nes_keyboard.enabled);
 }
 
 void mainWindow::action_text(QAction *action, QString description, QString *shortcut) {
@@ -1175,6 +1202,20 @@ void mainWindow::s_set_fullscreen(void) {
 void mainWindow::s_set_vs_window(void) {
 	ext_win.vs_system = !ext_win.vs_system;
 	gui_external_control_windows_show();
+}
+void mainWindow::s_open_dkeyb(void) {
+	int frame_w = frameGeometry().width() - geometry().width();
+	int frame_h = frameGeometry().height() - geometry().height();
+
+	if (dlgkeyb->geom.x() < frame_w) {
+		dlgkeyb->geom.setX(frame_w);
+	}
+	if (dlgkeyb->geom.y() < frame_h) {
+		dlgkeyb->geom.setY(frame_h);
+	}
+
+	dlgkeyb->setGeometry(dlgkeyb->geom);
+	dlgkeyb->show();
 }
 
 void mainWindow::s_open(void) {
@@ -1955,6 +1996,12 @@ void mainWindow::s_shcjoy_read_timer(void) {
 						case SET_INP_SC_TOGGLE_MENUBAR_IN_FULLSCREEN:
 							qaction_shcut.toggle_menubar_in_fullscreen->trigger();
 							break;
+						case SET_INP_SC_TOGGLE_CAPTURE_INPUT:
+							qaction_shcut.toggle_capture_input->trigger();
+							break;
+						case SET_INP_SC_TOGGLE_NES_KEYBOARD:
+							qaction_shcut.toggle_nes_keyboard->trigger();
+							break;
 						case SET_INP_SC_AUDIO_ENABLE:
 							qaction_shcut.audio_enable->trigger();
 							break;
@@ -2113,6 +2160,32 @@ void mainWindow::s_shcut_toggle_menubar(void) {
 	menubar->setVisible(!menubar->isVisible());
 
 	emu_thread_continue();
+}
+void mainWindow::s_shcut_toggle_capture_input(void) {
+	if (nes_keyboard.enabled) {
+		gui.capture_input = !gui.capture_input;
+		if (gui.capture_input) {
+			grabKeyboard();
+			grabMouse();
+			setCursor(Qt::BlankCursor);
+		} else {
+			releaseKeyboard();
+			releaseMouse();
+			unsetCursor();
+		}
+		statusbar->keyb->icon_pixmap(QIcon::Normal);
+		statusbar->keyb->update_tooltip();
+		statusbar->keyb->icon->update();
+	}
+}
+void mainWindow::s_shcut_toggle_nes_keyboard(void) {
+	if (nes_keyboard.enabled) {
+		if (dlgkeyb->isHidden()) {
+			mainwin->s_open_dkeyb();
+		} else {
+			dlgkeyb->hide();
+		}
+	}
 }
 
 void mainWindow::s_et_gg_reset(void) {

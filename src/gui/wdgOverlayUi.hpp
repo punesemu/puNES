@@ -217,6 +217,9 @@ class overlayWidgetInputPort : public overlayWidget {
 		struct _images_oeka_kids_tablet {
 			QImage tile;
 		} oeka_kids_tablet;
+		struct _images_family_basic_keyboard {
+			QImage tile;
+		} family_basic_keyboard;
 		QImage portx;
 		QImage exp_port;
 		int type;
@@ -241,6 +244,7 @@ class overlayWidgetInputPort : public overlayWidget {
 		void draw_snes_mouse(void);
 		void draw_arkanoid_paddle(void);
 		void draw_oeka_kids_tablet(void);
+		void draw_family_basic_keyboard(void);
 		void draw_mouse_coords(void);
 };
 class overlayWidgetRewind : public overlayWidget {
@@ -399,7 +403,7 @@ class overlayWidgetSaveSlot : public overlayWidget {
 		void draw_slots(void);
 };
 class overlayWidgetInfo : public overlayWidget {
-	Q_OBJECT
+		Q_OBJECT
 
 	private:
 		typedef struct _tags {

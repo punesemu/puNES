@@ -52,10 +52,10 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #if defined (WITH_OPENGL)
 #include "opengl.h"
 #endif
-#include "singleapplication.moc"
-#include "singleapplication_p.moc"
+#include "mainApplication.hpp"
 #include "mainWindow.hpp"
 #include "objCheat.hpp"
+#include "dlgKeyboard.hpp"
 #include "dlgSettings.hpp"
 #include "dlgUncomp.hpp"
 #include "dlgVsSystem.hpp"
@@ -79,7 +79,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 static void gui_is_in_desktop(int *x, int *y);
 
 static struct _qt {
-	SingleApplication *app;
+	mainApplication *app;
 	mainWindow *mwin;
 	wdgScreen *screen;
 	objCheat *objch;
@@ -94,6 +94,9 @@ static struct _qt {
 	// controlli esterni
 	dlgVsSystem *vssystem;
 	dlgJsc *djsc;
+
+	// dialog della tastiera virtuale
+	dlgKeyboard *dkeyb;
 
 	// QObject che non mandano un pause quando in background
 	QList<QWidget *>no_bck_pause;
@@ -116,7 +119,7 @@ class appEventFilter: public QObject {
 };
 
 void gui_init(int *argc, char **argv) {
-	QFlags<SingleApplication::Mode> mode = SingleApplication::Mode::ExcludeAppVersion | SingleApplication::Mode::ExcludeAppPath;
+	QFlags<mainApplication::Mode> mode = mainApplication::Mode::ExcludeAppVersion | mainApplication::Mode::ExcludeAppPath;
 	int i = 0;
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -131,7 +134,7 @@ void gui_init(int *argc, char **argv) {
 
 	memset(&gui, 0, sizeof(gui));
 	qt = {};
-	qt.app = new SingleApplication((*argc), argv, true, mode);
+	qt.app = new mainApplication((*argc), argv, true, mode);
 
 	info.gui = TRUE;
 	gui.in_update = FALSE;
@@ -191,6 +194,7 @@ BYTE gui_create(void) {
 
 	gui_is_in_desktop(&cfg->lg.x, &cfg->lg.y);
 	gui_is_in_desktop(&cfg->lg_settings.x, &cfg->lg_settings.y);
+	gui_is_in_desktop(&cfg->lg_nes_keyboard.x, &cfg->lg_nes_keyboard.y);
 	qt.mwin->setGeometry(cfg->lg.x, cfg->lg.y, 0, 0);
 
 	qt.mwin->show();
@@ -201,11 +205,13 @@ BYTE gui_create(void) {
 	memset(&ext_win, 0x00, sizeof(ext_win));
 	qt.vssystem = new dlgVsSystem(qt.mwin);
 	qt.djsc = new dlgJsc(qt.mwin);
+	qt.dkeyb = new dlgKeyboard(qt.mwin);
 
 	qt.no_bck_pause.append(qt.mwin);
 	qt.no_bck_pause.append(qt.dset);
 	qt.no_bck_pause.append(qt.vssystem);
 	qt.no_bck_pause.append(qt.djsc);
+	qt.no_bck_pause.append(qt.dkeyb);
 
 	gmouse.hidden = FALSE;
 	gmouse.timer = gui_get_ms();
@@ -616,6 +622,10 @@ void gui_dlgjsc_emit_update_joy_combo(void) {
 	if (qt.djsc->isVisible()) {
 		emit qt.djsc->et_update_joy_combo();
 	}
+}
+
+void *gui_dlgkeyboard_get_ptr(void) {
+	return ((void *)qt.dkeyb);
 }
 
 void gui_js_joyval_icon_desc(int index, DBWORD input, void *icon, void *desc) {

@@ -5,6 +5,8 @@ dlgCmdLineHelp.moc: dlgCmdLineHelp.hpp
 	$(MOC) $(srcdir)/dlgCmdLineHelp.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgJsc.moc: dlgJsc.hpp
 	$(MOC) $(srcdir)/dlgJsc.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+dlgKeyboard.moc: dlgKeyboard.hpp
+	$(MOC) $(srcdir)/dlgKeyboard.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgSettings.moc: dlgSettings.hpp
 	$(MOC) $(srcdir)/dlgSettings.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgStdPad.moc: dlgStdPad.hpp
@@ -13,6 +15,8 @@ dlgUncomp.moc: dlgUncomp.hpp
 	$(MOC) $(srcdir)/dlgUncomp.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgVsSystem.moc: dlgVsSystem.hpp
 	$(MOC) $(srcdir)/dlgVsSystem.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+mainApplication.moc: mainApplication.hpp
+	$(MOC) $(srcdir)/mainApplication.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 mainWindow.moc: mainWindow.hpp
 	$(MOC) $(srcdir)/mainWindow.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 objCheat.moc: objCheat.hpp
@@ -70,6 +74,8 @@ dlgCmdLineHelp.hh: designer/dlgCmdLineHelp.ui
 	$(UIC) $(srcdir)/designer/dlgCmdLineHelp.ui -o $@
 dlgJsc.hh: designer/dlgJsc.ui
 	$(UIC) $(srcdir)/designer/dlgJsc.ui -o $@
+dlgKeyboard.hh: designer/dlgKeyboard.ui
+	$(UIC) $(srcdir)/designer/dlgKeyboard.ui -o $@
 dlgSettings.hh: designer/dlgSettings.ui
 	$(UIC) $(srcdir)/designer/dlgSettings.ui -o $@
 dlgStdPad.hh: designer/dlgStdPad.ui
@@ -163,11 +169,13 @@ BUILT_SOURCES = \
 BUILT_SOURCES += \
 	dlgCmdLineHelp.moc \
 	dlgJsc.moc \
+	dlgKeyboard.moc \
 	dlgSettings.moc \
 	dlgStdPad.moc \
 	dlgUncomp.moc \
 	dlgVsSystem.moc \
 	mainWindow.moc \
+	mainApplication.moc \
 	objCheat.moc \
 	objSettings.moc \
 	singleapplication.moc \
@@ -192,13 +200,14 @@ BUILT_SOURCES += \
 	wdgToolBar.moc
 
 BUILT_SOURCES += \
-	mainWindow.hh \
 	dlgCmdLineHelp.hh \
 	dlgJsc.hh \
+	dlgKeyboard.hh \
 	dlgSettings.hh \
 	dlgStdPad.hh \
 	dlgUncomp.hh \
 	dlgVsSystem.hh \
+	mainWindow.hh \
 	wdgAPUChannels.hh \
 	wdgCheatsEditor.hh \
 	wdgNTSCFilter.hh \
@@ -227,6 +236,8 @@ libgui_a_SOURCES = \
 	cmd_line.h \
 	dlgCmdLineHelp.cpp \
 	dlgCmdLineHelp.hpp \
+	dlgKeyboard.cpp \
+	dlgKeyboard.hpp \
 	dlgJsc.cpp \
 	dlgJsc.hpp \
 	dlgSettings.cpp \
@@ -237,12 +248,15 @@ libgui_a_SOURCES = \
 	dlgUncomp.hpp \
 	dlgVsSystem.cpp \
 	dlgVsSystem.hpp \
+	mainApplication.cpp \
+	mainApplication.hpp \
 	mainWindow.cpp \
 	mainWindow.hpp \
 	objCheat.cpp \
 	objCheat.hpp \
 	objSettings.cpp \
 	objSettings.hpp \
+	qNativeScanCode.hpp \
 	qt.cpp \
 	qt.h \
 	recent_roms.cpp \
@@ -307,6 +321,7 @@ endif
 
 if LINUX
 libgui_a_SOURCES += \
+	qNativeScanCode_x11.cpp \
 	linux/os_jstick.c \
 	linux/os_jstick.h \
 	linux/os_linux.h
@@ -321,6 +336,7 @@ endif
 
 if BSD
 libgui_a_SOURCES += \
+	qNativeScanCode_x11.cpp \
 	bsd/os_jstick.c \
 	bsd/os_jstick.h \
 	bsd/os_bsd.h
@@ -335,6 +351,7 @@ endif
 
 if WINDOWS
 libgui_a_SOURCES += \
+	qNativeScanCode_win.cpp \
 	windows/os_jstick.c \
 	windows/os_jstick.h \
 	windows/os_windows.h \

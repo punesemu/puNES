@@ -85,29 +85,31 @@ libcore_a_SOURCES += \
 endif
 
 libcore_a_SOURCES += \
-	input/arkanoid.h \
 	input/arkanoid.c \
-	input/famicom.h \
+	input/arkanoid.h \
+	input/family_basic_keyboard.c \
+	input/family_basic_keyboard.h \
 	input/famicom.c \
-	input/four_score.h \
+	input/famicom.h \
 	input/four_score.c \
+	input/four_score.h \
 	input/mouse.h \
-	input/nes_001.h \
 	input/nes_001.c \
-	input/nsf_controller.h \
+	input/nes_001.h \
 	input/nsf_controller.c \
-	input/nsf_mouse.h \
+	input/nsf_controller.h \
 	input/nsf_mouse.c \
-	input/oeka_kids_tablet.h \
+	input/nsf_mouse.h \
 	input/oeka_kids_tablet.c \
-	input/snes_mouse.h \
+	input/oeka_kids_tablet.h \
 	input/snes_mouse.c \
-	input/standard_controller.h \
+	input/snes_mouse.h \
 	input/standard_controller.c \
-	input/vs.h \
+	input/standard_controller.h \
 	input/vs.c \
-	input/zapper.h \
-	input/zapper.c
+	input/vs.h \
+	input/zapper.c \
+	input/zapper.h
 
 libcore_a_SOURCES += \
 	../extra/kiss_fft130/kiss_fft.c \

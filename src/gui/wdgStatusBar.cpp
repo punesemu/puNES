@@ -21,9 +21,11 @@
 #include <QtWidgets/QLabel>
 #include "wdgStatusBar.moc"
 #include "mainWindow.hpp"
+#include "dlgKeyboard.hpp"
 #include "conf.h"
 #include "patcher.h"
 #include "recording.h"
+#include "gui.h"
 
 // -------------------------------- Statusbar -----------------------------------------
 
@@ -31,13 +33,16 @@ wdgStatusBar::wdgStatusBar(QWidget *parent) : QStatusBar(parent) {
 	setObjectName("statusbar");
 	setSizeGripEnabled(false);
 
-	layout()->setContentsMargins(QMargins(0,0,0,0));
+	layout()->setContentsMargins(QMargins(0, 0, 0, 0));
 	layout()->setSpacing(0);
 
 	//setStyleSheet("QStatusBar::item { border: 1px solid; border-radius: 3px; } ");
 
 	info = new infoStatusBar(this);
 	addWidget(info, 1);
+
+	keyb = new nesKeyboardStatusBar(this);
+	addWidget(keyb, 0);
 
 	alg = new alignmentStatusBar(this);
 	addWidget(alg, 0);
@@ -64,13 +69,14 @@ void wdgStatusBar::showEvent(QShowEvent *event) {
 void wdgStatusBar::update_statusbar(void) {
 	alg->update_label();
 	info->update_label();
+	keyb->update_tooltip();
 }
 
 // ---------------------------------- Info --------------------------------------------
 
 infoStatusBar::infoStatusBar(QWidget *parent) : QWidget(parent) {
 	hbox = new QHBoxLayout(this);
-	hbox->setContentsMargins(QMargins(0,0,0,0));
+	hbox->setContentsMargins(QMargins(0, 0, 0, 0));
 	hbox->setSpacing(SPACING);
 
 	setLayout(hbox);
@@ -118,10 +124,7 @@ void infoStatusBar::update_label(void) {
 alignmentStatusBar::alignmentStatusBar(QWidget *parent) : QFrame(parent) {
 	QHBoxLayout *layout = new QHBoxLayout(this);
 
-	setFrameShape(QFrame::Panel);
-	setFrameShadow(QFrame::Sunken);
-
-	layout->setContentsMargins(QMargins(0,0,0,0));
+	layout->setContentsMargins(QMargins(0, 0, 0, 0));
 
 	label = new QLabel(this);
 	label->setText("c00p0");
@@ -146,10 +149,7 @@ void alignmentStatusBar::update_label(void) {
 recStatusBar::recStatusBar(QWidget *parent) : QFrame(parent) {
 	QHBoxLayout *layout = new QHBoxLayout(this);
 
-	setFrameShape(QFrame::Panel);
-	setFrameShadow(QFrame::Sunken);
-
-	layout->setContentsMargins(QMargins(0,0,0,0));
+	layout->setContentsMargins(QMargins(0, 0, 0, 0));
 
 	desc = new QLabel(this);
 	layout->addWidget(desc);
@@ -246,4 +246,87 @@ void recStatusBar::s_context_menu(const QPoint &pos) {
 	menu.addAction(mainwin->action_Start_Stop_Video_recording);
 #endif
 	menu.exec(global_pos);
+}
+
+// --------------------------------- Keyboard -----------------------------------------
+
+nesKeyboardIcon::nesKeyboardIcon(QWidget* parent) : QLabel(parent) {}
+nesKeyboardIcon::~nesKeyboardIcon() {}
+
+void nesKeyboardIcon::mousePressEvent(QMouseEvent *event) {
+	emit clicked(event->button());
+}
+
+// --
+
+nesKeyboardStatusBar::nesKeyboardStatusBar(QWidget *parent) : QFrame(parent) {
+	QHBoxLayout *layout = new QHBoxLayout(this);
+
+	layout->setContentsMargins(QMargins(0, 0, 0, 0));
+
+	icon = new nesKeyboardIcon(this);
+	layout->addWidget(icon);
+
+	icon_pixmap(QIcon::Normal);
+
+	setLayout(layout);
+
+	connect(icon, SIGNAL(clicked(int)), this, SLOT(s_clicked(int)));
+}
+nesKeyboardStatusBar::~nesKeyboardStatusBar() {}
+
+void nesKeyboardStatusBar::changeEvent(QEvent *event) {
+	if (event->type() == QEvent::LanguageChange) {
+		update_tooltip();
+	} else {
+		QWidget::changeEvent(event);
+	}
+}
+
+void nesKeyboardStatusBar::update_tooltip(void) {
+	QString tooltip = "";
+
+	if (isEnabled()) {
+		tooltip += "<body style=\"margin-up:0px; margin-down:0px; margin-left:0px; vertical-align:middle;\">";
+		tooltip += "<img src=':/pics/pics/mouse_left_button.png'>";
+		if (!mainwin->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->key().toString().isEmpty()) {
+			tooltip += " / [" + mainwin->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->key().toString() + "]";
+		}
+		tooltip += " : ";
+		tooltip += tr("Capture/Release the Input");
+		tooltip += "<body style=\"margin-left:10px;\">";
+		tooltip += "<img src=':/pics/pics/hostkey.png'> ";
+		tooltip += tr("Input is released");
+		tooltip += "<br>";
+		tooltip += "<img src=':/pics/pics/hostkey_captured.png'> ";
+		tooltip += tr("Input is captured");
+		tooltip += "</body>";
+		tooltip += "<br>";
+		tooltip += "<img src=':/pics/pics/mouse_right_button.png'> ";
+		if (!mainwin->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->key().toString().isEmpty()) {
+			tooltip += " / [" + mainwin->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->key().toString() + "]";
+		}
+		tooltip += " : ";
+		tooltip += tr("Show/Hide Virtual Keyboard");
+		tooltip += "</body>";
+	}
+
+	icon->setToolTip(tooltip);
+}
+void nesKeyboardStatusBar::icon_pixmap(QIcon::Mode mode) {
+	if (gui.capture_input) {
+		icon->setPixmap(QIcon(":/pics/pics/hostkey_captured.png").pixmap(16, 16,  mode));
+	} else {
+		icon->setPixmap(QIcon(":/pics/pics/hostkey.png").pixmap(16, 16,  mode));
+	}
+}
+
+void nesKeyboardStatusBar::s_clicked(int button) {
+	if (nes_keyboard.enabled) {
+		if (button == Qt::LeftButton) {
+			mainwin->qaction_shcut.toggle_capture_input->trigger();
+		} else if (button == Qt::RightButton) {
+			mainwin->qaction_shcut.toggle_nes_keyboard->trigger();
+		}
+	}
 }

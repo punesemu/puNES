@@ -80,6 +80,10 @@ void dlgSettings::retranslateUi(QDialog *dlgSettings) {
 
 	// Toggle Menubar
 	mainwin->qaction_shcut.toggle_menubar_in_fullscreen->setText(tr("Toggle the Menu Bar in Fullscreen"));
+
+	// nes keyboard
+	mainwin->qaction_shcut.toggle_capture_input->setText(tr("Capture/Release Input"));
+	mainwin->qaction_shcut.toggle_nes_keyboard->setText(tr("Show/Hide Virtual Keyboard"));
 }
 void dlgSettings::update_dialog(void) {
 	update_tab_general();

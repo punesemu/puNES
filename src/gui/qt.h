@@ -120,6 +120,7 @@ enum _overlay_info_alignment {
 #define wdgrewind ((wdgRewind *)gui_wdgrewind_get_ptr())
 #define dlgsettings ((dlgSettings *)gui_dlgsettings_get_ptr())
 #define dlgjsc ((dlgJsc *)gui_dlgjsc_get_ptr())
+#define dlgkeyb ((dlgKeyboard *)gui_dlgkeyboard_get_ptr())
 #define objcheat ((objCheat *)gui_objcheat_get_ptr())
 #define wdgoverlayui ((wdgOverlayUi *)gui_wdgoverlayui_get_ptr())
 
@@ -142,6 +143,7 @@ typedef struct _gui {
 
 	uint8_t start;
 	uint8_t in_update;
+	uint8_t capture_input;
 
 	// lost focus pause
 	uint8_t main_win_lfp;
@@ -264,6 +266,8 @@ EXTERNC void gui_dlgsettings_input_update_joy_combo(void);
 EXTERNC void *gui_dlgjsc_get_ptr(void);
 EXTERNC void gui_dlgjsc_emit_update_joy_combo(void);
 
+EXTERNC void *gui_dlgkeyboard_get_ptr(void);
+
 EXTERNC void gui_js_joyval_icon_desc(int index, DBWORD input, void *icon, void *desc);
 
 EXTERNC void *gui_dlgdebugger_get_ptr(void);
@@ -274,6 +278,8 @@ EXTERNC void gui_external_control_windows_update_pos(void);
 
 EXTERNC void gui_vs_system_update_dialog(void);
 EXTERNC void gui_vs_system_insert_coin(void);
+
+EXTERNC void gui_nes_keyboard(void);
 
 #if defined (WITH_OPENGL)
 EXTERNC void gui_wdgopengl_make_current(void);

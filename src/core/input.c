@@ -35,6 +35,7 @@
 #include "input/snes_mouse.h"
 #include "input/arkanoid.h"
 #include "input/oeka_kids_tablet.h"
+#include "input/family_basic_keyboard.h"
 
 #define SET_WR_REG(funct) input_wr_reg = funct
 #define SET_RD_REG(id, funct) input_rd_reg[id] = funct
@@ -48,6 +49,7 @@
 _r4016 r4016;
 _port port[PORT_MAX];
 _port_funct port_funct[PORT_MAX];
+_nes_keyboard nes_keyboard;
 
 BYTE (*input_wr_reg)(BYTE value);
 BYTE (*input_rd_reg[2])(BYTE openbus, BYTE nport);
@@ -65,6 +67,10 @@ void input_init(BYTE set_cursor) {
 	input_init_arkanoid();
 	input_init_oeka_kids_tablet();
 	input_init_nsf_mouse();
+	input_init_family_basic_keyboard();
+
+	nes_keyboard.enabled = FALSE;
+	nes_keyboard.type = -1;
 
 	if (nsf.enabled == TRUE) {
 		SET_WR_REG(NULL);
@@ -240,6 +246,14 @@ void input_init(BYTE set_cursor) {
 				SET_WR(PORT4, input_wr_oeka_kids_tablet);
 				SET_RD(PORT4, input_rd_oeka_kids_tablet);
 				break;
+			case CTRL_FAMILY_BASIC_KEYBOARD:
+				nes_keyboard.enabled = TRUE;
+				nes_keyboard.type = CTRL_FAMILY_BASIC_KEYBOARD;
+				SET_WR(PORT3, input_wr_family_basic_keyboard);
+				SET_RD(PORT3, input_rd_family_basic_keyboard);
+				SET_RD(PORT4, input_rd_family_basic_keyboard);
+				SET_ADD_EVENT(PORT3, input_add_event_family_basic_keyboard);
+				break;
 			default:
 				break;
 		}
@@ -248,7 +262,7 @@ void input_init(BYTE set_cursor) {
 	if (set_cursor == TRUE) {
 		gfx_cursor_set();
 	}
-
+	gui_nes_keyboard();
 	gui_overlay_update();
 }
 

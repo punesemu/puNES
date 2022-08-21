@@ -206,6 +206,10 @@
     <file>pics/overlay_controller.png</file>
     <file>pics/overlay_family_basic_keyboard.png</file>
     <file>pics/overlay_controller_left.png</file>
+    <file>pics/hostkey.png</file>
+    <file>pics/hostkey_captured.png</file>
+    <file>pics/mouse_left_button.png</file>
+    <file>pics/mouse_right_button.png</file>
     <file>pics/overlay_controller_exp_port.png</file>
     <file>pics/Nes_controller.svg</file>
     <file>pics/overlay_controller_b.png</file>

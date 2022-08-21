@@ -57,7 +57,7 @@ class qtHelper {
 		static void spinbox_set_value(void *sbox, int value);
 };
 class timerEgds : public QTimer {
-		Q_OBJECT
+	Q_OBJECT
 
 	private:
 		enum with_emu_pause {
@@ -111,7 +111,7 @@ class actionOneTrigger : public QAction {
 		void reset_count(void);
 };
 class mainWindow : public QMainWindow, public Ui::mainWindow {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 		struct _qaction_shcut_extern {
@@ -129,6 +129,8 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			QAction *integer_in_fullscreen;
 			QAction *stretch_in_fullscreen;
 			QAction *toggle_menubar_in_fullscreen;
+			QAction *toggle_capture_input;
+			QAction *toggle_nes_keyboard;
 			QAction *audio_enable;
 			QAction *save_settings;
 			struct _qaction_shcut_extern_rwnd {
@@ -152,6 +154,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		wdgScreen *screen;
 		wdgStatusBar *statusbar;
 		wdgToolBar *toolbar;
+		QShortcut *shortcut[SET_MAX_NUM_SC];
 
 	private:
 		struct _shcjoy {
@@ -168,7 +171,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			QMutex mutex;
 			QString message;
 		} secondary_instance;
-		QShortcut *shortcut[SET_MAX_NUM_SC];
 		QTranslator *translator;
 		QTranslator *qtTranslator;
 		bool setup_in_out_fullscreen;
@@ -215,7 +217,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void toggle_toolbars(void);
 		void reset_min_max_size(void);
 		QScreen *win_handle_screen(void);
-		void update_fds_menu(void);
 
 	private:
 		void connect_menu_signals(void);
@@ -227,8 +228,11 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 	private:
 		void update_menu_file(void);
 		void update_menu_nes(void);
-		void update_menu_tools(void);
 		void update_menu_state(void);
+
+	public:
+		void update_fds_menu(void);
+		void update_menu_tools(void);
 
 	private:
 		void action_text(QAction *action, QString description, QString *shortcut);
@@ -238,6 +242,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 	public slots:
 		void s_set_fullscreen(void);
 		void s_set_vs_window(void);
+		void s_open_dkeyb(void);
 
 	private slots:
 		void s_open(void);
@@ -292,6 +297,8 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_shcut_rwnd_fast_forward(void);
 		void s_shcut_rwnd_step_forward(void);
 		void s_shcut_toggle_menubar(void);
+		void s_shcut_toggle_capture_input(void);
+		void s_shcut_toggle_nes_keyboard(void);
 
 	private slots:
 		void s_et_gg_reset(void);
