@@ -348,8 +348,8 @@ BYTE emu_load_rom(void) {
 	fds_quit();
 	map_quit();
 
-	umemset(info.rom.file, 0x00, usizeof(info.rom.file));
-	ustrncpy(info.rom.file, info.rom.change_rom, usizeof(info.rom.file) - 1);
+	ustrncpy(info.rom.file, info.rom.change_rom, usizeof(info.rom.file));
+	info.rom.file[usizeof(info.rom.file) - 1] = 0x00;
 
 	info.doublebuffer = TRUE;
 
@@ -422,7 +422,6 @@ BYTE emu_load_rom(void) {
 
 		info.no_rom = TRUE;
 	}
-
 
 #if defined (FULLSCREEN_RESFREQ)
 	// mi salvo la vecchia modalita'
@@ -1264,16 +1263,17 @@ static void emu_cpu_initial_cycles(void) {
 static BYTE emu_ctrl_if_rom_exist(void) {
 	BYTE found = FALSE;
 
-	umemset(info.rom.change_rom, 0x00, usizeof(info.rom.change_rom));
-
 	if (info.rom.from_load_menu) {
-		ustrncpy(info.rom.change_rom, info.rom.from_load_menu, usizeof(info.rom.change_rom) - 1);
+		ustrncpy(info.rom.change_rom, info.rom.from_load_menu, usizeof(info.rom.change_rom));
+		info.rom.change_rom[usizeof(info.rom.change_rom) - 1] = 0x00;
 		free(info.rom.from_load_menu);
 		info.rom.from_load_menu = NULL;
 	} else if (gamegenie.rom) {
-		ustrncpy(info.rom.change_rom, gamegenie.rom, usizeof(info.rom.change_rom) - 1);
+		ustrncpy(info.rom.change_rom, gamegenie.rom, usizeof(info.rom.change_rom));
+		info.rom.change_rom[usizeof(info.rom.change_rom) - 1] = 0x00;
 	} else {
-		ustrncpy(info.rom.change_rom, info.rom.file, usizeof(info.rom.change_rom) - 1);
+		ustrncpy(info.rom.change_rom, info.rom.file, usizeof(info.rom.change_rom));
+		info.rom.change_rom[usizeof(info.rom.change_rom) - 1] = 0x00;
 	}
 
 	if (info.rom.change_rom[0]) {
@@ -1306,7 +1306,8 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 						break;
 					case UNCOMPRESS_EXIT_IS_COMP_BUT_NOT_SELECTED:
 					case UNCOMPRESS_EXIT_IS_COMP_BUT_NO_ITEMS:
-						ustrncpy(info.rom.change_rom, info.rom.file, usizeof(info.rom.change_rom) - 1);
+						ustrncpy(info.rom.change_rom, info.rom.file, usizeof(info.rom.change_rom));
+						info.rom.change_rom[usizeof(info.rom.change_rom) - 1] = 0x00;
 						break;
 					default:
 						break;
@@ -1335,8 +1336,8 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 	}
 
 	if (found == FALSE) {
-		umemset(info.rom.change_rom, 0x00, usizeof(info.rom.change_rom));
-		ustrncpy(info.rom.change_rom, info.rom.file, usizeof(info.rom.change_rom) - 1);
+		ustrncpy(info.rom.change_rom, info.rom.file, usizeof(info.rom.change_rom));
+		info.rom.change_rom[usizeof(info.rom.change_rom) - 1] = 0x00;
 		return (EXIT_ERROR);
 	}
 
