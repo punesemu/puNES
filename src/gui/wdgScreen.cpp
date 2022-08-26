@@ -20,19 +20,23 @@
 #include <QtCore/QMimeData>
 #include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
+#include <QtGui/QClipboard>
 #if defined (WITH_OPENGL)
 #include "opengl.h"
 #endif
+#include "wdgScreen.moc"
 #include "mainWindow.hpp"
 #include "objSettings.hpp"
-#include "wdgScreen.moc"
+#include "dlgKeyboard.hpp"
 #include "conf.h"
 #include "tas.h"
 #include "gui.h"
 #include "patcher.h"
+#include "input.h"
 
 wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 	target = NULL;
+	paste = new QAction(this);
 #if defined (WITH_OPENGL)
 	wogl = new wdgOpenGL(this);
 #elif defined (WITH_D3D9)
@@ -54,6 +58,10 @@ wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 
 	connect (this, SIGNAL(et_cursor_set()), this, SLOT(s_cursor_set()));
 	connect (this, SIGNAL(et_cursor_hide(int)), this, SLOT(s_cursor_hide(int)));
+	connect(paste, SIGNAL(triggered()), this, SLOT(s_paste_event()));
+
+	setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(s_context_menu(const QPoint&)));
 
 	installEventFilter(this);
 }
@@ -119,6 +127,9 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 }
 void wdgScreen::dragEnterEvent(QDragEnterEvent *event) {
 	if (event->mimeData()->hasUrls()) {
+		event->acceptProposedAction();
+	}
+	if (nes_keyboard.enabled && event->mimeData()->hasText()) {
 		event->acceptProposedAction();
 	}
 }
@@ -191,7 +202,11 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 		mainwin->change_rom(rom);
 		activateWindow();
 		gui_set_focus();
-		break;
+		return;
+	}
+	if (!event->mimeData()->text().isEmpty() && nes_keyboard.enabled) {
+		dlgkeyb->paste->set_text(event->mimeData()->text());
+		return;
 	}
 }
 void wdgScreen::resizeEvent(QResizeEvent *event) {
@@ -230,5 +245,27 @@ void wdgScreen::s_cursor_hide(int hide) {
 		setCursor(Qt::BlankCursor);
 	} else {
 		cursor_set();
+	}
+}
+void wdgScreen::s_paste_event(void) {
+	const QClipboard *clipboard = QApplication::clipboard();
+	const QMimeData *mimeData = clipboard->mimeData();
+
+	if (mimeData->hasUrls() || mimeData->hasText()) {
+		dropEvent(new QDropEvent(QPointF(0, 0), Qt::CopyAction, clipboard->mimeData(), Qt::NoButton, Qt::NoModifier));
+	}
+}
+void wdgScreen::s_context_menu(const QPoint &pos) {
+	if (nes_keyboard.enabled && !info.no_rom) {
+		const QClipboard *clipboard = QApplication::clipboard();
+		const QMimeData *mimeData = clipboard->mimeData();
+		QPoint global_pos = mapToGlobal(pos);
+		QMenu menu;
+
+		paste->setText(tr("Paste"));
+		paste->setEnabled(mimeData->hasUrls() || mimeData->hasText());
+
+		menu.addAction(paste);
+		menu.exec(global_pos);
 	}
 }

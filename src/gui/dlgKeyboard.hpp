@@ -40,16 +40,19 @@ class keyboardButton : public QPushButton {
 			MIN_W = 40,
 			MIN_H = MIN_W
 		};
-		struct _keyboardButton_modifier {
+		typedef struct _modifier {
 			modifier_types type;
 			BYTE state;
-		} modifier;
+		} _modifier;
+
+	public:
 		SWORD index;
 		SWORD key;
 		DBWORD scancode;
 		QString line1;
 		QString line2;
 		BYTE pressed;
+		_modifier modifier;
 
 	public:
 		keyboardButton(QWidget *parent);
@@ -65,6 +68,102 @@ class keyboardButton : public QPushButton {
 		void reset(void);
 };
 
+// keyboardObject -----------------------------------------------------------------------------------------------------------------
+
+class keyboardObject : public QObject {
+	Q_OBJECT
+
+	public:
+		typedef struct _character {
+			QString string;
+			SBYTE keys[4];
+		} _character;
+		typedef struct _charset {
+			_character *set;
+			BYTE length;
+		} _charset;
+		typedef struct _keycode {
+			DBWORD code;
+			BYTE row;
+			BYTE column;
+			keyboardButton::modifier_types modifier;
+			QString line1;
+			QString line2;
+		} _keycode;
+		typedef struct _delay {
+			BYTE counter;
+			BYTE set;
+			BYTE unset;
+		} _delay;
+
+	public:
+		int rows;
+		int columns;
+		_delay delay;
+
+	public:
+		keyboardObject(QObject *parent = 0);
+		~keyboardObject();
+
+	protected:
+		void init(void);
+		virtual void set_keycodes(void);
+		virtual void set_charset();
+};
+
+// familyBasicKeyboard -----------------------------------------------------------------------------------------------------------
+
+class familyBasicKeyboard : public keyboardObject {
+	Q_OBJECT
+
+	public:
+		familyBasicKeyboard(QObject *parent = 0);
+		~familyBasicKeyboard();
+
+	protected:
+		void set_keycodes(void);
+		void set_charset();
+};
+
+// pasteObject -------------------------------------------------------------------------------------------------------------------
+
+class pasteObject : public QObject {
+	Q_OBJECT
+
+	private:
+		enum paste_modes {
+			PASTE_SET,
+			PAST_UNSET
+		};
+
+	public:
+		BYTE enable;
+
+	private:
+		BYTE type;
+		int index;
+		QString string;
+		BYTE break_insert;
+		QList<keyboardObject::_character> charset;
+		keyboardObject::_character *ch;
+		keyboardObject::_delay delay;
+
+	public:
+		pasteObject(QObject *parent = 0);
+		~pasteObject();
+
+	public:
+		void reset(void);
+		void set_charset(keyboardObject::_charset charset, keyboardObject::_delay delay);
+		void set_text(QString text);
+		void parse_text(void);
+		void parse_break(void);
+
+	private:
+		void parse_reset(void);
+		void set_keys(BYTE value);
+};
+
 // dlgKeyboard -------------------------------------------------------------------------------------------------------------------
 
 #include "dlgKeyboard.hh"
@@ -77,26 +176,27 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 			KEVENT_NORMAL,
 			KEVENT_VIRTUAL,
 		};
+
+	private:
+		typedef struct _one_click {
+			QList<keyboardButton *> list;
+			BYTE activies;
+		} _one_click;
+		typedef struct _last_press {
+			DBWORD code;
+			double time;
+		} _last_press;
+
+	public:
+		keyboardObject *keyboard;
+		pasteObject *paste;
 		QRect geom;
 
 	private:
-		typedef struct _keycode {
-			DBWORD code;
-			BYTE row;
-			BYTE column;
-			keyboardButton::modifier_types modifier;
-			QString line1;
-			QString line2;
-		} _dlgKeyboard_keycode;
-		struct _one_click {
-			QList<keyboardButton *>list;
-			BYTE activies;
-		} one_click;
-		struct _last_press {
-			DBWORD code;
-			double time;
-		} last_press;
 		keyboardButton *keys[NES_KEYBOARD_MAX_KEYS];
+		_one_click one_click;
+		_last_press last_press;
+		QString last_line;
 
 	public:
 		dlgKeyboard(QWidget *parent = 0);
@@ -112,6 +212,9 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 
 	public:
 		void retranslateUi(QDialog *dlgKeyboard);
+		void reset(void);
+		void set_keycodes(keyboardObject::_keycode keycodes[], int totals);
+		void set_charset(keyboardObject::_charset charset, keyboardObject::_delay delay);
 		bool process_event(QEvent *event);
 		void shortcut_toggle(BYTE mode);
 		void button_press(keyboardButton *kb, key_event_types type);
@@ -120,11 +223,7 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 		void key_event_release(QKeyEvent *keyEvent, key_event_types type);
 
 	public:
-		void reset(void);
-		void familyBasicKeyboard(void);
-
-	private:
-		void init(_dlgKeyboard_keycode kcodes[], int totals);
+		void family_basic_keyboard(void);
 
 	private:
 		bool one_click_find(keyboardButton *kb);

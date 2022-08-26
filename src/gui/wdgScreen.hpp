@@ -67,6 +67,7 @@ class wdgScreen : public QWidget {
 
 	private:
 		QCursor *target;
+		QAction *paste;
 
 	public:
 		wdgScreen(QWidget *parent);
@@ -93,6 +94,8 @@ class wdgScreen : public QWidget {
 	private slots:
 		void s_cursor_set(void);
 		void s_cursor_hide(int hide);
+		void s_paste_event(void);
+		void s_context_menu(const QPoint &pos);
 };
 
 #endif /* WDGSCREEN_HPP_ */

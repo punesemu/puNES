@@ -48,6 +48,7 @@ void input_wr_family_basic_keyboard(BYTE *value, UNUSED(BYTE nport)) {
 	if (family_basic_keyboard.enable) {
 		if ((*value) & 0x01) {
 			family_basic_keyboard.row = 0;
+			gui_nes_keyboard_paste_event();
 		} else if (family_basic_keyboard.column && !column) {
 			family_basic_keyboard.row = (family_basic_keyboard.row + 1) % 10;
 		}
