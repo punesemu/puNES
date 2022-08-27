@@ -260,6 +260,7 @@ void dlgKeyboard::hideEvent(QHideEvent *event) {
 }
 void dlgKeyboard::closeEvent(QCloseEvent *event) {
 	event->ignore();
+	QTimer::singleShot(50, [this] { setVisible(FALSE); });
 }
 
 void dlgKeyboard::retranslateUi(QDialog *dlgKeyboard) {
@@ -487,6 +488,7 @@ void dlgKeyboard::key_event_release(QKeyEvent *keyEvent, key_event_types type) {
 		}
 	}
 }
+
 void dlgKeyboard::family_basic_keyboard(void) {
 	keyboard = new familyBasicKeyboard(this);
 }

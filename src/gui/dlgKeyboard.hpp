@@ -37,7 +37,7 @@ class keyboardButton : public QPushButton {
 			MODIFIERS_ONE_CLICK
 		};
 		enum misc {
-			MIN_W = 40,
+			MIN_W = 45,
 			MIN_H = MIN_W
 		};
 		typedef struct _modifier {
