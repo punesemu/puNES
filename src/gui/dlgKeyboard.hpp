@@ -49,8 +49,10 @@ class keyboardButton : public QPushButton {
 		SWORD index;
 		SWORD key;
 		DBWORD scancode;
-		QString line1;
-		QString line2;
+		QString left;
+		QString up;
+		QString down;
+		QString right;
 		BYTE pressed;
 		_modifier modifier;
 
@@ -64,7 +66,7 @@ class keyboardButton : public QPushButton {
 		void mouseReleaseEvent(QMouseEvent *event);
 
 	public:
-		void set(SWORD index, SWORD key, modifier_types mtype, QString line1, QString line2);
+		void set(SWORD index, SWORD key, modifier_types mtype, QString left, QString up, QString down, QString right);
 		void reset(void);
 };
 
@@ -75,7 +77,7 @@ class keyboardObject : public QObject {
 
 	public:
 		typedef struct _character {
-			QString string;
+			QList<QString> string;
 			SBYTE keys[4];
 		} _character;
 		typedef struct _charset {
@@ -87,8 +89,10 @@ class keyboardObject : public QObject {
 			BYTE row;
 			BYTE column;
 			keyboardButton::modifier_types modifier;
-			QString line1;
-			QString line2;
+			QString left;
+			QString up;
+			QString down;
+			QString right;
 		} _keycode;
 		typedef struct _delay {
 			BYTE counter;
@@ -109,6 +113,9 @@ class keyboardObject : public QObject {
 		void init(void);
 		virtual void set_keycodes(void);
 		virtual void set_charset();
+
+	public:
+		virtual QList<QList<SBYTE>> parse_text(keyboardObject::_character *ch);
 };
 
 // familyBasicKeyboard -----------------------------------------------------------------------------------------------------------
@@ -123,6 +130,14 @@ class familyBasicKeyboard : public keyboardObject {
 	protected:
 		void set_keycodes(void);
 		void set_charset();
+
+	public:
+		QList<QList<SBYTE>> parse_text(keyboardObject::_character *ch);
+
+	private:
+		SBYTE calc_key(BYTE row, BYTE column);
+		SBYTE calc_kana(void);
+		SBYTE calc_shift(void);
 };
 
 // pasteObject -------------------------------------------------------------------------------------------------------------------
@@ -141,12 +156,15 @@ class pasteObject : public QObject {
 
 	private:
 		BYTE type;
-		int index;
 		QString string;
+		int string_index;
+		int characters_elaborate;
 		BYTE break_insert;
 		QList<keyboardObject::_character> charset;
 		keyboardObject::_character *ch;
 		keyboardObject::_delay delay;
+		QList<QList<SBYTE>> keys;
+		int keys_index;
 
 	public:
 		pasteObject(QObject *parent = 0);

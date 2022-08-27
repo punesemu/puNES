@@ -310,7 +310,7 @@ void dlgKeyboard::set_keycodes(keyboardObject::_keycode keycodes[], int totals) 
 
 		foreach (keyboardButton *kb, kb_list) {
 			if (kc->code == kb->scancode) {
-				kb->set(i, (kc->row * nes_keyboard.columns) + kc->column, kc->modifier, kc->line1, kc->line2);
+				kb->set(i, (kc->row * nes_keyboard.columns) + kc->column, kc->modifier, kc->left, kc->up, kc->down, kc->right);
 				keys[kb->index] = kb;
 				break;
 			}
@@ -487,7 +487,6 @@ void dlgKeyboard::key_event_release(QKeyEvent *keyEvent, key_event_types type) {
 		}
 	}
 }
-
 void dlgKeyboard::family_basic_keyboard(void) {
 	keyboard = new familyBasicKeyboard(this);
 }
@@ -567,28 +566,41 @@ void keyboardButton::paintEvent(QPaintEvent *event) {
 		spainter.setFont(dlgkbd->font());
 		spainter.drawControl(QStyle::CE_PushButton, option);
 
+		painter.setFont(dlgkbd->font());
+		painter.setRenderHint(QPainter::HighQualityAntialiasing);
+
 		painter.save();
 
 		// disegno il testo interno
 		{
+			int corner = 4;
+
 			x = 0;
 			y = 0;
 			w = (qreal)rect().width();
 			h = (qreal)rect().height();
 
-			painter.setFont(dlgkbd->font());
-
-			if (!line1.isEmpty()) {
-				if (!line2.isEmpty()) {
-					h = (qreal)rect().height() / 2.0f;
-					y = h;
-				}
-				painter.drawText(QRectF(x, y, w, h), Qt::AlignCenter, line1);
+			if (!down.isEmpty()) {
+				painter.drawText(QRectF(x, y, w, h - corner), Qt::AlignHCenter | Qt::AlignBottom, down);
 			}
-			if (!line2.isEmpty()) {
-				y = 0;
-				h = (qreal)rect().height() / 2.0f;
-				painter.drawText(QRectF(x, y, w, h), Qt::AlignCenter, line2);
+			if (!right.isEmpty()) {
+				painter.drawText(QRectF(x, y, w - corner, h), Qt::AlignRight | Qt::AlignVCenter, right);
+			}
+			if (!up.isEmpty()) {
+				painter.drawText(QRectF(x, y + corner, w, h), Qt::AlignHCenter | Qt::AlignTop, up);
+			}
+			if (!left.isEmpty()) {
+				QFont bold = dlgkbd->font();
+
+				bold.setBold(true);
+
+				painter.setFont(bold);
+
+				if (down.isEmpty() && right.isEmpty() && up.isEmpty()) {
+					painter.drawText(QRectF(x, y, w, h), Qt::AlignCenter, left);
+				} else {
+					painter.drawText(QRectF(x + corner, y, w, h), Qt::AlignLeft | Qt::AlignVCenter, left);
+				}
 			}
 		}
 
@@ -625,7 +637,6 @@ void keyboardButton::paintEvent(QPaintEvent *event) {
 					break;
 			}
 
-			painter.setRenderHint(QPainter::HighQualityAntialiasing);
 			painter.setPen(QPen(Qt::black, 2.0f));
 			painter.setBrush(brush);
 			painter.drawEllipse(QPointF(x, y), radius, radius);
@@ -642,13 +653,15 @@ void keyboardButton::mouseReleaseEvent(QMouseEvent *event) {
 	QPushButton::mouseReleaseEvent(event);
 }
 
-void keyboardButton::set(SWORD index, SWORD key, modifier_types mtype, QString line1, QString line2) {
+void keyboardButton::set(SWORD index, SWORD key, modifier_types mtype, QString left, QString up, QString down, QString right) {
 	this->index = index;
 	this->key = key;
 	modifier.type = mtype;
 	modifier.state = 0;
-	this->line1 = line1;
-	this->line2 = line2;
+	this->left = left;
+	this->up = up;
+	this->down = down;
+	this->right = right;
 	pressed = FALSE;
 	setEnabled(TRUE);
 }
@@ -657,8 +670,10 @@ void keyboardButton::reset(void) {
 	key = -1;
 	modifier.type = MODIFIERS_NONE;
 	modifier.state = 0;
-	line1 = "";
-	line2 = "";
+	left = "";
+	up = "";
+	down = "";
+	right = "";
 	pressed = FALSE;
 	setEnabled(FALSE);
 }
@@ -701,67 +716,94 @@ void pasteObject::set_text(QString text) {
 	enable = TRUE;
 }
 void pasteObject::parse_text(void) {
+	int i;
+
 	if (delay.counter && (--delay.counter)) {
 		return;
 	}
 
 	if (type == PASTE_SET) {
-		QString character;
-		int i;
+		if (keys_index == keys.length()) {
+			ch = NULL;
 
-		if (index == 0) {
-			gui_max_speed_start();
-		} else if (break_insert || (index == string.length())) {
-			gui_max_speed_stop();
-			enable = FALSE;
-			parse_reset();
-			return;
-		}
+			while (ch == NULL) {
+				QString character;
 
-		character = string.mid(index, 1);
-
-		if ((character.compare(QString("\\"), Qt::CaseInsensitive) == 0) && ((index + 1) < string.length())) {
-			static const QString escape_sequences[] = {
-				"n",  // newline
-				"t",  // horizontal tab
-				"v",  // vertical tab
-				"b",  // backspace
-				"\"", // double quote
-				"r",  // carriage return
-				"0",  // the null character
-				"f"   // form feed
-			};
-			QString second_character = string.mid(index + 1, 1);
-
-			for (i = 0; i < (int)LENGTH(escape_sequences); i++) {
-				if (second_character.compare(escape_sequences[i], Qt::CaseInsensitive) == 0) {
-					character = string.mid(index, 2);
-					index++;
-					break;
+				if (break_insert || (string_index >= string.length())) {
+					if (characters_elaborate > 0) {
+						gui_max_speed_stop();
+					}
+					enable = FALSE;
+					parse_reset();
+					return;
 				}
+
+				character = string.mid(string_index, 1);
+
+				if ((character.compare(QString("\\"), Qt::CaseInsensitive) == 0) && ((string_index + 1) < string.length())) {
+					static const QString escape_sequences[] = {
+						"n",  // newline
+						"t",  // horizontal tab
+						"v",  // vertical tab
+						"b",  // backspace
+						"\"", // double quote
+						"r",  // carriage return
+						"0",  // the null character
+						"f"   // form feed
+					};
+					QString second_character = string.mid(string_index + 1, 1);
+
+					for (i = 0; i < (int)LENGTH(escape_sequences); i++) {
+						if (second_character.compare(escape_sequences[i], Qt::CaseInsensitive) == 0) {
+							character = string.mid(string_index, 2);
+							string_index++;
+							break;
+						}
+					}
+				}
+
+				for (i = 0; i < charset.count(); i++) {
+					BYTE found = FALSE;
+					int a;
+
+					for (a = 0; a < charset[i].string.length(); a++) {
+						if (charset[i].string[a].compare(character.toUpper(), Qt::CaseInsensitive) == 0) {
+							ch = &charset[i];
+							keys = dlgkeyb->keyboard->parse_text(ch);
+							found = TRUE;
+							break;
+						}
+					}
+					if (found) {
+						break;
+					}
+				}
+
+				string_index++;
 			}
+
+			keys_index = 0;
 		}
 
-		index++;
-		ch = NULL;
-
-		for (i = 0; i < charset.count(); i++) {
-			if (charset[i].string.compare(character.toUpper(), Qt::CaseInsensitive) == 0) {
-				ch = &charset[i];
-				set_keys(0x80);
-				break;
-			}
+		if (characters_elaborate == 0) {
+			gui_max_speed_start();
 		}
 
-		if (ch) {
-			delay.counter = delay.set;
-			type = PAST_UNSET;
+		characters_elaborate++;
+
+		for (i = 0; i < keys.at(keys_index).length(); i++) {
+			nes_keyboard.keys[keys.at(keys_index).at(i)] = 0x80;
 		}
+
+		delay.counter = delay.set;
+		type = PAST_UNSET;
 	} else {
-		set_keys(0x00);
-		ch = NULL;
-		type = PASTE_SET;
+		for (i = 0; i < keys.at(keys_index).length(); i++) {
+			nes_keyboard.keys[keys.at(keys_index).at(i)] = 0x00;
+		}
+		keys_index++;
 		delay.counter = delay.unset;
+		type = PASTE_SET;
 	}
 }
 void pasteObject::parse_break(void) {
@@ -769,10 +811,13 @@ void pasteObject::parse_break(void) {
 }
 void pasteObject::parse_reset(void) {
 	type = PASTE_SET;
-	index = 0;
 	string = "";
+	string_index = 0;
+	characters_elaborate = 0;
 	delay.counter = 0;
 	break_insert = FALSE;
+	keys.clear();
+	keys_index = 0;
 }
 void pasteObject::set_keys(BYTE value) {
 	if (ch) {
@@ -805,6 +850,11 @@ void keyboardObject::init(void) {
 }
 void keyboardObject::set_keycodes(void) {}
 void keyboardObject::set_charset(void) {}
+QList<QList<SBYTE>> keyboardObject::parse_text(UNUSED(keyboardObject::_character *ch)) {
+	QList<QList<SBYTE>> keys;
+
+	return (keys);
+}
 
 // familyBasicKeyboard -----------------------------------------------------------------------------------------------------------
 
@@ -826,227 +876,324 @@ void keyboardObject::set_charset(void) {}
 familyBasicKeyboard::familyBasicKeyboard(QObject *parent) : keyboardObject(parent) {
 	rows = 9;
 	columns = 8;
-	delay.set = 11;
-	delay.unset = 11;
+	delay.set = 12;
+	delay.unset = 12;
 	init();
 }
 familyBasicKeyboard::~familyBasicKeyboard() {}
 
 void familyBasicKeyboard::set_keycodes(void) {
 	_keycode keycodes[] = {
-		// Row 0 - Column 0
-		{ NSCODE_F8,           0, 0, keyboardButton::MODIFIERS_NONE,      "F8",    ""  }, // F8
-		{ NSCODE_Return,       0, 1, keyboardButton::MODIFIERS_NONE,      "⏎",     ""  }, // RETURN
-		{ NSCODE_Enter,        0, 1, keyboardButton::MODIFIERS_NONE,      "⏎",     ""  }, // RETURN
-		{ NSCODE_BracketRight, 0, 2, keyboardButton::MODIFIERS_NONE,      "[",     ""  }, // [
-		{ NSCODE_NumberSign,   0, 3, keyboardButton::MODIFIERS_NONE,      "]",     ""  }, // ]
-		// Row 0 - Column 1
-		{ NSCODE_CapsLock,     0, 4, keyboardButton::MODIFIERS_SWITCH,    "Kana",  ""  }, // KANA
-		{ NSCODE_RShift,       0, 5, keyboardButton::MODIFIERS_ONE_CLICK, "Shift", ""  }, // RSHIFT
-		{ NSCODE_Home,         0, 6, keyboardButton::MODIFIERS_NONE,      "¥",     ""  }, // ¥
-		{ NSCODE_End,          0, 7, keyboardButton::MODIFIERS_NONE,      "Stop",  ""  }, // STOP
-		// Row 1 - Column 0
-		{ NSCODE_F7,           1, 0, keyboardButton::MODIFIERS_NONE,      "F7",    ""  }, // F7
-		{ NSCODE_BracketLeft,  1, 1, keyboardButton::MODIFIERS_NONE,      "@",     ""  }, // @
-		{ NSCODE_Apostrophe,   1, 2, keyboardButton::MODIFIERS_NONE,      ":",     "*" }, // :
-		{ NSCODE_Semicolon,    1, 3, keyboardButton::MODIFIERS_NONE,      ";",     "+" }, // ;
-		// Row 1 - Column 1
-		{ NSCODE_QuoteLeft,    1, 4, keyboardButton::MODIFIERS_NONE,      "_",     ""  }, // _
-		{ NSCODE_Slash,        1, 5, keyboardButton::MODIFIERS_NONE,      "/",     "?" }, // /
-		{ NSCODE_Minus,        1, 6, keyboardButton::MODIFIERS_NONE,      "-",     "=" }, // -
-		{ NSCODE_Equal,        1, 7, keyboardButton::MODIFIERS_NONE,      "^",     ""  }, // ^
-		// Row 2 - Column 0
-		{ NSCODE_F6,           2, 0, keyboardButton::MODIFIERS_NONE,      "F6",     "" }, // F6
-		{ NSCODE_O,            2, 1, keyboardButton::MODIFIERS_NONE,      "O",      "" }, // O
-		{ NSCODE_L,            2, 2, keyboardButton::MODIFIERS_NONE,      "L",      "" }, // L
-		{ NSCODE_K,            2, 3, keyboardButton::MODIFIERS_NONE,      "K",      "" }, // K
-		// Row 2 - Column 1
-		{ NSCODE_Period,       2, 4, keyboardButton::MODIFIERS_NONE,      ".",     ">" }, // .
-		{ NSCODE_Comma,        2, 5, keyboardButton::MODIFIERS_NONE,      ",",     "<" }, // ,
-		{ NSCODE_P,            2, 6, keyboardButton::MODIFIERS_NONE,      "P",      "" }, // P
-		{ NSCODE_0,            2, 7, keyboardButton::MODIFIERS_NONE,      "0",      "" }, // 0
-		// Row 3 - Column 0
-		{ NSCODE_F5,           3, 0, keyboardButton::MODIFIERS_NONE,      "F5",     "" }, // F5
-		{ NSCODE_I,            3, 1, keyboardButton::MODIFIERS_NONE,      "I",      "" }, // I
-		{ NSCODE_U,            3, 2, keyboardButton::MODIFIERS_NONE,      "U",      "" }, // U
-		{ NSCODE_J,            3, 3, keyboardButton::MODIFIERS_NONE,      "J",      "" }, // J
-		// Row 3 - Column 1
-		{ NSCODE_M,            3, 4, keyboardButton::MODIFIERS_NONE,      "M",      "" }, // M
-		{ NSCODE_N,            3, 5, keyboardButton::MODIFIERS_NONE,      "N",      "" }, // N
-		{ NSCODE_9,            3, 6, keyboardButton::MODIFIERS_NONE,      "9",     ")" }, // 9
-		{ NSCODE_8,            3, 7, keyboardButton::MODIFIERS_NONE,      "8",     "(" }, // 8
-		// Row 4 - Column 0
-		{ NSCODE_F4,           4, 0, keyboardButton::MODIFIERS_NONE,      "F4",     "" }, // F4
-		{ NSCODE_Y,            4, 1, keyboardButton::MODIFIERS_NONE,      "Y",      "" }, // Y
-		{ NSCODE_G,            4, 2, keyboardButton::MODIFIERS_NONE,      "G",      "" }, // G
-		{ NSCODE_H,            4, 3, keyboardButton::MODIFIERS_NONE,      "H",      "" }, // H
-		// Row 4 - Column 1
-		{ NSCODE_B,            4, 4, keyboardButton::MODIFIERS_NONE,      "B",      "" }, // B
-		{ NSCODE_V,            4, 5, keyboardButton::MODIFIERS_NONE,      "V",      "" }, // V
-		{ NSCODE_7,            4, 6, keyboardButton::MODIFIERS_NONE,      "7",     "'" }, // 7
-		{ NSCODE_6,            4, 7, keyboardButton::MODIFIERS_NONE,      "6",     "&" }, // 6
-		// Row 5 - Column 0
-		{ NSCODE_F3,           5, 0, keyboardButton::MODIFIERS_NONE,      "F3",     "" }, // F3
-		{ NSCODE_T,            5, 1, keyboardButton::MODIFIERS_NONE,      "T",      "" }, // T
-		{ NSCODE_R,            5, 2, keyboardButton::MODIFIERS_NONE,      "R",      "" }, // R
-		{ NSCODE_D,            5, 3, keyboardButton::MODIFIERS_NONE,      "D",      "" }, // D
-		// Row 5 - Column 1
-		{ NSCODE_F,            5, 4, keyboardButton::MODIFIERS_NONE,      "F",      "" }, // F
-		{ NSCODE_C,            5, 5, keyboardButton::MODIFIERS_NONE,      "C",      "" }, // C
-		{ NSCODE_5,            5, 6, keyboardButton::MODIFIERS_NONE,      "5",     "%" }, // 5
-		{ NSCODE_4,            5, 7, keyboardButton::MODIFIERS_NONE,      "4",     "$" }, // 4
-		// Row 6 - Column 0
-		{ NSCODE_F2,           6, 0, keyboardButton::MODIFIERS_NONE,      "F2",     "" }, // F2
-		{ NSCODE_W,            6, 1, keyboardButton::MODIFIERS_NONE,      "W",      "" }, // W
-		{ NSCODE_S,            6, 2, keyboardButton::MODIFIERS_NONE,      "S",      "" }, // S
-		{ NSCODE_A,            6, 3, keyboardButton::MODIFIERS_NONE,      "A",      "" }, // A
-		// Row 6 - Column 1
-		{ NSCODE_X,            6, 4, keyboardButton::MODIFIERS_NONE,      "X",      "" }, // X
-		{ NSCODE_Z,            6, 5, keyboardButton::MODIFIERS_NONE,      "Z",      "" }, // Z
-		{ NSCODE_E,            6, 6, keyboardButton::MODIFIERS_NONE,      "E",      "" }, // E
-		{ NSCODE_3,            6, 7, keyboardButton::MODIFIERS_NONE,      "3",     "#" }, // 3
-		// Row 7 - Column 0
-		{ NSCODE_F1,           7, 0, keyboardButton::MODIFIERS_NONE,      "F1",     "" }, // F1
-		{ NSCODE_Escape,       7, 1, keyboardButton::MODIFIERS_NONE,      "Esc",    "" }, // ESC
-		{ NSCODE_Q,            7, 2, keyboardButton::MODIFIERS_NONE,      "Q",      "" }, // Q
-		{ NSCODE_LControl,     7, 3, keyboardButton::MODIFIERS_NONE,      "CTR",    "" }, // CTR
-		{ NSCODE_RControl,     7, 3, keyboardButton::MODIFIERS_NONE,      "CTR",    "" }, // CTR
-		// Row 7 - Column 1
-		{ NSCODE_LShift,       7, 4, keyboardButton::MODIFIERS_ONE_CLICK, "Shift",  "" }, // LSHIFT
-		{ NSCODE_Alt,          7, 5, keyboardButton::MODIFIERS_NONE,      "GRPH",   "" }, // GRPH
-		{ NSCODE_1,            7, 6, keyboardButton::MODIFIERS_NONE,      "1",     "!" }, // 1
-		{ NSCODE_2,            7, 7, keyboardButton::MODIFIERS_NONE,      "2",    "\"" }, // 2
-		// Row 8 - Column 0
-		{ NSCODE_Delete,       8, 0, keyboardButton::MODIFIERS_NONE,      "CLR",    "" }, // CLR HOME
-		{ NSCODE_Up,           8, 1, keyboardButton::MODIFIERS_NONE,      "↑",      "" }, // UP
-		{ NSCODE_Right,        8, 2, keyboardButton::MODIFIERS_NONE,      "→",      "" }, // RIGHT
-		{ NSCODE_Left,         8, 3, keyboardButton::MODIFIERS_NONE,      "←",      "" }, // LEFT
-		// Row 8 - Column 1
-		{ NSCODE_Down,         8, 4, keyboardButton::MODIFIERS_NONE,      "↓",      "" }, // DOWN
-		{ NSCODE_Space,        8, 5, keyboardButton::MODIFIERS_NONE,      "Space",  "" }, // SPACE
-		{ NSCODE_Backspace,    8, 6, keyboardButton::MODIFIERS_NONE,      "Del",    "" }, // DEL
-		{ NSCODE_Insert,       8, 7, keyboardButton::MODIFIERS_NONE,      "Ins",    "" }, // INS
+		                                     /* Row 0 - Column 0 */
+		/* F8       */ { NSCODE_F8,           0, 0, keyboardButton::MODIFIERS_NONE,      "F8",    "",  "",  "" },
+		/* RETRUN   */ { NSCODE_Return,       0, 1, keyboardButton::MODIFIERS_NONE,      "⏎",     "",  "",  "" },
+		/* RETRUN   */ { NSCODE_Enter,        0, 1, keyboardButton::MODIFIERS_NONE,      "⏎",     "",  "",  "" },
+		/* [        */ { NSCODE_BracketRight, 0, 2, keyboardButton::MODIFIERS_NONE,      "[",     "",  "ロ", "「" },
+		/* ]        */ { NSCODE_NumberSign,   0, 3, keyboardButton::MODIFIERS_NONE,      "]",     "",  "。", "」" },
+
+		                                     /* Row 0 - Column 1 */
+		/* KANA     */ { NSCODE_CapsLock,     0, 4, keyboardButton::MODIFIERS_SWITCH,    "Kana",  "",   "",  "" },
+		/* RSHIFT   */ { NSCODE_RShift,       0, 5, keyboardButton::MODIFIERS_ONE_CLICK, "Shift", "",   "",  "" },
+		/* ¥        */ { NSCODE_Home,         0, 6, keyboardButton::MODIFIERS_NONE,      "¥",     "",   "ル", "" },
+		/* STOP     */ { NSCODE_End,          0, 7, keyboardButton::MODIFIERS_NONE,      "Stop",  "",   "",  "" },
+
+		                                     /* Row 1 - Column 0 */
+		/* F7       */ { NSCODE_F7,           1, 0, keyboardButton::MODIFIERS_NONE,      "F7",    "",   "",  "" },
+		/* @        */ { NSCODE_BracketLeft,  1, 1, keyboardButton::MODIFIERS_NONE,      "@",     "",   "レ", "" },
+		/* :        */ { NSCODE_Apostrophe,   1, 2, keyboardButton::MODIFIERS_NONE,      ":",     "*",  "ー", "" },
+		/* ;        */ { NSCODE_Semicolon,    1, 3, keyboardButton::MODIFIERS_NONE,      ";",     "+",  "モ", "" },
+
+                                             /* Row 1 - Column 1 */
+		/* _        */ { NSCODE_QuoteLeft,    1, 4, keyboardButton::MODIFIERS_NONE,      "",      "␣",  "ン", "" },
+		/* /        */ { NSCODE_Slash,        1, 5, keyboardButton::MODIFIERS_NONE,      "/",     "?",  "ヲ", "" },
+		/* -        */ { NSCODE_Minus,        1, 6, keyboardButton::MODIFIERS_NONE,      "-",     "=",  "ラ", "" },
+		/* ^        */ { NSCODE_Equal,        1, 7, keyboardButton::MODIFIERS_NONE,      "^",     "",   "リ", "" },
+
+		                                     /* Row 2 - Column 0 */
+		/* F6       */ { NSCODE_F6,           2, 0, keyboardButton::MODIFIERS_NONE,      "F6",    "",   "",  "" },
+		/* O        */ { NSCODE_O,            2, 1, keyboardButton::MODIFIERS_NONE,      "O",     "",   "ヘ", "ペ" },
+		/* L        */ { NSCODE_L,            2, 2, keyboardButton::MODIFIERS_NONE,      "L",     "",   "メ", "" },
+		/* K        */ { NSCODE_K,            2, 3, keyboardButton::MODIFIERS_NONE,      "K",     "",   "ム", "" },
+
+		                                     /* Row 2 - Column 1 */
+		/* .        */ { NSCODE_Period,       2, 4, keyboardButton::MODIFIERS_NONE,      ".",     ">",  "ワ", "" },
+		/* ,        */ { NSCODE_Comma,        2, 5, keyboardButton::MODIFIERS_NONE,      ",",     "<",  "ヨ", "" },
+		/* P        */ { NSCODE_P,            2, 6, keyboardButton::MODIFIERS_NONE,      "P",     "",   "ホ", "ポ" },
+		/* 0        */ { NSCODE_0,            2, 7, keyboardButton::MODIFIERS_NONE,      "0",     "",   "ノ", "" },
+
+		                                     /* Row 3 - Column 0 */
+		/* F5       */ { NSCODE_F5,           3, 0, keyboardButton::MODIFIERS_NONE,      "F5",    "",   "",  "" },
+		/* I        */ { NSCODE_I,            3, 1, keyboardButton::MODIFIERS_NONE,      "I",     "",   "フ", "プ" },
+		/* U        */ { NSCODE_U,            3, 2, keyboardButton::MODIFIERS_NONE,      "U",     "",   "ヒ", "ピ" },
+		/* J        */ { NSCODE_J,            3, 3, keyboardButton::MODIFIERS_NONE,      "J",     "",   "ミ", "" },
+
+		                                     /* Row 3 - Column 1 */
+		/* M        */ { NSCODE_M,            3, 4, keyboardButton::MODIFIERS_NONE,      "M",     "",   "ユ", "" },
+		/* N        */ { NSCODE_N,            3, 5, keyboardButton::MODIFIERS_NONE,      "N",     "",   "ヤ", "" },
+		/* 9        */ { NSCODE_9,            3, 6, keyboardButton::MODIFIERS_NONE,      "9",     ")",  "ネ", "" },
+		/* 8        */ { NSCODE_8,            3, 7, keyboardButton::MODIFIERS_NONE,      "8",     "(",  "ヌ", "" },
+
+		                                     /* Row 4 - Column 0 */
+		/* F4       */ { NSCODE_F4,           4, 0, keyboardButton::MODIFIERS_NONE,      "F4",    "",   "",  "" },
+		/* Y        */ { NSCODE_Y,            4, 1, keyboardButton::MODIFIERS_NONE,      "Y",     "",   "ハ", "パ" },
+		/* G        */ { NSCODE_G,            4, 2, keyboardButton::MODIFIERS_NONE,      "G",     "",   "ソ", "" },
+		/* H        */ { NSCODE_H,            4, 3, keyboardButton::MODIFIERS_NONE,      "H",     "",   "マ", "" },
+
+		                                     /* Row 4 - Column 1 */
+		/* B        */ { NSCODE_B,            4, 4, keyboardButton::MODIFIERS_NONE,      "B",     "",   "ト", "" },
+		/* V        */ { NSCODE_V,            4, 5, keyboardButton::MODIFIERS_NONE,      "V",     "",   "テ", "" },
+		/* 7        */ { NSCODE_7,            4, 6, keyboardButton::MODIFIERS_NONE,      "7",     "'",  "ニ", "" },
+		/* 6        */ { NSCODE_6,            4, 7, keyboardButton::MODIFIERS_NONE,      "6",     "&",  "ナ", "" },
+
+		                                     /* Row 5 - Column 0 */
+		/* F3       */ { NSCODE_F3,           5, 0, keyboardButton::MODIFIERS_NONE,      "F3",    "",   "",  "" },
+		/* T        */ { NSCODE_T,            5, 1, keyboardButton::MODIFIERS_NONE,      "T",     "",   "コ", "" },
+		/* R        */ { NSCODE_R,            5, 2, keyboardButton::MODIFIERS_NONE,      "R",     "",   "ケ", "" },
+		/* D        */ { NSCODE_D,            5, 3, keyboardButton::MODIFIERS_NONE,      "D",     "",   "ス", "" },
+
+		                                     /* Row 5 - Column 1 */
+		/* F        */ { NSCODE_F,            5, 4, keyboardButton::MODIFIERS_NONE,      "F",     "",   "セ", "" },
+		/* C        */ { NSCODE_C,            5, 5, keyboardButton::MODIFIERS_NONE,      "C",     "",   "ツ", "" },
+		/* 5        */ { NSCODE_5,            5, 6, keyboardButton::MODIFIERS_NONE,      "5",     "%",  "オ", "ォ" },
+		/* 4        */ { NSCODE_4,            5, 7, keyboardButton::MODIFIERS_NONE,      "4",     "$",  "エ", "ェ" },
+
+		                                     /* Row 6 - Column 0 */
+		/* F2       */ { NSCODE_F2,           6, 0, keyboardButton::MODIFIERS_NONE,      "F2",    "",   "",  "" },
+		/* W        */ { NSCODE_W,            6, 1, keyboardButton::MODIFIERS_NONE,      "W",     "",   "キ", "" },
+		/* S        */ { NSCODE_S,            6, 2, keyboardButton::MODIFIERS_NONE,      "S",     "",   "シ", "" },
+		/* A        */ { NSCODE_A,            6, 3, keyboardButton::MODIFIERS_NONE,      "A",     "",   "サ", "" },
+
+		                                     /* Row 6 - Column 1 */
+		/* X        */ { NSCODE_X,            6, 4, keyboardButton::MODIFIERS_NONE,      "X",     "",   "チ", "" },
+		/* Z        */ { NSCODE_Z,            6, 5, keyboardButton::MODIFIERS_NONE,      "Z",     "",   "タ", "" },
+		/* E        */ { NSCODE_E,            6, 6, keyboardButton::MODIFIERS_NONE,      "E",     "",   "ク", "" },
+		/* 3        */ { NSCODE_3,            6, 7, keyboardButton::MODIFIERS_NONE,      "3",     "#",  "ウ", "ゥ" },
+
+		                                     /* Row 7 - Column 0 */
+		/* F1       */ { NSCODE_F1,           7, 0, keyboardButton::MODIFIERS_NONE,      "F1",    "",   "",  "" },
+		/* ESC      */ { NSCODE_Escape,       7, 1, keyboardButton::MODIFIERS_NONE,      "Esc",   "",   "",  "" },
+		/* Q        */ { NSCODE_Q,            7, 2, keyboardButton::MODIFIERS_NONE,      "Q",     "",   "カ", "" },
+		/* CTR      */ { NSCODE_LControl,     7, 3, keyboardButton::MODIFIERS_NONE,      "CTR",   "",   "",  "" },
+		/* CTR      */ { NSCODE_RControl,     7, 3, keyboardButton::MODIFIERS_NONE,      "CTR",   "",   "",  "" },
+
+		                                     /* Row 7 - Column 1 */
+		/* LSHIFT   */ { NSCODE_LShift,       7, 4, keyboardButton::MODIFIERS_ONE_CLICK, "Shift", "",   "",  "" },
+		/* GRPH     */ { NSCODE_Alt,          7, 5, keyboardButton::MODIFIERS_NONE,      "GRPH",  "",   "",  "" },
+		/* 1        */ { NSCODE_1,            7, 6, keyboardButton::MODIFIERS_NONE,      "1",     "!",  "ア", "ァ" },
+		/* 2        */ { NSCODE_2,            7, 7, keyboardButton::MODIFIERS_NONE,      "2",     "\"", "イ", "ィ" },
+
+		                                     /* Row 8 - Column 0 */
+		/* CLR HOME */ { NSCODE_Delete,       8, 0, keyboardButton::MODIFIERS_NONE,      "CLR",   "",   "",  "" },
+		/* UP       */ { NSCODE_Up,           8, 1, keyboardButton::MODIFIERS_NONE,      "↑",     "",   "",  "" },
+		/* RIGHT    */ { NSCODE_Right,        8, 2, keyboardButton::MODIFIERS_NONE,      "→",     "",   "",  "" },
+		/* LEFT     */ { NSCODE_Left,         8, 3, keyboardButton::MODIFIERS_NONE,      "←",     "",   "",  "" },
+
+		                                     /* Row 8 - Column 1 */
+		/* DOWN     */ { NSCODE_Down,         8, 4, keyboardButton::MODIFIERS_NONE,      "↓",     "",   "",  "" },
+		/* SPACE    */ { NSCODE_Space,        8, 5, keyboardButton::MODIFIERS_NONE,      "Space", "",   "",  "" },
+		/* DEL      */ { NSCODE_Backspace,    8, 6, keyboardButton::MODIFIERS_NONE,      "Del",   "",   "",  "" },
+		/* INS      */ { NSCODE_Insert,       8, 7, keyboardButton::MODIFIERS_NONE,      "Ins",   "",   "",  "" },
 	};
 	nes_keyboard.totals = LENGTH(keycodes);
 
 	dlgkeyb->set_keycodes(keycodes, nes_keyboard.totals);
 }
 void familyBasicKeyboard::set_charset(void) {
-#define calc_key(row, column) (row * 8) + column
-#define calc_kana() calc_key(0, 4)
-#define calc_shift() calc_key(0, 5)
-
 	_character charset[] {
-		// Row 0 - Column 0
-		//
-		{ "\n", { calc_key(0, 1), -1, -1, -1 } },
-		{ "[",  { calc_key(0, 2), -1, -1, -1 } },
-		{ "]",  { calc_key(0, 3), -1, -1, -1 } },
-		// Row 0 - Column 1
-		//
-		//
-		{ "¥",  { calc_key(0, 6), -1, -1, -1 } },
-		//
-		// Row 1 - Column 0
-		//
-		{ "@",  { calc_key(1, 1), -1, -1, -1 } },
-		{ ":",  { calc_key(1, 2), -1, -1, -1 } },
-		{ "*",  { calc_key(1, 2), calc_shift(), -1, -1 } },
-		{ ";",  { calc_key(1, 3), -1, -1, -1 } },
-		{ "+",  { calc_key(1, 3), calc_shift(), -1, -1 } },
-		// Row 1 - Column 1
-		{ "_",  { calc_key(1, 4), calc_shift(), -1, -1 } },
-		{ "/",  { calc_key(1, 5), -1, -1, -1 } },
-		{ "?",  { calc_key(1, 5), calc_shift(), -1, -1 } },
-		{ "-",  { calc_key(1, 6), -1, -1, -1 } },
-		{ "=",  { calc_key(1, 6), calc_shift(), -1, -1 } },
-		{ "^",  { calc_key(1, 7), -1, -1, -1 } },
-		// Row 2 - Column 0
-		//
-		{ "O",  { calc_key(2, 1), -1, -1, -1 } },
-		{ "L",  { calc_key(2, 2), -1, -1, -1 } },
-		{ "K",  { calc_key(2, 3), -1, -1, -1 } },
-		// Row 2 - Column 1
-		{ ".",  { calc_key(2, 4), -1, -1, -1 } },
-		{ ">",  { calc_key(2, 4), calc_shift(), -1, -1 } },
-		{ ",",  { calc_key(2, 5), -1, -1, -1 } },
-		{ "<",  { calc_key(2, 5), calc_shift(), -1, -1 } },
-		{ "P",  { calc_key(2, 6), -1, -1, -1 } },
-		{ "0",  { calc_key(2, 7), -1, -1, -1 } },
-		// Row 3 - Column 0
-		//
-		{ "I",  { calc_key(3, 1), -1, -1, -1 } },
-		{ "U",  { calc_key(3, 2), -1, -1, -1 } },
-		{ "J",  { calc_key(3, 3), -1, -1, -1 } },
-		// Row 3 - Column 1
-		{ "M",  { calc_key(3, 4), -1, -1, -1 } },
-		{ "N",  { calc_key(3, 5), -1, -1, -1 } },
-		{ "9",  { calc_key(3, 6), -1, -1, -1 } },
-		{ ")",  { calc_key(3, 6), calc_shift(), -1, -1 } },
-		{ "8",  { calc_key(3, 7), -1, -1, -1 } },
-		{ "(",  { calc_key(3, 7), calc_shift(), -1, -1 } },
-		// Row 4 - Column 0
-		//
-		{ "Y",  { calc_key(4, 1), -1, -1, -1 } },
-		{ "G",  { calc_key(4, 2), -1, -1, -1 } },
-		{ "H",  { calc_key(4, 3), -1, -1, -1 } },
-		// Row 4 - Column 1
-		{ "B",  { calc_key(4, 4), -1, -1, -1 } },
-		{ "V",  { calc_key(4, 5), -1, -1, -1 } },
-		{ "7",  { calc_key(4, 6), -1, -1, -1 } },
-		{ "'",  { calc_key(4, 6), calc_shift(), -1, -1 } },
-		{ "6",  { calc_key(4, 7), -1, -1, -1 } },
-		{ "&",  { calc_key(4, 7), calc_shift(), -1, -1 } },
-		// Row 5 - Column 0
-		//
-		{ "T",  { calc_key(5, 1), -1, -1, -1 } },
-		{ "R",  { calc_key(5, 2), -1, -1, -1 } },
-		{ "D",  { calc_key(5, 3), -1, -1, -1 } },
-		// Row 5 - Column 1
-		{ "F",  { calc_key(5, 4), -1, -1, -1 } },
-		{ "C",  { calc_key(5, 5), -1, -1, -1 } },
-		{ "5",  { calc_key(5, 6), -1, -1, -1 } },
-		{ "%",  { calc_key(5, 6), calc_shift(), -1, -1 } },
-		{ "4",  { calc_key(5, 7), -1, -1, -1 } },
-		{ "$",  { calc_key(5, 7), calc_shift(), -1, -1 } },
-		// Row 6 - Column 0
-		//
-		{ "W",  { calc_key(6, 1), -1, -1, -1 } },
-		{ "S",  { calc_key(6, 2), -1, -1, -1 } },
-		{ "A",  { calc_key(6, 3), -1, -1, -1 } },
-		// Row 6 - Column 1
-		{ "X",  { calc_key(6, 4), -1, -1, -1 } },
-		{ "Z",  { calc_key(6, 5), -1, -1, -1 } },
-		{ "E",  { calc_key(6, 6), -1, -1, -1 } },
-		{ "3",  { calc_key(6, 7), -1, -1, -1 } },
-		{ "#",  { calc_key(6, 7), calc_shift(), -1, -1 } },
-		// Row 7 - Column 0
-		//
-		//
-		{ "Q",  { calc_key(7, 2), -1, -1, -1 } },
-		//
-		// Row 7 - Column 1
-		//
-		//
-		{ "1",  { calc_key(7, 6), -1, -1, -1 } },
-		{ "!",  { calc_key(7, 6), calc_shift(), -1, -1 } },
-		{ "2",  { calc_key(7, 7), -1, -1, -1 } },
-		{ "\"", { calc_key(7, 7), calc_shift(), -1, -1 } },
-		// Row 8 - Column 0
-		//
-		//
-		//
-		//
-		// Row 8 - Column 1
-		//
-		{ " ",  { calc_key(8, 5), -1, -1, -1 } },
-		//
-		//
+		                      // Row 0 - Column 0
+		{ QList<QString> { "\n" }, { calc_key(0, 1), -1, -1, -1 } },
+		{ QList<QString> { "[", "［" }, { calc_key(0, 2), -1, -1, -1 } },
+		{ QList<QString> { "ロ" }, { calc_key(0, 2), calc_kana(), -1, -1 } },
+		{ QList<QString> { "「" }, { calc_key(0, 2), calc_kana(), calc_shift(), -1 } },
+		{ QList<QString> { "]", "］"}, { calc_key(0, 3), -1, -1, -1 } },
+		{ QList<QString> { "。" }, { calc_key(0, 3), calc_kana(), -1, -1 } },
+		{ QList<QString> { "」" }, { calc_key(0, 3), calc_kana(), calc_shift(), -1 } },
+
+		                      // Row 0 - Column 1
+		{ QList<QString> { "¥", "￥" }, { calc_key(0, 6), -1, -1, -1 } },
+		{ QList<QString> { "ル" }, { calc_key(0, 6), calc_kana(), -1, -1 } },
+
+		                      // Row 1 - Column 0
+		{ QList<QString> { "@", "＠" }, { calc_key(1, 1), -1, -1, -1 } },
+		{ QList<QString> { "レ" }, { calc_key(1, 1), calc_kana(), -1, -1 } },
+		{ QList<QString> { ":", "：" }, { calc_key(1, 2), -1, -1, -1 } },
+		{ QList<QString> { "*", "＊" }, { calc_key(1, 2), calc_shift(), -1, -1 } },
+		{ QList<QString> { "ー" }, { calc_key(1, 2), calc_kana(), -1, -1 } },
+		{ QList<QString> { ";", "；" }, { calc_key(1, 3), -1, -1, -1 } },
+		{ QList<QString> { "+", "＋" }, { calc_key(1, 3), calc_shift(), -1, -1 } },
+		{ QList<QString> { "モ" }, { calc_key(1, 3), calc_kana(), -1, -1 } },
+
+		                      // Row 1 - Column 1
+		{ QList<QString> { "_", "␣" }, { calc_key(1, 4), calc_shift(), -1, -1 } },
+		{ QList<QString> { "ン" }, { calc_key(1, 4), calc_kana(), -1, -1 } },
+		{ QList<QString> {"/", "／" }, { calc_key(1, 5), -1, -1, -1 } },
+		{ QList<QString> { "?", "？" }, { calc_key(1, 5), calc_shift(), -1, -1 } },
+		{ QList<QString> { "ヲ" }, { calc_key(1, 5), calc_kana(), -1, -1 } },
+		{ QList<QString> { "-", "－" }, { calc_key(1, 6), -1, -1, -1 } },
+		{ QList<QString> { "=", "＝" }, { calc_key(1, 6), calc_shift(), -1, -1 } },
+		{ QList<QString> { "ラ" }, { calc_key(1, 6), calc_kana(), -1, -1 } },
+		{ QList<QString> { "^", "＾" }, { calc_key(1, 7), -1, -1, -1 } },
+		{ QList<QString> { "リ" }, { calc_key(1, 7), calc_kana(), -1, -1 } },
+
+		                      // Row 2 - Column 0
+		{ QList<QString> { "O", "Ｏ" }, { calc_key(2, 1), -1, -1, -1 } },
+		{ QList<QString> { "ヘ" }, { calc_key(2, 1), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ペ" }, { calc_key(2, 1), calc_kana(), calc_shift(), -1 } },
+		{ QList<QString> { "L", "Ｌ" }, { calc_key(2, 2), -1, -1, -1 } },
+		{ QList<QString> { "メ" }, { calc_key(2, 2), calc_kana(), -1, -1 } },
+		{ QList<QString> { "K", "Ｋ" }, { calc_key(2, 3), -1, -1, -1 } },
+		{ QList<QString> { "ム" }, { calc_key(2, 3), calc_kana(), -1, -1 } },
+
+		                      // Row 2 - Column 1
+		{ QList<QString> { ".", "．" }, { calc_key(2, 4), -1, -1, -1 } },
+		{ QList<QString> { ">", "〉" }, { calc_key(2, 4), calc_shift(), -1, -1 } },
+		{ QList<QString> { "ワ" }, { calc_key(2, 4), calc_kana(), -1, -1 } },
+		{ QList<QString> { ",", "，" }, { calc_key(2, 5), -1, -1, -1 } },
+		{ QList<QString> { "<", "〈" }, { calc_key(2, 5), calc_shift(), -1, -1 } },
+		{ QList<QString> { "ヨ" }, { calc_key(2, 5), calc_kana(), -1, -1 } },
+		{ QList<QString> { "P", "Ｐ" }, { calc_key(2, 6), -1, -1, -1 } },
+		{ QList<QString> { "ホ" }, { calc_key(2, 6), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ポ" }, { calc_key(2, 6), calc_kana(), calc_shift(), -1 } },
+		{ QList<QString> { "0", "０" }, { calc_key(2, 7), -1, -1, -1 } },
+		{ QList<QString> { "ノ" }, { calc_key(2, 7), calc_kana(), -1, -1 } },
+
+		                      // Row 3 - Column 0
+		{ QList<QString> { "I", "Ｉ" }, { calc_key(3, 1), -1, -1, -1 } },
+		{ QList<QString> { "フ" }, { calc_key(3, 1), calc_kana(), -1, -1 } },
+		{ QList<QString> { "プ" }, { calc_key(3, 1), calc_kana(), calc_shift(), -1 } },
+		{ QList<QString> { "U", "Ｕ" }, { calc_key(3, 2), -1, -1, -1 } },
+		{ QList<QString> { "ヒ" }, { calc_key(3, 2), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ピ" }, { calc_key(3, 2), calc_kana(), calc_shift(), -1 } },
+		{ QList<QString> { "J", "Ｊ" }, { calc_key(3, 3), -1, -1, -1 } },
+		{ QList<QString> { "ミ" }, { calc_key(3, 3), calc_kana(), -1, -1 } },
+
+		                      // Row 3 - Column 1
+		{ QList<QString> { "M", "Ｍ" }, { calc_key(3, 4), -1, -1, -1 } },
+		{ QList<QString> { "ユ" }, { calc_key(3, 4), calc_kana(), -1, -1 } },
+		{ QList<QString> { "N", "Ｎ" }, { calc_key(3, 5), -1, -1, -1 } },
+		{ QList<QString> { "ヤ" }, { calc_key(3, 5), calc_kana(), -1, -1 } },
+		{ QList<QString> { "9", "９" }, { calc_key(3, 6), -1, -1, -1 } },
+		{ QList<QString> { ")", "）" }, { calc_key(3, 6), calc_shift(), -1, -1 } },
+		{ QList<QString> { "ネ" }, { calc_key(3, 6), calc_kana(), -1, -1 } },
+		{ QList<QString> { "8", "８" }, { calc_key(3, 7), -1, -1, -1 } },
+		{ QList<QString> { "(", "（" }, { calc_key(3, 7), calc_shift(), -1, -1 } },
+		{ QList<QString> { "ヌ" }, { calc_key(3, 7), calc_kana(), -1, -1 } },
+
+		                      // Row 4 - Column 0
+		{ QList<QString> { "Y", "Ｙ" }, { calc_key(4, 1), -1, -1, -1 } },
+		{ QList<QString> { "ハ" }, { calc_key(4, 1), calc_kana(), -1, -1 } },
+		{ QList<QString> { "パ" }, { calc_key(4, 1), calc_kana(), calc_shift(), -1 } },
+		{ QList<QString> { "G", "Ｇ" }, { calc_key(4, 2), -1, -1, -1 } },
+		{ QList<QString> { "ソ" }, { calc_key(4, 2), calc_kana(), -1, -1 } },
+		{ QList<QString> { "H", "Ｈ" }, { calc_key(4, 3), -1, -1, -1 } },
+		{ QList<QString> { "マ" }, { calc_key(4, 3), calc_kana(), -1, -1 } },
+
+		                      // Row 4 - Column 1
+		{ QList<QString> { "B", "Ｂ" }, { calc_key(4, 4), -1, -1, -1 } },
+		{ QList<QString> { "ト" }, { calc_key(4, 4), calc_kana(), -1, -1 } },
+		{ QList<QString> { "V", "Ｖ" }, { calc_key(4, 5), -1, -1, -1 } },
+		{ QList<QString> { "テ" }, { calc_key(4, 5), calc_kana(), -1, -1 } },
+		{ QList<QString> { "7", "７" }, { calc_key(4, 6), -1, -1, -1 } },
+		{ QList<QString> { "'",  "＇" }, { calc_key(4, 6), calc_shift(), -1, -1 } },
+		{ QList<QString> { "ニ" }, { calc_key(4, 6), calc_kana(), -1, -1 } },
+		{ QList<QString> { "6", "６" }, { calc_key(4, 7), -1, -1, -1 } },
+		{ QList<QString> { "&", "＆" }, { calc_key(4, 7), calc_shift(), -1, -1 } },
+		{ QList<QString> { "ナ" }, { calc_key(4, 7), calc_kana(), -1, -1 } },
+
+		                      // Row 5 - Column 0
+		{ QList<QString> { "T", "Ｔ" }, { calc_key(5, 1), -1, -1, -1 } },
+		{ QList<QString> { "コ" }, { calc_key(5, 1), calc_kana(), -1, -1 } },
+		{ QList<QString> { "R", "Ｒ" }, { calc_key(5, 2), -1, -1, -1 } },
+		{ QList<QString> { "ケ" }, { calc_key(5, 2), calc_kana(), -1, -1 } },
+		{ QList<QString> { "D", "Ｄ" }, { calc_key(5, 3), -1, -1, -1 } },
+		{ QList<QString> { "ス" }, { calc_key(5, 3), calc_kana(), -1, -1 } },
+
+		                      // Row 5 - Column 1
+		{ QList<QString> { "F", "Ｆ" }, { calc_key(5, 4), -1, -1, -1 } },
+		{ QList<QString> { "セ" }, { calc_key(5, 4), calc_kana(), -1, -1 } },
+		{ QList<QString> { "C", "Ｃ" }, { calc_key(5, 5), -1, -1, -1 } },
+		{ QList<QString> { "ツ" }, { calc_key(5, 5), calc_kana(), -1, -1 } },
+		{ QList<QString> { "5", "５" }, { calc_key(5, 6), -1, -1, -1 } },
+		{ QList<QString> { "%", "％" }, { calc_key(5, 6), calc_shift(), -1, -1 } },
+		{ QList<QString> { "オ" }, { calc_key(5, 6), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ォ" }, { calc_key(5, 6), calc_kana(), calc_shift(), -1 } },
+		{ QList<QString> { "4", "４" }, { calc_key(5, 7), -1, -1, -1 } },
+		{ QList<QString> { "$", "＄" }, { calc_key(5, 7), calc_shift(), -1, -1 } },
+		{ QList<QString> { "エ" }, { calc_key(5, 7), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ェ" }, { calc_key(5, 7), calc_kana(), calc_shift(), -1 } },
+
+		                      // Row 6 - Column 0
+		{ QList<QString> { "W", "Ｗ" }, { calc_key(6, 1), -1, -1, -1 } },
+		{ QList<QString> { "キ" }, { calc_key(6, 1), calc_kana(), -1, -1 } },
+		{ QList<QString> { "S", "Ｓ" }, { calc_key(6, 2), -1, -1, -1 } },
+		{ QList<QString> { "シ" }, { calc_key(6, 2), calc_kana(), -1, -1 } },
+		{ QList<QString> { "A", "Ａ" }, { calc_key(6, 3), -1, -1, -1 } },
+		{ QList<QString> { "サ" }, { calc_key(6, 3), calc_kana(), -1, -1 } },
+
+		                      // Row 6 - Column 1
+		{ QList<QString> { "X", "Ｘ" }, { calc_key(6, 4), -1, -1, -1 } },
+		{ QList<QString> { "チ" }, { calc_key(6, 4), calc_kana(), -1, -1 } },
+		{ QList<QString> { "Z", "Ｚ" }, { calc_key(6, 5), -1, -1, -1 } },
+		{ QList<QString> { "タ" }, { calc_key(6, 5), calc_kana(), -1, -1 } },
+		{ QList<QString> { "E", "Ｅ" }, { calc_key(6, 6), -1, -1, -1 } },
+		{ QList<QString> { "ク" }, { calc_key(6, 6), calc_kana(), -1, -1 } },
+		{ QList<QString> { "3", "３" }, { calc_key(6, 7), -1, -1, -1 } },
+		{ QList<QString> { "#", "＃" }, { calc_key(6, 7), calc_shift(), -1, -1 } },
+		{ QList<QString> { "ウ" }, { calc_key(6, 7), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ゥ" }, { calc_key(6, 7), calc_kana(), calc_shift(), -1 } },
+
+		                      // Row 7 - Column 0
+		{ QList<QString> { "Q", "Ｑ" }, { calc_key(7, 2), -1, -1, -1 } },
+		{ QList<QString> { "カ" }, { calc_key(7, 2), calc_kana(), -1, -1 } },
+
+		                      // Row 7 - Column 1
+		{ QList<QString> { "1", "１" }, { calc_key(7, 6), -1, -1, -1 } },
+		{ QList<QString> { "!", "！" }, { calc_key(7, 6), calc_shift(), -1, -1 } },
+		{ QList<QString> { "ア" }, { calc_key(7, 6), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ァ" }, { calc_key(7, 6), calc_kana(), calc_shift(), -1 } },
+		{ QList<QString> { "2", "２" }, { calc_key(7, 7), -1, -1, -1 } },
+		{ QList<QString> { "\"", "＂" }, { calc_key(7, 7), calc_shift(), -1, -1 } },
+		{ QList<QString> { "イ" }, { calc_key(7, 7), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ィ" }, { calc_key(7, 7), calc_kana(), calc_shift(), -1 } },
+
+		                      // Row 8 - Column 0
+		                      // Row 8 - Column 1
+		{ QList<QString> { " ", "　" }, { calc_key(8, 5), -1, -1, -1 } },
 	};
 
-#undef calc_key
-#undef calc_kana
-#undef calc_shift
-
 	dlgkeyb->set_charset({ &charset[0], LENGTH(charset) }, delay);
+}
+QList<QList<SBYTE>> familyBasicKeyboard::parse_text(keyboardObject::_character *ch) {
+	QList<QList<SBYTE>> keys;
+	QList<SBYTE> key;
+	QList<SBYTE> kana;
+	int i;
+
+	for (i = 0; i < 4; i++) {
+		if (ch->keys[i] > 0) {
+			if (ch->keys[i] == calc_kana()) {
+				kana.append(calc_kana());
+				continue;
+			}
+			key.append(ch->keys[i]);
+		}
+	}
+	if (kana.length() == 1) {
+		keys.append(kana);
+		keys.append(key);
+		keys.append(kana);
+	} else {
+		keys.append(key);
+	}
+	return (keys);
+}
+
+SBYTE familyBasicKeyboard::calc_key(BYTE row, BYTE column) {
+	return ((row * columns) + column);
+}
+SBYTE familyBasicKeyboard::calc_kana(void) {
+	return (calc_key(0, 4));
+}
+SBYTE familyBasicKeyboard::calc_shift(void) {
+	return (calc_key(0, 5));
 }
