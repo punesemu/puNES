@@ -35,6 +35,7 @@ void gui_nes_keyboard(void) {
 
 		if (dlgkeyb->keyboard) {
 			delete (dlgkeyb->keyboard);
+			dlgkeyb->keyboard = NULL;
 		}
 		dlgkeyb->reset();
 
@@ -52,6 +53,7 @@ void gui_nes_keyboard(void) {
 			if (!dlgkeyb->isHidden()) {
 				dlgkeyb->close();
 			}
+			dlgkeyb->fake_keyboard();
 			dlgkeyb->reset();
 		}
 		mainwin->action_Virtual_Keyboard->setEnabled(!disable);
@@ -489,6 +491,9 @@ void dlgKeyboard::key_event_release(QKeyEvent *keyEvent, key_event_types type) {
 	}
 }
 
+void dlgKeyboard::fake_keyboard(void) {
+	keyboard = new keyboardObject(this);
+}
 void dlgKeyboard::family_basic_keyboard(void) {
 	keyboard = new familyBasicKeyboard(this);
 }

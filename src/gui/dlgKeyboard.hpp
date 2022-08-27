@@ -241,6 +241,7 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 		void key_event_release(QKeyEvent *keyEvent, key_event_types type);
 
 	public:
+		void fake_keyboard(void);
 		void family_basic_keyboard(void);
 
 	private:
