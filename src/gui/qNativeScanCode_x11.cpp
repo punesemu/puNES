@@ -247,7 +247,6 @@
 
 // keyboard mapping table
 static const unsigned int KeyTbl[] = {
-
     // misc keys
 
     XK_Escape,                  Qt::Key_Escape,

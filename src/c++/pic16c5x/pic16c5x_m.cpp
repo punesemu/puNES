@@ -956,7 +956,6 @@ void PIC16C5X::run()
 		}
 
 		m_icount -= m_inst_cycles;
-
 	} 
 }
 
