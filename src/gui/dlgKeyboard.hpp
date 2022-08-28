@@ -138,6 +138,10 @@ class familyBasicKeyboard : public keyboardObject {
 		SBYTE calc_key(BYTE row, BYTE column);
 		SBYTE calc_kana(void);
 		SBYTE calc_shift(void);
+		SBYTE calc_ctr(void);
+		SBYTE calc_grph(void);
+		SBYTE calc_w(void);
+		SBYTE calc_v(void);
 };
 
 // pasteObject -------------------------------------------------------------------------------------------------------------------

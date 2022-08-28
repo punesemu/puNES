@@ -1045,6 +1045,7 @@ void familyBasicKeyboard::set_charset(void) {
 		                      // Row 2 - Column 0
 		{ QList<QString> { "O", "Ｏ" }, { calc_key(2, 1), -1, -1, -1 } },
 		{ QList<QString> { "ヘ" }, { calc_key(2, 1), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ベ" }, { calc_key(2, 1), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "ペ" }, { calc_key(2, 1), calc_kana(), calc_shift(), -1 } },
 		{ QList<QString> { "L", "Ｌ" }, { calc_key(2, 2), -1, -1, -1 } },
 		{ QList<QString> { "メ" }, { calc_key(2, 2), calc_kana(), -1, -1 } },
@@ -1058,8 +1059,10 @@ void familyBasicKeyboard::set_charset(void) {
 		{ QList<QString> { ",", "，" }, { calc_key(2, 5), -1, -1, -1 } },
 		{ QList<QString> { "<", "〈" }, { calc_key(2, 5), calc_shift(), -1, -1 } },
 		{ QList<QString> { "ヨ" }, { calc_key(2, 5), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ョ" }, { calc_key(2, 5), calc_kana(), calc_shift(), -1 } },
 		{ QList<QString> { "P", "Ｐ" }, { calc_key(2, 6), -1, -1, -1 } },
 		{ QList<QString> { "ホ" }, { calc_key(2, 6), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ボ" }, { calc_key(2, 6), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "ポ" }, { calc_key(2, 6), calc_kana(), calc_shift(), -1 } },
 		{ QList<QString> { "0", "０" }, { calc_key(2, 7), -1, -1, -1 } },
 		{ QList<QString> { "ノ" }, { calc_key(2, 7), calc_kana(), -1, -1 } },
@@ -1067,9 +1070,11 @@ void familyBasicKeyboard::set_charset(void) {
 		                      // Row 3 - Column 0
 		{ QList<QString> { "I", "Ｉ" }, { calc_key(3, 1), -1, -1, -1 } },
 		{ QList<QString> { "フ" }, { calc_key(3, 1), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ブ" }, { calc_key(3, 1), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "プ" }, { calc_key(3, 1), calc_kana(), calc_shift(), -1 } },
 		{ QList<QString> { "U", "Ｕ" }, { calc_key(3, 2), -1, -1, -1 } },
 		{ QList<QString> { "ヒ" }, { calc_key(3, 2), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ビ" }, { calc_key(3, 2), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "ピ" }, { calc_key(3, 2), calc_kana(), calc_shift(), -1 } },
 		{ QList<QString> { "J", "Ｊ" }, { calc_key(3, 3), -1, -1, -1 } },
 		{ QList<QString> { "ミ" }, { calc_key(3, 3), calc_kana(), -1, -1 } },
@@ -1077,8 +1082,10 @@ void familyBasicKeyboard::set_charset(void) {
 		                      // Row 3 - Column 1
 		{ QList<QString> { "M", "Ｍ" }, { calc_key(3, 4), -1, -1, -1 } },
 		{ QList<QString> { "ユ" }, { calc_key(3, 4), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ュ" }, { calc_key(3, 4), calc_kana(), calc_shift(), -1 } },
 		{ QList<QString> { "N", "Ｎ" }, { calc_key(3, 5), -1, -1, -1 } },
 		{ QList<QString> { "ヤ" }, { calc_key(3, 5), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ャ" }, { calc_key(3, 5), calc_kana(), calc_shift(), -1 } },
 		{ QList<QString> { "9", "９" }, { calc_key(3, 6), -1, -1, -1 } },
 		{ QList<QString> { ")", "）" }, { calc_key(3, 6), calc_shift(), -1, -1 } },
 		{ QList<QString> { "ネ" }, { calc_key(3, 6), calc_kana(), -1, -1 } },
@@ -1089,17 +1096,21 @@ void familyBasicKeyboard::set_charset(void) {
 		                      // Row 4 - Column 0
 		{ QList<QString> { "Y", "Ｙ" }, { calc_key(4, 1), -1, -1, -1 } },
 		{ QList<QString> { "ハ" }, { calc_key(4, 1), calc_kana(), -1, -1 } },
+		{ QList<QString> { "バ" }, { calc_key(4, 1), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "パ" }, { calc_key(4, 1), calc_kana(), calc_shift(), -1 } },
 		{ QList<QString> { "G", "Ｇ" }, { calc_key(4, 2), -1, -1, -1 } },
 		{ QList<QString> { "ソ" }, { calc_key(4, 2), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ゾ" }, { calc_key(4, 2), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "H", "Ｈ" }, { calc_key(4, 3), -1, -1, -1 } },
 		{ QList<QString> { "マ" }, { calc_key(4, 3), calc_kana(), -1, -1 } },
 
 		                      // Row 4 - Column 1
 		{ QList<QString> { "B", "Ｂ" }, { calc_key(4, 4), -1, -1, -1 } },
 		{ QList<QString> { "ト" }, { calc_key(4, 4), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ド" }, { calc_key(4, 4), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "V", "Ｖ" }, { calc_key(4, 5), -1, -1, -1 } },
 		{ QList<QString> { "テ" }, { calc_key(4, 5), calc_kana(), -1, -1 } },
+		{ QList<QString> { "デ" }, { calc_key(4, 5), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "7", "７" }, { calc_key(4, 6), -1, -1, -1 } },
 		{ QList<QString> { "'",  "＇" }, { calc_key(4, 6), calc_shift(), -1, -1 } },
 		{ QList<QString> { "ニ" }, { calc_key(4, 6), calc_kana(), -1, -1 } },
@@ -1110,16 +1121,22 @@ void familyBasicKeyboard::set_charset(void) {
 		                      // Row 5 - Column 0
 		{ QList<QString> { "T", "Ｔ" }, { calc_key(5, 1), -1, -1, -1 } },
 		{ QList<QString> { "コ" }, { calc_key(5, 1), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ゴ" }, { calc_key(5, 1), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "R", "Ｒ" }, { calc_key(5, 2), -1, -1, -1 } },
 		{ QList<QString> { "ケ" }, { calc_key(5, 2), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ゲ" }, { calc_key(5, 2), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "D", "Ｄ" }, { calc_key(5, 3), -1, -1, -1 } },
 		{ QList<QString> { "ス" }, { calc_key(5, 3), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ズ" }, { calc_key(5, 3), calc_kana(), calc_grph(), -1 } },
 
 		                      // Row 5 - Column 1
 		{ QList<QString> { "F", "Ｆ" }, { calc_key(5, 4), -1, -1, -1 } },
 		{ QList<QString> { "セ" }, { calc_key(5, 4), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ゼ" }, { calc_key(5, 4), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "C", "Ｃ" }, { calc_key(5, 5), -1, -1, -1 } },
 		{ QList<QString> { "ツ" }, { calc_key(5, 5), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ヅ" }, { calc_key(5, 5), calc_kana(), calc_grph(), -1 } },
+		{ QList<QString> { "ッ" }, { calc_key(5, 5), calc_kana(), calc_shift(), -1 } },
 		{ QList<QString> { "5", "５" }, { calc_key(5, 6), -1, -1, -1 } },
 		{ QList<QString> { "%", "％" }, { calc_key(5, 6), calc_shift(), -1, -1 } },
 		{ QList<QString> { "オ" }, { calc_key(5, 6), calc_kana(), -1, -1 } },
@@ -1132,18 +1149,24 @@ void familyBasicKeyboard::set_charset(void) {
 		                      // Row 6 - Column 0
 		{ QList<QString> { "W", "Ｗ" }, { calc_key(6, 1), -1, -1, -1 } },
 		{ QList<QString> { "キ" }, { calc_key(6, 1), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ギ" }, { calc_key(6, 1), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "S", "Ｓ" }, { calc_key(6, 2), -1, -1, -1 } },
 		{ QList<QString> { "シ" }, { calc_key(6, 2), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ジ" }, { calc_key(6, 2), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "A", "Ａ" }, { calc_key(6, 3), -1, -1, -1 } },
 		{ QList<QString> { "サ" }, { calc_key(6, 3), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ザ" }, { calc_key(6, 3), calc_kana(), calc_grph(), -1 } },
 
 		                      // Row 6 - Column 1
 		{ QList<QString> { "X", "Ｘ" }, { calc_key(6, 4), -1, -1, -1 } },
 		{ QList<QString> { "チ" }, { calc_key(6, 4), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ヂ" }, { calc_key(6, 4), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "Z", "Ｚ" }, { calc_key(6, 5), -1, -1, -1 } },
 		{ QList<QString> { "タ" }, { calc_key(6, 5), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ダ" }, { calc_key(6, 5), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "E", "Ｅ" }, { calc_key(6, 6), -1, -1, -1 } },
 		{ QList<QString> { "ク" }, { calc_key(6, 6), calc_kana(), -1, -1 } },
+		{ QList<QString> { "グ" }, { calc_key(6, 6), calc_kana(), calc_grph(), -1 } },
 		{ QList<QString> { "3", "３" }, { calc_key(6, 7), -1, -1, -1 } },
 		{ QList<QString> { "#", "＃" }, { calc_key(6, 7), calc_shift(), -1, -1 } },
 		{ QList<QString> { "ウ" }, { calc_key(6, 7), calc_kana(), -1, -1 } },
@@ -1152,6 +1175,7 @@ void familyBasicKeyboard::set_charset(void) {
 		                      // Row 7 - Column 0
 		{ QList<QString> { "Q", "Ｑ" }, { calc_key(7, 2), -1, -1, -1 } },
 		{ QList<QString> { "カ" }, { calc_key(7, 2), calc_kana(), -1, -1 } },
+		{ QList<QString> { "ガ" }, { calc_key(7, 2), calc_kana(), calc_grph(), -1 } },
 
 		                      // Row 7 - Column 1
 		{ QList<QString> { "1", "１" }, { calc_key(7, 6), -1, -1, -1 } },
@@ -1173,21 +1197,32 @@ void familyBasicKeyboard::set_charset(void) {
 QList<QList<SBYTE>> familyBasicKeyboard::parse_text(keyboardObject::_character *ch) {
 	QList<QList<SBYTE>> keys;
 	QList<SBYTE> key;
-	QList<SBYTE> kana;
+	BYTE kana_found = FALSE;
 	int i;
 
 	for (i = 0; i < 4; i++) {
 		if (ch->keys[i] > 0) {
 			if (ch->keys[i] == calc_kana()) {
-				kana.append(calc_kana());
+				kana_found = TRUE;
 				continue;
 			}
 			key.append(ch->keys[i]);
 		}
 	}
-	if (kana.length() == 1) {
+	if (kana_found) {
+		QList<SBYTE> kana;
+
+		// CTR + V abilita il kana
+		kana.append(calc_ctr());
+		kana.append(calc_v());
 		keys.append(kana);
+
 		keys.append(key);
+
+		// CTR + W lo disabilita
+		kana.clear();
+		kana.append(calc_ctr());
+		kana.append(calc_w());
 		keys.append(kana);
 	} else {
 		keys.append(key);
@@ -1203,4 +1238,16 @@ SBYTE familyBasicKeyboard::calc_kana(void) {
 }
 SBYTE familyBasicKeyboard::calc_shift(void) {
 	return (calc_key(0, 5));
+}
+SBYTE familyBasicKeyboard::calc_ctr(void) {
+	return (calc_key(7, 3));
+}
+SBYTE familyBasicKeyboard::calc_grph(void) {
+	return (calc_key(7, 5));
+}
+SBYTE familyBasicKeyboard::calc_w(void) {
+	return (calc_key(6, 1));
+}
+SBYTE familyBasicKeyboard::calc_v(void) {
+	return (calc_key(4, 5));
 }
