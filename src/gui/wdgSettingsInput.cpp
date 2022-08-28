@@ -928,7 +928,11 @@ void wdgSettingsInput::s_joy_index_changed(UNUSED(int index)) {
 }
 void wdgSettingsInput::s_shortcut_keyb(void) {
 	QKeySequenceEdit *se = ((QKeySequenceEdit *)sender());
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	int value = se->keySequence()[0];
+#else
+	int value = se->keySequence()[0].toCombined();
+#endif
 	QKeySequence shortcut(value);
 
 	shcut.type = QVariant(((QObject *)sender())->property("myType")).toInt();

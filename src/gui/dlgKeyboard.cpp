@@ -574,7 +574,7 @@ void keyboardButton::paintEvent(QPaintEvent *event) {
 		spainter.drawControl(QStyle::CE_PushButton, option);
 
 		painter.setFont(dlgkbd->font());
-		painter.setRenderHint(QPainter::HighQualityAntialiasing);
+		painter.setRenderHint(QPainter::Antialiasing);
 
 		painter.save();
 
