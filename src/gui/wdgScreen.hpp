@@ -20,6 +20,7 @@
 #define WDGSCREEN_HPP_
 
 #include <QtCore/QtGlobal>
+#include <QtCore/QMutex>
 #include <QtWidgets/QWidget>
 #include <QtGui/QDragEnterEvent>
 #include <QtGui/QDropEvent>
@@ -48,7 +49,7 @@ typedef struct _wdgScreen_mouse_event {
 } _wdgScreen_mouse_event;
 
 class wdgScreen : public QWidget {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 #if defined (WITH_OPENGL)
@@ -66,6 +67,7 @@ class wdgScreen : public QWidget {
 
 	private:
 		QCursor *target;
+		QAction *paste;
 
 	public:
 		wdgScreen(QWidget *parent);
@@ -92,6 +94,8 @@ class wdgScreen : public QWidget {
 	private slots:
 		void s_cursor_set(void);
 		void s_cursor_hide(int hide);
+		void s_paste_event(void);
+		void s_context_menu(const QPoint &pos);
 };
 
 #endif /* WDGSCREEN_HPP_ */

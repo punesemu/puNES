@@ -36,7 +36,8 @@ enum controller_types {
 	CTRL_ZAPPER,
 	CTRL_SNES_MOUSE,
 	CTRL_ARKANOID_PADDLE,
-	CTRL_OEKA_KIDS_TABLET
+	CTRL_OEKA_KIDS_TABLET,
+	CTRL_FAMILY_BASIC_KEYBOARD,
 };
 enum pad_types { CTRL_PAD_AUTO, CTRL_PAD_ORIGINAL, CTRL_PAD_3RD_PARTY };
 enum controller_buttons {
@@ -65,6 +66,7 @@ enum port_controllers {
 	PORT4,
 	PORT_MAX
 };
+enum nes_keyboard_misc { NES_KEYBOARD_MAX_KEYS = 105 };
 
 #if defined (_WIN32)
 typedef GUID _input_guid;
@@ -115,10 +117,26 @@ typedef struct _port_funct {
 	void (*input_add_event)(BYTE index);
 	BYTE (*input_decode_event)(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *port);
 } _port_funct;
+typedef struct _nes_keyboard_keycode {
+	DBWORD code;
+	BYTE row;
+	BYTE column;
+	WORD index;
+} _nes_keyboard_keycode;
+typedef struct _nes_keyboard {
+	BYTE enabled;
+	SBYTE type;
+	WORD rows;
+	WORD columns;
+	WORD totals;
+	BYTE keys[NES_KEYBOARD_MAX_KEYS];
+	_nes_keyboard_keycode keycodes[NES_KEYBOARD_MAX_KEYS];
+} _nes_keyboard;
 
 extern _r4016 r4016;
 extern _port port[PORT_MAX];
 extern _port_funct port_funct[PORT_MAX];
+extern _nes_keyboard nes_keyboard;
 extern _arkanoid arkanoid[PORT_BASE];
 
 extern BYTE (*input_wr_reg)(BYTE value);

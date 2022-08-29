@@ -208,6 +208,7 @@ INLINE static void chr_fix_HP2018A(void) {
 	BYTE swap = 0;
 
 	switch (hp2018a.cpu5xxx[0] & 0x07) {
+		default:
 		case 0:
 		case 1:
 		case 2:

@@ -44,7 +44,7 @@ typedef struct _ffmpeg_stream {
 
 	// video e audio
 	AVCodecContext *avcc;
-	AVCodec *avc;
+	const AVCodec *avc;
 	AVStream *avs;
 	AVFrame *avf;
 	int64_t pts;
@@ -152,7 +152,7 @@ void recording_init(void) {
 	// controllo la presenze dei codec
 	for (a = 0; a < REC_FORMAT_TOTAL; a++) {
 		_recording_format_info *rfi = &recording_format_info[a];
-		AVCodec *avc = NULL;
+		const AVCodec *avc = NULL;
 		int b = 0;
 
 		rfi->codec = rfi->codecs_list[0];

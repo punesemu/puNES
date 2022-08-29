@@ -57,10 +57,11 @@ public:
 	void	reset(uint8_t reset_type);
 	void	run();
 	BYTE	save_mapper(BYTE mode, BYTE slot, FILE *fp);
+
 protected:
 		PIC16C5X(int program_width, int data_width, int picmodel, uint8_t *rom, pic16c5x_rd_funct _rd, pic16c5x_wr_funct _wr);
-private:
 
+private:
 	/******************** CPU Internal Registers *******************/
 	uint16_t  m_PC;
 	uint16_t  m_PREVPC;     /* previous program counter */

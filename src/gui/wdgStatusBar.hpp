@@ -80,9 +80,43 @@ class alignmentStatusBar : public QFrame {
 	public:
 		void update_label(void);
 };
+class nesKeyboardIcon: public QLabel {
+	Q_OBJECT
+
+	public:
+		nesKeyboardIcon(QWidget *parent);
+		~nesKeyboardIcon();
+
+	Q_SIGNALS:
+		void clicked(int button);
+
+	protected:
+		void mousePressEvent(QMouseEvent *event);
+};
+class nesKeyboardStatusBar : public QFrame {
+	Q_OBJECT
+
+	public:
+		nesKeyboardIcon *icon;
+
+	public:
+		nesKeyboardStatusBar(QWidget *parent = 0);
+		~nesKeyboardStatusBar();
+
+	protected:
+		void changeEvent(QEvent *event);
+
+	public:
+		void update_tooltip(void);
+		void icon_pixmap(QIcon::Mode mode);
+
+	private slots:
+		void s_clicked(int button);
+};
 class wdgStatusBar : public QStatusBar {
 	public:
 		infoStatusBar *info;
+		nesKeyboardStatusBar *keyb;
 		alignmentStatusBar *alg;
 		recStatusBar *rec;
 

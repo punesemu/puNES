@@ -64,7 +64,7 @@ class pixmapButton: public QPushButton {
 #include "dlgStdPad.hh"
 
 class dlgStdPad : public QDialog, public Ui::dlgStdPad {
-		Q_OBJECT
+	Q_OBJECT
 
 	private:
 		struct _data {

@@ -49,14 +49,6 @@ void sst39sf040_init(BYTE *data, size_t size, BYTE manufacter_id, BYTE model_id,
 	sst39sf040tmp.address2 = adr2;
 	sst39sf040tmp.sector_size = sector_size;
 }
-BYTE sst39sf040_read(WORD address) {
-	if (sst39sf040.sequence == 0x90) {
-		return (address & 0x0001 ? sst39sf040tmp.model_id : sst39sf040tmp.manufacturer_id);
-	} else if (sst39sf040.time_out) {
-		return ((sst39sf040tmp.data[rd_address_sst39sf040(address)] ^ ((sst39sf040.time_out & 0x01) << 6)) & 0x77);
-	}
-	return sst39sf040tmp.data[rd_address_sst39sf040(address)];
-}
 void sst39sf040_write(WORD address, BYTE value) {
 	DBWORD chip_address = wr_address_sst39sf040(address);
 	WORD cmd = address & 0x7FFF;
@@ -111,6 +103,14 @@ void sst39sf040_write(WORD address, BYTE value) {
 			sst39sf040.sequence = 0;
 			break;
 	}
+}
+BYTE sst39sf040_read(WORD address) {
+	if (sst39sf040.sequence == 0x90) {
+		return (address & 0x0001 ? sst39sf040tmp.model_id : sst39sf040tmp.manufacturer_id);
+	} else if (sst39sf040.time_out) {
+		return ((sst39sf040tmp.data[rd_address_sst39sf040(address)] ^ ((sst39sf040.time_out & 0x01) << 6)) & 0x77);
+	}
+	return sst39sf040tmp.data[rd_address_sst39sf040(address)];
 }
 void sst39sf040_tick(void) {
 	if (sst39sf040.time_out && !--sst39sf040.time_out) {

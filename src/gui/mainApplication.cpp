@@ -16,33 +16,32 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef WDGSETTINGSCHEATS_HPP_
-#define WDGSETTINGSCHEATS_HPP_
-
 #include <QtWidgets/QWidget>
-#include "wdgSettingsCheats.hh"
+#include <QtGui/QKeyEvent>
+#include "mainApplication.moc"
+#include "singleapplication.moc"
+#include "singleapplication_p.moc"
+#include "mainWindow.hpp"
+#include "dlgKeyboard.hpp"
+#include "wdgScreen.hpp"
+#include "gui.h"
 
-class wdgSettingsCheats : public QWidget, public Ui::wdgSettingsCheats {
-	Q_OBJECT
+mainApplication::mainApplication(int &argc, char *argv[], bool allowSecondary, Options options, int timeout, const QString &userData) :
+	SingleApplication(argc, argv, allowSecondary, options, timeout, userData) {
+}
+mainApplication::~mainApplication() {}
 
-	public:
-		wdgSettingsCheats(QWidget *parent = 0);
-		~wdgSettingsCheats();
-
-	private:
-		void changeEvent(QEvent *event);
-		void showEvent(QShowEvent *event);
-
-	public:
-		void retranslateUi(QWidget *wdgSettingsCheats);
-		void update_widget(void);
-
-	private:
-		void cheat_mode_set(void);
-		void cheat_editor_control(void);
-
-	private slots:
-		void s_cheat_mode(bool checked);
-};
-
-#endif /* WDGSETTINGSCHEATS_HPP_ */
+bool mainApplication::notify(QObject *receiver, QEvent *event) {
+	switch (event->type()) {
+		case QEvent::ShortcutOverride:
+		case QEvent::KeyRelease:
+		case QEvent::Shortcut:
+			if (dlgkeyb && dlgkeyb->process_event(event)) {
+				return (true);
+			}
+			break;
+		default:
+			break;
+	}
+	return (QApplication::notify(receiver, event));
+}

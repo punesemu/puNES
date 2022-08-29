@@ -23,7 +23,7 @@
 #include "wdgSettingsVideo.hh"
 
 class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
-		Q_OBJECT
+	Q_OBJECT
 
 	private:
 		int vsync;

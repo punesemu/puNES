@@ -16,33 +16,21 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef WDGSETTINGSCHEATS_HPP_
-#define WDGSETTINGSCHEATS_HPP_
+#ifndef MAINAPPLICATION_HPP_
+#define MAINAPPLICATION_HPP_
 
-#include <QtWidgets/QWidget>
-#include "wdgSettingsCheats.hh"
+#include "extra/singleapplication/singleapplication.h"
 
-class wdgSettingsCheats : public QWidget, public Ui::wdgSettingsCheats {
+class mainApplication : public SingleApplication {
 	Q_OBJECT
 
 	public:
-		wdgSettingsCheats(QWidget *parent = 0);
-		~wdgSettingsCheats();
-
-	private:
-		void changeEvent(QEvent *event);
-		void showEvent(QShowEvent *event);
+		mainApplication(int &argc, char *argv[], bool allowSecondary = false, Options options = Mode::User,
+			int timeout = 1000, const QString &userData = {});
+		~mainApplication();
 
 	public:
-		void retranslateUi(QWidget *wdgSettingsCheats);
-		void update_widget(void);
-
-	private:
-		void cheat_mode_set(void);
-		void cheat_editor_control(void);
-
-	private slots:
-		void s_cheat_mode(bool checked);
+		bool notify(QObject *receiver, QEvent *event);
 };
 
-#endif /* WDGSETTINGSCHEATS_HPP_ */
+#endif /* MAINAPPLICATION_HPP_ */

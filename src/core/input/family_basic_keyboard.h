@@ -16,33 +16,16 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef WDGSETTINGSCHEATS_HPP_
-#define WDGSETTINGSCHEATS_HPP_
+#ifndef INPUT_FAMILY_BASIC_KEYBOARD_H_
+#define INPUT_FAMILY_BASIC_KEYBOARD_H_
 
-#include <QtWidgets/QWidget>
-#include "wdgSettingsCheats.hh"
+#include "input.h"
 
-class wdgSettingsCheats : public QWidget, public Ui::wdgSettingsCheats {
-	Q_OBJECT
+void input_init_family_basic_keyboard(void);
 
-	public:
-		wdgSettingsCheats(QWidget *parent = 0);
-		~wdgSettingsCheats();
+void input_wr_family_basic_keyboard(BYTE *value, BYTE nport);
+void input_rd_family_basic_keyboard(BYTE *value, BYTE nport, BYTE shift);
 
-	private:
-		void changeEvent(QEvent *event);
-		void showEvent(QShowEvent *event);
+void input_add_event_family_basic_keyboard(BYTE index);
 
-	public:
-		void retranslateUi(QWidget *wdgSettingsCheats);
-		void update_widget(void);
-
-	private:
-		void cheat_mode_set(void);
-		void cheat_editor_control(void);
-
-	private slots:
-		void s_cheat_mode(bool checked);
-};
-
-#endif /* WDGSETTINGSCHEATS_HPP_ */
+#endif /* INPUT_FAMILY_BASIC_KEYBOARD_H_ */

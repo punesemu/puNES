@@ -23,7 +23,7 @@
 #include "wdgNTSCFilter.hh"
 
 class wdgNTSCFilter : public QWidget, public Ui::wdgNTSCFilter {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 		wdgNTSCFilter(QWidget *parent = 0);

@@ -23,7 +23,7 @@
 #include "wdgSettingsPPU.hh"
 
 class wdgSettingsPPU : public QWidget, public Ui::wdgSettingsPPU {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 		wdgSettingsPPU(QWidget *parent = 0);

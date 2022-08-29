@@ -144,6 +144,7 @@
     <property name="title">
      <string>Too&amp;ls</string>
     </property>
+    <addaction name="action_Virtual_Keyboard"/>
     <addaction name="action_Vs_System"/>
     <addaction name="action_Joypad_Gamepads_Debug"/>
    </widget>
@@ -660,6 +661,15 @@
    </property>
    <property name="text">
     <string>&amp;Joypad/Gamepad Debug</string>
+   </property>
+  </action>
+  <action name="action_Virtual_Keyboard">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/virtual_keyboard.svg</normaloff>:/icon/icons/virtual_keyboard.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Virtual &amp;Keyboard</string>
    </property>
   </action>
  </widget>

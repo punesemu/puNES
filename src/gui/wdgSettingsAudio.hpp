@@ -23,7 +23,7 @@
 #include "wdgSettingsAudio.hh"
 
 class wdgSettingsAudio : public QWidget, public Ui::wdgSettingsAudio {
-		Q_OBJECT
+	Q_OBJECT
 
 	public:
 		wdgSettingsAudio(QWidget *parent = 0);

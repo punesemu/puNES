@@ -749,7 +749,7 @@ void overlayWidgetFloppy::update_widget(void) {
 	}
 }
 
-// overlayWidgetFrame --------------------------------------------------------------------------------------------------------------
+// overlayWidgetFrame ------------------------------------------------------------------------------------------------------------
 
 overlayWidgetFrame::overlayWidgetFrame(QWidget *parent) : overlayWidget(parent) {
 	old.actual_frame = 0;
@@ -842,6 +842,9 @@ void overlayWidgetInputPort::paintEvent(QPaintEvent *event) {
 		case CTRL_OEKA_KIDS_TABLET:
 			draw_oeka_kids_tablet();
 			break;
+		case CTRL_FAMILY_BASIC_KEYBOARD:
+			draw_family_basic_keyboard();
+			break;
 	}
 	painter.end();
 }
@@ -870,6 +873,8 @@ void overlayWidgetInputPort::update_dpr(void) {
 	arkanoid_paddle.button = dpr_image(":/pics/pics/overlay_arkanoid_paddle_button.png");
 
 	oeka_kids_tablet.tile = dpr_image(":/pics/pics/overlay_oeka_kids_tablet.png");
+
+	family_basic_keyboard.tile = dpr_image(":/pics/pics/overlay_family_basic_keyboard.png");
 
 	exp_port = dpr_image(":/pics/pics/overlay_controller_exp_port.png");
 
@@ -951,6 +956,8 @@ BYTE overlayWidgetInputPort::is_to_redraw(void) {
 				return (TRUE);
 			}
 			break;
+		case CTRL_FAMILY_BASIC_KEYBOARD:
+			break;
 		default:
 			break;
 	}
@@ -985,6 +992,7 @@ void overlayWidgetInputPort::update_old_value(void) {
 			old.mouse.left = gmouse.left;
 			old.mouse.x = arkanoid[input_port & 0x01].x;
 			break;
+		case CTRL_FAMILY_BASIC_KEYBOARD:
 			break;
 		default:
 			break;
@@ -1074,6 +1082,15 @@ void overlayWidgetInputPort::draw_arkanoid_paddle(void) {
 }
 void overlayWidgetInputPort::draw_oeka_kids_tablet(void) {
 	painter.drawImage(dpr_point(0, 0), oeka_kids_tablet.tile);
+
+	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
+		painter.drawImage(dpr_point(61, 1), exp_port);
+	} else {
+		painter.drawImage(dpr_point(74, 1), portx);
+	}
+}
+void overlayWidgetInputPort::draw_family_basic_keyboard(void) {
+	painter.drawImage(dpr_point(0, 0), family_basic_keyboard.tile);
 
 	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
 		painter.drawImage(dpr_point(61, 1), exp_port);

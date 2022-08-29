@@ -16,6 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <QtWidgets/QKeySequenceEdit>
 #include <QtWidgets/QScrollBar>
 #include "wdgSettingsInput.moc"
 #include "mainWindow.hpp"
@@ -187,7 +188,8 @@ void wdgSettingsInput::controller_ports_init(void) {
 		{ tr("Standard Pads on Port3 and Port4"), CTRL_STANDARD },
 		{ tr("Zapper"),                           CTRL_ZAPPER   },
 		{ tr("Arkanoid Paddle"),                  CTRL_ARKANOID_PADDLE },
-		{ tr("Oeka Kids Tablet"),                 CTRL_OEKA_KIDS_TABLET }
+		{ tr("Oeka Kids Tablet"),                 CTRL_OEKA_KIDS_TABLET },
+		{ tr("Family BASIC Keyboard"),            CTRL_FAMILY_BASIC_KEYBOARD }
 	};
 	_cb_ports ctrl_mode_famicom_ports1[] {
 		{ tr("Disabled"),        CTRL_DISABLED },
@@ -287,7 +289,6 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	QTableWidgetItem *col;
 	QHBoxLayout *layout;
 	QWidget *widget;
-	pixmapButton *btext;
 	QPushButton *bicon;
 	QFontMetrics fm = tableWidget_Shortcuts->fontMetrics();
 	int icon_size = 21;
@@ -307,16 +308,18 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	}
 	widget = new QWidget(this);
 	layout = new QHBoxLayout(widget);
-	btext = new pixmapButton(this);
-	btext->setObjectName("value");
-	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
-	btext->setIconSize(QSize(21, 21));
-	btext->setMinimumHeight(btexth);
-	btext->setProperty("myValue", QVariant(row));
-	btext->setProperty("myType", QVariant(KEYBOARD));
-	btext->installEventFilter(this);
-	layout->addWidget(btext);
-	connect(btext, SIGNAL(clicked(bool)), this, SLOT(s_shortcut(bool)));
+	{
+		QKeySequenceEdit *btext;
+
+		btext = new QKeySequenceEdit();
+		btext->setObjectName("value");
+		btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+		btext->setMinimumHeight(btexth);
+		btext->setProperty("myValue", QVariant(row));
+		btext->setProperty("myType", QVariant(KEYBOARD));
+		connect(btext, SIGNAL(editingFinished()), this, SLOT(s_shortcut_keyb()));
+		layout->addWidget(btext);
+	}
 	bicon = new QPushButton(this);
 	bicon->setObjectName("default");
 	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
@@ -333,7 +336,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	bicon->setProperty("myValue", QVariant(row));
 	connect(bicon, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_keyb_unset(bool)));
 	layout->addWidget(bicon);
-	layout->setContentsMargins(0,0,0,0);
+	layout->setContentsMargins(0, 0, 0, 0);
 	layout->setSpacing(0);
 	tableWidget_Shortcuts->setCellWidget(row, 1, widget);
 
@@ -345,16 +348,20 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	}
 	widget = new QWidget(this);
 	layout = new QHBoxLayout(widget);
-	btext = new pixmapButton(this);
-	btext->setObjectName("value");
-	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
-	btext->setIconSize(QSize(21, 21));
-	btext->setMinimumHeight(btexth);
-	btext->setProperty("myValue", QVariant(row));
-	btext->setProperty("myType", QVariant(JOYSTICK));
-	btext->installEventFilter(this);
-	connect(btext, SIGNAL(clicked(bool)), this, SLOT(s_shortcut(bool)));
-	layout->addWidget(btext);
+	{
+		pixmapButton *btext;
+
+		btext = new pixmapButton(this);
+		btext->setObjectName("value");
+		btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+		btext->setIconSize(QSize(21, 21));
+		btext->setMinimumHeight(btexth);
+		btext->setProperty("myValue", QVariant(row));
+		btext->setProperty("myType", QVariant(JOYSTICK));
+		btext->installEventFilter(this);
+		connect(btext, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_joy(bool)));
+		layout->addWidget(btext);
+	}
 	bicon = new QPushButton(this);
 	bicon->setObjectName("unset");
 	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
@@ -363,7 +370,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	bicon->setProperty("myValue", QVariant(row));
 	connect(bicon, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_joy_unset(bool)));
 	layout->addWidget(bicon);
-	layout->setContentsMargins(0,0,0,0);
+	layout->setContentsMargins(0, 0, 0, 0);
 	layout->setSpacing(0);
 	tableWidget_Shortcuts->setCellWidget(row, 2, widget);
 }
@@ -466,7 +473,7 @@ void wdgSettingsInput::shortcut_update_text(QAction *action, int index) {
 #endif
 
 	// keyboard
-	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<pixmapButton *>("value")->setText(shcut.text[KEYBOARD].at(row));
+	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QKeySequenceEdit *>("value")->setKeySequence(shcut.text[KEYBOARD].at(row));
 
 	// joystick
 	js_row_pixmapButton(row);
@@ -476,38 +483,7 @@ bool wdgSettingsInput::shortcut_keypressEvent(QKeyEvent *event) {
 		return (true);
 	}
 
-	if (shcut.type == KEYBOARD) {
-		if ((event->key() == Qt::Key_Control) ||
-			(event->key() == Qt::Key_Meta)  ||
-			(event->key() == Qt::Key_Alt) ||
-			(event->key() == Qt::Key_AltGr) ||
-			(event->key() == Qt::Key_Shift)) {
-			return (true);
-		}
-
-		if ((event->key() != Qt::Key_Escape) || (event->modifiers() != Qt::MetaModifier)) {
-			QString key = QKeySequence(event->key()).toString(QKeySequence::PortableText);
-
-			switch (event->modifiers()) {
-				case Qt::GroupSwitchModifier:
-				case Qt::NoModifier:
-				default:
-					shcut.text[KEYBOARD].replace(shcut.row, key);
-					break;
-				case Qt::ControlModifier:
-					shcut.text[KEYBOARD].replace(shcut.row, QString("Ctrl+%1").arg(key));
-					break;
-				case Qt::AltModifier:
-					shcut.text[KEYBOARD].replace(shcut.row, QString("Alt+%1").arg(key));
-					break;
-				case Qt::MetaModifier:
-					shcut.text[KEYBOARD].replace(shcut.row, QString("Meta+%1").arg(key));
-					break;
-			}
-			settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(shcut.row), shcut.row + SET_INP_SC_OPEN, KEYBOARD);
-			mainwin->shortcuts();
-		}
-	} else {
+	if (shcut.type == JOYSTICK) {
 		if ((event->key() != Qt::Key_Escape) || (event->modifiers() != Qt::MetaModifier)) {
 			return (true);
 		}
@@ -550,7 +526,7 @@ void wdgSettingsInput::shortcuts_update(int mode, int type, int row) {
 
 				widget = tableWidget_Shortcuts->cellWidget(i, 1);
 				widget->setEnabled(true);
-				widget->findChild<pixmapButton *>("value")->setEnabled(true);
+				widget->findChild<QKeySequenceEdit *>("value")->setEnabled(true);
 				widget->findChild<QPushButton *>("default")->setEnabled(true);
 
 				tableWidget_Shortcuts->cellWidget(i, 1)->setEnabled(true);
@@ -766,6 +742,7 @@ void wdgSettingsInput::controller_ports_set(void) {
 			case CTRL_ZAPPER:
 			case CTRL_SNES_MOUSE:
 			case CTRL_ARKANOID_PADDLE:
+			case CTRL_FAMILY_BASIC_KEYBOARD:
 			default:
 				pb->setEnabled(false);
 				break;
@@ -842,6 +819,8 @@ void wdgSettingsInput::shortcuts_set(void) {
 	shortcut_update_text(mainwin->qaction_shcut.integer_in_fullscreen, SET_INP_SC_INTEGER_FULLSCREEN);
 	shortcut_update_text(mainwin->qaction_shcut.stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN);
 	shortcut_update_text(mainwin->qaction_shcut.toggle_menubar_in_fullscreen, SET_INP_SC_TOGGLE_MENUBAR_IN_FULLSCREEN);
+	shortcut_update_text(mainwin->qaction_shcut.toggle_capture_input, SET_INP_SC_TOGGLE_CAPTURE_INPUT);
+	shortcut_update_text(mainwin->qaction_shcut.toggle_nes_keyboard, SET_INP_SC_TOGGLE_NES_KEYBOARD);
 	shortcut_update_text(mainwin->qaction_shcut.audio_enable, SET_INP_SC_AUDIO_ENABLE);
 	shortcut_update_text(mainwin->qaction_shcut.save_settings, SET_INP_SC_SAVE_SETTINGS);
 	shortcut_update_text(mainwin->action_Save_state, SET_INP_SC_SAVE_STATE);
@@ -947,7 +926,32 @@ void wdgSettingsInput::s_joy_index_changed(UNUSED(int index)) {
 		js_row_pixmapButton(i);
 	}
 }
-void wdgSettingsInput::s_shortcut(UNUSED(bool checked)) {
+void wdgSettingsInput::s_shortcut_keyb(void) {
+	QKeySequenceEdit *se = ((QKeySequenceEdit *)sender());
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	int value = se->keySequence()[0];
+#else
+	int value = se->keySequence()[0].toCombined();
+#endif
+	QKeySequence shortcut(value);
+
+	shcut.type = QVariant(((QObject *)sender())->property("myType")).toInt();
+	shcut.row = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	shcut.bp = NULL;
+
+	se->setKeySequence(shortcut);
+
+	shcut.text[KEYBOARD].replace(shcut.row, shortcut.toString());
+
+	settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(shcut.row), shcut.row + SET_INP_SC_OPEN, KEYBOARD);
+	mainwin->shortcuts();
+
+	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
+	update_widget();
+
+	shcut.no_other_buttons = false;
+}
+void wdgSettingsInput::s_shortcut_joy(UNUSED(bool checked)) {
 	if (shcut.no_other_buttons == true) {
 		return;
 	}
@@ -961,17 +965,14 @@ void wdgSettingsInput::s_shortcut(UNUSED(bool checked)) {
 	shcut.no_other_buttons = true;
 	shcut.bp->setPixmap(QPixmap(""));
 	shcut.bp->setText("...");
-
 	shcut.bp->setFocus(Qt::ActiveWindowFocusReason);
 
 	shcut.timeout.seconds = 5;
 	shcut.timeout.timer->start(1000);
 	s_input_timeout();
 
-	if (shcut.type == JOYSTICK) {
-		shcut.joy.value = 0;
-		shcut.joy.timer->start(150);
-	}
+	shcut.joy.value = 0;
+	shcut.joy.timer->start(150);
 }
 void wdgSettingsInput::s_shortcut_unset_all(UNUSED(bool checked)) {
 	int i;
@@ -979,7 +980,7 @@ void wdgSettingsInput::s_shortcut_unset_all(UNUSED(bool checked)) {
 	for (i = 0; i < SET_MAX_NUM_SC; i++) {
 		shcut.text[KEYBOARD].replace(i, "NULL");
 		settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(i), i + SET_INP_SC_OPEN, KEYBOARD);
-		tableWidget_Shortcuts->cellWidget(i, 1)->findChild<pixmapButton *>("value")->setText(shcut.text[KEYBOARD].at(i));
+		tableWidget_Shortcuts->cellWidget(i, 1)->findChild<QKeySequenceEdit *>("value")->setKeySequence(shcut.text[KEYBOARD].at(i));
 
 		shcut.text[JOYSTICK].replace(i, "NULL");
 		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(i), i + SET_INP_SC_OPEN, JOYSTICK);
@@ -998,7 +999,7 @@ void wdgSettingsInput::s_shortcut_reset(UNUSED(bool checked)) {
 	for (i = 0; i < SET_MAX_NUM_SC; i++) {
 		shcut.text[KEYBOARD].replace(i, uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
 		settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(i), i + SET_INP_SC_OPEN, KEYBOARD);
-		tableWidget_Shortcuts->cellWidget(i, 1)->findChild<pixmapButton *>("value")->setText(shcut.text[KEYBOARD].at(i));
+		tableWidget_Shortcuts->cellWidget(i, 1)->findChild<QKeySequenceEdit *>("value")->setKeySequence(shcut.text[KEYBOARD].at(i));
 
 		shcut.text[JOYSTICK].replace(i, uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(JOYSTICK));
 		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(i), i + SET_INP_SC_OPEN, JOYSTICK);
@@ -1011,7 +1012,7 @@ void wdgSettingsInput::s_shortcut_keyb_default(UNUSED(bool checked)) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	shcut.text[KEYBOARD].replace(row, uQString(inp_cfg[row + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
-	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<pixmapButton *>("value")->setText(shcut.text[KEYBOARD].at(row));
+	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QKeySequenceEdit *>("value")->setKeySequence(shcut.text[KEYBOARD].at(row));
 	settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(row), row + SET_INP_SC_OPEN, KEYBOARD);
 	mainwin->shortcuts();
 }
@@ -1019,7 +1020,7 @@ void wdgSettingsInput::s_shortcut_keyb_unset(UNUSED(bool checked)) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	shcut.text[KEYBOARD].replace(row, "NULL");
-	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<pixmapButton *>("value")->setText("NULL");
+	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QKeySequenceEdit *>("value")->clear();
 	settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(row), row + SET_INP_SC_OPEN, KEYBOARD);
 	mainwin->shortcuts();
 }

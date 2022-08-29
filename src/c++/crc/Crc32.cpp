@@ -381,7 +381,6 @@ uint32_t crc32_4x8bytes(const void* data, size_t length, uint32_t previousCrc32)
             Crc32Lookup[6][(one>> 8) & 0xFF] ^
             Crc32Lookup[7][ one      & 0xFF];
 #endif
-
     }
 
     length -= BytesAtOnce;

@@ -25,7 +25,7 @@
 #include "uncompress.h"
 
 class dlgUncomp : public QDialog, public Ui::dlgUncomp {
-		Q_OBJECT
+	Q_OBJECT
 
 	private:
 		int selected;
