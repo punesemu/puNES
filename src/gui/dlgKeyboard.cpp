@@ -696,7 +696,7 @@ void pasteObject::reset(void) {
 	enable = FALSE;
 	delay.set = 0;
 	delay.unset = 0;
-	ch = NULL;
+	character = NULL;
 	charset.clear();
 	parse_reset();
 }
@@ -722,6 +722,7 @@ void pasteObject::set_text(QString text) {
 	string = text;
 	enable = TRUE;
 }
+
 void pasteObject::parse_text(void) {
 	int i;
 
@@ -731,13 +732,13 @@ void pasteObject::parse_text(void) {
 
 	if (type == PASTE_SET) {
 		if (keys_index == keys.length()) {
-			ch = NULL;
+			character = NULL;
 
-			while (ch == NULL) {
-				QString character;
+			while (character == NULL) {
+				QString actual;
 
-				if (break_insert || (string_index >= string.length())) {
-					if (characters_elaborate > 0) {
+				if (break_process || (string_index >= string.length())) {
+					if (characters_processed > 0) {
 						gui_max_speed_stop();
 					}
 					enable = FALSE;
@@ -745,9 +746,10 @@ void pasteObject::parse_text(void) {
 					return;
 				}
 
-				character = string.mid(string_index, 1);
+				actual = string.mid(string_index, 1);
 
-				if ((character.compare(QString("\\"), Qt::CaseInsensitive) == 0) && ((string_index + 1) < string.length())) {
+				if ((actual.compare(QString("\\"), Qt::CaseInsensitive) == 0) && ((string_index + 1) < string.length())) {
+					QString next = string.mid(string_index + 1, 1);
 					static const QString escape_sequences[] = {
 						"n",  // newline
 						"t",  // horizontal tab
@@ -758,11 +760,10 @@ void pasteObject::parse_text(void) {
 						"0",  // the null character
 						"f"   // form feed
 					};
-					QString second_character = string.mid(string_index + 1, 1);
 
 					for (i = 0; i < (int)LENGTH(escape_sequences); i++) {
-						if (second_character.compare(escape_sequences[i], Qt::CaseInsensitive) == 0) {
-							character = string.mid(string_index, 2);
+						if (next.compare(escape_sequences[i], Qt::CaseInsensitive) == 0) {
+							actual = string.mid(string_index, 2);
 							string_index++;
 							break;
 						}
@@ -774,9 +775,9 @@ void pasteObject::parse_text(void) {
 					int a;
 
 					for (a = 0; a < charset[i].string.length(); a++) {
-						if (charset[i].string[a].compare(character.toUpper(), Qt::CaseInsensitive) == 0) {
-							ch = &charset[i];
-							keys = dlgkeyb->keyboard->parse_text(ch);
+						if (charset[i].string[a].compare(actual, Qt::CaseInsensitive) == 0) {
+							character = &charset[i];
+							keys = dlgkeyb->keyboard->parse_character(character);
 							found = TRUE;
 							break;
 						}
@@ -792,11 +793,11 @@ void pasteObject::parse_text(void) {
 			keys_index = 0;
 		}
 
-		if (characters_elaborate == 0) {
+		if (characters_processed == 0) {
 			gui_max_speed_start();
 		}
 
-		characters_elaborate++;
+		characters_processed++;
 
 		for (i = 0; i < keys.at(keys_index).length(); i++) {
 			nes_keyboard.keys[keys.at(keys_index).at(i)] = 0x80;
@@ -814,25 +815,26 @@ void pasteObject::parse_text(void) {
 	}
 }
 void pasteObject::parse_break(void) {
-	break_insert = TRUE;
+	break_process = TRUE;
 }
+
 void pasteObject::parse_reset(void) {
 	type = PASTE_SET;
 	string = "";
 	string_index = 0;
-	characters_elaborate = 0;
+	characters_processed = 0;
 	delay.counter = 0;
-	break_insert = FALSE;
+	break_process = FALSE;
 	keys.clear();
 	keys_index = 0;
 }
 void pasteObject::set_keys(BYTE value) {
-	if (ch) {
+	if (character) {
 		int i;
 
 		for (i = 0; i < 4; i++) {
-			if (ch->keys[i] > 0) {
-				nes_keyboard.keys[ch->keys[i]] = value;
+			if (character->keys[i] > 0) {
+				nes_keyboard.keys[character->keys[i]] = value;
 			}
 		}
 	}
@@ -857,7 +859,8 @@ void keyboardObject::init(void) {
 }
 void keyboardObject::set_keycodes(void) {}
 void keyboardObject::set_charset(void) {}
-QList<QList<SBYTE>> keyboardObject::parse_text(UNUSED(keyboardObject::_character *ch)) {
+
+QList<QList<SBYTE>> keyboardObject::parse_character(UNUSED(keyboardObject::_character *ch)) {
 	QList<QList<SBYTE>> keys;
 
 	return (keys);
@@ -1194,7 +1197,8 @@ void familyBasicKeyboard::set_charset(void) {
 
 	dlgkeyb->set_charset({ &charset[0], LENGTH(charset) }, delay);
 }
-QList<QList<SBYTE>> familyBasicKeyboard::parse_text(keyboardObject::_character *ch) {
+
+QList<QList<SBYTE>> familyBasicKeyboard::parse_character(keyboardObject::_character *ch) {
 	QList<QList<SBYTE>> keys;
 	QList<SBYTE> key;
 	BYTE kana_found = FALSE;
