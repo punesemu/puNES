@@ -729,6 +729,10 @@
       <source>&amp;Joypad/Gamepad Debug</source>
       <translation>调试手柄/摇杆(&amp;J)</translation>
     </message>
+    <message>
+      <source>Virtual &amp;Keyboard</source>
+      <translation>虚拟键盘(&amp;K)</translation>
+    </message>
   </context>
   <context>
     <name>objCheat</name>
