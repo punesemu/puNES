@@ -370,6 +370,9 @@ void gui_update_ppu_hacks_lag_frames(void) {
 void gui_update_fds_menu(void) {
 	qt.mwin->update_fds_menu();
 }
+void gui_update_tape_menu(void) {
+	qt.mwin->update_tape_menu();
+}
 void gui_update_recording_tab(void) {
 	qt.dset->update_tab_recording();
 }

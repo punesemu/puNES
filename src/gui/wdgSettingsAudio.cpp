@@ -248,7 +248,7 @@ void wdgSettingsAudio::s_sample_rate(bool checked) {
 		}
 
 		emu_thread_pause();
-		wave_close();
+		wav_from_audio_emulator_close();
 		cfg->samplerate = samplerate;
 		snd_playback_start();
 		emu_thread_continue();
@@ -286,7 +286,7 @@ void wdgSettingsAudio::s_channels(bool checked) {
 		}
 
 		emu_thread_pause();
-		wave_close();
+		wav_from_audio_emulator_close();
 		cfg->channels_mode = channels;
 		snd_playback_start();
 		emu_thread_continue();

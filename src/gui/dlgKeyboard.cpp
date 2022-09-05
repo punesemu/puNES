@@ -26,6 +26,7 @@
 #include "gui.h"
 #include "conf.h"
 #include "tas.h"
+#include "tape_data_recorder.h"
 
 static dlgKeyboard *dlgkbd = NULL;
 
@@ -335,12 +336,12 @@ bool dlgKeyboard::process_event(QEvent *event) {
 			} else if (keyevent->key() == Qt::Key_Escape) {
 				paste->parse_break();
 			}
-			return (true);
+			return (gui.capture_input);
 		} else if (event->type() == QEvent::KeyRelease) {
 			if (!paste->enable) {
 				key_event_release((QKeyEvent*)event, dlgKeyboard::KEVENT_NORMAL);
 			}
-			return (true);
+			return (gui.capture_input);
 		} else if (event->type() == QEvent::Shortcut) {
 			if (!paste->enable) {
 				QKeySequence key = ((QShortcutEvent*)event)->key();
@@ -721,6 +722,7 @@ void pasteObject::set_text(QString text) {
 	parse_reset();
 	string = text;
 	enable = TRUE;
+	gui_update_tape_menu();
 }
 
 void pasteObject::parse_text(void) {
@@ -742,6 +744,7 @@ void pasteObject::parse_text(void) {
 						gui_max_speed_stop();
 					}
 					enable = FALSE;
+					gui_update_tape_menu();
 					parse_reset();
 					return;
 				}
@@ -889,8 +892,13 @@ familyBasicKeyboard::familyBasicKeyboard(QObject *parent) : keyboardObject(paren
 	delay.set = 12;
 	delay.unset = 12;
 	init();
+	tape_data_recorder.enabled = TRUE;
+	gui_update_tape_menu();
 }
-familyBasicKeyboard::~familyBasicKeyboard() {}
+familyBasicKeyboard::~familyBasicKeyboard() {
+	tape_data_recorder.enabled = FALSE;
+	tape_data_recorder_quit();
+}
 
 void familyBasicKeyboard::set_keycodes(void) {
 	_keycode keycodes[] = {

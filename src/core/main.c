@@ -32,6 +32,7 @@
 #include "patcher.h"
 #include "ppu.h"
 #include "mappers.h"
+#include "tape_data_recorder.h"
 #if defined (WITH_FFMPEG)
 #include "recording.h"
 #endif
@@ -52,6 +53,7 @@ int main(int argc, char **argv) {
 	memset(&info, 0x00, sizeof(info));
 	memset(&jstick, 0x00, sizeof(jstick));
 	memset(&chinaersan2, 0x00, sizeof(chinaersan2));
+	memset(&tape_data_recorder, 0x00, sizeof(tape_data_recorder));
 
 	info.no_rom = TRUE;
 	info.doublebuffer = TRUE;

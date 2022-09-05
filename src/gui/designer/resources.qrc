@@ -3,8 +3,13 @@
     <file>resources.qrc</file>
     <file>icons/rotate_left.svg</file>
     <file>icons/misc.svg</file>
+    <file>icons/paste.svg</file>
     <file>icons/pixel.svg</file>
     <file>icons/monitor_screen.svg</file>
+    <file>icons/cassette_tape_play.svg</file>
+    <file>icons/cassette_tape.svg</file>
+    <file>icons/cassette_tape_record.svg</file>
+    <file>icons/cassette_tape_stop.svg</file>
     <file>icons/copy.svg</file>
     <file>icons/virtual_keyboard.svg</file>
     <file>icons/recording.svg</file>
@@ -12,6 +17,11 @@
     <file>icons/gamepad_playstation_3_dpad_down.svg</file>
     <file>icons/gamepad_playstation_3_dpad_left.svg</file>
     <file>icons/gamepad_playstation_3_dpad_right.svg</file>
+    <file>icons/multimedia_eject.svg</file>
+    <file>icons/multimedia_pause.svg</file>
+    <file>icons/multimedia_play.svg</file>
+    <file>icons/multimedia_record.svg</file>
+    <file>icons/multimedia_stop.svg</file>
     <file>icons/gamepad_playstation_3_dpad_up.svg</file>
     <file>icons/gamepad_playstation_3_l1.svg</file>
     <file>icons/gamepad_playstation_3_l2.svg</file>
@@ -157,9 +167,6 @@
     <file>icons/mode.svg</file>
     <file>icons/trash.svg</file>
     <file>icons/open.svg</file>
-    <file>icons/pause.svg</file>
-    <file>icons/wav_start.svg</file>
-    <file>icons/wav_stop.svg</file>
     <file>icons/screenshot.svg</file>
     <file>icons/turn_on.svg</file>
     <file>icons/patch.svg</file>
@@ -191,7 +198,6 @@
     <file>icons/video.svg</file>
     <file>icons/soft_reset.svg</file>
     <file>icons/switch_sides.svg</file>
-    <file>icons/eject.svg</file>
     <file>icons/nes_file.svg</file>
     <file>icons/disk_side.svg</file>
     <file>icons/hard_reset.svg</file>

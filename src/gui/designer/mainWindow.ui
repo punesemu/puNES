@@ -77,6 +77,18 @@
      <addaction name="separator"/>
      <addaction name="action_Switch_sides"/>
     </widget>
+    <widget class="QMenu" name="menu_Tape">
+     <property name="title">
+      <string>Tape</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/icon/icons/cassette_tape.svg</normaloff>:/icon/icons/cassette_tape.svg</iconset>
+     </property>
+     <addaction name="action_Tape_Play"/>
+     <addaction name="action_Tape_Record"/>
+     <addaction name="action_Tape_Stop"/>
+    </widget>
     <addaction name="action_Turn_Off"/>
     <addaction name="action_Hard_Reset"/>
     <addaction name="action_Soft_Reset"/>
@@ -85,6 +97,8 @@
     <addaction name="separator"/>
     <addaction name="menu_Disk_Side"/>
     <addaction name="action_Eject_Insert_Disk"/>
+    <addaction name="separator"/>
+    <addaction name="menu_Tape"/>
     <addaction name="separator"/>
     <addaction name="action_Fullscreen"/>
     <addaction name="action_Save_Screenshot"/>
@@ -206,7 +220,7 @@
   <action name="action_Eject_Insert_Disk">
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/icon/icons/eject.svg</normaloff>:/icon/icons/eject.svg</iconset>
+     <normaloff>:/icon/icons/multimedia_eject.svg</normaloff>:/icon/icons/multimedia_eject.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Eject/Insert Disk</string>
@@ -488,7 +502,7 @@
    </property>
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/icon/icons/pause.svg</normaloff>:/icon/icons/pause.svg</iconset>
+     <normaloff>:/icon/icons/multimedia_pause.svg</normaloff>:/icon/icons/multimedia_pause.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Pause</string>
@@ -670,6 +684,33 @@
    </property>
    <property name="text">
     <string>Virtual &amp;Keyboard</string>
+   </property>
+  </action>
+  <action name="action_Tape_Play">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/cassette_tape_play.svg</normaloff>:/icon/icons/cassette_tape_play.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Play</string>
+   </property>
+  </action>
+  <action name="action_Tape_Record">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/cassette_tape_record.svg</normaloff>:/icon/icons/cassette_tape_record.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Record</string>
+   </property>
+  </action>
+  <action name="action_Tape_Stop">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/cassette_tape_stop.svg</normaloff>:/icon/icons/cassette_tape_stop.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Stop</string>
    </property>
   </action>
  </widget>

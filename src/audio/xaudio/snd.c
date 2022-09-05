@@ -161,7 +161,7 @@ BYTE snd_init(void) {
 }
 void snd_quit(void) {
 	// se e' in corso una registrazione, la concludo
-	wave_close();
+	wav_from_audio_emulator_close();
 
 	snd_playback_stop();
 
@@ -310,7 +310,7 @@ BYTE snd_playback_start(void) {
 	{
 		static int factor[10] = { 90, 80, 70, 60, 50, 40, 30, 20, 10, 5 };
 
-		// snd.samplarate / 50 = 20 ms
+		// snd.samplerate / 50 = 20 ms
 		snd.period.samples = (snd.samplerate / factor[cfg->audio_buffer_factor]);
 		snd.frequency = machine.cpu_hz / (double)snd.samplerate;
 
@@ -623,7 +623,7 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 			read = (void *)cbd.silence;
 		}
 
-		wave_write((SWORD *)read, avail);
+		wave_from_audio_emulator_write((SWORD *)read, avail);
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)read);
 
 		cbd.bytes_available -= len;

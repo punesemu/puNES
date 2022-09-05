@@ -33,10 +33,14 @@
 #include "gui.h"
 #include "patcher.h"
 #include "input.h"
+#include "tape_data_recorder.h"
 
 wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 	target = NULL;
 	paste = new QAction(this);
+	tape.play = new QAction(this);
+	tape.record = new QAction(this);
+	tape.stop = new QAction(this);
 #if defined (WITH_OPENGL)
 	wogl = new wdgOpenGL(this);
 #elif defined (WITH_D3D9)
@@ -56,9 +60,17 @@ wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
+	paste->setIcon(QIcon(":/icon/icons/paste.svg"));
+	tape.play->setIcon(QIcon(":/icon/icons/cassette_tape_play.svg"));
+	tape.record->setIcon(QIcon(":/icon/icons/cassette_tape_record.svg"));
+	tape.stop->setIcon(QIcon(":/icon/icons/cassette_tape_stop.svg"));
+
 	connect (this, SIGNAL(et_cursor_set()), this, SLOT(s_cursor_set()));
 	connect (this, SIGNAL(et_cursor_hide(int)), this, SLOT(s_cursor_hide(int)));
 	connect(paste, SIGNAL(triggered()), this, SLOT(s_paste_event()));
+	connect(tape.play, SIGNAL(triggered()), this, SLOT(s_tape_play_event()));
+	connect(tape.record, SIGNAL(triggered()), this, SLOT(s_tape_record_event()));
+	connect(tape.stop, SIGNAL(triggered()), this, SLOT(s_tape_stop_event()));
 
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(s_context_menu(const QPoint&)));
@@ -255,17 +267,56 @@ void wdgScreen::s_paste_event(void) {
 		dropEvent(new QDropEvent(QPointF(0, 0), Qt::CopyAction, clipboard->mimeData(), Qt::NoButton, Qt::NoModifier));
 	}
 }
+void wdgScreen::s_tape_play_event(void) {
+	mainwin->action_Tape_Play->trigger();
+}
+void wdgScreen::s_tape_record_event(void) {
+	mainwin->action_Tape_Record->trigger();
+}
+void wdgScreen::s_tape_stop_event(void) {
+	mainwin->action_Tape_Stop->trigger();
+}
 void wdgScreen::s_context_menu(const QPoint &pos) {
-	if (nes_keyboard.enabled && !info.no_rom) {
-		const QClipboard *clipboard = QApplication::clipboard();
-		const QMimeData *mimeData = clipboard->mimeData();
-		QPoint global_pos = mapToGlobal(pos);
-		QMenu menu;
+	QPoint global_pos = mapToGlobal(pos);
+	int counter = 0;
+	QMenu menu;
 
-		paste->setText(tr("Paste"));
-		paste->setEnabled(mimeData->hasUrls() || mimeData->hasText());
+	menu.setMinimumWidth(200);
 
-		menu.addAction(paste);
+	if (!info.no_rom) {
+		if (nes_keyboard.enabled) {
+			const QClipboard *clipboard = QApplication::clipboard();
+			const QMimeData *mimeData = clipboard->mimeData();
+
+			menu.addSection(tr("Family Basic Keyboard"));
+
+			paste->setText(tr("Paste"));
+			paste->setEnabled((mimeData->hasUrls() || mimeData->hasText()) && !dlgkeyb->paste->enable);
+
+			menu.addAction(paste);
+
+			counter++;
+		}
+		if (tape_data_recorder.enabled) {
+			menu.addSection(tr("Tape"));
+
+			tape.play->setText(tr("Play"));
+			tape.record->setText(tr("Record"));
+			tape.stop->setText(tr("Stop"));
+
+			tape.play->setEnabled(mainwin->action_Tape_Play->isEnabled());
+			tape.record->setEnabled(mainwin->action_Tape_Record->isEnabled());
+			tape.stop->setEnabled(mainwin->action_Tape_Stop->isEnabled());
+
+			menu.addAction(tape.play);
+			menu.addAction(tape.record);
+			menu.addAction(tape.stop);
+
+			counter++;
+		}
+	}
+
+	if (counter) {
 		menu.exec(global_pos);
 	}
 }

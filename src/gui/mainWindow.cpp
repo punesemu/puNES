@@ -31,6 +31,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QUrl>
 #include <QtGui/QDesktopServices>
+#include <QtWidgets/QErrorMessage>
 #include <QtCore/QBuffer>
 #include <libgen.h>
 #include "mainWindow.moc"
@@ -57,6 +58,7 @@
 #include "video/effects/tv_noise.h"
 #include "debugger.h"
 #include "video/gfx_thread.h"
+#include "tape_data_recorder.h"
 #if defined (WITH_FFMPEG)
 #include "recording.h"
 #endif
@@ -364,12 +366,12 @@ void mainWindow::update_recording_widgets(void) {
 				audio = true;
 				video = false;
 				sa = tr("Stop &AUDIO recording");
-				ia = QIcon(":/icon/icons/wav_stop.svg");
+				ia = QIcon(":/icon/icons/multimedia_stop.svg");
 			} else {
 				audio = false;
 				video = true;
 				sv = tr("Stop &VIDEO recording");
-				iv = QIcon(":/icon/icons/wav_stop.svg");
+				iv = QIcon(":/icon/icons/multimedia_stop.svg");
 			}
 		} else {
 			audio = true;
@@ -387,7 +389,7 @@ void mainWindow::update_recording_widgets(void) {
 	action_text(action_Start_Stop_Video_recording, sv, sc);
 	action_Start_Stop_Video_recording->setIcon(iv);
 #else
-	QIcon ia = QIcon(":/icon/icons/wav_start.svg");
+	QIcon ia = QIcon(":/icon/icons/multimedia_record.svg");
 	QString sa = tr("Start &WAV recording");
 	bool audio = false;
 	QString *sc;
@@ -398,7 +400,7 @@ void mainWindow::update_recording_widgets(void) {
 		audio = true;
 		if (info.recording_on_air) {
 			sa = tr("Stop &WAV recording");
-			ia = QIcon(":/icon/icons/wav_stop.svg");
+			ia = QIcon(":/icon/icons/multimedia_stop.svg");
 		}
 	}
 
@@ -815,6 +817,9 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Disk_4_side_B, 7, SLOT(s_disk_side()));
 	connect_action(action_Switch_sides, 0xFFF, SLOT(s_disk_side()));
 	connect_action(action_Eject_Insert_Disk, SLOT(s_eject_disk()));
+	connect_action(action_Tape_Play, SLOT(s_tape_play()));
+	connect_action(action_Tape_Record, SLOT(s_tape_record()));
+	connect_action(action_Tape_Stop, SLOT(s_tape_stop()));
 	connect_action(action_Fullscreen, SLOT(s_set_fullscreen()));
 	connect_action(action_Save_Screenshot, SLOT(s_save_screenshot()));
 	connect_action(action_Save_Unaltered_NES_screen, SLOT(s_save_screenshot_1x()));
@@ -961,16 +966,16 @@ void mainWindow::update_menu_file(void) {
 			action->setText(QFileInfo(description).completeBaseName());
 
 			if (rom.suffix().isEmpty() ||
-				!QString::compare(rom.suffix(), "nes", Qt::CaseInsensitive) ||
-				!QString::compare(rom.suffix(), "unf", Qt::CaseInsensitive) ||
-				!QString::compare(rom.suffix(), "unif", Qt::CaseInsensitive)) {
+				!rom.suffix().compare("nes", Qt::CaseInsensitive) ||
+				!rom.suffix().compare("unf", Qt::CaseInsensitive) ||
+				!rom.suffix().compare("unif", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/nes_file.svg"));
-			} else if (!QString::compare(rom.suffix(), "nsf", Qt::CaseInsensitive) ||
-				!QString::compare(rom.suffix(), "nsfe", Qt::CaseInsensitive)) {
+			} else if (!rom.suffix().compare("nsf", Qt::CaseInsensitive) ||
+				!rom.suffix().compare("nsfe", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/nsf_file.svg"));
-			} else if (!QString::compare(rom.suffix(), "fds", Qt::CaseInsensitive)) {
+			} else if (!rom.suffix().compare("fds", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/fds_file.svg"));
-			} else if (!QString::compare(rom.suffix(), "fm2", Qt::CaseInsensitive)) {
+			} else if (!rom.suffix().compare("fm2", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/fm2_file.svg"));
 			} else {
 				action->setIcon(QIcon(":/icon/icons/compressed_file.svg"));
@@ -1014,6 +1019,7 @@ void mainWindow::update_menu_nes(void) {
 	}
 
 	update_fds_menu();
+	update_tape_menu();
 
 	if ((info.pause_from_gui == TRUE) && (rwnd.active == FALSE)) {
 		action_Pause->setChecked(true);
@@ -1091,6 +1097,28 @@ void mainWindow::update_fds_menu(void) {
 		action_text(action_Eject_Insert_Disk, tr("&Eject/Insert disk"), sc);
 		menu_Disk_Side->setEnabled(false);
 		action_Eject_Insert_Disk->setEnabled(false);
+	}
+}
+void mainWindow::update_tape_menu(void) {
+	menu_Tape->setEnabled(!info.no_rom && tape_data_recorder.enabled);
+
+	switch (tape_data_recorder.mode) {
+		case TAPE_DATA_NONE:
+			action_Tape_Play->setEnabled(!dlgkeyb->paste->enable);
+			action_Tape_Record->setEnabled(!dlgkeyb->paste->enable);
+			action_Tape_Stop->setEnabled(false);
+			break;
+		case TAPE_DATA_PLAY:
+		case TAPE_DATA_RECORD:
+			action_Tape_Play->setEnabled(false);
+			action_Tape_Record->setEnabled(false);
+			action_Tape_Stop->setEnabled(!dlgkeyb->paste->enable);
+			break;
+		default:
+			action_Tape_Play->setEnabled(false);
+			action_Tape_Record->setEnabled(false);
+			action_Tape_Stop->setEnabled(false);
+			break;
 	}
 }
 void mainWindow::update_menu_tools(void) {
@@ -1464,8 +1492,7 @@ void mainWindow::s_start_stop_audio_recording(void) {
 			dir = uQString(cfg->last_rec_audio_path);
 		}
 
-		file = QFileDialog::getSaveFileName(this, tr("Record sound"),
-			dir + "/" + rom.completeBaseName(), filters.join(";;"));
+		file = QFileDialog::getSaveFileName(this, tr("Record sound"), dir + "/" + rom.completeBaseName(), filters.join(";;"));
 
 		if (file.isNull() == false) {
 			QFileInfo fileinfo(file);
@@ -1476,12 +1503,12 @@ void mainWindow::s_start_stop_audio_recording(void) {
 
 			umemset(cfg->last_rec_audio_path, 0x00, usizeof(cfg->last_rec_audio_path));
 			ustrncpy(cfg->last_rec_audio_path, uQStringCD(fileinfo.absolutePath()), usizeof(cfg->last_rec_audio_path) - 1);
-			wave_open(uQStringCD(fileinfo.absoluteFilePath()), snd.samplerate * 5);
+			wav_from_audio_emulator_open(uQStringCD(fileinfo.absoluteFilePath()), snd.samplerate * 5);
 		}
 
 		emu_pause(FALSE);
 	} else {
-		wave_close();
+		wav_from_audio_emulator_close();
 	}
 	update_menu_file();
 #endif
@@ -1716,6 +1743,135 @@ void mainWindow::s_state_load_file(void) {
 }
 void mainWindow::s_open_djsc(void) {
 	dlgjsc->show();
+}
+void mainWindow::s_tape_play(void) {
+	QFileInfo rom = QFileInfo(uQString(info.rom.file));
+	QStringList filters;
+	QString file, dir, selected;
+
+	if (info.no_rom || !tape_data_recorder.enabled || (tape_data_recorder.mode != TAPE_DATA_NONE)) {
+		return;
+	}
+
+	emu_pause(TRUE);
+
+	filters.append(tr("puNES Tape files"));
+	filters.append(tr("Virtuanes Tape files"));
+	filters.append(tr("Nestopia Tape files"));
+	filters.append(tr("WAVE Tape files"));
+	filters.append(tr("All files"));
+
+	filters[0].append(" (*.tap *.TAP)");
+	filters[1].append(" (*.vtp *.VTP)");
+	filters[2].append(" (*.tp *.TP)");
+	filters[3].append(" (*.wav *.WAV)");
+	filters[4].append(" (*.*)");
+
+	dir = rom.dir().absolutePath();
+
+	file = QFileDialog::getOpenFileName(this, tr("Open tape image"), dir + "/" + rom.completeBaseName() + ".tap",
+		filters.join(";;"), &selected, QFileDialog::DontUseNativeDialog);
+
+	if (file.isNull() == false) {
+		BYTE mode = TAPE_DATA_TYPE_TAP;
+		QFileInfo fileinfo(file);
+
+		if (fileinfo.suffix().isEmpty()) {
+			fileinfo.setFile(file + ".tap");
+		}
+
+		if (fileinfo.suffix().compare("tap", Qt::CaseInsensitive) == 0) {
+			mode = TAPE_DATA_TYPE_VIRTUANES;
+		} else if (fileinfo.suffix().compare("vtp", Qt::CaseInsensitive) == 0) {
+			mode = TAPE_DATA_TYPE_VIRTUANES;
+		} else if (fileinfo.suffix().compare("tp", Qt::CaseInsensitive) == 0) {
+			mode = TAPE_DATA_TYPE_NESTOPIA;
+		} else if (fileinfo.suffix().compare("wav", Qt::CaseInsensitive) == 0) {
+			mode = TAPE_DATA_TYPE_WAV;
+		} else {
+			fileinfo.setFile(fileinfo.absoluteFilePath() + ".tap");
+			mode = TAPE_DATA_TYPE_TAP;
+		}
+
+		if (tape_data_recorder_init(uQStringCD(fileinfo.absoluteFilePath()), mode, TAPE_DATA_PLAY) == EXIT_ERROR) {
+			QErrorMessage errorMessage;
+
+			errorMessage.showMessage(tr("Error opening tape image file"));
+			errorMessage.exec();
+		}
+	}
+
+	emu_pause(FALSE);
+}
+void mainWindow::s_tape_record(void) {
+	QFileInfo rom = QFileInfo(uQString(info.rom.file));
+	QStringList filters;
+	QString file, dir, selected;
+
+	if (info.no_rom || !tape_data_recorder.enabled || (tape_data_recorder.mode != TAPE_DATA_NONE)) {
+		return;
+	}
+
+	emu_pause(TRUE);
+
+	filters.append(tr("puNES Tape files"));
+	filters.append(tr("Virtuanes Tape files"));
+	filters.append(tr("Nestopia Tape files"));
+	filters.append(tr("WAVE Tape files"));
+	filters.append(tr("All files"));
+
+	filters[0].append(" (*.tap *.TAP)");
+	filters[1].append(" (*.vtp *.VTP)");
+	filters[2].append(" (*.tp *.TP)");
+	filters[3].append(" (*.wav *.WAV)");
+	filters[4].append(" (*.*)");
+
+	dir = rom.dir().absolutePath();
+
+	file = QFileDialog::getSaveFileName(this, tr("Save tape image"), dir + "/" + rom.completeBaseName() + ".tap",
+		filters.join(";;"), &selected, QFileDialog::DontUseNativeDialog);
+
+	if (file.isNull() == false) {
+		BYTE mode = TAPE_DATA_TYPE_TAP;
+		QFileInfo fileinfo(file);
+
+		if (fileinfo.suffix().isEmpty()) {
+			fileinfo.setFile(file + ".tap");
+		}
+
+		if (fileinfo.suffix().compare("tap", Qt::CaseInsensitive) == 0) {
+			mode = TAPE_DATA_TYPE_VIRTUANES;
+		} else if (fileinfo.suffix().compare("vtp", Qt::CaseInsensitive) == 0) {
+			mode = TAPE_DATA_TYPE_VIRTUANES;
+		} else if (fileinfo.suffix().compare("tp", Qt::CaseInsensitive) == 0) {
+			mode = TAPE_DATA_TYPE_NESTOPIA;
+		} else if (fileinfo.suffix().compare("wav", Qt::CaseInsensitive) == 0) {
+			mode = TAPE_DATA_TYPE_WAV;
+		} else {
+			fileinfo.setFile(fileinfo.absoluteFilePath() + ".tap");
+			mode = TAPE_DATA_TYPE_TAP;
+		}
+
+		if (tape_data_recorder_init(uQStringCD(fileinfo.absoluteFilePath()), mode, TAPE_DATA_RECORD) == EXIT_ERROR) {
+			QErrorMessage errorMessage;
+
+			errorMessage.showMessage(tr("Error opening tape image file"));
+			errorMessage.exec();
+		}
+	}
+
+	emu_pause(FALSE);
+}
+void mainWindow::s_tape_stop(void) {
+	if (info.no_rom || !tape_data_recorder.enabled || (tape_data_recorder.mode == TAPE_DATA_NONE)) {
+		return;
+	}
+
+	emu_pause(TRUE);
+
+	tape_data_recorder_stop();
+
+	emu_pause(FALSE);
 }
 void mainWindow::s_help(void) {
 	QDateTime compiled = QDateTime::fromString(COMPILED, "MMddyyyyhhmmss");
@@ -2168,10 +2324,12 @@ void mainWindow::s_shcut_toggle_capture_input(void) {
 			grabKeyboard();
 			grabMouse();
 			setCursor(Qt::BlankCursor);
+			gui_overlay_info_append_msg_precompiled(36, NULL);
 		} else {
 			releaseKeyboard();
 			releaseMouse();
 			unsetCursor();
+			gui_overlay_info_append_msg_precompiled(37, NULL);
 		}
 		statusbar->keyb->icon_pixmap(QIcon::Normal);
 		statusbar->keyb->update_tooltip();
@@ -2219,7 +2377,10 @@ void actionOneTrigger::only_one_trigger(void) {
 	mutex.unlock();
 }
 void actionOneTrigger::reset_count(void) {
-	mutex.lock();
+	// sono nel trigger in un altro thread
+	if (mutex.tryLock(10) == false) {
+		return;
+	}
 	count = 0;
 	mutex.unlock();
 }
