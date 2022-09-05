@@ -73,6 +73,7 @@ BYTE tape_data_recorder_init(uTCHAR *file, BYTE type, BYTE mode) {
 				tape_data_recorder_quit();
 				return (EXIT_ERROR);
 			}
+
 			if ((tape_data_recorder.type == TAPE_DATA_TYPE_VIRTUANES) ||
 				(tape_data_recorder.type == TAPE_DATA_TYPE_NESTOPIA)) {
 				tape_data_recorder.tick = tape_data_record_virtuanes;
@@ -158,13 +159,14 @@ void tape_data_recorder_stop(void) {
 			fclose(tape_data_recorder.file);
 		}
 		tape_data_recorder.file = NULL;
+
+		gui_overlay_info_append_msg_precompiled(35, NULL);
+		gui_max_speed_stop();
 	}
+
 	tape_data_reset();
 
 	vector_clear(&tape_data_recorder.data);
-
-	gui_overlay_info_append_msg_precompiled(35, NULL);
-	gui_max_speed_stop();
 
 	gui_update_tape_menu();
 }

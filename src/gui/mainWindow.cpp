@@ -1755,16 +1755,16 @@ void mainWindow::s_tape_play(void) {
 
 	emu_pause(TRUE);
 
-	filters.append(tr("puNES Tape files"));
-	filters.append(tr("Virtuanes Tape files"));
-	filters.append(tr("Nestopia Tape files"));
-	filters.append(tr("WAVE Tape files"));
+	filters.append(tr("All supported formats"));
+	filters.append(tr("puNES tape image"));
+	filters.append(tr("Virtuanes tape image"));
+	filters.append(tr("Nestopia tape image"));
 	filters.append(tr("All files"));
 
-	filters[0].append(" (*.tap *.TAP)");
-	filters[1].append(" (*.vtp *.VTP)");
-	filters[2].append(" (*.tp *.TP)");
-	filters[3].append(" (*.wav *.WAV)");
+	filters[0].append(" (*.tap *.TAP *.vtp *.VTP *.tp *.TP)");
+	filters[1].append(" (*.tap *.TAP)");
+	filters[2].append(" (*.vtp *.VTP)");
+	filters[3].append(" (*.tp *.TP)");
 	filters[4].append(" (*.*)");
 
 	dir = rom.dir().absolutePath();
@@ -1781,16 +1781,19 @@ void mainWindow::s_tape_play(void) {
 		}
 
 		if (fileinfo.suffix().compare("tap", Qt::CaseInsensitive) == 0) {
-			mode = TAPE_DATA_TYPE_VIRTUANES;
+			mode = TAPE_DATA_TYPE_TAP;
 		} else if (fileinfo.suffix().compare("vtp", Qt::CaseInsensitive) == 0) {
 			mode = TAPE_DATA_TYPE_VIRTUANES;
 		} else if (fileinfo.suffix().compare("tp", Qt::CaseInsensitive) == 0) {
 			mode = TAPE_DATA_TYPE_NESTOPIA;
-		} else if (fileinfo.suffix().compare("wav", Qt::CaseInsensitive) == 0) {
-			mode = TAPE_DATA_TYPE_WAV;
 		} else {
-			fileinfo.setFile(fileinfo.absoluteFilePath() + ".tap");
-			mode = TAPE_DATA_TYPE_TAP;
+			QErrorMessage errorMessage;
+
+			errorMessage.showMessage(tr("Unsupported format."));
+			errorMessage.exec();
+
+			emu_pause(FALSE);
+			return;
 		}
 
 		if (tape_data_recorder_init(uQStringCD(fileinfo.absoluteFilePath()), mode, TAPE_DATA_PLAY) == EXIT_ERROR) {
@@ -1814,10 +1817,10 @@ void mainWindow::s_tape_record(void) {
 
 	emu_pause(TRUE);
 
-	filters.append(tr("puNES Tape files"));
-	filters.append(tr("Virtuanes Tape files"));
-	filters.append(tr("Nestopia Tape files"));
-	filters.append(tr("WAVE Tape files"));
+	filters.append(tr("puNES tape image"));
+	filters.append(tr("Virtuanes tape image"));
+	filters.append(tr("Nestopia tape image"));
+	filters.append(tr("WAVE tape image"));
 	filters.append(tr("All files"));
 
 	filters[0].append(" (*.tap *.TAP)");
@@ -1840,7 +1843,7 @@ void mainWindow::s_tape_record(void) {
 		}
 
 		if (fileinfo.suffix().compare("tap", Qt::CaseInsensitive) == 0) {
-			mode = TAPE_DATA_TYPE_VIRTUANES;
+			mode = TAPE_DATA_TYPE_TAP;
 		} else if (fileinfo.suffix().compare("vtp", Qt::CaseInsensitive) == 0) {
 			mode = TAPE_DATA_TYPE_VIRTUANES;
 		} else if (fileinfo.suffix().compare("tp", Qt::CaseInsensitive) == 0) {

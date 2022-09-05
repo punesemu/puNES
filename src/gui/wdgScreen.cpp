@@ -217,7 +217,9 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 		return;
 	}
 	if (!event->mimeData()->text().isEmpty() && nes_keyboard.enabled) {
-		dlgkeyb->paste->set_text(event->mimeData()->text());
+		if (!dlgkeyb->paste->enable && (tape_data_recorder.mode == TAPE_DATA_NONE)) {
+			dlgkeyb->paste->set_text(event->mimeData()->text());
+		}
 		return;
 	}
 }
@@ -291,7 +293,8 @@ void wdgScreen::s_context_menu(const QPoint &pos) {
 			menu.addSection(tr("Family Basic Keyboard"));
 
 			paste->setText(tr("Paste"));
-			paste->setEnabled((mimeData->hasUrls() || mimeData->hasText()) && !dlgkeyb->paste->enable);
+			paste->setEnabled((mimeData->hasUrls() || mimeData->hasText()) &&
+				!dlgkeyb->paste->enable && (tape_data_recorder.mode == TAPE_DATA_NONE));
 
 			menu.addAction(paste);
 
