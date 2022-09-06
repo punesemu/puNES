@@ -112,10 +112,10 @@ class keyboardObject : public QObject {
 	protected:
 		void init(void);
 		virtual void set_keycodes(void);
-		virtual void set_charset();
+		virtual void set_charset(void);
 
 	public:
-		virtual QList<QList<SBYTE>> parse_text(keyboardObject::_character *ch);
+		virtual QList<QList<SBYTE>> parse_character(keyboardObject::_character *ch);
 };
 
 // familyBasicKeyboard -----------------------------------------------------------------------------------------------------------
@@ -129,10 +129,10 @@ class familyBasicKeyboard : public keyboardObject {
 
 	protected:
 		void set_keycodes(void);
-		void set_charset();
+		void set_charset(void);
 
 	public:
-		QList<QList<SBYTE>> parse_text(keyboardObject::_character *ch);
+		QList<QList<SBYTE>> parse_character(keyboardObject::_character *ch);
 
 	private:
 		SBYTE calc_key(BYTE row, BYTE column);
@@ -162,10 +162,10 @@ class pasteObject : public QObject {
 		BYTE type;
 		QString string;
 		int string_index;
-		int characters_elaborate;
-		BYTE break_insert;
+		int characters_processed;
+		BYTE break_process;
 		QList<keyboardObject::_character> charset;
-		keyboardObject::_character *ch;
+		keyboardObject::_character *character;
 		keyboardObject::_delay delay;
 		QList<QList<SBYTE>> keys;
 		int keys_index;

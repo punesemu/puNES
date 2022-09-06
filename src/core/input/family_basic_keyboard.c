@@ -18,6 +18,7 @@
 
 #include <string.h>
 #include "input/family_basic_keyboard.h"
+#include "tape_data_recorder.h"
 #include "conf.h"
 #include "gui.h"
 
@@ -54,6 +55,15 @@ void input_wr_family_basic_keyboard(BYTE *value, UNUSED(BYTE nport)) {
 		}
 		family_basic_keyboard.column = column;
 	}
+
+	// tape data recorder
+	// 7  bit  0
+	// ---- ----
+	// xxxx xExS
+	//       | |
+	//       | +- 1-bit DAC audio to audio cassette
+	//       +--- When 0, force audio readback to always read as binary 0 (5V)
+	tape_data_recorder.in = ((*value) & 0x01);
 }
 void input_rd_family_basic_keyboard(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	if (nport & 0x01) {
@@ -70,9 +80,15 @@ void input_rd_family_basic_keyboard(BYTE *value, BYTE nport, UNUSED(BYTE shift))
 		} else {
 			state = (family_basic_keyboard.data[family_basic_keyboard.row] & 0x0F) << 1;
 		}
-		(*value) = family_basic_keyboard.enable ? state ^ 0x1E : 0x00;
+		(*value) = ((*value) & 0xE1) | (family_basic_keyboard.enable ? state ^ 0x1E : 0x00);
 	} else {
 		// r4016
+		// 7  bit  0
+		// ---- ----
+		// xxxx xxAx
+		//        |
+		//        +-- 1-bit ADC audio from audio cassette
+		(*value) = ((*value) & 0xFD) | ((r4016.value & 0x04) ? ((tape_data_recorder.out & 0x01) << 1) : 0x00);
 	}
 }
 

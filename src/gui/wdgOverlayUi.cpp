@@ -108,6 +108,16 @@ static const char *info_messages_precompiled[] = {
 /* 31 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "state [cyan]%1[normal] saved successfully"),
 //: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
 /* 32 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "state [cyan]%1[normal] loaded successfully"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 33 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "tape play"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 34 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "tape record"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 35 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "tape stop"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 36 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "input captured"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 37 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "input released"),
 };
 
 typedef struct _overlay_info_message {

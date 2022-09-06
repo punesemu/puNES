@@ -37,6 +37,7 @@
 #include "vs_system.h"
 #include "qt.h"
 #include "audio/snd.h"
+#include "tape_data_recorder.h"
 
 #define mod_cycles_op(op, vl) cpu.cycles op vl
 #define r2006_during_rendering()\
@@ -2211,6 +2212,10 @@ INLINE static void tick_hw(BYTE value) {
 
 	if (overclock.in_extra_sclines == FALSE) {
 		apu_tick(&value);
+	}
+
+	if (tape_data_recorder.enabled == TRUE) {
+		tape_data_recorder_tick();
 	}
 
 	if (extcl_cpu_every_cycle) {

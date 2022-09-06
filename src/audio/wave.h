@@ -21,15 +21,33 @@
 
 #include "common.h"
 
+typedef struct _wav {
+	FILE *outfile;
+	char *buffer;
+	char *pbuffer;
+	int channels;
+	int samplerate;
+	int bits_per_sample;
+	int samples;
+	int subchunk2size;
+	int buffer_size;
+	int count;
+} _wav;
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
 
-EXTERNC BYTE wave_open(uTCHAR *filename, int samples);
-EXTERNC void wave_close(void);
-EXTERNC void wave_write(SWORD *data, int samples);
+EXTERNC BYTE wave_open_file(_wav *wav, FILE *file, int samples, int bits_per_sample, int samplerate, int channels);
+EXTERNC BYTE wave_open_filename(_wav *wav, uTCHAR *filename, int samples, int bits_per_sample, int samplerate, int channels);
+EXTERNC void wave_close(_wav *wav);
+EXTERNC void wave_write(_wav *wav, BYTE *data, int samples);
+
+EXTERNC BYTE wav_from_audio_emulator_open(uTCHAR *filename, int samples);
+EXTERNC void wav_from_audio_emulator_close(void);
+EXTERNC void wave_from_audio_emulator_write(SWORD *data, int samples);
 
 #undef EXTERNC
 

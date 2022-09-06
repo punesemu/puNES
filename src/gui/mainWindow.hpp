@@ -232,6 +232,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 
 	public:
 		void update_fds_menu(void);
+		void update_tape_menu(void);
 		void update_menu_tools(void);
 
 	private:
@@ -273,6 +274,9 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_state_save_file(void);
 		void s_state_load_file(void);
 		void s_open_djsc(void);
+		void s_tape_play(void);
+		void s_tape_record(void);
+		void s_tape_stop(void);
 		void s_help(void);
 
 	private slots:

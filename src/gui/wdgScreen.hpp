@@ -68,6 +68,11 @@ class wdgScreen : public QWidget {
 	private:
 		QCursor *target;
 		QAction *paste;
+		struct wdgScreen_tape {
+			QAction *play;
+			QAction *record;
+			QAction *stop;
+		} tape;
 
 	public:
 		wdgScreen(QWidget *parent);
@@ -95,6 +100,9 @@ class wdgScreen : public QWidget {
 		void s_cursor_set(void);
 		void s_cursor_hide(int hide);
 		void s_paste_event(void);
+		void s_tape_play_event(void);
+		void s_tape_record_event(void);
+		void s_tape_stop_event(void);
 		void s_context_menu(const QPoint &pos);
 };
 

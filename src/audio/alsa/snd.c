@@ -118,7 +118,7 @@ BYTE snd_init(void) {
 }
 void snd_quit(void) {
 	// se e' in corso una registrazione, la concludo
-	wave_close();
+	wav_from_audio_emulator_close();
 
 	if (snd_thread.action != ST_UNINITIALIZED) {
 		snd_thread.action = ST_STOP;
@@ -238,7 +238,7 @@ BYTE snd_playback_start(void) {
 		_snd_dev *dev = &snd_list.playback.devices[alsa_find_index_id(&snd_list.playback, cfg->audio_output, usizeof(cfg->audio_output))];
 		int tries;
 
-		// snd.samplarate / 50 = 20 ms
+		// snd.samplerate / 50 = 20 ms
 		snd.period.samples = (snd.samplerate / factor[cfg->audio_buffer_factor]);
 
 		rc = snd_pcm_open(&alsa.playback, (uTCHAR *)dev->id, SND_PCM_STREAM_PLAYBACK, 0);
@@ -860,7 +860,7 @@ static thread_funct(alsa_thread_loop, UNUSED(void *data)) {
 				read = (void *)cbd.silence;
 			}
 
-			wave_write((SWORD *)read, avail);
+			wave_from_audio_emulator_write((SWORD *)read, avail);
 			alsa_wr_buf(read, avail);
 
 			cbd.bytes_available -= len;

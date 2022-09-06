@@ -69,12 +69,16 @@ libcore_a_SOURCES = \
 	save_slot.h \
 	sha1.c \
 	sha1.h \
+	tape_data_recorder.c \
+	tape_data_recorder.h \
 	thread_def.h \
 	uncompress.c \
 	uncompress.h \
 	uncompress_selection.h \
 	unif.c \
 	unif.h \
+	vector.c \
+	vector.h \
 	version.h \
 	vs_system.h
 
@@ -112,6 +116,8 @@ libcore_a_SOURCES += \
 	input/zapper.h
 
 libcore_a_SOURCES += \
+	../extra/filter-c/filter.c \
+	../extra/filter-c/filter.h \
 	../extra/kiss_fft130/kiss_fft.c \
 	../extra/kiss_fft130/_kiss_fft_guts.h \
 	../extra/kiss_fft130/kiss_fft.h
@@ -755,7 +761,6 @@ libcore_a_SOURCES += \
 	mappers/serial_devices_interface.h \
 	mappers/SST39SF040.c \
 	mappers/SST39SF040.h
-	
 
 patcher_xdelta3_wrap.o: patcher_xdelta3_wrap.c patcher_xdelta3_wrap.h
 	${CC} -w ${DEFS} ${DEFAULT_INCLUDES} ${CFLAGS} -c -o $@ $<

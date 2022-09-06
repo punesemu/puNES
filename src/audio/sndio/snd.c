@@ -101,7 +101,7 @@ BYTE snd_init(void) {
 }
 void snd_quit(void) {
 	// se e' in corso una registrazione, la concludo
-	wave_close();
+	wav_from_audio_emulator_close();
 
 	if (snd_thread.action != ST_UNINITIALIZED) {
 		snd_thread.action = ST_STOP;
@@ -229,7 +229,7 @@ BYTE snd_playback_start(void) {
 
 		sio_initpar(&par);
 
-		// snd.samplarate / 50 = 20 ms
+		// snd.samplerate / 50 = 20 ms
 		snd.period.samples = (snd.samplerate / factor[cfg->audio_buffer_factor]);
 
 		par.bits = 16;
@@ -435,7 +435,7 @@ static thread_funct(sndio_thread_loop, UNUSED(void *data)) {
 				read = (void *)cbd.silence;
 			}
 
-			wave_write((SWORD *)read, avail);
+			wave_from_audio_emulator_write((SWORD *)read, avail);
 			sndio_wr_buf(read, len);
 
 			cbd.bytes_available -= len;
