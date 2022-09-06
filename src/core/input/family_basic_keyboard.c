@@ -17,18 +17,13 @@
  */
 
 #include <string.h>
+#include "input.h"
 #include "input/family_basic_keyboard.h"
 #include "tape_data_recorder.h"
 #include "conf.h"
 #include "gui.h"
 
-struct _family_basic_keyboard {
-	BYTE row;
-	BYTE column;
-	BYTE enable;
-	BYTE state;
-	BYTE data[10];
-} family_basic_keyboard;
+_family_basic_keyboard family_basic_keyboard;
 
 void input_init_family_basic_keyboard(void) {
 	memset(&family_basic_keyboard, 0x00, sizeof(family_basic_keyboard));
