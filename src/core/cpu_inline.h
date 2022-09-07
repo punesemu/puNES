@@ -2218,6 +2218,30 @@ INLINE static void tick_hw(BYTE value) {
 		tape_data_recorder_tick();
 	}
 
+	// microfono
+	if (mic.enable) {
+		if (mic.mode == MIC_STOP) {
+			mic.enable = FALSE;
+			mic.mode = MIC_NONE;
+			mic.cycles = 0;
+			mic.data = 0x00;
+		} if (mic.mode == MIC_RESET) {
+			mic.mode = MIC_NONE;
+			if (!mic.cycles) {
+				mic.cycles = 0x3FFFF;
+				mic.data = 0x00;
+			}
+		}
+		if (mic.cycles) {
+			mic.cycles--;
+			if (!mic.cycles) {
+				mic.mode = MIC_STOP;
+			} else if (!(mic.cycles & 0x000F)) {
+				mic.data ^= 0x04;
+			}
+		}
+	}
+
 	if (extcl_cpu_every_cycle) {
 		/*
 		 * utilizzato dalle mappers :

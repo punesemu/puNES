@@ -18,6 +18,7 @@
 
 #include <QtWidgets/QWidget>
 #include <QtGui/QKeyEvent>
+#include <QtGui/QKeySequence>
 #include "mainApplication.moc"
 #include "singleapplication.moc"
 #include "singleapplication_p.moc"
@@ -34,9 +35,17 @@ mainApplication::~mainApplication() {}
 bool mainApplication::notify(QObject *receiver, QEvent *event) {
 	switch (event->type()) {
 		case QEvent::ShortcutOverride:
+			if (shortcut_override_event(event)) {
+				return (true);
+			}
+			break;
 		case QEvent::KeyRelease:
+			if (key_release_event(event)) {
+				return (true);
+			}
+			break;
 		case QEvent::Shortcut:
-			if (dlgkeyb && dlgkeyb->process_event(event)) {
+			if (dlgkeyb_event(event)) {
 				return (true);
 			}
 			break;
@@ -44,4 +53,48 @@ bool mainApplication::notify(QObject *receiver, QEvent *event) {
 			break;
 	}
 	return (QApplication::notify(receiver, event));
+}
+
+QKeySequence mainApplication::key_sequence_from_key_event(QKeyEvent *event) {
+	int modifiers = event->modifiers();
+	int key = event->key();
+	QKeySequence ks;
+
+	if ((key >= Qt::Key_Shift) && (key <= Qt::Key_Alt)) {
+	    key = 0;
+	}
+	return (QKeySequence(modifiers ? modifiers : key, modifiers ? key : 0).toString().remove(", "));
+}
+bool mainApplication::dlgkeyb_event(QEvent *event) {
+	// il resto degli eventi
+	if (dlgkeyb && dlgkeyb->process_event(event)) {
+		return (true);
+	}
+	return (false);
+}
+bool mainApplication::shortcut_override_event(QEvent *event) {
+	if (!dlgkeyb_event(event)) {
+		// shortcut attivi finche' il tasto della tastiera e' premuto
+		if (key_sequence_from_key_event((QKeyEvent *)event) == mainwin->shortcut[SET_INP_SC_SHOUT_INTO_MIC]->key()) {
+			if (!((QKeyEvent *)event)->isAutoRepeat()) {
+				mainwin->shout_into_mic(PRESSED);
+			}
+			return (true);
+		}
+		return (false);
+	}
+	return (true);
+}
+bool mainApplication::key_release_event(QEvent *event) {
+	if (!dlgkeyb_event(event)) {
+		// shortcut attivi finche' il tasto della tastiera e' premuto
+		if (key_sequence_from_key_event((QKeyEvent *)event) == mainwin->shortcut[SET_INP_SC_SHOUT_INTO_MIC]->key()) {
+			if (!((QKeyEvent *)event)->isAutoRepeat()) {
+				mainwin->shout_into_mic(RELEASED);
+			}
+			return (true);
+		}
+		return (false);
+	}
+	return (true);
 }

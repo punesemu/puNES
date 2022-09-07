@@ -31,6 +31,12 @@ class mainApplication : public SingleApplication {
 
 	public:
 		bool notify(QObject *receiver, QEvent *event);
+
+	private:
+		QKeySequence key_sequence_from_key_event(QKeyEvent *event);
+		bool dlgkeyb_event(QEvent *event);
+		bool shortcut_override_event(QEvent *event);
+		bool key_release_event(QEvent *event);
 };
 
 #endif /* MAINAPPLICATION_HPP_ */

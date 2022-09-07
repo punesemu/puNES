@@ -217,6 +217,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void toggle_toolbars(void);
 		void reset_min_max_size(void);
 		QScreen *win_handle_screen(void);
+		void shout_into_mic(BYTE mode);
 
 	private:
 		void connect_menu_signals(void);
@@ -246,6 +247,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_open_dkeyb(void);
 
 	private slots:
+		void s_fake_slot(void);
 		void s_open(void);
 		void s_apply_patch(void);
 		void s_open_recent_roms(void);

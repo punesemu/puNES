@@ -84,8 +84,8 @@ typedef struct _js_btn_joyval {
 	uTCHAR desc[30];
 } _js_btn_joyval;
 typedef struct _js_sch {
-	DBWORD value;
 	BYTE mode;
+	DBWORD value;
 } _js_sch;
 typedef struct _js_info {
 	int axes;

@@ -212,6 +212,13 @@ void objCheat::import_CHT(QString file_CHT) {
 			QStringList splitted = in.readLine().split(":");
 			chl_map cheat;
 
+			if (splitted.length() < 5) {
+				QMessageBox::critical(0, tr("Import error"), tr("Unsupported format"), QMessageBox::Ok);
+				cheats.clear();
+				file->close();
+				return;
+			}
+
 			// 0
 			{
 				int index = 0;
@@ -222,8 +229,7 @@ void objCheat::import_CHT(QString file_CHT) {
 					index++;
 				}
 
-				if ((splitted.at(0).length() > index)
-					&& (splitted.at(0).at(index) == QLatin1Char('C'))) {
+				if ((splitted.at(0).length() > index) && (splitted.at(0).at(index) == QLatin1Char('C'))) {
 					cheat.insert("enabled_compare", "1");
 					index++;
 				} else {

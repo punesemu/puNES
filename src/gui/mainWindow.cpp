@@ -580,6 +580,7 @@ void mainWindow::shortcuts(void) {
 	connect_shortcut(action_Hard_Reset, SET_INP_SC_HARD_RESET, SLOT(s_make_reset()));
 	connect_shortcut(action_Soft_Reset, SET_INP_SC_SOFT_RESET, SLOT(s_make_reset()));
 	connect_shortcut(action_Insert_Coin, SET_INP_SC_INSERT_COIN, SLOT(s_insert_coin()));
+	connect_shortcut(action_Shout_into_Microphone, SET_INP_SC_SHOUT_INTO_MIC, SLOT(s_fake_slot())); // shortcut speciale
 	connect_shortcut(action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
 	connect_shortcut(action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
 	connect_shortcut(action_Fullscreen, SET_INP_SC_FULLSCREEN, SLOT(s_set_fullscreen()));
@@ -790,6 +791,14 @@ QScreen *mainWindow::win_handle_screen(void) {
 #endif
 
 	return (screen);
+}
+void mainWindow::shout_into_mic(BYTE mode) {
+	if ((tas.type == NOTAS) && (rwnd.active == FALSE)) {
+		if (mode) {
+			mic.mode = MIC_RESET;
+			mic.enable = TRUE;
+		}
+	}
 }
 
 void mainWindow::connect_menu_signals(void) {
@@ -1246,6 +1255,7 @@ void mainWindow::s_open_dkeyb(void) {
 	dlgkeyb->show();
 }
 
+void mainWindow::s_fake_slot(void) {}
 void mainWindow::s_open(void) {
 	QStringList filters;
 	QString file;
@@ -1787,20 +1797,13 @@ void mainWindow::s_tape_play(void) {
 		} else if (fileinfo.suffix().compare("tp", Qt::CaseInsensitive) == 0) {
 			mode = TAPE_DATA_TYPE_NESTOPIA;
 		} else {
-			QErrorMessage errorMessage;
-
-			errorMessage.showMessage(tr("Unsupported format."));
-			errorMessage.exec();
-
+			QMessageBox::critical(0, tr("Tape Image"), tr("Unsupported format"), QMessageBox::Ok);
 			emu_pause(FALSE);
 			return;
 		}
 
 		if (tape_data_recorder_init(uQStringCD(fileinfo.absoluteFilePath()), mode, TAPE_DATA_PLAY) == EXIT_ERROR) {
-			QErrorMessage errorMessage;
-
-			errorMessage.showMessage(tr("Error opening tape image file"));
-			errorMessage.exec();
+			QMessageBox::critical(0, tr("Tape Image"), tr("Error opening tape image file"), QMessageBox::Ok);
 		}
 	}
 
@@ -1930,6 +1933,8 @@ void mainWindow::s_help(void) {
 	about->show();
 	about->activateWindow();
 	about->exec();
+
+	delete (about);
 
 	emu_pause(FALSE);
 }
@@ -2061,8 +2066,18 @@ void mainWindow::s_shcjoy_read_timer(void) {
 
 		for (index = 0; index < SET_MAX_NUM_SC; index++) {
 			if (shcjoy.sch.value == shcjoy.shortcut[index]) {
+				int sch = index + SET_INP_SC_OPEN;
+
+				// shortcut attivi finche' il pulsante/asse e' premuto
+				switch (sch) {
+					case SET_INP_SC_SHOUT_INTO_MIC:
+						shout_into_mic(shcjoy.sch.mode);
+						return;
+				}
+
+				// shortcut che si attivano al rilascio del pulsante/asse
 				if (shcjoy.sch.mode == RELEASED) {
-					switch (index + SET_INP_SC_OPEN) {
+					switch (sch) {
 						case SET_INP_SC_OPEN:
 							action_Open->trigger();
 							break;

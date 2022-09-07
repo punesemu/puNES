@@ -67,6 +67,7 @@ enum port_controllers {
 	PORT_MAX
 };
 enum nes_keyboard_misc { NES_KEYBOARD_MAX_KEYS = 105 };
+enum mic_modes { MIC_NONE, MIC_RESET, MIC_STOP };
 
 #if defined (_WIN32)
 typedef GUID _input_guid;
@@ -115,6 +116,12 @@ typedef struct _family_basic_keyboard {
 	BYTE state;
 	BYTE data[10];
 } _family_basic_keyboard;
+typedef struct _mic {
+	BYTE enable;
+	BYTE mode;
+	DBWORD cycles;
+	BYTE data;
+} _mic;
 typedef struct _array_pointers_port {
 	_port *port[PORT_MAX];
 } _array_pointers_port;
@@ -146,6 +153,7 @@ extern _port_funct port_funct[PORT_MAX];
 extern _arkanoid arkanoid[PORT_BASE];
 extern _nes_keyboard nes_keyboard;
 extern _family_basic_keyboard family_basic_keyboard;
+extern _mic mic;
 
 extern BYTE (*input_wr_reg)(BYTE value);
 extern BYTE (*input_rd_reg[2])(BYTE openbus, BYTE nport);

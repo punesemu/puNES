@@ -103,8 +103,6 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 			events.keyb << _wdgScreen_keyboard_event(PRESSED, keyEvent->isAutoRepeat(), keyval, KEYBOARD);
 			events.mutex.unlock();
 		}
-	} else if (event->type() == QEvent::KeyPress) {
-		return (true);
 	} else if (event->type() == QEvent::KeyRelease) {
 		keyEvent = ((QKeyEvent *)event);
 

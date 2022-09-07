@@ -36,15 +36,16 @@ BYTE input_rd_reg_famicom_r4016(BYTE openbus, BYTE nport) {
 	BYTE value = 0;
 
 	_input_rd_reg_famicom(&value, nport);
+	value |= mic.data;
 
 	// Famicom $4016:
 	// 7  bit  0
 	// ---- ----
-	// oooo oMFD
+	// xxxx xMFD
 	// |||| ||||
 	// |||| |||+- Player 1 serial controller data
 	// |||| ||+-- If connected to expansion port (and available), player 3 serial controller data (0 otherwise)
-	// |||| |+--- Microphone in controller 2 on traditional Famicom, 0 on AV Famicom
+	// |||| |+--- Microphone status bit (Famicom, $4016 only)
 	// ++++-+---- Open bus
 	return ((openbus & 0xF8) | value);
 }
@@ -56,7 +57,7 @@ BYTE input_rd_reg_famicom_r4017(BYTE openbus, BYTE nport) {
 	// Famicom $4017:
 	// 7  bit  0
 	// ---- ----
-	// oooX XXFD
+	// xxxX XXFD
 	// |||| ||||
 	// |||| |||+- Player 2 serial controller data
 	// |||| ||+-- If connected to expansion port, player 4 serial controller data (0 otherwise)
