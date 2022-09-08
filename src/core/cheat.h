@@ -46,10 +46,6 @@ typedef struct _cheat {
 	BYTE replace;
 	BYTE compare;
 } _cheat;
-typedef struct _type_cheat {
-	int counter;
-	_cheat cheat[CL_CHEATS];
-} _type_cheat;
 typedef struct _gamegenie {
 	uTCHAR *rom;
 	uTCHAR *patch;
@@ -60,8 +56,8 @@ typedef struct _gamegenie {
 	_cheat cheat[GG_CHEATS];
 } _gamegenie;
 typedef struct _cheats_list {
-	_type_cheat rom;
-	_type_cheat ram;
+	int counter;
+	_cheat cheat[CL_CHEATS];
 } _cheats_list;
 
 extern _gamegenie gamegenie;

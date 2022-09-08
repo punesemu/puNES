@@ -16,9 +16,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtWidgets/QMessageBox>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
+#include <QtCore/QRegularExpression>
+#include <QtCore/QSettings>
+#include <QtWidgets/QMessageBox>
 #include "objCheat.moc"
 #include "info.h"
 #include "conf.h"
@@ -27,6 +29,9 @@
 #define CHEAT_XML_VERSION "1.0"
 #define CHEATFILENAME uQString(info.base_folder) + QString(CHEAT_FOLDER) + "/" +\
 	QFileInfo(uQString(info.rom.file)).completeBaseName() + ".xml"
+
+static bool libretro_value(QSettings *set, QString key, QString &value);
+static bool libretro_rd_file(QIODevice &device, QSettings::SettingsMap &map);
 
 static const QChar gg_table[] = {
 	'A', 'P', 'Z', 'L',
@@ -54,7 +59,7 @@ void objCheat::read_game_cheats(QWidget *parent) {
 		return;
 	}
 
-	import_XML(parent, CHEATFILENAME);
+	import_Nestopia_xml(parent, CHEATFILENAME);
 
 	if (cfg->cheat_mode == CHEATSLIST_MODE) {
 		apply_cheats();
@@ -72,7 +77,7 @@ void objCheat::save_game_cheats(QWidget *parent) {
 		return;
 	}
 
-	save_XML(parent, CHEATFILENAME);
+	save_Nestopia_xml(parent, CHEATFILENAME);
 }
 void objCheat::clear_list(void) {
 	if (cheats.count() > 0) {
@@ -80,7 +85,9 @@ void objCheat::clear_list(void) {
 	}
 }
 void objCheat::apply_cheats(void) {
-	int tot = 0;
+	_cheat *actual;
+	chl_map cheat;
+	int i;
 
 	cheatslist_blank();
 
@@ -88,39 +95,33 @@ void objCheat::apply_cheats(void) {
 		return;
 	}
 
-	chl_map cheat;
-	_cheat *rom, *ram;
-
-	for (int i = 0; i < cheats.count(); i++) {
+	for (i = 0; i < cheats.count(); i++) {
 		cheat = cheats.at(i);
 
-		rom = &cheats_list.rom.cheat[cheats_list.rom.counter];
-		ram = &cheats_list.ram.cheat[cheats_list.ram.counter];
+		actual = &cheats_list.cheat[cheats_list.counter];
 
-		if (cheat["genie"] != "-") {
-			if ((cheat["enabled"].toInt() == 1) && (cheats_list.rom.counter <= CL_CHEATS)
-				&& (decode_gg(cheat["genie"], rom) == EXIT_OK)) {
-				cheats_list.rom.counter++;
+		if (cheat["genie"].compare("-") != 0) {
+			if ((cheat["enabled"].toInt() == 1) && (cheats_list.counter <= CL_CHEATS)
+				&& (decode_gg(cheat["genie"], actual) == EXIT_OK)) {
+				cheats_list.counter++;
 			}
-		} else if (cheat["rocky"] != "-") {
-			if ((cheat["enabled"].toInt() == 1) && (cheats_list.rom.counter <= CL_CHEATS)
-				&& (decode_rocky(cheat["rocky"], rom) == EXIT_OK)) {
-				cheats_list.rom.counter++;
+		} else if (cheat["rocky"].compare("-") != 0) {
+			if ((cheat["enabled"].toInt() == 1) && (cheats_list.counter <= CL_CHEATS)
+				&& (decode_rocky(cheat["rocky"], actual) == EXIT_OK)) {
+				cheats_list.counter++;
 			}
 		} else {
-			if ((cheat["enabled"].toInt() == 1) && (cheats_list.ram.counter <= CL_CHEATS)
-				&& (decode_ram(cheat, ram) == EXIT_OK)) {
-				cheats_list.ram.counter++;
+			if ((cheat["enabled"].toInt() == 1) && (cheats_list.counter <= CL_CHEATS)
+				&& (decode_ram(cheat, actual) == EXIT_OK)) {
+				cheats_list.counter++;
 			}
 		}
 	}
 
-	tot = cheats_list.rom.counter + cheats_list.ram.counter;
-
-	if (tot == 1) {
-		gui_overlay_info_append_msg_precompiled(17, &tot);
-	} else if (tot > 1) {
-		gui_overlay_info_append_msg_precompiled(18, &tot);
+	if (cheats_list.counter == 1) {
+		gui_overlay_info_append_msg_precompiled(17, &cheats_list.counter);
+	} else if (cheats_list.counter > 1) {
+		gui_overlay_info_append_msg_precompiled(18, &cheats_list.counter);
 	}
 }
 bool objCheat::is_equal(int index, chl_map *find, bool description) {
@@ -162,197 +163,37 @@ int objCheat::find_cheat(chl_map *find, bool description) {
 
 	return (-1);
 }
-void objCheat::import_XML(QWidget *parent, QString file_XML) {
-	QFile *file = new QFile(file_XML);
-
-	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-		QXmlStreamReader xmlReader(file);
-
-		while (!xmlReader.atEnd() && !xmlReader.hasError()) {
-			QXmlStreamReader::TokenType token = xmlReader.readNext();
-
-			if (token == QXmlStreamReader::StartDocument) {
-				continue;
-			}
-
-			if (token == QXmlStreamReader::StartElement) {
-				if (xmlReader.name() == QString("cheats")) {
-					continue;
-				}
-				if (xmlReader.name() == QString("cheat")) {
-					chl_map cheat = parse_xml_cheat(xmlReader);
-
-					if ((cheat.count() > 0) && (find_cheat(&cheat, true) == -1)) {
-						cheats.append(cheat);
-					}
-				}
-			}
-		}
-		if (xmlReader.hasError()) {
-			QMessageBox::critical(parent, tr("Error on reading the file"), xmlReader.errorString(), QMessageBox::Ok);
-		}
-		xmlReader.clear();
-
-		file->close();
-	}
-}
-void objCheat::import_CHT(QString file_CHT) {
-	QFile *file = new QFile(file_CHT);
-
-	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-		QTextStream in(file);
-
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-		in.setCodec("UTF-8");
-#else
-		in.setEncoding(QStringEncoder::Utf8);
-#endif
-
-		while (!in.atEnd()) {
-			QStringList splitted = in.readLine().split(":");
-			chl_map cheat;
-
-			if (splitted.length() < 5) {
-				QMessageBox::critical(0, tr("Import error"), tr("Unsupported format"), QMessageBox::Ok);
-				cheats.clear();
-				file->close();
-				return;
-			}
-
-			// 0
-			{
-				int index = 0;
-
-				if (splitted.at(0).at(index) != QLatin1Char('S')) {
-					continue;
-				} else {
-					index++;
-				}
-
-				if ((splitted.at(0).length() > index) && (splitted.at(0).at(index) == QLatin1Char('C'))) {
-					cheat.insert("enabled_compare", "1");
-					index++;
-				} else {
-					cheat.insert("enabled_compare", "0");
-				}
-
-				if (splitted.at(0).length() < 3) {
-					cheat.insert("enabled", "0");
-				} else {
-					cheat.insert("enabled", "1");
-					splitted.insert(1, splitted.at(0).mid(index));
-				}
-			}
-
-			// 1
-			cheat.insert("address", QString("0x" + splitted.at(1).toUpper()));
-
-			// 2
-			cheat.insert("value", QString("0x" + splitted.at(2).toUpper()));
-
-			// 3
-			if (cheat["enabled_compare"] == "0") {
-				cheat.insert("compare", "-");
-				splitted.insert(4, splitted.at(3));
-			} else {
-				cheat.insert("compare", QString("0x" + splitted.at(3).toUpper()));
-			}
-
-			// 4
-			cheat.insert("description", splitted.at(4));
-
-			{
-				_cheat ch;
-
-				decode_ram(cheat, &ch);
-				cheat.insert("genie", encode_gg(&ch));
-				cheat.insert("rocky", "-");
-			}
-
-			if (find_cheat(&cheat, true) == -1) {
-				cheats.append(cheat);
-			}
-		}
-
-		file->close();
-	}
-}
-void objCheat::save_XML(QWidget *parent, QString file_XML) {
-	if (cheats.count() == 0) {
-		return;
-	}
-
-	QFile *file = new QFile(file_XML);
-
-	if (!file->open(QIODevice::WriteOnly)) {
-		QMessageBox::warning(parent, tr("Read only"), tr("The file is in read only mode"));
-	} else {
-		QXmlStreamWriter *xmlWriter = new QXmlStreamWriter(file);
-
-		// with QT6 QXmlStreamWriter always encodes XML in UTF-8.
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-		xmlWriter->setCodec("UTF-8");
-#endif
-
-		xmlWriter->setAutoFormatting(true);
-
-		xmlWriter->writeStartDocument();
-
-		xmlWriter->writeStartElement("cheats");
-		xmlWriter->writeAttribute("version", CHEAT_XML_VERSION);
-
-		for (int i = 0; i < cheats.count(); i++) {
-			chl_map cheat = cheats.at(i);
-
-			xmlWriter->writeStartElement("cheat");
-			xmlWriter->writeAttribute("enabled", cheat["enabled"]);
-
-			if (cheat["genie"] != "-") {
-				xmlWriter->writeStartElement("genie");
-				xmlWriter->writeCharacters(cheat["genie"]);
-				xmlWriter->writeEndElement();
-			} else if (cheat["rocky"] != "-") {
-				xmlWriter->writeStartElement("rocky");
-				xmlWriter->writeCharacters(cheat["rocky"]);
-				xmlWriter->writeEndElement();
-			} else {
-				if (cheat.contains("address")) {
-					xmlWriter->writeStartElement("address");
-					xmlWriter->writeCharacters(cheat["address"]);
-					xmlWriter->writeEndElement();
-				}
-				if (cheat.contains("value")) {
-					xmlWriter->writeStartElement("value");
-					xmlWriter->writeCharacters(cheat["value"]);
-					xmlWriter->writeEndElement();
-				}
-			}
-			if (cheat.contains("description")) {
-				xmlWriter->writeStartElement("description");
-				xmlWriter->writeCharacters(cheat["description"]);
-				xmlWriter->writeEndElement();
-			}
-
-			xmlWriter->writeEndElement();
-		}
-		xmlWriter->writeEndElement();
-
-		xmlWriter->writeEndDocument();
-		delete (xmlWriter);
-
-		file->close();
-	}
-}
 
 bool objCheat::decode_ram(chl_map ch, _cheat *cheat) {
+	uint address = 0, replace = 0, enabled_compare = 0, compare = 0;
 	bool ok;
 
-	cheat->address = ch["address"].toInt(&ok, 16);
-	cheat->replace = ch["value"].toInt(&ok, 16);
-	cheat->enabled_compare = ch["enabled_compare"].toInt();
-	if (ch["compare"] != "-") {
-		cheat->compare = ch["compare"].toInt(&ok, 16);
+	memset(cheat, 0x00, sizeof(_cheat));
+
+	address = ch["address"].toUInt(&ok, 16);
+	if (!ok || (address > 0xFFFF)) {
+		return (EXIT_ERROR);
 	}
+
+	replace = ch["value"].toUInt(&ok, 16);
+	if (!ok || (replace > 0xFF)) {
+		return (EXIT_ERROR);
+	}
+	enabled_compare = ch["enabled_compare"].toUInt();
+	if (!ok || (enabled_compare > 1)) {
+		return (EXIT_ERROR);
+	}
+	if (ch["compare"].compare("-") != 0) {
+		compare = ch["compare"].toUInt(&ok, 16);
+		if (!ok || (compare > 0xFF)) {
+			return (EXIT_ERROR);
+		}
+	}
+
+	cheat->address = address;
+	cheat->replace = replace;
+	cheat->enabled_compare = enabled_compare;
+	cheat->compare = compare;
 
 	return (EXIT_OK);
 }
@@ -478,7 +319,7 @@ bool objCheat::decode_gg(QString code, _cheat *cheat) {
 		cheat->compare = 0x00;
 	}
 
-	cheat->disabled = 0x00;
+	cheat->disabled = FALSE;
 
 	return (EXIT_OK);
 }
@@ -600,47 +441,305 @@ void objCheat::complete_rocky(chl_map *cheat) {
 	complete_from_code(cheat, &ch);
 }
 
-void objCheat::complete_from_code(chl_map *cheat, _cheat *ch) {
-	cheat->insert("address", QString("0x" + QString("%1").arg(ch->address, 4, 16, QChar('0')).toUpper()));
-	cheat->insert("value", QString( "0x" + QString("%1").arg(ch->replace, 2, 16, QChar('0')).toUpper()));
-	cheat->insert("enabled_compare", QString("%1").arg(ch->enabled_compare));
-	if (ch->enabled_compare) {
-		cheat->insert("compare", QString("0x" + QString("%1").arg(ch->compare, 2, 16, QChar('0')).toUpper()));
-	} else {
-		cheat->insert("compare", "-");
+void objCheat::import_Nestopia_xml(QWidget *parent, QString path) {
+	QFile *file = new QFile(path);
+
+	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QXmlStreamReader xmlReader(file);
+
+		while (!xmlReader.atEnd() && !xmlReader.hasError()) {
+			QXmlStreamReader::TokenType token = xmlReader.readNext();
+
+			if (token == QXmlStreamReader::StartDocument) {
+				continue;
+			}
+
+			if (token == QXmlStreamReader::StartElement) {
+				if (!xmlReader.name().toString().compare("cheats", Qt::CaseInsensitive)) {
+					continue;
+				}
+				if (!xmlReader.name().toString().compare("cheat", Qt::CaseInsensitive)) {
+					chl_map cheat = parse_nestopia_cheat(xmlReader);
+
+					if ((cheat.count() > 0) && (find_cheat(&cheat, true) == -1)) {
+						cheats.append(cheat);
+					}
+				}
+			}
+		}
+		if (xmlReader.hasError()) {
+			QMessageBox::critical(parent, tr("Error on reading the file"), xmlReader.errorString(), QMessageBox::Ok);
+		}
+		xmlReader.clear();
+
+		file->close();
 	}
+	delete (file);
+}
+void objCheat::import_MAME_xml(QWidget *parent, QString path) {
+	QFile *file = new QFile(path);
+
+	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QXmlStreamReader xmlReader(file);
+
+		while (!xmlReader.atEnd() && !xmlReader.hasError()) {
+			QXmlStreamReader::TokenType token = xmlReader.readNext();
+
+			if (token == QXmlStreamReader::StartDocument) {
+				continue;
+			}
+
+			if (token == QXmlStreamReader::StartElement) {
+				if (!xmlReader.name().toString().compare("mamecheat", Qt::CaseInsensitive)) {
+					continue;
+				}
+				if (!xmlReader.name().toString().compare("cheat", Qt::CaseInsensitive)) {
+					QList<chl_map> list = parse_mame_cheat(xmlReader);
+					int i;
+
+					for (i = 0; i < list.count(); i++) {
+						if ((list[i].count() > 0) && (find_cheat(&list[i], true) == -1)) {
+							cheats.append(list[i]);
+						}
+					}
+				}
+			}
+		}
+		if (xmlReader.hasError()) {
+			QMessageBox::critical(parent, tr("Error on reading the file"), xmlReader.errorString(), QMessageBox::Ok);
+		}
+		xmlReader.clear();
+
+		file->close();
+	}
+	delete (file);
+}
+void objCheat::import_FCEUX_cht(QString path) {
+	QFile *file = new QFile(path);
+
+	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QTextStream in(file);
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+		in.setCodec("UTF-8");
+#else
+		in.setEncoding(QStringEncoder::Utf8);
+#endif
+
+		while (!in.atEnd()) {
+			chl_map cheat = parse_fceux_cheat(in.readLine());
+
+			if ((cheat.count() > 0) && (find_cheat(&cheat, true) == -1)) {
+				cheats.append(cheat);
+			}
+		}
+
+		file->close();
+	}
+
+	delete (file);
+}
+void objCheat::import_libretro_cht(QString path) {
+	static const QSettings::Format cfg = QSettings::registerFormat("libretro", libretro_rd_file, NULL);
+	QFileInfo file(path);
+	QSettings *set;
+	QString key, value;
+	uint totals = 0, i;
+
+	set = new QSettings(file.canonicalFilePath(), cfg);
+
+	if (set->allKeys().contains("cheats", Qt::CaseInsensitive)) {
+		bool ok;
+
+		totals = set->value("cheats").toUInt(&ok);
+		if (!ok) {
+			totals = 0;
+		}
+	}
+
+	for (i = 0; i < totals; i++) {
+		key = QString("cheat%1_code").arg(i);
+		if (libretro_value(set, key, value) == FALSE) {
+			QString description = "", enable = "0";
+			QList<chl_map> list;
+			QStringList splitted;
+			int a;
+
+			if (value.contains("+")) {
+				splitted = value.split("+");
+			} else {
+				splitted.append(value);
+			}
+
+			for (a = 0; a < splitted.count(); a++) {
+				chl_map cheat;
+
+				if (splitted.at(a).contains(":")) {
+					QStringList chsplitted = splitted.at(a).split(":");
+					uint adr, replace;
+					bool ok;
+
+					if (chsplitted.count() != 2) {
+						continue;
+					}
+
+					adr = chsplitted.at(0).toUInt(&ok, 16);
+					if (!ok || (adr > 0xFFFF)) {
+						continue;
+					}
+
+					replace = chsplitted.at(1).toUInt(&ok, 16);
+					if (!ok || (replace > 0xFF)) {
+						continue;
+					}
+
+					cheat.insert("address", "0x" + QString("%0").arg(adr, 4, 16, QChar('0')));
+					cheat.insert("value", "0x" + QString("%0").arg(replace, 2, 16, QChar('0')));
+
+					complete_ram(&cheat);
+					ram_to_gg(&cheat);
+				} else {
+					cheat.insert("genie", splitted.at(a));
+					complete_gg(&cheat);
+				}
+				list.append(cheat);
+			}
+
+			key = QString("cheat%1_desc").arg(i);
+			if (libretro_value(set, key, value) == FALSE) {
+				description = value;
+			}
+
+			key = QString("cheat%1_enable").arg(i);
+			if (libretro_value(set, key, value) == FALSE) {
+				enable = value;
+			}
+
+			for (a = 0; a < list.count(); a++) {
+				if (list.count() > 1) {
+					list[a].insert("description", description + QString(" (%0 of %1)").arg(a + 1).arg(list.count()));
+				} else {
+					list[a].insert("description", description);
+				}
+				list[a].insert("enable", enable);
+				if ((list[a].count() > 0) && (find_cheat(&list[a], true) == -1)) {
+					cheats.append(list[a]);
+				}
+			}
+		} else {
+			continue;
+		}
+	}
+
+	delete (set);
 }
 
-chl_map objCheat::parse_xml_cheat(QXmlStreamReader &xml) {
+void objCheat::save_Nestopia_xml(QWidget *parent, QString path) {
+	QFile *file;
+
+	if (cheats.count() == 0) {
+		return;
+	}
+
+	file = new QFile(path);
+
+	if (!file->open(QIODevice::WriteOnly)) {
+		QMessageBox::warning(parent, tr("Read only"), tr("The file is in read only mode"));
+	} else {
+		QXmlStreamWriter *xmlWriter = new QXmlStreamWriter(file);
+
+		// with QT6 QXmlStreamWriter always encodes XML in UTF-8.
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+		xmlWriter->setCodec("UTF-8");
+#endif
+
+		xmlWriter->setAutoFormatting(true);
+
+		xmlWriter->writeStartDocument();
+
+		xmlWriter->writeStartElement("cheats");
+		xmlWriter->writeAttribute("version", CHEAT_XML_VERSION);
+
+		for (int i = 0; i < cheats.count(); i++) {
+			chl_map cheat = cheats.at(i);
+
+			xmlWriter->writeStartElement("cheat");
+			xmlWriter->writeAttribute("enabled", cheat["enabled"]);
+
+			if (cheat["genie"] != "-") {
+				xmlWriter->writeStartElement("genie");
+				xmlWriter->writeCharacters(cheat["genie"]);
+				xmlWriter->writeEndElement();
+			} else if (cheat["rocky"] != "-") {
+				xmlWriter->writeStartElement("rocky");
+				xmlWriter->writeCharacters(cheat["rocky"]);
+				xmlWriter->writeEndElement();
+			} else {
+				if (cheat.contains("address")) {
+					xmlWriter->writeStartElement("address");
+					xmlWriter->writeCharacters(cheat["address"]);
+					xmlWriter->writeEndElement();
+				}
+				if (cheat.contains("value")) {
+					xmlWriter->writeStartElement("value");
+					xmlWriter->writeCharacters(cheat["value"]);
+					xmlWriter->writeEndElement();
+				}
+				if (cheat.contains("compare") && (cheat["compare"].compare("-") != 0)) {
+					xmlWriter->writeStartElement("compare");
+					xmlWriter->writeCharacters(cheat["compare"]);
+					xmlWriter->writeEndElement();
+				}
+			}
+			if (cheat.contains("description")) {
+				xmlWriter->writeStartElement("description");
+				xmlWriter->writeCharacters(cheat["description"]);
+				xmlWriter->writeEndElement();
+			}
+
+			xmlWriter->writeEndElement();
+		}
+		xmlWriter->writeEndElement();
+
+		xmlWriter->writeEndDocument();
+		delete (xmlWriter);
+
+		file->close();
+	}
+	delete (file);
+}
+
+chl_map objCheat::parse_nestopia_cheat(QXmlStreamReader &xml) {
 	chl_map cheat;
 
 	if ((xml.tokenType() != QXmlStreamReader::StartElement) && (xml.name() == QString("cheat"))) {
 		return (cheat);
 	}
 
-	QXmlStreamAttributes attributes = xml.attributes();
-
-	if (attributes.hasAttribute("enabled")) {
-		cheat["enabled"] = attributes.value("enabled").toString();
+	if (xml.attributes().hasAttribute("enabled")) {
+		cheat["enabled"] = xml.attributes().value("enabled").toString();
 	}
 
 	xml.readNext();
 
 	while (!((xml.tokenType() == QXmlStreamReader::EndElement) && (xml.name() == QString("cheat")))) {
 		if (xml.tokenType() == QXmlStreamReader::StartElement) {
-			if (xml.name() == QString("genie")) {
+			if (!xml.name().toString().compare("genie", Qt::CaseInsensitive)) {
 				add_element_data_to_map(xml, cheat);
 			}
-			if (xml.name() == QString("rocky")) {
+			if (!xml.name().toString().compare("rocky", Qt::CaseInsensitive)) {
 				add_element_data_to_map(xml, cheat);
 			}
-			if (xml.name() == QString("description")) {
+			if (!xml.name().toString().compare("description", Qt::CaseInsensitive)) {
 				add_element_data_to_map(xml, cheat);
 			}
-			if (xml.name() == QString("address")) {
+			if (!xml.name().toString().compare("address", Qt::CaseInsensitive)) {
 				add_element_data_to_map(xml, cheat);
 			}
-			if (xml.name() == QString("value")) {
+			if (!xml.name().toString().compare("value", Qt::CaseInsensitive)) {
+				add_element_data_to_map(xml, cheat);
+			}
+			if (!xml.name().toString().compare("compare", Qt::CaseInsensitive)) {
 				add_element_data_to_map(xml, cheat);
 			}
 		}
@@ -659,19 +758,249 @@ chl_map objCheat::parse_xml_cheat(QXmlStreamReader &xml) {
 
 	return (cheat);
 }
-void objCheat::add_element_data_to_map(QXmlStreamReader &xml, chl_map &map) const {
-	if (xml.tokenType() != QXmlStreamReader::StartElement) {
-		return;
+QList<chl_map> objCheat::parse_mame_cheat(QXmlStreamReader &xml) {
+	QString desc = "";
+	QList<chl_map> list;
+
+	list.clear();
+
+	if ((xml.tokenType() != QXmlStreamReader::StartElement) && (xml.name() == QString("cheat"))) {
+		return (list);
 	}
-	QString elementName = xml.name().toString();
+
+	if (xml.attributes().hasAttribute("desc")) {
+		desc = xml.attributes().value("desc").toString();
+	}
+
 	xml.readNext();
-	if (xml.tokenType() != QXmlStreamReader::Characters) {
-		return;
+
+	while (!((xml.tokenType() == QXmlStreamReader::EndElement) && (xml.name() == QString("cheat")))) {
+		if (xml.tokenType() == QXmlStreamReader::StartElement) {
+			bool enabled = 0;
+
+			if (!xml.name().toString().compare("script", Qt::CaseInsensitive)) {
+				enabled = xml.attributes().value("state").toString().compare("run", Qt::CaseInsensitive) == 0 ? false : true;
+			}
+
+			if (!xml.name().toString().compare("action", Qt::CaseInsensitive)) {
+				QString condition =  xml.attributes().value("condition").toString();
+
+				xml.readNext();
+
+				if (xml.tokenType() == QXmlStreamReader::Characters) {
+					QString text = xml.text().toString();
+					uint adr1 = 0, adr2 = 0, compare = 0, value = 0;
+					bool oka1 = false, oka2 = false, okc = false, okv = false;
+					int index = -1;
+
+					// condition
+					index = condition.indexOf('@');
+					if (index >= 0) {
+						QStringList splitted = condition.mid(index + 1).split("==");
+
+						if (splitted.count() == 2) {
+							adr1 = splitted.at(0).toUInt(&oka1, 16);
+							if (oka1 && (adr1 > 0xFFFF)) {
+								oka1 = false;
+							}
+							compare = splitted.at(1).toUInt(&okc, 16);
+							if (okc && (compare > 0xFF)) {
+								okc = false;
+							}
+						}
+					}
+
+					// text
+					index = text.indexOf('@');
+					if (index >= 0) {
+						QStringList splitted = text.mid(index + 1).split("=");
+
+						if (splitted.count() == 2) {
+							adr2 = splitted.at(0).toUInt(&oka2, 16);
+							if (oka2 && (adr2 > 0xFFFF)) {
+								oka2 = false;
+							}
+							value = splitted.at(1).toUInt(&okv, 16);
+							if (okv && (value > 0xFF)) {
+								okv = false;
+							}
+						}
+					}
+
+					if (oka2 & okv) {
+						chl_map cheat;
+
+						add_element_data_to_map("enabled", enabled ? "1" : "0", cheat);
+						add_element_data_to_map("description", desc, cheat);
+						add_element_data_to_map("address", "0x" + QString("%0").arg(adr2, 4, 16, QChar('0')).toUpper(), cheat);
+						add_element_data_to_map("value", "0x" + QString("%0").arg(value, 2, 16, QChar('0')).toUpper(), cheat);
+						if (okc) {
+							add_element_data_to_map("compare", "0x" + QString("%0").arg(compare, 2, 16, QChar('0')).toUpper(), cheat);
+						}
+
+						complete_ram(&cheat);
+						ram_to_gg(&cheat);
+
+						list.append(cheat);
+					}
+				}
+			}
+		}
+		xml.readNext();
 	}
-	if ((elementName == "genie") || (elementName == "rocky")) {
-		if (xml.text().isNull() || xml.text().isEmpty() || xml.text().toString() == "-") {
+
+	if (list.count() > 1) {
+		int i;
+
+		for (i = 0; i < list.count(); i++) {
+			list[i]["description"] = list[i]["description"] + QString(" (%0 of %1)").arg(i + 1).arg(list.count());
+		}
+	}
+
+	return (list);
+}
+chl_map objCheat::parse_fceux_cheat(QString line) {
+	QStringList splitted = line.split(":");
+	chl_map cheat;
+
+	if (splitted.length() < 5) {
+		return (cheat);
+	}
+
+	// 0
+	{
+		int index = 0;
+
+		if (splitted.at(0).at(index) != QLatin1Char('S')) {
+			return (cheat);
+		} else {
+			index++;
+		}
+
+		if ((splitted.at(0).length() > index) && (splitted.at(0).at(index) == QLatin1Char('C'))) {
+			cheat.insert("enabled_compare", "1");
+			index++;
+		} else {
+			cheat.insert("enabled_compare", "0");
+		}
+
+		if (splitted.at(0).length() < 3) {
+			cheat.insert("enabled", "0");
+		} else {
+			cheat.insert("enabled", "1");
+			splitted.insert(1, splitted.at(0).mid(index));
+		}
+	}
+
+	// 1
+	cheat.insert("address", QString("0x" + splitted.at(1).toUpper()));
+
+	// 2
+	cheat.insert("value", QString("0x" + splitted.at(2).toUpper()));
+
+	// 3
+	if (!cheat["enabled_compare"].compare("0")) {
+		cheat.insert("compare", "-");
+		splitted.insert(4, splitted.at(3));
+	} else {
+		cheat.insert("compare", QString("0x" + splitted.at(3).toUpper()));
+	}
+
+	// 4
+	cheat.insert("description", splitted.at(4));
+
+	ram_to_gg(&cheat);
+
+	return (cheat);
+}
+
+void objCheat::complete_from_code(chl_map *cheat, _cheat *ch) {
+	cheat->insert("address", QString("0x" + QString("%1").arg(ch->address, 4, 16, QChar('0')).toUpper()));
+	cheat->insert("value", QString( "0x" + QString("%1").arg(ch->replace, 2, 16, QChar('0')).toUpper()));
+	cheat->insert("enabled_compare", QString("%1").arg(ch->enabled_compare));
+	if (ch->enabled_compare) {
+		cheat->insert("compare", QString("0x" + QString("%1").arg(ch->compare, 2, 16, QChar('0')).toUpper()));
+	} else {
+		cheat->insert("compare", "-");
+	}
+}
+void objCheat::ram_to_gg(chl_map *cheat) {
+	_cheat ch;
+
+	decode_ram((*cheat), &ch);
+	cheat->insert("genie", encode_gg(&ch));
+	cheat->insert("rocky", "-");
+}
+void objCheat::add_element_data_to_map(QString element_name, QString text, chl_map &map) const {
+	if (!element_name.compare("genie", Qt::CaseInsensitive) ||
+		!element_name.compare("rocky", Qt::CaseInsensitive) ||
+		!element_name.compare("compare", Qt::CaseInsensitive)) {
+		if (text.isNull() || text.isEmpty() || !text.compare("-")) {
 			return;
 		}
 	}
-	map.insert(elementName, xml.text().toString());
+	map.insert(element_name.toLower(), text);
+}
+void objCheat::add_element_data_to_map(QXmlStreamReader &xml, chl_map &map) const {
+	QString element_name;
+
+	if (xml.tokenType() != QXmlStreamReader::StartElement) {
+		return;
+	}
+
+	element_name = xml.name().toString();
+
+	xml.readNext();
+
+	if (xml.tokenType() != QXmlStreamReader::Characters) {
+		return;
+	}
+
+	add_element_data_to_map(element_name, xml.text().toString(), map);
+}
+
+// ----------------------------------------- I/O -----------------------------------------
+
+static bool libretro_value(QSettings *set, QString key, QString &value) {
+	value = "";
+
+	if (set->allKeys().contains(key, Qt::CaseInsensitive)) {
+		value = set->value(key).toString();
+		return (FALSE);
+	}
+	return (TRUE);
+}
+static bool libretro_rd_file(QIODevice &device, QSettings::SettingsMap &map) {
+	QTextStream in(&device);
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	in.setCodec("UTF-8");
+#else
+	in.setEncoding(QStringEncoder::Utf8);
+#endif
+
+	while (!in.atEnd()) {
+		QString line = in.readLine();
+
+		if (line.isEmpty() || line.startsWith("#") || line.startsWith("*")) {
+			continue;
+		}
+
+		QStringList splitted = line.split("=");
+		QString key, value;
+
+		if (splitted.count() == 2) {
+			key = QString(splitted.at(0)).replace(QRegularExpression("\\s*$"), "");
+			value = splitted.at(1).trimmed();
+			// rimuovo i commenti che possono esserci sulla riga
+			value = value.remove(QRegularExpression("#.*"));
+			value = value.remove(QRegularExpression("//.*"));
+			value = value.remove('"');
+			value = value.trimmed();
+
+			map[key] = value;
+		}
+	}
+
+	return (true);
 }

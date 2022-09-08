@@ -1761,7 +1761,7 @@ void objJsc::ulonglong_to_val(int index, qulonglong value) {
 	val.replace(index, QString("0x") + QString("%1").arg(value, 1, 16).toUpper());
 }
 
-// ----------------------------------------- I/O------------------------------------------
+// ----------------------------------------- I/O -----------------------------------------
 
 bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 	QTextStream in(&device);

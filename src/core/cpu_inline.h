@@ -76,11 +76,11 @@
 	ppu_openbus_rd(bit5, 0x20);\
 	ppu_openbus_rd(bit6, 0x40);\
 	ppu_openbus_rd(bit7, 0x80)
-#define cheat_cheatlist_rom_mode(lst, lng)\
+#define look_cheats_list(lst, lng, adr)\
 	if (lst.counter) {\
 		BYTE i;\
 		for (i = 0; i < lng; i++) {\
-			if (!lst.cheat[i].disabled && (lst.cheat[i].address == address)) {\
+			if (!lst.cheat[i].disabled && (lst.cheat[i].address == adr)) {\
 				if (lst.cheat[i].enabled_compare) {\
 					if (lst.cheat[i].compare == cpu.openbus) {\
 						cpu.openbus = lst.cheat[i].replace;\
@@ -88,15 +88,6 @@
 				} else {\
 					cpu.openbus = lst.cheat[i].replace;\
 				}\
-			}\
-		}\
-	}
-#define cheat_cheatlist_ram_mode(adr)\
-	if ((cfg->cheat_mode == CHEATSLIST_MODE) && cheats_list.ram.counter) {\
-		BYTE i;\
-		for (i = 0; i < cheats_list.ram.counter; i++) {\
-			if (cheats_list.ram.cheat[i].address == (adr)) {\
-				cpu.openbus = cheats_list.ram.cheat[i].replace;\
 			}\
 		}\
 	}
@@ -155,9 +146,9 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		/* cheat */
 		if (cfg->cheat_mode != NOCHEAT_MODE) {
 			if (cfg->cheat_mode == GAMEGENIE_MODE) {
-				cheat_cheatlist_rom_mode(gamegenie, LENGTH(gamegenie.cheat))
+				look_cheats_list(gamegenie, LENGTH(gamegenie.cheat), address)
 			} else if (cfg->cheat_mode == CHEATSLIST_MODE) {
-				cheat_cheatlist_rom_mode(cheats_list.rom, cheats_list.rom.counter)
+				look_cheats_list(cheats_list, cheats_list.counter, address)
 			}
 		}
 
@@ -180,7 +171,9 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			}
 
 			/* cheat */
-			cheat_cheatlist_ram_mode(address & 0x7FF);
+			if (cfg->cheat_mode == CHEATSLIST_MODE) {
+				look_cheats_list(cheats_list, cheats_list.counter, (address & 0x7FF));
+			}
 
 			return (cpu.openbus);
 		}
@@ -300,7 +293,9 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		}
 
 		/* cheat */
-		cheat_cheatlist_ram_mode(address & 0x1FFF);
+		if (cfg->cheat_mode == CHEATSLIST_MODE) {
+			look_cheats_list(cheats_list, cheats_list.counter, (address & 0x1FFF));
+		}
 
 		return (cpu.openbus);
 	}

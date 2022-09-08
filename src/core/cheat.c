@@ -54,6 +54,7 @@ void gamegenie_reset(void) {
 		ch->disabled = TRUE;
 		ch->address = 0xFFFF;
 		ch->compare = 0xFF;
+		ch->enabled_compare = FALSE;
 		ch->replace = 0xFF;
 	}
 }
@@ -188,11 +189,8 @@ void cheatslist_read_game_cheats(void) {
 	gui_objcheat_read_game_cheats();
 }
 void cheatslist_blank(void) {
-	if (cheats_list.rom.counter > 0) {
-		memset(&cheats_list.rom, 0x00, sizeof(_type_cheat));
-	}
-	if (cheats_list.ram.counter > 0) {
-		memset(&cheats_list.ram, 0x00, sizeof(_type_cheat));
+	if (cheats_list.counter > 0) {
+		memset(&cheats_list, 0x00, sizeof(_cheats_list));
 	}
 }
 void cheatslist_quit(void) {

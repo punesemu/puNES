@@ -42,9 +42,6 @@ class objCheat : public QObject {
 		void apply_cheats(void);
 		bool is_equal(int index, chl_map *find, bool dscription);
 		int find_cheat(chl_map *find, bool description);
-		void import_XML(QWidget *parent, QString file_XML);
-		void import_CHT(QString file_CHT);
-		void save_XML(QWidget *parent, QString file_XML);
 
 		void complete_ram(chl_map *cheat);
 		bool decode_ram(chl_map ch, _cheat *cheat);
@@ -57,10 +54,23 @@ class objCheat : public QObject {
 		bool decode_rocky(QString code, _cheat *cheat);
 		QString encode_rocky(_cheat *cheat);
 
-	private:
-		void complete_from_code(chl_map *cheat, _cheat *ch);
+	public:
+		void import_Nestopia_xml(QWidget *parent, QString path);
+		void import_MAME_xml(QWidget *parent, QString path);
+		void import_FCEUX_cht(QString path);
+		void import_libretro_cht(QString path);
 
-		chl_map parse_xml_cheat(QXmlStreamReader &xml);
+	public:
+		void save_Nestopia_xml(QWidget *parent, QString path);
+
+	private:
+		chl_map parse_nestopia_cheat(QXmlStreamReader &xml);
+		QList<chl_map> parse_mame_cheat(QXmlStreamReader &xml);
+		chl_map parse_fceux_cheat(QString line);
+
+		void complete_from_code(chl_map *cheat, _cheat *ch);
+		void ram_to_gg(chl_map *cheat);
+		void add_element_data_to_map(QString element_name, QString text, chl_map &map) const;
 		void add_element_data_to_map(QXmlStreamReader &xml, chl_map &map) const;
 };
 
