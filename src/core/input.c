@@ -50,6 +50,7 @@ _r4016 r4016;
 _port port[PORT_MAX];
 _port_funct port_funct[PORT_MAX];
 _nes_keyboard nes_keyboard;
+_mic mic;
 
 BYTE (*input_wr_reg)(BYTE value);
 BYTE (*input_rd_reg[2])(BYTE openbus, BYTE nport);
@@ -68,6 +69,8 @@ void input_init(BYTE set_cursor) {
 	input_init_oeka_kids_tablet();
 	input_init_nsf_mouse();
 	input_init_family_basic_keyboard();
+
+	memset(&mic, 0x00, sizeof(mic));
 
 	nes_keyboard.enabled = FALSE;
 	nes_keyboard.type = -1;

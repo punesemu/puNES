@@ -388,6 +388,7 @@ BYTE emu_load_rom(void) {
 				fprintf(stderr, "error loading rom\n");
 			}
 			emu_recent_roms_add(&recent_roms_permit_add, tas.file);
+			ustrncpy(info.rom.change_rom, info.rom.file, usizeof(info.rom.change_rom));
 			// rielaboro il nome del file
 			goto elaborate_rom_file;
 		} else {

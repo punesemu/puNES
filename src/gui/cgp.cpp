@@ -79,7 +79,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 			value.replace('\\', '/');
 			ustrncpy(sp->path, uQStringCD(QFileInfo(fi.absolutePath() + '/' + value).absoluteFilePath()), usizeof(sp->path) - 1);
 		} else {
-			delete(set);
+			delete (set);
 			return (EXIT_ERROR);
 		}
 
@@ -358,7 +358,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 		}
 	}
 
-	delete(set);
+	delete (set);
 
 	memcpy(&shader_effect, &se, sizeof(_shader_effect));
 

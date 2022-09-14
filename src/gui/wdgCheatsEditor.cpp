@@ -589,22 +589,33 @@ void wdgCheatsEditor::s_import(UNUSED(bool checked)) {
 	QString file;
 
 	filters.append(tr("All supported formats"));
-	filters.append(tr("XML files"));
-	filters.append(tr("CHT files"));
+	filters.append(tr("Nestopia XML files"));
+	filters.append(tr("Mame 128+ XML files"));
+	filters.append(tr("FCEUX CHT files"));
+	filters.append(tr("libretro CHT files"));
 
 	filters[0].append(" (*.xml *.XML *.cht *.CHT)");
 	filters[1].append(" (*.xml *.XML)");
-	filters[2].append(" (*.cht *.CHT)");
+	filters[2].append(" (*.xml *.XML)");
+	filters[3].append(" (*.cht *.CHT)");
+	filters[3].append(" (*.cht *.CHT)");
 
-	file = QFileDialog::getOpenFileName(this, tr("Import Cheats"), uQString(cfg->last_import_cheat_path), filters.join(";;"));
+	file = QFileDialog::getOpenFileName(this, tr("Import Cheats"),
+		uQString(cfg->last_import_cheat_path), filters.join(";;"));
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
 
-		if (fileinfo.suffix().toLower() == "cht") {
-			objch->import_CHT(fileinfo.absoluteFilePath());
-		} else {
-			objch->import_XML(this, fileinfo.absoluteFilePath());
+		if (!fileinfo.suffix().compare("xml", Qt::CaseInsensitive)) {
+			objch->import_Nestopia_xml(this, fileinfo.absoluteFilePath());
+			if (objch->cheats.count() == 0) {
+				objch->import_MAME_xml(this, fileinfo.absoluteFilePath());
+			}
+		} else if (!fileinfo.suffix().compare("cht", Qt::CaseInsensitive)) {
+			objch->import_FCEUX_cht(fileinfo.absoluteFilePath());
+			if (objch->cheats.count() == 0) {
+				objch->import_libretro_cht(fileinfo.absoluteFilePath());
+			}
 		}
 		populate_cheat_table();
 		objch->save_game_cheats(this);
@@ -616,7 +627,7 @@ void wdgCheatsEditor::s_export(UNUSED(bool checked)) {
 	QStringList filters;
 	QString file;
 
-	filters.append(tr("XML files"));
+	filters.append(tr("Nestopia XML files"));
 	filters.append(tr("All files"));
 
 	filters[0].append(" (*.xml *.XML)");
@@ -632,7 +643,7 @@ void wdgCheatsEditor::s_export(UNUSED(bool checked)) {
 			fileinfo.setFile(QString(file) + ".xml");
 		}
 
-		objch->save_XML(this, fileinfo.absoluteFilePath());
+		objch->save_Nestopia_xml(this, fileinfo.absoluteFilePath());
 	}
 }
 void wdgCheatsEditor::s_delete(UNUSED(bool checked)) {
