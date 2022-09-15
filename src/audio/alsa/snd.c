@@ -32,13 +32,6 @@
 
 #define SND_LIST_DEVICES_V1
 
-enum snd_thread_actions {
-	ST_UNINITIALIZED,
-	ST_RUN,
-	ST_STOP,
-	ST_PAUSE
-};
-
 typedef struct _alsa {
 	snd_pcm_t *playback;
 	snd_pcm_sframes_t (*snd_writei)(snd_pcm_t *pcm, const void *buffer, snd_pcm_uframes_t size);

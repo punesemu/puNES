@@ -38,11 +38,7 @@
 #include <dsound.h>
 #undef INITGUID
 
-enum snd_thread_actions {
-	ST_UNINITIALIZED,
-	ST_RUN,
-	ST_STOP
-};
+static void _snd_playback_stop(void);
 
 static int snd_list_find_index_id(_snd_list_dev *list, uTCHAR *id, int size);
 static void snd_list_device_add(_snd_list_dev *list, uTCHAR *id, GUID *guid, uTCHAR *desc);
@@ -50,8 +46,6 @@ static void snd_list_devices_quit(void);
 static void snd_list_devices_free(_snd_list_dev *list);
 
 static BOOL CALLBACK cb_enum_capture_dev(LPGUID guid, LPCWSTR desc, LPCWSTR module, LPVOID data);
-
-INLINE static void xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf, const BYTE *buffer);
 
 static void STDMETHODCALLTYPE OnVoiceProcessPassStart(IXAudio2VoiceCallback *callback, UINT32 b);
 static void STDMETHODCALLTYPE OnVoiceProcessPassEnd(IXAudio2VoiceCallback *callback);
@@ -61,7 +55,12 @@ static void STDMETHODCALLTYPE OnBufferEnd(IXAudio2VoiceCallback *callback, void*
 static void STDMETHODCALLTYPE OnLoopEnd(IXAudio2VoiceCallback *callback, void *pBufferContext);
 static void STDMETHODCALLTYPE OnVoiceError(IXAudio2VoiceCallback *callback, void* pBufferContext, HRESULT Error);
 
+INLINE static void xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf, const BYTE *buffer);
+
+static thread_funct(snd_dummy_thread_loop, void *data);
+
 static struct _snd_thread {
+	thread_t thread;
 	thread_mutex_t lock;
 
 	BYTE action;
@@ -95,6 +94,7 @@ static IXAudio2VoiceCallbackVtbl voice_callbacks_vtable = {
 };
 static IXAudio2VoiceCallback voice_callbacks = { &voice_callbacks_vtable };
 static _callback_data cbd;
+static BYTE snd_dummy_enabled = FALSE;
 
 _snd snd;
 _snd_list snd_list;
@@ -152,9 +152,18 @@ BYTE snd_init(void) {
 
 	snd_list_devices();
 
+	// non ho trovato dispositivi audio
+	if (snd_list.capture.count == 1) {
+		snd_dummy_enabled = TRUE;
+	}
+
 	// apro e avvio la riproduzione
 	if (snd_playback_start()) {
 		return (EXIT_ERROR);
+	}
+
+	if (snd_dummy_enabled) {
+		thread_create(snd_thread.thread, snd_dummy_thread_loop, NULL);
 	}
 
 	return (EXIT_OK);
@@ -162,6 +171,13 @@ BYTE snd_init(void) {
 void snd_quit(void) {
 	// se e' in corso una registrazione, la concludo
 	wav_from_audio_emulator_close();
+
+	if (snd_dummy_enabled) {
+		if (snd_thread.action != ST_UNINITIALIZED) {
+			snd_thread.action = ST_STOP;
+			thread_join(snd_thread.thread);
+		}
+	}
 
 	snd_playback_stop();
 
@@ -192,23 +208,41 @@ void snd_reset_buffers(void) {
 }
 
 void snd_thread_pause(void) {
+	if (snd_dummy_enabled && (snd_thread.action == ST_UNINITIALIZED)) {
+		return;
+	}
+
 	snd_thread.pause_calls++;
 
 	if (snd_thread.pause_calls == 1) {
-		snd_thread.action = ST_STOP;
+		snd_thread.action = ST_PAUSE;
 
 		while (snd_thread.in_run == TRUE) {
-			;
+			if (snd_dummy_enabled) {
+				gui_sleep(1);
+			} else {
+				;
+			}
 		}
 	}
 }
 void snd_thread_continue(void) {
+	if (snd_dummy_enabled && (snd_thread.action == ST_UNINITIALIZED)) {
+		return;
+	}
+
 	if (--snd_thread.pause_calls < 0) {
 		snd_thread.pause_calls = 0;
 	}
 
 	if (snd_thread.pause_calls == 0) {
 		snd_thread.action = ST_RUN;
+
+		if (snd_dummy_enabled && (snd.initialized == TRUE)) {
+			while (snd_thread.in_run == FALSE) {
+				gui_sleep(1);
+			}
+		}
 	}
 }
 
@@ -220,8 +254,15 @@ void snd_thread_unlock(void) {
 }
 
 BYTE snd_playback_start(void) {
+	static BYTE first_time = TRUE;
+
+	if (snd_dummy_enabled && !first_time) {
+		snd_thread_pause();
+	}
+
+	snd_playback_restart:
 	// come prima cosa blocco eventuali riproduzioni
-	snd_playback_stop();
+	_snd_playback_stop();
 
 	memset(&snd, 0x00, sizeof(_snd));
 	memset(&xaudio2, 0x00, sizeof(xaudio2));
@@ -251,37 +292,39 @@ BYTE snd_playback_start(void) {
 			break;
 	}
 
-	if (XAudio2Create(&xaudio2.engine, 0, XAUDIO2_DEFAULT_PROCESSOR) != S_OK) {
-		MessageBox(NULL,
-			"ATTENTION: Unable to create XAudio2 object. Probably you\n"
-			"have an incomplete installation of DirectX 10.",
-			"Error!",
-			MB_ICONEXCLAMATION | MB_OK);
-		goto snd_playback_start_error;
-	}
-
-	{
+	if (!snd_dummy_enabled) {
 		int index = snd_list_find_index_id(&snd_list.playback, cfg->audio_output, usizeof(cfg->audio_output));
-
-		if (index == 0) {
-			if (IXAudio2_CreateMasteringVoice(xaudio2.engine, &xaudio2.master, snd.channels, snd.samplerate, 0, 0, NULL) != S_OK) {
-				MessageBox(NULL, "ATTENTION: Unable to create XAudio2 master voice.", "Error!",
-				MB_ICONEXCLAMATION | MB_OK);
-				goto snd_playback_start_error;
-			}
-		} else {
-			if (IXAudio2_CreateMasteringVoice(xaudio2.engine, &xaudio2.master, snd.channels, snd.samplerate, 0, index - 1, NULL) != S_OK) {
-				MessageBox(NULL, "ATTENTION: Unable to create XAudio2 master voice.", "Error!",
-				MB_ICONEXCLAMATION | MB_OK);
-				goto snd_playback_start_error;
-			}
-		}
-	}
-
-	{
 		WAVEFORMATEX wfm;
 
 		memset(&wfm, 0, sizeof(wfm));
+
+		if (XAudio2Create(&xaudio2.engine, 0, XAUDIO2_DEFAULT_PROCESSOR) != S_OK) {
+			MessageBox(NULL,
+				"ATTENTION: Unable to create XAudio2 object. Probably you\n"
+				"have an incomplete installation of DirectX 10.",
+				"Error!",
+				MB_ICONEXCLAMATION | MB_OK);
+			snd_dummy_enabled = TRUE;
+			goto snd_playback_restart;
+		}
+
+		if (index == 0) {
+			if (IXAudio2_CreateMasteringVoice(xaudio2.engine, &xaudio2.master, snd.channels,
+				snd.samplerate, 0, 0, NULL) != S_OK) {
+				MessageBox(NULL, "ATTENTION: Unable to create XAudio2 master voice.", "Error!",
+				MB_ICONEXCLAMATION | MB_OK);
+				snd_dummy_enabled = TRUE;
+				goto snd_playback_restart;
+			}
+		} else {
+			if (IXAudio2_CreateMasteringVoice(xaudio2.engine, &xaudio2.master, snd.channels,
+				snd.samplerate, 0, index - 1, NULL) != S_OK) {
+				MessageBox(NULL, "ATTENTION: Unable to create XAudio2 master voice.", "Error!",
+				MB_ICONEXCLAMATION | MB_OK);
+				snd_dummy_enabled = TRUE;
+				goto snd_playback_restart;
+			}
+		}
 
 		wfm.wFormatTag = WAVE_FORMAT_PCM;
 		wfm.nChannels = snd.channels;
@@ -303,7 +346,8 @@ BYTE snd_playback_start(void) {
 				"ATTENTION: Unable to create XAudio2 source voice.\n",
 				"Error!",
 				MB_ICONEXCLAMATION | MB_OK);
-			goto snd_playback_start_error;
+			snd_dummy_enabled = TRUE;
+			goto snd_playback_restart;
 		}
 	}
 
@@ -366,12 +410,15 @@ BYTE snd_playback_start(void) {
 		xaudio2.buffer.LoopCount = 0;
 		xaudio2.buffer.pContext = snd.cache;
 
-		if (IXAudio2SourceVoice_SubmitSourceBuffer(xaudio2.source, (const XAUDIO2_BUFFER *)&xaudio2.buffer, NULL) != S_OK) {
-			MessageBox(NULL,
-				"ATTENTION: Unable to set sound engine.\n",
-				"Error!",
-				MB_ICONEXCLAMATION | MB_OK);
-			goto snd_playback_start_error;
+		if (!snd_dummy_enabled) {
+			if (IXAudio2SourceVoice_SubmitSourceBuffer(xaudio2.source, (const XAUDIO2_BUFFER *)&xaudio2.buffer, NULL) != S_OK) {
+				MessageBox(NULL,
+					"ATTENTION: Unable to set sound engine.\n",
+					"Error!",
+					MB_ICONEXCLAMATION | MB_OK);
+				snd_dummy_enabled = TRUE;
+				goto snd_playback_restart;
+			}
 		}
 	}
 
@@ -383,73 +430,46 @@ BYTE snd_playback_start(void) {
 	snd_thread.tick = gui_get_ms();
 #endif
 
-	if (IXAudio2_StartEngine(xaudio2.engine) != S_OK) {
-		MessageBox(NULL,
-			"ATTENTION: Unable to start sound engine.\n",
-			"Error!",
-			MB_ICONEXCLAMATION | MB_OK);
-		goto snd_playback_start_error;
-	}
+	if (!snd_dummy_enabled) {
+		if (IXAudio2_StartEngine(xaudio2.engine) != S_OK) {
+			MessageBox(NULL,
+				"ATTENTION: Unable to start sound engine.\n",
+				"Error!",
+				MB_ICONEXCLAMATION | MB_OK);
+			snd_dummy_enabled = TRUE;
+			goto snd_playback_restart;
+		}
 
-	if (IXAudio2SourceVoice_Start(xaudio2.source, 0, XAUDIO2_COMMIT_NOW) != S_OK) {
-		MessageBox(NULL,
-			"ATTENTION: Unable to start source voice.\n",
-			"Error!",
-			MB_ICONEXCLAMATION | MB_OK);
-		goto snd_playback_start_error;
+		if (IXAudio2SourceVoice_Start(xaudio2.source, 0, XAUDIO2_COMMIT_NOW) != S_OK) {
+			MessageBox(NULL,
+				"ATTENTION: Unable to start source voice.\n",
+				"Error!",
+				MB_ICONEXCLAMATION | MB_OK);
+			snd_dummy_enabled = TRUE;
+			goto snd_playback_restart;
+		}
 	}
 
 	snd.initialized = TRUE;
 
+	if (snd_dummy_enabled && !first_time) {
+		snd_thread_continue();
+	}
+	first_time = FALSE;
 	return (EXIT_OK);
 
 	snd_playback_start_error:
-	snd_playback_stop();
+	_snd_playback_stop();
+	if (snd_dummy_enabled && !first_time) {
+		snd_thread_continue();
+	}
+	first_time = FALSE;
 	return (EXIT_ERROR);
 }
 void snd_playback_stop(void) {
-	snd.initialized = FALSE;
-
-	if (xaudio2.source) {
-		IXAudio2SourceVoice_Stop(xaudio2.source, 0, XAUDIO2_COMMIT_NOW);
-		IXAudio2SourceVoice_FlushSourceBuffers(xaudio2.source);
-		IXAudio2SourceVoice_DestroyVoice(xaudio2.source);
-		xaudio2.source = NULL;
-	}
-
-	if (xaudio2.engine) {
-		IXAudio2_StopEngine(xaudio2.engine);
-	}
-
-	if (xaudio2.master) {
-		IXAudio2MasteringVoice_DestroyVoice(xaudio2.master);
-		xaudio2.master = NULL;
-	}
-
-	if (xaudio2.engine) {
-		IXAudio2_Release(xaudio2.engine);
-		xaudio2.engine = NULL;
-	}
-
-	gui_sleep(150);
-
-	if (cbd.start) {
-		free(snd.cache->start);
-		cbd.start = NULL;
-	}
-
-	if (cbd.silence) {
-		free(cbd.silence);
-		cbd.silence = NULL;
-	}
-
-	snd.cache = NULL;
-
-	if (audio_channels_quit) {
-		audio_channels_quit();
-	}
-
-	audio_quit_blipbuf();
+	snd_thread_pause();
+	_snd_playback_stop();
+	snd_thread_continue();
 }
 
 void snd_playback_pause(void) {
@@ -524,6 +544,51 @@ void snd_list_devices(void) {
 	}
 }
 
+static void _snd_playback_stop(void) {
+	snd.initialized = FALSE;
+
+	if (xaudio2.source) {
+		IXAudio2SourceVoice_Stop(xaudio2.source, 0, XAUDIO2_COMMIT_NOW);
+		IXAudio2SourceVoice_FlushSourceBuffers(xaudio2.source);
+		IXAudio2SourceVoice_DestroyVoice(xaudio2.source);
+		xaudio2.source = NULL;
+	}
+
+	if (xaudio2.engine) {
+		IXAudio2_StopEngine(xaudio2.engine);
+	}
+
+	if (xaudio2.master) {
+		IXAudio2MasteringVoice_DestroyVoice(xaudio2.master);
+		xaudio2.master = NULL;
+	}
+
+	if (xaudio2.engine) {
+		IXAudio2_Release(xaudio2.engine);
+		xaudio2.engine = NULL;
+	}
+
+	gui_sleep(150);
+
+	if (cbd.start) {
+		free(snd.cache->start);
+		cbd.start = NULL;
+	}
+
+	if (cbd.silence) {
+		free(cbd.silence);
+		cbd.silence = NULL;
+	}
+
+	snd.cache = NULL;
+
+	if (audio_channels_quit) {
+		audio_channels_quit();
+	}
+
+	audio_quit_blipbuf();
+}
+
 static int snd_list_find_index_id(_snd_list_dev *list, uTCHAR *id, int size) {
 	int i, index = -1;
 
@@ -590,14 +655,6 @@ static BOOL CALLBACK cb_enum_capture_dev(LPGUID guid, LPCWSTR desc, UNUSED(LPCWS
 	return (TRUE);
 }
 
-INLINE static void xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf, const BYTE *buffer) {
-	x2buf->pAudioData = buffer;
-
-	if (IXAudio2SourceVoice_SubmitSourceBuffer(source, x2buf, NULL) != S_OK) {
-		fprintf(stderr, "Unable to submit source buffer\n");
-	}
-}
-
 static void STDMETHODCALLTYPE OnVoiceProcessPassStart(UNUSED(IXAudio2VoiceCallback *callback), UNUSED(UINT32 b)) {}
 static void STDMETHODCALLTYPE OnVoiceProcessPassEnd(UNUSED(IXAudio2VoiceCallback *callback)) {}
 static void STDMETHODCALLTYPE OnStreamEnd(UNUSED(IXAudio2VoiceCallback *callback)) {}
@@ -607,7 +664,7 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 
 	snd_thread.in_run = TRUE;
 
-	if (snd_thread.action == ST_STOP) {
+	if ((snd_thread.action == ST_STOP) || (snd_thread.action == ST_PAUSE)) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
 	} else if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps_fast_forward_enabled() | !snd.buffer.start) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
@@ -668,3 +725,88 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 static void STDMETHODCALLTYPE OnBufferEnd(UNUSED(IXAudio2VoiceCallback *callback), UNUSED(void *pBufferContext)) {}
 static void STDMETHODCALLTYPE OnLoopEnd(UNUSED(IXAudio2VoiceCallback *callback), UNUSED(void *pBufferContext)) {}
 static void STDMETHODCALLTYPE OnVoiceError(UNUSED(IXAudio2VoiceCallback *callback), UNUSED(void* pBufferContext), UNUSED(HRESULT Error)) {}
+
+INLINE static void xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf, const BYTE *buffer) {
+	x2buf->pAudioData = buffer;
+
+	if (IXAudio2SourceVoice_SubmitSourceBuffer(source, x2buf, NULL) != S_OK) {
+		fprintf(stderr, "Unable to submit source buffer\n");
+	}
+}
+
+static thread_funct(snd_dummy_thread_loop, UNUSED(void *data)) {
+#if !defined (RELEASE)
+	snd_thread.tick = gui_get_ms();
+#endif
+
+	while (TRUE) {
+		WORD len = xaudio2.buffer.AudioBytes;
+		int avail = xaudio2.buffer.PlayLength;
+
+		if (snd_thread.action == ST_STOP) {
+			snd_thread.in_run = FALSE;
+			break;
+		} else if ((snd_thread.action == ST_PAUSE) || (snd.initialized == FALSE) || (cbd.bytes_available < len)) {
+			snd_thread.in_run = FALSE;
+			gui_sleep(1);
+			continue;
+		}
+
+		snd_thread.in_run = TRUE;
+
+		if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps_fast_forward_enabled() | !snd.buffer.start) {
+			;
+		} else {
+			void *read = (void *)cbd.read;
+
+			snd_thread_lock();
+
+			if (snd.pause_calls) {
+				read = (void *)cbd.silence;
+			}
+
+			wave_from_audio_emulator_write((SWORD *)read, avail);
+			;
+
+			cbd.bytes_available -= len;
+			cbd.samples_available -= avail;
+
+#if !defined (RELEASE)
+			if (((void *)cbd.write > (void *)cbd.read) && ((void *)cbd.write < (void *)(cbd.read + len))) {
+				snd.overlap++;
+			}
+#endif
+
+			// mi preparo per i prossimi frames da inviare, sempre
+		 	// che non abbia raggiunto la fine del buffer, nel
+		 	// qual caso devo puntare al suo inizio.
+			if ((cbd.read += len) >= cbd.end) {
+				cbd.read = (SBYTE *)cbd.start;
+			}
+
+			snd_thread_unlock();
+		}
+
+#if !defined (RELEASE)
+		if ((gui_get_ms() - snd_thread.tick) >= 250.0f) {
+			snd_thread.tick = gui_get_ms();
+			if (info.snd_info == TRUE)
+			fprintf(stderr, "snd dummy : %d %d %6d %6d %4d %4d %4d %4d %3d %f\r",
+				avail,
+				len,
+				cbd.samples_available,
+				cbd.bytes_available,
+				fps.info.emu_too_long,
+				fps.info.skipped,
+				snd.overlap,
+				snd.out_of_sync,
+				(int)fps.gfx,
+				machine.ms_frame);
+		}
+#endif
+
+		snd_thread.in_run = FALSE;
+	}
+
+	thread_funct_return();
+}

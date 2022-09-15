@@ -34,13 +34,6 @@
 #include "wave.h"
 #include "rewind.h"
 
-enum snd_thread_actions {
-	ST_UNINITIALIZED,
-	ST_RUN,
-	ST_STOP,
-	ST_PAUSE
-};
-
 typedef struct _sndio {
 	struct sio_hdl *playback;
 	struct pollfd *pfds;
