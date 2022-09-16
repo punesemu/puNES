@@ -153,7 +153,7 @@ BYTE snd_init(void) {
 	snd_list_devices();
 
 	// non ho trovato dispositivi audio
-	if (snd_list.capture.count == 1) {
+	if (snd_list.playback.count == 1) {
 		snd_dummy_enabled = TRUE;
 	}
 
