@@ -148,6 +148,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	qaction_shcut.toggle_nes_keyboard = new QAction(this);
 	qaction_shcut.audio_enable = new QAction(this);
 	qaction_shcut.save_settings = new QAction(this);
+	qaction_shcut.hold_fast_forward = new QAction(this);
 	qaction_shcut.rwnd.active = new QAction(this);
 	qaction_shcut.rwnd.step_backward = new QAction(this);
 	qaction_shcut.rwnd.step_forward = new QAction(this);
@@ -333,6 +334,7 @@ void mainWindow::closeEvent(QCloseEvent *event) {
 
 void mainWindow::retranslateUi(mainWindow *mainWindow) {
 	Ui::mainWindow::retranslateUi(mainWindow);
+	qaction_shcut.hold_fast_forward->setText(tr("Fast Forward (hold button)"));
 	shortcuts();
 	save_slot_count_load();
 	update_window();
@@ -587,7 +589,7 @@ void mainWindow::shortcuts(void) {
 	connect_shortcut(action_Save_Screenshot, SET_INP_SC_SCREENSHOT, SLOT(s_save_screenshot()));
 	connect_shortcut(action_Save_Unaltered_NES_screen, SET_INP_SC_SCREENSHOT_1X, SLOT(s_save_screenshot_1x()));
 	connect_shortcut(action_Pause, SET_INP_SC_PAUSE, SLOT(s_pause()));
-	connect_shortcut(action_Fast_Forward, SET_INP_SC_FAST_FORWARD, SLOT(s_fast_forward()));
+	connect_shortcut(action_Toogle_Fast_Forward, SET_INP_SC_TOGGLE_FAST_FORWARD, SLOT(s_fast_forward()));
 	connect_shortcut(action_Toggle_GUI_in_window, SET_INP_SC_TOGGLE_GUI_IN_WINDOW, SLOT(s_toggle_gui_in_window()));
 	// Settings/Mode
 	connect_shortcut(qaction_shcut.mode_auto, SET_INP_SC_MODE_AUTO, SLOT(s_shcut_mode()));
@@ -631,6 +633,9 @@ void mainWindow::shortcuts(void) {
 	// Nes Keyboard
 	connect_shortcut(qaction_shcut.toggle_capture_input, SET_INP_SC_TOGGLE_CAPTURE_INPUT, SLOT(s_shcut_toggle_capture_input()));
 	connect_shortcut(qaction_shcut.toggle_nes_keyboard, SET_INP_SC_TOGGLE_NES_KEYBOARD, SLOT(s_shcut_toggle_nes_keyboard()));
+
+	// Hold Fast Forward
+	connect_shortcut(qaction_shcut.hold_fast_forward, SET_INP_SC_HOLD_FAST_FORWARD, SLOT(s_fake_slot())); // shortcut speciale
 
 	// aggiorno il tooltip del nesKeyboardStatusBar
 	if (gui.start) {
@@ -800,6 +805,11 @@ void mainWindow::shout_into_mic(BYTE mode) {
 		}
 	}
 }
+void mainWindow::hold_fast_forward(BYTE mode) {
+	if (fps.fast_forward != mode) {
+		s_fast_forward();
+	}
+}
 
 void mainWindow::connect_menu_signals(void) {
 	// File
@@ -816,6 +826,7 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Hard_Reset, HARD, SLOT(s_make_reset()));
 	connect_action(action_Soft_Reset, RESET, SLOT(s_make_reset()));
 	connect_action(action_Insert_Coin, SLOT(s_insert_coin()));
+	connect_action(action_Shout_into_Microphone, SLOT(s_shout_into_mic()));
 	connect_action(action_Disk_1_side_A, 0, SLOT(s_disk_side()));
 	connect_action(action_Disk_1_side_B, 1, SLOT(s_disk_side()));
 	connect_action(action_Disk_2_side_A, 2, SLOT(s_disk_side()));
@@ -833,7 +844,7 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Save_Screenshot, SLOT(s_save_screenshot()));
 	connect_action(action_Save_Unaltered_NES_screen, SLOT(s_save_screenshot_1x()));
 	connect_action(action_Pause, SLOT(s_pause()));
-	connect_action(action_Fast_Forward, SLOT(s_fast_forward()));
+	connect_action(action_Toogle_Fast_Forward, SLOT(s_fast_forward()));
 	connect_action(action_Toggle_GUI_in_window, SLOT(s_toggle_gui_in_window()));
 
 	// Settings
@@ -1039,15 +1050,15 @@ void mainWindow::update_menu_nes(void) {
 	}
 
 	if ((nsf.enabled == FALSE) && (rwnd.active == FALSE)) {
-		action_Fast_Forward->setEnabled(true);
+		action_Toogle_Fast_Forward->setEnabled(true);
 
 		if (fps.fast_forward == TRUE) {
-			action_Fast_Forward->setChecked(true);
+			action_Toogle_Fast_Forward->setChecked(true);
 		} else {
-			action_Fast_Forward->setChecked(false);
+			action_Toogle_Fast_Forward->setChecked(false);
 		}
 	} else {
-		action_Fast_Forward->setEnabled(false);
+		action_Toogle_Fast_Forward->setEnabled(false);
 	}
 }
 void mainWindow::update_menu_state(void) {
@@ -1415,6 +1426,9 @@ void mainWindow::s_make_reset(void) {
 }
 void mainWindow::s_insert_coin(void) {
 	gui_vs_system_insert_coin();
+}
+void mainWindow::s_shout_into_mic(void) {
+	shout_into_mic(PRESSED);
 }
 void mainWindow::s_disk_side(void) {
 	int side = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -2075,6 +2089,9 @@ void mainWindow::s_shcjoy_read_timer(void) {
 					case SET_INP_SC_SHOUT_INTO_MIC:
 						shout_into_mic(shcjoy.sch.mode);
 						return;
+					case SET_INP_SC_HOLD_FAST_FORWARD:
+						hold_fast_forward(shcjoy.sch.mode);
+						return;
 				}
 
 				// shortcut che si attivano al rilascio del pulsante/asse
@@ -2124,8 +2141,8 @@ void mainWindow::s_shcjoy_read_timer(void) {
 						case SET_INP_SC_PAUSE:
 							action_Pause->trigger();
 							break;
-						case SET_INP_SC_FAST_FORWARD:
-							action_Fast_Forward->trigger();
+						case SET_INP_SC_TOGGLE_FAST_FORWARD:
+							action_Toogle_Fast_Forward->trigger();
 							break;
 						case SET_INP_SC_TOGGLE_GUI_IN_WINDOW:
 							action_Toggle_GUI_in_window->trigger();
