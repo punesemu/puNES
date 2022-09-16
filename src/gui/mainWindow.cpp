@@ -1016,9 +1016,11 @@ void mainWindow::update_menu_nes(void) {
 	if (info.no_rom | info.turn_off | rwnd.active) {
 		action_Hard_Reset->setEnabled(false);
 		action_Soft_Reset->setEnabled(false);
+		action_Shout_into_Microphone->setEnabled(false);
 	} else {
 		action_Hard_Reset->setEnabled(true);
 		action_Soft_Reset->setEnabled(true);
+		action_Shout_into_Microphone->setEnabled(true);
 	}
 
 	if ((vs_system.enabled == TRUE) && (rwnd.active == FALSE)) {
