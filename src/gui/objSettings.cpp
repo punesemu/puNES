@@ -532,7 +532,7 @@ static const struct _kvTable {
 
 // -------------------------------- Oggetto base -----------------------------------------
 
-objSettings::objSettings(Format f, QString file, int list_ele) : QSettings(uQString(info.base_folder) + file, f) {
+objSettings::objSettings(Format f, QString file, int list_ele) : QSettings(uQString(gui_config_folder()) + file, f) {
 	listEle = list_ele;
 	set = &list_settings[listEle];
 

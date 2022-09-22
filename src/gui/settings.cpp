@@ -27,8 +27,6 @@
 #endif
 #include "gui.h"
 
-#define CFGFILENAME "/puNES.cfg"
-#define INPFILENAME "/input.cfg"
 #define PGSFILENAME QString(PERGAME_FOLDER) + "/" +\
 	QFileInfo(uQString(info.rom.file)).completeBaseName() + ".pgs"
 #define SHPFILENAME QString(SHDPAR_FOLDER) + "/" +\

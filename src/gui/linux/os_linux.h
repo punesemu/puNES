@@ -24,7 +24,7 @@
 static double high_resolution_ms(void);
 static int __nsleep(const struct timespec *req, struct timespec *rem);
 
-void gui_init_os(void) {
+INLINE void gui_init_os(void) {
 	/*
 	// cerco il numero dei cores
 	{
@@ -36,32 +36,18 @@ void gui_init_os(void) {
 	*/
 
 	// cerco la HOME e imposto la directory base
-	{
-		gui.home = getenv("HOME");
-
-		if (!gui.home) {
-			gui.home = QDir::homePath().toUtf8().constData();
-		}
-
-		if (info.portable) {
-			uTCHAR path[usizeof(info.base_folder)];
-			int length = readlink("/proc/self/exe", uPTCHAR(path), usizeof(path) - 1);
-
-			if (length < 0) {
-				fprintf(stderr, "INFO: Error resolving symlink /proc/self/exe.\n");
-				info.portable = FALSE;
-			} else {
-				path[length] = 0;
-				gui_utf_dirname(path, info.base_folder, usizeof(info.base_folder));
-			}
-		} else {
-			usnprintf(info.base_folder, usizeof(info.base_folder), uL("" uPs("") "/." NAME), gui.home);
-		}
- 	}
-
 	gettimeofday(&gui.counterStart, nullptr);
 	gui_get_ms = high_resolution_ms;
 }
+INLINE uTCHAR *gui_home(void) {
+	static uTCHAR *home = NULL;
+
+	if (!(home = getenv("HOME"))) {
+		home = uQStringCD(QDir::homePath());
+	}
+	return (home);
+}
+
 void gui_sleep(double ms) {
 	struct timespec req = {}, rem = {};
 	time_t sec;

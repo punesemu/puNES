@@ -38,7 +38,6 @@ typedef struct _info_sh1sum {
 	} chr;
 } _info_sh1sum;
 typedef struct _info {
-	uTCHAR base_folder[LENGTH_FILE_NAME_MID];
 	struct _info_rom {
 		uTCHAR file[LENGTH_FILE_NAME_LONG];
 		uTCHAR change_rom[LENGTH_FILE_NAME_LONG];

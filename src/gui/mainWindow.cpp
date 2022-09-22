@@ -224,6 +224,10 @@ mainWindow::mainWindow() : QMainWindow() {
 	}
 
 	set_language(cfg->language);
+
+	if (QString(uQString(gui_config_folder())) == QString(uQString(gui_data_folder()))) {
+		action_Open_config_folder->setVisible(false);
+	}
 }
 mainWindow::~mainWindow() {}
 
@@ -425,10 +429,10 @@ void mainWindow::set_language(int lang) {
 
 	// solo per testare le nuove traduzioni
 	if (gui.start == FALSE) {
-		QFile ext(uQString(info.base_folder) + "/test.qm");
+		QFile ext(uQString(gui_application_folder()) + "/test.qm");
 
 		if (ext.exists()) {
-			if (translator->load("test.qm", uQString(info.base_folder))) {
+			if (translator->load("test.qm", uQString(gui_application_folder()))) {
 				qApp->installTranslator(translator);
 			}
 			return;
@@ -819,6 +823,7 @@ void mainWindow::connect_menu_signals(void) {
 #if defined (WITH_FFMPEG)
 	connect_action(action_Start_Stop_Video_recording, SLOT(s_start_stop_video_recording()));
 #endif
+	connect_action(action_Open_config_folder, SLOT(s_open_config_folder()));
 	connect_action(action_Open_working_folder, SLOT(s_open_working_folder()));
 	connect_action(action_Quit, SLOT(s_quit()));
 	// NES
@@ -1031,7 +1036,7 @@ void mainWindow::update_menu_nes(void) {
 	} else {
 		action_Hard_Reset->setEnabled(true);
 		action_Soft_Reset->setEnabled(true);
-		action_Shout_into_Microphone->setEnabled(true);
+		action_Shout_into_Microphone->setEnabled(cfg->input.controller_mode == CTRL_MODE_FAMICOM);
 	}
 
 	if ((vs_system.enabled == TRUE) && (rwnd.active == FALSE)) {
@@ -1394,8 +1399,11 @@ void mainWindow::s_open_recent_roms(void) {
 
 	emu_pause(FALSE);
 }
+void mainWindow::s_open_config_folder(void) {
+	QDesktopServices::openUrl(QUrl(QDir(uQString(gui_config_folder())).absolutePath()));
+}
 void mainWindow::s_open_working_folder(void) {
-	QDesktopServices::openUrl(QUrl(QDir(uQString(info.base_folder)).absolutePath()));
+	QDesktopServices::openUrl(QUrl(QDir(uQString(gui_data_folder())).absolutePath()));
 }
 void mainWindow::s_quit(void) {
 	close();
@@ -1949,8 +1957,6 @@ void mainWindow::s_help(void) {
 	about->show();
 	about->activateWindow();
 	about->exec();
-
-	delete (about);
 
 	emu_pause(FALSE);
 }

@@ -1743,7 +1743,7 @@ void map_prg_ram_battery_file(uTCHAR *prg_ram_file) {
 	fl = info.rom.file;
 
 	gui_utf_basename(fl, basename, usizeof(basename));
-	usnprintf(prg_ram_file, LENGTH_FILE_NAME_LONG, uL("" uPs("") PRB_FOLDER "/" uPs("")), info.base_folder, basename);
+	usnprintf(prg_ram_file, LENGTH_FILE_NAME_LONG, uL("" uPs("") PRB_FOLDER "/" uPs("")), gui_data_folder(), basename);
 
 	/* rintraccio l'ultimo '.' nel nome */
 	if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {

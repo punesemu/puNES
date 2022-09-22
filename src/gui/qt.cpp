@@ -18,6 +18,7 @@
 
 #include <QtWidgets/QMessageBox>
 #include <QtGui/QImage>
+#include <QtCore/QStandardPaths>
 #include <QtCore/QDir>
 #include <QtGui/QScreen>
 #include <QtGui/QFontDatabase>
@@ -76,6 +77,9 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "d3d9.h"
 #endif
 
+INLINE void gui_init_os(void);
+INLINE uTCHAR *gui_home(void);
+
 static void gui_is_in_desktop(int *x, int *y);
 
 static struct _qt {
@@ -84,6 +88,7 @@ static struct _qt {
 	wdgScreen *screen;
 	objCheat *objch;
 	QImage qimage;
+	QByteArray sba;
 
 	// widget dell'overlay
 	wdgOverlayUi *overlay;
@@ -118,7 +123,7 @@ class appEventFilter: public QObject {
 		}
 };
 
-void gui_init(int *argc, char **argv) {
+BYTE gui_init(int *argc, char **argv) {
 	QFlags<mainApplication::Mode> mode = mainApplication::Mode::ExcludeAppVersion | mainApplication::Mode::ExcludeAppPath;
 	int i = 0;
 
@@ -145,6 +150,8 @@ void gui_init(int *argc, char **argv) {
 	}
 
 	gui_init_os();
+
+	return (qt.app->control_base_folders());
 }
 void gui_quit(void) {}
 BYTE gui_control_instance(void) {
@@ -234,6 +241,50 @@ void gui_start(void) {
 	gfx_thread_continue();
 	emu_thread_continue();
 	qt.app->exec();
+}
+
+const uTCHAR *gui_home_folder(void) {
+	return (gui_home());
+}
+const uTCHAR *gui_application_folder(void) {
+	QString path = QCoreApplication::applicationDirPath();
+
+	qt.sba.clear();
+	qt.sba = uQByteArrayFromString(path);
+	return (uQByteArrayCD(qt.sba));
+}
+const uTCHAR *gui_config_folder(void) {
+	QString path;
+
+	if (info.portable) {
+		return (gui_application_folder());
+	}
+	path = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation).replace(QCoreApplication::applicationName(), NAME);
+	qt.sba.clear();
+	qt.sba = uQByteArrayFromString(path);
+	return (uQByteArrayCD(qt.sba));
+}
+const uTCHAR *gui_data_folder(void) {
+	QString path;
+
+	if (info.portable) {
+		return (gui_application_folder());
+	}
+#if defined (_WIN32)
+	path = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation).replace(QCoreApplication::applicationName(), NAME);
+#else
+	path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation).replace(QCoreApplication::applicationName(), NAME);
+#endif
+	qt.sba.clear();
+	qt.sba = uQByteArrayFromString(path);
+	return (uQByteArrayCD(qt.sba));
+}
+const uTCHAR *gui_temp_folder(void) {
+	QString path = QString("%0/%1").arg(QStandardPaths::writableLocation(QStandardPaths::TempLocation)).arg(NAME);
+
+	qt.sba.clear();
+	qt.sba = uQByteArrayFromString(path);
+	return (uQByteArrayCD(qt.sba));
 }
 
 double gui_device_pixel_ratio(void) {
@@ -723,7 +774,7 @@ BYTE gui_load_lut(void *l, const uTCHAR *path) {
 	return (EXIT_OK);
 }
 void gui_save_screenshot(int w, int h, int stride, char *buffer, BYTE flip) {
-	QString basename = QString(uQString(info.base_folder)) + QString(SCRSHT_FOLDER) + "/"
+	QString basename = QString(uQString(gui_data_folder())) + QString(SCRSHT_FOLDER) + "/"
 		+ QFileInfo(uQString(info.rom.file)).completeBaseName();
 	QImage screenshot = QImage((uchar *)buffer, w, h, stride, QImage::Format_RGB32);
 	QFile file;

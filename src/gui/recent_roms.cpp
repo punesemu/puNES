@@ -26,8 +26,6 @@
 #include "settings.h"
 #include "gui.h"
 
-#define RECENT_ROMS_FILE "recent.cfg"
-
 static void recent_roms_reset_list(void);
 static uTCHAR *recent_roms_file(void);
 
@@ -213,6 +211,6 @@ static uTCHAR *recent_roms_file(void) {
 	static uTCHAR file[LENGTH_FILE_NAME_LONG];
 
 	umemset(file, 0x00, LENGTH_FILE_NAME_LONG);
-	usnprintf(file, usizeof(file), uL("" uPs("") "/" RECENT_ROMS_FILE), info.base_folder);
+	usnprintf(file, usizeof(file), uL("" uPs("") RECENTFILENAME), gui_config_folder());
 	return (file);
 }

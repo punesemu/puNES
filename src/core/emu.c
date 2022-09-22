@@ -73,9 +73,6 @@ static void emu_cpu_initial_cycles(void);
 static BYTE emu_ctrl_if_rom_exist(void);
 static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file);
 static void emu_recent_roms_add(BYTE *add, uTCHAR *file);
-#if defined (__unix__)
-static BYTE emu_test_tmp_dir(const uTCHAR *tmp_dir);
-#endif
 
 struct _fps_pause {
 	double expected_end;
@@ -1158,50 +1155,6 @@ void emu_info_rom(void) {
 	fprintf(stderr, "\n");
 }
 
-#if defined (__unix__)
-BYTE emu_find_tmp_dir(void) {
-	const uTCHAR *dirs[] = { "/tmp", "/usr/tmp", "/var/tmp" };
-	const uTCHAR *envs[] = { "TMP", "TEMP", "TMPDIR" };
-	BYTE i;
-
-	// ordine di ricerca:
-	// 	$TMP
-	// 	$TEMP
-	// 	$TMPDIR
-	//	"/tmp"
-	//	"/var/tmp"
-	//	"/usr/tmp"
-	//	P_tmpdir
-
-	for (i = 0; i < LENGTH(envs); i++) {
-		char *value = getenv(envs[i]);
-
-		if (value) {
-			if ((strlen(value) > 0) && (emu_test_tmp_dir(value) == EXIT_OK)) {
-				gui.ostmp = value;
-				return (EXIT_OK);
-			}
-		}
-	}
-
-	for (i = 0; i < LENGTH(dirs); i++) {
-		if (emu_test_tmp_dir(dirs[i]) == EXIT_OK) {
-			gui.ostmp = dirs[i];
-			return (EXIT_OK);
-		}
-	}
-
-#ifdef P_tmpdir
-	if (emu_test_tmp_dir(P_tmpdir) == EXIT_OK) {
-		gui.ostmp = P_tmpdir;
-		return (EXIT_OK);
-	}
-#endif
-
-	return (EXIT_ERROR);
-}
-#endif
-
 INLINE static void emu_frame_started(void) {
 	tas.lag_next_frame = TRUE;
 
@@ -1371,19 +1324,3 @@ static void emu_recent_roms_add(BYTE *add, uTCHAR *file) {
 		recent_roms_add(file);
 	}
 }
-#if defined (__unix__)
-static BYTE emu_test_tmp_dir(const uTCHAR *tmp_dir) {
-	uTCHAR tmp_file[LENGTH_FILE_NAME_LONG];
-	int fp;
-
-	usnprintf(tmp_file, usizeof(tmp_file), uL("" uPs("") "/" NAME "-test_tmp_dir.XXXXXX"), tmp_dir);
-
-	if ((fp = mkstemp(tmp_file)) < 0) {
-		return (EXIT_ERROR);
-	}
-	close(fp);
-	uremove(tmp_file);
-
-	return (EXIT_OK);
-}
-#endif

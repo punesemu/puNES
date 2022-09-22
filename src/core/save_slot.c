@@ -836,7 +836,7 @@ static uTCHAR *name_slot_file(BYTE slot) {
 	}
 
 	gui_utf_basename(fl, bname, usizeof(bname));
-	usnprintf(file, usizeof(file), uL("" uPs("") SAVE_FOLDER "/" uPs("")), info.base_folder, bname);
+	usnprintf(file, usizeof(file), uL("" uPs("") SAVE_FOLDER "/" uPs("")), gui_data_folder(), bname);
 
 	if (nsf.enabled == TRUE) {
 		usnprintf(ext, usizeof(ext), uL(".n%02X"), slot);
