@@ -133,6 +133,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			QAction *toggle_nes_keyboard;
 			QAction *audio_enable;
 			QAction *save_settings;
+			QAction *hold_fast_forward;
 			struct _qaction_shcut_extern_rwnd {
 				QAction *active;
 				QAction *step_backward;
@@ -218,6 +219,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void reset_min_max_size(void);
 		QScreen *win_handle_screen(void);
 		void shout_into_mic(BYTE mode);
+		void hold_fast_forward(BYTE mode);
 
 	private:
 		void connect_menu_signals(void);
@@ -256,6 +258,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_turn_on_off(void);
 		void s_make_reset(void);
 		void s_insert_coin(void);
+		void s_shout_into_mic(void);
 		void s_disk_side(void);
 		void s_eject_disk(void);
 		void s_start_stop_audio_recording(void);

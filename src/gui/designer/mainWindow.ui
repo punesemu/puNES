@@ -106,7 +106,7 @@
     <addaction name="action_Save_Screenshot"/>
     <addaction name="action_Save_Unaltered_NES_screen"/>
     <addaction name="action_Pause"/>
-    <addaction name="action_Fast_Forward"/>
+    <addaction name="action_Toogle_Fast_Forward"/>
     <addaction name="action_Toggle_GUI_in_window"/>
    </widget>
    <widget class="QMenu" name="menu_Settings">
@@ -486,7 +486,7 @@
     <string>&amp;Disabled</string>
    </property>
   </action>
-  <action name="action_Fast_Forward">
+  <action name="action_Toogle_Fast_Forward">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -495,7 +495,7 @@
      <normaloff>:/icon/icons/fast_forward.svg</normaloff>:/icon/icons/fast_forward.svg</iconset>
    </property>
    <property name="text">
-    <string>&amp;Fast Forward</string>
+    <string>Toggle &amp;Fast Forward</string>
    </property>
   </action>
   <action name="action_Pause">

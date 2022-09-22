@@ -803,7 +803,7 @@ void wdgSettingsInput::shortcuts_set(void) {
 	shortcut_update_text(mainwin->action_Save_Screenshot, SET_INP_SC_SCREENSHOT);
 	shortcut_update_text(mainwin->action_Save_Unaltered_NES_screen, SET_INP_SC_SCREENSHOT_1X);
 	shortcut_update_text(mainwin->action_Pause, SET_INP_SC_PAUSE);
-	shortcut_update_text(mainwin->action_Fast_Forward, SET_INP_SC_FAST_FORWARD);
+	shortcut_update_text(mainwin->action_Toogle_Fast_Forward, SET_INP_SC_TOGGLE_FAST_FORWARD);
 	shortcut_update_text(mainwin->action_Toggle_GUI_in_window, SET_INP_SC_TOGGLE_GUI_IN_WINDOW);
 	shortcut_update_text(mainwin->action_Shout_into_Microphone, SET_INP_SC_SHOUT_INTO_MIC);
 	shortcut_update_text(mainwin->qaction_shcut.mode_auto, SET_INP_SC_MODE_AUTO);
@@ -824,6 +824,7 @@ void wdgSettingsInput::shortcuts_set(void) {
 	shortcut_update_text(mainwin->qaction_shcut.toggle_nes_keyboard, SET_INP_SC_TOGGLE_NES_KEYBOARD);
 	shortcut_update_text(mainwin->qaction_shcut.audio_enable, SET_INP_SC_AUDIO_ENABLE);
 	shortcut_update_text(mainwin->qaction_shcut.save_settings, SET_INP_SC_SAVE_SETTINGS);
+	shortcut_update_text(mainwin->qaction_shcut.hold_fast_forward, SET_INP_SC_HOLD_FAST_FORWARD);
 	shortcut_update_text(mainwin->action_Save_state, SET_INP_SC_SAVE_STATE);
 	shortcut_update_text(mainwin->action_Load_state, SET_INP_SC_LOAD_STATE);
 	shortcut_update_text(mainwin->action_Increment_slot, SET_INP_SC_INC_SLOT);

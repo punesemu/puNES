@@ -24,8 +24,8 @@
 #include "audio/wave.h"
 #include "gui.h"
 
-static INLINE void tape_data_reset(void);
-static INLINE double tape_data_cycles(void);
+INLINE static void tape_data_reset(void);
+INLINE static double tape_data_cycles(void);
 
 void tape_data_play_punes(void);
 void tape_data_record_punes(void);
@@ -222,7 +222,7 @@ void tape_data_record_virtuanes(void) {
 	vector_push_back(&tape_data_recorder.data, &data);
 }
 
-static INLINE void tape_data_reset(void) {
+INLINE static void tape_data_reset(void) {
 	tape_data_recorder.mode = TAPE_DATA_NONE;
 	tape_data_recorder.type = TAPE_DATA_TYPE_TAP;
 
@@ -234,7 +234,7 @@ static INLINE void tape_data_reset(void) {
 
 	tape_data_recorder.tick = NULL;
 }
-static INLINE double tape_data_cycles(void) {
+INLINE static double tape_data_cycles(void) {
 	switch (tape_data_recorder.type) {
 		default:
 			return (machine.cpu_hz / 44100.0f);

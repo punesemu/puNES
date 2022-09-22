@@ -80,6 +80,11 @@ bool mainApplication::shortcut_override_event(QEvent *event) {
 				mainwin->shout_into_mic(PRESSED);
 			}
 			return (true);
+		} else if (key_sequence_from_key_event((QKeyEvent *)event) == mainwin->shortcut[SET_INP_SC_HOLD_FAST_FORWARD]->key()) {
+			if (!((QKeyEvent *)event)->isAutoRepeat()) {
+				mainwin->hold_fast_forward(TRUE);
+			}
+			return (true);
 		}
 		return (false);
 	}
@@ -91,6 +96,11 @@ bool mainApplication::key_release_event(QEvent *event) {
 		if (key_sequence_from_key_event((QKeyEvent *)event) == mainwin->shortcut[SET_INP_SC_SHOUT_INTO_MIC]->key()) {
 			if (!((QKeyEvent *)event)->isAutoRepeat()) {
 				mainwin->shout_into_mic(RELEASED);
+			}
+			return (true);
+		} else if (key_sequence_from_key_event((QKeyEvent *)event) == mainwin->shortcut[SET_INP_SC_HOLD_FAST_FORWARD]->key()) {
+			if (!((QKeyEvent *)event)->isAutoRepeat()) {
+				mainwin->hold_fast_forward(FALSE);
 			}
 			return (true);
 		}
