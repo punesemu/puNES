@@ -1,11 +1,11 @@
 desktopdir = $(datadir)/applications
-desktop_DATA = com.github.punesemu.punes.desktop
+desktop_DATA = com.github.punesemu.puNES.desktop
 
 public_icons = \
-	hicolor_apps_16x16_com.github.punesemu.punes.png \
-	hicolor_apps_32x32_com.github.punesemu.punes.png \
-	hicolor_apps_48x48_com.github.punesemu.punes.png \
-	hicolor_apps_256x256_com.github.punesemu.punes.png
+	hicolor_apps_16x16_com.github.punesemu.puNES.png \
+	hicolor_apps_32x32_com.github.punesemu.puNES.png \
+	hicolor_apps_48x48_com.github.punesemu.puNES.png \
+	hicolor_apps_256x256_com.github.punesemu.puNES.png
 	
 EXTRA_DIST = \
 	$(public_icons) \
