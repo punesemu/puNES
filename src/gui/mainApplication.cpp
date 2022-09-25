@@ -30,8 +30,16 @@
 #include "version.h"
 #include "gui.h"
 
+#define FONT_SIZE 9
+
 mainApplication::mainApplication(int &argc, char *argv[], bool allowSecondary, Options options, int timeout, const QString &userData) :
 	SingleApplication(argc, argv, allowSecondary, options, timeout, userData) {
+	QFont f = font();
+
+	if (f.pointSize() != FONT_SIZE) {
+	//	f.setPointSize(FONT_SIZE);
+	//	setFont(f);
+	}
 }
 mainApplication::~mainApplication() {}
 
