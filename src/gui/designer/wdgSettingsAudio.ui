@@ -120,8 +120,8 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>526</width>
-         <height>174</height>
+         <width>20</width>
+         <height>20</height>
         </size>
        </property>
       </spacer>

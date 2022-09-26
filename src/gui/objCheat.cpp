@@ -27,7 +27,7 @@
 #include "gui.h"
 
 #define CHEAT_XML_VERSION "1.0"
-#define CHEATFILENAME uQString(info.base_folder) + QString(CHEAT_FOLDER) + "/" +\
+#define CHEATFILENAME uQString(gui_config_folder()) + QString(CHEAT_FOLDER) + "/" +\
 	QFileInfo(uQString(info.rom.file)).completeBaseName() + ".xml"
 
 static bool libretro_value(QSettings *set, QString key, QString &value);

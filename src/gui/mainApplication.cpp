@@ -16,6 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <QtCore/QStandardPaths>
+#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QWidget>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QKeySequence>
@@ -25,10 +27,19 @@
 #include "mainWindow.hpp"
 #include "dlgKeyboard.hpp"
 #include "wdgScreen.hpp"
+#include "version.h"
 #include "gui.h"
+
+#define FONT_SIZE 9
 
 mainApplication::mainApplication(int &argc, char *argv[], bool allowSecondary, Options options, int timeout, const QString &userData) :
 	SingleApplication(argc, argv, allowSecondary, options, timeout, userData) {
+	QFont f = font();
+
+	if (f.pointSize() != FONT_SIZE) {
+	//	f.setPointSize(FONT_SIZE);
+	//	setFont(f);
+	}
 }
 mainApplication::~mainApplication() {}
 
@@ -53,6 +64,88 @@ bool mainApplication::notify(QObject *receiver, QEvent *event) {
 			break;
 	}
 	return (QApplication::notify(receiver, event));
+}
+
+BYTE mainApplication::base_folder(QDir *new_folder, QDir *old_folder, QString base, QString message) {
+	QString folder = QString(base).remove("/");
+
+	if (old_folder && !info.portable && !new_folder->exists(folder) && old_folder->exists(folder)) {
+		old_folder->rename(old_folder->absolutePath() + base, new_folder->absolutePath() + base);
+	}
+	if (!new_folder->mkpath(folder)) {
+		QMessageBox::critical(0,
+			//: Do not translate %1
+			tr("%1 folders").arg(NAME),
+			message, QMessageBox::Ok);
+		return (EXIT_ERROR);
+	}
+	return (EXIT_OK);
+}
+BYTE mainApplication::control_base_folders(void) {
+	QDir config_folder(uQString(gui_config_folder()));
+	QDir data_folder(uQString(gui_data_folder()));
+	QDir temp_folder(uQString(gui_temp_folder()));
+#if defined (_WIN32)
+	QDir old(QString("%0/%1").arg(uQString(gui_home_folder())).arg(NAME));
+#else
+	QDir old(QString("%0/.%1").arg(uQString(gui_home_folder())).arg(NAME));
+#endif
+
+	// controllo l'esistenza della directory principale
+	if (base_folder(&config_folder, NULL, ".", tr("Error on create config folder")) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+	if (base_folder(&data_folder, NULL, ".", tr("Error on create data folder")) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+	if (base_folder(&temp_folder, NULL, ".", tr("Error on create temp folder")) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+
+	// creo le sottocartelle
+	if (base_folder(&config_folder, &old, CHEAT_FOLDER, tr("Error on create cheat folder")) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+	if (base_folder(&config_folder, &old, PERGAME_FOLDER, tr("Error on create psg folder")) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+	if (base_folder(&config_folder, &old, SHDPAR_FOLDER, tr("Error on create shp folder")) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+	if (base_folder(&config_folder, &old, JSC_FOLDER, tr("Error on create jsc folder")) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+	if (base_folder(&data_folder, &old, BIOS_FOLDER, tr("Error on create bios folder")) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+	if (base_folder(&data_folder, &old, DIFF_FOLDER, tr("Error on create diff folder")) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+	if (base_folder(&data_folder, &old, PRB_FOLDER, tr("Error on create prb folder")) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+	if (base_folder(&data_folder, &old, SAVE_FOLDER, tr("Error on create save folder")) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+	if (base_folder(&data_folder, &old, SCRSHT_FOLDER, tr("Error on create screenshot folder")) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+
+	if (!info.portable && old.exists()) {
+		QString list[] = { QString(CFGFILENAME), QString(INPFILENAME), QString(RECENTFILENAME) };
+		int i;
+
+		for (i = 0; i < 3; i++) {
+			QString file = QString(list[i]).remove("/");
+
+			if (!config_folder.exists(file) && old.exists(file)) {
+				old.rename(old.absolutePath() + list[i], config_folder.absolutePath() + list[i]);
+			}
+		}
+		old.removeRecursively();
+	}
+
+	return (EXIT_OK);
 }
 
 QKeySequence mainApplication::key_sequence_from_key_event(QKeyEvent *event) {

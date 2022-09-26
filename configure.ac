@@ -706,7 +706,7 @@ LIBS="$LIBS ${my_LIBS}"
 
 AC_CONFIG_FILES([
 Makefile
-misc/punes.desktop
+misc/com.github.punesemu.puNES.desktop
 misc/Makefile
 src/Makefile
 src/audio/Makefile

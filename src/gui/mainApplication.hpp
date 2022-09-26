@@ -19,7 +19,9 @@
 #ifndef MAINAPPLICATION_HPP_
 #define MAINAPPLICATION_HPP_
 
+#include <QtCore/QDir>
 #include "extra/singleapplication/singleapplication.h"
+#include "common.h"
 
 class mainApplication : public SingleApplication {
 	Q_OBJECT
@@ -31,6 +33,10 @@ class mainApplication : public SingleApplication {
 
 	public:
 		bool notify(QObject *receiver, QEvent *event);
+
+	public:
+		BYTE base_folder(QDir *new_folder, QDir *old_folder, QString base, QString message);
+		BYTE control_base_folders(void);
 
 	private:
 		QKeySequence key_sequence_from_key_event(QKeyEvent *event);

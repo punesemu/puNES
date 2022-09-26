@@ -50,6 +50,7 @@
     <addaction name="action_Start_Stop_Audio_recording"/>
     <addaction name="action_Start_Stop_Video_recording"/>
     <addaction name="separator"/>
+    <addaction name="action_Open_config_folder"/>
     <addaction name="action_Open_working_folder"/>
     <addaction name="separator"/>
     <addaction name="action_Quit"/>
@@ -722,6 +723,15 @@
    </property>
    <property name="text">
     <string>Shout into &amp;Microphone</string>
+   </property>
+  </action>
+  <action name="action_Open_config_folder">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/preferences_other.svg</normaloff>:/icon/icons/preferences_other.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open config folder</string>
    </property>
   </action>
  </widget>

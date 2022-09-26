@@ -56,7 +56,7 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 	connect(tableWidget_Cheats, SIGNAL(itemSelectionChanged()), this, SLOT(s_cheat_item()));
 	connect(tableWidget_Cheats->model(),
 		SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)),
-		this, SLOT(s_table_data_changed(const QModelIndex &, const QModelIndex &, const QVector<int> & )));
+		this, SLOT(s_table_data_changed(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
 	connect(tableWidget_Cheats->model(),
 		SIGNAL(layoutChanged(const QList<QPersistentModelIndex> &, QAbstractItemModel::LayoutChangeHint)), this,
 		SLOT(s_table_layout_changed(const QList<QPersistentModelIndex> &, QAbstractItemModel::LayoutChangeHint)));
@@ -106,8 +106,11 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 
 	hexSpinBox_Address = new hexSpinBox(this, 4);
 	hexSpinBox_Address->setRange(0, 0xFFFF);
+	hexSpinBox_Address->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 	hexSpinBox_Value = new hexSpinBox(this, 2);
+	hexSpinBox_Value->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 	hexSpinBox_Compare = new hexSpinBox(this, 2);
+	hexSpinBox_Compare->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
 	gridLayout_Raw_Value->addWidget(hexSpinBox_Address, 0, 1);
 	gridLayout_Raw_Value->addWidget(hexSpinBox_Value, 1, 1);
@@ -140,9 +143,9 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 	{
 		int w = QLabel("0000000000").sizeHint().width() + 10;
 
-		lineEdit_CPU_Ram->setFixedWidth(w);
-		lineEdit_GG->setFixedWidth(w);
-		lineEdit_ProAR->setFixedWidth(w);
+		lineEdit_CPU_Ram->setMinimumWidth(w);
+		lineEdit_GG->setMinimumWidth(w);
+		lineEdit_ProAR->setMinimumWidth(w);
 	}
 
 	installEventFilter(this);

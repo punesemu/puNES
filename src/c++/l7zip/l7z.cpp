@@ -339,7 +339,7 @@ BYTE l7z_extract_from_archive(_uncompress_archive *archive, uint32_t selected, B
 	wcstombs((char *)file, item->GetFullPath().c_str(), sizeof(file) - 1);
 #endif
 	gui_utf_basename(file, basename, usizeof(basename));
-	usnprintf(file, usizeof(file), uL("" uPs("") TMP_FOLDER "/" uPs("")), info.base_folder, basename);
+	usnprintf(file, usizeof(file), uL("" uPs("") "/" uPs("")), gui_temp_folder(), basename);
 
 	{
 		out_stream o_stream(file);

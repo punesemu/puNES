@@ -136,32 +136,20 @@
          <property name="text">
           <string>Code</string>
          </property>
-         <property name="textAlignment">
-          <set>AlignCenter</set>
-         </property>
         </column>
         <column>
          <property name="text">
           <string>Address</string>
-         </property>
-         <property name="textAlignment">
-          <set>AlignCenter</set>
          </property>
         </column>
         <column>
          <property name="text">
           <string>Value</string>
          </property>
-         <property name="textAlignment">
-          <set>AlignCenter</set>
-         </property>
         </column>
         <column>
          <property name="text">
           <string>Compare</string>
-         </property>
-         <property name="textAlignment">
-          <set>AlignCenter</set>
          </property>
         </column>
        </widget>
@@ -362,6 +350,12 @@
             <layout class="QGridLayout" name="gridLayout_Type_Cheat">
              <item row="2" column="0">
               <widget class="QLabel" name="label_color_ProAR">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>10</width>
@@ -383,7 +377,7 @@
              <item row="1" column="2">
               <widget class="QLineEdit" name="lineEdit_GG">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -395,6 +389,12 @@
              </item>
              <item row="0" column="0">
               <widget class="QLabel" name="label_color_CPU_Ram">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>10</width>
@@ -416,7 +416,7 @@
              <item row="2" column="2">
               <widget class="QLineEdit" name="lineEdit_ProAR">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -439,7 +439,7 @@
                 <bool>false</bool>
                </property>
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -457,6 +457,12 @@
              </item>
              <item row="1" column="0">
               <widget class="QLabel" name="label_color_GG">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>10</width>
@@ -513,7 +519,7 @@
           </layout>
          </widget>
         </item>
-        <item row="1" column="2">
+        <item row="2" column="0" colspan="2">
          <widget class="QFrame" name="frame_Buttons">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -541,34 +547,8 @@
             <number>6</number>
            </property>
            <item>
-            <layout class="QGridLayout" name="gridLayout_Edit_Buttons">
-             <item row="1" column="0">
-              <widget class="QPushButton" name="pushButton_New_Cheat_GG">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>New Game Genie</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QPushButton" name="pushButton_New_Cheat_ProAR">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>New Pro Action</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout_Edit_Buttons">
+             <item>
               <widget class="QPushButton" name="pushButton_New_Cheat">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -581,12 +561,38 @@
                </property>
               </widget>
              </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_New_Cheat_ProAR">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>New Pro Action</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_New_Cheat_GG">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>New Game Genie</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
           </layout>
          </widget>
         </item>
-        <item row="0" column="0" colspan="3">
+        <item row="0" column="0" colspan="2">
          <layout class="QHBoxLayout" name="horizontalLayout_Description">
           <item>
            <widget class="QLabel" name="label_Description">
@@ -600,7 +606,7 @@
           </item>
          </layout>
         </item>
-        <item row="2" column="0" colspan="3">
+        <item row="3" column="0" colspan="2">
          <layout class="QHBoxLayout" name="horizontalLayout_Submit_Cancel">
           <item>
            <widget class="QPushButton" name="pushButton_Submit_Cheat">

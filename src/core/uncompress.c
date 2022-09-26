@@ -362,7 +362,7 @@ static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t s
 
 	mz_zip_reader_get_filename(&mzarchive, aitem->index, file, sizeof(file));
 
-	snprintf(file, sizeof(file), "%s" TMP_FOLDER "/%s", info.base_folder, basename(file));
+	snprintf(file, sizeof(file), "%s/%s", gui_temp_folder(), basename(file));
 
 	if (!mz_zip_reader_extract_to_file(&mzarchive, aitem->index, file, 0)) {
 		fprintf(stderr, "unzip file failed!\n");

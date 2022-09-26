@@ -38,8 +38,12 @@ typedef wchar_t uTCHAR;
 #define uPTCHAR(string) (wchar_t *)string
 
 #define usizeof(string) LENGTH(string)
+
 #define uQString QString::fromWCharArray
 #define uQStringCD(string) uPTCHAR(string.constData())
+
+#define uQByteArrayFromString(string) QByteArray((const char *)string.utf16(), (string.length() + 1) * 2)
+#define uQByteArrayCD(string) uPTCHAR(string.constData())
 
 #define uvsnprintf vswprintf
 #define umemset wmemset
@@ -82,8 +86,12 @@ typedef char uTCHAR;
 #define uPTCHAR(string) (char *)string
 
 #define usizeof(string) sizeof(string)
+
 #define uQString QString::fromUtf8
 #define uQStringCD(string) uPTCHAR(string.toUtf8().constData())
+
+#define uQByteArrayFromString(string) string.toUtf8()
+#define uQByteArrayCD(string) uPTCHAR(string.constData())
 
 #define uvsnprintf vsnprintf
 #define umemset memset

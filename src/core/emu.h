@@ -50,10 +50,6 @@ EXTERNC void emu_ctrl_doublebuffer(void);
 EXTERNC void emu_frame_input_and_rewind(void);
 EXTERNC void emu_info_rom(void);
 
-#if defined (__unix__)
-EXTERNC BYTE emu_find_tmp_dir(void);
-#endif
-
 #undef EXTERNC
 
 #endif /* EMU_H_ */

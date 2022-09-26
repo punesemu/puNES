@@ -126,14 +126,10 @@ enum _overlay_info_alignment {
 
 typedef struct _gui {
 #if defined (_WIN32)
-	uTCHAR home[MAX_PATH];
-	const uTCHAR *ostmp;
 	DWORD version_os;
 	double frequency;
 	uint64_t counter_start;
 #else
-	const uTCHAR *home;
-	const uTCHAR *ostmp;
 	struct timeval counterStart;
 #endif
 	uTCHAR last_open_path[LENGTH_FILE_NAME_MAX];
@@ -177,11 +173,17 @@ extern double (*gui_get_ms)(void);
 #define EXTERNC
 #endif
 
-EXTERNC void gui_init(int *argc, char **argv);
+EXTERNC BYTE gui_init(int *argc, char **argv);
 EXTERNC void gui_quit(void);
 EXTERNC BYTE gui_control_instance(void);
 EXTERNC BYTE gui_create(void);
 EXTERNC void gui_start(void);
+
+EXTERNC const uTCHAR *gui_home_folder(void);
+EXTERNC const uTCHAR *gui_application_folder(void);
+EXTERNC const uTCHAR *gui_config_folder(void);
+EXTERNC const uTCHAR *gui_data_folder(void);
+EXTERNC const uTCHAR *gui_temp_folder(void);
 
 EXTERNC double gui_device_pixel_ratio(void);
 EXTERNC void gui_set_window_size(void);
@@ -302,7 +304,6 @@ EXTERNC int gui_utf_strcasecmp(uTCHAR *s0, uTCHAR *s1);
 
 EXTERNC unsigned int gui_hardware_concurrency(void);
 
-EXTERNC void gui_init_os(void);
 EXTERNC void gui_sleep(double ms);
 #if defined (_WIN32)
 EXTERNC HWND gui_screen_id(void);

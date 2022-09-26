@@ -32,16 +32,22 @@ typedef signed int SDBWORD;
 #define FHMAX(a, b) (((a) > (b)) ? (a) : (b))
 #define FHMIN(a, b) (((a) < (b)) ? (a) : (b))
 
-#define BIOS_FOLDER    "/bios"
-#define DIFF_FOLDER    "/diff"
+#define CFGFILENAME "/puNES.cfg"
+#define INPFILENAME "/input.cfg"
+#define RECENTFILENAME "/recent.cfg"
+
+#define CHEAT_FOLDER   "/cheat"
 #define PERGAME_FOLDER "/pgs"
 #define SHDPAR_FOLDER  "/shp"
-#define SAVE_FOLDER    "/save"
-#define TMP_FOLDER     "/tmp"
-#define PRB_FOLDER     "/prb"
-#define CHEAT_FOLDER   "/cheat"
-#define SCRSHT_FOLDER  "/screenshot"
 #define JSC_FOLDER     "/jsc"
+
+#define BIOS_FOLDER    "/bios"
+#define DIFF_FOLDER    "/diff"
+#define PRB_FOLDER     "/prb"
+#define SAVE_FOLDER    "/save"
+#define SCRSHT_FOLDER  "/screenshot"
+
+#define TMP_FOLDER     "/tmp"
 
 #if !defined (FALSE)
 enum false_value { FALSE, TRUE };
