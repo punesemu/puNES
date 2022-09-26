@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='utf-8'?>
+<component type="desktop">
+  <!--Created with jdAppdataEdit 5.0-->
+  <id>com.github.punesemu.puNES</id>
+  <name>puNES</name>
+  <summary>Nintendo Entertaiment System emulator</summary>
+  <developer_name>punesemu</developer_name>
+  <launchable type="desktop-id">com.github.punesemu.puNES.desktop</launchable>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0</project_license>
+  <description>
+    <p>Qt-based Nintendo Entertaiment System emulator and NSF/NSFe Music Player</p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <caption>puNES main window</caption>
+      <image type="source">https://user-images.githubusercontent.com/14859058/153704977-bacb2e1a-7394-49f0-b29a-f1700d1e1991.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>puNES NSFE Player</caption>
+      <image type="source">https://user-images.githubusercontent.com/14859058/142155318-22d86ae5-3a3f-486a-8ae8-e78c8eeabb2f.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>puNES Slot Preview</caption>
+      <image type="source">https://user-images.githubusercontent.com/14859058/153705022-299874d6-e2f6-4a50-a394-a91cefe150a9.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>puNES General Settings</caption>
+      <image type="source">https://user-images.githubusercontent.com/14859058/135748722-ea73e6b3-db6b-4cf2-b13d-755ca4824975.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>puNES Video Filters Settings</caption>
+      <image type="source">https://user-images.githubusercontent.com/14859058/140854472-60a88023-e719-4637-9289-08991a367ddd.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Cheat Editor</caption>
+      <image type="source">https://user-images.githubusercontent.com/14859058/135748586-fe41d0d1-18d0-4c14-b7c4-4d6deacb4fbb.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>puNES Xbox360 Standard Controller Settings</caption>
+      <image type="source">https://user-images.githubusercontent.com/14859058/146680023-2c40f991-67d2-4502-963f-39c8b5bfc4ca.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>puNES PS4 Standard Controller Settings</caption>
+      <image type="source">https://user-images.githubusercontent.com/14859058/146680033-5fc36150-c52f-494a-ba5c-9d7d675e43d6.png</image>
+    </screenshot>
+  </screenshots>
+  <releases>
+    <release version="v0.109" date="2022-02-12" type="stable">
+      <url>https://github.com/punesemu/puNES/releases/tag/v0.109</url>
+    </release>
+    <release version="v0.108" date="2021-12-28" type="stable">
+      <url>https://github.com/punesemu/puNES/releases/tag/v0.108</url>
+    </release>
+    <release version="v0.107" date="2020-12-28" type="stable">
+      <url>https://github.com/punesemu/puNES/releases/tag/v0.107</url>
+    </release>
+    <release version="v0.106" date="2020-07-28" type="stable">
+      <url>https://github.com/punesemu/puNES/releases/tag/v0.106</url>
+    </release>
+    <release version="v0.105" date="2019-07-30" type="stable">
+      <url>https://github.com/punesemu/puNES/releases/tag/v0.105</url>
+    </release>
+    <release version="v0.104" date="2019-03-24" type="stable">
+      <url>https://github.com/punesemu/puNES/releases/tag/v0.104</url>
+    </release>
+    <release version="v0.103" date="2019-01-13" type="stable">
+      <url>https://github.com/punesemu/puNES/releases/tag/v0.103</url>
+    </release>
+    <release version="v0.102" date="2017-11-28" type="stable">
+      <url>https://github.com/punesemu/puNES/releases/tag/v0.102</url>
+    </release>
+    <release version="v0.101" date="2017-11-13" type="stable">
+      <url>https://github.com/punesemu/puNES/releases/tag/v0.101</url>
+    </release>
+    <release version="v0.100" date="2017-11-13" type="stable">
+      <url>https://github.com/punesemu/puNES/releases/tag/v0.100</url>
+    </release>
+    <release version="v0.99" date="2016-04-12" type="stable">
+      <url>https://github.com/punesemu/puNES/releases/tag/v0.99</url>
+    </release>
+    <release version="v0.98" date="2016-04-12" type="stable">
+      <url>https://github.com/punesemu/puNES/releases/tag/v0.98</url>
+    </release>
+  </releases>
+  <url type="homepage">https://github.com/punesemu/puNES</url>
+  <url type="bugtracker">https://github.com/punesemu/puNES/issues</url>
+  <url type="donation">https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=QPPXNRL5NAHDC</url>
+  <categories>
+    <category>Game</category>
+    <category>Emulator</category>
+    <category>Qt</category>
+  </categories>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>gamepad</control>
+  </supports>
+  <content_rating type="oars-1.1"/>
+  <provides>
+    <binary>punes</binary>
+    <mediatype>application/x-nes</mediatype>
+    <mediatype>application/x-nes-rom</mediatype>
+  </provides>
+</component>
