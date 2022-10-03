@@ -40,6 +40,7 @@ class mainApplication : public SingleApplication {
 
 	private:
 		QKeySequence key_sequence_from_key_event(QKeyEvent *event);
+		bool is_set_inp_shortcut(QEvent *event, int set_inp);
 		bool dlgkeyb_event(QEvent *event);
 		bool shortcut_override_event(QEvent *event);
 		bool key_release_event(QEvent *event);
