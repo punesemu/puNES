@@ -153,6 +153,9 @@ QKeySequence mainApplication::key_sequence_from_key_event(QKeyEvent *event) {
 	int key = event->key();
 	QKeySequence ks;
 
+	if (modifiers & Qt::KeypadModifier) {
+		modifiers &= ~Qt::KeypadModifier;
+	}
 	if ((key >= Qt::Key_Shift) && (key <= Qt::Key_Alt)) {
 	    key = 0;
 	}
