@@ -72,8 +72,6 @@ wdgRewind::wdgRewind(QWidget *parent) : QWidget(parent) {
 
 		setStyleSheet(style);
 	}
-
-	setFixedWidth(sizeHint().width());
 }
 wdgRewind::~wdgRewind() {}
 
