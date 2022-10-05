@@ -153,10 +153,17 @@ QKeySequence mainApplication::key_sequence_from_key_event(QKeyEvent *event) {
 	int key = event->key();
 	QKeySequence ks;
 
+	if (modifiers & Qt::KeypadModifier) {
+		modifiers &= ~Qt::KeypadModifier;
+	}
 	if ((key >= Qt::Key_Shift) && (key <= Qt::Key_Alt)) {
 	    key = 0;
 	}
 	return (QKeySequence(modifiers ? modifiers : key, modifiers ? key : 0).toString().remove(", "));
+}
+bool mainApplication::is_set_inp_shortcut(QEvent *event, int set_inp) {
+	return (!mainwin->shortcut[set_inp]->key().isEmpty() &&
+		(key_sequence_from_key_event((QKeyEvent *)event) == mainwin->shortcut[set_inp]->key()));
 }
 bool mainApplication::dlgkeyb_event(QEvent *event) {
 	// il resto degli eventi
@@ -168,12 +175,12 @@ bool mainApplication::dlgkeyb_event(QEvent *event) {
 bool mainApplication::shortcut_override_event(QEvent *event) {
 	if (!dlgkeyb_event(event)) {
 		// shortcut attivi finche' il tasto della tastiera e' premuto
-		if (key_sequence_from_key_event((QKeyEvent *)event) == mainwin->shortcut[SET_INP_SC_SHOUT_INTO_MIC]->key()) {
+		if (is_set_inp_shortcut(event, SET_INP_SC_SHOUT_INTO_MIC)) {
 			if (!((QKeyEvent *)event)->isAutoRepeat()) {
 				mainwin->shout_into_mic(PRESSED);
 			}
 			return (true);
-		} else if (key_sequence_from_key_event((QKeyEvent *)event) == mainwin->shortcut[SET_INP_SC_HOLD_FAST_FORWARD]->key()) {
+		} else if (is_set_inp_shortcut(event, SET_INP_SC_HOLD_FAST_FORWARD)) {
 			if (!((QKeyEvent *)event)->isAutoRepeat()) {
 				mainwin->hold_fast_forward(TRUE);
 			}
@@ -186,12 +193,12 @@ bool mainApplication::shortcut_override_event(QEvent *event) {
 bool mainApplication::key_release_event(QEvent *event) {
 	if (!dlgkeyb_event(event)) {
 		// shortcut attivi finche' il tasto della tastiera e' premuto
-		if (key_sequence_from_key_event((QKeyEvent *)event) == mainwin->shortcut[SET_INP_SC_SHOUT_INTO_MIC]->key()) {
+		if (is_set_inp_shortcut(event, SET_INP_SC_SHOUT_INTO_MIC)) {
 			if (!((QKeyEvent *)event)->isAutoRepeat()) {
 				mainwin->shout_into_mic(RELEASED);
 			}
 			return (true);
-		} else if (key_sequence_from_key_event((QKeyEvent *)event) == mainwin->shortcut[SET_INP_SC_HOLD_FAST_FORWARD]->key()) {
+		} else if (is_set_inp_shortcut(event, SET_INP_SC_HOLD_FAST_FORWARD)) {
 			if (!((QKeyEvent *)event)->isAutoRepeat()) {
 				mainwin->hold_fast_forward(FALSE);
 			}

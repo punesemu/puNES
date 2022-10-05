@@ -936,7 +936,7 @@ void mainWindow::connect_shortcut(QAction *action, int index) {
 	if (sc->isEmpty() == false) {
 		QStringList text = action->text().split('\t');
 
-		action->setShortcut(QKeySequence((*sc)));
+		action->setShortcut(sc->compare("NULL") ? QKeySequence((*sc)) : 0);
 		action_text(action, text.at(0), sc);
 	}
 }
@@ -947,7 +947,7 @@ void mainWindow::connect_shortcut(QAction *action, int index, const char *member
 		QStringList text = action->text().split('\t');
 		QVariant value = action->property("myValue");
 
-		shortcut[index]->setKey(QKeySequence((*sc)));
+		shortcut[index]->setKey(sc->compare("NULL") ? QKeySequence((*sc)) : 0);
 		if (!value.isNull()) {
 			shortcut[index]->setProperty("myValue", value);
 		}
