@@ -686,6 +686,7 @@ void dlgStdPad::s_discard_clicked(UNUSED(bool checked)) {
 void dlgStdPad::s_et_update_joy_combo(void) {
 	// se la combox e' aperta o sto configurando i pulsanti, non devo aggiornarne il contenuto
 	if ((comboBox_joy_ID->view()->isVisible() == false) &&
+		(data.no_other_buttons == false) &&
 		(data.seq.timer->isActive() == false) &&
 		(data.joy.timer->isActive() == false)) {
 		joy_combo_init();
