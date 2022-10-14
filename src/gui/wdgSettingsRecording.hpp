@@ -21,7 +21,7 @@
 
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QFileDialog>
-#include "wdgSettingsRecording.hh"
+#include "ui_wdgSettingsRecording.h"
 
 class wdgSettingsRecording : public QWidget, public Ui::wdgSettingsRecording {
 	Q_OBJECT

@@ -20,7 +20,7 @@
 #define WDGNTSCFILTER_HPP_
 
 #include <QtWidgets/QWidget>
-#include "wdgNTSCFilter.hh"
+#include "ui_wdgNTSCFilter.h"
 
 class wdgNTSCFilter : public QWidget, public Ui::wdgNTSCFilter {
 	Q_OBJECT

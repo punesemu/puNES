@@ -20,7 +20,7 @@
 #define WDGSETTINGSGENERAL_HPP_
 
 #include <QtWidgets/QWidget>
-#include "wdgSettingsGeneral.hh"
+#include "ui_wdgSettingsGeneral.h"
 
 class wdgSettingsGeneral : public QWidget, public Ui::wdgSettingsGeneral {
 	Q_OBJECT

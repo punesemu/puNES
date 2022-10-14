@@ -20,7 +20,7 @@
 #define WDGSETTINGSCHEATS_HPP_
 
 #include <QtWidgets/QWidget>
-#include "wdgSettingsCheats.hh"
+#include "ui_wdgSettingsCheats.h"
 
 class wdgSettingsCheats : public QWidget, public Ui::wdgSettingsCheats {
 	Q_OBJECT

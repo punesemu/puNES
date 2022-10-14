@@ -34,7 +34,7 @@
 #include <QtWidgets/QErrorMessage>
 #include <QtCore/QBuffer>
 #include <libgen.h>
-#include "mainWindow.moc"
+#include "mainWindow.hpp"
 #include "extra/singleapplication/singleapplication.h"
 #include "dlgSettings.hpp"
 #include "dlgJsc.hpp"

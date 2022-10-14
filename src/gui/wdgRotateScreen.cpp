@@ -19,7 +19,7 @@
 #include <QtWidgets/QStyleOption>
 #include <QtWidgets/QStylePainter>
 #include <QtWidgets/QCommonStyle>
-#include "wdgRotateScreen.moc"
+#include "wdgRotateScreen.hpp"
 #include "wdgToolBar.hpp"
 #include "mainWindow.hpp"
 #include "conf.h"

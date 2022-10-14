@@ -21,7 +21,7 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QButtonGroup>
-#include "wdgCheatsEditor.moc"
+#include "wdgCheatsEditor.hpp"
 #include "mainWindow.hpp"
 #include "objCheat.hpp"
 #include "conf.h"

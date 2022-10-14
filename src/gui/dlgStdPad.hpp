@@ -61,7 +61,7 @@ class pixmapButton: public QPushButton {
 		void setPixmap(const QPixmap &pixmap);
 };
 
-#include "dlgStdPad.hh"
+#include "ui_dlgStdPad.h"
 
 class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 	Q_OBJECT

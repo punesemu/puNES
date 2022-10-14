@@ -24,7 +24,7 @@
 #include <QtWidgets/QGraphicsItem>
 #include <time.h>
 #include <math.h>
-#include "wdgOverlayUi.moc"
+#include "wdgOverlayUi.hpp"
 #include "mainWindow.hpp"
 #include "fps.h"
 #include "tas.h"

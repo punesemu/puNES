@@ -20,7 +20,7 @@
 #define WDGSETTINGSVIDEO_HPP_
 
 #include <QtWidgets/QWidget>
-#include "wdgSettingsVideo.hh"
+#include "ui_wdgSettingsVideo.h"
 
 class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 	Q_OBJECT

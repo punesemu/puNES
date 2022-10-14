@@ -122,7 +122,7 @@ class wdgHtmlName : public QLineEdit {
 		void focusOutEvent(QFocusEvent *event);
 };
 
-#include "wdgPaletteEditor.hh"
+#include "ui_wdgPaletteEditor.h"
 
 class wdgPaletteEditor : public QWidget, public Ui::wdgPaletteEditor {
 	Q_OBJECT

@@ -24,7 +24,7 @@
 #if defined (WITH_OPENGL)
 #include "opengl.h"
 #endif
-#include "wdgScreen.moc"
+#include "wdgScreen.hpp"
 #include "mainWindow.hpp"
 #include "objSettings.hpp"
 #include "dlgKeyboard.hpp"

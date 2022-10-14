@@ -20,7 +20,7 @@
 #define DLGUNCOMP_HPP_
 
 #include <QtWidgets/QDialog>
-#include "dlgUncomp.hh"
+#include "ui_dlgUncomp.h"
 #include "common.h"
 #include "uncompress.h"
 

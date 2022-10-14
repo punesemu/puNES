@@ -17,7 +17,7 @@
  */
 
 #include <QtWidgets/QToolTip>
-#include "wdgState.moc"
+#include "wdgState.hpp"
 #include "wdgToolBar.hpp"
 #include "mainWindow.hpp"
 #include "save_slot.h"

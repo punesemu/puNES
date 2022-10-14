@@ -23,7 +23,7 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QStatusBar>
-#include "mainWindow.hh"
+#include "ui_mainWindow.h"
 #include "common.h"
 
 class infoStatusBar : public QWidget {

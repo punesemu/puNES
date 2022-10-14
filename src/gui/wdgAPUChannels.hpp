@@ -20,7 +20,7 @@
 #define WDGAPUCHANNELS_HPP_
 
 #include <QtWidgets/QWidget>
-#include "wdgAPUChannels.hh"
+#include "ui_wdgAPUChannels.h"
 
 class wdgAPUChannels : public QWidget, public Ui::wdgAPUChannels {
 	Q_OBJECT

@@ -35,7 +35,7 @@
 #include <QtGui/QValidator>
 #include "settings.h"
 #include "os_jstick.h"
-#include "mainWindow.hh"
+#include "ui_mainWindow.h"
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"
 #include "wdgToolBar.hpp"

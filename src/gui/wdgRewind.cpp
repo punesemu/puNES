@@ -18,7 +18,7 @@
 
 #include <QtWidgets/QStyleOption>
 #include <QtGui/QPainter>
-#include "wdgRewind.moc"
+#include "wdgRewind.hpp"
 #include "wdgToolBar.hpp"
 #include "rewind.h"
 #include "video/gfx.h"

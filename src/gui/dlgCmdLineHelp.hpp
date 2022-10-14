@@ -20,7 +20,7 @@
 #define DLGCMDLINEHELP_HPP_
 
 #include <QtWidgets/QDialog>
-#include "dlgCmdLineHelp.hh"
+#include "ui_dlgCmdLineHelp.h"
 #include "common.h"
 
 class dlgCmdLineHelp : public QDialog, public Ui::dlgCmdLineHelp {
