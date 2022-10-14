@@ -20,7 +20,7 @@
 #define WDGSETTINGSAUDIO_HPP_
 
 #include <QtWidgets/QWidget>
-#include "wdgSettingsAudio.hh"
+#include "ui_wdgSettingsAudio.h"
 
 class wdgSettingsAudio : public QWidget, public Ui::wdgSettingsAudio {
 	Q_OBJECT

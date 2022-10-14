@@ -20,7 +20,7 @@
 #include <QtSvg/QSvgRenderer>
 #include <QtGui/QPainter>
 #include <QtCore/QBuffer>
-#include "dlgStdPad.moc"
+#include "dlgStdPad.hpp"
 #include "mainWindow.hpp"
 #include "objSettings.hpp"
 #include "clock.h"

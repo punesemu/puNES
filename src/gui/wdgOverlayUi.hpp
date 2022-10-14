@@ -439,7 +439,7 @@ class overlayWidgetInfo : public overlayWidget {
 		void s_fade_out_finished(void);
 };
 
-#include "wdgOverlayUi.hh"
+#include "ui_wdgOverlayUi.h"
 
 class wdgOverlayUi : public QWidget, public Ui::wdgOverlayUi {
 	Q_OBJECT

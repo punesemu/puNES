@@ -21,7 +21,7 @@
 
 #include <QtWidgets/QWidget>
 #include <QtCore/QTimer>
-#include "wdgRewind.hh"
+#include "ui_wdgRewind.h"
 #include "common.h"
 
 class wdgRewind : public QWidget, public Ui::wdgRewind {

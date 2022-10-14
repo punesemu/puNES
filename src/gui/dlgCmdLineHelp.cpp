@@ -16,7 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "dlgCmdLineHelp.moc"
+#include "dlgCmdLineHelp.hpp"
 #include "info.h"
 #include "settings.h"
 #include "cmd_line.h"

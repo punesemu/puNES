@@ -16,36 +16,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef DLGVSSYSTEM_HPP_
-#define DLGVSSYSTEM_HPP_
+#ifndef COMPILED_H_
+#define COMPILED_H_
 
-#include <QtWidgets/QDialog>
-#include "ui_dlgVsSystem.h"
+#define COMPILED "@COMPILED_TIMESTAMP@"
 
-class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
-	Q_OBJECT
+#define GIT_COUNT_COMMITS "@GIT_COUNT_COMMITS@"
+#define GIT_LAST_COMMIT "@GIT_LAST_COMMIT@"
+#define GIT_LAST_COMMIT_HASH "@GIT_LAST_COMMIT_HASH@"
 
-	public:
-		bool in_update;
-
-	public:
-		dlgVsSystem(QWidget *parent = 0);
-		~dlgVsSystem();
-
-	protected:
-		bool eventFilter(QObject *obj, QEvent *event);
-		void changeEvent(QEvent *event);
-
-	public:
-		int update_pos(int startY);
-		void update_dialog(void);
-		void insert_coin(int index);
-
-	private slots:
-		void s_coins_clicked(bool checked);
-		void s_ds_changed(int state);
-		void s_defaults_clicked(bool checked);
-		void s_x_clicked(bool checked);
-};
-
-#endif /* DLGVSSYSTEM_HPP_ */
+#endif

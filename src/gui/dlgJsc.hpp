@@ -21,7 +21,7 @@
 
 #include <QtWidgets/QDialog>
 #include <QtCore/QMutex>
-#include "dlgJsc.hh"
+#include "ui_dlgJsc.h"
 #include "jstick.h"
 
 class dlgJsc : public QDialog, public Ui::dlgJsc {

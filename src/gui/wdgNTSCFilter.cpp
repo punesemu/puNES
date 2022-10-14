@@ -17,7 +17,7 @@
  */
 
 #include <math.h>
-#include "wdgNTSCFilter.moc"
+#include "wdgNTSCFilter.hpp"
 #include "mainWindow.hpp"
 #include "video/filters/ntsc.h"
 #include "conf.h"

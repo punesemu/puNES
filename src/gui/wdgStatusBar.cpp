@@ -19,7 +19,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QEvent>
 #include <QtWidgets/QLabel>
-#include "wdgStatusBar.moc"
+#include "wdgStatusBar.hpp"
 #include "mainWindow.hpp"
 #include "dlgKeyboard.hpp"
 #include "conf.h"

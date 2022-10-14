@@ -197,7 +197,7 @@ class pasteObject : public QObject {
 
 // familyBasicKeyboard -----------------------------------------------------------------------------------------------------------
 
-#include "wdgKeyboardFB.hh"
+#include "ui_wdgKeyboardFB.h"
 
 class familyBasicKeyboard : public wdgKeyboard, public Ui::wdgKeyboardFB {
 	Q_OBJECT
@@ -227,7 +227,7 @@ class familyBasicKeyboard : public wdgKeyboard, public Ui::wdgKeyboardFB {
 
 // suborKeyboard -----------------------------------------------------------------------------------------------------------------
 
-#include "wdgKeyboardSubor.hh"
+#include "ui_wdgKeyboardSubor.h"
 
 class suborKeyboard : public wdgKeyboard, public Ui::wdgKeyboardSubor {
 	Q_OBJECT
@@ -250,7 +250,7 @@ class suborKeyboard : public wdgKeyboard, public Ui::wdgKeyboardSubor {
 
 // dlgCfgNSCode ------------------------------------------------------------------------------------------------------------------
 
-#include "dlgCfgNSCode.hh"
+#include "ui_dlgCfgNSCode.h"
 
 class dlgCfgNSCode : public QDialog, public Ui::dlgCfgNSCode {
 	Q_OBJECT
@@ -278,7 +278,7 @@ class dlgCfgNSCode : public QDialog, public Ui::dlgCfgNSCode {
 
 // dlgKeyboard -------------------------------------------------------------------------------------------------------------------
 
-#include "dlgKeyboard.hh"
+#include "ui_dlgKeyboard.h"
 
 class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 	Q_OBJECT

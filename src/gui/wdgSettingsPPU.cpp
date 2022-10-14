@@ -16,7 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "wdgSettingsPPU.moc"
+#include "wdgSettingsPPU.hpp"
 #include "mainWindow.hpp"
 #include "emu_thread.h"
 #include "tas.h"

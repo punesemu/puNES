@@ -19,7 +19,7 @@
 #include <QtCore/QTimer>
 #include <QtGui/QKeyEvent>
 #include <QtWidgets/QStylePainter>
-#include "dlgKeyboard.moc"
+#include "dlgKeyboard.hpp"
 #include "objSettings.hpp"
 #include "nscode.hpp"
 #include "mainWindow.hpp"

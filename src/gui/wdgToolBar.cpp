@@ -17,7 +17,7 @@
  */
 
 #include <QtCore/QEvent>
-#include "wdgToolBar.moc"
+#include "wdgToolBar.hpp"
 #include "mainWindow.hpp"
 #include "video/gfx.h"
 #include "save_slot.h"

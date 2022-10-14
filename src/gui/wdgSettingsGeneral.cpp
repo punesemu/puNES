@@ -17,7 +17,7 @@
  */
 
 #include <QtWidgets/QFileDialog>
-#include "wdgSettingsGeneral.moc"
+#include "wdgSettingsGeneral.hpp"
 #include "mainWindow.hpp"
 #include "emu.h"
 #include "emu_thread.h"

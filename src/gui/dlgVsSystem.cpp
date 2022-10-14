@@ -17,7 +17,7 @@
  */
 
 #include <QtGui/QScreen>
-#include "dlgVsSystem.moc"
+#include "dlgVsSystem.hpp"
 #include "mainWindow.hpp"
 #include "dlgSettings.hpp"
 #include "vs_system.h"

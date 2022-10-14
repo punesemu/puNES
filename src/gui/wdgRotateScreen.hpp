@@ -20,7 +20,7 @@
 #define WDGROTATESCREEN_HPP_
 
 #include <QtWidgets/QWidget>
-#include "wdgRotateScreen.hh"
+#include "ui_wdgRotateScreen.h"
 
 class wdgRotateScreen : public QWidget, public Ui::wdgRotateScreen {
 	Q_OBJECT
