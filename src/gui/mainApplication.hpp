@@ -20,6 +20,7 @@
 #define MAINAPPLICATION_HPP_
 
 #include <QtCore/QDir>
+#include <QtGui/QKeyEvent>
 #include "extra/singleapplication/singleapplication.h"
 #include "common.h"
 

@@ -12,7 +12,8 @@ bin_PROGRAMS = punes
 
 punes_SOURCES = \
 	core/main.c \
-	gui/resources.cpp \
+	gui/qrc_resources.cpp \
+	gui/qrc_translations.cpp \
 	core/palette.c \
 	$(ico_stuff)
 
