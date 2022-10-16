@@ -159,7 +159,9 @@ mainWindow::mainWindow() : QMainWindow() {
 
 	// qaction esterni
 	qaction_extern.max_speed.start = new actionOneTrigger(this);
+	qaction_extern.max_speed.start->setObjectName("max_speed.start");
 	qaction_extern.max_speed.stop = new actionOneTrigger(this);
+	qaction_extern.max_speed.stop->setObjectName("max_speed.stop");
 
 	{
 		QActionGroup *grp;
@@ -1603,7 +1605,6 @@ void mainWindow::s_fast_forward(void) {
 	}
 }
 void mainWindow::s_max_speed_start(void) {
-	qaction_extern.max_speed.start->reset_count();
 	if (fps.max_speed == TRUE) {
 		return;
 	}
@@ -1613,7 +1614,6 @@ void mainWindow::s_max_speed_start(void) {
 	emu_thread_continue();
 }
 void mainWindow::s_max_speed_stop(void) {
-	qaction_extern.max_speed.stop->reset_count();
 	if (fps.max_speed == FALSE) {
 		return;
 	}
@@ -1928,13 +1928,7 @@ void mainWindow::s_help(void) {
 	text.append("<center><h4>[<font color='#800000'>Commit " + QString(GIT_COUNT_COMMITS) + "</font> " + "<a href=\"https://github.com/punesemu/puNES/commit/" + QString(GIT_LAST_COMMIT_HASH) + "\">" + QString(GIT_LAST_COMMIT) + "</a>]</h4></center>");
 #endif
 	text.append("<center>" + tr("Nintendo Entertainment System Emulator") + "</center>");
-
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-	text.append("<center>" + tr("Compiled") + " " + compiled.toString(Qt::DefaultLocaleShortDate) + " (" + QString(ENVIRONMENT));
-#else
 	text.append("<center>" + tr("Compiled") + " " + QLocale().toString(compiled, QLocale::ShortFormat) + " (" + QString(ENVIRONMENT));
-#endif
-
 
 #if defined (WITH_OPENGL)
 	text.append(", OpenGL)</center>");
@@ -2416,6 +2410,7 @@ void actionOneTrigger::only_one_trigger(void) {
 	mutex.lock();
 	if (count++ == 0) {
 		trigger();
+		count--;
 	}
 	mutex.unlock();
 }
