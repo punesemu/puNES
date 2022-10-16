@@ -366,7 +366,11 @@ void dlgKeyboard::replace_keyboard(wdgKeyboard *wk) {
 	delete (keyboard);
 	keyboard = wk;
 	keyboard->ext_setup();
-	comboBox_Size->setCurrentIndex(cfg_from_file.vk_size);
+	if (comboBox_Size->currentIndex() == cfg_from_file.vk_size) {
+		s_size_factor(cfg_from_file.vk_size);
+	} else {
+		comboBox_Size->setCurrentIndex(cfg_from_file.vk_size);
+	}
 	keyboard->show();
 }
 void dlgKeyboard::set_size_factor(double size_factor) {
