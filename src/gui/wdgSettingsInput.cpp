@@ -22,6 +22,7 @@
 #include "mainWindow.hpp"
 #include "dlgSettings.hpp"
 #include "dlgStdPad.hpp"
+#include "dlgKeyboard.hpp"
 #include "emu_thread.h"
 #include "conf.h"
 
@@ -638,6 +639,7 @@ void wdgSettingsInput::ports_end_misc_set_enabled(bool mode) {
 	comboBox_cp4->setEnabled(mode);
 	comboBox_exp->setEnabled(mode);
 
+	pushButton_ep->setEnabled(mode);
 	pushButton_cp1->setEnabled(mode);
 	pushButton_cp2->setEnabled(mode);
 	pushButton_cp3->setEnabled(mode);
@@ -708,6 +710,19 @@ void wdgSettingsInput::expansion_port_set(void) {
 			comboBox_exp->setEnabled(true);
 			break;
 	}
+
+	disconnect(pushButton_ep, SIGNAL(clicked(bool)), this, SLOT(s_expansion_port_setup(bool)));
+
+	switch (cfg->input.expansion) {
+		case CTRL_FAMILY_BASIC_KEYBOARD:
+			pushButton_ep->setEnabled(comboBox_exp->isEnabled());
+			//pb->setProperty("myPointer", QVariant::fromValue(((void *)ctrl_in)));
+			connect(pushButton_ep, SIGNAL(clicked(bool)), this, SLOT(s_expansion_port_setup(bool)));
+			break;
+		default:
+			pushButton_ep->setEnabled(false);
+			break;
+	}
 	icon_exp->setEnabled(comboBox_exp->isEnabled());
 	label_exp->setEnabled(comboBox_exp->isEnabled());
 }
@@ -742,13 +757,11 @@ void wdgSettingsInput::controller_ports_set(void) {
 			case CTRL_ZAPPER:
 			case CTRL_SNES_MOUSE:
 			case CTRL_ARKANOID_PADDLE:
-			case CTRL_FAMILY_BASIC_KEYBOARD:
 			default:
 				pb->setEnabled(false);
 				break;
 			case CTRL_STANDARD:
 				pb->setEnabled(true);
-				pb->setProperty("myPointer", QVariant::fromValue(((void *)ctrl_in)));
 				connect(pb, SIGNAL(clicked(bool)), this, SLOT(s_controller_port_setup(bool)));
 				break;
 		}
@@ -863,6 +876,19 @@ void wdgSettingsInput::s_expansion_port(int index) {
 	input_init(SET_CURSOR);
 	emu_thread_continue();
 	update_widget();
+}
+void wdgSettingsInput::s_expansion_port_setup(UNUSED(bool checked)) {
+	switch (cfg->input.expansion) {
+		case CTRL_FAMILY_BASIC_KEYBOARD:
+			if (dlgkeyb->isHidden()) {
+				mainwin->open_dkeyb(dlgKeyboard::DK_SETUP);
+			} else {
+				dlgkeyb->switch_mode(dlgKeyboard::DK_SETUP);
+			}
+			break;
+		default:
+			break;
+	}
 }
 void wdgSettingsInput::s_controller_port(int index) {
 	QList<QVariant> type = ((QComboBox *)sender())->itemData(index).toList();

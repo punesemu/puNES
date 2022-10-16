@@ -37,6 +37,8 @@
 #include "input/oeka_kids_tablet.h"
 #include "input/family_basic_keyboard.h"
 
+INLINE static void input_init_generic_keyboard(void);
+
 #define SET_WR_REG(funct) input_wr_reg = funct
 #define SET_RD_REG(id, funct) input_rd_reg[id] = funct
 
@@ -50,6 +52,7 @@ _r4016 r4016;
 _port port[PORT_MAX];
 _port_funct port_funct[PORT_MAX];
 _nes_keyboard nes_keyboard;
+_generic_keyboard generic_keyboard;
 _mic mic;
 
 BYTE (*input_wr_reg)(BYTE value);
@@ -68,7 +71,7 @@ void input_init(BYTE set_cursor) {
 	input_init_arkanoid();
 	input_init_oeka_kids_tablet();
 	input_init_nsf_mouse();
-	input_init_family_basic_keyboard();
+	input_init_generic_keyboard();
 
 	memset(&mic, 0x00, sizeof(mic));
 
@@ -301,4 +304,8 @@ BYTE input_draw_target(void) {
 	}
 
 	return (FALSE);
+}
+
+INLINE static void input_init_generic_keyboard(void) {
+        memset(&generic_keyboard, 0x00, sizeof(generic_keyboard));
 }

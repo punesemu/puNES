@@ -153,6 +153,11 @@ class objInp : public objSettings {
 		static DBWORD kbd_keyval_decode(QKeyEvent *keyEvent);
 		void kbd_default(int button, _port *port, int index);
 		void kbd_defaults(_port *port, int index);
+		static QString nscode_to_name(const DBWORD value);
+		static DBWORD nscode_from_name(QString name);
+		DBWORD nes_keyboard_nscode(int index);
+		DBWORD nes_keyboard_nscode_default(int index);
+		void nes_keyboard_set_nscode(int index, DBWORD nscode);
 
 	private:
 		void kbd_rd(int index, int pIndex);
@@ -160,6 +165,7 @@ class objInp : public objSettings {
 		DBWORD _kbd_keyval_from_name(QString name);
 		DBWORD kbd_keyval_from_name(int index, QString name);
 		int kbd_keyval_to_int(int index);
+		int nes_keyboard_index(int index);
 
 	private:
 		void js_val_to_guid(int index, _input_guid *guid);

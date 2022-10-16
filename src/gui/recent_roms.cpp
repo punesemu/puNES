@@ -20,6 +20,9 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QtCore/QStringEncoder>
+#endif
 #include "recent_roms.h"
 #include "info.h"
 #include "conf.h"

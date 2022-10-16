@@ -276,7 +276,82 @@ enum inp_element {
 
 	SET_INP_CONTROLLER_MODE,
 	SET_INP_LEFTRIGHT,
-	SET_INP_HIDE_ZAPPER_CURSOR
+	SET_INP_HIDE_ZAPPER_CURSOR,
+
+	SET_INP_VK_SIZE,
+
+	SET_INP_FBK_0,
+	SET_INP_FBK_1,
+	SET_INP_FBK_2,
+	SET_INP_FBK_3,
+	SET_INP_FBK_4,
+	SET_INP_FBK_5,
+	SET_INP_FBK_6,
+	SET_INP_FBK_7,
+	SET_INP_FBK_8,
+	SET_INP_FBK_9,
+	SET_INP_FBK_10,
+	SET_INP_FBK_11,
+	SET_INP_FBK_12,
+	SET_INP_FBK_13,
+	SET_INP_FBK_14,
+	SET_INP_FBK_15,
+	SET_INP_FBK_16,
+	SET_INP_FBK_17,
+	SET_INP_FBK_18,
+	SET_INP_FBK_19,
+	SET_INP_FBK_20,
+	SET_INP_FBK_21,
+	SET_INP_FBK_22,
+	SET_INP_FBK_23,
+	SET_INP_FBK_24,
+	SET_INP_FBK_25,
+	SET_INP_FBK_26,
+	SET_INP_FBK_27,
+	SET_INP_FBK_28,
+	SET_INP_FBK_29,
+	SET_INP_FBK_30,
+	SET_INP_FBK_31,
+	SET_INP_FBK_32,
+	SET_INP_FBK_33,
+	SET_INP_FBK_34,
+	SET_INP_FBK_35,
+	SET_INP_FBK_36,
+	SET_INP_FBK_37,
+	SET_INP_FBK_38,
+	SET_INP_FBK_39,
+	SET_INP_FBK_40,
+	SET_INP_FBK_41,
+	SET_INP_FBK_42,
+	SET_INP_FBK_43,
+	SET_INP_FBK_44,
+	SET_INP_FBK_45,
+	SET_INP_FBK_46,
+	SET_INP_FBK_47,
+	SET_INP_FBK_48,
+	SET_INP_FBK_49,
+	SET_INP_FBK_50,
+	SET_INP_FBK_51,
+	SET_INP_FBK_52,
+	SET_INP_FBK_53,
+	SET_INP_FBK_54,
+	SET_INP_FBK_55,
+	SET_INP_FBK_56,
+	SET_INP_FBK_57,
+	SET_INP_FBK_58,
+	SET_INP_FBK_59,
+	SET_INP_FBK_60,
+	SET_INP_FBK_61,
+	SET_INP_FBK_62,
+	SET_INP_FBK_63,
+	SET_INP_FBK_64,
+	SET_INP_FBK_65,
+	SET_INP_FBK_66,
+	SET_INP_FBK_67,
+	SET_INP_FBK_68,
+	SET_INP_FBK_69,
+	SET_INP_FBK_70,
+	SET_INP_FBK_71
 };
 enum jsc_element {
 	SET_JSC_PAD_A,
@@ -577,6 +652,12 @@ static const _opt opt_pad_type[] = {
 	{NULL, uL("auto")    , CTRL_PAD_AUTO},
 	{NULL, uL("original"), CTRL_PAD_ORIGINAL},
 	{NULL, uL("3rdparty"), CTRL_PAD_3RD_PARTY}
+};
+static const _opt opt_vk_size[] = {
+	{NULL, uL("1.0x")    , VK_SIZE_10X},
+	{NULL, uL("1.5x")    , VK_SIZE_15X},
+	{NULL, uL("2.0x")    , VK_SIZE_20X},
+	{NULL, uL("2.5x")    , VK_SIZE_25X}
 };
 
 static const _settings main_cfg[] = {
@@ -1417,7 +1498,103 @@ static const _settings inp_cfg[] = {
 		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
-	}
+	},
+	{
+		uL("virtual keyboard"), uL("size"), uL("1.0x"),
+		uL("# possible values: 1.0x, 1.5x, 2.0x, 2.5x"),
+		NULL,
+		{LENGTH(opt_vk_size), opt_vk_size}
+	},
+	// Row 0 - Column 1
+	{uL("family basic keyboard"), uL("FBK 0"),   uL("NSCODE_F8"),           NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 1"),   uL("NSCODE_Return"),       NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 2"),   uL("NSCODE_BrkRight"),     NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 3"),   uL("NSCODE_Bckslsh"),      NULL, NULL, {0, NULL}},
+	// Row 0 - Column 1
+	{uL("family basic keyboard"), uL("FBK 4"),   uL("NSCODE_CapsLck"),      NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 5"),   uL("NSCODE_RShift"),       NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 6"),   uL("NSCODE_Home"),         NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 7"),   uL("NSCODE_End"),          NULL, NULL, {0, NULL}},
+	// Row 1 - Column 0
+	{uL("family basic keyboard"), uL("FBK 8"),   uL("NSCODE_F7"),           NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 9"),   uL("NSCODE_BrkLeft"),      NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 10"),  uL("NSCODE_Apstrph"),      NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 11"),  uL("NSCODE_Semicln"),      NULL, NULL, {0, NULL}},
+	// Row 1 - Column 1
+	{uL("family basic keyboard"), uL("FBK 12"),  uL("NSCODE_QtLeft"),       NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 13"),  uL("NSCODE_Slash"),        NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 14"),  uL("NSCODE_Minus"),        NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 15"),  uL("NSCODE_Equal"),        NULL, NULL, {0, NULL}},
+	// Row 2 - Column 0
+	{uL("family basic keyboard"), uL("FBK 16"),  uL("NSCODE_F6"),           NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 17"),  uL("NSCODE_O"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 18"),  uL("NSCODE_L"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 19"),  uL("NSCODE_K"),            NULL, NULL, {0, NULL}},
+	// Row 2 - Column 1
+	{uL("family basic keyboard"), uL("FBK 20"),  uL("NSCODE_Period"),       NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 21"),  uL("NSCODE_Comma"),        NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 22"),  uL("NSCODE_P"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 23"),  uL("NSCODE_0"),            NULL, NULL, {0, NULL}},
+	// Row 3 - Column 0
+	{uL("family basic keyboard"), uL("FBK 24"),  uL("NSCODE_F5"),           NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 25"),  uL("NSCODE_I"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 26"),  uL("NSCODE_U"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 27"),  uL("NSCODE_J"),            NULL, NULL, {0, NULL}},
+	// Row 3 - Column 1
+	{uL("family basic keyboard"), uL("FBK 28"),  uL("NSCODE_M"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 29"),  uL("NSCODE_N"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 30"),  uL("NSCODE_9"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 31"),  uL("NSCODE_8"),            NULL, NULL, {0, NULL}},
+	// Row 4 - Column 0
+	{uL("family basic keyboard"), uL("FBK 32"),  uL("NSCODE_F4"),           NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 33"),  uL("NSCODE_Y"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 34"),  uL("NSCODE_G"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 35"),  uL("NSCODE_H"),            NULL, NULL, {0, NULL}},
+	// Row 4 - Column 1
+	{uL("family basic keyboard"), uL("FBK 36"),  uL("NSCODE_B"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 37"),  uL("NSCODE_V"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 38"),  uL("NSCODE_7"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 39"),  uL("NSCODE_6"),            NULL, NULL, {0, NULL}},
+	// Row 5 - Column 0
+	{uL("family basic keyboard"), uL("FBK 40"),  uL("NSCODE_F3"),           NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 41"),  uL("NSCODE_T"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 42"),  uL("NSCODE_R"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 43"),  uL("NSCODE_D"),            NULL, NULL, {0, NULL}},
+	// Row 5 - Column 1
+	{uL("family basic keyboard"), uL("FBK 44"),  uL("NSCODE_F"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 45"),  uL("NSCODE_C"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 46"),  uL("NSCODE_5"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 47"),  uL("NSCODE_4"),            NULL, NULL, {0, NULL}},
+	// Row 6 - Column 0
+	{uL("family basic keyboard"), uL("FBK 48"),  uL("NSCODE_F2"),           NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 49"),  uL("NSCODE_W"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 50"),  uL("NSCODE_S"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 51"),  uL("NSCODE_A"),            NULL, NULL, {0, NULL}},
+	// Row 6 - Column 1
+	{uL("family basic keyboard"), uL("FBK 52"),  uL("NSCODE_X"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 53"),  uL("NSCODE_Z"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 54"),  uL("NSCODE_E"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 55"),  uL("NSCODE_3"),            NULL, NULL, {0, NULL}},
+	// Row 7 - Column 0
+	{uL("family basic keyboard"), uL("FBK 56"),  uL("NSCODE_F1"),           NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 57"),  uL("NSCODE_Escape"),       NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 58"),  uL("NSCODE_Q"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 59"),  uL("NSCODE_LCtrl"),        NULL, NULL, {0, NULL}},
+	// Row 7 - Column 1
+	{uL("family basic keyboard"), uL("FBK 60"),  uL("NSCODE_LShift"),       NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 61"),  uL("NSCODE_Alt"),          NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 62"),  uL("NSCODE_1"),            NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 63"),  uL("NSCODE_2"),            NULL, NULL, {0, NULL}},
+	// Row 8 - Column 0
+	{uL("family basic keyboard"), uL("FBK 64"),  uL("NSCODE_Delete"),       NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 65"),  uL("NSCODE_Up"),           NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 66"),  uL("NSCODE_Right"),        NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 67"),  uL("NSCODE_Left"),         NULL, NULL, {0, NULL}},
+	// Row 8 - Column 1
+	{uL("family basic keyboard"), uL("FBK 68"),  uL("NSCODE_Down"),         NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 69"),  uL("NSCODE_Space"),        NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 70"),  uL("NSCODE_Bckspc"),       NULL, NULL, {0, NULL}},
+	{uL("family basic keyboard"), uL("FBK 71"),  uL("NSCODE_Insert"),       NULL, NULL, {0, NULL}}
 };
 
 static const _settings jsc_cfg[] = {
@@ -1482,6 +1659,9 @@ EXTERNC void settings_inp_wr_sc(void *str, int index, int type);
 EXTERNC void settings_inp_all_defaults(_config_input *config_input, _array_pointers_port *array);
 EXTERNC void settings_inp_port_defaults(_port *port, int index, int mode);
 EXTERNC void settings_inp_port_button_default(int button, _port *port, int index, int mode);
+EXTERNC DBWORD settings_inp_nes_keyboard_nscode_default(int element);
+EXTERNC DBWORD settings_inp_nes_keyboard_nscode(int element);
+EXTERNC void settings_inp_nes_keyboard_set_nscode(int element, DBWORD nscode);
 EXTERNC void settings_inp_save(void);
 
 EXTERNC void settings_pgs_parse(void);

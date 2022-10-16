@@ -70,6 +70,8 @@ wdgToolBar.moc: wdgToolBar.hpp
 
 mainWindow.hh: designer/mainWindow.ui
 	$(UIC) $(srcdir)/designer/mainWindow.ui -o $@
+dlgCfgNSCode.hh: designer/dlgCfgNSCode.ui
+	$(UIC) $(srcdir)/designer/dlgCfgNSCode.ui -o $@
 dlgCmdLineHelp.hh: designer/dlgCmdLineHelp.ui
 	$(UIC) $(srcdir)/designer/dlgCmdLineHelp.ui -o $@
 dlgJsc.hh: designer/dlgJsc.ui
@@ -88,6 +90,8 @@ wdgAPUChannels.hh: designer/wdgAPUChannels.ui
 	$(UIC) $(srcdir)/designer/wdgAPUChannels.ui -o $@
 wdgCheatsEditor.hh: designer/wdgCheatsEditor.ui
 	$(UIC) $(srcdir)/designer/wdgCheatsEditor.ui -o $@
+wdgKeyboardFB.hh: designer/wdgKeyboardFB.ui
+	$(UIC) $(srcdir)/designer/wdgKeyboardFB.ui -o $@
 wdgNTSCFilter.hh: designer/wdgNTSCFilter.ui
 	$(UIC) $(srcdir)/designer/wdgNTSCFilter.ui -o $@
 wdgOverlayUi.hh: designer/wdgOverlayUi.ui
@@ -201,6 +205,7 @@ BUILT_SOURCES += \
 
 BUILT_SOURCES += \
 	dlgCmdLineHelp.hh \
+	dlgCfgNSCode.hh \
 	dlgJsc.hh \
 	dlgKeyboard.hh \
 	dlgSettings.hh \
@@ -210,6 +215,7 @@ BUILT_SOURCES += \
 	mainWindow.hh \
 	wdgAPUChannels.hh \
 	wdgCheatsEditor.hh \
+	wdgKeyboardFB.hh \
 	wdgNTSCFilter.hh \
 	wdgOverlayUi.hh \
 	wdgPaletteEditor.hh \
@@ -226,6 +232,13 @@ BUILT_SOURCES += \
 
 noinst_LIBRARIES = libgui.a
 libgui_a_SOURCES = \
+	../extra/qkeycode/src/qkeycode/chromium/keycode_converter.cc \
+	../extra/qkeycode/src/qkeycode/qkeycode.cpp \
+	../extra/qkeycode/include/qkeycode/qkeycode.h \
+	../extra/qkeycode/include/qkeycode/values.h \
+	../extra/qkeycode/include/qkeycode/chromium/dom_code.h \
+	../extra/qkeycode/include/qkeycode/chromium/keycode_converter.h \
+	../extra/qkeycode/include/qkeycode/chromium/macros.h \
 	../extra/singleapplication/singleapplication.cpp \
 	../extra/singleapplication/singleapplication.h \
 	../extra/singleapplication/singleapplication_p.cpp \
@@ -252,11 +265,11 @@ libgui_a_SOURCES = \
 	mainApplication.hpp \
 	mainWindow.cpp \
 	mainWindow.hpp \
+	nscode.hpp \
 	objCheat.cpp \
 	objCheat.hpp \
 	objSettings.cpp \
 	objSettings.hpp \
-	qNativeScanCode.hpp \
 	qt.cpp \
 	qt.h \
 	recent_roms.cpp \
@@ -321,7 +334,6 @@ endif
 
 if LINUX
 libgui_a_SOURCES += \
-	qNativeScanCode_x11.cpp \
 	linux/os_jstick.c \
 	linux/os_jstick.h \
 	linux/os_linux.h
@@ -336,7 +348,6 @@ endif
 
 if BSD
 libgui_a_SOURCES += \
-	qNativeScanCode_x11.cpp \
 	bsd/os_jstick.c \
 	bsd/os_jstick.h \
 	bsd/os_bsd.h
@@ -351,7 +362,6 @@ endif
 
 if WINDOWS
 libgui_a_SOURCES += \
-	qNativeScanCode_win.cpp \
 	windows/os_jstick.c \
 	windows/os_jstick.h \
 	windows/os_windows.h \

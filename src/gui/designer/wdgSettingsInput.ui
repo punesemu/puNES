@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>574</width>
-    <height>388</height>
+    <width>563</width>
+    <height>340</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -392,6 +392,17 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QPushButton" name="pushButton_ep">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/icon/icons/settings_wrench.svg</normaloff>:/icon/icons/settings_wrench.svg</iconset>
            </property>
           </widget>
          </item>

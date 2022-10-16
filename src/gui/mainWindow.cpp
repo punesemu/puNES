@@ -816,6 +816,21 @@ void mainWindow::hold_fast_forward(BYTE mode) {
 		s_fast_forward();
 	}
 }
+void mainWindow::open_dkeyb(BYTE mode) {
+	int frame_w = frameGeometry().width() - geometry().width();
+	int frame_h = frameGeometry().height() - geometry().height();
+
+	if (dlgkeyb->geom.x() < frame_w) {
+		dlgkeyb->geom.setX(frame_w);
+	}
+	if (dlgkeyb->geom.y() < frame_h) {
+		dlgkeyb->geom.setY(frame_h);
+	}
+
+	dlgkeyb->setGeometry(dlgkeyb->geom);
+	dlgkeyb->switch_mode(mode);
+	dlgkeyb->show();
+}
 
 void mainWindow::connect_menu_signals(void) {
 	// File
@@ -1261,18 +1276,7 @@ void mainWindow::s_set_vs_window(void) {
 	gui_external_control_windows_show();
 }
 void mainWindow::s_open_dkeyb(void) {
-	int frame_w = frameGeometry().width() - geometry().width();
-	int frame_h = frameGeometry().height() - geometry().height();
-
-	if (dlgkeyb->geom.x() < frame_w) {
-		dlgkeyb->geom.setX(frame_w);
-	}
-	if (dlgkeyb->geom.y() < frame_h) {
-		dlgkeyb->geom.setY(frame_h);
-	}
-
-	dlgkeyb->setGeometry(dlgkeyb->geom);
-	dlgkeyb->show();
+	open_dkeyb(dlgKeyboard::DK_VIRTUAL);
 }
 
 void mainWindow::s_fake_slot(void) {}

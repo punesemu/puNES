@@ -48,7 +48,7 @@ wdgPaletteWall::wdgPaletteWall(QWidget *parent) : QWidget(parent) {
 	selCol = -1;
 	selRow = -1;
 
-	//setStyleSheet("background-color:black;");
+	//setStyleSheet("background-color: black;");
 }
 wdgPaletteWall::~wdgPaletteWall() {};
 
