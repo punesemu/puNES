@@ -1188,6 +1188,8 @@ INLINE static void emu_frame_finished(void) {
 	}
 
 	r4011.frames++;
+
+	gui_nes_keyboard_frame_finished();
 }
 INLINE static void emu_frame_sleep(void) {
 	double diff, now = gui_get_ms();

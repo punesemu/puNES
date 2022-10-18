@@ -92,6 +92,8 @@ wdgCheatsEditor.hh: designer/wdgCheatsEditor.ui
 	$(UIC) $(srcdir)/designer/wdgCheatsEditor.ui -o $@
 wdgKeyboardFB.hh: designer/wdgKeyboardFB.ui
 	$(UIC) $(srcdir)/designer/wdgKeyboardFB.ui -o $@
+wdgKeyboardSubor.hh: designer/wdgKeyboardSubor.ui
+	$(UIC) $(srcdir)/designer/wdgKeyboardSubor.ui -o $@
 wdgNTSCFilter.hh: designer/wdgNTSCFilter.ui
 	$(UIC) $(srcdir)/designer/wdgNTSCFilter.ui -o $@
 wdgOverlayUi.hh: designer/wdgOverlayUi.ui
@@ -216,6 +218,7 @@ BUILT_SOURCES += \
 	wdgAPUChannels.hh \
 	wdgCheatsEditor.hh \
 	wdgKeyboardFB.hh \
+	wdgKeyboardSubor.hh \
 	wdgNTSCFilter.hh \
 	wdgOverlayUi.hh \
 	wdgPaletteEditor.hh \

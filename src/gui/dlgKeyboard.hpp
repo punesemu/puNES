@@ -163,6 +163,7 @@ class pasteObject : public QObject {
 
 	public:
 		BYTE enable;
+		Qt::CaseSensitivity cs;
 
 	private:
 		BYTE type;
@@ -184,6 +185,7 @@ class pasteObject : public QObject {
 		void reset(void);
 		void set_charset(wdgKeyboard::_charset charset, wdgKeyboard::_delay delay);
 		void set_text(QString text);
+		void parse_delay();
 		void parse_text(void);
 		void parse_break(void);
 
@@ -198,8 +200,6 @@ class pasteObject : public QObject {
 
 class familyBasicKeyboard : public wdgKeyboard, public Ui::wdgKeyboardFB {
 	Q_OBJECT
-
-	public:
 
 	public:
 		familyBasicKeyboard(QWidget *parent = 0);
@@ -221,6 +221,28 @@ class familyBasicKeyboard : public wdgKeyboard, public Ui::wdgKeyboardFB {
 		SBYTE calc_grph(void);
 		SBYTE calc_w(void);
 		SBYTE calc_v(void);
+};
+
+// suborKeyboard -----------------------------------------------------------------------------------------------------------------
+
+#include "wdgKeyboardSubor.hh"
+
+class suborKeyboard : public wdgKeyboard, public Ui::wdgKeyboardSubor {
+	Q_OBJECT
+
+	public:
+		suborKeyboard(QWidget *parent = 0);
+		~suborKeyboard();
+
+	protected:
+		void set_buttons(void);
+		void set_charset(void);
+
+	public:
+		void ext_setup(void);
+
+	private:
+		SBYTE calc_shift(void);
 };
 
 // dlgCfgNSCode ------------------------------------------------------------------------------------------------------------------
@@ -317,6 +339,7 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 	public:
 		void fake_keyboard(void);
 		void family_basic_keyboard(void);
+		void subor_keyboard(void);
 
 	private:
 		void replace_keyboard(wdgKeyboard *wk);

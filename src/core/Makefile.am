@@ -110,6 +110,8 @@ libcore_a_SOURCES += \
 	input/snes_mouse.h \
 	input/standard_controller.c \
 	input/standard_controller.h \
+	input/subor_keyboard.c \
+	input/subor_keyboard.h \
 	input/vs.c \
 	input/vs.h \
 	input/zapper.c \

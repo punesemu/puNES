@@ -1661,14 +1661,14 @@ DBWORD objInp::nscode_from_name(QString name) {
 		return (ok ? tmp : 0);
 	}
 }
-DBWORD objInp::nes_keyboard_nscode_default(int index) {
-	return (nscode_from_name(uQString(set->cfg[nes_keyboard_index(index)].def)));
+DBWORD objInp::nes_keyboard_nscode_default(QString name) {
+	return (nscode_from_name(uQString(set->cfg[nes_keyboard_index(name)].def)));
 }
-DBWORD objInp::nes_keyboard_nscode(int index) {
-	return (nscode_from_name(val.at(nes_keyboard_index(index))));
+DBWORD objInp::nes_keyboard_nscode(QString name) {
+	return (nscode_from_name(val.at(nes_keyboard_index(name))));
 }
-void objInp::nes_keyboard_set_nscode(int index, DBWORD nscode) {
-	val[nes_keyboard_index(index)] = nscode_to_name(nscode);
+void objInp::nes_keyboard_set_nscode(QString name, DBWORD nscode) {
+	val[nes_keyboard_index(name)] = nscode_to_name(nscode);
 }
 
 void objInp::kbd_rd(int index, int pIndex) {
@@ -1718,15 +1718,30 @@ int objInp::kbd_keyval_to_int(int index) {
 
 	return (kbd_keyval_from_name(index, val.at(index)));
 }
-int objInp::nes_keyboard_index(int index) {
-	int pIndex;
+int objInp::nes_keyboard_index(QString name) {
+	int index = 0, end = 0;
+	QString button;
 
-	//if (cfg->input.expansion == CTRL_FAMILY_BASIC_KEYBOARD) {
-		pIndex = SET_INP_FBK_0;
-	//} else {
-	//	pIndex = SET_INP_SUBOR_0;
-	//}
-	return (pIndex + index);
+	switch (cfg->input.expansion) {
+		case CTRL_FAMILY_BASIC_KEYBOARD:
+			button = "FBKB " + name.replace("kButton_", "");
+			index = SET_INP_FBKB_0;
+			end = SET_INP_FBKB_END + 1;
+			break;
+		case CTRL_SUBOR_KEYBOARD:
+			button = "SBKB " + name.replace("kButton_", "");
+			index = SET_INP_SBKB_0;
+			end = SET_INP_SBKB_END + 1;
+			break;
+		default:
+			return (0);
+	}
+	for (; index < end; index++) {
+		if (!QString(uQString(set->cfg[index].key)).compare(button)) {
+			return (index);
+		}
+	}
+	return (0);
 }
 
 void objInp::js_val_to_guid(int index, _input_guid *guid) {

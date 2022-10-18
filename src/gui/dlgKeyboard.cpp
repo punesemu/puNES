@@ -45,6 +45,9 @@ void gui_nes_keyboard(void) {
 				case CTRL_FAMILY_BASIC_KEYBOARD:
 					dlgkbd->family_basic_keyboard();
 					break;
+				case CTRL_SUBOR_KEYBOARD:
+					dlgkbd->subor_keyboard();
+					break;
 			}
 		}
 		if (disable) {
@@ -62,6 +65,11 @@ void gui_nes_keyboard(void) {
 void gui_nes_keyboard_paste_event(void) {
 	if (dlgkbd->paste->enable) {
 		dlgkbd->paste->parse_text();
+	}
+}
+void gui_nes_keyboard_frame_finished(void) {
+	if (dlgkbd->paste->enable) {
+		dlgkbd->paste->parse_delay();
 	}
 }
 
@@ -149,6 +157,9 @@ void dlgKeyboard::retranslateUi(QDialog *dlgKeyboard) {
 			case CTRL_FAMILY_BASIC_KEYBOARD:
 				setWindowTitle(tr("Family BASIC Keyboard"));
 				break;
+			case CTRL_SUBOR_KEYBOARD:
+				setWindowTitle(tr("Subor Keyboard"));
+				break;
 		}
 	}
 }
@@ -174,10 +185,11 @@ void dlgKeyboard::set_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], i
 	for (i = 0; i < totals; i++) {
 		wdgKeyboard::_button *btn = &buttons[i];
 		int element = (btn->row * nes_keyboard.columns) + btn->column;
-		DBWORD nscode = settings_inp_nes_keyboard_nscode(element);
 
 		foreach (keyboardButton *kb, kb_list) {
 			if (!kb->objectName().compare(btn->object_name, Qt::CaseInsensitive)) {
+				DBWORD nscode = settings_inp_nes_keyboard_nscode(uQStringCD(kb->objectName()));
+
 				kb->set(nscode, i, btn->row, btn->column, element, btn->modifier, btn->clr, btn->labels);
 				kbuttons[i] = kb;
 				break;
@@ -352,10 +364,16 @@ void dlgKeyboard::switch_mode(BYTE mode) {
 }
 
 void dlgKeyboard::fake_keyboard(void) {
+	paste->cs = Qt::CaseInsensitive;
 	replace_keyboard(new wdgKeyboard(this));
 }
 void dlgKeyboard::family_basic_keyboard(void) {
+	paste->cs = Qt::CaseInsensitive;
 	replace_keyboard(new familyBasicKeyboard(this));
+}
+void dlgKeyboard::subor_keyboard(void) {
+	paste->cs = Qt::CaseSensitive;
+	replace_keyboard(new suborKeyboard(this));
 }
 
 void dlgKeyboard::replace_keyboard(wdgKeyboard *wk) {
@@ -491,7 +509,7 @@ bool dlgCfgNSCode::keypress(QKeyEvent *event) {
 }
 
 void dlgCfgNSCode::s_default_clicked(UNUSED(bool checked)) {
-	nscode = settings_inp_nes_keyboard_nscode_default(button->element);
+	nscode = settings_inp_nes_keyboard_nscode_default(uQStringCD(button->objectName()));
 	label_Desc->setText(objInp::nscode_to_name(nscode));
 }
 void dlgCfgNSCode::s_unset_clicked(UNUSED(bool checked)) {
@@ -500,7 +518,7 @@ void dlgCfgNSCode::s_unset_clicked(UNUSED(bool checked)) {
 }
 void dlgCfgNSCode::s_apply_clicked(UNUSED(bool checked)) {
 	button->nscode = nscode;
-	settings_inp_nes_keyboard_set_nscode(button->element, nscode);
+	settings_inp_nes_keyboard_set_nscode(uQStringCD(button->objectName()), nscode);
 	settings_inp_save();
 	close();
 }
@@ -576,7 +594,7 @@ void keyboardButton::paintEvent(QPaintEvent *event) {
 
 			painter.setFont(font);
 			painter.drawText(QRectF(x, y + corner, w, h), Qt::AlignHCenter | Qt::AlignTop,
-			    objInp::nscode_to_name(nscode).replace("NSCODE_", ""));
+				objInp::nscode_to_name(nscode).replace("NSCODE_", ""));
 
 			painter.restore();
 		} else {
@@ -771,8 +789,8 @@ void keyboardButton::reset(void) {
 wdgKeyboard::wdgKeyboard(QWidget *parent) : QWidget(parent) {
 	rows = 0;
 	columns = 0;
-	delay.set = 0;
-	delay.unset = 0;
+	delay.set = 2;
+	delay.unset = 1;
 }
 wdgKeyboard::~wdgKeyboard() {}
 
@@ -790,8 +808,18 @@ void wdgKeyboard::ext_setup(void) {}
 SBYTE wdgKeyboard::calc_element(BYTE row, BYTE column) {
 	return ((row * columns) + column);
 }
-QList<QList<SBYTE>> wdgKeyboard::parse_character(UNUSED(_character *ch)) {
-	return (QList<QList<SBYTE>>());
+QList<QList<SBYTE>> wdgKeyboard::parse_character(_character *ch) {
+	QList<QList<SBYTE>> elements;
+	QList<SBYTE> element;
+	int i;
+
+	for (i = 0; i < 4; i++) {
+		if (ch->elements[i] > 0) {
+			element.append(ch->elements[i]);
+		}
+	}
+	elements.append(element);
+	return (elements);
 }
 
 // pasteObject -------------------------------------------------------------------------------------------------------------------
@@ -832,11 +860,15 @@ void pasteObject::set_text(QString text) {
 	enable = TRUE;
 	gui_update_tape_menu();
 }
-
+void pasteObject::parse_delay(void) {
+	if (delay.counter) {
+		delay.counter--;
+	}
+}
 void pasteObject::parse_text(void) {
 	int i;
 
-	if (delay.counter && (--delay.counter)) {
+	if (delay.counter) {
 		return;
 	}
 
@@ -873,7 +905,7 @@ void pasteObject::parse_text(void) {
 					};
 
 					for (i = 0; i < (int)LENGTH(escape_sequences); i++) {
-						if (next.compare(escape_sequences[i], Qt::CaseInsensitive) == 0) {
+						if (!next.compare(escape_sequences[i], Qt::CaseInsensitive)) {
 							actual = string.mid(string_index, 2);
 							string_index++;
 							break;
@@ -886,7 +918,7 @@ void pasteObject::parse_text(void) {
 					int a;
 
 					for (a = 0; a < charset[i].string.length(); a++) {
-						if (charset[i].string[a].compare(actual, Qt::CaseInsensitive) == 0) {
+						if (!charset[i].string[a].compare(actual, cs)) {
 							character = &charset[i];
 							elements = dlgkbd->keyboard->parse_character(character);
 							found = TRUE;
@@ -972,8 +1004,6 @@ familyBasicKeyboard::familyBasicKeyboard(QWidget *parent) : wdgKeyboard(parent) 
 
 	rows = 9;
 	columns = 8;
-	delay.set = 12;
-	delay.unset = 12;
 	init();
 }
 familyBasicKeyboard::~familyBasicKeyboard() {
@@ -1789,4 +1819,884 @@ SBYTE familyBasicKeyboard::calc_w(void) {
 }
 SBYTE familyBasicKeyboard::calc_v(void) {
 	return (calc_element(4, 5));
+}
+
+// suborKeyboard -----------------------------------------------------------------------------------------------------------------
+
+// Subor SB97 ???
+
+// |-----------|-------------------------------------------|--------------------------------------|
+// |           |                 Column 0                  |               Column 1               |
+// |-----------|-------------------------------------------|--------------------------------------|
+// | $4017 bit |    4   |     3     |     2     |    1     |     4    |    3   |    2    |    1   |
+// |-----------|-------------------------------------------|--------------------------------------|
+// |   Row 0   |    C   |     F     |     G     |    4     |     V    |    5   |    E    |   F2   |
+// |   Row 1   |   END  |     S     |     D     |    2     |     X    |    3   |    W    |   F1   |
+// |   Row 2   |  RIGHT | PAGE DOWN | BACKSPACE |   INS    |   HOME   | DELETE | PAGE UP |   F8   |
+// |   Row 3   |    ,   |     L     |     I     |    9     |     .    |    0   |    O    |   F5   |
+// |   Row 4   |  LEFT  |     UP    |  RETURN   |    ]     |   DOWN   |    \   |    [    |   F7   |
+// |   Row 5   |  TAB   |     Z     | CAPSLOCK  |    Q     | LCONTROL |    1   |    A    |  ESC   |
+// |   Row 6   |    M   |     K     |     Y     |    7     |     J    |    8   |    U    |   F4   |
+// |   Row 7   |    /   |     '     |     ;     |    -     |  LSHIFT  |    =   |    P    |   F6   |
+// |   Row 8   |  SPACE |     N     |     H     |    T     |     B    |    6   |    R    |   F3   |
+// |   Row 9   | NULL ? |   NULL ?  |   NULL ?  | ALWAYS1  |   NULL ? | NULL ? |  NULL ? | NULL ? |
+// |   Row 10  |  F11   |    NP7    |    NP4    | PAUSE ?  |    NP8   |  NP2   |   NP1   |  F12   |
+// |   Row 11  |  NP9   |    NP*    |    NP+    |   NP-    |  NUMLCK  |  NP/   |   NP5   |  F10   |
+// |   Row 12  | BREAK ?|    ALT    |    NP6    |    `     |    NP0   |  NP.   |   NP3   |   F9   |
+// ------------------------------------------------------------------------------------------------
+
+suborKeyboard::suborKeyboard(QWidget *parent) : wdgKeyboard(parent) {
+	setupUi(this);
+
+	rows = 13;
+	columns = 8;
+	init();
+}
+suborKeyboard::~suborKeyboard() {
+	tape_data_recorder.enabled = FALSE;
+	tape_data_recorder_quit();
+}
+
+void suborKeyboard::set_buttons(void) {
+	_button buttons[] = {
+		// Row 0 - Column 0
+		{ "kButton_4", 0, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "4", true },
+				{ keyboardButton::LP_TOP, "$", false }
+			})
+		},
+		{ "kButton_G", 0, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "G", true }
+			})
+		},
+		{ "kButton_F", 0, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "F", true }
+			})
+		},
+		{ "kButton_C", 0, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "C", true }
+			})
+		},
+
+		// Row 0 - Column 1
+		{ "kButton_F2", 0, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "F2", true }
+			})
+		},
+		{ "kButton_E", 0, 5, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "E", true }
+			})
+		},
+		{ "kButton_5", 0, 6, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "5", true },
+				{ keyboardButton::LP_TOP, "%", false }
+			})
+		},
+		{ "kButton_V", 0, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "V", true }
+			})
+		},
+
+		// Row 1 - Column 0
+		{ "kButton_2", 1, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "2", true },
+				{ keyboardButton::LP_TOP, "@", false }
+			})
+		},
+		{ "kButton_D", 1, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "D", true }
+			})
+		},
+		{ "kButton_S", 1, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "S", true }
+			})
+		},
+		{ "kButton_End", 1, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "End", true }
+			})
+		},
+
+		// Row 1 - Column 1
+		{ "kButton_F1", 1, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "F1", true }
+			})
+		},
+		{ "kButton_W", 1, 5, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "W", true }
+			})
+		},
+		{ "kButton_3", 1, 6, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "3", true },
+				{ keyboardButton::LP_TOP, "#", false }
+			})
+		},
+		{ "kButton_X", 1, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "X", true }
+			})
+		},
+
+		// Row 2 - Column 0
+		{ "kButton_Insert", 2, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Insert", true }
+			})
+		},
+		{ "kButton_Backspace", 2, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "←", true }
+			})
+		},
+		{ "kButton_PageDown", 2, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Page\nDown", true }
+			})
+		},
+		{ "kButton_Right", 2, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "→", true }
+			})
+		},
+
+		// Row 2 - Column 1
+		{ "kButton_F8", 2, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "F8", true }
+			})
+		},
+		{ "kButton_PageUp", 2, 5, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Page\nUp", true }
+			})
+		},
+		{ "kButton_Delete", 2, 6, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Delete", true }
+			})
+		},
+		{ "kButton_Home", 2, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Home", true }
+			})
+		},
+
+		// Row 3 - Column 0
+		{ "kButton_9", 3, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "9", true },
+				{ keyboardButton::LP_TOP, "(", false }
+			})
+		},
+		{ "kButton_I", 3, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "I", true }
+			})
+		},
+		{ "kButton_L", 3, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "L", true }
+			})
+		},
+		{ "kButton_Comma", 3, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, ",", true },
+				{ keyboardButton::LP_TOP, "<", false }
+			})
+		},
+
+		// Row 3 - Column 1
+		{ "kButton_F5", 3, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "F5", true }
+			})
+		},
+		{ "kButton_O", 3, 5, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "O", true }
+			})
+		},
+		{ "kButton_0", 3, 6, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "0", true },
+				{ keyboardButton::LP_TOP, ")", false }
+			})
+		},
+		{ "kButton_Period", 3, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, ".", true },
+				{ keyboardButton::LP_TOP, ">", false }
+			})
+		},
+
+		// Row 4 - Column 0
+		{ "kButton_BracketRight", 4, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "]", true },
+				{ keyboardButton::LP_TOP, "}", false }
+			})
+		},
+		{ "kButton_Return", 4, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Enter", true }
+			})
+		},
+		{ "kButton_Enter", 4, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "⏎", true }
+			})
+		},
+		{ "kButton_Up", 4, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "↑", true }
+			})
+		},
+		{ "kButton_Left", 4, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "←", true }
+			})
+		},
+
+		// Row 4 - Column 1
+		{ "kButton_F7", 4, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "F7", true }
+			})
+		},
+		{ "kButton_BracketLeft", 4, 5, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "[", true },
+				{ keyboardButton::LP_TOP, "{", false }
+			})
+		},
+		{ "kButton_Backslash", 4, 6, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "\\", true },
+				{ keyboardButton::LP_TOP, "|", false }
+			})
+		},
+		{ "kButton_Down", 4, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "↓", true }
+			})
+		},
+
+		// Row 5 - Column 0
+		{ "kButton_Q", 5, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Q", true }
+			})
+		},
+		{ "kButton_CapsLock", 5, 1, keyboardButton::MODIFIERS_SWITCH, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Caps", true }
+			})
+		},
+		{ "kButton_Z", 5, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Z", true }
+			})
+		},
+		{ "kButton_Tab", 5, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Tab", true }
+			})
+		},
+
+		// Row 5 - Column 1
+		{ "kButton_Esc", 5, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Esc", true }
+			})
+		},
+		{ "kButton_A", 5, 5, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "A", true }
+			})
+		},
+		{ "kButton_1", 5, 6, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "1", true },
+				{ keyboardButton::LP_TOP, "!", false }
+			})
+		},
+		{ "kButton_LControl", 5, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Ctrl", true }
+			})
+		},
+		{ "kButton_RControl", 5, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Ctrl", true }
+			})
+		},
+
+		// Row 6 - Column 0
+		{ "kButton_7", 6, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "7", true },
+				{ keyboardButton::LP_TOP, "&", false }
+			})
+		},
+		{ "kButton_Y", 6, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Y", true }
+			})
+		},
+		{ "kButton_K", 6, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "K", true }
+			})
+		},
+		{ "kButton_M", 6, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "M", true }
+			})
+		},
+
+		// Row 6 - Column 1
+		{ "kButton_F4", 6, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "F4", true }
+			})
+		},
+		{ "kButton_U", 6, 5, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "U", true }
+			})
+		},
+		{ "kButton_8", 6, 6, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "8", true },
+				{ keyboardButton::LP_TOP, "*", false }
+			})
+		},
+		{ "kButton_J", 6, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "J", true }
+			})
+		},
+
+		// Row 7 - Column 0
+		{ "kButton_Minus", 7, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "-", true },
+				{ keyboardButton::LP_TOP, "_", false }
+			})
+		},
+		{ "kButton_Semicolon", 7, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, ";", true },
+				{ keyboardButton::LP_TOP, ":", false }
+			})
+		},
+		{ "kButton_Apostrophe", 7, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "'", true },
+				{ keyboardButton::LP_TOP, "\"", false }
+			})
+		},
+		{ "kButton_Slash", 7, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "/", true },
+				{ keyboardButton::LP_TOP, "?", false }
+			})
+		},
+
+		// Row 7 - Column 1
+		{ "kButton_F6", 7, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "F6", true }
+			})
+		},
+		{ "kButton_P", 7, 5, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "P", true }
+			})
+		},
+		{ "kButton_Equal", 7, 6, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "=", true },
+				{ keyboardButton::LP_TOP, "+", false }
+			})
+		},
+		{ "kButton_LShift", 7, 7, keyboardButton::MODIFIERS_ONE_CLICK, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Shift", true }
+			})
+		},
+		{ "kButton_RShift", 7, 7, keyboardButton::MODIFIERS_ONE_CLICK, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Shift", true }
+			})
+		},
+
+		// Row 8 - Column 0
+		{ "kButton_T", 8, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "T", true }
+			})
+		},
+		{ "kButton_H", 8, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "H", true }
+			})
+		},
+		{ "kButton_N", 8, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "N", true }
+			})
+		},
+		{ "kButton_Space", 8, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Space", true }
+			})
+		},
+
+		// Row 8 - Column 1
+		{ "kButton_F3", 8, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "F3", true }
+			})
+		},
+		{ "kButton_R", 8, 5, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "R", true }
+			})
+		},
+		{ "kButton_6", 8, 6, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "6", true },
+				{ keyboardButton::LP_TOP, "^", false }
+			})
+		},
+		{ "kButton_B", 8, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "B", true }
+			})
+		},
+
+		// Row 10 - Column 0
+		// Pause ???????
+		{ "kButton_Pause", 10, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Pause", true }
+			})
+		},
+		{ "kButton_K4", 10, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "←", false },
+				{ keyboardButton::LP_TOP, "4", true }
+			})
+		},
+		{ "kButton_K7", 10, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "Home", false },
+				{ keyboardButton::LP_TOP, "7", true }
+			})
+		},
+		{ "kButton_F11", 10, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "F11", true }
+			})
+		},
+
+		// Row 10 - Column 1
+		{ "kButton_F12", 10, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "F12", true }
+			})
+		},
+		{ "kButton_K1", 10, 5, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "End", false },
+				{ keyboardButton::LP_TOP, "1", true }
+			})
+		},
+		{ "kButton_K2", 10, 6, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "↓", false },
+				{ keyboardButton::LP_TOP, "2", true }
+			})
+		},
+		{ "kButton_K8", 10, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "↑", false },
+				{ keyboardButton::LP_TOP, "8", true }
+			})
+		},
+
+		// Row 11 - Column 0
+		{ "kButton_KMinus", 11, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "-", true }
+			})
+		},
+		{ "kButton_KPlus", 11, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "+", true }
+			})
+		},
+		{ "kButton_KAsterisk", 11, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "*", true }
+			})
+		},
+		{ "kButton_K9", 11, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "PgUp", false },
+				{ keyboardButton::LP_TOP, "9", true }
+			})
+		},
+
+		// Row 11 - Column 1
+		{ "kButton_F10", 11, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "F10", true }
+			})
+		},
+		{ "kButton_K5", 11, 5, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_TOP, "5", true }
+			})
+		},
+		{ "kButton_KSlash", 11, 6, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "/", true }
+			})
+		},
+		{ "kButton_NumLock", 11, 7, keyboardButton::MODIFIERS_SWITCH, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_LEFT, "Num\nLock", true }
+			})
+		},
+
+		// Row 12 - Column 0
+		{ "kButton_QuoteLeft", 12, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "`", true },
+				{ keyboardButton::LP_TOP, "~", false }
+			})
+		},
+		{ "kButton_K6", 12, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "→", false },
+				{ keyboardButton::LP_TOP, "6", true }
+			})
+		},
+		{ "kButton_Alt", 12, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Alt", true }
+			})
+		},
+		{ "kButton_AltGr", 12, 2, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Alt", true }
+			})
+		},
+		// Big Space ?????
+		{ "kButton_Break", 12, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "Break", true }
+			})
+		},
+
+		// Row 12 - Column 1
+		{ "kButton_F9", 12, 4, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_CENTER, "F9", true }
+			})
+		},
+		{ "kButton_K3", 12, 5, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "PgDn", false },
+				{ keyboardButton::LP_TOP, "3", true }
+			})
+		},
+		{ "kButton_KPeriod", 12, 6, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "Del", false },
+				{ keyboardButton::LP_TOP, ".", true }
+			})
+		},
+		{ "kButton_K0", 12, 7, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+			QList<keyboardButton::_label>
+			({
+				{ keyboardButton::LP_BOTTOM, "Ins", false },
+				{ keyboardButton::LP_TOP, "0", true }
+			})
+		}
+	};
+
+	nes_keyboard.totals = LENGTH(buttons);
+	dlgkbd->set_buttons(this, buttons, nes_keyboard.totals);
+}
+void suborKeyboard::set_charset(void) {
+	_character charset[] {
+		// Row 0 - Column 0
+		{ QList<QString> { "4", "４" }, { calc_element(0, 0), -1, -1, -1 } },
+		{ QList<QString> { "$", "＄" }, { calc_element(0, 1), calc_shift(), -1, -1 } },
+		{ QList<QString> { "g" }, { calc_element(0, 1), -1, -1, -1 } },
+		{ QList<QString> { "G", "Ｇ" }, { calc_element(0, 1), calc_shift(), -1, -1 } },
+		{ QList<QString> { "f" }, { calc_element(0, 2), -1, -1, -1 } },
+		{ QList<QString> { "F", "Ｆ" }, { calc_element(0, 2), calc_shift(), -1, -1 } },
+		{ QList<QString> { "c" }, { calc_element(0, 3), -1, -1, -1 } },
+		{ QList<QString> { "C", "Ｃ" }, { calc_element(0, 3), calc_shift(), -1, -1 } },
+
+		// Row 0 - Column 1
+		{ QList<QString> { "e" }, { calc_element(0, 5), -1, -1, -1 } },
+		{ QList<QString> { "E", "Ｅ" }, { calc_element(0, 5), calc_shift(), -1, -1 } },
+		{ QList<QString> { "5", "５" }, { calc_element(0, 6), -1, -1, -1 } },
+		{ QList<QString> { "%", "％" }, { calc_element(0, 6), calc_shift(), -1, -1 } },
+		{ QList<QString> { "v" }, { calc_element(0, 7), -1, -1, -1 } },
+		{ QList<QString> { "V", "Ｖ" }, { calc_element(0, 7), calc_shift(), -1, -1 } },
+
+		// Row 1 - Column 0
+		{ QList<QString> { "2", "２" }, { calc_element(1, 0), -1, -1, -1 } },
+		{ QList<QString> { "@", "＠" }, { calc_element(1, 0), calc_shift(), -1, -1 } },
+		{ QList<QString> { "d" }, { calc_element(1, 1), -1, -1, -1 } },
+		{ QList<QString> { "D", "Ｄ" }, { calc_element(1, 1), calc_shift(), -1, -1 } },
+		{ QList<QString> { "s" }, { calc_element(1, 2), -1, -1, -1 } },
+		{ QList<QString> { "S", "Ｓ" }, { calc_element(1, 2), calc_shift(), -1, -1 } },
+
+		// Row 1 - Column 1
+		{ QList<QString> { "w" }, { calc_element(1, 5), -1, -1, -1 } },
+		{ QList<QString> { "W", "Ｗ" }, { calc_element(1, 5), calc_shift(), -1, -1 } },
+		{ QList<QString> { "3", "３" }, { calc_element(1, 6), -1, -1, -1 } },
+		{ QList<QString> { "#", "＃" }, { calc_element(1, 6), calc_shift(), -1, -1 } },
+		{ QList<QString> { "x" }, { calc_element(1, 7), -1, -1, -1 } },
+		{ QList<QString> { "X", "Ｘ" }, { calc_element(1, 7), calc_shift(), -1, -1 } },
+
+		// Row 2 - Column 0
+		// Row 2 - Column 1
+
+		// Row 3 - Column 0
+		{ QList<QString> { "9", "９" }, { calc_element(3, 0), -1, -1, -1 } },
+		{ QList<QString> { "(", "（" }, { calc_element(3, 0), calc_shift(), -1, -1 } },
+		{ QList<QString> { "i" }, { calc_element(3, 1), -1, -1, -1 } },
+		{ QList<QString> { "I", "Ｉ" }, { calc_element(3, 1), calc_shift(), -1, -1 } },
+		{ QList<QString> { "l" }, { calc_element(3, 2), -1, -1, -1 } },
+		{ QList<QString> { "L", "Ｌ" }, { calc_element(3, 2), calc_shift(), -1, -1 } },
+		{ QList<QString> { ",", "，" }, { calc_element(3, 3), -1, -1, -1 } },
+		{ QList<QString> { "<", "〈" }, { calc_element(3, 3), calc_shift(), -1, -1 } },
+
+		// Row 3 - Column 1
+		{ QList<QString> { "o" }, { calc_element(3, 5), -1, -1, -1 } },
+		{ QList<QString> { "O", "Ｏ" }, { calc_element(3, 5), calc_shift(), -1, -1 } },
+		{ QList<QString> { "0", "０" }, { calc_element(3, 6), -1, -1, -1 } },
+		{ QList<QString> { ")", "）" }, { calc_element(3, 6), calc_shift(), -1, -1 } },
+		{ QList<QString> { ".", "．" }, { calc_element(3, 7), -1, -1, -1 } },
+		{ QList<QString> { ">", "〉" }, { calc_element(3, 7), calc_shift(), -1, -1 } },
+
+		// Row 4 - Column 0
+		{ QList<QString> { "]", "］"}, { calc_element(4, 0), -1, -1, -1 } },
+		{ QList<QString> { "}" }, { calc_element(4, 0), calc_shift(), -1, -1 } },
+		{ QList<QString> { "\n" }, { calc_element(4, 1), -1, -1, -1 } },
+
+		// Row 4 - Column 1
+		{ QList<QString> { "[", "［" }, { calc_element(4, 5), -1, -1, -1 } },
+		{ QList<QString> { "{" }, { calc_element(4, 5), calc_shift(), -1, -1 } },
+		{ QList<QString> { "\\" }, { calc_element(4, 6), -1, -1, -1 } },
+		{ QList<QString> { "|" }, { calc_element(4, 6), calc_shift(), -1, -1 } },
+
+		// Row 5 - Column 0
+		{ QList<QString> { "q" }, { calc_element(5, 0), -1, -1, -1 } },
+		{ QList<QString> { "Q", "Ｑ" }, { calc_element(5, 0), calc_shift(), -1, -1 } },
+		{ QList<QString> { "z" }, { calc_element(5, 2), -1, -1, -1 } },
+		{ QList<QString> { "Z", "Ｚ" }, { calc_element(5, 2), calc_shift(), -1, -1 } },
+
+		// Row 5 - Column 1
+		{ QList<QString> { "a" }, { calc_element(5, 5), -1, -1, -1 } },
+		{ QList<QString> { "A", "Ａ" }, { calc_element(5, 5), calc_shift(), -1, -1 } },
+		{ QList<QString> { "1", "１" }, { calc_element(5, 6), -1, -1, -1 } },
+		{ QList<QString> { "!", "！" }, { calc_element(5, 6), calc_shift(), -1, -1 } },
+
+		// Row 6 - Column 0
+		{ QList<QString> { "7", "７" }, { calc_element(6, 0), -1, -1, -1 } },
+		{ QList<QString> { "&", "＆" }, { calc_element(6, 0), calc_shift(), -1, -1 } },
+		{ QList<QString> { "y" }, { calc_element(6, 1), -1, -1, -1 } },
+		{ QList<QString> { "Y", "Ｙ" }, { calc_element(6, 1), calc_shift(), -1, -1 } },
+		{ QList<QString> { "k" }, { calc_element(6, 2), -1, -1, -1 } },
+		{ QList<QString> { "K", "Ｋ" }, { calc_element(6, 2), calc_shift(), -1, -1 } },
+		{ QList<QString> { "m" }, { calc_element(6, 3), -1, -1, -1 } },
+		{ QList<QString> { "M", "Ｍ" }, { calc_element(6, 3), calc_shift(), -1, -1 } },
+
+		// Row 6 - Column 1
+		{ QList<QString> { "u" }, { calc_element(6, 5), -1, -1, -1 } },
+		{ QList<QString> { "U", "Ｕ" }, { calc_element(6, 5), calc_shift(), -1, -1 } },
+		{ QList<QString> { "8", "８" }, { calc_element(6, 6), -1, -1, -1 } },
+		{ QList<QString> { "*", "＊" }, { calc_element(6, 6), calc_shift(), -1, -1 } },
+		{ QList<QString> { "j" }, { calc_element(6, 7), -1, -1, -1 } },
+		{ QList<QString> { "J", "Ｊ" }, { calc_element(6, 7), calc_shift(), -1, -1 } },
+
+		// Row 7 - Column 0
+		{ QList<QString> { "-", "－" }, { calc_element(7, 0), -1, -1, -1 } },
+		{ QList<QString> { "_", "␣" }, { calc_element(7, 0), calc_shift(), -1, -1 } },
+		{ QList<QString> { ";", "；" }, { calc_element(7, 1), -1, -1, -1 } },
+		{ QList<QString> { ":", "：" }, { calc_element(7, 1), calc_shift(), -1, -1 } },
+		{ QList<QString> { "'",  "＇" }, { calc_element(7, 2), -1, -1, -1 } },
+		{ QList<QString> { "\"", "＂" }, { calc_element(7, 2), calc_shift(), -1, -1 } },
+		{ QList<QString> {"/", "／" }, { calc_element(7, 3), -1, -1, -1 } },
+		{ QList<QString> { "?", "？" }, { calc_element(7, 3), calc_shift(), -1, -1 } },
+
+		// Row 7 - Column 1
+		{ QList<QString> { "p" }, { calc_element(7, 5), -1, -1, -1 } },
+		{ QList<QString> { "P", "Ｐ" }, { calc_element(7, 5), calc_shift(), -1, -1 } },
+		{ QList<QString> { "=", "＝" }, { calc_element(7, 6), -1, -1, -1 } },
+		{ QList<QString> { "+", "＋" }, { calc_element(7, 6), calc_shift(), -1, -1 } },
+
+		// Row 8 - Column 0
+		{ QList<QString> { "t" }, { calc_element(8, 0), -1, -1, -1 } },
+		{ QList<QString> { "T", "Ｔ" }, { calc_element(8, 0), calc_shift(), -1, -1 } },
+		{ QList<QString> { "h" }, { calc_element(8, 1), -1, -1, -1 } },
+		{ QList<QString> { "H", "Ｈ" }, { calc_element(8, 1), calc_shift(), -1, -1 } },
+		{ QList<QString> { "n" }, { calc_element(8, 2), -1, -1, -1 } },
+		{ QList<QString> { "N", "Ｎ" }, { calc_element(8, 2), calc_shift(), -1, -1 } },
+		{ QList<QString> { " ", "　" }, { calc_element(8, 3), -1, -1, -1 } },
+
+		// Row 8 - Column 1
+		{ QList<QString> { "r" }, { calc_element(8, 5), -1, -1, -1 } },
+		{ QList<QString> { "R", "Ｒ" }, { calc_element(8, 5), calc_shift(), -1, -1 } },
+		{ QList<QString> { "6", "６" }, { calc_element(8, 6), -1, -1, -1 } },
+		{ QList<QString> { "^", "＾" }, { calc_element(8, 6), calc_shift(), -1, -1 } },
+		{ QList<QString> { "b" }, { calc_element(8, 7), -1, -1, -1 } },
+		{ QList<QString> { "B", "Ｂ" }, { calc_element(8, 7), calc_shift(), -1, -1 } },
+
+		// Row 9 - Column 0
+		// Row 9 - Column 1
+		// Row 10 - Column 0
+		// Row 10 - Column 1
+		// Row 11 - Column 0
+		// Row 11 - Column 1
+
+		// Row 12 - Column 0
+		{ QList<QString> { "`" }, { calc_element(12, 0), -1, -1, -1 } },
+		{ QList<QString> { "~" }, { calc_element(12, 0), calc_shift(), -1, -1 } },
+
+		// Row 12 - Column 1
+	};
+
+	dlgkbd->set_charset({ &charset[0], LENGTH(charset) }, delay);
+}
+
+void suborKeyboard::ext_setup(void) {
+	tape_data_recorder.enabled = TRUE;
+	gui_update_tape_menu();
+}
+
+SBYTE suborKeyboard::calc_shift(void) {
+	return (calc_element(7, 7));
 }

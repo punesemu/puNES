@@ -36,6 +36,7 @@
 #include "input/arkanoid.h"
 #include "input/oeka_kids_tablet.h"
 #include "input/family_basic_keyboard.h"
+#include "input/subor_keyboard.h"
 
 INLINE static void input_init_generic_keyboard(void);
 
@@ -259,6 +260,14 @@ void input_init(BYTE set_cursor) {
 				SET_RD(PORT3, input_rd_family_basic_keyboard);
 				SET_RD(PORT4, input_rd_family_basic_keyboard);
 				SET_ADD_EVENT(PORT3, input_add_event_family_basic_keyboard);
+				break;
+			case CTRL_SUBOR_KEYBOARD:
+				nes_keyboard.enabled = TRUE;
+				nes_keyboard.type = CTRL_SUBOR_KEYBOARD;
+				SET_WR(PORT3, input_wr_subor_keyboard);
+				SET_RD(PORT3, input_rd_subor_keyboard);
+				SET_RD(PORT4, input_rd_subor_keyboard);
+				SET_ADD_EVENT(PORT3, input_add_event_subor_keyboard);
 				break;
 			default:
 				break;

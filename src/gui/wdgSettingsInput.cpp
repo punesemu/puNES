@@ -190,7 +190,8 @@ void wdgSettingsInput::controller_ports_init(void) {
 		{ tr("Zapper"),                           CTRL_ZAPPER   },
 		{ tr("Arkanoid Paddle"),                  CTRL_ARKANOID_PADDLE },
 		{ tr("Oeka Kids Tablet"),                 CTRL_OEKA_KIDS_TABLET },
-		{ tr("Family BASIC Keyboard"),            CTRL_FAMILY_BASIC_KEYBOARD }
+		{ tr("Family BASIC Keyboard"),            CTRL_FAMILY_BASIC_KEYBOARD },
+		{ tr("Subor Keyboard"),                   CTRL_SUBOR_KEYBOARD }
 	};
 	_cb_ports ctrl_mode_famicom_ports1[] {
 		{ tr("Disabled"),        CTRL_DISABLED },
@@ -715,6 +716,7 @@ void wdgSettingsInput::expansion_port_set(void) {
 
 	switch (cfg->input.expansion) {
 		case CTRL_FAMILY_BASIC_KEYBOARD:
+		case CTRL_SUBOR_KEYBOARD:
 			pushButton_ep->setEnabled(comboBox_exp->isEnabled());
 			//pb->setProperty("myPointer", QVariant::fromValue(((void *)ctrl_in)));
 			connect(pushButton_ep, SIGNAL(clicked(bool)), this, SLOT(s_expansion_port_setup(bool)));
@@ -880,6 +882,7 @@ void wdgSettingsInput::s_expansion_port(int index) {
 void wdgSettingsInput::s_expansion_port_setup(UNUSED(bool checked)) {
 	switch (cfg->input.expansion) {
 		case CTRL_FAMILY_BASIC_KEYBOARD:
+		case CTRL_SUBOR_KEYBOARD:
 			if (dlgkeyb->isHidden()) {
 				mainwin->open_dkeyb(dlgKeyboard::DK_SETUP);
 			} else {
