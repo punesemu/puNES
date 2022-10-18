@@ -455,8 +455,6 @@ enum inp_element {
 	SET_INP_SBKB_98,
 	SET_INP_SBKB_99,
 	SET_INP_SBKB_END = SET_INP_SBKB_99,
-
-
 };
 enum jsc_element {
 	SET_JSC_PAD_A,

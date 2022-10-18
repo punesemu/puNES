@@ -718,7 +718,6 @@ void wdgSettingsInput::expansion_port_set(void) {
 		case CTRL_FAMILY_BASIC_KEYBOARD:
 		case CTRL_SUBOR_KEYBOARD:
 			pushButton_ep->setEnabled(comboBox_exp->isEnabled());
-			//pb->setProperty("myPointer", QVariant::fromValue(((void *)ctrl_in)));
 			connect(pushButton_ep, SIGNAL(clicked(bool)), this, SLOT(s_expansion_port_setup(bool)));
 			break;
 		default:
@@ -764,6 +763,7 @@ void wdgSettingsInput::controller_ports_set(void) {
 				break;
 			case CTRL_STANDARD:
 				pb->setEnabled(true);
+				pb->setProperty("myPointer", QVariant::fromValue(((void *)ctrl_in)));
 				connect(pb, SIGNAL(clicked(bool)), this, SLOT(s_controller_port_setup(bool)));
 				break;
 		}
