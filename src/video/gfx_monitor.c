@@ -41,7 +41,7 @@ pnp.ids.orig: pnp.ids.xlsx
 	        -e 's/\&amp;/\&/g' \
 	        -e "s/\&#039;/'/g" \
 	        -e "s/“/'/g" \
-            -e "s/”/'/g" \
+	        -e "s/”/'/g" \
 	        -e 's:^.*<tr class=".*"><td>\(.*\)</td><td>\([a-zA-Z@]\{3\}\).*</td><td>.*$$:\2\t\1:p' | \
 	    sed 's/\s*$$//' | sort -u >$@
 

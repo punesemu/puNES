@@ -1849,11 +1849,11 @@ void overlayWidgetInfo::paintEvent(QPaintEvent *event) {
 			painter.begin(this);
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-		    to.setWrapMode(QTextOption::WordWrap);
-		    to.setAlignment(Qt::AlignCenter);
+			to.setWrapMode(QTextOption::WordWrap);
+			to.setAlignment(Qt::AlignCenter);
 			td.setDefaultFont(font_info);
 			td.setDocumentMargin(0.0f);
-		    td.setDefaultTextOption(to);
+			td.setDefaultTextOption(to);
 			td.setHtml(actual);
 
 			if (td.size().width() > dpr_rect().width()) {

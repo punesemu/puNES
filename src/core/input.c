@@ -316,5 +316,5 @@ BYTE input_draw_target(void) {
 }
 
 INLINE static void input_init_generic_keyboard(void) {
-        memset(&generic_keyboard, 0x00, sizeof(generic_keyboard));
+	memset(&generic_keyboard, 0x00, sizeof(generic_keyboard));
 }

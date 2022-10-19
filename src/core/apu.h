@@ -506,7 +506,7 @@ typedef struct _apuDMC {
 
 	/* misc */
 	BYTE tick_type;
-}  _apuDMC;
+} _apuDMC;
 
 /* apuPeriod[mode][type][cycles] */
 static const WORD apuPeriod[2][3][7] = {
