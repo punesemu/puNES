@@ -21,6 +21,9 @@
 #include <QtCore/QRegularExpression>
 #include <QtCore/QSettings>
 #include <QtWidgets/QMessageBox>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QtCore/QStringEncoder>
+#endif
 #include "objCheat.moc"
 #include "info.h"
 #include "conf.h"

@@ -57,7 +57,7 @@ BYTE tape_data_recorder_init(uTCHAR *file, BYTE type, BYTE mode) {
 			tape_data_recorder.bits = tape_data_recorder.data.total << 3;
 			vector_resize(&tape_data_recorder.data, tape_data_recorder.data.total);
 			if (fread(vector_get(&tape_data_recorder.data, 0), 1, tape_data_recorder.data.total, tape_data_recorder.file)
-			    != tape_data_recorder.data.total) {
+				!= tape_data_recorder.data.total) {
 				tape_data_recorder_quit();
 				return (EXIT_ERROR);
 			}
@@ -179,7 +179,7 @@ void tape_data_recorder_tick(void) {
 		if ((tape_data_recorder.cycles -= 1.0f) <= 0) {
 			tape_data_recorder.tick();
 			tape_data_recorder.cycles += tape_data_cycles();
-	    }
+		}
 	}
 }
 

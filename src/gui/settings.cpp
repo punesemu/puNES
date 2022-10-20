@@ -105,6 +105,15 @@ void settings_inp_port_button_default(int button, _port *port, int index, int mo
 		port->input[JOYSTICK][button] = js_joyval_default(index, button);
 	}
 }
+DBWORD settings_inp_nes_keyboard_nscode_default(uTCHAR *name) {
+	return (s.inp->nes_keyboard_nscode_default(uQString(name)));
+}
+DBWORD settings_inp_nes_keyboard_nscode(uTCHAR *name) {
+	return (s.inp->nes_keyboard_nscode(uQString(name)));
+}
+void settings_inp_nes_keyboard_set_nscode(uTCHAR *name, DBWORD nscode) {
+	s.inp->nes_keyboard_set_nscode(uQString(name), nscode);
+}
 void settings_inp_save(void) {
 	s.list = LSET_INP;
 	s.inp->wr();

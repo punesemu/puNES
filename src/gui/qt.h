@@ -284,6 +284,7 @@ EXTERNC void gui_vs_system_insert_coin(void);
 
 EXTERNC void gui_nes_keyboard(void);
 EXTERNC void gui_nes_keyboard_paste_event(void);
+EXTERNC void gui_nes_keyboard_frame_finished(void);
 
 #if defined (WITH_OPENGL)
 EXTERNC void gui_wdgopengl_make_current(void);

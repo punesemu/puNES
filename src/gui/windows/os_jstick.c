@@ -388,10 +388,10 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 		int i = 0;
 
 		for (i = 0; i < 4; i++) {
-		    XINPUT_STATE state;
+			XINPUT_STATE state;
 
-		    ZeroMemory(&state, sizeof(XINPUT_STATE));
-		    xrc = js_os.XInputGetState_proc(jdev->xinput_player_index, &state);
+			ZeroMemory(&state, sizeof(XINPUT_STATE));
+			xrc = js_os.XInputGetState_proc(jdev->xinput_player_index, &state);
 			if (xrc == ERROR_SUCCESS) {
 				js_os.xinput_player_index = (jdev->xinput_player_index + 1) % 4;
 				js_os.xinput_player_count++;

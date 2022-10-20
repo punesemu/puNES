@@ -23,12 +23,6 @@
 #include "conf.h"
 #include "gui.h"
 
-_family_basic_keyboard family_basic_keyboard;
-
-void input_init_family_basic_keyboard(void) {
-	memset(&family_basic_keyboard, 0x00, sizeof(family_basic_keyboard));
-}
-
 void input_wr_family_basic_keyboard(BYTE *value, UNUSED(BYTE nport)) {
 	BYTE column;
 
@@ -39,16 +33,16 @@ void input_wr_family_basic_keyboard(BYTE *value, UNUSED(BYTE nport)) {
 	//       ||+-- Reset the keyboard to the first row.
 	//       |+--- Select column, row is incremented if this bit goes from high to low.
 	//       +---- Enable keyboard matrix (if 0, all voltages inside the keyboard will be 5V, reading back as logical 0 always)
-	family_basic_keyboard.enable = (*value) & 0x04;
+	generic_keyboard.enable = (*value) & 0x04;
 	column = ((*value) & 0x02) >> 1;
-	if (family_basic_keyboard.enable) {
+	if (generic_keyboard.enable) {
 		if ((*value) & 0x01) {
-			family_basic_keyboard.row = 0;
+			generic_keyboard.row = 0;
 			gui_nes_keyboard_paste_event();
-		} else if (family_basic_keyboard.column && !column) {
-			family_basic_keyboard.row = (family_basic_keyboard.row + 1) % 10;
+		} else if (generic_keyboard.column && !column) {
+			generic_keyboard.row = (generic_keyboard.row + 1) % 10;
 		}
-		family_basic_keyboard.column = column;
+		generic_keyboard.column = column;
 	}
 
 	// tape data recorder
@@ -70,12 +64,12 @@ void input_rd_family_basic_keyboard(BYTE *value, BYTE nport, UNUSED(BYTE shift))
 		// xxxK KKKx
 		//    | |||
 		//    +-+++--- Receive key status of currently selected row/column.
-		if (family_basic_keyboard.column) {
-			state = (family_basic_keyboard.data[family_basic_keyboard.row] & 0xF0) >> 3;
+		if (generic_keyboard.column) {
+			state = (generic_keyboard.data[generic_keyboard.row] & 0xF0) >> 3;
 		} else {
-			state = (family_basic_keyboard.data[family_basic_keyboard.row] & 0x0F) << 1;
+			state = (generic_keyboard.data[generic_keyboard.row] & 0x0F) << 1;
 		}
-		(*value) = ((*value) & 0xE1) | (family_basic_keyboard.enable ? state ^ 0x1E : 0x00);
+		(*value) = ((*value) & 0xE1) | (generic_keyboard.enable ? state ^ 0x1E : 0x00);
 	} else {
 		// r4016
 		// 7  bit  0
@@ -83,7 +77,7 @@ void input_rd_family_basic_keyboard(BYTE *value, BYTE nport, UNUSED(BYTE shift))
 		// xxxx xxAx
 		//        |
 		//        +-- 1-bit ADC audio from audio cassette
-		(*value) = ((*value) & 0xFD) | ((r4016.value & 0x04) ? ((tape_data_recorder.out & 0x01) << 1) : 0x00);
+		(*value) = ((*value) & 0xFD) | (generic_keyboard.enable ? ((tape_data_recorder.out & 0x01) << 1) : 0x00);
 	}
 }
 
@@ -91,10 +85,10 @@ void input_add_event_family_basic_keyboard(UNUSED(BYTE index)) {
 	WORD a, b;
 
 	for (a = 0; a < nes_keyboard.rows; a++) {
-		family_basic_keyboard.data[a] = 0;
+		generic_keyboard.data[a] = 0;
 		for (b = 0; b < nes_keyboard.columns; b++) {
-			if (nes_keyboard.keys[(a * nes_keyboard.columns) + b] & 0x80) {
-				family_basic_keyboard.data[a] |= (1 << b);
+			if (nes_keyboard.matrix[(a * nes_keyboard.columns) + b] & 0x80) {
+				generic_keyboard.data[a] |= (1 << b);
 			}
 		}
 	}

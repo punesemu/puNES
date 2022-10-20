@@ -157,7 +157,7 @@ QKeySequence mainApplication::key_sequence_from_key_event(QKeyEvent *event) {
 		modifiers &= ~Qt::KeypadModifier;
 	}
 	if ((key >= Qt::Key_Shift) && (key <= Qt::Key_Alt)) {
-	    key = 0;
+		key = 0;
 	}
 	return (QKeySequence(modifiers ? modifiers : key, modifiers ? key : 0).toString().remove(", "));
 }

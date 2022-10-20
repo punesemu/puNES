@@ -61,25 +61,25 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 		const char *devnode = udev_device_get_devnode(dev);
 		struct udev_device *udevd = dev;
 
-	    if (devnode == NULL) {
-	        return;
-	    }
+		if (devnode == NULL) {
+			return;
+		}
 
 		while (udevd && !udev_device_get_sysattr_value(udevd, "capabilities/ev")) {
 			udevd = udev_device_get_parent_with_subsystem_devtype(udevd, "input", NULL);
 		}
 		if (udevd) {
-		    const char *btype = udev_device_get_sysattr_value(udevd, "id/bustype");
-		    const char *pid = udev_device_get_sysattr_value(udevd, "id/product");
-		    const char *vid = udev_device_get_sysattr_value(udevd, "id/vendor");
-		    const char *ver = udev_device_get_sysattr_value(udevd, "id/version");
-		    const char *name = udev_device_get_sysattr_value(udevd, "name");
+			const char *btype = udev_device_get_sysattr_value(udevd, "id/bustype");
+			const char *pid = udev_device_get_sysattr_value(udevd, "id/product");
+			const char *vid = udev_device_get_sysattr_value(udevd, "id/vendor");
+			const char *ver = udev_device_get_sysattr_value(udevd, "id/version");
+			const char *name = udev_device_get_sysattr_value(udevd, "name");
 
-		    jdev->usb.bustype = strtoul(btype, NULL, 16);
-		    jdev->usb.vendor_id = strtoul(vid, NULL, 16);
-		    jdev->usb.product_id = strtoul(pid, NULL, 16);
-		    jdev->usb.version = strtoul(ver, NULL, 16);
-		    ustrncpy(jdev->desc, name, usizeof(jdev->desc) - 1);
+			jdev->usb.bustype = strtoul(btype, NULL, 16);
+			jdev->usb.vendor_id = strtoul(vid, NULL, 16);
+			jdev->usb.product_id = strtoul(pid, NULL, 16);
+			jdev->usb.version = strtoul(ver, NULL, 16);
+			ustrncpy(jdev->desc, name, usizeof(jdev->desc) - 1);
 		} else {
 			return;
 		}

@@ -94,6 +94,7 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 	private slots:
 		void s_controller_mode(bool checked);
 		void s_expansion_port(int index);
+		void s_expansion_port_setup(bool checked);
 		void s_controller_port(int index);
 		void s_controller_port_setup(bool checked);
 		void s_input_reset(bool checked);

@@ -20,12 +20,16 @@
 #include <QtCore/QStringList>
 #include <QtCore/QTextStream>
 #include <QtCore/QRegularExpression>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QtCore/QStringEncoder>
+#endif
 #include "objSettings.moc"
 #include "clock.h"
 #include "save_slot.h"
 #include "emu.h"
 #include "shaders.h"
 #include "video/filters/ntsc.h"
+#include "nscode.hpp"
 #if defined (__unix__)
 #define XK_MISCELLANY
 #include <X11/keysymdef.h>
@@ -33,13 +37,13 @@
 
 extern _emu_settings s;
 
-static const struct _kvSpecials {
+static const struct _kv_specials {
 	quint32 native;
 	Qt::KeyboardModifiers modifiers;
 	DBWORD key;
 	char name[20];
 	DBWORD value;
-} kvSpecials[] = {
+} kv_specials[] = {
 	{ 0,            Qt::KeypadModifier,  Qt::Key_0,        "Numpad0",    257 },
 	{ 0,            Qt::KeypadModifier,  Qt::Key_Insert,   "NumPad0",    257 },
 	{ 0,            Qt::KeypadModifier,  Qt::Key_1,        "NumPad1",    258 },
@@ -95,10 +99,10 @@ static const struct _kvSpecials {
 #endif
 };
 /*
-static const struct _kvTable {
+static const struct _kv_table {
 	DBWORD key;
 	char name[40];
-} kvTable[] = {
+} kv_table[] = {
 	{ Qt::Key_Escape,                 "Esc"        },
 	{ Qt::Key_Tab,                    "Tab"        },
 	{ Qt::Key_Backtab,                "Backtab"    },
@@ -529,6 +533,167 @@ static const struct _kvTable {
 	{ Qt::Key_Cancel,                 "Cancel"     }
 };
 */
+static const struct _nscode_list {
+	qkeycode::KeyCode value;
+	char name[20];
+} nscode_list[] = {
+	{ NSCODE_Sleep,              "NSCODE_Sleep"    },
+	{ NSCODE_WakeUp,             "NSCODE_WkUp"     },
+	{ NSCODE_A,                  "NSCODE_A"        },
+	{ NSCODE_B,                  "NSCODE_B"        },
+	{ NSCODE_C,                  "NSCODE_C"        },
+	{ NSCODE_D,                  "NSCODE_D"        },
+	{ NSCODE_E,                  "NSCODE_E"        },
+	{ NSCODE_F,                  "NSCODE_F"        },
+	{ NSCODE_G,                  "NSCODE_G"        },
+	{ NSCODE_H,                  "NSCODE_H"        },
+	{ NSCODE_I,                  "NSCODE_I"        },
+	{ NSCODE_J,                  "NSCODE_J"        },
+	{ NSCODE_K,                  "NSCODE_K"        },
+	{ NSCODE_L,                  "NSCODE_L"        },
+	{ NSCODE_M,                  "NSCODE_M"        },
+	{ NSCODE_N,                  "NSCODE_N"        },
+	{ NSCODE_O,                  "NSCODE_O"        },
+	{ NSCODE_P,                  "NSCODE_P"        },
+	{ NSCODE_Q,                  "NSCODE_Q"        },
+	{ NSCODE_R,                  "NSCODE_R"        },
+	{ NSCODE_S,                  "NSCODE_S"        },
+	{ NSCODE_T,                  "NSCODE_T"        },
+	{ NSCODE_U,                  "NSCODE_U"        },
+	{ NSCODE_V,                  "NSCODE_V"        },
+	{ NSCODE_W,                  "NSCODE_W"        },
+	{ NSCODE_X,                  "NSCODE_X"        },
+	{ NSCODE_Y,                  "NSCODE_Y"        },
+	{ NSCODE_Z,                  "NSCODE_Z"        },
+	{ NSCODE_1,                  "NSCODE_1"        },
+	{ NSCODE_2,                  "NSCODE_2"        },
+	{ NSCODE_3,                  "NSCODE_3"        },
+	{ NSCODE_4,                  "NSCODE_4"        },
+	{ NSCODE_5,                  "NSCODE_5"        },
+	{ NSCODE_6,                  "NSCODE_6"        },
+	{ NSCODE_7,                  "NSCODE_7"        },
+	{ NSCODE_8,                  "NSCODE_8"        },
+	{ NSCODE_9,                  "NSCODE_9"        },
+	{ NSCODE_0,                  "NSCODE_0"        },
+	{ NSCODE_Return,             "NSCODE_Return"   },
+	{ NSCODE_Escape,             "NSCODE_Escape"   },
+	{ NSCODE_Backspace,          "NSCODE_Bckspc"   },
+	{ NSCODE_Tab,                "NSCODE_Tab"      },
+	{ NSCODE_Space,              "NSCODE_Space"    },
+	{ NSCODE_Minus,              "NSCODE_Minus"    },
+	{ NSCODE_Equal,              "NSCODE_Equal"    },
+	{ NSCODE_BracketLeft,        "NSCODE_BrkLeft"  },
+	{ NSCODE_BracketRight,       "NSCODE_BrkRight" },
+	{ NSCODE_Backslash,          "NSCODE_Bckslsh"  },
+	{ NSCODE_Semicolon,          "NSCODE_Semicln"  },
+	{ NSCODE_Apostrophe,         "NSCODE_Apstrph"  },
+	{ NSCODE_QuoteLeft,          "NSCODE_QtLeft"   },
+	{ NSCODE_Comma,              "NSCODE_Comma"    },
+	{ NSCODE_Period,             "NSCODE_Period"   },
+	{ NSCODE_Slash,              "NSCODE_Slash"    },
+	{ NSCODE_CapsLock,           "NSCODE_CapsLck"  },
+	{ NSCODE_F1,                 "NSCODE_F1"       },
+	{ NSCODE_F2,                 "NSCODE_F2"       },
+	{ NSCODE_F3,                 "NSCODE_F3"       },
+	{ NSCODE_F4,                 "NSCODE_F4"       },
+	{ NSCODE_F5,                 "NSCODE_F5"       },
+	{ NSCODE_F6,                 "NSCODE_F6"       },
+	{ NSCODE_F7,                 "NSCODE_F7"       },
+	{ NSCODE_F8,                 "NSCODE_F8"       },
+	{ NSCODE_F9,                 "NSCODE_F9"       },
+	{ NSCODE_F10,                "NSCODE_F10"      },
+	{ NSCODE_F11,                "NSCODE_F11"      },
+	{ NSCODE_F12,                "NSCODE_F12"      },
+	{ NSCODE_Print,              "NSCODE_Print"    },
+	{ NSCODE_ScrollLock,         "NSCODE_ScrLck"   },
+	{ NSCODE_Pause,              "NSCODE_Pause"    },
+	{ NSCODE_Insert,             "NSCODE_Insert"   },
+	{ NSCODE_Home,               "NSCODE_Home"     },
+	{ NSCODE_PageUp,             "NSCODE_PgUp"     },
+	{ NSCODE_Delete,             "NSCODE_Delete"   },
+	{ NSCODE_End,                "NSCODE_End"      },
+	{ NSCODE_PageDown,           "NSCODE_PgDown"   },
+	{ NSCODE_Right,              "NSCODE_Right"    },
+	{ NSCODE_Left,               "NSCODE_Left"     },
+	{ NSCODE_Down,               "NSCODE_Down"     },
+	{ NSCODE_Up,                 "NSCODE_Up"       },
+	{ NSCODE_NumLock,            "NSCODE_NmLock"   },
+	{ NSCODE_KSlash,             "NSCODE_KSlash"   },
+	{ NSCODE_KAsterisk,          "NSCODE_KAstrsk"  },
+	{ NSCODE_KMinus,             "NSCODE_KMinus"   },
+	{ NSCODE_KPlus,              "NSCODE_KPlus"    },
+	{ NSCODE_Enter,              "NSCODE_Enter"    },
+	{ NSCODE_K1,                 "NSCODE_K1"       },
+	{ NSCODE_K2,                 "NSCODE_K2"       },
+	{ NSCODE_K3,                 "NSCODE_K3"       },
+	{ NSCODE_K4,                 "NSCODE_K4"       },
+	{ NSCODE_K5,                 "NSCODE_K5"       },
+	{ NSCODE_K6,                 "NSCODE_K6"       },
+	{ NSCODE_K7,                 "NSCODE_K7"       },
+	{ NSCODE_K8,                 "NSCODE_K8"       },
+	{ NSCODE_K9,                 "NSCODE_K9"       },
+	{ NSCODE_K0,                 "NSCODE_K0"       },
+	{ NSCODE_KPeriod,            "NSCODE_KPrd"     },
+	{ NSCODE_IntlBackslash,      "NSCODE_IBckslsh" },
+	{ NSCODE_Menu,               "NSCODE_Menu"     },
+	{ NSCODE_Power,              "NSCODE_Power"    },
+	{ NSCODE_KEqual,             "NSCODE_KEqual"   },
+	{ NSCODE_F13,                "NSCODE_F13"      },
+	{ NSCODE_F14,                "NSCODE_F14"      },
+	{ NSCODE_F15,                "NSCODE_F15"      },
+	{ NSCODE_F16,                "NSCODE_F16"      },
+	{ NSCODE_F17,                "NSCODE_F17"      },
+	{ NSCODE_F18,                "NSCODE_F18"      },
+	{ NSCODE_F19,                "NSCODE_F19"      },
+	{ NSCODE_F20,                "NSCODE_F20"      },
+	{ NSCODE_F21,                "NSCODE_F21"      },
+	{ NSCODE_F22,                "NSCODE_F22"      },
+	{ NSCODE_F23,                "NSCODE_F23"      },
+	{ NSCODE_F24,                "NSCODE_F24"      },
+	{ NSCODE_Open,               "NSCODE_Open"     },
+	{ NSCODE_Help,               "NSCODE_Help"     },
+	{ NSCODE_Undo,               "NSCODE_Undo"     },
+	{ NSCODE_Cut,                "NSCODE_Cut"      },
+	{ NSCODE_Copy,               "NSCODE_Copy"     },
+	{ NSCODE_Paste,              "NSCODE_Paste"    },
+	{ NSCODE_VolMute,            "NSCODE_VlMute"   },
+	{ NSCODE_VolUp,              "NSCODE_VlUp"     },
+	{ NSCODE_VolDown,            "NSCODE_VlDown"   },
+	{ NSCODE_KComma,             "NSCODE_KComma"   },
+	{ NSCODE_IntlRo,             "NSCODE_IntlRo"   },
+	{ NSCODE_KanaMode,           "NSCODE_KanaMd"   },
+	{ NSCODE_IntlYen,            "NSCODE_IYen"     },
+	{ NSCODE_Convert,            "NSCODE_Conv"     },
+	{ NSCODE_NonConvert,         "NSCODE_NConv"    },
+	{ NSCODE_Lang1,              "NSCODE_Lang1"    },
+	{ NSCODE_Lang2,              "NSCODE_Lang2"    },
+	{ NSCODE_Lang3,              "NSCODE_Lang3"    },
+	{ NSCODE_Lang4,              "NSCODE_Lang4"    },
+	{ NSCODE_LControl,           "NSCODE_LCtrl"    },
+	{ NSCODE_LShift,             "NSCODE_LShift"   },
+	{ NSCODE_Alt,                "NSCODE_Alt"      },
+	{ NSCODE_Super_L,            "NSCODE_SuperL"   },
+	{ NSCODE_RControl,           "NSCODE_RCtrl"    },
+	{ NSCODE_RShift,             "NSCODE_RShift"   },
+	{ NSCODE_AltGr,              "NSCODE_AltGr"    },
+	{ NSCODE_Super_R,            "NSCODE_SuperR"   },
+	{ NSCODE_MediaTrackNext,     "NSCODE_MTNext"   },
+	{ NSCODE_MediaTrackPrevious, "NSCODE_MTPrev"   },
+	{ NSCODE_MediaStop,          "NSCODE_MStop"    },
+	{ NSCODE_Eject,              "NSCODE_Eject"    },
+	{ NSCODE_MediaPlayPause,     "NSCODE_MPlay"    },
+	{ NSCODE_MediaSelect,        "NSCODE_MSelect"  },
+	{ NSCODE_LaunchMail,         "NSCODE_LMail"    },
+	{ NSCODE_LaunchApp2,         "NSCODE_LApp2"    },
+	{ NSCODE_LaunchApp1,         "NSCODE_LApp1"    },
+	{ NSCODE_BrowserSearch,      "NSCODE_BSearch"  },
+	{ NSCODE_BrowserHome,        "NSCODE_BHome"    },
+	{ NSCODE_BrowserBack,        "NSCODE_BBack"    },
+	{ NSCODE_BrowserForward,     "NSCODE_BForwrd"  },
+	{ NSCODE_BrowserStop,        "NSCODE_BStop"    },
+	{ NSCODE_BrowserRefresh,     "NSCODE_BRefrsh"  },
+	{ NSCODE_BrowserFavorites,   "NSCODE_BFavs"    }
+};
 
 // -------------------------------- Oggetto base -----------------------------------------
 
@@ -1260,6 +1425,10 @@ void objInp::to_cfg(QString group) {
 	if ((group == "shortcuts") || (group == "all")) {
 		js_guid_to_val(SET_INP_SC_JOYSTICK_GUID, &cfg_from_file.input.jguid_sch);
 	}
+
+	if ((group == "virtual keyboard") || (group == "all")) {
+		int_to_val(SET_INP_VK_SIZE, cfg_from_file.vk_size);
+	}
 }
 void objInp::fr_cfg(QString group) {
 	if ((group == "expansion port") || (group == "all")) {
@@ -1320,14 +1489,19 @@ void objInp::fr_cfg(QString group) {
 			}
 		}
 	}
+	if ((group == "virtual keyboard") || (group == "all")) {
+		cfg_from_file.vk_size = val_to_int(SET_INP_VK_SIZE);
+	}
 }
 
 void objInp::set_all_input_defaults(_config_input *config_input, _array_pointers_port *array) {
+	int i;
+
 	config_input->permit_updown_leftright = FALSE;
 	config_input->hide_zapper_cursor = FALSE;
 	config_input->controller_mode = CTRL_MODE_NES;
 
-	for (int i = PORT1; i < PORT_MAX; i++) {
+	for (i = PORT1; i < PORT_MAX; i++) {
 		_port *port = array->port[i];
 
 		js_guid_unset(&port->jguid);
@@ -1354,13 +1528,14 @@ void objInp::sc_qstring_pntr_to_val(void *str, int index, int type) {
 QString objInp::kbd_keyval_to_name(const DBWORD value) {
 	bool ok = false;
 	int index = 0;
+	unsigned int i;
 
 	if (!value) {
 		return ("NULL");
 	}
 
-	for (unsigned int i = 0; i < LENGTH(kvSpecials); i++) {
-		if (value == kvSpecials[i].value) {
+	for (i = 0; i < LENGTH(kv_specials); i++) {
+		if (value == kv_specials[i].value) {
 			ok = true;
 			index = i;
 			break;
@@ -1368,7 +1543,7 @@ QString objInp::kbd_keyval_to_name(const DBWORD value) {
 	}
 
 	if (ok) {
-		return (QString(kvSpecials[index].name));
+		return (QString(kv_specials[index].name));
 	}
 
 	return (QKeySequence(value).toString());
@@ -1408,19 +1583,19 @@ DBWORD objInp::kbd_keyval_decode(QKeyEvent *keyEvent) {
 #undef RSHIFT_MASK
 #endif
 
-	for (unsigned int i = 0; i < LENGTH(kvSpecials); i++) {
-		if (key == kvSpecials[i].key) {
-			if (kvSpecials[i].native) {
-				if (native != kvSpecials[i].native) {
+	for (unsigned int i = 0; i < LENGTH(kv_specials); i++) {
+		if (key == kv_specials[i].key) {
+			if (kv_specials[i].native) {
+				if (native != kv_specials[i].native) {
 					continue;
 				}
-				key = kvSpecials[i].value;
+				key = kv_specials[i].value;
 				break;
-			} else if (kvSpecials[i].modifiers == Qt::NoModifier) {
-				key = kvSpecials[i].value;
+			} else if (kv_specials[i].modifiers == Qt::NoModifier) {
+				key = kv_specials[i].value;
 				break;
-			} else if (keyEvent->modifiers() == kvSpecials[i].modifiers) {
-				key = kvSpecials[i].value;
+			} else if (keyEvent->modifiers() == kv_specials[i].modifiers) {
+				key = kv_specials[i].value;
 				break;
 			}
 		}
@@ -1455,14 +1630,58 @@ void objInp::kbd_defaults(_port *port, int index) {
 		kbd_default(i, port, index);
 	}
 }
+QString objInp::nscode_to_name(const DBWORD value) {
+	unsigned int i;
+
+	if (value == 0) {
+		return ("NULL");
+	}
+	for (i = 0; i < LENGTH(nscode_list); i++) {
+		if (value == (DBWORD)nscode_list[i].value) {
+			return (QString(nscode_list[i].name));
+		}
+	}
+	return (QString("NSCODE_%1").arg(value));
+}
+DBWORD objInp::nscode_from_name(QString name) {
+	unsigned int i;
+
+	if (!name.compare("NULL", Qt::CaseInsensitive)) {
+		return (0);
+	}
+	for (i = 0; i < LENGTH(nscode_list); i++) {
+		if (name == nscode_list[i].name) {
+			return ((DBWORD)nscode_list[i].value);
+		}
+	}
+	{
+		bool ok;
+		DBWORD tmp = name.remove("NSCODE_", Qt::CaseInsensitive).toUInt(&ok, 10);
+
+		return (ok ? tmp : 0);
+	}
+}
+DBWORD objInp::nes_keyboard_nscode_default(QString name) {
+	return (nscode_from_name(uQString(set->cfg[nes_keyboard_index(name)].def)));
+}
+DBWORD objInp::nes_keyboard_nscode(QString name) {
+	return (nscode_from_name(val.at(nes_keyboard_index(name))));
+}
+void objInp::nes_keyboard_set_nscode(QString name, DBWORD nscode) {
+	val[nes_keyboard_index(name)] = nscode_to_name(nscode);
+}
 
 void objInp::kbd_rd(int index, int pIndex) {
-	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+	int i;
+
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 		port[pIndex].input[KEYBOARD][i] = kbd_keyval_to_int(index + i);
 	}
 }
 void objInp::kbd_wr(int index, int pIndex) {
-	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+	int i;
+
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 		val.replace(index + i, kbd_keyval_to_name(port[pIndex].input[KEYBOARD][i]));
 	}
 }
@@ -1472,10 +1691,11 @@ DBWORD objInp::_kbd_keyval_from_name(QString name) {
 #else
 	DBWORD value = QKeySequence::fromString(name).operator[](0).toCombined();
 #endif
+	unsigned int i;
 
-	for (unsigned int i = 0; i < LENGTH(kvSpecials); i++) {
-		if (name == kvSpecials[i].name) {
-			value = (kvSpecials[i].value);
+	for (i = 0; i < LENGTH(kv_specials); i++) {
+		if (name == kv_specials[i].name) {
+			value = (kv_specials[i].value);
 			break;
 		}
 	}
@@ -1498,9 +1718,34 @@ int objInp::kbd_keyval_to_int(int index) {
 
 	return (kbd_keyval_from_name(index, val.at(index)));
 }
+int objInp::nes_keyboard_index(QString name) {
+	int index = 0, end = 0;
+	QString button;
+
+	switch (cfg->input.expansion) {
+		case CTRL_FAMILY_BASIC_KEYBOARD:
+			button = "FBKB " + name.replace("kButton_", "");
+			index = SET_INP_FBKB_0;
+			end = SET_INP_FBKB_END + 1;
+			break;
+		case CTRL_SUBOR_KEYBOARD:
+			button = "SBKB " + name.replace("kButton_", "");
+			index = SET_INP_SBKB_0;
+			end = SET_INP_SBKB_END + 1;
+			break;
+		default:
+			return (0);
+	}
+	for (; index < end; index++) {
+		if (!QString(uQString(set->cfg[index].key)).compare(button)) {
+			return (index);
+		}
+	}
+	return (0);
+}
 
 void objInp::js_val_to_guid(int index, _input_guid *guid) {
-	if (val.at(index).isEmpty() || (val.at(index).count() != 38)) {
+	if (val.at(index).isEmpty() || (val.at(index).size() != 38)) {
 		val.replace(index, uQString(set->cfg[index].def));
 		js_guid_unset(guid);
 		return;

@@ -855,6 +855,9 @@ void overlayWidgetInputPort::paintEvent(QPaintEvent *event) {
 		case CTRL_FAMILY_BASIC_KEYBOARD:
 			draw_family_basic_keyboard();
 			break;
+		case CTRL_SUBOR_KEYBOARD:
+			draw_subor_keyboard_sb97();
+			break;
 	}
 	painter.end();
 }
@@ -885,6 +888,7 @@ void overlayWidgetInputPort::update_dpr(void) {
 	oeka_kids_tablet.tile = dpr_image(":/pics/pics/overlay_oeka_kids_tablet.png");
 
 	family_basic_keyboard.tile = dpr_image(":/pics/pics/overlay_family_basic_keyboard.png");
+	subor_keyboard_sb97.tile = dpr_image(":/pics/pics/overlay_subor_keyboard_sb97.png");
 
 	exp_port = dpr_image(":/pics/pics/overlay_controller_exp_port.png");
 
@@ -967,6 +971,7 @@ BYTE overlayWidgetInputPort::is_to_redraw(void) {
 			}
 			break;
 		case CTRL_FAMILY_BASIC_KEYBOARD:
+		case CTRL_SUBOR_KEYBOARD:
 			break;
 		default:
 			break;
@@ -1003,6 +1008,7 @@ void overlayWidgetInputPort::update_old_value(void) {
 			old.mouse.x = arkanoid[input_port & 0x01].x;
 			break;
 		case CTRL_FAMILY_BASIC_KEYBOARD:
+		case CTRL_SUBOR_KEYBOARD:
 			break;
 		default:
 			break;
@@ -1101,6 +1107,15 @@ void overlayWidgetInputPort::draw_oeka_kids_tablet(void) {
 }
 void overlayWidgetInputPort::draw_family_basic_keyboard(void) {
 	painter.drawImage(dpr_point(0, 0), family_basic_keyboard.tile);
+
+	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
+		painter.drawImage(dpr_point(61, 1), exp_port);
+	} else {
+		painter.drawImage(dpr_point(74, 1), portx);
+	}
+}
+void overlayWidgetInputPort::draw_subor_keyboard_sb97(void) {
+	painter.drawImage(dpr_point(0, 0), subor_keyboard_sb97.tile);
 
 	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
 		painter.drawImage(dpr_point(61, 1), exp_port);
@@ -1834,11 +1849,11 @@ void overlayWidgetInfo::paintEvent(QPaintEvent *event) {
 			painter.begin(this);
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-		    to.setWrapMode(QTextOption::WordWrap);
-		    to.setAlignment(Qt::AlignCenter);
+			to.setWrapMode(QTextOption::WordWrap);
+			to.setAlignment(Qt::AlignCenter);
 			td.setDefaultFont(font_info);
 			td.setDocumentMargin(0.0f);
-		    td.setDefaultTextOption(to);
+			td.setDefaultTextOption(to);
 			td.setHtml(actual);
 
 			if (td.size().width() > dpr_rect().width()) {

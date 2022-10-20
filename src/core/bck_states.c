@@ -181,12 +181,12 @@ void bck_states_op_input(BYTE mode, void *data, size_t *index, size_t *size_buff
 	bck_states_on_struct(mode, gmouse.left, data, (*index), (*size_buff));
 	bck_states_on_struct(mode, gmouse.right, data, (*index), (*size_buff));
 
-	// family basic keyboard
-	bck_states_on_struct(mode, family_basic_keyboard.row, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, family_basic_keyboard.column, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, family_basic_keyboard.enable, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, family_basic_keyboard.state, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, family_basic_keyboard.data, data, (*index), (*size_buff));
+	// generic keyboard
+	bck_states_on_struct(mode, generic_keyboard.row, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, generic_keyboard.column, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, generic_keyboard.enable, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, generic_keyboard.state, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, generic_keyboard.data, data, (*index), (*size_buff));
 
 	// lag frames
 	bck_states_on_struct(mode, tas.total_lag_frames, data, (*index), (*size_buff));

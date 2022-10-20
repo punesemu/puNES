@@ -27,7 +27,7 @@ enum interrupt_types {
 	INT_RESET = 0xFFFC,
 	INT_IRQ = 0xFFFE,
 	APU_IRQ = 0x01,
-	DMC_IRQ =  0x02,
+	DMC_IRQ = 0x02,
 	EXT_IRQ = 0x04,
 	FDS_TIMER_IRQ = 0x08,
 	FDS_DISK_IRQ = 0x10

@@ -64,8 +64,8 @@ void map_init_OneBus(void) {
 	EXTCL_WR_PPU_REG(OneBus);
 	EXTCL_WR_APU(OneBus);
 	EXTCL_RD_APU(OneBus);
-    EXTCL_RD_CHR(OneBus);
-    EXTCL_CPU_EVERY_CYCLE(OneBus);
+	EXTCL_RD_CHR(OneBus);
+	EXTCL_CPU_EVERY_CYCLE(OneBus);
 	EXTCL_IRQ_A12_CLOCK(OneBus);
 	EXTCL_PPU_000_TO_34X(OneBus);
 	EXTCL_PPU_000_TO_255(MMC3);
@@ -110,7 +110,7 @@ void map_init_OneBus(void) {
 		}
 	}
 
-    if (info.reset >= HARD) {
+	if (info.reset >= HARD) {
 		size_t i;
 
 		for (i = 0; i < onebustmp.chr.size; i++) {
@@ -137,32 +137,32 @@ void map_init_OneBus(void) {
 		memset(&onebus.pcm, 0x00, sizeof(onebus.pcm));
 
 		onebus.pcm.clock = 0xE1;
-    }
+	}
 
 	if (info.prg.ram.banks_8k_plus == 0) {
 		info.prg.ram.banks_8k_plus = 1;
 	}
 
-    onebus.relative_8k = 0;
-    onebus.reg.ppu[0x10] = 0x00;
-    onebus.reg.ppu[0x12] = 0x04;
-    onebus.reg.ppu[0x13] = 0x05;
-    onebus.reg.ppu[0x14] = 0x06;
-    onebus.reg.ppu[0x15] = 0x07;
-    onebus.reg.ppu[0x16] = 0x00;
-    onebus.reg.ppu[0x17] = 0x02;
-    onebus.reg.ppu[0x18] = 0x00;
-    onebus.reg.ppu[0x1A] = 0x00;
-    onebus.reg.cpu[0x00] = 0x00;
-    onebus.reg.cpu[0x05] = 0x00;
-    onebus.reg.cpu[0x07] = 0x00;
-    onebus.reg.cpu[0x08] = 0x01;
-    onebus.reg.cpu[0x09] = 0xFE;
-    onebus.reg.cpu[0x0A] = 0x00;
-    onebus.reg.cpu[0x0B] = 0x00;
-    onebus.reg.cpu[0x0F] = 0xFF;
-    onebus.reg.cpu[0x60] = 0x00;
-    onebus.reg.cpu[0x61] = 0x00;
+	onebus.relative_8k = 0;
+	onebus.reg.ppu[0x10] = 0x00;
+	onebus.reg.ppu[0x12] = 0x04;
+	onebus.reg.ppu[0x13] = 0x05;
+	onebus.reg.ppu[0x14] = 0x06;
+	onebus.reg.ppu[0x15] = 0x07;
+	onebus.reg.ppu[0x16] = 0x00;
+	onebus.reg.ppu[0x17] = 0x02;
+	onebus.reg.ppu[0x18] = 0x00;
+	onebus.reg.ppu[0x1A] = 0x00;
+	onebus.reg.cpu[0x00] = 0x00;
+	onebus.reg.cpu[0x05] = 0x00;
+	onebus.reg.cpu[0x07] = 0x00;
+	onebus.reg.cpu[0x08] = 0x01;
+	onebus.reg.cpu[0x09] = 0xFE;
+	onebus.reg.cpu[0x0A] = 0x00;
+	onebus.reg.cpu[0x0B] = 0x00;
+	onebus.reg.cpu[0x0F] = 0xFF;
+	onebus.reg.cpu[0x60] = 0x00;
+	onebus.reg.cpu[0x61] = 0x00;
 
 	if (info.mapper.ext_console_type == VT369) {
 		BYTE i;
@@ -596,8 +596,8 @@ INLINE static void chr_swap_OneBus(BYTE **banks, BYTE *base, BYTE bit4pp, BYTE e
 	}
 }
 INLINE static void irq_tick_OneBus(void) {
-    irqA12.counter = !irqA12.counter ? onebus.reg.cpu[0x01] : irqA12.counter - 1;
-    if (!irqA12.counter &&irqA12.enable && !ppu.vblank && r2001.visible) {
+	irqA12.counter = !irqA12.counter ? onebus.reg.cpu[0x01] : irqA12.counter - 1;
+	if (!irqA12.counter &&irqA12.enable && !ppu.vblank && r2001.visible) {
 		if (info.mapper.ext_console_type == VT369 && (onebus.reg.cpu[0x1C] & 0x20)) {
 			irqA12.delay = 24;
 		} else {

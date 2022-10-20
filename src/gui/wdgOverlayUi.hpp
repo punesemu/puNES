@@ -220,6 +220,9 @@ class overlayWidgetInputPort : public overlayWidget {
 		struct _images_family_basic_keyboard {
 			QImage tile;
 		} family_basic_keyboard;
+		struct _images_subor_keyboard_sb97 {
+			QImage tile;
+		} subor_keyboard_sb97;
 		QImage portx;
 		QImage exp_port;
 		int type;
@@ -245,6 +248,7 @@ class overlayWidgetInputPort : public overlayWidget {
 		void draw_arkanoid_paddle(void);
 		void draw_oeka_kids_tablet(void);
 		void draw_family_basic_keyboard(void);
+		void draw_subor_keyboard_sb97(void);
 		void draw_mouse_coords(void);
 };
 class overlayWidgetRewind : public overlayWidget {

@@ -93,6 +93,7 @@ typedef struct _config {
 	BYTE nsf_player_effect;
 	BYTE nsf_player_nsfe_playlist;
 	BYTE nsf_player_nsfe_fadeout;
+	BYTE vk_size;
 #if defined (FULLSCREEN_RESFREQ)
 	BYTE adaptive_rrate;
 	int fullscreen_res_w;
