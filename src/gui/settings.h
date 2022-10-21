@@ -354,6 +354,7 @@ enum inp_element {
 	SET_INP_FBKB_71,
 	SET_INP_FBKB_END = SET_INP_FBKB_71,
 
+	SET_INP_SBKB_EXTENDED_MODE,
 	SET_INP_SBKB_0,
 	SET_INP_SBKB_1,
 	SET_INP_SBKB_2,
@@ -454,7 +455,7 @@ enum inp_element {
 	SET_INP_SBKB_97,
 	SET_INP_SBKB_98,
 	SET_INP_SBKB_99,
-	SET_INP_SBKB_END = SET_INP_SBKB_99,
+	SET_INP_SBKB_END = SET_INP_SBKB_99
 };
 enum jsc_element {
 	SET_JSC_PAD_A,
@@ -1701,6 +1702,12 @@ static const _settings inp_cfg[] = {
 	{uL("family basic keyboard"), uL("FBKB Del"),          uL("NSCODE_Bckspc"),   NULL, NULL, {0, NULL}},
 	{uL("family basic keyboard"), uL("FBKB Ins"),          uL("NSCODE_Insert"),   NULL, NULL, {0, NULL}},
 
+	{
+		uL("subor keyboard"), uL("extended mode"), uL("no"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
 	// Row 0 - Column 1
 	{uL("subor keyboard"), uL("SBKB 4"),            uL("NSCODE_4"),        NULL, NULL, {0, NULL}},
 	{uL("subor keyboard"), uL("SBKB G"),            uL("NSCODE_G"),        NULL, NULL, {0, NULL}},

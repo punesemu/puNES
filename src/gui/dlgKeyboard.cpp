@@ -95,8 +95,11 @@ dlgKeyboard::dlgKeyboard(QWidget *parent) : QDialog(parent) {
 	dlgkbd = this;
 	reset();
 
+	checkBox_Subor_Extende_Mode->setChecked(cfg->input.vk_subor_extended_mode);
+
 	connect(comboBox_Mode, SIGNAL(currentIndexChanged(int)), this, SLOT(s_mode(int)));
 	connect(comboBox_Size, SIGNAL(currentIndexChanged(int)), this, SLOT(s_size_factor(int)));
+	connect(checkBox_Subor_Extende_Mode, SIGNAL(clicked(bool)), this, SLOT(s_subor_extended_mode(bool)));
 
 	installEventFilter(this);
 }
@@ -174,13 +177,9 @@ void dlgKeyboard::reset(void) {
 
 	retranslateUi(this);
 }
-void dlgKeyboard::set_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals) {
+void dlgKeyboard::add_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals) {
 	QList<keyboardButton *> kb_list= wk->findChildren<keyboardButton *>();
 	int i;
-
-	reset();
-
-	memset(nes_keyboard.matrix, 0x00, sizeof(nes_keyboard.matrix));
 
 	for (i = 0; i < totals; i++) {
 		wdgKeyboard::_button *btn = &buttons[i];
@@ -190,15 +189,22 @@ void dlgKeyboard::set_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], i
 			if (!kb->objectName().compare(btn->object_name, Qt::CaseInsensitive)) {
 				DBWORD nscode = settings_inp_nes_keyboard_nscode(uQStringCD(kb->objectName()));
 
-				kb->set(nscode, i, btn->row, btn->column, element, btn->modifier, btn->clr, btn->labels);
-				kbuttons[i] = kb;
+				kb->set(nscode, nes_keyboard.totals + i, btn->row, btn->column, element, btn->modifier, btn->clr, btn->labels);
+				kbuttons[nes_keyboard.totals + i] = kb;
 				break;
 			}
 		}
 	}
-
+	nes_keyboard.totals += totals;
 	retranslateUi(this);
 }
+void dlgKeyboard::set_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals) {
+	reset();
+	memset(nes_keyboard.matrix, 0x00, sizeof(nes_keyboard.matrix));
+	nes_keyboard.totals = 0;
+	add_buttons(wk, buttons, totals);
+}
+
 void dlgKeyboard::set_charset(wdgKeyboard::_charset charset, wdgKeyboard::_delay delay) {
 	paste->set_charset(charset, delay);
 }
@@ -365,14 +371,17 @@ void dlgKeyboard::switch_mode(BYTE mode) {
 
 void dlgKeyboard::fake_keyboard(void) {
 	paste->cs = Qt::CaseInsensitive;
+	widget_Subor->setVisible(false);
 	replace_keyboard(new wdgKeyboard(this));
 }
 void dlgKeyboard::family_basic_keyboard(void) {
 	paste->cs = Qt::CaseInsensitive;
+	widget_Subor->setVisible(false);
 	replace_keyboard(new familyBasicKeyboard(this));
 }
 void dlgKeyboard::subor_keyboard(void) {
 	paste->cs = Qt::CaseSensitive;
+	widget_Subor->setVisible(true);
 	replace_keyboard(new suborKeyboard(this));
 }
 
@@ -384,10 +393,10 @@ void dlgKeyboard::replace_keyboard(wdgKeyboard *wk) {
 	delete (keyboard);
 	keyboard = wk;
 	keyboard->ext_setup();
-	if (comboBox_Size->currentIndex() == cfg_from_file.vk_size) {
-		s_size_factor(cfg_from_file.vk_size);
+	if (comboBox_Size->currentIndex() == cfg_from_file.input.vk_size) {
+		s_size_factor(cfg_from_file.input.vk_size);
 	} else {
-		comboBox_Size->setCurrentIndex(cfg_from_file.vk_size);
+		comboBox_Size->setCurrentIndex(cfg_from_file.input.vk_size);
 	}
 	keyboard->show();
 }
@@ -449,8 +458,12 @@ void dlgKeyboard::s_mode(int index) {
 	update();
 }
 void dlgKeyboard::s_size_factor(int index) {
-	cfg_from_file.vk_size = index;
+	cfg_from_file.input.vk_size = index;
 	set_size_factor(1.0f + ((double)index * 0.5f));
+	settings_inp_save();
+}
+void dlgKeyboard::s_subor_extended_mode(UNUSED(bool checked)) {
+	cfg->input.vk_subor_extended_mode = !cfg->input.vk_subor_extended_mode;
 	settings_inp_save();
 }
 
@@ -1561,8 +1574,7 @@ void familyBasicKeyboard::set_buttons(void) {
 		}
 	};
 
-	nes_keyboard.totals = LENGTH(buttons);
-	dlgkbd->set_buttons(this, buttons, nes_keyboard.totals);
+	dlgkbd->set_buttons(this, buttons, LENGTH(buttons));
 }
 void familyBasicKeyboard::set_charset(void) {
 	_character charset[] {
@@ -1823,8 +1835,6 @@ SBYTE familyBasicKeyboard::calc_v(void) {
 
 // suborKeyboard -----------------------------------------------------------------------------------------------------------------
 
-// Subor SB97 ???
-
 // |-----------|-------------------------------------------|--------------------------------------|
 // |           |                 Column 0                  |               Column 1               |
 // |-----------|-------------------------------------------|--------------------------------------|
@@ -1835,14 +1845,14 @@ SBYTE familyBasicKeyboard::calc_v(void) {
 // |   Row 2   |  RIGHT | PAGE DOWN | BACKSPACE |   INS    |   HOME   | DELETE | PAGE UP |   F8   |
 // |   Row 3   |    ,   |     L     |     I     |    9     |     .    |    0   |    O    |   F5   |
 // |   Row 4   |  LEFT  |     UP    |  RETURN   |    ]     |   DOWN   |    \   |    [    |   F7   |
-// |   Row 5   |  TAB   |     Z     | CAPSLOCK  |    Q     | LCONTROL |    1   |    A    |  ESC   |
+// |   Row 5   | PAUSE??|     Z     | CAPSLOCK  |    Q     | LCONTROL |    1   |    A    |  ESC   |
 // |   Row 6   |    M   |     K     |     Y     |    7     |     J    |    8   |    U    |   F4   |
 // |   Row 7   |    /   |     '     |     ;     |    -     |  LSHIFT  |    =   |    P    |   F6   |
 // |   Row 8   |  SPACE |     N     |     H     |    T     |     B    |    6   |    R    |   F3   |
-// |   Row 9   | NULL ? |   NULL ?  |   NULL ?  | ALWAYS1  |   NULL ? | NULL ? |  NULL ? | NULL ? |
-// |   Row 10  |  F11   |    NP7    |    NP4    | PAUSE ?  |    NP8   |  NP2   |   NP1   |  F12   |
+// |   Row 9   | NULL ??|   NULL  ??|   NULL  ??| ALWAYS1  |   NULL ??| NULL ??|  NULL ??| NULL ??|
+// |   Row 10  |  F11   |    NP7    |    NP4    |  BREAK ??|    NP8   |  NP2   |   NP1   |  F12   |
 // |   Row 11  |  NP9   |    NP*    |    NP+    |   NP-    |  NUMLCK  |  NP/   |   NP5   |  F10   |
-// |   Row 12  | BREAK ?|    ALT    |    NP6    |    `     |    NP0   |  NP.   |   NP3   |   F9   |
+// |   Row 12  |  TAB   |    ALT    |    NP6    |    `     |    NP0   |  NP.   |   NP3   |   F9   |
 // ------------------------------------------------------------------------------------------------
 
 suborKeyboard::suborKeyboard(QWidget *parent) : wdgKeyboard(parent) {
@@ -2155,10 +2165,10 @@ void suborKeyboard::set_buttons(void) {
 				{ keyboardButton::LP_CENTER, "Z", true }
 			})
 		},
-		{ "kButton_Tab", 5, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Pause", 5, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
 			QList<keyboardButton::_label>
 			({
-				{ keyboardButton::LP_CENTER, "Tab", true }
+				{ keyboardButton::LP_CENTER, "Pause", true }
 			})
 		},
 
@@ -2366,11 +2376,11 @@ void suborKeyboard::set_buttons(void) {
 		},
 
 		// Row 10 - Column 0
-		// Pause ???????
-		{ "kButton_Pause", 10, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		// Break ???????
+		{ "kButton_Break", 10, 0, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
 			QList<keyboardButton::_label>
 			({
-				{ keyboardButton::LP_CENTER, "Pause", true }
+				{ keyboardButton::LP_CENTER, "Break", true }
 			})
 		},
 		{ "kButton_K4", 10, 1, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
@@ -2503,11 +2513,10 @@ void suborKeyboard::set_buttons(void) {
 				{ keyboardButton::LP_CENTER, "Alt", true }
 			})
 		},
-		// Big Space ?????
-		{ "kButton_Break", 12, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
+		{ "kButton_Tab", 12, 3, keyboardButton::MODIFIERS_NONE, keyboardButton::_color(),
 			QList<keyboardButton::_label>
 			({
-				{ keyboardButton::LP_CENTER, "Break", true }
+				{ keyboardButton::LP_CENTER, "Tab", true }
 			})
 		},
 
@@ -2541,8 +2550,7 @@ void suborKeyboard::set_buttons(void) {
 		}
 	};
 
-	nes_keyboard.totals = LENGTH(buttons);
-	dlgkbd->set_buttons(this, buttons, nes_keyboard.totals);
+	dlgkbd->set_buttons(this, buttons, LENGTH(buttons));
 }
 void suborKeyboard::set_charset(void) {
 	_character charset[] {

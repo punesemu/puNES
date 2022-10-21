@@ -326,6 +326,7 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 	public:
 		void retranslateUi(QDialog *dlgKeyboard);
 		void reset(void);
+		void add_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals);
 		void set_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals);
 		void set_charset(wdgKeyboard::_charset charset, wdgKeyboard::_delay delay);
 		bool process_event(QEvent *event);
@@ -354,6 +355,7 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 	private slots:
 		void s_mode(int index);
 		void s_size_factor(int index);
+		void s_subor_extended_mode(bool checked);
 };
 
 #endif /* DLGKEYBOARD_HPP_ */

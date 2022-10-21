@@ -3886,6 +3886,8 @@ static const _dbelement dblist[] = {
 	{"3c72706af5998133ec6be703994c10466a094eab", 241, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Education Computer 26-in-1 (R)[!].nes */
 	{"eea726f679d364e6805d48f923ddd21fe14d9f43", 241, DEFAULT, DEFAULT, DENDY, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Study and Game 32-in-1 [!].nes */
+	{"c073cd6389e373cbb3433f81196ece4d09c33bef", 241, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* -------------------------------------------- 242 --------------------------------------- */
 	/* Dragon Quest VIII (ES-1077) (Ch) [!].nes */
