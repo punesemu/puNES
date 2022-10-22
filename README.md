@@ -38,7 +38,7 @@ If you want buy me a beer : <span class="badge-paypal"><a href="https://www.payp
   <img src="https://user-images.githubusercontent.com/14859058/146680023-2c40f991-67d2-4502-963f-39c8b5bfc4ca.png" width="400" alt="puNES Xbox360 Standard Controller Settings"/>
   <img src="https://user-images.githubusercontent.com/14859058/146680033-5fc36150-c52f-494a-ba5c-9d7d675e43d6.png" width="400" alt="puNES PS4 Standard Controller Settings"/>
   <img src="https://user-images.githubusercontent.com/14859058/196442457-e799ee41-17cd-46bf-821e-7532b85c304e.png" width="800" alt="puNES Family BASIC Virtual Keyboard"/>
-  <img src="https://user-images.githubusercontent.com/14859058/196442946-89e5bb4c-3d8f-431c-b15a-0cff68ad1563.png" width="800" alt="puNES Family BASIC Virtual Keyboard"/>
+  <img src="https://user-images.githubusercontent.com/14859058/197157708-e2eab47e-001c-4e18-9df8-eb46fb106980.png" width="800" alt="puNES Subor Virtual Keyboard"/>
 </p>
 
 :keyboard: Configuration
