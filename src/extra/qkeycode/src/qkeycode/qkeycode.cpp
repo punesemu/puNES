@@ -64,8 +64,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "../../to_compile.h"
-
 #include "../../include/qkeycode/qkeycode.h"
 #include "../../include/qkeycode/chromium/dom_code.h"
 #include "../../include/qkeycode/chromium/keycode_converter.h"
@@ -166,7 +164,7 @@ static std::optional<quint32> nativeKeyCodeForKeyEvent(const QKeyEvent *ev)
         code = (code - 0x100) | 0xe000;
     }
     return asNonzero(code);
-#elif defined(Q_OS_LINUX)
+#elif defined(Q_OS_LINUX) || defined(Q_OS_OPENBSD) || defined(Q_OS_FREEBSD)
     return asNonzero(
         keyboardDriver() == KeyboardDriver::Xkb ? ev->nativeScanCode() : 0);
 #elif defined(Q_OS_MACOS)

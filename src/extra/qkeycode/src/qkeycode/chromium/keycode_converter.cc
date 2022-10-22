@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "../../../to_compile.h"
+#include "../../../include/qkeycode/qkeycode.h"
 
 #include "../../../include/qkeycode/chromium/keycode_converter.h"
 
@@ -22,7 +22,7 @@ namespace {
 #elif defined(Q_OS_ANDROID)
 #define DOM_CODE(usb, evdev, xkb, win, mac, code, id) \
   { usb, evdev, code }
-#elif defined(Q_OS_LINUX)
+#elif defined(Q_OS_LINUX) || defined(Q_OS_OPENBSD) || defined(Q_OS_FREEBSD)
 #define DOM_CODE(usb, evdev, xkb, win, mac, code, id) \
   { usb, xkb, code }
 #elif defined(Q_OS_MACOS)
