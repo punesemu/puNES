@@ -5,7 +5,7 @@
 #ifndef UI_EVENTS_KEYCODES_DOM3_DOM_CODE_H_
 #define UI_EVENTS_KEYCODES_DOM3_DOM_CODE_H_
 
-namespace qkeycode::ui {
+namespace qkeycode { namespace ui {
 
 #define DOM_CODE(usb, evdev, xkb, win, mac, code, id) id = usb
 #define DOM_CODE_DECLARATION enum class DomCode
@@ -13,6 +13,6 @@ namespace qkeycode::ui {
 #undef DOM_CODE
 #undef DOM_CODE_DECLARATION
 
-}  // namespace ui
+} } // namespace ui
 
 #endif  // UI_EVENTS_KEYCODES_DOM3_DOM_CODE_H_

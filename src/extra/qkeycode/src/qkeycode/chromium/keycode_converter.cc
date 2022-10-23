@@ -10,7 +10,7 @@
 
 #include <QtCore/QDebug>
 
-namespace qkeycode::ui {
+namespace qkeycode { namespace ui {
 
 namespace {
 
@@ -205,4 +205,4 @@ int KeycodeConverter::CodeStringToNativeKeycode(const std::string& code) {
   return UsbKeycodeToNativeKeycode(CodeStringToUsbKeycode(code));
 }
 
-}  // namespace ui
+} } // namespace ui

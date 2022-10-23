@@ -14,7 +14,7 @@
 // For reference, the W3C UI Event spec is located at:
 // http://www.w3.org/TR/uievents/
 
-namespace qkeycode::ui {
+namespace qkeycode { namespace ui {
 
 enum class DomCode;
 
@@ -95,6 +95,6 @@ class KeycodeConverter {
   DISALLOW_COPY_AND_ASSIGN(KeycodeConverter);
 };
 
-}  // namespace ui
+} } // namespace ui
 
 #endif  // UI_EVENTS_KEYCODES_DOM_KEYCODE_CONVERTER_H_
