@@ -74,11 +74,11 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QStyleHints>
 
-#include <optional>
-
 namespace qkeycode {
 
 enum class KeyboardDriver { Unknown, Windows, Cocoa, Xkb, Evdev };
+
+static quint32 static_value = 0;
 
 static KeyboardDriver keyboardDriverImpl()
 {
@@ -122,11 +122,12 @@ static int qtKeyForKeyEvent(const QKeyEvent *ev)
 }
 #endif
 
-std::optional<quint32> asNonzero(quint32 x) {
+quint32 *asNonzero(quint32 x) {
+    static_value = x;
     if (x != 0) {
-        return x;
+        return &static_value;
     } else {
-        return std::nullopt;
+        return NULL;
     }
 }
 
@@ -135,7 +136,7 @@ std::optional<quint32> asNonzero(quint32 x) {
 //   - On Windows: the Windows OEM scancode.
 //   - On macOS: the NSEvent's keyCode.
 //   - On Linux: The XKB keycode.
-static std::optional<quint32> nativeKeyCodeForKeyEvent(const QKeyEvent *ev)
+static quint32 *nativeKeyCodeForKeyEvent(const QKeyEvent *ev)
 {
     // Ifdefs here should match <chromium/keycode_converter.cc> kDomCodeMappings,
     // since NativeKeycodeToDomCode() is where the native key code is eventually used.
@@ -191,13 +192,14 @@ static std::optional<quint32> nativeKeyCodeForKeyEvent(const QKeyEvent *ev)
     // So just always return it.
 
     if (keyboardDriver() == KeyboardDriver::Cocoa) {
-        return ev->nativeVirtualKey();
+        static_value = ev->nativeVirtualKey();
+        return &static_value;
     } else {
-        return std::nullopt;
+        return NULL;
     }
 #else
 #error Unsupported platform, cannot determine keycode
-    return 0; // 0 means unknown, KeyboardEvent.code will be empty string.
+    return NULL; // 0 means unknown, KeyboardEvent.code will be empty string.
 #endif
 }
 
