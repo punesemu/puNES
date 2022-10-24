@@ -46,6 +46,14 @@ if (ENABLE_GIT_INFO)
 	endif()
 endif()
 
+# sizeof checking for xdelta config.h generation
+include(CheckTypeSize)
+check_type_size("size_t" SIZEOF_SIZE_T)
+check_type_size("unsigned int" SIZEOF_UNSIGNED_INT)
+check_type_size("unsigned long" SIZEOF_UNSIGNED_LONG)
+check_type_size("unsigned long long" SIZEOF_UNSIGNED_LONG_LONG)
+configure_file(xdelta_config.h.in extra/xdelta-3.1.0/config.h)
+
 configure_file(compiled.h.in compiled.h)
 
 # handling external dependencies
