@@ -1758,7 +1758,6 @@
       <zorder>label_Fullscreen_resolution_note_asterisk</zorder>
       <zorder>checkBox_Fullscreen_adaptive_rrate</zorder>
       <zorder>label_Fullscreen_adaptive_rrate_note_asterisk</zorder>
-      <zorder>verticalSpacer_Video_Misc</zorder>
      </widget>
     </widget>
    </item>
