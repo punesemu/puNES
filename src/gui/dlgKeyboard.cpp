@@ -38,7 +38,7 @@ void gui_nes_keyboard(void) {
 		dlgkbd->reset();
 
 		if (nes_keyboard.enabled) {
-			switch (nes_keyboard.type) {
+			switch (cfg->input.expansion) {
 				default:
 					disable = TRUE;
 					break;
@@ -153,17 +153,7 @@ void dlgKeyboard::closeEvent(QCloseEvent *event) {
 void dlgKeyboard::retranslateUi(QDialog *dlgKeyboard) {
 	Ui::dlgKeyboard::retranslateUi(dlgKeyboard);
 	if (nes_keyboard.enabled) {
-		switch (nes_keyboard.type) {
-			default:
-				setWindowTitle(tr("Virtual Keyboard"));
-				break;
-			case CTRL_FAMILY_BASIC_KEYBOARD:
-				setWindowTitle(tr("Family BASIC Keyboard"));
-				break;
-			case CTRL_SUBOR_KEYBOARD:
-				setWindowTitle(tr("Subor Keyboard"));
-				break;
-		}
+		setWindowTitle(keyboard->keyboard_name());
 	}
 }
 void dlgKeyboard::reset(void) {
@@ -221,12 +211,12 @@ bool dlgKeyboard::process_event(QEvent *event) {
 			return (gui.capture_input);
 		} else if (event->type() == QEvent::KeyRelease) {
 			if (!paste->enable) {
-				key_event_release((QKeyEvent*)event, dlgKeyboard::KEVENT_NORMAL);
+				key_event_release((QKeyEvent *)event, dlgKeyboard::KEVENT_NORMAL);
 			}
 			return (gui.capture_input);
 		} else if (event->type() == QEvent::Shortcut) {
 			if (!paste->enable) {
-				QKeySequence key = ((QShortcutEvent*)event)->key();
+				QKeySequence key = ((QShortcutEvent *)event)->key();
 
 				if (gui.capture_input &&
 					(key != mainwin->shortcut[SET_INP_SC_TOGGLE_CAPTURE_INPUT]->key()) &&
@@ -399,6 +389,7 @@ void dlgKeyboard::replace_keyboard(wdgKeyboard *wk) {
 		comboBox_Size->setCurrentIndex(cfg_from_file.input.vk_size);
 	}
 	keyboard->show();
+	setWindowTitle(keyboard->keyboard_name());
 }
 void dlgKeyboard::set_size_factor(double size_factor) {
 	QList<keyboardButton *> kb_list= findChildren<keyboardButton *>();
@@ -817,6 +808,9 @@ void wdgKeyboard::init(void) {
 void wdgKeyboard::set_buttons(void) {}
 void wdgKeyboard::set_charset(void) {}
 
+QString wdgKeyboard::keyboard_name(void) {
+	return (tr("Virtual Keyboard"));
+}
 void wdgKeyboard::ext_setup(void) {}
 SBYTE wdgKeyboard::calc_element(BYTE row, BYTE column) {
 	return ((row * columns) + column);
@@ -1766,6 +1760,9 @@ void familyBasicKeyboard::set_charset(void) {
 	dlgkbd->set_charset({ &charset[0], LENGTH(charset) }, delay);
 }
 
+QString familyBasicKeyboard::keyboard_name(void) {
+	return (tr("Family Basic Keyboard"));
+}
 void familyBasicKeyboard::ext_setup(void) {
 	tape_data_recorder.enabled = TRUE;
 	gui_update_tape_menu();
@@ -2700,6 +2697,9 @@ void suborKeyboard::set_charset(void) {
 	dlgkbd->set_charset({ &charset[0], LENGTH(charset) }, delay);
 }
 
+QString suborKeyboard::keyboard_name(void) {
+	return (tr("Subor Keyboard"));
+}
 void suborKeyboard::ext_setup(void) {
 	tape_data_recorder.enabled = TRUE;
 	gui_update_tape_menu();

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Virtual Keyboard</string>
+   <string notr="true">Virtual Keyboard</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
@@ -71,9 +71,6 @@
         </item>
         <item>
          <widget class="Line" name="line">
-          <property name="frameShadow">
-           <enum>QFrame::Plain</enum>
-          </property>
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>

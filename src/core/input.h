@@ -137,7 +137,6 @@ typedef struct _port_funct {
 } _port_funct;
 typedef struct _nes_keyboard {
 	BYTE enabled;
-	SBYTE type;
 	WORD rows;
 	WORD columns;
 	WORD totals;

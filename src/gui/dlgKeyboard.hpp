@@ -145,6 +145,7 @@ class wdgKeyboard : public QWidget {
 		virtual void set_charset(void);
 
 	public:
+		virtual QString keyboard_name(void);
 		virtual void ext_setup(void);
 		virtual SBYTE calc_element(BYTE row, BYTE column);
 		virtual QList<QList<SBYTE>> parse_character(_character *ch);
@@ -210,6 +211,7 @@ class familyBasicKeyboard : public wdgKeyboard, public Ui::wdgKeyboardFB {
 		void set_charset(void);
 
 	public:
+		QString keyboard_name(void);
 		void ext_setup(void);
 		QList<QList<SBYTE>> parse_character(wdgKeyboard::_character *ch);
 
@@ -239,6 +241,7 @@ class suborKeyboard : public wdgKeyboard, public Ui::wdgKeyboardSubor {
 		void set_charset(void);
 
 	public:
+		QString keyboard_name(void);
 		void ext_setup(void);
 
 	private:
