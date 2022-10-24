@@ -29,7 +29,7 @@
 #define _C99_SOURCE
 
 //#if HAVE_CONFIG_H
-#include "../extra/xdelta-3.1.0/config.h"
+#include "extra/xdelta-3.1.0/config.h"
 //#endif
 
 #include <errno.h>
