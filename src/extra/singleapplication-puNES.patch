@@ -1,12 +1,6 @@
-Solo in SingleApplication: CMakeLists.txt
-Solo in SingleApplication: examples
-Solo in SingleApplication: .git
-Solo in SingleApplication: .github
-Solo in SingleApplication: .gitignore
-Solo in SingleApplication: SingleApplication
-diff -upr SingleApplication/singleapplication.h /home/fhorse/sviluppo/personale/punes/src/extra/singleapplication/singleapplication.h
---- SingleApplication/singleapplication.h	2022-10-26 09:16:46.570279610 +0200
-+++ /home/fhorse/sviluppo/personale/punes/src/extra/singleapplication/singleapplication.h	2022-08-28 12:51:22.205543218 +0200
+diff -upr SingleApplication.org/singleapplication.h singleapplication/singleapplication.h
+--- SingleApplication.org/singleapplication.h	2022-10-26 09:16:46.570279610 +0200
++++ singleapplication/singleapplication.h	2022-08-28 12:51:22.205543218 +0200
 @@ -27,10 +27,11 @@
  #include <QtNetwork/QLocalSocket>
  
@@ -21,9 +15,9 @@ diff -upr SingleApplication/singleapplication.h /home/fhorse/sviluppo/personale/
  
  class SingleApplicationPrivate;
  
-diff -upr SingleApplication/singleapplication_p.cpp /home/fhorse/sviluppo/personale/punes/src/extra/singleapplication/singleapplication_p.cpp
---- SingleApplication/singleapplication_p.cpp	2022-10-26 09:16:46.570279610 +0200
-+++ /home/fhorse/sviluppo/personale/punes/src/extra/singleapplication/singleapplication_p.cpp	2022-08-17 10:11:53.213111623 +0200
+diff -upr SingleApplication.org/singleapplication_p.cpp singleapplication/singleapplication_p.cpp
+--- SingleApplication.org/singleapplication_p.cpp	2022-10-26 09:16:46.570279610 +0200
++++ singleapplication/singleapplication_p.cpp	2022-08-17 10:11:53.213111623 +0200
 @@ -60,7 +60,8 @@
      #ifndef NOMINMAX
          #define NOMINMAX 1
@@ -43,4 +37,3 @@ diff -upr SingleApplication/singleapplication_p.cpp /home/fhorse/sviluppo/person
      {
          Q_EMIT q->instanceStarted();
      }
-Solo in SingleApplication: singleapplication.pri

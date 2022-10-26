@@ -55,7 +55,7 @@ diff -upr xdelta3/Makefile.am xdelta-3.1.0/Makefile.am
  # are a lot of false positives.
 diff -upr xdelta3/xdelta3.h xdelta-3.1.0/xdelta3.h
 --- xdelta3/xdelta3.h	2022-10-26 08:51:30.430347792 +0200
-+++ /home/fhorse/sviluppo/personale/punes/src/extra/xdelta-3.1.0/xdelta3.h	2022-10-25 20:56:25.394530450 +0200
++++ xdelta-3.1.0/xdelta3.h	2022-10-25 20:56:25.394530450 +0200
 @@ -24,13 +24,17 @@
  #ifndef _XDELTA3_H_
  #define _XDELTA3_H_

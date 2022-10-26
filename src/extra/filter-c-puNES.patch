@@ -1,6 +1,6 @@
-diff -upr filter-c/filter.h /home/fhorse/sviluppo/personale/punes/src/extra/filter-c/filter.h
---- filter-c/filter.h	2022-10-26 09:06:55.767655179 +0200
-+++ /home/fhorse/sviluppo/personale/punes/src/extra/filter-c/filter.h	2022-09-05 10:41:12.957578789 +0200
+diff -upr filter-c.org/filter.h filter-c/filter.h
+--- filter-c.org/filter.h	2022-10-26 09:06:55.767655179 +0200
++++ filter-c/filter.h	2022-09-05 10:41:12.957578789 +0200
 @@ -16,8 +16,6 @@ extern "C"{
  
  #define DOUBLE_PRECISION 0
@@ -46,5 +46,3 @@ diff -upr filter-c/filter.h /home/fhorse/sviluppo/personale/punes/src/extra/filt
 -#endif /* filter_h */
 \ Manca newline alla fine del file
 +#endif /* filter_h */
-Solo in filter-c: .git
-Solo in filter-c: .gitignore

@@ -1,6 +1,6 @@
-diff -upr qkeycode/CMakeLists.txt /home/fhorse/sviluppo/personale/punes/src/extra/qkeycode/CMakeLists.txt
---- qkeycode/CMakeLists.txt	2022-10-26 09:11:11.718684201 +0200
-+++ /home/fhorse/sviluppo/personale/punes/src/extra/qkeycode/CMakeLists.txt	2022-10-16 09:15:54.958601219 +0200
+diff -upr qkeycode.org/CMakeLists.txt qkeycode/CMakeLists.txt
+--- qkeycode.org/CMakeLists.txt	2022-10-26 09:11:11.718684201 +0200
++++ qkeycode/CMakeLists.txt	2022-10-16 09:15:54.958601219 +0200
 @@ -5,7 +5,7 @@ project(qkeycode LANGUAGES CXX)
  set(CMAKE_CXX_STANDARD 17)
  set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -18,10 +18,9 @@ diff -upr qkeycode/CMakeLists.txt /home/fhorse/sviluppo/personale/punes/src/extr
 +target_link_libraries(qkeycode PRIVATE Qt::Gui)
  
  target_compile_definitions(qkeycode PRIVATE KEYCODEQT_LIBRARY)
-Solo in qkeycode: .git
-diff -upr qkeycode/include/qkeycode/chromium/dom_code.h /home/fhorse/sviluppo/personale/punes/src/extra/qkeycode/include/qkeycode/chromium/dom_code.h
---- qkeycode/include/qkeycode/chromium/dom_code.h	2022-10-26 09:11:11.718684201 +0200
-+++ /home/fhorse/sviluppo/personale/punes/src/extra/qkeycode/include/qkeycode/chromium/dom_code.h	2022-10-23 16:20:52.627284503 +0200
+diff -upr qkeycode.org/chromium/dom_code.h qkeycode/include/qkeycode/chromium/dom_code.h
+--- qkeycode.org/include/qkeycode/chromium/dom_code.h	2022-10-26 09:11:11.718684201 +0200
++++ qkeycode/include/qkeycode/chromium/dom_code.h	2022-10-23 16:20:52.627284503 +0200
 @@ -5,14 +5,14 @@
  #ifndef UI_EVENTS_KEYCODES_DOM3_DOM_CODE_H_
  #define UI_EVENTS_KEYCODES_DOM3_DOM_CODE_H_
@@ -40,9 +39,9 @@ diff -upr qkeycode/include/qkeycode/chromium/dom_code.h /home/fhorse/sviluppo/pe
 +} } // namespace ui
  
  #endif  // UI_EVENTS_KEYCODES_DOM3_DOM_CODE_H_
-diff -upr qkeycode/include/qkeycode/chromium/keycode_converter.h /home/fhorse/sviluppo/personale/punes/src/extra/qkeycode/include/qkeycode/chromium/keycode_converter.h
---- qkeycode/include/qkeycode/chromium/keycode_converter.h	2022-10-26 09:11:11.718684201 +0200
-+++ /home/fhorse/sviluppo/personale/punes/src/extra/qkeycode/include/qkeycode/chromium/keycode_converter.h	2022-10-23 16:21:31.868638585 +0200
+diff -upr qkeycode.org/include/qkeycode/chromium/keycode_converter.h qkeycode/chromium/keycode_converter.h
+--- qkeycode.org/include/qkeycode/chromium/keycode_converter.h	2022-10-26 09:11:11.718684201 +0200
++++ qkeycode/include/qkeycode/chromium/keycode_converter.h	2022-10-23 16:21:31.868638585 +0200
 @@ -9,12 +9,12 @@
  #include <stdint.h>
  #include <string>
@@ -66,9 +65,9 @@ diff -upr qkeycode/include/qkeycode/chromium/keycode_converter.h /home/fhorse/sv
 +} } // namespace ui
  
  #endif  // UI_EVENTS_KEYCODES_DOM_KEYCODE_CONVERTER_H_
-diff -upr qkeycode/include/qkeycode/qkeycode.h /home/fhorse/sviluppo/personale/punes/src/extra/qkeycode/include/qkeycode/qkeycode.h
---- qkeycode/include/qkeycode/qkeycode.h	2022-10-26 09:11:11.718684201 +0200
-+++ /home/fhorse/sviluppo/personale/punes/src/extra/qkeycode/include/qkeycode/qkeycode.h	2022-10-22 15:06:34.994671728 +0200
+diff -upr qkeycode.org/include/qkeycode/qkeycode.h qkeycode/include/qkeycode/qkeycode.h
+--- qkeycode.org/include/qkeycode/qkeycode.h	2022-10-26 09:11:11.718684201 +0200
++++ qkeycode/include/qkeycode/qkeycode.h	2022-10-22 15:06:34.994671728 +0200
 @@ -40,9 +40,9 @@
  #ifndef WEB_EVENT_FACTORY_H
  #define WEB_EVENT_FACTORY_H
@@ -96,9 +95,9 @@ diff -upr qkeycode/include/qkeycode/qkeycode.h /home/fhorse/sviluppo/personale/p
 +#endif
 +
  #endif // WEB_EVENT_FACTORY_H
-diff -upr qkeycode/include/qkeycode/values.h /home/fhorse/sviluppo/personale/punes/src/extra/qkeycode/include/qkeycode/values.h
---- qkeycode/include/qkeycode/values.h	2022-10-26 09:11:11.718684201 +0200
-+++ /home/fhorse/sviluppo/personale/punes/src/extra/qkeycode/include/qkeycode/values.h	2022-10-16 01:04:30.858636488 +0200
+diff -upr qkeycode.org/include/qkeycode/values.h qkeycode/include/qkeycode/values.h
+--- qkeycode.org/include/qkeycode/values.h	2022-10-26 09:11:11.718684201 +0200
++++ qkeycode/values.h	2022-10-16 01:04:30.858636488 +0200
 @@ -1,7 +1,7 @@
  #pragma once
  
@@ -109,9 +108,9 @@ diff -upr qkeycode/include/qkeycode/values.h /home/fhorse/sviluppo/personale/pun
  
  namespace qkeycode {
  
-diff -upr qkeycode/src/qkeycode/chromium/keycode_converter.cc /home/fhorse/sviluppo/personale/punes/src/extra/qkeycode/src/qkeycode/chromium/keycode_converter.cc
---- qkeycode/src/qkeycode/chromium/keycode_converter.cc	2022-10-26 09:11:11.718684201 +0200
-+++ /home/fhorse/sviluppo/personale/punes/src/extra/qkeycode/src/qkeycode/chromium/keycode_converter.cc	2022-10-23 16:22:34.940201379 +0200
+diff -upr qkeycode.org/src/qkeycode/chromium/keycode_converter.cc qkeycode/chromium/keycode_converter.cc
+--- qkeycode.org/src/qkeycode/chromium/keycode_converter.cc	2022-10-26 09:11:11.718684201 +0200
++++ qkeycode/src/qkeycode/chromium/keycode_converter.cc	2022-10-23 16:22:34.940201379 +0200
 @@ -2,13 +2,15 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -156,9 +155,9 @@ diff -upr qkeycode/src/qkeycode/chromium/keycode_converter.cc /home/fhorse/svilu
  
 -}  // namespace ui
 +} } // namespace ui
-diff -upr qkeycode/src/qkeycode/qkeycode.cpp /home/fhorse/sviluppo/personale/punes/src/extra/qkeycode/src/qkeycode/qkeycode.cpp
---- qkeycode/src/qkeycode/qkeycode.cpp	2022-10-26 09:11:11.718684201 +0200
-+++ /home/fhorse/sviluppo/personale/punes/src/extra/qkeycode/src/qkeycode/qkeycode.cpp	2022-10-23 15:29:16.947532061 +0200
+diff -upr qkeycode.org/src/qkeycode/qkeycode.cpp qkeycode/src/qkeycode/qkeycode.cpp
+--- qkeycode.org/src/qkeycode/qkeycode.cpp	2022-10-26 09:11:11.718684201 +0200
++++ qkeycode/qkeycode.cpp	2022-10-23 15:29:16.947532061 +0200
 @@ -64,22 +64,22 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   */
