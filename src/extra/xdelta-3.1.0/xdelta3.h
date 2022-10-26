@@ -24,6 +24,10 @@
 #ifndef _XDELTA3_H_
 #define _XDELTA3_H_
 
+#if defined _POSIX_SOURCE
+#undef _POSIX_SOURCE
+#endif
+
 #define _POSIX_SOURCE 200112L
 #define _ISOC99_SOURCE
 #define _C99_SOURCE

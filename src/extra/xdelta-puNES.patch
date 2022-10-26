@@ -1,0 +1,78 @@
+diff -upr xdelta3/configure.ac xdelta-3.1.0/configure.ac
+--- xdelta3/configure.ac	2022-10-26 08:51:30.423347717 +0200
++++ xdelta-3.1.0/configure.ac	2021-09-06 11:46:21.804211323 +0200
+@@ -1,5 +1,4 @@
+-AC_INIT([Xdelta3], [3.1.0], [josh.macdonald@gmail.com], 
+-	[xdelta3], [http://xdelta.org/])
++AC_INIT([Xdelta3],[3.1.0],[josh.macdonald@gmail.com],[xdelta3],[http://xdelta.org/])
+ AC_PREREQ([2.68])
+ AC_CONFIG_MACRO_DIR([m4])
+ LT_INIT
+@@ -16,11 +15,11 @@ AC_CHECK_SIZEOF(unsigned long long)
+ 
+ AC_ARG_WITH(
+     [liblzma],
+-    [AC_HELP_STRING(
++    [AS_HELP_STRING(
+         [--with-liblzma],
+         [build with liblzma support @<:@default=autodetect@:>@])],
+     [USE_LIBLZMA=$withval],
+-    [USE_LIBLZMA=auto])
++    [USE_LIBLZMA=no])
+ 
+ if test "x$USE_LIBLZMA" != xno ; then
+     AC_CHECK_HEADERS([lzma.h],,[
+diff -upr xdelta3/Makefile.am xdelta-3.1.0/Makefile.am
+--- xdelta3/Makefile.am	2022-10-26 08:51:30.423347717 +0200
++++ xdelta-3.1.0/Makefile.am	2021-09-06 11:46:21.971212916 +0200
+@@ -4,7 +4,7 @@ AUTOMAKE_OPTIONS = subdir-objects
+ bin_PROGRAMS = xdelta3
+ noinst_PROGRAMS = xdelta3regtest xdelta3decode xdelta3checksum
+ 
+-export AFL_HARDEN
++#export AFL_HARDEN
+ 
+ common_SOURCES = \
+ 	  xdelta3-blkcache.h \
+@@ -46,12 +46,12 @@ xdelta3checksum_SOURCES = $(common_SOURC
+ # not automatically built or run.  Install Go-1.5.x or later, add
+ # `pwd`/go in $GOPATH, and (cd go/src && go run regtest.go).
+ # TODO(jmacd): replace hard-coded path names in regtest.go w/ flags.
+-GOLANG_SOURCES = \
+-	go/src/xdelta/test.go \
+-	go/src/xdelta/rstream.go \
+-	go/src/xdelta/tgroup.go \
+-	go/src/xdelta/run.go \
+-	go/src/regtest.go
++#GOLANG_SOURCES = \
++#	go/src/xdelta/test.go \
++#	go/src/xdelta/rstream.go \
++#	go/src/xdelta/tgroup.go \
++#	go/src/xdelta/run.go \
++#	go/src/regtest.go
+ 
+ # Note: for extra sanity checks, enable -Wconversion. Note there
+ # are a lot of false positives.
+diff -upr xdelta3/xdelta3.h xdelta-3.1.0/xdelta3.h
+--- xdelta3/xdelta3.h	2022-10-26 08:51:30.430347792 +0200
++++ /home/fhorse/sviluppo/personale/punes/src/extra/xdelta-3.1.0/xdelta3.h	2022-10-25 20:56:25.394530450 +0200
+@@ -24,13 +24,17 @@
+ #ifndef _XDELTA3_H_
+ #define _XDELTA3_H_
+ 
++#if defined _POSIX_SOURCE
++#undef _POSIX_SOURCE
++#endif
++
+ #define _POSIX_SOURCE 200112L
+ #define _ISOC99_SOURCE
+ #define _C99_SOURCE
+ 
+-#if HAVE_CONFIG_H
++//#if HAVE_CONFIG_H
+ #include "config.h"
+-#endif
++//#endif
+ 
+ #include <errno.h>
+ #include <stdarg.h>
