@@ -44,7 +44,7 @@
 #include "audio/blipbuf.h"
 #include "audio/snd.h"
 #include "patcher.h"
-#include "extra/kiss_fft130/kiss_fft.h"
+#include "extra/kissfft/kiss_fft.h"
 
 enum nsf_flags {
 	VERSION,
@@ -1136,7 +1136,7 @@ static void nsf_effect_bars(void) {
 			int index = (bars / 2), last_index = 999;
 
 			kiss_fft(fft_cfg, fft_in, fft_out);
-			free(fft_cfg);
+			kiss_fft_free(fft_cfg);
 
 			for (count = 0; count <= (len / 2); count++) {
 				const float band_width = (len / 2) / bars, multiplier = 0.17f;

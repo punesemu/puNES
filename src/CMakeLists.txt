@@ -437,7 +437,7 @@ set(core_srcs
 
 set(extra_srcs
 	extra/filter-c/filter.c
-	extra/kiss_fft130/kiss_fft.c
+	extra/kissfft/kiss_fft.c
 	extra/singleapplication/singleapplication.cpp
 	extra/singleapplication/singleapplication_p.cpp
 	)
