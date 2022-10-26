@@ -1,7 +1,7 @@
 qrc_resources.cpp: designer/resources.qrc
 	$(RCC) $(srcdir)/designer/resources.qrc -name resources -o $@
 
-qrc_translations.cpp: designer/translations.qrc $(QM_SOURCES)
+qrc_translations.cpp: designer/translations.qrc $(QM_FILES)
 	$(RCC) $(srcdir)/designer/translations.qrc -name translations -o $@
 
 .ts.qm:
@@ -109,7 +109,7 @@ MOC_SOURCES += \
 	wdgOpenGL_moc.cpp
 endif
 
-QM_SOURCES = \
+QM_FILES = \
 	$(srcdir)/designer/translations/en_EN.qm \
 	$(srcdir)/designer/translations/tr_TR.qm \
 	$(srcdir)/designer/translations/it_IT.qm \
@@ -160,7 +160,7 @@ UI_SOURCES = \
 BUILT_SOURCES = \
 	$(MOC_SOURCES) \
 	$(UI_SOURCES) \
-	$(QM_SOURCES) \
+	$(QM_FILES) \
 	$(QRC_SOURCES)
 
 noinst_LIBRARIES = libgui.a
