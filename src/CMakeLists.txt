@@ -563,8 +563,11 @@ set(gui_srcs
 	>
 
 	$<$<PLATFORM_ID:Linux>:
-		gui/linux/monitor.c
 		gui/linux/os_jstick.c
+	>
+
+	$<$<AND:$<PLATFORM_ID:FreeBSD,OpenBSD,Linux>,$<BOOL:${X11_FOUND}>>:
+		gui/linux/monitor.c
 	>
 	)
 
@@ -618,7 +621,7 @@ target_include_directories(punes
 	video/shaders
 	"${PROJECT_BINARY_DIR}"
 
-	$<$<PLATFORM_ID:FreeBSD>:${CMAKE_CURRENT_SOURCE_DIR}/gui/bsd>
+	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:${CMAKE_CURRENT_SOURCE_DIR}/gui/bsd>
 	$<$<PLATFORM_ID:Linux>:${CMAKE_CURRENT_SOURCE_DIR}/gui/linux>
 	$<$<PLATFORM_ID:Windows>:${CMAKE_CURRENT_SOURCE_DIR}/gui/windows>
 	)
@@ -631,13 +634,13 @@ target_link_libraries(punes
 	Qt::Widgets
 	Threads::Threads
 	$<$<BOOL:${ENABLE_FFMPEG}>:PkgConfig::LIBAV>
+	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:Sndio::Sndio>
+	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:UsbHid::UsbHid>
 	$<$<PLATFORM_ID:Linux>:ALSA::ALSA>
 	$<$<PLATFORM_ID:Linux>:PkgConfig::UDEV>
 	$<$<BOOL:${X11_FOUND}>:X11::Xrandr>
-	$<$<BOOL:${ENABLE_OPENGL}>:
-		OpenGL::OpenGL
-		OpenGL::GLX
-	>
+	$<$<BOOL:${ENABLE_OPENGL}>:OpenGL::GL>
+	$<$<BOOL:${ENABLE_OPENGL}>:$<$<PLATFORM_ID:Linux>:OpenGL::GLX>>
 	$<$<BOOL:${ENABLE_OPENGL_CG}>:Cg::CgGL>
 	lib7zip
 	qkeycode
