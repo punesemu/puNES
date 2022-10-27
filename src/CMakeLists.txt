@@ -558,9 +558,11 @@ set(gui_srcs
 	>
 
 	$<$<PLATFORM_ID:Windows>:
-		gui/windows/monitor.c
 		gui/windows/os_jstick.c
 		gui/windows/resources.rc
+	>
+	$<$<AND:$<PLATFORM_ID:Windows>,$<BOOL:${ENABLE_FULLSCREEN_RESFREQ}>>:
+		gui/windows/monitor.c
 	>
 
 	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:
@@ -571,7 +573,7 @@ set(gui_srcs
 		gui/linux/os_jstick.c
 	>
 
-	$<$<AND:$<PLATFORM_ID:FreeBSD,OpenBSD,Linux>,$<BOOL:${X11_FOUND}>>:
+	$<$<AND:$<PLATFORM_ID:FreeBSD,OpenBSD,Linux>,$<BOOL:${ENABLE_FULLSCREEN_RESFREQ}>>:
 		gui/linux/monitor.c
 	>
 	)
@@ -589,7 +591,9 @@ set(video_srcs
 	video/filters/scale2x.c
 	video/filters/xBRZ.c
 	video/gfx.c
-	video/gfx_monitor.c
+	$<$<BOOL:${ENABLE_FULLSCREEN_RESFREQ}>:
+		video/gfx_monitor.c
+	>
 	video/gfx_thread.c
 	video/shaders/shaders.c
 	$<IF:$<BOOL:${ENABLE_OPENGL}>,
@@ -713,5 +717,5 @@ target_compile_definitions(punes
 		WITH_D3D9
 	>
 	$<$<BOOL:${ENABLE_OPENGL_CG}>:WITH_OPENGL_CG>
-	$<$<BOOL:${X11_FOUND}>:FULLSCREEN_RESFREQ>
+	$<$<BOOL:${ENABLE_FULLSCREEN_RESFREQ}>:FULLSCREEN_RESFREQ>
 	)

@@ -20,6 +20,7 @@ option(ENABLE_OPENGL "Use OpenGL support instead of Direct3D 9 (only for Windows
 option(ENABLE_OPENGL_CG "Enable OpenGL nVidia Cg Toolkit support" OFF)
 option(ENABLE_WIN_STATIC_QT "Use precompiled Qt static library (only for Windows)" OFF)
 option(ENABLE_WIN_STATIC_QT560 "Use precompiled Qt 5.6.3 static library (only for Windows)" OFF)
+option(ENABLE_FULLSCREEN_RESFREQ "Enable Fullscreen resolution and auto frequency" ON)
 
 if (ENABLE_GIT_INFO)
 	find_package(Git)
@@ -84,9 +85,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
-	find_package(X11)
-	if(NOT X11_FOUND)
-		message(WARNING "libX11 not found, fullscreen resolution and auto frequency disabled")
+	if(ENABLE_FULLSCREEN_RESFREQ)
+		find_package(X11 REQUIRED)
 	endif()
 	# No alternatives, force selection
 	set(ENABLE_OPENGL ON)
@@ -99,6 +99,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	if(ENABLE_WIN_STATIC_QT560)
 		set(ENABLE_WIN_STATIC_QT ON)
 	endif()
+	# No alternatives, force selection
+	set(ENABLE_FULLSCREEN_RESFREQ ON)
 else()
 	set(ENABLE_WIN_STATIC_QT OFF)
 	set(ENABLE_WIN_STATIC_QT560 OFF)
