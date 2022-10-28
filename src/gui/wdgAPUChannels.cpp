@@ -16,7 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "wdgAPUChannels.moc"
+#include "wdgAPUChannels.hpp"
 #include "dlgSettings.hpp"
 #include "audio/snd.h"
 #include "conf.h"

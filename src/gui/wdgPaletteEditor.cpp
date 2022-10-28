@@ -21,7 +21,7 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
 #include <QtWidgets/QMenu>
-#include "wdgPaletteEditor.moc"
+#include "wdgPaletteEditor.hpp"
 #include "mainWindow.hpp"
 #include "common.h"
 #include "palette.h"

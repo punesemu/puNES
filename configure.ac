@@ -19,6 +19,12 @@ AC_PROG_CXX
 AC_PROG_RANLIB
 AM_PROG_AR
 
+# Required macros for xdelta stubbed config.h
+AC_CHECK_SIZEOF(size_t)
+AC_CHECK_SIZEOF(unsigned int)
+AC_CHECK_SIZEOF(unsigned long)
+AC_CHECK_SIZEOF(unsigned long long)
+
 AC_ARG_WITH([d3d9],
 	AS_HELP_STRING([--with-d3d9],
 		[Build with support for D3D9 (only windows) @<:@default: yes@:>@]
@@ -189,7 +195,7 @@ AS_IF([test "x$PKG_CONFIG" = "xno"], [
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h float.h inttypes.h limits.h stddef.h stdint.h stdlib.h string.h strings.h sys/ioctl.h sys/time.h unistd.h utime.h])
 
-AX_CXX_COMPILE_STDCXX_17([noext])
+AX_CXX_COMPILE_STDCXX_14([noext])
 
 OLD_CFLAGS="$CFLAGS"
 OLD_LIBS="$LIBS"
@@ -675,9 +681,6 @@ AC_CONFIG_SUBDIRS([src/extra/lib7zip-53abfeb])
 LIB7ZIP_LIBS="${TOP_BUILDDIR}src/extra/${LIB7ZIP_SRC}/src/lib7zip.a"
 AC_SUBST(LIB7ZIP_SRC)
 AC_SUBST(LIB7ZIP_LIBS)
-
-# xdelta
-AC_CONFIG_SUBDIRS([src/extra/xdelta-3.1.0])
 
 # The End
 AM_COND_IF([LINUX], [

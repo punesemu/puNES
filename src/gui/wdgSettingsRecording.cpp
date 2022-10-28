@@ -17,7 +17,7 @@
  */
 
 #include <QtGui/QStandardItemModel>
-#include "wdgSettingsRecording.moc"
+#include "wdgSettingsRecording.hpp"
 #include "mainWindow.hpp"
 #include "recording.h"
 #include "conf.h"

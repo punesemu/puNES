@@ -18,7 +18,7 @@
 
 #include <QtWidgets/QAbstractItemView>
 #include <QtCore/QBuffer>
-#include "dlgJsc.moc"
+#include "dlgJsc.hpp"
 #include "dlgStdPad.hpp"
 #include "settings.h"
 #include "gui.h"

@@ -76,9 +76,6 @@ void input_init(BYTE set_cursor) {
 
 	memset(&mic, 0x00, sizeof(mic));
 
-	nes_keyboard.enabled = FALSE;
-	nes_keyboard.type = -1;
-
 	if (nsf.enabled == TRUE) {
 		SET_WR_REG(NULL);
 		SET_RD_REG(PORT1, NULL);
@@ -255,7 +252,6 @@ void input_init(BYTE set_cursor) {
 				break;
 			case CTRL_FAMILY_BASIC_KEYBOARD:
 				nes_keyboard.enabled = TRUE;
-				nes_keyboard.type = CTRL_FAMILY_BASIC_KEYBOARD;
 				SET_WR(PORT3, input_wr_family_basic_keyboard);
 				SET_RD(PORT3, input_rd_family_basic_keyboard);
 				SET_RD(PORT4, input_rd_family_basic_keyboard);
@@ -263,7 +259,6 @@ void input_init(BYTE set_cursor) {
 				break;
 			case CTRL_SUBOR_KEYBOARD:
 				nes_keyboard.enabled = TRUE;
-				nes_keyboard.type = CTRL_SUBOR_KEYBOARD;
 				SET_WR(PORT3, input_wr_subor_keyboard);
 				SET_RD(PORT3, input_rd_subor_keyboard);
 				SET_RD(PORT4, input_rd_subor_keyboard);
@@ -316,5 +311,6 @@ BYTE input_draw_target(void) {
 }
 
 INLINE static void input_init_generic_keyboard(void) {
+	nes_keyboard.enabled = FALSE;
 	memset(&generic_keyboard, 0x00, sizeof(generic_keyboard));
 }

@@ -18,7 +18,7 @@
 
 #include <QtWidgets/QKeySequenceEdit>
 #include <QtWidgets/QScrollBar>
-#include "wdgSettingsInput.moc"
+#include "wdgSettingsInput.hpp"
 #include "mainWindow.hpp"
 #include "dlgSettings.hpp"
 #include "dlgStdPad.hpp"

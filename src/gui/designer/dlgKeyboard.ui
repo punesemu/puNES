@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>314</width>
-    <height>99</height>
+    <width>861</width>
+    <height>151</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Virtual Keyboard</string>
+   <string notr="true">Virtual Keyboard</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
@@ -26,85 +26,138 @@
      <property name="title">
       <string>Options</string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QVBoxLayout" name="verticalLayout_Options">
       <item>
-       <widget class="QLabel" name="label_Size">
-        <property name="text">
-         <string>Size</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout_Common">
+        <item>
+         <widget class="QLabel" name="label_Size">
+          <property name="text">
+           <string>Size</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox_Size">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
+          <item>
+           <property name="text">
+            <string>1.0x</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>1.5x</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>2.0x</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>2.5x</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="Line" name="line">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_Mode">
+          <property name="text">
+           <string>Mode</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox_Mode">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
+          <item>
+           <property name="text">
+            <string>Virtual Keyboard</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Setup</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
-       <widget class="QComboBox" name="comboBox_Size">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <item>
-         <property name="text">
-          <string>1.0x</string>
+       <widget class="QWidget" name="widget_Subor" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout_Subor">
+         <property name="leftMargin">
+          <number>0</number>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>1.5x</string>
+         <property name="topMargin">
+          <number>0</number>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>2.0x</string>
+         <property name="rightMargin">
+          <number>0</number>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>2.5x</string>
+         <property name="bottomMargin">
+          <number>0</number>
          </property>
-        </item>
-       </widget>
-      </item>
-      <item>
-       <widget class="Line" name="line">
-        <property name="frameShadow">
-         <enum>QFrame::Plain</enum>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_Mode">
-        <property name="text">
-         <string>Mode</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBox_Mode">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <item>
-         <property name="text">
-          <string>Virtual Keyboard</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Setup</string>
-         </property>
-        </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_Subor">
+           <item>
+            <widget class="QLabel" name="label_Subor">
+             <property name="text">
+              <string>Subor Keyboard</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line_Subor">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_Subor_Extende_Mode">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="text">
+            <string>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : 'Study and Game 32-in-1' have problems with this mode.)</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>

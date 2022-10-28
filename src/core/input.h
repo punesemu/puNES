@@ -84,6 +84,8 @@ typedef struct _config_input {
 	BYTE controller_mode;
 	BYTE expansion;
 	_input_guid jguid_sch;
+	BYTE vk_size;
+	BYTE vk_subor_extended_mode;
 } _config_input;
 typedef struct _r4016 {
 	BYTE value;
@@ -135,7 +137,6 @@ typedef struct _port_funct {
 } _port_funct;
 typedef struct _nes_keyboard {
 	BYTE enabled;
-	SBYTE type;
 	WORD rows;
 	WORD columns;
 	WORD totals;

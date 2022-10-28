@@ -1,0 +1,337 @@
+diff -upr qkeycode.org/CMakeLists.txt qkeycode/CMakeLists.txt
+--- qkeycode.org/CMakeLists.txt	2022-10-26 09:11:11.718684201 +0200
++++ qkeycode/CMakeLists.txt	2022-10-16 09:15:54.958601219 +0200
+@@ -5,7 +5,7 @@ project(qkeycode LANGUAGES CXX)
+ set(CMAKE_CXX_STANDARD 17)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+-find_package(Qt5 COMPONENTS Gui Widgets REQUIRED)
++# The includer is responsible for supplying a Qt target.
+ 
+ add_library(qkeycode STATIC
+     src/qkeycode/qkeycode.cpp
+@@ -15,6 +15,6 @@ target_include_directories(qkeycode
+     PUBLIC include
+     PRIVATE src
+ )
+-target_link_libraries(qkeycode PRIVATE Qt5::Gui)
++target_link_libraries(qkeycode PRIVATE Qt::Gui)
+ 
+ target_compile_definitions(qkeycode PRIVATE KEYCODEQT_LIBRARY)
+diff -upr qkeycode.org/chromium/dom_code.h qkeycode/include/qkeycode/chromium/dom_code.h
+--- qkeycode.org/include/qkeycode/chromium/dom_code.h	2022-10-26 09:11:11.718684201 +0200
++++ qkeycode/include/qkeycode/chromium/dom_code.h	2022-10-23 16:20:52.627284503 +0200
+@@ -5,14 +5,14 @@
+ #ifndef UI_EVENTS_KEYCODES_DOM3_DOM_CODE_H_
+ #define UI_EVENTS_KEYCODES_DOM3_DOM_CODE_H_
+ 
+-namespace qkeycode::ui {
++namespace qkeycode { namespace ui {
+ 
+ #define DOM_CODE(usb, evdev, xkb, win, mac, code, id) id = usb
+ #define DOM_CODE_DECLARATION enum class DomCode
+-#include "qkeycode/chromium/dom_code_data.inc"
++#include "../../qkeycode/chromium/dom_code_data.inc"
+ #undef DOM_CODE
+ #undef DOM_CODE_DECLARATION
+ 
+-}  // namespace ui
++} } // namespace ui
+ 
+ #endif  // UI_EVENTS_KEYCODES_DOM3_DOM_CODE_H_
+diff -upr qkeycode.org/include/qkeycode/chromium/keycode_converter.h qkeycode/chromium/keycode_converter.h
+--- qkeycode.org/include/qkeycode/chromium/keycode_converter.h	2022-10-26 09:11:11.718684201 +0200
++++ qkeycode/include/qkeycode/chromium/keycode_converter.h	2022-10-23 16:21:31.868638585 +0200
+@@ -9,12 +9,12 @@
+ #include <stdint.h>
+ #include <string>
+ 
+-#include "qkeycode/chromium/macros.h"
++#include "../../qkeycode/chromium/macros.h"
+ 
+ // For reference, the W3C UI Event spec is located at:
+ // http://www.w3.org/TR/uievents/
+ 
+-namespace qkeycode::ui {
++namespace qkeycode { namespace ui {
+ 
+ enum class DomCode;
+ 
+@@ -95,6 +95,6 @@ class KeycodeConverter {
+   DISALLOW_COPY_AND_ASSIGN(KeycodeConverter);
+ };
+ 
+-}  // namespace ui
++} } // namespace ui
+ 
+ #endif  // UI_EVENTS_KEYCODES_DOM_KEYCODE_CONVERTER_H_
+diff -upr qkeycode.org/include/qkeycode/qkeycode.h qkeycode/include/qkeycode/qkeycode.h
+--- qkeycode.org/include/qkeycode/qkeycode.h	2022-10-26 09:11:11.718684201 +0200
++++ qkeycode/include/qkeycode/qkeycode.h	2022-10-22 15:06:34.994671728 +0200
+@@ -40,9 +40,9 @@
+ #ifndef WEB_EVENT_FACTORY_H
+ #define WEB_EVENT_FACTORY_H
+ 
+-#include "qkeycode/chromium/keycode_converter.h"
++#include "../qkeycode/chromium/keycode_converter.h"
+ 
+-#include <QtGlobal>
++#include <QtCore/QtGlobal>
+ 
+ QT_BEGIN_NAMESPACE
+ class QKeyEvent;
+@@ -57,4 +57,14 @@ KeyCode toKeycode(QKeyEvent*);
+ 
+ }
+ 
++#if defined(_WIN32)
++#if !defined(Q_OS_WINDOWS)
++#define Q_OS_WINDOWS
++#endif
++#else
++#if !defined(Q_OS_WINDOWS) || !defined(Q_OS_OPENBSD) || !defined(Q_OS_FREEBSD)
++#define Q_OS_LINUX
++#endif
++#endif
++
+ #endif // WEB_EVENT_FACTORY_H
+diff -upr qkeycode.org/include/qkeycode/values.h qkeycode/include/qkeycode/values.h
+--- qkeycode.org/include/qkeycode/values.h	2022-10-26 09:11:11.718684201 +0200
++++ qkeycode/values.h	2022-10-16 01:04:30.858636488 +0200
+@@ -1,7 +1,7 @@
+ #pragma once
+ 
+-#include "qkeycode/chromium/dom_code.h"
+-#include "qkeycode/qkeycode.h"
++#include "../qkeycode/chromium/dom_code.h"
++#include "../qkeycode/qkeycode.h"
+ 
+ namespace qkeycode {
+ 
+diff -upr qkeycode.org/src/qkeycode/chromium/keycode_converter.cc qkeycode/chromium/keycode_converter.cc
+--- qkeycode.org/src/qkeycode/chromium/keycode_converter.cc	2022-10-26 09:11:11.718684201 +0200
++++ qkeycode/src/qkeycode/chromium/keycode_converter.cc	2022-10-23 16:22:34.940201379 +0200
+@@ -2,13 +2,15 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
+-#include "qkeycode/chromium/keycode_converter.h"
++#include "../../../include/qkeycode/qkeycode.h"
+ 
+-#include "qkeycode/chromium/dom_code.h"
++#include "../../../include/qkeycode/chromium/keycode_converter.h"
+ 
+-#include <QDebug>
++#include "../../../include/qkeycode/chromium/dom_code.h"
+ 
+-namespace qkeycode::ui {
++#include <QtCore/QDebug>
++
++namespace qkeycode { namespace ui {
+ 
+ namespace {
+ 
+@@ -20,7 +22,7 @@ namespace {
+ #elif defined(Q_OS_ANDROID)
+ #define DOM_CODE(usb, evdev, xkb, win, mac, code, id) \
+   { usb, evdev, code }
+-#elif defined(Q_OS_LINUX)
++#elif defined(Q_OS_LINUX) || defined(Q_OS_OPENBSD) || defined(Q_OS_FREEBSD)
+ #define DOM_CODE(usb, evdev, xkb, win, mac, code, id) \
+   { usb, xkb, code }
+ #elif defined(Q_OS_MACOS)
+@@ -30,7 +32,7 @@ namespace {
+ #error Unsupported platform
+ #endif
+ #define DOM_CODE_DECLARATION const KeycodeMapEntry kDomCodeMappings[] =
+-#include "qkeycode/chromium/dom_code_data.inc"
++#include "../../../include/qkeycode/chromium/dom_code_data.inc"
+ #undef DOM_CODE
+ #undef DOM_CODE_DECLARATION
+ 
+@@ -203,4 +205,4 @@ int KeycodeConverter::CodeStringToNative
+   return UsbKeycodeToNativeKeycode(CodeStringToUsbKeycode(code));
+ }
+ 
+-}  // namespace ui
++} } // namespace ui
+diff -upr qkeycode.org/src/qkeycode/qkeycode.cpp qkeycode/src/qkeycode/qkeycode.cpp
+--- qkeycode.org/src/qkeycode/qkeycode.cpp	2022-10-26 09:11:11.718684201 +0200
++++ qkeycode/qkeycode.cpp	2022-10-23 15:29:16.947532061 +0200
+@@ -64,22 +64,22 @@
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+-#include "qkeycode/qkeycode.h"
+-#include "qkeycode/chromium/dom_code.h"
+-#include "qkeycode/chromium/keycode_converter.h"
+-
+-#include <QCoreApplication>
+-#include <QElapsedTimer>
+-#include <QGuiApplication>
+-#include <QKeyEvent>
+-#include <QStyleHints>
+-
+-#include <optional>
++#include "../../include/qkeycode/qkeycode.h"
++#include "../../include/qkeycode/chromium/dom_code.h"
++#include "../../include/qkeycode/chromium/keycode_converter.h"
++
++#include <QtCore/QCoreApplication>
++#include <QtCore/QElapsedTimer>
++#include <QtGui/QGuiApplication>
++#include <QtGui/QKeyEvent>
++#include <QtGui/QStyleHints>
+ 
+ namespace qkeycode {
+ 
+ enum class KeyboardDriver { Unknown, Windows, Cocoa, Xkb, Evdev };
+ 
++static quint32 static_value = 0;
++
+ static KeyboardDriver keyboardDriverImpl()
+ {
+     QString platformName = QGuiApplication::platformName();
+@@ -102,6 +102,7 @@ static KeyboardDriver keyboardDriver()
+     return cached;
+ }
+ 
++#if defined(Q_OS_MACOS)
+ // Qt swaps the Control and Meta keys on macOS (unless the attribute
+ // AA_MacDontSwapCtrlAndMeta is set). To preserve compatibility with Chromium we
+ // want to unswap them when forwarding events. The following two functions,
+@@ -119,12 +120,14 @@ static int qtKeyForKeyEvent(const QKeyEv
+     }
+     return key;
+ }
++#endif
+ 
+-std::optional<quint32> asNonzero(quint32 x) {
++quint32 *asNonzero(quint32 x) {
++    static_value = x;
+     if (x != 0) {
+-        return x;
++        return &static_value;
+     } else {
+-        return std::nullopt;
++        return NULL;
+     }
+ }
+ 
+@@ -133,7 +136,7 @@ std::optional<quint32> asNonzero(quint32
+ //   - On Windows: the Windows OEM scancode.
+ //   - On macOS: the NSEvent's keyCode.
+ //   - On Linux: The XKB keycode.
+-static std::optional<quint32> nativeKeyCodeForKeyEvent(const QKeyEvent *ev)
++static quint32 *nativeKeyCodeForKeyEvent(const QKeyEvent *ev)
+ {
+     // Ifdefs here should match <chromium/keycode_converter.cc> kDomCodeMappings,
+     // since NativeKeycodeToDomCode() is where the native key code is eventually used.
+@@ -159,10 +162,10 @@ static std::optional<quint32> nativeKeyC
+ 
+     quint32 code = keyboardDriver() == KeyboardDriver::Windows ? ev->nativeScanCode() : 0;
+     if (code & 0x100) {
+-        code = code - 0x100 | 0xe000;
++        code = (code - 0x100) | 0xe000;
+     }
+     return asNonzero(code);
+-#elif defined(Q_OS_LINUX)
++#elif defined(Q_OS_LINUX) || defined(Q_OS_OPENBSD) || defined(Q_OS_FREEBSD)
+     return asNonzero(
+         keyboardDriver() == KeyboardDriver::Xkb ? ev->nativeScanCode() : 0);
+ #elif defined(Q_OS_MACOS)
+@@ -184,57 +187,60 @@ static std::optional<quint32> nativeKeyC
+     // Distinguishing left/right modifiers requires a change to Qt (qnsview_keys.mm)
+     // to set QKeyEvent::native...() to their proper values.
+ 
+-    if (keyboardDriver() == KeyboardDriver::Cocoa && ev->nativeScanCode() != 0) {
+-        return ev->nativeVirtualKey();
++    // BUG: On Qt 6.2.3 on macOS 12 on non-virtualized Mac,
++    // ev->nativeScanCode() is always 0 even for real keypresses.
++    // So just always return it.
++
++    if (keyboardDriver() == KeyboardDriver::Cocoa) {
++        static_value = ev->nativeVirtualKey();
++        return &static_value;
+     } else {
+-        return std::nullopt;
++        return NULL;
+     }
+ #else
+ #error Unsupported platform, cannot determine keycode
+-    return 0; // 0 means unknown, KeyboardEvent.code will be empty string.
++    return NULL; // 0 means unknown, KeyboardEvent.code will be empty string.
+ #endif
+ }
+ 
+ KeyCode toKeycode(QKeyEvent *ev)
+ {
+-    int qtKey = qtKeyForKeyEvent(ev);
+-
+-    auto nativeKeyCodeMaybe = nativeKeyCodeForKeyEvent(ev);
+-
+     // The dom_code field should contain the USB keycode of the *physical* key
+     // that was pressed. Physical meaning independent of layout and modifiers.
+     // Since this information is not available from QKeyEvent in portable form,
+     // we try to compute it from the native key code.
+     auto dom_code = KeyCode::NONE;
+ 
+-    if (nativeKeyCodeMaybe) {
+-        dom_code = ui::KeycodeConverter::NativeKeycodeToDomCode(*nativeKeyCodeMaybe);
+-    } else {
+ #if defined(Q_OS_MACOS)
+-        // On Mac, - (void)flagsChanged:(NSEvent *)nsevent
+-        // converts certain NSEventModifierFlag into Qt::Key.
+-        // Convert the corresponding Qt::Key to keycodes.
+-        //
+-        // As discussed in nativeKeyCodeForKeyEvent(),
+-        // we cannot tell if theleft or right modifier was pressed, so assume left.
+-        switch (qtKey) {
+-        case Qt::Key_Shift:
+-            dom_code = static_cast<int>(KeyCode::SHIFT_LEFT); break;
+-        case Qt::Key_Meta:
+-            dom_code = static_cast<int>(KeyCode::META_LEFT); break;
+-        case Qt::Key_Control:
+-            dom_code = static_cast<int>(KeyCode::CONTROL_LEFT); break;
+-        case Qt::Key_Alt:
+-            dom_code = static_cast<int>(KeyCode::ALT_LEFT); break;
+-        case Qt::Key_CapsLock:
+-            dom_code = static_cast<int>(KeyCode::CAPS_LOCK); break;
+-        default:
+-            // Don't know which key... too bad :(
+-            break;
+-        }
+-#else
+-        Q_UNUSED(qtKey)
++    int qtKey = qtKeyForKeyEvent(ev);
++    // On Mac, - (void)flagsChanged:(NSEvent *)nsevent
++    // converts certain NSEventModifierFlag into Qt::Key.
++    // Convert the corresponding Qt::Key to keycodes.
++    //
++    // As discussed in nativeKeyCodeForKeyEvent(),
++    // we cannot tell if the left or right modifier was pressed, so assume left.
++    switch (qtKey) {
++    case Qt::Key_Shift:
++        dom_code = KeyCode::SHIFT_LEFT; break;
++    case Qt::Key_Meta:
++        dom_code = KeyCode::META_LEFT; break;
++    case Qt::Key_Control:
++        dom_code = KeyCode::CONTROL_LEFT; break;
++    case Qt::Key_Alt:
++        dom_code = KeyCode::ALT_LEFT; break;
++    case Qt::Key_CapsLock:
++        dom_code = KeyCode::CAPS_LOCK; break;
++    default:
++        // Don't know which key... too bad :(
++        break;
++    }
+ #endif
++
++    if (dom_code == KeyCode::NONE) {
++        if (auto nativeKeyCodeMaybe = nativeKeyCodeForKeyEvent(ev)) {
++            dom_code =
++                ui::KeycodeConverter::NativeKeycodeToDomCode(*nativeKeyCodeMaybe);
++        }
+     }
+ 
+     // The original QtWebEngine code synthesized dom_code from windows_key_code

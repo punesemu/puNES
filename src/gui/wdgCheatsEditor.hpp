@@ -42,7 +42,7 @@ class hexSpinBox : public QSpinBox {
 		QString textFromValue(int value) const;
 };
 
-#include "wdgCheatsEditor.hh"
+#include "ui_wdgCheatsEditor.h"
 
 class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 	Q_OBJECT

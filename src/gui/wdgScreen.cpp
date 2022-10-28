@@ -24,7 +24,7 @@
 #if defined (WITH_OPENGL)
 #include "opengl.h"
 #endif
-#include "wdgScreen.moc"
+#include "wdgScreen.hpp"
 #include "mainWindow.hpp"
 #include "objSettings.hpp"
 #include "dlgKeyboard.hpp"
@@ -288,7 +288,7 @@ void wdgScreen::s_context_menu(const QPoint &pos) {
 			const QClipboard *clipboard = QApplication::clipboard();
 			const QMimeData *mimeData = clipboard->mimeData();
 
-			menu.addSection(tr("Family Basic Keyboard"));
+			menu.addSection(dlgkeyb->keyboard->keyboard_name());
 
 			paste->setText(tr("Paste"));
 			paste->setEnabled((mimeData->hasUrls() || mimeData->hasText()) &&

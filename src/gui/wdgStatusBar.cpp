@@ -19,7 +19,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QEvent>
 #include <QtWidgets/QLabel>
-#include "wdgStatusBar.moc"
+#include "wdgStatusBar.hpp"
 #include "mainWindow.hpp"
 #include "dlgKeyboard.hpp"
 #include "conf.h"
@@ -307,7 +307,7 @@ void nesKeyboardStatusBar::update_tooltip(void) {
 			tooltip += " / [" + mainwin->shortcut[SET_INP_SC_TOGGLE_NES_KEYBOARD]->key().toString() + "]";
 		}
 		tooltip += " : ";
-		tooltip += tr("Show/Hide Virtual Keyboard");
+		tooltip += tr("Toggle Virtual Keyboard");
 		tooltip += "</body>";
 	}
 

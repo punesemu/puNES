@@ -9,6 +9,25 @@
     </message>
 </context>
 <context>
+    <name>dlgCfgNSCode</name>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discard</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>dlgCmdLineHelp</name>
     <message>
         <source>Close</source>
@@ -27,6 +46,53 @@
     </message>
     <message>
         <source>Save Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>dlgKeyboard</name>
+    <message>
+        <source>Virtual Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Subor Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1.0x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1.5x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2.0x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2.5x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -102,6 +168,14 @@
     </message>
     <message>
         <source>Toggle the Menu Bar in Fullscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Capture/Release Input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle Virtual Keyboard</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -327,6 +401,69 @@
     </message>
 </context>
 <context>
+    <name>familyBasicKeyboard</name>
+    <message>
+        <source>Family Basic Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>mainApplication</name>
+    <message>
+        <source>%1 folders</source>
+        <extracomment>Do not translate %1</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create config folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create data folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create temp folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create cheat folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create psg folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create shp folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create jsc folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create bios folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create diff folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create prb folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create save folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create screenshot folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>mainWindow</name>
     <message>
         <source>&amp;Insert disk</source>
@@ -537,10 +674,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Fast Forward</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Pause</source>
         <translation type="unfinished"></translation>
     </message>
@@ -729,6 +862,101 @@
         <source>&amp;Joypad/Gamepad Debug</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Fast Forward (hold button)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Virtual Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>puNES tape image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Virtuanes tape image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nestopia tape image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open tape image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tape Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unsupported format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error opening tape image file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WAVE tape image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save tape image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Fast Forward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Virtual &amp;Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Play</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Record</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shout into &amp;Microphone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Open config folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ta&amp;pe</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>nesKeyboardStatusBar</name>
+    <message>
+        <source>Capture/Release the Input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input is released</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input is captured</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle Virtual Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>objCheat</name>
@@ -912,6 +1140,31 @@
         <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>tape play</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>tape record</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>tape stop</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>keyboard input captured</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>keyboard input released</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>recStatusBar</name>
@@ -921,6 +1174,13 @@
     </message>
     <message>
         <source>Video</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>suborKeyboard</name>
+    <message>
+        <source>Subor Keyboard</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1085,14 +1345,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>XML files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>CHT files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Import Cheats</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1118,6 +1370,29 @@
     </message>
     <message>
         <source>A description must be entered</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nestopia XML files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mame 128+ XML files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FCEUX CHT files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>libretro CHT files</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>wdgKeyboard</name>
+    <message>
+        <source>Virtual Keyboard</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1321,6 +1596,29 @@
     </message>
     <message>
         <source>Degrees</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>wdgScreen</name>
+    <message>
+        <source>Paste</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tape</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1753,6 +2051,14 @@
     </message>
     <message>
         <source>Press a key - timeout in %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Family BASIC Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Subor Keyboard</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -16,7 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "dlgSettings.moc"
+#include "dlgSettings.hpp"
 #include "mainWindow.hpp"
 #include "conf.h"
 
@@ -83,7 +83,7 @@ void dlgSettings::retranslateUi(QDialog *dlgSettings) {
 
 	// nes keyboard
 	mainwin->qaction_shcut.toggle_capture_input->setText(tr("Capture/Release Input"));
-	mainwin->qaction_shcut.toggle_nes_keyboard->setText(tr("Show/Hide Virtual Keyboard"));
+	mainwin->qaction_shcut.toggle_nes_keyboard->setText(tr("Toggle Virtual Keyboard"));
 }
 void dlgSettings::update_dialog(void) {
 	update_tab_general();

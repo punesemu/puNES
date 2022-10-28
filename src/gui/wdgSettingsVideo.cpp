@@ -17,7 +17,7 @@
  */
 
 #include <QtWidgets/QFileDialog>
-#include "wdgSettingsVideo.moc"
+#include "wdgSettingsVideo.hpp"
 #include "wdgPaletteEditor.hpp"
 #include "mainWindow.hpp"
 #include "emu_thread.h"

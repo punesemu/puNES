@@ -21,9 +21,7 @@
 #include <QtWidgets/QWidget>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QKeySequence>
-#include "mainApplication.moc"
-#include "singleapplication.moc"
-#include "singleapplication_p.moc"
+#include "mainApplication.hpp"
 #include "mainWindow.hpp"
 #include "dlgKeyboard.hpp"
 #include "wdgScreen.hpp"

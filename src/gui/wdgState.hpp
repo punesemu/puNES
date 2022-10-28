@@ -42,7 +42,7 @@ class stateBar : public QWidget {
 		int slot_at(QPoint pos);
 };
 
-#include "wdgState.hh"
+#include "ui_wdgState.h"
 
 class wdgState : public QWidget, public Ui::wdgState {
 	Q_OBJECT

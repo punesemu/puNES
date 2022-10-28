@@ -145,6 +145,7 @@ class wdgKeyboard : public QWidget {
 		virtual void set_charset(void);
 
 	public:
+		virtual QString keyboard_name(void);
 		virtual void ext_setup(void);
 		virtual SBYTE calc_element(BYTE row, BYTE column);
 		virtual QList<QList<SBYTE>> parse_character(_character *ch);
@@ -196,7 +197,7 @@ class pasteObject : public QObject {
 
 // familyBasicKeyboard -----------------------------------------------------------------------------------------------------------
 
-#include "wdgKeyboardFB.hh"
+#include "ui_wdgKeyboardFB.h"
 
 class familyBasicKeyboard : public wdgKeyboard, public Ui::wdgKeyboardFB {
 	Q_OBJECT
@@ -210,6 +211,7 @@ class familyBasicKeyboard : public wdgKeyboard, public Ui::wdgKeyboardFB {
 		void set_charset(void);
 
 	public:
+		QString keyboard_name(void);
 		void ext_setup(void);
 		QList<QList<SBYTE>> parse_character(wdgKeyboard::_character *ch);
 
@@ -225,7 +227,7 @@ class familyBasicKeyboard : public wdgKeyboard, public Ui::wdgKeyboardFB {
 
 // suborKeyboard -----------------------------------------------------------------------------------------------------------------
 
-#include "wdgKeyboardSubor.hh"
+#include "ui_wdgKeyboardSubor.h"
 
 class suborKeyboard : public wdgKeyboard, public Ui::wdgKeyboardSubor {
 	Q_OBJECT
@@ -239,6 +241,7 @@ class suborKeyboard : public wdgKeyboard, public Ui::wdgKeyboardSubor {
 		void set_charset(void);
 
 	public:
+		QString keyboard_name(void);
 		void ext_setup(void);
 
 	private:
@@ -247,7 +250,7 @@ class suborKeyboard : public wdgKeyboard, public Ui::wdgKeyboardSubor {
 
 // dlgCfgNSCode ------------------------------------------------------------------------------------------------------------------
 
-#include "dlgCfgNSCode.hh"
+#include "ui_dlgCfgNSCode.h"
 
 class dlgCfgNSCode : public QDialog, public Ui::dlgCfgNSCode {
 	Q_OBJECT
@@ -275,7 +278,7 @@ class dlgCfgNSCode : public QDialog, public Ui::dlgCfgNSCode {
 
 // dlgKeyboard -------------------------------------------------------------------------------------------------------------------
 
-#include "dlgKeyboard.hh"
+#include "ui_dlgKeyboard.h"
 
 class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 	Q_OBJECT
@@ -326,6 +329,7 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 	public:
 		void retranslateUi(QDialog *dlgKeyboard);
 		void reset(void);
+		void add_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals);
 		void set_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals);
 		void set_charset(wdgKeyboard::_charset charset, wdgKeyboard::_delay delay);
 		bool process_event(QEvent *event);
@@ -354,6 +358,7 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 	private slots:
 		void s_mode(int index);
 		void s_size_factor(int index);
+		void s_subor_extended_mode(bool checked);
 };
 
 #endif /* DLGKEYBOARD_HPP_ */

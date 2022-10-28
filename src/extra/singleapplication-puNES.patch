@@ -1,0 +1,39 @@
+diff -upr SingleApplication.org/singleapplication.h singleapplication/singleapplication.h
+--- SingleApplication.org/singleapplication.h	2022-10-26 09:16:46.570279610 +0200
++++ singleapplication/singleapplication.h	2022-08-28 12:51:22.205543218 +0200
+@@ -27,10 +27,11 @@
+ #include <QtNetwork/QLocalSocket>
+ 
+ #ifndef QAPPLICATION_CLASS
+-  #define QAPPLICATION_CLASS QCoreApplication
++  //#define QAPPLICATION_CLASS QCoreApplication
++  #define QAPPLICATION_CLASS QApplication
+ #endif
+ 
+-#include QT_STRINGIFY(QAPPLICATION_CLASS)
++#include <QtWidgets/QApplication>
+ 
+ class SingleApplicationPrivate;
+ 
+diff -upr SingleApplication.org/singleapplication_p.cpp singleapplication/singleapplication_p.cpp
+--- SingleApplication.org/singleapplication_p.cpp	2022-10-26 09:16:46.570279610 +0200
++++ singleapplication/singleapplication_p.cpp	2022-08-17 10:11:53.213111623 +0200
+@@ -60,7 +60,8 @@
+     #ifndef NOMINMAX
+         #define NOMINMAX 1
+     #endif
+-    #include <windows.h>
++    #include "gui.h"
++    //#include <windows.h>
+     #include <lmcons.h>
+ #endif
+ 
+@@ -498,7 +499,7 @@ void SingleApplicationPrivate::readInitM
+ 
+     if( connectionType == NewInstance ||
+         ( connectionType == SecondaryInstance &&
+-          options & SingleApplication::Mode::SecondaryNotification ) )
++          ( options & SingleApplication::Mode::SecondaryNotification ) ) )
+     {
+         Q_EMIT q->instanceStarted();
+     }

@@ -20,7 +20,7 @@
 #define WDGSETTINGSINPUT_HPP_
 
 #include <QtWidgets/QWidget>
-#include "wdgSettingsInput.hh"
+#include "ui_wdgSettingsInput.h"
 #include "dlgStdPad.hpp"
 
 class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {

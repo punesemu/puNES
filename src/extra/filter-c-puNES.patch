@@ -1,0 +1,48 @@
+diff -upr filter-c.org/filter.h filter-c/filter.h
+--- filter-c.org/filter.h	2022-10-26 09:06:55.767655179 +0200
++++ filter-c/filter.h	2022-09-05 10:41:12.957578789 +0200
+@@ -16,8 +16,6 @@ extern "C"{
+ 
+ #define DOUBLE_PRECISION 0
+ 
+-
+-
+ #if DOUBLE_PRECISION
+ #define FTR_PRECISION double
+ #if defined(_WIN32) || defined(__ZEPHYR__)
+@@ -26,9 +24,12 @@ extern "C"{
+ #else
+ #define FTR_PRECISION float
+ #if defined(_WIN32) || defined(__ZEPHYR__)
++#ifdef M_PI
++#undef M_PI
+ #define M_PI 3.1415927
+ #endif
+ #endif
++#endif
+ 
+ typedef struct {
+     int n;
+@@ -126,7 +127,6 @@ CHEHighPass* create_che_high_pass_filter
+ CHEBandPass* create_che_band_pass_filter(int order, FTR_PRECISION epsilon, FTR_PRECISION sampling_frequency, FTR_PRECISION lower_half_power_frequency, FTR_PRECISION upper_half_power_frequency);
+ CHEBandStop* create_che_band_stop_filter(int order, FTR_PRECISION epsilon, FTR_PRECISION sampling_frequency, FTR_PRECISION lower_half_power_frequency, FTR_PRECISION upper_half_power_frequency);
+ 
+-
+ void free_bw_low_pass(BWLowPass* filter);
+ void free_bw_high_pass(BWHighPass* filter);
+ void free_bw_band_pass(BWBandPass* filter);
+@@ -137,7 +137,6 @@ void free_che_high_pass(CHEHighPass* fil
+ void free_che_band_pass(CHEBandPass* filter);
+ void free_che_band_stop(CHEBandStop* filter);
+ 
+-
+ FTR_PRECISION bw_low_pass(BWLowPass* filter, FTR_PRECISION input);
+ FTR_PRECISION bw_high_pass(BWHighPass* filter, FTR_PRECISION input);
+ FTR_PRECISION bw_band_pass(BWBandPass* filter, FTR_PRECISION input);
+@@ -157,4 +156,4 @@ void spike_filter_upward(FTR_PRECISION *
+ }
+ #endif
+ 
+-#endif /* filter_h */
+\ Manca newline alla fine del file
++#endif /* filter_h */

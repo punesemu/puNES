@@ -23,7 +23,7 @@
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <QtCore/QStringEncoder>
 #endif
-#include "objSettings.moc"
+#include "objSettings.hpp"
 #include "clock.h"
 #include "save_slot.h"
 #include "emu.h"
@@ -1427,7 +1427,11 @@ void objInp::to_cfg(QString group) {
 	}
 
 	if ((group == "virtual keyboard") || (group == "all")) {
-		int_to_val(SET_INP_VK_SIZE, cfg_from_file.vk_size);
+		int_to_val(SET_INP_VK_SIZE, cfg_from_file.input.vk_size);
+	}
+
+	if ((group == "subor keyboard") || (group == "all")) {
+		int_to_val(SET_INP_SBKB_EXTENDED_MODE, cfg_from_file.input.vk_subor_extended_mode);
 	}
 }
 void objInp::fr_cfg(QString group) {
@@ -1489,8 +1493,13 @@ void objInp::fr_cfg(QString group) {
 			}
 		}
 	}
+
 	if ((group == "virtual keyboard") || (group == "all")) {
-		cfg_from_file.vk_size = val_to_int(SET_INP_VK_SIZE);
+		cfg_from_file.input.vk_size = val_to_int(SET_INP_VK_SIZE);
+	}
+
+	if ((group == "subor keyboard") || (group == "all")) {
+		cfg_from_file.input.vk_subor_extended_mode = val_to_int(SET_INP_SBKB_EXTENDED_MODE);
 	}
 }
 

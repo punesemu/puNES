@@ -20,7 +20,7 @@
 #define DLGSETTINGS_HPP_
 
 #include <QtWidgets/QDialog>
-#include "dlgSettings.hh"
+#include "ui_dlgSettings.h"
 
 class dlgSettings : public QDialog, public Ui::dlgSettings {
 	Q_OBJECT

@@ -26,8 +26,9 @@
 void input_wr_subor_keyboard(BYTE *value, UNUSED(BYTE nport)) {
 	BYTE column;
 
+	generic_keyboard.enable = (*value) & 0x04;
 	column = ((*value) & 0x02) >> 1;
-	if ((*value) & 0x04) {
+	if (generic_keyboard.enable) {
 		if ((*value) & 0x01) {
 			generic_keyboard.row = 0;
 			gui_nes_keyboard_paste_event();
@@ -42,17 +43,12 @@ void input_rd_subor_keyboard(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	if (nport & 0x01) {
 		BYTE state = 0;
 
-		// From https://problemkaputt.de/everynes.htm :
-		// > The 32-in-1 menu also checks Bit4 in Row 9, if that bit is zero then it does additionally read row 0Ah..0Ch.
-		// > Aside from the menu, most or all games in the 32-in-1 cartridge don't seem to use that extra rows though.
-		generic_keyboard.data[9] = generic_keyboard.data[9] | 0x10;
-
 		if (generic_keyboard.column) {
 			state = (generic_keyboard.data[generic_keyboard.row] & 0xF0) >> 3;
 		} else {
 			state = (generic_keyboard.data[generic_keyboard.row] & 0x0F) << 1;
 		}
-		(*value) = ((*value) & 0xE1) | (state ^ 0x1E);
+		(*value) = ((*value) & 0xE1) | (generic_keyboard.enable ? state ^ 0x1E : 0x00);
 	} else {
 		(*value) = ((*value) & 0xFB) | ((tape_data_recorder.out & 0x01) << 2);
 	}
@@ -68,5 +64,13 @@ void input_add_event_subor_keyboard(UNUSED(BYTE index)) {
 				generic_keyboard.data[a] |= (1 << b);
 			}
 		}
+	}
+	// From https://problemkaputt.de/everynes.htm :
+	// > The 32-in-1 menu also checks Bit4 in Row 9, if that bit is zero then it does additionally read row 0Ah..0Ch.
+	// > Aside from the menu, most or all games in the 32-in-1 cartridge don't seem to use that extra rows though.
+	// sempre nel 32-in-1, nell "English editor" se il bit è sempre a 1 inizia a scrivere ripetutamente l'ultimo carattere
+	// nel suo buffer.
+	if (cfg->input.vk_subor_extended_mode) {
+		generic_keyboard.data[9] |= 0x10;
 	}
 }

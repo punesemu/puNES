@@ -34,7 +34,7 @@
 #include <QtWidgets/QErrorMessage>
 #include <QtCore/QBuffer>
 #include <libgen.h>
-#include "mainWindow.moc"
+#include "mainWindow.hpp"
 #include "extra/singleapplication/singleapplication.h"
 #include "dlgSettings.hpp"
 #include "dlgJsc.hpp"
@@ -2362,14 +2362,8 @@ void mainWindow::s_shcut_toggle_capture_input(void) {
 	if (nes_keyboard.enabled) {
 		gui.capture_input = !gui.capture_input;
 		if (gui.capture_input) {
-			grabKeyboard();
-			grabMouse();
-			setCursor(Qt::BlankCursor);
 			gui_overlay_info_append_msg_precompiled(36, NULL);
 		} else {
-			releaseKeyboard();
-			releaseMouse();
-			unsetCursor();
 			gui_overlay_info_append_msg_precompiled(37, NULL);
 		}
 		statusbar->keyb->icon_pixmap(QIcon::Normal);

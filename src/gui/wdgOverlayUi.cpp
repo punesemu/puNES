@@ -24,7 +24,7 @@
 #include <QtWidgets/QGraphicsItem>
 #include <time.h>
 #include <math.h>
-#include "wdgOverlayUi.moc"
+#include "wdgOverlayUi.hpp"
 #include "mainWindow.hpp"
 #include "fps.h"
 #include "tas.h"
@@ -115,9 +115,9 @@ static const char *info_messages_precompiled[] = {
 //: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
 /* 35 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "tape stop"),
 //: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
-/* 36 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "input captured"),
+/* 36 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "keyboard input captured"),
 //: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
-/* 37 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "input released"),
+/* 37 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "keyboard input released"),
 };
 
 typedef struct _overlay_info_message {

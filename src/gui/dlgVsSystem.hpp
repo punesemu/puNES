@@ -20,7 +20,7 @@
 #define DLGVSSYSTEM_HPP_
 
 #include <QtWidgets/QDialog>
-#include "dlgVsSystem.hh"
+#include "ui_dlgVsSystem.h"
 
 class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
 	Q_OBJECT

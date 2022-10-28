@@ -1,0 +1,36 @@
+name: cmake-build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          # ubuntu-latest (20.04) don't have qt 5.15 yet
+          - { os: ubuntu-22.04, cc: "gcc", cxx: "g++", opts: "-DENABLE_RELEASE=ON -DENABLE_FFMPEG=ON -DENABLE_OPENGL_CG=ON" }
+          - { os: ubuntu-22.04, cc: "clang", cxx: "clang++", opts: "-DENABLE_RELEASE=ON -DENABLE_FFMPEG=ON -DENABLE_OPENGL_CG=ON" }
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libasound2-dev libxrandr-dev libudev-dev libglvnd-dev ninja-build \
+            libavformat-dev libavcodec-dev libswresample-dev libswscale-dev libavutil-dev nvidia-cg-dev \
+            libqt5svg5-dev qtbase5-dev qtbase5-dev-tools qttools5-dev
+      - name: Build with ${{ matrix.config.cc }}/${{ matrix.config.cxx }}
+        env:
+          CC: ${{ matrix.config.cc }}
+          CXX: ${{ matrix.config.cxx }}
+        run: |
+          cmake -B build -G Ninja ${{ matrix.config.opts }}
+          cmake --build build -j2
+

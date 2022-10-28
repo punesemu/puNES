@@ -62,7 +62,7 @@ KeyCode toKeycode(QKeyEvent*);
 #define Q_OS_WINDOWS
 #endif
 #else
-#if !defined(Q_OS_WINDOWS)
+#if !defined(Q_OS_WINDOWS) || !defined(Q_OS_OPENBSD) || !defined(Q_OS_FREEBSD)
 #define Q_OS_LINUX
 #endif
 #endif

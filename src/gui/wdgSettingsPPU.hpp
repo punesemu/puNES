@@ -20,7 +20,7 @@
 #define WDGSETTINGSPPU_HPP_
 
 #include <QtWidgets/QWidget>
-#include "wdgSettingsPPU.hh"
+#include "ui_wdgSettingsPPU.h"
 
 class wdgSettingsPPU : public QWidget, public Ui::wdgSettingsPPU {
 	Q_OBJECT

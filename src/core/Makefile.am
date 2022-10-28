@@ -120,9 +120,8 @@ libcore_a_SOURCES += \
 libcore_a_SOURCES += \
 	../extra/filter-c/filter.c \
 	../extra/filter-c/filter.h \
-	../extra/kiss_fft130/kiss_fft.c \
-	../extra/kiss_fft130/_kiss_fft_guts.h \
-	../extra/kiss_fft130/kiss_fft.h
+	../extra/kissfft/kiss_fft.c \
+	../extra/kissfft/kiss_fft.h
 
 libcore_a_SOURCES += \
 	mappers/EE93Cx6.c \

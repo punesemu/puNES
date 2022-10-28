@@ -1,159 +1,115 @@
-resources.cpp: designer/resources.qrc $(TRADUCTION_QM)
+qrc_resources.cpp: designer/resources.qrc
 	$(RCC) $(srcdir)/designer/resources.qrc -name resources -o $@
 
-dlgCmdLineHelp.moc: dlgCmdLineHelp.hpp
-	$(MOC) $(srcdir)/dlgCmdLineHelp.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-dlgJsc.moc: dlgJsc.hpp
-	$(MOC) $(srcdir)/dlgJsc.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-dlgKeyboard.moc: dlgKeyboard.hpp
-	$(MOC) $(srcdir)/dlgKeyboard.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-dlgSettings.moc: dlgSettings.hpp
-	$(MOC) $(srcdir)/dlgSettings.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-dlgStdPad.moc: dlgStdPad.hpp
-	$(MOC) $(srcdir)/dlgStdPad.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-dlgUncomp.moc: dlgUncomp.hpp
-	$(MOC) $(srcdir)/dlgUncomp.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-dlgVsSystem.moc: dlgVsSystem.hpp
-	$(MOC) $(srcdir)/dlgVsSystem.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-mainApplication.moc: mainApplication.hpp
-	$(MOC) $(srcdir)/mainApplication.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-mainWindow.moc: mainWindow.hpp
-	$(MOC) $(srcdir)/mainWindow.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-objCheat.moc: objCheat.hpp
-	$(MOC) $(srcdir)/objCheat.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-objSettings.moc: objSettings.hpp
-	$(MOC) $(srcdir)/objSettings.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-singleapplication.moc: ../extra/singleapplication/singleapplication.h
+qrc_translations.cpp: designer/translations.qrc $(QM_FILES)
+	$(RCC) $(srcdir)/designer/translations.qrc -name translations -o $@
+
+.ts.qm:
+	$(LRELEASE) -silent $< -qm $@
+
+singleapplication_moc.cpp: ../extra/singleapplication/singleapplication.h
 	$(MOC) $(srcdir)/../extra/singleapplication/singleapplication.h $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-singleapplication_p.moc: ../extra/singleapplication/singleapplication_p.h
+singleapplication_p_moc.cpp: ../extra/singleapplication/singleapplication_p.h
 	$(MOC) $(srcdir)/../extra/singleapplication/singleapplication_p.h $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgAPUChannels.moc: wdgAPUChannels.hpp
-	$(MOC) $(srcdir)/wdgAPUChannels.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgCheatsEditor.moc: wdgCheatsEditor.hpp
-	$(MOC) $(srcdir)/wdgCheatsEditor.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgNTSCFilter.moc: wdgNTSCFilter.hpp
-	$(MOC) $(srcdir)/wdgNTSCFilter.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-if WITH_OPENGL
-wdgOpenGL.moc: wdgOpenGL.hpp
-	$(MOC) $(srcdir)/wdgOpenGL.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-endif
-wdgOverlayUi.moc: wdgOverlayUi.hpp
-	$(MOC) $(srcdir)/wdgOverlayUi.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgPaletteEditor.moc: wdgPaletteEditor.hpp
-	$(MOC) $(srcdir)/wdgPaletteEditor.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgRewind.moc: wdgRewind.hpp
-	$(MOC) $(srcdir)/wdgRewind.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgRotateScreen.moc: wdgRotateScreen.hpp
-	$(MOC) $(srcdir)/wdgRotateScreen.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgSettingsAudio.moc: wdgSettingsAudio.hpp
-	$(MOC) $(srcdir)/wdgSettingsAudio.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgSettingsCheats.moc: wdgSettingsCheats.hpp
-	$(MOC) $(srcdir)/wdgSettingsCheats.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgSettingsGeneral.moc: wdgSettingsGeneral.hpp
-	$(MOC) $(srcdir)/wdgSettingsGeneral.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgSettingsInput.moc: wdgSettingsInput.hpp
-	$(MOC) $(srcdir)/wdgSettingsInput.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgSettingsPPU.moc: wdgSettingsPPU.hpp
-	$(MOC) $(srcdir)/wdgSettingsPPU.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgSettingsRecording.moc: wdgSettingsRecording.hpp
-	$(MOC) $(srcdir)/wdgSettingsRecording.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@	
-wdgSettingsVideo.moc: wdgSettingsVideo.hpp
-	$(MOC) $(srcdir)/wdgSettingsVideo.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgScreen.moc: wdgScreen.hpp
-	$(MOC) $(srcdir)/wdgScreen.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgState.moc: wdgState.hpp
-	$(MOC) $(srcdir)/wdgState.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgStatusBar.moc: wdgStatusBar.hpp
-	$(MOC) $(srcdir)/wdgStatusBar.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-wdgToolBar.moc: wdgToolBar.hpp
-	$(MOC) $(srcdir)/wdgToolBar.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 
-mainWindow.hh: designer/mainWindow.ui
-	$(UIC) $(srcdir)/designer/mainWindow.ui -o $@
-dlgCfgNSCode.hh: designer/dlgCfgNSCode.ui
-	$(UIC) $(srcdir)/designer/dlgCfgNSCode.ui -o $@
-dlgCmdLineHelp.hh: designer/dlgCmdLineHelp.ui
-	$(UIC) $(srcdir)/designer/dlgCmdLineHelp.ui -o $@
-dlgJsc.hh: designer/dlgJsc.ui
-	$(UIC) $(srcdir)/designer/dlgJsc.ui -o $@
-dlgKeyboard.hh: designer/dlgKeyboard.ui
-	$(UIC) $(srcdir)/designer/dlgKeyboard.ui -o $@
-dlgSettings.hh: designer/dlgSettings.ui
-	$(UIC) $(srcdir)/designer/dlgSettings.ui -o $@
-dlgStdPad.hh: designer/dlgStdPad.ui
-	$(UIC) $(srcdir)/designer/dlgStdPad.ui -o $@
-dlgUncomp.hh: designer/dlgUncomp.ui
-	$(UIC) $(srcdir)/designer/dlgUncomp.ui -o $@
-dlgVsSystem.hh: designer/dlgVsSystem.ui
-	$(UIC) $(srcdir)/designer/dlgVsSystem.ui -o $@
-wdgAPUChannels.hh: designer/wdgAPUChannels.ui
-	$(UIC) $(srcdir)/designer/wdgAPUChannels.ui -o $@
-wdgCheatsEditor.hh: designer/wdgCheatsEditor.ui
-	$(UIC) $(srcdir)/designer/wdgCheatsEditor.ui -o $@
-wdgKeyboardFB.hh: designer/wdgKeyboardFB.ui
-	$(UIC) $(srcdir)/designer/wdgKeyboardFB.ui -o $@
-wdgKeyboardSubor.hh: designer/wdgKeyboardSubor.ui
-	$(UIC) $(srcdir)/designer/wdgKeyboardSubor.ui -o $@
-wdgNTSCFilter.hh: designer/wdgNTSCFilter.ui
-	$(UIC) $(srcdir)/designer/wdgNTSCFilter.ui -o $@
-wdgOverlayUi.hh: designer/wdgOverlayUi.ui
-	$(UIC) $(srcdir)/designer/wdgOverlayUi.ui -o $@
-wdgPaletteEditor.hh: designer/wdgPaletteEditor.ui
-	$(UIC) $(srcdir)/designer/wdgPaletteEditor.ui -o $@
-wdgRewind.hh: designer/wdgRewind.ui
-	$(UIC) $(srcdir)/designer/wdgRewind.ui -o $@
-wdgRotateScreen.hh: designer/wdgRotateScreen.ui
-	$(UIC) $(srcdir)/designer/wdgRotateScreen.ui -o $@
-wdgSettingsAudio.hh: designer/wdgSettingsAudio.ui
-	$(UIC) $(srcdir)/designer/wdgSettingsAudio.ui -o $@
-wdgSettingsCheats.hh: designer/wdgSettingsCheats.ui
-	$(UIC) $(srcdir)/designer/wdgSettingsCheats.ui -o $@
-wdgSettingsGeneral.hh: designer/wdgSettingsGeneral.ui
-	$(UIC) $(srcdir)/designer/wdgSettingsGeneral.ui -o $@
-wdgSettingsInput.hh: designer/wdgSettingsInput.ui
-	$(UIC) $(srcdir)/designer/wdgSettingsInput.ui -o $@
-wdgSettingsPPU.hh: designer/wdgSettingsPPU.ui
-	$(UIC) $(srcdir)/designer/wdgSettingsPPU.ui -o $@
-wdgSettingsRecording.hh: designer/wdgSettingsRecording.ui
-	$(UIC) $(srcdir)/designer/wdgSettingsRecording.ui -o $@
-wdgSettingsVideo.hh: designer/wdgSettingsVideo.ui
-	$(UIC) $(srcdir)/designer/wdgSettingsVideo.ui -o $@
-wdgState.hh: designer/wdgState.ui
-	$(UIC) $(srcdir)/designer/wdgState.ui -o $@
+.hpp_moc.cpp:
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 
-$(srcdir)/designer/translations/en_EN.qm: designer/translations/en_EN.ts
-	$(LRELEASE) -silent $(srcdir)/designer/translations/en_EN.ts -qm $@
-$(srcdir)/designer/translations/tr_TR.qm: designer/translations/tr_TR.ts
-	$(LRELEASE) -silent $(srcdir)/designer/translations/tr_TR.ts -qm $@
-$(srcdir)/designer/translations/it_IT.qm: designer/translations/it_IT.ts
-	$(LRELEASE) -silent $(srcdir)/designer/translations/it_IT.ts -qm $@
-$(srcdir)/designer/translations/qt_it.qm: designer/translations/qt_it.ts
-	$(LRELEASE) -silent $(srcdir)/designer/translations/qt_it.ts -qm $@
-$(srcdir)/designer/translations/es_ES.qm: designer/translations/es_ES.ts
-	$(LRELEASE) -silent $(srcdir)/designer/translations/es_ES.ts -qm $@
-$(srcdir)/designer/translations/qt_es.qm: designer/translations/qt_es.ts
-	$(LRELEASE) -silent $(srcdir)/designer/translations/qt_es.ts -qm $@
-$(srcdir)/designer/translations/hu_HU.qm: designer/translations/hu_HU.ts
-	$(LRELEASE) -silent $(srcdir)/designer/translations/hu_HU.ts -qm $@
-$(srcdir)/designer/translations/qt_hu.qm: designer/translations/qt_hu.ts
-	$(LRELEASE) -silent $(srcdir)/designer/translations/qt_hu.ts -qm $@
-$(srcdir)/designer/translations/ru_RU.qm: designer/translations/ru_RU.ts
-	$(LRELEASE) -silent $(srcdir)/designer/translations/ru_RU.ts -qm $@
-$(srcdir)/designer/translations/qt_ru.qm: designer/translations/qt_ru.ts
-	$(LRELEASE) -silent $(srcdir)/designer/translations/qt_ru.ts -qm $@
-$(srcdir)/designer/translations/pt_BR.qm: designer/translations/pt_BR.ts
-	$(LRELEASE) -silent $(srcdir)/designer/translations/pt_BR.ts -qm $@
-$(srcdir)/designer/translations/qt_pt.qm: designer/translations/qt_pt.ts
-	$(LRELEASE) -silent $(srcdir)/designer/translations/qt_pt.ts -qm $@
-$(srcdir)/designer/translations/zh_CN.qm: designer/translations/zh_CN.ts
-	$(LRELEASE) -silent $(srcdir)/designer/translations/zh_CN.ts -qm $@
-$(srcdir)/designer/translations/qt_zh_CN.qm: designer/translations/qt_zh_CN.ts
-	$(LRELEASE) -silent $(srcdir)/designer/translations/qt_zh_CN.ts -qm $@
+ui_mainWindow.h: designer/mainWindow.ui
+	$(UIC) $< -o $@
+ui_dlgCfgNSCode.h: designer/dlgCfgNSCode.ui
+	$(UIC) $< -o $@
+ui_dlgCmdLineHelp.h: designer/dlgCmdLineHelp.ui
+	$(UIC) $< -o $@
+ui_dlgJsc.h: designer/dlgJsc.ui
+	$(UIC) $< -o $@
+ui_dlgKeyboard.h: designer/dlgKeyboard.ui
+	$(UIC) $< -o $@
+ui_dlgSettings.h: designer/dlgSettings.ui
+	$(UIC) $< -o $@
+ui_dlgStdPad.h: designer/dlgStdPad.ui
+	$(UIC) $< -o $@
+ui_dlgUncomp.h: designer/dlgUncomp.ui
+	$(UIC) $< -o $@
+ui_dlgVsSystem.h: designer/dlgVsSystem.ui
+	$(UIC) $< -o $@
+ui_wdgAPUChannels.h: designer/wdgAPUChannels.ui
+	$(UIC) $< -o $@
+ui_wdgKeyboardFB.h: designer/wdgKeyboardFB.ui
+	$(UIC) $< -o $@
+ui_wdgKeyboardSubor.h: designer/wdgKeyboardSubor.ui
+	$(UIC) $< -o $@
+ui_wdgCheatsEditor.h: designer/wdgCheatsEditor.ui
+	$(UIC) $< -o $@
+ui_wdgNTSCFilter.h: designer/wdgNTSCFilter.ui
+	$(UIC) $< -o $@
+ui_wdgOverlayUi.h: designer/wdgOverlayUi.ui
+	$(UIC) $< -o $@
+ui_wdgPaletteEditor.h: designer/wdgPaletteEditor.ui
+	$(UIC) $< -o $@
+ui_wdgRewind.h: designer/wdgRewind.ui
+	$(UIC) $< -o $@
+ui_wdgRotateScreen.h: designer/wdgRotateScreen.ui
+	$(UIC) $< -o $@
+ui_wdgSettingsAudio.h: designer/wdgSettingsAudio.ui
+	$(UIC) $< -o $@
+ui_wdgSettingsCheats.h: designer/wdgSettingsCheats.ui
+	$(UIC) $< -o $@
+ui_wdgSettingsGeneral.h: designer/wdgSettingsGeneral.ui
+	$(UIC) $< -o $@
+ui_wdgSettingsInput.h: designer/wdgSettingsInput.ui
+	$(UIC) $< -o $@
+ui_wdgSettingsPPU.h: designer/wdgSettingsPPU.ui
+	$(UIC) $< -o $@
+ui_wdgSettingsRecording.h: designer/wdgSettingsRecording.ui
+	$(UIC) $< -o $@
+ui_wdgSettingsVideo.h: designer/wdgSettingsVideo.ui
+	$(UIC) $< -o $@
+ui_wdgState.h: designer/wdgState.ui
+	$(UIC) $< -o $@
 
 clean-local:
-	rm -f resources.cpp *.{hh,moc} $(srcdir)/designer/translations/*.qm
+	rm -f qrc_*.cpp *_moc.cpp ui_*.h $(srcdir)/designer/translations/*.qm
 
-TRADUCTION_QM = \
+MOC_SOURCES = \
+	dlgCmdLineHelp_moc.cpp \
+	dlgJsc_moc.cpp \
+	dlgKeyboard_moc.cpp \
+	dlgSettings_moc.cpp \
+	dlgStdPad_moc.cpp \
+	dlgUncomp_moc.cpp \
+	dlgVsSystem_moc.cpp \
+	mainApplication_moc.cpp \
+	mainWindow_moc.cpp \
+	objCheat_moc.cpp \
+	objSettings_moc.cpp \
+	singleapplication_moc.cpp \
+	singleapplication_p_moc.cpp \
+	wdgAPUChannels_moc.cpp \
+	wdgCheatsEditor_moc.cpp \
+	wdgNTSCFilter_moc.cpp \
+	wdgOverlayUi_moc.cpp \
+	wdgPaletteEditor_moc.cpp \
+	wdgRewind_moc.cpp \
+	wdgRotateScreen_moc.cpp \
+	wdgScreen_moc.cpp \
+	wdgSettingsAudio_moc.cpp \
+	wdgSettingsCheats_moc.cpp \
+	wdgSettingsGeneral_moc.cpp \
+	wdgSettingsInput_moc.cpp \
+	wdgSettingsPPU_moc.cpp \
+	wdgSettingsRecording_moc.cpp \
+	wdgSettingsVideo_moc.cpp \
+	wdgState_moc.cpp \
+	wdgStatusBar_moc.cpp \
+	wdgToolBar_moc.cpp
+
+if WITH_OPENGL
+MOC_SOURCES += \
+	wdgOpenGL_moc.cpp
+endif
+
+QM_FILES = \
 	$(srcdir)/designer/translations/en_EN.qm \
 	$(srcdir)/designer/translations/tr_TR.qm \
 	$(srcdir)/designer/translations/it_IT.qm \
@@ -169,72 +125,68 @@ TRADUCTION_QM = \
 	$(srcdir)/designer/translations/zh_CN.qm \
 	$(srcdir)/designer/translations/qt_zh_CN.qm
 
+QRC_SOURCES = \
+	qrc_resources.cpp \
+	qrc_translations.cpp
+
+UI_SOURCES = \
+	ui_dlgCfgNSCode.h \
+	ui_dlgCmdLineHelp.h \
+	ui_dlgJsc.h \
+	ui_dlgKeyboard.h \
+	ui_dlgSettings.h \
+	ui_dlgStdPad.h \
+	ui_dlgUncomp.h \
+	ui_dlgVsSystem.h \
+	ui_mainWindow.h \
+	ui_wdgAPUChannels.h \
+	ui_wdgCheatsEditor.h \
+	ui_wdgKeyboardFB.h \
+	ui_wdgKeyboardSubor.h \
+	ui_wdgNTSCFilter.h \
+	ui_wdgOverlayUi.h \
+	ui_wdgPaletteEditor.h \
+	ui_wdgRewind.h \
+	ui_wdgRotateScreen.h \
+	ui_wdgSettingsAudio.h \
+	ui_wdgSettingsCheats.h \
+	ui_wdgSettingsGeneral.h \
+	ui_wdgSettingsInput.h \
+	ui_wdgSettingsPPU.h \
+	ui_wdgSettingsRecording.h \
+	ui_wdgSettingsVideo.h \
+	ui_wdgState.h
+
 BUILT_SOURCES = \
-	resources.cpp
-
-BUILT_SOURCES += \
-	dlgCmdLineHelp.moc \
-	dlgJsc.moc \
-	dlgKeyboard.moc \
-	dlgSettings.moc \
-	dlgStdPad.moc \
-	dlgUncomp.moc \
-	dlgVsSystem.moc \
-	mainWindow.moc \
-	mainApplication.moc \
-	objCheat.moc \
-	objSettings.moc \
-	singleapplication.moc \
-	singleapplication_p.moc \
-	wdgAPUChannels.moc \
-	wdgCheatsEditor.moc \
-	wdgNTSCFilter.moc \
-	wdgOverlayUi.moc \
-	wdgPaletteEditor.moc \
-	wdgRewind.moc \
-	wdgRotateScreen.moc \
-	wdgSettingsAudio.moc \
-	wdgSettingsCheats.moc \
-	wdgSettingsGeneral.moc \
-	wdgSettingsInput.moc \
-	wdgSettingsPPU.moc \
-	wdgSettingsRecording.moc \
-	wdgSettingsVideo.moc \
-	wdgScreen.moc \
-	wdgState.moc \
-	wdgStatusBar.moc \
-	wdgToolBar.moc
-
-BUILT_SOURCES += \
-	dlgCmdLineHelp.hh \
-	dlgCfgNSCode.hh \
-	dlgJsc.hh \
-	dlgKeyboard.hh \
-	dlgSettings.hh \
-	dlgStdPad.hh \
-	dlgUncomp.hh \
-	dlgVsSystem.hh \
-	mainWindow.hh \
-	wdgAPUChannels.hh \
-	wdgCheatsEditor.hh \
-	wdgKeyboardFB.hh \
-	wdgKeyboardSubor.hh \
-	wdgNTSCFilter.hh \
-	wdgOverlayUi.hh \
-	wdgPaletteEditor.hh \
-	wdgRewind.hh \
-	wdgRotateScreen.hh \
-	wdgSettingsAudio.hh \
-	wdgSettingsCheats.hh \
-	wdgSettingsGeneral.hh \
-	wdgSettingsInput.hh \
-	wdgSettingsPPU.hh \
-	wdgSettingsRecording.hh \
-	wdgSettingsVideo.hh \
-	wdgState.hh
+	$(MOC_SOURCES) \
+	$(UI_SOURCES) \
+	$(QM_FILES) \
+	$(QRC_SOURCES)
 
 noinst_LIBRARIES = libgui.a
+
 libgui_a_SOURCES = \
+	$(MOC_SOURCES) \
+	$(UI_SOURCES) \
+	$(QRC_SOURCES) \
+	cgp.cpp \
+	cgp.h \
+	cmd_line.cpp \
+	cmd_line.h \
+	dlgCmdLineHelp.cpp \
+	dlgCmdLineHelp.hpp \
+	dlgJsc.cpp \
+	dlgJsc.hpp \
+	dlgKeyboard.cpp \
+	dlgKeyboard.hpp \
+	dlgSettings.cpp \
+	dlgSettings.hpp \
+	dlgStdPad.cpp \
+	dlgStdPad.hpp \
+	dlgUncomp.cpp \
+	dlgUncomp.hpp \
+	dlgVsSystem.cpp \
+	dlgVsSystem.hpp \
 	../extra/qkeycode/src/qkeycode/chromium/keycode_converter.cc \
 	../extra/qkeycode/src/qkeycode/qkeycode.cpp \
 	../extra/qkeycode/include/qkeycode/qkeycode.h \
@@ -246,24 +198,6 @@ libgui_a_SOURCES = \
 	../extra/singleapplication/singleapplication.h \
 	../extra/singleapplication/singleapplication_p.cpp \
 	../extra/singleapplication/singleapplication_p.h \
-	cgp.cpp \
-	cgp.h \
-	cmd_line.cpp \
-	cmd_line.h \
-	dlgCmdLineHelp.cpp \
-	dlgCmdLineHelp.hpp \
-	dlgKeyboard.cpp \
-	dlgKeyboard.hpp \
-	dlgJsc.cpp \
-	dlgJsc.hpp \
-	dlgSettings.cpp \
-	dlgSettings.hpp \
-	dlgStdPad.cpp \
-	dlgStdPad.hpp \
-	dlgUncomp.cpp \
-	dlgUncomp.hpp \
-	dlgVsSystem.cpp \
-	dlgVsSystem.hpp \
 	mainApplication.cpp \
 	mainApplication.hpp \
 	mainWindow.cpp \
@@ -285,10 +219,10 @@ libgui_a_SOURCES = \
 	wdgAPUChannels.hpp \
 	wdgCheatsEditor.cpp \
 	wdgCheatsEditor.hpp \
-	wdgNTSCFilter.cpp \
-	wdgNTSCFilter.hpp \
 	wdgMenuBar.cpp \
 	wdgMenuBar.hpp \
+	wdgNTSCFilter.cpp \
+	wdgNTSCFilter.hpp \
 	wdgOverlayUi.cpp \
 	wdgOverlayUi.hpp \
 	wdgPaletteEditor.cpp \
@@ -297,6 +231,8 @@ libgui_a_SOURCES = \
 	wdgRewind.hpp \
 	wdgRotateScreen.cpp \
 	wdgRotateScreen.hpp \
+	wdgScreen.cpp \
+	wdgScreen.hpp \
 	wdgSettingsAudio.cpp \
 	wdgSettingsAudio.hpp \
 	wdgSettingsCheats.cpp \
@@ -311,8 +247,6 @@ libgui_a_SOURCES = \
 	wdgSettingsRecording.hpp \
 	wdgSettingsVideo.cpp \
 	wdgSettingsVideo.hpp \
-	wdgScreen.cpp \
-	wdgScreen.hpp \
 	wdgState.cpp \
 	wdgState.hpp \
 	wdgStatusBar.cpp \
@@ -321,9 +255,6 @@ libgui_a_SOURCES = \
 	wdgToolBar.hpp
 
 if WITH_OPENGL
-BUILT_SOURCES += \
-	wdgOpenGL.moc
-
 libgui_a_SOURCES += \
 	wdgOpenGL.cpp \
 	wdgOpenGL.hpp
@@ -375,3 +306,5 @@ libgui_a_SOURCES += \
 	windows/monitor.c
 endif
 endif
+
+SUFFIXES = .hpp _moc.cpp .qm .ts
