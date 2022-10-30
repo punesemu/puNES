@@ -20,11 +20,19 @@ set(ts_files
 	)
 set_source_files_properties(${ts_files} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/translations")
 configure_file(gui/designer/translations.qrc ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
-qt_add_translation(qm_files ${ts_files})
+if(ENABLE_WIN_STATIC_QT560)
+	qt5_add_translation(qm_files ${ts_files})
+else()
+	qt_add_translation(qm_files ${ts_files})
+endif()
 add_custom_target(translations DEPENDS ${qm_files})
 
 include(FetchContent)
-set(P7ZIP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src/extra/p7zip-17.04" CACHE INTERNAL "7ZIP source dir") # TODO
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	set(P7ZIP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src/extra/7z1900" CACHE INTERNAL "7ZIP source dir")
+else()
+	set(P7ZIP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src/extra/p7zip-17.04" CACHE INTERNAL "7ZIP source dir")
+endif()
 FetchContent_Declare(lib7zip
 	SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/extra/lib7zip-53abfeb
 	)
@@ -620,18 +628,32 @@ target_include_directories(punes
 	$<$<NOT:$<BOOL:${ENABLE_OPENGL}>>:${CMAKE_CURRENT_SOURCE_DIR}/video/d3d9>
 	video/shaders
 	"${PROJECT_BINARY_DIR}"
-
 	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:${CMAKE_CURRENT_SOURCE_DIR}/gui/bsd>
 	$<$<PLATFORM_ID:Linux>:${CMAKE_CURRENT_SOURCE_DIR}/gui/linux>
-	$<$<PLATFORM_ID:Windows>:${CMAKE_CURRENT_SOURCE_DIR}/gui/windows>
+	$<$<PLATFORM_ID:Windows>:
+		${CMAKE_CURRENT_SOURCE_DIR}/gui/windows
+		${CMAKE_CURRENT_SOURCE_DIR}/extra/windows/Cg/include
+		${CMAKE_CURRENT_SOURCE_DIR}/extra/windows/DSDK/Include
+		${CMAKE_CURRENT_SOURCE_DIR}/extra/windows/DSDK/vc10/include
+	>
 	)
 
 target_link_libraries(punes
-	Qt::Core
-	Qt::Gui
-	Qt::Network
-	Qt::Svg
-	Qt::Widgets
+	$<$<NOT:$<BOOL:${ENABLE_WIN_STATIC_QT560}>>:
+		Qt::Core
+		Qt::Network
+		Qt::Widgets
+		Qt::Svg
+		Qt::Gui
+	>
+	$<$<BOOL:${ENABLE_WIN_STATIC_QT560}>:
+		Qt5::Core
+		Qt5::Network
+		Qt5::Widgets
+		Qt5::Svg
+		Qt5::Gui
+	>
+	$<$<BOOL:${EXTRA_LIBS}>:${EXTRA_LIBS}>
 	Threads::Threads
 	$<$<BOOL:${ENABLE_FFMPEG}>:PkgConfig::LIBAV>
 	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:Sndio::Sndio>
@@ -639,19 +661,22 @@ target_link_libraries(punes
 	$<$<PLATFORM_ID:Linux>:ALSA::ALSA>
 	$<$<PLATFORM_ID:Linux>:PkgConfig::UDEV>
 	$<$<BOOL:${X11_FOUND}>:X11::Xrandr>
-	$<$<BOOL:${ENABLE_OPENGL}>:OpenGL::GL>
+	OpenGL::GL
 	$<$<BOOL:${ENABLE_OPENGL}>:$<$<PLATFORM_ID:Linux>:OpenGL::GLX>>
-	$<$<BOOL:${ENABLE_OPENGL_CG}>:Cg::CgGL>
+	$<$<BOOL:${ENABLE_OPENGL_CG}>:$<$<PLATFORM_ID:FreeBSD,OpenBSD,Linux>:Cg::CgGL>>
 	lib7zip
 	qkeycode
 	)
 
-target_compile_definitions(punes PRIVATE
-	GLEW_STATIC
+target_compile_definitions(punes
+	PRIVATE
 	$<$<BOOL:${ENABLE_FFMPEG}>:WITH_FFMPEG>
-	$<$<BOOL:${ENABLE_OPENGL}>:WITH_OPENGL>
-	$<$<BOOL:${ENABLE_OPENGL_CG}>:WITH_OPENGL_CG>
 	$<$<NOT:$<BOOL:${ENABLE_OPENGL}>>:WITH_D3D9>
+	$<$<BOOL:${ENABLE_OPENGL}>:
+		GLEW_STATIC
+		WITH_OPENGL
+	>
+	$<$<BOOL:${ENABLE_OPENGL_CG}>:WITH_OPENGL_CG>
 	$<$<BOOL:${X11_FOUND}>:FULLSCREEN_RESFREQ>
 	$<$<BOOL:${ENABLE_GIT_INFO}>:WITH_GIT_INFO>
 	$<$<BOOL:${ENABLE_RELEASE}>:RELEASE>

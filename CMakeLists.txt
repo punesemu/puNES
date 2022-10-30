@@ -6,7 +6,11 @@ set(CMAKE_C_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
-set(CMAKE_MODULE_PATH	"${PROJECT_SOURCE_DIR}/cmake")
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
+string(TIMESTAMP COMPILED_TIMESTAMP "%m%d%Y%H%M%S")
+
+#variable_watch(ENABLE_WIN_STATIC_QT560)
 
 # Options
 option(ENABLE_GIT_INFO "Include Git info" OFF)
@@ -14,8 +18,9 @@ option(ENABLE_RELEASE "Build release version" ON)
 option(ENABLE_FFMPEG "Enable FFMPEG support" ON)
 option(ENABLE_OPENGL "Use OpenGL support instead of Direct3D 9 (only for Windows)" ON)
 option(ENABLE_OPENGL_CG "Enable OpenGL nVidia Cg Toolkit support" OFF)
+option(ENABLE_WIN_STATIC_QT "Use precompiled Qt static library (only for Windows)" OFF)
+option(ENABLE_WIN_STATIC_QT560 "Use precompiled Qt 5.6.3 static library (only for Windows)" OFF)
 
-string(TIMESTAMP COMPILED_TIMESTAMP "%m%d%Y%H%M%S")
 if (ENABLE_GIT_INFO)
 	find_package(Git)
 
@@ -56,6 +61,9 @@ configure_file(xdelta_config.h.in config.h)
 
 configure_file(compiled.h.in compiled.h)
 
+include(TargetArch)
+target_architecture(HOST_CPU)
+
 # handling external dependencies
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -63,17 +71,18 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_AUTOUIC_SEARCH_PATHS gui/designer)
 
+#set(EXTRA_COMPILE_FLAGS "-Wall -Wextra -ffast-math")
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	find_package(ALSA REQUIRED)
 	find_package(PkgConfig REQUIRED)
-	pkg_check_modules(UDEV REQUIRED IMPORTED_TARGET
-		libudev
-		)
+	pkg_check_modules(UDEV REQUIRED IMPORTED_TARGET libudev)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
 	find_package(Sndio REQUIRED)
 	find_package(UsbHid REQUIRED)
+	set(ENABLE_OPENGL_CG OFF)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -81,22 +90,78 @@ if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" 
 	if(NOT X11_FOUND)
 		message(WARNING "libX11 not found, fullscreen resolution and auto frequency disabled")
 	endif()
-	find_package(OpenGL REQUIRED)
 	# No alternatives, force selection
 	set(ENABLE_OPENGL ON)
-endif()
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	if(ENABLE_OPENGL)
-		find_package(OpenGL REQUIRED)
+	if(ENABLE_OPENGL_CG)
+		find_package(Cg REQUIRED)
 	endif()
 endif()
 
-if(ENABLE_OPENGL_CG)
-	find_package(Cg REQUIRED)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	set(EXTRA_LINK_FLAGS "${EXTRA_LINK_FLAGS} -static-libgcc -static-libstdc++")
+
+	if(ENABLE_RELEASE)
+		set(EXTRA_LINK_FLAGS "${EXTRA_LINK_FLAGS} -Wl,-subsystem,windows")
+	else()
+		set(EXTRA_LINK_FLAGS "${EXTRA_LINK_FLAGS} -Wl,-subsystem,console")
+	endif()
+
+	if(HOST_CPU STREQUAL "i386")
+		set(CG_WINDOWS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/windows/Cg/lib)
+	else()
+		set(CG_WINDOWS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/windows/Cg/lib.x64)
+	endif()
+
+	set(EXTRA_LIBS ${EXTRA_LIBS} ${CG_WINDOWS_PATH}/libcg.dll.a)
+
+	if(ENABLE_OPENGL)
+		set(ENABLE_OPENGL_CG ON)
+		set(EXTRA_LIBS ${EXTRA_LIBS} ${CG_WINDOWS_PATH}/libcgGL.dll.a)
+	else()
+		set(EXTRA_LIBS ${EXTRA_LIBS} ${CG_WINDOWS_PATH}/libcgD3D9.dll.a)
+		set(EXTRA_LIBS ${EXTRA_LIBS} -ld3d9)
+		if(HOST_CPU STREQUAL "i386")
+			set(EXTRA_LIBS ${EXTRA_LIBS} -ld3dx9)
+		else()
+			set(EXTRA_LIBS ${EXTRA_LIBS} -ld3dx9_41)
+		endif()
+	endif()
+
+	if(ENABLE_WIN_STATIC_QT560)
+		set(ENABLE_WIN_STATIC_QT ON)
+	endif()
+else()
+	set(ENABLE_WIN_STATIC_QT OFF)
+	set(ENABLE_WIN_STATIC_QT560 OFF)
 endif()
 
-find_package(Qt5 5.15.0 COMPONENTS Core Gui LinguistTools Widgets Network Svg REQUIRED)
+# OpenGL is required for Qt, even in the case of D3D9.
+find_package(OpenGL REQUIRED)
+
+if(ENABLE_WIN_STATIC_QT560)
+	find_package(Qt5 5.6.3 COMPONENTS Core LinguistTools Widgets Network Svg Gui REQUIRED)
+else()
+	find_package(Qt5 5.15.0 COMPONENTS Core LinguistTools Widgets Network Svg Gui REQUIRED)
+endif()
+
+if(ENABLE_WIN_STATIC_QT)
+	include(WinStaticQt)
+	win_static_qt(
+		plugins/platforms/libqwindows.a
+		libQt5PlatformSupport.a
+		libQt5EventDispatcherSupport.a
+		libQt5FontDatabaseSupport.a
+		libqtfreetype.a
+		libQt5ThemeSupport.a
+		libqwindowsvistastyle.a
+		plugins/imageformats/libqgif.a
+		plugins/imageformats/libqico.a
+		plugins/imageformats/libqjpeg.a
+		plugins/imageformats/libqsvg.a
+		libqtpcre.a
+		libqtharfbuzzng.a
+		)
+endif()
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -110,6 +175,14 @@ if(ENABLE_FFMPEG)
 		libswscale>=5.1.100
 		libavutil>=56.14.100
 		)
+endif()
+
+if(EXTRA_COMPILE_FLAGS)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_COMPILE_FLAGS}")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}")
+endif()
+if(EXTRA_LINK_FLAGS)
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${EXTRA_LINK_FLAGS}")
 endif()
 
 add_subdirectory(src)

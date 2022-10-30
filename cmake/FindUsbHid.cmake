@@ -37,12 +37,12 @@ else()
 endif()
 
 if (NOT LIBUSBHID)
-	message(FATAL_ERROR "usb library not_found")
+	message(FATAL_ERROR "usb library not found")
 endif()
 
 find_library(USBHID_LIB ${LIBUSBHID})
 if(NOT USBHID_LIB)
-	message(FATAL_ERROR "usb library not_found")
+	message(FATAL_ERROR "usb library not found")
 endif()
 set(USB_LIBS ${USBHID_LIB})
 
