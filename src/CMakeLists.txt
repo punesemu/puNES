@@ -618,6 +618,10 @@ add_executable(punes
 	$<$<PLATFORM_ID:Windows>:gui/windows/resources.rc>
 	)
 
+# warnings disabled for this
+target_compile_options(lib7zip PRIVATE -w)
+set_source_files_properties(core/patcher_xdelta3_wrap.c PROPERTIES COMPILE_OPTIONS -w)
+
 target_include_directories(punes
 	PRIVATE
 	.
