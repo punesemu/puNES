@@ -151,6 +151,6 @@ if(HAVE_USBHID)
 		add_library(UsbHid::UsbHid UNKNOWN IMPORTED)
 		set_target_properties(UsbHid::UsbHid PROPERTIES
 			IMPORTED_LOCATION "${USB_LIBS}"
-		)
+			)
 	endif()
 endif()

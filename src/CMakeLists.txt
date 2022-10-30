@@ -638,6 +638,18 @@ target_include_directories(punes
 	>
 	)
 
+target_link_options(punes
+	PRIVATE
+	$<$<PLATFORM_ID:Windows>:
+		-static-libgcc
+		-static-libstdc++
+		$<$<BOOL:${ENABLE_RELEASE}>:-Wl,-subsystem,windows>
+		$<$<NOT:$<BOOL:${ENABLE_RELEASE}>>:-Wl,-subsystem,console>
+		$<$<STREQUAL:${HOST_CPU},i386>:-L${CMAKE_CURRENT_SOURCE_DIR}/extra/windows/Cg/lib>
+		$<$<NOT:$<STREQUAL:${HOST_CPU},i386>>:-L${CMAKE_CURRENT_SOURCE_DIR}/extra/windows/Cg/lib.x64>
+	>
+	)
+
 target_link_libraries(punes
 	$<$<NOT:$<BOOL:${ENABLE_WIN_STATIC_QT560}>>:
 		Qt::Core
@@ -653,19 +665,37 @@ target_link_libraries(punes
 		Qt5::Svg
 		Qt5::Gui
 	>
-	$<$<BOOL:${EXTRA_LIBS}>:${EXTRA_LIBS}>
 	Threads::Threads
 	$<$<BOOL:${ENABLE_FFMPEG}>:PkgConfig::LIBAV>
 	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:Sndio::Sndio>
 	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:UsbHid::UsbHid>
 	$<$<PLATFORM_ID:Linux>:ALSA::ALSA>
 	$<$<PLATFORM_ID:Linux>:PkgConfig::UDEV>
+	$<$<PLATFORM_ID:Windows>:
+		$<$<BOOL:${ENABLE_WIN_STATIC_QT}>:${WIN_STATIC_QT_LIBS}>
+		ws2_32
+		imm32
+		cg
+		$<$<BOOL:${ENABLE_OPENGL}>:cgGL>
+		$<$<NOT:$<BOOL:${ENABLE_OPENGL}>>:
+			cgD3D9
+			$<$<STREQUAL:${HOST_CPU},i386>:d3dx9>
+			$<$<NOT:$<STREQUAL:${HOST_CPU},i386>>:d3dx9_41>
+		>
+	>
 	$<$<BOOL:${X11_FOUND}>:X11::Xrandr>
 	OpenGL::GL
 	$<$<BOOL:${ENABLE_OPENGL}>:$<$<PLATFORM_ID:Linux>:OpenGL::GLX>>
 	$<$<BOOL:${ENABLE_OPENGL_CG}>:$<$<PLATFORM_ID:FreeBSD,OpenBSD,Linux>:Cg::CgGL>>
 	lib7zip
 	qkeycode
+	)
+
+target_compile_options(punes
+	PRIVATE
+	#-Wall
+	#-Wextra
+	-ffast-math
 	)
 
 target_compile_definitions(punes
@@ -681,4 +711,3 @@ target_compile_definitions(punes
 	$<$<BOOL:${ENABLE_GIT_INFO}>:WITH_GIT_INFO>
 	$<$<BOOL:${ENABLE_RELEASE}>:RELEASE>
 	)
-

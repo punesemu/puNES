@@ -71,8 +71,6 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_AUTOUIC_SEARCH_PATHS gui/designer)
 
-#set(EXTRA_COMPILE_FLAGS "-Wall -Wextra -ffast-math")
-
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	find_package(ALSA REQUIRED)
 	find_package(PkgConfig REQUIRED)
@@ -98,35 +96,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" 
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	set(EXTRA_LINK_FLAGS "${EXTRA_LINK_FLAGS} -static-libgcc -static-libstdc++")
-
-	if(ENABLE_RELEASE)
-		set(EXTRA_LINK_FLAGS "${EXTRA_LINK_FLAGS} -Wl,-subsystem,windows")
-	else()
-		set(EXTRA_LINK_FLAGS "${EXTRA_LINK_FLAGS} -Wl,-subsystem,console")
-	endif()
-
-	if(HOST_CPU STREQUAL "i386")
-		set(CG_WINDOWS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/windows/Cg/lib)
-	else()
-		set(CG_WINDOWS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src/extra/windows/Cg/lib.x64)
-	endif()
-
-	set(EXTRA_LIBS ${EXTRA_LIBS} ${CG_WINDOWS_PATH}/libcg.dll.a)
-
-	if(ENABLE_OPENGL)
-		set(ENABLE_OPENGL_CG ON)
-		set(EXTRA_LIBS ${EXTRA_LIBS} ${CG_WINDOWS_PATH}/libcgGL.dll.a)
-	else()
-		set(EXTRA_LIBS ${EXTRA_LIBS} ${CG_WINDOWS_PATH}/libcgD3D9.dll.a)
-		set(EXTRA_LIBS ${EXTRA_LIBS} -ld3d9)
-		if(HOST_CPU STREQUAL "i386")
-			set(EXTRA_LIBS ${EXTRA_LIBS} -ld3dx9)
-		else()
-			set(EXTRA_LIBS ${EXTRA_LIBS} -ld3dx9_41)
-		endif()
-	endif()
-
 	if(ENABLE_WIN_STATIC_QT560)
 		set(ENABLE_WIN_STATIC_QT ON)
 	endif()
@@ -146,21 +115,6 @@ endif()
 
 if(ENABLE_WIN_STATIC_QT)
 	include(WinStaticQt)
-	win_static_qt(
-		plugins/platforms/libqwindows.a
-		libQt5PlatformSupport.a
-		libQt5EventDispatcherSupport.a
-		libQt5FontDatabaseSupport.a
-		libqtfreetype.a
-		libQt5ThemeSupport.a
-		libqwindowsvistastyle.a
-		plugins/imageformats/libqgif.a
-		plugins/imageformats/libqico.a
-		plugins/imageformats/libqjpeg.a
-		plugins/imageformats/libqsvg.a
-		libqtpcre.a
-		libqtharfbuzzng.a
-		)
 endif()
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -175,14 +129,6 @@ if(ENABLE_FFMPEG)
 		libswscale>=5.1.100
 		libavutil>=56.14.100
 		)
-endif()
-
-if(EXTRA_COMPILE_FLAGS)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_COMPILE_FLAGS}")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}")
-endif()
-if(EXTRA_LINK_FLAGS)
-	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${EXTRA_LINK_FLAGS}")
 endif()
 
 add_subdirectory(src)
