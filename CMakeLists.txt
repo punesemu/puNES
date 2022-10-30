@@ -107,11 +107,7 @@ endif()
 # OpenGL is required for Qt, even in the case of D3D9.
 find_package(OpenGL REQUIRED)
 
-if(ENABLE_WIN_STATIC_QT560)
-	find_package(Qt5 5.6.3 COMPONENTS Core LinguistTools Widgets Network Svg Gui REQUIRED)
-else()
-	find_package(Qt5 5.15.0 COMPONENTS Core LinguistTools Widgets Network Svg Gui REQUIRED)
-endif()
+find_package(Qt5 5.6.3 COMPONENTS Core LinguistTools Widgets Network Svg Gui REQUIRED)
 
 if(ENABLE_WIN_STATIC_QT)
 	include(WinStaticQt)
