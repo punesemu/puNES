@@ -558,11 +558,9 @@ set(gui_srcs
 	>
 
 	$<$<PLATFORM_ID:Windows>:
+		$<$<BOOL:${ENABLE_FULLSCREEN_RESFREQ}>:gui/windows/monitor.c>
 		gui/windows/os_jstick.c
 		gui/windows/resources.rc
-	>
-	$<$<AND:$<PLATFORM_ID:Windows>,$<BOOL:${ENABLE_FULLSCREEN_RESFREQ}>>:
-		gui/windows/monitor.c
 	>
 
 	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:
@@ -678,7 +676,7 @@ target_link_libraries(punes
 		imm32
 		cg
 		$<IF:$<BOOL:${ENABLE_OPENGL}>,
-			cgGL,
+			$<$<BOOL:${ENABLE_OPENGL_CG}>:cgGL>,
 			cgD3D9
 			d3d9
 			$<IF:$<STREQUAL:${HOST_CPU},i386>,
