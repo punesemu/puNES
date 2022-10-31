@@ -550,12 +550,9 @@ set(gui_srcs
 	gui/wdgToolBar.cpp
 	gui/wdgToolBar.hpp
 
-	$<$<BOOL:${ENABLE_OPENGL}>:
+	$<IF:$<BOOL:${ENABLE_OPENGL}>,
 		gui/wdgOpenGL.cpp
-		gui/wdgOpenGL.hpp
-	>
-
-	$<$<NOT:$<BOOL:${ENABLE_OPENGL}>>:
+		gui/wdgOpenGL.hpp,
 		gui/wdgD3D9.cpp
 		gui/wdgD3D9.hpp
 	>
@@ -595,12 +592,10 @@ set(video_srcs
 	video/gfx_monitor.c
 	video/gfx_thread.c
 	video/shaders/shaders.c
-	$<$<BOOL:${ENABLE_OPENGL}>:
+	$<IF:$<BOOL:${ENABLE_OPENGL}>,
 		video/opengl/glew/glew.c
 		video/opengl/gfx_api.c
-		video/opengl/opengl.c
-	>
-	$<$<NOT:$<BOOL:${ENABLE_OPENGL}>>:
+		video/opengl/opengl.c,
 		video/d3d9/d3d9.c
 		video/d3d9/gfx_api.c
 	>
@@ -618,18 +613,16 @@ add_executable(punes
 	$<$<PLATFORM_ID:Windows>:gui/windows/resources.rc>
 	)
 
-# warnings disabled for this
-target_compile_options(lib7zip PRIVATE -w)
-set_source_files_properties(core/patcher_xdelta3_wrap.c PROPERTIES COMPILE_OPTIONS -w)
-
 target_include_directories(punes
 	PRIVATE
 	.
 	audio
 	core
 	gui
-	$<$<BOOL:${ENABLE_OPENGL}>:${CMAKE_CURRENT_SOURCE_DIR}/video/opengl>
-	$<$<NOT:$<BOOL:${ENABLE_OPENGL}>>:${CMAKE_CURRENT_SOURCE_DIR}/video/d3d9>
+	$<IF:$<BOOL:${ENABLE_OPENGL}>,
+		${CMAKE_CURRENT_SOURCE_DIR}/video/opengl,
+		${CMAKE_CURRENT_SOURCE_DIR}/video/d3d9
+	>
 	video/shaders
 	"${PROJECT_BINARY_DIR}"
 	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:${CMAKE_CURRENT_SOURCE_DIR}/gui/bsd>
@@ -649,25 +642,25 @@ target_link_options(punes
 		-static-libstdc++
 		$<$<BOOL:${ENABLE_RELEASE}>:-Wl,-subsystem,windows>
 		$<$<NOT:$<BOOL:${ENABLE_RELEASE}>>:-Wl,-subsystem,console>
-		$<$<STREQUAL:${HOST_CPU},i386>:-L${CMAKE_CURRENT_SOURCE_DIR}/extra/windows/Cg/lib>
-		$<$<NOT:$<STREQUAL:${HOST_CPU},i386>>:-L${CMAKE_CURRENT_SOURCE_DIR}/extra/windows/Cg/lib.x64>
+		$<IF:$<STREQUAL:${HOST_CPU},i386>,
+			-L${CMAKE_CURRENT_SOURCE_DIR}/extra/windows/Cg/lib,
+			-L${CMAKE_CURRENT_SOURCE_DIR}/extra/windows/Cg/lib.x64
+		>
 	>
 	)
 
 target_link_libraries(punes
-	$<$<NOT:$<BOOL:${ENABLE_WIN_STATIC_QT560}>>:
+	$<IF:$<BOOL:${ENABLE_WIN_STATIC_QT560}>,
+		Qt5::Core
+		Qt5::Network
+		Qt5::Widgets
+		Qt5::Svg
+		Qt5::Gui,
 		Qt::Core
 		Qt::Network
 		Qt::Widgets
 		Qt::Svg
 		Qt::Gui
-	>
-	$<$<BOOL:${ENABLE_WIN_STATIC_QT560}>:
-		Qt5::Core
-		Qt5::Network
-		Qt5::Widgets
-		Qt5::Svg
-		Qt5::Gui
 	>
 	Threads::Threads
 	$<$<BOOL:${ENABLE_FFMPEG}>:PkgConfig::LIBAV>
@@ -680,17 +673,20 @@ target_link_libraries(punes
 		ws2_32
 		imm32
 		cg
-		$<$<BOOL:${ENABLE_OPENGL}>:cgGL>
-		$<$<NOT:$<BOOL:${ENABLE_OPENGL}>>:
+		$<IF:$<BOOL:${ENABLE_OPENGL}>,
+			cgGL,
 			cgD3D9
-			$<$<STREQUAL:${HOST_CPU},i386>:d3dx9>
-			$<$<NOT:$<STREQUAL:${HOST_CPU},i386>>:d3dx9_41>
+			d3d9
+			$<IF:$<STREQUAL:${HOST_CPU},i386>,
+				d3dx9,
+				d3dx9_41
+			>
 		>
 	>
 	$<$<BOOL:${X11_FOUND}>:X11::Xrandr>
 	OpenGL::GL
-	$<$<BOOL:${ENABLE_OPENGL}>:$<$<PLATFORM_ID:Linux>:OpenGL::GLX>>
-	$<$<BOOL:${ENABLE_OPENGL_CG}>:$<$<PLATFORM_ID:FreeBSD,OpenBSD,Linux>:Cg::CgGL>>
+	$<$<PLATFORM_ID:Linux>:OpenGL::GLX>
+	$<$<AND:$<PLATFORM_ID:FreeBSD,OpenBSD,Linux>,$<BOOL:${ENABLE_OPENGL_CG}>>:Cg::CgGL>
 	lib7zip
 	qkeycode
 	)
@@ -702,16 +698,20 @@ target_compile_options(punes
 	-ffast-math
 	)
 
+# warnings disabled for this
+target_compile_options(lib7zip PRIVATE -w)
+set_source_files_properties(core/patcher_xdelta3_wrap.c PROPERTIES COMPILE_OPTIONS -w)
+
 target_compile_definitions(punes
 	PRIVATE
+	$<$<BOOL:${ENABLE_GIT_INFO}>:WITH_GIT_INFO>
+	$<$<BOOL:${ENABLE_RELEASE}>:RELEASE>
 	$<$<BOOL:${ENABLE_FFMPEG}>:WITH_FFMPEG>
-	$<$<NOT:$<BOOL:${ENABLE_OPENGL}>>:WITH_D3D9>
-	$<$<BOOL:${ENABLE_OPENGL}>:
+	$<IF:$<BOOL:${ENABLE_OPENGL}>,
 		GLEW_STATIC
-		WITH_OPENGL
+		WITH_OPENGL,
+		WITH_D3D9
 	>
 	$<$<BOOL:${ENABLE_OPENGL_CG}>:WITH_OPENGL_CG>
 	$<$<BOOL:${X11_FOUND}>:FULLSCREEN_RESFREQ>
-	$<$<BOOL:${ENABLE_GIT_INFO}>:WITH_GIT_INFO>
-	$<$<BOOL:${ENABLE_RELEASE}>:RELEASE>
 	)
