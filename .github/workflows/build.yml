@@ -33,7 +33,8 @@ jobs:
             libasound2-dev \
             libxrandr-dev \
             libudev-dev \
-            libglvnd-dev ninja-build \
+            libglvnd-dev \
+            ninja-build \
             libavformat-dev \
             libavcodec-dev \
             libswresample-dev \
@@ -52,7 +53,7 @@ jobs:
         run: |
           cmake -B build -G Ninja ${{ matrix.config.opts }}
           cmake --build build -j2
-  
+
   build-windows:
     runs-on: windows-latest
     name: build (${{ matrix.msystem }}, ${{ matrix.qt5ver }}, ${{ matrix.cc }}, ${{ matrix.cxx }})
@@ -154,4 +155,3 @@ jobs:
         with:
           name: punes${{ matrix.bit }}.wip.opengl
           path: artifacts\opengl\*.*
-          
