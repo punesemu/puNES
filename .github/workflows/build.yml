@@ -4,25 +4,71 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-linux:
+    runs-on: ${{ matrix.config.os }}
+    name: build (${{ matrix.config.os }}, ${{ matrix.config.cc }}, ${{ matrix.config.cxx }})
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          # ubuntu-latest (20.04) don't have qt 5.15 yet
+          - { os: ubuntu-22.04, cc: "gcc", cxx: "g++", opts: "-DENABLE_RELEASE=ON -DENABLE_FFMPEG=ON -DENABLE_OPENGL_CG=ON" }
+          - { os: ubuntu-22.04, cc: "clang", cxx: "clang++", opts: "-DENABLE_RELEASE=ON -DENABLE_FFMPEG=ON -DENABLE_OPENGL_CG=ON" }
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+            libasound2-dev \
+            libxrandr-dev \
+            libudev-dev \
+            libglvnd-dev ninja-build \
+            libavformat-dev \
+            libavcodec-dev \
+            libswresample-dev \
+            libswscale-dev \
+            libavutil-dev \
+            nvidia-cg-dev \
+            libqt5svg5-dev \
+            qtbase5-dev \
+            qtbase5-dev-tools \
+            qttools5-dev
+
+      - name: Build with ${{ matrix.config.cc }}/${{ matrix.config.cxx }}
+        env:
+          CC: ${{ matrix.config.cc }}
+          CXX: ${{ matrix.config.cxx }}
+        run: |
+          cmake -B build -G Ninja ${{ matrix.config.opts }}
+          cmake --build build -j2
+  
+  build-windows:
+    runs-on: windows-latest
+    name: build (${{ matrix.msystem }}, ${{ matrix.qt5ver }}, ${{ matrix.cc }}, ${{ matrix.cxx }})
     strategy:
       fail-fast: false
       matrix:
         include:
-          - { msystem: mingw64, env: x86_64, bit: 64, qt5ver: 5.15.0, url1: www.dropbox.com/s/xd9dq7dr713ao95, url2: www.dropbox.com/s/d632cjezybz6a74 }
-          - { msystem: mingw32, env: i686,   bit: 32, qt5ver: 5.6.3,  url1: www.dropbox.com/s/tc6wy8vpitkdlm1, url2: www.dropbox.com/s/ye00129nyacdl05 }
-    name: Windows ${{ matrix.bit }}bit
-    runs-on: windows-latest
+          - { msystem: mingw64, cc: "gcc", cxx: "g++", env: x86_64, bit: 64, qt5ver: 5.15.0, url1: www.dropbox.com/s/xd9dq7dr713ao95, url2: www.dropbox.com/s/d632cjezybz6a74, opts: '-DENABLE_WIN_STATIC_QT=ON' }
+          - { msystem: mingw32, cc: "gcc", cxx: "g++", env: i686,   bit: 32, qt5ver: 5.6.3,  url1: www.dropbox.com/s/k25y87k94cldb62, url2: www.dropbox.com/s/ye00129nyacdl05, opts: '-DENABLE_WIN_STATIC_QT560=ON' }
     env:
-      cxxflags: ${{ contains(matrix.bit, '64') && '' || '-Wno-deprecated-copy' }}
-      pdzip : punes${{ matrix.bit }}.wip.d3d9
-      pozip : punes${{ matrix.bit }}.wip.opengl
+      CC: ${{ matrix.config.cc }}
+      CXX: ${{ matrix.config.cxx }}
+      CFLAGS: '-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse'
+      CXXFLAGS: '-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse'
+      oglopts: '-DENABLE_RELEASE=ON -DENABLE_GIT_INFO=ON -DENABLE_FFMPEG=ON -DENABLE_OPENGL_CG=ON'
+      d3dopts: '-DENABLE_RELEASE=ON -DENABLE_GIT_INFO=ON -DENABLE_FFMPEG=ON -DENABLE_OPENGL=OFF'
 
     steps:
       - name: 'Checkout'
@@ -30,7 +76,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 'Setup ${{ matrix.env }} MSYS2'
+      - name: 'Setup ${{ matrix.env }} environment'
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.msystem }}
@@ -42,11 +88,8 @@ jobs:
             wget
             p7zip
             unzip
-            automake
-            autoconf
-            perl
-            ruby
             libtool
+            mingw-w64-${{ matrix.env }}-ffmpeg
             mingw-w64-${{ matrix.env }}-cmake
             mingw-w64-${{ matrix.env }}-toolchain
 
@@ -60,37 +103,33 @@ jobs:
           mkdir -p build/d3d9
           mkdir -p build/opengl
 
-      - name: 'Download QT5 and DLLs'
+      - name: 'Download qt5 and dlls'
         shell: msys2 {0}
         working-directory: artifacts/tmp
         run: |
           wget --no-check-cert -O qt5_${{ matrix.qt5ver }}_${{ matrix.env }}.7z 'https://${{ matrix.url1 }}/qt5_${{ matrix.qt5ver }}_${{ matrix.env }}.7z?dl=1' 1>/dev/null 2>&1
           wget --no-check-cert -O puNES_${{ matrix.env }}_dlls.zip 'https://${{ matrix.url2 }}/puNES_${{ matrix.env }}_dlls.zip?dl=1' 1>/dev/null 2>&1
 
-      - name: 'Extract QT5 and DLLs'
+      - name: 'Extract qt5 and dlls'
         working-directory: artifacts/tmp
         run: |
           7z x qt5_${{ matrix.qt5ver }}_${{ matrix.env }}.7z -oC:\msys64\${{ matrix.msystem }} > NUL
           7z x puNES_${{ matrix.env }}_dlls.zip -o${{ github.workspace }}\artifacts\dll > NUL
 
-      - name: 'autogen.sh'
-        shell: msys2 {0}
-        run: ./autogen.sh
-
-      - name: 'Build D3D9 version'
+      - name: 'Build d3d9 version'
         shell: msys2 {0}
         working-directory: build\d3d9
         run: |
-          WIPS_VERSION=true CPPFLAGS='-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse' CFLAGS='' CXXFLAGS='${{ env.cxxflags }}' ../../configure --with-d3d9
-          make -j3
+          Qt5_DIR='/${{ matrix.msystem }}/lib/qt5/cmake/Qt5' cmake -S ../../ -G Ninja ${{ env.d3dopts }} ${{ matrix.opts }}
+          cmake --build . -j3
           strip src/punes.exe
 
-      - name: 'Build OpenGL version'
+      - name: 'Build opengl version'
         shell: msys2 {0}
         working-directory: build\opengl
         run: |
-          WIPS_VERSION=true CPPFLAGS='-O3 -mmmx -msse -msse2 -mfpmath=sse' CFLAGS='' CXXFLAGS='${{ env.cxxflags }}' ../../configure --with-opengl
-          make -j3
+          Qt5_DIR='/${{ matrix.msystem }}/lib/qt5/cmake/Qt5' cmake -S ../../ -G Ninja ${{ env.oglopts }} ${{ matrix.opts }}
+          cmake --build . -j3
           strip src/punes.exe
 
       - name: 'Build artifacts'
@@ -104,14 +143,15 @@ jobs:
           rm opengl/cgD3D9.dll
           cp ../build/opengl/src/punes.exe opengl/.
 
-      - name: 'Upload D3D9 artifact'
+      - name: 'Upload d3d9 artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.pdzip }}
+          name: punes${{ matrix.bit }}.wip.d3d9
           path: artifacts\d3d9\*.*
 
-      - name: 'Upload OpenGL artifact'
+      - name: 'Upload opengl artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.pozip }}
+          name: punes${{ matrix.bit }}.wip.opengl
           path: artifacts\opengl\*.*
+          

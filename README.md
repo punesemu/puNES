@@ -116,12 +116,24 @@ NROM, NROM-128, NROM-256, SLROM, UOROM, CNROM, TLROM, TBROM, TKROM, TFROM, ANROM
 * :blowfish: [OpenBSD](#blowfish-openbsd)
 * :computer: [Windows](#computer-windows)
 
+
+CMake Options
+-----------
+
+| CMake Option              | Description                                                 | Default |
+|---------------------------|-------------------------------------------------------------|---------|
+| ENABLE_RELEASE            | Build release version                                       | ON      |
+| ENABLE_FFMPEG             | Enable FFMPEG support                                       | ON      |
+| ENABLE_OPENGL             | Use OpenGL support instead of Direct3D 9 (only for Windows) | ON      |
+| ENABLE_OPENGL_CG          | Enable OpenGL nVidia Cg Toolkit support                     | OFF     |
+| ENABLE_FULLSCREEN_RESFREQ | Enable Fullscreen resolution and auto frequency             | ON      |
+
 ## :penguin: Linux
 #### Dependencies
+* [CMake >= 3.12](https://cmake.org) and [Ninja](https://ninja-build.org)
 * [Qt5](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [nvidia-cg](https://developer.nvidia.com/cg-toolkit)
 * [alsa](https://www.alsa-project.org)
-* [cmake >= 3.13](https://cmake.org)
 * libudev
 * [libX11 and libXrandr](https://www.x.org)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
@@ -129,52 +141,49 @@ NROM, NROM-128, NROM-256, SLROM, UOROM, CNROM, TLROM, TBROM, TKROM, TFROM, ANROM
 ```bash
 git clone https://github.com/punesemu/puNES
 cd puNES
-./autogen.sh
-./configure
-make
+cmake -B build -G Ninja -DENABLE_FFMPEG=ON -DENABLE_OPENGL_CG=ON
+cmake --build build -j2
 ```
-the executable `punes` is in the `src` directory.
+the executable `punes` is in the `build/src` directory.
 #### Linux Debug version
-If you need the debug version then you need to replace the `./configure` command of the previous examples with the following:
+If you need the debug version then you need to replace the `cmake -B build -G Ninja` command of the previous examples with the following:
 ```bash
-CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" ./configure --disable-release [...]
+CFLAGS="-O0 -g -DDEBUG" CXXFLAGS="-O0 -g -DDEBUG" cmake -B build -G Ninja -DENABLE_RELEASE=OFF [...]
 ```
 where `[...]` are the other necessary options.
 #### Example on how to compile on Ubuntu 21.10
 ```bash
-sudo apt-get install git cmake autotools-dev autoconf libtool build-essential pkg-config libudev-dev libasound2-dev
+sudo apt-get install git cmake ninja-build libtool build-essential pkg-config libudev-dev libasound2-dev
 sudo apt-get install qtbase5-dev qttools5-dev-tools libqt5svg5-dev nvidia-cg-toolkit libx11-dev libxrandr-dev 
 sudo apt-get install libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev
 git clone https://github.com/punesemu/puNES
 cd puNES
-./autogen.sh
-./configure
-make
+cmake -B build -G Ninja
+cmake --build build -j2
 ```
 to start the emulator
 ```bash
-./src/punes
+./build/src/punes
 ```
 ## :smiling_imp: FreeBSD
 #### Dependencies
+* [CMake >= 3.12](https://cmake.org) and [Ninja](https://ninja-build.org)
 * [Qt5](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
-* [cmake >= 3.13](https://cmake.org)
 * [libX11 and libXrandr](https://www.x.org)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
 #### Compilation of puNES
 ```bash
 git clone https://github.com/punesemu/puNES
 cd puNES
-./autogen.sh
-CC=cc CXX=c++ ./configure
-make
+Qt5_DIR="/usr/local/lib/qt5/cmake/Qt5" cmake -B build -G Ninja -DENABLE_FFMPEG=ON
+cmake --build build -j2
 ```
-the executable `punes` is in the `src` directory.
+the executable `punes` is in the `build/src` directory.
 #### FreeBSD Debug version
-If you need the debug version then you need to replace the `./configure` command of the previous examples with the following:
+If you need the debug version then you need to replace the `cmake -B Build -G Ninja` command of the previous examples with the following:
 ```bash
-CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" CC=cc CXX=c++ ./configure --disable-release [...]
+CFLAGS="-O0 -g -DDEBUG" CXXFLAGS="-O0 -g -DDEBUG" cmake -B build -G Ninja -DENABLE_RELEASE=OFF [...]
 ```
 where `[...]` are the other necessary options.
 ## :blowfish: OpenBSD 
@@ -188,15 +197,14 @@ where `[...]` are the other necessary options.
 ```bash
 git clone https://github.com/punesemu/puNES
 cd puNES
-./autogen.sh
-CC=cc CXX=c++ ./configure
-make
+Qt5_DIR="/usr/local/lib/qt5/cmake/Qt5" cmake -B build -G Ninja -DENABLE_FFMPEG=ON
+cmake --build build -j2
 ```
-the executable `punes` is in the `src` directory.
+the executable `punes` is in the `buid/src` directory.
 #### OpenBSD Debug version
-If you need the debug version then you need to replace the `./configure` command of the previous examples with the following:
+If you need the debug version then you need to replace the `cmake -B Build -G Ninja` command of the previous examples with the following:
 ```bash
-CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" CC=cc CXX=c++ ./configure --disable-release [...]
+CFLAGS="-O0 -g -DDEBUG" CXXFLAGS="-O0 -g -DDEBUG" cmake -B build -G Ninja -DENABLE_RELEASE=OFF [...]
 ```
 where `[...]` are the other necessary options.
 ## :computer: Windows
@@ -213,6 +221,7 @@ pacman -Syu
 pacman -Su
 pacman -S base-devel git wget p7zip unzip mingw-w64-i686-cmake mingw-w64-x86_64-cmake
 pacman -S perl ruby python2 mingw-w64-i686-toolchain mingw-w64-x86_64-toolchain
+pacman -S mingw-w64-i686-ffmpeg mingw-w64-x86_64-ffmpeg
 exit
 ```
 4. open a new MSYS2 shell and build the necessary libraries
@@ -270,19 +279,18 @@ cd ..
 ```bash
 git clone https://github.com/punesemu/puNES
 cd puNES
-./autogen.sh
 ```
 if you want D3D9 version :
 ```bash
-./configure --with-d3d9
-make
+cmake -B build -G Ninja -DENABLE_FFMPEG=ON -DENABLE_OPENGL=OFF
+cmake --build build -j2
 ```
 otherwise :
 ```bash
-./configure --with-opengl
-make
+cmake -B build -G Ninja -DENABLE_FFMPEG=ON
+cmake --build build -j2
 ```
-The executable `punes.exe` is in the `src` directory but in order to run it you need the following dlls:
+The executable `punes.exe` is in the `build/src` directory but in order to run it you need the following dlls:
 * 7z.dl
 * avcodec-58.dll
 * avformat-58.dll
@@ -296,9 +304,9 @@ The executable `punes.exe` is in the `src` directory but in order to run it you 
 
 that you can download here : :link:[`64bit`](https://www.dropbox.com/s/d632cjezybz6a74/puNES_x86_64_dlls.zip?dl=1) version or :link:[`32bit`](https://www.dropbox.com/s/ye00129nyacdl05/puNES_i686_dlls.zip?dl=1) version.
 #### Windows Debug version
-If you need the debug version then you need to replace the `./configure` command of the previous examples with the following:
+If you need the debug version then you need to replace the `cmake -B build -G Ninja` command of the previous examples with the following:
 ```bash
-CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" ./configure --disable-release [...]
+CFLAGS="-O0 -g -DDEBUG" CXXFLAGS="-O0 -g -DDEBUG" cmake -B build -G Ninja -DENABLE_RELEASE=OFF [...]
 ```
 where `[...]` are the other necessary options.
 
