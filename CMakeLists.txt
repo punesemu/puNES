@@ -52,6 +52,9 @@ if (ENABLE_GIT_INFO)
 	endif()
 endif()
 
+# For installation targets
+include(GNUInstallDirs)
+
 # sizeof checking for xdelta config.h generation
 include(CheckTypeSize)
 check_type_size("size_t" SIZEOF_SIZE_T)
@@ -131,3 +134,17 @@ if(ENABLE_FFMPEG)
 endif()
 
 add_subdirectory(src)
+
+# Install misc files
+install(FILES misc/punes.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+
+install(FILES misc/hicolor_apps_16x16_com.github.punesemu.puNES.png
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/16x16/apps RENAME punes.png)
+install(FILES misc/hicolor_apps_32x32_com.github.punesemu.puNES.png
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/32x32/apps RENAME punes.png)
+install(FILES misc/hicolor_apps_64x64_com.github.punesemu.puNES.png
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/64x64/apps RENAME punes.png)
+install(FILES misc/hicolor_apps_512x512_com.github.punesemu.puNES.png
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/512x512/apps RENAME punes.png)
+
+install(FILES README.md ChangeLog DESTINATION ${CMAKE_INSTALL_DOCDIR})
