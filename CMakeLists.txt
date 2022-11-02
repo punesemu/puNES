@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.14)
 
 project(puNES)
 set(CMAKE_C_STANDARD 99)
@@ -115,6 +115,15 @@ find_package(OpenGL REQUIRED)
 
 find_package(Qt5 5.6.3 COMPONENTS Core LinguistTools Widgets Network Svg Gui REQUIRED)
 
+if(${Qt5_VERSION} VERSION_LESS "5.15.0")
+	macro(qt_add_translation)
+		qt5_add_translation(${ARGN})
+	endmacro()
+	macro(qt_add_resources)
+		qt5_add_resources(${ARGN})
+	endmacro()
+endif()
+
 if(ENABLE_WIN_STATIC_QT)
 	include(WinStaticQt)
 endif()
@@ -125,11 +134,11 @@ find_package(Threads REQUIRED)
 if(ENABLE_FFMPEG)
 	find_package(PkgConfig REQUIRED)
 	pkg_check_modules(LIBAV REQUIRED IMPORTED_TARGET
-		libavformat>=58.12.100
-		libavcodec>=58.18.100
-		libswresample>=3.1.100
-		libswscale>=5.1.100
-		libavutil>=56.14.100
+		libavformat
+		libavcodec
+		libswresample
+		libswscale
+		libavutil
 		)
 endif()
 

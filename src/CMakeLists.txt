@@ -20,11 +20,7 @@ set(ts_files
 	)
 set_source_files_properties(${ts_files} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/translations")
 configure_file(gui/designer/translations.qrc ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
-if(ENABLE_WIN_STATIC_QT560)
-	qt5_add_translation(qm_files ${ts_files})
-else()
-	qt_add_translation(qm_files ${ts_files})
-endif()
+qt_add_translation(qm_files ${ts_files})
 add_custom_target(translations DEPENDS ${qm_files})
 
 include(FetchContent)
@@ -652,7 +648,7 @@ target_link_options(punes
 	)
 
 target_link_libraries(punes
-	$<IF:$<BOOL:${ENABLE_WIN_STATIC_QT560}>,
+	$<IF:$<VERSION_LESS:${Qt5_VERSION},5.15.0>,
 		Qt5::Core
 		Qt5::Network
 		Qt5::Widgets
