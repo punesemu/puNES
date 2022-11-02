@@ -648,7 +648,7 @@ target_link_options(punes
 	)
 
 target_link_libraries(punes
-	$<IF:$<VERSION_LESS:${Qt5_VERSION},5.15.0>,
+	$<IF:$<VERSION_LESS:${QT_VERSION},5.15.0>,
 		Qt5::Core
 		Qt5::Network
 		Qt5::Widgets
@@ -659,6 +659,7 @@ target_link_libraries(punes
 		Qt::Widgets
 		Qt::Svg
 		Qt::Gui
+		$<IF:$<VERSION_GREATER_EQUAL:${QT_VERSION},6.0.0>,Qt::OpenGLWidgets,>
 	>
 	Threads::Threads
 	$<$<BOOL:${ENABLE_FFMPEG}>:PkgConfig::LIBAV>

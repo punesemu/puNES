@@ -15,7 +15,7 @@ target_include_directories(qkeycode
     PUBLIC include
     PRIVATE src
 )
-if(${Qt5_VERSION} VERSION_LESS "5.15.0")
+if(${QT_VERSION} VERSION_LESS "5.15.0")
 	target_link_libraries(qkeycode PRIVATE Qt5::Gui)
 else()
 	target_link_libraries(qkeycode PRIVATE Qt::Gui)

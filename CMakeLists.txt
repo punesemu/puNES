@@ -19,6 +19,7 @@ option(ENABLE_FFMPEG "Enable FFMPEG support" ON)
 option(ENABLE_OPENGL "Use OpenGL support instead of Direct3D 9 (only for Windows)" ON)
 option(ENABLE_OPENGL_CG "Enable OpenGL nVidia Cg Toolkit support" OFF)
 option(ENABLE_FULLSCREEN_RESFREQ "Enable Fullscreen resolution and auto frequency" ON)
+option(ENABLE_QT6_LIBS "Enable support for QT6 libraries" OFF)
 option(ENABLE_WIN_STATIC_QT "Use precompiled Qt static library (only for Windows)" OFF)
 option(ENABLE_WIN_STATIC_QT560 "Use precompiled Qt 5.6.3 static library (only for Windows)" OFF)
 
@@ -113,9 +114,17 @@ endif()
 # OpenGL is required for Qt, even in the case of D3D9.
 find_package(OpenGL REQUIRED)
 
-find_package(Qt5 5.6.3 COMPONENTS Core LinguistTools Widgets Network Svg Gui REQUIRED)
+if(ENABLE_QT6_LIBS)
+	find_package(Qt6 6.0.0 COMPONENTS Core LinguistTools Widgets Network Svg Gui OpenGLWidgets REQUIRED)
+	set(QT_VERSION ${Qt6_VERSION})
+else()
+	find_package(Qt5 5.6.3 COMPONENTS Core LinguistTools Widgets Network Svg Gui REQUIRED)
+	set(QT_VERSION ${Qt5_VERSION})
+endif()
 
-if(${Qt5_VERSION} VERSION_LESS "5.15.0")
+message(STATUS "Found Qt: ${QT_VERSION}")
+
+if(${QT_VERSION} VERSION_LESS "5.15.0")
 	macro(qt_add_translation)
 		qt5_add_translation(${ARGN})
 	endmacro()

@@ -127,11 +127,12 @@ CMake Options
 | ENABLE_OPENGL             | Use OpenGL support instead of Direct3D 9 (only for Windows) | ON      |
 | ENABLE_OPENGL_CG          | Enable OpenGL nVidia Cg Toolkit support                     | OFF     |
 | ENABLE_FULLSCREEN_RESFREQ | Enable Fullscreen resolution and auto frequency             | ON      |
+| ENABLE_QT6_LIBS           | Enable support for QT6 libraries                            | OFF     |
 
 ## :penguin: Linux
 #### Dependencies
 * [CMake >= 3.13](https://cmake.org) and [Ninja](https://ninja-build.org)
-* [Qt5](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
+* [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [nvidia-cg](https://developer.nvidia.com/cg-toolkit)
 * [alsa](https://www.alsa-project.org)
 * libudev
@@ -168,7 +169,7 @@ to start the emulator
 ## :smiling_imp: FreeBSD
 #### Dependencies
 * [CMake >= 3.13](https://cmake.org) and [Ninja](https://ninja-build.org)
-* [Qt5](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
+* [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
 * [libX11 and libXrandr](https://www.x.org)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
@@ -189,7 +190,7 @@ where `[...]` are the other necessary options.
 ## :blowfish: OpenBSD 
 #### Dependencies
 * [CMake >= 3.13](https://cmake.org) and [Ninja](https://ninja-build.org)
-* [Qt5](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
+* [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
 * [libX11 and libXrandr](https://www.x.org)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
