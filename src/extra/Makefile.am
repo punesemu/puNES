@@ -1,1 +1,0 @@
-SUBDIRS = $(LIB7ZIP_SRC)
