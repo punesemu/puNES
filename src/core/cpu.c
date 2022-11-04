@@ -21,8 +21,6 @@
 #include "ppu.h"
 #include "apu.h"
 #include "mem_map.h"
-#include "ppu_inline.h"
-#include "clock.h"
 #include "cpu_inline.h"
 
 enum cpu_opcode_type { RD_OP, WR_OP };
@@ -65,9 +63,8 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 {\
 	WORD adr2 = lend_word(cpu.PC, FALSE, TRUE);\
 	WORD adr0 = adr2 + reg;\
-	WORD adr1 = (adr2 & 0xFF00) | (BYTE) adr0;\
-	/* puo' essere la lettura corretta\
-	 * o anche semplice garbage */\
+	WORD adr1 = (adr2 & 0xFF00) | (BYTE)adr0;\
+	/* puo' essere la lettura corretta o anche semplice garbage */\
 	_RDABX_;\
 	cpu.PC += 2;\
 	cmd\
@@ -76,9 +73,8 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 {\
 	WORD adr2 = lend_word(cpu.PC, FALSE, TRUE);\
 	WORD adr0 = adr2 + reg;\
-	WORD adr1 = (adr2 & 0xFF00) | (BYTE) adr0;\
-	/* puo' essere la lettura corretta\
-	 * o anche semplice garbage */\
+	WORD adr1 = (adr2 & 0xFF00) | (BYTE)adr0;\
+	/* puo' essere la lettura corretta o anche semplice garbage */\
 	_RDAXW_;\
 	cpu.PC += 2;\
 	cmd\
@@ -100,9 +96,8 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 {\
 	WORD adr2 = lend_word(_RDP, TRUE, TRUE);\
 	WORD adr0 = adr2 + cpu.YR;\
-	WORD adr1 = (adr2 & 0xFF00) | (BYTE) adr0;\
-	/* puo' essere la lettura corretta
-	 * o anche semplice garbage */\
+	WORD adr1 = (adr2 & 0xFF00) | (BYTE)adr0;\
+	/* puo' essere la lettura corretta o anche semplice garbage */\
 	_RDIDY_;\
 	cmd\
 }
@@ -114,7 +109,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	_RDIDX_;\
 	WORD adr0 = lend_word((adr1 + cpu.XR) & 0x00FF, TRUE, FALSE);\
 	_DMC;\
-	cmd;\
+	cmd\
 }
 #define IXW(opTy, cmd)\
 {\
@@ -122,15 +117,15 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	_RDIDX_;\
 	WORD adr0 = lend_word((adr1 + cpu.XR) & 0x00FF, TRUE, FALSE);\
 	_DMC;\
-	cmd;\
+	cmd\
 }
 #define IYW(opTy, cmd)\
 {\
 	WORD adr2 = lend_word(_RDP, TRUE, TRUE);\
 	WORD adr0 = adr2 + cpu.YR;\
-	WORD adr1 = (adr2 & 0xFF00) | (BYTE) adr0;\
+	WORD adr1 = (adr2 & 0xFF00) | (BYTE)adr0;\
 	_RDIYW_;\
-	cmd;\
+	cmd\
 }
 #define _WRX(dst, src)\
 	if (!DMC.tick_type) DMC.tick_type = DMC_CPU_WRITE;\
@@ -144,7 +139,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 /* ADC, SBC */
 #define ADC(x)\
 	x;\
-	_ADC;
+	_ADC
 #define SBC(x)\
 	x;\
 	_SBC
@@ -193,7 +188,6 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	cpu.of = (cpu.openbus & 0x40);\
 	ZF((cpu.AR & cpu.openbus));
 /* BRK, PHP
- *
  * NOTE:
  * lo Status Register viene salvato solo nello stack con
  * il bf settato a 1.
@@ -209,7 +203,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 /* CMP, CPX, CPY */
 #define CMP(x, reg)\
 	{\
-	_RSZ(_CMP(x, reg);, (BYTE) cmp)\
+	_RSZ(_CMP(x, reg);, (BYTE)cmp)\
 	}
 /* LDA, LDX, LDY */
 #define LDX(x, reg) _RSZ(reg = x;, reg)
@@ -236,10 +230,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	/* il break flag (bit 4) e' sempre a 0 */\
 	cpu.SR = (_PUL & 0xEF);\
 	disassemble_SR();\
-	/*\
-	 * nell'RTI non c'e' nessun delay nel\
-	 * settaggio dell'inibizione dell'IRQ.\
-	 */\
+	/* nell'RTI non c'e' nessun delay nel settaggio dell'inibizione dell'IRQ.*/\
 	irq.inhibit = cpu.im;\
 	cpu.PC = _PUL;\
 	cpu.PC = (_PUL << 8) | cpu.PC;
@@ -288,7 +279,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define AXS\
 	cpu.XR &= cpu.AR;\
 	_CMP(_RDP, cpu.XR);\
-	_RSZ(cpu.XR = (BYTE) cmp;, cpu.XR)
+	_RSZ(cpu.XR = (BYTE)cmp;, cpu.XR)
 /* AAX */
 #define AAX\
 	BYTE tmp;\
@@ -688,7 +679,7 @@ void cpu_exe_op(void) {
 	/* ------------------------------------------------ */
 
 	/* salvo i cicli presi dall'istruzione... */
-	cpu.base_opcode_cycles = table_opcode_cycles[(BYTE) cpu.opcode];
+	cpu.base_opcode_cycles = table_opcode_cycles[(BYTE)cpu.opcode];
 	mod_cycles_op(+=, cpu.base_opcode_cycles);
 
 	/* ... e la eseguo */
@@ -1117,7 +1108,8 @@ void cpu_turn_on(void) {
 		cpu.SP -= 0x03;
 		cpu.SR |= 0x04;
 		cpu.odd_cycle = 0;
-		cpu.cycles = cpu.opcode_cycle = 0;
+		cpu.cycles = 0;
+		cpu.opcode_cycle = 0;
 		cpu.double_rd = cpu.double_wr = 0;
 	}
 	memset(&nmi, 0x00, sizeof(nmi));

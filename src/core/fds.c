@@ -22,11 +22,8 @@
 #include <libgen.h>
 #include "fds.h"
 #include "rom_mem.h"
-#include "cpu.h"
 #include "mappers.h"
 #include "mem_map.h"
-#include "emu.h"
-#include "clock.h"
 #include "info.h"
 #include "gui.h"
 #include "patcher.h"
@@ -69,7 +66,7 @@ void fds_quit(void) {
 }
 BYTE fds_load_rom(void) {
 	_rom_mem rom;
-	BYTE i;
+	unsigned int i;
 
 	{
 		BYTE found = TRUE;
@@ -288,6 +285,8 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 			fds.side.data = (WORD *)malloc(fds.info.sides_size[side_to_insert] * sizeof(WORD));
 			fds.side.counted_files = 0xFFFF;
 			break;
+		default:
+			break;
 	}
 
 	if (fds.info.type == FDS_FORMAT_FDS) {
@@ -306,7 +305,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 	position = 0;
 
 #define add_to_image(ty, md, vl, sz)\
-	if (type >= FDS_DISK_SELECT) {\
+	if (ty >= FDS_DISK_SELECT) {\
 		if (md == FDS_DISK_MEMSET) {\
 			WORD *dst = fds.side.data + size;\
 			uint32_t i;\
@@ -409,6 +408,8 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 #endif
 						fds.side.counted_files++;
 						break;
+					default:
+						break;
 				}
 			}
 
@@ -450,6 +451,8 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 			gui_overlay_info_append_msg_precompiled(10, NULL);
 			fds_diff_op(FDS_OP_READ, 0, 0);
 			break;
+		default:
+			break;
 	}
 }
 void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
@@ -465,7 +468,7 @@ void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 		if ((last_dot = ustrrchr(file, uL('.')))) {
 			// elimino l'estensione
 			(*last_dot) = 0x00;
-		};
+		}
 		// aggiungo l'estensione
 		ustrcat(file, ext);
 
@@ -505,7 +508,7 @@ void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 
 		while (fread(&in, sizeof(_fds_diff_ele), 1, fds.info.diff)) {
 			if ((in.position == out.position) && (in.side == out.side)) {
-				fseek(fds.info.diff, ftell(fds.info.diff) - sizeof(_fds_diff_ele), SEEK_SET);
+				fseek(fds.info.diff, ftell(fds.info.diff) - (long)sizeof(_fds_diff_ele), SEEK_SET);
 				break;
 			}
 		}

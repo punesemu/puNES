@@ -44,8 +44,6 @@ void (*extcl_ppu_000_to_255)(void);
 // (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_ROWS))
 void (*extcl_ppu_256_to_319)(void);
 void (*extcl_ppu_320_to_34x)(void);
-// viene chiamata ogni volta viene modificato ppu.screen_y
-void (*extcl_ppu_update_screen_y)(void);
 // viene chiamata dopo ogni cambiamento del $2006 in cpu_inline.h
 void (*extcl_update_r2006)(WORD new_r2006, WORD old_r2006);
 // viene chiamata alla lettura del $2007 in cpu_inline.h
@@ -94,7 +92,6 @@ void extcl_init(void) {
 	extcl_ppu_000_to_255 = NULL;
 	extcl_ppu_256_to_319 = NULL;
 	extcl_ppu_320_to_34x = NULL;
-	extcl_ppu_update_screen_y = NULL;
 	extcl_update_r2006 = NULL;
 	extcl_rd_r2007 = NULL;
 	extcl_after_rd_chr = NULL;

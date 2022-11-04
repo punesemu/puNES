@@ -131,7 +131,7 @@ CMake Options
 
 ## :penguin: Linux
 #### Dependencies
-* [CMake >= 3.13](https://cmake.org) and [Ninja](https://ninja-build.org)
+* [CMake >= 3.14](https://cmake.org) and [Ninja](https://ninja-build.org)
 * [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [nvidia-cg](https://developer.nvidia.com/cg-toolkit)
 * [alsa](https://www.alsa-project.org)
@@ -168,7 +168,7 @@ to start the emulator
 ```
 ## :smiling_imp: FreeBSD
 #### Dependencies
-* [CMake >= 3.13](https://cmake.org) and [Ninja](https://ninja-build.org)
+* [CMake >= 3.14](https://cmake.org) and [Ninja](https://ninja-build.org)
 * [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
 * [libX11 and libXrandr](https://www.x.org)
@@ -189,7 +189,7 @@ CFLAGS="-O0 -g -DDEBUG" CXXFLAGS="-O0 -g -DDEBUG" cmake -B build -G Ninja -DENAB
 where `[...]` are the other necessary options.
 ## :blowfish: OpenBSD 
 #### Dependencies
-* [CMake >= 3.13](https://cmake.org) and [Ninja](https://ninja-build.org)
+* [CMake >= 3.14](https://cmake.org) and [Ninja](https://ninja-build.org)
 * [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
 * [libX11 and libXrandr](https://www.x.org)

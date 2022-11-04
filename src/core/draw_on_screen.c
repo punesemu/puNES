@@ -25,8 +25,6 @@
 #include "draw_on_screen_font.h"
 #include "ppu.h"
 
-#define dos_special_ch(t) (t - DOS_BUTTON_LEFT)
-
 static char dos_tags[][10] = {
 	"[normal]",  "[red]",	  "[yellow]",  "[green]",
 	"[cyan]",    "[brown]",	  "[blue]",    "[gray]",
@@ -47,8 +45,8 @@ static char dos_tags[][10] = {
 
 void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 	va_list ap;
-	unsigned int i, dlength = 0, tlength = 0;
-	int w = 0, pixels = 0;
+	unsigned int i, tlength;
+	int w, pixels, dlength;
 	char text[1024];
 	WORD color = doscolor(DOS_NORMAL), background = doscolor(DOS_BLACK);
 	BYTE first_char = TRUE, last_char = FALSE, is_bck_color = FALSE;
@@ -98,7 +96,7 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 	for (pixels = x; pixels < SCR_COLUMNS;) {
 		unsigned int font_x = 0, font_y = 0;
 		int xl = 0, xr = 0;
-		char ch = ' ';
+		unsigned char ch;
 
 		if (i < tlength) {
 			ch = text[i];
@@ -110,7 +108,7 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 			unsigned int tag, found = FALSE;
 
 			for (tag = 0; tag < LENGTH(dos_tags); tag++) {
-				int len = strlen(dos_tags[tag]);
+				size_t len = strlen(dos_tags[tag]);
 
 				if (strncmp(text + i, dos_tags[tag], len) == 0) {
 					if (tag <= DOS_BLACK) {
@@ -669,6 +667,8 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 				font_x = dospf(12);
 				font_y = dospf(22);
 				break;
+			default:
+				break;
 		}
 
 		{
@@ -712,8 +712,8 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 }
 int dos_strlen(const char *fmt, ...) {
 	va_list ap;
-	unsigned int i, length = 0;
-	int tmp, tag;
+	unsigned int i;
+	int tmp, tag, length = 0;
 	char text[1024];
 
 	va_start(ap, fmt);
@@ -736,11 +736,11 @@ int dos_is_tag(const char *text, int *tag_founded) {
 	int len = 0;
 
 	if (text[0] == '[') {
-		unsigned int tag;
 		BYTE found = FALSE;
+		int tag;
 
-		for (tag = 0; tag < LENGTH(dos_tags); tag++) {
-			len = strlen(dos_tags[tag]);
+		for (tag = 0; tag < (int)LENGTH(dos_tags); tag++) {
+			len = (int)strlen(dos_tags[tag]);
 
 			if (strncmp(text, dos_tags[tag], len) == 0) {
 				(*tag_founded) = tag;

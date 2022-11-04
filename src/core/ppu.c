@@ -26,7 +26,6 @@
 #include "video/gfx.h"
 #include "mappers.h"
 #include "irqA12.h"
-#include "irql2f.h"
 #include "conf.h"
 #include "fps.h"
 #include "emu.h"
@@ -215,7 +214,7 @@ void ppu_quit(void) {
 
 void ppu_tick(void) {
 	/* aggiungo i cicli della cpu trascorsi */
-	ppu.cycles += machine.cpu_divide;
+	ppu.cycles = (SWORD)(ppu.cycles + machine.cpu_divide);
 
 	while (ppu.cycles >= machine.ppu_divide) {
 		r2002.race.sprite_overflow = FALSE;
@@ -520,7 +519,7 @@ void ppu_tick(void) {
 							 * utilizzo quello del background.
 							 */
 							if (cfg->hide_background) {
-								put_pixel(mmap_palette.color[0]);
+								put_pixel(mmap_palette.color[0])
 							} else {
 								put_bg
 							}
@@ -530,7 +529,7 @@ void ppu_tick(void) {
 							 * trasparente, utilizzo quello dello sprite.
 							 */
 							if (cfg->hide_sprites) {
-								put_pixel(mmap_palette.color[0]);
+								put_pixel(mmap_palette.color[0])
 							} else {
 								put_sp
 							}
@@ -545,7 +544,7 @@ void ppu_tick(void) {
 									 */
 									if (cfg->hide_background) {
 										if (cfg->hide_sprites) {
-											put_pixel(mmap_palette.color[0]);
+											put_pixel(mmap_palette.color[0])
 										} else {
 											put_sp
 										}
@@ -556,7 +555,7 @@ void ppu_tick(void) {
 									/* altrimenti quello dello sprite */
 									if (cfg->hide_sprites) {
 										if (cfg->hide_background) {
-											put_pixel(mmap_palette.color[0]);
+											put_pixel(mmap_palette.color[0])
 										} else {
 											put_bg
 										}
@@ -586,7 +585,7 @@ void ppu_tick(void) {
 								if (sprite_unl[visible_spr_unl].attrib & 0x20) {
 									if (cfg->hide_background) {
 										if (cfg->hide_sprites) {
-											put_pixel(mmap_palette.color[0]);
+											put_pixel(mmap_palette.color[0])
 										} else {
 											put_sp
 										}
@@ -596,7 +595,7 @@ void ppu_tick(void) {
 								} else {
 									if (cfg->hide_sprites) {
 										if (cfg->hide_background) {
-											put_pixel(mmap_palette.color[0]);
+											put_pixel(mmap_palette.color[0])
 										} else {
 											put_bg
 										}
@@ -668,7 +667,7 @@ void ppu_tick(void) {
 							 * esaminare uno sprite ogni 8 cicli.
 							 */
 							ppu.rnd_adr = 0x2000 | (r2006.value & 0xFFF);
-							ppu_spr_adr(spr_ev.tmp_spr_plus);
+							ppu_spr_adr(spr_ev.tmp_spr_plus)
 							get_sprites(ele_plus, spr_ev, sprite_plus, ppu.spr_adr)
 							r2004.value = oam.ele_plus[spr_ev.tmp_spr_plus][YC];
 							if (extcl_after_rd_chr) {
@@ -885,13 +884,6 @@ void ppu_tick(void) {
 				if ((ppu.screen_y == SCR_ROWS) && (info.no_ppu_draw_screen == 0)) {
 					gfx_draw_screen();
 				}
-				if (extcl_ppu_update_screen_y) {
-					/*
-					 * utilizzato dalle mappers :
-					 * m163
-					 */
-					extcl_ppu_update_screen_y();
-				}
 			}
 			/*
 			 * l'indice degli sprite per la (scanline+1)
@@ -952,7 +944,7 @@ void ppu_tick(void) {
 		/* controllo se ho completato il frame */
 		if (ppu.frame_y >= ppu_sclines.total) {
 			// aggiorno il numero delle scanlines
-			ppu_overclock_update();
+			ppu_overclock_update()
 			// azzero il flag del DMC dell'overclock
 			overclock.DMC_in_use = FALSE;
 			/* incremento il contatore ppu dei frames */
@@ -1061,7 +1053,7 @@ BYTE ppu_turn_on(void) {
 		}
 		/* reinizializzazione completa della PPU */
 		{
-			WORD a, x, y;
+			int a, x, y;
 
 			/* inizializzo lo screen */
 			for (a = 0; a < 2; a++) {
@@ -1121,8 +1113,8 @@ void ppu_overclock(BYTE reset_dmc_in_use) {
 	}
 
 	overclock.sclines.total = overclock.sclines.vb + overclock.sclines.pr;
-	ppu_overclock_update();
-	ppu_overclock_control();
+	ppu_overclock_update()
+	ppu_overclock_control()
 }
 
 void ppu_draw_screen_pause(void) {
@@ -1170,7 +1162,7 @@ static void ppu_alignment_init(void) {
 			break;
 	}
 
-	ppu.cycles = (ppu_alignment.cpu + (-ppu_alignment.ppu + 1)) % machine.cpu_divide;
+	ppu.cycles = (SWORD)((ppu_alignment.cpu + (-ppu_alignment.ppu + 1)) % machine.cpu_divide);
 
 	if (cfg->ppu_alignment == PPU_ALIGMENT_INC_AT_RESET) {
 		if ((ppu_alignment.count.cpu = (ppu_alignment.count.cpu + 1) % machine.cpu_divide) == 0) {
@@ -1183,7 +1175,7 @@ static void ppu_alignment_init(void) {
 	}
 }
 static BYTE ppu_alloc_screen_buffer(_screen_buffer *sb) {
-	BYTE b;
+	int b;
 
 	sb->ready = FALSE;
 	sb->frame = 0;
