@@ -15,6 +15,10 @@ target_include_directories(qkeycode
     PUBLIC include
     PRIVATE src
 )
-target_link_libraries(qkeycode PRIVATE Qt::Gui)
+if(${QT_VERSION} VERSION_LESS "5.15.0")
+	target_link_libraries(qkeycode PRIVATE Qt5::Gui)
+else()
+	target_link_libraries(qkeycode PRIVATE Qt::Gui)
+endif()
 
 target_compile_definitions(qkeycode PRIVATE KEYCODEQT_LIBRARY)

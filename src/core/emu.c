@@ -21,22 +21,16 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include <libgen.h>
 #include <time.h>
 #include "main.h"
 #include "debugger.h"
 #include "emu.h"
-#include "rom_mem.h"
 #include "settings.h"
-#include "audio/snd.h"
 #include "clock.h"
 #include "cpu.h"
 #include "mem_map.h"
 #include "ppu.h"
-#include "video/gfx.h"
 #include "video/gfx_thread.h"
-#include "emu_thread.h"
-#include "sha1.h"
 #include "mappers.h"
 #include "vs_system.h"
 #include "version.h"
@@ -50,9 +44,6 @@
 #include "patcher.h"
 #include "recent_roms.h"
 #include "../../c++/crc/crc.h"
-#if defined (WITH_OPENGL)
-#include "opengl.h"
-#endif
 #include "gui.h"
 #include "video/effects/tv_noise.h"
 #if defined (FULLSCREEN_RESFREQ)
@@ -73,10 +64,6 @@ static void emu_cpu_initial_cycles(void);
 static BYTE emu_ctrl_if_rom_exist(void);
 static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file);
 static void emu_recent_roms_add(BYTE *add, uTCHAR *file);
-
-struct _fps_pause {
-	double expected_end;
-} fps_pause;
 
 void emu_quit(void) {
 	if (cfg->save_on_exit) {
@@ -115,10 +102,10 @@ void emu_quit(void) {
 
 	gui_quit();
 }
-BYTE emu_frame(void) {
+void emu_frame(void) {
 	// gestione uscita
 	if (info.stop == TRUE) {
-		return (EXIT_OK);
+		return;
 	}
 
 	info.start_frame_0 = FALSE;
@@ -130,9 +117,9 @@ BYTE emu_frame(void) {
 		tv_noise_effect();
 		gfx_draw_screen();
 		emu_frame_sleep();
-		return (EXIT_OK);
+		return;
 	} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
-		BYTE i;
+		int i;
 
 		gui_decode_all_input_events();
 
@@ -147,7 +134,7 @@ BYTE emu_frame(void) {
 		nsf_effect();
 		gfx_draw_screen();
 		emu_frame_sleep();
-		return (EXIT_OK);
+		return;
 	}
 
 	// se nel debugger passo dal DBG_STEP al DBG_GO
@@ -172,12 +159,10 @@ BYTE emu_frame(void) {
 	emu_frame_finished();
 	emu_frame_sleep();
 	emu_frame_input_and_rewind();
-
-	return (EXIT_OK);
 }
-BYTE emu_frame_debugger(void) {
+void emu_frame_debugger(void) {
 	if ((info.stop == TRUE) || (debugger.mode >= DBG_BREAKPOINT)) {
-		return (EXIT_OK);
+		return;
 	}
 
 	if (info.frame_status == FRAME_FINISHED) {
@@ -186,9 +171,9 @@ BYTE emu_frame_debugger(void) {
 				tv_noise_effect();
 				gfx_draw_screen();
 				emu_frame_sleep();
-				return (EXIT_OK);
+				return;
 			} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
-				BYTE i;
+				int i;
 
 				gui_decode_all_input_events();
 
@@ -203,7 +188,7 @@ BYTE emu_frame_debugger(void) {
 				nsf_effect();
 				gfx_draw_screen();
 				emu_frame_sleep();
-				return (EXIT_OK);
+				return;
 			}
 		}
 
@@ -250,8 +235,6 @@ emu_frame_debugger_start_frame_0:
 			//gui_dlgdebugger_click_step();
 		}
 	}
-
-	return (EXIT_OK);
 }
 BYTE emu_make_dir(const uTCHAR *fmt, ...) {
 	static uTCHAR path[LENGTH_FILE_NAME_MID];
@@ -361,7 +344,7 @@ BYTE emu_load_rom(void) {
 			}
 			emu_recent_roms_add(&recent_roms_permit_add, info.rom.file);
 		} else if (!ustrcasecmp(ext, uL(".nsf"))) {
-			if (nsf_load_rom() == EXIT_ERROR) {;
+			if (nsf_load_rom() == EXIT_ERROR) {
 				info.rom.file[0] = 0;
 				info.rom.change_rom[0] = 0;
 				gui_overlay_info_append_msg_precompiled(5, NULL);
@@ -370,7 +353,7 @@ BYTE emu_load_rom(void) {
 			}
 			emu_recent_roms_add(&recent_roms_permit_add, info.rom.file);
 		} else if (!ustrcasecmp(ext, uL(".nsfe"))) {
-			if (nsfe_load_rom() == EXIT_ERROR) {;
+			if (nsfe_load_rom() == EXIT_ERROR) {
 				info.rom.file[0] = 0;
 				info.rom.change_rom[0] = 0;
 				gui_overlay_info_append_msg_precompiled(5, NULL);
@@ -531,7 +514,7 @@ BYTE emu_turn_on(void) {
 
 	cfg->extra_vb_scanlines = cfg->extra_pr_scanlines = 0;
 
-	vs_system.watchdog.next = vs_system_wd_next();
+	vs_system.watchdog.next = vs_system_wd_next()
 
 	info.r2002_jump_first_vblank = FALSE;
 	info.r2002_race_condition_disabled = FALSE;
@@ -787,7 +770,7 @@ BYTE emu_reset(BYTE type) {
 	memset(&vs_system.watchdog, 0x00, sizeof(vs_system.watchdog));
 	memset(&vs_system.r4020, 0x00, sizeof(vs_system.r4020));
 	memset(&vs_system.coins, 0x00, sizeof(vs_system.coins));
-	vs_system.watchdog.next = vs_system_wd_next();
+	vs_system.watchdog.next = vs_system_wd_next()
 
 	gui_emit_et_external_control_windows_show();
 
@@ -827,7 +810,7 @@ double emu_drand(void) {
 	double d;
 
 	do {
-		d = (((rand() * RS_SCALE) + rand()) * RS_SCALE + rand()) * RS_SCALE;
+		d = ((((double)rand() * RS_SCALE) + (double)rand()) * RS_SCALE + (double)rand()) * RS_SCALE;
 	} while (d >= 1); // Round off
 	return (d);
 }
@@ -853,10 +836,10 @@ uTCHAR *emu_ustrncpy(uTCHAR *dst, uTCHAR *src) {
 uTCHAR *emu_rand_str(void) {
 	static uTCHAR dest[10];
 	uTCHAR charset[] = uL("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	BYTE i;
+	unsigned int i;
 
 	for (i = 0; i < (usizeof(dest) - 1); i++) {
-		size_t index = (double)rand() / RAND_MAX * (usizeof(charset) - 1);
+		size_t index = rand() / RAND_MAX * (usizeof(charset) - 1);
 
 		dest[i] = charset[index];
 	}
@@ -908,7 +891,7 @@ void emu_ctrl_doublebuffer(void) {
 void emu_frame_input_and_rewind(void) {
 	// controllo se ci sono eventi di input
 	if (tas.type == NOTAS) {
-		BYTE i;
+		int i;
 
 		gui_decode_all_input_events();
 
@@ -1111,7 +1094,7 @@ void emu_info_rom(void) {
 
 		if (info.format == UNIF_FORMAT) {
 			if (unif.chips.prg > 1) {
-				BYTE chip;
+				int chip;
 
 				for (chip = 0; chip < unif.chips.prg; chip++) {
 					fprintf(stderr, " |_8k chip %-2d : %-4lu [ %08X %ld ]\n",
@@ -1131,7 +1114,7 @@ void emu_info_rom(void) {
 
 		if (info.format == UNIF_FORMAT) {
 			if (unif.chips.chr > 1) {
-				BYTE chip;
+				int chip;
 
 				for (chip = 0; chip < unif.chips.chr; chip++) {
 					fprintf(stderr, " |_4k chip %-2d : %-4lu [ %08X %ld ]\n",

@@ -47,8 +47,6 @@ typedef signed int SDBWORD;
 #define SAVE_FOLDER    "/save"
 #define SCRSHT_FOLDER  "/screenshot"
 
-#define TMP_FOLDER     "/tmp"
-
 #if !defined (FALSE)
 enum false_value { FALSE, TRUE };
 #endif

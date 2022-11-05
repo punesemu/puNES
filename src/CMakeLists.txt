@@ -24,7 +24,11 @@ qt_add_translation(qm_files ${ts_files})
 add_custom_target(translations DEPENDS ${qm_files})
 
 include(FetchContent)
-set(P7ZIP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src/extra/p7zip-17.04" CACHE INTERNAL "7ZIP source dir") # TODO
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	set(P7ZIP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src/extra/7z1900" CACHE INTERNAL "7ZIP source dir")
+else()
+	set(P7ZIP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src/extra/p7zip-17.04" CACHE INTERNAL "7ZIP source dir")
+endif()
 FetchContent_Declare(lib7zip
 	SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/extra/lib7zip-53abfeb
 	)
@@ -542,18 +546,15 @@ set(gui_srcs
 	gui/wdgToolBar.cpp
 	gui/wdgToolBar.hpp
 
-	$<$<BOOL:${ENABLE_OPENGL}>:
+	$<IF:$<BOOL:${ENABLE_OPENGL}>,
 		gui/wdgOpenGL.cpp
-		gui/wdgOpenGL.hpp
-	>
-
-	$<$<NOT:$<BOOL:${ENABLE_OPENGL}>>:
+		gui/wdgOpenGL.hpp,
 		gui/wdgD3D9.cpp
 		gui/wdgD3D9.hpp
 	>
 
 	$<$<PLATFORM_ID:Windows>:
-		gui/windows/monitor.c
+		$<$<BOOL:${ENABLE_FULLSCREEN_RESFREQ}>:gui/windows/monitor.c>
 		gui/windows/os_jstick.c
 		gui/windows/resources.rc
 	>
@@ -566,7 +567,7 @@ set(gui_srcs
 		gui/linux/os_jstick.c
 	>
 
-	$<$<AND:$<PLATFORM_ID:FreeBSD,OpenBSD,Linux>,$<BOOL:${X11_FOUND}>>:
+	$<$<AND:$<PLATFORM_ID:FreeBSD,OpenBSD,Linux>,$<BOOL:${ENABLE_FULLSCREEN_RESFREQ}>>:
 		gui/linux/monitor.c
 	>
 	)
@@ -584,15 +585,15 @@ set(video_srcs
 	video/filters/scale2x.c
 	video/filters/xBRZ.c
 	video/gfx.c
-	video/gfx_monitor.c
+	$<$<BOOL:${ENABLE_FULLSCREEN_RESFREQ}>:
+		video/gfx_monitor.c
+	>
 	video/gfx_thread.c
 	video/shaders/shaders.c
-	$<$<BOOL:${ENABLE_OPENGL}>:
+	$<IF:$<BOOL:${ENABLE_OPENGL}>,
 		video/opengl/glew/glew.c
 		video/opengl/gfx_api.c
-		video/opengl/opengl.c
-	>
-	$<$<NOT:$<BOOL:${ENABLE_OPENGL}>>:
+		video/opengl/opengl.c,
 		video/d3d9/d3d9.c
 		video/d3d9/gfx_api.c
 	>
@@ -616,44 +617,103 @@ target_include_directories(punes
 	audio
 	core
 	gui
-	$<$<BOOL:${ENABLE_OPENGL}>:${CMAKE_CURRENT_SOURCE_DIR}/video/opengl>
-	$<$<NOT:$<BOOL:${ENABLE_OPENGL}>>:${CMAKE_CURRENT_SOURCE_DIR}/video/d3d9>
+	$<IF:$<BOOL:${ENABLE_OPENGL}>,
+		${CMAKE_CURRENT_SOURCE_DIR}/video/opengl,
+		${CMAKE_CURRENT_SOURCE_DIR}/video/d3d9
+	>
 	video/shaders
 	"${PROJECT_BINARY_DIR}"
-
 	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:${CMAKE_CURRENT_SOURCE_DIR}/gui/bsd>
 	$<$<PLATFORM_ID:Linux>:${CMAKE_CURRENT_SOURCE_DIR}/gui/linux>
-	$<$<PLATFORM_ID:Windows>:${CMAKE_CURRENT_SOURCE_DIR}/gui/windows>
+	$<$<PLATFORM_ID:Windows>:
+		${CMAKE_CURRENT_SOURCE_DIR}/gui/windows
+		${CMAKE_CURRENT_SOURCE_DIR}/extra/windows/Cg/include
+		${CMAKE_CURRENT_SOURCE_DIR}/extra/windows/DSDK/Include
+		${CMAKE_CURRENT_SOURCE_DIR}/extra/windows/DSDK/vc10/include
+	>
+	)
+
+target_link_options(punes
+	PRIVATE
+	$<$<PLATFORM_ID:Windows>:
+		-static-libgcc
+		-static-libstdc++
+		$<$<BOOL:${ENABLE_RELEASE}>:-Wl,-subsystem,windows>
+		$<$<NOT:$<BOOL:${ENABLE_RELEASE}>>:-Wl,-subsystem,console>
+		$<IF:$<STREQUAL:${HOST_CPU},i386>,
+			-L${CMAKE_CURRENT_SOURCE_DIR}/extra/windows/Cg/lib,
+			-L${CMAKE_CURRENT_SOURCE_DIR}/extra/windows/Cg/lib.x64
+		>
+	>
 	)
 
 target_link_libraries(punes
-	Qt::Core
-	Qt::Gui
-	Qt::Network
-	Qt::Svg
-	Qt::Widgets
+	$<IF:$<VERSION_LESS:${QT_VERSION},5.15.0>,
+		Qt5::Core
+		Qt5::Network
+		Qt5::Widgets
+		Qt5::Svg
+		Qt5::Gui,
+		Qt::Core
+		Qt::Network
+		Qt::Widgets
+		Qt::Svg
+		Qt::Gui
+		$<IF:$<VERSION_GREATER_EQUAL:${QT_VERSION},6.0.0>,Qt::OpenGLWidgets,>
+	>
 	Threads::Threads
 	$<$<BOOL:${ENABLE_FFMPEG}>:PkgConfig::LIBAV>
 	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:Sndio::Sndio>
 	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:UsbHid::UsbHid>
 	$<$<PLATFORM_ID:Linux>:ALSA::ALSA>
 	$<$<PLATFORM_ID:Linux>:PkgConfig::UDEV>
+	$<$<PLATFORM_ID:Windows>:
+		$<$<BOOL:${ENABLE_WIN_STATIC_QT}>:${WIN_STATIC_QT_LIBS}>
+		ws2_32
+		imm32
+		cg
+		$<IF:$<BOOL:${ENABLE_OPENGL}>,
+			$<$<BOOL:${ENABLE_OPENGL_CG}>:cgGL>,
+			cgD3D9
+			d3d9
+			$<IF:$<STREQUAL:${HOST_CPU},i386>,
+				d3dx9,
+				d3dx9_41
+			>
+		>
+	>
 	$<$<BOOL:${X11_FOUND}>:X11::Xrandr>
-	$<$<BOOL:${ENABLE_OPENGL}>:OpenGL::GL>
-	$<$<BOOL:${ENABLE_OPENGL}>:$<$<PLATFORM_ID:Linux>:OpenGL::GLX>>
-	$<$<BOOL:${ENABLE_OPENGL_CG}>:Cg::CgGL>
+	OpenGL::GL
+	$<$<PLATFORM_ID:Linux>:OpenGL::GLX>
+	$<$<AND:$<PLATFORM_ID:FreeBSD,OpenBSD,Linux>,$<BOOL:${ENABLE_OPENGL_CG}>>:Cg::CgGL>
 	lib7zip
 	qkeycode
 	)
 
-target_compile_definitions(punes PRIVATE
-	GLEW_STATIC
-	$<$<BOOL:${ENABLE_FFMPEG}>:WITH_FFMPEG>
-	$<$<BOOL:${ENABLE_OPENGL}>:WITH_OPENGL>
-	$<$<BOOL:${ENABLE_OPENGL_CG}>:WITH_OPENGL_CG>
-	$<$<NOT:$<BOOL:${ENABLE_OPENGL}>>:WITH_D3D9>
-	$<$<BOOL:${X11_FOUND}>:FULLSCREEN_RESFREQ>
-	$<$<BOOL:${ENABLE_GIT_INFO}>:WITH_GIT_INFO>
-	$<$<BOOL:${ENABLE_RELEASE}>:RELEASE>
+target_compile_options(punes
+	PRIVATE
+	#-Wall
+	#-Wextra
+	-ffast-math
 	)
 
+# warnings disabled for this
+target_compile_options(lib7zip PRIVATE -w)
+set_source_files_properties(core/patcher_xdelta3_wrap.c PROPERTIES COMPILE_OPTIONS -w)
+
+target_compile_definitions(punes
+	PRIVATE
+	$<$<BOOL:${ENABLE_GIT_INFO}>:WITH_GIT_INFO>
+	$<$<BOOL:${ENABLE_RELEASE}>:RELEASE>
+	$<$<BOOL:${ENABLE_FFMPEG}>:WITH_FFMPEG>
+	$<IF:$<BOOL:${ENABLE_OPENGL}>,
+		GLEW_STATIC
+		WITH_OPENGL,
+		WITH_D3D9
+	>
+	$<$<BOOL:${ENABLE_OPENGL_CG}>:WITH_OPENGL_CG>
+	$<$<BOOL:${ENABLE_FULLSCREEN_RESFREQ}>:FULLSCREEN_RESFREQ>
+	)
+
+# Ship it!
+install(TARGETS punes RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

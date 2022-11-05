@@ -30,8 +30,8 @@
 #endif
 
 EXTERNC void emu_quit(void);
-EXTERNC BYTE emu_frame(void);
-EXTERNC BYTE emu_frame_debugger(void);
+EXTERNC void emu_frame(void);
+EXTERNC void emu_frame_debugger(void);
 EXTERNC BYTE emu_make_dir(const uTCHAR *fmt, ...);
 EXTERNC BYTE emu_file_exist(const uTCHAR *file);
 EXTERNC char *emu_file2string(const uTCHAR *path);

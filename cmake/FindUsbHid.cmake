@@ -37,12 +37,12 @@ else()
 endif()
 
 if (NOT LIBUSBHID)
-	message(FATAL_ERROR "usb library not_found")
+	message(FATAL_ERROR "usb library not found")
 endif()
 
 find_library(USBHID_LIB ${LIBUSBHID})
 if(NOT USBHID_LIB)
-	message(FATAL_ERROR "usb library not_found")
+	message(FATAL_ERROR "usb library not found")
 endif()
 set(USB_LIBS ${USBHID_LIB})
 
@@ -151,6 +151,6 @@ if(HAVE_USBHID)
 		add_library(UsbHid::UsbHid UNKNOWN IMPORTED)
 		set_target_properties(UsbHid::UsbHid PROPERTIES
 			IMPORTED_LOCATION "${USB_LIBS}"
-		)
+			)
 	endif()
 endif()

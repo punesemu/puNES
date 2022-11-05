@@ -42,6 +42,8 @@
 		case BCK_STATES_OP_COUNT:\
 			_size_buf += sizeof(_strct);\
 			break;\
+    	default:\
+    		break;\
 	}
 #define bck_states_on_mem(_mode, _mem, _size, _data, _index, _size_buf)\
 	switch (_mode) {\
@@ -56,111 +58,95 @@
 		case BCK_STATES_OP_COUNT:\
 			_size_buf += _size;\
 			break;\
-	}
-#define bck_states_on_pos(_mode, _mem, _data, _index, _size_buf)\
-	switch (mode) {\
-		case BCK_STATES_OP_SAVE_ON_MEM: {\
-			bank = 0;\
-			bank = end - start;\
-			save_slot_ele(mode, slot, bank);\
-			break;\
-		}\
-		case BCK_STATES_OP_READ_FROM_MEM: {\
-			uint32_t bank = 0;\
-			save_slot_ele(mode, slot, bank);\
-			end = start + bank;\
-			break;\
-		}\
-		case BCK_STATES_OP_COUNT:\
-			_size_buf += sizeof(uint32_t);\
-			break;\
+    	default:\
+    		break;\
 	}
 
 void bck_states_op_screen(BYTE mode, void *data, size_t *index, size_t *size_buff) {
-	bck_states_on_mem(mode, screen.rd->data, screen_size(), data, (*index), (*size_buff));
+	bck_states_on_mem(mode, screen.rd->data, screen_size(), data, (*index), (*size_buff))
 }
 void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_buff) {
-	BYTE i;
+	unsigned int i;
 
 	// CPU
-	bck_states_on_struct(mode, cpu, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, irq, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, nmi, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, cpu, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, irq, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, nmi, data, (*index), (*size_buff))
 
 	// PPU
-	bck_states_on_struct(mode, ppu, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, ppu_openbus, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, r2000, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, r2001, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, r2002, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, r2003, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, r2004, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, r2006, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, r2007, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, spr_ev, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, sprite, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, sprite_plus, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, tile_render, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, tile_fetch, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, ppu, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppu_openbus, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, r2000, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, r2001, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, r2002, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, r2003, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, r2004, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, r2006, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, r2007, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, spr_ev, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, sprite, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, sprite_plus, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, tile_render, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, tile_fetch, data, (*index), (*size_buff))
 
 	// APU
-	bck_states_on_struct(mode, apu, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, r4011, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, r4015, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, r4017, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, S1, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, S2, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, TR, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, NS, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, DMC, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, apu, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, r4011, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, r4015, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, r4017, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, S1, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, S2, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, TR, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, NS, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, DMC, data, (*index), (*size_buff))
 
 	// mem map
-	bck_states_on_struct(mode, mmcpu, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, prg, data, (*index), (*size_buff));
-	bck_states_on_mem(mode, prg.ram.data, prg.ram.size, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, mmcpu, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, prg, data, (*index), (*size_buff))
+	bck_states_on_mem(mode, prg.ram.data, prg.ram.size, data, (*index), (*size_buff))
 	if (prg.ram_plus) {
-		bck_states_on_mem(mode, prg.ram_plus, prg_ram_plus_size(), data, (*index), (*size_buff));
+		bck_states_on_mem(mode, prg.ram_plus, prg_ram_plus_size(), data, (*index), (*size_buff))
 	}
-	bck_states_on_struct(mode, chr, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, chr, data, (*index), (*size_buff))
 	if (mapper.write_vram) {
-		bck_states_on_mem(mode, chr_rom(), chr_ram_size(), data, (*index), (*size_buff));
+		bck_states_on_mem(mode, chr_rom(), chr_ram_size(), data, (*index), (*size_buff))
 	}
 	if (chr.extra.size) {
-		bck_states_on_mem(mode, chr.extra.data, chr.extra.size, data, (*index), (*size_buff));
+		bck_states_on_mem(mode, chr.extra.data, chr.extra.size, data, (*index), (*size_buff))
 	}
-	bck_states_on_struct(mode, ntbl, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, mmap_palette, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, oam, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, ntbl, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, mmap_palette, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, oam, data, (*index), (*size_buff))
 
 	// mapper
-	bck_states_on_struct(mode, mapper, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, mapper, data, (*index), (*size_buff))
 	for (i = 0; i < LENGTH(mapper.internal_struct); i++) {
 		if (mapper.internal_struct[i]) {
-			bck_states_on_mem(mode, mapper.internal_struct[i], mapper.internal_struct_size[i], data, (*index), (*size_buff));
+			bck_states_on_mem(mode, mapper.internal_struct[i], mapper.internal_struct_size[i], data, (*index), (*size_buff))
 		}
 	}
 
 	// irqA12
 	if (irqA12.present) {
-		bck_states_on_struct(mode, irqA12, data, (*index), (*size_buff));
+		bck_states_on_struct(mode, irqA12, data, (*index), (*size_buff))
 	}
 
 	// irql2f
 	if (irql2f.present) {
-		bck_states_on_struct(mode, irql2f, data, (*index), (*size_buff));
+		bck_states_on_struct(mode, irql2f, data, (*index), (*size_buff))
 	}
 
 	// FDS
 	if (fds.info.enabled) {
 		BYTE old_side_inserted = fds.drive.side_inserted;
 
-		bck_states_on_struct(mode, fds.drive, data, (*index), (*size_buff));
-		bck_states_on_struct(mode, fds.snd, data, (*index), (*size_buff));
-		bck_states_on_struct(mode, fds.info.last_operation, data, (*index), (*size_buff));
-		bck_states_on_struct(mode, fds.auto_insert, data, (*index), (*size_buff));
+		bck_states_on_struct(mode, fds.drive, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, fds.snd, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, fds.info.last_operation, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, fds.auto_insert, data, (*index), (*size_buff))
 
 		// in caso di ripristino di una snapshot, se era caricato
-		// un'altro side del disco, devo ricaricarlo.
+		// un altro side del disco, devo ricaricarlo.
 		if ((mode == BCK_STATES_OP_READ_FROM_MEM) && (old_side_inserted != fds.drive.side_inserted)) {
 			fds_disk_op(FDS_DISK_SELECT_FROM_REWIND, fds.drive.side_inserted, FALSE);
 			gui_update();
@@ -168,7 +154,7 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_b
 	}
 }
 void bck_states_op_input(BYTE mode, void *data, size_t *index, size_t *size_buff) {
-	BYTE i;
+	int i;
 
 	// standard controller
 	for (i = PORT1; i < PORT_MAX; i++) {
@@ -176,24 +162,24 @@ void bck_states_op_input(BYTE mode, void *data, size_t *index, size_t *size_buff
 	}
 
 	// zapper, mouse, arkanoid, oeka_kids_tablet
-	bck_states_on_struct(mode, gmouse.x, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, gmouse.y, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, gmouse.left, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, gmouse.right, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, gmouse.x, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, gmouse.y, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, gmouse.left, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, gmouse.right, data, (*index), (*size_buff))
 
 	// generic keyboard
-	bck_states_on_struct(mode, generic_keyboard.row, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, generic_keyboard.column, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, generic_keyboard.enable, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, generic_keyboard.state, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, generic_keyboard.data, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, generic_keyboard.row, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, generic_keyboard.column, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, generic_keyboard.enable, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, generic_keyboard.state, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, generic_keyboard.data, data, (*index), (*size_buff))
 
 	// lag frames
-	bck_states_on_struct(mode, tas.total_lag_frames, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, tas.total_lag_frames, data, (*index), (*size_buff))
 }
 void bck_states_op_input_port(BYTE id, BYTE mode, void *data, size_t *index, size_t *size_buff) {
-	bck_states_on_struct(mode, port[id].type_pad, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, port[id].index, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, port[id].data, data, (*index), (*size_buff));
-	bck_states_on_struct(mode, port[id].turbo, data, (*index), (*size_buff));
+	bck_states_on_struct(mode, port[id].type_pad, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, port[id].index, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, port[id].data, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, port[id].turbo, data, (*index), (*size_buff))
 }
