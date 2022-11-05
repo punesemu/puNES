@@ -86,9 +86,9 @@ void ee93cx6_write(BYTE CS, BYTE CLK, BYTE DAT) {
 				ee93cx6.data = (ee93cx6.data << 1) | (DAT * 1);
 			} else if (ee93cx6.opcode == Opcode_read) {
 				if (ee93cx6.wordSize == 16) {
-					ee93cx6.output = !!(ee93cx6.data & 0x8000);
+					ee93cx6.output = (ee93cx6.data & 0x8000) != 0;
 				} else {
-					ee93cx6.output = !!(ee93cx6.data & 0x80);
+					ee93cx6.output = (ee93cx6.data & 0x80) != 0;
 				}
 				ee93cx6.data = ee93cx6.data << 1;
 			}
@@ -146,12 +146,10 @@ void ee93cx6_write(BYTE CS, BYTE CLK, BYTE DAT) {
 		} else if (ee93cx6.state == ee93cx6.State_data) {
 			if (ee93cx6.opcode == Opcode_write) {
 				if (ee93cx6.wordSize == 16) {
-					//EMU->StatusOut(L"Written word %d", address);
 					ee93cx6.storage[(ee93cx6.address << 1) | 0] = ee93cx6.data & 0xFF;
 					ee93cx6.storage[(ee93cx6.address << 1) | 1] = ee93cx6.data >> 8;
 					ee93cx6.address++;
 				} else {
-					//EMU->StatusOut(L"Written byte %d", address);
 					ee93cx6.storage[ee93cx6.address++] = ee93cx6.data;
 				}
 				ee93cx6.state = State_finished;
@@ -181,7 +179,6 @@ void ee93cx6_write(BYTE CS, BYTE CLK, BYTE DAT) {
 		}
 	}
 
-	//EMU->DbgOut(L"state %d, opcode %d, address %02X, data %02X", state, opcode, address, data);
 	ee93cx6.lastCLK = CLK;
 }
 

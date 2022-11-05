@@ -345,22 +345,22 @@ EXTERNC BYTE js_guid_cmp(_input_guid *guid1, _input_guid *guid2);
 EXTERNC uTCHAR *js_guid_to_string(_input_guid *guid);
 EXTERNC void js_guid_from_string(_input_guid *guid, uTCHAR *string);
 
-EXTERNC uTCHAR *js_axs_joyoffset_to_name(const DBWORD offset);
-EXTERNC uTCHAR *js_axs_joyval_to_name(const DBWORD value);
+EXTERNC uTCHAR *js_axs_joyoffset_to_name(DBWORD offset);
+EXTERNC uTCHAR *js_axs_joyval_to_name(DBWORD value);
 EXTERNC DBWORD js_axs_joyval_from_name(const uTCHAR *name);
-EXTERNC DBWORD js_axs_joyval_to_joyoffset(const DBWORD value);
-EXTERNC DBWORD js_axs_joyval_from_joyoffset(const DBWORD offset);
+EXTERNC DBWORD js_axs_joyval_to_joyoffset(DBWORD value);
+EXTERNC DBWORD js_axs_joyval_from_joyoffset(DBWORD offset);
 EXTERNC void js_axs_validate(_js_axis *jsx, SDBWORD value);
 
-EXTERNC uTCHAR *js_btn_joyoffset_to_name(const DBWORD offset);
-EXTERNC uTCHAR *js_btn_joyval_to_name(const DBWORD value);
+EXTERNC uTCHAR *js_btn_joyoffset_to_name(DBWORD offset);
+EXTERNC uTCHAR *js_btn_joyval_to_name(DBWORD value);
 EXTERNC DBWORD js_btn_joyval_from_name(const uTCHAR *name);
-EXTERNC DBWORD js_btn_joyval_to_joyoffset(const DBWORD value);
-EXTERNC DBWORD js_btn_joyval_from_joyoffset(const DBWORD offset);
+EXTERNC DBWORD js_btn_joyval_to_joyoffset(DBWORD value);
+EXTERNC DBWORD js_btn_joyval_from_joyoffset(DBWORD offset);
 
-EXTERNC uTCHAR *js_joyval_to_name(const DBWORD value);
+EXTERNC uTCHAR *js_joyval_to_name(DBWORD value);
 EXTERNC DBWORD js_joyval_from_name(const uTCHAR *name);
-EXTERNC DBWORD js_joyval_to_joyoffset(const DBWORD value);
+EXTERNC DBWORD js_joyval_to_joyoffset(DBWORD value);
 
 EXTERNC DBWORD js_joyval_default(int index, int button);
 EXTERNC void js_joyval_icon_and_desc(int index, DBWORD input, uTCHAR **icon, uTCHAR **desc);

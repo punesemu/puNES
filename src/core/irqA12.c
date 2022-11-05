@@ -69,12 +69,12 @@ void irqA12_BS(void) {
 	if ((!spr_ev.count_plus) && (r2000.size_spr == 16)) {
 		ppu.spr_adr = 0x1000;
 	} else {
-		ppu_spr_adr(n_spr);
+		ppu_spr_adr(n_spr)
 	}
 
 	if (!(irqA12.s_adr_old & 0x1000) && (ppu.spr_adr & 0x1000)) {
 		if (!extcl_irq_A12_clock) {
-			irqA12_clock();
+			irqA12_clock()
 		} else {
 			/*
 			 * utilizzato dalle mappers :
@@ -94,7 +94,7 @@ void irqA12_SB(void) {
 	}
 
 	if (ppu.frame_x == 323) {
-		ppu_spr_adr(7);
+		ppu_spr_adr(7)
 		irqA12.b_adr_old = ppu.spr_adr;
 	}
 
@@ -102,7 +102,7 @@ void irqA12_SB(void) {
 
 	if (!(irqA12.b_adr_old & 0x1000) && (ppu.bck_adr & 0x1000)) {
 		if (!extcl_irq_A12_clock) {
-			irqA12_clock();
+			irqA12_clock()
 		} else {
 			/*
 			 * utilizzato dalle mappers :

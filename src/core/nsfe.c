@@ -69,16 +69,17 @@ void nsfe_quit(void) {
 }
 BYTE nsfe_load_rom(void) {
 	_rom_mem rom;
-	BYTE phase;
 
 	{
 		static const uTCHAR rom_ext[2][10] = { uL(".nsfe\0"), uL(".NSFE\0") };
-		BYTE i, found = TRUE;
+		BYTE found = TRUE;
 		FILE *fp;
 
 		fp = ufopen(info.rom.file, uL("rb"));
 
 		if (!fp) {
+			unsigned int i;
+
 			found = FALSE;
 
 			for (i = 0; i < LENGTH(rom_ext); i++) {
@@ -125,6 +126,8 @@ BYTE nsfe_load_rom(void) {
 	rom.position = 0;
 
 	if (strncmp((char *)rom.data, "NSFE", 4) == 0) {
+		int phase;
+
 		info.format = NSFE_FORMAT;
 
 		info.machine[DATABASE] = DEFAULT;
@@ -204,7 +207,7 @@ BYTE nsfe_load_rom(void) {
 
 #if !defined (RELEASE)
 		{
-			BYTE tmp;
+			unsigned int tmp;
 
 			fprintf(stderr, "nam : %s\n", nsf.info.name);
 			fprintf(stderr, "art : %s\n", nsf.info.artist);
@@ -438,7 +441,7 @@ BYTE nsfe_plst(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE nsfe_time(_rom_mem *rom, BYTE phase) {
-	int i, total;
+	unsigned int i, total;
 
 	if (phase == NSFE_COUNT) {
 		if ((rom->position + nsfe.chunk.length) > rom->size) {
@@ -466,7 +469,7 @@ BYTE nsfe_time(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE nsfe_fade(_rom_mem *rom, BYTE phase) {
-	int i, total;
+	unsigned int i, total;
 
 	if (phase == NSFE_COUNT) {
 		if ((rom->position + nsfe.chunk.length) > rom->size) {
@@ -577,6 +580,8 @@ BYTE nsfe_auth(_rom_mem *rom, BYTE phase) {
 				case 3:
 					dst = &nsf.info.ripper;
 					break;
+				default:
+					continue;
 			}
 			(*dst) = src;
 			if ((*dst[0]) == 0) {

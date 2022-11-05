@@ -19,7 +19,6 @@
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include "libswresample/swresample.h"
-#include <libavutil/imgutils.h>
 #include <libavutil/opt.h>
 #include <libswscale/swscale.h>
 #include "recording.h"
@@ -64,8 +63,8 @@ typedef struct _ffmpeg_stream {
 INLINE static void ffmpeg_thread_lock(void);
 INLINE static void ffmpeg_thread_unlock(void);
 
-static void ffmpeg_fstream_set_default(_ffmpeg_stream *stream);
-static void ffmpeg_fstream_close(_ffmpeg_stream *stream);
+static void ffmpeg_fstream_set_default(_ffmpeg_stream *fs);
+static void ffmpeg_fstream_close(_ffmpeg_stream *fs);
 INLINE static BYTE ffmpeg_stream_write_frame(_ffmpeg_stream *fs);
 
 static char *ffmpeg_av_make_error_string(int retcode);
@@ -100,7 +99,7 @@ static BYTE ffmpeg_video_add_stream_format_audio(enum recording_format format);
 static BYTE ffmpeg_audio_add_stream(void);
 INLINE static BYTE ffmpeg_audio_write_frame(SWORD *data);
 
-static AVFrame *ffmpeg_audio_alloc_frame(enum AVSampleFormat sample_fmt, uint64_t ch_layout, int samplerate, int nb_samples);
+static AVFrame *ffmpeg_audio_alloc_frame(enum AVSampleFormat sample_fmt, uint64_t ch_layout, int samplerate, int64_t nb_samples);
 static enum AVSampleFormat ffmpeg_audio_select_sample_fmt(const AVCodec *codec);
 static int ffmpeg_audio_select_samplerate(const AVCodec *codec);
 static int ffmpeg_audio_select_channel_layout(const AVCodec *codec);
@@ -210,7 +209,6 @@ void recording_start(uTCHAR *filename, int format) {
 
 	if ((ffmpeg.video.used | ffmpeg.audio.used) == FALSE) {
 		goto recording_start_end;
-		return;
 	}
 
 	av_dump_format(ffmpeg.format_ctx, 0, ffmpeg.format_ctx->url, 1);
@@ -218,13 +216,11 @@ void recording_start(uTCHAR *filename, int format) {
 	if ((ret = avio_open(&ffmpeg.format_ctx->pb, ffmpeg.format_ctx->url, AVIO_FLAG_WRITE) < 0)) {
 		fprintf(stderr, "cannot open file : %s.\n", ffmpeg_av_make_error_string(ret));
 		goto recording_start_end;
-		return;
 	}
 
 	if ((ret = avformat_write_header(ffmpeg.format_ctx, NULL) < 0)) {
 		fprintf(stderr, "cannot write header file : %s.\n", ffmpeg_av_make_error_string(ret));
 		goto recording_start_end;
-		return;
 	}
 
 	info.recording_on_air = TRUE;
@@ -242,7 +238,7 @@ void recording_start(uTCHAR *filename, int format) {
 	emu_thread_continue();
 }
 void recording_finish(BYTE from_quit) {
-	int ret = 0;
+	int ret;
 
 	if (from_quit == FALSE) {
 		emu_thread_pause();
@@ -409,25 +405,25 @@ INLINE static void ffmpeg_thread_unlock(void) {
 	thread_mutex_unlock(ffmpeg.lock);
 }
 
-static void ffmpeg_fstream_set_default(_ffmpeg_stream *stream) {
-	stream->used = FALSE;
-	stream->encode = FALSE;
+static void ffmpeg_fstream_set_default(_ffmpeg_stream *fs) {
+	fs->used = FALSE;
+	fs->encode = FALSE;
 
 	// video e audio
-	stream->avcc = NULL;
-	stream->avc = NULL;
-	stream->avs = NULL;
-	stream->avf = NULL;
-	stream->pts = 0;
+	fs->avcc = NULL;
+	fs->avc = NULL;
+	fs->avs = NULL;
+	fs->avf = NULL;
+	fs->pts = 0;
 
 	// video
-	stream->sws = NULL;
+	fs->sws = NULL;
 
 	// audio
-	stream->samples = 0;
-	stream->buffer = NULL;
-	stream->src_nb_samples = 0;
-	stream->swr = NULL;
+	fs->samples = 0;
+	fs->buffer = NULL;
+	fs->src_nb_samples = 0;
+	fs->swr = NULL;
 }
 static void ffmpeg_fstream_close(_ffmpeg_stream *fs) {
 	fs->used = FALSE;
@@ -566,7 +562,7 @@ static BYTE ffmpeg_context_setup(_recording_format_info *rfi, enum AVPixelFormat
 		return (EXIT_ERROR);
 	}
 
-	video->avs->id = ffmpeg.format_ctx->nb_streams - 1;
+	video->avs->id = (int)ffmpeg.format_ctx->nb_streams - 1;
 	video->avs->time_base = av_make_q(1, ffmpeg.fps);
 
 	// alloco il contesto del codec video
@@ -632,7 +628,7 @@ static BYTE ffmpeg_stream_open(_ffmpeg_stream *fs, AVDictionary *opts, BYTE crea
 
 static BYTE ffmpeg_video_add_stream(enum recording_format rf) {
 	_ffmpeg_stream *video = &ffmpeg.video;
-	BYTE ret = EXIT_OK;
+	BYTE ret;
 
 	switch (rf) {
 		case REC_FORMAT_VIDEO_MPG_MPEG1:
@@ -686,7 +682,7 @@ static BYTE ffmpeg_video_add_stream(enum recording_format rf) {
 INLINE static BYTE ffmpeg_video_write_frame(int w, int h, int stride, uint8_t *rgb) {
 	_ffmpeg_stream *video = &ffmpeg.video;
 	AVFrame *frame = NULL;
-	int ret = 0;
+	int ret;
 
 	if (rgb) {
 #if defined (WITH_OPENGL)
@@ -705,9 +701,9 @@ INLINE static BYTE ffmpeg_video_write_frame(int w, int h, int stride, uint8_t *r
 		sws_scale(video->sws, (const uint8_t *const *)in_data, in_linesize, 0, h, video->avf->data, video->avf->linesize);
 
 		if (video->pts == 0) {
-			video->pts = gfx.frame.in_draw;
+			video->pts = (int64_t)gfx.frame.in_draw;
 		}
-		video->avf->pts = gfx.frame.in_draw - video->pts;
+		video->avf->pts = (int64_t)gfx.frame.in_draw - video->pts;
 		frame = video->avf;
 	}
 
@@ -747,8 +743,8 @@ static void ffmpeg_set_output_resolution(void) {
 	} else {
 		recording_decode_output_resolution(&ffmpeg.w, &ffmpeg.h);
 	}
-	ffmpeg.w *= gfx.device_pixel_ratio;
-	ffmpeg.h *= gfx.device_pixel_ratio;
+	ffmpeg.w = (int)((float)ffmpeg.w * gfx.device_pixel_ratio);
+	ffmpeg.h = (int)((float)ffmpeg.h * gfx.device_pixel_ratio);
 	if (cfg->recording.follow_rotation == TRUE) {
 		if (!cfg->fullscreen && ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270))) {
 			int tmp = ffmpeg.w;
@@ -933,7 +929,7 @@ static BYTE ffmpeg_video_add_stream_format_h264(void) {
 			vbr = 4000;
 		}
 		video->avcc->profile = FF_PROFILE_H264_HIGH;
-		video->avcc->bit_rate = vbr;
+		video->avcc->bit_rate = (int64_t)vbr;
 	}
 
 	video->avcc->thread_count = FFMIN(8, gui_hardware_concurrency());
@@ -1134,7 +1130,7 @@ static BYTE ffmpeg_audio_add_stream(void) {
 	enum AVSampleFormat src_sample_fmt = AV_SAMPLE_FMT_S16;
 	int src_sample_rate = snd.samplerate;
 	uint64_t src_channel_layout = cfg->channels_mode == CH_MONO ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO;
-	uint64_t dst_nb_samples;
+	int64_t dst_nb_samples;
 
 	if (ffmpeg.format_ctx->oformat->audio_codec == AV_CODEC_ID_NONE) {
 		fprintf(stderr, "audio codec unavailable.\n");
@@ -1162,7 +1158,7 @@ static BYTE ffmpeg_audio_add_stream(void) {
 	audio->avcc->channels = av_get_channel_layout_nb_channels(audio->avcc->channel_layout);
 	audio->avcc->bit_rate = audio->avcc->sample_rate < 96000 ? 256000 : 512000;
 
-	audio->avs->id = ffmpeg.format_ctx->nb_streams - 1;
+	audio->avs->id = (int)ffmpeg.format_ctx->nb_streams - 1;
 	audio->avs->time_base = (AVRational){ 1, audio->avcc->sample_rate };
 
 	if (ffmpeg.format_ctx->oformat->flags & AVFMT_GLOBALHEADER) {
@@ -1186,8 +1182,8 @@ static BYTE ffmpeg_audio_add_stream(void) {
 		(src_sample_rate != audio->avcc->sample_rate) ||
 		(src_channel_layout != audio->avcc->channel_layout)) {
 		if (!(audio->swr = swr_alloc_set_opts(NULL,
-			audio->avcc->channel_layout, audio->avcc->sample_fmt, audio->avcc->sample_rate,
-			src_channel_layout, src_sample_fmt, src_sample_rate,
+			(int64_t)audio->avcc->channel_layout, audio->avcc->sample_fmt, audio->avcc->sample_rate,
+			(int64_t)src_channel_layout, src_sample_fmt, src_sample_rate,
 			0, NULL))) {
 			fprintf(stderr, "error allocating the resampling context.\n");
 			return (EXIT_ERROR);
@@ -1240,7 +1236,7 @@ INLINE static BYTE ffmpeg_audio_write_frame(SWORD *data) {
 		frame = audio->avf;
 
 		if (audio->swr) {
-			if (swr_convert(audio->swr, NULL, 0, (const uint8_t **)&audio->buffer, audio->src_nb_samples) < 0) {
+			if (swr_convert(audio->swr, NULL, 0, (const uint8_t **)&audio->buffer, (int)audio->src_nb_samples) < 0) {
 				fprintf(stderr, "Error feeding audio data to the resampler\n");
 				return (EXIT_ERROR);
 			}
@@ -1290,7 +1286,7 @@ INLINE static BYTE ffmpeg_audio_write_frame(SWORD *data) {
 	return (EXIT_OK);
 }
 
-static AVFrame *ffmpeg_audio_alloc_frame(enum AVSampleFormat sample_fmt, uint64_t ch_layout, int samplerate, int nb_samples) {
+static AVFrame *ffmpeg_audio_alloc_frame(enum AVSampleFormat sample_fmt, uint64_t ch_layout, int samplerate, int64_t nb_samples) {
 	AVFrame *avframe;
 
 	if (!(avframe = av_frame_alloc())) {
@@ -1298,7 +1294,7 @@ static AVFrame *ffmpeg_audio_alloc_frame(enum AVSampleFormat sample_fmt, uint64_
 		return (NULL);
 	}
 
-	avframe->nb_samples = nb_samples;
+	avframe->nb_samples = (int)nb_samples;
 	avframe->format = sample_fmt;
 	avframe->channel_layout = ch_layout;
 	avframe->sample_rate = samplerate;
@@ -1403,10 +1399,10 @@ static int ffmpeg_audio_select_channel_layout(const AVCodec *codec) {
 
 		if (nb_channels == snd.channels) {
 			best_ch_layout = (*p);
-			best_nb_channels = nb_channels;
+			//best_nb_channels = nb_channels;
 			break;
 		}
 		p++;
 	}
-	return (best_ch_layout);
+	return ((int)best_ch_layout);
 }

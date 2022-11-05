@@ -236,7 +236,7 @@ void js_guid_from_string(_input_guid *guid, uTCHAR *string) {
 #endif
 }
 
-uTCHAR *js_axs_joyoffset_to_name(const DBWORD offset) {
+uTCHAR *js_axs_joyoffset_to_name(DBWORD offset) {
 	static uTCHAR str[30];
 	unsigned int i;
 
@@ -248,7 +248,7 @@ uTCHAR *js_axs_joyoffset_to_name(const DBWORD offset) {
 	}
 	return ((uTCHAR *)js_axs_joyval[0].desc[0]);
 }
-uTCHAR *js_axs_joyval_to_name(const DBWORD value) {
+uTCHAR *js_axs_joyval_to_name(DBWORD value) {
 	static uTCHAR str[30];
 	unsigned int a, b;
 
@@ -276,7 +276,7 @@ DBWORD js_axs_joyval_from_name(const uTCHAR *name) {
 	}
 	return (0);
 }
-DBWORD js_axs_joyval_to_joyoffset(const DBWORD value) {
+DBWORD js_axs_joyval_to_joyoffset(DBWORD value) {
 	unsigned int i;
 
 	for (i = 0; i < LENGTH(js_axs_joyval); i++) {
@@ -286,7 +286,7 @@ DBWORD js_axs_joyval_to_joyoffset(const DBWORD value) {
 	}
 	return (0x0FF);
 }
-DBWORD js_axs_joyval_from_joyoffset(const DBWORD offset) {
+DBWORD js_axs_joyval_from_joyoffset(DBWORD offset) {
 	unsigned int a;
 
 	for (a = 0; a < LENGTH(js_axs_joyval); a++) {
@@ -297,16 +297,16 @@ DBWORD js_axs_joyval_from_joyoffset(const DBWORD offset) {
 	return (0);
 }
 void js_axs_validate(_js_axis *jsx, SDBWORD value) {
-	value = floorf((value - jsx->min) * jsx->scale + JS_AXIS_MIN + 0.5f);
+	value = (SDBWORD)floorf(((float)value - jsx->min) * jsx->scale + JS_AXIS_MIN + 0.5f);
 
 	// thx to the developer of SDL for this routine
 	if (!jsx->validate.has_initial_value ||
 		(!jsx->validate.has_second_value &&
 			((jsx->validate.initial_value <= JS_AXIS_MIN) || (jsx->validate.initial_value == JS_AXIS_MAX)) &&
 			(abs(value) < (JS_AXIS_MAX / 4)))) {
-		jsx->validate.initial_value = value;
+		jsx->validate.initial_value = (float)value;
 		jsx->validate.has_initial_value = TRUE;
-		jsx->value = value;
+		jsx->value = (SWORD)value;
 		if ((jsx->validate.initial_value <= JS_AXIS_MIN) || (jsx->validate.initial_value == JS_AXIS_MAX)) {
 			jsx->center = jsx->validate.initial_value;
 		} else {
@@ -323,14 +323,14 @@ void js_axs_validate(_js_axis *jsx, SDBWORD value) {
 		if (abs(value - jsx->value) <= MAX_ALLOWED_JITTER) {
 			return;
 		}
-		jsx->value = ~value;
+		jsx->value = (SWORD)(~value);
 		jsx->validate.sent_initial_value = TRUE;
-		js_axs_validate(jsx, jsx->validate.initial_value);
+		js_axs_validate(jsx, (SDBWORD)jsx->validate.initial_value);
 	}
-	jsx->value = value;
+	jsx->value = (SWORD)value;
 }
 
-uTCHAR *js_btn_joyoffset_to_name(const DBWORD offset) {
+uTCHAR *js_btn_joyoffset_to_name(DBWORD offset) {
 	static uTCHAR str[30];
 	unsigned int i;
 
@@ -342,7 +342,7 @@ uTCHAR *js_btn_joyoffset_to_name(const DBWORD offset) {
 	}
 	return ((uTCHAR *)js_axs_joyval[0].desc[0]);
 }
-uTCHAR *js_btn_joyval_to_name(const DBWORD value) {
+uTCHAR *js_btn_joyval_to_name(DBWORD value) {
 	static uTCHAR str[30];
 	unsigned int i;
 
@@ -366,7 +366,7 @@ DBWORD js_btn_joyval_from_name(const uTCHAR *name) {
 	}
 	return (0);
 }
-DBWORD js_btn_joyval_to_joyoffset(const DBWORD value) {
+DBWORD js_btn_joyval_to_joyoffset(DBWORD value) {
 	unsigned int i;
 
 	for (i = 0; i < LENGTH(js_btn_joyval); i++) {
@@ -376,7 +376,7 @@ DBWORD js_btn_joyval_to_joyoffset(const DBWORD value) {
 	}
 	return (0);
 }
-DBWORD js_btn_joyval_from_joyoffset(const DBWORD offset) {
+DBWORD js_btn_joyval_from_joyoffset(DBWORD offset) {
 	unsigned int i;
 
 	for (i = 0; i < LENGTH(js_btn_joyval); i++) {
@@ -387,7 +387,7 @@ DBWORD js_btn_joyval_from_joyoffset(const DBWORD offset) {
 	return (0);
 }
 
-uTCHAR *js_joyval_to_name(const DBWORD value) {
+uTCHAR *js_joyval_to_name(DBWORD value) {
 	if (value & 0x400) {
 		return (js_btn_joyval_to_name(value));
 	}
@@ -401,7 +401,7 @@ DBWORD js_joyval_from_name(const uTCHAR *name) {
 	}
 	return (js_btn_joyval_from_name(name));
 }
-DBWORD js_joyval_to_joyoffset(const DBWORD value) {
+DBWORD js_joyval_to_joyoffset(DBWORD value) {
 	if (value & 0x400) {
 		return (js_btn_joyval_to_joyoffset(value));
 	}
@@ -427,7 +427,7 @@ DBWORD js_joyval_default(int index, int button) {
 		}
 		return (js_btn_joyval[0].offset);
 	} else {
-		DBWORD min = !!(offset & JS_ABS_DEF_BIT(1));
+		DBWORD min = (offset & JS_ABS_DEF_BIT(1)) != 0;
 
 		offset = JS_BTNABS_UNDEF(offset);
 		for (i = 0; i < LENGTH(js_axs_joyval); i++) {
@@ -596,10 +596,10 @@ BYTE js_jdev_update_axs(_js_device *jdev, BYTE type, BYTE shcut, int index, DBWO
 			if (state > center) {
 				(*value) |= 1;
 			}
-			(*last_state) = (*value);
+			(*last_state) = (float)(*value);
 		} else {
 			(*mode) = RELEASED;
-			(*value) = (*last_state);
+			(*value) = (DBWORD)(*last_state);
 			(*last_state) = 0;
 		}
 
@@ -665,7 +665,7 @@ void js_jdev_read_port(_js *js, _port *port) {
 					_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
 
 					if (jsx->used & jsx->enabled)  {
-						if (js_jdev_update_axs(jdev, i, FALSE, a, &value, &mode, deadzone) == EXIT_OK) {
+						if (js_jdev_update_axs(jdev, i, FALSE, (int)a, &value, &mode, deadzone) == EXIT_OK) {
 							if (value && js->input_decode_event) {
 								js->input_decode_event(mode, FALSE, value, JOYSTICK, port);
 							}
@@ -677,7 +677,7 @@ void js_jdev_read_port(_js *js, _port *port) {
 				_js_button *jsx = &jdev->data.button[i];
 
 				if (jsx->used & jsx->enabled) {
-					if (js_jdev_update_btn(jdev, FALSE, i, &value, &mode) == EXIT_OK) {
+					if (js_jdev_update_btn(jdev, FALSE, (int)i, &value, &mode) == EXIT_OK) {
 						if (value && js->input_decode_event) {
 							js->input_decode_event(mode, FALSE, value, JOYSTICK, port);
 						}
@@ -713,7 +713,7 @@ BYTE js_jdev_read_shcut(_js_sch *js_sch) {
 					_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
 
 					if (jsx->used & jsx->enabled) {
-						if (js_jdev_update_axs(jdev, i, TRUE, a, &value, &mode, deadzone) == EXIT_OK) {
+						if (js_jdev_update_axs(jdev, i, TRUE, (int)a, &value, &mode, deadzone) == EXIT_OK) {
 							if (value) {
 								js_sch->value = value;
 								js_sch->mode = mode;
@@ -728,7 +728,7 @@ BYTE js_jdev_read_shcut(_js_sch *js_sch) {
 					_js_button *jsx = &jdev->data.button[i];
 
 					if (jsx->used & jsx->enabled) {
-						if (js_jdev_update_btn(jdev, TRUE, i, &value, &mode) == EXIT_OK) {
+						if (js_jdev_update_btn(jdev, TRUE, (int)i, &value, &mode) == EXIT_OK) {
 							if (value) {
 								js_sch->value = value;
 								js_sch->mode = mode;
@@ -750,12 +750,14 @@ BYTE js_jdev_read_shcut(_js_sch *js_sch) {
 DBWORD js_jdev_read_in_dialog(_input_guid *guid) {
 	_js_device *jdev = NULL;
 	DBWORD value = 0;
-	int i;
+	{
+		int i;
 
-	for (i = 0; i < MAX_JOYSTICK; i++) {
-		if (js_is_this(i, guid)) {
-			jdev = &jstick.jdd.devices[i];
-			break;
+		for (i = 0; i < MAX_JOYSTICK; i++) {
+			if (js_is_this(i, guid)) {
+				jdev = &jstick.jdd.devices[i];
+				break;
+			}
 		}
 	}
 
@@ -771,9 +773,9 @@ DBWORD js_jdev_read_in_dialog(_input_guid *guid) {
 					_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
 
 					if (jsx->used & jsx->enabled) {
-						if ((jsx->value < (jsx->center - deadzone)) || (jsx->value > (jsx->center + deadzone))) {
+						if (((float)jsx->value < (jsx->center - deadzone)) || ((float)jsx->value > (jsx->center + deadzone))) {
 							value = js_axs_joyval_from_joyoffset(jsx->offset);
-							if (jsx->value > jsx->center) {
+							if ((float)jsx->value > jsx->center) {
 								value |= 1;
 							}
 						}
@@ -819,7 +821,7 @@ void js_info_jdev(_js_device *jdev) {
 
 			if (jsx->used) {
 				ufprintf(stderr, uL("Axs: 0x%.3x " uPs("-20") " { %6d %6d %6d %13f}\n"), jsx->offset,
-					js_axs_joyoffset_to_name(jsx->offset),
+					js_axs_joyoffset_to_name((const DBWORD)jsx->offset),
 					(int)jsx->min,
 					(int)jsx->max,
 					(int)jsx->center,

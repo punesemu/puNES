@@ -21,21 +21,14 @@
 #include "bck_states.h"
 #include "rewind.h"
 #include "info.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "ppu.h"
-#include "mappers.h"
-#include "irqA12.h"
-#include "irql2f.h"
-#include "fds.h"
 #include "gui.h"
 #include "clock.h"
 #include "tas.h"
 #include "emu_thread.h"
 #include "video/gfx_thread.h"
-#include "clock.h"
 #include "conf.h"
-#include "audio/snd.h"
 
 enum rewind_misc {
 	REWIND_CHUNK_TYPE_SEGMENT,
@@ -208,7 +201,7 @@ BYTE rewind_init(void) {
 
 	// creo il file temporaneo
 	if (rewind_is_disabled() == FALSE) {
-		uTCHAR basename[255], *last_dot;;
+		uTCHAR basename[255], *last_dot;
 
 		gui_utf_basename(info.rom.file, basename, usizeof(basename));
 
@@ -216,7 +209,7 @@ BYTE rewind_init(void) {
 		if ((last_dot = ustrrchr(basename, uL('.')))) {
 			// elimino l'estensione
 			(*last_dot) = 0x00;
-		};
+		}
 
 #if defined (__WIN32__)
 		usnprintf(rwint.file_name, usizeof(rwint.file_name), uL("" uPs("") uPs("") "_" uPs("") ".rwd"), gui_temp_folder(),
@@ -373,7 +366,7 @@ INLINE static void rewind_increment_count_chunks(void) {
 			segment_to_save = rwint.index.segment % rwint.max_buffered.segments;
 		}
 
-		fseek(rwint.file, segment_to_save * rwint.size.total, SEEK_SET);
+		fseek(rwint.file, (long)(segment_to_save * rwint.size.total), SEEK_SET);
 		fwrite(rwint.segment.data, rwint.size.total, 1, rwint.file);
 		rwint.index.chunk = 0;
 		rwint.range.chunk.first = rwint.range.chunk.last;
@@ -486,11 +479,11 @@ static BYTE _rewind_frames(int32_t frames_to_rewind, BYTE exec_last_frame) {
 		}
 
 		if (rwint.index.segment == rwint.count.segments) {
-			fseek(rwint.file, segment_to_save * rwint.size.total, SEEK_SET);
+			fseek(rwint.file, (long)(segment_to_save * rwint.size.total), SEEK_SET);
 			fwrite(rwint.segment.data, rwint.size.total, 1, rwint.file);
 		}
 
-		fseek(rwint.file, segment_to_load * rwint.size.total, SEEK_SET);
+		fseek(rwint.file, (long)(segment_to_load * rwint.size.total), SEEK_SET);
 		if (fread(rwint.segment.data, rwint.size.total, 1, rwint.file) < 1) {
 			return (EXIT_ERROR);
 		}

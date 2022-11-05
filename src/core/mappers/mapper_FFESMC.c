@@ -685,7 +685,7 @@ BYTE extcl_save_mapper_FFESMC(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_wr_chr_FFESMC(WORD address, BYTE value) {
 	if ((ffesmc.mode.m1 >= 0xA0) && !(ffesmc.mode.m1 & 0x01)) {
-		ffesmc.chr.lock = !!(ffesmc.mode.m1 & 0x10);
+		ffesmc.chr.lock = (ffesmc.mode.m1 & 0x10) != 0;
 	}
 	if (((ffesmc.mode.m1 & 0xE1) >= 0x81) || ffesmc.chr.lock) {
 		return;

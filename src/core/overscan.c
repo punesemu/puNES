@@ -17,7 +17,6 @@
  */
 
 #include "overscan.h"
-#include "video/gfx.h"
 
 _overscan_borders overscan_borders[2];
 _overscan overscan;
@@ -32,7 +31,8 @@ BYTE overscan_set_mode(BYTE mode) {
 	}
 
 	{
-		BYTE i, *src = (BYTE *)&save, *dst = (BYTE *)overscan.borders;
+		BYTE *src = (BYTE *)&save, *dst = (BYTE *)overscan.borders;
+		unsigned int i;
 
 		for (i = 0; i < sizeof(_overscan_borders); i++) {
 			if ((*(src + i)) != (*(dst + i))) {

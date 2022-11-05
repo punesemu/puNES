@@ -24,15 +24,14 @@
 BYTE patcher_xdelta(_rom_mem *patch, _rom_mem *rom) {
 	usize_t size = 32 * 1024 * 1024; // 32 MB
 	BYTE *blk1, *blk2;
-	int result;
 
 	if ((blk1 = (BYTE *)malloc(size)) == NULL) {
 		return (EXIT_ERROR);
-	};
+	}
 
 	memset(blk1, 0x00, size);
 
-	if ((result = xd3_decode_memory(patch->data, patch->size, rom->data, rom->size, blk1, &size, size, 0) != 0)) {
+	if (xd3_decode_memory(patch->data, patch->size, rom->data, rom->size, blk1, &size, size, 0) != 0) {
 		free(blk1);
 		return (EXIT_ERROR);
 	}
@@ -40,7 +39,7 @@ BYTE patcher_xdelta(_rom_mem *patch, _rom_mem *rom) {
 	if ((blk2 = (BYTE *)malloc(size)) == NULL) {
 		free(blk1);
 		return (EXIT_ERROR);
-	};
+	}
 
 	memcpy(blk2, blk1, size);
 

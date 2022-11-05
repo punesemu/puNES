@@ -25,8 +25,6 @@
 #include "emu.h"
 #include "emu_thread.h"
 #include "settings.h"
-#include "video/gfx.h"
-#include "version.h"
 #include "cheat.h"
 #include "recent_roms.h"
 #include "patcher.h"
@@ -76,7 +74,7 @@ int main(int argc, char **argv) {
 	gui_overlay_info_init();
 	gui_overlay_info_emulator();
 
-	// tratto il file di configurazione ed i parametri passati dalla riga di comando.
+	// tratto il file di configurazione e i parametri passati dalla riga di comando.
 	settings_init();
 	if (cmd_line_parse(argc, argv) == EXIT_ERROR) {
 		emu_quit();

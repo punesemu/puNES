@@ -16,11 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <libgen.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <sys/stat.h>
 #include "save_slot.h"
 #include "conf.h"
 #include "mem_map.h"
@@ -157,7 +154,7 @@ BYTE save_slot_load(BYTE slot) {
 }
 void save_slot_count_load(void) {
 	uTCHAR *file;
-	BYTE i;
+	int i;
 
 	emu_thread_pause();
 	gfx_thread_pause();
@@ -186,8 +183,6 @@ void save_slot_count_load(void) {
 	}
 
 	if (!save_slot.state[save_slot.slot]) {
-		BYTE i;
-
 		save_slot.slot = 0;
 
 		for (i = 0; i < SAVE_SLOTS; i++) {
@@ -207,7 +202,7 @@ BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size,
 
 	switch (mode) {
 		case SAVE_SLOT_SAVE:
-			bytes = fwrite(src, size, 1, fp);
+			fwrite(src, size, 1, fp);
 			save_slot.tot_size[slot] += size;
 			fflush(fp);
 			if (preview == TRUE) {
@@ -229,16 +224,18 @@ BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size,
 				if (fread(screen.preview.data, size, 1, fp) == 1) {
 					preview_image(slot, &screen.preview);
 				}
-				fseek(fp, pos, SEEK_SET);
+				fseek(fp, (long)pos, SEEK_SET);
 			}
 			save_slot.tot_size[slot] += size;
 			break;
+		default:
+			return (EXIT_ERROR);
 	}
 	return (EXIT_OK);
 }
 BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	uint32_t tmp = 0;
-	WORD i = 0;
+	unsigned int i;
 
 	fseek(fp, 0L, SEEK_SET);
 
@@ -645,8 +642,6 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, old_romMapTo)
 
 		if (mode == SAVE_SLOT_READ) {
-			BYTE i;
-
 			for (i = 0; i < 4; i++) {
 				mapper.rom_map_to[i] = old_romMapTo[i];
 			}

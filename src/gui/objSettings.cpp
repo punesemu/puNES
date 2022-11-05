@@ -28,7 +28,6 @@
 #include "save_slot.h"
 #include "emu.h"
 #include "shaders.h"
-#include "video/filters/ntsc.h"
 #include "nscode.hpp"
 #if defined (__unix__)
 #define XK_MISCELLANY
@@ -1953,7 +1952,7 @@ void objJsc::fr_cfg(QString group) {
 				_js_button *jsx = &jdev->data.button[i];
 				qulonglong enabled = 1;
 
-				jsx->enabled = !!(buttons & (enabled << i));
+				jsx->enabled = (buttons & (enabled << i)) != 0;
 			}
 		}
 		{
@@ -1965,7 +1964,7 @@ void objJsc::fr_cfg(QString group) {
 					&jdev->data.hat[hat++] : &jdev->data.axis[axis++];
 				qulonglong enabled = 1;
 
-				jsx->enabled = !!(axes & (enabled << (i - 1)));
+				jsx->enabled = (axes & (enabled << (i - 1))) != 0;
 			}
 		}
 	}
