@@ -27,8 +27,8 @@ INLINE static void input_read_mouse_coords(int *x, int *y) {
 	double dpr = gui_device_pixel_ratio();
 	int mx, my;
 
-	mx = ((float)(gmouse.x - (gfx.vp.x / dpr)) / gfx.w_pr);
-	my = ((float)(gmouse.y - (gfx.vp.y / dpr)) / gfx.h_pr);
+	mx = (int)(((float)gmouse.x - (gfx.vp.x / dpr)) / gfx.w_pr);
+	my = (int)(((float)gmouse.y - (gfx.vp.y / dpr)) / gfx.h_pr);
 
 	switch (cfg->screen_rotation) {
 		default:

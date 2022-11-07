@@ -23,7 +23,6 @@
 #include "info.h"
 #include "mem_map.h"
 #include "mappers.h"
-#include "emu.h"
 #include "conf.h"
 #include "cheat.h"
 #include "vs_system.h"
@@ -215,11 +214,12 @@ static const _unif_board unif_boards[] = {
 
 BYTE unif_load_rom(void) {
 	_rom_mem rom;
-	BYTE phase;
+	int phase;
 
 	{
 		FILE *fp;
-		BYTE i, found = TRUE;
+		BYTE found = TRUE;
+		unsigned int i;
 		static const uTCHAR rom_ext[6][10] = {
 			uL(".nes\0"),  uL(".NES\0"),
 			uL(".unf\0"),  uL(".UNF\0"),
@@ -285,8 +285,6 @@ BYTE unif_load_rom(void) {
 		return (EXIT_ERROR);
 	}
 
-	phase = UNIF_COUNT;
-
 	// setto i defaults
 	mirroring_H();
 	info.machine[HEADER] = info.machine[DATABASE] = NTSC;
@@ -310,7 +308,7 @@ BYTE unif_load_rom(void) {
 
 			if (phase == UNIF_READ) {
 				size_t size;
-				BYTE i;
+				int i;
 
 				if (prg_chip_size(0) == 0) {
 					free(rom.data);
@@ -319,7 +317,7 @@ BYTE unif_load_rom(void) {
 
 				// PRG
 				{
-					for (i = size = 0; i < info.prg.chips; i++) {
+					for (i = 0, size = 0; i < info.prg.chips; i++) {
 						size += prg_chip_size(i);
 					}
 
@@ -335,7 +333,7 @@ BYTE unif_load_rom(void) {
 
 				// CHR
 				{
-					for (i = size = 0; i < info.chr.chips; i++) {
+					for (i = 0, size = 0; i < info.chr.chips; i++) {
 						size += chr_chip_size(i);
 					}
 
@@ -504,6 +502,7 @@ BYTE unif_NONE(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE unif_MAPR(_rom_mem *rom, BYTE phase) {
+	unsigned int i;
 	static const char strip[][5] = {
 		"NES-", "UNL-", "HVC-", "BTL-", "BMC-"
 	};
@@ -526,8 +525,6 @@ BYTE unif_MAPR(_rom_mem *rom, BYTE phase) {
 	rom->position += unif.chunk.length;
 
 	{
-		static BYTE i;
-
 		unif.stripped_board = &unif.board[0];
 
 		for (i = 0; i < strlen(unif.stripped_board); i++) {
@@ -546,8 +543,6 @@ BYTE unif_MAPR(_rom_mem *rom, BYTE phase) {
 	}
 
 	{
-		static WORD i;
-
 		unif.finded = FALSE;
 
 		for (i = 0; i < LENGTH(unif_boards); i++) {
@@ -573,11 +568,9 @@ BYTE unif_NAME(_rom_mem *rom, BYTE phase) {
 	static size_t length;
 
 	if (phase == UNIF_COUNT) {
-		BYTE buf = 0;
-
 		length = 0;
 
-		while ((buf = rom->data[rom->position]) > 0) {
+		while (rom->data[rom->position] > 0) {
 			if ((rom->position + 1) < rom->size) {
 				rom->position++;
 				length++;
@@ -617,7 +610,7 @@ BYTE unif_PRG(_rom_mem *rom, BYTE phase) {
 		rom->position += unif.chunk.length;
 		return (EXIT_OK);
 	} else {
-		BYTE i;
+		int i;
 
 		unif.chips.prg++;
 		for (i = 0, prg_chip_rom(chip) = prg_rom(); i < chip; i++) {
@@ -644,7 +637,7 @@ BYTE unif_CHR(_rom_mem *rom, BYTE phase) {
 		rom->position += unif.chunk.length;
 		return (EXIT_OK);
 	} else {
-		BYTE i;
+		int i;
 
 		unif.chips.chr++;
 		for (i = 0, chr_chip_rom(chip) = chr_rom(); i < chip; i++) {

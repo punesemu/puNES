@@ -16,14 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "input.h"
 #include "input/family_basic_keyboard.h"
 #include "tape_data_recorder.h"
-#include "conf.h"
 #include "gui.h"
 
-void input_wr_family_basic_keyboard(BYTE *value, UNUSED(BYTE nport)) {
+void input_wr_family_basic_keyboard(const BYTE *value, UNUSED(BYTE nport)) {
 	BYTE column;
 
 	// 7  bit  0
@@ -56,7 +54,7 @@ void input_wr_family_basic_keyboard(BYTE *value, UNUSED(BYTE nport)) {
 }
 void input_rd_family_basic_keyboard(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	if (nport & 0x01) {
-		BYTE state = 0;
+		BYTE state;
 
 		// r4017
 		// 7  bit  0

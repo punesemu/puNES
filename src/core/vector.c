@@ -94,7 +94,7 @@ void *vector_get(_vector *v, size_t index) {
 }
 BYTE vector_delete(_vector *v, size_t index) {
 	BYTE status = EXIT_ERROR;
-	size_t i = 0;
+	size_t i;
 
 	if (v) {
 		if (index >= v->total) {

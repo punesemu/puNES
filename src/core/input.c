@@ -279,7 +279,7 @@ void input_init(BYTE set_cursor) {
 	gui_overlay_update();
 }
 
-void input_wr_disabled(UNUSED(BYTE *value), UNUSED(BYTE nport)) {}
+void input_wr_disabled(UNUSED(const BYTE *value), UNUSED(BYTE nport)) {}
 void input_rd_disabled(UNUSED(BYTE *value), UNUSED(BYTE nport),	UNUSED(BYTE shift)) {}
 
 BYTE input_draw_target(void) {

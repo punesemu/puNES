@@ -17,58 +17,56 @@
  */
 
 #include "input/nsf_controller.h"
-#include "conf.h"
 #include "gui.h"
 #include "nsf.h"
 
 void input_add_event_nsf_controller(BYTE index) {
 	js_jdev_read_port(&js[index], &port[index]);
 }
-BYTE input_decode_event_nsf_controller(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *port) {
-
+BYTE input_decode_event_nsf_controller(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *prt) {
 	if (autorepeat == TRUE) {
 		return (EXIT_OK);
 	}
 
-	if (event == port->input[type][BUT_A]) {
-		if (!port->turbo[TURBOA].active) {
-			port->data[BUT_A] = mode;
+	if (event == prt->input[type][BUT_A]) {
+		if (!prt->turbo[TURBOA].active) {
+			prt->data[BUT_A] = mode;
 		}
 		nsf.timers.button[BUT_A] = 0;
 		return (EXIT_OK);
-	} else if (event == port->input[type][BUT_B]) {
-		if (!port->turbo[TURBOB].active) {
-			port->data[BUT_B] = mode;
+	} else if (event == prt->input[type][BUT_B]) {
+		if (!prt->turbo[TURBOB].active) {
+			prt->data[BUT_B] = mode;
 		}
 		nsf.timers.button[BUT_B] = 0;
 		return (EXIT_OK);
-	} else if (event == port->input[type][SELECT]) {
-		port->data[SELECT] = mode;
+	} else if (event == prt->input[type][SELECT]) {
+		prt->data[SELECT] = mode;
 		nsf.timers.button[SELECT] = 0;
 		return (EXIT_OK);
-	} else if (event == port->input[type][START]) {
-		port->data[START] = mode;
+	} else if (event == prt->input[type][START]) {
+		prt->data[START] = mode;
 		nsf.timers.button[START] = 0;
 		return (EXIT_OK);
-	} else if (event == port->input[type][UP]) {
-		port->data[UP] = mode;
+	} else if (event == prt->input[type][UP]) {
+		prt->data[UP] = mode;
 		nsf.timers.button[UP] = 0;
 		return (EXIT_OK);
-	} else if (event == port->input[type][DOWN]) {
-		port->data[DOWN] = mode;
+	} else if (event == prt->input[type][DOWN]) {
+		prt->data[DOWN] = mode;
 		nsf.timers.button[DOWN] = 0;
 		return (EXIT_OK);
-	} else if (event == port->input[type][LEFT]) {
+	} else if (event == prt->input[type][LEFT]) {
 		if (mode == PRESSED) {
-			port->data[RIGHT] = RELEASED;
+			prt->data[RIGHT] = RELEASED;
 		}
-		port->data[LEFT] = mode;
+		prt->data[LEFT] = mode;
 		nsf.timers.button[LEFT] = 0;
 		return (EXIT_OK);
-	} else if (event == port->input[type][RIGHT]) {
-		port->data[RIGHT] = mode;
+	} else if (event == prt->input[type][RIGHT]) {
+		prt->data[RIGHT] = mode;
 		if (mode == PRESSED) {
-			port->data[LEFT] = RELEASED;
+			prt->data[LEFT] = RELEASED;
 		}
 		nsf.timers.button[RIGHT] = 0;
 		return (EXIT_OK);

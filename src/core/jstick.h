@@ -199,7 +199,7 @@ typedef struct _js {
 	thread_mutex_t lock;
 	_input_guid guid;
 	void *jdev;
-	BYTE (*input_decode_event)(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *port);
+	BYTE (*input_decode_event)(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *prt);
 } _js;
 typedef struct _jstick {
 	thread_t thread;

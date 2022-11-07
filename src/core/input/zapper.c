@@ -20,9 +20,7 @@
 #include "input/zapper.h"
 #include "gui.h"
 #include "info.h"
-#include "conf.h"
 #include "ppu.h"
-#include "vs_system.h"
 #include "input/mouse.h"
 #include "tas.h"
 #include "palette.h"
@@ -83,7 +81,7 @@ void input_rd_zapper(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 					int brightness;
 					_color_RGB color = palette_RGB.in_use[screen.wr->line[y_rect][x_rect]];
 
-					brightness = (color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114);
+					brightness = (int)((color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114));
 					if (brightness > 0x80) {
 						count++;
 					}
@@ -120,9 +118,7 @@ void input_rd_zapper_vs(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 		}
 	}
 
-	if ((x_zapper <= 0) || (x_zapper >= SCR_COLUMNS) || (y_zapper <= 0) || (y_zapper >= SCR_ROWS)) {
-		light = 0;
-	} else {
+	if ((x_zapper > 0) && (x_zapper < SCR_COLUMNS) && (y_zapper > 0) && (y_zapper < SCR_ROWS)) {
 		if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) {
 			for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 				if (y_rect < 0) {
@@ -145,7 +141,7 @@ void input_rd_zapper_vs(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 						int brightness;
 						_color_RGB color = palette_RGB.in_use[screen.wr->line[y_rect][x_rect]];
 
-						brightness = (color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114);
+						brightness = (int)((color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114));
 						if (brightness > 0x80) {
 							count++;
 						}

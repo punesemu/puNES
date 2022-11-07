@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <stdlib.h>
 #include <string.h>
 #include "tape_data_recorder.h"
 #include "clock.h"
@@ -124,14 +123,14 @@ void tape_data_recorder_stop(void) {
 
 					for (i = 0 ; i < vector_total(&tape_data_recorder.data); i++) {
 						BYTE data = (*((BYTE *)vector_get(&tape_data_recorder.data, i)));
-						BYTE a = 0;
+						BYTE a;
 
 						for (a = 0; a < 8; a++) {
 							FTR_PRECISION sample = bw_high_pass(filter, data & 0x01 ? 0.50f : -0.50f);
 
 							count += 176;
 							if (count >= 39375) {
-								BYTE out = (sample * 127.0f) - 0x80;
+								BYTE out = (BYTE)(sample * 127.0f) - 0x80;
 
 								count -= 39375;
 								vector_push_back(&samples, &out);
@@ -147,8 +146,8 @@ void tape_data_recorder_stop(void) {
 
 						memset(&wav, 0x00, sizeof(_wav));
 
-						if (wave_open_file(&wav, tape_data_recorder.file, vector_total(&samples), 8, 8000, 1) == EXIT_OK) {
-							wave_write(&wav, vector_get(&samples, 0), vector_total(&samples));
+						if (wave_open_file(&wav, tape_data_recorder.file, (int)vector_total(&samples), 8, 8000, 1) == EXIT_OK) {
+							wave_write(&wav, vector_get(&samples, 0), (int)vector_total(&samples));
 							wave_close(&wav);
 							tape_data_recorder.file = wav.outfile;
 						}

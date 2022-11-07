@@ -22,9 +22,9 @@
 #include "video/gfx.h"
 #include "tas.h"
 
-INLINE static void input_turbo_buttons_standard_controller(_port *port);
+INLINE static void input_turbo_buttons_standard_controller(_port *prt);
 
-void input_wr_standard_controller(BYTE *value, BYTE nport) {
+void input_wr_standard_controller(const BYTE *value, BYTE nport) {
 	if ((r4016.value & 0x01) || ((*value) & 0x01)) {
 		port[nport].index = 0;
 	}
@@ -44,9 +44,9 @@ void input_add_event_standard_controller(BYTE index) {
 	js_jdev_read_port(&js[index], &port[index]);
 	input_turbo_buttons_standard_controller(&port[index]);
 }
-BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), DBWORD event, BYTE type, _port *port) {
-	BYTE *left = &port->data[LEFT], *right = &port->data[RIGHT];
-	BYTE *up = &port->data[UP], *down = &port->data[DOWN];
+BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), DBWORD event, BYTE type, _port *prt) {
+	BYTE *left = &prt->data[LEFT], *right = &prt->data[RIGHT];
+	BYTE *up = &prt->data[UP], *down = &prt->data[DOWN];
 
 	if (tas.type) {
 		return (EXIT_OK);
@@ -57,125 +57,125 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 			default:
 			case ROTATE_0:
 				if (cfg->hflip_screen) {
-					left = &port->data[RIGHT];
-					right = &port->data[LEFT];
+					left = &prt->data[RIGHT];
+					right = &prt->data[LEFT];
 				}
 				break;
 			case ROTATE_90:
-				left = &port->data[DOWN];
-				right = &port->data[UP];
+				left = &prt->data[DOWN];
+				right = &prt->data[UP];
 				if (cfg->hflip_screen) {
-					up = &port->data[RIGHT];
-					down = &port->data[LEFT];
+					up = &prt->data[RIGHT];
+					down = &prt->data[LEFT];
 				} else {
-					up = &port->data[LEFT];
-					down = &port->data[RIGHT];
+					up = &prt->data[LEFT];
+					down = &prt->data[RIGHT];
 				}
 				break;
 			case ROTATE_180:
 				if (cfg->hflip_screen) {
-					left = &port->data[LEFT];
-					right = &port->data[RIGHT];
+					left = &prt->data[LEFT];
+					right = &prt->data[RIGHT];
 				} else {
-					left = &port->data[RIGHT];
-					right = &port->data[LEFT];
+					left = &prt->data[RIGHT];
+					right = &prt->data[LEFT];
 				}
-				up = &port->data[DOWN];
-				down = &port->data[UP];
+				up = &prt->data[DOWN];
+				down = &prt->data[UP];
 				break;
 			case ROTATE_270:
-				left = &port->data[UP];
-				right = &port->data[DOWN];
+				left = &prt->data[UP];
+				right = &prt->data[DOWN];
 				if (cfg->hflip_screen) {
-					up = &port->data[LEFT];
-					down = &port->data[RIGHT];
+					up = &prt->data[LEFT];
+					down = &prt->data[RIGHT];
 				} else {
-					up = &port->data[RIGHT];
-					down = &port->data[LEFT];
+					up = &prt->data[RIGHT];
+					down = &prt->data[LEFT];
 				}
 				break;
 		}
 	}
 
-	if (event == port->input[type][BUT_A]) {
-		if (!port->turbo[TURBOA].active) {
-			port->data[BUT_A] = mode;
+	if (event == prt->input[type][BUT_A]) {
+		if (!prt->turbo[TURBOA].active) {
+			prt->data[BUT_A] = mode;
 		}
 		return (EXIT_OK);
-	} else if (event == port->input[type][BUT_B]) {
-		if (!port->turbo[TURBOB].active) {
-			port->data[BUT_B] = mode;
+	} else if (event == prt->input[type][BUT_B]) {
+		if (!prt->turbo[TURBOB].active) {
+			prt->data[BUT_B] = mode;
 		}
 		return (EXIT_OK);
-	} else if (event == port->input[type][SELECT]) {
-		port->data[SELECT] = mode;
+	} else if (event == prt->input[type][SELECT]) {
+		prt->data[SELECT] = mode;
 		return (EXIT_OK);
-	} else if (event == port->input[type][START]) {
-		port->data[START] = mode;
+	} else if (event == prt->input[type][START]) {
+		prt->data[START] = mode;
 		return (EXIT_OK);
-	} else if (event == port->input[type][UP]) {
+	} else if (event == prt->input[type][UP]) {
 		(*up) = mode;
 		// non possono essere premuti contemporaneamente
 		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
 			(*down) = RELEASED;
 		}
 		return (EXIT_OK);
-	} else if (event == port->input[type][DOWN]) {
+	} else if (event == prt->input[type][DOWN]) {
 		(*down) = mode;
 		// non possono essere premuti contemporaneamente
 		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
 			(*up) = RELEASED;
 		}
 		return (EXIT_OK);
-	} else if (event == port->input[type][LEFT]) {
+	} else if (event == prt->input[type][LEFT]) {
 		(*left) = mode;
 		// non possono essere premuti contemporaneamente
 		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
 			(*right) = RELEASED;
 		}
 		return (EXIT_OK);
-	} else if (event == port->input[type][RIGHT]) {
+	} else if (event == prt->input[type][RIGHT]) {
 		(*right) = mode;
 		// non possono essere premuti contemporaneamente
 		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
 			(*left) = RELEASED;
 		}
 		return (EXIT_OK);
-	} else if (event == port->input[type][TRB_A]) {
-		port->turbo[TURBOA].mode = mode;
+	} else if (event == prt->input[type][TRB_A]) {
+		prt->turbo[TURBOA].mode = mode;
 		if (mode == PRESSED) {
-			port->turbo[TURBOA].active = TRUE;
+			prt->turbo[TURBOA].active = TRUE;
 		}
 		return (EXIT_OK);
-	} else if (event == port->input[type][TRB_B]) {
-		port->turbo[TURBOB].mode = mode;
+	} else if (event == prt->input[type][TRB_B]) {
+		prt->turbo[TURBOB].mode = mode;
 		if (mode == PRESSED) {
-			port->turbo[TURBOB].active = TRUE;
+			prt->turbo[TURBOB].active = TRUE;
 		}
 		return (EXIT_OK);
 	}
 	return (EXIT_ERROR);
 }
 
-INLINE static void input_turbo_buttons_standard_controller(_port *port) {
-	if ((port->turbo[TURBOA].mode == PRESSED) || port->turbo[TURBOA].active) {
-		if (++port->turbo[TURBOA].counter == port->turbo[TURBOA].frequency) {
-			port->data[BUT_A] = PRESSED;
-			port->turbo[TURBOA].active = TRUE;
-		} else if (port->turbo[TURBOA].counter > port->turbo[TURBOA].frequency) {
-			port->data[BUT_A] = RELEASED;
-			port->turbo[TURBOA].active = FALSE;
-			port->turbo[TURBOA].counter = 0;
+INLINE static void input_turbo_buttons_standard_controller(_port *prt) {
+	if ((prt->turbo[TURBOA].mode == PRESSED) || prt->turbo[TURBOA].active) {
+		if (++prt->turbo[TURBOA].counter == prt->turbo[TURBOA].frequency) {
+			prt->data[BUT_A] = PRESSED;
+			prt->turbo[TURBOA].active = TRUE;
+		} else if (prt->turbo[TURBOA].counter > prt->turbo[TURBOA].frequency) {
+			prt->data[BUT_A] = RELEASED;
+			prt->turbo[TURBOA].active = FALSE;
+			prt->turbo[TURBOA].counter = 0;
 		}
 	}
-	if ((port->turbo[TURBOB].mode == PRESSED) || port->turbo[TURBOB].active) {
-		if (++port->turbo[TURBOB].counter == port->turbo[TURBOB].frequency) {
-			port->data[BUT_B] = PRESSED;
-			port->turbo[TURBOB].active = TRUE;
-		} else if (port->turbo[TURBOB].counter > port->turbo[TURBOB].frequency) {
-			port->data[BUT_B] = RELEASED;
-			port->turbo[TURBOB].active = FALSE;
-			port->turbo[TURBOB].counter = 0;
+	if ((prt->turbo[TURBOB].mode == PRESSED) || prt->turbo[TURBOB].active) {
+		if (++prt->turbo[TURBOB].counter == prt->turbo[TURBOB].frequency) {
+			prt->data[BUT_B] = PRESSED;
+			prt->turbo[TURBOB].active = TRUE;
+		} else if (prt->turbo[TURBOB].counter > prt->turbo[TURBOB].frequency) {
+			prt->data[BUT_B] = RELEASED;
+			prt->turbo[TURBOB].active = FALSE;
+			prt->turbo[TURBOB].counter = 0;
 		}
 	}
 }
