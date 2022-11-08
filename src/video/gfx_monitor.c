@@ -222,14 +222,14 @@ BYTE gfx_monitor_set_res(int w, int h, BYTE adaptive_rrate, BYTE change_rom_mode
 					rrate = 50.0f;
 				}
 				// cerco un refresh rate compatibile con la regione della rom
-				if ((mode_new = search_rrate(list, nmodes, rrate)) == -1) {
-					mode_new = search_rrate(list, nmodes, rrate * 2);
-				};
+				if ((mode_new = search_rrate(list, nmodes, (int)rrate)) == -1) {
+					mode_new = search_rrate(list, nmodes, (int)rrate * 2);
+				}
 			}
 			// se la ricerca precedente non e' andata a buon fine
 			// cerco una risoluzione con il refresh rate attuale
 			if (mode_new == -1) {
-				mode_new = search_rrate(list, nmodes, mode_info_org->rounded_rrate);
+				mode_new = search_rrate(list, nmodes, (int)mode_info_org->rounded_rrate);
 			}
 			// altrimenti prendo la prima risoluzione con un
 			// refresh rate superiore a 50
@@ -353,6 +353,7 @@ void gfx_monitor_edid_parse(const uint8_t *edid, _monitor_info *mi) {
 			mi->edid = me;
 		} else {
 			free(me);
+			me = NULL;
 		}
 
 		ustrncpy(mi->desc, make_display_name(me), usizeof(mi->desc));
@@ -593,24 +594,12 @@ static void edid_decode_display_descriptor(const uint8_t *desc, _monitor_edid *m
 		case 0xFE:
 			edid_decode_lf_string(desc + 5, 13, me->dsc_string);
 			break;
-		case 0xFD:
-			// Range Limits
-			break;
-		case 0xFB:
-			// Color Point
-			break;
-		case 0xFA:
-			// Timing Identifications
-			break;
-		case 0xF9:
-			// Color Management
-			break;
-		case 0xF8:
-			// Timing Codes
-			break;
-		case 0xF7:
-			// Established Timings
-			break;
+		case 0xFD: // Range Limits
+		case 0xFB: // Color Point
+		case 0xFA: // Timing Identifications
+		case 0xF9: // Color Management
+		case 0xF8: // Timing Codes
+		case 0xF7: // Established Timings
 		case 0x10:
 			break;
 	}
@@ -638,9 +627,11 @@ static uTCHAR *make_display_name(const _monitor_edid *me) {
 
 	memset(buff, 0x00, sizeof(buff));
 
-	if (me) {
-		vendor = pnp_find_vendor(me->manufacturer_code);
+	if (!me) {
+		return (buff);
 	}
+
+	vendor = pnp_find_vendor(me->manufacturer_code);
 
 	if (!vendor) {
 		BYTE is_good = TRUE;
@@ -659,15 +650,15 @@ static uTCHAR *make_display_name(const _monitor_edid *me) {
 	}
 
 	if (vendor) {
-		if (me && (me->w_mm != -1) && me->h_mm) {
+		w_mm = -1;
+		h_mm = -1;
+
+		if ((me->w_mm != -1) && me->h_mm) {
 			w_mm = me->w_mm;
 			h_mm = me->h_mm;
-		} else if (me && me->ndtimings) {
+		} else if (me->ndtimings) {
 			w_mm = me->dtimings[0].w_mm;
 			h_mm = me->dtimings[0].h_mm;
-		} else {
-			w_mm = -1;
-			h_mm = -1;
 		}
 
 		if ((w_mm != -1) && (h_mm != -1)) {
@@ -680,7 +671,7 @@ static uTCHAR *make_display_name(const _monitor_edid *me) {
 
 		if (inches > 0) {
 			usnprintf(buff, usizeof(buff), uL("" uPs("") " %d\""), vendor, inches);
-		} else if (vendor) {
+		} else {
 			usnprintf(buff, usizeof(buff), uL("" uPs("")), vendor);
 		}
 	}
@@ -732,7 +723,7 @@ static void print_info(void) {
 	if (monitor.nres) {
 		ufprintf(stderr, uL("gfx_monitor : common resolutions :\n"));
 
-		for (int a = 0; a < monitor.nres; a++) {
+		for (a = 0; a < monitor.nres; a++) {
 			_monitor_resolution *mr = &monitor.resolutions[a];
 
 			ufprintf(stderr, uL("\t%2d : %4dx%-4d\n"), a, mr->w, mr->h);

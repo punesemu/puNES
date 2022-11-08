@@ -22,7 +22,7 @@
 #define put_pixel(type, p0, p1)\
 	*(type *)(dstpix + p0 + p1) = (type)pixel
 
-INLINE static void scale_surface1x(_screen_buffer *sb, uint32_t *palette, uint32_t pitch, void *pix);
+INLINE static void scale_surface1x(_screen_buffer *sb, const uint32_t *palette, uint32_t pitch, void *pix);
 
 struct _scl {
 	WORD sx;
@@ -65,7 +65,7 @@ void scale_surface_preview_1x(void *sb, uint32_t pitch, void *pix) {
 	scale_surface1x((_screen_buffer *)sb, gfx.palette, pitch, pix);
 }
 
-INLINE void scale_surface1x(_screen_buffer *sb, uint32_t *palette, uint32_t pitch, void *pix) {
+INLINE void scale_surface1x(_screen_buffer *sb, const uint32_t *palette, uint32_t pitch, void *pix) {
 	const uint32_t dstpitch = pitch;
 	uint8_t *dstpix = (uint8_t *)pix;
 	uint32_t TH0, TW0;

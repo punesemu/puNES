@@ -78,7 +78,7 @@
 #define PIXEL22_5   (*(dp+dpL+dpL+2)) = Interp5(wrgb[6], wrgb[8]);
 #define PIXEL22_C   (*(dp+dpL+dpL+2)) = wrgb[5];
 
-void hq3x_32_rb(WORD *screen, void *pix, uint32_t *palette) {
+void hq3x_32_rb(WORD *screen, void *pix, const uint32_t *palette) {
 	BYTE k;
 	SWORD prev_line, next_line;
 	WORD w[10];
@@ -107,13 +107,13 @@ void hq3x_32_rb(WORD *screen, void *pix, uint32_t *palette) {
 
 	for (; hqnx.sy < hqnx.lines; ++hqnx.sy) {
 		if (hqnx.sy > 0) {
-			prev_line = -spL;
+			prev_line = (SWORD)-spL;
 		} else {
 			prev_line = 0;
 		}
 
 		if (hqnx.sy < (hqnx.lines - 1)) {
-			next_line = spL;
+			next_line = (SWORD)spL;
 		} else {
 			next_line = 0;
 		}
@@ -3113,6 +3113,8 @@ void hq3x_32_rb(WORD *screen, void *pix, uint32_t *palette) {
 					}
 					break;
 				}
+				default:
+					break;
 			}
 			screen++;
 			dp += 3;

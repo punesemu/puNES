@@ -43,9 +43,9 @@ extern _hqnx hqnx;
 
 EXTERNC void hqx_init(void);
 EXTERNC void hqNx(void);
-EXTERNC void hq2x_32_rb(WORD *screen, void *pix, uint32_t *palette);
-EXTERNC void hq3x_32_rb(WORD *screen, void *pix, uint32_t *palette);
-EXTERNC void hq4x_32_rb(WORD *screen, void *pix, uint32_t *palette);
+EXTERNC void hq2x_32_rb(WORD *screen, void *pix, const uint32_t *palette);
+EXTERNC void hq3x_32_rb(WORD *screen, void *pix, const uint32_t *palette);
+EXTERNC void hq4x_32_rb(WORD *screen, void *pix, const uint32_t *palette);
 
 #undef EXTERNC
 

@@ -17,7 +17,6 @@
  */
 
 #include <stdlib.h>
-#include <math.h>
 #include "pause.h"
 #include "conf.h"
 #include "video/gfx.h"
@@ -36,7 +35,7 @@ BYTE pause_init(void) {
 	}
 	palette = (uint32_t *)pause_effect.palette;
 
-	if (!(pause_effect.ntsc = malloc(sizeof(nes_ntsc_t)))) {;
+	if (!(pause_effect.ntsc = malloc(sizeof(nes_ntsc_t)))) {
 		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}

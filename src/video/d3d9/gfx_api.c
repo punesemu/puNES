@@ -48,22 +48,22 @@ void gfx_api_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ra
 		return;
 	}
 
-	dst.left = rect->x;
-	dst.top = rect->y;
-	dst.right = rect->x + rect->w;
-	dst.bottom = rect->y + rect->h;
+	dst.left = (LONG)rect->x;
+	dst.top = (LONG)rect->y;
+	dst.right = (LONG)(rect->x + rect->w);
+	dst.bottom = (LONG)(rect->y + rect->h);
 
 	if (IDirect3DSurface9_LockRect(d3d9.overlay.map0, &lock_dst, &dst, D3DLOCK_NO_DIRTY_UPDATE) != D3D_OK) {
 		fprintf(stderr, "D3D9 : LockRect overlay surface error\n");
 		return;
 	}
 
-	pitch = (rect->w * (float)(gfx.bit_per_pixel / 8.0f));
-	pitch_dpr = pitch * device_pixel_ratio;
+	pitch = (LONG)(rect->w * ((float)gfx.bit_per_pixel / 8.0f));
+	pitch_dpr = (LONG)((double)pitch * device_pixel_ratio);
 	psrc = (unsigned char *)surface;
 	pdst = (unsigned char *)lock_dst.pBits;
 
-	for (h = rect->h; h > 0; h--) {
+	for (h = (int)rect->h; h > 0; h--) {
 		memcpy(pdst, psrc, pitch);
 		psrc += pitch_dpr;
 		pdst += lock_dst.Pitch;

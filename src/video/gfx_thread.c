@@ -18,14 +18,11 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include "thread_def.h"
 #include "video/gfx_thread.h"
 #include "video/gfx.h"
 #include "info.h"
-#include "clock.h"
 #include "ppu.h"
-#include "fps.h"
 #include "gui.h"
 
 static thread_funct(gfx_thread_loop, void *arg);

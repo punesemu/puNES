@@ -41,7 +41,7 @@ extern nes_ntsc_setup_t ntsc_format[3];
 
 EXTERNC BYTE ntsc_init(void);
 EXTERNC void ntsc_quit(void);
-EXTERNC void ntsc_set(nes_ntsc_t *ntsc, BYTE create_palette, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out);
+EXTERNC void ntsc_set(nes_ntsc_t *ntsc, BYTE create_palette, BYTE color, const BYTE *palette_base, const BYTE *palette_in, BYTE *palette_out);
 EXTERNC void ntsc_rgb_modifier(nes_ntsc_t *ntsc, BYTE *palette, SWORD min, SWORD red, SWORD green, SWORD blue);
 EXTERNC void ntsc_effect_parameters_changed(void);
 EXTERNC void ntsc_effect_parameters_default(void);

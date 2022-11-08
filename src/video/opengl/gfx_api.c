@@ -44,13 +44,13 @@ uint32_t gfx_api_color(BYTE a, BYTE r, BYTE g, BYTE b) {
 	return (gui_color(a, r, g, b));
 }
 void gfx_api_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ratio) {
-	if (((rect->x + rect->w) > opengl.overlay.rect.w) || ((rect->y + rect->h) > opengl.overlay.rect.h)) {
+	if (((rect->x + rect->w) > (float)opengl.overlay.rect.w) || ((rect->y + rect->h) > (float)opengl.overlay.rect.h)) {
 		return;
 	}
 
 	glBindTexture(GL_TEXTURE_2D, opengl.overlay.id);
-	glPixelStoref(GL_UNPACK_ROW_LENGTH, rect->w * device_pixel_ratio);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, rect->x, rect->y, rect->w, rect->h, TI_FRM, TI_TYPE, surface);
+	glPixelStoref(GL_UNPACK_ROW_LENGTH, rect->w * (float)device_pixel_ratio);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, (GLint)rect->x, (GLint)rect->y, (GLsizei)rect->w, (GLsizei)rect->h, TI_FRM, TI_TYPE, surface);
 	glPixelStoref(GL_UNPACK_ROW_LENGTH, 0);
 }
 void gfx_api_apply_filter(void) {

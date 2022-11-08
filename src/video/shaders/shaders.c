@@ -56,6 +56,7 @@ BYTE shaders_set(int shader) {
 	shader_se_set_default(&shader_effect);
 
 	switch (shader) {
+		default:
 		case NO_SHADER:
 			shdpass();
 			sp->code = SHDCODE(shc_no_filter);
@@ -90,7 +91,7 @@ BYTE shaders_set(int shader) {
 			sp->linear = TEXTURE_LINEAR_DISAB;
 			type->x = SHADER_SCALE_ABSOLUTE;
 			type->y = SHADER_SCALE_ABSOLUTE;
-			abs->x = _SCR_COLUMNS_NOBRD * emu_power_of_two(cfg->scale);
+			abs->x = (unsigned int)(_SCR_COLUMNS_NOBRD * (float)emu_power_of_two(cfg->scale));
 			abs->y = SCR_ROWS * emu_power_of_two(cfg->scale);
 			se_soft_stretch();
 			break;
@@ -100,7 +101,7 @@ BYTE shaders_set(int shader) {
 			sp->linear = TEXTURE_LINEAR_DISAB;
 			type->x = SHADER_SCALE_ABSOLUTE;
 			type->y = SHADER_SCALE_ABSOLUTE;
-			abs->x = _SCR_COLUMNS_NOBRD * emu_power_of_two(cfg->scale);
+			abs->x = (unsigned int)(_SCR_COLUMNS_NOBRD * (float)emu_power_of_two(cfg->scale));
 			abs->y = SCR_ROWS * emu_power_of_two(cfg->scale);
 			se_soft_stretch();
 			break;
@@ -133,7 +134,7 @@ BYTE shaders_set(int shader) {
 			sp->linear = TEXTURE_LINEAR_DISAB;
 			type->x = SHADER_SCALE_ABSOLUTE;
 			type->y = SHADER_SCALE_ABSOLUTE;
-			abs->x = _SCR_COLUMNS_NOBRD * emu_power_of_two(cfg->scale);
+			abs->x = (unsigned int)(_SCR_COLUMNS_NOBRD * (float)emu_power_of_two(cfg->scale));
 			abs->y = SCR_ROWS * emu_power_of_two(cfg->scale);
 			se_soft_stretch();
 			break;
