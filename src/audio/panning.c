@@ -40,7 +40,7 @@ BYTE ch_stereo_panning_init(void) {
 
 	snd.channels = 2;
 
-	panning.angle = (ANG * M_PI) / 180.0f;
+	panning.angle = (ANG * (float)M_PI) / 180.0f;
 	//panning.sq = sqrtf(2.0f) / 2.0f;
 	panning.sq = 1.0f;
 	panning.cs = cosf(panning.angle);
@@ -53,8 +53,8 @@ void ch_stereo_panning_reset(void) {}
 void ch_stereo_panning_tick(SWORD value) {
 	float mixer = (float)value / 65535.0f;
 	SWORD actual[2] = {
-		(panning.sq * (panning.cs - panning.si) * mixer) * 65535.0f,
-		(panning.sq * (panning.cs + panning.si) * mixer) * 65535.0f
+		(SWORD)((panning.sq * (panning.cs - panning.si) * mixer) * 65535.0f),
+		(SWORD)((panning.sq * (panning.cs + panning.si) * mixer) * 65535.0f)
 	};
 
 	// sinistro

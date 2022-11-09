@@ -89,7 +89,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 		if (channel.sweep.enabled && channel.sweep.shift && (channel.timer >= 8)) {\
 			SWORD offset = channel.timer >> channel.sweep.shift;\
 			if (channel.sweep.negate) {\
-				channel.timer += ((SWORD) negative_adjust - offset);\
+				channel.timer += ((SWORD)negative_adjust - offset);\
 			} else if ((channel.timer + offset) <= 0x800) {\
 				channel.timer += offset;\
 			}\
@@ -330,13 +330,13 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 	square.sequencer = 0
 #define init_nla_table(p, t)\
 {\
-	WORD i;\
+	unsigned int i;\
 	for (i = 0; i < LENGTH(nla_table.pulse); i++) {\
-		double vl = 95.52 / (8128.0 / (double) i + 100.0);\
+		double vl = 95.52 / (8128.0 / (double)i + 100.0);\
 		nla_table.pulse[i] = (vl * p);\
 	}\
 	for (i = 0; i < LENGTH(nla_table.tnd); i++) {\
-		double vl = 163.67 / (24329.0 / (double) i + 100.0);\
+		double vl = 163.67 / (24329.0 / (double)i + 100.0);\
 		nla_table.tnd[i] = (vl * t);\
 	}\
 }
@@ -355,9 +355,9 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 #define extra_out(ch)\
 	(ch * cfg->apu.channel[APU_EXTRA])
 #define pulse_output()\
-	nla_table.pulse[(int) (s1_out + s2_out)]
+	nla_table.pulse[(int)(s1_out + s2_out)]
 #define tnd_output()\
-	nla_table.tnd[(int) ((tr_out * 3) + (ns_out * 2) + dmc_out)]
+	nla_table.tnd[(int)((tr_out * 3) + (ns_out * 2) + dmc_out)]
 
 typedef struct _config_apu {
 	BYTE channel[APU_MASTER + 1];

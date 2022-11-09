@@ -18,7 +18,6 @@
 
 #include "audio/snd.h"
 #include "thread_def.h"
-#include "emu.h"
 #include "info.h"
 #include "conf.h"
 #include "audio/blipbuf.h"
@@ -220,9 +219,7 @@ void snd_thread_pause(void) {
 		while (snd_thread.in_run == TRUE) {
 			if (snd_dummy_enabled) {
 				gui_sleep(1);
-			} else {
-				;
-			}
+			} else {}
 		}
 	}
 }
@@ -360,7 +357,7 @@ BYTE snd_playback_start(void) {
 
 		// dimensione in bytes del buffer
 		snd.period.size = snd.period.samples * snd.channels * sizeof(*cbd.write);
-		snd.buffer.size = snd.period.size * ((snd.samplerate / snd.period.samples) + 1);
+		snd.buffer.size = (int32_t)snd.period.size * ((snd.samplerate / (int32_t)snd.period.samples) + 1);
 
 		snd.buffer.limit.low = snd.period.size * 2;
 		snd.buffer.limit.high = snd.period.size * 7;
@@ -510,7 +507,7 @@ uTCHAR *snd_capture_device_id(int dev) {
 void snd_list_devices(void) {
 	IXAudio2 *ixa2 = NULL;
 	UINT32 devcount = 0;
-	UINT32 i = 0;
+	UINT32 i;
 
 	snd_list_devices_quit();
 
@@ -660,7 +657,7 @@ static void STDMETHODCALLTYPE OnVoiceProcessPassEnd(UNUSED(IXAudio2VoiceCallback
 static void STDMETHODCALLTYPE OnStreamEnd(UNUSED(IXAudio2VoiceCallback *callback)) {}
 static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callback), UNUSED(void *pBufferContext)) {
 	WORD len = xaudio2.buffer.AudioBytes;
-	int avail = xaudio2.buffer.PlayLength;
+	int avail = (int)xaudio2.buffer.PlayLength;
 
 	snd_thread.in_run = TRUE;
 
@@ -741,7 +738,7 @@ static thread_funct(snd_dummy_thread_loop, UNUSED(void *data)) {
 
 	while (TRUE) {
 		WORD len = xaudio2.buffer.AudioBytes;
-		int avail = xaudio2.buffer.PlayLength;
+		int avail = (int)xaudio2.buffer.PlayLength;
 
 		if (snd_thread.action == ST_STOP) {
 			snd_thread.in_run = FALSE;
@@ -755,7 +752,6 @@ static thread_funct(snd_dummy_thread_loop, UNUSED(void *data)) {
 		snd_thread.in_run = TRUE;
 
 		if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps_fast_forward_enabled() | !snd.buffer.start) {
-			;
 		} else {
 			void *read = (void *)cbd.read;
 
@@ -766,7 +762,6 @@ static thread_funct(snd_dummy_thread_loop, UNUSED(void *data)) {
 			}
 
 			wave_from_audio_emulator_write((SWORD *)read, avail);
-			;
 
 			cbd.bytes_available -= len;
 			cbd.samples_available -= avail;

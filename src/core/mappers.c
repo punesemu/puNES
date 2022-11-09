@@ -145,7 +145,6 @@ BYTE map_init(void) {
 			} else if (info.crc32.total == 0xE2D14080) { // Akumajou Special - Boku Dracula-kun (J) [p1][t1][b1].nes
 				info.mapper.submapper = VRC4UNL;
 			}
-
 			if (info.mapper.submapper == VRC4BMC) {
 				map_init_VRC4BMC();
 			} else if (info.mapper.submapper == VRC4T230) {
