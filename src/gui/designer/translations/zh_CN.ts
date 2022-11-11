@@ -12,19 +12,19 @@
     <name>dlgCfgNSCode</name>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>默认</translation>
     </message>
     <message>
       <source>Unset</source>
-      <translation type="unfinished">Unset</translation>
+      <translation>清除</translation>
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>提交</translation>
     </message>
     <message>
       <source>Discard</source>
-      <translation type="unfinished">Discard</translation>
+      <translation>丢弃</translation>
     </message>
   </context>
   <context>
@@ -53,43 +53,43 @@
     <name>dlgKeyboard</name>
     <message>
       <source>Virtual Keyboard</source>
-      <translation type="unfinished">Virtual Keyboard</translation>
+      <translation>虚拟键盘</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>小霸王键盘</translation>
     </message>
     <message>
       <source>Options</source>
-      <translation type="unfinished">Options</translation>
+      <translation>选项</translation>
     </message>
     <message>
       <source>Size</source>
-      <translation type="unfinished">Size</translation>
+      <translation>尺寸</translation>
     </message>
     <message>
       <source>1.0x</source>
-      <translation type="unfinished">1.0x</translation>
+      <translation>1.0 倍</translation>
     </message>
     <message>
       <source>1.5x</source>
-      <translation type="unfinished">1.5x</translation>
+      <translation>1.5 倍</translation>
     </message>
     <message>
       <source>2.0x</source>
-      <translation type="unfinished">2.0x</translation>
+      <translation>2.0 倍</translation>
     </message>
     <message>
       <source>2.5x</source>
-      <translation type="unfinished">2.5x</translation>
+      <translation>2.5 倍</translation>
     </message>
     <message>
       <source>Mode</source>
-      <translation type="unfinished">Mode</translation>
+      <translation>模式</translation>
     </message>
     <message>
       <source>Setup</source>
-      <translation type="unfinished">Setup</translation>
+      <translation>设置</translation>
     </message>
     <message>
       <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
