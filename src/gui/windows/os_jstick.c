@@ -436,6 +436,8 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 						jsx->min = 0;
 						jsx->max = 255;
 						break;
+					default:
+						break;
 				}
 				jsx->used = TRUE;
 				jsx->center = 0;
@@ -599,21 +601,21 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 			__js_axs_validate(JS_XINPUT_BRIGHTTRIGGER, state.Gamepad.bRightTrigger);
 #undef __js_axs_validate
 
-			jdev->data.button[JS_XINPUT_GAMEPAD_A].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_A);
-			jdev->data.button[JS_XINPUT_GAMEPAD_B].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_B);
-			jdev->data.button[JS_XINPUT_GAMEPAD_X].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_X);
-			jdev->data.button[JS_XINPUT_GAMEPAD_Y].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_Y);
-			jdev->data.button[JS_XINPUT_GAMEPAD_LEFT_SHOULDER].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER);
-			jdev->data.button[JS_XINPUT_GAMEPAD_RIGHT_SHOULDER].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER);
-			jdev->data.button[JS_XINPUT_GAMEPAD_LEFT_THUMB].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB);
-			jdev->data.button[JS_XINPUT_GAMEPAD_RIGHT_THUMB].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB);
-			jdev->data.button[JS_XINPUT_GAMEPAD_BACK].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK);
-			jdev->data.button[JS_XINPUT_GAMEPAD_START].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_START);
-			jdev->data.button[JS_XINPUT_GAMEPAD_GUIDE].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_GUIDE);
-			jdev->data.button[JS_XINPUT_GAMEPAD_DPAD_UP].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP);
-			jdev->data.button[JS_XINPUT_GAMEPAD_DPAD_DOWN].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN);
-			jdev->data.button[JS_XINPUT_GAMEPAD_DPAD_LEFT].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT);
-			jdev->data.button[JS_XINPUT_GAMEPAD_DPAD_RIGHT].value = !!(state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT);
+			jdev->data.button[JS_XINPUT_GAMEPAD_A].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_A) != 0;
+			jdev->data.button[JS_XINPUT_GAMEPAD_B].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) != 0;
+			jdev->data.button[JS_XINPUT_GAMEPAD_X].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_X) != 0;
+			jdev->data.button[JS_XINPUT_GAMEPAD_Y].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_Y) != 0;
+			jdev->data.button[JS_XINPUT_GAMEPAD_LEFT_SHOULDER].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) != 0;
+			jdev->data.button[JS_XINPUT_GAMEPAD_RIGHT_SHOULDER].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) != 0;
+			jdev->data.button[JS_XINPUT_GAMEPAD_LEFT_THUMB].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) != 0;
+			jdev->data.button[JS_XINPUT_GAMEPAD_RIGHT_THUMB].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) != 0;
+			jdev->data.button[JS_XINPUT_GAMEPAD_BACK].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) != 0;
+			jdev->data.button[JS_XINPUT_GAMEPAD_START].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_START) != 0;
+			jdev->data.button[JS_XINPUT_GAMEPAD_GUIDE].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_GUIDE) != 0;
+			jdev->data.button[JS_XINPUT_GAMEPAD_DPAD_UP].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) != 0;
+			jdev->data.button[JS_XINPUT_GAMEPAD_DPAD_DOWN].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) != 0;
+			jdev->data.button[JS_XINPUT_GAMEPAD_DPAD_LEFT].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) != 0;
+			jdev->data.button[JS_XINPUT_GAMEPAD_DPAD_RIGHT].value = (state.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) != 0;
 
 			error = FALSE;
 		}
@@ -664,7 +666,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 						_js_button *jsx = &jdev->data.button[a];
 
 						if (jsx->used && (events[i].dwOfs == jsx->offset_di8)) {
-							jsx->value = !!events[i].dwData;
+							jsx->value = events[i].dwData != 0;
 						}
 					}
 				}
@@ -752,7 +754,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 					_js_button *jsx = &jdev->data.button[i];
 
 					if (jsx->used) {
-						jsx->value = !!state.rgbButtons[i];
+						jsx->value = state.rgbButtons[i] != 0;
 					}
 				}
 

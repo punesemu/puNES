@@ -77,7 +77,7 @@ void extcl_cpu_wr_mem_413(WORD address, BYTE value) {
 			break;
 		case 0xA000:
 		case 0xB000:
-			irqA12.enable = !!(address & 0x1000);
+			irqA12.enable = (address & 0x1000) != 0;
 			if (!irqA12.enable) {
 				irq.high &= ~EXT_IRQ;
 			}

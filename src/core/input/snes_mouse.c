@@ -30,7 +30,7 @@ struct _snes_mouse {
 void input_init_snes_mouse(void) {
 	memset(&snes_mouse, 0x00, sizeof(snes_mouse));
 }
-void input_wr_snes_mouse(BYTE *value, BYTE nport) {
+void input_wr_snes_mouse(const BYTE *value, BYTE nport) {
 	if ((r4016.value & 0x01) && !((*value) & 0x01)) {
 		BYTE dx, dy;
 		int gx, gy;

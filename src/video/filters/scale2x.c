@@ -51,9 +51,9 @@
 #define put_pixel(type, pixel, p0, p1)\
 	*(type *)(dstpix + p0 + p1) = (type)palette[pixel]
 
-INLINE static void scale2x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
-INLINE static void scale3x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
-INLINE static void scale4x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
+INLINE static void scale2x(WORD **screen_index, const uint32_t *palette, uint32_t pitch, void *pix);
+INLINE static void scale3x(WORD **screen_index, const uint32_t *palette, uint32_t pitch, void *pix);
+INLINE static void scale4x(WORD **screen_index, const uint32_t *palette, uint32_t pitch, void *pix);
 
 struct _scl2x {
 	WORD sx;
@@ -96,7 +96,7 @@ void scaleNx(void) {
 	}
 }
 
-INLINE static void scale2x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix) {
+INLINE static void scale2x(WORD **screen_index, const uint32_t *palette, uint32_t pitch, void *pix) {
 	const DBWORD dstpitch = pitch;
 	WORD E0, E1, E2, E3, B, D, E, F, H;
 	uint8_t *dstpix = (uint8_t *)pix;
@@ -133,7 +133,7 @@ INLINE static void scale2x(WORD **screen_index, uint32_t *palette, uint32_t pitc
 		scl2x.oy++;
 	}
 }
-INLINE static void scale3x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix) {
+INLINE static void scale3x(WORD **screen_index, const uint32_t *palette, uint32_t pitch, void *pix) {
 	const DBWORD dstpitch = pitch;
 	WORD A, B, C, D, E, F, G, H, I;
 	WORD E0, E1, E2, E3, E4, E5, E6, E7, E8;
@@ -186,7 +186,7 @@ INLINE static void scale3x(WORD **screen_index, uint32_t *palette, uint32_t pitc
 		scl2x.oy++;
 	}
 }
-INLINE static void scale4x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix) {
+INLINE static void scale4x(WORD **screen_index, const uint32_t *palette, uint32_t pitch, void *pix) {
 	WORD x, y, width, height;
 	DBWORD srcpitch, dstpitch = pitch;
 	uint8_t *srcpix, *dstpix = (uint8_t *)pix;

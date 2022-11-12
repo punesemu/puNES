@@ -130,10 +130,10 @@ typedef struct _array_pointers_port {
 	_port *port[PORT_MAX];
 } _array_pointers_port;
 typedef struct _port_funct {
-	void (*input_wr)(BYTE *value, BYTE nport);
+	void (*input_wr)(const BYTE *value, BYTE nport);
 	void (*input_rd)(BYTE *value, BYTE nport, BYTE shift);
 	void (*input_add_event)(BYTE index);
-	BYTE (*input_decode_event)(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *port);
+	BYTE (*input_decode_event)(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *prt);
 } _port_funct;
 typedef struct _nes_keyboard {
 	BYTE enabled;
@@ -162,7 +162,7 @@ extern BYTE (*input_rd_reg[2])(BYTE openbus, BYTE nport);
 
 EXTERNC void input_init(BYTE set_cursor);
 
-EXTERNC void input_wr_disabled(BYTE *value, BYTE nport);
+EXTERNC void input_wr_disabled(const BYTE *value, BYTE nport);
 EXTERNC void input_rd_disabled(BYTE *value, BYTE nport, BYTE shift);
 
 EXTERNC BYTE input_draw_target();

@@ -21,8 +21,6 @@
 
 #include "common.h"
 
-#define STEREO_DELAY_DEFAULT 0.3f
-
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else

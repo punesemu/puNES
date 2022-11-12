@@ -165,7 +165,7 @@ INLINE static void prg_swap_K3033(WORD address, WORD value) {
 	} else {
 		// NROM mode
 		BYTE bank = ((k3033.reg & 0x0040) >> 1) | (k3033.reg & 0x001f);
-		BYTE mode = !!(k3033.reg & 0x03);
+		BYTE mode = (k3033.reg & 0x03) != 0;
 
 		bank = ((address & 0x4000) ? bank | mode : bank & ~mode);
 		value = (bank << 1) | ((address & 0x2000) >> 13);

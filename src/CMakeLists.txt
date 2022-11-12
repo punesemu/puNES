@@ -648,40 +648,14 @@ target_link_options(punes
 	)
 
 target_link_libraries(punes
-	$<IF:$<VERSION_LESS:${QT_VERSION},5.15.0>,
-		Qt5::Core
-		Qt5::Network
-		Qt5::Widgets
-		Qt5::Svg
-		Qt5::Gui,
-		Qt::Core
-		Qt::Network
-		Qt::Widgets
-		Qt::Svg
-		Qt::Gui
-		$<IF:$<VERSION_GREATER_EQUAL:${QT_VERSION},6.0.0>,Qt::OpenGLWidgets,>
-	>
+	${QT_LIBS_USED}
 	Threads::Threads
 	$<$<BOOL:${ENABLE_FFMPEG}>:PkgConfig::LIBAV>
 	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:Sndio::Sndio>
 	$<$<PLATFORM_ID:FreeBSD,OpenBSD>:UsbHid::UsbHid>
 	$<$<PLATFORM_ID:Linux>:ALSA::ALSA>
 	$<$<PLATFORM_ID:Linux>:PkgConfig::UDEV>
-	$<$<PLATFORM_ID:Windows>:
-		$<$<BOOL:${ENABLE_WIN_STATIC_QT}>:${WIN_STATIC_QT_LIBS}>
-		ws2_32
-		imm32
-		cg
-		$<IF:$<BOOL:${ENABLE_OPENGL}>,
-			$<$<BOOL:${ENABLE_OPENGL_CG}>:cgGL>,
-			cgD3D9
-			d3d9
-			$<IF:$<STREQUAL:${HOST_CPU},i386>,
-				d3dx9,
-				d3dx9_41
-			>
-		>
-	>
+	${WIN_LIBS_USED}
 	$<$<BOOL:${X11_FOUND}>:X11::Xrandr>
 	OpenGL::GL
 	$<$<PLATFORM_ID:Linux>:OpenGL::GLX>

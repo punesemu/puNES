@@ -262,7 +262,7 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 						case MAP387:
 						case MAP394:
 						case MAP397:
-							jyasic.nmt.extended_mode = !!(value & 0x20);
+							jyasic.nmt.extended_mode = (value & 0x20) != 0;
 							break;
 						case MAP90:
 						case MAP388:

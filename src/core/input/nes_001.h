@@ -24,4 +24,4 @@
 BYTE input_wr_reg_nes_001(BYTE value);
 BYTE input_rd_reg_nes_001(BYTE openbus, BYTE nport);
 
-#endif /* INPUT_NES_001 */
+#endif /* INPUT_NES_001_H */

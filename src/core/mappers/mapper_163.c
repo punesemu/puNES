@@ -151,7 +151,7 @@ void extcl_ppu_256_to_319_163(void) {
 	if ((!spr_ev.count_plus || (spr_ev.tmp_spr_plus == spr_ev.count_plus)) && (r2000.size_spr == 16)) {
 		ppu.spr_adr = r2000.spt_adr;
 	} else {
-		ppu_spr_adr((ppu.frame_x & 0x0038) >> 3);
+		ppu_spr_adr((ppu.frame_x & 0x0038) >> 3)
 	}
 	mode1_bpp(ppu.spr_adr);
 }
@@ -161,7 +161,7 @@ void extcl_ppu_320_to_34x_163(void) {
 	}
 
 	if (ppu.frame_x == 323) {
-		ppu_spr_adr(7);
+		ppu_spr_adr(7)
 	}
 
 	ppu_bck_adr(r2000.bpt_adr, r2006.value);
@@ -181,7 +181,7 @@ INLINE static void mode1_bpp(WORD address) {
 	BYTE pa13 = (address & 0x2000) >> 13;
 
 	if (!m163.pa13 && pa13) {
-		m163.pa9 = !!(address & 0x0200);
+		m163.pa9 = (address & 0x0200) != 0;
 	}
 	m163.pa13 = pa13;
 }

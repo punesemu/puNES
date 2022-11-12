@@ -115,7 +115,7 @@ void inverterROM::setPins(UNUSED(BYTE select), BYTE newClock, BYTE newData) {
 		} else if (state == 18) { // terminating bit
 			state = 0;
 		} else {
-			output = !!(result & 0x80);
+			output = (result & 0x80) != 0;
 			result <<= 1;
 		}
 	}

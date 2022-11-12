@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "conf.h"
 #include "input/arkanoid.h"
 #include "input/mouse.h"
@@ -30,24 +29,24 @@ enum _arkanoid_enum {
 _arkanoid arkanoid[PORT_BASE];
 
 void input_init_arkanoid(void) {
-	BYTE i;
+	int i;
 
 	for (i = 0; i <= PORT2; i++) {
 		arkanoid[i].x = arkanoid[i].rdx = 98;
 		arkanoid[i].button = 0;
 	}
 }
-void input_wr_arkanoid(BYTE *value, BYTE nport) {
+void input_wr_arkanoid(const BYTE *value, BYTE nport) {
 	static const float ratio = (float)ark_rows / (float)ark_stop_x;
 
 	nport &= 0x01;
 
-	if ((r4016.value & 0x01) && !((*value) & 0x01)) {;
+	if ((r4016.value & 0x01) && !((*value) & 0x01)) {
 		int x, y;
 
 		input_read_mouse_coords(&x, &y);
 
-		arkanoid[nport].x = ark_start_x + ((float)x * ratio);
+		arkanoid[nport].x = ark_start_x + (int)((float)x * ratio);
 
 		if (arkanoid[nport].x < ark_start_x) {
 			arkanoid[nport].x = ark_start_x;

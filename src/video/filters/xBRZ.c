@@ -19,7 +19,6 @@
 #include "video/gfx.h"
 #include "ppu.h"
 
-void xBRZ_init(void) {}
 void xBRZ(void) {
 	xbrz_scale(gfx.filter.factor, screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
 		SCR_COLUMNS, SCR_ROWS);

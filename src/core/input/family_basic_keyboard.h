@@ -21,7 +21,7 @@
 
 #include "input.h"
 
-void input_wr_family_basic_keyboard(BYTE *value, BYTE nport);
+void input_wr_family_basic_keyboard(const BYTE *value, BYTE nport);
 void input_rd_family_basic_keyboard(BYTE *value, BYTE nport, BYTE shift);
 
 void input_add_event_family_basic_keyboard(BYTE index);

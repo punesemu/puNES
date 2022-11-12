@@ -66,7 +66,7 @@ BYTE ch_stereo_delay_init(void) {
 			break;
 	}
 
-	delay.max_pos = delay.samples * cfg->stereo_delay;
+	delay.max_pos = (DBWORD)((double)delay.samples * cfg->stereo_delay);
 	delay.pos = 0;
 	delay.size = delay.samples * sizeof(*snd.cache->write);
 
@@ -155,7 +155,7 @@ void ch_stereo_delay_set(void) {
 	SWORD *here;
 	int i;
 
-	delay.max_pos = delay.samples * cfg->stereo_delay;
+	delay.max_pos = (DBWORD)((double)delay.samples * cfg->stereo_delay);
 	delay.pos = 0;
 
 	for (i = 0; i < 2; i++) {

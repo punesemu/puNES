@@ -258,7 +258,7 @@ BYTE snd_playback_start(void) {
 
 		// dimensione in bytes del buffer software
 		snd.period.size = snd.period.samples * snd.channels * sizeof(*cbd.write);
-		snd.buffer.size = snd.period.size * ((snd.samplerate / snd.period.samples) + 1);
+		snd.buffer.size = (int32_t)snd.period.size * ((snd.samplerate / snd.period.samples) + 1);
 
 		snd.buffer.limit.low = snd.period.size * 2;
 		snd.buffer.limit.high = snd.period.size * 7;
@@ -684,7 +684,7 @@ static BYTE alsa_playback_hwparams_set(void) {
 	// set the [mmap]/[rw interleaved read/write] format
 	alsa.snd_writei = snd_pcm_mmap_writei;
 
-	if ((rc = snd_pcm_hw_params_set_access(alsa.playback, params, SND_PCM_ACCESS_MMAP_INTERLEAVED)) < 0) {
+	if (snd_pcm_hw_params_set_access(alsa.playback, params, SND_PCM_ACCESS_MMAP_INTERLEAVED) < 0) {
 		if ((rc = snd_pcm_hw_params_set_access(alsa.playback, params, SND_PCM_ACCESS_RW_INTERLEAVED)) < 0) {
 			fprintf(stderr, "Access type not available for playback: %s\n", snd_strerror(rc));
 			return (EXIT_ERROR);
@@ -723,7 +723,7 @@ static BYTE alsa_playback_hwparams_set(void) {
 		fprintf(stderr, "Unable to set period size for playback: %s\n", snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
-	snd.period.samples = tmp;
+	snd.period.samples = (int32_t)tmp;
 
 	// set the buffer size
 	tmp = snd.period.samples * 3;
@@ -831,13 +831,13 @@ static thread_funct(alsa_thread_loop, UNUSED(void *data)) {
 
 		// controllo quanti frames alsa sono richiesti
 		if ((avail = snd_pcm_avail_update(alsa.playback)) < 0) {
-			fprintf(stderr, "snd_pcm_avail_update() failed (%s)\n", snd_strerror(avail));
-			alsa_xrun_recovery(alsa.playback, avail);
+			fprintf(stderr, "snd_pcm_avail_update() failed (%s)\n", snd_strerror((int)avail));
+			alsa_xrun_recovery(alsa.playback, (int)avail);
 			continue;
 		}
 
 		avail = (avail > snd.period.samples ? snd.period.samples : avail);
-		len = avail * snd.channels * sizeof(*cbd.write);
+		len = (int32_t)(avail * snd.channels * sizeof(*cbd.write));
 
 		if (info.no_rom | info.turn_off | info.pause | rwnd.active | fps_fast_forward_enabled() | !snd.buffer.start) {
 			alsa_wr_buf((void *)cbd.silence, avail);
@@ -853,11 +853,11 @@ static thread_funct(alsa_thread_loop, UNUSED(void *data)) {
 				read = (void *)cbd.silence;
 			}
 
-			wave_from_audio_emulator_write((SWORD *)read, avail);
+			wave_from_audio_emulator_write((SWORD *)read, (int)avail);
 			alsa_wr_buf(read, avail);
 
 			cbd.bytes_available -= len;
-			cbd.samples_available -= avail;
+			cbd.samples_available -= (int32_t)avail;
 
 #if !defined (RELEASE)
 			if (((void *)cbd.write > (void *)cbd.read) && ((void *)cbd.write < (void *)(cbd.read + len))) {
@@ -925,7 +925,7 @@ INLINE static BYTE alsa_xrun_recovery(snd_pcm_t *handle, int err) {
 INLINE static void alsa_wr_buf(void *buffer, snd_pcm_sframes_t avail) {
 	int rc;
 
-	if ((rc = alsa.snd_writei(alsa.playback, buffer, avail)) < 0) {
+	if ((rc = (int)alsa.snd_writei(alsa.playback, buffer, avail)) < 0) {
 		fprintf(stderr, "snd_pcm_xxxx_writei failed (%s)\n", snd_strerror(rc));
 		alsa_xrun_recovery(alsa.playback, rc);
 	}

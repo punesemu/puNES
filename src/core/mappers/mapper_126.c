@@ -119,7 +119,7 @@ void extcl_cpu_wr_mem_126(WORD address, BYTE value) {
 			prg_fix_126(mmc3.bank_to_update);
 			chr_fix_126(mmc3.bank_to_update);
 		} else if (reg == 2) {
-			BYTE mask = 0x03 >> !!(m126.reg[2] & 0x10);
+			BYTE mask = 0x03 >> ((m126.reg[2] & 0x10) != 0);
 
 			m126.reg[2] = (m126.reg[2] & ~mask) | (value & mask);
 			chr_fix_126(mmc3.bank_to_update);

@@ -21,7 +21,6 @@
 
 #include "common.h"
 
-void xBRZ_init(void);
 void xBRZ(void);
 void xBRZ_mt(void);
 

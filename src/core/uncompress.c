@@ -161,8 +161,8 @@ uint32_t uncompress_archive_counter(_uncompress_archive *archive, BYTE type) {
 	}
 }
 BYTE uncompress_archive_extract_file(_uncompress_archive *archive, BYTE type) {
-	BYTE rc = UNCOMPRESS_EXIT_ERROR_ON_UNCOMP;
 	uint32_t selected = 0;
+	BYTE rc;
 
 	switch (uncompress_archive_counter(archive, type)) {
 		case 0:
@@ -209,7 +209,6 @@ uTCHAR *uncompress_archive_extracted_file_name(_uncompress_archive *archive, BYT
 		default:
 		case UNCOMPRESS_TYPE_ALL:
 		case UNCOMPRESS_TYPE_ROM:
-			type = UNCOMPRESS_TYPE_ROM;
 			selected = archive->rom.storage_index;
 			break;
 		case UNCOMPRESS_TYPE_PATCH:

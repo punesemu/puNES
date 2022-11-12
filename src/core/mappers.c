@@ -25,7 +25,6 @@
 #include "irqA12.h"
 #include "irql2f.h"
 #include "tas.h"
-#include "uncompress.h"
 #include "unif.h"
 #include "gui.h"
 #include "vs_system.h"
@@ -35,7 +34,7 @@ void map_prg_ram_battery_file(uTCHAR *prg_ram_file);
 _mapper mapper;
 
 BYTE map_init(void) {
-	BYTE i;
+	unsigned int i;
 
 	/*
 	 * di default la routine di salvataggio
@@ -146,7 +145,6 @@ BYTE map_init(void) {
 			} else if (info.crc32.total == 0xE2D14080) { // Akumajou Special - Boku Dracula-kun (J) [p1][t1][b1].nes
 				info.mapper.submapper = VRC4UNL;
 			}
-
 			if (info.mapper.submapper == VRC4BMC) {
 				map_init_VRC4BMC();
 			} else if (info.mapper.submapper == VRC4T230) {
@@ -1243,9 +1241,6 @@ BYTE map_init(void) {
 			map_init_126(MAP534);
 			break;
 		case 536:
-			// https://forums.nesdev.org/viewtopic.php?p=240335#p240335
-			map_init_195();
-			break;
 		case 537:
 			// https://forums.nesdev.org/viewtopic.php?p=240335#p240335
 			map_init_195();
@@ -1727,12 +1722,10 @@ void map_bat_rd_default(FILE *fp) {
 void map_bat_wr_default(FILE *fp) {
 	/* ci scrivo i dati */
 	if (tas.type == NOTAS) {
+		size_t len = fwrite(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp);
 
-		int pippo = fwrite(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp);
-		//if (fwrite(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp) < 1) {
-		if (pippo < 1) {
+		if (len < 1) {
 			perror(NULL);
-			//fprintf(stderr, "error on write battery memory\n");
 		}
 	}
 }

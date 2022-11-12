@@ -172,7 +172,7 @@ INLINE static void mode1_bpp(WORD address) {
 	BYTE pa13 = (address & 0x2000) >> 13;
 
 	if (!fs304.pa13 && pa13) {
-		fs304.pa9 = !!(address & 0x0200);
+		fs304.pa9 = (address & 0x0200) != 0;
 	}
 	fs304.pa13 = pa13;
 }

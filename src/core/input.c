@@ -60,7 +60,7 @@ BYTE (*input_wr_reg)(BYTE value);
 BYTE (*input_rd_reg[2])(BYTE openbus, BYTE nport);
 
 void input_init(BYTE set_cursor) {
-	BYTE a;
+	int a;
 
 	r4016.value = 0;
 
@@ -120,6 +120,8 @@ void input_init(BYTE set_cursor) {
 					break;
 				case PORT2:
 					SET_ADD_EVENT(a, input_add_event_nsf_mouse);
+					break;
+				default:
 					break;
 			}
 		// VS SYSTEM
@@ -200,13 +202,14 @@ void input_init(BYTE set_cursor) {
 		port[a].index = 0;
 
 		{
-			BYTE b, state = RELEASED;
+			BYTE state = RELEASED;
+			int b;
 
 			if (((port[a].type_pad == CTRL_PAD_AUTO) && (machine.type != DENDY)) || (port[a].type_pad == CTRL_PAD_ORIGINAL)) {
 				state = PRESSED;
 			}
 
-			for (b = 0; b < LENGTH(port[a].data); b++) {
+			for (b = 0; b < (int)LENGTH(port[a].data); b++) {
 				if (b < 8) {
 					if (info.reset >= HARD) {
 						port[a].data[b] = RELEASED;
@@ -276,11 +279,11 @@ void input_init(BYTE set_cursor) {
 	gui_overlay_update();
 }
 
-void input_wr_disabled(UNUSED(BYTE *value), UNUSED(BYTE nport)) {}
+void input_wr_disabled(UNUSED(const BYTE *value), UNUSED(BYTE nport)) {}
 void input_rd_disabled(UNUSED(BYTE *value), UNUSED(BYTE nport),	UNUSED(BYTE shift)) {}
 
 BYTE input_draw_target(void) {
-	BYTE i;
+	int i;
 
 	if (vs_system.enabled == TRUE) {
 		if ((info.extra_from_db & VSZAPPER) && (cfg->input.hide_zapper_cursor == FALSE)) {

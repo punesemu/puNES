@@ -22,12 +22,9 @@
 #include <math.h>
 #include "ines.h"
 #include "rom_mem.h"
-#include "fds.h"
 #include "mem_map.h"
 #include "mappers.h"
-#include "emu.h"
 #include "conf.h"
-#include "clock.h"
 #include "cheat.h"
 #include "info.h"
 #include "vs_system.h"
@@ -39,7 +36,7 @@
 void search_in_database(void);
 BYTE ines10_search_in_database(void *rom_mem);
 void nes20_submapper(void);
-void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, float divider);
+void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, double divider);
 BYTE nes20_ram_size(BYTE mode);
 
 _ines ines;
@@ -49,7 +46,8 @@ BYTE ines_load_rom(void) {
 
 	{
 		static const uTCHAR rom_ext[2][10] = { uL(".nes\0"), uL(".NES\0") };
-		BYTE i, found = TRUE;
+		unsigned int i;
+		BYTE found = TRUE;
 		FILE *fp;
 
 		fp = ufopen(info.rom.file, uL("rb"));
@@ -414,7 +412,7 @@ BYTE ines_load_rom(void) {
 }
 
 void search_in_database(void) {
-	WORD i;
+	unsigned int i;
 
 	// cerco nel database
 	for (i = 0; i < LENGTH(dblist); i++) {
@@ -506,7 +504,8 @@ void search_in_database(void) {
 				case UNIF_MAPPER:
 					unif.internal_mapper = info.mapper.submapper;
 					break;
-
+				default:
+					break;
 			}
 			if (info.mirroring_db == UNK_VERTICAL) {
 				mirroring_V();
@@ -555,7 +554,7 @@ BYTE ines10_search_in_database(void *rom_mem) {
 		}
 
 		// calcolo l'sha1 della PRG Rom
-		sha1_csum(rom->data + position, len, info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
+		sha1_csum(rom->data + position, (int)len, info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
 		position += (info.prg.rom.banks_16k * 0x4000);
 	}
 
@@ -565,7 +564,7 @@ BYTE ines10_search_in_database(void *rom_mem) {
 			fprintf(stderr, "truncated CHR ROM\n");
 		}
 		// calcolo anche l'sha1 della CHR rom
-		sha1_csum(rom->data + position, info.chr.rom.banks_8k * 0x2000, info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
+		sha1_csum(rom->data + position, (int)(info.chr.rom.banks_8k * 0x2000), info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
 		position += (info.chr.rom.banks_8k * 0x2000);
 	}
 
@@ -687,12 +686,14 @@ void nes20_submapper(void) {
 					break;
 			}
 			break;
+		default:
+			break;
 	}
 }
-void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, float divider) {
+void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, double divider) {
 	if (((*reg1) & 0x0F00) == 0x0F00) {
-		int exponent = ((*reg1) & 0x00FC) >> 2;
-		float len = (size_t)pow(2, exponent) * ((((*reg1) & 0x0003) * 2) + 1);
+		unsigned int exponent = ((*reg1) & 0x00FC) >> 2;
+		double len = pow(2, exponent) * ((((*reg1) & 0x0003) * 2) + 1);
 
 		(*reg2) = (int)ceil(len / divider);
 		(*reg1) = (*reg2) / 2;
@@ -726,6 +727,8 @@ BYTE nes20_ram_size(BYTE mode) {
 			return (128);
 		case 15:
 			return (0);
+		default:
+			break;
 	}
 	return (0);
 }

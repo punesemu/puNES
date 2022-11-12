@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include "video/gfx.h"
 #include "ppu.h"
-#include "overscan.h"
 #include "palette.h"
 #include "conf.h"
 #include "clock.h"
@@ -44,7 +43,7 @@ BYTE ntsc_init(void) {
 void ntsc_quit(void) {
 	free(ntsc_filter.ntsc);
 }
-void ntsc_set(nes_ntsc_t *ntsc, BYTE create_palette, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out) {
+void ntsc_set(nes_ntsc_t *ntsc, BYTE create_palette, BYTE color, const BYTE *palette_base, const BYTE *palette_in, BYTE *palette_out) {
 	nes_ntsc_setup_t *format = create_palette ? &palette : &ntsc_filter.format[cfg->ntsc_format];
 	double saturation = format->saturation;
 
@@ -70,19 +69,19 @@ void ntsc_set(nes_ntsc_t *ntsc, BYTE create_palette, BYTE color, BYTE *palette_b
 	format->decoder_matrix = 0;
 	format->swapped = 0;
 
-	if (color) {
-		switch (color) {
-			// Sony CXA2025AS US
-			case PALETTE_SONY: {
-				static float matrix[6] = { 1.630, 0.317, -0.378, -0.466, -1.089, 1.677 };
+	switch (color) {
+		// Sony CXA2025AS US
+		case PALETTE_SONY: {
+			static float matrix[6] = { 1.630f, 0.317f, -0.378f, -0.466f, -1.089f, 1.677f };
 
-				format->decoder_matrix = matrix;
-				break;
-			}
-			case PALETTE_MONO:
-				format->saturation = -1;
-				break;
+			format->decoder_matrix = matrix;
+			break;
 		}
+		case PALETTE_MONO:
+			format->saturation = -1;
+			break;
+		default:
+			break;
 	}
 
 	nes_ntsc_init(ntsc, format);
@@ -96,12 +95,12 @@ void ntsc_set(nes_ntsc_t *ntsc, BYTE create_palette, BYTE color, BYTE *palette_b
 
 	format->saturation = saturation;
 }
-void ntsc_rgb_modifier(nes_ntsc_t *ntsc, BYTE *palette, SWORD min, SWORD red, SWORD green, SWORD blue) {
-	_color_RGB *pRGB = (_color_RGB *)palette;
+void ntsc_rgb_modifier(nes_ntsc_t *ntsc, BYTE *palette_out, SWORD min, SWORD red, SWORD green, SWORD blue) {
+	_color_RGB *pRGB = (_color_RGB *)palette_out;
 	WORD i;
 
 	// prima ottengo la paletta monocromatica
-	ntsc_set(ntsc, TRUE, PALETTE_MONO, 0, 0, palette);
+	ntsc_set(ntsc, TRUE, PALETTE_MONO, 0, 0, palette_out);
 	// quindi la modifico
 	for (i = 0; i < NUM_COLORS; i++, pRGB++) {
 		// rosso
@@ -110,7 +109,7 @@ void ntsc_rgb_modifier(nes_ntsc_t *ntsc, BYTE *palette, SWORD min, SWORD red, SW
 		change_color(&pRGB->b, min, blue);
 	}
 	// ed infine utilizzo la nuova
-	ntsc_set(ntsc, TRUE, 0, 0, palette, palette);
+	ntsc_set(ntsc, TRUE, 0, 0, palette_out, palette_out);
 }
 void ntsc_effect_parameters_changed(void) {
 	ntsc_set(NULL, FALSE, 0, 0, (BYTE *)palette_RGB.noswap, 0);
@@ -208,7 +207,7 @@ void ntsc_surface(void) {
 	}
 
 	nes_ntsc_blit((nes_ntsc_t *)gfx.filter.data.palette, screen.rd->data, SCR_COLUMNS, burst_phase, SCR_COLUMNS, SCR_ROWS,
-		gfx.filter.data.pix, gfx.filter.data.pitch);
+		gfx.filter.data.pix, (long)gfx.filter.data.pitch);
 
 	if (ntsc_filter.format[cfg->ntsc_format].merge_fields) {
 		burst_count = 0;
@@ -257,7 +256,7 @@ void ntsc_surface(void) {
 }
 
 static void change_color(BYTE *color, SWORD min, SWORD mod) {
-	SWORD tmp = (*color) + mod;
+	SWORD tmp = (SWORD)((*color) + mod);
 
 	(*color) = (tmp < 0 ? min : (tmp > 0xFF ? 0xFF : tmp));
 }

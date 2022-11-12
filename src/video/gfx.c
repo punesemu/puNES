@@ -18,7 +18,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include "video/gfx_thread.h"
 #include "conf.h"
 #include "clock.h"
@@ -209,17 +208,14 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 			width = gfx.w[PASS0] = gfx.w[NO_OVERSCAN] = NES_NTSC_OUT_WIDTH(SCR_COLUMNS);
 			gfx.filter.width_pixel = (float)nes_ntsc_out_chunk / (float)nes_ntsc_in_chunk;
 			if (overscan.enabled) {
-				width -= ((float)(overscan.borders->left + overscan.borders->right) * gfx.filter.width_pixel);
+				width -= (WORD)((float)(overscan.borders->left + overscan.borders->right) * gfx.filter.width_pixel);
 			}
-			switch (scale) {
-				case X2:
-					gfx.width_pixel = gfx.filter.width_pixel;
-					break;
-				default:
-					width = ((float)width / 2.0f) * (float)scale;
-					gfx.w[NO_OVERSCAN] = ((float)gfx.w[NO_OVERSCAN] / 2.0f) * (float)scale;
-					gfx.width_pixel = (gfx.filter.width_pixel / 2.0f) * (float)scale;
-					break;
+			if (scale == X2) {
+				gfx.width_pixel = gfx.filter.width_pixel;
+			} else {
+				width = (WORD)(((float)width / 2.0f) * (float)scale);
+				gfx.w[NO_OVERSCAN] = (SDBWORD)(((float)gfx.w[NO_OVERSCAN] / 2.0f) * (float)scale);
+				gfx.width_pixel = (gfx.filter.width_pixel / 2.0f) * (float)scale;
 			}
 		} else {
 			width = gfx.rows * scale;
@@ -367,7 +363,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 			gfx.PSS = TRUE;
 		}
 
-		if (shaders_set(shader) == EXIT_ERROR) {
+		if (shaders_set((int)shader) == EXIT_ERROR) {
 			umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
 			if (old_shader == shader) {
 				fprintf(stderr, "GFX: Error on loading the shader, switch to \"No shader\"\n");
@@ -395,15 +391,15 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 
 			// Pixel Aspect Ratio
 			if (cfg->pixel_aspect_ratio && !fullscreen) {
-				gfx.w[VIDEO_MODE] = (gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio);
+				gfx.w[VIDEO_MODE] = (SDBWORD)((float)gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio);
 
 				if (overscan.enabled && !cfg->oscan_black_borders) {
-					float brd = 0;
+					float brd;
 
 					brd = (float)gfx.w[VIDEO_MODE] / (float)SCR_COLUMNS;
-					brd *= (overscan.borders->right + overscan.borders->left);
+					brd = brd * (float)(overscan.borders->right + overscan.borders->left);
 
-					gfx.w[VIDEO_MODE] -= brd;
+					gfx.w[VIDEO_MODE] -= (SDBWORD)brd;
 				}
 			}
 
@@ -411,7 +407,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 			gui_set_window_size();
 		}
 
-		gfx.device_pixel_ratio = gui_device_pixel_ratio();
+		gfx.device_pixel_ratio = (float)gui_device_pixel_ratio();
 
 		switch (gfx_api_context_create()) {
 			case EXIT_ERROR:
@@ -436,7 +432,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		gfx.w_pr = ((float)gfx.vp.w / gfx.device_pixel_ratio) / (float)SCR_COLUMNS;
 		gfx.h_pr = ((float)gfx.vp.h / gfx.device_pixel_ratio) / (float)SCR_ROWS;
 	} else {
-		gfx.w_pr = (float)(gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio) / (float)SCR_COLUMNS;
+		gfx.w_pr = ((float)gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio) / (float)SCR_COLUMNS;
 		gfx.h_pr = (float)gfx.h[NO_OVERSCAN] / (float)SCR_ROWS;
 	}
 
@@ -518,7 +514,7 @@ void gfx_palette_update(void) {
 
 	// memorizzo i colori della paletta nel formato di visualizzazione
 	for (i = 0; i < NUM_COLORS; i++) {
-		gfx.palette[i] = gfx_os_color(palette_RGB.in_use[i].r, palette_RGB.in_use[i].g, palette_RGB.in_use[i].b);
+		gfx.palette[i] = gfx_os_color(palette_RGB.in_use[i].r, palette_RGB.in_use[i].g, palette_RGB.in_use[i].b)
 	}
 }
 uint32_t gfx_color(BYTE a, BYTE r, BYTE g, BYTE b) {
@@ -527,10 +523,10 @@ uint32_t gfx_color(BYTE a, BYTE r, BYTE g, BYTE b) {
 void gfx_cursor_init(void) {
 	gui_cursor_init();
 	gui_cursor_set();
-};
+}
 void gfx_cursor_set(void) {
 	gui_cursor_set();
-};
+}
 void gfx_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ratio) {
 	if (!cfg->txt_on_screen) {
 		return;

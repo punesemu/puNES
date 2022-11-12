@@ -1,4 +1,3 @@
-set(WIN_STATIC_QT_LIBS "")
 set(win_static_qt_libs_list
 	plugins/platforms/libqwindows.a
 	libQt5PlatformSupport.a
@@ -23,7 +22,7 @@ foreach(win_static_qt_lib ${win_static_qt_libs_list})
 	message(STATUS "Looking for ${file_name}")
 	if(EXISTS ${QT_LIB_LOC}/${win_static_qt_lib})
 		message(STATUS "Looking for ${file_name} - found")
-		set(WIN_STATIC_QT_LIBS ${WIN_STATIC_QT_LIBS} ${QT_LIB_LOC}/${win_static_qt_lib})
+		set(WIN_LIBS_USED ${WIN_LIBS_USED} ${QT_LIB_LOC}/${win_static_qt_lib})
 
 		if(file_name STREQUAL "libqwindows.a")
 			add_compile_definitions(QT5_PLUGIN_QWINDOWS)
@@ -36,7 +35,7 @@ foreach(win_static_qt_lib ${win_static_qt_libs_list})
 				if(NOT USBHID_LIB)
 					message(FATAL_ERROR "uxtheme library not found")
 				endif()
-				set(WIN_STATIC_QT_LIBS ${WIN_STATIC_QT_LIBS} ${UXTHEME_LIB})
+				set(WIN_LIBS_USED ${WIN_LIBS_USED} ${UXTHEME_LIB})
 			endif()
 		elseif(file_name STREQUAL "libqgif.a")
 			add_compile_definitions(QT_PLUGIN_QGIF)

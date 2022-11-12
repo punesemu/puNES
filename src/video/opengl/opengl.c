@@ -50,11 +50,11 @@ static void opengl_shader_delete(_shader *shd);
 static void opengl_shader_print_log(GLuint obj, BYTE ret);
 #endif
 static void opengl_shader_uni_texture_clear(_shader_uniforms_tex *sut);
-static void opengl_shader_uni_texture(_shader_uniforms_tex *uni, GLint prg, GLchar *fmt, ...);
+static void opengl_shader_uni_texture(_shader_uniforms_tex *sut, GLuint prg, GLchar *fmt, ...);
 static GLint opengl_shader_get_uni(GLuint prog, const char *param);
 static GLint opengl_shader_get_atr(GLuint prog, const char *param);
 static void opengl_vertex_buffer_set(_vertex_buffer *vb, _texture_rect *rect);
-static GLint opengl_integer_get(const GLenum penum);
+static GLint opengl_integer_get(GLenum penum);
 static void opengl_matrix_4x4_identity(_math_matrix_4x4 *mat);
 static void opengl_matrix_4x4_ortho(_math_matrix_4x4 *mat, GLfloat left, GLfloat right,
 	GLfloat bottom, GLfloat top, GLfloat znear, GLfloat zfar);
@@ -255,9 +255,9 @@ BYTE opengl_context_create(void) {
 
 	// surface
 	{
-		opengl.surface.w = w;
-		opengl.surface.h = h;
-		opengl.surface.pitch = w * sizeof(uint32_t);
+		opengl.surface.w = (GLint)w;
+		opengl.surface.h = (GLint)h;
+		opengl.surface.pitch = (GLint)(w * sizeof(uint32_t));
 
 		if ((opengl.surface.pixels = malloc(opengl.surface.pitch * h)) == NULL) {
 			opengl_context_delete(FALSE);
@@ -285,18 +285,18 @@ BYTE opengl_context_create(void) {
 			// alle dimensioni corrette, la ridimensiona alla vecchia risoluzione creando una dimensione dell'opengl surface
 			// maggiore di quella effettiva. Siccome lo 0 dell'asse verticale e' posto in basso, l'immagine verrebbe al di sotto
 			// dello schermo visibile quindi devo 'alzarla'.
-			vp->y = (gfx.h[VIDEO_MODE] < gfx.h[FSCR_RESIZE]) ? (gfx.h[FSCR_RESIZE] - gfx.h[VIDEO_MODE]) * gfx.device_pixel_ratio : 0;
+			vp->y = (gfx.h[VIDEO_MODE] < gfx.h[FSCR_RESIZE]) ? (float)(gfx.h[FSCR_RESIZE] - gfx.h[VIDEO_MODE]) * gfx.device_pixel_ratio : 0;
 			vp->w = (float)gfx.w[VIDEO_MODE] * gfx.device_pixel_ratio;
 			vp->h = (float)gfx.h[VIDEO_MODE] * gfx.device_pixel_ratio;
 
 			if (!cfg->stretch) {
 				if (cfg->integer_scaling) {
-					int factor = vmw > vmh
+					int factor = (int)(vmw > vmh
 						? ratio >= ratio_vm ? vmw / mw : vmh / mh
-						: ratio >= ratio_vm ? vmh / mh : vmw / mw;
+						: ratio >= ratio_vm ? vmh / mh : vmw / mw);
 
-					vp->w = mw * factor;
-					vp->h = mh * factor;
+					vp->w = mw * (float)factor;
+					vp->h = mh * (float)factor;
 				} else {
 					if (vmw > vmh) {
 						if (ratio >= ratio_vm) {
@@ -361,29 +361,29 @@ BYTE opengl_context_create(void) {
 		} else {
 			vp->x = 0;
 			vp->y = 0;
-			vp->w = gfx.w[VIDEO_MODE];
-			vp->h = gfx.h[VIDEO_MODE];
+			vp->w = (float)gfx.w[VIDEO_MODE];
+			vp->h = (float)gfx.h[VIDEO_MODE];
 
 			if (overscan.enabled && !cfg->oscan_black_borders) {
-				float h = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_180) ?
+				float hrz = (float)((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_180) ?
 					cfg->hflip_screen ? overscan.borders->left : overscan.borders->right :
-					cfg->hflip_screen ? overscan.borders->right : overscan.borders->left;
-				float v = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
-					overscan.borders->up : overscan.borders->down;
+					cfg->hflip_screen ? overscan.borders->right : overscan.borders->left);
+				float vrt = (float)((cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
+					overscan.borders->up : overscan.borders->down);
 
-				vp->x = (-h * gfx.width_pixel) * gfx.pixel_aspect_ratio;
-				vp->y = -v * (float)cfg->scale;
+				vp->x = (-hrz * gfx.width_pixel) * gfx.pixel_aspect_ratio;
+				vp->y = -vrt * (float)cfg->scale;
 				vp->w = (float)gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio;
 				vp->h = (float)gfx.h[NO_OVERSCAN];
 			}
 
 			if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
-				float x = vp->x, w = vp->w;
+				float vpx = vp->x, vpw = vp->w;
 
 				vp->x = vp->y;
-				vp->y = x;
+				vp->y = vpx;
 				vp->w = vp->h;
-				vp->h = w;
+				vp->h = vpw;
 			}
 
 			vp->x *= gfx.device_pixel_ratio;
@@ -473,8 +473,8 @@ BYTE opengl_context_create(void) {
 		_shader *shd = &opengl.overlay.shader;
 		BYTE rotate = FALSE;
 		float ow, oh;
-		float vmw = gfx.w[VIDEO_MODE];
-		float vmh = gfx.h[VIDEO_MODE];
+		float vmw = (float)gfx.w[VIDEO_MODE];
+		float vmh = (float)gfx.h[VIDEO_MODE];
 
 		if (cfg->fullscreen) {
 			float div;
@@ -520,9 +520,9 @@ BYTE opengl_context_create(void) {
 			oh = tmp;
 		}
 
-		opengl_texture_simple_create(&opengl.overlay, ow, oh, TRUE);
+		opengl_texture_simple_create(&opengl.overlay, (GLuint)ow, (GLuint)oh, TRUE);
 
-		gui_overlay_set_size(ow, oh);
+		gui_overlay_set_size((int)ow, (int)oh);
 
 		glGenBuffers(1, &shd->vbo);
 
@@ -612,7 +612,7 @@ void opengl_draw_scene(void) {
 	static GLuint prev_type = MS_MEM;
 #endif
 	const _texture_simple *scrtex;
-	GLuint offset_x = 0, offset_y = 0;
+	GLint offset_x = 0, offset_y = 0;
 	GLuint w = opengl.surface.w, h = opengl.surface.h;
 	GLuint sindex, i;
 
@@ -629,15 +629,15 @@ void opengl_draw_scene(void) {
 	glBindTexture(GL_TEXTURE_2D, scrtex->id);
 
 	if (overscan.enabled) {
-		offset_x = overscan.borders->left * gfx.filter.width_pixel;
+		offset_x = (GLint)((float)overscan.borders->left * gfx.filter.width_pixel);
 		offset_y = overscan.borders->up * gfx.filter.factor;
-		w -= (overscan.borders->left + overscan.borders->right) * gfx.filter.width_pixel;
-		h -= (overscan.borders->up + overscan.borders->down) * gfx.filter.factor;
+		w -= (GLuint)((float)(overscan.borders->left + overscan.borders->right) * gfx.filter.width_pixel);
+		h -= (GLuint)((overscan.borders->up + overscan.borders->down) * gfx.filter.factor);
 	}
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, opengl.surface.w);
 	glPixelStorei(GL_UNPACK_SKIP_PIXELS, offset_x);
 	glPixelStorei(GL_UNPACK_SKIP_ROWS, offset_y);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, offset_x, offset_y, w, h, TI_FRM, TI_TYPE, opengl.surface.pixels);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, offset_x, offset_y, (GLsizei)w, (GLsizei)h, TI_FRM, TI_TYPE, opengl.surface.pixels);
 	glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 	glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
@@ -675,14 +675,14 @@ void opengl_draw_scene(void) {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		glViewport(texture->vp.x, texture->vp.y, texture->vp.w, texture->vp.h);
+		glViewport((GLint)texture->vp.x, (GLint)texture->vp.y, (GLsizei)texture->vp.w, (GLsizei)texture->vp.h);
 		glBindTexture(GL_TEXTURE_2D, id);
 		if (sp->mipmap_input) {
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 		opengl_shader_filter(sp->linear, sp->mipmap_input, (cfg->interpolation || gfx.PSS), &mag, &min);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLint)mag);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLint)min);
 		if (texture->shader.type == MS_CGP) {
 #if defined (WITH_OPENGL_CG)
 			if (prev_type != MS_CGP) {
@@ -747,19 +747,19 @@ void opengl_draw_scene(void) {
 	// overlay
 	if (cfg->txt_on_screen && (gui_overlay_is_updated() == TRUE)) {
 		float vpx = 0;
-		float vpy = (gfx.h[VIDEO_MODE] < gfx.h[FSCR_RESIZE]) ? (gfx.h[FSCR_RESIZE] - gfx.h[VIDEO_MODE]) * gfx.device_pixel_ratio : 0;
-		float vpw = opengl.video_mode.w * gfx.device_pixel_ratio;
-		float vph = opengl.video_mode.h * gfx.device_pixel_ratio;
+		float vpy = (gfx.h[VIDEO_MODE] < gfx.h[FSCR_RESIZE]) ? (float)(gfx.h[FSCR_RESIZE] - gfx.h[VIDEO_MODE]) * gfx.device_pixel_ratio : 0;
+		float vpw = (float)opengl.video_mode.w * gfx.device_pixel_ratio;
+		float vph = (float)opengl.video_mode.h * gfx.device_pixel_ratio;
 		GLuint mag, min;
 
-		glViewport(vpx, vpy, vpw, vph);
+		glViewport((GLint)vpx, (GLint)vpy, (GLsizei)vpw, (GLsizei)vph);
 		glBindTexture(GL_TEXTURE_2D, opengl.overlay.id);
 		glUseProgram(opengl.overlay.shader.glslp.prg);
 		opengl_shader_params_overlay_set(&opengl.overlay.shader);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		opengl_shader_filter(TEXTURE_LINEAR_ENAB, TRUE, FALSE, &mag, &min);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLint)mag);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLint)min);
 		glBlendFuncSeparate(GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 		glEnable(GL_BLEND);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -887,7 +887,7 @@ static void opengl_context_delete(BYTE lock) {
 	}
 }
 INLINE static void opengl_read_front_buffer(void) {
-	float w, h;
+	int w, h;
 
 	if (info.screenshot == SCRSH_ORIGINAL_SIZE) {
 		void *buffer;
@@ -895,7 +895,7 @@ INLINE static void opengl_read_front_buffer(void) {
 
 		w = SCR_COLUMNS;
 		h = SCR_ROWS;
-		stride = w * sizeof(uint32_t);
+		stride = w * (int)sizeof(uint32_t);
 
 		if ((buffer = malloc(stride * h))) {
 			emu_thread_pause();
@@ -912,8 +912,8 @@ INLINE static void opengl_read_front_buffer(void) {
 #else
 	if (info.screenshot) {
 #endif
-		w = opengl.video_mode.w * gfx.device_pixel_ratio;
-		h = opengl.video_mode.h * gfx.device_pixel_ratio;
+		w = (int)((float)opengl.video_mode.w * gfx.device_pixel_ratio);
+		h = (int)((float)opengl.video_mode.h * gfx.device_pixel_ratio);
 
 		if ((opengl.screenshot.rgb == NULL) || (opengl.screenshot.w != w) || (opengl.screenshot.h != h)) {
 			if (opengl.screenshot.rgb) {
@@ -924,11 +924,11 @@ INLINE static void opengl_read_front_buffer(void) {
 			opengl.screenshot.w = w;
 			opengl.screenshot.h = h;
 
-			if ((opengl.screenshot.walign32 = (int)w) % 32) {
+			if ((opengl.screenshot.walign32 = w) % 32) {
 				opengl.screenshot.walign32 = (w / 32) + 1;
 				opengl.screenshot.walign32 *= 32;
 			}
-			opengl.screenshot.stride = opengl.screenshot.walign32 * sizeof(uint32_t);
+			opengl.screenshot.stride = opengl.screenshot.walign32 * (int)sizeof(uint32_t);
 
 			if ((opengl.screenshot.rgb = malloc(opengl.screenshot.stride * h)) == NULL) {
 				info.screenshot = SCRSH_NONE;
@@ -1000,7 +1000,7 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 	const _texture_rect *prev;
 	_texture_rect *rect = &texture->rect;
 	_viewport *vp = &texture->vp;
-	GLuint wrap;
+	GLint wrap;
 
 	if (index == 0) {
 		prev = &opengl.screen.tex[0].rect;
@@ -1024,60 +1024,64 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 	switch (sc->type.x) {
 		case SHADER_SCALE_DEFAULT:
 		case SHADER_SCALE_INPUT:
-			rect->base.w = (GLfloat)prev->base.w * sc->scale.x;
+			rect->base.w = (GLint)((GLfloat)prev->base.w * sc->scale.x);
 			break;
 		case SHADER_SCALE_ABSOLUTE:
 			rect->base.w = sc->abs.x;
 			break;
 		case SHADER_SCALE_VIEWPORT:
-			rect->base.w = (GLfloat)gfx.vp.w * sc->scale.x;
+			rect->base.w = (GLint)((GLfloat)gfx.vp.w * sc->scale.x);
 			break;
 	}
 	switch (sc->type.y) {
 		case SHADER_SCALE_DEFAULT:
 		case SHADER_SCALE_INPUT:
-			rect->base.h = (GLfloat)prev->base.h * sc->scale.y;
+			rect->base.h = (GLint)((GLfloat)prev->base.h * sc->scale.y);
 			break;
 		case SHADER_SCALE_ABSOLUTE:
 			rect->base.h = sc->abs.y;
 			break;
 		case SHADER_SCALE_VIEWPORT:
-			rect->base.h = (GLfloat)gfx.vp.h * sc->scale.y;
+			rect->base.h = (GLint)((GLfloat)gfx.vp.h * sc->scale.y);
 			break;
 	}
 
-	rect->w = emu_power_of_two(rect->base.w);
-	rect->h = emu_power_of_two(rect->base.h);
+	rect->w = (GLint)emu_power_of_two(rect->base.w);
+	rect->h = (GLint)emu_power_of_two(rect->base.h);
 #else
 	switch (sc->type.x) {
 		case SHADER_SCALE_DEFAULT:
 		case SHADER_SCALE_INPUT:
-			rect->w = (GLfloat)prev->w * sc->scale.x;
-			rect->base.w = (GLfloat)prev->base.w * sc->scale.x;
+			rect->base.w = (unsigned int)((GLfloat)prev->base.w * sc->scale.x);
+			rect->w = (GLint)((GLfloat)prev->w * sc->scale.x);
 			break;
 		case SHADER_SCALE_ABSOLUTE:
-			rect->w = rect->base.w = sc->abs.x;
+			rect->base.w = sc->abs.x;
+			rect->w = (GLint)rect->base.w;
 			break;
 		case SHADER_SCALE_VIEWPORT:
-			rect->w = rect->base.w = (GLfloat)gfx.vp.w * sc->scale.x;
+			rect->base.w = (unsigned int)(gfx.vp.w * sc->scale.x);
+			rect->w = (GLint)rect->base.w;
 			break;
 	}
 	switch (sc->type.y) {
 		case SHADER_SCALE_DEFAULT:
 		case SHADER_SCALE_INPUT:
-			rect->h = (GLfloat)prev->h * sc->scale.y;
-			rect->base.h = (GLfloat)prev->base.h * sc->scale.y;
+			rect->base.h = (unsigned int)((GLfloat)prev->base.h * sc->scale.y);
+			rect->h = (GLint)((GLfloat)prev->h * sc->scale.y);
 			break;
 		case SHADER_SCALE_ABSOLUTE:
-			rect->h = rect->base.h = sc->abs.y;
+			rect->base.h = sc->abs.y;
+			rect->h = (GLint)rect->base.h;
 			break;
 		case SHADER_SCALE_VIEWPORT:
-			rect->h = rect->base.h = (GLfloat)gfx.vp.h * sc->scale.y;
+			rect->base.h = (unsigned int)(gfx.vp.h * sc->scale.y);
+			rect->h = (GLint)rect->base.h;
 			break;
 	}
 
-	rect->w = emu_power_of_two(rect->w);
-	rect->h = emu_power_of_two(rect->h);
+	rect->w = (GLint)emu_power_of_two((unsigned int)rect->w);
+	rect->h = (GLint)emu_power_of_two((unsigned int)rect->h);
 #endif
 
 	if (index == shader_effect.last_pass) {
@@ -1088,8 +1092,8 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 	} else {
 		vp->x = 0;
 		vp->y = 0;
-		vp->w = rect->base.w;
-		vp->h = rect->base.h;
+		vp->w = (float)rect->base.w;
+		vp->h = (float)rect->base.h;
 	}
 
 	glGenTextures(1, &texture->id);
@@ -1164,8 +1168,8 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 
 	if (!overlay) {
 #if defined (FH_SHADERS_GEST)
-		rect->w = emu_power_of_two(rect->base.w);
-		rect->h = emu_power_of_two(rect->base.h);
+		rect->w = (GLint)emu_power_of_two(rect->base.w);
+		rect->h = (GLint)emu_power_of_two(rect->base.h);
 #else
 		// rect->w = 1024 e rect->h = 1024 sono
 		// le dimensioni che imposta retroarch
@@ -1173,16 +1177,16 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 		// sgranato ("mudlord/emboss.h" e
 		// "antialiasing/fx-aa.h" sono un esempio)
 		if ((w > 1024) || (h > 1024)) {
-			rect->w = emu_power_of_two(rect->base.w);
-			rect->h = emu_power_of_two(rect->base.h);
+			rect->w = (GLint)emu_power_of_two(rect->base.w);
+			rect->h = (GLint)emu_power_of_two(rect->base.h);
 		} else {
 			rect->w = 1024;
 			rect->h = 1024;
 		}
 #endif
 	} else {
-		rect->w = rect->base.w;
-		rect->h = rect->base.h;
+		rect->w = (GLint)rect->base.w;
+		rect->h = (GLint)rect->base.h;
 	}
 
 	shd->info.input_size[0] = (GLfloat)rect->base.w;
@@ -1212,7 +1216,8 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 }
 static BYTE opengl_texture_lut_create(_lut *lut, GLuint index) {
 	_lut_pass *lp = &shader_effect.lp[index];
-	GLuint mag, min, wrap;
+	GLuint mag, min;
+	GLint wrap;
 
 	glGenTextures(1, &lut->id);
 	glBindTexture(GL_TEXTURE_2D, lut->id);
@@ -1222,8 +1227,8 @@ static BYTE opengl_texture_lut_create(_lut *lut, GLuint index) {
 	opengl_shader_filter(lp->linear, lp->mipmap, lp->linear, &mag, &min);
 
 	switch (lp->wrap) {
-		case TEXTURE_WRAP_BORDER:
 		default:
+		case TEXTURE_WRAP_BORDER:
 			wrap = GL_CLAMP_TO_BORDER;
 			break;
 		case TEXTURE_WRAP_EDGE:
@@ -1239,8 +1244,8 @@ static BYTE opengl_texture_lut_create(_lut *lut, GLuint index) {
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (GLint)mag);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (GLint)min);
 
 	if (gui_load_lut(lut, lp->path) == EXIT_ERROR) {
 		return (EXIT_ERROR);
@@ -1316,7 +1321,7 @@ static void opengl_shader_uni_texture_clear(_shader_uniforms_tex *sut) {
 	sut->input_size = -1;
 	sut->tex_coord = -1;
 }
-static void opengl_shader_uni_texture(_shader_uniforms_tex *sut, GLint prg, GLchar *fmt, ...) {
+static void opengl_shader_uni_texture(_shader_uniforms_tex *sut, GLuint prg, GLchar *fmt, ...) {
 	char type[50], buff[100];
 	va_list ap;
 
@@ -1372,13 +1377,13 @@ static GLint opengl_shader_get_atr(GLuint prog, const char *param) {
 	return (-1);
 }
 static void opengl_vertex_buffer_set(_vertex_buffer *vb, _texture_rect *rect) {
-	GLfloat x = (GLfloat)rect->base.w / rect->w;
-	GLfloat y = (GLfloat)rect->base.h / rect->h;
+	GLfloat x = (GLfloat)rect->base.w / (GLfloat)rect->w;
+	GLfloat y = (GLfloat)rect->base.h / (GLfloat)rect->h;
 
 	vb[1].s0 = x; vb[2].t0 = y;
 	vb[3].s0 = x; vb[3].t0 = y;
 }
-static GLint opengl_integer_get(const GLenum penum) {
+static GLint opengl_integer_get(GLenum penum) {
 	GLint result = 0;
 
 	glGetIntegerv(penum, &result);
@@ -1497,7 +1502,6 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 	memset(version, 0x00, sizeof(version));
 
 	if (path && path[0]) {
-		unsigned int i;
 		char *ptr;
 
 		code = emu_file2string(path);
@@ -1672,7 +1676,8 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 	return (EXIT_OK);
 }
 INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint sindex, GLuint fcountmod, GLuint fcount) {
-	GLuint i, buffer_index = 0, texture_index = 1;
+	GLuint i, buffer_index = 0;
+	GLint texture_index = 1;
 
 	if (shd->glslp.uni.mvp >= 0) {
 		glUniformMatrix4fv(shd->glslp.uni.mvp, 1, GL_FALSE, opengl.mvp.data);
@@ -1690,7 +1695,7 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint sind
 		if (fcountmod) {
 			fcount %= fcountmod;
 		}
-		glUniform1i(shd->glslp.uni.frame_count, fcount);
+		glUniform1i(shd->glslp.uni.frame_count, (GLint)fcount);
 	}
 	if (shd->glslp.uni.frame_direction >= 0) {
 		//glUniform1i(shd->glslp.uni.frame_direction, state_manager_frame_is_reversed() ? -1 : 1);
@@ -1770,11 +1775,11 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint sind
 	}
 	// PREV (uso le stesse tex_coord di ORIG)
 	{
-		GLint circle_index = sindex - 1;
+		GLint circle_index = (GLint)sindex - 1;
 
 		for (i = 0; i < (opengl.screen.in_use - 1); i++) {
 			if (circle_index < 0) {
-				circle_index = opengl.screen.in_use - 1;
+				circle_index = (GLint)opengl.screen.in_use - 1;
 			}
 			if (shd->glslp.uni.prev[i].texture >= 0) {
 				glActiveTexture(GL_TEXTURE0 + texture_index);
@@ -1910,7 +1915,7 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 
 	if ((path != NULL) && path[0]) {
 		umemset(base, 0x00, usizeof(base));
-		if (ugetcwd(base, usizeof(base)) == NULL) { ; };
+		if (ugetcwd(base, usizeof(base)) == NULL) {}
 
 		umemset(dname, 0x00, usizeof(dname));
 		gui_utf_dirname((uTCHAR *)path, dname, usizeof(dname) - 1);
@@ -1939,11 +1944,11 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 		if ((path == NULL) || !path[0]) {
 			shd->cgp.prg.f = cgCreateProgram(opengl.cg.ctx, CG_SOURCE, code, opengl.cg.profile.f, "main_fragment", argv);
 		} else {
-			if (uchdir(dname) == -1) { ; }
+			if (uchdir(dname) == -1) {}
 			shd->cgp.prg.f = cgCreateProgramFromFile(opengl.cg.ctx, CG_SOURCE, (const char *)bname,
 				opengl.cg.profile.f, "main_fragment", argv);
 
-			if (uchdir(base) == -1) { ; }
+			if (uchdir(base) == -1) {}
 		}
 		if (!shd->cgp.prg.f && (list = cgGetLastListing(opengl.cg.ctx))) {
 			fprintf(stderr, "OPENGLCG: fragment program errors :\n%s\n", list);
@@ -1955,10 +1960,10 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 		if ((path == NULL) || !path[0]) {
 			shd->cgp.prg.v = cgCreateProgram(opengl.cg.ctx, CG_SOURCE, code, opengl.cg.profile.v, "main_vertex", argv);
 		} else {
-			if (uchdir(dname)) { ; }
+			if (uchdir(dname)) {}
 			shd->cgp.prg.v = cgCreateProgramFromFile(opengl.cg.ctx, CG_SOURCE, (const char *)bname,
 				opengl.cg.profile.v, "main_vertex", argv);
-			if (uchdir(base)) { ; }
+			if (uchdir(base)) {}
 		}
 		if (!shd->cgp.prg.v && (list = cgGetLastListing(opengl.cg.ctx))) {
 			fprintf(stderr, "OPENGLCG: vertex program errors :\n%s\n", list);
@@ -2332,11 +2337,11 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint s
 	}
 	// PREV (uso le stesse tex_coord di ORIG)
 	{
-		GLint circle_index = sindex - 1;
+		GLint circle_index = (GLint)sindex - 1;
 
 		for (i = 0; i < (opengl.screen.in_use - 1); i++) {
 			if (circle_index < 0) {
-				circle_index = opengl.screen.in_use - 1;
+				circle_index = (GLint)opengl.screen.in_use - 1;
 			}
 
 			// PREV.texture

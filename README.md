@@ -152,10 +152,10 @@ If you need the debug version then you need to replace the `cmake -B build -G Ni
 CFLAGS="-O0 -g -DDEBUG" CXXFLAGS="-O0 -g -DDEBUG" cmake -B build -G Ninja -DENABLE_RELEASE=OFF [...]
 ```
 where `[...]` are the other necessary options.
-#### Example on how to compile on Ubuntu 21.10
+#### Example on how to compile on Ubuntu 22.04
 ```bash
 sudo apt-get install git cmake ninja-build libtool build-essential pkg-config libudev-dev libasound2-dev
-sudo apt-get install qtbase5-dev qttools5-dev-tools libqt5svg5-dev nvidia-cg-toolkit libx11-dev libxrandr-dev 
+sudo apt-get install qtbase5-dev qttools5-dev qttools5-dev-tools libqt5svg5-dev nvidia-cg-toolkit libx11-dev libxrandr-dev 
 sudo apt-get install libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev
 git clone https://github.com/punesemu/puNES
 cd puNES

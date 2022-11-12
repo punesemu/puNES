@@ -52,7 +52,7 @@ void wave_close(_wav *wav) {
 
 		// scrivo l'ultimo segmento
 		if (wav->count) {
-			wav->subchunk2size += fwrite(wav->buffer, 1, wav->count * wav->channels * (wav->bits_per_sample / 8), wav->outfile);
+			wav->subchunk2size += (int)fwrite(wav->buffer, 1, wav->count * wav->channels * (wav->bits_per_sample / 8), wav->outfile);
 		}
 
 		actual_size = ftell(wav->outfile) - 8;
@@ -90,13 +90,13 @@ void wave_write(_wav *wav, BYTE *data, int samples) {
 	for (a = 0; a < samples; a++) {
 		for (b = 0; b < wav->channels; b++) {
 			for (c = 0; c < (wav->bits_per_sample / 8); c++) {
-				(*wav->pbuffer++) = (*src) & 0xFF;
+				(*wav->pbuffer++) = (char)((*src) & 0xFF);
 				src++;
 			}
 			//(*wav->pbuffer++) = ((*src) >> 8) & 0xFF;
 		}
 		if (++wav->count >= wav->samples) {
-			wav->subchunk2size += fwrite(wav->buffer, 1, wav->buffer_size, wav->outfile);
+			wav->subchunk2size += (int)fwrite(wav->buffer, 1, wav->buffer_size, wav->outfile);
 			wav->pbuffer = wav->buffer;
 			wav->count = 0;
 		}
@@ -153,7 +153,7 @@ BYTE wave_init(_wav *wav, int samples, int bits_per_sample, int samplerate, int 
 	}
 	// BlockAlign
 	{
-		short int blockalign = channels * bits_per_sample / 8;
+		short int blockalign = (short int)(channels * bits_per_sample / 8);
 
 		fputc((blockalign >> 0) & 0xFF, wav->outfile);
 		fputc((blockalign >> 8) & 0xFF, wav->outfile);

@@ -38,7 +38,7 @@ enum patcher_bps {
 static SDBWORD patcher_2byte(_rom_mem *patch);
 static SDBWORD patcher_3byte(_rom_mem *patch);
 static int64_t patcher_4byte_reverse(_rom_mem *patch);
-static uint32_t patcher_crc32(unsigned char *message, unsigned int len);
+static uint32_t patcher_crc32(const unsigned char *message, unsigned int len);
 static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom);
 static BYTE patcher_bps_decode(_rom_mem *patch, size_t *size);
 static BYTE patcher_bps(_rom_mem *patch, _rom_mem *rom);
@@ -61,7 +61,7 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 		uL(".xdelta\0"), uL(".XDELTA\0")
 	};
 	uTCHAR file[LENGTH_FILE_NAME_LONG], ext[10];
-	BYTE i, found = FALSE;
+	BYTE found = FALSE;
 
 	if (patch) {
 		ustrncpy(file, patch, usizeof(file) - 1);
@@ -94,9 +94,8 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 						ustrncpy(file, uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_PATCH), usizeof(file) - 1);
 						found = TRUE;
 						break;
-					case UNCOMPRESS_EXIT_ERROR_ON_UNCOMP:
-						break;
 					default:
+					case UNCOMPRESS_EXIT_ERROR_ON_UNCOMP:
 						break;
 				}
 			}
@@ -113,21 +112,25 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 
 	found = FALSE;
 
-	for (i = 0; i < LENGTH(patch_ext); i++) {
-		uTCHAR *last_dot;
+	{
+		unsigned int i;
 
-		// rintraccio l'ultimo '.' nel nome
-		if ((last_dot = ustrrchr(file, uL('.')))) {
-			// elimino l'estensione
-			(*last_dot) = 0x00;
-		};
-		// aggiungo l'estensione
-		ustrcat(file, patch_ext[i]);
+		for (i = 0; i < LENGTH(patch_ext); i++) {
+			uTCHAR *last_dot;
 
-		if (emu_file_exist(file) == EXIT_OK) {
-			found = TRUE;
-			ustrncpy(ext, patch_ext[i], usizeof(ext));
-			break;
+					// rintraccio l'ultimo '.' nel nome
+			if ((last_dot = ustrrchr(file, uL('.')))) {
+				// elimino l'estensione
+				(*last_dot) = 0x00;
+			}
+			// aggiungo l'estensione
+			ustrcat(file, patch_ext[i]);
+
+			if (emu_file_exist(file) == EXIT_OK) {
+				found = TRUE;
+				ustrncpy(ext, patch_ext[i], usizeof(ext));
+				break;
+			}
 		}
 	}
 
@@ -210,7 +213,7 @@ void patcher_apply(void *rom_mem) {
 }
 
 static SDBWORD patcher_2byte(_rom_mem *patch) {
-	DBWORD dbw = 0;
+	SDBWORD dbw;
 	BYTE ch;
 
 	if (rom_mem_ctrl_memcpy(&ch, patch, 1) == EXIT_ERROR) {
@@ -225,7 +228,7 @@ static SDBWORD patcher_2byte(_rom_mem *patch) {
 	return (dbw);
 }
 static SDBWORD patcher_3byte(_rom_mem *patch) {
-	DBWORD dbw = 0;
+	SDBWORD dbw;
 	BYTE ch;
 
 	if (rom_mem_ctrl_memcpy(&ch, patch, 1) == EXIT_ERROR) {
@@ -244,7 +247,7 @@ static SDBWORD patcher_3byte(_rom_mem *patch) {
 	return (dbw);
 }
 static int64_t patcher_4byte_reverse(_rom_mem *patch) {
-	uint64_t dbw = 0;
+	int64_t dbw;
 	BYTE ch;
 
 	if (rom_mem_ctrl_memcpy(&ch, patch, 1) == EXIT_ERROR) {
@@ -266,7 +269,7 @@ static int64_t patcher_4byte_reverse(_rom_mem *patch) {
 
 	return (dbw);
 }
-static uint32_t patcher_crc32(unsigned char *message, unsigned int len) {
+static uint32_t patcher_crc32(const unsigned char *message, unsigned int len) {
 	unsigned int byte, crc, mask, i;
 	int j;
 
@@ -294,7 +297,7 @@ static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom) {
 
 	if ((blk = (BYTE *)malloc(size)) == NULL) {
 		return (EXIT_ERROR);
-	};
+	}
 
 	memcpy(blk, rom->data, size);
 
@@ -327,7 +330,7 @@ static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom) {
 			}
 		}
 
-		if ((size_t)(address + len) > size) {
+		if (((size_t)address + (size_t)len) > size) {
 			size = (address + len);
 			blk = (BYTE *)realloc(blk, size);
 		}
@@ -494,7 +497,7 @@ static BYTE patcher_bps(_rom_mem *patch, _rom_mem *rom) {
 					free(blk);
 					return (EXIT_ERROR);
 				}
-				source_relative += (tmp & 1 ? -1 : +1) * (tmp >> 1);
+				source_relative = (int32_t)(source_relative + (tmp & 1 ? -1 : +1) * (tmp >> 1));
 				if ((source_relative < 0) || ((source_relative + length) > rom->size)) {
 					free(blk);
 					return (EXIT_ERROR);
@@ -508,7 +511,7 @@ static BYTE patcher_bps(_rom_mem *patch, _rom_mem *rom) {
 					free(blk);
 					return (EXIT_ERROR);
 				}
-				target_relative += (tmp & 1 ? -1 : +1) * (tmp >> 1);
+				target_relative = (int32_t)(target_relative + (tmp & 1 ? -1 : +1) * (tmp >> 1));
 				if ((target_relative < 0) || ((target_relative + length) > size_out)) {
 					free(blk);
 					return (EXIT_ERROR);
@@ -517,6 +520,9 @@ static BYTE patcher_bps(_rom_mem *patch, _rom_mem *rom) {
 					blk[output_offset++] = blk[target_relative++];
 				}
 				break;
+			default:
+				free(blk);
+				return (EXIT_ERROR);
 		}
 	}
 

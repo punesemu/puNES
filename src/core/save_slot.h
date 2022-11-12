@@ -55,6 +55,8 @@ enum save_slot_mode { SAVE_SLOT_SAVE, SAVE_SLOT_READ, SAVE_SLOT_COUNT, SAVE_SLOT
 		case SAVE_SLOT_COUNT:\
 			save_slot_ele(mode, slot, uint32);\
 			break;\
+		default:\
+			break;\
 	}\
 }
 #define save_slot_pos(mode, slot, start, end)\
@@ -71,6 +73,8 @@ enum save_slot_mode { SAVE_SLOT_SAVE, SAVE_SLOT_READ, SAVE_SLOT_COUNT, SAVE_SLOT
 			break;\
 		case SAVE_SLOT_COUNT:\
 			save_slot_ele(mode, slot, bank);\
+			break;\
+		default:\
 			break;\
 	}\
 }

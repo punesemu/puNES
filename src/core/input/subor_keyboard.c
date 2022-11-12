@@ -16,14 +16,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "input.h"
 #include "input/subor_keyboard.h"
 #include "tape_data_recorder.h"
 #include "conf.h"
 #include "gui.h"
 
-void input_wr_subor_keyboard(BYTE *value, UNUSED(BYTE nport)) {
+void input_wr_subor_keyboard(const BYTE *value, UNUSED(BYTE nport)) {
 	BYTE column;
 
 	generic_keyboard.enable = (*value) & 0x04;
@@ -41,7 +40,7 @@ void input_wr_subor_keyboard(BYTE *value, UNUSED(BYTE nport)) {
 }
 void input_rd_subor_keyboard(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	if (nport & 0x01) {
-		BYTE state = 0;
+		BYTE state;
 
 		if (generic_keyboard.column) {
 			state = (generic_keyboard.data[generic_keyboard.row] & 0xF0) >> 3;

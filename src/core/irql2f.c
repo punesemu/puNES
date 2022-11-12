@@ -44,5 +44,4 @@ void irql2f_tick(void) {
 			irq.high |= EXT_IRQ;
 		}
 	}
-	return;
 }

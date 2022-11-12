@@ -22,7 +22,7 @@
 #include "input.h"
 
 void input_init_arkanoid(void);
-void input_wr_arkanoid(BYTE *value, BYTE nport);
+void input_wr_arkanoid(const BYTE *value, BYTE nport);
 void input_rd_arkanoid(BYTE *value, BYTE nport, BYTE shift);
 
 #endif /* INPUT_ARKANOID_H */

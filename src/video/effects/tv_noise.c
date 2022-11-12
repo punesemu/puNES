@@ -38,7 +38,7 @@ BYTE tv_noise_init(void) {
 	}
 	palette = (uint32_t *)turn_off_effect.palette;
 
-	if (!(turn_off_effect.ntsc = malloc(sizeof(nes_ntsc_t)))) {;
+	if (!(turn_off_effect.ntsc = malloc(sizeof(nes_ntsc_t)))) {
 		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}
@@ -65,7 +65,7 @@ void tv_noise_quit(void) {
 void tv_noise_effect(void) {
 	static WORD t0 = 0;
 	BYTE direction = 1;
-	WORD x, y;
+	int x, y;
 
 	if (cfg->disable_tv_noise) {
 		for (y = 0; y < SCR_ROWS; y++) {
@@ -78,7 +78,7 @@ void tv_noise_effect(void) {
 
 	for (y = 0; y < SCR_ROWS; y++) {
 		for (x = 0; x < SCR_COLUMNS; x++) {
-			WORD w = 7 + sin(x / 50000 + t0 / 7);
+			WORD w = (WORD)(7 + sin((double)x / 50000 + (double)t0 / 7));
 
 			screen.wr->line[y][x] = emu_irand(16) * w;
 		}
