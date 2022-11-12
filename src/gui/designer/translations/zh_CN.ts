@@ -93,7 +93,7 @@
     </message>
     <message>
       <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
-      <translation type="unfinished">Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</translation>
+      <translation>扩展模式 (支持小键盘、F10、F11、F12 和 &quot;` &quot;. 说明: 'Study and Game 32-in-1' 在此模式下有问题)</translation>
     </message>
   </context>
   <context>
@@ -172,11 +172,11 @@
     </message>
     <message>
       <source>Capture/Release Input</source>
-      <translation type="unfinished">Capture/Release Input</translation>
+      <translation>捕捉/释放输入</translation>
     </message>
     <message>
       <source>Toggle Virtual Keyboard</source>
-      <translation type="unfinished">Toggle Virtual Keyboard</translation>
+      <translation>切换虚拟键盘</translation>
     </message>
   </context>
   <context>
@@ -404,7 +404,7 @@
     <name>familyBasicKeyboard</name>
     <message>
       <source>Family Basic Keyboard</source>
-      <translation type="unfinished">Family Basic Keyboard</translation>
+      <translation>Family Basic 键盘</translation>
     </message>
   </context>
   <context>
@@ -412,55 +412,55 @@
     <message>
       <source>%1 folders</source>
       <extracomment>Do not translate %1</extracomment>
-      <translation type="unfinished">%1 folders</translation>
+      <translation>%1 个文件夹</translation>
     </message>
     <message>
       <source>Error on create config folder</source>
-      <translation type="unfinished">Error on create config folder</translation>
+      <translation>创建配置文件夹时出错</translation>
     </message>
     <message>
       <source>Error on create data folder</source>
-      <translation type="unfinished">Error on create data folder</translation>
+      <translation>创建数据文件夹时出错</translation>
     </message>
     <message>
       <source>Error on create temp folder</source>
-      <translation type="unfinished">Error on create temp folder</translation>
+      <translation>创建临时文件夹时出错</translation>
     </message>
     <message>
       <source>Error on create cheat folder</source>
-      <translation type="unfinished">Error on create cheat folder</translation>
+      <translation>创建作弊文件夹时出错</translation>
     </message>
     <message>
       <source>Error on create psg folder</source>
-      <translation type="unfinished">Error on create psg folder</translation>
+      <translation>创建 psg 文件夹时出错</translation>
     </message>
     <message>
       <source>Error on create shp folder</source>
-      <translation type="unfinished">Error on create shp folder</translation>
+      <translation>创建 shp 文件夹时出错</translation>
     </message>
     <message>
       <source>Error on create jsc folder</source>
-      <translation type="unfinished">Error on create jsc folder</translation>
+      <translation>创建 jsc 文件夹时出错</translation>
     </message>
     <message>
       <source>Error on create bios folder</source>
-      <translation type="unfinished">Error on create bios folder</translation>
+      <translation>创建 bios 文件夹时出错</translation>
     </message>
     <message>
       <source>Error on create diff folder</source>
-      <translation type="unfinished">Error on create diff folder</translation>
+      <translation>创建差异文件夹时出错</translation>
     </message>
     <message>
       <source>Error on create prb folder</source>
-      <translation type="unfinished">Error on create prb folder</translation>
+      <translation>创建 prb 文件夹时出错</translation>
     </message>
     <message>
       <source>Error on create save folder</source>
-      <translation type="unfinished">Error on create save folder</translation>
+      <translation>创建保存文件夹时出错</translation>
     </message>
     <message>
       <source>Error on create screenshot folder</source>
-      <translation type="unfinished">Error on create screenshot folder</translation>
+      <translation>创建截图文件夹时出错</translation>
     </message>
   </context>
   <context>
@@ -864,79 +864,79 @@
     </message>
     <message>
       <source>Fast Forward (hold button)</source>
-      <translation type="unfinished">Fast Forward (hold button)</translation>
+      <translation>快进 (按住)</translation>
     </message>
     <message>
       <source>&amp;Virtual Keyboard</source>
-      <translation type="unfinished">&amp;Virtual Keyboard</translation>
+      <translation>虚拟键盘(&amp;V)</translation>
     </message>
     <message>
       <source>puNES tape image</source>
-      <translation type="unfinished">puNES tape image</translation>
+      <translation>puNES 磁带</translation>
     </message>
     <message>
       <source>Virtuanes tape image</source>
-      <translation type="unfinished">Virtuanes tape image</translation>
+      <translation>VirtuaNES 磁带</translation>
     </message>
     <message>
       <source>Nestopia tape image</source>
-      <translation type="unfinished">Nestopia tape image</translation>
+      <translation>Nestopia 磁带</translation>
     </message>
     <message>
       <source>Open tape image</source>
-      <translation type="unfinished">Open tape image</translation>
+      <translation>打开磁带</translation>
     </message>
     <message>
       <source>Tape Image</source>
-      <translation type="unfinished">Tape Image</translation>
+      <translation>磁带</translation>
     </message>
     <message>
       <source>Unsupported format</source>
-      <translation type="unfinished">Unsupported format</translation>
+      <translation>不支持的格式</translation>
     </message>
     <message>
       <source>Error opening tape image file</source>
-      <translation type="unfinished">Error opening tape image file</translation>
+      <translation>打开磁带文件出错</translation>
     </message>
     <message>
       <source>WAVE tape image</source>
-      <translation type="unfinished">WAVE tape image</translation>
+      <translation>波形磁带</translation>
     </message>
     <message>
       <source>Save tape image</source>
-      <translation type="unfinished">Save tape image</translation>
+      <translation>保存磁带</translation>
     </message>
     <message>
       <source>Toggle &amp;Fast Forward</source>
-      <translation type="unfinished">Toggle &amp;Fast Forward</translation>
+      <translation>切换快进(&amp;F)</translation>
     </message>
     <message>
       <source>Virtual &amp;Keyboard</source>
-      <translation type="unfinished">Virtual &amp;Keyboard</translation>
+      <translation>虚拟键盘(&amp;K)</translation>
     </message>
     <message>
       <source>&amp;Play</source>
-      <translation type="unfinished">&amp;Play</translation>
+      <translation>播放(&amp;P)</translation>
     </message>
     <message>
       <source>&amp;Record</source>
-      <translation type="unfinished">&amp;Record</translation>
+      <translation>录制(&amp;R)</translation>
     </message>
     <message>
       <source>&amp;Stop</source>
-      <translation type="unfinished">&amp;Stop</translation>
+      <translation>停止(&amp;S)</translation>
     </message>
     <message>
       <source>Shout into &amp;Microphone</source>
-      <translation type="unfinished">Shout into &amp;Microphone</translation>
+      <translation>喊麦(&amp;M)</translation>
     </message>
     <message>
       <source>&amp;Open config folder</source>
-      <translation type="unfinished">&amp;Open config folder</translation>
+      <translation>打开配置文件夹(&amp;O)</translation>
     </message>
     <message>
       <source>Ta&amp;pe</source>
-      <translation type="unfinished">Ta&amp;pe</translation>
+      <translation>磁带(&amp;p)</translation>
     </message>
   </context>
   <context>
