@@ -88,7 +88,7 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		int last_js_index;
 
 	public:
-		explicit dlgStdPad(_cfg_port *cfg_port, QWidget *parent = nullptr);
+		explicit dlgStdPad(QWidget *parent = nullptr, _cfg_port *cfg_port = nullptr);
 		~dlgStdPad() override;
 
 	signals:

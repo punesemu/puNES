@@ -32,14 +32,14 @@ class hexSpinBox : public QSpinBox {
 		QRegularExpressionValidator *validator;
 
 	public:
-		hexSpinBox(QWidget *parent, int dgts);
-		~hexSpinBox();
+		explicit hexSpinBox(QWidget *parent = nullptr, int dgts = 4);
+		~hexSpinBox() override;
 
 	protected:
-		bool eventFilter(QObject *obj, QEvent *event);
-		QValidator::State validate(QString &text, int &pos) const;
-		int valueFromText(const QString &text) const;
-		QString textFromValue(int value) const;
+		bool eventFilter(QObject *obj, QEvent *event) override;
+		QValidator::State validate(QString &text, int &pos) const override;
+		int valueFromText(const QString &text) const override;
+		QString textFromValue(int value) const override;
 };
 
 #include "ui_wdgCheatsEditor.h"
@@ -59,12 +59,12 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 		bool disable_hexspinbox_value_changed;
 
 	public:
-		wdgCheatsEditor(QWidget *parent = 0);
-		~wdgCheatsEditor();
+		explicit wdgCheatsEditor(QWidget *parent = nullptr);
+		~wdgCheatsEditor() override;
 
 	protected:
-		void changeEvent(QEvent *event);
-		void showEvent(QShowEvent *event);
+		void changeEvent(QEvent *event) override;
+		void showEvent(QShowEvent *event) override;
 
 	public:
 		void hide_tools_widgets(bool state);

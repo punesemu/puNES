@@ -26,11 +26,11 @@ class wdgAPUChannels : public QWidget, public Ui::wdgAPUChannels {
 	Q_OBJECT
 
 	public:
-		wdgAPUChannels(QWidget *parent = 0);
-		~wdgAPUChannels();
+		explicit wdgAPUChannels(QWidget *parent = nullptr);
+		~wdgAPUChannels() override;
 
 	private:
-		void changeEvent(QEvent *event);
+		void changeEvent(QEvent *event) override;
 
 	public:
 		void update_widget(void);

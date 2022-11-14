@@ -912,7 +912,7 @@ void wdgSettingsInput::s_controller_port_setup(UNUSED(bool checked)) {
 		case CTRL_ZAPPER:
 			break;
 		case CTRL_STANDARD:
-			dlg_std_pad = new dlgStdPad(cfg_port, this);
+			dlg_std_pad = new dlgStdPad(this, cfg_port);
 
 			hide_from_setup_button = true;
 			dlgsettings->hide();

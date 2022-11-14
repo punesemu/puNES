@@ -22,7 +22,7 @@
 #include "conf.h"
 
 wdgMenuBar::wdgMenuBar(QWidget *parent) : QMenuBar(parent) {}
-wdgMenuBar::~wdgMenuBar() {}
+wdgMenuBar::~wdgMenuBar() = default;
 
 void wdgMenuBar::mouseDoubleClickEvent(QMouseEvent *event) {
 	if ((cfg->fullscreen == FULLSCR) && (gfx.type_of_fscreen_in_use != FULLSCR_IN_WINDOW)) {

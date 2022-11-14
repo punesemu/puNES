@@ -158,7 +158,7 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 
 	s_cheat_item();
 }
-wdgCheatsEditor::~wdgCheatsEditor() {}
+wdgCheatsEditor::~wdgCheatsEditor() = default;
 
 void wdgCheatsEditor::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
@@ -184,7 +184,7 @@ void wdgCheatsEditor::hide_tools_widgets(bool state) {
 		return;
 	}
 
-	if (state == true) {
+	if (state) {
 		pushButton_Hide_Show_Tools->setText(tr("Show Tools"));
 	} else {
 		pushButton_Hide_Show_Tools->setText(tr("Hide Tools"));
@@ -318,7 +318,7 @@ void wdgCheatsEditor::update_cheat_row(int row, chl_map *cheat) {
 }
 void wdgCheatsEditor::update_color_row(int row, bool active) {
 	QBrush brush = QBrush(QColor::fromRgb(255, 255, 255, 0));
-	int i = 0;
+	int i;
 
 	if (active == 1) {
 		brush = QBrush(QColor::fromRgb(214, 255, 182, 255));
@@ -412,11 +412,11 @@ void wdgCheatsEditor::populate_gg_rocky_lineedit(bool control_widgets) {
 		pushButton_Copy_ProAR->setEnabled(rocky);
 	}
 
-	if (control_widgets == false) {
+	if (!control_widgets) {
 		return;
 	}
 
-	if (((grp->checkedId() == 1) && (gg == false)) || ((grp->checkedId() == 2) && (rocky == false))) {
+	if (((grp->checkedId() == 1) && !gg) || ((grp->checkedId() == 2) && !rocky)) {
 		radioButton_CPU_Ram->click();
 		return;
 	}
@@ -468,7 +468,7 @@ void wdgCheatsEditor::clear_edit_widgets(void) {
 	populate_gg_rocky_lineedit(false);
 }
 void wdgCheatsEditor::set_edit_widget(void) {
-	if ((new_cheat == true) || (tableWidget_Cheats->currentRow() >= 0)) {
+	if (new_cheat || (tableWidget_Cheats->currentRow() >= 0)) {
 		label_Description->setEnabled(true);
 		lineEdit_Description->setEnabled(true);
 		frame_Type_Cheat->setEnabled(true);
@@ -485,7 +485,11 @@ void wdgCheatsEditor::set_edit_widget(void) {
 void wdgCheatsEditor::set_type_cheat_checkbox(chl_map *cheat) {
 	QRadioButton *button;
 
-	if (new_cheat == true) {
+	if (!cheat) {
+		return;
+	}
+
+	if (new_cheat) {
 		radioButton_CPU_Ram->setEnabled(true);
 		radioButton_GG->setEnabled(true);
 		radioButton_ProAR->setEnabled(true);
@@ -504,7 +508,7 @@ void wdgCheatsEditor::set_type_cheat_checkbox(chl_map *cheat) {
 	button->click();
 }
 void wdgCheatsEditor::set_edit_buttons(void) {
-	if (new_cheat == true) {
+	if (new_cheat) {
 		pushButton_Delete_Cheat->setEnabled(false);
 
 		pushButton_New_Cheat->setEnabled(false);
@@ -530,7 +534,7 @@ void wdgCheatsEditor::set_edit_buttons(void) {
 
 void wdgCheatsEditor::s_table_data_changed(const QModelIndex &topLeft, UNUSED(const QModelIndex &bottomRight),
 	UNUSED(const QVector<int> &roles)) {
-	if (in_populate_cheat_table == true) {
+	if (in_populate_cheat_table) {
 		return;
 	}
 
@@ -606,7 +610,7 @@ void wdgCheatsEditor::s_import(UNUSED(bool checked)) {
 	file = QFileDialog::getOpenFileName(this, tr("Import Cheats"),
 		uQString(cfg->last_import_cheat_path), filters.join(";;"));
 
-	if (file.isNull() == false) {
+	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
 
 		if (!fileinfo.suffix().compare("xml", Qt::CaseInsensitive)) {
@@ -639,7 +643,7 @@ void wdgCheatsEditor::s_export(UNUSED(bool checked)) {
 	file = QFileDialog::getSaveFileName(this, tr("Export cheats on file"),
 		QFileInfo(uQString(info.rom.file)).completeBaseName() + ".xml", filters.join(";;"));
 
-	if (file.isNull() == false) {
+	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.suffix().isEmpty()) {
@@ -668,7 +672,7 @@ void wdgCheatsEditor::s_delete_all(UNUSED(bool checked)) {
 void wdgCheatsEditor::s_grp_type_cheat(UNUSED(QAbstractButton *button)) {
 	frame_Raw_Value->setEnabled(true);
 
-	if (new_cheat == true) {
+	if (new_cheat) {
 		pushButton_Submit_Cheat->setEnabled(true);
 	}
 
@@ -747,8 +751,8 @@ void wdgCheatsEditor::s_compare(int state) {
 }
 void wdgCheatsEditor::s_new(UNUSED(bool checked)) {
 	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
-	QRadioButton *rb = NULL;
-	QLineEdit *le = NULL;
+	QLineEdit *le = nullptr;
+	QRadioButton *rb;
 
 	new_cheat = true;
 
@@ -759,7 +763,7 @@ void wdgCheatsEditor::s_new(UNUSED(bool checked)) {
 	set_edit_widget();
 	set_edit_buttons();
 
-	set_type_cheat_checkbox(NULL);
+	set_type_cheat_checkbox(nullptr);
 
 	switch (index) {
 		default:
@@ -830,14 +834,14 @@ void wdgCheatsEditor::s_submit(UNUSED(bool checked)) {
 		return;
 	}
 
-	if (new_cheat == true) {
+	if (new_cheat) {
 		current = tableWidget_Cheats->rowCount();
 	} else {
 		current = tableWidget_Cheats->currentRow();
 	}
 
 	if ((i = objch->find_cheat(&cheat, false)) == -1) {
-		if (new_cheat == true) {
+		if (new_cheat) {
 			objch->cheats.insert(current, cheat);
 			insert_cheat_row(current);
 			tableWidget_Cheats->selectRow(current);
@@ -846,7 +850,7 @@ void wdgCheatsEditor::s_submit(UNUSED(bool checked)) {
 			update_cheat_row(current, &cheat);
 		}
 	} else {
-		if ((new_cheat == false) && (i == tableWidget_Cheats->currentRow())) {
+		if (!new_cheat && (i == tableWidget_Cheats->currentRow())) {
 			objch->cheats.replace(current, cheat);
 			update_cheat_row(current, &cheat);
 		} else {
@@ -859,7 +863,7 @@ void wdgCheatsEditor::s_submit(UNUSED(bool checked)) {
 		return;
 	}
 
-	if (new_cheat == true) {
+	if (new_cheat) {
 		s_cancel(false);
 	}
 
@@ -873,7 +877,7 @@ void wdgCheatsEditor::s_cancel(UNUSED(bool checked)) {
 
 // ----------------------------------------------------------------------------------------------
 
-hexSpinBox::hexSpinBox(QWidget *parent, int dgts = 4) : QSpinBox(parent) {
+hexSpinBox::hexSpinBox(QWidget *parent, int dgts) : QSpinBox(parent) {
 	digits = dgts;
 	no_prefix = false;
 
@@ -899,7 +903,7 @@ hexSpinBox::hexSpinBox(QWidget *parent, int dgts = 4) : QSpinBox(parent) {
 
 	installEventFilter(this);
 }
-hexSpinBox::~hexSpinBox() {}
+hexSpinBox::~hexSpinBox() = default;
 
 bool hexSpinBox::eventFilter(QObject *obj, QEvent *event) {
 	if (event->type() == QEvent::FocusIn) {
@@ -915,7 +919,7 @@ QValidator::State hexSpinBox::validate(QString &text, int &pos) const {
 	return (validator->validate(text, pos));
 }
 QString hexSpinBox::textFromValue(int value) const {
-	if (no_prefix == true) {
+	if (no_prefix) {
 		return (QString(QString("%1").arg(value, digits, 16, QChar('0')).toUpper()));
 	} else {
 		return (QString("0x" + QString("%1").arg(value, digits, 16, QChar('0')).toUpper()));

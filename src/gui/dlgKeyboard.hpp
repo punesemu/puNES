@@ -85,7 +85,7 @@ class keyboardButton : public QPushButton {
 		double size_factor;
 
 	public:
-		explicit keyboardButton(QWidget *parent);
+		explicit keyboardButton(QWidget *parent = nullptr);
 		~keyboardButton() override;
 
 	protected:

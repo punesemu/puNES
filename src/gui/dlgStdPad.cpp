@@ -38,7 +38,7 @@ static const char std_pad_button[10][15] = {
 
 _joy_list joy_list;
 
-dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent) : QDialog(parent) {
+dlgStdPad::dlgStdPad(QWidget *parent, _cfg_port *cfg_port) : QDialog(parent) {
 	int i;
 
 	memset(&data, 0x00, sizeof(data));

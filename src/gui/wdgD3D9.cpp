@@ -17,7 +17,6 @@
  */
 
 #include "wdgD3D9.hpp"
-#include "video/gfx.h"
 #include "fps.h"
 
 extern "C" void d3d9_draw_scene(void);
@@ -33,14 +32,17 @@ wdgD3D9::wdgD3D9(QWidget *parent) : QWidget(parent) {
 	gfps.frequency = 60;
 	gfps.timer.start();
 }
-wdgD3D9::~wdgD3D9() {}
+wdgD3D9::~wdgD3D9() = default;
 
+QPaintEngine *wdgD3D9::paintEngine() const {
+	return (nullptr);
+}
 void wdgD3D9::paintEvent(UNUSED(QPaintEvent *event)) {
 	d3d9_draw_scene();
 
 	if (++gfps.count > gfps.frequency) {
 		qint64 ms = gfps.timer.elapsed();
-		double sec = ms / 1000.0f;
+		double sec = (double)ms / 1000.0;
 
 		fps.gfx = gfps.count / sec;
 		gfps.count = 0;

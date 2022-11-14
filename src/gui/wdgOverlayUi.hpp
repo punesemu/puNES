@@ -42,7 +42,7 @@ class overlayWidget : public QWidget {
 					time_t start = 0;
 					int seconds = 0;
 				} timer;
-				QPropertyAnimation *animation;
+				QPropertyAnimation *animation{};
 		};
 		struct _exchange_data {
 			bool draw;
@@ -52,7 +52,7 @@ class overlayWidget : public QWidget {
 		struct _paddings {
 			int h;
 			int v;
-		} padding;
+		} padding{};
 		struct _base_colors {
 			QColor fg;
 			QColor bg;
@@ -60,10 +60,10 @@ class overlayWidget : public QWidget {
 		struct _opacity_data {
 			QGraphicsOpacityEffect *effect;
 			qreal value;
-		} opacity;
+		} opacity{};
 		_animation fade_in;
 		_animation fade_out;
-		double ms_last_draw;
+		double ms_last_draw{};
 		int fade_in_duration;
 		int fade_out_duration;
 		bool enabled;
@@ -73,29 +73,31 @@ class overlayWidget : public QWidget {
 		QPainter painter;
 
 	public:
-		overlayWidget(QWidget *parent);
-		~overlayWidget();
+		explicit overlayWidget(QWidget *parent = nullptr);
+		~overlayWidget() override;
 
 	protected:
-		void paintEvent(QPaintEvent *event);
+		void paintEvent(QPaintEvent *event) override;
 
 	public:
 		virtual void update_dpr(void);
 		virtual void update_widget(void);
 		virtual BYTE is_to_redraw(void);
 		virtual void update_old_value(void);
+
+	public:
 		void show_widget(void);
 		int hpadtot(void) const;
 		int vpadtot(void) const;
 		int minimum_eight(const QFont *font, int rows) const;
-		void set_opacity(qreal opacity);
+		void set_opacity(qreal value);
 		void draw_background(void);
 		void draw_background(QRectF rect);
 		virtual void fade_in_animation(void);
 		void fade_out_animation(void);
 		void fade_out_start_timer(void);
 		void fade_out_tick_timer(void);
-		QString color_string(QString string, QColor color);
+		QString color_string(const QString &string, const QColor &color);
 		qreal dpr_per_int(int integer) const;
 		qreal dpr_per_real(qreal real) const;
 		qreal dpr_int(int integer);
@@ -104,7 +106,7 @@ class overlayWidget : public QWidget {
 		QPointF dpr_point(QPoint point);
 		QRectF dpr_rect(void);
 		qreal dpr_radius(void);
-		QImage dpr_image(QString path);
+		QImage dpr_image(const QString &path);
 		qreal dpr_text_real(qreal real);
 		QPointF dpr_text_point(QPointF point);
 		QRectF dpr_text_rect(QRectF rect);
@@ -118,41 +120,41 @@ class overlayWidgetFPS : public overlayWidget {
 	private:
 		struct _old_values {
 			double fps;
-		} old;
+		} old{};
 
 	public:
-		overlayWidgetFPS(QWidget *parent);
-		~overlayWidgetFPS();
+		explicit overlayWidgetFPS(QWidget *parent = nullptr);
+		~overlayWidgetFPS() override;
 
 	protected:
-		QSize sizeHint(void) const;
-		void paintEvent(QPaintEvent *event);
+		QSize sizeHint(void) const override;
+		void paintEvent(QPaintEvent *event) override;
 
 	public:
-		void update_widget(void);
-		BYTE is_to_redraw(void);
-		void update_old_value(void);
+		void update_widget(void) override;
+		BYTE is_to_redraw(void) override;
+		void update_old_value(void) override;
 };
 class overlayWidgetFrame : public overlayWidget {
 	private:
 		struct _old_values {
 			uint32_t actual_frame;
-		} old;
+		} old{};
 		QTextDocument td;
 
 	public:
-		overlayWidgetFrame(QWidget *parent);
-		~overlayWidgetFrame();
+		explicit overlayWidgetFrame(QWidget *parent = nullptr);
+		~overlayWidgetFrame() override;
 
 	protected:
-		QSize sizeHint(void) const;
-		void paintEvent(QPaintEvent *event);
+		QSize sizeHint(void) const override;
+		void paintEvent(QPaintEvent *event) override;
 
 	public:
-		void update_dpr(void);
-		void update_widget(void);
-		BYTE is_to_redraw(void);
-		void update_old_value(void);
+		void update_dpr(void) override;
+		void update_widget(void) override;
+		BYTE is_to_redraw(void) override;
+		void update_old_value(void) override;
 
 	private:
 		void info(void);
@@ -166,16 +168,16 @@ class overlayWidgetFloppy : public overlayWidget {
 		} floppy;
 
 	public:
-		overlayWidgetFloppy(QWidget *parent);
-		~overlayWidgetFloppy();
+		explicit overlayWidgetFloppy(QWidget *parent = nullptr);
+		~overlayWidgetFloppy() override;
 
 	protected:
-		QSize sizeHint(void) const;
-		void paintEvent(QPaintEvent *event);
+		QSize sizeHint(void) const override;
+		void paintEvent(QPaintEvent *event) override;
 
 	public:
-		void update_dpr(void);
-		void update_widget(void);
+		void update_dpr(void) override;
+		void update_widget(void) override;
 };
 class overlayWidgetInputPort : public overlayWidget {
 	public:
@@ -192,7 +194,7 @@ class overlayWidgetInputPort : public overlayWidget {
 				int x;
 				int y;
 			} mouse;
-		} old;
+		} old{};
 		struct _images_std_controller {
 			QImage tile;
 			QImage up;
@@ -228,17 +230,19 @@ class overlayWidgetInputPort : public overlayWidget {
 		int type;
 
 	public:
-		overlayWidgetInputPort(QWidget *parent);
-		~overlayWidgetInputPort();
+		explicit overlayWidgetInputPort(QWidget *parent = nullptr);
+		~overlayWidgetInputPort() override;
 
 	protected:
-		void paintEvent(QPaintEvent *event);
+		void paintEvent(QPaintEvent *event) override;
 
 	public:
-		void update_dpr(void);
-		void update_widget(void);
-		BYTE is_to_redraw(void);
-		void update_old_value(void);
+		void update_dpr(void) override;
+		void update_widget(void) override;
+		BYTE is_to_redraw(void) override;
+		void update_old_value(void) override;
+
+	public:
 		void set_nport(int nport);
 
 	private:
@@ -275,7 +279,7 @@ class overlayWidgetRewind : public overlayWidget {
 				_measure max = _measure::MS;
 
 			public:
-				_infotime(int seconds) {
+				explicit _infotime(int seconds) {
 					int fseconds = seconds / machine.fps;
 
 					hh = (fseconds / 3600);
@@ -302,7 +306,7 @@ class overlayWidgetRewind : public overlayWidget {
 			BYTE action_before_pause;
 			int32_t actual_frame;
 			int32_t max_frames;
-		} old;
+		} old{};
 		struct _internal_colors {
 			QColor corner;
 			QColor border_bar;
@@ -313,24 +317,21 @@ class overlayWidgetRewind : public overlayWidget {
 		} color;
 		struct _info {
 			qreal width;
-		} info;
+		} info{};
 
 	public:
-		overlayWidgetRewind(QWidget *parent);
-		~overlayWidgetRewind();
+		explicit overlayWidgetRewind(QWidget *parent = nullptr);
+		~overlayWidgetRewind() override;
 
 	protected:
-		QSize sizeHint(void) const;
-		void paintEvent(QPaintEvent *event);
+		QSize sizeHint(void) const override;
+		void paintEvent(QPaintEvent *event) override;
 
 	public:
-		void update_dpr(void);
-		void update_widget(void);
-		BYTE is_to_redraw(void);
-		void update_old_value(void);
-		QString seconds_to_string(_infotime *itime, _infotime::_measure max, QColor color);
-		void draw_command(void);
-		void draw_corner_bar_info(void);
+		void update_dpr(void) override;
+		void update_widget(void) override;
+		BYTE is_to_redraw(void) override;
+		void update_old_value(void) override;
 
 	protected:
 		virtual int32_t min(void);
@@ -339,23 +340,30 @@ class overlayWidgetRewind : public overlayWidget {
 		virtual QString info_long(void);
 		virtual QString info_short(void);
 
+	public:
+		QString seconds_to_string(_infotime *itime, _infotime::_measure max, const QColor &clr);
+		void draw_command(void);
+		void draw_corner_bar_info(void);
+
 	private:
-		QImage svg_to_image(QString resource);
+		QImage svg_to_image(const QString &resource);
 };
 class overlayWidgetTAS : public overlayWidgetRewind {
 	public:
-		overlayWidgetTAS(QWidget *parent);
-		~overlayWidgetTAS();
+		explicit overlayWidgetTAS(QWidget *parent = nullptr);
+		~overlayWidgetTAS() override;
 
 	public:
-		void update_widget(void);
-		BYTE is_to_redraw(void);
-		void update_old_value(void);
-		int32_t min(void);
-		int32_t max(void);
-		int32_t value(void);
-		QString info_long(void);
-		QString info_short(void);
+		void update_widget(void) override;
+		BYTE is_to_redraw(void) override;
+		void update_old_value(void) override;
+
+	protected:
+		int32_t min(void) override;
+		int32_t max(void) override;
+		int32_t value(void) override;
+		QString info_long(void) override;
+		QString info_short(void) override;
 };
 class overlayWidgetSaveSlot : public overlayWidget {
 	private:
@@ -390,15 +398,15 @@ class overlayWidgetSaveSlot : public overlayWidget {
 		qreal dim_cell_x1;
 
 	public:
-		overlayWidgetSaveSlot(QWidget *parent);
-		~overlayWidgetSaveSlot();
+		explicit overlayWidgetSaveSlot(QWidget *parent = nullptr);
+		~overlayWidgetSaveSlot() override;
 
 	protected:
-		QSize sizeHint(void) const;
-		void paintEvent(QPaintEvent *event);
+		QSize sizeHint(void) const override;
+		void paintEvent(QPaintEvent *event) override;
 
 	public:
- 		void enable_overlay(BYTE operation);
+		void enable_overlay(BYTE operation);
 		QString date_and_time(int slot);
 		QSize calc_size(void);
 
@@ -419,24 +427,26 @@ class overlayWidgetInfo : public overlayWidget {
 		QFont font_info;
 
 	public:
-		overlayWidgetInfo(QWidget *parent);
-		~overlayWidgetInfo();
+		explicit overlayWidgetInfo(QWidget *parent = nullptr);
+		~overlayWidgetInfo() override;
 
 	protected:
-		QSize sizeHint(void) const;
-		void paintEvent(QPaintEvent *event);
+		QSize sizeHint(void) const override;
+		void paintEvent(QPaintEvent *event) override;
 
 	public:
-		void update_dpr(void);
-		BYTE is_to_redraw(void);
-		void fade_in_animation(void);
-		void append_msg(BYTE alignment, QString msg);
-		static void _append_msg(BYTE alignment, QString msg);
+		void update_dpr(void) override;
+		BYTE is_to_redraw(void) override;
+		void fade_in_animation(void) override;
+
+	public:
+		void append_msg(BYTE alignment, const QString &msg);
+		static void _append_msg(BYTE alignment, const QString &msg);
 		static QString decode_tags(QString string);
 
 	public slots:
-		void s_fade_in_finished(void);
-		void s_fade_out_finished(void);
+		void s_fade_in_finished(void) override;
+		void s_fade_out_finished(void) override;
 };
 
 #include "ui_wdgOverlayUi.h"
@@ -453,13 +463,13 @@ class wdgOverlayUi : public QWidget, public Ui::wdgOverlayUi {
 		BYTE update_texture;
 
 	public:
-		wdgOverlayUi(QWidget *parent = 0);
-		~wdgOverlayUi();
+		explicit wdgOverlayUi(QWidget *parent = nullptr);
+		~wdgOverlayUi() override;
 
 	protected:
-		void changeEvent(QEvent *event);
-		void resizeEvent(QResizeEvent *event);
-		void closeEvent(QCloseEvent *event);
+		void changeEvent(QEvent *event) override;
+		void resizeEvent(QResizeEvent *event) override;
+		void closeEvent(QCloseEvent *event) override;
 
 	public:
 		void retranslateUi(QWidget *wdgOverlayUi);

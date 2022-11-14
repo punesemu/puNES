@@ -16,10 +16,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <math.h>
+#include <cmath>
 #include "wdgNTSCFilter.hpp"
 #include "mainWindow.hpp"
-#include "video/filters/ntsc.h"
 #include "conf.h"
 #include "emu_thread.h"
 #include "gui.h"
@@ -63,7 +62,7 @@ wdgNTSCFilter::wdgNTSCFilter(QWidget *parent) : QWidget(parent) {
 
 	installEventFilter(this);
 }
-wdgNTSCFilter::~wdgNTSCFilter() {}
+wdgNTSCFilter::~wdgNTSCFilter() = default;
 
 void wdgNTSCFilter::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
@@ -88,29 +87,29 @@ void wdgNTSCFilter::ntsc_update_paramaters(void) {
 void wdgNTSCFilter::set_sliders_spins(void) {
 	nes_ntsc_setup_t *format = &ntsc_filter.format[cfg->ntsc_format];
 
-	qtHelper::slider_set_value(horizontalSlider_Hue, round(format->hue * 100));
-	qtHelper::slider_set_value(horizontalSlider_Saturation, round(format->saturation * 100));
-	qtHelper::slider_set_value(horizontalSlider_Contrast, round(format->contrast * 100));
-	qtHelper::slider_set_value(horizontalSlider_Brightness, round(format->brightness * 100));
-	qtHelper::slider_set_value(horizontalSlider_Sharpness, round(format->sharpness * 100));
-	qtHelper::slider_set_value(horizontalSlider_Gamma, round(format->gamma * 100));
-	qtHelper::slider_set_value(horizontalSlider_Resolution, round(format->resolution * 100));
-	qtHelper::slider_set_value(horizontalSlider_Artifacts, round(format->artifacts * 20));
-	qtHelper::slider_set_value(horizontalSlider_Fringing, round(format->fringing * 20));
-	qtHelper::slider_set_value(horizontalSlider_Bleed, round(format->bleed * 100));
-	qtHelper::slider_set_value(horizontalSlider_Scanline, round((1.0f - format->scanline_intensity) * 100));
+	qtHelper::slider_set_value(horizontalSlider_Hue, (int)round(format->hue * 100));
+	qtHelper::slider_set_value(horizontalSlider_Saturation, (int)round(format->saturation * 100));
+	qtHelper::slider_set_value(horizontalSlider_Contrast, (int)round(format->contrast * 100));
+	qtHelper::slider_set_value(horizontalSlider_Brightness, (int)round(format->brightness * 100));
+	qtHelper::slider_set_value(horizontalSlider_Sharpness, (int)round(format->sharpness * 100));
+	qtHelper::slider_set_value(horizontalSlider_Gamma, (int)round(format->gamma * 100));
+	qtHelper::slider_set_value(horizontalSlider_Resolution, (int)round(format->resolution * 100));
+	qtHelper::slider_set_value(horizontalSlider_Artifacts, (int)round(format->artifacts * 20));
+	qtHelper::slider_set_value(horizontalSlider_Fringing, (int)round(format->fringing * 20));
+	qtHelper::slider_set_value(horizontalSlider_Bleed, (int)round(format->bleed * 100));
+	qtHelper::slider_set_value(horizontalSlider_Scanline, (int)round((1.0f - format->scanline_intensity) * 100));
 
-	qtHelper::spinbox_set_value(spinBox_Hue, round(format->hue * 100));
-	qtHelper::spinbox_set_value(spinBox_Saturation, round(format->saturation * 100));
-	qtHelper::spinbox_set_value(spinBox_Contrast, round(format->contrast * 100));
-	qtHelper::spinbox_set_value(spinBox_Brightness, round(format->brightness * 100));
-	qtHelper::spinbox_set_value(spinBox_Sharpness, round(format->sharpness * 100));
-	qtHelper::spinbox_set_value(spinBox_Gamma, round(format->gamma * 100));
-	qtHelper::spinbox_set_value(spinBox_Resolution, round(format->resolution * 100));
-	qtHelper::spinbox_set_value(spinBox_Artifacts, round(format->artifacts * 20));
-	qtHelper::spinbox_set_value(spinBox_Fringing, round(format->fringing * 20));
-	qtHelper::spinbox_set_value(spinBox_Bleed, round(format->bleed * 100));
-	qtHelper::spinbox_set_value(spinBox_Scanline, round((1.0f - format->scanline_intensity) * 100));
+	qtHelper::spinbox_set_value(spinBox_Hue, (int)round(format->hue * 100));
+	qtHelper::spinbox_set_value(spinBox_Saturation, (int)round(format->saturation * 100));
+	qtHelper::spinbox_set_value(spinBox_Contrast, (int)round(format->contrast * 100));
+	qtHelper::spinbox_set_value(spinBox_Brightness, (int)round(format->brightness * 100));
+	qtHelper::spinbox_set_value(spinBox_Sharpness, (int)round(format->sharpness * 100));
+	qtHelper::spinbox_set_value(spinBox_Gamma, (int)round(format->gamma * 100));
+	qtHelper::spinbox_set_value(spinBox_Resolution, (int)round(format->resolution * 100));
+	qtHelper::spinbox_set_value(spinBox_Artifacts, (int)round(format->artifacts * 20));
+	qtHelper::spinbox_set_value(spinBox_Fringing, (int)round(format->fringing * 20));
+	qtHelper::spinbox_set_value(spinBox_Bleed, (int)round(format->bleed * 100));
+	qtHelper::spinbox_set_value(spinBox_Scanline, (int)round((1.0f - format->scanline_intensity) * 100));
 
 	qtHelper::checkbox_set_checked(checkBox_Merge_Fields, format->merge_fields);
 	qtHelper::checkbox_set_checked(checkBox_Vertical_Blend, format->vertical_blend);
@@ -172,6 +171,7 @@ void wdgNTSCFilter::s_checkbox_changed(int state) {
 	nes_ntsc_setup_t *format = &ntsc_filter.format[cfg->ntsc_format];
 
 	switch (index) {
+		default:
 		case 0:
 			format->merge_fields = state > 0;
 			break;
