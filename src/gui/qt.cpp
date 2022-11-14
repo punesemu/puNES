@@ -25,7 +25,7 @@
 #if defined (_WIN32)
 #include <QtCore/QtPlugin>
 #if defined (QT5_PLUGIN_QWINDOWS)
-Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
 #endif
 #if defined (QT_PLUGIN_QWINDOWSVISTASTYLE)
 Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin)
@@ -47,7 +47,6 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 // mi serve per il std::thread::hardware_concurrency() del gui_hardware_concurrency.
 #include <thread>
 #endif
-#include <stdlib.h>
 #include <unistd.h>
 #include <libgen.h>
 #if defined (WITH_OPENGL)
@@ -62,8 +61,6 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "dlgVsSystem.hpp"
 #include "dlgJsc.hpp"
 #include "wdgScreen.hpp"
-#include "wdgStatusBar.hpp"
-#include "wdgSettingsVideo.hpp"
 #include "wdgOverlayUi.hpp"
 #include "video/gfx_thread.h"
 #include "emu_thread.h"
@@ -83,25 +80,25 @@ INLINE uTCHAR *gui_home(void);
 static void gui_is_in_desktop(int *x, int *y);
 
 static struct _qt {
-	mainApplication *app;
-	mainWindow *mwin;
-	wdgScreen *screen;
-	objCheat *objch;
+	mainApplication *app{};
+	mainWindow *mwin{};
+	wdgScreen *screen{};
+	objCheat *objch{};
 	QImage qimage;
 	QByteArray sba;
 
 	// widget dell'overlay
-	wdgOverlayUi *overlay;
+	wdgOverlayUi *overlay{};
 
 	// dialog del settaggio
-	dlgSettings *dset;
+	dlgSettings *dset{};
 
 	// controlli esterni
-	dlgVsSystem *vssystem;
-	dlgJsc *djsc;
+	dlgVsSystem *vssystem{};
+	dlgJsc *djsc{};
 
 	// dialog della tastiera virtuale
-	dlgKeyboard *dkeyb;
+	dlgKeyboard *dkeyb{};
 
 	// QObject che non mandano un pause quando in background
 	QList<QWidget *>no_bck_pause;
@@ -110,9 +107,9 @@ static struct _qt {
 class appEventFilter: public QObject {
 	public:
 		appEventFilter() : QObject() {};
-		~appEventFilter() {};
+		~appEventFilter() override = default;;
 
-		bool eventFilter(QObject* object, QEvent* event) {
+		bool eventFilter(QObject* object, QEvent* event) override {
 			if (event->type() == QEvent::MouseMove) {
 				gmouse.timer = gui_get_ms();
 				if (gmouse.hidden == TRUE) {
@@ -125,7 +122,7 @@ class appEventFilter: public QObject {
 
 BYTE gui_init(int *argc, char **argv) {
 	QFlags<mainApplication::Mode> mode = mainApplication::Mode::ExcludeAppVersion | mainApplication::Mode::ExcludeAppPath;
-	int i = 0;
+	int i;
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -164,14 +161,14 @@ BYTE gui_control_instance(void) {
 			AllowSetForegroundWindow(DWORD(qt.app->primaryPid()));
 #endif
 			do {
-				if (qt.app->sendMessage(uQString(info.rom.file).toUtf8()) == true) {
+				if (qt.app->sendMessage(uQString(info.rom.file).toUtf8())) {
 					break;
 				}
 				gui_sleep(20);
 				count++;
 			} while (count < 10);
 		}
-		qt.app->exit(0);
+		mainApplication::exit(0);
 		return (EXIT_ERROR);
 	}
 	return (EXIT_OK);
@@ -240,7 +237,7 @@ void gui_start(void) {
 	fps.frame.expected_end = gui_get_ms() + machine.ms_frame;
 	gfx_thread_continue();
 	emu_thread_continue();
-	qt.app->exec();
+	mainApplication::exec();
 }
 
 const uTCHAR *gui_home_folder(void) {
@@ -329,7 +326,7 @@ void gui_set_window_size(void) {
 		qt.mwin->menu_Help->menuAction()->setVisible(true);
 	}
 
-	toolbar = qt.mwin->toolbar->isHidden() | qt.mwin->toolbar->isFloating();
+	toolbar = qt.mwin->toolbar->isHidden() || qt.mwin->toolbar->isFloating();
 
 	if (qt.mwin->toolbar->orientation() == Qt::Vertical) {
 		w += (toolbar ? 0 : qt.mwin->toolbar->sizeHint().width());
@@ -393,9 +390,6 @@ void gui_update(void) {
 	qt.overlay->update_widget();
 
 	gui.in_update = FALSE;
-}
-void gui_update_dset(void) {
-	qt.dset->update_dialog();
 }
 void gui_update_gps_settings(void) {
 	qt.dset->change_rom();
@@ -505,13 +499,13 @@ void *gui_objcheat_get_ptr(void) {
 	return ((void *)qt.objch);
 }
 void gui_objcheat_init(void) {
-	if (qt.objch == NULL) {
-		qt.objch = new objCheat(0);
+	if (qt.objch == nullptr) {
+		qt.objch = new objCheat(nullptr);
 	}
 	qt.objch->clear_list();
 }
 void gui_objcheat_read_game_cheats(void) {
-	qt.objch->read_game_cheats(NULL);
+	qt.objch->read_game_cheats(nullptr);
 }
 
 void gui_cursor_init(void) {
@@ -533,6 +527,7 @@ void *gui_mainwindow_get_ptr(void) {
 }
 void gui_mainwindow_coords(int *x, int *y, BYTE border) {
 	switch (border) {
+		default:
 		// top center
 		case 0:
 			(*x) = qt.mwin->geometry().x() + (qt.mwin->geometry().width() / 2);
@@ -607,9 +602,7 @@ void gui_decode_all_input_events(void) {
 
 	// keyboard
 	if (qt.screen->events.keyb.count()) {
-		for (QList<_wdgScreen_keyboard_event>::iterator e = qt.screen->events.keyb.begin(); e != qt.screen->events.keyb.end(); ++e) {
-			_wdgScreen_keyboard_event &event = *e;
-
+		for (_wdgScreen_keyboard_event &event : qt.screen->events.keyb) {
 			for (BYTE i = PORT1; i < PORT_MAX; i++) {
 				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(event.mode,
 					event.autorepeat, event.event, event.type, &port[i]) == EXIT_OK)) {
@@ -622,11 +615,8 @@ void gui_decode_all_input_events(void) {
 
 	// mouse
 	if (qt.screen->events.mouse.count()) {
-		for (QList<_wdgScreen_mouse_event>::iterator e = qt.screen->events.mouse.begin(); e != qt.screen->events.mouse.end(); ++e) {
-			_wdgScreen_mouse_event &event = *e;
-
-			if ((event.type == QEvent::MouseButtonPress) ||
-				(event.type == QEvent::MouseButtonDblClick)) {
+		for (_wdgScreen_mouse_event &event : qt.screen->events.mouse) {
+			if ((event.type == QEvent::MouseButtonPress) || (event.type == QEvent::MouseButtonDblClick)) {
 				if (event.button == Qt::LeftButton) {
 					gmouse.left = TRUE;
 				} else if (event.button == Qt::RightButton) {
@@ -683,7 +673,7 @@ void *gui_dlgkeyboard_get_ptr(void) {
 }
 
 void gui_js_joyval_icon_desc(int index, DBWORD input, void *icon, void *desc) {
-	uTCHAR *uicon = NULL, *udesc = NULL;
+	uTCHAR *uicon = nullptr, *udesc = nullptr;
 	QString *si = (QString *)icon, *sd = (QString *)desc;
 
 	js_joyval_icon_and_desc(index, input, &uicon, &udesc);
@@ -707,7 +697,7 @@ void gui_external_control_windows_show(void) {
 void gui_external_control_windows_update_pos(void) {
 	unsigned int y = 0;
 
-	y += qt.vssystem->update_pos(y);
+	y += qt.vssystem->update_pos((int)y);
 }
 
 void gui_vs_system_update_dialog(void) {
@@ -742,7 +732,7 @@ void gui_screen_info(void) {
 #else
 	gfx.is_wayland = FALSE;
 #endif
-	gfx.bit_per_pixel = qt.app->primaryScreen()->depth();
+	gfx.bit_per_pixel = mainApplication::primaryScreen()->depth();
 }
 
 uint32_t gui_color(BYTE a, BYTE r, BYTE g, BYTE b) {
@@ -787,7 +777,7 @@ void gui_save_screenshot(int w, int h, int stride, char *buffer, BYTE flip) {
 	for (count = 1; count < 999999; count++) {
 		QString final = basename + QString("_%1.png").arg(count, 6, 'd', 0, '0');
 
-		if (QFileInfo(final).exists() == false) {
+		if (!QFileInfo(final).exists()) {
 			file.setFileName(final);
 			break;
 		}
@@ -810,7 +800,7 @@ void gui_utf_printf(const uTCHAR *fmt, ...) {
 	va_end(ap);
 
 	QString utf = uQString(buffer);
-	QMessageBox::warning(0, QString("%1").arg(utf.length()), utf);
+	QMessageBox::warning(nullptr, QString("%1").arg(utf.length()), utf);
 }
 void gui_utf_dirname(uTCHAR *path, uTCHAR *dst, size_t len) {
 	QString utf = uQString(path);

@@ -40,8 +40,8 @@ typedef struct _cb_ports {
 } _cb_ports;
 typedef struct _joy_list {
 	_cb_ports ele[MAX_JOYSTICK + 1];
-	int count;
-	int disabled_line;
+	int count{};
+	int disabled_line{};
 } _joy_list;
 
 extern _joy_list joy_list;

@@ -42,10 +42,14 @@ void settings_init(void) {
 	memset(&s, 0x00, sizeof(_emu_settings));
 
 	s.cfg = QSettings::registerFormat("cfg", rd_cfg_file, wr_cfg_file);
+
 	s.list = LSET_SET;
 	s.set = new objSet(s.cfg, QString(CFGFILENAME), LSET_SET);
+	s.set->setup();
+
 	s.list = LSET_INP;
 	s.inp = new objInp(s.cfg, QString(INPFILENAME), LSET_INP);
+	s.inp->setup();
 }
 void settings_save(void) {
 	s.list = LSET_SET;
@@ -87,22 +91,22 @@ void settings_inp_wr_sc(void *str, int index, int type) {
 void settings_inp_all_defaults(_config_input *config_input, _array_pointers_port *array) {
 	s.inp->set_all_input_defaults(config_input, array);
 }
-void settings_inp_port_defaults(_port *port, int index, int mode) {
+void settings_inp_port_defaults(_port *prt, int index, int mode) {
 	if (mode == KEYBOARD) {
-		s.inp->kbd_defaults(port, index);
+		s.inp->kbd_defaults(prt, index);
 	} else {
 		int i;
 
 		for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-			port->input[JOYSTICK][i] = js_joyval_default(index, i);
+			prt->input[JOYSTICK][i] = js_joyval_default(index, i);
 		}
 	}
 }
-void settings_inp_port_button_default(int button, _port *port, int index, int mode) {
+void settings_inp_port_button_default(int button, _port *prt, int index, int mode) {
 	if (mode == KEYBOARD) {
-		s.inp->kbd_default(button, port, index);
+		s.inp->kbd_default(button, prt, index);
 	} else {
-		port->input[JOYSTICK][button] = js_joyval_default(index, button);
+		prt->input[JOYSTICK][button] = js_joyval_default(index, button);
 	}
 }
 DBWORD settings_inp_nes_keyboard_nscode_default(uTCHAR *name) {
@@ -131,14 +135,15 @@ void settings_pgs_parse(void) {
 
 	if (s.pgs) {
 		delete(s.pgs);
-		s.pgs = NULL;
+		s.pgs = nullptr;
 	}
 
 	s.list = LSET_PGS;
 	s.pgs = new objPgs(s.cfg, PGSFILENAME, LSET_PGS);
+	s.pgs->setup();
 
 	if (cfg->ppu_overclock) {
-		gui_overlay_info_append_msg_precompiled(19, NULL);
+		gui_overlay_info_append_msg_precompiled(19, nullptr);
 	}
 }
 void settings_pgs_save(void) {
@@ -153,7 +158,7 @@ void settings_shp_parse(void) {
 
 	if (s.shp) {
 		delete(s.shp);
-		s.shp = NULL;
+		s.shp = nullptr;
 	}
 
 	if (shader_effect.params == 0) {
@@ -191,6 +196,7 @@ void settings_shp_parse(void) {
 
 	s.list = LSET_NONE;
 	s.shp = new objShp(s.cfg, file, LSET_NONE);
+	s.shp->setup();
 }
 void settings_shp_save(void) {
 	if (shader_effect.params == 0) {
@@ -207,13 +213,14 @@ void settings_jsc_parse(int index) {
 
 	if (s.jsc) {
 		delete(s.jsc);
-		s.jsc = NULL;
+		s.jsc = nullptr;
 	}
 
 	file = JSCFILENAME(index);
 
 	s.list = LSET_JSC;
 	s.jsc = new objJsc(s.cfg, file, LSET_JSC, index);
+	s.jsc->setup();
 }
 void settings_jsc_save(void) {
 	if (s.jsc) {

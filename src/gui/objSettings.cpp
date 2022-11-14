@@ -16,7 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <math.h>
+#include <cmath>
 #include <QtCore/QStringList>
 #include <QtCore/QTextStream>
 #include <QtCore/QRegularExpression>
@@ -37,11 +37,11 @@
 extern _emu_settings s;
 
 static const struct _kv_specials {
-	quint32 native;
+	quint32 native{};
 	Qt::KeyboardModifiers modifiers;
-	DBWORD key;
-	char name[20];
-	DBWORD value;
+	DBWORD key{};
+	char name[20]{};
+	DBWORD value{};
 } kv_specials[] = {
 	{ 0,            Qt::KeypadModifier,  Qt::Key_0,        "Numpad0",    257 },
 	{ 0,            Qt::KeypadModifier,  Qt::Key_Insert,   "NumPad0",    257 },
@@ -696,7 +696,7 @@ static const struct _nscode_list {
 
 // -------------------------------- Oggetto base -----------------------------------------
 
-objSettings::objSettings(Format f, QString file, int list_ele) : QSettings(uQString(gui_config_folder()) + file, f) {
+objSettings::objSettings(Format f, const QString &file, int list_ele) : QSettings(uQString(gui_config_folder()) + file, f) {
 	listEle = list_ele;
 	set = &list_settings[listEle];
 
@@ -704,21 +704,21 @@ objSettings::objSettings(Format f, QString file, int list_ele) : QSettings(uQStr
 		val << "";
 	}
 }
-objSettings::~objSettings() {}
+objSettings::~objSettings() = default;
 
 void objSettings::setup(void) {
 	rd();
 	after_the_defaults();
 	wr();
 }
-void objSettings::to_cfg(UNUSED(QString group)) {}
-void objSettings::fr_cfg(UNUSED(QString group)) {}
+void objSettings::to_cfg(UNUSED(const QString &group)) {}
+void objSettings::fr_cfg(UNUSED(const QString &group)) {}
 void objSettings::after_the_defaults(void) {}
 
 void objSettings::rd(void) {
 	rd("all");
 }
-void objSettings::rd(QString group) {
+void objSettings::rd(const QString &group) {
 	for (int i = 0; i < set->count; i++) {
 		if (group == "all") {
 			rd_key(i);
@@ -735,7 +735,7 @@ void objSettings::rd_key(int index) {
 		endGroup();
 	}
 }
-void objSettings::rd_key(QString group, int index) {
+void objSettings::rd_key(const QString &group, int index) {
 	if (set->cfg[index].grp && (uQString(set->cfg[index].grp) == group)) {
 		rd_key(index);
 	}
@@ -745,7 +745,7 @@ void objSettings::wr(void) {
 	to_cfg("all");
 	wr_all_keys();
 }
-void objSettings::wr(QString group) {
+void objSettings::wr(const QString &group) {
 	to_cfg(group);
 	wr_all_keys();
 }
@@ -756,7 +756,7 @@ void objSettings::wr_key(int index) {
 		endGroup();
 	}
 }
-void objSettings::wr_key(QString group, int index) {
+void objSettings::wr_key(const QString &group, int index) {
 	if (set->cfg[index].grp && (uQString(set->cfg[index].grp) == group)) {
 		wr_key(index);
 	}
@@ -784,7 +784,7 @@ int objSettings::val_to_int(int index, const uTCHAR *buffer) {
 		}
 	}
 
-	if (finded == true) {
+	if (finded) {
 		return (set->cfg[index].opts.opt[a].value);
 	}
 
@@ -827,10 +827,8 @@ void objSettings::cpy_utchar_to_val(int index, uTCHAR *src) {
 
 // ------------------------------- Configurazioni ----------------------------------------
 
-objSet::objSet(Format f, QString file, int list_ele) : objSettings(f, file, list_ele) {
-	setup();
-}
-objSet::~objSet() {}
+objSet::objSet(Format f, const QString &file, int list_ele) : objSettings(f, file, list_ele) {}
+objSet::~objSet() = default;
 
 void objSet::setup(void) {
 	// attivo la modalita' configurazione
@@ -838,7 +836,7 @@ void objSet::setup(void) {
 
 	objSettings::setup();
 }
-void objSet::to_cfg(QString group) {
+void objSet::to_cfg(const QString &group) {
 	if ((group == "system") || (group == "all")) {
 		int_to_val(SET_MODE, cfg_from_file.mode);
 		int_to_val(SET_REWIND_MINUTES, cfg_from_file.rewind_minutes);
@@ -867,12 +865,12 @@ void objSet::to_cfg(QString group) {
 		int_to_val(SET_OVERSCAN_DEFAULT, cfg_from_file.oscan_default);
 		val.replace(SET_OVERSCAN_BRD_NTSC, oscan_val(&overscan_borders[0]));
 		val.replace(SET_OVERSCAN_BRD_PAL, oscan_val(&overscan_borders[1]));
-		int_to_val(SET_FILTER, cfg_from_file.filter);
+		int_to_val(SET_FILTER, (int)cfg_from_file.filter);
 		int_to_val(SET_NTSC_FORMAT, cfg_from_file.ntsc_format);
 		val.replace(SET_NTSC_COMPOSITE_PARAM, ntsc_val(&ntsc_filter.format[COMPOSITE]));
 		val.replace(SET_NTSC_SVIDEO_PARAM, ntsc_val(&ntsc_filter.format[SVIDEO]));
 		val.replace(SET_NTSC_RGB_PARAM, ntsc_val(&ntsc_filter.format[RGBMODE]));
-		int_to_val(SET_SHADER, cfg_from_file.shader);
+		int_to_val(SET_SHADER, (int)cfg_from_file.shader);
 		cpy_utchar_to_val(SET_FILE_SHADER, cfg_from_file.shader_file);
 		int_to_val(SET_PALETTE, cfg_from_file.palette);
 		cpy_utchar_to_val(SET_FILE_PALETTE, cfg_from_file.palette_file);
@@ -967,7 +965,7 @@ void objSet::to_cfg(QString group) {
 	}
 #endif
 }
-void objSet::fr_cfg(QString group) {
+void objSet::fr_cfg(const QString &group) {
 	if ((group == "system") || (group == "all")) {
 		cfg_from_file.mode = val_to_int(SET_MODE);
 		cfg_from_file.ff_velocity = val_to_int(SET_FF_VELOCITY);
@@ -1182,22 +1180,22 @@ void objSet::resolution_val_to_int(int *w, int *h, const uTCHAR *buffer) {
 		(*h) = splitted.at(1).toInt();
 	}
 }
-QString objSet::resolution_val(int *w, int *h) {
+QString objSet::resolution_val(const int *w, const int *h) {
 	if (((*w) == -1) || ((*h) == -1)) {
-		return (QString("automatic"));
+		return ({"automatic";});
 	}
 	return (QString("%0x%1").arg((*w)).arg((*h)));
 }
 #endif
 
-void objSet::ntsc_val_to_double(int index, void *ntsc_format) {
-	ntsc_val_to_double(ntsc_format, uQStringCD(val.at(index)));
+void objSet::ntsc_val_to_double(int index, void *ntsc_frmt) {
+	ntsc_val_to_double(ntsc_frmt, uQStringCD(val.at(index)));
 
-	val.replace(index, ntsc_val(ntsc_format));
+	val.replace(index, ntsc_val(ntsc_frmt));
 }
-void objSet::ntsc_val_to_double(void *ntsc_format, const uTCHAR *buffer) {
+void objSet::ntsc_val_to_double(void *ntsc_frmt, const uTCHAR *buffer) {
 	QStringList splitted = uQString(buffer).toLower().split(",");
-	nes_ntsc_setup_t *format = (nes_ntsc_setup_t *)ntsc_format;
+	nes_ntsc_setup_t *format = (nes_ntsc_setup_t *)ntsc_frmt;
 
 	if (splitted.count() == 13) {
 		format->hue = splitted.at(0).toDouble() / 100.0f;
@@ -1215,8 +1213,8 @@ void objSet::ntsc_val_to_double(void *ntsc_format, const uTCHAR *buffer) {
 		format->scanline_intensity = splitted.at(12).toDouble() / 100.0f;
 	}
 }
-QString objSet::ntsc_val(void *ntsc_format) {
-	nes_ntsc_setup_t *format = (nes_ntsc_setup_t *)ntsc_format;
+QString objSet::ntsc_val(void *ntsc_frmt) {
+	nes_ntsc_setup_t *format = (nes_ntsc_setup_t *)ntsc_frmt;
 
 	return (QString("%0,%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12").
 		arg(round(format->hue * 100)).
@@ -1253,7 +1251,7 @@ int objSet::channel_convert_index(int index) {
 			return (APU_EXTRA);
 	}
 }
-void objSet::channel_decode(int index, QString val) {
+void objSet::channel_decode(int index, const QString &val) {
 	QStringList split = val.split(",");
 
 	if (split.count() != 2) {
@@ -1330,10 +1328,8 @@ QString objSet::last_geometry_val(_last_geometry *lg) {
 
 // ---------------------------------------- Per game -------------------------------------
 
-objPgs::objPgs(Format f, QString file, int list_ele) : objSettings(f, file, list_ele) {
-	setup();
-}
-objPgs::~objPgs() {}
+objPgs::objPgs(Format f, const QString &file, int list_ele) : objSettings(f, file, list_ele) {}
+objPgs::~objPgs() = default;
 
 void objPgs::setup(void) {
 	rd();
@@ -1342,8 +1338,8 @@ void objPgs::setup(void) {
 		wr();
 	}
 }
-void objPgs::to_cfg(UNUSED(QString group)) {
-	int_to_val(SET_PGS_SLOT, save_slot.slot);
+void objPgs::to_cfg(UNUSED(const QString &group)) {
+	int_to_val(SET_PGS_SLOT, (int)save_slot.slot);
 	cpy_utchar_to_val(SET_PGS_FILE_SAVE, cfg_from_file.save_file);
 	int_to_val(SET_PGS_OVERSCAN, cfg_from_file.oscan);
 	int_to_val(SET_PGS_DIPSWITCH, cfg_from_file.dipswitch);
@@ -1352,7 +1348,7 @@ void objPgs::to_cfg(UNUSED(QString group)) {
 	int_to_val(SET_PGS_PPU_OVERCLOCK_VB_SCLINE, cfg_from_file.extra_vb_scanlines);
 	int_to_val(SET_PGS_PPU_OVERCLOCK_PR_SCLINE, cfg_from_file.extra_pr_scanlines);
 }
-void objPgs::fr_cfg(UNUSED(QString group)) {
+void objPgs::fr_cfg(UNUSED(const QString &group)) {
 	save_slot.slot = val_to_int(SET_PGS_SLOT);
 	cpy_val_to_utchar(SET_PGS_FILE_SAVE, cfg_from_file.save_file, usizeof(cfg_from_file.save_file));
 	cfg_from_file.oscan = val_to_int(SET_PGS_OVERSCAN);
@@ -1365,16 +1361,14 @@ void objPgs::fr_cfg(UNUSED(QString group)) {
 
 // ----------------------------------------- Input ---------------------------------------
 
-objInp::objInp(Format f, QString file, int list_ele) : objSettings(f, file, list_ele) {
-	setup();
-}
-objInp::~objInp() {}
+objInp::objInp(Format f, const QString &file, int list_ele) : objSettings(f, file, list_ele) {}
+objInp::~objInp() = default;
 
 void objInp::setup(void) {
 	rd();
 	wr();
 }
-void objInp::to_cfg(QString group) {
+void objInp::to_cfg(const QString &group) {
 	if ((group == "expansion port") || (group == "all")) {
 		int_to_val(SET_INP_EXPANSION_PORT, cfg_from_file.input.expansion);
 	}
@@ -1433,7 +1427,7 @@ void objInp::to_cfg(QString group) {
 		int_to_val(SET_INP_SBKB_EXTENDED_MODE, cfg_from_file.input.vk_subor_extended_mode);
 	}
 }
-void objInp::fr_cfg(QString group) {
+void objInp::fr_cfg(const QString &group) {
 	if ((group == "expansion port") || (group == "all")) {
 		cfg_from_file.input.expansion = val_to_int(SET_INP_EXPANSION_PORT);
 	}
@@ -1510,15 +1504,15 @@ void objInp::set_all_input_defaults(_config_input *config_input, _array_pointers
 	config_input->controller_mode = CTRL_MODE_NES;
 
 	for (i = PORT1; i < PORT_MAX; i++) {
-		_port *port = array->port[i];
+		_port *prt = array->port[i];
 
-		js_guid_unset(&port->jguid);
+		js_guid_unset(&prt->jguid);
 
-		port->type = CTRL_STANDARD;
-		port->type_pad = CTRL_PAD_AUTO;
-		port->turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
-		port->turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
-		kbd_defaults(port, i);
+		prt->type = CTRL_STANDARD;
+		prt->type_pad = CTRL_PAD_AUTO;
+		prt->turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+		prt->turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+		kbd_defaults(prt, i);
 	}
 }
 void *objInp::sc_val_to_qstring_pntr(int index, int type) {
@@ -1545,16 +1539,16 @@ QString objInp::kbd_keyval_to_name(const DBWORD value) {
 	for (i = 0; i < LENGTH(kv_specials); i++) {
 		if (value == kv_specials[i].value) {
 			ok = true;
-			index = i;
+			index = (int)i;
 			break;
 		}
 	}
 
 	if (ok) {
-		return (QString(kv_specials[index].name));
+		return ({kv_specials[index].name;});
 	}
 
-	return (QKeySequence(value).toString());
+	return (QKeySequence((int)value).toString());
 }
 DBWORD objInp::kbd_keyval_decode(QKeyEvent *keyEvent) {
 	DBWORD key = keyEvent->key();
@@ -1585,25 +1579,22 @@ DBWORD objInp::kbd_keyval_decode(QKeyEvent *keyEvent) {
 		}
 		default:
 			break;
-	};
+	}
 #undef EXTENDED_KEY_MASK
 #undef LSHIFT_MASK
 #undef RSHIFT_MASK
 #endif
 
-	for (unsigned int i = 0; i < LENGTH(kv_specials); i++) {
-		if (key == kv_specials[i].key) {
-			if (kv_specials[i].native) {
-				if (native != kv_specials[i].native) {
+	for (const auto & kv_special : kv_specials) {
+		if (key == kv_special.key) {
+			if (kv_special.native) {
+				if (native != kv_special.native) {
 					continue;
 				}
-				key = kv_specials[i].value;
+				key = kv_special.value;
 				break;
-			} else if (kv_specials[i].modifiers == Qt::NoModifier) {
-				key = kv_specials[i].value;
-				break;
-			} else if (keyEvent->modifiers() == kv_specials[i].modifiers) {
-				key = kv_specials[i].value;
+			} else if ((kv_special.modifiers == Qt::NoModifier) || (keyEvent->modifiers() == kv_special.modifiers)) {
+				key = kv_special.value;
 				break;
 			}
 		}
@@ -1611,10 +1602,11 @@ DBWORD objInp::kbd_keyval_decode(QKeyEvent *keyEvent) {
 
 	return (key);
 }
-void objInp::kbd_default(int button, _port *port, int index) {
+void objInp::kbd_default(int button, _port *prt, int index) {
 	int pIndex = 0;
 
 	switch (index) {
+		default:
 		case PORT1:
 			pIndex = SET_INP_P1K_A;
 			break;
@@ -1629,13 +1621,13 @@ void objInp::kbd_default(int button, _port *port, int index) {
 			break;
 	}
 
-	port->input[KEYBOARD][button] = kbd_keyval_from_name(pIndex + button, uQString(set->cfg[pIndex + button].def));
+	prt->input[KEYBOARD][button] = kbd_keyval_from_name(pIndex + button, uQString(set->cfg[pIndex + button].def));
 }
-void objInp::kbd_defaults(_port *port, int index) {
+void objInp::kbd_defaults(_port *prt, int index) {
 	int i;
 
 	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		kbd_default(i, port, index);
+		kbd_default(i, prt, index);
 	}
 }
 QString objInp::nscode_to_name(const DBWORD value) {
@@ -1646,7 +1638,7 @@ QString objInp::nscode_to_name(const DBWORD value) {
 	}
 	for (i = 0; i < LENGTH(nscode_list); i++) {
 		if (value == (DBWORD)nscode_list[i].value) {
-			return (QString(nscode_list[i].name));
+			return ({nscode_list[i].name;});
 		}
 	}
 	return (QString("NSCODE_%1").arg(value));
@@ -1669,13 +1661,13 @@ DBWORD objInp::nscode_from_name(QString name) {
 		return (ok ? tmp : 0);
 	}
 }
-DBWORD objInp::nes_keyboard_nscode_default(QString name) {
+DBWORD objInp::nes_keyboard_nscode_default(const QString &name) {
 	return (nscode_from_name(uQString(set->cfg[nes_keyboard_index(name)].def)));
 }
-DBWORD objInp::nes_keyboard_nscode(QString name) {
+DBWORD objInp::nes_keyboard_nscode(const QString &name) {
 	return (nscode_from_name(val.at(nes_keyboard_index(name))));
 }
-void objInp::nes_keyboard_set_nscode(QString name, DBWORD nscode) {
+void objInp::nes_keyboard_set_nscode(const QString &name, DBWORD nscode) {
 	val[nes_keyboard_index(name)] = nscode_to_name(nscode);
 }
 
@@ -1693,7 +1685,7 @@ void objInp::kbd_wr(int index, int pIndex) {
 		val.replace(index + i, kbd_keyval_to_name(port[pIndex].input[KEYBOARD][i]));
 	}
 }
-DBWORD objInp::_kbd_keyval_from_name(QString name) {
+DBWORD objInp::_kbd_keyval_from_name(const QString &name) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	DBWORD value = QKeySequence::fromString(name).operator[](0);
 #else
@@ -1710,7 +1702,7 @@ DBWORD objInp::_kbd_keyval_from_name(QString name) {
 
 	return (value);
 }
-DBWORD objInp::kbd_keyval_from_name(int index, QString name) {
+DBWORD objInp::kbd_keyval_from_name(int index, const QString &name) {
 	DBWORD value = 0;
 
 	if ((name != "NULL") && !(value = _kbd_keyval_from_name(name))) {
@@ -1724,20 +1716,20 @@ int objInp::kbd_keyval_to_int(int index) {
 		val.replace(index, uQString(set->cfg[index].def));
 	}
 
-	return (kbd_keyval_from_name(index, val.at(index)));
+	return ((int)kbd_keyval_from_name(index, val.at(index)));
 }
-int objInp::nes_keyboard_index(QString name) {
+int objInp::nes_keyboard_index(const QString &name) {
 	int index = 0, end = 0;
 	QString button;
 
 	switch (cfg->input.expansion) {
 		case CTRL_FAMILY_BASIC_KEYBOARD:
-			button = "FBKB " + name.replace("kButton_", "");
+			button = QString("FBKB " + name).replace("kButton_", "");
 			index = SET_INP_FBKB_0;
 			end = SET_INP_FBKB_END + 1;
 			break;
 		case CTRL_SUBOR_KEYBOARD:
-			button = "SBKB " + name.replace("kButton_", "");
+			button = QString("SBKB " + name).replace("kButton_", "");
 			index = SET_INP_SBKB_0;
 			end = SET_INP_SBKB_END + 1;
 			break;
@@ -1786,7 +1778,7 @@ int objInp::tb_delay_val_to_int(int index) {
 
 // -------------------------------- Shaders Parameters -----------------------------------
 
-objShp::objShp(Format f, QString file, int list_ele) : objSettings(f, file, list_ele) {
+objShp::objShp(Format f, const QString &file, int list_ele) : objSettings(f, file, list_ele) {
 	int i, param = 0;
 
 	for (i = 0; i < shader_effect.params; i++) {
@@ -1799,15 +1791,13 @@ objShp::objShp(Format f, QString file, int list_ele) : objSettings(f, file, list
 		val << "";
 		param++;
 	}
-
-	setup();
 }
-objShp::~objShp() {}
+objShp::~objShp() = default;
 
 void objShp::setup(void) {
 	rd();
 }
-void objShp::to_cfg(UNUSED(QString group)) {
+void objShp::to_cfg(UNUSED(const QString &group)) {
 	int i, param = 0;
 
 	for (i = 0; i < shader_effect.params; i++) {
@@ -1821,7 +1811,7 @@ void objShp::to_cfg(UNUSED(QString group)) {
 		param++;
 	}
 }
-void objShp::fr_cfg(UNUSED(QString group)) {
+void objShp::fr_cfg(UNUSED(const QString &group)) {
 	int i, param = 0;
 
 	for (i = 0; i < shader_effect.params; i++) {
@@ -1839,7 +1829,7 @@ void objShp::fr_cfg(UNUSED(QString group)) {
 void objShp::rd(void) {
 	objSettings::rd();
 }
-void objShp::rd(QString group) {
+void objShp::rd(const QString &group) {
 	int i, param = 0;
 
 	for (i = 0; i < shader_effect.params; i++) {
@@ -1882,7 +1872,7 @@ void objShp::wr_all_keys(void) {
 	sync();
 }
 
-double objShp::val_to_float(int index) {
+float objShp::val_to_float(int index) {
 	return (val.at(index).toFloat());
 }
 void objShp::float_to_val(int index, float value) {
@@ -1891,19 +1881,18 @@ void objShp::float_to_val(int index, float value) {
 
 // ------------------------------------ Jstick/Gamepads ----------------------------------
 
-objJsc::objJsc(Format f, QString file, int list_ele, int index) : objSettings(f, file, list_ele) {
+objJsc::objJsc(Format f, const QString &file, int list_ele, int index) : objSettings(f, file, list_ele) {
 	jindex = index;
-	setup();
 }
-objJsc::~objJsc() {}
+objJsc::~objJsc() = default;
 
-void objJsc::to_cfg(QString group) {
+void objJsc::to_cfg(const QString &group) {
 	_js_device *jdev = &jstick.jdd.devices[jindex];
 	unsigned int i;
 
 	if ((group == "standard controller") || (group == "all")) {
 		for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-			val.replace(SET_JSC_PAD_A + i, uQString(js_joyval_to_name(jdev->stdctrl[i])));
+			val.replace(SET_JSC_PAD_A + (int)i, uQString(js_joyval_to_name(jdev->stdctrl[i])));
 		}
 	}
 	if ((group == "system") || (group == "all")) {
@@ -1934,13 +1923,13 @@ void objJsc::to_cfg(QString group) {
 		}
 	}
 }
-void objJsc::fr_cfg(QString group) {
+void objJsc::fr_cfg(const QString &group) {
 	_js_device *jdev = &jstick.jdd.devices[jindex];
 	unsigned int i;
 
 	if ((group == "standard controller") || (group == "all")) {
 		for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-			jdev->stdctrl[i] = jsc_joyval_to_int(SET_JSC_PAD_A + i);
+			jdev->stdctrl[i] = jsc_joyval_to_int(SET_JSC_PAD_A + (int)i);
 		}
 	}
 	if ((group == "system") || (group == "all")) {
@@ -1998,13 +1987,13 @@ int objJsc::jsc_joyval_to_int(int index) {
 			val.replace(index, uQString(set->cfg[index].def));
 		}
 	}
-	return (js_joyval_from_name(uQStringCD(val.at(index))));
+	return ((int)js_joyval_from_name(uQStringCD(val.at(index))));
 }
 unsigned long long objJsc::val_to_ulonglong(int index) {
 	bool ok;
 	qulonglong value = val.at(index).toULongLong(&ok, 16);
 
-	if (ok == false) {
+	if (!ok) {
 		val.replace(index, uQString(set->cfg[index].def));
 		value = val.at(index).toULongLong(&ok, 16);
 	}
@@ -2018,7 +2007,7 @@ void objJsc::ulonglong_to_val(int index, qulonglong value) {
 
 bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 	QTextStream in(&device);
-	const _list_settings *cfg = &list_settings[s.list];
+	const _list_settings *ls = &list_settings[s.list];
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	in.setCodec("UTF-8");
@@ -2038,12 +2027,12 @@ bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 			QString group, key, value;
 			bool key_is_good = false;
 
-			if (cfg->cfg) {
-				for (int b = 0; b < cfg->count; b++) {
+			if (ls->cfg) {
+				for (int b = 0; b < ls->count; b++) {
 					// elimino eventuali spazi finali
 					key = QString(splitted.at(0)).replace(QRegularExpression("\\s*$"), "");
-					if (key == uQString(cfg->cfg[b].key)) {
-						group = uQString(cfg->cfg[b].grp);
+					if (key == uQString(ls->cfg[b].key)) {
+						group = uQString(ls->cfg[b].grp);
 						key_is_good = true;
 						break;
 					}
@@ -2069,7 +2058,7 @@ bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 	return (true);
 }
 bool wr_cfg_file(QIODevice &device, const QSettings::SettingsMap &map) {
-	const _list_settings *cfg = &list_settings[s.list];
+	const _list_settings *ls = &list_settings[s.list];
 	QTextStream out(&device);
 	QString last_group = "";
 	int count_grp = 0;
@@ -2085,7 +2074,7 @@ bool wr_cfg_file(QIODevice &device, const QSettings::SettingsMap &map) {
 		QSettings::SettingsMap::const_iterator iter = map.begin();
 		
 		for (; iter != map.end(); ++iter) {
-			if (iter.key().isEmpty() == false) {
+			if (!iter.key().isEmpty()) {
 				out << iter.key() << "=" << iter.value().toString() << NEWLINE;
 			}
 		}
@@ -2093,11 +2082,11 @@ bool wr_cfg_file(QIODevice &device, const QSettings::SettingsMap &map) {
 		return (true);
 	}
 
-	for (int i = 0; i < cfg->count; i++) {
-		QString group = uQString(cfg->cfg[i].grp);
-		QString key = uQString(cfg->cfg[i].key);
+	for (int i = 0; i < ls->count; i++) {
+		QString group = uQString(ls->cfg[i].grp);
+		QString key = uQString(ls->cfg[i].key);
 		QString gkey = group.isNull() || group.isEmpty() ? key : group + '/' + key;
-		QString comment = uQString(cfg->cfg[i].cmt);
+		QString comment = uQString(ls->cfg[i].cmt);
 		QSettings::SettingsMap::const_iterator iter = map.find(gkey);
 		BYTE is_group = FALSE;
 

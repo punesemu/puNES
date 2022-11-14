@@ -33,7 +33,7 @@
 #define CHEATFILENAME uQString(gui_config_folder()) + QString(CHEAT_FOLDER) + "/" +\
 	QFileInfo(uQString(info.rom.file)).completeBaseName() + ".xml"
 
-static bool libretro_value(QSettings *set, QString key, QString &value);
+static bool libretro_value(QSettings *set, const QString& key, QString &value);
 static bool libretro_rd_file(QIODevice &device, QSettings::SettingsMap &map);
 
 static const QChar gg_table[] = {
@@ -53,7 +53,7 @@ static const BYTE rocky_table[] = {
 objCheat::objCheat(QObject *parent) : QObject(parent) {
 	clear_list();
 }
-objCheat::~objCheat() {}
+objCheat::~objCheat() = default;
 
 void objCheat::read_game_cheats(QWidget *parent) {
 	clear_list();
@@ -68,7 +68,7 @@ void objCheat::read_game_cheats(QWidget *parent) {
 		apply_cheats();
 	}
 }
-void objCheat::save_game_cheats(QWidget *parent) {
+void objCheat::save_game_cheats(QWidget *parent) const {
 	if (info.no_rom) {
 		return;
 	}
@@ -127,14 +127,14 @@ void objCheat::apply_cheats(void) {
 		gui_overlay_info_append_msg_precompiled(18, &cheats_list.counter);
 	}
 }
-bool objCheat::is_equal(int index, chl_map *find, bool description) {
+bool objCheat::is_equal(int index, chl_map *find, bool description) const {
 	if (index >= cheats.count()) {
 		return (false);
 	}
 
 	chl_map src = cheats.at(index);
 
-	if (description == true) {
+	if (description) {
 		if ((src["genie"] == (*find)["genie"]) &&
 			(src["rocky"] == (*find)["rocky"]) &&
 			(src["address"] == (*find)["address"]) &&
@@ -157,7 +157,7 @@ bool objCheat::is_equal(int index, chl_map *find, bool description) {
 
 	return (false);
 }
-int objCheat::find_cheat(chl_map *find, bool description) {
+int objCheat::find_cheat(chl_map *find, bool description) const {
 	for (int i = 0; i < cheats.count(); i++) {
 		if (is_equal(i, find, description)) {
 			return (i);
@@ -227,7 +227,7 @@ void objCheat::complete_ram(chl_map *cheat) {
 	cheat->insert("rocky", "-");
 }
 
-bool objCheat::decode_gg(QString code, _cheat *cheat) {
+bool objCheat::decode_gg(const QString &code, _cheat *cheat) {
 	QByteArray lat1 = code.toLower().toLatin1();
 	int len = lat1.length();
 	BYTE codes[8];
@@ -335,20 +335,23 @@ QString objCheat::encode_gg(_cheat *cheat) {
 	}
 
 	i = (cheat->enabled_compare ? 8 : 6);
-	const int codes[8] = {
-		(cheat->replace       & 0x07) | (cheat->replace >> 4 & 0x08),
-		(cheat->replace >> 4  & 0x07) | (cheat->address >> 4 & 0x08),
-		(cheat->address >> 4  & 0x07) | (cheat->enabled_compare ? 0x08 : 0x00),
-		(cheat->address >> 12 & 0x07) | (cheat->address      & 0x08),
-		(cheat->address       & 0x07) | (cheat->address >> 8 & 0x08),
-		(cheat->address >> 8  & 0x07) | ((cheat->enabled_compare ? cheat->compare : cheat->replace) & 0x08),
-		(cheat->enabled_compare ? ((cheat->compare & 0x07)      | (cheat->compare >> 4 & 0x08)) : 0),
-		(cheat->enabled_compare ? ((cheat->compare >> 4 & 0x07) | (cheat->replace      & 0x08)) : 0)
-	};
+	{
+		const int codes[8] = {
+				(cheat->replace       & 0x07) | (cheat->replace >> 4 & 0x08),
+				(cheat->replace >> 4  & 0x07) | (cheat->address >> 4 & 0x08),
+				(cheat->address >> 4  & 0x07) | (cheat->enabled_compare ? 0x08 : 0x00),
+				(cheat->address >> 12 & 0x07) | (cheat->address      & 0x08),
+				(cheat->address       & 0x07) | (cheat->address >> 8 & 0x08),
+				(cheat->address >> 8  & 0x07) | ((cheat->enabled_compare ? cheat->compare : cheat->replace) & 0x08),
+				(cheat->enabled_compare ? ((cheat->compare & 0x07)      | (cheat->compare >> 4 & 0x08)) : 0),
+				(cheat->enabled_compare ? ((cheat->compare >> 4 & 0x07) | (cheat->replace      & 0x08)) : 0)
+		};
+		int a;
 
-	for (int a = 0; a < i; a++) {
-		gg.append(gg_table[codes[a]]);
-	};
+		for (a = 0; a < i; a++) {
+			gg.append(gg_table[codes[a]]);
+		}
+	}
 
 	return (gg);
 }
@@ -364,7 +367,7 @@ void objCheat::complete_gg(chl_map *cheat) {
 	complete_from_code(cheat, &ch);
 }
 
-bool objCheat::decode_rocky(QString code, _cheat *cheat) {
+bool objCheat::decode_rocky(const QString &code, _cheat *cheat) {
 	DBWORD input = 0, output = 0, key = rocky_key;
 	QByteArray lat1 = code.toUpper().toLatin1();
 	int i, len = lat1.length();
@@ -425,7 +428,7 @@ QString objCheat::encode_rocky(_cheat *cheat) {
 	}
 
 	for (i = 8; i--;) {
-		const char value = (output >> (i * 4)) & 0xF;
+		const char value = (char)((output >> (i * 4)) & 0xF);
 
 		rocky.append((value >= 0xA) ? (char)(value - 0xA + 'A') : (char)(value + '0'));
 	}
@@ -444,7 +447,7 @@ void objCheat::complete_rocky(chl_map *cheat) {
 	complete_from_code(cheat, &ch);
 }
 
-void objCheat::import_Nestopia_xml(QWidget *parent, QString path) {
+void objCheat::import_Nestopia_xml(QWidget *parent, const QString &path) {
 	QFile *file = new QFile(path);
 
 	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -479,7 +482,7 @@ void objCheat::import_Nestopia_xml(QWidget *parent, QString path) {
 	}
 	delete (file);
 }
-void objCheat::import_MAME_xml(QWidget *parent, QString path) {
+void objCheat::import_MAME_xml(QWidget *parent, const QString &path) {
 	QFile *file = new QFile(path);
 
 	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -517,7 +520,7 @@ void objCheat::import_MAME_xml(QWidget *parent, QString path) {
 	}
 	delete (file);
 }
-void objCheat::import_FCEUX_cht(QString path) {
+void objCheat::import_FCEUX_cht(const QString &path) {
 	QFile *file = new QFile(path);
 
 	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -542,8 +545,8 @@ void objCheat::import_FCEUX_cht(QString path) {
 
 	delete (file);
 }
-void objCheat::import_libretro_cht(QString path) {
-	static const QSettings::Format cfg = QSettings::registerFormat("libretro", libretro_rd_file, NULL);
+void objCheat::import_libretro_cht(const QString &path) {
+	static const QSettings::Format cfg = QSettings::registerFormat("libretro", libretro_rd_file, nullptr);
 	QFileInfo file(path);
 	QSettings *set;
 	QString key, value;
@@ -637,7 +640,7 @@ void objCheat::import_libretro_cht(QString path) {
 	delete (set);
 }
 
-void objCheat::save_Nestopia_xml(QWidget *parent, QString path) {
+void objCheat::save_Nestopia_xml(QWidget *parent, const QString &path) const {
 	QFile *file;
 
 	if (cheats.count() == 0) {
@@ -779,10 +782,10 @@ QList<chl_map> objCheat::parse_mame_cheat(QXmlStreamReader &xml) {
 
 	while (!((xml.tokenType() == QXmlStreamReader::EndElement) && (xml.name() == QString("cheat")))) {
 		if (xml.tokenType() == QXmlStreamReader::StartElement) {
-			bool enabled = 0;
+			bool enabled = false;
 
 			if (!xml.name().toString().compare("script", Qt::CaseInsensitive)) {
-				enabled = xml.attributes().value("state").toString().compare("run", Qt::CaseInsensitive) == 0 ? false : true;
+				enabled = xml.attributes().value("state").toString().compare("run", Qt::CaseInsensitive) != 0;
 			}
 
 			if (!xml.name().toString().compare("action", Qt::CaseInsensitive)) {
@@ -862,7 +865,7 @@ QList<chl_map> objCheat::parse_mame_cheat(QXmlStreamReader &xml) {
 
 	return (list);
 }
-chl_map objCheat::parse_fceux_cheat(QString line) {
+chl_map objCheat::parse_fceux_cheat(const QString &line) {
 	QStringList splitted = line.split(":");
 	chl_map cheat;
 
@@ -934,7 +937,7 @@ void objCheat::ram_to_gg(chl_map *cheat) {
 	cheat->insert("genie", encode_gg(&ch));
 	cheat->insert("rocky", "-");
 }
-void objCheat::add_element_data_to_map(QString element_name, QString text, chl_map &map) const {
+void objCheat::add_element_data_to_map(const QString &element_name, const QString &text, chl_map &map) const {
 	if (!element_name.compare("genie", Qt::CaseInsensitive) ||
 		!element_name.compare("rocky", Qt::CaseInsensitive) ||
 		!element_name.compare("compare", Qt::CaseInsensitive)) {
@@ -964,7 +967,7 @@ void objCheat::add_element_data_to_map(QXmlStreamReader &xml, chl_map &map) cons
 
 // ----------------------------------------- I/O -----------------------------------------
 
-static bool libretro_value(QSettings *set, QString key, QString &value) {
+static bool libretro_value(QSettings *set, const QString &key, QString &value) {
 	value = "";
 
 	if (set->allKeys().contains(key, Qt::CaseInsensitive)) {

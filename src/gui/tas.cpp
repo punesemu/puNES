@@ -22,8 +22,6 @@
 #include "emu.h"
 #include "info.h"
 #include "gui.h"
-#include "ppu.h"
-#include "rewind.h"
 
 #define tas_set_data_port_ctrlstd(prt, dt)\
 	prt.data[dt] = tas.il[tas.index].prt[dt]
@@ -40,11 +38,11 @@ typedef struct _tas_subtitles {
 } _tas_subtitles;
 
 struct _tas_internal {
-	unsigned int count;
-	uint32_t index;
+	unsigned int count{};
+	uint32_t index{};
 	QList<size_t> file_byte_il;
 	QString comment_author;
-	_tas_subtitles subtitles;
+	_tas_subtitles subtitles{};
 } tsint;
 static _port tas_port_bck[PORT_MAX];
 
@@ -61,7 +59,8 @@ BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 	}
 
 	if (tas.type != NOTAS) {
-		BYTE i, found = FALSE;
+		BYTE found = FALSE;
+		int i;
 
 		for (i = PORT1; i < PORT_MAX; i++) {
 			memcpy(&tas_port_bck[i], &port[i], sizeof(_port));
@@ -81,10 +80,10 @@ BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 		{
 			const QString rom_ext[4] = { ".nes", ".NES", ".fds", ".FDS" };
 
-			for (i = 0; i < LENGTH(rom_ext); i++) {
+			for (i = 0; i < (int)LENGTH(rom_ext); i++) {
 				QString rom = uQString(info.rom.file) + rom_ext[i];
 
-				if (QFileInfo(rom).exists()) {
+				if (QFileInfo::exists(rom)) {
 					umemset(info.rom.file, 0x00, usizeof(info.rom.file));
 					ustrncpy(info.rom.file, uQStringCD(rom), usizeof(info.rom.file) - 1);
 					found = TRUE;
@@ -113,12 +112,12 @@ void tas_quit(void) {
 
 	if (tas.fp) {
 		fclose(tas.fp);
-		tas.fp = NULL;
+		tas.fp = nullptr;
 	}
 
-	tas_header = NULL;
-	tas_read = NULL;
-	tas_frame = NULL;
+	tas_header = nullptr;
+	tas_read = nullptr;
+	tas_frame = nullptr;
 
 	for (i = PORT1; i < PORT_MAX; i++) {
 		memcpy(&port[i], &tas_port_bck[i], sizeof(_port));
@@ -134,12 +133,12 @@ void tas_quit(void) {
 
 		if (ts->string) {
 			free(ts->string);
-			ts->string = NULL;
+			ts->string = nullptr;
 		}
 	}
 	if (tsint.subtitles.list) {
 		free(tsint.subtitles.list);
-		tsint.subtitles.list = NULL;
+		tsint.subtitles.list = nullptr;
 	}
 	tsint.subtitles.nsubtitle = 0;
 }
@@ -216,10 +215,11 @@ void tas_header_FM2(uTCHAR *file) {
 			QRegularExpressionMatch match = re.match(value);
 
 			if (match.hasMatch()) {
-				_tas_subtitle *ts = NULL, *list = NULL;
+				_tas_subtitle *list;
 
 				if ((list = (_tas_subtitle *)realloc(tsint.subtitles.list, (tsint.subtitles.nsubtitle + 1) * sizeof(_tas_subtitle)))) {
 					QString subtitle = "[yellow]" + match.captured(2) + "[normal]";
+					_tas_subtitle *ts;
 
 					tsint.subtitles.list = list;
 					ts = &tsint.subtitles.list[tsint.subtitles.nsubtitle];
@@ -227,7 +227,7 @@ void tas_header_FM2(uTCHAR *file) {
 					ts->frame = match.captured(1).toInt();
 					ts->string = emu_ustrncpy(ts->string, uQStringCD(subtitle));
 					tsint.subtitles.nsubtitle++;
-				};
+				}
 			}
 		}
 		pos = ftell(tas.fp);
@@ -276,7 +276,7 @@ void tas_read_FM2(void) {
 			BYTE a, b;
 
 			for (a = PORT1; a <= PORT2; a++) {
-				sep = strtok_r(NULL, "|", &saveptr);
+				sep = strtok_r(nullptr, "|", &saveptr);
 
 				if (port[a].type == CTRL_STANDARD) {
 					for (b = 0; b < 8; b++) {
@@ -291,11 +291,11 @@ void tas_read_FM2(void) {
 
 					space = strtok_r(sep, " ", &last);
 					tas.il[tas.count].port[a][0] = QString::fromUtf8(space).simplified().toUInt();
-					space = strtok_r(NULL, " ", &last);
+					space = strtok_r(nullptr, " ", &last);
 					tas.il[tas.count].port[a][1] = QString::fromUtf8(space).simplified().toUInt();
-					space = strtok_r(NULL, " ", &last);
+					space = strtok_r(nullptr, " ", &last);
 					tas.il[tas.count].port[a][2] = QString::fromUtf8(space).simplified().toUInt();
-					space = strtok_r(NULL, " ", &last);
+					space = strtok_r(nullptr, " ", &last);
 					tas.il[tas.count].port[a][3] = QString::fromUtf8(space).simplified().toUInt();
 				}
 			}
@@ -313,13 +313,13 @@ void tas_frame_FM2(void) {
 
 	// il primo frame
 	if (!tas.frame) {
-		gui_overlay_info_append_msg_precompiled_with_alignment(OVERLAY_INFO_CENTER, 20, NULL);
+		gui_overlay_info_append_msg_precompiled_with_alignment(OVERLAY_INFO_CENTER, 20, nullptr);
 		//tas_increment_index()
 	}
 
 	if (++tas.frame >= tas.total) {
 		if (tas.frame == tas.total) {
-			gui_overlay_info_append_msg_precompiled_with_alignment(OVERLAY_INFO_CENTER, 21, NULL);
+			gui_overlay_info_append_msg_precompiled_with_alignment(OVERLAY_INFO_CENTER, 21, nullptr);
 		} else if (tas.frame == tas.total + 10) {
 			// nel tas_quit() eseguo il ripristino delle porte e l'input_init() solo che questo
 			// cambia lo stato delle pulsanti e in alcuni film (aglar-marblemadness.fm2)
@@ -351,40 +351,36 @@ void tas_frame_FM2(void) {
 		}
 	}
 
-	{
-		BYTE i;
-
-		for (i = PORT1; i < PORT_MAX; i++) {
-			if (port[i].type == CTRL_STANDARD) {
-				tas_set_data_port_ctrlstd(port[i], BUT_A);
-				tas_set_data_port_ctrlstd(port[i], BUT_B);
-				tas_set_data_port_ctrlstd(port[i], SELECT);
-				tas_set_data_port_ctrlstd(port[i], START);
-				tas_set_data_port_ctrlstd(port[i], UP);
-				tas_set_data_port_ctrlstd(port[i], DOWN);
-				tas_set_data_port_ctrlstd(port[i], LEFT);
-				tas_set_data_port_ctrlstd(port[i], RIGHT);
-			} else if (port[i].type == CTRL_ZAPPER) {
-				gmouse.x = tas.il[tas.index].port[i][0];
-				gmouse.y = tas.il[tas.index].port[i][1];
-				gmouse.left = tas.il[tas.index].port[i][2];
-				if ((gmouse.left == 0) && tas.il[tas.index].port[i][3]) {
-					gmouse.left = tas.il[tas.index].port[i][3];
-				}
-				gmouse.right = 0;
+	for (i = PORT1; i < PORT_MAX; i++) {
+		if (port[i].type == CTRL_STANDARD) {
+			tas_set_data_port_ctrlstd(port[i], BUT_A);
+			tas_set_data_port_ctrlstd(port[i], BUT_B);
+			tas_set_data_port_ctrlstd(port[i], SELECT);
+			tas_set_data_port_ctrlstd(port[i], START);
+			tas_set_data_port_ctrlstd(port[i], UP);
+			tas_set_data_port_ctrlstd(port[i], DOWN);
+			tas_set_data_port_ctrlstd(port[i], LEFT);
+			tas_set_data_port_ctrlstd(port[i], RIGHT);
+		} else if (port[i].type == CTRL_ZAPPER) {
+			gmouse.x = tas.il[tas.index].port[i][0];
+			gmouse.y = tas.il[tas.index].port[i][1];
+			gmouse.left = tas.il[tas.index].port[i][2];
+			if ((gmouse.left == 0) && tas.il[tas.index].port[i][3]) {
+				gmouse.left = tas.il[tas.index].port[i][3];
 			}
+			gmouse.right = 0;
 		}
 	}
 }
 void tas_rewind_FM2(int32_t frames_to_rewind) {
-	uint32_t frames, chunk, snaps;
+	int32_t frames, chunk, snaps;
 
 	frames = tas.frame + frames_to_rewind;
-	chunk = frames / LENGTH(tas.il);
-	snaps = frames % LENGTH(tas.il);
+	chunk = frames / (int)LENGTH(tas.il);
+	snaps = frames % (int)LENGTH(tas.il);
 
-	if (chunk != tsint.index) {
-		fseek(tas.fp, tsint.file_byte_il.at(chunk), SEEK_SET);
+	if (chunk != (int32_t)tsint.index) {
+		fseek(tas.fp, (long)tsint.file_byte_il.at((int)chunk), SEEK_SET);
 		tas_read();
 		tsint.index = chunk;
 	}

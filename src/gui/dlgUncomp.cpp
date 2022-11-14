@@ -19,9 +19,6 @@
 #include "dlgUncomp.hpp"
 #include <QtGui/QStandardItemModel>
 #include <QtCore/QFileInfo>
-#if defined (_WIN32)
-#include <libgen.h>
-#endif
 #include "gui.h"
 
 dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDialog(parent) {

@@ -24,7 +24,6 @@
 #include <QtCore/QStringEncoder>
 #endif
 #include "recent_roms.h"
-#include "info.h"
 #include "conf.h"
 #include "settings.h"
 #include "gui.h"
@@ -33,7 +32,7 @@ static void recent_roms_reset_list(void);
 static uTCHAR *recent_roms_file(void);
 
 typedef struct _recent_roms {
-	int count;
+	int count{};
 	QString item[RECENT_ROMS_MAX];
 	QString current;
 } _recent_roms;
@@ -48,13 +47,13 @@ void recent_roms_init(void) {
 	recent.setFileName(uQString(recent_roms_file()));
 
 	// se non esiste lo creo
-	if (recent.exists() == false) {
+	if (!recent.exists()) {
 		recent.open(QIODevice::WriteOnly);
 		recent.close();
 	}
 }
 void recent_roms_add(uTCHAR *file) {
-	int index = 0, rr_index = 1, count = 0;
+	int index, rr_index = 1, count = 0;
 	_recent_roms rr_tmp;
 	QString utf;
 	uTCHAR *rom;
@@ -67,7 +66,7 @@ void recent_roms_add(uTCHAR *file) {
 		return;
 	}
 
-	if ((rom = uncompress_storage_archive_name(file)) == NULL) {
+	if ((rom = uncompress_storage_archive_name(file)) == nullptr) {
 		rom = file;
 	}
 
@@ -116,7 +115,7 @@ void recent_roms_parse(void) {
 	recent.setFileName(uQString(recent_roms_file()));
 
 	// apro il file che contiene la lista
-	if (recent.open(QIODevice::ReadOnly) == false) {
+	if (!recent.open(QIODevice::ReadOnly)) {
 		return;
 	}
 
@@ -127,23 +126,23 @@ void recent_roms_parse(void) {
 	in.setEncoding(QStringEncoder::Utf8);
 #endif
 
-	while (in.atEnd() == false) {
+	while (!in.atEnd()) {
 		// elimino il ritorno a capo
 		line = in.readLine().remove(NEWLINE);
 		// normalizzo il path
 		line.replace('\\', '/');
 
 		// se il file non esiste passo alla riga successiva
-		if (QFileInfo(line).exists() == false) {
+		if (!QFileInfo::exists(line)) {
 			continue;
 		}
 
-		for (int index = 0; index < RECENT_ROMS_MAX; index++) {
-			if (recent_roms_list.item[index].isEmpty()) {
-				recent_roms_list.item[index] = line;
+		for (QString &index : recent_roms_list.item) {
+			if (index.isEmpty()) {
+				index = line;
 				break;
 			}
-			if (recent_roms_list.item[index] ==  line) {
+			if (index ==  line) {
 				break;
 			}
 		}
@@ -158,13 +157,13 @@ void recent_roms_parse(void) {
 	recent.close();
 }
 void recent_roms_save(void) {
-	int index = 0;
+	int index;
 	QFile recent;
 
 	recent.setFileName(uQString(recent_roms_file()));
 
 	// apro il file
-	if (recent.open(QIODevice::WriteOnly) == false) {
+	if (!recent.open(QIODevice::WriteOnly)) {
 		return;
 	}
 
@@ -206,8 +205,8 @@ int recent_roms_current_size(void) {
 static void recent_roms_reset_list(void) {
 	recent_roms_list.count = 0;
 
-	for (int index = 0; index < RECENT_ROMS_MAX; index++) {
-		recent_roms_list.item[index] = "";
+	for (QString &index : recent_roms_list.item) {
+		index = "";
 	}
 }
 static uTCHAR *recent_roms_file(void) {

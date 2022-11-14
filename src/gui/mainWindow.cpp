@@ -123,7 +123,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	addToolBar(toolbar->area, toolbar);
 
 	// creo gli shortcuts
-	for (auto & i : shortcut) {
+	for (QShortcut *&i : shortcut) {
 		i = new QShortcut(this);
 	}
 	// shortcuts esterni

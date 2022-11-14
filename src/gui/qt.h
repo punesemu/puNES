@@ -192,7 +192,6 @@ EXTERNC void gui_state_save_slot_set(BYTE slot, BYTE on_video);
 EXTERNC void gui_state_save_slot_set_tooltip(BYTE slot, char *buffer);
 
 EXTERNC void gui_update(void);
-EXTERNC void gui_update_dset(void);
 EXTERNC void gui_update_gps_settings(void);
 EXTERNC void gui_update_status_bar(void);
 
@@ -241,7 +240,6 @@ EXTERNC void gui_wdgrewind_play(void);
 EXTERNC void gui_emit_et_gg_reset(void);
 EXTERNC void gui_emit_et_vs_reset(void);
 EXTERNC void gui_emit_et_external_control_windows_show(void);
-EXTERNC void gui_emit_et_input_update_combo(void);
 
 EXTERNC void gui_max_speed_start(void);
 EXTERNC void gui_max_speed_stop(void);

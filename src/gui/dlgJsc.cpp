@@ -222,8 +222,8 @@ int dlgJsc::axes_disabled(void) {
 }
 int dlgJsc::hats_disabled(void) {
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
-	unsigned int i;
 	int disabled = 0;
+	unsigned int i;
 
 	for (i = 0; i < JS_MAX_HATS; i++) {
 		_js_axis *jsx = &jdev->data.hat[i];
@@ -236,8 +236,8 @@ int dlgJsc::hats_disabled(void) {
 }
 int dlgJsc::buttons_disabled(void) {
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
-	unsigned int i;
 	int disabled = 0;
+	unsigned int i;
 
 	for (i = 0; i < JS_MAX_BUTTONS; i++) {
 		_js_button *jsx = &jdev->data.button[i];
