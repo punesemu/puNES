@@ -686,7 +686,7 @@
      <normaloff>:/icon/icons/virtual_keyboard.svg</normaloff>:/icon/icons/virtual_keyboard.svg</iconset>
    </property>
    <property name="text">
-    <string>Virtual &amp;Keyboard</string>
+    <string>Toggle Virtual &amp;Keyboard</string>
    </property>
   </action>
   <action name="action_Tape_Play">

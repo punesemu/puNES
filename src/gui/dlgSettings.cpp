@@ -83,7 +83,6 @@ void dlgSettings::retranslateUi(QDialog *dlgSettings) {
 
 	// nes keyboard
 	mainwin->qaction_shcut.toggle_capture_input->setText(tr("Capture/Release Input"));
-	mainwin->qaction_shcut.toggle_nes_keyboard->setText(tr("Toggle Virtual Keyboard"));
 }
 void dlgSettings::update_dialog(void) {
 	update_tab_general();

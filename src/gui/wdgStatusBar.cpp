@@ -326,7 +326,7 @@ void nesKeyboardStatusBar::s_clicked(int button) {
 		if (button == Qt::LeftButton) {
 			mainwin->qaction_shcut.toggle_capture_input->trigger();
 		} else if (button == Qt::RightButton) {
-			mainwin->qaction_shcut.toggle_nes_keyboard->trigger();
+			mainwin->action_Virtual_Keyboard->trigger();
 		}
 	}
 }

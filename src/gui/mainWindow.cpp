@@ -142,7 +142,6 @@ mainWindow::mainWindow() : QMainWindow() {
 	qaction_shcut.stretch_in_fullscreen = new QAction(this);
 	qaction_shcut.toggle_menubar_in_fullscreen = new QAction(this);
 	qaction_shcut.toggle_capture_input = new QAction(this);
-	qaction_shcut.toggle_nes_keyboard = new QAction(this);
 	qaction_shcut.audio_enable = new QAction(this);
 	qaction_shcut.save_settings = new QAction(this);
 	qaction_shcut.hold_fast_forward = new QAction(this);
@@ -635,7 +634,7 @@ void mainWindow::shortcuts(void) {
 
 	// Nes Keyboard
 	connect_shortcut(qaction_shcut.toggle_capture_input, SET_INP_SC_TOGGLE_CAPTURE_INPUT, SLOT(s_shcut_toggle_capture_input()));
-	connect_shortcut(qaction_shcut.toggle_nes_keyboard, SET_INP_SC_TOGGLE_NES_KEYBOARD, SLOT(s_shcut_toggle_nes_keyboard()));
+	connect_shortcut(action_Virtual_Keyboard, SET_INP_SC_TOGGLE_NES_KEYBOARD, SLOT(s_open_dkeyb()));
 
 	// Hold Fast Forward
 	connect_shortcut(qaction_shcut.hold_fast_forward, SET_INP_SC_HOLD_FAST_FORWARD, SLOT(s_fake_slot())); // shortcut speciale
@@ -899,12 +898,10 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_State_Load_from_file, SLOT(s_state_load_file()));
 	// Tools
 	connect_action(action_Virtual_Keyboard, SLOT(s_open_dkeyb()));
+	connect_action(action_Vs_System, SLOT(s_set_vs_window()));
 	connect_action(action_Joypad_Gamepads_Debug, SLOT(s_open_djsc()));
 	// Help/About
 	connect_action(action_About, SLOT(s_help()));
-
-	// tools
-	connect_action(action_Vs_System, SLOT(s_set_vs_window()));
 
 	// external shortcuts
 	connect_action(qaction_shcut.mode_auto, AUTO, SLOT(s_shcut_mode()));
@@ -922,7 +919,6 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(qaction_shcut.stretch_in_fullscreen, SLOT(s_shcut_stretch_in_fullscreen()));
 	connect_action(qaction_shcut.toggle_menubar_in_fullscreen, SLOT(s_shcut_toggle_menubar()));
 	connect_action(qaction_shcut.toggle_capture_input, SLOT(s_shcut_toggle_capture_input()));
-	connect_action(qaction_shcut.toggle_nes_keyboard, SLOT(s_shcut_toggle_nes_keyboard()));
 	connect_action(qaction_shcut.audio_enable, SLOT(s_shcut_audio_enable()));
 	connect_action(qaction_shcut.save_settings, SLOT(s_shcut_save_settings()));
 	connect_action(qaction_shcut.rwnd.active, SLOT(s_shcut_rwnd_active_deactive_mode()));
@@ -1163,9 +1159,6 @@ void mainWindow::update_tape_menu(void) {
 	}
 }
 void mainWindow::update_menu_tools(void) {
-	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TOGGLE_NES_KEYBOARD, KEYBOARD);
-
-	action_text(action_Virtual_Keyboard, tr("&Virtual Keyboard"), sc);
 	action_Virtual_Keyboard->setEnabled(nes_keyboard.enabled);
 }
 
@@ -1273,7 +1266,13 @@ void mainWindow::s_set_vs_window(void) {
 	gui_external_control_windows_show();
 }
 void mainWindow::s_open_dkeyb(void) {
-	open_dkeyb(dlgKeyboard::DK_VIRTUAL);
+	if (nes_keyboard.enabled) {
+		if (dlgkeyb->isHidden()) {
+			open_dkeyb(dlgKeyboard::DK_VIRTUAL);
+		} else {
+			dlgkeyb->hide();
+		}
+	}
 }
 
 void mainWindow::s_fake_slot(void) {}
@@ -2196,7 +2195,7 @@ void mainWindow::s_shcjoy_read_timer(void) {
 							qaction_shcut.toggle_capture_input->trigger();
 							break;
 						case SET_INP_SC_TOGGLE_NES_KEYBOARD:
-							qaction_shcut.toggle_nes_keyboard->trigger();
+							action_Virtual_Keyboard->trigger();
 							break;
 						case SET_INP_SC_AUDIO_ENABLE:
 							qaction_shcut.audio_enable->trigger();
@@ -2370,15 +2369,6 @@ void mainWindow::s_shcut_toggle_capture_input(void) const {
 		statusbar->keyb->icon_pixmap(QIcon::Normal);
 		statusbar->keyb->update_tooltip();
 		statusbar->keyb->icon->update();
-	}
-}
-void mainWindow::s_shcut_toggle_nes_keyboard(void) {
-	if (nes_keyboard.enabled) {
-		if (dlgkeyb->isHidden()) {
-			mainwin->s_open_dkeyb();
-		} else {
-			dlgkeyb->hide();
-		}
 	}
 }
 

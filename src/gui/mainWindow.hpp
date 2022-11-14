@@ -130,7 +130,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			QAction *stretch_in_fullscreen;
 			QAction *toggle_menubar_in_fullscreen;
 			QAction *toggle_capture_input;
-			QAction *toggle_nes_keyboard;
 			QAction *audio_enable;
 			QAction *save_settings;
 			QAction *hold_fast_forward;
@@ -309,7 +308,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_shcut_rwnd_step_forward(void) const;
 		void s_shcut_toggle_menubar(void);
 		void s_shcut_toggle_capture_input(void) const;
-		void s_shcut_toggle_nes_keyboard(void);
 
 	private slots:
 		void s_et_gg_reset(void);
