@@ -80,7 +80,7 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 	}
 
 	adjustSize();
-	// se setto il fixed size, su windows xp non mi visualizza il dialog correttamente.
+	// Se setto il fixed size, su windows xp non mi visualizza il dialog correttamente.
 	//setFixedSize(size());
 
 	{
@@ -105,7 +105,7 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 
 	installEventFilter(this);
 }
-dlgVsSystem::~dlgVsSystem() {}
+dlgVsSystem::~dlgVsSystem() = default;
 
 bool dlgVsSystem::eventFilter(QObject *obj, QEvent *event) {
 	switch (event->type()) {
@@ -117,7 +117,7 @@ bool dlgVsSystem::eventFilter(QObject *obj, QEvent *event) {
 			break;
 	}
 
-	return (QObject::eventFilter(obj, event));
+	return (QDialog::eventFilter(obj, event));
 }
 void dlgVsSystem::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
@@ -137,7 +137,7 @@ int dlgVsSystem::update_pos(int startY) {
 	}
 	move(QPoint(x, y));
 
-	if (isHidden() == true) {
+	if (isHidden()) {
 		return (0);
 	}
 
@@ -162,9 +162,10 @@ void dlgVsSystem::update_dialog(void) {
 	in_update = false;
 }
 void dlgVsSystem::insert_coin(int index) {
-	int base = vs_system_cn_next();
+	int base = vs_system_cn_next()
 
 	switch (index) {
+		default:
 		case 1:
 			vs_system.coins.left = base;
 			break;
@@ -187,7 +188,7 @@ void dlgVsSystem::s_coins_clicked(UNUSED(bool checked)) {
 void dlgVsSystem::s_ds_changed(int state) {
 	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
-	if (in_update == true) {
+	if (in_update) {
 		return;
 	}
 
@@ -215,6 +216,8 @@ void dlgVsSystem::s_ds_changed(int state) {
 			break;
 		case 8:
 			cfg->dipswitch = (cfg->dipswitch & 0x7F) | (state ? 0x80 : 0x00);
+			break;
+		default:
 			break;
 	}
 	settings_pgs_save();

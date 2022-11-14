@@ -31,11 +31,11 @@ class dlgUncomp : public QDialog, public Ui::dlgUncomp {
 		int selected;
 
 	public:
-		dlgUncomp(QWidget *parent = 0, void *uncompress_archive = NULL, BYTE type = UNCOMPRESS_TYPE_ALL);
-		~dlgUncomp();
+		explicit dlgUncomp(QWidget *parent = nullptr, void *uncompress_archive = nullptr, BYTE type = UNCOMPRESS_TYPE_ALL);
+		~dlgUncomp() override;
 
 	private:
-		void closeEvent(QCloseEvent *event);
+		void closeEvent(QCloseEvent *event) override;
 
 	private slots:
 		void s_doubleclick(int row, int column);

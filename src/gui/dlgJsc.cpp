@@ -71,7 +71,7 @@ dlgJsc::dlgJsc(QWidget *parent) : QDialog(parent) {
 
 	installEventFilter(this);
 }
-dlgJsc::~dlgJsc() {}
+dlgJsc::~dlgJsc() = default;
 
 bool dlgJsc::eventFilter(QObject *obj, QEvent *event) {
 	switch (event->type()) {
@@ -82,12 +82,11 @@ bool dlgJsc::eventFilter(QObject *obj, QEvent *event) {
 		default:
 			break;
 	}
-
-	return (QObject::eventFilter(obj, event));
+	return (QDialog::eventFilter(obj, event));
 }
 
 void dlgJsc::showEvent(QShowEvent *event) {
-	if (first_time == true) {
+	if (first_time) {
 		first_time = false;
 	} else {
 		setGeometry(geom);
@@ -209,7 +208,8 @@ int dlgJsc::js_jdev_index(void) {
 }
 int dlgJsc::axes_disabled(void) {
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
-	unsigned int i, disabled = 0;
+	int disabled = 0;
+	unsigned int i;
 
 	for (i = 0; i < JS_MAX_AXES; i++) {
 		_js_axis *jsx = &jdev->data.axis[i];
@@ -222,7 +222,8 @@ int dlgJsc::axes_disabled(void) {
 }
 int dlgJsc::hats_disabled(void) {
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
-	unsigned int i, disabled = 0;
+	unsigned int i;
+	int disabled = 0;
 
 	for (i = 0; i < JS_MAX_HATS; i++) {
 		_js_axis *jsx = &jdev->data.hat[i];
@@ -235,7 +236,8 @@ int dlgJsc::hats_disabled(void) {
 }
 int dlgJsc::buttons_disabled(void) {
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
-	unsigned int i, disabled = 0;
+	unsigned int i;
+	int disabled = 0;
 
 	for (i = 0; i < JS_MAX_BUTTONS; i++) {
 		_js_button *jsx = &jdev->data.button[i];
@@ -302,7 +304,7 @@ void dlgJsc::s_joy_read_timer(void) {
 	mutex->unlock();
 }
 void dlgJsc::s_combobox_joy_activated(int index) {
-	unsigned int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
+	int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
 
 	if (comboBox_joy_ID->count() == 1) {
 		return;
@@ -509,7 +511,7 @@ void dlgJsc::s_close_clicked(UNUSED(bool checked)) {
 
 void dlgJsc::s_et_update_joy_combo(void) {
 	// se la combox e' aperta o sto configurando i pulsanti, non devo aggiornarne il contenuto
-	if (comboBox_joy_ID->view()->isVisible() == false) {
+	if (!comboBox_joy_ID->view()->isVisible()) {
 		joy_combo_init();
 	}
 }

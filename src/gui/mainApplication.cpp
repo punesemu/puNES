@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtCore/QStandardPaths>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QWidget>
 #include <QtGui/QKeyEvent>
@@ -24,7 +23,6 @@
 #include "mainApplication.hpp"
 #include "mainWindow.hpp"
 #include "dlgKeyboard.hpp"
-#include "wdgScreen.hpp"
 #include "version.h"
 #include "gui.h"
 
@@ -39,7 +37,7 @@ mainApplication::mainApplication(int &argc, char *argv[], bool allowSecondary, O
 	//	setFont(f);
 	}
 }
-mainApplication::~mainApplication() {}
+mainApplication::~mainApplication() = default;
 
 bool mainApplication::notify(QObject *receiver, QEvent *event) {
 	switch (event->type()) {
@@ -64,14 +62,14 @@ bool mainApplication::notify(QObject *receiver, QEvent *event) {
 	return (QApplication::notify(receiver, event));
 }
 
-BYTE mainApplication::base_folder(QDir *new_folder, QDir *old_folder, QString base, QString message) {
+BYTE mainApplication::base_folder(QDir *new_folder, QDir *old_folder, const QString &base, const QString &message) {
 	QString folder = QString(base).remove("/");
 
 	if (old_folder && !info.portable && !new_folder->exists(folder) && old_folder->exists(folder)) {
 		old_folder->rename(old_folder->absolutePath() + base, new_folder->absolutePath() + base);
 	}
 	if (!new_folder->mkpath(folder)) {
-		QMessageBox::critical(0,
+		QMessageBox::critical(nullptr,
 			//: Do not translate %1
 			tr("%1 folders").arg(NAME),
 			message, QMessageBox::Ok);
@@ -90,13 +88,13 @@ BYTE mainApplication::control_base_folders(void) {
 #endif
 
 	// controllo l'esistenza della directory principale
-	if (base_folder(&config_folder, NULL, ".", tr("Error on create config folder")) == EXIT_ERROR) {
+	if (base_folder(&config_folder, nullptr, ".", tr("Error on create config folder")) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}
-	if (base_folder(&data_folder, NULL, ".", tr("Error on create data folder")) == EXIT_ERROR) {
+	if (base_folder(&data_folder, nullptr, ".", tr("Error on create data folder")) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}
-	if (base_folder(&temp_folder, NULL, ".", tr("Error on create temp folder")) == EXIT_ERROR) {
+	if (base_folder(&temp_folder, nullptr, ".", tr("Error on create temp folder")) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}
 
@@ -147,7 +145,7 @@ BYTE mainApplication::control_base_folders(void) {
 }
 
 QKeySequence mainApplication::key_sequence_from_key_event(QKeyEvent *event) {
-	int modifiers = event->modifiers();
+	unsigned int modifiers = (unsigned int)event->modifiers();
 	int key = event->key();
 	QKeySequence ks;
 
@@ -157,7 +155,7 @@ QKeySequence mainApplication::key_sequence_from_key_event(QKeyEvent *event) {
 	if ((key >= Qt::Key_Shift) && (key <= Qt::Key_Alt)) {
 		key = 0;
 	}
-	return (QKeySequence(modifiers ? modifiers : key, modifiers ? key : 0).toString().remove(", "));
+	return (QKeySequence(modifiers ? (int)modifiers : key, modifiers ? key : 0).toString().remove(", "));
 }
 bool mainApplication::is_set_inp_shortcut(QEvent *event, int set_inp) {
 	return (!mainwin->shortcut[set_inp]->key().isEmpty() &&

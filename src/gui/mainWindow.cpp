@@ -33,7 +33,6 @@
 #include <QtGui/QDesktopServices>
 #include <QtWidgets/QErrorMessage>
 #include <QtCore/QBuffer>
-#include <libgen.h>
 #include "mainWindow.hpp"
 #include "extra/singleapplication/singleapplication.h"
 #include "dlgSettings.hpp"
@@ -50,14 +49,12 @@
 #include "patcher.h"
 #include "save_slot.h"
 #include "version.h"
-#include "audio/wave.h"
 #include "vs_system.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
 #include "tas.h"
 #include "video/effects/tv_noise.h"
 #include "debugger.h"
-#include "video/gfx_thread.h"
 #include "tape_data_recorder.h"
 #if defined (WITH_FFMPEG)
 #include "recording.h"
@@ -126,8 +123,8 @@ mainWindow::mainWindow() : QMainWindow() {
 	addToolBar(toolbar->area, toolbar);
 
 	// creo gli shortcuts
-	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
-		shortcut[i] = new QShortcut(this);
+	for (auto & i : shortcut) {
+		i = new QShortcut(this);
 	}
 	// shortcuts esterni
 	qaction_shcut.mode_auto = new QAction(this);
@@ -221,8 +218,8 @@ mainWindow::mainWindow() : QMainWindow() {
 		bool visibile = !info.start_with_hidden_gui;
 
 		menubar->setVisible(visibile);
-		toolbar->setVisible(visibile ? !cfg->toolbar.hidden : false);
-		statusbar->setVisible(visibile ? !cfg->toolbar.hidden : false);
+		toolbar->setVisible(visibile && !cfg->toolbar.hidden);
+		statusbar->setVisible(visibile && !cfg->toolbar.hidden);
 	}
 
 	set_language(cfg->language);
@@ -231,7 +228,7 @@ mainWindow::mainWindow() : QMainWindow() {
 		action_Open_config_folder->setVisible(false);
 	}
 }
-mainWindow::~mainWindow() {}
+mainWindow::~mainWindow() = default;
 
 #if defined (_WIN32)
 bool mainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result) {
@@ -269,7 +266,7 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 	switch (event->type()) {
 		case QEvent::WindowActivate:
 		case QEvent::WindowDeactivate:
-			if (setup_in_out_fullscreen == false) {
+			if (!setup_in_out_fullscreen) {
 				gui_control_pause_bck(event->type());
 			}
 			break;
@@ -293,7 +290,7 @@ void mainWindow::moveEvent(QMoveEvent *event) {
 }
 void mainWindow::resizeEvent(QResizeEvent *event) {
 	if (gui.start == TRUE) {
-		if ((fullscreen_resize == true) && (event->size().width() >= SCR_COLUMNS)) {
+		if (fullscreen_resize && (event->size().width() >= SCR_COLUMNS)) {
 			fullscreen_resize = false;
 			if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
 				fs_geom = QRect(0, 0, event->size().width(), event->size().height());
@@ -659,7 +656,7 @@ bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) {
 }
 void mainWindow::update_gfx_monitor_dimension(void) {
 	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
-		bool toolbar_is_hidden = toolbar->isHidden() | toolbar->isFloating();
+		bool toolbar_is_hidden = toolbar->isHidden() || toolbar->isFloating();
 
 #if QT_VERSION == QT_VERSION_CHECK(5, 12, 8)
 		gfx.w[MONITOR] = fs_geom.width() - (frameGeometry().width() - geometry().width());
@@ -680,10 +677,10 @@ void mainWindow::update_gfx_monitor_dimension(void) {
 	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
 		fs_geom = win_handle_screen()->geometry();
 #if defined (FULLSCREEN_RESFREQ)
-		if (setup_in_out_fullscreen == true) {
+		if (setup_in_out_fullscreen) {
 			int w, h, x, y;
 
-			if (gfx_monitor_mode_in_use_info(&x, &y, &w, &h, NULL) == EXIT_OK) {
+			if (gfx_monitor_mode_in_use_info(&x, &y, &w, &h, nullptr) == EXIT_OK) {
 				fs_geom = QRect(x, y, w, h);
 			}
 		}
@@ -694,8 +691,8 @@ void mainWindow::update_gfx_monitor_dimension(void) {
 		{
 			qreal dpr = win_handle_screen()->devicePixelRatio();
 
-			gfx.w[MONITOR] /= dpr;
-			gfx.h[MONITOR] /= dpr;
+			gfx.w[MONITOR] = (SDBWORD)((qreal)gfx.w[MONITOR] / dpr);
+			gfx.h[MONITOR] = (SDBWORD)((qreal)gfx.h[MONITOR] / dpr);
 		}
 	}
 }
@@ -707,7 +704,7 @@ void mainWindow::state_save_slot_set(int slot, bool on_video) {
 		return;
 	}
 	save_slot.slot = slot;
-	if (on_video == true) {
+	if (on_video) {
 		gui_overlay_enable_save_slot(SAVE_SLOT_INCDEC);
 	}
 	update_window();
@@ -726,7 +723,7 @@ void mainWindow::state_save_slot_set_tooltip(BYTE slot, char *buffer) {
 		int x, y, w, h;
 		double mul = 1.5f;
 
-		img = img.scaled(SCR_COLUMNS * mul, SCR_ROWS * mul, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+		img = img.scaled((int)(SCR_COLUMNS * mul), (int)(SCR_ROWS * mul), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
 		// scrivo le info
 		w = img.rect().width();
@@ -737,7 +734,7 @@ void mainWindow::state_save_slot_set_tooltip(BYTE slot, char *buffer) {
 		rect.setRect(x, y, w, h);
 
 		f = font();
-		f.setPixelSize(h / mul);
+		f.setPixelSize((int)(h / mul));
 
 		painter.begin(&img);
 		painter.setOpacity(0.5);
@@ -950,7 +947,7 @@ void mainWindow::connect_action(QAction *action, int value, const char *member) 
 void mainWindow::connect_shortcut(QAction *action, int index) {
 	QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
 
-	if (sc->isEmpty() == false) {
+	if (!sc->isEmpty()) {
 		QStringList text = action->text().split('\t');
 
 		action->setShortcut(sc->compare("NULL") ? QKeySequence((*sc)) : 0);
@@ -960,7 +957,7 @@ void mainWindow::connect_shortcut(QAction *action, int index) {
 void mainWindow::connect_shortcut(QAction *action, int index, const char *member) {
 	QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
 
-	if (sc->isEmpty() == false) {
+	if (!sc->isEmpty()) {
 		QStringList text = action->text().split('\t');
 		QVariant value = action->property("myValue");
 
@@ -1172,7 +1169,7 @@ void mainWindow::update_menu_tools(void) {
 	action_Virtual_Keyboard->setEnabled(nes_keyboard.enabled);
 }
 
-void mainWindow::action_text(QAction *action, QString description, QString *shortcut) {
+void mainWindow::action_text(QAction *action, const QString &description, QString *shortcut) {
 	if ((*shortcut) == "NULL") {
 		action->setText(description);
 	} else {
@@ -1319,7 +1316,7 @@ void mainWindow::s_open(void) {
 
 	file = QFileDialog::getOpenFileName(this, tr("Open File"), uQString(gui.last_open_path), filters.join(";;"));
 
-	if (file.isNull() == false) {
+	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
 
 		change_rom(uQStringCD(fileinfo.absoluteFilePath()));
@@ -1362,7 +1359,7 @@ void mainWindow::s_apply_patch(void) {
 	file = QFileDialog::getOpenFileName(this, tr("Open IPS/BPS/XDELTA Patch"), uQString(gui.last_open_patch_path),
 		filters.join(";;"));
 
-	if (file.isNull() == false) {
+	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
 
 		patcher_ctrl_if_exist(uQStringCD(fileinfo.absoluteFilePath()));
@@ -1500,7 +1497,7 @@ void mainWindow::s_start_stop_audio_recording(void) {
 
 		file = fd->audio_get_save_file_name();
 
-		if (file.isNull() == false) {
+		if (!file.isNull()) {
 			QFileInfo fileinfo = QFileInfo(file);
 
 			umemset(cfg->last_rec_audio_path, 0x00, usizeof(cfg->last_rec_audio_path));
@@ -1567,7 +1564,7 @@ void mainWindow::s_start_stop_video_recording(void) {
 
 		file = fd->video_get_save_file_name();
 
-		if (file.isNull() == false) {
+		if (!file.isNull()) {
 			QFileInfo fileinfo = QFileInfo(file);
 
 			umemset(cfg->last_rec_video_path, 0x00, usizeof(cfg->last_rec_video_path));
@@ -1608,7 +1605,7 @@ void mainWindow::s_fast_forward(void) {
 		update_menu_nes();
 	}
 }
-void mainWindow::s_max_speed_start(void) {
+void mainWindow::s_max_speed_start(void) const {
 	if (fps.max_speed == TRUE) {
 		return;
 	}
@@ -1617,7 +1614,7 @@ void mainWindow::s_max_speed_start(void) {
 	fps_max_speed_start();
 	emu_thread_continue();
 }
-void mainWindow::s_max_speed_stop(void) {
+void mainWindow::s_max_speed_stop(void) const {
 	if (fps.max_speed == FALSE) {
 		return;
 	}
@@ -1637,7 +1634,7 @@ void mainWindow::s_toggle_gui_in_window(void) {
 
 	visibility = !menubar->isVisible();
 	menubar->setVisible(visibility);
-	if (visibility == true) {
+	if (visibility) {
 		visibility = !cfg->toolbar.hidden;
 	}
 	toolbar->setVisible(visibility);
@@ -1727,7 +1724,7 @@ void mainWindow::s_state_save_file(void) {
 		QFileInfo(uQString(cfg->save_file)).dir().absolutePath() + "/" + QFileInfo(uQString(fl)).baseName(),
 		filters.join(";;"));
 
-	if (file.isNull() == false) {
+	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.suffix().isEmpty()) {
@@ -1765,7 +1762,7 @@ void mainWindow::s_state_load_file(void) {
 	file = QFileDialog::getOpenFileName(this, tr("Open save state"),
 			QFileInfo(uQString(cfg->save_file)).dir().absolutePath(), filters.join(";;"));
 
-	if (file.isNull() == false) {
+	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.exists()) {
@@ -1810,7 +1807,7 @@ void mainWindow::s_tape_play(void) {
 	file = QFileDialog::getOpenFileName(this, tr("Open tape image"), dir + "/" + rom.completeBaseName() + ".tap",
 		filters.join(";;"), &selected, QFileDialog::DontUseNativeDialog);
 
-	if (file.isNull() == false) {
+	if (!file.isNull()) {
 		BYTE mode = TAPE_DATA_TYPE_TAP;
 		QFileInfo fileinfo(file);
 
@@ -1825,13 +1822,13 @@ void mainWindow::s_tape_play(void) {
 		} else if (fileinfo.suffix().compare("tp", Qt::CaseInsensitive) == 0) {
 			mode = TAPE_DATA_TYPE_NESTOPIA;
 		} else {
-			QMessageBox::critical(0, tr("Tape Image"), tr("Unsupported format"), QMessageBox::Ok);
+			QMessageBox::critical(nullptr, tr("Tape Image"), tr("Unsupported format"), QMessageBox::Ok);
 			emu_pause(FALSE);
 			return;
 		}
 
 		if (tape_data_recorder_init(uQStringCD(fileinfo.absoluteFilePath()), mode, TAPE_DATA_PLAY) == EXIT_ERROR) {
-			QMessageBox::critical(0, tr("Tape Image"), tr("Error opening tape image file"), QMessageBox::Ok);
+			QMessageBox::critical(nullptr, tr("Tape Image"), tr("Error opening tape image file"), QMessageBox::Ok);
 		}
 	}
 
@@ -1865,7 +1862,7 @@ void mainWindow::s_tape_record(void) {
 	file = QFileDialog::getSaveFileName(this, tr("Save tape image"), dir + "/" + rom.completeBaseName() + ".tap",
 		filters.join(";;"), &selected, QFileDialog::DontUseNativeDialog);
 
-	if (file.isNull() == false) {
+	if (!file.isNull()) {
 		BYTE mode = TAPE_DATA_TYPE_TAP;
 		QFileInfo fileinfo(file);
 
@@ -1994,7 +1991,7 @@ void mainWindow::s_fullscreen(void) {
 			}
 #endif
 			reset_min_max_size();
-			if (desktop_resolution == true) {
+			if (desktop_resolution) {
 #if QT_VERSION == QT_VERSION_CHECK(5, 12, 8)
 				// con le QT 5.12.8 (Xubuntu 2004) lo showMaximized non funziona per un bug
 				// nelle Qt quindi utilizzo il vecchio metodo.
@@ -2077,7 +2074,7 @@ void mainWindow::s_fullscreen(void) {
 	setup_in_out_fullscreen = false;
 }
 void mainWindow::s_shcjoy_read_timer(void) {
-	if (shcjoy.enabled == false) {
+	if (!shcjoy.enabled) {
 		return;
 	}
 
@@ -2096,6 +2093,8 @@ void mainWindow::s_shcjoy_read_timer(void) {
 					case SET_INP_SC_HOLD_FAST_FORWARD:
 						hold_fast_forward(shcjoy.sch.mode);
 						return;
+					default:
+						break;
 				}
 
 				// shortcut che si attivano al rilascio del pulsante/asse
@@ -2238,6 +2237,8 @@ void mainWindow::s_shcjoy_read_timer(void) {
 						case SET_INP_SC_RWND_PAUSE:
 							qaction_shcut.rwnd.pause->trigger();
 							break;
+						default:
+							break;
 					}
 				}
 				break;
@@ -2245,7 +2246,7 @@ void mainWindow::s_shcjoy_read_timer(void) {
 		}
 	}
 }
-void mainWindow::s_received_message(UNUSED(quint32 instanceId), QByteArray message) {
+void mainWindow::s_received_message(UNUSED(quint32 instanceId), const QByteArray &message) {
 	secondary_instance.mutex.lock();
 	secondary_instance.message = QString(message);
 	secondary_instance.mutex.unlock();
@@ -2300,14 +2301,14 @@ void mainWindow::s_shcut_audio_enable(void) {
 void mainWindow::s_shcut_save_settings(void) {
 	dlgsettings->pushButton_Save_Settings->click();
 }
-void mainWindow::s_shcut_rwnd_active_deactive_mode(void) {
+void mainWindow::s_shcut_rwnd_active_deactive_mode(void) const {
 	if (rwnd.active == FALSE) {
 		toolbar->rewind->toolButton_Pause->click();
 	} else {
 		toolbar->rewind->toolButton_Play->click();
 	}
 }
-void mainWindow::s_shcut_rwnd_step_backward(void) {
+void mainWindow::s_shcut_rwnd_step_backward(void) const {
 	if (rwnd.active == FALSE) {
 		return;
 	}
@@ -2315,7 +2316,7 @@ void mainWindow::s_shcut_rwnd_step_backward(void) {
 		toolbar->rewind->toolButton_Step_Backward->click();
 	}
 }
-void mainWindow::s_shcut_rwnd_step_forward(void) {
+void mainWindow::s_shcut_rwnd_step_forward(void) const {
 	if (rwnd.active == FALSE) {
 		return;
 	}
@@ -2323,25 +2324,25 @@ void mainWindow::s_shcut_rwnd_step_forward(void) {
 		toolbar->rewind->toolButton_Step_Forward->click();
 	}
 }
-void mainWindow::s_shcut_rwnd_fast_backward(void) {
+void mainWindow::s_shcut_rwnd_fast_backward(void) const {
 	if (rwnd.active == FALSE) {
 		return;
 	}
 	toolbar->rewind->toolButton_Fast_Backward->click();
 }
-void mainWindow::s_shcut_rwnd_fast_forward(void) {
+void mainWindow::s_shcut_rwnd_fast_forward(void) const {
 	if (rwnd.active == FALSE) {
 		return;
 	}
 	toolbar->rewind->toolButton_Fast_Forward->click();
 }
-void mainWindow::s_shcut_rwnd_play(void) {
+void mainWindow::s_shcut_rwnd_play(void) const {
 	if (rwnd.active == FALSE) {
 		return;
 	}
 	toolbar->rewind->toolButton_Play->click();
 }
-void mainWindow::s_shcut_rwnd_pause(void) {
+void mainWindow::s_shcut_rwnd_pause(void) const {
 	if (rwnd.active == FALSE) {
 		return;
 	}
@@ -2358,13 +2359,13 @@ void mainWindow::s_shcut_toggle_menubar(void) {
 
 	emu_thread_continue();
 }
-void mainWindow::s_shcut_toggle_capture_input(void) {
+void mainWindow::s_shcut_toggle_capture_input(void) const {
 	if (nes_keyboard.enabled) {
 		gui.capture_input = !gui.capture_input;
 		if (gui.capture_input) {
-			gui_overlay_info_append_msg_precompiled(36, NULL);
+			gui_overlay_info_append_msg_precompiled(36, nullptr);
 		} else {
-			gui_overlay_info_append_msg_precompiled(37, NULL);
+			gui_overlay_info_append_msg_precompiled(37, nullptr);
 		}
 		statusbar->keyb->icon_pixmap(QIcon::Normal);
 		statusbar->keyb->update_tooltip();
@@ -2402,7 +2403,7 @@ void mainWindow::s_et_external_control_windows_show(void) {
 actionOneTrigger::actionOneTrigger(QObject *parent) : QAction(parent) {
 	count = 0;
 }
-actionOneTrigger::~actionOneTrigger() {}
+actionOneTrigger::~actionOneTrigger() = default;
 
 void actionOneTrigger::only_one_trigger(void) {
 	mutex.lock();
@@ -2414,7 +2415,7 @@ void actionOneTrigger::only_one_trigger(void) {
 }
 void actionOneTrigger::reset_count(void) {
 	// sono nel trigger in un altro thread
-	if (mutex.tryLock(10) == false) {
+	if (!mutex.tryLock(10)) {
 		return;
 	}
 	count = 0;
@@ -2432,13 +2433,13 @@ timerEgds::timerEgds(QObject *parent) : QTimer(parent) {
 
 	connect(this, SIGNAL(timeout()), this, SLOT(s_draw_screen()));
 }
-timerEgds::~timerEgds() {}
+timerEgds::~timerEgds() = default;
 
 void timerEgds::set_fps(void) {
-	if (isActive() == true) {
+	if (isActive()) {
 		stop();
 	}
-	setInterval(1000.0f / (double)machine.fps);
+	setInterval((int)(1000.0f / (double)machine.fps));
 }
 void timerEgds::stop_unnecessary(void) {
 	_etc(EGDS_TURN_OFF);
@@ -2476,7 +2477,7 @@ void timerEgds::stop_turn_off(void) {
 }
 
 void timerEgds::_start(void) {
-	if (isActive() == false) {
+	if (!isActive()) {
 		start();
 	}
 }
@@ -2534,7 +2535,7 @@ void timerEgds::s_draw_screen(void) {
 		}
 	}
 
-	if (ret == true) {
+	if (ret) {
 #if defined (WITH_FFMPEG)
 		if (info.recording_on_air == TRUE) {
 			recording_audio_silenced_frame();

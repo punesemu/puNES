@@ -51,11 +51,11 @@ class pixmapButton: public QPushButton {
 		QPixmap pixmap;
 
 	public:
-		pixmapButton(QWidget *parent);
-		~pixmapButton();
+		explicit pixmapButton(QWidget *parent = nullptr);
+		~pixmapButton() override;
 
 	protected:
-		void paintEvent(QPaintEvent *e);
+		void paintEvent(QPaintEvent *e) override;
 
 	public:
 		void setPixmap(const QPixmap &pixmap);
@@ -88,17 +88,17 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		int last_js_index;
 
 	public:
-		dlgStdPad(_cfg_port *cfg_port, QWidget *parent);
-		~dlgStdPad();
+		explicit dlgStdPad(_cfg_port *cfg_port, QWidget *parent = nullptr);
+		~dlgStdPad() override;
 
 	signals:
 		void et_update_joy_combo(void);
 
 	protected:
-		bool eventFilter(QObject *obj, QEvent *event);
-		void changeEvent(QEvent *event);
-		void showEvent(QShowEvent *event);
-		void closeEvent(QCloseEvent *event);
+		bool eventFilter(QObject *obj, QEvent *event) override;
+		void changeEvent(QEvent *event) override;
+		void showEvent(QShowEvent *event) override;
+		void closeEvent(QCloseEvent *event) override;
 
 	private:
 		bool keypress(QKeyEvent *event);
@@ -106,7 +106,7 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 		void joy_combo_init(void);
 		void setEnable_tab_buttons(int type, bool mode);
 		void disable_tab_and_other(int type, int vbutton);
-		void info_entry_print(int type, QString txt);
+		void info_entry_print(int type, const QString &txt);
 		void js_press_event(void);
 		void td_update_label(int type, int value);
 		void deadzone_update_label(int value);

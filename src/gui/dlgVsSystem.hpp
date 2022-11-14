@@ -29,12 +29,12 @@ class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
 		bool in_update;
 
 	public:
-		dlgVsSystem(QWidget *parent = 0);
-		~dlgVsSystem();
+		explicit dlgVsSystem(QWidget *parent = nullptr);
+		~dlgVsSystem() override;
 
 	protected:
-		bool eventFilter(QObject *obj, QEvent *event);
-		void changeEvent(QEvent *event);
+		bool eventFilter(QObject *obj, QEvent *event) override;
+		void changeEvent(QEvent *event) override;
 
 	public:
 		int update_pos(int startY);

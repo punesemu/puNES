@@ -35,17 +35,17 @@ class dlgJsc : public QDialog, public Ui::dlgJsc {
 		bool first_time;
 
 	public:
-		dlgJsc(QWidget *parent = 0);
-		~dlgJsc();
+		explicit dlgJsc(QWidget *parent = nullptr);
+		~dlgJsc() override;
 
 	signals:
 		void et_update_joy_combo(void);
 
 	protected:
-		bool eventFilter(QObject *obj, QEvent *event);
-		void showEvent(QShowEvent *event);
-		void hideEvent(QHideEvent *event);
-		void closeEvent(QCloseEvent *event);
+		bool eventFilter(QObject *obj, QEvent *event) override;
+		void showEvent(QShowEvent *event) override;
+		void hideEvent(QHideEvent *event) override;
+		void closeEvent(QCloseEvent *event) override;
 
 	private:
 		void joy_combo_init(void);

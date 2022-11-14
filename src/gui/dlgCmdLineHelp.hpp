@@ -27,8 +27,8 @@ class dlgCmdLineHelp : public QDialog, public Ui::dlgCmdLineHelp {
 	Q_OBJECT
 
 	public:
-		dlgCmdLineHelp(QWidget *parent = 0, QString name = "");
-		~dlgCmdLineHelp();
+		explicit dlgCmdLineHelp(QWidget *parent = nullptr, const QString &name = "");
+		~dlgCmdLineHelp() override;
 
 	private slots:
 		void s_close_clicked(bool checked);
