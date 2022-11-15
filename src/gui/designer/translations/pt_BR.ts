@@ -174,10 +174,6 @@
       <source>Capture/Release Input</source>
       <translation type="unfinished">Capture/Release Input</translation>
     </message>
-    <message>
-      <source>Toggle Virtual Keyboard</source>
-      <translation type="unfinished">Toggle Virtual Keyboard</translation>
-    </message>
   </context>
   <context>
     <name>dlgStdPad</name>
@@ -867,10 +863,6 @@
       <translation type="unfinished">Fast Forward (hold button)</translation>
     </message>
     <message>
-      <source>&amp;Virtual Keyboard</source>
-      <translation type="unfinished">&amp;Virtual Keyboard</translation>
-    </message>
-    <message>
       <source>puNES tape image</source>
       <translation type="unfinished">puNES tape image</translation>
     </message>
@@ -911,10 +903,6 @@
       <translation type="unfinished">Toggle &amp;Fast Forward</translation>
     </message>
     <message>
-      <source>Virtual &amp;Keyboard</source>
-      <translation type="unfinished">Virtual &amp;Keyboard</translation>
-    </message>
-    <message>
       <source>&amp;Play</source>
       <translation type="unfinished">&amp;Play</translation>
     </message>
@@ -937,6 +925,10 @@
     <message>
       <source>Ta&amp;pe</source>
       <translation type="unfinished">Ta&amp;pe</translation>
+    </message>
+    <message>
+      <source>Toggle Virtual &amp;Keyboard</source>
+      <translation type="unfinished">Toggle Virtual &amp;Keyboard</translation>
     </message>
   </context>
   <context>
