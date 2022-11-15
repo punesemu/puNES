@@ -174,10 +174,6 @@
       <source>Capture/Release Input</source>
       <translation>捕捉/释放输入</translation>
     </message>
-    <message>
-      <source>Toggle Virtual Keyboard</source>
-      <translation>切换虚拟键盘</translation>
-    </message>
   </context>
   <context>
     <name>dlgStdPad</name>
@@ -867,10 +863,6 @@
       <translation>快进 (按住)</translation>
     </message>
     <message>
-      <source>&amp;Virtual Keyboard</source>
-      <translation>虚拟键盘(&amp;V)</translation>
-    </message>
-    <message>
       <source>puNES tape image</source>
       <translation>puNES 磁带</translation>
     </message>
@@ -911,10 +903,6 @@
       <translation>切换快进(&amp;F)</translation>
     </message>
     <message>
-      <source>Virtual &amp;Keyboard</source>
-      <translation>虚拟键盘(&amp;K)</translation>
-    </message>
-    <message>
       <source>&amp;Play</source>
       <translation>播放(&amp;P)</translation>
     </message>
@@ -937,6 +925,10 @@
     <message>
       <source>Ta&amp;pe</source>
       <translation>磁带(&amp;p)</translation>
+    </message>
+    <message>
+      <source>Toggle Virtual &amp;Keyboard</source>
+      <translation type="unfinished">Toggle Virtual &amp;Keyboard</translation>
     </message>
   </context>
   <context>
