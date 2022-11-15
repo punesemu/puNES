@@ -31,7 +31,7 @@ wdgSettingsAudio::wdgSettingsAudio(QWidget *parent) : QWidget(parent) {
 	widget_Samplarate->setStyleSheet(button_stylesheet());
 	widget_Channels->setStyleSheet(button_stylesheet());
 
-#if defined (__OpenBSD__)
+#if defined (__OpenBSD__) || defined (__FreeBSD__)
 	icon_Output_Devices->setVisible(false);
 	label_Output_Devices->setVisible(false);
 	comboBox_Output_Devices->setVisible(false);
