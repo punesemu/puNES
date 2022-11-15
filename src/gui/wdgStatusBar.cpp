@@ -52,7 +52,7 @@ wdgStatusBar::wdgStatusBar(QWidget *parent) : QStatusBar(parent) {
 
 	installEventFilter(this);
 }
-wdgStatusBar::~wdgStatusBar() {}
+wdgStatusBar::~wdgStatusBar() = default;
 
 bool wdgStatusBar::eventFilter(QObject *obj, QEvent *event) {
 	if (event->type() == QEvent::MouseButtonPress) {
@@ -66,7 +66,7 @@ void wdgStatusBar::showEvent(QShowEvent *event) {
 	QStatusBar::showEvent(event);
 }
 
-void wdgStatusBar::update_statusbar(void) {
+void wdgStatusBar::update_statusbar(void) const {
 	alg->update_label();
 	info->update_label();
 	keyb->update_tooltip();
@@ -85,7 +85,7 @@ infoStatusBar::infoStatusBar(QWidget *parent) : QWidget(parent) {
 	label->setText("[no rom]");
 	hbox->addWidget(label);
 }
-infoStatusBar::~infoStatusBar() {}
+infoStatusBar::~infoStatusBar() = default;
 
 void infoStatusBar::update_label(void) {
 	BYTE patch = FALSE;
@@ -133,7 +133,7 @@ alignmentStatusBar::alignmentStatusBar(QWidget *parent) : QFrame(parent) {
 
 	setLayout(layout);
 }
-alignmentStatusBar::~alignmentStatusBar() {}
+alignmentStatusBar::~alignmentStatusBar() = default;
 
 void alignmentStatusBar::update_label(void) {
 	if (cfg->ppu_alignment == PPU_ALIGMENT_DEFAULT) {
@@ -166,13 +166,13 @@ recStatusBar::recStatusBar(QWidget *parent) : QFrame(parent) {
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(s_context_menu(const QPoint&)));
 }
-recStatusBar::~recStatusBar() {}
+recStatusBar::~recStatusBar() = default;
 
 void recStatusBar::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		desc_text();
 	} else {
-		QWidget::changeEvent(event);
+		QFrame::changeEvent(event);
 	}
 }
 void recStatusBar::closeEvent(QCloseEvent *event) {
@@ -215,7 +215,7 @@ void recStatusBar::icon_pixmap(QIcon::Mode mode) {
 
 void recStatusBar::s_et_blink_icon(void) {
 	if (info.recording_on_air) {
-		if (timer->isActive() == false) {
+		if (!timer->isActive()) {
 			desc_text();
 			timer->start(500);
 		}
@@ -251,7 +251,7 @@ void recStatusBar::s_context_menu(const QPoint &pos) {
 // --------------------------------- Keyboard -----------------------------------------
 
 nesKeyboardIcon::nesKeyboardIcon(QWidget* parent) : QLabel(parent) {}
-nesKeyboardIcon::~nesKeyboardIcon() {}
+nesKeyboardIcon::~nesKeyboardIcon() = default;
 
 void nesKeyboardIcon::mousePressEvent(QMouseEvent *event) {
 	emit clicked(event->button());
@@ -273,13 +273,13 @@ nesKeyboardStatusBar::nesKeyboardStatusBar(QWidget *parent) : QFrame(parent) {
 
 	connect(icon, SIGNAL(clicked(int)), this, SLOT(s_clicked(int)));
 }
-nesKeyboardStatusBar::~nesKeyboardStatusBar() {}
+nesKeyboardStatusBar::~nesKeyboardStatusBar() = default;
 
 void nesKeyboardStatusBar::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		update_tooltip();
 	} else {
-		QWidget::changeEvent(event);
+		QFrame::changeEvent(event);
 	}
 }
 
@@ -313,7 +313,7 @@ void nesKeyboardStatusBar::update_tooltip(void) {
 
 	icon->setToolTip(tooltip);
 }
-void nesKeyboardStatusBar::icon_pixmap(QIcon::Mode mode) {
+void nesKeyboardStatusBar::icon_pixmap(QIcon::Mode mode) const {
 	if (gui.capture_input) {
 		icon->setPixmap(QIcon(":/pics/pics/hostkey_captured.png").pixmap(16, 16,  mode));
 	} else {

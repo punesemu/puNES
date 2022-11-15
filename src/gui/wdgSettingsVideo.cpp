@@ -211,7 +211,7 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 
 	tabWidget_Video->setCurrentIndex(0);
 }
-wdgSettingsVideo::~wdgSettingsVideo() {}
+wdgSettingsVideo::~wdgSettingsVideo() = default;
 
 void wdgSettingsVideo::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
@@ -352,6 +352,7 @@ void wdgSettingsVideo::shcut_scale(int scale) {
 		case X1:
 			pushButton_Scale_1x->toggled(true);
 			break;
+		default:
 		case X2:
 			pushButton_Scale_2x->toggled(true);
 			break;
@@ -636,9 +637,9 @@ void wdgSettingsVideo::shader_param_set(void) {
 			slider->setProperty("myIndex", QVariant(i));
 			slider->setProperty("myValue", QVariant(row));
 			slider->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-			slider->setRange(0, steps);
+			slider->setRange(0, (int)steps);
 			slider->setSingleStep(1);
-			slider->setValue((steps / (pshd->max - pshd->min)) * (pshd->value - pshd->min));
+			slider->setValue((int)((steps / (pshd->max - pshd->min)) * (pshd->value - pshd->min)));
 			connect(slider, SIGNAL(valueChanged(int)), this, SLOT(s_shader_param_slider(int)));
 			layout->addWidget(slider);
 			layout->setAlignment(Qt::AlignCenter);
@@ -768,7 +769,7 @@ void wdgSettingsVideo::resolution_set(void) {
 		}
 	}
 
-	if ((cfg->fullscreen_res_w == -1) || (cfg->fullscreen_res_h == -1) || (finded == false)) {
+	if ((cfg->fullscreen_res_w == -1) || (cfg->fullscreen_res_h == -1) || !finded) {
 		comboBox_Fullscreen_resolution->setCurrentIndex(0);
 	}
 }
@@ -863,13 +864,13 @@ void wdgSettingsVideo::s_oscan_spinbox(int i) {
 
 	borders = &overscan_borders[mtype];
 
-	if (name.contains("brd_up") == true) {
+	if (name.contains("brd_up")) {
 		borders->up = i;
-	} else if (name.contains("brd_down") == true) {
+	} else if (name.contains("brd_down")) {
 		borders->down = i;
-	} else if (name.contains("brd_left") == true) {
+	} else if (name.contains("brd_left")) {
 		borders->left = i;
-	} else if (name.contains("brd_right") == true) {
+	} else if (name.contains("brd_right")) {
 		borders->right = i;
 	}
 
@@ -1048,7 +1049,7 @@ void wdgSettingsVideo::s_shader_file(UNUSED(bool checked)) {
 	file = QFileDialog::getOpenFileName(this, tr("Open Shader file"),
 		QFileInfo(uQString(cfg->shader_file)).dir().absolutePath(), filters.join(";;"));
 
-	if (file.isNull() == false) {
+	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.exists()) {
@@ -1058,7 +1059,7 @@ void wdgSettingsVideo::s_shader_file(UNUSED(bool checked)) {
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, SHADER_FILE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			emu_thread_continue();
 		} else {
-			gui_overlay_info_append_msg_precompiled(25, NULL);
+			gui_overlay_info_append_msg_precompiled(25, nullptr);
 		}
 	}
 
@@ -1086,7 +1087,7 @@ void wdgSettingsVideo::s_shader_param_spin(double d) {
 	QSlider *slider = tableWidget_Shader_Parameters->cellWidget(row, WSV_SP_SLIDER)->findChild<QSlider *>("slider");
 
 	pshd->value = (float)d;
-	qtHelper::slider_set_value(slider, ((float)slider->maximum() / (pshd->max - pshd->min)) * (pshd->value - pshd->min));
+	qtHelper::slider_set_value(slider, (int)(((float)slider->maximum() / (pshd->max - pshd->min)) * (pshd->value - pshd->min)));
 
 	if (pshd->value == pshd->initial) {
 		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setForeground(shdp_brush.fg);
@@ -1174,7 +1175,7 @@ void wdgSettingsVideo::s_palette_file(UNUSED(bool checked)) {
 	file = QFileDialog::getOpenFileName(this, tr("Open palette file"),
 		QFileInfo(uQString(cfg->palette_file)).dir().absolutePath(), filters.join(";;"));
 
-	if (file.isNull() == false) {
+	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.exists()) {
@@ -1185,7 +1186,7 @@ void wdgSettingsVideo::s_palette_file(UNUSED(bool checked)) {
 			widget_Palette_Editor->palette_changed();
 			emu_thread_continue();
 		} else {
-			gui_overlay_info_append_msg_precompiled(26, NULL);
+			gui_overlay_info_append_msg_precompiled(26, nullptr);
 		}
 	}
 

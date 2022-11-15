@@ -32,8 +32,8 @@ class infoStatusBar : public QWidget {
 		QLabel *label;
 
 	public:
-		infoStatusBar(QWidget *parent = 0);
-		~infoStatusBar();
+		explicit infoStatusBar(QWidget *parent = nullptr);
+		~infoStatusBar() override;
 
 	public:
 		void update_label(void);
@@ -47,16 +47,16 @@ class recStatusBar : public QFrame {
 		QTimer *timer;
 
 	public:
-		recStatusBar(QWidget *parent = 0);
-		~recStatusBar();
+		explicit recStatusBar(QWidget *parent = nullptr);
+		~recStatusBar() override;
 
 	signals:
 		void et_blink_icon(void);
 
 	protected:
-		void changeEvent(QEvent *event);
-		void closeEvent(QCloseEvent *event);
-		void mousePressEvent(QMouseEvent *event);
+		void changeEvent(QEvent *event) override;
+		void closeEvent(QCloseEvent *event) override;
+		void mousePressEvent(QMouseEvent *event) override;
 
 	private:
 		void desc_text(void);
@@ -74,8 +74,8 @@ class alignmentStatusBar : public QFrame {
 		QLabel *label;
 
 	public:
-		alignmentStatusBar(QWidget *parent = 0);
-		~alignmentStatusBar();
+		explicit alignmentStatusBar(QWidget *parent = nullptr);
+		~alignmentStatusBar() override;
 
 	public:
 		void update_label(void);
@@ -84,14 +84,14 @@ class nesKeyboardIcon: public QLabel {
 	Q_OBJECT
 
 	public:
-		nesKeyboardIcon(QWidget *parent);
-		~nesKeyboardIcon();
+		explicit nesKeyboardIcon(QWidget *parent = nullptr);
+		~nesKeyboardIcon() override;
 
 	Q_SIGNALS:
 		void clicked(int button);
 
 	protected:
-		void mousePressEvent(QMouseEvent *event);
+		void mousePressEvent(QMouseEvent *event) override;
 };
 class nesKeyboardStatusBar : public QFrame {
 	Q_OBJECT
@@ -100,15 +100,15 @@ class nesKeyboardStatusBar : public QFrame {
 		nesKeyboardIcon *icon;
 
 	public:
-		nesKeyboardStatusBar(QWidget *parent = 0);
-		~nesKeyboardStatusBar();
+		explicit nesKeyboardStatusBar(QWidget *parent = nullptr);
+		~nesKeyboardStatusBar() override;
 
 	protected:
-		void changeEvent(QEvent *event);
+		void changeEvent(QEvent *event) override;
 
 	public:
 		void update_tooltip(void);
-		void icon_pixmap(QIcon::Mode mode);
+		void icon_pixmap(QIcon::Mode mode) const;
 
 	private slots:
 		void s_clicked(int button);
@@ -121,15 +121,15 @@ class wdgStatusBar : public QStatusBar {
 		recStatusBar *rec;
 
 	public:
-		wdgStatusBar(QWidget *parent);
-		~wdgStatusBar();
+		explicit wdgStatusBar(QWidget *parent = nullptr);
+		~wdgStatusBar() override;
 
 	protected:
-		bool eventFilter(QObject *obj, QEvent *event);
-		void showEvent(QShowEvent *event);
+		bool eventFilter(QObject *obj, QEvent *event) override;
+		void showEvent(QShowEvent *event) override;
 
 	public:
-		void update_statusbar(void);
+		void update_statusbar(void) const;
 };
 
 #endif /* WDGSTATUSBAR_HPP_ */

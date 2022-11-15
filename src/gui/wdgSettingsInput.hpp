@@ -29,7 +29,7 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 	private:
 		struct _input {
 			_cfg_port cport[PORT_MAX];
-		} input;
+		} input{};
 		struct _shcut {
 			QStringList text[2];
 			pixmapButton *bp;
@@ -51,17 +51,17 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		dlgStdPad *dlg_std_pad;
 
 	public:
-		wdgSettingsInput(QWidget *parent = 0);
-		~wdgSettingsInput();
+		explicit wdgSettingsInput(QWidget *parent = nullptr);
+		~wdgSettingsInput() override;
 
 	signals:
 		void et_update_joy_combo(void);
 
 	private:
-		bool eventFilter(QObject *obj, QEvent *event);
-		void changeEvent(QEvent *event);
-		void showEvent(QShowEvent *event);
-		void hideEvent(QHideEvent *event);
+		bool eventFilter(QObject *obj, QEvent *event) override;
+		void changeEvent(QEvent *event) override;
+		void showEvent(QShowEvent *event) override;
+		void hideEvent(QHideEvent *event) override;
 
 	public:
 		void retranslateUi(QWidget *wdgSettingsInput);
@@ -80,9 +80,9 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		void shortcuts_update(int mode, int type, int row);
 		void shortcuts_tableview_resize(void);
 		void ports_end_misc_set_enabled(bool mode);
-		void info_entry_print(QString txt);
+		void info_entry_print(const QString &txt);
 		void js_row_pixmapButton(int row);
-		void js_pixmapButton(int index, DBWORD input, pixmapButton *bt);
+		void js_pixmapButton(int index, DBWORD in, pixmapButton *bt);
 		int js_jdev_index(void);
 
 	private:

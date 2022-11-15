@@ -50,7 +50,7 @@ wdgSettingsPPU::wdgSettingsPPU(QWidget *parent) : QWidget(parent) {
 
 	installEventFilter(this);
 }
-wdgSettingsPPU::~wdgSettingsPPU() {}
+wdgSettingsPPU::~wdgSettingsPPU() = default;
 
 void wdgSettingsPPU::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {

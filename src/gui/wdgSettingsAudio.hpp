@@ -26,12 +26,12 @@ class wdgSettingsAudio : public QWidget, public Ui::wdgSettingsAudio {
 	Q_OBJECT
 
 	public:
-		wdgSettingsAudio(QWidget *parent = 0);
-		~wdgSettingsAudio();
+		explicit wdgSettingsAudio(QWidget *parent = nullptr);
+		~wdgSettingsAudio() override;
 
 	private:
-		void changeEvent(QEvent *event);
-		void showEvent(QShowEvent *event);
+		void changeEvent(QEvent *event) override;
+		void showEvent(QShowEvent *event) override;
 
 	public:
 		void retranslateUi(QWidget *wdgSettingsAudio);

@@ -42,23 +42,23 @@ class wdgToolBar : public QToolBar {
 		Qt::ToolBarArea area;
 
 	private:
-		_toolbar_action_widget action_rotate;
-		_toolbar_action_widget action_state;
-		_toolbar_action_widget action_rewind;
+		_toolbar_action_widget action_rotate{};
+		_toolbar_action_widget action_state{};
+		_toolbar_action_widget action_rewind{};
 		bool mouse_pressed;
 
 	public:
-		wdgToolBar(QWidget *parent);
-		~wdgToolBar();
+		explicit wdgToolBar(QWidget *parent = nullptr);
+		~wdgToolBar() override;
 
 	protected:
-		bool eventFilter(QObject *obj, QEvent *event);
+		bool eventFilter(QObject *obj, QEvent *event) override;
 
 	public:
-		void update_toolbar(void);
-		void rotate_setVisible(bool visible);
-		void state_setVisible(bool visible);
-		void rewind_setVisible(bool visible);
+		void update_toolbar(void) const;
+		void rotate_setVisible(bool visible) const;
+		void state_setVisible(bool visible) const;
+		void rewind_setVisible(bool visible) const;
 
 	private slots:
 		void s_toplevel_changed(bool toplevel);

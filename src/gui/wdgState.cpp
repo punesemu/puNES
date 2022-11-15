@@ -34,7 +34,7 @@ wdgState::wdgState(QWidget *parent) : QWidget(parent) {
 	connect(pushButton_save, SIGNAL(clicked(bool)), this, SLOT(s_save_clicked(bool)));
 	connect(pushButton_load, SIGNAL(clicked(bool)), this, SLOT(s_load_clicked(bool)));
 }
-wdgState::~wdgState() {}
+wdgState::~wdgState() = default;
 
 void wdgState::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
@@ -72,7 +72,7 @@ stateBar::stateBar(QWidget *parent) : QWidget(parent) {
 	setMouseTracking(true);
 	installEventFilter(this);
 }
-stateBar::~stateBar() {}
+stateBar::~stateBar() = default;
 
 QSize stateBar::sizeHint(void) const {
 	return (QSize(SAVE_SLOTS * 13, fontMetrics().boundingRect("Qqy").height()));
@@ -109,7 +109,7 @@ void stateBar::paintEvent(UNUSED(QPaintEvent *event)) {
 	// disegno la riga di selezione dello slot
 	w = (width() / SAVE_SLOTS);
 	h = height();
-	x = 0;;
+	x = 0;
 	y = 0;
 
 	if ((x + (SAVE_SLOTS * w)) < width()) {

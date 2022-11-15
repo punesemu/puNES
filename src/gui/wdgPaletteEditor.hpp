@@ -39,8 +39,8 @@ class wdgPaletteWall : public QWidget {
 		int margin;
 
 	public:
-		wdgPaletteWall(QWidget *parent = 0);
-		~wdgPaletteWall();
+		explicit wdgPaletteWall(QWidget *parent = nullptr);
+		~wdgPaletteWall() override;
 
 	signals:
 		void et_first_paint(void);
@@ -48,23 +48,23 @@ class wdgPaletteWall : public QWidget {
 		void et_current_changed(int row, int col);
 
 	public:
-		QSize sizeHint(void) const;
+		QSize sizeHint(void) const override;
 
 	private:
-		void resizeEvent(QResizeEvent *event);
-		void paintEvent(QPaintEvent *event);
-		void mousePressEvent(QMouseEvent *event);
-		void mouseReleaseEvent(QMouseEvent *event);
-		void keyPressEvent(QKeyEvent *event);
-		void focusInEvent(QFocusEvent *event);
-		void focusOutEvent(QFocusEvent *event);
+		void resizeEvent(QResizeEvent *event) override;
+		void paintEvent(QPaintEvent *event) override;
+		void mousePressEvent(QMouseEvent *event) override;
+		void mouseReleaseEvent(QMouseEvent *event) override;
+		void keyPressEvent(QKeyEvent *event) override;
+		void focusInEvent(QFocusEvent *event) override;
+		void focusOutEvent(QFocusEvent *event) override;
 
 	public:
 		int count(void);
 		QColor color_at(int index);
 		void update_cell(int row, int col);
-		void update_cell_color(int index, QColor color);
-		int color_index(int row, int col);
+		void update_cell_color(int index, const QColor &color);
+		int color_index(int row, int col) const;
 		int current_palette_index(void);
 		void color_reset(int index);
 		void colors_reset(void);
@@ -74,10 +74,10 @@ class wdgPaletteWall : public QWidget {
 		virtual void set_current(int row, int col);
 
 	private:
-		int row_at(int y);
-		int column_at(int x);
-		int row_y(int row);
-		int column_x(int col);
+		int row_at(int y) const;
+		int column_at(int x) const;
+		int row_y(int row) const;
+		int column_x(int col) const;
 		QSize grid_size(void) const;
 		QRect cell_geometry(int row, int col);
 		void set_selected(int row, int col);
@@ -86,40 +86,40 @@ class wdgPaletteWall : public QWidget {
 };
 class wdgPalettePPU : public wdgPaletteWall {
 	public:
-		wdgPalettePPU(QWidget *parent = 0);
-		~wdgPalettePPU();
+		explicit wdgPalettePPU(QWidget *parent = nullptr);
+		~wdgPalettePPU() override;
 
 	public:
-		int palette_index(int row, int col);
-		void print_in_cell(QPainter *p, int row, int col, const QRect &rect);
+		int palette_index(int row, int col) override;
+		void print_in_cell(QPainter *p, int row, int col, const QRect &rect) override;
 };
 class wdgColorToChange : public wdgPaletteWall {
 	public:
 		int color;
 
 	public:
-		wdgColorToChange(QWidget *parent = 0);
-		~wdgColorToChange();
+		explicit wdgColorToChange(QWidget *parent = nullptr);
+		~wdgColorToChange() override;
 
 	private:
-		void resizeEvent(QResizeEvent *event);
+		void resizeEvent(QResizeEvent *event) override;
 
 	public:
-		int palette_index(int row, int col);
-		void set_current(int row, int col);
+		int palette_index(int row, int col) override;
+		void set_current(int row, int col) override;
 };
 class wdgHtmlName : public QLineEdit {
 	Q_OBJECT
 
 	public:
-		wdgHtmlName(QWidget *parent = 0);
-		~wdgHtmlName();
+		explicit wdgHtmlName(QWidget *parent = nullptr);
+		~wdgHtmlName() override;
 
 	signals:
 		void et_focus_out(void);
 
 	private:
-		void focusOutEvent(QFocusEvent *event);
+		void focusOutEvent(QFocusEvent *event) override;
 };
 
 #include "ui_wdgPaletteEditor.h"
@@ -128,18 +128,18 @@ class wdgPaletteEditor : public QWidget, public Ui::wdgPaletteEditor {
 	Q_OBJECT
 
 	public:
-		wdgPaletteEditor(QWidget *parent = 0);
-		~wdgPaletteEditor();
+		explicit wdgPaletteEditor(QWidget *parent = nullptr);
+		~wdgPaletteEditor() override;
 
 	protected:
-		void changeEvent(QEvent *event);
+		void changeEvent(QEvent *event) override;
 
 	public:
 		void palette_changed(void);
 
 	private:
 		void set_sliders_spins_lineedit(void);
-		void set_internal_color(int index, QColor qrgb, bool update_palette);
+		static void set_internal_color(int index, const QColor &qrgb, bool update_palette);
 
 	private slots:
 		void s_first_paint(void);

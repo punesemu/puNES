@@ -26,12 +26,12 @@ class wdgSettingsPPU : public QWidget, public Ui::wdgSettingsPPU {
 	Q_OBJECT
 
 	public:
-		wdgSettingsPPU(QWidget *parent = 0);
-		~wdgSettingsPPU();
+		explicit wdgSettingsPPU(QWidget *parent = nullptr);
+		~wdgSettingsPPU() override;
 
 	protected:
-		void changeEvent(QEvent *event);
-		void showEvent(QShowEvent *event);
+		void changeEvent(QEvent *event) override;
+		void showEvent(QShowEvent *event) override;
 
 	public:
 		void update_widget(void);

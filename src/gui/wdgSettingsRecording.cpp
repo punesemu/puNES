@@ -92,7 +92,7 @@ wdgSettingsRecording::wdgSettingsRecording(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Follow_rotation, SIGNAL(stateChanged(int)), this, SLOT(s_follow_rotation(int)));
 #endif
 }
-wdgSettingsRecording::~wdgSettingsRecording() {}
+wdgSettingsRecording::~wdgSettingsRecording() = default;
 
 #if defined (WITH_FFMPEG)
 void wdgSettingsRecording::changeEvent(QEvent *event) {
@@ -310,8 +310,8 @@ void wdgSettingsRecording::s_follow_rotation(UNUSED(int state)) {
 // ----------------------------------------------------------------------------------------------
 
 wdgRecGetSaveFileName::wdgRecGetSaveFileName(QWidget *parent) : QFileDialog(parent) {
-	label_Output_Quality = NULL;
-	comboBox_Output_Quality = NULL;
+	label_Output_Quality = nullptr;
+	comboBox_Output_Quality = nullptr;
 
 	rec_cfg.audio_format = cfg->recording.audio_format;
 	rec_cfg.video_format = cfg->recording.video_format;
@@ -322,10 +322,10 @@ wdgRecGetSaveFileName::wdgRecGetSaveFileName(QWidget *parent) : QFileDialog(pare
 	setFileMode(QFileDialog::AnyFile);
 	setViewMode(QFileDialog::Detail);
 }
-wdgRecGetSaveFileName::~wdgRecGetSaveFileName() {}
+wdgRecGetSaveFileName::~wdgRecGetSaveFileName() = default;
 
 QString wdgRecGetSaveFileName::audio_get_save_file_name(void) {
-	QComboBox *cb_file_types = NULL;
+	QComboBox *cb_file_types;
 
 	setWindowTitle(tr("Record AUDIO on file"));
 	// e' importante inserire prima il nome del file ...
@@ -352,7 +352,7 @@ QString wdgRecGetSaveFileName::audio_get_save_file_name(void) {
 QString wdgRecGetSaveFileName::video_get_save_file_name(void) {
 	QGridLayout *main_layout = dynamic_cast<QGridLayout *>(layout());
 	int num_rows = main_layout->rowCount();
-	QComboBox *cb_file_types = NULL;
+	QComboBox *cb_file_types;
 
 	label_Output_Quality = new QLabel(this);
 	label_Output_Quality->setObjectName("label_Output_Quality");
@@ -400,7 +400,7 @@ QComboBox *wdgRecGetSaveFileName::init_file_types(int start, int end, int curren
 	enum recording_format rfend = (enum recording_format)end;
 	QList<QComboBox *>cb_list= findChildren<QComboBox *>();
 	QStandardItemModel *model;
-	QComboBox *cb_file_types = NULL;
+	QComboBox *cb_file_types = nullptr;
 	QStringList filters;
 	QString selected_filter;
 	int i;
@@ -459,7 +459,7 @@ QString wdgRecGetSaveFileName::control_filename(int current) {
 		csuffix = rfi->suffix_list[++i];
 	}
 
-	if (found == false) {
+	if (!found) {
 		return (fi.absoluteFilePath() + "." + QString(rfi->suffix_list[0]));
 	}
 	return (selectedFiles().value(0));

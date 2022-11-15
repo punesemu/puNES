@@ -26,12 +26,12 @@ class wdgSettingsCheats : public QWidget, public Ui::wdgSettingsCheats {
 	Q_OBJECT
 
 	public:
-		wdgSettingsCheats(QWidget *parent = 0);
-		~wdgSettingsCheats();
+		explicit wdgSettingsCheats(QWidget *parent = nullptr);
+		~wdgSettingsCheats() override;
 
 	private:
-		void changeEvent(QEvent *event);
-		void showEvent(QShowEvent *event);
+		void changeEvent(QEvent *event) override;
+		void showEvent(QShowEvent *event) override;
 
 	public:
 		void retranslateUi(QWidget *wdgSettingsCheats);

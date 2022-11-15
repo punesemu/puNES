@@ -36,7 +36,7 @@
 #include "tape_data_recorder.h"
 
 wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
-	target = NULL;
+	target = nullptr;
 	paste = new QAction(this);
 	tape.play = new QAction(this);
 	tape.record = new QAction(this);
@@ -77,8 +77,11 @@ wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 
 	installEventFilter(this);
 }
-wdgScreen::~wdgScreen() {}
+wdgScreen::~wdgScreen() = default;
 
+QPaintEngine *wdgScreen::paintEngine() const {
+	return (nullptr);
+}
 bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 	static QMouseEvent *mouseEvent;
 	static QKeyEvent *keyEvent;

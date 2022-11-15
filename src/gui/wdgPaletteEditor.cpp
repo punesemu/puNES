@@ -29,7 +29,6 @@
 #include "emu.h"
 #include "conf.h"
 #include "settings.h"
-#include "video/gfx.h"
 
 // ----------------------------------------------------------------------------------------------
 
@@ -50,7 +49,7 @@ wdgPaletteWall::wdgPaletteWall(QWidget *parent) : QWidget(parent) {
 
 	//setStyleSheet("background-color: black;");
 }
-wdgPaletteWall::~wdgPaletteWall() {};
+wdgPaletteWall::~wdgPaletteWall() = default;
 
 QSize wdgPaletteWall::sizeHint(void) const {
 	ensurePolished();
@@ -64,11 +63,11 @@ void wdgPaletteWall::resizeEvent(QResizeEvent *event) {
 	cellh = s.height() / nrows;
 }
 void wdgPaletteWall::paintEvent(QPaintEvent *event) {
-	QRect r = event->rect();
-	int cx = r.x();
-	int cy = r.y();
-	int ch = r.height();
-	int cw = r.width();
+	QRect er = event->rect();
+	int cx = er.x();
+	int cy = er.y();
+	int ch = er.height();
+	int cw = er.width();
 	int colfirst = column_at(cx);
 	int collast = column_at(cx + cw);
 	int rowfirst = row_at(cy);
@@ -165,14 +164,14 @@ QColor wdgPaletteWall::color_at(int index) {
 void wdgPaletteWall::update_cell(int row, int col) {
 	update(cell_geometry(row, col));
 }
-void wdgPaletteWall::update_cell_color(int index, QColor color) {
+void wdgPaletteWall::update_cell_color(int index, const QColor &color) {
 	int row = (index / ncols);
 	int col = index - (row * ncols);
 
 	colors.replace(index, color);
 	update(cell_geometry(row, col));
 }
-int wdgPaletteWall::color_index(int row, int col) {
+int wdgPaletteWall::color_index(int row, int col) const {
 	return ((row * ncols) + col);
 }
 int wdgPaletteWall::current_palette_index(void) {
@@ -225,16 +224,16 @@ void wdgPaletteWall::set_current(int row, int col) {
 	emit et_current_changed(curRow, curCol);
 }
 
-int wdgPaletteWall::row_at(int y) {
+int wdgPaletteWall::row_at(int y) const {
 	return (y / cellh);
 }
-int wdgPaletteWall::column_at(int x) {
+int wdgPaletteWall::column_at(int x) const {
 	return (x / cellw);
 }
-int wdgPaletteWall::row_y(int row) {
+int wdgPaletteWall::row_y(int row) const {
 	return (cellh * row);
 }
-int wdgPaletteWall::column_x(int col) {
+int wdgPaletteWall::column_x(int col) const {
 	return (cellw * col);
 }
 QSize wdgPaletteWall::grid_size(void) const {
@@ -282,12 +281,12 @@ void wdgPaletteWall::paint_cell(QPainter *p, int row, int col, const QRect &rect
 
 	if ((row == curRow) && (col == curCol)) {
 		if (hasFocus()) {
-			QStyleOptionFocusRect opt;
+			QStyleOptionFocusRect sopt;
 
-			opt.palette = g;
-			opt.rect = rect;
-			opt.state = QStyle::State_None | QStyle::State_KeyboardFocusChange;
-			style()->drawPrimitive(QStyle::PE_FrameFocusRect, &opt, p, this);
+			sopt.palette = g;
+			sopt.rect = rect;
+			sopt.state = QStyle::State_None | QStyle::State_KeyboardFocusChange;
+			style()->drawPrimitive(QStyle::PE_FrameFocusRect, &sopt, p, this);
 		}
 	}
 	paint_cell_contents(p, row, col, opt.rect.adjusted(dfw, dfw, -dfw, -dfw));
@@ -330,7 +329,7 @@ wdgPalettePPU::wdgPalettePPU(QWidget *parent) : wdgPaletteWall(parent) {
 	ncols = 16;
 	cellh = 32;
 }
-wdgPalettePPU::~wdgPalettePPU() {};
+wdgPalettePPU::~wdgPalettePPU() = default;
 
 int wdgPalettePPU::palette_index(int row, int col) {
 	return (mmap_palette.color[(row * ncols) + col]);
@@ -358,7 +357,7 @@ wdgColorToChange::wdgColorToChange(QWidget *parent) : wdgPaletteWall(parent) {
 	ncols = 1;
 	color = 0;
 }
-wdgColorToChange::~wdgColorToChange() {};
+wdgColorToChange::~wdgColorToChange() = default;
 
 void wdgColorToChange::resizeEvent(QResizeEvent *event) {
 	QSize s = event->size();
@@ -388,7 +387,7 @@ void wdgColorToChange::set_current(int row, int col) {
 // ----------------------------------------------------------------------------------------------
 
 wdgHtmlName::wdgHtmlName(QWidget *parent) : QLineEdit(parent) {}
-wdgHtmlName::~wdgHtmlName() {}
+wdgHtmlName::~wdgHtmlName() = default;
 
 void wdgHtmlName::focusOutEvent(QFocusEvent *event) {
 	QLineEdit::focusOutEvent(event);
@@ -427,7 +426,7 @@ wdgPaletteEditor::wdgPaletteEditor(QWidget *parent) : QWidget(parent) {
 	connect(pushButton_Palette_save, SIGNAL(clicked(bool)), this, SLOT(s_palette_save(bool)));
 	connect(pushButton_Palette_reset, SIGNAL(clicked(bool)), this, SLOT(s_palette_reset(bool)));
 }
-wdgPaletteEditor::~wdgPaletteEditor() {}
+wdgPaletteEditor::~wdgPaletteEditor() = default;
 
 void wdgPaletteEditor::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
@@ -465,7 +464,7 @@ void wdgPaletteEditor::set_sliders_spins_lineedit(void) {
 	lineEdit_Html_Name->setText(qrgb.name().toUpper());
 	lineEdit_Html_Name->blockSignals(false);
 }
-void wdgPaletteEditor::set_internal_color(int index, QColor qrgb, bool update_palette) {
+void wdgPaletteEditor::set_internal_color(int index, const QColor &qrgb, bool update_palette) {
 	_color_RGB *rgb = &palette_RGB.noswap[index];
 
 	rgb->r = qrgb.red();
@@ -473,7 +472,7 @@ void wdgPaletteEditor::set_internal_color(int index, QColor qrgb, bool update_pa
 	rgb->b = qrgb.blue();
 
 	if (update_palette) {
-		ntsc_set(NULL, TRUE, 0, (BYTE *)palette_RGB.noswap, 0, (BYTE *)palette_RGB.noswap);
+		ntsc_set(nullptr, TRUE, 0, (BYTE *)palette_RGB.noswap, nullptr, (BYTE *)palette_RGB.noswap);
 		gfx_palette_update();
 	}
 }
@@ -522,7 +521,7 @@ void wdgPaletteEditor::s_html(void) {
 	int index = widget_Color_Selected->color;
 	QColor qrgb = widget_Palette_Wall->color_at(index);
 
-	if (QColor::isValidColor(lineEdit_Html_Name->text()) == false) {
+	if (!QColor::isValidColor(lineEdit_Html_Name->text())) {
 		set_sliders_spins_lineedit();
 		return;
 	}
@@ -563,7 +562,7 @@ void wdgPaletteEditor::s_palette_save(UNUSED(bool checked)) {
 		uQString(opt_palette[cfg->palette].lname).replace(" ", "_"),
 		filters.join(";;"));
 
-	if (file.isNull() == false) {
+	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.suffix().isEmpty()) {

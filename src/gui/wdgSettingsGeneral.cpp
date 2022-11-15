@@ -86,7 +86,7 @@ wdgSettingsGeneral::wdgSettingsGeneral(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Save_settings_on_exit, SIGNAL(clicked(bool)), this, SLOT(s_save_settings_on_exit(bool)));
 	connect(checkBox_Multiple_instances, SIGNAL(clicked(bool)), this, SLOT(s_multiple_settings(bool)));
 }
-wdgSettingsGeneral::~wdgSettingsGeneral() {}
+wdgSettingsGeneral::~wdgSettingsGeneral() = default;
 
 void wdgSettingsGeneral::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
@@ -151,6 +151,7 @@ void wdgSettingsGeneral::update_widget(void) {
 }
 void wdgSettingsGeneral::shcut_mode(int mode) {
 	switch (mode) {
+		default:
 		case AUTO:
 			pushButton_Mode_Auto->toggled(true);
 			break;
@@ -242,7 +243,7 @@ void wdgSettingsGeneral::rewind_minutes_set(void) {
 	}
 }
 void wdgSettingsGeneral::language_set(void) {
-	int lang = 0;
+	int lang;
 
 	switch (cfg->language) {
 		default:
@@ -373,13 +374,13 @@ void wdgSettingsGeneral::s_rewind_minutes(bool checked) {
 	gui_update();
 }
 void wdgSettingsGeneral::s_language(int index) {
-	int lang = index;
+	int lang;
 
 	switch (index) {
-		default:
 		case 0:
 			lang = LNG_CHINESE_SIMPLIFIED;
 			break;
+		default:
 		case 1:
 			lang = LNG_ENGLISH;
 			break;
@@ -418,7 +419,7 @@ void wdgSettingsGeneral::s_game_genie_rom_file(UNUSED(bool checked)) {
 	file = QFileDialog::getOpenFileName(this, tr("Select Game Genie ROM file"),
 			QFileInfo(uQString(cfg->gg_rom_file)).dir().absolutePath(), filters.join(";;"));
 
-	if (file.isNull() == false) {
+	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.exists()) {
@@ -426,7 +427,7 @@ void wdgSettingsGeneral::s_game_genie_rom_file(UNUSED(bool checked)) {
 			ustrncpy(cfg->gg_rom_file, uQStringCD(fileinfo.absoluteFilePath()), usizeof(cfg->gg_rom_file) - 1);
 			update_widget();
 		} else {
-			gui_overlay_info_append_msg_precompiled(23, NULL);
+			gui_overlay_info_append_msg_precompiled(23, nullptr);
 		}
 	}
 
@@ -449,7 +450,7 @@ void wdgSettingsGeneral::s_fds_bios_file(UNUSED(bool checked)) {
 	file = QFileDialog::getOpenFileName(this, tr("Select FDS BIOS file"),
 			QFileInfo(uQString(cfg->fds_bios_file)).dir().absolutePath(), filters.join(";;"));
 
-	if (file.isNull() == false) {
+	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.exists()) {
@@ -457,7 +458,7 @@ void wdgSettingsGeneral::s_fds_bios_file(UNUSED(bool checked)) {
 			ustrncpy(cfg->fds_bios_file, uQStringCD(fileinfo.absoluteFilePath()), usizeof(cfg->fds_bios_file) - 1);
 			update_widget();
 		} else {
-			gui_overlay_info_append_msg_precompiled(24, NULL);
+			gui_overlay_info_append_msg_precompiled(24, nullptr);
 		}
 	}
 

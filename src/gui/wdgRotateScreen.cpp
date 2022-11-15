@@ -24,7 +24,6 @@
 #include "mainWindow.hpp"
 #include "conf.h"
 #include "emu_thread.h"
-#include "video/gfx.h"
 
 wdgRotateScreen::wdgRotateScreen(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
@@ -37,7 +36,7 @@ wdgRotateScreen::wdgRotateScreen(QWidget *parent) : QWidget(parent) {
 
 	label_desc->setFixedWidth(QLabel("00000").sizeHint().width());
 }
-wdgRotateScreen::~wdgRotateScreen() {}
+wdgRotateScreen::~wdgRotateScreen() = default;
 
 void wdgRotateScreen::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {

@@ -67,7 +67,7 @@ BYTE gui_monitor_enum_monitors(void) {
 				if (!list) {
 					free_resources_on_err(sr, ci, oi, display);
 					return (EXIT_ERROR);
-				};
+				}
 				monitor.monitors = list;
 				mi = &monitor.monitors[monitor.nmonitor];
 				memset(mi, 0x00, sizeof(_monitor_info));
@@ -79,8 +79,8 @@ BYTE gui_monitor_enum_monitors(void) {
 				mi->rotation = ci->rotation;
 				mi->x = ci->x;
 				mi->y = ci->y;
-				mi->w = ci->width;
-				mi->h = ci->height;
+				mi->w = (int)ci->width;
+				mi->h = (int)ci->height;
 				mi->output = ci->outputs[output];
 				mi->mode_org = -1;
 				mi->mode_new = -1;
@@ -139,21 +139,21 @@ BYTE gui_monitor_enum_monitors(void) {
 
 					//if ((mode_info.modeFlags & RR_Interlace) == 0) {
 					{
-						_monitor_mode_info *mm = NULL, *list = NULL;
+						_monitor_mode_info *mm = NULL, *lst = NULL;
 
-						list = (_monitor_mode_info *)realloc(mi->modes, (mi->nmodes + 1) * sizeof(_monitor_mode_info));
-						if (!list) {
+						lst = (_monitor_mode_info *)realloc(mi->modes, (mi->nmodes + 1) * sizeof(_monitor_mode_info));
+						if (!lst) {
 							free_resources_on_err(sr, ci, oi, display);
 							return (EXIT_ERROR);
 						}
-						mi->modes = list;
+						mi->modes = lst;
 						mm = &mi->modes[mi->nmodes];
 						memset(mm, 0x00, sizeof(_monitor_mode_info));
 
 						mm->id = mode_info->id;
 						mm->flags = mode_info->modeFlags;
-						mm->w = mode_info->width;
-						mm->h = mode_info->height;
+						mm->w = (int)mode_info->width;
+						mm->h = (int)mode_info->height;
 						if (mode_info->hTotal && mode_info->vTotal) {
 							mm->rrate = ((double)mode_info->dotClock / ((double)mode_info->hTotal * (double)mode_info->vTotal));
 						} else {
