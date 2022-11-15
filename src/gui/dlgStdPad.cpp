@@ -113,7 +113,7 @@ dlgStdPad::dlgStdPad(QWidget *parent, _cfg_port *cfg_port) : QDialog(parent) {
 			connect(unset, SIGNAL(clicked(bool)), this, SLOT(s_unset_clicked(bool)));
 		}
 	}
-	
+
 	label_kbd_Deadzone_value_slider->setFixedWidth(QLabel("00").sizeHint().width());
 	label_kbd_Deadzone_value_slider->setText(QString("%1").arg(0, 2));
 	label_joy_Deadzone_value_slider->setFixedWidth(QLabel("00").sizeHint().width());
@@ -514,7 +514,7 @@ void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
 			icon = QString(" <html><img src=\"data:image/png;base64,") + byteArray.toBase64() + "\"/></hmtl>";
 		}
 
-		info_entry_print(type, tr("Press a key (ESC for the previous value \"%1\"%2)").arg(desc).arg(icon));
+		info_entry_print(type, tr("Press a key (ESC for the previous value \"%1\"%2)").arg(desc, icon));
 		js_press_event();
 	}
 }

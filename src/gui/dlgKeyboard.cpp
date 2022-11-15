@@ -127,7 +127,7 @@ void dlgKeyboard::changeEvent(QEvent *event) {
 	} else if (event->type() == QEvent::ActivationChange) {
 		// sotto window, a questo punto, isActiveWindow() mi restituisce true anche quando sono in uscita dall'activation
 		// quindi eseguo il shortcut_toggle() con un po' di ritardo per avere il corretto stato della finestra.
-		QTimer::singleShot(75, [this] {
+		QTimer::singleShot(75, this, [this] {
 			shortcut_toggle(this->isActiveWindow());
 		});
 	}
@@ -145,7 +145,7 @@ void dlgKeyboard::hideEvent(QHideEvent *event) {
 }
 void dlgKeyboard::closeEvent(QCloseEvent *event) {
 	event->ignore();
-	QTimer::singleShot(50, [this] {
+	QTimer::singleShot(50, this, [this] {
 		setVisible(FALSE);
 	});
 }
@@ -426,7 +426,7 @@ void dlgKeyboard::one_click_remove(keyboardButton *kb) {
 	}
 }
 void dlgKeyboard::one_click_oneshot(keyboardButton *kb) {
-	QTimer::singleShot(75, [this, kb] {
+	QTimer::singleShot(75, this, [this, kb] {
 		if (kb->modifier.state) {
 			this->one_click_dec();
 		}
@@ -710,7 +710,7 @@ void keyboardButton::mousePressEvent(QMouseEvent *event) {
 }
 void keyboardButton::mouseReleaseEvent(QMouseEvent *event) {
 	if (dlgkbd->mode == dlgKeyboard::DK_SETUP) {
-		QTimer::singleShot(75, [this] {
+		QTimer::singleShot(75, this, [this] {
 			dlgCfgNSCode *cfg = new dlgCfgNSCode(dlgkeyb, this);
 
 			cfg->exec();
@@ -766,13 +766,13 @@ void keyboardButton::set(DBWORD nscode, SWORD index, SBYTE row, SBYTE column, SW
 			"}";
 
 		setStyleSheet(
-			style.
-			arg(clr.bck.isEmpty() ? keyboardButton::_color().bck : clr.bck).
-			arg(clr.bck_border.isEmpty() ? keyboardButton::_color().bck_border : clr.bck_border).
-			arg(clr.hover.isEmpty() ? keyboardButton::_color().hover : clr.hover).
-			arg(clr.hover_border.isEmpty() ? keyboardButton::_color().hover_border : clr.hover_border).
-			arg(clr.press.isEmpty() ? keyboardButton::_color().press : clr.press).
-			arg(clr.press_border.isEmpty() ? keyboardButton::_color().press_border : clr.press_border));
+			style.arg(
+			(clr.bck.isEmpty() ? keyboardButton::_color().bck : clr.bck),
+			(clr.bck_border.isEmpty() ? keyboardButton::_color().bck_border : clr.bck_border),
+			(clr.hover.isEmpty() ? keyboardButton::_color().hover : clr.hover),
+			(clr.hover_border.isEmpty() ? keyboardButton::_color().hover_border : clr.hover_border),
+			(clr.press.isEmpty() ? keyboardButton::_color().press : clr.press),
+			(clr.press_border.isEmpty() ? keyboardButton::_color().press_border : clr.press_border)));
 	}
 }
 void keyboardButton::reset(void) {

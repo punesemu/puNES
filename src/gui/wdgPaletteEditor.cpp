@@ -401,9 +401,9 @@ wdgPaletteEditor::wdgPaletteEditor(QWidget *parent) : QWidget(parent) {
 
 	setFocusProxy(widget_Palette_Wall);
 
-	connect(widget_Palette_Wall, SIGNAL(et_selected(int, int)), this, SLOT(s_palette_wall(int, int)));
-	connect(widget_Palette_Wall, SIGNAL(et_first_paint(void)), this, SLOT(s_first_paint(void)));
-	connect(widget_Palette_PPU, SIGNAL(et_selected(int, int)), this, SLOT(s_palette_ppu(int, int)));
+	connect(widget_Palette_Wall, SIGNAL(et_selected(int,int)), this, SLOT(s_palette_wall(int,int)));
+	connect(widget_Palette_Wall, SIGNAL(et_first_paint()), this, SLOT(s_first_paint()));
+	connect(widget_Palette_PPU, SIGNAL(et_selected(int,int)), this, SLOT(s_palette_ppu(int,int)));
 
 	connect(horizontalSlider_Red, SIGNAL(valueChanged(int)), this, SLOT(s_slider_and_spin(int)));
 	connect(horizontalSlider_Green, SIGNAL(valueChanged(int)), this, SLOT(s_slider_and_spin(int)));
@@ -419,8 +419,8 @@ wdgPaletteEditor::wdgPaletteEditor(QWidget *parent) : QWidget(parent) {
 	connect(spinBox_Sat, SIGNAL(valueChanged(int)), this, SLOT(s_slider_and_spin(int)));
 	connect(spinBox_Val, SIGNAL(valueChanged(int)), this, SLOT(s_slider_and_spin(int)));
 
-	connect(lineEdit_Html_Name, SIGNAL(et_focus_out(void)), this, SLOT(s_html(void)));
-	connect(lineEdit_Html_Name, SIGNAL(returnPressed(void)), this, SLOT(s_html(void)));
+	connect(lineEdit_Html_Name, SIGNAL(et_focus_out()), this, SLOT(s_html()));
+	connect(lineEdit_Html_Name, SIGNAL(returnPressed()), this, SLOT(s_html()));
 
 	connect(pushButton_Color_reset, SIGNAL(clicked(bool)), this, SLOT(s_color_reset(bool)));
 	connect(pushButton_Palette_save, SIGNAL(clicked(bool)), this, SLOT(s_palette_save(bool)));

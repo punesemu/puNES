@@ -211,7 +211,7 @@ void tas_header_FM2(uTCHAR *file) {
 		} else if (key.compare("comment author", Qt::CaseInsensitive) == 0) {
 			tsint.comment_author = value;
 		} else if (key.compare("subtitle", Qt::CaseInsensitive) == 0) {
-			QRegularExpression re("^\\s*(\\d+)\\s+(.*)$");
+			static QRegularExpression re("^\\s*(\\d+)\\s+(.*)$");
 			QRegularExpressionMatch match = re.match(value);
 
 			if (match.hasMatch()) {

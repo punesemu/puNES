@@ -402,7 +402,6 @@ QComboBox *wdgRecGetSaveFileName::init_file_types(int start, int end, int curren
 	QStandardItemModel *model;
 	QComboBox *cb_file_types = nullptr;
 	QStringList filters;
-	QString selected_filter;
 	int i;
 
 	for (i = rfstart; i < rfend; i++) {

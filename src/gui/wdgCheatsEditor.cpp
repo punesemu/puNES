@@ -55,11 +55,11 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 
 	connect(tableWidget_Cheats, SIGNAL(itemSelectionChanged()), this, SLOT(s_cheat_item()));
 	connect(tableWidget_Cheats->model(),
-		SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)),
-		this, SLOT(s_table_data_changed(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
+		SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+		this, SLOT(s_table_data_changed(QModelIndex,QModelIndex,QVector<int>)));
 	connect(tableWidget_Cheats->model(),
-		SIGNAL(layoutChanged(const QList<QPersistentModelIndex> &, QAbstractItemModel::LayoutChangeHint)), this,
-		SLOT(s_table_layout_changed(const QList<QPersistentModelIndex> &, QAbstractItemModel::LayoutChangeHint)));
+		SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)), this,
+		SLOT(s_table_layout_changed(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)));
 
 	connect(pushButton_Hide_Show_Tools, SIGNAL(clicked(bool)), this, SLOT(s_hide_show_tools(bool)));
 	connect(pushButton_Import_Cheats, SIGNAL(clicked(bool)), this, SLOT(s_import(bool)));
@@ -76,7 +76,7 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 		grp->addButton(radioButton_ProAR);
 		grp->setId(radioButton_ProAR, 2);
 
-		connect(grp, SIGNAL(buttonClicked(QAbstractButton *)), this, SLOT(s_grp_type_cheat(QAbstractButton *)));
+		connect(grp, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(s_grp_type_cheat(QAbstractButton*)));
 	}
 
 	label_color_CPU_Ram->setStyleSheet("QLabel{background: #FCD7F8;}");
@@ -94,8 +94,8 @@ wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
 		lineEdit_ProAR->setStyleSheet("QLineEdit{background: yellow;}");
 		lineEdit_ProAR->setValidator(val);
 
-		connect(lineEdit_GG, SIGNAL(textEdited(const QString &)), SLOT(s_gg_proar_text_edited(const QString &)));
-		connect(lineEdit_ProAR, SIGNAL(textEdited(const QString &)), SLOT(s_gg_proar_text_edited(const QString &)));
+		connect(lineEdit_GG, SIGNAL(textEdited(QString)), SLOT(s_gg_proar_text_edited(QString)));
+		connect(lineEdit_ProAR, SIGNAL(textEdited(QString)), SLOT(s_gg_proar_text_edited(QString)));
 	}
 
 	pushButton_Copy_GG->setProperty("myValue", QVariant(0));
@@ -422,12 +422,14 @@ void wdgCheatsEditor::populate_gg_rocky_lineedit(bool control_widgets) {
 	}
 }
 void wdgCheatsEditor::populate_raw_edit(_cheat *cheat) {
-	hexSpinBox_Address->setValue(cheat->address);
-	hexSpinBox_Value->setValue(cheat->replace);
-	checkBox_Compare->setChecked(cheat->enabled_compare);
-	hexSpinBox_Compare->setValue(cheat->compare);
+	if (cheat) {
+		hexSpinBox_Address->setValue(cheat->address);
+		hexSpinBox_Value->setValue(cheat->replace);
+		checkBox_Compare->setChecked(cheat->enabled_compare);
+		hexSpinBox_Compare->setValue(cheat->compare);
 
-	s_compare(cheat->enabled_compare ? Qt::Checked : Qt::Unchecked);
+		s_compare(cheat->enabled_compare ? Qt::Checked : Qt::Unchecked);
+	}
 }
 void wdgCheatsEditor::populate_edit_widgets(int row) {
 	chl_map cheat;
@@ -701,6 +703,7 @@ void wdgCheatsEditor::s_gg_proar_text_edited(UNUSED(const QString &text)) {
 		return;
 	}
 	switch (grp->checkedId()) {
+		default:
 		case 1:
 			if (objch->decode_gg(le->text(), &cheat) == EXIT_ERROR) {
 				enabled = false;

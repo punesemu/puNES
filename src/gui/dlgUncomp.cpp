@@ -58,10 +58,9 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 	index = 0;
 
 	for (unsigned int i = 0; i < uncompress_archive_counter(archive, type); i++) {
-		_uncompress_archive_item *aitem;
 		uTCHAR *file;
 
-		if ((aitem = uncompress_archive_find_item(archive, index, type)) == nullptr) {
+		if (uncompress_archive_find_item(archive, index, type) == nullptr) {
 			continue;
 		}
 
@@ -76,7 +75,7 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 
 	tableWidget_Selection->setCurrentCell(0, 0);
 
-	connect(tableWidget_Selection, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(s_doubleclick(int, int)));
+	connect(tableWidget_Selection, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(s_doubleclick(int,int)));
 	connect(pushButton_Ok, SIGNAL(clicked(bool)), this, SLOT(s_ok_clicked(bool)));
 	connect(pushButton_None, SIGNAL(clicked(bool)), this, SLOT(s_none_clicked(bool)));
 

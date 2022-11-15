@@ -350,23 +350,23 @@ void wdgSettingsVideo::change_rom(void) {
 void wdgSettingsVideo::shcut_scale(int scale) {
 	switch (scale) {
 		case X1:
-			pushButton_Scale_1x->toggled(true);
+			emit pushButton_Scale_1x->toggled(true);
 			break;
 		default:
 		case X2:
-			pushButton_Scale_2x->toggled(true);
+			emit pushButton_Scale_2x->toggled(true);
 			break;
 		case X3:
-			pushButton_Scale_3x->toggled(true);
+			emit pushButton_Scale_3x->toggled(true);
 			break;
 		case X4:
-			pushButton_Scale_4x->toggled(true);
+			emit pushButton_Scale_4x->toggled(true);
 			break;
 		case X5:
-			pushButton_Scale_5x->toggled(true);
+			emit pushButton_Scale_5x->toggled(true);
 			break;
 		case X6:
-			pushButton_Scale_6x->toggled(true);
+			emit pushButton_Scale_6x->toggled(true);
 			break;
 	}
 }

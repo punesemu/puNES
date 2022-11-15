@@ -19,10 +19,10 @@
 #include <cmath>
 #include <QtCore/QStringList>
 #include <QtCore/QTextStream>
-#include <QtCore/QRegularExpression>
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <QtCore/QStringEncoder>
 #endif
+#include "mainWindow.hpp"
 #include "objSettings.hpp"
 #include "clock.h"
 #include "save_slot.h"
@@ -2030,7 +2030,7 @@ bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 			if (ls->cfg) {
 				for (int b = 0; b < ls->count; b++) {
 					// elimino eventuali spazi finali
-					key = QString(splitted.at(0)).replace(QRegularExpression("\\s*$"), "");
+					key = QString(splitted.at(0)).replace(qtHelper::rx_any_numbers, "");
 					if (key == uQString(ls->cfg[b].key)) {
 						group = uQString(ls->cfg[b].grp);
 						key_is_good = true;
@@ -2038,7 +2038,7 @@ bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 					}
 				}
 			} else {
-				key = QString(splitted.at(0)).replace(QRegularExpression("\\s*$"), "");
+				key = QString(splitted.at(0)).replace(qtHelper::rx_any_numbers, "");
 				key_is_good = true;
 			}
 
@@ -2072,7 +2072,7 @@ bool wr_cfg_file(QIODevice &device, const QSettings::SettingsMap &map) {
 
 	if (s.list == LSET_NONE) {
 		QSettings::SettingsMap::const_iterator iter = map.begin();
-		
+
 		for (; iter != map.end(); ++iter) {
 			if (!iter.key().isEmpty()) {
 				out << iter.key() << "=" << iter.value().toString() << NEWLINE;

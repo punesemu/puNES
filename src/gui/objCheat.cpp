@@ -18,12 +18,12 @@
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
-#include <QtCore/QRegularExpression>
 #include <QtCore/QSettings>
 #include <QtWidgets/QMessageBox>
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <QtCore/QStringEncoder>
 #endif
+#include "mainWindow.hpp"
 #include "objCheat.hpp"
 #include "info.h"
 #include "conf.h"
@@ -996,11 +996,11 @@ static bool libretro_rd_file(QIODevice &device, QSettings::SettingsMap &map) {
 		QString key, value;
 
 		if (splitted.count() == 2) {
-			key = QString(splitted.at(0)).replace(QRegularExpression("\\s*$"), "");
+			key = QString(splitted.at(0)).replace(qtHelper::rx_any_numbers, "");
 			value = splitted.at(1).trimmed();
 			// rimuovo i commenti che possono esserci sulla riga
-			value = value.remove(QRegularExpression("#.*"));
-			value = value.remove(QRegularExpression("//.*"));
+			value = value.remove(qtHelper::rx_comment_0);
+			value = value.remove(qtHelper::rx_comment_1);
 			value = value.remove('"');
 			value = value.trimmed();
 

@@ -153,16 +153,16 @@ void wdgSettingsGeneral::shcut_mode(int mode) {
 	switch (mode) {
 		default:
 		case AUTO:
-			pushButton_Mode_Auto->toggled(true);
+			emit pushButton_Mode_Auto->toggled(true);
 			break;
 		case NTSC:
-			pushButton_Mode_NTSC->toggled(true);
+			emit pushButton_Mode_NTSC->toggled(true);
 			break;
 		case PAL:
-			pushButton_Mode_PAL->toggled(true);
+			emit pushButton_Mode_PAL->toggled(true);
 			break;
 		case DENDY:
-			pushButton_Mode_Dendy->toggled(true);
+			emit pushButton_Mode_Dendy->toggled(true);
 			break;
 	}
 }

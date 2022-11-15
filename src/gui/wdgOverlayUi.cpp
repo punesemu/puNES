@@ -367,7 +367,11 @@ void wdgOverlayUi::update_dpr(void) {
 	font.setPointSizeF(9.0 / devicePixelRatioF());
 	setFont(font);
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
+	for (overlayWidget *ele : qAsConst(wdgs)) {
+#else
 	for (overlayWidget *ele : wdgs) {
+#endif
 		ele->update_dpr();
 	}
 }
@@ -403,11 +407,19 @@ void wdgOverlayUi::overlay_blit(void) {
 
 	// e' importante rispettare l'ordine sottostante.
 	// 1 - prima cancellazione
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
+	for (overlayWidget *ele : qAsConst(wdgs)) {
+#else
 	for (overlayWidget *ele : wdgs) {
+#endif
 		wdg_clear(ele, nullptr, dpr);
 	}
 	// 2 - seconda cancellazione con preparazione immagini
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
+	for (overlayWidget *ele : qAsConst(wdgs)) {
+#else
 	for (overlayWidget *ele : wdgs) {
+#endif
 		if (!ele->isHidden() && (ele->enabled == TRUE)) {
 			bool redraw = false;
 
@@ -433,7 +445,11 @@ void wdgOverlayUi::overlay_blit(void) {
 		}
 	}
 	// 3 - blit delle immagini
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
+	for (overlayWidget *ele : qAsConst(wdgs)) {
+#else
 	for (overlayWidget *ele : wdgs) {
+#endif
 		if (ele->exchange.draw) {
 			_gfx_rect rect;
 
@@ -1387,7 +1403,6 @@ void overlayWidgetRewind::draw_command(void) {
 }
 void overlayWidgetRewind::draw_corner_bar_info(void) {
 	static QRectF qr;
-	QPen pen = painter.pen();
 	qreal vpad = dpr_int(2), hpad = dpr_int(3);
 	qreal max = this->max();
 	qreal min = this->min();
@@ -1630,7 +1645,7 @@ void overlayWidgetSaveSlot::draw_slots_x1(void) {
 
 		pen.setColor(color.x1.selected);
 		pen.setWidthF(dpr_int(1));
-		
+
 		painter.setPen(pen);
 		painter.setBrush(Qt::NoBrush);
 		painter.drawEllipse(QPointF(x, y), radius, radius);
@@ -1832,7 +1847,7 @@ void overlayWidgetInfo::paintEvent(QPaintEvent *event) {
 		overlay.info.mutex.unlock();
 
 		if (len) {
-		    static QTextOption to;
+			static QTextOption to;
 			qreal font_height = QFontMetrics(font_info).height();
 			QTextDocument td;
 			qreal x, y, w, h, lines = 1;
@@ -2054,9 +2069,13 @@ void overlayWidgetInfo::s_fade_in_finished(void) {
 	td.setDocumentMargin(0.0f);
 	td.setHtml(actual);
 
-	words = td.toPlainText().split(QRegularExpression("(\\s|\\n|\\r)+")).count();
-	sec = ceil(sec_for_word * (double)words);
-	fade_out.timer.seconds = sec < 3 ? 3 : sec;
+	{
+		static QRegularExpression rx("(\\s|\\n|\\r)+");
+
+		words = td.toPlainText().split(rx).count();
+		sec = ceil(sec_for_word * (double)words);
+		fade_out.timer.seconds = sec < 3 ? 3 : sec;
+	}
 }
 void overlayWidgetInfo::s_fade_out_finished(void) {
 	overlay.info.mutex.lock();

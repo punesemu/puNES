@@ -87,10 +87,10 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 	connect(pushButton_Shortcut_reset, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_reset(bool)));
 
 	shcut.timeout.timer = new QTimer(this);
-	connect(shcut.timeout.timer, SIGNAL(timeout(void)), this, SLOT(s_input_timeout(void)));
+	connect(shcut.timeout.timer, SIGNAL(timeout()), this, SLOT(s_input_timeout()));
 
 	shcut.joy.timer = new QTimer(this);
-	connect(shcut.joy.timer, SIGNAL(timeout(void)), this, SLOT(s_joy_read_timer(void)));
+	connect(shcut.joy.timer, SIGNAL(timeout()), this, SLOT(s_joy_read_timer()));
 
 	shortcuts_tableview_resize();
 

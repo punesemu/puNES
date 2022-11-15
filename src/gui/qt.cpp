@@ -277,7 +277,7 @@ const uTCHAR *gui_data_folder(void) {
 	return (uQByteArrayCD(qt.sba));
 }
 const uTCHAR *gui_temp_folder(void) {
-	QString path = QString("%0/%1").arg(QStandardPaths::writableLocation(QStandardPaths::TempLocation)).arg(NAME);
+	QString path = QString("%0/%1").arg(QStandardPaths::writableLocation(QStandardPaths::TempLocation), NAME);
 
 	qt.sba.clear();
 	qt.sba = uQByteArrayFromString(path);
@@ -777,7 +777,7 @@ void gui_save_screenshot(int w, int h, int stride, char *buffer, BYTE flip) {
 	for (count = 1; count < 999999; count++) {
 		QString final = basename + QString("_%1.png").arg(count, 6, 'd', 0, '0');
 
-		if (!QFileInfo(final).exists()) {
+		if (!QFileInfo::exists(final)) {
 			file.setFileName(final);
 			break;
 		}

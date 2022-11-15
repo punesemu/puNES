@@ -32,6 +32,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QTranslator>
 #include <QtCore/QPoint>
+#include <QtCore/QRegularExpression>
 #include <QtGui/QValidator>
 #include "settings.h"
 #include "os_jstick.h"
@@ -49,6 +50,11 @@ class toUpValidator: public QValidator {
 		}
 };
 class qtHelper {
+	public:
+		static QRegularExpression rx_any_numbers;
+		static QRegularExpression rx_comment_0;
+		static QRegularExpression rx_comment_1;
+
 	public:
 		static void widget_set_visible(void *wdg, bool mode);
 		static void pushbutton_set_checked(void *btn, bool mode);

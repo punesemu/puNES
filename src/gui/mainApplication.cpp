@@ -84,7 +84,7 @@ BYTE mainApplication::control_base_folders(void) {
 #if defined (_WIN32)
 	QDir old(QString("%0/%1").arg(uQString(gui_home_folder())).arg(NAME));
 #else
-	QDir old(QString("%0/.%1").arg(uQString(gui_home_folder())).arg(NAME));
+	QDir old(QString("%0/.%1").arg(uQString(gui_home_folder()), NAME));
 #endif
 
 	// controllo l'esistenza della directory principale

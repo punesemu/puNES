@@ -24,6 +24,7 @@
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <QtCore/QStringEncoder>
 #endif
+#include "mainWindow.hpp"
 #include "cgp.h"
 #include "shaders.h"
 
@@ -350,7 +351,11 @@ BYTE cgp_parse(const uTCHAR *file) {
 			if (cgp_value(set, ele, value) == FALSE) {
 				QString qfloat;
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
+				for (QChar c : qAsConst(value)) {
+#else
 				for (QChar c : value) {
+#endif
 					if (c.isDigit() || (c == '.') || (c == ',')) {
 						qfloat.append(c);
 					}
@@ -397,10 +402,14 @@ BYTE cgp_pragma_param(const char *code, const uTCHAR *path) {
 				continue;
 			}
 
-			line = line.remove(QRegularExpression("#pragma parameter.*\""));
+			{
+				static QRegularExpression rx("#pragma parameter.*\"");
+
+				line = line.remove(rx);
+			}
 
 			{
-				QRegularExpression rx("[-+]?[0-9]*\\.[0-9]+");
+				static QRegularExpression rx("[-+]?[0-9]*\\.[0-9]+");
 				QRegularExpressionMatchIterator iterator = rx.globalMatch(line);
 
 				while (iterator.hasNext()) {
@@ -486,11 +495,11 @@ static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map) {
 		QString key, value;
 
 		if (splitted.count() == 2) {
-			key = QString(splitted.at(0)).replace(QRegularExpression("\\s*$"), "");
+			key = QString(splitted.at(0)).replace(qtHelper::rx_any_numbers, "");
 			value = splitted.at(1).trimmed();
 			// rimuovo i commenti che possono esserci sulla riga
-			value = value.remove(QRegularExpression("#.*"));
-			value = value.remove(QRegularExpression("//.*"));
+			value = value.remove(qtHelper::rx_comment_0);
+			value = value.remove(qtHelper::rx_comment_1);
 			value = value.remove('"');
 			value = value.trimmed();
 

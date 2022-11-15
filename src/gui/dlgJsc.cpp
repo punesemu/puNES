@@ -329,11 +329,11 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 			label_Device->setText(QString(jdev->dev));
 #endif
 			label_GUID->setText(uQString(js_guid_to_string(&jdev->guid)));
-			label_Misc->setText(QString("bustype %1 - vid:pid %2:%3 - version %4").
-				arg(QString("%1").arg(jdev->usb.bustype, 4, 16, QChar('0')).toUpper()).
-				arg(QString("%1").arg(jdev->usb.vendor_id, 4, 16, QLatin1Char('0')).toUpper()).
-				arg(QString("%1").arg(jdev->usb.product_id, 4, 16, QChar('0')).toUpper()).
-				arg(QString("%1").arg(jdev->usb.version, 4, 16, QChar('0')).toUpper()));
+			label_Misc->setText(QString("bustype %1 - vid:pid %2:%3 - version %4").arg(
+				QString("%1").arg(jdev->usb.bustype, 4, 16, QChar('0')).toUpper(),
+				QString("%1").arg(jdev->usb.vendor_id, 4, 16, QLatin1Char('0')).toUpper(),
+				QString("%1").arg(jdev->usb.product_id, 4, 16, QChar('0')).toUpper(),
+				QString("%1").arg(jdev->usb.version, 4, 16, QChar('0')).toUpper()));
 			{
 				QString type;
 
@@ -355,7 +355,7 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 						type = "Playstation 4";
 						break;
 				}
-				label_Type->setText(QString("%1 [xinput : %2]").arg(type).arg(jdev->is_xinput ? "y" : "n"));
+				label_Type->setText(QString("%1 [xinput : %2]").arg(type, (jdev->is_xinput ? "y" : "n")));
 			}
 
 			// abilito solo quello che serve
@@ -406,10 +406,10 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 										QString("<tr><td>Scale</td><td>: </td><td align=\"right\">%1</td></tr>").arg(jsx->scale) +
 										((tdesc2 == "") ?
 											QString("<tr><td>Desc</td><td>: </td><td align=\"right\">%1</td></tr>").arg(tdesc1) :
-											QString("<tr><td>Desc</td><td>: </td><td align=\"right\">%1, %2</td></tr>").arg(tdesc1).arg(tdesc2)) +
+											QString("<tr><td>Desc</td><td>: </td><td align=\"right\">%1, %2</td></tr>").arg(tdesc1, tdesc2)) +
 										((ticon2 == "") ?
 											((ticon1 == "") ? "" : QString("<tr><td>Image</td><td>: </td><td align=\"right\">%1</td></tr>").arg(ticon1)) :
-											QString("<tr><td>Image</td><td>: </td><td align=\"right\">%1, %2</td></tr>").arg(ticon1).arg(ticon2));
+											QString("<tr><td>Image</td><td>: </td><td align=\"right\">%1, %2</td></tr>").arg(ticon1, ticon2));
 
 									cb->setEnabled(true);
 									cb->setChecked(jsx->enabled);

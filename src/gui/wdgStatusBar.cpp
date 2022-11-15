@@ -164,7 +164,7 @@ recStatusBar::recStatusBar(QWidget *parent) : QFrame(parent) {
 	connect(this, SIGNAL(et_blink_icon()), this, SLOT(s_et_blink_icon()));
 
 	setContextMenuPolicy(Qt::CustomContextMenu);
-	connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(s_context_menu(const QPoint&)));
+	connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(s_context_menu(QPoint)));
 }
 recStatusBar::~recStatusBar() = default;
 

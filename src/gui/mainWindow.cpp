@@ -192,11 +192,11 @@ mainWindow::mainWindow() : QMainWindow() {
 	}
 
 	connect(shcjoy.timer, SIGNAL(timeout()), this, SLOT(s_shcjoy_read_timer()));
-	connect(qApp, SIGNAL(receivedMessage(quint32, QByteArray)), this, SLOT(s_received_message(quint32, QByteArray)));
+	connect(qApp, SIGNAL(receivedMessage(quint32,QByteArray)), this, SLOT(s_received_message(quint32,QByteArray)));
 
-	connect(this, SIGNAL(et_gg_reset(void)), this, SLOT(s_et_gg_reset(void)));
-	connect(this, SIGNAL(et_vs_reset(void)), this, SLOT(s_et_vs_reset(void)));
-	connect(this, SIGNAL(et_external_control_windows_show(void)), this, SLOT(s_et_external_control_windows_show(void)));
+	connect(this, SIGNAL(et_gg_reset()), this, SLOT(s_et_gg_reset()));
+	connect(this, SIGNAL(et_vs_reset()), this, SLOT(s_et_vs_reset()));
+	connect(this, SIGNAL(et_external_control_windows_show()), this, SLOT(s_et_external_control_windows_show()));
 
 	egds = new timerEgds(this);
 
@@ -992,12 +992,13 @@ void mainWindow::update_menu_file(void) {
 		for (i = 0; i < RECENT_ROMS_MAX; i++) {
 			QString description = QString((const QChar *)recent_roms_item(i), recent_roms_item_size(i));
 			QFileInfo rom(description);
-			QAction *action = new QAction(this);
+			QAction *action;
 
 			if (description.isEmpty()) {
 				break;
 			}
 
+			action = new QAction(this);
 			action->setText(QFileInfo(description).completeBaseName());
 
 			if (rom.suffix().isEmpty() ||
@@ -2536,6 +2537,10 @@ void timerEgds::s_draw_screen(void) {
 }
 
 // ----------------------------------------------------------------------------------------------
+
+QRegularExpression qtHelper::rx_any_numbers("\\s*$");
+QRegularExpression qtHelper::rx_comment_0("#.*");
+QRegularExpression qtHelper::rx_comment_1("//.*");
 
 void qtHelper::widget_set_visible(void *wdg, bool mode) {
 	((QWidget *)wdg)->blockSignals(true);
