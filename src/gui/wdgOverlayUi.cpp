@@ -2005,6 +2005,7 @@ void overlayWidgetInfo::append_msg(BYTE alignment, const QString &msg) {
 }
 void overlayWidgetInfo::_append_msg(BYTE alignment, const QString &msg) {
 	QString txt = decode_tags("[white]" + msg + "[normal]");
+
 	overlay.info.messages_to_draw.append(_overlay_info_message { txt, alignment });
 }
 QString overlayWidgetInfo::decode_tags(QString input) {
