@@ -43,16 +43,16 @@ class objCheat : public QObject {
 		bool is_equal(int index, chl_map *find, bool dscription) const;
 		int find_cheat(chl_map *find, bool description) const;
 
-		void complete_ram(chl_map *cheat);
 		bool decode_ram(chl_map ch, _cheat *cheat);
+		void complete_ram(chl_map *cheat);
 
-		void complete_gg(chl_map *cheat);
-		QString encode_gg(_cheat *cheat);
 		bool decode_gg(const QString &code, _cheat *cheat);
+		QString encode_gg(_cheat *cheat);
+		void complete_gg(chl_map *cheat);
 
-		void complete_rocky(chl_map *cheat);
 		bool decode_rocky(const QString &code, _cheat *cheat);
 		QString encode_rocky(_cheat *cheat);
+		void complete_rocky(chl_map *cheat);
 
 	public:
 		void import_Nestopia_xml(QWidget *parent, const QString &path);
