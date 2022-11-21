@@ -38,7 +38,7 @@ static const char std_pad_button[10][15] = {
 
 _joy_list joy_list;
 
-dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent) {
+dlgStdPad::dlgStdPad(QWidget *parent, _cfg_port *cfg_port) : QDialog(parent) {
 	int i;
 
 	memset(&data, 0x00, sizeof(data));
@@ -113,7 +113,7 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 			connect(unset, SIGNAL(clicked(bool)), this, SLOT(s_unset_clicked(bool)));
 		}
 	}
-	
+
 	label_kbd_Deadzone_value_slider->setFixedWidth(QLabel("00").sizeHint().width());
 	label_kbd_Deadzone_value_slider->setText(QString("%1").arg(0, 2));
 	label_joy_Deadzone_value_slider->setFixedWidth(QLabel("00").sizeHint().width());
@@ -174,21 +174,21 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 
 	installEventFilter(this);
 }
-dlgStdPad::~dlgStdPad() {}
+dlgStdPad::~dlgStdPad() = default;
 
 bool dlgStdPad::eventFilter(QObject *obj, QEvent *event) {
 	// mi interessa intercettare tutti i keyPress che arrivano, non solo quelli
 	// che riguardano questo dialog.
 	switch (event->type()) {
 		case QEvent::KeyPress:
-			if (data.no_other_buttons == true) {
+			if (data.no_other_buttons) {
 				return (keypress((QKeyEvent *)event));
 			}
 			break;
 		default:
 			break;
 	}
-	return (QObject::eventFilter(obj, event));
+	return (QDialog::eventFilter(obj, event));
 }
 void dlgStdPad::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
@@ -201,7 +201,7 @@ void dlgStdPad::showEvent(QShowEvent *event) {
 	QSvgRenderer svg(QString(":/pics/pics/Nes_controller.svg"));
 	float ratio = (float)svg.defaultSize().width() / (float)svg.defaultSize().height();
 	int w = image_pad->size().width();
-	int h = (float)w / ratio;
+	int h = (int)((float)w / ratio);
 	QImage image(w, h, QImage::Format_ARGB32);
 
 	mainwin->shcjoy_stop();
@@ -275,7 +275,7 @@ void dlgStdPad::update_dialog(void) {
 	bool mode = false;
 	unsigned int joy_index;
 
-	if (data.seq.active == true) {
+	if (data.seq.active) {
 		return;
 	}
 
@@ -393,11 +393,11 @@ void dlgStdPad::disable_tab_and_other(int type, int vbutton) {
 	// misc
 	groupBox_Misc->setEnabled(false);
 }
-void dlgStdPad::info_entry_print(int type, QString txt) {
+void dlgStdPad::info_entry_print(int type, const QString &txt) {
 	findChild<QLabel *>("label_" + SPT(type) + "_info")->setText(txt);
 }
 void dlgStdPad::js_press_event(void) {
-	unsigned int type;
+	int type;
 
 	type = data.vbutton / MAX_STD_PAD_BUTTONS;
 
@@ -437,7 +437,7 @@ int dlgStdPad::js_jdev_index(void) {
 }
 
 void dlgStdPad::s_combobox_joy_activated(int index) {
-	unsigned int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
+	int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
 
 	if (comboBox_joy_ID->count() == 1) {
 		return;
@@ -479,7 +479,7 @@ void dlgStdPad::s_combobox_joy_index_changed(UNUSED(int index)) {
 void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
 	int type, vbutton = QVariant(((pixmapButton *)sender())->property("myVbutton")).toInt();
 
-	if (data.no_other_buttons == true) {
+	if (data.no_other_buttons) {
 		return;
 	}
 
@@ -514,7 +514,7 @@ void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
 			icon = QString(" <html><img src=\"data:image/png;base64,") + byteArray.toBase64() + "\"/></hmtl>";
 		}
 
-		info_entry_print(type, tr("Press a key (ESC for the previous value \"%1\"%2)").arg(desc).arg(icon));
+		info_entry_print(type, tr("Press a key (ESC for the previous value \"%1\"%2)").arg(desc, icon));
 		js_press_event();
 	}
 }
@@ -620,7 +620,7 @@ void dlgStdPad::s_pad_joy_read_timer(void) {
 	DBWORD value = js_jdev_read_in_dialog(&data.cfg.port.jguid);
 
 	if (data.joy.value && (data.joy.value != value)) {
-		unsigned int type, vbutton;
+		int type, vbutton;
 
 		type = data.vbutton / MAX_STD_PAD_BUTTONS;
 		vbutton = data.vbutton - (type * MAX_STD_PAD_BUTTONS);
@@ -646,7 +646,7 @@ void dlgStdPad::s_pad_in_sequence_timer(void) {
 	};
 	QPushButton *bt;
 
-	if (data.no_other_buttons == true) {
+	if (data.no_other_buttons) {
 		return;
 	}
 
@@ -685,10 +685,10 @@ void dlgStdPad::s_discard_clicked(UNUSED(bool checked)) {
 
 void dlgStdPad::s_et_update_joy_combo(void) {
 	// se la combox e' aperta o sto configurando i pulsanti, non devo aggiornarne il contenuto
-	if ((comboBox_joy_ID->view()->isVisible() == false) &&
-		(data.no_other_buttons == false) &&
-		(data.seq.timer->isActive() == false) &&
-		(data.joy.timer->isActive() == false)) {
+	if (!comboBox_joy_ID->view()->isVisible() &&
+		!data.no_other_buttons &&
+		!data.seq.timer->isActive() &&
+		!data.joy.timer->isActive()) {
 		joy_combo_init();
 	}
 }
@@ -696,7 +696,7 @@ void dlgStdPad::s_et_update_joy_combo(void) {
 // ----------------------------------------------------------------------------------------------
 
 pixmapButton::pixmapButton(QWidget *parent) : QPushButton(parent) {}
-pixmapButton::~pixmapButton() {}
+pixmapButton::~pixmapButton() = default;
 
 void pixmapButton::paintEvent(QPaintEvent *e) {
 	QPushButton::paintEvent(e);

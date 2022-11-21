@@ -26,11 +26,11 @@ class wdgNTSCFilter : public QWidget, public Ui::wdgNTSCFilter {
 	Q_OBJECT
 
 	public:
-		wdgNTSCFilter(QWidget *parent = 0);
-		~wdgNTSCFilter();
+		explicit wdgNTSCFilter(QWidget *parent = nullptr);
+		~wdgNTSCFilter() override;
 
 	private:
-		void changeEvent(QEvent *event);
+		void changeEvent(QEvent *event) override;
 
 	public:
 		void update_widget(void);

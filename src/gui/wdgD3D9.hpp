@@ -27,20 +27,18 @@
 class wdgD3D9 : public QWidget {
 	private:
 		struct _gui_fps {
-			double count;
-			double frequency;
+			double count{};
+			double frequency{};
 			QElapsedTimer timer;
 		} gfps;
 
 	public:
-		wdgD3D9(QWidget *parent);
-		~wdgD3D9();
+		explicit wdgD3D9(QWidget *parent = nullptr);
+		~wdgD3D9() override;
 
 	protected:
-		void paintEvent(QPaintEvent *event);
-
-	protected:
-		QPaintEngine *paintEngine() const { return 0; }
+		QPaintEngine *paintEngine() const override;
+		void paintEvent(QPaintEvent *event) override;
 };
 
 #endif /* WDGD3D9_HPP_ */

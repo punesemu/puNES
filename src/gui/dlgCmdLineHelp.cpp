@@ -19,12 +19,10 @@
 #include "dlgCmdLineHelp.hpp"
 #include "info.h"
 #include "settings.h"
-#include "cmd_line.h"
-#include "conf.h"
 #include "version.h"
 #include "gui.h"
 
-dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, QString name) : QDialog(parent) {
+dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, const QString &name) : QDialog(parent) {
 	uTCHAR *usage_string;
 	const uTCHAR *istructions = {
 			uL("Usage: %%1 [options] file...\n\n")
@@ -154,7 +152,7 @@ dlgCmdLineHelp::dlgCmdLineHelp(QWidget *parent, QString name) : QDialog(parent) 
 
 	free(usage_string);
 }
-dlgCmdLineHelp::~dlgCmdLineHelp() {}
+dlgCmdLineHelp::~dlgCmdLineHelp() = default;
 
 void dlgCmdLineHelp::s_close_clicked(UNUSED(bool checked)) {
 	close();

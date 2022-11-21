@@ -23,11 +23,11 @@
 
 class wdgMenuBar : public QMenuBar {
 	public:
-		wdgMenuBar(QWidget *parent);
-		~wdgMenuBar();
+		explicit wdgMenuBar(QWidget *parent = nullptr);
+		~wdgMenuBar() override;
 
 	protected:
-		void mouseDoubleClickEvent(QMouseEvent *event);
+		void mouseDoubleClickEvent(QMouseEvent *event) override;
 };
 
 #endif /* WDGMENUBAR_HPP_ */

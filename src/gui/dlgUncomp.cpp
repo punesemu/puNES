@@ -19,9 +19,6 @@
 #include "dlgUncomp.hpp"
 #include <QtGui/QStandardItemModel>
 #include <QtCore/QFileInfo>
-#if defined (_WIN32)
-#include <libgen.h>
-#endif
 #include "gui.h"
 
 dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDialog(parent) {
@@ -30,7 +27,7 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 
 	selected = UNCOMPRESS_NO_FILE_SELECTED;
 
-	if (archive == NULL) {
+	if (archive == nullptr) {
 		return;
 	}
 
@@ -41,6 +38,7 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 	setWindowTitle(QFileInfo(uQString(archive->file)).fileName());
 
 	switch (type) {
+		default:
 		case UNCOMPRESS_TYPE_ROM: {
 			QTableWidgetItem *header = new QTableWidgetItem(tr("which ROM do you want to load?"));
 
@@ -60,25 +58,24 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 	index = 0;
 
 	for (unsigned int i = 0; i < uncompress_archive_counter(archive, type); i++) {
-		_uncompress_archive_item *aitem;
 		uTCHAR *file;
 
-		if ((aitem = uncompress_archive_find_item(archive, index, type)) == NULL) {
+		if (uncompress_archive_find_item(archive, index, type) == nullptr) {
 			continue;
 		}
 
 		if ((file = uncompress_archive_file_name(archive, index, type))) {
 			QTableWidgetItem *item = new QTableWidgetItem(QFileInfo(uQString(file)).fileName());
 
-			tableWidget_Selection->insertRow(index);
-			tableWidget_Selection->setItem(index, 0, item);
+			tableWidget_Selection->insertRow((int)index);
+			tableWidget_Selection->setItem((int)index, 0, item);
 			index++;
 		}
 	}
 
 	tableWidget_Selection->setCurrentCell(0, 0);
 
-	connect(tableWidget_Selection, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(s_doubleclick(int, int)));
+	connect(tableWidget_Selection, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(s_doubleclick(int,int)));
 	connect(pushButton_Ok, SIGNAL(clicked(bool)), this, SLOT(s_ok_clicked(bool)));
 	connect(pushButton_None, SIGNAL(clicked(bool)), this, SLOT(s_none_clicked(bool)));
 
@@ -90,7 +87,7 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 		emu_pause(TRUE);
 	}
 }
-dlgUncomp::~dlgUncomp() {}
+dlgUncomp::~dlgUncomp() = default;
 
 void dlgUncomp::closeEvent(QCloseEvent *event) {
 	if (gui.start == TRUE) {

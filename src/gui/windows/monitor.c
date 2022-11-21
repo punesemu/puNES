@@ -50,7 +50,7 @@ BYTE gui_monitor_enum_monitors(void) {
 				list = (_monitor_info *)realloc(monitor.monitors, (monitor.nmonitor + 1) * sizeof(_monitor_info));
 				if (!list) {
 					return (EXIT_ERROR);
-				};
+				}
 				monitor.monitors = list;
 				mi = &monitor.monitors[monitor.nmonitor];
 				memset(mi, 0x00, sizeof(_monitor_info));
@@ -63,8 +63,8 @@ BYTE gui_monitor_enum_monitors(void) {
 				mi->fixed_output = current_settings.dmDisplayFixedOutput;
 				mi->x = current_settings.dmPosition.x;
 				mi->y = current_settings.dmPosition.y;
-				mi->w = current_settings.dmPelsWidth;
-				mi->h = current_settings.dmPelsHeight;
+				mi->w = (int)current_settings.dmPelsWidth;
+				mi->h = (int)current_settings.dmPelsHeight;
 				mi->mode_org = -1;
 				mi->mode_new = -1;
 				mi->mode_in_use = -1;
@@ -114,7 +114,7 @@ void gui_monitor_set_res(void *monitor_info, void *mode_info) {
 	dm.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL | DM_DISPLAYFREQUENCY | DM_DISPLAYFIXEDOUTPUT;
 	dm.dmPelsWidth = mmi->w;
 	dm.dmPelsHeight = mmi->h;
-	dm.dmDisplayFrequency = mmi->rrate;
+	dm.dmDisplayFrequency = (DWORD)mmi->rrate;
 	dm.dmBitsPerPel = mi->bits_per_pixel;
 	dm.dmDisplayFixedOutput = mi->fixed_output;
 
@@ -144,8 +144,8 @@ static BYTE add_resolution_to_list(int mode, DEVMODEW *current_settings, DEVMODE
 
 	mm->id = mode;
 	mm->flags = dm->dmDisplayFlags;
-	mm->w = dm->dmPelsWidth;
-	mm->h = dm->dmPelsHeight;
+	mm->w = (int)dm->dmPelsWidth;
+	mm->h = (int)dm->dmPelsHeight;
 	mm->rrate = dm->dmDisplayFrequency;
 	mm->rounded_rrate = dm->dmDisplayFrequency;
 	if ((mm->flags == current_settings->dmDisplayFlags) &&

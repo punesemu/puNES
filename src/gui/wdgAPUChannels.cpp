@@ -54,7 +54,7 @@ wdgAPUChannels::wdgAPUChannels(QWidget *parent) : QWidget(parent) {
 
 	installEventFilter(this);
 }
-wdgAPUChannels::~wdgAPUChannels() {}
+wdgAPUChannels::~wdgAPUChannels() = default;
 
 void wdgAPUChannels::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
@@ -70,7 +70,7 @@ void wdgAPUChannels::update_widget(void) {
 		QCheckBox *cbox = findChild<QCheckBox *>("checkBox_" + QString(channels_desc[i]));
 
 		cbox->setChecked(cfg->apu.channel[i]);
-		slider->setValue(cfg->apu.volume[i] * 100);
+		slider->setValue((int)(cfg->apu.volume[i] * 100.0));
 	}
 }
 

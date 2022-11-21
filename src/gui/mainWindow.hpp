@@ -32,6 +32,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QTranslator>
 #include <QtCore/QPoint>
+#include <QtCore/QRegularExpression>
 #include <QtGui/QValidator>
 #include "settings.h"
 #include "os_jstick.h"
@@ -42,13 +43,18 @@
 
 class toUpValidator: public QValidator {
 	public:
-		toUpValidator(QObject *parent = nullptr): QValidator(parent) {}
+		explicit toUpValidator(QObject *parent = nullptr): QValidator(parent) {}
 		QValidator::State validate(QString &input, UNUSED(int &pos)) const override {
 			input = input.toUpper();
 			return (QValidator::Acceptable);
 		}
 };
 class qtHelper {
+	public:
+		static QRegularExpression rx_any_numbers;
+		static QRegularExpression rx_comment_0;
+		static QRegularExpression rx_comment_1;
+
 	public:
 		static void widget_set_visible(void *wdg, bool mode);
 		static void pushbutton_set_checked(void *btn, bool mode);
@@ -70,8 +76,8 @@ class timerEgds : public QTimer {
 		} calls[EGDS_TOTALS];
 
 	public:
-		timerEgds(QObject *parent = 0);
-		~timerEgds();
+		explicit timerEgds(QObject *parent = nullptr);
+		~timerEgds() override;
 
 	public:
 		void set_fps(void);
@@ -103,8 +109,8 @@ class actionOneTrigger : public QAction {
 		QMutex mutex;
 
 	public:
-		actionOneTrigger(QObject *parent = 0);
-		~actionOneTrigger();
+		explicit actionOneTrigger(QObject *parent = nullptr);
+		~actionOneTrigger() override;
 
 	public:
 		void only_one_trigger(void);
@@ -130,7 +136,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			QAction *stretch_in_fullscreen;
 			QAction *toggle_menubar_in_fullscreen;
 			QAction *toggle_capture_input;
-			QAction *toggle_nes_keyboard;
 			QAction *audio_enable;
 			QAction *save_settings;
 			QAction *hold_fast_forward;
@@ -180,7 +185,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 
 	public:
 		mainWindow();
-		~mainWindow();
+		~mainWindow() override;
 
 	signals:
 		void et_gg_reset(void);
@@ -191,11 +196,11 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 #if defined (_WIN32)
 		bool nativeEvent(const QByteArray &eventType, void *message, long *result);
 #endif
-		bool eventFilter(QObject *obj, QEvent *event);
-		void changeEvent(QEvent *event);
-		void closeEvent(QCloseEvent *event);
-		void moveEvent(QMoveEvent *event);
-		void resizeEvent(QResizeEvent *event);
+		bool eventFilter(QObject *obj, QEvent *event) override;
+		void changeEvent(QEvent *event) override;
+		void closeEvent(QCloseEvent *event) override;
+		void moveEvent(QMoveEvent *event) override;
+		void resizeEvent(QResizeEvent *event) override;
 
 	private:
 		void retranslateUi(mainWindow *mainWindow);
@@ -240,7 +245,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void update_menu_tools(void);
 
 	private:
-		void action_text(QAction *action, QString description, QString *shortcut);
+		void action_text(QAction *action, const QString &description, QString *shortcut);
 		void ctrl_disk_side(QAction *action);
 		int is_shortcut(const QKeyEvent *event);
 
@@ -271,8 +276,8 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_save_screenshot_1x(void);
 		void s_pause(void);
 		void s_fast_forward(void);
-		void s_max_speed_start(void);
-		void s_max_speed_stop(void);
+		void s_max_speed_start(void) const;
+		void s_max_speed_stop(void) const;
 		void s_toggle_gui_in_window(void);
 		void s_open_settings(void);
 		void s_state_save_slot_action(void);
@@ -289,7 +294,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 	private slots:
 		void s_fullscreen(void);
 		void s_shcjoy_read_timer(void);
-		void s_received_message(quint32 instanceId, QByteArray message);
+		void s_received_message(quint32 instanceId, const QByteArray &message);
 		void s_exec_message(void);
 
 	private slots:
@@ -300,16 +305,15 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_shcut_stretch_in_fullscreen(void);
 		void s_shcut_audio_enable(void);
 		void s_shcut_save_settings(void);
-		void s_shcut_rwnd_active_deactive_mode(void);
-		void s_shcut_rwnd_step_backward(void);
-		void s_shcut_rwnd_fast_backward(void);
-		void s_shcut_rwnd_play(void);
-		void s_shcut_rwnd_pause(void);
-		void s_shcut_rwnd_fast_forward(void);
-		void s_shcut_rwnd_step_forward(void);
+		void s_shcut_rwnd_active_deactive_mode(void) const;
+		void s_shcut_rwnd_step_backward(void) const;
+		void s_shcut_rwnd_fast_backward(void) const;
+		void s_shcut_rwnd_play(void) const;
+		void s_shcut_rwnd_pause(void) const;
+		void s_shcut_rwnd_fast_forward(void) const;
+		void s_shcut_rwnd_step_forward(void) const;
 		void s_shcut_toggle_menubar(void);
-		void s_shcut_toggle_capture_input(void);
-		void s_shcut_toggle_nes_keyboard(void);
+		void s_shcut_toggle_capture_input(void) const;
 
 	private slots:
 		void s_et_gg_reset(void);

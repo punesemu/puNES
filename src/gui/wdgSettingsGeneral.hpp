@@ -26,12 +26,12 @@ class wdgSettingsGeneral : public QWidget, public Ui::wdgSettingsGeneral {
 	Q_OBJECT
 
 	public:
-		wdgSettingsGeneral(QWidget *parent = 0);
-		~wdgSettingsGeneral();
+		explicit wdgSettingsGeneral(QWidget *parent = nullptr);
+		~wdgSettingsGeneral() override;
 
 	private:
-		void changeEvent(QEvent *event);
-		void showEvent(QShowEvent *event);
+		void changeEvent(QEvent *event) override;
+		void showEvent(QShowEvent *event) override;
 
 	public:
 		void retranslateUi(QWidget *wdgSettingsGeneral);

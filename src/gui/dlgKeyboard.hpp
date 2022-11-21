@@ -85,20 +85,20 @@ class keyboardButton : public QPushButton {
 		double size_factor;
 
 	public:
-		keyboardButton(QWidget *parent);
-		~keyboardButton();
+		explicit keyboardButton(QWidget *parent = nullptr);
+		~keyboardButton() override;
 
 	protected:
-		void paintEvent(QPaintEvent *event);
-		void mousePressEvent(QMouseEvent *event);
-		void mouseReleaseEvent(QMouseEvent *event);
+		void paintEvent(QPaintEvent *event) override;
+		void mousePressEvent(QMouseEvent *event) override;
+		void mouseReleaseEvent(QMouseEvent *event) override;
 
 	public:
 		void setMinimumSize(const QSize &s);
 
 	public:
 		void set(DBWORD nscode, SWORD index, SBYTE row, SBYTE column, SWORD element, modifier_types mtype,
-			_color clr, QList<_label> labels);
+			const _color &clr, QList<_label> labels);
 		void reset(void);
 };
 
@@ -136,8 +136,8 @@ class wdgKeyboard : public QWidget {
 		_delay delay;
 
 	public:
-		wdgKeyboard(QWidget *parent = 0);
-		~wdgKeyboard();
+		explicit wdgKeyboard(QWidget *parent = nullptr);
+		~wdgKeyboard() override;
 
 	protected:
 		void init(void);
@@ -179,13 +179,13 @@ class pasteObject : public QObject {
 		int element_index;
 
 	public:
-		pasteObject(QObject *parent = 0);
-		~pasteObject();
+		explicit pasteObject(QObject *parent = nullptr);
+		~pasteObject() override;
 
 	public:
 		void reset(void);
 		void set_charset(wdgKeyboard::_charset charset, wdgKeyboard::_delay delay);
-		void set_text(QString text);
+		void set_text(const QString &text);
 		void parse_delay();
 		void parse_text(void);
 		void parse_break(void);
@@ -203,17 +203,17 @@ class familyBasicKeyboard : public wdgKeyboard, public Ui::wdgKeyboardFB {
 	Q_OBJECT
 
 	public:
-		familyBasicKeyboard(QWidget *parent = 0);
-		~familyBasicKeyboard();
+		explicit familyBasicKeyboard(QWidget *parent = nullptr);
+		~familyBasicKeyboard() override;
 
 	protected:
-		void set_buttons(void);
-		void set_charset(void);
+		void set_buttons(void) override;
+		void set_charset(void) override;
 
 	public:
-		QString keyboard_name(void);
-		void ext_setup(void);
-		QList<QList<SBYTE>> parse_character(wdgKeyboard::_character *ch);
+		QString keyboard_name(void) override;
+		void ext_setup(void) override;
+		QList<QList<SBYTE>> parse_character(wdgKeyboard::_character *ch) override;
 
 	private:
 		keyboardButton::_color red_button(void);
@@ -233,16 +233,16 @@ class suborKeyboard : public wdgKeyboard, public Ui::wdgKeyboardSubor {
 	Q_OBJECT
 
 	public:
-		suborKeyboard(QWidget *parent = 0);
-		~suborKeyboard();
+		explicit suborKeyboard(QWidget *parent = nullptr);
+		~suborKeyboard() override;
 
 	protected:
-		void set_buttons(void);
-		void set_charset(void);
+		void set_buttons(void) override;
+		void set_charset(void) override;
 
 	public:
-		QString keyboard_name(void);
-		void ext_setup(void);
+		QString keyboard_name(void) override;
+		void ext_setup(void) override;
 
 	private:
 		SBYTE calc_shift(void);
@@ -260,11 +260,11 @@ class dlgCfgNSCode : public QDialog, public Ui::dlgCfgNSCode {
 		DBWORD nscode;
 
 	public:
-		dlgCfgNSCode(QWidget *parent = 0, keyboardButton *button = 0);
-		~dlgCfgNSCode();
+		explicit dlgCfgNSCode(QWidget *parent = nullptr, keyboardButton *button = nullptr);
+		~dlgCfgNSCode() override;
 
 	protected:
-		bool eventFilter(QObject *obj, QEvent *event);
+		bool eventFilter(QObject *obj, QEvent *event) override;
 
 	private:
 		bool keypress(QKeyEvent *event);
@@ -315,23 +315,23 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 		QString last_line;
 
 	public:
-		dlgKeyboard(QWidget *parent = 0);
-		~dlgKeyboard();
+		explicit dlgKeyboard(QWidget *parent = nullptr);
+		~dlgKeyboard() override;
 
 	protected:
-		bool event(QEvent *event);
-		bool eventFilter(QObject *obj, QEvent *event);
-		void changeEvent(QEvent *event);
-		void showEvent(QShowEvent *event);
-		void hideEvent(QHideEvent *event);
-		void closeEvent(QCloseEvent *event);
+		bool event(QEvent *event) override;
+		bool eventFilter(QObject *obj, QEvent *event) override;
+		void changeEvent(QEvent *event) override;
+		void showEvent(QShowEvent *event) override;
+		void hideEvent(QHideEvent *event) override;
+		void closeEvent(QCloseEvent *event) override;
 
 	public:
 		void retranslateUi(QDialog *dlgKeyboard);
 		void reset(void);
 		void add_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals);
 		void set_buttons(wdgKeyboard *wk, wdgKeyboard::_button buttons[], int totals);
-		void set_charset(wdgKeyboard::_charset charset, wdgKeyboard::_delay delay);
+		void set_charset(wdgKeyboard::_charset charset, wdgKeyboard::_delay delay) const;
 		bool process_event(QEvent *event);
 		void shortcut_toggle(BYTE mode);
 		void button_press(keyboardButton *kb, keyevent_types type);

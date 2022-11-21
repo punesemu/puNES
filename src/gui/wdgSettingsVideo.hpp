@@ -33,12 +33,12 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		} shdp_brush;
 
 	public:
-		wdgSettingsVideo(QWidget *parent = 0);
-		~wdgSettingsVideo();
+		explicit wdgSettingsVideo(QWidget *parent = nullptr);
+		~wdgSettingsVideo() override;
 
 	private:
-		void changeEvent(QEvent *event);
-		void showEvent(QShowEvent *event);
+		void changeEvent(QEvent *event) override;
+		void showEvent(QShowEvent *event) override;
 
 	public:
 		void retranslateUi(QWidget *wdgSettingsVideo);

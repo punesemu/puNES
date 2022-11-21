@@ -26,12 +26,12 @@ class wdgRotateScreen : public QWidget, public Ui::wdgRotateScreen {
 	Q_OBJECT
 
 	public:
-		wdgRotateScreen(QWidget *parent = 0);
-		~wdgRotateScreen();
+		explicit wdgRotateScreen(QWidget *parent = nullptr);
+		~wdgRotateScreen() override;
 
 	protected:
-		void changeEvent(QEvent *event);
-		void paintEvent(QPaintEvent *event);
+		void changeEvent(QEvent *event) override;
+		void paintEvent(QPaintEvent *event) override;
 
 	public:
 		void update_widget(void);

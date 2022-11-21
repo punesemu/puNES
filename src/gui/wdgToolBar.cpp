@@ -19,7 +19,6 @@
 #include <QtCore/QEvent>
 #include "wdgToolBar.hpp"
 #include "mainWindow.hpp"
-#include "video/gfx.h"
 #include "save_slot.h"
 #include "conf.h"
 #include "emu_thread.h"
@@ -40,7 +39,7 @@ wdgToolBar::wdgToolBar(QWidget *parent) : QToolBar(parent) {
 	addWidget(w);
 
 	state = new wdgState(this);
-	action_state.separator = NULL;
+	action_state.separator = nullptr;
 	action_state.widget = addWidget(state);
 
 	w = new QWidget();
@@ -73,7 +72,7 @@ wdgToolBar::wdgToolBar(QWidget *parent) : QToolBar(parent) {
 
 	installEventFilter(this);
 }
-wdgToolBar::~wdgToolBar() {}
+wdgToolBar::~wdgToolBar() = default;
 
 bool wdgToolBar::eventFilter(QObject *obj, QEvent *event) {
 	if (event->type() == QEvent::MouseButtonPress) {
@@ -89,38 +88,38 @@ bool wdgToolBar::eventFilter(QObject *obj, QEvent *event) {
 	return (QObject::eventFilter(obj, event));
 }
 
-void wdgToolBar::update_toolbar(void) {
-	bool rwnd = true;
+void wdgToolBar::update_toolbar(void) const {
+	bool rw = true;
 
 	if (info.no_rom | info.turn_off | nsf.state) {
 		state->setEnabled(false);
 
-		rwnd = false;
+		rw = false;
 	} else {
 		state->setEnabled(true);
 		state->update_widget();
 
 		if (cfg->rewind_minutes == RWND_0_MINUTES) {
-			rwnd = false;
+			rw = false;
 		}
 	}
-	rewind->setEnabled(rwnd);
+	rewind->setEnabled(rw);
 	rotate->update_widget();
 }
 
-void wdgToolBar::rotate_setVisible(bool visible) {
+void wdgToolBar::rotate_setVisible(bool visible) const {
 	if (action_rotate.separator) {
 		action_rotate.separator->setVisible(visible);
 	}
 	action_rotate.widget->setVisible(visible);
 }
-void wdgToolBar::state_setVisible(bool visible) {
+void wdgToolBar::state_setVisible(bool visible) const {
 	if (action_state.separator) {
 		action_state.separator->setVisible(visible);
 	}
 	action_state.widget->setVisible(visible);
 }
-void wdgToolBar::rewind_setVisible(bool visible) {
+void wdgToolBar::rewind_setVisible(bool visible) const {
 	if (action_rewind.separator) {
 		action_rewind.separator->setVisible(visible);
 	}
@@ -128,7 +127,7 @@ void wdgToolBar::rewind_setVisible(bool visible) {
 }
 
 void wdgToolBar::s_toplevel_changed(UNUSED(bool toplevel)) {
-	if (toplevel == true) {
+	if (toplevel) {
 		this->setOrientation(Qt::Vertical);
 	}
 
@@ -150,7 +149,7 @@ void wdgToolBar::s_toplevel_changed(UNUSED(bool toplevel)) {
 			break;
 	}
 
-	if (mouse_pressed == false) {
+	if (!mouse_pressed) {
 		gui_set_window_size();
 	}
 }

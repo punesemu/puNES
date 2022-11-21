@@ -38,17 +38,17 @@ class wdgOpenGL : public QOpenGLWidget {
 
 	private:
 		struct _gui_fps {
-			double count;
-			double frequency;
+			double count{};
+			double frequency{};
 			QElapsedTimer timer;
 		} gfps;
 
 	public:
-		wdgOpenGL(QWidget *parent);
-		~wdgOpenGL();
+		explicit wdgOpenGL(QWidget *parent = nullptr);
+		~wdgOpenGL() override;
 
 	protected:
-		void paintGL(void);
+		void paintGL(void) override;
 
 	public:
 		void show(void);

@@ -385,7 +385,7 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 
 	if (jdev->is_xinput && (jdev->xinput_player_index < 4)) {
 		DWORD xrc;
-		int i = 0;
+		int i;
 
 		for (i = 0; i < 4; i++) {
 			XINPUT_STATE state;
@@ -644,7 +644,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 					// axes e hats
 					for (a = 0; a < LENGTH(js_axs_type); a++) {
 						for (b = 0; b < js_axs_type[a]; b++) {
-							int hat_index = b * 2;
+							int hat_index = (int)b * 2;
 							_js_axis *jsx = !a ? &jdev->data.axis[b] : &jdev->data.hat[hat_index];
 
 							if (jsx->used && (events[i].dwOfs == jsx->offset_di8)) {
@@ -656,7 +656,7 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 									jsx = &jdev->data.hat[hat_index + 1];
 									js_axs_validate(jsx, y);
 								} else {
-									js_axs_validate(jsx, events[i].dwData);
+									js_axs_validate(jsx, (SDBWORD)events[i].dwData);
 								}
 							}
 						}
@@ -691,28 +691,28 @@ void js_os_jdev_read_events_loop(_js_device *jdev) {
 
 						switch (jsx->offset_di8) {
 							case DIJOFS_X:
-								value = state.lX;
+								value = (SWORD)state.lX;
 								break;
 							case DIJOFS_Y:
-								value = state.lY;
+								value = (SWORD)state.lY;
 								break;
 							case DIJOFS_Z:
-								value = state.lZ;
+								value = (SWORD)state.lZ;
 								break;
 							case DIJOFS_RX:
-								value = state.lRx;
+								value = (SWORD)state.lRx;
 								break;
 							case DIJOFS_RY:
-								value = state.lRy;
+								value = (SWORD)state.lRy;
 								break;
 							case DIJOFS_RZ:
-								value = state.lRz;
+								value = (SWORD)state.lRz;
 								break;
 							case DIJOFS_SLIDER(0):
-								value = state.rglSlider[0];
+								value = (SWORD)state.rglSlider[0];
 								break;
 							case DIJOFS_SLIDER(1):
-								value = state.rglSlider[1];
+								value = (SWORD)state.rglSlider[1];
 								break;
 						}
 						js_axs_validate(jsx, value);

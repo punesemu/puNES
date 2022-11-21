@@ -31,7 +31,7 @@ wdgSettingsAudio::wdgSettingsAudio(QWidget *parent) : QWidget(parent) {
 	widget_Samplarate->setStyleSheet(button_stylesheet());
 	widget_Channels->setStyleSheet(button_stylesheet());
 
-#if defined (__OpenBSD__)
+#if defined (__OpenBSD__) || defined (__FreeBSD__)
 	icon_Output_Devices->setVisible(false);
 	label_Output_Devices->setVisible(false);
 	comboBox_Output_Devices->setVisible(false);
@@ -78,7 +78,7 @@ wdgSettingsAudio::wdgSettingsAudio(QWidget *parent) : QWidget(parent) {
 		label_Channels_Delay_value->setFixedWidth(w);
 	}
 }
-wdgSettingsAudio::~wdgSettingsAudio() {}
+wdgSettingsAudio::~wdgSettingsAudio() = default;
 
 void wdgSettingsAudio::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
@@ -199,7 +199,7 @@ void wdgSettingsAudio::channels_set(void) {
 	}
 }
 void wdgSettingsAudio::channels_delay_set(void) {
-	horizontalSlider_Channels_Delay->setValue(((cfg->stereo_delay * 100) / 5) - 1);
+	horizontalSlider_Channels_Delay->setValue((int)(((cfg->stereo_delay * 100.0) / 5.0) - 1.0));
 }
 void wdgSettingsAudio::settings_set_enabled(bool mode) {
 	icon_Output_Devices->setEnabled(mode);

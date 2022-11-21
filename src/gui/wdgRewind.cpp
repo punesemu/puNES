@@ -21,8 +21,6 @@
 #include "wdgRewind.hpp"
 #include "wdgToolBar.hpp"
 #include "rewind.h"
-#include "video/gfx.h"
-#include "info.h"
 #include "gui.h"
 
 enum wdgrewind_misc {
@@ -73,7 +71,7 @@ wdgRewind::wdgRewind(QWidget *parent) : QWidget(parent) {
 		setStyleSheet(style);
 	}
 }
-wdgRewind::~wdgRewind() {}
+wdgRewind::~wdgRewind() = default;
 
 void wdgRewind::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
@@ -90,7 +88,7 @@ void wdgRewind::paintEvent(UNUSED(QPaintEvent *event)) {
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-bool wdgRewind::step_autorepeat_timer_control(void) {
+bool wdgRewind::step_autorepeat_timer_control(void) const {
 	if ((gui_get_ms() - step_autorepeat_timer) < WDGRWND_AUTOREPEAT_TIMER_STEP) {
 		return (false);
 	}
@@ -182,7 +180,7 @@ void wdgRewind::s_fast_backward(UNUSED(bool checked)) {
 	gui_egds_start_rwnd();
 }
 void wdgRewind::s_step_backward(UNUSED(bool checked)) {
-	if (step_autorepeat_timer_control() == false) {
+	if (!step_autorepeat_timer_control()) {
 		return;
 	}
 	first_backward();
@@ -233,7 +231,7 @@ void wdgRewind::s_pause(UNUSED(bool checked)) {
 	gui_egds_start_rwnd();
 }
 void wdgRewind::s_step_forward(UNUSED(bool checked)) {
-	if ((rwnd.active == FALSE) || (step_autorepeat_timer_control() == false)) {
+	if ((rwnd.active == FALSE) || !step_autorepeat_timer_control()) {
 		// il forward funziona solo dopo che si
 		// e' fatto un po' di backward.
 		return;

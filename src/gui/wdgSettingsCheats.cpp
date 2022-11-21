@@ -36,7 +36,7 @@ wdgSettingsCheats::wdgSettingsCheats(QWidget *parent) : QWidget(parent) {
 	connect(pushButton_Cheats_Mode_gg, SIGNAL(toggled(bool)), this, SLOT(s_cheat_mode(bool)));
 	connect(pushButton_Cheats_Mode_list, SIGNAL(toggled(bool)), this, SLOT(s_cheat_mode(bool)));
 }
-wdgSettingsCheats::~wdgSettingsCheats() {}
+wdgSettingsCheats::~wdgSettingsCheats() = default;
 
 void wdgSettingsCheats::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {

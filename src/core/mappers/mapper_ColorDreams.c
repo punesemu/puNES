@@ -36,7 +36,7 @@ void extcl_cpu_wr_mem_ColorDreams(WORD address, BYTE value) {
 		save = value &= prg_rom_rd(address);
 	}
 
-	control_bank_with_AND(0x03, info.prg.rom.max.banks_32k)
+	control_bank_with_AND(0x0F, info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 

@@ -71,7 +71,7 @@ dlgJsc::dlgJsc(QWidget *parent) : QDialog(parent) {
 
 	installEventFilter(this);
 }
-dlgJsc::~dlgJsc() {}
+dlgJsc::~dlgJsc() = default;
 
 bool dlgJsc::eventFilter(QObject *obj, QEvent *event) {
 	switch (event->type()) {
@@ -82,12 +82,11 @@ bool dlgJsc::eventFilter(QObject *obj, QEvent *event) {
 		default:
 			break;
 	}
-
-	return (QObject::eventFilter(obj, event));
+	return (QDialog::eventFilter(obj, event));
 }
 
 void dlgJsc::showEvent(QShowEvent *event) {
-	if (first_time == true) {
+	if (first_time) {
 		first_time = false;
 	} else {
 		setGeometry(geom);
@@ -209,7 +208,8 @@ int dlgJsc::js_jdev_index(void) {
 }
 int dlgJsc::axes_disabled(void) {
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
-	unsigned int i, disabled = 0;
+	int disabled = 0;
+	unsigned int i;
 
 	for (i = 0; i < JS_MAX_AXES; i++) {
 		_js_axis *jsx = &jdev->data.axis[i];
@@ -222,7 +222,8 @@ int dlgJsc::axes_disabled(void) {
 }
 int dlgJsc::hats_disabled(void) {
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
-	unsigned int i, disabled = 0;
+	int disabled = 0;
+	unsigned int i;
 
 	for (i = 0; i < JS_MAX_HATS; i++) {
 		_js_axis *jsx = &jdev->data.hat[i];
@@ -235,7 +236,8 @@ int dlgJsc::hats_disabled(void) {
 }
 int dlgJsc::buttons_disabled(void) {
 	_js_device *jdev = &jstick.jdd.devices[js_jdev_index()];
-	unsigned int i, disabled = 0;
+	int disabled = 0;
+	unsigned int i;
 
 	for (i = 0; i < JS_MAX_BUTTONS; i++) {
 		_js_button *jsx = &jdev->data.button[i];
@@ -302,7 +304,7 @@ void dlgJsc::s_joy_read_timer(void) {
 	mutex->unlock();
 }
 void dlgJsc::s_combobox_joy_activated(int index) {
-	unsigned int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
+	int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
 
 	if (comboBox_joy_ID->count() == 1) {
 		return;
@@ -327,11 +329,11 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 			label_Device->setText(QString(jdev->dev));
 #endif
 			label_GUID->setText(uQString(js_guid_to_string(&jdev->guid)));
-			label_Misc->setText(QString("bustype %1 - vid:pid %2:%3 - version %4").
-				arg(QString("%1").arg(jdev->usb.bustype, 4, 16, QChar('0')).toUpper()).
-				arg(QString("%1").arg(jdev->usb.vendor_id, 4, 16, QLatin1Char('0')).toUpper()).
-				arg(QString("%1").arg(jdev->usb.product_id, 4, 16, QChar('0')).toUpper()).
-				arg(QString("%1").arg(jdev->usb.version, 4, 16, QChar('0')).toUpper()));
+			label_Misc->setText(QString("bustype %1 - vid:pid %2:%3 - version %4").arg(
+				QString("%1").arg(jdev->usb.bustype, 4, 16, QChar('0')).toUpper(),
+				QString("%1").arg(jdev->usb.vendor_id, 4, 16, QLatin1Char('0')).toUpper(),
+				QString("%1").arg(jdev->usb.product_id, 4, 16, QChar('0')).toUpper(),
+				QString("%1").arg(jdev->usb.version, 4, 16, QChar('0')).toUpper()));
 			{
 				QString type;
 
@@ -353,7 +355,7 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 						type = "Playstation 4";
 						break;
 				}
-				label_Type->setText(QString("%1 [xinput : %2]").arg(type).arg(jdev->is_xinput ? "y" : "n"));
+				label_Type->setText(QString("%1 [xinput : %2]").arg(type, (jdev->is_xinput ? "y" : "n")));
 			}
 
 			// abilito solo quello che serve
@@ -404,10 +406,10 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 										QString("<tr><td>Scale</td><td>: </td><td align=\"right\">%1</td></tr>").arg(jsx->scale) +
 										((tdesc2 == "") ?
 											QString("<tr><td>Desc</td><td>: </td><td align=\"right\">%1</td></tr>").arg(tdesc1) :
-											QString("<tr><td>Desc</td><td>: </td><td align=\"right\">%1, %2</td></tr>").arg(tdesc1).arg(tdesc2)) +
+											QString("<tr><td>Desc</td><td>: </td><td align=\"right\">%1, %2</td></tr>").arg(tdesc1, tdesc2)) +
 										((ticon2 == "") ?
 											((ticon1 == "") ? "" : QString("<tr><td>Image</td><td>: </td><td align=\"right\">%1</td></tr>").arg(ticon1)) :
-											QString("<tr><td>Image</td><td>: </td><td align=\"right\">%1, %2</td></tr>").arg(ticon1).arg(ticon2));
+											QString("<tr><td>Image</td><td>: </td><td align=\"right\">%1, %2</td></tr>").arg(ticon1, ticon2));
 
 									cb->setEnabled(true);
 									cb->setChecked(jsx->enabled);
@@ -509,7 +511,7 @@ void dlgJsc::s_close_clicked(UNUSED(bool checked)) {
 
 void dlgJsc::s_et_update_joy_combo(void) {
 	// se la combox e' aperta o sto configurando i pulsanti, non devo aggiornarne il contenuto
-	if (comboBox_joy_ID->view()->isVisible() == false) {
+	if (!comboBox_joy_ID->view()->isVisible()) {
 		joy_combo_init();
 	}
 }

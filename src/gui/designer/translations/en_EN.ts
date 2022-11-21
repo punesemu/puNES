@@ -174,10 +174,6 @@
         <source>Capture/Release Input</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Toggle Virtual Keyboard</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>dlgStdPad</name>
@@ -867,10 +863,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Virtual Keyboard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>puNES tape image</source>
         <translation type="unfinished"></translation>
     </message>
@@ -911,10 +903,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Virtual &amp;Keyboard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Play</source>
         <translation type="unfinished"></translation>
     </message>
@@ -936,6 +924,10 @@
     </message>
     <message>
         <source>Ta&amp;pe</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle Virtual &amp;Keyboard</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

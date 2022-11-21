@@ -39,7 +39,7 @@ dlgSettings::dlgSettings(QWidget *parent) : QDialog(parent) {
 
 	installEventFilter(this);
 }
-dlgSettings::~dlgSettings() {}
+dlgSettings::~dlgSettings() = default;
 
 bool dlgSettings::eventFilter(QObject *obj, QEvent *event) {
 	switch (event->type()) {
@@ -51,7 +51,7 @@ bool dlgSettings::eventFilter(QObject *obj, QEvent *event) {
 			break;
 	}
 
-	return (QObject::eventFilter(obj, event));
+	return (QDialog::eventFilter(obj, event));
 }
 void dlgSettings::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
@@ -83,7 +83,6 @@ void dlgSettings::retranslateUi(QDialog *dlgSettings) {
 
 	// nes keyboard
 	mainwin->qaction_shcut.toggle_capture_input->setText(tr("Capture/Release Input"));
-	mainwin->qaction_shcut.toggle_nes_keyboard->setText(tr("Toggle Virtual Keyboard"));
 }
 void dlgSettings::update_dialog(void) {
 	update_tab_general();

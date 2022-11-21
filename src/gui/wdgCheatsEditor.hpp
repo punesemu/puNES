@@ -32,14 +32,14 @@ class hexSpinBox : public QSpinBox {
 		QRegularExpressionValidator *validator;
 
 	public:
-		hexSpinBox(QWidget *parent, int dgts);
-		~hexSpinBox();
+		explicit hexSpinBox(QWidget *parent = nullptr, int dgts = 4);
+		~hexSpinBox() override;
 
 	protected:
-		bool eventFilter(QObject *obj, QEvent *event);
-		QValidator::State validate(QString &text, int &pos) const;
-		int valueFromText(const QString &text) const;
-		QString textFromValue(int value) const;
+		bool eventFilter(QObject *obj, QEvent *event) override;
+		QValidator::State validate(QString &text, int &pos) const override;
+		int valueFromText(const QString &text) const override;
+		QString textFromValue(int value) const override;
 };
 
 #include "ui_wdgCheatsEditor.h"
@@ -49,6 +49,7 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 
 	private:
 		bool new_cheat;
+		bool modified_cheat;
 		objCheat *objch;
 		QButtonGroup *grp;
 		hexSpinBox *hexSpinBox_Address;
@@ -57,14 +58,15 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 		bool in_populate_cheat_table;
 		bool in_lineedit_text_changed;
 		bool disable_hexspinbox_value_changed;
+		chl_map last_cheat;
 
 	public:
-		wdgCheatsEditor(QWidget *parent = 0);
-		~wdgCheatsEditor();
+		explicit wdgCheatsEditor(QWidget *parent = nullptr);
+		~wdgCheatsEditor() override;
 
 	protected:
-		void changeEvent(QEvent *event);
-		void showEvent(QShowEvent *event);
+		void changeEvent(QEvent *event) override;
+		void showEvent(QShowEvent *event) override;
 
 	public:
 		void hide_tools_widgets(bool state);
@@ -77,10 +79,12 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 		void update_color_row(int row, bool active);
 
 	private:
+		void ctrl_last_cheat(void);
 		void linedit_select_all(QLineEdit *le);
 		void cheat_tableview_resize(void);
-		void populate_gg_rocky_lineedit(bool control_widgets);
-		void populate_raw_edit(_cheat *cheat);
+		void populate_lineedit_gg_rocky(bool control_widgets);
+		void populate_edit_raw(_cheat *cheat);
+		chl_map extract_cheat_from_edit_widget(void);
 		void populate_edit_widgets(int row);
 		void clear_edit_widgets(void);
 		void set_edit_widget(void);

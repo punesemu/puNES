@@ -17,7 +17,6 @@
  */
 
 #include "wdgOpenGL.hpp"
-#include "video/gfx.h"
 #include "fps.h"
 
 extern "C" void opengl_draw_scene(void);
@@ -34,7 +33,7 @@ wdgOpenGL::wdgOpenGL(QWidget *parent) : QOpenGLWidget(parent) {
 
 	connect(this, SIGNAL(frameSwapped()), this, SLOT(s_fps_frame_swapped()));
 }
-wdgOpenGL::~wdgOpenGL() {}
+wdgOpenGL::~wdgOpenGL() = default;
 
 void wdgOpenGL::paintGL(void) {
 	opengl_draw_scene();
@@ -55,7 +54,7 @@ unsigned int wdgOpenGL::framebuffer_id(void) {
 void wdgOpenGL::s_fps_frame_swapped(void) {
 	if (++gfps.count > gfps.frequency) {
 		qint64 ms = gfps.timer.elapsed();
-		double sec = ms / 1000.0f;
+		double sec = (double)ms / 1000.0f;
 
 		fps.gfx = gfps.count / sec;
 		gfps.count = 0;

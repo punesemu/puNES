@@ -30,13 +30,13 @@ class mainApplication : public SingleApplication {
 	public:
 		mainApplication(int &argc, char *argv[], bool allowSecondary = false, Options options = Mode::User,
 			int timeout = 1000, const QString &userData = {});
-		~mainApplication();
+		~mainApplication() override;
 
 	public:
-		bool notify(QObject *receiver, QEvent *event);
+		bool notify(QObject *receiver, QEvent *event) override;
 
 	public:
-		BYTE base_folder(QDir *new_folder, QDir *old_folder, QString base, QString message);
+		BYTE base_folder(QDir *new_folder, QDir *old_folder, const QString &base, const QString &message);
 		BYTE control_base_folders(void);
 
 	private:

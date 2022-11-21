@@ -72,24 +72,22 @@ class wdgScreen : public QWidget {
 			QAction *play;
 			QAction *record;
 			QAction *stop;
-		} tape;
+		} tape{};
 
 	public:
-		wdgScreen(QWidget *parent);
-		~wdgScreen();
+		explicit wdgScreen(QWidget *parent = nullptr);
+		~wdgScreen() override;
 
 	signals:
 		void et_cursor_set(void);
 		void et_cursor_hide(int hide);
 
 	protected:
-		bool eventFilter(QObject *obj, QEvent *event);
-		void dragEnterEvent(QDragEnterEvent *event);
-		void dropEvent(QDropEvent *event);
-		void resizeEvent(QResizeEvent *event);
-
-	protected:
-		QPaintEngine *paintEngine() const { return 0; }
+		QPaintEngine *paintEngine() const override;
+		bool eventFilter(QObject *obj, QEvent *event) override;
+		void dragEnterEvent(QDragEnterEvent *event) override;
+		void dropEvent(QDropEvent *event) override;
+		void resizeEvent(QResizeEvent *event) override;
 
 	public:
 		void cursor_init(void);

@@ -31,15 +31,15 @@ class wdgRewind : public QWidget, public Ui::wdgRewind {
 		double step_autorepeat_timer;
 
 	public:
-		wdgRewind(QWidget *parent = 0);
-		~wdgRewind();
+		explicit wdgRewind(QWidget *parent = nullptr);
+		~wdgRewind() override;
 
 	protected:
-		void changeEvent(QEvent *event);
-		void paintEvent(QPaintEvent *event);
+		void changeEvent(QEvent *event) override;
+		void paintEvent(QPaintEvent *event) override;
 
 	public:
-		bool step_autorepeat_timer_control(void);
+		bool step_autorepeat_timer_control(void) const;
 		bool egds_rewind(void);
 
 	private:

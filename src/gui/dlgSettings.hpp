@@ -29,13 +29,13 @@ class dlgSettings : public QDialog, public Ui::dlgSettings {
 		QRect geom;
 
 	public:
-		dlgSettings(QWidget *parent = 0);
-		~dlgSettings();
+		explicit dlgSettings(QWidget *parent = nullptr);
+		~dlgSettings() override;
 
 	private:
-		bool eventFilter(QObject *obj, QEvent *event);
-		void changeEvent(QEvent *event);
-		void hideEvent(QHideEvent *event);
+		bool eventFilter(QObject *obj, QEvent *event) override;
+		void changeEvent(QEvent *event) override;
+		void hideEvent(QHideEvent *event) override;
 
 	public:
 		void retranslateUi(QDialog *dlgSettings);

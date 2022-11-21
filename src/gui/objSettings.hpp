@@ -39,29 +39,31 @@ class objSettings : public QSettings {
 		int listEle;
 
 	public:
-		objSettings(Format f, QString file, int list_ele);
-		~objSettings();
+		objSettings(Format f, const QString &file, int list_ele);
+		~objSettings() override;
+
+	public:
+		virtual void setup(void);
 
 	protected:
-		virtual void setup(void);
-		virtual void to_cfg(QString group);
-		virtual void fr_cfg(QString group);
+		virtual void to_cfg(const QString &group);
+		virtual void fr_cfg(const QString &group);
 		virtual void after_the_defaults(void);
 
 	protected:
 		virtual void rd(void);
-		virtual void rd(QString group);
+		virtual void rd(const QString &group);
 		virtual void rd_key(int index);
 
 	private:
-		void rd_key(QString group, int index);
+		void rd_key(const QString &group, int index);
 
 	public:
 		void wr(void);
-		void wr(QString group);
+		void wr(const QString &group);
 
 	private:
-		void wr_key(QString group, int index);
+		void wr_key(const QString &group, int index);
 
 	protected:
 		virtual void wr_key(int index);
@@ -78,14 +80,16 @@ class objSettings : public QSettings {
 };
 class objSet : public objSettings {
 	public:
-		objSet(Format f, QString file, int list_ele);
-		~objSet();
+		objSet(Format f, const QString &file, int list_ele);
+		~objSet() override;
+
+	public:
+		void setup(void) override;
 
 	protected:
-		virtual void setup(void);
-		virtual void to_cfg(QString group);
-		virtual void fr_cfg(QString group);
-		virtual void after_the_defaults(void);
+		void to_cfg(const QString &group) override;
+		void fr_cfg(const QString &group) override;
+		void after_the_defaults(void) override;
 
 	public:
 		void oscan_default(_overscan_borders *ob, BYTE mode);
@@ -101,17 +105,17 @@ class objSet : public objSettings {
 
 	private:
 		void resolution_val_to_int(int index, int *w, int *h);
-		QString resolution_val(int *w, int *h);
+		QString resolution_val(const int *w, const int *h);
 #endif
 
 	private:
-		void ntsc_val_to_double(int index, void *ntsc_format);
-		void ntsc_val_to_double(void *ntsc_format, const uTCHAR *buffer);
-		QString ntsc_val(void *ntsc_format);
+		void ntsc_val_to_double(int index, void *ntsc_frmt);
+		void ntsc_val_to_double(void *ntsc_frmt, const uTCHAR *buffer);
+		QString ntsc_val(void *ntsc_frmt);
 
 	private:
 		int channel_convert_index(int index);
-		void channel_decode(int index, QString val);
+		void channel_decode(int index, const QString &val);
 		void channel_default(int index);
 		void channel_val_to_int(int index);
 		QString channel_val(int index);
@@ -127,45 +131,49 @@ class objSet : public objSettings {
 };
 class objPgs : public objSettings {
 	public:
-		objPgs(Format f, QString file, int list_ele);
-		~objPgs();
+		objPgs(Format f, const QString &file, int list_ele);
+		~objPgs() override;
+
+	public:
+		void setup(void) override;
 
 	protected:
-		void setup(void);
-		void to_cfg(QString group);
-		void fr_cfg(QString group);
+		void to_cfg(const QString &group) override;
+		void fr_cfg(const QString &group) override;
 };
 class objInp : public objSettings {
 	public:
-		objInp(Format f, QString file, int list_ele);
-		~objInp();
+		objInp(Format f, const QString &file, int list_ele);
+		~objInp() override;
+
+	public:
+		void setup(void) override;
 
 	protected:
-		void setup(void);
-		void to_cfg(QString group);
-		void fr_cfg(QString group);
+		void to_cfg(const QString &group) override;
+		void fr_cfg(const QString &group) override;
 
 	public:
 		void set_all_input_defaults(_config_input *config_input, _array_pointers_port *array);
 		void *sc_val_to_qstring_pntr(int index, int type);
 		void sc_qstring_pntr_to_val(void *str, int index, int type);
-		static QString kbd_keyval_to_name(const DBWORD value);
+		static QString kbd_keyval_to_name(DBWORD value);
 		static DBWORD kbd_keyval_decode(QKeyEvent *keyEvent);
-		void kbd_default(int button, _port *port, int index);
-		void kbd_defaults(_port *port, int index);
-		static QString nscode_to_name(const DBWORD value);
+		void kbd_default(int button, _port *prt, int index);
+		void kbd_defaults(_port *prt, int index);
+		static QString nscode_to_name(DBWORD value);
 		static DBWORD nscode_from_name(QString name);
-		DBWORD nes_keyboard_nscode_default(QString name);
-		DBWORD nes_keyboard_nscode(QString name);
-		void nes_keyboard_set_nscode(QString name, DBWORD nscode);
+		DBWORD nes_keyboard_nscode_default(const QString &name);
+		DBWORD nes_keyboard_nscode(const QString &name);
+		void nes_keyboard_set_nscode(const QString &name, DBWORD nscode);
 
 	private:
 		void kbd_rd(int index, int pIndex);
 		void kbd_wr(int index, int pIndex);
-		DBWORD _kbd_keyval_from_name(QString name);
-		DBWORD kbd_keyval_from_name(int index, QString name);
+		DBWORD _kbd_keyval_from_name(const QString &name);
+		DBWORD kbd_keyval_from_name(int index, const QString &name);
 		int kbd_keyval_to_int(int index);
-		int nes_keyboard_index(QString name);
+		int nes_keyboard_index(const QString &name);
 
 	private:
 		void js_val_to_guid(int index, _input_guid *guid);
@@ -176,27 +184,29 @@ class objInp : public objSettings {
 };
 class objShp : public objSettings {
 	public:
-		objShp(Format f, QString file, int list_ele);
-		~objShp();
+		objShp(Format f, const QString &file, int list_ele);
+		~objShp() override;
+
+	public:
+		void setup(void) override;
 
 	protected:
-		void setup(void);
-		void to_cfg(QString group);
-		void fr_cfg(QString group);
+		void to_cfg(const QString &group) override;
+		void fr_cfg(const QString &group) override;
 
 	protected:
-		void rd(void);
-		void rd(QString group);
+		void rd(void) override;
+		void rd(const QString &group) override;
 
 	private:
 		void rd_pshd_key(void *pshd, int index);
 		void wr_pshd_key(void *pshd, int index);
 
 	protected:
-		void wr_all_keys(void);
+		void wr_all_keys(void) override;
 
 	private:
-		double val_to_float(int index);
+		float val_to_float(int index);
 		void float_to_val(int index, float value);
 };
 class objJsc : public objSettings {
@@ -204,15 +214,15 @@ class objJsc : public objSettings {
 		int jindex;
 
 	public:
-		objJsc(Format f, QString file, int list_ele, int index);
-		~objJsc();
+		objJsc(Format f, const QString &file, int list_ele, int index);
+		~objJsc() override;
 
 	protected:
-		void to_cfg(QString group);
-		void fr_cfg(QString group);
+		void to_cfg(const QString &group) override;
+		void fr_cfg(const QString &group) override;
 
 	protected:
-		void rd_key(int index);
+		void rd_key(int index) override;
 
 	public:
 		int jsc_deadzone_default(void);

@@ -24,15 +24,15 @@
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <QtCore/QStringEncoder>
 #endif
-
+#include "mainWindow.hpp"
 #include "cgp.h"
 #include "shaders.h"
 
-static bool cgp_value(QSettings *set, QString key, QString &value);
+static bool cgp_value(QSettings *set, const QString &key, QString &value);
 static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map);
 
 BYTE cgp_parse(const uTCHAR *file) {
-	static const QSettings::Format cfg = QSettings::registerFormat("cgp", cgp_rd_file, NULL);
+	static const QSettings::Format cfg = QSettings::registerFormat("cgp", cgp_rd_file, nullptr);
 	QSettings *set;
 	QFileInfo fi(uQString(file));
 	QString key, value;
@@ -130,7 +130,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 		// frame_count_mod
 		key = QString("frame_count_mod%1").arg(i);
 		if (cgp_value(set, key, value) == FALSE) {
-			sp->frame_count_mod = value.toFloat();
+			sp->frame_count_mod = value.toInt();
 		}
 
 		// wrap_mode
@@ -205,11 +205,11 @@ BYTE cgp_parse(const uTCHAR *file) {
 				key = QString("scale%1").arg(i);
 				if (sc->type.x == SHADER_SCALE_ABSOLUTE) {
 					if (cgp_value(set, key, value) == FALSE) {
-						sc->abs.x = value.toFloat();
+						sc->abs.x = value.toUInt();
 					} else {
 						key = QString("scale_x%1").arg(i);
 						if (cgp_value(set, key, value) == FALSE) {
-							sc->abs.x = value.toFloat();
+							sc->abs.x = value.toUInt();
 						}
 					}
 				} else {
@@ -227,11 +227,11 @@ BYTE cgp_parse(const uTCHAR *file) {
 				key = QString("scale%1").arg(i);
 				if (sc->type.y == SHADER_SCALE_ABSOLUTE) {
 					if (cgp_value(set, key, value) == FALSE) {
-						sc->abs.y = value.toFloat();
+						sc->abs.y = value.toUInt();
 					} else {
 						key = QString("scale_y%1").arg(i);
 						if (cgp_value(set, key, value) == FALSE) {
-							sc->abs.y = value.toFloat();
+							sc->abs.y = value.toUInt();
 						}
 					}
 				} else {
@@ -269,7 +269,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 				}
 			}
 
-			if (finded == true) {
+			if (finded) {
 				continue;
 			}
 
@@ -338,7 +338,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 				}
 			}
 
-			if (finded == true) {
+			if (finded) {
 				continue;
 			}
 
@@ -349,10 +349,13 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 			// value
 			if (cgp_value(set, ele, value) == FALSE) {
-				const QString cvalue = value;
 				QString qfloat;
 
-				for (QChar c : cvalue) {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
+				for (QChar c : qAsConst(value)) {
+#else
+				for (QChar c : value) {
+#endif
 					if (c.isDigit() || (c == '.') || (c == ',')) {
 						qfloat.append(c);
 					}
@@ -368,14 +371,14 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 	return (EXIT_OK);
 }
-BYTE cgp_pragma_param(char *code, const uTCHAR *path) {
+BYTE cgp_pragma_param(const char *code, const uTCHAR *path) {
 	QTextStream stream(code);
 	QFile file(uQString(path));
 	QString line;
 	_param_shd param;
 
 	if (path && path[0]) {
-		if (file.open(QIODevice::ReadOnly) == false) {
+		if (!file.open(QIODevice::ReadOnly)) {
 			ufprintf(stderr, uL("CGP: Can't open file '" uPs("") "'\n"), path);
 			return (EXIT_ERROR);
 		}
@@ -388,7 +391,7 @@ BYTE cgp_pragma_param(char *code, const uTCHAR *path) {
 		::memset(&param, 0x00, sizeof(_param_shd));
 
 		if (line.startsWith("#pragma parameter")) {
-			int i, count = 0;
+			int i, count;
 			bool finded;
 
 			// sscanf non e' "locale indipendente" percio' lo utilizzo solo per
@@ -399,10 +402,14 @@ BYTE cgp_pragma_param(char *code, const uTCHAR *path) {
 				continue;
 			}
 
-			line = line.remove(QRegularExpression("#pragma parameter.*\""));
+			{
+				static QRegularExpression rx("#pragma parameter.*\"");
+
+				line = line.remove(rx);
+			}
 
 			{
-				QRegularExpression rx("[-+]?[0-9]*\\.[0-9]+");
+				static QRegularExpression rx("[-+]?[0-9]*\\.[0-9]+");
 				QRegularExpressionMatchIterator iterator = rx.globalMatch(line);
 
 				while (iterator.hasNext()) {
@@ -442,7 +449,7 @@ BYTE cgp_pragma_param(char *code, const uTCHAR *path) {
 				}
 			}
 
-			if (finded == false) {
+			if (!finded) {
 				if (shader_effect.params < MAX_PARAM) {
 					::memcpy(&shader_effect.param[shader_effect.params], &param, sizeof(_param_shd));
 					shader_effect.params++;
@@ -458,7 +465,7 @@ BYTE cgp_pragma_param(char *code, const uTCHAR *path) {
 	return (EXIT_OK);
 }
 
-static bool cgp_value(QSettings *set, QString key, QString &value) {
+static bool cgp_value(QSettings *set, const QString &key, QString &value) {
 	value = "";
 
 	if (set->allKeys().contains(key, Qt::CaseInsensitive)) {
@@ -488,11 +495,11 @@ static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map) {
 		QString key, value;
 
 		if (splitted.count() == 2) {
-			key = QString(splitted.at(0)).replace(QRegularExpression("\\s*$"), "");
+			key = QString(splitted.at(0)).replace(qtHelper::rx_any_numbers, "");
 			value = splitted.at(1).trimmed();
 			// rimuovo i commenti che possono esserci sulla riga
-			value = value.remove(QRegularExpression("#.*"));
-			value = value.remove(QRegularExpression("//.*"));
+			value = value.remove(qtHelper::rx_comment_0);
+			value = value.remove(qtHelper::rx_comment_1);
 			value = value.remove('"');
 			value = value.trimmed();
 

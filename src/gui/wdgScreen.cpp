@@ -36,7 +36,7 @@
 #include "tape_data_recorder.h"
 
 wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
-	target = NULL;
+	target = nullptr;
 	paste = new QAction(this);
 	tape.play = new QAction(this);
 	tape.record = new QAction(this);
@@ -73,12 +73,15 @@ wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 	connect(tape.stop, SIGNAL(triggered()), this, SLOT(s_tape_stop_event()));
 
 	setContextMenuPolicy(Qt::CustomContextMenu);
-	connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(s_context_menu(const QPoint&)));
+	connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(s_context_menu(QPoint)));
 
 	installEventFilter(this);
 }
-wdgScreen::~wdgScreen() {}
+wdgScreen::~wdgScreen() = default;
 
+QPaintEngine *wdgScreen::paintEngine() const {
+	return (nullptr);
+}
 bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 	static QMouseEvent *mouseEvent;
 	static QKeyEvent *keyEvent;
@@ -264,7 +267,9 @@ void wdgScreen::s_paste_event(void) {
 	const QMimeData *mimeData = clipboard->mimeData();
 
 	if (mimeData->hasUrls() || mimeData->hasText()) {
-		dropEvent(new QDropEvent(QPointF(0, 0), Qt::CopyAction, clipboard->mimeData(), Qt::NoButton, Qt::NoModifier));
+		QDropEvent de(QPointF(0, 0), Qt::CopyAction, clipboard->mimeData(), Qt::NoButton, Qt::NoModifier);
+
+		dropEvent(&de);
 	}
 }
 void wdgScreen::s_tape_play_event(void) {

@@ -30,13 +30,13 @@ class stateBar : public QWidget {
 		QPainter painter;
 
 	public:
-		stateBar(QWidget *parent = 0);
-		~stateBar();
+		explicit stateBar(QWidget *parent = nullptr);
+		~stateBar() override;
 
 	protected:
-		QSize sizeHint(void) const;
-		bool eventFilter(QObject *obj, QEvent *event);
-		void paintEvent(QPaintEvent *event);
+		QSize sizeHint(void) const override;
+		bool eventFilter(QObject *obj, QEvent *event) override;
+		void paintEvent(QPaintEvent *event) override;
 
 	private:
 		int slot_at(QPoint pos);
@@ -48,11 +48,11 @@ class wdgState : public QWidget, public Ui::wdgState {
 	Q_OBJECT
 
 	public:
-		wdgState(QWidget *parent = 0);
-		~wdgState();
+		explicit wdgState(QWidget *parent = nullptr);
+		~wdgState() override;
 
 	protected:
-		void changeEvent(QEvent *event);
+		void changeEvent(QEvent *event) override;
 
 	private:
 		void retranslateUi(wdgState *wdgState);

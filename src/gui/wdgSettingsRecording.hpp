@@ -27,13 +27,13 @@ class wdgSettingsRecording : public QWidget, public Ui::wdgSettingsRecording {
 	Q_OBJECT
 
 	public:
-		wdgSettingsRecording(QWidget *parent = 0);
-		~wdgSettingsRecording();
+		explicit wdgSettingsRecording(QWidget *parent = nullptr);
+		~wdgSettingsRecording() override;
 
 #if defined (WITH_FFMPEG)
 	private:
-		void changeEvent(QEvent *event);
-		void showEvent(QShowEvent *event);
+		void changeEvent(QEvent *event) override;
+		void showEvent(QShowEvent *event) override;
 
 	public:
 		void retranslateUi(QWidget *wdgSettingsRecording);
@@ -69,11 +69,11 @@ class wdgRecGetSaveFileName: public QFileDialog {
 			int audio_format;
 			int video_format;
 			int quality;
-		} rec_cfg;
+		} rec_cfg{};
 
 	public:
-		wdgRecGetSaveFileName(QWidget *parent = 0);
-		~wdgRecGetSaveFileName();
+		explicit wdgRecGetSaveFileName(QWidget *parent = nullptr);
+		~wdgRecGetSaveFileName() override;
 
 	public:
 		QString audio_get_save_file_name(void);
