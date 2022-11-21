@@ -9,6 +9,25 @@
     </message>
   </context>
   <context>
+    <name>dlgCfgNSCode</name>
+    <message>
+        <source>Default</source>
+        <translation>默认</translation>
+    </message>
+    <message>
+        <source>Unset</source>
+        <translation>未设置</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>应用</translation>
+    </message>
+    <message>
+        <source>Discard</source>
+        <translation">放弃</translation>
+    </message>
+</context>
+<context>
     <name>dlgCmdLineHelp</name>
     <message>
       <source>Close</source>
@@ -31,6 +50,53 @@
     </message>
   </context>
   <context>
+    <name>dlgKeyboard</name>
+    <message>
+        <source>Virtual Keyboard</source>
+        <translation>虚拟键盘</translation>
+    </message>
+    <message>
+        <source>Subor Keyboard</source>
+        <translation>小霸王键盘</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>选项</translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation>尺寸</translation>
+    </message>
+    <message>
+        <source>1.0x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1.5x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2.0x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2.5x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mode</source>
+        <translation>模式</translation>
+    </message>
+    <message>
+        <source>Setup</source>
+        <translation>设置</translation>
+    </message>
+    <message>
+        <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
+        <translation>扩展模式 (开启键盘支持, F10, F11, F12 和 &quot;` &quot;. P.S. : &apos;学习和游戏 32-in-1&apos; 在此模式下有问题。)</translation>
+    </message>
+</context>
+<context>
     <name>dlgSettings</name>
     <message>
       <source>Settings</source>
@@ -104,8 +170,12 @@
       <source>Toggle the Menu Bar in Fullscreen</source>
       <translation>切换全屏菜单栏</translation>
     </message>
-  </context>
-  <context>
+    <message>
+        <source>Capture/Release Input</source>
+        <translation>捕获/释放输入</translation>
+    </message>
+</context>
+<context>
     <name>dlgStdPad</name>
     <message>
       <source>Controller %1 : Standard Pad</source>
@@ -307,7 +377,7 @@
     </message>
     <message>
       <source>8</source>
-      <translation>7</translation>
+      <translation>8</translation>
     </message>
     <message>
       <source>3</source>
@@ -327,6 +397,69 @@
     </message>
   </context>
   <context>
+    <name>familyBasicKeyboard</name>
+    <message>
+        <source>Family Basic Keyboard</source>
+        <translation>Family Basic 键盘</translation>
+    </message>
+</context>
+<context>
+    <name>mainApplication</name>
+    <message>
+        <source>%1 folders</source>
+        <extracomment>Do not translate %1</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create config folder</source>
+        <translation>创建配置文件夹错误</translation>
+    </message>
+    <message>
+        <source>Error on create data folder</source>
+        <translation>创建数据文件夹错误</translation>
+    </message>
+    <message>
+        <source>Error on create temp folder</source>
+        <translation>创建临时文件夹错误</translation>
+    </message>
+    <message>
+        <source>Error on create cheat folder</source>
+        <translation>创建作弊文件夹错误</translation>
+    </message>
+    <message>
+        <source>Error on create psg folder</source>
+        <translation>创建 psg 文件夹错误</translation>
+    </message>
+    <message>
+        <source>Error on create shp folder</source>
+        <translation>创建 shp 文件夹错误</translation>
+    </message>
+    <message>
+        <source>Error on create jsc folder</source>
+        <translation>创建 jsc 文件夹错误</translation>
+    </message>
+    <message>
+        <source>Error on create bios folder</source>
+        <translation>创建 bios 文件夹错误</translation>
+    </message>
+    <message>
+        <source>Error on create diff folder</source>
+        <translation>创建 diff 文件夹错误</translation>
+    </message>
+    <message>
+        <source>Error on create prb folder</source>
+        <translation>创建 prb 文件夹错误</translation>
+    </message>
+    <message>
+        <source>Error on create save folder</source>
+        <translation>创建存档文件夹错误</translation>
+    </message>
+    <message>
+        <source>Error on create screenshot folder</source>
+        <translation>创建截图文件夹错误</translation>
+    </message>
+</context>
+<context>
     <name>mainWindow</name>
     <message>
       <source>&amp;Insert disk</source>
@@ -537,10 +670,6 @@
       <translation>禁用(&amp;D)</translation>
     </message>
     <message>
-      <source>&amp;Fast Forward</source>
-      <translation>快进(&amp;F)</translation>
-    </message>
-    <message>
       <source>&amp;Pause</source>
       <translation>暂停(&amp;P)</translation>
     </message>
@@ -730,11 +859,98 @@
       <translation>调试手柄/摇杆(&amp;J)</translation>
     </message>
     <message>
-      <source>Virtual &amp;Keyboard</source>
-      <translation>虚拟键盘(&amp;K)</translation>
+        <source>Fast Forward (hold button)</source>
+        <translation type="unfinished">快进 (按住按钮)</translation>
     </message>
-  </context>
-  <context>
+    <message>
+        <source>puNES tape image</source>
+        <translation>puNES 磁带镜像</translation>
+    </message>
+    <message>
+        <source>Virtuanes tape image</source>
+        <translation>Virtuanes 磁带镜像</translation>
+    </message>
+    <message>
+        <source>Nestopia tape image</source>
+        <translation>Nestopia 磁带镜像</translation>
+    </message>
+    <message>
+        <source>Open tape image</source>
+        <translation>打开磁带镜像</translation>
+    </message>
+    <message>
+        <source>Tape Image</source>
+        <translation>磁带镜像</translation>
+    </message>
+    <message>
+        <source>Unsupported format</source>
+        <translation>尚未支持的磁带镜像</translation>
+    </message>
+    <message>
+        <source>Error opening tape image file</source>
+        <translation>打开磁带镜像文件错误</translation>
+    </message>
+    <message>
+        <source>WAVE tape image</source>
+        <translation>波形磁带镜像</translation>
+    </message>
+    <message>
+        <source>Save tape image</source>
+        <translation>保存磁带镜像</translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Fast Forward</source>
+        <translation>切换快进(&amp;F)</translation>
+    </message>
+    <message>
+        <source>&amp;Play</source>
+        <translation>播放(&amp;P)</translation>
+    </message>
+    <message>
+        <source>&amp;Record</source>
+        <translation>录制(&amp;R)</translation>
+    </message>
+    <message>
+        <source>&amp;Stop</source>
+        <translation>停止(&amp;S)</translation>
+    </message>
+    <message>
+        <source>Shout into &amp;Microphone</source>
+        <translation>对话筒喊叫(&amp;M)</translation>
+    </message>
+    <message>
+        <source>&amp;Open config folder</source>
+        <translation>打开配置文件夹(&amp;O)</translation>
+    </message>
+    <message>
+        <source>Ta&amp;pe</source>
+        <translation>磁带(&amp;P)</translation>
+    </message>
+    <message>
+        <source>Toggle Virtual &amp;Keyboard</source>
+      <translation>切换虚拟键盘(&amp;K)</translation>
+    </message>
+</context>
+<context>
+    <name>nesKeyboardStatusBar</name>
+    <message>
+        <source>Capture/Release the Input</source>
+        <translation>捕获/释放输入</translation>
+    </message>
+    <message>
+        <source>Input is released</source>
+        <translation>输入已被释放</translation>
+    </message>
+    <message>
+        <source>Input is captured</source>
+        <translation>输入已被捕获</translation>
+    </message>
+    <message>
+        <source>Toggle Virtual Keyboard</source>
+        <translation>切换虚拟键盘</translation>
+    </message>
+</context>
+<context>
     <name>objCheat</name>
     <message>
       <source>Error on reading the file</source>
@@ -916,6 +1132,31 @@
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
       <translation>进度 [cyan]%1[normal] 已载入</translation>
     </message>
+    <message>
+        <source>tape play</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation>播放磁带</translation>
+    </message>
+    <message>
+        <source>tape record</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation>录制磁带</translation>
+    </message>
+    <message>
+        <source>tape stop</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation>停止磁带</translation>
+    </message>
+    <message>
+        <source>keyboard input captured</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation>捕获键盘输入</translation>
+    </message>
+    <message>
+        <source>keyboard input released</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation>释放键盘输入</translation>
+    </message>
   </context>
   <context>
     <name>recStatusBar</name>
@@ -929,6 +1170,13 @@
     </message>
   </context>
   <context>
+    <name>suborKeyboard</name>
+    <message>
+        <source>Subor Keyboard</source>
+        <translation>小霸王键盘</translation>
+    </message>
+</context>
+<context>
     <name>wdgAPUChannels</name>
     <message>
       <source>APU Channels</source>
@@ -1086,15 +1334,7 @@
     </message>
     <message>
       <source>All supported formats</source>
-      <translation>所有支持的格式</translation>
-    </message>
-    <message>
-      <source>XML files</source>
-      <translation>XML 作弊</translation>
-    </message>
-    <message>
-      <source>CHT files</source>
-      <translation>CHT 作弊</translation>
+        <translation>所有支持的格式</translation>
     </message>
     <message>
       <source>Import Cheats</source>
@@ -1124,8 +1364,31 @@
       <source>A description must be entered</source>
       <translation>请输入描述</translation>
     </message>
+    <message>
+        <source>Nestopia XML files</source>
+        <translation>Nestopia XML 文件</translation>
+    </message>
+    <message>
+        <source>Mame 128+ XML files</source>
+        <translation>Mame 128+ XML 文件</translation>
+    </message>
+    <message>
+        <source>FCEUX CHT files</source>
+        <translation>FCEUX CHT 文件</translation>
+    </message>
+    <message>
+        <source>libretro CHT files</source>
+        <translation type="unfinished"></translation>
+    </message>
   </context>
   <context>
+    <name>wdgKeyboard</name>
+    <message>
+        <source>Virtual Keyboard</source>
+        <translation>虚拟键盘</translation>
+    </message>
+</context>
+<context>
     <name>wdgNTSCFilter</name>
     <message>
       <source>Reset paramaters to defaults</source>
@@ -1329,6 +1592,29 @@
     </message>
   </context>
   <context>
+    <name>wdgScreen</name>
+    <message>
+        <source>Paste</source>
+        <translation>粘贴</translation>
+    </message>
+    <message>
+        <source>Tape</source>
+        <translation>磁带</translation>
+    </message>
+    <message>
+        <source>Play</source>
+        <translation>播放</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>录制</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>停止</translation>
+    </message>
+</context>
+<context>
     <name>wdgSettingsAudio</name>
     <message>
       <source>Output Devices</source>
@@ -1759,6 +2045,14 @@
       <source>Press a key - timeout in %1</source>
       <translation>请按键 - 剩余 %1 秒</translation>
     </message>
+    <message>
+        <source>Family BASIC Keyboard</source>
+        <translation>Family BASIC 键盘</translation>
+    </message>
+    <message>
+        <source>Subor Keyboard</source>
+        <translation>小霸王键盘</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsPPU</name>
@@ -1804,220 +2098,220 @@
     </message>
     <message>
       <source>Hide Background</source>
-      <translation>隐藏背景</translation>
+        <translation>隐藏背景</translation>
     </message>
     <message>
-      <source>Advanced</source>
-      <translation>高级</translation>
+        <source>Advanced</source>
+        <translation>高级</translation>
     </message>
     <message>
-      <source>Default</source>
-      <translation>默认</translation>
+        <source>Default</source>
+        <translation>默认</translation>
     </message>
     <message>
-      <source>Randomize (Not recommended)</source>
-      <translation>随机 (不推荐)</translation>
+        <source>Randomize (Not recommended)</source>
+        <translation>随机化(不推荐)</translation>
     </message>
     <message>
-      <source>Power up/reset CPU/PPU Alignment</source>
-      <translation>开机/重设 CPU/PPU 对齐</translation>
+        <source>Power up/reset CPU/PPU Alignment</source>
+        <translation>开机/重设 CPU/PPU 对齐</translation>
     </message>
     <message>
-      <source>Increment at every hard reset (Not recommended)</source>
-      <translation>每次硬件重设时增加 (不推荐)</translation>
+        <source>Increment at every hard reset (Not recommended)</source>
+        <translation>每次硬件重设时增加 (不推荐)</translation>
     </message>
     <message>
-      <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
-      <translation>必要时自动恢复限制以避免图像出问题</translation>
+        <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
+        <translation>必要时自动恢复限制以避免图像出问题</translation>
     </message>
-  </context>
-  <context>
+</context>
+<context>
     <name>wdgSettingsRecording</name>
     <message>
-      <source>MPEG 1 Video (*.mpg *.mpeg)</source>
-      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>MPEG 1 视频 (*.mpg *.mpeg)</translation>
+        <source>MPEG 1 Video (*.mpg *.mpeg)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation>MPEG 1 视频 (*.mpg *.mpeg)</translation>
     </message>
     <message>
-      <source>MPEG 2 Video (*.mpg *.mpeg)</source>
-      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>MPEG 2 视频 (*.mpg *.mpeg)</translation>
+        <source>MPEG 2 Video (*.mpg *.mpeg)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation>MPEG 2 视频 (*.mpg *.mpeg)</translation>
     </message>
     <message>
-      <source>MPEG 4 Video (*.mp4)</source>
-      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>MPEG4 视频 (*.mp4)</translation>
+        <source>MPEG 4 Video (*.mp4)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation>MPEG4 视频 (*.mp4)</translation>
     </message>
     <message>
-      <source>MPEG H264 Video (*.mp4)</source>
-      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>MPEG H264 视频 (*.mp4)</translation>
+        <source>MPEG H264 Video (*.mp4)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation>MPEG H264 视频 (*.mp4)</translation>
     </message>
     <message>
-      <source>High Efficiency Video Codec (*.mkv)</source>
-      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>高效率编码 (*.mkv)</translation>
+        <source>High Efficiency Video Codec (*.mkv)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation>高效率视频编码 (*.mkv)</translation>
     </message>
     <message>
-      <source>WebM Video (*.webm)</source>
-      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>WebM 视频 (*.webm)</translation>
+        <source>WebM Video (*.webm)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation>WebM 视频 (*.webm)</translation>
     </message>
     <message>
-      <source>Windows Media Video (*.wmv)</source>
-      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>Windows 媒体视频 (*.wmv)</translation>
+        <source>Windows Media Video (*.wmv)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation>Windows 媒体视频 (*.wmv)</translation>
     </message>
     <message>
-      <source>AVI FF Video (*.avi)</source>
-      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>AVI FF 视频 (*.avi)</translation>
+        <source>AVI FF Video (*.avi)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation>AVI FF 视频 (*.avi)</translation>
     </message>
     <message>
-      <source>AVI Video (*.avi)</source>
-      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>AVI 视频 (*.avi)</translation>
+        <source>AVI Video (*.avi)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation>AVI 视频 (*.avi)</translation>
     </message>
     <message>
-      <source>WAV Audio (*.wav)</source>
-      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>波形音频 (*.wav)</translation>
+        <source>WAV Audio (*.wav)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation>WAV 音频 (*.wav)</translation>
     </message>
     <message>
-      <source>MP3 Audio (*.mp3)</source>
-      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>MP3 音频 (*.mp3)</translation>
+        <source>MP3 Audio (*.mp3)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation>MP3 音频 (*.mp3)</translation>
     </message>
     <message>
-      <source>AAC Audio (*.aac)</source>
-      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>AAC 音频 (*.aac)</translation>
+        <source>AAC Audio (*.aac)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation>AAC 音频 (*.aac)</translation>
     </message>
     <message>
-      <source>Flac Audio (*.flac)</source>
-      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>Flac 音频 (*.flac)</translation>
+        <source>Flac Audio (*.flac)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation>Flac 音频 (*.flac)</translation>
     </message>
     <message>
-      <source>Ogg Audio (*.ogg)</source>
-      <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>Ogg 音频 (*.ogg)</translation>
+        <source>Ogg Audio (*.ogg)</source>
+        <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
+        <translation>Ogg 音频 (*.ogg)</translation>
     </message>
     <message>
-      <source>Not supported</source>
-      <translation>不支持</translation>
+        <source>Not supported</source>
+        <translation>不支持</translation>
     </message>
     <message>
-      <source>Custom Height</source>
-      <translation>自定义高度</translation>
+        <source>Custom Height</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>Output Video Format</source>
-      <translation>视频输出格式</translation>
+        <source>Output Video Format</source>
+        <translation>自定义高度</translation>
     </message>
     <message>
-      <source>Custom Width</source>
-      <translation>自定义宽度</translation>
+        <source>Custom Width</source>
+        <translation>自定义宽度</translation>
     </message>
     <message>
-      <source>Output Quality</source>
-      <translation>输出质量</translation>
+        <source>Output Quality</source>
+        <translation>输出质量</translation>
     </message>
     <message>
-      <source>Output Audio Format</source>
-      <translation>音频输出格式</translation>
+        <source>Output Audio Format</source>
+        <translation>输出音频格式</translation>
     </message>
     <message>
-      <source>Output Resolution</source>
-      <translation>输出分辨率</translation>
+        <source>Output Resolution</source>
+        <translation>输出分辨率</translation>
     </message>
     <message>
-      <source>Custom</source>
-      <translation>自定义</translation>
+        <source>Custom</source>
+        <translation>自定义</translation>
     </message>
     <message>
-      <source>256 x 240  (1:1)</source>
-      <translation>256×240  (1:1)</translation>
+        <source>256 x 240  (1:1)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>292 x 240  (8:7 NTSC TV)</source>
-      <translation>292×240  (8:7 NTSC 电视)</translation>
+        <source>292 x 240  (8:7 NTSC TV)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>320 x 240  (5:4)</source>
-      <translation>320×240  (5:4)</translation>
+        <source>320 x 240  (5:4)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>354 x 240  (11:8 PAL TV)</source>
-      <translation>354×240  (11:8 PAL 电视)</translation>
+        <source>354 x 240  (11:8 PAL TV)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>512 x 480  (1:1)</source>
-      <translation>512×480  (1:1)</translation>
+        <source>512 x 480  (1:1)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>584 x 480  (8:7 NTSC TV)</source>
-      <translation>584×480  (8:7 NTSC 电视)</translation>
+        <source>584 x 480  (8:7 NTSC TV)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>640 x 480  (5:4)</source>
-      <translation>640×480  (5:4)</translation>
+        <source>640 x 480  (5:4)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>708 x 480  (11:8 PAL TV)</source>
-      <translation>708×480  (11:8 PAL 电视)</translation>
+        <source>708 x 480  (11:8 PAL TV)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>768 x 720  (1:1)</source>
-      <translation>768×720  (1:1)</translation>
+        <source>768 x 720  (1:1)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>876 x 720  (8:7 NTSC TV)</source>
-      <translation>876×720  (8:7 NTSC 电视)</translation>
+        <source>876 x 720  (8:7 NTSC TV)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>960 x 720  (5:4)</source>
-      <translation>960×720  (5:4)</translation>
+        <source>960 x 720  (5:4)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>1064 x 720  (11:8 PAL TV)</source>
-      <translation>1064×720  (11:8 PAL 电视)</translation>
+        <source>1064 x 720  (11:8 PAL TV)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>1024 x 960  (1:1)</source>
-      <translation>1024×960  (1:1)</translation>
+        <source>1024 x 960  (1:1)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>1170 x 960  (8:7 NTSC TV)</source>
-      <translation>1170×960  (8:7 NTSC 电视)</translation>
+        <source>1170 x 960  (8:7 NTSC TV)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>1280 x 960  (5:4)</source>
-      <translation>1280×960  (5:4)</translation>
+        <source>1280 x 960  (5:4)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>1418 x 960  (11:8 PAL TV)</source>
-      <translation>1418×960  (11:8 PAL 电视)</translation>
+        <source>1418 x 960  (11:8 PAL TV)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>1280 x 720</source>
-      <translation>1280×720</translation>
+        <source>1280 x 720</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>1920 x 1080</source>
-      <translation>1920×1080</translation>
+        <source>1920 x 1080</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-      <source>Use the emulator resolution</source>
-      <translation>模拟器分辨率</translation>
+        <source>Use the emulator resolution</source>
+        <translation">使用模拟器分辨率</translation>
     </message>
     <message>
-      <source>Follow screen rotation</source>
-      <translation>旋转屏幕保持一致</translation>
+        <source>Follow screen rotation</source>
+        <translation">跟随屏幕旋转</translation>
     </message>
     <message>
-      <source>Low</source>
-      <translation>低</translation>
+        <source>Low</source>
+        <translation>低</translation>
     </message>
     <message>
       <source>Medium</source>
