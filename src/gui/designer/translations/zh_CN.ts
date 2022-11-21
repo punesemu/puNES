@@ -483,15 +483,15 @@
     </message>
     <message>
         <source>Nes rom files</source>
-        <translation>NES ROM</translation>
+        <translation>NES ROM 文件</translation>
     </message>
     <message>
         <source>FDS image files</source>
-        <translation>磁碟镜像</translation>
+        <translation>FDS 镜像文件</translation>
     </message>
     <message>
         <source>TAS movie files</source>
-        <translation>TAS 电影</translation>
+        <translation>TAS 电影文件</translation>
     </message>
     <message>
         <source>All files</source>
@@ -695,7 +695,7 @@
     </message>
     <message>
         <source>&amp;NES</source>
-        <translation>游戏(&amp;N)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Disk Side</source>
@@ -703,7 +703,7 @@
     </message>
     <message>
         <source>Setti&amp;ngs</source>
-        <translation>设置(&amp;N)</translation>
+        <translation>设置(&amp;S)</translation>
     </message>
     <message>
         <source>&amp;Video</source>
