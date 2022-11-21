@@ -844,11 +844,11 @@
     </message>
     <message>
         <source>Slot &amp;A</source>
-        <translation>槽 &amp;A</translation>
+        <translation>进度槽 &amp;A</translation>
     </message>
     <message>
         <source>Slot &amp;B</source>
-        <translation>槽 &amp;B</translation>
+        <translation>进度槽 &amp;B</translation>
     </message>
     <message>
         <source>&amp;Vs System Controls</source>
@@ -2203,11 +2203,11 @@
     </message>
     <message>
         <source>Custom Height</source>
-        <translation type="unfinished"></translation>
+        <translation>自定义高度</translation>
     </message>
     <message>
         <source>Output Video Format</source>
-        <translation>自定义高度</translation>
+        <translation>输出视频格式</translation>
     </message>
     <message>
         <source>Custom Width</source>
