@@ -4,18 +4,22 @@
 <h3 align="center">Qt-based Nintendo Entertainment System emulator and NSF/NSFe Music Player</h3>
 
 <p align="center">
+  <a href="https://github.com/punesemu/puNES/releases/latest">
+    <img src="https://img.shields.io/github/release/punesemu/puNES.svg?label=latest%20release" alt="GitHub release"/>
+  <a href="https://github.com/punesemu/puNES/blob/master/COPYING">
+    <img src="https://img.shields.io/github/license/punesemu/puNES.svg" alt="License"/>
+  <a href="https://crowdin.com/project/punes">
+    <img src="https://badges.crowdin.net/punes/localized.svg" alt="Crowdin"/>
+  <a href="https://github.com/punesemu/puNES">
+    <img src="https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat" alt="GitHub code size in bytes"/>
+  <a href="https://www.codefactor.io/repository/github/punesemu/punes/overview/master">
+    <img src="https://www.codefactor.io/repository/github/punesemu/punes/badge/master" alt="CodeFactor"/>
   <a href="https://repology.org/project/punes/versions">
-    <img src="https://repology.org/badge/version-for-repo/gentoo/punes.svg" alt="Gentoo"/>
-    <img src="https://repology.org/badge/version-for-repo/aur/punes.svg" alt="AUR]"/>
-    <img src="https://repology.org/badge/version-for-repo/slackbuilds/punes.svg" alt="SlackBuilds"/>
-    <img src="https://repology.org/badge/version-for-repo/nix_unstable/punes.svg" alt="Nixpkgs unstable"/>
-    <img src="https://repology.org/badge/version-for-repo/wikidata/punes.svg" alt="Wikidata"/>
+    <img src="https://repology.org/badge/tiny-repos/punes.svg" alt="Packaging status"/>
 </p>
 
-:floppy_disk: Work in Progress (WIP) Builds
+:floppy_disk: Work in Progress (WIP) Builds [![Build status](https://github.com/punesemu/puNES/actions/workflows/build.yml/badge.svg)](https://github.com/punesemu/puNES/actions)
 -----------
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat) [![CodeFactor](https://www.codefactor.io/repository/github/punesemu/punes/badge/master)](https://www.codefactor.io/repository/github/punesemu/punes/overview/master) [![Build status](https://github.com/punesemu/puNES/actions/workflows/build.yml/badge.svg)](https://github.com/punesemu/puNES/actions)
-
 These executables are always updated to the latest commit:
 * Windows 32 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build/master/punes32.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build/master/punes32.wip.d3d9.zip)
 * Windows 64 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build/master/punes64.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build/master/punes64.wip.d3d9.zip)
