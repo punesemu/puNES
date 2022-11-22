@@ -1314,8 +1314,12 @@
         <translation>复制</translation>
     </message>
     <message>
+        <source>New Cpu Ram</source>
+        <translation>新建 Cpu 内存</translation>
+    </message>
+    <message>
         <source>New Game Genie</source>
-        <translation>新建金手指</translation>
+        <translation>新建 Game Genie</translation>
     </message>
     <message>
         <source>New Pro Action</source>
@@ -1666,7 +1670,7 @@
     </message>
     <message>
         <source>Enable Audio</source>
-        <translation>出声</translation>
+        <translation>开启音频</translation>
     </message>
     <message>
         <source>Reverse bits of DPCM</source>
@@ -2066,7 +2070,7 @@
     </message>
     <message>
         <source>Reset Lag Counter</source>
-        <translation>重设延迟数</translation>
+        <translation>重置延迟计数</translation>
     </message>
     <message>
         <source>VBlank Lines</source>
