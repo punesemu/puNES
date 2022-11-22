@@ -583,6 +583,7 @@ set(video_srcs
 	video/filters/ntsc.c
 	video/filters/scale.c
 	video/filters/scale2x.c
+	video/filters/scalers.c
 	video/filters/xBRZ.c
 	video/gfx.c
 	$<$<BOOL:${ENABLE_FULLSCREEN_RESFREQ}>:

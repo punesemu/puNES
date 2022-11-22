@@ -552,24 +552,31 @@ static const _opt opt_oscan[] = {
 	{NULL, uL("default"), OSCAN_DEFAULT}
 };
 static const _opt opt_filter[] = {
-	{uL("no filter") , uL("none")    , NO_FILTER},
-	{uL("Scale2X")   , uL("scale2x") , SCALE2X},
-	{uL("Scale3X")   , uL("scale3x") , SCALE3X},
-	{uL("Scale4X")   , uL("scale4x") , SCALE4X},
-	{uL("Hq2X")      , uL("hq2x")    , HQ2X},
-	{uL("Hq3X")      , uL("hq3x")    , HQ3X},
-	{uL("Hq4X")      , uL("hq4x")    , HQ4X},
-	{uL("NTSC")      , uL("ntsc")    , NTSC_FILTER},
-	{uL("xBRZ 2x")   , uL("xbrz2x")  , XBRZ2X},
-	{uL("xBRZ 3x")   , uL("xbrz3x")  , XBRZ3X},
-	{uL("xBRZ 4x")   , uL("xbrz4x")  , XBRZ4X},
-	{uL("xBRZ 5x")   , uL("xbrz5x")  , XBRZ5X},
-	{uL("xBRZ 6x")   , uL("xbrz6x")  , XBRZ6X},
-	{uL("xBRZ 2x MT"), uL("xbrz2mtx"), XBRZ2XMT},
-	{uL("xBRZ 3x MT"), uL("xbrz3xmt"), XBRZ3XMT},
-	{uL("xBRZ 4x MT"), uL("xbrz4xmt"), XBRZ4XMT},
-	{uL("xBRZ 5x MT"), uL("xbrz5xmt"), XBRZ5XMT},
-	{uL("xBRZ 6x MT"), uL("xbrz6xmt"), XBRZ6XMT}
+	{uL("no filter")  , uL("none")      , NO_FILTER},
+	{uL("Scale2X")    , uL("scale2x")   , SCALE2X},
+	{uL("Scale3X")    , uL("scale3x")   , SCALE3X},
+	{uL("Scale4X")    , uL("scale4x")   , SCALE4X},
+	{uL("Hq2X")       , uL("hq2x")      , HQ2X},
+	{uL("Hq3X")       , uL("hq3x")      , HQ3X},
+	{uL("Hq4X")       , uL("hq4x")      , HQ4X},
+	{uL("NTSC")       , uL("ntsc")      , NTSC_FILTER},
+	{uL("xBRZ 2x")    , uL("xbrz2x")    , XBRZ2X},
+	{uL("xBRZ 3x")    , uL("xbrz3x")    , XBRZ3X},
+	{uL("xBRZ 4x")    , uL("xbrz4x")    , XBRZ4X},
+	{uL("xBRZ 5x")    , uL("xbrz5x")    , XBRZ5X},
+	{uL("xBRZ 6x")    , uL("xbrz6x")    , XBRZ6X},
+	{uL("xBRZ 2x MT") , uL("xbrz2mtx")  , XBRZ2XMT},
+	{uL("xBRZ 3x MT") , uL("xbrz3xmt")  , XBRZ3XMT},
+	{uL("xBRZ 4x MT") , uL("xbrz4xmt")  , XBRZ4XMT},
+	{uL("xBRZ 5x MT") , uL("xbrz5xmt")  , XBRZ5XMT},
+	{uL("xBRZ 6x MT") , uL("xbrz6xmt")  , XBRZ6XMT},
+	{uL("2xSaI")      , uL("2xsai")     , SCALE2XSAI},
+	{uL("Super 2xSaI"), uL("super2xsai"), SUPER2XSAI},
+	{uL("Super Eagle"), uL("supereagle"), SUPEREAGLE},
+	{uL("TV2x")       , uL("tv2x")      , TV2X},
+	{uL("TV3x")       , uL("tv3x")      , TV3X},
+	{uL("TV4x")       , uL("tv4x")      , TV4X},
+	{uL("Dot Matrix") , uL("dotmatrix") , DOTMATRIX}
 };
 static const _opt opt_ntsc[] = {
 	{uL("Composite"), uL("composite"), COMPOSITE},
@@ -883,12 +890,14 @@ static const _settings main_cfg[] = {
 		uL("video"), uL("filter"), uL("none"),
 		uL("# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE)
 		uL("#                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x," NEWLINE)
-		uL("#                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt" NEWLINE)
-		uL("#                  ntsc"),
+		uL("#                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt," NEWLINE)
+		uL("#                  ntsc, 2xsai, super2xsai, supereagle, tv2x, tv3x," NEWLINE)
+		uL("#                  tv4x, dotmatrix"),
 		uL("-i, --filter              filter to apply       : nofilter, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE)
 		uL("                                                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x," NEWLINE)
-		uL("                                                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt" NEWLINE)
-		uL("                                                  ntsc"),
+		uL("                                                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt," NEWLINE)
+		uL("                                                  ntsc, 2xsai, super2xsai, supereagle, tv2x,tv3x," NEWLINE)
+		uL("                                                  tv4x, dotmatrix"),
 		{LENGTH(opt_filter), opt_filter}
 	},
 	{

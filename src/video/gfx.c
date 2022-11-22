@@ -137,6 +137,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		filter = cfg->filter;
 	}
 	if ((filter != cfg->filter) || info.on_cfg || force_scale) {
+		gfx.filter_linear = TEXTURE_LINEAR_DISAB;
 		switch (filter) {
 			default:
 			case NO_FILTER:
@@ -175,6 +176,38 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				gfx.filter.func = ntsc_surface;
 				gfx.filter.factor = X2;
 				ntsc_update = TRUE;
+				break;
+			case SCALE2XSAI:
+				gfx.filter.func = scale_2xsai;
+				gfx.filter.factor = X2;
+				break;
+			case SUPER2XSAI:
+				gfx.filter.func = scale_super2xsai;
+				gfx.filter.factor = X2;
+				break;
+			case SUPEREAGLE:
+				gfx.filter.func = scale_supereagle;
+				gfx.filter.factor = X2;
+				break;
+			case TV2X:
+				gfx.filter.func = scale_tv2x;
+				gfx.filter.factor = X2;
+				gfx.filter_linear = TEXTURE_LINEAR_ENAB;
+				break;
+			case TV3X:
+				gfx.filter.func = scale_tv3x;
+				gfx.filter.factor = X3;
+				gfx.filter_linear = TEXTURE_LINEAR_ENAB;
+				break;
+			case TV4X:
+				gfx.filter.func = scale_tv4x;
+				gfx.filter.factor = X4;
+				gfx.filter_linear = TEXTURE_LINEAR_ENAB;
+				break;
+			case DOTMATRIX:
+				gfx.filter.func = scale_dotmatrix;
+				gfx.filter.factor = X2;
+				gfx.filter_linear = TEXTURE_LINEAR_ENAB;
 				break;
 		}
 		// forzo il controllo del fattore di scale
