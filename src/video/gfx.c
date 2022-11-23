@@ -209,6 +209,25 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				gfx.filter.factor = X2;
 				gfx.filter_linear = TEXTURE_LINEAR_ENAB;
 				break;
+			case PALTV1X:
+				gfx.filter.func = scale_paltv1x;
+				gfx.filter.factor = X1;
+				break;
+			case PALTV2X:
+				gfx.filter.func = scale_paltv2x;
+				gfx.filter.factor = X2;
+				gfx.filter_linear = TEXTURE_LINEAR_ENAB;
+				break;
+			case PALTV3X:
+				gfx.filter.func = scale_paltv3x;
+				gfx.filter.factor = X3;
+				gfx.filter_linear = TEXTURE_LINEAR_ENAB;
+				break;
+			case PALTV4X:
+				gfx.filter.func = scale_paltv4x;
+				gfx.filter.factor = X4;
+				gfx.filter_linear = TEXTURE_LINEAR_ENAB;
+				break;
 		}
 		// forzo il controllo del fattore di scale
 		force_scale = TRUE;

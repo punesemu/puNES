@@ -63,7 +63,11 @@ enum filters_type {
 	TV2X,
 	TV3X,
 	TV4X,
-	DOTMATRIX
+	DOTMATRIX,
+	PALTV1X,
+	PALTV2X,
+	PALTV3X,
+	PALTV4X
 };
 enum shader_type {
 	NO_SHADER,

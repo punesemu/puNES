@@ -1159,6 +1159,26 @@
          </item>
          <item>
           <property name="text">
+           <string>PAL TV1x</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>PAL TV2x</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>PAL TV3x</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>PAL TV4x</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>Scale2X</string>
           </property>
          </item>

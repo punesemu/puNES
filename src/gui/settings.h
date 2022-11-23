@@ -576,7 +576,11 @@ static const _opt opt_filter[] = {
 	{uL("TV2x")       , uL("tv2x")      , TV2X},
 	{uL("TV3x")       , uL("tv3x")      , TV3X},
 	{uL("TV4x")       , uL("tv4x")      , TV4X},
-	{uL("Dot Matrix") , uL("dotmatrix") , DOTMATRIX}
+	{uL("Dot Matrix") , uL("dotmatrix") , DOTMATRIX},
+	{uL("Pal TV1x")   , uL("paltv1x")   , PALTV1X},
+	{uL("Pal TV2x")   , uL("paltv2x")   , PALTV2X},
+	{uL("Pal TV3x")   , uL("paltv3x")   , PALTV3X},
+	{uL("Pal TV4x")   , uL("paltv4x")   , PALTV4X}
 };
 static const _opt opt_ntsc[] = {
 	{uL("Composite"), uL("composite"), COMPOSITE},
@@ -892,12 +896,13 @@ static const _settings main_cfg[] = {
 		uL("#                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x," NEWLINE)
 		uL("#                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt," NEWLINE)
 		uL("#                  ntsc, 2xsai, super2xsai, supereagle, tv2x, tv3x," NEWLINE)
-		uL("#                  tv4x, dotmatrix"),
+		uL("#                  tv4x, dotmatrix, paltv1x, paltv2x, paltv3x, paltv4x"),
 		uL("-i, --filter              filter to apply       : nofilter, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE)
 		uL("                                                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x," NEWLINE)
 		uL("                                                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt," NEWLINE)
 		uL("                                                  ntsc, 2xsai, super2xsai, supereagle, tv2x,tv3x," NEWLINE)
-		uL("                                                  tv4x, dotmatrix"),
+		uL("                                                  tv4x, dotmatrix, paltv1x, paltv2x, paltv3x," NEWLINE)
+		uL("                                                  paltv4x"),
 		{LENGTH(opt_filter), opt_filter}
 	},
 	{
