@@ -455,6 +455,7 @@ set(gui_ui_srcs
 	gui/designer/dlgStdPad.ui
 	gui/designer/dlgUncomp.ui
 	gui/designer/dlgVsSystem.ui
+	gui/designer/dlgWizard.ui
 	gui/designer/mainWindow.ui
 	gui/designer/wdgAPUChannels.ui
 	gui/designer/wdgCheatsEditor.ui
@@ -494,6 +495,8 @@ set(gui_srcs
 	gui/dlgUncomp.hpp
 	gui/dlgVsSystem.cpp
 	gui/dlgVsSystem.hpp
+	gui/dlgWizard.cpp
+	gui/dlgWizard.hpp
 	gui/mainApplication.cpp
 	gui/mainApplication.hpp
 	gui/mainWindow.cpp

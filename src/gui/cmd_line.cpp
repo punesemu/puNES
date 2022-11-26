@@ -296,11 +296,11 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 				break;
 		}
 	}
-
 	return (EXIT_OK);
 }
 BYTE cmd_line_check_portable(int argc, uTCHAR **argv) {
-	if (QFileInfo(uQString(argv[0])).completeBaseName().right(2) == "_p") {
+	if ((QFileInfo(uQString(argv[0])).completeBaseName().right(2) == "_p") ||
+		(QFile(uQString(gui_application_folder()) + QString(CFGFILENAME)).exists())) {
 		return (TRUE);
 	}
 	for (int opt = 0; opt < argc; opt++) {
@@ -314,8 +314,9 @@ BYTE cmd_line_check_portable(int argc, uTCHAR **argv) {
 }
 
 static void usage(QString &name) {
-	dlgCmdLineHelp *box = new dlgCmdLineHelp(nullptr, name);
+	dlgCmdLineHelp *dlg = new dlgCmdLineHelp(nullptr, name);
 
-	box->show();
-	box->exec();
+	dlg->show();
+	dlg->exec();
+	delete(dlg);
 }

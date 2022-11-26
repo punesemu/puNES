@@ -47,8 +47,11 @@ If you want buy me a beer : <span class="badge-paypal"><a href="https://www.payp
 
 :keyboard: Configuration
 -----------
-To run it in portable mode, rename the executable by adding the suffix `_p`.
-Examples: `punes.exe -> punes_p.exe` or `punes64.exe -> punes64_p.exe`
+To run in portable mode there is 3 distinct ways:
+1) If the executable is in a folder containing the puNES.cfg file.
+2) Rename the executable by adding the suffix `_p`.
+   - Examples: `punes.exe -> punes_p.exe` or `punes64.exe -> punes64_p.exe`
+3) Run the emulator with the "--portable" option.
 
 To see a list of available command-line options, start puNES with the `-h` argument.
 
