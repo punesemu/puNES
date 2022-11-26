@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtWidgets/QKeySequenceEdit>
 #include <QtWidgets/QScrollBar>
 #include "wdgSettingsInput.hpp"
 #include "mainWindow.hpp"
@@ -27,6 +26,19 @@
 #include "conf.h"
 
 enum page_input_shcut_mode { UPDATE_ALL, BUTTON_PRESSED, NO_ACTION = 255 };
+
+// ----------------------------- keySequenceEdit ---------------------------------------
+
+bool keySequenceEdit::event(QEvent *event) {
+	// comsume ALL key presses including Tab
+	if (event->type() == QEvent::KeyPress) {
+		keyPressEvent(static_cast<QKeyEvent *>(event));
+		return (true);
+	}
+	return (QKeySequenceEdit::event(event));
+}
+
+// ---------------------------- wdgSettingsInput --------------------------------------
 
 wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 	int i = 0;
@@ -313,7 +325,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	{
 		QKeySequenceEdit *btext;
 
-		btext = new QKeySequenceEdit();
+		btext = new keySequenceEdit();
 		btext->setObjectName("value");
 		btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
 		btext->setMinimumHeight(btexth);
@@ -1107,3 +1119,16 @@ void wdgSettingsInput::s_et_update_joy_combo(void) {
 	}
 	gui_dlgjsc_emit_update_joy_combo();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
