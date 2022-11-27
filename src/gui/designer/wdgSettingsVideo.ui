@@ -1119,17 +1119,12 @@
          </item>
          <item>
           <property name="text">
-           <string>Scale2X</string>
+           <string>2xSaI</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Scale3X</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Scale4X</string>
+           <string>Dot Matrix</string>
           </property>
          </item>
          <item>
@@ -1145,6 +1140,81 @@
          <item>
           <property name="text">
            <string>Hq4X</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>NTSC Composite</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>NTSC RGB</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>NTSC S-Video</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>PAL TV1x</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>PAL TV2x</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>PAL TV3x</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>PAL TV4x</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Scale2X</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Scale3X</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Scale4X</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Super 2xSaI</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Super Eagle</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>TV2x</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>TV3x</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>TV4x</string>
           </property>
          </item>
          <item>
@@ -1195,21 +1265,6 @@
          <item>
           <property name="text">
            <string>xBRZ 6X Multithreading</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>NTSC Composite</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>NTSC S-Video</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>NTSC RGB</string>
           </property>
          </item>
         </widget>

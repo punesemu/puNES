@@ -73,6 +73,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #if defined (WITH_D3D9)
 #include "d3d9.h"
 #endif
+#include "cmd_line.h"
 
 INLINE void gui_init_os(void);
 INLINE uTCHAR *gui_home(void);
@@ -137,6 +138,8 @@ BYTE gui_init(int *argc, char **argv) {
 	memset(&gui, 0, sizeof(gui));
 	qt = {};
 	qt.app = new mainApplication((*argc), argv, true, mode);
+
+	info.portable = cmd_line_check_portable((*argc), (uTCHAR **)argv);
 
 	info.gui = TRUE;
 	gui.in_update = FALSE;
@@ -456,6 +459,7 @@ int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type) {
 
 	dlg->show();
 	dlg->exec();
+	delete(dlg);
 
 	return (gui.dlg_rc);
 }

@@ -19,10 +19,15 @@
 #ifndef WDGSETTINGSINPUT_HPP_
 #define WDGSETTINGSINPUT_HPP_
 
+#include <QtWidgets/QKeySequenceEdit>
 #include <QtWidgets/QWidget>
 #include "ui_wdgSettingsInput.h"
 #include "dlgStdPad.hpp"
 
+class keySequenceEdit: public QKeySequenceEdit {
+	protected:
+		bool event(QEvent *event) override;
+};
 class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 	Q_OBJECT
 

@@ -22,20 +22,21 @@
 #include <QtGui/QKeySequence>
 #include "mainApplication.hpp"
 #include "mainWindow.hpp"
+#include "dlgWizard.hpp"
 #include "dlgKeyboard.hpp"
 #include "version.h"
 #include "gui.h"
 
-#define FONT_SIZE 9
+//#define FONT_SIZE 9
 
 mainApplication::mainApplication(int &argc, char *argv[], bool allowSecondary, Options options, int timeout, const QString &userData) :
 	SingleApplication(argc, argv, allowSecondary, options, timeout, userData) {
 	QFont f = font();
 
-	if (f.pointSize() != FONT_SIZE) {
+	//if (f.pointSize() != FONT_SIZE) {
 	//	f.setPointSize(FONT_SIZE);
 	//	setFont(f);
-	}
+	//}
 }
 mainApplication::~mainApplication() = default;
 
@@ -86,6 +87,20 @@ BYTE mainApplication::control_base_folders(void) {
 #else
 	QDir old(QString("%0/.%1").arg(uQString(gui_home_folder()), NAME));
 #endif
+
+	if (!info.portable && !old.exists() && !config_folder.exists()) {
+		dlgWizard *dlg = new dlgWizard(nullptr, config_folder.absolutePath(), uQString(gui_application_folder()));
+
+		dlg->show();
+		if (dlg->exec() == QDialog::Rejected) {
+			delete (dlg);
+			return (EXIT_ERROR);
+		}
+		delete (dlg);
+		config_folder.setPath(uQString(gui_config_folder()));
+		data_folder.setPath(uQString(gui_data_folder()));
+		temp_folder.setPath(uQString(gui_temp_folder()));
+	}
 
 	// controllo l'esistenza della directory principale
 	if (base_folder(&config_folder, nullptr, ".", tr("Error on create config folder")) == EXIT_ERROR) {
@@ -140,7 +155,6 @@ BYTE mainApplication::control_base_folders(void) {
 		}
 		old.removeRecursively();
 	}
-
 	return (EXIT_OK);
 }
 
@@ -158,7 +172,7 @@ QKeySequence mainApplication::key_sequence_from_key_event(QKeyEvent *event) {
 	return (QKeySequence(modifiers ? (int)modifiers : key, modifiers ? key : 0).toString().remove(", "));
 }
 bool mainApplication::is_set_inp_shortcut(QEvent *event, int set_inp) {
-	return (!mainwin->shortcut[set_inp]->key().isEmpty() &&
+	return (mainwin && !mainwin->shortcut[set_inp]->key().isEmpty() &&
 		(key_sequence_from_key_event((QKeyEvent *)event) == mainwin->shortcut[set_inp]->key()));
 }
 bool mainApplication::dlgkeyb_event(QEvent *event) {

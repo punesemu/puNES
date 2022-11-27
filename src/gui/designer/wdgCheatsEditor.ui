@@ -275,7 +275,7 @@
        </layout>
       </item>
       <item>
-       <widget class="QFrame" name="frame_pippo">
+       <widget class="QFrame" name="frame_Edit">
         <property name="styleSheet">
          <string notr="true">QFrame { background-color: rgb(235, 235, 255); }</string>
         </property>
@@ -285,7 +285,7 @@
         <property name="frameShadow">
          <enum>QFrame::Sunken</enum>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
+        <layout class="QVBoxLayout" name="verticalLayout_Edit">
          <property name="leftMargin">
           <number>6</number>
          </property>
@@ -299,7 +299,7 @@
           <number>6</number>
          </property>
          <item>
-          <layout class="QGridLayout" name="gridLayout">
+          <layout class="QGridLayout" name="gridLayout_Edit">
            <item row="1" column="0">
             <widget class="QFrame" name="frame_Type_Cheat">
              <property name="frameShape">

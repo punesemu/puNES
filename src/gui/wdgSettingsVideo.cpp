@@ -491,66 +491,99 @@ void wdgSettingsVideo::sfilter_set(void) {
 		case NO_FILTER:
 			filter = 0;
 			break;
-		case SCALE2X:
+		case SCALE2XSAI:
 			filter = 1;
 			break;
-		case SCALE3X:
+		case DOTMATRIX:
 			filter = 2;
 			break;
-		case SCALE4X:
+		case HQ2X:
 			filter = 3;
 			break;
-		case HQ2X:
+		case HQ3X:
 			filter = 4;
 			break;
-		case HQ3X:
-			filter = 5;
-			break;
 		case HQ4X:
-			filter = 6;
-			break;
-		case XBRZ2X:
-			filter = 7;
-			break;
-		case XBRZ3X:
-			filter = 8;
-			break;
-		case XBRZ4X:
-			filter = 9;
-			break;
-		case XBRZ5X:
-			filter = 10;
-			break;
-		case XBRZ6X:
-			filter = 11;
-			break;
-		case XBRZ2XMT:
-			filter = 12;
-			break;
-		case XBRZ3XMT:
-			filter = 13;
-			break;
-		case XBRZ4XMT:
-			filter = 14;
-			break;
-		case XBRZ5XMT:
-			filter = 15;
-			break;
-		case XBRZ6XMT:
-			filter = 16;
+			filter = 5;
 			break;
 		case NTSC_FILTER: {
 			switch (cfg->ntsc_format) {
 				case COMPOSITE:
-					filter = 17;
-					break;
-				case SVIDEO:
-					filter = 18;
+					filter = 6;
 					break;
 				case RGBMODE:
-					filter = 19;
+					filter = 7;
+					break;
+				case SVIDEO:
+					filter = 8;
 					break;
 			}
+			break;
+		case PALTV1X:
+			filter = 9;
+			break;
+		case PALTV2X:
+			filter = 10;
+			break;
+		case PALTV3X:
+			filter = 11;
+			break;
+		case PALTV4X:
+			filter = 12;
+			break;
+		case SCALE2X:
+			filter = 13;
+			break;
+		case SCALE3X:
+			filter = 14;
+			break;
+		case SCALE4X:
+			filter = 15;
+			break;
+		case SUPER2XSAI:
+			filter = 16;
+			break;
+		case SUPEREAGLE:
+			filter = 17;
+			break;
+		case TV2X:
+			filter = 18;
+			break;
+		case TV3X:
+			filter = 19;
+			break;
+		case TV4X:
+			filter = 20;
+			break;
+		case XBRZ2X:
+			filter = 21;
+			break;
+		case XBRZ3X:
+			filter = 22;
+			break;
+		case XBRZ4X:
+			filter = 23;
+			break;
+		case XBRZ5X:
+			filter = 24;
+			break;
+		case XBRZ6X:
+			filter = 25;
+			break;
+		case XBRZ2XMT:
+			filter = 26;
+			break;
+		case XBRZ3XMT:
+			filter = 27;
+			break;
+		case XBRZ4XMT:
+			filter = 28;
+			break;
+		case XBRZ5XMT:
+			filter = 29;
+			break;
+		case XBRZ6XMT:
+			filter = 30;
 			break;
 		}
 	}
@@ -903,64 +936,97 @@ void wdgSettingsVideo::s_sfilter(int index) {
 			filter = NO_FILTER;
 			break;
 		case 1:
-			filter = SCALE2X;
+			filter = SCALE2XSAI;
 			break;
 		case 2:
-			filter = SCALE3X;
+			filter = DOTMATRIX;
 			break;
 		case 3:
-			filter = SCALE4X;
-			break;
-		case 4:
 			filter = HQ2X;
 			break;
-		case 5:
+		case 4:
 			filter = HQ3X;
 			break;
-		case 6:
+		case 5:
 			filter = HQ4X;
 			break;
-		case 7:
-			filter = XBRZ2X;
-			break;
-		case 8:
-			filter = XBRZ3X;
-			break;
-		case 9:
-			filter = XBRZ4X;
-			break;
-		case 10:
-			filter = XBRZ5X;
-			break;
-		case 11:
-			filter = XBRZ6X;
-			break;
-		case 12:
-			filter = XBRZ2XMT;
-			break;
-		case 13:
-			filter = XBRZ3XMT;
-			break;
-		case 14:
-			filter = XBRZ4XMT;
-			break;
-		case 15:
-			filter = XBRZ5XMT;
-			break;
-		case 16:
-			filter = XBRZ6XMT;
-			break;
-		case 17:
+		case 6:
 			filter = NTSC_FILTER;
 			cfg->ntsc_format = COMPOSITE;
 			break;
-		case 18:
+		case 7:
+			filter = NTSC_FILTER;
+			cfg->ntsc_format = RGBMODE;
+			break;
+		case 8:
 			filter = NTSC_FILTER;
 			cfg->ntsc_format = SVIDEO;
 			break;
+		case 9:
+			filter = PALTV1X;
+			break;
+		case 10:
+			filter = PALTV2X;
+			break;
+		case 11:
+			filter = PALTV3X;
+			break;
+		case 12:
+			filter = PALTV4X;
+			break;
+		case 13:
+			filter = SCALE2X;
+			break;
+		case 14:
+			filter = SCALE3X;
+			break;
+		case 15:
+			filter = SCALE4X;
+			break;
+		case 16:
+			filter = SUPER2XSAI;
+			break;
+		case 17:
+			filter = SUPEREAGLE;
+			break;
+		case 18:
+			filter = TV2X;
+			break;
 		case 19:
-			filter = NTSC_FILTER;
-			cfg->ntsc_format = RGBMODE;
+			filter = TV3X;
+			break;
+		case 20:
+			filter = TV4X;
+			break;
+		case 21:
+			filter = XBRZ2X;
+			break;
+		case 22:
+			filter = XBRZ3X;
+			break;
+		case 23:
+			filter = XBRZ4X;
+			break;
+		case 24:
+			filter = XBRZ5X;
+			break;
+		case 25:
+			filter = XBRZ6X;
+			break;
+		case 26:
+			filter = XBRZ2XMT;
+			break;
+		case 27:
+			filter = XBRZ3XMT;
+			break;
+		case 28:
+			filter = XBRZ4XMT;
+			break;
+		case 29:
+			filter = XBRZ5XMT;
+			break;
+		case 30:
+			filter = XBRZ6XMT;
 			break;
 	}
 

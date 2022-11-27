@@ -57,12 +57,6 @@ int main(int argc, char **argv) {
 	info.doublebuffer = TRUE;
 	info.machine[HEADER] = info.machine[DATABASE] = DEFAULT;
 
-	if (cmd_line_check_portable(argc, argv) == TRUE) {
-		info.portable = TRUE;
-	} else {
-		info.portable = FALSE;
-	}
-
 	if (gui_init(&argc, (char **)argv) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}

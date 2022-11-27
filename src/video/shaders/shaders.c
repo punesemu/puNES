@@ -60,6 +60,7 @@ BYTE shaders_set(int shader) {
 		case NO_SHADER:
 			shdpass();
 			sp->code = SHDCODE(shc_no_filter);
+			sp->linear = gfx.filter_linear;
 			se_soft_stretch();
 			break;
 		case SHADER_CRTDOTMASK:

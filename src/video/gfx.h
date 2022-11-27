@@ -20,10 +20,11 @@
 #define GFX_H_
 
 #include "common.h"
-#include "video/filters/scale.h"
-#include "video/filters/scale2x.h"
 #include "video/filters/hqx.h"
 #include "video/filters/ntsc.h"
+#include "video/filters/scale.h"
+#include "video/filters/scale2x.h"
+#include "video/filters/scalers.h"
 #include "video/filters/xBRZ.h"
 
 //#define FH_SHADERS_GEST
@@ -55,7 +56,18 @@ enum filters_type {
 	XBRZ3XMT,
 	XBRZ4XMT,
 	XBRZ5XMT,
-	XBRZ6XMT
+	XBRZ6XMT,
+	SCALE2XSAI,
+	SUPER2XSAI,
+	SUPEREAGLE,
+	TV2X,
+	TV3X,
+	TV4X,
+	DOTMATRIX,
+	PALTV1X,
+	PALTV2X,
+	PALTV3X,
+	PALTV4X
 };
 enum shader_type {
 	NO_SHADER,
@@ -108,6 +120,7 @@ typedef struct _gfx {
 	uint32_t *palette;
 	uTCHAR last_shader_file[LENGTH_FILE_NAME_LONG];
 	_viewport vp;
+	BYTE filter_linear;
 	struct _gfx_frame {
 		uint64_t totals;
 		uint64_t filtered;
