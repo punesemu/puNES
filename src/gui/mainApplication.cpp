@@ -93,7 +93,6 @@ BYTE mainApplication::control_base_folders(void) {
 
 		dlg->show();
 		if (dlg->exec() == QDialog::Rejected) {
-			delete (dlg);
 			return (EXIT_ERROR);
 		}
 		config_folder.setPath(uQString(gui_config_folder()));
