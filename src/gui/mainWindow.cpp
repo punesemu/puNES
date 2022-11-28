@@ -984,7 +984,7 @@ void mainWindow::update_menu_file(void) {
 		int i;
 
 		foreach (QAction *action, menu_Recent_Roms->actions()) {
-			delete action;
+			delete (action);
 		}
 
 		menu_Recent_Roms->clear();
