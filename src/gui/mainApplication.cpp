@@ -96,7 +96,6 @@ BYTE mainApplication::control_base_folders(void) {
 			delete (dlg);
 			return (EXIT_ERROR);
 		}
-		delete (dlg);
 		config_folder.setPath(uQString(gui_config_folder()));
 		data_folder.setPath(uQString(gui_data_folder()));
 		temp_folder.setPath(uQString(gui_temp_folder()));

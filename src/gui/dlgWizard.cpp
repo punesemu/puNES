@@ -36,6 +36,8 @@ dlgWizard::dlgWizard(QWidget *parent, const QString &config_folder, const QStrin
 		connect(grp, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(s_grp_storage_type(QAbstractButton*)));
 	}
 	connect(pushButton_Start, SIGNAL(clicked(bool)), this, SLOT(s_accepted(bool)));
+
+	setAttribute(Qt::WA_DeleteOnClose);
 }
 dlgWizard::~dlgWizard() = default;
 
