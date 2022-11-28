@@ -459,7 +459,6 @@ int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type) {
 
 	dlg->show();
 	dlg->exec();
-	delete(dlg);
 
 	return (gui.dlg_rc);
 }
