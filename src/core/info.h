@@ -47,6 +47,7 @@ typedef struct _info {
 	BYTE machine[2];
 	struct _info_mapper {
 		WORD id;
+		BYTE submapper_nes20;
 		BYTE submapper;
 		BYTE extend_wr;
 		BYTE extend_rd;

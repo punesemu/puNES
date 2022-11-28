@@ -984,11 +984,9 @@ void emu_info_rom(void) {
 			fprintf(stderr, "UNIF name     : %s\n", unif.name);
 		}
 
-		if (info.mapper.id == UNIF_MAPPER) {
-			fprintf(stderr, "UNIF mapper   : %u\n", unif.internal_mapper);
-		} else {
-			fprintf(stderr, "NES mapper    : %u\n", info.mapper.id);
-		}
+		info.mapper.id == UNIF_MAPPER
+			? fprintf(stderr, "UNIF mapper   : %u\n", unif.internal_mapper)
+			: fprintf(stderr, "NES mapper    : %u\n", info.mapper.id);
 	} else {
 		fprintf(stderr, "NES mapper    : %u\n", info.mapper.id);
 	}
@@ -996,10 +994,18 @@ void emu_info_rom(void) {
 	{
 		fprintf(stderr, "submapper     : ");
 
-		if (info.mapper.submapper == DEFAULT) {
-			fprintf(stderr, "DEFAULT\n");
+		if (info.format == NES_2_0) {
+			fprintf(stderr, "%u", info.mapper.submapper_nes20);
+
+			info.mapper.submapper == DEFAULT
+				? fprintf(stderr, " (DEFAULT)\n")
+				: info.mapper.submapper == info.mapper.submapper_nes20
+					? fprintf(stderr, "\n")
+					: fprintf(stderr, " (%u)\n", info.mapper.submapper);
 		} else {
-			fprintf(stderr, "%u\n", info.mapper.submapper);
+			info.mapper.submapper == DEFAULT
+				? fprintf(stderr, "DEFAULT\n")
+				: fprintf(stderr, "%u\n", info.mapper.submapper);
 		}
 	}
 
@@ -1070,11 +1076,10 @@ void emu_info_rom(void) {
 		fprintf(stderr, "RAM PRG 8k    : %u", info.prg.ram.banks_8k_plus);
 		if (info.prg.ram.bat.banks) {
 			fprintf(stderr, " ( bat : %d - ", info.prg.ram.bat.banks);
-			if (info.prg.ram.bat.start == DEFAULT) {
-				fprintf(stderr, "DEFAULT )");
-			} else {
-				fprintf(stderr, "%d )", info.prg.ram.bat.start);
-			}
+
+			info.prg.ram.bat.start == DEFAULT
+				? fprintf(stderr, "DEFAULT )")
+				: fprintf(stderr, "%d )", info.prg.ram.bat.start);
 		}
 		fprintf(stderr, "\n");
 	}
