@@ -1294,10 +1294,6 @@
       <translation type="unfinished">Submit</translation>
     </message>
     <message>
-      <source>New</source>
-      <translation type="unfinished">New</translation>
-    </message>
-    <message>
       <source>Cancel</source>
       <translation type="unfinished">Cancel</translation>
     </message>
@@ -1320,6 +1316,10 @@
     <message>
       <source>New Pro Action</source>
       <translation type="unfinished">New Pro Action</translation>
+    </message>
+    <message>
+      <source>New CPU Ram</source>
+      <translation type="unfinished">New CPU Ram</translation>
     </message>
   </context>
   <context>
@@ -2792,6 +2792,50 @@
     <message>
       <source>Preferred resolution </source>
       <translation type="unfinished">Preferred resolution </translation>
+    </message>
+    <message>
+      <source>2xSaI</source>
+      <translation type="unfinished">2xSaI</translation>
+    </message>
+    <message>
+      <source>Dot Matrix</source>
+      <translation type="unfinished">Dot Matrix</translation>
+    </message>
+    <message>
+      <source>PAL TV1x</source>
+      <translation type="unfinished">PAL TV1x</translation>
+    </message>
+    <message>
+      <source>PAL TV2x</source>
+      <translation type="unfinished">PAL TV2x</translation>
+    </message>
+    <message>
+      <source>PAL TV3x</source>
+      <translation type="unfinished">PAL TV3x</translation>
+    </message>
+    <message>
+      <source>PAL TV4x</source>
+      <translation type="unfinished">PAL TV4x</translation>
+    </message>
+    <message>
+      <source>Super 2xSaI</source>
+      <translation type="unfinished">Super 2xSaI</translation>
+    </message>
+    <message>
+      <source>Super Eagle</source>
+      <translation type="unfinished">Super Eagle</translation>
+    </message>
+    <message>
+      <source>TV2x</source>
+      <translation type="unfinished">TV2x</translation>
+    </message>
+    <message>
+      <source>TV3x</source>
+      <translation type="unfinished">TV3x</translation>
+    </message>
+    <message>
+      <source>TV4x</source>
+      <translation type="unfinished">TV4x</translation>
     </message>
   </context>
   <context>
