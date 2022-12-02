@@ -90,7 +90,7 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 	if (event->type() == QEvent::ShortcutOverride) {
 		keyEvent = ((QKeyEvent *)event);
 
-		if ((rwnd.active == TRUE) || (mainwin->is_rwnd_shortcut_or_not_shcut(keyEvent) == false)) {
+		if (rwnd.active || !mainwin->is_rwnd_shortcut_or_not_shcut(keyEvent)) {
 			return (true);
 		}
 
@@ -109,7 +109,7 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 	} else if (event->type() == QEvent::KeyRelease) {
 		keyEvent = ((QKeyEvent *)event);
 
-		if ((rwnd.active == TRUE) || (mainwin->is_rwnd_shortcut_or_not_shcut(keyEvent) == false)) {
+		if (rwnd.active || !mainwin->is_rwnd_shortcut_or_not_shcut(keyEvent)) {
 			return (true);
 		}
 
@@ -168,7 +168,7 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 			if (archive->patch.count > 0) {
 				is_patch = TRUE;
 			}
-			if ((is_patch == TRUE) && (is_rom == FALSE) && !info.rom.file[0]) {
+			if (is_patch && (is_rom == FALSE) && !info.rom.file[0]) {
 				is_patch = FALSE;
 			}
 			if (is_rom) {
@@ -248,7 +248,7 @@ void wdgScreen::cursor_hide(BYTE hide) {
 }
 
 void wdgScreen::s_cursor_set(void) {
-	if (input_draw_target() == TRUE) {
+	if (input_draw_target()) {
 		setCursor((*target));
 	} else {
 		gmouse.hidden = FALSE;
@@ -256,7 +256,7 @@ void wdgScreen::s_cursor_set(void) {
 	}
 }
 void wdgScreen::s_cursor_hide(int hide) {
-	if (hide == TRUE) {
+	if (hide) {
 		setCursor(Qt::BlankCursor);
 	} else {
 		cursor_set();

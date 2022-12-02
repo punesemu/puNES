@@ -236,7 +236,7 @@ INLINE static void prg_fix_164(void) {
 	map_prg_rom_8k_update();
 }
 INLINE static void prg_ram_fix_164(void) {
-	m164tmp.prg_6000 = prg.ram_plus_8k ? prg.ram_plus_8k + (m164tmp.cc93c66 == TRUE ? 512 : 0) : NULL;
+	m164tmp.prg_6000 = prg.ram_plus_8k ? prg.ram_plus_8k + (m164tmp.cc93c66 ? 512 : 0) : NULL;
 }
 INLINE static void mirroring_fix_164(void) {
 	if ((m164.reg[0] & 0x10) && !(m164.reg[3] & 0x80)) {

@@ -507,7 +507,7 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 		jdev->present = TRUE;
 	}
 
-	if (jdev->present == TRUE) {
+	if (jdev->present) {
 		jstick.jdd.count++;
 		js_jdev_open_common(jdev);
 	}
@@ -517,7 +517,7 @@ void js_os_jdev_close(_js_device *jdev) {
 		return;
 	}
 
-	if (jdev->present == TRUE) {
+	if (jdev->present) {
 		jstick.jdd.count--;
 #if defined (DEBUG)
 		ufprintf(stderr, uL("jstick disc. : slot%d \"" uPs("") "\" (%d)\n"),
@@ -531,7 +531,7 @@ void js_os_jdev_close(_js_device *jdev) {
 	js_guid_unset(&jdev->guid);
 	js_guid_unset(&jdev->product_guid);
 
-	if (jdev->is_xinput == TRUE) {
+	if (jdev->is_xinput) {
 		js_os.xinput_player_count--;
 	} else if (jdev->di8device) {
 		IDirectInputDevice8_Release(JDEVIDID8W);
@@ -799,7 +799,7 @@ static BOOL CALLBACK cb_enum_dev(LPCDIDEVICEINSTANCEW instance, LPVOID context) 
 		for (i = 0; i < MAX_JOYSTICK; i++) {
 			jdev = &jstick.jdd.devices[i];
 
-			if (js_is_null(&jdev->guid) == TRUE) {
+			if (js_is_null(&jdev->guid)) {
 				if (jd == NULL) {
 					jd = jdev;
 				}

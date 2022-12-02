@@ -61,7 +61,7 @@ void map_init_8_IN_1(void) {
 	m8in1.mmc3[6] = 0;
 	m8in1.mmc3[7] = 0;
 
-	if ((mapper.write_vram == TRUE) && !info.chr.rom.banks_8k) {
+	if (mapper.write_vram && !info.chr.rom.banks_8k) {
 		info.chr.rom.banks_8k = 32;
 	}
 

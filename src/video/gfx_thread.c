@@ -83,7 +83,7 @@ void gfx_thread_continue(void) {
 
 	if (gfx_thread.pause_calls == 0) {
 		while (gfx_thread.in_run == TH_FALSE) {
-			if (info.stop == TRUE) {
+			if (info.stop) {
 				break;
 			}
 			gui_sleep(1);

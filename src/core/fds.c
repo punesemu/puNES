@@ -369,7 +369,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 		// blocchi riconosciuti allora considero l'analisi del disco completa e
 		// tralascio tutto quello che sta dopo (in questo modo funziona anche
 		// "Akumajou Dracula v1.02 (1986)(Konami)(J).fds" il cui disco e' "sporco").
-		if (stop == TRUE) {
+		if (stop) {
 			break;
 		}
 

@@ -30,7 +30,7 @@ void irqA12_IO(WORD value, WORD value_old) {
 			if (!extcl_irq_A12_clock) {
 				if (!irqA12.counter) {
 					irqA12.counter = irqA12.latch;
-					if (!irqA12.counter && (irqA12.reload == TRUE)) {
+					if (!irqA12.counter && irqA12.reload) {
 						irqA12.save_counter = 1;
 					}
 					irqA12.reload = FALSE;

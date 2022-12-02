@@ -132,7 +132,7 @@ void snd_quit(void) {
 void snd_reset_buffers(void) {
 	snd_thread_pause();
 
-	if (snd.initialized == TRUE) {
+	if (snd.initialized) {
 		cbd.samples_available = 0;
 		cbd.bytes_available = 0;
 		cbd.write = cbd.start;
@@ -158,7 +158,7 @@ void snd_thread_pause(void) {
 	if (snd_thread.pause_calls == 1) {
 		snd_thread.action = ST_PAUSE;
 
-		while (snd_thread.in_run == TRUE) {
+		while (snd_thread.in_run) {
 			gui_sleep(1);
 		}
 	}
@@ -175,7 +175,7 @@ void snd_thread_continue(void) {
 	if (snd_thread.pause_calls == 0) {
 		snd_thread.action = ST_RUN;
 
-		if (snd.initialized == TRUE) {
+		if (snd.initialized) {
 			while (snd_thread.in_run == FALSE) {
 				gui_sleep(1);
 			}
@@ -801,7 +801,7 @@ static thread_funct(alsa_thread_loop, UNUSED(void *data)) {
 
 		snd_thread.in_run = TRUE;
 
-		if (snd_thread.first == TRUE) {
+		if (snd_thread.first) {
 			if ((rc = snd_pcm_start(alsa.playback)) < 0) {
 				fprintf(stderr, "snd_pcm_start() failed (%s)\n", snd_strerror(rc));
 			}
@@ -875,7 +875,7 @@ static thread_funct(alsa_thread_loop, UNUSED(void *data)) {
 #if !defined (RELEASE)
 		if ((gui_get_ms() - snd_thread.tick) >= 250.0f) {
 			snd_thread.tick = gui_get_ms();
-			if (info.snd_info == TRUE)
+			if (info.snd_info)
 			fprintf(stderr, "snd : %ld %d %6d %6d %4d %4d %4d %4d %3d %f %4s\r",
 				avail,
 				len,

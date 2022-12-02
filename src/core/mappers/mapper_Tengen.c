@@ -354,7 +354,7 @@ void extcl_cpu_every_cycle_Tengen_Rambo(void) {
 }
 
 INLINE static void irq_clock_Tengen_Rambo(int delay) {
-	if (irqA12.reload == TRUE) {
+	if (irqA12.reload) {
 		irqA12.counter = irqA12.latch + tengen_rambo.irq_plus_clock + 1;
 		irqA12.reload = FALSE;
 		tengen_rambo.irq_plus_clock = 0;

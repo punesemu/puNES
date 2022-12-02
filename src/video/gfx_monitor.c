@@ -132,7 +132,7 @@ void gfx_monitor_enum_monitors(void) {
 
 	gfx_monitor_quit();
 
-	if (gfx.is_wayland == TRUE) {
+	if (gfx.is_wayland) {
 		return;
 	}
 
@@ -178,7 +178,7 @@ BYTE gfx_monitor_set_res(int w, int h, BYTE adaptive_rrate, BYTE change_rom_mode
 		gfx_monitor_enum_monitors();
 	}
 
-	if ((gfx.is_wayland == TRUE) || (monitor.enabled == FALSE) || (monitor.active == -1)) {
+	if (gfx.is_wayland || (monitor.enabled == FALSE) || (monitor.active == -1)) {
 		return (FALSE);
 	}
 
@@ -215,7 +215,7 @@ BYTE gfx_monitor_set_res(int w, int h, BYTE adaptive_rrate, BYTE change_rom_mode
 		}
 
 		if (list) {
-			if (adaptive_rrate == TRUE) {
+			if (adaptive_rrate) {
 				if (machine.type == NTSC) {
 					rrate = 60.0f;
 				} else {
@@ -285,7 +285,7 @@ BYTE gfx_monitor_restore_res(void) {
 	_monitor_mode_info *mode_info_org;
 	_monitor_info *mi;
 
-	if ((gfx.is_wayland == TRUE) || (monitor.enabled == FALSE) || (monitor.active == -1)) {
+	if (gfx.is_wayland || (monitor.enabled == FALSE) || (monitor.active == -1)) {
 		return (FALSE);
 	}
 
@@ -315,7 +315,7 @@ BYTE gfx_monitor_mode_in_use_info(int *x, int *y, int *w, int *h, int *rrate) {
 	_monitor_mode_info *mode_info;
 	_monitor_info *mi;
 
-	if ((gfx.is_wayland == TRUE) || (monitor.enabled == FALSE) || (monitor.active == -1)) {
+	if (gfx.is_wayland || (monitor.enabled == FALSE) || (monitor.active == -1)) {
 		return (EXIT_ERROR);
 	}
 

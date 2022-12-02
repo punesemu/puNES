@@ -160,7 +160,7 @@ void gui_overlay_set_size(int w, int h) {
 	// device pixel ratio possa essere diverso da quello impostato nella risoluzione
 	// originaria (capita su risoluzione basse tipo 640x480 o 1024x768) e quindi
 	// devo forzare il ricalcolo della geometria del wdgOverlayUi.
-	if (gui.start == TRUE) {
+	if (gui.start) {
 		overlay.ui.widget->update_dpr();
 		overlay.ui.widget->updateGeometry();
 	}
@@ -420,12 +420,12 @@ void wdgOverlayUi::overlay_blit(void) {
 #else
 	for (overlayWidget *ele : wdgs) {
 #endif
-		if (!ele->isHidden() && (ele->enabled == TRUE)) {
+		if (!ele->isHidden() && ele->enabled) {
 			bool redraw = false;
 
 			update_texture = TRUE;
 
-			if (force_redraw || (ele->is_to_redraw() == TRUE)) {
+			if (force_redraw || ele->is_to_redraw()) {
 				redraw = true;
 			}
 
@@ -440,7 +440,7 @@ void wdgOverlayUi::overlay_blit(void) {
 					wdg_clear(ele, &second_last, dpr);
 				}
 			}
-		} else if (ele->force_control_when_hidden && (ele->is_to_redraw() == TRUE)) {
+		} else if (ele->force_control_when_hidden && ele->is_to_redraw()) {
 			ele->grab().toImage();
 		}
 	}

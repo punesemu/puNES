@@ -27,13 +27,13 @@
 		BYTE *cnt = &irqA12.counter;\
 		BYTE *rld = &irqA12.reload;\
 		irqA12.cycles = 0;\
-		if (irqA12.race.C001 == TRUE) {\
+		if (irqA12.race.C001) {\
 			cnt = &irqA12.race.counter;\
 			rld = &irqA12.race.reload;\
 		}\
 		if (!(*cnt)) {\
 			(*cnt) = irqA12.latch;\
-			if (!(*cnt) && ((*rld) == TRUE)) {\
+			if (!(*cnt) && (*rld)) {\
 				irqA12.save_counter = 1;\
 			}\
 			(*rld) = FALSE;\

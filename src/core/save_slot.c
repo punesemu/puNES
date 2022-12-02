@@ -205,7 +205,7 @@ BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size,
 			fwrite(src, size, 1, fp);
 			save_slot.tot_size[slot] += size;
 			fflush(fp);
-			if (preview == TRUE) {
+			if (preview) {
 				preview_image(slot, screen.rd);
 			}
 			break;
@@ -217,7 +217,7 @@ BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size,
 			}
 			break;
 		case SAVE_SLOT_COUNT:
-			if (preview == TRUE) {
+			if (preview) {
 				size_t pos = ftell(fp);
 
 				fseek(fp, save_slot.tot_size[slot], SEEK_SET);
@@ -833,7 +833,7 @@ static uTCHAR *name_slot_file(BYTE slot) {
 	gui_utf_basename(fl, bname, usizeof(bname));
 	usnprintf(file, usizeof(file), uL("" uPs("") SAVE_FOLDER "/" uPs("")), gui_data_folder(), bname);
 
-	if (nsf.enabled == TRUE) {
+	if (nsf.enabled) {
 		usnprintf(ext, usizeof(ext), uL(".n%02X"), slot);
 	} else {
 		usnprintf(ext, usizeof(ext), uL(".p%02X"), slot);

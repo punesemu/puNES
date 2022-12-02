@@ -100,7 +100,7 @@ BYTE extcl_save_mapper_CNROM(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 BYTE extcl_rd_chr_CNROM(WORD address) {
-	if (cnrom_2627.chr_rd_enable == TRUE) {
+	if (cnrom_2627.chr_rd_enable) {
 		return (0xFF);
 	}
 

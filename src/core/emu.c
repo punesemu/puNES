@@ -104,7 +104,7 @@ void emu_quit(void) {
 }
 void emu_frame(void) {
 	// gestione uscita
-	if (info.stop == TRUE) {
+	if (info.stop) {
 		return;
 	}
 
@@ -161,7 +161,7 @@ void emu_frame(void) {
 	emu_frame_input_and_rewind();
 }
 void emu_frame_debugger(void) {
-	if ((info.stop == TRUE) || (debugger.mode >= DBG_BREAKPOINT)) {
+	if (info.stop || (debugger.mode >= DBG_BREAKPOINT)) {
 		return;
 	}
 
@@ -192,7 +192,7 @@ void emu_frame_debugger(void) {
 			}
 		}
 
-		if (info.start_frame_0 == TRUE) {
+		if (info.start_frame_0) {
 			info.start_frame_0 = FALSE;
 			goto emu_frame_debugger_start_frame_0;
 		}
@@ -229,7 +229,7 @@ void emu_frame_debugger(void) {
 		emu_frame_input_and_rewind();
 
 emu_frame_debugger_start_frame_0:
-		if (debugger.breakframe == TRUE) {
+		if (debugger.breakframe) {
 			debugger.mode = DBG_BREAKPOINT;
 			debugger.breakframe = FALSE;
 			//gui_dlgdebugger_click_step();
@@ -614,7 +614,7 @@ BYTE emu_turn_on(void) {
 	emu_cpu_initial_cycles();
 
 	ext_win.vs_system = vs_system.enabled;
-	if (vs_system.enabled == TRUE) {
+	if (vs_system.enabled) {
 		if ((cfg->dipswitch == 0xFF00) && (info.default_dipswitches != 0xFF00)) {
 			cfg->dipswitch = info.default_dipswitches;
 		}
@@ -632,7 +632,7 @@ BYTE emu_turn_on(void) {
 	return (EXIT_OK);
 }
 void emu_pause(BYTE mode) {
-	if (mode == TRUE) {
+	if (mode) {
 		if (++info.pause == 1) {
 			gui_egds_start_pause();
 		}
@@ -645,7 +645,7 @@ void emu_pause(BYTE mode) {
 	}
 
 	if (info.pause == 0) {
-		if (nsf.enabled == TRUE) {
+		if (nsf.enabled) {
 			nsf_reset_timers();
 		}
 	}
@@ -699,13 +699,13 @@ BYTE emu_reset(BYTE type) {
 		gui_update_gps_settings();
 	}
 
-	if ((info.reset == CHANGE_MODE) && (overscan_set_mode(machine.type) == TRUE)) {
+	if ((info.reset == CHANGE_MODE) && overscan_set_mode(machine.type)) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
 
 #if defined (FULLSCREEN_RESFREQ)
 	if ((gfx.type_of_fscreen_in_use == FULLSCR) &&
-		(cfg->adaptive_rrate == TRUE) &&
+		cfg->adaptive_rrate &&
 		(info.old_machine_type != machine.type)) {
 		gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, TRUE);
 	}
@@ -737,7 +737,7 @@ BYTE emu_reset(BYTE type) {
 
 	if (info.no_rom) {
 		info.reset = FALSE;
-		if (info.pause_from_gui == TRUE) {
+		if (info.pause_from_gui) {
 			emu_pause((info.pause_from_gui = FALSE));
 		}
 		return (EXIT_OK);
@@ -767,7 +767,7 @@ BYTE emu_reset(BYTE type) {
 	// ritardo della CPU
 	emu_cpu_initial_cycles();
 
-	if (vs_system.enabled == TRUE) {
+	if (vs_system.enabled) {
 		if (type >= HARD) {
 			vs_system.shared_mem = 0;
 		}
@@ -791,7 +791,7 @@ BYTE emu_reset(BYTE type) {
 		nsf.draw_mask_frames = 2;
 	}
 
-	if (info.pause_from_gui == TRUE) {
+	if (info.pause_from_gui) {
 		emu_pause((info.pause_from_gui = FALSE));
 	}
 
@@ -888,7 +888,7 @@ void emu_ctrl_doublebuffer(void) {
 			info.doublebuffer = FALSE;
 			break;
 		case DBG_GO:
-			if (debugger.breakframe == TRUE) {
+			if (debugger.breakframe) {
 				info.doublebuffer = FALSE;
 			}
 			break;
@@ -1244,7 +1244,7 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 			if (archive->patch.count > 0) {
 				is_patch = TRUE;
 			}
-			if ((is_patch == TRUE) && (is_rom == FALSE) && !info.rom.file[0]) {
+			if (is_patch && (is_rom == FALSE) && !info.rom.file[0]) {
 				is_patch = FALSE;
 			}
 			if (is_rom) {
@@ -1317,7 +1317,7 @@ static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file) {
 	return (ext);
 }
 static void emu_recent_roms_add(BYTE *add, uTCHAR *file) {
-	if ((*add) == TRUE) {
+	if ((*add)) {
 		(*add) = FALSE;
 		recent_roms_add(file);
 	}

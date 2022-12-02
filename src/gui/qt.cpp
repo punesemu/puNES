@@ -113,7 +113,7 @@ class appEventFilter: public QObject {
 		bool eventFilter(QObject* object, QEvent* event) override {
 			if (event->type() == QEvent::MouseMove) {
 				gmouse.timer = gui_get_ms();
-				if (gmouse.hidden == TRUE) {
+				if (gmouse.hidden) {
 					gui_cursor_hide(FALSE);
 				}
 			}
@@ -429,7 +429,7 @@ void gui_egds_set_fps(void) {
 	qt.mwin->egds->set_fps();
 }
 void gui_egds_stop_unnecessary(void) {
-	if (gui.start == TRUE) {
+	if (gui.start) {
 		qt.mwin->egds->stop_unnecessary();
 	}
 }
@@ -479,7 +479,7 @@ void gui_control_pause_bck(WORD event) {
 	}
 
 	if (event == QEvent::WindowActivate) {
-		if (gui.main_win_lfp == TRUE) {
+		if (gui.main_win_lfp) {
 			emu_pause(FALSE);
 		}
 		gui.main_win_lfp = FALSE;
@@ -584,7 +584,7 @@ void gui_emit_et_external_control_windows_show(void) {
 }
 
 void gui_max_speed_start(void) {
-	if (fps.max_speed == TRUE) {
+	if (fps.max_speed) {
 		return;
 	}
 	qt.mwin->qaction_extern.max_speed.start->only_one_trigger();
@@ -707,14 +707,14 @@ void gui_vs_system_update_dialog(void) {
 	qt.vssystem->update_dialog();
 }
 void gui_vs_system_insert_coin(void) {
-	if (vs_system.enabled == TRUE) {
+	if (vs_system.enabled) {
 		qt.vssystem->insert_coin(1);
 	}
 }
 
 #if defined (WITH_OPENGL)
 void gui_wdgopengl_make_current(void) {
-	if (gui.start == TRUE) {
+	if (gui.start) {
 		qt.screen->wogl->makeCurrent();
 	}
 }

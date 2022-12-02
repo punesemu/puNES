@@ -270,7 +270,7 @@ void js_os_jdev_close(_js_device *jdev) {
 		return;
 	}
 
-	if (jdev->present == TRUE) {
+	if (jdev->present) {
 		jstick.jdd.count--;
 #if defined (DEBUG)
 		ufprintf(stderr, uL("jstick disc. : slot%d \"" uPs("") "\" (%d)\n"),
@@ -534,7 +534,7 @@ INLINE static void usb_dev_info(_js_usb_hid_device *uhdev, struct usb_device_inf
 	size = FHMIN(size, (int)(usizeof(uhdev->desc) - 1));
 
 	if (size > 1) {
-		if (vendor == TRUE) {
+		if (vendor) {
 			usnprintf(uhdev->desc, size, uL("" uPs("") " " uPs("")), udi->udi_vendor, udi->udi_product);
 		} else {
 			usnprintf(uhdev->desc, size, uL("" uPs("")), udi->udi_product);

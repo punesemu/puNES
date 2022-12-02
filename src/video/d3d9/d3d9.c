@@ -554,7 +554,7 @@ BYTE d3d9_context_create(void) {
 		}
 
 		if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
-			if (cfg->text_rotation == TRUE) {
+			if (cfg->text_rotation) {
 				if (cfg->fullscreen) {
 					rotate = TRUE;
 				}
@@ -563,7 +563,7 @@ BYTE d3d9_context_create(void) {
 			}
 		}
 
-		if (rotate == TRUE) {
+		if (rotate) {
 			float tmp = ow;
 
 			ow = oh;
@@ -717,7 +717,7 @@ void d3d9_draw_scene(void) {
 	gui_overlay_blit();
 
 	// overlay
-	if (cfg->txt_on_screen && (gui_overlay_is_updated() == TRUE)) {
+	if (cfg->txt_on_screen && gui_overlay_is_updated()) {
 		DWORD vpx, vpy, vpw, vph;
 
 		vpx = (DWORD)d3d9.viewp.left;
@@ -795,7 +795,7 @@ static BYTE d3d9_device_create(UINT width, UINT height) {
 	d3dpp.BackBufferFormat = d3d9.adapter->display_mode.Format;
 	d3dpp.BackBufferWidth = width;
 	d3dpp.BackBufferHeight = height;
-	if (cfg->vsync == TRUE) {
+	if (cfg->vsync) {
 		//d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 	} else {
@@ -818,7 +818,7 @@ static BYTE d3d9_device_create(UINT width, UINT height) {
 void d3d9_context_delete(BYTE lock) {
 	UINT i;
 
-	if (lock == TRUE) {
+	if (lock) {
 		gfx_thread_lock();
 	}
 
@@ -937,7 +937,7 @@ void d3d9_context_delete(BYTE lock) {
 		d3d9.adapter->dev = NULL;
 	}
 
-	if (lock == TRUE) {
+	if (lock) {
 		gfx_thread_unlock();
 	}
 }
@@ -1024,7 +1024,7 @@ INLINE static void d3d9_read_front_buffer(void) {
 			srflock = d3d9.screenshot.srfc.s;
 		}
 
-		if (use_zone == TRUE) {
+		if (use_zone) {
 			if ((d3d9.screenshot.zone.s == NULL) || (d3d9.screenshot.zone.h != h)) {
 				if (d3d9.screenshot.zone.s) {
 					IDirect3DSurface9_Release(d3d9.screenshot.zone.s);
@@ -1154,7 +1154,7 @@ static BYTE d3d9_texture_create(_texture *texture, UINT index) {
 #endif
 
 	// se la scheda video supporta solo texture quadre allore devo crearle quadre
-	if (d3d9.adapter->texture_square_only == TRUE) {
+	if (d3d9.adapter->texture_square_only) {
 		if (rect->w < rect->h) {
 			rect->w = rect->h;
 		} else {
@@ -1239,7 +1239,7 @@ static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h,
 	}
 
 	// se la scheda video supporta solo texture quadre allore devo crearle quadre
-	if (d3d9.adapter->texture_square_only == TRUE) {
+	if (d3d9.adapter->texture_square_only) {
 		if (rect->w < rect->h) {
 			rect->w = rect->h;
 		} else {
@@ -1305,7 +1305,7 @@ static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h,
 	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_MAGFILTER, flt);
 	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, NULL);
 
-	if ((overlay == TRUE) && (cfg->text_rotation == TRUE)) {
+	if (overlay && cfg->text_rotation) {
 		d3d9_vertex_buffer_set(shd, &vp, rect, TRUE);
 	} else {
 		d3d9_vertex_buffer_set(shd, &vp, rect, FALSE);
@@ -1329,7 +1329,7 @@ static BYTE d3d9_texture_lut_create(_lut *lut, UINT index) {
 	lut->name = lp->name;
 	lut->filter = d3d9_shader_filter(lp->linear);
 
-	if (d3d9.adapter->texture_square_only == TRUE) {
+	if (d3d9.adapter->texture_square_only) {
 		if (width < height) {
 			width = height;
 		} else {
@@ -1800,7 +1800,7 @@ static void d3d9_vertex_buffer_set(_shader *shd, _viewport *vp, _texture_rect *p
 	void *buffer;
 	UINT i;
 
-	if (last_pass == TRUE) {
+	if (last_pass) {
 		if (cfg->hflip_screen) {
 			u0 = u;
 			u1 = 0.0f;

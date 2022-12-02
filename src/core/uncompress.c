@@ -85,7 +85,7 @@ _uncompress_archive *uncompress_archive_alloc(uTCHAR *file, BYTE *rc) {
 		return (NULL);
 	}
 
-	if ((l7z_present() == TRUE) && (l7z_control_ext(ext) == EXIT_OK)) {
+	if (l7z_present() && (l7z_control_ext(ext) == EXIT_OK)) {
 		uncompress_examine_archive = l7z_examine_archive;
 		uncompress_extract_from_archive = l7z_extract_from_archive;
 		uncompress_item_file_name = l7z_item_file_name;

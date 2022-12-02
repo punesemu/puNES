@@ -155,7 +155,7 @@ void wdgSettingsRecording::update_widget(void) {
 	label_Output_Resolution->setEnabled(!cfg->recording.use_emu_resolution);
 	comboBox_Output_Resolution->setEnabled(!cfg->recording.use_emu_resolution);
 
-	if (cfg->recording.use_emu_resolution == TRUE) {
+	if (cfg->recording.use_emu_resolution) {
 		mode = false;
 	} else {
 		mode = cfg->recording.output_resolution == REC_RES_CUSTOM;

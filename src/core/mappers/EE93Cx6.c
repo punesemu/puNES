@@ -71,7 +71,7 @@ void ee93cx6_init(BYTE *buffer, size_t _capacity, BYTE _wordSize) {
 void ee93cx6_write(BYTE CS, BYTE CLK, BYTE DAT) {
 	if (!CS && (ee93cx6.state <= ee93cx6.State_address)) {
 		ee93cx6.state = State_standBy;
-	} else if ((ee93cx6.state == State_standBy) && (CS == TRUE) && (CLK == TRUE) && (ee93cx6.lastCLK == FALSE)) {
+	} else if ((ee93cx6.state == State_standBy) && CS && CLK && (ee93cx6.lastCLK == FALSE)) {
 		ee93cx6.state = State_startBit;
 		ee93cx6.opcode = 0;
 		ee93cx6.address = 0;

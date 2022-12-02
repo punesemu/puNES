@@ -377,7 +377,7 @@ BYTE extcl_rd_chr_JYASIC(WORD address) {
 void extcl_wr_nmt_JYASIC(WORD address, BYTE value) {
 	BYTE index = (address & 0x0FFF) >> 10;
 
-	if ((jyasic.nmt.extended_mode == TRUE) && (jyasic.nmt.write[index] == FALSE)) {
+	if (jyasic.nmt.extended_mode && (jyasic.nmt.write[index] == FALSE)) {
 		return;
 	}
 	ntbl.bank_1k[index][address & 0x3FF] = value;
@@ -673,7 +673,7 @@ INLINE static void nmt_setup_JYASIC(void) {
 	WORD value;
 	BYTE i;
 
-	if (jyasic.nmt.extended_mode == TRUE) {
+	if (jyasic.nmt.extended_mode) {
 		WORD outer, mask;
 
 		ppu_setup_JYASIC(&outer, &mask);

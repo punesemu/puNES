@@ -225,7 +225,7 @@ INLINE static void ctrl_reg_105(void) {
 INLINE static void swap_prg_rom_105(void) {
 	BYTE value;
 
-	if (m105.prg.locked == TRUE) {
+	if (m105.prg.locked) {
 		map_prg_rom_8k(4, 0, 0);
 	} else if (!m105.prg.upper) {
 		value = m105.prg.reg[0];

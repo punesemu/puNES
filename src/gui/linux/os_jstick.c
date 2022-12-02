@@ -207,7 +207,7 @@ void js_os_jdev_close(_js_device *jdev) {
 		return;
 	}
 
-	if (jdev->present == TRUE) {
+	if (jdev->present) {
 		jstick.jdd.count--;
 #if defined (DEBUG)
 		ufprintf(stderr, uL("jstick disc. : slot%d \"" uPs("") "\" (%d)\n"),

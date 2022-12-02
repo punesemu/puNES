@@ -265,7 +265,7 @@ void dlgJsc::s_joy_read_timer(void) {
 				for (a = 0; a < js_axs_type[i]; a++) {
 					_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
 
-					if (jsx->used == TRUE) {
+					if (jsx->used) {
 						unsigned int b;
 
 						for (b = 1; b < LENGTH(js_axs_joyval); b++) {
@@ -286,7 +286,7 @@ void dlgJsc::s_joy_read_timer(void) {
 			for (i = 0; i < JS_MAX_BUTTONS; i++) {
 				_js_button *jsx = &jdev->data.button[i];
 
-				if (jsx->used == TRUE) {
+				if (jsx->used) {
 					for (a = 1; a < LENGTH(js_btn_joyval); a++) {
 						if (jsx->offset == js_btn_joyval[a].offset) {
 							QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(js_btn_joyval[a].desc));
@@ -363,7 +363,7 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 				for (a = 0; a < js_axs_type[i]; a++) {
 					_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
 
-					if (jsx->used == TRUE) {
+					if (jsx->used) {
 						unsigned int b;
 
 						for (b = 1; b < LENGTH(js_axs_joyval); b++) {
@@ -426,7 +426,7 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 			for (i = 0; i < JS_MAX_BUTTONS; i++) {
 				_js_button *jsx = &jdev->data.button[i];
 
-				if (jsx->used == TRUE) {
+				if (jsx->used) {
 					for (a = 1; a < LENGTH(js_btn_joyval); a++) {
 						if (jsx->offset == js_btn_joyval[a].offset) {
 							QCheckBox *cb = findChild<QCheckBox *>("checkBox_" + uQString(js_btn_joyval[a].desc));

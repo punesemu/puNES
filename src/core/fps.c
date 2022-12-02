@@ -49,18 +49,18 @@ void fps_init(void) {
 }
 
 void fps_fast_forward_estimated_ms(void) {
-	if (fps.fast_forward == TRUE) {
+	if (fps.fast_forward) {
 		if (fps.max_speed == FALSE) {
 			ff_estimated_ms();
 		}
-	} else if (fps.max_speed == TRUE) {
+	} else if (fps.max_speed) {
 		max_estimated_ms();
 	} else {
 		fps.frame.estimated_ms = machine.ms_frame;
 	}
 }
 void fps_fast_forward_start(void) {
-	if (fps.fast_forward == TRUE) {
+	if (fps.fast_forward) {
 		return;
 	}
 	ppu_draw_screen_pause();
@@ -77,16 +77,16 @@ void fps_fast_forward_stop(void) {
 }
 
 void fps_max_speed_estimated_ms(void) {
-	if (fps.max_speed == TRUE) {
+	if (fps.max_speed) {
 		max_estimated_ms();
-	} else if (fps.fast_forward == TRUE) {
+	} else if (fps.fast_forward) {
 		ff_estimated_ms();
 	} else {
 		fps.frame.estimated_ms = machine.ms_frame;
 	}
 }
 void fps_max_speed_start(void) {
-	if (fps.max_speed == TRUE) {
+	if (fps.max_speed) {
 		return;
 	}
 	ppu_draw_screen_pause();

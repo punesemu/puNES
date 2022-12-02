@@ -413,7 +413,7 @@ INLINE static void rewind_operation(BYTE mode, BYTE save_input, _rewind_snapshoo
 		}
 		bck_states_op_keyframe(mode, snap->data, &index, &rwint.size.keyframe);
 	}
-	if (save_input == TRUE) {
+	if (save_input) {
 		bck_states_op_input(mode, snap->data, &index, &rwint.size.input);
 	}
 }

@@ -278,7 +278,7 @@ void wdgSettingsVideo::update_widget(void) {
 #endif
 		par_set();
 
-		if (cfg->PAR_soft_stretch == TRUE) {
+		if (cfg->PAR_soft_stretch) {
 			checkBox_PAR_Soft_Stretch->setChecked(true);
 		} else {
 			checkBox_PAR_Soft_Stretch->setChecked(false);
@@ -1088,7 +1088,7 @@ void wdgSettingsVideo::s_shader(int index) {
 void wdgSettingsVideo::s_disable_srgb_fbo(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->disable_srgb_fbo = !cfg->disable_srgb_fbo;
-	if (info.sRGB_FBO_in_use == TRUE) {
+	if (info.sRGB_FBO_in_use) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
 	emu_thread_continue();

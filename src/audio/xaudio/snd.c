@@ -190,7 +190,7 @@ void snd_quit(void) {
 void snd_reset_buffers(void) {
 	snd_thread_pause();
 
-	if (snd.initialized == TRUE) {
+	if (snd.initialized) {
 		cbd.samples_available = 0;
 		cbd.bytes_available = 0;
 		cbd.write = cbd.start;
@@ -216,7 +216,7 @@ void snd_thread_pause(void) {
 	if (snd_thread.pause_calls == 1) {
 		snd_thread.action = ST_PAUSE;
 
-		while (snd_thread.in_run == TRUE) {
+		while (snd_thread.in_run) {
 			if (snd_dummy_enabled) {
 				gui_sleep(1);
 			} else {}
@@ -235,7 +235,7 @@ void snd_thread_continue(void) {
 	if (snd_thread.pause_calls == 0) {
 		snd_thread.action = ST_RUN;
 
-		if (snd_dummy_enabled && (snd.initialized == TRUE)) {
+		if (snd_dummy_enabled && snd.initialized) {
 			while (snd_thread.in_run == FALSE) {
 				gui_sleep(1);
 			}
@@ -702,7 +702,7 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 #if !defined (RELEASE)
 	if ((gui_get_ms() - snd_thread.tick) >= 250.0f) {
 		snd_thread.tick = gui_get_ms();
-		if (info.snd_info == TRUE)
+		if (info.snd_info)
 		fprintf(stderr, "snd : %d %d %6d %6d %4d %4d %4d %4d %3d %f\r",
 			avail,
 			len,
@@ -785,7 +785,7 @@ static thread_funct(snd_dummy_thread_loop, UNUSED(void *data)) {
 #if !defined (RELEASE)
 		if ((gui_get_ms() - snd_thread.tick) >= 250.0f) {
 			snd_thread.tick = gui_get_ms();
-			if (info.snd_info == TRUE)
+			if (info.snd_info)
 			fprintf(stderr, "snd dummy : %d %d %6d %6d %4d %4d %4d %4d %3d %f\r",
 				avail,
 				len,

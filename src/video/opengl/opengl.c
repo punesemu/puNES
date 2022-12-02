@@ -504,7 +504,7 @@ BYTE opengl_context_create(void) {
 		}
 
 		if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
-			if (cfg->text_rotation == TRUE) {
+			if (cfg->text_rotation) {
 				if (cfg->fullscreen) {
 					rotate = TRUE;
 				}
@@ -513,7 +513,7 @@ BYTE opengl_context_create(void) {
 			}
 		}
 
-		if (rotate == TRUE) {
+		if (rotate) {
 			float tmp = ow;
 
 			ow = oh;
@@ -745,7 +745,7 @@ void opengl_draw_scene(void) {
 	gui_overlay_blit();
 
 	// overlay
-	if (cfg->txt_on_screen && (gui_overlay_is_updated() == TRUE)) {
+	if (cfg->txt_on_screen && gui_overlay_is_updated()) {
 		float vpx = 0;
 		float vpy = (gfx.h[VIDEO_MODE] < gfx.h[FSCR_RESIZE]) ? (float)(gfx.h[FSCR_RESIZE] - gfx.h[VIDEO_MODE]) * gfx.device_pixel_ratio : 0;
 		float vpw = (float)opengl.video_mode.w * gfx.device_pixel_ratio;
@@ -784,7 +784,7 @@ void opengl_draw_scene(void) {
 static void opengl_context_delete(BYTE lock) {
 	GLuint i;
 
-	if (lock == TRUE) {
+	if (lock) {
 		gfx_thread_lock();
 	}
 
@@ -882,7 +882,7 @@ static void opengl_context_delete(BYTE lock) {
 
 	info.sRGB_FBO_in_use = FALSE;
 
-	if (lock == TRUE) {
+	if (lock) {
 		gfx_thread_unlock();
 	}
 }
@@ -1308,7 +1308,7 @@ static void opengl_shader_print_log(GLuint obj, BYTE ret) {
 
 		if (info_log_length > 0) {
 			fprintf(stderr, "OPENGL: %s", info_log);
-			if (ret == TRUE) {
+			if (ret) {
 				fprintf(stderr, "\n");
 			}
 		}

@@ -1330,7 +1330,7 @@ BYTE map_init(void) {
 	map_prg_ram_init();
 
 	// CHR
-	if (mapper.write_vram == TRUE) {
+	if (mapper.write_vram) {
 		if (!info.chr.rom.banks_8k) {
 			if ((info.format == iNES_1_0) || (info.format == UNIF_FORMAT)) {
 				if (info.extra_from_db & CHRRAM32K) {

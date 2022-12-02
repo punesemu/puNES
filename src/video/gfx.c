@@ -430,7 +430,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		settings_shp_parse();
 
 		if (set_mode) {
-			if (fullscreen == TRUE) {
+			if (fullscreen) {
 				gfx.w[VIDEO_MODE] = gfx.w[MONITOR];
 				gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
 			} else if (cfg->oscan_black_borders) {
@@ -493,16 +493,16 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	// setto il titolo della finestra
 	gui_update();
 
-	if (ntsc_update == TRUE) {
+	if (ntsc_update) {
 		ntsc_effect_parameters_changed();
 	}
 
-	if (info.on_cfg == TRUE) {
+	if (info.on_cfg) {
 		info.on_cfg = FALSE;
 	}
 }
 void gfx_draw_screen(void) {
-	if (gfx_thread_public.filtering == TRUE) {
+	if (gfx_thread_public.filtering) {
 		gfx.frame.totals++;
 		fps.info.skipped++;
 		return;
@@ -516,7 +516,7 @@ void gfx_draw_screen(void) {
 	screen.rd->frame = gfx.frame.totals++;
 	screen.last_completed_wr = screen.wr;
 
-	if (info.doublebuffer == TRUE) {
+	if (info.doublebuffer) {
 		screen.index = !screen.index;
 		screen.wr = &screen.buff[screen.index];
 	}

@@ -50,7 +50,7 @@ void map_init_FARIDSLROM8IN1(void) {
 }
 void extcl_cpu_wr_mem_FARIDSLROM8IN1(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if ((cpu.prg_ram_wr_active == TRUE) && !(faridslrom8in1.reg & 0x08)) {
+		if (cpu.prg_ram_wr_active && !(faridslrom8in1.reg & 0x08)) {
 			faridslrom8in1.reg = value;
 			mmc1.prg_upper = (value & 0x70) >> 1;
 			mmc1.chr_upper = (value & 0x70) << 1;

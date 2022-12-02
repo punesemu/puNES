@@ -282,13 +282,13 @@ void mainWindow::changeEvent(QEvent *event) {
 	}
 }
 void mainWindow::moveEvent(QMoveEvent *event) {
-	if (gui.start == TRUE) {
+	if (gui.start) {
 		gui_external_control_windows_update_pos();
 	}
 	QMainWindow::moveEvent(event);
 }
 void mainWindow::resizeEvent(QResizeEvent *event) {
-	if (gui.start == TRUE) {
+	if (gui.start) {
 		if (fullscreen_resize && (event->size().width() >= SCR_COLUMNS)) {
 			fullscreen_resize = false;
 			if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
@@ -365,7 +365,7 @@ void mainWindow::update_recording_widgets(void) {
 	emit statusbar->rec->et_blink_icon();
 
 	if ((info.no_rom | info.turn_off | rwnd.active) == FALSE) {
-		if (info.recording_on_air == TRUE) {
+		if (info.recording_on_air) {
 			if (recording_format_type() == REC_FORMAT_AUDIO) {
 				audio = true;
 				video = false;
@@ -419,7 +419,7 @@ void mainWindow::update_recording_widgets(void) {
 void mainWindow::set_language(int lang) {
 	QString lng = "en", file = "en_EN", dir = ":/tr/translations";
 
-	if ((lang == cfg->language) && (gui.start == TRUE)) {
+	if ((lang == cfg->language) && gui.start) {
 		return;
 	}
 
@@ -1052,7 +1052,7 @@ void mainWindow::update_menu_nes(void) {
 		action_Shout_into_Microphone->setEnabled(cfg->input.controller_mode == CTRL_MODE_FAMICOM);
 	}
 
-	if ((vs_system.enabled == TRUE) && (rwnd.active == FALSE)) {
+	if (vs_system.enabled && (rwnd.active == FALSE)) {
 		action_Insert_Coin->setEnabled(true);
 	} else {
 		action_Insert_Coin->setEnabled(false);
@@ -1061,7 +1061,7 @@ void mainWindow::update_menu_nes(void) {
 	update_fds_menu();
 	update_tape_menu();
 
-	if ((info.pause_from_gui == TRUE) && (rwnd.active == FALSE)) {
+	if (info.pause_from_gui && (rwnd.active == FALSE)) {
 		action_Pause->setChecked(true);
 	} else {
 		action_Pause->setChecked(false);
@@ -1070,7 +1070,7 @@ void mainWindow::update_menu_nes(void) {
 	if ((nsf.enabled == FALSE) && (rwnd.active == FALSE)) {
 		action_Toogle_Fast_Forward->setEnabled(true);
 
-		if (fps.fast_forward == TRUE) {
+		if (fps.fast_forward) {
 			action_Toogle_Fast_Forward->setChecked(true);
 		} else {
 			action_Toogle_Fast_Forward->setChecked(false);
@@ -1295,7 +1295,7 @@ void mainWindow::s_open(void) {
 	filters.append(tr("TAS movie files"));
 	filters.append(tr("All files"));
 
-	if (l7z_present() == TRUE) {
+	if (l7z_present()) {
 		if ((l7z_control_ext(uL(".rar")) == EXIT_OK)) {
 			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.nes *.NES *.unf *.UNF *.unif *.UNIF *.nsf *.NSF *.nsfe *.NSFE *.fds *.FDS *.fm2 *.FM2)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR)");
@@ -1340,7 +1340,7 @@ void mainWindow::s_apply_patch(void) {
 	filters.append(tr("XDELTA patch files"));
 	filters.append(tr("All files"));
 
-	if (l7z_present() == TRUE) {
+	if (l7z_present()) {
 		if ((l7z_control_ext(uL(".rar")) == EXIT_OK)) {
 			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.ips *.IPS *.bps *.BPS *.xdelta *.XDELTA)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR)");
@@ -1540,7 +1540,7 @@ void mainWindow::s_start_stop_audio_recording(void) {
 
 		file = QFileDialog::getSaveFileName(this, tr("Record sound"), dir + "/" + rom.completeBaseName(), filters.join(";;"));
 
-		if (file.isNull() == false) {
+		if (!file.isNull()) {
 			QFileInfo fileinfo(file);
 
 			if (fileinfo.suffix().isEmpty()) {
@@ -1615,7 +1615,7 @@ void mainWindow::s_fast_forward(void) {
 	}
 }
 void mainWindow::s_max_speed_start(void) const {
-	if (fps.max_speed == TRUE) {
+	if (fps.max_speed) {
 		return;
 	}
 	emu_thread_pause();
@@ -1715,7 +1715,7 @@ void mainWindow::s_state_save_file(void) {
 	filters.append(tr("Save states"));
 	filters.append(tr("All files"));
 
-	if (nsf.enabled == TRUE) {
+	if (nsf.enabled) {
 		filters[0].append(" (*.nns *.NNS)");
 	} else {
 		filters[0].append(" (*.pns *.PNS)");
@@ -1737,7 +1737,7 @@ void mainWindow::s_state_save_file(void) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.suffix().isEmpty()) {
-			if (nsf.enabled == TRUE) {
+			if (nsf.enabled) {
 				fileinfo.setFile(QString(file) + ".nns");
 			} else {
 				fileinfo.setFile(QString(file) + ".pns");
@@ -1761,7 +1761,7 @@ void mainWindow::s_state_load_file(void) {
 	filters.append(tr("Save states"));
 	filters.append(tr("All files"));
 
-	if (nsf.enabled == TRUE) {
+	if (nsf.enabled) {
 		filters[0].append(" (*.nns *.NNS)");
 	} else {
 		filters[0].append(" (*.pns *.PNS)");
@@ -1978,7 +1978,7 @@ void mainWindow::s_fullscreen(void) {
 #if defined (_WIN32)
 		window_flags = windowFlags();
 #endif
-		if ((gfx.is_wayland == TRUE) || (cfg->fullscreen_in_window == TRUE)) {
+		if (gfx.is_wayland || cfg->fullscreen_in_window) {
 			QRect fs_win_geom = win_handle_screen()->availableGeometry();
 #if defined (_WIN32)
 			// lo showMaximized sotto windows non considera la presenza della barra delle applicazioni
@@ -2071,7 +2071,7 @@ void mainWindow::s_fullscreen(void) {
 		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
 		setGeometry(org_geom.x(), org_geom.y(), geometry().width(), geometry().height());
 		// al rientro dal fullscreen a finestra devo eseguire un update() ritardato per ridisignare correttamente la GUI.
-		if (gfx.is_wayland == TRUE) {
+		if (gfx.is_wayland) {
 			QTimer::singleShot(200, this, [this]() { update(); });
 		}
 	}
@@ -2529,7 +2529,7 @@ void timerEgds::s_draw_screen(void) {
 			case DBG_BREAKPOINT:
 				return;
 			case DBG_GO:
-				if (debugger.breakframe == TRUE) {
+				if (debugger.breakframe) {
 					return;
 				}
 				break;
@@ -2538,7 +2538,7 @@ void timerEgds::s_draw_screen(void) {
 
 	if (ret) {
 #if defined (WITH_FFMPEG)
-		if (info.recording_on_air == TRUE) {
+		if (info.recording_on_air) {
 			recording_audio_silenced_frame();
 		}
 #endif

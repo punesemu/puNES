@@ -95,7 +95,7 @@ bool wdgRewind::step_autorepeat_timer_control(void) const {
 	return (true);
 }
 bool wdgRewind::egds_rewind(void) {
-	if (rwnd.active == TRUE) {
+	if (rwnd.active) {
 		int factor = rwnd.direction == RWND_BACKWARD ? rwnd.factor.backward : rwnd.factor.forward;
 
 		if (rwnd.action != RWND_ACT_PAUSE) {

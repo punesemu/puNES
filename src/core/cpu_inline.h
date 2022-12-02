@@ -120,7 +120,7 @@ BYTE cpu_rd_mem_dbg(WORD address) {
 }
 BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 	if (info.cpu_rw_extern) {
-		if (nsf.enabled == TRUE) {
+		if (nsf.enabled) {
 			nsf_rd_mem(address, made_tick);
 			return (cpu.openbus);
 		} else if (fds.info.enabled) {
@@ -267,7 +267,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 				 */
 				if (!prg.ram_plus) {
 					// Vs. System
-					if ((vs_system.enabled == TRUE) && vs_system.shared_mem) {
+					if (vs_system.enabled && vs_system.shared_mem) {
 						cpu.openbus = prg.ram.data[address & 0x07FF];
 					} else {
 						cpu.openbus = prg.ram.data[address & 0x1FFF];
@@ -844,7 +844,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 
 void cpu_wr_mem(WORD address, BYTE value) {
 	if (info.cpu_rw_extern) {
-		if (nsf.enabled == TRUE) {
+		if (nsf.enabled) {
 			nsf_wr_mem(address, value);
 			return;
 		} else if (fds.info.enabled) {
@@ -869,7 +869,7 @@ void cpu_wr_mem(WORD address, BYTE value) {
 				 * utilizzato dalle mappers :
 				 * OneBus
 				 */
-				if (extcl_wr_ppu_reg(address, &value) == TRUE) {
+				if (extcl_wr_ppu_reg(address, &value)) {
 					/* eseguo un tick hardware */
 					tick_hw(1);
 					return;
@@ -918,7 +918,7 @@ void cpu_wr_mem(WORD address, BYTE value) {
 			 * utilizzato dalle mappers :
 			 * OneBus
 			 */
-			if (extcl_wr_apu(address, &value) == TRUE) {
+			if (extcl_wr_apu(address, &value)) {
 				/* eseguo un tick hardware */
 				tick_hw(1);
 				return;
@@ -994,7 +994,7 @@ void cpu_wr_mem(WORD address, BYTE value) {
 				 */
 				if (!prg.ram_plus) {
 					// Vs. System
-					if ((vs_system.enabled == TRUE) && vs_system.shared_mem) {
+					if (vs_system.enabled && vs_system.shared_mem) {
 						prg.ram.data[address & 0x07FF] = value;
 					} else {
 						prg.ram.data[address & 0x1FFF] = value;
@@ -2196,7 +2196,7 @@ INLINE static void tick_hw(BYTE value) {
 	}
 
 	tick_hw_start:
-	if (nsf.enabled == TRUE) {
+	if (nsf.enabled) {
 		if (nsf.made_tick) {
 			cpu.opcode_cycle++;
 			nmi.before = nmi.high;
@@ -2219,7 +2219,7 @@ INLINE static void tick_hw(BYTE value) {
 		apu_tick(&value);
 	}
 
-	if (tape_data_recorder.enabled == TRUE) {
+	if (tape_data_recorder.enabled) {
 		tape_data_recorder_tick();
 	}
 
@@ -2279,12 +2279,12 @@ INLINE static void tick_hw(BYTE value) {
 	r2001.race.ctrl = FALSE;
 	r2006.race.ctrl = FALSE;
 
-	if (irqA12.present == TRUE) {
+	if (irqA12.present) {
 		irqA12.cycles++;
 		irqA12.race.C001 = FALSE;
 	}
 
-	if (vs_system.enabled == TRUE) {
+	if (vs_system.enabled) {
 		if (vs_system.coins.left) {
 			vs_system.coins.left--;
 		}

@@ -555,7 +555,7 @@ void js_jdev_update(_js *js, BYTE enable_decode, BYTE port_index) {
 			int i;
 
 			for (i = 0; i < MAX_JOYSTICK; i++) {
-				if (js_guid_cmp(&js->guid, &jstick.jdd.devices[i].guid) == TRUE) {
+				if (js_guid_cmp(&js->guid, &jstick.jdd.devices[i].guid)) {
 					js->jdev = &jstick.jdd.devices[i];
 					js->inited = TRUE;
 					if (enable_decode) {
@@ -651,10 +651,10 @@ void js_jdev_read_port(_js *js, _port *port) {
 
 	jdev = js->jdev;
 
-	if ((js->inited == TRUE) && jdev) {
+	if (js->inited && jdev) {
 		thread_mutex_lock(jdev->lock);
 
-		if (jdev->present == TRUE) {
+		if (jdev->present) {
 			float deadzone = (JS_AXIS_MAX / 100.0f) * (float)jdev->deadzone;
 			unsigned int i, a;
 			DBWORD value = 0;
@@ -700,10 +700,10 @@ BYTE js_jdev_read_shcut(_js_sch *js_sch) {
 
 	jdev = js->jdev;
 
-	if ((js->inited == TRUE) && jdev) {
+	if (js->inited && jdev) {
 		thread_mutex_lock(jdev->lock);
 
-		if (jdev->present == TRUE) {
+		if (jdev->present) {
 			static float deadzone = (JS_AXIS_MAX / 100.0f) * 45.0f;
 			BYTE mode = 0;
 			unsigned int i, a;
@@ -764,7 +764,7 @@ DBWORD js_jdev_read_in_dialog(_input_guid *guid) {
 	if (jdev) {
 		thread_mutex_lock(jdev->lock);
 
-		if (jdev->present == TRUE) {
+		if (jdev->present) {
 			static float deadzone = (JS_AXIS_MAX / 100.0f) * 75.0f;
 			unsigned int i, a;
 
@@ -855,7 +855,7 @@ thread_funct(js_jdev_read_events_loop, void *arg) {
 	while (info.stop == FALSE) {
 		thread_mutex_lock(jdev->lock);
 
-		if (jdev->present == TRUE) {
+		if (jdev->present) {
 			js_os_jdev_read_events_loop(jdev);
 		}
 
@@ -890,7 +890,7 @@ const _js_db_device *js_search_in_db(int index) {
 		for (i = 0; i < LENGTH(js_db_devices); i++) {
 			const _js_db_device *db = &js_db_devices[i];
 
-			if ((db->type == jdev->type) && (db->is_default == TRUE)) {
+			if ((db->type == jdev->type) && db->is_default) {
 				jdb = db;
 				break;
 			}
