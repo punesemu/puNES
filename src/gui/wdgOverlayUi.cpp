@@ -250,7 +250,7 @@ void gui_overlay_info_append_msg_precompiled_with_alignment(BYTE alignment, int 
 			msg = msg.arg(a1, a2, a3);
 			break;
 		default:
-			return;
+			break;
 	}
 	overlay_info_append_qstring(alignment, msg);
 }
@@ -832,7 +832,7 @@ void overlayWidgetFloppy::update_dpr(void) {
 	floppy.green = dpr_image(":/pics/pics/overlay_floppy_green.png");
 }
 void overlayWidgetFloppy::update_widget(void) {
-	if (cfg->txt_on_screen & fds.info.enabled) {
+	if (cfg->txt_on_screen & fds.info.enabled & !info.turn_off) {
 		show_widget();
 	} else {
 		hide();

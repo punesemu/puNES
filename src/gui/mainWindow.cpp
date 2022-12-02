@@ -563,6 +563,7 @@ void mainWindow::change_rom(const uTCHAR *rom) {
 	info.rom.from_load_menu = emu_ustrncpy(info.rom.from_load_menu, (uTCHAR *)rom);
 	gamegenie_reset();
 	gamegenie_free_paths();
+	info.fds_only_bios = FALSE;
 	make_reset(CHANGE_ROM);
 	gui_update();
 	emu_thread_continue();
@@ -854,6 +855,7 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Disk_4_side_A, 6, SLOT(s_disk_side()));
 	connect_action(action_Disk_4_side_B, 7, SLOT(s_disk_side()));
 	connect_action(action_Switch_sides, 0xFFF, SLOT(s_disk_side()));
+	connect_action(action_Start_FDS_without_Disk, SLOT(s_start_fds_without_disk()));
 	connect_action(action_Eject_Insert_Disk, SLOT(s_eject_disk()));
 	connect_action(action_Tape_Play, SLOT(s_tape_play()));
 	connect_action(action_Tape_Record, SLOT(s_tape_record()));
@@ -1114,7 +1116,7 @@ void mainWindow::update_menu_state(void) {
 void mainWindow::update_fds_menu(void) {
 	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
 
-	if (fds.info.enabled && (rwnd.active == FALSE)) {
+	if (fds.info.enabled && !info.fds_only_bios && (rwnd.active == FALSE)) {
 		if (fds.drive.disk_ejected) {
 			action_text(action_Eject_Insert_Disk, tr("&Insert disk"), sc);
 		} else {
@@ -1418,6 +1420,7 @@ void mainWindow::s_turn_on_off(void) {
 
 	if (info.turn_off) {
 		egds->start_turn_off();
+		gui_overlay_update();
 	} else {
 		make_reset(HARD);
 		egds->stop_turn_off();
@@ -1482,6 +1485,12 @@ void mainWindow::s_eject_disk(void) {
 	}
 	emu_thread_continue();
 	update_menu_nes();
+}
+void mainWindow::s_start_fds_without_disk(void) {
+	info.fds_only_bios = TRUE;
+	info.rom.file[0] = 0;
+	info.rom.change_rom[0] = 0;
+	make_reset(CHANGE_ROM);
 }
 void mainWindow::s_start_stop_audio_recording(void) {
 	if (info.no_rom) {
@@ -2375,6 +2384,7 @@ void mainWindow::s_shcut_toggle_capture_input(void) const {
 
 void mainWindow::s_et_gg_reset(void) {
 	emu_thread_pause();
+	info.fds_only_bios = FALSE;
 	make_reset(CHANGE_ROM);
 	gamegenie.phase = GG_FINISH;
 	emu_thread_continue();

@@ -1294,10 +1294,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>New</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1319,6 +1315,10 @@
     </message>
     <message>
         <source>New Pro Action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New CPU Ram</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2791,6 +2791,50 @@
     </message>
     <message>
         <source>Preferred resolution </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2xSaI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dot Matrix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL TV1x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL TV2x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL TV3x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL TV4x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Super 2xSaI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Super Eagle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV2x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV3x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV4x</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

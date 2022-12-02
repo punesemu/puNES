@@ -76,6 +76,7 @@ typedef struct _info {
 	BYTE recording_is_a_video;
 	BYTE cpu_rw_extern;
 	BYTE screenshot;
+	BYTE fds_only_bios;
 #if defined (WITH_OPENGL)
 	BYTE sRGB_FBO_in_use;
 #endif
