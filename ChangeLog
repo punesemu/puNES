@@ -1,4 +1,71 @@
 Changelog:
+0.110
+- Added support to Wayland.
+- Added support for "Fullscreen in window" with Wayland (the only type of fullscreen supported for now).
+- Added support for "Family Basic Keyboard" and "Subor Keyboard".
+  * It's possible to capture and release keyboard input with the shortcut "Scrollock" and open and
+    close a virtual keyboard with "CTRL+X".
+  * Implemented the "Paste" function. It's possible to paste the text by dragging it in the main
+    window of the emulator or copying it and then press the right mouse button and selecting "Paste".
+    The text will be inserted through the simulation of the pressure of the keys and it will always
+    be possible to interrupt the insertion by pressing the ESC key. During the paste, the Fast Forwandig
+    will be active to reduce the waiting time.
+  * Added support for the tape data recorder. Added a "Tape" submenu in the "NES" menu, also the same
+    menu is present in the context menu of the main window (right click) when the Keyboard is in use.
+    By default I use my own format for tape images but you can also save and load tape images
+    in Virtuanes and Nestopia format.
+- Added a shortcut "M" to simulate a shout in the microphone of the second controller.
+- Added the ability to start FDS emulation without inserting a disk (basically just start the bios).
+  Menu "NES -> Start FDS Emulation without Disk". Useless but fun option.
+- Renamed "Fast Forward" shortcut to "Toggle Fast Forward" and added a new "Fast Forward (hold button)" shortcut.
+- Added a Wizard to select the operating mode (portable mode or not) the first time the emulator is run.
+  (Info for those who already used the emulator) To run in portable mode there are 3 distinct ways:
+  1) If the executable is in a folder containing the puNES.cfg file.
+  2) Rename the executable by adding the suffix _p.
+     (Examples: punes.exe -> punes_p.exe or punes64.exe -> punes64_p.exe)
+  3) Run the emulator with the "--portable" option.
+- Support for XDG Base Directory Specification.
+  On UNIX-Like operating systems the configuration files will be found in "$XDG_CONFIG_HOME/puNES" and the rest
+  in "$XDG_DATA_HOME/puNES". Also under Windows the location of the working directory has changed and will now
+  be located in "C:\Users\<USER>\AppData\Local\puNES". Regarding the portable mode nothing has changed, everything
+  will be placed in the directory containing the executable. When the emulator is started, the old directories
+  will be automatically moved to the new location. In order to open the configuration directory easily, it's always
+  possible to do so via the menu items "File->Open working directory" [Windows and UNIX-Like] or
+  "File->Open config directory" [onlye UNIX-Like].
+- Updated internal shaders.
+- Improved FDS sound emulation.
+- Fixed autoswitch timing for FDS.
+- Fixed decimal mode support.
+- Rewritten mapper : 30, 45, 49, 52, 57, 62, 74, 91, 108, 114, 116, 132, 134, 136, 147, 150, 162, 163, 164, 172,
+  173, 176, 185, 191, 192, 194, 195, 197, 217, 221, 227, 242, 243
+- Added support to mapper : 6, 8, 17, 14, 29, 55, 59, 63, 81, 101, 103, 104, 106, 111, 125, 126, 179, 198, 207,
+  218, 224, 236, 237, 238, 248, 255, 256, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 271, 274,
+  281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 292, 295, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306,
+  307, 308, 309, 312, 313, 314, 315, 319, 320, 322, 323, 324, 325, 327, 328, 329, 331, 332, 333, 335, 336, 337,
+  338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 355, 356, 357, 358, 359, 360,
+  361, 368, 369, 370, 372, 374, 375, 377, 380, 381, 382, 386, 387, 388, 389, 390, 393, 394, 395, 396, 397, 398,
+  399, 400, 401, 403, 404, 406, 409, 410, 411, 412, 413, 414, 415, 416, 417, 420, 422, 428, 429, 431, 432, 433,
+  434, 436, 437, 438, 442, 447, 452, 455, 456, 457, 512, 513, 516, 518, 519, 521, 522, 524, 525, 526, 527, 528,
+  529, 530, 532, 534, 536, 537, 538, 539, 540, 541, 543, 547, 550, 554, 556, 557, 558, 559, 560
+- Added support to UNIF mapper : 10-24-C-A1, 11160, 12-IN-1, 158B, 190in1, 22026, 3D-BLOCK, 411120C, 603-5052,
+  60311C, 64in1NOrRepeat, 70in1, 70in1B, 8-IN-1, 80013-B, 810544-C-A1, 8157, 82112C, 830118C, 830134C,
+  830425C-4391T, 831128C, 891227, 900218, A65AS, AX-40G, AX5705, BJ-56, BS-400R, BS-4040R, BS-5, CHINA_ER_SAN2,
+  COOLBOY, Coolgirl, CTC-09, CTC-12IN1, DANCE, DANCE2000, DRAGONFIGHTER, DRIPGAME, EDU2000, EH8113A, F-15,
+  FARID_SLROM_8-IN-1, FARID_UNROM_8-IN-1, G-146, GN-26, HP2018-A, HP898F, HPXX, JC-016-2, K-3006, K-3010, K-3033,
+  K-3036, K-3046, K-3071, K-3088, KONAMI-QTAI, KOF97, KS106C, KS3070, KS7012, KS7013B, KS7016, KS7017, KS7021A,
+  KS7031, KS7037, KS7057, N625090, L6IN1, LH10, LH32, LH51, MALISB, MARIO1-MALEE2, MINDKIDS, N49C-300,
+  NEWSTAR-GRM070-8IN1, NTD-03, OneBus, RESET-TXROM, RESETNROM-XIN1, RT-01, SA005-A, SA-9602B, SB-5013, SHERO,
+  SL1632, STREETFIGTER-GAME4IN1, T-262, T3H53, T4A54A, TH2131-1, TF1201, TJ-03, WAIXING-FS005, WAIXING-FW01, WS,
+  YOKO
+- Fixed mapper : 1, 11, 30, 45, 57, 90, 111, 142, 171, 176, 192, 195, 209, 211, 212, 215, 226, 235
+- Fixed UNIF mapper : CITYFIGHT, FS-304
+- Added video filters: 2xSaI,  Dot Matrix, PAL TV1x, PAL TV2x, PAL TV3x, PAL TV4x, Super 2xSaI, Super Eagle,
+  TV2x, TV3x, TV4x.
+- Migrated the project from autotools to cmake.
+- Added AppStream manifest.
+- Fixed high dpi support.
+- Fixed many many many other bugs.
+
 0.109 (Bug fixes release)
 - Fixed 'make install'.
 - Added support for mapper 210 and improved support for Nes 2.0 format.

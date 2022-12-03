@@ -134,7 +134,7 @@ void settings_pgs_parse(void) {
 	}
 
 	if (s.pgs) {
-		delete(s.pgs);
+		delete (s.pgs);
 		s.pgs = nullptr;
 	}
 
@@ -157,7 +157,7 @@ void settings_shp_parse(void) {
 	QString file;
 
 	if (s.shp) {
-		delete(s.shp);
+		delete (s.shp);
 		s.shp = nullptr;
 	}
 
@@ -212,7 +212,7 @@ void settings_jsc_parse(int index) {
 	QString file;
 
 	if (s.jsc) {
-		delete(s.jsc);
+		delete (s.jsc);
 		s.jsc = nullptr;
 	}
 

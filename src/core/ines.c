@@ -128,7 +128,8 @@ BYTE ines_load_rom(void) {
 			info.extra_from_db = 0;
 
 			info.mapper.id = ((ines.flags[FL8] & 0x0F) << 8) | (ines.flags[FL7] & 0xF0) | (ines.flags[FL6] >> 4);
-			info.mapper.submapper = (ines.flags[FL8] & 0xF0) >> 4;
+			info.mapper.submapper_nes20 = (ines.flags[FL8] & 0xF0) >> 4;
+			info.mapper.submapper = info.mapper.submapper_nes20;
 
 			// Submapper number. Mappers not using submappers set this to zero.
 			if (info.mapper.submapper == 0) {
@@ -599,6 +600,11 @@ void nes20_submapper(void) {
 				case 2:
 					info.mapper.submapper = CNROM_CNFL;
 					break;
+			}
+			break;
+		case 4:
+			if (info.mapper.submapper == 1) {
+				info.mapper.submapper = MMC6;
 			}
 			break;
 		case 7:

@@ -321,6 +321,7 @@ BYTE emu_load_rom(void) {
 	gui_egds_stop_unnecessary();
 
 	elaborate_rom_file:
+	info.format = HEADER_UNKOWN;
 	info.no_rom = FALSE;
 	info.cpu_rw_extern = FALSE;
 
@@ -333,7 +334,16 @@ BYTE emu_load_rom(void) {
 
 	info.doublebuffer = TRUE;
 
-	if (info.rom.file[0]) {
+	if (info.fds_only_bios) {
+		if (fds_load_rom() == EXIT_ERROR) {
+			info.rom.file[0] = 0;
+			info.rom.change_rom[0] = 0;
+			info.fds_only_bios = FALSE;
+			goto elaborate_rom_file;
+		};
+		info.turn_off = FALSE;
+		info.no_rom = FALSE;
+	} else if (info.rom.file[0]) {
 		uTCHAR *ext = emu_ctrl_rom_ext(info.rom.file);
 
 		if (!ustrcasecmp(ext, uL(".fds"))) {
@@ -649,10 +659,8 @@ BYTE emu_reset(BYTE type) {
 
 	gui_wdgrewind_play();
 
-	if (type == CHANGE_ROM) {
-		if (emu_ctrl_if_rom_exist() == EXIT_ERROR) {
-			return (EXIT_OK);
-		}
+	if ((type == CHANGE_ROM) && !info.fds_only_bios && (emu_ctrl_if_rom_exist() == EXIT_ERROR)) {
+		return (EXIT_OK);
 	}
 
 	info.reset = type;
@@ -984,11 +992,9 @@ void emu_info_rom(void) {
 			fprintf(stderr, "UNIF name     : %s\n", unif.name);
 		}
 
-		if (info.mapper.id == UNIF_MAPPER) {
-			fprintf(stderr, "UNIF mapper   : %u\n", unif.internal_mapper);
-		} else {
-			fprintf(stderr, "NES mapper    : %u\n", info.mapper.id);
-		}
+		info.mapper.id == UNIF_MAPPER
+			? fprintf(stderr, "UNIF mapper   : %u\n", unif.internal_mapper)
+			: fprintf(stderr, "NES mapper    : %u\n", info.mapper.id);
 	} else {
 		fprintf(stderr, "NES mapper    : %u\n", info.mapper.id);
 	}
@@ -996,10 +1002,18 @@ void emu_info_rom(void) {
 	{
 		fprintf(stderr, "submapper     : ");
 
-		if (info.mapper.submapper == DEFAULT) {
-			fprintf(stderr, "DEFAULT\n");
+		if (info.format == NES_2_0) {
+			fprintf(stderr, "%u", info.mapper.submapper_nes20);
+
+			info.mapper.submapper == DEFAULT
+				? fprintf(stderr, " (DEFAULT)\n")
+				: info.mapper.submapper == info.mapper.submapper_nes20
+					? fprintf(stderr, "\n")
+					: fprintf(stderr, " (%u)\n", info.mapper.submapper);
 		} else {
-			fprintf(stderr, "%u\n", info.mapper.submapper);
+			info.mapper.submapper == DEFAULT
+				? fprintf(stderr, "DEFAULT\n")
+				: fprintf(stderr, "%u\n", info.mapper.submapper);
 		}
 	}
 
@@ -1070,11 +1084,10 @@ void emu_info_rom(void) {
 		fprintf(stderr, "RAM PRG 8k    : %u", info.prg.ram.banks_8k_plus);
 		if (info.prg.ram.bat.banks) {
 			fprintf(stderr, " ( bat : %d - ", info.prg.ram.bat.banks);
-			if (info.prg.ram.bat.start == DEFAULT) {
-				fprintf(stderr, "DEFAULT )");
-			} else {
-				fprintf(stderr, "%d )", info.prg.ram.bat.start);
-			}
+
+			info.prg.ram.bat.start == DEFAULT
+				? fprintf(stderr, "DEFAULT )")
+				: fprintf(stderr, "%d )", info.prg.ram.bat.start);
 		}
 		fprintf(stderr, "\n");
 	}

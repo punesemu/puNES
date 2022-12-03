@@ -68,7 +68,7 @@ BYTE fds_load_rom(void) {
 	_rom_mem rom;
 	unsigned int i;
 
-	{
+	if (!info.fds_only_bios) {
 		BYTE found = TRUE;
 		uTCHAR rom_ext[2][10] = { uL(".fds\0"), uL(".FDS\0") };
 		FILE *fp;
@@ -117,6 +117,9 @@ BYTE fds_load_rom(void) {
 		}
 
 		fclose(fp);
+	} else {
+		rom.size = 0;
+		rom.data = NULL;
 	}
 
 	patcher_apply(&rom);
@@ -133,7 +136,10 @@ BYTE fds_load_rom(void) {
 	// riposiziono il puntatore
 	rom.position = 0;
 
-	if ((rom.data[rom.position++] == 'F') &&
+	if (info.fds_only_bios) {
+		fds.info.type = FDS_FORMAT_FDS;
+		fds.info.total_sides = 0;
+	} else if ((rom.data[rom.position++] == 'F') &&
 		(rom.data[rom.position++] == 'D') &&
 		(rom.data[rom.position++] == 'S') &&
 		(rom.data[rom.position++] == '\32')) {
@@ -214,7 +220,7 @@ BYTE fds_load_bios(void) {
 	}
 
 	gui_overlay_info_append_msg_precompiled(6, NULL);
-	fprintf(stderr, "'FDS bios not found\n");
+	fprintf(stderr, "FDS bios not found\n");
 	return (EXIT_ERROR);
 
 	fds_load_bios_founded:

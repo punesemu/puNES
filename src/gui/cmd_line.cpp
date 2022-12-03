@@ -318,5 +318,4 @@ static void usage(QString &name) {
 
 	dlg->show();
 	dlg->exec();
-	delete(dlg);
 }
