@@ -923,6 +923,10 @@
         <translation>打开配置文件夹(&amp;O)</translation>
     </message>
     <message>
+        <source>Start FDS Emulation &amp;without Disk</source>
+        <translation>无磁盘启动 FDS 模拟(&amp;W)</translation>
+    </message>
+    <message>
         <source>Ta&amp;pe</source>
         <translation>磁带(&amp;P)</translation>
     </message>
@@ -1310,16 +1314,16 @@
         <translation>复制</translation>
     </message>
     <message>
-        <source>New Cpu Ram</source>
-        <translation>新建 Cpu 内存</translation>
-    </message>
-    <message>
         <source>New Game Genie</source>
         <translation>新建 Game Genie</translation>
     </message>
     <message>
         <source>New Pro Action</source>
         <translation>新建 Pro Action</translation>
+    </message>
+    <message>
+        <source>New CPU Ram</source>
+        <translation>新建 CPU 内存</translation>
     </message>
 </context>
 <context>
