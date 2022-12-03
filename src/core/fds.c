@@ -252,13 +252,13 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 			break;
 		case FDS_DISK_EJECT:
 			fds.drive.disk_ejected = TRUE;
-			if (quiet == FALSE) {
+			if (!quiet) {
 				gui_overlay_info_append_msg_precompiled(7, NULL);
 			}
 			return;
 		case FDS_DISK_INSERT:
 			if (!fds.drive.disk_ejected) {
-				if (quiet == FALSE) {
+				if (!quiet) {
 					gui_overlay_info_append_msg_precompiled(8, NULL);
 				}
 				return;
@@ -268,7 +268,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 			fds.drive.gap_ended = FALSE;
 
 			fds.drive.disk_ejected = FALSE;
-			if (quiet == FALSE) {
+			if (!quiet) {
 				gui_overlay_info_append_msg_precompiled(9, NULL);
 			}
 			return;

@@ -155,7 +155,7 @@ BYTE gui_init(int *argc, char **argv) {
 }
 void gui_quit(void) {}
 BYTE gui_control_instance(void) {
-	if (qt.app->isSecondary() && (cfg->multiple_instances == FALSE)) {
+	if (qt.app->isSecondary() && !cfg->multiple_instances) {
 		if (info.rom.file[0]) {
 			unsigned int count = 0;
 
@@ -467,7 +467,7 @@ void gui_control_pause_bck(WORD event) {
 	BYTE found = FALSE;
 	int i;
 
-	if (cfg->bck_pause == FALSE) {
+	if (!cfg->bck_pause) {
 		return;
 	}
 
@@ -484,7 +484,7 @@ void gui_control_pause_bck(WORD event) {
 		}
 		gui.main_win_lfp = FALSE;
 	} else {
-		if (found == FALSE) {
+		if (!found) {
 			emu_pause(TRUE);
 			gui.main_win_lfp = TRUE;
 		}
@@ -590,7 +590,7 @@ void gui_max_speed_start(void) {
 	qt.mwin->qaction_extern.max_speed.start->only_one_trigger();
 }
 void gui_max_speed_stop(void) {
-	if (fps.max_speed == FALSE) {
+	if (!fps.max_speed) {
 		return;
 	}
 	qt.mwin->qaction_extern.max_speed.stop->only_one_trigger();

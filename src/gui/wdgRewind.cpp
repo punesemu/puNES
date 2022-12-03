@@ -130,7 +130,7 @@ void wdgRewind::set_enable_play_pause_forward(BYTE mode) {
 	set_enable_forward(mode);
 }
 void wdgRewind::first_backward(void) {
-	if (rwnd.active == FALSE) {
+	if (!rwnd.active) {
 		set_enable_play_pause_forward(TRUE);
 		rewind_init_operation();
 		rwnd.factor.backward = 0;
@@ -201,7 +201,7 @@ void wdgRewind::s_step_backward(UNUSED(bool checked)) {
 }
 void wdgRewind::s_play(UNUSED(bool checked)) {
 	rwnd.action = RWND_ACT_PLAY;
-	if (rwnd.active == FALSE) {
+	if (!rwnd.active) {
 		return;
 	}
 	gui_egds_stop_rwnd();
@@ -231,7 +231,7 @@ void wdgRewind::s_pause(UNUSED(bool checked)) {
 	gui_egds_start_rwnd();
 }
 void wdgRewind::s_step_forward(UNUSED(bool checked)) {
-	if ((rwnd.active == FALSE) || !step_autorepeat_timer_control()) {
+	if (!rwnd.active || !step_autorepeat_timer_control()) {
 		// il forward funziona solo dopo che si
 		// e' fatto un po' di backward.
 		return;
@@ -253,7 +253,7 @@ void wdgRewind::s_step_forward(UNUSED(bool checked)) {
 	step_autorepeat_timer = gui_get_ms();
 }
 void wdgRewind::s_fast_forward(UNUSED(bool checked)) {
-	if (rwnd.active == FALSE) {
+	if (!rwnd.active) {
 		// il forward funziona solo dopo che si
 		// e' fatto un po' di backward.
 		return;

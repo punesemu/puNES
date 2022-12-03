@@ -147,7 +147,7 @@ BYTE extcl_save_mapper_253(BYTE mode, BYTE slot, FILE *fp) {
 void extcl_wr_chr_253(WORD address, BYTE value) {
 	BYTE i = address >> 10;
 
-	if (((m253.chr_map[i] == 4) || (m253.chr_map[i] == 5)) && (m253.disabled_vram == FALSE)) {
+	if (((m253.chr_map[i] == 4) || (m253.chr_map[i] == 5)) && !m253.disabled_vram) {
 		chr.bank_1k[i][address & 0x3FF] = value;
 	}
 }
@@ -179,7 +179,7 @@ INLINE static void m253_update_chr(void) {
 	for (i = 0; i < 8 ; i++) {
 		value = m253.chr_map_high[i] | m253.chr_map[i];
 
-		if (((m253.chr_map[i] == 4) || (m253.chr_map[i] == 5)) && (m253.disabled_vram == FALSE)) {
+		if (((m253.chr_map[i] == 4) || (m253.chr_map[i] == 5)) && !m253.disabled_vram) {
 			chr.bank_1k[i] = &chr.extra.data[(value & 0x0001) << 10];
 		} else {
 			control_bank(info.chr.rom.max.banks_1k)

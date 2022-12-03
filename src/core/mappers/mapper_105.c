@@ -136,7 +136,7 @@ void extcl_cpu_wr_mem_105(WORD address, BYTE value) {
 		 * locking PRG ROM at $C000-$FFFF
 		 * to the last 16k bank.
 		 */
-		if (m105.prg.locked == FALSE) {
+		if (!m105.prg.locked) {
 			if (m105.prg.upper) {
 				map_prg_rom_8k(2, 2, m105.prg.upper | (info.prg.rom.max.banks_16k & 0x0F));
 				map_prg_rom_8k_update();

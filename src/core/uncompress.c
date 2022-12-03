@@ -253,7 +253,7 @@ uint32_t uncompress_storage_add_to_list(_uncompress_archive *archive, _uncompres
 		}
 	}
 
-	if (found == FALSE) {
+	if (!found) {
 		uncstorage.item = (_uncompress_storage_item *)realloc(uncstorage.item,
 			(uncstorage.count + 1) * sizeof(_uncompress_storage_item));
 		sitem = &uncstorage.item[uncstorage.count];

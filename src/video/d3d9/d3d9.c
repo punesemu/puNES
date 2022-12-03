@@ -178,7 +178,7 @@ BYTE d3d9_init(void) {
 					dev->hlsl_compliant = TRUE;
 				}
 
-				if (dev->hlsl_compliant == FALSE) {
+				if (!dev->hlsl_compliant) {
 					dev_info("shaders are not supported\n");
 				}
 
@@ -213,7 +213,7 @@ BYTE d3d9_init(void) {
 		}
 	}
 
-	if (d3d9.adapter->hlsl_compliant == FALSE) {
+	if (!d3d9.adapter->hlsl_compliant) {
 		MessageBox(NULL, "Adapter is not hlsl compliant", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -374,7 +374,7 @@ BYTE d3d9_context_create(void) {
 				vp->y += (vmh - vp->h) / 2.0f;
 			}
 
-			if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
+			if (overscan.enabled && !cfg->oscan_black_borders_fscr) {
 				float left = cfg->hflip_screen ? (float)overscan.borders->right : (float)overscan.borders->left;
 				float right = cfg->hflip_screen ? (float)overscan.borders->left : (float)overscan.borders->right;
 				float brd_l_x, brd_r_x, brd_u_y, brd_d_y;
@@ -529,7 +529,7 @@ BYTE d3d9_context_create(void) {
 		if (cfg->fullscreen) {
 			float div;
 
-			if ((gfx.is_wayland == FALSE) && !cfg->fullscreen_in_window) {
+			if (!gfx.is_wayland && !cfg->fullscreen_in_window) {
 				vmw *= gfx.device_pixel_ratio;
 				vmh *= gfx.device_pixel_ratio;
 			}
@@ -620,7 +620,7 @@ void d3d9_draw_scene(void) {
 	LPDIRECT3DSURFACE9 back_buffer;
 	UINT sindex, i;
 
-	if ((gui.start == FALSE) || (gfx.frame.in_draw == gfx.frame.filtered)) {
+	if (!gui.start || (gfx.frame.in_draw == gfx.frame.filtered)) {
 		return;
 	}
 
@@ -1204,7 +1204,7 @@ static BYTE d3d9_texture_create(_texture *texture, UINT index) {
 	return (EXIT_OK);
 }
 static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h, BOOL overlay) {
-	uint32_t clean_color = (cfg->palette == PALETTE_RAW) && (overlay == FALSE) ? 0x00FF0000 : 0x00;
+	uint32_t clean_color = (cfg->palette == PALETTE_RAW) && !overlay ? 0x00FF0000 : 0x00;
 	_texture_rect *rect = &texture->rect;
 	_shader *shd = &texture->shader;
 	_viewport vp = { 0, 0, (float)w, (float)h };
@@ -1682,7 +1682,7 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 	if (!(param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "POSITION"))) {
 		param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "POSITION0");
 	}
-	if (param && (indices[cgGetParameterResourceIndex(param)] == FALSE)) {
+	if (param && !indices[cgGetParameterResourceIndex(param)]) {
 		stream[0] = TRUE;
 		index = cgGetParameterResourceIndex(param);
 		indices[index] = TRUE;
@@ -1699,7 +1699,7 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 	if (!(param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "TEXCOORD"))) {
 		param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "TEXCOORD0");
 	}
-	if (param && (indices[cgGetParameterResourceIndex(param)] == FALSE)) {
+	if (param && !indices[cgGetParameterResourceIndex(param)]) {
 		stream[1] = TRUE;
 		texcoord[0] = TRUE;
 		index = cgGetParameterResourceIndex(param);
@@ -1715,7 +1715,7 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 	}
 
 	param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "TEXCOORD1");
-	if (param && (indices[cgGetParameterResourceIndex(param)] == FALSE)) {
+	if (param && !indices[cgGetParameterResourceIndex(param)]) {
 		stream[2] = TRUE;
 		texcoord[1] = TRUE;
 		index = cgGetParameterResourceIndex(param);
@@ -1733,7 +1733,7 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 	if (!(param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "COLOR"))) {
 		param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "COLOR0");
 	}
-	if (param && (indices[cgGetParameterResourceIndex(param)] == FALSE)) {
+	if (param && !indices[cgGetParameterResourceIndex(param)]) {
 		stream[3] = TRUE;
 		index = cgGetParameterResourceIndex(param);
 		indices[index] = TRUE;
@@ -1749,7 +1749,7 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 
 	// Stream {0, 1, 2, 3} might be already taken. Find first vacant stream
 	for (index = 0; index < 4; index++) {
-		if (stream[index] == FALSE) {
+		if (!stream[index]) {
 			break;
 		}
 	}

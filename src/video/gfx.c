@@ -521,7 +521,7 @@ void gfx_draw_screen(void) {
 		screen.wr = &screen.buff[screen.index];
 	}
 
-	if (screen.rd->ready == FALSE) {
+	if (!screen.rd->ready) {
 		screen.rd->ready = TRUE;
 	}
 }
@@ -555,7 +555,7 @@ BYTE gfx_palette_init(void) {
 void gfx_palette_update(void) {
 	WORD i;
 
-	if ((cfg->disable_swap_emphasis_pal == FALSE) && ((machine.type == PAL) || (machine.type == DENDY))) {
+	if (!cfg->disable_swap_emphasis_pal && ((machine.type == PAL) || (machine.type == DENDY))) {
 		palette_RGB.in_use = &palette_RGB.swapped[0];
 	} else {
 		palette_RGB.in_use = &palette_RGB.noswap[0];

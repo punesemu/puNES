@@ -105,7 +105,7 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 		}
 	}
 
-	if (found == FALSE) {
+	if (!found) {
 		patcher.patched = FALSE;
 		return (EXIT_ERROR);
 	}

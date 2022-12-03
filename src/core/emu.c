@@ -204,7 +204,7 @@ void emu_frame_debugger(void) {
 	if (debugger.mode == DBG_GO) {
 		// posso passare dal DBG_GO al DBG_STEP durante l'esecuzione di un frame intero
 		while ((info.frame_status == FRAME_STARTED) && (debugger.mode == DBG_GO)) {
-			if ((debugger.breakpoint == cpu.PC) && (debugger.breakpoint_after_step == FALSE)) {
+			if ((debugger.breakpoint == cpu.PC) && !debugger.breakpoint_after_step) {
 				debugger.mode = DBG_BREAKPOINT;
 				//gui_dlgdebugger_click_step();
 				break;
@@ -340,7 +340,7 @@ BYTE emu_load_rom(void) {
 			info.rom.change_rom[0] = 0;
 			info.fds_only_bios = FALSE;
 			goto elaborate_rom_file;
-		};
+		}
 		info.turn_off = FALSE;
 		info.no_rom = FALSE;
 	} else if (info.rom.file[0]) {
@@ -448,7 +448,7 @@ BYTE emu_load_rom(void) {
 			break;
 	}
 
-	if (nsf.enabled == FALSE) {
+	if (!nsf.enabled) {
 		cheatslist_read_game_cheats();
 	}
 
@@ -1118,7 +1118,7 @@ void emu_info_rom(void) {
 			}
 		}
 
-		if ((mapper.write_vram == FALSE) && chr_size()) {
+		if (!mapper.write_vram && chr_size()) {
 			fprintf(stderr, "CHR 4k vrom   : %-4lu [ %08X %ld ]\n",
 				(long unsigned)chr_size() / 0x1000,
 				info.crc32.chr,
@@ -1140,7 +1140,7 @@ void emu_info_rom(void) {
 
 		if (info.format == iNES_1_0) {
 			fprintf(stderr, "sha1prg       : %40s\n", info.sha1sum.prg.string);
-			if ((mapper.write_vram == FALSE) && chr_size()) {
+			if (!mapper.write_vram && chr_size()) {
 				fprintf(stderr, "shachr        : %40s\n", info.sha1sum.chr.string);
 			}
 		}
@@ -1244,7 +1244,7 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 			if (archive->patch.count > 0) {
 				is_patch = TRUE;
 			}
-			if (is_patch && (is_rom == FALSE) && !info.rom.file[0]) {
+			if (is_patch && !is_rom && !info.rom.file[0]) {
 				is_patch = FALSE;
 			}
 			if (is_rom) {
@@ -1287,7 +1287,7 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 		}
 	}
 
-	if (found == FALSE) {
+	if (!found) {
 		ustrncpy(info.rom.change_rom, info.rom.file, usizeof(info.rom.change_rom));
 		info.rom.change_rom[usizeof(info.rom.change_rom) - 1] = 0x00;
 		return (EXIT_ERROR);

@@ -120,7 +120,7 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 			events.keyb << _wdgScreen_keyboard_event(RELEASED, keyEvent->isAutoRepeat(), keyval, KEYBOARD);
 			events.mutex.unlock();
 		}
-	} else if ((tas.type == NOTAS) && (rwnd.active == FALSE)) {
+	} else if ((tas.type == NOTAS) && !rwnd.active) {
 		if ((event->type() == QEvent::MouseButtonPress) ||
 			(event->type() == QEvent::MouseButtonRelease) ||
 			(event->type() == QEvent::MouseButtonDblClick)) {
@@ -168,7 +168,7 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 			if (archive->patch.count > 0) {
 				is_patch = TRUE;
 			}
-			if (is_patch && (is_rom == FALSE) && !info.rom.file[0]) {
+			if (is_patch && !is_rom && !info.rom.file[0]) {
 				is_patch = FALSE;
 			}
 			if (is_rom) {

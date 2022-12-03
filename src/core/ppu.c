@@ -291,7 +291,7 @@ void ppu_tick(void) {
 				/* setto a 0 il bit 5, 6 ed il 7 del $2002 */
 				r2002.sprite_overflow = r2002.sprite0_hit = r2002.vblank = ppu.vblank = FALSE;
 				// serve assolutamente per la corretta lettura delle coordinate del puntatore zapper
-				if (info.zapper_is_present && (fps_fast_forward_enabled() == FALSE)) {
+				if (info.zapper_is_present && !fps_fast_forward_enabled()) {
 					memset((BYTE *)screen.wr->data, 0, screen_size());
 				}
 			} else if ((ppu.frame_x == (SHORT_SLINE_CYCLES - 1)) && (machine.type == NTSC)) {
@@ -307,7 +307,7 @@ void ppu_tick(void) {
 				ppu.sf.actual = FALSE;
 				if (ppu.odd_frame) {
 					if (r2001.bck_visible) {
-						if ((r2001.race.ctrl == FALSE) || (r2001.race.value & 0x08)) {
+						if (!r2001.race.ctrl || (r2001.race.value & 0x08)) {
 							ppu.sline_cycles = SHORT_SLINE_CYCLES;
 							ppu.sf.actual = TRUE;
 						}
@@ -534,7 +534,7 @@ void ppu_tick(void) {
 								put_sp
 							}
 						} else {
-							if (unlimited_spr == FALSE) {
+							if (!unlimited_spr) {
 								if (sprite[visible_spr].attrib & 0x20) {
 									/*
 									 * se non lo sono tutti e due, controllo la
@@ -1416,7 +1416,7 @@ INLINE static void ppu_oam_evaluation(void) {
 				 * la coordinata Y (byte 0), tratta il byte puntato
 				 * da byte_OAM come se fosse la coordinata Y.
 				 */
-				if (spr_ev.evaluate == FALSE) {
+				if (!spr_ev.evaluate) {
 					/* incremento l'indice del byte da leggere */
 					if (++spr_ev.byte_OAM == 4) {
 						spr_ev.byte_OAM = 0;

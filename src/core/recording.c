@@ -207,7 +207,7 @@ void recording_start(uTCHAR *filename, int format) {
 		ffmpeg_fstream_close(&ffmpeg.audio);
 	}
 
-	if ((ffmpeg.video.used | ffmpeg.audio.used) == FALSE) {
+	if (!(ffmpeg.video.used | ffmpeg.audio.used)) {
 		goto recording_start_end;
 	}
 
@@ -240,7 +240,7 @@ void recording_start(uTCHAR *filename, int format) {
 void recording_finish(BYTE from_quit) {
 	int ret;
 
-	if (from_quit == FALSE) {
+	if (!from_quit) {
 		emu_thread_pause();
 		gfx_thread_pause();
 	}
@@ -286,7 +286,7 @@ void recording_finish(BYTE from_quit) {
 	gui_update_recording_widgets();
 	gui_update_apu_channels_widgets();
 
-	if (from_quit == FALSE) {
+	if (!from_quit) {
 		gfx_thread_continue();
 		emu_thread_continue();
 	}

@@ -364,7 +364,7 @@ void mainWindow::update_recording_widgets(void) {
 
 	emit statusbar->rec->et_blink_icon();
 
-	if ((info.no_rom | info.turn_off | rwnd.active) == FALSE) {
+	if (!(info.no_rom | info.turn_off | rwnd.active)) {
 		if (info.recording_on_air) {
 			if (recording_format_type() == REC_FORMAT_AUDIO) {
 				audio = true;
@@ -400,7 +400,7 @@ void mainWindow::update_recording_widgets(void) {
 
 	emit statusbar->rec->et_blink_icon();
 
-	if ((info.no_rom | info.turn_off | rwnd.active) == FALSE) {
+	if (!(info.no_rom | info.turn_off | rwnd.active)) {
 		audio = true;
 		if (info.recording_on_air) {
 			sa = tr("Stop &WAV recording");
@@ -426,7 +426,7 @@ void mainWindow::set_language(int lang) {
 	qApp->removeTranslator(translator);
 
 	// solo per testare le nuove traduzioni
-	if (gui.start == FALSE) {
+	if (!gui.start) {
 		QFile ext(uQString(gui_application_folder()) + "/test.qm");
 
 		if (ext.exists()) {
@@ -504,7 +504,7 @@ void mainWindow::shcjoy_stop(void) {
 	shcjoy.timer->stop();
 }
 void mainWindow::control_visible_cursor(void) {
-	if ((nsf.enabled == FALSE) && (gmouse.hidden == FALSE) && (input_draw_target() == FALSE)) {
+	if (!nsf.enabled && !gmouse.hidden && !input_draw_target()) {
 		if ((gui_get_ms() - gmouse.timer) >= 2000) {
 			gui_cursor_hide(TRUE);
 		}
@@ -801,7 +801,7 @@ QScreen *mainWindow::win_handle_screen(void) {
 	return (screen);
 }
 void mainWindow::shout_into_mic(BYTE mode) {
-	if ((tas.type == NOTAS) && (rwnd.active == FALSE)) {
+	if ((tas.type == NOTAS) && !rwnd.active) {
 		if (mode) {
 			mic.mode = MIC_RESET;
 			mic.enable = TRUE;
@@ -1052,7 +1052,7 @@ void mainWindow::update_menu_nes(void) {
 		action_Shout_into_Microphone->setEnabled(cfg->input.controller_mode == CTRL_MODE_FAMICOM);
 	}
 
-	if (vs_system.enabled && (rwnd.active == FALSE)) {
+	if (vs_system.enabled && !rwnd.active) {
 		action_Insert_Coin->setEnabled(true);
 	} else {
 		action_Insert_Coin->setEnabled(false);
@@ -1061,13 +1061,13 @@ void mainWindow::update_menu_nes(void) {
 	update_fds_menu();
 	update_tape_menu();
 
-	if (info.pause_from_gui && (rwnd.active == FALSE)) {
+	if (info.pause_from_gui && !rwnd.active) {
 		action_Pause->setChecked(true);
 	} else {
 		action_Pause->setChecked(false);
 	}
 
-	if ((nsf.enabled == FALSE) && (rwnd.active == FALSE)) {
+	if (!nsf.enabled && !rwnd.active) {
 		action_Toogle_Fast_Forward->setEnabled(true);
 
 		if (fps.fast_forward) {
@@ -1116,7 +1116,7 @@ void mainWindow::update_menu_state(void) {
 void mainWindow::update_fds_menu(void) {
 	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
 
-	if (fds.info.enabled && !info.fds_only_bios && (rwnd.active == FALSE)) {
+	if (fds.info.enabled && !info.fds_only_bios && !rwnd.active) {
 		if (fds.drive.disk_ejected) {
 			action_text(action_Eject_Insert_Disk, tr("&Insert disk"), sc);
 		} else {
@@ -1228,19 +1228,19 @@ void mainWindow::s_set_fullscreen(void) {
 		org_geom = geometry();
 		visibility.menubar = menubar->isVisible();
 		visibility.toolbars = toolbar->isVisible();
-		if (gfx.is_wayland == FALSE) {
+		if (!gfx.is_wayland) {
 			// muovo la finestra nell'angolo superiore del monitor, e' importante
 			// perche' in caso di cambio di risoluzione nell fullscreen, se posizionata
 			// nella parte destra del monitor potrebbe non essere visualizzata correttamente.
 			// E' importante che lo spostamento avvenga prima dell'hide().
-			if (cfg->fullscreen_in_window == FALSE) {
+			if (!cfg->fullscreen_in_window) {
 				QRect mgeom = win_handle_screen()->geometry();
 
 				move(mgeom.x() - (geometry().x() - x()), mgeom.y() - (geometry().y() - y()));
 			}
 			hide();
 #if defined (FULLSCREEN_RESFREQ)
-			if (cfg->fullscreen_in_window == FALSE) {
+			if (!cfg->fullscreen_in_window) {
 				delay = gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, FALSE);
 			}
 #endif
@@ -1249,7 +1249,7 @@ void mainWindow::s_set_fullscreen(void) {
 	} else {
 		// su Fedora 35 (Wayland, Gnome 41.5 e QT 5.15.2) il Fullscreen non funziona e
 		// quello a finestra funziona solo se non eseguo l'hide().
-		if (gfx.is_wayland == FALSE) {
+		if (!gfx.is_wayland) {
 			hide();
 		}
 		if (gfx.type_of_fscreen_in_use == FULLSCR) {
@@ -1498,7 +1498,7 @@ void mainWindow::s_start_stop_audio_recording(void) {
 	}
 
 #if defined (WITH_FFMPEG)
-	if (info.recording_on_air == FALSE) {
+	if (!info.recording_on_air) {
 		wdgRecGetSaveFileName *fd = new wdgRecGetSaveFileName(this);
 		QString file;
 
@@ -1519,7 +1519,7 @@ void mainWindow::s_start_stop_audio_recording(void) {
 		recording_finish(FALSE);
 	}
 #else
-	if (info.recording_on_air == FALSE) {
+	if (!info.recording_on_air) {
 		QStringList filters;
 		QString file, dir;
 		QFileInfo rom = QFileInfo(uQString(info.rom.file));
@@ -1565,7 +1565,7 @@ void mainWindow::s_start_stop_video_recording(void) {
 		return;
 	}
 
-	if (info.recording_on_air == FALSE) {
+	if (!info.recording_on_air) {
 		wdgRecGetSaveFileName *fd = new wdgRecGetSaveFileName(this);
 		QString file;
 
@@ -1601,9 +1601,9 @@ void mainWindow::s_pause(void) {
 	update_menu_nes();
 }
 void mainWindow::s_fast_forward(void) {
-	if (nsf.enabled == FALSE) {
+	if (!nsf.enabled) {
 		emu_thread_pause();
-		if (fps.fast_forward == FALSE) {
+		if (!fps.fast_forward) {
 			egds->start_ff();
 			fps_fast_forward_start();
 		} else {
@@ -1624,7 +1624,7 @@ void mainWindow::s_max_speed_start(void) const {
 	emu_thread_continue();
 }
 void mainWindow::s_max_speed_stop(void) const {
-	if (fps.max_speed == FALSE) {
+	if (!fps.max_speed) {
 		return;
 	}
 	emu_thread_pause();
@@ -2311,14 +2311,14 @@ void mainWindow::s_shcut_save_settings(void) {
 	dlgsettings->pushButton_Save_Settings->click();
 }
 void mainWindow::s_shcut_rwnd_active_deactive_mode(void) const {
-	if (rwnd.active == FALSE) {
+	if (!rwnd.active) {
 		toolbar->rewind->toolButton_Pause->click();
 	} else {
 		toolbar->rewind->toolButton_Play->click();
 	}
 }
 void mainWindow::s_shcut_rwnd_step_backward(void) const {
-	if (rwnd.active == FALSE) {
+	if (!rwnd.active) {
 		return;
 	}
 	if (toolbar->rewind->step_autorepeat_timer_control()) {
@@ -2326,7 +2326,7 @@ void mainWindow::s_shcut_rwnd_step_backward(void) const {
 	}
 }
 void mainWindow::s_shcut_rwnd_step_forward(void) const {
-	if (rwnd.active == FALSE) {
+	if (!rwnd.active) {
 		return;
 	}
 	if (toolbar->rewind->step_autorepeat_timer_control()) {
@@ -2334,25 +2334,25 @@ void mainWindow::s_shcut_rwnd_step_forward(void) const {
 	}
 }
 void mainWindow::s_shcut_rwnd_fast_backward(void) const {
-	if (rwnd.active == FALSE) {
+	if (!rwnd.active) {
 		return;
 	}
 	toolbar->rewind->toolButton_Fast_Backward->click();
 }
 void mainWindow::s_shcut_rwnd_fast_forward(void) const {
-	if (rwnd.active == FALSE) {
+	if (!rwnd.active) {
 		return;
 	}
 	toolbar->rewind->toolButton_Fast_Forward->click();
 }
 void mainWindow::s_shcut_rwnd_play(void) const {
-	if (rwnd.active == FALSE) {
+	if (!rwnd.active) {
 		return;
 	}
 	toolbar->rewind->toolButton_Play->click();
 }
 void mainWindow::s_shcut_rwnd_pause(void) const {
-	if (rwnd.active == FALSE) {
+	if (!rwnd.active) {
 		return;
 	}
 	toolbar->rewind->toolButton_Pause->click();

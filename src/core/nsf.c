@@ -575,7 +575,7 @@ void extcl_audio_samples_mod_nsf(SWORD *samples, int count) {
 	//timer dell'effect
 	nsf.timers.effect += nsf.timers.diff;
 
-	if (nsf.timers.update_only_diff == FALSE) {
+	if (!nsf.timers.update_only_diff) {
 		// timer della canzone
 		nsf.timers.song += nsf.timers.diff;
 
@@ -1005,7 +1005,7 @@ static void nsf_effect_raw(BYTE solid) {
 			}
 		}
 
-		if (solid == FALSE) {
+		if (!solid) {
 			y_last = y;
 		}
 	}
@@ -1066,7 +1066,7 @@ static void nsf_effect_hanning_window(BYTE solid) {
 			}
 		}
 
-		if (solid == FALSE) {
+		if (!solid) {
 			y_last = y;
 		}
 	}
@@ -1165,7 +1165,8 @@ static void nsf_effect_bars(void) {
 	for (count = 0; count < bars; count++) {
 		int a, b, x1, x2;
 		double value = (bar[count] * 16383.0f) / (16384.0f / (double)(nsf.effect_bars_coords.h - 5));
-		BYTE y = (BYTE)((nsf.effect_bars_coords.y2 - 5) - (value * (cfg->apu.channel[APU_MASTER] * cfg->apu.volume[APU_MASTER])));
+
+		y = (BYTE)((nsf.effect_bars_coords.y2 - 5) - (value * (cfg->apu.channel[APU_MASTER] * cfg->apu.volume[APU_MASTER])));
 
 		x1 = (int)(nsf.effect_bars_coords.x1 + ((nsf.effect_bars_coords.w / bars) * count));
 		x2 = (int)(x1 + (nsf.effect_bars_coords.w / bars));
@@ -1640,7 +1641,7 @@ static void nsf_draw_controls(void) {
 
 	// indicatore effetto
 	{
-		int w = (SCR_COLUMNS - (NSF_EFFECTS * (NSF_GUI_EFFECT_BOOKMARK_W + 2))) / 2;
+		w = (SCR_COLUMNS - (NSF_EFFECTS * (NSF_GUI_EFFECT_BOOKMARK_W + 2))) / 2;
 
 		if (nsf.draw_mask_frames) {
 			dos_hline(0, NSF_GUI_EFFECT_Y - 1, w - 1, doscolor(DOS_BROWN));
@@ -1713,7 +1714,7 @@ static char *nsf_print_number(unsigned int song, BYTE decimal, int color) {
 	memset(cbuff, 0x00, sizeof(cbuff));
 
 	for (i = 3 - decimal; i < 3; i++) {
-		if ((is_normal == FALSE) && (ibuff[i] > 0)) {
+		if (!is_normal && (ibuff[i] > 0)) {
 			is_normal = TRUE;
 			sprintf(cbuff + strlen(cbuff), "%s", nsf_print_color(color));
 		}
@@ -1723,8 +1724,9 @@ static char *nsf_print_number(unsigned int song, BYTE decimal, int color) {
 	return (cbuff);
 }
 static char *nsf_print_time(double timer, BYTE mode, int color) {
-	BYTE i, is_normal = FALSE;
+	BYTE is_normal = FALSE;
 	static char buff[300];
+	unsigned int i;
 	int tmp;
 
 	for (i = 0; i < 4; i++) {
@@ -1759,15 +1761,15 @@ static char *nsf_print_time(double timer, BYTE mode, int color) {
 			}
 			sprintf(buff + strlen(buff), "[gray]%s", nsf_print_number(tmp, 2, color));
 		}
-		if (is_last == FALSE) {
+		if (!is_last) {
 			sprintf(buff + strlen(buff), "[gray]:");
 		}
 	}
 
 	if (mode == 1) {
 		static char negative[sizeof(buff)];
-		char tmp[sizeof(negative) + 1];
-		unsigned int i, index_zero = 0;
+		char chtmp[sizeof(negative) + 1];
+		unsigned int index_zero = 0;
 
 		for (i = 0; i < strlen(buff); i++) {
 			if ((buff[i] < '1') || (buff[i] > '9')) {
@@ -1776,13 +1778,13 @@ static char *nsf_print_time(double timer, BYTE mode, int color) {
 				}
 				continue;
 			}
-			snprintf(tmp, sizeof(tmp), "%s-%s", nsf_print_color(color), &buff[index_zero + 1]);
-			if ((index_zero + strlen(tmp)) >= sizeof(negative)) {
+			snprintf(chtmp, sizeof(chtmp), "%s-%s", nsf_print_color(color), &buff[index_zero + 1]);
+			if ((index_zero + strlen(chtmp)) >= sizeof(negative)) {
 				return (buff);
 			}
 			buff[index_zero] = 0;
 			strncpy(negative, buff, sizeof(negative));
-			strncpy(negative + index_zero, tmp, sizeof(negative) - index_zero);
+			strncpy(negative + index_zero, chtmp, sizeof(negative) - index_zero);
 			return (negative);
 		}
 	}
@@ -1902,7 +1904,7 @@ static void nsf_text_curtain(_nsf_text_curtain *curtain, BYTE mode) {
 			_dos_text(curtain->x, curtain->y, -1, -1, curtain->redraw.bottom, -1, curtain->line[curtain->index].text);
 		}
 		if (curtain->timer <= 0) {
-			if (curtain->pause == FALSE) {
+			if (!curtain->pause) {
 				dos_hline(curtain->x, curtain->y + curtain->borders.bottom, curtain->rows * dospf(1), doscolor(DOS_BLACK));
 
 				_dos_text(curtain->x, curtain->y, -1, -1, curtain->borders.bottom, -1, curtain->line[curtain->index].text);

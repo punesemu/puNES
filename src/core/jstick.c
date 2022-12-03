@@ -33,7 +33,7 @@ thread_funct(js_detection_loop, void *arg);
 
 const _js_db_device *js_search_in_db(int index);
 
-_js js[PORT_MAX], js_shcut;
+_js jsp[PORT_MAX], js_shcut;
 _jstick jstick;
 
 void js_init(BYTE first_time) {
@@ -44,8 +44,8 @@ void js_init(BYTE first_time) {
 	jstick.last_control = gui_get_ms();
 
 	for (i = PORT1; i < PORT_MAX; i++) {
-		js_reset(&js[i]);
-		memcpy(&js[i].guid, &port[i].jguid, sizeof(_input_guid));
+		js_reset(&jsp[i]);
+		memcpy(&jsp[i].guid, &port[i].jguid, sizeof(_input_guid));
 	}
 
 	if (first_time) {
@@ -62,7 +62,7 @@ void js_init(BYTE first_time) {
 		}
 
 		for (i = PORT1; i < PORT_MAX; i++) {
-			thread_mutex_init(js[i].lock);
+			thread_mutex_init(jsp[i].lock);
 		}
 
 		thread_mutex_init(js_shcut.lock);
@@ -87,13 +87,13 @@ void js_quit(BYTE last_time) {
 		jstick.jdd.count = 0;
 
 		for (i = PORT1; i < PORT_MAX; i++) {
-			thread_mutex_destroy(js[i].lock);
+			thread_mutex_destroy(jsp[i].lock);
 		}
 		thread_mutex_destroy(js_shcut.lock);
 	}
 
 	for (i = PORT1; i < PORT_MAX; i++) {
-		js[i].jdev = NULL;
+		jsp[i].jdev = NULL;
 	}
 
 	js_os_quit(last_time);
@@ -533,7 +533,7 @@ void js_jdev_scan(void) {
 		js_os_jdev_scan();
 
 		for (i = PORT1; i < PORT_MAX; i++) {
-			js_jdev_update(&js[i], TRUE, i);
+			js_jdev_update(&jsp[i], TRUE, i);
 		}
 		js_jdev_update(&js_shcut, FALSE, 0);
 
@@ -551,7 +551,7 @@ void js_jdev_update(_js *js, BYTE enable_decode, BYTE port_index) {
 		js->inited = FALSE;
 		js->input_decode_event = NULL;
 
-		if (js_is_null(&js->guid) == FALSE) {
+		if (!js_is_null(&js->guid)) {
 			int i;
 
 			for (i = 0; i < MAX_JOYSTICK; i++) {
@@ -566,7 +566,7 @@ void js_jdev_update(_js *js, BYTE enable_decode, BYTE port_index) {
 				}
 			}
 		}
-	} else if (JSJDEV->present == FALSE) {
+	} else if (!JSJDEV->present) {
 		js->jdev = NULL;
 		js->inited = FALSE;
 		js->input_decode_event = NULL;
@@ -644,7 +644,7 @@ size_t js_jdev_sizeof_stdctrl(void) {
 	return (sizeof(jstick.jdd.devices[0].stdctrl));
 }
 
-void js_jdev_read_port(_js *js, _port *port) {
+void js_jdev_read_port(_js *js, _port *prt) {
 	_js_device *jdev;
 
 	thread_mutex_lock(js->lock);
@@ -667,7 +667,7 @@ void js_jdev_read_port(_js *js, _port *port) {
 					if (jsx->used & jsx->enabled)  {
 						if (js_jdev_update_axs(jdev, i, FALSE, (int)a, &value, &mode, deadzone) == EXIT_OK) {
 							if (value && js->input_decode_event) {
-								js->input_decode_event(mode, FALSE, value, JOYSTICK, port);
+								js->input_decode_event(mode, FALSE, value, JOYSTICK, prt);
 							}
 						}
 					}
@@ -679,7 +679,7 @@ void js_jdev_read_port(_js *js, _port *port) {
 				if (jsx->used & jsx->enabled) {
 					if (js_jdev_update_btn(jdev, FALSE, (int)i, &value, &mode) == EXIT_OK) {
 						if (value && js->input_decode_event) {
-							js->input_decode_event(mode, FALSE, value, JOYSTICK, port);
+							js->input_decode_event(mode, FALSE, value, JOYSTICK, prt);
 						}
 					}
 				}
@@ -852,7 +852,7 @@ void js_scan_thread_quit(void) {
 thread_funct(js_jdev_read_events_loop, void *arg) {
 	_js_device *jdev = (_js_device *)arg;
 
-	while (info.stop == FALSE) {
+	while (!info.stop) {
 		thread_mutex_lock(jdev->lock);
 
 		if (jdev->present) {
@@ -868,7 +868,7 @@ thread_funct(js_jdev_read_events_loop, void *arg) {
 	thread_funct_return();
 }
 thread_funct(js_detection_loop, UNUSED(void *arg)) {
-	while (info.stop == FALSE) {
+	while (!info.stop) {
 		// gestione pads
 		js_jdev_scan();
 		// gestione shortcuts

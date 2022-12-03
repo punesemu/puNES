@@ -40,7 +40,7 @@ void fps_init(void) {
 	memset(&fps.info, 0x00, sizeof(fps.info));
 	fps.gfx = 0;
 
-	if (fps_fast_forward_enabled() == FALSE) {
+	if (!fps_fast_forward_enabled()) {
 		fps_machine_ms(1.0f);
 	}
 
@@ -50,7 +50,7 @@ void fps_init(void) {
 
 void fps_fast_forward_estimated_ms(void) {
 	if (fps.fast_forward) {
-		if (fps.max_speed == FALSE) {
+		if (!fps.max_speed) {
 			ff_estimated_ms();
 		}
 	} else if (fps.max_speed) {
@@ -68,7 +68,7 @@ void fps_fast_forward_start(void) {
 	fps_fast_forward_estimated_ms();
 }
 void fps_fast_forward_stop(void) {
-	if (fps.fast_forward == FALSE) {
+	if (!fps.fast_forward) {
 		return;
 	}
 	fps.fast_forward = FALSE;
@@ -94,7 +94,7 @@ void fps_max_speed_start(void) {
 	fps_max_speed_estimated_ms();
 }
 void fps_max_speed_stop(void) {
-	if (fps.max_speed == FALSE) {
+	if (!fps.max_speed) {
 		return;
 	}
 	fps.max_speed = FALSE;

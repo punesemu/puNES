@@ -374,7 +374,7 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 
 	js_jdev_type(jdev);
 
-	if (is_xinput == FALSE) {
+	if (!is_xinput) {
 		is_xinput = js_jdev_is_xinput(jdev);
 	}
 
@@ -459,7 +459,7 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 		}
 	}
 
-	if (jdev->present == FALSE) {
+	if (!jdev->present) {
 		HRESULT rc;
 		IDirectInputDeviceW *didevice;
 		IDirectInputDevice8W *di8device;
@@ -804,7 +804,7 @@ static BOOL CALLBACK cb_enum_dev(LPCDIDEVICEINSTANCEW instance, LPVOID context) 
 					jd = jdev;
 				}
 			} else if (js_guid_cmp(&jdev->guid, (_input_guid *)&instance->guidInstance)) {
-				jd = jdev->present == FALSE ? jdev : NULL;
+				jd = !jdev->present ? jdev : NULL;
 				break;
 			}
 		}

@@ -286,7 +286,7 @@ BYTE input_draw_target(void) {
 	int i;
 
 	if (vs_system.enabled) {
-		if ((info.extra_from_db & VSZAPPER) && (cfg->input.hide_zapper_cursor == FALSE)) {
+		if ((info.extra_from_db & VSZAPPER) && !cfg->input.hide_zapper_cursor) {
 			return (TRUE);
 		}
 		return (FALSE);
@@ -295,7 +295,7 @@ BYTE input_draw_target(void) {
 	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
 		switch (cfg->input.expansion) {
 			case CTRL_ZAPPER:
-				if (cfg->input.hide_zapper_cursor == FALSE) {
+				if (!cfg->input.hide_zapper_cursor) {
 					return (TRUE);
 				}
 				return (FALSE);
@@ -304,7 +304,7 @@ BYTE input_draw_target(void) {
 		}
 	} else {
 		for (i = PORT1; i < PORT_MAX; i++) {
-			if ((port[i].type == CTRL_ZAPPER) && (cfg->input.hide_zapper_cursor == FALSE)) {
+			if ((port[i].type == CTRL_ZAPPER) && !cfg->input.hide_zapper_cursor) {
 				return (TRUE);
 			}
 		}

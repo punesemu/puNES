@@ -349,7 +349,7 @@ BYTE ines_load_rom(void) {
 		// che la rom non ha CHR Rom e che quindi la CHR Ram
 		// la trattero' nell'inizializzazione della mapper
 		// (perche' alcune mapper ne hanno 16k, altre 8k).
-		if (mapper.write_vram == FALSE) {
+		if (!mapper.write_vram) {
 			// alloco la CHR Rom
 			if (map_chr_malloc(info.chr.rom.banks_8k * 0x2000, 0x00, TRUE) == EXIT_ERROR) {
 				free(rom.data);
@@ -394,7 +394,7 @@ BYTE ines_load_rom(void) {
 			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
 			info.crc32.total = info.crc32.prg;
 
-			if ((mapper.write_vram == FALSE) && chr_size()) {
+			if (!mapper.write_vram && chr_size()) {
 				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
 				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.total);
 			}

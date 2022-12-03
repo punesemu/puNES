@@ -23,7 +23,7 @@
 BYTE snd_handler(void) {
 	if (snd.cache->bytes_available >= snd.buffer.size) {
 		return (EXIT_ERROR);
-	} else if (fps_fast_forward_enabled() == FALSE) {
+	} else if (!fps_fast_forward_enabled()) {
 		double landmark = snd.buffer.limit.low;
 		double percent = ((((double)snd.cache->bytes_available) / landmark) * 100.0f) - 100.0f;
 		double factor = 1.0f + ((((1.0f / (double)machine.fps) / 100.0f) * 1.0f) * percent);

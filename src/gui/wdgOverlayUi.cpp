@@ -942,7 +942,7 @@ void overlayWidgetInputPort::update_widget(void) {
 			break;
 	}
 
-	if ((cfg->txt_on_screen == FALSE) || ((input_port > PORT1) && (cfg->scale == X1)) || (type == CTRL_DISABLED)) {
+	if (!cfg->txt_on_screen || ((input_port > PORT1) && (cfg->scale == X1)) || (type == CTRL_DISABLED)) {
 		hide = true;
 	} else if (cfg->input_display) {
 		hide = false;

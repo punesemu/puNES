@@ -348,7 +348,7 @@ void wdgSettingsGeneral::s_fast_forward_velocity(bool checked) {
 
 		cfg->ff_velocity = velocity;
 
-		if (nsf.enabled == FALSE) {
+		if (!nsf.enabled) {
 			if (fps.fast_forward) {
 				emu_thread_pause();
 				fps_fast_forward_estimated_ms();

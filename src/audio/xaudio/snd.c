@@ -144,7 +144,7 @@ BYTE snd_init(void) {
 #pragma GCC diagnostic pop
 #endif
 #endif
-		if (ds8.available == FALSE) {
+		if (!ds8.available) {
 			fprintf(stderr, "DirectSound: System doesn't appear to have DS8.");
 		}
 	}
@@ -236,7 +236,7 @@ void snd_thread_continue(void) {
 		snd_thread.action = ST_RUN;
 
 		if (snd_dummy_enabled && snd.initialized) {
-			while (snd_thread.in_run == FALSE) {
+			while (!snd_thread.in_run) {
 				gui_sleep(1);
 			}
 		}
@@ -743,7 +743,7 @@ static thread_funct(snd_dummy_thread_loop, UNUSED(void *data)) {
 		if (snd_thread.action == ST_STOP) {
 			snd_thread.in_run = FALSE;
 			break;
-		} else if ((snd_thread.action == ST_PAUSE) || (snd.initialized == FALSE) || (cbd.bytes_available < len)) {
+		} else if ((snd_thread.action == ST_PAUSE) || !snd.initialized || (cbd.bytes_available < len)) {
 			snd_thread.in_run = FALSE;
 			gui_sleep(1);
 			continue;

@@ -157,7 +157,7 @@ void snd_thread_continue(void) {
 		snd_thread.action = ST_RUN;
 
 		if (snd.initialized) {
-			while (snd_thread.in_run == FALSE) {
+			while (!snd_thread.in_run) {
 				gui_sleep(1);
 			}
 		}
@@ -376,7 +376,7 @@ static thread_funct(sndio_thread_loop, UNUSED(void *data)) {
 		if (snd_thread.action == ST_STOP) {
 			snd_thread.in_run = FALSE;
 			break;
-		} else if ((snd_thread.action == ST_PAUSE) || (snd.initialized == FALSE)) {
+		} else if ((snd_thread.action == ST_PAUSE) || !snd.initialized) {
 			snd_thread.in_run = FALSE;
 			gui_sleep(1);
 			continue;

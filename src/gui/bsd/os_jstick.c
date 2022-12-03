@@ -249,7 +249,7 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 	}
 	hid_end_parse(hdata);
 
-	if ((is_a_joystick == FALSE) && ((jdev->info.axes == 0) && (jdev->info.buttons == 0) && (jdev->info.hats == 0))) {
+	if (!is_a_joystick && ((jdev->info.axes == 0) && (jdev->info.buttons == 0) && (jdev->info.hats == 0))) {
 		fprintf(stderr, "%s: is not a joystick\n", jdev->dev);
 		js_os_jdev_close(jdev);
 		return;
@@ -308,7 +308,7 @@ void js_os_jdev_scan(void) {
 
 		thread_mutex_lock(jdev->lock);
 
-		if (jdev->present == FALSE) {
+		if (!jdev->present) {
 			js_os_jdev_open(jdev, NULL);
 		}
 

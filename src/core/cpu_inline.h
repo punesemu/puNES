@@ -272,7 +272,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 					} else {
 						cpu.openbus = prg.ram.data[address & 0x1FFF];
 					}
-				} else if (info.mapper.ram_plus_op_controlled_by_mapper == FALSE) {
+				} else if (!info.mapper.ram_plus_op_controlled_by_mapper) {
 					cpu.openbus = prg.ram_plus_8k[address & 0x1FFF];
 				}
 			}
@@ -999,7 +999,7 @@ void cpu_wr_mem(WORD address, BYTE value) {
 					} else {
 						prg.ram.data[address & 0x1FFF] = value;
 					}
-				} else if (info.mapper.ram_plus_op_controlled_by_mapper == FALSE) {
+				} else if (!info.mapper.ram_plus_op_controlled_by_mapper) {
 					prg.ram_plus_8k[address & 0x1FFF] = value;
 				}
 			}
@@ -1642,7 +1642,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 				r4011.cycles = r4011.frames = 0;
 				r4011.value = value;
 
-				if ((nsf.enabled == FALSE) && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
+				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
 					overclock.DMC_in_use = TRUE;
 					ppu_sclines.total = machine.total_lines;
 					ppu_sclines.vint = machine.vint_lines;
@@ -1653,7 +1653,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 			if (address == 0x4012) {
 				DMC.address_start = (value << 6) | 0xC000;
 
-				if ((nsf.enabled == FALSE) && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
+				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
 					overclock.DMC_in_use = FALSE;
 					ppu_overclock_update()
 					ppu_overclock_control()
@@ -1664,7 +1664,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 				/* sample length */
 				DMC.length = (value << 4) | 0x01;
 
-				if ((nsf.enabled == FALSE) && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
+				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
 					overclock.DMC_in_use = FALSE;
 					ppu_overclock_update()
 					ppu_overclock_control()
@@ -2215,7 +2215,7 @@ INLINE static void tick_hw(BYTE value) {
 	irq.before = irq.high;
 	ppu_tick();
 
-	if (overclock.in_extra_sclines == FALSE) {
+	if (!overclock.in_extra_sclines) {
 		apu_tick(&value);
 	}
 
