@@ -1294,10 +1294,6 @@
         <translation>提交</translation>
     </message>
     <message>
-        <source>New</source>
-        <translation>新建</translation>
-    </message>
-    <message>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -2797,12 +2793,56 @@
         <source>Preferred resolution </source>
         <translation>建议分辨率</translation>
     </message>
+    <message>
+        <source>2xSaI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dot Matrix</source>
+        <translation>点阵</translation>
+    </message>
+    <message>
+        <source>PAL TV1x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL TV2x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL TV3x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL TV4x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Super 2xSaI</source>
+        <translation>超级 2xSaI</translation>
+    </message>
+    <message>
+        <source>Super Eagle</source>
+        <translation>超级 Eagle</translation>
+    </message>
+    <message>
+        <source>TV2x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV3x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV4x</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>wdgState</name>
     <message>
         <source>Save/Load Slot Box</source>
-        <translation>载入/保存进度</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Save state</source>
