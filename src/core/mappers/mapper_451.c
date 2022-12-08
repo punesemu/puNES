@@ -165,7 +165,7 @@ INLINE static void prg_fix_451(void) {
 INLINE static void chr_fix_451(void) {
 	DBWORD value = m451.reg & 0x01;
 
-	control_bank_with_AND(0xFF, info.chr.ram.max.banks_8k)
+	control_bank_with_AND(0xFF, info.chr.rom.max.banks_8k)
 	value <<= 13;
 
 	chr.bank_1k[0] = chr_pnt(value | 0x0000);

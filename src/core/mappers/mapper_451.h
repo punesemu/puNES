@@ -30,5 +30,4 @@ BYTE extcl_save_mapper_451(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_451(void);
 void extcl_battery_io_451(BYTE mode, FILE *fp);
 
-
 #endif /* MAPPER_451_H_ */
