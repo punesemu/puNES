@@ -291,7 +291,7 @@ void ppu_tick(void) {
 				/* setto a 0 il bit 5, 6 ed il 7 del $2002 */
 				r2002.sprite_overflow = r2002.sprite0_hit = r2002.vblank = ppu.vblank = FALSE;
 				// serve assolutamente per la corretta lettura delle coordinate del puntatore zapper
-				if ((info.zapper_is_present == TRUE) && (fps_fast_forward_enabled() == FALSE)) {
+				if (info.zapper_is_present && !fps_fast_forward_enabled()) {
 					memset((BYTE *)screen.wr->data, 0, screen_size());
 				}
 			} else if ((ppu.frame_x == (SHORT_SLINE_CYCLES - 1)) && (machine.type == NTSC)) {
@@ -307,12 +307,12 @@ void ppu_tick(void) {
 				ppu.sf.actual = FALSE;
 				if (ppu.odd_frame) {
 					if (r2001.bck_visible) {
-						if ((r2001.race.ctrl == FALSE) || (r2001.race.value & 0x08)) {
+						if (!r2001.race.ctrl || (r2001.race.value & 0x08)) {
 							ppu.sline_cycles = SHORT_SLINE_CYCLES;
 							ppu.sf.actual = TRUE;
 						}
 					} else {
-						if ((r2001.race.ctrl == TRUE) && (r2001.race.value & 0x08)) {
+						if (r2001.race.ctrl && (r2001.race.value & 0x08)) {
 							ppu.sline_cycles = SHORT_SLINE_CYCLES;
 							ppu.sf.actual = TRUE;
 						}
@@ -508,7 +508,7 @@ void ppu_tick(void) {
 
 							examine_sprites(spr_ev, sprite, visible_spr, FALSE)
 
-							if (cfg->unlimited_sprites == TRUE) {
+							if (cfg->unlimited_sprites) {
 								examine_sprites(spr_ev_unl, sprite_unl, visible_spr_unl, TRUE)
 							}
 						}
@@ -534,7 +534,7 @@ void ppu_tick(void) {
 								put_sp
 							}
 						} else {
-							if (unlimited_spr == FALSE) {
+							if (!unlimited_spr) {
 								if (sprite[visible_spr].attrib & 0x20) {
 									/*
 									 * se non lo sono tutti e due, controllo la
@@ -717,7 +717,7 @@ void ppu_tick(void) {
 							/* incremento l'indice temporaneo degli sprites */
 							if (++spr_ev.tmp_spr_plus == 8) {
 								// unlimited sprites
-								if ((cfg->unlimited_sprites == TRUE) && (spr_ev_unl.evaluate == TRUE)) {
+								if (cfg->unlimited_sprites && spr_ev_unl.evaluate) {
 									for (spr_ev_unl.tmp_spr_plus = 0;
 										spr_ev_unl.tmp_spr_plus < spr_ev_unl.count_plus;
 										spr_ev_unl.tmp_spr_plus++) {
@@ -909,7 +909,7 @@ void ppu_tick(void) {
 				sprite[a].h_byte = sprite_plus[a].h_byte;
 			}
 			// unlimited sprites
-			if (cfg->unlimited_sprites == TRUE) {
+			if (cfg->unlimited_sprites) {
 				spr_ev_unl.count = spr_ev_unl.count_plus;
 				/* azzero l'indice per la (scanline+1) */
 				spr_ev_unl.count_plus = 0;
@@ -1170,7 +1170,7 @@ static void ppu_alignment_init(void) {
 		}
 	}
 
-	if (gui.start == TRUE) {
+	if (gui.start) {
 		gui_update_status_bar();
 	}
 }
@@ -1332,13 +1332,13 @@ INLINE static void ppu_oam_evaluation(void) {
 						spr_ev.index_plus = 0;
 
 						// unlimited sprites
-						if (cfg->unlimited_sprites == TRUE) {
+						if (cfg->unlimited_sprites) {
 							// https://wiki.nesdev.com/w/index.php/Sprite_overflow_games (Use of excess sprites for masking effects)
 							// https://github.com/SourMesen/Mesen/issues/188
 							// start - thx to Sour
 							BYTE unlimited_sprites = TRUE;
 
-							if (cfg->unlimited_sprites_auto == TRUE) {
+							if (cfg->unlimited_sprites_auto) {
 								BYTE count = 0,  max_count = 0;
 								WORD last_position = 0xFFFF;
 								int i;
@@ -1416,7 +1416,7 @@ INLINE static void ppu_oam_evaluation(void) {
 				 * la coordinata Y (byte 0), tratta il byte puntato
 				 * da byte_OAM come se fosse la coordinata Y.
 				 */
-				if (spr_ev.evaluate == FALSE) {
+				if (!spr_ev.evaluate) {
 					/* incremento l'indice del byte da leggere */
 					if (++spr_ev.byte_OAM == 4) {
 						spr_ev.byte_OAM = 0;
@@ -1492,7 +1492,7 @@ INLINE static void ppu_oam_evaluation(void) {
 				 * come coordinata Y anche se questi finiscono nell'elemento
 				 * dell'OAM successivo.
 				 */
-				} else if (spr_ev.evaluate == TRUE) {
+				} else if (spr_ev.evaluate) {
 					/* incremento l'indice del byte da leggere */
 					if (++spr_ev.byte_OAM == 4) {
 						/*
@@ -1527,7 +1527,7 @@ INLINE static void ppu_oam_evaluation(void) {
 				/* leggo la coordinata Y dello sprite in esame */
 				r2004.value = oam.ele_plus[spr_ev.index_plus][YC];
 				/* se sto esaminando il nono sprite... */
-				if (spr_ev.evaluate == TRUE) {
+				if (spr_ev.evaluate) {
 					/* ...e sono nell'ultimo ciclo...*/
 					if (spr_ev.timing == 7) {
 						/* ...indico la nuova modalita'... */

@@ -125,10 +125,10 @@ void wdgSettingsRecording::retranslateUi(QWidget *wdgSettingsRecording) {
 void wdgSettingsRecording::update_widget(void) {
 	bool mode = true;
 
-	if (recording_format_info[cfg->recording.audio_format].present == FALSE) {
+	if (!recording_format_info[cfg->recording.audio_format].present) {
 		cfg->recording.audio_format = REC_FORMAT_AUDIO_WAV;
 	}
-	if (recording_format_info[cfg->recording.video_format].present == FALSE) {
+	if (!recording_format_info[cfg->recording.video_format].present) {
 		cfg->recording.video_format = REC_FORMAT_VIDEO_MPG_MPEG1;
 	}
 
@@ -155,7 +155,7 @@ void wdgSettingsRecording::update_widget(void) {
 	label_Output_Resolution->setEnabled(!cfg->recording.use_emu_resolution);
 	comboBox_Output_Resolution->setEnabled(!cfg->recording.use_emu_resolution);
 
-	if (cfg->recording.use_emu_resolution == TRUE) {
+	if (cfg->recording.use_emu_resolution) {
 		mode = false;
 	} else {
 		mode = cfg->recording.output_resolution == REC_RES_CUSTOM;
@@ -187,7 +187,7 @@ void wdgSettingsRecording::combobox_format_init(QComboBox *cb,  int start, int e
 		_recording_format_info *rfi = &recording_format_info[i];
 		QString description = tr(format_description[i]);
 
-		if (rfi->present == FALSE) {
+		if (!rfi->present) {
 			description += " [" + tr("Not supported") + "]";
 		}
 
@@ -200,7 +200,7 @@ void wdgSettingsRecording::combobox_format_init(QComboBox *cb,  int start, int e
 		_recording_format_info *rfi = &recording_format_info[i];
 		QStandardItem *item = model->item(i - rfstart);
 
-		if (rfi->present == FALSE) {
+		if (!rfi->present) {
 			item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
 		}
 	}
@@ -408,7 +408,7 @@ QComboBox *wdgRecGetSaveFileName::init_file_types(int start, int end, int curren
 		QString description = QCoreApplication::translate("wdgSettingsRecording", format_description[i]);
 		_recording_format_info *rfi = &recording_format_info[i];
 
-		if (rfi->present == FALSE) {
+		if (!rfi->present) {
 			description += " [" + tr("Not supported") + "]";
 		}
 
@@ -432,7 +432,7 @@ QComboBox *wdgRecGetSaveFileName::init_file_types(int start, int end, int curren
 			_recording_format_info *rfi = &recording_format_info[i];
 			QStandardItem *item = model->item(i - rfstart);
 
-			if (rfi->present == FALSE) {
+			if (!rfi->present) {
 				item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
 			}
 		}

@@ -41,7 +41,7 @@ void input_rd_standard_controller(BYTE *value, BYTE nport, BYTE shift) {
 }
 
 void input_add_event_standard_controller(BYTE index) {
-	js_jdev_read_port(&js[index], &port[index]);
+	js_jdev_read_port(&jsp[index], &port[index]);
 	input_turbo_buttons_standard_controller(&port[index]);
 }
 BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), DBWORD event, BYTE type, _port *prt) {
@@ -116,28 +116,28 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 	} else if (event == prt->input[type][UP]) {
 		(*up) = mode;
 		// non possono essere premuti contemporaneamente
-		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
+		if (!cfg->input.permit_updown_leftright && (mode == PRESSED)) {
 			(*down) = RELEASED;
 		}
 		return (EXIT_OK);
 	} else if (event == prt->input[type][DOWN]) {
 		(*down) = mode;
 		// non possono essere premuti contemporaneamente
-		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
+		if (!cfg->input.permit_updown_leftright && (mode == PRESSED)) {
 			(*up) = RELEASED;
 		}
 		return (EXIT_OK);
 	} else if (event == prt->input[type][LEFT]) {
 		(*left) = mode;
 		// non possono essere premuti contemporaneamente
-		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
+		if (!cfg->input.permit_updown_leftright && (mode == PRESSED)) {
 			(*right) = RELEASED;
 		}
 		return (EXIT_OK);
 	} else if (event == prt->input[type][RIGHT]) {
 		(*right) = mode;
 		// non possono essere premuti contemporaneamente
-		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
+		if (!cfg->input.permit_updown_leftright && (mode == PRESSED)) {
 			(*left) = RELEASED;
 		}
 		return (EXIT_OK);

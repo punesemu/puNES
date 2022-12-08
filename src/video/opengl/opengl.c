@@ -316,7 +316,7 @@ BYTE opengl_context_create(void) {
 				vp->y += (vmh - vp->h) / 2.0f;
 			}
 
-			if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
+			if (overscan.enabled && !cfg->oscan_black_borders_fscr) {
 				float left = cfg->hflip_screen ? (float)overscan.borders->right : (float)overscan.borders->left;
 				float right = cfg->hflip_screen ? (float)overscan.borders->left : (float)overscan.borders->right;
 				float brd_l_x, brd_r_x, brd_u_y, brd_d_y;
@@ -479,7 +479,7 @@ BYTE opengl_context_create(void) {
 		if (cfg->fullscreen) {
 			float div;
 
-			if ((gfx.is_wayland == FALSE) && !cfg->fullscreen_in_window) {
+			if (!gfx.is_wayland && !cfg->fullscreen_in_window) {
 				vmw *= gfx.device_pixel_ratio;
 				vmh *= gfx.device_pixel_ratio;
 			}
@@ -504,7 +504,7 @@ BYTE opengl_context_create(void) {
 		}
 
 		if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
-			if (cfg->text_rotation == TRUE) {
+			if (cfg->text_rotation) {
 				if (cfg->fullscreen) {
 					rotate = TRUE;
 				}
@@ -513,7 +513,7 @@ BYTE opengl_context_create(void) {
 			}
 		}
 
-		if (rotate == TRUE) {
+		if (rotate) {
 			float tmp = ow;
 
 			ow = oh;
@@ -526,7 +526,7 @@ BYTE opengl_context_create(void) {
 
 		glGenBuffers(1, &shd->vbo);
 
-		if (cfg->text_rotation == FALSE) {
+		if (!cfg->text_rotation) {
 			memcpy(shd->vb, vb_flipped[ROTATE_0][0], sizeof(vb_upright));
 		} else {
 			memcpy(shd->vb, vb_flipped[cfg->screen_rotation][cfg->hflip_screen], sizeof(vb_upright));
@@ -616,7 +616,7 @@ void opengl_draw_scene(void) {
 	GLuint w = opengl.surface.w, h = opengl.surface.h;
 	GLuint sindex, i;
 
-	if ((gui.start == FALSE) || (gfx.frame.in_draw == gfx.frame.filtered)) {
+	if (!gui.start || (gfx.frame.in_draw == gfx.frame.filtered)) {
 		return;
 	}
 
@@ -745,7 +745,7 @@ void opengl_draw_scene(void) {
 	gui_overlay_blit();
 
 	// overlay
-	if (cfg->txt_on_screen && (gui_overlay_is_updated() == TRUE)) {
+	if (cfg->txt_on_screen && gui_overlay_is_updated()) {
 		float vpx = 0;
 		float vpy = (gfx.h[VIDEO_MODE] < gfx.h[FSCR_RESIZE]) ? (float)(gfx.h[FSCR_RESIZE] - gfx.h[VIDEO_MODE]) * gfx.device_pixel_ratio : 0;
 		float vpw = (float)opengl.video_mode.w * gfx.device_pixel_ratio;
@@ -784,7 +784,7 @@ void opengl_draw_scene(void) {
 static void opengl_context_delete(BYTE lock) {
 	GLuint i;
 
-	if (lock == TRUE) {
+	if (lock) {
 		gfx_thread_lock();
 	}
 
@@ -882,7 +882,7 @@ static void opengl_context_delete(BYTE lock) {
 
 	info.sRGB_FBO_in_use = FALSE;
 
-	if (lock == TRUE) {
+	if (lock) {
 		gfx_thread_unlock();
 	}
 }
@@ -1202,7 +1202,7 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 	{
 		GLuint size = rect->w * rect->h * sizeof(uint32_t);
 		GLubyte *empty = malloc(size);
-		uint32_t clean_color = (cfg->palette == PALETTE_RAW) && (overlay == FALSE) ? 0x00FF0000 : 0x00;
+		uint32_t clean_color = (cfg->palette == PALETTE_RAW) && !overlay ? 0x00FF0000 : 0x00;
 		int i;
 
 		for (i = 0; i < (rect->w * rect->h); i++) {
@@ -1308,7 +1308,7 @@ static void opengl_shader_print_log(GLuint obj, BYTE ret) {
 
 		if (info_log_length > 0) {
 			fprintf(stderr, "OPENGL: %s", info_log);
-			if (ret == TRUE) {
+			if (ret) {
 				fprintf(stderr, "\n");
 			}
 		}

@@ -358,7 +358,7 @@ void map_init_FFESMC(void) {
 	ffesmctmp.buf.size = 0;
 
 	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		if (mapper.write_vram == FALSE) {
+		if (!mapper.write_vram) {
 			mapper.write_vram = TRUE;
 			if (info.mapper.id != 12) {
 				ffesmctmp.buf.data = malloc(chr_size());

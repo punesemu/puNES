@@ -207,7 +207,7 @@ void js_os_jdev_close(_js_device *jdev) {
 		return;
 	}
 
-	if (jdev->present == TRUE) {
+	if (jdev->present) {
 		jstick.jdd.count--;
 #if defined (DEBUG)
 		ufprintf(stderr, uL("jstick disc. : slot%d \"" uPs("") "\" (%d)\n"),
@@ -258,7 +258,7 @@ void js_os_jdev_scan(void) {
 				if (val && strcmp(val, "1") == 0) {
 					finded = FALSE;
 				}
-				if (finded == FALSE) {
+				if (!finded) {
 					val = udev_device_get_property_value(dev, "ID_CLASS");
 					if (val && strcmp(val, "joystick") == 0) {
 						finded = TRUE;
@@ -273,7 +273,7 @@ void js_os_jdev_scan(void) {
 						thread_mutex_lock(jd->lock);
 
 						if (ustrncmp(jd->dev, devnode, usizeof(jd->dev)) != 0) {
-							if (!jdev && (jd->present == FALSE)) {
+							if (!jdev && !jd->present) {
 								jdev = jd;
 							}
 							thread_mutex_unlock(jd->lock);

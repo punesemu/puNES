@@ -398,7 +398,7 @@ BYTE extcl_cpu_rd_mem_VRC4T230(WORD address, BYTE openbus, UNUSED(BYTE before)) 
 }
 
 INLINE static void prg_ram_fix_VRC4T230(void) {
-	vrc4tmp.prg_6000 = prg.ram_plus_8k ? prg.ram_plus_8k + (vrc4tmp.cc93c56 == TRUE ? 256 : 0) : NULL;
+	vrc4tmp.prg_6000 = prg.ram_plus_8k ? prg.ram_plus_8k + (vrc4tmp.cc93c56 ? 256 : 0) : NULL;
 }
 INLINE static BYTE prg_ram_check_VRC4T230(void) {
 	if (info.format == NES_2_0) {

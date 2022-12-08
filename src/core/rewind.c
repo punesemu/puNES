@@ -114,7 +114,7 @@ BYTE rewind_init(void) {
 	{
 		size_t size = sizeof(_rewind_snapshoot) * REWIND_SNAPS_FOR_CHUNK;
 
-		if (rewind_is_disabled() == FALSE) {
+		if (!rewind_is_disabled()) {
 			if ((rwint.segment.snaps = (_rewind_snapshoot *)malloc(size)) == NULL) {
 				fprintf(stderr, "rewind : Out of memory\n");
 				return (EXIT_ERROR);
@@ -141,7 +141,7 @@ BYTE rewind_init(void) {
 	rwint.size.first_chunk = rwint.size.screen + rwint.size.chunk;
 	rwint.size.total = rwint.size.screen + (rwint.size.chunk * rwint.chunks_for_segment);
 
-	if (rewind_is_disabled() == FALSE) {
+	if (!rewind_is_disabled()) {
 		if ((rwint.segment.data = (BYTE *)malloc(rwint.size.total)) == NULL) {
 			fprintf(stderr, "rewind : Out of memory\n");
 			return (EXIT_ERROR);
@@ -200,7 +200,7 @@ BYTE rewind_init(void) {
 	rwint.index.snap = -1;
 
 	// creo il file temporaneo
-	if (rewind_is_disabled() == FALSE) {
+	if (!rewind_is_disabled()) {
 		uTCHAR basename[255], *last_dot;
 
 		gui_utf_basename(info.rom.file, basename, usizeof(basename));
@@ -413,7 +413,7 @@ INLINE static void rewind_operation(BYTE mode, BYTE save_input, _rewind_snapshoo
 		}
 		bck_states_op_keyframe(mode, snap->data, &index, &rwint.size.keyframe);
 	}
-	if (save_input == TRUE) {
+	if (save_input) {
 		bck_states_op_input(mode, snap->data, &index, &rwint.size.input);
 	}
 }
@@ -525,7 +525,7 @@ static BYTE _rewind_frames(int32_t frames_to_rewind, BYTE exec_last_frame) {
 
 			rewind_operation(BCK_STATES_OP_READ_FROM_MEM, TRUE, snap);
 
-			if ((index.snap == snaps) && (exec_last_frame == FALSE)) {
+			if ((index.snap == snaps) && !exec_last_frame) {
 				break;
 			}
 

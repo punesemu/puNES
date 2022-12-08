@@ -100,7 +100,7 @@ void infoStatusBar::update_label(void) {
 		rom = info.rom.file;
 	}
 
-	if (patcher.patched == TRUE) {
+	if (patcher.patched) {
 		patch = TRUE;
 	}
 
@@ -111,7 +111,7 @@ void infoStatusBar::update_label(void) {
 		QFileInfo fileinfo = QFileInfo(uQString(rom));
 		QString base = "";
 
-		if (patch == TRUE) {
+		if (patch) {
 			base += "*";
 		}
 		label->setText(base + fileinfo.fileName());

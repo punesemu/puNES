@@ -317,7 +317,7 @@ static const _js_btn_joyval js_btn_joyval[] = {
 	{ 0x44A, BTN_TRIGGER_HAPPY40, uL("BTN75") }
 };
 
-extern _js js[PORT_MAX], js_shcut;
+extern _js jsp[PORT_MAX], js_shcut;
 extern _jstick jstick;
 
 #if defined (__cplusplus)
@@ -376,7 +376,7 @@ EXTERNC BYTE js_jdev_update_btn(_js_device *jdev, BYTE shcut, int index, DBWORD 
 EXTERNC uTCHAR *js_jdev_desc(int dev);
 EXTERNC size_t js_jdev_sizeof_stdctrl(void);
 
-EXTERNC void js_jdev_read_port(_js *js, _port *port);
+EXTERNC void js_jdev_read_port(_js *js, _port *prt);
 EXTERNC BYTE js_jdev_read_shcut(_js_sch *js_sch);
 EXTERNC DBWORD js_jdev_read_in_dialog(_input_guid *guid);
 

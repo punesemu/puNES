@@ -78,6 +78,7 @@ void map_init_406(void) {
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		m406tmp.sst39sf040 = (BYTE *)malloc(prg_size());
 		memcpy(m406tmp.sst39sf040, prg_rom(), prg_size());
+		// Macronix MX29F040 (0)/AMD AM29F040 (1)
 		sst39sf040_init(m406tmp.sst39sf040, prg_size(), info.mapper.submapper == 0 ? 0xC2 : 0x01, 0xA4, 0x5555, 0x2AAA, 65536);
 	}
 

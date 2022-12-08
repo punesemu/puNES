@@ -83,7 +83,7 @@ void gfx_thread_continue(void) {
 
 	if (gfx_thread.pause_calls == 0) {
 		while (gfx_thread.in_run == TH_FALSE) {
-			if (info.stop == TRUE) {
+			if (info.stop) {
 				break;
 			}
 			gui_sleep(1);
@@ -92,7 +92,7 @@ void gfx_thread_continue(void) {
 }
 
 static thread_funct(gfx_thread_loop, UNUSED(void *arg)) {
-	while (info.stop == FALSE) {
+	while (!info.stop) {
 		if (gfx_thread.pause_calls) {
 			gfx_thread.in_run = TH_FALSE;
 			gui_sleep(1);
@@ -101,7 +101,7 @@ static thread_funct(gfx_thread_loop, UNUSED(void *arg)) {
 
 		gfx_thread.in_run = TH_TRUE;
 
-		if (screen.rd->ready == FALSE) {
+		if (!screen.rd->ready) {
 			gui_sleep(1);
 			continue;
 		}

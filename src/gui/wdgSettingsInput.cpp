@@ -405,7 +405,7 @@ void wdgSettingsInput::shortcut_joy_list_init(void) {
 		BYTE index = i;
 
 		if (i < MAX_JOYSTICK) {
-			if (js_is_connected(index) == FALSE) {
+			if (!js_is_connected(index)) {
 				continue;
 			}
 			cb->desc = QString("js%1: ").arg(index) + uQString(js_jdev_desc(index));

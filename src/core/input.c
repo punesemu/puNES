@@ -76,11 +76,11 @@ void input_init(BYTE set_cursor) {
 
 	memset(&mic, 0x00, sizeof(mic));
 
-	if (nsf.enabled == TRUE) {
+	if (nsf.enabled) {
 		SET_WR_REG(NULL);
 		SET_RD_REG(PORT1, NULL);
 		SET_RD_REG(PORT2, NULL);
-	} else if (vs_system.enabled == TRUE) {
+	} else if (vs_system.enabled) {
 		SET_WR_REG(input_wr_reg_vs);
 		SET_RD_REG(PORT1, input_rd_reg_vs_r4016);
 		SET_RD_REG(PORT2, input_rd_reg_vs_r4017);
@@ -112,7 +112,7 @@ void input_init(BYTE set_cursor) {
 		SET_ADD_EVENT(a, NULL);
 
 		// NSF
-		if (nsf.enabled == TRUE) {
+		if (nsf.enabled) {
 			switch (a) {
 				case PORT1:
 					SET_DECODE_EVENT(a, input_decode_event_nsf_controller);
@@ -125,7 +125,7 @@ void input_init(BYTE set_cursor) {
 					break;
 			}
 		// VS SYSTEM
-		} else if (vs_system.enabled == TRUE) {
+		} else if (vs_system.enabled) {
 			if (info.extra_from_db & VSZAPPER) {
 				switch (a) {
 					case PORT1:
@@ -272,7 +272,7 @@ void input_init(BYTE set_cursor) {
 		}
 	}
 
-	if (set_cursor == TRUE) {
+	if (set_cursor) {
 		gfx_cursor_set();
 	}
 	gui_nes_keyboard();
@@ -285,8 +285,8 @@ void input_rd_disabled(UNUSED(BYTE *value), UNUSED(BYTE nport),	UNUSED(BYTE shif
 BYTE input_draw_target(void) {
 	int i;
 
-	if (vs_system.enabled == TRUE) {
-		if ((info.extra_from_db & VSZAPPER) && (cfg->input.hide_zapper_cursor == FALSE)) {
+	if (vs_system.enabled) {
+		if ((info.extra_from_db & VSZAPPER) && !cfg->input.hide_zapper_cursor) {
 			return (TRUE);
 		}
 		return (FALSE);
@@ -295,7 +295,7 @@ BYTE input_draw_target(void) {
 	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
 		switch (cfg->input.expansion) {
 			case CTRL_ZAPPER:
-				if (cfg->input.hide_zapper_cursor == FALSE) {
+				if (!cfg->input.hide_zapper_cursor) {
 					return (TRUE);
 				}
 				return (FALSE);
@@ -304,7 +304,7 @@ BYTE input_draw_target(void) {
 		}
 	} else {
 		for (i = PORT1; i < PORT_MAX; i++) {
-			if ((port[i].type == CTRL_ZAPPER) && (cfg->input.hide_zapper_cursor == FALSE)) {
+			if ((port[i].type == CTRL_ZAPPER) && !cfg->input.hide_zapper_cursor) {
 				return (TRUE);
 			}
 		}

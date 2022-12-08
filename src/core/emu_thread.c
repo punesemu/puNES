@@ -66,7 +66,7 @@ void emu_thread_continue(void) {
 
 	if (emu_thread.pause_calls == 0) {
 		while (emu_thread.in_run == TH_FALSE) {
-			if (info.stop == TRUE) {
+			if (info.stop) {
 				break;
 			}
 			gui_sleep(1);
@@ -90,7 +90,7 @@ void emu_thread_continue_ctrl_count(int *count) {
 }
 
 static thread_funct(emu_thread_loop, UNUSED(void *arg)) {
-	while (info.stop == FALSE) {
+	while (!info.stop) {
 		if (emu_thread.pause_calls) {
 			emu_thread.in_run = TH_FALSE;
 			gui_sleep(1);

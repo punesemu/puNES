@@ -412,7 +412,7 @@ QString objCheat::encode_rocky(_cheat *cheat) {
 	QString rocky;
 	int i;
 
-	if ((cheat->enabled_compare == FALSE) || (cheat->address < 0x8000)) {
+	if (!cheat->enabled_compare || (cheat->address < 0x8000)) {
 		return ("-");
 	}
 
@@ -565,7 +565,7 @@ void objCheat::import_libretro_cht(const QString &path) {
 
 	for (i = 0; i < totals; i++) {
 		key = QString("cheat%1_code").arg(i);
-		if (libretro_value(set, key, value) == FALSE) {
+		if (!libretro_value(set, key, value)) {
 			QString description = "", enable = "0";
 			QList<chl_map> list;
 			QStringList splitted;
@@ -612,12 +612,12 @@ void objCheat::import_libretro_cht(const QString &path) {
 			}
 
 			key = QString("cheat%1_desc").arg(i);
-			if (libretro_value(set, key, value) == FALSE) {
+			if (!libretro_value(set, key, value)) {
 				description = value;
 			}
 
 			key = QString("cheat%1_enable").arg(i);
-			if (libretro_value(set, key, value) == FALSE) {
+			if (!libretro_value(set, key, value)) {
 				enable = value;
 			}
 

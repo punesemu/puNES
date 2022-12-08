@@ -102,7 +102,7 @@ void map_init_BOY(void) {
 	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
-	if ((mapper.write_vram == TRUE) && !info.chr.rom.banks_8k) {
+	if (mapper.write_vram && !info.chr.rom.banks_8k) {
 		info.chr.rom.banks_8k = 32;
 	}
 

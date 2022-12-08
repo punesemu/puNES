@@ -46,7 +46,7 @@ void map_init_NSF(void) {
 	nsf_reset_prg();
 
 	if (info.reset >= HARD) {
-		if ((cfg->nsf_player_nsfe_playlist == TRUE) && (nsf.playlist.count > 0)) {
+		if (cfg->nsf_player_nsfe_playlist && (nsf.playlist.count > 0)) {
 			nsf.songs.current = nsf.playlist.starting;
 			nsf.playlist.index = 0;
 
@@ -185,13 +185,13 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 
 		nsf.curtain_title_song.redraw.all = TRUE;
 		nsf.curtain_title_song.redraw.bottom = nsf.curtain_title_song.borders.bottom;
-		if (nsf.curtain_title_song.pause == TRUE) {
+		if (nsf.curtain_title_song.pause) {
 			nsf.curtain_title_song.redraw.bottom = dospf(1);
 		}
 
 		nsf.curtain_info.redraw.all = TRUE;
 		nsf.curtain_info.redraw.bottom = nsf.curtain_info.borders.bottom;
-		if (nsf.curtain_info.pause == TRUE) {
+		if (nsf.curtain_info.pause) {
 			nsf.curtain_info.redraw.bottom = dospf(1);
 		}
 	}

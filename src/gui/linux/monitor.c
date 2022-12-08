@@ -39,7 +39,7 @@ BYTE gui_monitor_enum_monitors(void) {
 		}
 	}
 
-	if (monitor.enabled == FALSE) {
+	if (!monitor.enabled) {
 		XCloseDisplay(display);
 		return (EXIT_ERROR);
 	}

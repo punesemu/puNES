@@ -748,7 +748,7 @@ int dos_is_tag(const char *text, int *tag_founded) {
 				break;
 			}
 		}
-		if (found == FALSE) {
+		if (!found) {
 			len = 0;
 			(*tag_founded) = -1;
 		}

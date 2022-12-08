@@ -83,14 +83,14 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDi
 
 	// se l'archivio compresso e' caricato da riga di comando,
 	// la gui non e' ancora stata avviata.
-	if (gui.start == TRUE) {
+	if (gui.start) {
 		emu_pause(TRUE);
 	}
 }
 dlgUncomp::~dlgUncomp() = default;
 
 void dlgUncomp::closeEvent(QCloseEvent *event) {
-	if (gui.start == TRUE) {
+	if (gui.start) {
 		emu_pause(FALSE);
 	}
 

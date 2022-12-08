@@ -105,7 +105,7 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 		}
 	}
 
-	if (found == FALSE) {
+	if (!found) {
 		patcher.patched = FALSE;
 		return (EXIT_ERROR);
 	}
@@ -134,7 +134,7 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 		}
 	}
 
-	if (found == TRUE) {
+	if (found) {
 		patcher.file = emu_ustrncpy(patcher.file, file);
 		return (EXIT_OK);
 	}
@@ -335,7 +335,7 @@ static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom) {
 			blk = (BYTE *)realloc(blk, size);
 		}
 
-		if (rle == TRUE) {
+		if (rle) {
 			SDBWORD i;
 
 			for (i = 0; i < len; i++) {

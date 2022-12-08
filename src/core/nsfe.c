@@ -62,8 +62,7 @@ struct _nsfe {
 	} chunk;
 } nsfe;
 
-void nsfe_init(void) {
-}
+void nsfe_init(void) {}
 void nsfe_quit(void) {
 	extcl_audio_samples_mod = NULL;
 }

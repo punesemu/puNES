@@ -475,7 +475,7 @@ BYTE unif_load_rom(void) {
 			mapper.write_vram = TRUE;
 		}
 
-		if (unif.finded == FALSE) {
+		if (!unif.finded) {
 			free(rom.data);
 			return (EXIT_ERROR);
 		}

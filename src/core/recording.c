@@ -207,7 +207,7 @@ void recording_start(uTCHAR *filename, int format) {
 		ffmpeg_fstream_close(&ffmpeg.audio);
 	}
 
-	if ((ffmpeg.video.used | ffmpeg.audio.used) == FALSE) {
+	if (!(ffmpeg.video.used | ffmpeg.audio.used)) {
 		goto recording_start_end;
 	}
 
@@ -240,7 +240,7 @@ void recording_start(uTCHAR *filename, int format) {
 void recording_finish(BYTE from_quit) {
 	int ret;
 
-	if (from_quit == FALSE) {
+	if (!from_quit) {
 		emu_thread_pause();
 		gfx_thread_pause();
 	}
@@ -286,7 +286,7 @@ void recording_finish(BYTE from_quit) {
 	gui_update_recording_widgets();
 	gui_update_apu_channels_widgets();
 
-	if (from_quit == FALSE) {
+	if (!from_quit) {
 		gfx_thread_continue();
 		emu_thread_continue();
 	}
@@ -539,7 +539,7 @@ static BYTE ffmpeg_context_setup(_recording_format_info *rfi, enum AVPixelFormat
 	}
 
 	if (rfi->format_type == REC_FORMAT_AUDIO) {
-		if (ffmpeg.disable_logo == TRUE) {
+		if (ffmpeg.disable_logo) {
 			return (EXIT_ERROR);
 		}
 		if (ffmpeg.format_ctx->oformat->video_codec == AV_CODEC_ID_THEORA) {
@@ -612,7 +612,7 @@ static BYTE ffmpeg_stream_open(_ffmpeg_stream *fs, AVDictionary *opts, BYTE crea
 	}
 
 	// solo in caso di video
-	if (create_video_frame == TRUE) {
+	if (create_video_frame) {
 		_ffmpeg_stream *video = &ffmpeg.video;
 
 		if (!(video->avf = ffmpeg_video_alloc_frame(video->avcc->pix_fmt, video->avcc->width, video->avcc->height))) {
@@ -734,7 +734,7 @@ static AVFrame *ffmpeg_video_alloc_frame(enum AVPixelFormat pix_fmt, int width, 
 	return (avframe);
 }
 static void ffmpeg_set_output_resolution(void) {
-	if (cfg->recording.use_emu_resolution == TRUE) {
+	if (cfg->recording.use_emu_resolution) {
 		ffmpeg.w = gfx.w[VIDEO_MODE];
 		ffmpeg.h = gfx.h[VIDEO_MODE];
 	} else if (cfg->recording.output_resolution == REC_RES_CUSTOM) {
@@ -745,7 +745,7 @@ static void ffmpeg_set_output_resolution(void) {
 	}
 	ffmpeg.w = (int)((float)ffmpeg.w * gfx.device_pixel_ratio);
 	ffmpeg.h = (int)((float)ffmpeg.h * gfx.device_pixel_ratio);
-	if (cfg->recording.follow_rotation == TRUE) {
+	if (cfg->recording.follow_rotation) {
 		if (!cfg->fullscreen && ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270))) {
 			int tmp = ffmpeg.w;
 

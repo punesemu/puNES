@@ -146,7 +146,7 @@ void ch_stereo_delay_tick(SWORD value) {
 	snd.cache->bytes_available += (2 * sizeof(*snd.cache->write));
 
 #if defined (WITH_FFMPEG)
-	if (info.recording_on_air == TRUE) {
+	if (info.recording_on_air) {
 		recording_audio_tick(&actual[0]);
 	}
 #endif

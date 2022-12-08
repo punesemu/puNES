@@ -16,22 +16,18 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "audio/snd.h"
-#include "clock.h"
-#include "fps.h"
+#ifndef MAPPER_451_H_
+#define MAPPER_451_H_
 
-BYTE snd_handler(void) {
-	if (snd.cache->bytes_available >= snd.buffer.size) {
-		return (EXIT_ERROR);
-	} else if (!fps_fast_forward_enabled()) {
-		double landmark = snd.buffer.limit.low;
-		double percent = ((((double)snd.cache->bytes_available) / landmark) * 100.0f) - 100.0f;
-		double factor = 1.0f + ((((1.0f / (double)machine.fps) / 100.0f) * 1.0f) * percent);
+#include "common.h"
 
-		if (snd.factor != factor) {
-			fps_machine_ms(factor);
-			snd.factor = factor;
-		}
-	}
-	return (EXIT_OK);
-}
+void map_init_451(void);
+void extcl_after_mapper_init_451(void);
+void extcl_mapper_quit_451(void);
+void extcl_cpu_wr_mem_451(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_451(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_451(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_451(void);
+void extcl_battery_io_451(BYTE mode, FILE *fp);
+
+#endif /* MAPPER_451_H_ */

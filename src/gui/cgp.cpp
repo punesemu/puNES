@@ -79,7 +79,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 		// shader
 		key = QString("shader%1").arg(i);
-		if (cgp_value(set, key, value) == FALSE) {
+		if (!cgp_value(set, key, value)) {
 			value.replace('\\', '/');
 			ustrncpy(sp->path, uQStringCD(QFileInfo(fi.absolutePath() + '/' + value).absoluteFilePath()), usizeof(sp->path) - 1);
 		} else {
@@ -89,13 +89,13 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 		// alias
 		key = QString("alias%1").arg(i);
-		if (cgp_value(set, key, value) == FALSE) {
+		if (!cgp_value(set, key, value)) {
 			::strncpy(sp->alias, qPrintable(value), sizeof(sp->alias) - 1);
 		}
 
 		// mipmap_input
 		key = QString("mipmap_input%1").arg(i);
-		if (cgp_value(set, key, value) == FALSE) {
+		if (!cgp_value(set, key, value)) {
 			if (QString::compare(value, "true", Qt::CaseInsensitive) == 0) {
 				sp->mipmap_input = TRUE;
 			}
@@ -103,7 +103,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 		// filter_linear
 		key = QString("filter_linear%1").arg(i);
-		if (cgp_value(set, key, value) == FALSE) {
+		if (!cgp_value(set, key, value)) {
 			if (QString::compare(value, "false", Qt::CaseInsensitive) == 0) {
 				sp->linear = TEXTURE_LINEAR_DISAB;
 			} else if (QString::compare(value, "true", Qt::CaseInsensitive) == 0) {
@@ -113,7 +113,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 		// float_framebuffer
 		key = QString("float_framebuffer%1").arg(i);
-		if (cgp_value(set, key, value) == FALSE) {
+		if (!cgp_value(set, key, value)) {
 			if (QString::compare(value, "true", Qt::CaseInsensitive) == 0) {
 				sp->fbo_flt = TRUE;
 			}
@@ -121,7 +121,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 		// srgb_framebuffer
 		key = QString("srgb_framebuffer%1").arg(i);
-		if (cgp_value(set, key, value) == FALSE) {
+		if (!cgp_value(set, key, value)) {
 			if (QString::compare(value, "true", Qt::CaseInsensitive) == 0) {
 				sp->fbo_srgb = TRUE;
 			}
@@ -129,13 +129,13 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 		// frame_count_mod
 		key = QString("frame_count_mod%1").arg(i);
-		if (cgp_value(set, key, value) == FALSE) {
+		if (!cgp_value(set, key, value)) {
 			sp->frame_count_mod = value.toInt();
 		}
 
 		// wrap_mode
 		key = QString("wrap_mode%1").arg(i);
-		if (cgp_value(set, key, value) == FALSE) {
+		if (!cgp_value(set, key, value)) {
 			if (QString::compare(value, "clamp_to_border", Qt::CaseInsensitive) == 0) {
 				sp->wrap = TEXTURE_WRAP_BORDER;
 			} else if (QString::compare(value, "clamp_to_edge", Qt::CaseInsensitive) == 0) {
@@ -204,20 +204,20 @@ BYTE cgp_parse(const uTCHAR *file) {
 				// x
 				key = QString("scale%1").arg(i);
 				if (sc->type.x == SHADER_SCALE_ABSOLUTE) {
-					if (cgp_value(set, key, value) == FALSE) {
+					if (!cgp_value(set, key, value)) {
 						sc->abs.x = value.toUInt();
 					} else {
 						key = QString("scale_x%1").arg(i);
-						if (cgp_value(set, key, value) == FALSE) {
+						if (!cgp_value(set, key, value)) {
 							sc->abs.x = value.toUInt();
 						}
 					}
 				} else {
-					if (cgp_value(set, key, value) == FALSE) {
+					if (!cgp_value(set, key, value)) {
 						sc->scale.x = value.toFloat();
 					} else {
 						key = QString("scale_x%1").arg(i);
-						if (cgp_value(set, key, value) == FALSE) {
+						if (!cgp_value(set, key, value)) {
 							sc->scale.x = value.toFloat();
 						}
 					}
@@ -226,20 +226,20 @@ BYTE cgp_parse(const uTCHAR *file) {
 				// y
 				key = QString("scale%1").arg(i);
 				if (sc->type.y == SHADER_SCALE_ABSOLUTE) {
-					if (cgp_value(set, key, value) == FALSE) {
+					if (!cgp_value(set, key, value)) {
 						sc->abs.y = value.toUInt();
 					} else {
 						key = QString("scale_y%1").arg(i);
-						if (cgp_value(set, key, value) == FALSE) {
+						if (!cgp_value(set, key, value)) {
 							sc->abs.y = value.toUInt();
 						}
 					}
 				} else {
-					if (cgp_value(set, key, value) == FALSE) {
+					if (!cgp_value(set, key, value)) {
 						sc->scale.y = value.toFloat();
 					} else {
 						key = QString("scale_y%1").arg(i);
-						if (cgp_value(set, key, value) == FALSE) {
+						if (!cgp_value(set, key, value)) {
 							sc->scale.y = value.toFloat();
 						}
 					}
@@ -249,7 +249,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 	}
 
 	// textures
-	if (cgp_value(set, "textures", value) == FALSE) {
+	if (!cgp_value(set, "textures", value)) {
 		list = value.split(';');
 
 		foreach (const QString &ele, list) {
@@ -279,14 +279,14 @@ BYTE cgp_parse(const uTCHAR *file) {
 			::strncpy(lp->name, qPrintable(ele), sizeof(lp->name) - 1);
 
 			// path
-			if (cgp_value(set, ele, value) == FALSE) {
+			if (!cgp_value(set, ele, value)) {
 				value.replace('\\', '/');
 				ustrncpy(lp->path, uQStringCD(QFileInfo(fi.absolutePath() + '/' + value).absoluteFilePath()), usizeof(lp->path) - 1);
 			}
 
 			// mipmap
 			key = ele + "_mipmap";
-			if (cgp_value(set, key, value) == FALSE) {
+			if (!cgp_value(set, key, value)) {
 				if (QString::compare(value, "true", Qt::CaseInsensitive) == 0) {
 					lp->mipmap = TRUE;
 				}
@@ -294,7 +294,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 			// linear
 			key = ele + "_linear";
-			if (cgp_value(set, key, value) == FALSE) {
+			if (!cgp_value(set, key, value)) {
 				if (QString::compare(value, "false", Qt::CaseInsensitive) == 0) {
 					lp->linear = TEXTURE_LINEAR_DISAB;
 				} else if (QString::compare(value, "true", Qt::CaseInsensitive) == 0) {
@@ -304,7 +304,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 
 			// wrap_mode
 			key = ele + "_wrap_mode";
-			if (cgp_value(set, key, value) == FALSE) {
+			if (!cgp_value(set, key, value)) {
 				if (QString::compare(value, "clamp_to_border", Qt::CaseInsensitive) == 0) {
 					lp->wrap = TEXTURE_WRAP_BORDER;
 				} else if (QString::compare(value, "clamp_to_edge", Qt::CaseInsensitive) == 0) {
@@ -322,7 +322,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 	}
 
 	// parameters
-	if (cgp_value(set, "parameters", value) == FALSE) {
+	if (!cgp_value(set, "parameters", value)) {
 		list = value.split(';');
 
 		foreach (const QString &ele, list) {
@@ -348,7 +348,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 			::strncpy(prm->name, qPrintable(ele), sizeof(prm->name) - 1);
 
 			// value
-			if (cgp_value(set, ele, value) == FALSE) {
+			if (!cgp_value(set, ele, value)) {
 				QString qfloat;
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))

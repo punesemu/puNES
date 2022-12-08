@@ -113,7 +113,7 @@ void snd_quit(void) {
 void snd_reset_buffers(void) {
 	snd_thread_pause();
 
-	if (snd.initialized == TRUE) {
+	if (snd.initialized) {
 		cbd.samples_available = 0;
 		cbd.bytes_available = 0;
 		cbd.write = cbd.start;
@@ -139,7 +139,7 @@ void snd_thread_pause(void) {
 	if (snd_thread.pause_calls == 1) {
 		snd_thread.action = ST_PAUSE;
 
-		while (snd_thread.in_run == TRUE) {
+		while (snd_thread.in_run) {
 			gui_sleep(1);
 		}
 	}
@@ -156,8 +156,8 @@ void snd_thread_continue(void) {
 	if (snd_thread.pause_calls == 0) {
 		snd_thread.action = ST_RUN;
 
-		if (snd.initialized == TRUE) {
-			while (snd_thread.in_run == FALSE) {
+		if (snd.initialized) {
+			while (!snd_thread.in_run) {
 				gui_sleep(1);
 			}
 		}
@@ -376,7 +376,7 @@ static thread_funct(sndio_thread_loop, UNUSED(void *data)) {
 		if (snd_thread.action == ST_STOP) {
 			snd_thread.in_run = FALSE;
 			break;
-		} else if ((snd_thread.action == ST_PAUSE) || (snd.initialized == FALSE)) {
+		} else if ((snd_thread.action == ST_PAUSE) || !snd.initialized) {
 			snd_thread.in_run = FALSE;
 			gui_sleep(1);
 			continue;
@@ -450,7 +450,7 @@ static thread_funct(sndio_thread_loop, UNUSED(void *data)) {
 #if !defined (RELEASE)
 		if ((gui_get_ms() - snd_thread.tick) >= 250.0f) {
 			snd_thread.tick = gui_get_ms();
-			if (info.snd_info == TRUE)
+			if (info.snd_info)
 			fprintf(stderr, "snd : %d %d %6d %6d %4d %4d %4d %4d %3d %f %4s\r",
 				avail,
 				len,

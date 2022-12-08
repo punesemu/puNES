@@ -192,7 +192,7 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 		bool visible = false;
 
 #if defined (FULLSCREEN_RESFREQ)
-		if (gfx.is_wayland == FALSE) {
+		if (!gfx.is_wayland) {
 			visible = true;
 			gfx_monitor_enum_monitors();
 			connect(checkBox_Fullscreen_adaptive_rrate, SIGNAL(clicked(bool)), this, SLOT(s_adaptive_rrate(bool)));
@@ -206,7 +206,7 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 		checkBox_Fullscreen_adaptive_rrate->setVisible(visible);
 		label_Fullscreen_adaptive_rrate_note_asterisk->setVisible(visible);
 		label_Fullscreen_resolution_note->setVisible(visible);
-		checkBox_Fullscreen_in_window->setVisible(gfx.is_wayland == FALSE);
+		checkBox_Fullscreen_in_window->setVisible(!gfx.is_wayland);
 	}
 
 	tabWidget_Video->setCurrentIndex(0);
@@ -278,7 +278,7 @@ void wdgSettingsVideo::update_widget(void) {
 #endif
 		par_set();
 
-		if (cfg->PAR_soft_stretch == TRUE) {
+		if (cfg->PAR_soft_stretch) {
 			checkBox_PAR_Soft_Stretch->setChecked(true);
 		} else {
 			checkBox_PAR_Soft_Stretch->setChecked(false);
@@ -337,7 +337,7 @@ void wdgSettingsVideo::update_widget(void) {
 	checkBox_Use_integer_scaling_in_fullscreen->setChecked(cfg->integer_scaling);
 	checkBox_Stretch_in_fullscreen->setChecked(cfg->stretch);
 #if defined (FULLSCREEN_RESFREQ)
-	if (gfx.is_wayland == FALSE) {
+	if (!gfx.is_wayland) {
 		checkBox_Fullscreen_adaptive_rrate->setEnabled(!checkBox_Fullscreen_in_window->isChecked());
 		checkBox_Fullscreen_adaptive_rrate->setChecked(cfg->adaptive_rrate);
 		resolution_set();
@@ -1088,7 +1088,7 @@ void wdgSettingsVideo::s_shader(int index) {
 void wdgSettingsVideo::s_disable_srgb_fbo(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->disable_srgb_fbo = !cfg->disable_srgb_fbo;
-	if (info.sRGB_FBO_in_use == TRUE) {
+	if (info.sRGB_FBO_in_use) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
 	emu_thread_continue();

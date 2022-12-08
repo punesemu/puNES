@@ -249,7 +249,7 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 	}
 	hid_end_parse(hdata);
 
-	if ((is_a_joystick == FALSE) && ((jdev->info.axes == 0) && (jdev->info.buttons == 0) && (jdev->info.hats == 0))) {
+	if (!is_a_joystick && ((jdev->info.axes == 0) && (jdev->info.buttons == 0) && (jdev->info.hats == 0))) {
 		fprintf(stderr, "%s: is not a joystick\n", jdev->dev);
 		js_os_jdev_close(jdev);
 		return;
@@ -270,7 +270,7 @@ void js_os_jdev_close(_js_device *jdev) {
 		return;
 	}
 
-	if (jdev->present == TRUE) {
+	if (jdev->present) {
 		jstick.jdd.count--;
 #if defined (DEBUG)
 		ufprintf(stderr, uL("jstick disc. : slot%d \"" uPs("") "\" (%d)\n"),
@@ -308,7 +308,7 @@ void js_os_jdev_scan(void) {
 
 		thread_mutex_lock(jdev->lock);
 
-		if (jdev->present == FALSE) {
+		if (!jdev->present) {
 			js_os_jdev_open(jdev, NULL);
 		}
 
@@ -534,7 +534,7 @@ INLINE static void usb_dev_info(_js_usb_hid_device *uhdev, struct usb_device_inf
 	size = FHMIN(size, (int)(usizeof(uhdev->desc) - 1));
 
 	if (size > 1) {
-		if (vendor == TRUE) {
+		if (vendor) {
 			usnprintf(uhdev->desc, size, uL("" uPs("") " " uPs("")), udi->udi_vendor, udi->udi_product);
 		} else {
 			usnprintf(uhdev->desc, size, uL("" uPs("")), udi->udi_product);
