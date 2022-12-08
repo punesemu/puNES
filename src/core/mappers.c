@@ -1180,6 +1180,9 @@ BYTE map_init(void) {
 		case 447:
 			map_init_447();
 			break;
+		case 451:
+			map_init_451();
+			break;
 		case 452:
 			map_init_452();
 			break;

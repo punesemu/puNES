@@ -6,16 +6,22 @@
 <p align="center">
   <a href="https://github.com/punesemu/puNES/releases/latest">
     <img src="https://img.shields.io/github/release/punesemu/puNES.svg?label=latest%20release" alt="GitHub release"/>
+  </a>
   <a href="https://github.com/punesemu/puNES/blob/master/COPYING">
     <img src="https://img.shields.io/github/license/punesemu/puNES.svg" alt="License"/>
+  </a>
   <a href="https://crowdin.com/project/punes">
     <img src="https://badges.crowdin.net/punes/localized.svg" alt="Crowdin"/>
+  </a>
   <a href="https://github.com/punesemu/puNES">
     <img src="https://img.shields.io/github/languages/code-size/punesemu/puNES?style=flat" alt="GitHub code size in bytes"/>
+  </a>
   <a href="https://www.codefactor.io/repository/github/punesemu/punes/overview/master">
     <img src="https://www.codefactor.io/repository/github/punesemu/punes/badge/master" alt="CodeFactor"/>
+  </a>
   <a href="https://repology.org/project/punes/versions">
     <img src="https://repology.org/badge/tiny-repos/punes.svg" alt="Packaging status"/>
+  </a>
 </p>
 
 :floppy_disk: Work in Progress (WIP) Builds [![Build status](https://github.com/punesemu/puNES/actions/workflows/build.yml/badge.svg)](https://github.com/punesemu/puNES/actions)
@@ -57,58 +63,58 @@ To see a list of available command-line options, start puNES with the `-h` argum
 
 :electric_plug: Supported Mappers
 -----------
-|0   |1   |2   |3   |4   |5   |6   |7   |8   |9   |10  |
-|----|----|----|----|----|----|----|----|----|----|----|
-|11  |12  |13  |14  |15  |16  |17  |18  |19  |20  |21  |
-|22  |23  |24  |25  |26  |27  |28  |29  |30  |31  |32  |
-|33  |34  |35  |36  |37  |38  |    |40  |41  |42  |43  |
-|44  |45  |46  |47  |48  |49  |50  |51  |52  |53  |    |
-|55  |56  |57  |58  |59  |60  |61  |62  |63  |64  |65  |
-|66  |67  |68  |69  |70  |71  |72  |73  |74  |75  |76  |
-|77  |78  |79  |80  |81  |82  |83  |    |85  |86  |87  |
-|88  |89  |90  |91  |92  |93  |94  |95  |96  |97  |    |
-|99  |    |101 |    |103 |104 |105 |106 |107 |108 |    |
-|    |111 |112 |113 |114 |115 |116 |117 |118 |119 |120 |
-|121 |    |123 |    |125 |126 |    |    |    |    |    |
-|132 |133 |134 |    |136 |137 |138 |139 |140 |141 |142 |
-|143 |144 |145 |146 |147 |148 |149 |150 |151 |152 |153 |
-|154 |155 |156 |    |158 |159 |    |    |162 |163 |164 |
-|165 |166 |167 |168 |    |    |171 |172 |173 |    |175 |
-|176 |177 |178 |179 |180 |    |182 |183 |184 |185 |186 |
-|187 |188 |189 |190 |191 |192 |193 |194 |195 |196 |197 |
-|198 |199 |200 |201 |202 |203 |204 |205 |206 |207 |208 |
-|209 |210 |211 |212 |213 |214 |215 |216 |217 |218 |219 |
-|    |221 |222 |    |224 |225 |226 |227 |228 |229 |230 |
-|231 |232 |233 |234 |235 |236 |237 |238 |    |240 |241 |
-|242 |243 |244 |245 |246 |    |248 |249 |250 |    |252 |
-|253 |254 |255 |256 |    |258 |259 |260 |261 |262 |263 |
-|264 |265 |266 |267 |268 |269 |    |271 |    |    |274 |
-|    |    |    |    |    |    |281 |282 |283 |284 |285 |
-|286 |287 |288 |289 |290 |    |292 |    |    |295 |    |
-|297 |298 |299 |300 |301 |302 |303 |304 |305 |306 |307 |
-|308 |309 |    |    |312 |313 |314 |315 |    |    |    |
-|319 |320 |    |322 |323 |324 |325 |    |327 |328 |329 |
-|    |331 |332 |333 |    |335 |336 |337 |338 |339 |340 |
-|341 |342 |343 |344 |345 |346 |347 |348 |349 |350 |351 |
-|352 |353 |    |355 |356 |357 |358 |359 |360 |361 |    |
-|    |    |    |    |    |368 |369 |370 |    |372 |    |
-|374 |375 |    |377 |    |    |380 |381 |382 |    |    |
-|    |386 |387 |388 |389 |390 |    |    |393 |394 |395 |
-|396 |397 |398 |399 |400 |401 |    |403 |404 |    |406 |
-|    |    |409 |410 |411 |412 |413 |414 |415 |416 |417 |
-|    |    |420 |    |422 |    |    |    |    |    |428 |
-|429 |    |431 |432 |433 |434 |    |436 |437 |438 |    |
-|    |    |442 |    |    |    |    |447 |    |    |    |
-|    |452 |    |    |455 |456 |457 |    |    |    |    |
-|    |    |    |    |    |    |    |    |    |    |    |
-|    |    |    |    |    |    |    |    |    |    |    |
-|    |    |    |    |    |    |    |    |    |    |    |
-|    |    |    |    |    |    |    |    |    |    |    |
-|    |    |    |    |    |    |512 |513 |    |    |516 |
-|    |518 |519 |    |521 |522 |    |524 |525 |526 |527 |
-|528 |529 |530 |    |532 |    |534 |    |536 |537 |538 |
-|539 |540 |541 |    |543 |    |    |    |547 |    |    |
-|550 |    |    |    |554 |    |556 |557 |558 |559 |560 |
+| 0   | 1   | 2   | 3   | 4   | 5   | 6   | 7   | 8   | 9   | 10  |
+|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+| 11  | 12  | 13  | 14  | 15  | 16  | 17  | 18  | 19  | 20  | 21  |
+| 22  | 23  | 24  | 25  | 26  | 27  | 28  | 29  | 30  | 31  | 32  |
+| 33  | 34  | 35  | 36  | 37  | 38  |     | 40  | 41  | 42  | 43  |
+| 44  | 45  | 46  | 47  | 48  | 49  | 50  | 51  | 52  | 53  |     |
+| 55  | 56  | 57  | 58  | 59  | 60  | 61  | 62  | 63  | 64  | 65  |
+| 66  | 67  | 68  | 69  | 70  | 71  | 72  | 73  | 74  | 75  | 76  |
+| 77  | 78  | 79  | 80  | 81  | 82  | 83  |     | 85  | 86  | 87  |
+| 88  | 89  | 90  | 91  | 92  | 93  | 94  | 95  | 96  | 97  |     |
+| 99  |     | 101 |     | 103 | 104 | 105 | 106 | 107 | 108 |     |
+|     | 111 | 112 | 113 | 114 | 115 | 116 | 117 | 118 | 119 | 120 |
+| 121 |     | 123 |     | 125 | 126 |     |     |     |     |     |
+| 132 | 133 | 134 |     | 136 | 137 | 138 | 139 | 140 | 141 | 142 |
+| 143 | 144 | 145 | 146 | 147 | 148 | 149 | 150 | 151 | 152 | 153 |
+| 154 | 155 | 156 |     | 158 | 159 |     |     | 162 | 163 | 164 |
+| 165 | 166 | 167 | 168 |     |     | 171 | 172 | 173 |     | 175 |
+| 176 | 177 | 178 | 179 | 180 |     | 182 | 183 | 184 | 185 | 186 |
+| 187 | 188 | 189 | 190 | 191 | 192 | 193 | 194 | 195 | 196 | 197 |
+| 198 | 199 | 200 | 201 | 202 | 203 | 204 | 205 | 206 | 207 | 208 |
+| 209 | 210 | 211 | 212 | 213 | 214 | 215 | 216 | 217 | 218 | 219 |
+|     | 221 | 222 |     | 224 | 225 | 226 | 227 | 228 | 229 | 230 |
+| 231 | 232 | 233 | 234 | 235 | 236 | 237 | 238 |     | 240 | 241 |
+| 242 | 243 | 244 | 245 | 246 |     | 248 | 249 | 250 |     | 252 |
+| 253 | 254 | 255 | 256 |     | 258 | 259 | 260 | 261 | 262 | 263 |
+| 264 | 265 | 266 | 267 | 268 | 269 |     | 271 |     |     | 274 |
+|     |     |     |     |     |     | 281 | 282 | 283 | 284 | 285 |
+| 286 | 287 | 288 | 289 | 290 |     | 292 |     |     | 295 |     |
+| 297 | 298 | 299 | 300 | 301 | 302 | 303 | 304 | 305 | 306 | 307 |
+| 308 | 309 |     |     | 312 | 313 | 314 | 315 |     |     |     |
+| 319 | 320 |     | 322 | 323 | 324 | 325 |     | 327 | 328 | 329 |
+|     | 331 | 332 | 333 |     | 335 | 336 | 337 | 338 | 339 | 340 |
+| 341 | 342 | 343 | 344 | 345 | 346 | 347 | 348 | 349 | 350 | 351 |
+| 352 | 353 |     | 355 | 356 | 357 | 358 | 359 | 360 | 361 |     |
+|     |     |     |     |     | 368 | 369 | 370 |     | 372 |     |
+| 374 | 375 |     | 377 |     |     | 380 | 381 | 382 |     |     |
+|     | 386 | 387 | 388 | 389 | 390 |     |     | 393 | 394 | 395 |
+| 396 | 397 | 398 | 399 | 400 | 401 |     | 403 | 404 |     | 406 |
+|     |     | 409 | 410 | 411 | 412 | 413 | 414 | 415 | 416 | 417 |
+|     |     | 420 |     | 422 |     |     |     |     |     | 428 |
+| 429 |     | 431 | 432 | 433 | 434 |     | 436 | 437 | 438 |     |
+|     |     | 442 |     |     |     |     | 447 |     |     |     |
+| 451 | 452 |     |     | 455 | 456 | 457 |     |     |     |     |
+|     |     |     |     |     |     |     |     |     |     |     |
+|     |     |     |     |     |     |     |     |     |     |     |
+|     |     |     |     |     |     |     |     |     |     |     |
+|     |     |     |     |     |     |     |     |     |     |     |
+|     |     |     |     |     |     | 512 | 513 |     |     | 516 |
+|     | 518 | 519 |     | 521 | 522 |     | 524 | 525 | 526 | 527 |
+| 528 | 529 | 530 |     | 532 |     | 534 |     | 536 | 537 | 538 |
+| 539 | 540 | 541 |     | 543 |     |     |     | 547 |     |     |
+| 550 |     |     |     | 554 |     | 556 | 557 | 558 | 559 | 560 |
 
 
 :electric_plug: Unif
@@ -182,9 +188,12 @@ to start the emulator
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
 #### Compilation of puNES
 ```bash
+sudo pkg install -y devel/cmake devel/ninja devel/pkgconf devel/git multimedia/ffmpeg audio/sndio devel/qt5-qmake
+sudo pkg install -y devel/qt5-buildtools devel/qt5-core x11-toolkits/qt5-gui x11-toolkits/qt5-widgets graphics/qt5-svg
+sudo pkg install -y devel/qt5-linguisttools
 git clone https://github.com/punesemu/puNES
 cd puNES
-Qt5_DIR="/usr/local/lib/qt5/cmake/Qt5" cmake -B build -G Ninja -DENABLE_FFMPEG=ON
+cmake -B build -G Ninja -DQt5_DIR=/usr/local/lib/qt5/cmake/Qt5 -DENABLE_FFMPEG=ON
 cmake --build build -j2
 ```
 the executable `punes` is in the `build/src` directory.
@@ -205,7 +214,7 @@ where `[...]` are the other necessary options.
 ```bash
 git clone https://github.com/punesemu/puNES
 cd puNES
-Qt5_DIR="/usr/local/lib/qt5/cmake/Qt5" cmake -B build -G Ninja -DENABLE_FFMPEG=ON
+cmake -B build -G Ninja -DQt5_DIR=/usr/local/lib/qt5/cmake/Qt5 -DENABLE_FFMPEG=ON
 cmake --build build -j2
 ```
 the executable `punes` is in the `buid/src` directory.

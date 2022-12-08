@@ -216,6 +216,7 @@ set(core_srcs
 	core/mappers/mapper_442.c
 	core/mappers/mapper_447.c
 	core/mappers/mapper_44.c
+	core/mappers/mapper_451.c
 	core/mappers/mapper_452.c
 	core/mappers/mapper_455.c
 	core/mappers/mapper_456.c
@@ -505,7 +506,6 @@ set(gui_srcs
 	gui/objCheat.hpp
 	gui/objSettings.cpp
 	gui/objSettings.hpp
-
 	gui/qt.cpp
 	gui/recent_roms.cpp
 	gui/settings.cpp
