@@ -25,6 +25,7 @@
 #include "tas.h"
 #include "save_slot.h"
 #include "SST39SF040.h"
+#include "gui.h"
 
 INLINE static void prg_fix_406(BYTE value);
 INLINE static void prg_swap_406(WORD address, WORD value);
@@ -190,14 +191,14 @@ void extcl_battery_io_406(BYTE mode, FILE *fp) {
 			map_bat_wr_default(fp);
 		}
 		if (fwrite(m406tmp.sst39sf040, prg_size(), 1, fp) < 1) {
-			fprintf(stderr, "error on write flash chip\n");
+			log_error(uL("mapper_406;error on write flash chip"));
 		}
 	} else {
 		if (info.prg.ram.bat.banks) {
 			map_bat_rd_default(fp);
 		}
 		if (fread(m406tmp.sst39sf040, prg_size(), 1, fp) < 1) {
-			fprintf(stderr, "error on read flash chip\n");
+			log_error(uL("mapper_406;error on read flash chip"));
 		}
 	}
 }

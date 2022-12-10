@@ -99,6 +99,9 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 #if !defined (RELEASE)
 		if (keyval == Qt::Key_Insert) {
 			info.snd_info = !info.snd_info;
+			if (!info.snd_info) {
+				fprintf(stderr, "\n");
+			}
 		}
 #endif
 		if (tas.type == NOTAS) {

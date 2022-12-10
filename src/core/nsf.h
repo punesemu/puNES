@@ -210,7 +210,7 @@ typedef struct _nsf {
 } _nsf;
 
 #if defined (_NSF_STATIC_)
-static char nsf_default_label[4] = {"<?>"};
+static char nsf_default_label[] = {"<?>"};
 static const BYTE nsf_routine[17] = {
 //	0     1
 	0xA9, 0x00,       // 0x2500 : LDA [current song]
@@ -240,14 +240,16 @@ extern _nsf nsf;
 EXTERNC void nsf_init(void);
 EXTERNC void nsf_quit(void);
 EXTERNC void nsf_reset(void);
+EXTERNC void nsf_info(void);
 EXTERNC BYTE nsf_load_rom(void);
 EXTERNC void nsf_after_load_rom(void);
 EXTERNC void nsf_init_tune(void);
 EXTERNC void nsf_tick(void);
+EXTERNC void extcl_audio_samples_mod_nsf(SWORD *samples, int count);
+
 EXTERNC void nsf_reset_prg(void);
 EXTERNC void nsf_reset_timers(void);
 EXTERNC void nsf_reset_song_title(void);
-EXTERNC void extcl_audio_samples_mod_nsf(SWORD *samples, int count);
 
 EXTERNC void nsf_main_screen(void);
 EXTERNC void nsf_main_screen_event(void);

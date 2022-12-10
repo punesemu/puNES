@@ -219,6 +219,7 @@ EXTERNC void fds_init(void);
 EXTERNC void fds_quit(void);
 EXTERNC BYTE fds_load_rom(void);
 EXTERNC BYTE fds_load_bios(void);
+EXTERNC void fds_info_side(BYTE side);
 EXTERNC void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet);
 EXTERNC void fds_diff_op(BYTE mode, uint32_t position, WORD value);
 

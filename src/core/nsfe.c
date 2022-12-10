@@ -62,10 +62,6 @@ struct _nsfe {
 	} chunk;
 } nsfe;
 
-void nsfe_init(void) {}
-void nsfe_quit(void) {
-	extcl_audio_samples_mod = NULL;
-}
 BYTE nsfe_load_rom(void) {
 	_rom_mem rom;
 
@@ -204,32 +200,6 @@ BYTE nsfe_load_rom(void) {
 			}
 		}
 
-#if !defined (RELEASE)
-		{
-			unsigned int tmp;
-
-			fprintf(stderr, "nam : %s\n", nsf.info.name);
-			fprintf(stderr, "art : %s\n", nsf.info.artist);
-			fprintf(stderr, "cop : %s\n", nsf.info.copyright);
-			fprintf(stderr, "rip : %s\n", nsf.info.ripper);
-			fprintf(stderr, "txt : %s\n", nsf.text.data);
-			fprintf(stderr, "pls : ");
-			for (tmp = 0; tmp < nsf.playlist.count; tmp++) {
-				if (tmp == 0) {
-					fprintf(stderr, "%3d", nsf.playlist.data[tmp]);
-				} else {
-					fprintf(stderr, ",%3d", nsf.playlist.data[tmp]);
-				}
-			}
-			fprintf(stderr, "\n");
-			for (tmp = 0; tmp < nsf.songs.total; tmp++) {
-				_nsf_info_song *song = &nsf.info_song[tmp];
-
-				fprintf(stderr, "%3d : %7d %7d %s\n", tmp, song->time, song->fade, song->track_label);
-			}
-		}
-#endif
-
 		if ((nsf.songs.total == 0) || (nsf.adr.load < 0x6000) || (nsf.adr.init < 0x6000) || (nsf.adr.play < 0x6000)) {
 			free(rom.data);
 			return (EXIT_ERROR);
@@ -312,6 +282,29 @@ BYTE nsfe_load_rom(void) {
 
 	return (EXIT_OK);
 }
+void nsfe_info(void) {
+	uint32_t tmp;
+
+	log_info_box(uL("name;%s"), nsf.info.name);
+	log_info_box(uL("artist;%s"), nsf.info.artist);
+	log_info_box(uL("copyright;%s"), nsf.info.copyright);
+	log_info_box(uL("ripper;%s"), nsf.info.ripper);
+	log_info_box(uL("text;%s"), nsf.text.data);
+	log_info_box_open(uL("playlist;"));
+	for (tmp = 0; tmp < nsf.playlist.count; tmp++) {
+		if (tmp == 0) {
+			log_append(uL("%d"), nsf.playlist.data[tmp]);
+		} else {
+			log_append(uL(", %d"), nsf.playlist.data[tmp]);
+		}
+	}
+	log_close_box(uL(""));
+	for (tmp = 0; tmp < nsf.songs.total; tmp++) {
+		_nsf_info_song *song = &nsf.info_song[tmp];
+
+		log_info_box(uL("%d;%-7d %-7d %s"), tmp, song->time, song->fade, song->track_label);
+	}
+}
 
 BYTE nsfe_NONE(_rom_mem *rom, BYTE phase) {
 	if (phase == NSFE_COUNT) {
@@ -358,7 +351,7 @@ BYTE nsfe_INFO(_rom_mem *rom, BYTE phase) {
 
 	if (phase == NSFE_READ) {
 		if (!(nsf.info_song = (_nsf_info_song *)malloc(nsf.songs.total * sizeof(_nsf_info_song)))) {
-			fprintf(stderr, "Out of memory\n");
+			log_error(uL("nsfe;out of memory"));
 			return (EXIT_ERROR);
 		}
 		memset(nsf.info_song, 0x00, nsf.songs.total * sizeof(_nsf_info_song));
@@ -427,7 +420,7 @@ BYTE nsfe_plst(_rom_mem *rom, BYTE phase) {
 	}
 
 	if (!(nsf.playlist.data = (BYTE *)malloc(nsfe.chunk.length))) {
-		fprintf(stderr, "Out of memory\n");
+		log_error(uL("nsfe;out of memory"));
 		return (EXIT_ERROR);
 	}
 
@@ -508,7 +501,7 @@ BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase) {
 	}
 
 	if (!(nsf.info.track_label = (char *)malloc(nsfe.chunk.length))) {
-		fprintf(stderr, "Out of memory\n");
+		log_error(uL("nsfe;out of memory"));
 		return (EXIT_ERROR);
 	}
 
@@ -555,7 +548,7 @@ BYTE nsfe_auth(_rom_mem *rom, BYTE phase) {
 	}
 
 	if (!(nsf.info.auth = (char *)malloc(nsfe.chunk.length))) {
-		fprintf(stderr, "Out of memory\n");
+		log_error(uL("nsfe;out of memory"));
 		return (EXIT_ERROR);
 	}
 
@@ -605,7 +598,7 @@ BYTE nsfe_text(_rom_mem *rom, BYTE phase) {
 	}
 
 	if (!(nsf.text.data = (BYTE *)malloc(nsfe.chunk.length))) {
-		fprintf(stderr, "Out of memory\n");
+		log_error(uL("nsfe;out of memory"));
 		return (EXIT_ERROR);
 	}
 

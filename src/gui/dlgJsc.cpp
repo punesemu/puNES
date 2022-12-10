@@ -28,7 +28,6 @@ dlgJsc::dlgJsc(QWidget *parent) : QDialog(parent) {
 
 	js_guid_unset(&guid);
 	timer = new QTimer(this);
-	mutex = new QMutex();
 	first_time = true;
 
 	setupUi(this);
@@ -254,7 +253,7 @@ void dlgJsc::s_joy_read_timer(void) {
 	static const QString scbr = "QCheckBox { background-color : #FFCFCF; }";
 	int jdev_index = js_jdev_index();
 
-	mutex->lock();
+	mutex.lock();
 
 	if (jdev_index != JS_NO_JOYSTICK) {
 		if (jdev_index < MAX_JOYSTICK) {
@@ -301,7 +300,7 @@ void dlgJsc::s_joy_read_timer(void) {
 		}
 	}
 
-	mutex->unlock();
+	mutex.unlock();
 }
 void dlgJsc::s_combobox_joy_activated(int index) {
 	int jdev_index = ((QComboBox *)sender())->itemData(index).toInt();
@@ -318,7 +317,7 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 	if (jdev_index != old_jdev_index) {
 		unsigned int i, a;
 
-		mutex->lock();
+		mutex.lock();
 
 		clear_all();
 
@@ -460,7 +459,7 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 		}
 		old_jdev_index = jdev_index;
 
-		mutex->unlock();
+		mutex.unlock();
 	}
 }
 void dlgJsc::s_axis_cb_clicked(UNUSED(bool checked)) {

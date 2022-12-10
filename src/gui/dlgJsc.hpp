@@ -30,7 +30,7 @@ class dlgJsc : public QDialog, public Ui::dlgJsc {
 	private:
 		_input_guid guid;
 		QTimer *timer;
-		QMutex *mutex;
+		QMutex mutex;
 		QRect geom;
 		bool first_time;
 

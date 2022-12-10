@@ -24,6 +24,7 @@
 #include "tas.h"
 #include "save_slot.h"
 #include "SST39SF040.h"
+#include "gui.h"
 
 INLINE static void prg_fix_CHEAPOCABRA_GTROM(void);
 INLINE static void chr_fix_CHEAPOCABRA_GTROM(void);
@@ -163,14 +164,14 @@ void extcl_battery_io_CHEAPOCABRA_GTROM(BYTE mode, FILE *fp) {
 			map_bat_wr_default(fp);
 		}
 		if (fwrite(gtromtmp.sst39sf040, prg_size(), 1, fp) < 1) {
-			fprintf(stderr, "error on write flash chip\n");
+			log_error(uL("CHEAPOCABRA;error on write flash chip"));
 		}
 	} else {
 		if (info.prg.ram.bat.banks) {
 			map_bat_rd_default(fp);
 		}
 		if (fread(gtromtmp.sst39sf040, prg_size(), 1, fp) < 1) {
-			fprintf(stderr, "error on read flash chip\n");
+			log_error(uL("CHEAPOCABRA;error on read flash chip"));
 		}
 	}
 }

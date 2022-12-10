@@ -109,7 +109,7 @@ uTCHAR *gamegenie_check_rom_present(BYTE print_message) {
 
 	if (print_message) {
 		gui_overlay_info_append_msg_precompiled(2, NULL);
-		fprintf(stderr, "Game Genie rom not found\n");
+		log_error(uL("game genie;rom not found"));
 	}
 
 	return (NULL);
@@ -144,7 +144,7 @@ void gamegenie_load_rom(void *rom_mem) {
 
 	if (!(fp = ufopen(info.rom.file, uL("rb")))) {
 		gui_overlay_info_append_msg_precompiled(3, NULL);
-		fprintf(stderr, "error loading Game Genie rom\n");
+		log_error(uL("game genie;error loading rom"));
 		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file) - 1);
 		gamegenie_free_paths();
 		return;

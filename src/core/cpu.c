@@ -1001,7 +1001,7 @@ void cpu_exe_op(void) {
 	case 0xF2: // JAM
 	default:
 		if (!info.no_rom && !info.first_illegal_opcode) {
-			fprintf(stderr, "Alert: PC = 0x%04X, CODEOP = 0x%02X \n", (cpu.PC - 1), cpu.opcode);
+			log_warning(uL("cpu;alert PC = 0x%04X, CODEOP = 0x%02X"), (cpu.PC - 1), cpu.opcode);
 			gui_overlay_info_append_msg_precompiled(4, NULL);
 			info.first_illegal_opcode = TRUE;
 		}

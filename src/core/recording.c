@@ -172,7 +172,7 @@ void recording_init(void) {
 	}
 
 	if (thread_mutex_init_error(ffmpeg.lock)) {
-		fprintf(stderr, "Unable to allocate the recording mutex\n");
+		log_error(uL("recording;unable to allocate the recording mutex"));
 		return;
 	}
 }
@@ -214,12 +214,12 @@ void recording_start(uTCHAR *filename, int format) {
 	av_dump_format(ffmpeg.format_ctx, 0, ffmpeg.format_ctx->url, 1);
 
 	if ((ret = avio_open(&ffmpeg.format_ctx->pb, ffmpeg.format_ctx->url, AVIO_FLAG_WRITE) < 0)) {
-		fprintf(stderr, "cannot open file : %s.\n", ffmpeg_av_make_error_string(ret));
+		log_error(uL("recording;cannot open file, %s"), ffmpeg_av_make_error_string(ret));
 		goto recording_start_end;
 	}
 
 	if ((ret = avformat_write_header(ffmpeg.format_ctx, NULL) < 0)) {
-		fprintf(stderr, "cannot write header file : %s.\n", ffmpeg_av_make_error_string(ret));
+		log_error(uL("recording;cannot write header file, %s"), ffmpeg_av_make_error_string(ret));
 		goto recording_start_end;
 	}
 
@@ -253,7 +253,7 @@ void recording_finish(BYTE from_quit) {
 	}
 
 	if ((ret = av_write_trailer(ffmpeg.format_ctx)) < 0) {
-		fprintf(stderr, "error on write traile : %s\n", ffmpeg_av_make_error_string(ret));
+		log_error(uL("recording;error on write trailer, %s"), ffmpeg_av_make_error_string(ret));
 	}
 
 	if (ffmpeg.video.used) {
@@ -264,7 +264,7 @@ void recording_finish(BYTE from_quit) {
 	}
 
 	if ((ret = avio_close(ffmpeg.format_ctx->pb)) < 0) {
-		fprintf(stderr, "error on close file : %s\n", ffmpeg_av_make_error_string(ret));
+		log_error(uL("recording;error on close file, %s"), ffmpeg_av_make_error_string(ret));
 	}
 
 	if (ffmpeg.format_ctx) {
@@ -470,9 +470,9 @@ INLINE static BYTE ffmpeg_stream_write_frame(_ffmpeg_stream *fs) {
 		}
 		if (ret < 0) {
 			if (fs->avc->type == AVMEDIA_TYPE_VIDEO) {
-				fprintf(stderr, "Error encoding video frame : %s.\n", ffmpeg_av_make_error_string(ret));
+				log_error(uL("recording;error encoding video frame, %s"), ffmpeg_av_make_error_string(ret));
 			} else {
-				fprintf(stderr, "Error encoding audio frame : %s.\n", ffmpeg_av_make_error_string(ret));
+				log_error(uL("recording;error encoding audio frame, %s"), ffmpeg_av_make_error_string(ret));
 			}
 			rc = EXIT_ERROR;
 			break;
@@ -487,9 +487,9 @@ INLINE static BYTE ffmpeg_stream_write_frame(_ffmpeg_stream *fs) {
 
 		if (ret < 0) {
 			if (fs->avc->type == AVMEDIA_TYPE_VIDEO) {
-				fprintf(stderr, "Error while writing video frame : %s.\n", ffmpeg_av_make_error_string(ret));
+				log_error(uL("recording;error while writing video frame, %s"), ffmpeg_av_make_error_string(ret));
 			} else {
-				fprintf(stderr, "Error while writing audio frame : %s.\n", ffmpeg_av_make_error_string(ret));
+				log_error(uL("recording;error while writing audio frame, %s"), ffmpeg_av_make_error_string(ret));
 			}
 			rc = EXIT_ERROR;
 			break;
@@ -509,7 +509,7 @@ static BYTE ffmpeg_context_setup(_recording_format_info *rfi, enum AVPixelFormat
 
 	// alloco il contesto del formato
 	if (!(ffmpeg.format_ctx = avformat_alloc_context())) {
-		fprintf(stderr, "cannot allocate format context.\n");
+		log_error(uL("recording;cannot allocate format context"));
 		return (EXIT_ERROR);
 	}
 
@@ -528,13 +528,13 @@ static BYTE ffmpeg_context_setup(_recording_format_info *rfi, enum AVPixelFormat
 
 	// configuro il contesto
 	if (!(ffmpeg.format_ctx->oformat = av_guess_format(rfi->format, NULL, NULL))) {
-		fprintf(stderr, "format not found.\n");
+		log_error(uL("recording;format not found"));
 		return (EXIT_ERROR);
 	}
 
 	// controllo se il formato non supporta un codec video
 	if (ffmpeg.format_ctx->oformat->video_codec == AV_CODEC_ID_NONE) {
-		fprintf(stderr, "video codec unavailable.\n");
+		log_error(uL("recording;video codec unavailable"));
 		return (EXIT_OK);
 	}
 
@@ -552,13 +552,13 @@ static BYTE ffmpeg_context_setup(_recording_format_info *rfi, enum AVPixelFormat
 
 	// controllo se e' stato trovato un codec video
 	if (video->avc == NULL) {
-		fprintf(stderr, "video codec not found.\n");
+		log_error(uL("recording;video codec not found"));
 		return (EXIT_ERROR);
 	}
 
 	// creo lo stream video
 	if (!(video->avs = avformat_new_stream(ffmpeg.format_ctx, video->avc))) {
-		fprintf(stderr, "cannot allocate video stream.\n");
+		log_error(uL("recording;cannot allocate video stream"));
 		return (EXIT_ERROR);
 	}
 
@@ -567,7 +567,7 @@ static BYTE ffmpeg_context_setup(_recording_format_info *rfi, enum AVPixelFormat
 
 	// alloco il contesto del codec video
 	if (!(video->avcc = avcodec_alloc_context3(video->avc))) {
-		fprintf(stderr, "cannot allocate video codec context.\n");
+		log_error(uL("recording;cannot allocate video codec context"));
 		return (EXIT_ERROR);
 	}
 
@@ -598,7 +598,7 @@ static BYTE ffmpeg_stream_open(_ffmpeg_stream *fs, AVDictionary *opts, BYTE crea
 
 	// apro il codec
 	if ((ret = avcodec_open2(fs->avcc, fs->avc, &opts) < 0)) {
-		fprintf(stderr, "cannot open codec %s.\n", ffmpeg_av_make_error_string(ret));
+		log_error(uL("recording;cannot open codec %s"), ffmpeg_av_make_error_string(ret));
 		return (EXIT_ERROR);
 	}
 
@@ -607,7 +607,7 @@ static BYTE ffmpeg_stream_open(_ffmpeg_stream *fs, AVDictionary *opts, BYTE crea
 	opts = NULL;
 
 	if ((ret = avcodec_parameters_from_context(fs->avs->codecpar, fs->avcc) < 0)) {
-		fprintf(stderr, "%s.\n", ffmpeg_av_make_error_string(ret));
+		log_error(uL("recording;%s"), ffmpeg_av_make_error_string(ret));
 		return (EXIT_ERROR);
 	}
 
@@ -616,7 +616,7 @@ static BYTE ffmpeg_stream_open(_ffmpeg_stream *fs, AVDictionary *opts, BYTE crea
 		_ffmpeg_stream *video = &ffmpeg.video;
 
 		if (!(video->avf = ffmpeg_video_alloc_frame(video->avcc->pix_fmt, video->avcc->width, video->avcc->height))) {
-			fprintf(stderr, "Could not allocate picture\n");
+			log_error(uL("recording;could not allocate picture"));
 			return (EXIT_ERROR);
 		}
 	}
@@ -667,7 +667,7 @@ static BYTE ffmpeg_video_add_stream(enum recording_format rf) {
 			ret = ffmpeg_video_add_stream_format_audio(rf);
 			break;
 		default:
-			fprintf(stderr, "Encoding format not supported.\n");
+			log_error(uL("recording;encoding format not supported"));
 			ret = EXIT_ERROR;
 			break;
 	}
@@ -708,7 +708,7 @@ INLINE static BYTE ffmpeg_video_write_frame(int w, int h, int stride, uint8_t *r
 	}
 
 	if ((ret = avcodec_send_frame(video->avcc, frame)) < 0) {
-		fprintf(stderr, "Error submitting a video frame for encoding: %s.\n", ffmpeg_av_make_error_string(ret));
+		log_error(uL("recording;error submitting a video frame for encoding, %s"), ffmpeg_av_make_error_string(ret));
 		return (EXIT_ERROR);
 	}
 
@@ -727,7 +727,7 @@ static AVFrame *ffmpeg_video_alloc_frame(enum AVPixelFormat pix_fmt, int width, 
 	avframe->height = height;
 
 	if (av_frame_get_buffer(avframe, 32) < 0) {
-		fprintf(stderr, "Could not allocate frame data.\n");
+		log_error(uL("recording;could not allocate frame data"));
 		return (NULL);
 	}
 
@@ -1133,22 +1133,22 @@ static BYTE ffmpeg_audio_add_stream(void) {
 	int64_t dst_nb_samples;
 
 	if (ffmpeg.format_ctx->oformat->audio_codec == AV_CODEC_ID_NONE) {
-		fprintf(stderr, "audio codec unavailable.\n");
+		log_error(uL("recording;audio codec unavailable"));
 		return (EXIT_OK);
 	}
 
 	if (!(audio->avc = avcodec_find_encoder(ffmpeg.format_ctx->oformat->audio_codec))) {
-		fprintf(stderr, "audio codec not found.\n");
+		log_error(uL("recording;audio codec not found"));
 		return (EXIT_ERROR);
 	}
 
 	if (!(audio->avs = avformat_new_stream(ffmpeg.format_ctx, NULL))) {
-		fprintf(stderr, "could not alloc audio stream.\n");
+		log_error(uL("recording;could not alloc audio stream"));
 		return (EXIT_ERROR);
 	}
 
 	if (!(audio->avcc = avcodec_alloc_context3(audio->avc))) {
-		fprintf(stderr, "could not alloc an encoding context.\n");
+		log_error(uL("recording;could not alloc an encoding context"));
 		return (EXIT_ERROR);
 	}
 
@@ -1185,17 +1185,17 @@ static BYTE ffmpeg_audio_add_stream(void) {
 			(int64_t)audio->avcc->channel_layout, audio->avcc->sample_fmt, audio->avcc->sample_rate,
 			(int64_t)src_channel_layout, src_sample_fmt, src_sample_rate,
 			0, NULL))) {
-			fprintf(stderr, "error allocating the resampling context.\n");
+			log_error(uL("recording;error allocating the resampling context"));
 			return (EXIT_ERROR);
 		}
 
 		if (swr_init(audio->swr) < 0) {
-			fprintf(stderr, "error opening the resampling context.\n");
+			log_error(uL("recording;error opening the resampling context"));
 			return (EXIT_ERROR);
 		}
 
 		if (!(audio->buffer = (SWORD *)malloc(audio->src_nb_samples * snd.channels * sizeof(*audio->buffer)))) {
-			fprintf(stderr, "unable to allocate audio buffers.\n");
+			log_error(uL("recording;unable to allocate audio buffers"));
 			return (EXIT_ERROR);
 		}
 	} else {
@@ -1237,7 +1237,7 @@ INLINE static BYTE ffmpeg_audio_write_frame(SWORD *data) {
 
 		if (audio->swr) {
 			if (swr_convert(audio->swr, NULL, 0, (const uint8_t **)&audio->buffer, (int)audio->src_nb_samples) < 0) {
-				fprintf(stderr, "Error feeding audio data to the resampler\n");
+				log_error(uL("recording;error feeding audio data to the resampler"));
 				return (EXIT_ERROR);
 			}
 		}
@@ -1261,7 +1261,7 @@ INLINE static BYTE ffmpeg_audio_write_frame(SWORD *data) {
 			}
 
 			if ((ret = swr_convert(audio->swr, out, out_count, NULL, 0)) < 0) {
-				fprintf(stderr, "Error reading audio data from the resampler\n");
+				log_error(uL("recording;error reading audio data from the resampler"));
 				return (EXIT_ERROR);
 			}
 		} else {
@@ -1274,7 +1274,7 @@ INLINE static BYTE ffmpeg_audio_write_frame(SWORD *data) {
 		audio->pts += audio->avf->nb_samples;
 
 		if ((ret = avcodec_send_frame(audio->avcc, ret ? audio->avf : NULL)) < 0) {
-			fprintf(stderr, "Error submitting a audio frame for encoding: %s.\n", ffmpeg_av_make_error_string(ret));
+			log_error(uL("recording;error submitting a audio frame for encoding, %s"), ffmpeg_av_make_error_string(ret));
 			return (EXIT_ERROR);
 		}
 
@@ -1290,7 +1290,7 @@ static AVFrame *ffmpeg_audio_alloc_frame(enum AVSampleFormat sample_fmt, uint64_
 	AVFrame *avframe;
 
 	if (!(avframe = av_frame_alloc())) {
-		fprintf(stderr, "Error allocating an audio frame\n");
+		log_error(uL("recording;error allocating an audio frame"));
 		return (NULL);
 	}
 
@@ -1300,7 +1300,7 @@ static AVFrame *ffmpeg_audio_alloc_frame(enum AVSampleFormat sample_fmt, uint64_
 	avframe->sample_rate = samplerate;
 
 	if (nb_samples && (av_frame_get_buffer(avframe, 0) < 0)) {
-		fprintf(stderr, "Error allocating an audio buffer\n");
+		log_error(uL("recording;error allocating an audio buffer"));
 		return (NULL);
 	}
 

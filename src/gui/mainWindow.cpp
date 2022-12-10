@@ -35,9 +35,10 @@
 #include <QtCore/QBuffer>
 #include "mainWindow.hpp"
 #include "extra/singleapplication/singleapplication.h"
-#include "dlgSettings.hpp"
 #include "dlgJsc.hpp"
 #include "dlgKeyboard.hpp"
+#include "dlgLog.hpp"
+#include "dlgSettings.hpp"
 #include "wdgMenuBar.hpp"
 #include "wdgOverlayUi.hpp"
 #include "common.h"
@@ -903,6 +904,7 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Vs_System, SLOT(s_set_vs_window()));
 	connect_action(action_Joypad_Gamepads_Debug, SLOT(s_open_djsc()));
 	// Help/About
+	connect_action(action_Show_Log, SLOT(s_show_log()));
 	connect_action(action_About, SLOT(s_help()));
 
 	// external shortcuts
@@ -1912,6 +1914,23 @@ void mainWindow::s_tape_stop(void) {
 	tape_data_recorder_stop();
 
 	emu_pause(FALSE);
+}
+void mainWindow::s_show_log(void) {
+//	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
+//	int frame_w = frameGeometry().width() - geometry().width();
+//	int frame_h = frameGeometry().height() - geometry().height();
+//
+//	if (dlgsettings->geom.x() < frame_w) {
+//		dlgsettings->geom.setX(frame_w);
+//	}
+//	if (dlgsettings->geom.y() < frame_h) {
+//		dlgsettings->geom.setY(frame_h);
+//	}
+//
+//	dlgsettings->tabWidget_Settings->setCurrentIndex(index);
+//	dlgsettings->setGeometry(dlgsettings->geom);
+	dlglog->show();
+	dlglog->activateWindow();
 }
 void mainWindow::s_help(void) {
 	QDateTime compiled = QDateTime::fromString(COMPILED, "MMddyyyyhhmmss");

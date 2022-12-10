@@ -261,7 +261,7 @@ BYTE gfx_monitor_set_res(int w, int h, BYTE adaptive_rrate, BYTE change_rom_mode
 	if (mode_new != -1) {
 		_monitor_mode_info *mode_info_new = &mi->modes[mode_new];
 
-		ufprintf(stderr, uL("gfx_monitor: " uPs("") " switch to %dx%d, %fHz\n"),
+		log_info(uL("gfx_monitor;" uPs("") " switch to %dx%d, %fHz"),
 			mi->desc, mode_info_new->w, mode_info_new->h, mode_info_new->rrate);
 
 		if (!change_rom_mode) {
@@ -297,7 +297,7 @@ BYTE gfx_monitor_restore_res(void) {
 
 	mode_info_org = &mi->modes[mi->mode_org];
 
-	ufprintf(stderr, uL("gfx_monitor: " uPs("") " restore to %dx%d, %fHz\n"),
+	log_info(uL("gfx_monitor;" uPs("") " restore to %dx%d, %fHz"),
 		mi->desc, mode_info_org->w, mode_info_org->h, mode_info_org->rrate);
 
 	gui_monitor_set_res((void *)mi, (void *)mode_info_org);
@@ -707,13 +707,14 @@ static void print_info(void) {
 	for (a = 0; a < monitor.nmonitor; a++) {
 		_monitor_info *mi = &monitor.monitors[a];
 
-		ufprintf(stderr, uL("gfx_monitor : %d - " uPs("") " - %dx%d - %dx%d " uPs("") "\n"), a, !mi->desc[0] ? mi->name :  mi->desc,
-			mi->w, mi->h, mi->x, mi->y, mi->in_use ? uL("(puNES)") : uL(""));
+		log_info(uL("monitor %d;" uPs("") " - %dx%d - %dx%d " uPs("")), a,
+			!mi->desc[0] ? mi->name :  mi->desc,
+			mi->w, mi->h, mi->x, mi->y, mi->in_use ? uL("(in use)") : uL(""));
 
 		for (b = 0; b < mi->nmodes; b++) {
 			_monitor_mode_info *mm = &mi->modes[b];
 
-			ufprintf(stderr, uL("\t%2d : %4dx%-4d    %10f %10f" uPs("")"\n"), b,
+			log_info_box(uL("res %d;%4dx%-4d    %10f %10f" uPs("")), b,
 				mm->w, mm->h,
 				mm->rrate, mm->rounded_rrate,
 				mi->modes[mi->mode_org].id == mm->id ? uL(" *") : uL(""));
@@ -721,15 +722,15 @@ static void print_info(void) {
 	}
 
 	if (monitor.nres) {
-		ufprintf(stderr, uL("gfx_monitor : common resolutions :\n"));
+		log_info(uL("common res"));
 
 		for (a = 0; a < monitor.nres; a++) {
 			_monitor_resolution *mr = &monitor.resolutions[a];
 
-			ufprintf(stderr, uL("\t%2d : %4dx%-4d\n"), a, mr->w, mr->h);
+			log_info_box(uL("%d;%4dx%-4d"), a, mr->w, mr->h);
 		}
 	} else {
-		ufprintf(stderr, uL("gfx_monitor : no valid resolution found\n"));
+		log_warning(uL("no valid res"));
 	}
 }
 #endif

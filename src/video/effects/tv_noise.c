@@ -24,6 +24,7 @@
 #include "video/gfx.h"
 #include "emu.h"
 #include "palette.h"
+#include "gui.h"
 
 _turn_off_effect turn_off_effect;
 
@@ -33,13 +34,13 @@ BYTE tv_noise_init(void) {
 	WORD i;
 
 	if (!(turn_off_effect.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
-		fprintf(stderr, "Unable to allocate the palette\n");
+		log_error(uL("tv_noise;unable to allocate the palette"));
 		return (EXIT_ERROR);
 	}
 	palette = (uint32_t *)turn_off_effect.palette;
 
 	if (!(turn_off_effect.ntsc = malloc(sizeof(nes_ntsc_t)))) {
-		fprintf(stderr, "Unable to allocate the palette\n");
+		log_error(uL("tv_noise;unable to allocate the palette"));
 		return (EXIT_ERROR);
 	}
 

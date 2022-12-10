@@ -117,7 +117,7 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 	}
 
 	if ((jdev->repdesc = hid_get_report_desc(jdev->fd)) == NULL) {
-		fprintf(stderr, "%s: hid_get_report_desc: %s\n", jdev->dev, strerror(errno));
+		log_error(uL("" uPs("") ";hid_get_report_desc, %s"), jdev->dev, strerror(errno));
 		js_os_jdev_close(jdev);
 		return;
 	}
@@ -145,7 +145,7 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 	jdev->report.size = hid_report_size(jdev->repdesc, hid_input, &jdev->report.id);
 #endif
 	if (jdev->report.size <= 0) {
-		fprintf(stderr, "%s: hid_report_size() return invalid size\n", jdev->dev);
+		log_error(uL("" uPs("") ";hid_report_size() return invalid size"), jdev->dev);
 		js_os_jdev_close(jdev);
 		return;
 	}
@@ -156,7 +156,7 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 	jdev->report.buf = malloc(sizeof(*jdev->report.buf) - sizeof(REP_BUF_DATA(jdev->report)) + jdev->report.size);
 #endif
 	if (jdev->report.buf == NULL) {
-		fprintf(stderr, "%s: error on malloc report buf\n", jdev->dev);
+		log_error(uL("" uPs("") ";error on malloc report buf"), jdev->dev);
 		js_os_jdev_close(jdev);
 		return;
 	}
@@ -167,7 +167,7 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 	hdata = hid_start_parse(jdev->repdesc, 1 << hid_input);
 #endif
 	if (hdata == NULL) {
-		fprintf(stderr, "%s: hid_start_parse() don't start", jdev->dev);
+		log_error(uL("" uPs("") ";hid_start_parse() don't start"), jdev->dev);
 		js_os_jdev_close(jdev);
 		return;
 	}
@@ -250,7 +250,7 @@ void js_os_jdev_open(_js_device *jdev, UNUSED(void *arg)) {
 	hid_end_parse(hdata);
 
 	if (!is_a_joystick && ((jdev->info.axes == 0) && (jdev->info.buttons == 0) && (jdev->info.hats == 0))) {
-		fprintf(stderr, "%s: is not a joystick\n", jdev->dev);
+		log_error(uL("" uPs("") ";is not a joystick"), jdev->dev);
 		js_os_jdev_close(jdev);
 		return;
 	}
@@ -273,10 +273,7 @@ void js_os_jdev_close(_js_device *jdev) {
 	if (jdev->present) {
 		jstick.jdd.count--;
 #if defined (DEBUG)
-		ufprintf(stderr, uL("jstick disc. : slot%d \"" uPs("") "\" (%d)\n"),
-			jdev->index,
-			jdev->desc,
-			jstick.jdd.count);
+		log_warning(uL("jstick disc.;slot%d \"" uPs("") "\" (%d)"), jdev->index, jdev->desc, jstick.jdd.count);
 #endif
 	}
 

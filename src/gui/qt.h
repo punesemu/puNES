@@ -116,13 +116,14 @@ enum _overlay_info_alignment {
 	"	color: black;"\
 	"}"
 
-#define mainwin ((mainWindow *)gui_mainwindow_get_ptr())
-#define wdgrewind ((wdgRewind *)gui_wdgrewind_get_ptr())
-#define dlgsettings ((dlgSettings *)gui_dlgsettings_get_ptr())
 #define dlgjsc ((dlgJsc *)gui_dlgjsc_get_ptr())
 #define dlgkeyb ((dlgKeyboard *)gui_dlgkeyboard_get_ptr())
+#define dlglog ((dlgLog *)gui_dlglog_get_ptr())
+#define dlgsettings ((dlgSettings *)gui_dlgsettings_get_ptr())
+#define mainwin ((mainWindow *)gui_mainwindow_get_ptr())
 #define objcheat ((objCheat *)gui_objcheat_get_ptr())
 #define wdgoverlayui ((wdgOverlayUi *)gui_wdgoverlayui_get_ptr())
+#define wdgrewind ((wdgRewind *)gui_wdgrewind_get_ptr())
 
 typedef struct _gui {
 #if defined (_WIN32)
@@ -269,6 +270,8 @@ EXTERNC void gui_dlgjsc_emit_update_joy_combo(void);
 
 EXTERNC void *gui_dlgkeyboard_get_ptr(void);
 
+EXTERNC void *gui_dlglog_get_ptr(void);
+
 EXTERNC void gui_js_joyval_icon_desc(int index, DBWORD input, void *icon, void *desc);
 
 EXTERNC void *gui_dlgdebugger_get_ptr(void);
@@ -296,7 +299,6 @@ EXTERNC uint32_t gui_color(BYTE a, BYTE r, BYTE g, BYTE b);
 EXTERNC BYTE gui_load_lut(void *l, const uTCHAR *path);
 EXTERNC void gui_save_screenshot(int w, int h, int stride, char *buffer, BYTE flip);
 
-EXTERNC void gui_utf_printf(const uTCHAR *fmt, ...);
 EXTERNC void gui_utf_dirname(uTCHAR *path, uTCHAR *dst, size_t len);
 EXTERNC void gui_utf_basename(uTCHAR *path, uTCHAR *dst, size_t len);
 EXTERNC int gui_utf_strcasecmp(uTCHAR *s0, uTCHAR *s1);
@@ -318,6 +320,30 @@ EXTERNC BYTE gui_monitor_enum_monitors(void);
 EXTERNC void gui_monitor_set_res(void *monitor_info, void *mode_info);
 EXTERNC void gui_monitor_get_current_x_y(void *monitor_info, int *x, int *y);
 #endif
+
+EXTERNC void gui_warning(const uTCHAR *txt);
+EXTERNC void gui_critical(const uTCHAR *txt);
+
+EXTERNC void log_info(const uTCHAR *txt, ...);
+EXTERNC void log_info_open(const uTCHAR *txt, ...);
+EXTERNC void log_info_box(const uTCHAR *txt, ...);
+EXTERNC void log_info_box_open(const uTCHAR *txt, ...);
+
+EXTERNC void log_warning(const uTCHAR *txt, ...);
+EXTERNC void log_warning_open(const uTCHAR *txt, ...);
+EXTERNC void log_warning_box(const uTCHAR *txt, ...);
+EXTERNC void log_warning_box_open(const uTCHAR *txt, ...);
+
+EXTERNC void log_error(const uTCHAR *txt, ...);
+EXTERNC void log_error_open(const uTCHAR *txt, ...);
+EXTERNC void log_error_box(const uTCHAR *txt, ...);
+EXTERNC void log_error_box_open(const uTCHAR *txt, ...);
+
+EXTERNC void log_close(const uTCHAR *txt, ...);
+EXTERNC void log_close_box(const uTCHAR *txt, ...);
+
+EXTERNC void log_append(const uTCHAR *txt, ...);
+EXTERNC void log_newline(void);
 
 #undef EXTERNC
 

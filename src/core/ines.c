@@ -27,6 +27,7 @@
 #include "conf.h"
 #include "cheat.h"
 #include "info.h"
+#include "gui.h"
 #include "vs_system.h"
 #include "patcher.h"
 #include "sha1.h"
@@ -551,7 +552,7 @@ BYTE ines10_search_in_database(void *rom_mem) {
 		if ((position + len) > rom->size) {
 			info.prg.rom.banks_16k = (rom->size - position) / 0x4000;
 			len = !info.prg.rom.banks_16k ? 0x2000 : info.prg.rom.banks_16k * 0x4000;
-			fprintf(stderr, "truncated PRG ROM\n");
+			log_error(uL("ines 1.0;truncated PRG ROM"));
 		}
 
 		// calcolo l'sha1 della PRG Rom
@@ -562,7 +563,7 @@ BYTE ines10_search_in_database(void *rom_mem) {
 	if (info.chr.rom.banks_8k) {
 		if ((position + (info.chr.rom.banks_8k * 0x2000)) > rom->size) {
 			info.chr.rom.banks_8k = (rom->size - position) / 0x2000;
-			fprintf(stderr, "truncated CHR ROM\n");
+			log_error(uL("ines 1.0;truncated CHR ROM"));
 		}
 		// calcolo anche l'sha1 della CHR rom
 		sha1_csum(rom->data + position, (int)(info.chr.rom.banks_8k * 0x2000), info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);

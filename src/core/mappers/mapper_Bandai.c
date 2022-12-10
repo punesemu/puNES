@@ -24,6 +24,7 @@
 #include "ppu.h"
 #include "save_slot.h"
 #include "tas.h"
+#include "gui.h"
 
 enum {
 	MODE_IDLE,
@@ -360,22 +361,22 @@ void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp) {
 			if (FCGX.e0.size) {
 				if (mode == WR_BAT) {
 					if (fwrite(&FCGX.e0.eeprom[0], LENGTH(FCGX.e0.eeprom), 1, fp) < 1) {
-						fprintf(stderr, "error on write battery memory\n");
+						log_error(uL("Bandai_FCGX;error on write battery memory"));
 					}
 				} else {
 					if (fread(&FCGX.e0.eeprom[0], LENGTH(FCGX.e0.eeprom), 1, fp) < 1) {
-						fprintf(stderr, "error on read battery memory\n");
+						log_error(uL("Bandai_FCGX;error on read battery memory"));
 					}
 				}
 			}
 			if (FCGX.e1.size) {
 				if (mode == WR_BAT) {
 					if (fwrite(&FCGX.e1.eeprom[0], LENGTH(FCGX.e1.eeprom), 1, fp) < 1) {
-						fprintf(stderr, "error on write battery memory\n");
+						log_error(uL("Bandai_FCGX;error on write battery memory"));
 					}
 				} else {
 					if (fread(&FCGX.e1.eeprom[0], LENGTH(FCGX.e1.eeprom), 1, fp) < 1) {
-						fprintf(stderr, "error on read battery memory\n");
+						log_error(uL("Bandai_FCGX;error on read battery memory"));
 					}
 				}
 			}

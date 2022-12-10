@@ -19,7 +19,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <libgen.h>
 #include "fds.h"
 #include "rom_mem.h"
 #include "mappers.h"
@@ -97,7 +96,7 @@ BYTE fds_load_rom(void) {
 
 		if (!found) {
 			gui_overlay_info_append_msg_precompiled(5, NULL);
-			fprintf(stderr, "error loading rom\n");
+			log_error(uL("FDS;error loading rom"));
 			return (EXIT_ERROR);
 		}
 
@@ -220,7 +219,7 @@ BYTE fds_load_bios(void) {
 	}
 
 	gui_overlay_info_append_msg_precompiled(6, NULL);
-	fprintf(stderr, "FDS bios not found\n");
+	log_error(uL("FDS;bios not found"));
 	return (EXIT_ERROR);
 
 	fds_load_bios_founded:
@@ -230,12 +229,27 @@ BYTE fds_load_bios(void) {
 	}
 
 	if (fread(prg_rom(), prg_size(), 1, bios) < 1) {
-		fprintf(stderr, "error on reading fds bios\n");
+		log_error(uL("FDS;error on reading bios"));
 	}
 
 	fclose(bios);
 
 	return (EXIT_OK);
+}
+void fds_info_side(BYTE side) {
+	uint32_t i;
+
+	log_info(uL("FDS side;%d"), side);
+	log_info_box(uL("vrt disk size;%5d"), fds.info.sides_size[side]);
+	log_info_box(uL("block 1;pos %5d"), fds.side.block_1.position);
+	log_info_box(uL("block 2;pos %5d (fl : %5d)"), fds.side.block_2.position, fds.side.block_2.tot_files);
+	for (i = 0; i < fds.side.counted_files; i++) {
+		log_info_box(uL("file %d;size %5d - 0x%04X (b3 : %5d) (b4 : %5d)"), i,
+			fds.side.file[i].block_3.length,
+			fds.side.file[i].block_3.length,
+			fds.side.file[i].block_3.position,
+			fds.side.file[i].block_4.position);
+	}
 }
 void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 	BYTE buffer[DISK_SIDE_SIZE];
@@ -283,11 +297,6 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 				free(fds.side.data);
 				fds.side.data = NULL;
 			}
-
-#if !defined (RELEASE)
-			fprintf(stdout, "virtual disk size : %5d\n", fds.info.sides_size[side_to_insert]);
-#endif
-
 			fds.side.data = (WORD *)malloc(fds.info.sides_size[side_to_insert] * sizeof(WORD));
 			fds.side.counted_files = 0xFFFF;
 			break;
@@ -302,7 +311,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 	}
 
 	if ((position + DISK_SIDE_SIZE) > fds.info.total_size) {
-		fprintf(stderr, "error in fds disk\n");
+		log_error(uL("FDS;error on reading disk"));
 		memcpy(buffer, fds.info.data + position, fds.info.total_size - position);
 	} else {
 		memcpy(buffer, fds.info.data + position, DISK_SIDE_SIZE);
@@ -381,22 +390,12 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 				switch (block) {
 					case 1:
 						fds.side.block_1.position = size;
-#if !defined (RELEASE)
-						fprintf(stdout, "block 1 : (pos  : %5d)\n", fds.side.block_1.position);
-#endif
 						break;
 					case 2:
 						fds.side.block_2.position = size;
 						fds.side.block_2.tot_files = buffer[position + 1];
-
 						// a questo punto fds.side.counted_files e' 0xFFFF
 						fds.side.counted_files = 0;
-
-#if !defined (RELEASE)
-						fprintf(stdout, "block 2 : (pos  : %5d) (fl : %5d)\n",
-							fds.side.block_2.position,
-							fds.side.block_2.tot_files);
-#endif
 						break;
 					case 3:
 						fds.side.file[fds.side.counted_files].block_3.position = size;
@@ -404,14 +403,6 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 						break;
 					case 4:
 						fds.side.file[fds.side.counted_files].block_4.position = size;
-#if !defined (RELEASE)
-						fprintf(stdout, "file %2d : (size : %5d - 0x%04X) (b3 : %5d) (b4 : %5d)\n",
-							fds.side.counted_files,
-							fds.side.file[fds.side.counted_files].block_3.length,
-							fds.side.file[fds.side.counted_files].block_3.length,
-							fds.side.file[fds.side.counted_files].block_3.position,
-							fds.side.file[fds.side.counted_files].block_4.position);
-#endif
 						fds.side.counted_files++;
 						break;
 					default:
@@ -429,6 +420,10 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 			add_to_image(type, FDS_DISK_MEMSET, FDS_DISK_GAP, 1016 / 8);
 		}
 		position += blength;
+	}
+
+	if (info.reset != CHANGE_ROM) {
+		fds_info_side(side_to_insert);
 	}
 
 	if (size < DISK_SIDE_SIZE) {
@@ -520,7 +515,7 @@ void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 		}
 
 		if (fwrite(&out, sizeof(_fds_diff_ele), 1, fds.info.diff) < 1) {
-			fprintf(stderr, "error on write fds diff file\n");
+			log_error(uL("FDS;error on writing diff file"));
 		}
 		// senza questo in windows non funziona correttamente
 		fflush(fds.info.diff);
@@ -530,7 +525,7 @@ void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 
 		// leggo la versione del file
 		if (fread(&version, sizeof(uint32_t), 1, fds.info.diff) < 1) {
-			fprintf(stderr, "error on error version fds diff file\n");
+			log_error(uL("FDS;error on reading version diff file"));
 		}
 
 		while (fread(&ele, sizeof(_fds_diff_ele), 1, fds.info.diff)) {

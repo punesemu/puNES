@@ -249,7 +249,7 @@ BYTE l7z_examine_archive(_uncompress_archive *archive) {
 	in_stream stream(archive->file);
 
 	if (!l7z.lib.OpenArchive(&stream, &c7zarchive)) {
-		ufprintf(stderr, uL("open archive " uPs("") " fail\n"), archive->file);
+		log_error(uL("l7z;open archive " uPs("") " failed"), archive->file);
 		return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
 	}
 
@@ -346,7 +346,7 @@ BYTE l7z_extract_from_archive(_uncompress_archive *archive, uint32_t selected, B
 		uint32_t storage_index;
 
 		if (!c7zarchive->Extract(item, &o_stream)) {
-			fprintf(stderr, "uncompress file failed!\n");
+			log_error(uL("uncompress file failed!"));
 			delete (c7zarchive);
 			return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
 		}

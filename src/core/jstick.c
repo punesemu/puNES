@@ -804,28 +804,28 @@ DBWORD js_jdev_read_in_dialog(_input_guid *guid) {
 #if defined (DEBUG)
 void js_info_jdev(_js_device *jdev) {
 	unsigned int i, a;
+	int axes = 0, buttons = 0;
 
+	log_info(uL("description;" uPs("")), jdev->desc);
 #if !defined (_WIN32)
-	ufprintf(stderr, uL("dev : " uPs("") "\n"), jdev->dev);
+	log_info_box(uL("device;" uPs("")), jdev->dev);
 #endif
-	ufprintf(stderr, uL("dsc : " uPs("") "\n"), jdev->desc);
-	ufprintf(stderr, uL("usb : bustype %04X - vid:pid %04X:%04X - version %04X\n"),
-		jdev->usb.bustype,
-		jdev->usb.vendor_id,
-		jdev->usb.product_id,
-		jdev->usb.version);
-	ufprintf(stderr, uL("gid : " uPs("") "\n"), js_guid_to_string(&jdev->guid));
+	log_info_box(uL("usb;bustype %04X - vid:pid %04X:%04X - version %04X"),
+		jdev->usb.bustype, jdev->usb.vendor_id, jdev->usb.product_id, jdev->usb.version);
+	log_info_box(uL("gid;" uPs("")), js_guid_to_string(&jdev->guid));
+
 	for (i = 0; i < LENGTH(js_axs_type); i++) {
 		for (a = 0; a < js_axs_type[i]; a++) {
 			_js_axis *jsx = !i ? &jdev->data.axis[a] : &jdev->data.hat[a];
 
 			if (jsx->used) {
-				ufprintf(stderr, uL("Axs: 0x%.3x " uPs("-20") " { %6d %6d %6d %13f}\n"), jsx->offset,
+				axes++;
+				log_info_box(uL("axis %d;0x%.3x " uPs("-15") " { %6d %6d %6d %13f}"), axes, jsx->offset,
 					js_axs_joyoffset_to_name((const DBWORD)jsx->offset),
-					(int)jsx->min,
-					(int)jsx->max,
-					(int)jsx->center,
-					jsx->scale);
+						(int)jsx->min,
+						(int)jsx->max,
+						(int)jsx->center,
+						jsx->scale);
 			}
 		}
 	}
@@ -833,7 +833,8 @@ void js_info_jdev(_js_device *jdev) {
 		_js_button *jsx = &jdev->data.button[i];
 
 		if (jsx->used) {
-			ufprintf(stderr, uL("Btn: 0x%03x " uPs("") "\n"), jsx->offset, js_btn_joyoffset_to_name(jsx->offset));
+			buttons++;
+			log_info_box(uL("button %d;0x%03x " uPs("")), buttons, jsx->offset, js_btn_joyoffset_to_name(jsx->offset));
 		}
 	}
 }

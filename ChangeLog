@@ -31,7 +31,7 @@ Changelog:
   will be placed in the directory containing the executable. When the emulator is started, the old directories
   will be automatically moved to the new location. In order to open the configuration directory easily, it's always
   possible to do so via the menu items "File->Open working directory" [Windows and UNIX-Like] or
-  "File->Open config directory" [onlye UNIX-Like].
+  "File->Open config directory" [UNIX-Like].
 - Updated internal shaders.
 - Improved FDS sound emulation.
 - Fixed autoswitch timing for FDS.
@@ -64,6 +64,7 @@ Changelog:
 - Migrated the project from autotools to cmake.
 - Added AppStream manifest.
 - Fixed high dpi support.
+- Added a dialog to view log messages.
 - Fixed many many many other bugs.
 
 0.109 (Bug fixes release)

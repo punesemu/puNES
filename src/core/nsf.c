@@ -171,6 +171,13 @@ void nsf_quit(void) {
 void nsf_reset(void) {
 	nsf.timers.effect = 0;
 }
+void nsf_info(void) {
+	log_info_box(uL("name;%s"), nsf.info.name);
+	log_info_box(uL("artist;%s"), nsf.info.artist);
+	log_info_box(uL("copyright;%s"), nsf.info.copyright);
+	log_info_box(uL("ripper;%s"), nsf.info.ripper);
+	log_info_box(uL("text;%s"), nsf.text.data);
+}
 BYTE nsf_load_rom(void) {
 	_rom_mem rom;
 
@@ -287,7 +294,7 @@ BYTE nsf_load_rom(void) {
 			char *auth, **dst = NULL;
 
 			if (!(nsf.info.auth = (char *)malloc((32 + 1) * 4))) {
-				fprintf(stderr, "Out of memory\n");
+				log_error(uL("nsf;out of memory"));
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
@@ -352,14 +359,6 @@ BYTE nsf_load_rom(void) {
 		nsf.sound_chips.mmc5 = tmp & 0x08;
 		nsf.sound_chips.namco163 = tmp & 0x10;
 		nsf.sound_chips.sunsoft5b = tmp & 0x20;
-
-#if !defined (RELEASE)
-		fprintf(stderr, "nam : %s\n", nsf.info.name);
-		fprintf(stderr, "art : %s\n", nsf.info.artist);
-		fprintf(stderr, "cop : %s\n", nsf.info.copyright);
-		fprintf(stderr, "rip : %s\n", nsf.info.ripper);
-		fprintf(stderr, "txt : %s\n", nsf.text.data);
-#endif
 
 		if (!nsf.sound_chips.fds && (nsf.adr.load < 0x8000)) {
 			free(rom.data);
@@ -1158,7 +1157,7 @@ static void nsf_effect_bars(void) {
 				}
 			}
 		} else {
-			fprintf(stderr, "not enough memory?\n");
+			log_error(uL("nsf;not enough memory?"));
 		}
 	}
 

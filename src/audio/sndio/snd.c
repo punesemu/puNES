@@ -77,7 +77,7 @@ BYTE snd_init(void) {
 
 	// creo il lock
 	if (thread_mutex_init(snd_thread.lock) != 0) {
-		fprintf(stderr, "Unable to allocate the snd mutex\n");
+		gui_critical(uL("Unable to allocate the snd mutex."));
 		return (EXIT_ERROR);
 	}
 
@@ -104,10 +104,6 @@ void snd_quit(void) {
 	}
 
 	snd_playback_stop();
-
-#if !defined (RELEASE)
-	fprintf(stderr, "\n");
-#endif
 }
 
 void snd_reset_buffers(void) {
@@ -206,13 +202,13 @@ BYTE snd_playback_start(void) {
 	}
 
 	if ((sndio.playback = sio_open(SIO_DEVANY, SIO_PLAY, TRUE)) == NULL) {
-		fprintf(stderr, "sio_open() failed : audio disabled\n");
+		log_warning(uL("sndio;sio_open() failed, audio disabled"));
 		cfg->apu.channel[APU_MASTER] = 0;
 		return (EXIT_OK);
 	}
 
 	if ((sndio.pfds = calloc(sio_nfds(sndio.playback), sizeof(struct pollfd))) == NULL) {
-		fprintf(stderr, "sio_nfds() failed\n");
+		log_error(uL("sndio;sio_nfds() failed"));
 		goto snd_playback_start_error;
 	}
 
@@ -232,12 +228,12 @@ BYTE snd_playback_start(void) {
 		par.xrun = SIO_IGNORE;
 
 		if (!sio_setpar(sndio.playback, &par)) {
-			fprintf(stderr, "sio_setpar() failed\n");
+			log_error(uL("sndio;sio_setpar() failed"));
 			goto snd_playback_start_error;
 		}
 
 		if (!sio_getpar(sndio.playback, &par)) {
-			fprintf(stderr, "sio_getpar() failed\n");
+			log_error(uL("sndio;sio_getpar() failed"));
 			goto snd_playback_start_error;
 		}
 
@@ -252,19 +248,19 @@ BYTE snd_playback_start(void) {
 		snd.buffer.limit.high = snd.period.size * 7;
 
 #if !defined (RELEASE)
-		//fprintf(stderr, "new psize and bsize : %d %d\n", snd.period.samples, par.appbufsz);
-		fprintf(stderr, "softw bsize    : %10d - %10d\n", snd.buffer.size, snd.period.samples);
-		fprintf(stderr, "softw limit    : %10d - %10d\n", snd.buffer.limit.high, snd.buffer.limit.low);
+		//log_info(uL("psize bsize;%d %d"), snd.period.samples, par.appbufsz);
+		log_info(uL("sndio;softw bsize;%d - %d"), snd.buffer.size, snd.period.samples);
+		log_info(uL("sndio;softw limit;%d - %d"), snd.buffer.limit.high, snd.buffer.limit.low);
 #endif
 
 		// alloco il buffer in memoria
 		if (!(cbd.start = (SWORD *)malloc(snd.buffer.size))) {
-			fprintf(stderr, "Unable to allocate audio buffers\n");
+			log_error(uL("sndio;unable to allocate audio buffers"));
 			goto snd_playback_start_error;
 		}
 
 		if (!(cbd.silence = (SWORD *)malloc(snd.period.size))) {
-			fprintf(stderr, "Unable to allocate silence buffer\n");
+			log_error(uL("sndio;unable to allocate silence buffer"));
 			goto snd_playback_start_error;
 		}
 
@@ -285,7 +281,7 @@ BYTE snd_playback_start(void) {
 	audio_init_blipbuf();
 
 	if (!sio_start(sndio.playback)) {
-		fprintf(stderr, "sio_start() failed\n");
+		log_error(uL("sndio;sio_start() failed"));
 		goto snd_playback_start_error;
 	}
 
@@ -451,7 +447,7 @@ static thread_funct(sndio_thread_loop, UNUSED(void *data)) {
 		if ((gui_get_ms() - snd_thread.tick) >= 250.0f) {
 			snd_thread.tick = gui_get_ms();
 			if (info.snd_info)
-			fprintf(stderr, "snd : %d %d %6d %6d %4d %4d %4d %4d %3d %f %4s\r",
+			fprintf(stderr, "snd debug : %d %d %6d %6d %4d %4d %4d %4d %3d %f %4s\r",
 				avail,
 				len,
 				cbd.samples_available,
@@ -473,7 +469,7 @@ static thread_funct(sndio_thread_loop, UNUSED(void *data)) {
 INLINE static void sndio_wr_buf(void *buffer, uint32_t avail) {
 	if (sio_write(sndio.playback, buffer, avail) == 0) {
 		if (sio_eof(sndio.playback)) {
-			fprintf(stderr, "sio_write() failed\n");
+			log_error(uL("sndio;sio_write() failed"));
 		}
 	}
 }

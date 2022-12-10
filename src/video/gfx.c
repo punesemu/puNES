@@ -41,28 +41,20 @@ BYTE gfx_init(void) {
 	gui_screen_info();
 #endif
 
-#if defined (_WIN32)
-#define print_error(txt) MessageBox(NULL, txt, "Error!", MB_ICONEXCLAMATION | MB_OK)
-#else
-#define print_error(txt) fprintf(stderr, txt "\n")
-#endif
-
 	if (gui_create() == EXIT_ERROR) {
-		print_error("GUI initialization failed");
+		gui_critical(uL("GUI initialization failed."));
 		return (EXIT_ERROR);
 	}
 
 	if (gfx_thread_init() == EXIT_ERROR) {
-		print_error("Unable to allocate the gfx thread");
+		gui_critical(uL("Unable to allocate the gfx thread."));
 		return (EXIT_ERROR);
 	}
 
 	if (gfx_api_init() == EXIT_ERROR) {
-		print_error("Unable to initiliazed GFX API");
+		gui_critical(uL("Unable to initiliazed gfx API."));
 		return (EXIT_ERROR);
 	}
-
-#undef print_error
 
 	// casi particolari provenienti dal settings_file_parse() e cmd_line_parse()
 	if (cfg->fullscreen == FULLSCR) {
@@ -418,10 +410,10 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		if (shaders_set((int)shader) == EXIT_ERROR) {
 			umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
 			if (old_shader == shader) {
-				fprintf(stderr, "GFX: Error on loading the shader, switch to \"No shader\"\n");
+				log_warning(uL("gfx;error on loading the shader, switch to 'No shader'"));
 				shader = NO_SHADER;
 			} else {
-				fprintf(stderr, "GFX: Error on loading the shader, switch to previous shader\n");
+				log_warning(uL("gfx:error on loading the shader, switch to previous shader"));
 				shader = old_shader;
 			}
 			goto gfx_set_screen_start;
@@ -463,13 +455,13 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 
 		switch (gfx_api_context_create()) {
 			case EXIT_ERROR:
-				fprintf(stderr, "Unable to initialize gfx context\n");
+				gui_critical(uL("Unable to initialize gfx context."));
 				info.stop = TRUE;
 				gfx_thread_continue();
 				return;
 			case EXIT_ERROR_SHADER:
 				gui_overlay_info_append_msg_precompiled(27, NULL);
-				fprintf(stderr, "Error on loading the shader, switch to \"No shader\"\n");
+				log_warning(uL("gfx;error on loading the shader, switch to 'No shader'"));
 				umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
 				shader = NO_SHADER;
 				goto gfx_set_screen_start;
@@ -536,17 +528,17 @@ BYTE gfx_palette_init(void) {
 	// mi alloco una zona di memoria dove conservare la
 	// paletta nel formato di visualizzazione.
 	if (!(gfx.palette = (uint32_t *)malloc(NUM_COLORS * sizeof(uint32_t)))) {
-		fprintf(stderr, "Unable to allocate the palette\n");
+		gui_critical(uL("Unable to allocate the palette."));
 		return (EXIT_ERROR);
 	}
 
 	if (pause_init() == EXIT_ERROR) {
-		fprintf(stderr, "Pause initialization failed");
+		gui_critical(uL("Pause initialization failed."));
 		return (EXIT_ERROR);
 	}
 
 	if (tv_noise_init() == EXIT_ERROR) {
-		fprintf(stderr, "tv_noise initialization failed");
+		gui_critical(uL("tv_noise initialization failed."));
 		return (EXIT_ERROR);
 	}
 

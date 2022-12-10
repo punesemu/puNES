@@ -290,7 +290,7 @@ static BYTE mz_zip_examine_archive(_uncompress_archive *archive) {
 	memset(&mzarchive, 0x00, sizeof(mzarchive));
 
 	if (!mz_zip_reader_init_file(&mzarchive, archive->file, 0)) {
-		fprintf(stderr, "mz_zip_reader_init_file() failed!\n");
+		log_error(uL("uncompress;mz_zip_reader_init_file() failed!"));
 		return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
 	}
 
@@ -299,7 +299,7 @@ static BYTE mz_zip_examine_archive(_uncompress_archive *archive) {
 		unsigned int b;
 
 		if (!mz_zip_reader_file_stat(&mzarchive, a, &file_stat)) {
-			fprintf(stderr, "mz_zip_reader_file_stat() failed!\n");
+			log_error(uL("uncompress;mz_zip_reader_file_stat() failed!"));
 			mz_zip_reader_end(&mzarchive);
 			return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
 		}
@@ -355,7 +355,7 @@ static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t s
 	memset(&mzarchive, 0x00, sizeof(mzarchive));
 
 	if (!mz_zip_reader_init_file(&mzarchive, archive->file, 0)) {
-		fprintf(stderr, "mz_zip_reader_init_file() failed!\n");
+		log_error(uL("uncompress;mz_zip_reader_init_file() failed!"));
 		return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
 	}
 
@@ -364,7 +364,7 @@ static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t s
 	snprintf(file, sizeof(file), "%s/%s", gui_temp_folder(), basename(file));
 
 	if (!mz_zip_reader_extract_to_file(&mzarchive, aitem->index, file, 0)) {
-		fprintf(stderr, "unzip file failed!\n");
+		log_error(uL("uncompress;unzip file failed!"));
 		// Close the archive, freeing any resources it was using
 		mz_zip_reader_end(&mzarchive);
 		return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
@@ -402,7 +402,7 @@ static uTCHAR *mz_zip_item_file_name(_uncompress_archive *archive, uint32_t sele
 	memset(&mzarchive, 0x00, sizeof(mzarchive));
 
 	if (!mz_zip_reader_init_file(&mzarchive, archive->file, 0)) {
-		fprintf(stderr, "mz_zip_reader_init_file() failed!\n");
+		log_error(uL("uncompress;mz_zip_reader_init_file() failed!"));
 		return (NULL);
 	}
 

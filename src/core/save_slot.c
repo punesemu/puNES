@@ -63,7 +63,7 @@ BYTE save_slot_save(BYTE slot) {
 	}
 
 	if ((fp = ufopen(file, uL("wb"))) == NULL) {
-		fprintf(stderr, "error on write save state\n");
+		log_error(uL("save slot;error on write save state"));
 		return (EXIT_ERROR);
 	}
 
@@ -111,7 +111,7 @@ BYTE save_slot_load(BYTE slot) {
 
 	if ((fp = ufopen(file, uL("rb"))) == NULL) {
 		gui_overlay_info_append_msg_precompiled(15, NULL);
-		fprintf(stderr, "error loading state\n");
+		log_error(uL("save slot;error loading state"));
 		return (EXIT_ERROR);
 	}
 
@@ -124,7 +124,7 @@ BYTE save_slot_load(BYTE slot) {
 
 		if (memcmp(info.sha1sum.prg.value, save_slot.sha1sum.prg.value, sizeof(info.sha1sum.prg.value)) != 0) {
 			gui_overlay_info_append_msg_precompiled(16, NULL);
-			fprintf(stderr, "state file is not for this rom.\n");
+			log_error(uL("save slot;state file is not for this rom"));
 			rewind_save_state_snap(BCK_STATES_OP_READ_FROM_MEM);
 			fclose(fp);
 			return (EXIT_ERROR);
@@ -135,7 +135,7 @@ BYTE save_slot_load(BYTE slot) {
 		int corrupted = slot;
 
 		gui_overlay_info_append_msg_precompiled(30, &corrupted);
-		fprintf(stderr, "error loading state, corrupted file.\n");
+		log_error(uL("save slot;error loading state, corrupted file"));
 		rewind_save_state_snap(BCK_STATES_OP_READ_FROM_MEM);
 		fclose(fp);
 		return (EXIT_ERROR);
