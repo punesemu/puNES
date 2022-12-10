@@ -1382,7 +1382,7 @@
     </message>
     <message>
         <source>libretro CHT files</source>
-        <translation type="unfinished"></translation>
+        <translation>libretro CHT 文件</translation>
     </message>
 </context>
 <context>
