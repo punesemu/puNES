@@ -27,6 +27,7 @@
 #include "ppu.h"
 #include "tas.h"
 #include "save_slot.h"
+#include "gui.h"
 
 enum _coolgirl_misc {
 	SAVE_FLASH_SIZE = 1024 * 1024 * 8,
@@ -662,12 +663,12 @@ void extcl_battery_io_Coolgirl(BYTE mode, FILE *fp) {
 	if (mode == WR_BAT) {
 		map_bat_wr_default(fp);
 		if (fwrite(coolgirltmp.save_flash, SAVE_FLASH_SIZE, 1, fp) < 1) {
-			//fprintf(stderr, "error on write flash chip\n");
+			log_error(uL("Coolgirl;error on write flash chip"));
 		}
 	} else {
 		map_bat_rd_default(fp);
 		if (fread(coolgirltmp.save_flash, SAVE_FLASH_SIZE, 1, fp) < 1) {
-			//fprintf(stderr, "error on read flash chip\n");
+			log_error(uL("Coolgirl;error on read flash chip"));
 		}
 	}
 }

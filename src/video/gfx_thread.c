@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <stdio.h>
 #include <string.h>
 #include "thread_def.h"
 #include "video/gfx_thread.h"
@@ -40,7 +39,7 @@ BYTE gfx_thread_init(void) {
 	memset(&gfx_thread_public, 0x00, sizeof(gfx_thread_public));
 	memset(&gfx_thread, 0x00, sizeof(gfx_thread));
 	if (thread_mutex_init_error(gfx_thread.lock)) {
-		fprintf(stderr, "Unable to allocate the gfx mutex\n");
+		log_error(uL("gfx_thread;unable to allocate the gfx mutex"));
 		return (EXIT_ERROR);
 	}
 	thread_create(gfx_thread.thread, gfx_thread_loop, NULL);

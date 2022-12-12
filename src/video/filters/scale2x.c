@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include "video/gfx.h"
 #include "ppu.h"
+#include "gui.h"
 
 #define READINT24(x) ((x)[0] << 16 | (x)[1] << 8 | (x)[2])
 #define WRITEINT24(x, i)\
@@ -194,7 +195,7 @@ INLINE static void scale4x(WORD **screen_index, const uint32_t *palette, uint32_
 	uint32_t TW0, TW1, TW2;
 
 	if ((scl4x_buffer.pixels = malloc(scl4x_buffer.size)) == NULL) {
-		printf("Out of memory\n");
+		log_error(uL("scale4x;out of memory"));
 		return;
 	} else {
 		scale2x(screen_index, palette, scl4x_buffer.pitch, scl4x_buffer.pixels);

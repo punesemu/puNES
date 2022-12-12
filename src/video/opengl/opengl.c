@@ -47,7 +47,7 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 static BYTE opengl_texture_lut_create(_lut *lut, GLuint index);
 static void opengl_shader_delete(_shader *shd);
 #if !defined (RELEASE)
-static void opengl_shader_print_log(GLuint obj, BYTE ret);
+static void opengl_shader_print_log(GLuint obj);
 #endif
 static void opengl_shader_uni_texture_clear(_shader_uniforms_tex *sut);
 static void opengl_shader_uni_texture(_shader_uniforms_tex *sut, GLuint prg, GLchar *fmt, ...);
@@ -240,11 +240,11 @@ BYTE opengl_context_create(void) {
 			return (EXIT_ERROR);
 		}
 
-		fprintf(stderr, "OPENGLCG: vertex profile %s\n", cgGetProfileString(opengl.cg.profile.v));
+		log_info(uL("cg;vertex profile %s"), cgGetProfileString(opengl.cg.profile.v));
 		cgGLSetOptimalOptions(opengl.cg.profile.v);
 		cgGLEnableProfile(opengl.cg.profile.v);
 
-		fprintf(stderr, "OPENGLCG: fragment profile %s\n", cgGetProfileString(opengl.cg.profile.f));
+		log_info(uL("cg;fragment profile %s"), cgGetProfileString(opengl.cg.profile.f));
 		cgGLSetOptimalOptions(opengl.cg.profile.f);
 		cgGLEnableProfile(opengl.cg.profile.f);
 	}
@@ -400,7 +400,7 @@ BYTE opengl_context_create(void) {
 	for (i = 0; i < shader_effect.pass; i++) {
 		int rc;
 
-		fprintf(stderr, "OPENGL: Setting pass %d\n", i);
+		log_info(uL("opengl;setting pass %d"), i);
 
 		if (opengl_texture_create(&opengl.texture[i], i) == EXIT_ERROR) {
 			opengl_context_delete(FALSE);
@@ -963,15 +963,19 @@ static BYTE opengl_glew_init(void) {
 	glewExperimental = GL_TRUE;
 
 	if ((err = glewContextInit()) != GLEW_OK) {
-		fprintf(stderr, "OPENGL: %s\n", glewGetErrorString(err));
+		log_error(uL("opengl; %s"), glewGetErrorString(err));
 	} else {
-		fprintf(stderr, "OPENGL: GPU %s (%s, %s)\n", glGetString(GL_RENDERER), glGetString(GL_VENDOR), glGetString(GL_VERSION));
-		fprintf(stderr, "OPENGL: GL Version %d.%d %s\n", opengl_integer_get(GL_MAJOR_VERSION),
+		log_info(uL("opengl;GPU %s (%s, %s)"),
+			glGetString(GL_RENDERER),
+			glGetString(GL_VENDOR),
+			glGetString(GL_VERSION));
+		log_info(uL("opengl;GL version %d.%d %s"),
+			opengl_integer_get(GL_MAJOR_VERSION),
 			opengl_integer_get(GL_MINOR_VERSION),
 			opengl_integer_get(GL_CONTEXT_CORE_PROFILE_BIT) ? "Core" : "Compatibility");
 
 		if (!GLEW_VERSION_3_0) {
-			fprintf(stderr, "OPENGL: OpenGL 3.0 not supported. Disabled.\n");
+			log_info(uL("opengl;OpenGL 3.0 not supported, disabled"));
 			return (EXIT_ERROR);
 		}
 
@@ -1137,7 +1141,7 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		fprintf(stderr, "OPENGL: Error on create FBO.\n");
+		log_error(uL("opengl;error on create FBO"));
 		glBindFramebuffer(GL_FRAMEBUFFER, gui_wdgopengl_framebuffer_id());
 		glBindTexture(GL_TEXTURE_2D, 0);
 		return (EXIT_ERROR);
@@ -1282,7 +1286,7 @@ static void opengl_shader_delete(_shader *shd) {
 	}
 }
 #if !defined (RELEASE)
-static void opengl_shader_print_log(GLuint obj, BYTE ret) {
+static void opengl_shader_print_log(GLuint obj) {
 	GLint info_log_length = 0, max_length = 0;
 
 	if (glIsShader(obj)) {
@@ -1307,10 +1311,7 @@ static void opengl_shader_print_log(GLuint obj, BYTE ret) {
 		info_log[info_log_length] = 0;
 
 		if (info_log_length > 0) {
-			fprintf(stderr, "OPENGL: %s", info_log);
-			if (ret) {
-				fprintf(stderr, "\n");
-			}
+			log_info(uL("opengl;%s"), info_log);
 		}
 	}
 }
@@ -1563,7 +1564,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 	glShaderSource(vrt, 4, src, NULL);
 	glCompileShader(vrt);
 #if !defined (RELEASE)
-	opengl_shader_print_log(vrt, FALSE);
+	opengl_shader_print_log(vrt);
 #endif
 	glGetShaderiv(vrt, GL_COMPILE_STATUS, &success);
 	if (success == GL_FALSE) {
@@ -1582,7 +1583,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 	glShaderSource(frg, 4, src, NULL);
 	glCompileShader(frg);
 #if !defined (RELEASE)
-	opengl_shader_print_log(frg, FALSE);
+	opengl_shader_print_log(frg);
 #endif
 	glGetShaderiv(vrt, GL_COMPILE_STATUS, &success);
 	if (success == GL_FALSE) {
@@ -1597,7 +1598,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 
 	glLinkProgram(shd->glslp.prg);
 #if !defined (RELEASE)
-	opengl_shader_print_log(shd->glslp.prg, TRUE);
+	opengl_shader_print_log(shd->glslp.prg);
 #endif
 	glGetProgramiv(shd->glslp.prg, GL_LINK_STATUS, &success);
 	if (success == GL_FALSE) {
@@ -1873,16 +1874,15 @@ INLINE static void opengl_shader_glsl_disable_attrib(void) {
 static void opengl_shader_cg_error_handler(UNUSED(CGcontext ctx), CGerror error, UNUSED(void *data)) {
 	switch (error) {
 		case CG_INVALID_PARAM_HANDLE_ERROR:
-			fprintf(stderr, "OPENGLCG: Invalid param handle.\n");
+			log_warning(uL("cg;invalid param handle"));
 			break;
 		case CG_INVALID_PARAMETER_ERROR:
-			fprintf(stderr, "OPENGLCG: Invalid parameter.\n");
+			log_warning(uL("cg;invalid parameter"));
 			break;
 		default:
 			break;
 	}
-
-	fprintf(stderr, "OPENGLCG: \"%s\"\n", cgGetErrorString(error));
+	log_warning(uL("cg;%s"), cgGetErrorString(error));
 }
 #endif
 static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const uTCHAR *path) {
@@ -1951,7 +1951,7 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 			if (uchdir(base) == -1) {}
 		}
 		if (!shd->cgp.prg.f && (list = cgGetLastListing(opengl.cg.ctx))) {
-			fprintf(stderr, "OPENGLCG: fragment program errors :\n%s\n", list);
+			log_warning(uL("cg;fragment error '%s'"), list);
 		}
 	}
 
@@ -1966,12 +1966,12 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 			if (uchdir(base)) {}
 		}
 		if (!shd->cgp.prg.v && (list = cgGetLastListing(opengl.cg.ctx))) {
-			fprintf(stderr, "OPENGLCG: vertex program errors :\n%s\n", list);
+			log_warning(uL("cg;vertex error '%s'"), list);
 		}
 	}
 
 	if (!shd->cgp.prg.f || !shd->cgp.prg.v) {
-		fprintf(stderr, "OPENGLCG: %s\n", cgGetErrorString(cgGetError()));
+		log_error(uL("cg;%s"), cgGetErrorString(cgGetError()));
 		return (EXIT_ERROR_SHADER);
 	}
 
@@ -2018,7 +2018,7 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 				continue;
 			}
 
-			fprintf(stderr, "OPENGLCG: Found semantic \"%s\" in prog.\n", semantic);
+			log_info(uL("cg;found semantic '%s' in prog"), semantic);
 
 			if (strcmp(semantic, "POSITION") == 0) {
 				opengl_shader_cg_clstate_ctrl(&shd->cgp.uni.vertex, &param, semantic);
@@ -2112,7 +2112,7 @@ static void opengl_shader_cg_clstate_ctrl(CGparameter *dst, CGparameter *param, 
 			break;
 		default:
 			(*dst) = NULL;
-			fprintf(stderr, "OPENGLCG: Parameter \"%s\" disabled.\n", semantic);
+			log_info(uL("cg;parameter '%s' disabled"), semantic);
 			break;
 	}
 }
@@ -2129,7 +2129,7 @@ static void opengl_shader_cg_param2f_ctrl(CGparameter *dst, CGparameter *param, 
 			break;
 		default:
 			(*dst) = NULL;
-			fprintf(stderr, "OPENGLCG: Parameter \"%s\" disabled.\n", semantic);
+			log_info(uL("cg;parameter '%s' disabled"), semantic);
 			break;
 	}
 }

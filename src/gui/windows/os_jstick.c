@@ -25,6 +25,7 @@
 #include <xinput.h>
 #include "jstick.h"
 #include "conf.h"
+#include "gui.h"
 
 enum _js_windows_xinput {
 	JS_XINPUT_AXIS_MIN = -32768,
@@ -293,7 +294,7 @@ void js_os_init(BYTE first_time) {
 #endif
 		if (((js_os.xinput = LoadLibrary("XInput1_4.dll")) == NULL) &&
 			((js_os.xinput = LoadLibrary("XInput1_3.dll")) == NULL)) {
-			fprintf(stderr, "XInput : failed to load XInput dll\n");
+			log_error(uL("xinput;failed to load xinput dll"));
 			js_os.xinput_available = FALSE;
 		} else {
 			js_os.xinput_available = TRUE;
@@ -303,7 +304,7 @@ void js_os_init(BYTE first_time) {
 		}
 
 		if ((js_os.di8 = LoadLibrary("DINPUT8.dll")) == NULL) {
-			fprintf(stderr, "DirectInput8 : failed to load DINPUT8.dll\n");
+			log_error(uL("directinput;failed to load dinput8.dll"));
 		} else {
 			HRESULT (WINAPI *DirectInput8Create_proc)(HINSTANCE, DWORD, REFIID, LPVOID *, LPUNKNOWN);
 
@@ -467,20 +468,20 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 		BYTE buffered = TRUE;
 
 		if ((rc = IDirectInput8_CreateDevice(js_os.directInputInterface, &jdev->guid, &didevice, NULL)) != DI_OK) {
-			fprintf(stderr, "IDirectInput8_CreateDevice : 0x%X\n", (unsigned int)rc);
+			log_warning(uL("directinput;IDirectInput8_CreateDevice 0x%X"), (unsigned int)rc);
 		}
 
 		if ((rc = IDirectInputDevice8_QueryInterface(didevice, &IID_IDirectInputDevice8W, (LPVOID *)&di8device)) != DI_OK) {
-			fprintf(stderr, "IDirectInputDevice8_QueryInterface : 0x%X\n", (unsigned int)rc);
+			log_warning(uL("directinput;IDirectInputDevice8_QueryInterface 0x%X"), (unsigned int)rc);
 		}
 		IDirectInputDevice8_Release(didevice);
 
 		if ((rc = IDirectInputDevice8_SetCooperativeLevel(di8device, GetActiveWindow(), DISCL_NONEXCLUSIVE | DISCL_BACKGROUND)) != DI_OK) {
-			fprintf(stderr, "IDirectInputDevice8_SetCooperativeLevel : 0x%X\n", (unsigned int)rc);
+			log_warning(uL("directinput;IDirectInputDevice8_SetCooperativeLevel 0x%X"), (unsigned int)rc);
 		}
 
 		if ((rc = IDirectInputDevice8_SetDataFormat(di8device, &c_dfDIJoystick2)) != DI_OK) {
-			fprintf(stderr, "IDirectInputDevice8_SetDataFormat : 0x%X\n", (unsigned int)rc);
+			log_warning(uL("directinput;IDirectInputDevice8_SetDataFormat 0x%X"), (unsigned int)rc);
 		}
 
 		bufferSizeProp.diph.dwSize = sizeof(DIPROPDWORD);
@@ -493,7 +494,7 @@ void js_os_jdev_open(_js_device *jdev, void *arg) {
 		if (rc == DI_POLLEDDEVICE) {
 			buffered = FALSE;
 		} else if (rc != DI_OK) {
-			fprintf(stderr, "IDirectInputDevice8_SetProperty : 0x%X\n", (unsigned int)rc);
+			log_warning(uL("directinput;IDirectInputDevice8_SetProperty 0x%X"), (unsigned int)rc);
 		}
 
 		jdev->di8device = (void *)di8device;
@@ -520,7 +521,7 @@ void js_os_jdev_close(_js_device *jdev) {
 	if (jdev->present) {
 		jstick.jdd.count--;
 #if defined (DEBUG)
-		ufprintf(stderr, uL("jstick disc. : slot%d \"" uPs("") "\" (%d)\n"),
+		log_warning(uL("jstick disc.;slot%d \"" uPs("") "\" (%d)\n"),
 			jdev->index,
 			jdev->desc,
 			jstick.jdd.count);
@@ -556,7 +557,7 @@ void js_os_jdev_scan(void) {
 		cb_enum_dev,
 		(void *)&raw,
 		DIEDFL_ALLDEVICES)) != DI_OK) {
-		fprintf(stderr, "IDirectInput_EnumDevices : 0x%X\n", (unsigned int)result);
+		log_warning(uL("directinput;IDirectInput_EnumDevices 0x%X"), (unsigned int)result);
 	}
 
 	if (raw.list) {
@@ -900,7 +901,7 @@ static BOOL CALLBACK cb_enum_obj(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID con
 			range.lMax = JS_AXIS_MAX;
 
 			if ((rc = IDirectInputDevice8_SetProperty(JDEVIDID8W, DIPROP_RANGE, &range.diph)) != DI_OK) {
-				fprintf(stderr, "IDIrectInputDevice8_SetProperty : 0x%X\n", (unsigned int)rc);
+				log_warning(uL("directinput;IDIrectInputDevice8_SetProperty 0x%X"), (unsigned int)rc);
 			}
 
 			deadzone.diph.dwSize = sizeof(deadzone);
@@ -909,7 +910,7 @@ static BOOL CALLBACK cb_enum_obj(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID con
 			deadzone.diph.dwHow = DIPH_BYID;
 			deadzone.dwData = 0;
 			if ((rc = IDirectInputDevice8_SetProperty(JDEVIDID8W, DIPROP_DEADZONE, &deadzone.diph)) != DI_OK) {
-				fprintf(stderr, "IDIrectInputDevice8_SetProperty : 0x%X\n", (unsigned int)rc);
+				log_warning(uL("directinput;IDIrectInputDevice8_SetProperty 0x%X"), (unsigned int)rc);
 			}
 
 			jsx->used = TRUE;

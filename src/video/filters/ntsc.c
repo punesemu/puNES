@@ -23,6 +23,7 @@
 #include "palette.h"
 #include "conf.h"
 #include "clock.h"
+#include "gui.h"
 
 static void change_color(BYTE *color, SWORD min, SWORD mod);
 
@@ -34,7 +35,7 @@ BYTE ntsc_init(void) {
 	palette = nes_ntsc_composite;
 
 	if (!(ntsc_filter.ntsc = (nes_ntsc_t *)malloc(sizeof(nes_ntsc_t)))) {
-		fprintf(stderr, "Out of memory\n");
+		log_error(uL("ntsc;out of memory"));
 		return (EXIT_ERROR);
 	}
 	ntsc_set(NULL, TRUE, 0, NULL, NULL, NULL);

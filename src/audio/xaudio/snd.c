@@ -112,15 +112,12 @@ BYTE snd_init(void) {
 	snd_end_frame = NULL;
 
 	if (thread_mutex_init_error(snd_thread.lock)) {
-		MessageBox(NULL,
-			"ATTENTION: Unable to create XAudio2 semaphore.\n",
-			"Error!",
-			MB_ICONEXCLAMATION | MB_OK);
+		gui_critical(uL("Unable to create XAudio2 semaphore."));
 		return (EXIT_ERROR);
 	}
 
 	if ((ds8.ds8 = LoadLibrary("DSOUND.DLL")) == NULL) {
-		fprintf(stderr, "DirectSound: failed to load DSOUND.DLL\n");
+		log_error(uL("directsound;failed to load DSOUND.DLL"));
 		ds8.available = FALSE;
 	} else {
 		ds8.available = TRUE;
@@ -145,7 +142,7 @@ BYTE snd_init(void) {
 #endif
 #endif
 		if (!ds8.available) {
-			fprintf(stderr, "DirectSound: System doesn't appear to have DS8.");
+			log_error(uL("directsound;system doesn't appear to have DS8"));
 		}
 	}
 
@@ -296,11 +293,7 @@ BYTE snd_playback_start(void) {
 		memset(&wfm, 0, sizeof(wfm));
 
 		if (XAudio2Create(&xaudio2.engine, 0, XAUDIO2_DEFAULT_PROCESSOR) != S_OK) {
-			MessageBox(NULL,
-				"ATTENTION: Unable to create XAudio2 object. Probably you\n"
-				"have an incomplete installation of DirectX 10.",
-				"Error!",
-				MB_ICONEXCLAMATION | MB_OK);
+			gui_warning(uL("Unable to create XAudio2 object. Probably you\nhave an incomplete installation of DirectX 10."));
 			snd_dummy_enabled = TRUE;
 			goto snd_playback_restart;
 		}
@@ -308,16 +301,14 @@ BYTE snd_playback_start(void) {
 		if (index == 0) {
 			if (IXAudio2_CreateMasteringVoice(xaudio2.engine, &xaudio2.master, snd.channels,
 				snd.samplerate, 0, 0, NULL) != S_OK) {
-				MessageBox(NULL, "ATTENTION: Unable to create XAudio2 master voice.", "Error!",
-				MB_ICONEXCLAMATION | MB_OK);
+				gui_warning(uL("Unable to create XAudio2 master voice."));
 				snd_dummy_enabled = TRUE;
 				goto snd_playback_restart;
 			}
 		} else {
 			if (IXAudio2_CreateMasteringVoice(xaudio2.engine, &xaudio2.master, snd.channels,
 				snd.samplerate, 0, index - 1, NULL) != S_OK) {
-				MessageBox(NULL, "ATTENTION: Unable to create XAudio2 master voice.", "Error!",
-				MB_ICONEXCLAMATION | MB_OK);
+				gui_warning(uL("Unable to create XAudio2 master voice."));
 				snd_dummy_enabled = TRUE;
 				goto snd_playback_restart;
 			}
@@ -339,10 +330,7 @@ BYTE snd_playback_start(void) {
 				&voice_callbacks,
 				NULL,
 				NULL) != S_OK) {
-			MessageBox(NULL,
-				"ATTENTION: Unable to create XAudio2 source voice.\n",
-				"Error!",
-				MB_ICONEXCLAMATION | MB_OK);
+			gui_warning(uL("Unable to create XAudio2 source voice."));
 			snd_dummy_enabled = TRUE;
 			goto snd_playback_restart;
 		}
@@ -363,24 +351,18 @@ BYTE snd_playback_start(void) {
 		snd.buffer.limit.high = snd.period.size * 7;
 
 #if !defined (RELEASE)
-		fprintf(stderr, "softw bsize : %-6d - %-6d\n", snd.buffer.size, snd.period.samples);
-		fprintf(stderr, "softw limit : %-6d - %-6d\n", snd.buffer.limit.low, snd.buffer.limit.high);
+		log_info(uL("softw bsize;%d - %d"), snd.buffer.size, snd.period.samples);
+		log_info(uL("softw limit;%d - %d"), snd.buffer.limit.low, snd.buffer.limit.high);
 #endif
 
 		// alloco il buffer in memoria
 		if (!(cbd.start = (SWORD *)malloc(snd.buffer.size))) {
-			MessageBox(NULL,
-				"ATTENTION: Unable to allocate audio buffers.\n",
-				"Error!",
-				MB_ICONEXCLAMATION | MB_OK);
+			gui_critical(uL("Unable to allocate audio buffers."));
 			goto snd_playback_start_error;
 		}
 
 		if (!(cbd.silence = (SWORD *)malloc(snd.period.size))) {
-			MessageBox(NULL,
-				"ATTENTION: Unable to allocate silence buffer.\n",
-				"Error!",
-				MB_ICONEXCLAMATION | MB_OK);
+			gui_critical(uL("Unable to allocate silence buffer."));
 			goto snd_playback_start_error;
 		}
 
@@ -409,10 +391,7 @@ BYTE snd_playback_start(void) {
 
 		if (!snd_dummy_enabled) {
 			if (IXAudio2SourceVoice_SubmitSourceBuffer(xaudio2.source, (const XAUDIO2_BUFFER *)&xaudio2.buffer, NULL) != S_OK) {
-				MessageBox(NULL,
-					"ATTENTION: Unable to set sound engine.\n",
-					"Error!",
-					MB_ICONEXCLAMATION | MB_OK);
+				gui_warning(uL("Unable to set sound engine."));
 				snd_dummy_enabled = TRUE;
 				goto snd_playback_restart;
 			}
@@ -429,19 +408,12 @@ BYTE snd_playback_start(void) {
 
 	if (!snd_dummy_enabled) {
 		if (IXAudio2_StartEngine(xaudio2.engine) != S_OK) {
-			MessageBox(NULL,
-				"ATTENTION: Unable to start sound engine.\n",
-				"Error!",
-				MB_ICONEXCLAMATION | MB_OK);
+			gui_warning(uL("Unable to start sound engine."));
 			snd_dummy_enabled = TRUE;
 			goto snd_playback_restart;
 		}
-
 		if (IXAudio2SourceVoice_Start(xaudio2.source, 0, XAUDIO2_COMMIT_NOW) != S_OK) {
-			MessageBox(NULL,
-				"ATTENTION: Unable to start source voice.\n",
-				"Error!",
-				MB_ICONEXCLAMATION | MB_OK);
+			gui_warning(uL("Unable to start source voice."));
 			snd_dummy_enabled = TRUE;
 			goto snd_playback_restart;
 		}
@@ -703,7 +675,7 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 	if ((gui_get_ms() - snd_thread.tick) >= 250.0f) {
 		snd_thread.tick = gui_get_ms();
 		if (info.snd_info)
-		fprintf(stderr, "snd : %d %d %6d %6d %4d %4d %4d %4d %3d %f\r",
+		fprintf(stderr, "snd debug : %d %d %6d %6d %4d %4d %4d %4d %3d %f\r",
 			avail,
 			len,
 			cbd.samples_available,
@@ -727,7 +699,7 @@ INLINE static void xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2
 	x2buf->pAudioData = buffer;
 
 	if (IXAudio2SourceVoice_SubmitSourceBuffer(source, x2buf, NULL) != S_OK) {
-		fprintf(stderr, "Unable to submit source buffer\n");
+		log_warning(uL("xaudio;unable to submit source buffer"));
 	}
 }
 

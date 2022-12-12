@@ -80,10 +80,6 @@ int main(int argc, char **argv) {
 		return (EXIT_SUCCESS);
 	}
 
-	ufprintf(stderr, uL("INFO: config folder \"" uPs("") "\"\n"), gui_config_folder());
-	ufprintf(stderr, uL("INFO: data folder   \"" uPs("") "\"\n"), gui_data_folder());
-	ufprintf(stderr, uL("INFO: tmp folder    \"" uPs("") "\"\n"), gui_temp_folder());
-
 #if defined (__NETPLAY__)
 	netplay_init();
 #endif

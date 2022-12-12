@@ -19,7 +19,6 @@
  *
  */
 
-#include <stdio.h>
 #include "video/gfx.h"
 #include "d3d9.h"
 #include "gui.h"
@@ -54,7 +53,7 @@ void gfx_api_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ra
 	dst.bottom = (LONG)(rect->y + rect->h);
 
 	if (IDirect3DSurface9_LockRect(d3d9.overlay.map0, &lock_dst, &dst, D3DLOCK_NO_DIRTY_UPDATE) != D3D_OK) {
-		fprintf(stderr, "D3D9 : LockRect overlay surface error\n");
+		log_warning(uL("d3d9;LockRect overlay surface error"));
 		return;
 	}
 

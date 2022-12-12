@@ -55,11 +55,12 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "mainApplication.hpp"
 #include "mainWindow.hpp"
 #include "objCheat.hpp"
+#include "dlgJsc.hpp"
 #include "dlgKeyboard.hpp"
+#include "dlgLog.hpp"
 #include "dlgSettings.hpp"
 #include "dlgUncomp.hpp"
 #include "dlgVsSystem.hpp"
-#include "dlgJsc.hpp"
 #include "wdgScreen.hpp"
 #include "wdgOverlayUi.hpp"
 #include "video/gfx_thread.h"
@@ -87,6 +88,9 @@ static struct _qt {
 	objCheat *objch{};
 	QImage qimage;
 	QByteArray sba;
+
+	// widget dell'overlay
+	dlgLog *log{};
 
 	// widget dell'overlay
 	wdgOverlayUi *overlay{};
@@ -205,6 +209,14 @@ BYTE gui_create(void) {
 	qt.mwin->setGeometry(cfg->lg.x, cfg->lg.y, 0, 0);
 
 	qt.mwin->show();
+
+	qt.log = new dlgLog(qt.mwin);
+	qt.log->start_thread();
+
+	log_info(uL("folders"));
+	log_info_box(uL("config;" uPs("") ""), gui_config_folder());
+	log_info_box(uL("data;" uPs("") ""), gui_data_folder());
+	log_info_box(uL("temp;" uPs("") ""), gui_temp_folder());
 
 	qt.dset = new dlgSettings(qt.mwin);
 	qt.overlay = new wdgOverlayUi();
@@ -675,6 +687,10 @@ void *gui_dlgkeyboard_get_ptr(void) {
 	return ((void *)qt.dkeyb);
 }
 
+void *gui_dlglog_get_ptr(void) {
+	return ((void *)qt.log);
+}
+
 void gui_js_joyval_icon_desc(int index, DBWORD input, void *icon, void *desc) {
 	uTCHAR *uicon = nullptr, *udesc = nullptr;
 	QString *si = (QString *)icon, *sd = (QString *)desc;
@@ -794,17 +810,6 @@ void gui_save_screenshot(int w, int h, int stride, char *buffer, BYTE flip) {
 	screenshot.save(&file, "PNG");
 }
 
-void gui_utf_printf(const uTCHAR *fmt, ...) {
-	static uTCHAR buffer[1024];
-	va_list ap;
-
-	va_start(ap, fmt);
-	uvsnprintf(buffer, usizeof(buffer), fmt, ap);
-	va_end(ap);
-
-	QString utf = uQString(buffer);
-	QMessageBox::warning(nullptr, QString("%1").arg(utf.length()), utf);
-}
 void gui_utf_dirname(uTCHAR *path, uTCHAR *dst, size_t len) {
 	QString utf = uQString(path);
 
@@ -860,5 +865,18 @@ static void gui_is_in_desktop(int *x, int *y) {
 	}
 	if (((*y) == 0) || ((*y) < y_min) || ((*y) > y_max)) {
 		(*y) = 80;
+	}
+}
+
+void gui_warning(const uTCHAR *txt) {
+	QMessageBox::warning(nullptr, "Warning!", uQString(txt));
+	if (qt.log) {
+		log_warning(txt);
+	}
+}
+void gui_critical(const uTCHAR *txt) {
+	QMessageBox::critical(nullptr, "Error!", uQString(txt));
+	if (qt.log) {
+		log_error(txt);
 	}
 }

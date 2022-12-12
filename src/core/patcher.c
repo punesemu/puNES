@@ -185,21 +185,21 @@ void patcher_apply(void *rom_mem) {
 	if (ustrcasecmp(ext, uL(".ips")) == 0) {
 		if (patcher_ips(&patch, rom) == EXIT_ERROR) {
 			gui_overlay_info_append_msg_precompiled(12, NULL);
-			fprintf(stderr, "error loading patch file\n");
+			log_error(uL("patcher;error loading patch file"));
 		} else {
 			patcher.patched = TRUE;
 		}
 	} else if (ustrcasecmp(ext, uL(".bps")) == 0) {
 		if (patcher_bps(&patch, rom) == EXIT_ERROR) {
 			gui_overlay_info_append_msg_precompiled(12, NULL);
-			fprintf(stderr, "error loading patch file\n");
+			log_error(uL("patcher;error loading patch file"));
 		} else {
 			patcher.patched = TRUE;
 		}
 	} else if (ustrcasecmp(ext, uL(".xdelta")) == 0) {
 		if (patcher_xdelta(&patch, rom) == EXIT_ERROR) {
 			gui_overlay_info_append_msg_precompiled(12, NULL);
-			fprintf(stderr, "error loading patch file\n");
+			log_error(uL("patcher;error loading patch file"));
 		} else {
 			patcher.patched = TRUE;
 		}

@@ -25,6 +25,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 #include "tas.h"
+#include "gui.h"
 
 struct _taito_X1005 {
 	BYTE ram[0x80];
@@ -345,11 +346,11 @@ void extcl_battery_io_Taito_X1005(BYTE mode, FILE *fp) {
 	if (info.prg.ram.bat.banks) {
 		if (mode == WR_BAT) {
 			if (fwrite(&taito_X1005.ram[0], LENGTH(taito_X1005.ram), 1, fp) < 1) {
-				fprintf(stderr, "error on write battery memory\n");
+				log_error(uL("Taito_X1005;error on write battery memory"));
 			}
 		} else {
 			if (fread(&taito_X1005.ram[0], LENGTH(taito_X1005.ram), 1, fp) < 1) {
-				fprintf(stderr, "error on read battery memory\n");
+				log_error(uL("Taito_X1005;error on read battery memory"));
 			}
 		}
 	}

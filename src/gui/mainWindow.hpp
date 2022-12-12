@@ -290,6 +290,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_tape_play(void);
 		void s_tape_record(void);
 		void s_tape_stop(void);
+		void s_show_log(void);
 		void s_help(void);
 
 	private slots:

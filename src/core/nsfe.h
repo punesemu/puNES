@@ -21,5 +21,6 @@
 #include "common.h"
 
 BYTE nsfe_load_rom(void);
+void nsfe_info(void);
 
 #endif /* NSFE_H_ */

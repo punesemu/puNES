@@ -47,14 +47,14 @@ BYTE cgp_parse(const uTCHAR *file) {
 #if defined (WITH_OPENGL_CG) || defined (WITH_D3D9)
 		se.type = MS_CGP;
 # else
-		fprintf(stderr, "CGP: Shader format non supported.");
+		log_error(uL("cgp;shader format non supported");
 		return (EXIT_ERROR);
 #endif
 	} else if (QString::compare(fi.suffix(), "glslp", Qt::CaseInsensitive) == 0) {
 #if defined (WITH_OPENGL)
 		se.type = MS_GLSLP;
 # else
-		fprintf(stderr, "CGP: Shader format non supported.");
+		log_error(uL("cgp;shader format non supported"));
 		return (EXIT_ERROR);
 #endif
 	} else {
@@ -145,7 +145,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 			} else if (QString::compare(value, "mirrored_repeat", Qt::CaseInsensitive) == 0) {
 				sp->wrap = TEXTURE_WRAP_MIRRORED_REPEAT;
 			} else {
-				fprintf(stderr, "[CGP] : Invalid %s attribute. Using default value.\n", qPrintable(key));
+				log_warning(uL("cgp;invalid " uPs("") " attribute, using default value"), qPrintable(key));
 				sp->wrap = TEXTURE_WRAP_BORDER;
 			}
 		}
@@ -181,7 +181,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 					} else if (QString::compare(sc_type_x, "absolute", Qt::CaseInsensitive) == 0) {
 						sc->type.x = SHADER_SCALE_ABSOLUTE;
 					} else {
-						fprintf(stderr, "[CGP] : Invalid scale_type_x attribute.\n");
+						log_warning(uL("cgp;invalid scale_type_x attribute"));
 						delete(set);
 						return (EXIT_ERROR);
 					}
@@ -195,7 +195,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 					} else if (QString::compare(sc_type_y, "absolute", Qt::CaseInsensitive) == 0) {
 						sc->type.y = SHADER_SCALE_ABSOLUTE;
 					} else {
-						fprintf(stderr, "[CGP] : Invalid scale_type_y attribute.\n");
+						log_warning(uL("cgp;invalid scale_type_y attribute"));
 						delete(set);
 						return (EXIT_ERROR);
 					}
@@ -314,7 +314,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 				} else if (QString::compare(value, "mirrored_repeat", Qt::CaseInsensitive) == 0) {
 					lp->wrap = TEXTURE_WRAP_MIRRORED_REPEAT;
 				} else {
-					fprintf(stderr, "[CGP] : Invalid %s attribute. Using default value.\n", qPrintable(key));
+					log_warning(uL("cgp;invalid " uPs("") " attribute, using default value"), qPrintable(key));
 					lp->wrap = TEXTURE_WRAP_BORDER;
 				}
 			}
@@ -376,10 +376,11 @@ BYTE cgp_pragma_param(const char *code, const uTCHAR *path) {
 	QFile file(uQString(path));
 	QString line;
 	_param_shd param;
+	int i, params = 0;
 
 	if (path && path[0]) {
 		if (!file.open(QIODevice::ReadOnly)) {
-			ufprintf(stderr, uL("CGP: Can't open file '" uPs("") "'\n"), path);
+			log_error(uL("cgp;can't open file '" uPs("") "'"), path);
 			return (EXIT_ERROR);
 		}
 		stream.setDevice(&file);
@@ -391,8 +392,8 @@ BYTE cgp_pragma_param(const char *code, const uTCHAR *path) {
 		::memset(&param, 0x00, sizeof(_param_shd));
 
 		if (line.startsWith("#pragma parameter")) {
-			int i, count;
 			bool finded;
+			int count;
 
 			// sscanf non e' "locale indipendente" percio' lo utilizzo solo per
 			// ricavare nome e descrizione del parametro.
@@ -453,11 +454,20 @@ BYTE cgp_pragma_param(const char *code, const uTCHAR *path) {
 				if (shader_effect.params < MAX_PARAM) {
 					::memcpy(&shader_effect.param[shader_effect.params], &param, sizeof(_param_shd));
 					shader_effect.params++;
-					fprintf(stderr, "CGP: Findend parameter %s = %f\n", param.name, param.value);
+					params++;
 				}
 			}
 		}
 	} while (!line.isNull());
+
+	if (params) {
+		log_info(uL("shader parameters"));
+		for (i = 0; i < params; i++) {
+			_param_shd *ps = &shader_effect.param[i];
+
+			log_info_box(uL("%d;%s = %f"), i, ps->name, ps->value);
+		}
+	}
 
 	if (file.isOpen()) {
 		file.close();

@@ -468,7 +468,7 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 	}
 
 #if defined (DEBUG)
-	//fprintf(stderr, "Alert: Attempt to read PPU port %04X\n", address);
+	//printf("Alert: Attempt to read PPU port %04X\n", address);
 #endif
 
 	/* ppu open bus */
@@ -519,7 +519,7 @@ INLINE static BYTE apu_rd_reg(WORD address) {
 		}
 #if defined (DEBUG)
 	//} else {
-	//	fprintf(stderr, "Alert: Attempt to read APU port %04X\n", address);
+	//	printf("Alert: Attempt to read APU port %04X\n", address);
 #endif
 	}
 
@@ -728,7 +728,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			fds.drive.irq_disk_high = FALSE;
 			irq.high &= ~FDS_DISK_IRQ;
 #if !defined (RELEASE)
-			//fprintf(stderr, "0x%04X 0x%02X %d\n", address, cpu.openbus, irq.high);
+			//printf("0x%04X 0x%02X %d\n", address, cpu.openbus, irq.high);
 #endif
 			return (TRUE);
 		}
@@ -736,9 +736,9 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			cpu.openbus = fds.drive.data_readed;
 #if !defined (RELEASE)
 			/*
-			fprintf(stderr, "0x%04X 0x%02X [0x%04X] 0x%04X %d %d %d\n", address, cpu.openbus,
-					fds.side.data[fds.drive.disk_position], cpu.opcode_PC, fds.drive.disk_position,
-					fds.info.sides_size[fds.drive.side_inserted], irq.high);
+			printf("0x%04X 0x%02X [0x%04X] 0x%04X %d %d %d\n", address, cpu.openbus,
+				fds.side.data[fds.drive.disk_position], cpu.opcode_PC, fds.drive.disk_position,
+				fds.info.sides_size[fds.drive.side_inserted], irq.high);
 			*/
 #endif
 			/* devo disabilitare il disk IRQ */
@@ -1185,7 +1185,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 
 #if !defined (RELEASE)
 		if (old_delay && nmi.high) {
-			fprintf(stderr, "r2000 nmi high, set delay nmi.before, %d %d %d - %d %d - 0x%02X %d\n",
+			log_warning(uL("cpu_inline;r2000 nmi high, set delay nmi.before, %d %d %d - %d %d - 0x%02X %d"),
 				ppu.frames, ppu.frame_y, ppu.frame_x, nmi.frame_x, nmi.cpu_cycles_from_last_nmi,
 				cpu.opcode, cpu.base_opcode_cycles);
 		}
@@ -1467,7 +1467,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 
 #if defined (DEBUG)
 	/* non si puo' scrivere nel registro $2002 */
-	//fprintf(stderr, "Alert: Attempt to write PPU port %04X\n", address);
+	//printf("Alert: Attempt to write PPU port %04X\n", address);
 #endif
 
 	/* open bus */
@@ -1748,7 +1748,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 	}
 
 #if defined (DEBUG)
-		//fprintf(stderr, "Alert: Attempt to write APU port %04X\n", address);
+		//printf("Alert: Attempt to write APU port %04X\n", address);
 #endif
 }
 INLINE static void nsf_wr_mem(WORD address, BYTE value) {
@@ -1937,11 +1937,11 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 
 #if !defined (RELEASE)
 		/*if (address == 0x4025) {
-			fprintf(stderr, "0x%04X 0x%02X %d\n", address, value, fds.drive.enabled_dsk_reg);
+			printf("0x%04X 0x%02X %d\n", address, value, fds.drive.enabled_dsk_reg);
 		} else {
 			if (fds.drive.disk_position)
-			fprintf(stderr, "0x%04X 0x%02X 0x%04X %d 0x%02X %d\n", address, value, cpu.opcode_PC,
-					fds.drive.disk_position - 1, fds.side.data[fds.drive.disk_position - 1], ppu.frames);
+			printf("0x%04X 0x%02X 0x%04X %d 0x%02X %d\n", address, value, cpu.opcode_PC,
+				fds.drive.disk_position - 1, fds.side.data[fds.drive.disk_position - 1], ppu.frames);
 		}*/
 #endif
 

@@ -58,7 +58,7 @@ BYTE d3d9_init(void) {
 	memset(&d3d9, 0x00, sizeof(d3d9));
 
 	if ((d3d9.d3d = Direct3DCreate9(D3D_SDK_VERSION)) == NULL) {
-		MessageBox(NULL, "Unable to create d3d object", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		gui_critical(uL("Unable to create d3d object."));
 		return (EXIT_ERROR);
 	}
 
@@ -66,16 +66,12 @@ BYTE d3d9_init(void) {
 	d3d9.adapters_on_system = IDirect3D9_GetAdapterCount(d3d9.d3d);
 
 	if (!(d3d9.array = malloc(d3d9.adapters_on_system * sizeof(_d3d9_adapter)))) {
-		MessageBox(NULL, "Unable to create devices array", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		gui_critical(uL("Unable to create devices array."));
 		return (EXIT_ERROR);
 	}
 
 	{
 		unsigned int adapt;
-
-#define dev_error(s) fprintf(stderr, "D3D9 adapter %d : "s, dev->id)
-#define dev_info(s) printf("D3D9 adapter %d : "s, dev->id)
-#define dev_info_args(s, ...) printf("D3D9 adapter %d : "s, dev->id, __VA_ARGS__)
 
 		for (adapt = 0; adapt < d3d9.adapters_on_system; adapt++) {
 			_d3d9_adapter *dev = D3D9_ADAPTER(d3d9.adapters_in_use);
@@ -87,14 +83,14 @@ BYTE d3d9_init(void) {
 			dev->id = adapt;
 
 			if (IDirect3D9_GetAdapterIdentifier(d3d9.d3d, dev->id, 0, &d3dinfo)!= D3D_OK) {
-				dev_error("unable to get adapter display info\n");
+				log_error(uL("d3d9 adptr %d;unable to get adapter display info"));
 				continue;
 			}
 
-			dev_info_args("%s\n", d3dinfo.Description);
+			log_info(uL("d3d9 adptr %d;%s"), dev->id, d3dinfo.Description);
 
 			if (IDirect3D9_GetAdapterDisplayMode(d3d9.d3d, dev->id, &dev->display_mode) != D3D_OK) {
-				dev_error("unable to get adapter display mode\n");
+				log_error_box(uL("unable to get adapter display mode"));
 				continue;
 			}
 
@@ -103,13 +99,13 @@ BYTE d3d9_init(void) {
 				dev->bit_per_pixel = 32;
 			}
 			if (dev->bit_per_pixel < 32) {
-				dev_error("video mode < 32 bits are not supported\n");
+				log_error_box(uL("video mode < 32 bits are not supported"));
 				continue;
 			}
 
 			// Check for hardware T&L
 			if (IDirect3D9_GetDeviceCaps(d3d9.d3d, dev->id, D3DDEVTYPE_HAL, &d3dcaps) != D3D_OK) {
-				dev_error("unable to get device caps\n");
+				log_error_box(uL("unable to get device caps"));
 				continue;
 			}
 
@@ -117,12 +113,12 @@ BYTE d3d9_init(void) {
 				dev->dynamic_texture = TRUE;
 			} else {
 				dev->dynamic_texture = FALSE;
-				dev_info("don't support dynamic texture\n");
+				log_info_box(uL("don't support dynamic texture"));
 			}
 
 			if (d3dcaps.TextureCaps & D3DPTEXTURECAPS_SQUAREONLY) {
 				dev->texture_square_only = TRUE;
-				dev_info("support only square texture\n");
+				log_info_box(uL("support only square texture"));
 			} else {
 				dev->texture_square_only = FALSE;
 			}
@@ -131,7 +127,7 @@ BYTE d3d9_init(void) {
 		 	// This cap guarantees that UpdateSurface and UpdateTexture calls will be hardware
 		 	// accelerated. If this cap is absent, these calls will succeed but will be slower.
 			if (!(d3dcaps.Caps3 & D3DCAPS3_COPY_TO_VIDMEM)) {
-				dev_info("don't support accelerated texture update\n");
+				log_info_box(uL("don't support accelerated texture update"));
 			}
 
 			if (d3dcaps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) {
@@ -142,22 +138,22 @@ BYTE d3d9_init(void) {
 					dev->flags |= D3DCREATE_PUREDEVICE;
 				}
 			} else {
-				dev_info("don't support hardware accelaration\n");
+				log_info_box(uL("don't support hardware accelaration"));
 				dev->flags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 			}
 
 			if (d3dcaps.MaxSimultaneousTextures <= 1) { //number of textures
-				dev_info("single pass multitexturing not supported\n");
+				log_info_box(uL("single pass multitexturing not supported"));
 			} else {
-				dev_info_args("MaxSimultaneousTextures %ld\n", d3dcaps.MaxSimultaneousTextures);
+				log_info_box(uL("MaxSimultaneousTextures %ld"), d3dcaps.MaxSimultaneousTextures);
 			}
 
 			dev->number_of_monitors = d3dcaps.NumberOfAdaptersInGroup;
 
 			//if (dev->number_of_monitors > 1) {
-				dev_info_args("MasterAdapterOrdinal    %d\n", d3dcaps.MasterAdapterOrdinal);
-				dev_info_args("AdapterOrdinalInGroup   %d\n", d3dcaps.AdapterOrdinalInGroup);
-				dev_info_args("NumberOfAdaptersInGroup %d\n", dev->number_of_monitors);
+				log_info_box(uL("MasterAdapterOrdinal    %d"), d3dcaps.MasterAdapterOrdinal);
+				log_info_box(uL("AdapterOrdinalInGroup   %d"), d3dcaps.AdapterOrdinalInGroup);
+				log_info_box(uL("NumberOfAdaptersInGroup %d"), dev->number_of_monitors);
 				//dev->flags |= D3DCREATE_ADAPTERGROUP_DEVICE;
 			//}
 
@@ -173,13 +169,13 @@ BYTE d3d9_init(void) {
 
 				if (d3dcaps.PixelShaderVersion < D3DPS_VERSION(2, 0) ||
 					(d3dcaps.VertexShaderVersion < D3DVS_VERSION(2, 0))) {
-					dev_info("don't support shaders >= 2.0\n");
+					log_info_box(uL("don't support shaders >= 2.0"));
 				} else {
 					dev->hlsl_compliant = TRUE;
 				}
 
 				if (!dev->hlsl_compliant) {
-					dev_info("shaders are not supported\n");
+					log_info_box(uL("shaders are not supported"));
 				}
 
 				d3d9.adapter = NULL;
@@ -187,14 +183,10 @@ BYTE d3d9_init(void) {
 
 			d3d9.adapters_in_use++;
 		}
-
-#undef dev_error
-#undef dev_info
-#undef dev_info_args
 	}
 
 	if (d3d9.adapters_in_use == 0) {
-		MessageBox(NULL, "Unable find usable adapter", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		gui_critical(uL("Unable find usable adapter"));
 		return (EXIT_ERROR);
 	}
 
@@ -214,7 +206,7 @@ BYTE d3d9_init(void) {
 	}
 
 	if (!d3d9.adapter->hlsl_compliant) {
-		MessageBox(NULL, "Adapter is not hlsl compliant", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		gui_critical(uL("Adapter is not hlsl compliant."));
 		return (EXIT_ERROR);
 	}
 
@@ -463,7 +455,7 @@ BYTE d3d9_context_create(void) {
 
 	// texture
 	for (i = 0; i < shader_effect.pass; i++) {
-		fprintf(stderr, "D3D9: Setting pass %d.\n", i);
+		log_info(uL("d3d9;setting pass %d"), i);
 
 		if (d3d9_texture_create(&d3d9.texture[i], i) == EXIT_ERROR) {
 			d3d9_context_delete(FALSE);
@@ -578,7 +570,7 @@ BYTE d3d9_context_create(void) {
 
 		gui_overlay_set_size((int)ow, (int)oh);
 
-		fprintf(stderr, "D3D9: Setting overlay pass.\n");
+		log_info(uL("d3d9;setting overlay pass"));
 
 		if (d3d9_shader_init(0, &d3d9.overlay.shader, NULL, shader_code_blend()) == EXIT_ERROR) {
 			d3d9_context_delete(FALSE);
@@ -753,7 +745,7 @@ void d3d9_draw_scene(void) {
 		if (IDirect3DDevice9_TestCooperativeLevel(d3d9.adapter->dev) == D3DERR_DEVICENOTRESET) {
 			emu_thread_pause();
 			if (d3d9_context_create() == EXIT_ERROR) {
-				fprintf(stderr, "D3D9 : Unable to initialize d3d context\n");
+				log_error(uL("d3d9;unable to initialize d3d context"));
 			}
 			emu_thread_continue();
 		}
@@ -774,9 +766,9 @@ static void d3d9_shader_cg_error_handler(void) {
 	CGerror error = cgGetError();
 
 	if (error == (CGerror) cgD3D9Failed) {
-		fprintf(stderr, "D3D9: Error '%s' occurred.\n", cgD3D9TranslateHRESULT(cgD3D9GetLastError()));
+		log_error(uL("d3d9;error '%s' occurred"), cgD3D9TranslateHRESULT(cgD3D9GetLastError()));
 	} else {
-		fprintf(stderr, "CG: Error '%s' occurred.\n", cgD3D9TranslateCGerror(error));
+		log_error(uL("cg;error '%s' occurred"), cgD3D9TranslateCGerror(error));
 	}
 }
 static BYTE d3d9_device_create(UINT width, UINT height) {
@@ -809,7 +801,7 @@ static BYTE d3d9_device_create(UINT width, UINT height) {
 		d3d9.adapter->flags | D3DCREATE_MULTITHREADED | D3DCREATE_FPU_PRESERVE,
 		&d3dpp,
 		&d3d9.adapter->dev) != D3D_OK) {
-		MessageBox(NULL, "Unable to create d3d device", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		gui_critical(uL("Unable to create d3d device."));
 		return (EXIT_ERROR);
 	}
 
@@ -1176,7 +1168,7 @@ static BYTE d3d9_texture_create(_texture *texture, UINT index) {
 
 	if (IDirect3DDevice9_CreateVertexBuffer(d3d9.adapter->dev, sizeof(_vertex_buffer) * 4, 0, 0,
 		D3DPOOL_DEFAULT, &texture->shader.quad, NULL) != D3D_OK) {
-		MessageBox(NULL, "Unable to create the vertex buffer", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		gui_critical(uL("Unable to create the vertex buffer."));
 		return (EXIT_ERROR);
 	}
 
@@ -1187,7 +1179,7 @@ static BYTE d3d9_texture_create(_texture *texture, UINT index) {
 		D3DPOOL_DEFAULT,
 		&texture->data,
 		NULL) != D3D_OK) {
-		MessageBox(NULL, "Unable to create the texture", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		gui_critical(uL("Unable to create the texture."));
 		return (EXIT_ERROR);
 	}
 
@@ -1259,7 +1251,7 @@ static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h,
 		D3DPOOL_DEFAULT,
 		&texture->shader.quad,
 		NULL) != D3D_OK) {
-		MessageBox(NULL, "Unable to create the vertex buffer", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		gui_critical(uL("Unable to create the vertex buffer."));
 		return (EXIT_ERROR);
 	}
 
@@ -1270,7 +1262,7 @@ static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h,
 		D3DPOOL_DEFAULT,
 		&texture->data,
 		NULL) != D3D_OK) {
-		MessageBox(NULL, "Unable to create the texture", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		gui_critical(uL("Unable to create the texture."));
 		return (EXIT_ERROR);
 	}
 
@@ -1288,7 +1280,7 @@ static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h,
 			D3DPOOL_SYSTEMMEM,
 			&texture->offscreen,
 			NULL) != D3D_OK) {
-			MessageBox(NULL, "Unable to create the memory surface", "Error!", MB_ICONEXCLAMATION | MB_OK);
+			gui_critical(uL("Unable to create the memory surface."));
 			return (EXIT_ERROR);
 		}
 
@@ -1344,7 +1336,7 @@ static BYTE d3d9_texture_lut_create(_lut *lut, UINT index) {
 		D3DPOOL_DEFAULT,
 		&lut->data,
 		NULL) != D3D_OK) {
-		MessageBox(NULL, "Unable to create the texture", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		gui_critical(uL("Unable to create the texture."));
 		return (EXIT_ERROR);
 	}
 
@@ -1354,7 +1346,7 @@ static BYTE d3d9_texture_lut_create(_lut *lut, UINT index) {
 		D3DPOOL_SYSTEMMEM,
 		&offscreen,
 		NULL) != D3D_OK) {
-		MessageBox(NULL, "Unable to create the memory surface", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		gui_critical(uL("Unable to create the memory surface."));
 		return (EXIT_ERROR);
 	}
 
@@ -1475,7 +1467,7 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const uTCHAR *path, const 
 			if (uchdir(base) == -1) {}
 		}
 		if (!shd->prg.f && (list = cgGetLastListing(d3d9.cgctx))) {
-			printf("CG: fragment program errors :\n%s\n", list);
+			log_error(uL("cg;fragment program errors, %s"), list);
 		}
 	}
 
@@ -1514,21 +1506,21 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const uTCHAR *path, const 
 			if (uchdir(base) == -1) {}
 		}
 		if (!shd->prg.v && (list = cgGetLastListing(d3d9.cgctx))) {
-			printf("CG: vertex program errors :\n%s\n", list);
+			log_error(uL("cg;vertex program errors, %s"), list);
 		}
 	}
 
 	if (!shd->prg.f || !shd->prg.v) {
-		fprintf(stderr, "CG: %s\n", cgGetErrorString(cgGetError()));
+		log_error(uL("cg;%s"), cgGetErrorString(cgGetError()));
 		return (EXIT_ERROR);
 	}
 
 	if (cgD3D9LoadProgram(shd->prg.f, TRUE, 0) != D3D_OK) {
-		fprintf(stderr, "CG: Error on loading fragment program\n");
+		log_error(uL("cg;error on loading fragment program"));
 		return (EXIT_ERROR);
 	}
 	if (cgD3D9LoadProgram(shd->prg.v, TRUE, 0) != D3D_OK) {
-		fprintf(stderr, "CG: Error on loading vertex program\n");
+		log_error(uL("cg;error on loading vertex program"));
 		return (EXIT_ERROR);
 	}
 
@@ -1611,7 +1603,7 @@ static void d3d9_shader_uniform_ctrl(CGparameter *dst, CGparameter *param, const
 
 	if (cgD3D9SetUniform((*param), &f2) != D3D_OK) {
 		(*dst) = 0;
-		fprintf(stderr, "CG: Parameter \"%s\" disabled.\n", semantic);
+		log_error(uL("cg;parameter '%s' disabled"), semantic);
 	} else {
 		(*dst) = (*param);
 	}
@@ -1692,8 +1684,9 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 			D3DDECLMETHOD_DEFAULT,
 			D3DDECLUSAGE_POSITION, 0
 		};
-
-		fprintf(stderr, "CG: semantic POSITION found (%d)\n", index);
+#if !defined (RELEASE)
+		log_info(uL("cg;semantic POSITION found (%d)"), index);
+#endif
 	}
 
 	if (!(param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "TEXCOORD"))) {
@@ -1710,8 +1703,9 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 			D3DDECLMETHOD_DEFAULT,
 			D3DDECLUSAGE_TEXCOORD, 0
 		};
-
-		fprintf(stderr, "CG: semantic TEXCOORD0 found (%d)\n", index);
+#if !defined (RELEASE)
+		log_info(uL("cg;semantic TEXCOORD0 found (%d)"), index);
+#endif
 	}
 
 	param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "TEXCOORD1");
@@ -1726,8 +1720,9 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 			D3DDECLMETHOD_DEFAULT,
 			D3DDECLUSAGE_TEXCOORD, 1
 		};
-
-		fprintf(stderr, "CG: semantic TEXCOORD1 found (%d)\n", index);
+#if !defined (RELEASE)
+		log_info(uL("cg;semantic TEXCOORD1 found (%d)"), index);
+#endif
 	}
 
 	if (!(param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "COLOR"))) {
@@ -1743,8 +1738,9 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 			D3DDECLMETHOD_DEFAULT,
 			D3DDECLUSAGE_COLOR, 0
 		};
-
-		fprintf(stderr, "CG: semantic COLOR found (%d)\n", index);
+#if !defined (RELEASE)
+		log_info(uL("cg;semantic COLOR found (%d)"), index);
+#endif
 	}
 
 	// Stream {0, 1, 2, 3} might be already taken. Find first vacant stream
@@ -1769,8 +1765,9 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 		if (indices[i]) {
 			shd->attribs.attrib[shd->attribs.count++] = 0;
 		} else {
-			fprintf(stderr, "CG: attrib found (%d %d %d %d)\n", i, shd->attribs.count, index, tex_index);
-
+#if !defined (RELEASE)
+			log_info(uL("cg;attrib found (%d %d %d %d)"), i, shd->attribs.count, index, tex_index);
+#endif
 			shd->attribs.attrib[shd->attribs.count++] = index;
 			decl[i] = (D3DVERTEXELEMENT9) {
 				index, sizeof(float) * 3,

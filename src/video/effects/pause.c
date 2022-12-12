@@ -18,9 +18,9 @@
 
 #include <stdlib.h>
 #include "pause.h"
-#include "conf.h"
 #include "video/gfx.h"
 #include "palette.h"
+#include "gui.h"
 
 _pause_effect pause_effect;
 
@@ -30,13 +30,13 @@ BYTE pause_init(void) {
 	WORD i;
 
 	if (!(pause_effect.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
-		fprintf(stderr, "Unable to allocate the palette\n");
+		log_error(uL("pause;unable to allocate the palette"));
 		return (EXIT_ERROR);
 	}
 	palette = (uint32_t *)pause_effect.palette;
 
 	if (!(pause_effect.ntsc = malloc(sizeof(nes_ntsc_t)))) {
-		fprintf(stderr, "Unable to allocate the palette\n");
+		log_error(uL("pause;unable to allocate the palette"));
 		return (EXIT_ERROR);
 	}
 

@@ -1185,7 +1185,7 @@ static BYTE ppu_alloc_screen_buffer(_screen_buffer *sb) {
 	}
 
 	if (!(sb->data = (WORD *)malloc(screen_size()))) {
-		fprintf(stderr, "Out of memory\n");
+		log_error(uL("ppu;out of memory"));
 		return (EXIT_ERROR);
 	}
 	/*

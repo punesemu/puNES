@@ -1289,7 +1289,7 @@ BYTE map_init(void) {
 			break;
 		default:
 			gui_overlay_info_append_msg_precompiled(11, NULL);
-			fprintf(stderr, "Mapper not supported\n");
+			log_error(uL("mapper;not supported"));
 			EXTCL_CPU_WR_MEM(0);
 			break;
 		/* casi speciali */
@@ -1361,7 +1361,7 @@ BYTE map_init(void) {
 		extcl_after_mapper_init();
 	}
 
-	if (info.reset == CHANGE_ROM) {
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)){
 		emu_info_rom();
 	}
 	return (EXIT_OK);
@@ -1445,7 +1445,7 @@ BYTE map_prg_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom) {
 		free(prg_rom());
 		prg_rom() = NULL;
 		prg_size() = 0;
-		fprintf(stderr, "Out of memory\n");
+		log_error(uL("prg malloc;out of memory"));
 	}
 
 	if (init_chip0_rom) {
@@ -1530,7 +1530,7 @@ BYTE map_prg_ram_malloc(WORD size) {
 	prg.ram.size = size;
 
 	if (!(prg.ram.data = (BYTE *)malloc(prg.ram.size))) {
-		fprintf(stderr, "Out of memory\n");
+		log_error(uL("prg ram malloc;out of memory"));
 		return (EXIT_ERROR);
 	}
 
@@ -1622,7 +1622,7 @@ BYTE map_chr_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom) {
 		free(chr_rom());
 		chr_rom() = NULL;
 		chr_size() = 0;
-		fprintf(stderr, "Out of memory\n");
+		log_error(uL("chr malloc;out of memory"));
 	}
 
 	if (init_chip0_rom) {
@@ -1661,7 +1661,7 @@ BYTE map_chr_ram_extra_init(uint32_t size) {
 		}
 		/* alloco la CHR Ram extra */
 		if (!(chr.extra.data = (BYTE *)malloc(size))) {
-			fprintf(stderr, "Out of memory\n");
+			log_error(uL("prg ram extra;out of memory"));
 			return (EXIT_ERROR);
 		}
 		chr.extra.size = size;
@@ -1693,7 +1693,7 @@ BYTE map_misc_malloc(size_t size, BYTE set_value) {
 		free(mapper.misc_roms.data);
 		mapper.misc_roms.data = NULL;
 		mapper.misc_roms.size = 0;
-		fprintf(stderr, "Out of memory\n");
+		log_error(uL("misc malloc;out of memory"));
 	}
 
 	return (mapper.misc_roms.data ? EXIT_OK : EXIT_ERROR);
@@ -1718,7 +1718,7 @@ void map_bat_rd_default(FILE *fp) {
 	if ((tas.type == NOTAS) && fp) {
 		/* ne leggo il contenuto */
 		if (fread(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp) < 1) {
-			fprintf(stderr, "error on read battery memory\n");
+			log_error(uL("mapper;error on read battery memory"));
 		}
 	}
 }

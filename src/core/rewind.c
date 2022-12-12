@@ -116,14 +116,14 @@ BYTE rewind_init(void) {
 
 		if (!rewind_is_disabled()) {
 			if ((rwint.segment.snaps = (_rewind_snapshoot *)malloc(size)) == NULL) {
-				fprintf(stderr, "rewind : Out of memory\n");
+				log_error(uL("rewind;out of memory"));
 				return (EXIT_ERROR);
 			}
 			memset(rwint.segment.snaps, 0, size);
 		}
 
 		if ((rwint.cbuffer.snaps = (_rewind_snapshoot *)malloc(size)) == NULL) {
-			fprintf(stderr, "rewind : Out of memory\n");
+			log_error(uL("rewind;out of memory"));
 			return (EXIT_ERROR);
 		}
 		memset(rwint.cbuffer.snaps, 0, size);
@@ -143,7 +143,7 @@ BYTE rewind_init(void) {
 
 	if (!rewind_is_disabled()) {
 		if ((rwint.segment.data = (BYTE *)malloc(rwint.size.total)) == NULL) {
-			fprintf(stderr, "rewind : Out of memory\n");
+			log_error(uL("rewind;out of memory"));
 			return (EXIT_ERROR);
 		}
 		memset(rwint.segment.data, 0, rwint.size.chunk);
@@ -151,7 +151,7 @@ BYTE rewind_init(void) {
 		rewind_update_chunk_snaps(&rwint.segment, 0, NULL);
 	}
 	if ((rwint.cbuffer.data = (BYTE *)malloc(rwint.size.first_chunk)) == NULL) {
-		fprintf(stderr, "rewind : Out of memory\n");
+		log_error(uL("rewind;out of memory"));
 		return (EXIT_ERROR);
 	}
 	memset(rwint.cbuffer.data, 0, rwint.size.first_chunk);

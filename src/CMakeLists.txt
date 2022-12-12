@@ -452,6 +452,7 @@ set(gui_ui_srcs
 	gui/designer/dlgCmdLineHelp.ui
 	gui/designer/dlgJsc.ui
 	gui/designer/dlgKeyboard.ui
+	gui/designer/dlgLog.ui
 	gui/designer/dlgSettings.ui
 	gui/designer/dlgStdPad.ui
 	gui/designer/dlgUncomp.ui
@@ -488,6 +489,8 @@ set(gui_srcs
 	gui/dlgJsc.hpp
 	gui/dlgKeyboard.cpp
 	gui/dlgKeyboard.hpp
+	gui/dlgLog.cpp
+	gui/dlgLog.hpp
 	gui/dlgSettings.cpp
 	gui/dlgSettings.hpp
 	gui/dlgStdPad.cpp
