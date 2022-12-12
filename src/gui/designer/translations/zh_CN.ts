@@ -97,6 +97,17 @@
     </message>
 </context>
 <context>
+    <name>dlgLog</name>
+    <message>
+        <source>Log</source>
+        <translation>日志</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>关闭</translation>
+    </message>
+</context>
+<context>
     <name>dlgSettings</name>
     <message>
         <source>Settings</source>
@@ -925,6 +936,10 @@
     <message>
         <source>Start FDS Emulation &amp;without Disk</source>
         <translation>无磁盘启动 FDS 模拟(&amp;W)</translation>
+    </message>
+    <message>
+        <source>&amp;Show Log</source>
+        <translation>显示日志(&amp;S)</translation>
     </message>
     <message>
         <source>Ta&amp;pe</source>
