@@ -530,11 +530,11 @@
     </message>
     <message>
         <source>Compiled</source>
-        <translation>已编译</translation>
+        <translation>编译于</translation>
     </message>
     <message>
         <source>portable version</source>
-        <translation>移动版</translation>
+        <translation>便携版</translation>
     </message>
     <message>
         <source>&amp;Open</source>
@@ -694,7 +694,7 @@
     </message>
     <message>
         <source>&amp;Open working folder</source>
-        <translation>打开主文件夹(&amp;O)</translation>
+        <translation>打开工作文件夹(&amp;O)</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -702,7 +702,7 @@
     </message>
     <message>
         <source>&amp;Recent Roms</source>
-        <translation>重玩(&amp;R)</translation>
+        <translation>最近的 Rom(&amp;R)</translation>
     </message>
     <message>
         <source>&amp;NES</source>
