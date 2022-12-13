@@ -546,11 +546,11 @@
     </message>
     <message>
         <source>&amp;Hard Reset</source>
-        <translation>硬重设(&amp;H)</translation>
+        <translation>硬重置(&amp;H)</translation>
     </message>
     <message>
         <source>&amp;Soft Reset</source>
-        <translation>软重设(&amp;S)</translation>
+        <translation>软重置(&amp;S)</translation>
     </message>
     <message>
         <source>&amp;Eject/Insert Disk</source>
@@ -558,35 +558,35 @@
     </message>
     <message>
         <source>Disk 1 side A</source>
-        <translation>１碟Ａ面</translation>
+        <translation>磁盘 1 Ａ面</translation>
     </message>
     <message>
         <source>Disk 1 side B</source>
-        <translation>１碟Ｂ面</translation>
+        <translation>磁盘 1 Ｂ面</translation>
     </message>
     <message>
         <source>Disk 2 side A</source>
-        <translation>２碟Ａ面</translation>
+        <translation>磁盘 2 Ａ面</translation>
     </message>
     <message>
         <source>Disk 2 side B</source>
-        <translation>２碟Ｂ面</translation>
+        <translation>磁盘 2 Ｂ面</translation>
     </message>
     <message>
         <source>Disk 3 side A</source>
-        <translation>３碟Ａ面</translation>
+        <translation>磁盘 3 Ａ面</translation>
     </message>
     <message>
         <source>Disk 3 side B</source>
-        <translation>３碟Ｂ面</translation>
+        <translation>磁盘 3 Ｂ面</translation>
     </message>
     <message>
         <source>Disk 4 side A</source>
-        <translation>４碟Ａ面</translation>
+        <translation>磁盘 4 Ａ面</translation>
     </message>
     <message>
         <source>Disk 4 side B</source>
-        <translation>４碟Ｂ面</translation>
+        <translation>磁盘 4Ｂ面</translation>
     </message>
     <message>
         <source>&amp;Switch sides</source>
