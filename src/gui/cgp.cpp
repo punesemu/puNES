@@ -47,7 +47,7 @@ BYTE cgp_parse(const uTCHAR *file) {
 #if defined (WITH_OPENGL_CG) || defined (WITH_D3D9)
 		se.type = MS_CGP;
 # else
-		log_error(uL("cgp;shader format non supported");
+		log_error(uL("cgp;shader format non supported"));
 		return (EXIT_ERROR);
 #endif
 	} else if (QString::compare(fi.suffix(), "glslp", Qt::CaseInsensitive) == 0) {
