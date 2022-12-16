@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  Originally taken from Fuse - the Free Unix Spectrum Emulator
  *  Copyright (C) 2003-2015 Fredrick Meunier, Philip Kendall, Gergely Szasz
