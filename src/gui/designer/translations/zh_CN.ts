@@ -39,6 +39,553 @@
     </message>
   </context>
   <context>
+    <name>dlgHeaderEditor</name>
+    <message>
+      <source>Attention</source>
+      <translation type="unfinished">Attention</translation>
+    </message>
+    <message>
+      <source>Do you want to boot the ROM with the changes made?</source>
+      <translation type="unfinished">Do you want to boot the ROM with the changes made?</translation>
+    </message>
+    <message>
+      <source>Header Editor</source>
+      <translation type="unfinished">Header Editor</translation>
+    </message>
+    <message>
+      <source>Mirroring</source>
+      <translation type="unfinished">Mirroring</translation>
+    </message>
+    <message>
+      <source>Console Type</source>
+      <translation type="unfinished">Console Type</translation>
+    </message>
+    <message>
+      <source>PRG ROM KiB</source>
+      <translation type="unfinished">PRG ROM KiB</translation>
+    </message>
+    <message>
+      <source>None</source>
+      <translation type="unfinished">None</translation>
+    </message>
+    <message>
+      <source>128 Bytes</source>
+      <translation type="unfinished">128 Bytes</translation>
+    </message>
+    <message>
+      <source>256 Bytes</source>
+      <translation type="unfinished">256 Bytes</translation>
+    </message>
+    <message>
+      <source>512 Bytes</source>
+      <translation type="unfinished">512 Bytes</translation>
+    </message>
+    <message>
+      <source>1 KiB</source>
+      <translation type="unfinished">1 KiB</translation>
+    </message>
+    <message>
+      <source>2 KiB</source>
+      <translation type="unfinished">2 KiB</translation>
+    </message>
+    <message>
+      <source>4 KiB</source>
+      <translation type="unfinished">4 KiB</translation>
+    </message>
+    <message>
+      <source>8 KiB</source>
+      <translation type="unfinished">8 KiB</translation>
+    </message>
+    <message>
+      <source>16 KiB</source>
+      <translation type="unfinished">16 KiB</translation>
+    </message>
+    <message>
+      <source>32 KiB</source>
+      <translation type="unfinished">32 KiB</translation>
+    </message>
+    <message>
+      <source>64 KiB</source>
+      <translation type="unfinished">64 KiB</translation>
+    </message>
+    <message>
+      <source>128 KiB</source>
+      <translation type="unfinished">128 KiB</translation>
+    </message>
+    <message>
+      <source>256 KiB</source>
+      <translation type="unfinished">256 KiB</translation>
+    </message>
+    <message>
+      <source>512 KiB</source>
+      <translation type="unfinished">512 KiB</translation>
+    </message>
+    <message>
+      <source>1 MiB</source>
+      <translation type="unfinished">1 MiB</translation>
+    </message>
+    <message>
+      <source>N/A</source>
+      <translation type="unfinished">N/A</translation>
+    </message>
+    <message>
+      <source>Trainer</source>
+      <translation type="unfinished">Trainer</translation>
+    </message>
+    <message>
+      <source>Unspecified</source>
+      <translation type="unfinished">Unspecified</translation>
+    </message>
+    <message>
+      <source>Standard Controllers</source>
+      <translation type="unfinished">Standard Controllers</translation>
+    </message>
+    <message>
+      <source>NES Four Score/Satellite</source>
+      <translation type="unfinished">NES Four Score/Satellite</translation>
+    </message>
+    <message>
+      <source>Famicom Four Players Adapter</source>
+      <translation type="unfinished">Famicom Four Players Adapter</translation>
+    </message>
+    <message>
+      <source>Vs. System</source>
+      <translation type="unfinished">Vs. System</translation>
+    </message>
+    <message>
+      <source>Vs. System (1P via $4017)</source>
+      <translation type="unfinished">Vs. System (1P via $4017)</translation>
+    </message>
+    <message>
+      <source>Reserved</source>
+      <translation type="unfinished">Reserved</translation>
+    </message>
+    <message>
+      <source>Vs. Zapper</source>
+      <translation type="unfinished">Vs. Zapper</translation>
+    </message>
+    <message>
+      <source>Zapper</source>
+      <translation type="unfinished">Zapper</translation>
+    </message>
+    <message>
+      <source>Two Zappers</source>
+      <translation type="unfinished">Two Zappers</translation>
+    </message>
+    <message>
+      <source>Bandai Hyper Shot Lightgun</source>
+      <translation type="unfinished">Bandai Hyper Shot Lightgun</translation>
+    </message>
+    <message>
+      <source>Power Pad Side A</source>
+      <translation type="unfinished">Power Pad Side A</translation>
+    </message>
+    <message>
+      <source>Power Pad Side B</source>
+      <translation type="unfinished">Power Pad Side B</translation>
+    </message>
+    <message>
+      <source>Family Trainer Side A</source>
+      <translation type="unfinished">Family Trainer Side A</translation>
+    </message>
+    <message>
+      <source>Family Trainer Side B</source>
+      <translation type="unfinished">Family Trainer Side B</translation>
+    </message>
+    <message>
+      <source>Arkanoid Paddle (NES)</source>
+      <translation type="unfinished">Arkanoid Paddle (NES)</translation>
+    </message>
+    <message>
+      <source>Arkanoid Paddle (Famicom)</source>
+      <translation type="unfinished">Arkanoid Paddle (Famicom)</translation>
+    </message>
+    <message>
+      <source>Two Paddles plus Famicom Data Recorder</source>
+      <translation type="unfinished">Two Paddles plus Famicom Data Recorder</translation>
+    </message>
+    <message>
+      <source>Konami Hyper Shot</source>
+      <translation type="unfinished">Konami Hyper Shot</translation>
+    </message>
+    <message>
+      <source>Coconuts Pachinko</source>
+      <translation type="unfinished">Coconuts Pachinko</translation>
+    </message>
+    <message>
+      <source>Exciting Boxing Punching Bag</source>
+      <translation type="unfinished">Exciting Boxing Punching Bag</translation>
+    </message>
+    <message>
+      <source>Jissen Mahjong Controller</source>
+      <translation type="unfinished">Jissen Mahjong Controller</translation>
+    </message>
+    <message>
+      <source>Party Tap</source>
+      <translation type="unfinished">Party Tap</translation>
+    </message>
+    <message>
+      <source>Oeka Kids Tablet</source>
+      <translation type="unfinished">Oeka Kids Tablet</translation>
+    </message>
+    <message>
+      <source>Sunsoft Barcode Battler</source>
+      <translation type="unfinished">Sunsoft Barcode Battler</translation>
+    </message>
+    <message>
+      <source>Miracle Piano Keyboard</source>
+      <translation type="unfinished">Miracle Piano Keyboard</translation>
+    </message>
+    <message>
+      <source>Pokkun Moguraa</source>
+      <translation type="unfinished">Pokkun Moguraa</translation>
+    </message>
+    <message>
+      <source>Top Rider</source>
+      <translation type="unfinished">Top Rider</translation>
+    </message>
+    <message>
+      <source>Double-Fisted</source>
+      <translation type="unfinished">Double-Fisted</translation>
+    </message>
+    <message>
+      <source>Famicom 3D System</source>
+      <translation type="unfinished">Famicom 3D System</translation>
+    </message>
+    <message>
+      <source>Doremikko Keyboard</source>
+      <translation type="unfinished">Doremikko Keyboard</translation>
+    </message>
+    <message>
+      <source>R.O.B. Gyro Set</source>
+      <translation type="unfinished">R.O.B. Gyro Set</translation>
+    </message>
+    <message>
+      <source>Famicom Data Recorder</source>
+      <translation type="unfinished">Famicom Data Recorder</translation>
+    </message>
+    <message>
+      <source>ASCII Turbo File</source>
+      <translation type="unfinished">ASCII Turbo File</translation>
+    </message>
+    <message>
+      <source>IGS Storage Battle Box</source>
+      <translation type="unfinished">IGS Storage Battle Box</translation>
+    </message>
+    <message>
+      <source>Family BASIC Keyboard</source>
+      <translation type="unfinished">Family BASIC Keyboard</translation>
+    </message>
+    <message>
+      <source>Dongda PEC-586 Keyboard</source>
+      <translation type="unfinished">Dongda PEC-586 Keyboard</translation>
+    </message>
+    <message>
+      <source>Bit Corp. Bit-79 Keyboard</source>
+      <translation type="unfinished">Bit Corp. Bit-79 Keyboard</translation>
+    </message>
+    <message>
+      <source>Subor Keyboard</source>
+      <translation type="unfinished">Subor Keyboard</translation>
+    </message>
+    <message>
+      <source>Subor Keyboard plus 3x8-bit mouse</source>
+      <translation type="unfinished">Subor Keyboard plus 3x8-bit mouse</translation>
+    </message>
+    <message>
+      <source>Subor Keyboard plus 24-bit mouse</source>
+      <translation type="unfinished">Subor Keyboard plus 24-bit mouse</translation>
+    </message>
+    <message>
+      <source>SNES Mouse</source>
+      <translation type="unfinished">SNES Mouse</translation>
+    </message>
+    <message>
+      <source>Multicart</source>
+      <translation type="unfinished">Multicart</translation>
+    </message>
+    <message>
+      <source>Two SNES controllers</source>
+      <translation type="unfinished">Two SNES controllers</translation>
+    </message>
+    <message>
+      <source>RacerMate Bicycle</source>
+      <translation type="unfinished">RacerMate Bicycle</translation>
+    </message>
+    <message>
+      <source>U-Force</source>
+      <translation type="unfinished">U-Force</translation>
+    </message>
+    <message>
+      <source>R.O.B. Stack-Up</source>
+      <translation type="unfinished">R.O.B. Stack-Up</translation>
+    </message>
+    <message>
+      <source>City Patrolman Lightgun</source>
+      <translation type="unfinished">City Patrolman Lightgun</translation>
+    </message>
+    <message>
+      <source>Sharp C1 Cassette Interface</source>
+      <translation type="unfinished">Sharp C1 Cassette Interface</translation>
+    </message>
+    <message>
+      <source>Standard Controller (inverted direction)</source>
+      <translation type="unfinished">Standard Controller (inverted direction)</translation>
+    </message>
+    <message>
+      <source>Excalibor Sudoku Pad</source>
+      <translation type="unfinished">Excalibor Sudoku Pad</translation>
+    </message>
+    <message>
+      <source>ABL Pinball</source>
+      <translation type="unfinished">ABL Pinball</translation>
+    </message>
+    <message>
+      <source>Golden Nugget Casino</source>
+      <translation type="unfinished">Golden Nugget Casino</translation>
+    </message>
+    <message>
+      <source>NTSC</source>
+      <translation type="unfinished">NTSC</translation>
+    </message>
+    <message>
+      <source>PAL</source>
+      <translation type="unfinished">PAL</translation>
+    </message>
+    <message>
+      <source>Both</source>
+      <translation type="unfinished">Both</translation>
+    </message>
+    <message>
+      <source>Dendy</source>
+      <translation type="unfinished">Dendy</translation>
+    </message>
+    <message>
+      <source>VS Type</source>
+      <translation type="unfinished">VS Type</translation>
+    </message>
+    <message>
+      <source>Horizontal</source>
+      <translation type="unfinished">Horizontal</translation>
+    </message>
+    <message>
+      <source>Vertical</source>
+      <translation type="unfinished">Vertical</translation>
+    </message>
+    <message>
+      <source>4-Screen</source>
+      <translation type="unfinished">4-Screen</translation>
+    </message>
+    <message>
+      <source>CPU Timing</source>
+      <translation type="unfinished">CPU Timing</translation>
+    </message>
+    <message>
+      <source>VS PPU</source>
+      <translation type="unfinished">VS PPU</translation>
+    </message>
+    <message>
+      <source>CHR ROM KiB</source>
+      <translation type="unfinished">CHR ROM KiB</translation>
+    </message>
+    <message>
+      <source>NES/Famicom/Dendy</source>
+      <translation type="unfinished">NES/Famicom/Dendy</translation>
+    </message>
+    <message>
+      <source>Playchoice 10</source>
+      <translation type="unfinished">Playchoice 10</translation>
+    </message>
+    <message>
+      <source>Famiclone with Decimal Mode</source>
+      <translation type="unfinished">Famiclone with Decimal Mode</translation>
+    </message>
+    <message>
+      <source>NES/Famicom with EPSM</source>
+      <translation type="unfinished">NES/Famicom with EPSM</translation>
+    </message>
+    <message>
+      <source>VT01</source>
+      <translation type="unfinished">VT01</translation>
+    </message>
+    <message>
+      <source>VT02</source>
+      <translation type="unfinished">VT02</translation>
+    </message>
+    <message>
+      <source>VT03</source>
+      <translation type="unfinished">VT03</translation>
+    </message>
+    <message>
+      <source>VT09</source>
+      <translation type="unfinished">VT09</translation>
+    </message>
+    <message>
+      <source>VT32</source>
+      <translation type="unfinished">VT32</translation>
+    </message>
+    <message>
+      <source>VT369</source>
+      <translation type="unfinished">VT369</translation>
+    </message>
+    <message>
+      <source>UMC UM6578</source>
+      <translation type="unfinished">UMC UM6578</translation>
+    </message>
+    <message>
+      <source>Famicom Network System</source>
+      <translation type="unfinished">Famicom Network System</translation>
+    </message>
+    <message>
+      <source>File</source>
+      <translation type="unfinished">File</translation>
+    </message>
+    <message>
+      <source>CHR RAM Battery</source>
+      <translation type="unfinished">CHR RAM Battery</translation>
+    </message>
+    <message>
+      <source>Mapper</source>
+      <translation type="unfinished">Mapper</translation>
+    </message>
+    <message>
+      <source>Normal</source>
+      <translation type="unfinished">Normal</translation>
+    </message>
+    <message>
+      <source>RBI Baseball</source>
+      <translation type="unfinished">RBI Baseball</translation>
+    </message>
+    <message>
+      <source>TKO Boxing</source>
+      <translation type="unfinished">TKO Boxing</translation>
+    </message>
+    <message>
+      <source>Super Xevious</source>
+      <translation type="unfinished">Super Xevious</translation>
+    </message>
+    <message>
+      <source>Vs. Ice Climber</source>
+      <translation type="unfinished">Vs. Ice Climber</translation>
+    </message>
+    <message>
+      <source>Vs. Dual</source>
+      <translation type="unfinished">Vs. Dual</translation>
+    </message>
+    <message>
+      <source>Raid on Bungeling Bay</source>
+      <translation type="unfinished">Raid on Bungeling Bay</translation>
+    </message>
+    <message>
+      <source>PRG RAM</source>
+      <translation type="unfinished">PRG RAM</translation>
+    </message>
+    <message>
+      <source>iNES 1.0</source>
+      <translation type="unfinished">iNES 1.0</translation>
+    </message>
+    <message>
+      <source>NES 2.0</source>
+      <translation type="unfinished">NES 2.0</translation>
+    </message>
+    <message>
+      <source>Submapper</source>
+      <translation type="unfinished">Submapper</translation>
+    </message>
+    <message>
+      <source>RP2C03B</source>
+      <translation type="unfinished">RP2C03B</translation>
+    </message>
+    <message>
+      <source>RP2C03G</source>
+      <translation type="unfinished">RP2C03G</translation>
+    </message>
+    <message>
+      <source>RP2C04-0001</source>
+      <translation type="unfinished">RP2C04-0001</translation>
+    </message>
+    <message>
+      <source>RP2C04-0002</source>
+      <translation type="unfinished">RP2C04-0002</translation>
+    </message>
+    <message>
+      <source>RP2C04-0003</source>
+      <translation type="unfinished">RP2C04-0003</translation>
+    </message>
+    <message>
+      <source>RP2C04-0004</source>
+      <translation type="unfinished">RP2C04-0004</translation>
+    </message>
+    <message>
+      <source>RC2C03B</source>
+      <translation type="unfinished">RC2C03B</translation>
+    </message>
+    <message>
+      <source>RC2C03C</source>
+      <translation type="unfinished">RC2C03C</translation>
+    </message>
+    <message>
+      <source>RC2C05-01</source>
+      <translation type="unfinished">RC2C05-01</translation>
+    </message>
+    <message>
+      <source>RC2C05-02</source>
+      <translation type="unfinished">RC2C05-02</translation>
+    </message>
+    <message>
+      <source>RC2C05-03</source>
+      <translation type="unfinished">RC2C05-03</translation>
+    </message>
+    <message>
+      <source>RC2C05-04</source>
+      <translation type="unfinished">RC2C05-04</translation>
+    </message>
+    <message>
+      <source>RC2C05-05</source>
+      <translation type="unfinished">RC2C05-05</translation>
+    </message>
+    <message>
+      <source>Header</source>
+      <translation type="unfinished">Header</translation>
+    </message>
+    <message>
+      <source>PRG RAM Battery</source>
+      <translation type="unfinished">PRG RAM Battery</translation>
+    </message>
+    <message>
+      <source>CHR RAM</source>
+      <translation type="unfinished">CHR RAM</translation>
+    </message>
+    <message>
+      <source>Input</source>
+      <translation type="unfinished">Input</translation>
+    </message>
+    <message>
+      <source>Misc ROMs</source>
+      <translation type="unfinished">Misc ROMs</translation>
+    </message>
+    <message>
+      <source>Battery</source>
+      <translation type="unfinished">Battery</translation>
+    </message>
+    <message>
+      <source>Misc</source>
+      <translation type="unfinished">Misc</translation>
+    </message>
+    <message>
+      <source>Reset to default</source>
+      <translation type="unfinished">Reset to default</translation>
+    </message>
+    <message>
+      <source>Save</source>
+      <translation type="unfinished">Save</translation>
+    </message>
+    <message>
+      <source>Cancel</source>
+      <translation type="unfinished">Cancel</translation>
+    </message>
+  </context>
+  <context>
     <name>dlgJsc</name>
     <message>
       <source>Close Window</source>
@@ -94,6 +641,17 @@
     <message>
       <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
       <translation>扩展模式 (支持小键盘、F10、F11、F12 和 &quot;` &quot;. 说明: 'Study and Game 32-in-1' 在此模式下有问题)</translation>
+    </message>
+  </context>
+  <context>
+    <name>dlgLog</name>
+    <message>
+      <source>Log</source>
+      <translation type="unfinished">Log</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation type="unfinished">Close</translation>
     </message>
   </context>
   <context>
@@ -929,6 +1487,18 @@
     <message>
       <source>Toggle Virtual &amp;Keyboard</source>
       <translation type="unfinished">Toggle Virtual &amp;Keyboard</translation>
+    </message>
+    <message>
+      <source>Start FDS Emulation &amp;without Disk</source>
+      <translation type="unfinished">Start FDS Emulation &amp;without Disk</translation>
+    </message>
+    <message>
+      <source>&amp;Show Log</source>
+      <translation type="unfinished">&amp;Show Log</translation>
+    </message>
+    <message>
+      <source>Edit Current iNES/NES2.0 &amp;Header</source>
+      <translation type="unfinished">Edit Current iNES/NES2.0 &amp;Header</translation>
     </message>
   </context>
   <context>
