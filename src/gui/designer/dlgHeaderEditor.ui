@@ -1174,6 +1174,8 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>lineEdit_File</tabstop>
+  <tabstop>pushButton_Folder</tabstop>
   <tabstop>radioButton_ines10</tabstop>
   <tabstop>radioButton_nes20</tabstop>
   <tabstop>spinBox_Mapper</tabstop>
@@ -1193,6 +1195,9 @@
   <tabstop>comboBox_VS_Type</tabstop>
   <tabstop>comboBox_VS_PPU</tabstop>
   <tabstop>comboBox_Input</tabstop>
+  <tabstop>pushButton_Reset</tabstop>
+  <tabstop>pushButton_Save</tabstop>
+  <tabstop>pushButton_Cancel</tabstop>
  </tabstops>
  <resources>
   <include location="resources.qrc"/>
