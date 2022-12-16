@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ class textEditThread : public QThread {
 		~textEditThread() override;
 
 	protected:
-		void run(void);
+		void run(void) override;
 
 	private slots:
 		void time_out(void);
