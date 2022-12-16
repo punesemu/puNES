@@ -217,6 +217,19 @@ BYTE gui_create(void) {
 	qt.log = new dlgLog(qt.mwin);
 	qt.log->start_thread();
 
+	log_info(uL("" uPs("") " (by FHorse) " uPs("") ", " uPs("") ", " uPs("")
+#if defined (WITH_GIT_INFO)
+		", commit " uPs("")),
+#else
+		uPs("")),
+#endif
+		uL("" NAME), uL("" VERSION), uL("" ENVIRONMENT), uL("" VERTYPE),
+#if defined (WITH_GIT_INFO)
+		uL("" GIT_COUNT_COMMITS));
+#else
+		uL(""));
+#endif
+
 	log_info(uL("folders"));
 	log_info_box(uL("config;" uPs("") ""), gui_config_folder());
 	log_info_box(uL("data;" uPs("") ""), gui_data_folder());

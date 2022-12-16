@@ -65,21 +65,6 @@
 #include "video/gfx_monitor.h"
 #endif
 
-#if defined (_WIN32) || defined (_WIN64)
-#if defined (_WIN64)
-#define ENVIRONMENT "x86_64"
-#else
-#define ENVIRONMENT "x86"
-#endif
-#endif
-#if defined (__GNUC__)
-#if defined (__x86_64__)
-#define ENVIRONMENT "x86_64"
-#else
-#define ENVIRONMENT "x86"
-#endif
-#endif
-
 enum state_incdec_enum { INC, DEC };
 enum state_save_enum { SAVE, LOAD };
 
@@ -1957,12 +1942,7 @@ void mainWindow::s_help(void) {
 #endif
 	text.append("<center>" + tr("Nintendo Entertainment System Emulator") + "</center>");
 	text.append("<center>" + tr("Compiled") + " " + QLocale().toString(compiled, QLocale::ShortFormat) + " (" + QString(ENVIRONMENT));
-
-#if defined (WITH_OPENGL)
-	text.append(", OpenGL)</center>");
-#elif defined (WITH_D3D9)
-	text.append(", D3D9)</center>");
-#endif
+	text.append(", " + QString(VERTYPE) + ")</center>");
 
 	about->setText(text);
 

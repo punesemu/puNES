@@ -44,4 +44,25 @@
 #define COPYRANSI   "(C)" COPYRIGTH
 #define COPYRUTF8   "&#169;" COPYRIGTH
 
+#if defined (WITH_OPENGL)
+#define VERTYPE     "OpenGL"
+#elif defined (WITH_D3D9)
+#define VERTYPE     "D3D9"
+#endif
+
+#if defined (_WIN32) || defined (_WIN64)
+#if defined (_WIN64)
+#define ENVIRONMENT "x86_64"
+#else
+#define ENVIRONMENT "x86"
+#endif
+#endif
+#if defined (__GNUC__)
+#if defined (__x86_64__)
+#define ENVIRONMENT "x86_64"
+#else
+#define ENVIRONMENT "x86"
+#endif
+#endif
+
 #endif /* VERSION_H_ */
