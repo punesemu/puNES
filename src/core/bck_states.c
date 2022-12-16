@@ -63,7 +63,7 @@
 	}
 
 void bck_states_op_screen(BYTE mode, void *data, size_t *index, size_t *size_buff) {
-	bck_states_on_mem(mode, screen.rd->data, screen_size(), data, (*index), (*size_buff))
+	bck_states_on_mem(mode, ppu_screen.rd->data, screen_size(), data, (*index), (*size_buff))
 }
 void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_buff) {
 	unsigned int i;

@@ -79,7 +79,7 @@ void gfx_api_apply_filter(void) {
 	if (scrtex->offscreen) {
 		D3DLOCKED_RECT lrect;
 
-		gfx.frame.filtered = screen.rd->frame;
+		gfx.frame.filtered = ppu_screen.rd->frame;
 
 		// lock della surface in memoria
 		IDirect3DSurface9_LockRect(scrtex->offscreen, &lrect, NULL, D3DLOCK_DISCARD);

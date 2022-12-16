@@ -56,7 +56,7 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 	nmi.cpu_cycles_from_last_nmi++;\
 	/* deve essere azzerato alla fine di ogni ciclo PPU */\
 	r2006.changed_from_op = 0;
-#define put_pixel(clr) screen.wr->line[ppu.screen_y][ppu.frame_x] = r2001.emphasis | clr;
+#define put_pixel(clr) ppu_screen.wr->line[ppu.screen_y][ppu.frame_x] = r2001.emphasis | clr;
 #define put_emphasis(clr) put_pixel((mmap_palette.color[clr] & r2001.color_mode))
 #define put_bg put_emphasis(color_bg)
 #define put_sp put_emphasis(color_sp | 0x10)
@@ -129,7 +129,7 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 	}
 
 static void ppu_alignment_init(void);
-static BYTE ppu_alloc_screen_buffer(_screen_buffer *sb);
+static BYTE ppu_alloc_screen_buffer(_ppu_screen_buffer *sb);
 INLINE static void ppu_oam_evaluation(void);
 
 static const BYTE inv_chr[256] = {
@@ -174,7 +174,7 @@ static const BYTE palette_init[0x20] = {
 };
 
 _ppu ppu;
-_screen screen;
+_ppu_screen ppu_screen;
 _ppu_openbus ppu_openbus;
 _r2000 r2000;
 _r2001 r2001;
@@ -191,14 +191,14 @@ _overclock overclock;
 _ppu_alignment ppu_alignment;
 
 void ppu_init(void) {
-	memset(&screen, 0x00, sizeof(screen));
+	memset(&ppu_screen, 0x00, sizeof(ppu_screen));
 }
 void ppu_quit(void) {
 	/* libero la memoria riservata */
 	BYTE a;
 
 	for (a = 0; a < 2; a++) {
-		_screen_buffer *sb = &screen.buff[a];
+		_ppu_screen_buffer *sb = &ppu_screen.buff[a];
 
 		if (sb->data) {
 			free(sb->data);
@@ -206,9 +206,9 @@ void ppu_quit(void) {
 		}
 	}
 
-	if (screen.preview.data) {
-		free(screen.preview.data);
-		screen.preview.data = NULL;
+	if (ppu_screen.preview.data) {
+		free(ppu_screen.preview.data);
+		ppu_screen.preview.data = NULL;
 	}
 }
 
@@ -292,7 +292,7 @@ void ppu_tick(void) {
 				r2002.sprite_overflow = r2002.sprite0_hit = r2002.vblank = ppu.vblank = FALSE;
 				// serve assolutamente per la corretta lettura delle coordinate del puntatore zapper
 				if (info.zapper_is_present && !fps_fast_forward_enabled()) {
-					memset((BYTE *)screen.wr->data, 0, screen_size());
+					memset((BYTE *)ppu_screen.wr->data, 0, screen_size());
 				}
 			} else if ((ppu.frame_x == (SHORT_SLINE_CYCLES - 1)) && (machine.type == NTSC)) {
 				/*
@@ -1024,16 +1024,16 @@ BYTE ppu_turn_on(void) {
 		if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 			BYTE a;
 
-			screen.rd = &screen.buff[0];
-			screen.wr = &screen.buff[1];
-			screen.last_completed_wr = screen.wr;
+			ppu_screen.rd = &ppu_screen.buff[0];
+			ppu_screen.wr = &ppu_screen.buff[1];
+			ppu_screen.last_completed_wr = ppu_screen.wr;
 
 			for (a = 0; a < 2; a++) {
-				if (ppu_alloc_screen_buffer(&screen.buff[a]) == EXIT_ERROR) {
+				if (ppu_alloc_screen_buffer(&ppu_screen.buff[a]) == EXIT_ERROR) {
 					return (EXIT_ERROR);
 				}
 			}
-			if (ppu_alloc_screen_buffer(&screen.preview) == EXIT_ERROR) {
+			if (ppu_alloc_screen_buffer(&ppu_screen.preview) == EXIT_ERROR) {
 				return (EXIT_ERROR);
 			}
 			/*
@@ -1057,7 +1057,7 @@ BYTE ppu_turn_on(void) {
 
 			/* inizializzo lo screen */
 			for (a = 0; a < 2; a++) {
-				_screen_buffer *sb = &screen.buff[a];
+				_ppu_screen_buffer *sb = &ppu_screen.buff[a];
 
 				for (y = 0; y < SCR_ROWS; y++) {
 					for (x = 0; x < SCR_COLUMNS; x++) {
@@ -1174,7 +1174,7 @@ static void ppu_alignment_init(void) {
 		gui_update_status_bar();
 	}
 }
-static BYTE ppu_alloc_screen_buffer(_screen_buffer *sb) {
+static BYTE ppu_alloc_screen_buffer(_ppu_screen_buffer *sb) {
 	int b;
 
 	sb->ready = FALSE;

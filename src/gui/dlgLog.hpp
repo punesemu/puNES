@@ -54,20 +54,27 @@ class dlgLog : public QDialog, public Ui::dlgLog {
 		struct _buffer {
 			types type;
 			QString color;
-			QString symbol;
 			QString tmp;
 			QString txt;
+			struct _symbol {
+				QString html;
+				QString nohtml;
+			} symbol;
 		} buffer;
 		textEditThread textedit_thread;
 		int max;
 
 	public:
-		QMutex mutex;
 		QStringList messages;
+		QMutex mutex;
+		QRect geom;
 
 	public:
 		explicit dlgLog(QWidget *parent = nullptr);
 		~dlgLog() override;
+
+	protected:
+		void hideEvent(QHideEvent *event) override;
 
 	public:
 		void start_thread(void);
@@ -91,7 +98,7 @@ class dlgLog : public QDialog, public Ui::dlgLog {
 		void lnewline(void);
 
 	private:
-		void _lopen(types type, const QString &symbol, const uTCHAR *utxt, va_list ap);
+		void _lopen(types type, const QString &shtml, const QString &snohtml, const uTCHAR *utxt, va_list ap);
 		void _lclose(BYTE color, const uTCHAR *utxt, va_list ap);
 		void print(types type, const uTCHAR *utxt, va_list ap);
 		void print_box(types type, const uTCHAR *utxt, va_list ap);

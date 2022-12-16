@@ -37,15 +37,6 @@ _gfx gfx;
 BYTE gfx_init(void) {
 	info.screenshot = SCRSH_NONE;
 
-#if defined (WITH_OPENGL)
-	gui_screen_info();
-#endif
-
-	if (gui_create() == EXIT_ERROR) {
-		gui_critical(uL("GUI initialization failed."));
-		return (EXIT_ERROR);
-	}
-
 	if (gfx_thread_init() == EXIT_ERROR) {
 		gui_critical(uL("Unable to allocate the gfx thread."));
 		return (EXIT_ERROR);
@@ -504,17 +495,17 @@ void gfx_draw_screen(void) {
 		chinaersan2_apply_font();
 	}
 
-	screen.rd = screen.wr;
-	screen.rd->frame = gfx.frame.totals++;
-	screen.last_completed_wr = screen.wr;
+	ppu_screen.rd = ppu_screen.wr;
+	ppu_screen.rd->frame = gfx.frame.totals++;
+	ppu_screen.last_completed_wr = ppu_screen.wr;
 
 	if (info.doublebuffer) {
-		screen.index = !screen.index;
-		screen.wr = &screen.buff[screen.index];
+		ppu_screen.index = !ppu_screen.index;
+		ppu_screen.wr = &ppu_screen.buff[ppu_screen.index];
 	}
 
-	if (!screen.rd->ready) {
-		screen.rd->ready = TRUE;
+	if (!ppu_screen.rd->ready) {
+		ppu_screen.rd->ready = TRUE;
 	}
 }
 BYTE gfx_palette_init(void) {

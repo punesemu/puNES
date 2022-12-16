@@ -29,6 +29,18 @@ typedef struct _ines {
 
 extern _ines ines;
 
-BYTE ines_load_rom(void);
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC BYTE ines_load_rom(void);
+
+EXTERNC void nes20_submapper(void);
+EXTERNC void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, double divider);
+EXTERNC BYTE nes20_ram_size(BYTE mode);
+
+#undef EXTERNC
 
 #endif /* INES_H_ */

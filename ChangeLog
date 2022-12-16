@@ -1,6 +1,7 @@
 Changelog:
 0.110
 - Added support to Wayland.
+- Added iNES/NES 2.0 header editor.
 - Added support for "Fullscreen in window" with Wayland (the only type of fullscreen supported for now).
 - Added support for "Family Basic Keyboard" and "Subor Keyboard".
   * It's possible to capture and release keyboard input with the shortcut "Scrollock" and open and

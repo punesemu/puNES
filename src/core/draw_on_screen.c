@@ -693,13 +693,13 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 					}
 
 					if (list[x1] == '@') {
-						screen.wr->line[y + y1][x + x1] = color;
+						ppu_screen.wr->line[y + y1][x + x1] = color;
 					} else if (list[x1] == ',') {
-						screen.wr->line[y + y1][x + x1] = 0x0010;
+						ppu_screen.wr->line[y + y1][x + x1] = 0x0010;
 					} else if (list[x1] == '.') {
-						screen.wr->line[y + y1][x + x1] = 0x002D;
+						ppu_screen.wr->line[y + y1][x + x1] = 0x002D;
 					} else {
-						screen.wr->line[y + y1][x + x1] = background;
+						ppu_screen.wr->line[y + y1][x + x1] = background;
 					}
 				}
 				font_y++;
@@ -791,7 +791,7 @@ void dos_vline(int x, int y, int h, WORD color) {
 		if (x >= SCR_COLUMNS) {
 			break;
 		}
-		screen.wr->line[y + y1][x] = color;
+		ppu_screen.wr->line[y + y1][x] = color;
 	}
 }
 void dos_hline(int x, int y, int w, WORD color) {
@@ -829,7 +829,7 @@ void dos_hline(int x, int y, int w, WORD color) {
 		if ((x + x1) >= SCR_COLUMNS) {
 			break;
 		}
-		screen.wr->line[y][x + x1] = color;
+		ppu_screen.wr->line[y][x + x1] = color;
 	}
 }
 

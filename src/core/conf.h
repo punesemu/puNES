@@ -132,6 +132,8 @@ typedef struct _config {
 	_last_geometry lg;
 	_last_geometry lg_settings;
 	_last_geometry lg_nes_keyboard;
+	_last_geometry lg_log;
+	_last_geometry lg_header_editor;
 	_toolbar toolbar;
 } _config;
 

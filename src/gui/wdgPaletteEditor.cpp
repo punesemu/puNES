@@ -460,9 +460,7 @@ void wdgPaletteEditor::set_sliders_spins_lineedit(void) {
 	qtHelper::spinbox_set_value(spinBox_Green, qrgb.green());
 	qtHelper::spinbox_set_value(spinBox_Blue, qrgb.blue());
 
-	lineEdit_Html_Name->blockSignals(true);
-	lineEdit_Html_Name->setText(qrgb.name().toUpper());
-	lineEdit_Html_Name->blockSignals(false);
+	qtHelper::lineedit_set_text(lineEdit_Html_Name, qrgb.name().toUpper());
 }
 void wdgPaletteEditor::set_internal_color(int index, const QColor &qrgb, bool update_palette) {
 	_color_RGB *rgb = &palette_RGB.noswap[index];

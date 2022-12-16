@@ -45,6 +45,7 @@
     <addaction name="action_Open"/>
     <addaction name="menu_Recent_Roms"/>
     <addaction name="separator"/>
+    <addaction name="action_Edit_Current_Header"/>
     <addaction name="action_Apply_Patch"/>
     <addaction name="separator"/>
     <addaction name="action_Start_Stop_Audio_recording"/>
@@ -166,6 +167,7 @@
     <addaction name="action_Virtual_Keyboard"/>
     <addaction name="action_Vs_System"/>
     <addaction name="action_Joypad_Gamepads_Debug"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_NES"/>
@@ -752,6 +754,15 @@
    </property>
    <property name="text">
     <string>&amp;Show Log</string>
+   </property>
+  </action>
+  <action name="action_Edit_Current_Header">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/header.svg</normaloff>:/icon/icons/header.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Edit Current iNES/NES2.0 &amp;Header</string>
    </property>
   </action>
  </widget>

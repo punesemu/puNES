@@ -152,6 +152,7 @@ typedef struct _info {
 	BYTE zapper_is_present;
 	BYTE disable_tick_hw;
 	BYTE start_with_hidden_gui;
+	BYTE block_recent_roms_update;
 #if defined (FULLSCREEN_RESFREQ)
 	BYTE old_machine_type;
 #endif

@@ -34,6 +34,7 @@
 #include <QtCore/QPoint>
 #include <QtCore/QRegularExpression>
 #include <QtGui/QValidator>
+#include "conf.h"
 #include "settings.h"
 #include "os_jstick.h"
 #include "ui_mainWindow.h"
@@ -61,6 +62,8 @@ class qtHelper {
 		static void checkbox_set_checked(void *cbox, bool mode);
 		static void slider_set_value(void *slider, int value);
 		static void spinbox_set_value(void *sbox, int value);
+		static void combox_set_index(void *cbox, int value);
+		static void lineedit_set_text(void *ledit, const QString &txt);
 };
 class timerEgds : public QTimer {
 	Q_OBJECT
@@ -157,7 +160,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		} qaction_extern;
 		// ext_gfx_draw_screen
 		timerEgds *egds;
-		wdgScreen *screen;
+		wdgScreen *wscreen;
 		wdgStatusBar *statusbar;
 		wdgToolBar *toolbar;
 		QShortcut *shortcut[SET_MAX_NUM_SC];
@@ -188,6 +191,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		~mainWindow() override;
 
 	signals:
+		void et_reset(BYTE type);
 		void et_gg_reset(void);
 		void et_vs_reset(void);
 		void et_external_control_windows_show(void);
@@ -247,6 +251,8 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 	private:
 		void action_text(QAction *action, const QString &description, QString *shortcut);
 		void ctrl_disk_side(QAction *action);
+		void geom_to_cfg(const QRect &geom, _last_geometry *lg);
+		void set_dialog_geom(QRect &geom);
 		int is_shortcut(const QKeyEvent *event);
 
 	public slots:
@@ -258,6 +264,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_fake_slot(void);
 		void s_open(void);
 		void s_apply_patch(void);
+		void s_open_edit_current_header(void);
 		void s_open_recent_roms(void);
 		void s_open_config_folder(void);
 		void s_open_working_folder(void);
@@ -318,6 +325,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_shcut_toggle_capture_input(void) const;
 
 	private slots:
+		void s_et_reset(BYTE type);
 		void s_et_gg_reset(void);
 		void s_et_vs_reset(void);
 		void s_et_external_control_windows_show(void);

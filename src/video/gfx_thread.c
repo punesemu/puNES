@@ -100,13 +100,13 @@ static thread_funct(gfx_thread_loop, UNUSED(void *arg)) {
 
 		gfx_thread.in_run = TH_TRUE;
 
-		if (!screen.rd->ready) {
+		if (!ppu_screen.rd->ready) {
 			gui_sleep(1);
 			continue;
 		}
 
 		gfx_thread_public.filtering = TRUE;
-		screen.rd->ready = FALSE;
+		ppu_screen.rd->ready = FALSE;
 		gfx_apply_filter();
 		gfx_thread_public.filtering = FALSE;
 	}

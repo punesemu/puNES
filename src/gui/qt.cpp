@@ -55,6 +55,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "mainApplication.hpp"
 #include "mainWindow.hpp"
 #include "objCheat.hpp"
+#include "dlgHeaderEditor.hpp"
 #include "dlgJsc.hpp"
 #include "dlgKeyboard.hpp"
 #include "dlgLog.hpp"
@@ -104,6 +105,9 @@ static struct _qt {
 
 	// dialog della tastiera virtuale
 	dlgKeyboard *dkeyb{};
+
+	// dialog dell'editor di header
+	dlgHeaderEditor *header{};
 
 	// QObject che non mandano un pause quando in background
 	QList<QWidget *>no_bck_pause;
@@ -198,7 +202,7 @@ BYTE gui_create(void) {
 	QFontDatabase::addApplicationFont(":/fonts/fonts/Blocktopia.ttf");
 
 	qt.mwin = new mainWindow();
-	qt.screen = qt.mwin->screen;
+	qt.screen = qt.mwin->wscreen;
 	qt.objch->setParent(qt.mwin);
 
 	qt.app->installEventFilter(new appEventFilter());
@@ -225,6 +229,7 @@ BYTE gui_create(void) {
 	qt.vssystem = new dlgVsSystem(qt.mwin);
 	qt.djsc = new dlgJsc(qt.mwin);
 	qt.dkeyb = new dlgKeyboard(qt.mwin);
+	qt.header = new dlgHeaderEditor(qt.mwin);
 
 	qt.no_bck_pause.append(qt.mwin);
 	qt.no_bck_pause.append(qt.dset);
@@ -585,6 +590,9 @@ void gui_wdgrewind_play(void) {
 	wdgrewind->toolButton_Play->click();
 }
 
+void gui_emit_et_reset(BYTE type) {
+	emit qt.mwin->et_reset(type);
+}
 void gui_emit_et_gg_reset(void) {
 	emit qt.mwin->et_gg_reset();
 }
@@ -665,6 +673,13 @@ void gui_screen_update(void) {
 
 void *gui_wdgoverlayui_get_ptr(void) {
 	return ((void *)qt.overlay);
+}
+
+void *gui_dlgheadereditor_get_ptr(void) {
+	return ((void *)qt.header);
+}
+void gui_dlgheadereditor_read_header(void) {
+	qt.header->read_header(info.rom.file);
 }
 
 void *gui_dlgsettings_get_ptr(void) {
@@ -840,6 +855,19 @@ unsigned int gui_hardware_concurrency(void) {
 #include "os_windows.h"
 #endif
 
+void gui_warning(const uTCHAR *txt) {
+	QMessageBox::warning(nullptr, "Warning!", uQString(txt));
+	if (qt.log) {
+		log_warning(txt);
+	}
+}
+void gui_critical(const uTCHAR *txt) {
+	QMessageBox::critical(nullptr, "Error!", uQString(txt));
+	if (qt.log) {
+		log_error(txt);
+	}
+}
+
 static void gui_is_in_desktop(int *x, int *y) {
 	QList<QScreen *> screens = QGuiApplication::screens();
 	int i, x_min = 0, x_max = 0, y_min = 0, y_max = 0;
@@ -865,18 +893,5 @@ static void gui_is_in_desktop(int *x, int *y) {
 	}
 	if (((*y) == 0) || ((*y) < y_min) || ((*y) > y_max)) {
 		(*y) = 80;
-	}
-}
-
-void gui_warning(const uTCHAR *txt) {
-	QMessageBox::warning(nullptr, "Warning!", uQString(txt));
-	if (qt.log) {
-		log_warning(txt);
-	}
-}
-void gui_critical(const uTCHAR *txt) {
-	QMessageBox::critical(nullptr, "Error!", uQString(txt));
-	if (qt.log) {
-		log_error(txt);
 	}
 }

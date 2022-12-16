@@ -21,6 +21,7 @@
 #include "dlgLog.hpp"
 #include "info.h"
 #include "gui.h"
+#include "conf.h"
 
 void log_info(const uTCHAR *txt, ...) {
 	va_list ap;
@@ -164,6 +165,11 @@ dlgLog::dlgLog(QWidget *parent) : QDialog(parent) {
 
 	//setAttribute(Qt::WA_DeleteOnClose);
 
+	geom.setX(cfg->lg_log.x);
+	geom.setY(cfg->lg_log.y);
+	geom.setWidth(cfg->lg_log.w);
+	geom.setHeight(cfg->lg_log.h);
+
 	if (font().pointSize() > 9) {
 		QFont font;
 
@@ -182,6 +188,11 @@ dlgLog::dlgLog(QWidget *parent) : QDialog(parent) {
 	connect(pushButton_Close, SIGNAL(clicked(bool)), this, SLOT(s_close_clicked(bool)));
 }
 dlgLog::~dlgLog() = default;
+
+void dlgLog::hideEvent(QHideEvent *event) {
+	geom = geometry();
+	QDialog::hideEvent(event);
+}
 
 void dlgLog::start_thread(void) {
 	textedit_thread.start();
@@ -209,14 +220,18 @@ void dlgLog::error_box(const uTCHAR *utxt, va_list ap) {
 }
 
 void dlgLog::lopen(types type, const uTCHAR *utxt, va_list ap) {
-	_lopen(type, "*", utxt, ap);
+#if defined (_WIN32)
+	_lopen(type, "▶", ((gui.version_os < WIN_TEN) ? "*" : "▶"), utxt, ap);
+#else
+	_lopen(type, "▶", "▶", utxt, ap);
+#endif
 }
 void dlgLog::lclose(const uTCHAR *utxt, va_list ap) {
 	_lclose(TRUE, utxt, ap);
 }
 
 void dlgLog::lopen_box(types type, const uTCHAR *utxt, va_list ap) {
-	_lopen(type, " ", utxt, ap);
+	_lopen(type, " ", " ", utxt, ap);
 }
 void dlgLog::lclose_box(const uTCHAR *utxt, va_list ap) {
 	_lclose(FALSE, utxt, ap);
@@ -235,10 +250,11 @@ void dlgLog::lnewline(void) {
 	mutex.unlock();
 }
 
-void dlgLog::_lopen(types type, const QString &symbol, const uTCHAR *utxt, va_list ap) {
+void dlgLog::_lopen(types type, const QString &shtml, const QString &snohtml, const uTCHAR *utxt, va_list ap) {
 	mutex.lock();
 	buffer.type = type;
-	buffer.symbol = symbol;
+	buffer.symbol.html = shtml;
+	buffer.symbol.nohtml = snohtml;
 	buffer.tmp = "";
 	buffer.txt = "";
 	if (utxt) {
@@ -268,13 +284,13 @@ void dlgLog::_lclose(BYTE color, const uTCHAR *utxt, va_list ap) {
 	txt = ctrl_special_characters(buffer.txt);
 	list = txt.split(':');
 	symbol = color
-	 	? QString("<font color=%0>%1").arg(buffer.color, buffer.symbol)
-		: QString("%1").arg(buffer.symbol);
+	 	? QString("<font color=%0>%1").arg(buffer.color, buffer.symbol.html)
+		: QString("%1").arg(buffer.symbol.html);
 	html = list.count() == 2
 		? QString("<pre>%0 %1:%2</font></pre>").arg(symbol, list.at(0), list.at(1))
 		: QString("<pre>%0 %1</pre>").arg(symbol, txt);
 	messages.append(html);
-	std_err(QString("%0 %1").arg(buffer.symbol, buffer.txt));
+	std_err(QString("%0 %1").arg(buffer.symbol.nohtml, buffer.txt));
 	mutex.unlock();
 }
 void dlgLog::print(types type, const uTCHAR *utxt, va_list ap) {

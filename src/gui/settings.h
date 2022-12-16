@@ -107,6 +107,8 @@ enum set_element {
 	SET_GUI_LAST_POSITION,
 	SET_GUI_LAST_GEOMETRY_SETTINGS,
 	SET_GUI_LAST_GEOMETRY_NES_KEYBOARD,
+	SET_GUI_LAST_GEOMETRY_LOG,
+	SET_GUI_LAST_GEOMETRY_HEADER_EDITOR,
 	SET_GUI_LANGUAGE,
 	SET_GUI_TOOLBAR_AREA,
 	SET_GUI_TOOLBAR_HIDDEN,
@@ -1174,6 +1176,18 @@ static const _settings main_cfg[] = {
 		uL("# possible values: [X],[Y],[W],[H]"),
 		NULL,
 		{0, NULL}
+	},
+	{
+			uL("GUI"), uL("last geometry of log"), uL("80, 80, 0, 0"),
+			uL("# possible values: [X],[Y],[W],[H]"),
+			NULL,
+			{0, NULL}
+	},
+	{
+			uL("GUI"), uL("last geometry of head editor"), uL("80, 80, 0, 0"),
+			uL("# possible values: [X],[Y],[W],[H]"),
+			NULL,
+			{0, NULL}
 	},
 	{
 		uL("GUI"), uL("language"), uL("english"),
