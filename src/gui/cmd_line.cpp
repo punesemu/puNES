@@ -147,8 +147,12 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 				}
 			}
 		} else {
+			QFileInfo finfo(key);
+
 			umemset(info.rom.file, 0x00, usizeof(info.rom.file));
-			ustrncpy(info.rom.file, uQStringCD(key), usizeof(info.rom.file) - 1);
+			if (finfo.exists()) {
+				ustrncpy(info.rom.file, uQStringCD(finfo.absoluteFilePath()), usizeof(info.rom.file) - 1);
+			}
 			continue;
 		}
 
