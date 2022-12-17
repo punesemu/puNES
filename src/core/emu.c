@@ -333,16 +333,7 @@ BYTE emu_load_rom(void) {
 
 	info.doublebuffer = TRUE;
 
-	if (info.fds_only_bios) {
-		if (fds_load_rom() == EXIT_ERROR) {
-			info.rom.file[0] = 0;
-			info.rom.change_rom[0] = 0;
-			info.fds_only_bios = FALSE;
-			goto elaborate_rom_file;
-		}
-		info.turn_off = FALSE;
-		info.no_rom = FALSE;
-	} else if (info.rom.file[0]) {
+	if (info.rom.file[0]) {
 		uTCHAR *ext = emu_ctrl_rom_ext(info.rom.file);
 
 		if (!ustrcasecmp(ext, uL(".fds"))) {
@@ -668,7 +659,7 @@ BYTE emu_reset(BYTE type) {
 
 	gui_wdgrewind_play();
 
-	if ((type == CHANGE_ROM) && !info.fds_only_bios && (emu_ctrl_if_rom_exist() == EXIT_ERROR)) {
+	if ((type == CHANGE_ROM) && (emu_ctrl_if_rom_exist() == EXIT_ERROR)) {
 		return (EXIT_OK);
 	}
 

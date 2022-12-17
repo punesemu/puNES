@@ -101,7 +101,6 @@
     <addaction name="separator"/>
     <addaction name="menu_Disk_Side"/>
     <addaction name="action_Eject_Insert_Disk"/>
-    <addaction name="action_Start_FDS_without_Disk"/>
     <addaction name="separator"/>
     <addaction name="menu_Tape"/>
     <addaction name="separator"/>
@@ -736,15 +735,6 @@
    </property>
    <property name="text">
     <string>&amp;Open config folder</string>
-   </property>
-  </action>
-  <action name="action_Start_FDS_without_Disk">
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/pics/pics/Diskun.png</normaloff>:/pics/pics/Diskun.png</iconset>
-   </property>
-   <property name="text">
-    <string>Start FDS Emulation &amp;without Disk</string>
    </property>
   </action>
   <action name="action_Show_Log">

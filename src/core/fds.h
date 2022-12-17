@@ -53,7 +53,7 @@ enum fds_misc {
 	FDS_AUTOINSERT_R4032_MAX_CHECKS = 150
 };
 
-#define fds_auto_insert_enabled() (cfg->fds_switch_side_automatically & !fds.auto_insert.disabled)
+#define fds_auto_insert_enabled() (cfg->fds_switch_side_automatically & !fds.auto_insert.disabled & !fds.info.bios_first_run)
 #define fds_reset_envelope_counter(env) (fds.snd.envelope.speed << 3) * (fds.snd.env.speed + 1)
 #define fds_sweep_bias(val) (SBYTE)((val & 0x7F) << 1) / 2;
 
@@ -68,6 +68,8 @@ typedef struct _fds {
 		uint32_t total_size;
 		uint32_t sides_size[20];
 		BYTE last_operation;
+		BYTE first_insert;
+		BYTE bios_first_run;
 	} info;
 	// side
 	struct _fds_side {

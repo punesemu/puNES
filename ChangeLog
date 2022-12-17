@@ -16,8 +16,6 @@ Changelog:
     By default I use my own format for tape images but you can also save and load tape images
     in Virtuanes and Nestopia format.
 - Added a shortcut "M" to simulate a shout in the microphone of the second controller.
-- Added the ability to start FDS emulation without inserting a disk (basically just start the bios).
-  Menu "NES -> Start FDS Emulation without Disk". Useless but fun option.
 - Renamed "Fast Forward" shortcut to "Toggle Fast Forward" and added a new "Fast Forward (hold button)" shortcut.
 - Added a Wizard to select the operating mode (portable mode or not) the first time the emulator is run.
   (Info for those who already used the emulator) To run in portable mode there are 3 distinct ways:
