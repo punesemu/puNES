@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -85,15 +85,15 @@ void scaleNx(void) {
 	scl2x.startx = 0;
 
 	if (gfx.filter.factor == 2) {
-		scale2x(screen.rd->line, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
+		scale2x(ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
 	} else if (gfx.filter.factor == 3) {
-		scale3x(screen.rd->line, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
+		scale3x(ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
 	} else if (gfx.filter.factor == 4) {
 		scl4x_buffer.w = SCR_COLUMNS * 2;
 		scl4x_buffer.h = SCR_ROWS * 2;
 		scl4x_buffer.pitch = scl4x_buffer.w * sizeof(uint32_t);
 		scl4x_buffer.size = scl4x_buffer.pitch * scl4x_buffer.h;
-		scale4x(screen.rd->line, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
+		scale4x(ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
 	}
 }
 

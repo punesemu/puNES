@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -55,6 +55,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "mainApplication.hpp"
 #include "mainWindow.hpp"
 #include "objCheat.hpp"
+#include "dlgHeaderEditor.hpp"
 #include "dlgJsc.hpp"
 #include "dlgKeyboard.hpp"
 #include "dlgLog.hpp"
@@ -104,6 +105,9 @@ static struct _qt {
 
 	// dialog della tastiera virtuale
 	dlgKeyboard *dkeyb{};
+
+	// dialog dell'editor di header
+	dlgHeaderEditor *header{};
 
 	// QObject che non mandano un pause quando in background
 	QList<QWidget *>no_bck_pause;
@@ -161,19 +165,22 @@ void gui_quit(void) {}
 BYTE gui_control_instance(void) {
 	if (qt.app->isSecondary() && !cfg->multiple_instances) {
 		if (info.rom.file[0]) {
+			QFileInfo finfo(uQString(info.rom.file));
 			unsigned int count = 0;
 
 #if defined (_WIN32)
 			// https://github.com/itay-grudev/SingleApplication/blob/master/Windows.md
 			AllowSetForegroundWindow(DWORD(qt.app->primaryPid()));
 #endif
-			do {
-				if (qt.app->sendMessage(uQString(info.rom.file).toUtf8())) {
-					break;
-				}
-				gui_sleep(20);
-				count++;
-			} while (count < 10);
+			if (finfo.exists()) {
+				do {
+					if (qt.app->sendMessage(finfo.absoluteFilePath().toUtf8())) {
+						break;
+					}
+					gui_sleep(20);
+					count++;
+				} while (count < 10);
+			}
 		}
 		mainApplication::exit(0);
 		return (EXIT_ERROR);
@@ -198,7 +205,7 @@ BYTE gui_create(void) {
 	QFontDatabase::addApplicationFont(":/fonts/fonts/Blocktopia.ttf");
 
 	qt.mwin = new mainWindow();
-	qt.screen = qt.mwin->screen;
+	qt.screen = qt.mwin->wscreen;
 	qt.objch->setParent(qt.mwin);
 
 	qt.app->installEventFilter(new appEventFilter());
@@ -213,6 +220,19 @@ BYTE gui_create(void) {
 	qt.log = new dlgLog(qt.mwin);
 	qt.log->start_thread();
 
+	log_info(uL("" uPs("") " (by FHorse) " uPs("") ", " uPs("") ", " uPs("")
+#if defined (WITH_GIT_INFO)
+		", commit " uPs("")),
+#else
+		uPs("")),
+#endif
+		uL("" NAME), uL("" VERSION), uL("" ENVIRONMENT), uL("" VERTYPE),
+#if defined (WITH_GIT_INFO)
+		uL("" GIT_COUNT_COMMITS));
+#else
+		uL(""));
+#endif
+
 	log_info(uL("folders"));
 	log_info_box(uL("config;" uPs("") ""), gui_config_folder());
 	log_info_box(uL("data;" uPs("") ""), gui_data_folder());
@@ -225,6 +245,7 @@ BYTE gui_create(void) {
 	qt.vssystem = new dlgVsSystem(qt.mwin);
 	qt.djsc = new dlgJsc(qt.mwin);
 	qt.dkeyb = new dlgKeyboard(qt.mwin);
+	qt.header = new dlgHeaderEditor(qt.mwin);
 
 	qt.no_bck_pause.append(qt.mwin);
 	qt.no_bck_pause.append(qt.dset);
@@ -585,6 +606,9 @@ void gui_wdgrewind_play(void) {
 	wdgrewind->toolButton_Play->click();
 }
 
+void gui_emit_et_reset(BYTE type) {
+	emit qt.mwin->et_reset(type);
+}
 void gui_emit_et_gg_reset(void) {
 	emit qt.mwin->et_gg_reset();
 }
@@ -665,6 +689,13 @@ void gui_screen_update(void) {
 
 void *gui_wdgoverlayui_get_ptr(void) {
 	return ((void *)qt.overlay);
+}
+
+void *gui_dlgheadereditor_get_ptr(void) {
+	return ((void *)qt.header);
+}
+void gui_dlgheadereditor_read_header(void) {
+	qt.header->read_header(info.rom.file);
 }
 
 void *gui_dlgsettings_get_ptr(void) {
@@ -840,6 +871,19 @@ unsigned int gui_hardware_concurrency(void) {
 #include "os_windows.h"
 #endif
 
+void gui_warning(const uTCHAR *txt) {
+	QMessageBox::warning(nullptr, "Warning!", uQString(txt));
+	if (qt.log) {
+		log_warning(txt);
+	}
+}
+void gui_critical(const uTCHAR *txt) {
+	QMessageBox::critical(nullptr, "Error!", uQString(txt));
+	if (qt.log) {
+		log_error(txt);
+	}
+}
+
 static void gui_is_in_desktop(int *x, int *y) {
 	QList<QScreen *> screens = QGuiApplication::screens();
 	int i, x_min = 0, x_max = 0, y_min = 0, y_max = 0;
@@ -865,18 +909,5 @@ static void gui_is_in_desktop(int *x, int *y) {
 	}
 	if (((*y) == 0) || ((*y) < y_min) || ((*y) > y_max)) {
 		(*y) = 80;
-	}
-}
-
-void gui_warning(const uTCHAR *txt) {
-	QMessageBox::warning(nullptr, "Warning!", uQString(txt));
-	if (qt.log) {
-		log_warning(txt);
-	}
-}
-void gui_critical(const uTCHAR *txt) {
-	QMessageBox::critical(nullptr, "Error!", uQString(txt));
-	if (qt.log) {
-		log_error(txt);
 	}
 }

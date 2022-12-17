@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -63,7 +63,7 @@
 	}
 
 void bck_states_op_screen(BYTE mode, void *data, size_t *index, size_t *size_buff) {
-	bck_states_on_mem(mode, screen.rd->data, screen_size(), data, (*index), (*size_buff))
+	bck_states_on_mem(mode, ppu_screen.rd->data, screen_size(), data, (*index), (*size_buff))
 }
 void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_buff) {
 	unsigned int i;

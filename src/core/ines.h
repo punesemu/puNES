@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,6 +29,18 @@ typedef struct _ines {
 
 extern _ines ines;
 
-BYTE ines_load_rom(void);
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC BYTE ines_load_rom(void);
+
+EXTERNC void nes20_submapper(void);
+EXTERNC void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, double divider);
+EXTERNC BYTE nes20_ram_size(BYTE mode);
+
+#undef EXTERNC
 
 #endif /* INES_H_ */

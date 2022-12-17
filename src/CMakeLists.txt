@@ -450,6 +450,7 @@ set(extra_srcs
 set(gui_ui_srcs
 	gui/designer/dlgCfgNSCode.ui
 	gui/designer/dlgCmdLineHelp.ui
+	gui/designer/dlgHeaderEditor.ui
 	gui/designer/dlgJsc.ui
 	gui/designer/dlgKeyboard.ui
 	gui/designer/dlgLog.ui
@@ -485,6 +486,8 @@ set(gui_srcs
 	gui/cmd_line.cpp
 	gui/dlgCmdLineHelp.cpp
 	gui/dlgCmdLineHelp.hpp
+	gui/dlgHeaderEditor.cpp
+	gui/dlgHeaderEditor.hpp
 	gui/dlgJsc.cpp
 	gui/dlgJsc.hpp
 	gui/dlgKeyboard.cpp

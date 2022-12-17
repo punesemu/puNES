@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,9 +36,6 @@
 
 void search_in_database(void);
 BYTE ines10_search_in_database(void *rom_mem);
-void nes20_submapper(void);
-void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, double divider);
-BYTE nes20_ram_size(BYTE mode);
 
 _ines ines;
 
@@ -406,11 +403,175 @@ BYTE ines_load_rom(void) {
 		}
 
 		free(rom.data);
+
+		gui_dlgheadereditor_read_header();
+
 		return (EXIT_OK);
 	}
 
 	free(rom.data);
 	return (EXIT_ERROR);
+}
+
+void nes20_submapper(void) {
+	switch (info.mapper.id) {
+		case 2:
+			switch (info.mapper.submapper) {
+				case 0:
+				case 1:
+					info.mapper.submapper = UXROMNBC;
+					break;
+				case 2:
+					info.mapper.submapper = UXROM;
+					break;
+			}
+			break;
+		case 3:
+			switch (info.mapper.submapper) {
+				case 0:
+				case 1:
+					info.mapper.submapper = DEFAULT;
+					break;
+				case 2:
+					info.mapper.submapper = CNROM_CNFL;
+					break;
+			}
+			break;
+		case 4:
+			if (info.mapper.submapper == 1) {
+				info.mapper.submapper = MMC6;
+			}
+			break;
+		case 7:
+			switch (info.mapper.submapper) {
+				case 0:
+				case 1:
+					info.mapper.submapper = DEFAULT;
+					break;
+				case 2:
+					info.mapper.submapper = AMROM;
+					break;
+			}
+			break;
+		case 21:
+			switch (info.mapper.submapper) {
+				case 1:
+					info.mapper.submapper = VRC4A;
+					break;
+				case 2:
+					info.mapper.submapper = VRC4C;
+					break;
+			}
+			break;
+		case 23:
+			switch (info.mapper.submapper) {
+				case 0:
+				case 3:
+					info.mapper.submapper = VRC2B;
+					break;
+				case 1:
+					info.mapper.submapper = VRC4UNL;
+					break;
+				case 2:
+					info.mapper.submapper = VRC4E;
+					break;
+			}
+			break;
+		case 78:
+			switch (info.mapper.submapper) {
+				case 3:
+					info.mapper.submapper = HOLYDIVER;
+					break;
+			}
+			break;
+		case 85:
+			switch (info.mapper.submapper) {
+				case 1:
+					info.mapper.submapper = VRC7B;
+					break;
+				case 2:
+					info.mapper.submapper = VRC7A;
+					break;
+			}
+			break;
+		case 176:
+			switch (info.mapper.submapper) {
+				case 0:
+					info.mapper.submapper = LP8002KB;
+					break;
+				default:
+				case 1:
+					info.mapper.submapper = BMCFK23C;
+					break;
+				case 2:
+					info.mapper.submapper = FS005;
+					break;
+				case 3:
+					info.mapper.submapper = JX9003B;
+					break;
+				case 4:
+					info.mapper.submapper = HST162;
+					break;
+			}
+			break;
+		case 210:
+			search_in_database();
+			break;
+		case 268:
+			switch (info.mapper.submapper) {
+				case 0:
+					info.mapper.submapper = COOLBOY;
+					break;
+				case 1:
+					info.mapper.submapper = MINDKIDS;
+					break;
+			}
+			break;
+		default:
+			break;
+	}
+}
+void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, double divider) {
+	if (((*reg1) & 0x0F00) == 0x0F00) {
+		unsigned int exponent = ((*reg1) & 0x00FC) >> 2;
+		double len = pow(2, exponent) * ((((*reg1) & 0x0003) * 2) + 1);
+
+		(*reg2) = (int)ceil(len / divider);
+		(*reg1) = (*reg2) / 2;
+	}
+}
+BYTE nes20_ram_size(BYTE mode) {
+	switch (mode) {
+		case 0:
+			return (0);
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+			return (1);
+		case 8:
+			return (2);
+		case 9:
+			return (4);
+		case 10:
+			return (8);
+		case 11:
+			return (16);
+		case 12:
+			return (32);
+		case 13:
+			return (64);
+		case 14:
+			return (128);
+		case 15:
+			return (0);
+		default:
+			break;
+	}
+	return (0);
 }
 
 void search_in_database(void) {
@@ -578,164 +739,4 @@ BYTE ines10_search_in_database(void *rom_mem) {
 	}
 
 	return (EXIT_OK);
-}
-void nes20_submapper(void) {
-	switch (info.mapper.id) {
-		case 2:
-			switch (info.mapper.submapper) {
-				case 0:
-				case 1:
-					info.mapper.submapper = UXROMNBC;
-					break;
-				case 2:
-					info.mapper.submapper = UXROM;
-					break;
-			}
-			break;
-		case 3:
-			switch (info.mapper.submapper) {
-				case 0:
-				case 1:
-					info.mapper.submapper = DEFAULT;
-					break;
-				case 2:
-					info.mapper.submapper = CNROM_CNFL;
-					break;
-			}
-			break;
-		case 4:
-			if (info.mapper.submapper == 1) {
-				info.mapper.submapper = MMC6;
-			}
-			break;
-		case 7:
-			switch (info.mapper.submapper) {
-				case 0:
-				case 1:
-					info.mapper.submapper = DEFAULT;
-					break;
-				case 2:
-					info.mapper.submapper = AMROM;
-					break;
-			}
-			break;
-		case 21:
-			switch (info.mapper.submapper) {
-				case 1:
-					info.mapper.submapper = VRC4A;
-					break;
-				case 2:
-					info.mapper.submapper = VRC4C;
-					break;
-			}
-			break;
-		case 23:
-			switch (info.mapper.submapper) {
-				case 0:
-				case 3:
-					info.mapper.submapper = VRC2B;
-					break;
-				case 1:
-					info.mapper.submapper = VRC4UNL;
-					break;
-				case 2:
-					info.mapper.submapper = VRC4E;
-					break;
-			}
-			break;
-		case 78:
-			switch (info.mapper.submapper) {
-				case 3:
-					info.mapper.submapper = HOLYDIVER;
-					break;
-			}
-			break;
-		case 85:
-			switch (info.mapper.submapper) {
-				case 1:
-					info.mapper.submapper = VRC7B;
-					break;
-				case 2:
-					info.mapper.submapper = VRC7A;
-					break;
-			}
-			break;
-		case 176:
-			switch (info.mapper.submapper) {
-				case 0:
-					info.mapper.submapper = LP8002KB;
-					break;
-				default:
-				case 1:
-					info.mapper.submapper = BMCFK23C;
-					break;
-				case 2:
-					info.mapper.submapper = FS005;
-					break;
-				case 3:
-					info.mapper.submapper = JX9003B;
-					break;
-				case 4:
-					info.mapper.submapper = HST162;
-					break;
-			}
-			break;
-		case 210:
-			search_in_database();
-			break;
-		case 268:
-			switch (info.mapper.submapper) {
-				case 0:
-					info.mapper.submapper = COOLBOY;
-					break;
-				case 1:
-					info.mapper.submapper = MINDKIDS;
-					break;
-			}
-			break;
-		default:
-			break;
-	}
-}
-void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, double divider) {
-	if (((*reg1) & 0x0F00) == 0x0F00) {
-		unsigned int exponent = ((*reg1) & 0x00FC) >> 2;
-		double len = pow(2, exponent) * ((((*reg1) & 0x0003) * 2) + 1);
-
-		(*reg2) = (int)ceil(len / divider);
-		(*reg1) = (*reg2) / 2;
-	}
-}
-BYTE nes20_ram_size(BYTE mode) {
-	switch (mode) {
-		case 0:
-			return (0);
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-		case 7:
-			return (1);
-		case 8:
-			return (2);
-		case 9:
-			return (4);
-		case 10:
-			return (8);
-		case 11:
-			return (16);
-		case 12:
-			return (32);
-		case 13:
-			return (64);
-		case 14:
-			return (128);
-		case 15:
-			return (0);
-		default:
-			break;
-	}
-	return (0);
 }

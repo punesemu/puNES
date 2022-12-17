@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -207,7 +207,7 @@ void ntsc_surface(void) {
 		gfx.filter.data.palette = (void *)ntsc_filter.ntsc;
 	}
 
-	nes_ntsc_blit((nes_ntsc_t *)gfx.filter.data.palette, screen.rd->data, SCR_COLUMNS, burst_phase, SCR_COLUMNS, SCR_ROWS,
+	nes_ntsc_blit((nes_ntsc_t *)gfx.filter.data.palette, ppu_screen.rd->data, SCR_COLUMNS, burst_phase, SCR_COLUMNS, SCR_ROWS,
 		gfx.filter.data.pix, (long)gfx.filter.data.pitch);
 
 	if (ntsc_filter.format[cfg->ntsc_format].merge_fields) {

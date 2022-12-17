@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -100,13 +100,13 @@ static thread_funct(gfx_thread_loop, UNUSED(void *arg)) {
 
 		gfx_thread.in_run = TH_TRUE;
 
-		if (!screen.rd->ready) {
+		if (!ppu_screen.rd->ready) {
 			gui_sleep(1);
 			continue;
 		}
 
 		gfx_thread_public.filtering = TRUE;
-		screen.rd->ready = FALSE;
+		ppu_screen.rd->ready = FALSE;
 		gfx_apply_filter();
 		gfx_thread_public.filtering = FALSE;
 	}

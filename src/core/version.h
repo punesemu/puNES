@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@
 #define VER1        "0"
 #define VER1_INT    0
 
-#define VER2        "109"
-#define VER2_INT    109
+#define VER2        "110"
+#define VER2_INT    110
 
 #if defined (RELEASE) && !defined (WITH_GIT_INFO)
 #define VERSION     VER1 "." VER2
@@ -40,8 +40,29 @@
 #define GITLAB      "https://gitlab.com/FHorse/puNES"
 #define DONATE      "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC"
 
-#define COPYRIGTH   " 2022 by " AUTHOR
+#define COPYRIGTH   " 2023 by " AUTHOR
 #define COPYRANSI   "(C)" COPYRIGTH
 #define COPYRUTF8   "&#169;" COPYRIGTH
+
+#if defined (WITH_OPENGL)
+#define VERTYPE     "OpenGL"
+#elif defined (WITH_D3D9)
+#define VERTYPE     "D3D9"
+#endif
+
+#if defined (_WIN32) || defined (_WIN64)
+#if defined (_WIN64)
+#define ENVIRONMENT "x86_64"
+#else
+#define ENVIRONMENT "x86"
+#endif
+#endif
+#if defined (__GNUC__)
+#if defined (__x86_64__)
+#define ENVIRONMENT "x86_64"
+#else
+#define ENVIRONMENT "x86"
+#endif
+#endif
 
 #endif /* VERSION_H_ */

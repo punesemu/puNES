@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@
 #include "ppu.h"
 
 void xBRZ(void) {
-	xbrz_scale(gfx.filter.factor, screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
+	xbrz_scale(gfx.filter.factor, ppu_screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
 		SCR_COLUMNS, SCR_ROWS);
 }
 void xBRZ_mt(void) {
-	xbrz_scale_mt(gfx.filter.factor, screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
+	xbrz_scale_mt(gfx.filter.factor, ppu_screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
 		SCR_COLUMNS, SCR_ROWS);
 }

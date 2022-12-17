@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *  for some codes :
  *  Copyright (C) 2010-2015 The RetroArch team
  *
@@ -54,7 +54,7 @@ void gfx_api_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ra
 	glPixelStoref(GL_UNPACK_ROW_LENGTH, 0);
 }
 void gfx_api_apply_filter(void) {
-	gfx.frame.filtered = screen.rd->frame;
+	gfx.frame.filtered = ppu_screen.rd->frame;
 
 	// applico l'effetto desiderato
 	gfx.filter.data.pitch = opengl.surface.pitch;

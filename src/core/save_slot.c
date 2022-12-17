@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@
 
 #define SAVE_VERSION 27
 
-static void preview_image(BYTE slot, _screen_buffer *sb);
+static void preview_image(BYTE slot, _ppu_screen_buffer *sb);
 static uTCHAR *name_slot_file(BYTE slot);
 
 _save_slot save_slot;
@@ -206,7 +206,7 @@ BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size,
 			save_slot.tot_size[slot] += size;
 			fflush(fp);
 			if (preview) {
-				preview_image(slot, screen.rd);
+				preview_image(slot, ppu_screen.rd);
 			}
 			break;
 		case SAVE_SLOT_READ:
@@ -221,8 +221,8 @@ BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size,
 				size_t pos = ftell(fp);
 
 				fseek(fp, save_slot.tot_size[slot], SEEK_SET);
-				if (fread(screen.preview.data, size, 1, fp) == 1) {
-					preview_image(slot, &screen.preview);
+				if (fread(ppu_screen.preview.data, size, 1, fp) == 1) {
+					preview_image(slot, &ppu_screen.preview);
 				}
 				fseek(fp, (long)pos, SEEK_SET);
 			}
@@ -795,12 +795,12 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	}
 
 	// in caso di save slot file non devo visualizzare nessuna preview (thx Brandon Enright for the report and for the fix).
-	save_slot_mem(mode, slot, screen.rd->data, screen_size(), slot == SAVE_SLOT_FILE ? FALSE : TRUE)
+	save_slot_mem(mode, slot, ppu_screen.rd->data, screen_size(), slot == SAVE_SLOT_FILE ? FALSE : TRUE)
 
 	return (EXIT_OK);
 }
 
-static void preview_image(BYTE slot, _screen_buffer *sb) {
+static void preview_image(BYTE slot, _ppu_screen_buffer *sb) {
 	int stride = SCR_COLUMNS * sizeof(uint32_t);
 	void *buffer;
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -825,9 +825,9 @@ void chinaersan2_apply_font(void) { //书写浮动的文本 Writing floating tex
 
 						if (pos2 < maxpos) {
 							if (jj < 8 && (pSan2Font[index * 32 + ii * 2] & (0x80 >> jj)))
-								screen.wr->data[pos2] = mmap_palette.color[color];
+								ppu_screen.wr->data[pos2] = mmap_palette.color[color];
 							if (jj >= 8 && (pSan2Font[index * 32 + ii * 2 + 1] & (0x80 >> (jj - 8))))
-								screen.wr->data[pos2] = mmap_palette.color[color];
+								ppu_screen.wr->data[pos2] = mmap_palette.color[color];
 						}
 					}
 				}

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  Originally taken from Fuse - the Free Unix Spectrum Emulator
  *  Copyright (C) 2003-2015 Fredrick Meunier, Philip Kendall, Gergely Szasz
@@ -84,47 +84,47 @@ static const uint32_t dotmatrix[16] = {
 };
 
 void scale_2xsai(void) {
-	scaler_2xsai((BYTE *)screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
+	scaler_2xsai((BYTE *)ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
 		(uint32_t *)gfx.filter.data.palette);
 }
 void scale_dotmatrix(void) {
-	scaler_dotmatrix((BYTE *)screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
+	scaler_dotmatrix((BYTE *)ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
 		(uint32_t *)gfx.filter.data.palette);
 }
 void scale_paltv1x(void) {
-	scaler_paltv1x((BYTE *)screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
+	scaler_paltv1x((BYTE *)ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
 		(uint32_t *)gfx.filter.data.palette);
 }
 void scale_paltv2x(void) {
-	scaler_paltv2x((BYTE *)screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
+	scaler_paltv2x((BYTE *)ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
 		(uint32_t *)gfx.filter.data.palette);
 }
 void scale_paltv3x(void) {
-	scaler_paltv3x((BYTE *)screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
+	scaler_paltv3x((BYTE *)ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
 		(uint32_t *)gfx.filter.data.palette);
 }
 void scale_paltv4x(void) {
-	scaler_paltv4x((BYTE *)screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
+	scaler_paltv4x((BYTE *)ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
 		(uint32_t *)gfx.filter.data.palette);
 }
 void scale_super2xsai(void) {
-	scaler_super2xsai((BYTE *)screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
+	scaler_super2xsai((BYTE *)ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
 		(uint32_t *)gfx.filter.data.palette);
 }
 void scale_supereagle(void) {
-	scaler_supereagle((BYTE *)screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
+	scaler_supereagle((BYTE *)ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
 		(uint32_t *)gfx.filter.data.palette);
 }
 void scale_tv2x(void) {
-	scaler_tv2x((BYTE *)screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
+	scaler_tv2x((BYTE *)ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
 		(uint32_t *)gfx.filter.data.palette);
 }
 void scale_tv3x(void) {
-	scaler_tv3x((BYTE *)screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
+	scaler_tv3x((BYTE *)ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
 		(uint32_t *)gfx.filter.data.palette);
 }
 void scale_tv4x(void) {
-	scaler_tv4x((BYTE *)screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
+	scaler_tv4x((BYTE *)ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch, SCR_COLUMNS, SCR_ROWS,
 		(uint32_t *)gfx.filter.data.palette);
 }
 

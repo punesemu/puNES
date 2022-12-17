@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -48,10 +48,10 @@ void hqNx(void) {
 	hqnx.startx = 0;
 
 	if (gfx.filter.factor == 2) {
-		hq2x_32_rb(screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
+		hq2x_32_rb(ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
 	} else if (gfx.filter.factor == 3) {
-		hq3x_32_rb(screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
+		hq3x_32_rb(ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
 	} else if (gfx.filter.factor == 4) {
-		hq4x_32_rb(screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
+		hq4x_32_rb(ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
 	}
 }

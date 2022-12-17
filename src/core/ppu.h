@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -148,20 +148,20 @@ typedef struct _ppu {
 	} sf;
 	WORD rnd_adr;
 }  _ppu;
-typedef struct _screen_buffer {
+typedef struct _ppu_screen_buffer {
 	BYTE ready;
 	uint64_t frame;
 	WORD *data;
 	WORD *line[SCR_ROWS];
-} _screen_buffer;
+} _ppu_screen_buffer;
 typedef struct _screen {
 	BYTE index;
-	_screen_buffer *wr;
-	_screen_buffer *rd;
-	_screen_buffer *last_completed_wr;
-	_screen_buffer buff[2];
-	_screen_buffer preview;
-} _screen;
+	_ppu_screen_buffer *wr;
+	_ppu_screen_buffer *rd;
+	_ppu_screen_buffer *last_completed_wr;
+	_ppu_screen_buffer buff[2];
+	_ppu_screen_buffer preview;
+} _ppu_screen;
 typedef struct _ppu_openbus {
 	int32_t bit0;
 	int32_t bit1;
@@ -285,7 +285,7 @@ typedef struct _ppu_alignment {
 }  _ppu_alignment;
 
 extern _ppu ppu;
-extern _screen screen;
+extern _ppu_screen ppu_screen;
 extern _ppu_openbus ppu_openbus;
 extern _r2000 r2000;
 extern _r2001 r2001;

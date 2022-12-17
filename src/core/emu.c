@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -315,7 +315,7 @@ char *emu_file2string(const uTCHAR *path) {
 	return (str);
 }
 BYTE emu_load_rom(void) {
-	BYTE recent_roms_permit_add = TRUE;
+	BYTE recent_roms_permit_add = !info.block_recent_roms_update;
 
 	gui_egds_stop_unnecessary();
 
@@ -391,6 +391,7 @@ BYTE emu_load_rom(void) {
 			}
 			emu_recent_roms_add(&recent_roms_permit_add, info.rom.file);
 			info.turn_off = FALSE;
+			info.block_recent_roms_update = FALSE;
 		}
 	} else if (info.gui) {
 		// impostazione primaria
@@ -515,7 +516,7 @@ BYTE emu_turn_on(void) {
 	memset(&ntbl, 0x00, sizeof(ntbl));
 	memset(&mmap_palette, 0x00, sizeof(mmap_palette));
 	memset(&oam, 0x00, sizeof(oam));
-	memset(&screen, 0x00, sizeof(screen));
+	memset(&ppu_screen, 0x00, sizeof(ppu_screen));
 	memset(&vs_system, 0x00, sizeof(vs_system));
 
 	tas.lag_next_frame = TRUE;
@@ -531,6 +532,15 @@ BYTE emu_turn_on(void) {
 	info.r4016_dmc_double_read_disabled = FALSE;
 
 	cheatslist_init();
+
+#if defined (WITH_OPENGL)
+	gui_screen_info();
+#endif
+
+	if (gui_create() == EXIT_ERROR) {
+		gui_critical(uL("GUI initialization failed."));
+		return (EXIT_ERROR);
+	}
 
 	nsf_init();
 	fds_init();
@@ -1235,6 +1245,11 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 		ustrncpy(info.rom.change_rom, gamegenie.rom, usizeof(info.rom.change_rom));
 		info.rom.change_rom[usizeof(info.rom.change_rom) - 1] = 0x00;
 	} else {
+		if (info.rom.file[0] && (emu_file_exist(info.rom.file) == EXIT_ERROR)) {
+			log_error(uL("emu;'" uPs("") "' not found"), info.rom.file);
+			info.rom.file[0] = 0x00;
+			return (EXIT_ERROR);
+		}
 		ustrncpy(info.rom.change_rom, info.rom.file, usizeof(info.rom.change_rom));
 		info.rom.change_rom[usizeof(info.rom.change_rom) - 1] = 0x00;
 	}
@@ -1305,7 +1320,7 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 	}
 
 	if (patcher_ctrl_if_exist(NULL) == EXIT_OK) {
-		log_info(uL("patch file;" uPs("") "\n"), patcher.file);
+		log_info(uL("patch file;" uPs("")), patcher.file);
 	}
 
 	return (EXIT_OK);

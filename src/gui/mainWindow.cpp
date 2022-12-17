@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2022 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2023 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@
 #include <QtCore/QBuffer>
 #include "mainWindow.hpp"
 #include "extra/singleapplication/singleapplication.h"
+#include "dlgHeaderEditor.hpp"
 #include "dlgJsc.hpp"
 #include "dlgKeyboard.hpp"
 #include "dlgLog.hpp"
@@ -44,7 +45,6 @@
 #include "common.h"
 #include "emu_thread.h"
 #include "clock.h"
-#include "conf.h"
 #include "recent_roms.h"
 #include "fds.h"
 #include "patcher.h"
@@ -54,6 +54,7 @@
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
 #include "tas.h"
+#include "ppu.h"
 #include "video/effects/tv_noise.h"
 #include "debugger.h"
 #include "tape_data_recorder.h"
@@ -62,21 +63,6 @@
 #endif
 #if defined (FULLSCREEN_RESFREQ)
 #include "video/gfx_monitor.h"
-#endif
-
-#if defined (_WIN32) || defined (_WIN64)
-#if defined (_WIN64)
-#define ENVIRONMENT "x86_64"
-#else
-#define ENVIRONMENT "x86"
-#endif
-#endif
-#if defined (__GNUC__)
-#if defined (__x86_64__)
-#define ENVIRONMENT "x86_64"
-#else
-#define ENVIRONMENT "x86"
-#endif
 #endif
 
 enum state_incdec_enum { INC, DEC };
@@ -90,7 +76,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	fs_geom.setX(0);
 	fs_geom.setY(0);
 
-	screen = new wdgScreen(this);
+	wscreen = new wdgScreen(this);
 	statusbar = new wdgStatusBar(this);
 	toolbar = new wdgToolBar(this);
 	translator = new QTranslator();
@@ -105,7 +91,7 @@ mainWindow::mainWindow() : QMainWindow() {
 		QHBoxLayout *layout = new QHBoxLayout(central_widget);
 
 		layout->setContentsMargins(0, 0, 0, 0);
-		layout->addWidget(screen);
+		layout->addWidget(wscreen);
 	}
 
 	setWindowIcon(QIcon(":icon/icons/application.png"));
@@ -195,6 +181,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	connect(shcjoy.timer, SIGNAL(timeout()), this, SLOT(s_shcjoy_read_timer()));
 	connect(qApp, SIGNAL(receivedMessage(quint32,QByteArray)), this, SLOT(s_received_message(quint32,QByteArray)));
 
+	connect(this, SIGNAL(et_reset(BYTE)), this, SLOT(s_et_reset(BYTE)));
 	connect(this, SIGNAL(et_gg_reset()), this, SLOT(s_et_gg_reset()));
 	connect(this, SIGNAL(et_vs_reset()), this, SLOT(s_et_vs_reset()));
 	connect(this, SIGNAL(et_external_control_windows_show()), this, SLOT(s_et_external_control_windows_show()));
@@ -320,15 +307,10 @@ void mainWindow::closeEvent(QCloseEvent *event) {
 		cfg->lg.y = geometry().y();
 	}
 
-	cfg->lg_settings.x = dlgsettings->geom.x();
-	cfg->lg_settings.y = dlgsettings->geom.y();
-	cfg->lg_settings.w = dlgsettings->geom.width();
-	cfg->lg_settings.h = dlgsettings->geom.height();
-
-	cfg->lg_nes_keyboard.x = dlgkeyb->geom.x();
-	cfg->lg_nes_keyboard.y = dlgkeyb->geom.y();
-	cfg->lg_nes_keyboard.w = dlgkeyb->geom.width();
-	cfg->lg_nes_keyboard.h = dlgkeyb->geom.height();
+	geom_to_cfg(dlgsettings->geom, &cfg->lg_settings);
+	geom_to_cfg(dlgkeyb->geom, &cfg->lg_nes_keyboard);
+	geom_to_cfg(dlglog->geom, &cfg->lg_log);
+	geom_to_cfg(dlgheader->geom, &cfg->lg_header_editor);
 
 	settings_save_GUI();
 
@@ -339,7 +321,9 @@ void mainWindow::retranslateUi(mainWindow *mainWindow) {
 	Ui::mainWindow::retranslateUi(mainWindow);
 	qaction_shcut.hold_fast_forward->setText(tr("Fast Forward (hold button)"));
 	shortcuts();
-	save_slot_count_load();
+	if (ppu_screen.rd) {
+		save_slot_count_load();
+	}
 	update_window();
 }
 
@@ -815,16 +799,7 @@ void mainWindow::hold_fast_forward(BYTE mode) {
 	}
 }
 void mainWindow::open_dkeyb(BYTE mode) {
-	int frame_w = frameGeometry().width() - geometry().width();
-	int frame_h = frameGeometry().height() - geometry().height();
-
-	if (dlgkeyb->geom.x() < frame_w) {
-		dlgkeyb->geom.setX(frame_w);
-	}
-	if (dlgkeyb->geom.y() < frame_h) {
-		dlgkeyb->geom.setY(frame_h);
-	}
-
+	set_dialog_geom(dlgkeyb->geom);
 	dlgkeyb->setGeometry(dlgkeyb->geom);
 	dlgkeyb->switch_mode(mode);
 	dlgkeyb->show();
@@ -834,6 +809,7 @@ void mainWindow::connect_menu_signals(void) {
 	// File
 	connect_action(action_Open, SLOT(s_open()));
 	connect_action(action_Apply_Patch, SLOT(s_apply_patch()));
+	connect_action(action_Edit_Current_Header, SLOT(s_open_edit_current_header()));
 	connect_action(action_Start_Stop_Audio_recording, SLOT(s_start_stop_audio_recording()));
 #if defined (WITH_FFMPEG)
 	connect_action(action_Start_Stop_Video_recording, SLOT(s_start_stop_video_recording()));
@@ -900,9 +876,9 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_State_Save_to_file, SLOT(s_state_save_file()));
 	connect_action(action_State_Load_from_file, SLOT(s_state_load_file()));
 	// Tools
+	connect_action(action_Joypad_Gamepads_Debug, SLOT(s_open_djsc()));
 	connect_action(action_Virtual_Keyboard, SLOT(s_open_dkeyb()));
 	connect_action(action_Vs_System, SLOT(s_set_vs_window()));
-	connect_action(action_Joypad_Gamepads_Debug, SLOT(s_open_djsc()));
 	// Help/About
 	connect_action(action_Show_Log, SLOT(s_show_log()));
 	connect_action(action_About, SLOT(s_help()));
@@ -975,10 +951,11 @@ void mainWindow::connect_shortcut(QAction *action, int index, const char *member
 }
 
 void mainWindow::update_menu_file(void) {
-	if (info.no_rom) {
-		action_Apply_Patch->setEnabled(false);
-	} else {
-		action_Apply_Patch->setEnabled(true);
+	action_Apply_Patch->setEnabled(!info.no_rom);
+
+	action_Edit_Current_Header->setEnabled((info.format == iNES_1_0) || (info.format == NES_2_0));
+	if (!action_Edit_Current_Header->isEnabled() && dlgheader->isVisible()) {
+		dlgheader->hide();
 	}
 
 	update_recording_widgets();
@@ -1003,7 +980,7 @@ void mainWindow::update_menu_file(void) {
 			}
 
 			action = new QAction(this);
-			action->setText(QFileInfo(description).completeBaseName());
+			action->setText(QFileInfo(description).fileName());
 
 			if (rom.suffix().isEmpty() ||
 				!rom.suffix().compare("nes", Qt::CaseInsensitive) ||
@@ -1165,6 +1142,9 @@ void mainWindow::update_tape_menu(void) {
 }
 void mainWindow::update_menu_tools(void) {
 	action_Virtual_Keyboard->setEnabled(nes_keyboard.enabled);
+	if (!action_Virtual_Keyboard->isEnabled() && dlgkeyb->isVisible()) {
+		dlgkeyb->hide();
+	}
 }
 
 void mainWindow::action_text(QAction *action, const QString &description, QString *shortcut) {
@@ -1191,6 +1171,23 @@ void mainWindow::ctrl_disk_side(QAction *action) {
 		action->setChecked(true);
 	}
 }
+void mainWindow::geom_to_cfg(const QRect &geom, _last_geometry *lg) {
+	lg->x = geom.x();
+	lg->y = geom.y();
+	lg->w = geom.width();
+	lg->h = geom.height();
+}
+void mainWindow::set_dialog_geom(QRect &geom) {
+	int frame_w = frameGeometry().width() - geometry().width();
+	int frame_h = frameGeometry().height() - geometry().height();
+
+	if (geom.x() < frame_w) {
+		geom.setX(frame_w);
+	}
+	if (geom.y() < frame_h) {
+		geom.setY(frame_h);
+	}
+}
 int mainWindow::is_shortcut(const QKeyEvent *event) {
 	int i;
 
@@ -1198,7 +1195,7 @@ int mainWindow::is_shortcut(const QKeyEvent *event) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 		if ((unsigned int)shortcut[i]->key()[0] == (event->key() | event->modifiers())) {
 #else
-		if (shortcut[i]->key()[0] == event->keyCombination()) {
+			if (shortcut[i]->key()[0] == event->keyCombination()) {
 #endif
 			return (i);
 		}
@@ -1379,6 +1376,12 @@ void mainWindow::s_apply_patch(void) {
 	}
 
 	emu_pause(FALSE);
+}
+void mainWindow::s_open_edit_current_header(void) {
+	set_dialog_geom(dlgheader->geom);
+	dlgheader->setGeometry(dlgheader->geom);
+	dlgheader->reset_dialog();
+	dlgheader->show();
 }
 void mainWindow::s_open_recent_roms(void) {
 	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -1657,16 +1660,8 @@ void mainWindow::s_toggle_gui_in_window(void) {
 }
 void mainWindow::s_open_settings(void) {
 	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
-	int frame_w = frameGeometry().width() - geometry().width();
-	int frame_h = frameGeometry().height() - geometry().height();
 
-	if (dlgsettings->geom.x() < frame_w) {
-		dlgsettings->geom.setX(frame_w);
-	}
-	if (dlgsettings->geom.y() < frame_h) {
-		dlgsettings->geom.setY(frame_h);
-	}
-
+	set_dialog_geom(dlgsettings->geom);
 	dlgsettings->tabWidget_Settings->setCurrentIndex(index);
 	dlgsettings->setGeometry(dlgsettings->geom);
 	dlgsettings->show();
@@ -1916,19 +1911,8 @@ void mainWindow::s_tape_stop(void) {
 	emu_pause(FALSE);
 }
 void mainWindow::s_show_log(void) {
-//	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
-//	int frame_w = frameGeometry().width() - geometry().width();
-//	int frame_h = frameGeometry().height() - geometry().height();
-//
-//	if (dlgsettings->geom.x() < frame_w) {
-//		dlgsettings->geom.setX(frame_w);
-//	}
-//	if (dlgsettings->geom.y() < frame_h) {
-//		dlgsettings->geom.setY(frame_h);
-//	}
-//
-//	dlgsettings->tabWidget_Settings->setCurrentIndex(index);
-//	dlgsettings->setGeometry(dlgsettings->geom);
+	set_dialog_geom(dlglog->geom);
+	dlglog->setGeometry(dlglog->geom);
 	dlglog->show();
 	dlglog->activateWindow();
 }
@@ -1958,12 +1942,7 @@ void mainWindow::s_help(void) {
 #endif
 	text.append("<center>" + tr("Nintendo Entertainment System Emulator") + "</center>");
 	text.append("<center>" + tr("Compiled") + " " + QLocale().toString(compiled, QLocale::ShortFormat) + " (" + QString(ENVIRONMENT));
-
-#if defined (WITH_OPENGL)
-	text.append(", OpenGL)</center>");
-#elif defined (WITH_D3D9)
-	text.append(", D3D9)</center>");
-#endif
+	text.append(", " + QString(VERTYPE) + ")</center>");
 
 	about->setText(text);
 
@@ -2098,7 +2077,7 @@ void mainWindow::s_fullscreen(void) {
 	emu_thread_continue();
 
 	gui_external_control_windows_show();
-	screen->activateWindow();
+	wscreen->activateWindow();
 	setup_in_out_fullscreen = false;
 }
 void mainWindow::s_shcjoy_read_timer(void) {
@@ -2401,6 +2380,11 @@ void mainWindow::s_shcut_toggle_capture_input(void) const {
 	}
 }
 
+void mainWindow::s_et_reset(BYTE type) {
+	emu_thread_pause();
+	make_reset(type);
+	emu_thread_continue();
+}
 void mainWindow::s_et_gg_reset(void) {
 	emu_thread_pause();
 	info.fds_only_bios = FALSE;
@@ -2595,4 +2579,14 @@ void qtHelper::spinbox_set_value(void *sbox, int value) {
 	((QSpinBox *)sbox)->blockSignals(true);
 	((QSpinBox *)sbox)->setValue(value);
 	((QSpinBox *)sbox)->blockSignals(false);
+}
+void qtHelper::combox_set_index(void *cbox, int value) {
+	((QComboBox *)cbox)->blockSignals(true);
+	((QComboBox *)cbox)->setCurrentIndex(value);
+	((QComboBox *)cbox)->blockSignals(false);
+}
+void qtHelper::lineedit_set_text(void *ledit, const QString &txt) {
+	((QLineEdit *)ledit)->blockSignals(true);
+	((QLineEdit *)ledit)->setText(txt);
+	((QLineEdit *)ledit)->blockSignals(false);
 }
