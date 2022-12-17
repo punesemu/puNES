@@ -1559,6 +1559,8 @@ overlayWidgetSaveSlot::overlayWidgetSaveSlot(QWidget *parent) : overlayWidget(pa
 	radius = 4;
 	padding.h = 4;
 	padding.v = 4;
+
+	set_opacity(0.98);
 }
 overlayWidgetSaveSlot::~overlayWidgetSaveSlot() = default;
 
