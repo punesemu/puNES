@@ -422,7 +422,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 		position += blength;
 	}
 
-	if (info.reset != CHANGE_ROM) {
+	if ((info.reset != CHANGE_ROM) && ((type == FDS_DISK_INSERT) || (type == FDS_DISK_SELECT_AND_INSERT))) {
 		fds_info_side(side_to_insert);
 	}
 
