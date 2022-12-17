@@ -39,6 +39,66 @@
     </message>
 </context>
 <context>
+    <name>dlgHeaderEditor</name>
+    <message>
+        <source>Header Editor</source>
+        <translation>头部编辑器</translation>
+    </message>
+    <message>
+        <source>Mirroring</source>
+        <translation>镜像</translation>
+    </message>
+ 
+    <message>
+        <source>File</source>
+        <translation>文件</translation>
+    </message>
+    <message>
+        <source>Header</source>
+        <translation>头部</translation>
+    </message>
+    <message>
+        <source>Horizontal</source>
+        <translation>水平</translation>
+    </message>
+    <message>
+        <source>Vertical</source>
+        <translation>垂直</translation>
+    </message>
+    <message>
+        <source>4-Screen</source>
+        <translation>4 屏幕</translation>
+    </message>
+    <message>
+        <source>CPU Timing</source>
+        <translation>CPU 计时</translation>
+    </message>
+    <message>
+        <source>Misc</source>
+        <translation>其它</translation>
+    </message>
+    <message>
+        <source>Battery</source>
+        <translation>电池</translation>
+    </message>
+    <message>
+        <source>Trainer</source>
+        <translation>Trainer</translation>
+    </message>
+    <message>
+        <source>Reset to default</source>
+        <translation>重置为默认</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>保存</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+</context>
+<context>
     <name>dlgJsc</name>
     <message>
         <source>Close Window</source>
@@ -940,6 +1000,10 @@
     <message>
         <source>&amp;Show Log</source>
         <translation>显示日志(&amp;S)</translation>
+    </message>
+    <message>
+        <source>Edit Current iNES/NES2.0 &amp;Header</source>
+        <translation>编辑当前 iNES/NES2.0 头部(&amp;H)</translation>
     </message>
     <message>
         <source>Ta&amp;pe</source>
