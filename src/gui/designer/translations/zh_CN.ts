@@ -41,6 +41,14 @@
 <context>
     <name>dlgHeaderEditor</name>
     <message>
+        <source>Attention</source>
+        <translation>警告</translation>
+    </message>
+    <message>
+        <source>Do you want to boot the ROM with the changes made?</source>
+        <translation>您希望以更改模式启动 ROM 吗?</translation>
+    </message>
+    <message>
         <source>Header Editor</source>
         <translation>头部编辑器</translation>
     </message>
@@ -48,14 +56,313 @@
         <source>Mirroring</source>
         <translation>镜像</translation>
     </message>
- 
     <message>
-        <source>File</source>
-        <translation>文件</translation>
+        <source>Console Type</source>
+        <translation>主机类型</translation>
     </message>
     <message>
-        <source>Header</source>
-        <translation>头部</translation>
+        <source>PRG ROM KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>无</translation>
+    </message>
+    <message>
+        <source>128 Bytes</source>
+        <translation>128 字节</translation>
+    </message>
+    <message>
+        <source>256 Bytes</source>
+        <translation>256 字节</translation>
+    </message>
+    <message>
+        <source>512 Bytes</source>
+        <translation>512 字节</translation>
+    </message>
+    <message>
+        <source>1 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>8 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>16 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>32 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>64 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>128 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>256 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>512 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1 MiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trainer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unspecified</source>
+        <translation>未指定</translation>
+    </message>
+    <message>
+        <source>Standard Controllers</source>
+        <translation>标准控制器</translation>
+    </message>
+    <message>
+        <source>NES Four Score/Satellite</source>
+        <translation>NES 四分插</translation>
+    </message>
+    <message>
+        <source>Famicom Four Players Adapter</source>
+        <translation>Famicom 四玩家适配器</translation>
+    </message>
+    <message>
+        <source>Vs. System</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vs. System (1P via $4017)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reserved</source>
+        <translation>保留</translation>
+    </message>
+    <message>
+        <source>Vs. Zapper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zapper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two Zappers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bandai Hyper Shot Lightgun</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Power Pad Side A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Power Pad Side B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Family Trainer Side A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Family Trainer Side B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arkanoid Paddle (NES)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arkanoid Paddle (Famicom)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two Paddles plus Famicom Data Recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Konami Hyper Shot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coconuts Pachinko</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exciting Boxing Punching Bag</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Jissen Mahjong Controller</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Party Tap</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Oeka Kids Tablet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sunsoft Barcode Battler</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Miracle Piano Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pokkun Moguraa</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top Rider</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double-Fisted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Famicom 3D System</source>
+        <translation>Famicom 3D 系统</translation>
+    </message>
+    <message>
+        <source>Doremikko Keyboard</source>
+        <translation>Doremikko 键盘</translation>
+    </message>
+    <message>
+        <source>R.O.B. Gyro Set</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Famicom Data Recorder</source>
+        <translation>Famicom 数据记录器</translation>
+    </message>
+    <message>
+        <source>ASCII Turbo File</source>
+        <translation>ASCII Turbo 文件</translation>
+    </message>
+    <message>
+        <source>IGS Storage Battle Box</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Family BASIC Keyboard</source>
+        <translation>Family BASIC 键盘</translation>
+    </message>
+    <message>
+        <source>Dongda PEC-586 Keyboard</source>
+        <translation>Dongda PEC-586 键盘</translation>
+    </message>
+    <message>
+        <source>Bit Corp. Bit-79 Keyboard</source>
+        <translation>Bit Corp. Bit-79 键盘</translation>
+    </message>
+    <message>
+        <source>Subor Keyboard</source>
+        <translation>小霸王键盘</translation>
+    </message>
+    <message>
+        <source>Subor Keyboard plus 3x8-bit mouse</source>
+        <translation>小霸王键盘加 3x8 位鼠标</translation>
+    </message>
+    <message>
+        <source>Subor Keyboard plus 24-bit mouse</source>
+        <translation>小霸王键盘加 24 位鼠标</translation>
+    </message>
+    <message>
+        <source>SNES Mouse</source>
+        <translation>SNES 鼠标</translation>
+    </message>
+    <message>
+        <source>Multicart</source>
+        <translation>多重卡带</translation>
+    </message>
+    <message>
+        <source>Two SNES controllers</source>
+        <translation>双 SNES 控制器</translation>
+    </message>
+    <message>
+        <source>RacerMate Bicycle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U-Force</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>R.O.B. Stack-Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>City Patrolman Lightgun</source>
+        <translation>城市巡警光枪</translation>
+    </message>
+    <message>
+        <source>Sharp C1 Cassette Interface</source>
+        <translation>Sharp C1 卡带界面</translation>
+    </message>
+    <message>
+        <source>Standard Controller (inverted direction)</source>
+        <translation>标准控制器 (方向相反)</translation>
+    </message>
+    <message>
+        <source>Excalibor Sudoku Pad</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ABL Pinball</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Golden Nugget Casino</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Both</source>
+        <translation>两者</translation>
+    </message>
+    <message>
+        <source>Dendy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VS Type</source>
+        <translation>类型</translation>
     </message>
     <message>
         <source>Horizontal</source>
@@ -74,16 +381,196 @@
         <translation>CPU 计时</translation>
     </message>
     <message>
-        <source>Misc</source>
-        <translation>其它</translation>
+        <source>VS PPU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CHR ROM KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NES/Famicom/Dendy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Playchoice 10</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Famiclone with Decimal Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NES/Famicom with EPSM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VT01</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VT02</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VT03</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VT09</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VT32</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VT369</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UMC UM6578</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Famicom Network System</source>
+        <translation>Famicom 网络系统</translation>
+    </message>
+    <message>
+        <source>File</source>
+        <translation>文件</translation>
+    </message>
+    <message>
+        <source>CHR RAM Battery</source>
+        <translation>CHR RAM 电池</translation>
+    </message>
+    <message>
+        <source>Mapper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation>普通</translation>
+    </message>
+    <message>
+        <source>RBI Baseball</source>
+        <translation>RBI 棒球</translation>
+    </message>
+    <message>
+        <source>TKO Boxing</source>
+        <translation>TKO 拳击</translation>
+    </message>
+    <message>
+        <source>Super Xevious</source>
+        <translation>超级铁板阵</translation>
+    </message>
+    <message>
+        <source>Vs. Ice Climber</source>
+        <translation>Vs. 敲冰块</translation>
+    </message>
+    <message>
+        <source>Vs. Dual</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Raid on Bungeling Bay</source>
+        <translation>救难直升机</translation>
+    </message>
+    <message>
+        <source>PRG RAM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>iNES 1.0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NES 2.0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Submapper</source>
+        <translation>子 mapper</translation>
+    </message>
+    <message>
+        <source>RP2C03B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RP2C03G</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RP2C04-0001</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RP2C04-0002</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RP2C04-0003</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RP2C04-0004</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RC2C03B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RC2C03C</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RC2C05-01</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RC2C05-02</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RC2C05-03</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RC2C05-04</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RC2C05-05</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Header</source>
+        <translation>头部</translation>
+    </message>
+    <message>
+        <source>PRG RAM Battery</source>
+        <translation>PRG RAM 电池</translation>
+    </message>
+    <message>
+        <source>CHR RAM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input</source>
+        <translation>输入</translation>
+    </message>
+    <message>
+        <source>Misc ROMs</source>
+        <translation>其它 ROM</translation>
     </message>
     <message>
         <source>Battery</source>
         <translation>电池</translation>
     </message>
     <message>
-        <source>Trainer</source>
-        <translation>Trainer</translation>
+        <source>Misc</source>
+        <translation>其它</translation>
     </message>
     <message>
         <source>Reset to default</source>
@@ -432,35 +919,35 @@
     </message>
     <message>
         <source>4</source>
-        <translation>4</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>5</source>
-        <translation>5</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>6</source>
-        <translation>6</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>7</source>
-        <translation>7</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>8</source>
-        <translation>8</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>3</source>
-        <translation>3</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>2</source>
-        <translation>2</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>1</source>
-        <translation>1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Defaults Game Dip Switches</source>
@@ -994,8 +1481,12 @@
         <translation>打开配置文件夹(&amp;O)</translation>
     </message>
     <message>
-        <source>Start FDS Emulation &amp;without Disk</source>
-        <translation>无磁盘启动 FDS 模拟(&amp;W)</translation>
+        <source>Ta&amp;pe</source>
+        <translation>磁带(&amp;A)</translation>
+    </message>
+    <message>
+        <source>Toggle Virtual &amp;Keyboard</source>
+        <translation>切换虚拟键盘(&amp;K)</translation>
     </message>
     <message>
         <source>&amp;Show Log</source>
@@ -1003,15 +1494,7 @@
     </message>
     <message>
         <source>Edit Current iNES/NES2.0 &amp;Header</source>
-        <translation>编辑当前 iNES/NES2.0 头部(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Ta&amp;pe</source>
-        <translation>磁带(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Toggle Virtual &amp;Keyboard</source>
-        <translation>切换虚拟键盘(&amp;K)</translation>
+        <translation>编辑当前的 iNES/NES2.0 头部(&amp;H)</translation>
     </message>
 </context>
 <context>
@@ -1935,23 +2418,23 @@
     </message>
     <message>
         <source>2</source>
-        <translation>2</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>5</source>
-        <translation>5</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>15</source>
-        <translation>15</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>30</source>
-        <translation>30</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>60</source>
-        <translation>60</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Unlim.</source>
@@ -1959,11 +2442,11 @@
     </message>
     <message>
         <source>2x</source>
-        <translation>2 倍</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Chinese Simplified</source>
-        <translation>简体中文</translation>
+        <translation>简体中文(Chinese Simplified)</translation>
     </message>
     <message>
         <source>Insert disk 1 side A at power-up/reset</source>
@@ -1971,19 +2454,19 @@
     </message>
     <message>
         <source>Famicom Disk System</source>
-        <translation>Famicom 磁碟机</translation>
-    </message>
-    <message>
-        <source>Use fast forward when loading the BIOS or disk/side</source>
-        <translation>快进载入 BIOS 和换面</translation>
+        <translation>Famicom 磁碟系统</translation>
     </message>
     <message>
         <source>Switch the disk/side automatically</source>
-        <translation>自动换面</translation>
+        <translation>自动切换磁盘/面</translation>
     </message>
     <message>
         <source>Allow multiple instances of the emulator</source>
-        <translation>允许运行多个模拟器</translation>
+        <translation>允许多个模拟器实例</translation>
+    </message>
+    <message>
+        <source>Use fast forward when loading the disk/side</source>
+        <translation>加载磁盘/面时快进</translation>
     </message>
 </context>
 <context>
@@ -2925,7 +3408,7 @@
     <name>wdgState</name>
     <message>
         <source>Save/Load Slot Box</source>
-        <translation type="unfinished"></translation>
+        <translation>保存/载入进度框</translation>
     </message>
     <message>
         <source>Save state</source>
