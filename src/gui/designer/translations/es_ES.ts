@@ -1489,10 +1489,6 @@
       <translation type="unfinished">Toggle Virtual &amp;Keyboard</translation>
     </message>
     <message>
-      <source>Start FDS Emulation &amp;without Disk</source>
-      <translation type="unfinished">Start FDS Emulation &amp;without Disk</translation>
-    </message>
-    <message>
       <source>&amp;Show Log</source>
       <translation type="unfinished">&amp;Show Log</translation>
     </message>
@@ -2461,16 +2457,16 @@
       <translation>Famicom Disk System</translation>
     </message>
     <message>
-      <source>Use fast forward when loading the BIOS or disk/side</source>
-      <translation>Usar adelantar rápido al cargar la BIOS o el disco/lado</translation>
-    </message>
-    <message>
       <source>Switch the disk/side automatically</source>
       <translation>Cambiar disco/lado automáticamente</translation>
     </message>
     <message>
       <source>Allow multiple instances of the emulator</source>
       <translation>Permitir múltiples instancias del emulador</translation>
+    </message>
+    <message>
+      <source>Use fast forward when loading the disk/side</source>
+      <translation type="unfinished">Use fast forward when loading the disk/side</translation>
     </message>
   </context>
   <context>
