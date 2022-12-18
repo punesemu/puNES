@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
-    <normaloff>:/icon/icons/preferences_other.svg</normaloff>:/icon/icons/preferences_other.svg</iconset>
+    <normaloff>:/icon/icons/preferences_other.svgz</normaloff>:/icon/icons/preferences_other.svgz</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_dlgWizard">
    <item>
@@ -100,7 +100,7 @@
         <string notr="true"/>
        </property>
        <property name="pixmap">
-        <pixmap resource="resources.qrc">:/icon/icons/open.svg</pixmap>
+        <pixmap resource="resources.qrc">:/icon/icons/open.svgz</pixmap>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
@@ -138,7 +138,7 @@
           <string notr="true"/>
          </property>
          <property name="pixmap">
-          <pixmap resource="resources.qrc">:/icon/icons/home.svg</pixmap>
+          <pixmap resource="resources.qrc">:/icon/icons/home.svgz</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -218,7 +218,7 @@
      </property>
      <property name="icon">
       <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/confirm.svg</normaloff>:/icon/icons/confirm.svg</iconset>
+       <normaloff>:/icon/icons/confirm.svgz</normaloff>:/icon/icons/confirm.svgz</iconset>
      </property>
     </widget>
    </item>

@@ -51,7 +51,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="icon">
       <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/turn_off.svg</normaloff>:/icon/icons/turn_off.svg</iconset>
+       <normaloff>:/icon/icons/turn_off.svgz</normaloff>:/icon/icons/turn_off.svgz</iconset>
      </property>
     </widget>
    </item>

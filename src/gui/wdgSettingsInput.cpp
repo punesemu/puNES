@@ -132,16 +132,16 @@ void wdgSettingsInput::changeEvent(QEvent *event) {
 void wdgSettingsInput::showEvent(QShowEvent *event) {
 	int dim = fontMetrics().height();
 
-	icon_Ports->setPixmap(QIcon(":/icon/icons/rs_232_female.svg").pixmap(dim, dim));
-	icon_cm->setPixmap(QIcon(":/icon/icons/mode.svg").pixmap(dim, dim));
-	icon_exp->setPixmap(QIcon(":/icon/icons/circuit_board.svg").pixmap(dim, dim));
-	icon_cp1->setPixmap(QIcon(":/icon/icons/game_controller.svg").pixmap(dim, dim));
-	icon_cp2->setPixmap(QIcon(":/icon/icons/game_controller.svg").pixmap(dim, dim));
-	icon_cp3->setPixmap(QIcon(":/icon/icons/game_controller.svg").pixmap(dim, dim));
-	icon_cp4->setPixmap(QIcon(":/icon/icons/game_controller.svg").pixmap(dim, dim));
-	icon_Input_misc->setPixmap(QIcon(":/icon/icons/misc.svg").pixmap(dim, dim));
-	icon_Shortcuts->setPixmap(QIcon(":/icon/icons/shortcuts.svg").pixmap(dim, dim));
-	icon_joy_ID->setPixmap(QIcon(":/icon/icons/input_config.svg").pixmap(dim, dim));
+	icon_Ports->setPixmap(QIcon(":/icon/icons/rs_232_female.svgz").pixmap(dim, dim));
+	icon_cm->setPixmap(QIcon(":/icon/icons/mode.svgz").pixmap(dim, dim));
+	icon_exp->setPixmap(QIcon(":/icon/icons/circuit_board.svgz").pixmap(dim, dim));
+	icon_cp1->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
+	icon_cp2->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
+	icon_cp3->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
+	icon_cp4->setPixmap(QIcon(":/icon/icons/game_controller.svgz").pixmap(dim, dim));
+	icon_Input_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
+	icon_Shortcuts->setPixmap(QIcon(":/icon/icons/shortcuts.svgz").pixmap(dim, dim));
+	icon_joy_ID->setPixmap(QIcon(":/icon/icons/input_config.svgz").pixmap(dim, dim));
 
 	mainwin->shcjoy_stop();
 
@@ -337,7 +337,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	bicon = new QPushButton(this);
 	bicon->setObjectName("default");
 	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-	bicon->setIcon(QIcon(":/icon/icons/default.svg"));
+	bicon->setIcon(QIcon(":/icon/icons/default.svgz"));
 	bicon->setToolTip(tr("Default"));
 	bicon->setProperty("myValue", QVariant(row));
 	connect(bicon, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_keyb_default(bool)));
@@ -345,7 +345,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	bicon = new QPushButton(this);
 	bicon->setObjectName("unset");
 	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-	bicon->setIcon(QIcon(":/icon/icons/trash.svg"));
+	bicon->setIcon(QIcon(":/icon/icons/trash.svgz"));
 	bicon->setToolTip(tr("Unset"));
 	bicon->setProperty("myValue", QVariant(row));
 	connect(bicon, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_keyb_unset(bool)));
@@ -379,7 +379,7 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	bicon = new QPushButton(this);
 	bicon->setObjectName("unset");
 	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-	bicon->setIcon(QIcon(":/icon/icons/trash.svg"));
+	bicon->setIcon(QIcon(":/icon/icons/trash.svgz"));
 	bicon->setToolTip(tr("Unset"));
 	bicon->setProperty("myValue", QVariant(row));
 	connect(bicon, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_joy_unset(bool)));

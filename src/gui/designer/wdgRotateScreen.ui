@@ -49,7 +49,7 @@
      </property>
      <property name="icon">
       <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rotate_left.svg</normaloff>:/icon/icons/rotate_left.svg</iconset>
+       <normaloff>:/icon/icons/rotate_left.svgz</normaloff>:/icon/icons/rotate_left.svgz</iconset>
      </property>
     </widget>
    </item>
@@ -76,7 +76,7 @@
      </property>
      <property name="icon">
       <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rotate_right.svg</normaloff>:/icon/icons/rotate_right.svg</iconset>
+       <normaloff>:/icon/icons/rotate_right.svgz</normaloff>:/icon/icons/rotate_right.svgz</iconset>
      </property>
     </widget>
    </item>
@@ -87,7 +87,7 @@
      </property>
      <property name="icon">
       <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/switch_sides.svg</normaloff>:/icon/icons/switch_sides.svg</iconset>
+       <normaloff>:/icon/icons/switch_sides.svgz</normaloff>:/icon/icons/switch_sides.svgz</iconset>
      </property>
      <property name="checkable">
       <bool>true</bool>

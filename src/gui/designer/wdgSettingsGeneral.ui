@@ -302,7 +302,7 @@
          </property>
          <property name="icon">
           <iconset resource="resources.qrc">
-           <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
+           <normaloff>:/icon/icons/load.svgz</normaloff>:/icon/icons/load.svgz</iconset>
          </property>
         </widget>
        </item>
@@ -310,7 +310,7 @@
         <widget class="QPushButton" name="pushButton_FDS_Bios_clear">
          <property name="icon">
           <iconset resource="resources.qrc">
-           <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+           <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
          </property>
         </widget>
        </item>
@@ -374,7 +374,7 @@
         </property>
         <property name="icon">
          <iconset resource="resources.qrc">
-          <normaloff>:/icon/icons/flag_china.svg</normaloff>:/icon/icons/flag_china.svg</iconset>
+          <normaloff>:/icon/icons/flag_china.svgz</normaloff>:/icon/icons/flag_china.svgz</iconset>
         </property>
        </item>
        <item>
@@ -383,7 +383,7 @@
         </property>
         <property name="icon">
          <iconset resource="resources.qrc">
-          <normaloff>:/icon/icons/flag_english.svg</normaloff>:/icon/icons/flag_english.svg</iconset>
+          <normaloff>:/icon/icons/flag_english.svgz</normaloff>:/icon/icons/flag_english.svgz</iconset>
         </property>
        </item>
        <item>
@@ -392,7 +392,7 @@
         </property>
         <property name="icon">
          <iconset resource="resources.qrc">
-          <normaloff>:/icon/icons/flag_hungary.svg</normaloff>:/icon/icons/flag_hungary.svg</iconset>
+          <normaloff>:/icon/icons/flag_hungary.svgz</normaloff>:/icon/icons/flag_hungary.svgz</iconset>
         </property>
        </item>
        <item>
@@ -401,7 +401,7 @@
         </property>
         <property name="icon">
          <iconset resource="resources.qrc">
-          <normaloff>:/icon/icons/flag_italy.svg</normaloff>:/icon/icons/flag_italy.svg</iconset>
+          <normaloff>:/icon/icons/flag_italy.svgz</normaloff>:/icon/icons/flag_italy.svgz</iconset>
         </property>
        </item>
        <item>
@@ -410,7 +410,7 @@
         </property>
         <property name="icon">
          <iconset resource="resources.qrc">
-          <normaloff>:/icon/icons/flag_brazil.svg</normaloff>:/icon/icons/flag_brazil.svg</iconset>
+          <normaloff>:/icon/icons/flag_brazil.svgz</normaloff>:/icon/icons/flag_brazil.svgz</iconset>
         </property>
        </item>
        <item>
@@ -419,7 +419,7 @@
         </property>
         <property name="icon">
          <iconset resource="resources.qrc">
-          <normaloff>:/icon/icons/flag_russia.svg</normaloff>:/icon/icons/flag_russia.svg</iconset>
+          <normaloff>:/icon/icons/flag_russia.svgz</normaloff>:/icon/icons/flag_russia.svgz</iconset>
         </property>
        </item>
        <item>
@@ -428,7 +428,7 @@
         </property>
         <property name="icon">
          <iconset resource="resources.qrc">
-          <normaloff>:/icon/icons/flag_spain.svg</normaloff>:/icon/icons/flag_spain.svg</iconset>
+          <normaloff>:/icon/icons/flag_spain.svgz</normaloff>:/icon/icons/flag_spain.svgz</iconset>
         </property>
        </item>
        <item>
@@ -437,7 +437,7 @@
         </property>
         <property name="icon">
          <iconset resource="resources.qrc">
-          <normaloff>:/icon/icons/flag_turkey.svg</normaloff>:/icon/icons/flag_turkey.svg</iconset>
+          <normaloff>:/icon/icons/flag_turkey.svgz</normaloff>:/icon/icons/flag_turkey.svgz</iconset>
         </property>
        </item>
       </widget>
@@ -645,7 +645,7 @@
          </property>
          <property name="icon">
           <iconset resource="resources.qrc">
-           <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
+           <normaloff>:/icon/icons/load.svgz</normaloff>:/icon/icons/load.svgz</iconset>
          </property>
         </widget>
        </item>
@@ -653,7 +653,7 @@
         <widget class="QPushButton" name="pushButton_Game_Genie_rom_file_clear">
          <property name="icon">
           <iconset resource="resources.qrc">
-           <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+           <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
          </property>
         </widget>
        </item>

@@ -105,14 +105,14 @@ void wdgSettingsRecording::changeEvent(QEvent *event) {
 void wdgSettingsRecording::showEvent(UNUSED(QShowEvent *event)) {
 	int dim = fontMetrics().height();
 
-	icon_Audio_recording_settings->setPixmap(QIcon(":/icon/icons/microphone.svg").pixmap(dim, dim));
-	icon_Output_Audio_Format->setPixmap(QIcon(":/icon/icons/nsf_file.svg").pixmap(dim, dim));
-	icon_Video_recording_settings->setPixmap(QIcon(":/icon/icons/camera.svg").pixmap(dim, dim));
-	icon_Output_Video_Format->setPixmap(QIcon(":/icon/icons/film.svg").pixmap(dim, dim));
-	icon_Output_Quality->setPixmap(QIcon(":/icon/icons/recording_quality.svg").pixmap(dim, dim));
-	icon_Output_Resolution->setPixmap(QIcon(":/icon/icons/resolution.svg").pixmap(dim, dim));
-	icon_Output_Custom_Width->setPixmap(QIcon(":/icon/icons/width.svg").pixmap(dim, dim));
-	icon_Output_Custom_Height->setPixmap(QIcon(":/icon/icons/height.svg").pixmap(dim, dim));
+	icon_Audio_recording_settings->setPixmap(QIcon(":/icon/icons/microphone.svgz").pixmap(dim, dim));
+	icon_Output_Audio_Format->setPixmap(QIcon(":/icon/icons/nsf_file.svgz").pixmap(dim, dim));
+	icon_Video_recording_settings->setPixmap(QIcon(":/icon/icons/camera.svgz").pixmap(dim, dim));
+	icon_Output_Video_Format->setPixmap(QIcon(":/icon/icons/film.svgz").pixmap(dim, dim));
+	icon_Output_Quality->setPixmap(QIcon(":/icon/icons/recording_quality.svgz").pixmap(dim, dim));
+	icon_Output_Resolution->setPixmap(QIcon(":/icon/icons/resolution.svgz").pixmap(dim, dim));
+	icon_Output_Custom_Width->setPixmap(QIcon(":/icon/icons/width.svgz").pixmap(dim, dim));
+	icon_Output_Custom_Height->setPixmap(QIcon(":/icon/icons/height.svgz").pixmap(dim, dim));
 
 	update_widget();
 }

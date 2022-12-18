@@ -1188,12 +1188,12 @@ void overlayWidgetRewind::update_dpr(void) {
 	td.setDefaultFont(led);
 	td.setDocumentMargin(0.0);
 
-	act.fbackward = svg_to_image(":/icon/icons/rwnd_fast_backward.svg");
-	act.backward = svg_to_image(":/icon/icons/rwnd_step_backward.svg");
-	act.play = svg_to_image(":/icon/icons/rwnd_play.svg");
-	act.pause = svg_to_image(":/icon/icons/rwnd_pause.svg");
-	act.forward = svg_to_image(":/icon/icons/rwnd_step_forward.svg");
-	act.fforward = svg_to_image(":/icon/icons/rwnd_fast_forward.svg");
+	act.fbackward = svg_to_image(":/icon/icons/rwnd_fast_backward.svgz");
+	act.backward = svg_to_image(":/icon/icons/rwnd_step_backward.svgz");
+	act.play = svg_to_image(":/icon/icons/rwnd_play.svgz");
+	act.pause = svg_to_image(":/icon/icons/rwnd_pause.svgz");
+	act.forward = svg_to_image(":/icon/icons/rwnd_step_forward.svgz");
+	act.fforward = svg_to_image(":/icon/icons/rwnd_fast_forward.svgz");
 }
 void overlayWidgetRewind::update_widget(void) {
 	if ((cfg->scale == X1) || (tas.type != NOTAS)) {

@@ -60,10 +60,10 @@ wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-	paste->setIcon(QIcon(":/icon/icons/paste.svg"));
-	tape.play->setIcon(QIcon(":/icon/icons/cassette_tape_play.svg"));
-	tape.record->setIcon(QIcon(":/icon/icons/cassette_tape_record.svg"));
-	tape.stop->setIcon(QIcon(":/icon/icons/cassette_tape_stop.svg"));
+	paste->setIcon(QIcon(":/icon/icons/paste.svgz"));
+	tape.play->setIcon(QIcon(":/icon/icons/cassette_tape_play.svgz"));
+	tape.record->setIcon(QIcon(":/icon/icons/cassette_tape_record.svgz"));
+	tape.stop->setIcon(QIcon(":/icon/icons/cassette_tape_stop.svgz"));
 
 	connect (this, SIGNAL(et_cursor_set()), this, SLOT(s_cursor_set()));
 	connect (this, SIGNAL(et_cursor_hide(int)), this, SLOT(s_cursor_hide(int)));
