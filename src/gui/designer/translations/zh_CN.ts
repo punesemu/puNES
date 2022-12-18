@@ -1133,7 +1133,7 @@
     </message>
     <message>
         <source>Disk 4 side B</source>
-        <translation>磁盘 4Ｂ面</translation>
+        <translation>磁盘 4 Ｂ面</translation>
     </message>
     <message>
         <source>&amp;Switch sides</source>
