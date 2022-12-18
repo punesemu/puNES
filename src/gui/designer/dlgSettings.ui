@@ -29,7 +29,7 @@
      <widget class="QWidget" name="tab_General">
       <attribute name="icon">
        <iconset resource="resources.qrc">
-        <normaloff>:/icon/icons/general.svg</normaloff>:/icon/icons/general.svg</iconset>
+        <normaloff>:/icon/icons/general.svgz</normaloff>:/icon/icons/general.svgz</iconset>
       </attribute>
       <attribute name="title">
        <string>General</string>
@@ -43,7 +43,7 @@
      <widget class="QWidget" name="tab_Video">
       <attribute name="icon">
        <iconset resource="resources.qrc">
-        <normaloff>:/icon/icons/video.svg</normaloff>:/icon/icons/video.svg</iconset>
+        <normaloff>:/icon/icons/video.svgz</normaloff>:/icon/icons/video.svgz</iconset>
       </attribute>
       <attribute name="title">
        <string>Video</string>
@@ -57,7 +57,7 @@
      <widget class="QWidget" name="tab_Audio">
       <attribute name="icon">
        <iconset resource="resources.qrc">
-        <normaloff>:/icon/icons/audio.svg</normaloff>:/icon/icons/audio.svg</iconset>
+        <normaloff>:/icon/icons/audio.svgz</normaloff>:/icon/icons/audio.svgz</iconset>
       </attribute>
       <attribute name="title">
        <string>Audio</string>
@@ -71,7 +71,7 @@
      <widget class="QWidget" name="tab_Input">
       <attribute name="icon">
        <iconset resource="resources.qrc">
-        <normaloff>:/icon/icons/input.svg</normaloff>:/icon/icons/input.svg</iconset>
+        <normaloff>:/icon/icons/input.svgz</normaloff>:/icon/icons/input.svgz</iconset>
       </attribute>
       <attribute name="title">
        <string>Input</string>
@@ -85,7 +85,7 @@
      <widget class="QWidget" name="tab_PPU">
       <attribute name="icon">
        <iconset resource="resources.qrc">
-        <normaloff>:/icon/icons/ppu.svg</normaloff>:/icon/icons/ppu.svg</iconset>
+        <normaloff>:/icon/icons/ppu.svgz</normaloff>:/icon/icons/ppu.svgz</iconset>
       </attribute>
       <attribute name="title">
        <string>PPU</string>
@@ -99,7 +99,7 @@
      <widget class="QWidget" name="tab_Cheats">
       <attribute name="icon">
        <iconset resource="resources.qrc">
-        <normaloff>:/icon/icons/cheat.svg</normaloff>:/icon/icons/cheat.svg</iconset>
+        <normaloff>:/icon/icons/cheat.svgz</normaloff>:/icon/icons/cheat.svgz</iconset>
       </attribute>
       <attribute name="title">
        <string>Cheats</string>
@@ -113,7 +113,7 @@
      <widget class="QWidget" name="tab_Recording">
       <attribute name="icon">
        <iconset resource="resources.qrc">
-        <normaloff>:/icon/icons/recording.svg</normaloff>:/icon/icons/recording.svg</iconset>
+        <normaloff>:/icon/icons/recording.svgz</normaloff>:/icon/icons/recording.svgz</iconset>
       </attribute>
       <attribute name="title">
        <string>Recording</string>
@@ -135,7 +135,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
+         <normaloff>:/icon/icons/save.svgz</normaloff>:/icon/icons/save.svgz</iconset>
        </property>
       </widget>
      </item>
@@ -146,7 +146,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/window_close.svg</normaloff>:/icon/icons/window_close.svg</iconset>
+         <normaloff>:/icon/icons/window_close.svgz</normaloff>:/icon/icons/window_close.svgz</iconset>
        </property>
       </widget>
      </item>

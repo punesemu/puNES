@@ -67,7 +67,7 @@ BYTE fds_load_rom(void) {
 	_rom_mem rom;
 	unsigned int i;
 
-	if (!info.fds_only_bios) {
+	{
 		BYTE found = TRUE;
 		uTCHAR rom_ext[2][10] = { uL(".fds\0"), uL(".FDS\0") };
 		FILE *fp;
@@ -116,9 +116,6 @@ BYTE fds_load_rom(void) {
 		}
 
 		fclose(fp);
-	} else {
-		rom.size = 0;
-		rom.data = NULL;
 	}
 
 	patcher_apply(&rom);
@@ -135,10 +132,7 @@ BYTE fds_load_rom(void) {
 	// riposiziono il puntatore
 	rom.position = 0;
 
-	if (info.fds_only_bios) {
-		fds.info.type = FDS_FORMAT_FDS;
-		fds.info.total_sides = 0;
-	} else if ((rom.data[rom.position++] == 'F') &&
+	if ((rom.data[rom.position++] == 'F') &&
 		(rom.data[rom.position++] == 'D') &&
 		(rom.data[rom.position++] == 'S') &&
 		(rom.data[rom.position++] == '\32')) {
@@ -161,7 +155,9 @@ BYTE fds_load_rom(void) {
 	}
 
 	// inserisco il primo
-	fds_disk_op(FDS_DISK_SELECT_AND_INSERT, 0, FALSE);
+	fds.info.first_insert = TRUE;
+	fds.info.bios_first_run = !cfg->fds_disk1sideA_at_reset;
+	fds_disk_op(cfg->fds_disk1sideA_at_reset ? FDS_DISK_SELECT_AND_INSERT : FDS_DISK_SELECT, 0, FALSE);
 
 	info.cpu_rw_extern = TRUE;
 	fds.info.enabled = TRUE;
@@ -239,6 +235,11 @@ BYTE fds_load_bios(void) {
 void fds_info_side(BYTE side) {
 	uint32_t i;
 
+	if (fds.info.first_insert) {
+		fds.info.first_insert = FALSE;
+		return;
+	}
+
 	log_info(uL("FDS side;%d"), side);
 	log_info_box(uL("vrt disk size;%5d"), fds.info.sides_size[side]);
 	log_info_box(uL("block 1;pos %5d"), fds.side.block_1.position);
@@ -278,6 +279,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 				return;
 			}
 
+			fds.info.bios_first_run = FALSE;
 			fds.drive.disk_position = 0;
 			fds.drive.gap_ended = FALSE;
 
@@ -422,8 +424,11 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 		position += blength;
 	}
 
-	if (info.reset != CHANGE_ROM) {
-		fds_info_side(side_to_insert);
+	if ((info.reset != CHANGE_ROM) && (type >= FDS_DISK_SELECT)) {
+		if (!fds.info.first_insert) {
+			fds_info_side(side_to_insert);
+		}
+		fds.info.first_insert = FALSE;
 	}
 
 	if (size < DISK_SIDE_SIZE) {

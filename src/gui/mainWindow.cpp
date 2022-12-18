@@ -342,7 +342,7 @@ void mainWindow::update_window(void) {
 }
 void mainWindow::update_recording_widgets(void) {
 #if defined (WITH_FFMPEG)
-	QIcon ia = QIcon(":/icon/icons/nsf_file.svg"), iv = QIcon(":/icon/icons/film.svg");
+	QIcon ia = QIcon(":/icon/icons/nsf_file.svgz"), iv = QIcon(":/icon/icons/film.svgz");
 	QString sa = tr("Start &AUDIO recording"), sv = tr("Start &VIDEO recording");
 	bool audio = false, video = false;
 	QString *sc;
@@ -355,12 +355,12 @@ void mainWindow::update_recording_widgets(void) {
 				audio = true;
 				video = false;
 				sa = tr("Stop &AUDIO recording");
-				ia = QIcon(":/icon/icons/multimedia_stop.svg");
+				ia = QIcon(":/icon/icons/multimedia_stop.svgz");
 			} else {
 				audio = false;
 				video = true;
 				sv = tr("Stop &VIDEO recording");
-				iv = QIcon(":/icon/icons/multimedia_stop.svg");
+				iv = QIcon(":/icon/icons/multimedia_stop.svgz");
 			}
 		} else {
 			audio = true;
@@ -378,7 +378,7 @@ void mainWindow::update_recording_widgets(void) {
 	action_text(action_Start_Stop_Video_recording, sv, sc);
 	action_Start_Stop_Video_recording->setIcon(iv);
 #else
-	QIcon ia = QIcon(":/icon/icons/multimedia_record.svg");
+	QIcon ia = QIcon(":/icon/icons/multimedia_record.svgz");
 	QString sa = tr("Start &WAV recording");
 	bool audio = false;
 	QString *sc;
@@ -389,7 +389,7 @@ void mainWindow::update_recording_widgets(void) {
 		audio = true;
 		if (info.recording_on_air) {
 			sa = tr("Stop &WAV recording");
-			ia = QIcon(":/icon/icons/multimedia_stop.svg");
+			ia = QIcon(":/icon/icons/multimedia_stop.svgz");
 		}
 	}
 
@@ -548,7 +548,6 @@ void mainWindow::change_rom(const uTCHAR *rom) {
 	info.rom.from_load_menu = emu_ustrncpy(info.rom.from_load_menu, (uTCHAR *)rom);
 	gamegenie_reset();
 	gamegenie_free_paths();
-	info.fds_only_bios = FALSE;
 	make_reset(CHANGE_ROM);
 	gui_update();
 	emu_thread_continue();
@@ -832,7 +831,6 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Disk_4_side_A, 6, SLOT(s_disk_side()));
 	connect_action(action_Disk_4_side_B, 7, SLOT(s_disk_side()));
 	connect_action(action_Switch_sides, 0xFFF, SLOT(s_disk_side()));
-	connect_action(action_Start_FDS_without_Disk, SLOT(s_start_fds_without_disk()));
 	connect_action(action_Eject_Insert_Disk, SLOT(s_eject_disk()));
 	connect_action(action_Tape_Play, SLOT(s_tape_play()));
 	connect_action(action_Tape_Record, SLOT(s_tape_record()));
@@ -986,16 +984,16 @@ void mainWindow::update_menu_file(void) {
 				!rom.suffix().compare("nes", Qt::CaseInsensitive) ||
 				!rom.suffix().compare("unf", Qt::CaseInsensitive) ||
 				!rom.suffix().compare("unif", Qt::CaseInsensitive)) {
-				action->setIcon(QIcon(":/icon/icons/nes_file.svg"));
+				action->setIcon(QIcon(":/icon/icons/nes_file.svgz"));
 			} else if (!rom.suffix().compare("nsf", Qt::CaseInsensitive) ||
 				!rom.suffix().compare("nsfe", Qt::CaseInsensitive)) {
-				action->setIcon(QIcon(":/icon/icons/nsf_file.svg"));
+				action->setIcon(QIcon(":/icon/icons/nsf_file.svgz"));
 			} else if (!rom.suffix().compare("fds", Qt::CaseInsensitive)) {
-				action->setIcon(QIcon(":/icon/icons/fds_file.svg"));
+				action->setIcon(QIcon(":/icon/icons/fds_file.svgz"));
 			} else if (!rom.suffix().compare("fm2", Qt::CaseInsensitive)) {
-				action->setIcon(QIcon(":/icon/icons/fm2_file.svg"));
+				action->setIcon(QIcon(":/icon/icons/fm2_file.svgz"));
 			} else {
-				action->setIcon(QIcon(":/icon/icons/compressed_file.svg"));
+				action->setIcon(QIcon(":/icon/icons/compressed_file.svgz"));
 			}
 
 			action->setProperty("myValue", QVariant(i));
@@ -1009,10 +1007,10 @@ void mainWindow::update_menu_nes(void) {
 
 	if (info.turn_off) {
 		action_text(action_Turn_Off, tr("&Turn On"), sc);
-		action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_on.svg"));
+		action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_on.svgz"));
 	} else {
 		action_text(action_Turn_Off, tr("&Turn Off"), sc);
-		action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_off.svg"));
+		action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_off.svgz"));
 	}
 
 	if (info.no_rom | rwnd.active) {
@@ -1095,7 +1093,7 @@ void mainWindow::update_menu_state(void) {
 void mainWindow::update_fds_menu(void) {
 	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
 
-	if (fds.info.enabled && !info.fds_only_bios && !rwnd.active) {
+	if (fds.info.enabled && !rwnd.active) {
 		if (fds.drive.disk_ejected) {
 			action_text(action_Eject_Insert_Disk, tr("&Insert disk"), sc);
 		} else {
@@ -1490,12 +1488,6 @@ void mainWindow::s_eject_disk(void) {
 	}
 	emu_thread_continue();
 	update_menu_nes();
-}
-void mainWindow::s_start_fds_without_disk(void) {
-	info.fds_only_bios = TRUE;
-	info.rom.file[0] = 0;
-	info.rom.change_rom[0] = 0;
-	make_reset(CHANGE_ROM);
 }
 void mainWindow::s_start_stop_audio_recording(void) {
 	if (info.no_rom) {
@@ -2387,7 +2379,6 @@ void mainWindow::s_et_reset(BYTE type) {
 }
 void mainWindow::s_et_gg_reset(void) {
 	emu_thread_pause();
-	info.fds_only_bios = FALSE;
 	make_reset(CHANGE_ROM);
 	gamegenie.phase = GG_FINISH;
 	emu_thread_continue();

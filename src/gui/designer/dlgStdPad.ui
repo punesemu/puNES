@@ -48,7 +48,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="resources.qrc">:/pics/pics/Nes_controller.svg</pixmap>
+         <pixmap resource="resources.qrc">:/pics/pics/Nes_controller.svgz</pixmap>
         </property>
        </widget>
       </item>
@@ -60,7 +60,7 @@
         <widget class="QWidget" name="tab_kbd">
          <attribute name="icon">
           <iconset resource="resources.qrc">
-           <normaloff>:/icon/icons/keyboard.svg</normaloff>:/icon/icons/keyboard.svg</iconset>
+           <normaloff>:/icon/icons/keyboard.svgz</normaloff>:/icon/icons/keyboard.svgz</iconset>
          </attribute>
          <attribute name="title">
           <string>Keyboard</string>
@@ -163,7 +163,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -183,7 +183,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -239,7 +239,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -259,7 +259,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -315,7 +315,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -335,7 +335,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -401,7 +401,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -421,7 +421,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -467,7 +467,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -487,7 +487,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -533,7 +533,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -553,7 +553,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -599,7 +599,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -619,7 +619,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -665,7 +665,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -685,7 +685,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -731,7 +731,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -751,7 +751,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -857,7 +857,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -877,7 +877,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -938,7 +938,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/icon/icons/state_inc.svg</normaloff>:/icon/icons/state_inc.svg</iconset>
+                <normaloff>:/icon/icons/state_inc.svgz</normaloff>:/icon/icons/state_inc.svgz</iconset>
               </property>
              </widget>
             </item>
@@ -949,7 +949,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
+                <normaloff>:/icon/icons/overscan_default.svgz</normaloff>:/icon/icons/overscan_default.svgz</iconset>
               </property>
              </widget>
             </item>
@@ -960,7 +960,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
               </property>
              </widget>
             </item>
@@ -1033,7 +1033,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
               </property>
              </widget>
             </item>
@@ -1044,7 +1044,7 @@
         <widget class="QWidget" name="tab_joy">
          <attribute name="icon">
           <iconset resource="resources.qrc">
-           <normaloff>:/icon/icons/input_config.svg</normaloff>:/icon/icons/input_config.svg</iconset>
+           <normaloff>:/icon/icons/input_config.svgz</normaloff>:/icon/icons/input_config.svgz</iconset>
          </attribute>
          <attribute name="title">
           <string>Joystick</string>
@@ -1145,7 +1145,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1165,7 +1165,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1211,7 +1211,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1231,7 +1231,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1277,7 +1277,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1297,7 +1297,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1363,7 +1363,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1383,7 +1383,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1449,7 +1449,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1469,7 +1469,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1525,7 +1525,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1545,7 +1545,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1591,7 +1591,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1611,7 +1611,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1667,7 +1667,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1687,7 +1687,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1733,7 +1733,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1753,7 +1753,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1809,7 +1809,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                  <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1829,7 +1829,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                  <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
                 </property>
                </widget>
               </item>
@@ -1910,7 +1910,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/icon/icons/state_inc.svg</normaloff>:/icon/icons/state_inc.svg</iconset>
+                <normaloff>:/icon/icons/state_inc.svgz</normaloff>:/icon/icons/state_inc.svgz</iconset>
               </property>
              </widget>
             </item>
@@ -1921,7 +1921,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
+                <normaloff>:/icon/icons/overscan_default.svgz</normaloff>:/icon/icons/overscan_default.svgz</iconset>
               </property>
              </widget>
             </item>
@@ -1932,7 +1932,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+                <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
               </property>
              </widget>
             </item>
@@ -1987,7 +1987,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+                <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
               </property>
              </widget>
             </item>
@@ -2122,7 +2122,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
+         <normaloff>:/icon/icons/save.svgz</normaloff>:/icon/icons/save.svgz</iconset>
        </property>
       </widget>
      </item>
@@ -2133,7 +2133,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/window_close.svg</normaloff>:/icon/icons/window_close.svg</iconset>
+         <normaloff>:/icon/icons/window_close.svgz</normaloff>:/icon/icons/window_close.svgz</iconset>
        </property>
       </widget>
      </item>

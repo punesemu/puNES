@@ -199,7 +199,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 #undef _max_speed
 	}
 
-	if (max_speed & !info.fds_only_bios) {
+	if (max_speed & !fds.info.bios_first_run) {
 		gui_max_speed_start();
 	} else {
 		gui_max_speed_stop();

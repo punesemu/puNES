@@ -198,7 +198,7 @@ void dlgStdPad::changeEvent(QEvent *event) {
 	}
 }
 void dlgStdPad::showEvent(QShowEvent *event) {
-	QSvgRenderer svg(QString(":/pics/pics/Nes_controller.svg"));
+	QSvgRenderer svg(QString(":/pics/pics/Nes_controller.svgz"));
 	float ratio = (float)svg.defaultSize().width() / (float)svg.defaultSize().height();
 	int w = image_pad->size().width();
 	int h = (int)((float)w / ratio);

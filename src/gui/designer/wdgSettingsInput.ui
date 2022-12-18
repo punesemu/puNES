@@ -40,7 +40,7 @@
      <widget class="QWidget" name="tab_Ports">
       <attribute name="icon">
        <iconset resource="resources.qrc">
-        <normaloff>:/icon/icons/rs_232_female.svg</normaloff>:/icon/icons/rs_232_female.svg</iconset>
+        <normaloff>:/icon/icons/rs_232_female.svgz</normaloff>:/icon/icons/rs_232_female.svgz</iconset>
       </attribute>
       <attribute name="title">
        <string>Ports</string>
@@ -123,7 +123,7 @@
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/icon/icons/settings_wrench.svg</normaloff>:/icon/icons/settings_wrench.svg</iconset>
+             <normaloff>:/icon/icons/settings_wrench.svgz</normaloff>:/icon/icons/settings_wrench.svgz</iconset>
            </property>
           </widget>
          </item>
@@ -168,7 +168,7 @@
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/icon/icons/settings_wrench.svg</normaloff>:/icon/icons/settings_wrench.svg</iconset>
+             <normaloff>:/icon/icons/settings_wrench.svgz</normaloff>:/icon/icons/settings_wrench.svgz</iconset>
            </property>
           </widget>
          </item>
@@ -295,7 +295,7 @@
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/icon/icons/settings_wrench.svg</normaloff>:/icon/icons/settings_wrench.svg</iconset>
+             <normaloff>:/icon/icons/settings_wrench.svgz</normaloff>:/icon/icons/settings_wrench.svgz</iconset>
            </property>
           </widget>
          </item>
@@ -313,7 +313,7 @@
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/icon/icons/settings_wrench.svg</normaloff>:/icon/icons/settings_wrench.svg</iconset>
+             <normaloff>:/icon/icons/settings_wrench.svgz</normaloff>:/icon/icons/settings_wrench.svgz</iconset>
            </property>
           </widget>
          </item>
@@ -324,7 +324,7 @@
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
+             <normaloff>:/icon/icons/overscan_default.svgz</normaloff>:/icon/icons/overscan_default.svgz</iconset>
            </property>
           </widget>
          </item>
@@ -402,7 +402,7 @@
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
-             <normaloff>:/icon/icons/settings_wrench.svg</normaloff>:/icon/icons/settings_wrench.svg</iconset>
+             <normaloff>:/icon/icons/settings_wrench.svgz</normaloff>:/icon/icons/settings_wrench.svgz</iconset>
            </property>
           </widget>
          </item>
@@ -413,7 +413,7 @@
      <widget class="QWidget" name="tab_Shortcuts">
       <attribute name="icon">
        <iconset resource="resources.qrc">
-        <normaloff>:/icon/icons/shortcuts.svg</normaloff>:/icon/icons/shortcuts.svg</iconset>
+        <normaloff>:/icon/icons/shortcuts.svgz</normaloff>:/icon/icons/shortcuts.svgz</iconset>
       </attribute>
       <attribute name="title">
        <string>Shortcuts</string>
@@ -495,7 +495,7 @@
              </property>
              <property name="icon">
               <iconset resource="resources.qrc">
-               <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+               <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
              </property>
             </widget>
            </item>
@@ -506,7 +506,7 @@
              </property>
              <property name="icon">
               <iconset resource="resources.qrc">
-               <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
+               <normaloff>:/icon/icons/overscan_default.svgz</normaloff>:/icon/icons/overscan_default.svgz</iconset>
              </property>
             </widget>
            </item>

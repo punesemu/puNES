@@ -36,7 +36,7 @@
      </property>
      <property name="icon">
       <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rwnd_step_forward.svg</normaloff>:/icon/icons/rwnd_step_forward.svg</iconset>
+       <normaloff>:/icon/icons/rwnd_step_forward.svgz</normaloff>:/icon/icons/rwnd_step_forward.svgz</iconset>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -56,7 +56,7 @@
      </property>
      <property name="icon">
       <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rwnd_step_backward.svg</normaloff>:/icon/icons/rwnd_step_backward.svg</iconset>
+       <normaloff>:/icon/icons/rwnd_step_backward.svgz</normaloff>:/icon/icons/rwnd_step_backward.svgz</iconset>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -76,7 +76,7 @@
      </property>
      <property name="icon">
       <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rwnd_pause.svg</normaloff>:/icon/icons/rwnd_pause.svg</iconset>
+       <normaloff>:/icon/icons/rwnd_pause.svgz</normaloff>:/icon/icons/rwnd_pause.svgz</iconset>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -93,7 +93,7 @@
      </property>
      <property name="icon">
       <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rwnd_fast_forward.svg</normaloff>:/icon/icons/rwnd_fast_forward.svg</iconset>
+       <normaloff>:/icon/icons/rwnd_fast_forward.svgz</normaloff>:/icon/icons/rwnd_fast_forward.svgz</iconset>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -110,7 +110,7 @@
      </property>
      <property name="icon">
       <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rwnd_fast_backward.svg</normaloff>:/icon/icons/rwnd_fast_backward.svg</iconset>
+       <normaloff>:/icon/icons/rwnd_fast_backward.svgz</normaloff>:/icon/icons/rwnd_fast_backward.svgz</iconset>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -127,7 +127,7 @@
      </property>
      <property name="icon">
       <iconset resource="resources.qrc">
-       <normaloff>:/icon/icons/rwnd_play.svg</normaloff>:/icon/icons/rwnd_play.svg</iconset>
+       <normaloff>:/icon/icons/rwnd_play.svgz</normaloff>:/icon/icons/rwnd_play.svgz</iconset>
      </property>
      <property name="checkable">
       <bool>false</bool>

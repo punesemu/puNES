@@ -210,7 +210,7 @@ void recStatusBar::desc_text(void) {
 	}
 }
 void recStatusBar::icon_pixmap(QIcon::Mode mode) {
-	icon->setPixmap(QIcon(":/icon/icons/recording_red.svg").pixmap(height(), height() - 4,  mode));
+	icon->setPixmap(QIcon(":/icon/icons/recording_red.svgz").pixmap(height(), height() - 4,  mode));
 }
 
 void recStatusBar::s_et_blink_icon(void) {

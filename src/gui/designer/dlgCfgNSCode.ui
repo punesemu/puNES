@@ -70,7 +70,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/default.svg</normaloff>:/icon/icons/default.svg</iconset>
+         <normaloff>:/icon/icons/default.svgz</normaloff>:/icon/icons/default.svgz</iconset>
        </property>
       </widget>
      </item>
@@ -93,7 +93,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+         <normaloff>:/icon/icons/trash.svgz</normaloff>:/icon/icons/trash.svgz</iconset>
        </property>
       </widget>
      </item>
@@ -111,7 +111,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
+         <normaloff>:/icon/icons/save.svgz</normaloff>:/icon/icons/save.svgz</iconset>
        </property>
       </widget>
      </item>
@@ -125,7 +125,7 @@
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/window_close.svg</normaloff>:/icon/icons/window_close.svg</iconset>
+         <normaloff>:/icon/icons/window_close.svgz</normaloff>:/icon/icons/window_close.svgz</iconset>
        </property>
       </widget>
      </item>

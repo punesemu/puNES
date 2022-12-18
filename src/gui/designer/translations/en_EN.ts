@@ -1489,10 +1489,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Start FDS Emulation &amp;without Disk</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Show Log</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2461,15 +2457,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Use fast forward when loading the BIOS or disk/side</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Switch the disk/side automatically</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Allow multiple instances of the emulator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use fast forward when loading the disk/side</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -62,9 +62,9 @@ void wdgSettingsPPU::changeEvent(QEvent *event) {
 void wdgSettingsPPU::showEvent(QShowEvent *event) {
 	int dim = fontMetrics().height();
 
-	icon_Sprites_and_background->setPixmap(QIcon(":/icon/icons/background.svg").pixmap(dim, dim));
-	icon_PPU_Overclock->setPixmap(QIcon(":/icon/icons/speedometer.svg").pixmap(dim, dim));
-	icon_PPU_Advanced->setPixmap(QIcon(":/icon/icons/chip.svg").pixmap(dim, dim));
+	icon_Sprites_and_background->setPixmap(QIcon(":/icon/icons/background.svgz").pixmap(dim, dim));
+	icon_PPU_Overclock->setPixmap(QIcon(":/icon/icons/speedometer.svgz").pixmap(dim, dim));
+	icon_PPU_Advanced->setPixmap(QIcon(":/icon/icons/chip.svgz").pixmap(dim, dim));
 
 	QWidget::showEvent(event);
 }

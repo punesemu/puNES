@@ -48,7 +48,7 @@ void wdgSettingsCheats::changeEvent(QEvent *event) {
 void wdgSettingsCheats::showEvent(QShowEvent *event) {
 	int dim = fontMetrics().height();
 
-	icon_Cheats_settings->setPixmap(QIcon(":/icon/icons/settings.svg").pixmap(dim, dim));
+	icon_Cheats_settings->setPixmap(QIcon(":/icon/icons/settings.svgz").pixmap(dim, dim));
 	QWidget::showEvent(event);
 }
 
