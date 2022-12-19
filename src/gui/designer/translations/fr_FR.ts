@@ -5,26 +5,26 @@
     <name>Settings</name>
     <message>
         <source>System Default</source>
-        <translation>Système par Défaut Default</translation>
+        <translation>Système par Défaut</translation>
     </message>
 </context>
 <context>
     <name>dlgCfgNSCode</name>
     <message>
         <source>Default</source>
-        <translation>Défaut</translation>
+        <translation type="unfinished">Défaut</translation>
     </message>
     <message>
         <source>Unset</source>
-        <translation>Désélectionner</translation>
+        <translation type="unfinished">Désélectionner</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation>Appliquer</translation>
+        <translation type="unfinished">Appliquer</translation>
     </message>
     <message>
         <source>Discard</source>
-        <translation>Jeter</translation>
+        <translation type="unfinished">Jeter</translation>
     </message>
 </context>
 <context>
@@ -42,507 +42,507 @@
     <name>dlgHeaderEditor</name>
     <message>
         <source>Attention</source>
-        <translation>Attention</translation>
+        <translation type="unfinished">Attention</translation>
     </message>
     <message>
         <source>Do you want to boot the ROM with the changes made?</source>
-        <translation>Voulez-vous démarrer la ROM avec les changements effectués ?</translation>
+        <translation type="unfinished">Voulez-vous démarrer la ROM avec les changements effectués ?</translation>
     </message>
     <message>
         <source>Header Editor</source>
-        <translation>Editeur d&apos;En-Tête</translation>
+        <translation type="unfinished">Editeur d'En-Tête</translation>
     </message>
     <message>
         <source>Mirroring</source>
-        <translation>Symétrie</translation>
+        <translation type="unfinished">Symétrie</translation>
     </message>
     <message>
         <source>Console Type</source>
-        <translation>Type de Console</translation>
+        <translation type="unfinished">Type de Console</translation>
     </message>
     <message>
         <source>PRG ROM KiB</source>
-        <translation>PRG ROM KiB</translation>
+        <translation type="unfinished">PRG ROM KiB</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Aucun</translation>
+        <translation type="unfinished">Aucun</translation>
     </message>
     <message>
         <source>128 Bytes</source>
-        <translation>128 Bytes</translation>
+        <translation type="unfinished">128 Bytes</translation>
     </message>
     <message>
         <source>256 Bytes</source>
-        <translation>256 Bytes</translation>
+        <translation type="unfinished">256 Bytes</translation>
     </message>
     <message>
         <source>512 Bytes</source>
-        <translation>512 Bytes</translation>
+        <translation type="unfinished">512 Bytes</translation>
     </message>
     <message>
         <source>1 KiB</source>
-        <translation>1 KiB</translation>
+        <translation type="unfinished">1 KiB</translation>
     </message>
     <message>
         <source>2 KiB</source>
-        <translation>2 KiB</translation>
+        <translation type="unfinished">2 KiB</translation>
     </message>
     <message>
         <source>4 KiB</source>
-        <translation>4 KiB</translation>
+        <translation type="unfinished">4 KiB</translation>
     </message>
     <message>
         <source>8 KiB</source>
-        <translation>8 KiB</translation>
+        <translation type="unfinished">8 KiB</translation>
     </message>
     <message>
         <source>16 KiB</source>
-        <translation>16 KiB</translation>
+        <translation type="unfinished">16 KiB</translation>
     </message>
     <message>
         <source>32 KiB</source>
-        <translation>32 KiB</translation>
+        <translation type="unfinished">32 KiB</translation>
     </message>
     <message>
         <source>64 KiB</source>
-        <translation>64 KiB</translation>
+        <translation type="unfinished">64 KiB</translation>
     </message>
     <message>
         <source>128 KiB</source>
-        <translation>128 KiB</translation>
+        <translation type="unfinished">128 KiB</translation>
     </message>
     <message>
         <source>256 KiB</source>
-        <translation>256 KiB</translation>
+        <translation type="unfinished">256 KiB</translation>
     </message>
     <message>
         <source>512 KiB</source>
-        <translation>512 KiB</translation>
+        <translation type="unfinished">512 KiB</translation>
     </message>
     <message>
         <source>1 MiB</source>
-        <translation>1 MiB</translation>
+        <translation type="unfinished">1 MiB</translation>
     </message>
     <message>
         <source>N/A</source>
-        <translation>N/A</translation>
+        <translation type="unfinished">N/A</translation>
     </message>
     <message>
         <source>Trainer</source>
-        <translation>Trainer</translation>
+        <translation type="unfinished">Trainer</translation>
     </message>
     <message>
         <source>Unspecified</source>
-        <translation>Non Spécifié</translation>
+        <translation type="unfinished">Non Spécifié</translation>
     </message>
     <message>
         <source>Standard Controllers</source>
-        <translation>Contrôleurs Standard</translation>
+        <translation type="unfinished">Contrôleurs Standard</translation>
     </message>
     <message>
         <source>NES Four Score/Satellite</source>
-        <translation>Four Score/Satellite NES</translation>
+        <translation type="unfinished">Four Score/Satellite NES</translation>
     </message>
     <message>
         <source>Famicom Four Players Adapter</source>
-        <translation>Adaptateur Famicom Four Players</translation>
+        <translation type="unfinished">Adaptateur Famicom Four Players</translation>
     </message>
     <message>
         <source>Vs. System</source>
-        <translation>Vs. System</translation>
+        <translation type="unfinished">Vs. System</translation>
     </message>
     <message>
         <source>Vs. System (1P via $4017)</source>
-        <translation>Vs. System (1P via $4017)</translation>
+        <translation type="unfinished">Vs. System (1P via $4017)</translation>
     </message>
     <message>
         <source>Reserved</source>
-        <translation>Réservé</translation>
+        <translation type="unfinished">Réservé</translation>
     </message>
     <message>
         <source>Vs. Zapper</source>
-        <translation>Vs. Zapper</translation>
+        <translation type="unfinished">Vs. Zapper</translation>
     </message>
     <message>
         <source>Zapper</source>
-        <translation>Zapper</translation>
+        <translation type="unfinished">Zapper</translation>
     </message>
     <message>
         <source>Two Zappers</source>
-        <translation>Deux Zappers</translation>
+        <translation type="unfinished">Deux Zappers</translation>
     </message>
     <message>
         <source>Bandai Hyper Shot Lightgun</source>
-        <translation>Bandai Hyper Shot Lightgun</translation>
+        <translation type="unfinished">Bandai Hyper Shot Lightgun</translation>
     </message>
     <message>
         <source>Power Pad Side A</source>
-        <translation>Power Pad Side A</translation>
+        <translation type="unfinished">Power Pad Side A</translation>
     </message>
     <message>
         <source>Power Pad Side B</source>
-        <translation>Power Pad Side B</translation>
+        <translation type="unfinished">Power Pad Side B</translation>
     </message>
     <message>
         <source>Family Trainer Side A</source>
-        <translation>Family Trainer Face A</translation>
+        <translation type="unfinished">Family Trainer Face A</translation>
     </message>
     <message>
         <source>Family Trainer Side B</source>
-        <translation>Family Trainer Face B</translation>
+        <translation type="unfinished">Family Trainer Face B</translation>
     </message>
     <message>
         <source>Arkanoid Paddle (NES)</source>
-        <translation>Arkanoid Paddle (NES)</translation>
+        <translation type="unfinished">Arkanoid Paddle (NES)</translation>
     </message>
     <message>
         <source>Arkanoid Paddle (Famicom)</source>
-        <translation>Arkanoid Paddle (Famicom)</translation>
+        <translation type="unfinished">Arkanoid Paddle (Famicom)</translation>
     </message>
     <message>
         <source>Two Paddles plus Famicom Data Recorder</source>
-        <translation>Deux Paddles plus Famicom Data Recorde</translation>
+        <translation type="unfinished">Deux Paddles plus Famicom Data Recorde</translation>
     </message>
     <message>
         <source>Konami Hyper Shot</source>
-        <translation>Konami Hyper Shot</translation>
+        <translation type="unfinished">Konami Hyper Shot</translation>
     </message>
     <message>
         <source>Coconuts Pachinko</source>
-        <translation>Coconuts Pachinko</translation>
+        <translation type="unfinished">Coconuts Pachinko</translation>
     </message>
     <message>
         <source>Exciting Boxing Punching Bag</source>
-        <translation>Exciting Boxing Punching Bag</translation>
+        <translation type="unfinished">Exciting Boxing Punching Bag</translation>
     </message>
     <message>
         <source>Jissen Mahjong Controller</source>
-        <translation>Contrôleur Jissen Mahjong</translation>
+        <translation type="unfinished">Contrôleur Jissen Mahjong</translation>
     </message>
     <message>
         <source>Party Tap</source>
-        <translation>Party Tap</translation>
+        <translation type="unfinished">Party Tap</translation>
     </message>
     <message>
         <source>Oeka Kids Tablet</source>
-        <translation>Tablette Oeka Kids</translation>
+        <translation type="unfinished">Tablette Oeka Kids</translation>
     </message>
     <message>
         <source>Sunsoft Barcode Battler</source>
-        <translation>Sunsoft Barcode Battler</translation>
+        <translation type="unfinished">Sunsoft Barcode Battler</translation>
     </message>
     <message>
         <source>Miracle Piano Keyboard</source>
-        <translation>Clavier Miracle Piano</translation>
+        <translation type="unfinished">Clavier Miracle Piano</translation>
     </message>
     <message>
         <source>Pokkun Moguraa</source>
-        <translation>Pokkun Moguraa</translation>
+        <translation type="unfinished">Pokkun Moguraa</translation>
     </message>
     <message>
         <source>Top Rider</source>
-        <translation>Top Rider</translation>
+        <translation type="unfinished">Top Rider</translation>
     </message>
     <message>
         <source>Double-Fisted</source>
-        <translation>Double-Fisted</translation>
+        <translation type="unfinished">Double-Fisted</translation>
     </message>
     <message>
         <source>Famicom 3D System</source>
-        <translation>Système Famicom 3D</translation>
+        <translation type="unfinished">Système Famicom 3D</translation>
     </message>
     <message>
         <source>Doremikko Keyboard</source>
-        <translation>Clavier Doremikko</translation>
+        <translation type="unfinished">Clavier Doremikko</translation>
     </message>
     <message>
         <source>R.O.B. Gyro Set</source>
-        <translation>R.O.B. Gyro Set</translation>
+        <translation type="unfinished">R.O.B. Gyro Set</translation>
     </message>
     <message>
         <source>Famicom Data Recorder</source>
-        <translation>Famicom Data Recorder</translation>
+        <translation type="unfinished">Famicom Data Recorder</translation>
     </message>
     <message>
         <source>ASCII Turbo File</source>
-        <translation>Fichier Turbo ASCII</translation>
+        <translation type="unfinished">Fichier Turbo ASCII</translation>
     </message>
     <message>
         <source>IGS Storage Battle Box</source>
-        <translation>IGS Storage Battle Box</translation>
+        <translation type="unfinished">IGS Storage Battle Box</translation>
     </message>
     <message>
         <source>Family BASIC Keyboard</source>
-        <translation>Clavier Family BASIC</translation>
+        <translation type="unfinished">Clavier Family BASIC</translation>
     </message>
     <message>
         <source>Dongda PEC-586 Keyboard</source>
-        <translation>Clavier Dongda PEC-586</translation>
+        <translation type="unfinished">Clavier Dongda PEC-586</translation>
     </message>
     <message>
         <source>Bit Corp. Bit-79 Keyboard</source>
-        <translation>Clavier Bit Corp. Bit-79</translation>
+        <translation type="unfinished">Clavier Bit Corp. Bit-79</translation>
     </message>
     <message>
         <source>Subor Keyboard</source>
-        <translation>Clavier Subor</translation>
+        <translation type="unfinished">Clavier Subor</translation>
     </message>
     <message>
         <source>Subor Keyboard plus 3x8-bit mouse</source>
-        <translation>Souris pour le Clavier Subor plus 3x8-bit</translation>
+        <translation type="unfinished">Souris pour le Clavier Subor plus 3x8-bit</translation>
     </message>
     <message>
         <source>Subor Keyboard plus 24-bit mouse</source>
-        <translation>Souris pour le Clavier Subor plus 24-bit</translation>
+        <translation type="unfinished">Souris pour le Clavier Subor plus 24-bit</translation>
     </message>
     <message>
         <source>SNES Mouse</source>
-        <translation>Souris SNES</translation>
+        <translation type="unfinished">Souris SNES</translation>
     </message>
     <message>
         <source>Multicart</source>
-        <translation>Multicart</translation>
+        <translation type="unfinished">Multicart</translation>
     </message>
     <message>
         <source>Two SNES controllers</source>
-        <translation>Deux Contrôleurs SNES</translation>
+        <translation type="unfinished">Deux Contrôleurs SNES</translation>
     </message>
     <message>
         <source>RacerMate Bicycle</source>
-        <translation>RacerMate Bicycle</translation>
+        <translation type="unfinished">RacerMate Bicycle</translation>
     </message>
     <message>
         <source>U-Force</source>
-        <translation>U-Force</translation>
+        <translation type="unfinished">U-Force</translation>
     </message>
     <message>
         <source>R.O.B. Stack-Up</source>
-        <translation>R.O.B. Stack-Up</translation>
+        <translation type="unfinished">R.O.B. Stack-Up</translation>
     </message>
     <message>
         <source>City Patrolman Lightgun</source>
-        <translation>City Patrolman Lightgun</translation>
+        <translation type="unfinished">City Patrolman Lightgun</translation>
     </message>
     <message>
         <source>Sharp C1 Cassette Interface</source>
-        <translation>Interface Cassette Sharp C1</translation>
+        <translation type="unfinished">Interface Cassette Sharp C1</translation>
     </message>
     <message>
         <source>Standard Controller (inverted direction)</source>
-        <translation>Contrôleur Standard (direction inversé)</translation>
+        <translation type="unfinished">Contrôleur Standard (direction inversé)</translation>
     </message>
     <message>
         <source>Excalibor Sudoku Pad</source>
-        <translation>Pad Excalibor Sudoku</translation>
+        <translation type="unfinished">Pad Excalibor Sudoku</translation>
     </message>
     <message>
         <source>ABL Pinball</source>
-        <translation>ABL Pinball</translation>
+        <translation type="unfinished">ABL Pinball</translation>
     </message>
     <message>
         <source>Golden Nugget Casino</source>
-        <translation>Golden Nugget Casino</translation>
+        <translation type="unfinished">Golden Nugget Casino</translation>
     </message>
     <message>
         <source>NTSC</source>
-        <translation>NTSC</translation>
+        <translation type="unfinished">NTSC</translation>
     </message>
     <message>
         <source>PAL</source>
-        <translation>PAL</translation>
+        <translation type="unfinished">PAL</translation>
     </message>
     <message>
         <source>Both</source>
-        <translation>Les Deux</translation>
+        <translation type="unfinished">Les Deux</translation>
     </message>
     <message>
         <source>Dendy</source>
-        <translation>Dendy</translation>
+        <translation type="unfinished">Dendy</translation>
     </message>
     <message>
         <source>VS Type</source>
-        <translation>Type VS</translation>
+        <translation type="unfinished">Type VS</translation>
     </message>
     <message>
         <source>Horizontal</source>
-        <translation>Horizontal</translation>
+        <translation type="unfinished">Horizontal</translation>
     </message>
     <message>
         <source>Vertical</source>
-        <translation>Vertical</translation>
+        <translation type="unfinished">Vertical</translation>
     </message>
     <message>
         <source>4-Screen</source>
-        <translation>4-écrans</translation>
+        <translation type="unfinished">4-écrans</translation>
     </message>
     <message>
         <source>CPU Timing</source>
-        <translation>Timing CPU</translation>
+        <translation type="unfinished">Timing CPU</translation>
     </message>
     <message>
         <source>VS PPU</source>
-        <translation>PPU VS</translation>
+        <translation type="unfinished">PPU VS</translation>
     </message>
     <message>
         <source>CHR ROM KiB</source>
-        <translation>CHR ROM KiB</translation>
+        <translation type="unfinished">CHR ROM KiB</translation>
     </message>
     <message>
         <source>NES/Famicom/Dendy</source>
-        <translation>NES/Famicom/Dendy</translation>
+        <translation type="unfinished">NES/Famicom/Dendy</translation>
     </message>
     <message>
         <source>Playchoice 10</source>
-        <translation>Playchoice 10</translation>
+        <translation type="unfinished">Playchoice 10</translation>
     </message>
     <message>
         <source>Famiclone with Decimal Mode</source>
-        <translation>Famiclone avec le Mode Décimal</translation>
+        <translation type="unfinished">Famiclone avec le Mode Décimal</translation>
     </message>
     <message>
         <source>NES/Famicom with EPSM</source>
-        <translation>NES/Famicom avec EPSM</translation>
+        <translation type="unfinished">NES/Famicom avec EPSM</translation>
     </message>
     <message>
         <source>VT01</source>
-        <translation>VT01</translation>
+        <translation type="unfinished">VT01</translation>
     </message>
     <message>
         <source>VT02</source>
-        <translation>VT02</translation>
+        <translation type="unfinished">VT02</translation>
     </message>
     <message>
         <source>VT03</source>
-        <translation>VT03</translation>
+        <translation type="unfinished">VT03</translation>
     </message>
     <message>
         <source>VT09</source>
-        <translation>VT09</translation>
+        <translation type="unfinished">VT09</translation>
     </message>
     <message>
         <source>VT32</source>
-        <translation>VT32</translation>
+        <translation type="unfinished">VT32</translation>
     </message>
     <message>
         <source>VT369</source>
-        <translation>VT369</translation>
+        <translation type="unfinished">VT369</translation>
     </message>
     <message>
         <source>UMC UM6578</source>
-        <translation>UMC UM6578</translation>
+        <translation type="unfinished">UMC UM6578</translation>
     </message>
     <message>
         <source>Famicom Network System</source>
-        <translation>Système Réseau Famicom</translation>
+        <translation type="unfinished">Système Réseau Famicom</translation>
     </message>
     <message>
         <source>File</source>
-        <translation>Fichier</translation>
+        <translation type="unfinished">Fichier</translation>
     </message>
     <message>
         <source>CHR RAM Battery</source>
-        <translation>Batterie RAM CHR</translation>
+        <translation type="unfinished">Batterie RAM CHR</translation>
     </message>
     <message>
         <source>Mapper</source>
-        <translation>Mapper</translation>
+        <translation type="unfinished">Mapper</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>Normal</translation>
+        <translation type="unfinished">Normal</translation>
     </message>
     <message>
         <source>RBI Baseball</source>
-        <translation>RBI Baseball</translation>
+        <translation type="unfinished">RBI Baseball</translation>
     </message>
     <message>
         <source>TKO Boxing</source>
-        <translation>TKO Boxing</translation>
+        <translation type="unfinished">TKO Boxing</translation>
     </message>
     <message>
         <source>Super Xevious</source>
-        <translation>Super Xevious</translation>
+        <translation type="unfinished">Super Xevious</translation>
     </message>
     <message>
         <source>Vs. Ice Climber</source>
-        <translation>Vs. Ice Climber</translation>
+        <translation type="unfinished">Vs. Ice Climber</translation>
     </message>
     <message>
         <source>Vs. Dual</source>
-        <translation>Vs. Dual</translation>
+        <translation type="unfinished">Vs. Dual</translation>
     </message>
     <message>
         <source>Raid on Bungeling Bay</source>
-        <translation>Raid on Bungeling Bay</translation>
+        <translation type="unfinished">Raid on Bungeling Bay</translation>
     </message>
     <message>
         <source>PRG RAM</source>
-        <translation>RAM PRG</translation>
+        <translation type="unfinished">RAM PRG</translation>
     </message>
     <message>
         <source>iNES 1.0</source>
-        <translation>iNES 1.0</translation>
+        <translation type="unfinished">iNES 1.0</translation>
     </message>
     <message>
         <source>NES 2.0</source>
-        <translation>NES 2.0</translation>
+        <translation type="unfinished">NES 2.0</translation>
     </message>
     <message>
         <source>Submapper</source>
-        <translation>Sous Mapper</translation>
+        <translation type="unfinished">Sous Mapper</translation>
     </message>
     <message>
         <source>RP2C03B</source>
-        <translation>RP2C03B</translation>
+        <translation type="unfinished">RP2C03B</translation>
     </message>
     <message>
         <source>RP2C03G</source>
-        <translation>RP2C03G</translation>
+        <translation type="unfinished">RP2C03G</translation>
     </message>
     <message>
         <source>RP2C04-0001</source>
-        <translation>RP2C04-0001</translation>
+        <translation type="unfinished">RP2C04-0001</translation>
     </message>
     <message>
         <source>RP2C04-0002</source>
-        <translation>RP2C04-0002</translation>
+        <translation type="unfinished">RP2C04-0002</translation>
     </message>
     <message>
         <source>RP2C04-0003</source>
-        <translation>RP2C04-0003</translation>
+        <translation type="unfinished">RP2C04-0003</translation>
     </message>
     <message>
         <source>RP2C04-0004</source>
-        <translation>RP2C04-0004</translation>
+        <translation type="unfinished">RP2C04-0004</translation>
     </message>
     <message>
         <source>RC2C03B</source>
-        <translation>RC2C03B</translation>
+        <translation type="unfinished">RC2C03B</translation>
     </message>
     <message>
         <source>RC2C03C</source>
-        <translation>RC2C03C</translation>
+        <translation type="unfinished">RC2C03C</translation>
     </message>
     <message>
         <source>RC2C05-01</source>
-        <translation>RC2C05-01</translation>
+        <translation type="unfinished">RC2C05-01</translation>
     </message>
     <message>
         <source>RC2C05-02</source>
-        <translation>&gt;RC2C05-02</translation>
+        <translation type="unfinished">>RC2C05-02</translation>
     </message>
     <message>
         <source>RC2C05-03</source>
-        <translation>RC2C05-03</translation>
+        <translation type="unfinished">RC2C05-03</translation>
     </message>
     <message>
         <source>RC2C05-04</source>
-        <translation>RC2C05-04</translation>
+        <translation type="unfinished">RC2C05-04</translation>
     </message>
     <message>
         <source>RC2C05-05</source>
-        <translation>RC2C05-05</translation>
+        <translation type="unfinished">RC2C05-05</translation>
     </message>
     <message>
         <source>Header</source>
@@ -550,39 +550,39 @@
     </message>
     <message>
         <source>PRG RAM Battery</source>
-        <translation>Batterie RAM PRG</translation>
+        <translation type="unfinished">Batterie RAM PRG</translation>
     </message>
     <message>
         <source>CHR RAM</source>
-        <translation>RAM CHR</translation>
+        <translation type="unfinished">RAM CHR</translation>
     </message>
     <message>
         <source>Input</source>
-        <translation>Contrôleur</translation>
+        <translation type="unfinished">Contrôleur</translation>
     </message>
     <message>
         <source>Misc ROMs</source>
-        <translation>Roms Diverses</translation>
+        <translation type="unfinished">Roms Diverses</translation>
     </message>
     <message>
         <source>Battery</source>
-        <translation>Batterie</translation>
+        <translation type="unfinished">Batterie</translation>
     </message>
     <message>
         <source>Misc</source>
-        <translation>Divers</translation>
+        <translation type="unfinished">Divers</translation>
     </message>
     <message>
         <source>Reset to default</source>
-        <translation>Redémarrer par Défaut</translation>
+        <translation type="unfinished">Redémarrer par Défaut</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Sauvegarder</translation>
+        <translation type="unfinished">Sauvegarder</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation type="unfinished">Annuler</translation>
     </message>
 </context>
 <context>
@@ -604,54 +604,54 @@
     </message>
     <message>
         <source>Size</source>
-        <translation>Taille</translation>
+        <translation type="unfinished">Taille</translation>
     </message>
     <message>
         <source>1.0x</source>
-        <translation>1.0x</translation>
+        <translation type="unfinished">1.0x</translation>
     </message>
     <message>
         <source>1.5x</source>
-        <translation>1.5x</translation>
+        <translation type="unfinished">1.5x</translation>
     </message>
     <message>
         <source>2.0x</source>
-        <translation>2.0x</translation>
+        <translation type="unfinished">2.0x</translation>
     </message>
     <message>
         <source>2.5x</source>
-        <translation>2.5x</translation>
+        <translation type="unfinished">2.5x</translation>
     </message>
     <message>
         <source>Mode</source>
-        <translation>Mode</translation>
+        <translation type="unfinished">Mode</translation>
     </message>
     <message>
         <source>Virtual Keyboard</source>
-        <translation>Clavier Virtuel</translation>
+        <translation type="unfinished">Clavier Virtuel</translation>
     </message>
     <message>
         <source>Setup</source>
-        <translation>Configuration</translation>
+        <translation type="unfinished">Configuration</translation>
     </message>
     <message>
         <source>Subor Keyboard</source>
-        <translation>Clavier Subor</translation>
+        <translation type="unfinished">Clavier Subor</translation>
     </message>
     <message>
         <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
-        <translation>Mode Etendue (Activer le support pour le keypad, F10, F11, F12 et &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; ont des problèmes avec ce mode.)</translation>
+        <translation type="unfinished">Mode Etendue (Activer le support pour le keypad, F10, F11, F12 et &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; ont des problèmes avec ce mode.)</translation>
     </message>
 </context>
 <context>
     <name>dlgLog</name>
     <message>
         <source>Log</source>
-        <translation>Journal</translation>
+        <translation type="unfinished">Journal</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Fermer</translation>
+        <translation type="unfinished">Fermer</translation>
     </message>
 </context>
 <context>
@@ -670,7 +670,7 @@
     </message>
     <message>
         <source>Audio</source>
-        <translation>Audio</translation>
+        <translation type="unfinished">Audio</translation>
     </message>
     <message>
         <source>Input</source>
@@ -678,11 +678,11 @@
     </message>
     <message>
         <source>PPU</source>
-        <translation>PPU</translation>
+        <translation type="unfinished">PPU</translation>
     </message>
     <message>
         <source>Cheats</source>
-        <translation>Cheats</translation>
+        <translation type="unfinished">Cheats</translation>
     </message>
     <message>
         <source>Save Settings</source>
@@ -730,7 +730,7 @@
     </message>
     <message>
         <source>Capture/Release Input</source>
-        <translation>Capturer/Libérer les Entrées</translation>
+        <translation type="unfinished">Capturer/Libérer les Entrées</translation>
     </message>
 </context>
 <context>
@@ -741,15 +741,15 @@
     </message>
     <message>
         <source>Auto</source>
-        <translation>Auto</translation>
+        <translation type="unfinished">Auto</translation>
     </message>
     <message>
         <source>Original</source>
-        <translation>Original</translation>
+        <translation type="unfinished">Original</translation>
     </message>
     <message>
         <source>3rd-party</source>
-        <translation>3rd-party</translation>
+        <translation type="unfinished">3rd-party</translation>
     </message>
     <message>
         <source>Keyboard</source>
@@ -769,7 +769,7 @@
     </message>
     <message>
         <source>ID</source>
-        <translation>ID</translation>
+        <translation type="unfinished">ID</translation>
     </message>
     <message>
         <source>Up</source>
@@ -777,7 +777,7 @@
     </message>
     <message>
         <source>A</source>
-        <translation>A</translation>
+        <translation type="unfinished">A</translation>
     </message>
     <message>
         <source>Down</source>
@@ -793,23 +793,23 @@
     </message>
     <message>
         <source>Start</source>
-        <translation>Start</translation>
+        <translation type="unfinished">Start</translation>
     </message>
     <message>
         <source>Turbo B</source>
-        <translation>Turbo B</translation>
+        <translation type="unfinished">Turbo B</translation>
     </message>
     <message>
         <source>Select</source>
-        <translation>Select</translation>
+        <translation type="unfinished">Select</translation>
     </message>
     <message>
         <source>Turbo A</source>
-        <translation>Turbo A</translation>
+        <translation type="unfinished">Turbo A</translation>
     </message>
     <message>
         <source>B</source>
-        <translation>B</translation>
+        <translation type="unfinished">B</translation>
     </message>
     <message>
         <source>Right</source>
@@ -829,7 +829,7 @@
     </message>
     <message>
         <source>Joystick</source>
-        <translation>Joystick</translation>
+        <translation type="unfinished">Joystick</translation>
     </message>
     <message>
         <source>Misc</source>
@@ -884,7 +884,7 @@
     </message>
     <message>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation type="unfinished">OK</translation>
     </message>
     <message>
         <source>None</source>
@@ -919,35 +919,35 @@
     </message>
     <message>
         <source>4</source>
-        <translation>4</translation>
+        <translation type="unfinished">4</translation>
     </message>
     <message>
         <source>5</source>
-        <translation>5</translation>
+        <translation type="unfinished">5</translation>
     </message>
     <message>
         <source>6</source>
-        <translation>6</translation>
+        <translation type="unfinished">6</translation>
     </message>
     <message>
         <source>7</source>
-        <translation>7</translation>
+        <translation type="unfinished">7</translation>
     </message>
     <message>
         <source>8</source>
-        <translation>8</translation>
+        <translation type="unfinished">8</translation>
     </message>
     <message>
         <source>3</source>
-        <translation>3</translation>
+        <translation type="unfinished">3</translation>
     </message>
     <message>
         <source>2</source>
-        <translation>2</translation>
+        <translation type="unfinished">2</translation>
     </message>
     <message>
         <source>1</source>
-        <translation>1</translation>
+        <translation type="unfinished">1</translation>
     </message>
     <message>
         <source>Defaults Game Dip Switches</source>
@@ -966,55 +966,55 @@
     <message>
         <source>%1 folders</source>
         <extracomment>Do not translate %1</extracomment>
-        <translation>%1 dossiers</translation>
+        <translation type="unfinished">%1 dossiers</translation>
     </message>
     <message>
         <source>Error on create config folder</source>
-        <translation>Erreur lors de la création du dossier config</translation>
+        <translation type="unfinished">Erreur lors de la création du dossier config</translation>
     </message>
     <message>
         <source>Error on create data folder</source>
-        <translation>Erreur lors de la création du dossier data</translation>
+        <translation type="unfinished">Erreur lors de la création du dossier data </translation>
     </message>
     <message>
         <source>Error on create temp folder</source>
-        <translation>Erreur lors de la création du dossier temp</translation>
+        <translation type="unfinished">Erreur lors de la création du dossier temp</translation>
     </message>
     <message>
         <source>Error on create cheat folder</source>
-        <translation>Erreur lors de la création du dossier cheat</translation>
+        <translation type="unfinished">Erreur lors de la création du dossier cheat</translation>
     </message>
     <message>
         <source>Error on create psg folder</source>
-        <translation>Erreur lors de la création du dossier psg</translation>
+        <translation type="unfinished">Erreur lors de la création du dossier psg</translation>
     </message>
     <message>
         <source>Error on create shp folder</source>
-        <translation>Erreur lors de la création du dossier shp</translation>
+        <translation type="unfinished">Erreur lors de la création du dossier shp</translation>
     </message>
     <message>
         <source>Error on create jsc folder</source>
-        <translation>Erreur lors de la création du dossier jsc</translation>
+        <translation type="unfinished">Erreur lors de la création du dossier jsc</translation>
     </message>
     <message>
         <source>Error on create bios folder</source>
-        <translation>Erreur lors de la création du dossier bios</translation>
+        <translation type="unfinished">Erreur lors de la création du dossier bios</translation>
     </message>
     <message>
         <source>Error on create diff folder</source>
-        <translation>Erreur lors de la création du dossier diff</translation>
+        <translation type="unfinished">Erreur lors de la création du dossier diff</translation>
     </message>
     <message>
         <source>Error on create prb folder</source>
-        <translation>Erreur lors de la création du dossier prb</translation>
+        <translation type="unfinished">Erreur lors de la création du dossier prb</translation>
     </message>
     <message>
         <source>Error on create save folder</source>
-        <translation>Erreur lors de la création du dossier sauvegarde</translation>
+        <translation type="unfinished">Erreur lors de la création du dossier sauvegarde </translation>
     </message>
     <message>
         <source>Error on create screenshot folder</source>
-        <translation>Erreur lors de la création du dossier copie d&apos;écran</translation>
+        <translation type="unfinished">Erreur lors de la création du dossier copie d'écran </translation>
     </message>
 </context>
 <context>
@@ -1149,7 +1149,7 @@
     </message>
     <message>
         <source>F&amp;ullscreen</source>
-        <translation>F&amp;lein Ecran</translation>
+        <translation>P&amp;lein Ecran</translation>
     </message>
     <message>
         <source>&amp;Game Genie Rom Mode</source>
@@ -1229,7 +1229,7 @@
     </message>
     <message>
         <source>&amp;Pause</source>
-        <translation>&amp;Pause</translation>
+        <translation type="unfinished">&amp;Pause</translation>
     </message>
     <message>
         <source>Save Screens&amp;hot</source>
@@ -1253,7 +1253,7 @@
     </message>
     <message>
         <source>&amp;NES</source>
-        <translation>&amp;NES</translation>
+        <translation type="unfinished">&amp;NES</translation>
     </message>
     <message>
         <source>&amp;Disk Side</source>
@@ -1269,7 +1269,7 @@
     </message>
     <message>
         <source>&amp;Audio</source>
-        <translation>&amp;Audio</translation>
+        <translation type="unfinished">&amp;Audio</translation>
     </message>
     <message>
         <source>&amp;Input</source>
@@ -1277,11 +1277,11 @@
     </message>
     <message>
         <source>&amp;Cheats</source>
-        <translation>&amp;Cheats</translation>
+        <translation type="unfinished">&amp;Cheats</translation>
     </message>
     <message>
         <source>&amp;PPU</source>
-        <translation>&amp;PPU</translation>
+        <translation type="unfinished">&amp;PPU</translation>
     </message>
     <message>
         <source>S&amp;tate</source>
@@ -1365,7 +1365,7 @@
     </message>
     <message>
         <source>Widgets</source>
-        <translation>Widgets</translation>
+        <translation type="unfinished">Widgets</translation>
     </message>
     <message>
         <source>Start &amp;AUDIO recording</source>
@@ -1418,7 +1418,7 @@
     </message>
     <message>
         <source>Fast Forward (hold button)</source>
-        <translation>Avance Rapide (Maintenir le bouton)</translation>
+        <translation type="unfinished">Avance Rapide (Maintenir le bouton)</translation>
     </message>
     <message>
         <source>puNES tape image</source>
@@ -1442,11 +1442,11 @@
     </message>
     <message>
         <source>Unsupported format</source>
-        <translation>Format Non Supporté</translation>
+        <translation type="unfinished">Format Non Supporté</translation>
     </message>
     <message>
         <source>Error opening tape image file</source>
-        <translation type="unfinished">Erreur à l&apos;ouverture du fichier image K7</translation>
+        <translation type="unfinished">Erreur à l'ouverture du fichier image K7</translation>
     </message>
     <message>
         <source>WAVE tape image</source>
@@ -1458,39 +1458,39 @@
     </message>
     <message>
         <source>Toggle &amp;Fast Forward</source>
-        <translation>Basculer sur l&apos;Avance &amp;Rapide</translation>
+        <translation type="unfinished">Basculer sur l'Avance &amp;Rapide</translation>
     </message>
     <message>
         <source>Toggle Virtual &amp;Keyboard</source>
-        <translation>Basculer sur &amp;Clavier Virtuel</translation>
+        <translation type="unfinished">Basculer sur &amp;Clavier Virtuel</translation>
     </message>
     <message>
         <source>&amp;Play</source>
-        <translation>&amp;Lancer</translation>
+        <translation type="unfinished">&amp;Lancer</translation>
     </message>
     <message>
         <source>&amp;Record</source>
-        <translation>&amp;Enregistrer</translation>
+        <translation type="unfinished">amp;Enregistrer</translation>
     </message>
     <message>
         <source>&amp;Stop</source>
-        <translation>Arrê&amp;ter</translation>
+        <translation type="unfinished">Arrê&amp;ter</translation>
     </message>
     <message>
         <source>Shout into &amp;Microphone</source>
-        <translation>Crier dans le &amp;Microphone</translation>
+        <translation type="unfinished">Crier dans le &amp;Microphone</translation>
     </message>
     <message>
         <source>&amp;Open config folder</source>
-        <translation>&amp;Ouvrir le dossier config</translation>
+        <translation type="unfinished">&amp;Ouvrir le dossier config</translation>
     </message>
     <message>
         <source>&amp;Show Log</source>
-        <translation>A&amp;fficher le J§ournal</translation>
+        <translation type="unfinished">A&amp;fficher le Journal</translation>
     </message>
     <message>
         <source>Edit Current iNES/NES2.0 &amp;Header</source>
-        <translation>Editer l&apos;&amp;En-Tête iNES/NES2.0 en cours</translation>
+        <translation type="unfinished">Editer l'&amp;En-Tête iNES/NES2.0 en cours</translation>
     </message>
     <message>
         <source>Ta&amp;pe</source>
@@ -1501,19 +1501,19 @@
     <name>nesKeyboardStatusBar</name>
     <message>
         <source>Capture/Release the Input</source>
-        <translation>Capturer/Libérer l&apos;Entrée</translation>
+        <translation type="unfinished">Capturer/Libérer l'Entrée</translation>
     </message>
     <message>
         <source>Input is released</source>
-        <translation>L&apos;Entrée a été libérée</translation>
+        <translation type="unfinished">L'Entrée a été libérée</translation>
     </message>
     <message>
         <source>Input is captured</source>
-        <translation>L&apos;Entrée a été capturé</translation>
+        <translation type="unfinished">L'Entrée a été capturé</translation>
     </message>
     <message>
         <source>Toggle Virtual Keyboard</source>
-        <translation>Basculer sur le Clavier Virtuel</translation>
+        <translation type="unfinished">Basculer sur le Clavier Virtuel</translation>
     </message>
 </context>
 <context>
@@ -1716,19 +1716,19 @@
     <message>
         <source>keyboard input captured</source>
         <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation>L&apos;entrée du Clavier est capturée</translation>
+        <translation type="unfinished">L'entrée du Clavier est capturée</translation>
     </message>
     <message>
         <source>keyboard input released</source>
         <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation>L&apos;entrée du Clavier est libérée</translation>
+        <translation type="unfinished">L'entrée du Clavier est libérée</translation>
     </message>
 </context>
 <context>
     <name>recStatusBar</name>
     <message>
         <source>Audio</source>
-        <translation>Audio</translation>
+        <translation type="unfinished">Audio</translation>
     </message>
     <message>
         <source>Video</source>
@@ -1739,7 +1739,7 @@
     <name>suborKeyboard</name>
     <message>
         <source>Subor Keyboard</source>
-        <translation>Clavier Subor</translation>
+        <translation type="unfinished">Clavier Subor</translation>
     </message>
 </context>
 <context>
@@ -1754,7 +1754,7 @@
     </message>
     <message>
         <source>DMC</source>
-        <translation>DMC</translation>
+        <translation type="unfinished">DMC</translation>
     </message>
     <message>
         <source>Noise</source>
@@ -1766,7 +1766,7 @@
     </message>
     <message>
         <source>Extra</source>
-        <translation>Supplémentaire</translation>
+        <translation type="unfinished">Supplémentaire</translation>
     </message>
     <message>
         <source>Master</source>
@@ -1774,15 +1774,15 @@
     </message>
     <message>
         <source>Triangle</source>
-        <translation>Triangle</translation>
+        <translation type="unfinished">Triangle</translation>
     </message>
     <message>
         <source>active</source>
-        <translation>actif</translation>
+        <translation type="unfinished">actif</translation>
     </message>
     <message>
         <source>volume</source>
-        <translation>volume</translation>
+        <translation type="unfinished">volume</translation>
     </message>
     <message>
         <source>Active all</source>
@@ -1809,11 +1809,11 @@
     </message>
     <message>
         <source>Description</source>
-        <translation>Description</translation>
+        <translation type="unfinished">Description</translation>
     </message>
     <message>
         <source>Code</source>
-        <translation>Code</translation>
+        <translation type="unfinished">Code</translation>
     </message>
     <message>
         <source>Address</source>
@@ -1849,7 +1849,7 @@
     </message>
     <message>
         <source>Pro Action Rocky</source>
-        <translation>Pro Action Rocky</translation>
+        <translation type="unfinished">Pro Action Rocky</translation>
     </message>
     <message>
         <source>Game Genie</source>
@@ -1885,14 +1885,14 @@
     </message>
     <message>
         <source>New CPU Ram</source>
-        <translation>Nouvelle RAM CPU</translation>
+        <translation type="unfinished">Nouvelle RAM CPU</translation>
     </message>
 </context>
 <context>
     <name>wdgCheatsEditor</name>
     <message>
         <source>Show Tools</source>
-        <translation>Afficher les Outilss</translation>
+        <translation>Afficher les Outils</translation>
     </message>
     <message>
         <source>Hide Tools</source>
@@ -1932,26 +1932,26 @@
     </message>
     <message>
         <source>Nestopia XML files</source>
-        <translation>Fichiers XML Nestopia</translation>
+        <translation type="unfinished">Fichiers XML Nestopia</translation>
     </message>
     <message>
         <source>Mame 128+ XML files</source>
-        <translation>Fichiers XML Mame 128+</translation>
+        <translation type="unfinished">Fichiers XML Mame 128+</translation>
     </message>
     <message>
         <source>FCEUX CHT files</source>
-        <translation>Fichiers CHT FCEUX</translation>
+        <translation type="unfinished">Fichiers CHT FCEUX</translation>
     </message>
     <message>
         <source>libretro CHT files</source>
-        <translation>Fichiers CHT Libretro</translation>
+        <translation type="unfinished">Fichiers CHT Libretro</translation>
     </message>
 </context>
 <context>
     <name>wdgKeyboard</name>
     <message>
         <source>Virtual Keyboard</source>
-        <translation>Clavier Virtuel</translation>
+        <translation type="unfinished">Clavier Virtuel</translation>
     </message>
 </context>
 <context>
@@ -1974,19 +1974,19 @@
     </message>
     <message>
         <source>Gamma</source>
-        <translation>Gamma</translation>
+        <translation type="unfinished">Gamma</translation>
     </message>
     <message>
         <source>Bleed</source>
-        <translation>Bleed</translation>
+        <translation type="unfinished">Bleed</translation>
     </message>
     <message>
         <source>MFields</source>
-        <translation>MFields</translation>
+        <translation type="unfinished">MFields</translation>
     </message>
     <message>
         <source>VBlend</source>
-        <translation>VBlend</translation>
+        <translation type="unfinished">VBlend</translation>
     </message>
     <message>
         <source>Sharpness</source>
@@ -2006,18 +2006,18 @@
     </message>
     <message>
         <source>Saturation</source>
-        <translation>Saturation</translation>
+        <translation type="unfinished">Saturation</translation>
     </message>
     <message>
         <source>Scanline</source>
-        <translation>Scanline</translation>
+        <translation type="unfinished">Scanline</translation>
     </message>
 </context>
 <context>
     <name>wdgPaletteEditor</name>
     <message>
         <source>Palette files</source>
-        <translation>Fichiers Palette</translation>
+        <translation type="unfinished">Fichiers Palette</translation>
     </message>
     <message>
         <source>All files</source>
@@ -2033,11 +2033,11 @@
     </message>
     <message>
         <source>PPU</source>
-        <translation>PPU</translation>
+        <translation type="unfinished">PPU</translation>
     </message>
     <message>
         <source>Val</source>
-        <translation>Val</translation>
+        <translation type="unfinished">Val</translation>
     </message>
     <message>
         <source>Blue</source>
@@ -2053,7 +2053,7 @@
     </message>
     <message>
         <source>Sat</source>
-        <translation>Sat</translation>
+        <translation type="unfinished">Sat</translation>
     </message>
     <message>
         <source>Hue</source>
@@ -2061,7 +2061,7 @@
     </message>
     <message>
         <source>HTML</source>
-        <translation>HTML</translation>
+        <translation type="unfinished">HTML</translation>
     </message>
     <message>
         <source>Reset color</source>
@@ -2119,7 +2119,7 @@
     </message>
     <message>
         <source>Pause</source>
-        <translation>Pause</translation>
+        <translation type="unfinished">Pause</translation>
     </message>
     <message>
         <source>Fast forward (from 1x to 8x)</source>
@@ -2161,7 +2161,7 @@
     <name>wdgScreen</name>
     <message>
         <source>Paste</source>
-        <translation>Coller</translation>
+        <translation type="unfinished">Coller</translation>
     </message>
     <message>
         <source>Tape</source>
@@ -2169,15 +2169,15 @@
     </message>
     <message>
         <source>Play</source>
-        <translation>Lancer</translation>
+        <translation type="unfinished">Lancer</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation>Enregistrer</translation>
+        <translation type="unfinished">Enregistrer</translation>
     </message>
     <message>
         <source>Stop</source>
-        <translation>Arrêter</translation>
+        <translation type="unfinished">Arrêter</translation>
     </message>
 </context>
 <context>
@@ -2196,7 +2196,7 @@
     </message>
     <message>
         <source>Mono</source>
-        <translation>Mono</translation>
+        <translation type="unfinished">Mono</translation>
     </message>
     <message>
         <source>Stereo Delay</source>
@@ -2228,7 +2228,7 @@
     </message>
     <message>
         <source>Swap Duty Cycles</source>
-        <translation>Permuation du Cycle d&apos;Utilisation</translation>
+        <translation>Permutation du Cycle d&apos;Utilisation</translation>
     </message>
     <message>
         <source>Enable Audio</source>
@@ -2240,27 +2240,27 @@
     </message>
     <message>
         <source>192000</source>
-        <translation>192000</translation>
+        <translation type="unfinished">192000</translation>
     </message>
     <message>
         <source>96000</source>
-        <translation>96000</translation>
+        <translation type="unfinished">96000</translation>
     </message>
     <message>
         <source>48000</source>
-        <translation>48000</translation>
+        <translation type="unfinished">48000</translation>
     </message>
     <message>
         <source>44100</source>
-        <translation>44100</translation>
+        <translation type="unfinished">44100</translation>
     </message>
     <message>
         <source>22050</source>
-        <translation>22050</translation>
+        <translation type="unfinished">22050</translation>
     </message>
     <message>
         <source>11025</source>
-        <translation>11025</translation>
+        <translation type="unfinished">11025</translation>
     </message>
 </context>
 <context>
@@ -2290,7 +2290,7 @@
     <name>wdgSettingsGeneral</name>
     <message>
         <source>[Select a file]</source>
-        <translation>[Sélectionner un Fichier]</translation>
+        <translation type="unfinished">[Sélectionner un Fichier]</translation>
     </message>
     <message>
         <source>All files</source>
@@ -2310,31 +2310,31 @@
     </message>
     <message>
         <source>3x</source>
-        <translation>3x</translation>
+        <translation type="unfinished">3x</translation>
     </message>
     <message>
         <source>4x</source>
-        <translation>4x</translation>
+        <translation type="unfinished">4x</translation>
     </message>
     <message>
         <source>5x</source>
-        <translation>5x</translation>
+        <translation type="unfinished">5x</translation>
     </message>
     <message>
         <source>Auto</source>
-        <translation>Auto</translation>
+        <translation type="unfinished">Auto</translation>
     </message>
     <message>
         <source>NTSC</source>
-        <translation>NTSC</translation>
+        <translation type="unfinished">NTSC</translation>
     </message>
     <message>
         <source>PAL</source>
-        <translation>PAL</translation>
+        <translation type="unfinished">PAL</translation>
     </message>
     <message>
         <source>Dendy</source>
-        <translation>Dendy</translation>
+        <translation type="unfinished">Dendy</translation>
     </message>
     <message>
         <source>System Roms</source>
@@ -2342,7 +2342,7 @@
     </message>
     <message>
         <source>Mode</source>
-        <translation>Mode</translation>
+        <translation type="unfinished">Mode</translation>
     </message>
     <message>
         <source>English</source>
@@ -2394,7 +2394,7 @@
     </message>
     <message>
         <source>Rewind minutes</source>
-        <translation>Rembobiner minutes</translation>
+        <translation>Rembobinage en minutes</translation>
     </message>
     <message>
         <source>Spanish</source>
@@ -2414,35 +2414,35 @@
     </message>
     <message>
         <source>Off</source>
-        <translation>Off</translation>
+        <translation type="unfinished">Off</translation>
     </message>
     <message>
         <source>2</source>
-        <translation>2</translation>
+        <translation type="unfinished">2</translation>
     </message>
     <message>
         <source>5</source>
-        <translation>5</translation>
+        <translation type="unfinished">5</translation>
     </message>
     <message>
         <source>15</source>
-        <translation>15</translation>
+        <translation type="unfinished">15</translation>
     </message>
     <message>
         <source>30</source>
-        <translation>30</translation>
+        <translation type="unfinished">30</translation>
     </message>
     <message>
         <source>60</source>
-        <translation>60</translation>
+        <translation type="unfinished">60</translation>
     </message>
     <message>
         <source>Unlim.</source>
-        <translation>Iliimité.</translation>
+        <translation>Illimité</translation>
     </message>
     <message>
         <source>2x</source>
-        <translation>2x</translation>
+        <translation type="unfinished">2x</translation>
     </message>
     <message>
         <source>Chinese Simplified</source>
@@ -2454,23 +2454,23 @@
     </message>
     <message>
         <source>Famicom Disk System</source>
-        <translation>Famicom Disk System</translation>
+        <translation type="unfinished">Famicom Disk System</translation>
     </message>
     <message>
         <source>Switch the disk/side automatically</source>
-        <translation>Changement automatique du disque/de la facey</translation>
+        <translation>Changement automatique du disque/face</translation>
     </message>
     <message>
         <source>Allow multiple instances of the emulator</source>
-        <translation>Autoriser plusieurs instances de l&apos;émulateurr</translation>
+        <translation>Autoriser plusieurs instances de l&apos;émulateur</translation>
     </message>
     <message>
         <source>French</source>
-        <translation>Français</translation>
+        <translation type="unfinished">Français</translation>
     </message>
     <message>
-        <source>Use fast forward when loading the disk/side</source>
-        <translation>Utiliser l&apos;avance rapide lors du chargement du disque/de la face</translation>
+        <source>Utiliser l'avance rapide lors du chargement du disque/de la face</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2485,7 +2485,7 @@
     </message>
     <message>
         <source>Zapper</source>
-        <translation>Zapper</translation>
+        <translation type="unfinished">Zapper</translation>
     </message>
     <message>
         <source>Snes Mouse</source>
@@ -2493,7 +2493,7 @@
     </message>
     <message>
         <source>Arkanoid Paddle</source>
-        <translation>Arkanoid Paddle</translation>
+        <translation type="unfinished">Arkanoid Paddle</translation>
     </message>
     <message>
         <source>Oeka Kids Tablet</source>
@@ -2521,15 +2521,15 @@
     </message>
     <message>
         <source>NES</source>
-        <translation>NES</translation>
+        <translation type="unfinished">NES</translation>
     </message>
     <message>
         <source>Famicom</source>
-        <translation>Famicom</translation>
+        <translation type="unfinished">Famicom</translation>
     </message>
     <message>
         <source>Four Score</source>
-        <translation>Four Score</translation>
+        <translation type="unfinished">Four Score</translation>
     </message>
     <message>
         <source>Misc</source>
@@ -2565,7 +2565,7 @@
     </message>
     <message>
         <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
-        <translation>Autorise &quot;Haut + Bas&quot; et &quot;Gauche + Droite&quot; en même temps</translation>
+        <translation type="unfinished">Autorise &quot;Haut + Bas&quot; et &quot;Gauche + Droite&quot; en même temps.</translation>
     </message>
     <message>
         <source>Controller Mode</source>
@@ -2581,7 +2581,7 @@
     </message>
     <message>
         <source>Action</source>
-        <translation>Action</translation>
+        <translation type="unfinished">Action</translation>
     </message>
     <message>
         <source>Keyboard</source>
@@ -2589,7 +2589,7 @@
     </message>
     <message>
         <source>Joystick</source>
-        <translation>Joystick</translation>
+        <translation type="unfinished">Joystick</translation>
     </message>
     <message>
         <source>Unset all</source>
@@ -2617,11 +2617,11 @@
     </message>
     <message>
         <source>Family BASIC Keyboard</source>
-        <translation>Clavier Family BASIC</translation>
+        <translation type="unfinished">Clavier Family BASIC</translation>
     </message>
     <message>
         <source>Subor Keyboard</source>
-        <translation>Clavier Subor</translation>
+        <translation type="unfinished">Clavier Subor</translation>
     </message>
 </context>
 <context>
@@ -2648,7 +2648,7 @@
     </message>
     <message>
         <source>Overclock</source>
-        <translation>Overclock</translation>
+        <translation type="unfinished">Overclock</translation>
     </message>
     <message>
         <source>Sprites and background</source>
@@ -2692,7 +2692,7 @@
     </message>
     <message>
         <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
-        <translation type="unfinished">Rétablir automatiquement la limite lorsque cela est nécessaire pour éviter les problèmes graphiques</translation>
+        <translation type="unfinished">Rétablir automatiquement la limite lorsque cela est nécessaire pour éviter les problèmes graphiques.</translation>
     </message>
 </context>
 <context>
@@ -2745,27 +2745,27 @@
     <message>
         <source>WAV Audio (*.wav)</source>
         <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-        <translation>Audio WAV (*.wav)</translation>
+        <translation type="unfinished">Audio WAV (*.wav)</translation>
     </message>
     <message>
         <source>MP3 Audio (*.mp3)</source>
         <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-        <translation>Audio MP3 (*.mp3)</translation>
+        <translation type="unfinished">Audio MP3 (*.mp3)</translation>
     </message>
     <message>
         <source>AAC Audio (*.aac)</source>
         <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-        <translation>Audio AACo (*.aac)</translation>
+        <translation type="unfinished">Audio AACo (*.aac)</translation>
     </message>
     <message>
         <source>Flac Audio (*.flac)</source>
         <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-        <translation>Audio Flac (*.flac)</translation>
+        <translation type="unfinished">Audio Flac (*.flac)</translation>
     </message>
     <message>
         <source>Ogg Audio (*.ogg)</source>
         <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-        <translation>Audio Ogg (*.ogg)</translation>
+        <translation type="unfinished">Audio Ogg (*.ogg)</translation>
     </message>
     <message>
         <source>Not supported</source>
@@ -2801,75 +2801,75 @@
     </message>
     <message>
         <source>256 x 240  (1:1)</source>
-        <translation>256 x 240  (1:1)</translation>
+        <translation type="unfinished">256 x 240  (1:1)</translation>
     </message>
     <message>
         <source>292 x 240  (8:7 NTSC TV)</source>
-        <translation>292 x 240  (8:7 NTSC TV)</translation>
+        <translation type="unfinished">292 x 240  (8:7 NTSC TV)</translation>
     </message>
     <message>
         <source>320 x 240  (5:4)</source>
-        <translation>320 x 240  (5:4)</translation>
+        <translation type="unfinished">320 x 240  (5:4)</translation>
     </message>
     <message>
         <source>354 x 240  (11:8 PAL TV)</source>
-        <translation>354 x 240  (11:8 PAL TV)</translation>
+        <translation type="unfinished">354 x 240  (11:8 PAL TV)</translation>
     </message>
     <message>
         <source>512 x 480  (1:1)</source>
-        <translation>512 x 480  (1:1)</translation>
+        <translation type="unfinished">512 x 480  (1:1)</translation>
     </message>
     <message>
         <source>584 x 480  (8:7 NTSC TV)</source>
-        <translation>584 x 480  (8:7 NTSC TV)</translation>
+        <translation type="unfinished">584 x 480  (8:7 NTSC TV)</translation>
     </message>
     <message>
         <source>640 x 480  (5:4)</source>
-        <translation>640 x 480  (5:4)</translation>
+        <translation type="unfinished">640 x 480  (5:4)</translation>
     </message>
     <message>
         <source>708 x 480  (11:8 PAL TV)</source>
-        <translation>708 x 480  (11:8 PAL TV)</translation>
+        <translation type="unfinished">708 x 480  (11:8 PAL TV)</translation>
     </message>
     <message>
         <source>768 x 720  (1:1)</source>
-        <translation>768 x 720  (1:1)</translation>
+        <translation type="unfinished">768 x 720  (1:1)</translation>
     </message>
     <message>
         <source>876 x 720  (8:7 NTSC TV)</source>
-        <translation>876 x 720  (8:7 NTSC TV)</translation>
+        <translation type="unfinished">876 x 720  (8:7 NTSC TV)</translation>
     </message>
     <message>
         <source>960 x 720  (5:4)</source>
-        <translation>960 x 720  (5:4)</translation>
+        <translation type="unfinished">960 x 720  (5:4)</translation>
     </message>
     <message>
         <source>1064 x 720  (11:8 PAL TV)</source>
-        <translation>1064 x 720  (11:8 PAL TV)</translation>
+        <translation type="unfinished">1064 x 720  (11:8 PAL TV)</translation>
     </message>
     <message>
         <source>1024 x 960  (1:1)</source>
-        <translation>1024 x 960  (1:1)</translation>
+        <translation type="unfinished">1024 x 960  (1:1)</translation>
     </message>
     <message>
         <source>1170 x 960  (8:7 NTSC TV)</source>
-        <translation>1170 x 960  (8:7 NTSC TV)</translation>
+        <translation type="unfinished">1170 x 960  (8:7 NTSC TV)</translation>
     </message>
     <message>
         <source>1280 x 960  (5:4)</source>
-        <translation>1280 x 960  (5:4)</translation>
+        <translation type="unfinished">1280 x 960  (5:4)</translation>
     </message>
     <message>
         <source>1418 x 960  (11:8 PAL TV)</source>
-        <translation>1418 x 960  (11:8 PAL TV)</translation>
+        <translation type="unfinished">1418 x 960  (11:8 PAL TV)</translation>
     </message>
     <message>
         <source>1280 x 720</source>
-        <translation>1280 x 720</translation>
+        <translation type="unfinished">1280 x 720</translation>
     </message>
     <message>
         <source>1920 x 1080</source>
-        <translation>1920 x 1080</translation>
+        <translation type="unfinished">1920 x 1080</translation>
     </message>
     <message>
         <source>Use the emulator resolution</source>
@@ -2906,7 +2906,7 @@
     <message>
         <source>Opus Audio (*.opus)</source>
         <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-        <translation>Audio Opus (*.opus)</translation>
+        <translation type="unfinished">Audio Opus (*.opus)</translation>
     </message>
 </context>
 <context>
@@ -2921,7 +2921,8 @@
     </message>
     <message>
         <source>[Select a file]</source>
-        <translation>[Sélectionner un Fichier]</translation>
+        <translation type="unfinished">[Sélectionner un Fichier]</translation>
+        <translation type="unfinished">[Sélectionner un Fichier]</translation>
     </message>
     <message>
         <source>Default</source>
@@ -2953,31 +2954,31 @@
     </message>
     <message>
         <source>1x</source>
-        <translation>1x</translation>
+        <translation type="unfinished">1x</translation>
     </message>
     <message>
         <source>2x</source>
-        <translation>2x</translation>
+        <translation type="unfinished">2x</translation>
     </message>
     <message>
         <source>3x</source>
-        <translation>3x</translation>
+        <translation type="unfinished">3x</translation>
     </message>
     <message>
         <source>4x</source>
-        <translation>4x</translation>
+        <translation type="unfinished">4x</translation>
     </message>
     <message>
         <source>5x</source>
-        <translation>5x</translation>
+        <translation type="unfinished">5x</translation>
     </message>
     <message>
         <source>6x</source>
-        <translation>6x</translation>
+        <translation type="unfinished">6x</translation>
     </message>
     <message>
         <source>Scale</source>
-        <translation>Scale</translation>
+        <translation type="unfinished">Mise à l'Echelle</translation>
     </message>
     <message>
         <source>** To apply this change restart is needed **</source>
@@ -2989,19 +2990,19 @@
     </message>
     <message>
         <source>1:1</source>
-        <translation>1:1</translation>
+        <translation type="unfinished">1:1</translation>
     </message>
     <message>
         <source>5:4</source>
-        <translation>5:4</translation>
+        <translation type="unfinished">5:4</translation>
     </message>
     <message>
         <source>8:7 (NTSC TV)</source>
-        <translation>8:7 (NTSC TV)</translation>
+        <translation type="unfinished">8:7 (NTSC TV)</translation>
     </message>
     <message>
         <source>11:8 (PAL TV)</source>
-        <translation>11:8 (PAL TV)</translation>
+        <translation type="unfinished">11:8 (PAL TV)</translation>
     </message>
     <message>
         <source>Pixel Aspect Ratio</source>
@@ -3009,11 +3010,11 @@
     </message>
     <message>
         <source>Off</source>
-        <translation>Off</translation>
+        <translation type="unfinished">Off</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>On</translation>
+        <translation type="unfinished">On</translation>
     </message>
     <message>
         <source>Default Value</source>
@@ -3021,11 +3022,11 @@
     </message>
     <message>
         <source>NTSC</source>
-        <translation>NTSC</translation>
+        <translation type="unfinished">NTSC</translation>
     </message>
     <message>
         <source>PAL/Dendy</source>
-        <translation>PAL/Dendy</translation>
+        <translation type="unfinished">PAL/Dendy</translation>
     </message>
     <message>
         <source>Right</source>
@@ -3049,15 +3050,15 @@
     </message>
     <message>
         <source>Black borders in window mode</source>
-        <translation>Bordures noires en mode fenêtré</translation>
+        <translation>Bordures noires en mode Fenêtré</translation>
     </message>
     <message>
         <source>Black borders in fullscreen</source>
-        <translation>Bordures noires en mode Plein Ecran</translation>
+        <translation>Bordures noir en mode Plein Ecran</translation>
     </message>
     <message>
         <source>Overscan</source>
-        <translation>Overscan</translation>
+        <translation type="unfinished">Overscan</translation>
     </message>
     <message>
         <source>No Shaders</source>
@@ -3085,7 +3086,7 @@
     </message>
     <message>
         <source>NTSC 2Phase Composite</source>
-        <translation>NTSC 2Phase Composite</translation>
+        <translation type="unfinished">NTSC 2Phase Composite</translation>
     </message>
     <message>
         <source>Old TV</source>
@@ -3101,47 +3102,47 @@
     </message>
     <message>
         <source>Scale2X</source>
-        <translation>Scale2X</translation>
+        <translation type="unfinished">Scale2X</translation>
     </message>
     <message>
         <source>Scale3X</source>
-        <translation>Scale3X</translation>
+        <translation type="unfinished">Scale3X</translation>
     </message>
     <message>
         <source>Scale4X</source>
-        <translation>Scale4X</translation>
+        <translation type="unfinished">Scale4X</translation>
     </message>
     <message>
         <source>Hq2X</source>
-        <translation>Hq2X</translation>
+        <translation type="unfinished">Hq2X</translation>
     </message>
     <message>
         <source>Hq3X</source>
-        <translation>Hq3X</translation>
+        <translation type="unfinished">Hq3X</translation>
     </message>
     <message>
         <source>Hq4X</source>
-        <translation>Hq4X</translation>
+        <translation type="unfinished">Hq4X</translation>
     </message>
     <message>
         <source>xBRZ 2X</source>
-        <translation>xBRZ 2X</translation>
+        <translation type="unfinished">xBRZ 2X</translation>
     </message>
     <message>
         <source>xBRZ 3X</source>
-        <translation>xBRZ 3X</translation>
+        <translation type="unfinished">xBRZ 3X</translation>
     </message>
     <message>
         <source>xBRZ 4X</source>
-        <translation>xBRZ 4X</translation>
+        <translation type="unfinished">xBRZ 4X</translation>
     </message>
     <message>
         <source>xBRZ 5X</source>
-        <translation>xBRZ 5X</translation>
+        <translation type="unfinished">xBRZ 5X</translation>
     </message>
     <message>
         <source>xBRZ 6X</source>
-        <translation>xBRZ 6X</translation>
+        <translation type="unfinished">xBRZ 6X</translation>
     </message>
     <message>
         <source>NTSC Composite</source>
@@ -3165,23 +3166,23 @@
     </message>
     <message>
         <source>PAL</source>
-        <translation>PAL</translation>
+        <translation type="unfinished">PAL</translation>
     </message>
     <message>
         <source>Sony CXA2025AS US</source>
-        <translation>Sony CXA2025AS US</translation>
+        <translation type="unfinished">Sony CXA2025AS US</translation>
     </message>
     <message>
         <source>Firebrandx Nostalgia (FBX)</source>
-        <translation>Firebrandx Nostalgia (FBX)</translation>
+        <translation type="unfinished">Firebrandx Nostalgia (FBX)</translation>
     </message>
     <message>
         <source>Firebrandx YUV</source>
-        <translation>Firebrandx YUV</translation>
+        <translation type="unfinished">Firebrandx YUV</translation>
     </message>
     <message>
         <source>Monochrome</source>
-        <translation>Monochrome</translation>
+        <translation type="unfinished">Monochrome</translation>
     </message>
     <message>
         <source>Green</source>
@@ -3193,35 +3194,35 @@
     </message>
     <message>
         <source>Palette</source>
-        <translation>Palette</translation>
+        <translation type="unfinished">Palette</translation>
     </message>
     <message>
         <source>xBRZ 2X Multithreading</source>
-        <translation>xBRZ 2X Multithreading</translation>
+        <translation type="unfinished">xBRZ 2X Multithreading</translation>
     </message>
     <message>
         <source>xBRZ 3X Multithreading</source>
-        <translation>xBRZ 3X Multithreading</translation>
+        <translation type="unfinished">xBRZ 3X Multithreading</translation>
     </message>
     <message>
         <source>xBRZ 4X Multithreading</source>
-        <translation>xBRZ 4X Multithreading</translation>
+        <translation type="unfinished">xBRZ 4X Multithreading</translation>
     </message>
     <message>
         <source>xBRZ 5X Multithreading</source>
-        <translation>xBRZ 5X Multithreading</translation>
+        <translation type="unfinished">xBRZ 5X Multithreading</translation>
     </message>
     <message>
         <source>xBRZ 6X Multithreading</source>
-        <translation>xBRZ 6X Multithreading</translation>
+        <translation type="unfinished">xBRZ 6X Multithreading</translation>
     </message>
     <message>
         <source>VSync</source>
-        <translation>VSync</translation>
+        <translation type="unfinished">VSync</translation>
     </message>
     <message>
         <source>Interpolation</source>
-        <translation>Interpolation</translation>
+        <translation type="unfinished">Interpolation</translation>
     </message>
     <message>
         <source>Text on screen</source>
@@ -3285,7 +3286,7 @@
     </message>
     <message>
         <source>Horizontal flip</source>
-        <translation>Retournement Horizontalp</translation>
+        <translation>Retournement Horizontal</translation>
     </message>
     <message>
         <source>Flip/Rotate the controller input</source>
@@ -3313,7 +3314,7 @@
     </message>
     <message>
         <source>Shader</source>
-        <translation>Shader</translation>
+        <translation type="unfinished">Shader</translation>
     </message>
     <message>
         <source>Shader File</source>
@@ -3365,47 +3366,47 @@
     </message>
     <message>
         <source>2xSaI</source>
-        <translation>2xSaI</translation>
+        <translation type="unfinished">2xSaI</translation>
     </message>
     <message>
         <source>Dot Matrix</source>
-        <translation>Dot Matrix</translation>
+        <translation type="unfinished">Dot Matrix</translation>
     </message>
     <message>
         <source>PAL TV1x</source>
-        <translation>PAL TV1x</translation>
+        <translation type="unfinished">PAL TV1x</translation>
     </message>
     <message>
         <source>PAL TV2x</source>
-        <translation>PAL TV2x</translation>
+        <translation type="unfinished">PAL TV2x</translation>
     </message>
     <message>
         <source>PAL TV3x</source>
-        <translation>AL TV3x</translation>
+        <translation type="unfinished">AL TV3x</translation>
     </message>
     <message>
         <source>PAL TV4x</source>
-        <translation>PAL TV4x</translation>
+        <translation type="unfinished">PAL TV4x</translation>
     </message>
     <message>
         <source>Super 2xSaI</source>
-        <translation>Super 2xSaI</translation>
+        <translation type="unfinished">Super 2xSaI</translation>
     </message>
     <message>
         <source>Super Eagle</source>
-        <translation>Super Eagle</translation>
+        <translation type="unfinished">Super Eagle</translation>
     </message>
     <message>
         <source>TV2x</source>
-        <translation>TV2x</translation>
+        <translation type="unfinished">TV2x</translation>
     </message>
     <message>
         <source>TV3x</source>
-        <translation>TV3x</translation>
+        <translation type="unfinished">TV3x</translation>
     </message>
     <message>
         <source>TV4x</source>
-        <translation>TV4x</translation>
+        <translation type="unfinished">TV4x</translation>
     </message>
 </context>
 <context>
