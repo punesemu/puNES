@@ -82,7 +82,7 @@ bool stateBar::eventFilter(QObject *obj, QEvent *event) {
 		QHelpEvent *helpEvent = ((QHelpEvent *)event);
 		int slot = slot_at(helpEvent->pos());
 
-		if (slot != -1) {
+		if (isEnabled() && (slot != -1)) {
 			QToolTip::showText(helpEvent->globalPos(), mainwin->state_save_slot_action(slot)->toolTip());
 		} else {
 			QToolTip::hideText();
