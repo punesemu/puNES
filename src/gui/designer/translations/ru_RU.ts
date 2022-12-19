@@ -2468,6 +2468,10 @@
       <source>Use fast forward when loading the disk/side</source>
       <translation type="unfinished">Use fast forward when loading the disk/side</translation>
     </message>
+    <message>
+      <source>French</source>
+      <translation type="unfinished">French</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
