@@ -134,7 +134,7 @@
     </message>
     <message>
         <source>Unspecified</source>
-        <translation type="unfinished"><Non Spécifié/translation>
+        <translation type="unfinished"><Non Spécifié</translation>
     </message>
     <message>
         <source>Standard Controllers</source>
