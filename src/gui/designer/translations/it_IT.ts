@@ -12,7 +12,7 @@
     <name>dlgCfgNSCode</name>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Predefinito</translation>
     </message>
     <message>
       <source>Unset</source>
@@ -20,7 +20,7 @@
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>Applica</translation>
     </message>
     <message>
       <source>Discard</source>
@@ -42,11 +42,11 @@
     <name>dlgHeaderEditor</name>
     <message>
       <source>Attention</source>
-      <translation type="unfinished">Attention</translation>
+      <translation>Attenzione</translation>
     </message>
     <message>
       <source>Do you want to boot the ROM with the changes made?</source>
-      <translation type="unfinished">Do you want to boot the ROM with the changes made?</translation>
+      <translation>Vuoi avviare la ROM con le modifiche apportate?</translation>
     </message>
     <message>
       <source>Header Editor</source>
@@ -58,79 +58,79 @@
     </message>
     <message>
       <source>Console Type</source>
-      <translation type="unfinished">Console Type</translation>
+      <translation>Tipo Di Console</translation>
     </message>
     <message>
       <source>PRG ROM KiB</source>
-      <translation type="unfinished">PRG ROM KiB</translation>
+      <translation>PRG ROM KiB</translation>
     </message>
     <message>
       <source>None</source>
-      <translation type="unfinished">None</translation>
+      <translation>None</translation>
     </message>
     <message>
       <source>128 Bytes</source>
-      <translation type="unfinished">128 Bytes</translation>
+      <translation>128 Byte</translation>
     </message>
     <message>
       <source>256 Bytes</source>
-      <translation type="unfinished">256 Bytes</translation>
+      <translation>256 Byte</translation>
     </message>
     <message>
       <source>512 Bytes</source>
-      <translation type="unfinished">512 Bytes</translation>
+      <translation>512 Byte</translation>
     </message>
     <message>
       <source>1 KiB</source>
-      <translation type="unfinished">1 KiB</translation>
+      <translation>1 KiB</translation>
     </message>
     <message>
       <source>2 KiB</source>
-      <translation type="unfinished">2 KiB</translation>
+      <translation>2 KiB</translation>
     </message>
     <message>
       <source>4 KiB</source>
-      <translation type="unfinished">4 KiB</translation>
+      <translation>4 KiB</translation>
     </message>
     <message>
       <source>8 KiB</source>
-      <translation type="unfinished">8 KiB</translation>
+      <translation>8 KiB</translation>
     </message>
     <message>
       <source>16 KiB</source>
-      <translation type="unfinished">16 KiB</translation>
+      <translation>16 KiB</translation>
     </message>
     <message>
       <source>32 KiB</source>
-      <translation type="unfinished">32 KiB</translation>
+      <translation>32 KiB</translation>
     </message>
     <message>
       <source>64 KiB</source>
-      <translation type="unfinished">64 KiB</translation>
+      <translation>64 KiB</translation>
     </message>
     <message>
       <source>128 KiB</source>
-      <translation type="unfinished">128 KiB</translation>
+      <translation>128 KiB</translation>
     </message>
     <message>
       <source>256 KiB</source>
-      <translation type="unfinished">256 KiB</translation>
+      <translation>256 KiB</translation>
     </message>
     <message>
       <source>512 KiB</source>
-      <translation type="unfinished">512 KiB</translation>
+      <translation>512 KiB</translation>
     </message>
     <message>
       <source>1 MiB</source>
-      <translation type="unfinished">1 MiB</translation>
+      <translation>1 MiB</translation>
     </message>
     <message>
       <source>N/A</source>
-      <translation type="unfinished">N/A</translation>
+      <translation>N/A</translation>
     </message>
     <message>
       <source>Trainer</source>
-      <translation type="unfinished">Trainer</translation>
+      <translation>Trainer</translation>
     </message>
     <message>
       <source>Unspecified</source>
@@ -346,11 +346,11 @@
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>NTSC</translation>
     </message>
     <message>
       <source>PAL</source>
-      <translation type="unfinished">PAL</translation>
+      <translation>PAL</translation>
     </message>
     <message>
       <source>Both</source>
@@ -358,7 +358,7 @@
     </message>
     <message>
       <source>Dendy</source>
-      <translation type="unfinished">Dendy</translation>
+      <translation>Dendy</translation>
     </message>
     <message>
       <source>VS Type</source>
@@ -366,11 +366,11 @@
     </message>
     <message>
       <source>Horizontal</source>
-      <translation type="unfinished">Horizontal</translation>
+      <translation>Orizzontale</translation>
     </message>
     <message>
       <source>Vertical</source>
-      <translation type="unfinished">Vertical</translation>
+      <translation>Verticale</translation>
     </message>
     <message>
       <source>4-Screen</source>
@@ -390,11 +390,11 @@
     </message>
     <message>
       <source>NES/Famicom/Dendy</source>
-      <translation type="unfinished">NES/Famicom/Dendy</translation>
+      <translation>NES/Famicom/Dendy</translation>
     </message>
     <message>
       <source>Playchoice 10</source>
-      <translation type="unfinished">Playchoice 10</translation>
+      <translation>Playchoice 10</translation>
     </message>
     <message>
       <source>Famiclone with Decimal Mode</source>
@@ -406,31 +406,31 @@
     </message>
     <message>
       <source>VT01</source>
-      <translation type="unfinished">VT01</translation>
+      <translation>VT01</translation>
     </message>
     <message>
       <source>VT02</source>
-      <translation type="unfinished">VT02</translation>
+      <translation>VT02</translation>
     </message>
     <message>
       <source>VT03</source>
-      <translation type="unfinished">VT03</translation>
+      <translation>VT03</translation>
     </message>
     <message>
       <source>VT09</source>
-      <translation type="unfinished">VT09</translation>
+      <translation>VT09</translation>
     </message>
     <message>
       <source>VT32</source>
-      <translation type="unfinished">VT32</translation>
+      <translation>VT32</translation>
     </message>
     <message>
       <source>VT369</source>
-      <translation type="unfinished">VT369</translation>
+      <translation>VT369</translation>
     </message>
     <message>
       <source>UMC UM6578</source>
-      <translation type="unfinished">UMC UM6578</translation>
+      <translation>UMC UM6578</translation>
     </message>
     <message>
       <source>Famicom Network System</source>
@@ -438,7 +438,7 @@
     </message>
     <message>
       <source>File</source>
-      <translation type="unfinished">File</translation>
+      <translation>File</translation>
     </message>
     <message>
       <source>CHR RAM Battery</source>
@@ -482,11 +482,11 @@
     </message>
     <message>
       <source>iNES 1.0</source>
-      <translation type="unfinished">iNES 1.0</translation>
+      <translation>iNES 1.0</translation>
     </message>
     <message>
       <source>NES 2.0</source>
-      <translation type="unfinished">NES 2.0</translation>
+      <translation>NES 2.0</translation>
     </message>
     <message>
       <source>Submapper</source>
@@ -494,55 +494,55 @@
     </message>
     <message>
       <source>RP2C03B</source>
-      <translation type="unfinished">RP2C03B</translation>
+      <translation>RP2C03B</translation>
     </message>
     <message>
       <source>RP2C03G</source>
-      <translation type="unfinished">RP2C03G</translation>
+      <translation>RP2C03G</translation>
     </message>
     <message>
       <source>RP2C04-0001</source>
-      <translation type="unfinished">RP2C04-0001</translation>
+      <translation>RP2C04-0001</translation>
     </message>
     <message>
       <source>RP2C04-0002</source>
-      <translation type="unfinished">RP2C04-0002</translation>
+      <translation>RP2C04-0002</translation>
     </message>
     <message>
       <source>RP2C04-0003</source>
-      <translation type="unfinished">RP2C04-0003</translation>
+      <translation>RP2C04-0003</translation>
     </message>
     <message>
       <source>RP2C04-0004</source>
-      <translation type="unfinished">RP2C04-0004</translation>
+      <translation>RP2C04-0004</translation>
     </message>
     <message>
       <source>RC2C03B</source>
-      <translation type="unfinished">RC2C03B</translation>
+      <translation>RC2C03B</translation>
     </message>
     <message>
       <source>RC2C03C</source>
-      <translation type="unfinished">RC2C03C</translation>
+      <translation>RC2C03C</translation>
     </message>
     <message>
       <source>RC2C05-01</source>
-      <translation type="unfinished">RC2C05-01</translation>
+      <translation>RC2C05-01</translation>
     </message>
     <message>
       <source>RC2C05-02</source>
-      <translation type="unfinished">RC2C05-02</translation>
+      <translation>RC2C05-02</translation>
     </message>
     <message>
       <source>RC2C05-03</source>
-      <translation type="unfinished">RC2C05-03</translation>
+      <translation>RC2C05-03</translation>
     </message>
     <message>
       <source>RC2C05-04</source>
-      <translation type="unfinished">RC2C05-04</translation>
+      <translation>RC2C05-04</translation>
     </message>
     <message>
       <source>RC2C05-05</source>
-      <translation type="unfinished">RC2C05-05</translation>
+      <translation>RC2C05-05</translation>
     </message>
     <message>
       <source>Header</source>
@@ -616,19 +616,19 @@
     </message>
     <message>
       <source>1.0x</source>
-      <translation type="unfinished">1.0x</translation>
+      <translation>1.0x</translation>
     </message>
     <message>
       <source>1.5x</source>
-      <translation type="unfinished">1.5x</translation>
+      <translation>1,5x</translation>
     </message>
     <message>
       <source>2.0x</source>
-      <translation type="unfinished">2.0x</translation>
+      <translation>2.0x</translation>
     </message>
     <message>
       <source>2.5x</source>
-      <translation type="unfinished">2.5x</translation>
+      <translation>2.5x</translation>
     </message>
     <message>
       <source>Mode</source>
@@ -970,31 +970,31 @@
     </message>
     <message>
       <source>Error on create config folder</source>
-      <translation type="unfinished">Error on create config folder</translation>
+      <translation>Errore nella creazione della cartella di configurazione</translation>
     </message>
     <message>
       <source>Error on create data folder</source>
-      <translation type="unfinished">Error on create data folder</translation>
+      <translation>Errore nella creazione della cartella dati</translation>
     </message>
     <message>
       <source>Error on create temp folder</source>
-      <translation type="unfinished">Error on create temp folder</translation>
+      <translation>Errore nella creazione della cartella temporanea</translation>
     </message>
     <message>
       <source>Error on create cheat folder</source>
-      <translation type="unfinished">Error on create cheat folder</translation>
+      <translation>Errore nella creazione della cartella cheat</translation>
     </message>
     <message>
       <source>Error on create psg folder</source>
-      <translation type="unfinished">Error on create psg folder</translation>
+      <translation>Errore nella creazione della cartella psg</translation>
     </message>
     <message>
       <source>Error on create shp folder</source>
-      <translation type="unfinished">Error on create shp folder</translation>
+      <translation>Errore nella creazione della cartella shp</translation>
     </message>
     <message>
       <source>Error on create jsc folder</source>
-      <translation type="unfinished">Error on create jsc folder</translation>
+      <translation>Errore nella creazione della cartella jsc</translation>
     </message>
     <message>
       <source>Error on create bios folder</source>
@@ -1490,7 +1490,7 @@
     </message>
     <message>
       <source>&amp;Show Log</source>
-      <translation type="unfinished">&amp;Show Log</translation>
+      <translation>Vi&amp;sualizza il Log</translation>
     </message>
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
@@ -1501,7 +1501,7 @@
     <name>nesKeyboardStatusBar</name>
     <message>
       <source>Capture/Release the Input</source>
-      <translation type="unfinished">Capture/Release the Input</translation>
+      <translation>Cattura/Rilascia l'Input</translation>
     </message>
     <message>
       <source>Input is released</source>
@@ -2466,7 +2466,11 @@
     </message>
     <message>
       <source>Use fast forward when loading the disk/side</source>
-      <translation type="unfinished">Use fast forward when loading the disk/side</translation>
+      <translation>Utilizza il fast forward al cambio del disco/lato</translation>
+    </message>
+    <message>
+      <source>French</source>
+      <translation type="unfinished">French</translation>
     </message>
   </context>
   <context>
@@ -3361,7 +3365,7 @@
     </message>
     <message>
       <source>2xSaI</source>
-      <translation type="unfinished">2xSaI</translation>
+      <translation>2xSaI</translation>
     </message>
     <message>
       <source>Dot Matrix</source>
@@ -3369,39 +3373,39 @@
     </message>
     <message>
       <source>PAL TV1x</source>
-      <translation type="unfinished">PAL TV1x</translation>
+      <translation>PAL TV1x</translation>
     </message>
     <message>
       <source>PAL TV2x</source>
-      <translation type="unfinished">PAL TV2x</translation>
+      <translation>PAL TV2x</translation>
     </message>
     <message>
       <source>PAL TV3x</source>
-      <translation type="unfinished">PAL TV3x</translation>
+      <translation>PAL TV3x</translation>
     </message>
     <message>
       <source>PAL TV4x</source>
-      <translation type="unfinished">PAL TV4x</translation>
+      <translation>PAL TV4x</translation>
     </message>
     <message>
       <source>Super 2xSaI</source>
-      <translation type="unfinished">Super 2xSaI</translation>
+      <translation>Super 2xSaI</translation>
     </message>
     <message>
       <source>Super Eagle</source>
-      <translation type="unfinished">Super Eagle</translation>
+      <translation>Super Eagle</translation>
     </message>
     <message>
       <source>TV2x</source>
-      <translation type="unfinished">TV2x</translation>
+      <translation>TV2x</translation>
     </message>
     <message>
       <source>TV3x</source>
-      <translation type="unfinished">TV3x</translation>
+      <translation>TV3x</translation>
     </message>
     <message>
       <source>TV4x</source>
-      <translation type="unfinished">TV4x</translation>
+      <translation>TV4x</translation>
     </message>
   </context>
   <context>
