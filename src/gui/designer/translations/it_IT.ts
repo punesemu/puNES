@@ -54,7 +54,7 @@
     </message>
     <message>
       <source>Mirroring</source>
-      <translation type="unfinished">Mirroring</translation>
+      <translation>Mirroring</translation>
     </message>
     <message>
       <source>Console Type</source>
@@ -162,15 +162,15 @@
     </message>
     <message>
       <source>Vs. Zapper</source>
-      <translation type="unfinished">Vs. Zapper</translation>
+      <translation>Vs. Zapper</translation>
     </message>
     <message>
       <source>Zapper</source>
-      <translation type="unfinished">Zapper</translation>
+      <translation>Zapper</translation>
     </message>
     <message>
       <source>Two Zappers</source>
-      <translation type="unfinished">Two Zappers</translation>
+      <translation>Due Zappers</translation>
     </message>
     <message>
       <source>Bandai Hyper Shot Lightgun</source>
@@ -194,11 +194,11 @@
     </message>
     <message>
       <source>Arkanoid Paddle (NES)</source>
-      <translation type="unfinished">Arkanoid Paddle (NES)</translation>
+      <translation>Paddle Arkanoid (NES)</translation>
     </message>
     <message>
       <source>Arkanoid Paddle (Famicom)</source>
-      <translation type="unfinished">Arkanoid Paddle (Famicom)</translation>
+      <translation>Paddle Arkanoid (Famicom)</translation>
     </message>
     <message>
       <source>Two Paddles plus Famicom Data Recorder</source>
@@ -254,7 +254,7 @@
     </message>
     <message>
       <source>Doremikko Keyboard</source>
-      <translation type="unfinished">Doremikko Keyboard</translation>
+      <translation>Tastiera Doremikko</translation>
     </message>
     <message>
       <source>R.O.B. Gyro Set</source>
@@ -274,31 +274,31 @@
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
-      <translation type="unfinished">Family BASIC Keyboard</translation>
+      <translation>Tastiera Family BASIC</translation>
     </message>
     <message>
       <source>Dongda PEC-586 Keyboard</source>
-      <translation type="unfinished">Dongda PEC-586 Keyboard</translation>
+      <translation>Tastiera Dongda PEC-586</translation>
     </message>
     <message>
       <source>Bit Corp. Bit-79 Keyboard</source>
-      <translation type="unfinished">Bit Corp. Bit-79 Keyboard</translation>
+      <translation>Tastiera Bit Corp. Bit-79</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>Tastiera Subor</translation>
     </message>
     <message>
       <source>Subor Keyboard plus 3x8-bit mouse</source>
-      <translation type="unfinished">Subor Keyboard plus 3x8-bit mouse</translation>
+      <translation>Tastiera Subor più mouse 3x8-bit</translation>
     </message>
     <message>
       <source>Subor Keyboard plus 24-bit mouse</source>
-      <translation type="unfinished">Subor Keyboard plus 24-bit mouse</translation>
+      <translation>Tastiera Subor più mouse 24-bit</translation>
     </message>
     <message>
       <source>SNES Mouse</source>
-      <translation type="unfinished">SNES Mouse</translation>
+      <translation>Mouse SNES</translation>
     </message>
     <message>
       <source>Multicart</source>
@@ -306,7 +306,7 @@
     </message>
     <message>
       <source>Two SNES controllers</source>
-      <translation type="unfinished">Two SNES controllers</translation>
+      <translation>Due controller SNES</translation>
     </message>
     <message>
       <source>RacerMate Bicycle</source>
@@ -314,7 +314,7 @@
     </message>
     <message>
       <source>U-Force</source>
-      <translation type="unfinished">U-Force</translation>
+      <translation>U-Force</translation>
     </message>
     <message>
       <source>R.O.B. Stack-Up</source>
