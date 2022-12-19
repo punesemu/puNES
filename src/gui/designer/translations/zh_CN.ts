@@ -16,15 +16,15 @@
     </message>
     <message>
       <source>Unset</source>
-      <translation>清除</translation>
+      <translation>未设置</translation>
     </message>
     <message>
       <source>Apply</source>
-      <translation>提交</translation>
+      <translation>应用</translation>
     </message>
     <message>
       <source>Discard</source>
-      <translation>丢弃</translation>
+      <translation>放弃</translation>
     </message>
   </context>
   <context>
@@ -42,23 +42,23 @@
     <name>dlgHeaderEditor</name>
     <message>
       <source>Attention</source>
-      <translation type="unfinished">Attention</translation>
+      <translation>警告</translation>
     </message>
     <message>
       <source>Do you want to boot the ROM with the changes made?</source>
-      <translation type="unfinished">Do you want to boot the ROM with the changes made?</translation>
+      <translation>您希望以更改模式启动 ROM 吗?</translation>
     </message>
     <message>
       <source>Header Editor</source>
-      <translation type="unfinished">Header Editor</translation>
+      <translation>头部编辑器</translation>
     </message>
     <message>
       <source>Mirroring</source>
-      <translation type="unfinished">Mirroring</translation>
+      <translation>镜像</translation>
     </message>
     <message>
       <source>Console Type</source>
-      <translation type="unfinished">Console Type</translation>
+      <translation>主机类型</translation>
     </message>
     <message>
       <source>PRG ROM KiB</source>
@@ -66,19 +66,19 @@
     </message>
     <message>
       <source>None</source>
-      <translation type="unfinished">None</translation>
+      <translation>无</translation>
     </message>
     <message>
       <source>128 Bytes</source>
-      <translation type="unfinished">128 Bytes</translation>
+      <translation>128 字节</translation>
     </message>
     <message>
       <source>256 Bytes</source>
-      <translation type="unfinished">256 Bytes</translation>
+      <translation>256 字节</translation>
     </message>
     <message>
       <source>512 Bytes</source>
-      <translation type="unfinished">512 Bytes</translation>
+      <translation>512 字节</translation>
     </message>
     <message>
       <source>1 KiB</source>
@@ -134,19 +134,19 @@
     </message>
     <message>
       <source>Unspecified</source>
-      <translation type="unfinished">Unspecified</translation>
+      <translation>未指定</translation>
     </message>
     <message>
       <source>Standard Controllers</source>
-      <translation type="unfinished">Standard Controllers</translation>
+      <translation>标准控制器</translation>
     </message>
     <message>
       <source>NES Four Score/Satellite</source>
-      <translation type="unfinished">NES Four Score/Satellite</translation>
+      <translation>NES 四分插</translation>
     </message>
     <message>
       <source>Famicom Four Players Adapter</source>
-      <translation type="unfinished">Famicom Four Players Adapter</translation>
+      <translation>Famicom 四玩家适配器</translation>
     </message>
     <message>
       <source>Vs. System</source>
@@ -158,7 +158,7 @@
     </message>
     <message>
       <source>Reserved</source>
-      <translation type="unfinished">Reserved</translation>
+      <translation>保留</translation>
     </message>
     <message>
       <source>Vs. Zapper</source>
@@ -166,7 +166,7 @@
     </message>
     <message>
       <source>Zapper</source>
-      <translation type="unfinished">Zapper</translation>
+      <translation>手枪</translation>
     </message>
     <message>
       <source>Two Zappers</source>
@@ -226,7 +226,7 @@
     </message>
     <message>
       <source>Oeka Kids Tablet</source>
-      <translation type="unfinished">Oeka Kids Tablet</translation>
+      <translation>Oeka 儿童输入板</translation>
     </message>
     <message>
       <source>Sunsoft Barcode Battler</source>
@@ -250,11 +250,11 @@
     </message>
     <message>
       <source>Famicom 3D System</source>
-      <translation type="unfinished">Famicom 3D System</translation>
+      <translation>Famicom 3D 系统</translation>
     </message>
     <message>
       <source>Doremikko Keyboard</source>
-      <translation type="unfinished">Doremikko Keyboard</translation>
+      <translation>Doremikko 键盘</translation>
     </message>
     <message>
       <source>R.O.B. Gyro Set</source>
@@ -262,11 +262,11 @@
     </message>
     <message>
       <source>Famicom Data Recorder</source>
-      <translation type="unfinished">Famicom Data Recorder</translation>
+      <translation>Famicom 数据记录器</translation>
     </message>
     <message>
       <source>ASCII Turbo File</source>
-      <translation type="unfinished">ASCII Turbo File</translation>
+      <translation>ASCII Turbo 文件</translation>
     </message>
     <message>
       <source>IGS Storage Battle Box</source>
@@ -274,39 +274,39 @@
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
-      <translation type="unfinished">Family BASIC Keyboard</translation>
+      <translation>Family BASIC 键盘</translation>
     </message>
     <message>
       <source>Dongda PEC-586 Keyboard</source>
-      <translation type="unfinished">Dongda PEC-586 Keyboard</translation>
+      <translation>Dongda PEC-586 键盘</translation>
     </message>
     <message>
       <source>Bit Corp. Bit-79 Keyboard</source>
-      <translation type="unfinished">Bit Corp. Bit-79 Keyboard</translation>
+      <translation>Bit Corp. Bit-79 键盘</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>小霸王键盘</translation>
     </message>
     <message>
       <source>Subor Keyboard plus 3x8-bit mouse</source>
-      <translation type="unfinished">Subor Keyboard plus 3x8-bit mouse</translation>
+      <translation>小霸王键盘加 3x8 位鼠标</translation>
     </message>
     <message>
       <source>Subor Keyboard plus 24-bit mouse</source>
-      <translation type="unfinished">Subor Keyboard plus 24-bit mouse</translation>
+      <translation>小霸王键盘加 24 位鼠标</translation>
     </message>
     <message>
       <source>SNES Mouse</source>
-      <translation type="unfinished">SNES Mouse</translation>
+      <translation>SNES 鼠标</translation>
     </message>
     <message>
       <source>Multicart</source>
-      <translation type="unfinished">Multicart</translation>
+      <translation>多重卡带</translation>
     </message>
     <message>
       <source>Two SNES controllers</source>
-      <translation type="unfinished">Two SNES controllers</translation>
+      <translation>双 SNES 控制器</translation>
     </message>
     <message>
       <source>RacerMate Bicycle</source>
@@ -322,15 +322,15 @@
     </message>
     <message>
       <source>City Patrolman Lightgun</source>
-      <translation type="unfinished">City Patrolman Lightgun</translation>
+      <translation>城市巡警光枪</translation>
     </message>
     <message>
       <source>Sharp C1 Cassette Interface</source>
-      <translation type="unfinished">Sharp C1 Cassette Interface</translation>
+      <translation>Sharp C1 卡带界面</translation>
     </message>
     <message>
       <source>Standard Controller (inverted direction)</source>
-      <translation type="unfinished">Standard Controller (inverted direction)</translation>
+      <translation>标准控制器 (方向相反)</translation>
     </message>
     <message>
       <source>Excalibor Sudoku Pad</source>
@@ -354,7 +354,7 @@
     </message>
     <message>
       <source>Both</source>
-      <translation type="unfinished">Both</translation>
+      <translation>两者</translation>
     </message>
     <message>
       <source>Dendy</source>
@@ -362,23 +362,23 @@
     </message>
     <message>
       <source>VS Type</source>
-      <translation type="unfinished">VS Type</translation>
+      <translation>类型</translation>
     </message>
     <message>
       <source>Horizontal</source>
-      <translation type="unfinished">Horizontal</translation>
+      <translation>水平</translation>
     </message>
     <message>
       <source>Vertical</source>
-      <translation type="unfinished">Vertical</translation>
+      <translation>垂直</translation>
     </message>
     <message>
       <source>4-Screen</source>
-      <translation type="unfinished">4-Screen</translation>
+      <translation>4 屏幕</translation>
     </message>
     <message>
       <source>CPU Timing</source>
-      <translation type="unfinished">CPU Timing</translation>
+      <translation>CPU 计时</translation>
     </message>
     <message>
       <source>VS PPU</source>
@@ -434,15 +434,15 @@
     </message>
     <message>
       <source>Famicom Network System</source>
-      <translation type="unfinished">Famicom Network System</translation>
+      <translation>Famicom 网络系统</translation>
     </message>
     <message>
       <source>File</source>
-      <translation type="unfinished">File</translation>
+      <translation>文件</translation>
     </message>
     <message>
       <source>CHR RAM Battery</source>
-      <translation type="unfinished">CHR RAM Battery</translation>
+      <translation>CHR RAM 电池</translation>
     </message>
     <message>
       <source>Mapper</source>
@@ -450,23 +450,23 @@
     </message>
     <message>
       <source>Normal</source>
-      <translation type="unfinished">Normal</translation>
+      <translation>普通</translation>
     </message>
     <message>
       <source>RBI Baseball</source>
-      <translation type="unfinished">RBI Baseball</translation>
+      <translation>RBI 棒球</translation>
     </message>
     <message>
       <source>TKO Boxing</source>
-      <translation type="unfinished">TKO Boxing</translation>
+      <translation>TKO 拳击</translation>
     </message>
     <message>
       <source>Super Xevious</source>
-      <translation type="unfinished">Super Xevious</translation>
+      <translation>超级铁板阵</translation>
     </message>
     <message>
       <source>Vs. Ice Climber</source>
-      <translation type="unfinished">Vs. Ice Climber</translation>
+      <translation>Vs. 敲冰块</translation>
     </message>
     <message>
       <source>Vs. Dual</source>
@@ -474,7 +474,7 @@
     </message>
     <message>
       <source>Raid on Bungeling Bay</source>
-      <translation type="unfinished">Raid on Bungeling Bay</translation>
+      <translation>救难直升机</translation>
     </message>
     <message>
       <source>PRG RAM</source>
@@ -490,7 +490,7 @@
     </message>
     <message>
       <source>Submapper</source>
-      <translation type="unfinished">Submapper</translation>
+      <translation>子 mapper</translation>
     </message>
     <message>
       <source>RP2C03B</source>
@@ -546,11 +546,11 @@
     </message>
     <message>
       <source>Header</source>
-      <translation type="unfinished">Header</translation>
+      <translation>头部</translation>
     </message>
     <message>
       <source>PRG RAM Battery</source>
-      <translation type="unfinished">PRG RAM Battery</translation>
+      <translation>PRG RAM 电池</translation>
     </message>
     <message>
       <source>CHR RAM</source>
@@ -558,31 +558,31 @@
     </message>
     <message>
       <source>Input</source>
-      <translation type="unfinished">Input</translation>
+      <translation>输入</translation>
     </message>
     <message>
       <source>Misc ROMs</source>
-      <translation type="unfinished">Misc ROMs</translation>
+      <translation>其它 ROM</translation>
     </message>
     <message>
       <source>Battery</source>
-      <translation type="unfinished">Battery</translation>
+      <translation>电池</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>其它</translation>
     </message>
     <message>
       <source>Reset to default</source>
-      <translation type="unfinished">Reset to default</translation>
+      <translation>重置为默认</translation>
     </message>
     <message>
       <source>Save</source>
-      <translation type="unfinished">Save</translation>
+      <translation>保存</translation>
     </message>
     <message>
       <source>Cancel</source>
-      <translation type="unfinished">Cancel</translation>
+      <translation>取消</translation>
     </message>
   </context>
   <context>
@@ -640,18 +640,18 @@
     </message>
     <message>
       <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
-      <translation>扩展模式 (支持小键盘、F10、F11、F12 和 &quot;` &quot;. 说明: 'Study and Game 32-in-1' 在此模式下有问题)</translation>
+      <translation>扩展模式 (开启键盘支持, F10, F11, F12 和 &quot;` &quot;. P.S. : &apos;学习和游戏 32-in-1&apos; 在此模式下有问题。)</translation>
     </message>
   </context>
   <context>
     <name>dlgLog</name>
     <message>
       <source>Log</source>
-      <translation type="unfinished">Log</translation>
+      <translation>日志</translation>
     </message>
     <message>
       <source>Close</source>
-      <translation type="unfinished">Close</translation>
+      <translation>关闭</translation>
     </message>
   </context>
   <context>
@@ -730,7 +730,7 @@
     </message>
     <message>
       <source>Capture/Release Input</source>
-      <translation>捕捉/释放输入</translation>
+      <translation>捕获/释放输入</translation>
     </message>
   </context>
   <context>
@@ -970,51 +970,51 @@
     </message>
     <message>
       <source>Error on create config folder</source>
-      <translation>创建配置文件夹时出错</translation>
+      <translation>创建配置文件夹错误</translation>
     </message>
     <message>
       <source>Error on create data folder</source>
-      <translation>创建数据文件夹时出错</translation>
+      <translation>创建数据文件夹错误</translation>
     </message>
     <message>
       <source>Error on create temp folder</source>
-      <translation>创建临时文件夹时出错</translation>
+      <translation>创建临时文件夹错误</translation>
     </message>
     <message>
       <source>Error on create cheat folder</source>
-      <translation>创建作弊文件夹时出错</translation>
+      <translation>创建作弊文件夹错误</translation>
     </message>
     <message>
       <source>Error on create psg folder</source>
-      <translation>创建 psg 文件夹时出错</translation>
+      <translation>创建 psg 文件夹错误</translation>
     </message>
     <message>
       <source>Error on create shp folder</source>
-      <translation>创建 shp 文件夹时出错</translation>
+      <translation>创建 shp 文件夹错误</translation>
     </message>
     <message>
       <source>Error on create jsc folder</source>
-      <translation>创建 jsc 文件夹时出错</translation>
+      <translation>创建 jsc 文件夹错误</translation>
     </message>
     <message>
       <source>Error on create bios folder</source>
-      <translation>创建 bios 文件夹时出错</translation>
+      <translation>创建 bios 文件夹错误</translation>
     </message>
     <message>
       <source>Error on create diff folder</source>
-      <translation>创建差异文件夹时出错</translation>
+      <translation>创建 diff 文件夹错误</translation>
     </message>
     <message>
       <source>Error on create prb folder</source>
-      <translation>创建 prb 文件夹时出错</translation>
+      <translation>创建 prb 文件夹错误</translation>
     </message>
     <message>
       <source>Error on create save folder</source>
-      <translation>创建保存文件夹时出错</translation>
+      <translation>创建存档文件夹错误</translation>
     </message>
     <message>
       <source>Error on create screenshot folder</source>
-      <translation>创建截图文件夹时出错</translation>
+      <translation>创建截图文件夹错误</translation>
     </message>
   </context>
   <context>
@@ -1041,15 +1041,15 @@
     </message>
     <message>
       <source>Nes rom files</source>
-      <translation>NES ROM</translation>
+      <translation>NES ROM 文件</translation>
     </message>
     <message>
       <source>FDS image files</source>
-      <translation>磁碟镜像</translation>
+      <translation>FDS 镜像文件</translation>
     </message>
     <message>
       <source>TAS movie files</source>
-      <translation>TAS 电影</translation>
+      <translation>TAS 电影文件</translation>
     </message>
     <message>
       <source>All files</source>
@@ -1077,11 +1077,11 @@
     </message>
     <message>
       <source>Compiled</source>
-      <translation>已编译</translation>
+      <translation>编译于</translation>
     </message>
     <message>
       <source>portable version</source>
-      <translation>移动版</translation>
+      <translation>便携版</translation>
     </message>
     <message>
       <source>&amp;Open</source>
@@ -1093,11 +1093,11 @@
     </message>
     <message>
       <source>&amp;Hard Reset</source>
-      <translation>硬重设(&amp;H)</translation>
+      <translation>硬重置(&amp;H)</translation>
     </message>
     <message>
       <source>&amp;Soft Reset</source>
-      <translation>软重设(&amp;S)</translation>
+      <translation>软重置(&amp;S)</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert Disk</source>
@@ -1105,35 +1105,35 @@
     </message>
     <message>
       <source>Disk 1 side A</source>
-      <translation>１碟Ａ面</translation>
+      <translation>磁盘 1 Ａ面</translation>
     </message>
     <message>
       <source>Disk 1 side B</source>
-      <translation>１碟Ｂ面</translation>
+      <translation>磁盘 1 Ｂ面</translation>
     </message>
     <message>
       <source>Disk 2 side A</source>
-      <translation>２碟Ａ面</translation>
+      <translation>磁盘 2 Ａ面</translation>
     </message>
     <message>
       <source>Disk 2 side B</source>
-      <translation>２碟Ｂ面</translation>
+      <translation>磁盘 2 Ｂ面</translation>
     </message>
     <message>
       <source>Disk 3 side A</source>
-      <translation>３碟Ａ面</translation>
+      <translation>磁盘 3 Ａ面</translation>
     </message>
     <message>
       <source>Disk 3 side B</source>
-      <translation>３碟Ｂ面</translation>
+      <translation>磁盘 3 Ｂ面</translation>
     </message>
     <message>
       <source>Disk 4 side A</source>
-      <translation>４碟Ａ面</translation>
+      <translation>磁盘 4 Ａ面</translation>
     </message>
     <message>
       <source>Disk 4 side B</source>
-      <translation>４碟Ｂ面</translation>
+      <translation>磁盘 4 Ｂ面</translation>
     </message>
     <message>
       <source>&amp;Switch sides</source>
@@ -1149,7 +1149,7 @@
     </message>
     <message>
       <source>F&amp;ullscreen</source>
-      <translation>全屏(&amp;u)</translation>
+      <translation>全屏(&amp;U)</translation>
     </message>
     <message>
       <source>&amp;Game Genie Rom Mode</source>
@@ -1157,11 +1157,11 @@
     </message>
     <message>
       <source>S&amp;ave state</source>
-      <translation>保存进度(&amp;a)</translation>
+      <translation>保存进度(&amp;A)</translation>
     </message>
     <message>
       <source>L&amp;oad state</source>
-      <translation>载入进度(&amp;o)</translation>
+      <translation>载入进度(&amp;O)</translation>
     </message>
     <message>
       <source>&amp;Increment slot</source>
@@ -1233,7 +1233,7 @@
     </message>
     <message>
       <source>Save Screens&amp;hot</source>
-      <translation>截图(&amp;h)</translation>
+      <translation>截图(&amp;H)</translation>
     </message>
     <message>
       <source>Insert Coin</source>
@@ -1241,7 +1241,7 @@
     </message>
     <message>
       <source>&amp;Open working folder</source>
-      <translation>打开主文件夹(&amp;O)</translation>
+      <translation>打开工作文件夹(&amp;O)</translation>
     </message>
     <message>
       <source>&amp;File</source>
@@ -1249,7 +1249,7 @@
     </message>
     <message>
       <source>&amp;Recent Roms</source>
-      <translation>重玩(&amp;R)</translation>
+      <translation>最近的 Rom(&amp;R)</translation>
     </message>
     <message>
       <source>&amp;NES</source>
@@ -1261,7 +1261,7 @@
     </message>
     <message>
       <source>Setti&amp;ngs</source>
-      <translation>设置(&amp;n)</translation>
+      <translation>设置(&amp;S)</translation>
     </message>
     <message>
       <source>&amp;Video</source>
@@ -1285,7 +1285,7 @@
     </message>
     <message>
       <source>S&amp;tate</source>
-      <translation>进度(&amp;t)</translation>
+      <translation>进度(&amp;T)</translation>
     </message>
     <message>
       <source>&amp;Help</source>
@@ -1301,7 +1301,7 @@
     </message>
     <message>
       <source>Too&amp;ls</source>
-      <translation>工具(&amp;l)</translation>
+      <translation>工具(&amp;L)</translation>
     </message>
     <message>
       <source>UNIF rom files</source>
@@ -1361,7 +1361,7 @@
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
-      <translation>保存原始截图(&amp;r)</translation>
+      <translation>保存原始截图(&amp;R)</translation>
     </message>
     <message>
       <source>Widgets</source>
@@ -1402,11 +1402,11 @@
     </message>
     <message>
       <source>Slot &amp;A</source>
-      <translation>槽 &amp;A</translation>
+      <translation>进度槽 &amp;A</translation>
     </message>
     <message>
       <source>Slot &amp;B</source>
-      <translation>槽 &amp;B</translation>
+      <translation>进度槽 &amp;B</translation>
     </message>
     <message>
       <source>&amp;Vs System Controls</source>
@@ -1418,43 +1418,43 @@
     </message>
     <message>
       <source>Fast Forward (hold button)</source>
-      <translation>快进 (按住)</translation>
+      <translation>快进 (按住按钮)</translation>
     </message>
     <message>
       <source>puNES tape image</source>
-      <translation>puNES 磁带</translation>
+      <translation>puNES 磁带镜像</translation>
     </message>
     <message>
       <source>Virtuanes tape image</source>
-      <translation>VirtuaNES 磁带</translation>
+      <translation>Virtuanes 磁带镜像</translation>
     </message>
     <message>
       <source>Nestopia tape image</source>
-      <translation>Nestopia 磁带</translation>
+      <translation>Nestopia 磁带镜像</translation>
     </message>
     <message>
       <source>Open tape image</source>
-      <translation>打开磁带</translation>
+      <translation>打开磁带镜像</translation>
     </message>
     <message>
       <source>Tape Image</source>
-      <translation>磁带</translation>
+      <translation>磁带镜像</translation>
     </message>
     <message>
       <source>Unsupported format</source>
-      <translation>不支持的格式</translation>
+      <translation>尚未支持的磁带镜像</translation>
     </message>
     <message>
       <source>Error opening tape image file</source>
-      <translation>打开磁带文件出错</translation>
+      <translation>打开磁带镜像文件错误</translation>
     </message>
     <message>
       <source>WAVE tape image</source>
-      <translation>波形磁带</translation>
+      <translation>波形磁带镜像</translation>
     </message>
     <message>
       <source>Save tape image</source>
-      <translation>保存磁带</translation>
+      <translation>保存磁带镜像</translation>
     </message>
     <message>
       <source>Toggle &amp;Fast Forward</source>
@@ -1474,7 +1474,7 @@
     </message>
     <message>
       <source>Shout into &amp;Microphone</source>
-      <translation>喊麦(&amp;M)</translation>
+      <translation>对话筒喊叫(&amp;M)</translation>
     </message>
     <message>
       <source>&amp;Open config folder</source>
@@ -1482,38 +1482,38 @@
     </message>
     <message>
       <source>Ta&amp;pe</source>
-      <translation>磁带(&amp;p)</translation>
+      <translation>磁带(&amp;A)</translation>
     </message>
     <message>
       <source>Toggle Virtual &amp;Keyboard</source>
-      <translation type="unfinished">Toggle Virtual &amp;Keyboard</translation>
+      <translation>切换虚拟键盘(&amp;K)</translation>
     </message>
     <message>
       <source>&amp;Show Log</source>
-      <translation type="unfinished">&amp;Show Log</translation>
+      <translation>显示日志(&amp;S)</translation>
     </message>
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
-      <translation type="unfinished">Edit Current iNES/NES2.0 &amp;Header</translation>
+      <translation>编辑当前的 iNES/NES2.0 头部(&amp;H)</translation>
     </message>
   </context>
   <context>
     <name>nesKeyboardStatusBar</name>
     <message>
       <source>Capture/Release the Input</source>
-      <translation type="unfinished">Capture/Release the Input</translation>
+      <translation>捕获/释放输入</translation>
     </message>
     <message>
       <source>Input is released</source>
-      <translation type="unfinished">Input is released</translation>
+      <translation>输入已被释放</translation>
     </message>
     <message>
       <source>Input is captured</source>
-      <translation type="unfinished">Input is captured</translation>
+      <translation>输入已被捕获</translation>
     </message>
     <message>
       <source>Toggle Virtual Keyboard</source>
-      <translation type="unfinished">Toggle Virtual Keyboard</translation>
+      <translation>切换虚拟键盘</translation>
     </message>
   </context>
   <context>
@@ -1701,27 +1701,27 @@
     <message>
       <source>tape play</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">tape play</translation>
+      <translation>播放磁带</translation>
     </message>
     <message>
       <source>tape record</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">tape record</translation>
+      <translation>录制磁带</translation>
     </message>
     <message>
       <source>tape stop</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">tape stop</translation>
+      <translation>停止磁带</translation>
     </message>
     <message>
       <source>keyboard input captured</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">keyboard input captured</translation>
+      <translation>捕获键盘输入</translation>
     </message>
     <message>
       <source>keyboard input released</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">keyboard input released</translation>
+      <translation>释放键盘输入</translation>
     </message>
   </context>
   <context>
@@ -1739,7 +1739,7 @@
     <name>suborKeyboard</name>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>小霸王键盘</translation>
     </message>
   </context>
   <context>
@@ -1877,7 +1877,7 @@
     </message>
     <message>
       <source>New Game Genie</source>
-      <translation>新建金手指</translation>
+      <translation>新建 Game Genie</translation>
     </message>
     <message>
       <source>New Pro Action</source>
@@ -1885,7 +1885,7 @@
     </message>
     <message>
       <source>New CPU Ram</source>
-      <translation type="unfinished">New CPU Ram</translation>
+      <translation>新建 CPU 内存</translation>
     </message>
   </context>
   <context>
@@ -1932,26 +1932,26 @@
     </message>
     <message>
       <source>Nestopia XML files</source>
-      <translation type="unfinished">Nestopia XML files</translation>
+      <translation>Nestopia XML 文件</translation>
     </message>
     <message>
       <source>Mame 128+ XML files</source>
-      <translation type="unfinished">Mame 128+ XML files</translation>
+      <translation>Mame 128+ XML 文件</translation>
     </message>
     <message>
       <source>FCEUX CHT files</source>
-      <translation type="unfinished">FCEUX CHT files</translation>
+      <translation>FCEUX CHT 文件</translation>
     </message>
     <message>
       <source>libretro CHT files</source>
-      <translation type="unfinished">libretro CHT files</translation>
+      <translation>libretro CHT 文件</translation>
     </message>
   </context>
   <context>
     <name>wdgKeyboard</name>
     <message>
       <source>Virtual Keyboard</source>
-      <translation type="unfinished">Virtual Keyboard</translation>
+      <translation>虚拟键盘</translation>
     </message>
   </context>
   <context>
@@ -2161,23 +2161,23 @@
     <name>wdgScreen</name>
     <message>
       <source>Paste</source>
-      <translation type="unfinished">Paste</translation>
+      <translation>粘贴</translation>
     </message>
     <message>
       <source>Tape</source>
-      <translation type="unfinished">Tape</translation>
+      <translation>磁带</translation>
     </message>
     <message>
       <source>Play</source>
-      <translation type="unfinished">Play</translation>
+      <translation>播放</translation>
     </message>
     <message>
       <source>Record</source>
-      <translation type="unfinished">Record</translation>
+      <translation>录制</translation>
     </message>
     <message>
       <source>Stop</source>
-      <translation type="unfinished">Stop</translation>
+      <translation>停止</translation>
     </message>
   </context>
   <context>
@@ -2232,7 +2232,7 @@
     </message>
     <message>
       <source>Enable Audio</source>
-      <translation>出声</translation>
+      <translation>开启音频</translation>
     </message>
     <message>
       <source>Reverse bits of DPCM</source>
@@ -2446,7 +2446,7 @@
     </message>
     <message>
       <source>Chinese Simplified</source>
-      <translation>简体中文</translation>
+      <translation>简体中文(Chinese Simplified)</translation>
     </message>
     <message>
       <source>Insert disk 1 side A at power-up/reset</source>
@@ -2454,19 +2454,23 @@
     </message>
     <message>
       <source>Famicom Disk System</source>
-      <translation>Famicom 磁碟机</translation>
+      <translation>Famicom 磁碟系统</translation>
     </message>
     <message>
       <source>Switch the disk/side automatically</source>
-      <translation>自动换面</translation>
+      <translation>自动切换磁盘/面</translation>
     </message>
     <message>
       <source>Allow multiple instances of the emulator</source>
-      <translation>允许运行多个模拟器</translation>
+      <translation>允许多个模拟器实例</translation>
     </message>
     <message>
       <source>Use fast forward when loading the disk/side</source>
-      <translation type="unfinished">Use fast forward when loading the disk/side</translation>
+      <translation>加载磁盘/面时快进</translation>
+    </message>
+    <message>
+      <source>French</source>
+      <translation type="unfinished">French</translation>
     </message>
   </context>
   <context>
@@ -2613,11 +2617,11 @@
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
-      <translation type="unfinished">Family BASIC Keyboard</translation>
+      <translation>Family BASIC 键盘</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>小霸王键盘</translation>
     </message>
   </context>
   <context>
@@ -2632,7 +2636,7 @@
     </message>
     <message>
       <source>Reset Lag Counter</source>
-      <translation>重设延迟数</translation>
+      <translation>重置延迟计数</translation>
     </message>
     <message>
       <source>VBlank Lines</source>
@@ -2676,7 +2680,7 @@
     </message>
     <message>
       <source>Randomize (Not recommended)</source>
-      <translation>随机 (不推荐)</translation>
+      <translation>随机化(不推荐)</translation>
     </message>
     <message>
       <source>Power up/reset CPU/PPU Alignment</source>
@@ -2716,7 +2720,7 @@
     <message>
       <source>High Efficiency Video Codec (*.mkv)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>高效率编码 (*.mkv)</translation>
+      <translation>高效率视频编码 (*.mkv)</translation>
     </message>
     <message>
       <source>WebM Video (*.webm)</source>
@@ -2741,7 +2745,7 @@
     <message>
       <source>WAV Audio (*.wav)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation>波形音频 (*.wav)</translation>
+      <translation>WAV 音频 (*.wav)</translation>
     </message>
     <message>
       <source>MP3 Audio (*.mp3)</source>
@@ -2773,7 +2777,7 @@
     </message>
     <message>
       <source>Output Video Format</source>
-      <translation>视频输出格式</translation>
+      <translation>输出视频格式</translation>
     </message>
     <message>
       <source>Custom Width</source>
@@ -2785,7 +2789,7 @@
     </message>
     <message>
       <source>Output Audio Format</source>
-      <translation>音频输出格式</translation>
+      <translation>输出音频格式</translation>
     </message>
     <message>
       <source>Output Resolution</source>
@@ -2869,11 +2873,11 @@
     </message>
     <message>
       <source>Use the emulator resolution</source>
-      <translation>模拟器分辨率</translation>
+      <translation>使用模拟器分辨率</translation>
     </message>
     <message>
       <source>Follow screen rotation</source>
-      <translation>旋转屏幕保持一致</translation>
+      <translation>跟随屏幕旋转</translation>
     </message>
     <message>
       <source>Low</source>
@@ -2909,11 +2913,11 @@
     <name>wdgSettingsVideo</name>
     <message>
       <source>GLSL &amp;soft stretch</source>
-      <translation>GLSL 柔和拉伸(&amp;s)</translation>
+      <translation>GL&amp;SL 柔和拉伸</translation>
     </message>
     <message>
       <source>HLSL &amp;soft stretch</source>
-      <translation>HLSL 柔和拉伸(&amp;s)</translation>
+      <translation>HL&amp;SL 柔和拉伸</translation>
     </message>
     <message>
       <source>[Select a file]</source>
@@ -3365,7 +3369,7 @@
     </message>
     <message>
       <source>Dot Matrix</source>
-      <translation type="unfinished">Dot Matrix</translation>
+      <translation>点阵</translation>
     </message>
     <message>
       <source>PAL TV1x</source>
@@ -3385,11 +3389,11 @@
     </message>
     <message>
       <source>Super 2xSaI</source>
-      <translation type="unfinished">Super 2xSaI</translation>
+      <translation>超级 2xSaI</translation>
     </message>
     <message>
       <source>Super Eagle</source>
-      <translation type="unfinished">Super Eagle</translation>
+      <translation>超级 Eagle</translation>
     </message>
     <message>
       <source>TV2x</source>
@@ -3408,7 +3412,7 @@
     <name>wdgState</name>
     <message>
       <source>Save/Load Slot Box</source>
-      <translation>载入/保存进度</translation>
+      <translation>保存/载入进度框</translation>
     </message>
     <message>
       <source>Save state</source>
