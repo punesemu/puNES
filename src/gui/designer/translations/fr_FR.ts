@@ -9,6 +9,25 @@
     </message>
 </context>
 <context>
+    <name>dlgCfgNSCode</name>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished">Défaut</translation>
+    </message>
+    <message>
+        <source>Unset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished">Appliquer</translation>
+    </message>
+    <message>
+        <source>Discard</source>
+        <translation type="unfinished">Jeter</translation>
+    </message>
+</context>
+<context>
     <name>dlgCmdLineHelp</name>
     <message>
         <source>Close</source>
@@ -20,6 +39,553 @@
     </message>
 </context>
 <context>
+    <name>dlgHeaderEditor</name>
+    <message>
+        <source>Attention</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to boot the ROM with the changes made?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Header Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mirroring</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Console Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PRG ROM KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Aucun</translation>
+    </message>
+    <message>
+        <source>128 Bytes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>256 Bytes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>512 Bytes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>8 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>16 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>32 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>64 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>128 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>256 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>512 KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1 MiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>N/A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trainer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unspecified</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Standard Controllers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NES Four Score/Satellite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Famicom Four Players Adapter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vs. System</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vs. System (1P via $4017)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reserved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vs. Zapper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zapper</source>
+        <translation type="unfinished">Zapper</translation>
+    </message>
+    <message>
+        <source>Two Zappers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bandai Hyper Shot Lightgun</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Power Pad Side A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Power Pad Side B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Family Trainer Side A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Family Trainer Side B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arkanoid Paddle (NES)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arkanoid Paddle (Famicom)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two Paddles plus Famicom Data Recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Konami Hyper Shot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coconuts Pachinko</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exciting Boxing Punching Bag</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Jissen Mahjong Controller</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Party Tap</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Oeka Kids Tablet</source>
+        <translation type="unfinished">Tablette Oeka Kids</translation>
+    </message>
+    <message>
+        <source>Sunsoft Barcode Battler</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Miracle Piano Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pokkun Moguraa</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top Rider</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double-Fisted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Famicom 3D System</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Doremikko Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>R.O.B. Gyro Set</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Famicom Data Recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ASCII Turbo File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>IGS Storage Battle Box</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Family BASIC Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dongda PEC-586 Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bit Corp. Bit-79 Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Subor Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Subor Keyboard plus 3x8-bit mouse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Subor Keyboard plus 24-bit mouse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SNES Mouse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multicart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two SNES controllers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RacerMate Bicycle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U-Force</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>R.O.B. Stack-Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>City Patrolman Lightgun</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sharp C1 Cassette Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Standard Controller (inverted direction)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Excalibor Sudoku Pad</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ABL Pinball</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Golden Nugget Casino</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC</source>
+        <translation type="unfinished">NTSC</translation>
+    </message>
+    <message>
+        <source>PAL</source>
+        <translation type="unfinished">PAL</translation>
+    </message>
+    <message>
+        <source>Both</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dendy</source>
+        <translation type="unfinished">Dendy</translation>
+    </message>
+    <message>
+        <source>VS Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Horizontal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vertical</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4-Screen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CPU Timing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VS PPU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CHR ROM KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NES/Famicom/Dendy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Playchoice 10</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Famiclone with Decimal Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NES/Famicom with EPSM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VT01</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VT02</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VT03</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VT09</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VT32</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VT369</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UMC UM6578</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Famicom Network System</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CHR RAM Battery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mapper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RBI Baseball</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TKO Boxing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Super Xevious</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vs. Ice Climber</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vs. Dual</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Raid on Bungeling Bay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PRG RAM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>iNES 1.0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NES 2.0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Submapper</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RP2C03B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RP2C03G</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RP2C04-0001</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RP2C04-0002</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RP2C04-0003</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RP2C04-0004</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RC2C03B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RC2C03C</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RC2C05-01</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RC2C05-02</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RC2C05-03</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RC2C05-04</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RC2C05-05</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Header</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PRG RAM Battery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CHR RAM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input</source>
+        <translation type="unfinished">Contrôleur</translation>
+    </message>
+    <message>
+        <source>Misc ROMs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Battery</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Misc</source>
+        <translation type="unfinished">Divers</translation>
+    </message>
+    <message>
+        <source>Reset to default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Annuler</translation>
+    </message>
+</context>
+<context>
     <name>dlgJsc</name>
     <message>
         <source>Close Window</source>
@@ -28,6 +594,64 @@
     <message>
         <source>Save Configuration</source>
         <translation>Sauvegarder la Configuration</translation>
+    </message>
+</context>
+<context>
+    <name>dlgKeyboard</name>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1.0x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1.5x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2.0x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2.5x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mode</source>
+        <translation type="unfinished">Mode</translation>
+    </message>
+    <message>
+        <source>Virtual Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Setup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Subor Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>dlgLog</name>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Fermer</translation>
     </message>
 </context>
 <context>
@@ -103,6 +727,10 @@
     <message>
         <source>Toggle the Menu Bar in Fullscreen</source>
         <translation>Basculer la Barre de Menu en Plein Ecran</translation>
+    </message>
+    <message>
+        <source>Capture/Release Input</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -327,6 +955,69 @@
     </message>
 </context>
 <context>
+    <name>familyBasicKeyboard</name>
+    <message>
+        <source>Family Basic Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>mainApplication</name>
+    <message>
+        <source>%1 folders</source>
+        <extracomment>Do not translate %1</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create config folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create data folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create temp folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create cheat folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create psg folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create shp folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create jsc folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create bios folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create diff folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create prb folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create save folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error on create screenshot folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>mainWindow</name>
     <message>
         <source>&amp;Insert disk</source>
@@ -537,10 +1228,6 @@
         <translation>&amp;Désactivé</translation>
     </message>
     <message>
-        <source>&amp;Fast Forward</source>
-        <translation>Avance &amp;Rapide</translation>
-    </message>
-    <message>
         <source>&amp;Pause</source>
         <translation type="unfinished">&amp;Pause</translation>
     </message>
@@ -729,6 +1416,105 @@
         <source>&amp;Joypad/Gamepad Debug</source>
         <translation>Débug du &amp;Joypad/Gamepad</translation>
     </message>
+    <message>
+        <source>Fast Forward (hold button)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>puNES tape image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Virtuanes tape image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nestopia tape image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open tape image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tape Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unsupported format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error opening tape image file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WAVE tape image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save tape image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle &amp;Fast Forward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle Virtual &amp;Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Play</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Record</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shout into &amp;Microphone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Open config folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Show Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit Current iNES/NES2.0 &amp;Header</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ta&amp;pe</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>nesKeyboardStatusBar</name>
+    <message>
+        <source>Capture/Release the Input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input is released</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input is captured</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle Virtual Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>objCheat</name>
@@ -749,168 +1535,193 @@
     <name>overlayWidgetInfo</name>
     <message>
         <source>start wav recording</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>Démarrer l&apos;Enregistrement en WAV</translation>
     </message>
     <message>
         <source>stop wav recording</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>Arrêter l&apos;Enregistrement en WAV</translation>
     </message>
     <message>
         <source>[red]Game Genie rom not found[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[red]Rom Game Génie non trouvé[normal]</translation>
     </message>
     <message>
         <source>[red]error loading Game Genie rom[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[red]Erreur de chargement de la rom  Game Genie[normal]</translation>
     </message>
     <message>
         <source>[red]Illegal Opcode[normal] [yellow]0x%1[normal] at [yellow]0x%2[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[red]Opcode Illégal[normal] [yellow]0x%1[normal] à [yellow]0x%2[normal]</translation>
     </message>
     <message>
         <source>[red]error loading rom[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[red]Erreur au chargement de la rom[normal]</translation>
     </message>
     <message>
         <source>[red]FDS bios not found[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[red]Le Bios FDS n&apos;a pas été trouvé[normal]</translation>
     </message>
     <message>
         <source>disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>disque [cyan]%1[normal] face [cyan]%2[normal] [yellow]éjecté[normal]</translation>
     </message>
     <message>
         <source>you must [yellow]eject[normal] disk first</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>vous devezt [yellow]éjecter[normal] le premier disque</translation>
     </message>
     <message>
         <source>disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>disque [cyan]%1[normal] face [cyan]%2[normal] [green]inséré[normal]</translation>
     </message>
     <message>
         <source>disk [cyan]%1[normal] side [cyan]%2[normal] [brown]selected[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>disque [cyan]%1[normal] face [cyan]%2[normal] [brown]sélectionné[normal]</translation>
     </message>
     <message>
         <source>[yellow]mapper[normal] [brown]%1[normal] [yellow]not supported[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[yellow]mapper[normal] [brown]%1[normal] [yellow]non supporté[normal]</translation>
     </message>
     <message>
         <source>[red]error loading patch file[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[red]erreur de chargement du fichier patch[normal]</translation>
     </message>
     <message>
         <source>[yellow]save is impossible in Game Genie menu[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[yellow]la sauvegarde est impossible dans le menu Game Génie[normal]</translation>
     </message>
     <message>
         <source>[yellow]movie playback interrupted[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[yellow]interruption de la lecture d&apos;un film[normal]</translation>
     </message>
     <message>
         <source>[red]error[normal] loading state</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[red]erreur[normal] du chargement d&apos;état</translation>
     </message>
     <message>
         <source>[red]state file is not for this rom[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[red]le fichier d&apos;état n est pas pour cette rom[normal]</translation>
     </message>
     <message>
         <source>[green]%1[normal] cheat active</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[green]%1[normal] cheat actif</translation>
     </message>
     <message>
         <source>[green]%1[normal] cheats active</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[green]%1[normal] cheats actif</translation>
     </message>
     <message>
         <source>overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>overclock activé [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
     </message>
     <message>
         <source>[yellow]silence, the movie has begun[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[yellow]silence, le film a commencé[normal]</translation>
     </message>
     <message>
         <source>The End</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>La Fin</translation>
     </message>
     <message>
         <source>switched to [green]%1[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>Changement de [green]%1[normal]</translation>
     </message>
     <message>
         <source>[red]error on game genie rom file[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[red]erreur sur le fichier rom game génie[normal]</translation>
     </message>
     <message>
         <source>[red]error on FDS bios file[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[red]erreur sur le fichier bios FDS[normal]</translation>
     </message>
     <message>
         <source>[red]error on shader file[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[red]erreur sur le fichier shader[normal]</translation>
     </message>
     <message>
         <source>[red]error on palette file[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[red]erreur sur le fichier palette[normal]</translation>
     </message>
     <message>
         <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[red]erreurs[normal] sur le shader, utilise [green]&apos;No shader&apos;[cyan]</translation>
     </message>
     <message>
         <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>Changement de [cyan]%1x%2[normal] vers [green]%3Hz[normal]</translation>
     </message>
     <message>
         <source>[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[cyan]%1[normal] ID des faces trouvés, changement auto [red]disabled[normal]</translation>
     </message>
     <message>
         <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>[red]erreur[normal] chargement d&apos;état [cyan]%1[normal], le fichier est corrompu</translation>
     </message>
     <message>
         <source>state [cyan]%1[normal] saved successfully</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>Etat [cyan]%1[normal] sauvegardé avec succès</translation>
     </message>
     <message>
         <source>state [cyan]%1[normal] loaded successfully</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not translate %1 and %2</extracomment>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation>Etat [cyan]%1[normal] chargé avec succès</translation>
+    </message>
+    <message>
+        <source>tape play</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>tape record</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>tape stop</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>keyboard input captured</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>keyboard input released</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -922,6 +1733,13 @@
     <message>
         <source>Video</source>
         <translation>Vidéo</translation>
+    </message>
+</context>
+<context>
+    <name>suborKeyboard</name>
+    <message>
+        <source>Subor Keyboard</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1042,10 +1860,6 @@
         <translation>Soumettre</translation>
     </message>
     <message>
-        <source>New</source>
-        <translation>Nouveau</translation>
-    </message>
-    <message>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -1069,6 +1883,10 @@
         <source>New Pro Action</source>
         <translation>Nouveau Pro Action</translation>
     </message>
+    <message>
+        <source>New CPU Ram</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>wdgCheatsEditor</name>
@@ -1083,14 +1901,6 @@
     <message>
         <source>All supported formats</source>
         <translation>Tous les formats supportés</translation>
-    </message>
-    <message>
-        <source>XML files</source>
-        <translation>Fichiers XML</translation>
-    </message>
-    <message>
-        <source>CHT files</source>
-        <translation>Fichiers CHT</translation>
     </message>
     <message>
         <source>Import Cheats</source>
@@ -1119,6 +1929,29 @@
     <message>
         <source>A description must be entered</source>
         <translation>Vous devez entrer une description</translation>
+    </message>
+    <message>
+        <source>Nestopia XML files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mame 128+ XML files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FCEUX CHT files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>libretro CHT files</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>wdgKeyboard</name>
+    <message>
+        <source>Virtual Keyboard</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1322,6 +2155,29 @@
     <message>
         <source>Degrees</source>
         <translation>Degrés</translation>
+    </message>
+</context>
+<context>
+    <name>wdgScreen</name>
+    <message>
+        <source>Paste</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tape</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play</source>
+        <translation type="unfinished">Lancer</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1601,16 +2457,20 @@
         <translation type="unfinished">Famicom Disk System</translation>
     </message>
     <message>
-        <source>Use fast forward when loading the BIOS or disk/side</source>
-        <translation type="unfinished">Utilisez l&apos;avance rapide lors du chargement du BIOS ou du disque/de la face.</translation>
-    </message>
-    <message>
         <source>Switch the disk/side automatically</source>
         <translation>Changement automatique du disque/de la facey</translation>
     </message>
     <message>
         <source>Allow multiple instances of the emulator</source>
         <translation>Autoriser plusieurs instances de l&apos;émulateurr</translation>
+    </message>
+    <message>
+        <source>French</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use fast forward when loading the disk/side</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1754,6 +2614,14 @@
     <message>
         <source>Press a key - timeout in %1</source>
         <translation>Appuyez sur une touche - expire dans %1</translation>
+    </message>
+    <message>
+        <source>Family BASIC Keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Subor Keyboard</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2494,6 +3362,50 @@
     <message>
         <source>Preferred resolution </source>
         <translation>Résolution préférée </translation>
+    </message>
+    <message>
+        <source>2xSaI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dot Matrix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL TV1x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL TV2x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL TV3x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL TV4x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Super 2xSaI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Super Eagle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV2x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV3x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV4x</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

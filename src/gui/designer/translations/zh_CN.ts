@@ -166,7 +166,7 @@
     </message>
     <message>
         <source>Zapper</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">手枪</translation>
     </message>
     <message>
         <source>Two Zappers</source>
@@ -226,7 +226,7 @@
     </message>
     <message>
         <source>Oeka Kids Tablet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Oeka 儿童输入板</translation>
     </message>
     <message>
         <source>Sunsoft Barcode Battler</source>
@@ -346,11 +346,11 @@
     </message>
     <message>
         <source>NTSC</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">NTSC</translation>
     </message>
     <message>
         <source>PAL</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">PAL</translation>
     </message>
     <message>
         <source>Both</source>
@@ -358,7 +358,7 @@
     </message>
     <message>
         <source>Dendy</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dendy</translation>
     </message>
     <message>
         <source>VS Type</source>
@@ -616,19 +616,19 @@
     </message>
     <message>
         <source>1.0x</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">1.0x</translation>
     </message>
     <message>
         <source>1.5x</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">1.5x</translation>
     </message>
     <message>
         <source>2.0x</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">2.0x</translation>
     </message>
     <message>
         <source>2.5x</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">2.5x</translation>
     </message>
     <message>
         <source>Mode</source>
@@ -919,35 +919,35 @@
     </message>
     <message>
         <source>4</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">4</translation>
     </message>
     <message>
         <source>5</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">5</translation>
     </message>
     <message>
         <source>6</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">6</translation>
     </message>
     <message>
         <source>7</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">7</translation>
     </message>
     <message>
         <source>8</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">8</translation>
     </message>
     <message>
         <source>3</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">3</translation>
     </message>
     <message>
         <source>2</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">2</translation>
     </message>
     <message>
         <source>1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">1</translation>
     </message>
     <message>
         <source>Defaults Game Dip Switches</source>
@@ -2418,23 +2418,23 @@
     </message>
     <message>
         <source>2</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">2</translation>
     </message>
     <message>
         <source>5</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">5</translation>
     </message>
     <message>
         <source>15</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">15</translation>
     </message>
     <message>
         <source>30</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">30</translation>
     </message>
     <message>
         <source>60</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">60</translation>
     </message>
     <message>
         <source>Unlim.</source>
@@ -2442,7 +2442,7 @@
     </message>
     <message>
         <source>2x</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">2 倍</translation>
     </message>
     <message>
         <source>Chinese Simplified</source>
@@ -2467,6 +2467,10 @@
     <message>
         <source>Use fast forward when loading the disk/side</source>
         <translation>加载磁盘/面时快进</translation>
+    </message>
+    <message>
+        <source>French</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
