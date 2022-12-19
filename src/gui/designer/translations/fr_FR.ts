@@ -5,7 +5,7 @@
     <name>Settings</name>
     <message>
         <source>System Default</source>
-        <translation>Système par Défaut Default</translation>
+        <translation>Système par Défaut</translation>
     </message>
 </context>
 <context>
@@ -1486,7 +1486,7 @@
     </message>
     <message>
         <source>&amp;Show Log</source>
-        <translation>A&amp;fficher le J§ournal</translation>
+        <translation>A&amp;fficher le Journal</translation>
     </message>
     <message>
         <source>Edit Current iNES/NES2.0 &amp;Header</source>
@@ -1892,7 +1892,7 @@
     <name>wdgCheatsEditor</name>
     <message>
         <source>Show Tools</source>
-        <translation>Afficher les Outilss</translation>
+        <translation>Afficher les Outils</translation>
     </message>
     <message>
         <source>Hide Tools</source>
@@ -2228,7 +2228,7 @@
     </message>
     <message>
         <source>Swap Duty Cycles</source>
-        <translation>Permuation du Cycle d&apos;Utilisation</translation>
+        <translation>Permutation  du Cycle d&apos;Utilisation</translation>
     </message>
     <message>
         <source>Enable Audio</source>
@@ -2394,7 +2394,7 @@
     </message>
     <message>
         <source>Rewind minutes</source>
-        <translation>Rembobiner minutes</translation>
+        <translation>Rembobinage en minutes</translation>
     </message>
     <message>
         <source>Spanish</source>
@@ -2438,7 +2438,7 @@
     </message>
     <message>
         <source>Unlim.</source>
-        <translation>Iliimité.</translation>
+        <translation>Illimité</translation>
     </message>
     <message>
         <source>2x</source>
@@ -2458,7 +2458,7 @@
     </message>
     <message>
         <source>Switch the disk/side automatically</source>
-        <translation>Changement automatique du disque/de la facey</translation>
+        <translation>Changement automatique du disque/face</translation>
     </message>
     <message>
         <source>Allow multiple instances of the emulator</source>
@@ -2470,7 +2470,7 @@
     </message>
     <message>
         <source>Use fast forward when loading the disk/side</source>
-        <translation>Utiliser l&apos;avance rapide lors du chargement du disque/de la face</translation>
+        <translation>Utiliser l&apos;avance rapide lors du chargement du disque/face</translation>
     </message>
 </context>
 <context>
@@ -2977,7 +2977,7 @@
     </message>
     <message>
         <source>Scale</source>
-        <translation>Scale</translation>
+        <translation>Mise à l'Echelle</translation>
     </message>
     <message>
         <source>** To apply this change restart is needed **</source>
@@ -3049,7 +3049,7 @@
     </message>
     <message>
         <source>Black borders in window mode</source>
-        <translation>Bordures noires en mode fenêtré</translation>
+        <translation>Bordures noires en mode Fenêtré</translation>
     </message>
     <message>
         <source>Black borders in fullscreen</source>
@@ -3285,7 +3285,7 @@
     </message>
     <message>
         <source>Horizontal flip</source>
-        <translation>Retournement Horizontalp</translation>
+        <translation>Retournement Horizontal</translation>
     </message>
     <message>
         <source>Flip/Rotate the controller input</source>
