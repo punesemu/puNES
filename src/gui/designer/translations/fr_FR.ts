@@ -1885,7 +1885,7 @@
     </message>
     <message>
         <source>New CPU Ram</source>
-        <translation type="unfinished"><Nouvelle RAM CPU/translation>
+        <translation type="unfinished">Nouvelle RAM CPU</translation>
     </message>
 </context>
 <context>
