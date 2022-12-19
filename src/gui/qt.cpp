@@ -292,7 +292,7 @@ const uTCHAR *gui_config_folder(void) {
 	if (info.portable) {
 		return (gui_application_folder());
 	}
-	path = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation).replace(QCoreApplication::applicationName(), NAME);
+	path = QString("%0/%1").arg(QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation), NAME);
 	qt.sba.clear();
 	qt.sba = uQByteArrayFromString(path);
 	return (uQByteArrayCD(qt.sba));
@@ -304,9 +304,9 @@ const uTCHAR *gui_data_folder(void) {
 		return (gui_application_folder());
 	}
 #if defined (_WIN32)
-	path = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation).replace(QCoreApplication::applicationName(), NAME);
+	path = QString("%0/%1").arg(QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation), NAME);
 #else
-	path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation).replace(QCoreApplication::applicationName(), NAME);
+	path = QString("%0/%1").arg(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation), NAME);
 #endif
 	qt.sba.clear();
 	qt.sba = uQByteArrayFromString(path);
