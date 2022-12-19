@@ -74,6 +74,7 @@ class dlgLog : public QDialog, public Ui::dlgLog {
 		~dlgLog() override;
 
 	protected:
+		void changeEvent(QEvent *event) override;
 		void hideEvent(QHideEvent *event) override;
 
 	public:

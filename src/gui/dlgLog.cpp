@@ -189,6 +189,13 @@ dlgLog::dlgLog(QWidget *parent) : QDialog(parent) {
 }
 dlgLog::~dlgLog() = default;
 
+void dlgLog::changeEvent(QEvent *event) {
+	if (event->type() == QEvent::LanguageChange) {
+		retranslateUi(this);
+	} else {
+		QDialog::changeEvent(event);
+	}
+}
 void dlgLog::hideEvent(QHideEvent *event) {
 	geom = geometry();
 	QDialog::hideEvent(event);
