@@ -388,6 +388,15 @@
        </item>
        <item>
         <property name="text">
+         <string>French</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/flag_france.svgz</normaloff>:/icon/icons/flag_france.svgz</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Hungarian</string>
         </property>
         <property name="icon">

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="it_IT">
+<TS version="2.1" language="fr_FR">
 <context>
     <name>CloseButton</name>
     <message>
         <location filename="../../qtbase/src/widgets/widgets/qtabbar.cpp" line="+2772"/>
         <source>Close Tab</source>
-        <translation>Chiudi scheda</translation>
+        <translation>Fermer l&apos;onglet</translation>
     </message>
 </context>
 <context>
@@ -14,37 +14,37 @@
     <message>
         <location filename="../../qtbase/src/plugins/platforms/cocoa/qcocoamenuitem.mm" line="+63"/>
         <source>Services</source>
-        <translation>Servizi</translation>
+        <translation>Services</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Hide %1</source>
-        <translation>Nascondi %1</translation>
+        <translation>Masquer %1</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Hide Others</source>
-        <translation>Nascondi gli altri</translation>
+        <translation>Masquer les autres</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Show All</source>
-        <translation>Mostra tutto</translation>
+        <translation>Tout afficher</translation>
     </message>
     <message>
         <location line="-4"/>
         <source>Preferences...</source>
-        <translation>Preferenze...</translation>
+        <translation>Préférences...</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Quit %1</source>
-        <translation>Esci da %1</translation>
+        <translation>Quitter %1</translation>
     </message>
     <message>
         <location line="-6"/>
         <source>About %1</source>
-        <translation>Informazioni su %1</translation>
+        <translation>À propos de %1</translation>
     </message>
 </context>
 <context>
@@ -52,7 +52,7 @@
     <message>
         <location filename="../../qtbase/src/printsupport/kernel/qplatformprintdevice.cpp" line="+292"/>
         <source>Automatic</source>
-        <translation type="unfinished">Automatico</translation>
+        <translation type="unfinished">Automatique</translation>
     </message>
 </context>
 <context>
@@ -60,7 +60,7 @@
     <message>
         <location line="+20"/>
         <source>Automatic</source>
-        <translation type="unfinished">Automatico</translation>
+        <translation type="unfinished">Automatique</translation>
     </message>
 </context>
 <context>
@@ -69,14 +69,14 @@
         <location filename="../../qtbase/src/network/access/qhttpnetworkconnection.cpp" line="+906"/>
         <location filename="../../qtbase/src/network/socket/qabstractsocket.cpp" line="+2204"/>
         <source>Socket operation timed out</source>
-        <translation>Operazione sul socket scaduta</translation>
+        <translation>L&apos;opération socket a expirée</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/socket/qabstractsocket.cpp" line="-1547"/>
         <location line="+1069"/>
         <location line="+229"/>
         <source>Operation on socket is not supported</source>
-        <translation>Operazione sul socket non supportata</translation>
+        <translation>L&apos;opération sur la socket n&apos;est pas supportée</translation>
     </message>
     <message>
         <location line="-896"/>
@@ -84,34 +84,34 @@
         <location filename="../../qtbase/src/network/socket/qsocks5socketengine.cpp" line="+647"/>
         <location line="+26"/>
         <source>Host not found</source>
-        <translation>Host non trovato</translation>
+        <translation>Hôte introuvable</translation>
     </message>
     <message>
         <location line="+47"/>
         <location filename="../../qtbase/src/network/socket/qhttpsocketengine.cpp" line="+3"/>
         <location filename="../../qtbase/src/network/socket/qsocks5socketengine.cpp" line="+4"/>
         <source>Connection refused</source>
-        <translation>Connessione rifiutata</translation>
+        <translation>Connexion refusée</translation>
     </message>
     <message>
         <location line="+131"/>
         <source>Connection timed out</source>
-        <translation>Connessione scaduta</translation>
+        <translation>Connexion expirée</translation>
     </message>
     <message>
         <location line="+459"/>
         <source>Trying to connect while connection is in progress</source>
-        <translation>Tentativo di connessione mentre una connessione è ancora in corso</translation>
+        <translation>Tentative de connexion alors qu&apos;une autre connexion est en cours</translation>
     </message>
     <message>
         <location line="+860"/>
         <source>Socket is not connected</source>
-        <translation>Socket non connesso</translation>
+        <translation>Le socket n&apos;est pas connectée</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/socket/qsocks5socketengine.cpp" line="-8"/>
         <source>Network unreachable</source>
-        <translation>Rete non raggiungibile</translation>
+        <translation>Le réseau n&apos;est pas accessible</translation>
     </message>
 </context>
 <context>
@@ -119,17 +119,17 @@
     <message>
         <location filename="../../qtbase/src/widgets/widgets/qabstractspinbox.cpp" line="+1323"/>
         <source>&amp;Select All</source>
-        <translation>&amp;Seleziona tutto</translation>
+        <translation>Tout &amp;sélectionner</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>&amp;Step up</source>
-        <translation>&amp;Aumenta</translation>
+        <translation>&amp;Augmenter</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Step &amp;down</source>
-        <translation>&amp;Diminuisci</translation>
+        <translation>&amp;Diminuer</translation>
     </message>
 </context>
 <context>
@@ -137,122 +137,122 @@
     <message>
         <location filename="../../qtbase/src/gui/accessible/qaccessible.cpp" line="+2807"/>
         <source>Press</source>
-        <translation>Premi</translation>
+        <translation>Appuyer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Increase</source>
-        <translation>Incrementa</translation>
+        <translation>Augmenter</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Decrease</source>
-        <translation>Decrementa</translation>
+        <translation>Diminuer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>ShowMenu</source>
-        <translation>MostraMenu</translation>
+        <translation>Afficher le menu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>SetFocus</source>
-        <translation>ImpostaFuoco</translation>
+        <translation>Définir le focus</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Toggle</source>
-        <translation>Commuta</translation>
+        <translation>Basculer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Scroll Left</source>
-        <translation>Scorri a sinistra</translation>
+        <translation>Défiler vers la gauche</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Scroll Right</source>
-        <translation>Scorri a destra</translation>
+        <translation>Défiler vers la droite</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Scroll Up</source>
-        <translation>Scorri in alto</translation>
+        <translation>Défiler vers le haut</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Scroll Down</source>
-        <translation>Scorri in basso</translation>
+        <translation>Défiler vers le bas</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Previous Page</source>
-        <translation>Pagina precedente</translation>
+        <translation>Page précédente</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Next Page</source>
-        <translation>Pagina successiva</translation>
+        <translation>Page suivante</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Triggers the action</source>
-        <translation>Attiva l&apos;azione</translation>
+        <translation>Déclenche l&apos;action</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Increase the value</source>
-        <translation>Incrementa il valore</translation>
+        <translation>Augmenter la valeur</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Decrease the value</source>
-        <translation>Decrementa il valore</translation>
+        <translation>Diminuer la valeur</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Shows the menu</source>
-        <translation>Mostra il menu</translation>
+        <translation>Affiche le menu</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Sets the focus</source>
-        <translation>Imposta il focus</translation>
+        <translation>Donne le focus</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Toggles the state</source>
-        <translation>Commuta lo stato</translation>
+        <translation>Bascule l&apos;état</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Scrolls to the left</source>
-        <translation>Scorre a sinistra</translation>
+        <translation>Défile vers la gauche</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Scrolls to the right</source>
-        <translation>Scorre a destra</translation>
+        <translation>Défile vers la droite</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Scrolls up</source>
-        <translation>Scorre in alto</translation>
+        <translation>Défile vers le haut</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Scrolls down</source>
-        <translation>Scorre in basso</translation>
+        <translation>Défile vers le bas</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Goes back a page</source>
-        <translation>Va indietro di una pagina</translation>
+        <translation>Revient à la page précédente</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Goes to the next page</source>
-        <translation>Va alla pagina successiva</translation>
+        <translation>Va à la page suivante</translation>
     </message>
 </context>
 <context>
@@ -260,22 +260,22 @@
     <message>
         <location filename="../../qtbase/src/plugins/platforms/android/qandroidplatformtheme.cpp" line="+502"/>
         <source>Yes</source>
-        <translation>Sì</translation>
+        <translation>Oui</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Yes to All</source>
-        <translation>Sì a tutti</translation>
+        <translation>Oui à tous</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>No</source>
-        <translation>No</translation>
+        <translation>Non</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>No to All</source>
-        <translation>No a tutti</translation>
+        <translation>Non à tous</translation>
     </message>
 </context>
 <context>
@@ -283,12 +283,12 @@
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qmessagebox.h" line="+320"/>
         <source>Executable &apos;%1&apos; requires Qt %2, found Qt %3.</source>
-        <translation>L&apos;eseguibile &apos;%1&apos; richiede Qt %2, trovata Qt %3.</translation>
+        <translation>L&apos;exécutable &quot;%1&quot; requiert Qt %2 (Qt %3 trouvé).</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Incompatible Qt Library Error</source>
-        <translation>Errore: libreria Qt non compatibile</translation>
+        <translation>Erreur de bibliothèque Qt incompatible</translation>
     </message>
 </context>
 <context>
@@ -296,67 +296,67 @@
     <message>
         <location filename="../../qtbase/src/plugins/platforms/cocoa/qcocoamenuitem.mm" line="+351"/>
         <source>About Qt</source>
-        <translation>Informazioni su Qt</translation>
+        <translation>À propos de Qt</translation>
     </message>
     <message>
         <location line="-158"/>
         <source>About</source>
-        <translation>Informazioni</translation>
+        <translation>À propos</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Config</source>
-        <translation>Configurazione</translation>
+        <translation>Configuration</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Preference</source>
-        <translation>Preferenza</translation>
+        <translation>Préférence</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Options</source>
-        <translation>Opzioni</translation>
+        <translation>Options</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Setting</source>
-        <translation>Impostazione</translation>
+        <translation>Paramètre</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Setup</source>
-        <translation>Impostazione</translation>
+        <translation>Réglage</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Quit</source>
-        <translation>Uscita</translation>
+        <translation>Quitter</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Exit</source>
-        <translation>Esci</translation>
+        <translation>Quitter</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Cut</source>
-        <translation>Taglia</translation>
+        <translation>Couper</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Copy</source>
-        <translation>Copia</translation>
+        <translation>Copier</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Paste</source>
-        <translation>Incolla</translation>
+        <translation>Coller</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Select All</source>
-        <translation>Seleziona tutto</translation>
+        <translation>Tout sélectionner</translation>
     </message>
 </context>
 <context>
@@ -364,7 +364,7 @@
     <message>
         <location filename="../../qtbase/src/plugins/platforms/cocoa/qcocoatheme.mm" line="+550"/>
         <source>Don&apos;t Save</source>
-        <translation>Non salvare</translation>
+        <translation>Ne pas enregistrer</translation>
     </message>
 </context>
 <context>
@@ -372,102 +372,92 @@
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qcolordialog.cpp" line="+1480"/>
         <source>Hu&amp;e:</source>
-        <translation>Tint&amp;a:</translation>
+        <translation>&amp;Teinte :</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>&amp;Sat:</source>
-        <translation>&amp;Sat:</translation>
+        <translation>&amp;Sat :</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>&amp;Val:</source>
-        <translation>&amp;Val:</translation>
+        <translation>&amp;Val :</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>&amp;Red:</source>
-        <translation>&amp;Rosso:</translation>
+        <translation>&amp;Rouge :</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>&amp;Green:</source>
-        <translation>&amp;Verde:</translation>
+        <translation>&amp;Vert :</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Bl&amp;ue:</source>
-        <translation>Bl&amp;u:</translation>
+        <translation>Ble&amp;u :</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>A&amp;lpha channel:</source>
-        <translation>Canale a&amp;lfa:</translation>
+        <translation>Canal a&amp;lpha :</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>&amp;HTML:</source>
-        <translation>&amp;HTML:</translation>
+        <translation>&amp;HTML :</translation>
     </message>
     <message>
         <location line="+164"/>
         <source>Cursor at %1, %2
 Press ESC to cancel</source>
-        <translation>Cursore su %1, %2
-Premi ESC per annullare</translation>
+        <translation>Curseur à %1, %2
+Appuyer sur Échap pour annuler</translation>
     </message>
     <message>
-        <location line="+224"/>
-        <source>&amp;Pick Screen Color</source>
-        <translation>&amp;Preleva un colore dallo schermo</translation>
-    </message>
-    <message>
-        <source>Cursor at %1, %2, color: %3
-Press ESC to cancel</source>
-        <translation type="vanished">Cursore su %1, %2, colore: %3
-Premi ESC per annullare</translation>
-    </message>
-    <message>
-        <location line="-196"/>
+        <location line="+28"/>
         <source>Select Color</source>
-        <translation>Seleziona colore</translation>
-    </message>
-    <message>
-        <source>Pick Screen Color</source>
-        <translation type="vanished">Scegli il colore dello schermo</translation>
+        <translation>Sélectionner une couleur</translation>
     </message>
     <message>
         <location line="+193"/>
         <source>&amp;Basic colors</source>
-        <translation>Colori di &amp;base</translation>
+        <translation>Couleurs de &amp;base</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>&amp;Custom colors</source>
-        <translation>&amp;Colori personalizzati</translation>
+        <translation>&amp;Couleurs personnalisées</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>&amp;Add to Custom Colors</source>
-        <translation>&amp;Aggiungi ai colori personalizzati</translation>
+        <translation>&amp;Ajouter aux couleurs personnalisées</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>&amp;Pick Screen Color</source>
+        <translation>&amp;Sélectionner une couleur à l&apos;écran</translation>
     </message>
 </context>
 <context>
     <name>QComboBox</name>
     <message>
+        <location filename="../../qtbase/src/widgets/accessible/complexwidgets.cpp" line="+393"/>
+        <source>Open the combo box selection popup</source>
+        <translation>Ouvrir la liste déroulante</translation>
+    </message>
+    <message>
         <location filename="../../qtbase/src/widgets/itemviews/qitemeditorfactory.cpp" line="+611"/>
         <source>False</source>
-        <translation>Falso</translation>
+        <translation>Faux</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>True</source>
-        <translation>Vero</translation>
-    </message>
-    <message>
-        <location filename="../../qtbase/src/widgets/accessible/complexwidgets.cpp" line="+393"/>
-        <source>Open the combo box selection popup</source>
-        <translation>Apri il menu a tendina</translation>
+        <translation>Vrai</translation>
     </message>
 </context>
 <context>
@@ -475,11 +465,11 @@ Premi ESC per annullare</translation>
     <message>
         <location filename="../../qtbase/src/corelib/tools/qcommandlineparser.cpp" line="+416"/>
         <source>Displays version information.</source>
-        <translation>Mostra le informazioni sulla versione.</translation>
+        <translation>Afficher les informations de version.</translation>
     </message>
     <message>
         <source>Displays this help.</source>
-        <translation type="vanished">Mostra questa guida.</translation>
+        <translation type="vanished">Afficher cette aide.</translation>
     </message>
     <message>
         <location line="+27"/>
@@ -494,42 +484,42 @@ Premi ESC per annullare</translation>
     <message>
         <location line="+92"/>
         <source>Unknown option &apos;%1&apos;.</source>
-        <translation>Opzione sconosciuta &apos;%1&apos;.</translation>
+        <translation>Option inconnue &quot;%1&quot;.</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Unknown options: %1.</source>
-        <translation>Opzioni sconosciute: %1.</translation>
+        <translation>Options inconnues : %1.</translation>
     </message>
     <message>
         <location line="+136"/>
         <source>Missing value after &apos;%1&apos;.</source>
-        <translation>Valore mancante dopo &apos;%1&apos;.</translation>
+        <translation>Valeur manquante après &quot;%1&quot;.</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Unexpected value after &apos;%1&apos;.</source>
-        <translation>Valore non previsto dopo &apos;%1&apos;.</translation>
+        <translation>Valeur inattendue après &quot;%1&quot;.</translation>
     </message>
     <message>
         <location line="+455"/>
         <source>[options]</source>
-        <translation>[opzioni]</translation>
+        <translation>[options]</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Usage: %1</source>
-        <translation>Utilizzo: %1</translation>
+        <translation>Utilisation : %1</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Options:</source>
-        <translation>Opzioni:</translation>
+        <translation>Options :</translation>
     </message>
     <message>
         <location line="+33"/>
         <source>Arguments:</source>
-        <translation>Parametri:</translation>
+        <translation>Arguments :</translation>
     </message>
 </context>
 <context>
@@ -539,19 +529,19 @@ Premi ESC per annullare</translation>
         <location filename="../../qtbase/src/corelib/kernel/qsystemsemaphore_systemv.cpp" line="+77"/>
         <source>%1: key is empty</source>
         <comment>QSystemSemaphore</comment>
-        <translation>%1: la chiave è vuota</translation>
+        <translation>%1 : la clé est vide</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/kernel/qsystemsemaphore_systemv.cpp" line="+18"/>
         <source>%1: unable to make key</source>
         <comment>QSystemSemaphore</comment>
-        <translation>%1: impossibile creare la chiave</translation>
+        <translation>%1 : impossible de créer la clé</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>%1: ftok failed</source>
         <comment>QSystemSemaphore</comment>
-        <translation>%1: ftok non riuscito</translation>
+        <translation>%1 : ftok a échoué</translation>
     </message>
 </context>
 <context>
@@ -559,91 +549,91 @@ Premi ESC per annullare</translation>
     <message>
         <location filename="../../qtbase/src/printsupport/widgets/qcupsjobwidget.ui"/>
         <source>Job</source>
-        <translation>Processo</translation>
+        <translation>Tâche</translation>
     </message>
     <message>
         <location/>
         <source>Job Control</source>
-        <translation>Controllo del processo</translation>
+        <translation>Contrôle des tâches</translation>
     </message>
     <message>
         <location/>
         <source>Scheduled printing:</source>
-        <translation>Pianificazione della stampa:</translation>
+        <translation>Impressions planifiées :</translation>
     </message>
     <message>
         <location/>
         <source>Billing information:</source>
-        <translation>Informazioni di resoconto:</translation>
+        <translation>Informations de facturation :</translation>
     </message>
     <message>
         <location/>
         <source>Job priority:</source>
-        <translation>Priorità del processo:</translation>
+        <translation>Priorité de la tâche :</translation>
     </message>
     <message>
         <location/>
         <source>Banner Pages</source>
-        <translation>Pagine di separazione</translation>
+        <translation>Pages de garde</translation>
     </message>
     <message>
         <location/>
         <source>End:</source>
         <comment>Banner page at end</comment>
-        <translation>Fine:</translation>
+        <translation>Finales :</translation>
     </message>
     <message>
         <location/>
         <source>Start:</source>
         <comment>Banner page at start</comment>
-        <translation>Inizio:</translation>
+        <translation>Premières :</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/printsupport/widgets/qcupsjobwidget.cpp" line="+119"/>
         <source>Print Immediately</source>
-        <translation>Stampa immediatamente</translation>
+        <translation>Imprimer immédiatement</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Hold Indefinitely</source>
-        <translation>Trattieni indefinitamente</translation>
+        <translation>Attendre indéfiniment</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Day (06:00 to 17:59)</source>
-        <translation>Giorno (dalle 06:00 alle 17:59)</translation>
+        <translation>Jour (de 06:00 à 17:59)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Night (18:00 to 05:59)</source>
-        <translation>Notte (dalle 18:00 alle 05:59)</translation>
+        <translation>Nuit (de 18:00 à 05:59)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Second Shift (16:00 to 23:59)</source>
-        <translation>Secondo turno (dalle 16:00 alle 23:59)</translation>
+        <translation>Deuxième quart (de 16:00 à 23:59)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Third Shift (00:00 to 07:59)</source>
-        <translation>Terzo turno (dalle 00:00 alle 07:59)</translation>
+        <translation>Troisième quart (de 00:00 à 07:59)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Weekend (Saturday to Sunday)</source>
-        <translation>Finesettimana (da sabato a domenica)</translation>
+        <translation>Week-end (de samedi à dimanche)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Specific Time</source>
-        <translation>Orario specifico</translation>
+        <translation>Temps spécifique</translation>
     </message>
     <message>
         <location line="+90"/>
         <location line="+8"/>
         <source>None</source>
         <comment>CUPS Banner page</comment>
-        <translation>Nessuno</translation>
+        <translation>Aucun</translation>
     </message>
     <message>
         <location line="-7"/>
@@ -657,35 +647,35 @@ Premi ESC per annullare</translation>
         <location line="+8"/>
         <source>Unclassified</source>
         <comment>CUPS Banner page</comment>
-        <translation>Non classificato</translation>
+        <translation>Non classifié</translation>
     </message>
     <message>
         <location line="-7"/>
         <location line="+8"/>
         <source>Confidential</source>
         <comment>CUPS Banner page</comment>
-        <translation>Confidenziale</translation>
+        <translation>Confidentiel</translation>
     </message>
     <message>
         <location line="-7"/>
         <location line="+8"/>
         <source>Classified</source>
         <comment>CUPS Banner page</comment>
-        <translation>Classificato</translation>
+        <translation>Classifié</translation>
     </message>
     <message>
         <location line="-7"/>
         <location line="+8"/>
         <source>Secret</source>
         <comment>CUPS Banner page</comment>
-        <translation>Segreto</translation>
+        <translation>Secret</translation>
     </message>
     <message>
         <location line="-7"/>
         <location line="+8"/>
         <source>Top Secret</source>
         <comment>CUPS Banner page</comment>
-        <translation>Segretissimo</translation>
+        <translation>Top secret</translation>
     </message>
 </context>
 <context>
@@ -721,22 +711,22 @@ Premi ESC per annullare</translation>
     <message>
         <location filename="../../qtbase/src/plugins/sqldrivers/db2/qsql_db2.cpp" line="+1338"/>
         <source>Unable to connect</source>
-        <translation>Connessione non riuscita</translation>
+        <translation>Impossible de se connecter</translation>
     </message>
     <message>
         <location line="+306"/>
         <source>Unable to commit transaction</source>
-        <translation>Impossibile effettuare la transazione</translation>
+        <translation>Impossible de soumettre la transaction</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Unable to rollback transaction</source>
-        <translation>Impossibile annullare la transazione</translation>
+        <translation>Impossible d&apos;annuler la transaction</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Unable to set autocommit</source>
-        <translation>Impossibile impostare l&apos;autocommit</translation>
+        <translation>Impossible d&apos;activer l&apos;autocommit</translation>
     </message>
 </context>
 <context>
@@ -745,32 +735,32 @@ Premi ESC per annullare</translation>
         <location line="-1046"/>
         <location line="+242"/>
         <source>Unable to execute statement</source>
-        <translation>Impossibile eseguire il comando</translation>
+        <translation>Impossible d&apos;exécuter la requête</translation>
     </message>
     <message>
         <location line="-204"/>
         <source>Unable to prepare statement</source>
-        <translation>Impossibile preparare il comando</translation>
+        <translation>Impossible de préparer la requête</translation>
     </message>
     <message>
         <location line="+194"/>
         <source>Unable to bind variable</source>
-        <translation>Impossibile effettuare il bind della variabile</translation>
+        <translation>Impossible d&apos;utiliser la variable</translation>
     </message>
     <message>
         <location line="+90"/>
         <source>Unable to fetch record %1</source>
-        <translation>Impossibile ottenere il record %1</translation>
+        <translation>Impossible de récupérer l&apos;enregistrement %1</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Unable to fetch next</source>
-        <translation>Impossibile recuperare il successivo</translation>
+        <translation>Impossible de récupérer le suivant</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Unable to fetch first</source>
-        <translation>Impossibile recuperare il primo</translation>
+        <translation>Impossible de récupérer le premier</translation>
     </message>
 </context>
 <context>
@@ -779,25 +769,6 @@ Premi ESC per annullare</translation>
         <location filename="../../qtbase/src/platformsupport/themes/genericunix/dbustray/qdbustrayicon.cpp" line="+302"/>
         <source>OK</source>
         <translation>OK</translation>
-    </message>
-</context>
-<context>
-    <name>QDateTimeEdit</name>
-    <message>
-        <source>AM</source>
-        <translation type="vanished">AM</translation>
-    </message>
-    <message>
-        <source>am</source>
-        <translation type="vanished">am</translation>
-    </message>
-    <message>
-        <source>PM</source>
-        <translation type="vanished">PM</translation>
-    </message>
-    <message>
-        <source>pm</source>
-        <translation type="vanished">pm</translation>
     </message>
 </context>
 <context>
@@ -828,7 +799,7 @@ Premi ESC per annullare</translation>
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qdialog.cpp" line="+690"/>
         <source>What&apos;s This?</source>
-        <translation>Che cos&apos;è?</translation>
+        <translation>Qu&apos;est-ce que c&apos;est&#xa0;?</translation>
     </message>
 </context>
 <context>
@@ -839,127 +810,35 @@ Premi ESC per annullare</translation>
         <source>OK</source>
         <translation>OK</translation>
     </message>
-    <message>
-        <source>&amp;OK</source>
-        <translation type="vanished">&amp;OK</translation>
-    </message>
-    <message>
-        <source>&amp;Save</source>
-        <translation type="vanished">&amp;Salva</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation type="vanished">Salva</translation>
-    </message>
-    <message>
-        <source>Open</source>
-        <translation type="vanished">Apri</translation>
-    </message>
-    <message>
-        <source>&amp;Cancel</source>
-        <translation type="vanished">&amp;Annulla</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="vanished">Annulla</translation>
-    </message>
-    <message>
-        <source>&amp;Close</source>
-        <translation type="vanished">&amp;Chiudi</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation type="vanished">Chiudi</translation>
-    </message>
-    <message>
-        <source>Apply</source>
-        <translation type="vanished">Applica</translation>
-    </message>
-    <message>
-        <source>Reset</source>
-        <translation type="vanished">Ripristina</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation type="vanished">Aiuto</translation>
-    </message>
-    <message>
-        <source>Don&apos;t Save</source>
-        <translation type="vanished">Non salvare</translation>
-    </message>
-    <message>
-        <source>Close without Saving</source>
-        <translation type="vanished">Chiudi senza salvare</translation>
-    </message>
-    <message>
-        <source>Discard</source>
-        <translation type="vanished">Scarta</translation>
-    </message>
-    <message>
-        <source>&amp;Yes</source>
-        <translation type="vanished">&amp;Sì</translation>
-    </message>
-    <message>
-        <source>Yes to &amp;All</source>
-        <translation type="vanished">Sì &amp;a tutti</translation>
-    </message>
-    <message>
-        <source>&amp;No</source>
-        <translation type="vanished">&amp;No</translation>
-    </message>
-    <message>
-        <source>N&amp;o to All</source>
-        <translation type="vanished">N&amp;o a tutti</translation>
-    </message>
-    <message>
-        <source>Save All</source>
-        <translation type="vanished">Salva tutti</translation>
-    </message>
-    <message>
-        <source>Abort</source>
-        <translation type="vanished">Interrompi</translation>
-    </message>
-    <message>
-        <source>Retry</source>
-        <translation type="vanished">Riprova</translation>
-    </message>
-    <message>
-        <source>Ignore</source>
-        <translation type="vanished">Ignora</translation>
-    </message>
-    <message>
-        <source>Restore Defaults</source>
-        <translation type="vanished">Ripristina valori predefiniti</translation>
-    </message>
 </context>
 <context>
     <name>QDirModel</name>
     <message>
         <location filename="../../qtbase/src/widgets/itemviews/qdirmodel.cpp" line="+442"/>
         <source>Name</source>
-        <translation>Nome</translation>
+        <translation>Nom</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Size</source>
-        <translation>Dimensione</translation>
+        <translation>Taille</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Kind</source>
         <comment>Match OS X Finder</comment>
-        <translation>Tipo</translation>
+        <translation>Type</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Type</source>
         <comment>All other platforms</comment>
-        <translation>Tipo</translation>
+        <translation>Type</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Date Modified</source>
-        <translation>Data di modifica</translation>
+        <translation>Dernière modification</translation>
     </message>
 </context>
 <context>
@@ -967,7 +846,7 @@ Premi ESC per annullare</translation>
     <message>
         <location filename="../../qtbase/src/network/kernel/qdnslookup.cpp" line="+487"/>
         <source>Operation cancelled</source>
-        <translation>Operazione annullata</translation>
+        <translation>Opération annulée</translation>
     </message>
 </context>
 <context>
@@ -975,132 +854,132 @@ Premi ESC per annullare</translation>
     <message>
         <location line="-328"/>
         <source>IPv6 addresses for nameservers are currently not supported</source>
-        <translation>Gli indirizzi IPv6 per i server di risoluzione dei nomi non sono al momento supportati</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+849"/>
         <source>Invalid domain name</source>
-        <translation>Nome di dominio non valido</translation>
+        <translation>Nom de domaine invalide</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/kernel/qdnslookup_android.cpp" line="+52"/>
         <source>Not yet supported on Android</source>
-        <translation>Non ancora supportato su Android</translation>
+        <translation>Pas encore pris en charge sur Android</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/kernel/qdnslookup_unix.cpp" line="+152"/>
         <source>Resolver functions not found</source>
-        <translation>Funzioni di risoluzione non trovate</translation>
+        <translation>Fonctions du résolveur introuvables</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Resolver initialization failed</source>
-        <translation>Inizializzazione del risolutore non riuscita</translation>
+        <translation>L&apos;initialisation du résolveur a échoué</translation>
     </message>
     <message>
         <source>IPv6 addresses for nameservers is currently not supported</source>
-        <translation type="vanished">Gli indirizzi IPv6 per i server di risoluzione dei nomi non sono al momento supportati</translation>
+        <translation type="vanished">Les adresses IPv6 pour les serveurs de noms ne sont pas encore supportées</translation>
     </message>
     <message>
         <location line="+75"/>
         <location filename="../../qtbase/src/network/kernel/qdnslookup_win.cpp" line="+80"/>
         <source>Server could not process query</source>
-        <translation>Il server non può elaborare la query</translation>
+        <translation>Le serveur n&apos;a pas pu traiter la requête</translation>
     </message>
     <message>
         <location line="+4"/>
         <location filename="../../qtbase/src/network/kernel/qdnslookup_win.cpp" line="+4"/>
         <source>Server failure</source>
-        <translation>Errore del server</translation>
+        <translation>Échec du serveur</translation>
     </message>
     <message>
         <location line="+4"/>
         <location filename="../../qtbase/src/network/kernel/qdnslookup_win.cpp" line="+4"/>
         <source>Non existent domain</source>
-        <translation>Dominio non esistente</translation>
+        <translation>Le domaine n&apos;existe pas</translation>
     </message>
     <message>
         <location line="+4"/>
         <location filename="../../qtbase/src/network/kernel/qdnslookup_win.cpp" line="+4"/>
         <source>Server refused to answer</source>
-        <translation>Il server si è rifiutato di rispondere</translation>
+        <translation>Le serveur ne répond pas</translation>
     </message>
     <message>
         <location line="+4"/>
         <location line="+7"/>
         <source>Invalid reply received</source>
-        <translation>Ricevuta una risposta non valida</translation>
+        <translation>La réponse reçue est invalide</translation>
     </message>
     <message>
         <location line="+10"/>
         <location line="+11"/>
         <source>Could not expand domain name</source>
-        <translation>Impossibile espandere il nome del dominio</translation>
+        <translation>Impossible de développer le nom de domaine</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>Invalid IPv4 address record</source>
-        <translation>Record di tipo indirizzo IPv4 non valido</translation>
+        <translation>L&apos;enregistrement d&apos;adresse IPv4 est invalide</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Invalid IPv6 address record</source>
-        <translation>Record di tipo indirizzo IPv6 non valido</translation>
+        <translation>L&apos;enregistrement d&apos;adresse IPv6 est invalide</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Invalid canonical name record</source>
-        <translation>Record di tipo nome canonico non valido</translation>
+        <translation>L&apos;enregistrement du nom canonique est invalide</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Invalid name server record</source>
-        <translation>Record di tipo nome del server non valido</translation>
+        <translation>L&apos;enregistrement du nom de serveur est invalide</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Invalid pointer record</source>
-        <translation>Record di tipo puntatore non valido</translation>
+        <translation>L&apos;enregistrement pointeur est invalide</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Invalid mail exchange record</source>
-        <translation>Record di tipo mail exchange non valido</translation>
+        <translation>L&apos;enregistrement du serveur de mail est invalide</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Invalid service record</source>
-        <translation>Record di tipo servizio non valido</translation>
+        <translation>L&apos;enregistrement service est invalide</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>Invalid text record</source>
-        <translation>Record di tipo testo non valido</translation>
+        <translation>L&apos;enregistrement texte est invalide</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Resolver library can&apos;t be loaded: No runtime library loading support</source>
-        <translation>La libreria di risoluzione non può essere caricata. Nessun supporto per il caricamento di librerie</translation>
+        <translation>La bibliothèque du résolveur ne peut pas être chargée : le chargement de bibliothèque à l&apos;exécution n&apos;est pas supporté</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/kernel/qdnslookup_winrt.cpp" line="+81"/>
         <source>No hostname given</source>
-        <translation>Nessun nome host inserito</translation>
+        <translation>Aucun nom d&apos;hôte n&apos;a été donné</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Invalid hostname</source>
-        <translation>Nome dell&apos;host non valido</translation>
+        <translation>Nom d&apos;hôte invalide</translation>
     </message>
     <message>
         <location line="+31"/>
         <source>Host %1 could not be found.</source>
-        <translation>L&apos;host %1 non è stato trovato.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Unknown error</source>
-        <translation>Errore sconosciuto</translation>
+        <translation type="unfinished">Erreur inconnue</translation>
     </message>
 </context>
 <context>
@@ -1109,23 +988,23 @@ Premi ESC per annullare</translation>
         <location filename="../../qtbase/src/widgets/widgets/qdockwidget.cpp" line="+746"/>
         <source>Float</source>
         <extracomment>Accessible name for button undocking a dock widget (floating state)</extracomment>
-        <translation>Fluttua</translation>
+        <translation>Détacher</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Undocks and re-attaches the dock widget</source>
-        <translation>Separa e ri-collega l&apos;oggetto contenitore</translation>
+        <translation>Détache et ré-attache le widget attaché</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Close</source>
         <extracomment>Accessible name for button closing a dock widget</extracomment>
-        <translation>Chiudi</translation>
+        <translation>Fermer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Closes the dock widget</source>
-        <translation>Chiudi l&apos;oggetto contenitore</translation>
+        <translation>Ferme le widget attaché</translation>
     </message>
 </context>
 <context>
@@ -1354,7 +1233,7 @@ Premi ESC per annullare</translation>
     <message>
         <location line="+11"/>
         <source>Error while reading: %1</source>
-        <translation type="unfinished">Errore di lettura: %1</translation>
+        <translation type="unfinished">Erreur lors de la lecture&#xa0;: %1</translation>
     </message>
 </context>
 <context>
@@ -1375,12 +1254,12 @@ Premi ESC per annullare</translation>
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qerrormessage.cpp" line="+175"/>
         <source>Debug Message:</source>
-        <translation>Messaggio di debug:</translation>
+        <translation>Message de débogage :</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Warning:</source>
-        <translation>Avvertimento:</translation>
+        <translation>Avertissement :</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1390,7 +1269,7 @@ Premi ESC per annullare</translation>
     <message>
         <location line="+1"/>
         <source>Fatal Error:</source>
-        <translation>Errore fatale:</translation>
+        <translation>Erreur fatale :</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1400,7 +1279,7 @@ Premi ESC per annullare</translation>
     <message>
         <location line="+207"/>
         <source>&amp;Show this message again</source>
-        <translation>Mo&amp;stra ancora questo messaggio</translation>
+        <translation>&amp;Afficher ce message de nouveau</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1413,22 +1292,22 @@ Premi ESC per annullare</translation>
     <message>
         <location filename="../../qtbase/src/corelib/io/qfile.cpp" line="+642"/>
         <source>Destination file is the same file.</source>
-        <translation>Il file di destinazione è lo stesso file.</translation>
+        <translation>Le fichier de destination est le même fichier.</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Source file does not exist.</source>
-        <translation>Il file di origine non esiste.</translation>
+        <translation>Le fichier source n&apos;existe pas.</translation>
     </message>
     <message>
         <location line="+15"/>
         <location line="+194"/>
         <source>Destination file exists</source>
-        <translation>Il file di destinazione esiste</translation>
+        <translation>Le fichier destination existe</translation>
     </message>
     <message>
         <source>Error while renaming.</source>
-        <translation type="vanished">Errore durante la rinomina.</translation>
+        <translation type="vanished">Erreur lors du renommage.</translation>
     </message>
     <message>
         <location line="-163"/>
@@ -1439,17 +1318,17 @@ Premi ESC per annullare</translation>
     <message>
         <location line="-5"/>
         <source>Unable to restore from %1: %2</source>
-        <translation>Impossibile ripristinare da %1: %2</translation>
+        <translation>Impossible de restaurer à partir de %1 : %2</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>Will not rename sequential file using block copy</source>
-        <translation>Impossibile rinominare un file sequenziale usando una copia a blocchi</translation>
+        <translation>Le fichier séquentiel ne sera pas renommé avec la copie par blocs</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Cannot remove source file</source>
-        <translation>Impossibile rimuovere il file di origine</translation>
+        <translation>Impossible de supprimer le fichier source</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -1459,7 +1338,7 @@ Premi ESC per annullare</translation>
     <message>
         <location line="+113"/>
         <source>Cannot open %1 for input</source>
-        <translation>Impossibile aprire %1 per l&apos;input</translation>
+        <translation>Impossible d&apos;ouvrir %1 en lecture</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -1468,17 +1347,17 @@ Premi ESC per annullare</translation>
     </message>
     <message>
         <source>Cannot open for output</source>
-        <translation type="vanished">Impossibile aprire per l&apos;output</translation>
+        <translation type="vanished">Impossible d&apos;ouvrir en écriture</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Failure to write block</source>
-        <translation>Scrittura del blocco non riuscita</translation>
+        <translation>Impossible d&apos;écrire un bloc</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Cannot create %1 for output</source>
-        <translation>Impossibile creare %1 per l&apos;output</translation>
+        <translation>Impossible de créer %1 en écriture</translation>
     </message>
 </context>
 <context>
@@ -1486,7 +1365,7 @@ Premi ESC per annullare</translation>
     <message>
         <location filename="../../qtbase/src/corelib/io/qfiledevice.cpp" line="+737"/>
         <source>No file engine available or engine does not support UnMapExtension</source>
-        <translation>Nessun file engine disponibile o l&apos;engine non supporta UnMapExtension</translation>
+        <translation>Aucun moteur de fichier disponible ou celui-ci ne supporte pas UnMapExtension</translation>
     </message>
     <message>
         <location line="+61"/>
@@ -1499,168 +1378,183 @@ Premi ESC per annullare</translation>
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qfiledialog.ui"/>
         <source>Look in:</source>
-        <translation>Cerca in:</translation>
+        <translation>Voir dans :</translation>
     </message>
     <message>
         <location/>
         <source>Back</source>
-        <translation>Indietro</translation>
+        <translation>Précédent</translation>
     </message>
     <message>
         <location/>
         <source>Go back</source>
-        <translation>Vai indietro</translation>
+        <translation>Aller à l&apos;élément précédent</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Alt+Left</source>
+        <translation>Alt+Gauche</translation>
     </message>
     <message>
         <location/>
         <source>Forward</source>
-        <translation>Vai avanti</translation>
+        <translation>Suivant</translation>
     </message>
     <message>
         <location/>
         <source>Go forward</source>
-        <translation>Avanti</translation>
+        <translation>Va à l&apos;élément suivant</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Alt+Right</source>
+        <translation>Alt+Droite</translation>
     </message>
     <message>
         <location/>
         <source>Parent Directory</source>
-        <translation>Cartella superiore</translation>
+        <translation>Dossier parent</translation>
     </message>
     <message>
         <location/>
         <source>Go to the parent directory</source>
-        <translation>Vai alla cartella superiore</translation>
+        <translation>Va au dossier parent</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Alt+Up</source>
+        <translation>Alt+Haut</translation>
     </message>
     <message>
         <location/>
         <source>Create New Folder</source>
-        <translation>Crea nuova cartella</translation>
+        <translation>Créer un nouveau dossier</translation>
     </message>
     <message>
         <location/>
         <source>Create a New Folder</source>
-        <translation>Crea una nuova cartella</translation>
+        <translation>Crée un nouveau dossier</translation>
     </message>
     <message>
         <location/>
         <source>List View</source>
-        <translation>Vista a elenco</translation>
+        <translation>Vue en liste</translation>
     </message>
     <message>
         <location/>
         <source>Change to list view mode</source>
-        <translation>Passa alla modalità vista a elenco</translation>
+        <translation>Affiche la vue sous forme de liste</translation>
     </message>
     <message>
         <location/>
         <source>Detail View</source>
-        <translation>Vista dettagliata</translation>
+        <translation>Vue détaillée</translation>
     </message>
     <message>
         <location/>
         <source>Change to detail view mode</source>
-        <translation>Passa alla modalità vista dettagliata</translation>
+        <translation>Affichage la vue sous forme détaillée</translation>
     </message>
     <message>
         <location/>
         <source>Sidebar</source>
-        <translation>Barra laterale</translation>
+        <translation>Barre latérale</translation>
     </message>
     <message>
         <location/>
         <source>List of places and bookmarks</source>
-        <translation>Lista di risorse e segnalibri</translation>
+        <translation>Liste des emplacements et des favoris</translation>
     </message>
     <message>
         <location/>
         <source>Files</source>
-        <translation>File</translation>
+        <translation>Fichiers</translation>
     </message>
     <message>
         <location/>
         <source>Files of type:</source>
-        <translation>File di tipo:</translation>
+        <translation>Fichiers de type :</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qfiledialog.cpp" line="+603"/>
         <source>Find Directory</source>
-        <translation>Trova cartella</translation>
+        <translation>Chercher dans le dossier</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Open</source>
-        <translation>Apri</translation>
+        <translation>Ouvrir</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Save As</source>
-        <translation>Salva come</translation>
+        <translation>Enregistrer sous</translation>
     </message>
     <message>
         <location line="+27"/>
         <source>Directory:</source>
-        <translation>Cartella:</translation>
+        <translation>Dossier :</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>File &amp;name:</source>
-        <translation>&amp;Nome del file:</translation>
+        <translation>&amp;Nom de fichier :</translation>
     </message>
     <message>
         <location line="+17"/>
         <location line="+16"/>
         <source>&amp;Open</source>
-        <translation>&amp;Apri</translation>
+        <translation>&amp;Ouvrir</translation>
     </message>
     <message>
         <location line="-5"/>
         <source>&amp;Choose</source>
-        <translation>S&amp;cegli</translation>
+        <translation>&amp;Choisir</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>&amp;Save</source>
-        <translation>&amp;Salva</translation>
+        <translation>&amp;Enregistrer</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/gui/kernel/qplatformdialoghelper.cpp" line="+640"/>
         <source>All Files (*)</source>
-        <translation>Tutti i file (*)</translation>
+        <translation>Tous les fichiers (*)</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qfiledialog.cpp" line="+29"/>
         <source>Show </source>
-        <translation>Mostra </translation>
+        <translation>Afficher </translation>
     </message>
     <message>
         <location line="+4"/>
         <source>&amp;Rename</source>
-        <translation>&amp;Rinomina</translation>
+        <translation>&amp;Renommer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>&amp;Delete</source>
-        <translation>&amp;Elimina</translation>
+        <translation>Suppri&amp;mer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Show &amp;hidden files</source>
-        <translation>Mostra i &amp;file nascosti</translation>
+        <translation>Afficher les fic&amp;hiers cachés</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>&amp;New Folder</source>
-        <translation>&amp;Nuova cartella</translation>
+        <translation>&amp;Nouveau dossier</translation>
     </message>
     <message>
         <location line="+875"/>
         <source>All files (*)</source>
-        <translation>Tutti i file (*)</translation>
+        <translation>Tous les fichiers (*)</translation>
     </message>
     <message>
         <location line="+180"/>
         <source>Directories</source>
-        <translation>Cartelle</translation>
+        <translation>Dossiers</translation>
     </message>
     <message>
         <location line="+1088"/>
@@ -1669,15 +1563,15 @@ Premi ESC per annullare</translation>
 Directory not found.
 Please verify the correct directory name was given.</source>
         <translation>%1
-Cartella non trovata.
-Verifica che sia stato inserito il nome corretto della cartella.</translation>
+Dossier introuvable.
+Veuillez vérifier que le nom du dossier est correct.</translation>
     </message>
     <message>
         <location line="-1043"/>
         <source>%1 already exists.
 Do you want to replace it?</source>
-        <translation>%1 esiste già.
-Vuoi sostituirlo?</translation>
+        <translation>Le fichier %1 existe déjà
+Voulez-vous l&apos;écraser ?</translation>
     </message>
     <message>
         <location line="+20"/>
@@ -1685,85 +1579,85 @@ Vuoi sostituirlo?</translation>
 File not found.
 Please verify the correct file name was given.</source>
         <translation>%1
-File non trovato.
-Verifica che sia stato inserito il nome corretto del file.</translation>
+Fichier introuvable.
+Veuillez vérifier que le nom du fichier est correct.</translation>
     </message>
     <message>
         <location line="+665"/>
         <source>New Folder</source>
-        <translation>Nuova cartella</translation>
+        <translation>Nouveau dossier</translation>
     </message>
     <message>
         <location line="+127"/>
         <location line="+5"/>
         <source>Delete</source>
-        <translation>Elimina</translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <location line="-4"/>
         <source>&apos;%1&apos; is write protected.
 Do you want to delete it anyway?</source>
-        <translation>&apos;%1&apos; è protetto da scrittura.
-Vuoi eliminarlo comunque?</translation>
+        <translation>&quot;%1&quot; est protégé en écriture.
+Voulez-vous quand même le supprimer ?</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Are you sure you want to delete &apos;%1&apos;?</source>
-        <translation>Sei sicuro di voler eliminare &apos;%1&apos;?</translation>
+        <translation>Êtes-vous sûr de vouloir supprimer &quot;%1&quot; ?</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Could not delete directory.</source>
-        <translation>Impossibile rimuovere la cartella.</translation>
+        <translation>Impossible de supprimer le dossier.</translation>
     </message>
     <message>
         <location line="+452"/>
         <source>Recent Places</source>
-        <translation>Risorse recenti</translation>
+        <translation>Emplacements récents</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qsidebar.cpp" line="+448"/>
         <source>Remove</source>
-        <translation>Elimina</translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/widgets/itemviews/qdirmodel.cpp" line="+405"/>
         <source>My Computer</source>
-        <translation>Il mio computer</translation>
+        <translation>Poste de travail</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/widgets/itemviews/qfileiconprovider.cpp" line="+304"/>
         <source>Drive</source>
-        <translation>Unità</translation>
+        <translation>Disque</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>%1 File</source>
         <extracomment>%1 is a file name suffix, for example txt</extracomment>
-        <translation>File %1</translation>
+        <translation>Fichier %1</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>File</source>
-        <translation>File</translation>
+        <translation>Fichier</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>File Folder</source>
         <comment>Match Windows Explorer</comment>
-        <translation>Cartella di file</translation>
+        <translation>Dossier</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Folder</source>
         <comment>All other platforms</comment>
-        <translation>Cartella</translation>
+        <translation>Dossier</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Alias</source>
         <comment>OS X Finder</comment>
-        <translation>Alias</translation>
+        <translation type="unfinished">Alias</translation>
     </message>
     <message>
         <source>Alias</source>
@@ -1774,59 +1668,44 @@ Vuoi eliminarlo comunque?</translation>
         <location line="+2"/>
         <source>Shortcut</source>
         <comment>All other platforms</comment>
-        <translation>Scorciatoia</translation>
+        <translation>Raccourci</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Unknown</source>
-        <translation>Sconosciuto</translation>
-    </message>
-    <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qfiledialog.ui"/>
-        <source>Alt+Left</source>
-        <translation>Alt+Sinistra</translation>
-    </message>
-    <message>
-        <location/>
-        <source>Alt+Right</source>
-        <translation>Alt+Destra</translation>
-    </message>
-    <message>
-        <location/>
-        <source>Alt+Up</source>
-        <translation>Alt+Su</translation>
+        <translation>Inconnu</translation>
     </message>
 </context>
 <context>
     <name>QFileSystemModel</name>
     <message>
         <source>%1 TB</source>
-        <translation type="vanished">%1 TB</translation>
+        <translation type="vanished">%1 To</translation>
     </message>
     <message>
         <source>%1 GB</source>
-        <translation type="vanished">%1 GB</translation>
+        <translation type="vanished">%1 Go</translation>
     </message>
     <message>
         <source>%1 MB</source>
-        <translation type="vanished">%1 MB</translation>
+        <translation type="vanished">%1 Mo</translation>
     </message>
     <message>
         <source>%1 KB</source>
-        <translation type="vanished">%1 KB</translation>
+        <translation type="vanished">%1 Ko</translation>
     </message>
     <message>
         <source>%1 bytes</source>
-        <translation type="vanished">%1 byte</translation>
+        <translation type="vanished">%1 octets</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qfilesystemmodel.cpp" line="+868"/>
         <source>Invalid filename</source>
-        <translation>Nome del file non valido</translation>
+        <translation>Nom de fichier invalide</translation>
     </message>
     <message>
         <source>&lt;b&gt;The name &quot;%1&quot; can not be used.&lt;/b&gt;&lt;p&gt;Try using another name, with fewer characters or no punctuations marks.</source>
-        <translation type="vanished">&lt;b&gt;Il nome &quot;%1&quot; non può essere usato.&lt;/b&gt;&lt;p&gt;Prova ad utilizzare un altro nome, con meno caratteri o senza punteggiatura.</translation>
+        <translation type="vanished">&lt;b&gt;Le nom &quot;%1&quot; ne peut pas être utilisé.&lt;/b&gt;&lt;p&gt;Essayez un autre nom avec moins de caractères ou sans ponctuation.</translation>
     </message>
     <message>
         <location line="-3"/>
@@ -1836,185 +1715,185 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+102"/>
         <source>Name</source>
-        <translation>Nome</translation>
+        <translation>Nom</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Size</source>
-        <translation>Dimensione</translation>
+        <translation>Taille</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Kind</source>
         <comment>Match OS X Finder</comment>
-        <translation>Tipo</translation>
+        <translation>Type</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Type</source>
         <comment>All other platforms</comment>
-        <translation>Tipo</translation>
+        <translation>Type</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Date Modified</source>
-        <translation>Data di modifica</translation>
+        <translation>Dernière modification</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qfilesystemmodel_p.h" line="+257"/>
         <source>My Computer</source>
-        <translation>Il mio computer</translation>
+        <translation>Poste de travail</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Computer</source>
-        <translation>Computer</translation>
+        <translation>Ordinateur</translation>
     </message>
     <message>
         <source>%1 byte(s)</source>
-        <translation type="vanished">%1 byte</translation>
+        <translation type="vanished">%1 octet(s)</translation>
     </message>
 </context>
 <context>
     <name>QFontDatabase</name>
     <message>
+        <location filename="../../qtbase/src/gui/text/qfontdatabase.cpp" line="+133"/>
+        <location line="+1198"/>
         <source>Normal</source>
-        <translation type="vanished">Normale</translation>
+        <comment>The Normal or Regular font weight</comment>
+        <translation>Normal</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/gui/text/qfontdatabase.cpp" line="+135"/>
+        <location line="-1196"/>
         <location line="+1176"/>
         <source>Bold</source>
-        <translation>Grassetto</translation>
+        <translation>Gras</translation>
     </message>
     <message>
         <location line="-1173"/>
         <location line="+1175"/>
         <source>Demi Bold</source>
-        <translation>Semigrassetto</translation>
+        <translation>Demi-gras</translation>
     </message>
     <message>
-        <location line="-1171"/>
-        <location line="+1165"/>
-        <source>Black</source>
-        <translation>Marcato</translation>
-    </message>
-    <message>
-        <location line="-1148"/>
-        <source>Demi</source>
-        <extracomment>The word for &quot;Demi&quot; as in &quot;Demi Bold&quot; used as a pattern for string searches</extracomment>
-        <translation>Semi</translation>
-    </message>
-    <message>
-        <location line="-15"/>
-        <location line="+1178"/>
-        <source>Light</source>
-        <translation>Leggero</translation>
-    </message>
-    <message>
-        <location line="-1189"/>
-        <location line="+1198"/>
-        <source>Normal</source>
-        <comment>The Normal or Regular font weight</comment>
-        <translation>Normale</translation>
-    </message>
-    <message>
-        <location line="-1191"/>
+        <location line="-1173"/>
         <location line="+1175"/>
         <source>Medium</source>
         <comment>The Medium font weight</comment>
-        <translation>Medio</translation>
+        <translation>Moyen</translation>
     </message>
     <message>
-        <location line="-1168"/>
+        <location line="-1173"/>
+        <location line="+1165"/>
+        <source>Black</source>
+        <translation>Extra-gras</translation>
+    </message>
+    <message>
+        <location line="-1163"/>
+        <location line="+1178"/>
+        <source>Light</source>
+        <translation>Maigre</translation>
+    </message>
+    <message>
+        <location line="-1175"/>
         <location line="+1171"/>
         <source>Thin</source>
-        <translation>Sottile</translation>
+        <translation>Mince</translation>
     </message>
     <message>
         <location line="-1169"/>
         <location line="+1171"/>
         <source>Extra Light</source>
-        <translation>Chiarissimo</translation>
+        <translation>Très léger</translation>
     </message>
     <message>
         <location line="-1169"/>
         <location line="+1158"/>
         <source>Extra Bold</source>
-        <translation>Nerissimo</translation>
+        <translation>Très gras</translation>
     </message>
     <message>
         <location line="-1153"/>
         <source>Extra</source>
         <extracomment>The word for &quot;Extra&quot; as in &quot;Extra Bold, Extra Thin&quot; used as a pattern for string searches</extracomment>
-        <translation>Extra</translation>
+        <translation>Très</translation>
     </message>
     <message>
-        <location line="+98"/>
+        <location line="+3"/>
+        <source>Demi</source>
+        <extracomment>The word for &quot;Demi&quot; as in &quot;Demi Bold&quot; used as a pattern for string searches</extracomment>
+        <translation>Demi</translation>
+    </message>
+    <message>
+        <location line="+95"/>
         <location line="+1072"/>
         <source>Italic</source>
-        <translation>Corsivo</translation>
+        <translation>Italique</translation>
     </message>
     <message>
         <location line="-1070"/>
         <location line="+1072"/>
         <source>Oblique</source>
-        <translation>Obliquo</translation>
+        <translation>Oblique</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation type="vanished">Normal</translation>
     </message>
     <message>
         <location line="+746"/>
         <source>Any</source>
-        <translation>Qualsiasi</translation>
+        <translation>Tous</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Latin</source>
-        <translation>Latino</translation>
+        <translation>Latin</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Greek</source>
-        <translation>Greco</translation>
+        <translation>Grec</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Cyrillic</source>
-        <translation>Cirillico</translation>
+        <translation>Cyrillique</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Armenian</source>
-        <translation>Armeno</translation>
+        <translation>Arménien</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Hebrew</source>
-        <translation>Ebraico</translation>
+        <translation>Hébreu</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Arabic</source>
-        <translation>Arabo</translation>
+        <translation>Arabe</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Syriac</source>
-        <translation>Siriaco</translation>
+        <translation>Syriaque</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Thaana</source>
-        <translation>Thaana</translation>
+        <translation>Thâna</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Devanagari</source>
-        <translation>Devanagari</translation>
+        <translation>Dévanagari</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Bengali</source>
-        <translation>Bengalese</translation>
+        <translation>Bengali</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -2034,7 +1913,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+3"/>
         <source>Tamil</source>
-        <translation>Tamil</translation>
+        <translation>Tamoul</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -2054,12 +1933,12 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+3"/>
         <source>Sinhala</source>
-        <translation>Singalese</translation>
+        <translation>Sinhala</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Thai</source>
-        <translation>Thailandese</translation>
+        <translation>Thaï</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -2069,17 +1948,17 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+3"/>
         <source>Tibetan</source>
-        <translation>Tibetano</translation>
+        <translation>Tibétain</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Myanmar</source>
-        <translation>Birmano</translation>
+        <translation>Myanmar</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Georgian</source>
-        <translation>Georgiano</translation>
+        <translation>Géorgien</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -2089,42 +1968,42 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+3"/>
         <source>Simplified Chinese</source>
-        <translation>Cinese semplificato</translation>
+        <translation>Chinois simplifié</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Traditional Chinese</source>
-        <translation>Cinese tradizionale</translation>
+        <translation>Chinois traditionnel</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Japanese</source>
-        <translation>Giapponese</translation>
+        <translation>Japonais</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Korean</source>
-        <translation>Coreano</translation>
+        <translation>Coréen</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Vietnamese</source>
-        <translation>Vietnamita</translation>
+        <translation>Vietnamien</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Symbol</source>
-        <translation>Simbolo</translation>
+        <translation>Symbole</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Ogham</source>
-        <translation>Ogamico</translation>
+        <translation>Ogham</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Runic</source>
-        <translation>Runico</translation>
+        <translation>Runique</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -2137,47 +2016,47 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qfontdialog.cpp" line="+179"/>
         <source>Select Font</source>
-        <translation>Seleziona carattere</translation>
+        <translation>Choisir une police</translation>
     </message>
     <message>
         <location line="+591"/>
         <source>&amp;Font</source>
-        <translation>&amp;Carattere</translation>
+        <translation>&amp;Police</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Font st&amp;yle</source>
-        <translation>St&amp;ile del carattere</translation>
+        <translation>St&amp;yle de police</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>&amp;Size</source>
-        <translation>Dimen&amp;sione</translation>
+        <translation>&amp;Taille</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Effects</source>
-        <translation>Effetti</translation>
+        <translation>Effets</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Stri&amp;keout</source>
-        <translation>Ba&amp;rrato</translation>
+        <translation>&amp;Barré</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>&amp;Underline</source>
-        <translation>Sottolineat&amp;o</translation>
+        <translation>&amp;Souligné</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Sample</source>
-        <translation>Esempio</translation>
+        <translation>Exemple</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Wr&amp;iting System</source>
-        <translation>Sistema di scr&amp;ittura</translation>
+        <translation>&amp;Système d&apos;écriture</translation>
     </message>
 </context>
 <context>
@@ -2185,109 +2064,105 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/network/access/qftp.cpp" line="+844"/>
         <source>Not connected</source>
-        <translation>Non connesso</translation>
+        <translation>Non connecté</translation>
     </message>
     <message>
         <location line="+79"/>
         <source>Host %1 not found</source>
-        <translation>Host %1 non trovato</translation>
+        <translation>L&apos;hôte %1 est introuvable</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Connection refused to host %1</source>
-        <translation>Connessione all&apos;host %1 rifiutata</translation>
+        <translation>La connexion à l&apos;hôte %1 est refusée</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Connection timed out to host %1</source>
-        <translation>Connessione all&apos;host %1 scaduta</translation>
+        <translation>La connexion à l&apos;hôte %1 a expirée</translation>
     </message>
     <message>
         <location line="+104"/>
         <source>Connected to host %1</source>
-        <translation>Connesso all&apos;host %1</translation>
-    </message>
-    <message>
-        <source>Connection refused for data connection</source>
-        <translation type="vanished">Connessione rifiutata per trasferimento dati</translation>
+        <translation>Connecté à l&apos;hôte %1</translation>
     </message>
     <message>
         <location line="+213"/>
         <source>Data Connection refused</source>
-        <translation>Connessione dati rifiutata</translation>
+        <translation>La connexion de données est refusée</translation>
     </message>
     <message>
         <location line="+180"/>
         <source>Unknown error</source>
-        <translation>Errore sconosciuto</translation>
+        <translation>Erreur inconnue</translation>
     </message>
     <message>
         <location line="+954"/>
         <source>Connecting to host failed:
 %1</source>
-        <translation>Connessione all&apos;host non riuscita:
+        <translation>Échec de la connexion à l&apos;hôte :
 %1</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Login failed:
 %1</source>
-        <translation>Login non riuscito:
+        <translation>Échec de l&apos;identification :
 %1</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Listing directory failed:
 %1</source>
-        <translation>Recupero del contenuto della cartella non riuscito:
+        <translation>Échec du listage du dossier&#xa0;:
 %1</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Changing directory failed:
 %1</source>
-        <translation>Cambio della cartella non riuscito:
+        <translation>Échec du changement de dossier&#xa0;:
 %1</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Downloading file failed:
 %1</source>
-        <translation>Scaricamento del file non riuscito:
+        <translation>Échec du téléchargement du fichier&#xa0;:
 %1</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Uploading file failed:
 %1</source>
-        <translation>Caricamento del file non riuscito:
+        <translation>Échec de l&apos;envoi du fichier :
 %1</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Removing file failed:
 %1</source>
-        <translation>Eliminazione del file non riuscita:
+        <translation>Échec de la suppression du fichier :
 %1</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Creating directory failed:
 %1</source>
-        <translation>Creazione della cartella non riuscita:
+        <translation>Échec de la création du dossier :
 %1</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Removing directory failed:
 %1</source>
-        <translation>Eliminazione della cartella non riuscita:
+        <translation>Échec de la suppression du dossier :
 %1</translation>
     </message>
     <message>
         <location line="+28"/>
         <source>Connection closed</source>
-        <translation>Connessione interrotta</translation>
+        <translation>La connexion est fermée</translation>
     </message>
 </context>
 <context>
@@ -2300,22 +2175,22 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+2"/>
         <source>&amp;Save</source>
-        <translation>&amp;Salva</translation>
+        <translation>&amp;Enregistrer</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>&amp;Cancel</source>
-        <translation>&amp;Annulla</translation>
+        <translation>&amp;Annuler</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>&amp;Close</source>
-        <translation>&amp;Chiudi</translation>
+        <translation>&amp;Fermer</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Close without Saving</source>
-        <translation>Chiudi senza salvare</translation>
+        <translation>Fermer sans enregistrer</translation>
     </message>
 </context>
 <context>
@@ -2417,12 +2292,12 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/network/kernel/qhostinfo.cpp" line="+814"/>
         <source>No host name given</source>
-        <translation>Nessun nome host inserito</translation>
+        <translation>Aucun nom d&apos;hôte n&apos;a été donné</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/kernel/qhostinfo_p.h" line="+132"/>
         <source>Unknown error</source>
-        <translation>Errore sconosciuto</translation>
+        <translation>Erreur inconnue</translation>
     </message>
 </context>
 <context>
@@ -2430,31 +2305,31 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/network/kernel/qhostinfo.cpp" line="-365"/>
         <source>No host name given</source>
-        <translation>Nessun nome host inserito</translation>
+        <translation>Aucun nom d&apos;hôte n&apos;a été donné</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Invalid hostname</source>
-        <translation>Nome dell&apos;host non valido</translation>
+        <translation>Nom d&apos;hôte invalide</translation>
     </message>
     <message>
         <location line="+50"/>
         <location line="+8"/>
         <source>Unknown address type</source>
-        <translation>Tipo di indirizzo sconosciuto</translation>
+        <translation>Adresse de type inconnu</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Host not found</source>
-        <translation>Host non trovato</translation>
+        <translation>Hôte introuvable</translation>
     </message>
     <message>
         <source>Unknown error</source>
-        <translation type="vanished">Errore sconosciuto</translation>
+        <translation type="vanished">Erreur inconnue</translation>
     </message>
     <message>
         <source>Unknown error (%1)</source>
-        <translation type="vanished">Errore sconosciuto (%1)</translation>
+        <translation type="vanished">Erreur inconnue (%1)</translation>
     </message>
 </context>
 <context>
@@ -2463,54 +2338,54 @@ Vuoi eliminarlo comunque?</translation>
         <location filename="../../qtbase/src/network/access/qhttpnetworkconnection.cpp" line="-11"/>
         <location line="+2"/>
         <source>Host %1 not found</source>
-        <translation>Host %1 non trovato</translation>
+        <translation>L&apos;hôte %1 est introuvable</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Connection refused</source>
-        <translation>Connessione rifiutata</translation>
+        <translation>Connexion refusée</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/access/qhttp2protocolhandler.cpp" line="+214"/>
         <location filename="../../qtbase/src/network/access/qhttpnetworkconnection.cpp" line="+3"/>
         <source>Connection closed</source>
-        <translation>Connessione interrotta</translation>
+        <translation>Connexion fermée</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/access/qhttpnetworkconnection.cpp" line="+6"/>
         <source>Proxy requires authentication</source>
-        <translation>Il proxy richiede autenticazione</translation>
+        <translation>Le proxy requiert une authentification</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Host requires authentication</source>
-        <translation>L&apos;host richiede autenticazione</translation>
+        <translation>L&apos;hôte requiert une authentification</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Data corrupted</source>
-        <translation>Dati corrotti</translation>
+        <translation>Les données sont corrompues</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Unknown protocol specified</source>
-        <translation>Protocollo sconosciuto specificato</translation>
+        <translation>Le protocole spécifié est inconnu</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>SSL handshake failed</source>
-        <translation>Handshake SSL non riuscito</translation>
+        <translation>Le handshake SSL a échoué</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Too many redirects</source>
-        <translation>Troppi reindirizzamenti</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="+1190"/>
         <source>Insecure redirect</source>
-        <translation>Reindirizzamento non sicuro</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2518,47 +2393,47 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/network/socket/qhttpsocketengine.cpp" line="-114"/>
         <source>Did not receive HTTP response from proxy</source>
-        <translation>Non è stata ricevuta una risposta HTTP dal proxy</translation>
+        <translation>Pas de réponse HTTP de la part du proxy</translation>
     </message>
     <message>
         <location line="+53"/>
         <source>Error parsing authentication request from proxy</source>
-        <translation>Errore analizzando la richiesta di autenticazione ricevuta dal proxy</translation>
+        <translation>Erreur d&apos;analyse de la reqête d&apos;authentification depuis le proxy</translation>
     </message>
     <message>
         <location line="+36"/>
         <source>Authentication required</source>
-        <translation>Autenticazione richiesta</translation>
+        <translation>Authentification requise</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Proxy denied connection</source>
-        <translation>Il proxy ha rifiutato la connessione</translation>
+        <translation>Le proxy a rejeté la connexion</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Error communicating with HTTP proxy</source>
-        <translation>Errore di comunicazione con il proxy HTTP</translation>
+        <translation>Erreur de communication avec le proxy HTTP</translation>
     </message>
     <message>
         <location line="+55"/>
         <source>Proxy server not found</source>
-        <translation>Server proxy non trovato</translation>
+        <translation>Le serveur proxy est introuvable</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Proxy connection refused</source>
-        <translation>Connessione al proxy rifiutata</translation>
+        <translation>La connexion au proxy est refusée</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Proxy server connection timed out</source>
-        <translation>La connessione al server proxy è scaduta</translation>
+        <translation>La connexion au serveur proxy est expirée</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Proxy connection closed prematurely</source>
-        <translation>La connessione al proxy si è interrotta prematuramente</translation>
+        <translation>La connexion au serveur proxy a été fermée prématurément</translation>
     </message>
 </context>
 <context>
@@ -2566,22 +2441,22 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/plugins/sqldrivers/ibase/qsql_ibase.cpp" line="+1532"/>
         <source>Error opening database</source>
-        <translation>Errore di apertura del database</translation>
+        <translation>Erreur lors de l&apos;ouverture de la base de données</translation>
     </message>
     <message>
         <location line="+56"/>
         <source>Could not start transaction</source>
-        <translation>Impossibile avviare la transazione</translation>
+        <translation>Impossible de démarrer la transaction</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Unable to commit transaction</source>
-        <translation>Impossibile effettuare la transazione</translation>
+        <translation>Impossible de soumettre la transaction</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Unable to rollback transaction</source>
-        <translation>Impossibile annullare la transazione</translation>
+        <translation>Impossible d&apos;annuler la transaction</translation>
     </message>
 </context>
 <context>
@@ -2589,89 +2464,89 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="-1158"/>
         <source>Unable to create BLOB</source>
-        <translation>Impossibile creare il BLOB</translation>
+        <translation>Impossible de créer un BLOB</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Unable to write BLOB</source>
-        <translation>Impossibile scrivere il BLOB</translation>
+        <translation>Impossible d&apos;écrire le BLOB</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Unable to open BLOB</source>
-        <translation>Impossibile aprire il BLOB</translation>
+        <translation>Impossible d&apos;ouvrir le BLOB</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Unable to read BLOB</source>
-        <translation>Impossibile leggere il BLOB</translation>
+        <translation>Impossible de lire le BLOB</translation>
     </message>
     <message>
         <location line="+112"/>
         <location line="+188"/>
         <source>Could not find array</source>
-        <translation>Array non trovato</translation>
+        <translation>Impossible de trouver le tableau</translation>
     </message>
     <message>
         <location line="-156"/>
         <source>Could not get array data</source>
-        <translation>Impossibile ottenere i dati dell&apos;array</translation>
+        <translation>Impossible de trouver le tableau de données</translation>
     </message>
     <message>
         <location line="+211"/>
         <source>Could not get query info</source>
-        <translation>Impossibile ottenere le informazione della query</translation>
+        <translation>Impossible d&apos;avoir les informations sur la requête</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Could not start transaction</source>
-        <translation>Impossibile avviare la transazione</translation>
+        <translation>Impossible de démarrer la transaction</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Unable to commit transaction</source>
-        <translation>Impossibile effettuare la transazione</translation>
+        <translation>Impossible de  soumettre la transaction</translation>
     </message>
     <message>
         <location line="+37"/>
         <source>Could not allocate statement</source>
-        <translation>Impossibile allocare il comando</translation>
+        <translation>Impossible d&apos;allouer la requête</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Could not prepare statement</source>
-        <translation>Impossibile preparare il comando</translation>
+        <translation>Impossible de préparer la requête</translation>
     </message>
     <message>
         <location line="+5"/>
         <location line="+11"/>
         <source>Could not describe input statement</source>
-        <translation>Impossibile descrivere il comando di input</translation>
+        <translation>Impossible de décrire la requête</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Could not describe statement</source>
-        <translation>Impossibile descrivere il comando</translation>
+        <translation>Impossible de décrire la requête</translation>
     </message>
     <message>
         <location line="+120"/>
         <source>Unable to close statement</source>
-        <translation>Impossibile chiudere il comando</translation>
+        <translation>Impossible de fermer la requête</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Unable to execute query</source>
-        <translation>Impossibile eseguire la query</translation>
+        <translation>Impossible d&apos;exécuter la requête</translation>
     </message>
     <message>
         <location line="+47"/>
         <source>Could not fetch next item</source>
-        <translation>Impossibile recuperare l&apos;elemento successivo</translation>
+        <translation>Impossible de récuperer l&apos;élément suivant</translation>
     </message>
     <message>
         <location line="+205"/>
         <source>Could not get statement info</source>
-        <translation>Impossibile ottenere le informazione del comando</translation>
+        <translation>Impossible d&apos;avoir les informations sur la requête</translation>
     </message>
 </context>
 <context>
@@ -2679,32 +2554,32 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/corelib/kernel/qsystemerror.cpp" line="+121"/>
         <source>Permission denied</source>
-        <translation>Permesso negato</translation>
+        <translation>Autorisation refusée</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Too many open files</source>
-        <translation>Troppi file aperti</translation>
+        <translation>Trop de fichiers ouverts simultanément</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>No such file or directory</source>
-        <translation>File o cartella non trovati</translation>
+        <translation>Aucun fichier ou dossier</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>No space left on device</source>
-        <translation>Spazio esaurito sul dispositivo</translation>
-    </message>
-    <message>
-        <location filename="../../qtbase/src/corelib/io/qiodevice.cpp" line="+2108"/>
-        <source>Unknown error</source>
-        <translation>Errore sconosciuto</translation>
+        <translation>Aucun espace disponible sur le disque</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/io/qfsfileengine_unix.cpp" line="+99"/>
         <source>file to open is a directory</source>
-        <translation>il file da aprire è una cartella</translation>
+        <translation>le fichier à ouvrir est un répertoire</translation>
+    </message>
+    <message>
+        <location filename="../../qtbase/src/corelib/io/qiodevice.cpp" line="+2108"/>
+        <source>Unknown error</source>
+        <translation>Erreur inconnue</translation>
     </message>
 </context>
 <context>
@@ -2712,27 +2587,27 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/gui/image/qimagereader.cpp" line="+531"/>
         <source>Invalid device</source>
-        <translation>Dispositivo non valido</translation>
+        <translation>Cible non valide</translation>
     </message>
     <message>
         <location line="+36"/>
         <source>File not found</source>
-        <translation>File non trovato</translation>
+        <translation>Fichier non trouvé</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Unsupported image format</source>
-        <translation>Formato di immagine non supportato</translation>
+        <translation>Format d&apos;image non supporté</translation>
     </message>
     <message>
         <location line="+720"/>
         <source>Unable to read image data</source>
-        <translation>Impossibile leggere i dati dell&apos;immagine</translation>
+        <translation>Impossible de lire les données de l&apos;image</translation>
     </message>
     <message>
         <location line="+197"/>
         <source>Unknown error</source>
-        <translation>Errore sconosciuto</translation>
+        <translation>Erreur inconnue</translation>
     </message>
 </context>
 <context>
@@ -2740,12 +2615,12 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/gui/image/qimagewriter.cpp" line="+281"/>
         <source>Unknown error</source>
-        <translation>Errore sconosciuto</translation>
+        <translation>Erreur inconnue</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Device is not set</source>
-        <translation>Il dispositivo non è impostato</translation>
+        <translation>La cible n&apos;est pas prête</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -2755,13 +2630,13 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+6"/>
         <source>Device not writable</source>
-        <translation>Dispositivo non scrivibile</translation>
+        <translation>La cible n&apos;est pas accessible en écriture</translation>
     </message>
     <message>
         <location line="+5"/>
         <location line="+525"/>
         <source>Unsupported image format</source>
-        <translation>Formato di immagine non supportato</translation>
+        <translation>Format d&apos;image non supporté</translation>
     </message>
     <message>
         <location line="-75"/>
@@ -2774,7 +2649,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qinputdialog.cpp" line="+244"/>
         <source>Enter a value:</source>
-        <translation>Inserisci un valore:</translation>
+        <translation>Entrer une valeur :</translation>
     </message>
 </context>
 <context>
@@ -2782,78 +2657,77 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/corelib/serialization/qjsonparser.cpp" line="+68"/>
         <source>no error occurred</source>
-        <translation>nessun errore rilevato</translation>
+        <translation>aucune erreur ne s&apos;est produite</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>unterminated object</source>
-        <translation>oggetto non terminato</translation>
+        <translation>l&apos;objet n&apos;est pas terminé</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>missing name separator</source>
-        <translation>separatore del nome mancante</translation>
+        <translation>le séparateur de nom est manquant</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>unterminated array</source>
-        <translation>array non terminato</translation>
+        <translation>le tableau n&apos;est pas terminé</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>missing value separator</source>
-        <translation>separatore del valore mancante</translation>
+        <translation>le séparateur de valeur est manquant</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>illegal value</source>
-        <translation>valore non valido</translation>
+        <translation>la valeur n&apos;est pas autorisée</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>invalid termination by number</source>
-        <translatorcomment>?</translatorcomment>
-        <translation>terminazione con un numero non valida</translation>
+        <translation>terminer par un nombre est invalide</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>illegal number</source>
-        <translation>numero non valido</translation>
+        <translation>le nombre n&apos;est pas autorisé</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>invalid escape sequence</source>
-        <translation>sequenza di escape non valida</translation>
+        <translation>la séquence d&apos;échappement est invalide</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>invalid UTF8 string</source>
-        <translation>stringa UTF8 non valida</translation>
+        <translation>la chaîne UTF8 est invalide</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>unterminated string</source>
-        <translation>stringa non terminata</translation>
+        <translation>la chaîne n&apos;est pas terminée</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>object is missing after a comma</source>
-        <translation>oggetto mancante dopo una virgola</translation>
+        <translation>un objet est manquant après la virgule</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>too deeply nested document</source>
-        <translation>documento annidato troppo profondamente</translation>
+        <translation>le document est imbriqué trop profondément</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>too large document</source>
-        <translation>documento troppo grande</translation>
+        <translation>le document est trop long</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>garbage at the end of the document</source>
-        <translation>contenuti spurî alla fine del documento</translation>
+        <translation>données invalides à la fin du document</translation>
     </message>
 </context>
 <context>
@@ -2861,7 +2735,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/widgets/widgets/qkeysequenceedit.cpp" line="+103"/>
         <source>Press shortcut</source>
-        <translation>Premi scorciatoia</translation>
+        <translation>Appuyez sur le raccourci</translation>
     </message>
     <message>
         <location line="+194"/>
@@ -2875,12 +2749,12 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/corelib/plugin/qelfparser_p.cpp" line="+74"/>
         <source>&apos;%1&apos; is not an ELF object (%2)</source>
-        <translation>&apos;%1&apos; non è un oggetto ELF (%2)</translation>
+        <translation>&quot;%1&quot; n&apos;est pas un objet ELF (%2)</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>&apos;%1&apos; is not an ELF object</source>
-        <translation>&apos;%1&apos; non è un oggetto ELF</translation>
+        <translation>&quot;%1&quot; n&apos;est pas un objet ELF</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -2895,7 +2769,7 @@ Vuoi eliminarlo comunque?</translation>
         <location line="+14"/>
         <location line="+13"/>
         <source>&apos;%1&apos; is an invalid ELF object (%2)</source>
-        <translation>&apos;%1&apos; è un oggetto ELF non valido (%2)</translation>
+        <translation>&quot;%1&quot; n&apos;est pas un objet ELF valide (%2)</translation>
     </message>
     <message>
         <location line="-136"/>
@@ -2957,98 +2831,98 @@ Vuoi eliminarlo comunque?</translation>
     </message>
     <message>
         <source>Plugin verification data mismatch in &apos;%1&apos;</source>
-        <translation type="vanished">Dati di verifica del plugin non corrispondenti in &apos;%1&apos;</translation>
+        <translation type="vanished">Les données de vérification du plugin sont différentes dans &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/plugin/qlibrary.cpp" line="+334"/>
         <source>Failed to extract plugin meta data from &apos;%1&apos;</source>
-        <translation>Estrazione dei metadati del plugin non riuscita da &apos;%1&apos;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+171"/>
         <location line="+261"/>
         <location line="+18"/>
         <source>The shared library was not found.</source>
-        <translation>La libreria dinamica non è stata trovata.</translation>
+        <translation>La bibliothèque partagée est introuvable.</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>The file &apos;%1&apos; is not a valid Qt plugin.</source>
-        <translation>Il file &apos;%1&apos; non è un plugin Qt valido.</translation>
+        <translation>Le fichier &quot;%1&quot; n&apos;est pas un plugin Qt valide.</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>The plugin &apos;%1&apos; uses incompatible Qt library. (%2.%3.%4) [%5]</source>
-        <translation>Il plugin &apos;%1&apos; usa una versione di Qt incompatibile (%2.%3.%4) [%5]</translation>
+        <translation>Le plugin &quot;%1&quot;  utilise une bibliothèque Qt incompatible. (%2.%3.%4) [%5]</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>The plugin &apos;%1&apos; uses incompatible Qt library. (Cannot mix debug and release libraries.)</source>
-        <translation>Il plugin &apos;%1&apos; usa una versione di Qt incompatibile (non si possono usare librerie di debug e di release assieme)</translation>
+        <translation>Le plugin &quot;%1&quot; utilise une bibliothèque Qt incompatible. (Il est impossible de mélanger des bibliothèques compilées en Debug et Release.)</translation>
     </message>
     <message>
         <location line="+319"/>
         <source>Unknown error</source>
-        <translation>Errore sconosciuto</translation>
+        <translation>Erreur inconnue</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/plugin/qlibrary_unix.cpp" line="+281"/>
         <location filename="../../qtbase/src/corelib/plugin/qlibrary_win.cpp" line="+122"/>
         <source>Cannot load library %1: %2</source>
-        <translation>Impossibile caricare la libreria %1: %2</translation>
+        <translation>Impossible de charger la bibliothèque %1&#xa0;: %2</translation>
     </message>
     <message>
         <location line="+17"/>
         <location line="+3"/>
         <location filename="../../qtbase/src/corelib/plugin/qlibrary_win.cpp" line="+37"/>
         <source>Cannot unload library %1: %2</source>
-        <translation>Impossibile rilasciare la libreria %1: %2</translation>
+        <translation>Impossible de libérer la bibliothèque %1 : %2</translation>
     </message>
     <message>
         <source>Cannot resolve symbol &quot;%1&quot; in %2: %3</source>
-        <translation type="vanished">Impossibile risolvere il simbolo &quot;%1&quot; in %2: %3</translation>
+        <translation type="vanished">Impossible de résoudre le symbole &quot;%1&quot; dans %2&#xa0;: %3</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/plugin/qmachparser.cpp" line="+87"/>
         <source>&apos;%1&apos; is not a valid Mach-O binary (%2)</source>
-        <translation>&apos;%1&apos; è un binario Mach-O non valido (%2)</translation>
+        <translation>&quot;%1&quot; n&apos;est pas un binaire Mach-O valide (%2)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>file is corrupt</source>
-        <translation>il file è danneggiato</translation>
+        <translation>le fichier est corrompu</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/plugin/qelfparser_p.cpp" line="-149"/>
         <location filename="../../qtbase/src/corelib/plugin/qmachparser.cpp" line="+15"/>
         <location line="+9"/>
         <source>file too small</source>
-        <translation>il file è troppo piccolo</translation>
+        <translation>le fichier est trop petit</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/plugin/qmachparser.cpp" line="+22"/>
         <source>no suitable architecture in fat binary</source>
-        <translation>nessuna architettura appropriata nel fat binary</translation>
+        <translation>aucune architecture n&apos;est adaptée au binaire fat</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>invalid magic %1</source>
-        <translation>magic %1 non valido</translation>
+        <translation>le nombre magique %1 est invalide</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>wrong architecture</source>
-        <translation>architettura errata</translation>
+        <translation>l&apos;architecture n&apos;est pas correcte</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>not a dynamic library</source>
-        <translation>non è una libreria dinamica</translation>
+        <translation>la bibliothèque n&apos;est pas une bibliothèque dynamique</translation>
     </message>
     <message>
         <location line="+50"/>
         <source>&apos;%1&apos; is not a Qt plugin</source>
-        <translation>&apos;%1&apos; non è un plugin Qt</translation>
+        <translation>&quot;%1&quot; n&apos;est pas un plugin Qt</translation>
     </message>
 </context>
 <context>
@@ -3056,37 +2930,37 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/widgets/widgets/qlineedit.cpp" line="+2211"/>
         <source>&amp;Undo</source>
-        <translation>Ann&amp;ulla</translation>
+        <translation>&amp;Annuler</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>&amp;Redo</source>
-        <translation>&amp;Rifai</translation>
+        <translation>&amp;Rétablir</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Cu&amp;t</source>
-        <translation>&amp;Taglia</translation>
+        <translation>Co&amp;uper</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>&amp;Copy</source>
-        <translation>&amp;Copia</translation>
+        <translation>Cop&amp;ier</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>&amp;Paste</source>
-        <translation>&amp;Incolla</translation>
+        <translation>Co&amp;ller</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Delete</source>
-        <translation>Elimina</translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Select All</source>
-        <translation>Seleziona tutto</translation>
+        <translation>Tout sélectionner</translation>
     </message>
 </context>
 <context>
@@ -3095,22 +2969,22 @@ Vuoi eliminarlo comunque?</translation>
         <location filename="../../qtbase/src/network/socket/qlocalserver.cpp" line="+335"/>
         <location filename="../../qtbase/src/network/socket/qlocalserver_unix.cpp" line="+323"/>
         <source>%1: Name error</source>
-        <translation>%1: errore nel nome</translation>
+        <translation>%1&#xa0;: Erreur de nom</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/socket/qlocalserver_unix.cpp" line="-8"/>
         <source>%1: Permission denied</source>
-        <translation>%1: permesso negato</translation>
+        <translation>%1&#xa0;: Permission refusée</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>%1: Address in use</source>
-        <translation>%1: indirizzo già in uso</translation>
+        <translation>%1&#xa0;: Adresse déjà utilisée</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>%1: Unknown error %2</source>
-        <translation>%1: errore sconosciuto %2</translation>
+        <translation>%1&#xa0;: Erreur inconnue %2</translation>
     </message>
 </context>
 <context>
@@ -3119,13 +2993,13 @@ Vuoi eliminarlo comunque?</translation>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_tcp.cpp" line="+135"/>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+139"/>
         <source>%1: Connection refused</source>
-        <translation>%1: connessione rifiutata</translation>
+        <translation>%1&#xa0;: Connexion refusée</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+3"/>
         <source>%1: Remote closed</source>
-        <translation>%1: connessione interrotta</translation>
+        <translation>%1&#xa0;: Connexion fermée</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -3133,114 +3007,110 @@ Vuoi eliminarlo comunque?</translation>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="+72"/>
         <location line="+64"/>
         <source>%1: Invalid name</source>
-        <translation>%1: nome non valido</translation>
+        <translation>%1&#xa0;: Nom invalide</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+3"/>
         <source>%1: Socket access error</source>
-        <translation>%1: errore di accesso al socket</translation>
+        <translation>%1&#xa0;: Erreur d&apos;accès à la socket</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+3"/>
         <source>%1: Socket resource error</source>
-        <translation>%1: errore di risorsa del socket</translation>
+        <translation>%1&#xa0;: Erreur de ressource de la socket</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+3"/>
         <source>%1: Socket operation timed out</source>
-        <translation>%1: operazione sul socket scaduta</translation>
+        <translation>%1 : L&apos;opération socket est expirée</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+3"/>
         <source>%1: Datagram too large</source>
-        <translation>%1: pacchetto troppo grande</translation>
+        <translation>%1 : Le datagramme est trop grand</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+3"/>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="-69"/>
         <source>%1: Connection error</source>
-        <translation>%1: errore di connessione</translation>
+        <translation>%1&#xa0;: Erreur de connexion</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+3"/>
         <source>%1: The socket operation is not supported</source>
-        <translation>%1: operazione sul socket non supportata</translation>
+        <translation>%1&#xa0;: L&apos;opération n&apos;est pas supportée</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+3"/>
         <source>%1: Operation not permitted when socket is in this state</source>
-        <translation>%1: operazione non permessa quando il socket è in questo stato</translation>
+        <translation>%1 : L&apos;opération n&apos;est pas permise lorsque la socket est dans cet état</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>%1: Unknown error</source>
-        <translation>%1: errore sconosciuto</translation>
+        <translation>%1 : L&apos;erreur est inconnue</translation>
+    </message>
+    <message>
+        <location line="+58"/>
+        <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="+58"/>
+        <source>Trying to connect while connection is in progress</source>
+        <translation>Tentative de connexion alors qu&apos;une autre connexion est en cours</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+4"/>
-        <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="+15"/>
+        <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="-43"/>
         <source>%1: Unknown error %2</source>
-        <translation>%1: errore sconosciuto %2</translation>
+        <translation>%1&#xa0;: Erreur inconnue %2</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="-5"/>
         <source>%1: Access denied</source>
-        <translation>%1: accesso negato</translation>
+        <translation>%1 : Autorisation refusée</translation>
     </message>
     <message>
         <location line="+135"/>
         <source>Socket is not connected</source>
-        <translation type="unfinished">Socket non connesso</translation>
-    </message>
-    <message>
-        <location filename="../../qtbase/src/network/socket/qlocalsocket_tcp.cpp" line="+58"/>
-        <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="-87"/>
-        <source>Trying to connect while connection is in progress</source>
-        <translation>Tentativo di connessione mentre una connessione è ancora in corso</translation>
+        <translation type="unfinished">Le socket n&apos;est pas connectée</translation>
     </message>
 </context>
 <context>
     <name>QMYSQLDriver</name>
     <message>
-        <source>Unable to open database &apos;</source>
-        <translation type="vanished">Impossibile aprire il database &apos;</translation>
-    </message>
-    <message>
         <location filename="../../qtbase/src/plugins/sqldrivers/mysql/qsql_mysql.cpp" line="+1294"/>
         <source>Unable to allocate a MYSQL object</source>
-        <translation>Impossibile allocare un oggetto MYSQL</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+45"/>
         <source>Unable to open database &apos;%1&apos;</source>
-        <translation>Impossibile aprire il database &apos;%1&apos;</translation>
+        <translation>Impossible d&apos;ouvrir la base de données &quot;%1&quot;</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Unable to connect</source>
-        <translation>Connessione non riuscita</translation>
+        <translation>Impossible de se connecter</translation>
     </message>
     <message>
         <location line="+138"/>
         <source>Unable to begin transaction</source>
-        <translation>Impossibile iniziare la transazione</translation>
+        <translation>Impossible de démarrer la transaction</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Unable to commit transaction</source>
-        <translation>Impossibile effettuare la transazione</translation>
+        <translation>Impossible de soumettre la transaction</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Unable to rollback transaction</source>
-        <translation>Impossibile annullare la transazione</translation>
+        <translation>Impossible d&apos;annuler la transaction</translation>
     </message>
 </context>
 <context>
@@ -3249,59 +3119,59 @@ Vuoi eliminarlo comunque?</translation>
         <location line="-1015"/>
         <location line="+28"/>
         <source>Unable to fetch data</source>
-        <translation>Impossibile ottenere i dati</translation>
+        <translation>Impossible de récupérer des données</translation>
     </message>
     <message>
         <location line="+172"/>
         <source>Unable to execute query</source>
-        <translation>Impossibile eseguire la query</translation>
+        <translation>Impossible d&apos;exécuter la requête</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Unable to store result</source>
-        <translation>Impossibile memorizzare il risultato</translation>
+        <translation>Impossible de stocker le résultat</translation>
     </message>
     <message>
         <location line="+107"/>
         <source>Unable to execute next query</source>
-        <translation>Impossibile eseguire la prossima query</translation>
+        <translation>Impossible d&apos;exécuter la prochaine requête</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Unable to store next result</source>
-        <translation>Impossibile memorizzare il prossimo risultato</translation>
+        <translation>Impossible de stocker le prochain résultat</translation>
     </message>
     <message>
         <location line="+66"/>
         <location line="+8"/>
         <source>Unable to prepare statement</source>
-        <translation>Impossibile preparare il comando</translation>
+        <translation>Impossible de préparer l&apos;instruction</translation>
     </message>
     <message>
         <location line="+35"/>
         <source>Unable to reset statement</source>
-        <translation>Impossibile azzerare il comando</translation>
+        <translation>Impossible de réinitialiser l&apos;instruction</translation>
     </message>
     <message>
         <location line="+91"/>
         <source>Unable to bind value</source>
-        <translation>Impossibile effettuare il bind del valore</translation>
+        <translation>Impossible d&apos;attacher la valeur</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Unable to execute statement</source>
-        <translation>Impossibile eseguire il comando</translation>
+        <translation>Impossible d&apos;exécuter la requête</translation>
     </message>
     <message>
         <location line="+14"/>
         <location line="+21"/>
         <source>Unable to bind outvalues</source>
-        <translation>Impossibile agganciare i valore di uscita</translation>
+        <translation>Impossible d&apos;attacher les valeurs de sortie</translation>
     </message>
     <message>
         <location line="-12"/>
         <source>Unable to store statement results</source>
-        <translation>Impossibile memorizzare i risultati del comando</translation>
+        <translation>Impossible de stocker les résultats de la requête</translation>
     </message>
 </context>
 <context>
@@ -3309,7 +3179,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/widgets/widgets/qmdiarea.cpp" line="+288"/>
         <source>(Untitled)</source>
-        <translation>(Senza titolo)</translation>
+        <translation>(Sans titre)</translation>
     </message>
 </context>
 <context>
@@ -3327,42 +3197,42 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+44"/>
         <source>Minimize</source>
-        <translation>Minimizza</translation>
+        <translation>Réduire</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Maximize</source>
-        <translation>Massimizza</translation>
+        <translation>Agrandir</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Unshade</source>
-        <translation>Srotola</translation>
+        <translation>Restaurer</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Shade</source>
-        <translation>Arrotola</translation>
+        <translation>Ombrer</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Restore Down</source>
-        <translation>Ripristina in basso</translation>
+        <translation>Restaurer en bas</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Restore</source>
-        <translation>Ripristina</translation>
+        <translation>Restaurer</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Close</source>
-        <translation>Chiudi</translation>
+        <translation>Fermer</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Help</source>
-        <translation>Aiuto</translation>
+        <translation>Aide</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -3372,37 +3242,37 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+702"/>
         <source>&amp;Restore</source>
-        <translation>&amp;Ripristina</translation>
+        <translation>&amp;Restaurer</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>&amp;Move</source>
-        <translation>&amp;Sposta</translation>
+        <translation>&amp;Déplacer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>&amp;Size</source>
-        <translation>Dimen&amp;sione</translation>
+        <translation>&amp;Taille</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Mi&amp;nimize</source>
-        <translation>Mi&amp;nimizza</translation>
+        <translation>Réd&amp;uire</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Ma&amp;ximize</source>
-        <translation>Ma&amp;ssimizza</translation>
+        <translation>A&amp;grandir</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Stay on &amp;Top</source>
-        <translation>Sempre in &amp;primo piano</translation>
+        <translation>&amp;Laisser au premier plan</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>&amp;Close</source>
-        <translation>&amp;Chiudi</translation>
+        <translation>&amp;Fermer</translation>
     </message>
 </context>
 <context>
@@ -3410,12 +3280,12 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qmessagebox.cpp" line="-2306"/>
         <source>Show Details...</source>
-        <translation>Mostra dettagli...</translation>
+        <translation>Montrer les détails...</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Hide Details...</source>
-        <translation>Nascondi dettagli...</translation>
+        <translation>Masquer les détails...</translation>
     </message>
     <message>
         <location line="+1703"/>
@@ -3429,17 +3299,21 @@ Vuoi eliminarlo comunque?</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="vanished">Aiuto</translation>
+        <translation type="vanished">Aide</translation>
     </message>
     <message>
         <location line="-6"/>
         <source>&lt;h3&gt;About Qt&lt;/h3&gt;&lt;p&gt;This program uses Qt version %1.&lt;/p&gt;</source>
-        <translation>&lt;h3&gt;Informazioni su Qt&lt;/h3&gt;&lt;p&gt;Questo programma usa la versione %1 di Qt.&lt;/p&gt;</translation>
+        <translation>&lt;h3&gt;À propos de Qt&lt;/h3&gt;&lt;p&gt;Ce programme utilise la version %1 de Qt.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3 or GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 2.1 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
+        <translation type="vanished">&lt;p&gt;Qt est dédié au développement d&apos;applications C++ multiplateformes.&lt;/p&gt;&lt;p&gt;Qt offre un code source unique compatible avec les principaux systèmes d&apos;exploitation &quot;de bureau&quot; (Linux, Mac, Windows). Qt est également compatible avec des systèmes d&apos;exploitation embarqués de type Linux ou autres.&lt;/p&gt;&lt;p&gt;Qt est utilisable sous les termes de trois types de licence différents, afin de répondre aux besoins d&apos;un maximum d&apos;utilisateurs.&lt;/p&gt;&lt;p&gt;La licence commerciale de Qt est appropriée pour le développement de logiciels propriétaires/commerciaux pour lesquels vous ne souhaitez pas partager le code source avec des tierces parties ou pour lesquels les termes de la licence GNU LGPL version 3 ou GNU LGPL version 2.1 ne vous conviennent pas.&lt;/p&gt;&lt;p&gt;La licence GNU LGPL version 3 de Qt est appropriée pour le développement d&apos;applications Qt si vous acceptez les termes et conditions de la licence GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;La licence GNU LGPL version 2.1 est appropriée pour le développement d&apos;applications Qt si vous acceptez les termes et conditions de la licence GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Veuillez consulter &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; pour le détail des différents types de licence Qt.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 &quot;The Qt Company Ltd&quot; et autres contributeurs.&lt;/p&gt;&lt;p&gt;Qt et le logo Qt sont des marques de &quot;The Qt Company Ltd&quot;.&lt;/p&gt;&lt;p&gt;Qt est le produit de &quot;The Qt Company Ltd&quot;, développé sous forme de projet open source. Veuillez trouver de plus amples information à &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
         <location line="+33"/>
         <source>About Qt</source>
-        <translation>Informazioni su Qt</translation>
+        <translation>À propos de Qt</translation>
     </message>
 </context>
 <context>
@@ -3448,157 +3322,157 @@ Vuoi eliminarlo comunque?</translation>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine.cpp" line="+235"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+1519"/>
         <source>Unable to initialize non-blocking socket</source>
-        <translation>Impossibile inizializzare un socket non bloccante</translation>
+        <translation>Impossible d&apos;initialiser la socket asynchrone</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Unable to initialize broadcast socket</source>
-        <translation>Impossibile inizializzare un socket broadcast</translation>
+        <translation>Impossible d&apos;initialiser la socket en broadcast</translation>
     </message>
     <message>
         <location line="+4"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+4"/>
         <source>Attempt to use IPv6 socket on a platform with no IPv6 support</source>
-        <translation>Tentativo di utilizzo di un socket IPv6 su una piattaforma che non supporta IPv6</translation>
+        <translation>Tentative d&apos;utiliser une socket IPv6 sur une plateforme qui ne supporte pas IPv6</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>The remote host closed the connection</source>
-        <translation>L&apos;host remoto ha chiuso la connessione</translation>
+        <translation>L&apos;hôte distant a fermé la connexion</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Network operation timed out</source>
-        <translation>Operazione di rete scaduta</translation>
+        <translation>L&apos;opération réseau est expirée</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Out of resources</source>
-        <translation>Risorse esaurite</translation>
+        <translation>Manque de ressources</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Unsupported socket operation</source>
-        <translation>Operazione su socket non supportata</translation>
+        <translation>L&apos;opération socket n&apos;est pas supportée</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Protocol type not supported</source>
-        <translation>Tipo di protocollo non supportato</translation>
+        <translation>Le protocol n&apos;est pas géré</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Invalid socket descriptor</source>
-        <translation>Descrittore del socket non valido</translation>
+        <translation>Le descripteur de socket est invalide</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Host unreachable</source>
-        <translation>Host non raggiungibile</translation>
+        <translation>L&apos;hôte n&apos;est pas accessible</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Network unreachable</source>
-        <translation>Rete non raggiungibile</translation>
+        <translation>Le réseau ne répond pas</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Permission denied</source>
-        <translation>Permesso negato</translation>
+        <translation>Autorisation refusée</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Connection timed out</source>
-        <translation>Connessione scaduta</translation>
+        <translation>Connexion expirée</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Connection refused</source>
-        <translation>Connessione rifiutata</translation>
+        <translation>Connexion refusée</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>The bound address is already in use</source>
-        <translation>L&apos;indirizzo selezionato è già in uso</translation>
+        <translation>L&apos;adresse liée est déjà utilisée</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>The address is not available</source>
-        <translation>L&apos;indirizzo non è disponibile</translation>
+        <translation>L&apos;adresse n&apos;est pas disponible</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>The address is protected</source>
-        <translation>L&apos;indirizzo è protetto</translation>
+        <translation>L&apos;adresse est protégée</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Datagram was too large to send</source>
-        <translation>Il pacchetto è troppo grande per l&apos;invio</translation>
+        <translation>Le datagramme était trop grand pour être envoyé</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Unable to send a message</source>
-        <translation>Impossibile inviare un messaggio</translation>
+        <translation>Impossible d&apos;envoyer un message</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Unable to receive a message</source>
-        <translation>Impossibile ricevere un messaggio</translation>
+        <translation>Impossible de recevoir un message</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Unable to write</source>
-        <translation>Impossibile scrivere</translation>
+        <translation>Impossible d&apos;écrire</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Network error</source>
-        <translation>Errore di rete</translation>
+        <translation>Erreur réseau</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Another socket is already listening on the same port</source>
-        <translation>Un altro socket è già in ascolto sulla stessa porta</translation>
+        <translation>Une autre socket écoute déjà sur le même port</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Operation on non-socket</source>
-        <translation>Operazione su un non-socket</translation>
+        <translation>Operation sur une non-socket</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>The proxy type is invalid for this operation</source>
-        <translation>Il tipo di proxy non è valido per questa operazione</translation>
+        <translation>Le type de proxy est invalide pour cette opération</translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Temporary error</source>
-        <translation>Errore temporaneo</translation>
+        <translation>Erreur temporaire</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -3608,13 +3482,13 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+3"/>
         <source>Connection reset by peer</source>
-        <translation type="unfinished">Connessione annullata dalla controparte</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+3"/>
         <source>Unknown error</source>
-        <translation>Errore sconosciuto</translation>
+        <translation>Erreur inconnue</translation>
     </message>
 </context>
 <context>
@@ -3622,7 +3496,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/network/access/qnetworkaccesscachebackend.cpp" line="+65"/>
         <source>Error opening %1</source>
-        <translation>Errore durante l&apos;apertura di %1</translation>
+        <translation>Erreur lors de l&apos;ouverture de %1</translation>
     </message>
 </context>
 <context>
@@ -3630,7 +3504,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/network/access/qnetworkreplydataimpl.cpp" line="+88"/>
         <source>Invalid URI: %1</source>
-        <translation>URI non valido: %1</translation>
+        <translation>URI invalide&#xa0;: %1</translation>
     </message>
 </context>
 <context>
@@ -3638,17 +3512,17 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/network/access/qnetworkaccessdebugpipebackend.cpp" line="+200"/>
         <source>Write error writing to %1: %2</source>
-        <translation>Errore di scrittura su %1: %2</translation>
+        <translation>Erreur lors de l&apos;écriture dans %1&#xa0;: %2</translation>
     </message>
     <message>
         <location line="+60"/>
         <source>Socket error on %1: %2</source>
-        <translation>Errore del socket su %1: %2</translation>
+        <translation>Erreur de socket sur %1&#xa0;: %2</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Remote host closed the connection prematurely on %1</source>
-        <translation>L&apos;host remoto ha chiuso la connessione prematuramente su %1</translation>
+        <translation>L&apos;hôte distant a fermé sa connexion de façon prématurée sur %1</translation>
     </message>
 </context>
 <context>
@@ -3657,31 +3531,31 @@ Vuoi eliminarlo comunque?</translation>
         <location filename="../../qtbase/src/network/access/qnetworkaccessfilebackend.cpp" line="+121"/>
         <location filename="../../qtbase/src/network/access/qnetworkreplyfileimpl.cpp" line="+90"/>
         <source>Request for opening non-local file %1</source>
-        <translation>Richiesta di apertura di un file non locale %1</translation>
+        <translation>Requête d&apos;ouverture de fichier distant %1</translation>
     </message>
     <message>
         <location line="+51"/>
         <location filename="../../qtbase/src/network/access/qnetworkfile.cpp" line="+74"/>
         <location filename="../../qtbase/src/network/access/qnetworkreplyfileimpl.cpp" line="+57"/>
         <source>Error opening %1: %2</source>
-        <translation>Errore durante l&apos;apertura di %1: %2</translation>
+        <translation>Erreur lors de l&apos;ouverture de %1&#xa0;: %2</translation>
     </message>
     <message>
         <location line="+38"/>
         <source>Write error writing to %1: %2</source>
-        <translation>Errore di scrittura su %1: %2</translation>
+        <translation>Erreur d&apos;écriture de %1&#xa0;: %2</translation>
     </message>
     <message>
         <location line="+42"/>
         <location filename="../../qtbase/src/network/access/qnetworkfile.cpp" line="-8"/>
         <location filename="../../qtbase/src/network/access/qnetworkreplyfileimpl.cpp" line="-12"/>
         <source>Cannot open %1: Path is a directory</source>
-        <translation>Impossibile aprire %1: il percorso è una cartella</translation>
+        <translation>Impossible d&apos;ouvrir %1&#xa0;: le chemin est un dossier</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>Read error reading from %1: %2</source>
-        <translation>Errore di lettura da %1: %2</translation>
+        <translation>Erreur de lecture de %1&#xa0;: %2</translation>
     </message>
 </context>
 <context>
@@ -3689,41 +3563,41 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/network/access/qnetworkaccessftpbackend.cpp" line="+139"/>
         <source>No suitable proxy found</source>
-        <translation>Nessun proxy adatto trovato</translation>
+        <translation>Aucun proxy trouvé</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Cannot open %1: is a directory</source>
-        <translation>Impossibile aprire %1: è una cartella</translation>
+        <translation>Impossible d&apos;ouvrir %1&#xa0;: le chemin est un dossier</translation>
     </message>
     <message>
         <location line="+105"/>
         <source>Logging in to %1 failed: authentication required</source>
-        <translation>Log su %1 non riuscito: richiesta autenticazione</translation>
+        <translation>La connexion à %1 a échoué : authentification requise</translation>
     </message>
     <message>
         <location line="+35"/>
         <source>Error while downloading %1: %2</source>
-        <translation>Errore durante lo scaricamento di %1: %2</translation>
+        <translation>Erreur lors du téléchargement de %1&#xa0;: %2</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Error while uploading %1: %2</source>
-        <translation>Errore durante il caricamento di %1: %2</translation>
+        <translation>Erreur lors de l&apos;envoi de %1&#xa0;: %2</translation>
     </message>
 </context>
 <context>
     <name>QNetworkAccessManager</name>
     <message>
         <source>Network access is disabled.</source>
-        <translation type="vanished">Accesso alla rete disabilitato.</translation>
+        <translation type="vanished">L&apos;accès au réseau est désactivé.</translation>
     </message>
 </context>
 <context>
     <name>QNetworkReply</name>
     <message>
         <source>Error downloading %1 - server replied: %2</source>
-        <translation type="vanished">Errore durante lo scaricamento %1 - il server ha risposto: %2</translation>
+        <translation type="vanished">Erreur lors du téléchargement de %1 - le serveur a répondu&#xa0;: %2</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="+721"/>
@@ -3731,7 +3605,7 @@ Vuoi eliminarlo comunque?</translation>
         <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+98"/>
         <location line="+257"/>
         <source>Background request not allowed.</source>
-        <translation>Richiesta in background non permessa.</translation>
+        <translation>La requête en arrière-plan n&apos;est pas autorisée.</translation>
     </message>
     <message>
         <location line="-273"/>
@@ -3741,30 +3615,30 @@ Vuoi eliminarlo comunque?</translation>
         <location line="+203"/>
         <location line="+15"/>
         <source>Network session error.</source>
-        <translation>Errore della sessione di rete.</translation>
+        <translation>Erreur de session réseau.</translation>
     </message>
     <message>
         <location line="-217"/>
         <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="-211"/>
         <source>backend start error.</source>
-        <translation>errore di avvio del backend.</translation>
+        <translation>erreur de démarrage du backend.</translation>
     </message>
     <message>
         <location line="+319"/>
         <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+675"/>
         <source>Temporary network failure.</source>
-        <translation>Errore temporaneo della rete.</translation>
+        <translation>Erreur réseau temporaire.</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="-719"/>
         <source>Protocol &quot;%1&quot; is unknown</source>
-        <translation>Il protocollo &quot;%1&quot; è sconosciuto</translation>
+        <translation>Le protocole &quot;%1&quot; est inconnu</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/access/qhttpthreaddelegate.cpp" line="+541"/>
         <location line="+26"/>
         <source>Error transferring %1 - server replied: %2</source>
-        <translation>Errore durante il trasferimento di %1 - il server ha risposto: %2</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3773,19 +3647,12 @@ Vuoi eliminarlo comunque?</translation>
         <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="-1969"/>
         <location line="+16"/>
         <source>Operation canceled</source>
-        <translation>Operazione annullata</translation>
+        <translation>L&apos;opération est annulée</translation>
     </message>
     <message>
         <location line="+389"/>
         <source>No suitable proxy found</source>
-        <translation>Nessun proxy adatto trovato</translation>
-    </message>
-</context>
-<context>
-    <name>QNetworkReplyHttpImplPrivate</name>
-    <message>
-        <source>No suitable proxy found</source>
-        <translation type="vanished">Nessun proxy adatto trovato</translation>
+        <translation>Aucun proxy trouvé</translation>
     </message>
 </context>
 <context>
@@ -3794,7 +3661,7 @@ Vuoi eliminarlo comunque?</translation>
         <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+851"/>
         <location line="+29"/>
         <source>Operation canceled</source>
-        <translation>Operazione annullata</translation>
+        <translation>L&apos;opération est annulée</translation>
     </message>
 </context>
 <context>
@@ -3802,7 +3669,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/network/bearer/qnetworksession.cpp" line="+472"/>
         <source>Invalid configuration.</source>
-        <translation>Configurazione non valida.</translation>
+        <translation>La configuration est invalide.</translation>
     </message>
 </context>
 <context>
@@ -3810,27 +3677,27 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/plugins/bearer/qnetworksession_impl.cpp" line="+253"/>
         <source>Unknown session error.</source>
-        <translation>Errore sconosciuto di sessione.</translation>
+        <translation>Erreur de session inconnue.</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>The session was aborted by the user or system.</source>
-        <translation>La sessione è stata interrotta dall&apos;utente o dal sistema.</translation>
+        <translation>La session a été annulée par l&apos;utilisateur ou le système.</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>The requested operation is not supported by the system.</source>
-        <translation>L&apos;operazione richiesta non è supportata dal sistema.</translation>
+        <translation>L&apos;opération requise n&apos;est pas supportée par le système.</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>The specified configuration cannot be used.</source>
-        <translation>La configurazione specificata non può essere utilizzata.</translation>
+        <translation>La configuration spécifiée ne peut pas être utilisée.</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Roaming was aborted or is not possible.</source>
-        <translation>Roaming interrotto o non possibile.</translation>
+        <translation>Le roaming a été annulé ou est impossible.</translation>
     </message>
 </context>
 <context>
@@ -3839,27 +3706,27 @@ Vuoi eliminarlo comunque?</translation>
         <location filename="../../qtbase/src/plugins/sqldrivers/oci/qsql_oci.cpp" line="+2169"/>
         <source>Unable to initialize</source>
         <comment>QOCIDriver</comment>
-        <translation>Impossibile inizializzare</translation>
+        <translation>Impossible d&apos;initialiser</translation>
     </message>
     <message>
         <location line="+146"/>
         <source>Unable to logon</source>
-        <translation>Autenticazione non riuscita</translation>
+        <translation>Impossible d&apos;ouvrir une session</translation>
     </message>
     <message>
         <location line="+73"/>
         <source>Unable to begin transaction</source>
-        <translation>Impossibile iniziare la transazione</translation>
+        <translation>Impossible de démarrer la transaction</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Unable to commit transaction</source>
-        <translation>Impossibile effettuare la transazione</translation>
+        <translation>Impossible d&apos;enregistrer la transaction</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Unable to rollback transaction</source>
-        <translation>Impossibile annullare la transazione</translation>
+        <translation>Impossible d&apos;annuler la transaction</translation>
     </message>
 </context>
 <context>
@@ -3869,42 +3736,42 @@ Vuoi eliminarlo comunque?</translation>
         <location line="+193"/>
         <location line="+15"/>
         <source>Unable to bind column for batch execute</source>
-        <translation>Impossibile effettuare il bind della colonna per l&apos;esecuzione non interattiva</translation>
+        <translation>Impossible d&apos;attacher la colonne pour une exécution en batch</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Unable to execute batch statement</source>
-        <translation>Impossibile eseguire il comando non interattivo</translation>
+        <translation>Impossible d&apos;exécuter l&apos;instruction batch</translation>
     </message>
     <message>
         <location line="+329"/>
         <source>Unable to goto next</source>
-        <translation>Impossibile andare al successivo</translation>
+        <translation>Impossible de passer au suivant</translation>
     </message>
     <message>
         <location line="+61"/>
         <source>Unable to alloc statement</source>
-        <translation>Impossibile allocare il comando</translation>
+        <translation>Impossible d&apos;allouer l&apos;instruction</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Unable to prepare statement</source>
-        <translation>Impossibile preparare il comando</translation>
+        <translation>Impossible de préparer l&apos;instruction</translation>
     </message>
     <message>
         <location line="+27"/>
         <source>Unable to get statement type</source>
-        <translation>Impossibile recuperare il tipo di comando</translation>
+        <translation>Impossible d&apos;obtenir le type de l&apos;instruction</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Unable to bind value</source>
-        <translation>Impossibile effettuare il bind del valore</translation>
+        <translation>Impossible d&apos;attacher la valeur</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Unable to execute statement</source>
-        <translation>Impossibile eseguire il comando</translation>
+        <translation>Impossible d&apos;exéctuer l&apos;instruction</translation>
     </message>
 </context>
 <context>
@@ -3912,32 +3779,32 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/plugins/sqldrivers/odbc/qsql_odbc.cpp" line="+1979"/>
         <source>Unable to connect</source>
-        <translation>Connessione non riuscita</translation>
+        <translation>Impossible de se connecter</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Unable to connect - Driver doesn&apos;t support all functionality required</source>
-        <translation>Connessione non riuscita - il driver non supporta tutte le funzionalità richieste</translation>
+        <translation>Impossible de se connecter - Le pilote ne supporte pas toutes les fonctionnalités nécessaires</translation>
     </message>
     <message>
         <location line="+282"/>
         <source>Unable to disable autocommit</source>
-        <translation>Impossibile disabilitare l&apos;autocommit</translation>
+        <translation>Impossible de désactiver l&apos;autocommit</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Unable to commit transaction</source>
-        <translation>Impossibile effettuare la transazione</translation>
+        <translation>Impossible de soumettre la transaction</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Unable to rollback transaction</source>
-        <translation>Impossibile annullare la transazione</translation>
+        <translation>Impossible d&apos;annuler la transaction</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Unable to enable autocommit</source>
-        <translation>Impossibile abilitare l&apos;autocommit</translation>
+        <translation>Impossible d&apos;activer l&apos;autocommit</translation>
     </message>
 </context>
 <context>
@@ -3947,60 +3814,49 @@ Vuoi eliminarlo comunque?</translation>
         <location line="+621"/>
         <location filename="../../qtbase/src/plugins/sqldrivers/db2/qsql_db2.cpp" line="+195"/>
         <source>Unable to fetch last</source>
-        <translation>Impossibile ottenere l&apos;ultimo</translation>
+        <translation>Impossible de récupérer le dernier</translation>
     </message>
     <message>
         <location line="-784"/>
         <location line="+349"/>
         <source>QODBCResult::reset: Unable to set &apos;SQL_CURSOR_STATIC&apos; as statement attribute. Please check your ODBC driver configuration</source>
-        <translation>QODBCResult::reset: Impossibile impostare &apos;SQL_CURSOR_STATIC&apos; come attributo del comando. Verifica la configurazione del driver ODBC</translation>
+        <translation>QODBCResult::reset : Impossible d&apos;utiliser &quot;SQL_CURSOR_STATIC&quot; comme attribut de requête. Veuillez vérifier la configuration de votre pilote ODBC</translation>
     </message>
     <message>
         <location line="-339"/>
         <location line="+634"/>
         <source>Unable to execute statement</source>
-        <translation>Impossibile eseguire l&apos;istruzione</translation>
+        <translation>Impossible d&apos;exécuter l&apos;instruction</translation>
     </message>
     <message>
         <location line="-579"/>
         <source>Unable to fetch</source>
-        <translation>Impossibile ottenere i dati</translation>
+        <translation>Impossible de récupérer</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Unable to fetch next</source>
-        <translation>Impossibile ottenere il successivo</translation>
+        <translation>Impossible de récupérer le suivant</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Unable to fetch first</source>
-        <translation>Impossibile ottenere il primo</translation>
+        <translation>Impossible de récupérer le premier</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Unable to fetch previous</source>
-        <translation>Impossibile ottenere il precedente</translation>
+        <translation>Impossible de récupérer le précédent</translation>
     </message>
     <message>
         <location line="+229"/>
         <source>Unable to prepare statement</source>
-        <translation>Impossibile preparare l&apos;istruzione</translation>
+        <translation>Impossible de préparer l&apos;instruction</translation>
     </message>
     <message>
         <location line="+276"/>
         <source>Unable to bind variable</source>
-        <translation>Impossibile agganciare la variabile</translation>
-    </message>
-</context>
-<context>
-    <name>QPPDOptionsModel</name>
-    <message>
-        <source>Name</source>
-        <translation type="vanished">Nome</translation>
-    </message>
-    <message>
-        <source>Value</source>
-        <translation type="vanished">Valore</translation>
+        <translation>Impossible d&apos;attacher la variable</translation>
     </message>
 </context>
 <context>
@@ -4008,32 +3864,32 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/plugins/sqldrivers/psql/qsql_psql.cpp" line="+1223"/>
         <source>Unable to connect</source>
-        <translation>Connessione non riuscita</translation>
+        <translation>Impossible de se connecter</translation>
     </message>
     <message>
         <location line="+50"/>
         <source>Could not begin transaction</source>
-        <translation>Impossibile avviare la transazione</translation>
+        <translation>Impossible de démarrer la transaction</translation>
     </message>
     <message>
         <location line="+29"/>
         <source>Could not commit transaction</source>
-        <translation>Impossibile effettuare la transazione</translation>
+        <translation>Impossible de soumettre la transaction</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Could not rollback transaction</source>
-        <translation>Impossibile annullare la transazione</translation>
+        <translation>Impossible d&apos;annuler la transaction</translation>
     </message>
     <message>
         <location line="+274"/>
         <source>Unable to subscribe</source>
-        <translation>Registrazione non riuscita</translation>
+        <translation>Impossible de s&apos;inscrire</translation>
     </message>
     <message>
         <location line="+35"/>
         <source>Unable to unsubscribe</source>
-        <translation>Deregistrazione non riuscita</translation>
+        <translation>Impossible de se désinscrire</translation>
     </message>
 </context>
 <context>
@@ -4046,7 +3902,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+33"/>
         <source>Unable to create query</source>
-        <translation>Impossibile creare la query</translation>
+        <translation>Impossible de créer la requête</translation>
     </message>
     <message>
         <location line="+195"/>
@@ -4063,7 +3919,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="-29"/>
         <source>Unable to prepare statement</source>
-        <translation>Impossibile preparare l&apos;istruzione</translation>
+        <translation>Impossible de préparer l&apos;instruction</translation>
     </message>
 </context>
 <context>
@@ -4071,101 +3927,112 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupwidget.ui"/>
         <source>Form</source>
-        <translation>Modulo</translation>
+        <translation>Formulaire</translation>
     </message>
     <message>
         <location/>
         <source>Paper</source>
-        <translation>Carta</translation>
+        <translation>Papier</translation>
     </message>
     <message>
         <location/>
         <source>Page size:</source>
-        <translation>Dimensione della pagina:</translation>
+        <translation>Dimensions :</translation>
     </message>
     <message>
         <location/>
         <source>Width:</source>
-        <translation>Larghezza:</translation>
+        <translation>Largeur :</translation>
     </message>
     <message>
         <location/>
         <source>Height:</source>
-        <translation>Altezza:</translation>
+        <translation>Hauteur :</translation>
     </message>
     <message>
         <location/>
         <source>Paper source:</source>
-        <translation>Alimentazione della carta:</translation>
+        <translation>Source du papier :</translation>
     </message>
     <message>
         <location/>
         <source>Orientation</source>
-        <translation>Orientamento</translation>
+        <translation>Orientation</translation>
     </message>
     <message>
         <location/>
         <source>Portrait</source>
-        <translation>Verticale</translation>
+        <translation>Portrait</translation>
     </message>
     <message>
         <location/>
         <source>Landscape</source>
-        <translation>Orizzontale</translation>
+        <translation>Paysage</translation>
     </message>
     <message>
         <location/>
         <source>Reverse landscape</source>
-        <translation>Orizzontale inverso</translation>
+        <translation>Paysage inversé</translation>
     </message>
     <message>
         <location/>
         <source>Reverse portrait</source>
-        <translation>Verticale inverso</translation>
+        <translation>Portrait inversé</translation>
     </message>
     <message>
         <location/>
         <source>Margins</source>
-        <translation>Margini</translation>
+        <translation>Marges</translation>
     </message>
     <message>
         <location/>
         <source>top margin</source>
-        <translation>margine superiore</translation>
+        <translation>marge haute</translation>
     </message>
     <message>
         <location/>
         <source>left margin</source>
-        <translation>margine sinistro</translation>
+        <translation>marge gauche</translation>
     </message>
     <message>
         <location/>
         <source>right margin</source>
-        <translation>margine destro</translation>
+        <translation>marge droite</translation>
     </message>
     <message>
         <location/>
         <source>bottom margin</source>
-        <translation>margine inferiore</translation>
+        <translation>marge basse</translation>
     </message>
     <message>
-        <source>Centimeters (cm)</source>
-        <translation type="vanished">Centimetri (cm)</translation>
+        <location/>
+        <source>Page Layout</source>
+        <translation>Mise en page</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Page order:</source>
+        <translation>Ordre des pages :</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Pages per sheet:</source>
+        <translation>Pages par feuille :</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_unix.cpp" line="+297"/>
         <source>Millimeters (mm)</source>
-        <translation>Millimetri (mm)</translation>
+        <translation>Millimètres (mm)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Inches (in)</source>
-        <translation>Pollici (in)</translation>
+        <translation>Pouces (in)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Points (pt)</source>
-        <translation>Punti (pt)</translation>
+        <translation>Points (pts)</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -4180,13 +4047,13 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+1"/>
         <source>Cicero (CC)</source>
-        <translation>Cicero (CC)</translation>
+        <translation>Cicéro (CC)</translation>
     </message>
     <message>
         <location line="+68"/>
         <location line="+17"/>
         <source>Custom</source>
-        <translation>Personalizzata</translation>
+        <translation>Personnalisée</translation>
     </message>
     <message>
         <location line="+60"/>
@@ -4204,7 +4071,7 @@ Vuoi eliminarlo comunque?</translation>
         <location line="+4"/>
         <source>in</source>
         <extracomment>Unit &apos;Inch&apos;</extracomment>
-        <translation>in</translation>
+        <translation>po</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -4224,21 +4091,6 @@ Vuoi eliminarlo comunque?</translation>
         <extracomment>Unit &apos;Cicero&apos;</extracomment>
         <translation>CC</translation>
     </message>
-    <message>
-        <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupwidget.ui"/>
-        <source>Page Layout</source>
-        <translation>Impaginazione</translation>
-    </message>
-    <message>
-        <location/>
-        <source>Page order:</source>
-        <translation>Ordine delle pagine:</translation>
-    </message>
-    <message>
-        <location/>
-        <source>Pages per sheet:</source>
-        <translation>Pagine per foglio:</translation>
-    </message>
 </context>
 <context>
     <name>QPageSize</name>
@@ -4246,43 +4098,43 @@ Vuoi eliminarlo comunque?</translation>
         <location filename="../../qtbase/src/gui/painting/qpagesize.cpp" line="+478"/>
         <source>Custom (%1mm x %2mm)</source>
         <extracomment>Custom size name in millimeters</extracomment>
-        <translation>Personalizzata (%1mm x %2mm)</translation>
+        <translation>Personnalisée (%1mm x %2mm)</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Custom (%1pt x %2pt)</source>
         <extracomment>Custom size name in points</extracomment>
-        <translation>Personalizzata (%1pt x %2pt)</translation>
+        <translation>Personnalisée (%1pt x %2pt)</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Custom (%1in x %2in)</source>
         <extracomment>Custom size name in inches</extracomment>
-        <translation>Personalizzata (%1in x %2in)</translation>
+        <translation>Personnalisée (%1po x %2po)</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Custom (%1pc x %2pc)</source>
         <extracomment>Custom size name in picas</extracomment>
-        <translation>Personalizzata (%1pc x %2pc)</translation>
+        <translation>Personnalisée (%1pc  %2pc)</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Custom (%1DD x %2DD)</source>
         <extracomment>Custom size name in didots</extracomment>
-        <translation>Personalizzata (%1DD x %2DD)</translation>
+        <translation>Personnalisée (%1DD x %2DD)</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Custom (%1CC x %2CC)</source>
         <extracomment>Custom size name in ciceros</extracomment>
-        <translation>Personalizzata (%1CC x %2CC)</translation>
+        <translation>Personnalisée (%1CC x %2CC)</translation>
     </message>
     <message>
         <location line="+989"/>
         <source>%1 x %2 in</source>
         <extracomment>Page size in &apos;Inch&apos;.</extracomment>
-        <translation>%1 x %2 pollici</translation>
+        <translation>%1 x %2 po</translation>
     </message>
     <message>
         <location line="+16"/>
@@ -4397,42 +4249,42 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+2"/>
         <source>Executive (7.5 x 10 in)</source>
-        <translation>Esecutivo (7.5 x 10 pollici)</translation>
+        <translation>Executive (7.5 x 10 po)</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Executive (7.25 x 10.5 in)</source>
-        <translation>Esecutivo (7.25 x 10.5 pollici)</translation>
+        <translation>Executive (7.25 x 10.5 po)</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Folio (8.27 x 13 in)</source>
-        <translation>Folio (8.27 x 13 pollici)</translation>
+        <translation>Folio (8.27 x 13 po)</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Legal</source>
-        <translation>Legale</translation>
+        <translation>Legal</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Letter / ANSI A</source>
-        <translation>Lettera / ANSI A</translation>
+        <translation>Lettre / ANSI A</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Tabloid / ANSI B</source>
-        <translation>Tabloid / ANSI B</translation>
+        <translation>Tabloïd / ANSI B</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Ledger / ANSI B</source>
-        <translation>Libro mastro / ANSI B</translation>
+        <translation>Ledger / ANSI B</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Custom</source>
-        <translation>Personalizzata</translation>
+        <translation>Personnalisée</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -4452,7 +4304,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+2"/>
         <source>A4 Small</source>
-        <translation>A4 Piccolo</translation>
+        <translation>A4 Small</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -4537,57 +4389,57 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+2"/>
         <source>Legal Extra</source>
-        <translation>Legale extra</translation>
+        <translation>Legal Extra</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Letter Extra</source>
-        <translation>Lettera extra</translation>
+        <translation>Legal Extra</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Letter Plus</source>
-        <translation>Lettera plus</translation>
+        <translation>Letter Plus</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Letter Small</source>
-        <translation>Lettera piccola</translation>
+        <translation>Letter Small</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Tabloid Extra</source>
-        <translation>Tabloid extra</translation>
+        <translation>Tabloïd Extra</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Architect A</source>
-        <translation>Architetto A</translation>
+        <translation>Architect A</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Architect B</source>
-        <translation>Architetto B</translation>
+        <translation>Architect B</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Architect C</source>
-        <translation>Architetto C</translation>
+        <translation>Architect C</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Architect D</source>
-        <translation>Architetto D</translation>
+        <translation>Architect D</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Architect E</source>
-        <translation>Architetto E</translation>
+        <translation>Architect E</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Note</source>
-        <translation>Nota</translation>
+        <translation>Note</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -4597,7 +4449,7 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+2"/>
         <source>Statement</source>
-        <translation>Dichiarazione</translation>
+        <translation>Statement</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -4612,12 +4464,12 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+2"/>
         <source>Postcard</source>
-        <translation>Cartolina</translation>
+        <translation>Carte postale</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Double Postcard</source>
-        <translation>Cartolina doppia</translation>
+        <translation>Carte postale double</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -4632,207 +4484,207 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+2"/>
         <source>PRC 32K Big</source>
-        <translation>PRC 32K Grande</translation>
+        <translation>PRC 32K Big</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Fan-fold US (14.875 x 11 in)</source>
-        <translation>Pieghevole US (14.875 x 11 pollici)</translation>
+        <translation>Fanfold US (14.875 x 11 po)</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Fan-fold German (8.5 x 12 in)</source>
-        <translation>Pieghevole tedesco (8.5 x 12 pollici)</translation>
+        <translation>Fanfold allemand (8.5 x 12 po)</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Fan-fold German Legal (8.5 x 13 in)</source>
-        <translation>Pieghevole tedesco legale (8.5 x 13 pollici)</translation>
+        <translation>Legal Fanfold allemand (8.5 x 13 po)</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope B4</source>
-        <translation>Busta B4</translation>
+        <translation>Enveloppe B4</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope B5</source>
-        <translation>Busta B5</translation>
+        <translation>Enveloppe B5</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope B6</source>
-        <translation>Busta B6</translation>
+        <translation>Enveloppe B6</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope C0</source>
-        <translation>Busta C0</translation>
+        <translation>Enveloppe C0</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope C1</source>
-        <translation>Busta C1</translation>
+        <translation>Enveloppe C1</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope C2</source>
-        <translation>Busta C2</translation>
+        <translation>Enveloppe C2</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope C3</source>
-        <translation>Busta C3</translation>
+        <translation>Enveloppe C3</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope C4</source>
-        <translation>Busta C4</translation>
+        <translation>Enveloppe C4</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope C5</source>
-        <translation>Busta C5</translation>
+        <translation>Enveloppe C5</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope C6</source>
-        <translation>Busta C6</translation>
+        <translation>Enveloppe C6</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope C65</source>
-        <translation>Busta C65</translation>
+        <translation>Enveloppe C65</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope C7</source>
-        <translation>Busta C7</translation>
+        <translation>Enveloppe C7</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope DL</source>
-        <translation>Busta DL</translation>
+        <translation>Enveloppe DL</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope US 9</source>
-        <translation>Busta US 9</translation>
+        <translation>Enveloppe US 9</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope US 10</source>
-        <translation>Busta US 10</translation>
+        <translation>Enveloppe US 10</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope US 11</source>
-        <translation>Busta US 11</translation>
+        <translation>Enveloppe US 11</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope US 12</source>
-        <translation>Busta US 12</translation>
+        <translation>Enveloppe US 12</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope US 14</source>
-        <translation>Busta US 14</translation>
+        <translation>Enveloppe US 14</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope Monarch</source>
-        <translation>Busta Monarch</translation>
+        <translation>Enveloppe Monarch</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope Personal</source>
-        <translation>Busta personale</translation>
+        <translation>Enveloppe Personelle</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope Chou 3</source>
-        <translation>Busta Chou 3</translation>
+        <translation>Enveloppe Chou 3</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope Chou 4</source>
-        <translation>Busta Chou 4</translation>
+        <translation>Enveloppe Chou 4</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope Invite</source>
-        <translation>Busta invito</translation>
+        <translation>Enveloppe Invitation</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope Italian</source>
-        <translation>Busta italiana</translation>
+        <translation>Enveloppe italienne</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope Kaku 2</source>
-        <translation>Busta Kaku 2</translation>
+        <translation>Enveloppe Kaku 2</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope Kaku 3</source>
-        <translation>Busta Kaku 3</translation>
+        <translation>Enveloppe Kaku 3</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope PRC 1</source>
-        <translation>Busta PRC 1</translation>
+        <translation>Enveloppe PRC 1</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope PRC 2</source>
-        <translation>Busta PRC 2</translation>
+        <translation>Enveloppe PRC 2</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope PRC 3</source>
-        <translation>Busta PRC 3</translation>
+        <translation>Enveloppe PRC 3</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope PRC 4</source>
-        <translation>Busta PRC 4</translation>
+        <translation>Enveloppe PRC 4</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope PRC 5</source>
-        <translation>Busta PRC 5</translation>
+        <translation>Enveloppe PRC 5</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope PRC 6</source>
-        <translation>Busta PRC 6</translation>
+        <translation>Enveloppe PRC 6</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope PRC 7</source>
-        <translation>Busta PRC 7</translation>
+        <translation>Enveloppe PRC 7</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope PRC 8</source>
-        <translation>Busta PRC 8</translation>
+        <translation>Enveloppe PRC 8</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope PRC 9</source>
-        <translation>Busta PRC 9</translation>
+        <translation>Enveloppe PRC 9</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope PRC 10</source>
-        <translation>Busta PRC 10</translation>
+        <translation>Enveloppe PRC 10</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Envelope You 4</source>
-        <translation>Busta You 4</translation>
+        <translation>Enveloppe You 4</translation>
     </message>
 </context>
 <context>
@@ -4845,87 +4697,87 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+2"/>
         <source>Save</source>
-        <translation>Salva</translation>
+        <translation>Enregistrer</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Save All</source>
-        <translation>Salva tutti</translation>
+        <translation>Tout enregistrer</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Open</source>
-        <translation>Apri</translation>
+        <translation>Ouvrir</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>&amp;Yes</source>
-        <translation>&amp;Sì</translation>
+        <translation>&amp;Oui</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Yes to &amp;All</source>
-        <translation>Sì &amp;a tutti</translation>
+        <translation>Oui à &amp;tout</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>&amp;No</source>
-        <translation>&amp;No</translation>
+        <translation>&amp;Non</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>N&amp;o to All</source>
-        <translation>N&amp;o a tutti</translation>
+        <translation>Non à to&amp;ut</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Abort</source>
-        <translation>Interrompi</translation>
+        <translation>Abandonner</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Retry</source>
-        <translation>Riprova</translation>
+        <translation>Réessayer</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Ignore</source>
-        <translation>Ignora</translation>
+        <translation>Ignorer</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Close</source>
-        <translation>Chiudi</translation>
+        <translation>Fermer</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Cancel</source>
-        <translation>Annulla</translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Discard</source>
-        <translation>Scarta</translation>
+        <translation>Ne pas tenir compte</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Help</source>
-        <translation>Aiuto</translation>
+        <translation>Aide</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Apply</source>
-        <translation>Applica</translation>
+        <translation>Appliquer</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Reset</source>
-        <translation>Ripristina</translation>
+        <translation>Réinitialiser</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Restore Defaults</source>
-        <translation>Ripristina valori predefiniti</translation>
+        <translation>Restaurer les valeurs par défaut</translation>
     </message>
 </context>
 <context>
@@ -4933,12 +4785,12 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/corelib/plugin/qpluginloader.cpp" line="+265"/>
         <source>The plugin was not loaded.</source>
-        <translation>Il plugin non è stata caricato.</translation>
+        <translation>Le plugin n&apos;a pas été chargé.</translation>
     </message>
     <message>
         <location line="+132"/>
         <source>Unknown error</source>
-        <translation>Errore sconosciuto</translation>
+        <translation>Erreur inconnue</translation>
     </message>
 </context>
 <context>
@@ -4948,171 +4800,47 @@ Vuoi eliminarlo comunque?</translation>
         <location line="+16"/>
         <location filename="../../qtbase/src/printsupport/dialogs/qprintdialog_win.cpp" line="+264"/>
         <source>Print</source>
-        <translation>Stampa</translation>
-    </message>
-    <message>
-        <source>A0</source>
-        <translation type="vanished">A0</translation>
-    </message>
-    <message>
-        <source>A1</source>
-        <translation type="vanished">A1</translation>
-    </message>
-    <message>
-        <source>A2</source>
-        <translation type="vanished">A2</translation>
-    </message>
-    <message>
-        <source>A3</source>
-        <translation type="vanished">A3</translation>
-    </message>
-    <message>
-        <source>A4</source>
-        <translation type="vanished">A4</translation>
-    </message>
-    <message>
-        <source>A5</source>
-        <translation type="vanished">A5</translation>
-    </message>
-    <message>
-        <source>A6</source>
-        <translation type="vanished">A6</translation>
-    </message>
-    <message>
-        <source>A7</source>
-        <translation type="vanished">A7</translation>
-    </message>
-    <message>
-        <source>A8</source>
-        <translation type="vanished">A8</translation>
-    </message>
-    <message>
-        <source>A9</source>
-        <translation type="vanished">A9</translation>
-    </message>
-    <message>
-        <source>B0</source>
-        <translation type="vanished">B0</translation>
-    </message>
-    <message>
-        <source>B1</source>
-        <translation type="vanished">B1</translation>
-    </message>
-    <message>
-        <source>B2</source>
-        <translation type="vanished">B2</translation>
-    </message>
-    <message>
-        <source>B3</source>
-        <translation type="vanished">B3</translation>
-    </message>
-    <message>
-        <source>B4</source>
-        <translation type="vanished">B4</translation>
-    </message>
-    <message>
-        <source>B5</source>
-        <translation type="vanished">B5</translation>
-    </message>
-    <message>
-        <source>B6</source>
-        <translation type="vanished">B6</translation>
-    </message>
-    <message>
-        <source>B7</source>
-        <translation type="vanished">B7</translation>
-    </message>
-    <message>
-        <source>B8</source>
-        <translation type="vanished">B8</translation>
-    </message>
-    <message>
-        <source>B9</source>
-        <translation type="vanished">B9</translation>
-    </message>
-    <message>
-        <source>B10</source>
-        <translation type="vanished">B10</translation>
-    </message>
-    <message>
-        <source>C5E</source>
-        <translation type="vanished">C5E</translation>
-    </message>
-    <message>
-        <source>DLE</source>
-        <translation type="vanished">DLE</translation>
-    </message>
-    <message>
-        <source>Executive</source>
-        <translation type="vanished">Esecutivo</translation>
-    </message>
-    <message>
-        <source>Folio</source>
-        <translation type="vanished">Foglio</translation>
-    </message>
-    <message>
-        <source>Ledger</source>
-        <translation type="vanished">Registro</translation>
-    </message>
-    <message>
-        <source>Legal</source>
-        <translation type="vanished">Legale</translation>
-    </message>
-    <message>
-        <source>Letter</source>
-        <translation type="vanished">Lettera</translation>
-    </message>
-    <message>
-        <source>Tabloid</source>
-        <translation type="vanished">Tabloid</translation>
-    </message>
-    <message>
-        <source>US Common #10 Envelope</source>
-        <translation type="vanished">Busta comune #10 USA</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation type="vanished">Personalizzato</translation>
+        <translation>Imprimer</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_unix.cpp" line="-155"/>
         <source>Left to Right, Top to Bottom</source>
-        <translation>Da sinistra a destra, dall&apos;alto verso il basso</translation>
+        <translation>De gauche à droite puis  de haut en bas</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Left to Right, Bottom to Top</source>
-        <translation>Da sinistra a destra, dal basso verso l&apos;alto</translation>
+        <translation>De gauche à droite puis de bas en haut</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Right to Left, Bottom to Top</source>
-        <translation>Da destra a sinistra, dal basso verso l&apos;alto</translation>
+        <translation>De droite à gauche puis de bas en haut</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Right to Left, Top to Bottom</source>
-        <translation>Da destra a sinistra, dall&apos;alto verso il basso</translation>
+        <translation>De droite à gauche puis de haut en bas</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Bottom to Top, Left to Right</source>
-        <translation>Dal basso verso l&apos;alto, da sinistra a destra</translation>
+        <translation>De bas en haut puis de gauche à droite</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Bottom to Top, Right to Left</source>
-        <translation>Dal basso verso l&apos;alto, da destra a sinistra</translation>
+        <translation>De bas en haut puis de droite à gauche</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Top to Bottom, Left to Right</source>
-        <translation>Dall&apos;alto verso il basso, da sinistra a destra</translation>
+        <translation>De haut en bas puis de gauche à droite</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Top to Bottom, Right to Left</source>
-        <translation>Dall&apos;alto verso il basso, da destra a sinistra</translation>
+        <translation>De haut en bas puis de droite à gauche</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -5147,33 +4875,33 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location filename="../../qtbase/src/printsupport/dialogs/qprintdialog_unix.cpp" line="+636"/>
         <source>All Pages</source>
-        <translation>Tutte le pagine</translation>
+        <translation>Toutes les pages</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Odd Pages</source>
-        <translation>Pagine dispari</translation>
+        <translation>Pages impaires</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Even Pages</source>
-        <translation>Pagine pari</translation>
+        <translation>Pages paires</translation>
     </message>
     <message>
         <location line="+11"/>
         <location line="+301"/>
         <source>&amp;Options &gt;&gt;</source>
-        <translation>&amp;Opzioni &gt;&gt;</translation>
+        <translation>&amp;Options &gt;&gt;</translation>
     </message>
     <message>
         <location line="-296"/>
         <source>&amp;Print</source>
-        <translation>Stam&amp;pa</translation>
+        <translation>Im&amp;primer</translation>
     </message>
     <message>
         <location line="+300"/>
         <source>&amp;Options &lt;&lt;</source>
-        <translation>&amp;Opzioni &lt;&lt;</translation>
+        <translation>&amp;Options &lt;&lt;</translation>
     </message>
     <message>
         <location line="+146"/>
@@ -5198,55 +4926,55 @@ Vuoi eliminarlo comunque?</translation>
     <message>
         <location line="+76"/>
         <source>Print to File (PDF)</source>
-        <translation>Stampa su file (PDF)</translation>
+        <translation>Imprimer dans un fichier (PDF)</translation>
     </message>
     <message>
         <location line="+51"/>
         <source>Local file</source>
-        <translation>File locale</translation>
+        <translation>Fichier local</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Write PDF file</source>
-        <translation>Scrivi file PDF</translation>
+        <translation>Imprime dans un fichier PDF</translation>
     </message>
     <message>
         <location line="+47"/>
         <source>Print To File ...</source>
-        <translation>Stampa su file...</translation>
+        <translation>Imprimer dans un fichier...</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>%1 is a directory.
 Please choose a different file name.</source>
-        <translation>%1 è una cartella.
-Seleziona un nome diverso per il file.</translation>
+        <translation>%1 est un dossier.
+Veuillez choisir un nom de fichier différent.</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>File %1 is not writable.
 Please choose a different file name.</source>
-        <translation>Il file %1 non è scrivibile.
-Seleziona un nome diverso per il file.</translation>
+        <translation>Impossible d&apos;écrire dans le fichier %1.
+Veuillez choisir un nom de fichier différent.</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>%1 already exists.
 Do you want to overwrite it?</source>
-        <translation>%1 esiste già.
-Vuoi sostituirlo?</translation>
+        <translation>%1 existe.
+Voulez-vous l&apos;écraser&#xa0;?</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Options &apos;Pages Per Sheet&apos; and &apos;Page Set&apos; cannot be used together.
 Please turn one of those options off.</source>
-        <translation>Le opzioni &apos;pagine per foglio&apos; e &apos;insieme di pagine&apos; non possono essere utilizzate insieme.
-Disattiva una di queste opzioni.</translation>
+        <translation>Les options &quot;Pages par feuille&quot; et &quot;Configuration de la page&quot; ne peuvent pas être utilisées ensemble.
+Veuillez désactiver l&apos;une de ces options.</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/printsupport/dialogs/qprintdialog_win.cpp" line="+1"/>
         <source>The &apos;From&apos; value cannot be greater than the &apos;To&apos; value.</source>
-        <translation>Il valore di &quot;Da&quot; non può essere maggiore del valore di &quot;A&quot;.</translation>
+        <translation>La valeur &quot;De&quot; ne peut pas être plus grande que la valeur &quot;à&quot;.</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -5255,7 +4983,7 @@ Disattiva una di queste opzioni.</translation>
     </message>
     <message>
         <source>Automatic</source>
-        <translation type="vanished">Automatico</translation>
+        <translation type="vanished">Automatique</translation>
     </message>
 </context>
 <context>
@@ -5266,7 +4994,7 @@ Disattiva una di queste opzioni.</translation>
         <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_win.cpp" line="+54"/>
         <location line="+7"/>
         <source>Page Setup</source>
-        <translation>Impostazione pagina</translation>
+        <translation>Mise en page</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/printsupport/dialogs/qprintpreviewdialog.cpp" line="+257"/>
@@ -5276,91 +5004,87 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location line="+81"/>
         <source>Print Preview</source>
-        <translation>Anteprima di stampa</translation>
+        <translation>Aperçu avant impression</translation>
     </message>
     <message>
         <location line="+30"/>
         <source>Next page</source>
-        <translation>Pagina successiva</translation>
+        <translation>Page suivante</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Previous page</source>
-        <translation>Pagina precedente</translation>
+        <translation>Page précédente</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>First page</source>
-        <translation>Prima pagina</translation>
+        <translation>Première page</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Last page</source>
-        <translation>Ultima pagina</translation>
+        <translation>Dernière page</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Fit width</source>
-        <translation>Adatta alla larghezza</translation>
+        <translation>Ajuster la largeur</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Fit page</source>
-        <translation>Adatta alla pagina</translation>
+        <translation>Ajuster la page</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Zoom in</source>
-        <translation>Ingrandisci</translation>
+        <translation>Zoom avant</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Zoom out</source>
-        <translation>Rimpicciolisci</translation>
+        <translation>Zoom arrière</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Portrait</source>
-        <translation>Verticale</translation>
+        <translation>Portrait</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Landscape</source>
-        <translation>Orizzontale</translation>
+        <translation>Paysage</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Show single page</source>
-        <translation>Mostra pagina singola</translation>
+        <translation>Afficher une seule page</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Show facing pages</source>
-        <translation>Mostra pagine affiancate</translation>
+        <translation>Afficher deux pages</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Show overview of all pages</source>
-        <translation>Mostra anteprima di tutte le pagine</translation>
+        <translation>Afficher un aperçu de toutes les pages</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Print</source>
-        <translation>Stampa</translation>
+        <translation>Imprimer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Page setup</source>
-        <translation>Impostazione pagina</translation>
+        <translation>Mise en page</translation>
     </message>
     <message>
         <location line="+147"/>
         <source>Export to PDF</source>
-        <translation>Esporta come PDF</translation>
-    </message>
-    <message>
-        <source>Export to PostScript</source>
-        <translation type="vanished">Esporta come PostScript</translation>
+        <translation>Exporter vers PDF</translation>
     </message>
 </context>
 <context>
@@ -5368,12 +5092,12 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location filename="../../qtbase/src/printsupport/dialogs/qprintdialog_unix.cpp" line="-1057"/>
         <source>Printer Properties</source>
-        <translation>Proprietà della stampante</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Job Options</source>
-        <translation>Opzioni del processo</translation>
+        <translation>Options de la tâche</translation>
     </message>
     <message>
         <location line="+62"/>
@@ -5401,17 +5125,17 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location filename="../../qtbase/src/printsupport/dialogs/qprintpropertieswidget.ui"/>
         <source>Form</source>
-        <translation>Modulo</translation>
+        <translation>Formulaire</translation>
     </message>
     <message>
         <location/>
         <source>Page</source>
-        <translation>Pagina</translation>
+        <translation>Page</translation>
     </message>
     <message>
         <location/>
         <source>Advanced</source>
-        <translation>Avanzate</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location/>
@@ -5424,103 +5148,103 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location filename="../../qtbase/src/printsupport/dialogs/qprintsettingsoutput.ui"/>
         <source>Form</source>
-        <translation>Modulo</translation>
+        <translation>Formulaire</translation>
     </message>
     <message>
         <location/>
         <source>Copies</source>
-        <translation>Copie</translation>
+        <translation>Copies</translation>
     </message>
     <message>
         <location/>
         <source>Print range</source>
-        <translation>Stampa intervallo</translation>
+        <translation>Imprimer la sélection</translation>
     </message>
     <message>
         <location/>
         <source>Print all</source>
-        <translation>Stampa tutto</translation>
+        <translation>Imprimer tout</translation>
     </message>
     <message>
         <location/>
         <source>Pages from</source>
-        <translation>Pagine da</translation>
+        <translation>Pages de</translation>
     </message>
     <message>
         <location/>
         <source>to</source>
-        <translation>a</translation>
+        <translation>à</translation>
     </message>
     <message>
         <location/>
         <source>Current Page</source>
-        <translation>Pagina corrente</translation>
+        <translation>Page courante</translation>
     </message>
     <message>
         <location/>
         <source>Selection</source>
-        <translation>Selezione</translation>
-    </message>
-    <message>
-        <location/>
-        <source>Output Settings</source>
-        <translation>Impostazioni di uscita</translation>
-    </message>
-    <message>
-        <location/>
-        <source>Copies:</source>
-        <translation>Copie:</translation>
-    </message>
-    <message>
-        <location/>
-        <source>Collate</source>
-        <translation>Fascicola</translation>
-    </message>
-    <message>
-        <location/>
-        <source>Reverse</source>
-        <translation>Ordine inverso</translation>
-    </message>
-    <message>
-        <location/>
-        <source>Options</source>
-        <translation>Opzioni</translation>
-    </message>
-    <message>
-        <location/>
-        <source>Color Mode</source>
-        <translation>Modalità colore</translation>
-    </message>
-    <message>
-        <location/>
-        <source>Color</source>
-        <translation>Colore</translation>
-    </message>
-    <message>
-        <location/>
-        <source>Grayscale</source>
-        <translation>Scala di grigi</translation>
-    </message>
-    <message>
-        <source>Duplex Printing</source>
-        <translation type="vanished">Stampa fronte/retro</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation type="vanished">Nessuno</translation>
-    </message>
-    <message>
-        <source>Long side</source>
-        <translation type="vanished">Lato lungo</translation>
-    </message>
-    <message>
-        <source>Short side</source>
-        <translation type="vanished">Lato corto</translation>
+        <translation>Sélection</translation>
     </message>
     <message>
         <location/>
         <source>Page Set:</source>
-        <translation>Insieme di pagine:</translation>
+        <translation>Configuration de la page :</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Output Settings</source>
+        <translation>Paramètres de sortie</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Copies:</source>
+        <translation>Copies :</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Collate</source>
+        <translation>Assembler</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Reverse</source>
+        <translation>Ordre inverse</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Options</source>
+        <translation>Options</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Color Mode</source>
+        <translation>Mode de couleur</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Color</source>
+        <translation>Couleur</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Grayscale</source>
+        <translation>Dégradé de gris</translation>
+    </message>
+    <message>
+        <source>Duplex Printing</source>
+        <translation type="vanished">Impression recto-verso</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="vanished">Non</translation>
+    </message>
+    <message>
+        <source>Long side</source>
+        <translation type="vanished">Côté long</translation>
+    </message>
+    <message>
+        <source>Short side</source>
+        <translation type="vanished">Côté court</translation>
     </message>
     <message>
         <location/>
@@ -5558,42 +5282,42 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location filename="../../qtbase/src/printsupport/dialogs/qprintwidget.ui"/>
         <source>Form</source>
-        <translation>Modulo</translation>
+        <translation>Formulaire</translation>
     </message>
     <message>
         <location/>
         <source>Printer</source>
-        <translation>Stampante</translation>
+        <translation>Imprimante</translation>
     </message>
     <message>
         <location/>
         <source>&amp;Name:</source>
-        <translation>&amp;Nome:</translation>
+        <translation>&amp;Nom :</translation>
     </message>
     <message>
         <location/>
         <source>P&amp;roperties</source>
-        <translation>P&amp;roprietà</translation>
+        <translation>P&amp;ropriétés</translation>
     </message>
     <message>
         <location/>
         <source>Location:</source>
-        <translation>Posizione:</translation>
+        <translation>Emplacement :</translation>
     </message>
     <message>
         <location/>
         <source>Preview</source>
-        <translation>Anteprima</translation>
+        <translation>Aperçu</translation>
     </message>
     <message>
         <location/>
         <source>Type:</source>
-        <translation>Tipo:</translation>
+        <translation>Type :</translation>
     </message>
     <message>
         <location/>
         <source>Output &amp;file:</source>
-        <translation>&amp;File di output:</translation>
+        <translation>&amp;Fichier de sortie :</translation>
     </message>
     <message>
         <location/>
@@ -5604,60 +5328,64 @@ Disattiva una di queste opzioni.</translation>
 <context>
     <name>QProcess</name>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qprocess.cpp" line="+974"/>
+        <location filename="../../qtbase/src/corelib/io/qprocess.cpp" line="+965"/>
+        <source>Process failed to start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
         <source>Error reading from process</source>
-        <translation>Errore di lettura dal processo</translation>
+        <translation>Erreur de lecture depuis le processus</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Error writing to process</source>
-        <translation>Errore di scrittura sul processo</translation>
+        <translation>Erreur d&apos;écriture vers le processus</translation>
     </message>
     <message>
         <location line="-9"/>
         <source>Process crashed</source>
-        <translation>Il processo è andato in crash</translation>
+        <translation>Le processus a planté</translation>
     </message>
     <message>
-        <location line="-3"/>
-        <source>Process failed to start</source>
-        <translation>Avvio del processo non riuscito</translation>
+        <source>Process failed to start (spawned process exited with code 127)</source>
+        <translation type="vanished">Le processus n&apos;a pu démarrer (le processus généré a terminé avec le code 127)</translation>
     </message>
     <message>
-        <location line="+1123"/>
+        <location line="+1120"/>
         <location line="+27"/>
         <location line="+63"/>
         <location line="+168"/>
         <source>No program defined</source>
-        <translation>Nessun programma definito</translation>
+        <translation>Aucun programme n&apos;est défini</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/io/qprocess_unix.cpp" line="+280"/>
         <location line="+13"/>
         <location filename="../../qtbase/src/corelib/io/qprocess_win.cpp" line="+266"/>
         <source>Could not open input redirection for reading</source>
-        <translation>Impossibile aprire la redirezione dell&apos;input per la lettura</translation>
+        <translation>Impossible d&apos;ouvrir la redirection d&apos;entrée en lecture</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/io/qprocess_win.cpp" line="+21"/>
         <source>Could not open output redirection for writing</source>
-        <translation>Impossibile aprire la redirezione dell&apos;output per la scrittura</translation>
+        <translation>Impossible d&apos;ouvrir la redirection de sortie en écriture</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/io/qprocess_unix.cpp" line="+196"/>
         <source>Resource error (fork failure): %1</source>
-        <translation>Errore di risorsa (fork non riuscito): %1</translation>
+        <translation>Erreur de ressouce (échec du fork) : %1</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/io/qprocess.cpp" line="-1375"/>
         <source>Process operation timed out</source>
-        <translation>Operazione del processo scaduta</translation>
+        <translation>L&apos;opération de processus a expiré</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/io/qprocess_win.cpp" line="+250"/>
         <location line="+49"/>
         <source>Process failed to start: %1</source>
-        <translation>Avvio del processo non riuscito: %1</translation>
+        <translation>Le démarrage du processus a échoué&#xa0;: %1</translation>
     </message>
 </context>
 <context>
@@ -5665,29 +5393,21 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qprogressdialog.cpp" line="+185"/>
         <source>Cancel</source>
-        <translation>Annulla</translation>
+        <translation>Annuler</translation>
     </message>
 </context>
 <context>
     <name>QQnxFileDialogHelper</name>
     <message>
-        <source>CANCEL</source>
-        <translation type="vanished">ANNULLA</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="vanished">OK</translation>
-    </message>
-    <message>
         <source>All files (*.*)</source>
-        <translation type="vanished">Tutti i file (*.*)</translation>
+        <translation type="vanished">Tous les fichiers (*.*)</translation>
     </message>
 </context>
 <context>
     <name>QQnxFilePicker</name>
     <message>
         <source>Pick a file</source>
-        <translation type="vanished">Scegli un file</translation>
+        <translation type="vanished">Choisir un fichier</translation>
     </message>
 </context>
 <context>
@@ -5695,62 +5415,62 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location filename="../../qtbase/src/corelib/text/qregexp.cpp" line="+63"/>
         <source>no error occurred</source>
-        <translation>nessun errore rilevato</translation>
+        <translation>aucune erreur ne s&apos;est produite</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>disabled feature used</source>
-        <translation>usata funzionalità disabilitata</translation>
+        <translation>l&apos;option est désactivée</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>bad char class syntax</source>
-        <translation>sintassi della classe di caratteri non corretta</translation>
+        <translation>la syntaxe est invalide pour la classe de caractère</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>bad lookahead syntax</source>
-        <translation>sintassi della ricerca in avanti non corretta</translation>
+        <translation>la syntaxe du lookahead est invalide</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>lookbehinds not supported, see QTBUG-2371</source>
-        <translation>ricerca all&apos;indietro non supportata, vedi QTBUG-2371</translation>
+        <translation>la fonctionnalité lookbehinds n&apos;est pas supportée, voir le rapport de bug QTBUG-2371</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>bad repetition syntax</source>
-        <translation>sintassi di ripetizione non corretta</translation>
+        <translation>la syntaxe de la répétition est invalide</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>invalid octal value</source>
-        <translation>valore ottale non valido</translation>
+        <translation>la valeur octale est invalide</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>missing left delim</source>
-        <translation>delimitatore sinistro mancante</translation>
+        <translation>le délémiteur gauche est manquant</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>unexpected end</source>
-        <translation>fine non prevista</translation>
+        <translation>la fin est inattendue</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>met internal limit</source>
-        <translation>raggiunto limite interno</translation>
+        <translation>limite interne atteinte</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>invalid interval</source>
-        <translation>intervallo non valido</translation>
+        <translation>l&apos;intervalle est invalide</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>invalid category</source>
-        <translation>categoria non valida</translation>
+        <translation>la catégorie est invalide</translation>
     </message>
 </context>
 <context>
@@ -5760,343 +5480,343 @@ Disattiva una di queste opzioni.</translation>
         <location line="+1284"/>
         <location line="+100"/>
         <source>no error</source>
-        <translation>nessun errore</translation>
+        <translation>aucune erreur</translation>
     </message>
     <message>
         <location line="-99"/>
         <source>\ at end of pattern</source>
-        <translation>\ alla fine del pattern</translation>
+        <translation>\ à la fin du motif</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>\c at end of pattern</source>
-        <translation>\c alla fine del pattern</translation>
+        <translation>\c à la fin du motif</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>unrecognized character follows \</source>
-        <translation>carattere non riconosciuto dopo \</translation>
+        <translation>le caractère suivant le \ n&apos;a pas été reconnu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>numbers out of order in {} quantifier</source>
-        <translation>numeri fuori sequenza nel quantificatore {}</translation>
+        <translation>les valeurs sont incorrectes dans le quantifieur {}</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>number too big in {} quantifier</source>
-        <translation>numero troppo grande nel quantificatore {}</translation>
+        <translation>le nombre dans le quantifieur {} est trop grand</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>missing terminating ] for character class</source>
-        <translation>terminatore ] mancante per la classe di caratteri</translation>
+        <translation>la classe de caractères ne se termine pas par ]</translation>
     </message>
     <message>
         <source>invalid escape sequence in character class</source>
-        <translation type="vanished">sequenza di escape non valida nella classe di caratteri</translation>
+        <translation type="vanished">la classe de caractères contient une séquence d&apos;échappement invalide</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>range out of order in character class</source>
-        <translation>intervallo fuori sequenza nella classe di caratteri</translation>
+        <translation>la classe de caractères contient une valeur incorrecte</translation>
     </message>
     <message>
         <source>nothing to repeat</source>
-        <translation type="vanished">nulla da ripetere</translation>
+        <translation type="vanished">il n&apos;y a rien à répéter</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>internal error: unexpected repeat</source>
-        <translation>errore interno: ripetizione imprevista</translation>
+        <translation>erreur interne : répétition inattendue</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>unrecognized character after (? or (?-</source>
-        <translation>carattere non riconosciuto dopo (? o (?-</translation>
+        <translation>le caractère après (? ou (?- n&apos;est pas reconnu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>POSIX named classes are supported only within a class</source>
-        <translation>le classi di tipo POSIX sono supportate solo all&apos;interno di una classe</translation>
+        <translation>les classes POSIX nommées sont supportées uniquement dans une classe</translation>
     </message>
     <message>
         <source>missing )</source>
-        <translation type="vanished">) mancante</translation>
+        <translation type="vanished">le caractère ) est manquant</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>reference to non-existent subpattern</source>
-        <translation>riferimento a sotto-pattern non esistente</translation>
+        <translation>référence à un sous-motif inexistant</translation>
     </message>
     <message>
         <source>erroffset passed as NULL</source>
-        <translation type="vanished">erroffset passato come NULL</translation>
+        <translation type="vanished">le paramètre erroffset est passé à NULL</translation>
     </message>
     <message>
         <source>unknown option bit(s) set</source>
-        <translation type="vanished">impostati bit sconosciuti per l&apos;opzione</translation>
+        <translation type="vanished">l&apos;option définie est inconnue</translation>
     </message>
     <message>
         <source>missing ) after comment</source>
-        <translation type="vanished">) mancante dopo il commento</translation>
+        <translation type="vanished">le caractère ) est manquant après le commentaire</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>regular expression is too large</source>
-        <translation>l&apos;espressione regolare è troppo grande</translation>
+        <translation>l&apos;expression régulière est trop large</translation>
     </message>
     <message>
         <source>failed to get memory</source>
-        <translation type="vanished">impossibile ottenere la memoria</translation>
+        <translation type="vanished">impossible de récupérer la mémoire</translation>
     </message>
     <message>
         <source>unmatched parentheses</source>
-        <translation type="vanished">parentesi non corrispondenti</translation>
+        <translation type="vanished">les parenthèses ne correspondent pas</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>internal error: code overflow</source>
-        <translation>errore interno: overflow del codice</translation>
+        <translation>erreur interne : débordement du code</translation>
     </message>
     <message>
         <source>unrecognized character after (?&lt;</source>
-        <translation type="vanished">carattere non riconosciuto dopo (?&lt;</translation>
+        <translation type="vanished">le caractère après (?&lt; n&apos;est pas reconnu</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>lookbehind assertion is not fixed length</source>
-        <translation>l&apos;asserzione di ricerca all&apos;indietro non è a lunghezza fissa</translation>
+        <translation>l&apos;assertion lookbehind n&apos;est pas de longueur fixe</translation>
     </message>
     <message>
         <source>malformed number or name after (?(</source>
-        <translation type="vanished">numero o nome maldefinito dopo (?(</translation>
+        <translation type="vanished">le nombre ou le nom après (?( n&apos;est pas formé correctement</translation>
     </message>
     <message>
         <source>conditional group contains more than two branches</source>
-        <translation type="vanished">il gruppo condizionale contiene più di due diramazioni</translation>
+        <translation type="vanished">le groupe conditionnel contient plus de deux branches</translation>
     </message>
     <message>
         <source>assertion expected after (?(</source>
-        <translation type="vanished">asserzione prevista dopo (?(</translation>
+        <translation type="vanished">une assertion est attendue après (?(</translation>
     </message>
     <message>
         <source>(?R or (?[+-]digits must be followed by )</source>
-        <translation type="vanished">(?R o (?[+-]cifre devono essere seguite da )</translation>
+        <translation type="vanished">les chiffres dans (?R ou (?[+-] doivent être suivis par )</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>unknown POSIX class name</source>
-        <translation>nome di classe POSIX sconosciuto</translation>
+        <translation>le nom de la classes POSIX est inconnu</translation>
     </message>
     <message>
         <location line="-17"/>
         <source>POSIX collating elements are not supported</source>
-        <translation>gli elementi POSIX di raccoglimento non sono supportati</translation>
+        <translation>Les éléments d&apos;assemblage POSIX ne sont pas pris en charge</translation>
     </message>
     <message>
         <source>this version of PCRE is not compiled with PCRE_UTF8 support</source>
-        <translation type="vanished">questa versione di PCRE non è compilata con il supporto PCRE_UTF8</translation>
+        <translation type="vanished">cette version de PCRE n&apos;est pas compilée avec le support de PCRE_UTF8</translation>
     </message>
     <message>
         <source>character value in \x{...} sequence is too large</source>
-        <translation type="vanished">il valore del carattere nella sequenza \x{...} è troppo grande</translation>
+        <translation type="vanished">les valeurs de caractères dans la séquence \x{...} est trop large</translation>
     </message>
     <message>
         <source>invalid condition (?(0)</source>
-        <translation type="vanished">condizione (?(0) non valida</translation>
+        <translation type="vanished">la condition (?(0) est invalide</translation>
     </message>
     <message>
         <source>\C not allowed in lookbehind assertion</source>
-        <translation type="vanished">\C non consentito in una asserzione lookbehind</translation>
+        <translation type="vanished">\C n&apos;est pas autorisé dans une assertion de type lookbehind</translation>
     </message>
     <message>
         <source>PCRE does not support \L, \l, \N{name}, \U, or \u</source>
-        <translation type="vanished">PCRE non supporta \L, \l, \N{nome}, \U, o \u</translation>
+        <translation type="vanished">PCRE ne supporte pas \L, \l, \N{name}, \U ou \u</translation>
     </message>
     <message>
         <source>number after (?C is &gt; 255</source>
-        <translation type="vanished">il numero dopo (?C è &gt; 255</translation>
+        <translation type="vanished">le nombre après (?C est supérieur à 255</translation>
     </message>
     <message>
         <source>closing ) for (?C expected</source>
-        <translation type="vanished">prevista ) di chiusura per (?C</translation>
+        <translation type="vanished">une parenthèse fermante ) est attendue pour (?C</translation>
     </message>
     <message>
         <source>recursive call could loop indefinitely</source>
-        <translation type="vanished">la chiamata ricorsiva potrebbe entrare in un loop infinito</translation>
+        <translation type="vanished">un appel récursif ne peut pas boucler indéfiniment</translation>
     </message>
     <message>
         <location line="+28"/>
         <source>unrecognized character after (?P</source>
-        <translation>carattere non riconosciuto dopo (?P</translation>
+        <translation>le caractère après (?P n&apos;est pas reconnu</translation>
     </message>
     <message>
         <source>syntax error in subpattern name (missing terminator)</source>
-        <translation type="vanished">errore di sintassi nel nome del sotto-pattern (terminatore mancante)</translation>
+        <translation type="vanished">erreur de syntaxe dans le nom du sous-motif (la terminaison est manquante)</translation>
     </message>
     <message>
         <source>two named subpatterns have the same name</source>
-        <translation type="vanished">due sotto-pattern con nome hanno lo stesso nome</translation>
+        <translation type="vanished">deux sous-motifs nommés possèdent le même nom</translation>
     </message>
     <message>
         <source>invalid UTF-8 string</source>
-        <translation type="vanished">stringa UTF-8 non valida</translation>
+        <translation type="vanished">la chaîne UTF-8 est invalide</translation>
     </message>
     <message>
         <source>support for \P, \p, and \X has not been compiled</source>
-        <translation type="vanished">il supporto per \P, \p e \X non è stato compilato</translation>
+        <translation type="vanished">le support de \P, \p et \X n&apos;a pas été compilé</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>malformed \P or \p sequence</source>
-        <translation>sequenza \P o \p malformata</translation>
+        <translation>la séquence \P ou \p n&apos;est pas formée correctement</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>unknown property name after \P or \p</source>
-        <translation>nome della proprietà sconosciuto dopo \P o \p</translation>
+        <translation>le nom de propriété après \P ou \p est inconnu</translation>
     </message>
     <message>
         <source>subpattern name is too long (maximum 32 characters)</source>
-        <translation type="vanished">il nome del sotto-pattern è troppo lungo (massimo 32 caratteri)</translation>
+        <translation type="vanished">le nom du sous-motif est trop long (maximum 32 caractères)</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>too many named subpatterns (maximum 10000)</source>
-        <translation>troppi sotto-pattern con nome (massimo 10000)</translation>
+        <translation>il y a trop de sous-motifs nommés (maximum 10000)</translation>
     </message>
     <message>
         <source>octal value is greater than \377 (not in UTF-8 mode)</source>
-        <translation type="vanished">il valore ottale è maggiore di \377 (non in modalità UTF-8)</translation>
+        <translation type="vanished">la valeur octale est plus grande que \377 (pas dans le mode UTF-8)</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>internal error: overran compiling workspace</source>
-        <translation>errore interno: sconfinamento nella compilazione dello spazio di lavoro</translation>
+        <translation>erreur interne : dépassement de l&apos;espace de travail de compilation</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>internal error: previously-checked referenced subpattern not found</source>
-        <translation>errore interno: riferimento non trovato al sotto-modello verificato in precedenza</translation>
+        <translation>erreur interne : le sous-motif référencé qui a déjà été vérifié n&apos;a pas été trouvé</translation>
     </message>
     <message>
         <source>DEFINE group contains more than one branch</source>
-        <translation type="vanished">il gruppo DEFINE contiene più di un ramo</translation>
+        <translation type="vanished">le groupe DEFINE contient plus d&apos;une branche</translation>
     </message>
     <message>
         <source>repeating a DEFINE group is not allowed</source>
-        <translation type="vanished">la ripetizione di un gruppo DEFINE non è consentita</translation>
+        <translation type="vanished">la répétion d&apos;un groupe DEFINE n&apos;est pas autorisée</translation>
     </message>
     <message>
         <source>inconsistent NEWLINE options</source>
-        <translation type="vanished">opzioni NEWLINE inconsistenti</translation>
+        <translation type="vanished">les options de NEWLINE ne sont pas compatibles</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>\g is not followed by a braced, angle-bracketed, or quoted name/number or by a plain number</source>
-        <translation>\g non è seguito da un nome/numero tra parentesi, parentesi graffe o tra virgolette o da un numero semplice</translation>
+        <translation>\g n&apos;est pas suivi par un nom ou un nombre entre crochets, entre crochets droits ou entre guillemets ou par un nombre plein</translation>
     </message>
     <message>
         <source>a numbered reference must not be zero</source>
-        <translation type="vanished">un riferimento numerato non deve essere pari a zero</translation>
+        <translation type="vanished">une référence numérique ne doit pas être zéro</translation>
     </message>
     <message>
         <source>an argument is not allowed for (*ACCEPT), (*FAIL), or (*COMMIT)</source>
-        <translation type="vanished">un parametro non è consentito per (*ACCEPT), (*FAIL), o (*COMMIT)</translation>
+        <translation type="vanished">un argument n&apos;est pas autorisé pour (*ACCEPT), (*FAIL) ou (*COMMIT)</translation>
     </message>
     <message>
         <source>(*VERB) not recognized</source>
-        <translation type="vanished">(*VERBO) non riconosciuto</translation>
+        <translation type="vanished">(*VERB) n&apos;est pas reconnu</translation>
     </message>
     <message>
         <source>number is too big</source>
-        <translation type="vanished">il numero è troppo grande</translation>
+        <translation type="vanished">le nombre est trop grand</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>subpattern name expected</source>
-        <translation>previsto nome del sotto-pattern</translation>
+        <translation>un nom de sous-motif est attendu</translation>
     </message>
     <message>
         <source>digit expected after (?+</source>
-        <translation type="vanished">cifra prevista dopo (?+</translation>
+        <translation type="vanished">un chiffre est attendu après (?+</translation>
     </message>
     <message>
         <source>] is an invalid data character in JavaScript compatibility mode</source>
-        <translation type="vanished">] è un carattere non valido nella modalità di compatibilità JavaScript</translation>
+        <translation type="vanished">le caractère ] n&apos;est pas une donnée valide dans le mode de compatibilité avec le JavaScript</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>different names for subpatterns of the same number are not allowed</source>
-        <translation>nomi diversi per sotto-pattern dello stesso numero non sono consentiti</translation>
+        <translation>des noms différents pour des sous-motifs ayant le même nombre n&apos;est pas autorisé</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>(*MARK) must have an argument</source>
-        <translation>(*MARK) deve avere un parametro</translation>
+        <translation>(*MARK) doit avoir un argument</translation>
     </message>
     <message>
         <source>this version of PCRE is not compiled with PCRE_UCP support</source>
-        <translation type="vanished">questa versione di PCRE non è compilata con il supporto PCRE_UCP</translation>
+        <translation type="vanished">cette version de PCRE n&apos;est pas compilée avec le support de PCRE_UCP</translation>
     </message>
     <message>
         <source>\c must be followed by an ASCII character</source>
-        <translation type="vanished">\c deve essere seguito da un carattere ASCII</translation>
+        <translation type="vanished">\c doit être suivi par un caractère ASCII</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>\k is not followed by a braced, angle-bracketed, or quoted name</source>
-        <translation>\k non è seguito da un nome tra parentesi, parentesi graffe o virgolette</translation>
+        <translation>\k n&apos;est pas suivi par un nom entre crochets, entre crochets droits ou entre guillemets</translation>
     </message>
     <message>
         <source>internal error: unknown opcode in find_fixedlength()</source>
-        <translation type="vanished">errore interno: opcode sconosciuto in find_fixedlength()</translation>
+        <translation type="vanished">erreur interne : l&apos;opcode dans find_fixedlenght() est inconnu</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>\N is not supported in a class</source>
-        <translation>\N non è supportato in una classe</translation>
+        <translation>\N n&apos;est pas supporté dans une classe</translation>
     </message>
     <message>
         <source>too many forward references</source>
-        <translation type="vanished">troppi riferimenti in avanti</translation>
+        <translation type="vanished">il y a trop de références en avant</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>disallowed Unicode code point (&gt;= 0xd800 &amp;&amp; &lt;= 0xdfff)</source>
-        <translation>code point Unicode non consentito (&gt;= 0xd800 &amp;&amp; &lt;= 0xdfff)</translation>
+        <translation>le code point Unicode (&gt;= 0xd800 &amp;&amp; &lt;= 0xdfff) n&apos;est pas autorisé</translation>
     </message>
     <message>
         <source>invalid UTF-16 string</source>
-        <translation type="vanished">stringa UTF-16 non valida</translation>
+        <translation type="vanished">la chaîne UTF-16 est invalide</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>name is too long in (*MARK), (*PRUNE), (*SKIP), or (*THEN)</source>
-        <translation>nome troppo lungo in (*MARK), (*PRUNE), (*SKIP), o (*THEN)</translation>
+        <translation>le nom dans (*MARK), (*PRUNE), (*SKIP) ou (*THEN) est trop long</translation>
     </message>
     <message>
         <source>character value in \u.... sequence is too large</source>
-        <translation type="vanished">valore del carattere troppo grande nella sequenza \u....</translation>
+        <translation type="vanished">la valeur dans la séquence \u... est trop longue</translation>
     </message>
     <message>
         <source>invalid UTF-32 string</source>
-        <translation type="vanished">stringa UTF-32 non valida</translation>
+        <translation type="vanished">la chaîne UTF-32 est invalide</translation>
     </message>
     <message>
         <source>setting UTF is disabled by the application</source>
-        <translation type="vanished">l&apos;impostazione di UTF è stata disabilitata dall&apos;applicazione</translation>
+        <translation type="vanished">l&apos;application ne permet pas d&apos;utiliser UTF</translation>
     </message>
     <message>
         <location line="-10"/>
         <source>non-hex character in \x{} (closing brace missing?)</source>
-        <translation>carattere non esadecimale in \x{} (parentesi chiusa mancante?)</translation>
+        <translation>caractère non-hexa dans \x{} (accolade fermante manquante ?)</translation>
     </message>
     <message>
         <location line="-3"/>
         <source>non-octal character in \o{} (closing brace missing?)</source>
-        <translation>carattere non ottale in \o{} (parentesi chiusa mancante?)</translation>
+        <translation>caractère non-octal dans \o{} (accolade fermante manquante ?)</translation>
     </message>
     <message>
         <location line="-57"/>
@@ -6246,7 +5966,7 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location line="+1"/>
         <source>missing opening brace after \o</source>
-        <translation>parentesi aperta mancante dopo \o</translation>
+        <translation>accolade ouvrante manquante après \o</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6751,25 +6471,25 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location line="-147"/>
         <source>parentheses are too deeply nested</source>
-        <translation>le parentesi sono annidate troppo profondamente</translation>
+        <translation>les parenthèses sont trop profondément imbriquées</translation>
     </message>
     <message>
         <location line="+31"/>
         <source>invalid range in character class</source>
-        <translation>intervallo non valido nella classe di caratteri</translation>
+        <translation>intervalle invalide dans la classe de caractères</translation>
     </message>
     <message>
         <source>group name must start with a non-digit</source>
-        <translation type="vanished">il nome del gruppo non deve iniziare con una cifra</translation>
+        <translation type="vanished">le nom du groupe ne doit pas commencer par un chiffre</translation>
     </message>
     <message>
         <location line="-17"/>
         <source>parentheses are too deeply nested (stack check)</source>
-        <translation>le parentesi sono annidate troppo profondamente (verifica dello stack)</translation>
+        <translation>les parenthèses sont trop profondément imbriquées (vérification de la pile)</translation>
     </message>
     <message>
         <source>digits missing in \x{} or \o{}</source>
-        <translation type="vanished">cifre mancanti in \x{} o \o{}</translation>
+        <translation type="vanished">chiffres manquants dans \x{} ou \o{}</translation>
     </message>
 </context>
 <context>
@@ -6777,22 +6497,22 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location filename="../../qtbase/src/plugins/sqldrivers/sqlite2/qsql_sqlite2.cpp" line="+434"/>
         <source>Error opening database</source>
-        <translation>Errore di apertura del database</translation>
+        <translation>Erreur lors de l&apos;ouverture de la base de données</translation>
     </message>
     <message>
         <location line="+43"/>
         <source>Unable to begin transaction</source>
-        <translation>Impossibile iniziare la transazione</translation>
+        <translation>Impossible de démarrer la transaction</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Unable to commit transaction</source>
-        <translation>Impossibile effettuare la transazione</translation>
+        <translation>Impossible de soumettre la transaction</translation>
     </message>
     <message>
         <location line="+18"/>
         <source>Unable to rollback transaction</source>
-        <translation>Impossibile annullare la transazione</translation>
+        <translation>Impossible d&apos;annuler la transaction</translation>
     </message>
 </context>
 <context>
@@ -6800,12 +6520,12 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location line="-335"/>
         <source>Unable to fetch results</source>
-        <translation>Impossibile ottenere i risultati</translation>
+        <translation>Impossible de récupérer les résultats</translation>
     </message>
     <message>
         <location line="+145"/>
         <source>Unable to execute statement</source>
-        <translation>Impossibile eseguire il comando</translation>
+        <translation>Impossible d&apos;exécuter l&apos;instruction</translation>
     </message>
 </context>
 <context>
@@ -6813,27 +6533,27 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location filename="../../qtbase/src/plugins/sqldrivers/sqlite/qsql_sqlite.cpp" line="+786"/>
         <source>Error opening database</source>
-        <translation>Errore di apertura del database</translation>
+        <translation>Erreur lors de l&apos;ouverture de la base de données</translation>
     </message>
     <message>
         <location line="+28"/>
         <source>Error closing database</source>
-        <translation>Errore di chiusura del database</translation>
+        <translation>Erreur lors de la fermeture de la base de données</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Unable to begin transaction</source>
-        <translation>Impossibile iniziare la transazione</translation>
+        <translation>Impossible de démarrer la transaction</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Unable to commit transaction</source>
-        <translation>Impossibile effettuare la transazione</translation>
+        <translation>Impossible de soumettre la transaction</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Unable to rollback transaction</source>
-        <translation>Impossibile annullare la transazione</translation>
+        <translation>Impossible d&apos;annuler la transaction</translation>
     </message>
 </context>
 <context>
@@ -6843,37 +6563,37 @@ Disattiva una di queste opzioni.</translation>
         <location line="+63"/>
         <location line="+8"/>
         <source>Unable to fetch row</source>
-        <translation>Impossibile ottenere la riga</translation>
+        <translation>Impossible de récupérer la ligne</translation>
     </message>
     <message>
         <location line="-70"/>
         <source>No query</source>
-        <translation>Nessuna query</translation>
+        <translation>Pas de requête</translation>
     </message>
     <message>
         <location line="+127"/>
         <source>Unable to execute statement</source>
-        <translation>Impossibile eseguire il comando</translation>
+        <translation>Impossible d&apos;exécuter l&apos;instruction</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Unable to execute multiple statements at a time</source>
-        <translation>Impossibile eseguire più comandi alla volta</translation>
+        <translation>Impossible d&apos;exécuter plusieurs instructions à la fois</translation>
     </message>
     <message>
         <location line="+44"/>
         <source>Unable to reset statement</source>
-        <translation>Impossibile reinizializzare il comando</translation>
+        <translation>Impossible de réinitialiser la requête</translation>
     </message>
     <message>
         <location line="+102"/>
         <source>Unable to bind parameters</source>
-        <translation>Impossibile effettuare il bind dei parametri</translation>
+        <translation>Impossible d&apos;attacher les paramètres</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Parameter count mismatch</source>
-        <translation>Numero di parametri non corrispondente</translation>
+        <translation>Nombre de paramètres incorrect</translation>
     </message>
 </context>
 <context>
@@ -6881,12 +6601,12 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location filename="../../qtbase/src/corelib/io/qsavefile.cpp" line="+214"/>
         <source>Existing file %1 is not writable</source>
-        <translation>Il file esistente %1 non è scrivibile</translation>
+        <translation>Le fichier existant %1 n&apos;est pas accessible en écriture</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Filename refers to a directory</source>
-        <translation>Il nome di file fa riferimento ad una cartella</translation>
+        <translation>Le nom de fichier est associé à un répertoire</translation>
     </message>
     <message>
         <location line="+43"/>
@@ -6896,7 +6616,7 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location line="+118"/>
         <source>Writing canceled by application</source>
-        <translation>La scrittura è stata annullata dall&apos;applicazione</translation>
+        <translation>L&apos;écriture a été annulée par l&apos;application</translation>
     </message>
 </context>
 <context>
@@ -6904,67 +6624,67 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location filename="../../qtbase/src/widgets/widgets/qscrollbar.cpp" line="+403"/>
         <source>Scroll here</source>
-        <translation>Scorri qui</translation>
+        <translation>Défiler jusqu&apos;ici</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Left edge</source>
-        <translation>Margine sinistro</translation>
+        <translation>Bord gauche</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Top</source>
-        <translation>Cima</translation>
+        <translation>Haut</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Right edge</source>
-        <translation>Margine destro</translation>
+        <translation>Bord droit</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Bottom</source>
-        <translation>Fondo</translation>
+        <translation>Bas</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Page left</source>
-        <translation>Pagina a sinistra</translation>
+        <translation>Page précédente</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Page up</source>
-        <translation>Pagina su</translation>
+        <translation>Page précédente</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Page right</source>
-        <translation>Pagina a destra</translation>
+        <translation>Page suivante</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Page down</source>
-        <translation>Pagina giù</translation>
+        <translation>Page suivante</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Scroll left</source>
-        <translation>Scorri a sinistra</translation>
+        <translation>Défiler vers la gauche</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Scroll up</source>
-        <translation>Scorri in alto</translation>
+        <translation>Défiler vers le haut</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Scroll right</source>
-        <translation>Scorri a destra</translation>
+        <translation>Défiler vers la droite</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Scroll down</source>
-        <translation>Scorri in basso</translation>
+        <translation>Défiler vers le bas</translation>
     </message>
 </context>
 <context>
@@ -6972,7 +6692,7 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location filename="../../qtbase/src/network/socket/qsctpsocket.cpp" line="+191"/>
         <source>The remote host closed the connection</source>
-        <translation type="unfinished">L&apos;host remoto ha chiuso la connessione</translation>
+        <translation type="unfinished">L&apos;hôte distant a fermé la connexion</translation>
     </message>
 </context>
 <context>
@@ -6980,106 +6700,106 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location filename="../../qtbase/src/corelib/kernel/qsharedmemory.cpp" line="+268"/>
         <source>%1: unable to set key on lock</source>
-        <translation>%1: impossibile impostare la chiave sul lock</translation>
+        <translation>%1&#xa0;: impossible d&apos;affecter la clé au verrou</translation>
     </message>
     <message>
         <location line="+100"/>
         <source>%1: create size is less then 0</source>
-        <translation>%1: la dimensione di creazione è minore di 0</translation>
+        <translation>%1&#xa0;: taille de création est inférieur à 0</translation>
     </message>
     <message>
         <location line="+167"/>
         <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_p.h" line="+157"/>
         <source>%1: unable to lock</source>
-        <translation>%1: impossibile bloccare</translation>
+        <translation>%1&#xa0;: impossible de vérrouiller</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>%1: unable to unlock</source>
-        <translation>%1: impossibile sbloccare</translation>
-    </message>
-    <message>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_unix.cpp" line="+88"/>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="+84"/>
-        <source>%1: permission denied</source>
-        <translation>%1: permesso negato</translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="-17"/>
-        <source>%1: already exists</source>
-        <translation>%1: esiste già</translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="+4"/>
-        <source>%1: doesn&apos;t exist</source>
-        <translation>%1: non esiste</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="+9"/>
-        <source>%1: out of resources</source>
-        <translation>%1: risorse esaurite</translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="+7"/>
-        <source>%1: unknown error %2</source>
-        <translation>%1: errore sconosciuto %2</translation>
+        <translation>%1&#xa0;: impossible de déverrouiller</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_posix.cpp" line="+69"/>
         <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_systemv.cpp" line="+79"/>
         <source>%1: key is empty</source>
-        <translation>%1: la chiave è vuota</translation>
+        <translation>%1 : la clé est vide</translation>
     </message>
     <message>
         <location line="+38"/>
         <location line="+44"/>
         <source>%1: bad name</source>
-        <translation>%1: nome non valido</translation>
+        <translation>%1 : nom incorrect</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_systemv.cpp" line="+7"/>
         <source>%1: UNIX key file doesn&apos;t exist</source>
-        <translation>%1: il file della chiave UNIX non esiste</translation>
+        <translation>%1&#xa0;: le fichier de clés UNIX n&apos;existe pas</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>%1: ftok failed</source>
-        <translation>%1: ftok non riuscito</translation>
+        <translation>%1&#xa0;: ftok a échoué</translation>
     </message>
     <message>
         <location line="+48"/>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="+14"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="+101"/>
         <source>%1: unable to make key</source>
-        <translation>%1: impossibile creare la chiave</translation>
+        <translation>%1&#xa0;: impossible de créer la clé</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>%1: system-imposed size restrictions</source>
-        <translation>%1: il sistema impone restrizioni di dimensione</translation>
+        <translation>%1&#xa0;: le système impose des restrictions sur la taille</translation>
     </message>
     <message>
         <location line="+50"/>
         <source>%1: not attached</source>
-        <translation>%1: non collegato</translation>
+        <translation>%1 : n&apos;est attaché</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="-26"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_unix.cpp" line="+88"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="-17"/>
+        <source>%1: permission denied</source>
+        <translation>%1&#xa0;: permission refusée</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="-17"/>
+        <source>%1: already exists</source>
+        <translation>%1&#xa0;: existe déjà</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="+4"/>
+        <source>%1: doesn&apos;t exist</source>
+        <translation>%1&#xa0;: n&apos;existe pas</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="+9"/>
+        <source>%1: out of resources</source>
+        <translation>%1 : manque de ressources</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="+7"/>
+        <source>%1: unknown error %2</source>
+        <translation>%1&#xa0;: erreur inconnue %2</translation>
+    </message>
+    <message>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="-12"/>
         <source>%1: invalid size</source>
-        <translation>%1: dimensione non valida</translation>
+        <translation>%1 : la taille est invalide</translation>
     </message>
     <message>
         <location line="+59"/>
         <source>%1: key error</source>
-        <translation>%1: errore della chiave</translation>
+        <translation>%1&#xa0;: erreur de clé</translation>
     </message>
     <message>
         <location line="+39"/>
         <source>%1: size query failed</source>
-        <translation>%1: query della dimensione non riuscita</translation>
+        <translation>%1&#xa0;: la requête de taille a échoué</translation>
     </message>
 </context>
 <context>
@@ -7088,12 +6808,12 @@ Disattiva una di queste opzioni.</translation>
         <location filename="../../qtbase/src/gui/kernel/qkeysequence.cpp" line="+422"/>
         <source>Space</source>
         <extracomment>This and all following &quot;incomprehensible&quot; strings in QShortcut context are key names. Please use the localized names appearing on actual keyboards or whatever is commonly used.</extracomment>
-        <translation>Spazio</translation>
+        <translation>Espace</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Esc</source>
-        <translation>Esc</translation>
+        <translation>Échap</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7103,102 +6823,102 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location line="+1"/>
         <source>Backtab</source>
-        <translation>Tab indietro</translation>
+        <translation>Tab arr</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Backspace</source>
-        <translation>Backspace</translation>
+        <translation>Effacement</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Return</source>
-        <translation>Invio</translation>
+        <translation>Retour</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter</source>
-        <translation>Invio</translation>
+        <translation>Entrée</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Ins</source>
-        <translation>Ins</translation>
+        <translation>Inser</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Del</source>
-        <translation>Canc</translation>
+        <translation>Suppr</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Pause</source>
-        <translation>Pausa</translation>
+        <translation>Pause</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Print</source>
-        <translation>Stampa</translation>
+        <translation>Imprimer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>SysReq</source>
-        <translation>R Sist</translation>
+        <translation>Syst</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Home</source>
-        <translation>↖</translation>
+        <translation>Début</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>End</source>
-        <translation>Fine</translation>
+        <translation>Fin</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Left</source>
-        <translation>Sinistra</translation>
+        <translation>Gauche</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Up</source>
-        <translation>Su</translation>
+        <translation>Haut</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Right</source>
-        <translation>Destra</translation>
+        <translation>Droite</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Down</source>
-        <translation>Giù</translation>
+        <translation>Bas</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>PgUp</source>
-        <translation>Pag↑</translation>
+        <translation>Page préc</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>PgDown</source>
-        <translation>Pag↓</translation>
+        <translation>Page suiv</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>CapsLock</source>
-        <translation>Bloc Maiusc</translation>
+        <translation>Verr maj</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>NumLock</source>
-        <translation>Bloc Num</translation>
+        <translation>Verr num</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>ScrollLock</source>
-        <translation>Bloc Scorr</translation>
+        <translation>Arrêt défil</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7208,670 +6928,222 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location line="+1"/>
         <source>Help</source>
-        <translation>Aiuto</translation>
+        <translation>Aide</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Back</source>
-        <translation>Indietro</translation>
+        <translation>Précédent</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Forward</source>
-        <translation>Avanti</translation>
+        <translation>Suivant</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Stop</source>
-        <translation>Stop</translation>
+        <translation>Arrêter</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Refresh</source>
-        <translation>Aggiorna</translation>
+        <translation>Rafraîchir</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Volume Down</source>
-        <translation>Diminuisci il volume</translation>
+        <translation>Volume bas</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Volume Mute</source>
-        <translation>Muto</translation>
+        <translation>Volume muet</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Volume Up</source>
-        <translation>Aumenta il volume</translation>
+        <translation>Volume haut</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Bass Boost</source>
-        <translation>Amplifica i bassi</translation>
+        <translation>Graves fort</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Bass Up</source>
-        <translation>Più bassi</translation>
+        <translation>Graves haut</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Bass Down</source>
-        <translation>Meno bassi</translation>
+        <translation>Graves bas</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Treble Up</source>
-        <translation>Più alti</translation>
+        <translation>Aigus haut</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Treble Down</source>
-        <translation>Meno alti</translation>
+        <translation>Aigus bas</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Media Play</source>
-        <translation>Riproduci media</translation>
+        <translation>Média lecture</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Media Stop</source>
-        <translation>Interrompi media</translation>
+        <translation>Média arrêt</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Media Previous</source>
-        <translation>Media precedente</translation>
+        <translation>Média précédent</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Media Next</source>
-        <translation>Media successivo</translation>
+        <translation>Média suivant</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Media Record</source>
-        <translation>Registrazione</translation>
+        <translation>Média enregistrer</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Media Pause</source>
         <extracomment>Media player pause button</extracomment>
-        <translation>Pausa</translation>
+        <translation>Média pause</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Toggle Media Play/Pause</source>
         <extracomment>Media player button to toggle between playing and paused</extracomment>
-        <translation>Pausa/riproduci</translation>
+        <translation>Média Lecture/Pause</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Home Page</source>
-        <translation>Pagina iniziale</translation>
+        <translation>Page d&apos;accueil</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Favorites</source>
-        <translation>Preferiti</translation>
+        <translation>Favoris</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Search</source>
-        <translation>Ricerca</translation>
+        <translation>Recherche</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Standby</source>
-        <translation>Standby</translation>
+        <translation>Attente</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Open URL</source>
-        <translation>Apri URL</translation>
+        <translation>Ouvrir URL</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch Mail</source>
-        <translation>Avvia mail</translation>
+        <translation>Lancer Boîte mail</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch Media</source>
-        <translation>Avvia media</translation>
+        <translation>Lancer média</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (0)</source>
-        <translation>Avvia (0)</translation>
+        <translation>Lancer (0)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (1)</source>
-        <translation>Avvia (1)</translation>
+        <translation>Lancer (1)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (2)</source>
-        <translation>Avvia (2)</translation>
+        <translation>Lancer (2)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (3)</source>
-        <translation>Avvia (3)</translation>
+        <translation>Lancer (3)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (4)</source>
-        <translation>Avvia (4)</translation>
+        <translation>Lancer (4)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (5)</source>
-        <translation>Avvia (5)</translation>
+        <translation>Lancer (5)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (6)</source>
-        <translation>Avvia (6)</translation>
+        <translation>Lancer (6)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (7)</source>
-        <translation>Avvia (7)</translation>
+        <translation>Lancer (7)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (8)</source>
-        <translation>Avvia (8)</translation>
+        <translation>Lancer (8)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (9)</source>
-        <translation>Avvia (9)</translation>
+        <translation>Lancer (9)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (A)</source>
-        <translation>Avvia (A)</translation>
+        <translation>Lancer (A)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (B)</source>
-        <translation>Avvia (B)</translation>
+        <translation>Lancer (B)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (C)</source>
-        <translation>Avvia (C)</translation>
+        <translation>Lancer (C)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (D)</source>
-        <translation>Avvia (D)</translation>
+        <translation>Lancer (D)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (E)</source>
-        <translation>Avvia (E)</translation>
+        <translation>Lancer (E)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Launch (F)</source>
-        <translation>Avvia (F)</translation>
+        <translation>Lancer (F)</translation>
     </message>
     <message>
-        <location line="+3"/>
-        <source>Monitor Brightness Up</source>
-        <translation>Aumenta luminosità dello schermo</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Monitor Brightness Down</source>
-        <translation>Diminuisci luminosità dello schermo</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Keyboard Light On/Off</source>
-        <translation>Attiva/disattiva illuminazione tastiera</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Keyboard Brightness Up</source>
-        <translation>Aumenta luminosità della tastiera</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Keyboard Brightness Down</source>
-        <translation>Diminuisci luminosità della tastiera</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Power Off</source>
-        <translation>Spegni</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Wake Up</source>
-        <translation>Risveglia</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Eject</source>
-        <translation>Espelli</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Screensaver</source>
-        <translation>Salvaschermo</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>WWW</source>
-        <translation>WWW</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Sleep</source>
-        <translation>Sospendi</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>LightBulb</source>
-        <translation>Lampadina</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Shop</source>
-        <translation>Negozio</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>History</source>
-        <translation>Cronologia</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Add Favorite</source>
-        <translation>Aggiungi preferito</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Hot Links</source>
-        <translation>Collegamenti</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Adjust Brightness</source>
-        <translation>Regola luminosità</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Finance</source>
-        <translation>Finanza</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Community</source>
-        <translation>Comunità</translation>
-    </message>
-    <message>
-        <source>Audio Rewind</source>
-        <translation type="vanished">Riavvolgi audio</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Back Forward</source>
-        <translation>Indietro veloce</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Application Left</source>
-        <translation>Applicazione a sinistra</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Application Right</source>
-        <translation>Applicazione a destra</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Book</source>
-        <translation>Libro</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>CD</source>
-        <translation>CD</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Calculator</source>
-        <translation>Calcolatrice</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Clear</source>
-        <translation>Pulisci</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Clear Grab</source>
-        <translation>Pulisci cattura</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Close</source>
-        <translation>Chiudi</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Copy</source>
-        <translation>Copia</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Cut</source>
-        <translation>Taglia</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Display</source>
-        <translation>Mostra</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>DOS</source>
-        <translation>DOS</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Documents</source>
-        <translation>Documenti</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Spreadsheet</source>
-        <translation>Foglio di calcolo</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Browser</source>
-        <translation>Browser</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Game</source>
-        <translation>Gioco</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Go</source>
-        <translation>Vai</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>iTouch</source>
-        <translation>iTouch</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Logoff</source>
-        <translation>Termina sessione</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Market</source>
-        <translation>Market</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Meeting</source>
-        <translation>Riunione</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Keyboard Menu</source>
-        <translation>Menu della tastiera</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Menu PB</source>
-        <translation>Menu PB</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>My Sites</source>
-        <translation>I miei siti</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>News</source>
-        <translation>Notizie</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Home Office</source>
-        <translation>Ufficio</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Option</source>
-        <translation>Opzione</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Paste</source>
-        <translation>Incolla</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Phone</source>
-        <translation>Telefono</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Reply</source>
-        <translation>Rispondi</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Reload</source>
-        <translation>Ricarica</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Rotate Windows</source>
-        <translation>Ruota finestre</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Rotation PB</source>
-        <translation>Rotazione PB</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Rotation KB</source>
-        <translation>Rotazione KB</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Save</source>
-        <translation>Salva</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Send</source>
-        <translation>Invia</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Spellchecker</source>
-        <translation>Controllo ortografico</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Split Screen</source>
-        <translation>Dividi schermo</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Support</source>
-        <translation>Supporto</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Task Panel</source>
-        <translation>Pannello attività</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Terminal</source>
-        <translation>Terminale</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Tools</source>
-        <translation>Strumenti</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Travel</source>
-        <translation>Viaggi</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Video</source>
-        <translation>Video</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Word Processor</source>
-        <translation>Elaboratore di testi</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>XFer</source>
-        <translation>XFer</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Zoom In</source>
-        <translation>Ingrandisci</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Zoom Out</source>
-        <translation>Rimpicciolisci</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Away</source>
-        <translation>Assente</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Messenger</source>
-        <translation>Messenger</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>WebCam</source>
-        <translation>WebCam</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Mail Forward</source>
-        <translation>Inoltra messaggio di posta</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Pictures</source>
-        <translation>Immagini</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Music</source>
-        <translation>Musica</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Battery</source>
-        <translation>Batteria</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Bluetooth</source>
-        <translation>Bluetooth</translation>
-    </message>
-    <message>
         <location line="+1"/>
-        <source>Wireless</source>
-        <translation>Wireless</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Ultra Wide Band</source>
-        <translation>Banda ultra larga</translation>
-    </message>
-    <message>
-        <source>Audio Forward</source>
-        <translation type="vanished">Avanzamento audio</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Audio Repeat</source>
-        <translation>Ripeti audio</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Audio Random Play</source>
-        <translation>Riproduzione audio casuale</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Subtitle</source>
-        <translation>Sottotitolo</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Audio Cycle Track</source>
-        <translation>Ripeti in ciclo le tracce audio</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Time</source>
-        <translation>Ora</translation>
-    </message>
-    <message>
-        <location line="+46"/>
-        <source>Select</source>
-        <translation>Seleziona</translation>
-    </message>
-    <message>
-        <location line="-44"/>
-        <source>View</source>
-        <translation>Vista</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Top Menu</source>
-        <translation>Menu principale</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Suspend</source>
-        <translation>Sospensione</translation>
-    </message>
-    <message>
-        <location line="-4"/>
-        <source>Hibernate</source>
-        <translation>Ibernazione</translation>
-    </message>
-    <message>
-        <location line="-91"/>
         <source>Launch (G)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7881,79 +7153,514 @@ Disattiva una di queste opzioni.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+20"/>
-        <source>Media Rewind</source>
-        <translation>Riavvolgi media</translation>
+        <location line="+1"/>
+        <source>Monitor Brightness Up</source>
+        <translation>Luminosité moniteur haut</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+1"/>
+        <source>Monitor Brightness Down</source>
+        <translation>Luminosité moniteur bas</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Keyboard Light On/Off</source>
+        <translation>Lumière clavier On/Off</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Keyboard Brightness Up</source>
+        <translation>Luminosité clavier haut</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Keyboard Brightness Down</source>
+        <translation>Luminosité clavier bas</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Power Off</source>
+        <translation>Éteindre</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Wake Up</source>
+        <translation>Réveiller</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Eject</source>
+        <translation>Éjecter</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Screensaver</source>
+        <translation>Économiseur d&apos;écran</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>WWW</source>
+        <translation>WWW</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Sleep</source>
+        <translation>Veille</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>LightBulb</source>
+        <translation>Ampoule</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Shop</source>
+        <translation>Magasin</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>History</source>
+        <translation>Historique</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Add Favorite</source>
+        <translation>Ajouter favori</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Hot Links</source>
+        <translation>Derniers favoris</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Adjust Brightness</source>
+        <translation>Régler luminosité</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Finance</source>
+        <translation>Finances</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Community</source>
+        <translation>Communauté</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Media Rewind</source>
+        <translation>Rembobiner</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Back Forward</source>
+        <translation>Retour avant</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Application Left</source>
+        <translation>Application gauche</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Application Right</source>
+        <translation>Application droite</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Book</source>
+        <translation>Livre</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>CD</source>
+        <translation>CD</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Calculator</source>
+        <translation>Calculatrice</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Calendar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+1"/>
+        <source>Clear</source>
+        <translation>Effacer</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Clear Grab</source>
+        <translation>Effacer la poignée</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Close</source>
+        <translation>Fermer</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Adjust contrast</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+1"/>
+        <source>Copy</source>
+        <translation>Copier</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Cut</source>
+        <translation>Couper</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Display</source>
+        <translation>Affichage</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>DOS</source>
+        <translation>DOS</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Documents</source>
+        <translation>Documents</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Spreadsheet</source>
+        <translation>Feuille de calcul</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Browser</source>
+        <translation>Navigateur</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Game</source>
+        <translation>Jeu</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Go</source>
+        <translation>Aller</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>iTouch</source>
+        <translation>iTouch</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Logoff</source>
+        <translation>Fermer session</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Market</source>
+        <translation>Marché</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Meeting</source>
+        <translation>Réunion</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Memo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+21"/>
+        <location line="+1"/>
+        <source>Keyboard Menu</source>
+        <translation>Menu clavier</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Menu PB</source>
+        <translation>Menu PB</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>My Sites</source>
+        <translation>Mes sites</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>News</source>
+        <translation>Actualités</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Home Office</source>
+        <translation>Bureau à domicile</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Option</source>
+        <translation>Option</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Paste</source>
+        <translation>Coller</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Phone</source>
+        <translation>Téléphone</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Reply</source>
+        <translation>Répondre</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Reload</source>
+        <translation>Recharger</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rotate Windows</source>
+        <translation>Tourner la fenêtre</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rotation PB</source>
+        <translation>Rotation PB</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Rotation KB</source>
+        <translation>Rotation KB</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Save</source>
+        <translation>Enregistrer</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Send</source>
+        <translation>Envoyer</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Spellchecker</source>
+        <translation>Correcteur orthographique</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Split Screen</source>
+        <translation>Partager l&apos;écran</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Support</source>
+        <translation>Support technique</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Task Panel</source>
+        <translation>Panneau de tâches</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Terminal</source>
+        <translation>Terminal</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>To-do list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+18"/>
+        <location line="+1"/>
+        <source>Tools</source>
+        <translation>Outils</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Travel</source>
+        <translation>Voyager</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Video</source>
+        <translation>Vidéo</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Word Processor</source>
+        <translation>Traitement de texte</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>XFer</source>
+        <translation>XFer</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom In</source>
+        <translation>Zoom avant</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom Out</source>
+        <translation>Zoom arrière</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Away</source>
+        <translation>Absent</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Messenger</source>
+        <translation>Messagerie instantanée</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>WebCam</source>
+        <translation>WebCam</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Mail Forward</source>
+        <translation>Faire suivre l&apos;e-mail</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Pictures</source>
+        <translation>Images</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Music</source>
+        <translation>Musique</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Battery</source>
+        <translation>Batterie</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Bluetooth</source>
+        <translation>Bluetooth</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Wireless</source>
+        <translation>Sans fil</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Ultra Wide Band</source>
+        <translation>Bande ultralarge</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Media Fast Forward</source>
-        <translation>Avanti veloce media</translation>
+        <translation>Avance rapide</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+1"/>
+        <source>Audio Repeat</source>
+        <translation>Audio répéter</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Audio Random Play</source>
+        <translation>Audio lecture aléatoire</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Subtitle</source>
+        <translation>Sous-titre</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Audio Cycle Track</source>
+        <translation>Audio répéter la piste</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Time</source>
+        <translation>Heure</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Hibernate</source>
+        <translation>Veille prolongée</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>View</source>
+        <translation>Affichage</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Top Menu</source>
+        <translation>Haut du menu</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Power Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Éteindre</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+1"/>
+        <source>Suspend</source>
+        <translation>Suspendre</translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>Microphone Mute</source>
-        <translation>Microfono muto</translation>
+        <translation>Désactiver le microphone</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Red</source>
-        <translation>Rosso</translation>
+        <translation>Rouge</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Green</source>
-        <translation>Verde</translation>
+        <translation>Vert</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Yellow</source>
-        <translation>Giallo</translation>
+        <translation>Jaune</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Blue</source>
-        <translation>Blu</translation>
+        <translation>Bleu</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Channel Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Chaîne suivante</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Channel Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Chaîne précédente</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Guide</source>
-        <translation>Guida</translation>
+        <translation>Guide</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7963,174 +7670,179 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location line="+1"/>
         <source>Settings</source>
-        <translation>Impostazioni</translation>
+        <translation>Paramètres</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Microphone Volume Up</source>
-        <translation>Aumenta il volume del microfono</translation>
+        <translation>Augmenter le son du microphone</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Microphone Volume Down</source>
-        <translation>Diminuisci il volume del microfono</translation>
+        <translation>Diminuer le son du microphone</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>New</source>
-        <translation>Nuovo</translation>
+        <translation>Nouveau</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Open</source>
-        <translation>Apri</translation>
+        <translation>Ouvrir</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Find</source>
-        <translation>Trova</translation>
+        <translation>Trouver</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Undo</source>
-        <translation>Annulla</translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Redo</source>
-        <translation>Rifai</translation>
+        <translation>Rétablir</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Print Screen</source>
-        <translation>Stampa schermo</translation>
+        <translation>Imprimer écran</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Page Up</source>
-        <translation>Pagina precedente</translation>
+        <translation>Page haut</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Page Down</source>
-        <translation>Pagina successiva</translation>
+        <translation>Page bas</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Caps Lock</source>
-        <translation>Bloc Maiusc</translation>
+        <translation>Verr Maj</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Num Lock</source>
-        <translation>Bloc Num</translation>
+        <translation>Verr num</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Number Lock</source>
-        <translation>Blocco numeri</translation>
+        <translation>Verrouillage numérique</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Scroll Lock</source>
-        <translation>Bloc Scorr</translation>
+        <translation>Arrêt défilement</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Insert</source>
-        <translation>Inserisci</translation>
+        <translation>Insérer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Delete</source>
-        <translation>Cancella</translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Escape</source>
-        <translation>Escape</translation>
+        <translation>Échapement</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>System Request</source>
-        <translation>Richiesta di sistema</translation>
+        <translation>Requète système</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+4"/>
+        <source>Select</source>
+        <translation>Sélectionner</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Yes</source>
-        <translation>Sì</translation>
+        <translation>Oui</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>No</source>
-        <translation>No</translation>
+        <translation>Non</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Context1</source>
-        <translation>Contesto1</translation>
+        <translation>Contexte1</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Context2</source>
-        <translation>Contesto2</translation>
+        <translation>Contexte2</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Context3</source>
-        <translation>Contesto3</translation>
+        <translation>Contexte3</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Context4</source>
-        <translation>Contesto4</translation>
+        <translation>Contexte4</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Call</source>
         <extracomment>Button to start a call (note: a separate button is used to end the call)</extracomment>
-        <translation>Chiama</translation>
+        <translation>Appeler</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Hangup</source>
         <extracomment>Button to end a call (note: a separate button is used to start the call)</extracomment>
-        <translation>Riaggancia</translation>
+        <translation>Raccrocher</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Toggle Call/Hangup</source>
         <extracomment>Button that will hang up if we&apos;re in call, or make a call if we&apos;re not.</extracomment>
-        <translation>Chiama/riaggancia</translation>
+        <translation>Décrocher/Raccrocher</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Flip</source>
-        <translation>Gira</translation>
+        <translation>Retourner</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Voice Dial</source>
         <extracomment>Button to trigger voice dialing</extracomment>
-        <translation>Composizione vocale</translation>
+        <translation>Commande vocale</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Last Number Redial</source>
         <extracomment>Button to redial the last number called</extracomment>
-        <translation>Richiama l&apos;ultimo numero</translation>
+        <translation>Bis</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Camera Shutter</source>
         <extracomment>Button to trigger the camera shutter (take a picture)</extracomment>
-        <translation>Scatta</translation>
+        <translation>Prendre photo</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Camera Focus</source>
         <extracomment>Button to focus the camera</extracomment>
-        <translation>Metti a fuoco</translation>
+        <translation>Focus appareil photo</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -8195,37 +7907,37 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location line="+1"/>
         <source>Kana Lock</source>
-        <translation>Blocca Kana</translation>
+        <translation>Kana Lock</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Kana Shift</source>
-        <translation>Shift Kana</translation>
+        <translation>Kana Shift</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Eisu Shift</source>
-        <translation>Shift Eisu</translation>
+        <translation>Eisu Shift</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Eisu toggle</source>
-        <translation>Commuta Eisu</translation>
+        <translation>Eisu toggle</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Code input</source>
-        <translation>Immissione codice</translation>
+        <translation>Entrée le code</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Multiple Candidate</source>
-        <translation>Candidati multipli</translation>
+        <translation>Candidat multiple</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Previous Candidate</source>
-        <translation>Candidato precedente</translation>
+        <translation>Candidat précédent</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -8235,12 +7947,12 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location line="+1"/>
         <source>Hangul Start</source>
-        <translation>Avvio Hangul</translation>
+        <translation>Hangul début</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Hangul End</source>
-        <translation>Fine Hangul</translation>
+        <translation>Hangul Fin</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8280,52 +7992,52 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location line="+1"/>
         <source>Hangul Special</source>
-        <translation>Hangul speciale</translation>
+        <translation>Hangul Special</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Cancel</source>
-        <translation>Annulla</translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Printer</source>
-        <translation>Stampante</translation>
+        <translation>Imprimante</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Execute</source>
-        <translation>Esegui</translation>
+        <translation>Exécuter</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Play</source>
-        <translation>Riproduci</translation>
+        <translation>Lecture</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Zoom</source>
-        <translation>Ingrandisci</translation>
+        <translation>Zoom</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Exit</source>
-        <translation>Esci</translation>
+        <translation>Quitter</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Touchpad Toggle</source>
-        <translation type="unfinished"></translation>
+        <translation>Basculer la plage tactile</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Touchpad On</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer la plage tactile</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Touchpad Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Désactiver la plage tactile</translation>
     </message>
     <message>
         <location line="+408"/>
@@ -8337,7 +8049,7 @@ Disattiva una di queste opzioni.</translation>
         <location line="-168"/>
         <location line="+172"/>
         <source>Shift</source>
-        <translation>Shift</translation>
+        <translation>Maj</translation>
     </message>
     <message>
         <location line="-171"/>
@@ -8349,7 +8061,7 @@ Disattiva una di queste opzioni.</translation>
         <location line="-168"/>
         <location line="+164"/>
         <source>Meta</source>
-        <translation>Meta</translation>
+        <translation>Méta</translation>
     </message>
     <message>
         <location line="-163"/>
@@ -8374,72 +8086,72 @@ Disattiva una di queste opzioni.</translation>
     <message>
         <location filename="../../qtbase/src/network/socket/qsocks5socketengine.cpp" line="-67"/>
         <source>Connection to proxy refused</source>
-        <translation>Connessione al proxy rifiutata</translation>
+        <translation>La connexion au proxy est refusée</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Connection to proxy closed prematurely</source>
-        <translation>La connessione al proxy si è interrotta prematuramente</translation>
+        <translation>La connexion au serveur proxy a été fermée prématurément</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Proxy host not found</source>
-        <translation>Host proxy non trovato</translation>
+        <translation>L&apos;hôte proxy est introuvable</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Connection to proxy timed out</source>
-        <translation>Connessione al proxy scaduta</translation>
+        <translation>La connexion au proxy est expirée</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>Proxy authentication failed</source>
-        <translation>Autenticazione al proxy non riuscita</translation>
+        <translation>L&apos;authentification proxy a échoué</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Proxy authentication failed: %1</source>
-        <translation>Autenticazione al proxy non riuscita: %1</translation>
+        <translation>L&apos;authentification proxy a échoué&#xa0;: %1</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>SOCKS version 5 protocol error</source>
-        <translation>Errore del protocollo SOCKS versione 5</translation>
+        <translation>Erreur de protocole SOCKS version 5</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>General SOCKSv5 server failure</source>
-        <translation>Errore generico del server SOCKv5</translation>
+        <translation>Erreur générale du serveur SOCKSv5</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Connection not allowed by SOCKSv5 server</source>
-        <translation>Connessione non consentita dal server SOCKSv5</translation>
+        <translation>La connexion est refusée par le serveur SOCKSv5</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>TTL expired</source>
-        <translation>TTL scaduto</translation>
+        <translation>Le TTL a expiré</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>SOCKSv5 command not supported</source>
-        <translation>Comando SOCKSv5 non supportato</translation>
+        <translation>La commande SOCKSv5 n&apos;est pas supportée</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Address type not supported</source>
-        <translation>Tipo di indirizzo non supportato</translation>
+        <translation>Le type d&apos;adresse n&apos;est pas supporté</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Unknown SOCKSv5 proxy error code 0x%1</source>
-        <translation>Codice di errore proxy SOCKSv5 0x%1 sconosciuto</translation>
+        <translation>Erreur proxy SOCKSv5 inconnue&#xa0;: 0x%1</translation>
     </message>
     <message>
         <location line="+698"/>
         <source>Network operation timed out</source>
-        <translation>Operazione di rete scaduta</translation>
+        <translation>L&apos;opération réseau a expiré</translation>
     </message>
 </context>
 <context>
@@ -8448,430 +8160,425 @@ Disattiva una di queste opzioni.</translation>
         <location filename="../../qtbase/src/platformsupport/linuxaccessibility/bridge.cpp" line="+120"/>
         <source>invalid role</source>
         <extracomment>Role of an accessible object - the object is in an invalid state or could not be constructed</extracomment>
-        <translation>ruolo non valido</translation>
+        <translation>rôle invalide</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>title bar</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>barra del titolo</translation>
+        <translation>barre de titre</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>menu bar</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>barra del menu</translation>
+        <translation>barre de menu</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>scroll bar</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>barra di scorrimento</translation>
+        <translation>Barre de défillement</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>grip</source>
         <extracomment>Role of an accessible object - the grip is usually used for resizing another object</extracomment>
-        <translation>maniglia</translation>
+        <translation>poignée</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>sound</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>suono</translation>
+        <translation>son</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>cursor</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>cursore</translation>
+        <translation>curseur</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>text caret</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>cursore del testo</translation>
+        <translation>curseur texte</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>alert message</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>messaggio di avviso</translation>
+        <translation>message d&apos;alerte</translation>
     </message>
     <message>
-        <source>window</source>
-        <extracomment>Role of an accessible object</extracomment>
-        <translation type="vanished">finestra</translation>
+        <location line="+2"/>
+        <location line="+20"/>
+        <source>frame</source>
+        <extracomment>Role of an accessible object: a window with frame and title
+----------
+Role of an accessible object</extracomment>
+        <translation>cadre</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="-18"/>
         <source>filler</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>riempitore</translation>
+        <translation>remplissage</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>popup menu</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>menu a comparsa</translation>
+        <translation>menu popup</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>menu item</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>voce di menu</translation>
+        <translation>élément de menu</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>tool tip</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>suggerimento</translation>
+        <translation>info-bulle</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>application</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>applicazione</translation>
+        <translation>application</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>document</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>documento</translation>
+        <translation>document</translation>
     </message>
     <message>
         <location line="+2"/>
         <location line="+8"/>
         <source>panel</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>pannello</translation>
+        <translation>panneau</translation>
     </message>
     <message>
         <location line="-6"/>
         <source>chart</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>grafico</translation>
+        <translation>graphique</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>dialog</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>finestra di dialogo</translation>
+        <translation>dialogue</translation>
     </message>
     <message>
-        <location line="-18"/>
-        <location line="+20"/>
-        <source>frame</source>
-        <extracomment>Role of an accessible object: a window with frame and title
-----------
-Role of an accessible object</extracomment>
-        <translation>cornice</translation>
-    </message>
-    <message>
-        <location line="+4"/>
+        <location line="+6"/>
         <source>separator</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>separatore</translation>
+        <translation>séparateur</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>tool bar</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>barra degli strumenti</translation>
+        <translation>barre d&apos;outils</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>status bar</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>barra di stato</translation>
+        <translation>barre de status</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>table</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>tabella</translation>
+        <translation>table</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>column header</source>
         <extracomment>Role of an accessible object - part of a table</extracomment>
-        <translation>intestazione della colonna</translation>
+        <translation>en-tête de colonne</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>row header</source>
         <extracomment>Role of an accessible object - part of a table</extracomment>
-        <translation>intestazione della riga</translation>
+        <translation>en-tête de ligne</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>column</source>
         <extracomment>Role of an accessible object - part of a table</extracomment>
-        <translation>colonna</translation>
+        <translation>colonne</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>row</source>
         <extracomment>Role of an accessible object - part of a table</extracomment>
-        <translation>riga</translation>
+        <translation>ligne</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>cell</source>
         <extracomment>Role of an accessible object - part of a table</extracomment>
-        <translation>cella</translation>
+        <translation>cellule</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>link</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>collegamento</translation>
+        <translation>lien</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>help balloon</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>fumetto di aiuto</translation>
+        <translation>bulle d&apos;aide</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>assistant</source>
         <extracomment>Role of an accessible object - a helper dialog</extracomment>
-        <translation>assistente</translation>
+        <translation>assistant</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>list</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>lista</translation>
+        <translation>liste</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>list item</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>elemento della lista</translation>
+        <translation>élément de liste</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>tree</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>albero</translation>
+        <translation>arbre</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>tree item</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>elemento dell&apos;albero</translation>
+        <translation>élément d&apos;un arbre</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>page tab</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>scheda</translation>
+        <translation>onglet de page</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>property page</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>pagina delle proprietà</translation>
+        <translation>page de propriété</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>indicator</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>indicatore</translation>
+        <translation>indicateur</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>graphic</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>grafico</translation>
+        <translation>graphique</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>label</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>etichetta</translation>
+        <translation>label</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>text</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>testo</translation>
+        <translation>texte</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>push button</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>pulsante</translation>
+        <translation>bouton</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>check box</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>casella di spunta</translation>
+        <translation>boîte à cocher</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>radio button</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>casella a scelta singola</translation>
+        <translation>bouton radio</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>combo box</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>casella combinata</translation>
+        <translation>boîte déroulante</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>progress bar</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>barra di avanzamento</translation>
+        <translation>barre de progression</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>dial</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>quadrante</translation>
+        <translation>clavier</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>hotkey field</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>campo di scorciatoia</translation>
+        <translation>champ de raccourci</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>slider</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>regolatore</translation>
+        <translation>slider</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>spin box</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>casella numerica</translation>
+        <translation>zone de sélection numérique</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>canvas</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>superficie</translation>
+        <translation>canvas</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>animation</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>animazione</translation>
+        <translation>animation</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>equation</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>equazione</translation>
+        <translation>équation</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>button with drop down</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>pulsante con elenco a comparsa</translation>
+        <translation>barre de défillement</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>button menu</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>pulsante con menu</translation>
+        <translation>bouton de menu</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>button with drop down grid</source>
         <extracomment>Role of an accessible object - a button that expands a grid.</extracomment>
-        <translation>pulsante con griglia a comparsa</translation>
+        <translation>bouton avec menu déroulant affichant une grille</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>space</source>
         <extracomment>Role of an accessible object - blank space between other objects.</extracomment>
-        <translation>spazio</translation>
+        <translation>espacement</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>page tab list</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>lista schede della pagina</translation>
+        <translation>liste d&apos;onglets de page</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>clock</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>orologio</translation>
+        <translation>horloge</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>splitter</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>divisore</translation>
+        <translation>séparateur</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>layered pane</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>pannello stratificato</translation>
+        <translation>volet en couche</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>web document</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>documento web</translation>
+        <translation>document web</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>paragraph</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>paragrafo</translation>
+        <translation>paragraphe</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>section</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>sezione</translation>
+        <translation>section</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>color chooser</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>selettore di colore</translation>
+        <translation>choix de couleur</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>footer</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>piè di pagina</translation>
+        <translation>pied de page</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>form</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>modulo</translation>
+        <translation>formulaire</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>heading</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>intestazione</translation>
+        <translation>en-tête</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>note</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>nota</translation>
+        <translation>note</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>complementary content</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>contenuto complementare</translation>
+        <translation>contenu additionnel</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -8895,7 +8602,7 @@ Role of an accessible object</extracomment>
         <location line="+2"/>
         <source>unknown</source>
         <extracomment>Role of an accessible object</extracomment>
-        <translation>sconosciuto</translation>
+        <translation>inconnu</translation>
     </message>
 </context>
 <context>
@@ -8903,7 +8610,7 @@ Role of an accessible object</extracomment>
     <message>
         <location filename="../../qtbase/src/network/ssl/qssldiffiehellmanparameters.cpp" line="+269"/>
         <source>No error</source>
-        <translation type="unfinished">Nessun errore</translation>
+        <translation type="unfinished">Aucune erreur</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -8919,119 +8626,222 @@ Role of an accessible object</extracomment>
 <context>
     <name>QSslSocket</name>
     <message>
+        <location filename="../../qtbase/src/network/ssl/qsslcontext_openssl.cpp" line="+89"/>
+        <source>Error when setting the OpenSSL configuration (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Error when setting the elliptic curves (%1)</source>
+        <translation>La définition des courbes elliptiques a provoqué une erreur (%1)</translation>
+    </message>
+    <message>
+        <location line="+253"/>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket_schannel.cpp" line="+807"/>
+        <location line="+92"/>
+        <source>Error creating SSL context (%1)</source>
+        <translation>Erreur lors de la création du contexte SSL (%1)</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>unsupported protocol</source>
+        <translation>protocole non supporté</translation>
+    </message>
+    <message>
+        <location line="+97"/>
+        <source>Error while setting the minimal protocol version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Error while setting the maximum protocol version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+41"/>
+        <location line="+10"/>
+        <location line="+7"/>
+        <source>Invalid or empty cipher list (%1)</source>
+        <translation>La liste de chiffrements est invalide ou vide (%1)</translation>
+    </message>
+    <message>
+        <location line="+51"/>
+        <source>Cannot provide a certificate with no key, %1</source>
+        <translation>Impossible de fournir un certificat sans clé, %1</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Error loading local certificate, %1</source>
+        <translation>Erreur lors du chargement du certificat local, %1</translation>
+    </message>
+    <message>
+        <location line="+24"/>
+        <source>Error loading private key, %1</source>
+        <translation>Erreur lors du chargement de la clé privée, %1</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Private key does not certify public key, %1</source>
+        <translation>La clé privée ne certifie pas la clé publique, %1</translation>
+    </message>
+    <message>
+        <location line="+58"/>
+        <source>Diffie-Hellman parameters are not valid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+24"/>
+        <source>OpenSSL version with disabled elliptic curves</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+54"/>
+        <source>Expecting QByteArray for %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <source>An error occurred attempting to set %1 to %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Wrong value for %1 (%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Unrecognized command %1 = %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>SSL_CONF_finish() failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>SSL_CONF_CTX_new() failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenSSL version too old, need at least v1.0.2</source>
+        <translation type="vanished">La version de OpenSSL est trop ancienne, requiert au moins v1.0.2</translation>
+    </message>
+    <message>
         <location filename="../../qtbase/src/network/ssl/qsslerror.cpp" line="+234"/>
         <source>No error</source>
-        <translation>Nessun errore</translation>
+        <translation>Aucune erreur</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The issuer certificate could not be found</source>
-        <translation>Il certificato dell&apos;emittente non è stato trovato</translation>
+        <translation>Le certificat de l&apos;émetteur est introuvable</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The certificate signature could not be decrypted</source>
-        <translation>La firma del certificato non può essere decifrata</translation>
+        <translation>La signature du certificat n&apos;a pas pu être décryptée</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The public key in the certificate could not be read</source>
-        <translation>La chiave pubblica del certificato non può essere letta</translation>
+        <translation>La clé publique du certificat n&apos;a pas pu être lue</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The signature of the certificate is invalid</source>
-        <translation>La firma del certificato non è valida</translation>
+        <translation>La signature du certificat n&apos;est pas valide</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The certificate is not yet valid</source>
-        <translation>Il certificato non è ancora valido</translation>
+        <translation>Le certificat n&apos;est pas encore valide</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The certificate has expired</source>
-        <translation>Il certificato è scaduto</translation>
+        <translation>Le certificat a expiré</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The certificate&apos;s notBefore field contains an invalid time</source>
-        <translation>Il campo notBefore del certificato contiene una data non valida</translation>
+        <translation>Le champ notBefore du certificat inclut une heure invalide</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The certificate&apos;s notAfter field contains an invalid time</source>
-        <translation>Il campo notAfter del certificato contiene una data non valida</translation>
+        <translation>Le champ notAfter du certificat inclut une heure invalide</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The certificate is self-signed, and untrusted</source>
-        <translation>Il certificato è auto-firmato e non affidabile</translation>
+        <translation>Le certificat est auto-signé et non approuvé</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The root certificate of the certificate chain is self-signed, and untrusted</source>
-        <translation>Il certificato principale della catena di certificati è auto-firmato e non affidabile</translation>
+        <translation>Le certificat racine de la chaîne de certificats est auto-signé et non approuvé</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The issuer certificate of a locally looked up certificate could not be found</source>
-        <translation>Il certificato dell&apos;emittente di un certificato cercato localmente non può essere trovato</translation>
+        <translation>Le certificat de l&apos;émetteur d&apos;un certificat converti localement est introuvable</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>No certificates could be verified</source>
-        <translation>Nessun certificato può essere verificato</translation>
+        <translation>Aucun certificat n&apos;a pu être vérifié</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>One of the CA certificates is invalid</source>
-        <translation>Uno dei certificati dell&apos;autorità di certificazione non è valido</translation>
+        <translation>L&apos;un des certificats CA n&apos;est pas valide</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The basicConstraints path length parameter has been exceeded</source>
-        <translation>La lunghezza del percorso del parametro basicConstraints è stata superata</translation>
+        <translation>Le paramètre de longueur du chemin basicConstraints a été dépassé</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The supplied certificate is unsuitable for this purpose</source>
-        <translation>Il certificato fornito non è adatto per questo scopo</translation>
+        <translation>Le certificat fourni ne convient pas pour cet objectif</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The root CA certificate is not trusted for this purpose</source>
-        <translation>Il certificato principale dell&apos;autorità di certificazione non è affidabile per questo scopo</translation>
+        <translation>Le certificat CA racine n&apos;est pas sécurisé pour cet objectif</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The root CA certificate is marked to reject the specified purpose</source>
-        <translation>Il certificato principale dell&apos;autorità di certificazione è contrassegnato per rifiutare lo scopo specifico</translation>
+        <translation>Le certificat CA racine est marqué pour rejeter l&apos;objectif spécifié</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The current candidate issuer certificate was rejected because its subject name did not match the issuer name of the current certificate</source>
-        <translation>Il certificato dell&apos;emittente attualmente candidato è stato rifiutato perché il nome del suo oggetto non corrisponde al nome dell&apos;emittente del certificato attuale</translation>
+        <translation>Le certificat de l&apos;émetteur candidat actuel a été rejeté car le nom de son sujet ne correspondait pas au nom de l&apos;émetteur du certificat actuel</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>The current candidate issuer certificate was rejected because its issuer name and serial number was present and did not match the authority key identifier of the current certificate</source>
-        <translation>Il certificato dell&apos;emittente attualmente candidato è stato rifiutato perché erano presenti il nome dell&apos;emittente e il numero di serie, e non corrispondevano all&apos;identificativo della chiave di autorità del certificato attuale</translation>
+        <translation>Le certificat de l&apos;émetteur candidat actuel a été rejeté car le nom de son sujet et son numéro de série étaient présents et ne correspondaient pas à l&apos;identifiant de la clé d&apos;autorité du certificat actuel</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>The peer did not present any certificate</source>
-        <translation>La controparte non ha presentato alcun certificato</translation>
+        <translation>Le peer ne contient aucun certificat</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>The host name did not match any of the valid hosts for this certificate</source>
-        <translation>Il nome dell&apos;host non coincide con nessuno degli host validi per questo certificato</translation>
+        <translation>Le nom d&apos;hôte ne correspondait à aucun des hôtes valides pour ce certificat</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>The peer certificate is blacklisted</source>
-        <translation>Il certificato della controparte è nella lista nera</translation>
+        <translation>Le certificat du peer est sur liste noire</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -9091,125 +8901,18 @@ Role of an accessible object</extracomment>
     <message>
         <location line="+3"/>
         <source>Unknown error</source>
-        <translation>Errore sconosciuto</translation>
-    </message>
-    <message>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_openssl.cpp" line="+89"/>
-        <source>Error when setting the OpenSSL configuration (%1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Error when setting the elliptic curves (%1)</source>
-        <translation>Errore durante l&apos;impostazione delle curve ellittiche (%1)</translation>
-    </message>
-    <message>
-        <location line="+253"/>
-        <location filename="../../qtbase/src/network/ssl/qsslsocket_schannel.cpp" line="+807"/>
-        <location line="+92"/>
-        <source>Error creating SSL context (%1)</source>
-        <translation>Errore di creazione del contesto SSL (%1)</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>unsupported protocol</source>
-        <translation>protocollo non supportato</translation>
-    </message>
-    <message>
-        <location line="+97"/>
-        <source>Error while setting the minimal protocol version</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Error while setting the maximum protocol version</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+41"/>
-        <location line="+10"/>
-        <location line="+7"/>
-        <source>Invalid or empty cipher list (%1)</source>
-        <translation>Elenco di cifrari non valido o vuoto (%1)</translation>
-    </message>
-    <message>
-        <location line="+51"/>
-        <source>Cannot provide a certificate with no key, %1</source>
-        <translation>Impossibile fornire un certificato senza chiave, %1</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Error loading local certificate, %1</source>
-        <translation>Errore di caricamento del certificato, %1</translation>
-    </message>
-    <message>
-        <location line="+24"/>
-        <source>Error loading private key, %1</source>
-        <translation>Errore di caricamento della chiave privata, %1</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Private key does not certify public key, %1</source>
-        <translation>La chiave privata non certifica la chiave pubblica %1</translation>
-    </message>
-    <message>
-        <location line="+58"/>
-        <source>Diffie-Hellman parameters are not valid</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+24"/>
-        <source>OpenSSL version with disabled elliptic curves</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+54"/>
-        <source>Expecting QByteArray for %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>An error occurred attempting to set %1 to %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Wrong value for %1 (%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Unrecognized command %1 = %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>SSL_CONF_finish() failed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <source>SSL_CONF_CTX_new() failed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OpenSSL version too old, need at least v1.0.2</source>
-        <translation type="vanished">Versione di OpenSSL troppo vecchia, è richiesta almeno v1.0.2</translation>
+        <translation>Erreur inconnue</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/ssl/qsslsocket_openssl.cpp" line="+601"/>
         <source>Error creating SSL session, %1</source>
-        <translation>Errore di creazione della sessione SSL, %1</translation>
+        <translation>Erreur lors de la création de la session SSL, %1</translation>
     </message>
     <message>
         <location line="+34"/>
         <location filename="../../qtbase/src/network/ssl/qsslsocket_winrt.cpp" line="+449"/>
         <source>Error creating SSL session: %1</source>
-        <translation>Errore di creazione della sessione SSL: %1</translation>
-    </message>
-    <message>
-        <source>Unable to init Ssl Context: %1</source>
-        <translation type="vanished">Impossibile inizializzare il contesto SSL: %1</translation>
+        <translation>Erreur lors de la création de la session SSL&#xa0;: %1</translation>
     </message>
     <message>
         <location line="+36"/>
@@ -9230,17 +8933,17 @@ Role of an accessible object</extracomment>
         <location line="+265"/>
         <location line="+14"/>
         <source>Unable to init SSL Context: %1</source>
-        <translation>Impossibile inizializzare il contesto SSL: %1</translation>
+        <translation>Impossible d&apos;initialiser le contexte SSL : %1</translation>
     </message>
     <message>
         <location line="+53"/>
         <source>Unable to write data: %1</source>
-        <translation>Impossibile scrivere i dati: %1</translation>
+        <translation>Impossible d&apos;écrire les données&#xa0;: %1</translation>
     </message>
     <message>
         <location line="+73"/>
         <source>Unable to decrypt data: %1</source>
-        <translation>Impossibile decifrare i dati: %1</translation>
+        <translation>Impossible de décrypter les données&#xa0;: %1</translation>
     </message>
     <message>
         <location line="+590"/>
@@ -9274,18 +8977,18 @@ Role of an accessible object</extracomment>
         <location line="+704"/>
         <location line="+111"/>
         <source>The TLS/SSL connection has been closed</source>
-        <translation>La connessione TLS/SSL è stata chiusa</translation>
+        <translation>La connexion TLS/SSL a été fermée</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/ssl/qsslsocket_openssl.cpp" line="+11"/>
         <location line="+12"/>
         <source>Error while reading: %1</source>
-        <translation>Errore di lettura: %1</translation>
+        <translation>Erreur lors de la lecture&#xa0;: %1</translation>
     </message>
     <message>
         <location line="+59"/>
         <source>Error during SSL handshake: %1</source>
-        <translation>Errore durante l&apos;handshake SSL: %1</translation>
+        <translation>Erreur lors de la connexion SSL : %1</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/ssl/qsslsocket.cpp" line="+491"/>
@@ -9456,92 +9159,92 @@ Role of an accessible object</extracomment>
     <message>
         <location filename="../../qtbase/src/corelib/io/qstandardpaths.cpp" line="+548"/>
         <source>Desktop</source>
-        <translation>Scrivania</translation>
+        <translation>Bureau</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Documents</source>
-        <translation>Documenti</translation>
+        <translation>Documents</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Fonts</source>
-        <translation>Caratteri</translation>
+        <translation>Polices</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Applications</source>
-        <translation>Applicazioni</translation>
+        <translation>Applications</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Music</source>
-        <translation>Musica</translation>
+        <translation>Musique</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Movies</source>
-        <translation>Video</translation>
+        <translation>Films</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Pictures</source>
-        <translation>Immagini</translation>
+        <translation>Images</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Temporary Directory</source>
-        <translation>Cartella temporanea</translation>
+        <translation>Dossier temporaire</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Home</source>
-        <translation>Home</translation>
-    </message>
-    <message>
-        <location line="+17"/>
-        <source>Application Data</source>
-        <translation>Dati dell&apos;applicazione</translation>
+        <translation>Début</translation>
     </message>
     <message>
         <location line="+2"/>
-        <source>Application Configuration</source>
-        <translation>Configurazione dell&apos;applicazione</translation>
-    </message>
-    <message>
-        <location line="-17"/>
         <source>Cache</source>
         <translation>Cache</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Shared Data</source>
-        <translation>Dati condivisi</translation>
+        <translation>Données partagées</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Runtime</source>
-        <translation>Esecuzione</translation>
+        <translation>Exécution</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Configuration</source>
-        <translation>Configurazione</translation>
+        <translation>Configuration</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Shared Configuration</source>
-        <translation>Configurazione condivisa</translation>
+        <translation>Configuration partagée</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Shared Cache</source>
-        <translation>Cache condivisa</translation>
+        <translation>Cache partagé</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Download</source>
-        <translation>Scaricati</translation>
+        <translation>Téléchargement</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Application Data</source>
+        <translation>Données d&apos;applications</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Application Configuration</source>
+        <translation>Configuration de l&apos;application</translation>
     </message>
 </context>
 <context>
@@ -9549,17 +9252,17 @@ Role of an accessible object</extracomment>
     <message>
         <location filename="../../qtbase/src/corelib/statemachine/qstatemachine.cpp" line="+1480"/>
         <source>Missing initial state in compound state &apos;%1&apos;</source>
-        <translation>Stato iniziale mancante nello stato composito &apos;%1&apos;</translation>
+        <translation>L&apos;état initial est manquant dans l&apos;état composé &quot;%1&quot;</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Missing default state in history state &apos;%1&apos;</source>
-        <translation>Stato predefinito mancante nello stato storico &apos;%1&apos;</translation>
+        <translation>L&apos;état par défaut est manquant dans l&apos;état de l&apos;historique &quot;%1&quot;</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>No common ancestor for targets and source of transition from state &apos;%1&apos;</source>
-        <translation>Nessun antenato comune per le destinazioni e l&apos;origine della transizione dallo stato &apos;%1&apos;</translation>
+        <translation>Aucun ancêtre commun pour les cibles et la source de la transition depuis l&apos;état &quot;%1&quot;</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -9569,7 +9272,7 @@ Role of an accessible object</extracomment>
     <message>
         <location line="+5"/>
         <source>Unknown error</source>
-        <translation>Errore sconosciuto</translation>
+        <translation>Erreur inconnue</translation>
     </message>
 </context>
 <context>
@@ -9578,29 +9281,29 @@ Role of an accessible object</extracomment>
         <location filename="../../qtbase/src/corelib/kernel/qsystemsemaphore_unix.cpp" line="+76"/>
         <location filename="../../qtbase/src/corelib/kernel/qsystemsemaphore_win.cpp" line="+69"/>
         <source>%1: permission denied</source>
-        <translation>%1: permesso negato</translation>
+        <translation>%1&#xa0;: permission refusée</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>%1: already exists</source>
-        <translation>%1: esiste già</translation>
+        <translation>%1&#xa0;: existe déjà</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>%1: does not exist</source>
-        <translation>%1: non esiste</translation>
+        <translation>%1&#xa0;: n&apos;existe pas</translation>
     </message>
     <message>
         <location line="+5"/>
         <location filename="../../qtbase/src/corelib/kernel/qsystemsemaphore_win.cpp" line="-4"/>
         <source>%1: out of resources</source>
-        <translation>%1: risorse esaurite</translation>
+        <translation>%1 : manque de ressources</translation>
     </message>
     <message>
         <location line="+4"/>
         <location filename="../../qtbase/src/corelib/kernel/qsystemsemaphore_win.cpp" line="+7"/>
         <source>%1: unknown error %2</source>
-        <translation>%1: errore sconosciuto %2</translation>
+        <translation>%1&#xa0;: erreur inconnue %2</translation>
     </message>
 </context>
 <context>
@@ -9608,12 +9311,12 @@ Role of an accessible object</extracomment>
     <message>
         <location filename="../../qtbase/src/plugins/sqldrivers/tds/qsql_tds.cpp" line="+642"/>
         <source>Unable to open connection</source>
-        <translation>Impossibile stabilire una connessione</translation>
+        <translation>Impossible d&apos;ouvrir la connexion</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Unable to use database</source>
-        <translation>Impossibile usare il database</translation>
+        <translation>Impossible d&apos;utiliser la base de données</translation>
     </message>
 </context>
 <context>
@@ -9621,12 +9324,12 @@ Role of an accessible object</extracomment>
     <message>
         <location filename="../../qtbase/src/widgets/widgets/qtabbar.cpp" line="-2345"/>
         <source>Scroll Left</source>
-        <translation>Scorri a sinistra</translation>
+        <translation>Défiler vers la gauche</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Scroll Right</source>
-        <translation>Scorri a destra</translation>
+        <translation>Défiler vers la droite</translation>
     </message>
 </context>
 <context>
@@ -9635,7 +9338,7 @@ Role of an accessible object</extracomment>
         <location filename="../../qtbase/src/network/socket/qtcpserver.cpp" line="+314"/>
         <location line="+122"/>
         <source>Operation on socket is not supported</source>
-        <translation>Operazione sul socket non supportata</translation>
+        <translation>Opération sur le socket non supportée</translation>
     </message>
 </context>
 <context>
@@ -9643,32 +9346,32 @@ Role of an accessible object</extracomment>
     <message>
         <location filename="../../qtimageformats/src/plugins/imageformats/tga/qtgafile.cpp" line="+138"/>
         <source>Could not read image data</source>
-        <translation>Impossibile leggere i dati dell&apos;immagine</translation>
+        <translation>Impossible de lire les données de l&apos;image</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Sequential device (eg socket) for image read not supported</source>
-        <translation>Il dispositivo sequenziale (ad es. socket) per la lettura dell&apos;immagine non è supportato</translation>
+        <translation>Les périphériques séquentiels (par exemple un socket) pour la lecture d&apos;image ne sont pas supportés</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Seek file/device for image read failed</source>
-        <translation>La ricerca su file/dispositivo per la lettura dell&apos;immagine non è riuscita</translation>
+        <translation>La recherche d&apos;un fichier/périphérique pour la lecture d&apos;image a échoué</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Image header read failed</source>
-        <translation>La lettura dell&apos;intestazione dell&apos;immagine non è riuscita</translation>
+        <translation>La lecture de l&apos;en-tête de l&apos;image a échoué</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Image type not supported</source>
-        <translation>Tipo di immagine non supportato</translation>
+        <translation>Le type d&apos;image n&apos;est pas supporté</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Image depth not valid</source>
-        <translation>La profondità dell&apos;immagine non è valida</translation>
+        <translation>La profondeur de l&apos;image n&apos;est pas valide</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -9678,22 +9381,22 @@ Role of an accessible object</extracomment>
     <message>
         <location line="+7"/>
         <source>Could not seek to image read footer</source>
-        <translation>Impossibile saltare al fondo del file dell&apos;immagine</translation>
+        <translation>Impossible de trouver le pied de page de l&apos;image lue</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Could not read footer</source>
-        <translation>Impossibile leggere il fondo</translation>
+        <translation>Impossible de lire le pied de page</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Image type (non-TrueVision 2.0) not supported</source>
-        <translation>Il tipo di immagine (non-TrueVision 2.0) non è supportato</translation>
+        <translation>Le type d&apos;image (non-TrueVision 2.0) n&apos;est pas supporté</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Could not reset to read data</source>
-        <translation>Impossibile reinizializzare per la lettura dei dati</translation>
+        <translation>Impossible de réinitialiser pour lire les données</translation>
     </message>
 </context>
 <context>
@@ -9714,24 +9417,24 @@ Role of an accessible object</extracomment>
     <message>
         <location filename="../../qtbase/src/widgets/util/qundogroup.cpp" line="+385"/>
         <source>Undo %1</source>
-        <translation>Annulla %1</translation>
+        <translation>Annuler %1</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Undo</source>
         <comment>Default text for undo action</comment>
-        <translation>Annulla</translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location line="+31"/>
         <source>Redo %1</source>
-        <translation>Rifai %1</translation>
+        <translation>Rétablir %1</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Redo</source>
         <comment>Default text for redo action</comment>
-        <translation>Rifai</translation>
+        <translation>Rétablir</translation>
     </message>
 </context>
 <context>
@@ -9739,7 +9442,7 @@ Role of an accessible object</extracomment>
     <message>
         <location filename="../../qtbase/src/widgets/util/qundoview.cpp" line="+99"/>
         <source>&lt;empty&gt;</source>
-        <translation>&lt;vuoto&gt;</translation>
+        <translation>&lt;vide&gt;</translation>
     </message>
 </context>
 <context>
@@ -9747,24 +9450,24 @@ Role of an accessible object</extracomment>
     <message>
         <location filename="../../qtbase/src/widgets/util/qundostack.cpp" line="+1087"/>
         <source>Undo %1</source>
-        <translation>Annulla %1</translation>
+        <translation>Annuler %1</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Undo</source>
         <comment>Default text for undo action</comment>
-        <translation>Annulla</translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location line="+30"/>
         <source>Redo %1</source>
-        <translation>Rifai %1</translation>
+        <translation>Rétablir %1</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Redo</source>
         <comment>Default text for redo action</comment>
-        <translation>Rifai</translation>
+        <translation>Rétablir</translation>
     </message>
 </context>
 <context>
@@ -9772,77 +9475,77 @@ Role of an accessible object</extracomment>
     <message>
         <location filename="../../qtbase/src/widgets/widgets/qwidgettextcontrol.cpp" line="+3386"/>
         <source>LRM Left-to-right mark</source>
-        <translation>LRM indicatore di direzione da sinistra a destra</translation>
+        <translation>LRM Left-to-right mark</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>RLM Right-to-left mark</source>
-        <translation>RLM indicatore di direzione da destra a sinistra</translation>
+        <translation>RLM Right-to-left mark</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>ZWJ Zero width joiner</source>
-        <translation>ZWJ carattere congiungente di ampiezza zero</translation>
+        <translation>ZWJ Zero width joiner</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>ZWNJ Zero width non-joiner</source>
-        <translation>ZWNJ carattere non congiungente di ampiezza zero</translation>
+        <translation>ZWNJ Zero width non-joiner</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>ZWSP Zero width space</source>
-        <translation>ZWSP spazio di ampiezza zero</translation>
+        <translation>ZWSP Zero width space</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>LRE Start of left-to-right embedding</source>
-        <translation>LRE inizio incorporamento da sinistra a destra</translation>
+        <translation>LRE Start of left-to-right embedding</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>RLE Start of right-to-left embedding</source>
-        <translation>RLE inizio incorporamento da destra a sinistra</translation>
+        <translation>RLE Start of right-to-left embedding</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>LRO Start of left-to-right override</source>
-        <translation>LRO inizio forzatura da sinistra a destra</translation>
+        <translation>LRO Start of left-to-right override</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>RLO Start of right-to-left override</source>
-        <translation>RLO inizio forzatura da destra a sinistra</translation>
+        <translation>RLO Start of right-to-left override</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>PDF Pop directional formatting</source>
-        <translation>PDF ripristina impostazioni di direzione del testo</translation>
+        <translation>PDF Pop directional formatting</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>LRI Left-to-right isolate</source>
-        <translation>LRI Isolato da sinistra a destra</translation>
+        <translation>LRI Left-to-right isolate</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>RLI Right-to-left isolate</source>
-        <translation>RLI Isolato da destra a sinistra</translation>
+        <translation>RLI Right-to-left isolate</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>FSI First strong isolate</source>
-        <translation type="unfinished"></translation>
+        <translation>FSI First strong isolate</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>PDI Pop directional isolate</source>
-        <translation type="unfinished"></translation>
+        <translation>PDI Pop directional isolate</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Insert Unicode control character</source>
-        <translation>Inserisci carattere di controllo Unicode</translation>
+        <translation>Insérer caractère de contrôle Unicode</translation>
     </message>
 </context>
 <context>
@@ -9850,7 +9553,7 @@ Role of an accessible object</extracomment>
     <message>
         <location filename="../../qtbase/src/widgets/kernel/qwhatsthis.cpp" line="+506"/>
         <source>What&apos;s This?</source>
-        <translation>Che cos&apos;è?</translation>
+        <translation>Qu&apos;est-ce que c&apos;est ?</translation>
     </message>
 </context>
 <context>
@@ -9866,42 +9569,42 @@ Role of an accessible object</extracomment>
     <message>
         <location filename="../../qtbase/src/widgets/widgets/qwidgettextcontrol.cpp" line="-1066"/>
         <source>&amp;Undo</source>
-        <translation>Ann&amp;ulla</translation>
+        <translation>&amp;Annuler</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>&amp;Redo</source>
-        <translation>&amp;Rifai</translation>
+        <translation>&amp;Rétablir</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Cu&amp;t</source>
-        <translation>&amp;Taglia</translation>
+        <translation>Co&amp;uper</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>&amp;Copy</source>
-        <translation>&amp;Copia</translation>
+        <translation>Cop&amp;ier</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Copy &amp;Link Location</source>
-        <translation>Copia il co&amp;llegamento</translation>
+        <translation>Copier l&apos;adresse du &amp;lien</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>&amp;Paste</source>
-        <translation>&amp;Incolla</translation>
+        <translation>Co&amp;ller</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Delete</source>
-        <translation>Elimina</translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Select All</source>
-        <translation>Seleziona tutto</translation>
+        <translation>Tout sélectionner</translation>
     </message>
 </context>
 <context>
@@ -9910,23 +9613,23 @@ Role of an accessible object</extracomment>
         <source>Qt cannot load the direct2d platform plugin because the Direct2D version on this system is too old. The minimum system requirement for this platform plugin is Windows 7 SP1 with Platform Update.
 
 The minimum Direct2D version required is %1.%2.%3.%4. The Direct2D version on this system is %5.%6.%7.%8.</source>
-        <translation type="vanished">Qt non può caricare il plugin di piattaforma direct2d perché la versione di Direct2D nel sistema è troppo vecchia. Il requisito minimo per questo plugin di piattaforma è Windows 7 SP1 con Platform Update.
+        <translation type="vanished">Qt ne peut pas charger le plugin direct2d parceque la version système de Direct2D est trop ancienne. Le support système minimal requis pour ce plugin est Windows 7 SP1 avec Mise à jour de plateforme.
 
-La versione minima di Direct2D richiesta è %1.%2.%3.%4. La versione di Direct2D in questo sistema è %5.%6.%7.%8.</translation>
+La version Direct2D minimale requise est %1.%2.%3.%4. La version Direct2D courante est %5.%6.%7.%8.</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/plugins/platforms/direct2d/qwindowsdirect2dintegration.cpp" line="+112"/>
         <source>Qt cannot load the direct2d platform plugin because the Direct2D version on this system is too old. The minimum system requirement for this platform plugin is Windows 7 SP1 with Platform Update.
 
 The minimum Direct2D version required is %1. The Direct2D version on this system is %2.</source>
-        <translation type="unfinished">Qt non può caricare il plugin di piattaforma direct2d perché la versione di Direct2D nel sistema è troppo vecchia. Il requisito minimo per questo plugin di piattaforma è Windows 7 SP1 con Platform Update.
+        <translation type="unfinished">Qt ne peut pas charger le plugin direct2d parceque la version système de Direct2D est trop ancienne. Le support système minimal requis pour ce plugin est Windows 7 SP1 avec Mise à jour de plateforme.
 
-La versione minima di Direct2D richiesta è %1.%2.%3.%4. La versione di Direct2D in questo sistema è %5.%6.%7.%8. {2d?} {2D?} {7 ?} {1 ?} {2D?} {1.?} {2D?} {2.?}</translation>
+La version Direct2D minimale requise est %1.%2.%3.%4. La version Direct2D courante est %5.%6.%7.%8. {2d?} {2D?} {7 ?} {1 ?} {2D?} {1.?} {2D?} {2.?}</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Cannot load direct2d platform plugin</source>
-        <translation>Impossibile caricare il plugin di piattaforma direct2d</translation>
+        <translation>Impossible de charger le plugin direct2d</translation>
     </message>
 </context>
 <context>
@@ -9934,57 +9637,57 @@ La versione minima di Direct2D richiesta è %1.%2.%3.%4. La versione di Direct2D
     <message>
         <location filename="../../qtbase/src/widgets/dialogs/qwizard.cpp" line="+662"/>
         <source>Go Back</source>
-        <translation>Indietro</translation>
+        <translation>Aller au précédent</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>&lt; &amp;Back</source>
-        <translation>&lt; &amp;Precedente</translation>
+        <translation>&lt; &amp;Précédent</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Continue</source>
-        <translation>Continua</translation>
+        <translation>Continuer</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>&amp;Next</source>
-        <translation>&amp;Successivo</translation>
+        <translation>&amp;Suivant &gt;</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>&amp;Next &gt;</source>
-        <translation>&amp;Successivo &gt;</translation>
+        <translation>&amp;Suivant &gt;</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Commit</source>
-        <translation>Applica</translation>
+        <translation>Soumettre</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Done</source>
-        <translation>Fatto</translation>
+        <translation>Terminer</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>&amp;Finish</source>
-        <translation>&amp;Fine</translation>
+        <translation>&amp;Terminer</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Cancel</source>
-        <translation>Annulla</translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Help</source>
-        <translation>Aiuto</translation>
+        <translation>Aide</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>&amp;Help</source>
-        <translation>&amp;Aiuto</translation>
+        <translation>&amp;Aide</translation>
     </message>
 </context>
 <context>
@@ -9992,117 +9695,117 @@ La versione minima di Direct2D richiesta è %1.%2.%3.%4. La versione di Direct2D
     <message>
         <location filename="../../qtbase/src/xml/sax/qxml.cpp" line="+68"/>
         <source>no error occurred</source>
-        <translation>nessun errore rilevato</translation>
+        <translation>aucune erreur ne s&apos;est produite</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>error triggered by consumer</source>
-        <translation>errore causato dal consumatore</translation>
+        <translation>erreur déclenchée par le consommateur</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>unexpected end of file</source>
-        <translation>fine del file inattesa</translation>
+        <translation>fin de fichier inattendue</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>more than one document type definition</source>
-        <translation>definizione di più di un tipo di documento</translation>
+        <translation>plus d&apos;une définition de type de document</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>error occurred while parsing element</source>
-        <translation>errore durante l&apos;analisi dell&apos;elemento</translation>
+        <translation>une erreur s&apos;est produite pendant l&apos;analyse syntaxique de l&apos;élement</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>tag mismatch</source>
-        <translation>tag non corrispondente</translation>
+        <translation>le tag ne correspond pas</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>error occurred while parsing content</source>
-        <translation>errore durante l&apos;analisi del contenuto</translation>
+        <translation>une erreur s&apos;est produite pendant l&apos;analyse syntaxique du contenu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>unexpected character</source>
-        <translation>carattere non previsto</translation>
+        <translation>caractère inattendu</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>invalid name for processing instruction</source>
-        <translation>nome non valido per l&apos;istruzione di elaborazione</translation>
+        <translation>le nom d&apos;instruction est invalide</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>version expected while reading the XML declaration</source>
-        <translation>prevista versione nella lettura della dichiarazione XML</translation>
+        <translation>une version est attendue dans la déclaration XML</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>wrong value for standalone declaration</source>
-        <translation>valore errato per la dichiarazione standalone</translation>
+        <translation>valeur incorrecte pour une déclaration &quot;standalone&quot;</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>encoding declaration or standalone declaration expected while reading the XML declaration</source>
-        <translation>prevista dichiarazione di codifica o dichiarazione standalone durante la lettura della dichiarazione XML</translation>
+        <translation>déclaration d&apos;encodage ou déclaration &quot;standalone&quot; attendue lors de la lecture de la déclaration XML</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>standalone declaration expected while reading the XML declaration</source>
-        <translation>prevista dichiarazione standalone durante la lettura della dichiarazione XML</translation>
+        <translation>déclaration &quot;standalone&quot; attendue lors de la lecture de la déclaration XML</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>error occurred while parsing document type definition</source>
-        <translation>si è verificato un errore nell&apos;analisi della definizione del documento</translation>
+        <translation>une erreur s&apos;est produite pendant l&apos;analyse syntaxique de la définition du type de document</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>letter is expected</source>
-        <translation>lettera prevista</translation>
+        <translation>une lettre est attendue</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>error occurred while parsing comment</source>
-        <translation>errore durante l&apos;analisi del commento</translation>
+        <translation>une erreur s&apos;est produite pendant l&apos;analyse syntaxique du commentaire</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>error occurred while parsing reference</source>
-        <translation>errore durante l&apos;analisi del riferimento</translation>
+        <translation>une erreur s&apos;est produite pendant l&apos;analyse syntaxique d&apos;une référence</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>internal general entity reference not allowed in DTD</source>
-        <translation>riferimento all&apos;entità generale interna non consentito nella DTD</translation>
+        <translation>référence à une entité générale interne non autorisée dans la DTD</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>external parsed general entity reference not allowed in attribute value</source>
-        <translation>riferimento ad entità esterna generale analizzata non consentito in un valore di attributo</translation>
+        <translation>référence à une entité générale externe non autorisée dans la valeur d&apos;attribut</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>external parsed general entity reference not allowed in DTD</source>
-        <translation>riferimento a entità esterna generale analizzata non consetito nella DTD</translation>
+        <translation>référence à une entité générale externe non autorisée dans le DTD</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>unparsed entity reference in wrong context</source>
-        <translation>riferimento ad entità non analizzato nel contesto errato</translation>
+        <translation>référence à une entité non analysée dans le mauvais contexte</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>recursive entities</source>
-        <translation>entità ricorsive</translation>
+        <translation>entités récursives</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>error in the text declaration of an external entity</source>
-        <translation>errore nella dichiarazione testuale di una entità esterna</translation>
+        <translation>erreur dans la déclaration texte d&apos;une entité externe</translation>
     </message>
 </context>
 <context>
@@ -10111,33 +9814,33 @@ La versione minima di Direct2D richiesta è %1.%2.%3.%4. La versione di Direct2D
         <location filename="../../qtbase/src/corelib/serialization/qxmlstream.cpp" line="+615"/>
         <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="+1790"/>
         <source>Extra content at end of document.</source>
-        <translation>Contenuti aggiuntivi alla fine del documento.</translation>
+        <translation>Contenu superflu à la fin du document.</translation>
     </message>
     <message>
         <location line="+278"/>
         <source>Invalid entity value.</source>
-        <translation>Valore dell&apos;entità non valido.</translation>
+        <translation>La valeur de l&apos;entité est invalide.</translation>
     </message>
     <message>
         <location line="+109"/>
         <source>Invalid XML character.</source>
-        <translation>Carattere XML non valido.</translation>
+        <translation>Le caractère XML est invalide.</translation>
     </message>
     <message>
         <location line="+263"/>
         <source>Sequence &apos;]]&gt;&apos; not allowed in content.</source>
-        <translation>La sequenza &apos;]]&gt;&apos; non è permessa nel contenuto.</translation>
+        <translation>La séquence &quot;]]&gt;&quot; n&apos;est pas autorisée dans le contenu.</translation>
     </message>
     <message>
         <location line="+280"/>
         <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="-694"/>
         <source>Encountered incorrectly encoded content.</source>
-        <translation>Rilevato contenuto non codificato correttamente.</translation>
+        <translation>Du contenu avec un encodage incorrect a été rencontré.</translation>
     </message>
     <message>
         <location line="+30"/>
         <source>Namespace prefix &apos;%1&apos; not declared</source>
-        <translation>Il prefisso &apos;%1&apos; del namespace non è stato dichiarato</translation>
+        <translation>Le préfixe d&apos;espace de noms &quot;%1&quot; n&apos;a pas été déclaré</translation>
     </message>
     <message>
         <location line="+34"/>
@@ -10145,66 +9848,62 @@ La versione minima di Direct2D richiesta è %1.%2.%3.%4. La versione di Direct2D
         <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="+615"/>
         <location line="+53"/>
         <source>Illegal namespace declaration.</source>
-        <translation>Dichiarazione di namespace non valida.</translation>
-    </message>
-    <message>
-        <source>Attribute redefined.</source>
-        <translation type="vanished">Attributo ridefinito.</translation>
+        <translation>La déclaration d&apos;espace de noms n&apos;est pas correcte.</translation>
     </message>
     <message>
         <location line="+34"/>
         <source>Attribute &apos;%1&apos; redefined.</source>
-        <translation>Attributo &apos;%1&apos; ridefinito.</translation>
+        <translation>L&apos;attribut &apos;%1&apos; est redéfini.</translation>
     </message>
     <message>
         <location line="+115"/>
         <source>Unexpected character &apos;%1&apos; in public id literal.</source>
-        <translation>Carattere inatteso &apos;%1&apos; in letterale identificativo pubblico.</translation>
+        <translation>Le caractère &quot;%1&quot; est inattendu pour une valeur d&apos;identifiant public.</translation>
     </message>
     <message>
         <location line="+28"/>
         <source>Invalid XML version string.</source>
-        <translation>Stringa di versione XML non valida.</translation>
+        <translation>La chaîne de version XML est invalide.</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Unsupported XML version.</source>
-        <translation>Versione di XML non supportata.</translation>
+        <translation>La version XML n&apos;est pas supportée.</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>The standalone pseudo attribute must appear after the encoding.</source>
-        <translation>Lo pseudo-attributo standalone deve comparire dopo la codifica.</translation>
+        <translation>Le pseudo-attribut &quot;standalone&quot; doit apparaître après l&apos;encodage.</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>%1 is an invalid encoding name.</source>
-        <translation>%1 è un nome di codifica non valido.</translation>
+        <translation>%1 n&apos;est pas un nom d&apos;encodage valide.</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Encoding %1 is unsupported</source>
-        <translation>La codifica %1 non è supportata</translation>
+        <translation>%1 n&apos;est pas un encodage supporté</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Standalone accepts only yes or no.</source>
-        <translation>Standalone accetta solo si o no.</translation>
+        <translation>Les seules valeurs possibles pour &quot;standalone&quot; sont &quot;yes&quot; ou &quot;no&quot;.</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Invalid attribute in XML declaration.</source>
-        <translation>Attributo non valido nella dichiarazione XML.</translation>
+        <translation>L&apos;attribut dans la déclaration XML est invalide.</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Premature end of document.</source>
-        <translation>Fine del documento prematura.</translation>
+        <translation>Fin de document inattendue.</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Invalid document.</source>
-        <translation>Documento non valido.</translation>
+        <translation>Le document est invalide.</translation>
     </message>
     <message>
         <location line="+36"/>
@@ -10246,24 +9945,24 @@ La versione minima di Direct2D richiesta è %1.%2.%3.%4. La versione di Direct2D
     </message>
     <message>
         <source>Expected </source>
-        <translation type="vanished">Previsto </translation>
+        <translation type="vanished">Attendu </translation>
     </message>
     <message>
         <source>, but got &apos;</source>
-        <translation type="vanished">, ma ottenuto &apos;</translation>
+        <translation type="vanished">, mais trouvé &apos;</translation>
     </message>
     <message>
         <source>Unexpected &apos;</source>
-        <translation type="vanished">Imprevisto &apos;</translation>
+        <translation type="vanished">Inattendu &apos;</translation>
     </message>
     <message>
         <location line="+258"/>
         <source>Expected character data.</source>
-        <translation>Previsti dati a carattere.</translation>
+        <translation>Des données texte sont attendues.</translation>
     </message>
     <message>
         <source>Recursive entity detected.</source>
-        <translation type="vanished">Entità ricorsiva rilevata.</translation>
+        <translation type="vanished">Une entité récursive est détectée.</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="-983"/>
@@ -10278,64 +9977,64 @@ La versione minima di Direct2D richiesta è %1.%2.%3.%4. La versione di Direct2D
     <message>
         <location line="+520"/>
         <source>Start tag expected.</source>
-        <translation>Previsto tag di inizio.</translation>
+        <translation>Un tag de départ est attendu.</translation>
     </message>
     <message>
         <location line="+193"/>
         <source>NDATA in parameter entity declaration.</source>
-        <translation>NDATA nella dichiarazione dell&apos;entità del parametro.</translation>
+        <translation>NDATA dans une déclaration de paramètre d&apos;entité.</translation>
     </message>
     <message>
         <location line="+30"/>
         <source>XML declaration not at start of document.</source>
-        <translation>Dichiarazione XML non all&apos;inizio del documento.</translation>
+        <translation>La déclaration XML doit être en début de document.</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>%1 is an invalid processing instruction name.</source>
-        <translation>%1 non è un nome di elaborazione dell&apos;istruzione valido.</translation>
+        <translation>%1 n&apos;est pas un nom d&apos;instruction valide.</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Invalid processing instruction name.</source>
-        <translation>nome non valido per l&apos;istruzione di elaborazione.</translation>
+        <translation>Le nom d&apos;instruction est invalide.</translation>
     </message>
     <message>
         <location line="+114"/>
         <source>%1 is an invalid PUBLIC identifier.</source>
-        <translation>%1 è un identificatore PUBLIC non valido.</translation>
+        <translation>%1 n&apos;est pas un identifiant PUBLIC valide.</translation>
     </message>
     <message>
         <location line="+118"/>
         <source>Invalid XML name.</source>
-        <translation>Nome XML non valido.</translation>
+        <translation>Le nom XML est invalide.</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Opening and ending tag mismatch.</source>
-        <translation>Apertura e chiusura del tag non corrispondenti.</translation>
+        <translation>Les tags ouvrant et fermants ne correspondent pas.</translation>
     </message>
     <message>
         <location line="+5"/>
         <location line="+61"/>
         <location line="+40"/>
         <source>Entity &apos;%1&apos; not declared.</source>
-        <translation>L&apos;entità &apos;%1&apos; non è stata dichiarata.</translation>
+        <translation>L&apos;entité &quot;%1&quot; n&apos;est pas déclarée.</translation>
     </message>
     <message>
         <location line="-88"/>
         <source>Reference to unparsed entity &apos;%1&apos;.</source>
-        <translation>Riferimento all&apos;entità &apos;%1&apos; non analizzata.</translation>
+        <translation>La référence à l&apos;entité &quot;%1&quot; n&apos;est pas analysée.</translation>
     </message>
     <message>
         <location line="+62"/>
         <source>Reference to external entity &apos;%1&apos; in attribute value.</source>
-        <translation>Riferimento all&apos;entità esterna &apos;%1&apos; nel valore dell&apos;attributo.</translation>
+        <translation>La référence à l&apos;entité externe &quot;%1&quot; comme valeur d&apos;attribut.</translation>
     </message>
     <message>
         <location line="+40"/>
         <source>Invalid character reference.</source>
-        <translation>Riferimento al carattere non valido.</translation>
+        <translation>Référence à un caractère invalide.</translation>
     </message>
 </context>
 </TS>

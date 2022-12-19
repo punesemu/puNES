@@ -657,14 +657,15 @@ static const _opt opt_rewind[] = {
 	{NULL, uL("unlimited"), RWND_UNLIMITED_MINUTES}
 };
 static const _opt opt_languages[] = {
-	{NULL, uL("english")   , LNG_ENGLISH},
-	{NULL, uL("italian")   , LNG_ITALIAN},
-	{NULL, uL("russian")   , LNG_RUSSIAN},
-	{NULL, uL("spanish")   , LNG_SPANISH},
-	{NULL, uL("hungarian") , LNG_HUNGARIAN},
-	{NULL, uL("turkish")   , LNG_TURKISH},
-	{NULL, uL("portuguese"), LNG_PORTUGUESEBR},
-	{NULL, uL("chinese simplified"), LNG_CHINESE_SIMPLIFIED}
+	{NULL, uL("english")           , LNG_ENGLISH},
+	{NULL, uL("italian")           , LNG_ITALIAN},
+	{NULL, uL("russian")           , LNG_RUSSIAN},
+	{NULL, uL("spanish")           , LNG_SPANISH},
+	{NULL, uL("hungarian")         , LNG_HUNGARIAN},
+	{NULL, uL("turkish")           , LNG_TURKISH},
+	{NULL, uL("portuguese")        , LNG_PORTUGUESEBR},
+	{NULL, uL("chinese simplified"), LNG_CHINESE_SIMPLIFIED},
+	{NULL, uL("french")            , LNG_FRENCH}
 };
 static const _opt opt_nsf_player_effect[] = {
 	{NULL, uL("bars")       , NSF_EFFECT_BARS},
@@ -1191,11 +1192,11 @@ static const _settings main_cfg[] = {
 	},
 	{
 		uL("GUI"), uL("language"), uL("english"),
-		uL("# possible values: english, italian, russian, spanish, hungarian, turkish, portuguese," NEWLINE)
-		uL("#                  chinese simplified"),
-		uL("    --language            GUI language          : english, italian, russian, spanish," NEWLINE)
-		uL("                                                  hungarian, turkish, portuguese,"  NEWLINE)
-		uL("                                                  chinese simplified"),
+		uL("# possible values: chinese simplified, english, french, hungarian, italian, portuguese," NEWLINE)
+		uL("#                  russian, spanish, turkish"),
+		uL("    --language            GUI language          : chinese simplified, english," NEWLINE)
+		uL("                                                  french, hungarian, italian,"  NEWLINE)
+		uL("                                                  russian, spanish"),
 		{LENGTH(opt_languages), opt_languages}
 	},
 	{

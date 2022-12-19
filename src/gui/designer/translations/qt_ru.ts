@@ -4,7 +4,7 @@
 <context>
     <name>CloseButton</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qtabbar.cpp" line="+2650"/>
+        <location filename="../../qtbase/src/widgets/widgets/qtabbar.cpp" line="+2772"/>
         <source>Close Tab</source>
         <translation>Закрыть вкладку</translation>
     </message>
@@ -12,51 +12,67 @@
 <context>
     <name>MAC_APPLICATION_MENU</name>
     <message>
-        <location filename="../../qtbase/src/plugins/platforms/cocoa/messages.cpp" line="+56"/>
+        <location filename="../../qtbase/src/plugins/platforms/cocoa/qcocoamenuitem.mm" line="+61"/>
         <source>About %1</source>
-        <translation type="unfinished"></translation>
+        <translation>О %1</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Preferences...</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Services</source>
-        <translation type="unfinished"></translation>
+        <translation>Службы</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Hide %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Скрыть %1</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Hide Others</source>
-        <translation type="unfinished"></translation>
+        <translation>Скрыть другое</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Show All</source>
-        <translation type="unfinished"></translation>
+        <translation>Показать всё</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Quit %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Выйти из %1</translation>
+    </message>
+</context>
+<context>
+    <name>Print Device Input Slot</name>
+    <message>
+        <location filename="../../qtbase/src/printsupport/kernel/qplatformprintdevice.cpp" line="+292"/>
+        <source>Automatic</source>
+        <translation>Автоматически</translation>
+    </message>
+</context>
+<context>
+    <name>Print Device Output Bin</name>
+    <message>
+        <location line="+20"/>
+        <source>Automatic</source>
+        <translation>Автоматически</translation>
     </message>
 </context>
 <context>
     <name>QAbstractSocket</name>
     <message>
-        <location filename="../../qtbase/src/network/access/qhttpnetworkconnection.cpp" line="+896"/>
-        <location filename="../../qtbase/src/network/socket/qabstractsocket.cpp" line="+2195"/>
+        <location filename="../../qtbase/src/network/access/qhttpnetworkconnection.cpp" line="+906"/>
+        <location filename="../../qtbase/src/network/socket/qabstractsocket.cpp" line="+2204"/>
         <source>Socket operation timed out</source>
         <translation>Время на операцию истекло</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/socket/qabstractsocket.cpp" line="-1552"/>
+        <location filename="../../qtbase/src/network/socket/qabstractsocket.cpp" line="-1547"/>
         <location line="+1069"/>
         <location line="+229"/>
         <source>Operation on socket is not supported</source>
@@ -65,7 +81,7 @@
     <message>
         <location line="-896"/>
         <location filename="../../qtbase/src/network/socket/qhttpsocketengine.cpp" line="+677"/>
-        <location filename="../../qtbase/src/network/socket/qsocks5socketengine.cpp" line="+649"/>
+        <location filename="../../qtbase/src/network/socket/qsocks5socketengine.cpp" line="+647"/>
         <location line="+26"/>
         <source>Host not found</source>
         <translation>Узел не найден</translation>
@@ -78,17 +94,17 @@
         <translation>Отказано в соединении</translation>
     </message>
     <message>
-        <location line="+129"/>
+        <location line="+131"/>
         <source>Connection timed out</source>
         <translation>Время на соединение истекло</translation>
     </message>
     <message>
-        <location line="+461"/>
+        <location line="+459"/>
         <source>Trying to connect while connection is in progress</source>
         <translation>Попытка подключиться во время подключения</translation>
     </message>
     <message>
-        <location line="+864"/>
+        <location line="+860"/>
         <source>Socket is not connected</source>
         <translation>Сокет не подключён</translation>
     </message>
@@ -101,12 +117,12 @@
 <context>
     <name>QAbstractSpinBox</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qabstractspinbox.cpp" line="+1321"/>
+        <location filename="../../qtbase/src/widgets/widgets/qabstractspinbox.cpp" line="+1323"/>
         <source>&amp;Select All</source>
         <translation>&amp;Выделить всё</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+9"/>
         <source>&amp;Step up</source>
         <translation>Шаг вв&amp;ерх</translation>
     </message>
@@ -119,7 +135,7 @@
 <context>
     <name>QAccessibleActionInterface</name>
     <message>
-        <location filename="../../qtbase/src/gui/accessible/qaccessible.cpp" line="+2812"/>
+        <location filename="../../qtbase/src/gui/accessible/qaccessible.cpp" line="+2807"/>
         <source>Press</source>
         <translation>Нажать</translation>
     </message>
@@ -242,24 +258,24 @@
 <context>
     <name>QAndroidPlatformTheme</name>
     <message>
-        <location filename="../../qtbase/src/plugins/platforms/android/qandroidplatformtheme.cpp" line="+500"/>
+        <location filename="../../qtbase/src/plugins/platforms/android/qandroidplatformtheme.cpp" line="+502"/>
         <source>Yes</source>
-        <translation type="unfinished">Да</translation>
+        <translation>Да</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Yes to All</source>
-        <translation type="unfinished"></translation>
+        <translation>Да для всех</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>No</source>
-        <translation type="unfinished">Нет</translation>
+        <translation>Нет</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>No to All</source>
-        <translation type="unfinished"></translation>
+        <translation>Нет для всех</translation>
     </message>
 </context>
 <context>
@@ -278,83 +294,84 @@
 <context>
     <name>QCocoaMenuItem</name>
     <message>
-        <location filename="../../qtbase/src/plugins/platforms/cocoa/messages.cpp" line="-11"/>
+        <location filename="../../qtbase/src/plugins/platforms/cocoa/qcocoamenuitem.mm" line="+345"/>
         <source>About Qt</source>
-        <translation type="unfinished">О Qt</translation>
+        <translation>О Qt</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="-158"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>здесь и далее (до exit включительно) слова используются для определения пункта меню по началу его надписи (caption).</translatorcomment>
+        <translation>О </translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Config</source>
-        <translation type="unfinished"></translation>
+        <translation>Конфигурация</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Preference</source>
-        <translation type="unfinished"></translation>
+        <translation>Предпочтени</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Options</source>
-        <translation type="unfinished">Параметры</translation>
+        <translation>Параметры</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Setting</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройк</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Setup</source>
-        <translation type="unfinished"></translation>
+        <translation>Параметр</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Выйти</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Exit</source>
-        <translation type="unfinished">Выход</translation>
+        <translation>Выход</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Cut</source>
-        <translation type="unfinished">Вырезать</translation>
+        <translation>Вырезать</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Copy</source>
-        <translation type="unfinished">Копировать</translation>
+        <translation>Копировать</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Paste</source>
-        <translation type="unfinished">Вставить</translation>
+        <translation>Вставить</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Select All</source>
-        <translation type="unfinished">Выделить всё</translation>
+        <translation>Выделить всё</translation>
     </message>
 </context>
 <context>
     <name>QCocoaTheme</name>
     <message>
-        <location line="+7"/>
+        <location filename="../../qtbase/src/plugins/platforms/cocoa/qcocoatheme.mm" line="+550"/>
         <source>Don&apos;t Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Не сохранять</translation>
     </message>
 </context>
 <context>
     <name>QColorDialog</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qcolordialog.cpp" line="+1473"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qcolordialog.cpp" line="+1480"/>
         <source>Hu&amp;e:</source>
         <translation>&amp;Тон:</translation>
     </message>
@@ -401,17 +418,17 @@ Press ESC to cancel</source>
 Нажмите ESC для отмены</translation>
     </message>
     <message>
-        <location line="+221"/>
+        <location line="+224"/>
         <source>&amp;Pick Screen Color</source>
         <translation>&amp;Взять цвет с экрана</translation>
     </message>
     <message>
-        <location line="-193"/>
+        <location line="-196"/>
         <source>Select Color</source>
         <translation>Выбор цвета</translation>
     </message>
     <message>
-        <location line="+190"/>
+        <location line="+193"/>
         <source>&amp;Basic colors</source>
         <translation>&amp;Основные цвета</translation>
     </message>
@@ -429,7 +446,7 @@ Press ESC to cancel</source>
 <context>
     <name>QComboBox</name>
     <message>
-        <location filename="../../qtbase/src/widgets/itemviews/qitemeditorfactory.cpp" line="+613"/>
+        <location filename="../../qtbase/src/widgets/itemviews/qitemeditorfactory.cpp" line="+611"/>
         <source>False</source>
         <translation>Нет</translation>
     </message>
@@ -439,7 +456,7 @@ Press ESC to cancel</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/widgets/accessible/complexwidgets.cpp" line="+380"/>
+        <location filename="../../qtbase/src/widgets/accessible/complexwidgets.cpp" line="+393"/>
         <source>Open the combo box selection popup</source>
         <translation>Открыть раскрывающийся список</translation>
     </message>
@@ -447,14 +464,19 @@ Press ESC to cancel</source>
 <context>
     <name>QCommandLineParser</name>
     <message>
-        <location filename="../../qtbase/src/corelib/tools/qcommandlineparser.cpp" line="+412"/>
+        <location filename="../../qtbase/src/corelib/tools/qcommandlineparser.cpp" line="+416"/>
         <source>Displays version information.</source>
         <translation>Показать сведения о версии.</translation>
     </message>
     <message>
-        <location line="+25"/>
-        <source>Displays this help.</source>
-        <translation>Показать эту справку.</translation>
+        <location line="+27"/>
+        <source>Displays help on commandline options.</source>
+        <translation>Вывод справки по параметрам командной строки.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Displays help including Qt specific options.</source>
+        <translation>Вывод справки с особыми параметрами Qt.</translation>
     </message>
     <message>
         <location line="+92"/>
@@ -467,7 +489,7 @@ Press ESC to cancel</source>
         <translation>Неизвестные параметры: %1.</translation>
     </message>
     <message>
-        <location line="+132"/>
+        <location line="+136"/>
         <source>Missing value after &apos;%1&apos;.</source>
         <translation>Отсутствует значение после «%1».</translation>
     </message>
@@ -477,7 +499,7 @@ Press ESC to cancel</source>
         <translation>Неожиданное значение после «%1».</translation>
     </message>
     <message>
-        <location line="+439"/>
+        <location line="+455"/>
         <source>[options]</source>
         <translation>[параметры]</translation>
     </message>
@@ -492,7 +514,7 @@ Press ESC to cancel</source>
         <translation>Параметры:</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+33"/>
         <source>Arguments:</source>
         <translation>Аргументы:</translation>
     </message>
@@ -741,7 +763,7 @@ Press ESC to cancel</source>
 <context>
     <name>QDBusTrayIcon</name>
     <message>
-        <location filename="../../qtbase/src/platformsupport/themes/genericunix/dbustray/qdbustrayicon.cpp" line="+300"/>
+        <location filename="../../qtbase/src/platformsupport/themes/genericunix/dbustray/qdbustrayicon.cpp" line="+302"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -749,7 +771,7 @@ Press ESC to cancel</source>
 <context>
     <name>QDateTimeParser</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qdatetimeedit.cpp" line="+2311"/>
+        <location filename="../../qtbase/src/widgets/widgets/qdatetimeedit.cpp" line="+2429"/>
         <source>AM</source>
         <translatorcomment>до полудня</translatorcomment>
         <translation>ДП</translation>
@@ -761,7 +783,7 @@ Press ESC to cancel</source>
         <translation>дп</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+3"/>
         <source>PM</source>
         <translatorcomment>после полудня</translatorcomment>
         <translation>ПП</translation>
@@ -776,7 +798,7 @@ Press ESC to cancel</source>
 <context>
     <name>QDialog</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qdialog.cpp" line="+691"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qdialog.cpp" line="+690"/>
         <source>What&apos;s This?</source>
         <translation>Что это?</translation>
     </message>
@@ -784,7 +806,7 @@ Press ESC to cancel</source>
 <context>
     <name>QDialogButtonBox</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qmessagebox.cpp" line="+2028"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qmessagebox.cpp" line="+2032"/>
         <location line="+446"/>
         <source>OK</source>
         <translation>OK</translation>
@@ -793,7 +815,7 @@ Press ESC to cancel</source>
 <context>
     <name>QDirModel</name>
     <message>
-        <location filename="../../qtbase/src/widgets/itemviews/qdirmodel.cpp" line="+440"/>
+        <location filename="../../qtbase/src/widgets/itemviews/qdirmodel.cpp" line="+442"/>
         <source>Name</source>
         <translation>Имя</translation>
     </message>
@@ -846,7 +868,7 @@ Press ESC to cancel</source>
         <translation>Ещё не поддерживается под Android</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/kernel/qdnslookup_unix.cpp" line="+137"/>
+        <location filename="../../qtbase/src/network/kernel/qdnslookup_unix.cpp" line="+152"/>
         <source>Resolver functions not found</source>
         <translation>Функция разрешения имён не найдена</translation>
     </message>
@@ -857,7 +879,7 @@ Press ESC to cancel</source>
     </message>
     <message>
         <location line="+75"/>
-        <location filename="../../qtbase/src/network/kernel/qdnslookup_win.cpp" line="+81"/>
+        <location filename="../../qtbase/src/network/kernel/qdnslookup_win.cpp" line="+80"/>
         <source>Server could not process query</source>
         <translation>Сервер не смог обработать запрос</translation>
     </message>
@@ -960,7 +982,7 @@ Press ESC to cancel</source>
 <context>
     <name>QDockWidget</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qdockwidget.cpp" line="+741"/>
+        <location filename="../../qtbase/src/widgets/widgets/qdockwidget.cpp" line="+746"/>
         <source>Float</source>
         <extracomment>Accessible name for button undocking a dock widget (floating state)</extracomment>
         <translation>Плавающее</translation>
@@ -983,9 +1005,88 @@ Press ESC to cancel</source>
     </message>
 </context>
 <context>
+    <name>QDomParser</name>
+    <message>
+        <location filename="../../qtbase/src/xml/dom/qdomhelpers.cpp" line="+504"/>
+        <source>Error occurred while processing XML declaration</source>
+        <translation>Возникла ошибка при обработке объявления XML</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Multiple DTD sections are not allowed</source>
+        <translation>Недопустимо более одной DTD секции</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Error occurred while processing document type declaration</source>
+        <translation>Возникла ошибка при обработке объявления типа документа</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Error occurred while processing comment</source>
+        <translation>Возникла ошибка при обработке комментария</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <location line="+64"/>
+        <source>Error occurred while processing a processing instruction</source>
+        <translation>Возникла ошибка при обработке инструкции обработки</translation>
+    </message>
+    <message>
+        <location line="-38"/>
+        <source>Error occurred while processing a start element</source>
+        <translation>Возникла ошибка при обработке начального элемента</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Unexpected end element &apos;%1&apos;</source>
+        <translation>Неожиданный конечный элемент «%1»</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Error occurred while processing an end element</source>
+        <translation>Возникла ошибка при обработке конечного элемента</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Error occurred while processing the element content</source>
+        <translation>Возникла ошибка при обработке содержимого элемента</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Error occurred while processing comments</source>
+        <translation>Возникла ошибка при обработке комментариев</translation>
+    </message>
+    <message>
+        <location line="+15"/>
+        <source>Error occurred while processing an entity reference</source>
+        <translation>Возникла ошибка при обработке ссылки на объект</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Unexpected token</source>
+        <translation>Неожиданный токен</translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <source>Tag mismatch</source>
+        <translation>Теги не соответствуют</translation>
+    </message>
+    <message>
+        <location line="+23"/>
+        <source>Error occurred while processing entity declaration</source>
+        <translation>Возникла ошибка при обработке объявления объекта</translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>Error occurred while processing notation declaration</source>
+        <translation type="unfinished">Ошибка при обработке объявления нотации</translation>
+    </message>
+</context>
+<context>
     <name>QDtls</name>
     <message>
-        <location filename="../../qtbase/src/network/ssl/qdtls.cpp" line="+383"/>
+        <location filename="../../qtbase/src/network/ssl/qdtls.cpp" line="+381"/>
         <source>Invalid (empty) secret</source>
         <translation>Неверный (пустой) пароль</translation>
     </message>
@@ -1081,7 +1182,7 @@ Press ESC to cancel</source>
         <translation>Невозможно прочитать датаграмму, не зашифрован</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/ssl/qdtls_openssl.cpp" line="+710"/>
+        <location filename="../../qtbase/src/network/ssl/qdtls_openssl.cpp" line="+653"/>
         <source>%1 failed</source>
         <extracomment>%1: Some function</extracomment>
         <translation>%1 завершилась с ошибкой</translation>
@@ -1097,12 +1198,12 @@ Press ESC to cancel</source>
         <translation>Неверная версия протокола, требуется протокол DTLS</translation>
     </message>
     <message>
-        <location line="+234"/>
+        <location line="+221"/>
         <source>BIO_ADD_new failed, cannot start handshake</source>
         <translation>BIO_ADD_new завершилась с ошибкой, невозможно начать квитирование</translation>
     </message>
     <message>
-        <location line="+16"/>
+        <location line="+13"/>
         <source>Cannot start the handshake, verified client hello expected</source>
         <translation>Невозможно начать квитирование, требуется проверенное приветствие клиента (client hello)</translation>
     </message>
@@ -1140,7 +1241,7 @@ Press ESC to cancel</source>
         <translation>Требуется допустимый сокет UDP, непустая датаграмма и корректный адрес/порт</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/ssl/qdtls_openssl.cpp" line="-377"/>
+        <location filename="../../qtbase/src/network/ssl/qdtls_openssl.cpp" line="-370"/>
         <source>BIO_ADDR_new failed, ignoring client hello</source>
         <translation>BIO_ADD_new завершилась с ошибкой, приветствие клиента (client hello) пропускается</translation>
     </message>
@@ -1186,7 +1287,7 @@ Press ESC to cancel</source>
 <context>
     <name>QFile</name>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qfile.cpp" line="+567"/>
+        <location filename="../../qtbase/src/corelib/io/qfile.cpp" line="+642"/>
         <source>Destination file is the same file.</source>
         <translation>Файл назначения совпадает с исходным файлом.</translation>
     </message>
@@ -1234,8 +1335,8 @@ Press ESC to cancel</source>
     </message>
     <message>
         <location line="+18"/>
-        <source>Cannot open for output</source>
-        <translation>Невозможно открыть для вывода</translation>
+        <source>Cannot open for output: %1</source>
+        <translation>Не удалось открыть для вывода: %1</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -1243,7 +1344,7 @@ Press ESC to cancel</source>
         <translation>Сбой записи блока</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+20"/>
         <source>Cannot create %1 for output</source>
         <translation>Невозможно создать %1 для вывода</translation>
     </message>
@@ -1251,7 +1352,7 @@ Press ESC to cancel</source>
 <context>
     <name>QFileDevice</name>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qfiledevice.cpp" line="+739"/>
+        <location filename="../../qtbase/src/corelib/io/qfiledevice.cpp" line="+737"/>
         <source>No file engine available or engine does not support UnMapExtension</source>
         <translation>Нет файлового движка или он не поддерживает UnMapExtension</translation>
     </message>
@@ -1334,7 +1435,7 @@ Press ESC to cancel</source>
         <translation>Типы файлов:</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qfiledialog.cpp" line="+588"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qfiledialog.cpp" line="+603"/>
         <source>Find Directory</source>
         <translation>Найти каталог</translation>
     </message>
@@ -1344,12 +1445,12 @@ Press ESC to cancel</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+3"/>
         <source>Save As</source>
         <translation>Сохранить как</translation>
     </message>
     <message>
-        <location line="+24"/>
+        <location line="+27"/>
         <source>Directory:</source>
         <translation>Каталог:</translation>
     </message>
@@ -1360,7 +1461,7 @@ Press ESC to cancel</source>
     </message>
     <message>
         <location line="+17"/>
-        <location line="+13"/>
+        <location line="+16"/>
         <source>&amp;Open</source>
         <translation>&amp;Открыть</translation>
     </message>
@@ -1375,7 +1476,7 @@ Press ESC to cancel</source>
         <translation>&amp;Сохранить</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/gui/kernel/qplatformdialoghelper.cpp" line="+633"/>
+        <location filename="../../qtbase/src/gui/kernel/qplatformdialoghelper.cpp" line="+640"/>
         <source>All Files (*)</source>
         <translation>Все файлы (*)</translation>
     </message>
@@ -1405,18 +1506,18 @@ Press ESC to cancel</source>
         <translation>&amp;Новая папка</translation>
     </message>
     <message>
-        <location line="+866"/>
+        <location line="+875"/>
         <source>All files (*)</source>
         <translation>Все файлы (*)</translation>
     </message>
     <message>
-        <location line="+175"/>
+        <location line="+180"/>
         <source>Directories</source>
         <translation>Каталоги</translation>
     </message>
     <message>
-        <location line="+945"/>
-        <location line="+1032"/>
+        <location line="+1088"/>
+        <location line="+1077"/>
         <source>%1
 Directory not found.
 Please verify the correct directory name was given.</source>
@@ -1425,7 +1526,7 @@ Please verify the correct directory name was given.</source>
 Проверьте правильность указанного имени каталога.</translation>
     </message>
     <message>
-        <location line="-998"/>
+        <location line="-1043"/>
         <source>%1 already exists.
 Do you want to replace it?</source>
         <translation>%1 уже существует.
@@ -1441,7 +1542,7 @@ Please verify the correct file name was given.</source>
 Проверьте правильность указанного имени файла.</translation>
     </message>
     <message>
-        <location line="+627"/>
+        <location line="+665"/>
         <source>New Folder</source>
         <translation>Новая папка</translation>
     </message>
@@ -1469,12 +1570,12 @@ Do you want to delete it anyway?</source>
         <translation>Не удалось удалить каталог.</translation>
     </message>
     <message>
-        <location line="+439"/>
+        <location line="+452"/>
         <source>Recent Places</source>
         <translation>Недавние документы</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qsidebar.cpp" line="+450"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qsidebar.cpp" line="+448"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
@@ -1562,7 +1663,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QFileSystemModel</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qfilesystemmodel.cpp" line="+867"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qfilesystemmodel.cpp" line="+868"/>
         <source>Invalid filename</source>
         <translation>Некорректное имя файла</translation>
     </message>
@@ -1572,7 +1673,7 @@ Do you want to delete it anyway?</source>
         <translation>&lt;b&gt;Имя «%1» не может быть использовано.&lt;/b&gt;&lt;p&gt;Попробуйте использовать имя меньшей длины и/или без символов пунктуации.</translation>
     </message>
     <message>
-        <location line="+103"/>
+        <location line="+102"/>
         <source>Name</source>
         <translation>Имя</translation>
     </message>
@@ -1599,7 +1700,7 @@ Do you want to delete it anyway?</source>
         <translation>Дата изменения</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qfilesystemmodel_p.h" line="+272"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qfilesystemmodel_p.h" line="+257"/>
         <source>My Computer</source>
         <translation>Мой компьютер</translation>
     </message>
@@ -1612,7 +1713,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QFontDatabase</name>
     <message>
-        <location filename="../../qtbase/src/gui/text/qfontdatabase.cpp" line="+147"/>
+        <location filename="../../qtbase/src/gui/text/qfontdatabase.cpp" line="+135"/>
         <location line="+1176"/>
         <source>Bold</source>
         <translation>Полужирный</translation>
@@ -1933,7 +2034,7 @@ Do you want to delete it anyway?</source>
         <translation>Время на соединение с узлом %1 истекло</translation>
     </message>
     <message>
-        <location line="+106"/>
+        <location line="+104"/>
         <source>Connected to host %1</source>
         <translation>Установлено соединение с узлом %1</translation>
     </message>
@@ -1948,7 +2049,7 @@ Do you want to delete it anyway?</source>
         <translation>Неизвестная ошибка</translation>
     </message>
     <message>
-        <location line="+943"/>
+        <location line="+954"/>
         <source>Connecting to host failed:
 %1</source>
         <translation>Не удалось соединиться с узлом:
@@ -2047,22 +2148,106 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QGuiApplication</name>
     <message>
-        <location filename="../../qtbase/src/gui/kernel/qguiapplication.cpp" line="+221"/>
+        <location filename="../../qtbase/src/gui/kernel/qguiapplication.cpp" line="+234"/>
         <source>QT_LAYOUT_DIRECTION</source>
         <comment>Translate this string to the string &apos;LTR&apos; in left-to-right languages or to &apos;RTL&apos; in right-to-left languages (such as Hebrew and Arabic) to get proper widget layout.</comment>
         <translation>LTR</translation>
+    </message>
+    <message>
+        <location line="+1120"/>
+        <source>QPA plugin. See QGuiApplication documentation for available options for each plugin.</source>
+        <translation>Модуль QPA. Доступные каждому модулю параметры описаны в документации QGuiApplication.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Path to the platform plugins.</source>
+        <translation>Путь к платформным модулям.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Platform theme.</source>
+        <translation>Тема платформы.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Additional plugins to load, can be specified multiple times.</source>
+        <translation>Дополнительные загружаемые модули, может быть указано несколько раз.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Window geometry for the main window, using the X11-syntax, like 100x100+50+50.</source>
+        <translation>Геометрия основного окна, задаётся в стиле X11, например: 100x100+50+50.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Default window icon.</source>
+        <translation>Значок окна по умолчанию.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Title of the first window.</source>
+        <translation>Заголовок первого окна.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Sets the application&apos;s layout direction to Qt::RightToLeft (debugging helper).</source>
+        <translation>Задёт направление выравнивания Qt::RightToLeft (помощь в отладке).</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Restores the application from an earlier session.</source>
+        <translation>Восстанавливает приложение из предыдущей сессии.</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Display name, overrides $DISPLAY.</source>
+        <translation>Имя экрана, заменяет $DISPLAY.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Instance name according to ICCCM 4.1.2.5.</source>
+        <translation>Имя экземпляра согласно ICCCM 4.1.2.5.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Disable mouse grabbing (useful in debuggers).</source>
+        <translation>Запрет захвата мыши (полезно при отладке).</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Force mouse grabbing (even when running in a debugger).</source>
+        <translation>Принудительный захват мыши (даже под отладчиком).</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>ID of the X11 Visual to use.</source>
+        <translation>ID используемого X11 Visual.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Alias for --windowgeometry.</source>
+        <translation>То же, что и --windowgeometry.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Alias for --windowicon.</source>
+        <translation>То же, что и --windowicon.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Alias for --windowtitle.</source>
+        <translation>То же, что и --windowtitle.</translation>
     </message>
 </context>
 <context>
     <name>QHostInfo</name>
     <message>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo.cpp" line="+244"/>
-        <location line="+385"/>
+        <location filename="../../qtbase/src/network/kernel/qhostinfo.cpp" line="+814"/>
         <source>No host name given</source>
         <translation>Имя узла не задано</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo_p.h" line="+146"/>
+        <location filename="../../qtbase/src/network/kernel/qhostinfo_p.h" line="+132"/>
         <source>Unknown error</source>
         <translation>Неизвестная ошибка</translation>
     </message>
@@ -2070,33 +2255,25 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QHostInfoAgent</name>
     <message>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo_unix.cpp" line="+222"/>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo_win.cpp" line="+123"/>
+        <location filename="../../qtbase/src/network/kernel/qhostinfo.cpp" line="-365"/>
         <source>No host name given</source>
         <translation>Имя узла не задано</translation>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo_win.cpp" line="+0"/>
         <source>Invalid hostname</source>
         <translation>Некорректное имя узла</translation>
     </message>
     <message>
-        <location line="+51"/>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo_win.cpp" line="+26"/>
+        <location line="+50"/>
+        <location line="+8"/>
         <source>Unknown address type</source>
         <translation>Неизвестный тип адреса</translation>
     </message>
     <message>
-        <location line="+13"/>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo_win.cpp" line="-83"/>
+        <location line="+19"/>
         <source>Host not found</source>
         <translation>Узел не найден</translation>
-    </message>
-    <message>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo_win.cpp" line="+4"/>
-        <source>Unknown error (%1)</source>
-        <translation>Неизвестная ошибка (%1)</translation>
     </message>
 </context>
 <context>
@@ -2113,12 +2290,13 @@ Do you want to delete it anyway?</source>
         <translation>Отказано в соединении</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location filename="../../qtbase/src/network/access/qhttp2protocolhandler.cpp" line="+214"/>
+        <location filename="../../qtbase/src/network/access/qhttpnetworkconnection.cpp" line="+3"/>
         <source>Connection closed</source>
         <translation>Соединение закрыто</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location filename="../../qtbase/src/network/access/qhttpnetworkconnection.cpp" line="+6"/>
         <source>Proxy requires authentication</source>
         <translation>Прокси-сервер запрашивает аутентификацию</translation>
     </message>
@@ -2149,7 +2327,7 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <location line="+3"/>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="+1191"/>
+        <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="+1190"/>
         <source>Insecure redirect</source>
         <translation>Небезопасное перенаправление</translation>
     </message>
@@ -2205,12 +2383,12 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QIBaseDriver</name>
     <message>
-        <location filename="../../qtbase/src/plugins/sqldrivers/ibase/qsql_ibase.cpp" line="+1545"/>
+        <location filename="../../qtbase/src/plugins/sqldrivers/ibase/qsql_ibase.cpp" line="+1532"/>
         <source>Error opening database</source>
         <translation>Ошибка открытия базы данных</translation>
     </message>
     <message>
-        <location line="+57"/>
+        <location line="+56"/>
         <source>Could not start transaction</source>
         <translation>Не удалось начать транзакцию</translation>
     </message>
@@ -2228,7 +2406,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QIBaseResult</name>
     <message>
-        <location line="-1173"/>
+        <location line="-1158"/>
         <source>Unable to create BLOB</source>
         <translation>Невозможно создать BLOB</translation>
     </message>
@@ -2248,7 +2426,7 @@ Do you want to delete it anyway?</source>
         <translation>Невозможно прочитать BLOB</translation>
     </message>
     <message>
-        <location line="+126"/>
+        <location line="+112"/>
         <location line="+188"/>
         <source>Could not find array</source>
         <translation>Не удалось найти массив</translation>
@@ -2338,7 +2516,7 @@ Do you want to delete it anyway?</source>
         <translation>Нет свободного места на устройстве</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qiodevice.cpp" line="+2106"/>
+        <location filename="../../qtbase/src/corelib/io/qiodevice.cpp" line="+2108"/>
         <source>Unknown error</source>
         <translation>Неизвестная ошибка</translation>
     </message>
@@ -2351,7 +2529,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QImageReader</name>
     <message>
-        <location filename="../../qtbase/src/gui/image/qimagereader.cpp" line="+508"/>
+        <location filename="../../qtbase/src/gui/image/qimagereader.cpp" line="+531"/>
         <source>Invalid device</source>
         <translation>Некорректное устройство</translation>
     </message>
@@ -2366,12 +2544,12 @@ Do you want to delete it anyway?</source>
         <translation>Неподдерживаемый формат изображения</translation>
     </message>
     <message>
-        <location line="+714"/>
+        <location line="+720"/>
         <source>Unable to read image data</source>
         <translation>Не удалось прочитать данные изображения</translation>
     </message>
     <message>
-        <location line="+195"/>
+        <location line="+197"/>
         <source>Unknown error</source>
         <translation>Неизвестная ошибка</translation>
     </message>
@@ -2379,7 +2557,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QImageWriter</name>
     <message>
-        <location filename="../../qtbase/src/gui/image/qimagewriter.cpp" line="+282"/>
+        <location filename="../../qtbase/src/gui/image/qimagewriter.cpp" line="+281"/>
         <source>Unknown error</source>
         <translation>Неизвестная ошибка</translation>
     </message>
@@ -2400,7 +2578,7 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <location line="+5"/>
-        <location line="+517"/>
+        <location line="+525"/>
         <source>Unsupported image format</source>
         <translation>Неподдерживаемый формат изображения</translation>
     </message>
@@ -2421,7 +2599,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QJsonParseError</name>
     <message>
-        <location filename="../../qtbase/src/corelib/serialization/qjsonparser.cpp" line="+66"/>
+        <location filename="../../qtbase/src/corelib/serialization/qjsonparser.cpp" line="+68"/>
         <source>no error occurred</source>
         <translation>ошибки отсутствуют</translation>
     </message>
@@ -2602,8 +2780,8 @@ Do you want to delete it anyway?</source>
         <translation>Не удалось извлечь метаданные модуля из «%1»</translation>
     </message>
     <message>
-        <location line="+172"/>
-        <location line="+230"/>
+        <location line="+171"/>
+        <location line="+261"/>
         <location line="+18"/>
         <source>The shared library was not found.</source>
         <translation>Динамическая библиотека не найдена.</translation>
@@ -2624,28 +2802,22 @@ Do you want to delete it anyway?</source>
         <translation>Модуль «%1» использует несоместимую библиотеку Qt. (Невозможно совместить релизные и отладочные библиотеки.)</translation>
     </message>
     <message>
-        <location line="+312"/>
+        <location line="+319"/>
         <source>Unknown error</source>
         <translation>Неизвестная ошибка</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/corelib/plugin/qlibrary_unix.cpp" line="+249"/>
-        <location filename="../../qtbase/src/corelib/plugin/qlibrary_win.cpp" line="+118"/>
+        <location filename="../../qtbase/src/corelib/plugin/qlibrary_unix.cpp" line="+281"/>
+        <location filename="../../qtbase/src/corelib/plugin/qlibrary_win.cpp" line="+122"/>
         <source>Cannot load library %1: %2</source>
         <translation>Невозможно загрузить библиотеку %1: %2</translation>
     </message>
     <message>
-        <location line="+16"/>
+        <location line="+17"/>
         <location line="+3"/>
-        <location filename="../../qtbase/src/corelib/plugin/qlibrary_win.cpp" line="+36"/>
+        <location filename="../../qtbase/src/corelib/plugin/qlibrary_win.cpp" line="+37"/>
         <source>Cannot unload library %1: %2</source>
         <translation>Невозможно выгрузить библиотеку %1: %2</translation>
-    </message>
-    <message>
-        <location line="+26"/>
-        <location filename="../../qtbase/src/corelib/plugin/qlibrary_win.cpp" line="+12"/>
-        <source>Cannot resolve symbol &quot;%1&quot; in %2: %3</source>
-        <translation>Невозможно разрешить символ «%1» в %2: %3</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/plugin/qmachparser.cpp" line="+87"/>
@@ -2693,7 +2865,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QLineEdit</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qlineedit.cpp" line="+2169"/>
+        <location filename="../../qtbase/src/widgets/widgets/qlineedit.cpp" line="+2211"/>
         <source>&amp;Undo</source>
         <translation>&amp;Отменить действие</translation>
     </message>
@@ -2756,7 +2928,7 @@ Do you want to delete it anyway?</source>
     <name>QLocalSocket</name>
     <message>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_tcp.cpp" line="+135"/>
-        <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+140"/>
+        <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+139"/>
         <source>%1: Connection refused</source>
         <translation>%1: отказано в соединении</translation>
     </message>
@@ -2834,8 +3006,13 @@ Do you want to delete it anyway?</source>
         <translation>%1: доступ запрещён</translation>
     </message>
     <message>
+        <location line="+135"/>
+        <source>Socket is not connected</source>
+        <translation type="unfinished">Сокет не подключён</translation>
+    </message>
+    <message>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_tcp.cpp" line="+58"/>
-        <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="+48"/>
+        <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="-87"/>
         <source>Trying to connect while connection is in progress</source>
         <translation>Попытка подключиться во время подключения</translation>
     </message>
@@ -2843,7 +3020,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QMYSQLDriver</name>
     <message>
-        <location filename="../../qtbase/src/plugins/sqldrivers/mysql/qsql_mysql.cpp" line="+1372"/>
+        <location filename="../../qtbase/src/plugins/sqldrivers/mysql/qsql_mysql.cpp" line="+1294"/>
         <source>Unable to allocate a MYSQL object</source>
         <translation>Не удалось создать объект MYSQL</translation>
     </message>
@@ -2858,7 +3035,7 @@ Do you want to delete it anyway?</source>
         <translation>Невозможно соединиться</translation>
     </message>
     <message>
-        <location line="+168"/>
+        <location line="+138"/>
         <source>Unable to begin transaction</source>
         <translation>Невозможно начать транзакцию</translation>
     </message>
@@ -2876,13 +3053,13 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QMYSQLResult</name>
     <message>
-        <location line="-1083"/>
-        <location line="+32"/>
+        <location line="-1015"/>
+        <location line="+28"/>
         <source>Unable to fetch data</source>
         <translation>Невозможно получить данные</translation>
     </message>
     <message>
-        <location line="+179"/>
+        <location line="+172"/>
         <source>Unable to execute query</source>
         <translation>Невозможно выполнить запрос</translation>
     </message>
@@ -2892,7 +3069,7 @@ Do you want to delete it anyway?</source>
         <translation>Невозможно сохранить результат</translation>
     </message>
     <message>
-        <location line="+108"/>
+        <location line="+107"/>
         <source>Unable to execute next query</source>
         <translation>Невозможно выполнить следующий запрос</translation>
     </message>
@@ -2902,13 +3079,13 @@ Do you want to delete it anyway?</source>
         <translation>Невозможно сохранить следующий результат</translation>
     </message>
     <message>
-        <location line="+72"/>
+        <location line="+66"/>
         <location line="+8"/>
         <source>Unable to prepare statement</source>
         <translation>Невозможно подготовить выражение</translation>
     </message>
     <message>
-        <location line="+38"/>
+        <location line="+35"/>
         <source>Unable to reset statement</source>
         <translation>Невозможно сбросить выражение</translation>
     </message>
@@ -2945,7 +3122,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QMdiSubWindow</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qmdisubwindow.cpp" line="+278"/>
+        <location filename="../../qtbase/src/widgets/widgets/qmdisubwindow.cpp" line="+281"/>
         <source>- [%1]</source>
         <translation>- [%1]</translation>
     </message>
@@ -2955,7 +3132,7 @@ Do you want to delete it anyway?</source>
         <translation>%1 - [%2]</translation>
     </message>
     <message>
-        <location line="+51"/>
+        <location line="+44"/>
         <source>Minimize</source>
         <translation>Свернуть</translation>
     </message>
@@ -3038,7 +3215,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QMessageBox</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qmessagebox.cpp" line="-2302"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qmessagebox.cpp" line="-2306"/>
         <source>Show Details...</source>
         <translation>Показать подробности...</translation>
     </message>
@@ -3048,11 +3225,7 @@ Do you want to delete it anyway?</source>
         <translation>Скрыть подробности...</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
-        <translation type="vanished">&lt;p&gt;Qt ― это инструментарий для разработки кроссплатформенных приложений на C++.&lt;/p&gt;&lt;p&gt;Qt предоставляет совместимость на уровне исходных текстов для всех популярных настольных операционных систем. Также Qt доступна для встраиваемого Linux и других мобильных операционных систем.&lt;/p&gt;&lt;p&gt;Qt доступна под тремя различными лицензиями, разработанными для удовлетворения различных требований.&lt;/p&gt;&lt;p&gt;Qt под нашей коммерческой лицензией предназначена для развития проприетарного/коммерческого программного обеспечения, когда вы не желаете предоставлять исходные тексты третьим сторонам, или в случае невозможности принятия условий лицензий GNU LGPL версии 3.&lt;/p&gt;&lt;p&gt;Qt под лицензией GNU LGPL версии 3 предназначена для разработки программного обеспечения, удовлетворяющего условиям лицензии GNU LGPL версии 3.&lt;/p&gt;&lt;p&gt;Подробнее с лицензированием Qt можно ознакомиться на сайте &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt и логотип Qt являются товарными знаками The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt ― продукт компании The Qt Company Ltd, разрабатываемый как проект с открытым исходным кодом. &lt;/p&gt;&lt;p&gt;Более подробную информацию можно найти на сайте &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt;.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <location line="+1693"/>
+        <location line="+1697"/>
         <source>&lt;h3&gt;About Qt&lt;/h3&gt;&lt;p&gt;This program uses Qt version %1.&lt;/p&gt;</source>
         <translation>&lt;h3&gt;О Qt&lt;/h3&gt;&lt;p&gt;Данная программа использует Qt версии %1.&lt;/p&gt;</translation>
     </message>
@@ -3060,7 +3233,7 @@ Do you want to delete it anyway?</source>
         <location line="+6"/>
         <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under multiple licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of GNU (L)GPL.&lt;/p&gt;&lt;p&gt;Qt licensed under GNU (L)GPL is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the respective licenses.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
         <extracomment>Leave this text untranslated or include a verbatim copy of it below and note that it is the authoritative version in case of doubt.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under multiple licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of GNU (L)GPL.&lt;/p&gt;&lt;p&gt;Qt licensed under GNU (L)GPL is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the respective licenses.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</translation>
     </message>
     <message>
         <location line="+27"/>
@@ -3072,7 +3245,7 @@ Do you want to delete it anyway?</source>
     <name>QNativeSocketEngine</name>
     <message>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine.cpp" line="+235"/>
-        <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+1513"/>
+        <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+1519"/>
         <source>Unable to initialize non-blocking socket</source>
         <translation>Невозможно инициализировать неблокирующий сокет</translation>
     </message>
@@ -3313,7 +3486,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QNetworkAccessFtpBackend</name>
     <message>
-        <location filename="../../qtbase/src/network/access/qnetworkaccessftpbackend.cpp" line="+137"/>
+        <location filename="../../qtbase/src/network/access/qnetworkaccessftpbackend.cpp" line="+139"/>
         <source>No suitable proxy found</source>
         <translation>Подходящий прокси-сервер не найден</translation>
     </message>
@@ -3328,7 +3501,7 @@ Do you want to delete it anyway?</source>
         <translation>Соединение с %1 не удалось: требуется аутентификация</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+35"/>
         <source>Error while downloading %1: %2</source>
         <translation>Ошибка в процессе загрузки %1: %2</translation>
     </message>
@@ -3341,24 +3514,23 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QNetworkAccessManager</name>
     <message>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+1132"/>
         <source>Network access is disabled.</source>
-        <translation>Доступ в сеть отключён.</translation>
+        <translation type="vanished">Доступ в сеть отключён.</translation>
     </message>
 </context>
 <context>
     <name>QNetworkReply</name>
     <message>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="+695"/>
-        <location line="+226"/>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="-1034"/>
+        <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="+721"/>
+        <location line="+252"/>
+        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+98"/>
         <location line="+257"/>
         <source>Background request not allowed.</source>
         <translation>Фоновые запросы недопустимы.</translation>
     </message>
     <message>
-        <location line="-248"/>
-        <location line="+219"/>
+        <location line="-273"/>
+        <location line="+244"/>
         <location line="+15"/>
         <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="-232"/>
         <location line="+203"/>
@@ -3367,24 +3539,24 @@ Do you want to delete it anyway?</source>
         <translation>Ошибка сетевой сессии.</translation>
     </message>
     <message>
-        <location line="-191"/>
+        <location line="-217"/>
         <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="-211"/>
         <source>backend start error.</source>
         <translation>ошибка запуска драйвера.</translation>
     </message>
     <message>
-        <location line="+291"/>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+679"/>
+        <location line="+319"/>
+        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+675"/>
         <source>Temporary network failure.</source>
         <translation>Временная ошибка сети.</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="-723"/>
+        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="-719"/>
         <source>Protocol &quot;%1&quot; is unknown</source>
         <translation>Неизвестный протокол «%1»</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/access/qhttpthreaddelegate.cpp" line="+520"/>
+        <location filename="../../qtbase/src/network/access/qhttpthreaddelegate.cpp" line="+541"/>
         <location line="+26"/>
         <source>Error transferring %1 - server replied: %2</source>
         <translation>Ошибка передачи %1 ― ответ сервера: %2</translation>
@@ -3393,13 +3565,13 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QNetworkReplyHttpImpl</name>
     <message>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="-1922"/>
+        <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="-1969"/>
         <location line="+16"/>
         <source>Operation canceled</source>
         <translation>Операция отменена</translation>
     </message>
     <message>
-        <location line="+388"/>
+        <location line="+389"/>
         <source>No suitable proxy found</source>
         <translation>Подходящий прокси-сервер не найден</translation>
     </message>
@@ -3407,7 +3579,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QNetworkReplyImpl</name>
     <message>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+855"/>
+        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+851"/>
         <location line="+29"/>
         <source>Operation canceled</source>
         <translation>Операция отменена</translation>
@@ -3416,7 +3588,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QNetworkSession</name>
     <message>
-        <location filename="../../qtbase/src/network/bearer/qnetworksession.cpp" line="+468"/>
+        <location filename="../../qtbase/src/network/bearer/qnetworksession.cpp" line="+472"/>
         <source>Invalid configuration.</source>
         <translation>Некорректная конфигурация.</translation>
     </message>
@@ -3424,7 +3596,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QNetworkSessionPrivateImpl</name>
     <message>
-        <location filename="../../qtbase/src/plugins/bearer/qnetworksession_impl.cpp" line="+254"/>
+        <location filename="../../qtbase/src/plugins/bearer/qnetworksession_impl.cpp" line="+253"/>
         <source>Unknown session error.</source>
         <translation>Неизвестная ошибка сессии.</translation>
     </message>
@@ -3526,7 +3698,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QODBCDriver</name>
     <message>
-        <location filename="../../qtbase/src/plugins/sqldrivers/odbc/qsql_odbc.cpp" line="+1984"/>
+        <location filename="../../qtbase/src/plugins/sqldrivers/odbc/qsql_odbc.cpp" line="+1979"/>
         <source>Unable to connect</source>
         <translation>Невозможно соединиться</translation>
     </message>
@@ -3559,26 +3731,26 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QODBCResult</name>
     <message>
-        <location line="-1135"/>
-        <location line="+618"/>
+        <location line="-1138"/>
+        <location line="+621"/>
         <location filename="../../qtbase/src/plugins/sqldrivers/db2/qsql_db2.cpp" line="+195"/>
         <source>Unable to fetch last</source>
         <translation>Невозможно получить последнюю строку</translation>
     </message>
     <message>
-        <location line="-781"/>
-        <location line="+348"/>
+        <location line="-784"/>
+        <location line="+349"/>
         <source>QODBCResult::reset: Unable to set &apos;SQL_CURSOR_STATIC&apos; as statement attribute. Please check your ODBC driver configuration</source>
         <translation>QODBCResult::reset: невозможно установить «SQL_CURSOR_STATIC» атрибутом выражения. Проверьте настройки драйвера ODBC</translation>
     </message>
     <message>
-        <location line="-338"/>
-        <location line="+631"/>
+        <location line="-339"/>
+        <location line="+634"/>
         <source>Unable to execute statement</source>
         <translation>Невозможно выполнить выражение</translation>
     </message>
     <message>
-        <location line="-576"/>
+        <location line="-579"/>
         <source>Unable to fetch</source>
         <translation>Невозможно получить данные</translation>
     </message>
@@ -3598,12 +3770,12 @@ Do you want to delete it anyway?</source>
         <translation>Невозможно получить предыдущую строку</translation>
     </message>
     <message>
-        <location line="+228"/>
+        <location line="+229"/>
         <source>Unable to prepare statement</source>
         <translation>Невозможно подготовить выражение</translation>
     </message>
     <message>
-        <location line="+274"/>
+        <location line="+276"/>
         <source>Unable to bind variable</source>
         <translation>Невозможно привязать значение</translation>
     </message>
@@ -3611,12 +3783,12 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QPSQLDriver</name>
     <message>
-        <location filename="../../qtbase/src/plugins/sqldrivers/psql/qsql_psql.cpp" line="+1236"/>
+        <location filename="../../qtbase/src/plugins/sqldrivers/psql/qsql_psql.cpp" line="+1223"/>
         <source>Unable to connect</source>
         <translation>Невозможно соединиться</translation>
     </message>
     <message>
-        <location line="+52"/>
+        <location line="+50"/>
         <source>Could not begin transaction</source>
         <translation>Не удалось начать транзакцию</translation>
     </message>
@@ -3631,7 +3803,7 @@ Do you want to delete it anyway?</source>
         <translation>Не удалось откатить транзакцию</translation>
     </message>
     <message>
-        <location line="+287"/>
+        <location line="+274"/>
         <source>Unable to subscribe</source>
         <translation>Невозможно подписаться</translation>
     </message>
@@ -3644,7 +3816,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QPSQLResult</name>
     <message>
-        <location line="-1317"/>
+        <location line="-1300"/>
         <source>Query results lost - probably discarded on executing another SQL query.</source>
         <translation>Результат запроса потерян, возможно, из-за выполнения другого запроса SQL.</translation>
     </message>
@@ -3654,14 +3826,14 @@ Do you want to delete it anyway?</source>
         <translation>Невозможно создать запрос</translation>
     </message>
     <message>
-        <location line="+191"/>
+        <location line="+195"/>
         <location line="+19"/>
         <source>Unable to get result</source>
         <translation>Не удалось получить результат</translation>
     </message>
     <message>
-        <location line="+162"/>
-        <location line="+194"/>
+        <location line="+153"/>
+        <location line="+195"/>
         <source>Unable to send query</source>
         <translation>Не удалось отправить запрос</translation>
     </message>
@@ -3800,13 +3972,13 @@ Do you want to delete it anyway?</source>
         <translation>Цицеро (CC)</translation>
     </message>
     <message>
-        <location line="+66"/>
-        <location line="+11"/>
+        <location line="+68"/>
+        <location line="+17"/>
         <source>Custom</source>
         <translation>Особый</translation>
     </message>
     <message>
-        <location line="+66"/>
+        <location line="+60"/>
         <source>mm</source>
         <extracomment>Unit &apos;Millimeter&apos;</extracomment>
         <translation>мм</translation>
@@ -3845,7 +4017,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QPageSize</name>
     <message>
-        <location filename="../../qtbase/src/gui/painting/qpagesize.cpp" line="+480"/>
+        <location filename="../../qtbase/src/gui/painting/qpagesize.cpp" line="+478"/>
         <source>Custom (%1mm x %2mm)</source>
         <extracomment>Custom size name in millimeters</extracomment>
         <translation>Особый (%1 мм x %2 мм)</translation>
@@ -4440,7 +4612,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QPlatformTheme</name>
     <message>
-        <location filename="../../qtbase/src/gui/kernel/qplatformtheme.cpp" line="+706"/>
+        <location filename="../../qtbase/src/gui/kernel/qplatformtheme.cpp" line="+708"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -4533,12 +4705,12 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QPluginLoader</name>
     <message>
-        <location filename="../../qtbase/src/corelib/plugin/qpluginloader.cpp" line="+267"/>
+        <location filename="../../qtbase/src/corelib/plugin/qpluginloader.cpp" line="+265"/>
         <source>The plugin was not loaded.</source>
         <translation>Модуль не был загружен.</translation>
     </message>
     <message>
-        <location line="+123"/>
+        <location line="+132"/>
         <source>Unknown error</source>
         <translation>Неизвестная ошибка</translation>
     </message>
@@ -4553,7 +4725,7 @@ Do you want to delete it anyway?</source>
         <translation>Печать</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_unix.cpp" line="-153"/>
+        <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_unix.cpp" line="-155"/>
         <source>Left to Right, Top to Bottom</source>
         <translation>Слева направо, сверху вниз</translation>
     </message>
@@ -4638,18 +4810,18 @@ Do you want to delete it anyway?</source>
         <translation>Чётные</translation>
     </message>
     <message>
-        <location line="+9"/>
-        <location line="+296"/>
+        <location line="+11"/>
+        <location line="+301"/>
         <source>&amp;Options &gt;&gt;</source>
         <translation>&amp;Параметры &gt;&gt;</translation>
     </message>
     <message>
-        <location line="-291"/>
+        <location line="-296"/>
         <source>&amp;Print</source>
         <translation>&amp;Печать</translation>
     </message>
     <message>
-        <location line="+295"/>
+        <location line="+300"/>
         <source>&amp;Options &lt;&lt;</source>
         <translation>&amp;Параметры &lt;&lt;</translation>
     </message>
@@ -4731,18 +4903,11 @@ Please turn one of those options off.</source>
         <source>OK</source>
         <translation>OK</translation>
     </message>
-    <message>
-        <location filename="../../qtbase/src/printsupport/kernel/qplatformprintdevice.cpp" line="+295"/>
-        <location line="+24"/>
-        <source>Automatic</source>
-        <translatorcomment>источник бумаги</translatorcomment>
-        <translation>Автоматически</translation>
-    </message>
 </context>
 <context>
     <name>QPrintPreviewDialog</name>
     <message>
-        <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_unix.cpp" line="+382"/>
+        <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_unix.cpp" line="+384"/>
         <location line="+8"/>
         <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_win.cpp" line="+54"/>
         <location line="+7"/>
@@ -4750,7 +4915,7 @@ Please turn one of those options off.</source>
         <translation>Параметры страницы</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/printsupport/dialogs/qprintpreviewdialog.cpp" line="+256"/>
+        <location filename="../../qtbase/src/printsupport/dialogs/qprintpreviewdialog.cpp" line="+257"/>
         <source>%1%</source>
         <translation>%1%</translation>
     </message>
@@ -4843,7 +5008,7 @@ Please turn one of those options off.</source>
 <context>
     <name>QPrintPropertiesDialog</name>
     <message>
-        <location filename="../../qtbase/src/printsupport/dialogs/qprintdialog_unix.cpp" line="-1050"/>
+        <location filename="../../qtbase/src/printsupport/dialogs/qprintdialog_unix.cpp" line="-1057"/>
         <source>Printer Properties</source>
         <translation>Свойства принтера</translation>
     </message>
@@ -4980,26 +5145,6 @@ Please turn one of those options off.</source>
     </message>
     <message>
         <location/>
-        <source>Duplex Printing</source>
-        <translation>Двусторонняя печать</translation>
-    </message>
-    <message>
-        <location/>
-        <source>None</source>
-        <translation>Нет</translation>
-    </message>
-    <message>
-        <location/>
-        <source>Long side</source>
-        <translation>По длинной стороне</translation>
-    </message>
-    <message>
-        <location/>
-        <source>Short side</source>
-        <translation>По короткой стороне</translation>
-    </message>
-    <message>
-        <location/>
         <source>Page Set:</source>
         <translation>Список страниц:</translation>
     </message>
@@ -5012,6 +5157,26 @@ Please turn one of those options off.</source>
         <location/>
         <source>Specify pages or ranges separated by commas. Ranges are specified by two numbers separated by a hyphen. E.g: 3,5-7,9 prints pages 3, 5, 6, 7 and 9.</source>
         <translation>Укажите страницы или диапазоны, разделяя их запятыми. Диапазоны задаются двумя числами, разделёнными дефисом. Например: при указании 3,5-7,9 будут напечатаны страницы 3, 5, 6, 7 и 9.</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Double Sided Printing</source>
+        <translation>Двусторонняя печать</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Off</source>
+        <translation>Отключена</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Long side binding</source>
+        <translation>Переплёт по длинной стороне</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Short side binding</source>
+        <translation>Переплёт по короткой стороне</translation>
     </message>
 </context>
 <context>
@@ -5065,7 +5230,7 @@ Please turn one of those options off.</source>
 <context>
     <name>QProcess</name>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qprocess.cpp" line="+975"/>
+        <location filename="../../qtbase/src/corelib/io/qprocess.cpp" line="+974"/>
         <source>Error reading from process</source>
         <translation>Ошибка получения данных от процесса</translation>
     </message>
@@ -5085,17 +5250,17 @@ Please turn one of those options off.</source>
         <translation>Не удалось запустить процесс</translation>
     </message>
     <message>
-        <location line="+1111"/>
+        <location line="+1123"/>
         <location line="+27"/>
         <location line="+63"/>
-        <location line="+155"/>
+        <location line="+168"/>
         <source>No program defined</source>
         <translation>Программа не указана</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/io/qprocess_unix.cpp" line="+280"/>
         <location line="+13"/>
-        <location filename="../../qtbase/src/corelib/io/qprocess_win.cpp" line="+267"/>
+        <location filename="../../qtbase/src/corelib/io/qprocess_win.cpp" line="+266"/>
         <source>Could not open input redirection for reading</source>
         <translation>Не удалось открыть перенаправление ввода для чтения</translation>
     </message>
@@ -5105,17 +5270,17 @@ Please turn one of those options off.</source>
         <translation>Не удалось открыть перенаправление вывода для записи</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qprocess_unix.cpp" line="+187"/>
+        <location filename="../../qtbase/src/corelib/io/qprocess_unix.cpp" line="+196"/>
         <source>Resource error (fork failure): %1</source>
         <translation>Ошибка выделения ресурсов (сбой fork): %1</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qprocess.cpp" line="-1350"/>
+        <location filename="../../qtbase/src/corelib/io/qprocess.cpp" line="-1375"/>
         <source>Process operation timed out</source>
         <translation>Время на операцию с процессом истекло</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qprocess_win.cpp" line="+240"/>
+        <location filename="../../qtbase/src/corelib/io/qprocess_win.cpp" line="+250"/>
         <location line="+49"/>
         <source>Process failed to start: %1</source>
         <translation>Не удалось запустить процесс: %1</translation>
@@ -5124,7 +5289,7 @@ Please turn one of those options off.</source>
 <context>
     <name>QProgressDialog</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qprogressdialog.cpp" line="+186"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qprogressdialog.cpp" line="+185"/>
         <source>Cancel</source>
         <translation>Отменить</translation>
     </message>
@@ -5132,7 +5297,7 @@ Please turn one of those options off.</source>
 <context>
     <name>QRegExp</name>
     <message>
-        <location filename="../../qtbase/src/corelib/tools/qregexp.cpp" line="+65"/>
+        <location filename="../../qtbase/src/corelib/text/qregexp.cpp" line="+63"/>
         <source>no error occurred</source>
         <translation>ошибки отсутствуют</translation>
     </message>
@@ -5195,14 +5360,14 @@ Please turn one of those options off.</source>
 <context>
     <name>QRegularExpression</name>
     <message>
-        <location filename="../../qtbase/src/corelib/tools/qregularexpression.cpp" line="+1648"/>
-        <location line="+1204"/>
-        <location line="+90"/>
+        <location filename="../../qtbase/src/corelib/text/qregularexpression.cpp" line="+1674"/>
+        <location line="+1284"/>
+        <location line="+100"/>
         <source>no error</source>
         <translation>нет ошибки</translation>
     </message>
     <message>
-        <location line="-89"/>
+        <location line="-99"/>
         <source>\ at end of pattern</source>
         <translation>\ в конце шаблона</translation>
     </message>
@@ -5232,12 +5397,7 @@ Please turn one of those options off.</source>
         <translation>отсутствует завершающая ] для класса символов</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>invalid escape sequence in character class</source>
-        <translation>некорректная ESC-последовательность в классе символов</translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location line="+2"/>
         <source>range out of order in character class</source>
         <translation>некорректный диапазон в классе символов</translation>
     </message>
@@ -5272,27 +5432,17 @@ Please turn one of those options off.</source>
         <translation>внутренняя ошибка: переполнение кода</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
+        <source>missing closing parenthesis for condition</source>
+        <translation>отсутствует закрывающая скобка условия</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>lookbehind assertion is not fixed length</source>
         <translation>утверждение lookbehind не фиксированной длины</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>malformed number or name after (?(</source>
-        <translation>некорректно сформировано число или имя после (?(</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>conditional group contains more than two branches</source>
-        <translation>условная группа содержит более двух веток</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>(?R or (?[+-]digits must be followed by )</source>
-        <translation>за (?R или (?[+-]цифры должна следовать )</translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location line="+5"/>
         <source>unknown POSIX class name</source>
         <translation>неизвестное имя POSIX класса</translation>
     </message>
@@ -5302,27 +5452,12 @@ Please turn one of those options off.</source>
         <translation>POSIX-сортировка элементов не поддерживается</translation>
     </message>
     <message>
-        <location line="+22"/>
-        <source>invalid condition (?(0)</source>
-        <translation>некорректное условие (?(0)</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>PCRE does not support \L, \l, \N{name}, \U, or \u</source>
-        <translation>PCRE не поддерживает \L, \l, \N{имя}, \U и \u</translation>
-    </message>
-    <message>
-        <location line="+4"/>
+        <location line="+28"/>
         <source>unrecognized character after (?P</source>
         <translation>не опознан символ после (?P</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>syntax error in subpattern name (missing terminator)</source>
-        <translation>синтаксическая ошибка в имени подшаблона (отсутствует признак завершения)</translation>
-    </message>
-    <message>
-        <location line="+4"/>
+        <location line="+5"/>
         <source>malformed \P or \p sequence</source>
         <translation>некорректно сформирована последовательность \P или \p</translation>
     </message>
@@ -5342,42 +5477,17 @@ Please turn one of those options off.</source>
         <translation>внутренняя ошибка: ранее проверенный подшаблон не найден</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>DEFINE group contains more than one branch</source>
-        <translation>группа DEFINE содержит более одной ветки</translation>
-    </message>
-    <message>
-        <location line="+3"/>
+        <location line="+4"/>
         <source>\g is not followed by a braced, angle-bracketed, or quoted name/number or by a plain number</source>
         <translation>за \g должно следовать число или название/число, заключённое в фигурные/угловые скобки или кавычки</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>a numbered reference must not be zero</source>
-        <translation>нумерованная ссылка не должна быть нулём</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>an argument is not allowed for (*ACCEPT), (*FAIL), or (*COMMIT)</source>
-        <translation>для (*ACCEPT), (*FAIL) и (*COMMIT) аргументы не допустимы</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>number is too big</source>
-        <translation>число слишком велико</translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location line="+5"/>
         <source>subpattern name expected</source>
         <translation>требуется имя подшаблона</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>digit expected after (?+</source>
-        <translation>после (?+ требуется цифра</translation>
-    </message>
-    <message>
-        <location line="+2"/>
+        <location line="+3"/>
         <source>different names for subpatterns of the same number are not allowed</source>
         <translation>отличные имена для подшаблонов с одним номером не допустимы</translation>
     </message>
@@ -5392,12 +5502,7 @@ Please turn one of those options off.</source>
         <translation>за \k должно следовать название, заключённое в фигурные/угловые скобки или кавычки</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>internal error: unknown opcode in find_fixedlength()</source>
-        <translation>внутренняя ошибка: неизвестный опкод в find_fixedlength()</translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location line="+2"/>
         <source>\N is not supported in a class</source>
         <translation>\N не поддерживается в классе</translation>
     </message>
@@ -5427,22 +5532,72 @@ Please turn one of those options off.</source>
         <translation>отсутствует открывающая фигурная скобка после \o</translation>
     </message>
     <message>
-        <location line="-36"/>
+        <location line="-48"/>
+        <source>escape sequence is invalid in character class</source>
+        <translation>ESC-последовательность в классе символов не допустима</translation>
+    </message>
+    <message>
+        <location line="+12"/>
         <source>parentheses are too deeply nested</source>
         <translation>слишком большое вложение скобок</translation>
     </message>
     <message>
-        <location line="+31"/>
+        <location line="+7"/>
+        <source>a relative value of zero is not allowed</source>
+        <translation>относительное значение нуль не допустимо</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>conditional subpattern contains more than two branches</source>
+        <translation>условный подшаблон содержит более двух вариантов</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>digit expected after (?+ or (?-</source>
+        <translation>ожидается цифра после (?+ или (?-</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>lookbehind is too complicated</source>
+        <translation>слишком сложный lookbehind</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>\C is not allowed in a lookbehind assertion in UTF-16 mode</source>
+        <translation>\C не допустимо в утверждении lookbehind в режиме UTF-16</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>PCRE2 does not support \F, \L, \l, \N{name}, \U, or \u</source>
+        <translation>PCRE2 не поддерживает \F, \L, \l, \N{name}, \U и \u</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>syntax error in subpattern name (missing terminator?)</source>
+        <translation>синтаксическая ошибка в имени подшаблона (отсутствует терминатор?)</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>subpattern name must start with a non-digit</source>
+        <translation>имя подшаблона не должно начинаться с цифры</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>subpattern name is too long (maximum 32 code units)</source>
+        <translation>слишком длинное имя подшаблона (максимум 32 кодовых единицы)</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>too many named subpatterns (maximum 10000)</source>
+        <translation>слишком много именованных подшаблонов (максимум 10000)</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>invalid range in character class</source>
         <translation>недопустимый диапазон в классе символов</translation>
     </message>
     <message>
-        <location line="-6"/>
-        <source>group name must start with a non-digit</source>
-        <translation>имя группы не должно начинаться с цифры</translation>
-    </message>
-    <message>
-        <location line="-35"/>
+        <location line="-41"/>
         <source>quantifier does not follow a repeatable item</source>
         <translation>квантификатор не соответствует повторяемому элементу</translation>
     </message>
@@ -5477,12 +5632,7 @@ Please turn one of those options off.</source>
         <translation>не соответствует закрывающая скобка</translation>
     </message>
     <message>
-        <location line="+2"/>
-        <source>letter or underscore expected after (?&lt; or (?&apos;</source>
-        <translation>после (?&lt; или (?&apos; требуется буква или подчёркивание</translation>
-    </message>
-    <message>
-        <location line="+4"/>
+        <location line="+6"/>
         <source>assertion expected after (?( or (?(?C)</source>
         <translation>после (?( или (?(?C) требуется утверждение</translation>
     </message>
@@ -5507,12 +5657,7 @@ Please turn one of those options off.</source>
         <translation>значение кодовой точки символа в \x{} или \o{} слишком большое</translation>
     </message>
     <message>
-        <location line="+2"/>
-        <source>\C is not allowed in a lookbehind assertion</source>
-        <translation>\C не допустимо в утверждениях lookbehind</translation>
-    </message>
-    <message>
-        <location line="+2"/>
+        <location line="+4"/>
         <source>number after (?C is greater than 255</source>
         <translation>число после (?C больше 255</translation>
     </message>
@@ -5537,32 +5682,47 @@ Please turn one of those options off.</source>
         <translation>эта версия PCRE2 не поддерживает \P, \p или \X</translation>
     </message>
     <message>
-        <location line="+3"/>
-        <source>subpattern name is too long (maximum 10000 characters)</source>
-        <translation>название подшаблона слишком велико (ограничено 10000 символов)</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>too many named subpatterns (maximum 256)</source>
-        <translation>слишком много именованных подшаблонов (ограничено 256)</translation>
-    </message>
-    <message>
-        <location line="+2"/>
+        <location line="+6"/>
         <source>octal value is greater than \377 in 8-bit non-UTF-8 mode</source>
         <translation>восьмеричное число больше \377 в 8-битном не UTF-8 режиме</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
+        <source>DEFINE subpattern contains more than one branch</source>
+        <translation>подшаблон DEFINE содержит более одного варианта</translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>internal error: unknown newline setting</source>
         <translation>внутренняя ошибка: неизвестный разделитель строк</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+2"/>
+        <source>(?R (recursive pattern call) must be followed by a closing parenthesis</source>
+        <translation>(?R (рекурсивный вызов шаблона) должен завершаться закрывающей скобкой</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>obsolete error (should not occur)</source>
+        <translation>устаревшая ошибка (возникать не должна)</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>(*VERB) not recognized or malformed</source>
         <translation>(*VERB) не опознан или неверен</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+1"/>
+        <source>subpattern number is too big</source>
+        <translation>номер подшаблона слишком велик</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>internal error: parsed pattern overflow</source>
+        <translation>внутренняя ошибка: переполнение разбора шаблона</translation>
+    </message>
+    <message>
+        <location line="+5"/>
         <source>\c must be followed by a printable ASCII character</source>
         <translation>после \c должен идти печатаемый символ ASCII</translation>
     </message>
@@ -5572,12 +5732,7 @@ Please turn one of those options off.</source>
         <translation>после \c должна идти буква или один из [\]^_?</translation>
     </message>
     <message>
-        <location line="+4"/>
-        <source>SPARE ERROR</source>
-        <translation>ОШИБКА SPARE</translation>
-    </message>
-    <message>
-        <location line="+2"/>
+        <location line="+6"/>
         <source>using UTF is disabled by the application</source>
         <translation>использование UTF отключено приложением</translation>
     </message>
@@ -5592,14 +5747,24 @@ Please turn one of those options off.</source>
         <translation>значение кодовой точки символа в последовательности \u.... слишком большое</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>digits missing in \x{} or \o{}</source>
-        <translation>отсутствуют цифры в \x{} или \o{}</translation>
+        <location line="-7"/>
+        <source>internal error: unknown meta code in check_lookbehinds()</source>
+        <translation>внутренняя ошибка: неизвестный мета-код в check_lookbehinds()</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>callout string is too long</source>
+        <translation>слишком длинная строка callout</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>digits missing in \x{} or \o{} or \N{U+}</source>
+        <translation>отсутствуют цифры в \x{}, \o{} или \N{U+}</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>syntax error in (?(VERSION condition</source>
-        <translation>синтаксическая ошибка в условии (?(VERSION</translation>
+        <source>syntax error or number too big in (?(VERSION condition</source>
+        <translation>синтаксическая ошибка или число слишком велико в условии (?(VERSION</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -5645,6 +5810,56 @@ Please turn one of those options off.</source>
         <location line="+1"/>
         <source>pattern string is longer than the limit set by the application</source>
         <translation>строка шаблона больше ограничения, заданного приложением</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>internal error: unknown code in parsed pattern</source>
+        <translation>внутренняя ошибка: неизвестный код в разобранном шаблоне</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>internal error: bad code value in parsed_skip()</source>
+        <translation>внутренняя ошибка: неверное значение кода в parsed_skip()</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>PCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES is not allowed in UTF-16 mode</source>
+        <translation>PCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES не допустим в режиме UTF-16</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>invalid option bits with PCRE2_LITERAL</source>
+        <translation>неверные биты опций с PCRE2_LITERAL</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>\N{U+dddd} is supported only in Unicode (UTF) mode</source>
+        <translation>\N{U+dddd} поддерживается только в режиме Unicode (UTF)</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>invalid hyphen in option setting</source>
+        <translation>неверный дефис в настройке опции</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>(*alpha_assertion) not recognized</source>
+        <translation>не распознана (*alpha_assertion)</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>script runs require Unicode support, which this version of PCRE2 does not have</source>
+        <translation>для запуска скрипта необходима поддержка Unicode, которая отсутствует у этой версии PCRE2</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>too many capturing groups (maximum 65535)</source>
+        <translation>слишком много захватываемых групп (максимум 65535)</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>atomic assertion expected after (?( or (?(?C)</source>
+        <translation>требуется атомарное утверждение после (?( или (?(?C)</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -5910,11 +6125,41 @@ Please turn one of those options off.</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>recursion limit exceeded</source>
-        <translation>предел рекурсии превышен</translation>
+        <source>matching depth limit exceeded</source>
+        <translation>глубина совпадений превышена</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>match with end before start or start moved backwards is not supported</source>
+        <translation>не поддерживается сравнение с окончанием до начала или с началом смещенным назад</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>bad serialized data</source>
+        <translation>неверные данные сериализации</translation>
     </message>
     <message>
         <location line="+1"/>
+        <source>heap limit exceeded</source>
+        <translation>превышен предел кучи</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>invalid syntax</source>
+        <translation>неверный синтаксис</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>internal error - duplicate substitution match</source>
+        <translation>внутренняя ошибка: двойное совпадение для замены</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>PCRE2_MATCH_INVALID_UTF is not supported for DFA matching</source>
+        <translation>PCRE2_MATCH_INVALID_UTF не поддерживается для сравнения DFA</translation>
+    </message>
+    <message>
+        <location line="-12"/>
         <source>requested value is not available</source>
         <translation>запрошенное значение недоступно</translation>
     </message>
@@ -5945,12 +6190,7 @@ Please turn one of those options off.</source>
         <translation>плохая замена в замещающей строке</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>match with end before start is not supported</source>
-        <translation>поиск с концом перед началом не поддерживается</translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location line="+2"/>
         <source>too many replacements (more than INT_MAX)</source>
         <translation>слишком много замен (более INT_MAX)</translation>
     </message>
@@ -5958,7 +6198,7 @@ Please turn one of those options off.</source>
 <context>
     <name>QSQLite2Driver</name>
     <message>
-        <location filename="../../qtbase/src/plugins/sqldrivers/sqlite2/qsql_sqlite2.cpp" line="+435"/>
+        <location filename="../../qtbase/src/plugins/sqldrivers/sqlite2/qsql_sqlite2.cpp" line="+434"/>
         <source>Error opening database</source>
         <translation>Ошибка открытия базы данных</translation>
     </message>
@@ -5994,7 +6234,7 @@ Please turn one of those options off.</source>
 <context>
     <name>QSQLiteDriver</name>
     <message>
-        <location filename="../../qtbase/src/plugins/sqldrivers/sqlite/qsql_sqlite.cpp" line="+790"/>
+        <location filename="../../qtbase/src/plugins/sqldrivers/sqlite/qsql_sqlite.cpp" line="+786"/>
         <source>Error opening database</source>
         <translation>Ошибка открытия базы данных</translation>
     </message>
@@ -6022,7 +6262,7 @@ Please turn one of those options off.</source>
 <context>
     <name>QSQLiteResult</name>
     <message>
-        <location line="-587"/>
+        <location line="-592"/>
         <location line="+63"/>
         <location line="+8"/>
         <source>Unable to fetch row</source>
@@ -6049,7 +6289,7 @@ Please turn one of those options off.</source>
         <translation>Невозможно сбросить выражение</translation>
     </message>
     <message>
-        <location line="+97"/>
+        <location line="+102"/>
         <source>Unable to bind parameters</source>
         <translation>Невозможно привязать параметр</translation>
     </message>
@@ -6072,12 +6312,12 @@ Please turn one of those options off.</source>
         <translation>Имя файла ссылается на каталог</translation>
     </message>
     <message>
-        <location line="+38"/>
-        <source>QSaveFile cannot open &apos;%1&apos; without direct write fallback enabled: path contains an Alternate Data Stream specifier</source>
-        <translation>QSaveFile не может открыть «%1» без включения прямой записи: путь содержит спецификатор альтернативного потока данных</translation>
+        <location line="+43"/>
+        <source>QSaveFile cannot open &apos;%1&apos; without direct write fallback enabled.</source>
+        <translation>QSaveFile не может открыть «%1» без включения прямой записи.</translation>
     </message>
     <message>
-        <location line="+126"/>
+        <location line="+118"/>
         <source>Writing canceled by application</source>
         <translation>Запись прервана приложением</translation>
     </message>
@@ -6161,7 +6401,7 @@ Please turn one of those options off.</source>
 <context>
     <name>QSharedMemory</name>
     <message>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory.cpp" line="+253"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory.cpp" line="+268"/>
         <source>%1: unable to set key on lock</source>
         <translation>%1: невозможно установить ключ блокировки</translation>
     </message>
@@ -6172,7 +6412,7 @@ Please turn one of those options off.</source>
     </message>
     <message>
         <location line="+167"/>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_p.h" line="+149"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_p.h" line="+157"/>
         <source>%1: unable to lock</source>
         <translation>%1: невозможно заблокировать</translation>
     </message>
@@ -6182,8 +6422,8 @@ Please turn one of those options off.</source>
         <translation>%1: невозможно разблокировать</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_unix.cpp" line="+85"/>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="+81"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_unix.cpp" line="+88"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="+84"/>
         <source>%1: permission denied</source>
         <translation>%1: доступ запрещён</translation>
     </message>
@@ -6268,7 +6508,7 @@ Please turn one of those options off.</source>
 <context>
     <name>QShortcut</name>
     <message>
-        <location filename="../../qtbase/src/gui/kernel/qkeysequence.cpp" line="+425"/>
+        <location filename="../../qtbase/src/gui/kernel/qkeysequence.cpp" line="+422"/>
         <source>Space</source>
         <extracomment>This and all following &quot;incomprehensible&quot; strings in QShortcut context are key names. Please use the localized names appearing on actual keyboards or whatever is commonly used.</extracomment>
         <translation>Пробел</translation>
@@ -6607,6 +6847,16 @@ Please turn one of those options off.</source>
     </message>
     <message>
         <location line="+1"/>
+        <source>Launch (G)</source>
+        <translation>Запустить (G)</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Launch (H)</source>
+        <translation>Запустить (H)</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Monitor Brightness Up</source>
         <translation>Увеличить яркость монитора</translation>
     </message>
@@ -6633,7 +6883,7 @@ Please turn one of those options off.</source>
     <message>
         <location line="+1"/>
         <source>Power Off</source>
-        <translation>Отключение питания</translation>
+        <translation>Выключение</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6658,7 +6908,7 @@ Please turn one of those options off.</source>
     <message>
         <location line="+1"/>
         <source>Sleep</source>
-        <translation>Спящий режим</translation>
+        <translation>Ждущий режим</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6732,6 +6982,11 @@ Please turn one of those options off.</source>
     </message>
     <message>
         <location line="+1"/>
+        <source>Calendar</source>
+        <translation>Календарь</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
@@ -6744,6 +6999,11 @@ Please turn one of those options off.</source>
         <location line="+1"/>
         <source>Close</source>
         <translation>Закрыть</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Adjust contrast</source>
+        <translation>Подстройка контраста</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6809,6 +7069,11 @@ Please turn one of those options off.</source>
         <location line="+1"/>
         <source>Meeting</source>
         <translation>Встреча</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Memo</source>
+        <translation>Заметки</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6909,6 +7174,11 @@ Please turn one of those options off.</source>
         <location line="+1"/>
         <source>Terminal</source>
         <translation>Терминал</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>To-do list</source>
+        <translation>Список дел</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7043,22 +7313,22 @@ Please turn one of those options off.</source>
     <message>
         <location line="-4"/>
         <source>Hibernate</source>
-        <translation>Перейти в сон</translation>
+        <translation>Спящий режим</translation>
     </message>
     <message>
-        <location line="-66"/>
+        <location line="-70"/>
         <source>Media Rewind</source>
         <translation>Перемотать в начало</translation>
     </message>
     <message>
-        <location line="+60"/>
+        <location line="+64"/>
         <source>Media Fast Forward</source>
         <translation>Ускоренное проигрывание</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Power Down</source>
-        <translation>Выключить</translation>
+        <translation>Отключение питания</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -7474,41 +7744,42 @@ Please turn one of those options off.</source>
     </message>
     <message>
         <location line="+408"/>
-        <location line="+167"/>
+        <location line="+169"/>
         <source>Ctrl</source>
         <translation>Ctrl</translation>
     </message>
     <message>
-        <location line="-166"/>
-        <location line="+170"/>
+        <location line="-168"/>
+        <location line="+172"/>
         <source>Shift</source>
         <translation>Shift</translation>
     </message>
     <message>
-        <location line="-169"/>
-        <location line="+167"/>
+        <location line="-171"/>
+        <location line="+169"/>
         <source>Alt</source>
         <translation>Alt</translation>
     </message>
     <message>
-        <location line="-166"/>
-        <location line="+162"/>
+        <location line="-168"/>
+        <location line="+164"/>
         <source>Meta</source>
         <translation>Meta</translation>
     </message>
     <message>
-        <location line="-161"/>
-        <location line="+170"/>
+        <location line="-163"/>
+        <location line="+172"/>
         <source>Num</source>
         <translation>Num</translation>
     </message>
     <message>
-        <location line="-57"/>
+        <location line="-58"/>
         <source>+</source>
+        <extracomment>Key separator in shortcut string</extracomment>
         <translation>+</translation>
     </message>
     <message>
-        <location line="+92"/>
+        <location line="+93"/>
         <source>F%1</source>
         <translation>F%1</translation>
     </message>
@@ -7581,7 +7852,7 @@ Please turn one of those options off.</source>
         <translation>Неизвестная ошибка SOCKSv5 прокси (код 0x%1)</translation>
     </message>
     <message>
-        <location line="+696"/>
+        <location line="+698"/>
         <source>Network operation timed out</source>
         <translation>Время на сетевую операцию истекло</translation>
     </message>
@@ -8014,6 +8285,24 @@ Role of an accessible object</extracomment>
     </message>
     <message>
         <location line="+2"/>
+        <source>terminal</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation>терминал</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>desktop</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation>рабочий стол</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>notification</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation>уведомление</translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>unknown</source>
         <extracomment>Role of an accessible object</extracomment>
         <translation>неизвестная</translation>
@@ -8040,7 +8329,7 @@ Role of an accessible object</extracomment>
 <context>
     <name>QSslSocket</name>
     <message>
-        <location filename="../../qtbase/src/network/ssl/qsslerror.cpp" line="+221"/>
+        <location filename="../../qtbase/src/network/ssl/qsslerror.cpp" line="+234"/>
         <source>No error</source>
         <translation>Нет ошибки</translation>
     </message>
@@ -8156,29 +8445,83 @@ Role of an accessible object</extracomment>
     </message>
     <message>
         <location line="+3"/>
+        <source>No OCSP status response found</source>
+        <translation>Не найден ответ с состоянием OCSP</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The OCSP status request had invalid syntax</source>
+        <translation>Запрос состояния OCSP синтаксически неверен</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>OCSP response contains an unexpected number of SingleResponse structures</source>
+        <translation>Ответ OCSP содержит неожиданное число структур SingleResponse</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>OCSP responder reached an inconsistent internal state</source>
+        <translation>Ответчик OCSP вошёл в неверное внутреннее состояние</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>OCSP responder was unable to return a status for the requested certificate</source>
+        <translation>Ответчик OCSP не может вернуть состояние запрошенного сертификата</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The server requires the client to sign the OCSP request in order to construct a response</source>
+        <translation>Для подготовки ответа сервер требует от клиента подписать запрос OCSP</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The client is not authorized to request OCSP status from this server</source>
+        <translation>Клиент не авторизован для запроса состояния OCSP с этого сервера</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>OCSP responder&apos;s identity cannot be verified</source>
+        <translation>Невозможно проверить подлинность ответчика OCSP</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The identity of a certificate in an OCSP response cannot be established</source>
+        <translation>Невозможно установить подлинность сертификата в ответе OCSP</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The certificate status response has expired</source>
+        <translation>Ответ о состоянии сертификата просрочен</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The certificate&apos;s status is unknown</source>
+        <translation>Состояние сертификата неизвестно</translation>
+    </message>
+    <message>
+        <location line="+3"/>
         <source>Unknown error</source>
         <translation>Неизвестная ошибка</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_openssl11.cpp" line="+76"/>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_opensslpre11.cpp" line="+73"/>
+        <location filename="../../qtbase/src/network/ssl/qsslcontext_openssl.cpp" line="+94"/>
         <source>Error when setting the elliptic curves (%1)</source>
         <translation>Ошибка задания эллиптических кривых (%1)</translation>
     </message>
     <message>
-        <location line="+61"/>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_opensslpre11.cpp" line="+130"/>
+        <location line="+253"/>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket_schannel.cpp" line="+807"/>
+        <location line="+92"/>
         <source>Error creating SSL context (%1)</source>
         <translation>Ошибка создания контекста SSL: (%1)</translation>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_opensslpre11.cpp" line="+1"/>
         <source>unsupported protocol</source>
         <translation>протокол не поддерживается</translation>
     </message>
     <message>
-        <location line="+102"/>
+        <location line="+97"/>
         <source>Error while setting the minimal protocol version</source>
         <translation>Ошибка при задании минимальной версии протокола</translation>
     </message>
@@ -8191,37 +8534,31 @@ Role of an accessible object</extracomment>
         <location line="+41"/>
         <location line="+10"/>
         <location line="+7"/>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_opensslpre11.cpp" line="+33"/>
         <source>Invalid or empty cipher list (%1)</source>
         <translation>Некорректный или пустой список шифров (%1)</translation>
     </message>
     <message>
-        <location line="+36"/>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_opensslpre11.cpp" line="+36"/>
+        <location line="+51"/>
         <source>Cannot provide a certificate with no key, %1</source>
         <translation>Невозможно предоставить сертификат без ключа, %1</translation>
     </message>
     <message>
         <location line="+7"/>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_opensslpre11.cpp" line="+7"/>
         <source>Error loading local certificate, %1</source>
         <translation>Ошибка загрузки локального сертификата, %1</translation>
     </message>
     <message>
         <location line="+24"/>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_opensslpre11.cpp" line="+24"/>
         <source>Error loading private key, %1</source>
         <translation>Ошибка загрузки закрытого ключа, %1</translation>
     </message>
     <message>
         <location line="+9"/>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_opensslpre11.cpp" line="+9"/>
         <source>Private key does not certify public key, %1</source>
         <translation>Закрытый ключ не соответствует открытому ключу, %1</translation>
     </message>
     <message>
-        <location line="+47"/>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_opensslpre11.cpp" line="+47"/>
+        <location line="+58"/>
         <source>Diffie-Hellman parameters are not valid</source>
         <translation>Параметры Диффи-Хеллмана неверны</translation>
     </message>
@@ -8231,12 +8568,12 @@ Role of an accessible object</extracomment>
         <translation>Версия OpenSSL с отключёнными эллиптическими кривыми</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_openssl.cpp" line="+54"/>
+        <location line="-594"/>
         <source>Error when setting the OpenSSL configuration (%1)</source>
         <translation>Ошибка при создании конфигурации OpenSSL (%1)</translation>
     </message>
     <message>
-        <location line="+210"/>
+        <location line="+648"/>
         <source>Expecting QByteArray for %1</source>
         <translation>Для %1 требуется QByteArray</translation>
     </message>
@@ -8266,13 +8603,7 @@ Role of an accessible object</extracomment>
         <translation>Сбой SSL_CONF_CTX_new()</translation>
     </message>
     <message>
-        <location line="+9"/>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_opensslpre11.cpp" line="+54"/>
-        <source>OpenSSL version too old, need at least v1.0.2</source>
-        <translation>Версия OpenSSL очень старая, требуется минимум 1.0.2</translation>
-    </message>
-    <message>
-        <location filename="../../qtbase/src/network/ssl/qsslsocket_openssl.cpp" line="+353"/>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket_openssl.cpp" line="+601"/>
         <source>Error creating SSL session, %1</source>
         <translation>Ошибка создания сессии SSL, %1</translation>
     </message>
@@ -8283,7 +8614,22 @@ Role of an accessible object</extracomment>
         <translation>Ошибка создания сессии SSL: %1</translation>
     </message>
     <message>
-        <location line="+242"/>
+        <location line="+36"/>
+        <source>Server-side QSslSocket does not support OCSP stapling</source>
+        <translation>Серверный QSslSocket не поддерживает сшивку OCSP</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Failed to enable OCSP stapling</source>
+        <translation>Не удалось включить сшивку OCSP</translation>
+    </message>
+    <message>
+        <location line="+19"/>
+        <source>Client-side sockets do not send OCSP responses</source>
+        <translation>Клиентские сокеты не отправляют ответы OCSP</translation>
+    </message>
+    <message>
+        <location line="+265"/>
         <location line="+14"/>
         <source>Unable to init SSL Context: %1</source>
         <translation>Не удалось инициализировать контекст SSL: %1</translation>
@@ -8299,13 +8645,41 @@ Role of an accessible object</extracomment>
         <translation>Не удалось расшифровать данные: %1</translation>
     </message>
     <message>
+        <location line="+590"/>
+        <source>Failed to decode OCSP response</source>
+        <translation>Не удалось разобрать ответ OCSP</translation>
+    </message>
+    <message>
+        <location line="+15"/>
+        <source>Failed to extract basic OCSP response</source>
+        <translation>Не удалось извлечь базовый ответ OCSP</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>No certificate verification store, cannot verify OCSP response</source>
+        <translation>Невозможно проверить ответ OCSP, так как отсутствует хранилище проверок сертификатов</translation>
+    </message>
+    <message>
+        <location line="+36"/>
+        <source>Failed to decode a SingleResponse from OCSP status response</source>
+        <translation>Не удалось разобрать SingleResponse из ответа с состоянием OCSP</translation>
+    </message>
+    <message>
+        <location line="+53"/>
+        <source>Failed to extract &apos;this update time&apos; from the SingleResponse</source>
+        <translation>Не удалось извлечь «время этого обновления» из SingleResponse</translation>
+    </message>
+    <message>
         <location filename="../../qtbase/src/network/ssl/qsslsocket_mac.cpp" line="+601"/>
-        <location filename="../../qtbase/src/network/ssl/qsslsocket_openssl.cpp" line="+83"/>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket_openssl.cpp" line="-621"/>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket_schannel.cpp" line="-691"/>
+        <location line="+704"/>
+        <location line="+111"/>
         <source>The TLS/SSL connection has been closed</source>
         <translation>Соединение TLS/SSL было закрыто</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/ssl/qsslsocket_openssl.cpp" line="+10"/>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket_openssl.cpp" line="+11"/>
         <location line="+12"/>
         <source>Error while reading: %1</source>
         <translation>Ошибка чтения: %1</translation>
@@ -8316,23 +8690,173 @@ Role of an accessible object</extracomment>
         <translation>Ошибка квитирования SSL: %1</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_opensslpre11.cpp" line="-225"/>
-        <source>DTLS server requires a &apos;VerifyNone&apos; mode with your version of OpenSSL</source>
-        <translation>Серверу DTLS требуется режим «VerifyNone» для текущей версии OpenSSL</translation>
-    </message>
-    <message>
-        <location filename="../../qtbase/src/network/ssl/qsslsocket.cpp" line="+458"/>
-        <location line="+37"/>
-        <location line="+1351"/>
-        <location line="+43"/>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket.cpp" line="+491"/>
+        <location line="+40"/>
+        <location line="+1441"/>
+        <location line="+47"/>
         <source>TLS initialization failed</source>
         <translation>Не удалось инициализировать TLS</translation>
+    </message>
+    <message>
+        <location line="+247"/>
+        <source>Attempted to use an unsupported protocol.</source>
+        <translation>Попытка использовать неподдерживаемый протокол.</translation>
+    </message>
+    <message>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket_schannel.cpp" line="-855"/>
+        <source>Insufficient memory</source>
+        <translation>Недостаточно памяти</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Internal error</source>
+        <translation>Внутренняя ошибка</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>An internal handle was invalid</source>
+        <translation>Неверен внутренний указатель</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>An internal token was invalid</source>
+        <translation>Неверен внутренний токен</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Access denied</source>
+        <translation>Доступ запрещён</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>No authority could be contacted for authorization</source>
+        <translation>Отсутствует удалённый сервис авторизации</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>No credentials</source>
+        <translation>Отсутствуют учётные данные</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>The target is unknown or unreachable</source>
+        <translation>Цель неизвестна или недоступна</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>An unsupported function was requested</source>
+        <translation>Запрошена неподдерживаемая функция</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The hostname provided does not match the one received from the peer</source>
+        <translation>Предоставленное имя узла не совпадает с полученным от пира</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>No common protocol exists between the client and the server</source>
+        <translation>У клиента и сервера нет общих протоколов</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Unexpected or badly-formatted message received</source>
+        <translation>Получено неожиданное или неверно сформированное сообщение</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>The data could not be encrypted</source>
+        <translation>Невозможно зашифровать данные</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>No cipher suites in common</source>
+        <translation>Нет общих наборов шифров</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The credentials were not recognized / Invalid argument</source>
+        <translation>Учётные данные не распознаны / Неверный параметр</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>The message was tampered with, damaged or out of sequence.</source>
+        <translation>Сообщение подделано, повреждено или вне последовательности.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>A message was received out of sequence.</source>
+        <translation>Сообщение получено вне последовательности.</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Unknown error occurred: %1</source>
+        <translation>Возникла неизвестная ошибка: %1</translation>
+    </message>
+    <message>
+        <location line="+424"/>
+        <source>Invalid protocol chosen</source>
+        <translation>Выбран неверный протокол</translation>
+    </message>
+    <message>
+        <location line="+35"/>
+        <source>The certificate provided cannot be used for a client.</source>
+        <translation>Невозможно использовать предоставленный сертификат для клиента.</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>The certificate provided cannot be used for a server.</source>
+        <translation>Невозможно использовать предоставленный сертификат для сервера.</translation>
+    </message>
+    <message>
+        <location line="+343"/>
+        <source>Server did not accept any certificate we could present.</source>
+        <translation>Сервер не принимает предоставляемые нами сертификаты.</translation>
+    </message>
+    <message>
+        <location line="+19"/>
+        <source>Algorithm mismatch</source>
+        <translation>Не совпадают алгоритмы</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Handshake failed: %1</source>
+        <translation>Не удалось выполнить квитирование: %1</translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Failed to query the TLS context: %1</source>
+        <translation>Не удалось запросить контекст TLS: %1</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Did not get the required attributes for the connection.</source>
+        <translation>Не удалось получить необходимые для подключения атрибуты.</translation>
+    </message>
+    <message>
+        <location line="+28"/>
+        <source>Unwanted protocol was negotiated</source>
+        <translation>Был согласован нежелательный протокол</translation>
+    </message>
+    <message>
+        <location line="+114"/>
+        <source>Renegotiation was unsuccessful: %1</source>
+        <translation>Не удалось выполнить пересогласование: %1</translation>
+    </message>
+    <message>
+        <location line="+92"/>
+        <source>Schannel failed to encrypt data: %1</source>
+        <translation>Schannel не удалось зашифровать данные: %1</translation>
+    </message>
+    <message>
+        <location line="+434"/>
+        <source>Cannot provide a certificate with no key</source>
+        <translation>Невозможно предоставить сертификат без ключа</translation>
     </message>
 </context>
 <context>
     <name>QStandardPaths</name>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qstandardpaths.cpp" line="+580"/>
+        <location filename="../../qtbase/src/corelib/io/qstandardpaths.cpp" line="+548"/>
         <source>Desktop</source>
         <translation>Рабочий стол</translation>
     </message>
@@ -8425,7 +8949,7 @@ Role of an accessible object</extracomment>
 <context>
     <name>QStateMachine</name>
     <message>
-        <location filename="../../qtbase/src/corelib/statemachine/qstatemachine.cpp" line="+1469"/>
+        <location filename="../../qtbase/src/corelib/statemachine/qstatemachine.cpp" line="+1480"/>
         <source>Missing initial state in compound state &apos;%1&apos;</source>
         <translation>Отсутствует исходное состояние в составном состоянии «%1»</translation>
     </message>
@@ -8440,7 +8964,12 @@ Role of an accessible object</extracomment>
         <translation>Нет общего предка у источника и цели перехода из состояния «%1»</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+7"/>
+        <source>Child mode of state machine &apos;%1&apos; is not &apos;ExclusiveStates&apos;.</source>
+        <translation>Дочернее состояние конечного автомата «%1» не «ExclusiveStates».</translation>
+    </message>
+    <message>
+        <location line="+5"/>
         <source>Unknown error</source>
         <translation>Неизвестная ошибка</translation>
     </message>
@@ -8492,7 +9021,7 @@ Role of an accessible object</extracomment>
 <context>
     <name>QTabBar</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qtabbar.cpp" line="-2223"/>
+        <location filename="../../qtbase/src/widgets/widgets/qtabbar.cpp" line="-2345"/>
         <source>Scroll Left</source>
         <translation>Прокрутить влево</translation>
     </message>
@@ -8577,7 +9106,7 @@ Role of an accessible object</extracomment>
         <translation>Невозможно отправить датаграмму</translation>
     </message>
     <message>
-        <location line="+157"/>
+        <location line="+160"/>
         <source>No datagram available for reading</source>
         <translation>Нет доступных для чтения датаграмм</translation>
     </message>
@@ -8643,7 +9172,7 @@ Role of an accessible object</extracomment>
 <context>
     <name>QUnicodeControlCharacterMenu</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qwidgettextcontrol.cpp" line="+3271"/>
+        <location filename="../../qtbase/src/widgets/widgets/qwidgettextcontrol.cpp" line="+3386"/>
         <source>LRM Left-to-right mark</source>
         <translation>LRM Признак написания слева направо</translation>
     </message>
@@ -8729,7 +9258,7 @@ Role of an accessible object</extracomment>
 <context>
     <name>QWidget</name>
     <message>
-        <location filename="../../qtbase/src/widgets/kernel/qwidget.cpp" line="+6086"/>
+        <location filename="../../qtbase/src/widgets/kernel/qwidget.cpp" line="+5846"/>
         <source>*</source>
         <translation>*</translation>
     </message>
@@ -8737,7 +9266,7 @@ Role of an accessible object</extracomment>
 <context>
     <name>QWidgetTextControl</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qwidgettextcontrol.cpp" line="-1030"/>
+        <location filename="../../qtbase/src/widgets/widgets/qwidgettextcontrol.cpp" line="-1066"/>
         <source>&amp;Undo</source>
         <translation>&amp;Отменить действие</translation>
     </message>
@@ -8780,22 +9309,24 @@ Role of an accessible object</extracomment>
 <context>
     <name>QWindowsDirect2DIntegration</name>
     <message>
-        <location filename="../../qtbase/src/plugins/platforms/direct2d/qwindowsdirect2dintegration.cpp" line="+123"/>
+        <location filename="../../qtbase/src/plugins/platforms/direct2d/qwindowsdirect2dintegration.cpp" line="+112"/>
         <source>Qt cannot load the direct2d platform plugin because the Direct2D version on this system is too old. The minimum system requirement for this platform plugin is Windows 7 SP1 with Platform Update.
 
 The minimum Direct2D version required is %1. The Direct2D version on this system is %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>Qt не может загрузить модуль платформы direct2d, так как версия Direct2D в системе слишком старая. Требуется минимум Windows 7 SP1 с обновлением платформы (Platform Update).
+
+Необходим Direct2D версии не ниже %1, в системе же установлен Direct2D версии %2.</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Cannot load direct2d platform plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Невозможно загрузить модуль платформы direct2d</translation>
     </message>
 </context>
 <context>
     <name>QWizard</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qwizard.cpp" line="+699"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qwizard.cpp" line="+662"/>
         <source>Go Back</source>
         <translation>Назад</translation>
     </message>
@@ -8853,7 +9384,7 @@ The minimum Direct2D version required is %1. The Direct2D version on this system
 <context>
     <name>QXml</name>
     <message>
-        <location filename="../../qtbase/src/xml/sax/qxml.cpp" line="+60"/>
+        <location filename="../../qtbase/src/xml/sax/qxml.cpp" line="+68"/>
         <source>no error occurred</source>
         <translation>ошибки отсутствуют</translation>
     </message>
@@ -8971,8 +9502,8 @@ The minimum Direct2D version required is %1. The Direct2D version on this system
 <context>
     <name>QXmlStream</name>
     <message>
-        <location filename="../../qtbase/src/corelib/serialization/qxmlstream.cpp" line="+614"/>
-        <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="+1778"/>
+        <location filename="../../qtbase/src/corelib/serialization/qxmlstream.cpp" line="+615"/>
+        <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="+1790"/>
         <source>Extra content at end of document.</source>
         <translation>Лишние данные в конце документа.</translation>
     </message>
@@ -8982,7 +9513,7 @@ The minimum Direct2D version required is %1. The Direct2D version on this system
         <translation>Некорректное значение объекта.</translation>
     </message>
     <message>
-        <location line="+110"/>
+        <location line="+109"/>
         <source>Invalid XML character.</source>
         <translation>Некорректный символ XML.</translation>
     </message>
@@ -8992,8 +9523,8 @@ The minimum Direct2D version required is %1. The Direct2D version on this system
         <translation>Последовательность «]]&gt;» недопустима в содержимом.</translation>
     </message>
     <message>
-        <location line="+279"/>
-        <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="-692"/>
+        <location line="+280"/>
+        <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="-694"/>
         <source>Encountered incorrectly encoded content.</source>
         <translation>Обнаружено некорректно закодированное содержимое.</translation>
     </message>
@@ -9003,15 +9534,15 @@ The minimum Direct2D version required is %1. The Direct2D version on this system
         <translation>Префикс пространства имён «%1» не объявлен</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+34"/>
         <location line="+12"/>
-        <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="+613"/>
+        <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="+615"/>
         <location line="+53"/>
         <source>Illegal namespace declaration.</source>
         <translation>Некорректное объявление пространства имён.</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+34"/>
         <source>Attribute &apos;%1&apos; redefined.</source>
         <translation>Атрибут «%1» переопределён.</translation>
     </message>
@@ -9104,14 +9635,19 @@ The minimum Direct2D version required is %1. The Direct2D version on this system
         <translation>Неожиданный «%1».</translation>
     </message>
     <message>
-        <location line="+222"/>
+        <location line="+258"/>
         <source>Expected character data.</source>
         <translation>Требуются символьные данные.</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="-973"/>
-        <source>Recursive entity detected.</source>
-        <translation>Обнаружен рекурсивный объект.</translation>
+        <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="-983"/>
+        <source>Self-referencing entity detected.</source>
+        <translation>Обнаружен объект, ссылающийся на себя.</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Entity expands to more characters than the entity expansion limit.</source>
+        <translation>При разворачивании объекта число символов превысило предел.</translation>
     </message>
     <message>
         <location line="+520"/>
@@ -9119,7 +9655,7 @@ The minimum Direct2D version required is %1. The Direct2D version on this system
         <translation>Требуется открывающий тег.</translation>
     </message>
     <message>
-        <location line="+191"/>
+        <location line="+193"/>
         <source>NDATA in parameter entity declaration.</source>
         <translation>NDATA в объявлении параметра.</translation>
     </message>

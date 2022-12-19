@@ -423,16 +423,27 @@ void mainWindow::set_language(int lang) {
 	}
 
 	switch (lang) {
-		case LNG_ITALIAN:
-			lng = "it";
-			file = "it_IT";
+		case LNG_CHINESE_SIMPLIFIED:
+			lng = "zh_CN";
+			file = "zh_CN";
+			break;
+		case LNG_ENGLISH:
+		default:
+			break;
+		case LNG_FRENCH:
+			lng = "fr";
+			file = "fr_FR";
 			break;
 		case LNG_HUNGARIAN:
 			lng = "hu";
 			file = "hu_HU";
 			break;
+		case LNG_ITALIAN:
+			lng = "it";
+			file = "it_IT";
+			break;
 		case LNG_PORTUGUESEBR:
-			lng = "pt";
+			lng = "pt_BR";
 			file = "pt_BR";
 			break;
 		case LNG_RUSSIAN:
@@ -446,13 +457,6 @@ void mainWindow::set_language(int lang) {
 		case LNG_TURKISH:
 			lng = "en";
 			file = "tr_TR";
-			break;
-		case LNG_CHINESE_SIMPLIFIED:
-			lng = "zh_CN";
-			file = "zh_CN";
-			break;
-		case LNG_ENGLISH:
-		default:
 			break;
 	}
 

@@ -11,10 +11,12 @@ set(ts_files
 	gui/designer/translations/tr_TR.ts
 	gui/designer/translations/zh_CN.ts
 
+	gui/designer/translations/qt_de.ts
 	gui/designer/translations/qt_es.ts
+	gui/designer/translations/qt_fr.ts
 	gui/designer/translations/qt_hu.ts
 	gui/designer/translations/qt_it.ts
-	gui/designer/translations/qt_pt.ts
+	gui/designer/translations/qt_pt_BR.ts
 	gui/designer/translations/qt_ru.ts
 	gui/designer/translations/qt_zh_CN.ts
 	)

@@ -4,7 +4,7 @@
 <context>
     <name>CloseButton</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qtabbar.cpp" line="+2629"/>
+        <location filename="../../qtbase/src/widgets/widgets/qtabbar.cpp" line="+2772"/>
         <source>Close Tab</source>
         <translation>Cerrar pestaña</translation>
     </message>
@@ -12,7 +12,7 @@
 <context>
     <name>MAC_APPLICATION_MENU</name>
     <message>
-        <location filename="../../qtbase/src/plugins/platforms/cocoa/messages.cpp" line="+55"/>
+        <location filename="../../qtbase/src/plugins/platforms/cocoa/qcocoamenuitem.mm" line="+63"/>
         <source>Services</source>
         <translation>Servicios</translation>
     </message>
@@ -32,40 +32,56 @@
         <translation>Mostrar todo</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-4"/>
         <source>Preferences...</source>
         <translation>Preferencias…</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="+5"/>
         <source>Quit %1</source>
         <translation>Salir de %1</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-6"/>
         <source>About %1</source>
         <translation>Acerca de %1</translation>
     </message>
 </context>
 <context>
+    <name>Print Device Input Slot</name>
+    <message>
+        <location filename="../../qtbase/src/printsupport/kernel/qplatformprintdevice.cpp" line="+292"/>
+        <source>Automatic</source>
+        <translation type="unfinished">Automático</translation>
+    </message>
+</context>
+<context>
+    <name>Print Device Output Bin</name>
+    <message>
+        <location line="+20"/>
+        <source>Automatic</source>
+        <translation type="unfinished">Automático</translation>
+    </message>
+</context>
+<context>
     <name>QAbstractSocket</name>
     <message>
-        <location filename="../../qtbase/src/network/access/qhttpnetworkconnection.cpp" line="+867"/>
-        <location filename="../../qtbase/src/network/socket/qabstractsocket.cpp" line="+2160"/>
+        <location filename="../../qtbase/src/network/access/qhttpnetworkconnection.cpp" line="+906"/>
+        <location filename="../../qtbase/src/network/socket/qabstractsocket.cpp" line="+2204"/>
         <source>Socket operation timed out</source>
         <translation>Operación socket expirada</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/socket/qabstractsocket.cpp" line="-1522"/>
-        <location line="+1056"/>
-        <location line="+222"/>
+        <location filename="../../qtbase/src/network/socket/qabstractsocket.cpp" line="-1547"/>
+        <location line="+1069"/>
+        <location line="+229"/>
         <source>Operation on socket is not supported</source>
         <translation>La operación no está soportada por el socket</translation>
     </message>
     <message>
-        <location line="-878"/>
-        <location filename="../../qtbase/src/network/socket/qhttpsocketengine.cpp" line="+683"/>
-        <location filename="../../qtbase/src/network/socket/qsocks5socketengine.cpp" line="+649"/>
+        <location line="-896"/>
+        <location filename="../../qtbase/src/network/socket/qhttpsocketengine.cpp" line="+677"/>
+        <location filename="../../qtbase/src/network/socket/qsocks5socketengine.cpp" line="+647"/>
         <location line="+26"/>
         <source>Host not found</source>
         <translation>Equipo no encontrado</translation>
@@ -78,17 +94,17 @@
         <translation>Conexión rechazada</translation>
     </message>
     <message>
-        <location line="+133"/>
+        <location line="+131"/>
         <source>Connection timed out</source>
         <translation>Tiempo de espera por la conexión expirado</translation>
     </message>
     <message>
-        <location line="+446"/>
+        <location line="+459"/>
         <source>Trying to connect while connection is in progress</source>
         <translation>Intentando conectar mientras la conexión está en progreso</translation>
     </message>
     <message>
-        <location line="+847"/>
+        <location line="+860"/>
         <source>Socket is not connected</source>
         <translation>El socket no está conectado</translation>
     </message>
@@ -101,12 +117,12 @@
 <context>
     <name>QAbstractSpinBox</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qabstractspinbox.cpp" line="+1266"/>
+        <location filename="../../qtbase/src/widgets/widgets/qabstractspinbox.cpp" line="+1323"/>
         <source>&amp;Select All</source>
         <translation>&amp;Seleccionar todo</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+9"/>
         <source>&amp;Step up</source>
         <translation>&amp;Aumentar</translation>
     </message>
@@ -119,7 +135,7 @@
 <context>
     <name>QAccessibleActionInterface</name>
     <message>
-        <location filename="../../qtbase/src/gui/accessible/qaccessible.cpp" line="+2827"/>
+        <location filename="../../qtbase/src/gui/accessible/qaccessible.cpp" line="+2807"/>
         <source>Press</source>
         <translation>Pulsar</translation>
     </message>
@@ -242,7 +258,7 @@
 <context>
     <name>QAndroidPlatformTheme</name>
     <message>
-        <location filename="../../qtbase/src/plugins/platforms/android/qandroidplatformtheme.cpp" line="+500"/>
+        <location filename="../../qtbase/src/plugins/platforms/android/qandroidplatformtheme.cpp" line="+502"/>
         <source>Yes</source>
         <translation>Sí</translation>
     </message>
@@ -278,17 +294,17 @@
 <context>
     <name>QCocoaMenuItem</name>
     <message>
-        <location filename="../../qtbase/src/plugins/platforms/cocoa/messages.cpp" line="-11"/>
+        <location filename="../../qtbase/src/plugins/platforms/cocoa/qcocoamenuitem.mm" line="+351"/>
         <source>About Qt</source>
         <translation>Acerca de Qt</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="-158"/>
         <source>About</source>
         <translation>Acerca de</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+8"/>
         <source>Config</source>
         <translation>Configuración</translation>
     </message>
@@ -346,7 +362,7 @@
 <context>
     <name>QCocoaTheme</name>
     <message>
-        <location line="+7"/>
+        <location filename="../../qtbase/src/plugins/platforms/cocoa/qcocoatheme.mm" line="+550"/>
         <source>Don&apos;t Save</source>
         <translation>No guardar</translation>
     </message>
@@ -354,7 +370,7 @@
 <context>
     <name>QColorDialog</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qcolordialog.cpp" line="+1467"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qcolordialog.cpp" line="+1480"/>
         <source>Hu&amp;e:</source>
         <translation>&amp;Tono:</translation>
     </message>
@@ -394,7 +410,7 @@
         <translation>&amp;HTML:</translation>
     </message>
     <message>
-        <location line="+165"/>
+        <location line="+164"/>
         <source>Cursor at %1, %2
 Press ESC to cancel</source>
         <translation>Cursor en %1, %2
@@ -406,7 +422,7 @@ Presiona ESC para cancelar</translation>
         <translation>Selecciona color</translation>
     </message>
     <message>
-        <location line="+183"/>
+        <location line="+193"/>
         <source>&amp;Basic colors</source>
         <translation>Colores &amp;básicos</translation>
     </message>
@@ -429,12 +445,12 @@ Presiona ESC para cancelar</translation>
 <context>
     <name>QComboBox</name>
     <message>
-        <location filename="../../qtbase/src/widgets/accessible/complexwidgets.cpp" line="+373"/>
+        <location filename="../../qtbase/src/widgets/accessible/complexwidgets.cpp" line="+393"/>
         <source>Open the combo box selection popup</source>
         <translation>Abrir el menú desplegable del combo box</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/widgets/itemviews/qitemeditorfactory.cpp" line="+609"/>
+        <location filename="../../qtbase/src/widgets/itemviews/qitemeditorfactory.cpp" line="+611"/>
         <source>False</source>
         <translation>Falso</translation>
     </message>
@@ -447,14 +463,23 @@ Presiona ESC para cancelar</translation>
 <context>
     <name>QCommandLineParser</name>
     <message>
-        <location filename="../../qtbase/src/corelib/tools/qcommandlineparser.cpp" line="+412"/>
+        <location filename="../../qtbase/src/corelib/tools/qcommandlineparser.cpp" line="+416"/>
         <source>Displays version information.</source>
         <translation>Muestra la información de versión.</translation>
     </message>
     <message>
-        <location line="+25"/>
         <source>Displays this help.</source>
-        <translation>Muestra esta ayuda.</translation>
+        <translation type="vanished">Muestra esta ayuda.</translation>
+    </message>
+    <message>
+        <location line="+27"/>
+        <source>Displays help on commandline options.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Displays help including Qt specific options.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+92"/>
@@ -467,7 +492,7 @@ Presiona ESC para cancelar</translation>
         <translation>Opciones desconocidas: %1.</translation>
     </message>
     <message>
-        <location line="+132"/>
+        <location line="+136"/>
         <source>Missing value after &apos;%1&apos;.</source>
         <translation>Falta valor tras «%1».</translation>
     </message>
@@ -477,7 +502,7 @@ Presiona ESC para cancelar</translation>
         <translation>Valor inesperado tras «%1».</translation>
     </message>
     <message>
-        <location line="+435"/>
+        <location line="+455"/>
         <source>[options]</source>
         <translation>[opciones]</translation>
     </message>
@@ -492,7 +517,7 @@ Presiona ESC para cancelar</translation>
         <translation>Opciones:</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+33"/>
         <source>Arguments:</source>
         <translation>Argumentos:</translation>
     </message>
@@ -564,7 +589,7 @@ Presiona ESC para cancelar</translation>
         <translation>Inicial:</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/printsupport/widgets/qcupsjobwidget.cpp" line="+98"/>
+        <location filename="../../qtbase/src/printsupport/widgets/qcupsjobwidget.cpp" line="+119"/>
         <source>Print Immediately</source>
         <translation>Imprimir inmediatamente</translation>
     </message>
@@ -604,7 +629,7 @@ Presiona ESC para cancelar</translation>
         <translation>Hora específica</translation>
     </message>
     <message>
-        <location line="+68"/>
+        <location line="+90"/>
         <location line="+8"/>
         <source>None</source>
         <comment>CUPS Banner page</comment>
@@ -654,14 +679,42 @@ Presiona ESC para cancelar</translation>
     </message>
 </context>
 <context>
+    <name>QCupsPrinterSupport</name>
+    <message>
+        <location filename="../../qtbase/src/plugins/printsupport/cups/qcupsprintersupport.cpp" line="+83"/>
+        <source>Authentication Needed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+17"/>
+        <source>Authentication needed to use %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Authentication needed to use %1 on %2.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Username:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Password:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QDB2Driver</name>
     <message>
-        <location filename="../../qtbase/src/plugins/sqldrivers/db2/qsql_db2.cpp" line="+1293"/>
+        <location filename="../../qtbase/src/plugins/sqldrivers/db2/qsql_db2.cpp" line="+1338"/>
         <source>Unable to connect</source>
         <translation>Imposible establecer una conexión</translation>
     </message>
     <message>
-        <location line="+304"/>
+        <location line="+306"/>
         <source>Unable to commit transaction</source>
         <translation>Incapaz de enviar la transacción</translation>
     </message>
@@ -679,7 +732,7 @@ Presiona ESC para cancelar</translation>
 <context>
     <name>QDB2Result</name>
     <message>
-        <location line="-1044"/>
+        <location line="-1046"/>
         <location line="+242"/>
         <source>Unable to execute statement</source>
         <translation>Imposible ejecutar la instrucción</translation>
@@ -713,7 +766,7 @@ Presiona ESC para cancelar</translation>
 <context>
     <name>QDBusTrayIcon</name>
     <message>
-        <location filename="../../qtbase/src/platformsupport/themes/genericunix/dbustray/qdbustrayicon.cpp" line="+293"/>
+        <location filename="../../qtbase/src/platformsupport/themes/genericunix/dbustray/qdbustrayicon.cpp" line="+302"/>
         <source>OK</source>
         <translation>Aceptar</translation>
     </message>
@@ -721,7 +774,7 @@ Presiona ESC para cancelar</translation>
 <context>
     <name>QDateTimeParser</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qdatetimeedit.cpp" line="+2302"/>
+        <location filename="../../qtbase/src/widgets/widgets/qdatetimeedit.cpp" line="+2429"/>
         <source>AM</source>
         <translation>AM</translation>
     </message>
@@ -731,7 +784,7 @@ Presiona ESC para cancelar</translation>
         <translation>am</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+3"/>
         <source>PM</source>
         <translation>PM</translation>
     </message>
@@ -744,7 +797,7 @@ Presiona ESC para cancelar</translation>
 <context>
     <name>QDialog</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qdialog.cpp" line="+640"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qdialog.cpp" line="+690"/>
         <source>What&apos;s This?</source>
         <translation>¿Qué es esto?</translation>
     </message>
@@ -752,7 +805,7 @@ Presiona ESC para cancelar</translation>
 <context>
     <name>QDialogButtonBox</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qmessagebox.cpp" line="+1973"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qmessagebox.cpp" line="+2032"/>
         <location line="+446"/>
         <source>OK</source>
         <translation>Aceptar</translation>
@@ -761,7 +814,7 @@ Presiona ESC para cancelar</translation>
 <context>
     <name>QDirModel</name>
     <message>
-        <location filename="../../qtbase/src/widgets/itemviews/qdirmodel.cpp" line="+440"/>
+        <location filename="../../qtbase/src/widgets/itemviews/qdirmodel.cpp" line="+442"/>
         <source>Name</source>
         <translation>Nombre</translation>
     </message>
@@ -791,7 +844,7 @@ Presiona ESC para cancelar</translation>
 <context>
     <name>QDnsLookup</name>
     <message>
-        <location filename="../../qtbase/src/network/kernel/qdnslookup.cpp" line="+486"/>
+        <location filename="../../qtbase/src/network/kernel/qdnslookup.cpp" line="+487"/>
         <source>Operation cancelled</source>
         <translation>Operación cancelada</translation>
     </message>
@@ -804,7 +857,7 @@ Presiona ESC para cancelar</translation>
         <translation>Las direcciones IPv6 para los servidores de nombres no están actualmente soportadas</translation>
     </message>
     <message>
-        <location line="+847"/>
+        <location line="+849"/>
         <source>Invalid domain name</source>
         <translation>Nombre de dominio inválido</translation>
     </message>
@@ -814,7 +867,7 @@ Presiona ESC para cancelar</translation>
         <translation>No está soportado todavía en Android</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/kernel/qdnslookup_unix.cpp" line="+137"/>
+        <location filename="../../qtbase/src/network/kernel/qdnslookup_unix.cpp" line="+152"/>
         <source>Resolver functions not found</source>
         <translation>Funciones de resolución no encontradas</translation>
     </message>
@@ -825,7 +878,7 @@ Presiona ESC para cancelar</translation>
     </message>
     <message>
         <location line="+75"/>
-        <location filename="../../qtbase/src/network/kernel/qdnslookup_win.cpp" line="+81"/>
+        <location filename="../../qtbase/src/network/kernel/qdnslookup_win.cpp" line="+80"/>
         <source>Server could not process query</source>
         <translation>El Servidor no pudo procesar la consulta</translation>
     </message>
@@ -928,7 +981,7 @@ Presiona ESC para cancelar</translation>
 <context>
     <name>QDockWidget</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qdockwidget.cpp" line="+694"/>
+        <location filename="../../qtbase/src/widgets/widgets/qdockwidget.cpp" line="+746"/>
         <source>Float</source>
         <extracomment>Accessible name for button undocking a dock widget (floating state)</extracomment>
         <translation>Flotante</translation>
@@ -948,6 +1001,248 @@ Presiona ESC para cancelar</translation>
         <location line="+1"/>
         <source>Closes the dock widget</source>
         <translation>Cierra el widget acoplable</translation>
+    </message>
+</context>
+<context>
+    <name>QDomParser</name>
+    <message>
+        <location filename="../../qtbase/src/xml/dom/qdomhelpers.cpp" line="+504"/>
+        <source>Error occurred while processing XML declaration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Multiple DTD sections are not allowed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Error occurred while processing document type declaration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Error occurred while processing comment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <location line="+64"/>
+        <source>Error occurred while processing a processing instruction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-38"/>
+        <source>Error occurred while processing a start element</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Unexpected end element &apos;%1&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Error occurred while processing an end element</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Error occurred while processing the element content</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Error occurred while processing comments</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+15"/>
+        <source>Error occurred while processing an entity reference</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Unexpected token</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <source>Tag mismatch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+23"/>
+        <source>Error occurred while processing entity declaration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>Error occurred while processing notation declaration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QDtls</name>
+    <message>
+        <location filename="../../qtbase/src/network/ssl/qdtls.cpp" line="+381"/>
+        <source>Invalid (empty) secret</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+27"/>
+        <source>Multicast and broadcast addresses are not supported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+198"/>
+        <source>Cannot set peer after handshake started</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Invalid address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+33"/>
+        <source>Cannot set verification name after handshake started</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+134"/>
+        <source>Cannot set configuration after handshake started</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+62"/>
+        <source>Cannot start/continue handshake, invalid handshake state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <location line="+38"/>
+        <location line="+42"/>
+        <location line="+24"/>
+        <location line="+27"/>
+        <location line="+75"/>
+        <location line="+24"/>
+        <source>Invalid (nullptr) socket</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-224"/>
+        <source>To start a handshake you must set peer&apos;s address and port first</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>To start a handshake, DTLS server requires non-empty datagram (client hello)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Cannot start handshake, already done/in progress</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+36"/>
+        <source>A valid QUdpSocket and non-empty datagram are needed to continue the handshake</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Cannot continue handshake, not in InProgress state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+26"/>
+        <source>Cannot resume, not in VerificationError state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+24"/>
+        <source>No handshake in progress, nothing to abort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+27"/>
+        <source>Cannot send shutdown alert, not encrypted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+75"/>
+        <source>Cannot write a datagram, not in encrypted state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+24"/>
+        <source>Cannot read a datagram, not in encrypted state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../qtbase/src/network/ssl/qdtls_openssl.cpp" line="+653"/>
+        <source>%1 failed</source>
+        <extracomment>%1: Some function</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>Invalid SslMode, SslServerMode or SslClientMode expected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Invalid protocol version, DTLS protocol expected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+221"/>
+        <source>BIO_ADD_new failed, cannot start handshake</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Cannot start the handshake, verified client hello expected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+91"/>
+        <source>Peer verification failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+111"/>
+        <source>The DTLS connection has been closed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+15"/>
+        <source>Error while writing: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+49"/>
+        <source>The DTLS connection has been shutdown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>Error while reading: %1</source>
+        <translation type="unfinished">Error al leer: %1</translation>
+    </message>
+</context>
+<context>
+    <name>QDtlsClientVerifier</name>
+    <message>
+        <location filename="../../qtbase/src/network/ssl/qdtls.cpp" line="-570"/>
+        <source>A valid UDP socket, non-empty datagram, valid address/port were expected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../qtbase/src/network/ssl/qdtls_openssl.cpp" line="-370"/>
+        <source>BIO_ADDR_new failed, ignoring client hello</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -991,7 +1286,7 @@ Presiona ESC para cancelar</translation>
 <context>
     <name>QFile</name>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qfile.cpp" line="+561"/>
+        <location filename="../../qtbase/src/corelib/io/qfile.cpp" line="+642"/>
         <source>Destination file is the same file.</source>
         <translation>El fichero de destino es el mismo.</translation>
     </message>
@@ -1002,22 +1297,27 @@ Presiona ESC para cancelar</translation>
     </message>
     <message>
         <location line="+15"/>
-        <location line="+184"/>
+        <location line="+194"/>
         <source>Destination file exists</source>
         <translation>El archivo de destino ya existe</translation>
     </message>
     <message>
-        <location line="-168"/>
         <source>Error while renaming.</source>
-        <translation>Error durante el renombrado.</translation>
+        <translation type="vanished">Error durante el renombrado.</translation>
     </message>
     <message>
-        <location line="+12"/>
+        <location line="-163"/>
+        <location line="+7"/>
+        <source>Error while renaming: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-5"/>
         <source>Unable to restore from %1: %2</source>
         <translation>No fue posible restaurar desde %1: %2</translation>
     </message>
     <message>
-        <location line="+19"/>
+        <location line="+21"/>
         <source>Will not rename sequential file using block copy</source>
         <translation>No será renombrado el archivo secuencial usando copia por bloques</translation>
     </message>
@@ -1027,22 +1327,31 @@ Presiona ESC para cancelar</translation>
         <translation>No se puede eliminar el archivo de origen</translation>
     </message>
     <message>
-        <location line="+127"/>
+        <location line="+17"/>
+        <source>Cannot open destination file: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+113"/>
         <source>Cannot open %1 for input</source>
         <translation>No se puede abrir %1 para escritura</translation>
     </message>
     <message>
         <location line="+18"/>
-        <source>Cannot open for output</source>
-        <translation>No se puede abrir para salida</translation>
+        <source>Cannot open for output: %1</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+11"/>
+        <source>Cannot open for output</source>
+        <translation type="vanished">No se puede abrir para salida</translation>
+    </message>
+    <message>
+        <location line="+12"/>
         <source>Failure to write block</source>
         <translation>Fallo al escribir un bloque</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+20"/>
         <source>Cannot create %1 for output</source>
         <translation>No se puede crear %1 para escritura</translation>
     </message>
@@ -1050,9 +1359,14 @@ Presiona ESC para cancelar</translation>
 <context>
     <name>QFileDevice</name>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qfiledevice.cpp" line="+739"/>
+        <location filename="../../qtbase/src/corelib/io/qfiledevice.cpp" line="+737"/>
         <source>No file engine available or engine does not support UnMapExtension</source>
         <translation>No hay un motor de archivos disponible o el motor no soporta UnMapExtension</translation>
+    </message>
+    <message>
+        <location line="+61"/>
+        <source>No file engine available</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1158,7 +1472,7 @@ Presiona ESC para cancelar</translation>
         <translation>Ficheros de tipo:</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qfiledialog.cpp" line="+581"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qfiledialog.cpp" line="+603"/>
         <source>Find Directory</source>
         <translation>Buscar directorio</translation>
     </message>
@@ -1168,12 +1482,12 @@ Presiona ESC para cancelar</translation>
         <translation>Abrir</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+3"/>
         <source>Save As</source>
         <translation>Guardar como</translation>
     </message>
     <message>
-        <location line="+24"/>
+        <location line="+27"/>
         <source>Directory:</source>
         <translation>Directorio:</translation>
     </message>
@@ -1184,7 +1498,7 @@ Presiona ESC para cancelar</translation>
     </message>
     <message>
         <location line="+17"/>
-        <location line="+13"/>
+        <location line="+16"/>
         <source>&amp;Open</source>
         <translation>&amp;Abrir</translation>
     </message>
@@ -1199,7 +1513,7 @@ Presiona ESC para cancelar</translation>
         <translation>&amp;Guardar</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/gui/kernel/qplatformdialoghelper.cpp" line="+611"/>
+        <location filename="../../qtbase/src/gui/kernel/qplatformdialoghelper.cpp" line="+640"/>
         <source>All Files (*)</source>
         <translation>Todos los ficheros (*)</translation>
     </message>
@@ -1229,18 +1543,18 @@ Presiona ESC para cancelar</translation>
         <translation>&amp;Nueva carpeta</translation>
     </message>
     <message>
-        <location line="+860"/>
+        <location line="+875"/>
         <source>All files (*)</source>
         <translation>Todos los archivos (*)</translation>
     </message>
     <message>
-        <location line="+145"/>
+        <location line="+180"/>
         <source>Directories</source>
         <translation>Directorios</translation>
     </message>
     <message>
-        <location line="+951"/>
-        <location line="+1028"/>
+        <location line="+1088"/>
+        <location line="+1077"/>
         <source>%1
 Directory not found.
 Please verify the correct directory name was given.</source>
@@ -1249,7 +1563,7 @@ Directorio no encontrado.
 Verifique que el nombre del directorio es correcto.</translation>
     </message>
     <message>
-        <location line="-994"/>
+        <location line="-1043"/>
         <source>%1 already exists.
 Do you want to replace it?</source>
         <translation>El fichero %1 ya existe.
@@ -1265,7 +1579,7 @@ Fichero no encontrado.
 Verifique que el nombre del fichero es correcto.</translation>
     </message>
     <message>
-        <location line="+623"/>
+        <location line="+665"/>
         <source>New Folder</source>
         <translation>Nueva carpeta</translation>
     </message>
@@ -1293,12 +1607,12 @@ Do you want to delete it anyway?</source>
         <translation>No fue posible borrar el directorio.</translation>
     </message>
     <message>
-        <location line="+439"/>
+        <location line="+452"/>
         <source>Recent Places</source>
         <translation>Lugares recientes</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qsidebar.cpp" line="+450"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qsidebar.cpp" line="+448"/>
         <source>Remove</source>
         <translation>Eliminar</translation>
     </message>
@@ -1356,46 +1670,41 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QFileSystemModel</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qfilesystemmodel.cpp" line="+791"/>
-        <location filename="../../qtbase/src/widgets/itemviews/qdirmodel.cpp" line="+463"/>
         <source>%1 TB</source>
-        <translation>%1 TiB</translation>
+        <translation type="vanished">%1 TiB</translation>
     </message>
     <message>
-        <location line="+2"/>
-        <location filename="../../qtbase/src/widgets/itemviews/qdirmodel.cpp" line="+2"/>
         <source>%1 GB</source>
-        <translation>%1 GiB</translation>
+        <translation type="vanished">%1 GiB</translation>
     </message>
     <message>
-        <location line="+2"/>
-        <location filename="../../qtbase/src/widgets/itemviews/qdirmodel.cpp" line="+2"/>
         <source>%1 MB</source>
-        <translation>%1 MiB</translation>
+        <translation type="vanished">%1 MiB</translation>
     </message>
     <message>
-        <location line="+2"/>
-        <location filename="../../qtbase/src/widgets/itemviews/qdirmodel.cpp" line="+2"/>
         <source>%1 KB</source>
-        <translation>%1 KiB</translation>
+        <translation type="vanished">%1 KiB</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>%1 bytes</source>
-        <translation>%1 bytes</translation>
+        <translation type="vanished">%1 bytes</translation>
     </message>
     <message>
-        <location line="+94"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qfilesystemmodel.cpp" line="+868"/>
         <source>Invalid filename</source>
         <translation>Nombre de fichero no válido</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>&lt;b&gt;The name &quot;%1&quot; can not be used.&lt;/b&gt;&lt;p&gt;Try using another name, with fewer characters or no punctuations marks.</source>
-        <translation>&lt;b&gt;No se puede utilizar el nombre «%1».&lt;/b&gt;&lt;p&gt;Intente usar otro nombre con menos caracteres o sin signos de puntuación.</translation>
+        <translation type="vanished">&lt;b&gt;No se puede utilizar el nombre «%1».&lt;/b&gt;&lt;p&gt;Intente usar otro nombre con menos caracteres o sin signos de puntuación.</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="-3"/>
+        <source>&lt;b&gt;The name &quot;%1&quot; cannot be used.&lt;/b&gt;&lt;p&gt;Try using another name, with fewer characters or no punctuation marks.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+102"/>
         <source>Name</source>
         <translation>Nombre</translation>
     </message>
@@ -1422,7 +1731,7 @@ Do you want to delete it anyway?</source>
         <translation>Última modificación</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qfilesystemmodel_p.h" line="+272"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qfilesystemmodel_p.h" line="+257"/>
         <source>My Computer</source>
         <translation>Mi Equipo</translation>
     </message>
@@ -1432,71 +1741,70 @@ Do you want to delete it anyway?</source>
         <translation>Equipo</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/widgets/itemviews/qdirmodel.cpp" line="+1"/>
         <source>%1 byte(s)</source>
-        <translation>%1 byte(s)</translation>
+        <translation type="vanished">%1 byte(s)</translation>
     </message>
 </context>
 <context>
     <name>QFontDatabase</name>
     <message>
-        <location filename="../../qtbase/src/gui/text/qfontdatabase.cpp" line="+144"/>
-        <location line="+1190"/>
+        <location filename="../../qtbase/src/gui/text/qfontdatabase.cpp" line="+133"/>
+        <location line="+1198"/>
         <source>Normal</source>
         <comment>The Normal or Regular font weight</comment>
         <translation>Normal</translation>
     </message>
     <message>
-        <location line="-1188"/>
-        <location line="+1168"/>
+        <location line="-1196"/>
+        <location line="+1176"/>
         <source>Bold</source>
         <translation>Negrita</translation>
     </message>
     <message>
-        <location line="-1165"/>
-        <location line="+1167"/>
+        <location line="-1173"/>
+        <location line="+1175"/>
         <source>Demi Bold</source>
         <translation>Seminegrita</translation>
     </message>
     <message>
-        <location line="-1165"/>
-        <location line="+1167"/>
+        <location line="-1173"/>
+        <location line="+1175"/>
         <source>Medium</source>
         <comment>The Medium font weight</comment>
         <translation>Mediana</translation>
     </message>
     <message>
-        <location line="-1165"/>
-        <location line="+1157"/>
+        <location line="-1173"/>
+        <location line="+1165"/>
         <source>Black</source>
         <translation>Negra</translation>
     </message>
     <message>
-        <location line="-1155"/>
-        <location line="+1170"/>
+        <location line="-1163"/>
+        <location line="+1178"/>
         <source>Light</source>
         <translation>Ligera</translation>
     </message>
     <message>
-        <location line="-1167"/>
-        <location line="+1163"/>
+        <location line="-1175"/>
+        <location line="+1171"/>
         <source>Thin</source>
         <translation>Delgada</translation>
     </message>
     <message>
-        <location line="-1161"/>
-        <location line="+1163"/>
+        <location line="-1169"/>
+        <location line="+1171"/>
         <source>Extra Light</source>
         <translation>ExtraDelgada</translation>
     </message>
     <message>
-        <location line="-1161"/>
-        <location line="+1150"/>
+        <location line="-1169"/>
+        <location line="+1158"/>
         <source>Extra Bold</source>
         <translation>ExtraNegrita</translation>
     </message>
     <message>
-        <location line="-1145"/>
+        <location line="-1153"/>
         <source>Extra</source>
         <extracomment>The word for &quot;Extra&quot; as in &quot;Extra Bold, Extra Thin&quot; used as a pattern for string searches</extracomment>
         <translation>Extra</translation>
@@ -1509,13 +1817,13 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <location line="+95"/>
-        <location line="+1064"/>
+        <location line="+1072"/>
         <source>Italic</source>
         <translation>Cursiva</translation>
     </message>
     <message>
-        <location line="-1062"/>
-        <location line="+1064"/>
+        <location line="-1070"/>
+        <location line="+1072"/>
         <source>Oblique</source>
         <translation>Oblǐcua</translation>
     </message>
@@ -1761,7 +2069,7 @@ Do you want to delete it anyway?</source>
         <translation>Tiempo de espera expirado al conectar al servidor %1</translation>
     </message>
     <message>
-        <location line="+106"/>
+        <location line="+104"/>
         <source>Connected to host %1</source>
         <translation>Conectado al equipo %1</translation>
     </message>
@@ -1776,7 +2084,7 @@ Do you want to delete it anyway?</source>
         <translation>Error desconocido</translation>
     </message>
     <message>
-        <location line="+943"/>
+        <location line="+954"/>
         <source>Connecting to host failed:
 %1</source>
         <translation>La conexión con el equipo ha fallado:
@@ -1847,7 +2155,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QGnomeTheme</name>
     <message>
-        <location filename="../../qtbase/src/platformsupport/themes/genericunix/qgenericunixthemes.cpp" line="+812"/>
+        <location filename="../../qtbase/src/platformsupport/themes/genericunix/qgenericunixthemes.cpp" line="+816"/>
         <source>&amp;OK</source>
         <translation>&amp;Aceptar</translation>
     </message>
@@ -1875,22 +2183,106 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QGuiApplication</name>
     <message>
-        <location filename="../../qtbase/src/gui/kernel/qguiapplication.cpp" line="+210"/>
+        <location filename="../../qtbase/src/gui/kernel/qguiapplication.cpp" line="+234"/>
         <source>QT_LAYOUT_DIRECTION</source>
         <comment>Translate this string to the string &apos;LTR&apos; in left-to-right languages or to &apos;RTL&apos; in right-to-left languages (such as Hebrew and Arabic) to get proper widget layout.</comment>
         <translation>LTR</translation>
+    </message>
+    <message>
+        <location line="+1120"/>
+        <source>QPA plugin. See QGuiApplication documentation for available options for each plugin.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Path to the platform plugins.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Platform theme.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Additional plugins to load, can be specified multiple times.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Window geometry for the main window, using the X11-syntax, like 100x100+50+50.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Default window icon.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Title of the first window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Sets the application&apos;s layout direction to Qt::RightToLeft (debugging helper).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Restores the application from an earlier session.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Display name, overrides $DISPLAY.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Instance name according to ICCCM 4.1.2.5.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Disable mouse grabbing (useful in debuggers).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Force mouse grabbing (even when running in a debugger).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>ID of the X11 Visual to use.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Alias for --windowgeometry.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Alias for --windowicon.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Alias for --windowtitle.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>QHostInfo</name>
     <message>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo.cpp" line="+244"/>
-        <location line="+364"/>
+        <location filename="../../qtbase/src/network/kernel/qhostinfo.cpp" line="+814"/>
         <source>No host name given</source>
         <translation>No se dio nombre de equipo</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo_p.h" line="+144"/>
+        <location filename="../../qtbase/src/network/kernel/qhostinfo_p.h" line="+132"/>
         <source>Unknown error</source>
         <translation>Error desconocido</translation>
     </message>
@@ -1898,41 +2290,33 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QHostInfoAgent</name>
     <message>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo_unix.cpp" line="+195"/>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo_win.cpp" line="+171"/>
+        <location filename="../../qtbase/src/network/kernel/qhostinfo.cpp" line="-365"/>
         <source>No host name given</source>
         <translation>No se dio nombre de equipo</translation>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo_win.cpp" line="+0"/>
         <source>Invalid hostname</source>
         <translation>Nombre de equipo inválido</translation>
     </message>
     <message>
-        <location line="+52"/>
-        <location line="+39"/>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo_win.cpp" line="+30"/>
-        <location line="+25"/>
+        <location line="+50"/>
+        <location line="+8"/>
         <source>Unknown address type</source>
         <translation>Dirección de tipo desconocido</translation>
     </message>
     <message>
-        <location line="-26"/>
-        <location line="+32"/>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo_win.cpp" line="-122"/>
+        <location line="+19"/>
         <source>Host not found</source>
         <translation>Equipo no encontrado</translation>
     </message>
     <message>
-        <location line="+4"/>
         <source>Unknown error</source>
-        <translation>Error desconocido</translation>
+        <translation type="vanished">Error desconocido</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/kernel/qhostinfo_win.cpp" line="+4"/>
         <source>Unknown error (%1)</source>
-        <translation>Error desconocido (%1)</translation>
+        <translation type="vanished">Error desconocido (%1)</translation>
     </message>
 </context>
 <context>
@@ -1949,12 +2333,13 @@ Do you want to delete it anyway?</source>
         <translation>Conexión rechazada</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location filename="../../qtbase/src/network/access/qhttp2protocolhandler.cpp" line="+214"/>
+        <location filename="../../qtbase/src/network/access/qhttpnetworkconnection.cpp" line="+3"/>
         <source>Connection closed</source>
         <translation>Conexión cerrada</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location filename="../../qtbase/src/network/access/qhttpnetworkconnection.cpp" line="+6"/>
         <source>Proxy requires authentication</source>
         <translation>El proxy requiere autenticación</translation>
     </message>
@@ -1985,7 +2370,7 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <location line="+3"/>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="+1175"/>
+        <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="+1190"/>
         <source>Insecure redirect</source>
         <translation>Redirección insegura</translation>
     </message>
@@ -1993,17 +2378,17 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QHttpSocketEngine</name>
     <message>
-        <location filename="../../qtbase/src/network/socket/qhttpsocketengine.cpp" line="-120"/>
+        <location filename="../../qtbase/src/network/socket/qhttpsocketengine.cpp" line="-114"/>
         <source>Did not receive HTTP response from proxy</source>
         <translation>Respuesta HTTP no recibida del proxy</translation>
     </message>
     <message>
-        <location line="+58"/>
+        <location line="+53"/>
         <source>Error parsing authentication request from proxy</source>
         <translation>Error durante el análisis sintáctico de la petición de autenticación del proxy</translation>
     </message>
     <message>
-        <location line="+37"/>
+        <location line="+36"/>
         <source>Authentication required</source>
         <translation>Se precisa autenticación</translation>
     </message>
@@ -2041,12 +2426,12 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QIBaseDriver</name>
     <message>
-        <location filename="../../qtbase/src/plugins/sqldrivers/ibase/qsql_ibase.cpp" line="+1542"/>
+        <location filename="../../qtbase/src/plugins/sqldrivers/ibase/qsql_ibase.cpp" line="+1532"/>
         <source>Error opening database</source>
         <translation>Error al abrir la base de datos</translation>
     </message>
     <message>
-        <location line="+57"/>
+        <location line="+56"/>
         <source>Could not start transaction</source>
         <translation>No fue posible iniciar la transacción</translation>
     </message>
@@ -2064,7 +2449,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QIBaseResult</name>
     <message>
-        <location line="-1172"/>
+        <location line="-1158"/>
         <source>Unable to create BLOB</source>
         <translation>Imposible crear un BLOB</translation>
     </message>
@@ -2084,7 +2469,7 @@ Do you want to delete it anyway?</source>
         <translation>Imposible leer el BLOB</translation>
     </message>
     <message>
-        <location line="+126"/>
+        <location line="+112"/>
         <location line="+188"/>
         <source>Could not find array</source>
         <translation>No fue posible encontrar la tabla</translation>
@@ -2174,12 +2559,12 @@ Do you want to delete it anyway?</source>
         <translation>No queda espacio en el dispositivo</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qfsfileengine_unix.cpp" line="+146"/>
+        <location filename="../../qtbase/src/corelib/io/qfsfileengine_unix.cpp" line="+99"/>
         <source>file to open is a directory</source>
         <translation>el archivo a abrir es un directorio</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qiodevice.cpp" line="+1966"/>
+        <location filename="../../qtbase/src/corelib/io/qiodevice.cpp" line="+2108"/>
         <source>Unknown error</source>
         <translation>Error desconocido</translation>
     </message>
@@ -2187,12 +2572,12 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QImageReader</name>
     <message>
-        <location filename="../../qtbase/src/gui/image/qimagereader.cpp" line="+567"/>
+        <location filename="../../qtbase/src/gui/image/qimagereader.cpp" line="+531"/>
         <source>Invalid device</source>
         <translation>Dispositivo inválido</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+36"/>
         <source>File not found</source>
         <translation>Archivo no encontrado</translation>
     </message>
@@ -2202,12 +2587,12 @@ Do you want to delete it anyway?</source>
         <translation>Formato de imagen no soportado</translation>
     </message>
     <message>
-        <location line="+703"/>
+        <location line="+720"/>
         <source>Unable to read image data</source>
         <translation>No se puede leer los datos de la imagen</translation>
     </message>
     <message>
-        <location line="+195"/>
+        <location line="+197"/>
         <source>Unknown error</source>
         <translation>Error desconocido</translation>
     </message>
@@ -2215,7 +2600,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QImageWriter</name>
     <message>
-        <location filename="../../qtbase/src/gui/image/qimagewriter.cpp" line="+273"/>
+        <location filename="../../qtbase/src/gui/image/qimagewriter.cpp" line="+281"/>
         <source>Unknown error</source>
         <translation>Error desconocido</translation>
     </message>
@@ -2236,15 +2621,20 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <location line="+5"/>
-        <location line="+510"/>
+        <location line="+525"/>
         <source>Unsupported image format</source>
         <translation>Formato de imagen no soportado</translation>
+    </message>
+    <message>
+        <location line="-75"/>
+        <source>Image is empty</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>QInputDialog</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qinputdialog.cpp" line="+231"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qinputdialog.cpp" line="+244"/>
         <source>Enter a value:</source>
         <translation>Introduzca un valor:</translation>
     </message>
@@ -2252,7 +2642,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QJsonParseError</name>
     <message>
-        <location filename="../../qtbase/src/corelib/json/qjsonparser.cpp" line="+66"/>
+        <location filename="../../qtbase/src/corelib/serialization/qjsonparser.cpp" line="+68"/>
         <source>no error occurred</source>
         <translation>no se ha producido ningún error</translation>
     </message>
@@ -2431,19 +2821,14 @@ Do you want to delete it anyway?</source>
         <translation type="vanished">Los datos de verificación del complemento no coinciden en «%1»</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/corelib/plugin/qlibrary.cpp" line="+256"/>
-        <source>Out of memory while loading plugin &apos;%1&apos;.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+78"/>
+        <location filename="../../qtbase/src/corelib/plugin/qlibrary.cpp" line="+334"/>
         <source>Failed to extract plugin meta data from &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+172"/>
-        <location line="+219"/>
-        <location line="+20"/>
+        <location line="+171"/>
+        <location line="+261"/>
+        <location line="+18"/>
         <source>The shared library was not found.</source>
         <translation>No se ha encontrado la biblioteca compartida.</translation>
     </message>
@@ -2463,28 +2848,26 @@ Do you want to delete it anyway?</source>
         <translation>El complemento «%1» usa una biblioteca Qt incompatible. (No se pueden mezclar las bibliotecas de «depuración» y de «distribución».)</translation>
     </message>
     <message>
-        <location line="+312"/>
+        <location line="+319"/>
         <source>Unknown error</source>
         <translation>Error desconocido</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/corelib/plugin/qlibrary_unix.cpp" line="+224"/>
-        <location filename="../../qtbase/src/corelib/plugin/qlibrary_win.cpp" line="+118"/>
+        <location filename="../../qtbase/src/corelib/plugin/qlibrary_unix.cpp" line="+281"/>
+        <location filename="../../qtbase/src/corelib/plugin/qlibrary_win.cpp" line="+122"/>
         <source>Cannot load library %1: %2</source>
         <translation>No se puede cargar la biblioteca %1: %2</translation>
     </message>
     <message>
-        <location line="+16"/>
+        <location line="+17"/>
         <location line="+3"/>
-        <location filename="../../qtbase/src/corelib/plugin/qlibrary_win.cpp" line="+36"/>
+        <location filename="../../qtbase/src/corelib/plugin/qlibrary_win.cpp" line="+37"/>
         <source>Cannot unload library %1: %2</source>
         <translation>No se puede descargar la biblioteca %1: %2</translation>
     </message>
     <message>
-        <location line="+26"/>
-        <location filename="../../qtbase/src/corelib/plugin/qlibrary_win.cpp" line="+12"/>
         <source>Cannot resolve symbol &quot;%1&quot; in %2: %3</source>
-        <translation>No se puede resolver el símbolo %1 en %2: %3</translation>
+        <translation type="vanished">No se puede resolver el símbolo %1 en %2: %3</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/plugin/qmachparser.cpp" line="+87"/>
@@ -2532,7 +2915,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QLineEdit</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qlineedit.cpp" line="+2123"/>
+        <location filename="../../qtbase/src/widgets/widgets/qlineedit.cpp" line="+2211"/>
         <source>&amp;Undo</source>
         <translation>&amp;Deshacer</translation>
     </message>
@@ -2570,7 +2953,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QLocalServer</name>
     <message>
-        <location filename="../../qtbase/src/network/socket/qlocalserver.cpp" line="+295"/>
+        <location filename="../../qtbase/src/network/socket/qlocalserver.cpp" line="+335"/>
         <location filename="../../qtbase/src/network/socket/qlocalserver_unix.cpp" line="+323"/>
         <source>%1: Name error</source>
         <translation>%1: Error de nombre</translation>
@@ -2594,8 +2977,8 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QLocalSocket</name>
     <message>
-        <location filename="../../qtbase/src/network/socket/qlocalsocket_tcp.cpp" line="+130"/>
-        <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+135"/>
+        <location filename="../../qtbase/src/network/socket/qlocalsocket_tcp.cpp" line="+135"/>
+        <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+139"/>
         <source>%1: Connection refused</source>
         <translation>%1: Conexión rechazada</translation>
     </message>
@@ -2608,8 +2991,8 @@ Do you want to delete it anyway?</source>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+3"/>
-        <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="+78"/>
-        <location line="+63"/>
+        <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="+72"/>
+        <location line="+64"/>
         <source>%1: Invalid name</source>
         <translation>%1: Nombre inválido</translation>
     </message>
@@ -2640,7 +3023,7 @@ Do you want to delete it anyway?</source>
     <message>
         <location line="+3"/>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+3"/>
-        <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="-68"/>
+        <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="-69"/>
         <source>%1: Connection error</source>
         <translation>%1: Error de conexión</translation>
     </message>
@@ -2663,13 +3046,13 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <location line="+58"/>
-        <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="+57"/>
+        <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="+58"/>
         <source>Trying to connect while connection is in progress</source>
         <translation>Intentando conectar mientras la conexión está en progreso</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/network/socket/qlocalsocket_unix.cpp" line="+4"/>
-        <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="-42"/>
+        <location filename="../../qtbase/src/network/socket/qlocalsocket_win.cpp" line="-43"/>
         <source>%1: Unknown error %2</source>
         <translation>%1: Error desconocido %2</translation>
     </message>
@@ -2678,11 +3061,16 @@ Do you want to delete it anyway?</source>
         <source>%1: Access denied</source>
         <translation>%1: Acceso denegado</translation>
     </message>
+    <message>
+        <location line="+135"/>
+        <source>Socket is not connected</source>
+        <translation type="unfinished">El socket no está conectado</translation>
+    </message>
 </context>
 <context>
     <name>QMYSQLDriver</name>
     <message>
-        <location filename="../../qtbase/src/plugins/sqldrivers/mysql/qsql_mysql.cpp" line="+1363"/>
+        <location filename="../../qtbase/src/plugins/sqldrivers/mysql/qsql_mysql.cpp" line="+1294"/>
         <source>Unable to allocate a MYSQL object</source>
         <translation>No ha sido posible reservar un objeto MYSQL</translation>
     </message>
@@ -2697,7 +3085,7 @@ Do you want to delete it anyway?</source>
         <translation>No es posible establecer una conexión</translation>
     </message>
     <message>
-        <location line="+168"/>
+        <location line="+138"/>
         <source>Unable to begin transaction</source>
         <translation>No es posible iniciar la transacción</translation>
     </message>
@@ -2715,13 +3103,13 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QMYSQLResult</name>
     <message>
-        <location line="-1083"/>
-        <location line="+32"/>
+        <location line="-1015"/>
+        <location line="+28"/>
         <source>Unable to fetch data</source>
         <translation>No es posible obtener los datos</translation>
     </message>
     <message>
-        <location line="+179"/>
+        <location line="+172"/>
         <source>Unable to execute query</source>
         <translation>No es posible ejecutar la consulta</translation>
     </message>
@@ -2731,7 +3119,7 @@ Do you want to delete it anyway?</source>
         <translation>No es posible almacenar el resultado</translation>
     </message>
     <message>
-        <location line="+108"/>
+        <location line="+107"/>
         <source>Unable to execute next query</source>
         <translation>No se puede ejecutar la siguiente consulta</translation>
     </message>
@@ -2741,13 +3129,13 @@ Do you want to delete it anyway?</source>
         <translation>No se puede almacenar el siguiente resultado</translation>
     </message>
     <message>
-        <location line="+72"/>
+        <location line="+66"/>
         <location line="+8"/>
         <source>Unable to prepare statement</source>
         <translation>No es posible preparar la instrucción</translation>
     </message>
     <message>
-        <location line="+38"/>
+        <location line="+35"/>
         <source>Unable to reset statement</source>
         <translation>No es posible reinicializar la instrucción</translation>
     </message>
@@ -2776,7 +3164,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QMdiArea</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qmdiarea.cpp" line="+290"/>
+        <location filename="../../qtbase/src/widgets/widgets/qmdiarea.cpp" line="+288"/>
         <source>(Untitled)</source>
         <translation>(Sin título)</translation>
     </message>
@@ -2784,7 +3172,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QMdiSubWindow</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qmdisubwindow.cpp" line="+276"/>
+        <location filename="../../qtbase/src/widgets/widgets/qmdisubwindow.cpp" line="+281"/>
         <source>- [%1]</source>
         <translation>- [%1]</translation>
     </message>
@@ -2794,7 +3182,7 @@ Do you want to delete it anyway?</source>
         <translation>%1 - [%2]</translation>
     </message>
     <message>
-        <location line="+54"/>
+        <location line="+44"/>
         <source>Minimize</source>
         <translation>Minimizar</translation>
     </message>
@@ -2877,7 +3265,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QMessageBox</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qmessagebox.cpp" line="-2249"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qmessagebox.cpp" line="-2306"/>
         <source>Show Details...</source>
         <translation>Mostrar los detalles...</translation>
     </message>
@@ -2887,8 +3275,9 @@ Do you want to delete it anyway?</source>
         <translation>Ocultar los detalles...</translation>
     </message>
     <message>
-        <location line="+1646"/>
-        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
+        <location line="+1703"/>
+        <source>&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under multiple licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of GNU (L)GPL.&lt;/p&gt;&lt;p&gt;Qt licensed under GNU (L)GPL is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the respective licenses.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</source>
+        <extracomment>Leave this text untranslated or include a verbatim copy of it below and note that it is the authoritative version in case of doubt.</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2900,7 +3289,7 @@ Do you want to delete it anyway?</source>
         <translation type="vanished">Ayuda</translation>
     </message>
     <message>
-        <location line="-5"/>
+        <location line="-6"/>
         <source>&lt;h3&gt;About Qt&lt;/h3&gt;&lt;p&gt;This program uses Qt version %1.&lt;/p&gt;</source>
         <translation>&lt;h3&gt;Acerca de Qt&lt;/h3&gt;&lt;p&gt;Este programa usa Qt versión %1.&lt;/p&gt;</translation>
     </message>
@@ -2909,7 +3298,7 @@ Do you want to delete it anyway?</source>
         <translation type="vanished">&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across all major desktop operating systems. It is also available for embedded Linux and other embedded and mobile operating systems.&lt;/p&gt;&lt;p&gt;Qt is available under three different licensing options designed to accommodate the needs of our various users.&lt;/p&gt;&lt;p&gt;Qt licensed under our commercial license agreement is appropriate for development of proprietary/commercial software where you do not want to share any source code with third parties or otherwise cannot comply with the terms of the GNU LGPL version 3 or GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 3 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 3.&lt;/p&gt;&lt;p&gt;Qt licensed under the GNU LGPL version 2.1 is appropriate for the development of Qt&amp;nbsp;applications provided you can comply with the terms and conditions of the GNU LGPL version 2.1.&lt;/p&gt;&lt;p&gt;Please see &lt;a href=&quot;http://%2/&quot;&gt;%2&lt;/a&gt; for an overview of Qt licensing.&lt;/p&gt;&lt;p&gt;Copyright (C) %1 The Qt Company Ltd and other contributors.&lt;/p&gt;&lt;p&gt;Qt and the Qt logo are trademarks of The Qt Company Ltd.&lt;/p&gt;&lt;p&gt;Qt is The Qt Company Ltd product developed as an open source project. See &lt;a href=&quot;http://%3/&quot;&gt;%3&lt;/a&gt; for more information.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+33"/>
         <source>About Qt</source>
         <translation>Acerca de Qt</translation>
     </message>
@@ -2918,7 +3307,7 @@ Do you want to delete it anyway?</source>
     <name>QNativeSocketEngine</name>
     <message>
         <location filename="../../qtbase/src/network/socket/qnativesocketengine.cpp" line="+235"/>
-        <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+1382"/>
+        <location filename="../../qtbase/src/network/socket/qnativesocketengine_winrt.cpp" line="+1519"/>
         <source>Unable to initialize non-blocking socket</source>
         <translation>Imposible inicializar el socket no bloqueante</translation>
     </message>
@@ -3159,7 +3548,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QNetworkAccessFtpBackend</name>
     <message>
-        <location filename="../../qtbase/src/network/access/qnetworkaccessftpbackend.cpp" line="+137"/>
+        <location filename="../../qtbase/src/network/access/qnetworkaccessftpbackend.cpp" line="+139"/>
         <source>No suitable proxy found</source>
         <translation>Proxy válido no encontrado</translation>
     </message>
@@ -3174,7 +3563,7 @@ Do you want to delete it anyway?</source>
         <translation>Fallo al hacer login en %1: autenticación requerida</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+35"/>
         <source>Error while downloading %1: %2</source>
         <translation>Error mientras se estaba descargando %1: %2</translation>
     </message>
@@ -3187,30 +3576,29 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QNetworkAccessManager</name>
     <message>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+1131"/>
         <source>Network access is disabled.</source>
-        <translation>Acceso a la red deshabilitado.</translation>
+        <translation type="vanished">Acceso a la red deshabilitado.</translation>
     </message>
 </context>
 <context>
     <name>QNetworkReply</name>
     <message>
-        <location filename="../../qtbase/src/network/access/qhttpthreaddelegate.cpp" line="+506"/>
+        <location filename="../../qtbase/src/network/access/qhttpthreaddelegate.cpp" line="+541"/>
         <location line="+26"/>
         <source>Error transferring %1 - server replied: %2</source>
         <translation>Error transfiriendo %1- el servidor respondió: %2</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="+702"/>
-        <location line="+226"/>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="-1033"/>
+        <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="+721"/>
+        <location line="+252"/>
+        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+98"/>
         <location line="+257"/>
         <source>Background request not allowed.</source>
         <translation>Petición en segundo plano no permitida.</translation>
     </message>
     <message>
-        <location line="-250"/>
-        <location line="+221"/>
+        <location line="-273"/>
+        <location line="+244"/>
         <location line="+15"/>
         <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="-232"/>
         <location line="+203"/>
@@ -3219,19 +3607,19 @@ Do you want to delete it anyway?</source>
         <translation>Error de sesión de red.</translation>
     </message>
     <message>
-        <location line="-191"/>
+        <location line="-217"/>
         <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="-211"/>
         <source>backend start error.</source>
         <translation>error de iniciación de backend.</translation>
     </message>
     <message>
-        <location line="+291"/>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+679"/>
+        <location line="+319"/>
+        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+675"/>
         <source>Temporary network failure.</source>
         <translation>Fallo temporal de red.</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="-723"/>
+        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="-719"/>
         <source>Protocol &quot;%1&quot; is unknown</source>
         <translation>Protocolo %1 desconocido</translation>
     </message>
@@ -3239,13 +3627,13 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QNetworkReplyHttpImpl</name>
     <message>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="-1914"/>
+        <location filename="../../qtbase/src/network/access/qnetworkreplyhttpimpl.cpp" line="-1969"/>
         <location line="+16"/>
         <source>Operation canceled</source>
         <translation>Operación cancelada</translation>
     </message>
     <message>
-        <location line="+383"/>
+        <location line="+389"/>
         <source>No suitable proxy found</source>
         <translation>No se encontró un proxy válido</translation>
     </message>
@@ -3253,7 +3641,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QNetworkReplyImpl</name>
     <message>
-        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+855"/>
+        <location filename="../../qtbase/src/network/access/qnetworkreplyimpl.cpp" line="+851"/>
         <location line="+29"/>
         <source>Operation canceled</source>
         <translation>Operación cancelada</translation>
@@ -3270,7 +3658,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QNetworkSessionPrivateImpl</name>
     <message>
-        <location filename="../../qtbase/src/plugins/bearer/qnetworksession_impl.cpp" line="+254"/>
+        <location filename="../../qtbase/src/plugins/bearer/qnetworksession_impl.cpp" line="+253"/>
         <source>Unknown session error.</source>
         <translation>Error de sesión desconocido.</translation>
     </message>
@@ -3298,7 +3686,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QOCIDriver</name>
     <message>
-        <location filename="../../qtbase/src/plugins/sqldrivers/oci/qsql_oci.cpp" line="+2131"/>
+        <location filename="../../qtbase/src/plugins/sqldrivers/oci/qsql_oci.cpp" line="+2169"/>
         <source>Unable to initialize</source>
         <comment>QOCIDriver</comment>
         <translation>La inicialización ha fallado</translation>
@@ -3327,8 +3715,8 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QOCIResult</name>
     <message>
-        <location line="-1043"/>
-        <location line="+194"/>
+        <location line="-1044"/>
+        <location line="+193"/>
         <location line="+15"/>
         <source>Unable to bind column for batch execute</source>
         <translation>No es posible ligar la columna para una ejecución por lotes</translation>
@@ -3339,7 +3727,7 @@ Do you want to delete it anyway?</source>
         <translation>No es posible ejecutar la instrucción por lotes</translation>
     </message>
     <message>
-        <location line="+327"/>
+        <location line="+329"/>
         <source>Unable to goto next</source>
         <translation>No es posible pasar al siguiente</translation>
     </message>
@@ -3372,7 +3760,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QODBCDriver</name>
     <message>
-        <location filename="../../qtbase/src/plugins/sqldrivers/odbc/qsql_odbc.cpp" line="+1972"/>
+        <location filename="../../qtbase/src/plugins/sqldrivers/odbc/qsql_odbc.cpp" line="+1979"/>
         <source>Unable to connect</source>
         <translation>No es posible establecer una conexión</translation>
     </message>
@@ -3405,26 +3793,26 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QODBCResult</name>
     <message>
-        <location line="-1135"/>
-        <location line="+618"/>
+        <location line="-1138"/>
+        <location line="+621"/>
         <location filename="../../qtbase/src/plugins/sqldrivers/db2/qsql_db2.cpp" line="+195"/>
         <source>Unable to fetch last</source>
         <translation>No se ha podido recuperar el último</translation>
     </message>
     <message>
-        <location line="-781"/>
-        <location line="+348"/>
+        <location line="-784"/>
+        <location line="+349"/>
         <source>QODBCResult::reset: Unable to set &apos;SQL_CURSOR_STATIC&apos; as statement attribute. Please check your ODBC driver configuration</source>
         <translation>QODBCResult::reset: No es posible establecer «SQL_CURSOR_STATIC» como atributo de instrucción. Compruebe la configuración de su controlador ODBC</translation>
     </message>
     <message>
-        <location line="-338"/>
-        <location line="+631"/>
+        <location line="-339"/>
+        <location line="+634"/>
         <source>Unable to execute statement</source>
         <translation>No es posible ejecutar la instrucción</translation>
     </message>
     <message>
-        <location line="-576"/>
+        <location line="-579"/>
         <source>Unable to fetch</source>
         <translation>No se ha podido recuperar</translation>
     </message>
@@ -3444,12 +3832,12 @@ Do you want to delete it anyway?</source>
         <translation>No se ha podido recuperar el previo</translation>
     </message>
     <message>
-        <location line="+228"/>
+        <location line="+229"/>
         <source>Unable to prepare statement</source>
         <translation>No es posible preparar la instrucción</translation>
     </message>
     <message>
-        <location line="+274"/>
+        <location line="+276"/>
         <source>Unable to bind variable</source>
         <translation>No es posible ligar la variable</translation>
     </message>
@@ -3457,12 +3845,12 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QPSQLDriver</name>
     <message>
-        <location filename="../../qtbase/src/plugins/sqldrivers/psql/qsql_psql.cpp" line="+957"/>
+        <location filename="../../qtbase/src/plugins/sqldrivers/psql/qsql_psql.cpp" line="+1223"/>
         <source>Unable to connect</source>
         <translation>No es posible establecer conexión</translation>
     </message>
     <message>
-        <location line="+52"/>
+        <location line="+50"/>
         <source>Could not begin transaction</source>
         <translation>No fue posible iniciar la transacción</translation>
     </message>
@@ -3477,7 +3865,7 @@ Do you want to delete it anyway?</source>
         <translation>No fue posible anular la transacción</translation>
     </message>
     <message>
-        <location line="+377"/>
+        <location line="+274"/>
         <source>Unable to subscribe</source>
         <translation>No se ha podido dar de subscribir</translation>
     </message>
@@ -3490,12 +3878,29 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QPSQLResult</name>
     <message>
-        <location line="-1186"/>
+        <location line="-1300"/>
+        <source>Query results lost - probably discarded on executing another SQL query.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+33"/>
         <source>Unable to create query</source>
         <translation>No es posible crear la consulta</translation>
     </message>
     <message>
-        <location line="+364"/>
+        <location line="+195"/>
+        <location line="+19"/>
+        <source>Unable to get result</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+153"/>
+        <location line="+195"/>
+        <source>Unable to send query</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-29"/>
         <source>Unable to prepare statement</source>
         <translation>No se ha podido preparar la instrucción</translation>
     </message>
@@ -3598,7 +4003,7 @@ Do you want to delete it anyway?</source>
         <translation>Páginas por hoja:</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_unix.cpp" line="+284"/>
+        <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_unix.cpp" line="+297"/>
         <source>Millimeters (mm)</source>
         <translation>Milímetros (mm)</translation>
     </message>
@@ -3628,13 +4033,13 @@ Do you want to delete it anyway?</source>
         <translation>Cicero (CC)</translation>
     </message>
     <message>
-        <location line="+64"/>
-        <location line="+10"/>
+        <location line="+68"/>
+        <location line="+17"/>
         <source>Custom</source>
         <translation>Personalizado</translation>
     </message>
     <message>
-        <location line="+52"/>
+        <location line="+60"/>
         <source>mm</source>
         <extracomment>Unit &apos;Millimeter&apos;</extracomment>
         <translation>mm</translation>
@@ -3673,7 +4078,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QPageSize</name>
     <message>
-        <location filename="../../qtbase/src/gui/painting/qpagesize.cpp" line="+480"/>
+        <location filename="../../qtbase/src/gui/painting/qpagesize.cpp" line="+478"/>
         <source>Custom (%1mm x %2mm)</source>
         <extracomment>Custom size name in millimeters</extracomment>
         <translation>Personalizado (%1mm x %2mm)</translation>
@@ -4268,7 +4673,7 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QPlatformTheme</name>
     <message>
-        <location filename="../../qtbase/src/gui/kernel/qplatformtheme.cpp" line="+698"/>
+        <location filename="../../qtbase/src/gui/kernel/qplatformtheme.cpp" line="+708"/>
         <source>OK</source>
         <translation>Aceptar</translation>
     </message>
@@ -4361,12 +4766,12 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QPluginLoader</name>
     <message>
-        <location filename="../../qtbase/src/corelib/plugin/qpluginloader.cpp" line="+266"/>
+        <location filename="../../qtbase/src/corelib/plugin/qpluginloader.cpp" line="+265"/>
         <source>The plugin was not loaded.</source>
         <translation>El complemento no fue cargado.</translation>
     </message>
     <message>
-        <location line="+123"/>
+        <location line="+132"/>
         <source>Unknown error</source>
         <translation>Error desconocido</translation>
     </message>
@@ -4374,14 +4779,14 @@ Do you want to delete it anyway?</source>
 <context>
     <name>QPrintDialog</name>
     <message>
-        <location filename="../../qtbase/src/printsupport/dialogs/qabstractprintdialog.cpp" line="+110"/>
+        <location filename="../../qtbase/src/printsupport/dialogs/qabstractprintdialog.cpp" line="+105"/>
         <location line="+16"/>
         <location filename="../../qtbase/src/printsupport/dialogs/qprintdialog_win.cpp" line="+264"/>
         <source>Print</source>
         <translation>Imprimir</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_unix.cpp" line="-136"/>
+        <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_unix.cpp" line="-155"/>
         <source>Left to Right, Top to Bottom</source>
         <translation>Izquierda a derecha, arriba a abajo</translation>
     </message>
@@ -4451,7 +4856,7 @@ Do you want to delete it anyway?</source>
         <translation>16 (4x4)</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/printsupport/dialogs/qprintdialog_unix.cpp" line="+324"/>
+        <location filename="../../qtbase/src/printsupport/dialogs/qprintdialog_unix.cpp" line="+636"/>
         <source>All Pages</source>
         <translation>Todas las páginas</translation>
     </message>
@@ -4466,28 +4871,48 @@ Do you want to delete it anyway?</source>
         <translation>Páginas pares</translation>
     </message>
     <message>
-        <location line="+6"/>
-        <location line="+161"/>
+        <location line="+11"/>
+        <location line="+301"/>
         <source>&amp;Options &gt;&gt;</source>
         <translation>&amp;Opciones &gt;&gt;</translation>
     </message>
     <message>
-        <location line="-156"/>
+        <location line="-296"/>
         <source>&amp;Print</source>
         <translation>Im&amp;primir</translation>
     </message>
     <message>
-        <location line="+160"/>
+        <location line="+300"/>
         <source>&amp;Options &lt;&lt;</source>
         <translation>&amp;Opciones &lt;&lt;</translation>
     </message>
     <message>
-        <location line="+211"/>
+        <location line="+146"/>
+        <source>Invalid Pages Definition</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>%1 does not follow the correct syntax. Please use &apos;,&apos; to separate ranges and pages, &apos;-&apos; to define ranges and make sure ranges do not intersect with each other.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Duplex Settings Conflicts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>There are conflicts in duplex settings. Do you want to fix them?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+76"/>
         <source>Print to File (PDF)</source>
         <translation>Imprimir a archivo (PDF)</translation>
     </message>
     <message>
-        <location line="+48"/>
+        <location line="+51"/>
         <source>Local file</source>
         <translation>Archivo local</translation>
     </message>
@@ -4497,12 +4922,12 @@ Do you want to delete it anyway?</source>
         <translation>Escribir archivo PDF</translation>
     </message>
     <message>
-        <location line="+37"/>
+        <location line="+47"/>
         <source>Print To File ...</source>
         <translation>Imprimir a fichero...</translation>
     </message>
     <message>
-        <location line="+64"/>
+        <location line="+22"/>
         <source>%1 is a directory.
 Please choose a different file name.</source>
         <translation>%1 es un directorio.
@@ -4540,16 +4965,14 @@ Por favor desactiva una de las opciones.</translation>
         <translation>Aceptar</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/printsupport/kernel/qplatformprintdevice.cpp" line="+308"/>
-        <location line="+24"/>
         <source>Automatic</source>
-        <translation>Automático</translation>
+        <translation type="vanished">Automático</translation>
     </message>
 </context>
 <context>
     <name>QPrintPreviewDialog</name>
     <message>
-        <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_unix.cpp" line="+295"/>
+        <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_unix.cpp" line="+384"/>
         <location line="+8"/>
         <location filename="../../qtbase/src/printsupport/dialogs/qpagesetupdialog_win.cpp" line="+54"/>
         <location line="+7"/>
@@ -4557,7 +4980,7 @@ Por favor desactiva una de las opciones.</translation>
         <translation>Configuración de página</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/printsupport/dialogs/qprintpreviewdialog.cpp" line="+256"/>
+        <location filename="../../qtbase/src/printsupport/dialogs/qprintpreviewdialog.cpp" line="+257"/>
         <source>%1%</source>
         <translation>%1%</translation>
     </message>
@@ -4650,14 +5073,34 @@ Por favor desactiva una de las opciones.</translation>
 <context>
     <name>QPrintPropertiesDialog</name>
     <message>
-        <location filename="../../qtbase/src/printsupport/dialogs/qprintdialog_unix.cpp" line="-643"/>
+        <location filename="../../qtbase/src/printsupport/dialogs/qprintdialog_unix.cpp" line="-1057"/>
         <source>Printer Properties</source>
         <translation>Propiedades de impresora</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+15"/>
         <source>Job Options</source>
         <translation>Opciones de trabajo</translation>
+    </message>
+    <message>
+        <location line="+62"/>
+        <source>Page Setup Conflicts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>There are conflicts in page setup options. Do you want to fix them?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Advanced Option Conflicts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>There are conflicts in some advanced options. Do you want to fix them?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4671,6 +5114,16 @@ Por favor desactiva una de las opciones.</translation>
         <location/>
         <source>Page</source>
         <translation>Página</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location/>
+        <source>There are conflicts in some options. Please fix them.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4761,24 +5214,50 @@ Por favor desactiva una de las opciones.</translation>
         <translation>Escala de grises</translation>
     </message>
     <message>
-        <location/>
         <source>Duplex Printing</source>
-        <translation>Impresión a doble cara</translation>
+        <translation type="vanished">Impresión a doble cara</translation>
     </message>
     <message>
-        <location/>
         <source>None</source>
-        <translation>Ninguno</translation>
+        <translation type="vanished">Ninguno</translation>
     </message>
     <message>
-        <location/>
         <source>Long side</source>
-        <translation>Lado largo</translation>
+        <translation type="vanished">Lado largo</translation>
+    </message>
+    <message>
+        <source>Short side</source>
+        <translation type="vanished">Lado corto</translation>
     </message>
     <message>
         <location/>
-        <source>Short side</source>
-        <translation>Lado corto</translation>
+        <source>Pages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location/>
+        <source>Specify pages or ranges separated by commas. Ranges are specified by two numbers separated by a hyphen. E.g: 3,5-7,9 prints pages 3, 5, 6, 7 and 9.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location/>
+        <source>Double Sided Printing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location/>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location/>
+        <source>Long side binding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location/>
+        <source>Short side binding</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4832,7 +5311,7 @@ Por favor desactiva una de las opciones.</translation>
 <context>
     <name>QProcess</name>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qprocess.cpp" line="+967"/>
+        <location filename="../../qtbase/src/corelib/io/qprocess.cpp" line="+965"/>
         <source>Process failed to start</source>
         <translation>El proceso no se ha podido iniciar</translation>
     </message>
@@ -4857,21 +5336,22 @@ Por favor desactiva una de las opciones.</translation>
         <translation>Error escribiendo al proceso</translation>
     </message>
     <message>
-        <location line="+1103"/>
+        <location line="+1111"/>
         <location line="+27"/>
-        <location line="+156"/>
+        <location line="+63"/>
+        <location line="+168"/>
         <source>No program defined</source>
         <translation>No se ha definido un proceso</translation>
     </message>
     <message>
         <location filename="../../qtbase/src/corelib/io/qprocess_unix.cpp" line="+280"/>
         <location line="+13"/>
-        <location filename="../../qtbase/src/corelib/io/qprocess_win.cpp" line="+250"/>
+        <location filename="../../qtbase/src/corelib/io/qprocess_win.cpp" line="+266"/>
         <source>Could not open input redirection for reading</source>
         <translation>No se puede abrir la redirección de entrada para lectura</translation>
     </message>
     <message>
-        <location line="+206"/>
+        <location line="+196"/>
         <source>Resource error (fork failure): %1</source>
         <translation>Error de recurso (fallo al bifurcar el proceso): %1</translation>
     </message>
@@ -4881,7 +5361,8 @@ Por favor desactiva una de las opciones.</translation>
         <translation>No se puede abrir la redirección de salida para escritura</translation>
     </message>
     <message>
-        <location line="+255"/>
+        <location line="+250"/>
+        <location line="+49"/>
         <source>Process failed to start: %1</source>
         <translation>El proceso no se ha podido iniciar: %1</translation>
     </message>
@@ -4889,7 +5370,7 @@ Por favor desactiva una de las opciones.</translation>
 <context>
     <name>QProgressDialog</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qprogressdialog.cpp" line="+186"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qprogressdialog.cpp" line="+185"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
@@ -4911,7 +5392,7 @@ Por favor desactiva una de las opciones.</translation>
 <context>
     <name>QRegExp</name>
     <message>
-        <location filename="../../qtbase/src/corelib/tools/qregexp.cpp" line="+65"/>
+        <location filename="../../qtbase/src/corelib/text/qregexp.cpp" line="+63"/>
         <source>no error occurred</source>
         <translation>no se ha producido ningún error</translation>
     </message>
@@ -4974,14 +5455,14 @@ Por favor desactiva una de las opciones.</translation>
 <context>
     <name>QRegularExpression</name>
     <message>
-        <location filename="../../qtbase/src/corelib/tools/qregularexpression.cpp" line="+1696"/>
-        <location line="+935"/>
-        <location line="+90"/>
+        <location filename="../../qtbase/src/corelib/text/qregularexpression.cpp" line="+1674"/>
+        <location line="+1284"/>
+        <location line="+100"/>
         <source>no error</source>
         <translation>no hay errores</translation>
     </message>
     <message>
-        <location line="-89"/>
+        <location line="-99"/>
         <source>\ at end of pattern</source>
         <translation>\ al final del patrón</translation>
     </message>
@@ -5011,12 +5492,11 @@ Por favor desactiva una de las opciones.</translation>
         <translation>falta el terminador ] para la clase carácter</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>invalid escape sequence in character class</source>
-        <translation>secuencia de escape inválida en clase carácter</translation>
+        <translation type="vanished">secuencia de escape inválida en clase carácter</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="+2"/>
         <source>range out of order in character class</source>
         <translation>rango fuera de servicio in clase carácter</translation>
     </message>
@@ -5088,26 +5568,23 @@ Por favor desactiva una de las opciones.</translation>
         <translation>la aserción lookbehind no tiene tamaño fijo</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>malformed number or name after (?(</source>
-        <translation>nombre o número mal formado tras (?(</translation>
+        <translation type="vanished">nombre o número mal formado tras (?(</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>conditional group contains more than two branches</source>
-        <translation>el grupo condicional contiene más de dos ramificaciones</translation>
+        <translation type="vanished">el grupo condicional contiene más de dos ramificaciones</translation>
     </message>
     <message>
         <source>assertion expected after (?(</source>
         <translation type="vanished">afirmación esperada tras (?(</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>(?R or (?[+-]digits must be followed by )</source>
-        <translation>(?R o (?[+-]dígitos deben ser seguidos por )</translation>
+        <translation type="vanished">(?R o (?[+-]dígitos deben ser seguidos por )</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="+5"/>
         <source>unknown POSIX class name</source>
         <translation>nombre de clase POSIX desconocido</translation>
     </message>
@@ -5125,18 +5602,16 @@ Por favor desactiva una de las opciones.</translation>
         <translation type="vanished">valor carácter en \x{...} la secuencia es muy grande</translation>
     </message>
     <message>
-        <location line="+22"/>
         <source>invalid condition (?(0)</source>
-        <translation>condición inválida (?(0)</translation>
+        <translation type="vanished">condición inválida (?(0)</translation>
     </message>
     <message>
         <source>\C not allowed in lookbehind assertion</source>
         <translation type="vanished">\C no permitida en afirmaciones lookbehind</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>PCRE does not support \L, \l, \N{name}, \U, or \u</source>
-        <translation>PCRE no soporta \L, \l, \N{nombre}, \U o \u</translation>
+        <translation type="vanished">PCRE no soporta \L, \l, \N{nombre}, \U o \u</translation>
     </message>
     <message>
         <source>number after (?C is &gt; 255</source>
@@ -5151,14 +5626,13 @@ Por favor desactiva una de las opciones.</translation>
         <translation type="vanished">llamada recursiva puede entrar en un bucle infinito</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+28"/>
         <source>unrecognized character after (?P</source>
         <translation>carácter nor reconocido tras (?P</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>syntax error in subpattern name (missing terminator)</source>
-        <translation>error de sintaxis en el subpatrón (falta el terminador)</translation>
+        <translation type="vanished">error de sintaxis en el subpatrón (falta el terminador)</translation>
     </message>
     <message>
         <source>two named subpatterns have the same name</source>
@@ -5173,7 +5647,7 @@ Por favor desactiva una de las opciones.</translation>
         <translation type="vanished">no se ha compilado el soporte para \P, \p y \X</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+5"/>
         <source>malformed \P or \p sequence</source>
         <translation>secuencia \P o \p mal formada</translation>
     </message>
@@ -5187,15 +5661,16 @@ Por favor desactiva una de las opciones.</translation>
         <translation type="vanished">el nombre de subpatrón es demasiado grande (máximo de 32 caracteres)</translation>
     </message>
     <message>
+        <location line="+2"/>
         <source>too many named subpatterns (maximum 10000)</source>
-        <translation type="vanished">demasiados subpatrones con nombre (el máximo es 10000)</translation>
+        <translation>demasiados subpatrones con nombre (el máximo es 10000)</translation>
     </message>
     <message>
         <source>octal value is greater than \377 (not in UTF-8 mode)</source>
         <translation type="vanished">valor octal es mayor que \377 (no está en modo UTF-8)</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>internal error: overran compiling workspace</source>
         <translation>error interno: espacio de trabajo rebasado durante compilación</translation>
     </message>
@@ -5205,9 +5680,8 @@ Por favor desactiva una de las opciones.</translation>
         <translation>error interno: subpatrón previamente referenciado no encontrado</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>DEFINE group contains more than one branch</source>
-        <translation>el grupo DEFINE contiene más de una bifurcación</translation>
+        <translation type="vanished">el grupo DEFINE contiene más de una bifurcación</translation>
     </message>
     <message>
         <source>repeating a DEFINE group is not allowed</source>
@@ -5218,45 +5692,41 @@ Por favor desactiva una de las opciones.</translation>
         <translation type="vanished">opciones para NEWLINE inconsistentes</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+4"/>
         <source>\g is not followed by a braced, angle-bracketed, or quoted name/number or by a plain number</source>
         <translation>\g no está seguido por un nombre/número entre llaves, entre símbolos de ángulo o entre comillas o un número simple</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>a numbered reference must not be zero</source>
-        <translation>una referencia numerada no puede ser cero</translation>
+        <translation type="vanished">una referencia numerada no puede ser cero</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>an argument is not allowed for (*ACCEPT), (*FAIL), or (*COMMIT)</source>
-        <translation>un argumento no está permitido para (*ACCEPT), (*FAIL) o (*COMMIT)</translation>
+        <translation type="vanished">un argumento no está permitido para (*ACCEPT), (*FAIL) o (*COMMIT)</translation>
     </message>
     <message>
         <source>(*VERB) not recognized</source>
         <translation type="vanished">(*VERB) no está reconocido</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>number is too big</source>
-        <translation>el número es muy grande</translation>
+        <translation type="vanished">el número es muy grande</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="+5"/>
         <source>subpattern name expected</source>
         <translation>se esperaba un nombre de subpatrón</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>digit expected after (?+</source>
-        <translation>se esperaba un dígito tras (?+</translation>
+        <translation type="vanished">se esperaba un dígito tras (?+</translation>
     </message>
     <message>
         <source>] is an invalid data character in JavaScript compatibility mode</source>
         <translation type="vanished">] es un carácter inválido en el modo de compatibilidad con JavaScript</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+3"/>
         <source>different names for subpatterns of the same number are not allowed</source>
         <translation>no están permitidos los nombres diferentes para subpatrones del mismo número</translation>
     </message>
@@ -5279,12 +5749,11 @@ Por favor desactiva una de las opciones.</translation>
         <translation>\k no está seguido de unas llaves, mayor-que/menor-que o un nombre entre comillas</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>internal error: unknown opcode in find_fixedlength()</source>
-        <translation>error interno: código de operación desconocido in find_fixedlength()</translation>
+        <translation type="vanished">error interno: código de operación desconocido in find_fixedlength()</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="+2"/>
         <source>\N is not supported in a class</source>
         <translation>\N no está soportado en una clase</translation>
     </message>
@@ -5329,27 +5798,12 @@ Por favor desactiva una de las opciones.</translation>
         <translation>carácter no octal en \o{} (¿es posible que se haya olvidado el carácter «}»?)</translation>
     </message>
     <message>
-        <location line="-9"/>
-        <source>missing opening brace after \o</source>
-        <translation>falta una llave tras \o</translation>
+        <location line="-57"/>
+        <source>escape sequence is invalid in character class</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-36"/>
-        <source>parentheses are too deeply nested</source>
-        <translation>paréntesis tiene demasiados elementos anidados</translation>
-    </message>
-    <message>
-        <location line="+31"/>
-        <source>invalid range in character class</source>
-        <translation>rango inválido en la clase carácter</translation>
-    </message>
-    <message>
-        <location line="-6"/>
-        <source>group name must start with a non-digit</source>
-        <translation>nombre de grupo debe de empezar por un carácter no dígito</translation>
-    </message>
-    <message>
-        <location line="-35"/>
+        <location line="+2"/>
         <source>quantifier does not follow a repeatable item</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5385,16 +5839,31 @@ Por favor desactiva una de las opciones.</translation>
     </message>
     <message>
         <location line="+2"/>
-        <source>letter or underscore expected after (?&lt; or (?&apos;</source>
+        <source>missing closing parenthesis for condition</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+2"/>
+        <source>a relative value of zero is not allowed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>conditional subpattern contains more than two branches</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>assertion expected after (?( or (?(?C)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+1"/>
+        <source>digit expected after (?+ or (?-</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>internal error in pcre2_study(): should not occur</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5404,22 +5873,27 @@ Por favor desactiva una de las opciones.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>parentheses are too deeply nested (stack check)</source>
-        <translation>demasiados paréntesis han sido anidados (chequeo de pila)</translation>
-    </message>
-    <message>
-        <location line="+1"/>
+        <location line="+2"/>
         <source>character code point value in \x{} or \o{} is too large</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+2"/>
-        <source>\C is not allowed in a lookbehind assertion</source>
+        <location line="+1"/>
+        <source>lookbehind is too complicated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
+        <source>\C is not allowed in a lookbehind assertion in UTF-16 mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>PCRE2 does not support \F, \L, \l, \N{name}, \U, or \u</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>number after (?C is greater than 255</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5434,42 +5908,77 @@ Por favor desactiva una de las opciones.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+2"/>
+        <source>syntax error in subpattern name (missing terminator?)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>two named subpatterns have the same name (PCRE2_DUPNAMES not set)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
+        <source>subpattern name must start with a non-digit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>this version of PCRE2 does not have support for \P, \p, or \X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>subpattern name is too long (maximum 10000 characters)</source>
-        <translation type="unfinished">el nombre de subpatrón es demasiado grande (máximo de 32 caracteres) {10000 ?}</translation>
+        <source>subpattern name is too long (maximum 32 code units)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>too many named subpatterns (maximum 256)</source>
-        <translation type="unfinished">demasiados subpatrones con nombre (el máximo es 10000) {256)?}</translation>
-    </message>
-    <message>
-        <location line="+2"/>
+        <location line="+3"/>
         <source>octal value is greater than \377 in 8-bit non-UTF-8 mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
+        <source>DEFINE subpattern contains more than one branch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>missing opening brace after \o</source>
+        <translation>falta una llave tras \o</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>internal error: unknown newline setting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+2"/>
+        <source>(?R (recursive pattern call) must be followed by a closing parenthesis</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>obsolete error (should not occur)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>(*VERB) not recognized or malformed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+1"/>
+        <source>subpattern number is too big</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>internal error: parsed pattern overflow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
         <source>\c must be followed by a printable ASCII character</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5479,8 +5988,13 @@ Por favor desactiva una de las opciones.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+4"/>
-        <source>SPARE ERROR</source>
+        <location line="+2"/>
+        <source>internal error: unknown meta code in check_lookbehinds()</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>callout string is too long</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5500,12 +6014,12 @@ Por favor desactiva una de las opciones.</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>digits missing in \x{} or \o{}</source>
-        <translation>faltan dígitos en \x{} o \o{}</translation>
+        <source>digits missing in \x{} or \o{} or \N{U+}</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>syntax error in (?(VERSION condition</source>
+        <source>syntax error or number too big in (?(VERSION condition</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5551,6 +6065,56 @@ Por favor desactiva una de las opciones.</translation>
     <message>
         <location line="+1"/>
         <source>pattern string is longer than the limit set by the application</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>internal error: unknown code in parsed pattern</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>internal error: bad code value in parsed_skip()</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>PCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES is not allowed in UTF-16 mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>invalid option bits with PCRE2_LITERAL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>\N{U+dddd} is supported only in Unicode (UTF) mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>invalid hyphen in option setting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>(*alpha_assertion) not recognized</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>script runs require Unicode support, which this version of PCRE2 does not have</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>too many capturing groups (maximum 65535)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>atomic assertion expected after (?( or (?(?C)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5815,7 +6379,7 @@ Por favor desactiva una de las opciones.</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>recursion limit exceeded</source>
+        <source>matching depth limit exceeded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5850,13 +6414,61 @@ Por favor desactiva una de las opciones.</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>match with end before start is not supported</source>
+        <source>match with end before start or start moved backwards is not supported</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <source>too many replacements (more than INT_MAX)</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>bad serialized data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>heap limit exceeded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>invalid syntax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>internal error - duplicate substitution match</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>PCRE2_MATCH_INVALID_UTF is not supported for DFA matching</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-147"/>
+        <source>parentheses are too deeply nested</source>
+        <translation>paréntesis tiene demasiados elementos anidados</translation>
+    </message>
+    <message>
+        <location line="+31"/>
+        <source>invalid range in character class</source>
+        <translation>rango inválido en la clase carácter</translation>
+    </message>
+    <message>
+        <source>group name must start with a non-digit</source>
+        <translation type="vanished">nombre de grupo debe de empezar por un carácter no dígito</translation>
+    </message>
+    <message>
+        <location line="-17"/>
+        <source>parentheses are too deeply nested (stack check)</source>
+        <translation>demasiados paréntesis han sido anidados (chequeo de pila)</translation>
+    </message>
+    <message>
+        <source>digits missing in \x{} or \o{}</source>
+        <translation type="vanished">faltan dígitos en \x{} o \o{}</translation>
     </message>
 </context>
 <context>
@@ -5885,12 +6497,12 @@ Por favor desactiva una de las opciones.</translation>
 <context>
     <name>QSQLite2Result</name>
     <message>
-        <location line="-334"/>
+        <location line="-335"/>
         <source>Unable to fetch results</source>
         <translation>No es posible obtener los resultados</translation>
     </message>
     <message>
-        <location line="+144"/>
+        <location line="+145"/>
         <source>Unable to execute statement</source>
         <translation>No es posible ejecutar la instrucción</translation>
     </message>
@@ -5898,12 +6510,12 @@ Por favor desactiva una de las opciones.</translation>
 <context>
     <name>QSQLiteDriver</name>
     <message>
-        <location filename="../../qtbase/src/plugins/sqldrivers/sqlite/qsql_sqlite.cpp" line="+687"/>
+        <location filename="../../qtbase/src/plugins/sqldrivers/sqlite/qsql_sqlite.cpp" line="+786"/>
         <source>Error opening database</source>
         <translation>Error al abrir la base de datos</translation>
     </message>
     <message>
-        <location line="+20"/>
+        <location line="+28"/>
         <source>Error closing database</source>
         <translation>Error al cerrar la base de datos</translation>
     </message>
@@ -5926,7 +6538,7 @@ Por favor desactiva una de las opciones.</translation>
 <context>
     <name>QSQLiteResult</name>
     <message>
-        <location line="-481"/>
+        <location line="-592"/>
         <location line="+63"/>
         <location line="+8"/>
         <source>Unable to fetch row</source>
@@ -5948,12 +6560,12 @@ Por favor desactiva una de las opciones.</translation>
         <translation>No es posible ejecutar múltiples instrucciones al mismo tiempo</translation>
     </message>
     <message>
-        <location line="+49"/>
+        <location line="+44"/>
         <source>Unable to reset statement</source>
         <translation>No es posible reinicializar la instrucción</translation>
     </message>
     <message>
-        <location line="+60"/>
+        <location line="+102"/>
         <source>Unable to bind parameters</source>
         <translation>No es posible ligar los parámetros</translation>
     </message>
@@ -5966,7 +6578,7 @@ Por favor desactiva una de las opciones.</translation>
 <context>
     <name>QSaveFile</name>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qsavefile.cpp" line="+212"/>
+        <location filename="../../qtbase/src/corelib/io/qsavefile.cpp" line="+214"/>
         <source>Existing file %1 is not writable</source>
         <translation>El archivo existente %1 no es grabable</translation>
     </message>
@@ -5976,7 +6588,12 @@ Por favor desactiva una de las opciones.</translation>
         <translation>El nombre de archivo se refiere a un directorio</translation>
     </message>
     <message>
-        <location line="+137"/>
+        <location line="+43"/>
+        <source>QSaveFile cannot open &apos;%1&apos; without direct write fallback enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+118"/>
         <source>Writing canceled by application</source>
         <translation>Escritura cancelada por la aplicación</translation>
     </message>
@@ -6060,7 +6677,7 @@ Por favor desactiva una de las opciones.</translation>
 <context>
     <name>QSharedMemory</name>
     <message>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory.cpp" line="+251"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory.cpp" line="+268"/>
         <source>%1: unable to set key on lock</source>
         <translation>%1: no se ha podido poner clave en bloqueo</translation>
     </message>
@@ -6071,7 +6688,7 @@ Por favor desactiva una de las opciones.</translation>
     </message>
     <message>
         <location line="+167"/>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_p.h" line="+149"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_p.h" line="+157"/>
         <source>%1: unable to lock</source>
         <translation>%1: no se ha podido bloquear</translation>
     </message>
@@ -6104,7 +6721,7 @@ Por favor desactiva una de las opciones.</translation>
     </message>
     <message>
         <location line="+48"/>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="+98"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="+101"/>
         <source>%1: unable to make key</source>
         <translation>%1: imposible crear clave</translation>
     </message>
@@ -6119,7 +6736,7 @@ Por favor desactiva una de las opciones.</translation>
         <translation>%1: no adjuntado</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_unix.cpp" line="+85"/>
+        <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_unix.cpp" line="+88"/>
         <location filename="../../qtbase/src/corelib/kernel/qsharedmemory_win.cpp" line="-17"/>
         <source>%1: permission denied</source>
         <translation>%1: permiso denegado</translation>
@@ -6154,12 +6771,12 @@ Por favor desactiva una de las opciones.</translation>
         <translation>%1: tamaño inválido</translation>
     </message>
     <message>
-        <location line="+58"/>
+        <location line="+59"/>
         <source>%1: key error</source>
         <translation>%1: error de clave</translation>
     </message>
     <message>
-        <location line="+40"/>
+        <location line="+39"/>
         <source>%1: size query failed</source>
         <translation>%1: la consulta del tamaño falló</translation>
     </message>
@@ -6167,7 +6784,7 @@ Por favor desactiva una de las opciones.</translation>
 <context>
     <name>QShortcut</name>
     <message>
-        <location filename="../../qtbase/src/gui/kernel/qkeysequence.cpp" line="+419"/>
+        <location filename="../../qtbase/src/gui/kernel/qkeysequence.cpp" line="+422"/>
         <source>Space</source>
         <extracomment>This and all following &quot;incomprehensible&quot; strings in QShortcut context are key names. Please use the localized names appearing on actual keyboards or whatever is commonly used.</extracomment>
         <translation>Espacio</translation>
@@ -6506,6 +7123,16 @@ Por favor desactiva una de las opciones.</translation>
     </message>
     <message>
         <location line="+1"/>
+        <source>Launch (G)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Launch (H)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Monitor Brightness Up</source>
         <translation>Subir brillo del monitor</translation>
     </message>
@@ -6636,6 +7263,11 @@ Por favor desactiva una de las opciones.</translation>
     </message>
     <message>
         <location line="+1"/>
+        <source>Calendar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Clear</source>
         <translation>Limpiar</translation>
     </message>
@@ -6648,6 +7280,11 @@ Por favor desactiva una de las opciones.</translation>
         <location line="+1"/>
         <source>Close</source>
         <translation>Cerrar</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Adjust contrast</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6713,6 +7350,11 @@ Por favor desactiva una de las opciones.</translation>
         <location line="+1"/>
         <source>Meeting</source>
         <translation>Reunión</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Memo</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6813,6 +7455,11 @@ Por favor desactiva una de las opciones.</translation>
         <location line="+1"/>
         <source>Terminal</source>
         <translation>Terminal</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>To-do list</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7373,41 +8020,42 @@ Por favor desactiva una de las opciones.</translation>
     </message>
     <message>
         <location line="+408"/>
-        <location line="+164"/>
+        <location line="+169"/>
         <source>Ctrl</source>
         <translation>Control</translation>
     </message>
     <message>
-        <location line="-163"/>
-        <location line="+167"/>
+        <location line="-168"/>
+        <location line="+172"/>
         <source>Shift</source>
         <translation>Mayúsculas</translation>
     </message>
     <message>
-        <location line="-166"/>
-        <location line="+164"/>
+        <location line="-171"/>
+        <location line="+169"/>
         <source>Alt</source>
         <translation>Alt</translation>
     </message>
     <message>
-        <location line="-163"/>
-        <location line="+159"/>
+        <location line="-168"/>
+        <location line="+164"/>
         <source>Meta</source>
         <translation>Meta</translation>
     </message>
     <message>
-        <location line="-158"/>
-        <location line="+167"/>
+        <location line="-163"/>
+        <location line="+172"/>
         <source>Num</source>
         <translation>Núm</translation>
     </message>
     <message>
-        <location line="-57"/>
+        <location line="-58"/>
         <source>+</source>
+        <extracomment>Key separator in shortcut string</extracomment>
         <translation>+</translation>
     </message>
     <message>
-        <location line="+92"/>
+        <location line="+93"/>
         <source>F%1</source>
         <translation>F%1</translation>
     </message>
@@ -7480,7 +8128,7 @@ Por favor desactiva una de las opciones.</translation>
         <translation>Código de error de SOCKSv5 proxy desconocido 0x%1</translation>
     </message>
     <message>
-        <location line="+713"/>
+        <location line="+698"/>
         <source>Network operation timed out</source>
         <translation>El tiempo de espera por la operación de red ha expirado</translation>
     </message>
@@ -7913,6 +8561,24 @@ Role of an accessible object</extracomment>
     </message>
     <message>
         <location line="+2"/>
+        <source>terminal</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>desktop</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>notification</source>
+        <extracomment>Role of an accessible object</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>unknown</source>
         <extracomment>Role of an accessible object</extracomment>
         <translation>desconocido</translation>
@@ -7939,12 +8605,19 @@ Role of an accessible object</extracomment>
 <context>
     <name>QSslSocket</name>
     <message>
-        <location filename="../../qtbase/src/network/ssl/qsslcontext_openssl.cpp" line="+83"/>
+        <location filename="../../qtbase/src/network/ssl/qsslcontext_openssl.cpp" line="+89"/>
+        <source>Error when setting the OpenSSL configuration (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
         <source>Error when setting the elliptic curves (%1)</source>
         <translation>Error estableciendo curvas elípticas (%1)</translation>
     </message>
     <message>
-        <location line="+89"/>
+        <location line="+253"/>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket_schannel.cpp" line="+807"/>
+        <location line="+92"/>
         <source>Error creating SSL context (%1)</source>
         <translation>Error al crear el contexto SSL (%1)</translation>
     </message>
@@ -7954,12 +8627,24 @@ Role of an accessible object</extracomment>
         <translation>protocolo no soportado</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+97"/>
+        <source>Error while setting the minimal protocol version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Error while setting the maximum protocol version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+41"/>
+        <location line="+10"/>
+        <location line="+7"/>
         <source>Invalid or empty cipher list (%1)</source>
         <translation>Lista de cifras vacía o no válida (%1)</translation>
     </message>
     <message>
-        <location line="+36"/>
+        <location line="+51"/>
         <source>Cannot provide a certificate with no key, %1</source>
         <translation>No se puede proporcionar un certificado sin clave, %1</translation>
     </message>
@@ -7979,17 +8664,51 @@ Role of an accessible object</extracomment>
         <translation>La clave privada no certifica la clave pública, %1</translation>
     </message>
     <message>
-        <location line="+36"/>
+        <location line="+58"/>
         <source>Diffie-Hellman parameters are not valid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+53"/>
-        <source>OpenSSL version too old, need at least v1.0.2</source>
-        <translation>Versión de OpenSSL demasiado vieja, se necesita al menos v1.0.2</translation>
+        <location line="+24"/>
+        <source>OpenSSL version with disabled elliptic curves</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/ssl/qsslerror.cpp" line="+221"/>
+        <location line="+54"/>
+        <source>Expecting QByteArray for %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <source>An error occurred attempting to set %1 to %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Wrong value for %1 (%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Unrecognized command %1 = %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>SSL_CONF_finish() failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>SSL_CONF_CTX_new() failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenSSL version too old, need at least v1.0.2</source>
+        <translation type="vanished">Versión de OpenSSL demasiado vieja, se necesita al menos v1.0.2</translation>
+    </message>
+    <message>
+        <location filename="../../qtbase/src/network/ssl/qsslerror.cpp" line="+234"/>
         <source>No error</source>
         <translation>No hay errores</translation>
     </message>
@@ -8105,58 +8824,319 @@ Role of an accessible object</extracomment>
     </message>
     <message>
         <location line="+3"/>
+        <source>No OCSP status response found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The OCSP status request had invalid syntax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>OCSP response contains an unexpected number of SingleResponse structures</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>OCSP responder reached an inconsistent internal state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>OCSP responder was unable to return a status for the requested certificate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The server requires the client to sign the OCSP request in order to construct a response</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The client is not authorized to request OCSP status from this server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>OCSP responder&apos;s identity cannot be verified</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The identity of a certificate in an OCSP response cannot be established</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The certificate status response has expired</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The certificate&apos;s status is unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
         <source>Unknown error</source>
         <translation>Error desconocido</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/ssl/qsslsocket_mac.cpp" line="+526"/>
-        <location filename="../../qtbase/src/network/ssl/qsslsocket_openssl.cpp" line="+979"/>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket_mac.cpp" line="+601"/>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket_openssl.cpp" line="+1183"/>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket_schannel.cpp" line="-691"/>
+        <location line="+704"/>
+        <location line="+111"/>
         <source>The TLS/SSL connection has been closed</source>
         <translation>La conexión TLS/SSL ha sido cerrada</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/network/ssl/qsslsocket_openssl.cpp" line="-586"/>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket_openssl.cpp" line="-582"/>
         <source>Error creating SSL session, %1</source>
         <translation>Error al crear la sesión SSL, %1</translation>
     </message>
     <message>
         <location line="+34"/>
-        <location filename="../../qtbase/src/network/ssl/qsslsocket_winrt.cpp" line="+443"/>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket_winrt.cpp" line="+449"/>
         <source>Error creating SSL session: %1</source>
         <translation>Error al crear la sesión SSL: %1</translation>
     </message>
     <message>
-        <location line="+344"/>
+        <location line="+36"/>
+        <source>Server-side QSslSocket does not support OCSP stapling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Failed to enable OCSP stapling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+19"/>
+        <source>Client-side sockets do not send OCSP responses</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+265"/>
         <location line="+14"/>
         <source>Unable to init SSL Context: %1</source>
         <translation>Ha sido imposible iniciar el contexto SSL: %1</translation>
     </message>
     <message>
-        <location line="+47"/>
+        <location line="+53"/>
         <source>Unable to write data: %1</source>
         <translation>No es posible escribir los datos: %1</translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+73"/>
         <source>Unable to decrypt data: %1</source>
         <translation>No ha sido posible descifrar los datos: %1</translation>
     </message>
     <message>
-        <location line="+83"/>
-        <location line="+9"/>
+        <location line="+94"/>
+        <location line="+12"/>
         <source>Error while reading: %1</source>
         <translation>Error al leer: %1</translation>
     </message>
     <message>
-        <location line="+92"/>
+        <location line="+59"/>
         <source>Error during SSL handshake: %1</source>
         <translation>Error durante el handshake SSL: %1</translation>
+    </message>
+    <message>
+        <location line="+425"/>
+        <source>Failed to decode OCSP response</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+15"/>
+        <source>Failed to extract basic OCSP response</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>No certificate verification store, cannot verify OCSP response</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+36"/>
+        <source>Failed to decode a SingleResponse from OCSP status response</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+53"/>
+        <source>Failed to extract &apos;this update time&apos; from the SingleResponse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket.cpp" line="+491"/>
+        <location line="+40"/>
+        <location line="+1441"/>
+        <location line="+47"/>
+        <source>TLS initialization failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+247"/>
+        <source>Attempted to use an unsupported protocol.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../qtbase/src/network/ssl/qsslsocket_schannel.cpp" line="-855"/>
+        <source>Insufficient memory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Internal error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>An internal handle was invalid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>An internal token was invalid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Access denied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>No authority could be contacted for authorization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>No credentials</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>The target is unknown or unreachable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>An unsupported function was requested</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The hostname provided does not match the one received from the peer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>No common protocol exists between the client and the server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Unexpected or badly-formatted message received</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>The data could not be encrypted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>No cipher suites in common</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The credentials were not recognized / Invalid argument</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>The message was tampered with, damaged or out of sequence.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>A message was received out of sequence.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Unknown error occurred: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+424"/>
+        <source>Invalid protocol chosen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+35"/>
+        <source>The certificate provided cannot be used for a client.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>The certificate provided cannot be used for a server.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+343"/>
+        <source>Server did not accept any certificate we could present.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+19"/>
+        <source>Algorithm mismatch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Handshake failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+13"/>
+        <source>Failed to query the TLS context: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Did not get the required attributes for the connection.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+28"/>
+        <source>Unwanted protocol was negotiated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+114"/>
+        <source>Renegotiation was unsuccessful: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+92"/>
+        <source>Schannel failed to encrypt data: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+434"/>
+        <source>Cannot provide a certificate with no key</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>QStandardPaths</name>
     <message>
-        <location filename="../../qtbase/src/corelib/io/qstandardpaths.cpp" line="+550"/>
+        <location filename="../../qtbase/src/corelib/io/qstandardpaths.cpp" line="+548"/>
         <source>Desktop</source>
         <translation>Escritorio</translation>
     </message>
@@ -8249,7 +9229,7 @@ Role of an accessible object</extracomment>
 <context>
     <name>QStateMachine</name>
     <message>
-        <location filename="../../qtbase/src/corelib/statemachine/qstatemachine.cpp" line="+1469"/>
+        <location filename="../../qtbase/src/corelib/statemachine/qstatemachine.cpp" line="+1480"/>
         <source>Missing initial state in compound state &apos;%1&apos;</source>
         <translation>Falta el el estado inicial en el campo compuesto «%1»</translation>
     </message>
@@ -8264,7 +9244,12 @@ Role of an accessible object</extracomment>
         <translation>No hay un antepasado común para los destinos y origen de la transición desde el estado «%1»</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+7"/>
+        <source>Child mode of state machine &apos;%1&apos; is not &apos;ExclusiveStates&apos;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
         <source>Unknown error</source>
         <translation>Error desconocido</translation>
     </message>
@@ -8303,7 +9288,7 @@ Role of an accessible object</extracomment>
 <context>
     <name>QTDSDriver</name>
     <message>
-        <location filename="../../qtbase/src/plugins/sqldrivers/tds/qsql_tds.cpp" line="+641"/>
+        <location filename="../../qtbase/src/plugins/sqldrivers/tds/qsql_tds.cpp" line="+642"/>
         <source>Unable to open connection</source>
         <translation>No es posible abrir la conexión</translation>
     </message>
@@ -8316,7 +9301,7 @@ Role of an accessible object</extracomment>
 <context>
     <name>QTabBar</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qtabbar.cpp" line="-2219"/>
+        <location filename="../../qtbase/src/widgets/widgets/qtabbar.cpp" line="-2345"/>
         <source>Scroll Left</source>
         <translation>Desplazar hacia la izquierda</translation>
     </message>
@@ -8396,12 +9381,12 @@ Role of an accessible object</extracomment>
 <context>
     <name>QUdpSocket</name>
     <message>
-        <location filename="../../qtbase/src/network/socket/qudpsocket.cpp" line="+353"/>
+        <location filename="../../qtbase/src/network/socket/qudpsocket.cpp" line="+363"/>
         <source>Unable to send a datagram</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+157"/>
+        <location line="+160"/>
         <source>No datagram available for reading</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8442,7 +9427,7 @@ Role of an accessible object</extracomment>
 <context>
     <name>QUndoStack</name>
     <message>
-        <location filename="../../qtbase/src/widgets/util/qundostack.cpp" line="+1032"/>
+        <location filename="../../qtbase/src/widgets/util/qundostack.cpp" line="+1087"/>
         <source>Undo %1</source>
         <translation>Deshacer %1</translation>
     </message>
@@ -8467,7 +9452,7 @@ Role of an accessible object</extracomment>
 <context>
     <name>QUnicodeControlCharacterMenu</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qwidgettextcontrol.cpp" line="+3268"/>
+        <location filename="../../qtbase/src/widgets/widgets/qwidgettextcontrol.cpp" line="+3386"/>
         <source>LRM Left-to-right mark</source>
         <translation>LRM Marca de-izquierda-a-derecha</translation>
     </message>
@@ -8545,7 +9530,7 @@ Role of an accessible object</extracomment>
 <context>
     <name>QWhatsThisAction</name>
     <message>
-        <location filename="../../qtbase/src/widgets/kernel/qwhatsthis.cpp" line="+498"/>
+        <location filename="../../qtbase/src/widgets/kernel/qwhatsthis.cpp" line="+506"/>
         <source>What&apos;s This?</source>
         <translation>¿Qué es esto?</translation>
     </message>
@@ -8553,7 +9538,7 @@ Role of an accessible object</extracomment>
 <context>
     <name>QWidget</name>
     <message>
-        <location filename="../../qtbase/src/widgets/kernel/qwidget.cpp" line="+6100"/>
+        <location filename="../../qtbase/src/widgets/kernel/qwidget.cpp" line="+5846"/>
         <source>*</source>
         <translation>*</translation>
     </message>
@@ -8561,7 +9546,7 @@ Role of an accessible object</extracomment>
 <context>
     <name>QWidgetTextControl</name>
     <message>
-        <location filename="../../qtbase/src/widgets/widgets/qwidgettextcontrol.cpp" line="-1030"/>
+        <location filename="../../qtbase/src/widgets/widgets/qwidgettextcontrol.cpp" line="-1066"/>
         <source>&amp;Undo</source>
         <translation>&amp;Deshacer</translation>
     </message>
@@ -8604,16 +9589,24 @@ Role of an accessible object</extracomment>
 <context>
     <name>QWindowsDirect2DIntegration</name>
     <message>
-        <location filename="../../qtbase/src/plugins/platforms/direct2d/qwindowsdirect2dintegration.cpp" line="+181"/>
         <source>Qt cannot load the direct2d platform plugin because the Direct2D version on this system is too old. The minimum system requirement for this platform plugin is Windows 7 SP1 with Platform Update.
 
 The minimum Direct2D version required is %1.%2.%3.%4. The Direct2D version on this system is %5.%6.%7.%8.</source>
-        <translation>Qt no puede cargar el plugin de plataforma direct2d porque la versión de Direct2D es demasiado antigua. El requisito mínimo de para este plugin de plataforma es Windows 7 SP1 con la Actualización de plataforma.
+        <translation type="vanished">Qt no puede cargar el plugin de plataforma direct2d porque la versión de Direct2D es demasiado antigua. El requisito mínimo de para este plugin de plataforma es Windows 7 SP1 con la Actualización de plataforma.
 
 La versión mínima de Direct2D requerida es %1.%2.%3.%4. Y la versión de Direct2D instalada en el sistema es %5.%6.%7.%8.</translation>
     </message>
     <message>
-        <location line="+17"/>
+        <location filename="../../qtbase/src/plugins/platforms/direct2d/qwindowsdirect2dintegration.cpp" line="+112"/>
+        <source>Qt cannot load the direct2d platform plugin because the Direct2D version on this system is too old. The minimum system requirement for this platform plugin is Windows 7 SP1 with Platform Update.
+
+The minimum Direct2D version required is %1. The Direct2D version on this system is %2.</source>
+        <translation type="unfinished">Qt no puede cargar el plugin de plataforma direct2d porque la versión de Direct2D es demasiado antigua. El requisito mínimo de para este plugin de plataforma es Windows 7 SP1 con la Actualización de plataforma.
+
+La versión mínima de Direct2D requerida es %1.%2.%3.%4. Y la versión de Direct2D instalada en el sistema es %5.%6.%7.%8. {2d?} {2D?} {7 ?} {1 ?} {2D?} {1.?} {2D?} {2.?}</translation>
+    </message>
+    <message>
+        <location line="+9"/>
         <source>Cannot load direct2d platform plugin</source>
         <translation>No se puede cargar el plugin de plataforma direct2d</translation>
     </message>
@@ -8621,7 +9614,7 @@ La versión mínima de Direct2D requerida es %1.%2.%3.%4. Y la versión de Direc
 <context>
     <name>QWizard</name>
     <message>
-        <location filename="../../qtbase/src/widgets/dialogs/qwizard.cpp" line="+704"/>
+        <location filename="../../qtbase/src/widgets/dialogs/qwizard.cpp" line="+662"/>
         <source>Go Back</source>
         <translation>Ir atrás</translation>
     </message>
@@ -8679,7 +9672,7 @@ La versión mínima de Direct2D requerida es %1.%2.%3.%4. Y la versión de Direc
 <context>
     <name>QXml</name>
     <message>
-        <location filename="../../qtbase/src/xml/sax/qxml.cpp" line="+58"/>
+        <location filename="../../qtbase/src/xml/sax/qxml.cpp" line="+68"/>
         <source>no error occurred</source>
         <translation>no se ha producido ningún error</translation>
     </message>
@@ -8797,18 +9790,18 @@ La versión mínima de Direct2D requerida es %1.%2.%3.%4. Y la versión de Direc
 <context>
     <name>QXmlStream</name>
     <message>
-        <location filename="../../qtbase/src/corelib/xml/qxmlstream.cpp" line="+607"/>
-        <location filename="../../qtbase/src/corelib/xml/qxmlstream_p.h" line="+1771"/>
+        <location filename="../../qtbase/src/corelib/serialization/qxmlstream.cpp" line="+615"/>
+        <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="+1790"/>
         <source>Extra content at end of document.</source>
         <translation>Contenido extra al final del documento.</translation>
     </message>
     <message>
-        <location line="+272"/>
+        <location line="+278"/>
         <source>Invalid entity value.</source>
         <translation>Valor de la entidad no válido.</translation>
     </message>
     <message>
-        <location line="+110"/>
+        <location line="+109"/>
         <source>Invalid XML character.</source>
         <translation>Carácter XML no válido.</translation>
     </message>
@@ -8818,8 +9811,8 @@ La versión mínima de Direct2D requerida es %1.%2.%3.%4. Y la versión de Direc
         <translation>Secuencia «]]&gt;» no permitida en el contenido.</translation>
     </message>
     <message>
-        <location line="+279"/>
-        <location filename="../../qtbase/src/corelib/xml/qxmlstream_p.h" line="-692"/>
+        <location line="+280"/>
+        <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="-694"/>
         <source>Encountered incorrectly encoded content.</source>
         <translation>Contenido codificado incorrectamente encontrado.</translation>
     </message>
@@ -8829,15 +9822,15 @@ La versión mínima de Direct2D requerida es %1.%2.%3.%4. Y la versión de Direc
         <translation>Prefijo de espacio de nombres «%1» no declarado</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+34"/>
         <location line="+12"/>
-        <location filename="../../qtbase/src/corelib/xml/qxmlstream_p.h" line="+613"/>
+        <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="+615"/>
         <location line="+53"/>
         <source>Illegal namespace declaration.</source>
         <translation>Declaración de espacio de nombres ilegal.</translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+34"/>
         <source>Attribute &apos;%1&apos; redefined.</source>
         <translation>El atributo «%1» está redefinido.</translation>
     </message>
@@ -8857,7 +9850,7 @@ La versión mínima de Direct2D requerida es %1.%2.%3.%4. Y la versión de Direc
         <translation>Versión XML no soportada.</translation>
     </message>
     <message>
-        <location line="+21"/>
+        <location line="+20"/>
         <source>The standalone pseudo attribute must appear after the encoding.</source>
         <translation>El pseudoatributo «standalone» debe aparece después de la codificación.</translation>
     </message>
@@ -8892,42 +9885,86 @@ La versión mínima de Direct2D requerida es %1.%2.%3.%4. Y la versión de Direc
         <translation>Documento no válido.</translation>
     </message>
     <message>
-        <location line="+40"/>
+        <location line="+36"/>
+        <source>&apos;%1&apos;</source>
+        <comment>expected</comment>
+        <extracomment>&apos;&lt;first option&gt;&apos;</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>%1 or &apos;%2&apos;</source>
+        <comment>expected</comment>
+        <extracomment>&lt;first option&gt;, &apos;&lt;second option&gt;&apos;</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>%1, &apos;%2&apos;</source>
+        <comment>expected</comment>
+        <extracomment>&lt;options so far&gt;, &apos;&lt;next option&gt;&apos;</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>%1, or &apos;%2&apos;</source>
+        <comment>expected</comment>
+        <extracomment>&lt;options so far&gt;, or &apos;&lt;final option&gt;&apos;</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Expected %1, but got &apos;%2&apos;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Unexpected &apos;%1&apos;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Expected </source>
-        <translation>Se esperaba </translation>
+        <translation type="vanished">Se esperaba </translation>
     </message>
     <message>
-        <location line="+11"/>
         <source>, but got &apos;</source>
-        <translation>, pero se ha recibido &apos;</translation>
+        <translation type="vanished">, pero se ha recibido &apos;</translation>
     </message>
     <message>
-        <location line="+4"/>
         <source>Unexpected &apos;</source>
-        <translation>No se esperaba &apos;</translation>
+        <translation type="vanished">No se esperaba &apos;</translation>
     </message>
     <message>
-        <location line="+225"/>
+        <location line="+258"/>
         <source>Expected character data.</source>
         <translation>Se esperaban datos de carácter.</translation>
     </message>
     <message>
-        <location filename="../../qtbase/src/corelib/xml/qxmlstream_p.h" line="-968"/>
         <source>Recursive entity detected.</source>
-        <translation>Detectada entidad recursiva.</translation>
+        <translation type="vanished">Detectada entidad recursiva.</translation>
     </message>
     <message>
-        <location line="+515"/>
+        <location filename="../../qtbase/src/corelib/serialization/qxmlstream_p.h" line="-983"/>
+        <source>Self-referencing entity detected.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Entity expands to more characters than the entity expansion limit.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+520"/>
         <source>Start tag expected.</source>
         <translation>Se esperaba etiqueta de inicio.</translation>
     </message>
     <message>
-        <location line="+191"/>
+        <location line="+193"/>
         <source>NDATA in parameter entity declaration.</source>
         <translation>NDATA en una declaración de entidad parámetro.</translation>
     </message>
     <message>
-        <location line="+31"/>
+        <location line="+30"/>
         <source>XML declaration not at start of document.</source>
         <translation>La declaración XML no está al principio del documento.</translation>
     </message>
@@ -8937,7 +9974,7 @@ La versión mínima de Direct2D requerida es %1.%2.%3.%4. Y la versión de Direc
         <translation>%1 es un nombre de instrucción de procesamiento no válido.</translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+12"/>
         <source>Invalid processing instruction name.</source>
         <translation>Nombre de instrucción de procesamiento no válido.</translation>
     </message>
