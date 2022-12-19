@@ -16,7 +16,7 @@
     </message>
     <message>
       <source>Unset</source>
-      <translation type="unfinished">Unset</translation>
+      <translation>Azzera</translation>
     </message>
     <message>
       <source>Apply</source>
@@ -24,7 +24,7 @@
     </message>
     <message>
       <source>Discard</source>
-      <translation type="unfinished">Discard</translation>
+      <translation>Annulla</translation>
     </message>
   </context>
   <context>
@@ -608,11 +608,11 @@
     </message>
     <message>
       <source>Options</source>
-      <translation type="unfinished">Options</translation>
+      <translation>Opzioni</translation>
     </message>
     <message>
       <source>Size</source>
-      <translation type="unfinished">Size</translation>
+      <translation>Dimensione</translation>
     </message>
     <message>
       <source>1.0x</source>
@@ -632,7 +632,7 @@
     </message>
     <message>
       <source>Mode</source>
-      <translation type="unfinished">Mode</translation>
+      <translation>Modalità</translation>
     </message>
     <message>
       <source>Setup</source>
@@ -647,11 +647,11 @@
     <name>dlgLog</name>
     <message>
       <source>Log</source>
-      <translation type="unfinished">Log</translation>
+      <translation>Log</translation>
     </message>
     <message>
       <source>Close</source>
-      <translation type="unfinished">Close</translation>
+      <translation>Chiudi</translation>
     </message>
   </context>
   <context>
@@ -958,7 +958,7 @@
     <name>familyBasicKeyboard</name>
     <message>
       <source>Family Basic Keyboard</source>
-      <translation type="unfinished">Family Basic Keyboard</translation>
+      <translation>Tastiera Family BASIC</translation>
     </message>
   </context>
   <context>
@@ -1486,7 +1486,7 @@
     </message>
     <message>
       <source>Toggle Virtual &amp;Keyboard</source>
-      <translation type="unfinished">Toggle Virtual &amp;Keyboard</translation>
+      <translation>&amp;Mostra/Nascondi Tastiera Virtuale</translation>
     </message>
     <message>
       <source>&amp;Show Log</source>
@@ -1513,7 +1513,7 @@
     </message>
     <message>
       <source>Toggle Virtual Keyboard</source>
-      <translation type="unfinished">Toggle Virtual Keyboard</translation>
+      <translation>Mostra/Nascondi Tastiera Virtuale</translation>
     </message>
   </context>
   <context>
@@ -1739,7 +1739,7 @@
     <name>suborKeyboard</name>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>Tastiera Subor</translation>
     </message>
   </context>
   <context>
@@ -1951,7 +1951,7 @@
     <name>wdgKeyboard</name>
     <message>
       <source>Virtual Keyboard</source>
-      <translation type="unfinished">Virtual Keyboard</translation>
+      <translation>Tastiera Virtuale</translation>
     </message>
   </context>
   <context>
@@ -2470,7 +2470,7 @@
     </message>
     <message>
       <source>French</source>
-      <translation type="unfinished">French</translation>
+      <translation>Francese</translation>
     </message>
   </context>
   <context>
@@ -2617,11 +2617,11 @@
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
-      <translation type="unfinished">Family BASIC Keyboard</translation>
+      <translation>Tastiera Family BASIC</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>Tastiera Subor</translation>
     </message>
   </context>
   <context>
