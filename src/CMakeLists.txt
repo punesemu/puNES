@@ -18,6 +18,7 @@ set(ts_files
 	gui/designer/translations/qt_it.ts
 	gui/designer/translations/qt_pt_BR.ts
 	gui/designer/translations/qt_ru.ts
+	gui/designer/translations/qt_tr.ts
 	gui/designer/translations/qt_zh_CN.ts
 	)
 set_source_files_properties(${ts_files} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/translations")

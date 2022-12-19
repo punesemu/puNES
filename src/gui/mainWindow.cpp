@@ -455,7 +455,7 @@ void mainWindow::set_language(int lang) {
 			file = "es_ES";
 			break;
 		case LNG_TURKISH:
-			lng = "en";
+			lng = "tr";
 			file = "tr_TR";
 			break;
 	}
