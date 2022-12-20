@@ -133,14 +133,15 @@ NROM, NROM-128, NROM-256, SLROM, UOROM, CNROM, TLROM, TBROM, TKROM, TFROM, ANROM
 CMake Options
 -----------
 
-| CMake Option              | Description                                                 | Default |
-|---------------------------|-------------------------------------------------------------|---------|
-| ENABLE_RELEASE            | Build release version                                       | ON      |
-| ENABLE_FFMPEG             | Enable FFMPEG support                                       | ON      |
-| ENABLE_OPENGL             | Use OpenGL support instead of Direct3D 9 (only for Windows) | ON      |
-| ENABLE_OPENGL_CG          | Enable OpenGL nVidia Cg Toolkit support                     | OFF     |
-| ENABLE_FULLSCREEN_RESFREQ | Enable Fullscreen resolution and auto frequency             | ON      |
-| ENABLE_QT6_LIBS           | Enable support for QT6 libraries                            | OFF     |
+| CMake Option              | Description                                                                                    | Default |
+|---------------------------|------------------------------------------------------------------------------------------------|---------|
+| ENABLE_RELEASE            | Build release version                                                                          | ON      |
+| ENABLE_FFMPEG             | Enable FFMPEG support                                                                          | ON      |
+| ENABLE_OPENGL             | Use OpenGL support instead of Direct3D 9 (only for Windows)                                    | ON      |
+| ENABLE_OPENGL_CG          | Enable OpenGL nVidia Cg Toolkit support                                                        | OFF     |
+| ENABLE_FULLSCREEN_RESFREQ | Enable Fullscreen resolution and auto frequency                                                | ON      |
+| ENABLE_QT6_LIBS           | Enable support for QT6 libraries                                                               | OFF     |
+| DISABLE_PORTABLE_MODE     | Disable compiling portable mode management (useful<br/>with sandbox environments like Flatpak) | OFF     |
 
 ## :penguin: Linux
 #### Dependencies
@@ -155,14 +156,14 @@ CMake Options
 ```bash
 git clone https://github.com/punesemu/puNES
 cd puNES
-cmake -B build -G Ninja -DENABLE_FFMPEG=ON -DENABLE_OPENGL_CG=ON
+cmake -B build -G Ninja -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON
 cmake --build build -j2
 ```
 the executable `punes` is in the `build/src` directory.
 #### Linux Debug version
 If you need the debug version then you need to replace the `cmake -B build -G Ninja` command of the previous examples with the following:
 ```bash
-CFLAGS="-O0 -g -DDEBUG" CXXFLAGS="-O0 -g -DDEBUG" cmake -B build -G Ninja -DENABLE_RELEASE=OFF [...]
+cmake -B build -G Ninja -DCMAKE_C_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_CXX_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_BUILD_TYPE:STRING=Debug -DENABLE_RELEASE:BOL=OFF [...]
 ```
 where `[...]` are the other necessary options.
 #### Example on how to compile on Ubuntu 22.04
@@ -193,14 +194,14 @@ sudo pkg install -y devel/qt5-buildtools devel/qt5-core x11-toolkits/qt5-gui x11
 sudo pkg install -y devel/qt5-linguisttools
 git clone https://github.com/punesemu/puNES
 cd puNES
-cmake -B build -G Ninja -DQt5_DIR=/usr/local/lib/qt5/cmake/Qt5 -DENABLE_FFMPEG=ON
+cmake -B build -G Ninja -DQt5_DIR=/usr/local/lib/qt5/cmake/Qt5 -DENABLE_FFMPEG:BOOL=ON
 cmake --build build -j2
 ```
 the executable `punes` is in the `build/src` directory.
 #### FreeBSD Debug version
 If you need the debug version then you need to replace the `cmake -B Build -G Ninja` command of the previous examples with the following:
 ```bash
-CFLAGS="-O0 -g -DDEBUG" CXXFLAGS="-O0 -g -DDEBUG" cmake -B build -G Ninja -DENABLE_RELEASE=OFF [...]
+cmake -B build -G Ninja -DCMAKE_C_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_CXX_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_BUILD_TYPE:STRING=Debug -DENABLE_RELEASE:BOOL=OFF [...]
 ```
 where `[...]` are the other necessary options.
 ## :blowfish: OpenBSD 
@@ -214,14 +215,14 @@ where `[...]` are the other necessary options.
 ```bash
 git clone https://github.com/punesemu/puNES
 cd puNES
-cmake -B build -G Ninja -DQt5_DIR=/usr/local/lib/qt5/cmake/Qt5 -DENABLE_FFMPEG=ON
+cmake -B build -G Ninja -DQt5_DIR=/usr/local/lib/qt5/cmake/Qt5 -DENABLE_FFMPEG:BOOL=ON
 cmake --build build -j2
 ```
 the executable `punes` is in the `buid/src` directory.
 #### OpenBSD Debug version
 If you need the debug version then you need to replace the `cmake -B Build -G Ninja` command of the previous examples with the following:
 ```bash
-CFLAGS="-O0 -g -DDEBUG" CXXFLAGS="-O0 -g -DDEBUG" cmake -B build -G Ninja -DENABLE_RELEASE=OFF [...]
+cmake -B build -G Ninja -DCMAKE_C_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_CXX_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_BUILD_TYPE:STRING=Debug -DENABLE_RELEASE:BOOL=OFF [...]
 ```
 where `[...]` are the other necessary options.
 ## :computer: Windows
@@ -299,12 +300,12 @@ cd puNES
 ```
 if you want D3D9 version :
 ```bash
-cmake -B build -G Ninja -DENABLE_FFMPEG=ON -DENABLE_OPENGL=OFF
+cmake -B build -G Ninja -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL:BOOL=OFF
 cmake --build build -j2
 ```
 otherwise :
 ```bash
-cmake -B build -G Ninja -DENABLE_FFMPEG=ON
+cmake -B build -G Ninja -DENABLE_FFMPEG:BOOL=ON
 cmake --build build -j2
 ```
 The executable `punes.exe` is in the `build/src` directory but in order to run it you need the following dlls:
@@ -323,7 +324,7 @@ that you can download here : :link:[`64bit`](https://www.dropbox.com/s/d632cjezy
 #### Windows Debug version
 If you need the debug version then you need to replace the `cmake -B build -G Ninja` command of the previous examples with the following:
 ```bash
-CFLAGS="-O0 -g -DDEBUG" CXXFLAGS="-O0 -g -DDEBUG" cmake -B build -G Ninja -DENABLE_RELEASE=OFF [...]
+cmake -B build -G Ninja -DCMAKE_C_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_CXX_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_BUILD_TYPE:STRING=Debug -DENABLE_RELEASE:BOOL=OFF [...]
 ```
 where `[...]` are the other necessary options.
 

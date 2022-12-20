@@ -22,6 +22,7 @@ option(ENABLE_FULLSCREEN_RESFREQ "Enable Fullscreen resolution and auto frequenc
 option(ENABLE_QT6_LIBS "Enable support for QT6 libraries" OFF)
 option(ENABLE_WIN_STATIC_QT "Use precompiled Qt static library (only for Windows)" OFF)
 option(ENABLE_WIN_STATIC_QT560 "Use precompiled Qt 5.6.3 static library (only for Windows)" OFF)
+option(DISABLE_PORTABLE_MODE "Disable compiling portable mode management (useful in sandbox environments like Flatpak)" OFF)
 
 if (ENABLE_GIT_INFO)
 	find_package(Git)

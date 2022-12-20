@@ -88,6 +88,7 @@ BYTE mainApplication::control_base_folders(void) {
 	QDir old(QString("%0/.%1").arg(uQString(gui_home_folder()), NAME));
 #endif
 
+#if !defined (WITHOUT_PORTABLE_MODE)
 	if (!info.portable && !old.exists() && !config_folder.exists()) {
 		dlgWizard *dlg = new dlgWizard(nullptr, config_folder.absolutePath(), uQString(gui_application_folder()));
 
@@ -99,6 +100,7 @@ BYTE mainApplication::control_base_folders(void) {
 		data_folder.setPath(uQString(gui_data_folder()));
 		temp_folder.setPath(uQString(gui_temp_folder()));
 	}
+#endif
 
 	// controllo l'esistenza della directory principale
 	if (base_folder(&config_folder, nullptr, ".", tr("Error on create config folder")) == EXIT_ERROR) {

@@ -31,6 +31,8 @@ Changelog:
   will be automatically moved to the new location. In order to open the configuration directory easily, it's always
   possible to do so via the menu items "File->Open working directory" [Windows and UNIX-Like] or
   "File->Open config directory" [UNIX-Like].
+- Added a cmake option to disable portable mode handling (useful in sandbox environments like Flatpak).
+- Added French translation (thx to Benjamin Siskoo).
 - Updated internal shaders.
 - Improved FDS sound emulation.
 - Fixed autoswitch timing for FDS.

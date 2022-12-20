@@ -147,7 +147,11 @@ BYTE gui_init(int *argc, char **argv) {
 	qt = {};
 	qt.app = new mainApplication((*argc), argv, true, mode);
 
+#if defined (WITHOUT_PORTABLE_MODE)
+	info.portable = FALSE;
+#else
 	info.portable = cmd_line_check_portable((*argc), (uTCHAR **)argv);
+#endif
 
 	info.gui = TRUE;
 	gui.in_update = FALSE;
