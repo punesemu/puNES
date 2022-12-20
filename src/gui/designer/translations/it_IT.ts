@@ -134,7 +134,7 @@
     </message>
     <message>
       <source>Unspecified</source>
-      <translation type="unfinished">Unspecified</translation>
+      <translation>Non specificato</translation>
     </message>
     <message>
       <source>Standard Controllers</source>
@@ -142,23 +142,23 @@
     </message>
     <message>
       <source>NES Four Score/Satellite</source>
-      <translation type="unfinished">NES Four Score/Satellite</translation>
+      <translation>NES Four Score/Satellite</translation>
     </message>
     <message>
       <source>Famicom Four Players Adapter</source>
-      <translation type="unfinished">Famicom Four Players Adapter</translation>
+      <translation>Adattatore Famicom Four Players</translation>
     </message>
     <message>
       <source>Vs. System</source>
-      <translation type="unfinished">Vs. System</translation>
+      <translation>Vs. System</translation>
     </message>
     <message>
       <source>Vs. System (1P via $4017)</source>
-      <translation type="unfinished">Vs. System (1P via $4017)</translation>
+      <translation>Vs. System (1P via $4017)</translation>
     </message>
     <message>
       <source>Reserved</source>
-      <translation type="unfinished">Reserved</translation>
+      <translation>Riservato</translation>
     </message>
     <message>
       <source>Vs. Zapper</source>
@@ -178,19 +178,19 @@
     </message>
     <message>
       <source>Power Pad Side A</source>
-      <translation type="unfinished">Power Pad Side A</translation>
+      <translation>Power Pad Lato A</translation>
     </message>
     <message>
       <source>Power Pad Side B</source>
-      <translation type="unfinished">Power Pad Side B</translation>
+      <translation>Power Pad Lato B</translation>
     </message>
     <message>
       <source>Family Trainer Side A</source>
-      <translation type="unfinished">Family Trainer Side A</translation>
+      <translation>Family Trainer Lato A</translation>
     </message>
     <message>
       <source>Family Trainer Side B</source>
-      <translation type="unfinished">Family Trainer Side B</translation>
+      <translation>Family Trainer Lato B</translation>
     </message>
     <message>
       <source>Arkanoid Paddle (NES)</source>
@@ -206,11 +206,11 @@
     </message>
     <message>
       <source>Konami Hyper Shot</source>
-      <translation type="unfinished">Konami Hyper Shot</translation>
+      <translation>Konami Hyper Shot</translation>
     </message>
     <message>
       <source>Coconuts Pachinko</source>
-      <translation type="unfinished">Coconuts Pachinko</translation>
+      <translation>Coconuts Pachinko</translation>
     </message>
     <message>
       <source>Exciting Boxing Punching Bag</source>
@@ -218,15 +218,15 @@
     </message>
     <message>
       <source>Jissen Mahjong Controller</source>
-      <translation type="unfinished">Jissen Mahjong Controller</translation>
+      <translation> Controller Jissen Mahjong</translation>
     </message>
     <message>
       <source>Party Tap</source>
-      <translation type="unfinished">Party Tap</translation>
+      <translation>Party Tap</translation>
     </message>
     <message>
       <source>Oeka Kids Tablet</source>
-      <translation type="unfinished">Oeka Kids Tablet</translation>
+      <translation>Tavoletta Oeka Kids</translation>
     </message>
     <message>
       <source>Sunsoft Barcode Battler</source>
@@ -374,7 +374,7 @@
     </message>
     <message>
       <source>4-Screen</source>
-      <translation type="unfinished">4-Screen</translation>
+      <translation>4-Screen</translation>
     </message>
     <message>
       <source>CPU Timing</source>
@@ -446,7 +446,7 @@
     </message>
     <message>
       <source>Mapper</source>
-      <translation type="unfinished">Mapper</translation>
+      <translation>Mapper</translation>
     </message>
     <message>
       <source>Normal</source>
@@ -578,11 +578,11 @@
     </message>
     <message>
       <source>Save</source>
-      <translation type="unfinished">Save</translation>
+      <translation>Salva</translation>
     </message>
     <message>
       <source>Cancel</source>
-      <translation type="unfinished">Cancel</translation>
+      <translation>Annulla</translation>
     </message>
   </context>
   <context>
@@ -600,11 +600,11 @@
     <name>dlgKeyboard</name>
     <message>
       <source>Virtual Keyboard</source>
-      <translation type="unfinished">Virtual Keyboard</translation>
+      <translation>Tastiera Virtuale</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>Tastiera Subor</translation>
     </message>
     <message>
       <source>Options</source>
@@ -636,7 +636,7 @@
     </message>
     <message>
       <source>Setup</source>
-      <translation type="unfinished">Setup</translation>
+      <translation>Configurazione</translation>
     </message>
     <message>
       <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
@@ -730,7 +730,7 @@
     </message>
     <message>
       <source>Capture/Release Input</source>
-      <translation type="unfinished">Capture/Release Input</translation>
+      <translation>Cattura/Rilascia Input</translation>
     </message>
   </context>
   <context>
@@ -966,7 +966,7 @@
     <message>
       <source>%1 folders</source>
       <extracomment>Do not translate %1</extracomment>
-      <translation type="unfinished">%1 folders</translation>
+      <translation>Cartelle %1</translation>
     </message>
     <message>
       <source>Error on create config folder</source>
@@ -998,23 +998,23 @@
     </message>
     <message>
       <source>Error on create bios folder</source>
-      <translation type="unfinished">Error on create bios folder</translation>
+      <translation>Errore nella creazione della cartella bios</translation>
     </message>
     <message>
       <source>Error on create diff folder</source>
-      <translation type="unfinished">Error on create diff folder</translation>
+      <translation>Errore nella creazione della cartella diff</translation>
     </message>
     <message>
       <source>Error on create prb folder</source>
-      <translation type="unfinished">Error on create prb folder</translation>
+      <translation>Errore nella creazione della cartella prb</translation>
     </message>
     <message>
       <source>Error on create save folder</source>
-      <translation type="unfinished">Error on create save folder</translation>
+      <translation>Errore nella creazione della cartella save</translation>
     </message>
     <message>
       <source>Error on create screenshot folder</source>
-      <translation type="unfinished">Error on create screenshot folder</translation>
+      <translation>Errore nella creazione della cartella screenshot</translation>
     </message>
   </context>
   <context>
@@ -1418,7 +1418,7 @@
     </message>
     <message>
       <source>Fast Forward (hold button)</source>
-      <translation type="unfinished">Fast Forward (hold button)</translation>
+      <translation>Avanti veloce (mantenendo pulsante premuto)</translation>
     </message>
     <message>
       <source>puNES tape image</source>
@@ -1442,7 +1442,7 @@
     </message>
     <message>
       <source>Unsupported format</source>
-      <translation type="unfinished">Unsupported format</translation>
+      <translation>Formato non supportato</translation>
     </message>
     <message>
       <source>Error opening tape image file</source>
