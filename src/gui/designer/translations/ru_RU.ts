@@ -12,7 +12,7 @@
     <name>dlgCfgNSCode</name>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>По умолчанию</translation>
     </message>
     <message>
       <source>Unset</source>
@@ -20,11 +20,11 @@
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>Применить</translation>
     </message>
     <message>
       <source>Discard</source>
-      <translation type="unfinished">Discard</translation>
+      <translation>Отклонить</translation>
     </message>
   </context>
   <context>
@@ -54,7 +54,7 @@
     </message>
     <message>
       <source>Mirroring</source>
-      <translation type="unfinished">Mirroring</translation>
+      <translation>Отражение</translation>
     </message>
     <message>
       <source>Console Type</source>
@@ -70,63 +70,63 @@
     </message>
     <message>
       <source>128 Bytes</source>
-      <translation type="unfinished">128 Bytes</translation>
+      <translation>128 байт</translation>
     </message>
     <message>
       <source>256 Bytes</source>
-      <translation type="unfinished">256 Bytes</translation>
+      <translation>256 байт</translation>
     </message>
     <message>
       <source>512 Bytes</source>
-      <translation type="unfinished">512 Bytes</translation>
+      <translation>512 байт</translation>
     </message>
     <message>
       <source>1 KiB</source>
-      <translation type="unfinished">1 KiB</translation>
+      <translation>1 КиБ</translation>
     </message>
     <message>
       <source>2 KiB</source>
-      <translation type="unfinished">2 KiB</translation>
+      <translation>2 КиБ</translation>
     </message>
     <message>
       <source>4 KiB</source>
-      <translation type="unfinished">4 KiB</translation>
+      <translation>4 КиБ</translation>
     </message>
     <message>
       <source>8 KiB</source>
-      <translation type="unfinished">8 KiB</translation>
+      <translation>8 КиБ</translation>
     </message>
     <message>
       <source>16 KiB</source>
-      <translation type="unfinished">16 KiB</translation>
+      <translation>16 КиБ</translation>
     </message>
     <message>
       <source>32 KiB</source>
-      <translation type="unfinished">32 KiB</translation>
+      <translation>32 КиБ</translation>
     </message>
     <message>
       <source>64 KiB</source>
-      <translation type="unfinished">64 KiB</translation>
+      <translation>64 КиБ</translation>
     </message>
     <message>
       <source>128 KiB</source>
-      <translation type="unfinished">128 KiB</translation>
+      <translation>128 КиБ</translation>
     </message>
     <message>
       <source>256 KiB</source>
-      <translation type="unfinished">256 KiB</translation>
+      <translation>256 КиБ</translation>
     </message>
     <message>
       <source>512 KiB</source>
-      <translation type="unfinished">512 KiB</translation>
+      <translation>512 КиБ</translation>
     </message>
     <message>
       <source>1 MiB</source>
-      <translation type="unfinished">1 MiB</translation>
+      <translation>1 МиБ</translation>
     </message>
     <message>
       <source>N/A</source>
-      <translation type="unfinished">N/A</translation>
+      <translation>Н/Д</translation>
     </message>
     <message>
       <source>Trainer</source>
@@ -150,7 +150,7 @@
     </message>
     <message>
       <source>Vs. System</source>
-      <translation type="unfinished">Vs. System</translation>
+      <translation>Vs. System</translation>
     </message>
     <message>
       <source>Vs. System (1P via $4017)</source>
@@ -286,19 +286,19 @@
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>Клавиатура Сюбор</translation>
     </message>
     <message>
       <source>Subor Keyboard plus 3x8-bit mouse</source>
-      <translation type="unfinished">Subor Keyboard plus 3x8-bit mouse</translation>
+      <translation>Клавиатура Сюбор плюс 3x8-битная мышь</translation>
     </message>
     <message>
       <source>Subor Keyboard plus 24-bit mouse</source>
-      <translation type="unfinished">Subor Keyboard plus 24-bit mouse</translation>
+      <translation>Клавиатура Сюбор плюс 24-битная мышь</translation>
     </message>
     <message>
       <source>SNES Mouse</source>
-      <translation type="unfinished">SNES Mouse</translation>
+      <translation>Мышь SNES</translation>
     </message>
     <message>
       <source>Multicart</source>
@@ -306,7 +306,7 @@
     </message>
     <message>
       <source>Two SNES controllers</source>
-      <translation type="unfinished">Two SNES controllers</translation>
+      <translation>Два контроллера SNES</translation>
     </message>
     <message>
       <source>RacerMate Bicycle</source>
@@ -314,7 +314,7 @@
     </message>
     <message>
       <source>U-Force</source>
-      <translation type="unfinished">U-Force</translation>
+      <translation>U-Force</translation>
     </message>
     <message>
       <source>R.O.B. Stack-Up</source>
@@ -346,19 +346,19 @@
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>NTSC</translation>
     </message>
     <message>
       <source>PAL</source>
-      <translation type="unfinished">PAL</translation>
+      <translation>PAL</translation>
     </message>
     <message>
       <source>Both</source>
-      <translation type="unfinished">Both</translation>
+      <translation>Оба</translation>
     </message>
     <message>
       <source>Dendy</source>
-      <translation type="unfinished">Dendy</translation>
+      <translation>Dendy</translation>
     </message>
     <message>
       <source>VS Type</source>
@@ -366,11 +366,11 @@
     </message>
     <message>
       <source>Horizontal</source>
-      <translation type="unfinished">Horizontal</translation>
+      <translation>Горизонтально</translation>
     </message>
     <message>
       <source>Vertical</source>
-      <translation type="unfinished">Vertical</translation>
+      <translation>Вертикально</translation>
     </message>
     <message>
       <source>4-Screen</source>
@@ -378,19 +378,19 @@
     </message>
     <message>
       <source>CPU Timing</source>
-      <translation type="unfinished">CPU Timing</translation>
+      <translation>Тайминг ЦП</translation>
     </message>
     <message>
       <source>VS PPU</source>
-      <translation type="unfinished">VS PPU</translation>
+      <translation>VS PPU</translation>
     </message>
     <message>
       <source>CHR ROM KiB</source>
-      <translation type="unfinished">CHR ROM KiB</translation>
+      <translation>CHR ROM в КиБ</translation>
     </message>
     <message>
       <source>NES/Famicom/Dendy</source>
-      <translation type="unfinished">NES/Famicom/Dendy</translation>
+      <translation>NES/Famicom/Dendy</translation>
     </message>
     <message>
       <source>Playchoice 10</source>
@@ -402,35 +402,35 @@
     </message>
     <message>
       <source>NES/Famicom with EPSM</source>
-      <translation type="unfinished">NES/Famicom with EPSM</translation>
+      <translation>NES/Famicom с EPSM</translation>
     </message>
     <message>
       <source>VT01</source>
-      <translation type="unfinished">VT01</translation>
+      <translation>VT01</translation>
     </message>
     <message>
       <source>VT02</source>
-      <translation type="unfinished">VT02</translation>
+      <translation>VT02</translation>
     </message>
     <message>
       <source>VT03</source>
-      <translation type="unfinished">VT03</translation>
+      <translation>VT03</translation>
     </message>
     <message>
       <source>VT09</source>
-      <translation type="unfinished">VT09</translation>
+      <translation>VT09</translation>
     </message>
     <message>
       <source>VT32</source>
-      <translation type="unfinished">VT32</translation>
+      <translation>VT32</translation>
     </message>
     <message>
       <source>VT369</source>
-      <translation type="unfinished">VT369</translation>
+      <translation>VT369</translation>
     </message>
     <message>
       <source>UMC UM6578</source>
-      <translation type="unfinished">UMC UM6578</translation>
+      <translation>UMC UM6578</translation>
     </message>
     <message>
       <source>Famicom Network System</source>
@@ -438,7 +438,7 @@
     </message>
     <message>
       <source>File</source>
-      <translation type="unfinished">File</translation>
+      <translation>Файл</translation>
     </message>
     <message>
       <source>CHR RAM Battery</source>
@@ -446,7 +446,7 @@
     </message>
     <message>
       <source>Mapper</source>
-      <translation type="unfinished">Mapper</translation>
+      <translation>Маппер</translation>
     </message>
     <message>
       <source>Normal</source>
@@ -462,7 +462,7 @@
     </message>
     <message>
       <source>Super Xevious</source>
-      <translation type="unfinished">Super Xevious</translation>
+      <translation>Super Xevious</translation>
     </message>
     <message>
       <source>Vs. Ice Climber</source>
@@ -478,15 +478,15 @@
     </message>
     <message>
       <source>PRG RAM</source>
-      <translation type="unfinished">PRG RAM</translation>
+      <translation>PRG RAM</translation>
     </message>
     <message>
       <source>iNES 1.0</source>
-      <translation type="unfinished">iNES 1.0</translation>
+      <translation>iNES 1.0</translation>
     </message>
     <message>
       <source>NES 2.0</source>
-      <translation type="unfinished">NES 2.0</translation>
+      <translation>NES 2.0</translation>
     </message>
     <message>
       <source>Submapper</source>
@@ -494,59 +494,59 @@
     </message>
     <message>
       <source>RP2C03B</source>
-      <translation type="unfinished">RP2C03B</translation>
+      <translation>RP2C03B</translation>
     </message>
     <message>
       <source>RP2C03G</source>
-      <translation type="unfinished">RP2C03G</translation>
+      <translation>RP2C03G</translation>
     </message>
     <message>
       <source>RP2C04-0001</source>
-      <translation type="unfinished">RP2C04-0001</translation>
+      <translation>RP2C04-0001</translation>
     </message>
     <message>
       <source>RP2C04-0002</source>
-      <translation type="unfinished">RP2C04-0002</translation>
+      <translation>RP2C04-0002</translation>
     </message>
     <message>
       <source>RP2C04-0003</source>
-      <translation type="unfinished">RP2C04-0003</translation>
+      <translation>RP2C04-0003</translation>
     </message>
     <message>
       <source>RP2C04-0004</source>
-      <translation type="unfinished">RP2C04-0004</translation>
+      <translation>RP2C04-0004</translation>
     </message>
     <message>
       <source>RC2C03B</source>
-      <translation type="unfinished">RC2C03B</translation>
+      <translation>RC2C03B</translation>
     </message>
     <message>
       <source>RC2C03C</source>
-      <translation type="unfinished">RC2C03C</translation>
+      <translation>RC2C03C</translation>
     </message>
     <message>
       <source>RC2C05-01</source>
-      <translation type="unfinished">RC2C05-01</translation>
+      <translation>RC2C05-01</translation>
     </message>
     <message>
       <source>RC2C05-02</source>
-      <translation type="unfinished">RC2C05-02</translation>
+      <translation>RC2C05-02</translation>
     </message>
     <message>
       <source>RC2C05-03</source>
-      <translation type="unfinished">RC2C05-03</translation>
+      <translation>RC2C05-03</translation>
     </message>
     <message>
       <source>RC2C05-04</source>
-      <translation type="unfinished">RC2C05-04</translation>
+      <translation>RC2C05-04</translation>
     </message>
     <message>
       <source>RC2C05-05</source>
-      <translation type="unfinished">RC2C05-05</translation>
+      <translation>RC2C05-05</translation>
     </message>
     <message>
       <source>Header</source>
-      <translation type="unfinished">Header</translation>
+      <translation>Заголовок</translation>
     </message>
     <message>
       <source>PRG RAM Battery</source>
@@ -554,7 +554,7 @@
     </message>
     <message>
       <source>CHR RAM</source>
-      <translation type="unfinished">CHR RAM</translation>
+      <translation>CHR RAM</translation>
     </message>
     <message>
       <source>Input</source>
@@ -600,11 +600,11 @@
     <name>dlgKeyboard</name>
     <message>
       <source>Virtual Keyboard</source>
-      <translation type="unfinished">Virtual Keyboard</translation>
+      <translation>Виртуальная клавиатура</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>Клавиатура Сюбор</translation>
     </message>
     <message>
       <source>Options</source>
@@ -616,19 +616,19 @@
     </message>
     <message>
       <source>1.0x</source>
-      <translation type="unfinished">1.0x</translation>
+      <translation>1.0x</translation>
     </message>
     <message>
       <source>1.5x</source>
-      <translation type="unfinished">1.5x</translation>
+      <translation>1.5x</translation>
     </message>
     <message>
       <source>2.0x</source>
-      <translation type="unfinished">2.0x</translation>
+      <translation>2.0x</translation>
     </message>
     <message>
       <source>2.5x</source>
-      <translation type="unfinished">2.5x</translation>
+      <translation>2.5x</translation>
     </message>
     <message>
       <source>Mode</source>
@@ -647,7 +647,7 @@
     <name>dlgLog</name>
     <message>
       <source>Log</source>
-      <translation type="unfinished">Log</translation>
+      <translation>Лог</translation>
     </message>
     <message>
       <source>Close</source>
@@ -730,7 +730,7 @@
     </message>
     <message>
       <source>Capture/Release Input</source>
-      <translation type="unfinished">Capture/Release Input</translation>
+      <translation>Удержание/снятие ввода</translation>
     </message>
   </context>
   <context>
@@ -970,51 +970,51 @@
     </message>
     <message>
       <source>Error on create config folder</source>
-      <translation type="unfinished">Error on create config folder</translation>
+      <translation>Ошибка при создании папки конфигураций</translation>
     </message>
     <message>
       <source>Error on create data folder</source>
-      <translation type="unfinished">Error on create data folder</translation>
+      <translation>Ошибка при создании папки данных</translation>
     </message>
     <message>
       <source>Error on create temp folder</source>
-      <translation type="unfinished">Error on create temp folder</translation>
+      <translation>Ошибка при создании временной папки</translation>
     </message>
     <message>
       <source>Error on create cheat folder</source>
-      <translation type="unfinished">Error on create cheat folder</translation>
+      <translation>Ошибка при создании папки читов</translation>
     </message>
     <message>
       <source>Error on create psg folder</source>
-      <translation type="unfinished">Error on create psg folder</translation>
+      <translation>Ошибка при создании папки psg</translation>
     </message>
     <message>
       <source>Error on create shp folder</source>
-      <translation type="unfinished">Error on create shp folder</translation>
+      <translation>Ошибка при создании папки shp</translation>
     </message>
     <message>
       <source>Error on create jsc folder</source>
-      <translation type="unfinished">Error on create jsc folder</translation>
+      <translation>Ошибка при создании папки jsc</translation>
     </message>
     <message>
       <source>Error on create bios folder</source>
-      <translation type="unfinished">Error on create bios folder</translation>
+      <translation>Ошибка при создании папки bios</translation>
     </message>
     <message>
       <source>Error on create diff folder</source>
-      <translation type="unfinished">Error on create diff folder</translation>
+      <translation>Ошибка при создании папки diff</translation>
     </message>
     <message>
       <source>Error on create prb folder</source>
-      <translation type="unfinished">Error on create prb folder</translation>
+      <translation>Ошибка при создании папки prb</translation>
     </message>
     <message>
       <source>Error on create save folder</source>
-      <translation type="unfinished">Error on create save folder</translation>
+      <translation>Ошибка при создании папки сохранений</translation>
     </message>
     <message>
       <source>Error on create screenshot folder</source>
-      <translation type="unfinished">Error on create screenshot folder</translation>
+      <translation>Ошибка при создании папки скриншотов</translation>
     </message>
   </context>
   <context>
@@ -1442,7 +1442,7 @@
     </message>
     <message>
       <source>Unsupported format</source>
-      <translation type="unfinished">Unsupported format</translation>
+      <translation>Неподдерживаемый формат</translation>
     </message>
     <message>
       <source>Error opening tape image file</source>
@@ -1458,7 +1458,7 @@
     </message>
     <message>
       <source>Toggle &amp;Fast Forward</source>
-      <translation type="unfinished">Toggle &amp;Fast Forward</translation>
+      <translation>Включить пе&amp;ремотку вперед</translation>
     </message>
     <message>
       <source>&amp;Play</source>
@@ -1474,46 +1474,46 @@
     </message>
     <message>
       <source>Shout into &amp;Microphone</source>
-      <translation type="unfinished">Shout into &amp;Microphone</translation>
+      <translation>Крикнуть в &amp;микрофон</translation>
     </message>
     <message>
       <source>&amp;Open config folder</source>
-      <translation type="unfinished">&amp;Open config folder</translation>
+      <translation>Открыть папку с &amp;конфигурациями</translation>
     </message>
     <message>
       <source>Ta&amp;pe</source>
-      <translation type="unfinished">Ta&amp;pe</translation>
+      <translation>&amp;Кассета</translation>
     </message>
     <message>
       <source>Toggle Virtual &amp;Keyboard</source>
-      <translation type="unfinished">Toggle Virtual &amp;Keyboard</translation>
+      <translation>Включить виртуальную &amp;клавиатуру</translation>
     </message>
     <message>
       <source>&amp;Show Log</source>
-      <translation type="unfinished">&amp;Show Log</translation>
+      <translation>Показать &amp;лог</translation>
     </message>
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
-      <translation type="unfinished">Edit Current iNES/NES2.0 &amp;Header</translation>
+      <translation>Редактировать текущий iNES/NES2.0 &amp;заголовок</translation>
     </message>
   </context>
   <context>
     <name>nesKeyboardStatusBar</name>
     <message>
       <source>Capture/Release the Input</source>
-      <translation type="unfinished">Capture/Release the Input</translation>
+      <translation>Удержание/снятие ввода</translation>
     </message>
     <message>
       <source>Input is released</source>
-      <translation type="unfinished">Input is released</translation>
+      <translation>Ввод отпущен</translation>
     </message>
     <message>
       <source>Input is captured</source>
-      <translation type="unfinished">Input is captured</translation>
+      <translation>Ввод зажат</translation>
     </message>
     <message>
       <source>Toggle Virtual Keyboard</source>
-      <translation type="unfinished">Toggle Virtual Keyboard</translation>
+      <translation>Включить виртуальную клавиатуру</translation>
     </message>
   </context>
   <context>
@@ -1716,12 +1716,12 @@
     <message>
       <source>keyboard input captured</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">keyboard input captured</translation>
+      <translation>Клавиатурный ввод зажат</translation>
     </message>
     <message>
       <source>keyboard input released</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">keyboard input released</translation>
+      <translation>Клавиатурный ввод отпущен</translation>
     </message>
   </context>
   <context>
@@ -1739,7 +1739,7 @@
     <name>suborKeyboard</name>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>Клавиатура Сюбор</translation>
     </message>
   </context>
   <context>
@@ -1885,7 +1885,7 @@
     </message>
     <message>
       <source>New CPU Ram</source>
-      <translation type="unfinished">New CPU Ram</translation>
+      <translation>Новое ЦП ОЗУ</translation>
     </message>
   </context>
   <context>
@@ -1932,26 +1932,26 @@
     </message>
     <message>
       <source>Nestopia XML files</source>
-      <translation type="unfinished">Nestopia XML files</translation>
+      <translation>XML файлы Nestopia</translation>
     </message>
     <message>
       <source>Mame 128+ XML files</source>
-      <translation type="unfinished">Mame 128+ XML files</translation>
+      <translation>XML файлы Mame 128+</translation>
     </message>
     <message>
       <source>FCEUX CHT files</source>
-      <translation type="unfinished">FCEUX CHT files</translation>
+      <translation>Файлы FCEUX CHT</translation>
     </message>
     <message>
       <source>libretro CHT files</source>
-      <translation type="unfinished">libretro CHT files</translation>
+      <translation>Файлы libretro CHT</translation>
     </message>
   </context>
   <context>
     <name>wdgKeyboard</name>
     <message>
       <source>Virtual Keyboard</source>
-      <translation type="unfinished">Virtual Keyboard</translation>
+      <translation>Виртуальная клавиатура</translation>
     </message>
   </context>
   <context>
@@ -2161,11 +2161,11 @@
     <name>wdgScreen</name>
     <message>
       <source>Paste</source>
-      <translation type="unfinished">Paste</translation>
+      <translation>Вставить</translation>
     </message>
     <message>
       <source>Tape</source>
-      <translation type="unfinished">Tape</translation>
+      <translation>Кассета</translation>
     </message>
     <message>
       <source>Play</source>
@@ -2466,11 +2466,11 @@
     </message>
     <message>
       <source>Use fast forward when loading the disk/side</source>
-      <translation type="unfinished">Use fast forward when loading the disk/side</translation>
+      <translation>Использовать перемотку при загрузке Дискеты/стороны</translation>
     </message>
     <message>
       <source>French</source>
-      <translation type="unfinished">French</translation>
+      <translation>Français</translation>
     </message>
   </context>
   <context>
@@ -2621,7 +2621,7 @@
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>Клавиатура Сюбор</translation>
     </message>
   </context>
   <context>
@@ -3373,19 +3373,19 @@
     </message>
     <message>
       <source>PAL TV1x</source>
-      <translation type="unfinished">PAL TV1x</translation>
+      <translation>PAL TV1x</translation>
     </message>
     <message>
       <source>PAL TV2x</source>
-      <translation type="unfinished">PAL TV2x</translation>
+      <translation>PAL TV2x</translation>
     </message>
     <message>
       <source>PAL TV3x</source>
-      <translation type="unfinished">PAL TV3x</translation>
+      <translation>PAL TV3x</translation>
     </message>
     <message>
       <source>PAL TV4x</source>
-      <translation type="unfinished">PAL TV4x</translation>
+      <translation>PAL TV4x</translation>
     </message>
     <message>
       <source>Super 2xSaI</source>
@@ -3397,15 +3397,15 @@
     </message>
     <message>
       <source>TV2x</source>
-      <translation type="unfinished">TV2x</translation>
+      <translation>TV2x</translation>
     </message>
     <message>
       <source>TV3x</source>
-      <translation type="unfinished">TV3x</translation>
+      <translation>TV3x</translation>
     </message>
     <message>
       <source>TV4x</source>
-      <translation type="unfinished">TV4x</translation>
+      <translation>TV4x</translation>
     </message>
   </context>
   <context>
