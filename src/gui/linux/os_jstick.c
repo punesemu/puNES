@@ -248,16 +248,16 @@ void js_os_jdev_scan(void) {
 				BYTE finded = FALSE;
 
 				val = udev_device_get_property_value(dev, "ID_INPUT_JOYSTICK");
-				if (val && strcmp(val, "1") == 0) {
+				if (val && (strcmp(val, "1") == 0)) {
 					finded = TRUE;
 				}
 				val = udev_device_get_property_value(dev, "ID_INPUT_ACCELEROMETER");
-				if (val && strcmp(val, "1") == 0) {
+				if (val && (strcmp(val, "1") == 0)) {
 					finded = FALSE;
 				}
 				if (!finded) {
 					val = udev_device_get_property_value(dev, "ID_CLASS");
-					if (val && strcmp(val, "joystick") == 0) {
+					if (val && (strcmp(val, "joystick") == 0)) {
 						finded = TRUE;
 					}
 				}
