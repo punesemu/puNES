@@ -494,6 +494,10 @@ void js_jdev_init(_js_device *jdev) {
 void js_jdev_type(_js_device *jdev) {
 	unsigned int i;
 
+	if (!(jdev->usb.vendor_id | jdev->usb.product_id)) {
+		jdev->type = JS_SC_UNKNOWN;
+		return;
+	}
 	for (i = 0; i < LENGTH(js_gamepads_list); i++) {
 		if ((jdev->usb.vendor_id == js_gamepads_list[i].vendor_id) &&
 			(jdev->usb.product_id == js_gamepads_list[i].product_id)) {
