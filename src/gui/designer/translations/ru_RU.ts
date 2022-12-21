@@ -46,11 +46,11 @@
     </message>
     <message>
       <source>Do you want to boot the ROM with the changes made?</source>
-      <translation type="unfinished">Do you want to boot the ROM with the changes made?</translation>
+      <translation>Вы хотите загрузить ROM с внесенными изменениями?</translation>
     </message>
     <message>
       <source>Header Editor</source>
-      <translation type="unfinished">Header Editor</translation>
+      <translation>Редактор заголовка</translation>
     </message>
     <message>
       <source>Mirroring</source>
@@ -62,7 +62,7 @@
     </message>
     <message>
       <source>PRG ROM KiB</source>
-      <translation type="unfinished">PRG ROM KiB</translation>
+      <translation>PRG ROM в КиБ</translation>
     </message>
     <message>
       <source>None</source>
@@ -130,11 +130,11 @@
     </message>
     <message>
       <source>Trainer</source>
-      <translation type="unfinished">Trainer</translation>
+      <translation>Трейнер</translation>
     </message>
     <message>
       <source>Unspecified</source>
-      <translation type="unfinished">Unspecified</translation>
+      <translation>Не указано</translation>
     </message>
     <message>
       <source>Standard Controllers</source>
@@ -218,7 +218,7 @@
     </message>
     <message>
       <source>Jissen Mahjong Controller</source>
-      <translation type="unfinished">Jissen Mahjong Controller</translation>
+      <translation>Контроллер Jissen Mahjong</translation>
     </message>
     <message>
       <source>Party Tap</source>
@@ -238,23 +238,23 @@
     </message>
     <message>
       <source>Pokkun Moguraa</source>
-      <translation type="unfinished">Pokkun Moguraa</translation>
+      <translation>Pokkun Moguraa</translation>
     </message>
     <message>
       <source>Top Rider</source>
-      <translation type="unfinished">Top Rider</translation>
+      <translation>Top Rider</translation>
     </message>
     <message>
       <source>Double-Fisted</source>
-      <translation type="unfinished">Double-Fisted</translation>
+      <translation>Double-Fisted</translation>
     </message>
     <message>
       <source>Famicom 3D System</source>
-      <translation type="unfinished">Famicom 3D System</translation>
+      <translation>Famicom 3D System</translation>
     </message>
     <message>
       <source>Doremikko Keyboard</source>
-      <translation type="unfinished">Doremikko Keyboard</translation>
+      <translation>Клавиатура Doremikko</translation>
     </message>
     <message>
       <source>R.O.B. Gyro Set</source>
@@ -274,15 +274,15 @@
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
-      <translation type="unfinished">Family BASIC Keyboard</translation>
+      <translation>Клавиатура Family BASIC</translation>
     </message>
     <message>
       <source>Dongda PEC-586 Keyboard</source>
-      <translation type="unfinished">Dongda PEC-586 Keyboard</translation>
+      <translation>Клавиатура Dongda PEC-586</translation>
     </message>
     <message>
       <source>Bit Corp. Bit-79 Keyboard</source>
-      <translation type="unfinished">Bit Corp. Bit-79 Keyboard</translation>
+      <translation>Клавиатура Bit Corp. Bit-79</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
@@ -374,7 +374,7 @@
     </message>
     <message>
       <source>4-Screen</source>
-      <translation type="unfinished">4-Screen</translation>
+      <translation>4-х экранное</translation>
     </message>
     <message>
       <source>CPU Timing</source>
@@ -566,7 +566,7 @@
     </message>
     <message>
       <source>Battery</source>
-      <translation type="unfinished">Battery</translation>
+      <translation>Батарейка</translation>
     </message>
     <message>
       <source>Misc</source>
@@ -608,11 +608,11 @@
     </message>
     <message>
       <source>Options</source>
-      <translation type="unfinished">Options</translation>
+      <translation>Опции</translation>
     </message>
     <message>
       <source>Size</source>
-      <translation type="unfinished">Size</translation>
+      <translation>Размер</translation>
     </message>
     <message>
       <source>1.0x</source>
@@ -632,7 +632,7 @@
     </message>
     <message>
       <source>Mode</source>
-      <translation type="unfinished">Mode</translation>
+      <translation>Режим</translation>
     </message>
     <message>
       <source>Setup</source>
@@ -958,7 +958,7 @@
     <name>familyBasicKeyboard</name>
     <message>
       <source>Family Basic Keyboard</source>
-      <translation type="unfinished">Family Basic Keyboard</translation>
+      <translation>Клавиатура Family BASIC</translation>
     </message>
   </context>
   <context>
@@ -1418,7 +1418,7 @@
     </message>
     <message>
       <source>Fast Forward (hold button)</source>
-      <translation type="unfinished">Fast Forward (hold button)</translation>
+      <translation>Перемотка вперёд (удерживать кнопку)</translation>
     </message>
     <message>
       <source>puNES tape image</source>
@@ -2617,7 +2617,7 @@
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
-      <translation type="unfinished">Family BASIC Keyboard</translation>
+      <translation>Клавиатура Family BASIC</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
