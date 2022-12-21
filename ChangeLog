@@ -67,6 +67,7 @@ Changelog:
 - Fixed high dpi support.
 - Added a dialog to view log messages.
 - Fixed many many many other bugs.
+- Redesigned the Standard Controller configuration dialog.
 
 0.109 (Bug fixes release)
 - Fixed 'make install'.
