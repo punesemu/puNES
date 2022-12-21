@@ -45,8 +45,8 @@ If you want buy me a beer : <span class="badge-paypal"><a href="https://www.payp
   <img src="https://user-images.githubusercontent.com/14859058/135748722-ea73e6b3-db6b-4cf2-b13d-755ca4824975.png" width="400" alt="puNES General Settings"/>
   <img src="https://user-images.githubusercontent.com/14859058/140854472-60a88023-e719-4637-9289-08991a367ddd.png" width="400" alt="puNES Video Filters Settings"/>
   <img src="https://user-images.githubusercontent.com/14859058/202864520-bdd84d5c-646e-40c0-84be-5ff2d225d015.png" width="400" alt="puNES Cheat Editor"/>
-  <img src="https://user-images.githubusercontent.com/14859058/146680023-2c40f991-67d2-4502-963f-39c8b5bfc4ca.png" width="400" alt="puNES Xbox360 Standard Controller Settings"/>
-  <img src="https://user-images.githubusercontent.com/14859058/146680033-5fc36150-c52f-494a-ba5c-9d7d675e43d6.png" width="400" alt="puNES PS4 Standard Controller Settings"/>
+  <img src="https://user-images.githubusercontent.com/14859058/208847541-778fb8fb-e070-432f-baf1-fb67cf13f3c5.png" width="400" alt="puNES Xbox360 Standard Controller Settings"/>
+  <img src="https://user-images.githubusercontent.com/14859058/208848284-0c30ff3f-d6f3-415d-87b1-e408e5454bba.png" width="400" alt="puNES PS4 Standard Controller Settings"/>
   <img src="https://user-images.githubusercontent.com/14859058/196442457-e799ee41-17cd-46bf-821e-7532b85c304e.png" width="800" alt="puNES Family BASIC Virtual Keyboard"/>
   <img src="https://user-images.githubusercontent.com/14859058/197157708-e2eab47e-001c-4e18-9df8-eb46fb106980.png" width="800" alt="puNES Subor Virtual Keyboard"/>
 </p>
