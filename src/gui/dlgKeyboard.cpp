@@ -751,10 +751,10 @@ void keyboardButton::set(DBWORD nscode, SWORD index, SBYTE row, SBYTE column, SW
 			"	border-color: %1;"\
 			"	border-style: solid;"\
 			"	padding: 5px;"\
-			"	padding-left:10px;"\
-			"	padding-right:10px;"\
+			"	padding-left: 10px;"\
+			"	padding-right: 10px;"\
 			"	border-radius: 3px;"\
-			"	color:#000;"\
+			"	color: #000;"\
 			"}"\
 			"QPushButton:hover {"\
 			"	background-color: %2;"\

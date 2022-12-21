@@ -85,8 +85,65 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 			BYTE exec_js_init;
 			int deadzone;
 		} data;
+		typedef struct _color_label {
+			_color_label() : normal("#EFEFEF"), selected("#BBF591") {}
+			QString normal;
+			QString selected;
+		} _color_label;
+		typedef struct _color_frame {
+			_color_frame() : button("#BAB9B7"), kbd("#DEDDDA"), joy("#E8E5DC"), tbrd("#A69F8A") {}
+			QString button;
+			QString kbd;
+			QString joy;
+			QString tbrd;
+		} _color_frame;
 		int last_js_index;
-
+		QString style_label = "QLabel {"\
+			"	background-color: %0;"\
+			"	border-width: 1px;"\
+			"	border-color: #BAB9B7;"\
+			"	border-style: solid;"\
+			"	padding: 2px;"\
+			"	padding-left: 3px;"\
+			"	padding-right: 3px;"\
+			"	border-radius: 3px;"\
+			"	color: #000;"\
+			"	font-size: 8pt;"\
+			"	font-weight: bold;"\
+			"}"\
+			"QLabel:disabled {"\
+			"	background-color: #EFEFEF;"\
+			"	border-color: #BABDB6;"\
+			"	color: #BABDB6;"\
+			"}";
+		QString style_pixmapbutton = "QPushButton {"\
+			"	border-width: 1px;"\
+			"	border-color: #8F8F91;"\
+			"	border-style: solid;"\
+			"	border-radius: 6px;"\
+			"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #F6F7FA, stop: 1 #DADBDE);"\
+			"	padding: 5px;"\
+			"	padding-left: 3px;"\
+			"	padding-right: 3px;"\
+			"	min-width: 80px;"\
+			"	font-size: 8pt;"\
+			"}"
+		 	"QPushButton:disabled {"\
+			"	background-color: #EFEFEF;"\
+			"	border-color: #C2C2C2;"\
+			"	color: #BABDB6;"\
+			"}"\
+			"QPushButton:hover {"\
+			"	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #DADBDE, stop: 1 #F6F7FA);"\
+			"}";
+		QString style_frame = "QFrame {"\
+			"	border-width: 1px;"\
+			"	border-color: %0;"\
+			"	border-style: solid;"\
+			"	border-radius: 6px;"\
+			"	background-color: %1;"\
+			"	font-size: 8pt;"\
+			"}";
 	public:
 		explicit dlgStdPad(QWidget *parent = nullptr, _cfg_port *cfg_port = nullptr);
 		~dlgStdPad() override;

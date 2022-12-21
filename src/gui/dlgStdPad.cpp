@@ -16,10 +16,10 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtWidgets/QAbstractItemView>
-#include <QtSvg/QSvgRenderer>
-#include <QtGui/QPainter>
 #include <QtCore/QBuffer>
+#include <QtGui/QPainter>
+#include <QtWidgets/QAbstractItemView>
+#include <QtWidgets/QStylePainter>
 #include "dlgStdPad.hpp"
 #include "mainWindow.hpp"
 #include "objSettings.hpp"
@@ -81,21 +81,22 @@ dlgStdPad::dlgStdPad(QWidget *parent, _cfg_port *cfg_port) : QDialog(parent) {
 		bt->setProperty("myType", QVariant(i));
 		connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_defaults_clicked(bool)));
 
+		frame_kbd_buttons->setStyleSheet(style_frame.arg(_color_frame().tbrd, _color_frame().kbd));
+		frame_joy_buttons->setStyleSheet(style_frame.arg(_color_frame().tbrd, _color_frame().joy));
+
 		for (a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
 			int vbutton = a + (i * MAX_STD_PAD_BUTTONS);
 			QPushButton *def, *unset;
 			pixmapButton *pbt;
+			QFrame *fbt;
 
+			fbt = findChild<QFrame *>("frame_" + SPT(i) + "_" + SPB(a));
 			pbt = findChild<pixmapButton *>("pushButton_" + SPT(i) + "_" + SPB(a));
 			def = findChild<QPushButton *>("pushButton_" + SPT(i) + "_default_" + SPB(a));
 			unset = findChild<QPushButton *>("pushButton_" + SPT(i) + "_unset_" + SPB(a));
 
-			pbt->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
-			pbt->setMinimumHeight(fontMetrics().boundingRect("PJTIL").height() < (pbt->iconSize().height() + 6) ?
-				pbt->iconSize().height() + 6 :
-				fontMetrics().boundingRect("PJTIL").height());
-			pbt->setMinimumWidth(fontMetrics().size(0, "0000000000000000").width() + pbt->iconSize().width() + 2);
-
+			fbt->setStyleSheet(style_frame.arg(_color_frame().button, _color_frame().button));
+			pbt->setStyleSheet(style_pixmapbutton);
 			pbt->setIcon(QIcon(""));
 			if (i == KEYBOARD) {
 				pbt->setText(objInp::kbd_keyval_to_name(data.cfg.port.input[i][a]));
@@ -198,28 +199,7 @@ void dlgStdPad::changeEvent(QEvent *event) {
 	}
 }
 void dlgStdPad::showEvent(QShowEvent *event) {
-	QSvgRenderer svg(QString(":/pics/pics/Nes_controller.svgz"));
-	float ratio = (float)svg.defaultSize().width() / (float)svg.defaultSize().height();
-	int w = image_pad->size().width();
-	int h = (int)((float)w / ratio);
-	QImage image(w, h, QImage::Format_ARGB32);
-
-	mainwin->shcjoy_stop();
-
-	image.fill(Qt::transparent);
-
-	{
-		QPainter painter(&image);
-
-		svg.render(&painter);
-	}
-
-	image_pad->resize(image.size());
-	image_pad->setPixmap(QPixmap::fromImage(image, Qt::ColorOnly));
-
 	adjustSize();
-	setFixedSize(size());
-
 	QDialog::showEvent(event);
 }
 void dlgStdPad::closeEvent(QCloseEvent *event) {
@@ -366,7 +346,7 @@ void dlgStdPad::setEnable_tab_buttons(int type, bool mode) {
 
 	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(i))->setEnabled(mode);
-		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(i))->setStyleSheet("");
+		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(i))->setStyleSheet(style_label.arg(_color_label().normal));
 		findChild<pixmapButton *>("pushButton_" + SPT(type) + "_" + SPB(i))->setEnabled(mode);
 		findChild<QPushButton *>("pushButton_" + SPT(type) + "_default_" + SPB(i))->setEnabled(mode);
 		findChild<QPushButton *>("pushButton_" + SPT(type) + "_unset_" + SPB(i))->setEnabled(mode);
@@ -382,7 +362,7 @@ void dlgStdPad::disable_tab_and_other(int type, int vbutton) {
 
 	setEnable_tab_buttons(type, false);
 	findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(vbutton))->setEnabled(true);
-	findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(vbutton))->setStyleSheet("background-color: cyan");
+	findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(vbutton))->setStyleSheet(style_label.arg(_color_label().selected));
 	findChild<pixmapButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton))->setEnabled(true);
 
 	// in sequence, unset all, default
@@ -699,14 +679,17 @@ pixmapButton::pixmapButton(QWidget *parent) : QPushButton(parent) {}
 pixmapButton::~pixmapButton() = default;
 
 void pixmapButton::paintEvent(QPaintEvent *e) {
-	QPushButton::paintEvent(e);
-
 	if (!pixmap.isNull()) {
 		QPixmap img = pixmap.scaled(iconSize(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-		const int y = (height() - img.height()) / 2;
-		QPainter painter(this);
+		QStylePainter spainter(this);
+		QStyleOptionButton option;
 
-		painter.drawPixmap(5, y, img);
+		initStyleOption(&option);
+		option.text = "";
+		option.icon = QIcon(img);
+		spainter.drawControl(QStyle::CE_PushButton, option);
+	} else {
+		QPushButton::paintEvent(e);
 	}
 }
 
