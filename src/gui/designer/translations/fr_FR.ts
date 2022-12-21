@@ -1149,7 +1149,7 @@
     </message>
     <message>
         <source>F&amp;ullscreen</source>
-        <translation>F&amp;lein Ecran</translation>
+        <translation>P&amp;lein Ecran</translation>
     </message>
     <message>
         <source>&amp;Game Genie Rom Mode</source>
