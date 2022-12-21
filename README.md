@@ -133,15 +133,16 @@ NROM, NROM-128, NROM-256, SLROM, UOROM, CNROM, TLROM, TBROM, TKROM, TFROM, ANROM
 CMake Options
 -----------
 
-| CMake Option              | Description                                                                                    | Default |
-|---------------------------|------------------------------------------------------------------------------------------------|---------|
-| ENABLE_RELEASE            | Build release version                                                                          | ON      |
-| ENABLE_FFMPEG             | Enable FFMPEG support                                                                          | ON      |
-| ENABLE_OPENGL             | Use OpenGL support instead of Direct3D 9 (only for Windows)                                    | ON      |
-| ENABLE_OPENGL_CG          | Enable OpenGL nVidia Cg Toolkit support                                                        | OFF     |
-| ENABLE_FULLSCREEN_RESFREQ | Enable Fullscreen resolution and auto frequency                                                | ON      |
-| ENABLE_QT6_LIBS           | Enable support for QT6 libraries                                                               | OFF     |
-| DISABLE_PORTABLE_MODE     | Disable compiling portable mode management (useful<br/>with sandbox environments like Flatpak) | OFF     |
+| CMake Option              | Description                                                                        | Default |
+|---------------------------|------------------------------------------------------------------------------------|---------|
+| ENABLE_RELEASE            | Build release version                                                              | ON      |
+| ENABLE_FFMPEG             | Enable FFMPEG support                                                              | ON      |
+| ENABLE_OPENGL             | Use OpenGL support instead of Direct3D 9 (only for Windows)                        | ON      |
+| ENABLE_OPENGL_CG          | Enable OpenGL nVidia Cg Toolkit support                                            | OFF     |
+| ENABLE_FULLSCREEN_RESFREQ | Enable Fullscreen resolution and auto frequency                                    | ON      |
+| ENABLE_QT6_LIBS           | Enable support for QT6 libraries                                                   | OFF     |
+| DISABLE_PORTABLE_MODE     | Disable portable mode handling (useful with sandbox<br/>environments like Flatpak) | OFF     |
+
 
 ## :penguin: Linux
 #### Dependencies

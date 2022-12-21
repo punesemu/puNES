@@ -9,7 +9,7 @@ Changelog:
   * Implemented the "Paste" function. It's possible to paste the text by dragging it in the main
     window of the emulator or copying it and then press the right mouse button and selecting "Paste".
     The text will be inserted through the simulation of the pressure of the keys and it will always
-    be possible to interrupt the insertion by pressing the ESC key. During the paste, the Fast Forwandig
+    be possible to interrupt the insertion by pressing the ESC key. During the paste, the Fast Forwarding
     will be active to reduce the waiting time.
   * Added support for the tape data recorder. Added a "Tape" submenu in the "NES" menu, also the same
     menu is present in the context menu of the main window (right click) when the Keyboard is in use.
