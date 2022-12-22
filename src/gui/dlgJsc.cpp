@@ -458,6 +458,7 @@ void dlgJsc::s_combobox_joy_index_changed(UNUSED(int index)) {
 			update_info_lines();
 		}
 		old_jdev_index = jdev_index;
+		pushButton_Save->setEnabled(jdev_index != JS_NO_JOYSTICK);
 
 		mutex.unlock();
 	}
