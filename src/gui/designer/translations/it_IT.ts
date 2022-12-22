@@ -174,7 +174,7 @@
     </message>
     <message>
       <source>Bandai Hyper Shot Lightgun</source>
-      <translation type="unfinished">Bandai Hyper Shot Lightgun</translation>
+      <translation>Bandai Hyper Shot Lightgun</translation>
     </message>
     <message>
       <source>Power Pad Side A</source>
@@ -202,7 +202,7 @@
     </message>
     <message>
       <source>Two Paddles plus Famicom Data Recorder</source>
-      <translation type="unfinished">Two Paddles plus Famicom Data Recorder</translation>
+      <translation>Due Paddle più Famicom Data Recorder</translation>
     </message>
     <message>
       <source>Konami Hyper Shot</source>
@@ -242,11 +242,11 @@
     </message>
     <message>
       <source>Top Rider</source>
-      <translation type="unfinished">Top Rider</translation>
+      <translation>Top Rider</translation>
     </message>
     <message>
       <source>Double-Fisted</source>
-      <translation type="unfinished">Double-Fisted</translation>
+      <translation>Double-Fisted</translation>
     </message>
     <message>
       <source>Famicom 3D System</source>
@@ -258,7 +258,7 @@
     </message>
     <message>
       <source>R.O.B. Gyro Set</source>
-      <translation type="unfinished">R.O.B. Gyro Set</translation>
+      <translation>R.O.B. Gyro Set</translation>
     </message>
     <message>
       <source>Famicom Data Recorder</source>
@@ -318,11 +318,11 @@
     </message>
     <message>
       <source>R.O.B. Stack-Up</source>
-      <translation type="unfinished">R.O.B. Stack-Up</translation>
+      <translation>R.O.B. Stack-Up</translation>
     </message>
     <message>
       <source>City Patrolman Lightgun</source>
-      <translation type="unfinished">City Patrolman Lightgun</translation>
+      <translation>City Patrolman Lightgun</translation>
     </message>
     <message>
       <source>Sharp C1 Cassette Interface</source>
@@ -338,11 +338,11 @@
     </message>
     <message>
       <source>ABL Pinball</source>
-      <translation type="unfinished">ABL Pinball</translation>
+      <translation>ABL Pinball</translation>
     </message>
     <message>
       <source>Golden Nugget Casino</source>
-      <translation type="unfinished">Golden Nugget Casino</translation>
+      <translation>Golden Nugget Casino</translation>
     </message>
     <message>
       <source>NTSC</source>
@@ -566,7 +566,7 @@
     </message>
     <message>
       <source>Battery</source>
-      <translation type="unfinished">Battery</translation>
+      <translation>Batteria</translation>
     </message>
     <message>
       <source>Misc</source>
@@ -1716,12 +1716,12 @@
     <message>
       <source>keyboard input captured</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">keyboard input captured</translation>
+      <translation>input della tastiera catturato</translation>
     </message>
     <message>
       <source>keyboard input released</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">keyboard input released</translation>
+      <translation>input della tastiera rilasciato</translation>
     </message>
   </context>
   <context>
