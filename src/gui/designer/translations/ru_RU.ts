@@ -16,7 +16,7 @@
     </message>
     <message>
       <source>Unset</source>
-      <translation type="unfinished">Unset</translation>
+      <translation>Сброс</translation>
     </message>
     <message>
       <source>Apply</source>
@@ -66,7 +66,7 @@
     </message>
     <message>
       <source>None</source>
-      <translation type="unfinished">None</translation>
+      <translation>Отсутствует</translation>
     </message>
     <message>
       <source>128 Bytes</source>
@@ -130,7 +130,7 @@
     </message>
     <message>
       <source>Trainer</source>
-      <translation>Трейнер</translation>
+      <translation>Тренер</translation>
     </message>
     <message>
       <source>Unspecified</source>
@@ -174,23 +174,23 @@
     </message>
     <message>
       <source>Bandai Hyper Shot Lightgun</source>
-      <translation type="unfinished">Bandai Hyper Shot Lightgun</translation>
+      <translation>Световой пистолет Bandai Hyper Shot</translation>
     </message>
     <message>
       <source>Power Pad Side A</source>
-      <translation type="unfinished">Power Pad Side A</translation>
+      <translation>Power Pad сторона A</translation>
     </message>
     <message>
       <source>Power Pad Side B</source>
-      <translation type="unfinished">Power Pad Side B</translation>
+      <translation>Power Pad сторона B</translation>
     </message>
     <message>
       <source>Family Trainer Side A</source>
-      <translation type="unfinished">Family Trainer Side A</translation>
+      <translation>Family Trainer сторона A</translation>
     </message>
     <message>
       <source>Family Trainer Side B</source>
-      <translation type="unfinished">Family Trainer Side B</translation>
+      <translation>Family Trainer сторона B</translation>
     </message>
     <message>
       <source>Arkanoid Paddle (NES)</source>
@@ -202,19 +202,19 @@
     </message>
     <message>
       <source>Two Paddles plus Famicom Data Recorder</source>
-      <translation type="unfinished">Two Paddles plus Famicom Data Recorder</translation>
+      <translation>Два пульта плюс Famicom Data Recorder</translation>
     </message>
     <message>
       <source>Konami Hyper Shot</source>
-      <translation type="unfinished">Konami Hyper Shot</translation>
+      <translation>Konami Hyper Shot</translation>
     </message>
     <message>
       <source>Coconuts Pachinko</source>
-      <translation type="unfinished">Coconuts Pachinko</translation>
+      <translation>Coconuts Pachinko</translation>
     </message>
     <message>
       <source>Exciting Boxing Punching Bag</source>
-      <translation type="unfinished">Exciting Boxing Punching Bag</translation>
+      <translation>Боксерская груша Exciting Boxing</translation>
     </message>
     <message>
       <source>Jissen Mahjong Controller</source>
@@ -222,7 +222,7 @@
     </message>
     <message>
       <source>Party Tap</source>
-      <translation type="unfinished">Party Tap</translation>
+      <translation>Party Tap</translation>
     </message>
     <message>
       <source>Oeka Kids Tablet</source>
@@ -270,7 +270,7 @@
     </message>
     <message>
       <source>IGS Storage Battle Box</source>
-      <translation type="unfinished">IGS Storage Battle Box</translation>
+      <translation>IGS Storage Battle Box</translation>
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
@@ -302,7 +302,7 @@
     </message>
     <message>
       <source>Multicart</source>
-      <translation type="unfinished">Multicart</translation>
+      <translation>Сборник игр</translation>
     </message>
     <message>
       <source>Two SNES controllers</source>
@@ -310,7 +310,7 @@
     </message>
     <message>
       <source>RacerMate Bicycle</source>
-      <translation type="unfinished">RacerMate Bicycle</translation>
+      <translation>Велосипед RacerMate</translation>
     </message>
     <message>
       <source>U-Force</source>
@@ -318,15 +318,15 @@
     </message>
     <message>
       <source>R.O.B. Stack-Up</source>
-      <translation type="unfinished">R.O.B. Stack-Up</translation>
+      <translation>R.O.B. Stack-Up</translation>
     </message>
     <message>
       <source>City Patrolman Lightgun</source>
-      <translation type="unfinished">City Patrolman Lightgun</translation>
+      <translation>Световой пистолет City Patrolman</translation>
     </message>
     <message>
       <source>Sharp C1 Cassette Interface</source>
-      <translation type="unfinished">Sharp C1 Cassette Interface</translation>
+      <translation>Кассетный интерфейс Sharp C1</translation>
     </message>
     <message>
       <source>Standard Controller (inverted direction)</source>
@@ -334,7 +334,7 @@
     </message>
     <message>
       <source>Excalibor Sudoku Pad</source>
-      <translation type="unfinished">Excalibor Sudoku Pad</translation>
+      <translation>Доска Excalibor Sudoku</translation>
     </message>
     <message>
       <source>ABL Pinball</source>
@@ -362,7 +362,7 @@
     </message>
     <message>
       <source>VS Type</source>
-      <translation type="unfinished">VS Type</translation>
+      <translation>Тип VS</translation>
     </message>
     <message>
       <source>Horizontal</source>
@@ -394,7 +394,7 @@
     </message>
     <message>
       <source>Playchoice 10</source>
-      <translation type="unfinished">Playchoice 10</translation>
+      <translation>Playchoice 10</translation>
     </message>
     <message>
       <source>Famiclone with Decimal Mode</source>
@@ -434,7 +434,7 @@
     </message>
     <message>
       <source>Famicom Network System</source>
-      <translation>Сетевая служба семейного компьютера (Famicom Modem)</translation>
+      <translation>Famicom Network System</translation>
     </message>
     <message>
       <source>File</source>
@@ -470,7 +470,7 @@
     </message>
     <message>
       <source>Vs. Dual</source>
-      <translation type="unfinished">Vs. Dual</translation>
+      <translation>Vs. Двойной</translation>
     </message>
     <message>
       <source>Raid on Bungeling Bay</source>
@@ -558,7 +558,7 @@
     </message>
     <message>
       <source>Input</source>
-      <translation>Ввод</translation>
+      <translation>Управление</translation>
     </message>
     <message>
       <source>Misc ROMs</source>
@@ -966,7 +966,7 @@
     <message>
       <source>%1 folders</source>
       <extracomment>Do not translate %1</extracomment>
-      <translation type="unfinished">%1 folders</translation>
+      <translation>%1 папок</translation>
     </message>
     <message>
       <source>Error on create config folder</source>
@@ -1389,7 +1389,7 @@
     </message>
     <message>
       <source>&amp;Recording</source>
-      <translation>&amp;Запись</translation>
+      <translation>Запис&amp;ь</translation>
     </message>
     <message>
       <source>Start/Stop &amp;VIDEO recording</source>
@@ -1450,11 +1450,11 @@
     </message>
     <message>
       <source>WAVE tape image</source>
-      <translation type="unfinished">WAVE tape image</translation>
+      <translation>Образ кассеты WAVE</translation>
     </message>
     <message>
       <source>Save tape image</source>
-      <translation type="unfinished">Save tape image</translation>
+      <translation>Сохранить образ кассеты</translation>
     </message>
     <message>
       <source>Toggle &amp;Fast Forward</source>
@@ -1462,15 +1462,15 @@
     </message>
     <message>
       <source>&amp;Play</source>
-      <translation type="unfinished">&amp;Play</translation>
+      <translation>&amp;Воспроизведение</translation>
     </message>
     <message>
       <source>&amp;Record</source>
-      <translation type="unfinished">&amp;Record</translation>
+      <translation>&amp;Запись</translation>
     </message>
     <message>
       <source>&amp;Stop</source>
-      <translation type="unfinished">&amp;Stop</translation>
+      <translation>&amp;Остановка</translation>
     </message>
     <message>
       <source>Shout into &amp;Microphone</source>
@@ -1505,11 +1505,11 @@
     </message>
     <message>
       <source>Input is released</source>
-      <translation>Ввод отпущен</translation>
+      <translation>Кнопка отпущена</translation>
     </message>
     <message>
       <source>Input is captured</source>
-      <translation>Ввод зажат</translation>
+      <translation>Кнопка зажата</translation>
     </message>
     <message>
       <source>Toggle Virtual Keyboard</source>
@@ -1701,27 +1701,27 @@
     <message>
       <source>tape play</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">tape play</translation>
+      <translation>Кассета проигрывается</translation>
     </message>
     <message>
       <source>tape record</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">tape record</translation>
+      <translation>Кассета записана</translation>
     </message>
     <message>
       <source>tape stop</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">tape stop</translation>
+      <translation>Кассета остановлена</translation>
     </message>
     <message>
       <source>keyboard input captured</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>Клавиатурный ввод зажат</translation>
+      <translation>Клавиша зажата</translation>
     </message>
     <message>
       <source>keyboard input released</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>Клавиатурный ввод отпущен</translation>
+      <translation>Клавиша отпущена</translation>
     </message>
   </context>
   <context>
@@ -3289,7 +3289,7 @@
     </message>
     <message>
       <source>Flip/Rotate the controller input</source>
-      <translation>Отразить/Повернуть кнопки управления</translation>
+      <translation>Отразить/Повернуть кнопки контроллера</translation>
     </message>
     <message>
       <source>Flip/Rotate the text on screen</source>
