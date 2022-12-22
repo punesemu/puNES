@@ -185,6 +185,8 @@ HMODULE Load7ZLibrary(const wstring & name)
   lib_search_pathlist.push_back("/usr/lib64");
   lib_search_pathlist.push_back("/usr/lib64/p7zip");
   lib_search_pathlist.push_back("/usr/local/lib64/p7zip");
+  // Flatpack support
+  lib_search_pathlist.push_back("/app/lib/p7zip");
 
   lib_search_pathlist.push_back(".");
 
