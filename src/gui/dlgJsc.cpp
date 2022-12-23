@@ -83,7 +83,13 @@ bool dlgJsc::eventFilter(QObject *obj, QEvent *event) {
 	}
 	return (QDialog::eventFilter(obj, event));
 }
-
+void dlgJsc::changeEvent(QEvent *event) {
+	if (event->type() == QEvent::LanguageChange) {
+		retranslateUi(this);
+	} else {
+		QDialog::changeEvent(event);
+	}
+}
 void dlgJsc::showEvent(QShowEvent *event) {
 	if (first_time) {
 		first_time = false;
