@@ -152,6 +152,7 @@ CMake Options
 * [alsa](https://www.alsa-project.org)
 * libudev
 * [libX11 and libXrandr](https://www.x.org)
+* [p7zip](https://github.com/p7zip-project/p7zip) for compressed file support
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
 #### Compilation of puNES
 ```bash
@@ -187,6 +188,7 @@ to start the emulator
 * [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
 * [libX11 and libXrandr](https://www.x.org)
+* [p7zip](https://github.com/p7zip-project/p7zip) for compressed file support
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
 #### Compilation of puNES
 ```bash
@@ -211,6 +213,7 @@ where `[...]` are the other necessary options.
 * [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
 * [libX11 and libXrandr](https://www.x.org)
+* [p7zip](https://github.com/p7zip-project/p7zip) for compressed file support
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
 #### Compilation of puNES
 ```bash
