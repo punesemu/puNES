@@ -573,16 +573,16 @@
       <translation>Divers</translation>
     </message>
     <message>
-      <source>Reset to default</source>
-      <translation>Redémarrer par Défaut</translation>
-    </message>
-    <message>
       <source>Save</source>
       <translation>Sauvegarder</translation>
     </message>
     <message>
       <source>Cancel</source>
       <translation>Annuler</translation>
+    </message>
+    <message>
+      <source>Reset to defaults</source>
+      <translation type="unfinished">Reset to defaults</translation>
     </message>
   </context>
   <context>
@@ -639,8 +639,8 @@
       <translation>Configuration</translation>
     </message>
     <message>
-      <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
-      <translation>Mode Etendue (Activer le support pour le keypad, F10, F11, F12 et &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; ont des problèmes avec ce mode.)</translation>
+      <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</source>
+      <translation type="unfinished">Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</translation>
     </message>
   </context>
   <context>
