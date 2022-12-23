@@ -573,16 +573,16 @@
       <translation>Разное</translation>
     </message>
     <message>
-      <source>Reset to default</source>
-      <translation>Восстановить значения по умолчанию</translation>
-    </message>
-    <message>
       <source>Save</source>
       <translation>Сохранить</translation>
     </message>
     <message>
       <source>Cancel</source>
       <translation>Отмена</translation>
+    </message>
+    <message>
+      <source>Reset to defaults</source>
+      <translation type="unfinished">Reset to defaults</translation>
     </message>
   </context>
   <context>
@@ -639,8 +639,8 @@
       <translation>Настройка</translation>
     </message>
     <message>
-      <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
-      <translation>Расширенный режим (включает поддержку цифрового блока, F10, F11, F12 и &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; имеет проблемы с этим режимом)</translation>
+      <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</source>
+      <translation type="unfinished">Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</translation>
     </message>
   </context>
   <context>
