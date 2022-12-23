@@ -4,7 +4,7 @@
   <id>com.github.punesemu.puNES</id>
   <name>puNES</name>
   <summary>Nintendo Entertaiment System emulator</summary>
-  <developer_name>punesemu</developer_name>
+  <developer_name>Fabio Cavallo (FHorse)</developer_name>
   <launchable type="desktop-id">com.github.punesemu.puNES.desktop</launchable>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0</project_license>
@@ -14,15 +14,15 @@
   <screenshots>
     <screenshot type="default">
       <caption>puNES main window</caption>
-      <image type="source">https://user-images.githubusercontent.com/14859058/153704977-bacb2e1a-7394-49f0-b29a-f1700d1e1991.png</image>
+      <image type="source">https://user-images.githubusercontent.com/14859058/208288696-b3a5494c-6c0f-4cf3-a339-bffe52806e09.png</image>
     </screenshot>
     <screenshot>
       <caption>puNES NSFE Player</caption>
-      <image type="source">https://user-images.githubusercontent.com/14859058/142155318-22d86ae5-3a3f-486a-8ae8-e78c8eeabb2f.png</image>
+      <image type="source">https://user-images.githubusercontent.com/14859058/208289018-e26ecb19-92d8-449f-8c35-77f67f8c8911.png</image>
     </screenshot>
     <screenshot>
       <caption>puNES Slot Preview</caption>
-      <image type="source">https://user-images.githubusercontent.com/14859058/153705022-299874d6-e2f6-4a50-a394-a91cefe150a9.png</image>
+      <image type="source">https://user-images.githubusercontent.com/14859058/208288805-fff96548-ebc1-4cef-b8ce-a813f0ccf27e.png</image>
     </screenshot>
     <screenshot>
       <caption>puNES General Settings</caption>
@@ -34,15 +34,19 @@
     </screenshot>
     <screenshot>
       <caption>Cheat Editor</caption>
-      <image type="source">https://user-images.githubusercontent.com/14859058/135748586-fe41d0d1-18d0-4c14-b7c4-4d6deacb4fbb.png</image>
+      <image type="source">https://user-images.githubusercontent.com/14859058/202864520-bdd84d5c-646e-40c0-84be-5ff2d225d015.png</image>
     </screenshot>
     <screenshot>
       <caption>puNES Xbox360 Standard Controller Settings</caption>
-      <image type="source">https://user-images.githubusercontent.com/14859058/146680023-2c40f991-67d2-4502-963f-39c8b5bfc4ca.png</image>
+      <image type="source">https://user-images.githubusercontent.com/14859058/208847541-778fb8fb-e070-432f-baf1-fb67cf13f3c5.png</image>
     </screenshot>
     <screenshot>
       <caption>puNES PS4 Standard Controller Settings</caption>
-      <image type="source">https://user-images.githubusercontent.com/14859058/146680033-5fc36150-c52f-494a-ba5c-9d7d675e43d6.png</image>
+      <image type="source">https://user-images.githubusercontent.com/14859058/208848284-0c30ff3f-d6f3-415d-87b1-e408e5454bba.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>puNES Family BASIC Virtual Keyboard</caption>
+      <image type="source">https://user-images.githubusercontent.com/14859058/196442457-e799ee41-17cd-46bf-821e-7532b85c304e.png</image>
     </screenshot>
   </screenshots>
   <releases>
