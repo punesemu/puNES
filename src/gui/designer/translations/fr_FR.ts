@@ -582,7 +582,7 @@
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Redémarrer par Défaut</translation>
     </message>
   </context>
   <context>
@@ -640,7 +640,7 @@
     </message>
     <message>
       <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</source>
-      <translation type="unfinished">Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</translation>
+      <translation>Mode Etendue (Activer le support pour le keypad, F10, F11, F12 et &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; ont des problèmes avec ce mode)</translation>
     </message>
   </context>
   <context>
