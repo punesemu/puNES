@@ -573,16 +573,16 @@
       <translation>Egyéb</translation>
     </message>
     <message>
-      <source>Reset to default</source>
-      <translation>Alaphelyzet visszaállítása</translation>
-    </message>
-    <message>
       <source>Save</source>
       <translation>Mentés</translation>
     </message>
     <message>
       <source>Cancel</source>
       <translation>Mégse</translation>
+    </message>
+    <message>
+      <source>Reset to defaults</source>
+      <translation type="unfinished">Reset to defaults</translation>
     </message>
   </context>
   <context>
@@ -639,8 +639,8 @@
       <translation>Beállítás</translation>
     </message>
     <message>
-      <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
-      <translation>Kiterjesztett mód (Keypad támogatás engedélyezése, F10, F11, F12 és &quot;`&quot;. U.i.: A &apos;Study and Game 32-in-1&apos;-nak problémái vannak ezzel a móddal.)</translation>
+      <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</source>
+      <translation type="unfinished">Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</translation>
     </message>
   </context>
   <context>
