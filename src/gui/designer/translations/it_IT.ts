@@ -582,7 +582,7 @@
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Predefiniti</translation>
     </message>
   </context>
   <context>
@@ -640,7 +640,7 @@
     </message>
     <message>
       <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</source>
-      <translation type="unfinished">Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</translation>
+      <translation>Modalità estesa (abilita il supporto per tastierino numerico, F10, F11, F12 e &quot;` &quot;. P.S. : &apos;Studio e Gioco 32-in-1&apos; ha problemi con questa modalità)</translation>
     </message>
   </context>
   <context>
@@ -1932,11 +1932,11 @@
     </message>
     <message>
       <source>Nestopia XML files</source>
-      <translation>Files XML Nestopia</translation>
+      <translation>XML Nestopia</translation>
     </message>
     <message>
       <source>Mame 128+ XML files</source>
-      <translation>Files XML Mame 128+</translation>
+      <translation>XML Mame 128+</translation>
     </message>
     <message>
       <source>FCEUX CHT files</source>
@@ -1944,7 +1944,7 @@
     </message>
     <message>
       <source>libretro CHT files</source>
-      <translation>Files CHT libretro</translation>
+      <translation>CHT libretro</translation>
     </message>
   </context>
   <context>
