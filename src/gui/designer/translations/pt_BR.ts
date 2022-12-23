@@ -582,7 +582,7 @@
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Redefinir padrões</translation>
     </message>
   </context>
   <context>
@@ -698,15 +698,15 @@
     </message>
     <message>
       <source>Rewind Step Backward</source>
-      <translation>Rebobinar Passo para Trás</translation>
+      <translation>Retroceder um Frame</translation>
     </message>
     <message>
       <source>Rewind Step Forward</source>
-      <translation>Rebobinar Passo para Frente</translation>
+      <translation>Avançar um Frame</translation>
     </message>
     <message>
       <source>Rewind Fast Forward</source>
-      <translation>Rebobinar para frente</translation>
+      <translation>Avançar Rápido</translation>
     </message>
     <message>
       <source>Rewind Play</source>
