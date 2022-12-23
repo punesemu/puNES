@@ -152,7 +152,7 @@ CMake Options
 * [alsa](https://www.alsa-project.org)
 * libudev
 * [libX11 and libXrandr](https://www.x.org)
-* [p7zip](https://github.com/p7zip-project/p7zip) for compressed file support
+* [p7zip](https://github.com/p7zip-project/p7zip) for compressed file support (lib7zip uses the 7z.so library on unix-like systems)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
 #### Compilation of puNES
 ```bash
@@ -172,7 +172,7 @@ where `[...]` are the other necessary options.
 ```bash
 sudo apt-get install git cmake ninja-build libtool build-essential pkg-config libudev-dev libasound2-dev
 sudo apt-get install qtbase5-dev qttools5-dev qttools5-dev-tools libqt5svg5-dev nvidia-cg-toolkit libx11-dev libxrandr-dev 
-sudo apt-get install libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev
+sudo apt-get install libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev p7zip-full
 git clone https://github.com/punesemu/puNES
 cd puNES
 cmake -B build -G Ninja
@@ -188,7 +188,7 @@ to start the emulator
 * [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
 * [libX11 and libXrandr](https://www.x.org)
-* [p7zip](https://github.com/p7zip-project/p7zip) for compressed file support
+* [p7zip](https://github.com/p7zip-project/p7zip) for compressed file support (lib7zip uses the 7z.so library on unix-like systems)
 * (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
 #### Compilation of puNES
 ```bash
@@ -209,12 +209,12 @@ cmake -B build -G Ninja -DCMAKE_C_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_CX
 where `[...]` are the other necessary options.
 ## :blowfish: OpenBSD 
 #### Dependencies
-* [CMake >= 3.14](https://cmake.org) and [Ninja](https://ninja-build.org)
+* [CMake >= 3.14](https://cmake.org) and [Ninja](https://ninja-build.org).
 * [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
 * [libX11 and libXrandr](https://www.x.org)
-* [p7zip](https://github.com/p7zip-project/p7zip) for compressed file support
-* (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg).
+* [p7zip](https://github.com/p7zip-project/p7zip) for compressed file support (lib7zip uses the 7z.so library on unix-like systems)
+* (optional) [ffmpeg libraries >= 4.0](https://ffmpeg.org) if you want video and audio recording support (libavcodec, libavformat, libavutil, libswresample and libswscale). See [notes](#movie_camera-ffmpeg)
 #### Compilation of puNES
 ```bash
 git clone https://github.com/punesemu/puNES
