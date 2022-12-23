@@ -573,16 +573,16 @@
       <translation>其它</translation>
     </message>
     <message>
-      <source>Reset to default</source>
-      <translation>重置为默认</translation>
-    </message>
-    <message>
       <source>Save</source>
       <translation>保存</translation>
     </message>
     <message>
       <source>Cancel</source>
       <translation>取消</translation>
+    </message>
+    <message>
+      <source>Reset to defaults</source>
+      <translation type="unfinished">Reset to defaults</translation>
     </message>
   </context>
   <context>
@@ -639,8 +639,8 @@
       <translation>设置</translation>
     </message>
     <message>
-      <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
-      <translation>扩展模式 (开启键盘支持, F10, F11, F12 和 &quot;` &quot;. P.S. : &apos;学习和游戏 32-in-1&apos; 在此模式下有问题。)</translation>
+      <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</source>
+      <translation type="unfinished">Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</translation>
     </message>
   </context>
   <context>
