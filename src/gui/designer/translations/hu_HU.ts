@@ -582,7 +582,7 @@
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Alapértelmezések visszaállítása</translation>
     </message>
   </context>
   <context>
@@ -640,7 +640,7 @@
     </message>
     <message>
       <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</source>
-      <translation type="unfinished">Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</translation>
+      <translation>Kiterjesztett mód (Keypad támogatás engedélyezése, F10, F11, F12 és &quot;`&quot;. U.i.: A &apos;Study and Game 32-in-1&apos;-nak problémái vannak ezzel a móddal)</translation>
     </message>
   </context>
   <context>
