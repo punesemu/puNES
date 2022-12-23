@@ -1130,7 +1130,7 @@
    <item>
     <widget class="QPushButton" name="pushButton_Reset">
      <property name="text">
-      <string>Reset to default</string>
+      <string>Reset to defaults</string>
      </property>
      <property name="icon">
       <iconset resource="resources.qrc">

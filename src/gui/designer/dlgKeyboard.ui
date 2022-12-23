@@ -153,7 +153,7 @@
             <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
-            <string>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : 'Study and Game 32-in-1' have problems with this mode.)</string>
+            <string>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : 'Study and Game 32-in-1' have problems with this mode)</string>
            </property>
           </widget>
          </item>

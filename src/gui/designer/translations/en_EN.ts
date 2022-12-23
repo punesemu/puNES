@@ -573,15 +573,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reset to default</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset to defaults</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -639,7 +639,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
+        <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
