@@ -50,7 +50,7 @@
     </message>
     <message>
       <source>Header Editor</source>
-      <translation type="unfinished">Header Editor</translation>
+      <translation>Editor della Header</translation>
     </message>
     <message>
       <source>Mirroring</source>
@@ -62,7 +62,7 @@
     </message>
     <message>
       <source>PRG ROM KiB</source>
-      <translation>PRG ROM KiB</translation>
+      <translation>ROM PRG KiB</translation>
     </message>
     <message>
       <source>None</source>
@@ -138,7 +138,7 @@
     </message>
     <message>
       <source>Standard Controllers</source>
-      <translation type="unfinished">Standard Controllers</translation>
+      <translation>Controllers Standard</translation>
     </message>
     <message>
       <source>NES Four Score/Satellite</source>
@@ -214,7 +214,7 @@
     </message>
     <message>
       <source>Exciting Boxing Punching Bag</source>
-      <translation type="unfinished">Exciting Boxing Punching Bag</translation>
+      <translation>Exciting Boxing Punching Bag</translation>
     </message>
     <message>
       <source>Jissen Mahjong Controller</source>
@@ -230,15 +230,15 @@
     </message>
     <message>
       <source>Sunsoft Barcode Battler</source>
-      <translation type="unfinished">Sunsoft Barcode Battler</translation>
+      <translation>Sunsoft Barcode Battler</translation>
     </message>
     <message>
       <source>Miracle Piano Keyboard</source>
-      <translation type="unfinished">Miracle Piano Keyboard</translation>
+      <translation>Tastiera Miracle Piano</translation>
     </message>
     <message>
       <source>Pokkun Moguraa</source>
-      <translation type="unfinished">Pokkun Moguraa</translation>
+      <translation>Pokkun Moguraa</translation>
     </message>
     <message>
       <source>Top Rider</source>
@@ -250,7 +250,7 @@
     </message>
     <message>
       <source>Famicom 3D System</source>
-      <translation type="unfinished">Famicom 3D System</translation>
+      <translation>Famicom 3D System</translation>
     </message>
     <message>
       <source>Doremikko Keyboard</source>
@@ -262,15 +262,15 @@
     </message>
     <message>
       <source>Famicom Data Recorder</source>
-      <translation type="unfinished">Famicom Data Recorder</translation>
+      <translation>Registratore Famicom Data</translation>
     </message>
     <message>
       <source>ASCII Turbo File</source>
-      <translation type="unfinished">ASCII Turbo File</translation>
+      <translation>ASCII Turbo File</translation>
     </message>
     <message>
       <source>IGS Storage Battle Box</source>
-      <translation type="unfinished">IGS Storage Battle Box</translation>
+      <translation>IGS Storage Battle Box</translation>
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
@@ -302,7 +302,7 @@
     </message>
     <message>
       <source>Multicart</source>
-      <translation type="unfinished">Multicart</translation>
+      <translation>Multicart</translation>
     </message>
     <message>
       <source>Two SNES controllers</source>
@@ -310,7 +310,7 @@
     </message>
     <message>
       <source>RacerMate Bicycle</source>
-      <translation type="unfinished">RacerMate Bicycle</translation>
+      <translation>RacerMate Bicycle</translation>
     </message>
     <message>
       <source>U-Force</source>
@@ -326,15 +326,15 @@
     </message>
     <message>
       <source>Sharp C1 Cassette Interface</source>
-      <translation type="unfinished">Sharp C1 Cassette Interface</translation>
+      <translation>Interfaccia a Cassette Sharp C1</translation>
     </message>
     <message>
       <source>Standard Controller (inverted direction)</source>
-      <translation type="unfinished">Standard Controller (inverted direction)</translation>
+      <translation>Controllers Standard (direzione invertita)</translation>
     </message>
     <message>
       <source>Excalibor Sudoku Pad</source>
-      <translation type="unfinished">Excalibor Sudoku Pad</translation>
+      <translation>Pad Excalibor Sudoku</translation>
     </message>
     <message>
       <source>ABL Pinball</source>
@@ -354,7 +354,7 @@
     </message>
     <message>
       <source>Both</source>
-      <translation type="unfinished">Both</translation>
+      <translation>Entrambe</translation>
     </message>
     <message>
       <source>Dendy</source>
@@ -362,7 +362,7 @@
     </message>
     <message>
       <source>VS Type</source>
-      <translation type="unfinished">VS Type</translation>
+      <translation>Modello VS</translation>
     </message>
     <message>
       <source>Horizontal</source>
@@ -378,15 +378,15 @@
     </message>
     <message>
       <source>CPU Timing</source>
-      <translation type="unfinished">CPU Timing</translation>
+      <translation>Timing della CPU</translation>
     </message>
     <message>
       <source>VS PPU</source>
-      <translation type="unfinished">VS PPU</translation>
+      <translation>PPU VS</translation>
     </message>
     <message>
       <source>CHR ROM KiB</source>
-      <translation type="unfinished">CHR ROM KiB</translation>
+      <translation>ROM CHR KiB</translation>
     </message>
     <message>
       <source>NES/Famicom/Dendy</source>
@@ -398,11 +398,11 @@
     </message>
     <message>
       <source>Famiclone with Decimal Mode</source>
-      <translation type="unfinished">Famiclone with Decimal Mode</translation>
+      <translation>Famiclone con Modalità Decimale</translation>
     </message>
     <message>
       <source>NES/Famicom with EPSM</source>
-      <translation type="unfinished">NES/Famicom with EPSM</translation>
+      <translation>NES/Famicom con EPSM</translation>
     </message>
     <message>
       <source>VT01</source>
@@ -434,7 +434,7 @@
     </message>
     <message>
       <source>Famicom Network System</source>
-      <translation type="unfinished">Famicom Network System</translation>
+      <translation>Famicom Network System</translation>
     </message>
     <message>
       <source>File</source>
@@ -442,7 +442,7 @@
     </message>
     <message>
       <source>CHR RAM Battery</source>
-      <translation type="unfinished">CHR RAM Battery</translation>
+      <translation>Batteria RAM CHR</translation>
     </message>
     <message>
       <source>Mapper</source>
@@ -450,35 +450,35 @@
     </message>
     <message>
       <source>Normal</source>
-      <translation type="unfinished">Normal</translation>
+      <translation>Normale</translation>
     </message>
     <message>
       <source>RBI Baseball</source>
-      <translation type="unfinished">RBI Baseball</translation>
+      <translation>RBI Baseball</translation>
     </message>
     <message>
       <source>TKO Boxing</source>
-      <translation type="unfinished">TKO Boxing</translation>
+      <translation>TKO Boxing</translation>
     </message>
     <message>
       <source>Super Xevious</source>
-      <translation type="unfinished">Super Xevious</translation>
+      <translation>Super Xevious</translation>
     </message>
     <message>
       <source>Vs. Ice Climber</source>
-      <translation type="unfinished">Vs. Ice Climber</translation>
+      <translation>Vs. Ice Climber</translation>
     </message>
     <message>
       <source>Vs. Dual</source>
-      <translation type="unfinished">Vs. Dual</translation>
+      <translation>Vs. Dual</translation>
     </message>
     <message>
       <source>Raid on Bungeling Bay</source>
-      <translation type="unfinished">Raid on Bungeling Bay</translation>
+      <translation>Raid on Bungeling Bay</translation>
     </message>
     <message>
       <source>PRG RAM</source>
-      <translation type="unfinished">PRG RAM</translation>
+      <translation>RAM PRG</translation>
     </message>
     <message>
       <source>iNES 1.0</source>
@@ -490,7 +490,7 @@
     </message>
     <message>
       <source>Submapper</source>
-      <translation type="unfinished">Submapper</translation>
+      <translation>Submapper</translation>
     </message>
     <message>
       <source>RP2C03B</source>
@@ -546,23 +546,23 @@
     </message>
     <message>
       <source>Header</source>
-      <translation type="unfinished">Header</translation>
+      <translation>Header</translation>
     </message>
     <message>
       <source>PRG RAM Battery</source>
-      <translation type="unfinished">PRG RAM Battery</translation>
+      <translation>Batteria RAM PRG</translation>
     </message>
     <message>
       <source>CHR RAM</source>
-      <translation type="unfinished">CHR RAM</translation>
+      <translation>RAM CHR</translation>
     </message>
     <message>
       <source>Input</source>
-      <translation type="unfinished">Input</translation>
+      <translation>Input</translation>
     </message>
     <message>
       <source>Misc ROMs</source>
-      <translation type="unfinished">Misc ROMs</translation>
+      <translation>ROMs Aggiuntive</translation>
     </message>
     <message>
       <source>Battery</source>
@@ -570,11 +570,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
-    </message>
-    <message>
-      <source>Reset to default</source>
-      <translation type="unfinished">Reset to default</translation>
+      <translation>Altro</translation>
     </message>
     <message>
       <source>Save</source>
@@ -583,6 +579,10 @@
     <message>
       <source>Cancel</source>
       <translation>Annulla</translation>
+    </message>
+    <message>
+      <source>Reset to defaults</source>
+      <translation type="unfinished">Reset to defaults</translation>
     </message>
   </context>
   <context>
@@ -639,8 +639,8 @@
       <translation>Configurazione</translation>
     </message>
     <message>
-      <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</source>
-      <translation type="unfinished">Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode.)</translation>
+      <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</source>
+      <translation type="unfinished">Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</translation>
     </message>
   </context>
   <context>
@@ -1422,23 +1422,23 @@
     </message>
     <message>
       <source>puNES tape image</source>
-      <translation type="unfinished">puNES tape image</translation>
+      <translation>Immagine nastro puNES</translation>
     </message>
     <message>
       <source>Virtuanes tape image</source>
-      <translation type="unfinished">Virtuanes tape image</translation>
+      <translation>Immagine nastro Virtuanes</translation>
     </message>
     <message>
       <source>Nestopia tape image</source>
-      <translation type="unfinished">Nestopia tape image</translation>
+      <translation>Immagine nastro Nestopia</translation>
     </message>
     <message>
       <source>Open tape image</source>
-      <translation type="unfinished">Open tape image</translation>
+      <translation>Apri immagine nastro</translation>
     </message>
     <message>
       <source>Tape Image</source>
-      <translation type="unfinished">Tape Image</translation>
+      <translation>Immagine Nastro</translation>
     </message>
     <message>
       <source>Unsupported format</source>
@@ -1446,43 +1446,43 @@
     </message>
     <message>
       <source>Error opening tape image file</source>
-      <translation type="unfinished">Error opening tape image file</translation>
+      <translation>Errore durante l'apertura del file d'immagine</translation>
     </message>
     <message>
       <source>WAVE tape image</source>
-      <translation type="unfinished">WAVE tape image</translation>
+      <translation>Immagine nastro WAVE</translation>
     </message>
     <message>
       <source>Save tape image</source>
-      <translation type="unfinished">Save tape image</translation>
+      <translation>Salva immagine del nastro</translation>
     </message>
     <message>
       <source>Toggle &amp;Fast Forward</source>
-      <translation type="unfinished">Toggle &amp;Fast Forward</translation>
+      <translation>Attiva/Disattiva Avanti &amp;Veloce</translation>
     </message>
     <message>
       <source>&amp;Play</source>
-      <translation type="unfinished">&amp;Play</translation>
+      <translation>&amp;Play</translation>
     </message>
     <message>
       <source>&amp;Record</source>
-      <translation type="unfinished">&amp;Record</translation>
+      <translation>&amp;Record</translation>
     </message>
     <message>
       <source>&amp;Stop</source>
-      <translation type="unfinished">&amp;Stop</translation>
+      <translation>&amp;Stop</translation>
     </message>
     <message>
       <source>Shout into &amp;Microphone</source>
-      <translation type="unfinished">Shout into &amp;Microphone</translation>
+      <translation>Urla in &amp;Microfono</translation>
     </message>
     <message>
       <source>&amp;Open config folder</source>
-      <translation type="unfinished">&amp;Open config folder</translation>
+      <translation>Apri &amp;cartella di configurazione</translation>
     </message>
     <message>
       <source>Ta&amp;pe</source>
-      <translation type="unfinished">Ta&amp;pe</translation>
+      <translation>&amp;Nastro</translation>
     </message>
     <message>
       <source>Toggle Virtual &amp;Keyboard</source>
@@ -1494,7 +1494,7 @@
     </message>
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
-      <translation type="unfinished">Edit Current iNES/NES2.0 &amp;Header</translation>
+      <translation>Modifica &amp;Intestazione iNES/NES2.0 Corrente</translation>
     </message>
   </context>
   <context>
@@ -1505,11 +1505,11 @@
     </message>
     <message>
       <source>Input is released</source>
-      <translation type="unfinished">Input is released</translation>
+      <translation>Input rilasciato</translation>
     </message>
     <message>
       <source>Input is captured</source>
-      <translation type="unfinished">Input is captured</translation>
+      <translation>Input catturato</translation>
     </message>
     <message>
       <source>Toggle Virtual Keyboard</source>
@@ -1701,17 +1701,17 @@
     <message>
       <source>tape play</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">tape play</translation>
+      <translation>avvio play cassetta</translation>
     </message>
     <message>
       <source>tape record</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">tape record</translation>
+      <translation>avvio record del nastro</translation>
     </message>
     <message>
       <source>tape stop</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">tape stop</translation>
+      <translation>stop del nastro</translation>
     </message>
     <message>
       <source>keyboard input captured</source>
@@ -1885,7 +1885,7 @@
     </message>
     <message>
       <source>New CPU Ram</source>
-      <translation type="unfinished">New CPU Ram</translation>
+      <translation>Nuovo Ram CPU</translation>
     </message>
   </context>
   <context>
@@ -1932,19 +1932,19 @@
     </message>
     <message>
       <source>Nestopia XML files</source>
-      <translation type="unfinished">Nestopia XML files</translation>
+      <translation>Files XML Nestopia</translation>
     </message>
     <message>
       <source>Mame 128+ XML files</source>
-      <translation type="unfinished">Mame 128+ XML files</translation>
+      <translation>Files XML Mame 128+</translation>
     </message>
     <message>
       <source>FCEUX CHT files</source>
-      <translation type="unfinished">FCEUX CHT files</translation>
+      <translation>Files CHT FCEUX</translation>
     </message>
     <message>
       <source>libretro CHT files</source>
-      <translation type="unfinished">libretro CHT files</translation>
+      <translation>Files CHT libretro</translation>
     </message>
   </context>
   <context>
@@ -2161,23 +2161,23 @@
     <name>wdgScreen</name>
     <message>
       <source>Paste</source>
-      <translation type="unfinished">Paste</translation>
+      <translation>Incolla</translation>
     </message>
     <message>
       <source>Tape</source>
-      <translation type="unfinished">Tape</translation>
+      <translation>Nastro</translation>
     </message>
     <message>
       <source>Play</source>
-      <translation type="unfinished">Play</translation>
+      <translation>Play</translation>
     </message>
     <message>
       <source>Record</source>
-      <translation type="unfinished">Record</translation>
+      <translation>Record</translation>
     </message>
     <message>
       <source>Stop</source>
-      <translation type="unfinished">Stop</translation>
+      <translation>Stop</translation>
     </message>
   </context>
   <context>
@@ -2466,7 +2466,7 @@
     </message>
     <message>
       <source>Use fast forward when loading the disk/side</source>
-      <translation>Utilizza il fast forward al cambio del disco/lato</translation>
+      <translation>Utilizza l'avanti veloce al cambio del disco/lato</translation>
     </message>
     <message>
       <source>French</source>
@@ -3369,7 +3369,7 @@
     </message>
     <message>
       <source>Dot Matrix</source>
-      <translation type="unfinished">Dot Matrix</translation>
+      <translation>Dot Matrix</translation>
     </message>
     <message>
       <source>PAL TV1x</source>
