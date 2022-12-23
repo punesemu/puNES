@@ -5,7 +5,7 @@
     <name>Settings</name>
     <message>
       <source>System Default</source>
-      <translation>Система по умолчанию</translation>
+      <translation>Задано системой по умолчанию</translation>
     </message>
   </context>
   <context>
@@ -582,7 +582,7 @@
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Сброс по умолчанию</translation>
     </message>
   </context>
   <context>
@@ -640,7 +640,7 @@
     </message>
     <message>
       <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</source>
-      <translation type="unfinished">Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</translation>
+      <translation>Расширенный режим (включает поддержку цифрового блока, F10, F11, F12 и &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; имеет проблемы с этим режимом)</translation>
     </message>
   </context>
   <context>
@@ -1029,7 +1029,7 @@
     </message>
     <message>
       <source>&amp;Eject/Insert disk</source>
-      <translation>&amp;Вставить/Вынуть дискету</translation>
+      <translation>Вставить/Вынуть &amp;дискету</translation>
     </message>
     <message>
       <source>All supported formats</source>
@@ -1089,7 +1089,7 @@
     </message>
     <message>
       <source>&amp;Quit</source>
-      <translation>&amp;Выход</translation>
+      <translation>В&amp;ыход</translation>
     </message>
     <message>
       <source>&amp;Hard Reset</source>
@@ -1141,7 +1141,7 @@
     </message>
     <message>
       <source>&amp;Save to file</source>
-      <translation>&amp;Сохранить в файл</translation>
+      <translation>Со&amp;хранить в файл</translation>
     </message>
     <message>
       <source>&amp;Load from file</source>
@@ -1149,7 +1149,7 @@
     </message>
     <message>
       <source>F&amp;ullscreen</source>
-      <translation>&amp;Полноэкранный режим</translation>
+      <translation>Полно&amp;экранный режим</translation>
     </message>
     <message>
       <source>&amp;Game Genie Rom Mode</source>
@@ -1229,7 +1229,7 @@
     </message>
     <message>
       <source>&amp;Pause</source>
-      <translation>&amp;Пауза</translation>
+      <translation>П&amp;ауза</translation>
     </message>
     <message>
       <source>Save Screens&amp;hot</source>
@@ -1249,7 +1249,7 @@
     </message>
     <message>
       <source>&amp;Recent Roms</source>
-      <translation>&amp;Последние ROM&apos;ы</translation>
+      <translation>Последние &amp;ROM&apos;ы</translation>
     </message>
     <message>
       <source>&amp;NES</source>
@@ -1257,7 +1257,7 @@
     </message>
     <message>
       <source>&amp;Disk Side</source>
-      <translation>&amp;Сторона дискеты</translation>
+      <translation>Сторона &amp;дискеты</translation>
     </message>
     <message>
       <source>Setti&amp;ngs</source>
@@ -1349,7 +1349,7 @@
     </message>
     <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
-      <translation>&amp;Применить IPS/BPS/XDELTA патч</translation>
+      <translation>Пр&amp;именить IPS/BPS/XDELTA патч</translation>
     </message>
     <message>
       <source>&amp;General</source>
@@ -2370,7 +2370,7 @@
     </message>
     <message>
       <source>Save battery RAM file every 3 min.</source>
-      <translation>Сохранять файл батареи каждые 3 минуты</translation>
+      <translation>Сохранять файл батарейки ОЗУ каждые 3 минуты</translation>
     </message>
     <message>
       <source>Fast Forward velocity</source>
