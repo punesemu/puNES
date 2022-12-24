@@ -1241,7 +1241,7 @@
     </message>
     <message>
       <source>&amp;Open working folder</source>
-      <translation>A&amp;brir diretório atual</translation>
+      <translation>Abrir &amp;diretório atual</translation>
     </message>
     <message>
       <source>&amp;File</source>
@@ -1269,7 +1269,7 @@
     </message>
     <message>
       <source>&amp;Audio</source>
-      <translation>&amp;Áudio</translation>
+      <translation>Á&amp;udio</translation>
     </message>
     <message>
       <source>&amp;Input</source>
@@ -1289,7 +1289,7 @@
     </message>
     <message>
       <source>&amp;Help</source>
-      <translation>&amp;Ajuda</translation>
+      <translation>A&amp;juda</translation>
     </message>
     <message>
       <source>&amp;Turn On</source>
@@ -1349,7 +1349,7 @@
     </message>
     <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
-      <translation>&amp;Aplicar Patch IPS/BPS/XDELTA</translation>
+      <translation>Aplicar &amp;Patch IPS/BPS/XDELTA</translation>
     </message>
     <message>
       <source>&amp;General</source>
@@ -1369,7 +1369,7 @@
     </message>
     <message>
       <source>Start &amp;AUDIO recording</source>
-      <translation>Iniciar gravação de &amp;AUDIO</translation>
+      <translation>Iniciar gravação de Á&amp;UDIO</translation>
     </message>
     <message>
       <source>Start &amp;VIDEO recording</source>
@@ -1377,7 +1377,7 @@
     </message>
     <message>
       <source>Stop &amp;AUDIO recording</source>
-      <translation>Parar gravação de &amp;ÁUDIO</translation>
+      <translation>Parar gravação de Á&amp;UDIO</translation>
     </message>
     <message>
       <source>Stop &amp;VIDEO recording</source>
@@ -1385,11 +1385,11 @@
     </message>
     <message>
       <source>Start/Stop &amp;AUDIO recording</source>
-      <translation>Iniciar/Parar gravação de &amp;ÁUDIO</translation>
+      <translation>Iniciar/Parar gravação de Á&amp;UDIO</translation>
     </message>
     <message>
       <source>&amp;Recording</source>
-      <translation>&amp;Gravação</translation>
+      <translation>G&amp;ravação</translation>
     </message>
     <message>
       <source>Start/Stop &amp;VIDEO recording</source>
@@ -1418,7 +1418,7 @@
     </message>
     <message>
       <source>Fast Forward (hold button)</source>
-      <translation>Avanço Rápido (segure o botão)</translation>
+      <translation>Avanço Rápido (pressionando o botão)</translation>
     </message>
     <message>
       <source>puNES tape image</source>
@@ -1466,7 +1466,7 @@
     </message>
     <message>
       <source>&amp;Record</source>
-      <translation>Grava&amp;r</translation>
+      <translation>G&amp;ravar</translation>
     </message>
     <message>
       <source>&amp;Stop</source>
@@ -1478,7 +1478,7 @@
     </message>
     <message>
       <source>&amp;Open config folder</source>
-      <translation>Abrir diretório de c&amp;onfigurações</translation>
+      <translation>Abrir diretório de &amp;configurações</translation>
     </message>
     <message>
       <source>Ta&amp;pe</source>
@@ -1490,7 +1490,7 @@
     </message>
     <message>
       <source>&amp;Show Log</source>
-      <translation>Mo&amp;strar Log</translation>
+      <translation>Mostrar &amp;Log</translation>
     </message>
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
@@ -2597,7 +2597,7 @@
     </message>
     <message>
       <source>Start/Stop AUDIO recording</source>
-      <translation>Iniciar/Parar gravação de &amp;ÁUDIO</translation>
+      <translation>Iniciar/Parar gravação de Á&amp;UDIO</translation>
     </message>
     <message>
       <source>Start/Stop VIDEO recording</source>
