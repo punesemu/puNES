@@ -1232,18 +1232,6 @@
       <translation>&amp;Pausa</translation>
     </message>
     <message>
-      <source>Save Screens&amp;hot</source>
-      <translation>Salva Screens&amp;hot</translation>
-    </message>
-    <message>
-      <source>Insert Coin</source>
-      <translation>Inserisci Moneta</translation>
-    </message>
-    <message>
-      <source>&amp;Open working folder</source>
-      <translation>Apri &amp;directory di lavoro</translation>
-    </message>
-    <message>
       <source>&amp;File</source>
       <translation>&amp;File</translation>
     </message>
@@ -1348,16 +1336,8 @@
       <translation>Apri IPS/BPS/XDELTA Patch</translation>
     </message>
     <message>
-      <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
-      <translation>&amp;Applica IPS/BPS/XDELTA Patch</translation>
-    </message>
-    <message>
       <source>&amp;General</source>
       <translation>&amp;Generale</translation>
-    </message>
-    <message>
-      <source>&amp;Toggle GUI in window</source>
-      <translation>&amp;Attiva o disattiva la GUI nella finestra</translation>
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
@@ -1477,14 +1457,6 @@
       <translation>Urla in &amp;Microfono</translation>
     </message>
     <message>
-      <source>&amp;Open config folder</source>
-      <translation>Apri &amp;cartella di configurazione</translation>
-    </message>
-    <message>
-      <source>Ta&amp;pe</source>
-      <translation>&amp;Nastro</translation>
-    </message>
-    <message>
       <source>Toggle Virtual &amp;Keyboard</source>
       <translation>&amp;Mostra/Nascondi Tastiera Virtuale</translation>
     </message>
@@ -1495,6 +1467,34 @@
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
       <translation>Modifica &amp;Intestazione iNES/NES2.0 Corrente</translation>
+    </message>
+    <message>
+      <source>Toggle &amp;GUI in window</source>
+      <translation type="unfinished">Toggle &amp;GUI in window</translation>
+    </message>
+    <message>
+      <source>Sa&amp;ve Screenshot</source>
+      <translation type="unfinished">Sa&amp;ve Screenshot</translation>
+    </message>
+    <message>
+      <source>Insert &amp;Coin</source>
+      <translation type="unfinished">Insert &amp;Coin</translation>
+    </message>
+    <message>
+      <source>Open &amp;working folder</source>
+      <translation type="unfinished">Open &amp;working folder</translation>
+    </message>
+    <message>
+      <source>Apply IPS/BPS/XDELTA &amp;Patch</source>
+      <translation type="unfinished">Apply IPS/BPS/XDELTA &amp;Patch</translation>
+    </message>
+    <message>
+      <source>Open &amp;config folder</source>
+      <translation type="unfinished">Open &amp;config folder</translation>
+    </message>
+    <message>
+      <source>T&amp;ape</source>
+      <translation type="unfinished">T&amp;ape</translation>
     </message>
   </context>
   <context>
@@ -1701,12 +1701,12 @@
     <message>
       <source>tape play</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>avvio play del nastro</translation>
+      <translation>play del nastro</translation>
     </message>
     <message>
       <source>tape record</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation>avvio record del nastro</translation>
+      <translation>avvio registrazione del nastro</translation>
     </message>
     <message>
       <source>tape stop</source>
