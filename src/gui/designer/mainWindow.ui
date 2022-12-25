@@ -81,7 +81,7 @@
     </widget>
     <widget class="QMenu" name="menu_Tape">
      <property name="title">
-      <string>Ta&amp;pe</string>
+      <string>T&amp;ape</string>
      </property>
      <property name="icon">
       <iconset resource="resources.qrc">
@@ -202,7 +202,7 @@
      <normaloff>:/icon/icons/toggle_gui.svgz</normaloff>:/icon/icons/toggle_gui.svgz</iconset>
    </property>
    <property name="text">
-    <string>&amp;Toggle GUI in window</string>
+    <string>Toggle &amp;GUI in window</string>
    </property>
   </action>
   <action name="action_Hard_Reset">
@@ -520,7 +520,7 @@
      <normaloff>:/icon/icons/screenshot.svgz</normaloff>:/icon/icons/screenshot.svgz</iconset>
    </property>
    <property name="text">
-    <string>Save Screens&amp;hot</string>
+    <string>Sa&amp;ve Screenshot</string>
    </property>
   </action>
   <action name="action_Insert_Coin">
@@ -529,7 +529,7 @@
      <normaloff>:/icon/icons/insert_coins.svgz</normaloff>:/icon/icons/insert_coins.svgz</iconset>
    </property>
    <property name="text">
-    <string>Insert Coin</string>
+    <string>Insert &amp;Coin</string>
    </property>
   </action>
   <action name="action_Vs_System">
@@ -547,7 +547,7 @@
      <normaloff>:/icon/icons/home.svgz</normaloff>:/icon/icons/home.svgz</iconset>
    </property>
    <property name="text">
-    <string>&amp;Open working folder</string>
+    <string>Open &amp;working folder</string>
    </property>
   </action>
   <action name="action_Turn_Off">
@@ -574,7 +574,7 @@
      <normaloff>:/icon/icons/patch.svgz</normaloff>:/icon/icons/patch.svgz</iconset>
    </property>
    <property name="text">
-    <string>&amp;Apply IPS/BPS/XDELTA Patch</string>
+    <string>Apply IPS/BPS/XDELTA &amp;Patch</string>
    </property>
   </action>
   <action name="action_Video">
@@ -734,7 +734,7 @@
      <normaloff>:/icon/icons/preferences_other.svgz</normaloff>:/icon/icons/preferences_other.svgz</iconset>
    </property>
    <property name="text">
-    <string>&amp;Open config folder</string>
+    <string>Open &amp;config folder</string>
    </property>
   </action>
   <action name="action_Show_Log">

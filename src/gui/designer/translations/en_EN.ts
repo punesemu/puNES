@@ -1232,18 +1232,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Save Screens&amp;hot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Insert Coin</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Open working folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1348,15 +1336,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;General</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Toggle GUI in window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1477,14 +1457,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Open config folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ta&amp;pe</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Toggle Virtual &amp;Keyboard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1494,6 +1466,34 @@
     </message>
     <message>
         <source>Edit Current iNES/NES2.0 &amp;Header</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Toggle &amp;GUI in window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sa&amp;ve Screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Insert &amp;Coin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open &amp;working folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply IPS/BPS/XDELTA &amp;Patch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open &amp;config folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>T&amp;ape</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
