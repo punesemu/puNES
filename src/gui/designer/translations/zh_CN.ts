@@ -1232,18 +1232,6 @@
       <translation>暂停(&amp;P)</translation>
     </message>
     <message>
-      <source>Save Screens&amp;hot</source>
-      <translation>截图(&amp;H)</translation>
-    </message>
-    <message>
-      <source>Insert Coin</source>
-      <translation>投币</translation>
-    </message>
-    <message>
-      <source>&amp;Open working folder</source>
-      <translation>打开工作文件夹(&amp;O)</translation>
-    </message>
-    <message>
       <source>&amp;File</source>
       <translation>文件(&amp;F)</translation>
     </message>
@@ -1348,16 +1336,8 @@
       <translation>打开 IPS/BPS/XDELTA 补丁</translation>
     </message>
     <message>
-      <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
-      <translation>打 IPS/BPS/XDELTA 补丁(&amp;A)</translation>
-    </message>
-    <message>
       <source>&amp;General</source>
       <translation>常规(&amp;G)</translation>
-    </message>
-    <message>
-      <source>&amp;Toggle GUI in window</source>
-      <translation>切换窗口界面(&amp;T)</translation>
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
@@ -1477,14 +1457,6 @@
       <translation>对话筒喊叫(&amp;M)</translation>
     </message>
     <message>
-      <source>&amp;Open config folder</source>
-      <translation>打开配置文件夹(&amp;O)</translation>
-    </message>
-    <message>
-      <source>Ta&amp;pe</source>
-      <translation>磁带(&amp;A)</translation>
-    </message>
-    <message>
       <source>Toggle Virtual &amp;Keyboard</source>
       <translation>切换虚拟键盘(&amp;K)</translation>
     </message>
@@ -1495,6 +1467,34 @@
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
       <translation>编辑当前的 iNES/NES2.0 头部(&amp;H)</translation>
+    </message>
+    <message>
+      <source>Toggle &amp;GUI in window</source>
+      <translation>切换窗口界面(&amp;T)</translation>
+    </message>
+    <message>
+      <source>Sa&amp;ve Screenshot</source>
+      <translation>截图(&amp;H)</translation>
+    </message>
+    <message>
+      <source>Insert &amp;Coin</source>
+      <translation>投币</translation>
+    </message>
+    <message>
+      <source>Open &amp;working folder</source>
+      <translation>打开工作文件夹(&amp;O)</translation>
+    </message>
+    <message>
+      <source>Apply IPS/BPS/XDELTA &amp;Patch</source>
+      <translation>打 IPS/BPS/XDELTA 补丁(&amp;A)</translation>
+    </message>
+    <message>
+      <source>Open &amp;config folder</source>
+      <translation>打开配置文件夹(&amp;O)</translation>
+    </message>
+    <message>
+      <source>T&amp;ape</source>
+      <translation>磁带(&amp;A)</translation>
     </message>
   </context>
   <context>
