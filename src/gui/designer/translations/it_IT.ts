@@ -1349,7 +1349,7 @@
     </message>
     <message>
       <source>Start &amp;AUDIO recording</source>
-      <translation>Avvia registrazione &amp;AUDIO</translation>
+      <translation>Avvia registrazione A&amp;UDIO</translation>
     </message>
     <message>
       <source>Start &amp;VIDEO recording</source>
@@ -1462,7 +1462,7 @@
     </message>
     <message>
       <source>&amp;Show Log</source>
-      <translation>Vi&amp;sualizza il Log</translation>
+      <translation>Visualizza il &amp;Log</translation>
     </message>
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
@@ -1470,7 +1470,7 @@
     </message>
     <message>
       <source>Toggle &amp;GUI in window</source>
-      <translation>Attiva o disattiva la &amp;GUI nella finestra</translation>
+      <translation>Attiva o disattiva la G&amp;UI nella finestra</translation>
     </message>
     <message>
       <source>Sa&amp;ve Screenshot</source>
@@ -1478,7 +1478,7 @@
     </message>
     <message>
       <source>Insert &amp;Coin</source>
-      <translation>Inserisci &amp;Moneta</translation>
+      <translation>Inserisci M&amp;oneta</translation>
     </message>
     <message>
       <source>Open &amp;working folder</source>
