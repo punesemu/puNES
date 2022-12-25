@@ -1232,18 +1232,6 @@
       <translation>&amp;Pause</translation>
     </message>
     <message>
-      <source>Save Screens&amp;hot</source>
-      <translation>Képernyőfotó (&amp;h)</translation>
-    </message>
-    <message>
-      <source>Insert Coin</source>
-      <translation>Érme bedobása</translation>
-    </message>
-    <message>
-      <source>&amp;Open working folder</source>
-      <translation>Munkakönyvtár megnyitása (&amp;O)</translation>
-    </message>
-    <message>
       <source>&amp;File</source>
       <translation>Fájl (&amp;F)</translation>
     </message>
@@ -1348,16 +1336,8 @@
       <translation>IPS/BPS/XDELTA patch megnyitása</translation>
     </message>
     <message>
-      <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
-      <translation>IPS/BPS/XDELTA patch alkalmazása (&amp;A)</translation>
-    </message>
-    <message>
       <source>&amp;General</source>
       <translation>Általános (&amp;G)</translation>
-    </message>
-    <message>
-      <source>&amp;Toggle GUI in window</source>
-      <translation>GUI ki/be kapcsolása ablakos módban</translation>
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
@@ -1477,14 +1457,6 @@
       <translation>Kiálts a &amp;mikrofonba</translation>
     </message>
     <message>
-      <source>&amp;Open config folder</source>
-      <translation>Konfigmappa megnyitása (&amp;O)</translation>
-    </message>
-    <message>
-      <source>Ta&amp;pe</source>
-      <translation>Magnó (&amp;p)</translation>
-    </message>
-    <message>
       <source>Toggle Virtual &amp;Keyboard</source>
       <translation>Virtuális billentyűzet &amp;Ki/Be</translation>
     </message>
@@ -1495,6 +1467,34 @@
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
       <translation>Jelenlegi iNES/NES2.0 fejléc szerkesztése (&amp;H)</translation>
+    </message>
+    <message>
+      <source>Toggle &amp;GUI in window</source>
+      <translation>GUI ki/be kapcsolása ablakos módban</translation>
+    </message>
+    <message>
+      <source>Sa&amp;ve Screenshot</source>
+      <translation>Képernyőfotó (&amp;h)</translation>
+    </message>
+    <message>
+      <source>Insert &amp;Coin</source>
+      <translation>Érme bedobása</translation>
+    </message>
+    <message>
+      <source>Open &amp;working folder</source>
+      <translation>Munkakönyvtár megnyitása (&amp;O)</translation>
+    </message>
+    <message>
+      <source>Apply IPS/BPS/XDELTA &amp;Patch</source>
+      <translation>IPS/BPS/XDELTA patch alkalmazása (&amp;A)</translation>
+    </message>
+    <message>
+      <source>Open &amp;config folder</source>
+      <translation>Konfigmappa megnyitása (&amp;O)</translation>
+    </message>
+    <message>
+      <source>T&amp;ape</source>
+      <translation>Magnó</translation>
     </message>
   </context>
   <context>

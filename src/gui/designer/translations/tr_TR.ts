@@ -1232,18 +1232,6 @@
       <translation>&amp;Duraklat</translation>
     </message>
     <message>
-      <source>Save Screens&amp;hot</source>
-      <translation>Ekran Görüntüsünü Kayd&amp;et</translation>
-    </message>
-    <message>
-      <source>Insert Coin</source>
-      <translation>Coin Ekle</translation>
-    </message>
-    <message>
-      <source>&amp;Open working folder</source>
-      <translation>&amp;Çalışan klasörü aç</translation>
-    </message>
-    <message>
       <source>&amp;File</source>
       <translation>&amp;Dosya</translation>
     </message>
@@ -1348,16 +1336,8 @@
       <translation>IPS/BPS/XDELTA Yamasını aç</translation>
     </message>
     <message>
-      <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
-      <translation>&amp;IPS/BPS/XDELTA Yamasını Uygula</translation>
-    </message>
-    <message>
       <source>&amp;General</source>
       <translation>&amp;Genel</translation>
-    </message>
-    <message>
-      <source>&amp;Toggle GUI in window</source>
-      <translation>&amp;Pencerede GUI'yi aç/kapat</translation>
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
@@ -1477,14 +1457,6 @@
       <translation type="unfinished">Shout into &amp;Microphone</translation>
     </message>
     <message>
-      <source>&amp;Open config folder</source>
-      <translation type="unfinished">&amp;Open config folder</translation>
-    </message>
-    <message>
-      <source>Ta&amp;pe</source>
-      <translation type="unfinished">Ta&amp;pe</translation>
-    </message>
-    <message>
       <source>Toggle Virtual &amp;Keyboard</source>
       <translation type="unfinished">Toggle Virtual &amp;Keyboard</translation>
     </message>
@@ -1495,6 +1467,34 @@
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
       <translation type="unfinished">Edit Current iNES/NES2.0 &amp;Header</translation>
+    </message>
+    <message>
+      <source>Toggle &amp;GUI in window</source>
+      <translation type="unfinished">Toggle &amp;GUI in window</translation>
+    </message>
+    <message>
+      <source>Sa&amp;ve Screenshot</source>
+      <translation type="unfinished">Sa&amp;ve Screenshot</translation>
+    </message>
+    <message>
+      <source>Insert &amp;Coin</source>
+      <translation type="unfinished">Insert &amp;Coin</translation>
+    </message>
+    <message>
+      <source>Open &amp;working folder</source>
+      <translation type="unfinished">Open &amp;working folder</translation>
+    </message>
+    <message>
+      <source>Apply IPS/BPS/XDELTA &amp;Patch</source>
+      <translation type="unfinished">Apply IPS/BPS/XDELTA &amp;Patch</translation>
+    </message>
+    <message>
+      <source>Open &amp;config folder</source>
+      <translation type="unfinished">Open &amp;config folder</translation>
+    </message>
+    <message>
+      <source>T&amp;ape</source>
+      <translation type="unfinished">T&amp;ape</translation>
     </message>
   </context>
   <context>
