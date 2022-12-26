@@ -33,6 +33,9 @@ Changelog:
   "File->Open config directory" [UNIX-Like].
 - Added a cmake option to disable portable mode handling (useful in sandbox environments like Flatpak).
 - Added French translation (thx to Benjamin Siskoo).
+- Updated Chinese Simplified, Hungarian, Italian, Portuguese and Russian translation (thx to owomomo, shinyoyo,
+  TCH, Matheus Scattolin Anselmo and Alexey Timonin).
+  It was not possible to update the Spanish and Turkish one because I lost contact with MS-PC and Ömercan Kömür.
 - Updated internal shaders.
 - Improved FDS sound emulation.
 - Fixed autoswitch timing for FDS.
