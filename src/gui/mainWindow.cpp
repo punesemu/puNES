@@ -60,6 +60,8 @@
 #include "tape_data_recorder.h"
 #if defined (WITH_FFMPEG)
 #include "recording.h"
+#else
+#include "audio/wave.h"
 #endif
 #if defined (FULLSCREEN_RESFREQ)
 #include "video/gfx_monitor.h"
