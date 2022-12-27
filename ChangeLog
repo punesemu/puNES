@@ -1,8 +1,8 @@
 Changelog:
 0.110
 - Added support to Wayland.
-- Added iNES/NES 2.0 header editor.
 - Added support for "Fullscreen in window" with Wayland (the only type of fullscreen supported for now).
+- Added iNES/NES 2.0 header editor.
 - Added support for "Family Basic Keyboard" and "Subor Keyboard".
   * It's possible to capture and release keyboard input with the shortcut "Scrollock" and open and
     close a virtual keyboard with "CTRL+X".
@@ -19,10 +19,10 @@ Changelog:
 - Renamed "Fast Forward" shortcut to "Toggle Fast Forward" and added a new "Fast Forward (hold button)" shortcut.
 - Added a Wizard to select the operating mode (portable mode or not) the first time the emulator is run.
   (Info for those who already used the emulator) To run in portable mode there are 3 distinct ways:
-  1) If the executable is in a folder containing the puNES.cfg file.
-  2) Rename the executable by adding the suffix _p.
-     (Examples: punes.exe -> punes_p.exe or punes64.exe -> punes64_p.exe)
-  3) Run the emulator with the "--portable" option.
+  * If the executable is in a folder containing the puNES.cfg file.
+  * Rename the executable by adding the suffix _p.
+    (Examples: punes.exe -> punes_p.exe or punes64.exe -> punes64_p.exe)
+  * Run the emulator with the "--portable" option.
 - Support for XDG Base Directory Specification.
   On UNIX-Like operating systems the configuration files will be found in "$XDG_CONFIG_HOME/puNES" and the rest
   in "$XDG_DATA_HOME/puNES". Also under Windows the location of the working directory has changed and will now
@@ -69,8 +69,8 @@ Changelog:
 - Added AppStream manifest.
 - Fixed high dpi support.
 - Added a dialog to view log messages.
-- Fixed many many many other bugs.
 - Redesigned the Standard Controller configuration dialog.
+- Fixed many many many other bugs.
 
 0.109 (Bug fixes release)
 - Fixed 'make install'.
