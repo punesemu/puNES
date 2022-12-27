@@ -671,7 +671,6 @@ target_link_libraries(punes
 	${WIN_LIBS_USED}
 	$<$<BOOL:${X11_FOUND}>:X11::Xrandr>
 	OpenGL::GL
-	$<$<PLATFORM_ID:Linux>:OpenGL::GLX>
 	$<$<AND:$<PLATFORM_ID:FreeBSD,OpenBSD,Linux>,$<BOOL:${ENABLE_OPENGL_CG}>>:Cg::CgGL>
 	lib7zip
 	qkeycode

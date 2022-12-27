@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.15)
 
 project(puNES)
 set(CMAKE_C_STANDARD 99)
@@ -116,6 +116,10 @@ else()
 endif()
 
 # OpenGL is required for Qt, even in the case of D3D9.
+if((CMAKE_SYSTEM_NAME STREQUAL "Linux") AND (NOT OpenGL_GL_PREFERENCE))
+	# See CMP0072 for more details (cmake --help-policy CMP0072)
+	set(OpenGL_GL_PREFERENCE "GLVND")
+endif()
 find_package(OpenGL REQUIRED)
 
 if(ENABLE_QT6_LIBS)
