@@ -1958,11 +1958,11 @@
     <name>wdgNTSCBisqwitFilter</name>
     <message>
       <source>QWidth</source>
-      <translation type="unfinished">LargeurQ</translation>
+      <translation>LargeurQ</translation>
     </message>
     <message>
       <source>YWidth</source>
-      <translation type="unfinished">LargeurY</translation>
+      <translation>LargeurY</translation>
     </message>
     <message>
       <source>VBlend</source>
@@ -1974,7 +1974,7 @@
     </message>
     <message>
       <source>IWidth</source>
-      <translation type="unfinished">LargeurI</translation>
+      <translation>LargeurI</translation>
     </message>
     <message>
       <source>Scanline</source>
