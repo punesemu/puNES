@@ -36,7 +36,6 @@ INLINE static void ntsc_bisqwit_decode_frame(int start_row, int end_row, const W
 INLINE static void ntsc_bisqwit_decode_line(int width, const int8_t *signal, uint32_t *pix, int phase0);
 
 typedef struct _ntsc_bisqwit_thread {
-	int slice;
 	BYTE factor;
 	const WORD *src;
 	uint32_t *dst;
@@ -120,7 +119,6 @@ void ntsc_bisqwit_surface(void) {
 	}
 
 	for (i = 0; i < NTSC_BISQWIT_NUM_SLICE; i++) {
-		param[i].slice = i;
 		param[i].factor = gfx.filter.factor;
 		param[i].src = ppu_screen.rd->data;
 		param[i].dst = (uint32_t *)gfx.filter.data.pix;
@@ -258,14 +256,15 @@ INLINE static void ntsc_bisqwit_generate_signal(const WORD *screen, int8_t *ntsc
 	int x;
 
 	for (x = 0; x < SCR_COLUMNS ; x++) {
-		uint16_t color = screen[(row_number << 8) | (x < 0 ? 0 : (x >= SCR_COLUMNS ? SCR_COLUMNS - 1 : x))];
+		uint16_t color = screen[(row_number << 8) | x];
 		int8_t low = _signal_low[color & 0x3F];
 		int8_t high = _signal_high[color & 0x3F];
 		int8_t emphasis = color >> 6;
 		uint16_t phase_bitmask = _bitmask_lut[abs((*phase) - (color & 0x0F)) % 12];
 		uint8_t voltage;
+		int j;
 
-		for (int j = 0; j < 8; j++) {
+		for (j = 0; j < 8; j++) {
 			phase_bitmask <<= 1;
 			voltage = high;
 			if (phase_bitmask >= 0x40) {
@@ -304,7 +303,7 @@ INLINE static void ntsc_bisqwit_decode_frame(int start_row, int end_row, const W
 
 	// Generate the missing vertical lines
 	{
-		int last_row = SCR_ROWS - 1, y;
+		int last_row = SCR_ROWS - 1;
 
 		pix = pix_org;
 		for (y = start_row; y <= end_row; y++) {
@@ -357,13 +356,13 @@ INLINE static void ntsc_bisqwit_decode_frame(int start_row, int end_row, const W
 INLINE static void ntsc_bisqwit_decode_line(int width, const int8_t *signal, uint32_t *pix, int phase0) {
 	int brightness = (int)(nes_ntsc_bisqwit.brightness * 750);
 	int ysum = brightness, isum = 0, qsum = 0;
-	int r, g, b;
+	int r, g, b, s;
 
 #define bread(pos) (pos >= 0 ? signal[pos] : 0)
 #define bcos(pos) _sine_table[(pos + 36) % 12 + phase0]
 #define bsin(pos) _sine_table[(pos + 36) % 12 + 3 + phase0]
 
-	for (int s = 0; s < width; s++) {
+	for (s = 0; s < width; s++) {
 		ysum += bread(s)           - bread(s - _yWidth);
 		isum += bread(s) * bcos(s) - bread(s - _iWidth) * bcos(s - _iWidth);
 		qsum += bread(s) * bsin(s) - bread(s - _qWidth) * bsin(s - _qWidth);
