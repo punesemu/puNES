@@ -1958,11 +1958,11 @@
     <name>wdgNTSCBisqwitFilter</name>
     <message>
       <source>QWidth</source>
-      <translation type="unfinished">QWidth</translation>
+      <translation>LargeurQ</translation>
     </message>
     <message>
       <source>YWidth</source>
-      <translation type="unfinished">YWidth</translation>
+      <translation>LargeurY</translation>
     </message>
     <message>
       <source>VBlend</source>
@@ -1974,7 +1974,7 @@
     </message>
     <message>
       <source>IWidth</source>
-      <translation type="unfinished">IWidth</translation>
+      <translation>LargeurI</translation>
     </message>
     <message>
       <source>Scanline</source>
@@ -1994,7 +1994,7 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation>Rsémarrer les paramètres par défaut</translation>
+      <translation>Redémarrer les paramètres par défaut</translation>
     </message>
   </context>
   <context>
@@ -2053,7 +2053,7 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation>Rsémarrer les paramètres par défaut</translation>
+      <translation>Redémarrer les paramètres par défaut</translation>
     </message>
   </context>
   <context>
@@ -3460,7 +3460,7 @@
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation>Rsémarrer les paramètres par défaut</translation>
+      <translation>Redémarrer les paramètres par défaut</translation>
     </message>
   </context>
   <context>
