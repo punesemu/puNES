@@ -1955,6 +1955,49 @@
     </message>
   </context>
   <context>
+    <name>wdgNTSCBisqwitFilter</name>
+    <message>
+      <source>QWidth</source>
+      <translation type="unfinished">QWidth</translation>
+    </message>
+    <message>
+      <source>YWidth</source>
+      <translation type="unfinished">YWidth</translation>
+    </message>
+    <message>
+      <source>VBlend</source>
+      <translation type="unfinished">VBlend</translation>
+    </message>
+    <message>
+      <source>Brightness</source>
+      <translation type="unfinished">Brightness</translation>
+    </message>
+    <message>
+      <source>IWidth</source>
+      <translation type="unfinished">IWidth</translation>
+    </message>
+    <message>
+      <source>Scanline</source>
+      <translation type="unfinished">Scanline</translation>
+    </message>
+    <message>
+      <source>Saturation</source>
+      <translation type="unfinished">Saturation</translation>
+    </message>
+    <message>
+      <source>Contrast</source>
+      <translation type="unfinished">Contrast</translation>
+    </message>
+    <message>
+      <source>Hue</source>
+      <translation type="unfinished">Hue</translation>
+    </message>
+    <message>
+      <source>Reset paramaters to defaults</source>
+      <translation type="unfinished">Reset paramaters to defaults</translation>
+    </message>
+  </context>
+  <context>
     <name>wdgNTSCFilter</name>
     <message>
       <source>Reset paramaters to defaults</source>
@@ -3406,6 +3449,18 @@
     <message>
       <source>TV4x</source>
       <translation>TV4x</translation>
+    </message>
+    <message>
+      <source>NTSC Bisqwit 2X</source>
+      <translation type="unfinished">NTSC Bisqwit 2X</translation>
+    </message>
+    <message>
+      <source>NTSC Bisqwit 4X</source>
+      <translation type="unfinished">NTSC Bisqwit 4X</translation>
+    </message>
+    <message>
+      <source>NTSC Bisqwit 8X</source>
+      <translation type="unfinished">NTSC Bisqwit 8X</translation>
     </message>
   </context>
   <context>
