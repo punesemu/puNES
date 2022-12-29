@@ -1970,7 +1970,7 @@
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Luminosité</translation>
     </message>
     <message>
       <source>IWidth</source>
@@ -1986,23 +1986,19 @@
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Contraste</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Teinte</translation>
     </message>
     <message>
-      <source>Reset paramaters to defaults</source>
-      <translation type="unfinished">Reset paramaters to defaults</translation>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
     </message>
   </context>
   <context>
     <name>wdgNTSCFilter</name>
-    <message>
-      <source>Reset paramaters to defaults</source>
-      <translation>Rsémarrer les paramètres par défaut</translation>
-    </message>
     <message>
       <source>Artifacts</source>
       <translation>Artefacts</translation>
@@ -2054,6 +2050,10 @@
     <message>
       <source>Scanline</source>
       <translation type="unfinished">Scanline</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
     </message>
   </context>
   <context>
@@ -3199,10 +3199,6 @@
       <translation>RGB NTSC</translation>
     </message>
     <message>
-      <source>Reset paramaters to defaults</source>
-      <translation>Redémarrer les Paramètres par Défaut</translation>
-    </message>
-    <message>
       <source>Filters</source>
       <translation>Filtres</translation>
     </message>
@@ -3461,6 +3457,10 @@
     <message>
       <source>NTSC Bisqwit 8X</source>
       <translation type="unfinished">NTSC Bisqwit 8X</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
     </message>
   </context>
   <context>
