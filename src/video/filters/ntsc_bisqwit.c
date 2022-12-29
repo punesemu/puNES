@@ -29,8 +29,9 @@
 #define NTSC_BISQWIT_NUM_SLICE 4
 
 thread_funct(ntsc_bisqwit_mt, void *arg);
+static void ntsc_bisqwit_recursive_blend(int iteration_count, uint64_t *output, uint64_t *current_line, uint64_t *next_line, int pixels_per_cycle);
+
 INLINE static void ntsc_bisqwit_generate_signal(const WORD *screen, int8_t *ntsc_signal, int *phase, int row_number);
-INLINE static void ntsc_bisqwit_recursive_blend(int iteration_count, uint64_t *output, uint64_t *current_line, uint64_t *next_line, int pixels_per_cycle);
 INLINE static void ntsc_bisqwit_decode_frame(int start_row, int end_row, const WORD *screen, uint32_t *pix, int start_phase);
 INLINE static void ntsc_bisqwit_decode_line(int width, const int8_t *signal, uint32_t *pix, int phase0);
 
@@ -187,37 +188,7 @@ thread_funct(ntsc_bisqwit_mt, void *arg) {
 
 	thread_funct_return();
 }
-
-INLINE static void ntsc_bisqwit_generate_signal(const WORD *screen, int8_t *ntsc_signal, int *phase, int row_number) {
-	int x;
-
-	for (x = 0; x < SCR_COLUMNS ; x++) {
-		uint16_t color = screen[(row_number << 8) | (x < 0 ? 0 : (x >= SCR_COLUMNS ? SCR_COLUMNS - 1 : x))];
-		int8_t low = _signal_low[color & 0x3F];
-		int8_t high = _signal_high[color & 0x3F];
-		int8_t emphasis = color >> 6;
-		uint16_t phase_bitmask = _bitmask_lut[abs((*phase) - (color & 0x0F)) % 12];
-		uint8_t voltage;
-
-		for (int j = 0; j < 8; j++) {
-			phase_bitmask <<= 1;
-			voltage = high;
-			if (phase_bitmask >= 0x40) {
-				if (phase_bitmask == 0x1000) {
-					phase_bitmask = 1;
-				} else {
-					voltage = low;
-				}
-			}
-			if (phase_bitmask & emphasis) {
-				voltage -= (voltage / 4);
-			}
-			ntsc_signal[(x << 3) | j] = voltage;
-		}
-		(*phase) += _signals_per_pixel;
-	}
-}
-INLINE static void ntsc_bisqwit_recursive_blend(int iteration_count, uint64_t *output, uint64_t *current_line, uint64_t *next_line, int pixels_per_cycle) {
+static void ntsc_bisqwit_recursive_blend(int iteration_count, uint64_t *output, uint64_t *current_line, uint64_t *next_line, int pixels_per_cycle) {
 	// Blend 2 pixels at once
 	uint32_t width = SCR_COLUMNS * pixels_per_cycle / 2, x;
 	double scanline_intensity = nes_ntsc_bisqwit.scanline_intensity;
@@ -277,9 +248,39 @@ INLINE static void ntsc_bisqwit_recursive_blend(int iteration_count, uint64_t *o
 
 	if (iteration_count > 0) {
 		ntsc_bisqwit_recursive_blend(iteration_count, output - width * iteration_count,
-			current_line, output, pixels_per_cycle);
+									 current_line, output, pixels_per_cycle);
 		ntsc_bisqwit_recursive_blend(iteration_count, output + width * iteration_count,
-			output, next_line, pixels_per_cycle);
+									 output, next_line, pixels_per_cycle);
+	}
+}
+
+INLINE static void ntsc_bisqwit_generate_signal(const WORD *screen, int8_t *ntsc_signal, int *phase, int row_number) {
+	int x;
+
+	for (x = 0; x < SCR_COLUMNS ; x++) {
+		uint16_t color = screen[(row_number << 8) | (x < 0 ? 0 : (x >= SCR_COLUMNS ? SCR_COLUMNS - 1 : x))];
+		int8_t low = _signal_low[color & 0x3F];
+		int8_t high = _signal_high[color & 0x3F];
+		int8_t emphasis = color >> 6;
+		uint16_t phase_bitmask = _bitmask_lut[abs((*phase) - (color & 0x0F)) % 12];
+		uint8_t voltage;
+
+		for (int j = 0; j < 8; j++) {
+			phase_bitmask <<= 1;
+			voltage = high;
+			if (phase_bitmask >= 0x40) {
+				if (phase_bitmask == 0x1000) {
+					phase_bitmask = 1;
+				} else {
+					voltage = low;
+				}
+			}
+			if (phase_bitmask & emphasis) {
+				voltage -= (voltage / 4);
+			}
+			ntsc_signal[(x << 3) | j] = voltage;
+		}
+		(*phase) += _signals_per_pixel;
 	}
 }
 INLINE static void ntsc_bisqwit_decode_frame(int start_row, int end_row, const WORD *screen, uint32_t *pix, int start_phase) {
