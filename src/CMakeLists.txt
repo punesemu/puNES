@@ -468,6 +468,7 @@ set(gui_ui_srcs
 	gui/designer/wdgKeyboardFB.ui
 	gui/designer/wdgKeyboardSubor.ui
 	gui/designer/wdgNTSCFilter.ui
+	gui/designer/wdgNTSCBisqwitFilter.ui
 	gui/designer/wdgOverlayUi.ui
 	gui/designer/wdgPaletteEditor.ui
 	gui/designer/wdgRewind.ui
@@ -593,6 +594,7 @@ set(video_srcs
 	video/filters/hqx.c
 	video/filters/nes_ntsc.c
 	video/filters/ntsc.c
+	video/filters/ntsc_bisqwit.c
 	video/filters/scale.c
 	video/filters/scale2x.c
 	video/filters/scalers.c

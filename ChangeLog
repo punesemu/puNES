@@ -65,6 +65,8 @@ Changelog:
 - Fixed UNIF mapper : CITYFIGHT, FS-304
 - Added video filters: 2xSaI,  Dot Matrix, PAL TV1x, PAL TV2x, PAL TV3x, PAL TV4x, Super 2xSaI, Super Eagle,
   TV2x, TV3x, TV4x.
+- Added video filters: NTSC Bisqwit 2X, NTSC Bisqwit 4X, NTSC Bisqwit 8X (https://forums.nesdev.org/viewtopic.php?t=14338).
+  Notice : This filter uses its own color palette.
 - Migrated the project from autotools to cmake.
 - Added AppStream manifest.
 - Fixed high dpi support.

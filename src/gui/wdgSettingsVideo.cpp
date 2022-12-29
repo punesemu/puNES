@@ -303,6 +303,7 @@ void wdgSettingsVideo::update_widget(void) {
 	{
 		sfilter_set();
 		widget_NTSC_Filter->update_widget();
+		widget_NTSC_Bisqwit_Filter->update_widget();
 		shader_set();
 #if defined (WITH_OPENGL)
 		checkBox_Disable_sRGB_FBO->setChecked(cfg->disable_srgb_fbo);
@@ -506,84 +507,93 @@ void wdgSettingsVideo::sfilter_set(void) {
 		case HQ4X:
 			filter = 5;
 			break;
+		case NTSC_BISQWIT_2X:
+			filter = 6;
+			break;
+		case NTSC_BISQWIT_4X:
+			filter = 7;
+			break;
+		case NTSC_BISQWIT_8X:
+			filter = 8;
+			break;
 		case NTSC_FILTER: {
 			switch (cfg->ntsc_format) {
 				case COMPOSITE:
-					filter = 6;
+					filter = 9;
 					break;
 				case RGBMODE:
-					filter = 7;
+					filter = 10;
 					break;
 				case SVIDEO:
-					filter = 8;
+					filter = 11;
 					break;
 			}
 			break;
 		case PALTV1X:
-			filter = 9;
-			break;
-		case PALTV2X:
-			filter = 10;
-			break;
-		case PALTV3X:
-			filter = 11;
-			break;
-		case PALTV4X:
 			filter = 12;
 			break;
-		case SCALE2X:
+		case PALTV2X:
 			filter = 13;
 			break;
-		case SCALE3X:
+		case PALTV3X:
 			filter = 14;
 			break;
-		case SCALE4X:
+		case PALTV4X:
 			filter = 15;
 			break;
-		case SUPER2XSAI:
+		case SCALE2X:
 			filter = 16;
 			break;
-		case SUPEREAGLE:
+		case SCALE3X:
 			filter = 17;
 			break;
-		case TV2X:
+		case SCALE4X:
 			filter = 18;
 			break;
-		case TV3X:
+		case SUPER2XSAI:
 			filter = 19;
 			break;
-		case TV4X:
+		case SUPEREAGLE:
 			filter = 20;
 			break;
-		case XBRZ2X:
+		case TV2X:
 			filter = 21;
 			break;
-		case XBRZ3X:
+		case TV3X:
 			filter = 22;
 			break;
-		case XBRZ4X:
+		case TV4X:
 			filter = 23;
 			break;
-		case XBRZ5X:
+		case XBRZ2X:
 			filter = 24;
 			break;
-		case XBRZ6X:
+		case XBRZ3X:
 			filter = 25;
 			break;
-		case XBRZ2XMT:
+		case XBRZ4X:
 			filter = 26;
 			break;
-		case XBRZ3XMT:
+		case XBRZ5X:
 			filter = 27;
 			break;
-		case XBRZ4XMT:
+		case XBRZ6X:
 			filter = 28;
 			break;
-		case XBRZ5XMT:
+		case XBRZ2XMT:
 			filter = 29;
 			break;
-		case XBRZ6XMT:
+		case XBRZ3XMT:
 			filter = 30;
+			break;
+		case XBRZ4XMT:
+			filter = 31;
+			break;
+		case XBRZ5XMT:
+			filter = 32;
+			break;
+		case XBRZ6XMT:
+			filter = 33;
 			break;
 		}
 	}
@@ -951,81 +961,90 @@ void wdgSettingsVideo::s_sfilter(int index) {
 			filter = HQ4X;
 			break;
 		case 6:
+			filter = NTSC_BISQWIT_2X;
+			break;
+		case 7:
+			filter = NTSC_BISQWIT_4X;
+			break;
+		case 8:
+			filter = NTSC_BISQWIT_8X;
+			break;
+		case 9:
 			filter = NTSC_FILTER;
 			cfg->ntsc_format = COMPOSITE;
 			break;
-		case 7:
+		case 10:
 			filter = NTSC_FILTER;
 			cfg->ntsc_format = RGBMODE;
 			break;
-		case 8:
+		case 11:
 			filter = NTSC_FILTER;
 			cfg->ntsc_format = SVIDEO;
 			break;
-		case 9:
+		case 12:
 			filter = PALTV1X;
 			break;
-		case 10:
+		case 13:
 			filter = PALTV2X;
 			break;
-		case 11:
+		case 14:
 			filter = PALTV3X;
 			break;
-		case 12:
+		case 15:
 			filter = PALTV4X;
 			break;
-		case 13:
+		case 16:
 			filter = SCALE2X;
 			break;
-		case 14:
+		case 17:
 			filter = SCALE3X;
 			break;
-		case 15:
+		case 18:
 			filter = SCALE4X;
 			break;
-		case 16:
+		case 19:
 			filter = SUPER2XSAI;
 			break;
-		case 17:
+		case 20:
 			filter = SUPEREAGLE;
 			break;
-		case 18:
+		case 21:
 			filter = TV2X;
 			break;
-		case 19:
+		case 22:
 			filter = TV3X;
 			break;
-		case 20:
+		case 23:
 			filter = TV4X;
 			break;
-		case 21:
+		case 24:
 			filter = XBRZ2X;
 			break;
-		case 22:
+		case 25:
 			filter = XBRZ3X;
 			break;
-		case 23:
+		case 26:
 			filter = XBRZ4X;
 			break;
-		case 24:
+		case 27:
 			filter = XBRZ5X;
 			break;
-		case 25:
+		case 28:
 			filter = XBRZ6X;
 			break;
-		case 26:
+		case 29:
 			filter = XBRZ2XMT;
 			break;
-		case 27:
+		case 30:
 			filter = XBRZ3XMT;
 			break;
-		case 28:
+		case 31:
 			filter = XBRZ4XMT;
 			break;
-		case 29:
+		case 32:
 			filter = XBRZ5XMT;
 			break;
-		case 30:
+		case 33:
 			filter = XBRZ6XMT;
 			break;
 	}
@@ -1037,7 +1056,7 @@ void wdgSettingsVideo::s_sfilter(int index) {
 	emu_thread_pause();
 	gfx_set_screen(NO_CHANGE, filter, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 	if (cfg->filter == NTSC_FILTER) {
-		ntsc_effect_parameters_changed();
+		ntsc_filter_parameters_changed();
 	}
 	emu_thread_continue();
 }

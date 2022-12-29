@@ -21,7 +21,6 @@
 #include "ppu.h"
 
 uint32_t RGBtoYUV[NUM_COLORS];
-uint32_t YUV1, YUV2;
 
 _hqnx hqnx;
 
@@ -33,9 +32,9 @@ void hqx_init(void) {
 		r = palette_RGB.in_use[i].r;
 		g = palette_RGB.in_use[i].g;
 		b = palette_RGB.in_use[i].b;
-		y = (uint32_t) (0.299 * r + 0.587 * g + 0.114 * b);
-		u = (uint32_t) (-0.169 * r - 0.331 * g + 0.5 * b) + 128;
-		v = (uint32_t) (0.5 * r - 0.419 * g - 0.081 * b) + 128;
+		y = (uint32_t)(0.299 * r + 0.587 * g + 0.114 * b);
+		u = (uint32_t)(-0.169 * r - 0.331 * g + 0.5 * b) + 128;
+		v = (uint32_t)(0.5 * r - 0.419 * g - 0.081 * b) + 128;
 		RGBtoYUV[i] = (y << 16) + (u << 8) + v;
 	}
 }

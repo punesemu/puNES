@@ -6,14 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>413</width>
+    <width>518</width>
     <height>206</height>
    </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>206</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string notr="true">wdgNTSCFilter</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gridLayout_wdgNTSCFilter">
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -275,7 +281,7 @@
       </widget>
      </item>
      <item row="5" column="0" colspan="3">
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QHBoxLayout" name="horizontalLayout_MV">
        <item>
         <widget class="QCheckBox" name="checkBox_Merge_Fields">
          <property name="text">

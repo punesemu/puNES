@@ -867,9 +867,10 @@ void objSet::to_cfg(const QString &group) {
 		val.replace(SET_OVERSCAN_BRD_PAL, oscan_val(&overscan_borders[1]));
 		int_to_val(SET_FILTER, (int)cfg_from_file.filter);
 		int_to_val(SET_NTSC_FORMAT, cfg_from_file.ntsc_format);
-		val.replace(SET_NTSC_COMPOSITE_PARAM, ntsc_val(&ntsc_filter.format[COMPOSITE]));
-		val.replace(SET_NTSC_SVIDEO_PARAM, ntsc_val(&ntsc_filter.format[SVIDEO]));
-		val.replace(SET_NTSC_RGB_PARAM, ntsc_val(&ntsc_filter.format[RGBMODE]));
+		val.replace(SET_NTSC_COMPOSITE_PARAM, ntsc_val((void *)&ntsc_filter.format[COMPOSITE]));
+		val.replace(SET_NTSC_SVIDEO_PARAM, ntsc_val((void *)&ntsc_filter.format[SVIDEO]));
+		val.replace(SET_NTSC_RGB_PARAM, ntsc_val((void *)&ntsc_filter.format[RGBMODE]));
+		val.replace(SET_NTSC_BISQWIT_PARAM, ntsc_bisqwit_val((void *)&nes_ntsc_bisqwit));
 		int_to_val(SET_SHADER, (int)cfg_from_file.shader);
 		cpy_utchar_to_val(SET_FILE_SHADER, cfg_from_file.shader_file);
 		int_to_val(SET_PALETTE, cfg_from_file.palette);
@@ -998,9 +999,10 @@ void objSet::fr_cfg(const QString &group) {
 		oscan_val_to_int(SET_OVERSCAN_BRD_PAL, &overscan_borders[1]);
 		cfg_from_file.filter = val_to_int(SET_FILTER);
 		cfg_from_file.ntsc_format = val_to_int(SET_NTSC_FORMAT);
-		ntsc_val_to_double(SET_NTSC_COMPOSITE_PARAM, &ntsc_filter.format[COMPOSITE]);
-		ntsc_val_to_double(SET_NTSC_SVIDEO_PARAM, &ntsc_filter.format[SVIDEO]);
-		ntsc_val_to_double(SET_NTSC_RGB_PARAM, &ntsc_filter.format[RGBMODE]);
+		ntsc_val_to_double(SET_NTSC_COMPOSITE_PARAM, (void *)&ntsc_filter.format[COMPOSITE]);
+		ntsc_val_to_double(SET_NTSC_SVIDEO_PARAM, (void *)&ntsc_filter.format[SVIDEO]);
+		ntsc_val_to_double(SET_NTSC_RGB_PARAM, (void *)&ntsc_filter.format[RGBMODE]);
+		ntsc_bisqwit_val_to_double(SET_NTSC_BISQWIT_PARAM, (void *)&nes_ntsc_bisqwit);
 		cfg_from_file.shader = val_to_int(SET_SHADER);
 		cpy_val_to_utchar(SET_FILE_SHADER, cfg_from_file.shader_file, usizeof(cfg_from_file.shader_file));
 		cfg_from_file.palette = val_to_int(SET_PALETTE);
@@ -1234,6 +1236,51 @@ QString objSet::ntsc_val(void *ntsc_frmt) {
 		arg(round(format->merge_fields & 0x01)).
 		arg(round(format->vertical_blend & 0x01)).
 		arg(round(format->scanline_intensity * 100)));
+}
+
+void objSet::ntsc_bisqwit_val_to_double(int index, void *ntsc_frmt) {
+	ntsc_bisqwit_val_to_double(ntsc_frmt, uQStringCD(val.at(index)));
+
+	val.replace(index, ntsc_bisqwit_val(ntsc_frmt));
+}
+void objSet::ntsc_bisqwit_val_to_double(void *ntsc_frmt, const uTCHAR *buffer) {
+	QStringList splitted = uQString(buffer).toLower().split(",");
+	nes_ntsc_bisqwit_setup_t *format = (nes_ntsc_bisqwit_setup_t *)ntsc_frmt;
+
+	if (splitted.count() == 9) {
+		format->hue = splitted.at(0).toDouble() / 100.0f;
+		format->saturation = splitted.at(1).toDouble() / 100.0f;
+		format->contrast = splitted.at(2).toDouble() / 100.0f;
+		format->brightness = splitted.at(3).toDouble() / 100.0f;
+		format->ywidth = splitted.at(4).toInt();
+		if ((format->ywidth < 1) || (format->ywidth > 50)) {
+			format->ywidth = 12;
+		}
+		format->iwidth = splitted.at(5).toInt();
+		if ((format->iwidth < 1) || (format->iwidth > 50)) {
+			format->iwidth = 24;
+		}
+		format->qwidth = splitted.at(6).toInt();
+		if ((format->qwidth < 1) || (format->qwidth > 50)) {
+			format->qwidth = 24;
+		}
+		format->vertical_blend = splitted.at(7).toInt() & 0x01;
+		format->scanline_intensity = splitted.at(8).toDouble() / 100.0f;
+	}
+}
+QString objSet::ntsc_bisqwit_val(void *ntsc_frmt) {
+	nes_ntsc_bisqwit_setup_t *format = (nes_ntsc_bisqwit_setup_t *)ntsc_frmt;
+
+	return (QString("%0,%1,%2,%3,%4,%5,%6,%7,%8").
+			arg(round(format->hue * 100)).
+			arg(round(format->saturation * 100)).
+			arg(round(format->contrast * 100)).
+			arg(round(format->brightness * 100)).
+			arg(round(format->ywidth)).
+			arg(round(format->iwidth)).
+			arg(round(format->qwidth)).
+			arg(round(format->vertical_blend & 0x01)).
+			arg(round(format->scanline_intensity * 100)));
 }
 
 int objSet::channel_convert_index(int index) {

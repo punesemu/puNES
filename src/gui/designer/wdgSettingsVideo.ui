@@ -35,7 +35,7 @@
       <enum>QTabWidget::East</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_Screen">
       <attribute name="icon">
@@ -833,17 +833,47 @@
        <string>Filters</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_tab_filters">
-       <item row="2" column="0" colspan="3">
-        <widget class="wdgNTSCFilter" name="widget_NTSC_Filter" native="true"/>
+       <item row="1" column="0">
+        <widget class="QLabel" name="icon_Filter">
+         <property name="text">
+          <string notr="true">Filter icon</string>
+         </property>
+        </widget>
        </item>
        <item row="5" column="0">
-        <widget class="QLabel" name="icon_Shader_file">
+        <widget class="QLabel" name="icon_Shader">
          <property name="text">
-          <string notr="true">Shader File icon</string>
+          <string notr="true">Shader icon</string>
          </property>
         </widget>
        </item>
        <item row="7" column="0" colspan="3">
+        <widget class="QTableWidget" name="tableWidget_Shader_Parameters">
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
+         <property name="showDropIndicator" stdset="0">
+          <bool>false</bool>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::NoSelection</enum>
+         </property>
+         <attribute name="horizontalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="label_Filter">
+         <property name="text">
+          <string>Filter</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="3">
+        <widget class="wdgNTSCFilter" name="widget_NTSC_Filter" native="true"/>
+       </item>
+       <item row="8" column="0" colspan="3">
         <widget class="QPushButton" name="pushButton_Shader_Parameters_reset_alls">
          <property name="text">
           <string>Reset paramaters to defaults</string>
@@ -854,24 +884,17 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
-        <widget class="QLabel" name="label_Shader">
-         <property name="text">
-          <string>Shader</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0" colspan="3">
-        <layout class="QHBoxLayout" name="horizontalLayout_Filters_misc">
+       <item row="4" column="0" colspan="3">
+        <layout class="QHBoxLayout" name="horizontalLayout_GPU_Shaders">
          <item>
-          <widget class="QLabel" name="icon_Filters_misc">
+          <widget class="QLabel" name="icon_GPU_Shaders">
            <property name="text">
-            <string notr="true">Misc icon</string>
+            <string notr="true">GPU Shaders icon</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="label_Filters_misc">
+          <widget class="QLabel" name="label_GPU_Shaders">
            <property name="font">
             <font>
              <weight>75</weight>
@@ -879,12 +902,12 @@
             </font>
            </property>
            <property name="text">
-            <string>Misc</string>
+            <string>GPU Shaders</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="Line" name="line_Filters_misc">
+          <widget class="Line" name="line_GPU_Shaders">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -898,7 +921,51 @@
          </item>
         </layout>
        </item>
-       <item row="5" column="2">
+       <item row="10" column="0" colspan="3">
+        <widget class="QCheckBox" name="checkBox_Disable_sRGB_FBO">
+         <property name="text">
+          <string>Disable sRGB FBO</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="3">
+        <layout class="QHBoxLayout" name="horizontalLayout_Software_Filters">
+         <item>
+          <widget class="QLabel" name="icon_Software_Filters">
+           <property name="text">
+            <string notr="true">Software Filters icon</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_Software_Filters">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Software Filters</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_Software_Filters">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="6" column="2">
         <layout class="QHBoxLayout" name="horizontalLayout_Shaders_file">
          <item>
           <widget class="QLineEdit" name="lineEdit_Shaders_file">
@@ -931,14 +998,7 @@
          </item>
         </layout>
        </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="icon_Shader">
-         <property name="text">
-          <string notr="true">Shader icon</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="2">
+       <item row="5" column="2">
         <widget class="QComboBox" name="comboBox_Shaders">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -993,91 +1053,31 @@
          </item>
         </widget>
        </item>
-       <item row="6" column="0" colspan="3">
-        <widget class="QTableWidget" name="tableWidget_Shader_Parameters">
-         <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
-         </property>
-         <property name="showDropIndicator" stdset="0">
-          <bool>false</bool>
-         </property>
-         <property name="selectionMode">
-          <enum>QAbstractItemView::NoSelection</enum>
-         </property>
-         <attribute name="horizontalHeaderVisible">
-          <bool>false</bool>
-         </attribute>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="icon_Filter">
+       <item row="5" column="1">
+        <widget class="QLabel" name="label_Shader">
          <property name="text">
-          <string notr="true">Filter icon</string>
+          <string>Shader</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="0" colspan="3">
-        <layout class="QHBoxLayout" name="horizontalLayout_GPU_Shaders">
-         <item>
-          <widget class="QLabel" name="icon_GPU_Shaders">
-           <property name="text">
-            <string notr="true">GPU Shaders icon</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_GPU_Shaders">
-           <property name="font">
-            <font>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>GPU Shaders</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="Line" name="line_GPU_Shaders">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="label_Filter">
+       <item row="6" column="0">
+        <widget class="QLabel" name="icon_Shader_file">
          <property name="text">
-          <string>Filter</string>
+          <string notr="true">Shader File icon</string>
          </property>
         </widget>
        </item>
        <item row="9" column="0" colspan="3">
-        <widget class="QCheckBox" name="checkBox_Disable_sRGB_FBO">
-         <property name="text">
-          <string>Disable sRGB FBO</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="3">
-        <layout class="QHBoxLayout" name="horizontalLayout_Software_Filters">
+        <layout class="QHBoxLayout" name="horizontalLayout_Filters_misc">
          <item>
-          <widget class="QLabel" name="icon_Software_Filters">
+          <widget class="QLabel" name="icon_Filters_misc">
            <property name="text">
-            <string notr="true">Software Filters icon</string>
+            <string notr="true">Misc icon</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="label_Software_Filters">
+          <widget class="QLabel" name="label_Filters_misc">
            <property name="font">
             <font>
              <weight>75</weight>
@@ -1085,12 +1085,12 @@
             </font>
            </property>
            <property name="text">
-            <string>Software Filters</string>
+            <string>Misc</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="Line" name="line_Software_Filters">
+          <widget class="Line" name="line_Filters_misc">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -1103,6 +1103,13 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLabel" name="label_Shader_file">
+         <property name="text">
+          <string>Shader File</string>
+         </property>
+        </widget>
        </item>
        <item row="1" column="2">
         <widget class="QComboBox" name="comboBox_Software_Filters">
@@ -1140,6 +1147,21 @@
          <item>
           <property name="text">
            <string>Hq4X</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>NTSC Bisqwit 2X</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>NTSC Bisqwit 4X</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>NTSC Bisqwit 8X</string>
           </property>
          </item>
          <item>
@@ -1269,12 +1291,8 @@
          </item>
         </widget>
        </item>
-       <item row="5" column="1">
-        <widget class="QLabel" name="label_Shader_file">
-         <property name="text">
-          <string>Shader File</string>
-         </property>
-        </widget>
+       <item row="3" column="0" colspan="3">
+        <widget class="wdgNTSCBisqwitFilter" name="widget_NTSC_Bisqwit_Filter" native="true"/>
        </item>
       </layout>
      </widget>
@@ -1827,6 +1845,12 @@
   </customwidget>
   <customwidget>
    <class>wdgNTSCFilter</class>
+   <extends>QWidget</extends>
+   <header>wdgNTSCFilter.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>wdgNTSCBisqwitFilter</class>
    <extends>QWidget</extends>
    <header>wdgNTSCFilter.hpp</header>
    <container>1</container>

@@ -114,6 +114,11 @@ class objSet : public objSettings {
 		QString ntsc_val(void *ntsc_frmt);
 
 	private:
+		void ntsc_bisqwit_val_to_double(int index, void *ntsc_frmt);
+		void ntsc_bisqwit_val_to_double(void *ntsc_frmt, const uTCHAR *buffer);
+		QString ntsc_bisqwit_val(void *ntsc_frmt);
+
+	private:
 		int channel_convert_index(int index);
 		void channel_decode(int index, const QString &val);
 		void channel_default(int index);

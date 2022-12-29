@@ -21,6 +21,7 @@
 
 #include <QtWidgets/QWidget>
 #include "ui_wdgNTSCFilter.h"
+#include "ui_wdgNTSCBisqwitFilter.h"
 
 class wdgNTSCFilter : public QWidget, public Ui::wdgNTSCFilter {
 	Q_OBJECT
@@ -44,6 +45,30 @@ class wdgNTSCFilter : public QWidget, public Ui::wdgNTSCFilter {
 		void s_checkbox_changed(int state);
 		void s_default_value_clicked(bool checked);
 		void s_default_value_mv_clicked(bool checked);
+		void s_reset(bool checked);
+};
+class wdgNTSCBisqwitFilter : public QWidget, public Ui::wdgNTSCBisqwitFilter {
+	Q_OBJECT
+
+	public:
+		explicit wdgNTSCBisqwitFilter(QWidget *parent = nullptr);
+		~wdgNTSCBisqwitFilter() override;
+
+	private:
+		void changeEvent(QEvent *event) override;
+
+	public:
+		void update_widget(void);
+
+	private:
+		void ntsc_update_paramaters(void);
+		void set_sliders_spins(void);
+
+	private slots:
+		void s_slider_spin_changed(int value);
+		void s_checkbox_changed(int state);
+		void s_default_value_clicked(bool checked);
+		void s_default_value_v_clicked(bool checked);
 		void s_reset(bool checked);
 };
 

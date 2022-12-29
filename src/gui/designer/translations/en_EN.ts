@@ -1955,6 +1955,49 @@
     </message>
 </context>
 <context>
+    <name>wdgNTSCBisqwitFilter</name>
+    <message>
+        <source>QWidth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>YWidth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBlend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>IWidth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scanline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saturation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset paramaters to defaults</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>wdgNTSCFilter</name>
     <message>
         <source>Reset paramaters to defaults</source>
@@ -3405,6 +3448,18 @@
     </message>
     <message>
         <source>TV4x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC Bisqwit 2X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC Bisqwit 4X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC Bisqwit 8X</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -66,6 +66,7 @@ enum set_element {
 	SET_NTSC_COMPOSITE_PARAM,
 	SET_NTSC_SVIDEO_PARAM,
 	SET_NTSC_RGB_PARAM,
+	SET_NTSC_BISQWIT_PARAM,
 	SET_SHADER,
 	SET_FILE_SHADER,
 	SET_PALETTE,
@@ -554,35 +555,38 @@ static const _opt opt_oscan[] = {
 	{NULL, uL("default"), OSCAN_DEFAULT}
 };
 static const _opt opt_filter[] = {
-	{uL("no filter")  , uL("none")      , NO_FILTER},
-	{uL("Scale2X")    , uL("scale2x")   , SCALE2X},
-	{uL("Scale3X")    , uL("scale3x")   , SCALE3X},
-	{uL("Scale4X")    , uL("scale4x")   , SCALE4X},
-	{uL("Hq2X")       , uL("hq2x")      , HQ2X},
-	{uL("Hq3X")       , uL("hq3x")      , HQ3X},
-	{uL("Hq4X")       , uL("hq4x")      , HQ4X},
-	{uL("NTSC")       , uL("ntsc")      , NTSC_FILTER},
-	{uL("xBRZ 2x")    , uL("xbrz2x")    , XBRZ2X},
-	{uL("xBRZ 3x")    , uL("xbrz3x")    , XBRZ3X},
-	{uL("xBRZ 4x")    , uL("xbrz4x")    , XBRZ4X},
-	{uL("xBRZ 5x")    , uL("xbrz5x")    , XBRZ5X},
-	{uL("xBRZ 6x")    , uL("xbrz6x")    , XBRZ6X},
-	{uL("xBRZ 2x MT") , uL("xbrz2mtx")  , XBRZ2XMT},
-	{uL("xBRZ 3x MT") , uL("xbrz3xmt")  , XBRZ3XMT},
-	{uL("xBRZ 4x MT") , uL("xbrz4xmt")  , XBRZ4XMT},
-	{uL("xBRZ 5x MT") , uL("xbrz5xmt")  , XBRZ5XMT},
-	{uL("xBRZ 6x MT") , uL("xbrz6xmt")  , XBRZ6XMT},
-	{uL("2xSaI")      , uL("2xsai")     , SCALE2XSAI},
-	{uL("Super 2xSaI"), uL("super2xsai"), SUPER2XSAI},
-	{uL("Super Eagle"), uL("supereagle"), SUPEREAGLE},
-	{uL("TV2x")       , uL("tv2x")      , TV2X},
-	{uL("TV3x")       , uL("tv3x")      , TV3X},
-	{uL("TV4x")       , uL("tv4x")      , TV4X},
-	{uL("Dot Matrix") , uL("dotmatrix") , DOTMATRIX},
-	{uL("Pal TV1x")   , uL("paltv1x")   , PALTV1X},
-	{uL("Pal TV2x")   , uL("paltv2x")   , PALTV2X},
-	{uL("Pal TV3x")   , uL("paltv3x")   , PALTV3X},
-	{uL("Pal TV4x")   , uL("paltv4x")   , PALTV4X}
+	{uL("no filter")      , uL("none")         , NO_FILTER},
+	{uL("Scale2X")        , uL("scale2x")      , SCALE2X},
+	{uL("Scale3X")        , uL("scale3x")      , SCALE3X},
+	{uL("Scale4X")        , uL("scale4x")      , SCALE4X},
+	{uL("Hq2X")           , uL("hq2x")         , HQ2X},
+	{uL("Hq3X")           , uL("hq3x")         , HQ3X},
+	{uL("Hq4X")           , uL("hq4x")         , HQ4X},
+	{uL("NTSC")           , uL("ntsc")         , NTSC_FILTER},
+	{uL("xBRZ 2x")        , uL("xbrz2x")       , XBRZ2X},
+	{uL("xBRZ 3x")        , uL("xbrz3x")       , XBRZ3X},
+	{uL("xBRZ 4x")        , uL("xbrz4x")       , XBRZ4X},
+	{uL("xBRZ 5x")        , uL("xbrz5x")       , XBRZ5X},
+	{uL("xBRZ 6x")        , uL("xbrz6x")       , XBRZ6X},
+	{uL("xBRZ 2x MT")     , uL("xbrz2mtx")     , XBRZ2XMT},
+	{uL("xBRZ 3x MT")     , uL("xbrz3xmt")     , XBRZ3XMT},
+	{uL("xBRZ 4x MT")     , uL("xbrz4xmt")     , XBRZ4XMT},
+	{uL("xBRZ 5x MT")     , uL("xbrz5xmt")     , XBRZ5XMT},
+	{uL("xBRZ 6x MT")     , uL("xbrz6xmt")     , XBRZ6XMT},
+	{uL("2xSaI")          , uL("2xsai")        , SCALE2XSAI},
+	{uL("Super 2xSaI")    , uL("super2xsai")   , SUPER2XSAI},
+	{uL("Super Eagle")    , uL("supereagle")   , SUPEREAGLE},
+	{uL("TV2x")           , uL("tv2x")         , TV2X},
+	{uL("TV3x")           , uL("tv3x")         , TV3X},
+	{uL("TV4x")           , uL("tv4x")         , TV4X},
+	{uL("Dot Matrix")     , uL("dotmatrix")    , DOTMATRIX},
+	{uL("Pal TV1x")       , uL("paltv1x")      , PALTV1X},
+	{uL("Pal TV2x")       , uL("paltv2x")      , PALTV2X},
+	{uL("Pal TV3x")       , uL("paltv3x")      , PALTV3X},
+	{uL("Pal TV4x")       , uL("paltv4x")      , PALTV4X},
+	{uL("NTSC Bisqwit 2x"), uL("ntscbisqwit2x"), NTSC_BISQWIT_2X},
+	{uL("NTSC Bisqwit 4x"), uL("ntscbisqwit4x"), NTSC_BISQWIT_4X},
+	{uL("NTSC Bisqwit 8x"), uL("ntscbisqwit8x"), NTSC_BISQWIT_8X}
 };
 static const _opt opt_ntsc[] = {
 	{uL("Composite"), uL("composite"), COMPOSITE},
@@ -899,13 +903,14 @@ static const _settings main_cfg[] = {
 		uL("#                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x," NEWLINE)
 		uL("#                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt," NEWLINE)
 		uL("#                  ntsc, 2xsai, super2xsai, supereagle, tv2x, tv3x," NEWLINE)
-		uL("#                  tv4x, dotmatrix, paltv1x, paltv2x, paltv3x, paltv4x"),
+		uL("#                  tv4x, dotmatrix, paltv1x, paltv2x, paltv3x, paltv4x" NEWLINE)
+		uL("#                  ntscbisqwit2x, ntscbisqwit8x, ntscbisqwit8x"),
 		uL("-i, --filter              filter to apply       : nofilter, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE)
 		uL("                                                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x," NEWLINE)
 		uL("                                                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt," NEWLINE)
 		uL("                                                  ntsc, 2xsai, super2xsai, supereagle, tv2x,tv3x," NEWLINE)
 		uL("                                                  tv4x, dotmatrix, paltv1x, paltv2x, paltv3x," NEWLINE)
-		uL("                                                  paltv4x"),
+		uL("                                                  paltv4x, ntscbisqwit2x, ntscbisqwit8x, ntscbisqwit8x"),
 		{LENGTH(opt_filter), opt_filter}
 	},
 	{
@@ -926,15 +931,31 @@ static const _settings main_cfg[] = {
 	},
 	{
 		uL("video"), uL("ntsc filter parameters svideo"), uL("0,0,0,0,20,0,20,-20,-20,0,0,1,88"),
-		NULL,
+		uL("# possible values: [hue       : -100/100],[saturation  : -100/100],[contrast      : -100/100]," NEWLINE)
+		uL("#                  [brightness: -100/100],[sharpness   : -100/100],[gamma         : -100/100]," NEWLINE)
+		uL("#                  [resolution: -100/100],[artifacts   : -100/100],[fringing      : -100/100]," NEWLINE)
+		uL("#                  [bleed     : -100/100],[merge fields:      0/1],[vertical blend:      0/1]," NEWLINE)
+		uL("#                  [scanline  :    0/100]"),
 		NULL,
 		{0, NULL}
 	},
 	{
 		uL("video"), uL("ntsc filter parameters rgb"), uL("0,0,0,0,20,0,70,-20,-20,-100,0,1,88"),
-		NULL,
+		uL("# possible values: [hue       : -100/100],[saturation  : -100/100],[contrast      : -100/100]," NEWLINE)
+		uL("#                  [brightness: -100/100],[sharpness   : -100/100],[gamma         : -100/100]," NEWLINE)
+		uL("#                  [resolution: -100/100],[artifacts   : -100/100],[fringing      : -100/100]," NEWLINE)
+		uL("#                  [bleed     : -100/100],[merge fields:      0/1],[vertical blend:      0/1]," NEWLINE)
+		uL("#                  [scanline  :    0/100]"),
 		NULL,
 		{0, NULL}
+	},
+	{
+			uL("video"), uL("ntsc bisqwit filter parameters"), uL("0,0,0,0,12,24,24,1,88"),
+			uL("# possible values: [hue       : -100/100],[saturation    : -100/100],[contrast  : -100/100]," NEWLINE)
+			uL("#                  [brightness: -100/100],[ywidth        :     0/50],[iwidth    :     0/50]," NEWLINE)
+			uL("#                  [qwidth    :     0/50],[vertical blend:      0/1],[scanline  :    0/100]"),
+			NULL,
+			{0, NULL}
 	},
 	{
 		uL("video"), uL("shader"), uL("none"),

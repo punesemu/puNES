@@ -16,20 +16,24 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef NTSC_H_
-#define NTSC_H_
+#ifndef NTSC_BISQWIT_H_
+#define NTSC_BISQWIT_H_
 
-#include "video/filters/nes_ntsc.h"
 #include "common.h"
 
-enum ntsc_mode { COMPOSITE, SVIDEO, RGBMODE };
+typedef struct nes_ntsc_bisqwit_setup_t {
+	double hue;        /* -1 = -180 degrees     +1 = +180 degrees */
+	double saturation; /* -1 = grayscale (0.0)  +1 = oversaturated colors (2.0) */
+	double contrast;   /* -1 = dark (0.5)       +1 = light (1.5) */
+	double brightness; /* -1 = dark (0.5)       +1 = light (1.5) */
+	int ywidth;
+	int iwidth;
+	int qwidth;
+	int vertical_blend;
+	double scanline_intensity;
+} nes_ntsc_bisqwit_setup_t;
 
-typedef struct _ntsc_filter {
-	nes_ntsc_setup_t format[3];
-	nes_ntsc_t *ntsc;
-} _ntsc_filter;
-
-extern _ntsc_filter ntsc_filter;
+extern nes_ntsc_bisqwit_setup_t nes_ntsc_bisqwit;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -37,18 +41,14 @@ extern _ntsc_filter ntsc_filter;
 #define EXTERNC
 #endif
 
-extern nes_ntsc_setup_t ntsc_format[3];
+EXTERNC void ntsc_bisqwit_init(void);
+EXTERNC void ntsc_bisqwit_surface(void);
 
-EXTERNC BYTE ntsc_init(void);
-EXTERNC void ntsc_quit(void);
-EXTERNC void ntsc_set(nes_ntsc_t *ntsc, BYTE create_palette, BYTE color, const BYTE *palette_base, const BYTE *palette_in, BYTE *palette_out);
-EXTERNC void ntsc_rgb_modifier(nes_ntsc_t *ntsc, BYTE *palette, SWORD min, SWORD red, SWORD green, SWORD blue);
-EXTERNC void ntsc_filter_parameters_changed(void);
-EXTERNC void ntsc_filter_parameters_default(void);
-EXTERNC void ntsc_filter_parameter_default(int index);
-EXTERNC void ntsc_filter_parameter_mv_default(void);
-EXTERNC void ntsc_surface(void);
+EXTERNC void ntsc_bisqwit_filter_parameters_changed(void);
+EXTERNC void ntsc_bisqwit_filter_parameters_default(void);
+EXTERNC void ntsc_bisqwit_filter_parameter_default(int index);
+EXTERNC void ntsc_bisqwit_filter_parameter_v_default(void);
 
 #undef EXTERNC
 
-#endif /* NTSC_H_ */
+#endif /* NTSC_BISQWIT_H_ */

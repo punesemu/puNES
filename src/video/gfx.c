@@ -211,6 +211,24 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				gfx.filter.factor = X4;
 				gfx.filter_linear = TEXTURE_LINEAR_ENAB;
 				break;
+			case NTSC_BISQWIT_2X:
+				gfx.filter.func = ntsc_bisqwit_surface;
+				gfx.filter.factor = X2;
+				gfx.filter_linear = TEXTURE_LINEAR_ENAB;
+				ntsc_bisqwit_init();
+				break;
+			case NTSC_BISQWIT_4X:
+				gfx.filter.func = ntsc_bisqwit_surface;
+				gfx.filter.factor = X4;
+				gfx.filter_linear = TEXTURE_LINEAR_ENAB;
+				ntsc_bisqwit_init();
+				break;
+			case NTSC_BISQWIT_8X:
+				gfx.filter.func = ntsc_bisqwit_surface;
+				gfx.filter.factor = X8;
+				gfx.filter_linear = TEXTURE_LINEAR_ENAB;
+				ntsc_bisqwit_init();
+				break;
 		}
 		// forzo il controllo del fattore di scale
 		force_scale = TRUE;
@@ -477,7 +495,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	gui_update();
 
 	if (ntsc_update) {
-		ntsc_effect_parameters_changed();
+		ntsc_filter_parameters_changed();
 	}
 
 	if (info.on_cfg) {

@@ -22,6 +22,7 @@
 #include "common.h"
 #include "video/filters/hqx.h"
 #include "video/filters/ntsc.h"
+#include "video/filters/ntsc_bisqwit.h"
 #include "video/filters/scale.h"
 #include "video/filters/scale2x.h"
 #include "video/filters/scalers.h"
@@ -35,7 +36,7 @@
 #endif
 
 enum fullscreen_type { NO_FULLSCR, FULLSCR, FULLSCR_IN_WINDOW };
-enum scale_type { X1 = 1, X2, X3, X4, X5, X6 };
+enum scale_type { X1 = 1, X2, X3, X4, X5, X6, X8 = 8 };
 enum par_type { PAR11, PAR54, PAR87, PAR118 };
 enum screenshot_type { SCRSH_NONE, SCRSH_STANDARD, SCRSH_ORIGINAL_SIZE };
 enum filters_type {
@@ -67,7 +68,10 @@ enum filters_type {
 	PALTV1X,
 	PALTV2X,
 	PALTV3X,
-	PALTV4X
+	PALTV4X,
+	NTSC_BISQWIT_2X,
+	NTSC_BISQWIT_4X,
+	NTSC_BISQWIT_8X
 };
 enum shader_type {
 	NO_SHADER,

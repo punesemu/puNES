@@ -112,11 +112,11 @@ void ntsc_rgb_modifier(nes_ntsc_t *ntsc, BYTE *palette_out, SWORD min, SWORD red
 	// ed infine utilizzo la nuova
 	ntsc_set(ntsc, TRUE, 0, 0, palette_out, palette_out);
 }
-void ntsc_effect_parameters_changed(void) {
+void ntsc_filter_parameters_changed(void) {
 	ntsc_set(NULL, FALSE, 0, 0, (BYTE *)palette_RGB.noswap, 0);
 	ntsc_set(NULL, FALSE, 0, 0, (BYTE *)palette_RGB.swapped, 0);
 }
-void ntsc_effect_parameters_default(void) {
+void ntsc_filter_parameters_default(void) {
 	switch (cfg->ntsc_format) {
 		case COMPOSITE:
 			ntsc_filter.format[cfg->ntsc_format] = nes_ntsc_composite;
@@ -129,7 +129,7 @@ void ntsc_effect_parameters_default(void) {
 			break;
 	}
 }
-void ntsc_effect_parameter_default(int index) {
+void ntsc_filter_parameter_default(int index) {
 	nes_ntsc_setup_t *format;
 
 	switch (cfg->ntsc_format) {
@@ -181,7 +181,7 @@ void ntsc_effect_parameter_default(int index) {
 			break;
 	}
 }
-void ntsc_effect_parameter_mv_default(void) {
+void ntsc_filter_parameter_mv_default(void) {
 	nes_ntsc_setup_t *format;
 
 	switch (cfg->ntsc_format) {
