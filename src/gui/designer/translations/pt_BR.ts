@@ -1966,11 +1966,11 @@
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Brilho</translation>
     </message>
     <message>
       <source>IWidth</source>
@@ -1978,31 +1978,27 @@
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Scanline</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Saturação</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Contraste</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Matiz</translation>
     </message>
     <message>
-      <source>Reset paramaters to defaults</source>
-      <translation type="unfinished">Reset paramaters to defaults</translation>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
     </message>
   </context>
   <context>
     <name>wdgNTSCFilter</name>
-    <message>
-      <source>Reset paramaters to defaults</source>
-      <translation>Redefinir parâmetros para os padrões</translation>
-    </message>
     <message>
       <source>Artifacts</source>
       <translation>Artefatos</translation>
@@ -2054,6 +2050,10 @@
     <message>
       <source>Scanline</source>
       <translation>Scanline</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
     </message>
   </context>
   <context>
@@ -3199,10 +3199,6 @@
       <translation>NTSC RGB</translation>
     </message>
     <message>
-      <source>Reset paramaters to defaults</source>
-      <translation>Redefinir parâmetros para os padrões</translation>
-    </message>
-    <message>
       <source>Filters</source>
       <translation>Filtros</translation>
     </message>
@@ -3461,6 +3457,10 @@
     <message>
       <source>NTSC Bisqwit 8X</source>
       <translation type="unfinished">NTSC Bisqwit 8X</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
     </message>
   </context>
   <context>
