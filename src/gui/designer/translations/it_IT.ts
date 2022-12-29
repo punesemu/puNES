@@ -1966,11 +1966,11 @@
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>Luminosità</translation>
     </message>
     <message>
       <source>IWidth</source>
@@ -1978,31 +1978,27 @@
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Scanline</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Saturazione</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>Contrasto</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Tonalità</translation>
     </message>
     <message>
-      <source>Reset paramaters to defaults</source>
-      <translation type="unfinished">Reset paramaters to defaults</translation>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
     </message>
   </context>
   <context>
     <name>wdgNTSCFilter</name>
-    <message>
-      <source>Reset paramaters to defaults</source>
-      <translation>Predefiniti</translation>
-    </message>
     <message>
       <source>Artifacts</source>
       <translation>Artefatti</translation>
@@ -2041,7 +2037,7 @@
     </message>
     <message>
       <source>Hue</source>
-      <translation>Hue</translation>
+      <translation>Tonalità</translation>
     </message>
     <message>
       <source>Contrast</source>
@@ -2054,6 +2050,10 @@
     <message>
       <source>Scanline</source>
       <translation>Scanline</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
     </message>
   </context>
   <context>
@@ -2100,7 +2100,7 @@
     </message>
     <message>
       <source>Hue</source>
-      <translation>Hue</translation>
+      <translation>Tonalità</translation>
     </message>
     <message>
       <source>HTML</source>
@@ -3199,10 +3199,6 @@
       <translation>NTSC RGB</translation>
     </message>
     <message>
-      <source>Reset paramaters to defaults</source>
-      <translation>Predefiniti</translation>
-    </message>
-    <message>
       <source>Filters</source>
       <translation>Filtri</translation>
     </message>
@@ -3452,15 +3448,19 @@
     </message>
     <message>
       <source>NTSC Bisqwit 2X</source>
-      <translation type="unfinished">NTSC Bisqwit 2X</translation>
+      <translation>NTSC Bisqwit 2X</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 4X</source>
-      <translation type="unfinished">NTSC Bisqwit 4X</translation>
+      <translation>NTSC Bisqwit 4X</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 8X</source>
-      <translation type="unfinished">NTSC Bisqwit 8X</translation>
+      <translation>NTSC Bisqwit 8X</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
     </message>
   </context>
   <context>
