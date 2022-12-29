@@ -1993,16 +1993,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reset paramaters to defaults</source>
+        <source>Reset parameters to defaults</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>wdgNTSCFilter</name>
-    <message>
-        <source>Reset paramaters to defaults</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Artifacts</source>
         <translation type="unfinished"></translation>
@@ -2053,6 +2049,10 @@
     </message>
     <message>
         <source>Scanline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset parameters to defaults</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3199,10 +3199,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reset paramaters to defaults</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Filters</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3460,6 +3456,10 @@
     </message>
     <message>
         <source>NTSC Bisqwit 8X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset parameters to defaults</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

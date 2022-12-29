@@ -876,7 +876,7 @@
        <item row="8" column="0" colspan="3">
         <widget class="QPushButton" name="pushButton_Shader_Parameters_reset_alls">
          <property name="text">
-          <string>Reset paramaters to defaults</string>
+          <string>Reset parameters to defaults</string>
          </property>
          <property name="icon">
           <iconset resource="resources.qrc">
