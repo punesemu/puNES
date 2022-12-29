@@ -1966,11 +1966,11 @@
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Brightness</source>
-      <translation type="unfinished">Brightness</translation>
+      <translation>亮度</translation>
     </message>
     <message>
       <source>IWidth</source>
@@ -1978,31 +1978,27 @@
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>扫描线</translation>
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>饱和度</translation>
     </message>
     <message>
       <source>Contrast</source>
-      <translation type="unfinished">Contrast</translation>
+      <translation>对比度</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>色调</translation>
     </message>
     <message>
-      <source>Reset paramaters to defaults</source>
-      <translation type="unfinished">Reset paramaters to defaults</translation>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
     </message>
   </context>
   <context>
     <name>wdgNTSCFilter</name>
-    <message>
-      <source>Reset paramaters to defaults</source>
-      <translation>恢复默认参数</translation>
-    </message>
     <message>
       <source>Artifacts</source>
       <translation>效果</translation>
@@ -2054,6 +2050,10 @@
     <message>
       <source>Scanline</source>
       <translation>扫描线</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
     </message>
   </context>
   <context>
@@ -3199,10 +3199,6 @@
       <translation>NTSC RGB</translation>
     </message>
     <message>
-      <source>Reset paramaters to defaults</source>
-      <translation>默认</translation>
-    </message>
-    <message>
       <source>Filters</source>
       <translation>滤镜</translation>
     </message>
@@ -3461,6 +3457,10 @@
     <message>
       <source>NTSC Bisqwit 8X</source>
       <translation type="unfinished">NTSC Bisqwit 8X</translation>
+    </message>
+    <message>
+      <source>Reset parameters to defaults</source>
+      <translation type="unfinished">Reset parameters to defaults</translation>
     </message>
   </context>
   <context>
