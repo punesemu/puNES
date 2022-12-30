@@ -1966,7 +1966,7 @@
     </message>
     <message>
       <source>VBlend</source>
-      <translation type="unfinished">VBlend</translation>
+      <translation>Függőleges összemosás</translation>
     </message>
     <message>
       <source>Brightness</source>
@@ -1995,6 +1995,10 @@
     <message>
       <source>Reset parameters to defaults</source>
       <translation>Paraméterek alapértelmezettre visszaállítása</translation>
+    </message>
+    <message>
+      <source>MFields</source>
+      <translation>Félképösszevonás</translation>
     </message>
   </context>
   <context>
