@@ -29,6 +29,7 @@ typedef struct nes_ntsc_bisqwit_setup_t {
 	int ywidth;
 	int iwidth;
 	int qwidth;
+	int merge_fields;
 	int vertical_blend;
 	double scanline_intensity;
 } nes_ntsc_bisqwit_setup_t;
@@ -47,7 +48,7 @@ EXTERNC void ntsc_bisqwit_surface(void);
 EXTERNC void ntsc_bisqwit_filter_parameters_changed(void);
 EXTERNC void ntsc_bisqwit_filter_parameters_default(void);
 EXTERNC void ntsc_bisqwit_filter_parameter_default(int index);
-EXTERNC void ntsc_bisqwit_filter_parameter_v_default(void);
+EXTERNC void ntsc_bisqwit_filter_parameter_mv_default(void);
 
 #undef EXTERNC
 

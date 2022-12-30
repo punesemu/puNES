@@ -68,7 +68,7 @@ class wdgNTSCBisqwitFilter : public QWidget, public Ui::wdgNTSCBisqwitFilter {
 		void s_slider_spin_changed(int value);
 		void s_checkbox_changed(int state);
 		void s_default_value_clicked(bool checked);
-		void s_default_value_v_clicked(bool checked);
+		void s_default_value_mv_clicked(bool checked);
 		void s_reset(bool checked);
 };
 

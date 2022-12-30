@@ -401,7 +401,7 @@
       </widget>
      </item>
      <item row="4" column="8">
-      <widget class="QPushButton" name="pushButton_VBlend">
+      <widget class="QPushButton" name="pushButton_MFields_VBlend">
        <property name="text">
         <string notr="true"/>
        </property>
@@ -424,6 +424,13 @@
      </item>
      <item row="4" column="5" colspan="3">
       <layout class="QHBoxLayout" name="horizontalLayout_MV">
+       <item>
+        <widget class="QCheckBox" name="checkBox_Merge_Fields">
+         <property name="text">
+          <string>MFields</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QCheckBox" name="checkBox_Vertical_Blend">
          <property name="layoutDirection">
@@ -476,8 +483,9 @@
   <tabstop>horizontalSlider_QWidth</tabstop>
   <tabstop>spinBox_QWidth</tabstop>
   <tabstop>pushButton_QWidth</tabstop>
+  <tabstop>checkBox_Merge_Fields</tabstop>
   <tabstop>checkBox_Vertical_Blend</tabstop>
-  <tabstop>pushButton_VBlend</tabstop>
+  <tabstop>pushButton_MFields_VBlend</tabstop>
   <tabstop>pushButton_NTSC_Parameters_reset</tabstop>
  </tabstops>
  <resources>

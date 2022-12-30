@@ -230,9 +230,13 @@ wdgNTSCBisqwitFilter::wdgNTSCBisqwitFilter(QWidget *parent) : QWidget(parent) {
 		connect(btn, SIGNAL(clicked(bool)), this, SLOT(s_default_value_clicked(bool)));
 	}
 
+	checkBox_Merge_Fields->setProperty("myIndex", QVariant(0));
+	connect(checkBox_Merge_Fields, SIGNAL(stateChanged(int)), this, SLOT(s_checkbox_changed(int)));
+
+	checkBox_Vertical_Blend->setProperty("myIndex", QVariant(1));
 	connect(checkBox_Vertical_Blend, SIGNAL(stateChanged(int)), this, SLOT(s_checkbox_changed(int)));
 
-	connect(pushButton_VBlend, SIGNAL(clicked(bool)), this, SLOT(s_default_value_v_clicked(bool)));
+	connect(pushButton_MFields_VBlend, SIGNAL(clicked(bool)), this, SLOT(s_default_value_mv_clicked(bool)));
 	connect(pushButton_NTSC_Parameters_reset, SIGNAL(clicked(bool)), this, SLOT(s_reset(bool)));
 }
 wdgNTSCBisqwitFilter::~wdgNTSCBisqwitFilter() = default;
@@ -279,6 +283,7 @@ void wdgNTSCBisqwitFilter::set_sliders_spins(void) {
 	qtHelper::spinbox_set_value(spinBox_QWidth, format->qwidth);
 	qtHelper::spinbox_set_value(spinBox_Scanline, (int)round((1.0f - format->scanline_intensity) * 100));
 
+	qtHelper::checkbox_set_checked(checkBox_Merge_Fields, format->merge_fields);
 	qtHelper::checkbox_set_checked(checkBox_Vertical_Blend, format->vertical_blend);
 }
 
@@ -325,9 +330,18 @@ void wdgNTSCBisqwitFilter::s_slider_spin_changed(int value) {
 	ntsc_bisqwit_filter_parameters_changed();
 }
 void wdgNTSCBisqwitFilter::s_checkbox_changed(int state) {
+	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 	nes_ntsc_bisqwit_setup_t *format = &nes_ntsc_bisqwit;
 
-	format->vertical_blend = state > 0;
+	switch (index) {
+		default:
+		case 0:
+			format->merge_fields = state > 0;
+			break;
+		case 1:
+			format->vertical_blend = state > 0;
+			break;
+	}
 	ntsc_bisqwit_filter_parameters_changed();
 }
 void wdgNTSCBisqwitFilter::s_default_value_clicked(UNUSED(bool checked)) {
@@ -337,8 +351,8 @@ void wdgNTSCBisqwitFilter::s_default_value_clicked(UNUSED(bool checked)) {
 	gui_update_ntsc_widgets();
 	ntsc_bisqwit_filter_parameters_changed();
 }
-void wdgNTSCBisqwitFilter::s_default_value_v_clicked(UNUSED(bool checked)) {
-	ntsc_bisqwit_filter_parameter_v_default();
+void wdgNTSCBisqwitFilter::s_default_value_mv_clicked(UNUSED(bool checked)) {
+	ntsc_bisqwit_filter_parameter_mv_default();
 	gui_update_ntsc_widgets();
 	ntsc_bisqwit_filter_parameters_changed();
 }

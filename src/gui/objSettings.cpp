@@ -1247,7 +1247,7 @@ void objSet::ntsc_bisqwit_val_to_double(void *ntsc_frmt, const uTCHAR *buffer) {
 	QStringList splitted = uQString(buffer).toLower().split(",");
 	nes_ntsc_bisqwit_setup_t *format = (nes_ntsc_bisqwit_setup_t *)ntsc_frmt;
 
-	if (splitted.count() == 9) {
+	if (splitted.count() == 10) {
 		format->hue = splitted.at(0).toDouble() / 100.0f;
 		format->saturation = splitted.at(1).toDouble() / 100.0f;
 		format->contrast = splitted.at(2).toDouble() / 100.0f;
@@ -1264,14 +1264,15 @@ void objSet::ntsc_bisqwit_val_to_double(void *ntsc_frmt, const uTCHAR *buffer) {
 		if ((format->qwidth < 1) || (format->qwidth > 50)) {
 			format->qwidth = 24;
 		}
-		format->vertical_blend = splitted.at(7).toInt() & 0x01;
-		format->scanline_intensity = splitted.at(8).toDouble() / 100.0f;
+		format->merge_fields = splitted.at(7).toInt() & 0x01;
+		format->vertical_blend = splitted.at(8).toInt() & 0x01;
+		format->scanline_intensity = splitted.at(9).toDouble() / 100.0f;
 	}
 }
 QString objSet::ntsc_bisqwit_val(void *ntsc_frmt) {
 	nes_ntsc_bisqwit_setup_t *format = (nes_ntsc_bisqwit_setup_t *)ntsc_frmt;
 
-	return (QString("%0,%1,%2,%3,%4,%5,%6,%7,%8").
+	return (QString("%0,%1,%2,%3,%4,%5,%6,%7,%8,%9").
 			arg(round(format->hue * 100)).
 			arg(round(format->saturation * 100)).
 			arg(round(format->contrast * 100)).
@@ -1279,6 +1280,7 @@ QString objSet::ntsc_bisqwit_val(void *ntsc_frmt) {
 			arg(round(format->ywidth)).
 			arg(round(format->iwidth)).
 			arg(round(format->qwidth)).
+			arg(round(format->merge_fields & 0x01)).
 			arg(round(format->vertical_blend & 0x01)).
 			arg(round(format->scanline_intensity * 100)));
 }

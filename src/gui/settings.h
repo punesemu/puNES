@@ -950,10 +950,11 @@ static const _settings main_cfg[] = {
 		{0, NULL}
 	},
 	{
-			uL("video"), uL("ntsc bisqwit filter parameters"), uL("0,0,0,0,12,24,24,1,88"),
-			uL("# possible values: [hue       : -100/100],[saturation    : -100/100],[contrast  : -100/100]," NEWLINE)
-			uL("#                  [brightness: -100/100],[ywidth        :     0/50],[iwidth    :     0/50]," NEWLINE)
-			uL("#                  [qwidth    :     0/50],[vertical blend:      0/1],[scanline  :    0/100]"),
+			uL("video"), uL("ntsc bisqwit filter parameters"), uL("0,0,0,0,12,24,24,0,1,88"),
+			uL("# possible values: [hue       : -100/100],[saturation  : -100/100],[contrast      : -100/100]," NEWLINE)
+			uL("#                  [brightness: -100/100],[ywidth      :     0/50],[iwidth        :     0/50]," NEWLINE)
+			uL("#                  [qwidth    :     0/50],[merge fields:      0/1],[vertical blend:      0/1]," NEWLINE)
+			uL("#                  [scanline  :    0/100]"),
 			NULL,
 			{0, NULL}
 	},
