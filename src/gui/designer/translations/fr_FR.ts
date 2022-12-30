@@ -1996,6 +1996,10 @@
       <source>Reset parameters to defaults</source>
       <translation>Redémarrer les paramètres par défaut</translation>
     </message>
+    <message>
+      <source>MFields</source>
+      <translation type="unfinished">MFields</translation>
+    </message>
   </context>
   <context>
     <name>wdgNTSCFilter</name>
