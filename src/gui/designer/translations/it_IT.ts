@@ -1996,6 +1996,10 @@
       <source>Reset parameters to defaults</source>
       <translation>Predefiniti</translation>
     </message>
+    <message>
+      <source>MFields</source>
+      <translation>MFields</translation>
+    </message>
   </context>
   <context>
     <name>wdgNTSCFilter</name>

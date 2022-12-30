@@ -1996,6 +1996,10 @@
       <source>Reset parameters to defaults</source>
       <translation>Redémarrer les paramètres par défaut</translation>
     </message>
+    <message>
+      <source>MFields</source>
+      <translation type="unfinished">MFields</translation>
+    </message>
   </context>
   <context>
     <name>wdgNTSCFilter</name>
@@ -3024,7 +3028,7 @@
     </message>
     <message>
       <source>** To apply this change restart is needed **</source>
-      <translation>** Pour appliquer ce changement, un redémarrage est nécessaire **</translation>
+      <translation>** Ce changement nécessite un redémarrage **</translation>
     </message>
     <message>
       <source>Misc</source>
