@@ -3028,7 +3028,7 @@
     </message>
     <message>
       <source>** To apply this change restart is needed **</source>
-      <translation>** Pour appliquer ce changement, un redémarrage est nécessaire **</translation>
+      <translation>** Ce changement nécessite un redémarrage **</translation>
     </message>
     <message>
       <source>Misc</source>
