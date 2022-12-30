@@ -1966,7 +1966,7 @@
     </message>
     <message>
       <source>VBlend</source>
-      <translation>Függőleges összemosás</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Brightness</source>
@@ -1998,7 +1998,7 @@
     </message>
     <message>
       <source>MFields</source>
-      <translation>Félképösszevonás</translation>
+      <translation>MFields</translation>
     </message>
   </context>
   <context>
@@ -2025,11 +2025,11 @@
     </message>
     <message>
       <source>MFields</source>
-      <translation>Félképösszevonás</translation>
+      <translation>MFields</translation>
     </message>
     <message>
       <source>VBlend</source>
-      <translation>Függőleges összemosás</translation>
+      <translation>VBlend</translation>
     </message>
     <message>
       <source>Sharpness</source>
