@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <component type="desktop">
   <!--Created with jdAppdataEdit 5.0-->
-  <id>com.github.punesemu.puNES</id>
+  <id>io.github.punesemu.puNES</id>
   <name>puNES</name>
   <summary>Nintendo Entertaiment System emulator</summary>
   <developer_name>Fabio Cavallo (FHorse)</developer_name>
-  <launchable type="desktop-id">com.github.punesemu.puNES.desktop</launchable>
+  <launchable type="desktop-id">io.github.punesemu.puNES.desktop</launchable>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0</project_license>
   <description>
