@@ -201,7 +201,7 @@ add_subdirectory(src)
 install(FILES misc/io.github.punesemu.puNES.desktop.in
 	DESTINATION ${CMAKE_INSTALL_DATADIR}/applications RENAME io.github.punesemu.puNES.desktop)
 
-foreach(SIZE  "16" "22" "24" "32" "48" "64" "256" "512")
+foreach(SIZE "16" "22" "24" "32" "48" "64" "256" "512")
 	install(FILES misc/hicolor_apps_${SIZE}x${SIZE}_io.github.punesemu.puNES.png
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/${SIZE}x${SIZE}/apps RENAME io.github.punesemu.puNES.png)
 endforeach()
