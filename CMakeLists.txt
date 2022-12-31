@@ -198,16 +198,14 @@ endif()
 add_subdirectory(src)
 
 # Install misc files
-install(FILES misc/com.github.punesemu.puNES.desktop.in
-	DESTINATION ${CMAKE_INSTALL_DATADIR}/applications RENAME com.github.punesemu.puNES.desktop)
+install(FILES misc/io.github.punesemu.puNES.desktop.in
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/applications RENAME io.github.punesemu.puNES.desktop)
 
-install(FILES misc/hicolor_apps_16x16_com.github.punesemu.puNES.png
-	DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/16x16/apps RENAME com.github.punesemu.puNES.png)
-install(FILES misc/hicolor_apps_32x32_com.github.punesemu.puNES.png
-	DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/32x32/apps RENAME com.github.punesemu.puNES.png)
-install(FILES misc/hicolor_apps_64x64_com.github.punesemu.puNES.png
-	DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/64x64/apps RENAME com.github.punesemu.puNES.png)
-install(FILES misc/hicolor_apps_512x512_com.github.punesemu.puNES.png
-	DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/512x512/apps RENAME com.github.punesemu.puNES.png)
+foreach(SIZE  "16" "22" "24" "32" "48" "64" "256" "512")
+	install(FILES misc/hicolor_apps_${SIZE}x${SIZE}_io.github.punesemu.puNES.png
+		DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/${SIZE}x${SIZE}/apps RENAME io.github.punesemu.puNES.png)
+endforeach()
+
+install(FILES misc/io.github.punesemu.puNES.metainfo.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
 
 install(FILES README.md ChangeLog DESTINATION ${CMAKE_INSTALL_DOCDIR})
