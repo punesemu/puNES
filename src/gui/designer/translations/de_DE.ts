@@ -5,14 +5,14 @@
     <name>Settings</name>
     <message>
       <source>System Default</source>
-      <translation type="unfinished">System Default</translation>
+      <translation>Systemvorgabe</translation>
     </message>
   </context>
   <context>
     <name>dlgCfgNSCode</name>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Standard</translation>
     </message>
     <message>
       <source>Unset</source>
@@ -20,11 +20,11 @@
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>Anwenden</translation>
     </message>
     <message>
       <source>Discard</source>
-      <translation type="unfinished">Discard</translation>
+      <translation>Verwerfen</translation>
     </message>
   </context>
   <context>
@@ -46,7 +46,7 @@
     </message>
     <message>
       <source>Do you want to boot the ROM with the changes made?</source>
-      <translation type="unfinished">Do you want to boot the ROM with the changes made?</translation>
+      <translation>Möchtest du das ROM mit den vorgenommenen Änderungen booten?</translation>
     </message>
     <message>
       <source>Header Editor</source>
@@ -158,7 +158,7 @@
     </message>
     <message>
       <source>Reserved</source>
-      <translation type="unfinished">Reserved</translation>
+      <translation>Reserviert</translation>
     </message>
     <message>
       <source>Vs. Zapper</source>
