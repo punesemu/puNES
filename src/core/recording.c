@@ -52,7 +52,7 @@ typedef struct _ffmpeg_stream {
 	struct SwsContext *sws;
 
 	// audio
-	SwrContext *swr;
+	struct SwrContext *swr;
 	WORD samples;
 	SWORD *buffer;
 	int64_t src_nb_samples;
@@ -99,10 +99,15 @@ static BYTE ffmpeg_video_add_stream_format_audio(enum recording_format format);
 static BYTE ffmpeg_audio_add_stream(void);
 INLINE static BYTE ffmpeg_audio_write_frame(SWORD *data);
 
-static AVFrame *ffmpeg_audio_alloc_frame(enum AVSampleFormat sample_fmt, uint64_t ch_layout, int samplerate, int64_t nb_samples);
 static enum AVSampleFormat ffmpeg_audio_select_sample_fmt(const AVCodec *codec);
 static int ffmpeg_audio_select_samplerate(const AVCodec *codec);
-static int ffmpeg_audio_select_channel_layout(const AVCodec *codec);
+#if LIBAVUTIL_VERSION_INT < AV_VERSION_INT(57,28,100)
+static AVFrame *ffmpeg_audio_alloc_frame(enum AVSampleFormat sample_fmt, uint64_t ch_layout, int samplerate, int64_t nb_samples);
+static uint64_t ffmpeg_audio_select_channel_layout(const AVCodec *codec);
+#else
+static AVFrame *ffmpeg_audio_alloc_frame(enum AVSampleFormat sample_fmt, const AVChannelLayout *ch_layout, int samplerate, int64_t nb_samples);
+static int ffmpeg_audio_select_channel_layout(const AVCodec *codec, AVChannelLayout *dst);
+#endif
 
 // --------------------------------------------------------------------------------------------------------
 
@@ -1129,7 +1134,13 @@ static BYTE ffmpeg_audio_add_stream(void) {
 	_ffmpeg_stream *audio = &ffmpeg.audio;
 	enum AVSampleFormat src_sample_fmt = AV_SAMPLE_FMT_S16;
 	int src_sample_rate = snd.samplerate;
-	uint64_t src_channel_layout = cfg->channels_mode == CH_MONO ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO;
+#if LIBAVUTIL_VERSION_INT < AV_VERSION_INT(57,28,100)
+	uint64_t src_channel_layout = (cfg->channels_mode == CH_MONO ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO);
+#else
+	AVChannelLayout src_channel_layout = (cfg->channels_mode == CH_MONO
+		? (AVChannelLayout)AV_CHANNEL_LAYOUT_MONO
+		: (AVChannelLayout)AV_CHANNEL_LAYOUT_STEREO);
+#endif
 	int64_t dst_nb_samples;
 
 	if (ffmpeg.format_ctx->oformat->audio_codec == AV_CODEC_ID_NONE) {
@@ -1154,8 +1165,14 @@ static BYTE ffmpeg_audio_add_stream(void) {
 
 	audio->avcc->sample_fmt = ffmpeg_audio_select_sample_fmt(audio->avc);
 	audio->avcc->sample_rate = ffmpeg_audio_select_samplerate(audio->avc);
+#if LIBAVUTIL_VERSION_INT < AV_VERSION_INT(57,28,100)
 	audio->avcc->channel_layout = ffmpeg_audio_select_channel_layout(audio->avc);
 	audio->avcc->channels = av_get_channel_layout_nb_channels(audio->avcc->channel_layout);
+#else
+	if (ffmpeg_audio_select_channel_layout(audio->avc, &audio->avcc->ch_layout) < 0) {
+		return (EXIT_ERROR);
+	}
+#endif
 	audio->avcc->bit_rate = audio->avcc->sample_rate < 96000 ? 256000 : 512000;
 
 	audio->avs->id = (int)ffmpeg.format_ctx->nb_streams - 1;
@@ -1174,12 +1191,18 @@ static BYTE ffmpeg_audio_add_stream(void) {
 	} else {
 		dst_nb_samples = audio->avcc->frame_size;
 	}
+#if LIBAVUTIL_VERSION_INT < AV_VERSION_INT(57,28,100)
 	audio->avf = ffmpeg_audio_alloc_frame(audio->avcc->sample_fmt, audio->avcc->channel_layout,
 		audio->avcc->sample_rate, dst_nb_samples);
+#else
+	audio->avf = ffmpeg_audio_alloc_frame(audio->avcc->sample_fmt, &audio->avcc->ch_layout,
+		audio->avcc->sample_rate, dst_nb_samples);
+#endif
 	audio->src_nb_samples = av_rescale_rnd(dst_nb_samples, src_sample_rate, audio->avcc->sample_rate, AV_ROUND_DOWN);
 
 	if ((src_sample_fmt != audio->avcc->sample_fmt) ||
 		(src_sample_rate != audio->avcc->sample_rate) ||
+#if LIBAVUTIL_VERSION_INT < AV_VERSION_INT(57,28,100)
 		(src_channel_layout != audio->avcc->channel_layout)) {
 		if (!(audio->swr = swr_alloc_set_opts(NULL,
 			(int64_t)audio->avcc->channel_layout, audio->avcc->sample_fmt, audio->avcc->sample_rate,
@@ -1188,6 +1211,16 @@ static BYTE ffmpeg_audio_add_stream(void) {
 			log_error(uL("recording;error allocating the resampling context"));
 			return (EXIT_ERROR);
 		}
+#else
+		av_channel_layout_compare(&src_channel_layout, &audio->avcc->ch_layout)) {
+		if (swr_alloc_set_opts2(&audio->swr,
+			&audio->avcc->ch_layout, audio->avcc->sample_fmt, audio->avcc->sample_rate,
+			&src_channel_layout, src_sample_fmt, src_sample_rate,
+			0, NULL) < 0) {
+			log_error(uL("recording;error allocating the resampling context"));
+			return (EXIT_ERROR);
+		}
+#endif
 
 		if (swr_init(audio->swr) < 0) {
 			log_error(uL("recording;error opening the resampling context"));
@@ -1251,7 +1284,11 @@ INLINE static BYTE ffmpeg_audio_write_frame(SWORD *data) {
 			ret = swr_get_out_samples(audio->swr, 0);
 
 			if (frame) {
+#if LIBAVUTIL_VERSION_INT < AV_VERSION_INT(57,28,100)
 				if (ret < (out_count * audio->avcc->channels)) {
+#else
+				if (ret < (out_count * audio->avcc->ch_layout.nb_channels)) {
+#endif
 					break;
 				}
 			} else if (ret <= 0) {
@@ -1286,26 +1323,6 @@ INLINE static BYTE ffmpeg_audio_write_frame(SWORD *data) {
 	return (EXIT_OK);
 }
 
-static AVFrame *ffmpeg_audio_alloc_frame(enum AVSampleFormat sample_fmt, uint64_t ch_layout, int samplerate, int64_t nb_samples) {
-	AVFrame *avframe;
-
-	if (!(avframe = av_frame_alloc())) {
-		log_error(uL("recording;error allocating an audio frame"));
-		return (NULL);
-	}
-
-	avframe->nb_samples = (int)nb_samples;
-	avframe->format = sample_fmt;
-	avframe->channel_layout = ch_layout;
-	avframe->sample_rate = samplerate;
-
-	if (nb_samples && (av_frame_get_buffer(avframe, 0) < 0)) {
-		log_error(uL("recording;error allocating an audio buffer"));
-		return (NULL);
-	}
-
-	return (avframe);
-}
 static enum AVSampleFormat ffmpeg_audio_select_sample_fmt(const AVCodec *codec) {
 	const enum AVSampleFormat *p = codec->sample_fmts;
 
@@ -1359,7 +1376,30 @@ static int ffmpeg_audio_select_samplerate(const AVCodec *codec) {
 
 	return (best_samplerate);
 }
-static int ffmpeg_audio_select_channel_layout(const AVCodec *codec) {
+#if LIBAVUTIL_VERSION_INT < AV_VERSION_INT(57,28,100)
+static AVFrame *ffmpeg_audio_alloc_frame(enum AVSampleFormat sample_fmt, uint64_t ch_layout, int samplerate, int64_t nb_samples) {
+	AVFrame *avframe;
+
+	if (!(avframe = av_frame_alloc())) {
+		log_error(uL("recording;error allocating an audio frame"));
+		return (NULL);
+	}
+
+	avframe->nb_samples = (int)nb_samples;
+	avframe->format = sample_fmt;
+	avframe->channel_layout = ch_layout;
+	avframe->sample_rate = samplerate;
+
+	if (nb_samples && (av_frame_get_buffer(avframe, 0) < 0)) {
+		av_frame_unref(avframe);
+		av_frame_free(&avframe);
+		log_error(uL("recording;error allocating an audio buffer"));
+		return (NULL);
+	}
+
+	return (avframe);
+}
+static uint64_t ffmpeg_audio_select_channel_layout(const AVCodec *codec) {
 	const uint64_t *p;
 	uint64_t best_ch_layout = 0;
 	int best_nb_channels = 0;
@@ -1406,3 +1446,80 @@ static int ffmpeg_audio_select_channel_layout(const AVCodec *codec) {
 	}
 	return ((int)best_ch_layout);
 }
+#else
+static AVFrame *ffmpeg_audio_alloc_frame(enum AVSampleFormat sample_fmt, const AVChannelLayout *ch_layout, int samplerate, int64_t nb_samples) {
+	AVFrame *avframe;
+
+	if (!(avframe = av_frame_alloc())) {
+		log_error(uL("recording;error allocating an audio frame"));
+		return (NULL);
+	}
+
+	avframe->nb_samples = (int)nb_samples;
+	avframe->format = sample_fmt;
+	if (av_channel_layout_copy(&avframe->ch_layout, ch_layout) < 0) {
+		av_frame_unref(avframe);
+		av_frame_free(&avframe);
+		log_error(uL("recording;error settings channel layout of audio frame"));
+		return (NULL);
+	}
+	avframe->sample_rate = samplerate;
+
+	if (nb_samples && (av_frame_get_buffer(avframe, 0) < 0)) {
+		av_frame_unref(avframe);
+		av_frame_free(&avframe);
+		log_error(uL("recording;error allocating an audio buffer"));
+		return (NULL);
+	}
+
+	return (avframe);
+}
+static int ffmpeg_audio_select_channel_layout(const AVCodec *codec, AVChannelLayout *dst) {
+	const  AVChannelLayout *p, *best_ch_layout;
+	int best_nb_channels = 0;
+
+	if (!codec->ch_layouts) {
+		switch(codec->id) {
+			case AV_CODEC_ID_PCM_S16LE:
+			case AV_CODEC_ID_PCM_S16BE:
+			case AV_CODEC_ID_PCM_S16LE_PLANAR:
+			case AV_CODEC_ID_PCM_S16BE_PLANAR:
+			case AV_CODEC_ID_PCM_F16LE:
+			case AV_CODEC_ID_AAC:
+			case AV_CODEC_ID_FLAC:
+			case AV_CODEC_ID_OPUS:
+				return (av_channel_layout_copy(dst, (cfg->channels_mode == CH_MONO)
+					? &(AVChannelLayout)AV_CHANNEL_LAYOUT_MONO
+					: &(AVChannelLayout)AV_CHANNEL_LAYOUT_STEREO));
+			// non supporta il mono
+			case AV_CODEC_ID_VORBIS:
+			default:
+				return (av_channel_layout_copy(dst, &(AVChannelLayout)AV_CHANNEL_LAYOUT_STEREO));
+		}
+	}
+
+	p = codec->ch_layouts;
+	while (p->nb_channels) {
+		int nb_channels = p->nb_channels;
+
+		if (nb_channels > best_nb_channels) {
+			best_ch_layout = p;
+			best_nb_channels = nb_channels;
+		}
+		p++;
+	}
+
+	p = codec->ch_layouts;
+	while (p->nb_channels) {
+		int nb_channels = p->nb_channels;
+
+		if (nb_channels == snd.channels) {
+			best_ch_layout = p;
+			//best_nb_channels = nb_channels;
+			break;
+		}
+		p++;
+	}
+	return (av_channel_layout_copy(dst, best_ch_layout));
+}
+#endif
