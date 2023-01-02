@@ -80,6 +80,7 @@ typedef struct _recording_format_info {
 	char format[10];
 	char *suffix_list[3];
 	int format_type;
+	int recording_format;
 	char *codec;
 	char *codecs_list[5];
 } _recording_format_info;

@@ -128,30 +128,32 @@ struct _ffmpeg {
 	BYTE disable_logo;
 } ffmpeg;
 _recording_format_info recording_format_info[REC_FORMAT_TOTAL] = {
-	{ FALSE, "mpeg"    , { "mpg" , "mpeg", "end" } , REC_FORMAT_VIDEO, NULL, { "mpeg1video", "end" } },
-	{ FALSE, "mpeg"    , { "mpg" , "mpeg", "end" } , REC_FORMAT_VIDEO, NULL, { "mpeg2video", "end" } },
-	{ FALSE, "mp4"     , { "mp4" , "end" }         , REC_FORMAT_VIDEO, NULL, { "mpeg4", "msmpeg4", "libxvid", "end" } },
-	{ FALSE, "mp4"     , { "mp4" , "end" }         , REC_FORMAT_VIDEO, NULL, { "h264_nvenc", "libx264", "h264_omx", "end" } },
-	{ FALSE, "matroska", { "mkv" , "end" }         , REC_FORMAT_VIDEO, NULL, { "hevc_nvenc", "libx265", "end" } },
-	{ FALSE, "webm"    , { "webm", "end" }         , REC_FORMAT_VIDEO, NULL, { "libvpx-vp9", "libvpx", "end" } },
-	{ FALSE, "avi"     , { "wmv" , "end" }         , REC_FORMAT_VIDEO, NULL, { "wmv2", "wmv1", "end" } },
-	{ FALSE, "avi"     , { "avi" , "end" }         , REC_FORMAT_VIDEO, NULL, { "ffv1", "end" } },
-	{ FALSE, "avi"     , { "avi" , "end" }         , REC_FORMAT_VIDEO, NULL, { "rawvideo", "end" } },
-	{ FALSE, "wav"     , { "wav" , "end" }         , REC_FORMAT_AUDIO, NULL, { "pcm_s16le", "end" } },
-	{ FALSE, "mp3"     , { "mp3" , "end" }         , REC_FORMAT_AUDIO, NULL, { "libmp3lame", "end" } },
-	{ FALSE, "adts"    , { "aac" , "end" }         , REC_FORMAT_AUDIO, NULL, { "aac", "end" } },
-	{ FALSE, "flac"    , { "flac", "end" }         , REC_FORMAT_AUDIO, NULL, { "flac", "end" } },
-	{ FALSE, "ogg"     , { "ogg" , "end" }         , REC_FORMAT_AUDIO, NULL, { "libvorbis", "end" } },
-	{ FALSE, "opus"    , { "opus", "end" }         , REC_FORMAT_AUDIO, NULL, { "libopus", "end" } }
+	{ FALSE, "mpeg"    , { "mpg" , "mpeg", "end" }, REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MPG_MPEG1, NULL, { "mpeg1video", "end" } },
+	{ FALSE, "mpeg"    , { "mpg" , "mpeg", "end" }, REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MPG_MPEG2, NULL, { "mpeg2video", "end" } },
+	{ FALSE, "mp4"     , { "mp4" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MP4_MPEG4, NULL, { "mpeg4", "msmpeg4", "libxvid", "end" } },
+	{ FALSE, "mp4"     , { "mp4" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MP4_H264 , NULL, { "h264_nvenc", "libx264", "h264_omx", "end" } },
+	{ FALSE, "matroska", { "mkv" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MKV_HEVC , NULL, { "hevc_nvenc", "libx265", "end" } },
+	{ FALSE, "webm"    , { "webm", "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_WEB_WEBM , NULL, { "libvpx-vp9", "libvpx", "end" } },
+	{ FALSE, "avi"     , { "wmv" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_AVI_WMV  , NULL, { "wmv2", "wmv1", "end" } },
+	{ FALSE, "avi"     , { "avi" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_AVI_FFV  , NULL, { "ffv1", "end" } },
+	{ FALSE, "avi"     , { "avi" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_AVI_RAW  , NULL, { "rawvideo", "end" } },
+	{ FALSE, "wav"     , { "wav" , "end" }        , REC_FORMAT_AUDIO, REC_FORMAT_AUDIO_WAV      , NULL, { "pcm_s16le", "end" } },
+	{ FALSE, "mp3"     , { "mp3" , "end" }        , REC_FORMAT_AUDIO, REC_FORMAT_AUDIO_MP3      , NULL, { "libmp3lame", "end" } },
+	{ FALSE, "adts"    , { "aac" , "end" }        , REC_FORMAT_AUDIO, REC_FORMAT_AUDIO_AAC      , NULL, { "aac", "end" } },
+	{ FALSE, "flac"    , { "flac", "end" }        , REC_FORMAT_AUDIO, REC_FORMAT_AUDIO_FLAC     , NULL, { "flac", "end" } },
+	{ FALSE, "ogg"     , { "ogg" , "end" }        , REC_FORMAT_AUDIO, REC_FORMAT_AUDIO_OGG      , NULL, { "libvorbis", "end" } },
+	{ FALSE, "opus"    , { "opus", "end" }        , REC_FORMAT_AUDIO, REC_FORMAT_AUDIO_OPUS     , NULL, { "libopus", "end" } }
 };
 
 void recording_init(void) {
-	int a;
+	int a, log_level = av_log_get_level();
 
 	memset(&ffmpeg, 0x00, sizeof(ffmpeg));
 
 	info.recording_on_air = FALSE;
 	info.recording_is_a_video = FALSE;
+
+	av_log_set_level(AV_LOG_QUIET);
 
 	// controllo la presenze dei codec
 	for (a = 0; a < REC_FORMAT_TOTAL; a++) {
@@ -163,7 +165,47 @@ void recording_init(void) {
 
 		while (strcmp(rfi->codec, "end") != 0) {
 			if ((avc = avcodec_find_encoder_by_name(rfi->codec)) != NULL) {
-				break;
+				AVCodecContext *test = avcodec_alloc_context3(avc);
+				AVDictionary *opts = NULL;
+				BYTE finded = TRUE;
+
+				if (rfi->format_type == REC_FORMAT_VIDEO) {
+					test->pix_fmt = AV_PIX_FMT_YUV420P;
+					test->bit_rate = 64000;
+					test->width = test->height = 64;
+					test->time_base = (AVRational){ 1,25 };
+					test->gop_size = 10;
+					if (rfi->recording_format != REC_FORMAT_VIDEO_AVI_WMV) {
+						test->max_b_frames = 1;
+					}
+					if (rfi->recording_format == REC_FORMAT_VIDEO_MKV_HEVC) {
+						av_dict_set(&opts, "x265-params", "log-level=none", 0);
+					}
+				} else {
+					test->sample_fmt = ffmpeg_audio_select_sample_fmt(avc);
+					test->sample_rate = ffmpeg_audio_select_samplerate(avc);
+#if LIBAVUTIL_VERSION_INT < AV_VERSION_INT(57,28,100)
+					test->channel_layout = ffmpeg_audio_select_channel_layout(avc);
+					test->channels = av_get_channel_layout_nb_channels(test->channel_layout);
+#else
+					if (ffmpeg_audio_select_channel_layout(avc, &test->ch_layout) < 0) {}
+#endif
+					test->bit_rate = test->sample_rate < 96000 ? 256000 : 512000;
+					test->time_base = (AVRational){ 1, test->sample_rate };
+				}
+
+				if (test) {
+					if (avcodec_open2(test, avc, &opts) < 0) {
+						finded = FALSE;
+					}
+					av_dict_free(&opts);
+					opts = NULL;
+					avcodec_close(test);
+					av_free(test);
+					if (finded) {
+						break;
+					}
+				}
 			}
 			rfi->codec = rfi->codecs_list[++b];
 		}
@@ -175,6 +217,8 @@ void recording_init(void) {
 			rfi->present = TRUE;
 		}
 	}
+
+	av_log_set_level(log_level);
 
 	if (thread_mutex_init_error(ffmpeg.lock)) {
 		log_error(uL("recording;unable to allocate the recording mutex"));
@@ -1339,7 +1383,7 @@ static enum AVSampleFormat ffmpeg_audio_select_sample_fmt(const AVCodec *codec) 
 	return (codec->sample_fmts[0]);
 }
 static int ffmpeg_audio_select_samplerate(const AVCodec *codec) {
-	int best_samplerate = 0;
+	int snd_sample_rate = (snd.samplerate ? snd.samplerate : 44100), best_samplerate = 0;
 	const int *p;
 
 	if (!codec->supported_samplerates) {
@@ -1350,10 +1394,10 @@ static int ffmpeg_audio_select_samplerate(const AVCodec *codec) {
 			case AV_CODEC_ID_PCM_S16BE_PLANAR:
 			case AV_CODEC_ID_PCM_F16LE:
 			case AV_CODEC_ID_FLAC:
-				return (snd.samplerate);
+				return (snd_sample_rate);
 			case AV_CODEC_ID_VORBIS:
 				// supporta solo i sample rate 48000 e 44100
-				return ((snd.samplerate == 48000) || (snd.samplerate == 44100) ? snd.samplerate : 44100);
+				return ((snd_sample_rate == 48000) || (snd_sample_rate == 44100) ? snd_sample_rate : 44100);
 			default:
 				return (44100);
 		}
@@ -1367,8 +1411,8 @@ static int ffmpeg_audio_select_samplerate(const AVCodec *codec) {
 
 	p = codec->supported_samplerates;
 	while (*p) {
-		if ((*p) == snd.samplerate) {
-			best_samplerate = snd.samplerate;
+		if ((*p) == snd_sample_rate) {
+			best_samplerate = snd_sample_rate;
 			break;
 		}
 		p++;
