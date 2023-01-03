@@ -669,7 +669,8 @@ static const _opt opt_languages[] = {
 	{NULL, uL("turkish")           , LNG_TURKISH},
 	{NULL, uL("portuguese")        , LNG_PORTUGUESEBR},
 	{NULL, uL("chinese simplified"), LNG_CHINESE_SIMPLIFIED},
-	{NULL, uL("french")            , LNG_FRENCH}
+	{NULL, uL("french")            , LNG_FRENCH},
+	{NULL, uL("german")            , LNG_GERMAN}
 };
 static const _opt opt_nsf_player_effect[] = {
 	{NULL, uL("bars")       , NSF_EFFECT_BARS},

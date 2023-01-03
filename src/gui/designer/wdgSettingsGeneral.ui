@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>861</width>
-    <height>464</height>
+    <width>874</width>
+    <height>544</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -393,6 +393,15 @@
         <property name="icon">
          <iconset resource="resources.qrc">
           <normaloff>:/icon/icons/flag_france.svgz</normaloff>:/icon/icons/flag_france.svgz</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>German</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/flag_germany.svgz</normaloff>:/icon/icons/flag_germany.svgz</iconset>
         </property>
        </item>
        <item>

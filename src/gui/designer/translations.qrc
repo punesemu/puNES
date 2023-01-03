@@ -17,5 +17,7 @@
     <file>translations/qt_zh_CN.qm</file>
     <file>translations/fr_FR.qm</file>
     <file>translations/qt_fr.qm</file>
+    <file>translations/de_DE.qm</file>
+    <file>translations/qt_de.qm</file>
   </qresource>
 </RCC>
