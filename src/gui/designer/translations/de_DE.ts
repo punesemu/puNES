@@ -16,7 +16,7 @@
     </message>
     <message>
       <source>Unset</source>
-      <translation type="unfinished">Unset</translation>
+      <translation>Zurücksetzen</translation>
     </message>
     <message>
       <source>Apply</source>
@@ -31,7 +31,7 @@
     <name>dlgCmdLineHelp</name>
     <message>
       <source>Close</source>
-      <translation type="unfinished">Close</translation>
+      <translation>Schließen</translation>
     </message>
     <message>
       <source>Command Line Help</source>
@@ -82,47 +82,47 @@
     </message>
     <message>
       <source>1 KiB</source>
-      <translation type="unfinished">1 KiB</translation>
+      <translation>1 KiB</translation>
     </message>
     <message>
       <source>2 KiB</source>
-      <translation type="unfinished">2 KiB</translation>
+      <translation>2 KiB</translation>
     </message>
     <message>
       <source>4 KiB</source>
-      <translation type="unfinished">4 KiB</translation>
+      <translation>4 KiB</translation>
     </message>
     <message>
       <source>8 KiB</source>
-      <translation type="unfinished">8 KiB</translation>
+      <translation>8 KiB</translation>
     </message>
     <message>
       <source>16 KiB</source>
-      <translation type="unfinished">16 KiB</translation>
+      <translation>16 KiB</translation>
     </message>
     <message>
       <source>32 KiB</source>
-      <translation type="unfinished">32 KiB</translation>
+      <translation>32 KiB</translation>
     </message>
     <message>
       <source>64 KiB</source>
-      <translation type="unfinished">64 KiB</translation>
+      <translation>64 KiB</translation>
     </message>
     <message>
       <source>128 KiB</source>
-      <translation type="unfinished">128 KiB</translation>
+      <translation>128 KiB</translation>
     </message>
     <message>
       <source>256 KiB</source>
-      <translation type="unfinished">256 KiB</translation>
+      <translation>256 KiB</translation>
     </message>
     <message>
       <source>512 KiB</source>
-      <translation type="unfinished">512 KiB</translation>
+      <translation>512 KiB</translation>
     </message>
     <message>
       <source>1 MiB</source>
-      <translation type="unfinished">1 MiB</translation>
+      <translation>1 MiB</translation>
     </message>
     <message>
       <source>N/A</source>
@@ -130,7 +130,7 @@
     </message>
     <message>
       <source>Trainer</source>
-      <translation type="unfinished">Trainer</translation>
+      <translation>Trainer</translation>
     </message>
     <message>
       <source>Unspecified</source>
@@ -298,7 +298,7 @@
     </message>
     <message>
       <source>SNES Mouse</source>
-      <translation type="unfinished">SNES Mouse</translation>
+      <translation>SNES Maus</translation>
     </message>
     <message>
       <source>Multicart</source>
@@ -306,7 +306,7 @@
     </message>
     <message>
       <source>Two SNES controllers</source>
-      <translation type="unfinished">Two SNES controllers</translation>
+      <translation>Zwei SNES Controller</translation>
     </message>
     <message>
       <source>RacerMate Bicycle</source>
@@ -438,11 +438,11 @@
     </message>
     <message>
       <source>File</source>
-      <translation type="unfinished">File</translation>
+      <translation>Datei</translation>
     </message>
     <message>
       <source>CHR RAM Battery</source>
-      <translation type="unfinished">CHR RAM Battery</translation>
+      <translation>CHR RAM Batterie</translation>
     </message>
     <message>
       <source>Mapper</source>
@@ -558,7 +558,7 @@
     </message>
     <message>
       <source>Input</source>
-      <translation type="unfinished">Input</translation>
+      <translation>Eingabe</translation>
     </message>
     <message>
       <source>Misc ROMs</source>
@@ -566,41 +566,41 @@
     </message>
     <message>
       <source>Battery</source>
-      <translation type="unfinished">Battery</translation>
+      <translation>Batterie</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Sonstiges</translation>
     </message>
     <message>
       <source>Save</source>
-      <translation type="unfinished">Save</translation>
+      <translation>Speichern</translation>
     </message>
     <message>
       <source>Cancel</source>
-      <translation type="unfinished">Cancel</translation>
+      <translation>Abbrechen</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Auf Standardeinstellungen zurücksetzen</translation>
     </message>
   </context>
   <context>
     <name>dlgJsc</name>
     <message>
       <source>Close Window</source>
-      <translation type="unfinished">Close Window</translation>
+      <translation>Fenster schließen</translation>
     </message>
     <message>
       <source>Save Configuration</source>
-      <translation type="unfinished">Save Configuration</translation>
+      <translation>Einstellungen speichern</translation>
     </message>
   </context>
   <context>
     <name>dlgKeyboard</name>
     <message>
       <source>Virtual Keyboard</source>
-      <translation type="unfinished">Virtual Keyboard</translation>
+      <translation>Bildschirmtastatur</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
@@ -608,31 +608,31 @@
     </message>
     <message>
       <source>Options</source>
-      <translation type="unfinished">Options</translation>
+      <translation>Optionen</translation>
     </message>
     <message>
       <source>Size</source>
-      <translation type="unfinished">Size</translation>
+      <translation>Größe</translation>
     </message>
     <message>
       <source>1.0x</source>
-      <translation type="unfinished">1.0x</translation>
+      <translation>1,0x</translation>
     </message>
     <message>
       <source>1.5x</source>
-      <translation type="unfinished">1.5x</translation>
+      <translation>1,5x</translation>
     </message>
     <message>
       <source>2.0x</source>
-      <translation type="unfinished">2.0x</translation>
+      <translation>2,0x</translation>
     </message>
     <message>
       <source>2.5x</source>
-      <translation type="unfinished">2.5x</translation>
+      <translation>2,5-fach</translation>
     </message>
     <message>
       <source>Mode</source>
-      <translation type="unfinished">Mode</translation>
+      <translation>Modus</translation>
     </message>
     <message>
       <source>Setup</source>
@@ -647,54 +647,54 @@
     <name>dlgLog</name>
     <message>
       <source>Log</source>
-      <translation type="unfinished">Log</translation>
+      <translation>Log</translation>
     </message>
     <message>
       <source>Close</source>
-      <translation type="unfinished">Close</translation>
+      <translation>Schließen</translation>
     </message>
   </context>
   <context>
     <name>dlgSettings</name>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Einstellungen</translation>
     </message>
     <message>
       <source>General</source>
-      <translation type="unfinished">General</translation>
+      <translation>Allgemein</translation>
     </message>
     <message>
       <source>Video</source>
-      <translation type="unfinished">Video</translation>
+      <translation>Video</translation>
     </message>
     <message>
       <source>Audio</source>
-      <translation type="unfinished">Audio</translation>
+      <translation>Audio</translation>
     </message>
     <message>
       <source>Input</source>
-      <translation type="unfinished">Input</translation>
+      <translation>Eingabe</translation>
     </message>
     <message>
       <source>PPU</source>
-      <translation type="unfinished">PPU</translation>
+      <translation>PPU</translation>
     </message>
     <message>
       <source>Cheats</source>
-      <translation type="unfinished">Cheats</translation>
+      <translation>Cheats</translation>
     </message>
     <message>
       <source>Save Settings</source>
-      <translation type="unfinished">Save Settings</translation>
+      <translation>Einstellungen speichern</translation>
     </message>
     <message>
       <source>Close Settings</source>
-      <translation type="unfinished">Close Settings</translation>
+      <translation>Einstellungen schließen</translation>
     </message>
     <message>
       <source>Rewind Mode On/Off</source>
-      <translation type="unfinished">Rewind Mode On/Off</translation>
+      <translation>Rückwärtsmodus ein/aus</translation>
     </message>
     <message>
       <source>Rewind Step Backward</source>
@@ -749,11 +749,11 @@
     </message>
     <message>
       <source>3rd-party</source>
-      <translation type="unfinished">3rd-party</translation>
+      <translation>Drittanbieter</translation>
     </message>
     <message>
       <source>Keyboard</source>
-      <translation type="unfinished">Keyboard</translation>
+      <translation>Tastatur</translation>
     </message>
     <message>
       <source>Select device first</source>
@@ -773,47 +773,47 @@
     </message>
     <message>
       <source>Up</source>
-      <translation type="unfinished">Up</translation>
+      <translation>Oben</translation>
     </message>
     <message>
       <source>A</source>
-      <translation type="unfinished">A</translation>
+      <translation>A</translation>
     </message>
     <message>
       <source>Down</source>
-      <translation type="unfinished">Down</translation>
+      <translation>Unten</translation>
     </message>
     <message>
       <source>Unset</source>
-      <translation type="unfinished">Unset</translation>
+      <translation>Zurücksetzen</translation>
     </message>
     <message>
       <source>Left</source>
-      <translation type="unfinished">Left</translation>
+      <translation>Links</translation>
     </message>
     <message>
       <source>Start</source>
-      <translation type="unfinished">Start</translation>
+      <translation>Start</translation>
     </message>
     <message>
       <source>Turbo B</source>
-      <translation type="unfinished">Turbo B</translation>
+      <translation>Turbo B</translation>
     </message>
     <message>
       <source>Select</source>
-      <translation type="unfinished">Select</translation>
+      <translation>Select</translation>
     </message>
     <message>
       <source>Turbo A</source>
-      <translation type="unfinished">Turbo A</translation>
+      <translation>Turbo A</translation>
     </message>
     <message>
       <source>B</source>
-      <translation type="unfinished">B</translation>
+      <translation>B</translation>
     </message>
     <message>
       <source>Right</source>
-      <translation type="unfinished">Right</translation>
+      <translation>Rechts</translation>
     </message>
     <message>
       <source>In sequence</source>
@@ -829,11 +829,11 @@
     </message>
     <message>
       <source>Joystick</source>
-      <translation type="unfinished">Joystick</translation>
+      <translation>Joystick</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Sonstiges</translation>
     </message>
     <message>
       <source>Controller type</source>
@@ -849,11 +849,11 @@
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>Anwenden</translation>
     </message>
     <message>
       <source>Discard</source>
-      <translation type="unfinished">Discard</translation>
+      <translation>Verwerfen</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;%2)</source>
@@ -861,7 +861,7 @@
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Standard</translation>
     </message>
     <message>
       <source>Deadzone</source>
@@ -884,11 +884,11 @@
     </message>
     <message>
       <source>OK</source>
-      <translation type="unfinished">OK</translation>
+      <translation>OK</translation>
     </message>
     <message>
       <source>None</source>
-      <translation type="unfinished">None</translation>
+      <translation>Nichts</translation>
     </message>
   </context>
   <context>
@@ -899,11 +899,11 @@
     </message>
     <message>
       <source>Left Coin</source>
-      <translation type="unfinished">Left Coin</translation>
+      <translation>Linke Münze</translation>
     </message>
     <message>
       <source>Right Coin</source>
-      <translation type="unfinished">Right Coin</translation>
+      <translation>Rechte Münze</translation>
     </message>
     <message>
       <source>Service Coin</source>
@@ -931,23 +931,23 @@
     </message>
     <message>
       <source>7</source>
-      <translation type="unfinished">7</translation>
+      <translation>7</translation>
     </message>
     <message>
       <source>8</source>
-      <translation type="unfinished">8</translation>
+      <translation>8</translation>
     </message>
     <message>
       <source>3</source>
-      <translation type="unfinished">3</translation>
+      <translation>3</translation>
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>1</source>
-      <translation type="unfinished">1</translation>
+      <translation>1</translation>
     </message>
     <message>
       <source>Defaults Game Dip Switches</source>
@@ -1037,7 +1037,7 @@
     </message>
     <message>
       <source>Compressed files</source>
-      <translation type="unfinished">Compressed files</translation>
+      <translation>Komprimierte Dateien</translation>
     </message>
     <message>
       <source>Nes rom files</source>
@@ -1053,7 +1053,7 @@
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Alle Dateien</translation>
     </message>
     <message>
       <source>Open File</source>
@@ -1069,35 +1069,35 @@
     </message>
     <message>
       <source>Open save state</source>
-      <translation type="unfinished">Open save state</translation>
+      <translation>Speicherstand öffnen</translation>
     </message>
     <message>
       <source>Nintendo Entertainment System Emulator</source>
-      <translation type="unfinished">Nintendo Entertainment System Emulator</translation>
+      <translation>Nintendo Entertainment System Emulator</translation>
     </message>
     <message>
       <source>Compiled</source>
-      <translation type="unfinished">Compiled</translation>
+      <translation>Kompiliert</translation>
     </message>
     <message>
       <source>portable version</source>
-      <translation type="unfinished">portable version</translation>
+      <translation>Portable Version</translation>
     </message>
     <message>
       <source>&amp;Open</source>
-      <translation type="unfinished">&amp;Open</translation>
+      <translation>&amp;Öffnen</translation>
     </message>
     <message>
       <source>&amp;Quit</source>
-      <translation type="unfinished">&amp;Quit</translation>
+      <translation>&amp;Beenden</translation>
     </message>
     <message>
       <source>&amp;Hard Reset</source>
-      <translation type="unfinished">&amp;Hard Reset</translation>
+      <translation>&amp;Hartes Zurücksetzen</translation>
     </message>
     <message>
       <source>&amp;Soft Reset</source>
-      <translation type="unfinished">&amp;Soft Reset</translation>
+      <translation>&amp;Weiches Zurücksetzen</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert Disk</source>
@@ -1145,23 +1145,23 @@
     </message>
     <message>
       <source>&amp;Load from file</source>
-      <translation type="unfinished">&amp;Load from file</translation>
+      <translation>&amp;Aus Datei laden</translation>
     </message>
     <message>
       <source>F&amp;ullscreen</source>
-      <translation type="unfinished">F&amp;ullscreen</translation>
+      <translation>&amp;Vollbild</translation>
     </message>
     <message>
       <source>&amp;Game Genie Rom Mode</source>
-      <translation type="unfinished">&amp;Game Genie Rom Mode</translation>
+      <translation>&amp;Game Genie Rom Modus</translation>
     </message>
     <message>
       <source>S&amp;ave state</source>
-      <translation type="unfinished">S&amp;ave state</translation>
+      <translation>Speicherstand &amp;erstellen</translation>
     </message>
     <message>
       <source>L&amp;oad state</source>
-      <translation type="unfinished">L&amp;oad state</translation>
+      <translation>Speicherstand &amp;laden</translation>
     </message>
     <message>
       <source>&amp;Increment slot</source>
@@ -1197,7 +1197,7 @@
     </message>
     <message>
       <source>&amp;About</source>
-      <translation type="unfinished">&amp;About</translation>
+      <translation>&amp;Über</translation>
     </message>
     <message>
       <source>Slot &amp;6</source>
@@ -1233,15 +1233,15 @@
     </message>
     <message>
       <source>&amp;File</source>
-      <translation type="unfinished">&amp;File</translation>
+      <translation>&amp;Datei</translation>
     </message>
     <message>
       <source>&amp;Recent Roms</source>
-      <translation type="unfinished">&amp;Recent Roms</translation>
+      <translation>&amp;Zuletzt geöffnete Roms</translation>
     </message>
     <message>
       <source>&amp;NES</source>
-      <translation type="unfinished">&amp;NES</translation>
+      <translation>&amp;NES</translation>
     </message>
     <message>
       <source>&amp;Disk Side</source>
@@ -1249,47 +1249,47 @@
     </message>
     <message>
       <source>Setti&amp;ngs</source>
-      <translation type="unfinished">Setti&amp;ngs</translation>
+      <translation>&amp;Einstellungen</translation>
     </message>
     <message>
       <source>&amp;Video</source>
-      <translation type="unfinished">&amp;Video</translation>
+      <translation>&amp;Video</translation>
     </message>
     <message>
       <source>&amp;Audio</source>
-      <translation type="unfinished">&amp;Audio</translation>
+      <translation>&amp;Audio</translation>
     </message>
     <message>
       <source>&amp;Input</source>
-      <translation type="unfinished">&amp;Input</translation>
+      <translation>&amp;Eingabe</translation>
     </message>
     <message>
       <source>&amp;Cheats</source>
-      <translation type="unfinished">&amp;Cheats</translation>
+      <translation>&amp;Cheats</translation>
     </message>
     <message>
       <source>&amp;PPU</source>
-      <translation type="unfinished">&amp;PPU</translation>
+      <translation>&amp;PPU</translation>
     </message>
     <message>
       <source>S&amp;tate</source>
-      <translation type="unfinished">S&amp;tate</translation>
+      <translation>&amp;Speicherstand</translation>
     </message>
     <message>
       <source>&amp;Help</source>
-      <translation type="unfinished">&amp;Help</translation>
+      <translation>&amp;Hilfe</translation>
     </message>
     <message>
       <source>&amp;Turn On</source>
-      <translation type="unfinished">&amp;Turn On</translation>
+      <translation>&amp;Einschalten</translation>
     </message>
     <message>
       <source>&amp;Turn Off</source>
-      <translation type="unfinished">&amp;Turn Off</translation>
+      <translation>&amp;Ausschalten</translation>
     </message>
     <message>
       <source>Too&amp;ls</source>
-      <translation type="unfinished">Too&amp;ls</translation>
+      <translation>&amp;Werkzeuge</translation>
     </message>
     <message>
       <source>UNIF rom files</source>
@@ -1309,7 +1309,7 @@
     </message>
     <message>
       <source>Record sound</source>
-      <translation type="unfinished">Record sound</translation>
+      <translation>Ton aufnehmen</translation>
     </message>
     <message>
       <source>NSF rom files</source>
@@ -1321,11 +1321,11 @@
     </message>
     <message>
       <source>IPS patch files</source>
-      <translation type="unfinished">IPS patch files</translation>
+      <translation>IPS-Patch-Dateien</translation>
     </message>
     <message>
       <source>BPS patch files</source>
-      <translation type="unfinished">BPS patch files</translation>
+      <translation>BPS-Patch-Dateien</translation>
     </message>
     <message>
       <source>XDELTA patch files</source>
@@ -1337,7 +1337,7 @@
     </message>
     <message>
       <source>&amp;General</source>
-      <translation type="unfinished">&amp;General</translation>
+      <translation>&amp;Allgemein</translation>
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
@@ -1349,11 +1349,11 @@
     </message>
     <message>
       <source>Start &amp;AUDIO recording</source>
-      <translation type="unfinished">Start &amp;AUDIO recording</translation>
+      <translation>&amp;AUDIO-Aufnahme starten</translation>
     </message>
     <message>
       <source>Start &amp;VIDEO recording</source>
-      <translation type="unfinished">Start &amp;VIDEO recording</translation>
+      <translation>&amp;VIDEO-Aufnahme starten</translation>
     </message>
     <message>
       <source>Stop &amp;AUDIO recording</source>
@@ -1365,7 +1365,7 @@
     </message>
     <message>
       <source>Start/Stop &amp;AUDIO recording</source>
-      <translation type="unfinished">Start/Stop &amp;AUDIO recording</translation>
+      <translation>&amp;AUDIO Aufnahme starten/stoppen</translation>
     </message>
     <message>
       <source>&amp;Recording</source>
@@ -1373,7 +1373,7 @@
     </message>
     <message>
       <source>Start/Stop &amp;VIDEO recording</source>
-      <translation type="unfinished">Start/Stop &amp;VIDEO recording</translation>
+      <translation>&amp;VIDEO-Aufnahme starten/stoppen</translation>
     </message>
     <message>
       <source>Slot %1 never used</source>
@@ -1442,11 +1442,11 @@
     </message>
     <message>
       <source>&amp;Play</source>
-      <translation type="unfinished">&amp;Play</translation>
+      <translation>&amp;Abspielen</translation>
     </message>
     <message>
       <source>&amp;Record</source>
-      <translation type="unfinished">&amp;Record</translation>
+      <translation>&amp;Aufnahme</translation>
     </message>
     <message>
       <source>&amp;Stop</source>
@@ -1462,7 +1462,7 @@
     </message>
     <message>
       <source>&amp;Show Log</source>
-      <translation type="unfinished">&amp;Show Log</translation>
+      <translation>&amp;Protokoll zeigen</translation>
     </message>
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
@@ -1474,7 +1474,7 @@
     </message>
     <message>
       <source>Sa&amp;ve Screenshot</source>
-      <translation type="unfinished">Sa&amp;ve Screenshot</translation>
+      <translation>Bildschirmfoto &amp;speichern</translation>
     </message>
     <message>
       <source>Insert &amp;Coin</source>
@@ -1482,7 +1482,7 @@
     </message>
     <message>
       <source>Open &amp;working folder</source>
-      <translation type="unfinished">Open &amp;working folder</translation>
+      <translation>&amp;Arbeitsordner öffnen</translation>
     </message>
     <message>
       <source>Apply IPS/BPS/XDELTA &amp;Patch</source>
@@ -1786,11 +1786,11 @@
     </message>
     <message>
       <source>Active all</source>
-      <translation type="unfinished">Active all</translation>
+      <translation>Alle aktivieren</translation>
     </message>
     <message>
       <source>Disable all</source>
-      <translation type="unfinished">Disable all</translation>
+      <translation>Alles deaktivieren</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
@@ -1801,15 +1801,15 @@
     <name>wdgCheatEditor</name>
     <message>
       <source>Cheats Editor</source>
-      <translation type="unfinished">Cheats Editor</translation>
+      <translation>Cheats Editor</translation>
     </message>
     <message>
       <source>Cheats List</source>
-      <translation type="unfinished">Cheats List</translation>
+      <translation>Cheats Liste</translation>
     </message>
     <message>
       <source>Description</source>
-      <translation type="unfinished">Description</translation>
+      <translation>Beschreibung</translation>
     </message>
     <message>
       <source>Code</source>
@@ -1817,27 +1817,27 @@
     </message>
     <message>
       <source>Address</source>
-      <translation type="unfinished">Address</translation>
+      <translation>Adresse</translation>
     </message>
     <message>
       <source>Value</source>
-      <translation type="unfinished">Value</translation>
+      <translation>Wert</translation>
     </message>
     <message>
       <source>Compare</source>
-      <translation type="unfinished">Compare</translation>
+      <translation>Vergleichen</translation>
     </message>
     <message>
       <source>Show Tools</source>
-      <translation type="unfinished">Show Tools</translation>
+      <translation>Werkzeuge anzeigen</translation>
     </message>
     <message>
       <source>Import</source>
-      <translation type="unfinished">Import</translation>
+      <translation>Importieren</translation>
     </message>
     <message>
       <source>Export</source>
-      <translation type="unfinished">Export</translation>
+      <translation>Exportieren</translation>
     </message>
     <message>
       <source>Editor Tools</source>
@@ -1845,7 +1845,7 @@
     </message>
     <message>
       <source>CPU Ram</source>
-      <translation type="unfinished">CPU Ram</translation>
+      <translation>CPU-Ram</translation>
     </message>
     <message>
       <source>Pro Action Rocky</source>
@@ -1853,27 +1853,27 @@
     </message>
     <message>
       <source>Game Genie</source>
-      <translation type="unfinished">Game Genie</translation>
+      <translation>Game Genie</translation>
     </message>
     <message>
       <source>Submit</source>
-      <translation type="unfinished">Submit</translation>
+      <translation>Bestätigen</translation>
     </message>
     <message>
       <source>Cancel</source>
-      <translation type="unfinished">Cancel</translation>
+      <translation>Abbrechen</translation>
     </message>
     <message>
       <source>Delete</source>
-      <translation type="unfinished">Delete</translation>
+      <translation>Löschen</translation>
     </message>
     <message>
       <source>Delete All</source>
-      <translation type="unfinished">Delete All</translation>
+      <translation>Alle löschen</translation>
     </message>
     <message>
       <source>Copy</source>
-      <translation type="unfinished">Copy</translation>
+      <translation>Kopieren</translation>
     </message>
     <message>
       <source>New Game Genie</source>
@@ -1892,27 +1892,27 @@
     <name>wdgCheatsEditor</name>
     <message>
       <source>Show Tools</source>
-      <translation type="unfinished">Show Tools</translation>
+      <translation>Werkzeuge anzeigen</translation>
     </message>
     <message>
       <source>Hide Tools</source>
-      <translation type="unfinished">Hide Tools</translation>
+      <translation>Werkzeuge verstecken</translation>
     </message>
     <message>
       <source>All supported formats</source>
-      <translation type="unfinished">All supported formats</translation>
+      <translation>Alle unterstützten Formate</translation>
     </message>
     <message>
       <source>Import Cheats</source>
-      <translation type="unfinished">Import Cheats</translation>
+      <translation>Cheats importieren</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Alle Dateien</translation>
     </message>
     <message>
       <source>Export cheats on file</source>
-      <translation type="unfinished">Export cheats on file</translation>
+      <translation>Cheats in Datei exportieren</translation>
     </message>
     <message>
       <source>Submit warning</source>
@@ -1920,19 +1920,19 @@
     </message>
     <message>
       <source>The code is invalid</source>
-      <translation type="unfinished">The code is invalid</translation>
+      <translation>Der Code ist ungültig</translation>
     </message>
     <message>
       <source>The cheat is already in the list</source>
-      <translation type="unfinished">The cheat is already in the list</translation>
+      <translation>Der Cheat ist bereits in der Liste</translation>
     </message>
     <message>
       <source>A description must be entered</source>
-      <translation type="unfinished">A description must be entered</translation>
+      <translation>Es muss eine Beschreibung angegeben werden</translation>
     </message>
     <message>
       <source>Nestopia XML files</source>
-      <translation type="unfinished">Nestopia XML files</translation>
+      <translation>Nestopia XML-Dateien</translation>
     </message>
     <message>
       <source>Mame 128+ XML files</source>
@@ -1958,7 +1958,7 @@
     <name>wdgNTSCBisqwitFilter</name>
     <message>
       <source>QWidth</source>
-      <translation type="unfinished">QWidth</translation>
+      <translation>QWidth</translation>
     </message>
     <message>
       <source>YWidth</source>
@@ -2088,15 +2088,15 @@
     </message>
     <message>
       <source>Blue</source>
-      <translation type="unfinished">Blue</translation>
+      <translation>Blau</translation>
     </message>
     <message>
       <source>Red</source>
-      <translation type="unfinished">Red</translation>
+      <translation>Rot</translation>
     </message>
     <message>
       <source>Green</source>
-      <translation type="unfinished">Green</translation>
+      <translation>Grün</translation>
     </message>
     <message>
       <source>Sat</source>
@@ -2108,7 +2108,7 @@
     </message>
     <message>
       <source>HTML</source>
-      <translation type="unfinished">HTML</translation>
+      <translation>HTML</translation>
     </message>
     <message>
       <source>Reset color</source>
@@ -2135,80 +2135,80 @@
     </message>
     <message>
       <source>Low</source>
-      <translation type="unfinished">Low</translation>
+      <translation>Niedrig</translation>
     </message>
     <message>
       <source>Medium</source>
-      <translation type="unfinished">Medium</translation>
+      <translation>Mittel</translation>
     </message>
     <message>
       <source>High</source>
-      <translation type="unfinished">High</translation>
+      <translation>Hoch</translation>
     </message>
     <message>
       <source>Record VIDEO on file</source>
-      <translation type="unfinished">Record VIDEO on file</translation>
+      <translation>VIDEO in Datei aufnehmen</translation>
     </message>
     <message>
       <source>Not supported</source>
-      <translation type="unfinished">Not supported</translation>
+      <translation>Nicht unterstützt</translation>
     </message>
   </context>
   <context>
     <name>wdgRewind</name>
     <message>
       <source>Forward (single frame)</source>
-      <translation type="unfinished">Forward (single frame)</translation>
+      <translation>Vorspulen (einzelner Frame)</translation>
     </message>
     <message>
       <source>Rewind (single frame)</source>
-      <translation type="unfinished">Rewind (single frame)</translation>
+      <translation>Zurückspulen (einzelner Frame)</translation>
     </message>
     <message>
       <source>Pause</source>
-      <translation type="unfinished">Pause</translation>
+      <translation>Pausieren</translation>
     </message>
     <message>
       <source>Fast forward (from 1x to 8x)</source>
-      <translation type="unfinished">Fast forward (from 1x to 8x)</translation>
+      <translation>Schnell vorspulen (von 1x bis 8x)</translation>
     </message>
     <message>
       <source>Fast rewind (from 1x to 8x)</source>
-      <translation type="unfinished">Fast rewind (from 1x to 8x)</translation>
+      <translation>Schnell zurückspulen (von 1x bis 8x)</translation>
     </message>
     <message>
       <source>Play</source>
-      <translation type="unfinished">Play</translation>
+      <translation>Spielen</translation>
     </message>
     <message>
       <source>Rewind</source>
-      <translation type="unfinished">Rewind</translation>
+      <translation>Zurückspulen</translation>
     </message>
   </context>
   <context>
     <name>wdgRotateScreen</name>
     <message>
       <source>Rotate the screen 90 degrees to the Right</source>
-      <translation type="unfinished">Rotate the screen 90 degrees to the Right</translation>
+      <translation>Drehe den Bildschirm 90 Grad nach rechts</translation>
     </message>
     <message>
       <source>Rotate the screen 90 degrees to the left</source>
-      <translation type="unfinished">Rotate the screen 90 degrees to the left</translation>
+      <translation>Drehe den Bildschirm 90 Grad nach links</translation>
     </message>
     <message>
       <source>Current degree of rotation</source>
-      <translation type="unfinished">Current degree of rotation</translation>
+      <translation>Aktueller Rotationsgrad</translation>
     </message>
     <message>
       <source>Degrees</source>
-      <translation type="unfinished">Degrees</translation>
+      <translation>Grad</translation>
     </message>
   </context>
   <context>
     <name>wdgScreen</name>
     <message>
       <source>Paste</source>
-      <translation type="unfinished">Paste</translation>
+      <translation>Einfügen</translation>
     </message>
     <message>
       <source>Tape</source>
@@ -2216,26 +2216,26 @@
     </message>
     <message>
       <source>Play</source>
-      <translation type="unfinished">Play</translation>
+      <translation>Spielen</translation>
     </message>
     <message>
       <source>Record</source>
-      <translation type="unfinished">Record</translation>
+      <translation>Aufnahme</translation>
     </message>
     <message>
       <source>Stop</source>
-      <translation type="unfinished">Stop</translation>
+      <translation>Stopp</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsAudio</name>
     <message>
       <source>Output Devices</source>
-      <translation type="unfinished">Output Devices</translation>
+      <translation>Ausgabegeräte</translation>
     </message>
     <message>
       <source>Sample Rate</source>
-      <translation type="unfinished">Sample Rate</translation>
+      <translation>Abtastrate</translation>
     </message>
     <message>
       <source>Buffer Size factor</source>
@@ -2259,15 +2259,15 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Sonstiges</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Einstellungen</translation>
     </message>
     <message>
       <source>Channels</source>
-      <translation type="unfinished">Channels</translation>
+      <translation>Kanäle</translation>
     </message>
     <message>
       <source>APU Channels</source>
@@ -2279,50 +2279,50 @@
     </message>
     <message>
       <source>Enable Audio</source>
-      <translation type="unfinished">Enable Audio</translation>
+      <translation>Audio aktivieren</translation>
     </message>
     <message>
       <source>Reverse bits of DPCM</source>
-      <translation type="unfinished">Reverse bits of DPCM</translation>
+      <translation>Umgekehrte DPCM-Bits</translation>
     </message>
     <message>
       <source>192000</source>
-      <translation type="unfinished">192000</translation>
+      <translation>192000</translation>
     </message>
     <message>
       <source>96000</source>
-      <translation type="unfinished">96000</translation>
+      <translation>96000</translation>
     </message>
     <message>
       <source>48000</source>
-      <translation type="unfinished">48000</translation>
+      <translation>48000</translation>
     </message>
     <message>
       <source>44100</source>
-      <translation type="unfinished">44100</translation>
+      <translation>44100</translation>
     </message>
     <message>
       <source>22050</source>
-      <translation type="unfinished">22050</translation>
+      <translation>22050</translation>
     </message>
     <message>
       <source>11025</source>
-      <translation type="unfinished">11025</translation>
+      <translation>11025</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsCheats</name>
     <message>
       <source>Cheats Settings</source>
-      <translation type="unfinished">Cheats Settings</translation>
+      <translation>Cheat-Einstellungen</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Einstellungen</translation>
     </message>
     <message>
       <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
+      <translation>Deaktiviert</translation>
     </message>
     <message>
       <source>Game Genie Rom Mode</source>
@@ -2337,11 +2337,11 @@
     <name>wdgSettingsGeneral</name>
     <message>
       <source>[Select a file]</source>
-      <translation type="unfinished">[Select a file]</translation>
+      <translation>[Wähle eine Datei]</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Alle Dateien</translation>
     </message>
     <message>
       <source>Select Game Genie ROM file</source>
@@ -2353,31 +2353,31 @@
     </message>
     <message>
       <source>General Settings</source>
-      <translation type="unfinished">General Settings</translation>
+      <translation>Allgemeine Einstellungen</translation>
     </message>
     <message>
       <source>3x</source>
-      <translation type="unfinished">3x</translation>
+      <translation>3x</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation type="unfinished">4x</translation>
+      <translation>4x</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation type="unfinished">5x</translation>
+      <translation>5x</translation>
     </message>
     <message>
       <source>Auto</source>
-      <translation type="unfinished">Auto</translation>
+      <translation>Auto</translation>
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>NTSC</translation>
     </message>
     <message>
       <source>PAL</source>
-      <translation type="unfinished">PAL</translation>
+      <translation>PAL</translation>
     </message>
     <message>
       <source>Dendy</source>
@@ -2385,39 +2385,39 @@
     </message>
     <message>
       <source>System Roms</source>
-      <translation type="unfinished">System Roms</translation>
+      <translation>System-Roms</translation>
     </message>
     <message>
       <source>Mode</source>
-      <translation type="unfinished">Mode</translation>
+      <translation>Modus</translation>
     </message>
     <message>
       <source>English</source>
-      <translation type="unfinished">English</translation>
+      <translation>Englisch</translation>
     </message>
     <message>
       <source>Italian</source>
-      <translation type="unfinished">Italian</translation>
+      <translation>Italienisch</translation>
     </message>
     <message>
       <source>Russian</source>
-      <translation type="unfinished">Russian</translation>
+      <translation>Russisch</translation>
     </message>
     <message>
       <source>Pause when in background</source>
-      <translation type="unfinished">Pause when in background</translation>
+      <translation>Im Hintergrund pausieren</translation>
     </message>
     <message>
       <source>Language</source>
-      <translation type="unfinished">Language</translation>
+      <translation>Sprache</translation>
     </message>
     <message>
       <source>Save settings on exit</source>
-      <translation type="unfinished">Save settings on exit</translation>
+      <translation>Einstellungen beim Beenden speichern</translation>
     </message>
     <message>
       <source>Save battery RAM file every 3 min.</source>
-      <translation type="unfinished">Save battery RAM file every 3 min.</translation>
+      <translation>Die RAM Batterie alle 3 Minuten speichern</translation>
     </message>
     <message>
       <source>Fast Forward velocity</source>
@@ -2425,11 +2425,11 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Sonstiges</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Einstellungen</translation>
     </message>
     <message>
       <source>Game Genie Rom file</source>
@@ -2445,55 +2445,55 @@
     </message>
     <message>
       <source>Spanish</source>
-      <translation type="unfinished">Spanish</translation>
+      <translation>Spanisch</translation>
     </message>
     <message>
       <source>Hungarian</source>
-      <translation type="unfinished">Hungarian</translation>
+      <translation>Ungarisch</translation>
     </message>
     <message>
       <source>Turkish</source>
-      <translation type="unfinished">Turkish</translation>
+      <translation>Türkisch</translation>
     </message>
     <message>
       <source>Portuguese (Brazil)</source>
-      <translation type="unfinished">Portuguese (Brazil)</translation>
+      <translation>Portugiesisch (Brasilien)</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>Aus</translation>
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>5</source>
-      <translation type="unfinished">5</translation>
+      <translation>5</translation>
     </message>
     <message>
       <source>15</source>
-      <translation type="unfinished">15</translation>
+      <translation>15</translation>
     </message>
     <message>
       <source>30</source>
-      <translation type="unfinished">30</translation>
+      <translation>30</translation>
     </message>
     <message>
       <source>60</source>
-      <translation type="unfinished">60</translation>
+      <translation>60</translation>
     </message>
     <message>
       <source>Unlim.</source>
-      <translation type="unfinished">Unlim.</translation>
+      <translation>Unbegrenzt</translation>
     </message>
     <message>
       <source>2x</source>
-      <translation type="unfinished">2x</translation>
+      <translation>2x</translation>
     </message>
     <message>
       <source>Chinese Simplified</source>
-      <translation type="unfinished">Chinese Simplified</translation>
+      <translation>Chinesisch (vereinfacht)</translation>
     </message>
     <message>
       <source>Insert disk 1 side A at power-up/reset</source>
@@ -2517,14 +2517,14 @@
     </message>
     <message>
       <source>French</source>
-      <translation type="unfinished">French</translation>
+      <translation>Französisch</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
     <message>
       <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
+      <translation>Deaktiviert</translation>
     </message>
     <message>
       <source>Standard Pad</source>
@@ -2536,7 +2536,7 @@
     </message>
     <message>
       <source>Snes Mouse</source>
-      <translation type="unfinished">Snes Mouse</translation>
+      <translation>SNES Maus</translation>
     </message>
     <message>
       <source>Arkanoid Paddle</source>
@@ -2548,7 +2548,7 @@
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Standard</translation>
     </message>
     <message>
       <source>Unset</source>
@@ -2568,11 +2568,11 @@
     </message>
     <message>
       <source>NES</source>
-      <translation type="unfinished">NES</translation>
+      <translation>NES</translation>
     </message>
     <message>
       <source>Famicom</source>
-      <translation type="unfinished">Famicom</translation>
+      <translation>Famicom</translation>
     </message>
     <message>
       <source>Four Score</source>
@@ -2580,7 +2580,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Sonstiges</translation>
     </message>
     <message>
       <source>Expansion Port</source>
@@ -2608,7 +2608,7 @@
     </message>
     <message>
       <source>Shortcuts</source>
-      <translation type="unfinished">Shortcuts</translation>
+      <translation>Tastenkürzel</translation>
     </message>
     <message>
       <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
@@ -2632,23 +2632,23 @@
     </message>
     <message>
       <source>Keyboard</source>
-      <translation type="unfinished">Keyboard</translation>
+      <translation>Tastatur</translation>
     </message>
     <message>
       <source>Joystick</source>
-      <translation type="unfinished">Joystick</translation>
+      <translation>Joystick</translation>
     </message>
     <message>
       <source>Unset all</source>
-      <translation type="unfinished">Unset all</translation>
+      <translation>Alle entfernen</translation>
     </message>
     <message>
       <source>Start/Stop AUDIO recording</source>
-      <translation type="unfinished">Start/Stop AUDIO recording</translation>
+      <translation>AUDIO-Aufnahme starten/stoppen</translation>
     </message>
     <message>
       <source>Start/Stop VIDEO recording</source>
-      <translation type="unfinished">Start/Stop VIDEO recording</translation>
+      <translation>VIDEO-Aufnahme starten/stoppen</translation>
     </message>
     <message>
       <source>Start/Stop WAV recording</source>
@@ -2695,15 +2695,15 @@
     </message>
     <message>
       <source>Overclock</source>
-      <translation type="unfinished">Overclock</translation>
+      <translation>Übertakten</translation>
     </message>
     <message>
       <source>Sprites and background</source>
-      <translation type="unfinished">Sprites and background</translation>
+      <translation>Sprites und Hintergrund</translation>
     </message>
     <message>
       <source>Unlimited Sprites</source>
-      <translation type="unfinished">Unlimited Sprites</translation>
+      <translation>Unbegrenzte Sprites</translation>
     </message>
     <message>
       <source>Enable Extra Scanlines</source>
@@ -2711,23 +2711,23 @@
     </message>
     <message>
       <source>Hide Sprites</source>
-      <translation type="unfinished">Hide Sprites</translation>
+      <translation>Sprites ausblenden</translation>
     </message>
     <message>
       <source>Hide Background</source>
-      <translation type="unfinished">Hide Background</translation>
+      <translation>Hintergrund ausblenden</translation>
     </message>
     <message>
       <source>Advanced</source>
-      <translation type="unfinished">Advanced</translation>
+      <translation>Erweitert</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Standard</translation>
     </message>
     <message>
       <source>Randomize (Not recommended)</source>
-      <translation type="unfinished">Randomize (Not recommended)</translation>
+      <translation>Zufällig (Nicht empfohlen)</translation>
     </message>
     <message>
       <source>Power up/reset CPU/PPU Alignment</source>
@@ -2735,7 +2735,7 @@
     </message>
     <message>
       <source>Increment at every hard reset (Not recommended)</source>
-      <translation type="unfinished">Increment at every hard reset (Not recommended)</translation>
+      <translation>Erhöhungen bei jedem harten Zurücksetzen (Nicht empfohlen)</translation>
     </message>
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
@@ -2816,11 +2816,11 @@
     </message>
     <message>
       <source>Not supported</source>
-      <translation type="unfinished">Not supported</translation>
+      <translation>Nicht unterstützt</translation>
     </message>
     <message>
       <source>Custom Height</source>
-      <translation type="unfinished">Custom Height</translation>
+      <translation>Eigene Höhe</translation>
     </message>
     <message>
       <source>Output Video Format</source>
@@ -2832,123 +2832,123 @@
     </message>
     <message>
       <source>Output Quality</source>
-      <translation type="unfinished">Output Quality</translation>
+      <translation>Ausgabequalität</translation>
     </message>
     <message>
       <source>Output Audio Format</source>
-      <translation type="unfinished">Output Audio Format</translation>
+      <translation>Ausgabe-Audioformat</translation>
     </message>
     <message>
       <source>Output Resolution</source>
-      <translation type="unfinished">Output Resolution</translation>
+      <translation>Ausgabeauflösung</translation>
     </message>
     <message>
       <source>Custom</source>
-      <translation type="unfinished">Custom</translation>
+      <translation>Benutzerdefiniert</translation>
     </message>
     <message>
       <source>256 x 240  (1:1)</source>
-      <translation type="unfinished">256 x 240  (1:1)</translation>
+      <translation>256 x 240 (1:1)</translation>
     </message>
     <message>
       <source>292 x 240  (8:7 NTSC TV)</source>
-      <translation type="unfinished">292 x 240  (8:7 NTSC TV)</translation>
+      <translation>292 x 240 (8:7 NTSC TV)</translation>
     </message>
     <message>
       <source>320 x 240  (5:4)</source>
-      <translation type="unfinished">320 x 240  (5:4)</translation>
+      <translation>320 x 240 (5:4)</translation>
     </message>
     <message>
       <source>354 x 240  (11:8 PAL TV)</source>
-      <translation type="unfinished">354 x 240  (11:8 PAL TV)</translation>
+      <translation>354 x 240 (11:8 PAL TV)</translation>
     </message>
     <message>
       <source>512 x 480  (1:1)</source>
-      <translation type="unfinished">512 x 480  (1:1)</translation>
+      <translation>512 x 480 (1:1)</translation>
     </message>
     <message>
       <source>584 x 480  (8:7 NTSC TV)</source>
-      <translation type="unfinished">584 x 480  (8:7 NTSC TV)</translation>
+      <translation>584 x 480 (8:7 NTSC TV)</translation>
     </message>
     <message>
       <source>640 x 480  (5:4)</source>
-      <translation type="unfinished">640 x 480  (5:4)</translation>
+      <translation>640 x 480 (5:4)</translation>
     </message>
     <message>
       <source>708 x 480  (11:8 PAL TV)</source>
-      <translation type="unfinished">708 x 480  (11:8 PAL TV)</translation>
+      <translation>708 x 480 (11:8 PAL TV)</translation>
     </message>
     <message>
       <source>768 x 720  (1:1)</source>
-      <translation type="unfinished">768 x 720  (1:1)</translation>
+      <translation>768 x 720 (1:1)</translation>
     </message>
     <message>
       <source>876 x 720  (8:7 NTSC TV)</source>
-      <translation type="unfinished">876 x 720  (8:7 NTSC TV)</translation>
+      <translation>876 x 720 (8:7 NTSC TV)</translation>
     </message>
     <message>
       <source>960 x 720  (5:4)</source>
-      <translation type="unfinished">960 x 720  (5:4)</translation>
+      <translation>960 x 720 (5:4)</translation>
     </message>
     <message>
       <source>1064 x 720  (11:8 PAL TV)</source>
-      <translation type="unfinished">1064 x 720  (11:8 PAL TV)</translation>
+      <translation>1064 x 720 (11:8 PAL TV)</translation>
     </message>
     <message>
       <source>1024 x 960  (1:1)</source>
-      <translation type="unfinished">1024 x 960  (1:1)</translation>
+      <translation>1024 x 960 (1:1)</translation>
     </message>
     <message>
       <source>1170 x 960  (8:7 NTSC TV)</source>
-      <translation type="unfinished">1170 x 960  (8:7 NTSC TV)</translation>
+      <translation>1170 x 960 (8:7 NTSC TV)</translation>
     </message>
     <message>
       <source>1280 x 960  (5:4)</source>
-      <translation type="unfinished">1280 x 960  (5:4)</translation>
+      <translation>1280 x 960 (5:4)</translation>
     </message>
     <message>
       <source>1418 x 960  (11:8 PAL TV)</source>
-      <translation type="unfinished">1418 x 960  (11:8 PAL TV)</translation>
+      <translation>1418 x 960 (11:8 PAL TV)</translation>
     </message>
     <message>
       <source>1280 x 720</source>
-      <translation type="unfinished">1280 x 720</translation>
+      <translation>1280 x 720</translation>
     </message>
     <message>
       <source>1920 x 1080</source>
-      <translation type="unfinished">1920 x 1080</translation>
+      <translation>1920 x 1080</translation>
     </message>
     <message>
       <source>Use the emulator resolution</source>
-      <translation type="unfinished">Use the emulator resolution</translation>
+      <translation>Emulator-Auflösung verwenden</translation>
     </message>
     <message>
       <source>Follow screen rotation</source>
-      <translation type="unfinished">Follow screen rotation</translation>
+      <translation>Bildschirmrotation folgen</translation>
     </message>
     <message>
       <source>Low</source>
-      <translation type="unfinished">Low</translation>
+      <translation>Niedrig</translation>
     </message>
     <message>
       <source>Medium</source>
-      <translation type="unfinished">Medium</translation>
+      <translation>Mittel</translation>
     </message>
     <message>
       <source>High</source>
-      <translation type="unfinished">High</translation>
+      <translation>Hoch</translation>
     </message>
     <message>
       <source>Audio recording settings</source>
-      <translation type="unfinished">Audio recording settings</translation>
+      <translation>Audio-Aufnahme-Einstellungen</translation>
     </message>
     <message>
       <source>Video recording settings</source>
-      <translation type="unfinished">Video recording settings</translation>
+      <translation>Audio-Aufnahme-Einstellungen</translation>
     </message>
     <message>
       <source>Recording Settings</source>
-      <translation type="unfinished">Recording Settings</translation>
+      <translation>Aufnahmeeinstellungen</translation>
     </message>
     <message>
       <source>Opus Audio (*.opus)</source>
@@ -2968,23 +2968,23 @@
     </message>
     <message>
       <source>[Select a file]</source>
-      <translation type="unfinished">[Select a file]</translation>
+      <translation>[Wähle eine Datei]</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Standard</translation>
     </message>
     <message>
       <source>Shaders files</source>
-      <translation type="unfinished">Shaders files</translation>
+      <translation>Shader-Dateien</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Alle Dateien</translation>
     </message>
     <message>
       <source>Open Shader file</source>
-      <translation type="unfinished">Open Shader file</translation>
+      <translation>Shader-Datei öffnen</translation>
     </message>
     <message>
       <source>Palette files</source>
@@ -3000,7 +3000,7 @@
     </message>
     <message>
       <source>1x</source>
-      <translation type="unfinished">1x</translation>
+      <translation>1x</translation>
     </message>
     <message>
       <source>2x</source>
@@ -3008,39 +3008,39 @@
     </message>
     <message>
       <source>3x</source>
-      <translation type="unfinished">3x</translation>
+      <translation>3x</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation type="unfinished">4x</translation>
+      <translation>4x</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation type="unfinished">5x</translation>
+      <translation>5x</translation>
     </message>
     <message>
       <source>6x</source>
-      <translation type="unfinished">6x</translation>
+      <translation>6x</translation>
     </message>
     <message>
       <source>Scale</source>
-      <translation type="unfinished">Scale</translation>
+      <translation>Skalierung</translation>
     </message>
     <message>
       <source>** To apply this change restart is needed **</source>
-      <translation type="unfinished">** To apply this change restart is needed **</translation>
+      <translation>** Um diese Änderung anzuwenden wird ein Neustart benötigt**</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Sonstiges</translation>
     </message>
     <message>
       <source>1:1</source>
-      <translation type="unfinished">1:1</translation>
+      <translation>1:1</translation>
     </message>
     <message>
       <source>5:4</source>
-      <translation type="unfinished">5:4</translation>
+      <translation>5:4</translation>
     </message>
     <message>
       <source>8:7 (NTSC TV)</source>
@@ -3056,71 +3056,71 @@
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>Aus</translation>
     </message>
     <message>
       <source>On</source>
-      <translation type="unfinished">On</translation>
+      <translation>An</translation>
     </message>
     <message>
       <source>Default Value</source>
-      <translation type="unfinished">Default Value</translation>
+      <translation>Standardwert</translation>
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>NTSC</translation>
     </message>
     <message>
       <source>PAL/Dendy</source>
-      <translation type="unfinished">PAL/Dendy</translation>
+      <translation>PAL/Dendy</translation>
     </message>
     <message>
       <source>Right</source>
-      <translation type="unfinished">Right</translation>
+      <translation>Rechts</translation>
     </message>
     <message>
       <source>Down</source>
-      <translation type="unfinished">Down</translation>
+      <translation>Unten</translation>
     </message>
     <message>
       <source>Up</source>
-      <translation type="unfinished">Up</translation>
+      <translation>Oben</translation>
     </message>
     <message>
       <source>Left</source>
-      <translation type="unfinished">Left</translation>
+      <translation>Links</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Auf Standardeinstellungen zurücksetzen</translation>
     </message>
     <message>
       <source>Black borders in window mode</source>
-      <translation type="unfinished">Black borders in window mode</translation>
+      <translation>Schwarze Ränder im Fenstermodus</translation>
     </message>
     <message>
       <source>Black borders in fullscreen</source>
-      <translation type="unfinished">Black borders in fullscreen</translation>
+      <translation>Schwarze Ränder im Vollbildmodus</translation>
     </message>
     <message>
       <source>Overscan</source>
-      <translation type="unfinished">Overscan</translation>
+      <translation>Overscan</translation>
     </message>
     <message>
       <source>No Shaders</source>
-      <translation type="unfinished">No Shaders</translation>
+      <translation>Keine Shader</translation>
     </message>
     <message>
       <source>CRT Dotmask</source>
-      <translation type="unfinished">CRT Dotmask</translation>
+      <translation>CRT-Punktmaske</translation>
     </message>
     <message>
       <source>CRT Scanlines</source>
-      <translation type="unfinished">CRT Scanlines</translation>
+      <translation>CRT-Scanlines</translation>
     </message>
     <message>
       <source>CRT With Curve</source>
-      <translation type="unfinished">CRT With Curve</translation>
+      <translation>CRT mit Kurve</translation>
     </message>
     <message>
       <source>Emboss</source>
@@ -3136,15 +3136,15 @@
     </message>
     <message>
       <source>Old TV</source>
-      <translation type="unfinished">Old TV</translation>
+      <translation>Alter Fernseher</translation>
     </message>
     <message>
       <source>From File</source>
-      <translation type="unfinished">From File</translation>
+      <translation>Aus Datei</translation>
     </message>
     <message>
       <source>No Filters</source>
-      <translation type="unfinished">No Filters</translation>
+      <translation>Keine Filter</translation>
     </message>
     <message>
       <source>Scale2X</source>
@@ -3228,11 +3228,11 @@
     </message>
     <message>
       <source>Green</source>
-      <translation type="unfinished">Green</translation>
+      <translation>Grün</translation>
     </message>
     <message>
       <source>Editor</source>
-      <translation type="unfinished">Editor</translation>
+      <translation>Editor</translation>
     </message>
     <message>
       <source>Palette</source>
@@ -3272,7 +3272,7 @@
     </message>
     <message>
       <source>Show FPS</source>
-      <translation type="unfinished">Show FPS</translation>
+      <translation>FPS anzeigen</translation>
     </message>
     <message>
       <source>Input display</source>
@@ -3308,19 +3308,19 @@
     </message>
     <message>
       <source>0 degrees</source>
-      <translation type="unfinished">0 degrees</translation>
+      <translation>0 Grad</translation>
     </message>
     <message>
       <source>90 degrees</source>
-      <translation type="unfinished">90 degrees</translation>
+      <translation>90 Grad</translation>
     </message>
     <message>
       <source>180 degrees</source>
-      <translation type="unfinished">180 degrees</translation>
+      <translation>180 Grad</translation>
     </message>
     <message>
       <source>270 degrees</source>
-      <translation type="unfinished">270 degrees</translation>
+      <translation>270 Grad</translation>
     </message>
     <message>
       <source>Raw</source>
@@ -3348,7 +3348,7 @@
     </message>
     <message>
       <source>Screen</source>
-      <translation type="unfinished">Screen</translation>
+      <translation>Bildschirm</translation>
     </message>
     <message>
       <source>Software Filters</source>
@@ -3384,7 +3384,7 @@
     </message>
     <message>
       <source>Desktop resolution</source>
-      <translation type="unfinished">Desktop resolution</translation>
+      <translation>Desktop-Auflösung</translation>
     </message>
     <message>
       <source>Adapt the refresh rate to the region (PAL/Dendy 50Hz, NTSC 60Hz)</source>
@@ -3392,7 +3392,7 @@
     </message>
     <message>
       <source>Fullscreen</source>
-      <translation type="unfinished">Fullscreen</translation>
+      <translation>Vollbild</translation>
     </message>
     <message>
       <source>* applied if supported by the monitor</source>
@@ -3475,15 +3475,15 @@
     </message>
     <message>
       <source>Save state</source>
-      <translation type="unfinished">Save state</translation>
+      <translation>Speicherstand erstellen</translation>
     </message>
     <message>
       <source>Save/Load State</source>
-      <translation type="unfinished">Save/Load State</translation>
+      <translation>Speicherstand laden/erstellen</translation>
     </message>
     <message>
       <source>Load state</source>
-      <translation type="unfinished">Load state</translation>
+      <translation>Speicherstand laden</translation>
     </message>
   </context>
 </TS>
