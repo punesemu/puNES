@@ -2521,7 +2521,7 @@
     </message>
     <message>
       <source>German</source>
-      <translation type="unfinished">German</translation>
+      <translation>Német</translation>
     </message>
   </context>
   <context>
