@@ -2521,7 +2521,7 @@
     </message>
     <message>
       <source>German</source>
-      <translation type="unfinished">German</translation>
+      <translation>Немецкий</translation>
     </message>
   </context>
   <context>
