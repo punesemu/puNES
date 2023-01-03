@@ -2519,6 +2519,10 @@
       <source>French</source>
       <translation>Französisch</translation>
     </message>
+    <message>
+      <source>German</source>
+      <translation type="unfinished">German</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
