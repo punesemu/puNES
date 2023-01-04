@@ -36,6 +36,8 @@ Note : 32 bit versions are Windows XP compatible.
 -----------
 If you want buy me a beer : <span class="badge-paypal"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button" /></a></span>
 
+[You can help translate puNES on Crowdin](https://crowdin.com/project/punes)
+
 :camera: Screenshots
 -----------
 <p align="center">
