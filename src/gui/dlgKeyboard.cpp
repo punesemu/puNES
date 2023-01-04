@@ -594,7 +594,7 @@ void keyboardButton::paintEvent(QPaintEvent *event) {
 				}
 			}
 
-			font.setPointSizeF(font.pointSizeF() - 2.0f);
+			font.setPointSizeF(font.pointSizeF() - 1.0f);
 
 			painter.setFont(font);
 			painter.drawText(QRectF(x, y + corner, w, h), Qt::AlignHCenter | Qt::AlignTop,
