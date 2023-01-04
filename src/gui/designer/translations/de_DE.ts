@@ -166,11 +166,11 @@
     </message>
     <message>
       <source>Zapper</source>
-      <translation type="unfinished">Zapper</translation>
+      <translation>Zapper</translation>
     </message>
     <message>
       <source>Two Zappers</source>
-      <translation type="unfinished">Two Zappers</translation>
+      <translation>Zwei Zapper</translation>
     </message>
     <message>
       <source>Bandai Hyper Shot Lightgun</source>
@@ -366,7 +366,7 @@
     </message>
     <message>
       <source>Horizontal</source>
-      <translation type="unfinished">Horizontal</translation>
+      <translation>Horizontal</translation>
     </message>
     <message>
       <source>Vertical</source>
@@ -1611,7 +1611,7 @@
     <message>
       <source>[red]error[normal] loading state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] loading state</translation>
+      <translation>[red]Fehler[normal] beim laden des Speicherstands</translation>
     </message>
     <message>
       <source>[red]state file is not for this rom[normal]</source>
@@ -1621,12 +1621,12 @@
     <message>
       <source>[green]%1[normal] cheat active</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[green]%1[normal] cheat active</translation>
+      <translation>[green]%1[normal] Cheat aktiviert</translation>
     </message>
     <message>
       <source>[green]%1[normal] cheats active</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[green]%1[normal] cheats active</translation>
+      <translation>[green]%1[normal] Cheats aktiviert</translation>
     </message>
     <message>
       <source>overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</source>
@@ -1651,7 +1651,7 @@
     <message>
       <source>[red]error on game genie rom file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on game genie rom file[normal]</translation>
+      <translation>[red]Fehler in der Game Genie Rom Datei[normal]</translation>
     </message>
     <message>
       <source>[red]error on FDS bios file[normal]</source>
@@ -1686,7 +1686,7 @@
     <message>
       <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] loading state [cyan]%1[normal], file is corrupted</translation>
+      <translation>[red]Fehler[normal] Speicherstand [cyan]%1[normal], Datei ist beschädigt</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] saved successfully</source>
@@ -1881,11 +1881,11 @@
     </message>
     <message>
       <source>New Pro Action</source>
-      <translation type="unfinished">New Pro Action</translation>
+      <translation>Neue pro Action</translation>
     </message>
     <message>
       <source>New CPU Ram</source>
-      <translation>Neuer CPU-Ram</translation>
+      <translation>Neuer CPU Ram</translation>
     </message>
   </context>
   <context>
@@ -2743,7 +2743,7 @@
     </message>
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
-      <translation type="unfinished">Automatically restores the limit when necessary to prevent graphical glitches</translation>
+      <translation>Automatisch das Limit wiederherstellen, wenn nötig, um graphische Fehler zu vermeiden</translation>
     </message>
   </context>
   <context>
