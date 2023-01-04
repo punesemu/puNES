@@ -228,7 +228,7 @@ void dlgLog::error_box(const uTCHAR *utxt, va_list ap) {
 
 void dlgLog::lopen(types type, const uTCHAR *utxt, va_list ap) {
 #if defined (_WIN32)
-	_lopen(type, "▶", ((gui.version_os < WIN_TEN) ? "*" : "▶"), utxt, ap);
+	_lopen(type, "▶", "*", utxt, ap);
 #elif defined (__OpenBSD__)
 	_lopen(type, "▶", "*", utxt, ap);
 #else
