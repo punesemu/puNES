@@ -131,8 +131,13 @@ _recording_format_info recording_format_info[REC_FORMAT_TOTAL] = {
 	{ FALSE, "mpeg"    , { "mpg" , "mpeg", "end" }, REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MPG_MPEG1, NULL, { "mpeg1video", "end" } },
 	{ FALSE, "mpeg"    , { "mpg" , "mpeg", "end" }, REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MPG_MPEG2, NULL, { "mpeg2video", "end" } },
 	{ FALSE, "mp4"     , { "mp4" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MP4_MPEG4, NULL, { "mpeg4", "msmpeg4", "libxvid", "end" } },
+#if defined (__WIN32__)
+	{ FALSE, "mp4"     , { "mp4" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MP4_H264 , NULL, { "libx264", "h264_omx", "end" } },
+	{ FALSE, "matroska", { "mkv" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MKV_HEVC , NULL, { "libx265", "end" } },
+#else
 	{ FALSE, "mp4"     , { "mp4" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MP4_H264 , NULL, { "h264_nvenc", "libx264", "h264_omx", "end" } },
 	{ FALSE, "matroska", { "mkv" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MKV_HEVC , NULL, { "hevc_nvenc", "libx265", "end" } },
+#endif
 	{ FALSE, "webm"    , { "webm", "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_WEB_WEBM , NULL, { "libvpx-vp9", "libvpx", "end" } },
 	{ FALSE, "avi"     , { "wmv" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_AVI_WMV  , NULL, { "wmv2", "wmv1", "end" } },
 	{ FALSE, "avi"     , { "avi" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_AVI_FFV  , NULL, { "ffv1", "end" } },
@@ -167,7 +172,7 @@ void recording_init(void) {
 			if ((avc = avcodec_find_encoder_by_name(rfi->codec)) != NULL) {
 				AVCodecContext *test = avcodec_alloc_context3(avc);
 				AVDictionary *opts = NULL;
-				BYTE finded = TRUE;
+				BYTE try_open = TRUE, finded = TRUE;
 
 				if (rfi->format_type == REC_FORMAT_VIDEO) {
 					test->pix_fmt = AV_PIX_FMT_YUV420P;
@@ -180,6 +185,9 @@ void recording_init(void) {
 					}
 					if (rfi->recording_format == REC_FORMAT_VIDEO_MKV_HEVC) {
 						av_dict_set(&opts, "x265-params", "log-level=none", 0);
+#if defined (__WIN32__)
+						try_open = FALSE;
+#endif
 					}
 				} else {
 					test->sample_fmt = ffmpeg_audio_select_sample_fmt(avc);
@@ -195,7 +203,7 @@ void recording_init(void) {
 				}
 
 				if (test) {
-					if (avcodec_open2(test, avc, &opts) < 0) {
+					if (try_open && avcodec_open2(test, avc, &opts) < 0) {
 						finded = FALSE;
 					}
 					av_dict_free(&opts);
@@ -980,7 +988,6 @@ static BYTE ffmpeg_video_add_stream_format_h264(void) {
 		video->avcc->profile = FF_PROFILE_H264_HIGH;
 		video->avcc->bit_rate = (int64_t)vbr;
 	}
-
 	video->avcc->thread_count = FFMIN(8, gui_hardware_concurrency());
 
 	if (ffmpeg_stream_open(video, opts, TRUE) == EXIT_ERROR) {
