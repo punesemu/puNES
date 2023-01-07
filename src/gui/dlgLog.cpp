@@ -304,11 +304,11 @@ void dlgLog::_lclose(BYTE color, const uTCHAR *utxt, va_list ap) {
 }
 void dlgLog::print(types type, const uTCHAR *utxt, va_list ap) {
 	lopen(type, utxt, ap);
-	lclose(nullptr, nullptr);
+	lclose(nullptr, ap);
 }
 void dlgLog::print_box(types type, const uTCHAR *utxt, va_list ap) {
 	lopen_box(type, utxt, ap);
-	lclose_box(nullptr, nullptr);
+	lclose_box(nullptr, ap);
 }
 void dlgLog::extract(void) {
 	QStringList list;
