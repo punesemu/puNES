@@ -1537,13 +1537,11 @@ BYTE map_prg_ram_malloc(WORD size) {
 	return (EXIT_OK);
 }
 void map_prg_ram_memset(void) {
-	int value = 0x00;
-
 	if (info.mapper.id == FDS_MAPPER) {
-		value = 0xEA;
+		memset(prg.ram.data, 0xEA, prg.ram.size);
+	} else {
+		emu_initial_ram(prg.ram.data, prg.ram.size);
 	}
-
-	memset(prg.ram.data, value, prg.ram.size);
 }
 void map_prg_ram_battery_save(void) {
 	/* se c'e' della PRG Ram battery packed la salvo in un file */

@@ -1062,7 +1062,7 @@ void cpu_turn_on(void) {
 			 *  state of any registers after Power-UP and especially
 			 *  not the stack register and WRAM ($0000-$07FF).
 			 */
-			memset(mmcpu.ram, 0xFF, sizeof(mmcpu.ram));
+			emu_initial_ram(mmcpu.ram, sizeof(mmcpu.ram));
 
 			/*
 			 * questo workaround serve solo per

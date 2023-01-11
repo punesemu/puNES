@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>573</width>
+    <width>733</width>
     <height>580</height>
    </rect>
   </property>
@@ -182,6 +182,11 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_Samplarate_44100">
+          <property name="font">
+           <font>
+            <underline>true</underline>
+           </font>
+          </property>
           <property name="text">
            <string>44100</string>
           </property>
@@ -249,6 +254,11 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_Channels_Stereo_Delay">
+          <property name="font">
+           <font>
+            <underline>true</underline>
+           </font>
+          </property>
           <property name="text">
            <string>Stereo Delay</string>
           </property>

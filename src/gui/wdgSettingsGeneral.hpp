@@ -43,6 +43,7 @@ class wdgSettingsGeneral : public QWidget, public Ui::wdgSettingsGeneral {
 		void fast_forward_velocity_set(void);
 		void rewind_minutes_set(void);
 		void language_set(void);
+		void initial_ram_value_set(void);
 
 	private slots:
 		void s_mode(bool checked);
@@ -51,6 +52,7 @@ class wdgSettingsGeneral : public QWidget, public Ui::wdgSettingsGeneral {
 		void s_language(int index);
 		void s_game_genie_rom_file(bool checked);
 		void s_game_genie_rom_file_clear(bool checked);
+		void s_initial_ram_value(bool checked);
 		void s_fds_bios_file(bool checked);
 		void s_fds_bios_file_clear(bool checked);
 		void s_fds_disk1sideA_at_reset(bool checked);

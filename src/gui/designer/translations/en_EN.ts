@@ -2523,6 +2523,26 @@
         <source>German</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>0x00</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Random</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Initial RAM value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RAM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0xFF</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>wdgSettingsInput</name>

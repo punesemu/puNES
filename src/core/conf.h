@@ -53,6 +53,7 @@ typedef struct _config {
 	BYTE ntsc_format;
 	BYTE palette;
 	BYTE disable_swap_emphasis_pal;
+	BYTE initial_ram_value;
 	BYTE vsync;
 	BYTE integer_scaling;
 	BYTE stretch;

@@ -49,6 +49,7 @@ EXTERNC uTCHAR *emu_rand_str(void);
 EXTERNC void emu_ctrl_doublebuffer(void);
 EXTERNC void emu_frame_input_and_rewind(void);
 EXTERNC void emu_info_rom(void);
+EXTERNC void emu_initial_ram(BYTE *ram, unsigned int length);
 
 #undef EXTERNC
 

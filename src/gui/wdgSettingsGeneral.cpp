@@ -32,6 +32,7 @@ wdgSettingsGeneral::wdgSettingsGeneral(QWidget *parent) : QWidget(parent) {
 	widget_Mode->setStyleSheet(button_stylesheet());
 	widget_Fast_Forward_velocity->setStyleSheet(button_stylesheet());
 	widget_Rewind_minutes->setStyleSheet(button_stylesheet());
+	widget_Initial_RAM_Value->setStyleSheet(button_stylesheet());
 
 	pushButton_Mode_Auto->setProperty("mtype", QVariant(AUTO));
 	pushButton_Mode_NTSC->setProperty("mtype", QVariant(NTSC));
@@ -74,6 +75,14 @@ wdgSettingsGeneral::wdgSettingsGeneral(QWidget *parent) : QWidget(parent) {
 	connect(pushButton_Game_Genie_rom_file, SIGNAL(clicked(bool)), this, SLOT(s_game_genie_rom_file(bool)));
 	connect(pushButton_Game_Genie_rom_file_clear, SIGNAL(clicked(bool)), this, SLOT(s_game_genie_rom_file_clear(bool)));
 
+	pushButton_IRV_0X00->setProperty("mtype", QVariant(IRV_0X00));
+	pushButton_IRV_0XFF->setProperty("mtype", QVariant(IRV_0XFF));
+	pushButton_IRV_Random->setProperty("mtype", QVariant(IRV_RANDOM));
+
+	connect(pushButton_IRV_0X00, SIGNAL(toggled(bool)), this, SLOT(s_initial_ram_value(bool)));
+	connect(pushButton_IRV_0XFF, SIGNAL(toggled(bool)), this, SLOT(s_initial_ram_value(bool)));
+	connect(pushButton_IRV_Random, SIGNAL(toggled(bool)), this, SLOT(s_initial_ram_value(bool)));
+
 	connect(pushButton_FDS_Bios, SIGNAL(clicked(bool)), this, SLOT(s_fds_bios_file(bool)));
 	connect(pushButton_FDS_Bios_clear, SIGNAL(clicked(bool)), this, SLOT(s_fds_bios_file_clear(bool)));
 
@@ -104,6 +113,8 @@ void wdgSettingsGeneral::showEvent(UNUSED(QShowEvent *event)) {
 	icon_Rewind_minutes->setPixmap(QIcon(":/icon/icons/rewind.svgz").pixmap(dim, dim));
 	icon_Language->setPixmap(QIcon(":/icon/icons/language.svgz").pixmap(dim, dim));
 	icon_System_Roms->setPixmap(QIcon(":/icon/icons/microprocessor.svgz").pixmap(dim, dim));
+	icon_General_ram->setPixmap(QIcon(":/icon/icons/buffer_size.svgz").pixmap(dim, dim));
+	icon_Init_RAM_Value->setPixmap(QIcon(":/icon/icons/hexadecimal.svgz").pixmap(dim, dim));
 	icon_General_FDS->setPixmap(QIcon(":/icon/icons/fds_file.svgz").pixmap(dim, dim));
 	icon_General_misc->setPixmap(QIcon(":/icon/icons/misc.svgz").pixmap(dim, dim));
 	icon_Game_Genie_rom_file->setPixmap(QIcon(":/icon/icons/bios.svgz").pixmap(dim, dim));
@@ -123,6 +134,7 @@ void wdgSettingsGeneral::update_widget(void) {
 	fast_forward_velocity_set();
 	rewind_minutes_set();
 	language_set();
+	initial_ram_value_set();
 
 	if (ustrlen(cfg->gg_rom_file) != 0) {
 		lineEdit_Game_Genie_rom_file->setEnabled(true);
@@ -280,6 +292,23 @@ void wdgSettingsGeneral::language_set(void) {
 	}
 
 	comboBox_Language->setCurrentIndex(lang);
+}
+void wdgSettingsGeneral::initial_ram_value_set(void) {
+	qtHelper::pushbutton_set_checked(pushButton_IRV_0X00, false);
+	qtHelper::pushbutton_set_checked(pushButton_IRV_0XFF, false);
+	qtHelper::pushbutton_set_checked(pushButton_IRV_Random, false);
+	switch (cfg->initial_ram_value) {
+		case IRV_0X00:
+			qtHelper::pushbutton_set_checked(pushButton_IRV_0X00, true);
+			break;
+		default:
+		case IRV_0XFF:
+			qtHelper::pushbutton_set_checked(pushButton_IRV_0XFF, true);
+			break;
+		case IRV_RANDOM:
+			qtHelper::pushbutton_set_checked(pushButton_IRV_Random, true);
+			break;
+	}
 }
 
 void wdgSettingsGeneral::s_mode(bool checked) {
@@ -448,6 +477,17 @@ void wdgSettingsGeneral::s_game_genie_rom_file(UNUSED(bool checked)) {
 void wdgSettingsGeneral::s_game_genie_rom_file_clear(UNUSED(bool checked)) {
 	umemset(cfg->gg_rom_file, 0x00, usizeof(cfg->gg_rom_file));
 	update_widget();
+}
+void wdgSettingsGeneral::s_initial_ram_value(bool checked) {
+	if (checked) {
+		int irv = QVariant(((QPushButton *)sender())->property("mtype")).toInt();
+
+		if (irv == cfg->initial_ram_value) {
+			return;
+		}
+		cfg->initial_ram_value = irv;
+	}
+	gui_update();
 }
 void wdgSettingsGeneral::s_fds_bios_file(UNUSED(bool checked)) {
 	QStringList filters;

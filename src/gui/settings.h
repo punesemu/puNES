@@ -47,6 +47,7 @@ enum set_element {
 	SET_FF_VELOCITY,
 	SET_REWIND_MINUTES,
 	SET_BATTERY_RAM_FILE_EVEY_TOT,
+	SET_INITIAL_RAM_VALUE,
 	SET_BCK_PAUSE,
 	SET_CHEAT_MODE,
 	SET_FILE_GAME_GENIE_ROM,
@@ -529,6 +530,11 @@ static const _opt opt_ff_velocity[] = {
 	{NULL, uL("4x"), FF_4X},
 	{NULL, uL("5x"), FF_5X}
 };
+static const _opt opt_initial_ram_value[] = {
+	{NULL, uL("0x00")  , IRV_0X00},
+	{NULL, uL("0xff")  , IRV_0XFF},
+	{NULL, uL("random"), IRV_RANDOM}
+};
 static const _opt opt_screen_rotation[] = {
 	{NULL, uL("0")  , ROTATE_0},
 	{NULL, uL("90") , ROTATE_90},
@@ -808,6 +814,12 @@ static const _settings main_cfg[] = {
 		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("system"), uL("initial ram value"), uL("0xff"),
+		uL("# possible values: 0x00, 0xff, random"),
+		NULL,
+		{LENGTH(opt_initial_ram_value), opt_initial_ram_value}
 	},
 	{
 		uL("system"), uL("pause when in background"), uL("yes"),

@@ -23,6 +23,7 @@
 #include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
+#include "emu.h"
 
 #define n163_prg_rom_8k_update(slot)\
 	control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)\
@@ -96,11 +97,12 @@ void map_init_Namco(BYTE model) {
 
 			if (info.reset >= HARD) {
 				memset(&n163, 0x00, sizeof(n163));
+				emu_initial_ram(n163.snd_ram, sizeof(n163.snd_ram));
 				n163.snd_ch_start = 7;
 				n163.snd_auto_inc = 1;
 			} else {
 				memset(&n163.ch, 0x00, sizeof(n163.ch));
-				memset(&n163.snd_ram, 0x00, sizeof(n163.snd_ram));
+				emu_initial_ram(n163.snd_ram, sizeof(n163.snd_ram));
 				memset(&n163.snd_wave, 0x00, sizeof(n163.snd_wave));
 				n163.irq_delay = FALSE;
 				n163.snd_ch_start = 7;

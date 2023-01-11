@@ -409,6 +409,11 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_Output_Quality_medium">
+          <property name="font">
+           <font>
+            <underline>true</underline>
+           </font>
+          </property>
           <property name="text">
            <string>Medium</string>
           </property>

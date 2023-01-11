@@ -667,8 +667,6 @@ BYTE emu_reset(BYTE type) {
 
 	info.first_illegal_opcode = FALSE;
 
-	srand(time(0));
-
 	tas.lag_next_frame = TRUE;
 	tas.lag_actual_frame = TRUE;
 
@@ -1161,6 +1159,20 @@ void emu_info_rom(void) {
 	}
 
 	log_info_box(uL("CRC32;%08X"), info.crc32.total);
+}
+void emu_initial_ram(BYTE *ram, unsigned int length) {
+	unsigned int i;
+
+	if (!ram || !length) {
+		return;
+	}
+	for (i = 0; i < length; i++) {
+		ram[i] = cfg->initial_ram_value == IRV_0X00
+			? 0x00
+			: cfg->initial_ram_value == IRV_0XFF
+				? 0xFF
+				: rand();
+	}
 }
 
 INLINE static void emu_frame_started(void) {

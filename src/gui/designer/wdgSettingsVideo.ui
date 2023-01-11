@@ -35,7 +35,7 @@
       <enum>QTabWidget::East</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_Screen">
       <attribute name="icon">
@@ -124,6 +124,11 @@
             </item>
             <item>
              <widget class="QPushButton" name="pushButton_Scale_2x">
+              <property name="font">
+               <font>
+                <underline>true</underline>
+               </font>
+              </property>
               <property name="text">
                <string>2x</string>
               </property>
@@ -280,6 +285,11 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="font">
+                  <font>
+                   <underline>true</underline>
+                  </font>
+                 </property>
                  <property name="text">
                   <string>Default Value</string>
                  </property>
@@ -312,6 +322,11 @@
                </item>
                <item>
                 <widget class="QPushButton" name="pushButton_Oscan_def_value_off">
+                 <property name="font">
+                  <font>
+                   <underline>true</underline>
+                  </font>
+                 </property>
                  <property name="text">
                   <string>Off</string>
                  </property>
@@ -630,6 +645,11 @@
               </item>
               <item row="1" column="0" colspan="2">
                <widget class="QPushButton" name="pushButton_PAR_87">
+                <property name="font">
+                 <font>
+                  <underline>true</underline>
+                 </font>
+                </property>
                 <property name="text">
                  <string>8:7 (NTSC TV)</string>
                 </property>
@@ -676,6 +696,11 @@
               </property>
               <item row="0" column="0">
                <widget class="QPushButton" name="pushButton_Screen_Rotation_0d">
+                <property name="font">
+                 <font>
+                  <underline>true</underline>
+                 </font>
+                </property>
                 <property name="text">
                  <string>0 degrees</string>
                 </property>

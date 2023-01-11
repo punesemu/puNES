@@ -101,6 +101,11 @@
         </property>
         <item>
          <widget class="QPushButton" name="pushButton_Cheats_Mode_disabled">
+          <property name="font">
+           <font>
+            <underline>true</underline>
+           </font>
+          </property>
           <property name="text">
            <string>Disabled</string>
           </property>

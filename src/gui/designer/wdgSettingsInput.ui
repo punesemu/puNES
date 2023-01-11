@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>563</width>
+    <width>574</width>
     <height>340</height>
    </rect>
   </property>
@@ -354,6 +354,11 @@
             </property>
             <item>
              <widget class="QPushButton" name="pushButton_cm_nes">
+              <property name="font">
+               <font>
+                <underline>true</underline>
+               </font>
+              </property>
               <property name="text">
                <string>NES</string>
               </property>

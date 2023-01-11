@@ -842,6 +842,7 @@ void objSet::to_cfg(const QString &group) {
 		int_to_val(SET_REWIND_MINUTES, cfg_from_file.rewind_minutes);
 		int_to_val(SET_FF_VELOCITY, cfg_from_file.ff_velocity);
 		int_to_val(SET_BATTERY_RAM_FILE_EVEY_TOT, cfg_from_file.save_battery_ram_file);
+		int_to_val(SET_INITIAL_RAM_VALUE, cfg_from_file.initial_ram_value);
 		int_to_val(SET_BCK_PAUSE, cfg_from_file.bck_pause);
 		int_to_val(SET_CHEAT_MODE, cfg_from_file.cheat_mode);
 		cpy_utchar_to_val(SET_FILE_GAME_GENIE_ROM, cfg_from_file.gg_rom_file);
@@ -974,6 +975,7 @@ void objSet::fr_cfg(const QString &group) {
 		cfg_from_file.ff_velocity = val_to_int(SET_FF_VELOCITY);
 		cfg_from_file.rewind_minutes = val_to_int(SET_REWIND_MINUTES);
 		cfg_from_file.save_battery_ram_file = val_to_int(SET_BATTERY_RAM_FILE_EVEY_TOT);
+		cfg_from_file.initial_ram_value = val_to_int(SET_INITIAL_RAM_VALUE);
 		cfg_from_file.bck_pause = val_to_int(SET_BCK_PAUSE);
 		cfg_from_file.cheat_mode = val_to_int(SET_CHEAT_MODE);
 		cpy_val_to_utchar(SET_FILE_GAME_GENIE_ROM, cfg_from_file.gg_rom_file, usizeof(cfg_from_file.gg_rom_file));
