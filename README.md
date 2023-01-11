@@ -23,6 +23,11 @@
     <img src="https://repology.org/badge/tiny-repos/punes.svg" alt="Packaging status"/>
   </a>
 </p>
+<p align="center">
+  <a href='https://flathub.org/apps/details/io.github.punesemu.puNES'>
+    <img width='180' height='60' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/>
+  </a>
+</p>
 
 :floppy_disk: Work in Progress (WIP) Builds [![Build status](https://github.com/punesemu/puNES/actions/workflows/build.yml/badge.svg)](https://github.com/punesemu/puNES/actions)
 -----------
