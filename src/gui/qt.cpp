@@ -647,9 +647,8 @@ void gui_decode_all_input_events(void) {
 	if (qt.screen->events.keyb.count()) {
 		for (_wdgScreen_keyboard_event &event : qt.screen->events.keyb) {
 			for (BYTE i = PORT1; i < PORT_MAX; i++) {
-				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(event.mode,
-					event.autorepeat, event.event, event.type, &port[i]) == EXIT_OK)) {
-					break;
+				if (port_funct[i].input_decode_event) {
+					port_funct[i].input_decode_event(event.mode, event.autorepeat, event.event, event.type, &port[i]);
 				}
 			}
 		}
