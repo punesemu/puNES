@@ -1049,33 +1049,34 @@ void cpu_turn_on(void) {
 				mmcpu.ram[x] = (x & 0x04) ? 0xFF : 0x00;
 			}
 		} else {
-			/*
-			 * reset della ram
-			 * Note:
-			 * All internal memory ($0000-$07FF) was consistently
-			 * set to $ff except
-			 *  $0008=$F7
-			 *  $0009=$EF
-			 *  $000a=$DF
-			 *  $000f=$BF
-			 *  Please note that you should NOT rely on the
-			 *  state of any registers after Power-UP and especially
-			 *  not the stack register and WRAM ($0000-$07FF).
-			 */
 			emu_initial_ram(mmcpu.ram, sizeof(mmcpu.ram));
 
-			/*
-			 * questo workaround serve solo per
-			 * 2nd2006.nes e 256inc.nes
-			 */
-			if (info.mapper.id == 0) {
-				mmcpu.ram[0x000] = 0x00;
-			}
-			mmcpu.ram[0x008] = 0xF7;
-			mmcpu.ram[0x009] = 0xEF;
-			mmcpu.ram[0x00A] = 0xDF;
-			//mmcpu.ram[0x00B] = 0xBF;
-			mmcpu.ram[0x00F] = 0xBF;
+//			/*
+//			 * reset della ram
+//			 * Note:
+//			 * All internal memory ($0000-$07FF) was consistently
+//			 * set to $ff except
+//			 *  $0008=$F7
+//			 *  $0009=$EF
+//			 *  $000a=$DF
+//			 *  $000f=$BF
+//			 *  Please note that you should NOT rely on the
+//			 *  state of any registers after Power-UP and especially
+//			 *  not the stack register and WRAM ($0000-$07FF).
+//			 */
+//			mmcpu.ram[0x008] = 0xF7;
+//			mmcpu.ram[0x009] = 0xEF;
+//			mmcpu.ram[0x00A] = 0xDF;
+//			//mmcpu.ram[0x00B] = 0xBF;
+//			mmcpu.ram[0x00F] = 0xBF;
+//
+//			/*
+//			 * questo workaround serve solo per
+//			 * 2nd2006.nes e 256inc.nes
+//			 */
+//			if (info.mapper.id == 0) {
+//				mmcpu.ram[0x000] = 0x00;
+//			}
 
 			/*
 			 * questo workaround serve solo per
