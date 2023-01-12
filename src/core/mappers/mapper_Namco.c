@@ -96,13 +96,22 @@ void map_init_Namco(BYTE model) {
 			mapper.internal_struct_size[0] = sizeof(n163);
 
 			if (info.reset >= HARD) {
-				memset(&n163, 0x00, sizeof(n163));
-				emu_initial_ram(n163.snd_ram, sizeof(n163.snd_ram));
+				memset(&n163.ch, 0x00, sizeof(n163).ch);
+				memset(&n163.nmt_bank, 0x00, sizeof(n163).nmt_bank);
+				memset(&n163.snd_wave, 0x00, sizeof(n163).snd_wave);
+				if (info.reset >= CHANGE_ROM) {
+					memset(&n163.snd_ram, 0x00, sizeof(n163.snd_ram));
+				}
+				if (!info.prg.ram.bat.banks) {
+					emu_initial_ram(n163.snd_ram, sizeof(n163.snd_ram));
+				}
+				n163.snd_adr = 0;
+				n163.irq_delay = 0;
+				n163.irq_count = 0;
 				n163.snd_ch_start = 7;
 				n163.snd_auto_inc = 1;
 			} else {
 				memset(&n163.ch, 0x00, sizeof(n163.ch));
-				emu_initial_ram(n163.snd_ram, sizeof(n163.snd_ram));
 				memset(&n163.snd_wave, 0x00, sizeof(n163.snd_wave));
 				n163.irq_delay = FALSE;
 				n163.snd_ch_start = 7;
