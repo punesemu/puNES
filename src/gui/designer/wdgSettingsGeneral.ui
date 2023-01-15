@@ -815,7 +815,7 @@
      <item row="9" column="0">
       <widget class="QLabel" name="icon_Init_RAM_Value">
        <property name="text">
-        <string>Initial RAM value</string>
+        <string notr="true">Initial RAM value icon</string>
        </property>
       </widget>
      </item>
