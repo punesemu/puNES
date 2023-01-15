@@ -42,28 +42,23 @@ typedef struct _chinaersan2 {
 		size_t size;
 	} font;
 } _chinaersan2;
-typedef struct _n163_snd_ch {
-	BYTE enabled;
-	BYTE active;
-	WORD address;
-	DBWORD freq;
-	DBWORD cycles_reload;
-	DBWORD cycles;
-	WORD length;
-	WORD step;
-	WORD volume;
-	SWORD output;
-} _n163_snd_ch;
 typedef struct _n163 {
-	uint32_t nmt_bank[4][2];
-	BYTE irq_delay;
-	DBWORD irq_count;
-	BYTE snd_ram[0x80];
-	BYTE snd_adr;
-	BYTE snd_auto_inc;
-	BYTE snd_ch_start;
-	BYTE snd_wave[0x100];
-	_n163_snd_ch ch[8];
+	BYTE prg[3];
+	BYTE chr[12];
+	BYTE write_protect;
+	struct _snd_n163 {
+		BYTE enabled;
+		BYTE adr;
+		BYTE auto_inc;
+		BYTE tick;
+		BYTE channel;
+		BYTE channel_start;
+		SWORD output[8];
+	} snd;
+	struct _irq_n163 {
+		BYTE delay;
+		DBWORD count;
+	} irq;
 } _n163;
 
 extern _chinaersan2 chinaersan2;
@@ -72,12 +67,16 @@ extern _n163 n163;
 void map_init_Namco(BYTE model);
 void map_init_NSF_Namco(BYTE model);
 
+void extcl_after_mapper_init_Namco_163(void);
 void extcl_mapper_quit_Namco_163(void);
 void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_Namco_163(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_Namco_163(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_Namco_163(void);
+void extcl_wr_nmt_Namco_163(WORD address, BYTE value);
+void extcl_wr_chr_Namco_163(WORD address, BYTE value);
 void extcl_apu_tick_Namco_163(void);
+void extcl_battery_io_Namco_163(BYTE mode, FILE *fp);
 
 void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value);
 BYTE extcl_save_mapper_Namco_3425(BYTE mode, BYTE slot, FILE *fp);
