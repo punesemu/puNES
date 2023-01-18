@@ -3,7 +3,7 @@ name: build
 on:
   push:
     branches:
-      - qt5.15.8
+      - master
   pull_request:
     branches:
       - master
