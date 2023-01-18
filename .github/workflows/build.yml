@@ -61,7 +61,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { msystem: mingw64, cc: "gcc", cxx: "g++", env: x86_64, bit: 64, qt5ver: 5.15.0, url1: www.dropbox.com/s/xd9dq7dr713ao95, url2: www.dropbox.com/s/d632cjezybz6a74, opts: '-DENABLE_WIN_STATIC_QT=ON' }
+          - { msystem: mingw64, cc: "gcc", cxx: "g++", env: x86_64, bit: 64, qt5ver: 5.15.8, url1: www.dropbox.com/s/e8ejq25mdg1cuub, url2: www.dropbox.com/s/d632cjezybz6a74, opts: '-DENABLE_WIN_STATIC_QT=ON' }
           - { msystem: mingw32, cc: "gcc", cxx: "g++", env: i686,   bit: 32, qt5ver: 5.6.3,  url1: www.dropbox.com/s/k25y87k94cldb62, url2: www.dropbox.com/s/ye00129nyacdl05, opts: '-DENABLE_WIN_STATIC_QT560=ON' }
     env:
       CC: ${{ matrix.config.cc }}
