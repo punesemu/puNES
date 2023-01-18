@@ -3,10 +3,10 @@ name: build
 on:
   push:
     branches:
-      - master
+      - qt5.15.8
   pull_request:
     branches:
-      - qt5.15.8
+      - master
 
 concurrency:
   group: ${{ github.ref }}
