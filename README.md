@@ -258,7 +258,7 @@ exit
 5. download and unzip the sources
 ```bash
 wget http://download.qt.io/archive/qt/5.15/5.15.8/submodules/qtbase-everywhere-opensource-src-5.15.8.zip
-unzip qtbase-everywhere-src-5.15.8.zip
+unzip qtbase-everywhere-opensource-src-5.15.8.zip
 mv qtbase-everywhere-src-5.15.8 qt5
 ```
 the renaming of the directory is necessary to not generate a compile-time error caused by the 255 characters maximum path length limitation on Windows, This is the typical error message you might encounter:
@@ -269,7 +269,7 @@ the renaming of the directory is necessary to not generate a compile-time error 
 ```bash
 cd qt5
 echo -e "QMAKE_LFLAGS += -static -static-libgcc\nDEFINES += QT_STATIC_BUILD\n" >> mkspecs/win32-g++/qmake.conf
-./configure.bat -prefix $MINGW_PREFIX -extprefix $MINGW_PREFIX -bindir $MINGW_PREFIX/lib/qt5/bin -headerdir $MINGW_PREFIX/include/qt5 -libdir $MINGW_PREFIX/lib/qt5 -archdatadir $MINGW_PREFIX/lib/qt5 -plugindir $MINGW_PREFIX/lib/qt5/plugins -libexecdir $MINGW_PREFIX/lib/qt5/bin -datadir $MINGW_PREFIX/share/qt5 -docdir $MINGW_PREFIX/share/doc/qt5 -translationdir $MINGW_PREFIX/share/qt5/translations -sysconfdir $MINGW_PREFIX/etc/xdg -examplesdir $MINGW_PREFIX/share/qt5/examples -testsdir $MINGW_PREFIX/share/qt5/tests -platform win32-g++ -nomake examples -nomake tests -nomake tools -no-compile-examples -release -opensource -confirm-license -static -c++std c++11 -sse2 -static-runtime -make libs -no-ltcg -no-dbus -no-accessibility -no-inotify -no-iconv -no-icu -no-openssl -no-system-proxies -no-cups -no-fontconfig -opengl desktop -no-angle -gif -ico -qt-libpng -qt-libjpeg -qt-pcre -qt-zlib -qt-freetype
+./configure.bat -prefix $MINGW_PREFIX -extprefix $MINGW_PREFIX -bindir $MINGW_PREFIX/lib/qt5/bin -headerdir $MINGW_PREFIX/include/qt5 -libdir $MINGW_PREFIX/lib/qt5 -archdatadir $MINGW_PREFIX/lib/qt5 -plugindir $MINGW_PREFIX/lib/qt5/plugins -libexecdir $MINGW_PREFIX/lib/qt5/bin -datadir $MINGW_PREFIX/share/qt5 -docdir $MINGW_PREFIX/share/doc/qt5 -translationdir $MINGW_PREFIX/share/qt5/translations -sysconfdir $MINGW_PREFIX/etc/xdg -examplesdir $MINGW_PREFIX/share/qt5/examples -testsdir $MINGW_PREFIX/share/qt5/tests -platform win32-g++ -nomake examples -nomake tests -nomake tools -no-compile-examples -release -opensource -confirm-license -static -c++std c++17 -sse2 -static-runtime -make libs -no-ltcg -no-dbus -no-accessibility -no-inotify -no-iconv -no-icu -no-openssl -no-system-proxies -no-cups -no-fontconfig -no-zstd -opengl desktop -no-angle -gif -ico -qt-libpng -qt-libjpeg -qt-pcre -qt-zlib -qt-freetype
 make
 ```
 7. and finally install them
@@ -281,7 +281,7 @@ cd ..
 8. now it's time for the SVG module...
 ```bash
 wget http://download.qt.io/archive/qt/5.15/5.15.8/submodules/qtsvg-everywhere-opensource-src-5.15.8.zip
-unzip qtsvg-everywhere-src-5.15.8.zip
+unzip qtsvg-everywhere-opensource-src-5.15.8.zip
 mv qtsvg-everywhere-src-5.15.8 qt5svg
 cd qt5svg
 $MINGW_PREFIX/lib/qt5/bin/qmake
@@ -292,8 +292,8 @@ cd ..
 ```
 9. ...and for the tools
 ```bash
-wget http://download.qt.io/archive/qt/5.15/5.15.8/submodules/qttools-everywhere-opensource-src-5.15.0.zip
-unzip qttools-everywhere-src-5.15.8.zip
+wget http://download.qt.io/archive/qt/5.15/5.15.8/submodules/qttools-everywhere-opensource-src-5.15.8.zip
+unzip qttools-everywhere-opensource-src-5.15.8.zip
 mv qttools-everywhere-src-5.15.8 qt5tools
 cd qt5tools
 $MINGW_PREFIX/lib/qt5/bin/qmake
