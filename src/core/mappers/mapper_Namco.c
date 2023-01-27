@@ -63,11 +63,6 @@
 #define n163_ch_freq_low(channel)\
 	_n163_ch_freq((n163.ch[channel].freq & 0x3FF00) | value, channel)
 
-#define n3425_nmt_update()\
-	if (namcotmp.type == N3425) {\
-		ntbl.bank_1k[n3425.bank_to_update >> 1] = &ntbl.data[((value >> 5) & 0x01) << 10];\
-	}
-
 struct _n3425 {
 	BYTE bank_to_update;
 } n3425;
@@ -394,7 +389,7 @@ void extcl_apu_tick_Namco_163(void) {
 }
 
 void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
-	switch (address & 0xA001) {
+	switch (address & 0xE001) {
 		case 0x8000:
 			n3425.bank_to_update = value & 0x07;
 			if (namcotmp.type == N3453) {
@@ -406,13 +401,30 @@ void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
 			}
 			return;
 		case 0x8001: {
+			// 7  bit  0
+			// ---- ----
+			// xxxx xRRR
+			//       |||
+			//       +++- Specify which bank register to update on next write to Bank Data register
+			//            0: Select 2 KB CHR bank at PPU $0000-$07FF and nametable at PPU $2000-$27FF
+			//            1: Select 2 KB CHR bank at PPU $0800-$0FFF and nametable at PPU $2800-$2FFF
+			//            2: Select 1 KB CHR bank at PPU $1000-$13FF
+			//            3: Select 1 KB CHR bank at PPU $1400-$17FF
+			//            4: Select 1 KB CHR bank at PPU $1800-$1BFF
+			//            5: Select 1 KB CHR bank at PPU $1C00-$1FFF
+			//            6: Select 8 KB PRG ROM bank at $8000-$9FFF
+			//            7: Select 8 KB PRG ROM bank at $A000-$BFFF
 			switch (n3425.bank_to_update) {
 				case 0x00:
 				case 0x01: {
 					const BYTE slot = n3425.bank_to_update << 1;
 					DBWORD bank;
 
-					n3425_nmt_update()
+					if (namcotmp.type == N3425) {
+						bank = ((value >> 5) & 0x01) << 10;
+						ntbl.bank_1k[slot] = &ntbl.data[bank];
+						ntbl.bank_1k[slot | 0x01] = &ntbl.data[bank];
+					}
 					value >>= 1;
 					control_bank(info.chr.rom.max.banks_2k)
 					bank = value << 11;
@@ -424,7 +436,6 @@ void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
 				case 0x03:
 				case 0x04:
 				case 0x05:
-					n3425_nmt_update()
 					value |= 0x40;
 					control_bank(info.chr.rom.max.banks_1k)
 					chr.bank_1k[n3425.bank_to_update + 2] = chr_pnt(value << 10);
