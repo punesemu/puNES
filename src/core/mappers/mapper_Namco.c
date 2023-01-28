@@ -389,31 +389,18 @@ void extcl_apu_tick_Namco_163(void) {
 }
 
 void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
+	if (namcotmp.type == N3453) {
+		if (value & 0x40) {
+			mirroring_SCR1();
+		} else {
+			mirroring_SCR0();
+		}
+	}
 	switch (address & 0xE001) {
 		case 0x8000:
 			n3425.bank_to_update = value & 0x07;
-			if (namcotmp.type == N3453) {
-				if (value & 0x40) {
-					mirroring_SCR1();
-				} else {
-					mirroring_SCR0();
-				}
-			}
 			return;
 		case 0x8001: {
-			// 7  bit  0
-			// ---- ----
-			// xxxx xRRR
-			//       |||
-			//       +++- Specify which bank register to update on next write to Bank Data register
-			//            0: Select 2 KB CHR bank at PPU $0000-$07FF and nametable at PPU $2000-$27FF
-			//            1: Select 2 KB CHR bank at PPU $0800-$0FFF and nametable at PPU $2800-$2FFF
-			//            2: Select 1 KB CHR bank at PPU $1000-$13FF
-			//            3: Select 1 KB CHR bank at PPU $1400-$17FF
-			//            4: Select 1 KB CHR bank at PPU $1800-$1BFF
-			//            5: Select 1 KB CHR bank at PPU $1C00-$1FFF
-			//            6: Select 8 KB PRG ROM bank at $8000-$9FFF
-			//            7: Select 8 KB PRG ROM bank at $A000-$BFFF
 			switch (n3425.bank_to_update) {
 				case 0x00:
 				case 0x01: {
@@ -421,6 +408,19 @@ void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
 					DBWORD bank;
 
 					if (namcotmp.type == N3425) {
+						// 7  bit  0
+						// ---- ----
+						// xxxx xRRR
+						//       |||
+						//       +++- Specify which bank register to update on next write to Bank Data register
+						//            0: Select 2 KB CHR bank at PPU $0000-$07FF and nametable at PPU $2000-$27FF
+						//            1: Select 2 KB CHR bank at PPU $0800-$0FFF and nametable at PPU $2800-$2FFF
+						//            2: Select 1 KB CHR bank at PPU $1000-$13FF
+						//            3: Select 1 KB CHR bank at PPU $1400-$17FF
+						//            4: Select 1 KB CHR bank at PPU $1800-$1BFF
+						//            5: Select 1 KB CHR bank at PPU $1C00-$1FFF
+						//            6: Select 8 KB PRG ROM bank at $8000-$9FFF
+						//            7: Select 8 KB PRG ROM bank at $A000-$BFFF
 						bank = ((value >> 5) & 0x01) << 10;
 						ntbl.bank_1k[slot] = &ntbl.data[bank];
 						ntbl.bank_1k[slot | 0x01] = &ntbl.data[bank];
