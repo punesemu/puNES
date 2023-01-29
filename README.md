@@ -153,7 +153,7 @@ CMake Options
 
 ## :penguin: Linux
 #### Dependencies
-* [CMake >= 3.14](https://cmake.org) and [Ninja](https://ninja-build.org)
+* [CMake >= 3.14](https://cmake.org) ([Ninja](https://ninja-build.org) build system is optional)
 * [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [nvidia-cg](https://developer.nvidia.com/cg-toolkit)
 * [alsa](https://www.alsa-project.org)
@@ -168,11 +168,22 @@ cd puNES
 cmake -B build -G Ninja -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON
 cmake --build build -j2
 ```
+if you don't want to use the Ninja build system and prefer the classic Makefile:
+```bash
+cmake -B build -DENABLE_FFMPEG:BOOL=ON -DENABLE_OPENGL_CG:BOOL=ON
+make -j2
+```
 the executable `punes` is in the `build/src` directory.
 #### Linux Debug version
 If you need the debug version then you need to replace the `cmake -B build -G Ninja` command of the previous examples with the following:
 ```bash
 cmake -B build -G Ninja -DCMAKE_C_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_CXX_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_BUILD_TYPE:STRING=Debug -DENABLE_RELEASE:BOL=OFF [...]
+cmake --build build -j2
+```
+or if you prefer the classic Makefile:
+```bash
+cmake -B build -DCMAKE_C_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_CXX_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_BUILD_TYPE:STRING=Debug -DENABLE_RELEASE:BOL=OFF [...]
+make -j2
 ```
 where `[...]` are the other necessary options.
 #### Example on how to compile on Ubuntu 22.04
@@ -191,7 +202,7 @@ to start the emulator
 ```
 ## :smiling_imp: FreeBSD
 #### Dependencies
-* [CMake >= 3.14](https://cmake.org) and [Ninja](https://ninja-build.org)
+* [CMake >= 3.14](https://cmake.org) ([Ninja](https://ninja-build.org) build system is optional)
 * [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
 * [libX11 and libXrandr](https://www.x.org)
@@ -207,16 +218,27 @@ cd puNES
 cmake -B build -G Ninja -DQt5_DIR=/usr/local/lib/qt5/cmake/Qt5 -DENABLE_FFMPEG:BOOL=ON
 cmake --build build -j2
 ```
+if you don't want to use the Ninja build system and prefer the classic Makefile:
+```bash
+cmake -B build -DQt5_DIR=/usr/local/lib/qt5/cmake/Qt5 -DENABLE_FFMPEG:BOOL=ON
+make -j2
+```
 the executable `punes` is in the `build/src` directory.
 #### FreeBSD Debug version
 If you need the debug version then you need to replace the `cmake -B Build -G Ninja` command of the previous examples with the following:
 ```bash
 cmake -B build -G Ninja -DCMAKE_C_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_CXX_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_BUILD_TYPE:STRING=Debug -DENABLE_RELEASE:BOOL=OFF [...]
+cmake --build build -j2
+```
+or if you prefer the classic Makefile:
+```bash
+cmake -B build -DCMAKE_C_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_CXX_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_BUILD_TYPE:STRING=Debug -DENABLE_RELEASE:BOOL=OFF [...]
+make -j2
 ```
 where `[...]` are the other necessary options.
 ## :blowfish: OpenBSD 
 #### Dependencies
-* [CMake >= 3.14](https://cmake.org) and [Ninja](https://ninja-build.org).
+* [CMake >= 3.14](https://cmake.org) ([Ninja](https://ninja-build.org) build system is optional)
 * [Qt5](https://www.qt.io) or [Qt6](https://www.qt.io) with OpenGL support (qtcore, qtgui, qtwidgets, qtnetwork, qtsvg and qttools)
 * [sndio](http://www.sndio.org)
 * [libX11 and libXrandr](https://www.x.org)
@@ -229,11 +251,22 @@ cd puNES
 cmake -B build -G Ninja -DQt5_DIR=/usr/local/lib/qt5/cmake/Qt5 -DENABLE_FFMPEG:BOOL=ON
 cmake --build build -j2
 ```
+if you don't want to use the Ninja build system and prefer the classic Makefile:
+```bash
+cmake -B build -DQt5_DIR=/usr/local/lib/qt5/cmake/Qt5 -DENABLE_FFMPEG:BOOL=ON
+make -j2
+```
 the executable `punes` is in the `buid/src` directory.
 #### OpenBSD Debug version
 If you need the debug version then you need to replace the `cmake -B Build -G Ninja` command of the previous examples with the following:
 ```bash
 cmake -B build -G Ninja -DCMAKE_C_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_CXX_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_BUILD_TYPE:STRING=Debug -DENABLE_RELEASE:BOOL=OFF [...]
+cmake --build build -j2
+```
+or if you prefer the classic Makefile:
+```bash
+cmake -B build -DCMAKE_C_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_CXX_FLAGS_DEBUG:STRING='-O0 -g -DDEBUG' -DCMAKE_BUILD_TYPE:STRING=Debug -DENABLE_RELEASE:BOOL=OFF [...]
+make -j2
 ```
 where `[...]` are the other necessary options.
 ## :computer: Windows
