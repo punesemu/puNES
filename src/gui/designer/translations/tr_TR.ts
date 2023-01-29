@@ -12,19 +12,19 @@
     <name>dlgCfgNSCode</name>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Varsayılan</translation>
     </message>
     <message>
       <source>Unset</source>
-      <translation type="unfinished">Unset</translation>
+      <translation>Tanımlamayı kaldır</translation>
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>Uygula</translation>
     </message>
     <message>
       <source>Discard</source>
-      <translation type="unfinished">Discard</translation>
+      <translation>Yoksay</translation>
     </message>
   </context>
   <context>
@@ -42,187 +42,187 @@
     <name>dlgHeaderEditor</name>
     <message>
       <source>Attention</source>
-      <translation type="unfinished">Attention</translation>
+      <translation>Dikkat</translation>
     </message>
     <message>
       <source>Do you want to boot the ROM with the changes made?</source>
-      <translation type="unfinished">Do you want to boot the ROM with the changes made?</translation>
+      <translation>ROM'a yapılan değişikliklerle başlatmak istiyor musunuz?</translation>
     </message>
     <message>
       <source>Header Editor</source>
-      <translation type="unfinished">Header Editor</translation>
+      <translation>Başlık Editörü</translation>
     </message>
     <message>
       <source>Mirroring</source>
-      <translation type="unfinished">Mirroring</translation>
+      <translation>Yansıtma</translation>
     </message>
     <message>
       <source>Console Type</source>
-      <translation type="unfinished">Console Type</translation>
+      <translation>Konsol Tipi</translation>
     </message>
     <message>
       <source>PRG ROM KiB</source>
-      <translation type="unfinished">PRG ROM KiB</translation>
+      <translation>PRG ROM KiB</translation>
     </message>
     <message>
       <source>None</source>
-      <translation type="unfinished">None</translation>
+      <translation>Hiçbiri</translation>
     </message>
     <message>
       <source>128 Bytes</source>
-      <translation type="unfinished">128 Bytes</translation>
+      <translation>128 Bytes</translation>
     </message>
     <message>
       <source>256 Bytes</source>
-      <translation type="unfinished">256 Bytes</translation>
+      <translation>256 Bytes</translation>
     </message>
     <message>
       <source>512 Bytes</source>
-      <translation type="unfinished">512 Bytes</translation>
+      <translation>512 Bytes</translation>
     </message>
     <message>
       <source>1 KiB</source>
-      <translation type="unfinished">1 KiB</translation>
+      <translation>1 KiB</translation>
     </message>
     <message>
       <source>2 KiB</source>
-      <translation type="unfinished">2 KiB</translation>
+      <translation>2 KiB</translation>
     </message>
     <message>
       <source>4 KiB</source>
-      <translation type="unfinished">4 KiB</translation>
+      <translation>4 KiB</translation>
     </message>
     <message>
       <source>8 KiB</source>
-      <translation type="unfinished">8 KiB</translation>
+      <translation>8 KiB</translation>
     </message>
     <message>
       <source>16 KiB</source>
-      <translation type="unfinished">16 KiB</translation>
+      <translation>16 KiB</translation>
     </message>
     <message>
       <source>32 KiB</source>
-      <translation type="unfinished">32 KiB</translation>
+      <translation>32 KiB</translation>
     </message>
     <message>
       <source>64 KiB</source>
-      <translation type="unfinished">64 KiB</translation>
+      <translation>64 KiB</translation>
     </message>
     <message>
       <source>128 KiB</source>
-      <translation type="unfinished">128 KiB</translation>
+      <translation>128 KiB</translation>
     </message>
     <message>
       <source>256 KiB</source>
-      <translation type="unfinished">256 KiB</translation>
+      <translation>256 KiB</translation>
     </message>
     <message>
       <source>512 KiB</source>
-      <translation type="unfinished">512 KiB</translation>
+      <translation>512 KiB</translation>
     </message>
     <message>
       <source>1 MiB</source>
-      <translation type="unfinished">1 MiB</translation>
+      <translation>1 MiB</translation>
     </message>
     <message>
       <source>N/A</source>
-      <translation type="unfinished">N/A</translation>
+      <translation>N/A</translation>
     </message>
     <message>
       <source>Trainer</source>
-      <translation type="unfinished">Trainer</translation>
+      <translation>Çalıştırıcı</translation>
     </message>
     <message>
       <source>Unspecified</source>
-      <translation type="unfinished">Unspecified</translation>
+      <translation>Belirtilmemiş</translation>
     </message>
     <message>
       <source>Standard Controllers</source>
-      <translation type="unfinished">Standard Controllers</translation>
+      <translation>Standart kontroller</translation>
     </message>
     <message>
       <source>NES Four Score/Satellite</source>
-      <translation type="unfinished">NES Four Score/Satellite</translation>
+      <translation>NES Four Score/Satellite</translation>
     </message>
     <message>
       <source>Famicom Four Players Adapter</source>
-      <translation type="unfinished">Famicom Four Players Adapter</translation>
+      <translation>Famicom Dört Oyuncu Adaptörü</translation>
     </message>
     <message>
       <source>Vs. System</source>
-      <translation type="unfinished">Vs. System</translation>
+      <translation>Vs. System</translation>
     </message>
     <message>
       <source>Vs. System (1P via $4017)</source>
-      <translation type="unfinished">Vs. System (1P via $4017)</translation>
+      <translation>Vs. System (1P via $4017)</translation>
     </message>
     <message>
       <source>Reserved</source>
-      <translation type="unfinished">Reserved</translation>
+      <translation>Rezerve</translation>
     </message>
     <message>
       <source>Vs. Zapper</source>
-      <translation type="unfinished">Vs. Zapper</translation>
+      <translation>Vs. Zapper</translation>
     </message>
     <message>
       <source>Zapper</source>
-      <translation type="unfinished">Zapper</translation>
+      <translation>Zapper</translation>
     </message>
     <message>
       <source>Two Zappers</source>
-      <translation type="unfinished">Two Zappers</translation>
+      <translation>İki Zapper</translation>
     </message>
     <message>
       <source>Bandai Hyper Shot Lightgun</source>
-      <translation type="unfinished">Bandai Hyper Shot Lightgun</translation>
+      <translation>Bandai Hyper Shot Lightgun</translation>
     </message>
     <message>
       <source>Power Pad Side A</source>
-      <translation type="unfinished">Power Pad Side A</translation>
+      <translation>Power Pad Side A</translation>
     </message>
     <message>
       <source>Power Pad Side B</source>
-      <translation type="unfinished">Power Pad Side B</translation>
+      <translation>Power Pad Side B</translation>
     </message>
     <message>
       <source>Family Trainer Side A</source>
-      <translation type="unfinished">Family Trainer Side A</translation>
+      <translation>Family Trainer Side A</translation>
     </message>
     <message>
       <source>Family Trainer Side B</source>
-      <translation type="unfinished">Family Trainer Side B</translation>
+      <translation>Family Trainer Side B</translation>
     </message>
     <message>
       <source>Arkanoid Paddle (NES)</source>
-      <translation type="unfinished">Arkanoid Paddle (NES)</translation>
+      <translation>Arkanoid Paddle (NES)</translation>
     </message>
     <message>
       <source>Arkanoid Paddle (Famicom)</source>
-      <translation type="unfinished">Arkanoid Paddle (Famicom)</translation>
+      <translation>Arkanoid Paddle (Famicom)</translation>
     </message>
     <message>
       <source>Two Paddles plus Famicom Data Recorder</source>
-      <translation type="unfinished">Two Paddles plus Famicom Data Recorder</translation>
+      <translation>Two Paddles ve Famicom Data Recorder</translation>
     </message>
     <message>
       <source>Konami Hyper Shot</source>
-      <translation type="unfinished">Konami Hyper Shot</translation>
+      <translation>Konami Hyper Shot</translation>
     </message>
     <message>
       <source>Coconuts Pachinko</source>
-      <translation type="unfinished">Coconuts Pachinko</translation>
+      <translation>Coconuts Pachinko</translation>
     </message>
     <message>
       <source>Exciting Boxing Punching Bag</source>
-      <translation type="unfinished">Exciting Boxing Punching Bag</translation>
+      <translation>Exciting Boxing Punching Bag</translation>
     </message>
     <message>
       <source>Jissen Mahjong Controller</source>
-      <translation type="unfinished">Jissen Mahjong Controller</translation>
+      <translation>Jissen Mahjong Controller</translation>
     </message>
     <message>
       <source>Party Tap</source>
-      <translation type="unfinished">Party Tap</translation>
+      <translation>Party Tap</translation>
     </message>
     <message>
       <source>Oeka Kids Tablet</source>
@@ -426,163 +426,163 @@
     </message>
     <message>
       <source>VT369</source>
-      <translation type="unfinished">VT369</translation>
+      <translation>VT369</translation>
     </message>
     <message>
       <source>UMC UM6578</source>
-      <translation type="unfinished">UMC UM6578</translation>
+      <translation>UMC UM6578</translation>
     </message>
     <message>
       <source>Famicom Network System</source>
-      <translation type="unfinished">Famicom Network System</translation>
+      <translation>Famicom Network System</translation>
     </message>
     <message>
       <source>File</source>
-      <translation type="unfinished">File</translation>
+      <translation>Dosya</translation>
     </message>
     <message>
       <source>CHR RAM Battery</source>
-      <translation type="unfinished">CHR RAM Battery</translation>
+      <translation>CHR RAM Battery</translation>
     </message>
     <message>
       <source>Mapper</source>
-      <translation type="unfinished">Mapper</translation>
+      <translation>Mapper</translation>
     </message>
     <message>
       <source>Normal</source>
-      <translation type="unfinished">Normal</translation>
+      <translation>Normal</translation>
     </message>
     <message>
       <source>RBI Baseball</source>
-      <translation type="unfinished">RBI Baseball</translation>
+      <translation>RBI Baseball</translation>
     </message>
     <message>
       <source>TKO Boxing</source>
-      <translation type="unfinished">TKO Boxing</translation>
+      <translation>TKO Boxing</translation>
     </message>
     <message>
       <source>Super Xevious</source>
-      <translation type="unfinished">Super Xevious</translation>
+      <translation>Super Xevious</translation>
     </message>
     <message>
       <source>Vs. Ice Climber</source>
-      <translation type="unfinished">Vs. Ice Climber</translation>
+      <translation>Vs. Ice Climber</translation>
     </message>
     <message>
       <source>Vs. Dual</source>
-      <translation type="unfinished">Vs. Dual</translation>
+      <translation>Vs. Dual</translation>
     </message>
     <message>
       <source>Raid on Bungeling Bay</source>
-      <translation type="unfinished">Raid on Bungeling Bay</translation>
+      <translation>Raid on Bungeling Bay</translation>
     </message>
     <message>
       <source>PRG RAM</source>
-      <translation type="unfinished">PRG RAM</translation>
+      <translation>PRG RAM</translation>
     </message>
     <message>
       <source>iNES 1.0</source>
-      <translation type="unfinished">iNES 1.0</translation>
+      <translation>iNES 1.0</translation>
     </message>
     <message>
       <source>NES 2.0</source>
-      <translation type="unfinished">NES 2.0</translation>
+      <translation>NES 2.0</translation>
     </message>
     <message>
       <source>Submapper</source>
-      <translation type="unfinished">Submapper</translation>
+      <translation>Submapper</translation>
     </message>
     <message>
       <source>RP2C03B</source>
-      <translation type="unfinished">RP2C03B</translation>
+      <translation>RP2C03B</translation>
     </message>
     <message>
       <source>RP2C03G</source>
-      <translation type="unfinished">RP2C03G</translation>
+      <translation>RP2C03G</translation>
     </message>
     <message>
       <source>RP2C04-0001</source>
-      <translation type="unfinished">RP2C04-0001</translation>
+      <translation>RP2C04-0001</translation>
     </message>
     <message>
       <source>RP2C04-0002</source>
-      <translation type="unfinished">RP2C04-0002</translation>
+      <translation>RP2C04-0002</translation>
     </message>
     <message>
       <source>RP2C04-0003</source>
-      <translation type="unfinished">RP2C04-0003</translation>
+      <translation>RP2C04-0003</translation>
     </message>
     <message>
       <source>RP2C04-0004</source>
-      <translation type="unfinished">RP2C04-0004</translation>
+      <translation>RP2C04-0004</translation>
     </message>
     <message>
       <source>RC2C03B</source>
-      <translation type="unfinished">RC2C03B</translation>
+      <translation>RC2C03B</translation>
     </message>
     <message>
       <source>RC2C03C</source>
-      <translation type="unfinished">RC2C03C</translation>
+      <translation>RC2C03C</translation>
     </message>
     <message>
       <source>RC2C05-01</source>
-      <translation type="unfinished">RC2C05-01</translation>
+      <translation>RC2C05-01</translation>
     </message>
     <message>
       <source>RC2C05-02</source>
-      <translation type="unfinished">RC2C05-02</translation>
+      <translation>RC2C05-02</translation>
     </message>
     <message>
       <source>RC2C05-03</source>
-      <translation type="unfinished">RC2C05-03</translation>
+      <translation>RC2C05-03</translation>
     </message>
     <message>
       <source>RC2C05-04</source>
-      <translation type="unfinished">RC2C05-04</translation>
+      <translation>RC2C05-04</translation>
     </message>
     <message>
       <source>RC2C05-05</source>
-      <translation type="unfinished">RC2C05-05</translation>
+      <translation>RC2C05-05</translation>
     </message>
     <message>
       <source>Header</source>
-      <translation type="unfinished">Header</translation>
+      <translation>Header</translation>
     </message>
     <message>
       <source>PRG RAM Battery</source>
-      <translation type="unfinished">PRG RAM Battery</translation>
+      <translation>PRG RAM Battery</translation>
     </message>
     <message>
       <source>CHR RAM</source>
-      <translation type="unfinished">CHR RAM</translation>
+      <translation>CHR RAM</translation>
     </message>
     <message>
       <source>Input</source>
-      <translation type="unfinished">Input</translation>
+      <translation>Girdi</translation>
     </message>
     <message>
       <source>Misc ROMs</source>
-      <translation type="unfinished">Misc ROMs</translation>
+      <translation>Çeşitli ROMlar</translation>
     </message>
     <message>
       <source>Battery</source>
-      <translation type="unfinished">Battery</translation>
+      <translation>Batarya</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Diğer</translation>
     </message>
     <message>
       <source>Save</source>
-      <translation type="unfinished">Save</translation>
+      <translation>Kaydet</translation>
     </message>
     <message>
       <source>Cancel</source>
-      <translation type="unfinished">Cancel</translation>
+      <translation>İptal</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Varsayılanlara Sıfırla</translation>
     </message>
   </context>
   <context>
@@ -600,43 +600,43 @@
     <name>dlgKeyboard</name>
     <message>
       <source>Virtual Keyboard</source>
-      <translation type="unfinished">Virtual Keyboard</translation>
+      <translation>Sanal Klavye</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>Subor Klavye</translation>
     </message>
     <message>
       <source>Options</source>
-      <translation type="unfinished">Options</translation>
+      <translation>Şeçenekler</translation>
     </message>
     <message>
       <source>Size</source>
-      <translation type="unfinished">Size</translation>
+      <translation>Boyut</translation>
     </message>
     <message>
       <source>1.0x</source>
-      <translation type="unfinished">1.0x</translation>
+      <translation>1.0x</translation>
     </message>
     <message>
       <source>1.5x</source>
-      <translation type="unfinished">1.5x</translation>
+      <translation>1.5x</translation>
     </message>
     <message>
       <source>2.0x</source>
-      <translation type="unfinished">2.0x</translation>
+      <translation>2.0x</translation>
     </message>
     <message>
       <source>2.5x</source>
-      <translation type="unfinished">2.5x</translation>
+      <translation>2.5x</translation>
     </message>
     <message>
       <source>Mode</source>
-      <translation type="unfinished">Mode</translation>
+      <translation>Mod</translation>
     </message>
     <message>
       <source>Setup</source>
-      <translation type="unfinished">Setup</translation>
+      <translation>Kurulum</translation>
     </message>
     <message>
       <source>Extended Mode (enable support for keypad, F10, F11, F12 and &quot;` &quot;. P.S. : &apos;Study and Game 32-in-1&apos; have problems with this mode)</source>
@@ -647,11 +647,11 @@
     <name>dlgLog</name>
     <message>
       <source>Log</source>
-      <translation type="unfinished">Log</translation>
+      <translation>Kayıt defteri</translation>
     </message>
     <message>
       <source>Close</source>
-      <translation type="unfinished">Close</translation>
+      <translation>Kapat</translation>
     </message>
   </context>
   <context>
@@ -730,7 +730,7 @@
     </message>
     <message>
       <source>Capture/Release Input</source>
-      <translation type="unfinished">Capture/Release Input</translation>
+      <translation>Girişi Yakalama/Bırakma</translation>
     </message>
   </context>
   <context>
@@ -958,7 +958,7 @@
     <name>familyBasicKeyboard</name>
     <message>
       <source>Family Basic Keyboard</source>
-      <translation type="unfinished">Family Basic Keyboard</translation>
+      <translation>Family BASIC Klavyesi</translation>
     </message>
   </context>
   <context>
@@ -966,55 +966,55 @@
     <message>
       <source>%1 folders</source>
       <extracomment>Do not translate %1</extracomment>
-      <translation type="unfinished">%1 folders</translation>
+      <translation>%1 klasörler</translation>
     </message>
     <message>
       <source>Error on create config folder</source>
-      <translation type="unfinished">Error on create config folder</translation>
+      <translation>Yapılandırma klasörü oluşturma hatası</translation>
     </message>
     <message>
       <source>Error on create data folder</source>
-      <translation type="unfinished">Error on create data folder</translation>
+      <translation>Veri klasörü oluşturma hatası</translation>
     </message>
     <message>
       <source>Error on create temp folder</source>
-      <translation type="unfinished">Error on create temp folder</translation>
+      <translation>Geçici klasör oluşturma hatası</translation>
     </message>
     <message>
       <source>Error on create cheat folder</source>
-      <translation type="unfinished">Error on create cheat folder</translation>
+      <translation>Hile klasörü oluşturma hatası</translation>
     </message>
     <message>
       <source>Error on create psg folder</source>
-      <translation type="unfinished">Error on create psg folder</translation>
+      <translation>Psg klasörü oluşturma hatası</translation>
     </message>
     <message>
       <source>Error on create shp folder</source>
-      <translation type="unfinished">Error on create shp folder</translation>
+      <translation>Shp klasörü oluşturma hatası</translation>
     </message>
     <message>
       <source>Error on create jsc folder</source>
-      <translation type="unfinished">Error on create jsc folder</translation>
+      <translation>Jsc klasörü oluşturma hatası</translation>
     </message>
     <message>
       <source>Error on create bios folder</source>
-      <translation type="unfinished">Error on create bios folder</translation>
+      <translation>BIOS klasörü oluşturma hatası</translation>
     </message>
     <message>
       <source>Error on create diff folder</source>
-      <translation type="unfinished">Error on create diff folder</translation>
+      <translation>Diff klasörü oluşturma hatası</translation>
     </message>
     <message>
       <source>Error on create prb folder</source>
-      <translation type="unfinished">Error on create prb folder</translation>
+      <translation>Prb klasörü oluşturma hatası</translation>
     </message>
     <message>
       <source>Error on create save folder</source>
-      <translation type="unfinished">Error on create save folder</translation>
+      <translation>Kayıt klasörü oluşturma hatası</translation>
     </message>
     <message>
       <source>Error on create screenshot folder</source>
-      <translation type="unfinished">Error on create screenshot folder</translation>
+      <translation>Ekran görüntüsü klasörü oluşturma hatası</translation>
     </message>
   </context>
   <context>
@@ -1398,43 +1398,43 @@
     </message>
     <message>
       <source>Fast Forward (hold button)</source>
-      <translation type="unfinished">Fast Forward (hold button)</translation>
+      <translation>İleri sarma (düğmeyi basılı tutun)</translation>
     </message>
     <message>
       <source>puNES tape image</source>
-      <translation type="unfinished">puNES tape image</translation>
+      <translation>puNES kaset imajı</translation>
     </message>
     <message>
       <source>Virtuanes tape image</source>
-      <translation type="unfinished">Virtuanes tape image</translation>
+      <translation>Virtuanes kaset imajı</translation>
     </message>
     <message>
       <source>Nestopia tape image</source>
-      <translation type="unfinished">Nestopia tape image</translation>
+      <translation>Nestopia kaset imajı</translation>
     </message>
     <message>
       <source>Open tape image</source>
-      <translation type="unfinished">Open tape image</translation>
+      <translation>Kaset imajını aç</translation>
     </message>
     <message>
       <source>Tape Image</source>
-      <translation type="unfinished">Tape Image</translation>
+      <translation>Kaset imajı</translation>
     </message>
     <message>
       <source>Unsupported format</source>
-      <translation type="unfinished">Unsupported format</translation>
+      <translation>Desteklenmeyen dosya türü</translation>
     </message>
     <message>
       <source>Error opening tape image file</source>
-      <translation type="unfinished">Error opening tape image file</translation>
+      <translation>Kaset imajını açarken hata oluştu</translation>
     </message>
     <message>
       <source>WAVE tape image</source>
-      <translation type="unfinished">WAVE tape image</translation>
+      <translation>WAVE kaset imajı</translation>
     </message>
     <message>
       <source>Save tape image</source>
-      <translation type="unfinished">Save tape image</translation>
+      <translation>Kaset imajını kaydet</translation>
     </message>
     <message>
       <source>Toggle &amp;Fast Forward</source>
@@ -1716,12 +1716,12 @@
     <message>
       <source>keyboard input captured</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">keyboard input captured</translation>
+      <translation>klavye girişi yakalandı</translation>
     </message>
     <message>
       <source>keyboard input released</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">keyboard input released</translation>
+      <translation>klavye girişi serbest bırakıldı</translation>
     </message>
   </context>
   <context>
@@ -1739,7 +1739,7 @@
     <name>suborKeyboard</name>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>Subor Klavye</translation>
     </message>
   </context>
   <context>
@@ -2216,15 +2216,15 @@
     </message>
     <message>
       <source>Play</source>
-      <translation type="unfinished">Play</translation>
+      <translation>Oynat</translation>
     </message>
     <message>
       <source>Record</source>
-      <translation type="unfinished">Record</translation>
+      <translation>Kayıt</translation>
     </message>
     <message>
       <source>Stop</source>
-      <translation type="unfinished">Stop</translation>
+      <translation>Durdur</translation>
     </message>
   </context>
   <context>
@@ -2513,15 +2513,35 @@
     </message>
     <message>
       <source>Use fast forward when loading the disk/side</source>
-      <translation type="unfinished">Use fast forward when loading the disk/side</translation>
+      <translation>Diski/tarafı yüklerken hızlı ileri sarmayı kullanın</translation>
     </message>
     <message>
       <source>French</source>
-      <translation type="unfinished">French</translation>
+      <translation>Fransızca</translation>
     </message>
     <message>
       <source>German</source>
-      <translation type="unfinished">German</translation>
+      <translation>Almanca</translation>
+    </message>
+    <message>
+      <source>0x00</source>
+      <translation type="unfinished">0x00</translation>
+    </message>
+    <message>
+      <source>Random</source>
+      <translation type="unfinished">Random</translation>
+    </message>
+    <message>
+      <source>Initial RAM value</source>
+      <translation type="unfinished">Initial RAM value</translation>
+    </message>
+    <message>
+      <source>RAM</source>
+      <translation type="unfinished">RAM</translation>
+    </message>
+    <message>
+      <source>0xFF</source>
+      <translation type="unfinished">0xFF</translation>
     </message>
   </context>
   <context>
@@ -2668,11 +2688,11 @@
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
-      <translation type="unfinished">Family BASIC Keyboard</translation>
+      <translation>Family BASIC Klavyesi</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>Subor Klavye</translation>
     </message>
   </context>
   <context>
@@ -3412,59 +3432,59 @@
     </message>
     <message>
       <source>2xSaI</source>
-      <translation type="unfinished">2xSaI</translation>
+      <translation>2xSaI</translation>
     </message>
     <message>
       <source>Dot Matrix</source>
-      <translation type="unfinished">Dot Matrix</translation>
+      <translation>Dot Matrix</translation>
     </message>
     <message>
       <source>PAL TV1x</source>
-      <translation type="unfinished">PAL TV1x</translation>
+      <translation>PAL TV1x</translation>
     </message>
     <message>
       <source>PAL TV2x</source>
-      <translation type="unfinished">PAL TV2x</translation>
+      <translation>PAL TV2x</translation>
     </message>
     <message>
       <source>PAL TV3x</source>
-      <translation type="unfinished">PAL TV3x</translation>
+      <translation>PAL TV3x</translation>
     </message>
     <message>
       <source>PAL TV4x</source>
-      <translation type="unfinished">PAL TV4x</translation>
+      <translation>PAL TV4x</translation>
     </message>
     <message>
       <source>Super 2xSaI</source>
-      <translation type="unfinished">Super 2xSaI</translation>
+      <translation>Super 2xSaI</translation>
     </message>
     <message>
       <source>Super Eagle</source>
-      <translation type="unfinished">Super Eagle</translation>
+      <translation>Super Eagle</translation>
     </message>
     <message>
       <source>TV2x</source>
-      <translation type="unfinished">TV2x</translation>
+      <translation>TV2x</translation>
     </message>
     <message>
       <source>TV3x</source>
-      <translation type="unfinished">TV3x</translation>
+      <translation>TV3x</translation>
     </message>
     <message>
       <source>TV4x</source>
-      <translation type="unfinished">TV4x</translation>
+      <translation>TV4x</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 2X</source>
-      <translation type="unfinished">NTSC Bisqwit 2X</translation>
+      <translation>NTSC Bisqwit 2X</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 4X</source>
-      <translation type="unfinished">NTSC Bisqwit 4X</translation>
+      <translation>NTSC Bisqwit 4X</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 8X</source>
-      <translation type="unfinished">NTSC Bisqwit 8X</translation>
+      <translation>NTSC Bisqwit 8X</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
