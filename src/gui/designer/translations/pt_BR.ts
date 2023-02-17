@@ -1077,7 +1077,7 @@
     </message>
     <message>
       <source>Compiled</source>
-      <translation>Compilado</translation>
+      <translation>Compilado em</translation>
     </message>
     <message>
       <source>portable version</source>
