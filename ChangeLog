@@ -1,4 +1,14 @@
 Changelog:
+0.111 (Bug fixes release)
+- Added an option for RAM initialization (#276).
+  It's possible to choose between three values:
+  * 0x00
+  * 0xFF (default)
+  * Randomize.
+- Fixed mapper : 30, 111, 95, 154, 406.
+- Windows x86_64: Update to Qt5 5.15.8. (#279)
+- Fixed map of one keyboard button to multiple controllers (#277).
+
 0.110
 - Added support to Wayland.
 - Added support for "Fullscreen in window" with Wayland (the only type of fullscreen supported for now).
