@@ -51,7 +51,7 @@ void sst39sf040_init(BYTE *data, size_t size, BYTE manufacter_id, BYTE model_id,
 }
 void sst39sf040_write(WORD address, BYTE value) {
 	DBWORD chip_address = wr_address_sst39sf040(address);
-	WORD cmd = address & 0x7FFF;
+	WORD cmd = chip_address & 0x7FFF;
 	size_t i;
 
 	switch (sst39sf040.sequence) {
@@ -118,8 +118,8 @@ void sst39sf040_tick(void) {
 	}
 }
 BYTE sst39sf040_save_mapper(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, sst39sf040.sequence);
-	save_slot_ele(mode, slot, sst39sf040.time_out);
+	save_slot_ele(mode, slot, sst39sf040.sequence)
+	save_slot_ele(mode, slot, sst39sf040.time_out)
 
 	return (EXIT_OK);
 }
