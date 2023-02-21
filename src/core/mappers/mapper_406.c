@@ -105,7 +105,7 @@ void extcl_cpu_wr_mem_406(WORD address, BYTE value) {
 	if (info.mapper.submapper == 0) {
 		address = (address & 0xFFFC) | ((address & 0x0001) << 1) | ((address & 0x0002) >> 1);
 	} else if ((address <= 0x9000) || (address >= 0xE000)) {
-		address = (address & 0x9FFF) ^ 0x6000;
+		address ^= 0x6000;
 	}
 
 	switch (address & 0xE001) {
