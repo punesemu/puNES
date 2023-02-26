@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - fix_fmmpeg_windows
   pull_request:
     branches:
       - master
