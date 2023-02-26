@@ -91,7 +91,6 @@ jobs:
             p7zip
             unzip
             libtool
-            mingw-w64-${{ matrix.env }}-ffmpeg4.4
             mingw-w64-${{ matrix.env }}-cmake
             mingw-w64-${{ matrix.env }}-toolchain
 
@@ -104,6 +103,7 @@ jobs:
           mkdir -p artifacts/opengl
           mkdir -p build/d3d9
           mkdir -p build/opengl
+          pacman -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-ffmpeg-4.4.3-6-any.pkg.tar.zst
 
       - name: 'Download qt5 and dlls'
         shell: msys2 {0}
