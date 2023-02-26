@@ -94,10 +94,14 @@ jobs:
             mingw-w64-${{ matrix.env }}-cmake
             mingw-w64-${{ matrix.env }}-toolchain
 
-      - name: 'Environment configuration'
+      - name: 'Install FFmpeg libraries'
         shell: msys2 {0}
         run: |
           pacman --noconfirm -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-ffmpeg-4.4.3-6-any.pkg.tar.zst
+
+      - name: 'Environment configuration'
+        shell: msys2 {0}
+        run: |
           mkdir -p artifacts/dll
           mkdir -p artifacts/tmp
           mkdir -p artifacts/d3d9
