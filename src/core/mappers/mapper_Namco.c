@@ -24,44 +24,14 @@
 #include "cpu.h"
 #include "save_slot.h"
 #include "emu.h"
+#include "tas.h"
+#include "gui.h"
 
-#define n163_prg_rom_8k_update(slot)\
-	control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)\
-	map_prg_rom_8k(1, slot, value);\
-	map_prg_rom_8k_update()
-#define _n163_nmt_update(slot)\
-	ntbl.bank_1k[slot] = chr_pnt(n163.nmt_bank[slot][1])
-#define n163_nmt_update(slot)\
-	if (namcotmp.hardwired) {\
-		return;\
-	}\
-	if (value >= 0xE0) {\
-		n163.nmt_bank[slot][0] = FALSE;\
-		ntbl.bank_1k[slot] = &ntbl.data[(value & 0x03) << 10];\
-	} else {\
-		control_bank(info.chr.rom.max.banks_1k)\
-		n163.nmt_bank[slot][0] = TRUE;\
-		n163.nmt_bank[slot][1] = value << 10;\
-		_n163_nmt_update(slot);\
-	}
-
-#define _n163_ch_freq(operation, channel)\
-{\
-	const DBWORD freq = operation;\
-	if (n163.ch[channel].freq != freq) {\
-		n163.ch[channel].freq = freq;\
-		if (n163.ch[channel].freq) {\
-			n163.ch[channel].cycles_reload = (15 * 65536 * (8 - n163.snd_ch_start)) / n163.ch[channel].freq;\
-			n163.ch[channel].cycles = n163.ch[channel].cycles_reload;\
-		}\
-	}\
-}
-#define n163_ch_freq_high(channel)\
-	_n163_ch_freq((n163.ch[channel].freq & 0x0FFFF) | ((value & 0x03) << 16), channel)
-#define n163_ch_freq_middle(channel)\
-	_n163_ch_freq((n163.ch[channel].freq & 0x300FF) | (value << 8), channel)
-#define n163_ch_freq_low(channel)\
-	_n163_ch_freq((n163.ch[channel].freq & 0x3FF00) | value, channel)
+INLINE static void prg_fix_Namco_163(void);
+INLINE static void chr_fix_Namco_163(void);
+INLINE static void chr_swap_Namco_163(BYTE **dst, DBWORD value, BYTE force_chrom, BYTE *bank_writable);
+INLINE static void snd_Namco_163_set_volume(void);
+INLINE static SWORD snd_Namco_163_wave(int cycles, int channel_offset);
 
 struct _n3425 {
 	BYTE bank_to_update;
@@ -73,6 +43,10 @@ struct _n3446 {
 _chinaersan2 chinaersan2;
 _n163 n163;
 struct _namcotmp {
+	BYTE ram[0x80];
+	BYTE chr_bank_writable[8];
+	BYTE nmt_bank_writable[4];
+	SWORD volume;
 	BYTE hardwired;
 	BYTE type;
 } namcotmp;
@@ -81,40 +55,63 @@ void map_init_Namco(BYTE model) {
 	switch (model) {
 		case N163:
 		case CHINA_ER_SAN2:
+			EXTCL_AFTER_MAPPER_INIT(Namco_163);
 			EXTCL_MAPPER_QUIT(Namco_163);
 			EXTCL_CPU_WR_MEM(Namco_163);
 			EXTCL_CPU_RD_MEM(Namco_163);
 			EXTCL_SAVE_MAPPER(Namco_163);
+			EXTCL_WR_NMT(Namco_163);
+			EXTCL_WR_CHR(Namco_163);
 			EXTCL_CPU_EVERY_CYCLE(Namco_163);
+			EXTCL_BATTERY_IO(Namco_163);
 			EXTCL_APU_TICK(Namco_163);
 			mapper.internal_struct[0] = (BYTE *)&n163;
 			mapper.internal_struct_size[0] = sizeof(n163);
 
+			if (info.prg.ram.banks_8k_plus == 0) {
+				info.prg.ram.banks_8k_plus = 1;
+			}
+
+			snd_Namco_163_set_volume();
+
 			if (info.reset >= HARD) {
-				memset(&n163.ch, 0x00, sizeof(n163).ch);
-				memset(&n163.nmt_bank, 0x00, sizeof(n163).nmt_bank);
-				memset(&n163.snd_wave, 0x00, sizeof(n163).snd_wave);
+				int i;
+
+				n163.prg[0] = 0xFC;
+				n163.prg[1] = 0xFD;
+				n163.prg[2] = 0xFE;
+
+				for (i = 0; i < 4; i++) {
+					n163.chr[i | 0] = i;
+					n163.chr[i | 4] = i | 0x04;
+					n163.chr[i | 8] = (i & 0x01) | 0xE0;
+				}
+
+				n163.write_protect = 0xFF;
+				n163.irq.delay = 0;
+				n163.irq.count = 0;
+
+				n163.snd.enabled = 0;
+				n163.snd.adr = 0;
+				n163.snd.auto_inc = 1;
+				n163.snd.tick = 0;
+				n163.snd.channel = 0;
+				n163.snd.channel_start = 0;
+				memset(&n163.snd.output, 0x00, sizeof(n163.snd.output));
+
 				if (info.reset >= CHANGE_ROM) {
-					memset(&n163.snd_ram, 0x00, sizeof(n163.snd_ram));
+					memset(&namcotmp.ram, 0x00, sizeof(namcotmp.ram));
 				}
 				if (!info.prg.ram.bat.banks) {
-					emu_initial_ram(n163.snd_ram, sizeof(n163.snd_ram));
+					emu_initial_ram(namcotmp.ram, sizeof(namcotmp.ram));
 				}
-				n163.snd_adr = 0;
-				n163.irq_delay = 0;
-				n163.irq_count = 0;
-				n163.snd_ch_start = 7;
-				n163.snd_auto_inc = 1;
 			} else {
-				memset(&n163.ch, 0x00, sizeof(n163.ch));
-				memset(&n163.snd_wave, 0x00, sizeof(n163.snd_wave));
-				n163.irq_delay = FALSE;
-				n163.snd_ch_start = 7;
-				n163.snd_adr = 0;
-				n163.snd_auto_inc = 1;
+				n163.irq.delay = 0;
 			}
 
 			info.mapper.extend_wr = TRUE;
+			info.mapper.ram_plus_op_controlled_by_mapper = TRUE;
+
 			namcotmp.hardwired = FALSE;
 
 			switch (info.id) {
@@ -171,221 +168,260 @@ void map_init_Namco(BYTE model) {
 }
 void map_init_NSF_Namco(BYTE model) {
 	memset(&n163, 0x00, sizeof(n163));
+	memset(&namcotmp.ram, 0x00, sizeof(namcotmp.ram));
 
-	n163.snd_ch_start = 7;
-	n163.snd_auto_inc = 1;
+	snd_Namco_163_set_volume();
+
+	n163.snd.enabled = 1;
+	n163.snd.auto_inc = 1;
 
 	namcotmp.type = model;
 }
 
+void extcl_after_mapper_init_Namco_163(void) {
+	prg_fix_Namco_163();
+	chr_fix_Namco_163();
+}
 void extcl_mapper_quit_Namco_163(void) {
 	chinaersan2_quit();
 }
 void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value) {
-	if (address < 0x4800) {
-		return;
-	}
-
 	switch (address & 0xF800) {
-		case 0x4800: {
-			n163.snd_ram[n163.snd_adr] = value;
-
-			{
-				const BYTE index = n163.snd_adr << 1;
-
-				n163.snd_wave[index + 0] = (value & 0x0F);
-				n163.snd_wave[index + 1] = (value >> 4);
-			}
-
-			if (n163.snd_adr >= 0x40) {
-				const BYTE chan = (n163.snd_adr >> 3) & 0x07;
-
-				switch (n163.snd_adr & 0x7) {
-					case 0x00:
-						n163_ch_freq_low(chan);
-						break;
-					case 0x02:
-						n163_ch_freq_middle(chan);
-						break;
-					case 0x04: {
-						const WORD length = (64 - (value >> 2)) << 2;
-
-						n163_ch_freq_high(chan);
-
-						if (n163.ch[chan].length != length) {
-							n163.ch[chan].length = length;
-							n163.ch[chan].step = 0;
-						}
-						break;
-					}
-					case 0x06:
-						n163.ch[chan].address = value;
-						break;
-					case 0x07:
-						n163.ch[chan].volume = value & 0x0F;
-						if (chan == 7) {
-							BYTE i;
-
-							value = (value >> 4) & 0x07;
-							n163.snd_ch_start = 7 - value;
-							for (i = 0; i < 8; i++) {
-								n163.ch[i].enabled = TRUE;
-								if (i < n163.snd_ch_start) {
-									n163.ch[i].enabled = FALSE;
-								}
-							}
-						}
-						break;
-				}
-
-				n163.ch[chan].active = FALSE;
-
-				/* se sono vere queste condizioni allora il canale e' attivo */
-				if (n163.ch[chan].enabled && n163.ch[chan].freq && n163.ch[chan].volume) {
-					n163.ch[chan].active = TRUE;
-				}
-			}
-			n163.snd_adr = (n163.snd_adr + n163.snd_auto_inc) & 0x07F;
-			return;
-		}
-		case 0x8000:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[0] = chr_pnt(value << 10);
-			return;
-		case 0x8800:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[1] = chr_pnt(value << 10);
-			return;
-		case 0x9000:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[2] = chr_pnt(value << 10);
-			return;
-		case 0x9800:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[3] = chr_pnt(value << 10);
-			return;
-		case 0xA000:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[4] = chr_pnt(value << 10);
-			return;
-		case 0xA800:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[5] = chr_pnt(value << 10);
-			return;
-		case 0xB000:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[6] = chr_pnt(value << 10);
-			return;
-		case 0xB800:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[7] = chr_pnt(value << 10);
-			return;
-		case 0xC000:
-			n163_nmt_update(0)
-			return;
-		case 0xC800:
-			n163_nmt_update(1)
-			return;
-		case 0xD000:
-			n163_nmt_update(2)
-			return;
-		case 0xD800:
-			n163_nmt_update(3)
-			return;
-		case 0xE000:
-			n163_prg_rom_8k_update(0);
-			return;
-		case 0xE800:
-			n163_prg_rom_8k_update(1);
-			return;
-		case 0xF000:
-			n163_prg_rom_8k_update(2);
+		case 0x4800:
+			namcotmp.ram[n163.snd.adr] = value;
+			n163.snd.adr = (n163.snd.adr + n163.snd.auto_inc) & 0x07F;
 			return;
 		case 0x5000:
-			n163.irq_count = (n163.irq_count & 0xFF00) | value;
+			n163.irq.count = (n163.irq.count & 0xFF00) | value;
 			irq.high &= ~EXT_IRQ;
 			return;
 		case 0x5800:
-			n163.irq_count = (value << 8) | (n163.irq_count & 0x00FF);
+			n163.irq.count = (value << 8) | (n163.irq.count & 0x00FF);
 			irq.high &= ~EXT_IRQ;
 			return;
+		case 0x6000:
+		case 0x6800:
+		case 0x7000:
+		case 0x7800: {
+			BYTE slot = (address >> 11) & 0x03;
+			BYTE writable = ((n163.write_protect & 0xF0) == 0x40) && !(n163.write_protect & (0x01 << slot));
+
+			if (writable) {
+				prg.ram_plus_8k[address & 0x1FFF] = value;
+			}
+			return;
+		}
+		case 0x8000:
+		case 0x8800:
+		case 0x9000:
+		case 0x9800:
+		case 0xA000:
+		case 0xA800:
+		case 0xB000:
+		case 0xB800:
+		case 0xC000:
+		case 0xC800:
+		case 0xD000:
+		case 0xD800:
+			n163.chr[(address >> 11) & 0x0F] = value;
+			chr_fix_Namco_163();
+			return;
+		case 0xE000:
+			n163.snd.enabled = !(value & 0x40);
+			n163.prg[0] = value;
+			prg_fix_Namco_163();
+			return;
+		case 0xE800:
+		case 0xF000:
+			n163.prg[(address >> 11) & 0x03] = value;
+			prg_fix_Namco_163();
+			return;
 		case 0xF800:
-			n163.snd_auto_inc = (value & 0x80) >> 7;
-			n163.snd_adr = value & 0x7F;
+			n163.write_protect = value;
+			n163.snd.auto_inc = (value & 0x80) >> 7;
+			n163.snd.adr = value & 0x7F;
 			return;
 	}
 }
 BYTE extcl_cpu_rd_mem_Namco_163(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address < 0x4800) || (address >= 0x6000)) {
-		return (openbus);
-	}
-
 	switch (address & 0xF800) {
 		case 0x4800:
-			openbus = n163.snd_ram[n163.snd_adr];
-			n163.snd_adr = (n163.snd_adr + n163.snd_auto_inc) & 0x07F;
+			openbus = namcotmp.ram[n163.snd.adr];
+			n163.snd.adr = (n163.snd.adr + n163.snd.auto_inc) & 0x07F;
 			return (openbus);
 		case 0x5000:
-			return (n163.irq_count & 0xFF);
+			return (n163.irq.count & 0xFF);
 		case 0x5800:
-			return ((n163.irq_count >> 8) & 0xFF);
+			return ((n163.irq.count >> 8) & 0xFF);
+		case 0x6000:
+		case 0x6800:
+		case 0x7000:
+		case 0x7800:
+			return (prg.ram_plus_8k[address & 0x1FFF]);
+			//return (openbus);
 		default:
 			return (openbus);
 	}
 }
 BYTE extcl_save_mapper_Namco_163(BYTE mode, BYTE slot, FILE *fp) {
-	BYTE i;
-
-	for (i = 0; i < LENGTH(n163.nmt_bank); i++) {
-		save_slot_int(mode, slot, n163.nmt_bank[i][0]);
-		save_slot_int(mode, slot, n163.nmt_bank[i][1]);
-		if ((mode == SAVE_SLOT_READ) && (n163.nmt_bank[i][0])) {
-			_n163_nmt_update(i);
+	if (save_slot.version >= 28) {
+		save_slot_ele(mode, slot, n163.prg);
+		save_slot_ele(mode, slot, n163.chr);
+		save_slot_ele(mode, slot, n163.write_protect);
+		save_slot_ele(mode, slot, n163.snd.enabled);
+		save_slot_ele(mode, slot, n163.snd.adr);
+		save_slot_ele(mode, slot, n163.snd.auto_inc);
+		save_slot_ele(mode, slot, n163.snd.tick);
+		save_slot_ele(mode, slot, n163.snd.channel);
+		save_slot_ele(mode, slot, n163.snd.channel_start);
+		save_slot_ele(mode, slot, n163.snd.output);
+		save_slot_ele(mode, slot, n163.irq.delay);
+		save_slot_ele(mode, slot, n163.irq.count);
+		if (mode == SAVE_SLOT_READ) {
+			extcl_after_mapper_init_Namco_163();
 		}
-	}
-	save_slot_ele(mode, slot, n163.irq_delay);
-	save_slot_ele(mode, slot, n163.irq_count);
-	save_slot_ele(mode, slot, n163.snd_ram);
-	save_slot_ele(mode, slot, n163.snd_adr);
-	save_slot_ele(mode, slot, n163.snd_auto_inc);
-	save_slot_ele(mode, slot, n163.snd_ch_start);
-	save_slot_ele(mode, slot, n163.snd_wave);
-	for (i = 0; i < LENGTH(n163.ch); i++) {
-		save_slot_ele(mode, slot, n163.ch[i].enabled);
-		save_slot_ele(mode, slot, n163.ch[i].active);
-		save_slot_ele(mode, slot, n163.ch[i].address);
-		save_slot_ele(mode, slot, n163.ch[i].freq);
-		save_slot_ele(mode, slot, n163.ch[i].cycles_reload);
-		save_slot_ele(mode, slot, n163.ch[i].cycles);
-		save_slot_ele(mode, slot, n163.ch[i].length);
-		save_slot_ele(mode, slot, n163.ch[i].step);
-		save_slot_ele(mode, slot, n163.ch[i].volume);
-		save_slot_ele(mode, slot, n163.ch[i].output);
+	} else {
+		return (EXIT_ERROR);
 	}
 
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_Namco_163(void) {
-	if (n163.irq_delay) {
-		n163.irq_delay = FALSE;
+	if (n163.irq.delay) {
+		n163.irq.delay = FALSE;
 		irq.high |= EXT_IRQ;
 	}
-	if (((n163.irq_count - 0x8000) < 0x7FFF) && (++n163.irq_count == 0xFFFF)) {
-		/* vale sempre il solito discorso di un ciclo di delay */
-		n163.irq_delay = TRUE;
+	if (((n163.irq.count - 0x8000) < 0x7FFF) && (++n163.irq.count == 0xFFFF)) {
+		// vale sempre il solito discorso di un ciclo di delay
+		n163.irq.delay = TRUE;
+	}
+}
+void extcl_wr_nmt_Namco_163(WORD address, BYTE value) {
+	const BYTE slot = (address & 0x0FFF) >> 10;
+
+	if (namcotmp.nmt_bank_writable[slot] | namcotmp.hardwired) {
+		ntbl.bank_1k[slot][address & 0x3FF] = value;
+	}
+}
+void extcl_wr_chr_Namco_163(WORD address, BYTE value) {
+	const BYTE slot = address >> 10;
+
+	if (namcotmp.chr_bank_writable[slot]) {
+		chr.bank_1k[slot][address & 0x3FF] = value;
 	}
 }
 void extcl_apu_tick_Namco_163(void) {
-	BYTE i;
+	if (n163.snd.enabled) {
+		n163.snd.channel_start = (~namcotmp.ram[0x7F] >> 4) & 0x07;
 
-	for (i = n163.snd_ch_start; i < 8; i++) {
-		if (n163.ch[i].active && !(--n163.ch[i].cycles)) {
-			n163.ch[i].step = (n163.ch[i].step + 1) % n163.ch[i].length;
-			n163.ch[i].output = (n163.snd_wave[(n163.ch[i].address + n163.ch[i].step) & 0xFF] - 8) *
-					n163.ch[i].volume;
-			n163.ch[i].cycles = n163.ch[i].cycles_reload;
+		if (n163.snd.channel > 7) {
+			n163.snd.channel = n163.snd.channel_start;
+		}
+		n163.snd.output[n163.snd.channel] = (snd_Namco_163_wave(n163.snd.tick ? 0 : 1, n163.snd.channel * 8 + 0x40) * namcotmp.volume) / 40;
+		if (++n163.snd.tick >= 15) {
+			n163.snd.tick = 0;
+			n163.snd.channel++;
 		}
 	}
+}
+void extcl_battery_io_Namco_163(BYTE mode, FILE *fp) {
+	if (!fp || (tas.type != NOTAS)) {
+		return;
+	}
+
+	if (mode == WR_BAT) {
+		if (info.prg.ram.bat.banks) {
+			map_bat_wr_default(fp);
+			if (fwrite(namcotmp.ram, sizeof(namcotmp.ram), 1, fp) < 1) {
+				log_error(uL("mapper_Namco_163;error on write 128 bytes ram"));
+			}
+		}
+	} else {
+		if (info.prg.ram.bat.banks) {
+			map_bat_rd_default(fp);
+			if (fread(namcotmp.ram, sizeof(namcotmp.ram), 1, fp) < 1) {
+				log_error(uL("mapper_Namco_163;error on write 128 bytes ram"));
+			}
+		}
+	}
+}
+
+INLINE static void prg_fix_Namco_163(void) {
+	WORD value;
+	BYTE i;
+
+	for (i = 0; i < 3; i++) {
+		value = n163.prg[i] & 0x3F;
+		control_bank(info.prg.rom.max.banks_8k)
+		map_prg_rom_8k(1, i, value);
+	}
+	value = 0x3F;
+	control_bank(info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 3, value);
+	map_prg_rom_8k_update();
+}
+INLINE static void chr_fix_Namco_163(void) {
+	BYTE force_chrom;
+
+	force_chrom = (n163.prg[1] & 0x40) ? TRUE : FALSE;
+	chr_swap_Namco_163(&chr.bank_1k[0], n163.chr[0], force_chrom, &namcotmp.chr_bank_writable[0]);
+	chr_swap_Namco_163(&chr.bank_1k[1], n163.chr[1], force_chrom, &namcotmp.chr_bank_writable[1]);
+	chr_swap_Namco_163(&chr.bank_1k[2], n163.chr[2], force_chrom, &namcotmp.chr_bank_writable[2]);
+	chr_swap_Namco_163(&chr.bank_1k[3], n163.chr[3], force_chrom, &namcotmp.chr_bank_writable[3]);
+
+	force_chrom = (n163.prg[1] & 0x80) ? TRUE : FALSE;
+	chr_swap_Namco_163(&chr.bank_1k[4], n163.chr[4], force_chrom, &namcotmp.chr_bank_writable[4]);
+	chr_swap_Namco_163(&chr.bank_1k[5], n163.chr[5], force_chrom, &namcotmp.chr_bank_writable[5]);
+	chr_swap_Namco_163(&chr.bank_1k[6], n163.chr[6], force_chrom, &namcotmp.chr_bank_writable[6]);
+	chr_swap_Namco_163(&chr.bank_1k[7], n163.chr[7], force_chrom, &namcotmp.chr_bank_writable[7]);
+
+	if (!namcotmp.hardwired) {
+		force_chrom = FALSE;
+		chr_swap_Namco_163(&ntbl.bank_1k[0], n163.chr[8], force_chrom, &namcotmp.nmt_bank_writable[0]);
+		chr_swap_Namco_163(&ntbl.bank_1k[1], n163.chr[9], force_chrom, &namcotmp.nmt_bank_writable[1]);
+		chr_swap_Namco_163(&ntbl.bank_1k[2], n163.chr[10], force_chrom, &namcotmp.nmt_bank_writable[2]);
+		chr_swap_Namco_163(&ntbl.bank_1k[3], n163.chr[11], force_chrom, &namcotmp.nmt_bank_writable[3]);
+	}
+}
+INLINE static void chr_swap_Namco_163(BYTE **dst, DBWORD value, BYTE force_chrom, BYTE *bank_writable) {
+	if ((value < 0xE0) || force_chrom) {
+		control_bank(info.chr.rom.max.banks_1k)
+		value <<= 10;
+		(*dst) = chr_pnt(value);
+		(*bank_writable) = mapper.write_vram;
+	} else {
+		value = (value & ((mapper.mirroring == MIRRORING_FOURSCR) ? 0x03 : 0x01)) << 10;
+		(*dst) = &ntbl.data[value];
+		(*bank_writable) = TRUE;
+	}
+}
+INLINE static void snd_Namco_163_set_volume(void) {
+	SWORD volume[6] = { 0x22, 0x22,  0, 0x22, 0x3B, 0x44 };
+
+	namcotmp.volume = volume[info.mapper.submapper >= 6 ? 0 : info.mapper.submapper];
+}
+INLINE static SWORD snd_Namco_163_wave(int cycles, int channel_offset) {
+	int phase = (namcotmp.ram[channel_offset + 5] << 16) |
+		(namcotmp.ram[channel_offset + 3] << 8) | namcotmp.ram[channel_offset + 1];
+	int freq = ((namcotmp.ram[channel_offset + 4] & 0x03) << 16) |
+		(namcotmp.ram[channel_offset + 2] << 8) | (namcotmp.ram[channel_offset]);
+	int length = 256 - (namcotmp.ram[channel_offset + 4] & 0xFC);
+	int offset = namcotmp.ram[channel_offset + 6];
+	int volume = namcotmp.ram[channel_offset + 7] & 0x0F;
+	int sample, output;
+
+	while (cycles--) {
+		phase = (phase + freq) % (length << 16);
+	}
+
+	sample = ((phase >> 16) + offset) & 0xFF;
+	output = (namcotmp.ram[sample >> 1] >> ((sample & 0x01) << 2)) & 0x0F;
+
+	namcotmp.ram[channel_offset + 5] = (phase >> 16) & 0xFF;
+	namcotmp.ram[channel_offset + 3] = (phase >> 8) & 0xFF;
+	namcotmp.ram[channel_offset + 1] = (phase >> 0) & 0xFF;
+
+	return (SWORD)(((output - 8) * volume));
 }
 
 void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
