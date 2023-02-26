@@ -97,14 +97,14 @@ jobs:
       - name: 'Environment configuration'
         shell: msys2 {0}
         run: |
+          pacman --noconfirm -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-ffmpeg-4.4.3-6-any.pkg.tar.zst
           mkdir -p artifacts/dll
           mkdir -p artifacts/tmp
           mkdir -p artifacts/d3d9
           mkdir -p artifacts/opengl
           mkdir -p build/d3d9
           mkdir -p build/opengl
-          pacman -U http://repo.msys2.org/mingw/${{ matrix.env }}/mingw-w64-${{ matrix.env }}-ffmpeg-4.4.3-6-any.pkg.tar.zst
-
+          
       - name: 'Download qt5 and dlls'
         shell: msys2 {0}
         working-directory: artifacts/tmp
