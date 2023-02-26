@@ -107,7 +107,7 @@ jobs:
           mkdir -p artifacts/opengl
           mkdir -p build/d3d9
           mkdir -p build/opengl
-          
+
       - name: 'Download qt5 and dlls'
         shell: msys2 {0}
         working-directory: artifacts/tmp
