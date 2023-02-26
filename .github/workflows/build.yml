@@ -91,7 +91,7 @@ jobs:
             p7zip
             unzip
             libtool
-            mingw-w64-${{ matrix.env }}-ffmpeg-4.4.3-6
+            mingw-w64-${{ matrix.env }}-ffmpeg4.4
             mingw-w64-${{ matrix.env }}-cmake
             mingw-w64-${{ matrix.env }}-toolchain
 
