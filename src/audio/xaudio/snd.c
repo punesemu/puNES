@@ -487,21 +487,36 @@ void snd_list_devices(void) {
 	snd_list_device_add(&snd_list.playback, uL("default"), NULL, uL("System Default"));
 
 	if (XAudio2Create(&ixa2, 0, XAUDIO2_DEFAULT_PROCESSOR) != S_OK) {
+		log_error(uL("xaudio2;error on create XAudio2 object"));
 		return;
 	}
 	if (IXAudio2_GetDeviceCount(ixa2, &devcount) != S_OK) {
 		IXAudio2_Release(ixa2);
+		log_error(uL("xaudio2;error on count devices"));
 		return;
 	}
 
-	for (i = 0; i < devcount; i++) {
-		XAUDIO2_DEVICE_DETAILS details;
+	if (!devcount) {
+		log_error(uL("xaudio2;no devices"));
+	} else {
+		if (devcount == 1) {
+			log_info(uL("xaudio2;%d device"), devcount);
+		} else {
+			log_info(uL("xaudio2;%d devices"), devcount);
+		}
+		for (i = 0; i < devcount; i++) {
+			XAUDIO2_DEVICE_DETAILS details;
 
-		if (IXAudio2_GetDeviceDetails(ixa2, i, &details) == S_OK) {
-			if (ustrlen(details.DisplayName) == 0) {
-				continue;
+			if (IXAudio2_GetDeviceDetails(ixa2, i, &details) == S_OK) {
+				if (ustrlen(details.DisplayName) == 0) {
+					log_warning_box(uL("%d : DisplayName null or empty"), i);
+					continue;
+				}
+				snd_list_device_add(&snd_list.playback, details.DeviceID, NULL, details.DisplayName);
+				log_info_box(uL("%d : " uPs("")), i, details.DisplayName);
+			} else {
+				log_error_box(uL("%d : error on GetDeviceDetails"), i);
 			}
-			snd_list_device_add(&snd_list.playback, details.DeviceID, NULL, details.DisplayName);
 		}
 	}
 	IXAudio2_Release(ixa2);

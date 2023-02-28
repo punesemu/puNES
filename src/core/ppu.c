@@ -1173,6 +1173,13 @@ static void ppu_alignment_init(void) {
 	if (gui.start) {
 		gui_update_status_bar();
 	}
+	if ((cfg->ppu_alignment == PPU_ALIGMENT_DEFAULT) || (info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		return;
+	} else if (info.reset >= HARD) {
+		log_info(uL("CPU/PPU alig.;PPU %d/%d, CPU %d/%d"),
+			ppu_alignment.ppu, machine.ppu_divide,
+			ppu_alignment.cpu, machine.cpu_divide);
+	}
 }
 static BYTE ppu_alloc_screen_buffer(_ppu_screen_buffer *sb) {
 	int b;

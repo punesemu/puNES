@@ -1159,6 +1159,10 @@ void emu_info_rom(void) {
 	}
 
 	log_info_box(uL("CRC32;%08X"), info.crc32.total);
+
+	log_info_box(uL("CPU/PPU alig.;PPU %d/%d, CPU %d/%d"),
+		ppu_alignment.ppu, machine.ppu_divide,
+		ppu_alignment.cpu, machine.cpu_divide);
 }
 void emu_initial_ram(BYTE *ram, unsigned int length) {
 	unsigned int i;
