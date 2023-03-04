@@ -6,7 +6,7 @@ Changelog:
   * 0xFF (default)
   * Randomize.
 - Rewritten mapper 19 (#276).
-- Fixed mapper : 30, 111, 95, 154, 406.
+- Fixed mapper : 30, 111, 95, 154, 344, 406.
 - Windows x86_64: Update to Qt5 5.15.8 (#279).
 - Fixed map of one keyboard button to multiple controllers (#277).
 

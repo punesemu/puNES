@@ -211,7 +211,7 @@ INLINE static void chr_swap_GN26(WORD address, WORD value) {
 	WORD base = (gn26.reg & 0x03) << 7;
 	WORD mask = gn26.reg & 0x02 ? 0x7F : 0xFF;
 
-	value = (base & ~mask) | (value & mask);
+	value = base | (value & mask);
 	control_bank(info.chr.rom.max.banks_1k)
 	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 }
