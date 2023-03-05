@@ -27,6 +27,14 @@ enum frame_status_modes {
 	FRAME_INTERRUPTED
 };
 
+typedef struct _info_lag_frame {
+	uint8_t next;
+	uint8_t actual;
+	uint32_t totals;
+
+	// da salvare
+	uint32_t consecutive;
+} _info_lag_frame;
 typedef struct _info_sh1sum {
 	struct _info_sha1sum_prg {
 		BYTE value[20];
@@ -80,6 +88,7 @@ typedef struct _info {
 	BYTE sRGB_FBO_in_use;
 #endif
 	_info_sh1sum sha1sum;
+	_info_lag_frame lag_frame;
 	struct _info_crc32 {
 		uint32_t prg;
 		uint32_t chr;

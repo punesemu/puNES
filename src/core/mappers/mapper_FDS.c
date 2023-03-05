@@ -28,10 +28,9 @@
 #include "fds.h"
 #include "cpu.h"
 #include "conf.h"
-#include "tas.h"
 #include "gui.h"
 
-enum { TRANSFERED_8BIT = 0x02, END_OF_HEAD = 0x40 };
+enum { TRANSFERED_8BIT = 0x02, END_OF_HEAD = 0x40, MIN_LAG_FRAMES = 20 };
 
 static const SBYTE modulation_table[8] = { 0, 1, 2, 4, 8, -4, -2, -1 };
 static const BYTE volume_wave[4] = { 36, 24, 17, 14 };
@@ -161,12 +160,13 @@ BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus), UNUSED(BYTE before
 	return (prg_byte(address & 0x1FFF));
 }
 void extcl_cpu_every_cycle_FDS(void) {
-	BYTE max_speed = cfg->fds_fast_forward & ((fds.drive.scan & tas.lag_actual_frame) | !fds.auto_insert.in_game);
+	BYTE max_speed = cfg->fds_fast_forward &
+		((fds.drive.scan & (info.lag_frame.consecutive > MIN_LAG_FRAMES)) | !fds.auto_insert.in_game);
 	WORD data;
 
 	// auto insert
 	if (fds_auto_insert_enabled()) {
-#define _max_speed cfg->fds_fast_forward & tas.lag_actual_frame
+#define _max_speed cfg->fds_fast_forward & (info.lag_frame.consecutive > MIN_LAG_FRAMES)
 		if (fds.auto_insert.delay.eject > 0) {
 			fds.auto_insert.delay.eject--;
 			max_speed = _max_speed & (fds.auto_insert.delay.eject > 0);
@@ -386,7 +386,7 @@ void extcl_apu_tick_FDS(void) {
 			fds.snd.modulation.index = (fds.snd.modulation.index + 1) & 0x3F;
 
 			fds.snd.sweep.bias += ((BYTE)adj == 8 ? 0 : adj);
-			fds.snd.sweep.bias = fds_sweep_bias(fds.snd.sweep.bias);
+			fds.snd.sweep.bias = fds_sweep_bias(fds.snd.sweep.bias)
 
 			/*
 			// vecchia gestione

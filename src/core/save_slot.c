@@ -37,7 +37,7 @@
 #include "nsf.h"
 #include "cheat.h"
 
-#define SAVE_VERSION 28
+#define SAVE_VERSION 29
 
 static void preview_image(BYTE slot, _ppu_screen_buffer *sb);
 static uTCHAR *name_slot_file(BYTE slot);
@@ -784,6 +784,10 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 
 		if (save_slot.version >= 20) {
 			save_slot_ele(mode, slot, r2001.grayscale_bit.delay)
+		}
+
+		if (save_slot.version >= 29) {
+			save_slot_ele(mode, slot, info.lag_frame.consecutive)
 		}
 
 		// in caso di ripristino di una salvataggio, se era caricato

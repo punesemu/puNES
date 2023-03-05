@@ -28,6 +28,7 @@
 #include "mainWindow.hpp"
 #include "fps.h"
 #include "tas.h"
+#include "info.h"
 #include "input.h"
 #include "input/mouse.h"
 #include "fds.h"
@@ -733,7 +734,7 @@ void overlayWidgetFPS::update_old_value(void) {
 
 overlayWidgetFrame::overlayWidgetFrame(QWidget *parent) : overlayWidget(parent) {
 	old.actual_frame = 0;
-	info();
+	update_info();
 }
 overlayWidgetFrame::~overlayWidgetFrame() = default;
 
@@ -772,7 +773,7 @@ void overlayWidgetFrame::update_widget(void) {
 }
 BYTE overlayWidgetFrame::is_to_redraw(void) {
 	if (ppu.frames != old.actual_frame) {
-		info();
+		update_info();
 		setMinimumWidth((int)td.size().width());
 		return (TRUE);
 	}
@@ -782,13 +783,13 @@ void overlayWidgetFrame::update_old_value(void) {
 	old.actual_frame = ppu.frames;
 }
 
-void overlayWidgetFrame::info(void) {
+void overlayWidgetFrame::update_info(void) {
 	QString txt = "";
 
 	txt += color_string("F : ", base_color.fg);
-	txt += color_string(QString("%1").arg(old.actual_frame), tas.lag_actual_frame ? shared_color.lag : shared_color.rwnd_actual);
+	txt += color_string(QString("%1").arg(old.actual_frame), info.lag_frame.actual ? shared_color.lag : shared_color.rwnd_actual);
 	txt += color_string(" L : ", base_color.fg);
-	txt += color_string(QString("%1").arg(tas.total_lag_frames), tas.lag_actual_frame ? shared_color.lag : shared_color.no_lag);
+	txt += color_string(QString("%1").arg(info.lag_frame.totals), info.lag_frame.actual ? shared_color.lag : shared_color.no_lag);
 
 	td.setHtml(txt);
 }
@@ -1174,7 +1175,7 @@ void overlayWidgetRewind::paintEvent(QPaintEvent *event) {
 	painter.begin(this);
 	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-	info.width = dpr_rect().width();
+	info_dim.width = dpr_rect().width();
 	draw_background();
 	draw_command();
 	draw_corner_bar_info();
@@ -1397,7 +1398,7 @@ void overlayWidgetRewind::draw_command(void) {
 		painter.drawText(dpr_text_rect(text), Qt::AlignHCenter | Qt::AlignVCenter, desc);
 	}
 
-	info.width = text.x() - dpr_int(hpadtot());
+	info_dim.width = text.x() - dpr_int(hpadtot());
 
 	painter.restore();
 }
@@ -1410,27 +1411,27 @@ void overlayWidgetRewind::draw_corner_bar_info(void) {
 	qreal step = value / (max - min);
 
 	//percentuale
-	info.width -= dpr_int(padding.h);
+	info_dim.width -= dpr_int(padding.h);
 	painter.translate(dpr_int(padding.h), 0);
-	qr = painter.boundingRect(QRectF(0, 0, info.width, dpr_rect().height()), Qt::AlignLeft | Qt::AlignVCenter, "000%");
+	qr = painter.boundingRect(QRectF(0, 0, info_dim.width, dpr_rect().height()), Qt::AlignLeft | Qt::AlignVCenter, "000%");
 	painter.setPen(base_color.fg);
 	painter.drawText(dpr_text_rect(qr), Qt::AlignCenter, QString("%1%").arg((int)(100 * step)));
 
 	// cornice
-	info.width -= (qr.width() + dpr_int(padding.h));
+	info_dim.width -= (qr.width() + dpr_int(padding.h));
 	painter.translate(qr.width() + dpr_int(padding.h), 0);
 	painter.setBrush(color.corner);
-	painter.drawRoundedRect(QRectF(0, 0, info.width, dpr_rect().height()), dpr_radius(), dpr_radius());
+	painter.drawRoundedRect(QRectF(0, 0, info_dim.width, dpr_rect().height()), dpr_radius(), dpr_radius());
 
 	// barra
 	if (value > 0) {
-		qr.setRect(hpad, vpad, (info.width - (hpad * 2)) * step, dpr_rect().height() - (vpad * 2));
+		qr.setRect(hpad, vpad, (info_dim.width - (hpad * 2)) * step, dpr_rect().height() - (vpad * 2));
 		painter.setPen(color.border_bar);
 		painter.setBrush(color.bar);
 		painter.drawRoundedRect(qr, dpr_radius(), dpr_radius());
 	}
 
-	info.width -= (hpad * 4);
+	info_dim.width -= (hpad * 4);
 	painter.translate(hpad * 2, 0);
 
 	{
@@ -1438,13 +1439,13 @@ void overlayWidgetRewind::draw_corner_bar_info(void) {
 
 		td.setHtml(info_long());
 
-		if (td.size().width() >= info.width) {
+		if (td.size().width() >= info_dim.width) {
 			td.setHtml(info_short());
 		}
 
 		painter.translate(dpr_text_coord(0.0), dpr_text_coord((dpr_rect().height() - td.size().height()) / 2.0));
 
-		ctx.clip = QRectF(0, 0, info.width, dpr_rect().height());
+		ctx.clip = QRectF(0, 0, info_dim.width, dpr_rect().height());
 		td.documentLayout()->draw(&painter, ctx);
 	}
 }
@@ -1511,7 +1512,7 @@ QString overlayWidgetTAS::info_long(void) {
 	txt += color_string("/", base_color.fg);
 	txt += seconds_to_string(&itmax, itmax.max, color.total);
 	txt += color_string(" (", base_color.fg);
-	txt += color_string(QString("%1").arg(old.actual_frame), tas.lag_actual_frame ? shared_color.lag : color.actual);
+	txt += color_string(QString("%1").arg(old.actual_frame), info.lag_frame.actual ? shared_color.lag : color.actual);
 	txt += color_string("/", base_color.fg);
 	txt += color_string(QString("%1").arg(old.max_frames), color.total);
 	txt += color_string(")", base_color.fg);
@@ -1521,11 +1522,11 @@ QString overlayWidgetTAS::info_long(void) {
 QString overlayWidgetTAS::info_short(void) {
 	QString txt = "";
 
-	txt += color_string(QString("%1").arg(old.actual_frame), tas.lag_actual_frame ? shared_color.lag : color.actual);
+	txt += color_string(QString("%1").arg(old.actual_frame), info.lag_frame.actual ? shared_color.lag : color.actual);
 	txt += color_string("/", base_color.fg);
 	txt += color_string(QString("%1").arg(old.max_frames), color.total);
 	txt += color_string(" [", base_color.fg);
-	txt += color_string(QString("%1").arg(tas.total_lag_frames), tas.lag_actual_frame ? shared_color.lag : color.actual);
+	txt += color_string(QString("%1").arg(info.lag_frame.totals), info.lag_frame.actual ? shared_color.lag : color.actual);
 	txt += color_string("]", base_color.fg);
 
 	return (txt);

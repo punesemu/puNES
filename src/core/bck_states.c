@@ -175,7 +175,8 @@ void bck_states_op_input(BYTE mode, void *data, size_t *index, size_t *size_buff
 	bck_states_on_struct(mode, generic_keyboard.data, data, (*index), (*size_buff))
 
 	// lag frames
-	bck_states_on_struct(mode, tas.total_lag_frames, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, info.lag_frame.totals, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, info.lag_frame.consecutive, data, (*index), (*size_buff))
 }
 void bck_states_op_input_port(BYTE id, BYTE mode, void *data, size_t *index, size_t *size_buff) {
 	bck_states_on_struct(mode, port[id].type_pad, data, (*index), (*size_buff))

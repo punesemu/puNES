@@ -157,7 +157,7 @@ class overlayWidgetFrame : public overlayWidget {
 		void update_old_value(void) override;
 
 	private:
-		void info(void);
+		void update_info(void);
 };
 class overlayWidgetFloppy : public overlayWidget {
 	private:
@@ -315,9 +315,9 @@ class overlayWidgetRewind : public overlayWidget {
 			QColor total;
 			QColor disabled;
 		} color;
-		struct _info {
+		struct _info_dim {
 			qreal width;
-		} info{};
+		} info_dim{};
 
 	public:
 		explicit overlayWidgetRewind(QWidget *parent = nullptr);

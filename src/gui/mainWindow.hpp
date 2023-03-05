@@ -110,6 +110,7 @@ class actionOneTrigger : public QAction {
 	public:
 		unsigned int count;
 		QMutex mutex;
+		double last;
 
 	public:
 		explicit actionOneTrigger(QObject *parent = nullptr);

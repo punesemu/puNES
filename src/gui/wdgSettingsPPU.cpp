@@ -19,7 +19,6 @@
 #include "wdgSettingsPPU.hpp"
 #include "mainWindow.hpp"
 #include "emu_thread.h"
-#include "tas.h"
 #include "ppu.h"
 #include "conf.h"
 #include "gui.h"
@@ -96,7 +95,7 @@ void wdgSettingsPPU::update_widget(void) {
 	lag_counter_update();
 }
 void wdgSettingsPPU::lag_counter_update(void) {
-	lineEdit_Lag_Counter->setText(QString("%1").arg(tas.total_lag_frames));
+	lineEdit_Lag_Counter->setText(QString("%1").arg(info.lag_frame.totals));
 }
 
 void wdgSettingsPPU::s_hide_sprites(UNUSED(bool checked)) {
@@ -150,7 +149,7 @@ void wdgSettingsPPU::s_overclock_pr_slines(int i) {
 }
 void wdgSettingsPPU::s_lag_counter_reset(UNUSED(bool checked)) {
 	emu_thread_pause();
-	tas.total_lag_frames = 0;
+	info.lag_frame.totals = 0;
 	emu_thread_continue();
 	lag_counter_update();
 }

@@ -37,15 +37,12 @@ typedef struct _tas {
 	FILE *fp;
 	uint8_t emulator;
 	uint8_t type;
-	uint8_t lag_next_frame;
-	uint8_t lag_actual_frame;
 	int32_t start_frame;
 	uint32_t emu_version;
 	int32_t index;
 	int32_t count;
 	int32_t total;
 	int32_t frame;
-	uint32_t total_lag_frames;
 	_tas_input_log il[TAS_CACHE];
 } _tas;
 

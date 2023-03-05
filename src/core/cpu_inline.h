@@ -195,7 +195,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		}
 		/* Controller port 1 */
 		if (address == 0x4016) {
-			tas.lag_next_frame = FALSE;
+			info.lag_frame.next = FALSE;
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* leggo dal controller */
@@ -204,7 +204,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		}
 		/* Controller port 2 */
 		if (address == 0x4017) {
-			tas.lag_next_frame = FALSE;
+			info.lag_frame.next = FALSE;
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* leggo dal controller */

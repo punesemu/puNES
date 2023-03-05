@@ -1040,8 +1040,6 @@ void cpu_turn_on(void) {
 		 */
 		cpu.SR = 0x34;
 
-		tas.total_lag_frames = 0;
-
 		if (tas.type && (tas.emulator == FCEUX)) {
 			unsigned int x;
 

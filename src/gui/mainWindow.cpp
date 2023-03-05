@@ -2407,14 +2407,20 @@ void mainWindow::s_et_external_control_windows_show(void) {
 
 actionOneTrigger::actionOneTrigger(QObject *parent) : QAction(parent) {
 	count = 0;
+	last = gui_get_ms();
 }
 actionOneTrigger::~actionOneTrigger() = default;
 
 void actionOneTrigger::only_one_trigger(void) {
 	mutex.lock();
+	if ((gui_get_ms() - last) < 10) {
+		mutex.unlock();
+		return;
+	}
 	if (count++ == 0) {
 		trigger();
 		count--;
+		last = gui_get_ms();
 	}
 	mutex.unlock();
 }

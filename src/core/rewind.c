@@ -429,7 +429,7 @@ INLINE static void rewind_free_chunk(_rewind_chunk *chunk) {
 }
 INLINE static void rewind_execute_frame(void) {
 	if (info.frame_status == FRAME_FINISHED) {
-		tas.lag_next_frame = TRUE;
+		info.lag_frame.next = TRUE;
 		info.frame_status = FRAME_STARTED;
 	}
 
@@ -437,7 +437,7 @@ INLINE static void rewind_execute_frame(void) {
 		cpu_exe_op();
 	}
 
-	tas.lag_actual_frame = tas.lag_next_frame;
+	info.lag_frame.actual = info.lag_frame.next;
 }
 
 static BYTE _rewind_frames(int32_t frames_to_rewind, BYTE exec_last_frame) {

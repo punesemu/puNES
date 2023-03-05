@@ -510,8 +510,10 @@ BYTE emu_turn_on(void) {
 	memset(&ppu_screen, 0x00, sizeof(ppu_screen));
 	memset(&vs_system, 0x00, sizeof(vs_system));
 
-	tas.lag_next_frame = TRUE;
-	tas.lag_actual_frame = TRUE;
+	info.lag_frame.next = TRUE;
+	info.lag_frame.actual = TRUE;
+	info.lag_frame.totals = 0;
+	info.lag_frame.consecutive = 0;
 
 	cfg->extra_vb_scanlines = cfg->extra_pr_scanlines = 0;
 
@@ -667,8 +669,10 @@ BYTE emu_reset(BYTE type) {
 
 	info.first_illegal_opcode = FALSE;
 
-	tas.lag_next_frame = TRUE;
-	tas.lag_actual_frame = TRUE;
+	info.lag_frame.next = TRUE;
+	info.lag_frame.actual = TRUE;
+	info.lag_frame.totals = (type >= HARD) ? 0 : info.lag_frame.totals;
+	info.lag_frame.consecutive = 0;
 
 	if (info.reset == CHANGE_ROM) {
 		info.r4014_precise_timing_disabled = FALSE;
@@ -1180,7 +1184,7 @@ void emu_initial_ram(BYTE *ram, unsigned int length) {
 }
 
 INLINE static void emu_frame_started(void) {
-	tas.lag_next_frame = TRUE;
+	info.lag_frame.next = TRUE;
 
 	// riprendo a far correre la CPU
 	info.frame_status = FRAME_STARTED;
@@ -1190,11 +1194,14 @@ INLINE static void emu_frame_finished(void) {
 		gui_emit_et_gg_reset();
 	}
 
-	tas.lag_actual_frame = tas.lag_next_frame;
+	info.lag_frame.actual = info.lag_frame.next;
 
-	if (tas.lag_actual_frame) {
-		tas.total_lag_frames++;
+	if (info.lag_frame.actual) {
+		info.lag_frame.consecutive++;
+		info.lag_frame.totals++;
 		gui_update_ppu_hacks_lag_frames();
+	} else {
+		info.lag_frame.consecutive = 0;
 	}
 
 	if (snd_end_frame) {
