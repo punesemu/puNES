@@ -170,6 +170,7 @@
 #include "mappers/mapper_436.h"
 #include "mappers/mapper_437.h"
 #include "mappers/mapper_442.h"
+#include "mappers/mapper_446.h"
 #include "mappers/mapper_447.h"
 #include "mappers/mapper_451.h"
 #include "mappers/mapper_452.h"

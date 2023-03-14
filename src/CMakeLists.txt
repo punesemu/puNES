@@ -217,6 +217,7 @@ set(core_srcs
 	core/mappers/mapper_437.c
 	core/mappers/mapper_43.c
 	core/mappers/mapper_442.c
+	core/mappers/mapper_446.c
 	core/mappers/mapper_447.c
 	core/mappers/mapper_44.c
 	core/mappers/mapper_451.c
