@@ -146,7 +146,7 @@
     </message>
     <message>
       <source>Famicom Four Players Adapter</source>
-      <translation>Adaptador Famicom para Quatro Jogadores</translation>
+      <translation>Adaptador do Famicom pra Quatro Jogadores</translation>
     </message>
     <message>
       <source>Vs. System</source>
@@ -1077,7 +1077,7 @@
     </message>
     <message>
       <source>Compiled</source>
-      <translation>Compilado</translation>
+      <translation>Compilado em</translation>
     </message>
     <message>
       <source>portable version</source>
@@ -1958,11 +1958,11 @@
     <name>wdgNTSCBisqwitFilter</name>
     <message>
       <source>QWidth</source>
-      <translation type="unfinished">QWidth</translation>
+      <translation>QWidth</translation>
     </message>
     <message>
       <source>YWidth</source>
-      <translation type="unfinished">YWidth</translation>
+      <translation>YWidth</translation>
     </message>
     <message>
       <source>VBlend</source>
@@ -1974,7 +1974,7 @@
     </message>
     <message>
       <source>IWidth</source>
-      <translation type="unfinished">IWidth</translation>
+      <translation>IWidth</translation>
     </message>
     <message>
       <source>Scanline</source>
@@ -2525,23 +2525,23 @@
     </message>
     <message>
       <source>0x00</source>
-      <translation type="unfinished">0x00</translation>
+      <translation>0x00</translation>
     </message>
     <message>
       <source>Random</source>
-      <translation type="unfinished">Random</translation>
+      <translation>Aleatório</translation>
     </message>
     <message>
       <source>Initial RAM value</source>
-      <translation type="unfinished">Initial RAM value</translation>
+      <translation>Valor Inicial da RAM</translation>
     </message>
     <message>
       <source>RAM</source>
-      <translation type="unfinished">RAM</translation>
+      <translation>RAM</translation>
     </message>
     <message>
       <source>0xFF</source>
-      <translation type="unfinished">0xFF</translation>
+      <translation>0xFF</translation>
     </message>
   </context>
   <context>
@@ -3476,15 +3476,15 @@
     </message>
     <message>
       <source>NTSC Bisqwit 2X</source>
-      <translation type="unfinished">NTSC Bisqwit 2X</translation>
+      <translation>NTSC Bisqwit 2X</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 4X</source>
-      <translation type="unfinished">NTSC Bisqwit 4X</translation>
+      <translation>NTSC Bisqwit 4X</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 8X</source>
-      <translation type="unfinished">NTSC Bisqwit 8X</translation>
+      <translation>NTSC Bisqwit 8X</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
