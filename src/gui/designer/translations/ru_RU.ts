@@ -2525,23 +2525,23 @@
     </message>
     <message>
       <source>0x00</source>
-      <translation type="unfinished">0x00</translation>
+      <translation>0x00</translation>
     </message>
     <message>
       <source>Random</source>
-      <translation type="unfinished">Random</translation>
+      <translation>Случайно</translation>
     </message>
     <message>
       <source>Initial RAM value</source>
-      <translation type="unfinished">Initial RAM value</translation>
+      <translation>Начальное значение ОЗУ</translation>
     </message>
     <message>
       <source>RAM</source>
-      <translation type="unfinished">RAM</translation>
+      <translation>ОЗУ</translation>
     </message>
     <message>
       <source>0xFF</source>
-      <translation type="unfinished">0xFF</translation>
+      <translation>0xFF</translation>
     </message>
   </context>
   <context>
@@ -3476,15 +3476,15 @@
     </message>
     <message>
       <source>NTSC Bisqwit 2X</source>
-      <translation type="unfinished">NTSC Bisqwit 2X</translation>
+      <translation>NTSC Bisqwit 2X</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 4X</source>
-      <translation type="unfinished">NTSC Bisqwit 4X</translation>
+      <translation>NTSC Bisqwit 4X</translation>
     </message>
     <message>
       <source>NTSC Bisqwit 8X</source>
-      <translation type="unfinished">NTSC Bisqwit 8X</translation>
+      <translation>NTSC Bisqwit 8X</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>

@@ -2525,23 +2525,23 @@
     </message>
     <message>
       <source>0x00</source>
-      <translation type="unfinished">0x00</translation>
+      <translation>0x00</translation>
     </message>
     <message>
       <source>Random</source>
-      <translation type="unfinished">Random</translation>
+      <translation>Casuale</translation>
     </message>
     <message>
       <source>Initial RAM value</source>
-      <translation type="unfinished">Initial RAM value</translation>
+      <translation>Valore iniziale RAM</translation>
     </message>
     <message>
       <source>RAM</source>
-      <translation type="unfinished">RAM</translation>
+      <translation>RAM</translation>
     </message>
     <message>
       <source>0xFF</source>
-      <translation type="unfinished">0xFF</translation>
+      <translation>0xFF</translation>
     </message>
   </context>
   <context>
