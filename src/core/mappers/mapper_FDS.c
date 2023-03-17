@@ -392,7 +392,7 @@ void extcl_apu_tick_FDS(void) {
 			// vecchia gestione
 			{
 				SWORD temp, temp2, a, d;
-				temp = fds.snd.sweep.bias * ((fds.snd.sweep.gain < 32) ? fds.snd.sweep.gain : 32);
+				temp = fds.snd.sweep.bias * fds.snd.sweep.gain;
 
 				a = 64;
 				d = 0;
@@ -417,17 +417,33 @@ void extcl_apu_tick_FDS(void) {
 			// fds.snd.sweep.bias = $4085 (7-bit signed mod counter)
 			// fds.snd.sweep.gain = $4084 (6-bit unsigned mod gain)
 			{
-				int32_t temp;
+				// 1. multiply counter by gain, lose lowest 4 bits of result but "round" in a strange way
+				int32_t temp = fds.snd.sweep.bias * fds.snd.sweep.gain;
+				int32_t remainder = temp & 0xF;
 
-				temp = fds.snd.sweep.bias * fds.snd.sweep.gain;
-				if ((temp & 0x0F) && !(temp & 0x800)) {
-					temp += 0x20;
+				temp >>= 4;
+				if ((remainder > 0) && ((temp & 0x80) == 0))
+				{
+					if (fds.snd.sweep.bias < 0) {
+						temp -= 1;
+					} else {
+						temp += 2;
+					}
 				}
-				temp += 0x400;
-				temp = (temp >> 4) & 0xFF;
-
+				// 2. wrap if a certain range is exceeded
+				if (temp >= 192) {
+					temp -= 256;
+				} else if (temp < -64) {
+					temp += 256;
+				}
+				// 3. multiply result by pitch, then round to nearest while dropping 6 bits
 				temp = freq * temp;
+				remainder = temp & 0x3F;
 				temp >>= 6;
+				if (remainder >= 32) {
+					temp += 1;
+				}
+				// final mod result is in temp
 				fds.snd.modulation.mod = temp;
 			}
 		}
