@@ -144,6 +144,7 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 			"	background-color: %1;"\
 			"	font-size: 8pt;"\
 			"}";
+
 	public:
 		explicit dlgStdPad(QWidget *parent = nullptr, _cfg_port *cfg_port = nullptr);
 		~dlgStdPad() override;
