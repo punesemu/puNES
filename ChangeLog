@@ -10,6 +10,9 @@ Changelog:
 - Added support to mapper : 446.
 - Windows x86_64: Update to Qt5 5.15.8 (#279).
 - Fixed map of one keyboard button to multiple controllers (#277).
+- Fixed FDS wavetable pitch (#295).
+- Updated Portuguese, Russian and Spanish translations (thx to Felipefpl, Matheus Scattolin Anselmo,
+  Alexey Timonin and MS-PC).
 
 0.110
 - Added support to Wayland.
