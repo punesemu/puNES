@@ -3924,6 +3924,8 @@ static const _dbelement dblist[] = {
 	{"f7c23ea5cdabdb89af08424cc36962ed5fbd3f37", 260, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* 2-in-1- Boogerman + Flintstones, The (Multi)[Unknown][!].nes */
 	{"f1a419af5d89c9c44b36efc8e5b4d9a81d3a56e8", 260, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* 2-in-1- Mortal Kombat V Turbo 30 + Super Aladdin (Multi)[Unknown][!].nes */
+	{"1f721cd383219f39519245581052d3bfda912541", 260, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ---------------------------------------- SHERO ----------------------------------------- */
 	/* Street Heroes (Asia) (Unl).nes */
