@@ -160,6 +160,7 @@ set(core_srcs
 	core/mappers/mapper_269.c
 	core/mappers/mapper_288.c
 	core/mappers/mapper_28.c
+	core/mappers/mapper_291.c
 	core/mappers/mapper_297.c
 	core/mappers/mapper_29.c
 	core/mappers/mapper_31.c

@@ -3919,6 +3919,12 @@ static const _dbelement dblist[] = {
 	/* Fong Shen Bang - Zhu Lu Zhi Zhan (Ch) [T+Chi(Simp)20060423].nes */
 	{"991968732e6f4f2289f8e751539b02b8a9d4853f", 246, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* -------------------------------------------- 260 --------------------------------------- */
+	/* 2-in-1- Aladdin + Lion King, The (Multi)[Unknown][!].nes */
+	{"f7c23ea5cdabdb89af08424cc36962ed5fbd3f37", 260, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* 2-in-1- Boogerman + Flintstones, The (Multi)[Unknown][!].nes */
+	{"f1a419af5d89c9c44b36efc8e5b4d9a81d3a56e8", 260, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* ---------------------------------------- SHERO ----------------------------------------- */
 	/* Street Heroes (Asia) (Unl).nes */
 	{"9500c52045909a239c21f15cdeda1782c7303f1e", 262, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
@@ -3930,6 +3936,10 @@ static const _dbelement dblist[] = {
 /* ------------------------------------- BMC-22026 ---------------------------------------- */
 	/* 4-in-1 (MGC-026, TXC, Idea-Tek).nes */
 	{"a612291ad4cd3a9a4dc8a3ff511a7c3f4979d0af", 271, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* -------------------------------------------- 291 --------------------------------------- */
+	/* 2-in-1- Mortal Kombat VI + Mortal Kombat VII (Multi)[Unknown][NT-639].nes */
+	{"4478cd97d34a1e5b7e0498851b36d6afa8172a76", 291, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- 3D-BLOCK ----------------------------------------- */
 	/* 3D Block (Hwang Shinwei) [!].nes */

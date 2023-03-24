@@ -862,6 +862,9 @@ BYTE map_init(void) {
 		case 290:
 			map_init_BMCNTD03();
 			break;
+		case 291:
+			map_init_291();
+			break;
 		case 292:
 			map_init_DRAGONFIGHTER();
 			break;
