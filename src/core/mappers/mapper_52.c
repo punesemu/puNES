@@ -81,7 +81,7 @@ void extcl_after_mapper_init_52(void) {
 }
 void extcl_cpu_wr_mem_52(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if ((cpu.prg_ram_wr_active) && !(m52.reg & 0x80)) {
+		if (cpu.prg_ram_wr_active && !(m52.reg & 0x80)) {
 			m52.reg = value;
 			prg_fix_52(mmc3.bank_to_update);
 			chr_fix_52(mmc3.bank_to_update);
@@ -183,9 +183,9 @@ INLINE static void chr_fix_52(BYTE value) {
 	chr_swap_52(cbase ^ 0x1C00, m52.mmc3[5]);
 }
 INLINE static void chr_swap_52(WORD address, WORD value) {
-	WORD base = m52tmp.mario7in1 ?
-		((m52.reg & 0x20) << 4) | ((m52.reg & 0x04) << 6) | (m52.reg & 0x40 ? (m52.reg & 0x10) << 3 : 0x00):
-		((m52.reg & 0x04) << 7) | ((m52.reg & 0x30) << 3);
+	WORD base = m52tmp.mario7in1
+		? ((m52.reg & 0x20) << 4) | ((m52.reg & 0x04) << 6) | (m52.reg & 0x40 ? (m52.reg & 0x10) << 3 : 0x00)
+		: ((m52.reg & 0x04) << 7) | ((m52.reg & 0x30) << 3);
 	WORD mask = 0xFF >> ((m52.reg & 0x40) >> 6);
 
 	value = (base & ~mask) | (value & mask);
