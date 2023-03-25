@@ -171,6 +171,7 @@ set(core_srcs
 	core/mappers/mapper_359.c
 	core/mappers/mapper_360.c
 	core/mappers/mapper_361.c
+	core/mappers/mapper_366.c
 	core/mappers/mapper_368.c
 	core/mappers/mapper_369.c
 	core/mappers/mapper_36.c

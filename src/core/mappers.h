@@ -130,6 +130,7 @@
 #include "mappers/mapper_359.h"
 #include "mappers/mapper_360.h"
 #include "mappers/mapper_361.h"
+#include "mappers/mapper_366.h"
 #include "mappers/mapper_368.h"
 #include "mappers/mapper_369.h"
 #include "mappers/mapper_370.h"
