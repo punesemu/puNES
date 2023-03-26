@@ -179,6 +179,7 @@
 #include "mappers/mapper_455.h"
 #include "mappers/mapper_456.h"
 #include "mappers/mapper_457.h"
+#include "mappers/mapper_471.h"
 #include "mappers/mapper_512.h"
 #include "mappers/mapper_516.h"
 #include "mappers/mapper_518.h"
