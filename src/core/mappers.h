@@ -123,6 +123,7 @@
 #include "mappers/mapper_288.h"
 #include "mappers/mapper_291.h"
 #include "mappers/mapper_297.h"
+#include "mappers/mapper_334.h"
 #include "mappers/mapper_351.h"
 #include "mappers/mapper_353.h"
 #include "mappers/mapper_356.h"
