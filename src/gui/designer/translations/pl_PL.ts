@@ -837,15 +837,15 @@
     </message>
     <message>
       <source>Controller type</source>
-      <translation type="unfinished">Controller type</translation>
+      <translation>Typ kontrolera</translation>
     </message>
     <message>
       <source>Turbo B Delay</source>
-      <translation type="unfinished">Turbo B Delay</translation>
+      <translation>Turbo B - opóźnienie</translation>
     </message>
     <message>
       <source>Turbo A Delay</source>
-      <translation>Turbo A Delay</translation>
+      <translation>Turbo A - opóźnienie</translation>
     </message>
     <message>
       <source>Apply</source>
@@ -857,7 +857,7 @@
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;%2)</source>
-      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;%2)</translation>
+      <translation>Wciśnij klawisz (Esc przywraca poprzednią wartość &quot;%1&quot;)</translation>
     </message>
     <message>
       <source>Default</source>
@@ -872,11 +872,11 @@
     <name>dlgUncomp</name>
     <message>
       <source>which ROM do you want to load?</source>
-      <translation type="unfinished">which ROM do you want to load?</translation>
+      <translation>Który ROM chcesz wczytać?</translation>
     </message>
     <message>
       <source>which PATCH do you want to apply?</source>
-      <translation type="unfinished">which PATCH do you want to apply?</translation>
+      <translation>Który PATCH chcesz zaaplikować?</translation>
     </message>
     <message>
       <source>Unpacked archive</source>
@@ -895,27 +895,27 @@
     <name>dlgVsSystem</name>
     <message>
       <source>Vs System Controls</source>
-      <translation type="unfinished">Vs System Controls</translation>
+      <translation>Vs System Controls</translation>
     </message>
     <message>
       <source>Left Coin</source>
-      <translation type="unfinished">Left Coin</translation>
+      <translation>Left Coin</translation>
     </message>
     <message>
       <source>Right Coin</source>
-      <translation type="unfinished">Right Coin</translation>
+      <translation>Right Coin</translation>
     </message>
     <message>
       <source>Service Coin</source>
-      <translation type="unfinished">Service Coin</translation>
+      <translation>Service Coin</translation>
     </message>
     <message>
       <source>Coin Counter</source>
-      <translation type="unfinished">Coin Counter</translation>
+      <translation>Coin Counter</translation>
     </message>
     <message>
       <source>Dip Switches</source>
-      <translation type="unfinished">Dip Switches</translation>
+      <translation>Dip Switches</translation>
     </message>
     <message>
       <source>4</source>
@@ -1033,7 +1033,7 @@
     </message>
     <message>
       <source>All supported formats</source>
-      <translation type="unfinished">All supported formats</translation>
+      <translation>Wszystkie obsługiwane formaty</translation>
     </message>
     <message>
       <source>Compressed files</source>
@@ -1041,7 +1041,7 @@
     </message>
     <message>
       <source>Nes rom files</source>
-      <translation type="unfinished">Nes rom files</translation>
+      <translation>Pliki romów NESa</translation>
     </message>
     <message>
       <source>FDS image files</source>
@@ -1053,15 +1053,15 @@
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Wszystkie pliki</translation>
     </message>
     <message>
       <source>Open File</source>
-      <translation type="unfinished">Open File</translation>
+      <translation>Otwórz plik</translation>
     </message>
     <message>
       <source>Save states</source>
-      <translation type="unfinished">Save states</translation>
+      <translation>Zapisy stanów gier</translation>
     </message>
     <message>
       <source>Save state on file</source>
@@ -1081,23 +1081,23 @@
     </message>
     <message>
       <source>portable version</source>
-      <translation type="unfinished">portable version</translation>
+      <translation>Wersja przenośna</translation>
     </message>
     <message>
       <source>&amp;Open</source>
-      <translation type="unfinished">&amp;Open</translation>
+      <translation>&amp;Otwórz</translation>
     </message>
     <message>
       <source>&amp;Quit</source>
-      <translation type="unfinished">&amp;Quit</translation>
+      <translation>&amp;Wyjdź</translation>
     </message>
     <message>
       <source>&amp;Hard Reset</source>
-      <translation type="unfinished">&amp;Hard Reset</translation>
+      <translation>&amp;Twardy reset</translation>
     </message>
     <message>
       <source>&amp;Soft Reset</source>
-      <translation type="unfinished">&amp;Soft Reset</translation>
+      <translation>&amp;Miękki reset</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert Disk</source>
@@ -1173,47 +1173,47 @@
     </message>
     <message>
       <source>Slot &amp;0</source>
-      <translation type="unfinished">Slot &amp;0</translation>
+      <translation>Slot &amp;0</translation>
     </message>
     <message>
       <source>Slot &amp;1</source>
-      <translation type="unfinished">Slot &amp;1</translation>
+      <translation>Slot &amp;1</translation>
     </message>
     <message>
       <source>Slot &amp;2</source>
-      <translation type="unfinished">Slot &amp;2</translation>
+      <translation>Slot &amp;2</translation>
     </message>
     <message>
       <source>Slot &amp;3</source>
-      <translation type="unfinished">Slot &amp;3</translation>
+      <translation>Slot &amp;3</translation>
     </message>
     <message>
       <source>Slot &amp;4</source>
-      <translation type="unfinished">Slot &amp;4</translation>
+      <translation>Slot &amp;4</translation>
     </message>
     <message>
       <source>Slot &amp;5</source>
-      <translation type="unfinished">Slot &amp;5</translation>
+      <translation>Slot &amp;5</translation>
     </message>
     <message>
       <source>&amp;About</source>
-      <translation type="unfinished">&amp;About</translation>
+      <translation>O progr&amp;amie</translation>
     </message>
     <message>
       <source>Slot &amp;6</source>
-      <translation type="unfinished">Slot &amp;6</translation>
+      <translation>Slot &amp;6</translation>
     </message>
     <message>
       <source>Slot &amp;7</source>
-      <translation type="unfinished">Slot &amp;7</translation>
+      <translation>Slot &amp;7</translation>
     </message>
     <message>
       <source>Slot &amp;8</source>
-      <translation type="unfinished">Slot &amp;8</translation>
+      <translation>Slot &amp;8</translation>
     </message>
     <message>
       <source>Slot &amp;9</source>
-      <translation type="unfinished">Slot &amp;9</translation>
+      <translation>Slot &amp;9</translation>
     </message>
     <message>
       <source>&amp;Cheats List Mode</source>
@@ -1229,15 +1229,15 @@
     </message>
     <message>
       <source>&amp;Pause</source>
-      <translation type="unfinished">&amp;Pause</translation>
+      <translation>&amp;Pauza</translation>
     </message>
     <message>
       <source>&amp;File</source>
-      <translation type="unfinished">&amp;File</translation>
+      <translation>P&amp;lik</translation>
     </message>
     <message>
       <source>&amp;Recent Roms</source>
-      <translation type="unfinished">&amp;Recent Roms</translation>
+      <translation>&amp;Ostatnio grane</translation>
     </message>
     <message>
       <source>&amp;NES</source>
