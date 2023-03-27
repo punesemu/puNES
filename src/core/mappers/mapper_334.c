@@ -190,7 +190,7 @@ INLINE static void chr_fix_334(BYTE value) {
 	chr_swap_334(cbase ^ 0x1C00, m334.mmc3[5]);
 }
 INLINE static void chr_swap_334(WORD address, WORD value) {
-	WORD base = (m334.reg & 0x40) << 2;
+	WORD base = 0;
 	WORD mask = 0xFF;
 
 	value = base | (value & mask);
