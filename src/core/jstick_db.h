@@ -228,8 +228,8 @@ static const _js_db_device js_db_devices[] = {
 		{
 			/* BUT_A  */ JS_BTN_DEF(BTN_B),
 			/* BUT_B  */ JS_BTN_DEF(BTN_X),
-			/* SELECT */ JS_BTN_DEF(BTN_THUMBL),
-			/* START  */ JS_BTN_DEF(BTN_MODE),
+			/* SELECT */ JS_BTN_DEF(BTN_MODE),
+			/* START  */ JS_BTN_DEF(BTN_THUMBL),
 			/* UP     */ JS_ABS_DEF(ABS_Y, 0),
 			/* DOWN   */ JS_ABS_DEF(ABS_Y, 1),
 			/* LEFT   */ JS_ABS_DEF(ABS_X, 0),
@@ -246,8 +246,8 @@ static const _js_db_device js_db_devices[] = {
 			{ BTN_START,      uL(":/icon/icons/gamepad_playstation_3_r1.svgz"),         uL("R1")        },
 			{ BTN_TL,         uL(":/icon/icons/gamepad_playstation_3_l2.svgz"),         uL("L2")        },
 			{ BTN_TR,         uL(":/icon/icons/gamepad_playstation_3_r2.svgz"),         uL("R2")        },
-			{ BTN_THUMBL,     uL(":/icon/icons/gamepad_playstation_3_select.svgz"),     uL("SELECT")    },
-			{ BTN_MODE,       uL(":/icon/icons/gamepad_playstation_3_start.svgz"),      uL("START")     },
+			{ BTN_MODE,       uL(":/icon/icons/gamepad_playstation_3_select.svgz"),     uL("SELECT")    },
+			{ BTN_THUMBL,     uL(":/icon/icons/gamepad_playstation_3_start.svgz"),      uL("START")     },
 			{ BTN_DPAD_DOWN,  uL(":/icon/icons/gamepad_playstation_home.svgz"),         uL("HOME")      },
 			{ BTN_THUMBR,     uL(":/icon/icons/gamepad_xbox_left_stick_click.svgz"),    uL("LS CLICK")  },
 			{ BTN_DPAD_UP,    uL(":/icon/icons/gamepad_xbox_right_stick_click.svgz"),   uL("RS CLICK")  }
@@ -468,6 +468,82 @@ static const _js_db_device js_db_devices[] = {
 			/* RIGHT  */ JS_ABS_DEF(ABS_HAT0X, 1),
 			/* TRB_A  */ JS_BTN_DEF(BTN_Y),
 			/* TRB_B  */ JS_BTN_DEF(BTN_A)
+		},
+		{},
+		{}
+#endif
+	},
+	// Retro-Bit NES adapter
+	{
+		JS_SC_UNKNOWN,
+		FALSE,
+		0x1292,
+		0x4643,
+#if defined (__linux__)
+		{
+			/* BUT_A  */ JS_BTN_DEF(BTN_A),
+			/* BUT_B  */ JS_BTN_DEF(BTN_B),
+			/* SELECT */ JS_BTN_DEF(BTN_X),
+			/* START  */ JS_BTN_DEF(BTN_Y),
+			/* UP     */ JS_ABS_DEF(ABS_HAT0Y, 0),
+			/* DOWN   */ JS_ABS_DEF(ABS_HAT0Y, 1),
+			/* LEFT   */ JS_ABS_DEF(ABS_HAT0X, 0),
+			/* RIGHT  */ JS_ABS_DEF(ABS_HAT0X, 1),
+			/* TRB_A  */ 0x000,
+			/* TRB_B  */ 0x000
+		},
+		{},
+		{}
+#else
+		{
+			/* BUT_A  */ JS_BTN_DEF(BTN_A),
+			/* BUT_B  */ JS_BTN_DEF(BTN_B),
+			/* SELECT */ JS_BTN_DEF(BTN_X),
+			/* START  */ JS_BTN_DEF(BTN_Y),
+			/* UP     */ JS_ABS_DEF(ABS_HAT0Y, 0),
+			/* DOWN   */ JS_ABS_DEF(ABS_HAT0Y, 1),
+			/* LEFT   */ JS_ABS_DEF(ABS_HAT0X, 0),
+			/* RIGHT  */ JS_ABS_DEF(ABS_HAT0X, 1),
+			/* TRB_A  */ 0x000,
+			/* TRB_B  */ 0x000
+		},
+		{},
+		{}
+#endif
+	},
+	// SNES adapter
+	{
+		JS_SC_UNKNOWN,
+		FALSE,
+		0x0E8F,
+		0x3013,
+#if defined (__linux__)
+		{
+			/* BUT_A  */ JS_BTN_DEF(BTN_B),
+			/* BUT_B  */ JS_BTN_DEF(BTN_A),
+			/* SELECT */ JS_BTN_DEF(BTN_SELECT),
+			/* START  */ JS_BTN_DEF(BTN_START),
+			/* UP     */ JS_ABS_DEF(ABS_HAT0Y, 0),
+			/* DOWN   */ JS_ABS_DEF(ABS_HAT0Y, 1),
+			/* LEFT   */ JS_ABS_DEF(ABS_HAT0X, 0),
+			/* RIGHT  */ JS_ABS_DEF(ABS_HAT0X, 1),
+			/* TRB_A  */ JS_BTN_DEF(BTN_Y),
+			/* TRB_B  */ JS_BTN_DEF(BTN_X)
+		},
+		{},
+		{}
+#else
+		{
+			/* BUT_A  */ JS_BTN_DEF(BTN_B),
+			/* BUT_B  */ JS_BTN_DEF(BTN_X),
+			/* SELECT */ JS_BTN_DEF(BTN_MODE),
+			/* START  */ JS_BTN_DEF(BTN_THUMBL),
+			/* UP     */ JS_ABS_DEF(ABS_HAT0Y, 0),
+			/* DOWN   */ JS_ABS_DEF(ABS_HAT0Y, 1),
+			/* LEFT   */ JS_ABS_DEF(ABS_HAT0X, 0),
+			/* RIGHT  */ JS_ABS_DEF(ABS_HAT0X, 1),
+			/* TRB_A  */ JS_BTN_DEF(BTN_A),
+			/* TRB_B  */ JS_BTN_DEF(BTN_Y)
 		},
 		{},
 		{}
