@@ -3025,6 +3025,10 @@ static const _dbelement dblist[] = {
 	/* WWF WrestleMania Challenge (U) [b3].nes */
 	{"5cad070d0926f25941556c5274b5ac9ce9d1c6ef", 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* -------------------------------------------- 36 ---------------------------------------- */
+	/* 3-in-1 Supergun (Multi)[Micro Genius][1993][Zapper].nes */
+	{"eb05d4cb13c3a334fa180c16f78ad4f8886afc88", 36, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* -------------------------------------------- 37 ---------------------------------------- */
 	/* Super Mario Bros. + Tetris + Nintendo World Cup (E) [b1].nes */
 	{"3fba4a79a0898ee9782243401fcdb88c61e999bd", 37, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
@@ -3060,6 +3064,8 @@ static const _dbelement dblist[] = {
 	{"dd545b471abe0a158c1bdcc656138274adee7eae", 59, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* TN 95-in-1 (6-in-1) [p1].nes */
 	{"9a37bc3003f6629499fe86c7ca2487a74291bcff", 59, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* 5-in-1 (Multi)[Unknown][YH501].nes */
+	{"f0bf757efa141060298295e1ec38af43fa768356", 59, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* -------------------------------------------- 60 ---------------------------------------- */
 	/* Reset Based 4-in-1 [p1].nes */
@@ -3827,6 +3833,10 @@ static const _dbelement dblist[] = {
 	/* Ying Xiong Chuan Qi (Ch).nes */
 	{"dbfcc70cc2dec7a889429ed542267f0f1bd967bf", 199, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* -------------------------------------------- 200 --------------------------------------- */
+	/* 150-in-1 (Multi)[Unknown][Mapper 204].nes */
+	{"9f57094ecb761e799e9e339ecb82c5fc2b50649a", 200, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* ------------------------------------- Namco 3416 --------------------------------------- */
 	/* Dragon Buster II - Yami no Fuuin (J) [T+Eng1.0_PentarouZero].nes */
 	{"1575a2477c0b9e3884f3141e8c01f56fe2cc9ef0", 206, DEFAULT, DEFAULT, DEFAULT, UNK_VERTICAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
@@ -3919,6 +3929,10 @@ static const _dbelement dblist[] = {
 	/* Fong Shen Bang - Zhu Lu Zhi Zhan (Ch) [T+Chi(Simp)20060423].nes */
 	{"991968732e6f4f2289f8e751539b02b8a9d4853f", 246, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* -------------------------------------------- 256 --------------------------------------- */
+	/* 2-in-1- Street Dance + Hit Mouse (Multi)[Feng Li][!].nes */
+	{"df00e70af3c77b28fea955b5518b27f54a120ed7", 256, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* -------------------------------------------- 260 --------------------------------------- */
 	/* 2-in-1- Aladdin + Lion King, The (Multi)[Unknown][!].nes */
 	{"f7c23ea5cdabdb89af08424cc36962ed5fbd3f37", 260, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
@@ -3926,6 +3940,10 @@ static const _dbelement dblist[] = {
 	{"f1a419af5d89c9c44b36efc8e5b4d9a81d3a56e8", 260, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* 2-in-1- Mortal Kombat V Turbo 30 + Super Aladdin (Multi)[Unknown][!].nes */
 	{"1f721cd383219f39519245581052d3bfda912541", 260, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* 4-in-1 (Multi)[Unknown][Harry Potter].nes */
+	{"0a1876bb76ffbcff65b350379474c3af9ac91964", 260, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* 4-in-1 (Multi)[Unknown][YH4222].nes */
+	{"ef70467cee09adbbd7ed37ac7501f017a84f19bf", 260, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ---------------------------------------- SHERO ----------------------------------------- */
 	/* Street Heroes (Asia) (Unl).nes */
@@ -3951,9 +3969,25 @@ static const _dbelement dblist[] = {
 	/* Block Force (Hwang Shinwei).nes */
 	{"5de850b4e28c49ff9ed53def2a335d29b09387c2", 355, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* -------------------------------------------- 366 --------------------------------------- */
+	/* 4-in-1 (Multi)[Unknown][K-3131GS, GN-45][!].nes */
+	{"ef17c86e521110637b443437fca269f2e3f2385f", 366, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* 4-in-1 (Multi)[Unknown][K-3131SS, GN-45][!].nes */
+	{"354116730efa2131172ccca3793a065abee6026e", 366, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* -------------------------------------------- 512 --------------------------------------- */
 	/* Chuugoku Taitei (Sachen).nes */
 	{"32436a43d3c371ab7aa6bb5165f60ca5c006a60e", 512, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* -------------------------------------------- 518 --------------------------------------- */
+	/* 5-in-1 (Multi)[Unknown][Subor 999].nes */
+	{"95c1482141e5b0c2e304a872b333f28fca32c360", 518, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* 8-in-1 (Multi)[Unknown][Subor v5.0].nes */
+	{"e92aeb559db317cfe4902a535b9bf6d73866c1d0", 518, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* -------------------------------------------- 534 --------------------------------------- */
+	/* 2-in-1 (Multi)[Unknown][Shu Du + Wu Zi Qi].nes */
+	{"7c3be2e58853f9cb3201ec7a3719a43b8d47e71c", 534, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* -------------------------------------- VS System --------------------------------------- */
 	/* Battle City (VS) [p1][o1].nes */
