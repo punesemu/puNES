@@ -131,13 +131,8 @@ _recording_format_info recording_format_info[REC_FORMAT_TOTAL] = {
 	{ FALSE, "mpeg"    , { "mpg" , "mpeg", "end" }, REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MPG_MPEG1, NULL, { "mpeg1video", "end" } },
 	{ FALSE, "mpeg"    , { "mpg" , "mpeg", "end" }, REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MPG_MPEG2, NULL, { "mpeg2video", "end" } },
 	{ FALSE, "mp4"     , { "mp4" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MP4_MPEG4, NULL, { "mpeg4", "msmpeg4", "libxvid", "end" } },
-#if defined (__WIN32__)
 	{ FALSE, "mp4"     , { "mp4" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MP4_H264 , NULL, { "libx264", "h264_omx", "end" } },
 	{ FALSE, "matroska", { "mkv" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MKV_HEVC , NULL, { "libx265", "end" } },
-#else
-	{ FALSE, "mp4"     , { "mp4" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MP4_H264 , NULL, { "h264_nvenc", "libx264", "h264_omx", "end" } },
-	{ FALSE, "matroska", { "mkv" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_MKV_HEVC , NULL, { "hevc_nvenc", "libx265", "end" } },
-#endif
 	{ FALSE, "webm"    , { "webm", "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_WEB_WEBM , NULL, { "libvpx-vp9", "libvpx", "end" } },
 	{ FALSE, "avi"     , { "wmv" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_AVI_WMV  , NULL, { "wmv2", "wmv1", "end" } },
 	{ FALSE, "avi"     , { "avi" , "end" }        , REC_FORMAT_VIDEO, REC_FORMAT_VIDEO_AVI_FFV  , NULL, { "ffv1", "end" } },
