@@ -698,7 +698,7 @@
     </message>
     <message>
       <source>Rewind Step Backward</source>
-      <translation>Przewiń o krok wstecz</translation>
+      <translation>Przewiń o krok do tyłu</translation>
     </message>
     <message>
       <source>Rewind Step Forward</source>
@@ -718,7 +718,7 @@
     </message>
     <message>
       <source>Rewind Fast Backward</source>
-      <translation>Szybkie przewijanie wstecz</translation>
+      <translation>Szybkie przewijanie do tyłu</translation>
     </message>
     <message>
       <source>Recording</source>
@@ -951,14 +951,14 @@
     </message>
     <message>
       <source>Defaults Game Dip Switches</source>
-      <translation type="unfinished">Defaults Game Dip Switches</translation>
+      <translation>Domyślne przełączniki DIP gry</translation>
     </message>
   </context>
   <context>
     <name>familyBasicKeyboard</name>
     <message>
       <source>Family Basic Keyboard</source>
-      <translation type="unfinished">Family Basic Keyboard</translation>
+      <translation>Klawiatura Family Basic</translation>
     </message>
   </context>
   <context>
@@ -970,66 +970,66 @@
     </message>
     <message>
       <source>Error on create config folder</source>
-      <translation type="unfinished">Error on create config folder</translation>
+      <translation>Błąd podczas tworzenia folderu konfiguracyjnego</translation>
     </message>
     <message>
       <source>Error on create data folder</source>
-      <translation type="unfinished">Error on create data folder</translation>
+      <translation>Błąd podczas tworzenia folderu danych</translation>
     </message>
     <message>
       <source>Error on create temp folder</source>
-      <translation type="unfinished">Error on create temp folder</translation>
+      <translation>Błąd podczas tworzenia folderu tymczasowego</translation>
     </message>
     <message>
       <source>Error on create cheat folder</source>
-      <translation type="unfinished">Error on create cheat folder</translation>
+      <translation>Błąd podczas tworzenia folderu z cheatami</translation>
     </message>
     <message>
       <source>Error on create psg folder</source>
-      <translation type="unfinished">Error on create psg folder</translation>
+      <translation>Błąd podczas tworzenia folderu psg</translation>
     </message>
     <message>
       <source>Error on create shp folder</source>
-      <translation type="unfinished">Error on create shp folder</translation>
+      <translation>Błąd podczas tworzenia folderu shp</translation>
     </message>
     <message>
       <source>Error on create jsc folder</source>
-      <translation type="unfinished">Error on create jsc folder</translation>
+      <translation>Błąd podczas tworzenia folderu jsc</translation>
     </message>
     <message>
       <source>Error on create bios folder</source>
-      <translation type="unfinished">Error on create bios folder</translation>
+      <translation>Błąd podczas tworzenia folderu bios</translation>
     </message>
     <message>
       <source>Error on create diff folder</source>
-      <translation type="unfinished">Error on create diff folder</translation>
+      <translation>Błąd podczas tworzenia folderu diff</translation>
     </message>
     <message>
       <source>Error on create prb folder</source>
-      <translation type="unfinished">Error on create prb folder</translation>
+      <translation>Błąd przy tworzeniu folderu prb</translation>
     </message>
     <message>
       <source>Error on create save folder</source>
-      <translation type="unfinished">Error on create save folder</translation>
+      <translation>Błąd podczas tworzenia folderu z zapisami</translation>
     </message>
     <message>
       <source>Error on create screenshot folder</source>
-      <translation type="unfinished">Error on create screenshot folder</translation>
+      <translation>Błąd podczas tworzenia folderu ze zrzutami ekranu</translation>
     </message>
   </context>
   <context>
     <name>mainWindow</name>
     <message>
       <source>&amp;Insert disk</source>
-      <translation type="unfinished">&amp;Insert disk</translation>
+      <translation>&amp;Włóż dysk</translation>
     </message>
     <message>
       <source>&amp;Eject disk</source>
-      <translation type="unfinished">&amp;Eject disk</translation>
+      <translation>W&amp;yjmij dysk</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert disk</source>
-      <translation type="unfinished">&amp;Eject/Insert disk</translation>
+      <translation>Wyj&amp;mij/włóż dysk</translation>
     </message>
     <message>
       <source>All supported formats</source>
@@ -1065,19 +1065,19 @@
     </message>
     <message>
       <source>Save state on file</source>
-      <translation type="unfinished">Save state on file</translation>
+      <translation>Zapisz stan gry do pliku</translation>
     </message>
     <message>
       <source>Open save state</source>
-      <translation type="unfinished">Open save state</translation>
+      <translation>Załaduj zapis stanu gry</translation>
     </message>
     <message>
       <source>Nintendo Entertainment System Emulator</source>
-      <translation type="unfinished">Nintendo Entertainment System Emulator</translation>
+      <translation>Emulator Nintendo Entertainment System</translation>
     </message>
     <message>
       <source>Compiled</source>
-      <translation type="unfinished">Compiled</translation>
+      <translation>Skompilowany</translation>
     </message>
     <message>
       <source>portable version</source>
@@ -1101,75 +1101,75 @@
     </message>
     <message>
       <source>&amp;Eject/Insert Disk</source>
-      <translation type="unfinished">&amp;Eject/Insert Disk</translation>
+      <translation>Wyj&amp;mij/włóż dysk</translation>
     </message>
     <message>
       <source>Disk 1 side A</source>
-      <translation type="unfinished">Disk 1 side A</translation>
+      <translation>Dysk 1 strona A</translation>
     </message>
     <message>
       <source>Disk 1 side B</source>
-      <translation type="unfinished">Disk 1 side B</translation>
+      <translation>Dysk 1 strona B</translation>
     </message>
     <message>
       <source>Disk 2 side A</source>
-      <translation type="unfinished">Disk 2 side A</translation>
+      <translation>Dysk 2 strona A</translation>
     </message>
     <message>
       <source>Disk 2 side B</source>
-      <translation type="unfinished">Disk 2 side B</translation>
+      <translation>Dysk 2 strona B</translation>
     </message>
     <message>
       <source>Disk 3 side A</source>
-      <translation type="unfinished">Disk 3 side A</translation>
+      <translation>Dysk 3 strona A</translation>
     </message>
     <message>
       <source>Disk 3 side B</source>
-      <translation type="unfinished">Disk 3 side B</translation>
+      <translation>Dysk 3 strona B</translation>
     </message>
     <message>
       <source>Disk 4 side A</source>
-      <translation type="unfinished">Disk 4 side A</translation>
+      <translation>Dysk 4 strona A</translation>
     </message>
     <message>
       <source>Disk 4 side B</source>
-      <translation type="unfinished">Disk 4 side B</translation>
+      <translation>Dysk 4 strona B</translation>
     </message>
     <message>
       <source>&amp;Switch sides</source>
-      <translation type="unfinished">&amp;Switch sides</translation>
+      <translation>&amp;Zamień strony</translation>
     </message>
     <message>
       <source>&amp;Save to file</source>
-      <translation type="unfinished">&amp;Save to file</translation>
+      <translation>&amp;Zapisz do pliku</translation>
     </message>
     <message>
       <source>&amp;Load from file</source>
-      <translation type="unfinished">&amp;Load from file</translation>
+      <translation>&amp;Wczytaj plik</translation>
     </message>
     <message>
       <source>F&amp;ullscreen</source>
-      <translation type="unfinished">F&amp;ullscreen</translation>
+      <translation>Pełny e&amp;kran</translation>
     </message>
     <message>
       <source>&amp;Game Genie Rom Mode</source>
-      <translation type="unfinished">&amp;Game Genie Rom Mode</translation>
+      <translation>Tryb &amp;Game Genie Rom</translation>
     </message>
     <message>
       <source>S&amp;ave state</source>
-      <translation type="unfinished">S&amp;ave state</translation>
+      <translation>Z&amp;apisz stan gry</translation>
     </message>
     <message>
       <source>L&amp;oad state</source>
-      <translation type="unfinished">L&amp;oad state</translation>
+      <translation>Wczy&amp;taj zapis stanu gry</translation>
     </message>
     <message>
       <source>&amp;Increment slot</source>
-      <translation type="unfinished">&amp;Increment slot</translation>
+      <translation>&amp;Zwiększ numer slotu</translation>
     </message>
     <message>
       <source>&amp;Decrement slot</source>
-      <translation type="unfinished">&amp;Decrement slot</translation>
+      <translation>Z&amp;mniejsz numer slotu</translation>
     </message>
     <message>
       <source>Slot &amp;0</source>
@@ -1273,7 +1273,7 @@
     </message>
     <message>
       <source>S&amp;tate</source>
-      <translation type="unfinished">S&amp;tate</translation>
+      <translation>S&amp;tan</translation>
     </message>
     <message>
       <source>&amp;Help</source>
@@ -1281,19 +1281,19 @@
     </message>
     <message>
       <source>&amp;Turn On</source>
-      <translation type="unfinished">&amp;Turn On</translation>
+      <translation>&amp;Włącz</translation>
     </message>
     <message>
       <source>&amp;Turn Off</source>
-      <translation type="unfinished">&amp;Turn Off</translation>
+      <translation>&amp;Wyłącz</translation>
     </message>
     <message>
       <source>Too&amp;ls</source>
-      <translation type="unfinished">Too&amp;ls</translation>
+      <translation>Narzę&amp;dzia</translation>
     </message>
     <message>
       <source>UNIF rom files</source>
-      <translation type="unfinished">UNIF rom files</translation>
+      <translation>Pliki romów UNIF</translation>
     </message>
     <message>
       <source>Stop &amp;WAV recording</source>
@@ -1442,7 +1442,7 @@
     </message>
     <message>
       <source>&amp;Play</source>
-      <translation type="unfinished">&amp;Play</translation>
+      <translation>&amp;Odtwórz</translation>
     </message>
     <message>
       <source>&amp;Record</source>
@@ -1861,19 +1861,19 @@
     </message>
     <message>
       <source>Cancel</source>
-      <translation type="unfinished">Cancel</translation>
+      <translation>Anuluj</translation>
     </message>
     <message>
       <source>Delete</source>
-      <translation type="unfinished">Delete</translation>
+      <translation>Usuń</translation>
     </message>
     <message>
       <source>Delete All</source>
-      <translation type="unfinished">Delete All</translation>
+      <translation>Usuń wszystko</translation>
     </message>
     <message>
       <source>Copy</source>
-      <translation type="unfinished">Copy</translation>
+      <translation>Skopiuj</translation>
     </message>
     <message>
       <source>New Game Genie</source>
@@ -1896,15 +1896,15 @@
     </message>
     <message>
       <source>Hide Tools</source>
-      <translation type="unfinished">Hide Tools</translation>
+      <translation>Ukryj narzędzia</translation>
     </message>
     <message>
       <source>All supported formats</source>
-      <translation type="unfinished">All supported formats</translation>
+      <translation>Wszystkie obsługiwane formaty</translation>
     </message>
     <message>
       <source>Import Cheats</source>
-      <translation type="unfinished">Import Cheats</translation>
+      <translation>Importuj cheaty</translation>
     </message>
     <message>
       <source>All files</source>
@@ -1916,35 +1916,35 @@
     </message>
     <message>
       <source>Submit warning</source>
-      <translation type="unfinished">Submit warning</translation>
+      <translation>Wyślij ostrzeżenie</translation>
     </message>
     <message>
       <source>The code is invalid</source>
-      <translation type="unfinished">The code is invalid</translation>
+      <translation>Nieprawidłowy kod</translation>
     </message>
     <message>
       <source>The cheat is already in the list</source>
-      <translation type="unfinished">The cheat is already in the list</translation>
+      <translation>Ten cheat jest już na liście</translation>
     </message>
     <message>
       <source>A description must be entered</source>
-      <translation type="unfinished">A description must be entered</translation>
+      <translation>Należy wprowadzić opis</translation>
     </message>
     <message>
       <source>Nestopia XML files</source>
-      <translation type="unfinished">Nestopia XML files</translation>
+      <translation>Pliki XML Nestopia</translation>
     </message>
     <message>
       <source>Mame 128+ XML files</source>
-      <translation type="unfinished">Mame 128+ XML files</translation>
+      <translation>Pliki MAME 128+ XML</translation>
     </message>
     <message>
       <source>FCEUX CHT files</source>
-      <translation type="unfinished">FCEUX CHT files</translation>
+      <translation>Pliki FCEUX CHT</translation>
     </message>
     <message>
       <source>libretro CHT files</source>
-      <translation type="unfinished">libretro CHT files</translation>
+      <translation>Pliki libretro CHT</translation>
     </message>
   </context>
   <context>
@@ -2049,15 +2049,15 @@
     </message>
     <message>
       <source>Saturation</source>
-      <translation type="unfinished">Saturation</translation>
+      <translation>Nasycenie</translation>
     </message>
     <message>
       <source>Scanline</source>
-      <translation type="unfinished">Scanline</translation>
+      <translation>Przeplot</translation>
     </message>
     <message>
       <source>Reset parameters to defaults</source>
-      <translation type="unfinished">Reset parameters to defaults</translation>
+      <translation>Przywróć ustawienia domyślne</translation>
     </message>
   </context>
   <context>
@@ -2084,7 +2084,7 @@
     </message>
     <message>
       <source>Val</source>
-      <translation type="unfinished">Val</translation>
+      <translation>Wartość</translation>
     </message>
     <message>
       <source>Blue</source>
@@ -2100,7 +2100,7 @@
     </message>
     <message>
       <source>Sat</source>
-      <translation type="unfinished">Sat</translation>
+      <translation>Nasycenie</translation>
     </message>
     <message>
       <source>Hue</source>
@@ -2147,7 +2147,7 @@
     </message>
     <message>
       <source>Record VIDEO on file</source>
-      <translation type="unfinished">Record VIDEO on file</translation>
+      <translation>Nagrywanie video do pliku</translation>
     </message>
     <message>
       <source>Not supported</source>
@@ -2158,11 +2158,11 @@
     <name>wdgRewind</name>
     <message>
       <source>Forward (single frame)</source>
-      <translation type="unfinished">Forward (single frame)</translation>
+      <translation>Do przodu (jedna klatka)</translation>
     </message>
     <message>
       <source>Rewind (single frame)</source>
-      <translation type="unfinished">Rewind (single frame)</translation>
+      <translation>Do tyłu (jedna klatka)</translation>
     </message>
     <message>
       <source>Pause</source>
@@ -2170,120 +2170,120 @@
     </message>
     <message>
       <source>Fast forward (from 1x to 8x)</source>
-      <translation type="unfinished">Fast forward (from 1x to 8x)</translation>
+      <translation>Szybkie przewijanie do przodu (od 1x do 8x)</translation>
     </message>
     <message>
       <source>Fast rewind (from 1x to 8x)</source>
-      <translation type="unfinished">Fast rewind (from 1x to 8x)</translation>
+      <translation>Szybkie przewijanie do tyłu (od 1x do 8x)</translation>
     </message>
     <message>
       <source>Play</source>
-      <translation type="unfinished">Play</translation>
+      <translation>Odtwórz</translation>
     </message>
     <message>
       <source>Rewind</source>
-      <translation type="unfinished">Rewind</translation>
+      <translation>Przewiń</translation>
     </message>
   </context>
   <context>
     <name>wdgRotateScreen</name>
     <message>
       <source>Rotate the screen 90 degrees to the Right</source>
-      <translation type="unfinished">Rotate the screen 90 degrees to the Right</translation>
+      <translation>Obróć ekran o 90 stopni w prawo</translation>
     </message>
     <message>
       <source>Rotate the screen 90 degrees to the left</source>
-      <translation type="unfinished">Rotate the screen 90 degrees to the left</translation>
+      <translation>Obróć ekran o 90 stopni w lewo</translation>
     </message>
     <message>
       <source>Current degree of rotation</source>
-      <translation type="unfinished">Current degree of rotation</translation>
+      <translation>Aktualny stopień obrotu</translation>
     </message>
     <message>
       <source>Degrees</source>
-      <translation type="unfinished">Degrees</translation>
+      <translation>Stopnie</translation>
     </message>
   </context>
   <context>
     <name>wdgScreen</name>
     <message>
       <source>Paste</source>
-      <translation type="unfinished">Paste</translation>
+      <translation>Wklej</translation>
     </message>
     <message>
       <source>Tape</source>
-      <translation type="unfinished">Tape</translation>
+      <translation>Taśma</translation>
     </message>
     <message>
       <source>Play</source>
-      <translation type="unfinished">Play</translation>
+      <translation>Odtwórz</translation>
     </message>
     <message>
       <source>Record</source>
-      <translation type="unfinished">Record</translation>
+      <translation>Nagrywaj</translation>
     </message>
     <message>
       <source>Stop</source>
-      <translation type="unfinished">Stop</translation>
+      <translation>Zatrzymaj</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsAudio</name>
     <message>
       <source>Output Devices</source>
-      <translation type="unfinished">Output Devices</translation>
+      <translation>Urządzenia wyjściowe</translation>
     </message>
     <message>
       <source>Sample Rate</source>
-      <translation type="unfinished">Sample Rate</translation>
+      <translation>Częstotliwość próbkowania</translation>
     </message>
     <message>
       <source>Buffer Size factor</source>
-      <translation type="unfinished">Buffer Size factor</translation>
+      <translation>Współczynnik rozmiaru bufora</translation>
     </message>
     <message>
       <source>Mono</source>
-      <translation type="unfinished">Mono</translation>
+      <translation>Mono</translation>
     </message>
     <message>
       <source>Stereo Delay</source>
-      <translation type="unfinished">Stereo Delay</translation>
+      <translation>Opóźnienie stereo</translation>
     </message>
     <message>
       <source>Stereo Panning</source>
-      <translation type="unfinished">Stereo Panning</translation>
+      <translation>Przesunięcie stereo</translation>
     </message>
     <message>
       <source>Channels Delay</source>
-      <translation type="unfinished">Channels Delay</translation>
+      <translation>Opóźnienie kanałów</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Różne</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Ustawienia</translation>
     </message>
     <message>
       <source>Channels</source>
-      <translation type="unfinished">Channels</translation>
+      <translation>Kanały</translation>
     </message>
     <message>
       <source>APU Channels</source>
-      <translation type="unfinished">APU Channels</translation>
+      <translation>Kanały APU</translation>
     </message>
     <message>
       <source>Swap Duty Cycles</source>
-      <translation type="unfinished">Swap Duty Cycles</translation>
+      <translation>Zamień współczynniki wypełnienia impulsu</translation>
     </message>
     <message>
       <source>Enable Audio</source>
-      <translation type="unfinished">Enable Audio</translation>
+      <translation>Włącz dźwięk</translation>
     </message>
     <message>
       <source>Reverse bits of DPCM</source>
-      <translation type="unfinished">Reverse bits of DPCM</translation>
+      <translation>Odwróć bity DPCM</translation>
     </message>
     <message>
       <source>192000</source>
@@ -2314,7 +2314,7 @@
     <name>wdgSettingsCheats</name>
     <message>
       <source>Cheats Settings</source>
-      <translation type="unfinished">Cheats Settings</translation>
+      <translation>Ustawienia cheatów</translation>
     </message>
     <message>
       <source>Settings</source>
@@ -2326,11 +2326,11 @@
     </message>
     <message>
       <source>Game Genie Rom Mode</source>
-      <translation type="unfinished">Game Genie Rom Mode</translation>
+      <translation>Tryb romów Game Genie</translation>
     </message>
     <message>
       <source>Cheats List Mode</source>
-      <translation type="unfinished">Cheats List Mode</translation>
+      <translation>Tryb listy cheatów</translation>
     </message>
   </context>
   <context>
@@ -2345,11 +2345,11 @@
     </message>
     <message>
       <source>Select Game Genie ROM file</source>
-      <translation type="unfinished">Select Game Genie ROM file</translation>
+      <translation>Wybierz ROM Game Genie</translation>
     </message>
     <message>
       <source>Select FDS BIOS file</source>
-      <translation type="unfinished">Select FDS BIOS file</translation>
+      <translation>Wybierz plik biosu FDS</translation>
     </message>
     <message>
       <source>General Settings</source>
@@ -2385,7 +2385,7 @@
     </message>
     <message>
       <source>System Roms</source>
-      <translation type="unfinished">System Roms</translation>
+      <translation>ROMy systemowe</translation>
     </message>
     <message>
       <source>Mode</source>
@@ -2437,7 +2437,7 @@
     </message>
     <message>
       <source>FDS Bios file</source>
-      <translation type="unfinished">FDS Bios file</translation>
+      <translation>Plik biosu FDS</translation>
     </message>
     <message>
       <source>Rewind minutes</source>
@@ -2501,7 +2501,7 @@
     </message>
     <message>
       <source>Famicom Disk System</source>
-      <translation type="unfinished">Famicom Disk System</translation>
+      <translation>Famicom Disk System</translation>
     </message>
     <message>
       <source>Switch the disk/side automatically</source>
@@ -2509,7 +2509,7 @@
     </message>
     <message>
       <source>Allow multiple instances of the emulator</source>
-      <translation type="unfinished">Allow multiple instances of the emulator</translation>
+      <translation>Zezwól na działanie kilku wersji programu jednocześnie</translation>
     </message>
     <message>
       <source>Use fast forward when loading the disk/side</source>
@@ -2608,23 +2608,23 @@
     </message>
     <message>
       <source>Expansion Port</source>
-      <translation type="unfinished">Expansion Port</translation>
+      <translation>Expansion Port</translation>
     </message>
     <message>
       <source>Hide Zapper cursor</source>
-      <translation type="unfinished">Hide Zapper cursor</translation>
+      <translation>Ukryj kursor Zappera</translation>
     </message>
     <message>
       <source>Controller Port 1</source>
-      <translation type="unfinished">Controller Port 1</translation>
+      <translation>Port kontrolera 1</translation>
     </message>
     <message>
       <source>Controller Port 3</source>
-      <translation type="unfinished">Controller Port 3</translation>
+      <translation>Port kontrolera 3</translation>
     </message>
     <message>
       <source>Controller Port 2</source>
-      <translation type="unfinished">Controller Port 2</translation>
+      <translation>Port kontrolera 2</translation>
     </message>
     <message>
       <source>Ports</source>
@@ -2644,7 +2644,7 @@
     </message>
     <message>
       <source>Controller Port 4</source>
-      <translation type="unfinished">Controller Port 4</translation>
+      <translation>Port kontrolera 4</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
