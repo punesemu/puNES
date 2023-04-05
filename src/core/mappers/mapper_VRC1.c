@@ -34,7 +34,7 @@ void extcl_cpu_wr_mem_VRC1(WORD address, BYTE value) {
 
 	switch (address) {
 		case 0x8000:
-			control_bank_with_AND(0x0F, info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -58,12 +58,12 @@ void extcl_cpu_wr_mem_VRC1(WORD address, BYTE value) {
 			}
 			return;
 		case 0xA000:
-			control_bank_with_AND(0x0F, info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0xC000:
-			control_bank_with_AND(0x0F, info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;
