@@ -314,7 +314,7 @@ void tas_frame_FM2(void) {
 	// il primo frame
 	if (!tas.frame) {
 		gui_overlay_info_append_msg_precompiled_with_alignment(OVERLAY_INFO_CENTER, 20, nullptr);
-		//tas_increment_index()
+		//tas_increment_index();
 	}
 
 	if (++tas.frame >= tas.total) {

@@ -1408,7 +1408,13 @@ void overlayWidgetRewind::draw_corner_bar_info(void) {
 	qreal max = this->max();
 	qreal min = this->min();
 	qreal value = this->value();
-	qreal step = value / (max - min);
+	qreal step = 0;
+
+	if (value > max) {
+		value = max;
+	}
+
+	step = value / (max - min);
 
 	//percentuale
 	info_dim.width -= dpr_int(padding.h);
