@@ -318,6 +318,9 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 		explicit dlgKeyboard(QWidget *parent = nullptr);
 		~dlgKeyboard() override;
 
+	signals:
+		void et_nes_keyboard(void);
+
 	protected:
 		bool event(QEvent *event) override;
 		bool eventFilter(QObject *obj, QEvent *event) override;
@@ -356,6 +359,7 @@ class dlgKeyboard : public QDialog, public Ui::dlgKeyboard {
 		void one_click_dec(void);
 
 	private slots:
+		void s_nes_keyboard(void);
 		void s_mode(int index);
 		void s_size_factor(int index);
 		void s_subor_extended_mode(bool checked);

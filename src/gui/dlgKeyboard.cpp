@@ -33,33 +33,7 @@ static dlgKeyboard *dlgkbd = nullptr;
 
 void gui_nes_keyboard(void) {
 	if (dlgkbd) {
-		BYTE disable = !nes_keyboard.enabled;
-
-		dlgkbd->reset();
-
-		if (nes_keyboard.enabled) {
-			switch (cfg->input.expansion) {
-				default:
-					disable = TRUE;
-					break;
-				case CTRL_FAMILY_BASIC_KEYBOARD:
-					dlgkbd->family_basic_keyboard();
-					break;
-				case CTRL_SUBOR_KEYBOARD:
-					dlgkbd->subor_keyboard();
-					break;
-			}
-		}
-		if (disable) {
-			if (!dlgkbd->isHidden()) {
-				dlgkbd->close();
-			}
-			dlgkbd->fake_keyboard();
-			dlgkbd->reset();
-		}
-		mainwin->action_Virtual_Keyboard->setEnabled(!disable);
-		mainwin->statusbar->keyb->setEnabled(!disable);
-		mainwin->update_window();
+		emit dlgkbd->et_nes_keyboard();
 	}
 }
 void gui_nes_keyboard_paste_event(void) {
@@ -100,6 +74,8 @@ dlgKeyboard::dlgKeyboard(QWidget *parent) : QDialog(parent) {
 	connect(comboBox_Mode, SIGNAL(currentIndexChanged(int)), this, SLOT(s_mode(int)));
 	connect(comboBox_Size, SIGNAL(currentIndexChanged(int)), this, SLOT(s_size_factor(int)));
 	connect(checkBox_Subor_Extende_Mode, SIGNAL(clicked(bool)), this, SLOT(s_subor_extended_mode(bool)));
+
+	connect(this, SIGNAL(et_nes_keyboard()), this, SLOT(s_nes_keyboard()));
 
 	installEventFilter(this);
 }
@@ -444,6 +420,35 @@ void dlgKeyboard::one_click_dec(void) {
 	}
 }
 
+void dlgKeyboard::s_nes_keyboard(void) {
+	BYTE disable = !nes_keyboard.enabled;
+
+	reset();
+
+	if (nes_keyboard.enabled) {
+		switch (cfg->input.expansion) {
+			default:
+				disable = TRUE;
+				break;
+			case CTRL_FAMILY_BASIC_KEYBOARD:
+				family_basic_keyboard();
+				break;
+			case CTRL_SUBOR_KEYBOARD:
+				subor_keyboard();
+				break;
+		}
+	}
+	if (disable) {
+		if (!isHidden()) {
+			close();
+		}
+		fake_keyboard();
+		reset();
+	}
+	mainwin->action_Virtual_Keyboard->setEnabled(!disable);
+	mainwin->statusbar->keyb->setEnabled(!disable);
+	mainwin->update_window();
+}
 void dlgKeyboard::s_mode(int index) {
 	mode = index;
 	update();
