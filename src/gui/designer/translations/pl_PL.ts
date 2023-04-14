@@ -2727,7 +2727,7 @@
     </message>
     <message>
       <source>Unlimited Sprites</source>
-      <translation type="unfinished">Unlimited Sprites</translation>
+      <translation>Nieograniczone sprite'y</translation>
     </message>
     <message>
       <source>Enable Extra Scanlines</source>
@@ -3064,107 +3064,107 @@
     </message>
     <message>
       <source>5:4</source>
-      <translation type="unfinished">5:4</translation>
+      <translation>5:4</translation>
     </message>
     <message>
       <source>8:7 (NTSC TV)</source>
-      <translation type="unfinished">8:7 (NTSC TV)</translation>
+      <translation>8:7 (NTSC TV)</translation>
     </message>
     <message>
       <source>11:8 (PAL TV)</source>
-      <translation type="unfinished">11:8 (PAL TV)</translation>
+      <translation>11:8 (PAL TV)</translation>
     </message>
     <message>
       <source>Pixel Aspect Ratio</source>
-      <translation type="unfinished">Pixel Aspect Ratio</translation>
+      <translation>Proporcje pikseli</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>Wyłączone</translation>
     </message>
     <message>
       <source>On</source>
-      <translation type="unfinished">On</translation>
+      <translation>Włączone</translation>
     </message>
     <message>
       <source>Default Value</source>
-      <translation type="unfinished">Default Value</translation>
+      <translation>Domyślna wartość</translation>
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>NTSC</translation>
     </message>
     <message>
       <source>PAL/Dendy</source>
-      <translation type="unfinished">PAL/Dendy</translation>
+      <translation>PAL/Dendy</translation>
     </message>
     <message>
       <source>Right</source>
-      <translation type="unfinished">Right</translation>
+      <translation>Prawo</translation>
     </message>
     <message>
       <source>Down</source>
-      <translation type="unfinished">Down</translation>
+      <translation>Dół</translation>
     </message>
     <message>
       <source>Up</source>
-      <translation type="unfinished">Up</translation>
+      <translation>Góra</translation>
     </message>
     <message>
       <source>Left</source>
-      <translation type="unfinished">Left</translation>
+      <translation>Lewo</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Przywróć ustawienia domyślne</translation>
     </message>
     <message>
       <source>Black borders in window mode</source>
-      <translation type="unfinished">Black borders in window mode</translation>
+      <translation>Czarne obramowania w trybie okienkowym</translation>
     </message>
     <message>
       <source>Black borders in fullscreen</source>
-      <translation type="unfinished">Black borders in fullscreen</translation>
+      <translation>Czarne obramowania na pełnym ekranie</translation>
     </message>
     <message>
       <source>Overscan</source>
-      <translation type="unfinished">Overscan</translation>
+      <translation>Overscan</translation>
     </message>
     <message>
       <source>No Shaders</source>
-      <translation type="unfinished">No Shaders</translation>
+      <translation>Brak</translation>
     </message>
     <message>
       <source>CRT Dotmask</source>
-      <translation type="unfinished">CRT Dotmask</translation>
+      <translation>CRT Dotmask</translation>
     </message>
     <message>
       <source>CRT Scanlines</source>
-      <translation type="unfinished">CRT Scanlines</translation>
+      <translation>CRT Scanlines</translation>
     </message>
     <message>
       <source>CRT With Curve</source>
-      <translation type="unfinished">CRT With Curve</translation>
+      <translation>CRT With Curve</translation>
     </message>
     <message>
       <source>Emboss</source>
-      <translation type="unfinished">Emboss</translation>
+      <translation>Emboss</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Noise</translation>
     </message>
     <message>
       <source>NTSC 2Phase Composite</source>
-      <translation type="unfinished">NTSC 2Phase Composite</translation>
+      <translation>NTSC 2Phase Composite</translation>
     </message>
     <message>
       <source>Old TV</source>
-      <translation type="unfinished">Old TV</translation>
+      <translation>Stary TV</translation>
     </message>
     <message>
       <source>From File</source>
-      <translation type="unfinished">From File</translation>
+      <translation>Z pliku</translation>
     </message>
     <message>
       <source>No Filters</source>
@@ -3304,7 +3304,7 @@
     </message>
     <message>
       <source>Disable TV noise emulation when turned off</source>
-      <translation type="unfinished">Disable TV noise emulation when turned off</translation>
+      <translation>Nie emuluj zakłóceń telewizora przy wyłączonej grze</translation>
     </message>
     <message>
       <source>Disable sepia color on pause</source>
@@ -3328,7 +3328,7 @@
     </message>
     <message>
       <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
-      <translation type="unfinished">Disable Red and Green emphasis swap for PAL/Dendy</translation>
+      <translation>Wyłącz zmianę intensywności czerwieni i zieleni dla PAL/Dendy</translation>
     </message>
     <message>
       <source>0 degrees</source>
@@ -3356,11 +3356,11 @@
     </message>
     <message>
       <source>Flip/Rotate the controller input</source>
-      <translation type="unfinished">Flip/Rotate the controller input</translation>
+      <translation>Odwróć/obróć odczyty kontrolera</translation>
     </message>
     <message>
       <source>Flip/Rotate the text on screen</source>
-      <translation type="unfinished">Flip/Rotate the text on screen</translation>
+      <translation>Odwróć/obróć tekst na ekranie</translation>
     </message>
     <message>
       <source>Per-Game Overscan Setting</source>
