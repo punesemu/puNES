@@ -1309,35 +1309,35 @@
     </message>
     <message>
       <source>Record sound</source>
-      <translation type="unfinished">Record sound</translation>
+      <translation>Nagraj dźwięk</translation>
     </message>
     <message>
       <source>NSF rom files</source>
-      <translation type="unfinished">NSF rom files</translation>
+      <translation>Pliki romów NSF</translation>
     </message>
     <message>
       <source>NSFE rom files</source>
-      <translation type="unfinished">NSFE rom files</translation>
+      <translation>Pliki romów NSFE</translation>
     </message>
     <message>
       <source>IPS patch files</source>
-      <translation type="unfinished">IPS patch files</translation>
+      <translation>Pliki łatek IPS</translation>
     </message>
     <message>
       <source>BPS patch files</source>
-      <translation type="unfinished">BPS patch files</translation>
+      <translation>Pliki łatek BPS</translation>
     </message>
     <message>
       <source>XDELTA patch files</source>
-      <translation type="unfinished">XDELTA patch files</translation>
+      <translation>Pliki łatek XDELTA</translation>
     </message>
     <message>
       <source>Open IPS/BPS/XDELTA Patch</source>
-      <translation type="unfinished">Open IPS/BPS/XDELTA Patch</translation>
+      <translation>Otwórz plik IPS/BPS/XDELTA</translation>
     </message>
     <message>
       <source>&amp;General</source>
-      <translation type="unfinished">&amp;General</translation>
+      <translation>O&amp;gólne</translation>
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
@@ -1345,7 +1345,7 @@
     </message>
     <message>
       <source>Widgets</source>
-      <translation type="unfinished">Widgets</translation>
+      <translation>Widżety</translation>
     </message>
     <message>
       <source>Start &amp;AUDIO recording</source>
@@ -1382,11 +1382,11 @@
     </message>
     <message>
       <source>Slot &amp;A</source>
-      <translation type="unfinished">Slot &amp;A</translation>
+      <translation>Slot &amp;A</translation>
     </message>
     <message>
       <source>Slot &amp;B</source>
-      <translation type="unfinished">Slot &amp;B</translation>
+      <translation>Slot &amp;B</translation>
     </message>
     <message>
       <source>&amp;Vs System Controls</source>
@@ -1462,7 +1462,7 @@
     </message>
     <message>
       <source>&amp;Show Log</source>
-      <translation type="unfinished">&amp;Show Log</translation>
+      <translation>&amp;Pokaż dziennik</translation>
     </message>
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
@@ -1474,11 +1474,11 @@
     </message>
     <message>
       <source>Sa&amp;ve Screenshot</source>
-      <translation type="unfinished">Sa&amp;ve Screenshot</translation>
+      <translation>Zapisz &amp;zrzut ekranu</translation>
     </message>
     <message>
       <source>Insert &amp;Coin</source>
-      <translation type="unfinished">Insert &amp;Coin</translation>
+      <translation>Wrzuć &amp;monetę</translation>
     </message>
     <message>
       <source>Open &amp;working folder</source>
@@ -1494,7 +1494,7 @@
     </message>
     <message>
       <source>T&amp;ape</source>
-      <translation type="unfinished">T&amp;ape</translation>
+      <translation>T&amp;aśma</translation>
     </message>
   </context>
   <context>
@@ -1505,26 +1505,26 @@
     </message>
     <message>
       <source>Input is released</source>
-      <translation type="unfinished">Input is released</translation>
+      <translation>Zwolniono wejście</translation>
     </message>
     <message>
       <source>Input is captured</source>
-      <translation type="unfinished">Input is captured</translation>
+      <translation>Przechwycono wejście</translation>
     </message>
     <message>
       <source>Toggle Virtual Keyboard</source>
-      <translation type="unfinished">Toggle Virtual Keyboard</translation>
+      <translation>Włącz klawiaturę wirtualną</translation>
     </message>
   </context>
   <context>
     <name>objCheat</name>
     <message>
       <source>Error on reading the file</source>
-      <translation type="unfinished">Error on reading the file</translation>
+      <translation>Błąd odczytu pliku</translation>
     </message>
     <message>
       <source>Read only</source>
-      <translation type="unfinished">Read only</translation>
+      <translation>Tylko do odczytu</translation>
     </message>
     <message>
       <source>The file is in read only mode</source>
@@ -1728,136 +1728,136 @@
     <name>recStatusBar</name>
     <message>
       <source>Audio</source>
-      <translation type="unfinished">Audio</translation>
+      <translation>Dźwięk</translation>
     </message>
     <message>
       <source>Video</source>
-      <translation type="unfinished">Video</translation>
+      <translation>Obraz</translation>
     </message>
   </context>
   <context>
     <name>suborKeyboard</name>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>Klawiatura Subor</translation>
     </message>
   </context>
   <context>
     <name>wdgAPUChannels</name>
     <message>
       <source>APU Channels</source>
-      <translation type="unfinished">APU Channels</translation>
+      <translation>Kanały APU</translation>
     </message>
     <message>
       <source>Square 1</source>
-      <translation type="unfinished">Square 1</translation>
+      <translation>Square 1</translation>
     </message>
     <message>
       <source>DMC</source>
-      <translation type="unfinished">DMC</translation>
+      <translation>DMC</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Noise</translation>
     </message>
     <message>
       <source>Square 2</source>
-      <translation type="unfinished">Square 2</translation>
+      <translation>Square 2</translation>
     </message>
     <message>
       <source>Extra</source>
-      <translation type="unfinished">Extra</translation>
+      <translation>Ekstra</translation>
     </message>
     <message>
       <source>Master</source>
-      <translation type="unfinished">Master</translation>
+      <translation>Główna</translation>
     </message>
     <message>
       <source>Triangle</source>
-      <translation type="unfinished">Triangle</translation>
+      <translation>Trójkąt</translation>
     </message>
     <message>
       <source>active</source>
-      <translation type="unfinished">active</translation>
+      <translation>aktywny</translation>
     </message>
     <message>
       <source>volume</source>
-      <translation type="unfinished">volume</translation>
+      <translation>głośność</translation>
     </message>
     <message>
       <source>Active all</source>
-      <translation type="unfinished">Active all</translation>
+      <translation>Aktywuj wszystko</translation>
     </message>
     <message>
       <source>Disable all</source>
-      <translation type="unfinished">Disable all</translation>
+      <translation>Wyłącz wszystko</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Przywróć ustawienia domyślne</translation>
     </message>
   </context>
   <context>
     <name>wdgCheatEditor</name>
     <message>
       <source>Cheats Editor</source>
-      <translation type="unfinished">Cheats Editor</translation>
+      <translation>Edytor cheatów</translation>
     </message>
     <message>
       <source>Cheats List</source>
-      <translation type="unfinished">Cheats List</translation>
+      <translation>Lista cheatów</translation>
     </message>
     <message>
       <source>Description</source>
-      <translation type="unfinished">Description</translation>
+      <translation>Opis</translation>
     </message>
     <message>
       <source>Code</source>
-      <translation type="unfinished">Code</translation>
+      <translation>Kod</translation>
     </message>
     <message>
       <source>Address</source>
-      <translation type="unfinished">Address</translation>
+      <translation>Adres</translation>
     </message>
     <message>
       <source>Value</source>
-      <translation type="unfinished">Value</translation>
+      <translation>Wartość</translation>
     </message>
     <message>
       <source>Compare</source>
-      <translation type="unfinished">Compare</translation>
+      <translation>Porównaj</translation>
     </message>
     <message>
       <source>Show Tools</source>
-      <translation type="unfinished">Show Tools</translation>
+      <translation>Pokaż narzędzia</translation>
     </message>
     <message>
       <source>Import</source>
-      <translation type="unfinished">Import</translation>
+      <translation>Importuj</translation>
     </message>
     <message>
       <source>Export</source>
-      <translation type="unfinished">Export</translation>
+      <translation>Eksportuj</translation>
     </message>
     <message>
       <source>Editor Tools</source>
-      <translation type="unfinished">Editor Tools</translation>
+      <translation>Narzędzia edytora</translation>
     </message>
     <message>
       <source>CPU Ram</source>
-      <translation type="unfinished">CPU Ram</translation>
+      <translation>CPU Ram</translation>
     </message>
     <message>
       <source>Pro Action Rocky</source>
-      <translation type="unfinished">Pro Action Rocky</translation>
+      <translation>Pro Action Rocky</translation>
     </message>
     <message>
       <source>Game Genie</source>
-      <translation type="unfinished">Game Genie</translation>
+      <translation>Game Genie</translation>
     </message>
     <message>
       <source>Submit</source>
-      <translation type="unfinished">Submit</translation>
+      <translation>Prześlij</translation>
     </message>
     <message>
       <source>Cancel</source>
@@ -1877,22 +1877,22 @@
     </message>
     <message>
       <source>New Game Genie</source>
-      <translation type="unfinished">New Game Genie</translation>
+      <translation>Nowy Game Genie</translation>
     </message>
     <message>
       <source>New Pro Action</source>
-      <translation type="unfinished">New Pro Action</translation>
+      <translation>Nowy Pro Action</translation>
     </message>
     <message>
       <source>New CPU Ram</source>
-      <translation type="unfinished">New CPU Ram</translation>
+      <translation>Nowy CPU Ram</translation>
     </message>
   </context>
   <context>
     <name>wdgCheatsEditor</name>
     <message>
       <source>Show Tools</source>
-      <translation type="unfinished">Show Tools</translation>
+      <translation>Pokaż narzędzia</translation>
     </message>
     <message>
       <source>Hide Tools</source>
@@ -2656,11 +2656,11 @@
     </message>
     <message>
       <source>Keyboard</source>
-      <translation type="unfinished">Keyboard</translation>
+      <translation>Klawiatura</translation>
     </message>
     <message>
       <source>Joystick</source>
-      <translation type="unfinished">Joystick</translation>
+      <translation>Kontroler</translation>
     </message>
     <message>
       <source>Unset all</source>
@@ -2668,54 +2668,54 @@
     </message>
     <message>
       <source>Start/Stop AUDIO recording</source>
-      <translation type="unfinished">Start/Stop AUDIO recording</translation>
+      <translation>Rozpocznij/zatrzymaj nagrywanie dźwięku</translation>
     </message>
     <message>
       <source>Start/Stop VIDEO recording</source>
-      <translation type="unfinished">Start/Stop VIDEO recording</translation>
+      <translation>Rozpocznij/zatrzymaj nagrywanie obrazu</translation>
     </message>
     <message>
       <source>Start/Stop WAV recording</source>
-      <translation type="unfinished">Start/Stop WAV recording</translation>
+      <translation>Rozpocznij/zatrzymaj nagrywanie WAV</translation>
     </message>
     <message>
       <source>Standard Pads on Port3 and Port4</source>
-      <translation type="unfinished">Standard Pads on Port3 and Port4</translation>
+      <translation>Standardowe kontrolery w portach nr 3 i 4</translation>
     </message>
     <message>
       <source>Press a key - timeout in %1</source>
-      <translation type="unfinished">Press a key - timeout in %1</translation>
+      <translation>Naciśnij klawisz - limit czasu za %1</translation>
     </message>
     <message>
       <source>Family BASIC Keyboard</source>
-      <translation type="unfinished">Family BASIC Keyboard</translation>
+      <translation>Klawiatura Family BASIC</translation>
     </message>
     <message>
       <source>Subor Keyboard</source>
-      <translation type="unfinished">Subor Keyboard</translation>
+      <translation>Klawiatura Subor</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsPPU</name>
     <message>
       <source>PPU Settings</source>
-      <translation type="unfinished">PPU Settings</translation>
+      <translation>Ustawienia PPU</translation>
     </message>
     <message>
       <source>Disable 7bit Sample Control</source>
-      <translation type="unfinished">Disable 7bit Sample Control</translation>
+      <translation>Wyłącz 7bit Sample Control</translation>
     </message>
     <message>
       <source>Reset Lag Counter</source>
-      <translation type="unfinished">Reset Lag Counter</translation>
+      <translation>Zresetuj licznik opóźnienia</translation>
     </message>
     <message>
       <source>VBlank Lines</source>
-      <translation type="unfinished">VBlank Lines</translation>
+      <translation>Linie VBlank</translation>
     </message>
     <message>
       <source>Postrender Lines</source>
-      <translation type="unfinished">Postrender Lines</translation>
+      <translation>Postrender Lines</translation>
     </message>
     <message>
       <source>Overclock</source>
@@ -2723,7 +2723,7 @@
     </message>
     <message>
       <source>Sprites and background</source>
-      <translation type="unfinished">Sprites and background</translation>
+      <translation>Sprite'y i tło</translation>
     </message>
     <message>
       <source>Unlimited Sprites</source>
@@ -2731,15 +2731,15 @@
     </message>
     <message>
       <source>Enable Extra Scanlines</source>
-      <translation type="unfinished">Enable Extra Scanlines</translation>
+      <translation>Włącz dodatkowe "scanlines"</translation>
     </message>
     <message>
       <source>Hide Sprites</source>
-      <translation type="unfinished">Hide Sprites</translation>
+      <translation>Ukryj sprite'y</translation>
     </message>
     <message>
       <source>Hide Background</source>
-      <translation type="unfinished">Hide Background</translation>
+      <translation>Ukryj tło</translation>
     </message>
     <message>
       <source>Advanced</source>
@@ -2755,15 +2755,15 @@
     </message>
     <message>
       <source>Power up/reset CPU/PPU Alignment</source>
-      <translation type="unfinished">Power up/reset CPU/PPU Alignment</translation>
+      <translation>Wyrównanie/reset wyrównania CPU/PPU </translation>
     </message>
     <message>
       <source>Increment at every hard reset (Not recommended)</source>
-      <translation type="unfinished">Increment at every hard reset (Not recommended)</translation>
+      <translation>Przyrost przy każdym twardym resecie (niezalecane)</translation>
     </message>
     <message>
       <source>Automatically restores the limit when necessary to prevent graphical glitches</source>
-      <translation type="unfinished">Automatically restores the limit when necessary to prevent graphical glitches</translation>
+      <translation>Gdy to konieczne, automatycznie przywraca limit, by zapobiec błędom graficznym</translation>
     </message>
   </context>
   <context>
@@ -2771,88 +2771,88 @@
     <message>
       <source>MPEG 1 Video (*.mpg *.mpeg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG 1 Video (*.mpg *.mpeg)</translation>
+      <translation>MPEG 1 Video (*.mpg *.mpeg)</translation>
     </message>
     <message>
       <source>MPEG 2 Video (*.mpg *.mpeg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG 2 Video (*.mpg *.mpeg)</translation>
+      <translation>MPEG 2 Video (*.mpg *.mpeg)</translation>
     </message>
     <message>
       <source>MPEG 4 Video (*.mp4)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG 4 Video (*.mp4)</translation>
+      <translation>MPEG 4 Video (*.mp4)</translation>
     </message>
     <message>
       <source>MPEG H264 Video (*.mp4)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MPEG H264 Video (*.mp4)</translation>
+      <translation>MPEG H264 Video (*.mp4)</translation>
     </message>
     <message>
       <source>High Efficiency Video Codec (*.mkv)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">High Efficiency Video Codec (*.mkv)</translation>
+      <translation>High Efficiency Video Codec (*.mkv)</translation>
     </message>
     <message>
       <source>WebM Video (*.webm)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">WebM Video (*.webm)</translation>
+      <translation>WebM Video (*.webm)</translation>
     </message>
     <message>
       <source>Windows Media Video (*.wmv)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Windows Media Video (*.wmv)</translation>
+      <translation>Windows Media Video (*.wmv)</translation>
     </message>
     <message>
       <source>AVI FF Video (*.avi)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">AVI FF Video (*.avi)</translation>
+      <translation>AVI FF Video (*.avi)</translation>
     </message>
     <message>
       <source>AVI Video (*.avi)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">AVI Video (*.avi)</translation>
+      <translation>AVI Video (*.avi)</translation>
     </message>
     <message>
       <source>WAV Audio (*.wav)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">WAV Audio (*.wav)</translation>
+      <translation>WAV Audio (*.wav)</translation>
     </message>
     <message>
       <source>MP3 Audio (*.mp3)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">MP3 Audio (*.mp3)</translation>
+      <translation>MP3 Audio (*.mp3)</translation>
     </message>
     <message>
       <source>AAC Audio (*.aac)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">AAC Audio (*.aac)</translation>
+      <translation>AAC Audio (*.aac)</translation>
     </message>
     <message>
       <source>Flac Audio (*.flac)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Flac Audio (*.flac)</translation>
+      <translation>Flac Audio (*.flac)</translation>
     </message>
     <message>
       <source>Ogg Audio (*.ogg)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Ogg Audio (*.ogg)</translation>
+      <translation>Ogg Audio (*.ogg)</translation>
     </message>
     <message>
       <source>Not supported</source>
-      <translation type="unfinished">Not supported</translation>
+      <translation>Nieobsługiwane</translation>
     </message>
     <message>
       <source>Custom Height</source>
-      <translation type="unfinished">Custom Height</translation>
+      <translation>Niestandardowa wysokość</translation>
     </message>
     <message>
       <source>Output Video Format</source>
-      <translation type="unfinished">Output Video Format</translation>
+      <translation>Format wyjściowy video</translation>
     </message>
     <message>
       <source>Custom Width</source>
-      <translation type="unfinished">Custom Width</translation>
+      <translation>Niestandardowa szerokość</translation>
     </message>
     <message>
       <source>Output Quality</source>
@@ -2948,7 +2948,7 @@
     </message>
     <message>
       <source>Follow screen rotation</source>
-      <translation type="unfinished">Follow screen rotation</translation>
+      <translation>Śledź obrót ekranu</translation>
     </message>
     <message>
       <source>Low</source>
@@ -2964,103 +2964,103 @@
     </message>
     <message>
       <source>Audio recording settings</source>
-      <translation type="unfinished">Audio recording settings</translation>
+      <translation>Ustawienia nagrywania dźwięku</translation>
     </message>
     <message>
       <source>Video recording settings</source>
-      <translation type="unfinished">Video recording settings</translation>
+      <translation>Ustawienia nagrywania video</translation>
     </message>
     <message>
       <source>Recording Settings</source>
-      <translation type="unfinished">Recording Settings</translation>
+      <translation>Ustawienia nagrywania</translation>
     </message>
     <message>
       <source>Opus Audio (*.opus)</source>
       <extracomment>Do not translate file extensions contained between parentheses [example: (*.mp3)]</extracomment>
-      <translation type="unfinished">Opus Audio (*.opus)</translation>
+      <translation>Opus Audio (*.opus)</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsVideo</name>
     <message>
       <source>GLSL &amp;soft stretch</source>
-      <translation type="unfinished">GLSL &amp;soft stretch</translation>
+      <translation>&amp;Miękkie rozciąganie GLSL</translation>
     </message>
     <message>
       <source>HLSL &amp;soft stretch</source>
-      <translation type="unfinished">HLSL &amp;soft stretch</translation>
+      <translation>&amp;Miękkie rozciąganie HLSL</translation>
     </message>
     <message>
       <source>[Select a file]</source>
-      <translation type="unfinished">[Select a file]</translation>
+      <translation>[Wybierz plik]</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Domyślne</translation>
     </message>
     <message>
       <source>Shaders files</source>
-      <translation type="unfinished">Shaders files</translation>
+      <translation>Pliki shaderów</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Wszystkie pliki</translation>
     </message>
     <message>
       <source>Open Shader file</source>
-      <translation type="unfinished">Open Shader file</translation>
+      <translation>Otwórz plik shadera</translation>
     </message>
     <message>
       <source>Palette files</source>
-      <translation type="unfinished">Palette files</translation>
+      <translation>Pliki palety barw</translation>
     </message>
     <message>
       <source>Open palette file</source>
-      <translation type="unfinished">Open palette file</translation>
+      <translation>Otwórz plik palety</translation>
     </message>
     <message>
       <source>Video Settings</source>
-      <translation type="unfinished">Video Settings</translation>
+      <translation>Ustawienia video</translation>
     </message>
     <message>
       <source>1x</source>
-      <translation type="unfinished">1x</translation>
+      <translation>1x</translation>
     </message>
     <message>
       <source>2x</source>
-      <translation type="unfinished">2x</translation>
+      <translation>2x</translation>
     </message>
     <message>
       <source>3x</source>
-      <translation type="unfinished">3x</translation>
+      <translation>3x</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation type="unfinished">4x</translation>
+      <translation>4x</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation type="unfinished">5x</translation>
+      <translation>5x</translation>
     </message>
     <message>
       <source>6x</source>
-      <translation type="unfinished">6x</translation>
+      <translation>6 x</translation>
     </message>
     <message>
       <source>Scale</source>
-      <translation type="unfinished">Scale</translation>
+      <translation>Skala</translation>
     </message>
     <message>
       <source>** To apply this change restart is needed **</source>
-      <translation type="unfinished">** To apply this change restart is needed **</translation>
+      <translation>** Aby zastosować tę zmianę, należy zrestartować program **</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Różne</translation>
     </message>
     <message>
       <source>1:1</source>
-      <translation type="unfinished">1:1</translation>
+      <translation>1:1</translation>
     </message>
     <message>
       <source>5:4</source>
