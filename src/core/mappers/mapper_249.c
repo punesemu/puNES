@@ -23,56 +23,18 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-#define m249_swap_chr_bank_1k(src, dst)\
-{\
-	BYTE *chr_bank_1k = chr.bank_1k[src];\
-	chr.bank_1k[src] = chr.bank_1k[dst];\
-	chr.bank_1k[dst] = chr_bank_1k;\
-	WORD map = m249.chr_map[src];\
-	m249.chr_map[src] = m249.chr_map[dst];\
-	m249.chr_map[dst] = map;\
-}
-/* fceux */
-#define m249_chr_1k(vl)\
-	if (m249.reg) {\
-		value = (vl & 0x03) | ((vl >> 1) & 0x04) | ((vl >> 4) & 0x08)\
-				| ((vl >> 2) & 0x10) | ((vl << 3) & 0x20)\
-				| ((vl << 2) & 0xC0);\
-	}
-#define m249_prg_8k(vl)\
-	if (m249.reg) {\
-		if (vl < 0x20) {\
-			value = (vl & 0x01) | ((vl >> 3) & 0x02) | ((vl >> 1) & 0x04)\
-					| ((vl << 2) & 0x08) | ((vl << 2) & 0x10);\
-		} else {\
-			value = vl - 0x20;\
-			value = (vl & 0x03) | ((vl >> 1) & 0x04) | ((vl >> 4) & 0x08)\
-					| ((vl >> 2) & 0x10) | ((vl << 3) & 0x20)\
-					| ((vl << 2) & 0xC0);\
-		}\
-	}
-/**/
-/* nestopia
-#define m249_chr_1k(vl)\
-	if (m249.reg) {\
-		value = ((vl >> 0) & 0x03) | ((vl >> 1) & 0x04) | ((vl >> 4) & 0x08) | ((vl >> 2) & 0x10) |\
-				((vl << 3) & 0x20) | ((vl << 2) & 0x40) | ((vl << 2) & 0x80);\
-	}
-#define m249_prg_8k(vl)\
-	if (m249.reg) {\
-		value = ((vl << 0) & 0x01) | ((vl >> 3) & 0x02) | ((vl >> 1) & 0x04) | ((vl << 2) & 0x18);\
-	}
-*/
+void prg_swap_249(WORD address, WORD value);
+void chr_swap_249(WORD address, WORD value);
+
+INLINE static WORD calculate_bank(WORD value, const BYTE *src, const BYTE *trg, int len);
 
 struct _m249 {
 	BYTE reg;
-	WORD prg_map[4];
-	WORD chr_map[8];
 } m249;
 
 void map_init_249(void) {
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(249);
-	EXTCL_CPU_RD_MEM(249);
 	EXTCL_SAVE_MAPPER(249);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
@@ -85,26 +47,16 @@ void map_init_249(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	if (info.reset >= HARD) {
-		memset(&m249, 0x00, sizeof(m249));
-		memset(&mmc3, 0x00, sizeof(mmc3));
-		memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&m249, 0x00, sizeof(m249));
 
-		{
-			BYTE i;
-
-			map_chr_bank_1k_reset();
-
-			for (i = 0; i < 8; i++) {
-				if (i < 4) {
-					m249.prg_map[i] = mapper.rom_map_to[i];
-				}
-				m249.chr_map[i] = i;
-			}
-		}
-	} else {
-		memset(&irqA12, 0x00, sizeof(irqA12));
+	if (info.mapper.submapper == DEFAULT) {
+		info.mapper.submapper = 0;
 	}
+
+	init_MMC3();
+	MMC3_prg_swap = prg_swap_249;
+	MMC3_chr_swap = chr_swap_249;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -112,137 +64,70 @@ void map_init_249(void) {
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_249(WORD address, BYTE value) {
-	BYTE save = value;
-
-	if (address == 0x5000) {
-		value &= 0x02;
-
-		if (m249.reg != value) {
-			BYTE i;
-
-			m249.reg = value;
-
-			for (i = 0; i < 8; i++) {
-				if (i < 4) {
-					m249_prg_8k(m249.prg_map[i])
-					control_bank(info.prg.rom.max.banks_8k)
-					map_prg_rom_8k(1, i, value);
-				}
-				m249_chr_1k(m249.chr_map[i])
-				control_bank(info.chr.rom.max.banks_1k)
-				chr.bank_1k[i] = chr_pnt(value << 10);
-			}
-
-			map_prg_rom_8k_update();
-		}
-
+	if ((address >= 0x5000) && (address <= 0x5FFF)) {
+		m249.reg = value;
+		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_prg_fix(mmc3.bank_to_update);
 		return;
 	}
-
-	switch (address & 0xE001) {
-		case 0x8000: {
-			const BYTE chr_rom_cfg_old = mmc3.chr_rom_cfg;
-			const BYTE prg_rom_cfg_old = mmc3.prg_rom_cfg;
-			mmc3.bank_to_update = value & 0x07;
-			mmc3.prg_rom_cfg = (value & 0x40) >> 5;
-			mmc3.chr_rom_cfg = (value & 0x80) >> 5;
-			if (mmc3.chr_rom_cfg != chr_rom_cfg_old) {
-				m249_swap_chr_bank_1k(0, 4)
-				m249_swap_chr_bank_1k(1, 5)
-				m249_swap_chr_bank_1k(2, 6)
-				m249_swap_chr_bank_1k(3, 7)
-			}
-			if (mmc3.prg_rom_cfg != prg_rom_cfg_old) {
-				WORD p0 = mapper.rom_map_to[0];
-				WORD p2 = mapper.rom_map_to[2];
-				mapper.rom_map_to[0] = p2;
-				mapper.rom_map_to[2] = p0;
-
-				p0 = m249.prg_map[0];
-				p2 = m249.prg_map[2];
-				m249.prg_map[0] = p2;
-				m249.prg_map[2] = p0;
-
-				m249.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;
-				m249_prg_8k(info.prg.rom.max.banks_8k_before_last);
-				control_bank(info.prg.rom.max.banks_8k)
-				map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, value);
-				map_prg_rom_8k_update();
-			}
-			return;
-		}
-		case 0x8001:
-			switch (mmc3.bank_to_update) {
-				case 0:
-					m249.chr_map[mmc3.chr_rom_cfg] = value;
-					m249.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;
-					m249_chr_1k(value)
-					control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)
-					chr.bank_1k[mmc3.chr_rom_cfg] = chr_pnt(value << 10);
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = chr_pnt((value + 1) << 10);
-					return;
-				case 1:
-					m249.chr_map[mmc3.chr_rom_cfg | 0x02] = value;
-					m249.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;
-					m249_chr_1k(value)
-					control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = chr_pnt(value << 10);
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = chr_pnt((value + 1) << 10);
-					return;
-				case 2:
-					m249.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;
-					m249_chr_1k(value)
-					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = chr_pnt(value << 10);
-					return;
-				case 3:
-					m249.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = value;
-					m249_chr_1k(value)
-					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = chr_pnt(value << 10);
-					return;
-				case 4:
-					m249.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = value;
-					m249_chr_1k(value)
-					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = chr_pnt(value << 10);
-					return;
-				case 5:
-					m249.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;
-					m249_chr_1k(value)
-					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = chr_pnt(value << 10);
-					return;
-				case 6:
-					m249.prg_map[mmc3.prg_rom_cfg] = value;
-					m249_prg_8k(value)
-					control_bank(info.prg.rom.max.banks_8k)
-					map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);
-					map_prg_rom_8k_update();
-					return;
-				case 7:
-					m249.prg_map[1] = value;
-					m249_prg_8k(value)
-					control_bank(info.prg.rom.max.banks_8k)
-					map_prg_rom_8k(1, 1, value);
-					map_prg_rom_8k_update();
-					return;
-			}
-			return;
+	if (address >= 0x8000) {
+		extcl_cpu_wr_mem_MMC3(address, value);
 	}
-
-	extcl_cpu_wr_mem_MMC3(address, save);
-}
-BYTE extcl_cpu_rd_mem_249(WORD address, BYTE openbus, BYTE before) {
-	if ((address >= 0x5000) && (address < 0x6000)) {
-		return (before);
-	}
-	return (openbus);
 }
 BYTE extcl_save_mapper_249(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m249.reg);
-	save_slot_ele(mode, slot, m249.prg_map);
-	save_slot_ele(mode, slot, m249.chr_map);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
+}
+
+void prg_swap_249(WORD address, WORD value) {
+	static const BYTE pattern[4][4] = {
+		{ 3, 4, 2, 1 },
+		{ 4, 3, 1, 2 },
+		{ 1, 2, 3, 4 },
+		{ 2, 1, 4, 3 }
+	};
+	WORD bank = calculate_bank(value, (BYTE *)pattern[(m249.reg & 0x03)],
+		(BYTE *)pattern[(info.mapper.id == 249 ? 0 : 2)], 4);
+
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, (address >> 13) & 0x03, bank);
+	map_prg_rom_8k_update();
+}
+void chr_swap_249(WORD address, WORD value) {
+	static const BYTE pattern[8][6] = {
+		{ 5, 2, 6, 7, 4, 3 },
+		{ 4, 5, 3, 2, 7, 6 },
+		{ 2, 3, 4, 5, 6, 7 },
+		{ 6, 4, 2, 3, 7, 5 },
+		{ 5, 3, 7, 6, 2, 4 },
+		{ 4, 2, 5, 6, 7, 3 },
+		{ 3, 6, 4, 5, 2, 7 },
+		{ 2, 5, 6, 7, 3, 4 }
+	};
+	WORD bank = calculate_bank(value, (BYTE *)pattern[(m249.reg & 0x07)],
+		(BYTE *)pattern[(info.mapper.id == 249 ? 0 : 2)], 6);
+
+	_control_bank(bank, info.chr.rom.max.banks_1k)
+	chr.bank_1k[address >> 10] = chr_pnt(bank << 10);
+}
+
+INLINE static WORD calculate_bank(WORD value, const BYTE *src, const BYTE *trg, int len) {
+	WORD bank = 0;
+	int bit = 0;
+
+	for (bit = 0; bit < 8; bit++) {
+		if (value & (0x01 << bit)) {
+			int index = 0;
+
+			for (index = 0; index < len; index++) {
+				if (src[index] == bit) {
+					break;
+				}
+			}
+			bank |= (0x01 << (index == len ? bit : trg[index]));
+		}
+	}
+	return (bank);
 }

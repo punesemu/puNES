@@ -22,6 +22,9 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+INLINE static void prg_fix_226(void);
+INLINE static void mirroring_fix_226(void);
+
 struct _m226 {
 	BYTE reg[2];
 	BYTE reset;
@@ -31,57 +34,76 @@ struct _m226tmp {
 } m226tmp;
 
 void map_init_226(BYTE model) {
+	EXTCL_AFTER_MAPPER_INIT(226);
 	EXTCL_CPU_WR_MEM(226);
 	EXTCL_SAVE_MAPPER(226);
+	EXTCL_WR_CHR(226);
 	mapper.internal_struct[0] = (BYTE *)&m226;
 	mapper.internal_struct_size[0] = sizeof(m226);
 
 	// 42-in-1 (Reset Based) [U][p1][!].unf
 	m226tmp.reset_based = model == MAP233;
 
-	if (m226tmp.reset_based && (info.reset == RESET)) {
-		m226.reg[0] = 0;
-		m226.reg[1] = 0;
-		m226.reset ^= 1;
-	} else {
-		memset(&m226, 0x00, sizeof(m226));
+	m226.reg[0] = 0;
+	m226.reg[1] = 0;
+
+	if (info.reset == RESET) {
+		m226.reset ^= m226tmp.reset_based;
+	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+		m226.reset = 0;
 	}
-	extcl_cpu_wr_mem_226(0, m226.reg[0]);
+}
+void extcl_after_mapper_init_226(void) {
+	prg_fix_226();
+	mirroring_fix_226();
 }
 void extcl_cpu_wr_mem_226(WORD address, BYTE value) {
-	BYTE bank;
-
 	m226.reg[address & 0x0001] = value;
+	prg_fix_226();
+	mirroring_fix_226();
+}
+BYTE extcl_save_mapper_226(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m226.reg);
+	save_slot_ele(mode, slot, m226.reset);
+
+	return (EXIT_OK);
+}
+void extcl_wr_chr_226(WORD address, BYTE value) {
+	if (m226.reg[1] & 0x02) {
+		return;
+	}
+	chr.bank_1k[address >> 10][address & 0x3FF] = value;
+}
+
+INLINE static void prg_fix_226(void) {
+	WORD bank = 0;
 
 	if (m226tmp.reset_based) {
 		bank = (m226.reg[0] & 0x1F) | (m226.reset << 5) | ((m226.reg[1] << 6) & 0x40);
 	} else {
-		bank = (m226.reg[0] & 0x1F) | ((m226.reg[0] >> 2) & 0x20) | ((m226.reg[1] << 6) & 0x40);
+		bank = (m226.reg[0] >> 7) | ((m226.reg[1] & 0x01) << 1);
+		// bmcghostbusters63in1 : Mapper 226 with 1536 KiB: Outer bank order 0 0 1 2
+		if ((info.prg.rom.banks_16k == (1536 / 16)) && (bank > 0)) {
+			bank--;
+		}
+		bank = (m226.reg[0] & 0x1F) | (bank << 5);
 	}
 
 	if (m226.reg[0] & 0x20) {
-		value = bank;
-		control_bank(info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, value);
-		map_prg_rom_8k(2, 2, value);
+		_control_bank(bank, info.prg.rom.max.banks_16k)
+		map_prg_rom_8k(2, 0, bank);
+		map_prg_rom_8k(2, 2, bank);
 	} else {
-		value = bank >> 1;
-		control_bank(info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, value);
+		bank >>= 1;
+		_control_bank(bank, info.prg.rom.max.banks_32k)
+		map_prg_rom_8k(4, 0, bank);
 	}
 	map_prg_rom_8k_update();
-
+}
+INLINE static void mirroring_fix_226(void) {
 	if (m226.reg[0] & 0x40) {
 		mirroring_V();
 	} else {
 		mirroring_H();
 	}
-}
-BYTE extcl_save_mapper_226(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m226.reg);
-	if (save_slot.version >= 26) {
-		save_slot_ele(mode, slot, m226.reset);
-	}
-
-	return (EXIT_OK);
 }

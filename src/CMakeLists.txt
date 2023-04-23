@@ -89,20 +89,58 @@ set(core_srcs
 
 	core/mappers/EE93Cx6.c
 	core/mappers/mapper_0.c
+	core/mappers/mapper_15.c
+	core/mappers/mapper_28.c
+	core/mappers/mapper_29.c
+	core/mappers/mapper_31.c
+	core/mappers/mapper_36.c
+	core/mappers/mapper_37.c
+	core/mappers/mapper_38.c
+	core/mappers/mapper_40.c
+	core/mappers/mapper_42.c
+	core/mappers/mapper_43.c
+	core/mappers/mapper_44.c
+	core/mappers/mapper_45.c
+	core/mappers/mapper_46.c
+	core/mappers/mapper_47.c
+	core/mappers/mapper_49.c
+	core/mappers/mapper_50.c
+	core/mappers/mapper_51.c
+	core/mappers/mapper_52.c
+	core/mappers/mapper_53.c
+	core/mappers/mapper_57.c
+	core/mappers/mapper_58.c
+	core/mappers/mapper_59.c
+	core/mappers/mapper_60.c
+	core/mappers/mapper_61.c
+	core/mappers/mapper_62.c
+	core/mappers/mapper_63.c
+	core/mappers/mapper_70.c
+	core/mappers/mapper_74.c
+	core/mappers/mapper_81.c
+	core/mappers/mapper_83.c
+	core/mappers/mapper_91.c
+	core/mappers/mapper_100.c
 	core/mappers/mapper_101.c
-	core/mappers/mapper_1024CA1.c
 	core/mappers/mapper_103.c
 	core/mappers/mapper_105.c
 	core/mappers/mapper_106.c
+	core/mappers/mapper_108.c
 	core/mappers/mapper_114.c
+	core/mappers/mapper_115.c
 	core/mappers/mapper_116.c
+	core/mappers/mapper_117.c
+	core/mappers/mapper_119.c
 	core/mappers/mapper_120.c
 	core/mappers/mapper_121.c
+	core/mappers/mapper_123.c
 	core/mappers/mapper_126.c
 	core/mappers/mapper_134.c
+	core/mappers/mapper_152.c
 	core/mappers/mapper_156.c
 	core/mappers/mapper_163.c
 	core/mappers/mapper_164.c
+	core/mappers/mapper_165.c
 	core/mappers/mapper_166.c
 	core/mappers/mapper_167.c
 	core/mappers/mapper_168.c
@@ -113,6 +151,7 @@ set(core_srcs
 	core/mappers/mapper_186.c
 	core/mappers/mapper_187.c
 	core/mappers/mapper_188.c
+	core/mappers/mapper_189.c
 	core/mappers/mapper_190.c
 	core/mappers/mapper_191.c
 	core/mappers/mapper_192.c
@@ -121,6 +160,7 @@ set(core_srcs
 	core/mappers/mapper_196.c
 	core/mappers/mapper_197.c
 	core/mappers/mapper_198.c
+	core/mappers/mapper_199.c
 	core/mappers/mapper_200.c
 	core/mappers/mapper_201.c
 	core/mappers/mapper_202.c
@@ -131,10 +171,10 @@ set(core_srcs
 	core/mappers/mapper_212.c
 	core/mappers/mapper_213.c
 	core/mappers/mapper_214.c
+	core/mappers/mapper_215.c
 	core/mappers/mapper_217.c
 	core/mappers/mapper_218.c
 	core/mappers/mapper_219.c
-	core/mappers/mapper_22026.c
 	core/mappers/mapper_221.c
 	core/mappers/mapper_222.c
 	core/mappers/mapper_225.c
@@ -145,10 +185,12 @@ set(core_srcs
 	core/mappers/mapper_231.c
 	core/mappers/mapper_235.c
 	core/mappers/mapper_237.c
+	core/mappers/mapper_238.c
 	core/mappers/mapper_240.c
 	core/mappers/mapper_241.c
 	core/mappers/mapper_242.c
 	core/mappers/mapper_244.c
+	core/mappers/mapper_245.c
 	core/mappers/mapper_246.c
 	core/mappers/mapper_249.c
 	core/mappers/mapper_250.c
@@ -156,17 +198,37 @@ set(core_srcs
 	core/mappers/mapper_253.c
 	core/mappers/mapper_254.c
 	core/mappers/mapper_256.c
+	core/mappers/mapper_259.c
+	core/mappers/mapper_260.c
+	core/mappers/mapper_262.c
+	core/mappers/mapper_263.c
 	core/mappers/mapper_267.c
 	core/mappers/mapper_269.c
+	core/mappers/mapper_271.c
+	core/mappers/mapper_287.c
 	core/mappers/mapper_288.c
-	core/mappers/mapper_28.c
 	core/mappers/mapper_291.c
+	core/mappers/mapper_292.c
 	core/mappers/mapper_297.c
-	core/mappers/mapper_29.c
-	core/mappers/mapper_31.c
+	core/mappers/mapper_299.c
+	core/mappers/mapper_300.c
+	core/mappers/mapper_311.c
+	core/mappers/mapper_313.c
+	core/mappers/mapper_315.c
+	core/mappers/mapper_322.c
+	core/mappers/mapper_325.c
+	core/mappers/mapper_327.c
+	core/mappers/mapper_331.c
+	core/mappers/mapper_333.c
 	core/mappers/mapper_334.c
+	core/mappers/mapper_337.c
+	core/mappers/mapper_339.c
+	core/mappers/mapper_344.c
+	core/mappers/mapper_345.c
+	core/mappers/mapper_348.c
 	core/mappers/mapper_351.c
 	core/mappers/mapper_353.c
+	core/mappers/mapper_355.c
 	core/mappers/mapper_356.c
 	core/mappers/mapper_357.c
 	core/mappers/mapper_359.c
@@ -175,13 +237,11 @@ set(core_srcs
 	core/mappers/mapper_366.c
 	core/mappers/mapper_368.c
 	core/mappers/mapper_369.c
-	core/mappers/mapper_36.c
 	core/mappers/mapper_370.c
 	core/mappers/mapper_372.c
 	core/mappers/mapper_374.c
 	core/mappers/mapper_375.c
 	core/mappers/mapper_377.c
-	core/mappers/mapper_37.c
 	core/mappers/mapper_380.c
 	core/mappers/mapper_381.c
 	core/mappers/mapper_382.c
@@ -192,14 +252,12 @@ set(core_srcs
 	core/mappers/mapper_396.c
 	core/mappers/mapper_398.c
 	core/mappers/mapper_399.c
-	core/mappers/mapper_3DBLOCK.c
 	core/mappers/mapper_400.c
 	core/mappers/mapper_401.c
 	core/mappers/mapper_403.c
 	core/mappers/mapper_404.c
 	core/mappers/mapper_406.c
 	core/mappers/mapper_409.c
-	core/mappers/mapper_40.c
 	core/mappers/mapper_410.c
 	core/mappers/mapper_411.c
 	core/mappers/mapper_412.c
@@ -211,39 +269,30 @@ set(core_srcs
 	core/mappers/mapper_420.c
 	core/mappers/mapper_428.c
 	core/mappers/mapper_429.c
-	core/mappers/mapper_42.c
 	core/mappers/mapper_431.c
 	core/mappers/mapper_432.c
 	core/mappers/mapper_433.c
 	core/mappers/mapper_434.c
 	core/mappers/mapper_436.c
 	core/mappers/mapper_437.c
-	core/mappers/mapper_43.c
 	core/mappers/mapper_442.c
 	core/mappers/mapper_446.c
 	core/mappers/mapper_447.c
-	core/mappers/mapper_44.c
 	core/mappers/mapper_451.c
 	core/mappers/mapper_452.c
 	core/mappers/mapper_455.c
 	core/mappers/mapper_456.c
 	core/mappers/mapper_457.c
-	core/mappers/mapper_45.c
-	core/mappers/mapper_46.c
 	core/mappers/mapper_471.c
-	core/mappers/mapper_47.c
-	core/mappers/mapper_49.c
-	core/mappers/mapper_50.c
 	core/mappers/mapper_512.c
+	core/mappers/mapper_513.c
 	core/mappers/mapper_516.c
 	core/mappers/mapper_518.c
-	core/mappers/mapper_51.c
-	core/mappers/mapper_52.c
 	core/mappers/mapper_538.c
 	core/mappers/mapper_539.c
-	core/mappers/mapper_53.c
 	core/mappers/mapper_541.c
 	core/mappers/mapper_543.c
+	core/mappers/mapper_547.c
 	core/mappers/mapper_550.c
 	core/mappers/mapper_554.c
 	core/mappers/mapper_556.c
@@ -251,24 +300,10 @@ set(core_srcs
 	core/mappers/mapper_558.c
 	core/mappers/mapper_559.c
 	core/mappers/mapper_560.c
-	core/mappers/mapper_57.c
-	core/mappers/mapper_58.c
-	core/mappers/mapper_59.c
 	core/mappers/mapper_60311C.c
-	core/mappers/mapper_60.c
-	core/mappers/mapper_61.c
-	core/mappers/mapper_62.c
-	core/mappers/mapper_63.c
-	core/mappers/mapper_74.c
-	core/mappers/mapper_74x138x161.c
-	core/mappers/mapper_74x161x161x32.c
 	core/mappers/mapper_80013B.c
-	core/mappers/mapper_81.c
 	core/mappers/mapper_831128C.c
-	core/mappers/mapper_83.c
 	core/mappers/mapper_891227.c
-	core/mappers/mapper_8_IN_1.c
-	core/mappers/mapper_91.c
 	core/mappers/mapper_A65AS.c
 	core/mappers/mapper_AC08.c
 	core/mappers/mapper_Active.c
@@ -279,19 +314,12 @@ set(core_srcs
 	core/mappers/mapper_AxROM.c
 	core/mappers/mapper_Bandai.c
 	core/mappers/mapper_BJ56.c
-	core/mappers/mapper_BMC11160.c
-	core/mappers/mapper_BMC12IN1.c
-	core/mappers/mapper_BMC190IN1.c
-	core/mappers/mapper_BMC411120C.c
 	core/mappers/mapper_BMC64IN1NOREPEAT.c
 	core/mappers/mapper_BMC70IN1.c
 	core/mappers/mapper_BMC810544CA1.c
-	core/mappers/mapper_BMC830118C.c
-	core/mappers/mapper_BMC830134C.c
 	core/mappers/mapper_BMC830425C.c
 	core/mappers/mapper_BMCFK23C.c
 	core/mappers/mapper_BMCG146.c
-	core/mappers/mapper_BMCGhostbusters63in1.c
 	core/mappers/mapper_BMCHP898F.c
 	core/mappers/mapper_BMCNTD03.c
 	core/mappers/mapper_BOY.c
@@ -309,39 +337,27 @@ set(core_srcs
 	core/mappers/mapper_Coolgirl.c
 	core/mappers/mapper_CPROM.c
 	core/mappers/mapper_CTC09.c
-	core/mappers/mapper_CTC12IN1.c
-	core/mappers/mapper_DRAGONFIGHTER.c
 	core/mappers/mapper_DREAMTECH01.c
 	core/mappers/mapper_DRIPGAME.c
 	core/mappers/mapper_EDU2000.c
 	core/mappers/mapper_EH8813A.c
-	core/mappers/mapper_F15.c
 	core/mappers/mapper_FARIDSLROM8IN1.c
 	core/mappers/mapper_FARIDUNROM8IN1.c
 	core/mappers/mapper_FDS.c
 	core/mappers/mapper_FFESMC.c
 	core/mappers/mapper_FS304.c
-	core/mappers/mapper_Futuremedia.c
 	core/mappers/mapper_GameGenie.c
-	core/mappers/mapper_GN26.c
 	core/mappers/mapper_GS_20xx.c
 	core/mappers/mapper_GxROM.c
-	core/mappers/mapper_H2288.c
 	core/mappers/mapper_Hen.c
 	core/mappers/mapper_Hes.c
-	core/mappers/mapper_HP2018A.c
 	core/mappers/mapper_Irem.c
 	core/mappers/mapper_Jaleco.c
 	core/mappers/mapper_JYASIC.c
-	core/mappers/mapper_K3006.c
-	core/mappers/mapper_K3033.c
 	core/mappers/mapper_K3036.c
 	core/mappers/mapper_K3046.c
 	core/mappers/mapper_K3071.c
 	core/mappers/mapper_Kaiser.c
-	core/mappers/mapper_Kasing.c
-	core/mappers/mapper_KOF97.c
-	core/mappers/mapper_KONAMIQTAI.c
 	core/mappers/mapper_KS106C.c
 	core/mappers/mapper_KS7012.c
 	core/mappers/mapper_KS7013B.c
@@ -353,16 +369,15 @@ set(core_srcs
 	core/mappers/mapper_KS7032.c
 	core/mappers/mapper_KS7037.c
 	core/mappers/mapper_KS7057.c
-	core/mappers/mapper_L6IN1.c
 	core/mappers/mapper_LH10.c
 	core/mappers/mapper_LH32.c
 	core/mappers/mapper_LH51.c
 	core/mappers/mapper_Magic.c
 	core/mappers/mapper_Malee.c
-	core/mappers/mapper_MALISB.c
 	core/mappers/mapper_MMC1.c
 	core/mappers/mapper_MMC2andMMC4.c
 	core/mappers/mapper_MMC3.c
+	core/mappers/mapper_MMC3_old.c
 	core/mappers/mapper_MMC5.c
 	core/mappers/mapper_N118.c
 	core/mappers/mapper_Namco.c
@@ -370,14 +385,11 @@ set(core_srcs
 	core/mappers/mapper_Ntdec.c
 	core/mappers/mapper_Rcm.c
 	core/mappers/mapper_RESETNROMXIN1.c
-	core/mappers/mapper_RESETTXROM.c
 	core/mappers/mapper_Rex.c
 	core/mappers/mapper_RT_01.c
 	core/mappers/mapper_SA005A.c
-	core/mappers/mapper_SA_9602B.c
 	core/mappers/mapper_Sachen.c
 	core/mappers/mapper_SC_127.c
-	core/mappers/mapper_SHERO.c
 	core/mappers/mapper_SL1632.c
 	core/mappers/mapper_Sunsoft.c
 	core/mappers/mapper_T262.c
@@ -388,11 +400,7 @@ set(core_srcs
 	core/mappers/mapper_TJ03.c
 	core/mappers/mapper_Txc.c
 	core/mappers/mapper_TxROM.c
-	core/mappers/mapper_UNIF158B.c
-	core/mappers/mapper_UNIF43272.c
-	core/mappers/mapper_UNIF603_5052.c
 	core/mappers/mapper_UNIF8157.c
-	core/mappers/mapper_UNIF8237.c
 	core/mappers/mapper_UNIFSMB2J.c
 	core/mappers/mapper_UxROM.c
 	core/mappers/mapper_VRC1.c
@@ -403,8 +411,6 @@ set(core_srcs
 	core/mappers/mapper_VRC7.c
 	core/mappers/mapper_VRC7_snd.c
 	core/mappers/mapper_Vs.c
-	core/mappers/mapper_Waixing.c
-	core/mappers/mapper_Whirlwind.c
 	core/mappers/mapper_WS.c
 	core/mappers/mapper_YOKO.c
 	core/mappers/OneBus.c
@@ -517,6 +523,7 @@ set(gui_srcs
 	gui/mainApplication.hpp
 	gui/mainWindow.cpp
 	gui/mainWindow.hpp
+	gui/nes20db.cpp
 	gui/objCheat.cpp
 	gui/objCheat.hpp
 	gui/objSettings.cpp

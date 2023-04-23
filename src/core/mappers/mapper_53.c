@@ -99,11 +99,6 @@ BYTE extcl_cpu_rd_mem_53(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 BYTE extcl_save_mapper_53(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m53.reg);
 	if (mode == SAVE_SLOT_READ) {
-		if (save_slot.version < 26) {
-			BYTE tmp;
-
-			save_slot_ele(mode, slot, tmp);
-		}
 		m53_update_6000();
 	}
 

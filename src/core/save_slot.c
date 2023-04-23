@@ -37,16 +37,19 @@
 #include "nsf.h"
 #include "cheat.h"
 
-#define SAVE_VERSION 29
+#define SAVE_VERSION 100
 
-static void preview_image(BYTE slot, _ppu_screen_buffer *sb);
+static void preview_image_from_ppu_screen(BYTE slot, _ppu_screen_buffer *sb, void **dst, size_t *size);
+static void preview_image_from_png(BYTE slot, void *src, size_t size);
 static uTCHAR *name_slot_file(BYTE slot);
+
+typedef uint64_t postype;
 
 _save_slot save_slot;
 
 BYTE save_slot_save(BYTE slot) {
-	uTCHAR *file;
-	FILE *fp;
+	uTCHAR *file = NULL;
+	FILE *fp = NULL;
 
 	// game genie
 	if (info.mapper.id == GAMEGENIE_MAPPER) {
@@ -55,38 +58,42 @@ BYTE save_slot_save(BYTE slot) {
 	}
 
 	if (slot < SAVE_SLOT_FILE) {
-		if ((file = name_slot_file(slot)) == NULL) {
+		file = name_slot_file(slot);
+		if (file == NULL) {
 			return (EXIT_ERROR);
 		}
 	} else {
 		file = cfg->save_file;
 	}
 
-	if ((fp = ufopen(file, uL("wb"))) == NULL) {
+	fp = ufopen(file, uL("wb"));
+	if (fp == NULL) {
 		log_error(uL("save slot;error on write save state"));
 		return (EXIT_ERROR);
 	}
 
-	save_slot_operation(SAVE_SLOT_SAVE, slot, fp);
+	// devo calcolarmi il tot_size
+	save_slot_operation(SAVE_SLOT_COUNT, slot, NULL);
 
-	fflush(fp);
-
-	// aggiorno l'immagine della preview e il totalsize
-	save_slot_operation(SAVE_SLOT_COUNT, slot, fp);
-
-	save_slot.state[slot] = TRUE;
+	save_slot.slot[slot].state = (save_slot_operation(SAVE_SLOT_SAVE, slot, fp) == EXIT_OK);
 
 	fclose(fp);
 
-	if (slot < SAVE_SLOT_FILE) {
+	if (!save_slot.slot[slot].state) {
+		gui_overlay_info_append_msg_precompiled(38, NULL);
+		log_error(uL("save slot;error on write save state"));
+		if (emu_file_exist(file) == EXIT_OK) {
+			uremove(file);
+		}
+	} else if (slot < SAVE_SLOT_FILE) {
 		gui_overlay_enable_save_slot(SAVE_SLOT_SAVE);
 	}
 
 	return (EXIT_OK);
 }
 BYTE save_slot_load(BYTE slot) {
-	uTCHAR *file;
-	FILE *fp;
+	uTCHAR *file = NULL;
+	FILE *fp = NULL;
 
 	if (tas.type) {
 		gui_overlay_info_append_msg_precompiled(14, NULL);
@@ -102,14 +109,16 @@ BYTE save_slot_load(BYTE slot) {
 	}
 
 	if (slot < SAVE_SLOT_FILE) {
-		if ((file = name_slot_file(slot)) == NULL) {
+		file = name_slot_file(slot);
+		if (file == NULL) {
 			return (EXIT_ERROR);
 		}
 	} else {
 		file = cfg->save_file;
 	}
 
-	if ((fp = ufopen(file, uL("rb"))) == NULL) {
+	fp = ufopen(file, uL("rb"));
+	if (fp == NULL) {
 		gui_overlay_info_append_msg_precompiled(15, NULL);
 		log_error(uL("save slot;error loading state"));
 		return (EXIT_ERROR);
@@ -119,16 +128,14 @@ BYTE save_slot_load(BYTE slot) {
 	// di un file di salvataggio corrotto.
 	rewind_save_state_snap(BCK_STATES_OP_SAVE_ON_MEM);
 
-	if (slot == SAVE_SLOT_FILE) {
-		save_slot_operation(SAVE_SLOT_COUNT, slot, fp);
+	save_slot_operation(SAVE_SLOT_COUNT, slot, fp);
 
-		if (memcmp(info.sha1sum.prg.value, save_slot.sha1sum.prg.value, sizeof(info.sha1sum.prg.value)) != 0) {
-			gui_overlay_info_append_msg_precompiled(16, NULL);
-			log_error(uL("save slot;state file is not for this rom"));
-			rewind_save_state_snap(BCK_STATES_OP_READ_FROM_MEM);
-			fclose(fp);
-			return (EXIT_ERROR);
-		}
+	if (info.crc32.total != save_slot.crc32) {
+		gui_overlay_info_append_msg_precompiled(16, NULL);
+		log_error(uL("save slot;state file is not for this rom"));
+		rewind_save_state_snap(BCK_STATES_OP_READ_FROM_MEM);
+		fclose(fp);
+		return (EXIT_ERROR);
 	}
 
 	if (save_slot_operation(SAVE_SLOT_READ, slot, fp)) {
@@ -153,502 +160,371 @@ BYTE save_slot_load(BYTE slot) {
 	return (EXIT_OK);
 }
 void save_slot_count_load(void) {
-	uTCHAR *file;
-	int i;
+	uTCHAR *file = NULL;
+	int i = 0;
 
 	emu_thread_pause();
 	gfx_thread_pause();
 
 	for (i = 0; i < SAVE_SLOTS; i++) {
-		save_slot.tot_size[i] = 0;
+		save_slot.slot[i].tot_size = 0;
 
-		save_slot.state[i] = FALSE;
+		save_slot.slot[i].state = FALSE;
 		file = name_slot_file(i);
 
 		if (file && (emu_file_exist(file) == EXIT_OK)) {
-			FILE *fp;
+			FILE *fp = NULL;
 
-			save_slot.state[i] = TRUE;
-
-			if ((fp = ufopen(file, uL("rb"))) == NULL) {
+			fp = ufopen(file, uL("rb"));
+			if (fp == NULL) {
 				continue;
 			}
 
-			save_slot_operation(SAVE_SLOT_COUNT, i, fp);
+			save_slot.slot[i].state = (save_slot_operation(SAVE_SLOT_COUNT, i, fp) == EXIT_OK);
+
 			fclose(fp);
-		} else {
-			gui_overlay_slot_preview(i, NULL, NULL);
-			gui_state_save_slot_set_tooltip(i, NULL);
+		}
+
+		if (!save_slot.slot[i].state) {
+			gui_overlay_slot_preview_set_from_ppu_screen(i, NULL, NULL);
+			gui_state_save_slot_set_tooltip(i);
 		}
 	}
 
-	if (!save_slot.state[save_slot.slot]) {
-		save_slot.slot = 0;
+	if (!save_slot.slot[save_slot.slot_in_use].state) {
+		save_slot.slot_in_use = 0;
 
 		for (i = 0; i < SAVE_SLOTS; i++) {
-			if (save_slot.state[i]) {
-				save_slot.slot = i;
+			if (save_slot.slot[i].state) {
+				save_slot.slot_in_use = i;
 			}
 		}
 	}
 
-	gui_state_save_slot_set(save_slot.slot, FALSE);
+	gui_state_save_slot_set(save_slot.slot_in_use, FALSE);
 
 	gfx_thread_continue();
 	emu_thread_continue();
 }
-BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size, FILE *fp, BYTE preview) {
-	DBWORD bytes;
-
-	switch (mode) {
-		case SAVE_SLOT_SAVE:
-			fwrite(src, size, 1, fp);
-			save_slot.tot_size[slot] += size;
-			fflush(fp);
-			if (preview) {
-				preview_image(slot, ppu_screen.rd);
-			}
-			break;
-		case SAVE_SLOT_READ:
-			bytes = fread(src, size, 1, fp);
-			save_slot.tot_size[slot] += size;
-			if (bytes != 1) {
-				return (EXIT_ERROR);
-			}
-			break;
-		case SAVE_SLOT_COUNT:
-			if (preview) {
-				size_t pos = ftell(fp);
-
-				fseek(fp, save_slot.tot_size[slot], SEEK_SET);
-				if (fread(ppu_screen.preview.data, size, 1, fp) == 1) {
-					preview_image(slot, &ppu_screen.preview);
-				}
-				fseek(fp, (long)pos, SEEK_SET);
-			}
-			save_slot.tot_size[slot] += size;
-			break;
-		default:
-			return (EXIT_ERROR);
-	}
-	return (EXIT_OK);
-}
 BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	uint32_t tmp = 0;
-	unsigned int i;
+	unsigned int i = 0;
 
-	fseek(fp, 0L, SEEK_SET);
+	if (fp) {
+		fseek(fp, 0L, SEEK_SET);
+	}
 
 	save_slot.version = SAVE_VERSION;
-	save_slot.tot_size[slot] = 0;
 
 	if (mode == SAVE_SLOT_COUNT) {
-		// forzo la lettura perche' devo sapere la
-		// versione del file di salvataggio e le informazioni
-		// della rom.
-		save_slot_int(SAVE_SLOT_READ, slot, save_slot.version)
-		if (save_slot.version < 16) {
-			_save_slot_ele(SAVE_SLOT_READ, slot, save_slot.rom_file, 1024)
-		} else if (save_slot.version < 21) {
-			_save_slot_ele(SAVE_SLOT_READ, slot, save_slot.rom_file, (1024 * sizeof(uTCHAR)))
-		} else if (save_slot.version < 23) {
-			save_slot_ele(SAVE_SLOT_READ, slot, save_slot.rom_file)
-		}
-		save_slot_ele(SAVE_SLOT_READ, slot, save_slot.sha1sum.prg.value)
-		save_slot_ele(SAVE_SLOT_READ, slot, save_slot.sha1sum.prg.string)
-		if (save_slot.version >= 11) {
-			save_slot_ele(SAVE_SLOT_READ, slot, save_slot.sha1sum.chr.value)
-			save_slot_ele(SAVE_SLOT_READ, slot, save_slot.sha1sum.chr.string)
-		}
+		save_slot.slot[slot].tot_size = 0;
 	} else if (mode == SAVE_SLOT_READ) {
-		save_slot_int(mode, slot, save_slot.version)
-		if (save_slot.version < 16) {
-			_save_slot_ele(mode, slot, save_slot.rom_file, 1024)
-		} else if (save_slot.version < 21) {
-			_save_slot_ele(mode, slot, save_slot.rom_file, (1024 * sizeof(uTCHAR)))
-		} else if (save_slot.version < 23) {
-			save_slot_ele(mode, slot, save_slot.rom_file)
-		}
-		save_slot_ele(mode, slot, save_slot.sha1sum.prg.value)
-		save_slot_ele(mode, slot, save_slot.sha1sum.prg.string)
-		if (save_slot.version >= 11) {
-			save_slot_ele(mode, slot, save_slot.sha1sum.chr.value)
-			save_slot_ele(mode, slot, save_slot.sha1sum.chr.string)
-		}
+		save_slot.slot[slot].tot_size = 0;
 	} else {
-		save_slot_int(mode, slot, save_slot.version)
-		if (save_slot.version < 16) {
-			_save_slot_ele(mode, slot, info.rom.file, 1024)
-		} else if (save_slot.version < 21) {
-			_save_slot_ele(mode, slot, info.rom.file, (1024 * sizeof(uTCHAR)))
-		} else if (save_slot.version < 23) {
-			save_slot_ele(mode, slot, info.rom.file)
-		}
-		save_slot_ele(mode, slot, info.sha1sum.prg.value)
-		save_slot_ele(mode, slot, info.sha1sum.prg.string)
-		if (save_slot.version >= 11) {
-			save_slot_ele(mode, slot, info.sha1sum.chr.value)
-			save_slot_ele(mode, slot, info.sha1sum.chr.string)
+		save_slot.crc32 = info.crc32.total;
+		save_slot.size = save_slot.slot[slot].tot_size;
+	}
+
+	// forzo la lettura perche' devo sapere la
+	// versione del file di salvataggio e le informazioni
+	// della rom.
+	save_slot_int(mode == SAVE_SLOT_COUNT ? SAVE_SLOT_READ : mode, slot, save_slot.version);
+	save_slot_int(mode == SAVE_SLOT_COUNT ? SAVE_SLOT_READ : mode, slot, save_slot.crc32);
+	save_slot_int(mode == SAVE_SLOT_COUNT ? SAVE_SLOT_READ : mode, slot, save_slot.size);
+
+	if (fp && ((mode == SAVE_SLOT_COUNT) || (mode == SAVE_SLOT_READ))) {
+		if ((save_slot.version < 100) || (info.crc32.total != save_slot.crc32)) {
+			return (EXIT_ERROR);
 		}
 	}
 
 	// cpu
-	save_slot_ele(mode, slot, cpu.PC)
-	save_slot_ele(mode, slot, cpu.SP)
-	save_slot_ele(mode, slot, cpu.AR)
-	save_slot_ele(mode, slot, cpu.XR)
-	save_slot_ele(mode, slot, cpu.YR)
-	save_slot_ele(mode, slot, cpu.SR)
-	save_slot_ele(mode, slot, cpu.cf)
-	save_slot_ele(mode, slot, cpu.zf)
-	save_slot_ele(mode, slot, cpu.im)
-	save_slot_ele(mode, slot, cpu.df)
-	save_slot_ele(mode, slot, cpu.bf)
-	save_slot_ele(mode, slot, cpu.of)
-	save_slot_ele(mode, slot, cpu.sf)
-	save_slot_ele(mode, slot, cpu.opcode)
-	save_slot_ele(mode, slot, cpu.opcode_PC)
-	save_slot_ele(mode, slot, cpu.odd_cycle)
-	save_slot_ele(mode, slot, cpu.openbus)
-	save_slot_ele(mode, slot, cpu.cycles)
-	save_slot_ele(mode, slot, cpu.opcode_cycle)
-	save_slot_ele(mode, slot, cpu.double_rd)
-	save_slot_ele(mode, slot, cpu.double_wr)
-	save_slot_ele(mode, slot, cpu.prg_ram_rd_active)
-	save_slot_ele(mode, slot, cpu.prg_ram_wr_active)
-	// questo dato e' stato aggiunto solo dalla versione 9 in poi
-	if (save_slot.version >= 9) {
-		save_slot_ele(mode, slot, cpu.base_opcode_cycles)
-	}
+	save_slot_ele(mode, slot, cpu.PC);
+	save_slot_ele(mode, slot, cpu.SP);
+	save_slot_ele(mode, slot, cpu.AR);
+	save_slot_ele(mode, slot, cpu.XR);
+	save_slot_ele(mode, slot, cpu.YR);
+	save_slot_ele(mode, slot, cpu.SR);
+	save_slot_ele(mode, slot, cpu.cf);
+	save_slot_ele(mode, slot, cpu.zf);
+	save_slot_ele(mode, slot, cpu.im);
+	save_slot_ele(mode, slot, cpu.df);
+	save_slot_ele(mode, slot, cpu.bf);
+	save_slot_ele(mode, slot, cpu.of);
+	save_slot_ele(mode, slot, cpu.sf);
+	save_slot_ele(mode, slot, cpu.opcode);
+	save_slot_ele(mode, slot, cpu.opcode_PC);
+	save_slot_ele(mode, slot, cpu.odd_cycle);
+	save_slot_ele(mode, slot, cpu.openbus);
+	save_slot_ele(mode, slot, cpu.cycles);
+	save_slot_ele(mode, slot, cpu.opcode_cycle);
+	save_slot_ele(mode, slot, cpu.double_rd);
+	save_slot_ele(mode, slot, cpu.double_wr);
+	save_slot_ele(mode, slot, cpu.prg_ram_rd_active);
+	save_slot_ele(mode, slot, cpu.prg_ram_wr_active);
+	save_slot_ele(mode, slot, cpu.base_opcode_cycles);
 
 	// irq
-	save_slot_ele(mode, slot, irq.high)
-	save_slot_ele(mode, slot, irq.delay)
-	save_slot_ele(mode, slot, irq.before)
-	save_slot_ele(mode, slot, irq.inhibit)
+	save_slot_ele(mode, slot, irq.high);
+	save_slot_ele(mode, slot, irq.delay);
+	save_slot_ele(mode, slot, irq.before);
+	save_slot_ele(mode, slot, irq.inhibit);
 	// nmi
-	save_slot_ele(mode, slot, nmi.high)
-	save_slot_ele(mode, slot, nmi.delay)
-	save_slot_ele(mode, slot, nmi.before)
-	save_slot_ele(mode, slot, nmi.inhibit)
-	save_slot_ele(mode, slot, nmi.frame_x)
-	// questo dato e' stato aggiunto solo dalla versione 9 in poi
-	if (save_slot.version >= 9) {
-		save_slot_ele(mode, slot, nmi.cpu_cycles_from_last_nmi)
-	}
+	save_slot_ele(mode, slot, nmi.high);
+	save_slot_ele(mode, slot, nmi.delay);
+	save_slot_ele(mode, slot, nmi.before);
+	save_slot_ele(mode, slot, nmi.inhibit);
+	save_slot_ele(mode, slot, nmi.frame_x);
+	save_slot_ele(mode, slot, nmi.cpu_cycles_from_last_nmi);
 
 	// ppu
-	save_slot_ele(mode, slot, ppu.frame_x)
-	save_slot_ele(mode, slot, ppu.frame_y)
-	save_slot_ele(mode, slot, ppu.fine_x)
-	save_slot_ele(mode, slot, ppu.screen_y)
-	save_slot_ele(mode, slot, ppu.pixel_tile)
-	save_slot_ele(mode, slot, ppu.sline_cycles)
-	save_slot_ele(mode, slot, ppu.tmp_vram)
-	save_slot_ele(mode, slot, ppu.spr_adr)
-	save_slot_ele(mode, slot, ppu.bck_adr)
-	save_slot_ele(mode, slot, ppu.openbus)
-	save_slot_ele(mode, slot, ppu.odd_frame)
-	save_slot_ele(mode, slot, ppu.cycles)
-	save_slot_ele(mode, slot, ppu.frames)
-	if (save_slot.version >= 13) {
-		save_slot_ele(mode, slot, ppu.sf.actual)
-		save_slot_ele(mode, slot, ppu.sf.prev)
-		// questo byte ormai non serve piu'
-		save_slot_ele(mode, slot, ppu.sf.first_of_tick)
-	}
-	if (save_slot.version >= 14) {
-		save_slot_ele(mode, slot, ppu.rnd_adr)
-	}
+	save_slot_ele(mode, slot, ppu.frame_x);
+	save_slot_ele(mode, slot, ppu.frame_y);
+	save_slot_ele(mode, slot, ppu.fine_x);
+	save_slot_ele(mode, slot, ppu.screen_y);
+	save_slot_ele(mode, slot, ppu.pixel_tile);
+	save_slot_ele(mode, slot, ppu.sline_cycles);
+	save_slot_ele(mode, slot, ppu.tmp_vram);
+	save_slot_ele(mode, slot, ppu.spr_adr);
+	save_slot_ele(mode, slot, ppu.bck_adr);
+	save_slot_ele(mode, slot, ppu.openbus);
+	save_slot_ele(mode, slot, ppu.odd_frame);
+	save_slot_ele(mode, slot, ppu.cycles);
+	save_slot_ele(mode, slot, ppu.frames);
+	save_slot_ele(mode, slot, ppu.sf.actual);
+	save_slot_ele(mode, slot, ppu.sf.prev);
+	save_slot_ele(mode, slot, ppu.rnd_adr);
 	// ppu_openbus
-	save_slot_ele(mode, slot, ppu_openbus.bit0)
-	save_slot_ele(mode, slot, ppu_openbus.bit1)
-	save_slot_ele(mode, slot, ppu_openbus.bit2)
-	save_slot_ele(mode, slot, ppu_openbus.bit3)
-	save_slot_ele(mode, slot, ppu_openbus.bit4)
-	save_slot_ele(mode, slot, ppu_openbus.bit5)
-	save_slot_ele(mode, slot, ppu_openbus.bit6)
-	save_slot_ele(mode, slot, ppu_openbus.bit7)
+	save_slot_ele(mode, slot, ppu_openbus.bit0);
+	save_slot_ele(mode, slot, ppu_openbus.bit1);
+	save_slot_ele(mode, slot, ppu_openbus.bit2);
+	save_slot_ele(mode, slot, ppu_openbus.bit3);
+	save_slot_ele(mode, slot, ppu_openbus.bit4);
+	save_slot_ele(mode, slot, ppu_openbus.bit5);
+	save_slot_ele(mode, slot, ppu_openbus.bit6);
+	save_slot_ele(mode, slot, ppu_openbus.bit7);
 	// r2000
-	save_slot_ele(mode, slot, r2000.value)
-	save_slot_ele(mode, slot, r2000.nmi_enable)
-	save_slot_ele(mode, slot, r2000.size_spr)
-	save_slot_ele(mode, slot, r2000.r2006_inc)
-	save_slot_ele(mode, slot, r2000.spt_adr)
-	save_slot_ele(mode, slot, r2000.bpt_adr)
-	if (save_slot.version >= 13) {
-		save_slot_ele(mode, slot, r2000.race.ctrl)
-		save_slot_ele(mode, slot, r2000.race.value)
-	}
+	save_slot_ele(mode, slot, r2000.value);
+	save_slot_ele(mode, slot, r2000.nmi_enable);
+	save_slot_ele(mode, slot, r2000.size_spr);
+	save_slot_ele(mode, slot, r2000.r2006_inc);
+	save_slot_ele(mode, slot, r2000.spt_adr);
+	save_slot_ele(mode, slot, r2000.bpt_adr);
+	save_slot_ele(mode, slot, r2000.race.ctrl);
+	save_slot_ele(mode, slot, r2000.race.value);
 	// r2001
-	save_slot_ele(mode, slot, r2001.value)
-	save_slot_ele(mode, slot, r2001.emphasis)
-	save_slot_ele(mode, slot, r2001.visible)
-	save_slot_ele(mode, slot, r2001.bck_visible)
-	save_slot_ele(mode, slot, r2001.spr_visible)
-	save_slot_ele(mode, slot, r2001.bck_clipping)
-	save_slot_ele(mode, slot, r2001.spr_clipping)
-	save_slot_ele(mode, slot, r2001.color_mode)
-	if (save_slot.version >= 13) {
-		save_slot_ele(mode, slot, r2001.race.ctrl)
-		save_slot_ele(mode, slot, r2001.race.value)
-	}
+	save_slot_ele(mode, slot, r2001.value);
+	save_slot_ele(mode, slot, r2001.emphasis);
+	save_slot_ele(mode, slot, r2001.visible);
+	save_slot_ele(mode, slot, r2001.bck_visible);
+	save_slot_ele(mode, slot, r2001.spr_visible);
+	save_slot_ele(mode, slot, r2001.bck_clipping);
+	save_slot_ele(mode, slot, r2001.spr_clipping);
+	save_slot_ele(mode, slot, r2001.color_mode);
+	save_slot_ele(mode, slot, r2001.race.ctrl);
+	save_slot_ele(mode, slot, r2001.race.value);
 	// r2002
-	save_slot_ele(mode, slot, r2002.vblank)
-	save_slot_ele(mode, slot, r2002.sprite0_hit)
-	save_slot_ele(mode, slot, r2002.sprite_overflow)
-	save_slot_ele(mode, slot, r2002.toggle)
-	if (save_slot.version >= 17) {
-		save_slot_ele(mode, slot, r2002.race.sprite_overflow)
-	}
+	save_slot_ele(mode, slot, r2002.vblank);
+	save_slot_ele(mode, slot, r2002.sprite0_hit);
+	save_slot_ele(mode, slot, r2002.sprite_overflow);
+	save_slot_ele(mode, slot, r2002.toggle);
+	save_slot_ele(mode, slot, r2002.race.sprite_overflow);
 	// r2003
-	save_slot_ele(mode, slot, r2003.value)
+	save_slot_ele(mode, slot, r2003.value);
 	// r2004
-	save_slot_ele(mode, slot, r2004.value)
+	save_slot_ele(mode, slot, r2004.value);
 	// r2006
-	save_slot_ele(mode, slot, r2006.value)
-	save_slot_ele(mode, slot, r2006.changed_from_op)
-	if (save_slot.version >= 12) {
-		save_slot_ele(mode, slot, r2006.race.ctrl)
-		save_slot_ele(mode, slot, r2006.race.value)
-	}
+	save_slot_ele(mode, slot, r2006.value);
+	save_slot_ele(mode, slot, r2006.changed_from_op);
+	save_slot_ele(mode, slot, r2006.race.ctrl);
+	save_slot_ele(mode, slot, r2006.race.value);
 	// r2007
-	save_slot_ele(mode, slot, r2007.value)
+	save_slot_ele(mode, slot, r2007.value);
 	// spr_ev
-	save_slot_ele(mode, slot, spr_ev.range)
-	save_slot_ele(mode, slot, spr_ev.count)
-	save_slot_ele(mode, slot, spr_ev.count_plus)
-	save_slot_ele(mode, slot, spr_ev.tmp_spr_plus)
-	save_slot_ele(mode, slot, spr_ev.evaluate)
-	save_slot_ele(mode, slot, spr_ev.byte_OAM)
-	save_slot_ele(mode, slot, spr_ev.index_plus)
-	save_slot_ele(mode, slot, spr_ev.index)
-	save_slot_ele(mode, slot, spr_ev.timing)
-	save_slot_ele(mode, slot, spr_ev.phase)
-	if (save_slot.version >= 13) {
-		save_slot_ele(mode, slot, spr_ev.real)
-	}
+	save_slot_ele(mode, slot, spr_ev.range);
+	save_slot_ele(mode, slot, spr_ev.count);
+	save_slot_ele(mode, slot, spr_ev.count_plus);
+	save_slot_ele(mode, slot, spr_ev.tmp_spr_plus);
+	save_slot_ele(mode, slot, spr_ev.evaluate);
+	save_slot_ele(mode, slot, spr_ev.byte_OAM);
+	save_slot_ele(mode, slot, spr_ev.index_plus);
+	save_slot_ele(mode, slot, spr_ev.index);
+	save_slot_ele(mode, slot, spr_ev.timing);
+	save_slot_ele(mode, slot, spr_ev.phase);
+	save_slot_ele(mode, slot, spr_ev.real);
 	// sprite
 	for (i = 0; i < LENGTH(sprite); i++) {
-		save_slot_ele(mode, slot, sprite[i].y_C)
-		save_slot_ele(mode, slot, sprite[i].tile)
-		save_slot_ele(mode, slot, sprite[i].attrib)
-		save_slot_ele(mode, slot, sprite[i].x_C)
-		save_slot_ele(mode, slot, sprite[i].number)
-		save_slot_ele(mode, slot, sprite[i].flip_v)
-		save_slot_ele(mode, slot, sprite[i].l_byte)
-		save_slot_ele(mode, slot, sprite[i].h_byte)
+		save_slot_ele(mode, slot, sprite[i].y_C);
+		save_slot_ele(mode, slot, sprite[i].tile);
+		save_slot_ele(mode, slot, sprite[i].attrib);
+		save_slot_ele(mode, slot, sprite[i].x_C);
+		save_slot_ele(mode, slot, sprite[i].number);
+		save_slot_ele(mode, slot, sprite[i].flip_v);
+		save_slot_ele(mode, slot, sprite[i].l_byte);
+		save_slot_ele(mode, slot, sprite[i].h_byte);
 	}
 	// sprite_plus
 	for (i = 0; i < LENGTH(sprite_plus); i++) {
-		save_slot_ele(mode, slot, sprite_plus[i].y_C)
-		save_slot_ele(mode, slot, sprite_plus[i].tile)
-		save_slot_ele(mode, slot, sprite_plus[i].attrib)
-		save_slot_ele(mode, slot, sprite_plus[i].x_C)
-		save_slot_ele(mode, slot, sprite_plus[i].number)
-		save_slot_ele(mode, slot, sprite_plus[i].flip_v)
-		save_slot_ele(mode, slot, sprite_plus[i].l_byte)
-		save_slot_ele(mode, slot, sprite_plus[i].h_byte)
+		save_slot_ele(mode, slot, sprite_plus[i].y_C);
+		save_slot_ele(mode, slot, sprite_plus[i].tile);
+		save_slot_ele(mode, slot, sprite_plus[i].attrib);
+		save_slot_ele(mode, slot, sprite_plus[i].x_C);
+		save_slot_ele(mode, slot, sprite_plus[i].number);
+		save_slot_ele(mode, slot, sprite_plus[i].flip_v);
+		save_slot_ele(mode, slot, sprite_plus[i].l_byte);
+		save_slot_ele(mode, slot, sprite_plus[i].h_byte);
 	}
 	// tile_render
-	save_slot_ele(mode, slot, tile_render.attrib)
-	save_slot_ele(mode, slot, tile_render.l_byte)
-	save_slot_ele(mode, slot, tile_render.h_byte)
+	save_slot_ele(mode, slot, tile_render.attrib);
+	save_slot_ele(mode, slot, tile_render.l_byte);
+	save_slot_ele(mode, slot, tile_render.h_byte);
 	// tile_fetch
-	save_slot_ele(mode, slot, tile_fetch.attrib)
-	save_slot_ele(mode, slot, tile_fetch.l_byte)
-	save_slot_ele(mode, slot, tile_fetch.h_byte)
+	save_slot_ele(mode, slot, tile_fetch.attrib);
+	save_slot_ele(mode, slot, tile_fetch.l_byte);
+	save_slot_ele(mode, slot, tile_fetch.h_byte);
 
 	// apu
-	save_slot_ele(mode, slot, apu.mode)
-	save_slot_ele(mode, slot, apu.type)
-	save_slot_ele(mode, slot, apu.step)
-	save_slot_ele(mode, slot, apu.length_clocked)
-	save_slot_ele(mode, slot, apu.DMC)
-	save_slot_ele(mode, slot, apu.cycles)
+	save_slot_ele(mode, slot, apu.mode);
+	save_slot_ele(mode, slot, apu.type);
+	save_slot_ele(mode, slot, apu.step);
+	save_slot_ele(mode, slot, apu.length_clocked);
+	save_slot_ele(mode, slot, apu.DMC);
+	save_slot_ele(mode, slot, apu.cycles);
 	// r4015
-	save_slot_ele(mode, slot, r4015.value)
+	save_slot_ele(mode, slot, r4015.value);
 	// r4017
-	save_slot_ele(mode, slot, r4017.value)
-	save_slot_ele(mode, slot, r4017.jitter.value)
-	save_slot_ele(mode, slot, r4017.jitter.delay)
-	if (save_slot.version >= 13) {
-		save_slot_ele(mode, slot, r4017.reset_frame_delay)
-	}
+	save_slot_ele(mode, slot, r4017.value);
+	save_slot_ele(mode, slot, r4017.jitter.value);
+	save_slot_ele(mode, slot, r4017.jitter.delay);
+	save_slot_ele(mode, slot, r4017.reset_frame_delay);
 	// S1
-	save_slot_square(S1, slot)
+	save_slot_square(S1, slot);
 	// S2
-	save_slot_square(S2, slot)
+	save_slot_square(S2, slot);
 	// TR
-	save_slot_ele(mode, slot, TR.timer)
-	save_slot_ele(mode, slot, TR.frequency)
-	save_slot_ele(mode, slot, TR.linear.value)
-	save_slot_ele(mode, slot, TR.linear.reload)
-	save_slot_ele(mode, slot, TR.linear.halt)
-	save_slot_ele(mode, slot, TR.length.value)
-	save_slot_ele(mode, slot, TR.length.enabled)
-	save_slot_ele(mode, slot, TR.length.halt)
-	save_slot_ele(mode, slot, TR.sequencer)
-	save_slot_ele(mode, slot, TR.output)
+	save_slot_ele(mode, slot, TR.timer);
+	save_slot_ele(mode, slot, TR.frequency);
+	save_slot_ele(mode, slot, TR.linear.value);
+	save_slot_ele(mode, slot, TR.linear.reload);
+	save_slot_ele(mode, slot, TR.linear.halt);
+	save_slot_ele(mode, slot, TR.length.value);
+	save_slot_ele(mode, slot, TR.length.enabled);
+	save_slot_ele(mode, slot, TR.length.halt);
+	save_slot_ele(mode, slot, TR.sequencer);
+	save_slot_ele(mode, slot, TR.output);
 	// NS
-	save_slot_ele(mode, slot, NS.timer)
-	save_slot_ele(mode, slot, NS.frequency)
-	save_slot_ele(mode, slot, NS.envelope.enabled)
-	save_slot_ele(mode, slot, NS.envelope.divider)
-	save_slot_ele(mode, slot, NS.envelope.counter)
-	save_slot_ele(mode, slot, NS.envelope.constant_volume)
-	save_slot_ele(mode, slot, NS.envelope.delay)
-	save_slot_ele(mode, slot, NS.mode)
-	save_slot_ele(mode, slot, NS.volume)
-	// ho portato da DBWORD a WORD NS.shift e per mantenere
-	// la compatibilita' con i vecchi salvataggi faccio questa
-	// conversione.
-	if (save_slot.version < 7) {
-		DBWORD old_nsshift;
-
-		save_slot_ele(mode, slot, old_nsshift)
-
-		if (mode == SAVE_SLOT_READ) {
-			NS.shift = old_nsshift;
-		}
-	} else {
-		save_slot_ele(mode, slot, NS.shift)
-	}
-	save_slot_ele(mode, slot, NS.length.value)
-	save_slot_ele(mode, slot, NS.length.enabled)
-	save_slot_ele(mode, slot, NS.length.halt)
-	save_slot_ele(mode, slot, NS.sequencer)
-	save_slot_ele(mode, slot, NS.output)
+	save_slot_ele(mode, slot, NS.timer);
+	save_slot_ele(mode, slot, NS.frequency);
+	save_slot_ele(mode, slot, NS.envelope.enabled);
+	save_slot_ele(mode, slot, NS.envelope.divider);
+	save_slot_ele(mode, slot, NS.envelope.counter);
+	save_slot_ele(mode, slot, NS.envelope.constant_volume);
+	save_slot_ele(mode, slot, NS.envelope.delay);
+	save_slot_ele(mode, slot, NS.mode);
+	save_slot_ele(mode, slot, NS.volume);
+	save_slot_ele(mode, slot, NS.shift);
+	save_slot_ele(mode, slot, NS.length.value);
+	save_slot_ele(mode, slot, NS.length.enabled);
+	save_slot_ele(mode, slot, NS.length.halt);
+	save_slot_ele(mode, slot, NS.sequencer);
+	save_slot_ele(mode, slot, NS.output);
 	// DMC
-	save_slot_ele(mode, slot, DMC.frequency)
-	save_slot_ele(mode, slot, DMC.remain)
-	save_slot_ele(mode, slot, DMC.irq_enabled)
-	save_slot_ele(mode, slot, DMC.loop)
-	save_slot_ele(mode, slot, DMC.rate_index)
-	save_slot_ele(mode, slot, DMC.address_start)
-	save_slot_ele(mode, slot, DMC.address)
-	save_slot_ele(mode, slot, DMC.length)
-	save_slot_ele(mode, slot, DMC.counter)
-	save_slot_ele(mode, slot, DMC.empty)
-	save_slot_ele(mode, slot, DMC.buffer)
-	save_slot_ele(mode, slot, DMC.dma_cycle)
-	save_slot_ele(mode, slot, DMC.silence)
-	save_slot_ele(mode, slot, DMC.shift)
-	save_slot_ele(mode, slot, DMC.counter_out)
-	save_slot_ele(mode, slot, DMC.output)
-	save_slot_ele(mode, slot, DMC.tick_type)
+	save_slot_ele(mode, slot, DMC.frequency);
+	save_slot_ele(mode, slot, DMC.remain);
+	save_slot_ele(mode, slot, DMC.irq_enabled);
+	save_slot_ele(mode, slot, DMC.loop);
+	save_slot_ele(mode, slot, DMC.rate_index);
+	save_slot_ele(mode, slot, DMC.address_start);
+	save_slot_ele(mode, slot, DMC.address);
+	save_slot_ele(mode, slot, DMC.length);
+	save_slot_ele(mode, slot, DMC.counter);
+	save_slot_ele(mode, slot, DMC.empty);
+	save_slot_ele(mode, slot, DMC.buffer);
+	save_slot_ele(mode, slot, DMC.dma_cycle);
+	save_slot_ele(mode, slot, DMC.silence);
+	save_slot_ele(mode, slot, DMC.shift);
+	save_slot_ele(mode, slot, DMC.counter_out);
+	save_slot_ele(mode, slot, DMC.output);
+	save_slot_ele(mode, slot, DMC.tick_type);
 
 	// mem map
-	save_slot_ele(mode, slot, mmcpu.ram)
-	save_slot_mem(mode, slot, prg.ram.data, prg.ram.size, FALSE)
+	save_slot_ele(mode, slot, mmcpu.ram);
+	save_slot_mem(mode, slot, prg.ram.data, prg.ram.size, FALSE);
 	if (mode == SAVE_SLOT_READ) {
-		save_slot_int(mode, slot, tmp)
+		save_slot_int(mode, slot, tmp);
+		if (tmp > TRUE) {
+			return(EXIT_ERROR);
+		}
 		if (tmp) {
-			save_slot_mem(mode, slot, prg.ram_plus, prg_ram_plus_size(), FALSE)
-			save_slot_pos(mode, slot, prg.ram_plus, prg.ram_plus_8k)
-			save_slot_int(mode, slot, tmp)
+			save_slot_mem(mode, slot, prg.ram_plus, prg_ram_plus_size(), FALSE);
+			save_slot_pos(mode, slot, prg.ram_plus, prg.ram_plus_8k);
+			save_slot_int(mode, slot, tmp);
 			if (tmp) {
-				save_slot_pos(mode, slot, prg.ram_plus, prg.ram_battery)
+				save_slot_pos(mode, slot, prg.ram_plus, prg.ram_battery);
 			}
 		}
 	} else {
 		if (prg.ram_plus) {
 			tmp = TRUE;
-			save_slot_int(mode, slot, tmp)
-			save_slot_mem(mode, slot, prg.ram_plus, prg_ram_plus_size(), FALSE)
-			save_slot_pos(mode, slot, prg.ram_plus, prg.ram_plus_8k)
+			save_slot_int(mode, slot, tmp);
+			save_slot_mem(mode, slot, prg.ram_plus, prg_ram_plus_size(), FALSE);
+			save_slot_pos(mode, slot, prg.ram_plus, prg.ram_plus_8k);
 			if (prg.ram_battery) {
 				tmp = TRUE;
-				save_slot_int(mode, slot, tmp)
-				save_slot_pos(mode, slot, prg.ram_plus, prg.ram_battery)
+				save_slot_int(mode, slot, tmp);
+				save_slot_pos(mode, slot, prg.ram_plus, prg.ram_battery);
 			} else {
 				tmp = FALSE;
-				save_slot_int(mode, slot, tmp)
+				save_slot_int(mode, slot, tmp);
 			}
 		} else {
 			tmp = FALSE;
-			save_slot_int(mode, slot, tmp)
+			save_slot_int(mode, slot, tmp);
 		}
 	}
 
-	{
-		WORD rom_chip[4];
+	for (i = 0; i < LENGTH(prg.rom_8k); i++) {
+		if (mode == SAVE_SLOT_SAVE) {
+			postype bank = mapper.rom_map_to[i] << 13;
 
-		// e' fondamentale che il salvataggio avvenga qui
-		if ((save_slot.version >= 14) && (save_slot.version < 26)) {
-			save_slot_ele(mode, slot, rom_chip)
-		}
-		for (i = 0; i < LENGTH(prg.rom_8k); i++) {
-			if (mode == SAVE_SLOT_SAVE) {
-				uint32_t bank = mapper.rom_map_to[i] << 13;
-
-				save_slot_int(mode, slot, bank)
-			} else {
-				if ((save_slot.version >= 14) && (save_slot.version < 26)) {
-					save_slot_pos(mode, slot, prg_chip_rom(rom_chip[i]), prg.rom_8k[i])
-				} else {
-					save_slot_pos(mode, slot, prg_rom(), prg.rom_8k[i])
-				}
-			}
+			save_slot_int(mode, slot, bank);
+		} else {
+			save_slot_pos(mode, slot, prg_rom(), prg.rom_8k[i]);
 		}
 	}
-	save_slot_int(mode, slot, mapper.write_vram)
+
+	save_slot_int(mode, slot, mapper.write_vram);
 	if (mapper.write_vram) {
-		save_slot_mem(mode, slot, chr_rom(), chr_ram_size(), FALSE)
+		save_slot_mem(mode, slot, chr_rom(), chr_ram_size(), FALSE);
 	}
-	{
-		WORD rom_chip[8];
+	for (i = 0; i < LENGTH(chr.bank_1k); i++) {
+		save_slot_pos(mode, slot, chr_rom(), chr.bank_1k[i]);
+	}
 
-		if ((save_slot.version >= 14) && (save_slot.version < 26)) {
-			save_slot_ele(mode, slot, rom_chip)
-		}
-		for (i = 0; i < LENGTH(chr.bank_1k); i++) {
-			if ((save_slot.version >= 14) && (save_slot.version < 26)) {
-				save_slot_pos(mode, slot, chr_chip_rom(rom_chip[i]), chr.bank_1k[i])
-			} else {
-				save_slot_pos(mode, slot, chr_rom(), chr.bank_1k[i])
-			}
-		}
-	}
-	save_slot_ele(mode, slot, ntbl.data)
+	save_slot_ele(mode, slot, ntbl.data);
 	for (i = 0; i < LENGTH(ntbl.bank_1k); i++) {
 		if (mode == SAVE_SLOT_SAVE) {
-			uint32_t diff = ntbl.bank_1k[i] - ntbl.data;
+			postype diff = ntbl.bank_1k[i] - ntbl.data;
 
 			if (diff > 0x1000) {
 				tmp = 0;
-				save_slot_int(mode, slot, tmp)
+				save_slot_int(mode, slot, tmp);
 			} else {
-				save_slot_pos(mode, slot, ntbl.data, ntbl.bank_1k[i])
+				save_slot_pos(mode, slot, ntbl.data, ntbl.bank_1k[i]);
 			}
 		} else {
-			save_slot_pos(mode, slot, ntbl.data, ntbl.bank_1k[i])
+			save_slot_pos(mode, slot, ntbl.data, ntbl.bank_1k[i]);
 		}
 	}
-	save_slot_ele(mode, slot, mmap_palette.color)
-	save_slot_ele(mode, slot, oam.data)
-	save_slot_ele(mode, slot, oam.plus)
+	save_slot_ele(mode, slot, mmap_palette.color);
+	save_slot_ele(mode, slot, oam.data);
+	save_slot_ele(mode, slot, oam.plus);
 	for (i = 0; i < LENGTH(oam.ele_plus); i++) {
-		save_slot_pos(mode, slot, oam.plus, oam.ele_plus[i])
+		save_slot_pos(mode, slot, oam.plus, oam.ele_plus[i]);
 	}
 	// mapper
-	save_slot_ele(mode, slot, mapper.mirroring)
-	// ho portato da BYTE a WORD mapper.rom_map_to e per mantenere
-	// la compatibilita' con i vecchi salvataggi faccio questa
-	// conversione.
-	if (save_slot.version < 2) {
-		BYTE old_romMapTo[4];
-
-		save_slot_ele(mode, slot, old_romMapTo)
-
-		if (mode == SAVE_SLOT_READ) {
-			for (i = 0; i < 4; i++) {
-				mapper.rom_map_to[i] = old_romMapTo[i];
-			}
-		}
-	} else {
-		save_slot_ele(mode, slot, mapper.rom_map_to)
-	}
+	save_slot_ele(mode, slot, mapper.mirroring);
+	save_slot_ele(mode, slot, mapper.rom_map_to);
 
 	if (mapper.internal_struct[0]) {
 		extcl_save_mapper(mode, slot, fp);
@@ -656,37 +532,33 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 
 	// irqA12
 	if (irqA12.present) {
-		save_slot_ele(mode, slot, irqA12.present)
-		save_slot_ele(mode, slot, irqA12.delay)
-		save_slot_ele(mode, slot, irqA12.counter)
-		save_slot_ele(mode, slot, irqA12.latch)
-		save_slot_ele(mode, slot, irqA12.reload)
-		save_slot_ele(mode, slot, irqA12.enable)
-		save_slot_ele(mode, slot, irqA12.save_counter)
-		save_slot_ele(mode, slot, irqA12.a12BS)
-		save_slot_ele(mode, slot, irqA12.a12SB)
-		save_slot_ele(mode, slot, irqA12.b_adr_old)
-		save_slot_ele(mode, slot, irqA12.s_adr_old)
-		if (save_slot.version >= 10) {
-			save_slot_ele(mode, slot, irqA12.cycles)
-		}
-		if (save_slot.version >= 14) {
-			save_slot_ele(mode, slot, irqA12.race.C001)
-			save_slot_ele(mode, slot, irqA12.race.counter)
-			save_slot_ele(mode, slot, irqA12.race.reload)
-		}
+		save_slot_ele(mode, slot, irqA12.present);
+		save_slot_ele(mode, slot, irqA12.delay);
+		save_slot_ele(mode, slot, irqA12.counter);
+		save_slot_ele(mode, slot, irqA12.latch);
+		save_slot_ele(mode, slot, irqA12.reload);
+		save_slot_ele(mode, slot, irqA12.enable);
+		save_slot_ele(mode, slot, irqA12.save_counter);
+		save_slot_ele(mode, slot, irqA12.a12BS);
+		save_slot_ele(mode, slot, irqA12.a12SB);
+		save_slot_ele(mode, slot, irqA12.b_adr_old);
+		save_slot_ele(mode, slot, irqA12.s_adr_old);
+		save_slot_ele(mode, slot, irqA12.cycles);
+		save_slot_ele(mode, slot, irqA12.race.C001);
+		save_slot_ele(mode, slot, irqA12.race.counter);
+		save_slot_ele(mode, slot, irqA12.race.reload);
 	}
 
 	// irql2f
 	if (irql2f.present) {
-		save_slot_ele(mode, slot, irql2f.present)
-		save_slot_ele(mode, slot, irql2f.enable)
-		save_slot_ele(mode, slot, irql2f.counter)
-		save_slot_ele(mode, slot, irql2f.scanline)
-		save_slot_ele(mode, slot, irql2f.frame_x)
-		save_slot_ele(mode, slot, irql2f.delay)
-		save_slot_ele(mode, slot, irql2f.in_frame)
-		save_slot_ele(mode, slot, irql2f.pending)
+		save_slot_ele(mode, slot, irql2f.present);
+		save_slot_ele(mode, slot, irql2f.enable);
+		save_slot_ele(mode, slot, irql2f.counter);
+		save_slot_ele(mode, slot, irql2f.scanline);
+		save_slot_ele(mode, slot, irql2f.frame_x);
+		save_slot_ele(mode, slot, irql2f.delay);
+		save_slot_ele(mode, slot, irql2f.in_frame);
+		save_slot_ele(mode, slot, irql2f.pending);
 	}
 
 	if (fds.info.enabled) {
@@ -694,101 +566,89 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		BYTE old_side_inserted = fds.drive.side_inserted;
 
 		// salvo, leggo o conto quello che serve
-		save_slot_ele(mode, slot, fds.drive.disk_position)
-		save_slot_ele(mode, slot, fds.drive.delay)
-		save_slot_ele(mode, slot, fds.drive.disk_ejected)
-		save_slot_ele(mode, slot, fds.drive.side_inserted)
-		save_slot_ele(mode, slot, fds.drive.gap_ended)
-		save_slot_ele(mode, slot, fds.drive.scan)
-		save_slot_ele(mode, slot, fds.drive.crc_char)
-		save_slot_ele(mode, slot, fds.drive.enabled_dsk_reg)
-		save_slot_ele(mode, slot, fds.drive.enabled_snd_reg)
-		save_slot_ele(mode, slot, fds.drive.data_readed)
-		save_slot_ele(mode, slot, fds.drive.data_to_write)
-		save_slot_ele(mode, slot, fds.drive.transfer_flag)
-		save_slot_ele(mode, slot, fds.drive.motor_on)
-		save_slot_ele(mode, slot, fds.drive.transfer_reset)
-		save_slot_ele(mode, slot, fds.drive.read_mode)
-		save_slot_ele(mode, slot, fds.drive.mirroring)
-		save_slot_ele(mode, slot, fds.drive.crc_control)
-		save_slot_ele(mode, slot, fds.drive.unknow)
-		save_slot_ele(mode, slot, fds.drive.drive_ready)
-		save_slot_ele(mode, slot, fds.drive.irq_disk_enabled)
-		save_slot_ele(mode, slot, fds.drive.irq_disk_high)
-		save_slot_ele(mode, slot, fds.drive.irq_timer_enabled)
-		save_slot_ele(mode, slot, fds.drive.irq_timer_reload_enabled)
-		save_slot_ele(mode, slot, fds.drive.irq_timer_high)
-		save_slot_ele(mode, slot, fds.drive.irq_timer_reload)
-		save_slot_ele(mode, slot, fds.drive.irq_timer_counter)
-		save_slot_ele(mode, slot, fds.drive.irq_timer_delay)
-		save_slot_ele(mode, slot, fds.drive.data_external_connector)
-		save_slot_ele(mode, slot, fds.drive.filler)
+		save_slot_ele(mode, slot, fds.drive.disk_position);
+		save_slot_ele(mode, slot, fds.drive.delay);
+		save_slot_ele(mode, slot, fds.drive.disk_ejected);
+		save_slot_ele(mode, slot, fds.drive.side_inserted);
+		save_slot_ele(mode, slot, fds.drive.gap_ended);
+		save_slot_ele(mode, slot, fds.drive.scan);
+		save_slot_ele(mode, slot, fds.drive.crc_char);
+		save_slot_ele(mode, slot, fds.drive.enabled_dsk_reg);
+		save_slot_ele(mode, slot, fds.drive.enabled_snd_reg);
+		save_slot_ele(mode, slot, fds.drive.data_readed);
+		save_slot_ele(mode, slot, fds.drive.data_to_write);
+		save_slot_ele(mode, slot, fds.drive.transfer_flag);
+		save_slot_ele(mode, slot, fds.drive.motor_on);
+		save_slot_ele(mode, slot, fds.drive.transfer_reset);
+		save_slot_ele(mode, slot, fds.drive.read_mode);
+		save_slot_ele(mode, slot, fds.drive.mirroring);
+		save_slot_ele(mode, slot, fds.drive.crc_control);
+		save_slot_ele(mode, slot, fds.drive.unknow);
+		save_slot_ele(mode, slot, fds.drive.drive_ready);
+		save_slot_ele(mode, slot, fds.drive.irq_disk_enabled);
+		save_slot_ele(mode, slot, fds.drive.irq_disk_high);
+		save_slot_ele(mode, slot, fds.drive.irq_timer_enabled);
+		save_slot_ele(mode, slot, fds.drive.irq_timer_reload_enabled);
+		save_slot_ele(mode, slot, fds.drive.irq_timer_high);
+		save_slot_ele(mode, slot, fds.drive.irq_timer_reload);
+		save_slot_ele(mode, slot, fds.drive.irq_timer_counter);
+		save_slot_ele(mode, slot, fds.drive.irq_timer_delay);
+		save_slot_ele(mode, slot, fds.drive.data_external_connector);
+		save_slot_ele(mode, slot, fds.drive.filler);
 
-		// l'fds drive l'ho aggiunto nella versione 3, mentre il
-		// sound dalla 4 in poi.
-		if (save_slot.version >= 4) {
-			save_slot_ele(mode, slot, fds.snd.wave.data)
-			save_slot_ele(mode, slot, fds.snd.wave.writable)
-			save_slot_ele(mode, slot, fds.snd.wave.volume)
-			save_slot_ele(mode, slot, fds.snd.wave.index)
-			save_slot_ele(mode, slot, fds.snd.wave.counter)
+		save_slot_ele(mode, slot, fds.snd.wave.data);
+		save_slot_ele(mode, slot, fds.snd.wave.writable);
+		save_slot_ele(mode, slot, fds.snd.wave.volume);
+		save_slot_ele(mode, slot, fds.snd.wave.index);
+		save_slot_ele(mode, slot, fds.snd.wave.counter);
 
-			save_slot_ele(mode, slot, fds.snd.envelope.speed)
-			save_slot_ele(mode, slot, fds.snd.envelope.disabled)
+		save_slot_ele(mode, slot, fds.snd.envelope.speed);
+		save_slot_ele(mode, slot, fds.snd.envelope.disabled);
 
-			save_slot_ele(mode, slot, fds.snd.main.silence)
-			save_slot_ele(mode, slot, fds.snd.main.frequency)
-			save_slot_ele(mode, slot, fds.snd.main.output)
+		save_slot_ele(mode, slot, fds.snd.main.silence);
+		save_slot_ele(mode, slot, fds.snd.main.frequency);
+		save_slot_ele(mode, slot, fds.snd.main.output);
 
-			save_slot_ele(mode, slot, fds.snd.volume.speed)
-			save_slot_ele(mode, slot, fds.snd.volume.mode)
-			save_slot_ele(mode, slot, fds.snd.volume.increase)
-			save_slot_ele(mode, slot, fds.snd.volume.gain)
-			save_slot_ele(mode, slot, fds.snd.volume.counter)
+		save_slot_ele(mode, slot, fds.snd.volume.speed);
+		save_slot_ele(mode, slot, fds.snd.volume.mode);
+		save_slot_ele(mode, slot, fds.snd.volume.increase);
+		save_slot_ele(mode, slot, fds.snd.volume.gain);
+		save_slot_ele(mode, slot, fds.snd.volume.counter);
 
-			save_slot_ele(mode, slot, fds.snd.sweep.bias)
-			save_slot_ele(mode, slot, fds.snd.sweep.mode)
-			save_slot_ele(mode, slot, fds.snd.sweep.increase)
-			save_slot_ele(mode, slot, fds.snd.sweep.speed)
-			save_slot_ele(mode, slot, fds.snd.sweep.gain)
-			save_slot_ele(mode, slot, fds.snd.sweep.counter)
+		save_slot_ele(mode, slot, fds.snd.sweep.bias);
+		save_slot_ele(mode, slot, fds.snd.sweep.mode);
+		save_slot_ele(mode, slot, fds.snd.sweep.increase);
+		save_slot_ele(mode, slot, fds.snd.sweep.speed);
+		save_slot_ele(mode, slot, fds.snd.sweep.gain);
+		save_slot_ele(mode, slot, fds.snd.sweep.counter);
 
-			save_slot_ele(mode, slot, fds.snd.modulation.data)
-			save_slot_ele(mode, slot, fds.snd.modulation.frequency)
-			save_slot_ele(mode, slot, fds.snd.modulation.disabled)
-			save_slot_ele(mode, slot, fds.snd.modulation.index)
-			save_slot_ele(mode, slot, fds.snd.modulation.counter)
-			save_slot_ele(mode, slot, fds.snd.modulation.mod)
+		save_slot_ele(mode, slot, fds.snd.modulation.data);
+		save_slot_ele(mode, slot, fds.snd.modulation.frequency);
+		save_slot_ele(mode, slot, fds.snd.modulation.disabled);
+		save_slot_ele(mode, slot, fds.snd.modulation.index);
+		save_slot_ele(mode, slot, fds.snd.modulation.counter);
+		save_slot_ele(mode, slot, fds.snd.modulation.mod);
 
-			if (save_slot.version >= 25) {
-				save_slot_ele(mode, slot, fds.auto_insert.r4032.frames)
-				save_slot_ele(mode, slot, fds.auto_insert.r4032.checks)
+		save_slot_ele(mode, slot, fds.auto_insert.r4032.frames);
+		save_slot_ele(mode, slot, fds.auto_insert.r4032.checks);
 
-				save_slot_ele(mode, slot, fds.auto_insert.delay.eject)
-				save_slot_ele(mode, slot, fds.auto_insert.delay.dummy)
-				save_slot_ele(mode, slot, fds.auto_insert.delay.side)
+		save_slot_ele(mode, slot, fds.auto_insert.delay.eject);
+		save_slot_ele(mode, slot, fds.auto_insert.delay.dummy);
+		save_slot_ele(mode, slot, fds.auto_insert.delay.side);
 
-				save_slot_ele(mode, slot, fds.auto_insert.rE445.in_run)
-				save_slot_ele(mode, slot, fds.auto_insert.rE445.count)
+		save_slot_ele(mode, slot, fds.auto_insert.rE445.in_run);
+		save_slot_ele(mode, slot, fds.auto_insert.rE445.count);
 
-				save_slot_ele(mode, slot, fds.auto_insert.disabled)
-				save_slot_ele(mode, slot, fds.auto_insert.new_side)
-				save_slot_ele(mode, slot, fds.auto_insert.in_game)
-			}
-		}
+		save_slot_ele(mode, slot, fds.auto_insert.disabled);
+		save_slot_ele(mode, slot, fds.auto_insert.new_side);
+		save_slot_ele(mode, slot, fds.auto_insert.in_game);
 
-		if (save_slot.version >= 19) {
-			save_slot_ele(mode, slot, r2006.second_write.delay)
-			save_slot_ele(mode, slot, r2006.second_write.value)
-		}
+		save_slot_ele(mode, slot, r2006.second_write.delay);
+		save_slot_ele(mode, slot, r2006.second_write.value);
 
-		if (save_slot.version >= 20) {
-			save_slot_ele(mode, slot, r2001.grayscale_bit.delay)
-		}
+		save_slot_ele(mode, slot, r2001.grayscale_bit.delay);
 
-		if (save_slot.version >= 29) {
-			save_slot_ele(mode, slot, info.lag_frame.consecutive)
-		}
+		save_slot_ele(mode, slot, info.lag_frame.consecutive);
 
 		// in caso di ripristino di una salvataggio, se era caricato
 		// un'altro side del disco, devo ricaricarlo.
@@ -798,28 +658,128 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		}
 	}
 
-	// in caso di save slot file non devo visualizzare nessuna preview (thx Brandon Enright for the report and for the fix).
-	save_slot_mem(mode, slot, ppu_screen.rd->data, screen_size(), slot == SAVE_SLOT_FILE ? FALSE : TRUE)
+	if (save_slot.slot[slot].tot_size != save_slot.size) {
+		return (EXIT_ERROR);
+	}
+
+	// salvo la preview in formato PNG
+	save_slot_mem(mode, slot, NULL, 0, TRUE);
 
 	return (EXIT_OK);
 }
+BYTE save_slot_element(BYTE mode, BYTE slot, void *src, size_t size, FILE *fp, BYTE preview) {
+	DBWORD bytes = 0;
 
-static void preview_image(BYTE slot, _ppu_screen_buffer *sb) {
+	switch (mode) {
+		case SAVE_SLOT_SAVE:
+			if (preview) {
+				preview_image_from_ppu_screen(slot, ppu_screen.rd, &src, &size);
+				fwrite(src, size, 1, fp);
+			} else {
+				fwrite(src, size, 1, fp);
+			}
+			fflush(fp);
+			break;
+		case SAVE_SLOT_READ:
+			if (preview) {
+				break;
+			}
+			bytes = fp ? fread(src, size, 1, fp) : 1;
+			save_slot.slot[slot].tot_size += size;
+			if (bytes != 1) {
+				return (EXIT_ERROR);
+			}
+			break;
+		case SAVE_SLOT_COUNT:
+			if (preview) {
+				size_t pos = 0, end = 0;
+
+				if (!fp) {
+					break;
+				}
+
+				pos = ftell(fp);
+				fseek(fp, 0L, SEEK_END);
+				end = ftell(fp);
+
+				if (save_slot.slot[slot].tot_size >= end) {
+					return (EXIT_ERROR);
+				};
+
+				size = end - save_slot.slot[slot].tot_size;
+				src = malloc(size);
+
+				if (!src) {
+					return (EXIT_ERROR);
+				}
+
+				fseek(fp, save_slot.slot[slot].tot_size, SEEK_SET);
+				if (fread(src, size, 1, fp) == 1) {
+					preview_image_from_png(slot, src, size);
+				}
+				fseek(fp, pos, SEEK_SET);
+
+				free(src);
+				break;
+			}
+			save_slot.slot[slot].tot_size += size;
+			break;
+		default:
+			return (EXIT_ERROR);
+	}
+	return (EXIT_OK);
+}
+BYTE save_slot_position(BYTE mode, BYTE slot, void *start, void *end, FILE *fp) {
+	postype bank = 0;
+
+	switch (mode) {
+		case SAVE_SLOT_SAVE:
+			bank = end - start;
+			save_slot_ele(mode, slot, bank);
+			break;
+		case SAVE_SLOT_READ:
+			save_slot_ele(mode, slot, bank);
+			end = start + bank;
+			break;
+		case SAVE_SLOT_COUNT:
+			save_slot_ele(mode, slot, bank);
+			break;
+		default:
+			return (EXIT_ERROR);
+	}
+	return (EXIT_OK);
+}
+
+static void preview_image_from_ppu_screen(BYTE slot, _ppu_screen_buffer *sb, void **dst, size_t *size) {
 	int stride = SCR_COLUMNS * sizeof(uint32_t);
-	void *buffer;
+	void *buffer = malloc((size_t)stride * SCR_ROWS);
 
-	if ((buffer = malloc(stride * SCR_ROWS))) {
+	(*dst) = NULL;
+	(*size) = 0;
+
+	if (buffer) {
 		scale_surface_preview_1x(sb, stride, buffer);
-		gui_overlay_slot_preview(slot, buffer, name_slot_file(slot));
-		gui_state_save_slot_set_tooltip(slot, buffer);
+		gui_overlay_slot_preview_set_from_ppu_screen(slot, buffer, name_slot_file(slot));
+		if (slot != SAVE_SLOT_FILE) {
+			gui_state_save_slot_set_tooltip(slot);
+		}
 		free(buffer);
+		gui_save_slot_preview_to_png(slot, dst, size);
+	}
+}
+static void preview_image_from_png(BYTE slot, void *src, size_t size) {
+	if (src) {
+		gui_overlay_slot_preview_set_from_png(slot, src, size, name_slot_file(slot));
+		if (slot != SAVE_SLOT_FILE) {
+			gui_state_save_slot_set_tooltip(slot);
+		}
 	}
 }
 static uTCHAR *name_slot_file(BYTE slot) {
 	static uTCHAR file[LENGTH_FILE_NAME_LONG];
-	uTCHAR ext[10], bname[255], *last_dot, *fl = NULL;
+	uTCHAR ext[10], bname[255], *last_dot = NULL, *fl = NULL;
 
-	umemset(file, 0x00, LENGTH_FILE_NAME_LONG);
+	umemset(&file[0], 0x00, LENGTH_FILE_NAME_LONG);
 
 	// game genie
 	if (info.mapper.id == GAMEGENIE_MAPPER) {
@@ -835,7 +795,7 @@ static uTCHAR *name_slot_file(BYTE slot) {
 	}
 
 	gui_utf_basename(fl, bname, usizeof(bname));
-	usnprintf(file, usizeof(file), uL("" uPs("") SAVE_FOLDER "/" uPs("")), gui_data_folder(), bname);
+	usnprintf(&file[0], usizeof(file), uL("" uPs("") SAVE_FOLDER "/" uPs("")), gui_data_folder(), bname);
 
 	if (nsf.enabled) {
 		usnprintf(ext, usizeof(ext), uL(".n%02X"), slot);
@@ -844,12 +804,13 @@ static uTCHAR *name_slot_file(BYTE slot) {
 	}
 
 	// rintraccio l'ultimo '.' nel nome
-	if ((last_dot = ustrrchr(file, uL('.')))) {
+	last_dot = ustrrchr(file, uL('.'));
+	if (last_dot) {
 		// elimino l'estensione
 		(*last_dot) = 0x00;
 	}
 	// aggiungo l'estensione
-	ustrcat(file, ext);
+	ustrcat(&file[0], ext);
 
-	return (file);
+	return (&file[0]);
 }

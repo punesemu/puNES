@@ -28,13 +28,14 @@
 #include "unif.h"
 #include "gui.h"
 #include "vs_system.h"
+#include "nes20db.h"
 
 void map_prg_ram_battery_file(uTCHAR *prg_ram_file);
 
 _mapper mapper;
 
 BYTE map_init(void) {
-	unsigned int i;
+	unsigned int i = 0;
 
 	/*
 	 * di default la routine di salvataggio
@@ -49,6 +50,8 @@ BYTE map_init(void) {
 	irql2f.present = FALSE;
 	/* disabilito tutte le chiamate relative alle mappers */
 	extcl_init();
+
+	info.mapper.supported = TRUE;
 
 	switch (info.mapper.id) {
 		case 0:
@@ -72,7 +75,11 @@ BYTE map_init(void) {
 			map_init_CNROM();
 			break;
 		case 4:
-			map_init_MMC3();
+			if (info.mapper.submapper == MMC3_T9552) {
+				map_init_249();
+			} else {
+				map_init_MMC3();
+			}
 			break;
 		case 5:
 			map_init_MMC5();
@@ -95,7 +102,11 @@ BYTE map_init(void) {
 			map_init_ColorDreams();
 			break;
 		case 12:
-			map_init_Rex(DBZ);
+			if (info.mapper.submapper == 1) {
+				map_init_FFESMC();
+			} else {
+				map_init_Rexdbz();
+			}
 			break;
 		case 13:
 			map_init_CPROM();
@@ -104,7 +115,7 @@ BYTE map_init(void) {
 			map_init_SL1632();
 			break;
 		case 15:
-			map_init_Waixing(WPSX);
+			map_init_15();
 			break;
 		case 16: {
 			switch (info.mapper.submapper) {
@@ -167,7 +178,7 @@ BYTE map_init(void) {
 			map_init_VRC6(VRC6B);
 			break;
 		case 27:
-			map_init_VRC4(VRC4UNL);
+			map_init_CC_21();
 			break;
 		case 28:
 			map_init_28();
@@ -200,7 +211,7 @@ BYTE map_init(void) {
 			map_init_37();
 			break;
 		case 38:
-			map_init_74x138x161();
+			map_init_38();
 			break;
 		case 40:
 			map_init_40();
@@ -290,7 +301,7 @@ BYTE map_init(void) {
 			map_init_Sunsoft(FM7);
 			break;
 		case 70:
-			map_init_74x161x161x32(IC74X161X161X32A);
+			map_init_70();
 			break;
 		case 71:
 			map_init_Camerica();
@@ -379,6 +390,9 @@ BYTE map_init(void) {
 		case 99:
 			map_init_Vs();
 			break;
+		case 100:
+			map_init_100();
+			break;
 		case 101:
 			map_init_101();
 			break;
@@ -398,7 +412,7 @@ BYTE map_init(void) {
 			map_init_Magic();
 			break;
 		case 108:
-			map_init_Whirlwind();
+			map_init_108();
 			break;
 		case 111:
 			map_init_CHEAPOCABRA();
@@ -413,23 +427,19 @@ BYTE map_init(void) {
 			map_init_114();
 			break;
 		case 115:
-			map_init_Kasing();
+			map_init_115();
 			break;
 		case 116:
 			map_init_116();
 			break;
 		case 117:
-			map_init_Futuremedia();
+			map_init_117();
 			break;
 		case 118:
-			if (info.mapper.submapper == TKSROM) {
-				map_init_TxROM(TKSROM);
-			} else {
-				map_init_TxROM(TLSROM);
-			}
+			map_init_TxROM();
 			break;
 		case 119:
-			map_init_TxROM(TQROM);
+			map_init_119();
 			break;
 		case 120:
 			map_init_120();
@@ -438,7 +448,7 @@ BYTE map_init(void) {
 			map_init_121();
 			break;
 		case 123:
-			map_init_H2288();
+			map_init_123();
 			break;
 		case 125:
 			map_init_LH32();
@@ -504,7 +514,7 @@ BYTE map_init(void) {
 			map_init_VRC1();
 			break;
 		case 152:
-			map_init_74x161x161x32(IC74X161X161X32B);
+			map_init_152();
 			break;
 		case 153:
 			/* Famicom Jump II - Saikyou no 7 Nin (J) [!].nes */
@@ -536,7 +546,7 @@ BYTE map_init(void) {
 			map_init_164();
 			break;
 		case 165:
-			map_init_Waixing(SH2);
+			map_init_165();
 			break;
 		case 166:
 			map_init_166();
@@ -564,7 +574,7 @@ BYTE map_init(void) {
 			break;
 		case 177:
 			if (info.mapper.submapper != DEFAULT) {
-				/* questa e' la mappers 179 in nestopia */
+				// questa e' la mappers 179 in nestopia
 				map_init_Hen(info.mapper.submapper);
 			} else {
 				map_init_Hen(HEN_177);
@@ -601,7 +611,7 @@ BYTE map_init(void) {
 			map_init_188();
 			break;
 		case 189:
-			map_init_Txc(TXCTW);
+			map_init_189();
 			break;
 		case 190:
 			map_init_190();
@@ -631,7 +641,7 @@ BYTE map_init(void) {
 			map_init_198();
 			break;
 		case 199:
-			map_init_Waixing(WTG);
+			map_init_199();
 			break;
 		case 200:
 			map_init_200();
@@ -679,7 +689,7 @@ BYTE map_init(void) {
 			map_init_214();
 			break;
 		case 215:
-			map_init_UNIF8237(info.mapper.submapper);
+			map_init_215();
 			break;
 		case 216:
 			map_init_Rcm(GS2015);
@@ -742,7 +752,7 @@ BYTE map_init(void) {
 			map_init_237();
 			break;
 		case 238:
-			map_init_UNIF603_5052();
+			map_init_238();
 			break;
 		case 240:
 			map_init_240();
@@ -760,14 +770,14 @@ BYTE map_init(void) {
 			map_init_244();
 			break;
 		case 245:
-			map_init_Waixing(WTH);
+			map_init_245();
 			break;
 		case 246:
 			map_init_246();
 			break;
 		case 248:
 			// stessa mapper della 115
-			map_init_Kasing();
+			map_init_115();
 			break;
 		case 249:
 			map_init_249();
@@ -791,22 +801,22 @@ BYTE map_init(void) {
 			map_init_256();
 			break;
 		case 258:
-			map_init_UNIF158B();
+			map_init_215();
 			break;
 		case 259:
-			map_init_F15();
+			map_init_259();
 			break;
 		case 260:
-			map_init_HP2018A();
+			map_init_260();
 			break;
 		case 261:
 			map_init_BMC810544CA1();
 			break;
 		case 262:
-			map_init_SHERO();
+			map_init_262();
 			break;
 		case 263:
-			map_init_KOF97();
+			map_init_263();
 			break;
 		case 264:
 			map_init_YOKO();
@@ -827,7 +837,7 @@ BYTE map_init(void) {
 			map_init_269();
 			break;
 		case 271:
-			map_init_22026();
+			map_init_271();
 			break;
 		case 274:
 			map_init_80013B();
@@ -851,7 +861,7 @@ BYTE map_init(void) {
 			map_init_BS5();
 			break;
 		case 287:
-			map_init_BMC411120C();
+			map_init_287();
 			break;
 		case 288:
 			map_init_288();
@@ -866,7 +876,7 @@ BYTE map_init(void) {
 			map_init_291();
 			break;
 		case 292:
-			map_init_DRAGONFIGHTER();
+			map_init_292();
 			break;
 		case 295:
 			map_init_JYASIC(MAP295);
@@ -878,10 +888,10 @@ BYTE map_init(void) {
 			map_init_TF1201();
 			break;
 		case 299:
-			map_init_BMC11160();
+			map_init_299();
 			break;
 		case 300:
-			map_init_BMC190IN1();
+			map_init_300();
 			break;
 		case 301:
 			map_init_UNIF8157();
@@ -910,17 +920,20 @@ BYTE map_init(void) {
 		case 309:
 			map_init_LH51();
 			break;
+		case 311:
+			map_init_311();
+			break;
 		case 312:
 			map_init_KS7013B();
 			break;
 		case 313:
-			map_init_RESETTXROM();
+			map_init_313();
 			break;
 		case 314:
 			map_init_BMC64IN1NOREPEAT();
 			break;
 		case 315:
-			map_init_BMC830134C();
+			map_init_315();
 			break;
 		case 319:
 			map_init_BMCHP898F();
@@ -929,7 +942,7 @@ BYTE map_init(void) {
 			map_init_BMC830425C();
 			break;
 		case 322:
-			map_init_K3033();
+			map_init_322();
 			break;
 		case 323:
 			map_init_FARIDSLROM8IN1();
@@ -938,10 +951,10 @@ BYTE map_init(void) {
 			map_init_FARIDUNROM8IN1();
 			break;
 		case 325:
-			map_init_MALISB();
+			map_init_325();
 			break;
 		case 327:
-			map_init_1024CA1();
+			map_init_327();
 			break;
 		case 328:
 			map_init_RT_01();
@@ -950,13 +963,13 @@ BYTE map_init(void) {
 			map_init_EDU2000();
 			break;
 		case 331:
-			map_init_BMC12IN1();
+			map_init_331();
 			break;
 		case 332:
 			map_init_WS();
 			break;
 		case 333:
-			map_init_8_IN_1();
+			map_init_333();
 			break;
 		case 334:
 			map_init_334();
@@ -968,13 +981,13 @@ BYTE map_init(void) {
 			map_init_K3046();
 			break;
 		case 337:
-			map_init_CTC12IN1();
+			map_init_337();
 			break;
 		case 338:
 			map_init_SA005A();
 			break;
 		case 339:
-			map_init_K3006();
+			map_init_339();
 			break;
 		case 340:
 			map_init_K3036();
@@ -989,10 +1002,10 @@ BYTE map_init(void) {
 			map_init_RESETNROMXIN1();
 			break;
 		case 344:
-			map_init_GN26();
+			map_init_344();
 			break;
 		case 345:
-			map_init_L6IN1();
+			map_init_345();
 			break;
 		case 346:
 			map_init_KS7012();
@@ -1001,7 +1014,7 @@ BYTE map_init(void) {
 			map_init_KS7030();
 			break;
 		case 348:
-			map_init_BMC830118C();
+			map_init_348();
 			break;
 		case 349:
 			map_init_BMCG146();
@@ -1019,7 +1032,7 @@ BYTE map_init(void) {
 			map_init_353();
 			break;
 		case 355:
-			map_init_3DBLOCK();
+			map_init_355();
 			break;
 		case 356:
 			map_init_356();
@@ -1214,7 +1227,7 @@ BYTE map_init(void) {
 			map_init_512();
 			break;
 		case 513:
-			map_init_SA_9602B();
+			map_init_513();
 			break;
 		case 516:
 			map_init_516();
@@ -1279,7 +1292,7 @@ BYTE map_init(void) {
 			map_init_543();
 			break;
 		case 547:
-			map_init_KONAMIQTAI();
+			map_init_547();
 			break;
 		case 550:
 			map_init_550();
@@ -1304,8 +1317,9 @@ BYTE map_init(void) {
 			break;
 		default:
 			gui_overlay_info_append_msg_precompiled(11, NULL);
-			log_error(uL("mapper;not supported"));
 			EXTCL_CPU_WR_MEM(0);
+			info.no_rom = TRUE;
+			info.mapper.supported = FALSE;
 			break;
 		/* casi speciali */
 		case NSF_MAPPER:
@@ -1320,22 +1334,6 @@ BYTE map_init(void) {
 		case UNIF_MAPPER:
 			switch (unif.internal_mapper) {
 				case 1:
-					// Ghostbusters63in1
-					map_init_BMCGHOSTBUSTERS63IN1();
-					break;
-				case 2:
-					// 43272
-					map_init_UNIF43272();
-					break;
-				case 3:
-					// AC-08
-					map_init_AC08();
-					break;
-				case 4:
-					// CC-21
-					map_init_CC_21();
-					break;
-				case 5:
 					// BOY
 					map_init_BOY();
 					break;
@@ -1362,13 +1360,20 @@ BYTE map_init(void) {
 				info.chr.rom.banks_8k = 1;
 			}
 		}
-		info.chr.rom.is_ram = TRUE;
 		info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
 		info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
 		map_set_banks_max_chr();
 	}
 	if (map_chr_ram_init()) {
 		return (EXIT_ERROR);
+	}
+
+	if (info.chr.ram.banks_8k_plus) {
+		if (chr.extra.data) {
+			info.chr.ram.banks_8k_plus = 0;
+		} else if (map_chr_ram_extra_init(info.chr.ram.banks_8k_plus * 0x2000)) {
+			return (EXIT_ERROR);
+		}
 	}
 
 	// after mapper init
@@ -1390,6 +1395,7 @@ void map_quit(void) {
 	memset(&info.chr, 0x00, sizeof(info.chr));
 	memset(&info.prg, 0x00, sizeof(info.prg));
 	info.prg.ram.bat.start = DEFAULT;
+	nes20db_reset();
 
 	/* PRG */
 	if (prg_rom()) {
@@ -1453,7 +1459,8 @@ BYTE map_prg_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom) {
 		prg_size() = 0;
 	}
 
-	if ((prg_rom() = (BYTE *)malloc(size))) {
+	prg_rom() = (BYTE *)malloc(size);
+	if (prg_rom()) {
 		memset(prg_rom(), set_value, size);
 		prg_size() = size;
 	} else {
@@ -1470,7 +1477,7 @@ BYTE map_prg_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom) {
 	return (prg_rom() ? EXIT_OK : EXIT_ERROR);
 }
 void map_prg_rom_8k(BYTE banks_8k, BYTE at, WORD value) {
-	BYTE a;
+	BYTE a = 0;
 
 	/* se cerco di switchare 32k ma ho solo un banco da 16k esco */
 	if ((banks_8k == 4) && (info.prg.rom.banks_16k <= 1)) {
@@ -1488,7 +1495,7 @@ void map_prg_rom_8k_reset(void) {
 	mapper.rom_map_to[3] = info.prg.rom.banks_8k - 1;
 }
 void map_prg_rom_8k_update(void) {
-	BYTE i;
+	BYTE i = 0;
 
 	for (i = 0; i < 4; ++i) {
 		prg.rom_8k[i] = prg_pnt(mapper.rom_map_to[i] << 13);
@@ -1505,6 +1512,7 @@ void map_prg_ram_init(void) {
 		/* alloco la memoria necessaria */
 		prg.ram_plus = (BYTE *)malloc(prg_ram_plus_size());
 		/* inizializzo */
+		//emu_initial_ram(prg.ram_plus, prg_ram_plus_size());
 		memset(prg.ram_plus, 0x00, prg_ram_plus_size());
 		/* gli 8k iniziali */
 		prg.ram_plus_8k = &prg.ram_plus[0];
@@ -1513,7 +1521,7 @@ void map_prg_ram_init(void) {
 		// exectl_battery_io eseguito
 		executed_battery_io = TRUE;
 	} else if ((info.reset >= HARD) && info.prg.ram.banks_8k_plus) {
-		int i, start;
+		int i = 0, start = 0;
 
 		if (info.prg.ram.bat.start == DEFAULT) {
 			start = info.prg.ram.banks_8k_plus - info.prg.ram.bat.banks;
@@ -1524,7 +1532,8 @@ void map_prg_ram_init(void) {
 			if (info.prg.ram.bat.banks && (i >= start) && (i < (start + info.prg.ram.bat.banks))) {
 				continue;
 			}
-			memset(prg.ram_plus + (i * 0x2000), 0x00, 0x2000);
+			//emu_initial_ram(prg.ram_plus + (int)(i * 0x2000), 0x2000);
+			memset(prg.ram_plus + (int)(i * 0x2000), 0x00, 0x2000);
 		}
 	}
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
@@ -1544,7 +1553,8 @@ void map_prg_ram_init(void) {
 BYTE map_prg_ram_malloc(WORD size) {
 	prg.ram.size = size;
 
-	if (!(prg.ram.data = (BYTE *)malloc(prg.ram.size))) {
+	prg.ram.data = (BYTE *)malloc(prg.ram.size);
+	if (!prg.ram.data) {
 		log_error(uL("prg ram malloc;out of memory"));
 		return (EXIT_ERROR);
 	}
@@ -1562,7 +1572,7 @@ void map_prg_ram_battery_save(void) {
 	/* se c'e' della PRG Ram battery packed la salvo in un file */
 	if (info.prg.ram.bat.banks || info.mapper.force_battery_io) {
 		uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG];
-		FILE *fp;
+		FILE *fp = NULL;
 
 		// estraggo il nome del file
 		map_prg_ram_battery_file(&prg_ram_file[0]);
@@ -1587,8 +1597,8 @@ void map_prg_ram_battery_save(void) {
 void map_prg_ram_battery_load(void) {
 	if (info.prg.ram.bat.banks || info.mapper.force_battery_io) {
 		uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG];
-		BYTE bank;
-		FILE *fp;
+		BYTE bank = 0;
+		FILE *fp = NULL;
 
 		if (info.prg.ram.bat.banks) {
 			/*
@@ -1601,7 +1611,7 @@ void map_prg_ram_battery_load(void) {
 				bank = info.prg.ram.bat.start;
 			}
 
-			prg.ram_battery = &prg.ram_plus[bank * 0x2000];
+			prg.ram_battery = &prg.ram_plus[(int)(bank * 0x2000)];
 		}
 
 		// estraggo il nome del file
@@ -1628,7 +1638,8 @@ BYTE map_chr_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom) {
 		chr_size() = 0;
 	}
 
-	if ((chr_rom() = (BYTE *)malloc(size))) {
+	chr_rom() = (BYTE *)malloc(size);
+	if (chr_rom()) {
 		memset(chr_rom(), set_value, size);
 		chr_size() = size;
 	} else {
@@ -1645,12 +1656,12 @@ BYTE map_chr_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom) {
 	return (chr_rom() ? EXIT_OK : EXIT_ERROR);
 }
 void map_chr_bank_1k_reset(void) {
-	BYTE bank1k, bnk;
+	BYTE bank1k = 0, bnk = 0;
 
 	for (bank1k = 0; bank1k < 8; ++bank1k) {
 		bnk = bank1k;
 		_control_bank(bnk, info.chr.rom.max.banks_1k)
-		chr.bank_1k[bank1k] = chr_pnt(bnk * 0x0400);
+		chr.bank_1k[bank1k] = chr_pnt((int)(bnk * 0x0400));
 	}
 }
 BYTE map_chr_ram_init(void) {
@@ -1673,7 +1684,8 @@ BYTE map_chr_ram_extra_init(uint32_t size) {
 			chr.extra.size = 0;
 		}
 		/* alloco la CHR Ram extra */
-		if (!(chr.extra.data = (BYTE *)malloc(size))) {
+		chr.extra.data = (BYTE *)malloc(size);
+		if (!chr.extra.data) {
 			log_error(uL("prg ram extra;out of memory"));
 			return (EXIT_ERROR);
 		}
@@ -1692,6 +1704,12 @@ void map_chr_ram_extra_reset(void) {
 		memset(chr.extra.data, 0x00, chr.extra.size);
 	}
 }
+BYTE map_chr_ram_slot_in_range(BYTE slot) {
+	return (mapper.write_vram ||
+		(chr.extra.data &&
+		(chr.bank_1k[slot] >= chr.extra.data) &&
+		(chr.bank_1k[slot] < (chr.extra.data + chr.extra.size))));
+}
 BYTE map_misc_malloc(size_t size, BYTE set_value) {
 	if (mapper.misc_roms.data) {
 		free(mapper.misc_roms.data);
@@ -1699,7 +1717,8 @@ BYTE map_misc_malloc(size_t size, BYTE set_value) {
 		mapper.misc_roms.size = 0;
 	}
 
-	if ((mapper.misc_roms.data = (BYTE *)malloc(size))) {
+	mapper.misc_roms.data = (BYTE *)malloc(size);
+	if (mapper.misc_roms.data) {
 		memset(mapper.misc_roms.data, set_value, size);
 		mapper.misc_roms.size = size;
 	} else {
@@ -1730,7 +1749,7 @@ void map_set_banks_max_chr(void) {
 void map_bat_rd_default(FILE *fp) {
 	if ((tas.type == NOTAS) && fp) {
 		/* ne leggo il contenuto */
-		if (fread(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp) < 1) {
+		if (fread(&prg.ram_battery[0], (size_t)(info.prg.ram.bat.banks * 0x2000), 1, fp) < 1) {
 			log_error(uL("mapper;error on read battery memory"));
 		}
 	}
@@ -1738,7 +1757,7 @@ void map_bat_rd_default(FILE *fp) {
 void map_bat_wr_default(FILE *fp) {
 	/* ci scrivo i dati */
 	if (tas.type == NOTAS) {
-		size_t len = fwrite(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp);
+		size_t len = fwrite(&prg.ram_battery[0], (size_t)(info.prg.ram.bat.banks * 0x2000), 1, fp);
 
 		if (len < 1) {
 			perror(NULL);
@@ -1747,15 +1766,14 @@ void map_bat_wr_default(FILE *fp) {
 }
 
 void map_prg_ram_battery_file(uTCHAR *prg_ram_file) {
-	uTCHAR basename[255], *fl, *last_dot;
-
-	fl = info.rom.file;
+	uTCHAR basename[255], *fl = info.rom.file, *last_dot = NULL;
 
 	gui_utf_basename(fl, basename, usizeof(basename));
 	usnprintf(prg_ram_file, LENGTH_FILE_NAME_LONG, uL("" uPs("") PRB_FOLDER "/" uPs("")), gui_data_folder(), basename);
 
 	/* rintraccio l'ultimo '.' nel nome */
-	if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {
+	last_dot = ustrrchr(prg_ram_file, uL('.'));
+	if (last_dot) {
 		/* elimino l'estensione */
 		(*last_dot) = 0x00;
 	}

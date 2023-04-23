@@ -25,23 +25,11 @@
 #include "save_slot.h"
 #include "ppu_inline.h"
 
-INLINE static void prg_setup_JYASIC(void);
-INLINE static void chr_setup_JYASIC(void);
-INLINE static void nmt_setup_JYASIC(void);
-INLINE static void ppu_setup_JYASIC(WORD *outer, WORD *mask);
+INLINE static void prg_fix_JYASIC(void);
+INLINE static void chr_fix_JYASIC(void);
+INLINE static void nmt_fix_JYASIC(void);
+INLINE static void ppu_fix_JYASIC(WORD *outer, WORD *mask);
 INLINE static void irq_clock_prescaler_JYASIC(void);
-
-#define chr_JYASIC(index)\
-	((jyasic.chr.low[index] | (jyasic.chr.high[index] << 8)))
-#define nmt_rom_JYASIC(index)\
-	value = (jyasic.nmt.reg[index] & mask) | outer;\
-	control_bank(info.chr.rom.max.banks_1k)\
-	ntbl.bank_1k[index] = chr_pnt(value << 10);\
-	jyasic.nmt.write[index] = FALSE
-#define nmt_ram_JYASIC(index)\
-	value = jyasic.nmt.reg[index] & 0x01;\
-	ntbl.bank_1k[index] = &ntbl.data[value << 10];\
-	jyasic.nmt.write[index] = TRUE
 
 _jyasic jyasic;
 struct _jyasictmp {
@@ -54,8 +42,7 @@ struct _jyasictmp {
 } jyasictmp;
 
 void map_init_JYASIC(BYTE model) {
-	BYTE i;
-
+	EXTCL_AFTER_MAPPER_INIT(JYASIC);
 	EXTCL_CPU_WR_MEM(JYASIC);
 	EXTCL_CPU_RD_MEM(JYASIC);
 	EXTCL_SAVE_MAPPER(JYASIC);
@@ -104,44 +91,51 @@ void map_init_JYASIC(BYTE model) {
 		}
 	}
 
-	if (info.reset >= HARD) {
-		memset(&jyasic, 0x00, sizeof(jyasic));
+	{
+		BYTE i = 0;
 
-		jyasictmp.model = model;
+		if (info.reset >= HARD) {
+			memset(&jyasic, 0x00, sizeof(jyasic));
 
-		jyasic.mul[0] = 0xFF;
-		jyasic.mul[1] = 0xFF;
-		jyasic.single_byte_ram = 0xFF;
+			jyasictmp.model = model;
 
-		for (i = 0; i < 8; i++) {
-			if (i < 4) {
-				jyasic.prg[i] = 0xFF;
-				jyasic.nmt.write[i] = TRUE;
+			jyasic.mul[0] = 0xFF;
+			jyasic.mul[1] = 0xFF;
+			jyasic.single_byte_ram = 0xFF;
+
+			for (i = 0; i < 8; i++) {
+				if (i < 4) {
+					jyasic.prg[i] = 0xFF;
+					jyasic.nmt.write[i] = TRUE;
+				}
+				jyasic.chr.low[i] = 0xFF;
+				jyasic.chr.high[i] = 0xFF;
 			}
-			jyasic.chr.low[i] = 0xFF;
-			jyasic.chr.high[i] = 0xFF;
-		}
 
-		jyasic.chr.latch[0] = 0;
-		jyasic.chr.latch[1] = 4;
+			jyasic.chr.latch[0] = 0;
+			jyasic.chr.latch[1] = 4;
 
-		jyasic.irq.prescaler = 0xFF;
-		jyasic.irq.premask = 0x07;
-	} else {
-		for (i = 0; i < 8; i++) {
-			if (i < 4) {
-				jyasic.prg[i] = 0xFF;
-				jyasic.mode[i] = 0;
+			jyasic.irq.prescaler = 0xFF;
+			jyasic.irq.premask = 0x07;
+		} else {
+			for (i = 0; i < 8; i++) {
+				if (i < 4) {
+					jyasic.prg[i] = 0xFF;
+					jyasic.mode[i] = 0;
+				}
 			}
 		}
 	}
-	prg_setup_JYASIC();
-	chr_setup_JYASIC();
 
 	info.mapper.extend_wr = TRUE;
 }
+void extcl_after_mapper_init_JYASIC(void) {
+	prg_fix_JYASIC();
+	chr_fix_JYASIC();
+	nmt_fix_JYASIC();
+}
 void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
-	BYTE index;
+	BYTE index = 0;
 
 	if ((jyasic.irq.mode & 0x03) == 3) {
 		irq_clock_prescaler_JYASIC();
@@ -175,21 +169,21 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 				return;
 			}
 			jyasic.prg[address & 0x0003] = value;
-			prg_setup_JYASIC();
+			prg_fix_JYASIC();
 			return;
 		case 0x9000:
 			if (address & 0x0800) {
 				return;
 			}
 			jyasic.chr.low[address & 0x0007] = value;
-			chr_setup_JYASIC();
+			chr_fix_JYASIC();
 			return;
 		case 0xA000:
 			if (address & 0x0800) {
 				return;
 			}
 			jyasic.chr.high[address & 0x0007] = value;
-			chr_setup_JYASIC();
+			chr_fix_JYASIC();
 			return;
 		case 0xB000:
 			if (address & 0x0800) {
@@ -203,7 +197,7 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 				jyasic.nmt.reg[index] &= 0xFF00;
 				jyasic.nmt.reg[index] |= value;
 			}
-			nmt_setup_JYASIC();
+			nmt_fix_JYASIC();
 			return;
 		case 0xC000:
 			switch (address & 0x0007) {
@@ -250,6 +244,7 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 			}
 			index = address & 0x0003;
 			switch (index) {
+				default:
 				case 0:
 					switch (jyasictmp.model) {
 						case MAP209:
@@ -283,9 +278,9 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 					jyasic.mode[index] = value;
 					break;
 			}
-			prg_setup_JYASIC();
-			chr_setup_JYASIC();
-			nmt_setup_JYASIC();
+			prg_fix_JYASIC();
+			chr_fix_JYASIC();
+			nmt_fix_JYASIC();
 			return;
 	}
 }
@@ -340,9 +335,9 @@ BYTE extcl_save_mapper_JYASIC(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, jyasic.irq.premask);
 
 	if (mode == SAVE_SLOT_READ) {
-		prg_setup_JYASIC();
-		chr_setup_JYASIC();
-		nmt_setup_JYASIC();
+		prg_fix_JYASIC();
+		chr_fix_JYASIC();
+		nmt_fix_JYASIC();
 	}
 
 	return (EXIT_OK);
@@ -366,7 +361,7 @@ BYTE extcl_rd_chr_JYASIC(WORD address) {
 
 				jyasic.chr.latch[address >> 12] = (address >> 4) & (((address >> 10) & 0x04) | 0x02);
 				if ((jyasic.mode[0] & 0x18) == 0x08) {
-					chr_setup_JYASIC();
+					chr_fix_JYASIC();
 				}
 				return (last);
 			}
@@ -428,15 +423,9 @@ void extcl_update_r2006_JYASIC(WORD new_r2006, WORD old_r2006) {
 	}
 }
 
-void state_fix_JYASIC(void) {
-	prg_setup_JYASIC();
-	chr_setup_JYASIC();
-	nmt_setup_JYASIC();
-}
-
-INLINE static void prg_setup_JYASIC(void) {
-	BYTE outer, mask;
-	WORD value;
+INLINE static void prg_fix_JYASIC(void) {
+	BYTE outer = 0, mask = 0;
+	WORD value = 0;
 
 	switch(jyasictmp.model) {
 		case MAP281:
@@ -500,6 +489,7 @@ INLINE static void prg_setup_JYASIC(void) {
 			value = (jyasic.prg[1] & (mask >> 1)) | (outer >> 1);
 			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
+
 			value = (mask >> 1) | (outer >> 1);
 			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 2, value);
@@ -515,12 +505,15 @@ INLINE static void prg_setup_JYASIC(void) {
 			value = (jyasic.prg[0] & mask) | outer;
 			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
+
 			value = (jyasic.prg[1] & mask) | outer;
 			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
+
 			value = (jyasic.prg[2] & mask) | outer;
 			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
+
 			value = mask | outer;
 			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 3, value);
@@ -546,6 +539,7 @@ INLINE static void prg_setup_JYASIC(void) {
 			value = (jyasic.prg[1] & (mask >> 1)) | (outer >> 1);
 			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
+
 			value = (jyasic.prg[3] & (mask >> 1)) | (outer >> 1);
 			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 2, value);
@@ -561,12 +555,15 @@ INLINE static void prg_setup_JYASIC(void) {
 			value = (jyasic.prg[0] & mask) | outer;
 			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
+
 			value = (jyasic.prg[1] & mask) | outer;
 			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
+
 			value = (jyasic.prg[2] & mask) | outer;
 			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
+
 			value = (jyasic.prg[3] & mask) | outer;
 			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 3, value);
@@ -575,11 +572,14 @@ INLINE static void prg_setup_JYASIC(void) {
 	jyasictmp.m6000.rom_8k = prg_pnt(jyasictmp.m6000.prg << 13);
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_setup_JYASIC(void) {
+INLINE static void chr_fix_JYASIC(void) {
 	WORD outer = 0, mask = 0xFFFF;
-	DBWORD bank;
+	DBWORD bank = 0;
 
-	ppu_setup_JYASIC(&outer, &mask);
+	ppu_fix_JYASIC(&outer, &mask);
+
+#define chr_JYASIC(index)\
+	((jyasic.chr.low[index] | (jyasic.chr.high[index] << 8)))
 
 	switch (jyasic.mode[0] & 0x18) {
 		case 0x00:
@@ -603,6 +603,7 @@ INLINE static void chr_setup_JYASIC(void) {
 			chr.bank_1k[1] = chr_pnt(bank | 0x0400);
 			chr.bank_1k[2] = chr_pnt(bank | 0x0800);
 			chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+
 			bank = (chr_JYASIC(jyasic.chr.latch[1]) & (mask >> 2)) | (outer >> 2);
 			_control_bank(bank, info.chr.rom.max.banks_4k)
 			bank <<= 12;
@@ -617,16 +618,19 @@ INLINE static void chr_setup_JYASIC(void) {
 			bank <<= 11;
 			chr.bank_1k[0] = chr_pnt(bank);
 			chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+
 			bank = (chr_JYASIC(2) & (mask >> 1)) | (outer >> 1);
 			_control_bank(bank, info.chr.rom.max.banks_2k)
 			bank <<= 11;
 			chr.bank_1k[2] = chr_pnt(bank);
 			chr.bank_1k[3] = chr_pnt(bank | 0x0400);
+
 			bank = (chr_JYASIC(4) & (mask >> 1)) | (outer >> 1);
 			_control_bank(bank, info.chr.rom.max.banks_2k)
 			bank <<= 11;
 			chr.bank_1k[4] = chr_pnt(bank);
 			chr.bank_1k[5] = chr_pnt(bank | 0x0400);
+
 			bank = (chr_JYASIC(6) & (mask >> 1)) | (outer >> 1);
 			_control_bank(bank, info.chr.rom.max.banks_2k)
 			bank <<= 11;
@@ -638,56 +642,72 @@ INLINE static void chr_setup_JYASIC(void) {
 			_control_bank(bank, info.chr.rom.max.banks_1k)
 			bank <<= 10;
 			chr.bank_1k[0] = chr_pnt(bank);
+
 			bank = (chr_JYASIC(1) & mask) | outer;
 			_control_bank(bank, info.chr.rom.max.banks_1k)
 			bank <<= 10;
 			chr.bank_1k[1] = chr_pnt(bank);
+
 			bank = (chr_JYASIC(2) & mask) | outer;
 			_control_bank(bank, info.chr.rom.max.banks_1k)
 			bank <<= 10;
 			chr.bank_1k[2] = chr_pnt(bank);
+
 			bank = (chr_JYASIC(3) & mask) | outer;
 			_control_bank(bank, info.chr.rom.max.banks_1k)
 			bank <<= 10;
 			chr.bank_1k[3] = chr_pnt(bank);
+
 			bank = (chr_JYASIC(4) & mask) | outer;
 			_control_bank(bank, info.chr.rom.max.banks_1k)
 			bank <<= 10;
 			chr.bank_1k[4] = chr_pnt(bank);
+
 			bank = (chr_JYASIC(5) & mask) | outer;
 			_control_bank(bank, info.chr.rom.max.banks_1k)
 			bank <<= 10;
 			chr.bank_1k[5] = chr_pnt(bank);
+
 			bank = (chr_JYASIC(6) & mask) | outer;
 			_control_bank(bank, info.chr.rom.max.banks_1k)
 			bank <<= 10;
 			chr.bank_1k[6] = chr_pnt(bank);
+
 			bank = (chr_JYASIC(7) & mask) | outer;
 			_control_bank(bank, info.chr.rom.max.banks_1k)
 			bank <<= 10;
 			chr.bank_1k[7] = chr_pnt(bank);
 			break;
 	}
+
+#undef chr_JYASIC
 }
-INLINE static void nmt_setup_JYASIC(void) {
-	WORD value;
-	BYTE i;
+INLINE static void nmt_fix_JYASIC(void) {
+	WORD value = 0;
+	BYTE i = 0;
 
 	if (jyasic.nmt.extended_mode) {
-		WORD outer, mask;
+		WORD outer = 0, mask = 0;
 
-		ppu_setup_JYASIC(&outer, &mask);
+		ppu_fix_JYASIC(&outer, &mask);
 
 		for (i = 0; i < 4; i++) {
 			if (((jyasic.mode[2] ^ jyasic.nmt.reg[i]) & 0x80) | (jyasic.mode[0] & 0x40)) {
-				nmt_rom_JYASIC(i);
+				value = (jyasic.nmt.reg[i] & mask) | outer;
+				control_bank(info.chr.rom.max.banks_1k)
+				ntbl.bank_1k[i] = chr_pnt(value << 10);
+				jyasic.nmt.write[i] = FALSE;
 			} else {
-				nmt_ram_JYASIC(i);
+				value = jyasic.nmt.reg[i] & 0x01;
+				ntbl.bank_1k[i] = &ntbl.data[value << 10];
+				jyasic.nmt.write[i] = TRUE;
 			}
 		}
 	} else if (jyasic.mode[1] & 0x08) {
 		for (i = 0; i < 4; i++) {
-			nmt_ram_JYASIC(i);
+			value = jyasic.nmt.reg[i] & 0x01;
+			ntbl.bank_1k[i] = &ntbl.data[value << 10];
+			jyasic.nmt.write[i] = TRUE;
 		}
 	} else {
 		switch (jyasic.mode[1] & 0x03) {
@@ -706,7 +726,7 @@ INLINE static void nmt_setup_JYASIC(void) {
 		}
 	}
 }
-INLINE static void ppu_setup_JYASIC(WORD *outer, WORD *mask) {
+INLINE static void ppu_fix_JYASIC(WORD *outer, WORD *mask) {
 	switch(jyasictmp.model) {
 		case MAP281:
 			(*outer) = (jyasic.mode[3] & 0x03) << 8;
@@ -753,7 +773,7 @@ INLINE static void ppu_setup_JYASIC(WORD *outer, WORD *mask) {
 	}
 }
 INLINE static void irq_clock_prescaler_JYASIC(void) {
-	BYTE type;
+	BYTE type = 0;
 
 	if (!jyasic.irq.active) {
 		return;

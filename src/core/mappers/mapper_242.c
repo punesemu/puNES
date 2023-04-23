@@ -107,7 +107,7 @@ BYTE extcl_save_mapper_242(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_wr_chr_242(WORD address, BYTE value) {
-	if (!info.prg.ram.bat.banks && (m242.reg & 0x0080)) {
+	if (!info.prg.ram.bat.banks && (m242.reg & 0x0080) && (info.prg.rom.banks_8k >= (512 / 8))) {
 		return;
 	}
 	chr.bank_1k[address >> 10][address & 0x3FF] = value;
@@ -142,7 +142,7 @@ INLINE static void prg_fix_242(void) {
 	_control_bank(bank, info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, 0, bank);
 
-	bank = bit7 ? bank | bit0 : outer | (7 * bit9);
+	bank = outer | (bit7 ? bank | bit0 : 7 * bit9);
 	_control_bank(bank, info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, 2, bank);
 

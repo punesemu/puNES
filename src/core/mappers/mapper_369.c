@@ -23,14 +23,13 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_369(void);
-INLINE static void prg_swap_369(WORD address, WORD value);
-INLINE static void chr_fix_369(void);
-INLINE static void chr_swap_369(WORD address, WORD value);
+void prg_fix_369(BYTE value);
+void prg_swap_369(WORD address, WORD value);
+void chr_fix_369(BYTE value);
+void chr_swap_369(WORD address, WORD value);
 
 struct _m369 {
 	BYTE reg;
-	WORD mmc3[8];
 	BYTE smb2j;
 	struct _m369_irq {
 		BYTE enable;
@@ -42,7 +41,7 @@ struct _m369tmp {
 } m369tmp;
 
 void map_init_369(void) {
-	EXTCL_AFTER_MAPPER_INIT(369);
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(369);
 	EXTCL_CPU_RD_MEM(369);
 	EXTCL_SAVE_MAPPER(369);
@@ -57,18 +56,14 @@ void map_init_369(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m369, 0x00, sizeof(m369));
 
-	m369.mmc3[0] = 0;
-	m369.mmc3[1] = 2;
-	m369.mmc3[2] = 4;
-	m369.mmc3[3] = 5;
-	m369.mmc3[4] = 6;
-	m369.mmc3[5] = 7;
-	m369.mmc3[6] = 0;
-	m369.mmc3[7] = 0;
+	init_MMC3();
+	MMC3_prg_fix = prg_fix_369;
+	MMC3_prg_swap = prg_swap_369;
+	MMC3_chr_fix = chr_fix_369;
+	MMC3_chr_swap = chr_swap_369;
 
 	if (!info.chr.ram.banks_8k_plus) {
 		info.chr.ram.banks_8k_plus = 1;
@@ -80,17 +75,13 @@ void map_init_369(void) {
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extcl_after_mapper_init_369(void) {
-	prg_fix_369();
-	chr_fix_369();
-}
 void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x4000:
 			if (cpu.prg_ram_wr_active && (address & 0x0100)) {
 				m369.reg = value;
-				prg_fix_369();
-				chr_fix_369();
+				MMC3_prg_fix(mmc3.bank_to_update);
+				MMC3_chr_fix(mmc3.bank_to_update);
 			}
 			return;
 		case 0x6000:
@@ -106,17 +97,9 @@ void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
 				irq.high &= ~EXT_IRQ;
 			}
 			if (!(address & 0x0001)) {
-				BYTE bank_to_update = mmc3.bank_to_update;
-
-				mmc3.bank_to_update = value;
-				if ((mmc3.bank_to_update & 0x40) != (bank_to_update & 0x40)) {
-					prg_fix_369();
-				}
-				if ((mmc3.bank_to_update & 0x80) != (bank_to_update & 0x80)) {
-					chr_fix_369();
-				}
+				extcl_cpu_wr_mem_MMC3(address, value);
 			} else {
-				m369.mmc3[mmc3.bank_to_update & 0x07] = value;
+				mmc3.reg[mmc3.bank_to_update & 0x07] = value;
 				switch (mmc3.bank_to_update & 0x07) {
 					case 0:
 					case 1:
@@ -124,11 +107,11 @@ void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
 					case 3:
 					case 4:
 					case 5:
-						chr_fix_369();
+						MMC3_chr_fix(mmc3.bank_to_update);
 						return;
 					case 6:
 					case 7:
-						prg_fix_369();
+						MMC3_prg_fix(mmc3.bank_to_update);
 						return;
 				}
 			}
@@ -148,7 +131,7 @@ void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
 		case 0xF000:
 			if (m369.reg == 0x13) {
 				m369.smb2j = value;
-				prg_fix_369();
+				MMC3_prg_fix(mmc3.bank_to_update);
 			}
 			extcl_cpu_wr_mem_MMC3(address, value);
 			return;
@@ -164,14 +147,13 @@ BYTE extcl_cpu_rd_mem_369(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 }
 BYTE extcl_save_mapper_369(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m369.reg);
-	save_slot_ele(mode, slot, m369.mmc3);
 	save_slot_ele(mode, slot, m369.smb2j);
 	save_slot_ele(mode, slot, m369.irq.enable);
 	save_slot_ele(mode, slot, m369.irq.counter);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
-		prg_fix_369();
+		MMC3_prg_fix(mmc3.bank_to_update);
 	}
 
 	return (EXIT_OK);
@@ -190,34 +172,32 @@ void extcl_cpu_every_cycle_369(void) {
 }
 void extcl_ppu_000_to_34x_369(void) {
 	if (!(m369.reg == 0x13)) {
-		irqA12_RS();
+		extcl_ppu_000_to_34x_MMC3();
 	}
 }
 void extcl_ppu_000_to_255_369(void) {
 	if (!(m369.reg == 0x13)) {
-		if (r2001.visible) {
-			irqA12_SB();
-		}
+		extcl_ppu_000_to_255_MMC3();
 	}
 }
 void extcl_ppu_256_to_319_369(void) {
 	if (!(m369.reg == 0x13)) {
-		irqA12_BS();
+		extcl_ppu_256_to_319_MMC3();
 	}
 }
 void extcl_ppu_320_to_34x_369(void) {
 	if (!(m369.reg == 0x13)) {
-		irqA12_SB();
+		extcl_ppu_320_to_34x_MMC3();
 	}
 }
 void extcl_update_r2006_369(WORD new_r2006, WORD old_r2006) {
 	if (!(m369.reg == 0x13)) {
-		irqA12_IO(new_r2006, old_r2006);
+		extcl_update_r2006_MMC3(new_r2006, old_r2006);
 	}
 }
 
-INLINE static void prg_fix_369(void) {
-	WORD bank;
+void prg_fix_369(BYTE value) {
+	WORD bank = 0;
 
 	m369tmp.prg_6000 = NULL;
 
@@ -259,19 +239,11 @@ INLINE static void prg_fix_369(void) {
 			return;
 		case 0x37:
 		case 0xFF:
-			if (mmc3.bank_to_update & 0x40) {
-				prg_swap_369(0x8000, ~1);
-				prg_swap_369(0xC000, m369.mmc3[6]);
-			} else {
-				prg_swap_369(0x8000, m369.mmc3[6]);
-				prg_swap_369(0xC000, ~1);
-			}
-			prg_swap_369(0xA000, m369.mmc3[7]);
-			prg_swap_369(0xE000, ~0);
+			prg_fix_MMC3(value);
 			return;
 	}
 }
-INLINE static void prg_swap_369(WORD address, WORD value) {
+void prg_swap_369(WORD address, WORD value) {
 	WORD base = (m369.reg == 0x37) ? 0x10 : 0x20;
 	WORD mask = (m369.reg == 0x37) ? 0x0F : 0x1F;
 
@@ -280,8 +252,8 @@ INLINE static void prg_swap_369(WORD address, WORD value) {
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_369(void) {
-	DBWORD bank;
+void chr_fix_369(BYTE value) {
+	DBWORD bank = 0;
 
 	switch (m369.reg) {
 		case 0x00:
@@ -324,22 +296,12 @@ INLINE static void chr_fix_369(void) {
 			chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 			return;
 		case 0x37:
-		case 0xFF: {
-			WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
-
-			chr_swap_369(cbase ^ 0x0000, m369.mmc3[0] & (~1));
-			chr_swap_369(cbase ^ 0x0400, m369.mmc3[0] |   1);
-			chr_swap_369(cbase ^ 0x0800, m369.mmc3[1] & (~1));
-			chr_swap_369(cbase ^ 0x0C00, m369.mmc3[1] |   1);
-			chr_swap_369(cbase ^ 0x1000, m369.mmc3[2]);
-			chr_swap_369(cbase ^ 0x1400, m369.mmc3[3]);
-			chr_swap_369(cbase ^ 0x1800, m369.mmc3[4]);
-			chr_swap_369(cbase ^ 0x1C00, m369.mmc3[5]);
+		case 0xFF:
+			chr_fix_MMC3(value);
 			return;
-		}
 	}
 }
-INLINE static void chr_swap_369(WORD address, WORD value) {
+void chr_swap_369(WORD address, WORD value) {
 	WORD base = (m369.reg == 0x37) ? 0x0080 : 0x0100;
 	WORD mask = 0x7F;
 

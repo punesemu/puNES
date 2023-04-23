@@ -57,7 +57,7 @@ BYTE uncompress_init(void) {
 	return (EXIT_OK);
 }
 void uncompress_quit(void) {
-	uint32_t i;
+	uint32_t i = 0;
 
 	l7z_quit();
 
@@ -75,12 +75,13 @@ void uncompress_quit(void) {
 }
 
 _uncompress_archive *uncompress_archive_alloc(uTCHAR *file, BYTE *rc) {
-	_uncompress_archive *archive;
-	uTCHAR *ext;
-	uint32_t size;
+	_uncompress_archive *archive = NULL;
+	uTCHAR *ext = NULL;
+	uint32_t size = 0;
 
 	// rintraccio l'ultimo '.' nel nome
-	if ((ext = ustrrchr(file, uL('.'))) == NULL) {
+	ext = ustrrchr(file, uL('.'));
+	if (ext == NULL) {
 		(*rc) = UNCOMPRESS_EXIT_IS_NOT_COMP;
 		return (NULL);
 	}
@@ -100,7 +101,8 @@ _uncompress_archive *uncompress_archive_alloc(uTCHAR *file, BYTE *rc) {
 		return (NULL);
 	}
 
-	if (!(archive = (_uncompress_archive *)malloc(sizeof(_uncompress_archive)))) {
+	archive = (_uncompress_archive *)malloc(sizeof(_uncompress_archive));
+	if (!archive) {
 		(*rc) = UNCOMPRESS_EXIT_ERROR_ON_UNCOMP;
 		return (NULL);
 	}
@@ -108,7 +110,8 @@ _uncompress_archive *uncompress_archive_alloc(uTCHAR *file, BYTE *rc) {
 	archive->file = NULL;
 
 	size = ustrlen(file) + 1;
-	if (!(archive->file = (uTCHAR *)malloc(sizeof(uTCHAR) * size))) {
+	archive->file = (uTCHAR *)malloc(sizeof(uTCHAR) * size);
+	if (!archive->file) {
 		uncompress_archive_free(archive);
 		(*rc) = UNCOMPRESS_EXIT_ERROR_ON_UNCOMP;
 		return (NULL);
@@ -125,7 +128,8 @@ _uncompress_archive *uncompress_archive_alloc(uTCHAR *file, BYTE *rc) {
 	archive->list.count = 0;
 	archive->list.item = NULL;
 
-	if (((*rc) = uncompress_examine_archive(archive)) != UNCOMPRESS_EXIT_OK) {
+	(*rc) = uncompress_examine_archive(archive);
+	if ((*rc) != UNCOMPRESS_EXIT_OK) {
 		uncompress_archive_free(archive);
 		return (NULL);
 	}
@@ -162,7 +166,7 @@ uint32_t uncompress_archive_counter(_uncompress_archive *archive, BYTE type) {
 }
 BYTE uncompress_archive_extract_file(_uncompress_archive *archive, BYTE type) {
 	uint32_t selected = 0;
-	BYTE rc;
+	BYTE rc = 0;
 
 	switch (uncompress_archive_counter(archive, type)) {
 		case 0:
@@ -185,7 +189,7 @@ BYTE uncompress_archive_extract_file(_uncompress_archive *archive, BYTE type) {
 	return (rc);
 }
 _uncompress_archive_item *uncompress_archive_find_item(_uncompress_archive *archive, uint32_t selected, BYTE type) {
-	uint32_t i, index = 0;
+	uint32_t i = 0, index = 0;
 
 	for (i = 0; i < archive->list.count; i++) {
 		_uncompress_archive_item *aitem = &archive->list.item[i];
@@ -203,7 +207,7 @@ _uncompress_archive_item *uncompress_archive_find_item(_uncompress_archive *arch
 	return (NULL);
 }
 uTCHAR *uncompress_archive_extracted_file_name(_uncompress_archive *archive, BYTE type) {
-	uint32_t selected;
+	uint32_t selected = 0;
 
 	switch (type) {
 		default:
@@ -227,7 +231,7 @@ uTCHAR *uncompress_archive_file_name(_uncompress_archive *archive, uint32_t sele
 }
 
 uTCHAR *uncompress_storage_archive_name(uTCHAR *file) {
-	uint32_t i;
+	uint32_t i = 0;
 
 	for (i = 0; i < uncstorage.count; i++) {
 		_uncompress_storage_item *sitem = &uncstorage.item[i];
@@ -240,9 +244,9 @@ uTCHAR *uncompress_storage_archive_name(uTCHAR *file) {
 	return (NULL);
 }
 uint32_t uncompress_storage_add_to_list(_uncompress_archive *archive, _uncompress_archive_item *aitem, uTCHAR *file) {
-	_uncompress_storage_item *sitem, *si = NULL;
+	_uncompress_storage_item *sitem = NULL, *si = NULL;
 	BYTE found = FALSE;
-	uint32_t i;
+	uint32_t i = 0;
 
 	for (i = 0; i < uncstorage.count; i++) {
 		si = &uncstorage.item[i];
@@ -254,12 +258,16 @@ uint32_t uncompress_storage_add_to_list(_uncompress_archive *archive, _uncompres
 	}
 
 	if (!found) {
-		uncstorage.item = (_uncompress_storage_item *)realloc(uncstorage.item,
-			(uncstorage.count + 1) * sizeof(_uncompress_storage_item));
-		sitem = &uncstorage.item[uncstorage.count];
-		memset(sitem, 0x00, sizeof(_uncompress_storage_item));
-		i = uncstorage.count;
-		uncstorage.count++;
+		_uncompress_storage_item *item = NULL;
+
+		item = (_uncompress_storage_item *)realloc(uncstorage.item, (uncstorage.count + 1) * sizeof(_uncompress_storage_item));
+		if (item) {
+			uncstorage.item = item;
+			sitem = &uncstorage.item[uncstorage.count];
+			memset(sitem, 0x00, sizeof(_uncompress_storage_item));
+			i = uncstorage.count;
+			uncstorage.count++;
+		}
 	} else {
 		sitem = si;
 	}
@@ -285,7 +293,7 @@ static uTCHAR *uncompress_storage_index_file_name(uint32_t index) {
 #if defined (__unix__)
 static BYTE mz_zip_examine_archive(_uncompress_archive *archive) {
 	mz_zip_archive mzarchive;
-	unsigned int a;
+	unsigned int a = 0;
 
 	memset(&mzarchive, 0x00, sizeof(mzarchive));
 
@@ -296,7 +304,7 @@ static BYTE mz_zip_examine_archive(_uncompress_archive *archive) {
 
 	for (a = 0; a < mz_zip_reader_get_num_files(&mzarchive); a++) {
 		mz_zip_archive_file_stat file_stat;
-		unsigned int b;
+		unsigned int b = 0;
 
 		if (!mz_zip_reader_file_stat(&mzarchive, a, &file_stat)) {
 			log_error(uL("uncompress;mz_zip_reader_file_stat() failed!"));
@@ -314,6 +322,7 @@ static BYTE mz_zip_examine_archive(_uncompress_archive *archive) {
 
 			if ((ext != NULL) && (strcasecmp(ext, (uTCHAR *)uncompress_exts[b].e) == 0)) {
 				_uncompress_archive_items_list *list = &archive->list;
+				_uncompress_archive_item *item = NULL;
 
 				if (uncompress_exts[b].type == UNCOMPRESS_TYPE_ROM) {
 					archive->rom.count++;
@@ -323,18 +332,17 @@ static BYTE mz_zip_examine_archive(_uncompress_archive *archive) {
 					continue;
 				}
 
-				list->item = (_uncompress_archive_item *)realloc(list->item,
-					(list->count + 1) * sizeof(_uncompress_archive_item));
+				item = (_uncompress_archive_item *)realloc(list->item, (list->count + 1) * sizeof(_uncompress_archive_item));
+				if (item) {
+					_uncompress_archive_item *aitem = NULL;
 
-				{
-					_uncompress_archive_item *aitem = &list->item[list->count];
-
+					list->item = item;
+					aitem = &list->item[list->count];
 					aitem->type = uncompress_exts[b].type;
 					aitem->index = file_stat.m_file_index;
+					list->count++;
+					break;
 				}
-
-				list->count++;
-				break;
 			}
 		}
 	}
@@ -346,9 +354,10 @@ static BYTE mz_zip_examine_archive(_uncompress_archive *archive) {
 static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t selected, BYTE type) {
 	mz_zip_archive mzarchive;
 	uTCHAR file[LENGTH_FILE_NAME_LONG];
-	_uncompress_archive_item *aitem;
+	_uncompress_archive_item *aitem = NULL;
 
-	if ((aitem = uncompress_archive_find_item(archive, selected, type)) == NULL) {
+	aitem = uncompress_archive_find_item(archive, selected, type);
+	if (aitem == NULL) {
 		return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
 	}
 
@@ -393,9 +402,10 @@ static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t s
 static uTCHAR *mz_zip_item_file_name(_uncompress_archive *archive, uint32_t selected, BYTE type) {
 	static uTCHAR file[LENGTH_FILE_NAME_LONG];
 	mz_zip_archive mzarchive;
-	_uncompress_archive_item *aitem;
+	_uncompress_archive_item *aitem = NULL;
 
-	if ((aitem = uncompress_archive_find_item(archive, selected, type)) == NULL) {
+	aitem = uncompress_archive_find_item(archive, selected, type);
+	if (aitem == NULL) {
 		return (NULL);
 	}
 
@@ -411,6 +421,6 @@ static uTCHAR *mz_zip_item_file_name(_uncompress_archive *archive, uint32_t sele
 	// Close the archive, freeing any resources it was using
 	mz_zip_reader_end(&mzarchive);
 
-	return (file);
+	return (&file[0]);
 }
 #endif

@@ -102,19 +102,19 @@ void map_init_OneBus(void) {
 		}
 
 		{
-			BYTE i;
+			int i = 0;
 
-			for (i = 0; i < LENGTH(onebus.gpio); i++) {
+			for (i = 0; i < (int)LENGTH(onebus.gpio); i++) {
 				onebus.gpio[i] = gpio_onebus_create();
 			}
 		}
 	}
 
 	if (info.reset >= HARD) {
-		size_t i;
+		size_t i = 0;
 
 		for (i = 0; i < onebustmp.chr.size; i++) {
-			int address = (i & 0x0F) | ((i >> 1) & ~0x0F);
+			size_t address = (i & 0x0F) | ((i >> 1) & ~0x0F);
 
 			if (i & 0x10) {
 				onebustmp.chr.high[address] = onebustmp.chr.data[i];
@@ -165,11 +165,11 @@ void map_init_OneBus(void) {
 	onebus.reg.cpu[0x61] = 0x00;
 
 	if (info.mapper.ext_console_type == VT369) {
-		BYTE i;
+		int i = 0;
 
 		extcl_cpu_wr_mem_OneBus(0x4162, 0x00);
 
-		for (i = 0; i < LENGTH(onebus.gpio); i++) {
+		for (i = 0; i < (int)LENGTH(onebus.gpio); i++) {
 			gpio_onebus_reset(onebus.gpio[i]);
 		}
 
@@ -189,9 +189,9 @@ void extcl_after_mapper_init_OneBus(void) {
 	mirroring_fix_OneBus();
 }
 void extcl_mapper_quit_OneBus(void) {
-	BYTE i;
+	int i = 0;
 
-	for (i = 0; i < LENGTH(onebus.gpio); i++) {
+	for (i = 0; i < (int)LENGTH(onebus.gpio); i++) {
 		gpio_onebus_reset(onebus.gpio[i]);
 		gpio_onebus_free(onebus.gpio[i]);
 	}
@@ -274,6 +274,8 @@ void extcl_cpu_wr_mem_OneBus(WORD address, BYTE value) {
 						case 7:
 							extcl_cpu_wr_mem_OneBus(0x4101 + reg, value);
 							break;
+						default:
+							break;
 					}
 					break;
 				}
@@ -327,7 +329,7 @@ BYTE extcl_cpu_rd_mem_OneBus(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	return (openbus);
 }
 BYTE extcl_save_mapper_OneBus(BYTE mode, BYTE slot, FILE *fp) {
-	BYTE i;
+	int i = 0;
 
 	save_slot_ele(mode, slot, onebus.relative_8k);
 	save_slot_ele(mode, slot, onebus.reg.cpu);
@@ -340,7 +342,7 @@ BYTE extcl_save_mapper_OneBus(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, onebus.pcm.enable);
 	save_slot_ele(mode, slot, onebus.pcm.irq);
 
-	for (i = 0; i < LENGTH(onebus.gpio); i++) {
+	for (i = 0; i < (int)LENGTH(onebus.gpio); i++) {
 		gpio_onebus_save_mapper(onebus.gpio[i], mode, slot, fp);
 	}
 
@@ -459,7 +461,7 @@ void prg_fix_8k_OneBus(WORD mmask, WORD mblock) {
 	BYTE mode = onebus.reg.cpu[0x0B] & 0x07;
 	BYTE mask = mode == 0x07 ? 0xFF : 0x3F >> mode;
 	BYTE swap = (onebus.reg.cpu[0x05] & 0x40) >> 5;
-	WORD bank, block = ((onebus.reg.cpu[0] & 0xF0) << 4) | (onebus.reg.cpu[0x0A] & ~mask);
+	WORD bank = 0, block = ((onebus.reg.cpu[0] & 0xF0) << 4) | (onebus.reg.cpu[0x0A] & ~mask);
 
 	if ((info.mapper.ext_console_type == VT369) && (onebus.reg.cpu[0x1C] & 0x40)) {
 		bank = mblock | (((block | (onebus.reg.cpu[0x12] & mask)) + onebus.relative_8k) & mmask);
@@ -490,7 +492,7 @@ void prg_fix_8k_OneBus(WORD mmask, WORD mblock) {
 void prg_fix_16k_OneBus(WORD bank0, WORD bank1, WORD mmask, WORD mblock) {
 	BYTE mode = onebus.reg.cpu[0x0B] & 0x07;
 	BYTE mask = mode == 0x07 ? 0xFF : 0x3F >> mode;
-	WORD bank, block = ((onebus.reg.cpu[0] & 0xF0) << 4) | (onebus.reg.cpu[0x0A] & ~mask);
+	WORD bank = 0, block = ((onebus.reg.cpu[0] & 0xF0) << 4) | (onebus.reg.cpu[0x0A] & ~mask);
 
 	if ((info.mapper.ext_console_type == VT369) && (onebus.reg.cpu[0x1C] & 0x40)) {
 		bank = mblock | (((block | (onebus.reg.cpu[0x12] & mask)) + onebus.relative_8k) & mmask);
@@ -570,7 +572,7 @@ INLINE static void chr_swap_OneBus(BYTE **banks, BYTE *base, BYTE bit4pp, BYTE e
 
 	if (extended) {
 #define chrpnt(input)\
-	(((mblock | ((block | (input & mask) | EVA | ((onebus.reg.cpu[0] & 0x0F) << 11)) & mmask)) + relative) << 10) & chrMask
+	(((mblock | ((block | ((input) & mask) | EVA | ((onebus.reg.cpu[0] & 0x0F) << 11)) & mmask)) + relative) << 10) & chrMask
 		banks[0 ^ swap] = &base[chrpnt((onebus.reg.ppu[0x16] & 0xFE))];
 		banks[1 ^ swap] = &base[chrpnt((onebus.reg.ppu[0x16] | 0x01))];
 		banks[2 ^ swap] = &base[chrpnt((onebus.reg.ppu[0x17] & 0xFE))];
@@ -583,7 +585,7 @@ INLINE static void chr_swap_OneBus(BYTE **banks, BYTE *base, BYTE bit4pp, BYTE e
 	} else {
 		block |= ((onebus.reg.ppu[0x18] & 0x70) << 4);
 #define chrpnt(input)\
-	(((mblock | ((block | (input & mask) | ((onebus.reg.cpu[0] & 0x0F) << 11)) & mmask)) + relative) << 10) & chrMask
+	(((mblock | ((block | ((input) & mask) | ((onebus.reg.cpu[0] & 0x0F) << 11)) & mmask)) + relative) << 10) & chrMask
 		banks[0 ^ swap] = &base[chrpnt((onebus.reg.ppu[0x16] & 0xFE))];
 		banks[1 ^ swap] = &base[chrpnt((onebus.reg.ppu[0x16] | 0x01))];
 		banks[2 ^ swap] = &base[chrpnt((onebus.reg.ppu[0x17] & 0xFE))];

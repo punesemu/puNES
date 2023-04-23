@@ -21,43 +21,28 @@
 
 #include "common.h"
 
-#define swap_chr_bank_1k(src, dst)\
-{\
-	BYTE *chr_bank_1k = chr.bank_1k[src];\
-	chr.bank_1k[src] = chr.bank_1k[dst];\
-	chr.bank_1k[dst] = chr_bank_1k;\
-}
-
 enum {
-	NAMCO3413,
-	NAMCO3414,
-	NAMCO3415,
-	NAMCO3416,
-	NAMCO3417,
-	NAMCO3451,
-	TKROM,
-	KT008,
-	SMB2EREZA,
+	MMC3_SHARP,
+	MMC3_MMC6,
+	MMC3C,
+	MMC3_MCACC,
+	MMC3_NEC,
+	MMC3_T9552,
+	SMB2EREZA = 10,
 	SMB2JSMB1,
-	RADRACER2,
-	MMC3_ALTERNATE,
-	MMC6
+	RADRACER2
 };
 
 typedef struct _mmc3 {
-	BYTE prg_ram_protect;
+	WORD reg[8];
 	BYTE bank_to_update;
-	BYTE prg_rom_cfg;
-	BYTE chr_rom_cfg;
+	BYTE mirroring;
 } _mmc3;
-typedef struct _kt008 {
-	BYTE value;
-} _kt008;
 
 extern _mmc3 mmc3;
-extern _kt008 kt008;
 
 void map_init_MMC3(void);
+void extcl_after_mapper_init_MMC3(void);
 void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value);
 BYTE extcl_save_mapper_MMC3(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_MMC3(void);
@@ -66,9 +51,19 @@ void extcl_ppu_000_to_255_MMC3(void);
 void extcl_ppu_256_to_319_MMC3(void);
 void extcl_ppu_320_to_34x_MMC3(void);
 void extcl_update_r2006_MMC3(WORD new_r2006, WORD old_r2006);
-void extcl_irq_A12_clock_MMC3_alternate(void);
+void extcl_irq_A12_clock_MMC3_NEC(void);
 
-void extcl_cpu_wr_mem_KT008(WORD address, BYTE value);
-BYTE extcl_save_mapper_KT008(BYTE mode, BYTE slot, FILE *fp);
+void init_MMC3(void);
+void prg_fix_MMC3(BYTE value);
+void prg_swap_MMC3(WORD address, WORD value);
+void chr_fix_MMC3(BYTE value);
+void chr_swap_MMC3(WORD address, WORD value);
+void mirroring_fix_MMC3(void);
+
+extern void (*MMC3_prg_fix)(BYTE value);
+extern void (*MMC3_prg_swap)(WORD address, WORD value);
+extern void (*MMC3_chr_fix)(BYTE value);
+extern void (*MMC3_chr_swap)(WORD address, WORD value);
+extern void (*MMC3_mirroring_fix)(void);
 
 #endif /* MAPPER_MMC3_H_ */

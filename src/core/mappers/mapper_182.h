@@ -22,6 +22,5 @@
 #include "common.h"
 
 void map_init_182(void);
-void extcl_cpu_wr_mem_182(WORD address, BYTE value);
 
 #endif /* MAPPER_182_H_ */

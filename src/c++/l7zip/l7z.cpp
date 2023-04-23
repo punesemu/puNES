@@ -59,8 +59,8 @@ class in_stream: public C7ZipInStream {
 				if (pos) {
 					pos++;
 
-					m_strFileExt = wstring(m_strFileName.c_str() + pos,
-							(m_strFileName.c_str() + pos) + ustrlen(m_strFileName.c_str() + pos));
+					m_strFileExt = wstring((m_strFileName.c_str() + pos),
+						((m_strFileName.c_str() + pos) + ustrlen((m_strFileName.c_str() + pos))));
 				}
 			}
 		}
@@ -74,16 +74,16 @@ class in_stream: public C7ZipInStream {
 		}
 
 		virtual int Read(void *data, unsigned int size, unsigned int *processedSize) {
-			int count;
+			int count = 0;
 
 			if (!m_pFile) {
 				return (EXIT_ERROR);
 			}
 
-			count = fread(data, 1, size, m_pFile);
+			count = fread(data, 1, (size_t)size, m_pFile);
 
 			if (count >= 0) {
-				if (processedSize != NULL) {
+				if (processedSize != nullptr) {
 					*processedSize = count;
 				}
 
@@ -94,13 +94,13 @@ class in_stream: public C7ZipInStream {
 		}
 
 		virtual int Seek(__int64 offset, unsigned int seekOrigin, unsigned __int64 *newPosition) {
-			int result;
+			int result = 0;
 
 			if (!m_pFile) {
 				return (EXIT_ERROR);
 			}
 
-			result = fseek(m_pFile, (long)offset, seekOrigin);
+			result = fseek(m_pFile, (long)offset, (int)seekOrigin);
 
 			if (!result) {
 				if (newPosition) {
@@ -150,10 +150,10 @@ class out_stream: public C7ZipOutStream {
 		}
 
 		virtual int Write(const void *data, unsigned int size, unsigned int *processedSize) {
-			int count = fwrite(data, 1, size, m_pFile);
+			const int count = fwrite(data, 1, size, m_pFile);
 
 			if (count >= 0) {
-				if (processedSize != NULL) {
+				if (processedSize != nullptr) {
 					*processedSize = count;
 				}
 
@@ -166,7 +166,7 @@ class out_stream: public C7ZipOutStream {
 		}
 
 		virtual int Seek(__int64 offset, unsigned int seekOrigin, unsigned __int64 *newPosition) {
-			int result = fseek(m_pFile, (long) offset, seekOrigin);
+			const int result = fseek(m_pFile, (long) offset, (int)seekOrigin);
 
 			if (!result) {
 				if (newPosition) {
@@ -216,14 +216,14 @@ BYTE l7z_control_ext(const uTCHAR *ext) {
 	}
 
 	for (size_t i = 0; i < exts.size(); i++) {
-		wstring l7zext = exts[i];
+		const wstring l7zext = exts[i];
 
 #if defined (_WIN32)
-		if (ustrlen(ext + 1) != ustrlen(uPTCHAR(l7zext.c_str()))) {
+		if (ustrlen((ext + 1)) != ustrlen(uPTCHAR(l7zext.c_str()))) {
 			continue;
 		}
 
-		if (ustrcasecmp(uPTCHAR(ext + 1), uPTCHAR(l7zext.c_str())) == 0) {
+		if (ustrcasecmp(uPTCHAR((ext + 1)), uPTCHAR(l7zext.c_str())) == 0) {
 			return (EXIT_OK);
 		}
 #else
@@ -231,11 +231,11 @@ BYTE l7z_control_ext(const uTCHAR *ext) {
 
 		wcstombs((char *)buffer, l7zext.c_str(), sizeof(buffer) - 1);
 
-		if (strlen(ext + 1) != strlen(buffer)) {
+		if (strlen((ext + 1)) != strlen(buffer)) {
 			continue;
 		}
 
-		if (strcasecmp(ext + 1, buffer) == 0) {
+		if (strcasecmp((ext + 1), buffer) == 0) {
 			return (EXIT_OK);
 		}
 #endif
@@ -244,8 +244,8 @@ BYTE l7z_control_ext(const uTCHAR *ext) {
 	return (EXIT_ERROR);
 }
 BYTE l7z_examine_archive(_uncompress_archive *archive) {
-	C7ZipArchive *c7zarchive = NULL;
-	unsigned int a, num_items = 0;
+	C7ZipArchive *c7zarchive = nullptr;
+	unsigned int a = 0, num_items = 0;
 	in_stream stream(archive->file);
 
 	if (!l7z.lib.OpenArchive(&stream, &c7zarchive)) {
@@ -256,9 +256,9 @@ BYTE l7z_examine_archive(_uncompress_archive *archive) {
 	c7zarchive->GetItemCount(&num_items);
 
 	for (a = 0; a < num_items; a++) {
-		uTCHAR file[LENGTH_FILE_NAME_LONG], *ext;
-		C7ZipArchiveItem *item = NULL;
-		unsigned int b;
+		uTCHAR file[LENGTH_FILE_NAME_LONG], *ext = nullptr;
+		C7ZipArchiveItem *item = nullptr;
+		unsigned int b = 0;
 
 		if (!(c7zarchive->GetItemInfo(a, &item))) {
 			continue;
@@ -271,13 +271,13 @@ BYTE l7z_examine_archive(_uncompress_archive *archive) {
 
 		//printf("%d,%ls,%d\n", item->GetArchiveIndex(), item->GetFullPath().c_str(), item->IsDir());
 
-		umemset(file, 0x00, usizeof(file));
+		umemset(&file[0], 0x00, usizeof(file));
 #if defined (_WIN32)
-		ustrncpy(file, item->GetFullPath().c_str(), usizeof(file) - 1);
+		ustrncpy(&file[0], item->GetFullPath().c_str(), usizeof(file) - 1);
 #else
-		wcstombs((char *)file, item->GetFullPath().c_str(), sizeof(file) - 1);
+		wcstombs((char *)&file[0], item->GetFullPath().c_str(), sizeof(file) - 1);
 #endif
-		if ((ext = ustrrchr(file, uL('.'))) == NULL) {
+		if ((ext = ustrrchr(&file[0], uL('.'))) == nullptr) {
 			continue;
 		}
 
@@ -314,13 +314,13 @@ BYTE l7z_examine_archive(_uncompress_archive *archive) {
 	return (UNCOMPRESS_EXIT_OK);
 }
 BYTE l7z_extract_from_archive(_uncompress_archive *archive, uint32_t selected, BYTE type) {
-	C7ZipArchive *c7zarchive = NULL;
-	C7ZipArchiveItem *item = NULL;
+	C7ZipArchive *c7zarchive = nullptr;
+	C7ZipArchiveItem *item = nullptr;
 	uTCHAR file[LENGTH_FILE_NAME_LONG], basename[255];
 	in_stream stream(archive->file);
-	_uncompress_archive_item *aitem;
+	_uncompress_archive_item *aitem = nullptr;
 
-	if ((aitem = uncompress_archive_find_item(archive, selected, type)) == NULL) {
+	if ((aitem = uncompress_archive_find_item(archive, selected, type)) == nullptr) {
 		return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
 	}
 
@@ -334,16 +334,16 @@ BYTE l7z_extract_from_archive(_uncompress_archive *archive, uint32_t selected, B
 	}
 
 #if defined (_WIN32)
-	ustrncpy(file, item->GetFullPath().c_str(), usizeof(file) - 1);
+	ustrncpy(&file[0], item->GetFullPath().c_str(), usizeof(file) - 1);
 #else
 	wcstombs((char *)file, item->GetFullPath().c_str(), sizeof(file) - 1);
 #endif
-	gui_utf_basename(file, basename, usizeof(basename));
-	usnprintf(file, usizeof(file), uL("" uPs("") "/" uPs("")), gui_temp_folder(), basename);
+	gui_utf_basename(&file[0], basename, usizeof(basename));
+	usnprintf(&file[0], usizeof(file), uL("" uPs("") "/" uPs("")), gui_temp_folder(), basename);
 
 	{
-		out_stream o_stream(file);
-		uint32_t storage_index;
+		out_stream o_stream(&file[0]);
+		uint32_t storage_index = 0;
 
 		if (!c7zarchive->Extract(item, &o_stream)) {
 			log_error(uL("uncompress file failed!"));
@@ -351,7 +351,7 @@ BYTE l7z_extract_from_archive(_uncompress_archive *archive, uint32_t selected, B
 			return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
 		}
 
-		storage_index = uncompress_storage_add_to_list(archive, aitem, file);
+		storage_index = uncompress_storage_add_to_list(archive, aitem, &file[0]);
 
 		switch (type) {
 			default:
@@ -371,32 +371,33 @@ BYTE l7z_extract_from_archive(_uncompress_archive *archive, uint32_t selected, B
 }
 uTCHAR *l7z_item_file_name(_uncompress_archive *archive, uint32_t selected, BYTE type) {
 	static uTCHAR file[LENGTH_FILE_NAME_LONG];
-	C7ZipArchive *c7zarchive = NULL;
-	C7ZipArchiveItem *item = NULL;
+	C7ZipArchive *c7zarchive = nullptr;
+	C7ZipArchiveItem *item = nullptr;
 	in_stream stream(archive->file);
-	_uncompress_archive_item *aitem;
+	_uncompress_archive_item *aitem = nullptr;
 
-	if ((aitem = uncompress_archive_find_item(archive, selected, type)) == NULL) {
-		return (NULL);
+	aitem = uncompress_archive_find_item(archive, selected, type);
+	if (aitem == nullptr) {
+		return (nullptr);
 	}
 
 	if (!l7z.lib.OpenArchive(&stream, &c7zarchive)) {
-		return (NULL);
+		return (nullptr);
 	}
 
 	if (!c7zarchive->GetItemInfo(aitem->index, &item)) {
 		delete (c7zarchive);
-		return (NULL);
+		return (nullptr);
 	}
 
-	umemset(file, 0x00, usizeof(file));
+	umemset(&file[0], 0x00, usizeof(file));
 #if defined (_WIN32)
-	ustrncpy(file, item->GetFullPath().c_str(), usizeof(file) - 1);
+	ustrncpy(&file[0], item->GetFullPath().c_str(), usizeof(file) - 1);
 # else
-	wcstombs((char *)file, item->GetFullPath().c_str(), usizeof(file) - 1);
+	wcstombs((char *)&file[0], item->GetFullPath().c_str(), usizeof(file) - 1);
 #endif
 
 	delete (c7zarchive);
 
-	return (file);
+	return (&file[0]);
 }

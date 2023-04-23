@@ -22,7 +22,7 @@
 #include "common.h"
 
 enum _jyasic_types {
-	 MAP90, MAP209, MAP211, MAP281,
+	MAP90,  MAP209, MAP211, MAP281,
 	MAP282, MAP295, MAP358, MAP386,
 	MAP387, MAP388, MAP394, MAP397 };
 
@@ -54,7 +54,9 @@ typedef struct _jyasic {
 } _jyasic;
 
 extern _jyasic jyasic;
+
 void map_init_JYASIC(BYTE model);
+void extcl_after_mapper_init_JYASIC(void);
 void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_JYASIC(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_JYASIC(BYTE mode, BYTE slot, FILE *fp);
@@ -66,7 +68,5 @@ void extcl_ppu_000_to_255_JYASIC(void);
 void extcl_ppu_256_to_319_JYASIC(void);
 void extcl_ppu_320_to_34x_JYASIC(void);
 void extcl_update_r2006_JYASIC(WORD new_r2006, WORD old_r2006);
-
-void state_fix_JYASIC(void);
 
 #endif /* MAPPER_JYASIC_H_ */

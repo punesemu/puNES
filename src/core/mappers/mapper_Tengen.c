@@ -120,6 +120,7 @@ struct _tengentmp {
 
 void map_init_Tengen(BYTE model) {
 	switch (model) {
+		default:
 		case T800037:
 		case TRAMBO:
 			EXTCL_CPU_WR_MEM(Tengen_Rambo);
@@ -137,17 +138,17 @@ void map_init_Tengen(BYTE model) {
 			mapper.internal_struct_size[1] = sizeof(irqA12);
 
 			if (info.reset >= HARD) {
-				BYTE i;
+				int i = 0;
 
 				memset(&tengen_rambo, 0x00, sizeof(tengen_rambo));
 				memset(&irqA12, 0x00, sizeof(irqA12));
 				tengen_rambo.irq_mode = CPU_MODE;
 
-				for (i = 0; i < LENGTH(tengen_rambo.chr); i++) {
+				for (i = 0; i < (int)LENGTH(tengen_rambo.chr); i++) {
 					tengen_rambo.chr[i] = i;
 				}
 
-				for (i = 0; i < LENGTH(tengen_rambo.prg); i++) {
+				for (i = 0; i < (int)LENGTH(tengen_rambo.prg); i++) {
 					tengen_rambo.prg[i] = i;
 				}
 			} else {
@@ -158,6 +159,7 @@ void map_init_Tengen(BYTE model) {
 
 			{
 				BYTE value = 0;
+
 				tengen_rambo_prg_24k_update()
 				tengen_rambo_chr_8k_update()
 			}
@@ -166,7 +168,6 @@ void map_init_Tengen(BYTE model) {
 
 	tengentmp.type = model;
 }
-
 void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 	switch (address & 0xF001) {
 		case 0x8000:

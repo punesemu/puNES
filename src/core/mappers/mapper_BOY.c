@@ -31,46 +31,46 @@ INLINE static void boy_update_chr(void);
 	boy.chr_map[b] = boy.chr_map[a];\
 	boy.chr_map[a] = chr1k
 #define boy_8000()\
-	if (mmc3.chr_rom_cfg != old_chr_rom_cfg) {\
+	if (mmc3_old.chr_rom_cfg != old_chr_rom_cfg) {\
 		WORD chr1k;\
 		boy_swap_chr_1k(0, 4);\
 		boy_swap_chr_1k(1, 5);\
 		boy_swap_chr_1k(2, 6);\
 		boy_swap_chr_1k(3, 7);\
 	}\
-	if (mmc3.prg_rom_cfg != old_prg_rom_cfg) {\
+	if (mmc3_old.prg_rom_cfg != old_prg_rom_cfg) {\
 		mapper.rom_map_to[2] = boy.prg_map[0];\
 		mapper.rom_map_to[0] = boy.prg_map[2];\
 		boy.prg_map[0] = mapper.rom_map_to[0];\
 		boy.prg_map[2] = mapper.rom_map_to[2];\
-		boy.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
+		boy.prg_map[mmc3_old.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
 	}
 #define boy_8001()\
-	switch (mmc3.bank_to_update) {\
+	switch (mmc3_old.bank_to_update) {\
 		case 0:\
 			value &= 0xFE;\
-			boy.chr_map[mmc3.chr_rom_cfg] = value;\
-			boy.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
+			boy.chr_map[mmc3_old.chr_rom_cfg] = value;\
+			boy.chr_map[mmc3_old.chr_rom_cfg | 0x01] = value + 1;\
 			break;\
 		case 1:\
 			value &= 0xFE;\
-			boy.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
-			boy.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
+			boy.chr_map[mmc3_old.chr_rom_cfg | 0x02] = value;\
+			boy.chr_map[mmc3_old.chr_rom_cfg | 0x03] = value + 1;\
 			break;\
 		case 2:\
-			boy.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;\
+			boy.chr_map[mmc3_old.chr_rom_cfg ^ 0x04] = value;\
 			break;\
 		case 3:\
-			boy.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = value;\
+			boy.chr_map[(mmc3_old.chr_rom_cfg ^ 0x04) | 0x01] = value;\
 			break;\
 		case 4:\
-			boy.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = value;\
+			boy.chr_map[(mmc3_old.chr_rom_cfg ^ 0x04) | 0x02] = value;\
 			break;\
 		case 5:\
-			boy.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;\
+			boy.chr_map[(mmc3_old.chr_rom_cfg ^ 0x04) | 0x03] = value;\
 			break;\
 		case 6:\
-			boy.prg_map[mmc3.prg_rom_cfg] = value;\
+			boy.prg_map[mmc3_old.prg_rom_cfg] = value;\
 			break;\
 		case 7:\
 			boy.prg_map[1] = value;\
@@ -87,20 +87,20 @@ void map_init_BOY(void) {
 	EXTCL_AFTER_MAPPER_INIT(BOY);
 	EXTCL_CPU_WR_MEM(BOY);
 	EXTCL_SAVE_MAPPER(BOY);
-	EXTCL_CPU_EVERY_CYCLE(MMC3);
-	EXTCL_PPU_000_TO_34X(MMC3);
-	EXTCL_PPU_000_TO_255(MMC3);
-	EXTCL_PPU_256_TO_319(MMC3);
-	EXTCL_PPU_320_TO_34X(MMC3);
-	EXTCL_UPDATE_R2006(MMC3);
+	EXTCL_CPU_EVERY_CYCLE(MMC3_old);
+	EXTCL_PPU_000_TO_34X(MMC3_old);
+	EXTCL_PPU_000_TO_255(MMC3_old);
+	EXTCL_PPU_256_TO_319(MMC3_old);
+	EXTCL_PPU_320_TO_34X(MMC3_old);
+	EXTCL_UPDATE_R2006(MMC3_old);
 	mapper.internal_struct[0] = (BYTE *)&boy;
 	mapper.internal_struct_size[0] = sizeof(boy);
-	mapper.internal_struct[1] = (BYTE *)&mmc3;
-	mapper.internal_struct_size[1] = sizeof(mmc3);
+	mapper.internal_struct[1] = (BYTE *)&mmc3_old;
+	mapper.internal_struct_size[1] = sizeof(mmc3_old);
 
-	memset(&boy, 0x00, sizeof(boy));
-	memset(&mmc3, 0x00, sizeof(mmc3));
+	memset(&mmc3_old, 0x00, sizeof(mmc3_old));
 	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&boy, 0x00, sizeof(boy));
 
 	if (mapper.write_vram && !info.chr.rom.banks_8k) {
 		info.chr.rom.banks_8k = 32;
@@ -112,7 +112,7 @@ void map_init_BOY(void) {
 	irqA12_delay = 1;
 }
 void extcl_after_mapper_init_BOY(void) {
-	BYTE i;
+	BYTE i = 0;
 
 	map_prg_rom_8k_reset();
 	map_chr_bank_1k_reset();
@@ -128,8 +128,8 @@ void extcl_after_mapper_init_BOY(void) {
 	boy_update_chr();
 }
 void extcl_cpu_wr_mem_BOY(WORD address, BYTE value) {
-	BYTE old_prg_rom_cfg = mmc3.prg_rom_cfg;
-	BYTE old_chr_rom_cfg = mmc3.chr_rom_cfg;
+	BYTE old_prg_rom_cfg = mmc3_old.prg_rom_cfg;
+	BYTE old_chr_rom_cfg = mmc3_old.chr_rom_cfg;
 
 	switch (address & 0xF001) {
 		case 0x6000:
@@ -144,20 +144,20 @@ void extcl_cpu_wr_mem_BOY(WORD address, BYTE value) {
 			return;
 		case 0x8000:
 		case 0x9000:
-			extcl_cpu_wr_mem_MMC3(address, value);
+			extcl_cpu_wr_mem_MMC3_old(address, value);
 			boy_8000()
 			boy_update_prg();
 			boy_update_chr();
 			return;
 		case 0x8001:
 		case 0x9001:
-			extcl_cpu_wr_mem_MMC3(address, value);
+			extcl_cpu_wr_mem_MMC3_old(address, value);
 			boy_8001()
 			boy_update_prg();
 			boy_update_chr();
 			return;
 		default:
-			extcl_cpu_wr_mem_MMC3(address, value);
+			extcl_cpu_wr_mem_MMC3_old(address, value);
 			return;
 	}
 }
@@ -165,35 +165,35 @@ BYTE extcl_save_mapper_BOY(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, boy.reg);
 	save_slot_ele(mode, slot, boy.prg_map);
 	save_slot_ele(mode, slot, boy.chr_map);
-	extcl_save_mapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3_old(mode, slot, fp);
 
 	return (EXIT_OK);
 }
 
 INLINE static void boy_update_prg(void) {
-	BYTE i;
-	WORD value;
+	BYTE i = 0;
+	WORD value = 0;
 	WORD mask = ((0x3F | (boy.reg[1] & 0x40) |
-			((boy.reg[1] & 0x20) << 2)) ^
-			((boy.reg[0] & 0x40) >> 2)) ^
-			((boy.reg[1] & 0x80) >> 2);
+		((boy.reg[1] & 0x20) << 2)) ^
+		((boy.reg[0] & 0x40) >> 2)) ^
+		((boy.reg[1] & 0x80) >> 2);
 	WORD base = ((boy.reg[0] & 0x07) >> 0) |
-			((boy.reg[1] & 0x10) >> 1) |
-			((boy.reg[1] & 0x0C) << 2) |
-			((boy.reg[0] & 0x30) << 2);
+		((boy.reg[1] & 0x10) >> 1) |
+		((boy.reg[1] & 0x0C) << 2) |
+		((boy.reg[0] & 0x30) << 2);
 
 	for (i = 0; i < 4; i++) {
 		value = boy.prg_map[i];
 
-		if ((boy.reg[3] & 0x40) && (value >= 0xFE) && !mmc3.prg_rom_cfg) {
+		if ((boy.reg[3] & 0x40) && (value >= 0xFE) && !mmc3_old.prg_rom_cfg) {
 			switch (i) {
 				case 1:
-					if (mmc3.prg_rom_cfg) {
+					if (mmc3_old.prg_rom_cfg) {
 						value = 0;
 					}
 					break;
 				case 2:
-					if (!mmc3.prg_rom_cfg) {
+					if (!mmc3_old.prg_rom_cfg) {
 						value = 0;
 					}
 					break;
@@ -205,7 +205,7 @@ INLINE static void boy_update_prg(void) {
 		if (!(boy.reg[3] & 0x10)) {
 			value = (((base << 4) & ~mask)) | (value & mask);
 		} else {
-			BYTE emask;
+			BYTE emask = 0;
 
 			mask &= 0xF0;
 			if ((((boy.reg[1] & 0x02) != 0))) {
@@ -221,14 +221,14 @@ INLINE static void boy_update_prg(void) {
 	map_prg_rom_8k_update();
 }
 INLINE static void boy_update_chr(void) {
-	BYTE i, mask = 0xFF ^ (boy.reg[0] & 0x80);
-	WORD value;
+	BYTE i = 0, mask = 0xFF ^ (boy.reg[0] & 0x80);
+	WORD value = 0;
 
 	for (i = 0; i < 8; i++) {
 		value = boy.chr_map[i];
 		if (boy.reg[3] & 0x10) {
 			if (boy.reg[3] & 0x40) {
-				switch (mmc3.chr_rom_cfg ^ i) {
+				switch (mmc3_old.chr_rom_cfg ^ i) {
 					case 1:
 					case 3:
 						value &= 0x7F;
@@ -240,7 +240,7 @@ INLINE static void boy_update_chr(void) {
 					((boy.reg[2] & 0x0F) << 3) | i;
 		} else {
 			if (boy.reg[3] & 0x40) {
-				switch (mmc3.chr_rom_cfg ^ i) {
+				switch (mmc3_old.chr_rom_cfg ^ i) {
 					case 0:
 						value = boy.chr_map[0];
 						break;

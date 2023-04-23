@@ -23,33 +23,24 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_45(BYTE value);
-INLINE static void prg_swap_45(WORD address, WORD value);
-INLINE static void chr_fix_45(BYTE value);
-INLINE static void chr_swap_45(WORD address, WORD value);
+void prg_swap_45(WORD address, WORD value);
+void chr_swap_45(WORD address, WORD value);
 
-static const BYTE dipswitch_45[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
-static const SBYTE dipswitch_index_45[][8] = {
-	{ 0, -1, -1, -1, -1, -1, -1, -1 }, // 0
-	{ 0,  1,  2, -1, -1, -1, -1, -1 }, // 1
-	{ 0,  4,  3,  2, -1, -1, -1, -1 }, // 2
-	{ 0,  2, -1, -1, -1, -1, -1, -1 }, // 3
-	{ 0,  1,  2,  3,  4,  5,  6,  7 }, // 4
-};
+INLINE static void tmp_fix_45(BYTE max, BYTE index, const BYTE *ds);
 
 struct _m45 {
 	BYTE index;
 	BYTE reg[4];
-	WORD mmc3[8];
 } m45;
 struct _m45tmp {
-	BYTE select;
+	BYTE ds_used;
+	BYTE max;
 	BYTE index;
-	BYTE dipswitch;
+	const BYTE *dipswitch;
 } m45tmp;
 
 void map_init_45(void) {
-	EXTCL_AFTER_MAPPER_INIT(45);
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(45);
 	EXTCL_CPU_RD_MEM(45);
 	EXTCL_SAVE_MAPPER(45);
@@ -64,122 +55,65 @@ void map_init_45(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m45, 0x00, sizeof(m45));
 
+	m45.reg[2] = 0x0F;
+
+	init_MMC3();
+	MMC3_prg_swap = prg_swap_45;
+	MMC3_chr_swap = chr_swap_45;
+
 	if (info.reset == RESET) {
-		do {
-			m45tmp.index = (m45tmp.index + 1) & 0x07;
-		} while (dipswitch_index_45[m45tmp.select][m45tmp.index] < 0);
+		if (m45tmp.ds_used) {
+			m45tmp.index = (m45tmp.index + 1) % m45tmp.max;
+		}
 	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+		memset(&m45tmp, 0x00, sizeof(m45tmp));
 		if (info.crc32.prg == 0x2011376B) { // 98+1800000-in-1.nes
-			m45tmp.select = 2;
-			m45tmp.index = 0;
+			static const BYTE ds[] = { 0,  4,  3,  2 };
+
+			tmp_fix_45(LENGTH(ds), 0, &ds[0]);
 		} else if (
 			(info.crc32.prg == 0x70EE2D30) || // Super 19-in-1 (329-JY818).nes
 			(info.crc32.prg == 0x07FDD349) || // Super 1000000-in-1 [p1][!].nes
 			(info.crc32.prg == 0x899AEB47)) { // Super 19-in-1 (329-JY819).nes
-			m45tmp.select = 1;
-			m45tmp.index = 0;
+			static const BYTE ds[] = { 0,  1,  2 };
+
+			tmp_fix_45(LENGTH(ds), 0, &ds[0]);
 		} else if (info.crc32.prg == 0x28E0CF3B) { // Brain Series 12-in-1 [p1][!].nes
-			m45tmp.select = 3;
-			m45tmp.index = 0;
-		} else {
-			m45tmp.select = 0;
-			m45tmp.index = 0;
+			static const BYTE ds[] = { 0,  2 };
+
+			tmp_fix_45(LENGTH(ds), 0, &ds[0]);
 		}
 	}
-	m45tmp.dipswitch = dipswitch_45[dipswitch_index_45[m45tmp.select][m45tmp.index]];
-
-	m45.reg[2] = 0x0F;
-
-	m45.mmc3[0] = 0;
-	m45.mmc3[1] = 2;
-	m45.mmc3[2] = 4;
-	m45.mmc3[3] = 5;
-	m45.mmc3[4] = 6;
-	m45.mmc3[5] = 7;
-	m45.mmc3[6] = 0;
-	m45.mmc3[7] = 0;
 
 	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extcl_after_mapper_init_45(void) {
-	prg_fix_45(mmc3.bank_to_update);
-	chr_fix_45(mmc3.bank_to_update);
-}
 void extcl_cpu_wr_mem_45(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if ((cpu.prg_ram_wr_active) && !(m45.reg[3] & 0x40)) {
+		if (cpu.prg_ram_wr_active && !(m45.reg[3] & 0x40)) {
 			m45.reg[m45.index] = value;
 			m45.index = (m45.index + 1) & 0x03;
-			prg_fix_45(mmc3.bank_to_update);
-			chr_fix_45(mmc3.bank_to_update);
+			MMC3_prg_fix(mmc3.bank_to_update);
+			MMC3_chr_fix(mmc3.bank_to_update);
 		}
 		return;
 	}
 	if (address >= 0x8000) {
-		switch (address & 0xE001) {
-			case 0x8000:
-				if ((value & 0x40) != (mmc3.bank_to_update & 0x40)) {
-					prg_fix_45(value);
-				}
-				if ((value & 0x80) != (mmc3.bank_to_update & 0x80)) {
-					chr_fix_45(value);
-				}
-				mmc3.bank_to_update = value;
-				return;
-			case 0x8001: {
-				WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
-
-				m45.mmc3[mmc3.bank_to_update & 0x07] = value;
-
-				switch (mmc3.bank_to_update & 0x07) {
-					case 0:
-						chr_swap_45(cbase ^ 0x0000, value & (~1));
-						chr_swap_45(cbase ^ 0x0400, value | 1);
-						return;
-					case 1:
-						chr_swap_45(cbase ^ 0x0800, value & (~1));
-						chr_swap_45(cbase ^ 0x0C00, value | 1);
-						return;
-					case 2:
-						chr_swap_45(cbase ^ 0x1000, value);
-						return;
-					case 3:
-						chr_swap_45(cbase ^ 0x1400, value);
-						return;
-					case 4:
-						chr_swap_45(cbase ^ 0x1800, value);
-						return;
-					case 5:
-						chr_swap_45(cbase ^ 0x1C00, value);
-						return;
-					case 6:
-						if (mmc3.bank_to_update & 0x40) {
-							prg_swap_45(0xC000, value);
-						} else {
-							prg_swap_45(0x8000, value);
-						}
-						return;
-					case 7:
-						prg_swap_45(0xA000, value);
-						return;
-				}
-				return;
-			}
-		}
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
 BYTE extcl_cpu_rd_mem_45(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	switch (address & 0xF000) {
 		case 0x5000:
-			if (~m45tmp.dipswitch & address) {
+			if (!cpu.prg_ram_rd_active || !m45tmp.ds_used) {
+				return (openbus);
+			}
+			if (~m45tmp.dipswitch[m45tmp.index] & address) {
 				return (0x01);
 			} else {
 				return (0x00);
@@ -193,7 +127,10 @@ BYTE extcl_cpu_rd_mem_45(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 		case 0xD000:
 		case 0xE000:
 		case 0xF000:
-			switch (m45tmp.dipswitch) {
+			if (!m45tmp.ds_used) {
+				return (openbus);
+			}
+			switch (m45tmp.dipswitch[m45tmp.index]) {
 				case 1:
 					return (m45.reg[1] & 0x80 ? 0xFF : openbus);
 				case 2:
@@ -213,30 +150,18 @@ BYTE extcl_cpu_rd_mem_45(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 BYTE extcl_save_mapper_45(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m45.index);
 	save_slot_ele(mode, slot, m45.reg);
-	save_slot_ele(mode, slot, m45.mmc3);
 	save_slot_ele(mode, slot, m45tmp.index);
 	save_slot_ele(mode, slot, m45tmp.dipswitch);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
-		chr_fix_45(mmc3.bank_to_update);
+		MMC3_chr_fix(mmc3.bank_to_update);
 	}
 
 	return (EXIT_OK);
 }
 
-INLINE static void prg_fix_45(BYTE value) {
-	if (value & 0x40) {
-		prg_swap_45(0x8000, ~1);
-		prg_swap_45(0xC000, m45.mmc3[6]);
-	} else {
-		prg_swap_45(0x8000, m45.mmc3[6]);
-		prg_swap_45(0xC000, ~1);
-	}
-	prg_swap_45(0xA000, m45.mmc3[7]);
-	prg_swap_45(0xE000, ~0);
-}
-INLINE static void prg_swap_45(WORD address, WORD value) {
+void prg_swap_45(WORD address, WORD value) {
 	WORD base = m45.reg[1] | ((m45.reg[2] & 0xC0) << 2);
 	WORD mask = ~m45.reg[3] & 0x3F;
 
@@ -245,28 +170,23 @@ INLINE static void prg_swap_45(WORD address, WORD value) {
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_45(BYTE value) {
-	WORD cbase = (value & 0x80) << 5;
-
-	chr_swap_45(cbase ^ 0x0000, m45.mmc3[0] & (~1));
-	chr_swap_45(cbase ^ 0x0400, m45.mmc3[0] |   1);
-	chr_swap_45(cbase ^ 0x0800, m45.mmc3[1] & (~1));
-	chr_swap_45(cbase ^ 0x0C00, m45.mmc3[1] |   1);
-	chr_swap_45(cbase ^ 0x1000, m45.mmc3[2]);
-	chr_swap_45(cbase ^ 0x1400, m45.mmc3[3]);
-	chr_swap_45(cbase ^ 0x1800, m45.mmc3[4]);
-	chr_swap_45(cbase ^ 0x1C00, m45.mmc3[5]);
-}
-INLINE static void chr_swap_45(WORD address, WORD value) {
+void chr_swap_45(WORD address, WORD value) {
 	if (mapper.write_vram && (info.chr.rom.max.banks_8k == 1)) {
 		value = address >> 10;
 		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 	} else {
-		WORD base = m45.reg[0] | (m45.reg[2] & 0xF0) << 4;
+		WORD base = m45.reg[0] | ((m45.reg[2] & 0xF0) << 4);
 		WORD mask = 0xFF >> (~m45.reg[2] & 0x0F);
 
 		value = base | (value & mask);
 		control_bank(info.chr.rom.max.banks_1k)
 		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 	}
+}
+
+INLINE static void tmp_fix_45(BYTE max, BYTE index, const BYTE *ds) {
+	m45tmp.ds_used = TRUE;
+	m45tmp.max = max;
+	m45tmp.index = index;
+	m45tmp.dipswitch = ds;
 }

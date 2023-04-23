@@ -224,7 +224,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void update_gfx_monitor_dimension(void);
 		QAction *state_save_slot_action(BYTE slot);
 		void state_save_slot_set(int slot, bool on_video);
-		void state_save_slot_set_tooltip(BYTE slot, char *buffer);
+		void state_save_slot_set_tooltip(BYTE slot);
 		void toggle_toolbars(void);
 		void reset_min_max_size(void);
 		QScreen *win_handle_screen(void);

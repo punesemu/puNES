@@ -253,9 +253,7 @@ BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, mmc1.prg0);
 	save_slot_ele(mode, slot, mmc1.reset);
 	save_slot_ele(mode, slot, mmc1.prg_upper);
-	if (save_slot.version >= 27) {
-		save_slot_ele(mode, slot, mmc1.chr_upper);
-	}
+	save_slot_ele(mode, slot, mmc1.chr_upper);
 
 	return (EXIT_OK);
 }

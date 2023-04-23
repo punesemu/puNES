@@ -21,11 +21,9 @@
 
 #include "common.h"
 
-enum { TXCTW, T22211A, T22211B, T22211C };
+enum { T22211A, T22211B, T22211C };
 
 void map_init_Txc(BYTE model);
-
-void extcl_cpu_wr_mem_Txc_tw(WORD address, BYTE value);
 
 void extcl_cpu_wr_mem_Txc_t22211ab(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_Txc_t22211ab(WORD address, BYTE openbus, BYTE before);

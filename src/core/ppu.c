@@ -129,7 +129,6 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 	}
 
 static void ppu_alignment_init(void);
-static BYTE ppu_alloc_screen_buffer(_ppu_screen_buffer *sb);
 INLINE static void ppu_oam_evaluation(void);
 
 static const BYTE inv_chr[256] = {
@@ -195,7 +194,7 @@ void ppu_init(void) {
 }
 void ppu_quit(void) {
 	/* libero la memoria riservata */
-	BYTE a;
+	BYTE a = 0;
 
 	for (a = 0; a < 2; a++) {
 		_ppu_screen_buffer *sb = &ppu_screen.buff[a];
@@ -204,11 +203,6 @@ void ppu_quit(void) {
 			free(sb->data);
 			sb->data = NULL;
 		}
-	}
-
-	if (ppu_screen.preview.data) {
-		free(ppu_screen.preview.data);
-		ppu_screen.preview.data = NULL;
 	}
 }
 
@@ -292,7 +286,7 @@ void ppu_tick(void) {
 				r2002.sprite_overflow = r2002.sprite0_hit = r2002.vblank = ppu.vblank = FALSE;
 				// serve assolutamente per la corretta lettura delle coordinate del puntatore zapper
 				if (info.zapper_is_present && !fps_fast_forward_enabled()) {
-					memset((BYTE *)ppu_screen.wr->data, 0, screen_size());
+					memset((BYTE *)ppu_screen.wr->data, 0, (size_t)screen_size());
 				}
 			} else if ((ppu.frame_x == (SHORT_SLINE_CYCLES - 1)) && (machine.type == NTSC)) {
 				/*
@@ -504,7 +498,7 @@ void ppu_tick(void) {
 						 * invisibili e non devo disegnarli).
 						 */
 						if (r2001.spr_visible) {
-							BYTE a;
+							BYTE a = 0;
 
 							examine_sprites(spr_ev, sprite, visible_spr, FALSE)
 
@@ -721,7 +715,7 @@ void ppu_tick(void) {
 									for (spr_ev_unl.tmp_spr_plus = 0;
 										spr_ev_unl.tmp_spr_plus < spr_ev_unl.count_plus;
 										spr_ev_unl.tmp_spr_plus++) {
-										WORD spr_adr;
+										WORD spr_adr = 0;
 
 										_ppu_spr_adr(spr_ev_unl.tmp_spr_plus, ele_plus_unl, sprite_plus_unl, spr_adr)
 										get_sprites(ele_plus_unl, spr_ev_unl, sprite_plus_unl, spr_adr)
@@ -875,7 +869,7 @@ void ppu_tick(void) {
 		 */
 		/* controllo di essere nel range [dummy...rendering screen] */
 		if ((ppu.frame_y >= ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) {
-			BYTE a;
+			BYTE a = 0;
 
 			/* verifico di non trattare la dummy line */
 			if (ppu.frame_y > ppu_sclines.vint) {
@@ -1022,7 +1016,7 @@ BYTE ppu_turn_on(void) {
 
 		/* riservo una zona di memoria per lo screen */
 		if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-			BYTE a;
+			BYTE a = 0;
 
 			ppu_screen.rd = &ppu_screen.buff[0];
 			ppu_screen.wr = &ppu_screen.buff[1];
@@ -1033,27 +1027,24 @@ BYTE ppu_turn_on(void) {
 					return (EXIT_ERROR);
 				}
 			}
-			if (ppu_alloc_screen_buffer(&ppu_screen.preview) == EXIT_ERROR) {
-				return (EXIT_ERROR);
-			}
 			/*
 			 * tabella di indici che puntano ad ogni
 			 * elemento dell'OAM (4 bytes ciascuno).
 			 */
 			for (a = 0; a < 64; ++a) {
-				oam.element[a] = &oam.data[(a * 4)];
+				oam.element[a] = &oam.data[(size_t)(a * 4)];
 			}
 			for (a = 0; a < 8; ++a) {
-				oam.ele_plus[a] = &oam.plus[(a * 4)];
+				oam.ele_plus[a] = &oam.plus[(size_t)(a * 4)];
 			}
 			for (a = 0; a < 56; ++a) {
-				oam.ele_plus_unl[a] = &oam.plus_unl[(a * 4)];
+				oam.ele_plus_unl[a] = &oam.plus_unl[(size_t)(a * 4)];
 			}
 			ppu_alignment_reset();
 		}
 		/* reinizializzazione completa della PPU */
 		{
-			int a, x, y;
+			int a = 0, x = 0, y = 0;
 
 			/* inizializzo lo screen */
 			for (a = 0; a < 2; a++) {
@@ -1139,6 +1130,31 @@ void ppu_draw_screen_continue_ctrl_count(int *count) {
 	}
 	(*count) = 0;
 }
+BYTE ppu_alloc_screen_buffer(_ppu_screen_buffer *sb) {
+	int b = 0;
+
+	sb->ready = FALSE;
+	sb->frame = 0;
+
+	if (sb->data) {
+		free(sb->data);
+	}
+
+	sb->data = (WORD *)malloc((size_t)screen_size());
+	if (!sb->data) {
+		log_error(uL("ppu;out of memory"));
+		return (EXIT_ERROR);
+	}
+	/*
+	 * creo una tabella di indici che puntano
+	 * all'inizio di ogni linea dello screen.
+	 */
+	for (b = 0; b < SCR_ROWS; b++) {
+		sb->line[b] = (WORD *)(sb->data + ((size_t)b * SCR_COLUMNS));
+	}
+
+	return (EXIT_OK);
+}
 
 void ppu_alignment_reset(void) {
 	ppu_alignment.count.cpu = 0;
@@ -1165,7 +1181,8 @@ static void ppu_alignment_init(void) {
 	ppu.cycles = (SWORD)((ppu_alignment.cpu + (-ppu_alignment.ppu + 1)) % machine.cpu_divide);
 
 	if (cfg->ppu_alignment == PPU_ALIGMENT_INC_AT_RESET) {
-		if ((ppu_alignment.count.cpu = (ppu_alignment.count.cpu + 1) % machine.cpu_divide) == 0) {
+		ppu_alignment.count.cpu = (ppu_alignment.count.cpu + 1) % machine.cpu_divide;
+		if (!ppu_alignment.count.cpu) {
 			ppu_alignment.count.ppu = (ppu_alignment.count.ppu + 1) % machine.ppu_divide;
 		}
 	}
@@ -1181,30 +1198,7 @@ static void ppu_alignment_init(void) {
 			ppu_alignment.cpu, machine.cpu_divide);
 	}
 }
-static BYTE ppu_alloc_screen_buffer(_ppu_screen_buffer *sb) {
-	int b;
 
-	sb->ready = FALSE;
-	sb->frame = 0;
-
-	if (sb->data) {
-		free(sb->data);
-	}
-
-	if (!(sb->data = (WORD *)malloc(screen_size()))) {
-		log_error(uL("ppu;out of memory"));
-		return (EXIT_ERROR);
-	}
-	/*
-	 * creo una tabella di indici che puntano
-	 * all'inizio di ogni linea dello screen.
-	 */
-	for (b = 0; b < SCR_ROWS; b++) {
-		sb->line[b] = (WORD *)(sb->data + (b * SCR_COLUMNS));
-	}
-
-	return (EXIT_OK);
-}
 INLINE static void ppu_oam_evaluation(void) {
 /* ------------------------------- CONTROLLO SPRITE SCANLINE+1 ------------------------------- */
 	if (ppu.frame_x < 64) {
@@ -1348,7 +1342,7 @@ INLINE static void ppu_oam_evaluation(void) {
 							if (cfg->unlimited_sprites_auto) {
 								BYTE count = 0,  max_count = 0;
 								WORD last_position = 0xFFFF;
-								int i;
+								int i = 0;
 
 								for (i = 0; i < 64; i++) {
 									BYTE y = oam.element[i][YC];
@@ -1373,7 +1367,7 @@ INLINE static void ppu_oam_evaluation(void) {
 							// end
 
 							if (unlimited_sprites) {
-								BYTE t2004;
+								BYTE t2004 = 0;
 
 								spr_ev_unl.index = spr_ev.index + 1;
 								spr_ev_unl.count_plus = 0;

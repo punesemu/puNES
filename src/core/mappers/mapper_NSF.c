@@ -170,14 +170,12 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, nsf.timers.total_rom);
 	save_slot_ele(mode, slot, nsf.timers.song);
 
-	if (save_slot.version >= 22) {
-		save_slot_ele(mode, slot, nsf.songs.started);
+	save_slot_ele(mode, slot, nsf.songs.started);
 
-		save_slot_ele(mode, slot, nsf.timers.fadeout);
-		save_slot_ele(mode, slot, nsf.timers.silence);
+	save_slot_ele(mode, slot, nsf.timers.fadeout);
+	save_slot_ele(mode, slot, nsf.timers.silence);
 
-		save_slot_ele(mode, slot, nsf.playlist.index);
-	}
+	save_slot_ele(mode, slot, nsf.playlist.index);
 
 	if (mode == SAVE_SLOT_READ) {
 		nsf_reset_song_title();
@@ -203,38 +201,38 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 		extcl_save_mapper_VRC7(mode, slot, fp);
 	}
 	if (nsf.sound_chips.fds) {
-		save_slot_ele(mode, slot, fds.snd.wave.data)
-		save_slot_ele(mode, slot, fds.snd.wave.writable)
-		save_slot_ele(mode, slot, fds.snd.wave.volume)
-		save_slot_ele(mode, slot, fds.snd.wave.index)
-		save_slot_ele(mode, slot, fds.snd.wave.counter)
+		save_slot_ele(mode, slot, fds.snd.wave.data);
+		save_slot_ele(mode, slot, fds.snd.wave.writable);
+		save_slot_ele(mode, slot, fds.snd.wave.volume);
+		save_slot_ele(mode, slot, fds.snd.wave.index);
+		save_slot_ele(mode, slot, fds.snd.wave.counter);
 
-		save_slot_ele(mode, slot, fds.snd.envelope.speed)
-		save_slot_ele(mode, slot, fds.snd.envelope.disabled)
+		save_slot_ele(mode, slot, fds.snd.envelope.speed);
+		save_slot_ele(mode, slot, fds.snd.envelope.disabled);
 
-		save_slot_ele(mode, slot, fds.snd.main.silence)
-		save_slot_ele(mode, slot, fds.snd.main.frequency)
-		save_slot_ele(mode, slot, fds.snd.main.output)
+		save_slot_ele(mode, slot, fds.snd.main.silence);
+		save_slot_ele(mode, slot, fds.snd.main.frequency);
+		save_slot_ele(mode, slot, fds.snd.main.output);
 
-		save_slot_ele(mode, slot, fds.snd.volume.speed)
-		save_slot_ele(mode, slot, fds.snd.volume.mode)
-		save_slot_ele(mode, slot, fds.snd.volume.increase)
-		save_slot_ele(mode, slot, fds.snd.volume.gain)
-		save_slot_ele(mode, slot, fds.snd.volume.counter)
+		save_slot_ele(mode, slot, fds.snd.volume.speed);
+		save_slot_ele(mode, slot, fds.snd.volume.mode);
+		save_slot_ele(mode, slot, fds.snd.volume.increase);
+		save_slot_ele(mode, slot, fds.snd.volume.gain);
+		save_slot_ele(mode, slot, fds.snd.volume.counter);
 
-		save_slot_ele(mode, slot, fds.snd.sweep.bias)
-		save_slot_ele(mode, slot, fds.snd.sweep.mode)
-		save_slot_ele(mode, slot, fds.snd.sweep.increase)
-		save_slot_ele(mode, slot, fds.snd.sweep.speed)
-		save_slot_ele(mode, slot, fds.snd.sweep.gain)
-		save_slot_ele(mode, slot, fds.snd.sweep.counter)
+		save_slot_ele(mode, slot, fds.snd.sweep.bias);
+		save_slot_ele(mode, slot, fds.snd.sweep.mode);
+		save_slot_ele(mode, slot, fds.snd.sweep.increase);
+		save_slot_ele(mode, slot, fds.snd.sweep.speed);
+		save_slot_ele(mode, slot, fds.snd.sweep.gain);
+		save_slot_ele(mode, slot, fds.snd.sweep.counter);
 
-		save_slot_ele(mode, slot, fds.snd.modulation.data)
-		save_slot_ele(mode, slot, fds.snd.modulation.frequency)
-		save_slot_ele(mode, slot, fds.snd.modulation.disabled)
-		save_slot_ele(mode, slot, fds.snd.modulation.index)
-		save_slot_ele(mode, slot, fds.snd.modulation.counter)
-		save_slot_ele(mode, slot, fds.snd.modulation.mod)
+		save_slot_ele(mode, slot, fds.snd.modulation.data);
+		save_slot_ele(mode, slot, fds.snd.modulation.frequency);
+		save_slot_ele(mode, slot, fds.snd.modulation.disabled);
+		save_slot_ele(mode, slot, fds.snd.modulation.index);
+		save_slot_ele(mode, slot, fds.snd.modulation.counter);
+		save_slot_ele(mode, slot, fds.snd.modulation.mod);
 	}
 	if (nsf.sound_chips.mmc5) {
 		extcl_save_mapper_MMC5(mode, slot, fp);

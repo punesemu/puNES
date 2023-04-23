@@ -162,7 +162,7 @@ BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus), UNUSED(BYTE before
 void extcl_cpu_every_cycle_FDS(void) {
 	BYTE max_speed = cfg->fds_fast_forward &
 		((fds.drive.scan & (info.lag_frame.consecutive > MIN_LAG_FRAMES)) | !fds.auto_insert.in_game);
-	WORD data;
+	WORD data = 0;
 
 	// auto insert
 	if (fds_auto_insert_enabled()) {
@@ -323,7 +323,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 		fds.drive.gap_ended = FALSE;
 	}
 
-	if (++fds.drive.disk_position >= fds.info.sides_size[fds.drive.side_inserted]) {
+	if (++fds.drive.disk_position >= fds.info.sides[fds.drive.side_inserted].size) {
 		fds.drive.end_of_head = END_OF_HEAD;
 		fds.drive.disk_position = 0;
 		fds.drive.gap_ended = FALSE;

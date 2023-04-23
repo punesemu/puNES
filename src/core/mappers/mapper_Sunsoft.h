@@ -77,7 +77,6 @@ void extcl_cpu_wr_mem_Sunsoft_S4(WORD address, BYTE value);
 BYTE extcl_save_mapper_Sunsoft_S4(BYTE mode, BYTE slot, FILE *fp);
 
 void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_Sunsoft_FM7(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_Sunsoft_FM7(void);
 void extcl_apu_tick_Sunsoft_FM7(void);

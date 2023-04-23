@@ -22,6 +22,7 @@
 #include <QtCore/QDir>
 #include <QtGui/QScreen>
 #include <QtGui/QFontDatabase>
+#include <QtCore/QBuffer>
 #if defined (_WIN32)
 #include <QtCore/QtPlugin>
 #if defined (QT5_PLUGIN_QWINDOWS)
@@ -131,7 +132,7 @@ class appEventFilter: public QObject {
 
 BYTE gui_init(int *argc, char **argv) {
 	QFlags<mainApplication::Mode> mode = mainApplication::Mode::ExcludeAppVersion | mainApplication::Mode::ExcludeAppPath;
-	int i;
+	int i = 0;
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -323,6 +324,13 @@ const uTCHAR *gui_temp_folder(void) {
 	qt.sba = uQByteArrayFromString(path);
 	return (uQByteArrayCD(qt.sba));
 }
+const uTCHAR *gui_extract_base(const uTCHAR *path) {
+	QString spath = (uQString(path)).remove(QRegularExpression(QString("/%0$").arg(NAME)));
+
+	qt.sba.clear();
+	qt.sba = uQByteArrayFromString(spath);
+	return (uQByteArrayCD(qt.sba));
+}
 
 double gui_device_pixel_ratio(void) {
 	return (qt.mwin->win_handle_screen()->devicePixelRatio());
@@ -414,8 +422,8 @@ void gui_state_save_slot_set(BYTE slot, BYTE on_video) {
 	}
 	qt.mwin->state_save_slot_set(slot, on_video);
 }
-void gui_state_save_slot_set_tooltip(BYTE slot, char *buffer) {
-	qt.mwin->state_save_slot_set_tooltip(slot, buffer);
+void gui_state_save_slot_set_tooltip(BYTE slot) {
+	qt.mwin->state_save_slot_set_tooltip(slot);
 }
 
 void gui_update(void) {
@@ -821,7 +829,7 @@ void gui_save_screenshot(int w, int h, int stride, char *buffer, BYTE flip) {
 		+ QFileInfo(uQString(info.rom.file)).completeBaseName();
 	QImage screenshot = QImage((uchar *)buffer, w, h, stride, QImage::Format_RGB32);
 	QFile file;
-	uint count;
+	uint count = 0;
 
 	if (!info.rom.file[0]) {
 		return;
@@ -842,6 +850,25 @@ void gui_save_screenshot(int w, int h, int stride, char *buffer, BYTE flip) {
 
 	file.open(QIODevice::WriteOnly);
 	screenshot.save(&file, "PNG");
+}
+void gui_save_slot_preview_to_png(int slot, void **dst, size_t *size) {
+	QImage *preview = (QImage *)gui_overlay_slot_preview_get(slot);
+	QBuffer buffer;
+
+	(*dst) = nullptr;
+	(*size) = 0;
+
+	if (!preview) {
+		return;
+	}
+
+	qt.sba.clear();
+	buffer.setBuffer(&qt.sba);
+	buffer.open(QIODevice::WriteOnly);
+	if (preview->save(&buffer, "PNG")) {
+		(*dst) = uQByteArrayCD(qt.sba);
+		(*size) = qt.sba.size();
+	}
 }
 
 void gui_utf_dirname(uTCHAR *path, uTCHAR *dst, size_t len) {

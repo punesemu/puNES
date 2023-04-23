@@ -64,21 +64,14 @@ void opll_update(void) {
 	}
 }
 BYTE opll_save(BYTE mode, BYTE slot, FILE *fp) {
-	// per poter utilizzare i salvataggi effettuati prima dell'utilizzo del Nuked-OPLL.
-	if (save_slot.version < 24) {
-		BYTE buffer[1658];
+	opll_patch_t *patchrom = (opll_patch_t *)opll.chip.patchrom;
 
-		save_slot_ele(mode, slot, buffer);
-	} else {
-		opll_patch_t *patchrom = (opll_patch_t *)opll.chip.patchrom;
-
-		opll.chip.patchrom = NULL;
-		save_slot_ele(mode, slot, opll.chip);
-		save_slot_ele(mode, slot, opll.out);
-		save_slot_ele(mode, slot, opll.next);
-		save_slot_ele(mode, slot, opll.tick);
-		opll.chip.patchrom = patchrom;
-	}
+	opll.chip.patchrom = NULL;
+	save_slot_ele(mode, slot, opll.chip);
+	save_slot_ele(mode, slot, opll.out);
+	save_slot_ele(mode, slot, opll.next);
+	save_slot_ele(mode, slot, opll.tick);
+	opll.chip.patchrom = patchrom;
 	return (EXIT_OK);
 }
 SWORD opll_calc(void) {

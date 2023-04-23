@@ -112,6 +112,7 @@ struct _sunsofttmp {
 
 void map_init_Sunsoft(BYTE model) {
 	switch (model) {
+		default:
 		case SUN1:
 			EXTCL_CPU_WR_MEM(Sunsoft_S1);
 			info.mapper.extend_wr = TRUE;
@@ -150,7 +151,6 @@ void map_init_Sunsoft(BYTE model) {
 			break;
 		case FM7:
 			EXTCL_CPU_WR_MEM(Sunsoft_FM7);
-			EXTCL_CPU_RD_MEM(Sunsoft_FM7);
 			EXTCL_SAVE_MAPPER(Sunsoft_FM7);
 			EXTCL_CPU_EVERY_CYCLE(Sunsoft_FM7);
 			EXTCL_APU_TICK(Sunsoft_FM7);
@@ -161,17 +161,14 @@ void map_init_Sunsoft(BYTE model) {
 				memset(&fm7, 0x00, sizeof(fm7));
 			}
 
-			if ((info.format == iNES_1_0) || !info.prg.ram.banks_8k_plus) {
-				info.prg.ram.banks_8k_plus = 1;
-
-				if ((info.id == BARCODEWORLD) || (info.id == DODGEDANPEI2)) {
-					info.prg.ram.bat.banks = 1;
-				}
-			}
+			//if ((info.id == BARCODEWORLD) || (info.id == DODGEDANPEI2)) {
+			//	info.prg.ram.bat.banks = 1;
+			//}
 
 			fm7.square[0].timer = 1;
 			fm7.square[1].timer = 1;
 			fm7.square[2].timer = 1;
+
 			break;
 	}
 
@@ -194,7 +191,7 @@ void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value) {
 
 	{
 		const BYTE save = value;
-		DBWORD bank;
+		DBWORD bank = 0;
 
 		control_bank_with_AND(0x0F, info.chr.rom.max.banks_4k)
 		bank = value << 12;
@@ -210,13 +207,12 @@ void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value) {
 		chr.bank_1k[5] = chr_pnt(bank | 0x0400);
 		chr.bank_1k[6] = chr_pnt(bank | 0x0800);
 		chr.bank_1k[7] = chr_pnt(bank | 0x0C00);
-
 	}
 }
 
 void extcl_cpu_wr_mem_Sunsoft_S2(UNUSED(WORD address), BYTE value) {
 	const BYTE save = value;
-	DBWORD bank;
+	DBWORD bank = 0;
 
 	if (sunsofttmp.type == SUN2B) {
 		if (value & 0x08) {
@@ -260,7 +256,8 @@ void extcl_cpu_wr_mem_Sunsoft_S3(WORD address, BYTE value) {
 			return;
 		case 0xC000:
 		case 0xC800:
-			if (s3.toggle ^= 1) {
+			s3.toggle ^= 1;
+			if (s3.toggle) {
 				s3.count = (s3.count & 0x00FF) | (value << 8);
 			} else {
 				s3.count = (s3.count & 0xFF00) | value;
@@ -348,14 +345,6 @@ BYTE extcl_save_mapper_Sunsoft_S4(BYTE mode, BYTE slot, FILE *fp) {
 
 void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 	switch (address & 0xE000) {
-		case 0x4000:
-			if (cpu.prg_ram_wr_active) {
-				return;
-			}
-			prg.ram.data[address & 0x1FFF] = value;
-			return;
-		case 0x6000:
-			return;
 		case 0x8000:
 			fm7.address = value;
 			return;
@@ -388,11 +377,12 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 							return;
 						case 0x40:
 						case 0xC0:
-							cpu.prg_ram_rd_active = (value & 0x80) >> 7;
-							cpu.prg_ram_wr_active = TRUE;
-							control_bank_with_AND(0x3F, (info.prg.ram.banks_8k_plus - 1))
-							fm7.prg_ram_address = (value & 0x3F) << 13;
-							prg.ram_plus_8k = &prg.ram_plus[fm7.prg_ram_address];
+							cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = fm7.prg_ram_enable >> 7;
+							if (info.prg.ram.banks_8k_plus) {
+								control_bank_with_AND(0x3F, (info.prg.ram.banks_8k_plus - 1))
+								fm7.prg_ram_address = (value & 0x3F) << 13;
+								prg.ram_plus_8k = &prg.ram_plus[fm7.prg_ram_address];
+							}
 							return;
 					}
 					return;
@@ -417,6 +407,8 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 					return;
 				case 0x0F:
 					fm7.irq_count = (fm7.irq_count & 0x00FF) | (value << 8);
+					return;
+				default:
 					return;
 			}
 			return;
@@ -460,17 +452,6 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_Sunsoft_FM7(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if (fm7.prg_ram_enable) {
-		return (openbus);
-	}
-
-	if (address < 0x6000) {
-		return (prg.ram.data[address & 0x1FFF]);
-	}
-
-	return (openbus);
-}
 BYTE extcl_save_mapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, fm7.address);
 	save_slot_ele(mode, slot, fm7.prg_ram_enable);
@@ -489,10 +470,10 @@ BYTE extcl_save_mapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp) {
 	 * i dati delle snd square perche' non avevo ancora
 	 * implementato la loro emulazione.
 	 */
-	if (save_slot.version > 2) {
-		BYTE i;
+	{
+		int i = 0;
 
-		for (i = 0; i < LENGTH(fm7.square); i++) {
+		for (i = 0; i < (int)LENGTH(fm7.square); i++) {
 			save_slot_ele(mode, slot, fm7.square[i].disable);
 			save_slot_ele(mode, slot, fm7.square[i].step);
 			save_slot_ele(mode, slot, fm7.square[i].frequency);

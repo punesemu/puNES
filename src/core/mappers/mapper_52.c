@@ -23,21 +23,18 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_52(BYTE value);
-INLINE static void prg_swap_52(WORD address, WORD value);
-INLINE static void chr_fix_52(BYTE value);
-INLINE static void chr_swap_52(WORD address, WORD value);
+void prg_swap_52(WORD address, WORD value);
+void chr_swap_52(WORD address, WORD value);
 
 struct _m52 {
 	BYTE reg;
-	WORD mmc3[8];
 } m52;
 struct _m52tmp {
 	BYTE mario7in1;
 } m52tmp;
 
 void map_init_52(void) {
-	EXTCL_AFTER_MAPPER_INIT(52);
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(52);
 	EXTCL_SAVE_MAPPER(52);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -51,18 +48,12 @@ void map_init_52(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m52, 0x00, sizeof(m52));
 
-	m52.mmc3[0] = 0;
-	m52.mmc3[1] = 2;
-	m52.mmc3[2] = 4;
-	m52.mmc3[3] = 5;
-	m52.mmc3[4] = 6;
-	m52.mmc3[5] = 7;
-	m52.mmc3[6] = 0;
-	m52.mmc3[7] = 0;
+	init_MMC3();
+	MMC3_prg_swap = prg_swap_52;
+	MMC3_chr_swap = chr_swap_52;
 
 	if (info.crc32.prg == 0xC021A8B9) {
 		m52tmp.mario7in1 = TRUE;
@@ -75,93 +66,27 @@ void map_init_52(void) {
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extcl_after_mapper_init_52(void) {
-	prg_fix_52(mmc3.bank_to_update);
-	chr_fix_52(mmc3.bank_to_update);
-}
 void extcl_cpu_wr_mem_52(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		if (cpu.prg_ram_wr_active && !(m52.reg & 0x80)) {
 			m52.reg = value;
-			prg_fix_52(mmc3.bank_to_update);
-			chr_fix_52(mmc3.bank_to_update);
+			MMC3_prg_fix(mmc3.bank_to_update);
+			MMC3_chr_fix(mmc3.bank_to_update);
 		}
 		return;
 	}
 	if (address >= 0x8000) {
-		switch (address & 0xE001) {
-			case 0x8000:
-				if ((value & 0x40) != (mmc3.bank_to_update & 0x40)) {
-					prg_fix_52(value);
-				}
-				if ((value & 0x80) != (mmc3.bank_to_update & 0x80)) {
-					chr_fix_52(value);
-				}
-				mmc3.bank_to_update = value;
-				return;
-			case 0x8001: {
-				WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
-
-				m52.mmc3[mmc3.bank_to_update & 0x07] = value;
-
-				switch (mmc3.bank_to_update & 0x07) {
-					case 0:
-						chr_swap_52(cbase ^ 0x0000, value & (~1));
-						chr_swap_52(cbase ^ 0x0400, value | 1);
-						return;
-					case 1:
-						chr_swap_52(cbase ^ 0x0800, value & (~1));
-						chr_swap_52(cbase ^ 0x0C00, value | 1);
-						return;
-					case 2:
-						chr_swap_52(cbase ^ 0x1000, value);
-						return;
-					case 3:
-						chr_swap_52(cbase ^ 0x1400, value);
-						return;
-					case 4:
-						chr_swap_52(cbase ^ 0x1800, value);
-						return;
-					case 5:
-						chr_swap_52(cbase ^ 0x1C00, value);
-						return;
-					case 6:
-						if (mmc3.bank_to_update & 0x40) {
-							prg_swap_52(0xC000, value);
-						} else {
-							prg_swap_52(0x8000, value);
-						}
-						return;
-					case 7:
-						prg_swap_52(0xA000, value);
-						return;
-				}
-				return;
-			}
-		}
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
 BYTE extcl_save_mapper_52(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m52.reg);
-	save_slot_ele(mode, slot, m52.mmc3);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
 }
 
-INLINE static void prg_fix_52(BYTE value) {
-	if (value & 0x40) {
-		prg_swap_52(0x8000, ~1);
-		prg_swap_52(0xC000, m52.mmc3[6]);
-	} else {
-		prg_swap_52(0x8000, m52.mmc3[6]);
-		prg_swap_52(0xC000, ~1);
-	}
-	prg_swap_52(0xA000, m52.mmc3[7]);
-	prg_swap_52(0xE000, ~0);
-}
-INLINE static void prg_swap_52(WORD address, WORD value) {
+void prg_swap_52(WORD address, WORD value) {
 	WORD base = (m52.reg & 0x07) << 4;
 	WORD mask = 0x1F >> ((m52.reg & 0x08) >> 3);
 
@@ -170,19 +95,7 @@ INLINE static void prg_swap_52(WORD address, WORD value) {
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_52(BYTE value) {
-	WORD cbase = (value & 0x80) << 5;
-
-	chr_swap_52(cbase ^ 0x0000, m52.mmc3[0] & (~1));
-	chr_swap_52(cbase ^ 0x0400, m52.mmc3[0] |   1);
-	chr_swap_52(cbase ^ 0x0800, m52.mmc3[1] & (~1));
-	chr_swap_52(cbase ^ 0x0C00, m52.mmc3[1] |   1);
-	chr_swap_52(cbase ^ 0x1000, m52.mmc3[2]);
-	chr_swap_52(cbase ^ 0x1400, m52.mmc3[3]);
-	chr_swap_52(cbase ^ 0x1800, m52.mmc3[4]);
-	chr_swap_52(cbase ^ 0x1C00, m52.mmc3[5]);
-}
-INLINE static void chr_swap_52(WORD address, WORD value) {
+void chr_swap_52(WORD address, WORD value) {
 	WORD base = m52tmp.mario7in1
 		? ((m52.reg & 0x20) << 4) | ((m52.reg & 0x04) << 6) | (m52.reg & 0x40 ? (m52.reg & 0x10) << 3 : 0x00)
 		: ((m52.reg & 0x04) << 7) | ((m52.reg & 0x30) << 3);

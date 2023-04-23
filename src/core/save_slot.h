@@ -30,87 +30,48 @@ enum save_slot_misc {
 };
 enum save_slot_mode { SAVE_SLOT_SAVE, SAVE_SLOT_READ, SAVE_SLOT_COUNT, SAVE_SLOT_INCDEC };
 
-#define _save_slot_ele(mode, slot, src, size)\
-	if (save_slot_element_struct(mode, slot, (uintptr_t *)&src, size, fp, FALSE)) {\
-		return (EXIT_ERROR);\
-	}
+#define _save_slot_ele(mode, slot, src, size, preview)\
+	if (save_slot_element((mode), (slot), (src), (size_t)(size), fp, (preview))) return (EXIT_ERROR)
 #define save_slot_ele(mode, slot, src)\
-	_save_slot_ele(mode, slot, src, sizeof(src))
-#define save_slot_mem(mode, slot, src, size, preview)\
-	if (save_slot_element_struct(mode, slot, (uintptr_t *)src, size, fp, preview)) {\
-		return (EXIT_ERROR);\
-	}
+	_save_slot_ele((mode), (slot), (void *)&(src), sizeof(src), FALSE)
 #define save_slot_int(mode, slot, value)\
-{\
-	uint32_t uint32 = 0;\
-	switch (mode) {\
-		case SAVE_SLOT_SAVE:\
-			uint32 = value;\
-			save_slot_ele(mode, slot, uint32);\
-			break;\
-		case SAVE_SLOT_READ:\
-			save_slot_ele(mode, slot, uint32);\
-			value = uint32;\
-			break;\
-		case SAVE_SLOT_COUNT:\
-			save_slot_ele(mode, slot, uint32);\
-			break;\
-		default:\
-			break;\
-	}\
-}
+	_save_slot_ele((mode), (slot), (void *)&(value), sizeof(value), FALSE)
+#define save_slot_mem(mode, slot, src, size, preview)\
+	_save_slot_ele((mode), (slot), (void *)(src), (size_t)(size), (preview))
 #define save_slot_pos(mode, slot, start, end)\
-{\
-	uint32_t bank = 0;\
-	switch (mode) {\
-		case SAVE_SLOT_SAVE:\
-			bank = end - start;\
-			save_slot_ele(mode, slot, bank);\
-			break;\
-		case SAVE_SLOT_READ:\
-			save_slot_ele(mode, slot, bank);\
-			end = start + bank;\
-			break;\
-		case SAVE_SLOT_COUNT:\
-			save_slot_ele(mode, slot, bank);\
-			break;\
-		default:\
-			break;\
-	}\
-}
+	if (save_slot_position((mode), (slot), (void *)(start), (void *)(end), fp)) return (EXIT_ERROR)
 #define save_slot_square(square, slot)\
-	save_slot_ele(mode, slot, square.timer)\
-	save_slot_ele(mode, slot, square.frequency);\
-	save_slot_ele(mode, slot, square.duty);\
-	save_slot_ele(mode, slot, square.envelope.enabled);\
-	save_slot_ele(mode, slot, square.envelope.divider);\
-	save_slot_ele(mode, slot, square.envelope.counter);\
-	save_slot_ele(mode, slot, square.envelope.constant_volume);\
-	save_slot_ele(mode, slot, square.envelope.delay);\
-	save_slot_ele(mode, slot, square.volume);\
-	save_slot_ele(mode, slot, square.sequencer);\
-	save_slot_ele(mode, slot, square.sweep.enabled);\
-	save_slot_ele(mode, slot, square.sweep.negate);\
-	save_slot_ele(mode, slot, square.sweep.divider);\
-	save_slot_ele(mode, slot, square.sweep.shift);\
-	save_slot_ele(mode, slot, square.sweep.reload);\
-	/* ho aggiunto una nuova variabile */\
-	if (save_slot.version > 7) {\
-		save_slot_ele(mode, slot, square.sweep.silence);\
-	}\
-	save_slot_ele(mode, slot, square.sweep.delay);\
-	save_slot_ele(mode, slot, square.length.value);\
-	save_slot_ele(mode, slot, square.length.enabled);\
-	save_slot_ele(mode, slot, square.length.halt);\
-	save_slot_ele(mode, slot, square.output)
+	save_slot_ele(mode, slot, (square).timer);\
+	save_slot_ele(mode, slot, (square).frequency);\
+	save_slot_ele(mode, slot, (square).duty);\
+	save_slot_ele(mode, slot, (square).envelope.enabled);\
+	save_slot_ele(mode, slot, (square).envelope.divider);\
+	save_slot_ele(mode, slot, (square).envelope.counter);\
+	save_slot_ele(mode, slot, (square).envelope.constant_volume);\
+	save_slot_ele(mode, slot, (square).envelope.delay);\
+	save_slot_ele(mode, slot, (square).volume);\
+	save_slot_ele(mode, slot, (square).sequencer);\
+	save_slot_ele(mode, slot, (square).sweep.enabled);\
+	save_slot_ele(mode, slot, (square).sweep.negate);\
+	save_slot_ele(mode, slot, (square).sweep.divider);\
+	save_slot_ele(mode, slot, (square).sweep.shift);\
+	save_slot_ele(mode, slot, (square).sweep.reload);\
+	save_slot_ele(mode, slot, (square).sweep.silence);\
+	save_slot_ele(mode, slot, (square).sweep.delay);\
+	save_slot_ele(mode, slot, (square).length.value);\
+	save_slot_ele(mode, slot, (square).length.enabled);\
+	save_slot_ele(mode, slot, (square).length.halt);\
+	save_slot_ele(mode, slot, (square).output)
 
 typedef struct _save_slot {
 	uint32_t version;
-	DBWORD slot;
-	BYTE state[SAVE_SLOTS_TOTAL];
-	DBWORD tot_size[SAVE_SLOTS_TOTAL];
-	uTCHAR rom_file[LENGTH_FILE_NAME_LONG];
-	_info_sh1sum sha1sum;
+	DBWORD slot_in_use;
+	uint32_t crc32;
+	uint32_t size;
+	struct _save_slots_info {
+		BYTE state;
+		uint32_t tot_size;
+	} slot[SAVE_SLOTS_TOTAL];
 } _save_slot;
 
 extern _save_slot save_slot;
@@ -124,7 +85,8 @@ extern _save_slot save_slot;
 EXTERNC BYTE save_slot_save(BYTE slot);
 EXTERNC BYTE save_slot_load(BYTE slot);
 EXTERNC void save_slot_count_load(void);
-EXTERNC BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size, FILE *fp, BYTE preview);
+EXTERNC BYTE save_slot_element(BYTE mode, BYTE slot, void *src, size_t size, FILE *fp, BYTE preview);
+EXTERNC BYTE save_slot_position(BYTE mode, BYTE slot, void *start, void *end, FILE *fp);
 EXTERNC BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp);
 
 #undef EXTERNC

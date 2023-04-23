@@ -47,7 +47,7 @@ struct _tas_internal {
 static _port tas_port_bck[PORT_MAX];
 
 BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
-	QString extension = uQString(ext);
+	const QString extension = uQString(ext);
 
 	if (extension.compare(".fm2", Qt::CaseInsensitive) == 0) {
 		tas.type = FM2;
@@ -81,11 +81,11 @@ BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 			const QString rom_ext[4] = { ".nes", ".NES", ".fds", ".FDS" };
 
 			for (i = 0; i < (int)LENGTH(rom_ext); i++) {
-				QString rom = uQString(info.rom.file) + rom_ext[i];
+				const QString rom = uQString(&info.rom.file[0]) + rom_ext[i];
 
 				if (QFileInfo::exists(rom)) {
-					umemset(info.rom.file, 0x00, usizeof(info.rom.file));
-					ustrncpy(info.rom.file, uQStringCD(rom), usizeof(info.rom.file) - 1);
+					umemset(&info.rom.file[0], 0x00, usizeof(info.rom.file));
+					ustrncpy(&info.rom.file[0], uQStringCD(rom), usizeof(info.rom.file) - 1);
 					found = TRUE;
 					break;
 				}
@@ -106,7 +106,7 @@ BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 	return (EXIT_OK);
 }
 void tas_quit(void) {
-	int i;
+	int i = 0;
 
 	tas.type = NOTAS;
 
@@ -146,8 +146,8 @@ void tas_quit(void) {
 void tas_header_FM2(uTCHAR *file) {
 	QString line;
 	char buffer[1024];
-	int32_t counter;
-	size_t pos;
+	int32_t counter = 0;
+	size_t pos = 0;
 
 	tas.emulator = FCEUX;
 
@@ -157,11 +157,11 @@ void tas_header_FM2(uTCHAR *file) {
 	counter = 0;
 	pos = ftell(tas.fp);
 
-	while (fgets(buffer, sizeof(buffer), tas.fp)) {
+	while (fgets((char *)buffer, sizeof(buffer), tas.fp)) {
 		QString key, value;
 
 		// elimino spazi iniziali, tabulazioni e ritorno a capo
-		line = QString::fromUtf8(buffer).simplified();
+		line = QString::fromUtf8((char *)buffer).simplified();
 
 		if (line.isEmpty() || line.startsWith('#')) {
 			pos = ftell(tas.fp);
@@ -194,10 +194,10 @@ void tas_header_FM2(uTCHAR *file) {
 		} else if (key.compare("punesStartFrame", Qt::CaseInsensitive) == 0) {
 			tas.start_frame = value.toInt() + 1;
 		} else if (key.compare("romFilename", Qt::CaseInsensitive) == 0) {
-			QString rom = QFileInfo(uQString(file)).absolutePath() + "/" + value;
+			const QString rom = QFileInfo(uQString(file)).absolutePath() + "/" + value;
 
-			umemset(info.rom.file, 0x00, usizeof(info.rom.file));
-			ustrncpy(info.rom.file, uQStringCD(rom), usizeof(info.rom.file) - 1);
+			umemset(&info.rom.file[0], 0x00, usizeof(info.rom.file));
+			ustrncpy(&info.rom.file[0], uQStringCD(rom), usizeof(info.rom.file) - 1);
 		} else if (key.compare("port0", Qt::CaseInsensitive) == 0) {
 			port[PORT1].type = value.toInt();
 			if (port[PORT1].type == CTRL_ZAPPER) {
@@ -211,15 +211,16 @@ void tas_header_FM2(uTCHAR *file) {
 		} else if (key.compare("comment author", Qt::CaseInsensitive) == 0) {
 			tsint.comment_author = value;
 		} else if (key.compare("subtitle", Qt::CaseInsensitive) == 0) {
-			static QRegularExpression re("^\\s*(\\d+)\\s+(.*)$");
-			QRegularExpressionMatch match = re.match(value);
+			static const QRegularExpression re("^\\s*(\\d+)\\s+(.*)$");
+			const QRegularExpressionMatch match = re.match(value);
 
 			if (match.hasMatch()) {
-				_tas_subtitle *list;
+				_tas_subtitle *list = nullptr;
 
-				if ((list = (_tas_subtitle *)realloc(tsint.subtitles.list, (tsint.subtitles.nsubtitle + 1) * sizeof(_tas_subtitle)))) {
-					QString subtitle = "[yellow]" + match.captured(2) + "[normal]";
-					_tas_subtitle *ts;
+				list = (_tas_subtitle *)realloc(tsint.subtitles.list, ((tsint.subtitles.nsubtitle + 1) * sizeof(_tas_subtitle)));
+				if (list) {
+					const QString subtitle = "[yellow]" + match.captured(2) + "[normal]";
+					_tas_subtitle *ts = nullptr;
 
 					tsint.subtitles.list = list;
 					ts = &tsint.subtitles.list[tsint.subtitles.nsubtitle];
@@ -250,13 +251,13 @@ void tas_header_FM2(uTCHAR *file) {
 	fseek(tas.fp, 0, SEEK_SET);
 }
 void tas_read_FM2(void) {
-	unsigned int start;
-	char line[256], *sep, *saveptr;
+	unsigned int start = 0;
+	char line[256], *sep = nullptr, *saveptr = nullptr;
 
 	tas.count = tas.index = 0;
 
-	while (fgets(line, sizeof(line), tas.fp)) {
-		for (start = 0; start < strlen(line); start++) {
+	while (fgets(&line[0], sizeof(line), tas.fp)) {
+		for (start = 0; start < strlen(&line[0]); start++) {
 			if ((line[start] == ' ') || (line[start] == '\t')) {
 				continue;
 			}
@@ -273,7 +274,7 @@ void tas_read_FM2(void) {
 		tas.il[tas.count].state = atoi(sep);
 
 		{
-			BYTE a, b;
+			BYTE a = 0, b = 0;
 
 			for (a = PORT1; a <= PORT2; a++) {
 				sep = strtok_r(nullptr, "|", &saveptr);
@@ -287,7 +288,7 @@ void tas_read_FM2(void) {
 						}
 					}
 				} else if (port[a].type == CTRL_ZAPPER) {
-					char *space, *last;
+					char *space = nullptr, *last = nullptr;
 
 					space = strtok_r(sep, " ", &last);
 					tas.il[tas.count].port[a][0] = QString::fromUtf8(space).simplified().toUInt();
@@ -301,7 +302,7 @@ void tas_read_FM2(void) {
 			}
 		}
 
-		if (++tas.count == LENGTH(tas.il)) {
+		if (++tas.count == (int32_t)LENGTH(tas.il)) {
 			break;
 		}
 	}
@@ -309,7 +310,7 @@ void tas_read_FM2(void) {
 	tsint.index++;
 }
 void tas_frame_FM2(void) {
-	int i;
+	int i = 0;
 
 	// il primo frame
 	if (!tas.frame) {
@@ -373,11 +374,9 @@ void tas_frame_FM2(void) {
 	}
 }
 void tas_rewind_FM2(int32_t frames_to_rewind) {
-	int32_t frames, chunk, snaps;
-
-	frames = tas.frame + frames_to_rewind;
-	chunk = frames / (int)LENGTH(tas.il);
-	snaps = frames % (int)LENGTH(tas.il);
+	int32_t frames = tas.frame + frames_to_rewind;
+	int32_t chunk = frames / (int)LENGTH(tas.il);
+	int32_t snaps = frames % (int)LENGTH(tas.il);
 
 	if (chunk != (int32_t)tsint.index) {
 		fseek(tas.fp, (long)tsint.file_byte_il.at((int)chunk), SEEK_SET);

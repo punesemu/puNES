@@ -441,6 +441,8 @@ BYTE nsf_load_rom(void) {
 		info.mapper.id = NSF_MAPPER;
 		info.cpu_rw_extern = TRUE;
 
+		emu_save_header_info();
+
 		free(rom.data);
 	} else {
 		free(rom.data);

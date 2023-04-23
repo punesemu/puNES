@@ -23,18 +23,15 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_412(BYTE value);
-INLINE static void prg_swap_412(WORD address, WORD value);
-INLINE static void chr_fix_412(BYTE value);
-INLINE static void chr_swap_412(WORD address, WORD value);
+void prg_swap_412(WORD address, WORD value);
+void chr_swap_412(WORD address, WORD value);
 
 struct _m412 {
 	BYTE reg[4];
-	WORD mmc3[8];
 } m412;
 
 void map_init_412(void) {
-	EXTCL_AFTER_MAPPER_INIT(412);
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(412);
 	EXTCL_SAVE_MAPPER(412);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -48,113 +45,41 @@ void map_init_412(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m412, 0x00, sizeof(m412));
 
-	m412.mmc3[0] = 0;
-	m412.mmc3[1] = 2;
-	m412.mmc3[2] = 4;
-	m412.mmc3[3] = 5;
-	m412.mmc3[4] = 6;
-	m412.mmc3[5] = 7;
-	m412.mmc3[6] = 0;
-	m412.mmc3[7] = 0;
+	init_MMC3();
+	MMC3_prg_swap = prg_swap_412;
+	MMC3_chr_swap = chr_swap_412;
 
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extcl_after_mapper_init_412(void) {
-	prg_fix_412(mmc3.bank_to_update);
-	chr_fix_412(mmc3.bank_to_update);
-}
 void extcl_cpu_wr_mem_412(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		if (cpu.prg_ram_wr_active) {
 			m412.reg[address & 0x0003] = value;
-			prg_fix_412(mmc3.bank_to_update);
-			chr_fix_412(mmc3.bank_to_update);
+			MMC3_prg_fix(mmc3.bank_to_update);
+			MMC3_chr_fix(mmc3.bank_to_update);
 		}
 		return;
 	}
 	if (address >= 0x8000) {
-		switch (address & 0xE001) {
-			case 0x8000:
-				if ((value & 0x40) != (mmc3.bank_to_update & 0x40)) {
-					prg_fix_412(value);
-				}
-				if ((value & 0x80) != (mmc3.bank_to_update & 0x80)) {
-					chr_fix_412(value);
-				}
-				mmc3.bank_to_update = value;
-				return;
-			case 0x8001: {
-				WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
-
-				m412.mmc3[mmc3.bank_to_update & 0x07] = value;
-
-				switch (mmc3.bank_to_update & 0x07) {
-					case 0:
-						chr_swap_412(cbase ^ 0x0000, value & (~1));
-						chr_swap_412(cbase ^ 0x0400, value | 1);
-						return;
-					case 1:
-						chr_swap_412(cbase ^ 0x0800, value & (~1));
-						chr_swap_412(cbase ^ 0x0C00, value | 1);
-						return;
-					case 2:
-						chr_swap_412(cbase ^ 0x1000, value);
-						return;
-					case 3:
-						chr_swap_412(cbase ^ 0x1400, value);
-						return;
-					case 4:
-						chr_swap_412(cbase ^ 0x1800, value);
-						return;
-					case 5:
-						chr_swap_412(cbase ^ 0x1C00, value);
-						return;
-					case 6:
-						if (mmc3.bank_to_update & 0x40) {
-							prg_swap_412(0xC000, value);
-						} else {
-							prg_swap_412(0x8000, value);
-						}
-						return;
-					case 7:
-						prg_swap_412(0xA000, value);
-						return;
-				}
-				return;
-			}
-		}
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
 BYTE extcl_save_mapper_412(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m412.reg);
-	save_slot_ele(mode, slot, m412.mmc3);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
 }
 
-INLINE static void prg_fix_412(BYTE value) {
-	if (value & 0x40) {
-		prg_swap_412(0x8000, ~1);
-		prg_swap_412(0xC000, m412.mmc3[6]);
-	} else {
-		prg_swap_412(0x8000, m412.mmc3[6]);
-		prg_swap_412(0xC000, ~1);
-	}
-	prg_swap_412(0xA000, m412.mmc3[7]);
-	prg_swap_412(0xE000, ~0);
-}
-INLINE static void prg_swap_412(WORD address, WORD value) {
-	WORD base;
-	WORD mask;
+void prg_swap_412(WORD address, WORD value) {
+	WORD base = 0;
+	WORD mask = 0;
 
 	if (m412.reg[2] & 0x02) {
 		BYTE n256 = (m412.reg[2] & 0x04) >> 2;
@@ -173,19 +98,7 @@ INLINE static void prg_swap_412(WORD address, WORD value) {
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_412(BYTE value) {
-	WORD cbase = (value & 0x80) << 5;
-
-	chr_swap_412(cbase ^ 0x0000, m412.mmc3[0] & (~1));
-	chr_swap_412(cbase ^ 0x0400, m412.mmc3[0] |   1);
-	chr_swap_412(cbase ^ 0x0800, m412.mmc3[1] & (~1));
-	chr_swap_412(cbase ^ 0x0C00, m412.mmc3[1] |   1);
-	chr_swap_412(cbase ^ 0x1000, m412.mmc3[2]);
-	chr_swap_412(cbase ^ 0x1400, m412.mmc3[3]);
-	chr_swap_412(cbase ^ 0x1800, m412.mmc3[4]);
-	chr_swap_412(cbase ^ 0x1C00, m412.mmc3[5]);
-}
-INLINE static void chr_swap_412(WORD address, WORD value) {
+void chr_swap_412(WORD address, WORD value) {
 	WORD base = m412.reg[1] & 0x80;
 	WORD mask = 0x7F;
 

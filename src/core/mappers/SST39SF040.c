@@ -118,8 +118,8 @@ void sst39sf040_tick(void) {
 	}
 }
 BYTE sst39sf040_save_mapper(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, sst39sf040.sequence)
-	save_slot_ele(mode, slot, sst39sf040.time_out)
+	save_slot_ele(mode, slot, sst39sf040.sequence);
+	save_slot_ele(mode, slot, sst39sf040.time_out);
 
 	return (EXIT_OK);
 }

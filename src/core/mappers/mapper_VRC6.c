@@ -235,8 +235,8 @@ BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, vrc6.prescaler);
 	save_slot_ele(mode, slot, vrc6.delay);
 
-	vrc6_square_saveslot(vrc6.S3)
-	vrc6_square_saveslot(vrc6.S4)
+	vrc6_square_saveslot(vrc6.S3);
+	vrc6_square_saveslot(vrc6.S4);
 
 	save_slot_ele(mode, slot, vrc6.saw.enabled);
 	save_slot_ele(mode, slot, vrc6.saw.accumulator);
@@ -246,13 +246,11 @@ BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, vrc6.saw.frequency);
 	save_slot_ele(mode, slot, vrc6.saw.output);
 
-	if (save_slot.version >= 18) {
-		save_slot_ele(mode, slot, vrc6.mode)
-		save_slot_ele(mode, slot, vrc6.chr_map)
+	save_slot_ele(mode, slot, vrc6.mode);
+	save_slot_ele(mode, slot, vrc6.chr_map);
 
-		if (mode == SAVE_SLOT_READ) {
-			vrc6_update_chr_and_mirroring();
-		}
+	if (mode == SAVE_SLOT_READ) {
+		vrc6_update_chr_and_mirroring();
 	}
 
 	return (EXIT_OK);

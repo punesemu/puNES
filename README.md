@@ -35,7 +35,10 @@ These executables are always updated to the latest commit:
 * Windows 32 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build/master/punes32.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build/master/punes32.wip.d3d9.zip)
 * Windows 64 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build/master/punes64.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build/master/punes64.wip.d3d9.zip)
 
-Note : 32 bit versions are Windows XP compatible.
+Notes: 
+- WARNING save states of version 0.110 or earlier are no longer compatible.
+- Due to the many changes I'm making to the core of the emulator, new bugs may have been introduced, if you find that the roms no longer work properly compared to version 0.110, please let me know.
+- 32 bit versions are Windows XP compatible.
 
 :beer: Support
 -----------
@@ -80,7 +83,7 @@ To see a list of available command-line options, start puNES with the `-h` argum
 | 66  | 67  | 68  | 69  | 70  | 71  | 72  | 73  | 74  | 75  | 76  |
 | 77  | 78  | 79  | 80  | 81  | 82  | 83  |     | 85  | 86  | 87  |
 | 88  | 89  | 90  | 91  | 92  | 93  | 94  | 95  | 96  | 97  |     |
-| 99  |     | 101 |     | 103 | 104 | 105 | 106 | 107 | 108 |     |
+| 99  | 100 | 101 |     | 103 | 104 | 105 | 106 | 107 | 108 |     |
 |     | 111 | 112 | 113 | 114 | 115 | 116 | 117 | 118 | 119 | 120 |
 | 121 |     | 123 |     | 125 | 126 |     |     |     |     |     |
 | 132 | 133 | 134 |     | 136 | 137 | 138 | 139 | 140 | 141 | 142 |
@@ -99,7 +102,7 @@ To see a list of available command-line options, start puNES with the `-h` argum
 |     |     |     |     |     |     | 281 | 282 | 283 | 284 | 285 |
 | 286 | 287 | 288 | 289 | 290 | 291 | 292 |     |     | 295 |     |
 | 297 | 298 | 299 | 300 | 301 | 302 | 303 | 304 | 305 | 306 | 307 |
-| 308 | 309 |     |     | 312 | 313 | 314 | 315 |     |     |     |
+| 308 | 309 |     | 311 | 312 | 313 | 314 | 315 |     |     |     |
 | 319 | 320 |     | 322 | 323 | 324 | 325 |     | 327 | 328 | 329 |
 |     | 331 | 332 | 333 | 334 | 335 | 336 | 337 | 338 | 339 | 340 |
 | 341 | 342 | 343 | 344 | 345 | 346 | 347 | 348 | 349 | 350 | 351 |

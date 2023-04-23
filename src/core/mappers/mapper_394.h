@@ -23,7 +23,6 @@
 
 typedef struct _m394 {
 	BYTE reg[4];
-	WORD mmc3[8];
 } _m394;
 
 extern _m394 m394;
@@ -31,6 +30,7 @@ extern _m394 m394;
 void map_init_394(void);
 void extcl_after_mapper_init_394(void);
 void extcl_cpu_wr_mem_394(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_394(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_394(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_394(void);
 void extcl_rd_ppu_mem_394(WORD address);

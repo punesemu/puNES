@@ -28,18 +28,16 @@ enum _m116_mappers { M116_MMC3 = 1, M116_VRC2, M116_MMC1 };
 
 INLINE static void prg_fix_116(void);
 INLINE static void chr_fix_116(void);
+INLINE static void mirroring_fix_116(void);
 
 INLINE static void switch_mode(void);
-INLINE static void cpu_wr_mmc3(WORD address, BYTE value);
 INLINE static WORD prg_base(void);
 INLINE static WORD prg_mask(void);
 INLINE static WORD chr_base(void);
 INLINE static WORD chr_mask(void);
 
-INLINE static void prg_fix_mmc3(void);
-INLINE static void prg_swap_mmc3(WORD address, WORD value);
-INLINE static void chr_fix_mmc3(void);
-INLINE static void chr_swap_mmc3(WORD address, WORD value);
+void prg_swap_116_mmc3(WORD address, WORD value);
+void chr_swap_116_mmc3(WORD address, WORD value);
 
 INLINE static void cpu_wr_mem_vrc2(WORD address, BYTE value);
 INLINE static void prg_fix_vrc2(void);
@@ -53,8 +51,6 @@ INLINE static void mirroring_fix_mmc1(void);
 struct _m116 {
 	BYTE mapper;
 	WORD reg;
-	// MMC3
-	WORD mmc3[8];
 	// VRC2
 	struct _m116_vrc2 {
 		BYTE prg[3];
@@ -87,20 +83,14 @@ void map_init_116(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc1);
 
 	memset(&mmc1, 0x00, sizeof(mmc1));
-	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m116, 0x00, sizeof(m116));
 
 	m116.reg = 0x01;
 
-	m116.mmc3[0] = 0;
-	m116.mmc3[1] = 2;
-	m116.mmc3[2] = 4;
-	m116.mmc3[3] = 5;
-	m116.mmc3[4] = 6;
-	m116.mmc3[5] = 7;
-	m116.mmc3[6] = 0;
-	m116.mmc3[7] = 1;
+	init_MMC3();
+	MMC3_prg_swap = prg_swap_116_mmc3;
+	MMC3_chr_swap = chr_swap_116_mmc3;
 
 	m116.vrc2.chr[0] = 0xFF;
 	m116.vrc2.chr[1] = 0xFF;
@@ -132,6 +122,7 @@ void extcl_after_mapper_init_116(void) {
 	switch_mode();
 	prg_fix_116();
 	chr_fix_116();
+	mirroring_fix_116();
 }
 void extcl_cpu_wr_mem_116(WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x5FFF)) {
@@ -145,7 +136,7 @@ void extcl_cpu_wr_mem_116(WORD address, BYTE value) {
 	}
 	if (address >= 0x8000) {
 		if (m116.mapper == M116_MMC3) {
-			cpu_wr_mmc3(address, value);
+			extcl_cpu_wr_mem_MMC3(address, value);
 		} else if (m116.mapper == M116_VRC2) {
 			cpu_wr_mem_vrc2(address, value);
 		} else if (m116.mapper == M116_MMC1) {
@@ -156,7 +147,6 @@ void extcl_cpu_wr_mem_116(WORD address, BYTE value) {
 BYTE extcl_save_mapper_116(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m116.mapper);
 	save_slot_ele(mode, slot, m116.reg);
-	save_slot_ele(mode, slot, m116.mmc3);
 	save_slot_ele(mode, slot, m116.vrc2.prg);
 	save_slot_ele(mode, slot, m116.vrc2.chr);
 	extcl_save_mapper_MMC3(mode, slot, fp);
@@ -197,7 +187,7 @@ void extcl_update_r2006_116(WORD new_r2006, WORD old_r2006) {
 
 INLINE static void prg_fix_116(void) {
 	if (m116.mapper == M116_MMC3) {
-		prg_fix_mmc3();
+		MMC3_prg_fix(mmc3.bank_to_update);
 	} else if (m116.mapper == M116_VRC2) {
 		prg_fix_vrc2();
 	} else if (m116.mapper == M116_MMC1) {
@@ -206,11 +196,16 @@ INLINE static void prg_fix_116(void) {
 }
 INLINE static void chr_fix_116(void) {
 	if (m116.mapper == M116_MMC3) {
-		chr_fix_mmc3();
+		MMC3_chr_fix(mmc3.bank_to_update);
 	} else if (m116.mapper == M116_VRC2) {
 		chr_fix_vrc2();
 	} else if (m116.mapper == M116_MMC1) {
 		chr_fix_mmc1();
+	}
+}
+INLINE static void mirroring_fix_116(void) {
+	if (m116.mapper == M116_MMC3) {
+		MMC3_mirroring_fix();
 	}
 }
 
@@ -246,54 +241,7 @@ INLINE static WORD chr_mask(void) {
 	return (m116tmp.dipswitch ? 0x7F : 0xFF);
 }
 
-INLINE static void cpu_wr_mmc3(WORD address, BYTE value) {
-	switch (address & 0xE001) {
-		case 0x8000: {
-			BYTE old = mmc3.bank_to_update;
-
-			mmc3.bank_to_update = value;
-
-			if ((value & 0x40) != (old & 0x40)) {
-				prg_fix_116();
-			}
-			if ((value & 0x80) != (old & 0x80)) {
-				chr_fix_116();
-			}
-			return;
-		}
-		case 0x8001: {
-			m116.mmc3[mmc3.bank_to_update & 0x07] = value;
-			switch (mmc3.bank_to_update & 0x07) {
-				case 0:
-				case 1:
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-					chr_fix_116();
-					return;
-				case 6:
-				case 7:
-					prg_fix_116();
-					return;
-			}
-			return;
-		}
-	}
-	extcl_cpu_wr_mem_MMC3(address, value);
-}
-INLINE static void prg_fix_mmc3(void) {
-	if (mmc3.bank_to_update & 0x40) {
-		prg_swap_mmc3(0x8000, ~1);
-		prg_swap_mmc3(0xC000, m116.mmc3[6]);
-	} else {
-		prg_swap_mmc3(0x8000, m116.mmc3[6]);
-		prg_swap_mmc3(0xC000, ~1);
-	}
-	prg_swap_mmc3(0xA000, m116.mmc3[7]);
-	prg_swap_mmc3(0xE000, ~0);
-}
-INLINE static void prg_swap_mmc3(WORD address, WORD value) {
+void prg_swap_116_mmc3(WORD address, WORD value) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 
@@ -302,19 +250,7 @@ INLINE static void prg_swap_mmc3(WORD address, WORD value) {
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_mmc3(void) {
-	WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
-
-	chr_swap_mmc3(cbase ^ 0x0000, m116.mmc3[0] & (~1));
-	chr_swap_mmc3(cbase ^ 0x0400, m116.mmc3[0] | 1);
-	chr_swap_mmc3(cbase ^ 0x0800, m116.mmc3[1] & (~1));
-	chr_swap_mmc3(cbase ^ 0x0C00, m116.mmc3[1] | 1);
-	chr_swap_mmc3(cbase ^ 0x1000, m116.mmc3[2]);
-	chr_swap_mmc3(cbase ^ 0x1400, m116.mmc3[3]);
-	chr_swap_mmc3(cbase ^ 0x1800, m116.mmc3[4]);
-	chr_swap_mmc3(cbase ^ 0x1C00, m116.mmc3[5]);
-}
-INLINE static void chr_swap_mmc3(WORD address, WORD value) {
+void chr_swap_116_mmc3(WORD address, WORD value) {
 	WORD base = ((m116.reg & 0x04) << 6) | chr_base();
 	WORD mask = chr_mask();
 

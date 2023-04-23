@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <unistd.h>
 #include "ines.h"
 #include "rom_mem.h"
 #include "mem_map.h"
@@ -33,20 +34,23 @@
 #include "sha1.h"
 #include "database.h"
 #include "../../c++/crc/crc.h"
+#include "nes20db.h"
 
+void calculate_checksums_from_rom(void *rom_mem);
 void search_in_database(void);
-BYTE ines10_search_in_database(void *rom_mem);
+BYTE ines10_search_in_database(void);
 
 _ines ines;
 
 BYTE ines_load_rom(void) {
 	_rom_mem rom;
+	BYTE cpu_timing = 0;
 
 	{
 		static const uTCHAR rom_ext[2][10] = { uL(".nes\0"), uL(".NES\0") };
-		unsigned int i;
+		unsigned int i = 0;
 		BYTE found = TRUE;
-		FILE *fp;
+		FILE *fp = NULL;
 
 		fp = ufopen(info.rom.file, uL("rb"));
 
@@ -78,7 +82,8 @@ BYTE ines_load_rom(void) {
 		rom.size = ftell(fp);
 		fseek(fp, 0L, SEEK_SET);
 
-		if ((rom.data = (BYTE *)malloc(rom.size)) == NULL) {
+		rom.data = (BYTE *)malloc(rom.size);
+		if (rom.data == NULL) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
@@ -104,11 +109,9 @@ BYTE ines_load_rom(void) {
 		(rom.data[rom.position++] == 'E') &&
 		(rom.data[rom.position++] == 'S') &&
 		(rom.data[rom.position++] == '\32')) {
-		BYTE cpu_timing;
 
 		info.prg.rom.banks_16k = rom.data[rom.position++];
 		info.chr.rom.banks_8k = rom.data[rom.position++];
-
 		info.chr.ram.banks_8k_plus = 0;
 
 		if (rom_mem_ctrl_memcpy(&ines.flags[0], &rom, TOTAL_FL) == EXIT_ERROR) {
@@ -193,11 +196,26 @@ BYTE ines_load_rom(void) {
 				cpu_timing = ines.flags[FL9] & 0x01;
 			}
 
+			info.mapper.submapper = DEFAULT;
+
+			info.prg.ram.banks_8k_plus = 1;
 			info.prg.ram.bat.banks = (ines.flags[FL6] & 0x02) >> 1;
+
+			vs_system.ppu = vs_system.special_mode.type = 0;
+			vs_system.special_mode.type = 0;
+			info.decimal_mode = FALSE;
 		}
 
-		if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
-			info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
+		info.mapper.trainer = ines.flags[FL6] & 0x04;
+
+		if (ines.flags[FL6] & 0x08) {
+			info.mapper.mirroring = MIRRORING_FOURSCR;
+		} else {
+			if (ines.flags[FL6] & 0x01) {
+				info.mapper.mirroring = MIRRORING_VERTICAL;
+			} else {
+				info.mapper.mirroring = MIRRORING_HORIZONTAL;
+			}
 		}
 
 		switch (cpu_timing) {
@@ -214,18 +232,8 @@ BYTE ines_load_rom(void) {
 				break;
 		}
 
-		info.mapper.trainer = ines.flags[FL6] & 0x04;
-
-		if (ines.flags[FL6] & 0x08) {
-			mirroring_FSCR();
-		} else {
-			if (ines.flags[FL6] & 0x01) {
-				mirroring_V();
-			} else {
-				mirroring_H();
-			}
-		}
-		info.mapper.mirroring = mapper.mirroring;
+		emu_save_header_info();
+		calculate_checksums_from_rom(&rom);
 
 		// inizializzo qui il writeVRAM per la mapper 96 perche'
 		// e' l'unica mapper che utilizza 32k di CHR Ram e che
@@ -234,9 +242,37 @@ BYTE ines_load_rom(void) {
 		// ines10_search_in_database().
 		mapper.write_vram = FALSE;
 
-		if ((info.format != NES_2_0) && ines10_search_in_database(&rom)) {
-			free(rom.data);
-			return (EXIT_ERROR);
+		if (info.format != NES_2_0)  {
+			if (ines10_search_in_database()) {
+				free(rom.data);
+				return (EXIT_ERROR);
+			}
+			calculate_checksums_from_rom(&rom);
+		}
+
+		nes20db_search();
+
+		if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
+			info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
+		}
+
+		switch (info.mapper.mirroring) {
+			default:
+			case MIRRORING_HORIZONTAL:
+				mirroring_H();
+				break;
+			case MIRRORING_VERTICAL:
+				mirroring_V();
+				break;
+			case MIRRORING_FOURSCR:
+				mirroring_FSCR();
+				break;
+			case MIRRORING_SINGLE_SCR0:
+				mirroring_SCR0();
+				break;
+			case MIRRORING_SINGLE_SCR1:
+				mirroring_SCR1();
+				break;
 		}
 
 		// gestione Vs. System
@@ -298,6 +334,7 @@ BYTE ines_load_rom(void) {
 					vs_system.special_mode.r5e0x = NULL;
 					break;
 			}
+
 			vs_system.special_mode.index = 0;
 		}
 
@@ -313,7 +350,7 @@ BYTE ines_load_rom(void) {
 		if (!info.chr.rom.banks_8k) {
 			mapper.write_vram = TRUE;
 			if (info.format == NES_2_0) {
-				info.chr.rom.banks_8k = nes20_ram_size(ines.flags[FL11] & 0x0F);
+				info.chr.rom.banks_8k = info.chr.ram.banks_8k_plus;
 				info.chr.ram.banks_8k_plus = 0;
 			}
 		}
@@ -329,18 +366,13 @@ BYTE ines_load_rom(void) {
 		}
 
 		// alloco e carico la PRG Rom
-		if (map_prg_malloc(info.prg.rom.banks_8k * 0x2000, 0x00, TRUE) == EXIT_ERROR) {
+		if (map_prg_malloc((size_t)info.prg.rom.banks_8k * 0x2000, 0x00, TRUE) == EXIT_ERROR) {
 			free(rom.data);
 			return (EXIT_ERROR);
 		}
 
-		if (rom_mem_ctrl_memcpy(prg_rom(), &rom, prg_size()) == EXIT_ERROR) {
-			free(rom.data);
-			return (EXIT_ERROR);
-		}
-
-		if (info.format == NES_2_0) {
-			sha1_csum(prg_rom(), prg_size(), info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
+		if (rom_mem_ctrl_memcpy_truncated(prg_rom(), &rom, prg_size()) == EXIT_ERROR) {
+			info.prg_truncated = TRUE;
 		}
 
 		// se e' settato mapper.write_vram, vuol dire
@@ -349,14 +381,13 @@ BYTE ines_load_rom(void) {
 		// (perche' alcune mapper ne hanno 16k, altre 8k).
 		if (!mapper.write_vram) {
 			// alloco la CHR Rom
-			if (map_chr_malloc(info.chr.rom.banks_8k * 0x2000, 0x00, TRUE) == EXIT_ERROR) {
+			if (map_chr_malloc((size_t)info.chr.rom.banks_8k * 0x2000, 0x00, TRUE) == EXIT_ERROR) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
 
-			if (rom_mem_ctrl_memcpy(chr_rom(), &rom, chr_size()) == EXIT_ERROR) {
-				free(rom.data);
-				return (EXIT_ERROR);
+			if (rom_mem_ctrl_memcpy_truncated(chr_rom(), &rom, chr_size()) == EXIT_ERROR) {
+				info.chr_truncated = TRUE;
 			}
 
 			info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
@@ -371,13 +402,11 @@ BYTE ines_load_rom(void) {
 
 		if (info.mapper.misc_roms) {
 			if (map_misc_malloc(rom.size - rom.position, 0x00) == EXIT_ERROR) {
-				free(rom.data);
-				return (EXIT_ERROR);
+				info.misc_truncated = TRUE;
 			}
 
-			if (rom_mem_ctrl_memcpy(mapper.misc_roms.data, &rom, mapper.misc_roms.size) == EXIT_ERROR) {
-				free(rom.data);
-				return (EXIT_ERROR);
+			if (rom_mem_ctrl_memcpy_truncated(mapper.misc_roms.data, &rom, mapper.misc_roms.size) == EXIT_ERROR) {
+				info.misc_truncated = TRUE;
 			}
 		}
 
@@ -386,20 +415,6 @@ BYTE ines_load_rom(void) {
 
 		if (info.format == NES_2_0) {
 			nes20_submapper();
-		}
-
-		{
-			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
-			info.crc32.total = info.crc32.prg;
-
-			if (!mapper.write_vram && chr_size()) {
-				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
-				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.total);
-			}
-			if (mapper.misc_roms.size) {
-				info.crc32.misc = emu_crc32((void *)mapper.misc_roms.data, mapper.misc_roms.size);
-				info.crc32.total = emu_crc32_continue((void *)mapper.misc_roms.data, mapper.misc_roms.size, info.crc32.total);
-			}
 		}
 
 		free(rom.data);
@@ -435,11 +450,6 @@ void nes20_submapper(void) {
 				case 2:
 					info.mapper.submapper = CNROM_CNFL;
 					break;
-			}
-			break;
-		case 4:
-			if (info.mapper.submapper == 1) {
-				info.mapper.submapper = MMC6;
 			}
 			break;
 		case 7:
@@ -574,8 +584,89 @@ BYTE nes20_ram_size(BYTE mode) {
 	return (0);
 }
 
+void calculate_checksums_from_rom(void *rom_mem) {
+	_rom_mem *rom = (_rom_mem *)rom_mem;
+	size_t position = 0x10, len = 0, difference = 0;
+
+	info.crc32.prg = 0;
+	info.crc32.chr = 0;
+	info.crc32.trainer = 0;
+	info.crc32.misc = 0;
+	info.crc32.total = 0;
+
+	// punto oltre l'header
+	if (info.mapper.trainer) {
+		len = sizeof(mapper.trainer);
+		info.crc32.trainer = emu_crc32((void *)(rom->data + position), len);
+		info.crc32.total = info.crc32.trainer;
+		position += len;
+	}
+
+	// mapper 235
+	// 260-in-1 [p1][b1].nes ha un numero di prg_rom_16k_count
+	// pari a 256 (0x100) ed essendo un BYTE (0xFF) quello che l'INES
+	// utilizza per indicare in numero di 16k, nell'INES header sara'
+	// presente 0.
+	// 150-in-1 [a1][p1][!].nes ha lo stesso chsum del 260-in-1 [p1][b1].nes
+	// ma ha un numero di prg_rom_16k_count di 127.
+	if (!info.prg.rom.banks_16k && (info.mapper.id == 235)) {
+		info.prg.rom.banks_16k = 256;
+	}
+
+	{
+		len = !info.prg.rom.banks_16k ? 0x2000 : (size_t)info.prg.rom.banks_16k * 0x4000;
+		difference = !info.prg.rom.banks_16k ? 0x2000 : 0;
+		if ((position + len) > rom->size) {
+			DBWORD banks = (rom->size - position) / 0x4000;
+
+			info.prg.rom.banks_16k = banks < 1 ? banks : emu_power_of_two(banks);
+			len = rom->size - position;
+			difference = ((size_t)info.prg.rom.banks_16k * 0x4000) - len;
+		}
+		// calcolo l'sha1 e il crc32 della PRG Rom
+		sha1_csum(rom->data + position, (int)len, info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
+		info.crc32.prg = emu_crc32((void *)(rom->data + position), len);
+		info.crc32.prg = emu_crc32_zeroes(difference, info.crc32.prg);
+		info.crc32.total = emu_crc32_continue((void *)(rom->data + position), len, info.crc32.total);
+		position += len;
+	}
+
+	if (info.chr.rom.banks_8k) {
+		len = (size_t)info.chr.rom.banks_8k * 0x2000;
+		difference = 0;
+		if ((position + len) > rom->size) {
+			DBWORD banks = (rom->size - position) / 0x2000;
+
+			info.chr.rom.banks_8k = banks < 1 ? banks : emu_power_of_two(banks);
+			len = rom->size - position;
+			difference = ((size_t)info.chr.rom.banks_8k * 0x2000) - len;
+		}
+		// calcolo anche l'sha1 e il crc32 della CHR rom
+		sha1_csum(rom->data + position, (int)len, info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
+		info.crc32.chr = emu_crc32((void *)(rom->data + position), len);
+		info.crc32.chr = emu_crc32_zeroes(difference, info.crc32.chr);
+		info.crc32.total = emu_crc32_continue((void *)(rom->data + position), len, info.crc32.total);
+		position += len;
+	}
+
+	if (mapper.misc_roms.size) {
+		len = mapper.misc_roms.size;
+		if ((position + len) > rom->size) {
+			mapper.misc_roms.size = rom->size - position;
+			len = mapper.misc_roms.size;
+		}
+		info.crc32.misc = emu_crc32((void *)(void *)(rom->data + position), len);
+		info.crc32.total = emu_crc32_continue((void *)(rom->data + position), len, info.crc32.total);
+		position += len;
+	}
+}
 void search_in_database(void) {
-	unsigned int i;
+	unsigned int i = 0;
+
+	// Nesticle MMC3
+	if ((info.mapper.id == 4) && info.mapper.trainer) {
+		info.mapper.id = 100;
+	}
 
 	// cerco nel database
 	for (i = 0; i < LENGTH(dblist); i++) {
@@ -659,6 +750,11 @@ void search_in_database(void) {
 						info.chr.rom.banks_8k = 16;
 					}
 					break;
+				case 194:
+					if (info.id == DAI2JI) {
+						info.prg.ram.bat.banks = 1;
+					}
+					break;
 				case 235:
 					if (!info.prg.rom.banks_16k) {
 						info.prg.rom.banks_16k = 256;
@@ -671,65 +767,20 @@ void search_in_database(void) {
 					break;
 			}
 			if (info.mirroring_db == UNK_VERTICAL) {
-				mirroring_V();
+				info.mapper.mirroring = MIRRORING_VERTICAL;
 			}
 			if (info.mirroring_db == UNK_HORIZONTAL) {
-				mirroring_H();
+				info.mapper.mirroring = MIRRORING_HORIZONTAL;
 			}
 			break;
 		}
 	}
 }
-BYTE ines10_search_in_database(void *rom_mem) {
-	_rom_mem *rom = (_rom_mem *)rom_mem;
-	size_t position;
-
+BYTE ines10_search_in_database(void) {
 	// setto i default prima della ricerca
 	info.machine[DATABASE] = info.mapper.submapper = info.mirroring_db = info.id = DEFAULT;
 	info.extra_from_db = 0;
 	vs_system.ppu = vs_system.special_mode.type = DEFAULT;
-
-	// punto oltre l'header
-	if (info.mapper.trainer) {
-		position = (0x10 + sizeof(mapper.trainer));
-	} else {
-		position = 0x10;
-	}
-
-	// mapper 235
-	// 260-in-1 [p1][b1].nes ha un numero di prg_rom_16k_count
-	// pari a 256 (0x100) ed essendo un BYTE (0xFF) quello che l'INES
-	// utilizza per indicare in numero di 16k, nell'INES header sara'
-	// presente 0.
-	// 150-in-1 [a1][p1][!].nes ha lo stesso chsum del 260-in-1 [p1][b1].nes
-	// ma ha un numero di prg_rom_16k_count di 127.
-	if (!info.prg.rom.banks_16k && (info.mapper.id == 235)) {
-		info.prg.rom.banks_16k = 256;
-	}
-
-	{
-		size_t len = !info.prg.rom.banks_16k ? 0x2000 : info.prg.rom.banks_16k * 0x4000;
-
-		if ((position + len) > rom->size) {
-			info.prg.rom.banks_16k = (rom->size - position) / 0x4000;
-			len = !info.prg.rom.banks_16k ? 0x2000 : info.prg.rom.banks_16k * 0x4000;
-			log_error(uL("ines 1.0;truncated PRG ROM"));
-		}
-
-		// calcolo l'sha1 della PRG Rom
-		sha1_csum(rom->data + position, (int)len, info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
-		position += (info.prg.rom.banks_16k * 0x4000);
-	}
-
-	if (info.chr.rom.banks_8k) {
-		if ((position + (info.chr.rom.banks_8k * 0x2000)) > rom->size) {
-			info.chr.rom.banks_8k = (rom->size - position) / 0x2000;
-			log_error(uL("ines 1.0;truncated CHR ROM"));
-		}
-		// calcolo anche l'sha1 della CHR rom
-		sha1_csum(rom->data + position, (int)(info.chr.rom.banks_8k * 0x2000), info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
-		position += (info.chr.rom.banks_8k * 0x2000);
-	}
 
 	// cerco nel database
 	search_in_database();

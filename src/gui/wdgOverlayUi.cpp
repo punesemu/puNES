@@ -119,6 +119,8 @@ static const char *info_messages_precompiled[] = {
 /* 36 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "keyboard input captured"),
 //: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
 /* 37 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "keyboard input released"),
+//: Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2
+/* 38 */ QT_TRANSLATE_NOOP("overlayWidgetInfo", "[red]error[normal] on write save state"),
 };
 
 typedef struct _overlay_info_message {
@@ -258,12 +260,15 @@ void gui_overlay_info_append_msg_precompiled_with_alignment(BYTE alignment, int 
 void gui_overlay_blit(void) {
 	overlay.ui.widget->overlay_blit();
 }
-void gui_overlay_slot_preview(int slot, void *buffer, uTCHAR *file) {
+
+void gui_overlay_slot_preview_set_from_ppu_screen(int slot, void *buffer, uTCHAR *file) {
 	if (buffer) {
 		overlay.ui.widget->overlaySaveSlot->previews[slot].image =
-			QImage((uchar*)buffer, SCR_COLUMNS, SCR_ROWS, SCR_COLUMNS * sizeof(uint32_t), QImage::Format_RGB32);
-		overlay.ui.widget->overlaySaveSlot->previews[slot].image =
-			overlay.ui.widget->overlaySaveSlot->previews[slot].image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+			QImage((uchar *)buffer, SCR_COLUMNS, SCR_ROWS, SCR_COLUMNS * sizeof(uint32_t), QImage::Format_RGB32);
+		if (!overlay.ui.widget->overlaySaveSlot->previews[slot].image.isNull()) {
+			overlay.ui.widget->overlaySaveSlot->previews[slot].image =
+				overlay.ui.widget->overlaySaveSlot->previews[slot].image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+		}
 	} else {
 		overlay.ui.widget->overlaySaveSlot->previews[slot].image = QImage();
 	}
@@ -272,6 +277,27 @@ void gui_overlay_slot_preview(int slot, void *buffer, uTCHAR *file) {
 	} else {
 		overlay.ui.widget->overlaySaveSlot->previews[slot].fileinfo = QFileInfo();
 	}
+}
+void gui_overlay_slot_preview_set_from_png(int slot, void *buffer, size_t size, uTCHAR *file) {
+	if (buffer) {
+		if (overlay.ui.widget->overlaySaveSlot->previews[slot].image.loadFromData((uchar *)buffer, size, "PNG")) {
+			overlay.ui.widget->overlaySaveSlot->previews[slot].image =
+				overlay.ui.widget->overlaySaveSlot->previews[slot].image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+		}
+	} else {
+		overlay.ui.widget->overlaySaveSlot->previews[slot].image = QImage();
+	}
+	if (file) {
+		overlay.ui.widget->overlaySaveSlot->previews[slot].fileinfo = QFileInfo(uQString(file));
+	} else {
+		overlay.ui.widget->overlaySaveSlot->previews[slot].fileinfo = QFileInfo();
+	}
+}
+void *gui_overlay_slot_preview_get(int slot) {
+	if (overlay.ui.widget->overlaySaveSlot->previews[slot].image.isNull()) {
+		return (nullptr);
+	}
+	return (&overlay.ui.widget->overlaySaveSlot->previews[slot].image);
 }
 
 void overlay_info_append_qstring(BYTE alignment, const QString &msg) {
@@ -1600,9 +1626,9 @@ void overlayWidgetSaveSlot::enable_overlay(BYTE operation) {
 	save_slot_operation = operation;
 
 	if (save_slot_operation == SAVE_SLOT_SAVE) {
-		gui_overlay_info_append_msg_precompiled(31, &save_slot.slot);
+		gui_overlay_info_append_msg_precompiled(31, &save_slot.slot_in_use);
 	} else if (save_slot_operation == SAVE_SLOT_READ) {
-		gui_overlay_info_append_msg_precompiled(32, &save_slot.slot);
+		gui_overlay_info_append_msg_precompiled(32, &save_slot.slot_in_use);
 	} else {
 		fade_out_start_timer();
 		enabled = TRUE;
@@ -1640,7 +1666,7 @@ void overlayWidgetSaveSlot::draw_slots_x1(void) {
 		x = x1 + (i * w);
 		y = y1;
 
-		if (save_slot.state[i]) {
+		if (save_slot.slot[i].state) {
 			painter.setPen(Qt::NoPen);
 			painter.setBrush(QColor(80, 255, 87));
 			painter.drawEllipse(QPointF(x, y), radius, radius);
@@ -1649,7 +1675,7 @@ void overlayWidgetSaveSlot::draw_slots_x1(void) {
 
 	// disegno il cursore di selezione
 	{
-		x = x1 + (save_slot.slot * w);
+		x = x1 + (save_slot.slot_in_use * w);
 		y = y1;
 
 		pen.setColor(color.x1.selected);
@@ -1672,7 +1698,7 @@ void overlayWidgetSaveSlot::draw_slots_x1(void) {
 
 		rect.setRect(x - radius, y - radius, radius * 2.0, radius * 2.0);
 
-		if (save_slot.state[i]) {
+		if (save_slot.slot[i].state) {
 			painter.setPen(color.x1.text);
 		} else {
 			painter.setPen(color.x1.text_not_used);
@@ -1691,8 +1717,8 @@ void overlayWidgetSaveSlot::draw_slots_x1(void) {
 
 	rect.setRect(x, y, w, h);
 
-	if (!previews[save_slot.slot].image.isNull()) {
-		painter.drawImage(rect, previews[save_slot.slot].image.scaled((int)nw, (int)nh, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+	if (!previews[save_slot.slot_in_use].image.isNull()) {
+		painter.drawImage(rect, previews[save_slot.slot_in_use].image.scaled((int)nw, (int)nh, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 	} else {
 		painter.setRenderHint(QPainter::Antialiasing, false);
 		painter.setPen(Qt::NoPen);
@@ -1704,7 +1730,7 @@ void overlayWidgetSaveSlot::draw_slots_x1(void) {
 	rect.setHeight(dpr_int((int)height_row_slot));
 
 	painter.setOpacity(0.9);
-	if (!previews[save_slot.slot].image.isNull()) {
+	if (!previews[save_slot.slot_in_use].image.isNull()) {
 		painter.fillRect(rect, color.bar_selected);
 	} else {
 		painter.fillRect(rect, color.bar);
@@ -1720,11 +1746,11 @@ void overlayWidgetSaveSlot::draw_slots_x1(void) {
 
 	pen.setColor(color.slot);
 	painter.setPen(pen);
-	painter.drawText(dpr_text_rect(rect), Qt::AlignLeft | Qt::AlignVCenter, QString(" %0").arg(save_slot.slot, 1, 16).toUpper());
+	painter.drawText(dpr_text_rect(rect), Qt::AlignLeft | Qt::AlignVCenter, QString(" %0").arg(save_slot.slot_in_use, 1, 16).toUpper());
 
 	pen.setColor(color.info);
 	painter.setPen(pen);
-	painter.drawText(dpr_text_rect(rect), Qt::AlignHCenter | Qt::AlignVCenter, date_and_time((int)save_slot.slot));
+	painter.drawText(dpr_text_rect(rect), Qt::AlignHCenter | Qt::AlignVCenter, date_and_time((int)save_slot.slot_in_use));
 
 	painter.restore();
 }
@@ -1759,7 +1785,7 @@ void overlayWidgetSaveSlot::draw_slots(void) {
 				QImage img = previews[i].image.scaled((int)nw, (int)nh, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 				static QPainter p;
 
-				if (i != save_slot.slot) {
+				if (i != save_slot.slot_in_use) {
 					p.begin(&img);
 					p.setOpacity(0.65);
 					p.fillRect(img.rect(), color.previw_opacity);
@@ -1785,7 +1811,7 @@ void overlayWidgetSaveSlot::draw_slots(void) {
 			rect.setRect(x + (pen.widthF() / 2.0), y, w - pen.widthF(), dpr_real(height_row_slot));
 
 			painter.setOpacity(0.9);
-			if (i == save_slot.slot) {
+			if (i == save_slot.slot_in_use) {
 				painter.fillRect(rect, color.bar_selected);
 			} else {
 				painter.fillRect(rect, color.bar);
@@ -1811,8 +1837,8 @@ void overlayWidgetSaveSlot::draw_slots(void) {
 
 		// disegno il cursore di selezione dello slot
 		{
-			x = x1 + ((int)(save_slot.slot % columns) * w);
-			y = y1 + ((int)(save_slot.slot / columns) * h);
+			x = x1 + ((int)(save_slot.slot_in_use % columns) * w);
+			y = y1 + ((int)(save_slot.slot_in_use / columns) * h);
 
 			rect.setRect(x, y, w, h);
 

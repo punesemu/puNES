@@ -39,6 +39,7 @@ struct _m252 {
 } m252;
 
 void map_init_252(void) {
+	EXTCL_AFTER_MAPPER_INIT(252);
 	EXTCL_CPU_WR_MEM(252);
 	EXTCL_SAVE_MAPPER(252);
 	EXTCL_WR_CHR(252);
@@ -59,6 +60,8 @@ void map_init_252(void) {
 	}
 
 	map_chr_ram_extra_init(0x800);
+}
+void extcl_after_mapper_init_252(void) {
 	m252_update_chr_extra();
 }
 void extcl_cpu_wr_mem_252(WORD address, BYTE value) {

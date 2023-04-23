@@ -22,6 +22,7 @@
 #include "common.h"
 
 void map_init_SL1632(void);
+void extcl_after_mapper_init_SL1632(void);
 void extcl_cpu_wr_mem_SL1632(WORD address, BYTE value);
 BYTE extcl_save_mapper_SL1632(BYTE mode, BYTE slot, FILE *fp);
 

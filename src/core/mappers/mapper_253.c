@@ -31,13 +31,14 @@ struct _m253 {
 	BYTE chr_map[8];
 	struct _m253_irq {
 		BYTE active;
-		WORD prescaler;
+		SWORD prescaler;
 		WORD count;
 		WORD reload;
 	} irq;
 } m253;
 
 void map_init_253(void) {
+	EXTCL_AFTER_MAPPER_INIT(253);
 	EXTCL_CPU_WR_MEM(253);
 	EXTCL_SAVE_MAPPER(253);
 	EXTCL_WR_CHR(253);
@@ -58,6 +59,8 @@ void map_init_253(void) {
 	}
 
 	map_chr_ram_extra_init(0x800);
+}
+void extcl_after_mapper_init_253(void) {
 	m253_update_chr();
 }
 void extcl_cpu_wr_mem_253(WORD address, BYTE value) {
@@ -92,12 +95,12 @@ void extcl_cpu_wr_mem_253(WORD address, BYTE value) {
 			m253.irq.reload = (m253.irq.reload & 0xF0) | (value & 0x0F);
 			return;
 		case 0xF004:
-			m253.irq.reload = (value << 4) | (m253.irq.reload & 0x0F);
+			m253.irq.reload = ((value & 0x0F) << 4) | (m253.irq.reload & 0x0F);
 			return;
 		case 0xF008:
 			m253.irq.active = value & 0x02;
+			m253.irq.prescaler = 0;
 			if (m253.irq.active) {
-				m253.irq.prescaler = 0;
 				m253.irq.count = m253.irq.reload;
 			}
 			irq.high &= ~EXT_IRQ;
@@ -156,11 +159,11 @@ void extcl_cpu_every_cycle_253(void) {
 		return;
 	}
 
-	if (m253.irq.prescaler < 338) {
+	if (m253.irq.prescaler < 341) {
 		m253.irq.prescaler += 3;
 		return;
 	}
-	m253.irq.prescaler -= 338;
+	m253.irq.prescaler -= 341;
 
 	if (m253.irq.count != 0xFF) {
 		m253.irq.count++;

@@ -27,6 +27,7 @@
 #include "gui.h"
 #include "patcher.h"
 #include "conf.h"
+#include "ppu.h"
 
 #define BIOSFILE "disksys.rom"
 #define DIFFVERSION 1
@@ -65,12 +66,12 @@ void fds_quit(void) {
 }
 BYTE fds_load_rom(void) {
 	_rom_mem rom;
-	unsigned int i;
+	unsigned int i = 0;
 
 	{
 		BYTE found = TRUE;
 		uTCHAR rom_ext[2][10] = { uL(".fds\0"), uL(".FDS\0") };
-		FILE *fp;
+		FILE *fp = NULL;
 
 		fp = ufopen(info.rom.file, uL("rb"));
 
@@ -104,7 +105,8 @@ BYTE fds_load_rom(void) {
 		rom.size = ftell(fp);
 		fseek(fp, 0L, SEEK_SET);
 
-		if ((rom.data = (BYTE *)malloc(rom.size)) == NULL) {
+		rom.data = (BYTE *)malloc(rom.size);
+		if (rom.data == NULL) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
@@ -148,6 +150,7 @@ BYTE fds_load_rom(void) {
 	}
 
 	info.format = FDS_FORMAT;
+	fds.info.expcted_side = fds.info.total_sides;
 
 	// conto le dimensioni dei vari sides
 	for (i = 0; i < fds.info.total_sides; i++) {
@@ -155,7 +158,7 @@ BYTE fds_load_rom(void) {
 	}
 
 	// inserisco il primo
-	fds.info.first_insert = TRUE;
+	fds.info.frame_insert = ppu.frames;
 	fds.info.bios_first_run = !cfg->fds_disk1sideA_at_reset;
 	fds_disk_op(cfg->fds_disk1sideA_at_reset ? FDS_DISK_SELECT_AND_INSERT : FDS_DISK_SELECT, 0, FALSE);
 
@@ -170,23 +173,27 @@ BYTE fds_load_rom(void) {
 	info.mapper.id = FDS_MAPPER;
 	info.machine[HEADER] = NTSC;
 
+	emu_save_header_info();
+
 	return (EXIT_OK);
 }
 BYTE fds_load_bios(void) {
-	uTCHAR bios_file[LENGTH_FILE_NAME_LONG], *lastSlash;
+	uTCHAR bios_file[LENGTH_FILE_NAME_LONG], *lastSlash = NULL;
 	FILE *bios = NULL;
 
 	// ordine di ricerca:
 
 	// 1) file specificato dall'utente
 	usnprintf(bios_file, usizeof(bios_file), uL("" uPs("")), cfg->fds_bios_file);
-	if ((bios = ufopen(bios_file, uL("rb")))) {
+	bios = ufopen(bios_file, uL("rb"));
+	if (bios) {
 		goto fds_load_bios_founded;
 	}
 
 	// 2) directory di lavoro
 	ustrncpy(bios_file, uL("" BIOSFILE), usizeof(bios_file));
-	if ((bios = ufopen(bios_file, uL("rb")))) {
+	bios = ufopen(bios_file, uL("rb"));
+	if (bios) {
 		goto fds_load_bios_founded;
 	}
 
@@ -194,23 +201,27 @@ BYTE fds_load_bios(void) {
 	ustrncpy(bios_file, info.rom.file, usizeof(bios_file));
 	// rintraccio l'ultimo '.' nel nome
 #if defined (_WIN32)
-	if ((lastSlash = ustrrchr(bios_file, uL('\\')))) {
+	lastSlash = ustrrchr(bios_file, uL('\\'));
+	if (lastSlash) {
 		(*(lastSlash + 1)) = 0x00;
 	}
 #else
-	if ((lastSlash = ustrrchr(bios_file, uL('/')))) {
+	lastSlash = ustrrchr(bios_file, uL('/'));
+	if (lastSlash) {
 		(*(lastSlash + 1)) = 0x00;
 	}
 #endif
 	// aggiungo il nome del file
 	ustrcat(bios_file, uL("" BIOSFILE));
-	if ((bios = ufopen(bios_file, uL("rb")))) {
+	bios = ufopen(bios_file, uL("rb"));
+	if (bios) {
 		goto fds_load_bios_founded;
 	}
 
 	// 4) directory puNES/bios
 	usnprintf(bios_file, usizeof(bios_file), uL("" uPs("") BIOS_FOLDER "/" BIOSFILE), gui_data_folder());
-	if ((bios = ufopen(bios_file, uL("rb")))) {
+	bios = ufopen(bios_file, uL("rb"));
+	if (bios) {
 		goto fds_load_bios_founded;
 	}
 
@@ -232,18 +243,27 @@ BYTE fds_load_bios(void) {
 
 	return (EXIT_OK);
 }
-void fds_info_side(BYTE side) {
-	uint32_t i;
+void fds_info(void) {
+	int i = 0;
 
-	if (fds.info.first_insert) {
-		fds.info.first_insert = FALSE;
-		return;
+	log_info_box_open(uL("sides;"));
+	if (fds.info.expcted_side != fds.info.total_sides) {
+		log_close_box(uL("expected %d, finded %d"),  fds.info.expcted_side, fds.info.total_sides);
+	} else {
+		log_close_box(uL("%d"), fds.info.total_sides);
 	}
 
+	for (i = 0; i < fds.info.total_sides; i++) {
+		log_info_box(uL("FDS side %d;vrt size %d, files %d"), i, fds.info.sides[i].size, fds.info.sides[i].files);
+	}
+}
+void fds_info_side(BYTE side) {
+	uint32_t i = 0;
+
 	log_info(uL("FDS side;%d"), side);
-	log_info_box(uL("vrt disk size;%5d"), fds.info.sides_size[side]);
+	log_info_box(uL("vrt disk size;%5d"), fds.info.sides[side].size);
 	log_info_box(uL("block 1;pos %5d"), fds.side.block_1.position);
-	log_info_box(uL("block 2;pos %5d (fl : %5d)"), fds.side.block_2.position, fds.side.block_2.tot_files);
+	log_info_box(uL("block 2;pos %5d (fl : %5d)"), fds.side.block_2.position, fds.info.sides[side].files);
 	for (i = 0; i < fds.side.counted_files; i++) {
 		log_info_box(uL("file %d;size %5d - 0x%04X (b3 : %5d) (b4 : %5d)"), i,
 			fds.side.file[i].block_3.length,
@@ -254,13 +274,24 @@ void fds_info_side(BYTE side) {
 }
 void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 	BYTE buffer[DISK_SIDE_SIZE];
-	uint32_t position, size = 0, length = 0;
+	uint32_t position = 0, size = 0, length = 0;
 
 	if (side_to_insert >= fds.info.total_sides) {
 		return;
 	}
 
-	fds_disk_op_start:
+fds_disk_op_start:
+	if (fds.info.type == FDS_FORMAT_FDS) {
+		position = (side_to_insert * DISK_SIDE_SIZE) + 16;
+	} else {
+		position = side_to_insert * DISK_SIDE_SIZE;
+	}
+
+	if ((position + DISK_SIDE_SIZE) > fds.info.total_size) {
+		fds.info.total_sides = side_to_insert;
+		return;
+	}
+
 	switch (type) {
 		case FDS_DISK_COUNT:
 			fds.side.counted_files = 0xFFFF;
@@ -299,46 +330,35 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 				free(fds.side.data);
 				fds.side.data = NULL;
 			}
-			fds.side.data = (WORD *)malloc(fds.info.sides_size[side_to_insert] * sizeof(WORD));
+			fds.side.data = (WORD *)malloc(fds.info.sides[side_to_insert].size * sizeof(WORD));
 			fds.side.counted_files = 0xFFFF;
 			break;
 		default:
 			break;
 	}
 
-	if (fds.info.type == FDS_FORMAT_FDS) {
-		position = (side_to_insert * DISK_SIDE_SIZE) + 16;
-	} else {
-		position = side_to_insert * DISK_SIDE_SIZE;
-	}
-
-	if ((position + DISK_SIDE_SIZE) > fds.info.total_size) {
-		log_error(uL("FDS;error on reading disk"));
-		memcpy(buffer, fds.info.data + position, fds.info.total_size - position);
-	} else {
-		memcpy(buffer, fds.info.data + position, DISK_SIDE_SIZE);
-	}
+	memcpy(buffer, fds.info.data + position, DISK_SIDE_SIZE);
 
 	position = 0;
 
 #define add_to_image(ty, md, vl, sz)\
-	if (ty >= FDS_DISK_SELECT) {\
-		if (md == FDS_DISK_MEMSET) {\
+	if ((ty) >= FDS_DISK_SELECT) {\
+		if ((md) == FDS_DISK_MEMSET) {\
 			WORD *dst = fds.side.data + size;\
-			uint32_t i;\
-			for (i = 0; i < sz; i++) {\
-				(*dst++) = vl;\
+			uint32_t i = 0;\
+			for (i = 0; i < (sz); i++) {\
+				(*dst++) = (vl);\
 			}\
-		} else if (md == FDS_DISK_MEMCPY) {\
+		} else if ((md) == FDS_DISK_MEMCPY) {\
 			BYTE *src = buffer + position;\
 			WORD *dst = fds.side.data + size;\
-			uint32_t i;\
-			for (i = 0; i < sz; i++) {\
+			uint32_t i = 0;\
+			for (i = 0; i < (sz); i++) {\
 				(*dst++) = (*src++);\
 			}\
 		}\
 	}\
-	size += sz
+	size += (sz)
 
 	add_to_image(type, FDS_DISK_MEMSET, FDS_DISK_GAP, 28300 / 8);
 
@@ -388,7 +408,22 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 			// indico l'inizio del blocco
 			add_to_image(type, FDS_DISK_MEMSET, FDS_DISK_BLOCK_MARK, 1);
 
-			if (type >= FDS_DISK_SELECT) {
+			if (type == FDS_DISK_COUNT) {
+				switch (block) {
+					case 1:
+						break;
+					case 2:
+						fds.info.sides[side_to_insert].files = 0;
+						break;
+					case 3:
+						break;
+					case 4:
+						fds.info.sides[side_to_insert].files++;
+						break;
+					default:
+						break;
+				}
+			} else if (type >= FDS_DISK_SELECT) {
 				switch (block) {
 					case 1:
 						fds.side.block_1.position = size;
@@ -398,6 +433,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 						fds.side.block_2.tot_files = buffer[position + 1];
 						// a questo punto fds.side.counted_files e' 0xFFFF
 						fds.side.counted_files = 0;
+						fds.info.sides[side_to_insert].files = 0;
 						break;
 					case 3:
 						fds.side.file[fds.side.counted_files].block_3.position = size;
@@ -406,6 +442,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 					case 4:
 						fds.side.file[fds.side.counted_files].block_4.position = size;
 						fds.side.counted_files++;
+						fds.info.sides[side_to_insert].files++;
 						break;
 					default:
 						break;
@@ -425,10 +462,10 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 	}
 
 	if ((info.reset != CHANGE_ROM) && (type >= FDS_DISK_SELECT)) {
-		if (!fds.info.first_insert) {
+		if (fds.info.frame_insert != ppu.frames) {
+			fds.info.frame_insert = ppu.frames;
 			fds_info_side(side_to_insert);
 		}
-		fds.info.first_insert = FALSE;
 	}
 
 	if (size < DISK_SIDE_SIZE) {
@@ -441,7 +478,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 
 	switch (type) {
 		case FDS_DISK_COUNT:
-			fds.info.sides_size[side_to_insert] = size;
+			fds.info.sides[side_to_insert].size = size;
 			break;
 		case FDS_DISK_SELECT_AND_INSERT:
 			type = FDS_DISK_INSERT;
@@ -464,14 +501,15 @@ void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet) {
 void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 	if (!fds.info.diff) {
 		uTCHAR file[LENGTH_FILE_NAME_LONG];
-		uTCHAR ext[10], basename[255], *last_dot;
+		uTCHAR ext[10], basename[255], *last_dot = NULL;
 
 		gui_utf_basename(info.rom.file, basename, usizeof(basename));
 		usnprintf(file, usizeof(file), uL("" uPs("") DIFF_FOLDER "/" uPs("")), gui_data_folder(), basename);
 		usnprintf(ext, usizeof(ext), uL(".dif"));
 
 		// rintraccio l'ultimo '.' nel nome
-		if ((last_dot = ustrrchr(file, uL('.')))) {
+		last_dot = ustrrchr(file, uL('.'));
+		if (last_dot) {
 			// elimino l'estensione
 			(*last_dot) = 0x00;
 		}
@@ -482,7 +520,8 @@ void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 
 		if ((mode == FDS_OP_WRITE) && !fds.info.diff) {
 			// creo il file
-			if ((fds.info.diff = ufopen(file, uL("a+b")))) {
+			fds.info.diff = ufopen(file, uL("a+b"));
+			if (fds.info.diff) {
 				// lo chiudo
 				fclose(fds.info.diff);
 				// lo riapro in modalita' rb+
@@ -526,7 +565,7 @@ void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 		fflush(fds.info.diff);
 	} else if (mode == FDS_OP_READ) {
 		_fds_diff_ele ele;
-		uint32_t version;
+		uint32_t version = 0;
 
 		// leggo la versione del file
 		if (fread(&version, sizeof(uint32_t), 1, fds.info.diff) < 1) {

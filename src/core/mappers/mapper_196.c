@@ -23,32 +23,14 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-INLINE static void m196_update_prg(void);
-
-#define m196_8000()\
-	if (mmc3.prg_rom_cfg != old_prg_rom_cfg) {\
-		mapper.rom_map_to[2] = m196.prg_map[0];\
-		mapper.rom_map_to[0] = m196.prg_map[2];\
-		m196.prg_map[0] = mapper.rom_map_to[0];\
-		m196.prg_map[2] = mapper.rom_map_to[2];\
-		m196.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
-	}
-#define m196_8001()\
-	switch (mmc3.bank_to_update) {\
-		case 6:\
-			m196.prg_map[mmc3.prg_rom_cfg] = value;\
-			break;\
-		case 7:\
-			m196.prg_map[1] = value;\
-			break;\
-	}
+void prg_swap_196(WORD address, WORD value);
 
 struct _m196 {
 	BYTE reg[2];
-	WORD prg_map[4];
 } m196;
 
 void map_init_196(void) {
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(196);
 	EXTCL_SAVE_MAPPER(196);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -62,20 +44,11 @@ void map_init_196(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&m196, 0x00, sizeof(m196));
-	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&m196, 0x00, sizeof(m196));
 
-	{
-		BYTE i;
-
-		map_prg_rom_8k_reset();
-		map_chr_bank_1k_reset();
-
-		for (i = 0; i < 4; i++) {
-			m196.prg_map[i] = mapper.rom_map_to[i];
-		}
-	}
+	init_MMC3();
+	MMC3_prg_swap = prg_swap_196;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -83,70 +56,39 @@ void map_init_196(void) {
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_196(WORD address, BYTE value) {
+	if ((address >= 0x6000) && (address <= 0x6FFF)) {
+		m196.reg[0] = 1;
+		m196.reg[1] = value | (value >> 4);
+		MMC3_prg_fix(mmc3.bank_to_update);
+		return;
+	}
 	if (address >= 0x8000) {
-		BYTE old_prg_rom_cfg = mmc3.prg_rom_cfg;
-
 		if (address >= 0xC000) {
 			address = (address & 0xFFFE) | ((address >> 2) & 0x01) | ((address >> 3) & 0x01);
 		} else {
-			address = (address & 0xFFFE) | ((address >> 2) & 0x01) | ((address >> 3) & 0x01)
-				| ((address >> 1) & 0x01);
+			address = (address & 0xFFFE) | ((address >> 2) & 0x01) | ((address >> 3) & 0x01) | ((address >> 1) & 0x01);
 		}
-
-		switch (address & 0xF001) {
-			case 0x8000:
-				extcl_cpu_wr_mem_MMC3(address, value);
-				m196_8000()
-				m196_update_prg();
-				return;
-			case 0x8001:
-				extcl_cpu_wr_mem_MMC3(address, value);
-				m196_8001()
-				m196_update_prg();
-				return;
-			default:
-				extcl_cpu_wr_mem_MMC3(address, value);
-				return;
-		}
-	}
-
-	if ((address >= 0x6000) && (address <= 0x6FFF)) {
-		m196.reg[0] = 1;
-		m196.reg[1] = (value & 0x0F) | (value >> 4);
-		m196_update_prg();
+		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
 BYTE extcl_save_mapper_196(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m196.reg);
-	save_slot_ele(mode, slot, m196.prg_map);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
 }
 
-INLINE static void m196_update_prg(void) {
-	WORD value;
+void prg_swap_196(WORD address, WORD value) {
+	const BYTE slot = (address >> 13) & 0x03;
+	WORD bank = 0;
 
 	if (m196.reg[0]) {
-		value = m196.reg[1];
-		control_bank(info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, value);
+		bank = (m196.reg[1] << 2) | slot;
 	} else {
-		value = m196.prg_map[0];
-		control_bank(info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 0, value);
-
-		value = m196.prg_map[1];
-		control_bank(info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 1, value);
-
-		value = m196.prg_map[2];
-		control_bank(info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 2, value);
-
-		value = m196.prg_map[3];
-		control_bank(info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 3, value);
+		bank = value;
 	}
+
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, slot, bank);
 	map_prg_rom_8k_update();
 }

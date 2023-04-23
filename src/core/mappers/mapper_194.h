@@ -21,9 +21,9 @@
 
 #include "common.h"
 
+enum m194_types { DAI2JI = 1 };
+
 void map_init_194(void);
-void extcl_after_mapper_init_194(void);
-void extcl_cpu_wr_mem_194(WORD address, BYTE value);
 BYTE extcl_save_mapper_194(BYTE mode, BYTE slot, FILE *fp);
 void extcl_wr_chr_194(WORD address, BYTE value);
 

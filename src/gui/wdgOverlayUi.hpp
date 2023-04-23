@@ -376,7 +376,7 @@ class overlayWidgetSaveSlot : public overlayWidget {
 		struct _previews {
 			QImage image;
 			QFileInfo fileinfo;
-		} previews[SAVE_SLOTS];
+		} previews[SAVE_SLOTS_TOTAL];
 		struct _internal_colors {
 			struct _internal_colors_x1 {
 				QColor save;

@@ -697,27 +697,26 @@ void mainWindow::state_save_slot_set(int slot, bool on_video) {
 	if (info.no_rom | info.turn_off) {
 		return;
 	}
-	save_slot.slot = slot;
+	save_slot.slot_in_use = slot;
 	if (on_video) {
 		gui_overlay_enable_save_slot(SAVE_SLOT_INCDEC);
 	}
 	update_window();
 }
-void mainWindow::state_save_slot_set_tooltip(BYTE slot, char *buffer) {
+void mainWindow::state_save_slot_set_tooltip(BYTE slot) {
+	QImage *preview = (QImage *)gui_overlay_slot_preview_get(slot);
 	QString tooltip;
 
-	if (buffer) {
+	if (preview) {
 		static QPainter painter;
 		static QFont f;
 		static QRect rect;
 		static QPen pen;
-		QImage img = QImage((uchar *)buffer, SCR_COLUMNS, SCR_ROWS, SCR_COLUMNS * sizeof(uint32_t), QImage::Format_RGB32);
 		QByteArray data;
 		QBuffer png(&data);
-		int x, y, w, h;
-		double mul = 1.5f;
-
-		img = img.scaled((int)(SCR_COLUMNS * mul), (int)(SCR_ROWS * mul), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+		int x = 0, y = 0, w = 0, h = 0;
+		const double mul = 1.5f;
+		QImage img = preview->scaled((int)(SCR_COLUMNS * mul), (int)(SCR_ROWS * mul), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
 		// scrivo le info
 		w = img.rect().width();
@@ -759,12 +758,12 @@ void mainWindow::state_save_slot_set_tooltip(BYTE slot, char *buffer) {
 	state_save_slot_action(slot)->setToolTip(tooltip);
 }
 void mainWindow::toggle_toolbars(void) {
-	bool visibility = !toolbar->isVisible();
+	const bool visible = !toolbar->isVisible();
 
 	emu_thread_pause();
 
-	toolbar->setVisible(visibility);
-	statusbar->setVisible(visibility);
+	toolbar->setVisible(visible);
+	statusbar->setVisible(visible);
 	update_gfx_monitor_dimension();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 
@@ -970,7 +969,7 @@ void mainWindow::update_menu_file(void) {
 
 	// recent roms
 	if (recent_roms_count() > 0) {
-		int i;
+		int i = 0;
 
 		foreach (QAction *action, menu_Recent_Roms->actions()) {
 			delete (action);
@@ -979,9 +978,9 @@ void mainWindow::update_menu_file(void) {
 		menu_Recent_Roms->clear();
 
 		for (i = 0; i < RECENT_ROMS_MAX; i++) {
-			QString description = QString((const QChar *)recent_roms_item(i), recent_roms_item_size(i));
-			QFileInfo rom(description);
-			QAction *action;
+			const QString description = QString((const QChar *)recent_roms_item(i), recent_roms_item_size(i));
+			const QFileInfo rom(description);
+			QAction *action = nullptr;
 
 			if (description.isEmpty()) {
 				break;
@@ -1074,7 +1073,7 @@ void mainWindow::update_menu_state(void) {
 	}
 
 	action_Save_state->setEnabled(state);
-	action_Load_state->setEnabled(state && (tas.type == NOTAS) && save_slot.state[save_slot.slot]);
+	action_Load_state->setEnabled(state && (tas.type == NOTAS) && save_slot.slot[save_slot.slot_in_use].state);
 	action_Increment_slot->setEnabled(state);
 	action_Decrement_slot->setEnabled(state);
 
@@ -1083,11 +1082,11 @@ void mainWindow::update_menu_state(void) {
 		QString used = " *";
 		QString txt = a->text().replace(used, "");
 
-		if (i == save_slot.slot) {
+		if (i == save_slot.slot_in_use) {
 			a->setChecked(true);
 		}
 
-		if (save_slot.state[i]) {
+		if (save_slot.slot[i].state) {
 			a->setText(txt + used);
 		} else {
 			a->setText(txt);
@@ -1674,10 +1673,10 @@ void mainWindow::s_state_save_slot_action(void) {
 
 	emu_thread_pause();
 	if (mode == SAVE) {
-		save_slot_save(save_slot.slot);
+		save_slot_save(save_slot.slot_in_use);
 		settings_pgs_save();
 	} else {
-		save_slot_load(save_slot.slot);
+		save_slot_load(save_slot.slot_in_use);
 	}
 	emu_thread_continue();
 	update_window();
@@ -1687,12 +1686,12 @@ void mainWindow::s_state_save_slot_incdec(void) {
 	BYTE new_slot;
 
 	if (mode == INC) {
-		new_slot = save_slot.slot + 1;
+		new_slot = save_slot.slot_in_use + 1;
 		if (new_slot >= SAVE_SLOTS) {
 			new_slot = 0;
 		}
 	} else {
-		new_slot = save_slot.slot - 1;
+		new_slot = save_slot.slot_in_use - 1;
 		if (new_slot >= SAVE_SLOTS) {
 			new_slot = SAVE_SLOTS - 1;
 		}

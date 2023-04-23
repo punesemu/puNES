@@ -23,15 +23,15 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_399(void);
-INLINE static void chr_fix_399(void);
+void prg_fix_399(BYTE value);
+void chr_fix_399(BYTE value);
 
 struct _m399 {
 	BYTE reg[4];
 } m399;
 
 void map_init_399(void) {
-	EXTCL_AFTER_MAPPER_INIT(399);
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(399);
 	EXTCL_SAVE_MAPPER(399);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -45,8 +45,11 @@ void map_init_399(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
+
+	init_MMC3();
+	MMC3_prg_fix = prg_fix_399;
+	MMC3_chr_fix = chr_fix_399;
 
 	m399.reg[0] = m399.reg[2] = 0;
 	m399.reg[1] = m399.reg[3] = 1;
@@ -58,15 +61,11 @@ void map_init_399(void) {
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extcl_after_mapper_init_399(void) {
-	prg_fix_399();
-	chr_fix_399();
-}
 void extcl_cpu_wr_mem_399(WORD address, BYTE value) {
 	if ((address >= 0x8000) && (address <= 0x9FFF)) {
 		m399.reg[(!(address & 0x0001) << 1) | (value >> 7)] = value;
-		prg_fix_399();
-		chr_fix_399();
+		MMC3_prg_fix(mmc3.bank_to_update);
+		MMC3_chr_fix(mmc3.bank_to_update);
 		return;
 	}
 	extcl_cpu_wr_mem_MMC3(address, value);
@@ -78,43 +77,43 @@ BYTE extcl_save_mapper_399(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-INLINE static void prg_fix_399(void) {
-	BYTE value;
+void prg_fix_399(UNUSED(BYTE value)) {
+	WORD bank;
 
-	value = 0;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, 0);
+	bank = 0;
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 0, bank);
 
-	value = m399.reg[0];
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, value);
+	bank = m399.reg[0];
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 1, bank);
 
-	value = m399.reg[1];
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, value);
+	bank = m399.reg[1];
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 2, bank);
 
-	value = 0xFF;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, value);
+	bank = 0xFF;
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 3, bank);
 
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_399(void) {
-	DBWORD value;
+void chr_fix_399(UNUSED(BYTE value)) {
+	DBWORD bank;
 
-	value = m399.reg[2];
-	control_bank(info.chr.rom.max.banks_4k)
-	value <<= 12;
-	chr.bank_1k[0] = chr_pnt(value);
-	chr.bank_1k[1] = chr_pnt(value | 0x400);
-	chr.bank_1k[2] = chr_pnt(value | 0x800);
-	chr.bank_1k[3] = chr_pnt(value | 0xC00);
+	bank = m399.reg[2];
+	_control_bank(bank, info.chr.rom.max.banks_4k)
+	bank <<= 12;
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x800);
+	chr.bank_1k[3] = chr_pnt(bank | 0xC00);
 
-	value = m399.reg[3];
-	control_bank(info.chr.rom.max.banks_4k)
-	value <<= 12;
-	chr.bank_1k[4] = chr_pnt(value);
-	chr.bank_1k[5] = chr_pnt(value | 0x400);
-	chr.bank_1k[6] = chr_pnt(value | 0x800);
-	chr.bank_1k[7] = chr_pnt(value | 0xC00);
+	bank = m399.reg[3];
+	_control_bank(bank, info.chr.rom.max.banks_4k)
+	bank <<= 12;
+	chr.bank_1k[4] = chr_pnt(bank);
+	chr.bank_1k[5] = chr_pnt(bank | 0x400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x800);
+	chr.bank_1k[7] = chr_pnt(bank | 0xC00);
 }

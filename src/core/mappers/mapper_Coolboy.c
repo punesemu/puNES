@@ -23,22 +23,20 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_Coolboy(BYTE value);
-INLINE static void prg_swap_Coolboy(WORD address, WORD value);
-INLINE static void chr_fix_Coolboy(BYTE value);
-INLINE static void chr_swap_Coolboy(WORD address, WORD value);
+void prg_swap_Coolboy(WORD address, WORD value);
+void chr_swap_Coolboy(WORD address, WORD value);
 
 struct _coolboy {
 	BYTE reg[4];
-	BYTE mmc3[8];
-
+} coolboy;
+struct _coolboytmp {
 	BYTE model;
 	WORD rstart;
 	WORD rstop;
-} coolboy;
+} coolboytmp;
 
 void map_init_Coolboy(BYTE model) {
-	EXTCL_AFTER_MAPPER_INIT(Coolboy);
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(Coolboy);
 	EXTCL_SAVE_MAPPER(Coolboy);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -52,131 +50,59 @@ void map_init_Coolboy(BYTE model) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&coolboy, 0x00, sizeof(coolboy));
-	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&coolboy, 0x00, sizeof(coolboy));
 
-	coolboy.model = model;
+	init_MMC3();
+	MMC3_prg_swap = prg_swap_Coolboy;
+	MMC3_chr_swap = chr_swap_Coolboy;
+
+	coolboytmp.model = model;
 
 	if (mapper.write_vram && !info.chr.rom.banks_8k) {
 		info.chr.rom.banks_8k = 32;
 	}
 
 	if (model == COOLBOY) {
-		coolboy.rstart = 0x6000;
-		coolboy.rstop = 0x6FFF;
+		coolboytmp.rstart = 0x6000;
+		coolboytmp.rstop = 0x6FFF;
 	} else {
-		coolboy.rstart = 0x5000;
-		coolboy.rstop = 0x5FFF;
+		coolboytmp.rstart = 0x5000;
+		coolboytmp.rstop = 0x5FFF;
 	}
-
-	coolboy.mmc3[0] = 0;
-	coolboy.mmc3[1] = 2;
-	coolboy.mmc3[2] = 4;
-	coolboy.mmc3[3] = 5;
-	coolboy.mmc3[4] = 6;
-	coolboy.mmc3[5] = 7;
-	coolboy.mmc3[6] = 0;
-	coolboy.mmc3[7] = 1;
 
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extcl_after_mapper_init_Coolboy(void) {
-	// posso farlo solo dopo il map_prg_ram_init();
-	prg_fix_Coolboy(mmc3.bank_to_update);
-	chr_fix_Coolboy(mmc3.bank_to_update);
-}
 void extcl_cpu_wr_mem_Coolboy(WORD address, BYTE value) {
-	if ((address >= coolboy.rstart) && (address <= coolboy.rstop)) {
+	if ((address >= coolboytmp.rstart) && (address <= coolboytmp.rstop)) {
 		if ((coolboy.reg[3] & 0x90) != 0x80) {
 			coolboy.reg[address & 0x03] = value;
-			prg_fix_Coolboy(mmc3.bank_to_update);
-			chr_fix_Coolboy(mmc3.bank_to_update);
+			MMC3_prg_fix(mmc3.bank_to_update);
+			MMC3_chr_fix(mmc3.bank_to_update);
 		}
 		return;
 	}
-
-	switch (address & 0xE001) {
-		case 0x8000:
-			if ((value & 0x40) != (mmc3.bank_to_update & 0x40)) {
-				prg_fix_Coolboy(value);
-			}
-			if ((value & 0x80) != (mmc3.bank_to_update & 0x80)) {
-				chr_fix_Coolboy(value);
-			}
-			mmc3.bank_to_update = value;
-			return;
-		case 0x8001: {
-			WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
-
-			coolboy.mmc3[mmc3.bank_to_update & 0x07] = value;
-
-			switch (mmc3.bank_to_update & 0x07) {
-				case 0:
-					chr_swap_Coolboy(cbase ^ 0x0000, value & (~1));
-					chr_swap_Coolboy(cbase ^ 0x0400, value | 1);
-					return;
-				case 1:
-					chr_swap_Coolboy(cbase ^ 0x0800, value & (~1));
-					chr_swap_Coolboy(cbase ^ 0x0C00, value | 1);
-					return;
-				case 2:
-					chr_swap_Coolboy(cbase ^ 0x1000, value);
-					return;
-				case 3:
-					chr_swap_Coolboy(cbase ^ 0x1400, value);
-					return;
-				case 4:
-					chr_swap_Coolboy(cbase ^ 0x1800, value);
-					return;
-				case 5:
-					chr_swap_Coolboy(cbase ^ 0x1C00, value);
-					return;
-				case 6:
-					if (mmc3.bank_to_update & 0x40) {
-						prg_swap_Coolboy(0xC000, value);
-					} else {
-						prg_swap_Coolboy(0x8000, value);
-					}
-					return;
-				case 7:
-					prg_swap_Coolboy(0xA000, value);
-					return;
-			}
-			return;
-		}
+	if (address >= 0x8000) {
+		extcl_cpu_wr_mem_MMC3(address, value);
 	}
-	extcl_cpu_wr_mem_MMC3(address, value);
 }
 BYTE extcl_save_mapper_Coolboy(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, coolboy.reg);
-	save_slot_ele(mode, slot, coolboy.mmc3);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
 }
 
-INLINE static void prg_fix_Coolboy(BYTE value) {
-	if (value & 0x40) {
-		prg_swap_Coolboy(0x8000, ~1);
-		prg_swap_Coolboy(0xC000, coolboy.mmc3[6]);
-	} else {
-		prg_swap_Coolboy(0x8000, coolboy.mmc3[6]);
-		prg_swap_Coolboy(0xC000, ~1);
-	}
-	prg_swap_Coolboy(0xA000, coolboy.mmc3[7]);
-	prg_swap_Coolboy(0xE000, ~0);
-}
-INLINE static void prg_swap_Coolboy(WORD address, WORD value) {
+void prg_swap_Coolboy(WORD address, WORD value) {
 	uint32_t mask = ((0x3F | (coolboy.reg[1] & 0x40) | ((coolboy.reg[1] & 0x20) << 2)) ^ ((coolboy.reg[0] & 0x40) >> 2))
 		^ ((coolboy.reg[1] & 0x80) >> 2);
 	uint32_t base = ((coolboy.reg[0] & 0x07) >> 0) | ((coolboy.reg[1] & 0x10) >> 1) | ((coolboy.reg[1] & 0x0C) << 2)
 		| ((coolboy.reg[0] & 0x30) << 2);
 
-	if ((coolboy.reg[3] & 0x40) && (value >= 0xFE) && !(mmc3.prg_rom_cfg != 0)) {
+	if ((coolboy.reg[3] & 0x40) && (value >= 0xFE) && !((mmc3.bank_to_update & 0x40) != 0)) {
 		switch (address & 0xE000) {
 			case 0xC000:
 			case 0xE000:
@@ -190,11 +116,10 @@ INLINE static void prg_swap_Coolboy(WORD address, WORD value) {
 		value = (((base << 4) & ~mask)) | (value & mask);
 	} else {
 		// NROM mode
-		BYTE emask;
+		BYTE emask = 0;
 
 		mask &= 0xF0;
-
-		if ((((coolboy.reg[1] & 0x02) != 0))) {
+		if ((coolboy.reg[1] & 0x02) != 0) {
 			// 32kb mode
 			emask = (coolboy.reg[3] & 0x0C) | ((address & 0x4000) >> 13);
 		} else {
@@ -203,24 +128,11 @@ INLINE static void prg_swap_Coolboy(WORD address, WORD value) {
 		}
 		value = ((base << 4) & ~mask) | (value & mask) | emask | ((address & 0x2000) >> 13);
 	}
-
 	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_Coolboy(BYTE value) {
-	WORD cbase = (value & 0x80) << 5;
-
-	chr_swap_Coolboy(cbase ^ 0x0000, coolboy.mmc3[0] & (~1));
-	chr_swap_Coolboy(cbase ^ 0x0400, coolboy.mmc3[0] |   1);
-	chr_swap_Coolboy(cbase ^ 0x0800, coolboy.mmc3[1] & (~1));
-	chr_swap_Coolboy(cbase ^ 0x0C00, coolboy.mmc3[1] |   1);
-	chr_swap_Coolboy(cbase ^ 0x1000, coolboy.mmc3[2]);
-	chr_swap_Coolboy(cbase ^ 0x1400, coolboy.mmc3[3]);
-	chr_swap_Coolboy(cbase ^ 0x1800, coolboy.mmc3[4]);
-	chr_swap_Coolboy(cbase ^ 0x1C00, coolboy.mmc3[5]);
-}
-INLINE static void chr_swap_Coolboy(WORD address, WORD value) {
+void chr_swap_Coolboy(WORD address, WORD value) {
 	DBWORD mask = 0xFF ^ (coolboy.reg[0] & 0x80);
 
 	if (coolboy.reg[3] & 0x10) {
@@ -242,10 +154,10 @@ INLINE static void chr_swap_Coolboy(WORD address, WORD value) {
 
 			switch (cbase ^ address) {
 				case 0x0000:
-					value = coolboy.mmc3[0];
+					value = mmc3.reg[0];
 					break;
 				case 0x0800:
-					value = coolboy.mmc3[1];
+					value = mmc3.reg[1];
 					break;
 				case 0x0400:
 				case 0x0C00:
@@ -255,7 +167,6 @@ INLINE static void chr_swap_Coolboy(WORD address, WORD value) {
 		}
 		value = (value & mask) | (((coolboy.reg[0] & 0x08) << 4) & ~mask);
 	}
-
 	control_bank(info.chr.rom.max.banks_1k)
 	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 }

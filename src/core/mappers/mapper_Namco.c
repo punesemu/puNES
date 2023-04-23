@@ -264,24 +264,20 @@ BYTE extcl_cpu_rd_mem_Namco_163(WORD address, BYTE openbus, UNUSED(BYTE before))
 	}
 }
 BYTE extcl_save_mapper_Namco_163(BYTE mode, BYTE slot, FILE *fp) {
-	if (save_slot.version >= 28) {
-		save_slot_ele(mode, slot, n163.prg);
-		save_slot_ele(mode, slot, n163.chr);
-		save_slot_ele(mode, slot, n163.write_protect);
-		save_slot_ele(mode, slot, n163.snd.enabled);
-		save_slot_ele(mode, slot, n163.snd.adr);
-		save_slot_ele(mode, slot, n163.snd.auto_inc);
-		save_slot_ele(mode, slot, n163.snd.tick);
-		save_slot_ele(mode, slot, n163.snd.channel);
-		save_slot_ele(mode, slot, n163.snd.channel_start);
-		save_slot_ele(mode, slot, n163.snd.output);
-		save_slot_ele(mode, slot, n163.irq.delay);
-		save_slot_ele(mode, slot, n163.irq.count);
-		if (mode == SAVE_SLOT_READ) {
-			extcl_after_mapper_init_Namco_163();
-		}
-	} else {
-		return (EXIT_ERROR);
+	save_slot_ele(mode, slot, n163.prg);
+	save_slot_ele(mode, slot, n163.chr);
+	save_slot_ele(mode, slot, n163.write_protect);
+	save_slot_ele(mode, slot, n163.snd.enabled);
+	save_slot_ele(mode, slot, n163.snd.adr);
+	save_slot_ele(mode, slot, n163.snd.auto_inc);
+	save_slot_ele(mode, slot, n163.snd.tick);
+	save_slot_ele(mode, slot, n163.snd.channel);
+	save_slot_ele(mode, slot, n163.snd.channel_start);
+	save_slot_ele(mode, slot, n163.snd.output);
+	save_slot_ele(mode, slot, n163.irq.delay);
+	save_slot_ele(mode, slot, n163.irq.count);
+	if (mode == SAVE_SLOT_READ) {
+		extcl_after_mapper_init_Namco_163();
 	}
 
 	return (EXIT_OK);

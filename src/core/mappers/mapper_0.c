@@ -31,6 +31,7 @@ struct _m0tmp {
 
 void map_init_0(void) {
 	EXTCL_AFTER_MAPPER_INIT(0);
+	EXTCL_CPU_INIT_PC(0);
 	EXTCL_CPU_WR_MEM(0);
 	EXTCL_CPU_RD_MEM(0);
 	EXTCL_SAVE_MAPPER(0);
@@ -39,6 +40,15 @@ void map_init_0(void) {
 }
 void extcl_after_mapper_init_0(void) {
 	prg_fix_0();
+}
+void extcl_cpu_init_pc_0(void) {
+	if (info.reset >= HARD) {
+		if (info.mapper.trainer && prg.ram_plus_8k) {
+			BYTE *data = &prg.ram_plus_8k[0x7000 & 0x1FFF];
+
+			memcpy(data, &mapper.trainer[0], sizeof(mapper.trainer));
+		}
+	}
 }
 void extcl_cpu_wr_mem_0(UNUSED(WORD address), UNUSED(BYTE value)) {}
 BYTE extcl_cpu_rd_mem_0(WORD address, BYTE openbus, BYTE before) {
@@ -62,8 +72,9 @@ INLINE static void prg_fix_0(void) {
 		m0tmp.prg_4000 = prg_pnt(0);
 		map_prg_rom_8k(2, 0, 1);
 		map_prg_rom_8k(2, 2, 2);
-		map_prg_rom_8k_update();
 	} else {
 		m0tmp.prg_4000 = NULL;
+		map_prg_rom_8k(4, 0, 0);
 	}
+	map_prg_rom_8k_update();
 }

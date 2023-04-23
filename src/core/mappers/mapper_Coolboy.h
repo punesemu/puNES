@@ -24,7 +24,6 @@
 enum coolboy_types { COOLBOY, MINDKIDS };
 
 void map_init_Coolboy(BYTE model);
-void extcl_after_mapper_init_Coolboy(void);
 void extcl_cpu_wr_mem_Coolboy(WORD address, BYTE value);
 BYTE extcl_save_mapper_Coolboy(BYTE mode, BYTE slot, FILE *fp);
 

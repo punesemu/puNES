@@ -98,11 +98,7 @@ void map_init_BMCFK23C(void) {
 	bmcfk23c.mmc3[10] = 0xFF;
 	bmcfk23c.mmc3[11] = 0xFF;
 
-	if (info.format == NES_2_0) {
-		if (info.chr.ram.banks_8k_plus > 0) {
-			map_chr_ram_extra_init(info.chr.ram.banks_8k_plus * 0x2000);
-		}
-	} else {
+	if (info.format != NES_2_0) {
 		if ((info.crc32.prg == 0x678DE5AA) || // 120-in-1 (Unl)[U].unf
 			(info.crc32.prg == 0xE6D869ED) || // 6-in-1 Rockman (Unl) [U][!].unf
 			(info.crc32.prg == 0xE79F157E) || // 23 Plus 222-in-1 (Unl) [U][!].unf
@@ -113,7 +109,7 @@ void map_init_BMCFK23C(void) {
 			if (mapper.write_vram) {
 				info.chr.rom.banks_8k = 32;
 			} else {
-				map_chr_ram_extra_init(0x2000);
+				info.chr.ram.banks_8k_plus = 1;
 			}
 		}
 	}
@@ -159,6 +155,8 @@ void map_init_BMCFK23C(void) {
 		if (
 			(info.crc32.prg == 0x81907A3B) || // (KY-9006) 9-in-1 Super Game.nes
 			(info.crc32.prg == 0x26ABC25E) || // 9-in-1 - Pokemon Yellow (FK23C board)[p4][!].nes
+			(info.crc32.prg == 0xCD028ED2) || // 6-in-1 (Multi)[Unknown][YH602].nes
+			(info.crc32.prg == 0xD6F095DC) || // 8-in-1 (Multi)[Unknown][YH801].nes
 			(info.crc32.prg == 0xCFAE9BF7)) { // 6-in-1 - Spider Man 2 (FK23C board)[p4][!].nes
 			bmcfk23ctmp.select = 1;
 			bmcfk23ctmp.index = 0;
@@ -396,10 +394,9 @@ BYTE extcl_save_mapper_BMCFK23C(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_wr_chr_BMCFK23C(WORD address, BYTE value) {
-	BYTE slot = address >> 10;
+	const BYTE slot = address >> 10;
 
-	if (info.chr.rom.is_ram ||
-		((chr.bank_1k[slot] >= chr.extra.data) && (chr.bank_1k[slot] < (chr.extra.data + chr.extra.size)))) {
+	if (map_chr_ram_slot_in_range(slot)) {
 		chr.bank_1k[slot][address & 0x3FF] = value;
 	}
 }

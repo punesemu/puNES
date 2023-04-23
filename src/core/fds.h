@@ -64,12 +64,16 @@ typedef struct _fds {
 		BYTE *data;
 		FILE *diff;
 		BYTE total_sides;
+		BYTE expcted_side;
 		BYTE type;
 		uint32_t total_size;
-		uint32_t sides_size[20];
 		BYTE last_operation;
-		BYTE first_insert;
 		BYTE bios_first_run;
+		BYTE frame_insert;
+		struct _fds_info_sides {
+			uint32_t size;
+			uint32_t files;
+		} sides[20];
 	} info;
 	// side
 	struct _fds_side {
@@ -221,6 +225,7 @@ EXTERNC void fds_init(void);
 EXTERNC void fds_quit(void);
 EXTERNC BYTE fds_load_rom(void);
 EXTERNC BYTE fds_load_bios(void);
+EXTERNC void fds_info(void);
 EXTERNC void fds_info_side(BYTE side);
 EXTERNC void fds_disk_op(WORD type, BYTE side_to_insert, BYTE quiet);
 EXTERNC void fds_diff_op(BYTE mode, uint32_t position, WORD value);

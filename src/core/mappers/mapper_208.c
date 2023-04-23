@@ -24,9 +24,15 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
+void prg_swap_208(WORD address, WORD value);
+void mirroring_fix_208(void);
+
 struct _m208 {
-	BYTE ctrl;
-	BYTE reg[4];
+	BYTE reg;
+	struct _protection {
+		BYTE index;
+		BYTE reg[4];
+	} protection;
 } m208;
 static const BYTE vlu208[256] = {
 		0x59, 0x59, 0x59, 0x59, 0x59, 0x59, 0x59, 0x59,
@@ -64,6 +70,7 @@ static const BYTE vlu208[256] = {
 };
 
 void map_init_208(void) {
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(208);
 	EXTCL_CPU_RD_MEM(208);
 	EXTCL_SAVE_MAPPER(208);
@@ -78,57 +85,72 @@ void map_init_208(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	info.mapper.extend_wr = TRUE;
-
-	if (info.reset >= HARD) {
-		memset(&m208, 0x00, sizeof(m208));
-		memset(&mmc3, 0x00, sizeof(mmc3));
-
-		/* sembra proprio che parta in questa modalita' */
-		mmc3.prg_rom_cfg = 0x02;
-	}
-
 	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&m208, 0x00, sizeof(m208));
+
+	init_MMC3();
+	MMC3_prg_swap = prg_swap_208;
+	MMC3_mirroring_fix = mirroring_fix_208;
+
+	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_208(WORD address, BYTE value) {
+	if ((address >= 0x4000) && (address <= 0x5FFF)) {
+		switch (address & 0xF800) {
+			case 0x4800:
+				m208.reg = value;
+				MMC3_prg_fix(mmc3.bank_to_update);
+				MMC3_mirroring_fix();
+				return;
+			case 0x5000:
+				m208.protection.index = value;
+				return;
+			case 0x5800:
+				m208.protection.reg[address & 0x0003] = value ^ vlu208[m208.protection.index];
+				return;
+		}
+		return;
+	}
 	if (address >= 0x8000) {
 		extcl_cpu_wr_mem_MMC3(address, value);
-		return;
-	}
-
-	if ((address < 0x4800) || (address > 0x5FFF)) {
-		return;
-	}
-
-	switch (address & 0xF800) {
-		case 0x4800:
-			value = ((value >> 3) & 0x02) | (value & 0x01);
-			control_bank(info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, value);
-			map_prg_rom_8k_update();
-			return;
-		case 0x5000:
-			m208.ctrl = value;
-			return;
-		case 0x5800:
-			m208.reg[address & 0x0003] = value ^ vlu208[m208.ctrl];
-			return;
 	}
 }
 BYTE extcl_cpu_rd_mem_208(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address < 0x5800) || (address > 0x5FFF)) {
-		return (openbus);
+	if ((address >= 0x5000) && (address <= 0x5FFF)) {
+		return (address & 0x0800 ? m208.protection.reg[address & 0x0003]: openbus);
 	}
-
-	return (m208.reg[address & 0x0003]);
+	return (openbus);
 }
 BYTE extcl_save_mapper_208(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m208.ctrl);
 	save_slot_ele(mode, slot, m208.reg);
+	save_slot_ele(mode, slot, m208.protection);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
+}
+
+void prg_swap_208(WORD address, WORD value) {
+	const WORD slot = (address >> 13) & 0x03;
+
+	value = info.mapper.submapper == 1
+		? (mmc3.reg[6] & ~3) | slot
+		: ((m208.reg & 0x01) << 2) | ((m208.reg & 0x10) >> 1) | slot;
+
+	control_bank(info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, slot, value);
+	map_prg_rom_8k_update();
+}
+void mirroring_fix_208(void) {
+	if (info.mapper.submapper == 1) {
+		mirroring_fix_MMC3();
+		return;
+	}
+	if (m208.reg & 0x20) {
+		mirroring_H();
+	} else {
+		mirroring_V();
+	}
 }

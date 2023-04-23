@@ -65,7 +65,7 @@
 	ppu_openbus_wr(bit7)
 #define ppu_openbus_rd(bit, mask)\
 	if ((ppu.frames - ppu_openbus.bit) > machine.ppu_openbus_frames) {\
-		ppu.openbus &= mask;\
+		ppu.openbus &= (mask);\
 	}
 #define ppu_openbus_rd_all()\
 	ppu_openbus_rd(bit0, 0x01);\
@@ -77,16 +77,16 @@
 	ppu_openbus_rd(bit6, 0x40);\
 	ppu_openbus_rd(bit7, 0x80)
 #define look_cheats_list(lst, lng, adr)\
-	if (lst.counter) {\
+	if ((lst).counter) {\
 		int i;\
-		for (i = 0; i < lng; i++) {\
-			if (!lst.cheat[i].disabled && (lst.cheat[i].address == adr)) {\
-				if (lst.cheat[i].enabled_compare) {\
-					if (lst.cheat[i].compare == cpu.openbus) {\
-						cpu.openbus = lst.cheat[i].replace;\
+		for (i = 0; i < (lng); i++) {\
+			if (!(lst).cheat[i].disabled && ((lst).cheat[i].address == (adr))) {\
+				if ((lst).cheat[i].enabled_compare) {\
+					if ((lst).cheat[i].compare == cpu.openbus) {\
+						cpu.openbus = (lst).cheat[i].replace;\
 					}\
 				} else {\
-					cpu.openbus = lst.cheat[i].replace;\
+					cpu.openbus = (lst).cheat[i].replace;\
 				}\
 			}\
 		}\
@@ -110,7 +110,7 @@ INLINE static void tick_hw(BYTE value);
 
 BYTE cpu_rd_mem_dbg(WORD address) {
 	BYTE cpu_openbus = cpu.openbus;
-	BYTE read;
+	BYTE read = 0;
 
 	info.disable_tick_hw = TRUE;
 	read = cpu_rd_mem(address, FALSE);
@@ -232,9 +232,6 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		/* controllo se e' consentita la lettura dalla PRG Ram */
 		if (cpu.prg_ram_rd_active) {
 			if (address < 0x6000) {
-				/* leggo */
-				cpu.openbus = prg.ram.data[address & 0x1FFF];
-
 				// Vs System
 				if ((vs_system.enabled) && (address >= 0x4020)) {
 					if ((address & 0x4020) == 0x4020) {
@@ -265,12 +262,10 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 				 * la utilizzo, altrimenti leggo dalla PRG
 				 * Ram normale.
 				 */
-				if (!prg.ram_plus) {
+				if (!prg.ram_plus_8k) {
 					// Vs. System
 					if (vs_system.enabled && vs_system.shared_mem) {
 						cpu.openbus = prg.ram.data[address & 0x07FF];
-					} else {
-						cpu.openbus = prg.ram.data[address & 0x1FFF];
 					}
 				} else if (!info.mapper.ram_plus_op_controlled_by_mapper) {
 					cpu.openbus = prg.ram_plus_8k[address & 0x1FFF];
@@ -984,20 +979,16 @@ void cpu_wr_mem(WORD address, BYTE value) {
 						vs_system_r4020_clock(wr, value)
 					}
 				}
-				/* scrivo */
-				prg.ram.data[address & 0x1FFF] = value;
 			} else {
 				/*
 				 * se la rom ha una PRG Ram extra allora
 				 * la utilizzo, altrimenti uso la PRG Ram
 				 * normale.
 				 */
-				if (!prg.ram_plus) {
+				if (!prg.ram_plus_8k) {
 					// Vs. System
 					if (vs_system.enabled && vs_system.shared_mem) {
 						prg.ram.data[address & 0x07FF] = value;
-					} else {
-						prg.ram.data[address & 0x1FFF] = value;
 					}
 				} else if (!info.mapper.ram_plus_op_controlled_by_mapper) {
 					prg.ram_plus_8k[address & 0x1FFF] = value;
@@ -1403,7 +1394,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		/* DMA transfer source address */
 		address = value << 8;
 		{
-			WORD index;
+			WORD index = 0;
 			BYTE save_irq = irq.high;
 			BYTE save_cpu_cycles = cpu.cycles;
 
@@ -1701,16 +1692,20 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 			 * counter di ogni canale e' a 0, il counter
 			 * dello stesso canale e' immediatamente azzerato.
 			 */
-			if (!(S1.length.enabled = r4015.value & 0x01)) {
+			S1.length.enabled = r4015.value & 0x01;
+			if (!S1.length.enabled) {
 				S1.length.value = 0;
 			}
-			if (!(S2.length.enabled = r4015.value & 0x02)) {
+			S2.length.enabled = r4015.value & 0x02;
+			if (!S2.length.enabled) {
 				S2.length.value = 0;
 			}
-			if (!(TR.length.enabled = r4015.value & 0x04)) {
+			TR.length.enabled = r4015.value & 0x04;
+			if (!TR.length.enabled) {
 				TR.length.value = 0;
 			}
-			if (!(NS.length.enabled = r4015.value & 0x08)) {
+			NS.length.enabled = r4015.value & 0x08;
+			if (!NS.length.enabled) {
 				NS.length.value = 0;
 			}
 			/*
@@ -1878,7 +1873,7 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 	}
 	// Bankswitch
 	if (nsf.bankswitch.enabled && (address >= 0x5FF6) && (address <= 0x5FFF)) {
-		BYTE bank;
+		BYTE bank = 0;
 
 		tick_hw(1);
 
@@ -2054,8 +2049,8 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 				fds.drive.gap_ended = FALSE;
 			}
 			fds.drive.read_mode = value & 0x04;
-
-			if ((fds.drive.mirroring = value & 0x08)) {
+			fds.drive.mirroring = value & 0x08;
+			if (fds.drive.mirroring) {
 				mirroring_H();
 			} else {
 				mirroring_V();
@@ -2169,9 +2164,8 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 /* ------------------------------------ MISC ROUTINE ------------------------------------------- */
 
 INLINE static WORD lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw) {
-	WORD newAdr;
+	WORD newAdr = cpu_rd_mem(address++, TRUE);
 
-	newAdr = cpu_rd_mem(address++, TRUE);
 	/* 6502 Bugs :
 	 * Indirect addressing modes are not able to fetch an address which
 	 * crosses the page boundary

@@ -24,7 +24,9 @@
 enum _m226_types { MAP226, MAP233 };
 
 void map_init_226(BYTE model);
+void extcl_after_mapper_init_226(void);
 void extcl_cpu_wr_mem_226(WORD address, BYTE value);
 BYTE extcl_save_mapper_226(BYTE mode, BYTE slot, FILE *fp);
+void extcl_wr_chr_226(WORD address, BYTE value);
 
 #endif /* MAPPER_226_H_ */

@@ -38,32 +38,6 @@ struct _txctmp {
 
 void map_init_Txc(BYTE model) {
 	switch (model) {
-		case TXCTW:
-			EXTCL_CPU_WR_MEM(Txc_tw);
-			EXTCL_SAVE_MAPPER(MMC3);
-			EXTCL_CPU_EVERY_CYCLE(MMC3);
-			EXTCL_PPU_000_TO_34X(MMC3);
-			EXTCL_PPU_000_TO_255(MMC3);
-			EXTCL_PPU_256_TO_319(MMC3);
-			EXTCL_PPU_320_TO_34X(MMC3);
-			EXTCL_UPDATE_R2006(MMC3);
-			mapper.internal_struct[0] = (BYTE *)&mmc3;
-			mapper.internal_struct_size[0] = sizeof(mmc3);
-
-			info.mapper.extend_wr = TRUE;
-
-			if (info.reset >= HARD) {
-				memset(&mmc3, 0x00, sizeof(mmc3));
-				/* sembra proprio che parta in questa modalita' */
-				mmc3.prg_rom_cfg = 0x02;
-				map_prg_rom_8k(4, 0, 0);
-			}
-
-			memset(&irqA12, 0x00, sizeof(irqA12));
-
-			irqA12.present = TRUE;
-			irqA12_delay = 1;
-			break;
 		case T22211A:
 		case T22211B:
 			EXTCL_CPU_WR_MEM(Txc_t22211ab);
@@ -102,22 +76,6 @@ void map_init_Txc(BYTE model) {
 	}
 
 	txctmp.type = model;
-}
-
-void extcl_cpu_wr_mem_Txc_tw(WORD address, BYTE value) {
-	if (address < 0x4120) {
-		return;
-	}
-
-	if (address >= 0x8000) {
-		extcl_cpu_wr_mem_MMC3(address, value);
-		return;
-	}
-
-	value = (value >> 4) | value;
-	control_bank(info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, value);
-	map_prg_rom_8k_update();
 }
 
 void extcl_cpu_wr_mem_Txc_t22211ab(WORD address, BYTE value) {

@@ -23,27 +23,54 @@
 #include "cpu.h"
 
 struct _m42 {
-	WORD rom_map_to;
-	BYTE *prg_6000;
+	WORD reg;
 	struct _m42_irq {
-		BYTE active;
+		BYTE enabled;
 		uint32_t count;
 	} irq;
 } m42;
+struct _m42tmp {
+	BYTE *prg_6000;
+} m42tmp;
 
 void map_init_42(void) {
-	EXTCL_CPU_WR_MEM(42);
-	EXTCL_CPU_RD_MEM(42);
-	EXTCL_SAVE_MAPPER(42);
-	EXTCL_CPU_EVERY_CYCLE(42);
+	if ((info.mapper.submapper < 1) || (info.mapper.submapper > 3)) {
+		if (info.chr.rom.banks_8k && !mapper.write_vram) {
+			// Ai Senshi Nicole
+			info.mapper.submapper = 1;
+		} else if (info.prg.rom.banks_16k > (128 /16)) {
+			// Green Beret
+			info.mapper.submapper = 2;
+		} else {
+			// Mario Baby
+			info.mapper.submapper = 3;
+		}
+	}
+	switch(info.mapper.submapper) {
+		default:
+		case 1:
+			EXTCL_CPU_WR_MEM(42_submapper1);
+			EXTCL_CPU_RD_MEM(42);
+			EXTCL_SAVE_MAPPER(42);
+			break;
+		case 2:
+			map_init_AC08();
+			return;
+		case 3:
+			EXTCL_CPU_WR_MEM(42_submapper3);
+			EXTCL_CPU_RD_MEM(42);
+			EXTCL_SAVE_MAPPER(42);
+			EXTCL_CPU_EVERY_CYCLE(42);
+			break;
+	}
 	mapper.internal_struct[0] = (BYTE *)&m42;
 	mapper.internal_struct_size[0] = sizeof(m42);
 
 	map_prg_rom_8k(4, 0, (info.prg.rom.banks_16k >> 1) - 1);
-	m42.prg_6000 = prg_pnt(0 << 13);
+	m42tmp.prg_6000 = prg_pnt(0 << 13);
 }
-void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
-	switch (address & 0xE003) {
+void extcl_cpu_wr_mem_42_submapper1(WORD address, BYTE value) {
+	switch (address & 0xE000) {
 		case 0x8000: {
 			DBWORD bank;
 
@@ -61,8 +88,17 @@ void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
 		}
 		case 0xE000:
 			control_bank(info.prg.rom.max.banks_8k)
-			m42.rom_map_to = value;
-			m42.prg_6000 = prg_pnt(value << 13);
+			m42.reg = value;
+			m42tmp.prg_6000 = prg_pnt(value << 13);
+			return;
+	}
+}
+void extcl_cpu_wr_mem_42_submapper3(WORD address, BYTE value) {
+	switch (address & 0xE003) {
+		case 0xE000:
+			control_bank(info.prg.rom.max.banks_8k)
+			m42.reg = value;
+			m42tmp.prg_6000 = prg_pnt(value << 13);
 			return;
 		case 0xE001:
 			if (value == 0x08) {
@@ -72,8 +108,8 @@ void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
 			}
 			return;
 		case 0xE002:
-			m42.irq.active = value & 0x02;
-			if (!m42.irq.active) {
+			m42.irq.enabled = value & 0x02;
+			if (!m42.irq.enabled) {
 				m42.irq.count = 0;
 			}
 			irq.high &= ~EXT_IRQ;
@@ -82,24 +118,23 @@ void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_42(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (m42.prg_6000[address & 0x1FFF]);
+		return (m42tmp.prg_6000[address & 0x1FFF]);
 	}
 	return (openbus);
 }
 BYTE extcl_save_mapper_42(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m42.rom_map_to);
-	save_slot_ele(mode, slot, m42.prg_6000);
-	save_slot_ele(mode, slot, m42.irq.active);
+	save_slot_ele(mode, slot, m42.reg);
+	save_slot_ele(mode, slot, m42.irq.enabled);
 	save_slot_ele(mode, slot, m42.irq.count);
 
 	if (mode == SAVE_SLOT_READ) {
-		m42.prg_6000 = prg_pnt(m42.rom_map_to << 13);
+		m42tmp.prg_6000 = prg_pnt(m42.reg << 13);
 	}
 
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_42(void) {
-	if (m42.irq.active) {
+	if (m42.irq.enabled) {
 		m42.irq.count++;
 		if (m42.irq.count >= 32768) {
 			m42.irq.count -= 32768;

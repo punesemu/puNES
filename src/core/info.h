@@ -65,7 +65,32 @@ typedef struct _info {
 		BYTE force_battery_io;
 		BYTE ext_console_type;
 		BYTE mirroring;
+		BYTE supported;
 	} mapper;
+	struct _info_header {
+		BYTE format;
+		WORD mapper;
+		BYTE submapper;
+		DBWORD prgrom;
+		DBWORD chrrom;
+		DBWORD prgram;
+		DBWORD prgnvram;
+		DBWORD chrram;
+		DBWORD chrnvram;
+		BYTE trainer;
+		BYTE misc_roms;
+		BYTE battery;
+		BYTE ext_console_type;
+		BYTE mirroring;
+		BYTE cpu_timing;
+		BYTE vs_hardware;
+		BYTE vs_ppu;
+	} header;
+
+	BYTE prg_truncated;
+	BYTE chr_truncated;
+	BYTE misc_truncated;
+
 	BYTE mirroring_db;
 	BYTE portable;
 	BYTE id;
@@ -92,13 +117,13 @@ typedef struct _info {
 	struct _info_crc32 {
 		uint32_t prg;
 		uint32_t chr;
+		uint32_t trainer;
 		uint32_t misc;
 		uint32_t total;
 	} crc32;
 	struct _info_chr {
 		WORD chips;
 		struct _info_chr_rom {
-			BYTE is_ram;
 			DBWORD banks_8k;
 			DBWORD banks_4k;
 			DBWORD banks_1k;

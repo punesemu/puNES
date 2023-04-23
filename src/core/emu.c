@@ -48,6 +48,7 @@
 #include "video/effects/tv_noise.h"
 #if defined (FULLSCREEN_RESFREQ)
 #include "video/gfx_monitor.h"
+#include "nes20db.h"
 #endif
 
 #define RS_SCALE (1.0f / (1.0f + (float)RAND_MAX))
@@ -117,9 +118,10 @@ void emu_frame(void) {
 		tv_noise_effect();
 		gfx_draw_screen();
 		emu_frame_sleep();
+		ppu.frames++;
 		return;
 	} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
-		int i;
+		int i = 0;
 
 		gui_decode_all_input_events();
 
@@ -171,9 +173,10 @@ void emu_frame_debugger(void) {
 				tv_noise_effect();
 				gfx_draw_screen();
 				emu_frame_sleep();
+				ppu.frames++;
 				return;
 			} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
-				int i;
+				int i = 0;
 
 				gui_decode_all_input_events();
 
@@ -279,11 +282,12 @@ BYTE emu_file_exist(const uTCHAR *file) {
 	return (EXIT_ERROR);
 }
 char *emu_file2string(const uTCHAR *path) {
-	FILE *fd;
-	size_t len;
-	char *str;
+	FILE *fd = NULL;
+	size_t len = 0;
+	char *str = NULL;
 
-	if (!(fd = ufopen(path, uL("r")))) {
+	fd = ufopen(path, uL("r"));
+	if (!fd) {
 		log_error(uL("opengl;can't open file '" uPs("") "' for reading"), path);
 		return (NULL);
 	}
@@ -292,7 +296,8 @@ char *emu_file2string(const uTCHAR *path) {
 	len = ftell(fd);
 	fseek(fd, 0, SEEK_SET);
 
-	if (!(str = (char *)malloc((len + 1) * sizeof(char)))) {
+	str = (char *)malloc((len + 1) * sizeof(char));
+	if (!str) {
 		fclose(fd);
 		log_error(uL("opengl;can't malloc space for '" uPs("")), path);
 		return (NULL);
@@ -323,6 +328,9 @@ BYTE emu_load_rom(void) {
 	info.format = HEADER_UNKOWN;
 	info.no_rom = FALSE;
 	info.cpu_rw_extern = FALSE;
+	info.prg_truncated = FALSE;
+	info.chr_truncated = FALSE;
+	info.misc_truncated = FALSE;
 
 	nsf_quit();
 	fds_quit();
@@ -378,6 +386,7 @@ BYTE emu_load_rom(void) {
 				info.rom.file[0] = 0;
 				info.rom.change_rom[0] = 0;
 				gui_overlay_info_append_msg_precompiled(5, NULL);
+				nes20db_reset();
 				goto elaborate_rom_file;
 			}
 			emu_recent_roms_add(&recent_roms_permit_add, info.rom.file);
@@ -387,7 +396,6 @@ BYTE emu_load_rom(void) {
 	} else if (info.gui) {
 		// impostazione primaria
 		info.prg.rom.banks_16k = info.chr.rom.banks_8k = 1;
-
 		info.prg.rom.banks_8k = info.prg.rom.banks_16k * 2;
 		info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
 		info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
@@ -398,7 +406,7 @@ BYTE emu_load_rom(void) {
 		}
 
 		// PRG Rom
-		if (map_prg_malloc(info.prg.rom.banks_16k * 0x4000, 0xEA, TRUE) == EXIT_ERROR) {
+		if (map_prg_malloc((size_t)(info.prg.rom.banks_16k * 0x4000), 0xEA, TRUE) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
 
@@ -483,6 +491,7 @@ void emu_set_title(uTCHAR *title, int len) {
 #if !defined (RELEASE)
 	if (cfg->scale != X1) {
 		uTCHAR mapper_id[10];
+
 		usnprintf(mapper_id, usizeof(mapper_id), uL(", %d"), info.mapper.id);
 		ustrcat(title, mapper_id);
 	}
@@ -817,7 +826,7 @@ unsigned int emu_power_of_two(unsigned int base) {
 	return (pot == 1 ? 2 : pot);
 }
 double emu_drand(void) {
-	double d;
+	double d = 0.0;
 
 	do {
 		d = ((((double)rand() * RS_SCALE) + (double)rand()) * RS_SCALE + (double)rand()) * RS_SCALE;
@@ -825,7 +834,7 @@ double emu_drand(void) {
 	return (d);
 }
 uTCHAR *emu_ustrncpy(uTCHAR *dst, uTCHAR *src) {
-	uint32_t size;
+	uint32_t size = 0;
 
 	if (dst) {
 		free(dst);
@@ -846,7 +855,7 @@ uTCHAR *emu_ustrncpy(uTCHAR *dst, uTCHAR *src) {
 uTCHAR *emu_rand_str(void) {
 	static uTCHAR dest[10];
 	uTCHAR charset[] = uL("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-	unsigned int i;
+	unsigned int i = 0;
 
 	for (i = 0; i < (usizeof(dest) - 1); i++) {
 		size_t index = rand() / RAND_MAX * (usizeof(charset) - 1);
@@ -901,7 +910,7 @@ void emu_ctrl_doublebuffer(void) {
 void emu_frame_input_and_rewind(void) {
 	// controllo se ci sono eventi di input
 	if (tas.type == NOTAS) {
-		int i;
+		int i = 0;
 
 		gui_decode_all_input_events();
 
@@ -917,89 +926,198 @@ void emu_frame_input_and_rewind(void) {
 	rewind_snapshoot();
 }
 void emu_info_rom(void) {
+	BYTE changed = FALSE;
+	BYTE at_least_one_change = FALSE;
+
 	if (!info.rom.file[0]) {
 		return;
 	}
 
-	log_info(uL("file;" uPs("")), info.rom.file);
+	{
+		uTCHAR buffer[LENGTH_FILE_NAME_MID];
+
+		log_info_open(uL("file;"));
+		umemset(buffer, 0x00, usizeof(buffer));
+		gui_utf_basename((uTCHAR *)info.rom.file, buffer, usizeof(buffer) - 1);
+		log_close(uL("" uPs("")), buffer);
+
+		log_info_box_open(uL("folder;"));
+		umemset(buffer, 0x00, usizeof(buffer));
+		gui_utf_dirname((uTCHAR *)info.rom.file, buffer, usizeof(buffer) - 1);
+		log_close_box(uL("" uPs("")), buffer);
+
+		if (patcher.patched == TRUE) {
+			log_info_box(uL("patched;yes"));
+		}
+	}
 
 	log_info_box_open(uL("format;"));
-	if (info.format == NES_2_0) {
+	if (info.header.format == NES_2_0) {
 		log_close_box(uL("Nes 2.0"));
-	} else if (info.format == iNES_1_0) {
+	} else if (info.header.format == iNES_1_0) {
 		log_close_box(uL("iNES 1.0"));
-	} else if (info.format == UNIF_FORMAT) {
+	} else if (info.header.format == UNIF_FORMAT) {
 		log_close_box(uL("UNIF"));
-	} else if (info.format == NSF_FORMAT) {
+	} else if (info.header.format == NSF_FORMAT) {
 		log_close_box(uL("NSF"));
 		nsf_info();
 		return;
-	} else if (info.format == NSFE_FORMAT) {
+	} else if (info.header.format == NSFE_FORMAT) {
 		log_close_box(uL("NSFE"));
 		nsfe_info();
 		return;
-	} else if (info.format == FDS_FORMAT) {
+	} else if (info.header.format == FDS_FORMAT) {
 		log_close_box(uL("FDS"));
-		fds_info_side(0);
+		fds_info();
 		return;
 	} else {
 		log_close_box(uL("Unknow"));
 		return;
 	}
 
+#define ischanged(a) changed = (a); at_least_one_change = changed ? TRUE : at_least_one_change
+#define ifchanged() (changed ? " *" : "")
+
+	log_info_box(uL("nes20db;%s"), nes20db.in_use ? "yes" : "no");
+
 	{
 		log_info_box_open(uL("console type;"));
+		ischanged(info.header.ext_console_type != info.mapper.ext_console_type);
 		switch (info.mapper.ext_console_type) {
 			case REGULAR_NES:
-				log_close_box(uL("Regular NES/Famicom/Dendy"));
+				log_close_box(uL("Regular NES/Famicom/Dendy%s"), ifchanged());
 				break;
 			case VS_SYSTEM:
-				log_close_box(uL("Nintendo Vs. System"));
+				log_close_box(uL("Nintendo Vs. System%s"), ifchanged());
 				break;
 			case PLAYCHOICE10:
-				log_close_box(uL("Playchoice 10"));
+				log_close_box(uL("Playchoice 10%s"), ifchanged());
 				break;
 			case FAMICLONE_DECIMAL_MODE:
-				log_close_box(uL("Regular Famiclone, but with CPU that supports Decimal Mode"));
+				log_close_box(uL("Regular Famiclone, but with CPU that supports Decimal Mode%s"), ifchanged());
 				break;
 			case EPSM:
-				log_close_box(uL("Regular NES/Famicom with EPSM module or plug-through cartridge [unsupported]"));
+				log_close_box(uL("Regular NES/Famicom with EPSM module or plug-through cartridge [unsupported]%s"), ifchanged());
 				break;
 			case VT01:
-				log_close_box(uL("V.R. Technology VT01 with red/cyan STN palette [unsupported]"));
+				log_close_box(uL("V.R. Technology VT01 with red/cyan STN palette [unsupported]%s"), ifchanged());
 				break;
 			case VT02:
-				log_close_box(uL("V.R. Technology VT02 [unsupported]\n"));
+				log_close_box(uL("V.R. Technology VT02 [unsupported]%s"), ifchanged());
 				break;
 			case VT03:
-				log_close_box(uL("V.R. Technology VT03 [unsupported]"));
+				log_close_box(uL("V.R. Technology VT03 [unsupported]%s"), ifchanged());
 				break;
 			case VT09:
-				log_close_box(uL("V.R. Technology VT09 [unsupported]"));
+				log_close_box(uL("V.R. Technology VT09 [unsupported]%s"), ifchanged());
 				break;
 			case VT32:
-				log_close_box(uL("V.R. Technology VT32 [unsupported]"));
+				log_close_box(uL("V.R. Technology VT32 [unsupported]%s"), ifchanged());
 				break;
 			case VT369:
-				log_close_box(uL("V.R. Technology VT369 [unsupported]"));
+				log_close_box(uL("V.R. Technology VT369 [unsupported]%s"), ifchanged());
 				break;
 			case UMC_UM6578:
-				log_close_box(uL("UMC UM6578 [unsupported]"));
+				log_close_box(uL("UMC UM6578 [unsupported]%s"), ifchanged());
 				break;
 			case FAMICOM_NETWORK_SYSTEM:
-				log_close_box(uL("Famicom Network System [unsupported]"));
+				log_close_box(uL("Famicom Network System [unsupported]%s"), ifchanged());
 				break;
 			case 13:
 			case 14:
 			case 15:
-				log_close_box(uL("reserved"));
+				log_close_box(uL("reserved%s"), ifchanged());
 				break;
 		}
 	}
 
-	if (info.format == UNIF_FORMAT) {
+	{
+		log_info_box_open(uL("CPU timing;"));
+		ischanged(machine.type != info.header.cpu_timing);
+		switch (machine.type) {
+			default:
+			case NTSC:
+				log_close_box(uL("NTSC NES%s"), ifchanged());
+				break;
+			case PAL:
+				log_close_box(uL("Licensed PAL NES%s"), ifchanged());
+				break;
+			case DENDY:
+				log_close_box(uL("Dendy%s"), ifchanged());
+				break;
+		}
+	}
+
+	if (vs_system.enabled) {
+		log_info_box_open(uL("vs ppu;"));
+		ischanged(info.header.vs_ppu != vs_system.ppu);
+		switch (vs_system.ppu) {
+			case RP2C03B:
+				log_close_box(uL("RP2C03B%s"), ifchanged());
+				break;
+			case RP2C03G:
+				log_close_box(uL("RP2C03G%s"), ifchanged());
+				break;
+			case RP2C04:
+				log_close_box(uL("RP2C04-0001%s"), ifchanged());
+				break;
+			case RP2C04_0002:
+				log_close_box(uL("RP2C04-0002%s"), ifchanged());
+				break;
+			case RP2C04_0003:
+				log_close_box(uL("RP2C04-0003%s"), ifchanged());
+				break;
+			case RP2C04_0004:
+				log_close_box(uL("RP2C04-0004%s"), ifchanged());
+				break;
+			case RC2C03B:
+				log_close_box(uL("RC2C03B%s"), ifchanged());
+				break;
+			case RC2C03C:
+			default:
+				log_close_box(uL("RC2C03C%s"), ifchanged());
+				break;
+			case RC2C05_01:
+				log_close_box(uL("RC2C05-01%s"), ifchanged());
+				break;
+			case RC2C05_02:
+				log_close_box(uL("RC2C05-02%s"), ifchanged());
+				break;
+			case RC2C05_03:
+				log_close_box(uL("RC2C05-03%s"), ifchanged());
+				break;
+			case RC2C05_04:
+				log_close_box(uL("RC2C05-04%s"), ifchanged());
+				break;
+			case RC2C05_05:
+				log_close_box(uL("RC2C05-05%s"), ifchanged());
+				break;
+		}
+
+		log_info_box_open(uL("vs system;"));
+		ischanged(info.header.vs_hardware != vs_system.special_mode.type);
+		switch (vs_system.special_mode.type) {
+			case VS_SM_Normal:
+			default:
+				log_close_box(uL("Unisystem (normal)%s"), ifchanged());
+				break;
+			case VS_SM_RBI_Baseball:
+				log_close_box(uL("Unisystem (RBI Baseball protection)%s"), ifchanged());
+				break;
+			case VS_SM_TKO_Boxing:
+				log_close_box(uL("Unisystem (TKO Boxing protection)%s"), ifchanged());
+				break;
+			case VS_SM_Super_Xevious:
+				log_close_box(uL("Unisystem (Super Xevious protection)%s"), ifchanged());
+				break;
+		}
+	}
+
+#define ifsupported() (info.mapper.supported ? "" : " [not supported]")
+
+	if (info.header.format == UNIF_FORMAT) {
 		char *trimmed = &unif.board[0];
-		size_t i;
+		size_t i = 0;
 
 		for (i = 0; i < strlen(unif.stripped_board); i++) {
 			if ((*unif.stripped_board) != ' ') {
@@ -1013,29 +1131,36 @@ void emu_info_rom(void) {
 			log_info_box(uL("UNIF name;%s"), unif.name);
 		}
 
-		info.mapper.id == UNIF_MAPPER
-			? log_info_box(uL("UNIF mapper;%u"), unif.internal_mapper)
-			: log_info_box(uL("NES mapper;%u"), info.mapper.id);
+		if (info.mapper.id == UNIF_MAPPER) {
+			log_info_box(uL("UNIF mapper;%u"), unif.internal_mapper);
+		} else {
+			ischanged(info.header.mapper != info.mapper.id);
+			log_info_box(uL("NES mapper;%u%s%s"), info.mapper.id, ifsupported(), ifchanged());
+		}
 	} else {
-		log_info_box(uL("NES mapper;%u"), info.mapper.id);
+		ischanged(info.header.mapper != info.mapper.id);
+		log_info_box(uL("NES mapper;%u%s%s"), info.mapper.id, ifsupported(), ifchanged());
 	}
+
+#undef ifsupported
 
 	{
 		log_info_box_open(uL("submapper;"));
-		if (info.format == NES_2_0) {
+		ischanged(info.header.submapper != info.mapper.submapper);
+		if ((info.header.format == NES_2_0) || nes20db.in_use) {
 			info.mapper.submapper == DEFAULT
-				? log_close_box(uL("%u (DEFAULT)"), info.mapper.submapper_nes20)
+				? log_close_box(uL("%u (DEFAULT)%s"), info.mapper.submapper_nes20, ifchanged())
 				: info.mapper.submapper == info.mapper.submapper_nes20
-					? log_close_box(uL("%u"), info.mapper.submapper_nes20)
-					: log_close_box(uL("%u (%u)"), info.mapper.submapper_nes20, info.mapper.submapper);
+					? log_close_box(uL("%u%s"), info.mapper.submapper_nes20, ifchanged())
+					: log_close_box(uL("%u (%u)%s"), info.mapper.submapper_nes20, info.mapper.submapper, ifchanged());
 		} else {
 			info.mapper.submapper == DEFAULT
-				? log_close_box(uL("DEFAULT"))
-				: log_close_box(uL("%u"), info.mapper.submapper);
+				? log_close_box(uL("DEFAULT%s"), ifchanged())
+				: log_close_box(uL("%u%s"), info.mapper.submapper, ifchanged());
 		}
 	}
 
-	if (info.format == UNIF_FORMAT) {
+	if (info.header.format == UNIF_FORMAT) {
 		if (strlen(unif.dumped.by) > 0) {
 			log_info_box_open(uL("dumped by;%s"), unif.dumped.by);
 
@@ -1062,42 +1187,45 @@ void emu_info_rom(void) {
 
 	{
 		log_info_box_open(uL("mirroring;"));
-		if ((info.format == UNIF_FORMAT) && (info.mapper.mirroring == 5)) {
+		if ((info.header.format == UNIF_FORMAT) && (info.mapper.mirroring == 5)) {
 			log_close_box(uL("controlled by the mapper"));
 		} else {
+			ischanged(info.header.mirroring != info.mapper.mirroring);
 			switch (info.mapper.mirroring) {
 				default:
 				case MIRRORING_HORIZONTAL:
-					log_close_box(uL("horizontal"));
+					log_close_box(uL("horizontal%s"), ifchanged());
 					break;
 				case MIRRORING_VERTICAL:
-					log_close_box(uL("vertical"));
+					log_close_box(uL("vertical%s"), ifchanged());
 					break;
 				case MIRRORING_SINGLE_SCR0:
-					log_close_box(uL("scr0"));
+					log_close_box(uL("scr0%s"), ifchanged());
 					break;
 				case MIRRORING_SINGLE_SCR1:
-					log_close_box(uL("scr1"));
+					log_close_box(uL("scr1%s"), ifchanged());
 					break;
 				case MIRRORING_FOURSCR:
-					log_close_box(uL("4 screen"));
+					log_close_box(uL("4 screen%s"), ifchanged());
 					break;
 			}
 		}
 	}
 
 	if (mapper.misc_roms.size) {
-		log_info_box(uL("MISC rom;%-4lu [ %08X %ld ]"),
+		log_info_box(uL("MISC rom;%-4lu [ %08X %ld ]%s"),
 			(long unsigned)info.mapper.misc_roms,
 			info.crc32.misc,
-			(long)mapper.misc_roms.size);
+			(long)mapper.misc_roms.size,
+			(info.misc_truncated ? " truncated" : ""));
 	}
 
 	if (info.mapper.trainer) {
-		log_info_box(uL("trainer;yes"));
+		log_info_box(uL("trainer;yes [ %08X ]"), info.crc32.trainer);
 	}
 
 	if (info.prg.ram.banks_8k_plus) {
+		ischanged((info.header.prgram != info.prg.ram.banks_8k_plus) && (info.header.prgnvram != info.prg.ram.bat.banks));
 		log_info_box_open(uL("RAM PRG 8k;%u"), info.prg.ram.banks_8k_plus);
 		if (info.prg.ram.bat.banks) {
 			log_append(uL(" ( bat : %d - "), info.prg.ram.bat.banks);
@@ -1106,25 +1234,33 @@ void emu_info_rom(void) {
 				? log_append(uL("DEFAULT )"))
 				: log_append(uL("%d )"), info.prg.ram.bat.start);
 		}
-		log_close_box(uL(""));
+		log_close_box(uL("%s"), ifchanged());
 	}
 
-	if (mapper.write_vram || info.chr.ram.banks_8k_plus) {
-		log_info_box(uL("RAM CHR 8k;%-4u"),
-			info.chr.ram.banks_8k_plus + (mapper.write_vram ? info.chr.rom.banks_8k : 0));
+	if (mapper.write_vram) {
+		DBWORD banks = info.chr.rom.banks_8k;
+
+		ischanged((info.header.chrram + info.header.chrnvram) != banks);
+		log_info_box(uL("RAM CHR 8k;%-4u (wvram)%s"), banks, ifchanged());
+	} else if (info.chr.ram.banks_8k_plus) {
+		DBWORD banks = info.chr.ram.banks_8k_plus;
+
+		ischanged((info.header.chrram + info.header.chrnvram) != banks);
+		log_info_box(uL("RAM CHR 8k;%-4u%s"), banks, ifchanged());
 	}
-	if (chr.extra.data) {
+	if (!info.chr.ram.banks_8k_plus && chr.extra.data) {
 		log_info_box(uL("RAM CHR extra;%ld"), (long)chr.extra.size);
 	}
 
-	log_info_box(uL("PRG 8k rom;%-4lu [ %08X %ld ]"),
+	log_info_box(uL("PRG 8k rom;%-4lu [ %08X %ld ]%s"),
 		(long unsigned)prg_size() / 0x2000,
 		info.crc32.prg,
-		(long)prg_size());
+		(long)prg_size(),
+		(info.prg_truncated ? " truncated" : ""));
 
-	if (info.format == UNIF_FORMAT) {
+	if (info.header.format == UNIF_FORMAT) {
 		if (unif.chips.prg > 1) {
-			int chip;
+			int chip = 0;
 
 			for (chip = 0; chip < unif.chips.prg; chip++) {
 				log_info_box(uL(" 8k chip %d;%-4lu [ %08X %ld ]"),
@@ -1136,15 +1272,16 @@ void emu_info_rom(void) {
 	}
 
 	if (!mapper.write_vram && chr_size()) {
-		log_info_box(uL("CHR 4k vrom;%-4lu [ %08X %ld ]"),
+		log_info_box(uL("CHR 4k vrom;%-4lu [ %08X %ld ]%s"),
 			(long unsigned)chr_size() / 0x1000,
 			info.crc32.chr,
-			(long)chr_size());
+			(long)chr_size(),
+			(info.chr_truncated ? " truncated" : ""));
 	}
 
-	if (info.format == UNIF_FORMAT) {
+	if (info.header.format == UNIF_FORMAT) {
 		if (unif.chips.chr > 1) {
-			int chip;
+			int chip = 0;
 
 			for (chip = 0; chip < unif.chips.chr; chip++) {
 				log_info_box(uL(" 4k chip %d;%-4lu [ %08X %ld ]"),
@@ -1155,21 +1292,28 @@ void emu_info_rom(void) {
 		}
 	}
 
-	if (info.format == iNES_1_0) {
+	if (info.header.format == iNES_1_0) {
 		log_info_box(uL("sha1prg;%40s"), info.sha1sum.prg.string);
 		if (!mapper.write_vram && chr_size()) {
 			log_info_box(uL("shachr;%40s"), info.sha1sum.chr.string);
 		}
 	}
 
+#undef ischanged
+#undef ifchanged
+
 	log_info_box(uL("CRC32;%08X"), info.crc32.total);
 
 	log_info_box(uL("CPU/PPU alig.;PPU %d/%d, CPU %d/%d"),
 		ppu_alignment.ppu, machine.ppu_divide,
 		ppu_alignment.cpu, machine.cpu_divide);
+
+	if (at_least_one_change) {
+		log_info_box(uL("Note;* different values than the header"));
+	}
 }
 void emu_initial_ram(BYTE *ram, unsigned int length) {
-	unsigned int i;
+	unsigned int i = 0;
 
 	if (!ram || !length) {
 		return;
@@ -1181,6 +1325,26 @@ void emu_initial_ram(BYTE *ram, unsigned int length) {
 				? 0xFF
 				: rand();
 	}
+}
+void emu_save_header_info(void) {
+	info.header.format = info.format;
+	info.header.prgrom = info.prg.rom.banks_16k;
+	info.header.chrrom = info.chr.rom.banks_8k;
+	info.header.prgram = info.prg.ram.banks_8k_plus;
+	info.header.prgnvram = info.prg.ram.bat.banks;
+	info.header.chrram = !info.chr.rom.banks_8k
+		 ? info.format == NES_2_0
+			   ? info.chr.ram.banks_8k_plus
+			   : 1
+		 : info.chr.ram.banks_8k_plus;
+	//info.header.chrnvram = info.prg.ram.bat.banks;
+	info.header.mapper = info.mapper.id;
+	info.header.submapper = info.mapper.submapper;
+	info.header.mirroring = info.mapper.mirroring;
+	info.header.cpu_timing = info.machine[HEADER];
+	info.header.ext_console_type = info.mapper.ext_console_type;
+	info.header.vs_ppu = vs_system.ppu;
+	info.header.vs_hardware = vs_system.special_mode.type;
 }
 
 INLINE static void emu_frame_started(void) {
@@ -1223,7 +1387,7 @@ INLINE static void emu_frame_finished(void) {
 	gui_nes_keyboard_frame_finished();
 }
 INLINE static void emu_frame_sleep(void) {
-	double diff, now = gui_get_ms();
+	double diff = 0.0, now = gui_get_ms();
 
 	diff = fps.frame.expected_end - now;
 
@@ -1237,7 +1401,7 @@ INLINE static void emu_frame_sleep(void) {
 }
 
 static void emu_cpu_initial_cycles(void) {
-	BYTE i;
+	BYTE i = 0;
 
 	for (i = 0; i < 8; i++) {
 		if (info.mapper.id != NSF_MAPPER) {
@@ -1269,8 +1433,8 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 	}
 
 	if (info.rom.change_rom[0]) {
-		_uncompress_archive *archive;
-		BYTE rc;
+		_uncompress_archive *archive = NULL;
+		BYTE rc = 0;
 
 		archive = uncompress_archive_alloc(info.rom.change_rom, &rc);
 
@@ -1334,14 +1498,24 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 	}
 
 	if (patcher_ctrl_if_exist(NULL) == EXIT_OK) {
-		log_info(uL("patch file;" uPs("")), patcher.file);
+		uTCHAR buffer[LENGTH_FILE_NAME_MID];
+
+		log_info_open(uL("patch file;"));
+		umemset(buffer, 0x00, usizeof(buffer));
+		gui_utf_basename((uTCHAR *)patcher.file, buffer, usizeof(buffer) - 1);
+		log_close(uL("" uPs("")), buffer);
+
+		log_info_box_open(uL("folder;"));
+		umemset(buffer, 0x00, usizeof(buffer));
+		gui_utf_dirname((uTCHAR *)patcher.file, buffer, usizeof(buffer) - 1);
+		log_close_box(uL("" uPs("")), buffer);
 	}
 
 	return (EXIT_OK);
 }
 static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file) {
 	static uTCHAR ext[10];
-	uTCHAR name_file[255], *last_dot;
+	uTCHAR name_file[255], *last_dot = NULL;
 
 	gui_utf_basename(file, name_file, usizeof(name_file));
 

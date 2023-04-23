@@ -28,6 +28,9 @@
 #include "vs_system.h"
 #include "patcher.h"
 #include "../../c++/crc/crc.h"
+#include "emu.h"
+#include "ines.h"
+#include "nes20db.h"
 
 enum unif_phase_type { UNIF_COUNT, UNIF_READ };
 
@@ -66,7 +69,9 @@ static const _unif_board unif_boards[] = {
 	{"TFROM", 4, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"ANROM", 7, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"SL1632", 14, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
+	{"CC-21", 27, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"SC-127", 35, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
+	{"AC08", 42, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"SuperHIK8in1", 45, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"STREETFIGTER-GAME4IN1", 49, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"Supervision16in1", 53, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
@@ -104,10 +109,12 @@ static const _unif_board unif_boards[] = {
 	{"8237", 215, NO_UNIF, U8237, DEFAULT, NOEXTRA},
 	{"8237A", 215, NO_UNIF, U8237A, DEFAULT, NOEXTRA},
 	{"N625092", 221, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
+	{"Ghostbusters63in1", 226, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"WAIXING-FW01", 227, NO_UNIF, WAIXING_FW01, DEFAULT, NOEXTRA},
 	{"42in1ResetSwitch", 233, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"70in1", 236, NO_UNIF, BMC70IN1, DEFAULT, NOEXTRA},
 	{"70in1B", 236, NO_UNIF, BMC70IN1B, DEFAULT, NOEXTRA},
+	{"43272", 242, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"603-5052", 238, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"OneBus", 256, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"DANCE", 256, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
@@ -205,21 +212,17 @@ static const _unif_board unif_boards[] = {
 	{"82112C", 540, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"KONAMI-QTAI", 547, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 
-	{"Ghostbusters63in1", NO_INES, 1, DEFAULT, DEFAULT, NOEXTRA},
-	{"43272", NO_INES, 2, DEFAULT, DEFAULT, NOEXTRA},
-	{"AC08", NO_INES, 3, DEFAULT, DEFAULT, NOEXTRA},
-	{"CC-21", NO_INES, 4, DEFAULT, DEFAULT, NOEXTRA},
-	{"BOY", NO_INES, 5, DEFAULT, DEFAULT, NOEXTRA},
+	{"BOY", NO_INES, 1, DEFAULT, DEFAULT, NOEXTRA},
 };
 
 BYTE unif_load_rom(void) {
 	_rom_mem rom;
-	int phase;
+	int phase = 0;
 
 	{
-		FILE *fp;
+		FILE *fp = NULL;
 		BYTE found = TRUE;
-		unsigned int i;
+		unsigned int i = 0;
 		static const uTCHAR rom_ext[6][10] = {
 			uL(".nes\0"),  uL(".NES\0"),
 			uL(".unf\0"),  uL(".UNF\0"),
@@ -256,7 +259,8 @@ BYTE unif_load_rom(void) {
 		rom.size = ftell(fp);
 		fseek(fp, 0L, SEEK_SET);
 
-		if ((rom.data = (BYTE *)malloc(rom.size)) == NULL) {
+		rom.data = (BYTE *)malloc(rom.size);
+		if (rom.data == NULL) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
@@ -286,10 +290,10 @@ BYTE unif_load_rom(void) {
 	}
 
 	// setto i defaults
-	mirroring_H();
 	info.machine[HEADER] = info.machine[DATABASE] = NTSC;
 	info.prg.ram.bat.banks = 0;
 	info.mapper.submapper = DEFAULT;
+	info.mapper.mirroring = MIRRORING_HORIZONTAL;
 	info.mirroring_db = info.id = DEFAULT;
 	info.extra_from_db = 0;
 	info.chr.rom.banks_8k = 0;
@@ -307,8 +311,8 @@ BYTE unif_load_rom(void) {
 			unif.chips.chr = 0;
 
 			if (phase == UNIF_READ) {
-				size_t size;
-				int i;
+				size_t size = 0;
+				int i = 0;
 
 				if (prg_chip_size(0) == 0) {
 					free(rom.data);
@@ -349,10 +353,6 @@ BYTE unif_load_rom(void) {
 
 						map_chr_bank_1k_reset();
 					}
-				}
-
-				if (info.prg.ram.bat.banks) {
-					info.prg.ram.banks_8k_plus = 1;
 				}
 
 				// alloco la PRG Ram
@@ -467,12 +467,45 @@ BYTE unif_load_rom(void) {
 			}
 		}
 
+		emu_save_header_info();
+		nes20db_search();
+		if (info.format == NES_2_0) {
+			nes20_submapper();
+		}
+
 		if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
 			info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
 		}
 
+		if ((info.format != NES_2_0) && !info.prg.ram.banks_8k_plus) {
+			info.prg.ram.banks_8k_plus = 1;
+		}
+
 		if (!info.chr.rom.banks_1k) {
 			mapper.write_vram = TRUE;
+			if (info.chr.ram.banks_8k_plus) {
+				info.chr.rom.banks_8k = info.chr.ram.banks_8k_plus;
+				info.chr.ram.banks_8k_plus = 0;
+			}
+		}
+
+		switch (info.mapper.mirroring) {
+			default:
+			case MIRRORING_HORIZONTAL:
+				mirroring_H();
+				break;
+			case MIRRORING_VERTICAL:
+				mirroring_V();
+				break;
+			case MIRRORING_FOURSCR:
+				mirroring_FSCR();
+				break;
+			case MIRRORING_SINGLE_SCR0:
+				mirroring_SCR0();
+				break;
+			case MIRRORING_SINGLE_SCR1:
+				mirroring_SCR1();
+				break;
 		}
 
 		if (!unif.finded) {
@@ -502,7 +535,7 @@ BYTE unif_NONE(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE unif_MAPR(_rom_mem *rom, BYTE phase) {
-	unsigned int i;
+	unsigned int i = 0;
 	static const char strip[][5] = {
 		"NES-", "UNL-", "HVC-", "BTL-", "BMC-"
 	};
@@ -610,7 +643,7 @@ BYTE unif_PRG(_rom_mem *rom, BYTE phase) {
 		rom->position += unif.chunk.length;
 		return (EXIT_OK);
 	} else {
-		int i;
+		int i = 0;
 
 		unif.chips.prg++;
 		for (i = 0, prg_chip_rom(chip) = prg_rom(); i < chip; i++) {
@@ -637,7 +670,7 @@ BYTE unif_CHR(_rom_mem *rom, BYTE phase) {
 		rom->position += unif.chunk.length;
 		return (EXIT_OK);
 	} else {
-		int i;
+		int i = 0;
 
 		unif.chips.chr++;
 		for (i = 0, chr_chip_rom(chip) = chr_rom(); i < chip; i++) {
@@ -649,7 +682,7 @@ BYTE unif_CHR(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE unif_TVCI(_rom_mem *rom, BYTE phase) {
-	BYTE tv;
+	BYTE cpu_timing = 0;
 
 	if (phase == UNIF_COUNT) {
 		if ((rom->position + unif.chunk.length) > rom->size) {
@@ -663,22 +696,22 @@ BYTE unif_TVCI(_rom_mem *rom, BYTE phase) {
 		return (EXIT_ERROR);
 	}
 
-	rom_mem_memcpy(&tv, rom, unif.chunk.length);
+	rom_mem_memcpy(&cpu_timing, rom, unif.chunk.length);
 
-	switch (tv) {
+	switch (cpu_timing) {
 		default:
 		case 0:
-			info.machine[HEADER] = info.machine[DATABASE] = NTSC;
+			info.machine[HEADER] = NTSC;
 			break;
 		case 1:
-			info.machine[HEADER] = info.machine[DATABASE] = PAL;
+			info.machine[HEADER] = PAL;
 			break;
 	}
 
 	return (EXIT_OK);
 }
 BYTE unif_BATR(_rom_mem *rom, BYTE phase) {
-	BYTE batr;
+	BYTE batr = 0;
 
 	if (phase == UNIF_COUNT) {
 		if ((rom->position + unif.chunk.length) > rom->size) {
@@ -712,22 +745,20 @@ BYTE unif_MIRR(_rom_mem *rom, BYTE phase) {
 	switch (info.mapper.mirroring) {
 		default:
 		case 0:
-			mirroring_H();
+			info.mapper.mirroring = MIRRORING_HORIZONTAL;
 			break;
 		case 1:
-			mirroring_V();
+		case 5:
+			info.mapper.mirroring = MIRRORING_VERTICAL;
 			break;
 		case 2:
-			mirroring_SCR0();
+			info.mapper.mirroring = MIRRORING_SINGLE_SCR0;
 			break;
 		case 3:
-			mirroring_SCR1();
+			info.mapper.mirroring = MIRRORING_SINGLE_SCR1;
 			break;
 		case 4:
-			mirroring_FSCR();
-			break;
-		case 5:
-			mirroring_H();
+			info.mapper.mirroring = MIRRORING_FOURSCR;
 			break;
 	}
 
@@ -754,7 +785,7 @@ BYTE unif_FONT(_rom_mem *rom, BYTE phase) {
 		if ((rom->position + unif.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
 		}
-		chinaersan2.font.size = 64 * 1024;
+		chinaersan2.font.size = (size_t)(64 * 1024);
 		rom->position += unif.chunk.length;
 		return (EXIT_OK);
 	}

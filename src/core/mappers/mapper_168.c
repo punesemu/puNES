@@ -30,6 +30,7 @@ struct _m168 {
 } m168;
 
 void map_init_168(void) {
+	EXTCL_AFTER_MAPPER_INIT(168);
 	EXTCL_CPU_WR_MEM(168);
 	EXTCL_SAVE_MAPPER(168);
 	EXTCL_WR_CHR(168);
@@ -44,7 +45,9 @@ void map_init_168(void) {
 		}
 	}
 
-	map_chr_ram_extra_init(0x2000 * 8);
+	info.chr.ram.banks_8k_plus = 8;
+}
+void extcl_after_mapper_init_168(void) {
 	m168_update_chr();
 }
 void extcl_cpu_wr_mem_168(WORD address, BYTE value) {

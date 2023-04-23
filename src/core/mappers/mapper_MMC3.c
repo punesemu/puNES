@@ -23,20 +23,16 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-#define reload_counter()\
-{\
-	mmc3.irq_counter = mmc3.irq_latch;\
-	/* MMC3 Rev A */\
-	if (!mmc3.irq_counter && mmc3.irq_reload) {\
-		mmc3.save_irq_counter = 1;\
-	}\
-	mmc3.irq_reload = FALSE;\
-}
+void (*MMC3_prg_fix)(BYTE value);
+void (*MMC3_prg_swap)(WORD address, WORD value);
+void (*MMC3_chr_fix)(BYTE value);
+void (*MMC3_chr_swap)(WORD address, WORD value);
+void (*MMC3_mirroring_fix)(void);
 
 _mmc3 mmc3;
-_kt008 kt008;
 
 void map_init_MMC3(void) {
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(MMC3);
 	EXTCL_SAVE_MAPPER(MMC3);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -49,33 +45,17 @@ void map_init_MMC3(void) {
 	mapper.internal_struct_size[0] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&mmc3, 0x00, sizeof(mmc3));
-		memset(&kt008, 0x00, sizeof(kt008));
+		init_MMC3();
 		memset(&irqA12, 0x00, sizeof(irqA12));
 	}
 
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
-
 	switch (info.mapper.submapper) {
-		case NAMCO3413:
-		case NAMCO3414:
-		case NAMCO3415:
-		case NAMCO3416:
-		case NAMCO3417:
-		case NAMCO3451:
-			mirroring_V();
+		default:
+		case DEFAULT:
+			info.mapper.submapper = MMC3_SHARP;
 			break;
-		case MMC3_ALTERNATE:
-			EXTCL_IRQ_A12_CLOCK(MMC3_alternate);
-			break;
-		case KT008:
-			EXTCL_CPU_WR_MEM(KT008);
-			EXTCL_SAVE_MAPPER(KT008);
-			mapper.internal_struct[1] = (BYTE *)&kt008;
-			mapper.internal_struct_size[1] = sizeof(kt008);
-
-			info.mapper.extend_wr = TRUE;
+		case MMC3_NEC:
+			EXTCL_IRQ_A12_CLOCK(MMC3_NEC);
 			break;
 	}
 
@@ -90,148 +70,77 @@ void map_init_MMC3(void) {
 	if (info.id == RADRACER2) {
 		mirroring_FSCR();
 	}
+
+	irqA12.present = TRUE;
+	irqA12_delay = 1;
+}
+void extcl_after_mapper_init_MMC3(void) {
+	MMC3_prg_fix(mmc3.bank_to_update);
+	MMC3_chr_fix(mmc3.bank_to_update);
+	MMC3_mirroring_fix();
 }
 void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 	switch (address & 0xE001) {
-		case 0x8000: {
-			const BYTE chr_rom_cfg_old = mmc3.chr_rom_cfg;
-			const BYTE prg_rom_cfg_old = mmc3.prg_rom_cfg;
-
-			mmc3.bank_to_update = value & 0x07;
-			mmc3.prg_rom_cfg = (value & 0x40) >> 5;
-			mmc3.chr_rom_cfg = (value & 0x80) >> 5;
-			/*
-			 * se il tipo di configurazione della chr cambia,
-			 * devo swappare i primi 4 banchi con i secondi
-			 * quattro.
-			 */
-			if (mmc3.chr_rom_cfg != chr_rom_cfg_old) {
-				swap_chr_bank_1k(0, 4)
-				swap_chr_bank_1k(1, 5)
-				swap_chr_bank_1k(2, 6)
-				swap_chr_bank_1k(3, 7)
+		case 0x8000:
+			if ((value & 0x40) != (mmc3.bank_to_update & 0x40)) {
+				MMC3_prg_fix(value);
 			}
-			if (mmc3.prg_rom_cfg != prg_rom_cfg_old) {
-				WORD p0 = mapper.rom_map_to[0];
-				WORD p2 = mapper.rom_map_to[2];
-
-				mapper.rom_map_to[0] = p2;
-				mapper.rom_map_to[2] = p0;
-				/*
-				 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco
-				 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco
-				 */
-				map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, info.prg.rom.max.banks_8k_before_last);
-				map_prg_rom_8k_update();
+			if ((value & 0x80) != (mmc3.bank_to_update & 0x80)) {
+				MMC3_chr_fix(value);
 			}
-			break;
-		}
+			mmc3.bank_to_update = value;
+			return;
 		case 0x8001: {
-			switch (mmc3.bank_to_update) {
+			WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
+
+			mmc3.reg[mmc3.bank_to_update & 0x07] = value;
+
+			switch (mmc3.bank_to_update & 0x07) {
 				case 0:
-					/*
-					 * chr_rom_cfg 0x00 : chr_bank_1k 0 e 1
-					 * chr_rom_cfg 0x04 : chr_bank_1k 4 e 5
-					 */
-					/*
-					 * nel caso value sia dispari, visto che devo
-					 * trattare 2Kb, devo considerare come primo
-					 * Kb quello pari e come secondo il dispari.
-					 * Per questo motivo faccio l'AND con 0xFE.
-					 */
-					control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)
-					chr.bank_1k[mmc3.chr_rom_cfg] = chr_pnt(value << 10);
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = chr_pnt((value + 1) << 10);
-					break;
+					MMC3_chr_swap(cbase ^ 0x0000, value & (~1));
+					MMC3_chr_swap(cbase ^ 0x0400, value | 1);
+					return;
 				case 1:
-					/*
-					 * chr_rom_cfg 0x00 : chr_bank_1k 2 e 3
-					 * chr_rom_cfg 0x04 : chr_bank_1k 6 e 7
-					 */
-					/*
-					 * nel caso value sia dispari, visto che devo
-					 * trattare 2Kb, devo considerare come primo
-					 * Kb quello pari e come secondo il dispari.
-					 * Per questo motivo faccio l'AND con 0xFE.
-					 */
-					control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = chr_pnt(value << 10);
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = chr_pnt((value + 1) << 10);
-					break;
+					MMC3_chr_swap(cbase ^ 0x0800, value & (~1));
+					MMC3_chr_swap(cbase ^ 0x0C00, value | 1);
+					return;
 				case 2:
-					/*
-					 * chr_rom_cfg 0x00 : chr_bank_1k 4
-					 * chr_rom_cfg 0x04 : chr_bank_1k 0
-					 */
-					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = chr_pnt(value << 10);
-					break;
+					MMC3_chr_swap(cbase ^ 0x1000, value);
+					return;
 				case 3:
-					/*
-					 * chr_rom_cfg 0x00 : chr_bank_1k 5
-					 * chr_rom_cfg 0x04 : chr_bank_1k 1
-					 */
-					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = chr_pnt(value << 10);
-					break;
+					MMC3_chr_swap(cbase ^ 0x1400, value);
+					return;
 				case 4:
-					/*
-					 * chr_rom_cfg 0x00 : chr_bank_1k 6
-					 * chr_rom_cfg 0x04 : chr_bank_1k 2
-					 */
-					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = chr_pnt(value << 10);
-					break;
+					MMC3_chr_swap(cbase ^ 0x1800, value);
+					return;
 				case 5:
-					/*
-					 * chr_rom_cfg 0x00 : chr_bank_1k 7
-					 * chr_rom_cfg 0x04 : chr_bank_1k 3
-					 */
-					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = chr_pnt(value << 10);
-					break;
+					MMC3_chr_swap(cbase ^ 0x1C00, value);
+					return;
 				case 6:
-					/*
-					 * prg_rom_cfg 0x00 : $8000 - $9FFF swappable
-					 * prg_rom_cfg 0x02 : $C000 - $DFFF swappable
-					 */
-					control_bank(info.prg.rom.max.banks_8k)
-					map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);
-					map_prg_rom_8k_update();
-					break;
+					if (mmc3.bank_to_update & 0x40) {
+						MMC3_prg_swap(0xC000, value);
+					} else {
+						MMC3_prg_swap(0x8000, value);
+					}
+					return;
 				case 7:
-					/* $A000 - $BFFF swappable */
-					control_bank(info.prg.rom.max.banks_8k)
-					map_prg_rom_8k(1, 1, value);
-					map_prg_rom_8k_update();
-					break;
+					MMC3_prg_swap(0xA000, value);
+					return;
 			}
-			break;
+			return;
 		}
 		case 0xA000:
-			/*
-			 * se e' abilitato il 4 schermi, il cambio
-			 * di mirroring deve essere ignorato.
-			 */
-			if (mapper.mirroring == MIRRORING_FOURSCR) {
-				break;
-			}
-			if (value & 0x01) {
-				mirroring_H();
-			} else {
-				mirroring_V();
-			}
+			mmc3.mirroring = value;
+			MMC3_mirroring_fix();
 			break;
 		case 0xA001: {
-			if (info.mapper.submapper != MMC6) {
-				/*
-				 * 7  bit  0
-				 * ---- ----
-				 * RWxx xxxx
-				 * ||
-				 * |+-------- Write protection (0: allow writes; 1: deny writes)
-				 * +--------- Chip enable (0: disable chip; 1: enable chip)
-				 */
+			if (info.mapper.submapper != MMC3_MMC6) {
+				// 7  bit  0
+				// ---- ----
+				// RWxx xxxx
+				// ||
+				// |+-------- Write protection (0: allow writes; 1: deny writes)
+				// +--------- Chip enable (0: disable chip; 1: enable chip)
 				switch ((value & 0xC0) >> 6) {
 					case 0x00:
 					case 0x01:
@@ -252,13 +161,11 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 			irqA12.latch = value;
 			break;
 		case 0xC001:
-			/*
-			 * in "Downtown Special - Kunio-kun no Jidaigeki Dayo Zenin Shuugou! (J)"
-			 * avviene uno sfarfallio dell'ultima riga dello screen perche' avviene
-			 * una scrittura in questo registro nel momento esatto in cui avviene un
-			 * clock irqA12_SB() facendo gia' caricare il counter con il nuovo latch
-			 * cosa che invece dovrebbe avvenire nel clock successivo.
-			 */
+			// in "Downtown Special - Kunio-kun no Jidaigeki Dayo Zenin Shuugou! (J)"
+			// avviene uno sfarfallio dell'ultima riga dello screen perche' avviene
+			// una scrittura in questo registro nel momento esatto in cui avviene un
+			// clock irqA12_SB() facendo gia' caricare il counter con il nuovo latch
+			// cosa che invece dovrebbe avvenire nel clock successivo.
 			irqA12.race.C001 = TRUE;
 			irqA12.race.reload = irqA12.reload;
 			irqA12.race.counter = irqA12.counter;
@@ -268,7 +175,7 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 			break;
 		case 0xE000:
 			irqA12.enable = FALSE;
-			/* disabilito l'IRQ dell'MMC3 */
+			// disabilito l'IRQ dell'MMC3
 			irq.high &= ~EXT_IRQ;
 			break;
 		case 0xE001:
@@ -277,10 +184,9 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_MMC3(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, mmc3.prg_ram_protect);
 	save_slot_ele(mode, slot, mmc3.bank_to_update);
-	save_slot_ele(mode, slot, mmc3.prg_rom_cfg);
-	save_slot_ele(mode, slot, mmc3.chr_rom_cfg);
+	save_slot_ele(mode, slot, mmc3.reg);
+	save_slot_ele(mode, slot, mmc3.mirroring);
 
 	return (EXIT_OK);
 }
@@ -306,7 +212,7 @@ void extcl_ppu_320_to_34x_MMC3(void) {
 void extcl_update_r2006_MMC3(WORD new_r2006, WORD old_r2006) {
 	irqA12_IO(new_r2006, old_r2006);
 }
-void extcl_irq_A12_clock_MMC3_alternate(void) {
+void extcl_irq_A12_clock_MMC3_NEC(void) {
 	if (!irqA12.counter) {
 		irqA12.counter = irqA12.latch;
 		irqA12.reload = FALSE;
@@ -318,34 +224,65 @@ void extcl_irq_A12_clock_MMC3_alternate(void) {
 	}
 }
 
-void extcl_cpu_wr_mem_KT008(WORD address, BYTE value) {
-	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		if ((address & 0x0003) == 0x0000) {
-			kt008.value = value;
-		}
-		return;
-	}
-	if (address < 0x8000) {
-		return;
-	}
-	if ((address & 0xE001) == 0x8001) {
-		switch (mmc3.bank_to_update) {
-			default:
-				extcl_cpu_wr_mem_MMC3(address, value);
-				break;
-			case 6:
-			case 7:
-				value = (value & 0x7F) | ((kt008.value & 0x04) << 4);
-				extcl_cpu_wr_mem_MMC3(address, value);
-				break;
-		}
-		return;
-	}
-	extcl_cpu_wr_mem_MMC3(address, value);
-}
-BYTE extcl_save_mapper_KT008(BYTE mode, BYTE slot, FILE *fp) {
-	extcl_save_mapper_MMC3(mode, slot, fp);
-	save_slot_ele(mode, slot, kt008.value);
+void init_MMC3(void) {
+	memset(&mmc3, 0x00, sizeof(mmc3));
 
-	return (EXIT_OK);
+	mmc3.reg[0] = 0;
+	mmc3.reg[1] = 2;
+	mmc3.reg[2] = 4;
+	mmc3.reg[3] = 5;
+	mmc3.reg[4] = 6;
+	mmc3.reg[5] = 7;
+	mmc3.reg[6] = 0;
+	mmc3.reg[7] = 1;
+
+	MMC3_prg_fix = prg_fix_MMC3;
+	MMC3_prg_swap = prg_swap_MMC3;
+	MMC3_chr_fix = chr_fix_MMC3;
+	MMC3_chr_swap = chr_swap_MMC3;
+	MMC3_mirroring_fix = mirroring_fix_MMC3;
+}
+void prg_fix_MMC3(BYTE value) {
+	if (value & 0x40) {
+		MMC3_prg_swap(0x8000, ~1);
+		MMC3_prg_swap(0xC000, mmc3.reg[6]);
+	} else {
+		MMC3_prg_swap(0x8000, mmc3.reg[6]);
+		MMC3_prg_swap(0xC000, ~1);
+	}
+	MMC3_prg_swap(0xA000, mmc3.reg[7]);
+	MMC3_prg_swap(0xE000, ~0);
+}
+void prg_swap_MMC3(WORD address, WORD value) {
+	control_bank(info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
+	map_prg_rom_8k_update();
+}
+void chr_fix_MMC3(BYTE value) {
+	WORD cbase = (value & 0x80) << 5;
+
+	MMC3_chr_swap(cbase ^ 0x0000, mmc3.reg[0] & (~1));
+	MMC3_chr_swap(cbase ^ 0x0400, mmc3.reg[0] |   1);
+	MMC3_chr_swap(cbase ^ 0x0800, mmc3.reg[1] & (~1));
+	MMC3_chr_swap(cbase ^ 0x0C00, mmc3.reg[1] |   1);
+	MMC3_chr_swap(cbase ^ 0x1000, mmc3.reg[2]);
+	MMC3_chr_swap(cbase ^ 0x1400, mmc3.reg[3]);
+	MMC3_chr_swap(cbase ^ 0x1800, mmc3.reg[4]);
+	MMC3_chr_swap(cbase ^ 0x1C00, mmc3.reg[5]);
+}
+void chr_swap_MMC3(WORD address, WORD value) {
+	control_bank(info.chr.rom.max.banks_1k)
+	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+}
+void mirroring_fix_MMC3(void) {
+	// se e' abilitato il 4 schermi, il cambio
+	// di mirroring deve essere ignorato.
+	if (mapper.mirroring == MIRRORING_FOURSCR) {
+		return;
+	}
+	if (mmc3.mirroring & 0x01) {
+		mirroring_H();
+	} else {
+		mirroring_V();
+	}
 }

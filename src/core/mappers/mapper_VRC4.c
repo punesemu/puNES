@@ -206,9 +206,7 @@ void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_VRC4(BYTE mode, BYTE slot, FILE *fp) {
-	if (save_slot.version >= 14) {
-		save_slot_ele(mode, slot, vrc4.chr_rom_high_bank);
-	}
+	save_slot_ele(mode, slot, vrc4.chr_rom_high_bank);
 	save_slot_ele(mode, slot, vrc4.chr_rom_bank);
 	save_slot_ele(mode, slot, vrc4.swap_mode);
 	save_slot_ele(mode, slot, vrc4.irq_enabled);

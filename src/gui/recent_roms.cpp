@@ -212,7 +212,7 @@ static void recent_roms_reset_list(void) {
 static uTCHAR *recent_roms_file(void) {
 	static uTCHAR file[LENGTH_FILE_NAME_LONG];
 
-	umemset(file, 0x00, LENGTH_FILE_NAME_LONG);
-	usnprintf(file, usizeof(file), uL("" uPs("") RECENTFILENAME), gui_config_folder());
-	return (file);
+	umemset(&file[0], 0x00, LENGTH_FILE_NAME_LONG);
+	usnprintf(&file[0], usizeof(file), uL("" uPs("") RECENTFILENAME), gui_config_folder());
+	return (&file[0]);
 }

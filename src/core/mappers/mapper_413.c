@@ -56,8 +56,8 @@ void map_init_413(void) {
 	mapper.internal_struct[1] = (BYTE *)&irqA12;
 	mapper.internal_struct_size[1] = sizeof(irqA12);
 
-	memset(&m413, 0x00, sizeof(m413));
 	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&m413, 0x00, sizeof(m413));
 
 	info.mapper.extend_rd = TRUE;
 

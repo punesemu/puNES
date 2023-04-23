@@ -49,7 +49,7 @@ void wdgState::retranslateUi(wdgState *wdgState) {
 }
 
 void wdgState::update_widget(void) {
-	pushButton_load->setEnabled((tas.type == NOTAS) & save_slot.state[save_slot.slot]);
+	pushButton_load->setEnabled((tas.type == NOTAS) & save_slot.slot[save_slot.slot_in_use].state);
 	update();
 }
 
@@ -92,7 +92,7 @@ bool stateBar::eventFilter(QObject *obj, QEvent *event) {
 	} else if (event->type() == QEvent::MouseButtonPress) {
 		DBWORD slot = slot_at(((QMouseEvent *)event)->pos());
 
-		if (slot != save_slot.slot) {
+		if (slot != save_slot.slot_in_use) {
 			gui_state_save_slot_set(slot, TRUE);
 		}
 	}
@@ -119,7 +119,7 @@ void stateBar::paintEvent(UNUSED(QPaintEvent *event)) {
 	for (unsigned int i = 0; i < SAVE_SLOTS; i++) {
 		rect.setRect(x + (padding / 2), y, w - padding, h);
 
-		if (save_slot.state[i]) {
+		if (save_slot.slot[i].state) {
 			painter.fillRect(rect, Qt::green);
 			pen.setColor(Qt::black);
 		} else {
@@ -131,10 +131,10 @@ void stateBar::paintEvent(UNUSED(QPaintEvent *event)) {
 			}
 		}
 
-		if (save_slot.slot == i) {
+		if (save_slot.slot_in_use == i) {
 			painter.save();
 			painter.setOpacity(0.6);
-			if (save_slot.state[i]) {
+			if (save_slot.slot[i].state) {
 				painter.fillRect(rect, Qt::darkGreen);
 				pen.setColor(Qt::white);
 			} else {

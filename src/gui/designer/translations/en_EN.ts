@@ -1723,6 +1723,11 @@
         <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>[red]error[normal] on write save state</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>recStatusBar</name>

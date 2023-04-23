@@ -30,16 +30,13 @@ INLINE static void prg_fix_351(void);
 INLINE static void chr_fix_351(void);
 
 INLINE static void switch_mode(void);
-INLINE static void cpu_wr_mmc3(WORD address, BYTE value);
 INLINE static WORD prg_base(void);
 INLINE static WORD prg_mask(void);
 INLINE static WORD chr_base(void);
 INLINE static WORD chr_mask(void);
 
-INLINE static void prg_fix_mmc3(void);
-INLINE static void prg_swap_mmc3(WORD address, WORD value);
-INLINE static void chr_fix_mmc3(void);
-INLINE static void chr_swap_mmc3(WORD address, WORD value);
+void prg_swap_351_mmc3(WORD address, WORD value);
+void chr_swap_351_mmc3(WORD address, WORD value);
 
 INLINE static void cpu_wr_mem_vrc4(WORD address, BYTE value);
 INLINE static void prg_fix_vrc4(void);
@@ -53,8 +50,6 @@ INLINE static void mirroring_fix_mmc1(void);
 struct _m351 {
 	BYTE mapper;
 	WORD reg[4];
-	// MMC3
-	WORD mmc3[8];
 	// VRC4
 	struct _m351_vrc4 {
 		BYTE prg[3];
@@ -86,23 +81,17 @@ void map_init_351(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc1);
 
 	memset(&mmc1, 0x00, sizeof(mmc1));
-	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m351, 0x00, sizeof(m351));
+
+	init_MMC3();
+	MMC3_prg_swap = prg_swap_351_mmc3;
+	MMC3_chr_swap = chr_swap_351_mmc3;
 
 	mmc1.ctrl = 0x0C;
 	mmc1.prg_mode = 3;
 
-	m351.mmc3[0] = 0;
-	m351.mmc3[1] = 2;
-	m351.mmc3[2] = 4;
-	m351.mmc3[3] = 5;
-	m351.mmc3[4] = 6;
-	m351.mmc3[5] = 7;
-	m351.mmc3[6] = 0;
-	m351.mmc3[7] = 1;
-
-	map_chr_ram_extra_init(0x2000);
+	info.chr.ram.banks_8k_plus = 1;
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		// Unusually, in CHR-RAM mode (R=1), CHR-ROM becomes the second half of an enlarged PRG address space that
@@ -142,6 +131,8 @@ void extcl_cpu_wr_mem_351(WORD address, BYTE value) {
 			case 2:
 				m351.reg[reg] = value;
 				break;
+			default:
+				break;
 		}
 		prg_fix_351();
 		chr_fix_351();
@@ -149,7 +140,7 @@ void extcl_cpu_wr_mem_351(WORD address, BYTE value) {
 	}
 	if (address >= 0x8000) {
 		if (m351.mapper == M351_MMC3) {
-			cpu_wr_mmc3(address, value);
+			extcl_cpu_wr_mem_MMC3(address, value);
 		} else if (m351.mapper == M351_VRC4) {
 			cpu_wr_mem_vrc4(address, value);
 		} else if (m351.mapper == M351_MMC1) {
@@ -160,7 +151,6 @@ void extcl_cpu_wr_mem_351(WORD address, BYTE value) {
 BYTE extcl_save_mapper_351(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m351.mapper);
 	save_slot_ele(mode, slot, m351.reg);
-	save_slot_ele(mode, slot, m351.mmc3);
 	save_slot_ele(mode, slot, m351.vrc4.prg);
 	save_slot_ele(mode, slot, m351.vrc4.chr);
 	save_slot_ele(mode, slot, m351.vrc4.swap);
@@ -171,9 +161,9 @@ BYTE extcl_save_mapper_351(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_wr_chr_351(WORD address, BYTE value) {
-	BYTE slot = address >> 10;
+	const BYTE slot = address >> 10;
 
-	if ((chr.bank_1k[slot] >= chr.extra.data) && (chr.bank_1k[slot] < (chr.extra.data + chr.extra.size))) {
+	if (map_chr_ram_slot_in_range(slot)) {
 		chr.bank_1k[slot][address & 0x3FF] = value;
 	}
 }
@@ -211,7 +201,7 @@ void extcl_update_r2006_351(WORD new_r2006, WORD old_r2006) {
 }
 
 INLINE static void prg_fix_351(void) {
-	WORD bank;
+	WORD bank = 0;
 
 	if (m351.reg[2] & 0x10) {
 		if (m351.reg[2] & 0x04) {
@@ -227,7 +217,7 @@ INLINE static void prg_fix_351(void) {
 		map_prg_rom_8k_update();
 	} else {
 		if (m351.mapper == M351_MMC3) {
-			prg_fix_mmc3();
+			MMC3_prg_fix(mmc3.bank_to_update);
 		} else if (m351.mapper == M351_VRC4) {
 			prg_fix_vrc4();
 		} else if (m351.mapper == M351_MMC1) {
@@ -236,7 +226,7 @@ INLINE static void prg_fix_351(void) {
 	}
 }
 INLINE static void chr_fix_351(void) {
-	DBWORD bank;
+	DBWORD bank = 0;
 
 	if (m351.reg[2] & 0x01) {
 		chr.bank_1k[0] = &chr.extra.data[0 | 0x0000];
@@ -261,7 +251,7 @@ INLINE static void chr_fix_351(void) {
 		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 	} else {
 		if (m351.mapper == M351_MMC3) {
-			chr_fix_mmc3();
+			MMC3_chr_fix(mmc3.bank_to_update);
 		} else if (m351.mapper == M351_VRC4) {
 			chr_fix_vrc4();
 		} else if (m351.mapper == M351_MMC1) {
@@ -299,54 +289,7 @@ INLINE static WORD chr_mask(void) {
 	return ((m351.reg[2] & 0x10) ? 0x1F : (m351.reg[2] & 0x20 ? 0x7F : 0xFF));
 }
 
-INLINE static void cpu_wr_mmc3(WORD address, BYTE value) {
-	switch (address & 0xE001) {
-		case 0x8000: {
-			BYTE old = mmc3.bank_to_update;
-
-			mmc3.bank_to_update = value;
-
-			if ((value & 0x40) != (old & 0x40)) {
-				prg_fix_351();
-			}
-			if ((value & 0x80) != (old & 0x80)) {
-				chr_fix_351();
-			}
-			return;
-		}
-		case 0x8001: {
-			m351.mmc3[mmc3.bank_to_update & 0x07] = value;
-			switch (mmc3.bank_to_update & 0x07) {
-				case 0:
-				case 1:
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-					chr_fix_351();
-					return;
-				case 6:
-				case 7:
-					prg_fix_351();
-					return;
-			}
-			return;
-		}
-	}
-	extcl_cpu_wr_mem_MMC3(address, value);
-}
-INLINE static void prg_fix_mmc3(void) {
-	if (mmc3.bank_to_update & 0x40) {
-		prg_swap_mmc3(0x8000, ~1);
-		prg_swap_mmc3(0xC000, m351.mmc3[6]);
-	} else {
-		prg_swap_mmc3(0x8000, m351.mmc3[6]);
-		prg_swap_mmc3(0xC000, ~1);
-	}
-	prg_swap_mmc3(0xA000, m351.mmc3[7]);
-	prg_swap_mmc3(0xE000, ~0);
-}
-INLINE static void prg_swap_mmc3(WORD address, WORD value) {
+void prg_swap_351_mmc3(WORD address, WORD value) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 
@@ -355,19 +298,7 @@ INLINE static void prg_swap_mmc3(WORD address, WORD value) {
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_mmc3(void) {
-	WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
-
-	chr_swap_mmc3(cbase ^ 0x0000, m351.mmc3[0] & (~1));
-	chr_swap_mmc3(cbase ^ 0x0400, m351.mmc3[0] | 1);
-	chr_swap_mmc3(cbase ^ 0x0800, m351.mmc3[1] & (~1));
-	chr_swap_mmc3(cbase ^ 0x0C00, m351.mmc3[1] | 1);
-	chr_swap_mmc3(cbase ^ 0x1000, m351.mmc3[2]);
-	chr_swap_mmc3(cbase ^ 0x1400, m351.mmc3[3]);
-	chr_swap_mmc3(cbase ^ 0x1800, m351.mmc3[4]);
-	chr_swap_mmc3(cbase ^ 0x1C00, m351.mmc3[5]);
-}
-INLINE static void chr_swap_mmc3(WORD address, WORD value) {
+void chr_swap_351_mmc3(WORD address, WORD value) {
 	WORD base = chr_base();
 	WORD mask = chr_mask();
 
@@ -377,7 +308,7 @@ INLINE static void chr_swap_mmc3(WORD address, WORD value) {
 }
 
 INLINE static void cpu_wr_mem_vrc4(WORD address, BYTE value) {
-	WORD vrc4_address;
+	WORD vrc4_address = 0;
 
 	if (address & 0x0800) {
 		address = (address & 0xFFF3) | ((address & 0x0004) << 1) | ((address & 0x0008) >> 1);
@@ -431,7 +362,7 @@ INLINE static void cpu_wr_mem_vrc4(WORD address, BYTE value) {
 INLINE static void prg_fix_vrc4(void) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
-	WORD bank;
+	WORD bank = 0;
 
 	bank = (base & ~mask) | (m351.vrc4.prg[0] & mask);
 	_control_bank(bank, info.prg.rom.max.banks_8k)
@@ -454,7 +385,7 @@ INLINE static void prg_fix_vrc4(void) {
 INLINE static void chr_fix_vrc4(void) {
 	WORD base = chr_base();
 	WORD mask = chr_mask();
-	DBWORD bank;
+	DBWORD bank = 0;
 
 	bank = (base & ~mask) | (m351.vrc4.chr[0] & mask);
 	_control_bank(bank, info.chr.rom.max.banks_1k)
@@ -531,6 +462,8 @@ INLINE static void cpu_wr_mem_mmc1(WORD address, BYTE value) {
 				cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
 				prg_fix_351();
 				break;
+			default:
+				break;
 		}
 		mmc1.pos = mmc1.reg = 0;
 	}
@@ -538,7 +471,7 @@ INLINE static void cpu_wr_mem_mmc1(WORD address, BYTE value) {
 INLINE static void prg_fix_mmc1(void) {
 	WORD base = prg_base() >> 1;
 	WORD mask = prg_mask() >> 1;
-	WORD bank;
+	WORD bank = 0;
 
 	switch (mmc1.prg_mode) {
 		case 0:
@@ -571,7 +504,7 @@ INLINE static void prg_fix_mmc1(void) {
 INLINE static void chr_fix_mmc1(void) {
 	WORD base = chr_base() >> 2;
 	WORD mask = chr_mask() >> 2;
-	DBWORD bank;
+	DBWORD bank = 0;
 
 	bank = (base & ~mask) | (mmc1.chr0 & mask);
 	_control_bank(bank, info.chr.rom.max.banks_4k)

@@ -30,5 +30,6 @@ typedef struct _rom_mem {
 
 void rom_mem_memcpy(void *dst, _rom_mem *rom, size_t increment);
 BYTE rom_mem_ctrl_memcpy(void *dst, _rom_mem *rom, size_t increment);
+BYTE rom_mem_ctrl_memcpy_truncated(void *dst, _rom_mem *rom, size_t increment);
 
 #endif /* ROM_MEM_H_ */
