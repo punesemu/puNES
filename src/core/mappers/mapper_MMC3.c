@@ -23,10 +23,11 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void (*MMC3_prg_fix)(BYTE value);
+void (*MMC3_prg_fix)(void);
 void (*MMC3_prg_swap)(WORD address, WORD value);
-void (*MMC3_chr_fix)(BYTE value);
+void (*MMC3_chr_fix)(void);
 void (*MMC3_chr_swap)(WORD address, WORD value);
+void (*MMC3_wram_fix)(void);
 void (*MMC3_mirroring_fix)(void);
 
 _mmc3 mmc3;
@@ -75,21 +76,26 @@ void map_init_MMC3(void) {
 	irqA12_delay = 1;
 }
 void extcl_after_mapper_init_MMC3(void) {
-	MMC3_prg_fix(mmc3.bank_to_update);
-	MMC3_chr_fix(mmc3.bank_to_update);
+	MMC3_prg_fix();
+	MMC3_chr_fix();
+	MMC3_wram_fix();
 	MMC3_mirroring_fix();
 }
 void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 	switch (address & 0xE001) {
-		case 0x8000:
-			if ((value & 0x40) != (mmc3.bank_to_update & 0x40)) {
-				MMC3_prg_fix(value);
-			}
-			if ((value & 0x80) != (mmc3.bank_to_update & 0x80)) {
-				MMC3_chr_fix(value);
-			}
+		case 0x8000: {
+			const BYTE btu = mmc3.bank_to_update;
+
 			mmc3.bank_to_update = value;
+
+			if ((value & 0x40) != (btu & 0x40)) {
+				MMC3_prg_fix();
+			}
+			if ((value & 0x80) != (btu & 0x80)) {
+				MMC3_chr_fix();
+			}
 			return;
+		}
 		case 0x8001: {
 			WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
 
@@ -133,30 +139,10 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 			mmc3.mirroring = value;
 			MMC3_mirroring_fix();
 			break;
-		case 0xA001: {
-			if (info.mapper.submapper != MMC3_MMC6) {
-				// 7  bit  0
-				// ---- ----
-				// RWxx xxxx
-				// ||
-				// |+-------- Write protection (0: allow writes; 1: deny writes)
-				// +--------- Chip enable (0: disable chip; 1: enable chip)
-				switch ((value & 0xC0) >> 6) {
-					case 0x00:
-					case 0x01:
-						cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = FALSE;
-						break;
-					case 0x02:
-						cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = TRUE;
-						break;
-					case 0x03:
-						cpu.prg_ram_rd_active = TRUE;
-						cpu.prg_ram_wr_active = FALSE;
-						break;
-				}
-			}
+		case 0xA001:
+			mmc3.wram_protect = value;
+			MMC3_wram_fix();
 			break;
-		}
 		case 0xC000:
 			irqA12.latch = value;
 			break;
@@ -187,6 +173,7 @@ BYTE extcl_save_mapper_MMC3(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, mmc3.bank_to_update);
 	save_slot_ele(mode, slot, mmc3.reg);
 	save_slot_ele(mode, slot, mmc3.mirroring);
+	save_slot_ele(mode, slot, mmc3.wram_protect);
 
 	return (EXIT_OK);
 }
@@ -240,10 +227,11 @@ void init_MMC3(void) {
 	MMC3_prg_swap = prg_swap_MMC3;
 	MMC3_chr_fix = chr_fix_MMC3;
 	MMC3_chr_swap = chr_swap_MMC3;
+	MMC3_wram_fix = wram_fix_MMC3;
 	MMC3_mirroring_fix = mirroring_fix_MMC3;
 }
-void prg_fix_MMC3(BYTE value) {
-	if (value & 0x40) {
+void prg_fix_MMC3(void) {
+	if (mmc3.bank_to_update & 0x40) {
 		MMC3_prg_swap(0x8000, ~1);
 		MMC3_prg_swap(0xC000, mmc3.reg[6]);
 	} else {
@@ -258,8 +246,8 @@ void prg_swap_MMC3(WORD address, WORD value) {
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-void chr_fix_MMC3(BYTE value) {
-	WORD cbase = (value & 0x80) << 5;
+void chr_fix_MMC3(void) {
+	WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
 
 	MMC3_chr_swap(cbase ^ 0x0000, mmc3.reg[0] & (~1));
 	MMC3_chr_swap(cbase ^ 0x0400, mmc3.reg[0] |   1);
@@ -273,6 +261,29 @@ void chr_fix_MMC3(BYTE value) {
 void chr_swap_MMC3(WORD address, WORD value) {
 	control_bank(info.chr.rom.max.banks_1k)
 	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+}
+void wram_fix_MMC3(void) {
+	if (info.mapper.submapper != MMC3_MMC6) {
+		// 7  bit  0
+		// ---- ----
+		// RWxx xxxx
+		// ||
+		// |+-------- Write protection (0: allow writes; 1: deny writes)
+		// +--------- Chip enable (0: disable chip; 1: enable chip)
+		switch ((mmc3.wram_protect & 0xC0) >> 6) {
+			case 0x00:
+			case 0x01:
+				cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = FALSE;
+				break;
+			case 0x02:
+				cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = TRUE;
+				break;
+			case 0x03:
+				cpu.prg_ram_rd_active = TRUE;
+				cpu.prg_ram_wr_active = FALSE;
+				break;
+		}
+	}
 }
 void mirroring_fix_MMC3(void) {
 	// se e' abilitato il 4 schermi, il cambio

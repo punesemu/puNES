@@ -66,8 +66,8 @@ void map_init_249(void) {
 void extcl_cpu_wr_mem_249(WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		m249.reg = value;
-		MMC3_chr_fix(mmc3.bank_to_update);
-		MMC3_prg_fix(mmc3.bank_to_update);
+		MMC3_chr_fix();
+		MMC3_prg_fix();
 		return;
 	}
 	if (address >= 0x8000) {

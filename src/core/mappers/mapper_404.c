@@ -21,18 +21,15 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_404(void);
-INLINE static void chr_fix_404(void);
+void prg_swap_404(WORD address, WORD value);
+void chr_swap_404(WORD address, WORD value);
 
 struct _m404 {
 	BYTE reg;
 } m404;
 
 void map_init_404(void) {
-	info.mapper.submapper = MAP404;
-	map_init_MMC1();
-
-	EXTCL_AFTER_MAPPER_INIT(404);
+	EXTCL_AFTER_MAPPER_INIT(MMC1);
 	EXTCL_CPU_WR_MEM(404);
 	EXTCL_SAVE_MAPPER(404);
 	mapper.internal_struct[0] = (BYTE *)&m404;
@@ -42,39 +39,23 @@ void map_init_404(void) {
 
 	memset(&m404, 0x00, sizeof(m404));
 
-	mmc1.prg_mask = 0x0F;
-	mmc1.prg_upper = 0;
-	mmc1.chr_upper = 0;
+	init_MMC1(MMC1A);
+	MMC1_prg_swap = prg_swap_404;
+	MMC1_chr_swap = chr_swap_404;
 
 	info.mapper.extend_wr = TRUE;
 }
-void extcl_after_mapper_init_404(void) {
-	prg_fix_404();
-	chr_fix_404();
-}
 void extcl_cpu_wr_mem_404(WORD address, BYTE value) {
-	switch (address & 0xF000) {
-		case 0x6000:
-		case 0x7000:
-			if (!(m404.reg & 0x80)) {
-				m404.reg = value;
-				mmc1.prg_mask = 0x0F >> ((m404.reg & 0x40) >> 6);
-				mmc1.prg_upper = ((m404.reg & 0x0F) << 3) & ~mmc1.prg_mask;
-				mmc1.chr_upper = ((m404.reg & 0x0F) << 5);
-				prg_fix_404();
-				chr_fix_404();
-			}
-			break;
-		case 0x8000:
-		case 0x9000:
-		case 0xA000:
-		case 0xB000:
-		case 0xC000:
-		case 0xD000:
-		case 0xE000:
-		case 0xF000:
-			extcl_cpu_wr_mem_MMC1(address, value);
-			break;
+	if ((address >= 0x6000) && (address <= 0x7FFF)) {
+		if (!(m404.reg & 0x80)) {
+			m404.reg = value;
+			MMC1_prg_fix();
+			MMC1_chr_fix();
+		}
+		return;
+	}
+	if (address >= 0x8000) {
+		extcl_cpu_wr_mem_MMC1(address, value);
 	}
 }
 BYTE extcl_save_mapper_404(BYTE mode, BYTE slot, FILE *fp) {
@@ -84,31 +65,12 @@ BYTE extcl_save_mapper_404(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-INLINE static void prg_fix_404(void) {
-	WORD bank;
+void prg_swap_404(WORD address, WORD value) {
+	WORD base = m404.reg << 3;
+	WORD mask = 0x0F >> ((m404.reg & 0x40) >> 6);
 
-	bank = mmc1.prg_upper | (mmc1.prg0 & mmc1.prg_mask);
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-
-	bank = mmc1.prg_upper | mmc1.prg_mask;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank);
-
-	map_prg_rom_8k_update();
+	prg_swap_MMC1(address, (base | (value & mask)));
 }
-INLINE static void chr_fix_404(void) {
-	DBWORD bank;
-
-	bank = mmc1.chr_upper & 0x1F;
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+void chr_swap_404(WORD address, WORD value) {
+	chr_swap_MMC1(address, ((m404.reg << 5) | (value & 0x1F)));
 }

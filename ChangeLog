@@ -20,6 +20,7 @@ Changelog:
   if you want to use a more updated version than the one distributed by the emulator, just copy it either in the executable directory or in the working directory of the emulator, which can also be opened from the "File -> Open working directory" menu.
 - Rewritten WRAM management.
 - Rewritten the MMC3 mapper with all its derivatives.
+- Rewritten the MMC1 mapper with all its derivatives..
 - Rewritten the format and management of save states.
   WARNING save states of version 0.110 or earlier are no longer compatible.
 

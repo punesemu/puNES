@@ -108,15 +108,15 @@ void extcl_cpu_wr_mem_134(WORD address, BYTE value) {
 				case 0:
 					if (!(m134.reg[0] & 0x80)) {
 						m134.reg[0] = value;
-						MMC3_prg_fix(mmc3.bank_to_update);
-						MMC3_chr_fix(mmc3.bank_to_update);
+						MMC3_prg_fix();
+						MMC3_chr_fix();
 					}
 					break;
 				case 1:
 					if (!(m134.reg[0] & 0x80)) {
 						m134.reg[1] = value;
-						MMC3_prg_fix(mmc3.bank_to_update);
-						MMC3_chr_fix(mmc3.bank_to_update);
+						MMC3_prg_fix();
+						MMC3_chr_fix();
 					}
 					break;
 				case 2:
@@ -124,7 +124,7 @@ void extcl_cpu_wr_mem_134(WORD address, BYTE value) {
 						value = (m134.reg[2] & 0xFC) | (value & 0x03);
 					}
 					m134.reg[2] = value;
-					MMC3_chr_fix(mmc3.bank_to_update);
+					MMC3_chr_fix();
 					break;
 				case 3:
 					if (!(m134.reg[0] & 0x80)) {
@@ -142,7 +142,7 @@ void extcl_cpu_wr_mem_134(WORD address, BYTE value) {
 					mmc3.reg[6] = value;
 
 					if (m134.reg[1] & 0x80) {
-						MMC3_prg_fix(mmc3.bank_to_update);
+						MMC3_prg_fix();
 					} else {
 						if (mmc3.bank_to_update & 0x40) {
 							MMC3_prg_swap(0xC000, value);

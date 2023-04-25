@@ -169,14 +169,14 @@ INLINE static void prg_fix_556(void) {
 	if (m556.reg[2] & 0x80) {
 		prg_fix_vrc4();
 	} else {
-		MMC3_prg_fix(mmc3.bank_to_update);
+		MMC3_prg_fix();
 	}
 }
 INLINE static void chr_fix_556(void) {
 	if (m556.reg[2] & 0x80) {
 		chr_fix_vrc4();
 	} else {
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_chr_fix();
 	}
 }
 

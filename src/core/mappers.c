@@ -415,7 +415,7 @@ BYTE map_init(void) {
 			map_init_108();
 			break;
 		case 111:
-			map_init_CHEAPOCABRA();
+			map_init_111();
 			break;
 		case 112:
 			map_init_Ntdec(ASDER);
@@ -524,7 +524,6 @@ BYTE map_init(void) {
 			map_init_Namco(N3453);
 			break;
 		case 155:
-			info.mapper.submapper = SKROM;
 			map_init_MMC1();
 			break;
 		case 156:
@@ -945,7 +944,7 @@ BYTE map_init(void) {
 			map_init_322();
 			break;
 		case 323:
-			map_init_FARIDSLROM8IN1();
+			map_init_323();
 			break;
 		case 324:
 			map_init_FARIDUNROM8IN1();

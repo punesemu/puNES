@@ -23,43 +23,51 @@
 
 enum MMC1_types {
 	SNROM,
-	SOROM,
 	SUROM,
-	SXROM,
+	SOROM,
+	MMC1_SUBMAPPER3_DEPRECATED3,
+	SXROM = 4,
 	SEROM = 5,
-	SKROM = 6,
-	SJROM = 7,
-	FARIDSLROM = 8,
-	MAP111 = 9,
-	MAP297 = 10,
-	MAP374 = 11,
-	MAP404 = 12,
+	MMC1_2ME,
+	MMC1A = 10,
+	MMC1B,
 	BAD_YOSHI_U = 20,
 	MOWPC10
 };
 
 typedef struct _mmc1 {
-	BYTE reg;
-	BYTE pos;
-	BYTE prg_mode;
-	BYTE chr_mode;
-	BYTE ctrl;
-	BYTE chr0;
-	BYTE chr1;
-	BYTE prg0;
+	WORD reg[4];
+	BYTE accumulator;
+	BYTE shift;
 	BYTE reset;
-	BYTE prg_upper;
-	BYTE chr_upper;
-
-	// da non salvare
-	BYTE prg_mask;
 } _mmc1;
 
 extern _mmc1 mmc1;
 
 void map_init_MMC1(void);
+void extcl_after_mapper_init_MMC1(void);
 void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value);
 BYTE extcl_cpu_rd_ram_MMC1(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp);
+
+void init_MMC1(BYTE type);
+void prg_fix_MMC1(void);
+void prg_swap_MMC1(WORD address, WORD value);
+void chr_fix_MMC1(void);
+void chr_swap_MMC1(WORD address, WORD value);
+void wram_fix_MMC1(void);
+void wram_swap_MMC1(WORD value);
+void mirroring_fix_MMC1(void);
+
+WORD prg_bank_MMC1(int index);
+WORD chr_bank_MMC1(int index);
+
+extern void (*MMC1_prg_fix)(void);
+extern void (*MMC1_prg_swap)(WORD address, WORD value);
+extern void (*MMC1_chr_fix)(void);
+extern void (*MMC1_chr_swap)(WORD address, WORD value);
+extern void (*MMC1_wram_fix)(void);
+extern void (*MMC1_wram_swap)(WORD value);
+extern void (*MMC1_mirroring_fix)(void);
 
 #endif /* MAPPER_MMC1_H_ */

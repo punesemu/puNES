@@ -102,7 +102,7 @@ void extcl_cpu_wr_mem_208(WORD address, BYTE value) {
 		switch (address & 0xF800) {
 			case 0x4800:
 				m208.reg = value;
-				MMC3_prg_fix(mmc3.bank_to_update);
+				MMC3_prg_fix();
 				MMC3_mirroring_fix();
 				return;
 			case 0x5000:

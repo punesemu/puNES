@@ -16,21 +16,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_CHEAPOCABRA_H_
-#define MAPPER_CHEAPOCABRA_H_
+#ifndef MAPPER_323_H_
+#define MAPPER_323_H_
 
 #include "common.h"
 
-void map_init_CHEAPOCABRA(void);
+void map_init_323(void);
+void extcl_cpu_wr_mem_323(WORD address, BYTE value);
+BYTE extcl_save_mapper_323(BYTE mode, BYTE slot, FILE *fp);
 
-void extcl_after_mapper_init_CHEAPOCABRA_GTROM(void);
-void extcl_mapper_quit_CHEAPOCABRA_GTROM(void);
-void extcl_cpu_wr_mem_CHEAPOCABRA_GTROM(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_CHEAPOCABRA_GTROM(WORD address, BYTE openbus, BYTE before);
-BYTE extcl_save_mapper_CHEAPOCABRA_GTROM(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_CHEAPOCABRA_GTROM(void);
-void extcl_wr_nmt_CHEAPOCABRA_GTROM(WORD address, BYTE value);
-BYTE extcl_rd_nmt_CHEAPOCABRA_GTROM(WORD address);
-void extcl_battery_io_CHEAPOCABRA_GTROM(BYTE mode, FILE *fp);
-
-#endif /* MAPPER_CHEAPOCABRA_H_ */
+#endif /* MAPPER_323_H_ */

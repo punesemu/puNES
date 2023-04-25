@@ -126,6 +126,7 @@ set(core_srcs
 	core/mappers/mapper_105.c
 	core/mappers/mapper_106.c
 	core/mappers/mapper_108.c
+	core/mappers/mapper_111.c
 	core/mappers/mapper_114.c
 	core/mappers/mapper_115.c
 	core/mappers/mapper_116.c
@@ -216,6 +217,7 @@ set(core_srcs
 	core/mappers/mapper_313.c
 	core/mappers/mapper_315.c
 	core/mappers/mapper_322.c
+	core/mappers/mapper_323.c
 	core/mappers/mapper_325.c
 	core/mappers/mapper_327.c
 	core/mappers/mapper_331.c
@@ -329,7 +331,6 @@ set(core_srcs
 	core/mappers/mapper_Caltron.c
 	core/mappers/mapper_Camerica.c
 	core/mappers/mapper_CC_21.c
-	core/mappers/mapper_CHEAPOCABRA.c
 	core/mappers/mapper_CITYFIGHT.c
 	core/mappers/mapper_CNROM.c
 	core/mappers/mapper_ColorDreams.c
@@ -341,7 +342,6 @@ set(core_srcs
 	core/mappers/mapper_DRIPGAME.c
 	core/mappers/mapper_EDU2000.c
 	core/mappers/mapper_EH8813A.c
-	core/mappers/mapper_FARIDSLROM8IN1.c
 	core/mappers/mapper_FARIDUNROM8IN1.c
 	core/mappers/mapper_FDS.c
 	core/mappers/mapper_FFESMC.c

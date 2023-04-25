@@ -88,7 +88,7 @@ BYTE extcl_save_mapper_195(BYTE mode, BYTE slot, FILE *fp) {
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_chr_fix();
 	}
 
 	return (EXIT_OK);
@@ -127,7 +127,7 @@ void extcl_wr_chr_195(WORD address, BYTE value) {
 				m195.chr.compare = masks[index];
 			}
 		}
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_chr_fix();
 	}
 
 	if (map_chr_ram_slot_in_range(slot)) {

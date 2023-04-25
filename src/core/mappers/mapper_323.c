@@ -23,37 +23,37 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-struct _faridslrom8in1 {
+void prg_swap_323(WORD address, WORD value);
+void chr_swap_323(WORD address, WORD value);
+
+struct _m323 {
 	BYTE reg;
-} faridslrom8in1;
+} m323;
 
-void map_init_FARIDSLROM8IN1(void) {
-	info.mapper.submapper = FARIDSLROM;
-	map_init_MMC1();
-
-	EXTCL_CPU_WR_MEM(FARIDSLROM8IN1);
-	EXTCL_SAVE_MAPPER(FARIDSLROM8IN1);
-
-	mapper.internal_struct[0] = (BYTE *)&faridslrom8in1;
-	mapper.internal_struct_size[0] = sizeof(faridslrom8in1);
+void map_init_323(void) {
+	EXTCL_AFTER_MAPPER_INIT(MMC1);
+	EXTCL_CPU_WR_MEM(323);
+	EXTCL_SAVE_MAPPER(323);
+	mapper.internal_struct[0] = (BYTE *)&m323;
+	mapper.internal_struct_size[0] = sizeof(m323);
 	mapper.internal_struct[1] = (BYTE *)&mmc1;
 	mapper.internal_struct_size[1] = sizeof(mmc1);
 
-	memset(&faridslrom8in1, 0x00, sizeof(faridslrom8in1));
+	memset(&m323, 0x00, sizeof(m323));
 
-	mmc1.prg_mask = 0x07;
-
-	map_prg_rom_8k(2, 0, 0);
-	map_prg_rom_8k(2, 2, 7);
+	init_MMC1(MMC1B);
+	MMC1_prg_swap = prg_swap_323;
+	MMC1_chr_swap = chr_swap_323;
 
 	info.mapper.extend_wr = TRUE;
 }
-void extcl_cpu_wr_mem_FARIDSLROM8IN1(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_323(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active && !(faridslrom8in1.reg & 0x08)) {
-			faridslrom8in1.reg = value;
-			mmc1.prg_upper = (value & 0x70) >> 1;
-			mmc1.chr_upper = (value & 0x70) << 1;
+		if (cpu.prg_ram_wr_active && !(m323.reg & 0x08)) {
+			m323.reg = value;
+			MMC1_prg_fix();
+			MMC1_chr_fix();
+			MMC1_mirroring_fix();
 		}
 		return;
 	}
@@ -61,9 +61,16 @@ void extcl_cpu_wr_mem_FARIDSLROM8IN1(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC1(address, value);
 	}
 }
-BYTE extcl_save_mapper_FARIDSLROM8IN1(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, faridslrom8in1.reg);
+BYTE extcl_save_mapper_323(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m323.reg);
 	extcl_save_mapper_MMC1(mode, slot, fp);
 
 	return (EXIT_OK);
+}
+
+void prg_swap_323(WORD address, WORD value) {
+	prg_swap_MMC1(address, (((m323.reg & 0xF0) >> 1) | (value & 0x07)));
+}
+void chr_swap_323(WORD address, WORD value) {
+	chr_swap_MMC1(address, (((m323.reg & 0xF0) << 1) | (value & 0x1F)));
 }

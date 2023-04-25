@@ -24,7 +24,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_fix_123(BYTE value);
+void prg_fix_123(void);
 void prg_swap_123(WORD address, WORD value);
 
 static const BYTE vlu2288[8] = {0, 3, 1, 5, 6, 7, 2, 4};
@@ -65,7 +65,7 @@ void extcl_cpu_wr_mem_123(WORD address, BYTE value) {
 		if (cpu.prg_ram_wr_active) {
 			if (address & 0x0800) {
 				m123.reg = value;
-				MMC3_prg_fix(mmc3.bank_to_update);
+				MMC3_prg_fix();
 			}
 		}
 		return;
@@ -80,7 +80,7 @@ void extcl_cpu_wr_mem_123(WORD address, BYTE value) {
 					case 6:
 					case 7:
 						mmc3.reg[mmc3.bank_to_update & 0x07] = value;
-						MMC3_prg_fix(mmc3.bank_to_update);
+						MMC3_prg_fix();
 						return;
 					default:
 						extcl_cpu_wr_mem_MMC3(address, value);
@@ -100,7 +100,9 @@ BYTE extcl_save_mapper_123(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_fix_123(BYTE value) {
+void prg_fix_123(void) {
+	BYTE value = 0;
+
 	if (m123.reg & 0x40) {
 		value = (m123.reg & 0x05) | ((m123.reg & 0x08) >> 2) | ((m123.reg & 0x20) >> 2);
 		if (m123.reg & 0x02) {
@@ -115,7 +117,7 @@ void prg_fix_123(BYTE value) {
 		map_prg_rom_8k_update();
 		return;
 	}
-	prg_fix_MMC3(value);
+	prg_fix_MMC3();
 }
 void prg_swap_123(WORD address, WORD value) {
 	control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)

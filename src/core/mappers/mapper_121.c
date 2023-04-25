@@ -65,8 +65,8 @@ void extcl_cpu_wr_mem_121(WORD address, BYTE value) {
 		m121.reg[4] = vlu121[(((address >> 6) & 0x04) | (value & 0x03))];
 		if (address & 0x0100) {
 			m121.reg[3] = value;
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 		}
 		return;
 	}
@@ -85,8 +85,8 @@ void extcl_cpu_wr_mem_121(WORD address, BYTE value) {
 					m121.reg[0x15 - (m121.reg[5] >> 1)] = m121.reg[6];
 				}
 			}
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 			return;
 		}
 		extcl_cpu_wr_mem_MMC3(address, value);

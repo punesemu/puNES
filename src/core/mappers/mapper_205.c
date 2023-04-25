@@ -85,8 +85,8 @@ void extcl_cpu_wr_mem_205(WORD address, BYTE value) {
 			if ((value & 0x01) && m205tmp.ds_used && (m205tmp.dipswitch[m205tmp.index])) {
 				m205.reg |= 2;
 			}
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 		}
 		return;
 	}

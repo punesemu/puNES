@@ -37,6 +37,7 @@ typedef struct _mmc3 {
 	WORD reg[8];
 	BYTE bank_to_update;
 	BYTE mirroring;
+	BYTE wram_protect;
 } _mmc3;
 
 extern _mmc3 mmc3;
@@ -54,16 +55,18 @@ void extcl_update_r2006_MMC3(WORD new_r2006, WORD old_r2006);
 void extcl_irq_A12_clock_MMC3_NEC(void);
 
 void init_MMC3(void);
-void prg_fix_MMC3(BYTE value);
+void prg_fix_MMC3(void);
 void prg_swap_MMC3(WORD address, WORD value);
-void chr_fix_MMC3(BYTE value);
+void chr_fix_MMC3(void);
+void wram_fix_MMC3(void);
 void chr_swap_MMC3(WORD address, WORD value);
 void mirroring_fix_MMC3(void);
 
-extern void (*MMC3_prg_fix)(BYTE value);
+extern void (*MMC3_prg_fix)(void);
 extern void (*MMC3_prg_swap)(WORD address, WORD value);
-extern void (*MMC3_chr_fix)(BYTE value);
+extern void (*MMC3_chr_fix)(void);
 extern void (*MMC3_chr_swap)(WORD address, WORD value);
+extern void (*MMC3_wram_fix)(void);
 extern void (*MMC3_mirroring_fix)(void);
 
 #endif /* MAPPER_MMC3_H_ */

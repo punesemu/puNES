@@ -103,13 +103,13 @@ void extcl_cpu_wr_mem_126(WORD address, BYTE value) {
 
 		if (!(m126.reg[3] & 0x80)) {
 			m126.reg[reg] = value;
-			MMC3_prg_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
 		} else if (reg == 2) {
 			const BYTE mask = 0x03 >> ((m126.reg[2] & 0x10) != 0);
 
 			m126.reg[2] = (m126.reg[2] & ~mask) | (value & mask);
 		}
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_chr_fix();
 		return;
 	}
 	if (address >= 0x8000) {

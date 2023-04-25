@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_fix_513(BYTE value);
+void prg_fix_513(void);
 void chr_swap_513(WORD address, WORD value);
 
 struct _m513 {
@@ -75,7 +75,7 @@ void extcl_cpu_wr_mem_513(WORD address, BYTE value) {
 				mmc3.reg[mmc3.bank_to_update & 0x07] = value;
 				break;
 		}
-		MMC3_prg_fix(mmc3.bank_to_update);
+		MMC3_prg_fix();
 		return;
 	}
 	extcl_cpu_wr_mem_MMC3(address, value);
@@ -87,8 +87,8 @@ BYTE extcl_save_mapper_513(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_fix_513(BYTE value) {
-	if (value & 0x40) {
+void prg_fix_513(void) {
+	if (mmc3.bank_to_update & 0x40) {
 		MMC3_prg_swap(0x8000, (~1 & 0x3F));
 		MMC3_prg_swap(0xC000, (m513.reg & 0xC0) | (mmc3.reg[6] & 0x3F));
 	} else {

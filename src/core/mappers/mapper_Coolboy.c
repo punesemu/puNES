@@ -80,8 +80,8 @@ void extcl_cpu_wr_mem_Coolboy(WORD address, BYTE value) {
 	if ((address >= coolboytmp.rstart) && (address <= coolboytmp.rstop)) {
 		if ((coolboy.reg[3] & 0x90) != 0x80) {
 			coolboy.reg[address & 0x03] = value;
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 		}
 		return;
 	}

@@ -61,8 +61,8 @@ void extcl_cpu_wr_mem_37(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		if (cpu.prg_ram_wr_active) {
 			m37.reg = value;
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 		}
 		return;
 	}

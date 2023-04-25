@@ -50,7 +50,7 @@ void extcl_cpu_wr_mem_245(WORD address, BYTE value) {
 
 		extcl_cpu_wr_mem_MMC3(address, value);
 		if (mmc3.reg[0] != reg0) {
-			MMC3_prg_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
 		}
 		return;
 	}

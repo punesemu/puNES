@@ -24,7 +24,7 @@
 #include "save_slot.h"
 
 void prg_swap_292(WORD address, WORD value);
-void chr_fix_292(BYTE value);
+void chr_fix_292(void);
 
 struct _m292 {
 	BYTE reg[3];
@@ -63,7 +63,7 @@ void extcl_cpu_wr_mem_292(WORD address, BYTE value) {
 	if ((address & 0xE001) == 0x6000) {
 		if (cpu.prg_ram_wr_active) {
 			m292.reg[0] = value;
-			MMC3_prg_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
 		}
 		return;
 	}
@@ -77,7 +77,7 @@ void extcl_cpu_wr_mem_292(WORD address, BYTE value) {
 				case 4:
 				case 5:
 					mmc3.reg[mmc3.bank_to_update & 0x07] = value;
-					MMC3_chr_fix(mmc3.bank_to_update);
+					MMC3_chr_fix();
 					return;
 				default:
 					extcl_cpu_wr_mem_MMC3(address, value);
@@ -95,7 +95,7 @@ BYTE extcl_cpu_rd_mem_292(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 			} else {
 				m292.reg[2] = mmcpu.ram[0x0FF];
 			}
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_chr_fix();
 		}
 	}
 	return (openbus);
@@ -117,24 +117,24 @@ void prg_swap_292(WORD address, WORD value) {
 	map_prg_rom_8k(1, slot, value);
 	map_prg_rom_8k_update();
 }
-void chr_fix_292(BYTE value) {
-	SDBWORD bank = 0;
+void chr_fix_292(void) {
+	DBWORD bank = 0;
 
-	value = (mmc3.reg[0] >> 1) ^ m292.reg[1];
-	control_bank(info.chr.rom.max.banks_2k)
-	bank = value << 11;
+	bank = (mmc3.reg[0] >> 1) ^ m292.reg[1];
+	_control_bank(bank, info.chr.rom.max.banks_2k)
+	bank <<= 11;
 	chr.bank_1k[0] = chr_pnt(bank);
 	chr.bank_1k[1] = chr_pnt(bank | 0x400);
 
-	value = (mmc3.reg[1] >> 1) | ((m292.reg[2] & 0x40) << 1);
-	control_bank(info.chr.rom.max.banks_2k)
-	bank = value << 11;
+	bank = (mmc3.reg[1] >> 1) | ((m292.reg[2] & 0x40) << 1);
+	_control_bank(bank, info.chr.rom.max.banks_2k)
+	bank <<= 11;
 	chr.bank_1k[2] = chr_pnt(bank);
 	chr.bank_1k[3] = chr_pnt(bank | 0x400);
 
-	value = m292.reg[2] & 0x3F;
-	control_bank(info.chr.rom.max.banks_4k)
-	bank = value << 12;
+	bank = m292.reg[2] & 0x3F;
+	_control_bank(bank, info.chr.rom.max.banks_4k)
+	bank <<= 12;
 	chr.bank_1k[4] = chr_pnt(bank);
 	chr.bank_1k[5] = chr_pnt(bank | 0x400);
 	chr.bank_1k[6] = chr_pnt(bank | 0x800);

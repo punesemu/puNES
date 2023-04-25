@@ -17,60 +17,165 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
 #include "mappers.h"
 #include "mem_map.h"
 #include "cpu.h"
+#include "tas.h"
 #include "save_slot.h"
+#include "SST39SF040.h"
+#include "gui.h"
 
-INLINE static void prg_fix_446(void);
-INLINE static void chr_fix_446(void);
-INLINE static void mirroring_fix_446(void);
+INLINE static void fix_all_446(void);
+
+INLINE static void switch_mode(void);
+INLINE static WORD prg_base(void);
+INLINE static WORD prg_mask(void);
+INLINE static WORD chr_base(void);
+
+INLINE static void prg_fix_446_no_mapper(void);
+INLINE static void chr_fix_446_no_mapper(void);
+INLINE static void wram_fix_446_no_mapper(void);
+INLINE static void mirroring_fix_446_no_mapper(void);
+
+INLINE static void prg_fix_446_nrom(void);
+INLINE static void chr_fix_446_nrom(void);
+INLINE static void wram_fix_446_nrom(void);
+INLINE static void mirroring_fix_446_nrom(void);
+
+INLINE static void prg_fix_446_cnrom(void);
+INLINE static void chr_fix_446_cnrom(void);
+INLINE static void wram_fix_446_cnrom(void);
+INLINE static void mirroring_fix_446_cnrom(void);
+
+INLINE static void prg_fix_446_unrom(void);
+INLINE static void chr_fix_446_unrom(void);
+INLINE static void wram_fix_446_unrom(void);
+INLINE static void mirroring_fix_446_unrom(void);
+
+INLINE static void prg_fix_446_bandai(void);
+INLINE static void chr_fix_446_bandai(void);
+INLINE static void wram_fix_446_bandai(void);
+INLINE static void mirroring_fix_446_bandai(void);
+
+INLINE static void prg_fix_446_anrom(void);
+INLINE static void chr_fix_446_anrom(void);
+INLINE static void wram_fix_446_anrom(void);
+INLINE static void mirroring_fix_446_anrom(void);
+
+INLINE static void prg_fix_446_gnrom(void);
+INLINE static void chr_fix_446_gnrom(void);
+INLINE static void wram_fix_446_gnrom(void);
+INLINE static void mirroring_fix_446_gnrom(void);
+
+void prg_swap_446_mmc1(WORD address, WORD value);
+void chr_swap_446_mmc1(WORD address, WORD value);
+
+void prg_swap_446_mmc3(WORD address, WORD value);
+void chr_swap_446_mmc3(WORD address, WORD value);
+
+void prg_swap_446_tlsrom(WORD address, WORD value);
+void chr_swap_446_tlsrom(WORD address, WORD value);
+
+void prg_swap_446_189(WORD address, WORD value);
+void chr_swap_446_189(WORD address, WORD value);
+
+enum _m116_mappers {
+	M446_UNROM,
+	M446_MMC3,
+	M446_NROM,
+	M446_CNROM,
+	M446_ANROM,
+	M446_SLROM,
+	M446_SNROM,
+	M446_SUROM,
+	M446_GNROM,
+	M446_PNROM,
+	M446_HNROM,
+	M446_BANDAI,
+	M446_TLSROM,
+	M446_189,
+	M446_VRC6,
+	M446_VRC2_22,
+	M446_VRC4_25,
+	M446_VRC4_23,
+	M446_VRC1
+};
 
 struct _m446 {
 	BYTE reg[8];
+	BYTE reg189;
+	BYTE latch;
+	BYTE mapper;
 } m446;
+struct _m446tmp {
+	BYTE *sst39sf040;
+} m446tmp;
 
 void map_init_446(void) {
 	EXTCL_AFTER_MAPPER_INIT(446);
+	EXTCL_MAPPER_QUIT(446);
 	EXTCL_CPU_WR_MEM(446);
+	EXTCL_CPU_RD_MEM(446);
 	EXTCL_SAVE_MAPPER(446);
+	EXTCL_BATTERY_IO(446);
 	EXTCL_WR_CHR(446);
 	mapper.internal_struct[0] = (BYTE *)&m446;
 	mapper.internal_struct_size[0] = sizeof(m446);
-	mapper.internal_struct[1] = (BYTE *)&mmc1;
-	mapper.internal_struct_size[1] = sizeof(mmc1);
+	mapper.internal_struct[1] = (BYTE *)&mmc3;
+	mapper.internal_struct_size[1] = sizeof(mmc3);
+	mapper.internal_struct[2] = (BYTE *)&mmc1;
+	mapper.internal_struct_size[2] = sizeof(mmc1);
 
 	if (info.reset >= HARD) {
 		memset(&m446, 0x00, sizeof(m446));
 	}
 
-	memset(&mmc1, 0x00, sizeof(mmc1));
+	if (info.mapper.submapper == DEFAULT) {
+		info.mapper.submapper = 0;
+	}
 
-	mmc1.ctrl = 0x0C;
-	mmc1.prg_mode = 3;
-	mmc1.prg_mask = 0x0F;
-	mmc1.chr1 = 1;
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		m446tmp.sst39sf040 = (BYTE *)malloc(prg_size());
+		memcpy(m446tmp.sst39sf040, prg_rom(), prg_size());
+		sst39sf040_init(m446tmp.sst39sf040, prg_size(), 0x01, 0x76, 0x0AAA, 0x0555, 131072);
+	}
 
+	info.mapper.force_battery_io = TRUE;
 	info.mapper.extend_wr = TRUE;
+	info.mapper.extend_rd = TRUE;
 }
 void extcl_after_mapper_init_446(void) {
-	prg_fix_446();
-	chr_fix_446();
-	mirroring_fix_446();
+	switch_mode();
+	fix_all_446();
+}
+void extcl_mapper_quit_446(void) {
+	if (m446tmp.sst39sf040) {
+		free(m446tmp.sst39sf040);
+		m446tmp.sst39sf040 = NULL;
+	}
 }
 void extcl_cpu_wr_mem_446(WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x5000:
 			if (!(m446.reg[0] & 0x80)) {
-				m446.reg[address & 0x07] = value;
-				prg_fix_446();
-				chr_fix_446();
-				mirroring_fix_446();
+				address &= 0x0007;
+				if (!address && (info.mapper.submapper == 0) && ((value & 0x1F) == 0x01)) {
+					value = (value & ~0x1F) | M446_SNROM;
+				}
+				m446.reg[address] = value;
+				switch_mode();
+				fix_all_446();
 			}
-			break;
+			return;
 		case 0x6000:
+			if ((m446.reg[0] & 0x80) && (m446.mapper == M446_189)) {
+				m446.reg189 = address & 0xFF;
+				fix_all_446();
+			}
+			return;
 		case 0x7000:
-			break;
+			return;
 		case 0x8000:
 		case 0x9000:
 		case 0xA000:
@@ -79,171 +184,235 @@ void extcl_cpu_wr_mem_446(WORD address, BYTE value) {
 		case 0xD000:
 		case 0xE000:
 		case 0xF000:
-			if ((m446.reg[0] & 0x80) && (m446.reg[4] == 0x04)) {
-				if (mmc1.reset) {
-					mmc1.reset = FALSE;
-					if (cpu.double_wr) {
+			if (m446.reg[0] & 0x80) {
+				switch (m446.mapper) {
+					case M446_ANROM:
+					case M446_CNROM:
+					case M446_UNROM:
+					case M446_GNROM:
+					case M446_BANDAI:
+						m446.latch = value;
+						fix_all_446();
 						return;
-					}
+					case M446_SLROM:
+					case M446_SNROM:
+						extcl_cpu_wr_mem_MMC1(address, value);
+						return;
+					case M446_189:
+					case M446_MMC3:
+					case M446_TLSROM:
+						extcl_cpu_wr_mem_MMC3(address, value);
+						return;
+					case M446_VRC2_22:
+						return;
+					case M446_VRC4_23:
+						return;
+					case M446_VRC4_25:
+						return;
+					case M446_VRC6:
+						return;
+					default:
+						return;
 				}
-				if (value & 0x80) {
-					mmc1.reset = TRUE;
-					mmc1.pos = mmc1.reg = 0;
-					mmc1.ctrl |= 0x0C;
-					return;
-				}
-
-				mmc1.reg |= ((value & 0x01) << mmc1.pos);
-
-				if (mmc1.pos++ == 4) {
-					BYTE reg = (address >> 13) & 0x03;
-
-					switch (reg) {
-						case 0:
-							mmc1.ctrl = mmc1.reg;
-							mmc1.prg_mode = (mmc1.ctrl & 0x0C) >> 2;
-							mmc1.chr_mode = (mmc1.ctrl & 0x10) >> 4;
-							mirroring_fix_446();
-							prg_fix_446();
-							chr_fix_446();
-							break;
-						case 1:
-							mmc1.chr0 = mmc1.reg;
-							chr_fix_446();
-							break;
-						case 2:
-							mmc1.chr1 = mmc1.reg;
-							chr_fix_446();
-							break;
-						case 3:
-							mmc1.prg0 = mmc1.reg;
-							cpu.prg_ram_rd_active = (mmc1.prg0 & 0x10 ? FALSE : TRUE);
-							cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
-							prg_fix_446();
-							break;
-					}
-					mmc1.pos = mmc1.reg = 0;
-				}
+			} else {
+				sst39sf040_write(address, value);
 			}
-			break;
+			return;
 		default:
-			break;
+			return;
 	}
+}
+BYTE extcl_cpu_rd_mem_446(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+	if (address >= 0x8000) {
+		return (sst39sf040_read(address));
+	}
+	return (openbus);
 }
 BYTE extcl_save_mapper_446(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m446.reg);
+	save_slot_ele(mode, slot, m446.reg189);
+	save_slot_ele(mode, slot, m446.latch);
+	save_slot_ele(mode, slot, m446.mapper);
 	extcl_save_mapper_MMC1(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
+	sst39sf040_save_mapper(mode, slot, fp);
 
 	return (EXIT_OK);
 }
-void extcl_wr_chr_446(WORD address, BYTE value) {
+void extcl_battery_io_446(BYTE mode, FILE *fp) {
+	if (!fp || (tas.type != NOTAS)) {
+		return;
+	}
+
+	if (mode == WR_BAT) {
+		if (info.prg.ram.bat.banks) {
+			map_bat_wr_default(fp);
+		}
+		if (fwrite(m446tmp.sst39sf040, prg_size(), 1, fp) < 1) {
+			log_error(uL("mapper_446;error on write flash chip"));
+		}
+	} else {
+		if (info.prg.ram.bat.banks) {
+			map_bat_rd_default(fp);
+		}
+		if (fread(m446tmp.sst39sf040, prg_size(), 1, fp) < 1) {
+			log_error(uL("mapper_446;error on read flash chip"));
+		}
+	}
+}void extcl_wr_chr_446(WORD address, BYTE value) {
 	if (!(m446.reg[5] & 0x04)) {
 		chr.bank_1k[address >> 10][address & 0x3FF] = value;
 	}
 }
 
-INLINE static void prg_fix_446(void) {
-	WORD base = (m446.reg[2] << 8) | m446.reg[1];
-	WORD bank;
-
+INLINE static void fix_all_446(void) {
 	if (m446.reg[0] & 0x80) {
-		WORD mask = ~m446.reg[3];
-
-		if (m446.reg[4] == 0x00) {
-			bank = base | (0x00 & mask);
-			_control_bank(bank, info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 0, bank);
-
-			bank = base | (0x01 & mask);
-			_control_bank(bank, info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 1, bank);
-
-			bank = base | (0x02 & mask);
-			_control_bank(bank, info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 2, bank);
-
-			bank = base | (0x03 & mask);
-			_control_bank(bank, info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 3, bank);
-		} else if (m446.reg[4] == 0x04) {
-			base >>= 1;
-			mask >>= 1;
-
-			switch (mmc1.prg_mode) {
-				case 0:
-				case 1:
-					bank = (base | (mmc1.prg0 & mask)) >> 1;
-					_control_bank(bank, info.prg.rom.max.banks_32k)
-					map_prg_rom_8k(4, 0, bank);
-					break;
-				case 2:
-					bank = base | (mmc1.prg0 & mask);
-					_control_bank(bank, info.prg.rom.max.banks_16k)
-					map_prg_rom_8k(2, 2, bank);
-
-					bank = base & ~mask;
-					_control_bank(bank, info.prg.rom.max.banks_16k)
-					map_prg_rom_8k(2, 0, bank);
-					break;
-				case 3:
-					bank = base | (mmc1.prg0 & mask);
-					_control_bank(bank, info.prg.rom.max.banks_16k)
-					map_prg_rom_8k(2, 0, bank);
-
-					bank = base | mask;
-					_control_bank(bank, info.prg.rom.max.banks_16k)
-					map_prg_rom_8k(2, 2, bank);
-					break;
-				default:
-					break;
-			}
+		switch (m446.mapper) {
+			case M446_NROM:
+				prg_fix_446_nrom();
+				chr_fix_446_nrom();
+				wram_fix_446_nrom();
+				mirroring_fix_446_nrom();
+				return;
+			case M446_CNROM:
+				prg_fix_446_cnrom();
+				chr_fix_446_cnrom();
+				wram_fix_446_cnrom();
+				mirroring_fix_446_cnrom();
+				return;
+			case M446_UNROM:
+				prg_fix_446_unrom();
+				chr_fix_446_unrom();
+				wram_fix_446_unrom();
+				mirroring_fix_446_unrom();
+				return;
+			case M446_BANDAI:
+				prg_fix_446_bandai();
+				chr_fix_446_bandai();
+				wram_fix_446_bandai();
+				mirroring_fix_446_bandai();
+				return;
+			case M446_ANROM:
+				prg_fix_446_anrom();
+				chr_fix_446_anrom();
+				wram_fix_446_anrom();
+				mirroring_fix_446_anrom();
+				return;
+			case M446_GNROM:
+				prg_fix_446_gnrom();
+				chr_fix_446_gnrom();
+				wram_fix_446_gnrom();
+				mirroring_fix_446_gnrom();
+				return;
+			case M446_SLROM:
+			case M446_SNROM:
+				MMC1_prg_fix();
+				MMC1_chr_fix();
+				MMC1_wram_fix();
+				MMC1_mirroring_fix();
+				return;
+			case M446_MMC3:
+			case M446_TLSROM:
+			case M446_189:
+				MMC3_prg_fix();
+				MMC3_chr_fix();
+				MMC3_wram_fix();
+				MMC3_mirroring_fix();
+				return;
+			case M446_VRC2_22:
+				return;
+			case M446_VRC4_23:
+			case M446_VRC4_25:
+				return;
+			case M446_VRC6:
+				return;
 		}
 	} else {
-		bank = base;
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 0, bank);
-
-		bank = 0x3D;
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 1, bank);
-
-		bank = 0x3E;
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 2, bank);
-
-		bank = 0x3F;
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 3, bank);
+		prg_fix_446_no_mapper();
+		chr_fix_446_no_mapper();
+		wram_fix_446_no_mapper();
+		mirroring_fix_446_no_mapper();
 	}
+}
+
+INLINE static void switch_mode(void) {
+	if (m446.reg[0] & 0x80) {
+		m446.mapper = m446.reg[0] & 0x1F;
+		switch (m446.mapper) {
+			case M446_ANROM:
+			case M446_CNROM:
+			case M446_UNROM:
+			case M446_GNROM:
+			case M446_BANDAI:
+				m446.latch = 0;
+				break;
+			case M446_SLROM:
+			case M446_SNROM:
+				init_MMC1(MMC1B);
+				MMC1_prg_swap = prg_swap_446_mmc1;
+				MMC1_chr_swap = chr_swap_446_mmc1;
+				break;
+			case M446_MMC3:
+				init_MMC3();
+				MMC3_prg_swap = prg_swap_446_mmc3;
+				MMC3_chr_swap = chr_swap_446_mmc3;
+				break;
+			case M446_TLSROM:
+				init_MMC3();
+				MMC3_prg_swap = prg_swap_446_tlsrom;
+				MMC3_chr_swap = chr_swap_446_tlsrom;
+				break;
+			case M446_189:
+				init_MMC3();
+				MMC3_prg_swap = prg_swap_446_189;
+				MMC3_chr_swap = chr_swap_446_189;
+				break;
+			case M446_VRC2_22:
+				break;
+			case M446_VRC4_23:
+				break;
+			case M446_VRC4_25:
+				break;
+			case M446_VRC6:
+				break;
+			default:
+				break;
+		}
+	}
+}
+INLINE static WORD prg_base(void) {
+	return (m446.reg[1] | (m446.reg[2] << 8));
+}
+INLINE static WORD prg_mask(void) {
+	return (~m446.reg[3]);
+}
+INLINE static WORD chr_base(void) {
+	return (m446.reg[6]);
+}
+
+INLINE static void prg_fix_446_no_mapper(void) {
+	WORD bank = prg_base();
+
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 0, bank);
+
+	bank = 0x3D;
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 1, bank);
+
+	bank = 0x3E;
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 2, bank);
+
+	bank = 0x3F;
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 3, bank);
+
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_446(void) {
-	DBWORD bank = 0;
+INLINE static void chr_fix_446_no_mapper(void) {
+	DBWORD bank = chr_base();
 
-	if ((m446.reg[0] & 0x80) && (m446.reg[4] == 0x04)) {
-		WORD base = m446.reg[6] >> 2;
-		WORD mask = 0x1F;
-
-		bank = base | (mmc1.chr0 & mask);
-		_control_bank(bank, info.chr.rom.max.banks_4k)
-		bank <<= 12;
-		chr.bank_1k[0] = chr_pnt(bank);
-		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-
-		bank = base | (mmc1.chr1 & mask);
-		_control_bank(bank, info.chr.rom.max.banks_4k)
-		bank <<= 12;
-		chr.bank_1k[4] = chr_pnt(bank);
-		chr.bank_1k[5] = chr_pnt(bank | 0x0400);
-		chr.bank_1k[6] = chr_pnt(bank | 0x0800);
-		chr.bank_1k[7] = chr_pnt(bank | 0x0C00);
-
-		return;
-	}
-
-	bank = m446.reg[6];
 	_control_bank(bank, info.chr.rom.max.banks_8k)
 	bank <<= 13;
 	chr.bank_1k[0] = chr_pnt(bank);
@@ -255,27 +424,332 @@ INLINE static void chr_fix_446(void) {
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
-INLINE static void mirroring_fix_446(void) {
-	if ((m446.reg[0] & 0x80) && (m446.reg[4] == 0x04)) {
-		switch (mmc1.ctrl & 0x03) {
-			case 0x00:
-				mirroring_SCR0();
-				break;
-			case 0x01:
-				mirroring_SCR1();
-				break;
-			case 0x02:
-				mirroring_V();
-				break;
-			case 0x03:
-				mirroring_H();
-				break;
-		}
-		return;
-	}
-	if (m446.reg[0] & 0x01) {
-		mirroring_H();
-	} else {
+INLINE static void wram_fix_446_no_mapper(void) {}
+INLINE static void mirroring_fix_446_no_mapper(void) {
+	if (m446.reg[4] & 0x01) {
 		mirroring_V();
+	} else {
+		mirroring_H();
 	}
+}
+
+INLINE static void prg_fix_446_nrom(void) {
+	WORD base = prg_base();
+	WORD mask = prg_mask();
+	WORD bank = 0;
+
+	bank = base | (0x00 & mask);
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 0, bank);
+
+	bank = base | (0x01 & mask);
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 0, bank);
+
+	bank = base | (0x02 & mask);
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 0, bank);
+
+	bank = base | (0x03 & mask);
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 0, bank);
+
+	map_prg_rom_8k_update();
+}
+INLINE static void chr_fix_446_nrom(void) {
+	DBWORD bank = chr_base();
+
+	_control_bank(bank, info.chr.rom.max.banks_8k)
+	bank <<= 13;
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+}
+INLINE static void wram_fix_446_nrom(void) {
+	cpu.prg_ram_wr_active = FALSE;
+	cpu.prg_ram_rd_active = FALSE;
+}
+INLINE static void mirroring_fix_446_nrom(void) {
+	if (m446.reg[4] & 0x01) {
+		mirroring_V();
+	} else {
+		mirroring_H();
+	}
+}
+
+INLINE static void prg_fix_446_cnrom(void) {
+	WORD base = prg_base();
+	WORD mask = prg_mask();
+	WORD bank = 0;
+
+	bank = base | (0x00 & mask);
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 0, bank);
+
+	bank = base | (0x01 & mask);
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 0, bank);
+
+	bank = base | (0x02 & mask);
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 0, bank);
+
+	bank = base | (0x03 & mask);
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 0, bank);
+
+	map_prg_rom_8k_update();
+}
+INLINE static void chr_fix_446_cnrom(void) {
+	DBWORD bank = m446.latch & 0x03;
+
+	_control_bank(bank, info.chr.rom.max.banks_8k)
+	bank <<= 13;
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+}
+INLINE static void wram_fix_446_cnrom(void) {
+	cpu.prg_ram_wr_active = FALSE;
+	cpu.prg_ram_rd_active = FALSE;
+}
+INLINE static void mirroring_fix_446_cnrom(void) {
+	if (m446.reg[4] & 0x01) {
+		mirroring_V();
+	} else {
+		mirroring_H();
+	}
+}
+
+INLINE static void prg_fix_446_unrom(void) {
+	WORD base = prg_base() >> 1;
+	WORD mask = prg_mask() >> 1;
+	WORD bank = m446.latch;
+
+	bank = base | (bank & mask);
+	_control_bank(bank, info.prg.rom.max.banks_16k)
+	map_prg_rom_8k(2, 0, bank);
+
+	bank = base | (0x1F & mask);
+	_control_bank(bank, info.prg.rom.max.banks_16k)
+	map_prg_rom_8k(2, 2, bank);
+
+	map_prg_rom_8k_update();
+}
+INLINE static void chr_fix_446_unrom(void) {
+	DBWORD bank = chr_base();
+
+	_control_bank(bank, info.chr.rom.max.banks_8k)
+	bank <<= 13;
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+}
+INLINE static void wram_fix_446_unrom(void) {
+	cpu.prg_ram_wr_active = FALSE;
+	cpu.prg_ram_rd_active = FALSE;
+}
+INLINE static void mirroring_fix_446_unrom(void) {
+	if (m446.reg[4] & 0x01) {
+		mirroring_V();
+	} else {
+		mirroring_H();
+	}
+}
+
+INLINE static void prg_fix_446_bandai(void) {
+	WORD base = prg_base() >> 1;
+	WORD mask = prg_mask() >> 1;
+	WORD bank = m446.latch >> 4;
+
+	bank = base | (bank & mask);
+	_control_bank(bank, info.prg.rom.max.banks_16k)
+	map_prg_rom_8k(2, 0, bank);
+
+	bank = base | (0xFF & mask);
+	_control_bank(bank, info.prg.rom.max.banks_16k)
+	map_prg_rom_8k(2, 2, bank);
+
+	map_prg_rom_8k_update();
+}
+INLINE static void chr_fix_446_bandai(void) {
+	DBWORD bank = m446.latch & 0x0F;
+
+	_control_bank(bank, info.chr.rom.max.banks_8k)
+	bank <<= 13;
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+}
+INLINE static void wram_fix_446_bandai(void) {
+	cpu.prg_ram_wr_active = FALSE;
+	cpu.prg_ram_rd_active = FALSE;
+}
+INLINE static void mirroring_fix_446_bandai(void) {
+	if (m446.latch & 0x10) {
+		mirroring_SCR1();
+	} else {
+		mirroring_SCR0();
+	}
+}
+
+INLINE static void prg_fix_446_anrom(void) {
+	WORD base = prg_base() >> 2;
+	WORD mask = prg_mask() >> 2;
+	WORD bank = m446.latch;
+
+	bank = base | (bank & mask);
+	_control_bank(bank, info.prg.rom.max.banks_32k)
+	map_prg_rom_8k(4, 0, bank);
+
+	map_prg_rom_8k_update();
+}
+INLINE static void chr_fix_446_anrom(void) {
+	DBWORD bank = m446.latch & 0x03;
+
+	_control_bank(bank, info.chr.rom.max.banks_8k)
+	bank <<= 13;
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+}
+INLINE static void wram_fix_446_anrom(void) {
+	cpu.prg_ram_wr_active = FALSE;
+	cpu.prg_ram_rd_active = FALSE;
+}
+INLINE static void mirroring_fix_446_anrom(void) {
+	if (m446.reg[4] & 0x01) {
+		mirroring_V();
+	} else {
+		mirroring_H();
+	}
+}
+
+INLINE static void prg_fix_446_gnrom(void) {
+	WORD base = prg_base() >> 2;
+	WORD mask = prg_mask() >> 2;
+	WORD bank = m446.latch >> 4;
+
+	bank = base | (bank & mask);
+	_control_bank(bank, info.prg.rom.max.banks_32k)
+	map_prg_rom_8k(4, 0, bank);
+
+	map_prg_rom_8k_update();
+}
+INLINE static void chr_fix_446_gnrom(void) {
+	DBWORD bank = m446.latch & 0x03;
+
+	_control_bank(bank, info.chr.rom.max.banks_8k)
+	bank <<= 13;
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+}
+INLINE static void wram_fix_446_gnrom(void) {
+	cpu.prg_ram_wr_active = FALSE;
+	cpu.prg_ram_rd_active = FALSE;
+}
+INLINE static void mirroring_fix_446_gnrom(void) {
+	if (m446.reg[4] & 0x01) {
+		mirroring_V();
+	} else {
+		mirroring_H();
+	}
+}
+
+void prg_swap_446_mmc1(WORD address, WORD value) {
+	WORD base = prg_base() >> 1;
+	WORD mask = prg_mask() >> 1;
+
+	prg_swap_MMC1(address, (base | (value & mask)));
+}
+void chr_swap_446_mmc1(WORD address, WORD value) {
+	WORD base = chr_base() >> 2;
+	WORD mask = 0x1F;
+
+	chr_swap_MMC1(address, (base | (value & mask)));
+}
+
+void prg_swap_446_mmc3(WORD address, WORD value) {
+	WORD base = prg_base();
+	WORD mask = prg_mask();
+
+	value = base | (value & mask);
+	control_bank(info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
+	map_prg_rom_8k_update();
+}
+void chr_swap_446_mmc3(WORD address, WORD value) {
+	WORD base = chr_base();
+	WORD mask = 0xFF;
+
+	value = base | (value & mask);
+	control_bank(info.chr.rom.max.banks_1k)
+	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+}
+
+void prg_swap_446_tlsrom(WORD address, WORD value) {
+	WORD base = prg_base();
+	WORD mask = prg_mask();
+
+	value = base | (value & mask);
+	control_bank(info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
+	map_prg_rom_8k_update();
+}
+void chr_swap_446_tlsrom(WORD address, WORD value) {
+	WORD base = chr_base();
+	WORD mask = 0x7F;
+
+	value = base | (value & mask);
+	control_bank(info.chr.rom.max.banks_1k)
+	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+}
+
+void prg_swap_446_189(WORD address, WORD value) {
+	const WORD slot = (address >> 13) & 0x03;
+	WORD base = prg_base() & ~3;
+
+	value = base | ((m446.reg189 & 0x03) << 2) | slot;
+	control_bank(info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1,slot, value);
+	map_prg_rom_8k_update();
+}
+void chr_swap_446_189(WORD address, WORD value) {
+	WORD base = chr_base();
+	WORD mask = 0xFF;
+
+	value = base | (value & mask);
+	control_bank(info.chr.rom.max.banks_1k)
+	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 }

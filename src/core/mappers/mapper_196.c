@@ -59,7 +59,7 @@ void extcl_cpu_wr_mem_196(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x6FFF)) {
 		m196.reg[0] = 1;
 		m196.reg[1] = value | (value >> 4);
-		MMC3_prg_fix(mmc3.bank_to_update);
+		MMC3_prg_fix();
 		return;
 	}
 	if (address >= 0x8000) {

@@ -68,16 +68,16 @@ void map_init_353(void) {
 void extcl_cpu_wr_mem_353(WORD address, BYTE value) {
 	if ((address & 0x0FFF) == 0x0080) {
 		m353.reg = (address >> 13) & 0x03;
-		MMC3_prg_fix(mmc3.bank_to_update);
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_prg_fix();
+		MMC3_chr_fix();
 		MMC3_mirroring_fix();
 		return;
 	}
 	switch (address & 0xE001) {
 		case 0x8000:
 			mmc3.bank_to_update = value;
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 			MMC3_mirroring_fix();
 			return;
 		case 0x8001:
@@ -85,8 +85,8 @@ void extcl_cpu_wr_mem_353(WORD address, BYTE value) {
 
 			switch (mmc3.bank_to_update & 0x07) {
 				case 0:
-					MMC3_prg_fix(mmc3.bank_to_update);
-					MMC3_chr_fix(mmc3.bank_to_update);
+					MMC3_prg_fix();
+					MMC3_chr_fix();
 					MMC3_mirroring_fix();
 					return;
 				case 1:
@@ -94,7 +94,7 @@ void extcl_cpu_wr_mem_353(WORD address, BYTE value) {
 				case 3:
 				case 4:
 				case 5:
-					MMC3_chr_fix(mmc3.bank_to_update);
+					MMC3_chr_fix();
 					MMC3_mirroring_fix();
 					return;
 				default:
@@ -111,7 +111,7 @@ BYTE extcl_save_mapper_353(BYTE mode, BYTE slot, FILE *fp) {
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_chr_fix();
 		MMC3_mirroring_fix();
 	}
 

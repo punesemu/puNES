@@ -58,8 +58,8 @@ void map_init_44(void) {
 void extcl_cpu_wr_mem_44(WORD address, BYTE value) {
 	if ((address & 0xE001) == 0xA001) {
 		m44.reg = value & 0x07;
-		MMC3_prg_fix(mmc3.bank_to_update);
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_prg_fix();
+		MMC3_chr_fix();
 	}
 	extcl_cpu_wr_mem_MMC3(address, value);
 }

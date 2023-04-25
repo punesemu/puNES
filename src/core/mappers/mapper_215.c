@@ -74,13 +74,13 @@ void extcl_cpu_wr_mem_215(WORD address, BYTE value) {
 		switch (address & 0x0007) {
 			case 0:
 				m215.reg[0] = value;
-				MMC3_prg_fix(mmc3.bank_to_update);
-				MMC3_chr_fix(mmc3.bank_to_update);
+				MMC3_prg_fix();
+				MMC3_chr_fix();
 				return;
 			case 1:
 				m215.reg[1] = value;
-				MMC3_prg_fix(mmc3.bank_to_update);
-				MMC3_chr_fix(mmc3.bank_to_update);
+				MMC3_prg_fix();
+				MMC3_chr_fix();
 				return;
 			case 2:
 				m215.reg[2] = value & 0x07;

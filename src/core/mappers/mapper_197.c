@@ -24,7 +24,7 @@
 #include "save_slot.h"
 
 void prg_swap_197(WORD address, WORD value);
-void chr_fix_197(BYTE value);
+void chr_fix_197(void);
 
 struct _m197 {
 	BYTE reg;
@@ -63,7 +63,7 @@ void extcl_cpu_wr_mem_197(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		if (cpu.prg_ram_wr_active) {
 			m197.reg = value;
-			MMC3_prg_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
 		}
 		return;
 	}
@@ -77,7 +77,7 @@ void extcl_cpu_wr_mem_197(WORD address, BYTE value) {
 				case 4:
 				case 5:
 					mmc3.reg[mmc3.bank_to_update & 0x07] = value;
-					MMC3_chr_fix(mmc3.bank_to_update);
+					MMC3_chr_fix();
 					return;
 				default:
 					extcl_cpu_wr_mem_MMC3(address, value);
@@ -103,7 +103,7 @@ void prg_swap_197(WORD address, WORD value) {
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-void chr_fix_197(UNUSED(BYTE value)) {
+void chr_fix_197(void) {
 	WORD slot[4];
 	DBWORD bank = 0;
 

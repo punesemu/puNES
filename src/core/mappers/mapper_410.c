@@ -70,8 +70,8 @@ void extcl_cpu_wr_mem_410(WORD address, BYTE value) {
 		if (cpu.prg_ram_wr_active && !(m410.reg[3] & 0x40)) {
 			m410.reg[m410.index] = value;
 			m410.index = (m410.index + 1) & 0x03;
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 		}
 		return;
 	}
@@ -85,7 +85,7 @@ BYTE extcl_save_mapper_410(BYTE mode, BYTE slot, FILE *fp) {
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_chr_fix();
 	}
 
 	return (EXIT_OK);

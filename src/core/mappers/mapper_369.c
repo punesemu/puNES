@@ -23,9 +23,9 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_fix_369(BYTE value);
+void prg_fix_369(void);
 void prg_swap_369(WORD address, WORD value);
-void chr_fix_369(BYTE value);
+void chr_fix_369(void);
 void chr_swap_369(WORD address, WORD value);
 
 struct _m369 {
@@ -80,8 +80,8 @@ void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
 		case 0x4000:
 			if (cpu.prg_ram_wr_active && (address & 0x0100)) {
 				m369.reg = value;
-				MMC3_prg_fix(mmc3.bank_to_update);
-				MMC3_chr_fix(mmc3.bank_to_update);
+				MMC3_prg_fix();
+				MMC3_chr_fix();
 			}
 			return;
 		case 0x6000:
@@ -107,11 +107,11 @@ void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
 					case 3:
 					case 4:
 					case 5:
-						MMC3_chr_fix(mmc3.bank_to_update);
+						MMC3_chr_fix();
 						return;
 					case 6:
 					case 7:
-						MMC3_prg_fix(mmc3.bank_to_update);
+						MMC3_prg_fix();
 						return;
 				}
 			}
@@ -131,7 +131,7 @@ void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
 		case 0xF000:
 			if (m369.reg == 0x13) {
 				m369.smb2j = value;
-				MMC3_prg_fix(mmc3.bank_to_update);
+				MMC3_prg_fix();
 			}
 			extcl_cpu_wr_mem_MMC3(address, value);
 			return;
@@ -153,7 +153,7 @@ BYTE extcl_save_mapper_369(BYTE mode, BYTE slot, FILE *fp) {
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
-		MMC3_prg_fix(mmc3.bank_to_update);
+		MMC3_prg_fix();
 	}
 
 	return (EXIT_OK);
@@ -196,7 +196,7 @@ void extcl_update_r2006_369(WORD new_r2006, WORD old_r2006) {
 	}
 }
 
-void prg_fix_369(BYTE value) {
+void prg_fix_369(void) {
 	WORD bank = 0;
 
 	m369tmp.prg_6000 = NULL;
@@ -239,7 +239,7 @@ void prg_fix_369(BYTE value) {
 			return;
 		case 0x37:
 		case 0xFF:
-			prg_fix_MMC3(value);
+			prg_fix_MMC3();
 			return;
 	}
 }
@@ -252,7 +252,7 @@ void prg_swap_369(WORD address, WORD value) {
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-void chr_fix_369(BYTE value) {
+void chr_fix_369(void) {
 	DBWORD bank = 0;
 
 	switch (m369.reg) {
@@ -297,7 +297,7 @@ void chr_fix_369(BYTE value) {
 			return;
 		case 0x37:
 		case 0xFF:
-			chr_fix_MMC3(value);
+			chr_fix_MMC3();
 			return;
 	}
 }

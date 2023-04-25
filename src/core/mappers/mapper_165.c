@@ -24,7 +24,7 @@
 #include "save_slot.h"
 
 void prg_swap_165(WORD address, WORD value);
-void chr_fix_165(BYTE value);
+void chr_fix_165(void);
 void chr_swap_165(WORD address, WORD value);
 
 INLINE static BYTE chr_control_165(WORD address);
@@ -81,7 +81,7 @@ void extcl_cpu_wr_mem_165(WORD address, BYTE value) {
 				case 4:
 				case 5:
 					mmc3.reg[mmc3.bank_to_update & 0x07] = value;
-					MMC3_chr_fix(mmc3.bank_to_update);
+					MMC3_chr_fix();
 					return;
 				default:
 					extcl_cpu_wr_mem_MMC3(address, value);
@@ -96,20 +96,20 @@ BYTE extcl_save_mapper_165(BYTE mode, BYTE slot, FILE *fp) {
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_chr_fix();
 	}
 
 	return (EXIT_OK);
 }
 void extcl_after_rd_chr_165(WORD address) {
 	if (chr_control_165(address)) {
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_chr_fix();
 	}
 }
 void extcl_update_r2006_165(WORD new_r2006, WORD old_r2006) {
 	extcl_update_r2006_MMC3(new_r2006, old_r2006);
 	if ((new_r2006 < 0x2000) && chr_control_165(new_r2006)) {
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_chr_fix();
 	}
 }
 void extcl_wr_chr_165(WORD address, BYTE value) {
@@ -125,7 +125,7 @@ void prg_swap_165(WORD address, WORD value) {
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-void chr_fix_165(UNUSED(BYTE value)) {
+void chr_fix_165(void) {
 	WORD bank[2] = { 0, 0 };
 
 	if (!m165.reg) {

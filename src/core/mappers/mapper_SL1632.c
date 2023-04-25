@@ -90,8 +90,8 @@ void extcl_cpu_wr_mem_SL1632(WORD address, BYTE value) {
 	if (address == 0xA131) {
 		sl1632.mode = value;
 		if (value & 0x02) {
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 			MMC3_mirroring_fix();
 		} else {
 			sl1632_update();

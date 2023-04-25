@@ -63,8 +63,8 @@ void extcl_cpu_wr_mem_395(WORD address, BYTE value) {
 			const BYTE index = (address & 0x0010) >> 4;
 
 			m395.reg[index] = value;
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 		}
 		return;
 	}

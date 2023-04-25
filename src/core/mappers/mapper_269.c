@@ -87,8 +87,8 @@ void extcl_cpu_wr_mem_269(WORD address, BYTE value) {
 	if (address == 0x5000) {
 		if (!(m269.reg[3] & 0x80)) {
 			m269.reg[m269.write++ & 0x03] = value;
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 		}
 		return;
 	}

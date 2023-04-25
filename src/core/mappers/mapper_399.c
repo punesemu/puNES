@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_fix_399(BYTE value);
-void chr_fix_399(BYTE value);
+void prg_fix_399(void);
+void chr_fix_399(void);
 
 struct _m399 {
 	BYTE reg[4];
@@ -64,8 +64,8 @@ void map_init_399(void) {
 void extcl_cpu_wr_mem_399(WORD address, BYTE value) {
 	if ((address >= 0x8000) && (address <= 0x9FFF)) {
 		m399.reg[(!(address & 0x0001) << 1) | (value >> 7)] = value;
-		MMC3_prg_fix(mmc3.bank_to_update);
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_prg_fix();
+		MMC3_chr_fix();
 		return;
 	}
 	extcl_cpu_wr_mem_MMC3(address, value);
@@ -77,8 +77,8 @@ BYTE extcl_save_mapper_399(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_fix_399(UNUSED(BYTE value)) {
-	WORD bank;
+void prg_fix_399(void) {
+	WORD bank = 0;
 
 	bank = 0;
 	_control_bank(bank, info.prg.rom.max.banks_8k)
@@ -98,7 +98,7 @@ void prg_fix_399(UNUSED(BYTE value)) {
 
 	map_prg_rom_8k_update();
 }
-void chr_fix_399(UNUSED(BYTE value)) {
+void chr_fix_399(void) {
 	DBWORD bank;
 
 	bank = m399.reg[2];

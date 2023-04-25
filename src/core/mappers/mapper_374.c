@@ -21,70 +21,42 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_374(void);
-INLINE static void chr_fix_374(void);
+void prg_swap_374(WORD address, WORD value);
+void chr_swap_374(WORD address, WORD value);
 
 struct _m374 {
-	BYTE index;
+	BYTE reg;
 } m374;
 
 void map_init_374(void) {
-	info.mapper.submapper = MAP374;
-	map_init_MMC1();
-
-	EXTCL_AFTER_MAPPER_INIT(374);
+	EXTCL_AFTER_MAPPER_INIT(MMC1);
+	EXTCL_CPU_WR_MEM(MMC1);
 	EXTCL_SAVE_MAPPER(374);
 	mapper.internal_struct[0] = (BYTE *)&m374;
 	mapper.internal_struct_size[0] = sizeof(m374);
 	mapper.internal_struct[1] = (BYTE *)&mmc1;
 	mapper.internal_struct_size[1] = sizeof(mmc1);
 
-	if (info.reset == RESET) {
-		m374.index++;
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		m374.index = 0;
-	}
+	init_MMC1(MMC1A);
+	MMC1_prg_swap = prg_swap_374;
+	MMC1_chr_swap = chr_swap_374;
 
-	mmc1.prg_mask = 0x07;
-	mmc1.prg_upper = m374.index << 3;
-	mmc1.chr_upper = m374.index << 5;
-}
-void extcl_after_mapper_init_374(void) {
-	prg_fix_374();
-	chr_fix_374();
+	if (info.reset == RESET) {
+		m374.reg++;
+	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+		m374.reg = 0;
+	}
 }
 BYTE extcl_save_mapper_374(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m374.index);
+	save_slot_ele(mode, slot, m374.reg);
 	extcl_save_mapper_MMC1(mode, slot, fp);
 
 	return (EXIT_OK);
 }
 
-INLINE static void prg_fix_374(void) {
-	WORD bank;
-
-	bank = mmc1.prg_upper | (mmc1.prg0 & mmc1.prg_mask);
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-
-	bank = mmc1.prg_upper | mmc1.prg_mask;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank);
-
-	map_prg_rom_8k_update();
+void prg_swap_374(WORD address, WORD value) {
+	prg_swap_MMC1(address, ((m374.reg << 3) | (value & 0x07)));
 }
-INLINE static void chr_fix_374(void) {
-	DBWORD bank;
-
-	bank = mmc1.chr_upper & 0x1F;
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+void chr_swap_374(WORD address, WORD value) {
+	chr_swap_MMC1(address, ((m374.reg << 5) | (value & 0x1F)));
 }

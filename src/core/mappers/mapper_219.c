@@ -62,8 +62,8 @@ void extcl_cpu_wr_mem_219(WORD address, BYTE value) {
 		m219.reg[0] = address & 0x0001
 			? (m219.reg[0] & 0xFD) | ((value & 0x20) >> 4)
 			: (m219.reg[0] & 0xFE) | ((value & 0x08) >> 3);
-		MMC3_prg_fix(mmc3.bank_to_update);
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_prg_fix();
+		MMC3_chr_fix();
 		return;
 	}
 	if (address >= 0x8000) {
@@ -93,8 +93,8 @@ void extcl_cpu_wr_mem_219(WORD address, BYTE value) {
 						mmc3.reg[index] |= ((value & 0x0F) << 4);
 					}
 				}
-				MMC3_prg_fix(mmc3.bank_to_update);
-				MMC3_chr_fix(mmc3.bank_to_update);
+				MMC3_prg_fix();
+				MMC3_chr_fix();
 				return;
 			default:
 				extcl_cpu_wr_mem_MMC3(address, value);

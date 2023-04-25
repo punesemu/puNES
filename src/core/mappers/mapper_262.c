@@ -74,7 +74,7 @@ void extcl_cpu_wr_mem_262(WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x4FFF)) {
 		if (address & 0x0100) {
 			m262.reg = value;
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_chr_fix();
 		}
 		return;
 	}
@@ -96,7 +96,7 @@ BYTE extcl_save_mapper_262(BYTE mode, BYTE slot, FILE *fp) {
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_chr_fix();
 	}
 
 	return (EXIT_OK);

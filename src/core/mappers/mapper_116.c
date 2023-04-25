@@ -43,10 +43,8 @@ INLINE static void cpu_wr_mem_vrc2(WORD address, BYTE value);
 INLINE static void prg_fix_vrc2(void);
 INLINE static void chr_fix_vrc2(void);
 
-INLINE static void cpu_wr_mem_mmc1(WORD address, BYTE value);
-INLINE static void prg_fix_mmc1(void);
-INLINE static void chr_fix_mmc1(void);
-INLINE static void mirroring_fix_mmc1(void);
+void prg_swap_116_mmc1(WORD address, WORD value);
+void chr_swap_116_mmc1(WORD address, WORD value);
 
 struct _m116 {
 	BYTE mapper;
@@ -82,7 +80,6 @@ void map_init_116(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc1;
 	mapper.internal_struct_size[1] = sizeof(mmc1);
 
-	memset(&mmc1, 0x00, sizeof(mmc1));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m116, 0x00, sizeof(m116));
 
@@ -92,16 +89,17 @@ void map_init_116(void) {
 	MMC3_prg_swap = prg_swap_116_mmc3;
 	MMC3_chr_swap = chr_swap_116_mmc3;
 
+	init_MMC1(MMC1A);
+	MMC1_prg_swap = prg_swap_116_mmc1;
+	MMC1_chr_swap = chr_swap_116_mmc1;
+
 	m116.vrc2.chr[0] = 0xFF;
 	m116.vrc2.chr[1] = 0xFF;
 	m116.vrc2.chr[2] = 0xFF;
 	m116.vrc2.chr[3] = 0xFF;
 
-	mmc1.ctrl = 0x0C;
-	mmc1.prg_mode = 3;
-
 	// AV Kyuukyoku Mahjong 2 (Asia) (Ja) (Ge De) (Unl).nes
-	if ((prg_size() == (1024 * 128)) && (prg_size() == chr_size())) {
+	if ((prg_size() == (size_t)(1024 * 128)) && (prg_size() == chr_size())) {
 		info.mapper.submapper = 2;
 	};
 
@@ -140,7 +138,7 @@ void extcl_cpu_wr_mem_116(WORD address, BYTE value) {
 		} else if (m116.mapper == M116_VRC2) {
 			cpu_wr_mem_vrc2(address, value);
 		} else if (m116.mapper == M116_MMC1) {
-			cpu_wr_mem_mmc1(address, value);
+			extcl_cpu_wr_mem_MMC1(address, value);
 		}
 	}
 }
@@ -187,20 +185,20 @@ void extcl_update_r2006_116(WORD new_r2006, WORD old_r2006) {
 
 INLINE static void prg_fix_116(void) {
 	if (m116.mapper == M116_MMC3) {
-		MMC3_prg_fix(mmc3.bank_to_update);
+		MMC3_prg_fix();
 	} else if (m116.mapper == M116_VRC2) {
 		prg_fix_vrc2();
 	} else if (m116.mapper == M116_MMC1) {
-		prg_fix_mmc1();
+		MMC1_prg_fix();
 	}
 }
 INLINE static void chr_fix_116(void) {
 	if (m116.mapper == M116_MMC3) {
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_chr_fix();
 	} else if (m116.mapper == M116_VRC2) {
 		chr_fix_vrc2();
 	} else if (m116.mapper == M116_MMC1) {
-		chr_fix_mmc1();
+		MMC1_chr_fix();
 	}
 }
 INLINE static void mirroring_fix_116(void) {
@@ -219,7 +217,7 @@ INLINE static void switch_mode(void) {
 			m116.mapper = M116_MMC1;
 			irq.high &= ~EXT_IRQ;
 			if (info.mapper.submapper != 1) {
-				cpu_wr_mem_mmc1(0x8000, 0x80);
+				extcl_cpu_wr_mem_MMC1(0x8000, 0x80);
 			}
 			break;
 		case 0:
@@ -260,9 +258,7 @@ void chr_swap_116_mmc3(WORD address, WORD value) {
 }
 
 INLINE static void cpu_wr_mem_vrc2(WORD address, BYTE value) {
-	WORD vrc2_address;
-
-	vrc2_address = address_VRC2(address);
+	WORD vrc2_address = address_VRC2(address);
 
 	switch (vrc2_address) {
 		case 0x8000:
@@ -305,7 +301,7 @@ INLINE static void cpu_wr_mem_vrc2(WORD address, BYTE value) {
 INLINE static void prg_fix_vrc2(void) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
-	WORD bank;
+	WORD bank = 0;
 
 	bank = (base & ~mask) | (m116.vrc2.prg[0] & mask);
 	_control_bank(bank, info.prg.rom.max.banks_8k)
@@ -328,7 +324,7 @@ INLINE static void prg_fix_vrc2(void) {
 INLINE static void chr_fix_vrc2(void) {
 	WORD base = ((m116.reg & 0x04) << 6) | chr_base();
 	WORD mask = chr_mask();
-	DBWORD bank;
+	DBWORD bank = 0;
 
 	bank = (base & ~mask) | (m116.vrc2.chr[0] & mask);
 	_control_bank(bank, info.chr.rom.max.banks_1k)
@@ -363,129 +359,20 @@ INLINE static void chr_fix_vrc2(void) {
 	chr.bank_1k[7] = chr_pnt(bank << 10);
 }
 
-INLINE static void cpu_wr_mem_mmc1(WORD address, BYTE value) {
-	if (mmc1.reset) {
-		mmc1.reset = FALSE;
-		if (cpu.double_wr) {
-			return;
-		}
-	}
-	if (value & 0x80) {
-		mmc1.reset = TRUE;
-		mmc1.pos = mmc1.reg = 0;
-		mmc1.ctrl |= 0x0C;
-		return;
-	}
-
-	mmc1.reg |= ((value & 0x01) << mmc1.pos);
-
-	if (mmc1.pos++ == 4) {
-		BYTE reg = (address >> 13) & 0x03;
-
-		switch (reg) {
-			case 0:
-				mmc1.ctrl = mmc1.reg;
-				mmc1.prg_mode = (mmc1.ctrl & 0x0C) >> 2;
-				mmc1.chr_mode = (mmc1.ctrl & 0x10) >> 4;
-				mirroring_fix_mmc1();
-				prg_fix_116();
-				chr_fix_116();
-				break;
-			case 1:
-				mmc1.chr0 = mmc1.reg;
-				chr_fix_116();
-				break;
-			case 2:
-				mmc1.chr1 = mmc1.reg;
-				chr_fix_116();
-				break;
-			case 3:
-				mmc1.prg0 = mmc1.reg;
-				cpu.prg_ram_rd_active = (mmc1.prg0 & 0x10 ? FALSE : TRUE);
-				cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
-				prg_fix_116();
-				break;
-		}
-		mmc1.pos = mmc1.reg = 0;
-	}
-}
-INLINE static void prg_fix_mmc1(void) {
-	WORD base = prg_base() >> 1;
-	WORD mask = prg_mask() >> 1;
-	WORD bank;
-
+void prg_swap_116_mmc1(WORD address, WORD value) {
 	if (info.mapper.submapper == 2) {
-		bank = ((base & ~mask) | (mmc1.prg0  & mask)) >> 1;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
-
-		bank = ((base & ~mask) | mask) >> 1;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 2, bank);
+		value >>= 1;
 	} else {
-		switch (mmc1.prg_mode) {
-			case 0:
-			case 1:
-				bank = ((base & ~mask) | (mmc1.prg0 & mask)) >> 1;
-				_control_bank(bank, info.prg.rom.max.banks_32k)
-				map_prg_rom_8k(4, 0, bank);
-				break;
-			case 2:
-				bank = (base & ~mask) | (mmc1.prg0 & mask);
-				_control_bank(bank, info.prg.rom.max.banks_16k)
-				map_prg_rom_8k(2, 2, bank);
+		WORD base = prg_base() >> 1;
+		WORD mask = prg_mask() >> 1;
 
-				bank = base & ~mask;
-				_control_bank(bank, info.prg.rom.max.banks_16k)
-				map_prg_rom_8k(2, 0, bank);
-				break;
-			case 3:
-				bank = (base & ~mask) | (mmc1.prg0 & mask);
-				_control_bank(bank, info.prg.rom.max.banks_16k)
-				map_prg_rom_8k(2, 0, bank);
-
-				bank = (base & ~mask) | mask;
-				_control_bank(bank, info.prg.rom.max.banks_16k)
-				map_prg_rom_8k(2, 2, bank);
-				break;
-		}
+		value = (base & ~mask) | (value & mask);
 	}
-	map_prg_rom_8k_update();
+	prg_swap_MMC1(address, value);
 }
-INLINE static void chr_fix_mmc1(void) {
+void chr_swap_116_mmc1(WORD address, WORD value) {
 	WORD base = chr_base() >> 2;
 	WORD mask = chr_mask() >> 2;
-	DBWORD bank;
 
-	bank = (base & ~mask) | (mmc1.chr0 & mask);
-	_control_bank(bank, info.chr.rom.max.banks_4k)
-	bank <<= 12;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-
-	bank = (base & ~mask) | (mmc1.chr1 & mask);
-	_control_bank(bank, info.chr.rom.max.banks_4k)
-	bank <<= 12;
-	chr.bank_1k[4] = chr_pnt(bank);
-	chr.bank_1k[5] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x0C00);
-}
-INLINE static void mirroring_fix_mmc1(void) {
-	switch (mmc1.ctrl & 0x03) {
-		case 0x00:
-			mirroring_SCR0();
-			break;
-		case 0x01:
-			mirroring_SCR1();
-			break;
-		case 0x02:
-			mirroring_V();
-			break;
-		case 0x03:
-			mirroring_H();
-			break;
-	}
+	chr_swap_MMC1(address, (base & ~mask) | (value & mask));
 }

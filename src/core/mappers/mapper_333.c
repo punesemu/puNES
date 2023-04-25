@@ -70,8 +70,8 @@ void extcl_cpu_wr_mem_333(WORD address, BYTE value) {
 		case 0xF000:
 		case 0xF001:
 			m333.reg = value;
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 			return;
 	}
 	extcl_cpu_wr_mem_MMC3(address, value);

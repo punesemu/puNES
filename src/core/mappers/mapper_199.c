@@ -83,7 +83,7 @@ BYTE extcl_save_mapper_199(BYTE mode, BYTE slot, FILE *fp) {
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_chr_fix();
 		prg_5000_fix();
 	}
 
@@ -99,5 +99,5 @@ void chr_swap_199(WORD address, WORD value) {
 }
 
 INLINE static void prg_5000_fix(void) {
-	m199tmp.prg_5000 = &prg.ram_plus[0x2000 & ((info.prg.ram.banks_8k_plus * 0x2000) - 1)];
+	m199tmp.prg_5000 = &prg.ram_plus[0x2000 & ((prg_ram_plus_size()) - 1)];
 }

@@ -78,8 +78,8 @@ void extcl_cpu_wr_mem_344(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		if (cpu.prg_ram_wr_active) {
 			m344.reg = address;
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 		}
 		return;
 	}
@@ -89,7 +89,7 @@ void extcl_cpu_wr_mem_344(WORD address, BYTE value) {
 				case 6:
 					mmc3.reg[6] = value;
 					if (m344.reg & 0x04) {
-						MMC3_prg_fix(mmc3.bank_to_update);
+						MMC3_prg_fix();
 					} else {
 						if (mmc3.bank_to_update & 0x40) {
 							MMC3_prg_swap(0xC000, value);

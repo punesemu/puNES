@@ -80,8 +80,8 @@ void extcl_cpu_wr_mem_401(WORD address, BYTE value) {
 		if ((cpu.prg_ram_wr_active) && !(m401.reg[3] & 0x40)) {
 			m401.reg[m401.index] = value;
 			m401.index = (m401.index + 1) & 0x03;
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 		}
 		return;
 	}

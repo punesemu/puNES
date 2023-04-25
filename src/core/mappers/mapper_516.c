@@ -58,8 +58,8 @@ void map_init_516(void) {
 void extcl_cpu_wr_mem_516(WORD address, BYTE value) {
 	if (address & 0x0010) {
 		m516.reg = address & 0x0F;
-		MMC3_prg_fix(mmc3.bank_to_update);
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_prg_fix();
+		MMC3_chr_fix();
 	}
 	extcl_cpu_wr_mem_MMC3(address, value);
 }

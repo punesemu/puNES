@@ -16,13 +16,24 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_FARIDSLROM8IN1_H_
-#define MAPPER_FARIDSLROM8IN1_H_
+#ifndef MAPPER_111_H_
+#define MAPPER_111_H_
 
 #include "common.h"
 
-void map_init_FARIDSLROM8IN1(void);
-void extcl_cpu_wr_mem_FARIDSLROM8IN1(WORD address, BYTE value);
-BYTE extcl_save_mapper_FARIDSLROM8IN1(BYTE mode, BYTE slot, FILE *fp);
+void map_init_111(void);
 
-#endif /* MAPPER_FARIDSLROM8IN1_H_ */
+void extcl_cpu_wr_mem_111_MMC1(WORD address, BYTE value);
+BYTE extcl_save_mapper_111_MMC1(BYTE mode, BYTE slot, FILE *fp);
+
+void extcl_after_mapper_init_111_GTROM(void);
+void extcl_mapper_quit_111_GTROM(void);
+void extcl_cpu_wr_mem_111_GTROM(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_111_GTROM(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_111_GTROM(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_111_GTROM(void);
+void extcl_wr_nmt_111_GTROM(WORD address, BYTE value);
+BYTE extcl_rd_nmt_111_GTROM(WORD address);
+void extcl_battery_io_111_GTROM(BYTE mode, FILE *fp);
+
+#endif /* MAPPER_111_H_ */

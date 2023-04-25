@@ -21,6 +21,9 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+void prg_swap_297_mmc1(WORD address, WORD value);
+void chr_swap_297_mmc1(WORD address, WORD value);
+
 INLINE static void prg_fix_297(void);
 INLINE static void chr_fix_297(void);
 INLINE static void mirroring_fix_297(void);
@@ -30,9 +33,6 @@ struct _m297 {
 } m297;
 
 void map_init_297(void) {
-	info.mapper.submapper = MAP297;
-	map_init_MMC1();
-
 	EXTCL_AFTER_MAPPER_INIT(297);
 	EXTCL_CPU_WR_MEM(297);
 	EXTCL_SAVE_MAPPER(297);
@@ -45,9 +45,9 @@ void map_init_297(void) {
 		memset(&m297, 0x00, sizeof(m297));
 	}
 
-	mmc1.prg_mask = 0x07;
-	mmc1.prg_upper = 0x08;
-	mmc1.chr_upper = 0x20;
+	init_MMC1(MMC1A);
+	MMC1_prg_swap = prg_swap_297_mmc1;
+	MMC1_chr_swap = chr_swap_297_mmc1;
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -93,40 +93,53 @@ BYTE extcl_save_mapper_297(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
+void prg_swap_297_mmc1(WORD address, WORD value) {
+	prg_swap_MMC1(address, (0x08 | (value & 0x07)));
+}
+void chr_swap_297_mmc1(WORD address, WORD value) {
+	chr_swap_MMC1(address, (0x20 | (value & 0x1F)));
+}
+
 INLINE static void prg_fix_297(void) {
-	WORD bank[2];
-
 	if (m297.reg[0] & 0x01) {
-		bank[0] = mmc1.prg_upper | (mmc1.prg0 & mmc1.prg_mask);
-		bank[1] = mmc1.prg_upper | mmc1.prg_mask;
+		MMC1_prg_fix();
 	} else {
-		bank[0] = ((m297.reg[0] & 0x02) << 1) | ((m297.reg[1] & 0x30) >> 4);
-		bank[1] = ((m297.reg[0] & 0x02) << 1) | 0x03;
+		WORD bank = 0;
+
+		bank = ((m297.reg[0] & 0x02) << 1) | ((m297.reg[1] & 0x30) >> 4);
+		_control_bank(bank, info.prg.rom.max.banks_16k)
+		map_prg_rom_8k(2, 0, bank);
+
+		bank = ((m297.reg[0] & 0x02) << 1) | 0x03;
+		_control_bank(bank, info.prg.rom.max.banks_16k)
+		map_prg_rom_8k(2, 2, bank);
+
+		map_prg_rom_8k_update();
 	}
-
-	_control_bank(bank[0], info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank[0]);
-
-	_control_bank(bank[1], info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank[1]);
-
-	map_prg_rom_8k_update();
 }
 INLINE static void chr_fix_297(void) {
-	DBWORD bank;
+	if (m297.reg[0] & 0x01) {
+		MMC1_chr_fix();
+	} else {
+		DBWORD bank;
 
-	bank = m297.reg[1] & 0x0F;
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+		bank = m297.reg[1] & 0x0F;
+		_control_bank(bank, info.chr.rom.max.banks_8k)
+		bank <<= 13;
+		chr.bank_1k[0] = chr_pnt(bank);
+		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+		chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	}
 }
 INLINE static void mirroring_fix_297(void) {
-	mirroring_V();
+	if (m297.reg[0] & 0x01) {
+		mirroring_fix_MMC1();
+	} else {
+		mirroring_V();
+	}
 }

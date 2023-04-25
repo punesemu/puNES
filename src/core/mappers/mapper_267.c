@@ -61,8 +61,8 @@ void extcl_cpu_wr_mem_267(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x6FFF)) {
 		if (!(m267.reg & 0x80)) {
 			m267.reg = value;
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 		}
 		return;
 	}

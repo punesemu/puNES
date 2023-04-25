@@ -67,7 +67,7 @@ void extcl_cpu_wr_mem_512(WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x5FFF)) {
 		if ((address & 0x1100) == 0x0100) {
 			m512.reg = value & 0x03;
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_chr_fix();
 		}
 		return;
 	}
@@ -82,7 +82,7 @@ BYTE extcl_save_mapper_512(BYTE mode, BYTE slot, FILE *fp) {
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix(mmc3.bank_to_update);
+		MMC3_chr_fix();
 	}
 
 	return (EXIT_OK);

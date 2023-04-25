@@ -64,8 +64,8 @@ void extcl_cpu_wr_mem_411(WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		if (cpu.prg_ram_wr_active) {
 			m411.reg[address & 0x0001] = value;
-			MMC3_prg_fix(mmc3.bank_to_update);
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_prg_fix();
+			MMC3_chr_fix();
 		}
 		return;
 	}

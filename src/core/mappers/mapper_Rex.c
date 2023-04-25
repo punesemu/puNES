@@ -79,7 +79,7 @@ void extcl_cpu_wr_mem_Rexdbz(WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address < 0x4FFF)) {
 		if (address & 0x0100) {
 			rexdbz.reg = value;
-			MMC3_chr_fix(mmc3.bank_to_update);
+			MMC3_chr_fix();
 		}
 		return;
 	}

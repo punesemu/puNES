@@ -63,7 +63,7 @@ void extcl_cpu_wr_mem_TxROM(WORD address, BYTE value) {
 				case 4:
 				case 5:
 					mmc3.reg[mmc3.bank_to_update & 0x07] = value;
-					MMC3_chr_fix(mmc3.bank_to_update);
+					MMC3_chr_fix();
 					MMC3_mirroring_fix();
 					break;
 				default:
