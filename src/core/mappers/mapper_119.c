@@ -75,8 +75,7 @@ void chr_swap_119(WORD address, WORD value) {
 		control_bank_with_AND(0x3F, info.chr.ram.max.banks_1k)
 		chr.bank_1k[slot] = &chr.extra.data[value << 10];
 	} else {
-		control_bank_with_AND(0x3F, info.chr.rom.max.banks_1k)
-		chr.bank_1k[slot] = chr_pnt(value << 10);
+		chr_swap_MMC3(address, (value & 0x3F));
 	}
 }
 

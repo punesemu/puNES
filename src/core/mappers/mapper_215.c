@@ -165,11 +165,7 @@ void prg_swap_215(WORD address, WORD value) {
 			value = (value << 1) | (slot & 0x01);
 		}
 	}
-
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, slot, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_215(WORD address, WORD value) {
 	WORD base = info.mapper.submapper == 1
@@ -177,7 +173,5 @@ void chr_swap_215(WORD address, WORD value) {
 		: ((m215.reg[1] & 0x0C) << 6) | ((m215.reg[1] & 0x20) << 2);
 	WORD mask = 0xFF >> ((m215.reg[0] & 0x40) >> 6);
 
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }

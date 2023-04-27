@@ -18,110 +18,100 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
 #include "mem_map.h"
 #include "cpu.h"
-#include "irqA12.h"
 #include "save_slot.h"
 
+void prg_swap_222(WORD address, WORD value);
+void chr_swap_222(WORD address, WORD value);
+
 struct _m222 {
-	BYTE count;
-	BYTE delay;
+	BYTE prescaler;
+	BYTE mode;
+	BYTE count[2];
+	BYTE pending;
 } m222;
 
 void map_init_222(void) {
+	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
 	EXTCL_CPU_WR_MEM(222);
+	EXTCL_CPU_RD_MEM(VRC2and4);
 	EXTCL_SAVE_MAPPER(222);
 	EXTCL_CPU_EVERY_CYCLE(222);
-	EXTCL_PPU_000_TO_34X(MMC3);
-	EXTCL_PPU_000_TO_255(MMC3);
-	EXTCL_PPU_256_TO_319(MMC3);
-	EXTCL_PPU_320_TO_34X(MMC3);
-	EXTCL_UPDATE_R2006(MMC3);
-	EXTCL_IRQ_A12_CLOCK(222);
-
 	mapper.internal_struct[0] = (BYTE *)&m222;
 	mapper.internal_struct_size[0] = sizeof(m222);
+	mapper.internal_struct[1] = (BYTE *)&vrc2and4;
+	mapper.internal_struct_size[1] = sizeof(vrc2and4);
 
 	memset(&m222, 0x00, sizeof(m222));
-	memset(&irqA12, 0x00, sizeof(irqA12));
 
-	irqA12.present = TRUE;
+	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE);
+	VRC2and4_prg_swap = prg_swap_222;
+	VRC2and4_chr_swap = chr_swap_222;
 }
 void extcl_cpu_wr_mem_222(WORD address, BYTE value) {
-	switch (address & 0xF003) {
-		case 0x8000:
-			control_bank(info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 0, value);
-			map_prg_rom_8k_update();
-			return;
-		case 0x9000:
-			if (value & 0x01) {
-				mirroring_H();
-			} else {
-				mirroring_V();
+	switch (address & 0xF000) {
+		case 0xB000:
+		case 0xC000:
+		case 0xD000:
+		case 0xE000:
+			if (!(address & 0x0001)) {
+				extcl_cpu_wr_mem_VRC2and4(address, value);
+				extcl_cpu_wr_mem_VRC2and4(address | 0x0001, value >> 4);
 			}
 			return;
-		case 0xA000:
-			control_bank(info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 1, value);
-			map_prg_rom_8k_update();
-			return;
-		case 0xB000:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[0] = chr_pnt(value << 10);
-			return;
-		case 0xB002:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[1] = chr_pnt(value << 10);
-			return;
-		case 0xC000:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[2] = chr_pnt(value << 10);
-			return;
-		case 0xC002:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[3] = chr_pnt(value << 10);
-			return;
-		case 0xD000:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[4] = chr_pnt(value << 10);
-			return;
-		case 0xD002:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[5] = chr_pnt(value << 10);
-			return;
-		case 0xE000:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[6] = chr_pnt(value << 10);
-			return;
-		case 0xE002:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[7] = chr_pnt(value << 10);
-			return;
 		case 0xF000:
-			//irqA12.latch = value;
-			m222.count = value;
-			irq.high &= ~EXT_IRQ;
+			switch (address & 0x0003) {
+				case 0:
+					m222.mode = FALSE;
+					break;
+				case 1:
+					if (!m222.mode) {
+						m222.count[0] = value & 0x0F;
+						m222.count[1] = value >> 4;
+					}
+					m222.pending = FALSE;
+					break;
+				case 2:
+					m222.mode = TRUE;
+					break;
+			}
+			return;
+		default:
+			extcl_cpu_wr_mem_VRC2and4(address, value);
 			return;
 	}
 }
 BYTE extcl_save_mapper_222(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m222.prescaler);
+	save_slot_ele(mode, slot, m222.mode);
 	save_slot_ele(mode, slot, m222.count);
-	save_slot_ele(mode, slot, m222.delay);
+	save_slot_ele(mode, slot, m222.pending);
+	extcl_save_mapper_VRC2and4(mode, slot, fp);
 
 	return (EXIT_OK);
 }
-void extcl_irq_A12_clock_222(void) {
-	if (!m222.count || (++m222.count < 240)) {
-		return;
-	}
-
-	m222.count = 0;
-	m222.delay = 16;
-}
 void extcl_cpu_every_cycle_222(void) {
-	if (m222.delay && !(--m222.delay)) {
-		irq.high |= EXT_IRQ;
+	BYTE save = m222.prescaler;
+
+	m222.prescaler = m222.pending ? 0 : m222.prescaler + 1;
+	if (m222.mode && !(save & 0x40) && (m222.prescaler & 0x40)) {
+		if ((++m222.count[0] == 0x0F) && (++m222.count[1] == 0x0F)) {
+			m222.pending = TRUE;
+		}
+		m222.count[0] &= 0x0F;
+		m222.count[1] &= 0x0F;
 	}
+	if (m222.pending) {
+		irq.high |= EXT_IRQ;
+	} else {
+		irq.high &= ~EXT_IRQ;
+	}
+}
+
+void prg_swap_222(WORD address, WORD value) {
+	prg_swap_VRC2and4(address, (value & 0x1F));
+}
+void chr_swap_222(WORD address, WORD value) {
+	chr_swap_VRC2and4(address, (value & 0xFFF));
 }

@@ -22,7 +22,6 @@
 #include "common.h"
 
 typedef struct _nes20db {
-	BYTE in_use;
 	struct _nes20db_prgrom {
 		uint32_t size;
 		uint32_t crc32;

@@ -129,17 +129,11 @@ void prg_swap_344(WORD address, WORD value) {
 		value = (address >> 13) & 0x03;
 		mask = 0x03;
 	}
-
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_344(WORD address, WORD value) {
 	WORD base = (m344.reg & 0x03) << 7;
 	WORD mask = m344.reg & 0x02 ? 0x7F : 0xFF;
 
-	value = base | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, (base | (value & mask)));
 }

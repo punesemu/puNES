@@ -21,122 +21,72 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_398(void);
-INLINE static void chr_fix_398(void);
+void prg_swap_398(WORD address, WORD value);
+void chr_swap_398(WORD address, WORD value);
 
 struct _m398 {
-	BYTE reg;
-	BYTE prg[2];
-	BYTE swap;
-	BYTE chr_slot;
+	BYTE reg[2];
 } m398;
 
 void map_init_398(void) {
-	map_init_VRC4(VRC4UNL);
-
-	EXTCL_AFTER_MAPPER_INIT(398);
+	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
 	EXTCL_CPU_WR_MEM(398);
 	EXTCL_SAVE_MAPPER(398);
+	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
 	EXTCL_RD_CHR(398);
 	mapper.internal_struct[0] = (BYTE *)&m398;
 	mapper.internal_struct_size[0] = sizeof(m398);
-	mapper.internal_struct[1] = (BYTE *)&vrc4;
-	mapper.internal_struct_size[1] = sizeof(vrc4);
+	mapper.internal_struct[1] = (BYTE *)&vrc2and4;
+	mapper.internal_struct_size[1] = sizeof(vrc2and4);
 
 	memset(&m398, 0x00, sizeof(m398));
 
-	m398.reg = 0xC0;
-	m398.prg[0] = 0;
-	m398.prg[1] = 1;
-}
-void extcl_after_mapper_init_398(void) {
-	prg_fix_398();
-	chr_fix_398();
+	init_VRC2and4(VRC24_VRC4, 0x01, 0x02, TRUE);
+	VRC2and4_prg_swap = prg_swap_398;
+	VRC2and4_chr_swap = chr_swap_398;
+
+	m398.reg[0] = 0xC0;
 }
 void extcl_cpu_wr_mem_398(WORD address, BYTE value) {
-	BYTE tmp = address & 0xFF;
+	BYTE reg0 = address & 0xFF;
 
-	if (tmp != m398.reg) {
-		m398.reg = tmp;
+	if (reg0 != m398.reg[0]) {
+		m398.reg[0] = reg0;
+		VRC2and4_prg_fix();
+		VRC2and4_chr_fix();
 	}
-
-	switch (address_VRC4(address)) {
-		case 0x8000:
-			m398.prg[0] = value;
-			break;
-		case 0xA000:
-			m398.prg[1] = value;
-			break;
-		case 0x9002:
-		case 0x9003:
-			m398.swap = value & 0x02;
-			break;
-		default:
-			extcl_cpu_wr_mem_VRC4(address, value);
-			break;
-	}
-	prg_fix_398();
-	chr_fix_398();
+	extcl_cpu_wr_mem_VRC2and4(address, value);
 }
 BYTE extcl_save_mapper_398(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m398.reg);
-	save_slot_ele(mode, slot, m398.prg);
-	save_slot_ele(mode, slot, m398.swap);
-	save_slot_ele(mode, slot, m398.chr_slot);
-	extcl_save_mapper_VRC4(mode, slot, fp);
+	extcl_save_mapper_VRC2and4(mode, slot, fp);
 
 	return (EXIT_OK);
 }
 BYTE extcl_rd_chr_398(WORD address) {
-	m398.chr_slot = address >> 10;
-	if (m398.reg & 0x80) {
-		prg_fix_398();
-		chr_fix_398();
-	}
-	return (chr.bank_1k[address >> 10][address & 0x3FF]);
+	const BYTE slot = address >> 10;
+
+	m398.reg[1] = slot;
+	VRC2and4_prg_fix();
+	VRC2and4_chr_fix();
+	return (chr.bank_1k[slot][address & 0x3FF]);
 }
 
-INLINE static void prg_fix_398(void) {
-	WORD bank;
+void prg_swap_398(WORD address, WORD value) {
+	WORD mask = 0x0F;
 
-	if (m398.reg & 0x80) {
-		bank = ((m398.reg & 0xC0) >> 5) | ((vrc4.chr_rom_bank[m398.chr_slot] & 0x04) >> 2);
-		_control_bank(bank, info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, bank);
-	} else {
-		bank = m398.prg[0] & 0x0F;
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 0 ^ m398.swap, bank);
-
-		bank = m398.prg[1] & 0x0F;
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 1, bank);
-
-		bank = 0xFE & 0x0F;
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 2 ^ m398.swap, bank);
-
-		bank = 0xFF & 0x0F;
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 3, bank);
+	if (m398.reg[0] & 0x80) {
+		value = ((((m398.reg[0] & 0xC0) >> 5) | ((vrc2and4.chr[m398.reg[1]] & 0x04) >> 2)) << 2) | ((address >> 13) & 0x03);
+		mask = ~0;
 	}
-	map_prg_rom_8k_update();
+	prg_swap_VRC2and4(address, (value & mask));
 }
-INLINE static void chr_fix_398(void) {
-	DBWORD bank;
+void chr_swap_398(WORD address, WORD value) {
+	WORD mask = 0x1FF;
 
-	if (m398.reg & 0x80) {
-		bank = 0x40 | ((m398.reg & 0x40) >> 3) | (vrc4.chr_rom_bank[m398.chr_slot] & 0x07);
-
-		_control_bank(bank, info.chr.rom.max.banks_8k)
-		bank <<= 13;
-		chr.bank_1k[0] = chr_pnt(bank);
-		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-		chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	if (m398.reg[0] & 0x80) {
+		value = ((0x40 | ((m398.reg[0] & 0x40) >> 3) | ((vrc2and4.chr[m398.reg[1]] & 0x07))) << 3) | (address >> 10);
+		mask = ~0;
 	}
+	chr_swap_VRC2and4(address, (value & mask));
 }

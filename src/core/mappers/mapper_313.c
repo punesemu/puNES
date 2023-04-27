@@ -117,16 +117,11 @@ void prg_swap_313(WORD address, WORD value) {
 	WORD base = m313.reg << ((m313.reg == 0) ? m313.prg.outer[0] : m313.prg.outer[1]);
 	WORD mask = (m313.reg == 0) ? m313.prg.mask[0] : m313.prg.mask[1];
 
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_313(WORD address, WORD value) {
 	WORD base = m313.reg << m313.chr.outer;
 	WORD mask = m313.chr.mask;
 
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }

@@ -101,18 +101,13 @@ void prg_swap_370(WORD address, WORD value) {
 	WORD base = (m370.reg & 0x38) << 1;
 	WORD mask = 0x1F >> ((m370.reg & 0x20) >> 5);
 
-	value = base | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, (base | (value & mask)));
 }
 void chr_swap_370(WORD address, WORD value) {
 	WORD base = (m370.reg & 0x07) << 7;
 	WORD mask = 0xFF >> ((~m370.reg & 0x04) >> 2);
 
-	value = base | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, (base | (value & mask)));
 }
 void mirroring_fix_370(void) {
 	if ((m370.reg & 0x07) == 0x01) {

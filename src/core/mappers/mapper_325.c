@@ -58,14 +58,9 @@ void extcl_cpu_wr_mem_325(WORD address, BYTE value) {
 
 void prg_swap_325(WORD address, WORD value) {
 	value = (value & 0x03) | ((value >> 1) & 0x04) | ((value << 1) & 0x08);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, value);
 }
 void chr_swap_325(WORD address, WORD value) {
-	const BYTE slot = (address >> 10);
-
-	value = (value & 0xDD) | ((value >> 4) & 0x02) | ((value << 4) & 0x20) | slot;
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[slot] = chr_pnt(value << 10);
+	value = (value & 0xDD) | ((value >> 4) & 0x02) | ((value << 4) & 0x20) | (address >> 10);
+	chr_swap_MMC3(address, value);
 }

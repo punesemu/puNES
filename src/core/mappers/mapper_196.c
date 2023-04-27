@@ -80,15 +80,9 @@ BYTE extcl_save_mapper_196(BYTE mode, BYTE slot, FILE *fp) {
 
 void prg_swap_196(WORD address, WORD value) {
 	const BYTE slot = (address >> 13) & 0x03;
-	WORD bank = 0;
 
 	if (m196.reg[0]) {
-		bank = (m196.reg[1] << 2) | slot;
-	} else {
-		bank = value;
+		value = (m196.reg[1] << 2) | slot;
 	}
-
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, slot, bank);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, value);
 }

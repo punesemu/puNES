@@ -86,9 +86,5 @@ void prg_swap_259(WORD address, WORD value) {
 	} else {
 		base = base & ~((m259.reg & 0x08) << 2);
 	}
-
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }

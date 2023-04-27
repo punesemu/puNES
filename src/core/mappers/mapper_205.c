@@ -105,18 +105,13 @@ void prg_swap_205(WORD address, WORD value) {
 	WORD base = (m205.reg & 0x03) << 4;
 	WORD mask = 0x1F >> ((m205.reg & 0x04) ? 1 : ((m205.reg & 0x02) >> 1));
 
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_205(WORD address, WORD value) {
 	WORD base = (m205.reg & 0x03) << 7;
 	WORD mask = 0xFF >> ((m205.reg & 0x04) ? 1 : ((m205.reg & 0x02) >> 1));
 
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }
 
 INLINE static void tmp_fix_205(BYTE max, BYTE index, const BYTE *ds) {

@@ -90,12 +90,8 @@ BYTE extcl_save_mapper_199(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void chr_swap_199(WORD address, WORD value) {
-	const BYTE slot = address >> 10;
-
-	value = slot;
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[slot] = chr_pnt(value << 10);
+void chr_swap_199(WORD address, UNUSED(WORD value)) {
+	chr_swap_MMC3(address, (address >> 10));
 }
 
 INLINE static void prg_5000_fix(void) {

@@ -110,7 +110,6 @@ void prg_swap_Coolboy(WORD address, WORD value) {
 				break;
 		}
 	}
-
 	if (!(coolboy.reg[3] & 0x10)) {
 		// modalita' MMC3
 		value = (((base << 4) & ~mask)) | (value & mask);
@@ -128,9 +127,7 @@ void prg_swap_Coolboy(WORD address, WORD value) {
 		}
 		value = ((base << 4) & ~mask) | (value & mask) | emask | ((address & 0x2000) >> 13);
 	}
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, value);
 }
 void chr_swap_Coolboy(WORD address, WORD value) {
 	DBWORD mask = 0xFF ^ (coolboy.reg[0] & 0x80);
@@ -167,6 +164,5 @@ void chr_swap_Coolboy(WORD address, WORD value) {
 		}
 		value = (value & mask) | (((coolboy.reg[0] & 0x08) << 4) & ~mask);
 	}
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, value);
 }

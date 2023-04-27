@@ -113,9 +113,7 @@ void prg_swap_292(WORD address, WORD value) {
 	if (!slot) {
 		value = m292.reg[0] & 0x1F;
 	}
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, slot, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, value);
 }
 void chr_fix_292(void) {
 	DBWORD bank = 0;

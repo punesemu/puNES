@@ -135,7 +135,5 @@ void extcl_irq_A12_clock_406(void) {
 }
 
 void prg_swap_406(WORD address, WORD value) {
-	control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, (value & 0x3F));
 }

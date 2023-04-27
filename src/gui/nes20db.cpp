@@ -65,6 +65,9 @@ void nes20db_search(void) {
 	}
 	data_locations.append(gaf);
 
+	info.mapper.nes20db.in_use = FALSE;
+	info.mapper.nes20db.from_crc32_prg = FALSE;
+
 	foreach(const QString path, data_locations) {
 		QFile file(QString("%0/%1").arg(path, NES20DBFILENAME));
 
@@ -138,7 +141,8 @@ void search_in_xml(QFile &file) {
 						if ((nes20db.rom.crc32 == info.crc32.total) || (nes20db.prgrom.crc32 == info.crc32.prg)) {
 							const QString comment = game["comment"];
 
-							nes20db.in_use = TRUE;
+							info.mapper.nes20db.in_use = TRUE;
+							info.mapper.nes20db.from_crc32_prg = TRUE;
 
 							info.format = NES_2_0;
 
@@ -212,6 +216,7 @@ void search_in_xml(QFile &file) {
 							}
 
 							if (nes20db.rom.crc32 == info.crc32.total) {
+								info.mapper.nes20db.from_crc32_prg = FALSE;
 								break;
 							}
 						}
@@ -327,7 +332,6 @@ void add_element_data_to_map(QXmlStreamReader &xml, game_map &map) {
 	}
 }
 void populate_game_info(_nes20db &game_info, game_map &map) {
-	game_info.in_use = FALSE;
 	game_info.prgrom.size = to_uint(map["prgrom_size"], 10);
 	game_info.prgrom.crc32 = to_uint(map["prgrom_crc32"], 16);
 	game_info.chrrom.size = to_uint(map["chrrom_size"], 10);

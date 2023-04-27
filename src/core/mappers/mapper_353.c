@@ -107,7 +107,6 @@ void extcl_cpu_wr_mem_353(WORD address, BYTE value) {
 BYTE extcl_save_mapper_353(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m353.reg);
 	save_slot_ele(mode, slot, m353.chr_writable);
-	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
@@ -135,11 +134,7 @@ void prg_swap_353(WORD address, WORD value) {
 		mask = 0x0F;
 		value = mmc3.reg[address >> 13];
 	}
-
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_353(WORD address, WORD value) {
 	WORD base = m353.reg << 7;

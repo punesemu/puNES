@@ -106,9 +106,7 @@ void chr_swap_Rexdbz(WORD address, WORD value) {
 	const BYTE slot = address >> 10;
 	WORD base = (rexdbz.reg << ((slot >= 4) ? 4 : 8)) & 0x0100;
 
-	value = base | value;
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[slot] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, (base | value));
 }
 
 INLINE static void tmp_fix_Rexdbz(BYTE max, BYTE index, const BYTE *ds) {

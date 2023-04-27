@@ -97,11 +97,7 @@ void prg_swap_187(WORD address, WORD value) {
 			value = (value << 1) | (slot & 0x01);
 		}
 	}
-
-	value &= mask;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, slot, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, (value & mask));
 }
 void chr_swap_187(WORD address, WORD value) {
 	const BYTE slot = address >> 10;
@@ -110,8 +106,5 @@ void chr_swap_187(WORD address, WORD value) {
 	if ((slot & 0x04) == ((mmc3.bank_to_update & 0x80) >> 5)) {
 		base = 0x100;
 	}
-
-	value = base | value;
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[slot] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, (base | value));
 }

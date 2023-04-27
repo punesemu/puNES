@@ -139,9 +139,7 @@ void prg_swap_208(WORD address, WORD value) {
 		? (mmc3.reg[6] & ~3) | slot
 		: ((m208.reg & 0x01) << 2) | ((m208.reg & 0x10) >> 1) | slot;
 
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, slot, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, value);
 }
 void mirroring_fix_208(void) {
 	if (info.mapper.submapper == 1) {

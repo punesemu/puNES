@@ -106,10 +106,7 @@ void prg_swap_356(WORD address, WORD value) {
 	WORD base = m356.reg[1] | ((m356.reg[2] & 0xC0) << 2);
 	WORD mask = ~m356.reg[3] & 0x3F;
 
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_356(WORD address, WORD value) {
 	if (!(m356.reg[2] & 0x20)) {

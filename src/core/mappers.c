@@ -58,7 +58,7 @@ BYTE map_init(void) {
 			map_init_0();
 			break;
 		case 1:
-			map_init_MMC1();
+			map_init_1();
 			break;
 		case 2:
 			if (info.mapper.submapper == UNLROM) {
@@ -78,7 +78,7 @@ BYTE map_init(void) {
 			if (info.mapper.submapper == MMC3_T9552) {
 				map_init_249();
 			} else {
-				map_init_MMC3();
+				map_init_4();
 			}
 			break;
 		case 5:
@@ -90,7 +90,6 @@ BYTE map_init(void) {
 		case 7:
 			map_init_AxROM();
 			break;
-			/* per MMC2 e MMC4 uso le stesse routine */
 		case 8:
 			map_init_FFESMC();
 			break;
@@ -112,7 +111,7 @@ BYTE map_init(void) {
 			map_init_CPROM();
 			break;
 		case 14:
-			map_init_SL1632();
+			map_init_14();
 			break;
 		case 15:
 			map_init_15();
@@ -140,39 +139,40 @@ BYTE map_init(void) {
 		case 19:
 			map_init_Namco(N163);
 			break;
-		// mapper 20 e' l'FDS
-		//case 20:
+		// case 20:
+		// 	mapper 20 e' l'FDS
 		//	break;
 		case 21:
-			map_init_VRC4(info.mapper.submapper == DEFAULT ? VRC4A : info.mapper.submapper);
+			map_init_21();
 			break;
 		case 22:
-			map_init_VRC2(VRC2A, 0x0F);
+			map_init_22();
 			break;
 		case 23:
-			if ((info.crc32.total == 0xE07163D9) || // Akumajou Special - Boku Dracula-kun (J) [b2].nes
-				(info.crc32.total == 0xC6D62814)) { // Akumajou Special - Boku Dracula-kun (J) [p1][t1].nes
-				info.mapper.submapper = VRC2B;
-			} else if (info.crc32.total == 0xE2D14080) { // Akumajou Special - Boku Dracula-kun (J) [p1][t1][b1].nes
-				info.mapper.submapper = VRC4UNL;
-			}
-			if (info.mapper.submapper == VRC4BMC) {
-				map_init_VRC4BMC();
-			} else if (info.mapper.submapper == VRC4T230) {
-				map_init_VRC4T230();
-			} else if (info.mapper.submapper == VRC4E) {
-				map_init_VRC4(VRC4E);
-			} else if (info.mapper.submapper == VRC4UNL) {
-				map_init_VRC4(VRC4UNL);
-			} else {
-				map_init_VRC2(VRC2B, 0x0F);
-			}
+			map_init_23();
+//			if ((info.crc32.total == 0xE07163D9) || // Akumajou Special - Boku Dracula-kun (J) [b2].nes
+//				(info.crc32.total == 0xC6D62814)) { // Akumajou Special - Boku Dracula-kun (J) [p1][t1].nes
+//				info.mapper.submapper = VRC2B;
+//			} else if (info.crc32.total == 0xE2D14080) { // Akumajou Special - Boku Dracula-kun (J) [p1][t1][b1].nes
+//				info.mapper.submapper = VRC4UNL;
+//			}
+//			if (info.mapper.submapper == VRC4BMC) {
+//				map_init_VRC4BMC();
+//			} else if (info.mapper.submapper == VRC4T230) {
+//				map_init_VRC4T230();
+//			} else if (info.mapper.submapper == VRC4E) {
+//				map_init_VRC4(VRC4E);
+//			} else if (info.mapper.submapper == VRC4UNL) {
+//				map_init_VRC4(VRC4UNL);
+//			} else {
+//				map_init_VRC2(VRC2B, 0x0F);
+//			}
 			break;
 		case 24:
 			map_init_VRC6(VRC6A);
 			break;
 		case 25:
-			map_init_VRC4(info.mapper.submapper == DEFAULT ? VRC4B : info.mapper.submapper);
+			map_init_25();
 			break;
 		case 26:
 			map_init_VRC6(VRC6B);
@@ -524,7 +524,7 @@ BYTE map_init(void) {
 			map_init_Namco(N3453);
 			break;
 		case 155:
-			map_init_MMC1();
+			map_init_1();
 			break;
 		case 156:
 			map_init_156();
@@ -785,10 +785,8 @@ BYTE map_init(void) {
 			map_init_250();
 			break;
 		case 252:
-			map_init_252();
-			break;
 		case 253:
-			map_init_253();
+			map_init_252();
 			break;
 		case 254:
 			map_init_254();
@@ -824,7 +822,7 @@ BYTE map_init(void) {
 			map_init_T262();
 			break;
 		case 266:
-			map_init_CITYFIGHT();
+			map_init_266();
 			break;
 		case 267:
 			map_init_267();
@@ -884,7 +882,7 @@ BYTE map_init(void) {
 			map_init_297();
 			break;
 		case 298:
-			map_init_TF1201();
+			map_init_298();
 			break;
 		case 299:
 			map_init_299();
@@ -896,7 +894,7 @@ BYTE map_init(void) {
 			map_init_UNIF8157();
 			break;
 		case 302:
-			map_init_KS7057();
+			map_init_302();
 			break;
 		case 303:
 			map_init_KS7017();
@@ -914,7 +912,7 @@ BYTE map_init(void) {
 			map_init_KS7037();
 			break;
 		case 308:
-			map_init_TH21311();
+			map_init_308();
 			break;
 		case 309:
 			map_init_LH51();
@@ -1051,6 +1049,9 @@ BYTE map_init(void) {
 		case 361:
 			map_init_361();
 			break;
+		case 362:
+			map_init_362();
+			break;
 		case 366:
 			map_init_366();
 			break;
@@ -1083,6 +1084,9 @@ BYTE map_init(void) {
 			break;
 		case 382:
 			map_init_382();
+			break;
+		case 384:
+			map_init_384();
 			break;
 		case 386:
 			map_init_JYASIC(MAP386);
@@ -1244,7 +1248,7 @@ BYTE map_init(void) {
 			map_init_LH10();
 			break;
 		case 524:
-			map_init_BTL900218();
+			map_init_524();
 			break;
 		case 525:
 			map_init_KS7021A();
@@ -1253,16 +1257,16 @@ BYTE map_init(void) {
 			map_init_BJ56();
 			break;
 		case 527:
-			map_init_AX40G();
+			map_init_527();
 			break;
 		case 528:
 			map_init_831128C();
 			break;
 		case 529:
-			map_init_VRC4T230();
+			map_init_529();
 			break;
 		case 530:
-			map_init_AX5705();
+			map_init_530();
 			break;
 		case 532:
 			map_init_Namco(CHINA_ER_SAN2);

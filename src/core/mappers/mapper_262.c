@@ -92,7 +92,6 @@ BYTE extcl_cpu_rd_mem_262(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 }
 BYTE extcl_save_mapper_262(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m262.reg);
-	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
@@ -103,29 +102,24 @@ BYTE extcl_save_mapper_262(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_wr_chr_262(WORD address, BYTE value) {
 	if ((m262.reg & 0x40) && chr.extra.data) {
-		chr.extra.data[address] = value;
+		chr.bank_1k[address >> 10][address & 0x3FF] = value;
 	}
 }
 
 void prg_swap_262(WORD address, WORD value) {
-	control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, (value & 0x3F));
 }
 void chr_swap_262(WORD address, WORD value) {
 	const BYTE slot = address >> 10;
 	WORD base = 0;
 
 	if ((m262.reg & 0x40) && chr.extra.data) {
-		value = slot;
-		chr.bank_1k[slot] = &chr.extra.data[value << 10];
+		chr.bank_1k[slot] = &chr.extra.data[slot << 10];
 	} else {
 		static const BYTE shift[] = { 3, 2, 0, 1 };
 		const BYTE index = (slot & 0x06) >> 1;
 
 		base = ((m262.reg >> shift[index]) & 0x01) * 0x100;
-		value = base | value;
-		control_bank(info.chr.rom.max.banks_1k)
-		chr.bank_1k[slot] = chr_pnt(value << 10);
+		chr_swap_MMC3(address, (base | value));
 	}
 }

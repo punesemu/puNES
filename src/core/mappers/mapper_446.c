@@ -26,9 +26,8 @@
 #include "SST39SF040.h"
 #include "gui.h"
 
-INLINE static void fix_all_446(void);
-
 INLINE static void switch_mode(void);
+INLINE static void fix_all(void);
 INLINE static WORD prg_base(void);
 INLINE static WORD prg_mask(void);
 INLINE static WORD chr_base(void);
@@ -118,6 +117,12 @@ void map_init_446(void) {
 	EXTCL_CPU_WR_MEM(446);
 	EXTCL_CPU_RD_MEM(446);
 	EXTCL_SAVE_MAPPER(446);
+	EXTCL_CPU_EVERY_CYCLE(446);
+	EXTCL_PPU_000_TO_34X(446);
+	EXTCL_PPU_000_TO_255(446);
+	EXTCL_PPU_256_TO_319(446);
+	EXTCL_PPU_320_TO_34X(446);
+	EXTCL_UPDATE_R2006(446);
 	EXTCL_BATTERY_IO(446);
 	EXTCL_WR_CHR(446);
 	mapper.internal_struct[0] = (BYTE *)&m446;
@@ -147,7 +152,7 @@ void map_init_446(void) {
 }
 void extcl_after_mapper_init_446(void) {
 	switch_mode();
-	fix_all_446();
+	fix_all();
 }
 void extcl_mapper_quit_446(void) {
 	if (m446tmp.sst39sf040) {
@@ -165,13 +170,13 @@ void extcl_cpu_wr_mem_446(WORD address, BYTE value) {
 				}
 				m446.reg[address] = value;
 				switch_mode();
-				fix_all_446();
+				fix_all();
 			}
 			return;
 		case 0x6000:
 			if ((m446.reg[0] & 0x80) && (m446.mapper == M446_189)) {
 				m446.reg189 = address & 0xFF;
-				fix_all_446();
+				fix_all();
 			}
 			return;
 		case 0x7000:
@@ -192,7 +197,7 @@ void extcl_cpu_wr_mem_446(WORD address, BYTE value) {
 					case M446_GNROM:
 					case M446_BANDAI:
 						m446.latch = value;
-						fix_all_446();
+						fix_all();
 						return;
 					case M446_SLROM:
 					case M446_SNROM:
@@ -239,6 +244,76 @@ BYTE extcl_save_mapper_446(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
+void extcl_cpu_every_cycle_446(void) {
+	switch (m446.mapper) {
+		case M446_189:
+		case M446_MMC3:
+		case M446_TLSROM:
+			extcl_cpu_every_cycle_MMC3();
+			return;
+		case M446_VRC4_23:
+			return;
+		case M446_VRC4_25:
+			return;
+		default:
+			return;
+	}
+}
+void extcl_ppu_000_to_34x_446(void) {
+	switch (m446.mapper) {
+		case M446_189:
+		case M446_MMC3:
+		case M446_TLSROM:
+			extcl_ppu_000_to_34x_MMC3();
+			return;
+		default:
+			return;
+	}
+}
+void extcl_ppu_000_to_255_446(void) {
+	switch (m446.mapper) {
+		case M446_189:
+		case M446_MMC3:
+		case M446_TLSROM:
+			extcl_ppu_000_to_255_MMC3();
+			return;
+		default:
+			return;
+	}
+}
+void extcl_ppu_256_to_319_446(void) {
+	switch (m446.mapper) {
+		case M446_189:
+		case M446_MMC3:
+		case M446_TLSROM:
+			extcl_ppu_256_to_319_MMC3();
+			return;
+		default:
+			return;
+	}
+}
+void extcl_ppu_320_to_34x_446(void) {
+	switch (m446.mapper) {
+		case M446_189:
+		case M446_MMC3:
+		case M446_TLSROM:
+			extcl_ppu_320_to_34x_MMC3();
+			return;
+		default:
+			return;
+	}
+}
+void extcl_update_r2006_446(WORD new_r2006, WORD old_r2006) {
+	switch (m446.mapper) {
+		case M446_189:
+		case M446_MMC3:
+		case M446_TLSROM:
+			extcl_update_r2006_MMC3(new_r2006, old_r2006);
+			return;
+		default:
+			return;
+	}
+}
 void extcl_battery_io_446(BYTE mode, FILE *fp) {
 	if (!fp || (tas.type != NOTAS)) {
 		return;
@@ -259,13 +334,59 @@ void extcl_battery_io_446(BYTE mode, FILE *fp) {
 			log_error(uL("mapper_446;error on read flash chip"));
 		}
 	}
-}void extcl_wr_chr_446(WORD address, BYTE value) {
+}
+void extcl_wr_chr_446(WORD address, BYTE value) {
 	if (!(m446.reg[5] & 0x04)) {
 		chr.bank_1k[address >> 10][address & 0x3FF] = value;
 	}
 }
 
-INLINE static void fix_all_446(void) {
+INLINE static void switch_mode(void) {
+	if (m446.reg[0] & 0x80) {
+		m446.mapper = m446.reg[0] & 0x1F;
+		switch (m446.mapper) {
+			case M446_ANROM:
+			case M446_CNROM:
+			case M446_UNROM:
+			case M446_GNROM:
+			case M446_BANDAI:
+				m446.latch = 0;
+				break;
+			case M446_SLROM:
+			case M446_SNROM:
+				init_MMC1(MMC1B);
+				MMC1_prg_swap = prg_swap_446_mmc1;
+				MMC1_chr_swap = chr_swap_446_mmc1;
+				break;
+			case M446_MMC3:
+				init_MMC3();
+				MMC3_prg_swap = prg_swap_446_mmc3;
+				MMC3_chr_swap = chr_swap_446_mmc3;
+				break;
+			case M446_TLSROM:
+				init_MMC3();
+				MMC3_prg_swap = prg_swap_446_tlsrom;
+				MMC3_chr_swap = chr_swap_446_tlsrom;
+				break;
+			case M446_189:
+				init_MMC3();
+				MMC3_prg_swap = prg_swap_446_189;
+				MMC3_chr_swap = chr_swap_446_189;
+				break;
+			case M446_VRC2_22:
+				break;
+			case M446_VRC4_23:
+				break;
+			case M446_VRC4_25:
+				break;
+			case M446_VRC6:
+				break;
+			default:
+				break;
+		}
+	}
+}
+INLINE static void fix_all(void) {
 	if (m446.reg[0] & 0x80) {
 		switch (m446.mapper) {
 			case M446_NROM:
@@ -332,52 +453,6 @@ INLINE static void fix_all_446(void) {
 		chr_fix_446_no_mapper();
 		wram_fix_446_no_mapper();
 		mirroring_fix_446_no_mapper();
-	}
-}
-
-INLINE static void switch_mode(void) {
-	if (m446.reg[0] & 0x80) {
-		m446.mapper = m446.reg[0] & 0x1F;
-		switch (m446.mapper) {
-			case M446_ANROM:
-			case M446_CNROM:
-			case M446_UNROM:
-			case M446_GNROM:
-			case M446_BANDAI:
-				m446.latch = 0;
-				break;
-			case M446_SLROM:
-			case M446_SNROM:
-				init_MMC1(MMC1B);
-				MMC1_prg_swap = prg_swap_446_mmc1;
-				MMC1_chr_swap = chr_swap_446_mmc1;
-				break;
-			case M446_MMC3:
-				init_MMC3();
-				MMC3_prg_swap = prg_swap_446_mmc3;
-				MMC3_chr_swap = chr_swap_446_mmc3;
-				break;
-			case M446_TLSROM:
-				init_MMC3();
-				MMC3_prg_swap = prg_swap_446_tlsrom;
-				MMC3_chr_swap = chr_swap_446_tlsrom;
-				break;
-			case M446_189:
-				init_MMC3();
-				MMC3_prg_swap = prg_swap_446_189;
-				MMC3_chr_swap = chr_swap_446_189;
-				break;
-			case M446_VRC2_22:
-				break;
-			case M446_VRC4_23:
-				break;
-			case M446_VRC4_25:
-				break;
-			case M446_VRC6:
-				break;
-			default:
-				break;
-		}
 	}
 }
 INLINE static WORD prg_base(void) {
@@ -704,52 +779,37 @@ void prg_swap_446_mmc3(WORD address, WORD value) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 
-	value = base | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, (base | (value & mask)));
 }
 void chr_swap_446_mmc3(WORD address, WORD value) {
 	WORD base = chr_base();
 	WORD mask = 0xFF;
 
-	value = base | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, (base | (value & mask)));
 }
 
 void prg_swap_446_tlsrom(WORD address, WORD value) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 
-	value = base | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, (base | (value & mask)));
 }
 void chr_swap_446_tlsrom(WORD address, WORD value) {
 	WORD base = chr_base();
 	WORD mask = 0x7F;
 
-	value = base | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, (base | (value & mask)));
 }
 
-void prg_swap_446_189(WORD address, WORD value) {
+void prg_swap_446_189(WORD address, UNUSED(WORD value)) {
 	const WORD slot = (address >> 13) & 0x03;
 	WORD base = prg_base() & ~3;
 
-	value = base | ((m446.reg189 & 0x03) << 2) | slot;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1,slot, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, (base | ((m446.reg189 & 0x03) << 2) | slot));
 }
 void chr_swap_446_189(WORD address, WORD value) {
 	WORD base = chr_base();
 	WORD mask = 0xFF;
 
-	value = base | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, (base | (value & mask)));
 }

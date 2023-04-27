@@ -81,16 +81,11 @@ void prg_swap_47(WORD address, WORD value) {
 	WORD base = m47.reg << 4;
 	WORD mask = 0x0F;
 
-	value = base | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, (base | (value & mask)));
 }
 void chr_swap_47(WORD address, WORD value) {
 	WORD base = m47.reg << 7;
 	WORD mask = 0x7F;
 
-	value = base | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, (base | (value & mask)));
 }

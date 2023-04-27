@@ -91,17 +91,11 @@ void prg_swap_420(WORD address, WORD value) {
 		base = (m420.reg[3] & 0x04) << 3;
 		mask = 0x3F >> (m420.reg[0] & 0x20 ? 2 : ((m420.reg[3] & 0x20) >> 5));
 	}
-
-	value = base | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, (base | (value & mask)));
 }
 void chr_swap_420(WORD address, WORD value) {
 	WORD base = ((m420.reg[1] & 0x80) << 1) | ((m420.reg[1] & 0x04) << 5);
 	WORD mask = 0xFF >> ((m420.reg[1] & 0x80) >> 7);
 
-	value = base | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, (base | (value & mask)));
 }

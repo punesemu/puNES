@@ -124,17 +124,11 @@ void prg_swap_432(WORD address, WORD value) {
 			value = mmc3.reg[5 + (bank & 0x01)] | ((m432.reg[1] & 0x80) >> 6);
 		}
 	}
-
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, bank, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_432(WORD address, WORD value) {
 	WORD base = ((m432.reg[1] & 0x08) << 5) | ((m432.reg[1] & 0x01) << 7);
 	WORD mask = 0xFF >> ((m432.reg[1] & 0x04) >> 2);
 
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }

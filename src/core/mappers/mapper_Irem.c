@@ -240,8 +240,7 @@ void extcl_cpu_wr_mem_Irem_LROG017(WORD address, BYTE value) {
 	chr.bank_1k[0] = chr_pnt(bank);
 	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
 }
-BYTE extcl_save_mapper_Irem_LROG017(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
+BYTE extcl_save_mapper_Irem_LROG017(BYTE mode, UNUSED(BYTE slot), UNUSED(FILE *fp)) {
 	if (mode == SAVE_SLOT_READ) {
 		irem_LROG017_chr_ram();
 	}

@@ -66,6 +66,10 @@ typedef struct _info {
 		BYTE ext_console_type;
 		BYTE mirroring;
 		BYTE supported;
+		struct _info_mapper_nes20db {
+			BYTE in_use;
+			BYTE from_crc32_prg;
+		} nes20db;
 	} mapper;
 	struct _info_header {
 		BYTE format;

@@ -463,30 +463,6 @@ void nes20_submapper(void) {
 					break;
 			}
 			break;
-		case 21:
-			switch (info.mapper.submapper) {
-				case 1:
-					info.mapper.submapper = VRC4A;
-					break;
-				case 2:
-					info.mapper.submapper = VRC4C;
-					break;
-			}
-			break;
-		case 23:
-			switch (info.mapper.submapper) {
-				case 0:
-				case 3:
-					info.mapper.submapper = VRC2B;
-					break;
-				case 1:
-					info.mapper.submapper = VRC4UNL;
-					break;
-				case 2:
-					info.mapper.submapper = VRC4E;
-					break;
-			}
-			break;
 		case 78:
 			switch (info.mapper.submapper) {
 				case 3:

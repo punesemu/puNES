@@ -61,8 +61,5 @@ void prg_swap_245(WORD address, WORD value) {
 	WORD base = (mmc3.reg[0] & 0x02) << 5;
 	WORD mask = 0x3F;
 
-	value = base | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, (base | (value & mask)));
 }

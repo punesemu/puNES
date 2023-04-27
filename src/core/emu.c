@@ -978,7 +978,9 @@ void emu_info_rom(void) {
 #define ischanged(a) changed = (a); at_least_one_change = changed ? TRUE : at_least_one_change
 #define ifchanged() (changed ? " *" : "")
 
-	log_info_box(uL("nes20db;%s"), nes20db.in_use ? "yes" : "no");
+	log_info_box(uL("nes20db;%s%s"),
+		info.mapper.nes20db.in_use ? "yes" : "no",
+		info.mapper.nes20db.from_crc32_prg ? " [from crc32 prg]" : "");
 
 	{
 		log_info_box_open(uL("console type;"));
@@ -1147,7 +1149,7 @@ void emu_info_rom(void) {
 	{
 		log_info_box_open(uL("submapper;"));
 		ischanged(info.header.submapper != info.mapper.submapper);
-		if ((info.header.format == NES_2_0) || nes20db.in_use) {
+		if ((info.header.format == NES_2_0) || info.mapper.nes20db.in_use) {
 			info.mapper.submapper == DEFAULT
 				? log_close_box(uL("%u (DEFAULT)%s"), info.mapper.submapper_nes20, ifchanged())
 				: info.mapper.submapper == info.mapper.submapper_nes20

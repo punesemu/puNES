@@ -89,7 +89,14 @@ set(core_srcs
 
 	core/mappers/EE93Cx6.c
 	core/mappers/mapper_0.c
+	core/mappers/mapper_1.c
+	core/mappers/mapper_4.c
+	core/mappers/mapper_14.c
 	core/mappers/mapper_15.c
+	core/mappers/mapper_21.c
+	core/mappers/mapper_22.c
+	core/mappers/mapper_23.c
+	core/mappers/mapper_25.c
 	core/mappers/mapper_28.c
 	core/mappers/mapper_29.c
 	core/mappers/mapper_31.c
@@ -196,13 +203,13 @@ set(core_srcs
 	core/mappers/mapper_249.c
 	core/mappers/mapper_250.c
 	core/mappers/mapper_252.c
-	core/mappers/mapper_253.c
 	core/mappers/mapper_254.c
 	core/mappers/mapper_256.c
 	core/mappers/mapper_259.c
 	core/mappers/mapper_260.c
 	core/mappers/mapper_262.c
 	core/mappers/mapper_263.c
+	core/mappers/mapper_266.c
 	core/mappers/mapper_267.c
 	core/mappers/mapper_269.c
 	core/mappers/mapper_271.c
@@ -211,8 +218,11 @@ set(core_srcs
 	core/mappers/mapper_291.c
 	core/mappers/mapper_292.c
 	core/mappers/mapper_297.c
+	core/mappers/mapper_298.c
 	core/mappers/mapper_299.c
 	core/mappers/mapper_300.c
+	core/mappers/mapper_302.c
+	core/mappers/mapper_308.c
 	core/mappers/mapper_311.c
 	core/mappers/mapper_313.c
 	core/mappers/mapper_315.c
@@ -236,6 +246,7 @@ set(core_srcs
 	core/mappers/mapper_359.c
 	core/mappers/mapper_360.c
 	core/mappers/mapper_361.c
+	core/mappers/mapper_362.c
 	core/mappers/mapper_366.c
 	core/mappers/mapper_368.c
 	core/mappers/mapper_369.c
@@ -247,6 +258,7 @@ set(core_srcs
 	core/mappers/mapper_380.c
 	core/mappers/mapper_381.c
 	core/mappers/mapper_382.c
+	core/mappers/mapper_384.c
 	core/mappers/mapper_389.c
 	core/mappers/mapper_393.c
 	core/mappers/mapper_394.c
@@ -290,6 +302,10 @@ set(core_srcs
 	core/mappers/mapper_513.c
 	core/mappers/mapper_516.c
 	core/mappers/mapper_518.c
+	core/mappers/mapper_524.c
+	core/mappers/mapper_527.c
+	core/mappers/mapper_529.c
+	core/mappers/mapper_530.c
 	core/mappers/mapper_538.c
 	core/mappers/mapper_539.c
 	core/mappers/mapper_541.c
@@ -311,8 +327,6 @@ set(core_srcs
 	core/mappers/mapper_Active.c
 	core/mappers/mapper_Agci.c
 	core/mappers/mapper_Ave.c
-	core/mappers/mapper_AX40G.c
-	core/mappers/mapper_AX5705.c
 	core/mappers/mapper_AxROM.c
 	core/mappers/mapper_Bandai.c
 	core/mappers/mapper_BJ56.c
@@ -326,12 +340,10 @@ set(core_srcs
 	core/mappers/mapper_BMCNTD03.c
 	core/mappers/mapper_BOY.c
 	core/mappers/mapper_BS5.c
-	core/mappers/mapper_BTL900218.c
 	core/mappers/mapper_BxROM.c
 	core/mappers/mapper_Caltron.c
 	core/mappers/mapper_Camerica.c
 	core/mappers/mapper_CC_21.c
-	core/mappers/mapper_CITYFIGHT.c
 	core/mappers/mapper_CNROM.c
 	core/mappers/mapper_ColorDreams.c
 	core/mappers/mapper_Coolboy.c
@@ -368,15 +380,12 @@ set(core_srcs
 	core/mappers/mapper_KS7031.c
 	core/mappers/mapper_KS7032.c
 	core/mappers/mapper_KS7037.c
-	core/mappers/mapper_KS7057.c
 	core/mappers/mapper_LH10.c
 	core/mappers/mapper_LH32.c
 	core/mappers/mapper_LH51.c
 	core/mappers/mapper_Magic.c
 	core/mappers/mapper_Malee.c
-	core/mappers/mapper_MMC1.c
 	core/mappers/mapper_MMC2andMMC4.c
-	core/mappers/mapper_MMC3.c
 	core/mappers/mapper_MMC3_old.c
 	core/mappers/mapper_MMC5.c
 	core/mappers/mapper_N118.c
@@ -390,13 +399,10 @@ set(core_srcs
 	core/mappers/mapper_SA005A.c
 	core/mappers/mapper_Sachen.c
 	core/mappers/mapper_SC_127.c
-	core/mappers/mapper_SL1632.c
 	core/mappers/mapper_Sunsoft.c
 	core/mappers/mapper_T262.c
 	core/mappers/mapper_Taito.c
 	core/mappers/mapper_Tengen.c
-	core/mappers/mapper_TF1201.c
-	core/mappers/mapper_TH21311.c
 	core/mappers/mapper_TJ03.c
 	core/mappers/mapper_Txc.c
 	core/mappers/mapper_TxROM.c
@@ -404,9 +410,7 @@ set(core_srcs
 	core/mappers/mapper_UNIFSMB2J.c
 	core/mappers/mapper_UxROM.c
 	core/mappers/mapper_VRC1.c
-	core/mappers/mapper_VRC2.c
 	core/mappers/mapper_VRC3.c
-	core/mappers/mapper_VRC4.c
 	core/mappers/mapper_VRC6.c
 	core/mappers/mapper_VRC7.c
 	core/mappers/mapper_VRC7_snd.c
@@ -415,9 +419,12 @@ set(core_srcs
 	core/mappers/mapper_YOKO.c
 	core/mappers/OneBus.c
 	core/mappers/opll.c
+	core/mappers/MMC1.c
+	core/mappers/MMC3.c
 	core/mappers/serial_devices.cpp
 	core/mappers/serial_devices_interface.cpp
 	core/mappers/SST39SF040.c
+	core/mappers/VRC2and4.c
 
 	core/apu.c
 	core/bck_states.c

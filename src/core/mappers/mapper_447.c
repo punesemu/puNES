@@ -18,211 +18,112 @@
 
 #include <string.h>
 #include "mappers.h"
+#include "cpu.h"
 #include "mem_map.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_447(void);
-INLINE static void chr_fix_447(void);
+void prg_fix_447(void);
+void prg_swap_447(WORD address, WORD value);
+void chr_swap_447(WORD address, WORD value);
 
-static const SBYTE dipswitch_447[][4] = {
-	{  0, -1, -1, -1 }, // 0
-	{  0,  1,  2,  3 }, // 1
-};
+INLINE static void tmp_fix_447(BYTE max, BYTE index, const BYTE *ds);
+
 struct _m447 {
 	BYTE reg;
-	BYTE prg[2];
-	WORD chr[8];
-	BYTE swap;
 } m447;
 struct _m447tmp {
-	BYTE select;
+	BYTE ds_used;
+	BYTE max;
 	BYTE index;
-	WORD dipswitch;
+	const BYTE *dipswitch;
 } m447tmp;
 
 void map_init_447(void) {
-	map_init_VRC4(VRC4E);
-
-	EXTCL_AFTER_MAPPER_INIT(447);
+	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
 	EXTCL_CPU_WR_MEM(447);
 	EXTCL_CPU_RD_MEM(447);
 	EXTCL_SAVE_MAPPER(447);
+	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
 	mapper.internal_struct[0] = (BYTE *)&m447;
 	mapper.internal_struct_size[0] = sizeof(m447);
-	mapper.internal_struct[1] = (BYTE *)&vrc4;
-	mapper.internal_struct_size[1] = sizeof(vrc4);
+	mapper.internal_struct[1] = (BYTE *)&vrc2and4;
+	mapper.internal_struct_size[1] = sizeof(vrc2and4);
 
 	memset(&m447, 0x00, sizeof(m447));
 
+	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE);
+	VRC2and4_prg_fix = prg_fix_447;
+	VRC2and4_prg_swap = prg_swap_447;
+	VRC2and4_chr_swap = chr_swap_447;
+
 	if (info.reset == RESET) {
-		do {
-			m447tmp.index = (m447tmp.index + 1) & 0x03;
-		} while (dipswitch_447[m447tmp.select][m447tmp.index] < 0);
+		if (m447tmp.ds_used) {
+			m447tmp.index = (m447tmp.index + 1) % m447tmp.max;
+		}
 	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
 		if (info.crc32.prg == 0x8A929147) { // 1993 New 860-in-1 Over-Valued Golden Version Games.nes
-			m447tmp.select = 1;
-			m447tmp.index = 0;
-		} else {
-			m447tmp.select = 0;
-			m447tmp.index = 0;
+			static BYTE ds[] = { 0x00, 0x01, 0x02, 0x03 };
+
+			tmp_fix_447(LENGTH(ds), 0, &ds[0]);
 		}
 	}
 
-	m447tmp.dipswitch = dipswitch_447[m447tmp.select][m447tmp.index];
-
-	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
-}
-void extcl_after_mapper_init_447(void) {
-	prg_fix_447();
-	chr_fix_447();
+	info.mapper.extend_wr = TRUE;
+	info.mapper.extend_rd = TRUE;
 }
 void extcl_cpu_wr_mem_447(WORD address, BYTE value) {
-	WORD vrc4_address = address_VRC4(address);
-
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m447.reg & 0x01)) {
+		if (cpu.prg_ram_wr_active && !(m447.reg & 0x01)) {
 			m447.reg = address & 0xFF;
-			prg_fix_447();
-			chr_fix_447();
+			VRC2and4_prg_fix();
+			VRC2and4_chr_fix();
 			return;
 		}
 	}
-	if (address >= 0x8000) {
-		switch (vrc4_address) {
-			case 0x8000:
-				m447.prg[0] = value;
-				break;
-			case 0xA000:
-				m447.prg[1] = value;
-				break;
-			case 0x9002:
-			case 0x9003:
-				m447.swap = value & 0x02;
-				break;
-			case 0xB000:
-			case 0xB001:
-			case 0xB002:
-			case 0xB003:
-			case 0xC000:
-			case 0xC001:
-			case 0xC002:
-			case 0xC003:
-			case 0xD000:
-			case 0xD001:
-			case 0xD002:
-			case 0xD003:
-			case 0xE000:
-			case 0xE001:
-			case 0xE002:
-			case 0xE003: {
-				BYTE reg = ((vrc4_address - 0xB000) >> 11) | ((vrc4_address & 0x0003) >> 1);
-
-				m447.chr[reg] = vrc4_address & 0x0001 ?
-					(m447.chr[reg] & 0x000F) | (value << 4) :
-					(m447.chr[reg] & 0x0FF0) | (value & 0x0F);
-				break;
-			}
-			default:
-				extcl_cpu_wr_mem_VRC4(address, value);
-				break;
-		}
-		prg_fix_447();
-		chr_fix_447();
-	}
+	extcl_cpu_wr_mem_VRC2and4(address, value);
 }
 BYTE extcl_cpu_rd_mem_447(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address >= 0x8000) && m447tmp.select && (m447.reg & 0x08)) {
-		return (prg_rom_rd(((address & 0xFFFC) | m447tmp.dipswitch)));
+	if ((address >= 0x8000) && m447tmp.ds_used && (m447.reg & 0x08)) {
+		return (prg_rom_rd(((address & 0xFFFC) | (m447tmp.dipswitch[m447tmp.index] & 0x03))));
 	}
 	return (openbus);
 }
 BYTE extcl_save_mapper_447(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m447.reg);
-	save_slot_ele(mode, slot, m447.prg);
-	save_slot_ele(mode, slot, m447.chr);
-	save_slot_ele(mode, slot, m447.swap);
-	save_slot_ele(mode, slot, m447tmp.index);
-	save_slot_ele(mode, slot, m447tmp.dipswitch);
-	extcl_save_mapper_VRC4(mode, slot, fp);
+	extcl_save_mapper_VRC2and4(mode, slot, fp);
 
 	return (EXIT_OK);
 }
 
-INLINE static void prg_fix_447(void) {
-	WORD base = m447.reg << 4;
-	WORD bank;
-
+void prg_fix_447(void) {
 	if (m447.reg & 0x04) {
 		WORD A14 = ~m447.reg & 0x02;
+		WORD base = m447.reg << 4;
+		WORD mask = 0x0F;
+		WORD bank = 0;
 
-		bank = base | ((m447.prg[0] & ~A14) & 0x0F);
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 0, bank);
-
-		bank = base | ((m447.prg[1] & ~A14) & 0x0F);
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 1, bank);
-
-		bank = base | ((m447.prg[0] | A14) & 0x0F);
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 2, bank);
-
-		bank = base | ((m447.prg[1] | A14) & 0x0F);
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 3, bank);
-	} else {
-		bank = base | (m447.prg[0] & 0x0F);
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 0 ^ m447.swap, bank);
-
-		bank = base | (m447.prg[1] & 0x0F);
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 1, bank);
-
-		bank = base | (0xFE & 0x0F);
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 2 ^ m447.swap, bank);
-
-		bank = base | (0xFF & 0x0F);
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 3, bank);
+		bank = (vrc2and4.prg[0] & ~A14);
+		VRC2and4_prg_swap(0x8000, (base | (bank & mask)));
+		bank = (vrc2and4.prg[1] & ~A14);
+		VRC2and4_prg_swap(0xA000, (base | (bank & mask)));
+		bank = (vrc2and4.prg[0] | A14);
+		VRC2and4_prg_swap(0xC000, (base | (bank & mask)));
+		bank = (vrc2and4.prg[1] | A14);
+		VRC2and4_prg_swap(0xE000, (base | (bank & mask)));
+		return;
 	}
-	map_prg_rom_8k_update();
+	prg_fix_VRC2and4();
 }
-INLINE static void chr_fix_447(void) {
-	WORD base = m447.reg << 7;
-	WORD mask = 0x7F;
-	DBWORD bank;
+void prg_swap_447(WORD address, WORD value) {
+	prg_swap_VRC2and4(address, ((m447.reg << 4) | (value & 0x0F)));
+}
+void chr_swap_447(WORD address, WORD value) {
+	chr_swap_VRC2and4(address, ((m447.reg << 7) | (value & 0x7F)));
+}
 
-	bank = base | (m447.chr[0] & mask);
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[0] = chr_pnt(bank << 10);
-
-	bank = base | (m447.chr[1] & mask);
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[1] = chr_pnt(bank << 10);
-
-	bank = base | (m447.chr[2] & mask);
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[2] = chr_pnt(bank << 10);
-
-	bank = base | (m447.chr[3] & mask);
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[3] = chr_pnt(bank << 10);
-
-	bank = base | (m447.chr[4] & mask);
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[4] = chr_pnt(bank << 10);
-
-	bank = base | (m447.chr[5] & mask);
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[5] = chr_pnt(bank << 10);
-
-	bank = base | (m447.chr[6] & mask);
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[6] = chr_pnt(bank << 10);
-
-	bank = base | (m447.chr[7] & mask);
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[7] = chr_pnt(bank << 10);
+INLINE static void tmp_fix_447(BYTE max, BYTE index, const BYTE *ds) {
+	m447tmp.ds_used = TRUE;
+	m447tmp.max = max;
+	m447tmp.index = index;
+	m447tmp.dipswitch = ds;
 }

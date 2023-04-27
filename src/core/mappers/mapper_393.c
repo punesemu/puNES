@@ -129,11 +129,7 @@ void prg_swap_393(WORD address, WORD value) {
 			value = (mmc3.reg[6] & 0x0C) | ((address >> 13) & 0x03);
 		}
 	}
-
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_393(WORD address, WORD value) {
 	if ((m393.reg[0] & 0x08) && chr.extra.data) {
@@ -143,8 +139,6 @@ void chr_swap_393(WORD address, WORD value) {
 		WORD base = (m393.reg[0] & 0x07) << 8;
 		WORD mask = 0xFF;
 
-		value = (base & ~mask) | (value & mask);
-		control_bank(info.chr.rom.max.banks_1k)
-		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+		chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 	}
 }

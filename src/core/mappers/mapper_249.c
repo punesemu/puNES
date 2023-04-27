@@ -91,9 +91,7 @@ void prg_swap_249(WORD address, WORD value) {
 	WORD bank = calculate_bank(value, (BYTE *)pattern[(m249.reg & 0x03)],
 		(BYTE *)pattern[(info.mapper.id == 249 ? 0 : 2)], 4);
 
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, bank);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, bank);
 }
 void chr_swap_249(WORD address, WORD value) {
 	static const BYTE pattern[8][6] = {
@@ -109,8 +107,7 @@ void chr_swap_249(WORD address, WORD value) {
 	WORD bank = calculate_bank(value, (BYTE *)pattern[(m249.reg & 0x07)],
 		(BYTE *)pattern[(info.mapper.id == 249 ? 0 : 2)], 6);
 
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(bank << 10);
+	chr_swap_MMC3(address, bank);
 }
 
 INLINE static WORD calculate_bank(WORD value, const BYTE *src, const BYTE *trg, int len) {

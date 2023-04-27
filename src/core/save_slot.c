@@ -500,6 +500,9 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	for (i = 0; i < LENGTH(chr.bank_1k); i++) {
 		save_slot_pos(mode, slot, chr_rom(), chr.bank_1k[i]);
 	}
+	if (chr.extra.size) {
+		save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
+	}
 
 	save_slot_ele(mode, slot, ntbl.data);
 	for (i = 0; i < LENGTH(ntbl.bank_1k); i++) {

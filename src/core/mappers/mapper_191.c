@@ -69,9 +69,7 @@ void extcl_wr_chr_191(WORD address, BYTE value) {
 }
 
 void prg_swap_191(WORD address, WORD value) {
-	control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, (value & 0x3F));
 }
 void chr_swap_191(WORD address, WORD value) {
 	const BYTE slot = address >> 10;
@@ -80,7 +78,6 @@ void chr_swap_191(WORD address, WORD value) {
 		value &= 0x01;
 		chr.bank_1k[slot] = &chr.extra.data[value << 10];
 	} else {
-		control_bank(info.chr.rom.max.banks_1k)
-		chr.bank_1k[slot] = chr_pnt(value << 10);
+		chr_swap_MMC3(address, value);
 	}
 }

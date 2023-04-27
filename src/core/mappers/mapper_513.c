@@ -99,6 +99,5 @@ void prg_fix_513(void) {
 	MMC3_prg_swap(0xE000, (~0 & 0x3F));
 }
 void chr_swap_513(WORD address, WORD value) {
-	control_bank_with_AND(0x3F, info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, (value & 0x3F));
 }

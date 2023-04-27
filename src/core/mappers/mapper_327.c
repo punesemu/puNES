@@ -75,7 +75,6 @@ void extcl_cpu_wr_mem_327(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_327(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m327.reg);
-	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
@@ -96,10 +95,7 @@ void prg_swap_327(WORD address, WORD value) {
 	WORD base = (m327.reg & 0x07) << 4;
 	WORD mask = m327.reg & 0x08 ? 0x1F : 0x0F;
 
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_327(WORD address, WORD value) {
 	BYTE slot = address >> 10;
@@ -110,8 +106,6 @@ void chr_swap_327(WORD address, WORD value) {
 		WORD base = (m327.reg & 0x07) << 7;
 		WORD mask = m327.reg & 0x20 ? 0xFF : 0x7F;
 
-		value = base | (value & mask);
-		control_bank(info.chr.rom.max.banks_1k)
-		chr.bank_1k[slot] = chr_pnt(value << 10);
+		chr_swap_MMC3(address, (base | (value & mask)));
 	}
 }

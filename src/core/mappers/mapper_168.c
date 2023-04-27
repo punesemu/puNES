@@ -70,7 +70,6 @@ void extcl_cpu_wr_mem_168(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_168(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m168.chr_map);
-	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
 
 	if (mode == SAVE_SLOT_READ) {
 		m168_update_chr();

@@ -111,17 +111,13 @@ void prg_swap_334(WORD address, WORD value) {
 	const WORD slot = (address >> 13) & 0x03;
 
 	value = ((m334.reg & ~1) << 1) | slot;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, slot, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, value);
 }
 void chr_swap_334(WORD address, WORD value) {
 	WORD base = 0;
 	WORD mask = 0xFF;
 
-	value = base | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, (base | (value & mask)));
 }
 
 INLINE static void tmp_fix_334(BYTE max, BYTE index, const BYTE *ds) {

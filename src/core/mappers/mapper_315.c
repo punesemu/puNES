@@ -88,11 +88,7 @@ void prg_swap_315(WORD address, WORD value) {
 
 		value = bank < 2 ? reg & 0xFD : reg | 0x02;
 	}
-
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_315(WORD address, WORD value) {
 	WORD base = (m315.reg & 0x01) << 8;
@@ -100,8 +96,5 @@ void chr_swap_315(WORD address, WORD value) {
 
 	// Outer Bank Register's CHR A16 and CHR A17 are OR'd with the respective MMC3 bits.
 	value = ((m315.reg & 0x08) << 3) | ((m315.reg & 0x02) << 6) | value;
-
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
 }

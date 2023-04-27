@@ -20,157 +20,116 @@
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
-#include "cpu.h"
 #include "save_slot.h"
 
+void chr_swap_183(WORD address, WORD value);
+
+INLINE static void prg_fix_183();
+
 struct _m183 {
-	BYTE enabled;
-	BYTE prescaler;
-	BYTE count;
-	BYTE delay;
-	BYTE chr_rom_bank[8];
+	BYTE reg[4];
 } m183;
+struct _m183tmp {
+	BYTE *prg_6000;
+} m183tmp;
 
 void map_init_183(void) {
+	EXTCL_AFTER_MAPPER_INIT(183);
 	EXTCL_CPU_WR_MEM(183);
 	EXTCL_CPU_RD_MEM(183);
 	EXTCL_SAVE_MAPPER(183);
-	EXTCL_CPU_EVERY_CYCLE(183);
+	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
 	mapper.internal_struct[0] = (BYTE *)&m183;
 	mapper.internal_struct_size[0] = sizeof(m183);
+	mapper.internal_struct[1] = (BYTE *)&vrc2and4;
+	mapper.internal_struct_size[1] = sizeof(vrc2and4);
 
 	if (info.reset >= HARD) {
 		memset(&m183, 0x00, sizeof(m183));
 	}
 
-	{
-		BYTE i;
-		for (i = 0; i < LENGTH(m183.chr_rom_bank); i++) {
-			m183.chr_rom_bank[i] = i;
-		}
-	}
+	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE);
+	VRC2and4_chr_swap = chr_swap_183;
+
+	info.mapper.extend_wr = TRUE;
+}
+void extcl_after_mapper_init_183(void) {
+	prg_fix_183();
+	VRC2and4_chr_fix();
+	VRC2and4_wram_fix();
+	VRC2and4_mirroring_fix();
 }
 void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
-	switch (address & 0xF80F) {
+	switch (address & 0xF800) {
+		case 0x6800:
+			m183.reg[0] = address & 0x3F;
+			prg_fix_183();
+			return;
 		case 0x8800:
-		case 0x8801:
-		case 0x8802:
-		case 0x8803:
-			control_bank(info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 0, value);
-			map_prg_rom_8k_update();
+			m183.reg[1] = value;
+			prg_fix_183();
 			return;
 		case 0x9800:
-		case 0x9801:
-		case 0x9802:
-		case 0x9803: {
-			switch (value & 0x03) {
-				case 0:
-					mirroring_V();
-					break;
-				case 1:
-					mirroring_H();
-					break;
-				case 2:
-					mirroring_SCR0();
-					break;
-				case 3:
-					mirroring_SCR1();
-					break;
-			}
-			return;
-		}
-		case 0xA000:
-		case 0xA001:
-		case 0xA002:
-		case 0xA003:
-			control_bank(info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 2, value);
-			map_prg_rom_8k_update();
+			extcl_cpu_wr_mem_VRC2and4(0x9000, value);
 			return;
 		case 0xA800:
-		case 0xA801:
-		case 0xA802:
-		case 0xA803:
-			control_bank(info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 1, value);
-			map_prg_rom_8k_update();
+			m183.reg[2] = value;
+			prg_fix_183();
 			return;
-		case 0xF000:
-		case 0xF001:
-		case 0xF002:
-		case 0xF003:
-		case 0xF800:
-		case 0xF801:
-		case 0xF802:
-		case 0xF803:
-			m183.count = (m183.count & 0xF0) | (value & 0x0F);
+		case 0xA000:
+			m183.reg[3] = value;
+			prg_fix_183();
 			return;
-		case 0xF004:
-		case 0xF005:
-		case 0xF006:
-		case 0xF007:
-		case 0xF804:
-		case 0xF805:
-		case 0xF806:
-		case 0xF807:
-			m183.count = (value << 4) | (m183.count & 0x0F);
-			return;
-		case 0xF008:
-		case 0xF009:
-		case 0xF00A:
-		case 0xF00B:
-		case 0xF808:
-		case 0xF809:
-		case 0xF80A:
-		case 0xF80B:
-			m183.enabled = value;
-			if (!m183.enabled) {
-				m183.prescaler = 0;
-				irq.high &= ~EXT_IRQ;
-			}
+		case 0x6000:
+		case 0x7000:
+		case 0x7800:
+		case 0x8000:
+		case 0x9000:
 			return;
 		default:
-			if ((address > 0xAFFF) && (address < 0xF000)) {
-				const BYTE shift = address & 0x04;
-				const BYTE slot = (((address - 0x3000) >> 1 | (address << 7)) & 0x1C00) >> 10;
-
-				value = (m183.chr_rom_bank[slot] & (0xF0 >> shift)) | ((value & 0x0F) << shift);
-				control_bank(info.chr.rom.max.banks_1k)
-				chr.bank_1k[slot] = chr_pnt(value << 10);
-				m183.chr_rom_bank[slot] = value;
-			}
+			extcl_cpu_wr_mem_VRC2and4(address, value);
 			return;
 	}
 }
 BYTE extcl_cpu_rd_mem_183(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address < 0x6000) || (address > 0x7FFF)) {
-		return (openbus);
+	if ((address >= 0x6000) && (address <= 0x7FFF)) {
+		return (m183tmp.prg_6000[address & 0x1FFF]);
 	}
-
-	return (prg_byte(address & 0x1FFF));
+	return (openbus);
 }
 BYTE extcl_save_mapper_183(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m183.enabled);
-	save_slot_ele(mode, slot, m183.prescaler);
-	save_slot_ele(mode, slot, m183.count);
-	save_slot_ele(mode, slot, m183.delay);
-	save_slot_ele(mode, slot, m183.chr_rom_bank);
+	save_slot_ele(mode, slot, m183.reg);
+	extcl_save_mapper_VRC2and4(mode, slot, fp);
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_183(void) {
-	if (m183.delay && !(--m183.delay)) {
-		irq.high |= EXT_IRQ;
-	}
 
-	if (++m183.prescaler < 114) {
-		return;
-	}
+void chr_swap_183(WORD address, WORD value) {
+	chr_swap_VRC2and4(address, (value & 0x1FF));
+}
 
-	m183.prescaler = 0;
+INLINE static void prg_fix_183(void) {
+	WORD bank = 0;
 
-	if (m183.enabled && !(++m183.count)) {
-		m183.delay = 1;
-	}
+	bank = m183.reg[0];
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	m183tmp.prg_6000 = prg_pnt(bank << 13);
+
+	bank = m183.reg[1];
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 0, bank);
+
+	bank = m183.reg[2];
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 1, bank);
+
+	bank = m183.reg[3];
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 2, bank);
+
+	bank = 0xFF;
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 3, bank);
+
+	map_prg_rom_8k_update();
 }

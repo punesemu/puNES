@@ -78,7 +78,6 @@ void extcl_cpu_wr_mem_512(WORD address, BYTE value) {
 BYTE extcl_save_mapper_512(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m512.reg);
 	save_slot_ele(mode, slot, m512.vram);
-	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
@@ -115,7 +114,6 @@ void chr_swap_512(WORD address, WORD value) {
 		control_bank_with_AND(0x03, info.chr.ram.max.banks_1k)
 		chr.bank_1k[address >> 10] = &chr.extra.data[value << 10];
 	} else {
-		control_bank_with_AND(0x7F, info.chr.rom.max.banks_1k)
-		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+		chr_swap_MMC3(address, (value & 0x7F));
 	}
 }

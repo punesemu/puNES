@@ -129,8 +129,5 @@ void chr_swap_121(WORD address, WORD value) {
 	} else if ((slot & 0x04) == ((mmc3.bank_to_update & 0x80) >> 5)) {
 		base = 0x100;
 	}
-
-	value = base | value;
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[slot] = chr_pnt(value << 10);
+	chr_swap_MMC3(address, (base | value));
 }

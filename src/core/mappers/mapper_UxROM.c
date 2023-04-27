@@ -172,7 +172,6 @@ BYTE extcl_cpu_rd_mem_UNROM512(WORD address, BYTE openbus, UNUSED(BYTE before)) 
 BYTE extcl_save_mapper_UNROM512(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, unrom512.reg);
 	sst39sf040_save_mapper(mode, slot, fp);
-	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
 
 	if (mode == SAVE_SLOT_READ) {
 		mirroring_fix_UNROM512();

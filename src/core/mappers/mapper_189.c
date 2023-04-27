@@ -85,12 +85,9 @@ BYTE extcl_save_mapper_189(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_189(WORD address, WORD value) {
+void prg_swap_189(WORD address, UNUSED(WORD value)) {
 	const BYTE slot = (address >> 13) & 0x03;
 	WORD base = (m189.reg | (m189.reg >> 4)) << 2;
 
-	value = base | slot;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, slot, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3(address, (base | slot));
 }
