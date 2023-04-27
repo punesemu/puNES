@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_205(WORD address, WORD value);
-void chr_swap_205(WORD address, WORD value);
+void prg_swap_mmc3_205(WORD address, WORD value);
+void chr_swap_mmc3_205(WORD address, WORD value);
 
 INLINE static void tmp_fix_205(BYTE max, BYTE index, const BYTE *ds);
 
@@ -57,8 +57,8 @@ void map_init_205(void) {
 	memset(&m205, 0x00, sizeof(m205));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_205;
-	MMC3_chr_swap = chr_swap_205;
+	MMC3_prg_swap = prg_swap_mmc3_205;
+	MMC3_chr_swap = chr_swap_mmc3_205;
 
 	if (info.reset == RESET) {
 		if (m205tmp.ds_used) {
@@ -101,17 +101,17 @@ BYTE extcl_save_mapper_205(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_205(WORD address, WORD value) {
+void prg_swap_mmc3_205(WORD address, WORD value) {
 	WORD base = (m205.reg & 0x03) << 4;
 	WORD mask = 0x1F >> ((m205.reg & 0x04) ? 1 : ((m205.reg & 0x02) >> 1));
 
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_205(WORD address, WORD value) {
+void chr_swap_mmc3_205(WORD address, WORD value) {
 	WORD base = (m205.reg & 0x03) << 7;
 	WORD mask = 0xFF >> ((m205.reg & 0x04) ? 1 : ((m205.reg & 0x02) >> 1));
 
-	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
 
 INLINE static void tmp_fix_205(BYTE max, BYTE index, const BYTE *ds) {

@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_189(WORD address, WORD value);
+void prg_swap_mmc3_189(WORD address, WORD value);
 
 struct _m189 {
 	BYTE reg;
@@ -48,7 +48,7 @@ void map_init_189(void) {
 	memset(&m189, 0x00, sizeof(m189));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_189;
+	MMC3_prg_swap = prg_swap_mmc3_189;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -85,9 +85,9 @@ BYTE extcl_save_mapper_189(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_189(WORD address, UNUSED(WORD value)) {
+void prg_swap_mmc3_189(WORD address, UNUSED(WORD value)) {
 	const BYTE slot = (address >> 13) & 0x03;
 	WORD base = (m189.reg | (m189.reg >> 4)) << 2;
 
-	prg_swap_MMC3(address, (base | slot));
+	prg_swap_MMC3_base(address, (base | slot));
 }

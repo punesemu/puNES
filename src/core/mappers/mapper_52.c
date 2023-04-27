@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_52(WORD address, WORD value);
-void chr_swap_52(WORD address, WORD value);
+void prg_swap_mmc3_52(WORD address, WORD value);
+void chr_swap_mmc3_52(WORD address, WORD value);
 
 struct _m52 {
 	BYTE reg;
@@ -52,8 +52,8 @@ void map_init_52(void) {
 	memset(&m52, 0x00, sizeof(m52));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_52;
-	MMC3_chr_swap = chr_swap_52;
+	MMC3_prg_swap = prg_swap_mmc3_52;
+	MMC3_chr_swap = chr_swap_mmc3_52;
 
 	if (info.crc32.prg == 0xC021A8B9) {
 		m52tmp.mario7in1 = TRUE;
@@ -86,17 +86,17 @@ BYTE extcl_save_mapper_52(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_52(WORD address, WORD value) {
+void prg_swap_mmc3_52(WORD address, WORD value) {
 	WORD base = (m52.reg & 0x07) << 4;
 	WORD mask = 0x1F >> ((m52.reg & 0x08) >> 3);
 
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_52(WORD address, WORD value) {
+void chr_swap_mmc3_52(WORD address, WORD value) {
 	WORD base = m52tmp.mario7in1
 		? ((m52.reg & 0x20) << 4) | ((m52.reg & 0x04) << 6) | (m52.reg & 0x40 ? (m52.reg & 0x10) << 3 : 0x00)
 		: ((m52.reg & 0x04) << 7) | ((m52.reg & 0x30) << 3);
 	WORD mask = 0xFF >> ((m52.reg & 0x40) >> 6);
 
-	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

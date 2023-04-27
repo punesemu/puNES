@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_269(WORD address, WORD value);
-void chr_swap_269(WORD address, WORD value);
+void prg_swap_mmc3_269(WORD address, WORD value);
+void chr_swap_mmc3_269(WORD address, WORD value);
 
 struct _m269 {
 	BYTE write;
@@ -50,8 +50,8 @@ void map_init_269(void) {
 	memset(&m269, 0x00, sizeof(m269));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_269;
-	MMC3_chr_swap = chr_swap_269;
+	MMC3_prg_swap = prg_swap_mmc3_269;
+	MMC3_chr_swap = chr_swap_mmc3_269;
 
 	m269.reg[2] = 0x0F;
 
@@ -104,15 +104,15 @@ BYTE extcl_save_mapper_269(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_269(WORD address, WORD value) {
+void prg_swap_mmc3_269(WORD address, WORD value) {
 	WORD base = ((m269.reg[3] & 0x40) << 2) | m269.reg[1];
 	WORD mask = ~m269.reg[3] & 0x3F;
 
-	prg_swap_MMC3(address, (base | (value & mask)));
+	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
-void chr_swap_269(WORD address, WORD value) {
+void chr_swap_mmc3_269(WORD address, WORD value) {
 	WORD base = ((m269.reg[3] & 0x40) << 6) | ((m269.reg[2] & 0xF0) << 4) | m269.reg[0];
 	WORD mask = 0xFF >> (~m269.reg[2] & 0x0F);
 
-	chr_swap_MMC3(address, (base | (value & mask)));
+	chr_swap_MMC3_base(address, (base | (value & mask)));
 }

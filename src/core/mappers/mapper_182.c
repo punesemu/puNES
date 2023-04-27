@@ -20,17 +20,17 @@
 #include "info.h"
 #include "mem_map.h"
 
-void prg_swap_182(WORD address, WORD value);
-void chr_swap_182(WORD address, WORD value);
+void prg_swap_mmc3_182(WORD address, WORD value);
+void chr_swap_mmc3_182(WORD address, WORD value);
 
 void map_init_182(void) {
 	map_init_114();
 
-	MMC3_prg_swap = prg_swap_182;
-	MMC3_chr_swap = chr_swap_182;
+	MMC3_prg_swap = prg_swap_mmc3_182;
+	MMC3_chr_swap = chr_swap_mmc3_182;
 }
 
-void prg_swap_182(WORD address, WORD value) {
+void prg_swap_mmc3_182(WORD address, WORD value) {
 	if (m114.reg[0] & 0x80) {
 		value = ((m114.reg[0] & 0x0E) | (m114.reg[0] & 0x20 ? (address & 0x4000) >> 14 : m114.reg[0] & 0x01)) << 1;
 		value |= (address & 0x2000) >> 13;
@@ -44,7 +44,7 @@ void prg_swap_182(WORD address, WORD value) {
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-void chr_swap_182(WORD address, WORD value) {
+void chr_swap_mmc3_182(WORD address, WORD value) {
 	WORD base = ((m114.reg[1] & 0x10) << 4) | ((m114.reg[1] & 0x02) << 6);
 	WORD mask = 0x7F | ((m114.reg[1] & 0x40) << 1);
 

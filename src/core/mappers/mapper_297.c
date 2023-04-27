@@ -21,8 +21,8 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-void prg_swap_297_mmc1(WORD address, WORD value);
-void chr_swap_297_mmc1(WORD address, WORD value);
+void prg_swap_mmc1_297(WORD address, WORD value);
+void chr_swap_mmc1_297(WORD address, WORD value);
 
 INLINE static void prg_fix_297(void);
 INLINE static void chr_fix_297(void);
@@ -46,8 +46,8 @@ void map_init_297(void) {
 	}
 
 	init_MMC1(MMC1A);
-	MMC1_prg_swap = prg_swap_297_mmc1;
-	MMC1_chr_swap = chr_swap_297_mmc1;
+	MMC1_prg_swap = prg_swap_mmc1_297;
+	MMC1_chr_swap = chr_swap_mmc1_297;
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -93,11 +93,11 @@ BYTE extcl_save_mapper_297(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_297_mmc1(WORD address, WORD value) {
-	prg_swap_MMC1(address, (0x08 | (value & 0x07)));
+void prg_swap_mmc1_297(WORD address, WORD value) {
+	prg_swap_MMC1_base(address, (0x08 | (value & 0x07)));
 }
-void chr_swap_297_mmc1(WORD address, WORD value) {
-	chr_swap_MMC1(address, (0x20 | (value & 0x1F)));
+void chr_swap_mmc1_297(WORD address, WORD value) {
+	chr_swap_MMC1_base(address, (0x20 | (value & 0x1F)));
 }
 
 INLINE static void prg_fix_297(void) {
@@ -138,7 +138,7 @@ INLINE static void chr_fix_297(void) {
 }
 INLINE static void mirroring_fix_297(void) {
 	if (m297.reg[0] & 0x01) {
-		mirroring_fix_MMC1();
+		mirroring_fix_MMC1_base();
 	} else {
 		mirroring_V();
 	}

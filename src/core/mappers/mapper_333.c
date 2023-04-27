@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_333(WORD address, WORD value);
-void chr_swap_333(WORD address, WORD value);
+void prg_swap_mmc3_333(WORD address, WORD value);
+void chr_swap_mmc3_333(WORD address, WORD value);
 
 struct _m333 {
 	BYTE reg;
@@ -49,8 +49,8 @@ void map_init_333(void) {
 	memset(&m333, 0x00, sizeof(m333));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_333;
-	MMC3_chr_swap = chr_swap_333;
+	MMC3_prg_swap = prg_swap_mmc3_333;
+	MMC3_chr_swap = chr_swap_mmc3_333;
 
 	if (mapper.write_vram && !info.chr.rom.banks_8k) {
 		info.chr.rom.banks_8k = 32;
@@ -83,15 +83,15 @@ BYTE extcl_save_mapper_333(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_333(WORD address, WORD value) {
+void prg_swap_mmc3_333(WORD address, WORD value) {
 	if (m333.reg & 0x10) {
 		value = ((m333.reg & 0x0C) << 2) | (value & 0x0F);
 	} else {
 		value = ((m333.reg & 0x0F) << 2) | ((address >> 13) & 0x03);
 	}
-	prg_swap_MMC3(address, value);
+	prg_swap_MMC3_base(address, value);
 }
-void chr_swap_333(WORD address, WORD value) {
+void chr_swap_mmc3_333(WORD address, WORD value) {
 	value = ((m333.reg & 0x0C) << 5) | (value & 0x7F);
-	chr_swap_MMC3(address, value);
+	chr_swap_MMC3_base(address, value);
 }

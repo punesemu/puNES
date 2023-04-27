@@ -23,9 +23,9 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-void prg_fix_105(void);
-void prg_swap_105(WORD address, WORD value);
-void chr_swap_105(WORD address, WORD value);
+void prg_fix_mmc1_105(void);
+void prg_swap_mmc1_105(WORD address, WORD value);
+void chr_swap_mmc1_105(WORD address, WORD value);
 
 INLINE static void tmp_fix_105(BYTE max, BYTE index, const BYTE *ds);
 
@@ -55,9 +55,9 @@ void map_init_105(void) {
 	memset(&m105tmp, 0x00, sizeof(m105tmp));
 
 	init_MMC1(MMC1B);
-	MMC1_prg_fix = prg_fix_105;
-	MMC1_prg_swap = prg_swap_105;
-	MMC1_chr_swap = chr_swap_105;
+	MMC1_prg_fix = prg_fix_mmc1_105;
+	MMC1_prg_swap = prg_swap_mmc1_105;
+	MMC1_chr_swap = chr_swap_mmc1_105;
 
 	if (info.reset == RESET) {
 		if (m105tmp.ds_used) {
@@ -91,11 +91,11 @@ void extcl_cpu_every_cycle_105(void) {
 	}
 }
 
-void prg_fix_105(void) {
+void prg_fix_mmc1_105(void) {
 	WORD bank = 0;
 
 	if (mmc1.reg[1] & 0x08) {
-		prg_fix_MMC1();
+		prg_fix_MMC1_base();
 		return;
 	}
 	bank = (mmc1.reg[1] & 0x06) >> 1;
@@ -103,11 +103,11 @@ void prg_fix_105(void) {
 	map_prg_rom_8k(4, 0, bank);
 	map_prg_rom_8k_update();
 }
-void prg_swap_105(WORD address, WORD value) {
-	prg_swap_MMC1(address, (0x08 | (value & 0x07)));
+void prg_swap_mmc1_105(WORD address, WORD value) {
+	prg_swap_MMC1_base(address, (0x08 | (value & 0x07)));
 }
-void chr_swap_105(WORD address, WORD value) {
-	chr_swap_MMC1(address, (value & 0x01));
+void chr_swap_mmc1_105(WORD address, WORD value) {
+	chr_swap_MMC1_base(address, (value & 0x01));
 }
 
 INLINE static void tmp_fix_105(BYTE max, BYTE index, const BYTE *ds) {

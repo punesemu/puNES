@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_259(WORD address, WORD value);
+void prg_swap_mmc3_259(WORD address, WORD value);
 
 struct _m259 {
 	BYTE reg;
@@ -48,7 +48,7 @@ void map_init_259(void) {
 	memset(&m259, 0x00, sizeof(m259));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_259;
+	MMC3_prg_swap = prg_swap_mmc3_259;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -75,7 +75,7 @@ BYTE extcl_save_mapper_259(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_259(WORD address, WORD value) {
+void prg_swap_mmc3_259(WORD address, WORD value) {
 	WORD base = (m259.reg & 0x0F) << 1;
 	WORD mask = 0x01;
 
@@ -86,5 +86,5 @@ void prg_swap_259(WORD address, WORD value) {
 	} else {
 		base = base & ~((m259.reg & 0x08) << 2);
 	}
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

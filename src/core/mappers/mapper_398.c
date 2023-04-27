@@ -21,8 +21,8 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-void prg_swap_398(WORD address, WORD value);
-void chr_swap_398(WORD address, WORD value);
+void prg_swap_vrc2and4_398(WORD address, WORD value);
+void chr_swap_vrc2and4_398(WORD address, WORD value);
 
 struct _m398 {
 	BYTE reg[2];
@@ -42,8 +42,8 @@ void map_init_398(void) {
 	memset(&m398, 0x00, sizeof(m398));
 
 	init_VRC2and4(VRC24_VRC4, 0x01, 0x02, TRUE);
-	VRC2and4_prg_swap = prg_swap_398;
-	VRC2and4_chr_swap = chr_swap_398;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_398;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_398;
 
 	m398.reg[0] = 0xC0;
 }
@@ -72,21 +72,21 @@ BYTE extcl_rd_chr_398(WORD address) {
 	return (chr.bank_1k[slot][address & 0x3FF]);
 }
 
-void prg_swap_398(WORD address, WORD value) {
+void prg_swap_vrc2and4_398(WORD address, WORD value) {
 	WORD mask = 0x0F;
 
 	if (m398.reg[0] & 0x80) {
 		value = ((((m398.reg[0] & 0xC0) >> 5) | ((vrc2and4.chr[m398.reg[1]] & 0x04) >> 2)) << 2) | ((address >> 13) & 0x03);
 		mask = ~0;
 	}
-	prg_swap_VRC2and4(address, (value & mask));
+	prg_swap_VRC2and4_base(address, (value & mask));
 }
-void chr_swap_398(WORD address, WORD value) {
+void chr_swap_vrc2and4_398(WORD address, WORD value) {
 	WORD mask = 0x1FF;
 
 	if (m398.reg[0] & 0x80) {
 		value = ((0x40 | ((m398.reg[0] & 0x40) >> 3) | ((vrc2and4.chr[m398.reg[1]] & 0x07))) << 3) | (address >> 10);
 		mask = ~0;
 	}
-	chr_swap_VRC2and4(address, (value & mask));
+	chr_swap_VRC2and4_base(address, (value & mask));
 }

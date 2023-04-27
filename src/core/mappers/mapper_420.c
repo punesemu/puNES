@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_420(WORD address, WORD value);
-void chr_swap_420(WORD address, WORD value);
+void prg_swap_mmc3_420(WORD address, WORD value);
+void chr_swap_mmc3_420(WORD address, WORD value);
 
 struct _m420 {
 	BYTE reg[4];
@@ -49,8 +49,8 @@ void map_init_420(void) {
 	memset(&m420, 0x00, sizeof(m420));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_420;
-	MMC3_chr_swap = chr_swap_420;
+	MMC3_prg_swap = prg_swap_mmc3_420;
+	MMC3_chr_swap = chr_swap_mmc3_420;
 
 	m420.reg[2] = 0x0F;
 
@@ -79,7 +79,7 @@ BYTE extcl_save_mapper_420(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_420(WORD address, WORD value) {
+void prg_swap_mmc3_420(WORD address, WORD value) {
 	WORD base = 0;
 	WORD mask = 0;
 
@@ -91,11 +91,11 @@ void prg_swap_420(WORD address, WORD value) {
 		base = (m420.reg[3] & 0x04) << 3;
 		mask = 0x3F >> (m420.reg[0] & 0x20 ? 2 : ((m420.reg[3] & 0x20) >> 5));
 	}
-	prg_swap_MMC3(address, (base | (value & mask)));
+	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
-void chr_swap_420(WORD address, WORD value) {
+void chr_swap_mmc3_420(WORD address, WORD value) {
 	WORD base = ((m420.reg[1] & 0x80) << 1) | ((m420.reg[1] & 0x04) << 5);
 	WORD mask = 0xFF >> ((m420.reg[1] & 0x80) >> 7);
 
-	chr_swap_MMC3(address, (base | (value & mask)));
+	chr_swap_MMC3_base(address, (base | (value & mask)));
 }

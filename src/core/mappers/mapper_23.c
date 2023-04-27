@@ -19,9 +19,9 @@
 #include "mappers.h"
 #include "info.h"
 
-void prg_swap_23(WORD address, WORD value);
-void chr_swap_23(WORD address, WORD value);
-void wired_fix_23(void);
+void prg_swap_vrc2and4_23(WORD address, WORD value);
+void chr_swap_vrc2and4_23(WORD address, WORD value);
+void wired_fix_vrc2and4_23(void);
 
 void map_init_23(void) {
 	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
@@ -46,17 +46,17 @@ void map_init_23(void) {
 			init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE);
 			break;
 	}
-	VRC2and4_prg_swap = prg_swap_23;
-	VRC2and4_chr_swap = chr_swap_23;
-	VRC2and4_wired_fix = wired_fix_23;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_23;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_23;
+	VRC2and4_wired_fix = wired_fix_vrc2and4_23;
 }
 
-void prg_swap_23(WORD address, WORD value) {
-	prg_swap_VRC2and4(address, (value & 0x1F));
+void prg_swap_vrc2and4_23(WORD address, WORD value) {
+	prg_swap_VRC2and4_base(address, (value & 0x1F));
 }
-void chr_swap_23(WORD address, WORD value) {
-	chr_swap_VRC2and4(address, (value & 0x1FF));
+void chr_swap_vrc2and4_23(WORD address, WORD value) {
+	chr_swap_VRC2and4_base(address, (value & 0x1FF));
 }
-void wired_fix_23(void) {
+void wired_fix_vrc2and4_23(void) {
 	vrc2and4.wired = ((vrc2and4.wired & 0x01) << 3) | (vrc2and4.wired & 0xF7);
 }

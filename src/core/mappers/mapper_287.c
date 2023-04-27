@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_287(WORD address, WORD value);
-void chr_swap_287(WORD address, WORD value);
+void prg_swap_mmc3_287(WORD address, WORD value);
+void chr_swap_mmc3_287(WORD address, WORD value);
 
 struct _m287 {
 	WORD reg;
@@ -49,8 +49,8 @@ void map_init_287(void) {
 	memset(&m287, 0x00, sizeof(m287));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_287;
-	MMC3_chr_swap = chr_swap_287;
+	MMC3_prg_swap = prg_swap_mmc3_287;
+	MMC3_chr_swap = chr_swap_mmc3_287;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -77,7 +77,7 @@ BYTE extcl_save_mapper_287(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_287(WORD address, WORD value) {
+void prg_swap_mmc3_287(WORD address, WORD value) {
 	if (m287.reg & 0x0008) {
 		BYTE bank = ((m287.reg & 0x0007) << 2) | ((m287.reg & 0x0030) >> 4);
 
@@ -88,11 +88,11 @@ void prg_swap_287(WORD address, WORD value) {
 
 		value = (base & ~mask) | (value & mask);
 	}
-	prg_swap_MMC3(address, value);
+	prg_swap_MMC3_base(address, value);
 }
-void chr_swap_287(WORD address, WORD value) {
+void chr_swap_mmc3_287(WORD address, WORD value) {
 	WORD base = (m287.reg & 0x0007) << 7;
 	WORD mask = 0x7F;
 
-	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

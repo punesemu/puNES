@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_187(WORD address, WORD value);
-void chr_swap_187(WORD address, WORD value);
+void prg_swap_mmc3_187(WORD address, WORD value);
+void chr_swap_mmc3_187(WORD address, WORD value);
 
 struct _m187 {
 	BYTE reg;
@@ -50,8 +50,8 @@ void map_init_187(void) {
 	memset(&m187, 0x00, sizeof(m187));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_187;
-	MMC3_chr_swap = chr_swap_187;
+	MMC3_prg_swap = prg_swap_mmc3_187;
+	MMC3_chr_swap = chr_swap_mmc3_187;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -84,7 +84,7 @@ BYTE extcl_save_mapper_187(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_187(WORD address, WORD value) {
+void prg_swap_mmc3_187(WORD address, WORD value) {
 	const WORD slot = (address >> 13) & 0x03;
 	WORD mask = 0x3F;
 
@@ -97,14 +97,14 @@ void prg_swap_187(WORD address, WORD value) {
 			value = (value << 1) | (slot & 0x01);
 		}
 	}
-	prg_swap_MMC3(address, (value & mask));
+	prg_swap_MMC3_base(address, (value & mask));
 }
-void chr_swap_187(WORD address, WORD value) {
+void chr_swap_mmc3_187(WORD address, WORD value) {
 	const BYTE slot = address >> 10;
 	WORD base = 0;
 
 	if ((slot & 0x04) == ((mmc3.bank_to_update & 0x80) >> 5)) {
 		base = 0x100;
 	}
-	chr_swap_MMC3(address, (base | value));
+	chr_swap_MMC3_base(address, (base | value));
 }

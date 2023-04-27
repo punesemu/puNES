@@ -66,14 +66,14 @@ BYTE extcl_save_mapper_VRC2and4(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_VRC2and4(void);
 
 void init_VRC2and4(BYTE type, WORD A0, WORD A1, BYTE irq_repeated);
-void prg_fix_VRC2and4(void);
-void prg_swap_VRC2and4(WORD address, WORD value);
-void chr_fix_VRC2and4(void);
-void chr_swap_VRC2and4(WORD address, WORD value);
-void wram_fix_VRC2and4(void);
-void mirroring_fix_VRC2and4(void);
-void wired_fix_VRC2and4(void);
-void misc_03_VRC2and4(WORD address, BYTE value);
+void prg_fix_VRC2and4_base(void);
+void prg_swap_VRC2and4_base(WORD address, WORD value);
+void chr_fix_VRC2and4_base(void);
+void chr_swap_VRC2and4_base(WORD address, WORD value);
+void wram_fix_VRC2and4_base(void);
+void mirroring_fix_VRC2and4_base(void);
+void wired_fix_VRC2and4_base(void);
+void misc_03_VRC2and4_base(WORD address, BYTE value);
 
 extern void (*VRC2and4_prg_fix)(void);
 extern void (*VRC2and4_prg_swap)(WORD address, WORD value);

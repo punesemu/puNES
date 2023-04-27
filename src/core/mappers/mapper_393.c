@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_393(WORD address, WORD value);
-void chr_swap_393(WORD address, WORD value);
+void prg_swap_mmc3_393(WORD address, WORD value);
+void chr_swap_mmc3_393(WORD address, WORD value);
 
 struct _m393 {
 	BYTE reg[2];
@@ -50,8 +50,8 @@ void map_init_393(void) {
 	memset(&m393, 0x00, sizeof(m393));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_393;
-	MMC3_chr_swap = chr_swap_393;
+	MMC3_prg_swap = prg_swap_mmc3_393;
+	MMC3_chr_swap = chr_swap_mmc3_393;
 
 	if (info.format != NES_2_0) {
 		info.chr.ram.banks_8k_plus = 1;
@@ -118,7 +118,7 @@ void extcl_wr_chr_393(WORD address, BYTE value) {
 	}
 }
 
-void prg_swap_393(WORD address, WORD value) {
+void prg_swap_mmc3_393(WORD address, WORD value) {
 	WORD base = (m393.reg[0] & 0x07) << 4;
 	WORD mask = 0x0F;
 
@@ -129,9 +129,9 @@ void prg_swap_393(WORD address, WORD value) {
 			value = (mmc3.reg[6] & 0x0C) | ((address >> 13) & 0x03);
 		}
 	}
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_393(WORD address, WORD value) {
+void chr_swap_mmc3_393(WORD address, WORD value) {
 	if ((m393.reg[0] & 0x08) && chr.extra.data) {
 		value = address >> 10;
 		chr.bank_1k[address >> 10] = &chr.extra.data[value << 10];
@@ -139,6 +139,6 @@ void chr_swap_393(WORD address, WORD value) {
 		WORD base = (m393.reg[0] & 0x07) << 8;
 		WORD mask = 0xFF;
 
-		chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+		chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 	}
 }

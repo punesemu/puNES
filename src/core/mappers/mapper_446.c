@@ -32,46 +32,46 @@ INLINE static WORD prg_base(void);
 INLINE static WORD prg_mask(void);
 INLINE static WORD chr_base(void);
 
-INLINE static void prg_fix_446_no_mapper(void);
-INLINE static void chr_fix_446_no_mapper(void);
-INLINE static void wram_fix_446_no_mapper(void);
-INLINE static void mirroring_fix_446_no_mapper(void);
+INLINE static void prg_fix_no_mapper_446(void);
+INLINE static void chr_fix_no_mapper_446(void);
+INLINE static void wram_fix_no_mapper_446(void);
+INLINE static void mirroring_fix_no_mapper_446(void);
 
-INLINE static void prg_fix_446_nrom(void);
-INLINE static void chr_fix_446_nrom(void);
-INLINE static void wram_fix_446_nrom(void);
-INLINE static void mirroring_fix_446_nrom(void);
+INLINE static void prg_fix_nrom_446(void);
+INLINE static void chr_fix_nrom_446(void);
+INLINE static void wram_fix_nrom_446(void);
+INLINE static void mirroring_fix_nrom_446(void);
 
-INLINE static void prg_fix_446_cnrom(void);
-INLINE static void chr_fix_446_cnrom(void);
-INLINE static void wram_fix_446_cnrom(void);
-INLINE static void mirroring_fix_446_cnrom(void);
+INLINE static void prg_fix_cnrom_446(void);
+INLINE static void chr_fix_cnrom_446(void);
+INLINE static void wram_fix_cnrom_446(void);
+INLINE static void mirroring_fix_cnrom_446(void);
 
-INLINE static void prg_fix_446_unrom(void);
-INLINE static void chr_fix_446_unrom(void);
-INLINE static void wram_fix_446_unrom(void);
-INLINE static void mirroring_fix_446_unrom(void);
+INLINE static void prg_fix_unrom_446(void);
+INLINE static void chr_fix_unrom_446(void);
+INLINE static void wram_fix_unrom_446(void);
+INLINE static void mirroring_fix_unrom_446(void);
 
-INLINE static void prg_fix_446_bandai(void);
-INLINE static void chr_fix_446_bandai(void);
-INLINE static void wram_fix_446_bandai(void);
-INLINE static void mirroring_fix_446_bandai(void);
+INLINE static void prg_fix_bandai_446(void);
+INLINE static void chr_fix_bandai_446(void);
+INLINE static void wram_fix_bandai_446(void);
+INLINE static void mirroring_fix_bandai_446(void);
 
-INLINE static void prg_fix_446_anrom(void);
-INLINE static void chr_fix_446_anrom(void);
-INLINE static void wram_fix_446_anrom(void);
-INLINE static void mirroring_fix_446_anrom(void);
+INLINE static void prg_fix_anrom_446(void);
+INLINE static void chr_fix_anrom_446(void);
+INLINE static void wram_fix_anrom_446(void);
+INLINE static void mirroring_fix_anrom_446(void);
 
-INLINE static void prg_fix_446_gnrom(void);
-INLINE static void chr_fix_446_gnrom(void);
-INLINE static void wram_fix_446_gnrom(void);
-INLINE static void mirroring_fix_446_gnrom(void);
+INLINE static void prg_fix_gnrom_446(void);
+INLINE static void chr_fix_gnrom_446(void);
+INLINE static void wram_fix_gnrom_446(void);
+INLINE static void mirroring_fix_gnrom_446(void);
 
-void prg_swap_446_mmc1(WORD address, WORD value);
-void chr_swap_446_mmc1(WORD address, WORD value);
+void prg_swap_mmc1_446(WORD address, WORD value);
+void chr_swap_mmc1_446(WORD address, WORD value);
 
-void prg_swap_446_mmc3(WORD address, WORD value);
-void chr_swap_446_mmc3(WORD address, WORD value);
+void prg_swap_mmc3_446(WORD address, WORD value);
+void chr_swap_mmc3_446(WORD address, WORD value);
 
 void prg_swap_446_tlsrom(WORD address, WORD value);
 void chr_swap_446_tlsrom(WORD address, WORD value);
@@ -355,13 +355,13 @@ INLINE static void switch_mode(void) {
 			case M446_SLROM:
 			case M446_SNROM:
 				init_MMC1(MMC1B);
-				MMC1_prg_swap = prg_swap_446_mmc1;
-				MMC1_chr_swap = chr_swap_446_mmc1;
+				MMC1_prg_swap = prg_swap_mmc1_446;
+				MMC1_chr_swap = chr_swap_mmc1_446;
 				break;
 			case M446_MMC3:
 				init_MMC3();
-				MMC3_prg_swap = prg_swap_446_mmc3;
-				MMC3_chr_swap = chr_swap_446_mmc3;
+				MMC3_prg_swap = prg_swap_mmc3_446;
+				MMC3_chr_swap = chr_swap_mmc3_446;
 				break;
 			case M446_TLSROM:
 				init_MMC3();
@@ -390,40 +390,40 @@ INLINE static void fix_all(void) {
 	if (m446.reg[0] & 0x80) {
 		switch (m446.mapper) {
 			case M446_NROM:
-				prg_fix_446_nrom();
-				chr_fix_446_nrom();
-				wram_fix_446_nrom();
-				mirroring_fix_446_nrom();
+				prg_fix_nrom_446();
+				chr_fix_nrom_446();
+				wram_fix_nrom_446();
+				mirroring_fix_nrom_446();
 				return;
 			case M446_CNROM:
-				prg_fix_446_cnrom();
-				chr_fix_446_cnrom();
-				wram_fix_446_cnrom();
-				mirroring_fix_446_cnrom();
+				prg_fix_cnrom_446();
+				chr_fix_cnrom_446();
+				wram_fix_cnrom_446();
+				mirroring_fix_cnrom_446();
 				return;
 			case M446_UNROM:
-				prg_fix_446_unrom();
-				chr_fix_446_unrom();
-				wram_fix_446_unrom();
-				mirroring_fix_446_unrom();
+				prg_fix_unrom_446();
+				chr_fix_unrom_446();
+				wram_fix_unrom_446();
+				mirroring_fix_unrom_446();
 				return;
 			case M446_BANDAI:
-				prg_fix_446_bandai();
-				chr_fix_446_bandai();
-				wram_fix_446_bandai();
-				mirroring_fix_446_bandai();
+				prg_fix_bandai_446();
+				chr_fix_bandai_446();
+				wram_fix_bandai_446();
+				mirroring_fix_bandai_446();
 				return;
 			case M446_ANROM:
-				prg_fix_446_anrom();
-				chr_fix_446_anrom();
-				wram_fix_446_anrom();
-				mirroring_fix_446_anrom();
+				prg_fix_anrom_446();
+				chr_fix_anrom_446();
+				wram_fix_anrom_446();
+				mirroring_fix_anrom_446();
 				return;
 			case M446_GNROM:
-				prg_fix_446_gnrom();
-				chr_fix_446_gnrom();
-				wram_fix_446_gnrom();
-				mirroring_fix_446_gnrom();
+				prg_fix_gnrom_446();
+				chr_fix_gnrom_446();
+				wram_fix_gnrom_446();
+				mirroring_fix_gnrom_446();
 				return;
 			case M446_SLROM:
 			case M446_SNROM:
@@ -449,10 +449,10 @@ INLINE static void fix_all(void) {
 				return;
 		}
 	} else {
-		prg_fix_446_no_mapper();
-		chr_fix_446_no_mapper();
-		wram_fix_446_no_mapper();
-		mirroring_fix_446_no_mapper();
+		prg_fix_no_mapper_446();
+		chr_fix_no_mapper_446();
+		wram_fix_no_mapper_446();
+		mirroring_fix_no_mapper_446();
 	}
 }
 INLINE static WORD prg_base(void) {
@@ -465,7 +465,7 @@ INLINE static WORD chr_base(void) {
 	return (m446.reg[6]);
 }
 
-INLINE static void prg_fix_446_no_mapper(void) {
+INLINE static void prg_fix_no_mapper_446(void) {
 	WORD bank = prg_base();
 
 	_control_bank(bank, info.prg.rom.max.banks_8k)
@@ -485,7 +485,7 @@ INLINE static void prg_fix_446_no_mapper(void) {
 
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_446_no_mapper(void) {
+INLINE static void chr_fix_no_mapper_446(void) {
 	DBWORD bank = chr_base();
 
 	_control_bank(bank, info.chr.rom.max.banks_8k)
@@ -499,8 +499,8 @@ INLINE static void chr_fix_446_no_mapper(void) {
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
-INLINE static void wram_fix_446_no_mapper(void) {}
-INLINE static void mirroring_fix_446_no_mapper(void) {
+INLINE static void wram_fix_no_mapper_446(void) {}
+INLINE static void mirroring_fix_no_mapper_446(void) {
 	if (m446.reg[4] & 0x01) {
 		mirroring_V();
 	} else {
@@ -508,7 +508,7 @@ INLINE static void mirroring_fix_446_no_mapper(void) {
 	}
 }
 
-INLINE static void prg_fix_446_nrom(void) {
+INLINE static void prg_fix_nrom_446(void) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 	WORD bank = 0;
@@ -531,7 +531,7 @@ INLINE static void prg_fix_446_nrom(void) {
 
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_446_nrom(void) {
+INLINE static void chr_fix_nrom_446(void) {
 	DBWORD bank = chr_base();
 
 	_control_bank(bank, info.chr.rom.max.banks_8k)
@@ -545,11 +545,11 @@ INLINE static void chr_fix_446_nrom(void) {
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
-INLINE static void wram_fix_446_nrom(void) {
+INLINE static void wram_fix_nrom_446(void) {
 	cpu.prg_ram_wr_active = FALSE;
 	cpu.prg_ram_rd_active = FALSE;
 }
-INLINE static void mirroring_fix_446_nrom(void) {
+INLINE static void mirroring_fix_nrom_446(void) {
 	if (m446.reg[4] & 0x01) {
 		mirroring_V();
 	} else {
@@ -557,7 +557,7 @@ INLINE static void mirroring_fix_446_nrom(void) {
 	}
 }
 
-INLINE static void prg_fix_446_cnrom(void) {
+INLINE static void prg_fix_cnrom_446(void) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 	WORD bank = 0;
@@ -580,7 +580,7 @@ INLINE static void prg_fix_446_cnrom(void) {
 
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_446_cnrom(void) {
+INLINE static void chr_fix_cnrom_446(void) {
 	DBWORD bank = m446.latch & 0x03;
 
 	_control_bank(bank, info.chr.rom.max.banks_8k)
@@ -594,11 +594,11 @@ INLINE static void chr_fix_446_cnrom(void) {
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
-INLINE static void wram_fix_446_cnrom(void) {
+INLINE static void wram_fix_cnrom_446(void) {
 	cpu.prg_ram_wr_active = FALSE;
 	cpu.prg_ram_rd_active = FALSE;
 }
-INLINE static void mirroring_fix_446_cnrom(void) {
+INLINE static void mirroring_fix_cnrom_446(void) {
 	if (m446.reg[4] & 0x01) {
 		mirroring_V();
 	} else {
@@ -606,7 +606,7 @@ INLINE static void mirroring_fix_446_cnrom(void) {
 	}
 }
 
-INLINE static void prg_fix_446_unrom(void) {
+INLINE static void prg_fix_unrom_446(void) {
 	WORD base = prg_base() >> 1;
 	WORD mask = prg_mask() >> 1;
 	WORD bank = m446.latch;
@@ -621,7 +621,7 @@ INLINE static void prg_fix_446_unrom(void) {
 
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_446_unrom(void) {
+INLINE static void chr_fix_unrom_446(void) {
 	DBWORD bank = chr_base();
 
 	_control_bank(bank, info.chr.rom.max.banks_8k)
@@ -635,11 +635,11 @@ INLINE static void chr_fix_446_unrom(void) {
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
-INLINE static void wram_fix_446_unrom(void) {
+INLINE static void wram_fix_unrom_446(void) {
 	cpu.prg_ram_wr_active = FALSE;
 	cpu.prg_ram_rd_active = FALSE;
 }
-INLINE static void mirroring_fix_446_unrom(void) {
+INLINE static void mirroring_fix_unrom_446(void) {
 	if (m446.reg[4] & 0x01) {
 		mirroring_V();
 	} else {
@@ -647,7 +647,7 @@ INLINE static void mirroring_fix_446_unrom(void) {
 	}
 }
 
-INLINE static void prg_fix_446_bandai(void) {
+INLINE static void prg_fix_bandai_446(void) {
 	WORD base = prg_base() >> 1;
 	WORD mask = prg_mask() >> 1;
 	WORD bank = m446.latch >> 4;
@@ -662,7 +662,7 @@ INLINE static void prg_fix_446_bandai(void) {
 
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_446_bandai(void) {
+INLINE static void chr_fix_bandai_446(void) {
 	DBWORD bank = m446.latch & 0x0F;
 
 	_control_bank(bank, info.chr.rom.max.banks_8k)
@@ -676,11 +676,11 @@ INLINE static void chr_fix_446_bandai(void) {
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
-INLINE static void wram_fix_446_bandai(void) {
+INLINE static void wram_fix_bandai_446(void) {
 	cpu.prg_ram_wr_active = FALSE;
 	cpu.prg_ram_rd_active = FALSE;
 }
-INLINE static void mirroring_fix_446_bandai(void) {
+INLINE static void mirroring_fix_bandai_446(void) {
 	if (m446.latch & 0x10) {
 		mirroring_SCR1();
 	} else {
@@ -688,7 +688,7 @@ INLINE static void mirroring_fix_446_bandai(void) {
 	}
 }
 
-INLINE static void prg_fix_446_anrom(void) {
+INLINE static void prg_fix_anrom_446(void) {
 	WORD base = prg_base() >> 2;
 	WORD mask = prg_mask() >> 2;
 	WORD bank = m446.latch;
@@ -699,7 +699,7 @@ INLINE static void prg_fix_446_anrom(void) {
 
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_446_anrom(void) {
+INLINE static void chr_fix_anrom_446(void) {
 	DBWORD bank = m446.latch & 0x03;
 
 	_control_bank(bank, info.chr.rom.max.banks_8k)
@@ -713,11 +713,11 @@ INLINE static void chr_fix_446_anrom(void) {
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
-INLINE static void wram_fix_446_anrom(void) {
+INLINE static void wram_fix_anrom_446(void) {
 	cpu.prg_ram_wr_active = FALSE;
 	cpu.prg_ram_rd_active = FALSE;
 }
-INLINE static void mirroring_fix_446_anrom(void) {
+INLINE static void mirroring_fix_anrom_446(void) {
 	if (m446.reg[4] & 0x01) {
 		mirroring_V();
 	} else {
@@ -725,7 +725,7 @@ INLINE static void mirroring_fix_446_anrom(void) {
 	}
 }
 
-INLINE static void prg_fix_446_gnrom(void) {
+INLINE static void prg_fix_gnrom_446(void) {
 	WORD base = prg_base() >> 2;
 	WORD mask = prg_mask() >> 2;
 	WORD bank = m446.latch >> 4;
@@ -736,7 +736,7 @@ INLINE static void prg_fix_446_gnrom(void) {
 
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_446_gnrom(void) {
+INLINE static void chr_fix_gnrom_446(void) {
 	DBWORD bank = m446.latch & 0x03;
 
 	_control_bank(bank, info.chr.rom.max.banks_8k)
@@ -750,11 +750,11 @@ INLINE static void chr_fix_446_gnrom(void) {
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
-INLINE static void wram_fix_446_gnrom(void) {
+INLINE static void wram_fix_gnrom_446(void) {
 	cpu.prg_ram_wr_active = FALSE;
 	cpu.prg_ram_rd_active = FALSE;
 }
-INLINE static void mirroring_fix_446_gnrom(void) {
+INLINE static void mirroring_fix_gnrom_446(void) {
 	if (m446.reg[4] & 0x01) {
 		mirroring_V();
 	} else {
@@ -762,54 +762,54 @@ INLINE static void mirroring_fix_446_gnrom(void) {
 	}
 }
 
-void prg_swap_446_mmc1(WORD address, WORD value) {
+void prg_swap_mmc1_446(WORD address, WORD value) {
 	WORD base = prg_base() >> 1;
 	WORD mask = prg_mask() >> 1;
 
-	prg_swap_MMC1(address, (base | (value & mask)));
+	prg_swap_MMC1_base(address, (base | (value & mask)));
 }
-void chr_swap_446_mmc1(WORD address, WORD value) {
+void chr_swap_mmc1_446(WORD address, WORD value) {
 	WORD base = chr_base() >> 2;
 	WORD mask = 0x1F;
 
-	chr_swap_MMC1(address, (base | (value & mask)));
+	chr_swap_MMC1_base(address, (base | (value & mask)));
 }
 
-void prg_swap_446_mmc3(WORD address, WORD value) {
+void prg_swap_mmc3_446(WORD address, WORD value) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 
-	prg_swap_MMC3(address, (base | (value & mask)));
+	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
-void chr_swap_446_mmc3(WORD address, WORD value) {
+void chr_swap_mmc3_446(WORD address, WORD value) {
 	WORD base = chr_base();
 	WORD mask = 0xFF;
 
-	chr_swap_MMC3(address, (base | (value & mask)));
+	chr_swap_MMC3_base(address, (base | (value & mask)));
 }
 
 void prg_swap_446_tlsrom(WORD address, WORD value) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 
-	prg_swap_MMC3(address, (base | (value & mask)));
+	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
 void chr_swap_446_tlsrom(WORD address, WORD value) {
 	WORD base = chr_base();
 	WORD mask = 0x7F;
 
-	chr_swap_MMC3(address, (base | (value & mask)));
+	chr_swap_MMC3_base(address, (base | (value & mask)));
 }
 
 void prg_swap_446_189(WORD address, UNUSED(WORD value)) {
 	const WORD slot = (address >> 13) & 0x03;
 	WORD base = prg_base() & ~3;
 
-	prg_swap_MMC3(address, (base | ((m446.reg189 & 0x03) << 2) | slot));
+	prg_swap_MMC3_base(address, (base | ((m446.reg189 & 0x03) << 2) | slot));
 }
 void chr_swap_446_189(WORD address, WORD value) {
 	WORD base = chr_base();
 	WORD mask = 0xFF;
 
-	chr_swap_MMC3(address, (base | (value & mask)));
+	chr_swap_MMC3_base(address, (base | (value & mask)));
 }

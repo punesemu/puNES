@@ -16,18 +16,14 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
-#include "cpu.h"
-#include "save_slot.h"
 
-
-void prg_swap_1(WORD address, WORD value);
-void chr_swap_1(WORD address, WORD value);
-void wram_fix_1(void);
-void mirroring_fix_1(void);
+void prg_swap_mmc1_1(WORD address, WORD value);
+void chr_swap_mmc1_1(WORD address, WORD value);
+void wram_fix_mmc1_1(void);
+void mirroring_fix_mmc1_1(void);
 
 INLINE static void tmp_fix_1(BYTE max, BYTE index, const BYTE *ds);
 
@@ -47,10 +43,10 @@ void map_init_1(void) {
 	mapper.internal_struct_size[0] = sizeof(mmc1);
 
 	init_MMC1((info.mapper.id == 155) || (info.mapper.submapper == 3) ? MMC1A : MMC1B);
-	MMC1_prg_swap = prg_swap_1;
-	MMC1_chr_swap = chr_swap_1;
-	MMC1_wram_fix = wram_fix_1;
-	MMC1_mirroring_fix = mirroring_fix_1;
+	MMC1_prg_swap = prg_swap_mmc1_1;
+	MMC1_chr_swap = chr_swap_mmc1_1;
+	MMC1_wram_fix = wram_fix_mmc1_1;
+	MMC1_mirroring_fix = mirroring_fix_mmc1_1;
 
 	if (info.reset == RESET) {
 		if (m1tmp.ds_used) {
@@ -102,16 +98,16 @@ BYTE extcl_cpu_rd_ram_1(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	return (openbus);
 }
 
-void prg_swap_1(WORD address, WORD value) {
+void prg_swap_mmc1_1(WORD address, WORD value) {
 	value = info.mapper.submapper == SEROM
 		? (address >> 14) & 0x01
 		: (chr_bank_MMC1(0) & 0x10) | (value & 0x0F);
-	prg_swap_MMC1(address, value);
+	prg_swap_MMC1_base(address, value);
 }
-void chr_swap_1(WORD address, WORD value) {
-	chr_swap_MMC1(address, (value & 0x1F));
+void chr_swap_mmc1_1(WORD address, WORD value) {
+	chr_swap_MMC1_base(address, (value & 0x1F));
 }
-void wram_fix_1(void) {
+void wram_fix_mmc1_1(void) {
 	WORD bank = chr_bank_MMC1(0);
 
 	if (prg_ram_plus_size() == (16 * 1024)) {
@@ -123,11 +119,11 @@ void wram_fix_1(void) {
 	}
 	MMC1_wram_swap(bank);
 }
-void mirroring_fix_1(void) {
+void mirroring_fix_mmc1_1(void) {
 	if (mapper.mirroring == MIRRORING_FOURSCR) {
 		return;
 	}
-	mirroring_fix_MMC1();
+	mirroring_fix_MMC1_base();
 }
 
 INLINE static void tmp_fix_1(BYTE max, BYTE index, const BYTE *ds) {

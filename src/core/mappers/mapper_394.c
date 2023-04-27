@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_394(WORD address, WORD value);
-void chr_swap_394(WORD address, WORD value);
+void prg_swap_mmc3_394(WORD address, WORD value);
+void chr_swap_mmc3_394(WORD address, WORD value);
 
 _m394 m394;
 
@@ -60,8 +60,8 @@ void map_init_394(void) {
 	}
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_394;
-	MMC3_chr_swap = chr_swap_394;
+	MMC3_prg_swap = prg_swap_mmc3_394;
+	MMC3_chr_swap = chr_swap_mmc3_394;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -166,7 +166,7 @@ void extcl_update_r2006_394(WORD new_r2006, WORD old_r2006) {
 	}
 }
 
-void prg_swap_394(WORD address, WORD value) {
+void prg_swap_mmc3_394(WORD address, WORD value) {
 	WORD base = ((m394.reg[3] & 0x08) << 1) | ((m394.reg[1] & 0x01) << 5);
 	WORD mask = 0x1F >> !(m394.reg[3] & 0x10);
 
@@ -175,11 +175,11 @@ void prg_swap_394(WORD address, WORD value) {
 		mask = 0x03;
 		value = (address >> 13) & 0x03;
 	}
-	prg_swap_MMC3(address, ((base & ~mask)| (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask)| (value & mask)));
 }
-void chr_swap_394(WORD address, WORD value) {
+void chr_swap_mmc3_394(WORD address, WORD value) {
 	WORD base =((m394.reg[3] & 0x40) << 1) | ((m394.reg[1] & 0x01) << 8);
 	WORD mask = 0xFF >> !(m394.reg[3] & 0x80);
 
-	chr_swap_MMC3(address, (base | (value & mask)));
+	chr_swap_MMC3_base(address, (base | (value & mask)));
 }

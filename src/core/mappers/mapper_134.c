@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_134(WORD address, WORD value);
-void chr_swap_134(WORD address, WORD value);
+void prg_swap_mmc3_134(WORD address, WORD value);
+void chr_swap_mmc3_134(WORD address, WORD value);
 
 INLINE static void tmp_fix_134(BYTE max, BYTE index, const BYTE *ds);
 
@@ -58,8 +58,8 @@ void map_init_134(void) {
 	memset(&m134, 0x00, sizeof(m134));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_134;
-	MMC3_chr_swap = chr_swap_134;
+	MMC3_prg_swap = prg_swap_mmc3_134;
+	MMC3_chr_swap = chr_swap_mmc3_134;
 
 	if (info.reset == RESET) {
 		if (m134tmp.ds_used) {
@@ -172,7 +172,7 @@ BYTE extcl_save_mapper_134(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_134(WORD address, WORD value) {
+void prg_swap_mmc3_134(WORD address, WORD value) {
 	WORD base = ((m134.reg[1] & 0x03) << 4) | ((m134.reg[0] & 0x10) << 2);
 	WORD mask = m134.reg[1] & 0x04 ? 0x0F: 0x1F;
 
@@ -181,16 +181,16 @@ void prg_swap_134(WORD address, WORD value) {
 		value = (mmc3.reg[6] & (m134.reg[1] & 0x08 ? 0xFE : 0xFC)) |
 			((address >> 13) & (m134.reg[1] & 0x08 ? 0x01 : 0x03));
 	}
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_134(WORD address, WORD value) {
+void chr_swap_mmc3_134(WORD address, WORD value) {
 	WORD base = ((m134.reg[1] & 0x30) << 3) | ((m134.reg[0] & 0x20) << 4);
 	WORD mask = m134.reg[1] & 0x40 ? 0x7F: 0xFF;
 
 	if (m134.reg[0] & 0x08) {
 		value = ((m134.reg[2] & mask) << 3) | (address >> 10);
 	}
-	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
 
 INLINE static void tmp_fix_134(BYTE max, BYTE index, const BYTE *ds) {

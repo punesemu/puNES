@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_114(WORD address, WORD value);
-void chr_swap_114(WORD address, WORD value);
+void prg_swap_mmc3_114(WORD address, WORD value);
+void chr_swap_mmc3_114(WORD address, WORD value);
 
 _m114 m114;
 
@@ -51,8 +51,8 @@ void map_init_114(void) {
 	}
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_114;
-	MMC3_chr_swap = chr_swap_114;
+	MMC3_prg_swap = prg_swap_mmc3_114;
+	MMC3_chr_swap = chr_swap_mmc3_114;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -92,7 +92,7 @@ BYTE extcl_save_mapper_114(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_114(WORD address, WORD value) {
+void prg_swap_mmc3_114(WORD address, WORD value) {
 	if (m114.reg[0] & 0x80) {
 		value = ((m114.reg[0] & 0x0E) | (m114.reg[0] & 0x20 ? (address & 0x4000) >> 14 : m114.reg[0] & 0x01)) << 1;
 		value |= (address & 0x2000) >> 13;
@@ -101,7 +101,7 @@ void prg_swap_114(WORD address, WORD value) {
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-void chr_swap_114(WORD address, WORD value) {
+void chr_swap_mmc3_114(WORD address, WORD value) {
 	WORD base = (m114.reg[1] & 0x01) << 8;
 	WORD mask = 0xFF;
 

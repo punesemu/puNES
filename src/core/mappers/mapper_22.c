@@ -18,8 +18,8 @@
 
 #include "mappers.h"
 
-void prg_swap_22(WORD address, WORD value);
-void chr_swap_22(WORD address, WORD value);
+void prg_swap_vrc2and4_22(WORD address, WORD value);
+void chr_swap_vrc2and4_22(WORD address, WORD value);
 
 void map_init_22(void) {
 	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
@@ -31,13 +31,13 @@ void map_init_22(void) {
 	mapper.internal_struct_size[0] = sizeof(vrc2and4);
 
 	init_VRC2and4(VRC24_VRC2, 0x02, 0x01, TRUE);
-	VRC2and4_prg_swap = prg_swap_22;
-	VRC2and4_chr_swap = chr_swap_22;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_22;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_22;
 }
 
-void prg_swap_22(WORD address, WORD value) {
-	prg_swap_VRC2and4(address, (value & 0x1F));
+void prg_swap_vrc2and4_22(WORD address, WORD value) {
+	prg_swap_VRC2and4_base(address, (value & 0x1F));
 }
-void chr_swap_22(WORD address, WORD value) {
-	chr_swap_VRC2and4(address, ((value & 0xFF) >> 1));
+void chr_swap_vrc2and4_22(WORD address, WORD value) {
+	chr_swap_VRC2and4_base(address, ((value & 0xFF) >> 1));
 }

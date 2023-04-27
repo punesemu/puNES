@@ -20,11 +20,10 @@
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
-#include "cpu.h"
 #include "save_slot.h"
 
-void prg_swap_252(WORD address, WORD value);
-void chr_swap_252(WORD address, WORD value);
+void prg_swap_vrc2and4_252(WORD address, WORD value);
+void chr_swap_vrc2and4_252(WORD address, WORD value);
 
 struct _m252 {
 	WORD mask;
@@ -46,8 +45,8 @@ void map_init_252(void) {
 	memset(&m252, 0x00, sizeof(m252));
 
 	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE);
-	VRC2and4_prg_swap = prg_swap_252;
-	VRC2and4_chr_swap = chr_swap_252;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_252;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_252;
 
 	if (info.mapper.id == 252) {
 		m252.mask = 0xFE;
@@ -91,14 +90,14 @@ void extcl_wr_chr_252(WORD address, BYTE value) {
 	}
 }
 
-void prg_swap_252(WORD address, WORD value) {
-	prg_swap_VRC2and4(address, (value & 0x1F));
+void prg_swap_vrc2and4_252(WORD address, WORD value) {
+	prg_swap_VRC2and4_base(address, (value & 0x1F));
 }
-void chr_swap_252(WORD address, WORD value) {
+void chr_swap_vrc2and4_252(WORD address, WORD value) {
 	if (((value & m252.mask) == m252.compare) && chr.extra.data) {
 		control_bank(info.chr.ram.max.banks_1k)
 		chr.bank_1k[address >> 10] = &chr.extra.data[value << 10];
 	} else {
-		chr_swap_VRC2and4(address, value);
+		chr_swap_VRC2and4_base(address, value);
 	}
 }

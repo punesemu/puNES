@@ -16,16 +16,14 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <stdlib.h>
 #include <string.h>
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
-#include "cpu.h"
 #include "save_slot.h"
 
-void prg_swap_550(WORD address, WORD value);
-void chr_swap_550(WORD address, WORD value);
+void prg_swap_mmc1_550(WORD address, WORD value);
+void chr_swap_mmc1_550(WORD address, WORD value);
 
 struct _m550 {
 	BYTE reg[2];
@@ -43,8 +41,8 @@ void map_init_550(void) {
 	memset(&m550, 0x00, sizeof(m550));
 
 	init_MMC1(MMC1A);
-	MMC1_prg_swap = prg_swap_550;
-	MMC1_chr_swap = chr_swap_550;
+	MMC1_prg_swap = prg_swap_mmc1_550;
+	MMC1_chr_swap = chr_swap_mmc1_550;
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -76,19 +74,19 @@ BYTE extcl_save_mapper_550(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_550(WORD address, WORD value) {
+void prg_swap_mmc1_550(WORD address, WORD value) {
 	if ((m550.reg[0] & 0x06) == 0x06) {
 		value = (m550.reg[0] << 2) | (value & 0x07);
 	} else {
 		value = (((m550.reg[0] << 1) | (m550.reg[1] >> 4)) << 1) | ((address >> 14) & 0x01);
 	}
-	prg_swap_MMC1(address, value);
+	prg_swap_MMC1_base(address, value);
 }
-void chr_swap_550(WORD address, WORD value) {
+void chr_swap_mmc1_550(WORD address, WORD value) {
 	if ((m550.reg[0] & 0x06) == 0x06) {
 		value = 0x18 | (value & 0x07);
 	} else {
 		value = ((((m550.reg[0] << 1) & 0x0C) | (m550.reg[1] & 0x03)) << 1) | ((address >> 12) & 0x01);
 	}
-	chr_swap_MMC1(address, value);
+	chr_swap_MMC1_base(address, value);
 }

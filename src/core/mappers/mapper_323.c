@@ -23,8 +23,8 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-void prg_swap_323(WORD address, WORD value);
-void chr_swap_323(WORD address, WORD value);
+void prg_swap_mmc1_323(WORD address, WORD value);
+void chr_swap_mmc1_323(WORD address, WORD value);
 
 struct _m323 {
 	BYTE reg;
@@ -42,8 +42,8 @@ void map_init_323(void) {
 	memset(&m323, 0x00, sizeof(m323));
 
 	init_MMC1(MMC1B);
-	MMC1_prg_swap = prg_swap_323;
-	MMC1_chr_swap = chr_swap_323;
+	MMC1_prg_swap = prg_swap_mmc1_323;
+	MMC1_chr_swap = chr_swap_mmc1_323;
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -68,9 +68,9 @@ BYTE extcl_save_mapper_323(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_323(WORD address, WORD value) {
-	prg_swap_MMC1(address, (((m323.reg & 0xF0) >> 1) | (value & 0x07)));
+void prg_swap_mmc1_323(WORD address, WORD value) {
+	prg_swap_MMC1_base(address, (((m323.reg & 0xF0) >> 1) | (value & 0x07)));
 }
-void chr_swap_323(WORD address, WORD value) {
-	chr_swap_MMC1(address, (((m323.reg & 0xF0) << 1) | (value & 0x1F)));
+void chr_swap_mmc1_323(WORD address, WORD value) {
+	chr_swap_MMC1_base(address, (((m323.reg & 0xF0) << 1) | (value & 0x1F)));
 }

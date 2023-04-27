@@ -24,8 +24,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_fix_123(void);
-void prg_swap_123(WORD address, WORD value);
+void prg_fix_mmc3_123(void);
+void prg_swap_mmc3_123(WORD address, WORD value);
 
 static const BYTE vlu2288[8] = {0, 3, 1, 5, 6, 7, 2, 4};
 
@@ -52,8 +52,8 @@ void map_init_123(void) {
 	memset(&m123, 0x00, sizeof(m123));
 
 	init_MMC3();
-	MMC3_prg_fix = prg_fix_123;
-	MMC3_prg_swap = prg_swap_123;
+	MMC3_prg_fix = prg_fix_mmc3_123;
+	MMC3_prg_swap = prg_swap_mmc3_123;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -100,7 +100,7 @@ BYTE extcl_save_mapper_123(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_fix_123(void) {
+void prg_fix_mmc3_123(void) {
 	BYTE value = 0;
 
 	if (m123.reg & 0x40) {
@@ -117,8 +117,8 @@ void prg_fix_123(void) {
 		map_prg_rom_8k_update();
 		return;
 	}
-	prg_fix_MMC3();
+	prg_fix_MMC3_base();
 }
-void prg_swap_123(WORD address, WORD value) {
-	prg_swap_MMC3(address, (value & 0x3F));
+void prg_swap_mmc3_123(WORD address, WORD value) {
+	prg_swap_MMC3_base(address, (value & 0x3F));
 }

@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_37(WORD address, WORD value);
-void chr_swap_37(WORD address, WORD value);
+void prg_swap_mmc3_37(WORD address, WORD value);
+void chr_swap_mmc3_37(WORD address, WORD value);
 
 struct _m37 {
 	BYTE reg;
@@ -49,8 +49,8 @@ void map_init_37(void) {
 	memset(&m37, 0x00, sizeof(m37));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_37;
-	MMC3_chr_swap = chr_swap_37;
+	MMC3_prg_swap = prg_swap_mmc3_37;
+	MMC3_chr_swap = chr_swap_mmc3_37;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -77,15 +77,15 @@ BYTE extcl_save_mapper_37(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_37(WORD address, WORD value) {
+void prg_swap_mmc3_37(WORD address, WORD value) {
 	WORD base = ((m37.reg << 2) & 0x10) | ((m37.reg & 0x03) == 0x03 ? 0x08 : 0);
 	WORD mask = (m37.reg << 1) | 0x07;
 
-	prg_swap_MMC3(address, (base | (value & mask)));
+	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
-void chr_swap_37(WORD address, WORD value) {
+void chr_swap_mmc3_37(WORD address, WORD value) {
 	WORD base = (m37.reg << 5) & 0x80;
 	WORD mask = 0x7F;
 
-	chr_swap_MMC3(address, (base | (value & mask)));
+	chr_swap_MMC3_base(address, (base | (value & mask)));
 }

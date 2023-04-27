@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_315(WORD address, WORD value);
-void chr_swap_315(WORD address, WORD value);
+void prg_swap_mmc3_315(WORD address, WORD value);
+void chr_swap_mmc3_315(WORD address, WORD value);
 
 struct _m315 {
 	BYTE reg;
@@ -49,8 +49,8 @@ void map_init_315(void) {
 	memset(&m315, 0x00, sizeof(m315));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_315;
-	MMC3_chr_swap = chr_swap_315;
+	MMC3_prg_swap = prg_swap_mmc3_315;
+	MMC3_chr_swap = chr_swap_mmc3_315;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -77,7 +77,7 @@ BYTE extcl_save_mapper_315(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_315(WORD address, WORD value) {
+void prg_swap_mmc3_315(WORD address, WORD value) {
 	WORD base = ((m315.reg >> 1) & 0x03) << 4;
 	WORD mask = 0x0F;
 
@@ -88,13 +88,13 @@ void prg_swap_315(WORD address, WORD value) {
 
 		value = bank < 2 ? reg & 0xFD : reg | 0x02;
 	}
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_315(WORD address, WORD value) {
+void chr_swap_mmc3_315(WORD address, WORD value) {
 	WORD base = (m315.reg & 0x01) << 8;
 	WORD mask = 0xFF;
 
 	// Outer Bank Register's CHR A16 and CHR A17 are OR'd with the respective MMC3 bits.
 	value = ((m315.reg & 0x08) << 3) | ((m315.reg & 0x02) << 6) | value;
-	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

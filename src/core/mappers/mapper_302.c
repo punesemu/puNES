@@ -16,14 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
-#include "save_slot.h"
 
-void prg_swap_302(WORD address, WORD value);
-void chr_swap_302(WORD address, WORD value);
+void prg_swap_vrc2and4_302(WORD address, WORD value);
+void chr_swap_vrc2and4_302(WORD address, WORD value);
 
 void map_init_302(void) {
 	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
@@ -33,8 +31,8 @@ void map_init_302(void) {
 	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
 
 	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE);
-	VRC2and4_prg_swap = prg_swap_302;
-	VRC2and4_chr_swap = chr_swap_302;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_302;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_302;
 
 	info.mapper.extend_rd = TRUE;
 }
@@ -47,12 +45,12 @@ BYTE extcl_cpu_rd_mem_302(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	return (openbus);
 }
 
-void prg_swap_302(WORD address, WORD value) {
+void prg_swap_vrc2and4_302(WORD address, WORD value) {
 	const WORD slot = (address >> 13) & 0x03;
 
 	value = !slot ? 0 : 0x0D + (slot - 1);
-	prg_swap_VRC2and4(address, value);
+	prg_swap_VRC2and4_base(address, value);
 }
-void chr_swap_302(WORD address, UNUSED(WORD value)) {
-	chr_swap_VRC2and4(address, (address >> 10));
+void chr_swap_vrc2and4_302(WORD address, UNUSED(WORD value)) {
+	chr_swap_VRC2and4_base(address, (address >> 10));
 }

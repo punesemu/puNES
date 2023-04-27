@@ -18,12 +18,10 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 
-void prg_swap_325(WORD address, WORD value);
-void chr_swap_325(WORD address, WORD value);
+void prg_swap_mmc3_325(WORD address, WORD value);
+void chr_swap_mmc3_325(WORD address, WORD value);
 
 void map_init_325(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
@@ -41,8 +39,8 @@ void map_init_325(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_325;
-	MMC3_chr_swap = chr_swap_325;
+	MMC3_prg_swap = prg_swap_mmc3_325;
+	MMC3_chr_swap = chr_swap_mmc3_325;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -56,11 +54,11 @@ void extcl_cpu_wr_mem_325(WORD address, BYTE value) {
 	extcl_cpu_wr_mem_MMC3(address, value);
 }
 
-void prg_swap_325(WORD address, WORD value) {
+void prg_swap_mmc3_325(WORD address, WORD value) {
 	value = (value & 0x03) | ((value >> 1) & 0x04) | ((value << 1) & 0x08);
-	prg_swap_MMC3(address, value);
+	prg_swap_MMC3_base(address, value);
 }
-void chr_swap_325(WORD address, WORD value) {
+void chr_swap_mmc3_325(WORD address, WORD value) {
 	value = (value & 0xDD) | ((value >> 4) & 0x02) | ((value << 4) & 0x20) | (address >> 10);
-	chr_swap_MMC3(address, value);
+	chr_swap_MMC3_base(address, value);
 }

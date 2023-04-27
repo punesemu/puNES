@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_313(WORD address, WORD value);
-void chr_swap_313(WORD address, WORD value);
+void prg_swap_mmc3_313(WORD address, WORD value);
+void chr_swap_mmc3_313(WORD address, WORD value);
 
 struct _m313 {
 	BYTE reg;
@@ -58,8 +58,8 @@ void map_init_313(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_313;
-	MMC3_chr_swap = chr_swap_313;
+	MMC3_prg_swap = prg_swap_mmc3_313;
+	MMC3_chr_swap = chr_swap_mmc3_313;
 
 	if (info.reset == RESET) {
 		m313.reg = (m313.reg + 1) & 0x03;
@@ -113,15 +113,15 @@ BYTE extcl_save_mapper_313(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_313(WORD address, WORD value) {
+void prg_swap_mmc3_313(WORD address, WORD value) {
 	WORD base = m313.reg << ((m313.reg == 0) ? m313.prg.outer[0] : m313.prg.outer[1]);
 	WORD mask = (m313.reg == 0) ? m313.prg.mask[0] : m313.prg.mask[1];
 
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_313(WORD address, WORD value) {
+void chr_swap_mmc3_313(WORD address, WORD value) {
 	WORD base = m313.reg << m313.chr.outer;
 	WORD mask = m313.chr.mask;
 
-	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

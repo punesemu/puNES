@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_49(WORD address, WORD value);
-void chr_swap_49(WORD address, WORD value);
+void prg_swap_mmc3_49(WORD address, WORD value);
+void chr_swap_mmc3_49(WORD address, WORD value);
 
 struct _m49 {
 	BYTE reg;
@@ -49,8 +49,8 @@ void map_init_49(void) {
 	memset(&m49, 0x00, sizeof(m49));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_49;
-	MMC3_chr_swap = chr_swap_49;
+	MMC3_prg_swap = prg_swap_mmc3_49;
+	MMC3_chr_swap = chr_swap_mmc3_49;
 
 	m49.reg = 0x01;
 
@@ -84,7 +84,7 @@ BYTE extcl_save_mapper_49(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_49(WORD address, WORD value) {
+void prg_swap_mmc3_49(WORD address, WORD value) {
 	if (m49.reg & 0x01) {
 		WORD base = (m49.reg & 0xC0) >> 2;
 		WORD mask = 0x0F;
@@ -94,11 +94,11 @@ void prg_swap_49(WORD address, WORD value) {
 		// Master Fighter III
 		value = ((m49.reg & 0x30) >> 2) | ((address >> 13) & 0x03);
 	}
-	prg_swap_MMC3(address, value);
+	prg_swap_MMC3_base(address, value);
 }
-void chr_swap_49(WORD address, WORD value) {
+void chr_swap_mmc3_49(WORD address, WORD value) {
 	WORD base = (m49.reg & 0xC0) << 1;
 	WORD mask = 0x7F;
 
-	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

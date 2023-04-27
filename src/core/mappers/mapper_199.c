@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void chr_swap_199(WORD address, WORD value);
+void chr_swap_mmc3_199(WORD address, WORD value);
 
 INLINE static void prg_5000_fix(void);
 
@@ -48,7 +48,7 @@ void map_init_199(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
 	init_MMC3();
-	MMC3_chr_swap = chr_swap_199;
+	MMC3_chr_swap = chr_swap_mmc3_199;
 
 	if (info.prg.ram.banks_8k_plus < 2) {
 		info.prg.ram.banks_8k_plus = 2;
@@ -90,8 +90,8 @@ BYTE extcl_save_mapper_199(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void chr_swap_199(WORD address, UNUSED(WORD value)) {
-	chr_swap_MMC3(address, (address >> 10));
+void chr_swap_mmc3_199(WORD address, UNUSED(WORD value)) {
+	chr_swap_MMC3_base(address, (address >> 10));
 }
 
 INLINE static void prg_5000_fix(void) {

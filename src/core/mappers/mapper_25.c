@@ -19,8 +19,8 @@
 #include "mappers.h"
 #include "info.h"
 
-void prg_swap_25(WORD address, WORD value);
-void chr_swap_25(WORD address, WORD value);
+void prg_swap_vrc2and4_25(WORD address, WORD value);
+void chr_swap_vrc2and4_25(WORD address, WORD value);
 
 void map_init_25(void) {
 	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
@@ -45,13 +45,13 @@ void map_init_25(void) {
 			init_VRC2and4(VRC24_VRC2, 0x02, 0x01, TRUE);
 			break;
 	}
-	VRC2and4_prg_swap = prg_swap_25;
-	VRC2and4_chr_swap = chr_swap_25;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_25;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_25;
 }
 
-void prg_swap_25(WORD address, WORD value) {
-	prg_swap_VRC2and4(address, (value & 0x1F));
+void prg_swap_vrc2and4_25(WORD address, WORD value) {
+	prg_swap_VRC2and4_base(address, (value & 0x1F));
 }
-void chr_swap_25(WORD address, WORD value) {
-	chr_swap_VRC2and4(address, (value & 0xFFF));
+void chr_swap_vrc2and4_25(WORD address, WORD value) {
+	chr_swap_VRC2and4_base(address, (value & 0xFFF));
 }

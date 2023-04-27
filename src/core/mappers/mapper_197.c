@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_197(WORD address, WORD value);
-void chr_fix_197(void);
+void prg_swap_mmc3_197(WORD address, WORD value);
+void chr_fix_mmc3_197(void);
 
 struct _m197 {
 	BYTE reg;
@@ -49,8 +49,8 @@ void map_init_197(void) {
 	memset(&m197, 0x00, sizeof(m197));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_197;
-	MMC3_chr_fix = chr_fix_197;
+	MMC3_prg_swap = prg_swap_mmc3_197;
+	MMC3_chr_fix = chr_fix_mmc3_197;
 
 	if (info.mapper.submapper == 3) {
 		info.mapper.extend_wr = TRUE;
@@ -94,13 +94,13 @@ BYTE extcl_save_mapper_197(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_197(WORD address, WORD value) {
+void prg_swap_mmc3_197(WORD address, WORD value) {
 	WORD base = info.mapper.submapper == 3 ? (m197.reg & 0x01) << 4 : 0;
 	WORD mask = info.mapper.submapper == 3 ? 0x1F >> ((m197.reg & 0x08) >> 3) : 0x3F;
 
-	prg_swap_MMC3(address, (base | (value & mask)));
+	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
-void chr_fix_197(void) {
+void chr_fix_mmc3_197(void) {
 	WORD slot[4];
 	DBWORD bank = 0;
 

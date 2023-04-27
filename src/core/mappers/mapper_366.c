@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_366(WORD address, WORD value);
-void chr_swap_366(WORD address, WORD value);
+void prg_swap_mmc3_366(WORD address, WORD value);
+void chr_swap_mmc3_366(WORD address, WORD value);
 
 struct _m366 {
 	BYTE reg;
@@ -49,8 +49,8 @@ void map_init_366(void) {
 	memset(&m366, 0x00, sizeof(m366));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_366;
-	MMC3_chr_swap = chr_swap_366;
+	MMC3_prg_swap = prg_swap_mmc3_366;
+	MMC3_chr_swap = chr_swap_mmc3_366;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -77,15 +77,15 @@ BYTE extcl_save_mapper_366(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_366(WORD address, WORD value) {
+void prg_swap_mmc3_366(WORD address, WORD value) {
 	WORD base = m366.reg;
 	WORD mask = 0x0F;
 
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_366(WORD address, WORD value) {
+void chr_swap_mmc3_366(WORD address, WORD value) {
 	WORD base = (m366.reg & 0xF0) << 3;
 	WORD mask = 0x7F;
 
-	chr_swap_MMC3(address, (base | (value & mask)));
+	chr_swap_MMC3_base(address, (base | (value & mask)));
 }

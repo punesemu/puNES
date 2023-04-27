@@ -22,7 +22,7 @@
 #include "save_slot.h"
 
 INLINE static void prg_fix_891227(void);
-INLINE static void mirroring_fix_BMCFK23C(void);
+INLINE static void mirroring_fix_891227(void);
 
 struct _bmc891227 {
 	BYTE reg[2];
@@ -47,7 +47,7 @@ void map_init_891227(void) {
 }
 void extcl_after_mapper_init_891227(void) {
 	prg_fix_891227();
-	mirroring_fix_BMCFK23C();
+	mirroring_fix_891227();
 }
 void extcl_cpu_wr_mem_891227(WORD address, BYTE value) {
 	switch (address & 0xE000) {
@@ -55,7 +55,7 @@ void extcl_cpu_wr_mem_891227(WORD address, BYTE value) {
 		case 0xA000:
 			bmc891227.reg[0] = value;
 			prg_fix_891227();
-			mirroring_fix_BMCFK23C();
+			mirroring_fix_891227();
 			break;
 		case 0xC000:
 		case 0xE000:
@@ -106,7 +106,7 @@ INLINE static void prg_fix_891227(void) {
 	}
 	map_prg_rom_8k_update();
 }
-INLINE static void mirroring_fix_BMCFK23C(void) {
+INLINE static void mirroring_fix_891227(void) {
 	if (bmc891227.reg[0] & 0x80) {
 		mirroring_H();
 	} else {

@@ -226,16 +226,16 @@ void init_VRC2and4(BYTE type, WORD A0, WORD A1, BYTE irq_repeated) {
 
 	vrc2and4.wram_protect = ((info.format == NES_2_0) && (info.mapper.submapper != DEFAULT) && (info.mapper.submapper > 1));
 
-	VRC2and4_prg_fix = prg_fix_VRC2and4;
-	VRC2and4_prg_swap = prg_swap_VRC2and4;
-	VRC2and4_chr_fix = chr_fix_VRC2and4;
-	VRC2and4_chr_swap = chr_swap_VRC2and4;
-	VRC2and4_wram_fix = wram_fix_VRC2and4;
-	VRC2and4_mirroring_fix = mirroring_fix_VRC2and4;
-	VRC2and4_wired_fix = wired_fix_VRC2and4;
-	VRC2and4_misc_03 = misc_03_VRC2and4;
+	VRC2and4_prg_fix = prg_fix_VRC2and4_base;
+	VRC2and4_prg_swap = prg_swap_VRC2and4_base;
+	VRC2and4_chr_fix = chr_fix_VRC2and4_base;
+	VRC2and4_chr_swap = chr_swap_VRC2and4_base;
+	VRC2and4_wram_fix = wram_fix_VRC2and4_base;
+	VRC2and4_mirroring_fix = mirroring_fix_VRC2and4_base;
+	VRC2and4_wired_fix = wired_fix_VRC2and4_base;
+	VRC2and4_misc_03 = misc_03_VRC2and4_base;
 }
-void prg_fix_VRC2and4(void) {
+void prg_fix_VRC2and4_base(void) {
 	if (vrc2and4.swap_mode) {
 		VRC2and4_prg_swap(0x8000, ~1);
 		VRC2and4_prg_swap(0xC000, vrc2and4.prg[0]);
@@ -246,12 +246,12 @@ void prg_fix_VRC2and4(void) {
 	VRC2and4_prg_swap(0xA000, vrc2and4.prg[1]);
 	VRC2and4_prg_swap(0xE000, ~0);
 }
-void prg_swap_VRC2and4(WORD address, WORD value) {
+void prg_swap_VRC2and4_base(WORD address, WORD value) {
 	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-void chr_fix_VRC2and4(void) {
+void chr_fix_VRC2and4_base(void) {
 	VRC2and4_chr_swap(0x0000, vrc2and4.chr[0]);
 	VRC2and4_chr_swap(0x0400, vrc2and4.chr[1]);
 	VRC2and4_chr_swap(0x0800, vrc2and4.chr[2]);
@@ -261,15 +261,15 @@ void chr_fix_VRC2and4(void) {
 	VRC2and4_chr_swap(0x1800, vrc2and4.chr[6]);
 	VRC2and4_chr_swap(0x1C00, vrc2and4.chr[7]);
 }
-void chr_swap_VRC2and4(WORD address, WORD value) {
+void chr_swap_VRC2and4_base(WORD address, WORD value) {
 	control_bank(info.chr.rom.max.banks_1k)
 	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 }
-void wram_fix_VRC2and4(void) {
+void wram_fix_VRC2and4_base(void) {
 	cpu.prg_ram_rd_active = !vrc2and4.wram_protect;
 	cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
 }
-void mirroring_fix_VRC2and4(void) {
+void mirroring_fix_VRC2and4_base(void) {
 	switch (vrc2and4.mirroring & (vrc2and4tmp.type == VRC24_VRC4 ? 0x03 : 0x01)) {
 		default:
 		case 0:
@@ -286,5 +286,5 @@ void mirroring_fix_VRC2and4(void) {
 			break;
 	}
 }
-void wired_fix_VRC2and4(void) {}
-void misc_03_VRC2and4(UNUSED(WORD address), UNUSED(BYTE value)) {}
+void wired_fix_VRC2and4_base(void) {}
+void misc_03_VRC2and4_base(UNUSED(WORD address), UNUSED(BYTE value)) {}

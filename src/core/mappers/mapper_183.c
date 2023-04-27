@@ -22,7 +22,7 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-void chr_swap_183(WORD address, WORD value);
+void chr_swap_vrc2and4_183(WORD address, WORD value);
 
 INLINE static void prg_fix_183();
 
@@ -49,7 +49,7 @@ void map_init_183(void) {
 	}
 
 	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE);
-	VRC2and4_chr_swap = chr_swap_183;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_183;
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -104,8 +104,8 @@ BYTE extcl_save_mapper_183(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void chr_swap_183(WORD address, WORD value) {
-	chr_swap_VRC2and4(address, (value & 0x1FF));
+void chr_swap_vrc2and4_183(WORD address, WORD value) {
+	chr_swap_VRC2and4_base(address, (value & 0x1FF));
 }
 
 INLINE static void prg_fix_183(void) {

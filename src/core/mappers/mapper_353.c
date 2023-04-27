@@ -23,9 +23,9 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_353(WORD address, WORD value);
-void chr_swap_353(WORD address, WORD value);
-void mirroring_fix_353(void);
+void prg_swap_mmc3_353(WORD address, WORD value);
+void chr_swap_mmc3_353(WORD address, WORD value);
+void mirroring_fix_mmc3_353(void);
 
 INLINE static void mirroring_swap_353(BYTE slot, BYTE value);
 
@@ -54,9 +54,9 @@ void map_init_353(void) {
 	memset(&m353, 0x00, sizeof(m353));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_353;
-	MMC3_chr_swap = chr_swap_353;
-	MMC3_mirroring_fix = mirroring_fix_353;
+	MMC3_prg_swap = prg_swap_mmc3_353;
+	MMC3_chr_swap = chr_swap_mmc3_353;
+	MMC3_mirroring_fix = mirroring_fix_mmc3_353;
 
 	if (info.format != NES_2_0) {
 		info.chr.ram.banks_8k_plus = 1;
@@ -122,7 +122,7 @@ void extcl_wr_chr_353(WORD address, BYTE value) {
 	}
 }
 
-void prg_swap_353(WORD address, WORD value) {
+void prg_swap_mmc3_353(WORD address, WORD value) {
 	WORD base = m353.reg << 5;
 	WORD mask = 0x1F;
 
@@ -134,9 +134,9 @@ void prg_swap_353(WORD address, WORD value) {
 		mask = 0x0F;
 		value = mmc3.reg[address >> 13];
 	}
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_353(WORD address, WORD value) {
+void chr_swap_mmc3_353(WORD address, WORD value) {
 	WORD base = m353.reg << 7;
 	WORD mask = 0x7F;
 
@@ -152,7 +152,7 @@ void chr_swap_353(WORD address, WORD value) {
 		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 	}
 }
-void mirroring_fix_353(void) {
+void mirroring_fix_mmc3_353(void) {
 	if (!m353.reg) {
 		 if (!(mmc3.reg[0] & 0x80)) {
 			mirroring_swap_353(0, mmc3.reg[0]);
@@ -166,7 +166,7 @@ void mirroring_fix_353(void) {
 			mirroring_swap_353(3, mmc3.reg[5]);
 		 }
 	} else {
-		mirroring_fix_MMC3();
+		mirroring_fix_MMC3_base();
 	}
 }
 

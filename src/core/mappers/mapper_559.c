@@ -21,10 +21,10 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-void prg_swap_559(WORD address, WORD value);
-void chr_swap_559(WORD address, WORD value);
-void mirroring_fix_559(void);
-void misc_03_559(WORD address, BYTE value);
+void prg_swap_vrc2and4_559(WORD address, WORD value);
+void chr_swap_vrc2and4_559(WORD address, WORD value);
+void mirroring_fix_vrc2and4_559(void);
+void misc_03_vrc2and4_559(WORD address, BYTE value);
 
 struct _m559 {
 	BYTE prg;
@@ -44,10 +44,10 @@ void map_init_559(void) {
 	memset(&m559, 0x00, sizeof(m559));
 
 	init_VRC2and4(VRC24_VRC4, 0x400, 0x800, TRUE);
-	VRC2and4_prg_swap = prg_swap_559;
-	VRC2and4_chr_swap = chr_swap_559;
-	VRC2and4_mirroring_fix = mirroring_fix_559;
-	VRC2and4_misc_03 = misc_03_559;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_559;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_559;
+	VRC2and4_mirroring_fix = mirroring_fix_vrc2and4_559;
+	VRC2and4_misc_03 = misc_03_vrc2and4_559;
 
 	m559.prg = 0xFE;
 	m559.mir[0] = 0xE0;
@@ -84,19 +84,19 @@ BYTE extcl_save_mapper_559(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_559(WORD address, WORD value) {
+void prg_swap_vrc2and4_559(WORD address, WORD value) {
 	WORD mask = 0x1F;
 
 	if (((address >> 13) & 0x03) == 2) {
 		value = m559.prg;
 		mask = 0xFF;
 	}
-	prg_swap_VRC2and4(address, (value & mask));
+	prg_swap_VRC2and4_base(address, (value & mask));
 }
-void chr_swap_559(WORD address, WORD value) {
-	chr_swap_VRC2and4(address, (value & 0x1FF));
+void chr_swap_vrc2and4_559(WORD address, WORD value) {
+	chr_swap_VRC2and4_base(address, (value & 0x1FF));
 }
-void mirroring_fix_559(void) {
+void mirroring_fix_vrc2and4_559(void) {
 	WORD bank = 0;
 
 	bank = m559.mir[0];
@@ -115,7 +115,7 @@ void mirroring_fix_559(void) {
 	_control_bank(bank, info.chr.rom.max.banks_1k)
 	ntbl.bank_1k[3] = chr_pnt(bank << 10);
 }
-void misc_03_559(WORD address, BYTE value) {
+void misc_03_vrc2and4_559(WORD address, BYTE value) {
 	if (address & 0x0004) {
 		m559.mir[address & 0x03] = value;
 		VRC2and4_mirroring_fix();

@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_249(WORD address, WORD value);
-void chr_swap_249(WORD address, WORD value);
+void prg_swap_mmc3_249(WORD address, WORD value);
+void chr_swap_mmc3_249(WORD address, WORD value);
 
 INLINE static WORD calculate_bank(WORD value, const BYTE *src, const BYTE *trg, int len);
 
@@ -55,8 +55,8 @@ void map_init_249(void) {
 	}
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_249;
-	MMC3_chr_swap = chr_swap_249;
+	MMC3_prg_swap = prg_swap_mmc3_249;
+	MMC3_chr_swap = chr_swap_mmc3_249;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -81,7 +81,7 @@ BYTE extcl_save_mapper_249(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_249(WORD address, WORD value) {
+void prg_swap_mmc3_249(WORD address, WORD value) {
 	static const BYTE pattern[4][4] = {
 		{ 3, 4, 2, 1 },
 		{ 4, 3, 1, 2 },
@@ -91,9 +91,9 @@ void prg_swap_249(WORD address, WORD value) {
 	WORD bank = calculate_bank(value, (BYTE *)pattern[(m249.reg & 0x03)],
 		(BYTE *)pattern[(info.mapper.id == 249 ? 0 : 2)], 4);
 
-	prg_swap_MMC3(address, bank);
+	prg_swap_MMC3_base(address, bank);
 }
-void chr_swap_249(WORD address, WORD value) {
+void chr_swap_mmc3_249(WORD address, WORD value) {
 	static const BYTE pattern[8][6] = {
 		{ 5, 2, 6, 7, 4, 3 },
 		{ 4, 5, 3, 2, 7, 6 },
@@ -107,7 +107,7 @@ void chr_swap_249(WORD address, WORD value) {
 	WORD bank = calculate_bank(value, (BYTE *)pattern[(m249.reg & 0x07)],
 		(BYTE *)pattern[(info.mapper.id == 249 ? 0 : 2)], 6);
 
-	chr_swap_MMC3(address, bank);
+	chr_swap_MMC3_base(address, bank);
 }
 
 INLINE static WORD calculate_bank(WORD value, const BYTE *src, const BYTE *trg, int len) {

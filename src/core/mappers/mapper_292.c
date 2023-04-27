@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_292(WORD address, WORD value);
-void chr_fix_292(void);
+void prg_swap_mmc3_292(WORD address, WORD value);
+void chr_fix_mmc3_292(void);
 
 struct _m292 {
 	BYTE reg[3];
@@ -50,8 +50,8 @@ void map_init_292(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_292;
-	MMC3_chr_fix = chr_fix_292;
+	MMC3_prg_swap = prg_swap_mmc3_292;
+	MMC3_chr_fix = chr_fix_mmc3_292;
 
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
@@ -107,15 +107,15 @@ BYTE extcl_save_mapper_292(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_292(WORD address, WORD value) {
+void prg_swap_mmc3_292(WORD address, WORD value) {
 	const BYTE slot = (address >> 13) & 0x03;
 
 	if (!slot) {
 		value = m292.reg[0] & 0x1F;
 	}
-	prg_swap_MMC3(address, value);
+	prg_swap_MMC3_base(address, value);
 }
-void chr_fix_292(void) {
+void chr_fix_mmc3_292(void) {
 	DBWORD bank = 0;
 
 	bank = (mmc3.reg[0] >> 1) ^ m292.reg[1];

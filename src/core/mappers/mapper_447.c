@@ -22,9 +22,9 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-void prg_fix_447(void);
-void prg_swap_447(WORD address, WORD value);
-void chr_swap_447(WORD address, WORD value);
+void prg_fix_vrc2and4_447(void);
+void prg_swap_vrc2and4_447(WORD address, WORD value);
+void chr_swap_vrc2and4_447(WORD address, WORD value);
 
 INLINE static void tmp_fix_447(BYTE max, BYTE index, const BYTE *ds);
 
@@ -52,9 +52,9 @@ void map_init_447(void) {
 	memset(&m447, 0x00, sizeof(m447));
 
 	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE);
-	VRC2and4_prg_fix = prg_fix_447;
-	VRC2and4_prg_swap = prg_swap_447;
-	VRC2and4_chr_swap = chr_swap_447;
+	VRC2and4_prg_fix = prg_fix_vrc2and4_447;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_447;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_447;
 
 	if (info.reset == RESET) {
 		if (m447tmp.ds_used) {
@@ -95,7 +95,7 @@ BYTE extcl_save_mapper_447(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_fix_447(void) {
+void prg_fix_vrc2and4_447(void) {
 	if (m447.reg & 0x04) {
 		WORD A14 = ~m447.reg & 0x02;
 		WORD base = m447.reg << 4;
@@ -112,13 +112,13 @@ void prg_fix_447(void) {
 		VRC2and4_prg_swap(0xE000, (base | (bank & mask)));
 		return;
 	}
-	prg_fix_VRC2and4();
+	prg_fix_VRC2and4_base();
 }
-void prg_swap_447(WORD address, WORD value) {
-	prg_swap_VRC2and4(address, ((m447.reg << 4) | (value & 0x0F)));
+void prg_swap_vrc2and4_447(WORD address, WORD value) {
+	prg_swap_VRC2and4_base(address, ((m447.reg << 4) | (value & 0x0F)));
 }
-void chr_swap_447(WORD address, WORD value) {
-	chr_swap_VRC2and4(address, ((m447.reg << 7) | (value & 0x7F)));
+void chr_swap_vrc2and4_447(WORD address, WORD value) {
+	chr_swap_VRC2and4_base(address, ((m447.reg << 7) | (value & 0x7F)));
 }
 
 INLINE static void tmp_fix_447(BYTE max, BYTE index, const BYTE *ds) {

@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_432(WORD address, WORD value);
-void chr_swap_432(WORD address, WORD value);
+void prg_swap_mmc3_432(WORD address, WORD value);
+void chr_swap_mmc3_432(WORD address, WORD value);
 
 static const BYTE dipswitch_432[4] = { 0, 1, 2, 3 };
 static const SBYTE dipswitch_index_432[][4] = {
@@ -61,8 +61,8 @@ void map_init_432(void) {
 	memset(&m432, 0x00, sizeof(m432));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_432;
-	MMC3_chr_swap = chr_swap_432;
+	MMC3_prg_swap = prg_swap_mmc3_432;
+	MMC3_chr_swap = chr_swap_mmc3_432;
 
 	if (info.reset == RESET) {
 		do {
@@ -112,7 +112,7 @@ BYTE extcl_save_mapper_432(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_432(WORD address, WORD value) {
+void prg_swap_mmc3_432(WORD address, WORD value) {
 	WORD base = ((m432.reg[1] & 0x01) << 4) | ((m432.reg[1] & 0x10) << 1);
 	WORD mask = 0x1F >> ((m432.reg[1] & 0x02) >> 1);
 	BYTE bank = (address >> 13) & 0x03;
@@ -124,11 +124,11 @@ void prg_swap_432(WORD address, WORD value) {
 			value = mmc3.reg[5 + (bank & 0x01)] | ((m432.reg[1] & 0x80) >> 6);
 		}
 	}
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_432(WORD address, WORD value) {
+void chr_swap_mmc3_432(WORD address, WORD value) {
 	WORD base = ((m432.reg[1] & 0x08) << 5) | ((m432.reg[1] & 0x01) << 7);
 	WORD mask = 0xFF >> ((m432.reg[1] & 0x04) >> 2);
 
-	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

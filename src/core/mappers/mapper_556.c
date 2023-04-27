@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <stdlib.h>
 #include <string.h>
 #include "mappers.h"
 #include "info.h"
@@ -30,11 +29,11 @@ INLINE static WORD prg_mask(void);
 INLINE static WORD chr_base(void);
 INLINE static WORD chr_mask(void);
 
-void prg_swap_556_mmc3(WORD address, WORD value);
-void chr_swap_556_mmc3(WORD address, WORD value);
+void prg_swap_mmc3_556(WORD address, WORD value);
+void chr_swap_mmc3_556(WORD address, WORD value);
 
-void prg_swap_556_vrc2and4(WORD address, WORD value);
-void chr_swap_556_vrc2and4(WORD address, WORD value);
+void prg_swap_vrc2and4_556(WORD address, WORD value);
+void chr_swap_vrc2and4_556(WORD address, WORD value);
 
 struct _m556 {
 	WORD index;
@@ -62,12 +61,12 @@ void map_init_556(void) {
 	memset(&m556, 0x00, sizeof(m556));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_556_mmc3;
-	MMC3_chr_swap = chr_swap_556_mmc3;
+	MMC3_prg_swap = prg_swap_mmc3_556;
+	MMC3_chr_swap = chr_swap_mmc3_556;
 
 	init_VRC2and4(VRC24_VRC4, 0x05, 0x0A, TRUE);
-	VRC2and4_prg_swap = prg_swap_556_vrc2and4;
-	VRC2and4_chr_swap = chr_swap_556_vrc2and4;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_556;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_556;
 
 	m556.reg[2] = 0x0F;
 
@@ -158,28 +157,28 @@ INLINE static WORD chr_mask(void) {
 	return (0xFF >> (~m556.reg[2] & 0x0F));
 }
 
-void prg_swap_556_mmc3(WORD address, WORD value) {
+void prg_swap_mmc3_556(WORD address, WORD value) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_556_mmc3(WORD address, WORD value) {
+void chr_swap_mmc3_556(WORD address, WORD value) {
 	WORD base = chr_base();
 	WORD mask = chr_mask();
 
-	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
 
-void prg_swap_556_vrc2and4(WORD address, WORD value) {
+void prg_swap_vrc2and4_556(WORD address, WORD value) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 
-	prg_swap_VRC2and4(address, ((base & ~mask) | (value & mask)));
+	prg_swap_VRC2and4_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_556_vrc2and4(WORD address, WORD value) {
+void chr_swap_vrc2and4_556(WORD address, WORD value) {
 	WORD base = chr_base();
 	WORD mask = chr_mask();
 
-	chr_swap_VRC2and4(address, ((base & ~mask) | (value & mask)));
+	chr_swap_VRC2and4_base(address, ((base & ~mask) | (value & mask)));
 }

@@ -23,11 +23,10 @@
 #include "mem_map.h"
 #include "irqA12.h"
 #include "tas.h"
-#include "save_slot.h"
 #include "SST39SF040.h"
 #include "gui.h"
 
-void prg_swap_406(WORD address, WORD value);
+void prg_swap_mmc3_406(WORD address, WORD value);
 
 struct _m406tmp {
 	BYTE *sst39sf040;
@@ -53,7 +52,7 @@ void map_init_406(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_406;
+	MMC3_prg_swap = prg_swap_mmc3_406;
 
 	if (info.mapper.submapper == DEFAULT) {
 		info.mapper.submapper = 0;
@@ -134,6 +133,6 @@ void extcl_irq_A12_clock_406(void) {
 	irqA12_clock()
 }
 
-void prg_swap_406(WORD address, WORD value) {
-	prg_swap_MMC3(address, (value & 0x3F));
+void prg_swap_mmc3_406(WORD address, WORD value) {
+	prg_swap_MMC3_base(address, (value & 0x3F));
 }

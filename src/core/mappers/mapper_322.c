@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_322(WORD address, WORD value);
-void chr_swap_322(WORD address, WORD value);
+void prg_swap_mmc3_322(WORD address, WORD value);
+void chr_swap_mmc3_322(WORD address, WORD value);
 
 struct _m322 {
 	WORD reg;
@@ -49,8 +49,8 @@ void map_init_322(void) {
 	memset(&m322, 0x00, sizeof(m322));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_322;
-	MMC3_chr_swap = chr_swap_322;
+	MMC3_prg_swap = prg_swap_mmc3_322;
+	MMC3_chr_swap = chr_swap_mmc3_322;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -77,7 +77,7 @@ BYTE extcl_save_mapper_322(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_322(WORD address, WORD value) {
+void prg_swap_mmc3_322(WORD address, WORD value) {
 	BYTE mmc3_mode = m322.reg & 0x0020;
 	BYTE mode_128k = !((m322.reg & 0x0080) && mmc3_mode);
 
@@ -95,13 +95,13 @@ void prg_swap_322(WORD address, WORD value) {
 		bank = ((address & 0x4000) ? bank | mode : bank & ~mode);
 		value = (bank << 1) | ((address & 0x2000) >> 13);
 	}
-	prg_swap_MMC3(address, value);
+	prg_swap_MMC3_base(address, value);
 }
-void chr_swap_322(WORD address, WORD value) {
+void chr_swap_mmc3_322(WORD address, WORD value) {
 	BYTE mmc3_mode = m322.reg & 0x0020;
 	BYTE mode_128k = !((m322.reg & 0x0080) && mmc3_mode);
 	WORD base = (((m322.reg & 0x0040) >> 4) | ((m322.reg & 0x0018) >> 3)) << (8 - mode_128k);
 	WORD mask = 0xFF >> mode_128k;
 
-	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

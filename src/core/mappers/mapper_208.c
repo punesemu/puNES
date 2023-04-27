@@ -20,12 +20,11 @@
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
-#include "cpu.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_208(WORD address, WORD value);
-void mirroring_fix_208(void);
+void prg_swap_mmc3_208(WORD address, WORD value);
+void mirroring_fix_mmc3_208(void);
 
 struct _m208 {
 	BYTE reg;
@@ -89,8 +88,8 @@ void map_init_208(void) {
 	memset(&m208, 0x00, sizeof(m208));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_208;
-	MMC3_mirroring_fix = mirroring_fix_208;
+	MMC3_prg_swap = prg_swap_mmc3_208;
+	MMC3_mirroring_fix = mirroring_fix_mmc3_208;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -132,18 +131,18 @@ BYTE extcl_save_mapper_208(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_208(WORD address, WORD value) {
+void prg_swap_mmc3_208(WORD address, WORD value) {
 	const WORD slot = (address >> 13) & 0x03;
 
 	value = info.mapper.submapper == 1
 		? (mmc3.reg[6] & ~3) | slot
 		: ((m208.reg & 0x01) << 2) | ((m208.reg & 0x10) >> 1) | slot;
 
-	prg_swap_MMC3(address, value);
+	prg_swap_MMC3_base(address, value);
 }
-void mirroring_fix_208(void) {
+void mirroring_fix_mmc3_208(void) {
 	if (info.mapper.submapper == 1) {
-		mirroring_fix_MMC3();
+		mirroring_fix_MMC3_base();
 		return;
 	}
 	if (m208.reg & 0x20) {

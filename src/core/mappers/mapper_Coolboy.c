@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_Coolboy(WORD address, WORD value);
-void chr_swap_Coolboy(WORD address, WORD value);
+void prg_swap_mmc3_Coolboy(WORD address, WORD value);
+void chr_swap_mmc3_Coolboy(WORD address, WORD value);
 
 struct _coolboy {
 	BYTE reg[4];
@@ -54,8 +54,8 @@ void map_init_Coolboy(BYTE model) {
 	memset(&coolboy, 0x00, sizeof(coolboy));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_Coolboy;
-	MMC3_chr_swap = chr_swap_Coolboy;
+	MMC3_prg_swap = prg_swap_mmc3_Coolboy;
+	MMC3_chr_swap = chr_swap_mmc3_Coolboy;
 
 	coolboytmp.model = model;
 
@@ -96,7 +96,7 @@ BYTE extcl_save_mapper_Coolboy(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_Coolboy(WORD address, WORD value) {
+void prg_swap_mmc3_Coolboy(WORD address, WORD value) {
 	uint32_t mask = ((0x3F | (coolboy.reg[1] & 0x40) | ((coolboy.reg[1] & 0x20) << 2)) ^ ((coolboy.reg[0] & 0x40) >> 2))
 		^ ((coolboy.reg[1] & 0x80) >> 2);
 	uint32_t base = ((coolboy.reg[0] & 0x07) >> 0) | ((coolboy.reg[1] & 0x10) >> 1) | ((coolboy.reg[1] & 0x0C) << 2)
@@ -127,9 +127,9 @@ void prg_swap_Coolboy(WORD address, WORD value) {
 		}
 		value = ((base << 4) & ~mask) | (value & mask) | emask | ((address & 0x2000) >> 13);
 	}
-	prg_swap_MMC3(address, value);
+	prg_swap_MMC3_base(address, value);
 }
-void chr_swap_Coolboy(WORD address, WORD value) {
+void chr_swap_mmc3_Coolboy(WORD address, WORD value) {
 	DBWORD mask = 0xFF ^ (coolboy.reg[0] & 0x80);
 
 	if (coolboy.reg[3] & 0x10) {
@@ -164,5 +164,5 @@ void chr_swap_Coolboy(WORD address, WORD value) {
 		}
 		value = (value & mask) | (((coolboy.reg[0] & 0x08) << 4) & ~mask);
 	}
-	chr_swap_MMC3(address, value);
+	chr_swap_MMC3_base(address, value);
 }

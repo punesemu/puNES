@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_412(WORD address, WORD value);
-void chr_swap_412(WORD address, WORD value);
+void prg_swap_mmc3_412(WORD address, WORD value);
+void chr_swap_mmc3_412(WORD address, WORD value);
 
 struct _m412 {
 	BYTE reg[4];
@@ -49,8 +49,8 @@ void map_init_412(void) {
 	memset(&m412, 0x00, sizeof(m412));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_412;
-	MMC3_chr_swap = chr_swap_412;
+	MMC3_prg_swap = prg_swap_mmc3_412;
+	MMC3_chr_swap = chr_swap_mmc3_412;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -77,7 +77,7 @@ BYTE extcl_save_mapper_412(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_412(WORD address, WORD value) {
+void prg_swap_mmc3_412(WORD address, WORD value) {
 	WORD base = 0;
 	WORD mask = 0;
 
@@ -92,9 +92,9 @@ void prg_swap_412(WORD address, WORD value) {
 		mask = (0x3F & ~((m412.reg[1] & 0x07) << 3));
 		base = ((m412.reg[1] & 0xF8) >> 2) & ~mask;
 	}
-	prg_swap_MMC3(address, (base | (value & mask)));
+	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
-void chr_swap_412(WORD address, WORD value) {
+void chr_swap_mmc3_412(WORD address, WORD value) {
 	WORD base = m412.reg[1] & 0x80;
 	WORD mask = 0x7F;
 
@@ -103,5 +103,5 @@ void chr_swap_412(WORD address, WORD value) {
 		mask = 0x07;
 		value = address >> 10;
 	}
-	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

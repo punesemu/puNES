@@ -53,13 +53,13 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value);
 BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp);
 
 void init_MMC1(BYTE type);
-void prg_fix_MMC1(void);
-void prg_swap_MMC1(WORD address, WORD value);
-void chr_fix_MMC1(void);
-void chr_swap_MMC1(WORD address, WORD value);
-void wram_fix_MMC1(void);
-void wram_swap_MMC1(WORD value);
-void mirroring_fix_MMC1(void);
+void prg_fix_MMC1_base(void);
+void prg_swap_MMC1_base(WORD address, WORD value);
+void chr_fix_MMC1_base(void);
+void chr_swap_MMC1_base(WORD address, WORD value);
+void wram_fix_MMC1_base(void);
+void wram_swap_MMC1_base(WORD value);
+void mirroring_fix_MMC1_base(void);
 
 WORD prg_bank_MMC1(int index);
 WORD chr_bank_MMC1(int index);

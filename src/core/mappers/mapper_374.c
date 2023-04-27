@@ -16,13 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "mappers.h"
 #include "mem_map.h"
 #include "save_slot.h"
 
-void prg_swap_374(WORD address, WORD value);
-void chr_swap_374(WORD address, WORD value);
+void prg_swap_mmc1_374(WORD address, WORD value);
+void chr_swap_mmc1_374(WORD address, WORD value);
 
 struct _m374 {
 	BYTE reg;
@@ -38,8 +37,8 @@ void map_init_374(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc1);
 
 	init_MMC1(MMC1A);
-	MMC1_prg_swap = prg_swap_374;
-	MMC1_chr_swap = chr_swap_374;
+	MMC1_prg_swap = prg_swap_mmc1_374;
+	MMC1_chr_swap = chr_swap_mmc1_374;
 
 	if (info.reset == RESET) {
 		m374.reg++;
@@ -54,9 +53,9 @@ BYTE extcl_save_mapper_374(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_374(WORD address, WORD value) {
-	prg_swap_MMC1(address, ((m374.reg << 3) | (value & 0x07)));
+void prg_swap_mmc1_374(WORD address, WORD value) {
+	prg_swap_MMC1_base(address, ((m374.reg << 3) | (value & 0x07)));
 }
-void chr_swap_374(WORD address, WORD value) {
-	chr_swap_MMC1(address, ((m374.reg << 5) | (value & 0x1F)));
+void chr_swap_mmc1_374(WORD address, WORD value) {
+	chr_swap_MMC1_base(address, ((m374.reg << 5) | (value & 0x1F)));
 }

@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void chr_swap_512(WORD address, WORD value);
+void chr_swap_mmc3_512(WORD address, WORD value);
 
 struct _m512 {
 	BYTE reg;
@@ -52,7 +52,7 @@ void map_init_512(void) {
 	memset(&m512, 0x00, sizeof(m512));
 
 	init_MMC3();
-	MMC3_chr_swap = chr_swap_512;
+	MMC3_chr_swap = chr_swap_mmc3_512;
 
 	if (info.format != NES_2_0) {
 		info.prg.ram.banks_8k_plus = 1;
@@ -109,11 +109,11 @@ BYTE extcl_rd_nmt_512(WORD address) {
 	return (ntbl.bank_1k[address >> 10][address & 0x3FF]);
 }
 
-void chr_swap_512(WORD address, WORD value) {
+void chr_swap_mmc3_512(WORD address, WORD value) {
 	if ((m512.reg > 1) && chr.extra.data) {
 		control_bank_with_AND(0x03, info.chr.ram.max.banks_1k)
 		chr.bank_1k[address >> 10] = &chr.extra.data[value << 10];
 	} else {
-		chr_swap_MMC3(address, (value & 0x7F));
+		chr_swap_MMC3_base(address, (value & 0x7F));
 	}
 }

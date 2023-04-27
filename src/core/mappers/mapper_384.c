@@ -22,8 +22,8 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-void prg_swap_384(WORD address, WORD value);
-void chr_swap_384(WORD address, WORD value);
+void prg_swap_vrc2and4_384(WORD address, WORD value);
+void chr_swap_vrc2and4_384(WORD address, WORD value);
 
 struct _m384 {
 	BYTE reg;
@@ -42,8 +42,8 @@ void map_init_384(void) {
 	memset(&m384, 0x00, sizeof(m384));
 
 	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, FALSE);
-	VRC2and4_prg_swap = prg_swap_384;
-	VRC2and4_chr_swap = chr_swap_384;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_384;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_384;
 }
 void extcl_cpu_wr_mem_384(WORD address, BYTE value) {
 	if ((address >= 0x6800) && (address <= 0x6FFF)) {
@@ -63,9 +63,9 @@ BYTE extcl_save_mapper_384(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_384(WORD address, WORD value) {
-	prg_swap_VRC2and4(address, ((m384.reg << 4) | (value & 0x0F)));
+void prg_swap_vrc2and4_384(WORD address, WORD value) {
+	prg_swap_VRC2and4_base(address, ((m384.reg << 4) | (value & 0x0F)));
 }
-void chr_swap_384(WORD address, WORD value) {
-	chr_swap_VRC2and4(address, ((m384.reg << 7) | (value & 0x7F)));
+void chr_swap_vrc2and4_384(WORD address, WORD value) {
+	chr_swap_VRC2and4_base(address, ((m384.reg << 7) | (value & 0x7F)));
 }

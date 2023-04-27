@@ -23,9 +23,9 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_356(WORD address, WORD value);
-void chr_swap_356(WORD address, WORD value);
-void mirroring_fix_356(void);
+void prg_swap_mmc3_356(WORD address, WORD value);
+void chr_swap_mmc3_356(WORD address, WORD value);
+void mirroring_fix_mmc3_356(void);
 
 struct _m356 {
 	BYTE index;
@@ -53,9 +53,9 @@ void map_init_356(void) {
 	memset(&m356, 0x00, sizeof(m356));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_356;
-	MMC3_chr_swap = chr_swap_356;
-	MMC3_mirroring_fix = mirroring_fix_356;
+	MMC3_prg_swap = prg_swap_mmc3_356;
+	MMC3_chr_swap = chr_swap_mmc3_356;
+	MMC3_mirroring_fix = mirroring_fix_mmc3_356;
 
 	m356.reg[2] = 0x0F;
 
@@ -102,13 +102,13 @@ void extcl_wr_chr_356(WORD address, BYTE value) {
 	}
 }
 
-void prg_swap_356(WORD address, WORD value) {
+void prg_swap_mmc3_356(WORD address, WORD value) {
 	WORD base = m356.reg[1] | ((m356.reg[2] & 0xC0) << 2);
 	WORD mask = ~m356.reg[3] & 0x3F;
 
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_356(WORD address, WORD value) {
+void chr_swap_mmc3_356(WORD address, WORD value) {
 	if (!(m356.reg[2] & 0x20)) {
 		m356.chr_writable = TRUE;
 		value = address >> 10;
@@ -123,7 +123,7 @@ void chr_swap_356(WORD address, WORD value) {
 		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 	}
 }
-void mirroring_fix_356(void) {
+void mirroring_fix_mmc3_356(void) {
 	if (m356.reg[2] & 0x40) {
 		mirroring_FSCR();
 	} else if (mmc3.mirroring & 0x01) {

@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_195(WORD address, WORD value);
-void chr_swap_195(WORD address, WORD value);
+void prg_swap_mmc3_195(WORD address, WORD value);
+void chr_swap_mmc3_195(WORD address, WORD value);
 
 INLINE static BYTE chr_bank_mmc3(WORD address);
 
@@ -65,8 +65,8 @@ void map_init_195(void) {
 	memset(&m195, 0x00, sizeof(m195));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_195;
-	MMC3_chr_swap = chr_swap_195;
+	MMC3_prg_swap = prg_swap_mmc3_195;
+	MMC3_chr_swap = chr_swap_mmc3_195;
 
 	m195.chr.mask = 0xFC;
 	m195.chr.compare = 0x00;
@@ -135,17 +135,17 @@ void extcl_wr_chr_195(WORD address, BYTE value) {
 	}
 }
 
-void prg_swap_195(WORD address, WORD value) {
-	prg_swap_MMC3(address, (value & 0x3F));
+void prg_swap_mmc3_195(WORD address, WORD value) {
+	prg_swap_MMC3_base(address, (value & 0x3F));
 }
-void chr_swap_195(WORD address, WORD value) {
+void chr_swap_mmc3_195(WORD address, WORD value) {
 	const BYTE slot = address >> 10;
 
 	if ((value & m195.chr.mask) == m195.chr.compare) {
 		control_bank(info.chr.ram.max.banks_1k)
 		chr.bank_1k[slot] = &chr.extra.data[value << 10];
 	} else {
-		chr_swap_MMC3(address, value);
+		chr_swap_MMC3_base(address, value);
 	}
 }
 

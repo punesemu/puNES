@@ -19,12 +19,11 @@
 #include <string.h>
 #include "mappers.h"
 #include "mem_map.h"
-#include "cpu.h"
 #include "save_slot.h"
 
-void prg_swap_543(WORD address, WORD value);
-void chr_swap_543(WORD address, WORD value);
-void wram_fix_543(void);
+void prg_swap_mmc1_543(WORD address, WORD value);
+void chr_swap_mmc1_543(WORD address, WORD value);
+void wram_fix_mmc1_543(void);
 
 struct _m543 {
 	BYTE reg;
@@ -44,9 +43,9 @@ void map_init_543(void) {
 	memset(&m543, 0x00, sizeof(m543));
 
 	init_MMC1(MMC1B);
-	MMC1_prg_swap = prg_swap_543;
-	MMC1_chr_swap = chr_swap_543;
-	MMC1_wram_fix = wram_fix_543;
+	MMC1_prg_swap = prg_swap_mmc1_543;
+	MMC1_chr_swap = chr_swap_mmc1_543;
+	MMC1_wram_fix = wram_fix_mmc1_543;
 
 	// per far avviare 1996 無敵智カ卡 5-in-1 (CH-501).nes
 	mmc1.reg[3] = 0x0E;
@@ -82,13 +81,13 @@ BYTE extcl_save_mapper_543(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_543(WORD address, WORD value) {
-	prg_swap_MMC1(address, ((m543.reg << 4) | (value & 0x0F)));
+void prg_swap_mmc1_543(WORD address, WORD value) {
+	prg_swap_MMC1_base(address, ((m543.reg << 4) | (value & 0x0F)));
 }
-void chr_swap_543(WORD address, WORD value) {
-	chr_swap_MMC1(address, (value & 0x07));
+void chr_swap_mmc1_543(WORD address, WORD value) {
+	chr_swap_MMC1_base(address, (value & 0x07));
 }
-void wram_fix_543(void) {
+void wram_fix_mmc1_543(void) {
 	WORD bank = m543.reg & 0x02
 		? 0x04 | ((m543.reg & 0x04) >> 1) | (m543.reg & 0x01)
 		: ((m543.reg & 0x01) << 1) | ((mmc1.reg[1] & 0x08) >> 3);

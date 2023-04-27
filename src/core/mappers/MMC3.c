@@ -184,14 +184,14 @@ void init_MMC3(void) {
 
 	irq.high &= ~EXT_IRQ;
 
-	MMC3_prg_fix = prg_fix_MMC3;
-	MMC3_prg_swap = prg_swap_MMC3;
-	MMC3_chr_fix = chr_fix_MMC3;
-	MMC3_chr_swap = chr_swap_MMC3;
-	MMC3_wram_fix = wram_fix_MMC3;
-	MMC3_mirroring_fix = mirroring_fix_MMC3;
+	MMC3_prg_fix = prg_fix_MMC3_base;
+	MMC3_prg_swap = prg_swap_MMC3_base;
+	MMC3_chr_fix = chr_fix_MMC3_base;
+	MMC3_chr_swap = chr_swap_MMC3_base;
+	MMC3_wram_fix = wram_fix_MMC3_base;
+	MMC3_mirroring_fix = mirroring_fix_MMC3_base;
 }
-void prg_fix_MMC3(void) {
+void prg_fix_MMC3_base(void) {
 	if (mmc3.bank_to_update & 0x40) {
 		MMC3_prg_swap(0x8000, ~1);
 		MMC3_prg_swap(0xC000, mmc3.reg[6]);
@@ -202,12 +202,12 @@ void prg_fix_MMC3(void) {
 	MMC3_prg_swap(0xA000, mmc3.reg[7]);
 	MMC3_prg_swap(0xE000, ~0);
 }
-void prg_swap_MMC3(WORD address, WORD value) {
+void prg_swap_MMC3_base(WORD address, WORD value) {
 	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-void chr_fix_MMC3(void) {
+void chr_fix_MMC3_base(void) {
 	WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
 
 	MMC3_chr_swap(cbase ^ 0x0000, mmc3.reg[0] & (~1));
@@ -219,11 +219,11 @@ void chr_fix_MMC3(void) {
 	MMC3_chr_swap(cbase ^ 0x1800, mmc3.reg[4]);
 	MMC3_chr_swap(cbase ^ 0x1C00, mmc3.reg[5]);
 }
-void chr_swap_MMC3(WORD address, WORD value) {
+void chr_swap_MMC3_base(WORD address, WORD value) {
 	control_bank(info.chr.rom.max.banks_1k)
 	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
 }
-void wram_fix_MMC3(void) {
+void wram_fix_MMC3_base(void) {
 	if (info.mapper.submapper != MMC3_MMC6) {
 		// 7  bit  0
 		// ---- ----
@@ -246,7 +246,7 @@ void wram_fix_MMC3(void) {
 		}
 	}
 }
-void mirroring_fix_MMC3(void) {
+void mirroring_fix_MMC3_base(void) {
 	// se e' abilitato il 4 schermi, il cambio
 	// di mirroring deve essere ignorato.
 	if (mapper.mirroring == MIRRORING_FOURSCR) {

@@ -33,14 +33,14 @@ INLINE static WORD prg_mask(void);
 INLINE static WORD chr_base(void);
 INLINE static WORD chr_mask(void);
 
-void prg_swap_116_mmc3(WORD address, WORD value);
-void chr_swap_116_mmc3(WORD address, WORD value);
+void prg_swap_mmc3_116(WORD address, WORD value);
+void chr_swap_mmc3_116(WORD address, WORD value);
 
-void prg_swap_116_vrc2and4(WORD address, WORD value);
-void chr_swap_116_vrc2and4(WORD address, WORD value);
+void prg_swap_vrc2and4_116(WORD address, WORD value);
+void chr_swap_vrc2and4_116(WORD address, WORD value);
 
-void prg_swap_116_mmc1(WORD address, WORD value);
-void chr_swap_116_mmc1(WORD address, WORD value);
+void prg_swap_mmc1_116(WORD address, WORD value);
+void chr_swap_mmc1_116(WORD address, WORD value);
 
 struct _m116 {
 	BYTE mapper;
@@ -74,16 +74,16 @@ void map_init_116(void) {
 	memset(&m116, 0x00, sizeof(m116));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_116_mmc3;
-	MMC3_chr_swap = chr_swap_116_mmc3;
+	MMC3_prg_swap = prg_swap_mmc3_116;
+	MMC3_chr_swap = chr_swap_mmc3_116;
 
 	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE);
-	VRC2and4_prg_swap = prg_swap_116_vrc2and4;
-	VRC2and4_chr_swap = chr_swap_116_vrc2and4;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_116;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_116;
 
 	init_MMC1(MMC1A);
-	MMC1_prg_swap = prg_swap_116_mmc1;
-	MMC1_chr_swap = chr_swap_116_mmc1;
+	MMC1_prg_swap = prg_swap_mmc1_116;
+	MMC1_chr_swap = chr_swap_mmc1_116;
 
 	vrc2and4.chr[0] = 0xFF;
 	vrc2and4.chr[1] = 0xFF;
@@ -217,33 +217,33 @@ INLINE static WORD chr_mask(void) {
 	return (m116tmp.dipswitch ? 0x7F : 0xFF);
 }
 
-void prg_swap_116_mmc3(WORD address, WORD value) {
+void prg_swap_mmc3_116(WORD address, WORD value) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_116_mmc3(WORD address, WORD value) {
+void chr_swap_mmc3_116(WORD address, WORD value) {
 	WORD base = ((m116.reg & 0x04) << 6) | chr_base();
 	WORD mask = chr_mask();
 
-	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
 
-void prg_swap_116_vrc2and4(WORD address, WORD value) {
+void prg_swap_vrc2and4_116(WORD address, WORD value) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 
-	prg_swap_VRC2and4(address, ((base & ~mask) | (value & mask)));
+	prg_swap_VRC2and4_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_116_vrc2and4(WORD address, WORD value) {
+void chr_swap_vrc2and4_116(WORD address, WORD value) {
 	WORD base = ((m116.reg & 0x04) << 6) | chr_base();
 	WORD mask = chr_mask();
 
-	chr_swap_VRC2and4(address, ((base & ~mask) | (value & mask)));
+	chr_swap_VRC2and4_base(address, ((base & ~mask) | (value & mask)));
 }
 
-void prg_swap_116_mmc1(WORD address, WORD value) {
+void prg_swap_mmc1_116(WORD address, WORD value) {
 	if (info.mapper.submapper == 2) {
 		value >>= 1;
 	} else {
@@ -252,11 +252,11 @@ void prg_swap_116_mmc1(WORD address, WORD value) {
 
 		value = (base & ~mask) | (value & mask);
 	}
-	prg_swap_MMC1(address, value);
+	prg_swap_MMC1_base(address, value);
 }
-void chr_swap_116_mmc1(WORD address, WORD value) {
+void chr_swap_mmc1_116(WORD address, WORD value) {
 	WORD base = chr_base() >> 2;
 	WORD mask = chr_mask() >> 2;
 
-	chr_swap_MMC1(address, (base & ~mask) | (value & mask));
+	chr_swap_MMC1_base(address, (base & ~mask) | (value & mask));
 }

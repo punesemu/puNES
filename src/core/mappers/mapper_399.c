@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_fix_399(void);
-void chr_fix_399(void);
+void prg_fix_mmc3_399(void);
+void chr_fix_mmc3_399(void);
 
 struct _m399 {
 	BYTE reg[4];
@@ -48,8 +48,8 @@ void map_init_399(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
 	init_MMC3();
-	MMC3_prg_fix = prg_fix_399;
-	MMC3_chr_fix = chr_fix_399;
+	MMC3_prg_fix = prg_fix_mmc3_399;
+	MMC3_chr_fix = chr_fix_mmc3_399;
 
 	m399.reg[0] = m399.reg[2] = 0;
 	m399.reg[1] = m399.reg[3] = 1;
@@ -77,7 +77,7 @@ BYTE extcl_save_mapper_399(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_fix_399(void) {
+void prg_fix_mmc3_399(void) {
 	WORD bank = 0;
 
 	bank = 0;
@@ -98,7 +98,7 @@ void prg_fix_399(void) {
 
 	map_prg_rom_8k_update();
 }
-void chr_fix_399(void) {
+void chr_fix_mmc3_399(void) {
 	DBWORD bank;
 
 	bank = m399.reg[2];

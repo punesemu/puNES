@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_262(WORD address, WORD value);
-void chr_swap_262(WORD address, WORD value);
+void prg_swap_mmc3_262(WORD address, WORD value);
+void chr_swap_mmc3_262(WORD address, WORD value);
 
 struct _m262 {
 	BYTE reg;
@@ -54,8 +54,8 @@ void map_init_262(void) {
 	memset(&m262, 0x00, sizeof(m262));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_262;
-	MMC3_chr_swap = chr_swap_262;
+	MMC3_prg_swap = prg_swap_mmc3_262;
+	MMC3_chr_swap = chr_swap_mmc3_262;
 
 	if (info.reset >= HARD) {
 		m262tmp.reset = 0;
@@ -106,10 +106,10 @@ void extcl_wr_chr_262(WORD address, BYTE value) {
 	}
 }
 
-void prg_swap_262(WORD address, WORD value) {
-	prg_swap_MMC3(address, (value & 0x3F));
+void prg_swap_mmc3_262(WORD address, WORD value) {
+	prg_swap_MMC3_base(address, (value & 0x3F));
 }
-void chr_swap_262(WORD address, WORD value) {
+void chr_swap_mmc3_262(WORD address, WORD value) {
 	const BYTE slot = address >> 10;
 	WORD base = 0;
 
@@ -120,6 +120,6 @@ void chr_swap_262(WORD address, WORD value) {
 		const BYTE index = (slot & 0x06) >> 1;
 
 		base = ((m262.reg >> shift[index]) & 0x01) * 0x100;
-		chr_swap_MMC3(address, (base | value));
+		chr_swap_MMC3_base(address, (base | value));
 	}
 }

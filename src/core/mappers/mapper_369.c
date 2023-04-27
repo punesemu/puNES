@@ -23,10 +23,10 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_fix_369(void);
-void prg_swap_369(WORD address, WORD value);
-void chr_fix_369(void);
-void chr_swap_369(WORD address, WORD value);
+void prg_fix_mmc3_369(void);
+void prg_swap_mmc3_369(WORD address, WORD value);
+void chr_fix_mmc3_369(void);
+void chr_swap_mmc3_369(WORD address, WORD value);
 
 struct _m369 {
 	BYTE reg;
@@ -60,10 +60,10 @@ void map_init_369(void) {
 	memset(&m369, 0x00, sizeof(m369));
 
 	init_MMC3();
-	MMC3_prg_fix = prg_fix_369;
-	MMC3_prg_swap = prg_swap_369;
-	MMC3_chr_fix = chr_fix_369;
-	MMC3_chr_swap = chr_swap_369;
+	MMC3_prg_fix = prg_fix_mmc3_369;
+	MMC3_prg_swap = prg_swap_mmc3_369;
+	MMC3_chr_fix = chr_fix_mmc3_369;
+	MMC3_chr_swap = chr_swap_mmc3_369;
 
 	if (!info.chr.ram.banks_8k_plus) {
 		info.chr.ram.banks_8k_plus = 1;
@@ -196,7 +196,7 @@ void extcl_update_r2006_369(WORD new_r2006, WORD old_r2006) {
 	}
 }
 
-void prg_fix_369(void) {
+void prg_fix_mmc3_369(void) {
 	WORD bank = 0;
 
 	m369tmp.prg_6000 = NULL;
@@ -239,17 +239,17 @@ void prg_fix_369(void) {
 			return;
 		case 0x37:
 		case 0xFF:
-			prg_fix_MMC3();
+			prg_fix_MMC3_base();
 			return;
 	}
 }
-void prg_swap_369(WORD address, WORD value) {
+void prg_swap_mmc3_369(WORD address, WORD value) {
 	WORD base = (m369.reg == 0x37) ? 0x10 : 0x20;
 	WORD mask = (m369.reg == 0x37) ? 0x0F : 0x1F;
 
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_fix_369(void) {
+void chr_fix_mmc3_369(void) {
 	DBWORD bank = 0;
 
 	switch (m369.reg) {
@@ -294,13 +294,13 @@ void chr_fix_369(void) {
 			return;
 		case 0x37:
 		case 0xFF:
-			chr_fix_MMC3();
+			chr_fix_MMC3_base();
 			return;
 	}
 }
-void chr_swap_369(WORD address, WORD value) {
+void chr_swap_mmc3_369(WORD address, WORD value) {
 	WORD base = (m369.reg == 0x37) ? 0x0080 : 0x0100;
 	WORD mask = 0x7F;
 
-	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

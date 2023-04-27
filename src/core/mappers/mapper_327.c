@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_327(WORD address, WORD value);
-void chr_swap_327(WORD address, WORD value);
+void prg_swap_mmc3_327(WORD address, WORD value);
+void chr_swap_mmc3_327(WORD address, WORD value);
 
 struct _m327 {
 	WORD reg;
@@ -50,8 +50,8 @@ void map_init_327(void) {
 	memset(&m327, 0x00, sizeof(m327));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_327;
-	MMC3_chr_swap = chr_swap_327;
+	MMC3_prg_swap = prg_swap_mmc3_327;
+	MMC3_chr_swap = chr_swap_mmc3_327;
 
 	info.chr.ram.banks_8k_plus = 1;
 
@@ -91,13 +91,13 @@ void extcl_wr_chr_327(WORD address, BYTE value) {
 	}
 }
 
-void prg_swap_327(WORD address, WORD value) {
+void prg_swap_mmc3_327(WORD address, WORD value) {
 	WORD base = (m327.reg & 0x07) << 4;
 	WORD mask = m327.reg & 0x08 ? 0x1F : 0x0F;
 
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_327(WORD address, WORD value) {
+void chr_swap_mmc3_327(WORD address, WORD value) {
 	BYTE slot = address >> 10;
 
 	if (m327.reg & 0x10) {
@@ -106,6 +106,6 @@ void chr_swap_327(WORD address, WORD value) {
 		WORD base = (m327.reg & 0x07) << 7;
 		WORD mask = m327.reg & 0x20 ? 0xFF : 0x7F;
 
-		chr_swap_MMC3(address, (base | (value & mask)));
+		chr_swap_MMC3_base(address, (base | (value & mask)));
 	}
 }

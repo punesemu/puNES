@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_372(WORD address, WORD value);
-void chr_swap_372(WORD address, WORD value);
+void prg_swap_mmc3_372(WORD address, WORD value);
+void chr_swap_mmc3_372(WORD address, WORD value);
 
 struct _m372 {
 	BYTE index;
@@ -51,8 +51,8 @@ void map_init_372(void) {
 	memset(&m372, 0x00, sizeof(m372));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_372;
-	MMC3_chr_swap = chr_swap_372;
+	MMC3_prg_swap = prg_swap_mmc3_372;
+	MMC3_chr_swap = chr_swap_mmc3_372;
 
 	m372.reg[2] = 0x0F;
 
@@ -98,13 +98,13 @@ void extcl_wr_chr_372(WORD address, BYTE value) {
 	}
 }
 
-void prg_swap_372(WORD address, WORD value) {
+void prg_swap_mmc3_372(WORD address, WORD value) {
 	WORD base = m372.reg[1] | ((m372.reg[2] & 0xC0) << 2);
 	WORD mask = ~m372.reg[3] & 0x3F;
 
-	prg_swap_MMC3(address, (base | (value & mask)));
+	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
-void chr_swap_372(WORD address, WORD value) {
+void chr_swap_mmc3_372(WORD address, WORD value) {
 	if ((m372.reg[2] & 0x20) && chr.extra.data) {
 		value = address >> 10;
 		control_bank(info.chr.ram.max.banks_1k)
@@ -113,6 +113,6 @@ void chr_swap_372(WORD address, WORD value) {
 		WORD base = m372.reg[0] | (m372.reg[2] & 0xF0) << 4;
 		WORD mask = 0xFF >> (~m372.reg[2] & 0x0F);
 
-		chr_swap_MMC3(address, (base | (value & mask)));
+		chr_swap_MMC3_base(address, (base | (value & mask)));
 	}
 }

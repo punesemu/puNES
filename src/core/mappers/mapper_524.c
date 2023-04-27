@@ -22,8 +22,8 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-void prg_swap_524(WORD address, WORD value);
-void chr_swap_524(WORD address, WORD value);
+void prg_swap_vrc2and4_524(WORD address, WORD value);
+void chr_swap_vrc2and4_524(WORD address, WORD value);
 
 struct _m524 {
 	struct _m524_irq {
@@ -46,8 +46,8 @@ void map_init_524(void) {
 	memset(&m524, 0x00, sizeof(m524));
 
 	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE);
-	VRC2and4_prg_swap = prg_swap_524;
-	VRC2and4_chr_swap = chr_swap_524;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_524;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_524;
 }
 void extcl_cpu_wr_mem_524(WORD address, BYTE value) {
 	switch (address & 0xF00C) {
@@ -77,9 +77,9 @@ void extcl_cpu_every_cycle_524(void) {
 	}
 }
 
-void prg_swap_524(WORD address, WORD value) {
-	prg_swap_VRC2and4(address, (value & 0x1F));
+void prg_swap_vrc2and4_524(WORD address, WORD value) {
+	prg_swap_VRC2and4_base(address, (value & 0x1F));
 }
-void chr_swap_524(WORD address, WORD value) {
-	chr_swap_VRC2and4(address, (value & 0xFF));
+void chr_swap_vrc2and4_524(WORD address, WORD value) {
+	chr_swap_VRC2and4_base(address, (value & 0xFF));
 }

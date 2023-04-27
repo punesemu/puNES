@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_fix_513(void);
-void chr_swap_513(WORD address, WORD value);
+void prg_fix_mmc3_513(void);
+void chr_swap_mmc3_513(WORD address, WORD value);
 
 struct _m513 {
 	BYTE reg;
@@ -49,8 +49,8 @@ void map_init_513(void) {
 	memset(&m513, 0x00, sizeof(m513));
 
 	init_MMC3();
-	MMC3_prg_fix = prg_fix_513;
-	MMC3_chr_swap = chr_swap_513;
+	MMC3_prg_fix = prg_fix_mmc3_513;
+	MMC3_chr_swap = chr_swap_mmc3_513;
 
 	if (mapper.write_vram && !info.chr.rom.banks_8k) {
 		info.chr.rom.banks_8k = 4;
@@ -87,7 +87,7 @@ BYTE extcl_save_mapper_513(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_fix_513(void) {
+void prg_fix_mmc3_513(void) {
 	if (mmc3.bank_to_update & 0x40) {
 		MMC3_prg_swap(0x8000, (~1 & 0x3F));
 		MMC3_prg_swap(0xC000, (m513.reg & 0xC0) | (mmc3.reg[6] & 0x3F));
@@ -98,6 +98,6 @@ void prg_fix_513(void) {
 	MMC3_prg_swap(0xA000, (m513.reg & 0xC0) | (mmc3.reg[7] & 0x3F));
 	MMC3_prg_swap(0xE000, (~0 & 0x3F));
 }
-void chr_swap_513(WORD address, WORD value) {
-	chr_swap_MMC3(address, (value & 0x3F));
+void chr_swap_mmc3_513(WORD address, WORD value) {
+	chr_swap_MMC3_base(address, (value & 0x3F));
 }

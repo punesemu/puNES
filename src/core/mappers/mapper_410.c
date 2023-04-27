@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_410(WORD address, WORD value);
-void chr_swap_410(WORD address, WORD value);
+void prg_swap_mmc3_410(WORD address, WORD value);
+void chr_swap_mmc3_410(WORD address, WORD value);
 
 struct _m410 {
 	BYTE index;
@@ -51,8 +51,8 @@ void map_init_410(void) {
 	memset(&m410, 0x00, sizeof(m410));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_410;
-	MMC3_chr_swap = chr_swap_410;
+	MMC3_prg_swap = prg_swap_mmc3_410;
+	MMC3_chr_swap = chr_swap_mmc3_410;
 
 	if (info.format != NES_2_0) {
 		info.chr.ram.banks_8k_plus = 1;
@@ -98,13 +98,13 @@ void extcl_wr_chr_410(WORD address, BYTE value) {
 	}
 }
 
-void prg_swap_410(WORD address, WORD value) {
+void prg_swap_mmc3_410(WORD address, WORD value) {
 	WORD base = m410.reg[1] | ((m410.reg[2] & 0xC0) << 2);
 	WORD mask = ~m410.reg[3] & 0x3F;
 
-	prg_swap_MMC3(address, (base | (value & mask)));
+	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
-void chr_swap_410(WORD address, WORD value) {
+void chr_swap_mmc3_410(WORD address, WORD value) {
 	if ((m410.reg[2] & 0x40) && chr.extra.data) {
 		value = address >> 10;
 		chr.bank_1k[address >> 10] = &chr.extra.data[value << 10];
@@ -112,6 +112,6 @@ void chr_swap_410(WORD address, WORD value) {
 		WORD base = m410.reg[0] | (m410.reg[2] & 0xF0) << 4;
 		WORD mask = 0xFF >> (~m410.reg[2] & 0x0F);
 
-		chr_swap_MMC3(address, (base | (value & mask)));
+		chr_swap_MMC3_base(address, (base | (value & mask)));
 	}
 }

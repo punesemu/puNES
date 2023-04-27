@@ -18,8 +18,8 @@
 
 #include "mappers.h"
 
-void prg_swap_298(WORD address, WORD value);
-void chr_swap_298(WORD address, WORD value);
+void prg_swap_vrc2and4_298(WORD address, WORD value);
+void chr_swap_vrc2and4_298(WORD address, WORD value);
 
 void map_init_298(void) {
 	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
@@ -28,13 +28,13 @@ void map_init_298(void) {
 	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
 
 	init_VRC2and4(VRC24_VRC4, 0x02, 0x01, FALSE);
-	VRC2and4_prg_swap = prg_swap_298;
-	VRC2and4_chr_swap = chr_swap_298;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_298;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_298;
 }
 
-void prg_swap_298(WORD address, WORD value) {
-	prg_swap_VRC2and4(address, (value & 0x1F));
+void prg_swap_vrc2and4_298(WORD address, WORD value) {
+	prg_swap_VRC2and4_base(address, (value & 0x1F));
 }
-void chr_swap_298(WORD address, WORD value) {
-	chr_swap_VRC2and4(address, (value & 0x1FF));
+void chr_swap_vrc2and4_298(WORD address, WORD value) {
+	chr_swap_VRC2and4_base(address, (value & 0x1FF));
 }

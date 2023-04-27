@@ -25,11 +25,11 @@
 
 INLINE static WORD chr_base(int slot);
 
-void prg_swap_14_mmc3(WORD address, WORD value);
-void chr_swap_14_mmc3(WORD address, WORD value);
+void prg_swap_mmc3_14(WORD address, WORD value);
+void chr_swap_mmc3_14(WORD address, WORD value);
 
-void prg_swap_14_vrc2and4(WORD address, WORD value);
-void chr_swap_14_vrc2and4(WORD address, WORD value);
+void prg_swap_vrc2and4_14(WORD address, WORD value);
+void chr_swap_vrc2and4_14(WORD address, WORD value);
 
 struct _m14 {
 	BYTE reg;
@@ -57,12 +57,12 @@ void map_init_14(void) {
 	memset(&m14, 0x00, sizeof(m14));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_14_mmc3;
-	MMC3_chr_swap = chr_swap_14_mmc3;
+	MMC3_prg_swap = prg_swap_mmc3_14;
+	MMC3_chr_swap = chr_swap_mmc3_14;
 
 	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE);
-	VRC2and4_prg_swap = prg_swap_14_vrc2and4;
-	VRC2and4_chr_swap = chr_swap_14_vrc2and4;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_14;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_14;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -149,16 +149,16 @@ INLINE static WORD chr_base(int slot) {
 	return (0);
 }
 
-void prg_swap_14_mmc3(WORD address, WORD value) {
-	prg_swap_MMC3(address, (value & 0x3F));
+void prg_swap_mmc3_14(WORD address, WORD value) {
+	prg_swap_MMC3_base(address, (value & 0x3F));
 }
-void chr_swap_14_mmc3(WORD address, WORD value) {
-	chr_swap_MMC3(address, (chr_base(address >> 10) | (value & 0xFF)));
+void chr_swap_mmc3_14(WORD address, WORD value) {
+	chr_swap_MMC3_base(address, (chr_base(address >> 10) | (value & 0xFF)));
 }
 
-void prg_swap_14_vrc2and4(WORD address, WORD value) {
-	prg_swap_VRC2and4(address, (value & 0x1F));
+void prg_swap_vrc2and4_14(WORD address, WORD value) {
+	prg_swap_VRC2and4_base(address, (value & 0x1F));
 }
-void chr_swap_14_vrc2and4(WORD address, WORD value) {
-	chr_swap_VRC2and4(address, (chr_base(address >> 10) | (value & 0xFF)));
+void chr_swap_vrc2and4_14(WORD address, WORD value) {
+	chr_swap_VRC2and4_base(address, (chr_base(address >> 10) | (value & 0xFF)));
 }

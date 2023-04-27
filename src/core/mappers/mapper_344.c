@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_344(WORD address, WORD value);
-void chr_swap_344(WORD address, WORD value);
+void prg_swap_mmc3_344(WORD address, WORD value);
+void chr_swap_mmc3_344(WORD address, WORD value);
 
 static BYTE dipswitch[2] = { 0x00, 0x78 };
 static BYTE prg_chip_order[2][4] = {
@@ -59,8 +59,8 @@ void map_init_344(void) {
 	memset(&m344, 0x00, sizeof(m344));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_344;
-	MMC3_chr_swap = chr_swap_344;
+	MMC3_prg_swap = prg_swap_mmc3_344;
+	MMC3_chr_swap = chr_swap_mmc3_344;
 
 	m344tmp.prg_chip = info.crc32.prg == 0xAB2ACA46 ? 1 : 0;
 	if (info.reset == RESET) {
@@ -119,7 +119,7 @@ BYTE extcl_save_mapper_344(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_344(WORD address, WORD value) {
+void prg_swap_mmc3_344(WORD address, WORD value) {
 	WORD base = (prg_chip_order[m344tmp.prg_chip][m344.reg & 0x03]) << 4;
 	WORD mask = 0x0F;
 
@@ -129,11 +129,11 @@ void prg_swap_344(WORD address, WORD value) {
 		value = (address >> 13) & 0x03;
 		mask = 0x03;
 	}
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_344(WORD address, WORD value) {
+void chr_swap_mmc3_344(WORD address, WORD value) {
 	WORD base = (m344.reg & 0x03) << 7;
 	WORD mask = m344.reg & 0x02 ? 0x7F : 0xFF;
 
-	chr_swap_MMC3(address, (base | (value & mask)));
+	chr_swap_MMC3_base(address, (base | (value & mask)));
 }

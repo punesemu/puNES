@@ -23,9 +23,9 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_165(WORD address, WORD value);
-void chr_fix_165(void);
-void chr_swap_165(WORD address, WORD value);
+void prg_swap_mmc3_165(WORD address, WORD value);
+void chr_fix_mmc3_165(void);
+void chr_swap_mmc3_165(WORD address, WORD value);
 
 INLINE static BYTE chr_control_165(WORD address);
 
@@ -54,9 +54,9 @@ void map_init_165(void) {
 	memset(&m165, 0x00, sizeof(m165));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_165;
-	MMC3_chr_fix = chr_fix_165;
-	MMC3_chr_swap = chr_swap_165;
+	MMC3_prg_swap = prg_swap_mmc3_165;
+	MMC3_chr_fix = chr_fix_mmc3_165;
+	MMC3_chr_swap = chr_swap_mmc3_165;
 
 	mmc3.reg[0] = 0;
 	mmc3.reg[1] = 0;
@@ -120,10 +120,10 @@ void extcl_wr_chr_165(WORD address, BYTE value) {
 	}
 }
 
-void prg_swap_165(WORD address, WORD value) {
-	prg_swap_MMC3(address, (value & 0x3F));
+void prg_swap_mmc3_165(WORD address, WORD value) {
+	prg_swap_MMC3_base(address, (value & 0x3F));
 }
-void chr_fix_165(void) {
+void chr_fix_mmc3_165(void) {
 	WORD bank[2] = { 0, 0 };
 
 	if (!m165.reg) {
@@ -135,25 +135,25 @@ void chr_fix_165(void) {
 	}
 
 	bank[0] &= ~3;
-	chr_swap_165(0x0000, bank[0] | 0x00);
-	chr_swap_165(0x0400, bank[0] | 0x01);
-	chr_swap_165(0x0800, bank[0] | 0x02);
-	chr_swap_165(0x0C00, bank[0] | 0x03);
+	chr_swap_mmc3_165(0x0000, bank[0] | 0x00);
+	chr_swap_mmc3_165(0x0400, bank[0] | 0x01);
+	chr_swap_mmc3_165(0x0800, bank[0] | 0x02);
+	chr_swap_mmc3_165(0x0C00, bank[0] | 0x03);
 
 	bank[1] &= ~3;
-	chr_swap_165(0x1000, bank[1] | 0x00);
-	chr_swap_165(0x1400, bank[1] | 0x01);
-	chr_swap_165(0x1800, bank[1] | 0x02);
-	chr_swap_165(0x1C00, bank[1] | 0x03);
+	chr_swap_mmc3_165(0x1000, bank[1] | 0x00);
+	chr_swap_mmc3_165(0x1400, bank[1] | 0x01);
+	chr_swap_mmc3_165(0x1800, bank[1] | 0x02);
+	chr_swap_mmc3_165(0x1C00, bank[1] | 0x03);
 }
-void chr_swap_165(WORD address, WORD value) {
+void chr_swap_mmc3_165(WORD address, WORD value) {
 	const BYTE slot = address >> 10;
 
 	if (!(value & ~3)) {
 		control_bank(info.chr.ram.max.banks_1k)
 		chr.bank_1k[slot] = &chr.extra.data[value << 10];
 	} else {
-		chr_swap_MMC3(address, value);
+		chr_swap_MMC3_base(address, value);
 	}
 }
 

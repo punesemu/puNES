@@ -21,8 +21,8 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-void prg_swap_362(WORD address, WORD value);
-void chr_swap_362(WORD address, WORD value);
+void prg_swap_vrc2and4_362(WORD address, WORD value);
+void chr_swap_vrc2and4_362(WORD address, WORD value);
 
 struct _m362 {
 	BYTE reg;
@@ -43,8 +43,8 @@ void map_init_362(void) {
 	memset(&m362, 0x00, sizeof(m362));
 
 	init_VRC2and4(VRC24_VRC4, 0x01, 0x02, FALSE);
-	VRC2and4_prg_swap = prg_swap_362;
-	VRC2and4_chr_swap = chr_swap_362;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_362;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_362;
 
 	if ((info.reset >= HARD) || (prg.rom.size <= (512 * 1024))) {
 		m362.game = 0;
@@ -82,16 +82,16 @@ BYTE extcl_rd_chr_362(WORD address) {
 	return (chr.bank_1k[slot][address & 0x3FF]);
 }
 
-void prg_swap_362(WORD address, WORD value) {
+void prg_swap_vrc2and4_362(WORD address, WORD value) {
 	WORD base = 0x40;
 	WORD mask = 0x0F;
 
 	if (!m362.game) {
 		base = (vrc2and4.chr[m362.reg] & 0x180) >> 3;
 	}
-	prg_swap_VRC2and4(address, (base | (value & mask)));
+	prg_swap_VRC2and4_base(address, (base | (value & mask)));
 }
-void chr_swap_362(WORD address, WORD value) {
+void chr_swap_vrc2and4_362(WORD address, WORD value) {
 	WORD base = 0x200;
 	WORD mask = 0x1FF;
 
@@ -99,5 +99,5 @@ void chr_swap_362(WORD address, WORD value) {
 		base = vrc2and4.chr[m362.reg] & 0x180;
 		mask = 0x7F;
 	}
-	chr_swap_VRC2and4(address, (base | (value & mask)));
+	chr_swap_VRC2and4_base(address, (base | (value & mask)));
 }

@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void chr_swap_Rexdbz(WORD address, WORD value);
+void chr_swap_mmc3_Rexdbz(WORD address, WORD value);
 
 INLINE static void tmp_fix_Rexdbz(BYTE max, BYTE index, const BYTE *ds);
 
@@ -57,7 +57,7 @@ void map_init_Rexdbz(void) {
 	memset(&rexdbz, 0x00, sizeof(rexdbz));
 
 	init_MMC3();
-	MMC3_chr_swap = chr_swap_Rexdbz;
+	MMC3_chr_swap = chr_swap_mmc3_Rexdbz;
 
 	if (info.reset == RESET) {
 		if (rexdbztmp.ds_used) {
@@ -102,11 +102,11 @@ BYTE extcl_save_mapper_Rexdbz(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void chr_swap_Rexdbz(WORD address, WORD value) {
+void chr_swap_mmc3_Rexdbz(WORD address, WORD value) {
 	const BYTE slot = address >> 10;
 	WORD base = (rexdbz.reg << ((slot >= 4) ? 4 : 8)) & 0x0100;
 
-	chr_swap_MMC3(address, (base | value));
+	chr_swap_MMC3_base(address, (base | value));
 }
 
 INLINE static void tmp_fix_Rexdbz(BYTE max, BYTE index, const BYTE *ds) {

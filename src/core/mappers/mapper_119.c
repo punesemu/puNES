@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void chr_swap_119(WORD address, WORD value);
+void chr_swap_mmc3_119(WORD address, WORD value);
 
 void map_init_119(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
@@ -42,7 +42,7 @@ void map_init_119(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
 	init_MMC3();
-	MMC3_chr_swap = chr_swap_119;
+	MMC3_chr_swap = chr_swap_mmc3_119;
 
 	if (info.format != NES_2_0) {
 		info.chr.ram.banks_8k_plus = 1;
@@ -68,14 +68,14 @@ void extcl_wr_chr_119(WORD address, BYTE value) {
 	}
 }
 
-void chr_swap_119(WORD address, WORD value) {
+void chr_swap_mmc3_119(WORD address, WORD value) {
 	const BYTE slot = address >> 10;
 
 	if (value & 0x40) {
 		control_bank_with_AND(0x3F, info.chr.ram.max.banks_1k)
 		chr.bank_1k[slot] = &chr.extra.data[value << 10];
 	} else {
-		chr_swap_MMC3(address, (value & 0x3F));
+		chr_swap_MMC3_base(address, (value & 0x3F));
 	}
 }
 

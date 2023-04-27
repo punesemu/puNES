@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_191(WORD address, WORD value);
-void chr_swap_191(WORD address, WORD value);
+void prg_swap_mmc3_191(WORD address, WORD value);
+void chr_swap_mmc3_191(WORD address, WORD value);
 
 void map_init_191(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
@@ -43,8 +43,8 @@ void map_init_191(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_191;
-	MMC3_chr_swap = chr_swap_191;
+	MMC3_prg_swap = prg_swap_mmc3_191;
+	MMC3_chr_swap = chr_swap_mmc3_191;
 
 	map_chr_ram_extra_init(0x800);
 
@@ -68,16 +68,16 @@ void extcl_wr_chr_191(WORD address, BYTE value) {
 	}
 }
 
-void prg_swap_191(WORD address, WORD value) {
-	prg_swap_MMC3(address, (value & 0x3F));
+void prg_swap_mmc3_191(WORD address, WORD value) {
+	prg_swap_MMC3_base(address, (value & 0x3F));
 }
-void chr_swap_191(WORD address, WORD value) {
+void chr_swap_mmc3_191(WORD address, WORD value) {
 	const BYTE slot = address >> 10;
 
 	if ((value & 0x80) && chr.extra.data) {
 		value &= 0x01;
 		chr.bank_1k[slot] = &chr.extra.data[value << 10];
 	} else {
-		chr_swap_MMC3(address, value);
+		chr_swap_MMC3_base(address, value);
 	}
 }

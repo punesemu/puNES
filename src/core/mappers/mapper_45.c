@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_45(WORD address, WORD value);
-void chr_swap_45(WORD address, WORD value);
+void prg_swap_mmc3_45(WORD address, WORD value);
+void chr_swap_mmc3_45(WORD address, WORD value);
 
 INLINE static void tmp_fix_45(BYTE max, BYTE index, const BYTE *ds);
 
@@ -61,8 +61,8 @@ void map_init_45(void) {
 	m45.reg[2] = 0x0F;
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_45;
-	MMC3_chr_swap = chr_swap_45;
+	MMC3_prg_swap = prg_swap_mmc3_45;
+	MMC3_chr_swap = chr_swap_mmc3_45;
 
 	if (info.reset == RESET) {
 		if (m45tmp.ds_used) {
@@ -161,13 +161,13 @@ BYTE extcl_save_mapper_45(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_45(WORD address, WORD value) {
+void prg_swap_mmc3_45(WORD address, WORD value) {
 	WORD base = m45.reg[1] | ((m45.reg[2] & 0xC0) << 2);
 	WORD mask = ~m45.reg[3] & 0x3F;
 
-	prg_swap_MMC3(address, (base | (value & mask)));
+	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
-void chr_swap_45(WORD address, WORD value) {
+void chr_swap_mmc3_45(WORD address, WORD value) {
 	if (mapper.write_vram && (info.chr.rom.max.banks_8k == 1)) {
 		value = address >> 10;
 		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
@@ -175,7 +175,7 @@ void chr_swap_45(WORD address, WORD value) {
 		WORD base = m45.reg[0] | ((m45.reg[2] & 0xF0) << 4);
 		WORD mask = 0xFF >> (~m45.reg[2] & 0x0F);
 
-		chr_swap_MMC3(address, (base | (value & mask)));
+		chr_swap_MMC3_base(address, (base | (value & mask)));
 	}
 }
 

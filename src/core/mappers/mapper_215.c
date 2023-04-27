@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_215(WORD address, WORD value);
-void chr_swap_215(WORD address, WORD value);
+void prg_swap_mmc3_215(WORD address, WORD value);
+void chr_swap_mmc3_215(WORD address, WORD value);
 
 struct _m215 {
 	BYTE reg[4];
@@ -50,8 +50,8 @@ void map_init_215(void) {
 	memset(&m215, 0x00, sizeof(m215));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_215;
-	MMC3_chr_swap = chr_swap_215;
+	MMC3_prg_swap = prg_swap_mmc3_215;
+	MMC3_chr_swap = chr_swap_mmc3_215;
 
 	m215.reg[1] = 0x03;
 	m215.reg[2] = 0x07;
@@ -146,7 +146,7 @@ BYTE extcl_save_mapper_215(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_215(WORD address, WORD value) {
+void prg_swap_mmc3_215(WORD address, WORD value) {
 	const WORD slot = (address >> 13) & 0x03;
 	WORD base = info.mapper.submapper == 1
 		? ((m215.reg[1] & 0x03) << 5) | (m215.reg[1] & 0x10) | ((m215.reg[1] & 0x08) << 4)
@@ -165,13 +165,13 @@ void prg_swap_215(WORD address, WORD value) {
 			value = (value << 1) | (slot & 0x01);
 		}
 	}
-	prg_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-void chr_swap_215(WORD address, WORD value) {
+void chr_swap_mmc3_215(WORD address, WORD value) {
 	WORD base = info.mapper.submapper == 1
 		? ((m215.reg[1] & 0x0E) << 7) | ((m215.reg[1] & 0x20) << 2)
 		: ((m215.reg[1] & 0x0C) << 6) | ((m215.reg[1] & 0x20) << 2);
 	WORD mask = 0xFF >> ((m215.reg[0] & 0x40) >> 6);
 
-	chr_swap_MMC3(address, ((base & ~mask) | (value & mask)));
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

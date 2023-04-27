@@ -21,8 +21,8 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-void prg_swap_404(WORD address, WORD value);
-void chr_swap_404(WORD address, WORD value);
+void prg_swap_mmc1_404(WORD address, WORD value);
+void chr_swap_mmc1_404(WORD address, WORD value);
 
 struct _m404 {
 	BYTE reg;
@@ -40,8 +40,8 @@ void map_init_404(void) {
 	memset(&m404, 0x00, sizeof(m404));
 
 	init_MMC1(MMC1A);
-	MMC1_prg_swap = prg_swap_404;
-	MMC1_chr_swap = chr_swap_404;
+	MMC1_prg_swap = prg_swap_mmc1_404;
+	MMC1_chr_swap = chr_swap_mmc1_404;
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -65,12 +65,12 @@ BYTE extcl_save_mapper_404(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_404(WORD address, WORD value) {
+void prg_swap_mmc1_404(WORD address, WORD value) {
 	WORD base = m404.reg << 3;
 	WORD mask = 0x0F >> ((m404.reg & 0x40) >> 6);
 
-	prg_swap_MMC1(address, (base | (value & mask)));
+	prg_swap_MMC1_base(address, (base | (value & mask)));
 }
-void chr_swap_404(WORD address, WORD value) {
-	chr_swap_MMC1(address, ((m404.reg << 5) | (value & 0x1F)));
+void chr_swap_mmc1_404(WORD address, WORD value) {
+	chr_swap_MMC1_base(address, ((m404.reg << 5) | (value & 0x1F)));
 }

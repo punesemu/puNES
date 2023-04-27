@@ -21,9 +21,8 @@
 #include "info.h"
 #include "mem_map.h"
 #include "irqA12.h"
-#include "save_slot.h"
 
-void mirroring_fix_TxROM(void);
+void mirroring_fix_mmc3_TxROM(void);
 
 void map_init_TxROM(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
@@ -41,7 +40,7 @@ void map_init_TxROM(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
 	init_MMC3();
-	MMC3_mirroring_fix = mirroring_fix_TxROM;
+	MMC3_mirroring_fix = mirroring_fix_mmc3_TxROM;
 
 	if ((info.format != NES_2_0) && (info.mapper.submapper == TKSROM)) {
 		info.prg.ram.banks_8k_plus = 1;
@@ -51,7 +50,6 @@ void map_init_TxROM(void) {
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-
 void extcl_cpu_wr_mem_TxROM(WORD address, BYTE value) {
 	switch (address & 0xE001) {
 		case 0x8001:
@@ -77,7 +75,7 @@ void extcl_cpu_wr_mem_TxROM(WORD address, BYTE value) {
 	extcl_cpu_wr_mem_MMC3(address, value);
 }
 
-void mirroring_fix_TxROM(void) {
+void mirroring_fix_mmc3_TxROM(void) {
 	if (mmc3.bank_to_update & 0x80) {
 		ntbl.bank_1k[0] = &ntbl.data[((mmc3.reg[2] >> 7) ^ 0x01) << 10];
 		ntbl.bank_1k[1] = &ntbl.data[((mmc3.reg[3] >> 7) ^ 0x01) << 10];

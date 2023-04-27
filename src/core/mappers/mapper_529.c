@@ -25,8 +25,8 @@
 #include "nes20db.h"
 #include "EE93Cx6.h"
 
-void prg_fix_529(void);
-void chr_swap_529(WORD address, WORD value);
+void prg_fix_vrc2and4_529(void);
+void chr_swap_vrc2and4_529(WORD address, WORD value);
 
 INLINE static void prg_ram_fix(void);
 INLINE static BYTE prg_ram_check(void);
@@ -46,8 +46,8 @@ void map_init_529(void) {
 	mapper.internal_struct_size[0] = sizeof(vrc2and4);
 
 	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE);
-	VRC2and4_prg_fix = prg_fix_529;
-	VRC2and4_chr_swap = chr_swap_529;
+	VRC2and4_prg_fix = prg_fix_vrc2and4_529;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_529;
 
 	if (prg_ram_check()) {
 		info.prg.ram.banks_8k_plus = 1;
@@ -113,7 +113,7 @@ BYTE extcl_save_mapper_529(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_fix_529(void) {
+void prg_fix_vrc2and4_529(void) {
 	WORD bank = 0;
 
 	bank = vrc2and4.prg[1];
@@ -126,8 +126,8 @@ void prg_fix_529(void) {
 
 	map_prg_rom_8k_update();
 }
-void chr_swap_529(WORD address, WORD value) {
-	chr_swap_VRC2and4(address, (value & 0x1FF));
+void chr_swap_vrc2and4_529(WORD address, WORD value) {
+	chr_swap_VRC2and4_base(address, (value & 0x1FF));
 }
 
 INLINE static void prg_ram_fix(void) {

@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_334(WORD address, WORD value);
-void chr_swap_334(WORD address, WORD value);
+void prg_swap_mmc3_334(WORD address, WORD value);
+void chr_swap_mmc3_334(WORD address, WORD value);
 
 INLINE static void tmp_fix_334(BYTE max, BYTE index, const BYTE *ds);
 
@@ -58,8 +58,8 @@ void map_init_334(void) {
 	memset(&m334, 0x00, sizeof(m334));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_334;
-	MMC3_chr_swap = chr_swap_334;
+	MMC3_prg_swap = prg_swap_mmc3_334;
+	MMC3_chr_swap = chr_swap_mmc3_334;
 
 	if (info.reset == RESET) {
 		if (m334tmp.ds_used) {
@@ -107,17 +107,17 @@ BYTE extcl_save_mapper_334(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_334(WORD address, WORD value) {
+void prg_swap_mmc3_334(WORD address, WORD value) {
 	const WORD slot = (address >> 13) & 0x03;
 
 	value = ((m334.reg & ~1) << 1) | slot;
-	prg_swap_MMC3(address, value);
+	prg_swap_MMC3_base(address, value);
 }
-void chr_swap_334(WORD address, WORD value) {
+void chr_swap_mmc3_334(WORD address, WORD value) {
 	WORD base = 0;
 	WORD mask = 0xFF;
 
-	chr_swap_MMC3(address, (base | (value & mask)));
+	chr_swap_MMC3_base(address, (base | (value & mask)));
 }
 
 INLINE static void tmp_fix_334(BYTE max, BYTE index, const BYTE *ds) {

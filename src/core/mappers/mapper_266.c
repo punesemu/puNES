@@ -21,9 +21,9 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-void prg_swap_266(WORD address, WORD value);
-void chr_swap_266(WORD address, WORD value);
-void misc_03_266(WORD address, BYTE value);
+void prg_swap_vrc2and4_266(WORD address, WORD value);
+void chr_swap_vrc2and4_266(WORD address, WORD value);
+void misc_03_vrc2and4_266(WORD address, BYTE value);
 
 struct _m266 {
 	BYTE reg;
@@ -45,9 +45,9 @@ void map_init_266(void) {
 	memset(&m266, 0x00, sizeof(m266));
 
 	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE);
-	VRC2and4_prg_swap = prg_swap_266;
-	VRC2and4_chr_swap = chr_swap_266;
-	VRC2and4_misc_03 = misc_03_266;
+	VRC2and4_prg_swap = prg_swap_vrc2and4_266;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_266;
+	VRC2and4_misc_03 = misc_03_vrc2and4_266;
 
 	m266.pcm = 7;
 }
@@ -63,14 +63,14 @@ BYTE extcl_save_mapper_266(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_266(WORD address, WORD value) {
+void prg_swap_vrc2and4_266(WORD address, WORD value) {
 	value = (m266.reg << 2) | ((address >> 13) & 0x03);
-	prg_swap_VRC2and4(address, value);
+	prg_swap_VRC2and4_base(address, value);
 }
-void chr_swap_266(WORD address, WORD value) {
-	chr_swap_VRC2and4(address, (value & 0x1FF));
+void chr_swap_vrc2and4_266(WORD address, WORD value) {
+	chr_swap_VRC2and4_base(address, (value & 0x1FF));
 }
-void misc_03_266(WORD address, BYTE value) {
+void misc_03_vrc2and4_266(WORD address, BYTE value) {
 	if (address & 0x0800) {
 		m266.pcm = value & 0x0F;
 	} else {

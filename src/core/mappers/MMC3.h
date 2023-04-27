@@ -54,12 +54,12 @@ void extcl_update_r2006_MMC3(WORD new_r2006, WORD old_r2006);
 void extcl_irq_A12_clock_MMC3_NEC(void);
 
 void init_MMC3(void);
-void prg_fix_MMC3(void);
-void prg_swap_MMC3(WORD address, WORD value);
-void chr_fix_MMC3(void);
-void wram_fix_MMC3(void);
-void chr_swap_MMC3(WORD address, WORD value);
-void mirroring_fix_MMC3(void);
+void prg_fix_MMC3_base(void);
+void prg_swap_MMC3_base(WORD address, WORD value);
+void chr_fix_MMC3_base(void);
+void wram_fix_MMC3_base(void);
+void chr_swap_MMC3_base(WORD address, WORD value);
+void mirroring_fix_MMC3_base(void);
 
 extern void (*MMC3_prg_fix)(void);
 extern void (*MMC3_prg_swap)(WORD address, WORD value);

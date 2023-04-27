@@ -23,9 +23,9 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_370(WORD address, WORD value);
-void chr_swap_370(WORD address, WORD value);
-void mirroring_fix_370(void);
+void prg_swap_mmc3_370(WORD address, WORD value);
+void chr_swap_mmc3_370(WORD address, WORD value);
+void mirroring_fix_mmc3_370(void);
 
 INLINE static BYTE mirroring_TLSROM(BYTE value);
 
@@ -56,9 +56,9 @@ void map_init_370(void) {
 	memset(&m370, 0x00, sizeof(m370));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_370;
-	MMC3_chr_swap = chr_swap_370;
-	MMC3_mirroring_fix = mirroring_fix_370;
+	MMC3_prg_swap = prg_swap_mmc3_370;
+	MMC3_chr_swap = chr_swap_mmc3_370;
+	MMC3_mirroring_fix = mirroring_fix_mmc3_370;
 
 	if (info.reset == RESET) {
 		m370tmp.dipswitch ^= 0x80;
@@ -97,19 +97,19 @@ BYTE extcl_save_mapper_370(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_370(WORD address, WORD value) {
+void prg_swap_mmc3_370(WORD address, WORD value) {
 	WORD base = (m370.reg & 0x38) << 1;
 	WORD mask = 0x1F >> ((m370.reg & 0x20) >> 5);
 
-	prg_swap_MMC3(address, (base | (value & mask)));
+	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
-void chr_swap_370(WORD address, WORD value) {
+void chr_swap_mmc3_370(WORD address, WORD value) {
 	WORD base = (m370.reg & 0x07) << 7;
 	WORD mask = 0xFF >> ((~m370.reg & 0x04) >> 2);
 
-	chr_swap_MMC3(address, (base | (value & mask)));
+	chr_swap_MMC3_base(address, (base | (value & mask)));
 }
-void mirroring_fix_370(void) {
+void mirroring_fix_mmc3_370(void) {
 	if ((m370.reg & 0x07) == 0x01) {
 		if (mmc3.bank_to_update & 0x80) {
 			ntbl.bank_1k[0] = &ntbl.data[mirroring_TLSROM(mmc3.reg[2]) << 10];
@@ -124,7 +124,7 @@ void mirroring_fix_370(void) {
 		}
 		return;
 	}
-	mirroring_fix_MMC3();
+	mirroring_fix_MMC3_base();
 }
 
 INLINE static BYTE mirroring_TLSROM(BYTE value) {

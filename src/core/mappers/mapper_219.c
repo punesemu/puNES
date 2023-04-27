@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_219(WORD address, WORD value);
-void chr_swap_219(WORD address, WORD value);
+void prg_swap_mmc3_219(WORD address, WORD value);
+void chr_swap_mmc3_219(WORD address, WORD value);
 
 struct _m219 {
 	BYTE reg[2];
@@ -49,8 +49,8 @@ void map_init_219(void) {
 	memset(&m219, 0x00, sizeof(m219));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_219;
-	MMC3_chr_swap = chr_swap_219;
+	MMC3_prg_swap = prg_swap_mmc3_219;
+	MMC3_chr_swap = chr_swap_mmc3_219;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -109,15 +109,15 @@ BYTE extcl_save_mapper_219(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_219(WORD address, WORD value) {
+void prg_swap_mmc3_219(WORD address, WORD value) {
 	WORD base = m219.reg[0] << 4;
 	WORD mask = 0x0F;
 
-	prg_swap_MMC3(address, (base | (value & mask)));
+	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
-void chr_swap_219(WORD address, WORD value) {
+void chr_swap_mmc3_219(WORD address, WORD value) {
 	WORD base = m219.reg[0] << 7;
 	WORD mask = 0x7F;
 
-	chr_swap_MMC3(address, (base | (value & mask)));
+	chr_swap_MMC3_base(address, (base | (value & mask)));
 }

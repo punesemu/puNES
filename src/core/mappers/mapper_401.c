@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_swap_401(WORD address, WORD value);
-void chr_swap_401(WORD address, WORD value);
+void prg_swap_mmc3_401(WORD address, WORD value);
+void chr_swap_mmc3_401(WORD address, WORD value);
 
 static BYTE dipswitch_401[] = { 7, 1, 2, 4, 3, 5, 6, 0 };
 
@@ -57,8 +57,8 @@ void map_init_401(void) {
 	memset(&m401, 0x00, sizeof(m401));
 
 	init_MMC3();
-	MMC3_prg_swap = prg_swap_401;
-	MMC3_chr_swap = chr_swap_401;
+	MMC3_prg_swap = prg_swap_mmc3_401;
+	MMC3_chr_swap = chr_swap_mmc3_401;
 
 	if (info.reset == RESET) {
 		m401tmp.index = (m401tmp.index + 1) & 0x07;
@@ -107,17 +107,17 @@ BYTE extcl_save_mapper_401(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_swap_401(WORD address, WORD value) {
+void prg_swap_mmc3_401(WORD address, WORD value) {
 	WORD base = (m401.reg[1] & 0x1F) | (m401.reg[2] & 0x80) |
 		(m401tmp.dipswitch & 0x02 ? m401.reg[2] & 0x20 : (m401.reg[1] & 0x40) >> 1) |
 		(m401tmp.dipswitch & 0x04 ? m401.reg[2] & 0x40 : (m401.reg[1] & 0x20) << 1);
 	WORD mask = ~m401.reg[3] & 0x1F;
 
-	prg_swap_MMC3(address, (base | (value & mask)));
+	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
-void chr_swap_401(WORD address, WORD value) {
+void chr_swap_mmc3_401(WORD address, WORD value) {
 	WORD base = m401.reg[0] | (m401.reg[2] & 0xF0) << 4;
 	WORD mask = 0xFF >> (~m401.reg[2] & 0x0F);
 
-	chr_swap_MMC3(address, (base | (value & mask)));
+	chr_swap_MMC3_base(address, (base | (value & mask)));
 }

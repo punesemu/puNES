@@ -23,9 +23,9 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-void prg_fix_115(void);
-void prg_swap_115(WORD address, WORD value);
-void chr_swap_115(WORD address, WORD value);
+void prg_fix_mmc3_115(void);
+void prg_swap_mmc3_115(WORD address, WORD value);
+void chr_swap_mmc3_115(WORD address, WORD value);
 
 struct _m115 {
 	BYTE reg[2];
@@ -54,9 +54,9 @@ void map_init_115(void) {
 	}
 
 	init_MMC3();
-	MMC3_prg_fix = prg_fix_115;
-	MMC3_prg_swap = prg_swap_115;
-	MMC3_chr_swap = chr_swap_115;
+	MMC3_prg_fix = prg_fix_mmc3_115;
+	MMC3_prg_swap = prg_swap_mmc3_115;
+	MMC3_chr_swap = chr_swap_mmc3_115;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -100,7 +100,7 @@ BYTE extcl_save_mapper_115(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_fix_115(void) {
+void prg_fix_mmc3_115(void) {
 	BYTE value = 0;
 
 	if (m115.reg[1] & 0x80) {
@@ -117,12 +117,12 @@ void prg_fix_115(void) {
 		map_prg_rom_8k_update();
 		return;
 	}
-	prg_fix_MMC3();
+	prg_fix_MMC3_base();
 }
-void prg_swap_115(WORD address, WORD value) {
-	prg_swap_MMC3(address, (value & 0x3F));
+void prg_swap_mmc3_115(WORD address, WORD value) {
+	prg_swap_MMC3_base(address, (value & 0x3F));
 }
-void chr_swap_115(WORD address, WORD value) {
-	chr_swap_MMC3(address, ((m115.reg[0] << 8) | (value & 0xFF)));
+void chr_swap_mmc3_115(WORD address, WORD value) {
+	chr_swap_MMC3_base(address, ((m115.reg[0] << 8) | (value & 0xFF)));
 }
 

@@ -98,28 +98,28 @@ void init_MMC1(BYTE type) {
 	mmc1.reg[0] = 0x0C;
 	mmc1tmp.type = type;
 
-	MMC1_prg_fix = prg_fix_MMC1;
-	MMC1_prg_swap = prg_swap_MMC1;
-	MMC1_chr_fix = chr_fix_MMC1;
-	MMC1_chr_swap = chr_swap_MMC1;
-	MMC1_wram_fix = wram_fix_MMC1;
-	MMC1_wram_swap = wram_swap_MMC1;
-	MMC1_mirroring_fix = mirroring_fix_MMC1;
+	MMC1_prg_fix = prg_fix_MMC1_base;
+	MMC1_prg_swap = prg_swap_MMC1_base;
+	MMC1_chr_fix = chr_fix_MMC1_base;
+	MMC1_chr_swap = chr_swap_MMC1_base;
+	MMC1_wram_fix = wram_fix_MMC1_base;
+	MMC1_wram_swap = wram_swap_MMC1_base;
+	MMC1_mirroring_fix = mirroring_fix_MMC1_base;
 }
-void prg_fix_MMC1(void) {
+void prg_fix_MMC1_base(void) {
 	MMC1_prg_swap(0x8000, prg_bank_MMC1(0));
 	MMC1_prg_swap(0xC000, prg_bank_MMC1(1));
 }
-void prg_swap_MMC1(WORD address, WORD value) {
+void prg_swap_MMC1_base(WORD address, WORD value) {
 	control_bank(info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, ((address >> 13) & 0x02), value);
 	map_prg_rom_8k_update();
 }
-void chr_fix_MMC1(void) {
+void chr_fix_MMC1_base(void) {
 	MMC1_chr_swap(0x0000, chr_bank_MMC1(0));
 	MMC1_chr_swap(0x1000, chr_bank_MMC1(1));
 }
-void chr_swap_MMC1(WORD address, WORD value) {
+void chr_swap_MMC1_base(WORD address, WORD value) {
 	const BYTE slot = (address >> 10) & 0x04;
 	DBWORD bank = value;
 
@@ -130,10 +130,10 @@ void chr_swap_MMC1(WORD address, WORD value) {
 	chr.bank_1k[slot | 0x02] = chr_pnt(bank | 0x0800);
 	chr.bank_1k[slot | 0x03] = chr_pnt(bank | 0x0C00);
 }
-void wram_fix_MMC1(void) {
+void wram_fix_MMC1_base(void) {
 	MMC1_wram_swap(0);
 }
-void wram_swap_MMC1(WORD value) {
+void wram_swap_MMC1_base(WORD value) {
 	if (mmc1tmp.type == MMC1B) {
 		cpu.prg_ram_rd_active = (mmc1.reg[3] & 0x10 ? FALSE : TRUE);
 		cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
@@ -143,7 +143,7 @@ void wram_swap_MMC1(WORD value) {
 	}
 
 }
-void mirroring_fix_MMC1(void) {
+void mirroring_fix_MMC1_base(void) {
 	switch (mmc1.reg[0] & 0x03) {
 		case 0x00:
 			mirroring_SCR0();

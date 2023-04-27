@@ -26,12 +26,12 @@
 #include "SST39SF040.h"
 #include "gui.h"
 
-void prg_swap_111_MMC1(WORD address, WORD value);
-void chr_swap_111_MMC1(WORD address, WORD value);
+void prg_swap_mmc1_111(WORD address, WORD value);
+void chr_swap_mmc1_111(WORD address, WORD value);
 
-INLINE static void prg_fix_111_GTROM(void);
-INLINE static void chr_fix_111_GTROM(void);
-INLINE static void mirroring_fix_111_GTROM(void);
+INLINE static void prg_fix_gtrom_111(void);
+INLINE static void chr_fix_gtrom_111(void);
+INLINE static void mirroring_fix_gtrom_111(void);
 
 struct _m111 {
 	BYTE reg;
@@ -56,8 +56,8 @@ void map_init_111(void) {
 		}
 
 		init_MMC1(MMC1B);
-		MMC1_prg_swap = prg_swap_111_MMC1;
-		MMC1_chr_swap = chr_swap_111_MMC1;
+		MMC1_prg_swap = prg_swap_mmc1_111;
+		MMC1_chr_swap = chr_swap_mmc1_111;
 	} else {
 		EXTCL_AFTER_MAPPER_INIT(111_GTROM);
 		EXTCL_MAPPER_QUIT(111_GTROM);
@@ -103,9 +103,9 @@ BYTE extcl_save_mapper_111_MMC1(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void extcl_after_mapper_init_111_GTROM(void) {
-	prg_fix_111_GTROM();
-	chr_fix_111_GTROM();
-	mirroring_fix_111_GTROM();
+	prg_fix_gtrom_111();
+	chr_fix_gtrom_111();
+	mirroring_fix_gtrom_111();
 }
 void extcl_mapper_quit_111_GTROM(void) {
 	if (gtromtmp.sst39sf040) {
@@ -118,9 +118,9 @@ void extcl_cpu_wr_mem_111_GTROM(WORD address, BYTE value) {
 		case 0x5000:
 		case 0x7000:
 			m111.reg = value;
-			prg_fix_111_GTROM();
-			chr_fix_111_GTROM();
-			mirroring_fix_111_GTROM();
+			prg_fix_gtrom_111();
+			chr_fix_gtrom_111();
+			mirroring_fix_gtrom_111();
 			break;
 		case 0x8000:
 		case 0x9000:
@@ -139,9 +139,9 @@ BYTE extcl_cpu_rd_mem_111_GTROM(WORD address, BYTE openbus, UNUSED(BYTE before))
 		case 0x5000:
 		case 0x7000:
 			m111.reg = openbus;
-			prg_fix_111_GTROM();
-			chr_fix_111_GTROM();
-			mirroring_fix_111_GTROM();
+			prg_fix_gtrom_111();
+			chr_fix_gtrom_111();
+			mirroring_fix_gtrom_111();
 			return (m111.reg);
 		case 0x8000:
 		case 0x9000:
@@ -160,7 +160,7 @@ BYTE extcl_save_mapper_111_GTROM(BYTE mode, BYTE slot, FILE *fp) {
 	sst39sf040_save_mapper(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
-		mirroring_fix_111_GTROM();
+		mirroring_fix_gtrom_111();
 	}
 
 	return (EXIT_OK);
@@ -204,21 +204,21 @@ void extcl_battery_io_111_GTROM(BYTE mode, FILE *fp) {
 	}
 }
 
-void prg_swap_111_MMC1(WORD address, WORD value) {
-	prg_swap_MMC1(address, (value & 0x0F));
+void prg_swap_mmc1_111(WORD address, WORD value) {
+	prg_swap_MMC1_base(address, (value & 0x0F));
 }
-void chr_swap_111_MMC1(WORD address, WORD value) {
-	chr_swap_MMC1(address, (value & 0x3F));
+void chr_swap_mmc1_111(WORD address, WORD value) {
+	chr_swap_MMC1_base(address, (value & 0x3F));
 }
 
-INLINE static void prg_fix_111_GTROM(void) {
+INLINE static void prg_fix_gtrom_111(void) {
 	BYTE value = m111.reg & 0x0F;
 
 	control_bank(info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 }
-INLINE static void chr_fix_111_GTROM(void) {
+INLINE static void chr_fix_gtrom_111(void) {
 	DBWORD bank = (m111.reg & 0x10) >> 4;
 
 	_control_bank(bank, info.chr.rom.max.banks_8k)
@@ -232,7 +232,7 @@ INLINE static void chr_fix_111_GTROM(void) {
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
-INLINE static void mirroring_fix_111_GTROM(void) {
+INLINE static void mirroring_fix_gtrom_111(void) {
 	DBWORD bank = 0x02 | ((m111.reg & 0x20) >> 5);
 
 	_control_bank(bank, info.chr.rom.max.banks_8k)
