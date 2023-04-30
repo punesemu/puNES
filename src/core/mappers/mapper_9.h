@@ -16,11 +16,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_4_H_
-#define MAPPER_4_H_
+#ifndef MAPPER_9_H_
+#define MAPPER_9_H_
 
 #include "common.h"
 
-void map_init_4(void);
+void map_init_9(void);
 
-#endif /* MAPPER_4_H_ */
+#endif /* MAPPER_9_H_ */

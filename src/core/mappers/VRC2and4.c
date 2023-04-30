@@ -44,13 +44,13 @@ struct _vrc2and4tmp {
 } vrc2and4tmp;
 
 // promemoria
-void map_init_VRC2and4(void) {
-	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
-	EXTCL_CPU_WR_MEM(VRC2and4);
-	EXTCL_CPU_RD_MEM(VRC2and4); // VRC2
-	EXTCL_SAVE_MAPPER(VRC2and4);
-	EXTCL_CPU_EVERY_CYCLE(VRC2and4); // VRC4
-}
+//void map_init_VRC2and4(void) {
+//	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
+//	EXTCL_CPU_WR_MEM(VRC2and4);
+//	EXTCL_CPU_RD_MEM(VRC2and4); // VRC2
+//	EXTCL_SAVE_MAPPER(VRC2and4);
+//	EXTCL_CPU_EVERY_CYCLE(VRC2and4); // VRC4
+//}
 
 void extcl_after_mapper_init_VRC2and4(void) {
 	if (vrc2and4tmp.type == VRC24_VRC2) {

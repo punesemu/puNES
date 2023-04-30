@@ -94,8 +94,10 @@ BYTE map_init(void) {
 			map_init_FFESMC();
 			break;
 		case 9:
+			map_init_9();
+			break;
 		case 10:
-			map_init_MMC2and4();
+			map_init_10();
 			break;
 		case 11:
 			map_init_ColorDreams();
@@ -150,23 +152,6 @@ BYTE map_init(void) {
 			break;
 		case 23:
 			map_init_23();
-//			if ((info.crc32.total == 0xE07163D9) || // Akumajou Special - Boku Dracula-kun (J) [b2].nes
-//				(info.crc32.total == 0xC6D62814)) { // Akumajou Special - Boku Dracula-kun (J) [p1][t1].nes
-//				info.mapper.submapper = VRC2B;
-//			} else if (info.crc32.total == 0xE2D14080) { // Akumajou Special - Boku Dracula-kun (J) [p1][t1][b1].nes
-//				info.mapper.submapper = VRC4UNL;
-//			}
-//			if (info.mapper.submapper == VRC4BMC) {
-//				map_init_VRC4BMC();
-//			} else if (info.mapper.submapper == VRC4T230) {
-//				map_init_VRC4T230();
-//			} else if (info.mapper.submapper == VRC4E) {
-//				map_init_VRC4(VRC4E);
-//			} else if (info.mapper.submapper == VRC4UNL) {
-//				map_init_VRC4(VRC4UNL);
-//			} else {
-//				map_init_VRC2(VRC2B, 0x0F);
-//			}
 			break;
 		case 24:
 			map_init_VRC6(VRC6A);

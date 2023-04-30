@@ -73,11 +73,11 @@ void chr_swap_mmc1_446(WORD address, WORD value);
 void prg_swap_mmc3_446(WORD address, WORD value);
 void chr_swap_mmc3_446(WORD address, WORD value);
 
-void prg_swap_446_tlsrom(WORD address, WORD value);
-void chr_swap_446_tlsrom(WORD address, WORD value);
+void prg_swap_mmc3_tlsrom_446(WORD address, WORD value);
+void chr_swap_mmc3_tlsrom_446(WORD address, WORD value);
 
-void prg_swap_446_189(WORD address, WORD value);
-void chr_swap_446_189(WORD address, WORD value);
+void prg_swap_mmc3_m189_446(WORD address, WORD value);
+void chr_swap_mmc3_m189_446(WORD address, WORD value);
 
 enum _m116_mappers {
 	M446_UNROM,
@@ -365,13 +365,13 @@ INLINE static void switch_mode(void) {
 				break;
 			case M446_TLSROM:
 				init_MMC3();
-				MMC3_prg_swap = prg_swap_446_tlsrom;
-				MMC3_chr_swap = chr_swap_446_tlsrom;
+				MMC3_prg_swap = prg_swap_mmc3_tlsrom_446;
+				MMC3_chr_swap = chr_swap_mmc3_tlsrom_446;
 				break;
 			case M446_189:
 				init_MMC3();
-				MMC3_prg_swap = prg_swap_446_189;
-				MMC3_chr_swap = chr_swap_446_189;
+				MMC3_prg_swap = prg_swap_mmc3_m189_446;
+				MMC3_chr_swap = chr_swap_mmc3_m189_446;
 				break;
 			case M446_VRC2_22:
 				break;
@@ -788,26 +788,26 @@ void chr_swap_mmc3_446(WORD address, WORD value) {
 	chr_swap_MMC3_base(address, (base | (value & mask)));
 }
 
-void prg_swap_446_tlsrom(WORD address, WORD value) {
+void prg_swap_mmc3_tlsrom_446(WORD address, WORD value) {
 	WORD base = prg_base();
 	WORD mask = prg_mask();
 
 	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
-void chr_swap_446_tlsrom(WORD address, WORD value) {
+void chr_swap_mmc3_tlsrom_446(WORD address, WORD value) {
 	WORD base = chr_base();
 	WORD mask = 0x7F;
 
 	chr_swap_MMC3_base(address, (base | (value & mask)));
 }
 
-void prg_swap_446_189(WORD address, UNUSED(WORD value)) {
+void prg_swap_mmc3_m189_446(WORD address, UNUSED(WORD value)) {
 	const WORD slot = (address >> 13) & 0x03;
 	WORD base = prg_base() & ~3;
 
 	prg_swap_MMC3_base(address, (base | ((m446.reg189 & 0x03) << 2) | slot));
 }
-void chr_swap_446_189(WORD address, WORD value) {
+void chr_swap_mmc3_m189_446(WORD address, WORD value) {
 	WORD base = chr_base();
 	WORD mask = 0xFF;
 

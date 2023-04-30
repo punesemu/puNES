@@ -16,11 +16,31 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_4_H_
-#define MAPPER_4_H_
+#include "mappers.h"
+#include "info.h"
 
-#include "common.h"
+void prg_swap_mmc2_9(WORD address, WORD value);
+void chr_swap_mmc2_9(WORD address, WORD value);
 
-void map_init_4(void);
+void map_init_9(void) {
+	EXTCL_AFTER_MAPPER_INIT(MMC2);
+	EXTCL_CPU_WR_MEM(MMC2);
+	EXTCL_SAVE_MAPPER(MMC2);
+	EXTCL_AFTER_RD_CHR(MMC2);
+	EXTCL_UPDATE_R2006(MMC2);
+	mapper.internal_struct[0] = (BYTE *)&mmc2;
+	mapper.internal_struct_size[0] = sizeof(mmc2);
 
-#endif /* MAPPER_4_H_ */
+	if (info.reset >= HARD) {
+		init_MMC2();
+		MMC2_prg_swap = prg_swap_mmc2_9;
+		MMC2_chr_swap = chr_swap_mmc2_9;
+	}
+}
+
+void prg_swap_mmc2_9(WORD address, WORD value) {
+	prg_swap_MMC2_base(address, (value & 0x0F));
+}
+void chr_swap_mmc2_9(WORD address, WORD value) {
+	chr_swap_MMC2_base(address, (value & 0x1F));
+}

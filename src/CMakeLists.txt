@@ -91,6 +91,8 @@ set(core_srcs
 	core/mappers/mapper_0.c
 	core/mappers/mapper_1.c
 	core/mappers/mapper_4.c
+	core/mappers/mapper_9.c
+	core/mappers/mapper_10.c
 	core/mappers/mapper_14.c
 	core/mappers/mapper_15.c
 	core/mappers/mapper_21.c
@@ -385,7 +387,6 @@ set(core_srcs
 	core/mappers/mapper_LH51.c
 	core/mappers/mapper_Magic.c
 	core/mappers/mapper_Malee.c
-	core/mappers/mapper_MMC2andMMC4.c
 	core/mappers/mapper_MMC3_old.c
 	core/mappers/mapper_MMC5.c
 	core/mappers/mapper_N118.c
@@ -420,7 +421,9 @@ set(core_srcs
 	core/mappers/OneBus.c
 	core/mappers/opll.c
 	core/mappers/MMC1.c
+	core/mappers/MMC2.c
 	core/mappers/MMC3.c
+	core/mappers/MMC4.c
 	core/mappers/serial_devices.cpp
 	core/mappers/serial_devices_interface.cpp
 	core/mappers/SST39SF040.c

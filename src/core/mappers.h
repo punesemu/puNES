@@ -27,6 +27,8 @@
 #include "mappers/mapper_0.h"
 #include "mappers/mapper_1.h"
 #include "mappers/mapper_4.h"
+#include "mappers/mapper_9.h"
+#include "mappers/mapper_10.h"
 #include "mappers/mapper_14.h"
 #include "mappers/mapper_15.h"
 #include "mappers/mapper_21.h"
@@ -279,7 +281,6 @@
 #include "mappers/mapper_JYASIC.h"
 #include "mappers/mapper_Kaiser.h"
 #include "mappers/mapper_Magic.h"
-#include "mappers/mapper_MMC2andMMC4.h"
 #include "mappers/mapper_MMC3_old.h"
 #include "mappers/mapper_MMC5.h"
 #include "mappers/mapper_N118.h"
@@ -354,7 +355,9 @@
 #include "mappers/mapper_YOKO.h"
 
 #include "mappers/MMC1.h"
+#include "mappers/MMC2.h"
 #include "mappers/MMC3.h"
+#include "mappers/MMC4.h"
 #include "mappers/VRC2and4.h"
 
 #define _control_bank(val, max)	if ((val) > (max)) (val) &= (max);

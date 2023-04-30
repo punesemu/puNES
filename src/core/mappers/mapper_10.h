@@ -16,18 +16,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_MMC2ANDMMC4_H_
-#define MAPPER_MMC2ANDMMC4_H_
+#ifndef MAPPER_10_H_
+#define MAPPER_10_H_
 
 #include "common.h"
 
-/* MMC4 */
-enum { BAD_INES_FWJ };
+void map_init_10(void);
 
-void map_init_MMC2and4(void);
-void extcl_cpu_wr_mem_MMC2and4(WORD address, BYTE value);
-BYTE extcl_save_mapper_MMC2and4(BYTE mode, BYTE slot, FILE *fp);
-void extcl_after_rd_chr_MMC2and4(WORD address);
-void extcl_update_r2006_MMC2and4(WORD new_r2006, WORD old_r2006);
-
-#endif /* MAPPER_MMC2ANDMMC4_H_ */
+#endif /* MAPPER_10_H_ */
