@@ -34,9 +34,9 @@
 
 enum blbuf_misc { master_vol = 65536 / 15 };
 
-#define _ch_gain(index, f) ((double)(f * cfg->apu.volume[index]))
+#define _ch_gain(index, f) ((double)((f) * cfg->apu.volume[index]))
 #define ch_gain_ptnd(index) _ch_gain(index, 1.0f)
-#define _ch_gain_ext(f) (master_vol * ((double)(f * cfg->apu.volume[APU_EXTRA])) / 100)
+#define _ch_gain_ext(f) (master_vol * ((double)((f) * cfg->apu.volume[APU_EXTRA])) / 100)
 #define ch_gain_ext(out, f) (extra_out(out) * _ch_gain_ext(f))
 
 #define _update_tick_blbuf(type, restart)\
@@ -108,7 +108,8 @@ BYTE audio_init_blipbuf(void) {
 
 	init_nla_table(500, 500)
 
-	if (!(blipbuf.samples.data = (SWORD *)malloc(snd.samplerate))) {
+	blipbuf.samples.data = (SWORD *)malloc(snd.samplerate);
+	if (!blipbuf.samples.data) {
 		return (EXIT_ERROR);
 	}
 
@@ -243,7 +244,7 @@ void audio_end_frame_blipbuf(void) {
 	blipbuf.counter = 0;
 
 	{
-		int i;
+		int i = 0;
 
 		blipbuf.samples.count = blip_samples_avail(blipbuf.wave);
 
@@ -327,12 +328,12 @@ static void apu_tick_blipbuf_MMC5(void) {
 	}
 }
 static void apu_tick_blipbuf_Namco_N163(void) {
-	int i;
+	int i = 0;
 
 	blipbuf.output = 0;
 
 	if (++blipbuf.n163.period == blipbuf.n163.min_period) {
-		double gain = 2.5f / (float)(8 - n163.snd.channel_start);
+		double gain = 2.5f / (double)(8 - n163.snd.channel_start);
 
 		if (n163.snd.enabled) {
 			for (i = n163.snd.channel_start; i < 8; i++) {
@@ -356,7 +357,8 @@ static void apu_tick_blipbuf_Sunsoft_FM7(void) {
 static void apu_tick_blipbuf_VRC6(void) {
 	if (vrc6.clocked) {
 		vrc6.clocked = FALSE;
-		blipbuf.output = ch_gain_ext(vrc6.S3.output, 5.0f) + ch_gain_ext(vrc6.S4.output, 5.0f) + ch_gain_ext(vrc6.saw.output, 0.7f);
+		blipbuf.output = ch_gain_ext(vrc6.S3.output, 5.0f) + ch_gain_ext(vrc6.S4.output, 5.0f) +
+			ch_gain_ext(vrc6.saw.output, 0.7f);
 		update_tick_extra_blbuf(vrc6, 1);
 	} else {
 		blipbuf.vrc6.period++;

@@ -98,7 +98,9 @@ set(core_srcs
 	core/mappers/mapper_021.c
 	core/mappers/mapper_022.c
 	core/mappers/mapper_023.c
+	core/mappers/mapper_024.c
 	core/mappers/mapper_025.c
+	core/mappers/mapper_026.c
 	core/mappers/mapper_028.c
 	core/mappers/mapper_029.c
 	core/mappers/mapper_031.c
@@ -412,7 +414,6 @@ set(core_srcs
 	core/mappers/mapper_UxROM.c
 	core/mappers/mapper_VRC1.c
 	core/mappers/mapper_VRC3.c
-	core/mappers/mapper_VRC6.c
 	core/mappers/mapper_VRC7.c
 	core/mappers/mapper_VRC7_snd.c
 	core/mappers/mapper_Vs.c
@@ -428,6 +429,7 @@ set(core_srcs
 	core/mappers/serial_devices_interface.cpp
 	core/mappers/SST39SF040.c
 	core/mappers/VRC2and4.c
+	core/mappers/VRC6.c
 
 	core/apu.c
 	core/bck_states.c

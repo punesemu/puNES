@@ -21,8 +21,6 @@
 
 #include "common.h"
 
-enum { VRC6A, VRC6B };
-
 typedef struct _vrc6_square {
 	BYTE enabled;
 	BYTE duty;
@@ -43,17 +41,20 @@ typedef struct _vrc6_saw {
 	SWORD output;
 } _vrc6_saw;
 typedef struct _vrc6 {
-	BYTE enabled;
-	BYTE reload;
-	BYTE mode;
-	BYTE acknowledge;
-	BYTE count;
-	BYTE delay;
-	BYTE b003;
-	BYTE chr_map[8];
-	WORD prescaler;
+	BYTE reg;
+	WORD prg[2];
+	WORD chr[8];
 	_vrc6_square S3, S4;
 	_vrc6_saw saw;
+	struct _vrc6_irq {
+		BYTE enabled;
+		BYTE reload;
+		BYTE mode;
+		BYTE acknowledge;
+		BYTE count;
+		BYTE delay;
+		WORD prescaler;
+	} irq;
 
 	/* ------------------------------------------------------- */
 	/* questi valori non e' necessario salvarli nei savestates */
@@ -64,11 +65,28 @@ typedef struct _vrc6 {
 
 extern _vrc6 vrc6;
 
-void map_init_VRC6(BYTE revision);
-void map_init_NSF_VRC6(BYTE revision);
+void extcl_after_mapper_init_VRC6(void);
 void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value);
 BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_VRC6(void);
 void extcl_apu_tick_VRC6(void);
+
+void init_NSF_VRC6(WORD A0, WORD A1);
+void init_VRC6(WORD A0, WORD A1);
+void prg_fix_VRC6_base(void);
+void prg_swap_VRC6_base(WORD address, WORD value);
+void chr_fix_VRC6_base(void);
+void chr_swap_VRC6_base(WORD address, WORD value);
+void wram_fix_VRC6_base(void);
+void mirroring_fix_VRC6_base(void);
+void nmt_swap_VRC6_base(WORD address, WORD value);
+
+extern void (*VRC6_prg_fix)(void);
+extern void (*VRC6_prg_swap)(WORD address, WORD value);
+extern void (*VRC6_chr_fix)(void);
+extern void (*VRC6_chr_swap)(WORD address, WORD value);
+extern void (*VRC6_wram_fix)(void);
+extern void (*VRC6_mirroring_fix)(void);
+extern void (*VRC6_nmt_swap)(WORD address, WORD value);
 
 #endif /* MAPPER_VRC6_H_ */

@@ -184,12 +184,12 @@ BYTE nsf_load_rom(void) {
 	{
 		static const uTCHAR rom_ext[2][10] = { uL(".nsf\0"), uL(".NSF\0") };
 		BYTE found = TRUE;
-		FILE *fp;
+		FILE *fp = NULL;
 
 		fp = ufopen(info.rom.file, uL("rb"));
 
 		if (!fp) {
-			unsigned int i;
+			unsigned int i = 0;
 
 			found = FALSE;
 
@@ -241,7 +241,7 @@ BYTE nsf_load_rom(void) {
 		(rom.data[rom.position++] == 'S') &&
 		(rom.data[rom.position++] == 'M') &&
 		(rom.data[rom.position++] == '\32')) {
-		BYTE tmp, flags[TOTAL_FL];
+		BYTE tmp = 0, flags[TOTAL_FL];
 		size_t len = rom.size;
 
 		info.format = NSF_FORMAT;
@@ -291,15 +291,16 @@ BYTE nsf_load_rom(void) {
 
 		{
 			char buffer[33];
-			char *auth, **dst = NULL;
+			char *auth = NULL, **dst = NULL;
 
-			if (!(nsf.info.auth = (char *)malloc((32 + 1) * 4))) {
+			nsf.info.auth = (char *)malloc((size_t)((32 + 1) * 4));
+			if (!nsf.info.auth) {
 				log_error(uL("nsf;out of memory"));
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
 
-			memset(nsf.info.auth, 0x00, (32 + 1) * 4);
+			memset(nsf.info.auth, 0x00, (size_t)((32 + 1) * 4));
 
 			auth = nsf.info.auth;
 
@@ -417,7 +418,7 @@ BYTE nsf_load_rom(void) {
 				nsf.prg.banks_4k++;
 			}
 
-			if (map_prg_malloc(nsf.prg.banks_4k * 0x1000, 0xF2, TRUE) == EXIT_ERROR) {
+			if (map_prg_malloc((size_t)(nsf.prg.banks_4k * 0x1000), 0xF2, TRUE) == EXIT_ERROR) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
@@ -488,7 +489,7 @@ void nsf_after_load_rom(void) {
 	nsf_text_curtain_add_line(&nsf.curtain_info, "or use the mouse [lmouse]");
 }
 void nsf_init_tune(void) {
-	WORD i;
+	WORD i = 0;
 
 	nsf.made_tick = FALSE;
 
@@ -498,7 +499,7 @@ void nsf_init_tune(void) {
 	memset(prg.ram.data, 0x00, prg.ram.size);
 
 	if (nsf.sound_chips.vrc6) {
-		map_init_NSF_VRC6(VRC6A);
+		init_NSF_VRC6(0x01, 0x02);
 	}
 	if (nsf.sound_chips.vrc7) {
 		map_init_NSF_VRC7(VRC7A);
@@ -569,7 +570,7 @@ void nsf_tick(void) {
 void extcl_audio_samples_mod_nsf(SWORD *samples, int count) {
 	double now = gui_get_ms();
 	BYTE silence = TRUE;
-	int i;
+	int i = 0;
 
 	nsf.timers.diff = (now - nsf.timers.last_tick);
 
@@ -588,7 +589,7 @@ void extcl_audio_samples_mod_nsf(SWORD *samples, int count) {
 			if (nsf.timers.song > (nsf.current_song.time - nsf.current_song.fade)) {
 				nsf.timers.fadeout += nsf.timers.diff;
 				if (cfg->nsf_player_nsfe_fadeout) {
-					double divider;
+					double divider = 0;
 
 					divider = 1.0f - ((1.0f / 100.f) *
 						(100.0f - ((100.0f / (double)nsf.current_song.fade) *
@@ -619,7 +620,7 @@ void extcl_audio_samples_mod_nsf(SWORD *samples, int count) {
 }
 
 void nsf_reset_prg(void) {
-	DBWORD i;
+	DBWORD i = 0;
 
 	if (nsf.bankswitch.enabled) {
 		if (nsf.sound_chips.fds) {
@@ -631,7 +632,7 @@ void nsf_reset_prg(void) {
 			cpu_wr_mem(i, nsf.bankswitch.banks[i & 0x07]);
 		}
 	} else {
-		BYTE value, bank = 0;
+		BYTE value = 0, bank = 0;
 
 		nsf.bankswitch.enabled = TRUE;
 
@@ -754,9 +755,9 @@ void nsf_main_screen_event(void) {
 }
 
 void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
-	int x, y, w, h, wc;
+	int x = 0, y = 0, w = 0, h = 0, wc = 0;
 
-#define nsf_c_x1(ctr) (x + 2 + (wc * ctr))
+#define nsf_c_x1(ctr) (x + 2 + (wc * (ctr)))
 #define nsf_c_x2(ctr) (nsf_c_x1(ctr) + (wc - 1))
 #define nsf_c_y1(ctr) (y + 2)
 #define nsf_c_y2(ctr) (nsf_c_y1(ctr) + (h - 2 - 1))
@@ -954,7 +955,7 @@ static void nsf_effect_set_coords(_nsf_effect_coords *coords, int x, int y, int 
 	coords->y_center = coords->y1 + (coords->h / 2);
 }
 static void nsf_effect_raw(BYTE solid) {
-	int x, y, count, len, y_last = nsf.effect_coords.y_center;
+	int x = 0, y = 0, count = 0, len = 0, y_last = nsf.effect_coords.y_center;
 	SWORD *buffer = NULL;
 
 	if (nsf.timers.effect <= NSF_TIME_EFFECT_UPDATE) {
@@ -976,7 +977,7 @@ static void nsf_effect_raw(BYTE solid) {
 	}
 
 	for (x = nsf.effect_coords.x1, count = 0; x <= nsf.effect_coords.x2; x++, count++) {
-		int a, b;
+		int a = 0, b = 0;
 
 		if (!buffer || !len) {
 			y = nsf.effect_coords.y_center;
@@ -1012,7 +1013,7 @@ static void nsf_effect_raw(BYTE solid) {
 	}
 }
 static void nsf_effect_hanning_window(BYTE solid) {
-	int x, y, count, len, y_last = nsf.effect_coords.y_center;
+	int x = 0, y = 0, count = 0, len = 0, y_last = nsf.effect_coords.y_center;
 	SWORD *buffer = NULL;
 	double multiplier;
 
@@ -1035,7 +1036,7 @@ static void nsf_effect_hanning_window(BYTE solid) {
 	}
 
 	for (x = nsf.effect_coords.x1, count = 0; x <= nsf.effect_coords.x2; x++, count++) {
-		int a, b;
+		int a = 0, b = 0;
 
 		if (!buffer || !len) {
 			y = nsf.effect_coords.y_center;
@@ -1073,7 +1074,7 @@ static void nsf_effect_hanning_window(BYTE solid) {
 	}
 }
 static void nsf_effect_bars(void) {
-	int x, y, count, len, y_last = nsf.effect_bars_coords.y2 - 5;
+	int x = 0, y = 0, count = 0, len = 0, y_last = nsf.effect_bars_coords.y2 - 5;
 	double bars = cfg->nsf_player_effect == NSF_EFFECT_BARS ? NSF_GUI_EFFECT_BARS : NSF_GUI_EFFECT_BARS * 2.0f;
 	double bar[(int)bars];
 	SWORD *buffer = NULL;
@@ -1102,7 +1103,7 @@ static void nsf_effect_bars(void) {
 		}
 	} else {
 		kiss_fft_cpx fft_in[len], fft_out[len];
-		kiss_fft_cfg fft_cfg;
+		kiss_fft_cfg fft_cfg = NULL;
 
 		for (count = 0; count < len; count++) {
 			if (cfg->nsf_player_effect == NSF_EFFECT_BARS_MIXED) {
@@ -1117,7 +1118,8 @@ static void nsf_effect_bars(void) {
 			bar[count] = 0;
 		}
 
-		if ((fft_cfg = kiss_fft_alloc(len, 0, NULL, NULL)) != NULL) {
+		fft_cfg = kiss_fft_alloc(len, 0, NULL, NULL);
+		if (fft_cfg) {
 			int index = (int)(bars / 2.0f), last_index = 999;
 
 			kiss_fft(fft_cfg, fft_in, fft_out);
@@ -1125,8 +1127,8 @@ static void nsf_effect_bars(void) {
 
 			for (count = 0; count <= (len / 2); count++) {
 				const double band_width = ((float)len / 2.0f) / bars, multiplier = 0.17f;
-				double magnitude, amplitude;
-				int tmp;
+				double magnitude = 0, amplitude = 0;
+				int tmp = 0;
 
 				tmp = (int)((double)count / band_width);
 
@@ -1164,7 +1166,7 @@ static void nsf_effect_bars(void) {
 	}
 
 	for (count = 0; count < bars; count++) {
-		int a, b, x1, x2;
+		int a = 0, b = 0, x1 = 0, x2 = 0;
 		double value = (bar[count] * 16383.0f) / (16384.0f / (double)(nsf.effect_bars_coords.h - 5));
 
 		y = (BYTE)((nsf.effect_bars_coords.y2 - 5) - (value * (cfg->apu.channel[APU_MASTER] * cfg->apu.volume[APU_MASTER])));
@@ -1262,7 +1264,7 @@ static void nsf_change_current_song(unsigned int mode) {
 			}
 		}
 		if (nsf.playlist.count > 0) {
-			unsigned int i;
+			unsigned int i = 0;
 
 			for (i = 0; i < nsf.playlist.count; i++) {
 				if (nsf.playlist.data[i] == nsf.songs.current) {
@@ -1278,7 +1280,7 @@ static void nsf_change_current_song(unsigned int mode) {
 	}
 }
 static void nsf_draw_controls(void) {
-	int i, x, y, w, h, wc;
+	int i = 0, x = 0, y = 0, w = 0, h = 0, wc = 0;
 
 	// titolo nsf - artista - copyright
 	{
@@ -1315,9 +1317,9 @@ static void nsf_draw_controls(void) {
 		}
 
 #define nsf_dc_box_ctrl(ctr, color, str)\
-	dos_box(x + 2 + (wc * ctr), y + 2, wc - 1, h - 2 -1,\
+	dos_box(x + 2 + (wc * (ctr)), y + 2, wc - 1, h - 2 -1,\
 		doscolor(color), doscolor(color), doscolor(color));\
-	dos_text(x + 1 + (wc * ctr) + ((wc - 8) / 2), y + ((h - 8) / 2), str)
+	dos_text(x + 1 + (wc * (ctr)) + ((wc - 8) / 2), y + ((h - 8) / 2), str)
 
 		if (port[PORT1].data[LEFT] == PRESSED) {
 			nsf_dc_box_ctrl(NSF_GUI_COMMANDS_PREV, DOS_GRAY, "[bck][gray][brown][prev]")
@@ -1702,7 +1704,7 @@ static char *nsf_print_color(int color) {
 }
 static char *nsf_print_number(unsigned int song, BYTE decimal, int color) {
 	static char cbuff[30];
-	BYTE ibuff[3], i, is_normal = FALSE;
+	BYTE ibuff[3], i = 0, is_normal = FALSE;
 
 	ibuff[0] =  song / 100;
 	ibuff[1] = (song - (ibuff[0] * 100)) / 10;
@@ -1727,8 +1729,8 @@ static char *nsf_print_number(unsigned int song, BYTE decimal, int color) {
 static char *nsf_print_time(double timer, BYTE mode, int color) {
 	BYTE is_normal = FALSE;
 	static char buff[300];
-	unsigned int i;
-	int tmp;
+	unsigned int i = 0;
+	int tmp = 0;
 
 	for (i = 0; i < 4; i++) {
 		BYTE is_last = FALSE;
@@ -1793,7 +1795,7 @@ static char *nsf_print_time(double timer, BYTE mode, int color) {
 	return (buff);
 }
 static void nsf_print_option(_nsf_option_data *option, BYTE active, BYTE mode) {
-	int xbox, xtext;
+	int xbox = 0, xtext = 0;
 
 	if (option->x1 < 0) {
 		if (option->direction) {
@@ -1834,7 +1836,7 @@ static void nsf_print_option(_nsf_option_data *option, BYTE active, BYTE mode) {
 }
 static void nsf_text_scroll_set_buffer(_nsf_text_scroll *scroll, const char *fmt, ...) {
 	va_list ap;
-	size_t len;
+	size_t len = 0;
 
 	memset(scroll->buffer, 0x20, sizeof(scroll->buffer));
 	scroll->buffer[sizeof(scroll->buffer) - 1] = 0x00;
@@ -1850,7 +1852,7 @@ static void nsf_text_scroll_set_buffer(_nsf_text_scroll *scroll, const char *fmt
 }
 static void nsf_text_scroll_tick(_nsf_text_scroll *scroll) {
 	if ((dos_strlen(scroll->buffer) > 0) && (scroll->timer <= 0)) {
-		int margin, start, row, tmp, tag;
+		int margin = 0, start = 0, row = 0, tmp = 0, tag = 0;
 		int count = 0, bindex = 0, sindex = 0;
 
 		scroll->timer = scroll->reload;
@@ -1931,7 +1933,7 @@ static void nsf_text_curtain(_nsf_text_curtain *curtain, BYTE mode) {
 		}
 	} else if (mode == NSF_TEXT_CURTAIN_QUIT) {
 		if (curtain->line) {
-			int i;
+			int i = 0;
 
 			for (i = 0; i < curtain->count; i++) {
 				if (curtain->line[i].text) {
@@ -1945,10 +1947,10 @@ static void nsf_text_curtain(_nsf_text_curtain *curtain, BYTE mode) {
 }
 static void nsf_text_curtain_add_line(_nsf_text_curtain *curtain, const char *fmt, ...) {
 	va_list ap;
-	char buffer[1024], *start;
-	int length, count, index, tmp, tag;
+	char buffer[1024], *start = NULL;
+	int length = 0, count = 0, index = 0, tmp = 0, tag = 0;
 	unsigned int i = 0;
-	_nsf_text_curtain_line *line;
+	_nsf_text_curtain_line *line = NULL;
 
 	va_start(ap, fmt);
 	vsnprintf(buffer, sizeof(buffer), fmt, ap);
@@ -1956,8 +1958,8 @@ static void nsf_text_curtain_add_line(_nsf_text_curtain *curtain, const char *fm
 
 	count = (dos_strlen(buffer) / curtain->rows) + 1;
 	start = buffer;
-
-	if ((line = realloc(curtain->line, (curtain->count + count) * sizeof(_nsf_text_curtain_line)))) {
+	line = realloc(curtain->line, (curtain->count + count) * sizeof(_nsf_text_curtain_line));
+	if (line) {
 		curtain->line = line;
 
 		for (index = curtain->count; index < (curtain->count + count); index++) {

@@ -16,13 +16,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "nsf.h"
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
 #include "fds.h"
-#include "cpu.h"
 #include "clock.h"
 #include "save_slot.h"
 #include "gui.h"
@@ -83,9 +81,9 @@ void map_init_NSF(void) {
 	nsf.draw_mask_frames = 2;
 
 	if (machine.type == NTSC) {
-		nsf.rate.reload = machine.cpu_hz / (1000000.0f / (double)nsf.play_speed.ntsc);
+		nsf.rate.reload = (DBWORD)(machine.cpu_hz / (1000000.0f / (double)nsf.play_speed.ntsc));
 	} else {
-		nsf.rate.reload = machine.cpu_hz / (1000000.0f / (double)nsf.play_speed.pal);
+		nsf.rate.reload = (DBWORD)(machine.cpu_hz / (1000000.0f / (double)nsf.play_speed.pal));
 	}
 
 	nsf.rate.count = nsf.rate.reload;
@@ -95,7 +93,7 @@ void map_init_NSF(void) {
 		mapper.internal_struct_size[internal_struct] = sizeof(vrc6);
 		internal_struct++;
 
-		map_init_NSF_VRC6(VRC6A);
+		init_NSF_VRC6(0x01, 0x02);
 	}
 	if (nsf.sound_chips.vrc7) {
 		mapper.internal_struct[internal_struct] = (BYTE *)&vrc7;
@@ -136,7 +134,7 @@ void map_init_NSF(void) {
 	nsf_main_screen();
 }
 BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
-	BYTE i;
+	int i = 0;
 
 	save_slot_ele(mode, slot, nsf.type);
 	save_slot_ele(mode, slot, nsf.state);
@@ -147,14 +145,14 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 
 	save_slot_ele(mode, slot, nsf.songs.current);
 
-	for (i = 0; i < LENGTH(nsf.prg.rom_4k); i++) {
+	for (i = 0; i < (int)LENGTH(nsf.prg.rom_4k); i++) {
 		if (nsf.sound_chips.fds) {
 			save_slot_pos(mode, slot, prg.ram.data, nsf.prg.rom_4k[i]);
 		} else {
 			save_slot_pos(mode, slot, prg_rom(), nsf.prg.rom_4k[i]);
 		}
 	}
-	for (i = 0; i < LENGTH(nsf.prg.rom_4k_6xxx); i++) {
+	for (i = 0; i < (int)LENGTH(nsf.prg.rom_4k_6xxx); i++) {
 		if (nsf.sound_chips.fds) {
 			save_slot_pos(mode, slot, prg.ram.data, nsf.prg.rom_4k_6xxx[i]);
 		} else {

@@ -24,6 +24,7 @@
 #include "unif.h"
 #include "mappers/mapper_NSF.h"
 // INES/NES2.0
+
 #include "mappers/mapper_000.h"
 #include "mappers/mapper_001.h"
 #include "mappers/mapper_004.h"
@@ -34,7 +35,9 @@
 #include "mappers/mapper_021.h"
 #include "mappers/mapper_022.h"
 #include "mappers/mapper_023.h"
+#include "mappers/mapper_024.h"
 #include "mappers/mapper_025.h"
+#include "mappers/mapper_026.h"
 #include "mappers/mapper_028.h"
 #include "mappers/mapper_029.h"
 #include "mappers/mapper_031.h"
@@ -298,7 +301,6 @@
 #include "mappers/mapper_UxROM.h"
 #include "mappers/mapper_VRC1.h"
 #include "mappers/mapper_VRC3.h"
-#include "mappers/mapper_VRC6.h"
 #include "mappers/mapper_VRC7.h"
 #include "mappers/mapper_Vs.h"
 // UNIF
@@ -359,6 +361,7 @@
 #include "mappers/MMC3.h"
 #include "mappers/MMC4.h"
 #include "mappers/VRC2and4.h"
+#include "mappers/VRC6.h"
 
 #define _control_bank(val, max)	if ((val) > (max)) (val) &= (max);
 #define control_bank(max) _control_bank(value, max)

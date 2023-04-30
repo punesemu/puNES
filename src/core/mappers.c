@@ -154,13 +154,13 @@ BYTE map_init(void) {
 			map_init_023();
 			break;
 		case 24:
-			map_init_VRC6(VRC6A);
+			map_init_024();
 			break;
 		case 25:
 			map_init_025();
 			break;
 		case 26:
-			map_init_VRC6(VRC6B);
+			map_init_026();
 			break;
 		case 27:
 			map_init_CC_21();

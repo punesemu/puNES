@@ -19,7 +19,7 @@ Changelog:
   * Windows - directory where the executable is placed.
   if you want to use a more updated version than the one distributed by the emulator, just copy it either in the executable directory or in the working directory of the emulator, which can also be opened from the "File -> Open working directory" menu.
 - Rewritten WRAM management.
-- Rewritten mappers MMC1, MMC2, MMC3, MMC4, VRC2 and VRC4 with all their derivatives.
+- Rewritten mappers MMC1, MMC2, MMC3, MMC4, VRC2, VRC4 and VRC6 with all their derivatives.
 - Rewritten the format and management of save states.
   WARNING save states of version 0.110 or earlier are no longer compatible.
 
