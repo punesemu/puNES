@@ -55,10 +55,10 @@ BYTE map_init(void) {
 
 	switch (info.mapper.id) {
 		case 0:
-			map_init_0();
+			map_init_000();
 			break;
 		case 1:
-			map_init_1();
+			map_init_001();
 			break;
 		case 2:
 			if (info.mapper.submapper == UNLROM) {
@@ -78,7 +78,7 @@ BYTE map_init(void) {
 			if (info.mapper.submapper == MMC3_T9552) {
 				map_init_249();
 			} else {
-				map_init_4();
+				map_init_004();
 			}
 			break;
 		case 5:
@@ -94,10 +94,10 @@ BYTE map_init(void) {
 			map_init_FFESMC();
 			break;
 		case 9:
-			map_init_9();
+			map_init_009();
 			break;
 		case 10:
-			map_init_10();
+			map_init_010();
 			break;
 		case 11:
 			map_init_ColorDreams();
@@ -113,10 +113,10 @@ BYTE map_init(void) {
 			map_init_CPROM();
 			break;
 		case 14:
-			map_init_14();
+			map_init_014();
 			break;
 		case 15:
-			map_init_15();
+			map_init_015();
 			break;
 		case 16: {
 			switch (info.mapper.submapper) {
@@ -145,19 +145,19 @@ BYTE map_init(void) {
 		// 	mapper 20 e' l'FDS
 		//	break;
 		case 21:
-			map_init_21();
+			map_init_021();
 			break;
 		case 22:
-			map_init_22();
+			map_init_022();
 			break;
 		case 23:
-			map_init_23();
+			map_init_023();
 			break;
 		case 24:
 			map_init_VRC6(VRC6A);
 			break;
 		case 25:
-			map_init_25();
+			map_init_025();
 			break;
 		case 26:
 			map_init_VRC6(VRC6B);
@@ -166,16 +166,16 @@ BYTE map_init(void) {
 			map_init_CC_21();
 			break;
 		case 28:
-			map_init_28();
+			map_init_028();
 			break;
 		case 29:
-			map_init_29();
+			map_init_029();
 			break;
 		case 30:
 			map_init_UxROM(UNROM512);
 			break;
 		case 31:
-			map_init_31();
+			map_init_031();
 			break;
 		case 32:
 			map_init_Irem(G101);
@@ -190,55 +190,55 @@ BYTE map_init(void) {
 			map_init_SC_127();
 			break;
 		case 36:
-			map_init_36();
+			map_init_036();
 			break;
 		case 37:
-			map_init_37();
+			map_init_037();
 			break;
 		case 38:
-			map_init_38();
+			map_init_038();
 			break;
 		case 40:
-			map_init_40();
+			map_init_040();
 			break;
 		case 41:
 			map_init_Caltron();
 			break;
 		case 42:
-			map_init_42();
+			map_init_042();
 			break;
 		case 43:
-			map_init_43();
+			map_init_043();
 			break;
 		case 44:
-			map_init_44();
+			map_init_044();
 			break;
 		case 45:
-			map_init_45();
+			map_init_045();
 			break;
 		case 46:
-			map_init_46();
+			map_init_046();
 			break;
 		case 47:
-			map_init_47();
+			map_init_047();
 			break;
 		case 48:
 			map_init_Taito(TC0690);
 			break;
 		case 49:
-			map_init_49();
+			map_init_049();
 			break;
 		case 50:
-			map_init_50();
+			map_init_050();
 			break;
 		case 51:
-			map_init_51();
+			map_init_051();
 			break;
 		case 52:
-			map_init_52();
+			map_init_052();
 			break;
 		case 53:
-			map_init_53();
+			map_init_053();
 			break;
 		case 55:
 			map_init_malee();
@@ -247,25 +247,25 @@ BYTE map_init(void) {
 			map_init_Kaiser(KS202);
 			break;
 		case 57:
-			map_init_57();
+			map_init_057();
 			break;
 		case 58:
-			map_init_58();
+			map_init_058();
 			break;
 		case 59:
-			map_init_59();
+			map_init_059();
 			break;
 		case 60:
-			map_init_60();
+			map_init_060();
 			break;
 		case 61:
-			map_init_61();
+			map_init_061();
 			break;
 		case 62:
-			map_init_62();
+			map_init_062();
 			break;
 		case 63:
-			map_init_63();
+			map_init_063();
 			break;
 		case 64:
 			map_init_Tengen(TRAMBO);
@@ -286,7 +286,7 @@ BYTE map_init(void) {
 			map_init_Sunsoft(FM7);
 			break;
 		case 70:
-			map_init_70();
+			map_init_070();
 			break;
 		case 71:
 			map_init_Camerica();
@@ -298,7 +298,7 @@ BYTE map_init(void) {
 			map_init_VRC3();
 			break;
 		case 74:
-			map_init_74();
+			map_init_074();
 			break;
 		case 75:
 			map_init_VRC1();
@@ -319,13 +319,13 @@ BYTE map_init(void) {
 			map_init_Taito(X1005A);
 			break;
 		case 81:
-			map_init_81();
+			map_init_081();
 			break;
 		case 82:
 			map_init_Taito(X1017);
 			break;
 		case 83:
-			map_init_83();
+			map_init_083();
 			break;
 		case 85:
 			if (info.mapper.submapper == VRC7UNL) {
@@ -352,7 +352,7 @@ BYTE map_init(void) {
 			map_init_JYASIC(MAP90);
 			break;
 		case 91:
-			map_init_91();
+			map_init_091();
 			break;
 		case 92:
 			map_init_Jaleco(JF19);
@@ -509,7 +509,7 @@ BYTE map_init(void) {
 			map_init_Namco(N3453);
 			break;
 		case 155:
-			map_init_1();
+			map_init_001();
 			break;
 		case 156:
 			map_init_156();
@@ -1305,7 +1305,7 @@ BYTE map_init(void) {
 			break;
 		default:
 			gui_overlay_info_append_msg_precompiled(11, NULL);
-			EXTCL_CPU_WR_MEM(0);
+			EXTCL_CPU_WR_MEM(000);
 			info.no_rom = TRUE;
 			info.mapper.supported = FALSE;
 			break;
