@@ -21,31 +21,45 @@
 
 #include "common.h"
 
-enum { VRC7A, VRC7B, VRC7UNL };
+enum { VRC7A = 2, VRC7B = 1 };
 
 typedef struct _vrc7 {
 	BYTE reg;
-	BYTE enabled;
-	BYTE reload;
-	BYTE mode;
-	BYTE acknowledge;
-	BYTE count;
-	BYTE delay;
-	WORD prescaler;
+	WORD prg[3];
+	WORD chr[8];
+	struct _vrc7_irq {
+		BYTE enabled;
+		BYTE reload;
+		BYTE mode;
+		BYTE acknowledge;
+		BYTE count;
+		BYTE delay;
+		WORD prescaler;
+	} irq;
 } _vrc7;
 
 extern _vrc7 vrc7;
 
-void map_init_VRC7(BYTE revision);
-void map_init_NSF_VRC7(BYTE revision);
+void extcl_after_mapper_init_VRC7(void);
 void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value);
 BYTE extcl_save_mapper_VRC7(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_VRC7(void);
 void extcl_apu_tick_VRC7(void);
 
-void map_init_VRC7UNL(void);
-void extcl_cpu_wr_mem_VRC7UNL(WORD address, BYTE value);
-BYTE extcl_save_mapper_VRC7UNL(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_VRC7UNL(void);
+void init_NSF_VRC7(WORD A0, WORD A1);
+void init_VRC7(WORD A0, WORD A1);
+void prg_fix_VRC7_base(void);
+void prg_swap_VRC7_base(WORD address, WORD value);
+void chr_fix_VRC7_base(void);
+void chr_swap_VRC7_base(WORD address, WORD value);
+void wram_fix_VRC7_base(void);
+void mirroring_fix_VRC7_base(void);
+
+extern void (*VRC7_prg_fix)(void);
+extern void (*VRC7_prg_swap)(WORD address, WORD value);
+extern void (*VRC7_chr_fix)(void);
+extern void (*VRC7_chr_swap)(WORD address, WORD value);
+extern void (*VRC7_wram_fix)(void);
+extern void (*VRC7_mirroring_fix)(void);
 
 #endif /* MAPPER_VRC7_H_ */

@@ -82,17 +82,6 @@
 			break;\
 		}\
 	}
-#define fm7_square_tick(sq)\
-	fm7.square[sq].output = 0;\
-	if (--fm7.square[sq].timer == 0) {\
-		fm7.square[sq].step = (fm7.square[sq].step + 1) & 0x1F;\
-		fm7.square[sq].timer = fm7.square[sq].frequency + 1;\
-		fm7.clocked = TRUE;\
-	}\
-	if (!fm7.square[sq].disable) {\
-		/*fm7.square[sq].output = -fm7.square[sq].volume * ((fm7.square[sq].step & 0x10) ? 2 : -2);*/\
-		fm7.square[sq].output = fm7.square[sq].volume * ((fm7.square[sq].step & 0x10) ? 1 : 0);\
-	}
 
 struct _sunsoft3 {
 	BYTE enable;
@@ -105,7 +94,6 @@ struct _sunsoft4 {
 	BYTE mode;
 	BYTE mirroring;
 } s4;
-_sunsoft_fm7 fm7;
 struct _sunsofttmp {
 	BYTE type;
 } sunsofttmp;
@@ -113,10 +101,6 @@ struct _sunsofttmp {
 void map_init_Sunsoft(BYTE model) {
 	switch (model) {
 		default:
-		case SUN1:
-			EXTCL_CPU_WR_MEM(Sunsoft_S1);
-			info.mapper.extend_wr = TRUE;
-			break;
 		case SUN2A:
 		case SUN2B:
 			EXTCL_CPU_WR_MEM(Sunsoft_S2);
@@ -149,65 +133,9 @@ void map_init_Sunsoft(BYTE model) {
 				info.prg.ram.bat.banks = 1;
 			}
 			break;
-		case FM7:
-			EXTCL_CPU_WR_MEM(Sunsoft_FM7);
-			EXTCL_SAVE_MAPPER(Sunsoft_FM7);
-			EXTCL_CPU_EVERY_CYCLE(Sunsoft_FM7);
-			EXTCL_APU_TICK(Sunsoft_FM7);
-			mapper.internal_struct[0] = (BYTE *)&fm7;
-			mapper.internal_struct_size[0] = sizeof(fm7);
-
-			if (info.reset >= HARD) {
-				memset(&fm7, 0x00, sizeof(fm7));
-			}
-
-			//if ((info.id == BARCODEWORLD) || (info.id == DODGEDANPEI2)) {
-			//	info.prg.ram.bat.banks = 1;
-			//}
-
-			fm7.square[0].timer = 1;
-			fm7.square[1].timer = 1;
-			fm7.square[2].timer = 1;
-
-			break;
 	}
 
 	sunsofttmp.type = model;
-}
-void map_init_NSF_Sunsoft(BYTE model) {
-	memset(&fm7, 0x00, sizeof(fm7));
-
-	fm7.square[0].timer = 1;
-	fm7.square[1].timer = 1;
-	fm7.square[2].timer = 1;
-
-	sunsofttmp.type = model;
-}
-
-void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value) {
-	if ((address < 0x6000) || (address > 0x7FFF)) {
-		return;
-	}
-
-	{
-		const BYTE save = value;
-		DBWORD bank = 0;
-
-		control_bank_with_AND(0x0F, info.chr.rom.max.banks_4k)
-		bank = value << 12;
-		chr.bank_1k[0] = chr_pnt(bank);
-		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-
-		value = save >> 4;
-		control_bank(info.chr.rom.max.banks_4k)
-		bank = value << 12;
-		chr.bank_1k[4] = chr_pnt(bank);
-		chr.bank_1k[5] = chr_pnt(bank | 0x0400);
-		chr.bank_1k[6] = chr_pnt(bank | 0x0800);
-		chr.bank_1k[7] = chr_pnt(bank | 0x0C00);
-	}
 }
 
 void extcl_cpu_wr_mem_Sunsoft_S2(UNUSED(WORD address), BYTE value) {
@@ -341,189 +269,4 @@ BYTE extcl_save_mapper_Sunsoft_S4(BYTE mode, BYTE slot, FILE *fp) {
 	}
 
 	return (EXIT_OK);
-}
-
-void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
-	switch (address & 0xE000) {
-		case 0x8000:
-			fm7.address = value;
-			return;
-		case 0xA000: {
-			const BYTE bank = fm7.address & 0x0F;
-
-			switch (bank) {
-				case 0x00:
-				case 0x01:
-				case 0x02:
-				case 0x03:
-				case 0x04:
-				case 0x05:
-				case 0x06:
-				case 0x07:
-					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[bank] = chr_pnt(value << 10);
-					return;
-				case 0x08: {
-					fm7.prg_ram_mode = value & 0x40;
-					fm7.prg_ram_enable = value & 0x80;
-					switch (value & 0xC0) {
-						case 0x00:
-						case 0x80:
-							cpu.prg_ram_rd_active = TRUE;
-							cpu.prg_ram_wr_active = FALSE;
-							control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
-							fm7.prg_ram_address = value << 13;
-							prg.ram_plus_8k = prg_pnt(fm7.prg_ram_address);
-							return;
-						case 0x40:
-						case 0xC0:
-							cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = fm7.prg_ram_enable >> 7;
-							if (info.prg.ram.banks_8k_plus) {
-								control_bank_with_AND(0x3F, (info.prg.ram.banks_8k_plus - 1))
-								fm7.prg_ram_address = (value & 0x3F) << 13;
-								prg.ram_plus_8k = &prg.ram_plus[fm7.prg_ram_address];
-							}
-							return;
-					}
-					return;
-				}
-				case 0x09:
-				case 0x0A:
-				case 0x0B:
-					control_bank(info.prg.rom.max.banks_8k)
-					map_prg_rom_8k(1, (bank & 0x03) - 1, value);
-					map_prg_rom_8k_update();
-					return;
-				case 0x0C:
-					mirroring(value)
-					return;
-				case 0x0D:
-					fm7.irq_enable_trig = value & 0x01;
-					fm7.irq_enable_count = value & 0x80;
-					irq.high &= ~EXT_IRQ;
-					return;
-				case 0x0E:
-					fm7.irq_count = (fm7.irq_count & 0xFF00) | value;
-					return;
-				case 0x0F:
-					fm7.irq_count = (fm7.irq_count & 0x00FF) | (value << 8);
-					return;
-				default:
-					return;
-			}
-			return;
-		}
-		case 0xC000:
-			fm7.snd_reg = value & 0x0F;
-			return;
-		case 0xE000:
-			switch (fm7.snd_reg) {
-				case 0x00:
-				case 0x02:
-				case 0x04: {
-					BYTE index = fm7.snd_reg >> 1;
-
-					fm7.square[index].frequency = (fm7.square[index].frequency & 0x0F00) | value;
-					return;
-				}
-				case 0x01:
-				case 0x03:
-				case 0x05: {
-					BYTE index = fm7.snd_reg >> 1;
-
-					fm7.square[index].frequency = (fm7.square[index].frequency & 0x00FF)
-						| ((value & 0x0F) << 8);
-					return;
-				}
-				case 0x07:
-					fm7.square[0].disable = value & 0x01;
-					fm7.square[1].disable = value & 0x02;
-					fm7.square[2].disable = value & 0x04;
-					return;
-				case 0x08:
-				case 0x09:
-				case 0x0A: {
-					BYTE index = fm7.snd_reg & 0x03;
-
-					fm7.square[index].volume = value & 0x0F;
-					return;
-				}
-			}
-			return;
-	}
-}
-BYTE extcl_save_mapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, fm7.address);
-	save_slot_ele(mode, slot, fm7.prg_ram_enable);
-	save_slot_ele(mode, slot, fm7.prg_ram_mode);
-	save_slot_ele(mode, slot, fm7.prg_ram_address);
-	if ((mode == SAVE_SLOT_READ) && !fm7.prg_ram_mode) {
-		prg.ram_plus_8k = prg_pnt(fm7.prg_ram_address);
-	}
-	save_slot_ele(mode, slot, fm7.irq_enable_trig);
-	save_slot_ele(mode, slot, fm7.irq_enable_count);
-	save_slot_ele(mode, slot, fm7.irq_count);
-	save_slot_ele(mode, slot, fm7.irq_delay);
-
-	/*
-	 * nelle versioni 1 e 2 dei files di save non salvavo
-	 * i dati delle snd square perche' non avevo ancora
-	 * implementato la loro emulazione.
-	 */
-	{
-		int i = 0;
-
-		for (i = 0; i < (int)LENGTH(fm7.square); i++) {
-			save_slot_ele(mode, slot, fm7.square[i].disable);
-			save_slot_ele(mode, slot, fm7.square[i].step);
-			save_slot_ele(mode, slot, fm7.square[i].frequency);
-			save_slot_ele(mode, slot, fm7.square[i].timer);
-			save_slot_ele(mode, slot, fm7.square[i].volume);
-			save_slot_ele(mode, slot, fm7.square[i].output);
-		}
-	}
-
-	return (EXIT_OK);
-}
-void extcl_cpu_every_cycle_Sunsoft_FM7(void) {
-#if defined (OLD_FM7_IRQ_HANDLER)
-	if (fm7.irq_delay && !(--fm7.irq_delay)) {
-		irq.high |= EXT_IRQ;
-	}
-
-	if (!fm7.irq_enable_count) {
-		return;
-	}
-
-	if (!(--fm7.irq_count) && fm7.irq_enable_trig) {
-		fm7.irq_delay = 1;
-	}
-# else
-	/*
-	 * nell'FM7 l'IRQ viene generato quando il contatore passa da 0x0000 a 0xFFFF.
-	 * Nella vecchia gestione utilizzavo il solito delay di un ciclo, ma a quanto pare
-	 * se lo genero quando a 0x0000, proprio per il famigerato delay con cui gira
-	 * l'emulatore compenso il fatto di non generarlo a 0xFFFF. Facendo cosi'
-	 * supero i test M69_P128K_C64K_S8K.nes e M69_P128K_C64K_W8K.nes del set
-	 * holydiverbatman-bin-0.01.7z
-	 */
-
-	/* questo lo lascio solo per i salvataggi effettuati prima della nuova gestione */
-	if (fm7.irq_delay && !(--fm7.irq_delay)) {
-		irq.high |= EXT_IRQ;
-	}
-
-	if (!fm7.irq_enable_count) {
-		return;
-	}
-
-	if (!(--fm7.irq_count) && fm7.irq_enable_trig) {
-		irq.high |= EXT_IRQ;
-	}
-#endif
-}
-void extcl_apu_tick_Sunsoft_FM7(void) {
-	fm7_square_tick(0)
-	fm7_square_tick(1)
-	fm7_square_tick(2)
 }

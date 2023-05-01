@@ -7,7 +7,7 @@ Changelog:
   * Randomize.
 - Rewritten mapper : 19 (#276), 200.
 - Fixed mapper : 30, 42, 45, 69, 95, 111, 154, 226, 242, 344, 406.
-- Added support to mapper : 100, 291, 311, 334, 362, 366, 384, 446, 471.
+- Added support to mapper : 100, 122, 291, 311, 334, 362, 366, 384, 446, 471.
 - Windows x86_64: Update to Qt5 5.15.8 (#279).
 - Fixed map of one keyboard button to multiple controllers (#277).
 - Fixed FDS wavetable pitch (#295).
@@ -19,7 +19,7 @@ Changelog:
   * Windows - directory where the executable is placed.
   if you want to use a more updated version than the one distributed by the emulator, just copy it either in the executable directory or in the working directory of the emulator, which can also be opened from the "File -> Open working directory" menu.
 - Rewritten WRAM management.
-- Rewritten mappers MMC1, MMC2, MMC3, MMC4, VRC2, VRC4 and VRC6 with all their derivatives.
+- Rewritten mappers MMC1, MMC2, MMC3, MMC4, VRC2, VRC4, VRC6, VRC7 and FME7 with all their derivatives.
 - Rewritten the format and management of save states.
   WARNING save states of version 0.110 or earlier are no longer compatible.
 

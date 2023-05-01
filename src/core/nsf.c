@@ -502,7 +502,7 @@ void nsf_init_tune(void) {
 		init_NSF_VRC6(0x01, 0x02);
 	}
 	if (nsf.sound_chips.vrc7) {
-		map_init_NSF_VRC7(VRC7A);
+		init_NSF_VRC7(0x10, 0x20);
 	}
 	if (nsf.sound_chips.fds) {
 		map_init_NSF_FDS();
@@ -514,7 +514,7 @@ void nsf_init_tune(void) {
 		map_init_NSF_Namco(N163);
 	}
 	if (nsf.sound_chips.sunsoft5b) {
-		map_init_NSF_Sunsoft(FM7);
+		init_NSF_FME7();
 	}
 
 	for (i = 0x4000; i <= 0x4013; i++) {

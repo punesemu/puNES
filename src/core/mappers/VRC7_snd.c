@@ -22,7 +22,7 @@
  ***********************************************************************************
  */
 
-#include "mapper_VRC7_snd.h"
+#include "VRC7_snd.h"
 #include "save_slot.h"
 #include "clock.h"
 #include "opll.h"

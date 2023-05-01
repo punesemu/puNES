@@ -38,9 +38,7 @@ struct _vrc2and4tmp {
 	WORD A0;
 	WORD A1;
 	BYTE prg6000_wired;
-	struct _vrc2and4tmp_irq {
-		BYTE repeated;
-	} irq;
+	BYTE irq_repeated;
 } vrc2and4tmp;
 
 // promemoria
@@ -136,7 +134,7 @@ void extcl_cpu_wr_mem_VRC2and4(WORD address, BYTE value) {
 							irq.high &= ~EXT_IRQ;
 							return;
 						case 3:
-							if (vrc2and4tmp.irq.repeated) {
+							if (vrc2and4tmp.irq_repeated) {
 								vrc2and4.irq.enabled = vrc2and4.irq.acknowledge;
 							}
 							irq.high &= ~EXT_IRQ;
@@ -202,19 +200,30 @@ void extcl_cpu_every_cycle_VRC2and4(void) {
 }
 
 void init_VRC2and4(BYTE type, WORD A0, WORD A1, BYTE irq_repeated) {
-	memset(&vrc2and4, 0x00, sizeof(vrc2and4));
+	if (info.reset >= HARD) {
+		memset(&vrc2and4, 0x00, sizeof(vrc2and4));
 
-	vrc2and4.prg[0] = 0;
-	vrc2and4.prg[1] = 1;
+		vrc2and4.prg[0] = 0;
+		vrc2and4.prg[1] = 1;
 
-	vrc2and4.chr[0] = 0;
-	vrc2and4.chr[1] = 1;
-	vrc2and4.chr[2] = 2;
-	vrc2and4.chr[3] = 3;
-	vrc2and4.chr[4] = 4;
-	vrc2and4.chr[5] = 5;
-	vrc2and4.chr[6] = 6;
-	vrc2and4.chr[7] = 7;
+		vrc2and4.chr[0] = 0;
+		vrc2and4.chr[1] = 1;
+		vrc2and4.chr[2] = 2;
+		vrc2and4.chr[3] = 3;
+		vrc2and4.chr[4] = 4;
+		vrc2and4.chr[5] = 5;
+		vrc2and4.chr[6] = 6;
+		vrc2and4.chr[7] = 7;
+	}
+
+	vrc2and4.irq.enabled = 0;
+	vrc2and4.irq.reload = 0;
+	vrc2and4.irq.mode = 0;
+	vrc2and4.irq.acknowledge = 0;
+	vrc2and4.irq.count = 0;
+	vrc2and4.irq.prescaler = 0;
+
+	vrc2and4.wram_protect = ((info.format == NES_2_0) && (info.mapper.submapper != DEFAULT) && (info.mapper.submapper > 1));
 
 	irq.high &= ~EXT_IRQ;
 
@@ -222,9 +231,7 @@ void init_VRC2and4(BYTE type, WORD A0, WORD A1, BYTE irq_repeated) {
 	vrc2and4tmp.A0 = A0;
 	vrc2and4tmp.A1 = A1;
 	vrc2and4tmp.prg6000_wired = FALSE;
-	vrc2and4tmp.irq.repeated = irq_repeated;
-
-	vrc2and4.wram_protect = ((info.format == NES_2_0) && (info.mapper.submapper != DEFAULT) && (info.mapper.submapper > 1));
+	vrc2and4tmp.irq_repeated = irq_repeated;
 
 	VRC2and4_prg_fix = prg_fix_VRC2and4_base;
 	VRC2and4_prg_swap = prg_swap_VRC2and4_base;

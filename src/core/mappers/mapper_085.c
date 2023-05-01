@@ -19,31 +19,36 @@
 #include "mappers.h"
 #include "info.h"
 
-void prg_swap_vrc6_024(WORD address, WORD value);
-void chr_swap_vrc6_024(WORD address, WORD value);
-void nmt_swap_vrc6_024(WORD address, WORD value);
+void prg_swap_vrc7v2_085(WORD address, WORD value);
+void chr_swap_vrc7v2_085(WORD address, WORD value);
 
-void map_init_024(void) {
-	EXTCL_AFTER_MAPPER_INIT(VRC6);
-	EXTCL_CPU_WR_MEM(VRC6);
-	EXTCL_SAVE_MAPPER(VRC6);
-	EXTCL_CPU_EVERY_CYCLE(VRC6);
-	EXTCL_APU_TICK(VRC6);
-	mapper.internal_struct[0] = (BYTE *)&vrc6;
-	mapper.internal_struct_size[0] = sizeof(vrc6);
+void map_init_085(void) {
+	EXTCL_AFTER_MAPPER_INIT(VRC7);
+	EXTCL_CPU_WR_MEM(VRC7);
+	EXTCL_SAVE_MAPPER(VRC7);
+	EXTCL_CPU_EVERY_CYCLE(VRC7);
+	EXTCL_APU_TICK(VRC7);
+	mapper.internal_struct[0] = (BYTE *)&vrc7;
+	mapper.internal_struct_size[0] = sizeof(vrc7);
 
-	init_VRC6(0x01, 0x02);
-	VRC6_prg_swap = prg_swap_vrc6_024;
-	VRC6_chr_swap = chr_swap_vrc6_024;
-	VRC6_nmt_swap = nmt_swap_vrc6_024;
+	switch(info.mapper.submapper) {
+		case 1:
+			init_VRC7(0x08, 0x20);
+			break;
+		case 2:
+			init_VRC7(0x10, 0x20);
+			break;
+		default:
+			init_VRC7(0x18, 0x20);
+			break;
+	}
+	VRC7_prg_swap = prg_swap_vrc7v2_085;
+	VRC7_chr_swap = chr_swap_vrc7v2_085;
 }
 
-void prg_swap_vrc6_024(WORD address, WORD value) {
-	prg_swap_VRC6_base(address, (value & 0x3F));
+void prg_swap_vrc7v2_085(WORD address, WORD value) {
+	prg_swap_VRC7_base(address, (value & 0x3F));
 }
-void chr_swap_vrc6_024(WORD address, WORD value) {
-	chr_swap_VRC6_base(address, (value & 0x1FF));
-}
-void nmt_swap_vrc6_024(WORD address, WORD value) {
-	nmt_swap_VRC6_base(address, (value & 0x1FF));
+void chr_swap_vrc7v2_085(WORD address, WORD value) {
+	chr_swap_VRC7_base(address, (value & 0xFF));
 }

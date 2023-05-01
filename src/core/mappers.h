@@ -63,10 +63,12 @@
 #include "mappers/mapper_061.h"
 #include "mappers/mapper_062.h"
 #include "mappers/mapper_063.h"
+#include "mappers/mapper_069.h"
 #include "mappers/mapper_070.h"
 #include "mappers/mapper_074.h"
 #include "mappers/mapper_081.h"
 #include "mappers/mapper_083.h"
+#include "mappers/mapper_085.h"
 #include "mappers/mapper_091.h"
 #include "mappers/mapper_100.h"
 #include "mappers/mapper_101.h"
@@ -96,6 +98,7 @@
 #include "mappers/mapper_178.h"
 #include "mappers/mapper_182.h"
 #include "mappers/mapper_183.h"
+#include "mappers/mapper_184.h"
 #include "mappers/mapper_185.h"
 #include "mappers/mapper_186.h"
 #include "mappers/mapper_187.h"
@@ -245,6 +248,7 @@
 #include "mappers/mapper_518.h"
 #include "mappers/mapper_524.h"
 #include "mappers/mapper_527.h"
+#include "mappers/mapper_528.h"
 #include "mappers/mapper_529.h"
 #include "mappers/mapper_530.h"
 #include "mappers/mapper_538.h"
@@ -301,12 +305,10 @@
 #include "mappers/mapper_UxROM.h"
 #include "mappers/mapper_VRC1.h"
 #include "mappers/mapper_VRC3.h"
-#include "mappers/mapper_VRC7.h"
 #include "mappers/mapper_Vs.h"
 // UNIF
 #include "mappers/mapper_60311C.h"
 #include "mappers/mapper_80013B.h"
-#include "mappers/mapper_831128C.h"
 #include "mappers/mapper_891227.h"
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_AC08.h"
@@ -356,12 +358,14 @@
 #include "mappers/mapper_WS.h"
 #include "mappers/mapper_YOKO.h"
 
+#include "mappers/FME7.h"
 #include "mappers/MMC1.h"
 #include "mappers/MMC2.h"
 #include "mappers/MMC3.h"
 #include "mappers/MMC4.h"
 #include "mappers/VRC2and4.h"
 #include "mappers/VRC6.h"
+#include "mappers/VRC7.h"
 
 #define _control_bank(val, max)	if ((val) > (max)) (val) &= (max);
 #define control_bank(max) _control_bank(value, max)
@@ -408,5 +412,7 @@ void map_set_banks_max_prg(void);
 void map_set_banks_max_chr(void);
 void map_bat_wr_default(FILE *fp) ;
 void map_bat_rd_default(FILE *fp);
+
+void map_chr_rom_4k(const WORD address, const WORD value);
 
 #endif /* MAPPERS_H_ */

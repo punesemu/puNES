@@ -44,6 +44,7 @@ struct _vrc6tmp {
 
 // promemoria
 //void map_init_VRC6(BYTE revision) {
+//	EXTCL_AFTER_MAPPER_INIT(VRC6);
 //	EXTCL_CPU_WR_MEM(VRC6);
 //	EXTCL_SAVE_MAPPER(VRC6);
 //	EXTCL_CPU_EVERY_CYCLE(VRC6);
@@ -57,80 +58,78 @@ void extcl_after_mapper_init_VRC6(void) {
 	VRC6_mirroring_fix();
 }
 void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
-	if (address >= 0x8000) {
-		WORD bank = address & 0xF000;
-		int index = 0;
+	WORD bank = address & 0xF000;
+	int index = 0;
 
-		switch (bank) {
-			case 0x8000:
-			case 0xC000:
-				vrc6.prg[(address >> 14) & 0x01] = value;
-				VRC6_prg_fix();
-				return;
-			case 0x9000:
-				index = (address & vrc6tmp.A1 ? 2 : 0) | (address & vrc6tmp.A0 ? 1 : 0);
-				vrc6_square_wr(index, value, &vrc6.S3);
-				return;
-			case 0xA000:
-				index = (address & vrc6tmp.A1 ? 2 : 0) | (address & vrc6tmp.A0 ? 1 : 0);
-				vrc6_square_wr(index, value, &vrc6.S4);
-				return;
-			case 0xB000:
-				index = (address & vrc6tmp.A1 ? 2 : 0) | (address & vrc6tmp.A0 ? 1 : 0);
-				switch (index) {
-					case 0x00:
-						vrc6.saw.accumulator = value & 0x3F;
-						break;
-					case 0x01:
-						vrc6.saw.frequency = (vrc6.saw.frequency & 0x0F00) | value;
-						break;
-					case 0x02:
-						vrc6.saw.frequency = (vrc6.saw.frequency & 0x00FF) | ((value & 0x0F) << 8);
-						vrc6.saw.enabled = value & 0x80;
-						break;
-					case 0x03:
-						vrc6.reg = value;
-						VRC6_chr_fix();
-						VRC6_wram_fix();
-						VRC6_mirroring_fix();
-						break;
-				}
-				return;
-			case 0xD000:
-			case 0xE000:
-				index = ((bank - 0xD000) >> 10) | (address & vrc6tmp.A1 ? 2 : 0) | (address & vrc6tmp.A0 ? 1 : 0);
-				vrc6.chr[index] = value;
-				VRC6_chr_fix();
-				VRC6_mirroring_fix();
-				return;
-			case 0xF000:
-				index = (address & vrc6tmp.A1 ? 2 : 0) | (address & vrc6tmp.A0 ? 1 : 0);
+	switch (bank) {
+		case 0x8000:
+		case 0xC000:
+			vrc6.prg[(address >> 14) & 0x01] = value;
+			VRC6_prg_fix();
+			return;
+		case 0x9000:
+			index = (address & vrc6tmp.A1 ? 2 : 0) | (address & vrc6tmp.A0 ? 1 : 0);
+			vrc6_square_wr(index, value, &vrc6.S3);
+			return;
+		case 0xA000:
+			index = (address & vrc6tmp.A1 ? 2 : 0) | (address & vrc6tmp.A0 ? 1 : 0);
+			vrc6_square_wr(index, value, &vrc6.S4);
+			return;
+		case 0xB000:
+			index = (address & vrc6tmp.A1 ? 2 : 0) | (address & vrc6tmp.A0 ? 1 : 0);
+			switch (index) {
+				case 0x00:
+					vrc6.saw.accumulator = value & 0x3F;
+					break;
+				case 0x01:
+					vrc6.saw.frequency = (vrc6.saw.frequency & 0x0F00) | value;
+					break;
+				case 0x02:
+					vrc6.saw.frequency = (vrc6.saw.frequency & 0x00FF) | ((value & 0x0F) << 8);
+					vrc6.saw.enabled = value & 0x80;
+					break;
+				case 0x03:
+					vrc6.reg = value;
+					VRC6_chr_fix();
+					VRC6_wram_fix();
+					VRC6_mirroring_fix();
+					break;
+			}
+			return;
+		case 0xD000:
+		case 0xE000:
+			index = ((bank - 0xD000) >> 10) | (address & vrc6tmp.A1 ? 2 : 0) | (address & vrc6tmp.A0 ? 1 : 0);
+			vrc6.chr[index] = value;
+			VRC6_chr_fix();
+			VRC6_mirroring_fix();
+			return;
+		case 0xF000:
+			index = (address & vrc6tmp.A1 ? 2 : 0) | (address & vrc6tmp.A0 ? 1 : 0);
 
-				switch (index) {
-					case 0x00:
-						vrc6.irq.reload = value;
-						break;
-					case 0x01:
-						vrc6.irq.acknowledge = value & 0x01;
-						vrc6.irq.enabled = value & 0x02;
-						vrc6.irq.mode = value & 0x04;
-						if (vrc6.irq.enabled) {
-							vrc6.irq.prescaler = 0;
-							vrc6.irq.count = vrc6.irq.reload;
-						}
-						irq.high &= ~EXT_IRQ;
-						break;
-					case 0x02:
-						vrc6.irq.enabled = vrc6.irq.acknowledge;
-						irq.high &= ~EXT_IRQ;
-						break;
-					default:
-						break;
-				}
-				return;
-			default:
-				return;
-		}
+			switch (index) {
+				case 0x00:
+					vrc6.irq.reload = value;
+					break;
+				case 0x01:
+					vrc6.irq.acknowledge = value & 0x01;
+					vrc6.irq.enabled = value & 0x02;
+					vrc6.irq.mode = value & 0x04;
+					if (vrc6.irq.enabled) {
+						vrc6.irq.prescaler = 0;
+						vrc6.irq.count = vrc6.irq.reload;
+					}
+					irq.high &= ~EXT_IRQ;
+					break;
+				case 0x02:
+					vrc6.irq.enabled = vrc6.irq.acknowledge;
+					irq.high &= ~EXT_IRQ;
+					break;
+				default:
+					break;
+			}
+			return;
+		default:
+			return;
 	}
 }
 BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp) {
@@ -251,18 +250,25 @@ void init_VRC6(WORD A0, WORD A1) {
 		vrc6.chr[7] = 7;
 	}
 
+	vrc6.irq.enabled = 0;
+	vrc6.irq.reload = 0;
+	vrc6.irq.mode = 0;
+	vrc6.irq.acknowledge = 0;
+	vrc6.irq.count = 0;
+	vrc6.irq.delay = 0;
+	vrc6.irq.prescaler = 0;
+
 	vrc6.S3.timer = 1;
 	vrc6.S3.duty = 1;
 	vrc6.S4.timer = 1;
 	vrc6.S4.duty = 1;
 	vrc6.saw.timer = 1;
 
-	vrc6tmp.irq_delay = 1;
-
 	irq.high &= ~EXT_IRQ;
 
 	vrc6tmp.A0 = A0;
 	vrc6tmp.A1 = A1;
+	vrc6tmp.irq_delay = 1;
 
 	VRC6_prg_fix = prg_fix_VRC6_base;
 	VRC6_prg_swap = prg_swap_VRC6_base;

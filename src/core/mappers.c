@@ -283,7 +283,7 @@ BYTE map_init(void) {
 			map_init_Sunsoft(SUN4);
 			break;
 		case 69:
-			map_init_Sunsoft(FM7);
+			map_init_069();
 			break;
 		case 70:
 			map_init_070();
@@ -328,13 +328,7 @@ BYTE map_init(void) {
 			map_init_083();
 			break;
 		case 85:
-			if (info.mapper.submapper == VRC7UNL) {
-				map_init_VRC7UNL();
-			} else if (info.mapper.submapper == VRC7A) {
-				map_init_VRC7(VRC7A);
-			} else {
-				map_init_VRC7(VRC7B);
-			}
+			map_init_085();
 			break;
 		case 86:
 			map_init_Jaleco(JF13);
@@ -431,6 +425,10 @@ BYTE map_init(void) {
 			break;
 		case 121:
 			map_init_121();
+			break;
+		case 122:
+			// 122 e 184 sono la stessa cosa
+			map_init_184();
 			break;
 		case 123:
 			map_init_123();
@@ -580,7 +578,8 @@ BYTE map_init(void) {
 			map_init_183();
 			break;
 		case 184:
-			map_init_Sunsoft(SUN1);
+			map_init_184();
+			//map_init_Sunsoft(SUN1);
 			break;
 		case 185:
 			map_init_185();
@@ -1245,7 +1244,7 @@ BYTE map_init(void) {
 			map_init_527();
 			break;
 		case 528:
-			map_init_831128C();
+			map_init_528();
 			break;
 		case 529:
 			map_init_529();
@@ -1768,3 +1767,16 @@ void map_prg_ram_battery_file(uTCHAR *prg_ram_file) {
 	/* aggiungo l'estensione prb */
 	ustrcat(prg_ram_file, uL(".prb"));
 }
+
+void map_chr_rom_4k(const WORD address, const WORD value) {
+	const BYTE slot = address >> 10;
+	DBWORD bank = value;
+
+	_control_bank(bank, info.chr.rom.max.banks_4k)
+	bank <<= 12;
+	chr.bank_1k[slot] = chr_pnt(bank);
+	chr.bank_1k[slot | 0x01] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[slot | 0x02] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[slot | 0x03] = chr_pnt(bank | 0x0C00);
+}
+

@@ -278,7 +278,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			 * MMC5
 			 * Namcot (163)
 			 * Rex (DBZ)
-			 * Sunsoft (FM7)
+			 * Sunsoft (FME7)
 			 * 249
 			 * 163
 			 * 164
@@ -1787,7 +1787,7 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 			switch (address) {
 				case 0xC000:
 				case 0xE000:
-					extcl_cpu_wr_mem_Sunsoft_FM7(address, value);
+					extcl_cpu_wr_mem_FME7(address, value);
 					return;
 				default:
 					break;
@@ -2260,7 +2260,7 @@ INLINE static void tick_hw(BYTE value) {
 		 * VRC6
 		 * VRC7
 		 * Sunsoft (S3)
-		 * Sunsoft (FM7)
+		 * Sunsoft (FME7)
 		 * TxROM
 		 */
 		extcl_cpu_every_cycle();

@@ -100,7 +100,7 @@ void map_init_NSF(void) {
 		mapper.internal_struct_size[internal_struct] = sizeof(vrc7);
 		internal_struct++;
 
-		map_init_NSF_VRC7(VRC7A);
+		init_NSF_VRC7(0x10, 0x20);
 	}
 	if (nsf.sound_chips.fds) {
 		mapper.internal_struct[internal_struct] = (BYTE *)&fds;
@@ -124,11 +124,11 @@ void map_init_NSF(void) {
 		map_init_NSF_Namco(N163);
 	}
 	if (nsf.sound_chips.sunsoft5b) {
-		mapper.internal_struct[internal_struct] = (BYTE *)&fm7;
-		mapper.internal_struct_size[internal_struct] = sizeof(fm7);
+		mapper.internal_struct[internal_struct] = (BYTE *)&fme7;
+		mapper.internal_struct_size[internal_struct] = sizeof(fme7);
 		internal_struct++;
 
-		map_init_NSF_Sunsoft(FM7);
+		init_NSF_FME7();
 	}
 
 	nsf_main_screen();
@@ -239,7 +239,7 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 		extcl_save_mapper_Namco_163(mode, slot, fp);
 	}
 	if (nsf.sound_chips.sunsoft5b) {
-		extcl_save_mapper_Sunsoft_FM7(mode, slot, fp);
+		extcl_save_mapper_FME7(mode, slot, fp);
 	}
 
 	return (EXIT_OK);
@@ -271,6 +271,6 @@ void extcl_apu_tick_NSF(void) {
 		extcl_apu_tick_Namco_163();
 	}
 	if (nsf.sound_chips.sunsoft5b) {
-		extcl_apu_tick_Sunsoft_FM7();
+		extcl_apu_tick_FME7();
 	}
 }

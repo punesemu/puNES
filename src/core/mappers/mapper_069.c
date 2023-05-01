@@ -16,28 +16,29 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_SUNSOFT_H_
-#define MAPPER_SUNSOFT_H_
+#include "mappers.h"
+#include "info.h"
 
-#include "common.h"
+void prg_swap_fme7_069(WORD address, WORD value);
+void chr_swap_fme7_069(WORD address, WORD value);
 
-enum sunsoft_types {
-	SUN2A,
-	SUN2B,
-	SUN3,
-	SUN4,
-	MAHARAJA,
-};
+void map_init_069(void) {
+	EXTCL_AFTER_MAPPER_INIT(FME7);
+	EXTCL_CPU_WR_MEM(FME7);
+	EXTCL_SAVE_MAPPER(FME7);
+	EXTCL_CPU_EVERY_CYCLE(FME7);
+	EXTCL_APU_TICK(FME7);
+	mapper.internal_struct[0] = (BYTE *)&fme7;
+	mapper.internal_struct_size[0] = sizeof(fme7);
 
-void map_init_Sunsoft(BYTE model);
+	init_FME7();
+	FME7_prg_swap = prg_swap_fme7_069;
+	FME7_chr_swap = chr_swap_fme7_069;
+}
 
-void extcl_cpu_wr_mem_Sunsoft_S2(WORD address, BYTE value);
-
-void extcl_cpu_wr_mem_Sunsoft_S3(WORD address, BYTE value);
-BYTE extcl_save_mapper_Sunsoft_S3(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_Sunsoft_S3(void);
-
-void extcl_cpu_wr_mem_Sunsoft_S4(WORD address, BYTE value);
-BYTE extcl_save_mapper_Sunsoft_S4(BYTE mode, BYTE slot, FILE *fp);
-
-#endif /* MAPPER_SUNSOFT_H_ */
+void prg_swap_fme7_069(WORD address, WORD value) {
+	prg_swap_FME7_base(address, (value & 0x3F));
+}
+void chr_swap_fme7_069(WORD address, WORD value) {
+	chr_swap_FME7_base(address, (value & 0xFF));
+}

@@ -3082,11 +3082,11 @@ static const _dbelement dblist[] = {
 	/* Maharaja (J).nes */
 	{"4ec7cd65520d37467088a9cc726156c030a307ca", 68, DEFAULT, MAHARAJA, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ------------------------------------ Sunsoft FM7 --------------------------------------- */
+/* ------------------------------------ Sunsoft FME7 -------------------------------------- */
 	/* Barcode World (J) [!].nes */
-	{"92f055653d33b8e31ec91b458357e75ad2336c33", 69, DEFAULT, BARCODEWORLD, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"92f055653d33b8e31ec91b458357e75ad2336c33", 69, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Honoo no Doukyuuji - Dodge Danpei 2 (J) [o1].nes */
-	{"31b0c5be4394269433d5100502bbf9b92a0c22b7", 69, DEFAULT, DODGEDANPEI2, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"31b0c5be4394269433d5100502bbf9b92a0c22b7", 69, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Batman - Return of the Joker (E) [!].nes */
 	{"6131bc47d788bc9a501cc452799379f7c0fb1ba0", 69, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Mr. Gimmick (E) [!].nes */

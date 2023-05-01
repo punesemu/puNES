@@ -16,28 +16,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_SUNSOFT_H_
-#define MAPPER_SUNSOFT_H_
+#ifndef MAPPER_528_H_
+#define MAPPER_528_H_
 
 #include "common.h"
 
-enum sunsoft_types {
-	SUN2A,
-	SUN2B,
-	SUN3,
-	SUN4,
-	MAHARAJA,
-};
+void map_init_528(void);
+void extcl_cpu_wr_mem_528(WORD address, BYTE value);
+BYTE extcl_save_mapper_528(BYTE mode, BYTE slot, FILE *fp);
 
-void map_init_Sunsoft(BYTE model);
-
-void extcl_cpu_wr_mem_Sunsoft_S2(WORD address, BYTE value);
-
-void extcl_cpu_wr_mem_Sunsoft_S3(WORD address, BYTE value);
-BYTE extcl_save_mapper_Sunsoft_S3(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_Sunsoft_S3(void);
-
-void extcl_cpu_wr_mem_Sunsoft_S4(WORD address, BYTE value);
-BYTE extcl_save_mapper_Sunsoft_S4(BYTE mode, BYTE slot, FILE *fp);
-
-#endif /* MAPPER_SUNSOFT_H_ */
+#endif /* MAPPER_528_H_ */

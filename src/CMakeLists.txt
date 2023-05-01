@@ -87,7 +87,6 @@ set(core_srcs
 	core/input/vs.c
 	core/input/zapper.c
 
-	core/mappers/EE93Cx6.c
 	core/mappers/mapper_000.c
 	core/mappers/mapper_001.c
 	core/mappers/mapper_004.c
@@ -126,10 +125,12 @@ set(core_srcs
 	core/mappers/mapper_061.c
 	core/mappers/mapper_062.c
 	core/mappers/mapper_063.c
+	core/mappers/mapper_069.c
 	core/mappers/mapper_070.c
 	core/mappers/mapper_074.c
 	core/mappers/mapper_081.c
 	core/mappers/mapper_083.c
+	core/mappers/mapper_085.c
 	core/mappers/mapper_091.c
 	core/mappers/mapper_100.c
 	core/mappers/mapper_101.c
@@ -159,6 +160,7 @@ set(core_srcs
 	core/mappers/mapper_178.c
 	core/mappers/mapper_182.c
 	core/mappers/mapper_183.c
+	core/mappers/mapper_184.c
 	core/mappers/mapper_185.c
 	core/mappers/mapper_186.c
 	core/mappers/mapper_187.c
@@ -308,6 +310,7 @@ set(core_srcs
 	core/mappers/mapper_518.c
 	core/mappers/mapper_524.c
 	core/mappers/mapper_527.c
+	core/mappers/mapper_528.c
 	core/mappers/mapper_529.c
 	core/mappers/mapper_530.c
 	core/mappers/mapper_538.c
@@ -324,7 +327,6 @@ set(core_srcs
 	core/mappers/mapper_560.c
 	core/mappers/mapper_60311C.c
 	core/mappers/mapper_80013B.c
-	core/mappers/mapper_831128C.c
 	core/mappers/mapper_891227.c
 	core/mappers/mapper_A65AS.c
 	core/mappers/mapper_AC08.c
@@ -414,11 +416,12 @@ set(core_srcs
 	core/mappers/mapper_UxROM.c
 	core/mappers/mapper_VRC1.c
 	core/mappers/mapper_VRC3.c
-	core/mappers/mapper_VRC7.c
-	core/mappers/mapper_VRC7_snd.c
 	core/mappers/mapper_Vs.c
 	core/mappers/mapper_WS.c
 	core/mappers/mapper_YOKO.c
+
+	core/mappers/EE93Cx6.c
+	core/mappers/FME7.c
 	core/mappers/OneBus.c
 	core/mappers/opll.c
 	core/mappers/MMC1.c
@@ -430,6 +433,8 @@ set(core_srcs
 	core/mappers/SST39SF040.c
 	core/mappers/VRC2and4.c
 	core/mappers/VRC6.c
+	core/mappers/VRC7.c
+	core/mappers/VRC7_snd.c
 
 	core/apu.c
 	core/bck_states.c

@@ -32,12 +32,10 @@ void map_init_026(void) {
 	mapper.internal_struct[0] = (BYTE *)&vrc6;
 	mapper.internal_struct_size[0] = sizeof(vrc6);
 
-	if (info.reset >= HARD) {
-		init_VRC6(0x02, 0x01);
-		VRC6_prg_swap = prg_swap_vrc6_026;
-		VRC6_chr_swap = chr_swap_vrc6_026;
-		VRC6_nmt_swap = nmt_swap_vrc6_026;
-	}
+	init_VRC6(0x02, 0x01);
+	VRC6_prg_swap = prg_swap_vrc6_026;
+	VRC6_chr_swap = chr_swap_vrc6_026;
+	VRC6_nmt_swap = nmt_swap_vrc6_026;
 }
 
 void prg_swap_vrc6_026(WORD address, WORD value) {
