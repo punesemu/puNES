@@ -125,13 +125,20 @@ set(core_srcs
 	core/mappers/mapper_061.c
 	core/mappers/mapper_062.c
 	core/mappers/mapper_063.c
+	core/mappers/mapper_067.c
+	core/mappers/mapper_068.c
 	core/mappers/mapper_069.c
 	core/mappers/mapper_070.c
 	core/mappers/mapper_074.c
+	core/mappers/mapper_076.c
 	core/mappers/mapper_081.c
 	core/mappers/mapper_083.c
 	core/mappers/mapper_085.c
+	core/mappers/mapper_088.c
+	core/mappers/mapper_089.c
 	core/mappers/mapper_091.c
+	core/mappers/mapper_093.c
+	core/mappers/mapper_095.c
 	core/mappers/mapper_100.c
 	core/mappers/mapper_101.c
 	core/mappers/mapper_103.c
@@ -150,6 +157,7 @@ set(core_srcs
 	core/mappers/mapper_126.c
 	core/mappers/mapper_134.c
 	core/mappers/mapper_152.c
+	core/mappers/mapper_154.c
 	core/mappers/mapper_156.c
 	core/mappers/mapper_163.c
 	core/mappers/mapper_164.c
@@ -181,6 +189,7 @@ set(core_srcs
 	core/mappers/mapper_203.c
 	core/mappers/mapper_204.c
 	core/mappers/mapper_205.c
+	core/mappers/mapper_206.c
 	core/mappers/mapper_208.c
 	core/mappers/mapper_212.c
 	core/mappers/mapper_213.c
@@ -228,6 +237,7 @@ set(core_srcs
 	core/mappers/mapper_299.c
 	core/mappers/mapper_300.c
 	core/mappers/mapper_302.c
+	core/mappers/mapper_307.c
 	core/mappers/mapper_308.c
 	core/mappers/mapper_311.c
 	core/mappers/mapper_313.c
@@ -329,7 +339,6 @@ set(core_srcs
 	core/mappers/mapper_80013B.c
 	core/mappers/mapper_891227.c
 	core/mappers/mapper_A65AS.c
-	core/mappers/mapper_AC08.c
 	core/mappers/mapper_Active.c
 	core/mappers/mapper_Agci.c
 	core/mappers/mapper_Ave.c
@@ -385,7 +394,6 @@ set(core_srcs
 	core/mappers/mapper_KS7030.c
 	core/mappers/mapper_KS7031.c
 	core/mappers/mapper_KS7032.c
-	core/mappers/mapper_KS7037.c
 	core/mappers/mapper_LH10.c
 	core/mappers/mapper_LH32.c
 	core/mappers/mapper_LH51.c
@@ -404,7 +412,6 @@ set(core_srcs
 	core/mappers/mapper_SA005A.c
 	core/mappers/mapper_Sachen.c
 	core/mappers/mapper_SC_127.c
-	core/mappers/mapper_Sunsoft.c
 	core/mappers/mapper_T262.c
 	core/mappers/mapper_Taito.c
 	core/mappers/mapper_Tengen.c
@@ -424,6 +431,7 @@ set(core_srcs
 	core/mappers/FME7.c
 	core/mappers/OneBus.c
 	core/mappers/opll.c
+	core/mappers/N118.c
 	core/mappers/MMC1.c
 	core/mappers/MMC2.c
 	core/mappers/MMC3.c

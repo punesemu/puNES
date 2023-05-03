@@ -996,23 +996,6 @@ void cpu_wr_mem(WORD address, BYTE value) {
 			}
 		}
 		if (info.mapper.extend_wr) {
-			/*
-			 * utilizzato dalle mappers :
-			 * Active
-			 * 74x138x161
-			 * Ave (NINA06)
-			 * BxROM (AVENINA001)
-			 * Caltron
-			 * Jaleco (JF05 e JF11)
-			 * MMC5
-			 * REX (DBZ)
-			 * 163
-			 * 164
-			 * 176
-			 * 28
-			 * 91
-			 * 31
-			 */
 			extcl_cpu_wr_mem(address, value);
 		}
 		return;
@@ -1030,10 +1013,6 @@ INLINE static void ppu_wr_mem(WORD address, BYTE value) {
 	address &= 0x3FFF;
 	if (address < 0x2000) {
 		if (extcl_wr_chr) {
-			/*
-			 * utilizzato dalle mappers :
-			 * Irem (LROG017)
-			 */
 			extcl_wr_chr(address, value);
 			return;
 		}
@@ -1044,15 +1023,20 @@ INLINE static void ppu_wr_mem(WORD address, BYTE value) {
 	}
 	if (address < 0x3F00) {
 		if (extcl_wr_nmt) {
-			/*
-			 * utilizzato dalle mappers :
-			 * JYASIC
-			 */
-			extcl_wr_nmt(address, value);
-			return;
+			// TRUE = write is menagement in extcl_wr_nmt()
+			// FALSE = continue with the write to ntbl.bank_1k
+			if (extcl_wr_nmt(address, value) == TRUE) {
+				return;
+			}
 		}
 		address &= 0x0FFF;
-		ntbl.bank_1k[address >> 10][address & 0x3FF] = value;
+		{
+			const BYTE slot = address >> 10;
+
+			if (ntbl.writable[slot]) {
+				ntbl.bank_1k[slot][address & 0x3FF] = value;
+			}
+		}
 		return;
 	}
 	address &= 0x1F;
@@ -2242,27 +2226,6 @@ INLINE static void tick_hw(BYTE value) {
 	}
 
 	if (extcl_cpu_every_cycle) {
-		/*
-		 * utilizzato dalle mappers :
-		 * 183
-		 * 222
-		 * Bandai (FCGX)
-		 * FDS
-		 * Futeremedia
-		 * Kaise (ks202)
-		 * Jaleco (SS8806)
-		 * Irem (H3000)
-		 * Namco (163)
-		 * Tengen (Rambo)
-		 * MMC3
-		 * VRC3
-		 * VRC4
-		 * VRC6
-		 * VRC7
-		 * Sunsoft (S3)
-		 * Sunsoft (FME7)
-		 * TxROM
-		 */
 		extcl_cpu_every_cycle();
 	}
 	cpu.odd_cycle = !cpu.odd_cycle;

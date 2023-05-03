@@ -220,8 +220,7 @@ void chr_fix_MMC3_base(void) {
 	MMC3_chr_swap(cbase ^ 0x1C00, mmc3.reg[5]);
 }
 void chr_swap_MMC3_base(WORD address, WORD value) {
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	map_chr_rom_1k(address, value);
 }
 void wram_fix_MMC3_base(void) {
 	if (info.mapper.submapper != MMC3_MMC6) {

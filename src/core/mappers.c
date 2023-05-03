@@ -277,10 +277,10 @@ BYTE map_init(void) {
 			map_init_GxROM();
 			break;
 		case 67:
-			map_init_Sunsoft(SUN3);
+			map_init_067();
 			break;
 		case 68:
-			map_init_Sunsoft(SUN4);
+			map_init_068();
 			break;
 		case 69:
 			map_init_069();
@@ -304,7 +304,7 @@ BYTE map_init(void) {
 			map_init_VRC1();
 			break;
 		case 76:
-			map_init_Namco(N3446);
+			map_init_076();
 			break;
 		case 77:
 			map_init_Irem(LROG017);
@@ -337,10 +337,10 @@ BYTE map_init(void) {
 			map_init_Jaleco(JF05);
 			break;
 		case 88:
-			map_init_Namco(N3433);
+			map_init_088();
 			break;
 		case 89:
-			map_init_Sunsoft(SUN2B);
+			map_init_089();
 			break;
 		case 90:
 			map_init_JYASIC(MAP90);
@@ -352,13 +352,13 @@ BYTE map_init(void) {
 			map_init_Jaleco(JF19);
 			break;
 		case 93:
-			map_init_Sunsoft(SUN2A);
+			map_init_093();
 			break;
 		case 94:
 			map_init_UxROM(UNL1XROM);
 			break;
 		case 95:
-			map_init_Namco(N3425);
+			map_init_095();
 			break;
 		case 96:
 			map_init_Bandai(B161X02X74);
@@ -504,7 +504,7 @@ BYTE map_init(void) {
 			map_init_Bandai(FCGx);
 			break;
 		case 154:
-			map_init_Namco(N3453);
+			map_init_154();
 			break;
 		case 155:
 			map_init_001();
@@ -579,7 +579,6 @@ BYTE map_init(void) {
 			break;
 		case 184:
 			map_init_184();
-			//map_init_Sunsoft(SUN1);
 			break;
 		case 185:
 			map_init_185();
@@ -645,7 +644,7 @@ BYTE map_init(void) {
 			map_init_205();
 			break;
 		case 206:
-			map_init_Namco(N3416);
+			map_init_206();
 			break;
 		case 207:
 			map_init_Taito(X1005B);
@@ -893,7 +892,7 @@ BYTE map_init(void) {
 			map_init_KS7016();
 			break;
 		case 307:
-			map_init_KS7037();
+			map_init_307();
 			break;
 		case 308:
 			map_init_308();
@@ -1768,8 +1767,25 @@ void map_prg_ram_battery_file(uTCHAR *prg_ram_file) {
 	ustrcat(prg_ram_file, uL(".prb"));
 }
 
+void map_chr_rom_1k(const WORD address, const WORD value) {
+	const BYTE slot = (address >> 10) & 0x07;
+	DBWORD bank = value;
+
+	_control_bank(bank, info.chr.rom.max.banks_1k)
+	bank <<= 10;
+	chr.bank_1k[slot] = chr_pnt(bank);
+}
+void map_chr_rom_2k(const WORD address, const WORD value) {
+	const BYTE slot = (address >> 10) & 0x06;
+	DBWORD bank = value;
+
+	_control_bank(bank, info.chr.rom.max.banks_2k)
+	bank <<= 11;
+	chr.bank_1k[slot] = chr_pnt(bank);
+	chr.bank_1k[slot | 0x01] = chr_pnt(bank | 0x0400);
+}
 void map_chr_rom_4k(const WORD address, const WORD value) {
-	const BYTE slot = address >> 10;
+	const BYTE slot = (address >> 10) & 0x04;
 	DBWORD bank = value;
 
 	_control_bank(bank, info.chr.rom.max.banks_4k)
@@ -1779,4 +1795,71 @@ void map_chr_rom_4k(const WORD address, const WORD value) {
 	chr.bank_1k[slot | 0x02] = chr_pnt(bank | 0x0800);
 	chr.bank_1k[slot | 0x03] = chr_pnt(bank | 0x0C00);
 }
+void map_chr_rom_8k(UNUSED(const WORD address), const WORD value) {
+	DBWORD bank = value;
 
+	_control_bank(bank, info.chr.rom.max.banks_8k)
+	bank <<= 13;
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+}
+
+void map_nmt_1k(BYTE slot, const WORD value) {
+	slot &= 0x03;
+	ntbl.bank_1k[slot] = &ntbl.data[(value & 0x03) << 10];
+	ntbl.writable[slot] = TRUE;
+}
+void map_nmt_chr_ram_1k(BYTE slot, const WORD value) {
+	DBWORD bank = value;
+
+	slot &= 0x03;
+	_control_bank(bank, info.chr.ram.max.banks_1k)
+	bank <<= 10;
+	ntbl.bank_1k[slot] = &chr.extra.data[bank];
+	ntbl.writable[slot] = TRUE;
+}
+void map_nmt_chr_rom_1k(BYTE slot, const WORD value) {
+	DBWORD bank = value;
+
+	slot &= 0x03;
+	_control_bank(bank, info.chr.rom.max.banks_1k)
+	bank <<= 10;
+	ntbl.bank_1k[slot] = chr_pnt(bank);
+	ntbl.writable[slot] = mapper.write_vram;
+}
+void map_nmt_chr_rom_2k(BYTE slot, const WORD value) {
+	DBWORD bank = value;
+
+	slot &= 0x02;
+	_control_bank(bank, info.chr.rom.max.banks_2k)
+	bank <<= 11;
+	ntbl.bank_1k[slot] = chr_pnt(bank);
+	ntbl.writable[slot] = mapper.write_vram;
+
+	slot |= 1;
+	ntbl.bank_1k[slot] = chr_pnt(bank | 0x400);
+	ntbl.writable[slot] = mapper.write_vram;
+}
+void map_nmt_chr_rom_4k(const WORD value) {
+	DBWORD bank = value;
+
+	_control_bank(bank, info.chr.rom.max.banks_4k)
+	bank <<= 12;
+	ntbl.bank_1k[0] = chr_pnt(bank);
+	ntbl.writable[0] = mapper.write_vram;
+
+	ntbl.bank_1k[1] = chr_pnt(bank | 0x400);
+	ntbl.writable[1] = mapper.write_vram;
+
+	ntbl.bank_1k[2] = chr_pnt(bank | 0x800);
+	ntbl.writable[2] = mapper.write_vram;
+
+	ntbl.bank_1k[3] = chr_pnt(bank | 0xC00);
+	ntbl.writable[3] = mapper.write_vram;
+}

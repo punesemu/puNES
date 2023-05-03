@@ -25,7 +25,7 @@ void map_init_442(void);
 void extcl_after_mapper_init_442(void);
 void extcl_cpu_wr_mem_442(WORD address, BYTE value);
 BYTE extcl_save_mapper_442(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_nmt_442(WORD address, BYTE value);
+BYTE extcl_wr_nmt_442(WORD address, BYTE value);
 void extcl_wr_chr_442(WORD address, BYTE value);
 BYTE extcl_rd_chr_442(WORD address);
 void extcl_ppu_000_to_255_442(void);

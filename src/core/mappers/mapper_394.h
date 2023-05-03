@@ -35,7 +35,6 @@ BYTE extcl_save_mapper_394(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_394(void);
 void extcl_rd_ppu_mem_394(WORD address);
 BYTE extcl_rd_chr_394(WORD address);
-void extcl_wr_nmt_394(WORD address, BYTE value);
 void extcl_ppu_000_to_34x_394(void);
 void extcl_ppu_000_to_255_394(void);
 void extcl_ppu_256_to_319_394(void);

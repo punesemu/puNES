@@ -269,8 +269,7 @@ void chr_fix_VRC2and4_base(void) {
 	VRC2and4_chr_swap(0x1C00, vrc2and4.chr[7]);
 }
 void chr_swap_VRC2and4_base(WORD address, WORD value) {
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	map_chr_rom_1k(address, value);
 }
 void wram_fix_VRC2and4_base(void) {
 	cpu.prg_ram_rd_active = !vrc2and4.wram_protect;

@@ -188,8 +188,8 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 					if ((tengentmp.type == T800037) && !(tengen_rambo.chr_mode & 0x80)) {
 						const BYTE slot = tengen_rambo.reg_index << 1;
 
-						ntbl.bank_1k[slot] = &ntbl.data[((value >> 7) ^ 0x01) << 10];
-						ntbl.bank_1k[slot | 0x01] = ntbl.bank_1k[slot];
+						map_nmt_1k(slot, ((value >> 7) ^ 0x01));
+						map_nmt_1k(slot | 0x01, ((value >> 7) ^ 0x01));
 					}
 					if (tengen_rambo.chr[tengen_rambo.reg_index] != value) {
 						tengen_rambo.chr[tengen_rambo.reg_index] = value;
@@ -201,8 +201,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 				case 0x04:
 				case 0x05:
 					if ((tengentmp.type == T800037) && (tengen_rambo.chr_mode & 0x80)) {
-						ntbl.bank_1k[tengen_rambo.reg_index - 2] = &ntbl.data[((value >> 7) ^ 0x01)
-							<< 10];
+						map_nmt_1k((tengen_rambo.reg_index - 2), ((value >> 7) ^ 0x01));
 					}
 					control_bank(info.chr.rom.max.banks_1k)
 					if (tengen_rambo.chr[tengen_rambo.reg_index] != value) {

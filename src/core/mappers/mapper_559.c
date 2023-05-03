@@ -97,23 +97,10 @@ void chr_swap_vrc2and4_559(WORD address, WORD value) {
 	chr_swap_VRC2and4_base(address, (value & 0x1FF));
 }
 void mirroring_fix_vrc2and4_559(void) {
-	WORD bank = 0;
-
-	bank = m559.mir[0];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	ntbl.bank_1k[0] = chr_pnt(bank << 10);
-
-	bank = m559.mir[1];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	ntbl.bank_1k[1] = chr_pnt(bank << 10);
-
-	bank = m559.mir[2];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	ntbl.bank_1k[2] = chr_pnt(bank << 10);
-
-	bank = m559.mir[3];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	ntbl.bank_1k[3] = chr_pnt(bank << 10);
+	map_nmt_chr_rom_1k(0, m559.mir[0]);
+	map_nmt_chr_rom_1k(1, m559.mir[1]);
+	map_nmt_chr_rom_1k(2, m559.mir[2]);
+	map_nmt_chr_rom_1k(3, m559.mir[3]);
 }
 void misc_03_vrc2and4_559(WORD address, BYTE value) {
 	if (address & 0x0004) {

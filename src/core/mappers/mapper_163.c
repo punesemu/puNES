@@ -122,9 +122,9 @@ BYTE extcl_save_mapper_163(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_wr_nmt_163(WORD address, BYTE value) {
+BYTE extcl_wr_nmt_163(WORD address, UNUSED(BYTE value)) {
 	mode1_bpp(address);
-	ntbl.bank_1k[(address & 0x0FFF) >> 10][address & 0x3FF] = value;
+	return (FALSE);
 }
 void extcl_wr_chr_163(WORD address, BYTE value) {
 	mode1_bpp(address);

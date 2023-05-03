@@ -16,14 +16,29 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_AC08_H_
-#define MAPPER_AC08_H_
+#include "mappers.h"
 
-#include "common.h"
+void prg_swap_n118v2_076(WORD address, WORD value);
+void chr_fix_n118v2_076(void);
 
-void map_init_AC08(void);
-void extcl_cpu_wr_mem_AC08(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_AC08(WORD address, BYTE openbus, BYTE before);
-BYTE extcl_save_mapper_AC08(BYTE mode, BYTE slot, FILE *fp);
+void map_init_076(void) {
+	EXTCL_AFTER_MAPPER_INIT(N118v2);
+	EXTCL_CPU_WR_MEM(N118v2);
+	EXTCL_SAVE_MAPPER(N118v2);
+	mapper.internal_struct[0] = (BYTE *)&n118v2;
+	mapper.internal_struct_size[0] = sizeof(n118v2);
 
-#endif /* MAPPER_AC08_H_ */
+	init_N118v2();
+	N118v2_prg_swap = prg_swap_n118v2_076;
+	N118v2_chr_fix = chr_fix_n118v2_076;
+}
+
+void prg_swap_n118v2_076(WORD address, WORD value) {
+	prg_swap_N118v2_base(address, (value & 0x1F));
+}
+void chr_fix_n118v2_076(void) {
+	map_chr_rom_2k(0x0000, n118v2.reg[2]);
+	map_chr_rom_2k(0x0800, n118v2.reg[3]);
+	map_chr_rom_2k(0x1000, n118v2.reg[4]);
+	map_chr_rom_2k(0x1800, n118v2.reg[5]);
+}

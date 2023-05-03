@@ -175,17 +175,8 @@ INLINE static void chr_fix_417(void) {
 	chr.bank_1k[7] = chr_pnt(bank);
 }
 INLINE static void mirroring_fix_417(void) {
-	WORD bank;
-
-	bank = m417.mir[0] & 0x01;
-	ntbl.bank_1k[0] = &ntbl.data[bank << 10];
-
-	bank = m417.mir[1] & 0x01;
-	ntbl.bank_1k[1] = &ntbl.data[bank << 10];
-
-	bank = m417.mir[2] & 0x01;
-	ntbl.bank_1k[2] = &ntbl.data[bank << 10];
-
-	bank = m417.mir[3] & 0x01;
-	ntbl.bank_1k[3] = &ntbl.data[bank << 10];
+	map_nmt_1k(0, (m417.mir[0] & 0x01));
+	map_nmt_1k(1, (m417.mir[1] & 0x01));
+	map_nmt_1k(2, (m417.mir[2] & 0x01));
+	map_nmt_1k(3, (m417.mir[3] & 0x01));
 }

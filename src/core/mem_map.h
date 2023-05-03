@@ -22,8 +22,7 @@
 #include <stdio.h>
 #include "common.h"
 
-/* i vari mirroring */
-enum mirroring_type {
+enum mirroring_types {
 	MIRRORING_HORIZONTAL,
 	MIRRORING_VERTICAL,
 	MIRRORING_SINGLE_SCR0,
@@ -35,38 +34,46 @@ enum mirroring_type {
 
 #define mirroring_H()\
 	mapper.mirroring = MIRRORING_HORIZONTAL;\
-	ntbl.bank_1k[0] = ntbl.bank_1k[1] = &ntbl.data[0];\
-	ntbl.bank_1k[2] = ntbl.bank_1k[3] = &ntbl.data[0x0400]
+	map_nmt_1k(0, 0);\
+	map_nmt_1k(1, 0);\
+	map_nmt_1k(2, 1);\
+	map_nmt_1k(3, 1)
 #define mirroring_V()\
 	mapper.mirroring = MIRRORING_VERTICAL;\
-	ntbl.bank_1k[0] = ntbl.bank_1k[2] = &ntbl.data[0];\
-	ntbl.bank_1k[1] = ntbl.bank_1k[3] = &ntbl.data[0x0400]
+	map_nmt_1k(0, 0);\
+	map_nmt_1k(1, 1);\
+	map_nmt_1k(2, 0);\
+	map_nmt_1k(3, 1)
 #define mirroring_SCR0()\
 	mapper.mirroring = MIRRORING_SINGLE_SCR0;\
-	ntbl.bank_1k[0] = ntbl.bank_1k[1] = &ntbl.data[0];\
-	ntbl.bank_1k[2] = ntbl.bank_1k[3] = &ntbl.data[0]
+	map_nmt_1k(0, 0);\
+	map_nmt_1k(1, 0);\
+	map_nmt_1k(2, 0);\
+	map_nmt_1k(3, 0)
 #define mirroring_SCR1()\
 	mapper.mirroring = MIRRORING_SINGLE_SCR1;\
-	ntbl.bank_1k[0] = ntbl.bank_1k[1] = &ntbl.data[0x0400];\
-	ntbl.bank_1k[2] = ntbl.bank_1k[3] = &ntbl.data[0x0400]
+	map_nmt_1k(0, 1);\
+	map_nmt_1k(1, 1);\
+	map_nmt_1k(2, 1);\
+	map_nmt_1k(3, 1)
 #define mirroring_FSCR()\
 	mapper.mirroring = MIRRORING_FOURSCR;\
-	ntbl.bank_1k[0] = &ntbl.data[0];\
-	ntbl.bank_1k[1] = &ntbl.data[0x0400];\
-	ntbl.bank_1k[2] = &ntbl.data[0x0800];\
-	ntbl.bank_1k[3] = &ntbl.data[0x0C00]
+	map_nmt_1k(0, 0);\
+	map_nmt_1k(1, 1);\
+	map_nmt_1k(2, 2);\
+	map_nmt_1k(3, 3)
 #define mirroring_SCR0x1_SCR1x3()\
 	mapper.mirroring = MIRRORING_SCR0x1_SCR1x3;\
-	ntbl.bank_1k[0] = &ntbl.data[0];\
-	ntbl.bank_1k[1] = \
-	ntbl.bank_1k[2] = \
-	ntbl.bank_1k[3] = &ntbl.data[0x0400]
+	map_nmt_1k(0, 0);\
+	map_nmt_1k(1, 1);\
+	map_nmt_1k(2, 1);\
+	map_nmt_1k(3, 1)
 #define mirroring_SCR0x3_SCR1x1()\
 	mapper.mirroring = MIRRORING_SCR0x3_SCR1x1;\
-	ntbl.bank_1k[0] = \
-	ntbl.bank_1k[1] = \
-	ntbl.bank_1k[2] = &ntbl.data[0];\
-	ntbl.bank_1k[3] = &ntbl.data[0x0400]
+	map_nmt_1k(0, 0);\
+	map_nmt_1k(1, 0);\
+	map_nmt_1k(2, 0);\
+	map_nmt_1k(3, 1)
 
 #define prg_rom() prg.rom.data
 #define prg_size() prg.rom.size
@@ -128,6 +135,7 @@ typedef struct _chr {
 typedef struct _nametables {
 	BYTE data[0x1000];
 	BYTE *bank_1k[4];
+	BYTE writable[4];
 } _nametables;
 typedef struct _mmap_palette {
 	BYTE color[0x20];

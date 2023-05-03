@@ -119,15 +119,7 @@ void chr_fix_MMC4_base(void) {
 	MMC4_chr_swap(0x1000, mmc4.chr[mmc4.latch[1]]);
 }
 void chr_swap_MMC4_base(WORD address, WORD value) {
-	const BYTE slot = address >> 10;
-	DBWORD bank = 0;
-
-	control_bank(info.chr.rom.max.banks_4k)
-	bank = value << 12;
-	chr.bank_1k[slot] = chr_pnt(bank);
-	chr.bank_1k[slot | 0x01] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[slot | 0x02] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[slot | 0x03] = chr_pnt(bank | 0x0C00);
+	map_chr_rom_4k(address, value);
 }
 void mirroring_fix_MMC4_base(void) {
 	if (mmc4.mirroring & 0x01) {

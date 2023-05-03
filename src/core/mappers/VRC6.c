@@ -355,11 +355,10 @@ void chr_swap_VRC6_base(WORD address, WORD value) {
 	const WORD slot = address >> 10;
 
 	value = chr_control(slot, value);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[slot] = chr_pnt(value << 10);
+	map_chr_rom_1k(address, value);
 }
 void wram_fix_VRC6_base(void) {
-	cpu.prg_ram_rd_active = (vrc6.reg & 0x80) >> 7;
+	cpu.prg_ram_rd_active = vrc6.reg >> 7;
 	cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
 }
 void mirroring_fix_VRC6_base(void) {
@@ -412,23 +411,19 @@ void mirroring_fix_VRC6_base(void) {
 }
 void nmt_swap_VRC6_base(WORD address, WORD value) {
 	WORD const slot = address >> 10;
-	BYTE *dst = NULL;
 
 	if (vrc6.reg & 0x10) {
-		value = chr_control(slot, value);
-		control_bank(info.chr.rom.max.banks_1k);
-		dst = chr_pnt(0);
+		map_nmt_chr_rom_1k(slot, chr_control(address, value));
 	} else if (info.chr.ram.banks_8k_plus) {
-		control_bank(info.chr.ram.max.banks_1k);
-		dst = chr.extra.data;
+		map_nmt_chr_ram_1k(slot, value);
 	} else {
-		control_bank(0x01);
-		dst = &ntbl.data[0];
+		map_nmt_1k(slot, (value & 0x01));
 	}
-	ntbl.bank_1k[slot] = &dst[value << 10];
 }
 
-INLINE static WORD chr_control(const WORD slot, const WORD value) {
+INLINE static WORD chr_control(const WORD address, const WORD value) {
+	WORD const slot = (address & 0x0F00) >> 10;
+
 	return (chr.rom.size >= (size_t)(512 * 1024) ? (value << 1) | (slot & 0x01) : value);
 }
 INLINE static void vrc6_square_wr(int index, BYTE value, _vrc6_square *square) {

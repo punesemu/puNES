@@ -355,7 +355,13 @@ BYTE extcl_save_mapper_OneBus(BYTE mode, BYTE slot, FILE *fp) {
 BYTE extcl_wr_ppu_reg_OneBus(WORD address, BYTE *value) {
 	if ((address >= 0x3000) && (info.mapper.ext_console_type == VT369)) {
 		address &= 0x0FFF;
-		ntbl.bank_1k[address >> 10][address & 0x3FF] = (*value);
+		{
+			const BYTE slot = address >> 10;
+
+			if (ntbl.writable[slot]) {
+				ntbl.bank_1k[slot][address & 0x3FF] = (*value);
+			}
+		}
 		return (TRUE);
 	}
 	if (address >= 0x2008) {

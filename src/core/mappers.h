@@ -63,13 +63,20 @@
 #include "mappers/mapper_061.h"
 #include "mappers/mapper_062.h"
 #include "mappers/mapper_063.h"
+#include "mappers/mapper_067.h"
+#include "mappers/mapper_068.h"
 #include "mappers/mapper_069.h"
 #include "mappers/mapper_070.h"
 #include "mappers/mapper_074.h"
+#include "mappers/mapper_076.h"
 #include "mappers/mapper_081.h"
 #include "mappers/mapper_083.h"
 #include "mappers/mapper_085.h"
+#include "mappers/mapper_088.h"
+#include "mappers/mapper_089.h"
 #include "mappers/mapper_091.h"
+#include "mappers/mapper_093.h"
+#include "mappers/mapper_095.h"
 #include "mappers/mapper_100.h"
 #include "mappers/mapper_101.h"
 #include "mappers/mapper_103.h"
@@ -88,6 +95,7 @@
 #include "mappers/mapper_126.h"
 #include "mappers/mapper_134.h"
 #include "mappers/mapper_152.h"
+#include "mappers/mapper_154.h"
 #include "mappers/mapper_156.h"
 #include "mappers/mapper_163.h"
 #include "mappers/mapper_164.h"
@@ -119,6 +127,7 @@
 #include "mappers/mapper_203.h"
 #include "mappers/mapper_204.h"
 #include "mappers/mapper_205.h"
+#include "mappers/mapper_206.h"
 #include "mappers/mapper_208.h"
 #include "mappers/mapper_212.h"
 #include "mappers/mapper_213.h"
@@ -166,6 +175,7 @@
 #include "mappers/mapper_299.h"
 #include "mappers/mapper_300.h"
 #include "mappers/mapper_302.h"
+#include "mappers/mapper_307.h"
 #include "mappers/mapper_308.h"
 #include "mappers/mapper_311.h"
 #include "mappers/mapper_313.h"
@@ -297,7 +307,6 @@
 #include "mappers/mapper_Rex.h"
 #include "mappers/mapper_Sachen.h"
 #include "mappers/mapper_SC_127.h"
-#include "mappers/mapper_Sunsoft.h"
 #include "mappers/mapper_Taito.h"
 #include "mappers/mapper_Tengen.h"
 #include "mappers/mapper_Txc.h"
@@ -311,7 +320,6 @@
 #include "mappers/mapper_80013B.h"
 #include "mappers/mapper_891227.h"
 #include "mappers/mapper_A65AS.h"
-#include "mappers/mapper_AC08.h"
 #include "mappers/mapper_BJ56.h"
 #include "mappers/mapper_BMC64IN1NOREPEAT.h"
 #include "mappers/mapper_BMC70IN1.h"
@@ -343,7 +351,6 @@
 #include "mappers/mapper_KS7030.h"
 #include "mappers/mapper_KS7031.h"
 #include "mappers/mapper_KS7032.h"
-#include "mappers/mapper_KS7037.h"
 #include "mappers/mapper_LH10.h"
 #include "mappers/mapper_LH32.h"
 #include "mappers/mapper_LH51.h"
@@ -359,6 +366,7 @@
 #include "mappers/mapper_YOKO.h"
 
 #include "mappers/FME7.h"
+#include "mappers/N118.h"
 #include "mappers/MMC1.h"
 #include "mappers/MMC2.h"
 #include "mappers/MMC3.h"
@@ -413,6 +421,15 @@ void map_set_banks_max_chr(void);
 void map_bat_wr_default(FILE *fp) ;
 void map_bat_rd_default(FILE *fp);
 
+void map_chr_rom_1k(const WORD address, const WORD value);
+void map_chr_rom_2k(const WORD address, const WORD value);
 void map_chr_rom_4k(const WORD address, const WORD value);
+void map_chr_rom_8k(const WORD address, const WORD value);
+
+void map_nmt_1k(BYTE slot, const WORD value);
+void map_nmt_chr_ram_1k(BYTE slot, const WORD value);
+void map_nmt_chr_rom_1k(BYTE slot, const WORD value);
+void map_nmt_chr_rom_2k(BYTE slot, const WORD value);
+void map_nmt_chr_rom_4k(const WORD value);
 
 #endif /* MAPPERS_H_ */

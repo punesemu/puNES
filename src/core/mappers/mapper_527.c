@@ -45,7 +45,8 @@ void chr_swap_vrc2and4_527(WORD address, WORD value) {
 
 	if (slot < 2) {
 		slot <<= 1;
-		ntbl.bank_1k[slot] = ntbl.bank_1k[slot | 0x01] = &ntbl.data[((value & 0x80) << 4)];
+		map_nmt_1k(slot, ((value & 0x80) >> 7));
+		map_nmt_1k(slot | 0x01, ((value & 0x80) >> 7));
 	}
 	chr_swap_VRC2and4_base(address, (value & 0xFFF));
 }

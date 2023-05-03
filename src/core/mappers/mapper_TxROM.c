@@ -77,14 +77,14 @@ void extcl_cpu_wr_mem_TxROM(WORD address, BYTE value) {
 
 void mirroring_fix_mmc3_TxROM(void) {
 	if (mmc3.bank_to_update & 0x80) {
-		ntbl.bank_1k[0] = &ntbl.data[((mmc3.reg[2] >> 7) ^ 0x01) << 10];
-		ntbl.bank_1k[1] = &ntbl.data[((mmc3.reg[3] >> 7) ^ 0x01) << 10];
-		ntbl.bank_1k[2] = &ntbl.data[((mmc3.reg[4] >> 7) ^ 0x01) << 10];
-		ntbl.bank_1k[3] = &ntbl.data[((mmc3.reg[5] >> 7) ^ 0x01) << 10];
+		map_nmt_1k(0, ((mmc3.reg[2] >> 7) ^ 0x01));
+		map_nmt_1k(1, ((mmc3.reg[3] >> 7) ^ 0x01));
+		map_nmt_1k(2, ((mmc3.reg[4] >> 7) ^ 0x01));
+		map_nmt_1k(3, ((mmc3.reg[5] >> 7) ^ 0x01));
 	} else {
-		ntbl.bank_1k[0] = &ntbl.data[((mmc3.reg[0] >> 7) ^ 0x01) << 10];
-		ntbl.bank_1k[1] = ntbl.bank_1k[0];
-		ntbl.bank_1k[2] = &ntbl.data[((mmc3.reg[1] >> 7) ^ 0x01) << 10];
-		ntbl.bank_1k[3] = ntbl.bank_1k[2];
+		map_nmt_1k(0, ((mmc3.reg[0] >> 7) ^ 0x01));
+		map_nmt_1k(1, ((mmc3.reg[0] >> 7) ^ 0x01));
+		map_nmt_1k(2, ((mmc3.reg[1] >> 7) ^ 0x01));
+		map_nmt_1k(3, ((mmc3.reg[1] >> 7) ^ 0x01));
 	}
 }

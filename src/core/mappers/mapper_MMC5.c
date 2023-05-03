@@ -122,16 +122,18 @@
 #define _nmt_update(slot)\
 	switch (mode) {\
 		case MODE0:\
-			ntbl.bank_1k[slot] = &ntbl.data[0];\
+			map_nmt_1k(slot, 0);\
 			break;\
 		case MODE1:\
-			ntbl.bank_1k[slot] = &ntbl.data[0x400];\
+			map_nmt_1k(slot, 1);\
 			break;\
 		case MODE2:\
 			ntbl.bank_1k[slot] = &mmc5.ext_ram[0];\
+			ntbl.writable[slot] = TRUE;\
 			break;\
 		case MODE3:\
 			ntbl.bank_1k[slot] = &mmc5.fill_table[0];\
+			ntbl.writable[slot] = TRUE;\
 			break;\
 	}
 

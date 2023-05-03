@@ -169,21 +169,6 @@ INLINE static void prg_fix_413(void) {
 	map_prg_rom_8k_update();
 }
 INLINE static void chr_fix_413(void) {
-	DBWORD bank;
-
-	bank = m413.reg[3];
-	_control_bank(bank, info.chr.rom.max.banks_4k)
-	bank <<= 12;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-
-	bank = 0xFD;
-	_control_bank(bank, info.chr.rom.max.banks_4k)
-	bank <<= 12;
-	chr.bank_1k[4] = chr_pnt(bank);
-	chr.bank_1k[5] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x0C00);
+	map_chr_rom_4k(0x0000, m413.reg[3]);
+	map_chr_rom_4k(0x1000, 0xFD);
 }

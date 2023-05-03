@@ -519,6 +519,7 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 			save_slot_pos(mode, slot, ntbl.data, ntbl.bank_1k[i]);
 		}
 	}
+	save_slot_ele(mode, slot, ntbl.writable);
 	save_slot_ele(mode, slot, mmap_palette.color);
 	save_slot_ele(mode, slot, oam.data);
 	save_slot_ele(mode, slot, oam.plus);

@@ -116,25 +116,7 @@ void prg_swap_mmc3_292(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, value);
 }
 void chr_fix_mmc3_292(void) {
-	DBWORD bank = 0;
-
-	bank = (mmc3.reg[0] >> 1) ^ m292.reg[1];
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x400);
-
-	bank = (mmc3.reg[1] >> 1) | ((m292.reg[2] & 0x40) << 1);
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[2] = chr_pnt(bank);
-	chr.bank_1k[3] = chr_pnt(bank | 0x400);
-
-	bank = m292.reg[2] & 0x3F;
-	_control_bank(bank, info.chr.rom.max.banks_4k)
-	bank <<= 12;
-	chr.bank_1k[4] = chr_pnt(bank);
-	chr.bank_1k[5] = chr_pnt(bank | 0x400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x800);
-	chr.bank_1k[7] = chr_pnt(bank | 0xC00);
+	map_chr_rom_2k(0x0000, ((mmc3.reg[0] >> 1) ^ m292.reg[1]));
+	map_chr_rom_2k(0x0800, ((mmc3.reg[1] >> 1) | ((m292.reg[2] & 0x40) << 1)));
+	map_chr_rom_4k(0x1000, m292.reg[2] & 0x3F);
 }

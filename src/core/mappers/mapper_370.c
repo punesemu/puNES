@@ -27,8 +27,6 @@ void prg_swap_mmc3_370(WORD address, WORD value);
 void chr_swap_mmc3_370(WORD address, WORD value);
 void mirroring_fix_mmc3_370(void);
 
-INLINE static BYTE mirroring_TLSROM(BYTE value);
-
 struct _m370 {
 	BYTE reg;
 } m370;
@@ -112,21 +110,17 @@ void chr_swap_mmc3_370(WORD address, WORD value) {
 void mirroring_fix_mmc3_370(void) {
 	if ((m370.reg & 0x07) == 0x01) {
 		if (mmc3.bank_to_update & 0x80) {
-			ntbl.bank_1k[0] = &ntbl.data[mirroring_TLSROM(mmc3.reg[2]) << 10];
-			ntbl.bank_1k[1] = &ntbl.data[mirroring_TLSROM(mmc3.reg[3]) << 10];
-			ntbl.bank_1k[2] = &ntbl.data[mirroring_TLSROM(mmc3.reg[4]) << 10];
-			ntbl.bank_1k[3] = &ntbl.data[mirroring_TLSROM(mmc3.reg[5]) << 10];
+			map_nmt_1k(0, ((mmc3.reg[2] >> 7) ^ 0x01));
+			map_nmt_1k(1, ((mmc3.reg[3] >> 7) ^ 0x01));
+			map_nmt_1k(2, ((mmc3.reg[4] >> 7) ^ 0x01));
+			map_nmt_1k(3, ((mmc3.reg[5] >> 7) ^ 0x01));
 		} else {
-			ntbl.bank_1k[0] = &ntbl.data[mirroring_TLSROM(mmc3.reg[0]) << 10];
-			ntbl.bank_1k[1] = ntbl.bank_1k[0];
-			ntbl.bank_1k[2] = &ntbl.data[mirroring_TLSROM(mmc3.reg[1]) << 10];
-			ntbl.bank_1k[3] = ntbl.bank_1k[2];
+			map_nmt_1k(0, ((mmc3.reg[0] >> 7) ^ 0x01));
+			map_nmt_1k(1, ((mmc3.reg[0] >> 7) ^ 0x01));
+			map_nmt_1k(2, ((mmc3.reg[1] >> 7) ^ 0x01));
+			map_nmt_1k(3, ((mmc3.reg[1] >> 7) ^ 0x01));
 		}
 		return;
 	}
 	mirroring_fix_MMC3_base();
-}
-
-INLINE static BYTE mirroring_TLSROM(BYTE value) {
-	return ((value >> 7) ^ 0x01);
 }

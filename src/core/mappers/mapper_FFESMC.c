@@ -707,13 +707,11 @@ BYTE extcl_rd_chr_FFESMC(WORD address) {
 	}
 	return (chr.bank_1k[address >> 10][address & 0x3FF]);
 }
-void extcl_wr_nmt_FFESMC(WORD address, BYTE value) {
-	BYTE index = (address & 0x0FFF) >> 10;
-
+BYTE extcl_wr_nmt_FFESMC(UNUSED(WORD address), UNUSED(BYTE value)) {
 	if (!(ffesmc.mode.smc & 0x02) && (((ffesmc.mode.m1 & 0xE1) >= 0x81) || ffesmc.chr.lock)) {
-		return;
+		return (TRUE);
 	}
-	ntbl.bank_1k[index][address & 0x3FF] = value;
+	return (FALSE);
 }
 void extcl_cpu_every_cycle_FFESMC(void) {
 	ffesmc.fds.counter += 3;
@@ -930,35 +928,22 @@ INLINE static void mirroring_fix_FFESMC(void) {
 		switch (ffesmc.mode.m1 & 0x11) {
 			case 0x00:
 				mirroring_SCR0();
-				break;
+				return;
 			case 0x10:
 				mirroring_SCR1();
-				break;
+				return;
 			case 0x01:
 				mirroring_V();
-				break;
+				return;
 			case 0x11:
 				mirroring_H();
-				break;
+				return;
 		}
 	} else {
-		WORD bank;
-
-		bank = ffesmc.chr.reg[8];
-		_control_bank(bank, info.chr.rom.max.banks_1k)
-		ntbl.bank_1k[0] = chr_pnt(bank << 10);
-
-		bank = ffesmc.chr.reg[9];
-		_control_bank(bank, info.chr.rom.max.banks_1k)
-		ntbl.bank_1k[1] = chr_pnt(bank << 10);
-
-		bank = ffesmc.chr.reg[10];
-		_control_bank(bank, info.chr.rom.max.banks_1k)
-		ntbl.bank_1k[2] = chr_pnt(bank << 10);
-
-		bank = ffesmc.chr.reg[11];
-		_control_bank(bank, info.chr.rom.max.banks_1k)
-		ntbl.bank_1k[3] = chr_pnt(bank << 10);
+		map_nmt_chr_rom_1k(0, ffesmc.chr.reg[8]);
+		map_nmt_chr_rom_1k(1, ffesmc.chr.reg[9]);
+		map_nmt_chr_rom_1k(2, ffesmc.chr.reg[10]);
+		map_nmt_chr_rom_1k(3, ffesmc.chr.reg[11]);
 	}
 }
 INLINE static void irq_clock_FFESMC(void) {

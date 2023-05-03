@@ -27,8 +27,6 @@ void prg_swap_mmc3_353(WORD address, WORD value);
 void chr_swap_mmc3_353(WORD address, WORD value);
 void mirroring_fix_mmc3_353(void);
 
-INLINE static void mirroring_swap_353(BYTE slot, BYTE value);
-
 struct _m353 {
 	BYTE reg;
 	BYTE chr_writable;
@@ -155,21 +153,17 @@ void chr_swap_mmc3_353(WORD address, WORD value) {
 void mirroring_fix_mmc3_353(void) {
 	if (!m353.reg) {
 		 if (!(mmc3.reg[0] & 0x80)) {
-			mirroring_swap_353(0, mmc3.reg[0]);
-			mirroring_swap_353(1, mmc3.reg[0]);
-			mirroring_swap_353(2, mmc3.reg[1]);
-			mirroring_swap_353(3, mmc3.reg[1]);
+			map_nmt_1k(0, ((mmc3.reg[0] >> 7) ^ 0x01));
+			map_nmt_1k(1, ((mmc3.reg[0] >> 7) ^ 0x01));
+			map_nmt_1k(2, ((mmc3.reg[1] >> 7) ^ 0x01));
+			map_nmt_1k(3, ((mmc3.reg[1] >> 7) ^ 0x01));
 		 } else {
-			mirroring_swap_353(0, mmc3.reg[2]);
-			mirroring_swap_353(1, mmc3.reg[3]);
-			mirroring_swap_353(2, mmc3.reg[4]);
-			mirroring_swap_353(3, mmc3.reg[5]);
+			map_nmt_1k(0, ((mmc3.reg[2] >> 7) ^ 0x01));
+			map_nmt_1k(1, ((mmc3.reg[3] >> 7) ^ 0x01));
+			map_nmt_1k(2, ((mmc3.reg[4] >> 7) ^ 0x01));
+			map_nmt_1k(3, ((mmc3.reg[5] >> 7) ^ 0x01));
 		 }
 	} else {
 		mirroring_fix_MMC3_base();
 	}
-}
-
-INLINE static void mirroring_swap_353(BYTE slot, BYTE value) {
-	ntbl.bank_1k[slot] = &ntbl.data[((value >> 7) ^ 0x01) << 10];
 }

@@ -49,8 +49,9 @@ void map_init_218(void) {
 			break;
 	}
 }
-void extcl_wr_nmt_218(WORD address, BYTE value) {
+BYTE extcl_wr_nmt_218(WORD address, BYTE value) {
 	extcl_wr_chr_218((address & 0x0FFF) + 0x2000, value);
+	return (TRUE);
 }
 BYTE extcl_rd_nmt_218(WORD address) {
 	return (extcl_rd_chr_218((address & 0x0FFF) + 0x2000));

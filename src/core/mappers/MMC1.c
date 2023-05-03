@@ -120,15 +120,7 @@ void chr_fix_MMC1_base(void) {
 	MMC1_chr_swap(0x1000, chr_bank_MMC1(1));
 }
 void chr_swap_MMC1_base(WORD address, WORD value) {
-	const BYTE slot = (address >> 10) & 0x04;
-	DBWORD bank = value;
-
-	_control_bank(bank, info.chr.rom.max.banks_4k)
-	bank <<= 12;
-	chr.bank_1k[slot] = chr_pnt(bank);
-	chr.bank_1k[slot | 0x01] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[slot | 0x02] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[slot | 0x03] = chr_pnt(bank | 0x0C00);
+	map_chr_rom_4k(address, value);
 }
 void wram_fix_MMC1_base(void) {
 	MMC1_wram_swap(0);

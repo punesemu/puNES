@@ -205,31 +205,23 @@ void extcl_battery_io_UNROM512(BYTE mode, FILE *fp) {
 }
 
 INLINE static void mirroring_fix_UNROM512(void) {
-	DBWORD bank;
-
 	switch (unrom512tmp.mirroring) {
 		case 0:
 			mirroring_H();
-			break;
+			return;
 		case 1:
 			mirroring_V();
-			break;
+			return;
 		case 2:
 			if (unrom512.reg & 0x80) {
 				mirroring_SCR1();
 			} else {
 				mirroring_SCR0();
 			}
-			break;
+			return;
 		case 3:
 			// 4-Screen, cartridge VRAM
-			bank = 3;
-			_control_bank(bank, info.chr.rom.max.banks_8k)
-			bank <<= 13;
-			ntbl.bank_1k[0] = chr_pnt(bank | 0x1000);
-			ntbl.bank_1k[1] = chr_pnt(bank | 0x1400);
-			ntbl.bank_1k[2] = chr_pnt(bank | 0x1800);
-			ntbl.bank_1k[3] = chr_pnt(bank | 0x1C00);
-			break;
+			map_nmt_chr_rom_4k(7);
+			return;
 	}
 }

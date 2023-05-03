@@ -38,7 +38,6 @@ void map_init_394(void) {
 	EXTCL_CPU_EVERY_CYCLE(394);
 	EXTCL_RD_PPU_MEM(394);
 	EXTCL_RD_CHR(394);
-	EXTCL_WR_NMT(394);
 	EXTCL_PPU_000_TO_34X(394);
 	EXTCL_PPU_000_TO_255(394);
 	EXTCL_PPU_256_TO_319(394);
@@ -106,7 +105,6 @@ BYTE extcl_save_mapper_394(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-
 void extcl_cpu_every_cycle_394(void) {
 	if (m394.reg[1] & 0x10) {
 		extcl_cpu_every_cycle_JYASIC();
@@ -124,13 +122,6 @@ BYTE extcl_rd_chr_394(WORD address) {
 		return (extcl_rd_chr_JYASIC(address));
 	}
 	return (chr.bank_1k[address >> 10][address & 0x3FF]);
-}
-void extcl_wr_nmt_394(WORD address, BYTE value) {
-	if (m394.reg[1] & 0x10) {
-		extcl_wr_nmt_JYASIC(address, value);
-		return;
-	}
-	ntbl.bank_1k[(address & 0x0FFF) >> 10][address & 0x3FF] = value;
 }
 void extcl_ppu_000_to_34x_394(void) {
 	if (!(m394.reg[1] & 0x10)) {

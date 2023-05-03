@@ -22,6 +22,5 @@
 #include "common.h"
 
 void map_init_557(void);
-void extcl_after_mapper_init_557(void);
 
 #endif /* MAPPER_557_H_ */

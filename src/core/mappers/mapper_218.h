@@ -24,7 +24,7 @@
 void map_init_218(void);
 void extcl_mapper_quit_218(void);
 BYTE extcl_save_mapper_218(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_nmt_218(WORD address, BYTE value);
+BYTE extcl_wr_nmt_218(WORD address, BYTE value);
 BYTE extcl_rd_nmt_218(WORD address);
 void extcl_wr_chr_218(WORD address, BYTE value);
 BYTE extcl_rd_chr_218(WORD address);

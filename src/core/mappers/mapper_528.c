@@ -93,8 +93,8 @@ void extcl_cpu_wr_mem_528(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_528(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m528.reg);
-	extcl_save_mapper_FME7(mode, slot, fp);
 	extcl_save_mapper_VRC7(mode, slot, fp);
+	extcl_save_mapper_FME7(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
 		FME7_wram_fix();

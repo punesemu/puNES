@@ -49,7 +49,6 @@ void map_init_JYASIC(BYTE model) {
 	EXTCL_CPU_EVERY_CYCLE(JYASIC);
 	EXTCL_RD_PPU_MEM(JYASIC);
 	EXTCL_RD_CHR(JYASIC);
-	EXTCL_WR_NMT(JYASIC);
 	EXTCL_PPU_000_TO_255(JYASIC);
 	EXTCL_PPU_256_TO_319(JYASIC);
 	EXTCL_PPU_320_TO_34X(JYASIC);
@@ -106,7 +105,6 @@ void map_init_JYASIC(BYTE model) {
 			for (i = 0; i < 8; i++) {
 				if (i < 4) {
 					jyasic.prg[i] = 0xFF;
-					jyasic.nmt.write[i] = TRUE;
 				}
 				jyasic.chr.low[i] = 0xFF;
 				jyasic.chr.high[i] = 0xFF;
@@ -324,7 +322,6 @@ BYTE extcl_save_mapper_JYASIC(BYTE mode, BYTE slot, FILE *fp) {
 
 	save_slot_ele(mode, slot, jyasic.nmt.extended_mode);
 	save_slot_ele(mode, slot, jyasic.nmt.reg);
-	save_slot_ele(mode, slot, jyasic.nmt.write);
 
 	save_slot_ele(mode, slot, jyasic.irq.active);
 	save_slot_ele(mode, slot, jyasic.irq.mode);
@@ -368,14 +365,6 @@ BYTE extcl_rd_chr_JYASIC(WORD address) {
 		}
 	}
 	return (chr.bank_1k[address >> 10][address & 0x3FF]);
-}
-void extcl_wr_nmt_JYASIC(WORD address, BYTE value) {
-	BYTE index = (address & 0x0FFF) >> 10;
-
-	if (jyasic.nmt.extended_mode && !jyasic.nmt.write[index]) {
-		return;
-	}
-	ntbl.bank_1k[index][address & 0x3FF] = value;
 }
 void extcl_ppu_000_to_255_JYASIC(void) {
 	if (r2001.visible) {
@@ -683,7 +672,6 @@ INLINE static void chr_fix_JYASIC(void) {
 #undef chr_JYASIC
 }
 INLINE static void nmt_fix_JYASIC(void) {
-	WORD value = 0;
 	BYTE i = 0;
 
 	if (jyasic.nmt.extended_mode) {
@@ -693,21 +681,14 @@ INLINE static void nmt_fix_JYASIC(void) {
 
 		for (i = 0; i < 4; i++) {
 			if (((jyasic.mode[2] ^ jyasic.nmt.reg[i]) & 0x80) | (jyasic.mode[0] & 0x40)) {
-				value = (jyasic.nmt.reg[i] & mask) | outer;
-				control_bank(info.chr.rom.max.banks_1k)
-				ntbl.bank_1k[i] = chr_pnt(value << 10);
-				jyasic.nmt.write[i] = FALSE;
+				map_nmt_chr_rom_1k(i, (outer | (jyasic.nmt.reg[i] & mask)));
 			} else {
-				value = jyasic.nmt.reg[i] & 0x01;
-				ntbl.bank_1k[i] = &ntbl.data[value << 10];
-				jyasic.nmt.write[i] = TRUE;
+				map_nmt_1k(i, (jyasic.nmt.reg[i] & 0x01));
 			}
 		}
 	} else if (jyasic.mode[1] & 0x08) {
 		for (i = 0; i < 4; i++) {
-			value = jyasic.nmt.reg[i] & 0x01;
-			ntbl.bank_1k[i] = &ntbl.data[value << 10];
-			jyasic.nmt.write[i] = TRUE;
+			map_nmt_1k(i, (jyasic.nmt.reg[i] & 0x01));
 		}
 	} else {
 		switch (jyasic.mode[1] & 0x03) {

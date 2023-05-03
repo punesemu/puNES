@@ -23,11 +23,6 @@
 
 enum _namco_types {
 	N163,
-	N3416,
-	N3425,
-	N3433,
-	N3446,
-	N3453,
 	CHINA_ER_SAN2,
 	NAMCO_HARD_WIRED_V,
 	NAMCO_HARD_WIRED_H,
@@ -73,16 +68,9 @@ void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_Namco_163(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_Namco_163(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_Namco_163(void);
-void extcl_wr_nmt_Namco_163(WORD address, BYTE value);
 void extcl_wr_chr_Namco_163(WORD address, BYTE value);
 void extcl_apu_tick_Namco_163(void);
 void extcl_battery_io_Namco_163(BYTE mode, FILE *fp);
-
-void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value);
-BYTE extcl_save_mapper_Namco_3425(BYTE mode, BYTE slot, FILE *fp);
-
-void extcl_cpu_wr_mem_Namco_3446(WORD address, BYTE value);
-BYTE extcl_save_mapper_Namco_3446(BYTE mode, BYTE slot, FILE *fp);
 
 void chinaersan2_apply_font(void);
 BYTE chinaersan2_init(void);

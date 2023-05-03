@@ -57,7 +57,7 @@ BYTE (*extcl_rd_chr)(WORD address);
 // viene chiamata dopo il FETCHB e dopo il fetch dello sprite
 void (*extcl_after_rd_chr)(WORD address);
 // viene chiamato quando si tenta di scrivere nella Nametable Ram
-void (*extcl_wr_nmt)(WORD address, BYTE value);
+BYTE (*extcl_wr_nmt)(WORD address, BYTE value);
 // viene chiamato quando si tenta di scrivere nella CHR Ram
 void (*extcl_wr_chr)(WORD address, BYTE value);
 // APU

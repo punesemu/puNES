@@ -65,13 +65,13 @@ BYTE extcl_save_mapper_560(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_wr_nmt_560(WORD address, BYTE value) {
-	BYTE bank = (address & 0x0FFF) >> 10;
+BYTE extcl_wr_nmt_560(WORD address, BYTE value) {
+	const BYTE slot = (address & 0x0F00) >> 10;
 
-	if (bank & 0x01) {
+	if (slot & 0x01) {
 		m560.ext_ram[r2006.value & 0x3FF] = value;
 	}
-	ntbl.bank_1k[bank][address & 0x3FF] = value;
+	return (FALSE);
 }
 BYTE extcl_rd_nmt_560(WORD address) {
 	if (!m560.pa13) {

@@ -30,22 +30,15 @@
 INLINE static void prg_fix_Namco_163(void);
 INLINE static void chr_fix_Namco_163(void);
 INLINE static void chr_swap_Namco_163(BYTE **dst, DBWORD value, BYTE force_chrom, BYTE *bank_writable);
+INLINE static void nmt_swap_Namco_163(BYTE slot, WORD value);
 INLINE static void snd_Namco_163_set_volume(void);
 INLINE static SWORD snd_Namco_163_wave(int cycles, int channel_offset);
 
-struct _n3425 {
-	BYTE bank_to_update;
-} n3425;
-struct _n3446 {
-	BYTE bank_to_update;
-	BYTE prg_rom_mode;
-} n3446;
 _chinaersan2 chinaersan2;
 _n163 n163;
 struct _namcotmp {
 	BYTE ram[0x80];
 	BYTE chr_bank_writable[8];
-	BYTE nmt_bank_writable[4];
 	SWORD volume;
 	BYTE hardwired;
 	BYTE type;
@@ -60,7 +53,6 @@ void map_init_Namco(BYTE model) {
 			EXTCL_CPU_WR_MEM(Namco_163);
 			EXTCL_CPU_RD_MEM(Namco_163);
 			EXTCL_SAVE_MAPPER(Namco_163);
-			EXTCL_WR_NMT(Namco_163);
 			EXTCL_WR_CHR(Namco_163);
 			EXTCL_CPU_EVERY_CYCLE(Namco_163);
 			EXTCL_BATTERY_IO(Namco_163);
@@ -132,35 +124,6 @@ void map_init_Namco(BYTE model) {
 			if (model == CHINA_ER_SAN2) {
 				chinaersan2.enable = TRUE;
 			}
-			break;
-		case N3416:
-		case N3425:
-		case N3433:
-		case N3453:
-			EXTCL_CPU_WR_MEM(Namco_3425);
-			EXTCL_SAVE_MAPPER(Namco_3425);
-			mapper.internal_struct[0] = (BYTE *)&n3425;
-			mapper.internal_struct_size[0] = sizeof(n3425);
-
-			if (info.reset >= HARD) {
-				memset(&n3425, 0x00, sizeof(n3425));
-			}
-
-			if (model == N3453) {
-				mirroring_SCR0();
-			}
-			break;
-		case N3446:
-			EXTCL_CPU_WR_MEM(Namco_3446);
-			EXTCL_SAVE_MAPPER(Namco_3446);
-			mapper.internal_struct[0] = (BYTE *)&n3446;
-			mapper.internal_struct_size[0] = sizeof(n3446);
-
-			if (info.reset >= HARD) {
-				memset(&n3446, 0x00, sizeof(n3446));
-			}
-
-			mapper.rom_map_to[2] = info.prg.rom.max.banks_8k - 1;
 			break;
 	}
 
@@ -292,13 +255,6 @@ void extcl_cpu_every_cycle_Namco_163(void) {
 		n163.irq.delay = TRUE;
 	}
 }
-void extcl_wr_nmt_Namco_163(WORD address, BYTE value) {
-	const BYTE slot = (address & 0x0FFF) >> 10;
-
-	if (namcotmp.nmt_bank_writable[slot] | namcotmp.hardwired) {
-		ntbl.bank_1k[slot][address & 0x3FF] = value;
-	}
-}
 void extcl_wr_chr_Namco_163(WORD address, BYTE value) {
 	const BYTE slot = address >> 10;
 
@@ -372,11 +328,10 @@ INLINE static void chr_fix_Namco_163(void) {
 	chr_swap_Namco_163(&chr.bank_1k[7], n163.chr[7], force_chrom, &namcotmp.chr_bank_writable[7]);
 
 	if (!namcotmp.hardwired) {
-		force_chrom = FALSE;
-		chr_swap_Namco_163(&ntbl.bank_1k[0], n163.chr[8], force_chrom, &namcotmp.nmt_bank_writable[0]);
-		chr_swap_Namco_163(&ntbl.bank_1k[1], n163.chr[9], force_chrom, &namcotmp.nmt_bank_writable[1]);
-		chr_swap_Namco_163(&ntbl.bank_1k[2], n163.chr[10], force_chrom, &namcotmp.nmt_bank_writable[2]);
-		chr_swap_Namco_163(&ntbl.bank_1k[3], n163.chr[11], force_chrom, &namcotmp.nmt_bank_writable[3]);
+		nmt_swap_Namco_163(0, n163.chr[8]);
+		nmt_swap_Namco_163(1, n163.chr[9]);
+		nmt_swap_Namco_163(2, n163.chr[10]);
+		nmt_swap_Namco_163(3, n163.chr[11]);
 	}
 }
 INLINE static void chr_swap_Namco_163(BYTE **dst, DBWORD value, BYTE force_chrom, BYTE *bank_writable) {
@@ -389,6 +344,14 @@ INLINE static void chr_swap_Namco_163(BYTE **dst, DBWORD value, BYTE force_chrom
 		value = (value & ((mapper.mirroring == MIRRORING_FOURSCR) ? 0x03 : 0x01)) << 10;
 		(*dst) = &ntbl.data[value];
 		(*bank_writable) = TRUE;
+	}
+}
+INLINE static void nmt_swap_Namco_163(BYTE slot, WORD value) {
+	if (value < 0xE0) {
+		map_nmt_chr_rom_1k(slot, value);
+	} else {
+		value |= (mapper.mirroring == MIRRORING_FOURSCR ? 0x03 : 0x01);
+		map_nmt_1k(slot, value);
 	}
 }
 INLINE static void snd_Namco_163_set_volume(void) {
@@ -420,121 +383,29 @@ INLINE static SWORD snd_Namco_163_wave(int cycles, int channel_offset) {
 	return (SWORD)(((output - 8) * volume));
 }
 
-void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
-	if (namcotmp.type == N3453) {
-		if (value & 0x40) {
-			mirroring_SCR1();
-		} else {
-			mirroring_SCR0();
-		}
-	}
-	switch (address & 0xE001) {
-		case 0x8000:
-			n3425.bank_to_update = value & 0x07;
-			return;
-		case 0x8001: {
-			switch (n3425.bank_to_update) {
-				case 0x00:
-				case 0x01: {
-					const BYTE slot = n3425.bank_to_update << 1;
-					DBWORD bank;
 
-					if (namcotmp.type == N3425) {
-						// 7  bit  0
-						// ---- ----
-						// xxxx xRRR
-						//       |||
-						//       +++- Specify which bank register to update on next write to Bank Data register
-						//            0: Select 2 KB CHR bank at PPU $0000-$07FF and nametable at PPU $2000-$27FF
-						//            1: Select 2 KB CHR bank at PPU $0800-$0FFF and nametable at PPU $2800-$2FFF
-						//            2: Select 1 KB CHR bank at PPU $1000-$13FF
-						//            3: Select 1 KB CHR bank at PPU $1400-$17FF
-						//            4: Select 1 KB CHR bank at PPU $1800-$1BFF
-						//            5: Select 1 KB CHR bank at PPU $1C00-$1FFF
-						//            6: Select 8 KB PRG ROM bank at $8000-$9FFF
-						//            7: Select 8 KB PRG ROM bank at $A000-$BFFF
-						bank = ((value >> 5) & 0x01) << 10;
-						ntbl.bank_1k[slot] = &ntbl.data[bank];
-						ntbl.bank_1k[slot | 0x01] = &ntbl.data[bank];
-					}
-					value >>= 1;
-					control_bank(info.chr.rom.max.banks_2k)
-					bank = value << 11;
-					chr.bank_1k[slot] = chr_pnt(bank);
-					chr.bank_1k[slot | 0x01] = chr_pnt(bank | 0x400);
-					return;
-				}
-				case 0x02:
-				case 0x03:
-				case 0x04:
-				case 0x05:
-					value |= 0x40;
-					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[n3425.bank_to_update + 2] = chr_pnt(value << 10);
-					return;
-				case 0x06:
-					control_bank(info.prg.rom.max.banks_8k)
-					map_prg_rom_8k(1, 0, value);
-					map_prg_rom_8k_update();
-					return;
-				case 0x07:
-					control_bank(info.prg.rom.max.banks_8k)
-					map_prg_rom_8k(1, 1, value);
-					map_prg_rom_8k_update();
-					return;
-			}
-			return;
-		}
-	}
-}
-BYTE extcl_save_mapper_Namco_3425(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, n3425.bank_to_update);
 
-	return (EXIT_OK);
-}
 
-void extcl_cpu_wr_mem_Namco_3446(WORD address, BYTE value) {
-	switch (address & 0x8001) {
-		case 0x8000:
-			n3446.bank_to_update = value & 0x7;
-			n3446.prg_rom_mode = (value & 0x40) >> 5;
-			return;
-		case 0x8001: {
-			switch (n3446.bank_to_update) {
-				case 0x02:
-				case 0x03:
-				case 0x04:
-				case 0x05: {
-					const BYTE slot = (n3446.bank_to_update - 2) << 1;
-					DBWORD bank;
 
-					control_bank(info.chr.rom.max.banks_2k)
-					bank = value << 11;
-					chr.bank_1k[slot] = chr_pnt(bank);
-					chr.bank_1k[slot | 0x01] = chr_pnt(bank | 0x400);
-					return;
-				}
-				case 0x06:
-					control_bank(info.prg.rom.max.banks_8k)
-					map_prg_rom_8k(1, n3446.prg_rom_mode, value);
-					map_prg_rom_8k_update();
-					return;
-				case 0x07:
-					control_bank(info.prg.rom.max.banks_8k)
-					map_prg_rom_8k(1, 1, value);
-					map_prg_rom_8k_update();
-					return;
-			}
-			return;
-		}
-	}
-}
-BYTE extcl_save_mapper_Namco_3446(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, n3446.bank_to_update);
-	save_slot_ele(mode, slot, n3446.prg_rom_mode);
 
-	return (EXIT_OK);
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // - Thx to guys of Nintendulator for this --------------------------------------------------------------------------------------
 #include "ppu.h"

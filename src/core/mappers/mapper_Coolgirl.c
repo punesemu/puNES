@@ -1827,8 +1827,8 @@ INLINE static void mapper20_cpu_wr_high(WORD address, BYTE value) {
 						if (coolgirl.chr.mode == 2) {
 							const BYTE slot = (coolgirl.mmc3.internal & 0x07) << 1;
 
-							ntbl.bank_1k[slot] = &ntbl.data[((value >> 7) ^ 0x01) << 10];
-							ntbl.bank_1k[slot | 0x01] = ntbl.bank_1k[slot];
+							map_nmt_1k(slot, ((value >> 7) ^ 0x01));
+							map_nmt_1k(slot | 0x01, ((value >> 7) ^ 0x01));
 						}
 						break;
 					case 2:

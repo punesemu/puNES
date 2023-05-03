@@ -224,11 +224,10 @@ void chr_fix_VRC7_base(void) {
 	VRC7_chr_swap(0x1C00, vrc7.chr[7]);
 }
 void chr_swap_VRC7_base(WORD address, WORD value) {
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	map_chr_rom_1k(address, value);
 }
 void wram_fix_VRC7_base(void) {
-	cpu.prg_ram_rd_active = (vrc7.reg & 0x80);
+	cpu.prg_ram_rd_active = vrc7.reg >> 7;
 	cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
 }
 void mirroring_fix_VRC7_base(void) {

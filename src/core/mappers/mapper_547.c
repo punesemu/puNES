@@ -198,14 +198,14 @@ void extcl_cpu_every_cycle_547(void) {
 		}
 	}
 }
-void extcl_wr_nmt_547(WORD address, BYTE value) {
+BYTE extcl_wr_nmt_547(WORD address, BYTE value) {
 	if (m547.reg[10] & 0x01) {
 		BYTE bank = mapper.mirroring == MIRRORING_HORIZONTAL ? (address & 0x800) ? 1 : 0 : (address & 0x400) ? 1 : 0;
 
 		m547.qt_ram[(bank << 10) | (address & 0x3FF)] = value;
-		return;
+		return (TRUE);
 	}
-	ntbl.bank_1k[(address & 0x0FFF) >> 10][address & 0x3FF] = value;
+	return (FALSE);
 }
 
 BYTE extcl_rd_nmt_547(WORD address) {

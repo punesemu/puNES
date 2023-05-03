@@ -168,12 +168,14 @@ BYTE extcl_save_mapper_111_GTROM(BYTE mode, BYTE slot, FILE *fp) {
 void extcl_cpu_every_cycle_111_GTROM(void) {
 	sst39sf040_tick();
 }
-void extcl_wr_nmt_111_GTROM(WORD address, BYTE value) {
+BYTE extcl_wr_nmt_111_GTROM(WORD address, BYTE value) {
 	//if (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_ROWS)) {
 		gtromtmp.vram[address & 0x1FFF] = value;
 	//} else {
 	//	gtromtmp.vram[address & 0x1FFF] = value;
 	//}
+	// write is done
+	return (TRUE);
 }
 BYTE extcl_rd_nmt_111_GTROM(WORD address) {
 	//if (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_ROWS)) {

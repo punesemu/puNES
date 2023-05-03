@@ -25,7 +25,7 @@ void map_init_560(void);
 void extcl_after_mapper_init_560(void);
 void extcl_cpu_wr_mem_560(WORD address, BYTE value);
 BYTE extcl_save_mapper_560(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_nmt_560(WORD address, BYTE value);
+BYTE extcl_wr_nmt_560(WORD address, BYTE value);
 BYTE extcl_rd_nmt_560(WORD address);
 BYTE extcl_rd_chr_560(WORD address);
 

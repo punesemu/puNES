@@ -238,8 +238,7 @@ void chr_fix_FME7_base(void) {
 	FME7_chr_swap(0x1C00, fme7.chr[7]);
 }
 void chr_swap_FME7_base(WORD address, WORD value) {
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	map_chr_rom_1k(address, value);
 }
 void wram_fix_FME7_base(void) {
 	switch (fme7.prg[0] & 0xC0) {

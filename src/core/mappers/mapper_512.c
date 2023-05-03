@@ -93,13 +93,13 @@ void extcl_wr_chr_512(WORD address, BYTE value) {
 		chr.bank_1k[slot][address & 0x3FF] = value;
 	}
 }
-void extcl_wr_nmt_512(WORD address, BYTE value) {
+BYTE extcl_wr_nmt_512(WORD address, BYTE value) {
 	address &= 0x0FFF;
 	if (m512.reg == 1) {
 		m512.vram[address] = value;
-		return;
+		return (TRUE);
 	}
-	ntbl.bank_1k[address >> 10][address & 0x3FF] = value;
+	return (FALSE);
 }
 BYTE extcl_rd_nmt_512(WORD address) {
 	address &= 0x0FFF;

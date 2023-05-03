@@ -30,8 +30,8 @@ struct _m185 {
 void map_init_185() {
 	EXTCL_CPU_WR_MEM(185);
 	EXTCL_SAVE_MAPPER(185);
-	EXTCL_RD_R2007(185);
 	EXTCL_RD_CHR(185);
+	EXTCL_RD_R2007(185);
 	mapper.internal_struct[0] = (BYTE *)&m185;
 	mapper.internal_struct_size[0] = sizeof(m185);
 

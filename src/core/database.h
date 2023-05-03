@@ -3080,7 +3080,7 @@ static const _dbelement dblist[] = {
 
 /* ------------------------------------ Sunsoft S4 ---------------------------------------- */
 	/* Maharaja (J).nes */
-	{"4ec7cd65520d37467088a9cc726156c030a307ca", 68, DEFAULT, MAHARAJA, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"4ec7cd65520d37467088a9cc726156c030a307ca", 68, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------ Sunsoft FME7 -------------------------------------- */
 	/* Barcode World (J) [!].nes */

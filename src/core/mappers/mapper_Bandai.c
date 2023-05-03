@@ -221,7 +221,6 @@ BYTE extcl_rd_nmt_Bandai_161x02x74(WORD address) {
 	if ((address & 0x03FF) < 0x03C0) {
 		b16x02x74_r2006(address);
 	}
-
 	return (ntbl.bank_1k[address >> 10][address & 0x3FF]);
 }
 
