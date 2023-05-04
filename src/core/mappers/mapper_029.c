@@ -66,5 +66,5 @@ INLINE static void prg_fix_029(void) {
 	map_prg_rom_8k_update();
 }
 INLINE static void chr_fix_029(void) {
-	map_chr_rom_8k(0x0000, (m029.reg & 0x03));
+	map_chr_rom_8k(m029.reg & 0x03);
 }

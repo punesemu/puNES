@@ -490,9 +490,6 @@ void nes20_submapper(void) {
 					break;
 			}
 			break;
-		case 210:
-			search_in_database();
-			break;
 		case 268:
 			switch (info.mapper.submapper) {
 				case 0:

@@ -16,23 +16,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_N118_H_
-#define MAPPER_N118_H_
+#ifndef MAPPER_210_H_
+#define MAPPER_210_H_
 
 #include "common.h"
 
-typedef struct _n118 {
-	BYTE reg[8 + 1];
-} _n118;
+void map_init_210(void);
+void extcl_after_mapper_init_210(void);
+void extcl_cpu_wr_mem_210(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_210(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_210(BYTE mode, BYTE slot, FILE *fp);
 
-extern _n118 n118;
-
-void map_init_N118(void);
-void extcl_after_mapper_init_N118(void);
-void extcl_cpu_wr_mem_N118(WORD address, BYTE value);
-BYTE extcl_save_mapper_N118(BYTE mode, BYTE slot, FILE *fp);
-
-void prg_fix_N118(WORD mmask, WORD mblock);
-void chr_fix_N118(WORD mmask, WORD mblock);
-
-#endif /* MAPPER_N118_H_ */
+#endif /* MAPPER_210_H_ */

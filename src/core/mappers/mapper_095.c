@@ -18,39 +18,39 @@
 
 #include "mappers.h"
 
-void prg_swap_n118v2_095(WORD address, WORD value);
-void chr_fix_n118v2_095(void);
-void chr_swap_n118v2_095(WORD address, WORD value);
+void prg_swap_n118_095(WORD address, WORD value);
+void chr_fix_n118_095(void);
+void chr_swap_n118_095(WORD address, WORD value);
 
 INLINE static void mirroring_fix_095(void);
 
 void map_init_095(void) {
-	EXTCL_AFTER_MAPPER_INIT(N118v2);
-	EXTCL_CPU_WR_MEM(N118v2);
-	EXTCL_SAVE_MAPPER(N118v2);
-	mapper.internal_struct[0] = (BYTE *)&n118v2;
-	mapper.internal_struct_size[0] = sizeof(n118v2);
+	EXTCL_AFTER_MAPPER_INIT(N118);
+	EXTCL_CPU_WR_MEM(N118);
+	EXTCL_SAVE_MAPPER(N118);
+	mapper.internal_struct[0] = (BYTE *)&n118;
+	mapper.internal_struct_size[0] = sizeof(n118);
 
-	init_N118v2();
-	N118v2_prg_swap = prg_swap_n118v2_095;
-	N118v2_chr_fix = chr_fix_n118v2_095;
-	N118v2_chr_swap = chr_swap_n118v2_095;
+	init_N118();
+	N118_prg_swap = prg_swap_n118_095;
+	N118_chr_fix = chr_fix_n118_095;
+	N118_chr_swap = chr_swap_n118_095;
 }
 
-void prg_swap_n118v2_095(WORD address, WORD value) {
-	prg_swap_N118v2_base(address, (value & 0x0F));
+void prg_swap_n118_095(WORD address, WORD value) {
+	prg_swap_N118_base(address, (value & 0x0F));
 }
-void chr_fix_n118v2_095(void) {
-	chr_fix_N118v2_base();
+void chr_fix_n118_095(void) {
+	chr_fix_N118_base();
 	mirroring_fix_095();
 }
-void chr_swap_n118v2_095(WORD address, WORD value) {
-	chr_swap_N118v2_base(address, (value & 0x3F));
+void chr_swap_n118_095(WORD address, WORD value) {
+	chr_swap_N118_base(address, (value & 0x3F));
 }
 
 INLINE static void mirroring_fix_095(void) {
-	map_nmt_1k(0, (n118v2.reg[0] >> 5));
-	map_nmt_1k(1, (n118v2.reg[0] >> 5));
-	map_nmt_1k(2, (n118v2.reg[1] >> 5));
-	map_nmt_1k(3, (n118v2.reg[1] >> 5));
+	map_nmt_1k(0, (n118.reg[0] >> 5));
+	map_nmt_1k(1, (n118.reg[0] >> 5));
+	map_nmt_1k(2, (n118.reg[1] >> 5));
+	map_nmt_1k(3, (n118.reg[1] >> 5));
 }

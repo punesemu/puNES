@@ -57,7 +57,7 @@ BYTE extcl_save_mapper_382(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_382(void) {
-	WORD bank;
+	WORD bank = 0;
 
 	if (m382.reg[0] & 0x0008) {
 		bank = ((m382.reg[0] & 0x0007) << 2) | (m382.reg[1] & 0x0003);

@@ -139,7 +139,7 @@ BYTE map_init(void) {
 			map_init_Jaleco(SS8806);
 			break;
 		case 19:
-			map_init_Namco(N163);
+			map_init_019();
 			break;
 		// case 20:
 		// 	mapper 20 e' l'FDS
@@ -656,7 +656,7 @@ BYTE map_init(void) {
 			map_init_JYASIC(MAP209);
 			break;
 		case 210:
-			map_init_Namco(N163);
+			map_init_210();
 			break;
 		case 211:
 			map_init_JYASIC(MAP211);
@@ -1252,7 +1252,7 @@ BYTE map_init(void) {
 			map_init_530();
 			break;
 		case 532:
-			map_init_Namco(CHINA_ER_SAN2);
+			map_init_532();
 			break;
 		case 534:
 			map_init_126(MAP534);
@@ -1795,7 +1795,7 @@ void map_chr_rom_4k(const WORD address, const WORD value) {
 	chr.bank_1k[slot | 0x02] = chr_pnt(bank | 0x0800);
 	chr.bank_1k[slot | 0x03] = chr_pnt(bank | 0x0C00);
 }
-void map_chr_rom_8k(UNUSED(const WORD address), const WORD value) {
+void map_chr_rom_8k(const WORD value) {
 	DBWORD bank = value;
 
 	_control_bank(bank, info.chr.rom.max.banks_8k)

@@ -94,6 +94,7 @@ set(core_srcs
 	core/mappers/mapper_010.c
 	core/mappers/mapper_014.c
 	core/mappers/mapper_015.c
+	core/mappers/mapper_019.c
 	core/mappers/mapper_021.c
 	core/mappers/mapper_022.c
 	core/mappers/mapper_023.c
@@ -191,6 +192,7 @@ set(core_srcs
 	core/mappers/mapper_205.c
 	core/mappers/mapper_206.c
 	core/mappers/mapper_208.c
+	core/mappers/mapper_210.c
 	core/mappers/mapper_212.c
 	core/mappers/mapper_213.c
 	core/mappers/mapper_214.c
@@ -323,6 +325,7 @@ set(core_srcs
 	core/mappers/mapper_528.c
 	core/mappers/mapper_529.c
 	core/mappers/mapper_530.c
+	core/mappers/mapper_532.c
 	core/mappers/mapper_538.c
 	core/mappers/mapper_539.c
 	core/mappers/mapper_541.c
@@ -401,8 +404,6 @@ set(core_srcs
 	core/mappers/mapper_Malee.c
 	core/mappers/mapper_MMC3_old.c
 	core/mappers/mapper_MMC5.c
-	core/mappers/mapper_N118.c
-	core/mappers/mapper_Namco.c
 	core/mappers/mapper_NSF.c
 	core/mappers/mapper_Ntdec.c
 	core/mappers/mapper_Rcm.c

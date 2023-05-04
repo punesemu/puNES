@@ -32,6 +32,7 @@
 #include "mappers/mapper_010.h"
 #include "mappers/mapper_014.h"
 #include "mappers/mapper_015.h"
+#include "mappers/mapper_019.h"
 #include "mappers/mapper_021.h"
 #include "mappers/mapper_022.h"
 #include "mappers/mapper_023.h"
@@ -129,6 +130,7 @@
 #include "mappers/mapper_205.h"
 #include "mappers/mapper_206.h"
 #include "mappers/mapper_208.h"
+#include "mappers/mapper_210.h"
 #include "mappers/mapper_212.h"
 #include "mappers/mapper_213.h"
 #include "mappers/mapper_214.h"
@@ -261,6 +263,7 @@
 #include "mappers/mapper_528.h"
 #include "mappers/mapper_529.h"
 #include "mappers/mapper_530.h"
+#include "mappers/mapper_532.h"
 #include "mappers/mapper_538.h"
 #include "mappers/mapper_539.h"
 #include "mappers/mapper_541.h"
@@ -300,8 +303,6 @@
 #include "mappers/mapper_Magic.h"
 #include "mappers/mapper_MMC3_old.h"
 #include "mappers/mapper_MMC5.h"
-#include "mappers/mapper_N118.h"
-#include "mappers/mapper_Namco.h"
 #include "mappers/mapper_Ntdec.h"
 #include "mappers/mapper_Rcm.h"
 #include "mappers/mapper_Rex.h"
@@ -424,7 +425,7 @@ void map_bat_rd_default(FILE *fp);
 void map_chr_rom_1k(const WORD address, const WORD value);
 void map_chr_rom_2k(const WORD address, const WORD value);
 void map_chr_rom_4k(const WORD address, const WORD value);
-void map_chr_rom_8k(const WORD address, const WORD value);
+void map_chr_rom_8k(const WORD value);
 
 void map_nmt_1k(BYTE slot, const WORD value);
 void map_nmt_chr_ram_1k(BYTE slot, const WORD value);

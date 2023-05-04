@@ -633,7 +633,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 	}
 	// Namco 163
 	if (nsf.sound_chips.namco163 && (address == 0x4800)) {
-		cpu.openbus = extcl_cpu_rd_mem_Namco_163(address, cpu.openbus, cpu.openbus);
+		cpu.openbus = extcl_cpu_rd_mem_019(address, cpu.openbus, cpu.openbus);
 		return;
 	}
 	// RAM
@@ -1764,7 +1764,7 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 			}
 		}
 		if (nsf.sound_chips.namco163 && (address == 0xF800)) {
-			extcl_cpu_wr_mem_Namco_163(address, value);
+			extcl_cpu_wr_mem_019(address, value);
 			return;
 		}
 		if (nsf.sound_chips.sunsoft5b) {
@@ -1853,7 +1853,7 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 	}
 	// Namco 163
 	if (nsf.sound_chips.namco163 && (address == 0x4800)) {
-		extcl_cpu_wr_mem_Namco_163(address, value);
+		extcl_cpu_wr_mem_019(address, value);
 	}
 	// Bankswitch
 	if (nsf.bankswitch.enabled && (address >= 0x5FF6) && (address <= 0x5FFF)) {

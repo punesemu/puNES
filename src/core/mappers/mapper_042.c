@@ -27,7 +27,7 @@ INLINE static void prg_fix_042_s1(void);
 INLINE static void chr_fix_042_s1(void);
 INLINE static void wram_fix_042_s1(void);
 
-void prg_fix_n118v2_042_s2(void);
+void prg_fix_n118_042_s2(void);
 
 INLINE static void wram_fix_042_s2(void);
 INLINE static void mirroring_fix_042_s2(void);
@@ -85,15 +85,15 @@ void map_init_042(void) {
 			EXTCL_SAVE_MAPPER(042_s2);
 			mapper.internal_struct[0] = (BYTE *)&m042;
 			mapper.internal_struct_size[0] = sizeof(m042);
-			mapper.internal_struct[1] = (BYTE *)&n118v2;
-			mapper.internal_struct_size[1] = sizeof(n118v2);
+			mapper.internal_struct[1] = (BYTE *)&n118;
+			mapper.internal_struct_size[1] = sizeof(n118);
 
 			if (info.reset >= HARD) {
 				memset(&m042, 0x00, sizeof(m042));
 			}
 
-			init_N118v2();
-			N118v2_prg_fix = prg_fix_n118v2_042_s2;
+			init_N118();
+			N118_prg_fix = prg_fix_n118_042_s2;
 
 			info.mapper.extend_wr = TRUE;
 			return;
@@ -160,7 +160,7 @@ INLINE static void prg_fix_042_s1(void) {
 	map_prg_rom_8k_update();
 }
 INLINE static void chr_fix_042_s1(void) {
-	map_chr_rom_8k(0x0000, m042.chr);
+	map_chr_rom_8k(m042.chr);
 }
 INLINE static void wram_fix_042_s1(void) {
 	WORD bank = m042.prg;
@@ -172,7 +172,7 @@ INLINE static void wram_fix_042_s1(void) {
 // submapper 2 -----------------------------------------------------------------
 
 void extcl_after_mapper_init_042_s2(void) {
-	extcl_after_mapper_init_N118v2();
+	extcl_after_mapper_init_N118();
 	mirroring_fix_042_s2();
 }
 void extcl_cpu_wr_mem_042_s2(WORD address, BYTE value) {
@@ -184,13 +184,13 @@ void extcl_cpu_wr_mem_042_s2(WORD address, BYTE value) {
 			}
 			return;
 		default:
-			extcl_cpu_wr_mem_N118v2(address, value);
+			extcl_cpu_wr_mem_N118(address, value);
 			return;
 	}
 }
 BYTE extcl_save_mapper_042_s2(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m042.mirroring);
-	extcl_save_mapper_N118v2(mode, slot, fp);
+	extcl_save_mapper_N118(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
 		wram_fix_042_s2();
@@ -199,7 +199,7 @@ BYTE extcl_save_mapper_042_s2(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void prg_fix_n118v2_042_s2(void) {
+void prg_fix_n118_042_s2(void) {
 	WORD bank = info.prg.rom.banks_16k & 0x0F ? 4 : 7;
 
 	_control_bank(bank, info.prg.rom.max.banks_32k)
@@ -210,7 +210,7 @@ void prg_fix_n118v2_042_s2(void) {
 }
 
 INLINE static void wram_fix_042_s2(void) {
-	WORD bank = (n118v2.reg[5] & 0x1E) >> 1;
+	WORD bank = (n118.reg[5] & 0x1E) >> 1;
 
 	_control_bank(bank, info.prg.rom.max.banks_8k)
 	m042tmp.prg_6000 = prg_pnt(bank << 13);

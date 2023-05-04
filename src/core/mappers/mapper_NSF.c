@@ -117,11 +117,11 @@ void map_init_NSF(void) {
 		map_init_NSF_MMC5();
 	}
 	if (nsf.sound_chips.namco163) {
-		mapper.internal_struct[internal_struct] = (BYTE *)&n163;
-		mapper.internal_struct_size[internal_struct] = sizeof(n163);
+		mapper.internal_struct[internal_struct] = (BYTE *)&m019;
+		mapper.internal_struct_size[internal_struct] = sizeof(m019);
 		internal_struct++;
 
-		map_init_NSF_Namco(N163);
+		map_init_NSF_N163();
 	}
 	if (nsf.sound_chips.sunsoft5b) {
 		mapper.internal_struct[internal_struct] = (BYTE *)&fme7;
@@ -236,7 +236,7 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 		extcl_save_mapper_MMC5(mode, slot, fp);
 	}
 	if (nsf.sound_chips.namco163) {
-		extcl_save_mapper_Namco_163(mode, slot, fp);
+		extcl_save_mapper_019(mode, slot, fp);
 	}
 	if (nsf.sound_chips.sunsoft5b) {
 		extcl_save_mapper_FME7(mode, slot, fp);
@@ -268,7 +268,7 @@ void extcl_apu_tick_NSF(void) {
 		extcl_apu_tick_MMC5();
 	}
 	if (nsf.sound_chips.namco163) {
-		extcl_apu_tick_Namco_163();
+		extcl_apu_tick_019();
 	}
 	if (nsf.sound_chips.sunsoft5b) {
 		extcl_apu_tick_FME7();

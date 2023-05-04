@@ -335,11 +335,11 @@ static void apu_tick_blipbuf_Namco_N163(void) {
 	blipbuf.output = 0;
 
 	if (++blipbuf.n163.period == blipbuf.n163.min_period) {
-		double gain = 2.5f / (double)(8 - n163.snd.channel_start);
+		double gain = 2.5f / (double)(8 - m019.snd.channel_start);
 
-		if (n163.snd.enabled) {
-			for (i = n163.snd.channel_start; i < 8; i++) {
-				blipbuf.output += (SWORD)((double)n163.snd.output[i] * gain);
+		if (m019.snd.enabled) {
+			for (i = m019.snd.channel_start; i < 8; i++) {
+				blipbuf.output += (SWORD)((double)m019.snd.output[i] * gain);
 			}
 		}
 		blipbuf.output = (SWORD)(ch_gain_ext(blipbuf.output, 1.0f));

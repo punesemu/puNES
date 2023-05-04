@@ -22,88 +22,88 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-void (*N118v2_prg_fix)(void);
-void (*N118v2_prg_swap)(WORD address, WORD value);
-void (*N118v2_chr_fix)(void);
-void (*N118v2_chr_swap)(WORD address, WORD value);
+void (*N118_prg_fix)(void);
+void (*N118_prg_swap)(WORD address, WORD value);
+void (*N118_chr_fix)(void);
+void (*N118_chr_swap)(WORD address, WORD value);
 
-_n118v2 n118v2;
+_n118 n118;
 
 // promemoria
-//void map_init_N118v2(void) {
-//	EXTCL_AFTER_MAPPER_INIT(N118v2);
-//	EXTCL_CPU_WR_MEM(N118v2);
-//	EXTCL_SAVE_MAPPER(N118v2);
+//void map_init_N118(void) {
+//	EXTCL_AFTER_MAPPER_INIT(N118);
+//	EXTCL_CPU_WR_MEM(N118);
+//	EXTCL_SAVE_MAPPER(N118);
 //}
 
-void init_N118v2(void) {
+void init_N118(void) {
 	if (info.reset >= HARD) {
-		memset(&n118v2, 0x00, sizeof(n118v2));
+		memset(&n118, 0x00, sizeof(n118));
 
-		n118v2.reg[0] = 0;
-		n118v2.reg[1] = 2;
-		n118v2.reg[2] = 4;
-		n118v2.reg[3] = 5;
-		n118v2.reg[4] = 6;
-		n118v2.reg[5] = 7;
-		n118v2.reg[6] = 0;
-		n118v2.reg[7] = 1;
+		n118.reg[0] = 0;
+		n118.reg[1] = 2;
+		n118.reg[2] = 4;
+		n118.reg[3] = 5;
+		n118.reg[4] = 6;
+		n118.reg[5] = 7;
+		n118.reg[6] = 0;
+		n118.reg[7] = 1;
 
-		n118v2.reg[8] = 0;
+		n118.reg[8] = 0;
 	}
 
-	N118v2_prg_fix = prg_fix_N118v2_base;
-	N118v2_prg_swap = prg_swap_N118v2_base;
-	N118v2_chr_fix = chr_fix_N118v2_base;
-	N118v2_chr_swap = chr_swap_N118v2_base;
+	N118_prg_fix = prg_fix_N118_base;
+	N118_prg_swap = prg_swap_N118_base;
+	N118_chr_fix = chr_fix_N118_base;
+	N118_chr_swap = chr_swap_N118_base;
 }
-void extcl_after_mapper_init_N118v2(void) {
-	N118v2_prg_fix();
-	N118v2_chr_fix();
+void extcl_after_mapper_init_N118(void) {
+	N118_prg_fix();
+	N118_chr_fix();
 }
-void extcl_cpu_wr_mem_N118v2(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_N118(WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 		case 0x9000:
 			if (address & 0x0001) {
-				n118v2.reg[n118v2.reg[8] & 0x07] = value;
+				n118.reg[n118.reg[8] & 0x07] = value;
 			} else {
-				n118v2.reg[8] = value;
+				n118.reg[8] = value;
 			}
-			N118v2_prg_fix();
-			N118v2_chr_fix();
+			N118_prg_fix();
+			N118_chr_fix();
 			return;
 		default:
 			return;
 	}
 }
-BYTE extcl_save_mapper_N118v2(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, n118v2.reg);
+BYTE extcl_save_mapper_N118(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, n118.reg);
 
 	return (EXIT_OK);
 }
 
-void prg_fix_N118v2_base(void) {
-	N118v2_prg_swap(0x8000, n118v2.reg[6]);
-	N118v2_prg_swap(0xA000, n118v2.reg[7]);
-	N118v2_prg_swap(0xC000, ~1);
-	N118v2_prg_swap(0xE000, ~0);
+void prg_fix_N118_base(void) {
+	N118_prg_swap(0x8000, n118.reg[6]);
+	N118_prg_swap(0xA000, n118.reg[7]);
+	N118_prg_swap(0xC000, ~1);
+	N118_prg_swap(0xE000, ~0);
 }
-void prg_swap_N118v2_base(WORD address, WORD value) {
+void prg_swap_N118_base(WORD address, WORD value) {
 	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
 	map_prg_rom_8k_update();
 }
-void chr_fix_N118v2_base(void) {
-	N118v2_chr_swap(0x0000, n118v2.reg[0] & (~1));
-	N118v2_chr_swap(0x0400, n118v2.reg[0] |   1);
-	N118v2_chr_swap(0x0800, n118v2.reg[1] & (~1));
-	N118v2_chr_swap(0x0C00, n118v2.reg[1] |   1);
-	N118v2_chr_swap(0x1000, n118v2.reg[2]);
-	N118v2_chr_swap(0x1400, n118v2.reg[3]);
-	N118v2_chr_swap(0x1800, n118v2.reg[4]);
-	N118v2_chr_swap(0x1C00, n118v2.reg[5]);
+void chr_fix_N118_base(void) {
+	N118_chr_swap(0x0000, n118.reg[0] & (~1));
+	N118_chr_swap(0x0400, n118.reg[0] |   1);
+	N118_chr_swap(0x0800, n118.reg[1] & (~1));
+	N118_chr_swap(0x0C00, n118.reg[1] |   1);
+	N118_chr_swap(0x1000, n118.reg[2]);
+	N118_chr_swap(0x1400, n118.reg[3]);
+	N118_chr_swap(0x1800, n118.reg[4]);
+	N118_chr_swap(0x1C00, n118.reg[5]);
 }
-void chr_swap_N118v2_base(WORD address, WORD value) {
+void chr_swap_N118_base(WORD address, WORD value) {
 	map_chr_rom_1k(address, value);
 }

@@ -28,6 +28,13 @@
 #include "mem_map.h"
 #include "vs_system.h"
 
+
+
+#include <QtCore/QDebug>
+
+
+
+
 #define NES20DBFILENAME "nes20db.xml"
 
 typedef QMap<QString, QString> game_map;
@@ -166,6 +173,13 @@ void search_in_xml(QFile &file) {
 							info.prg.ram.banks_8k_plus += nes20db.prgram.size
 								? (nes20db.prgram.size <= 0x2000 ? 1 : emu_power_of_two(nes20db.prgram.size / 0x2000))
 								: 0;
+
+//							if (nes20db.pcb.battery && !nes20db.prgnvram.size) {
+//								if (!info.prg.ram.banks_8k_plus) {
+//									info.prg.ram.banks_8k_plus = 1;
+//								}
+//								info.prg.ram.bat.banks = info.prg.ram.banks_8k_plus;
+//							}
 
 							{
 								DBWORD banks = 0;

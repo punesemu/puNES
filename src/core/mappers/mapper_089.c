@@ -72,7 +72,7 @@ INLINE static void prg_fix_089(void) {
 	map_prg_rom_8k_update();
 }
 INLINE static void chr_fix_089(void) {
-	map_chr_rom_8k(0x0000, (((m089.reg & 0x80) >> 4) | (m089.reg & 0x07)));
+	map_chr_rom_8k((((m089.reg & 0x80) >> 4) | (m089.reg & 0x07)));
 }
 INLINE static void mirroring_fix_089(void) {
 	if (m089.reg & 0x08) {

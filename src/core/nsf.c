@@ -511,7 +511,7 @@ void nsf_init_tune(void) {
 		map_init_NSF_MMC5();
 	}
 	if (nsf.sound_chips.namco163) {
-		map_init_NSF_Namco(N163);
+		map_init_NSF_N163();
 	}
 	if (nsf.sound_chips.sunsoft5b) {
 		init_NSF_FME7();
