@@ -22,35 +22,38 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-INLINE static void state_fix_60311C(void);
+INLINE static void prg_fix_289(void);
+INLINE static void mirroring_fix_289(void);
 
-struct _m60311C {
+struct _m289 {
 	BYTE reg[3];
-} m60311c;
+} m289;
 
-void map_init_60311C(void) {
-	EXTCL_AFTER_MAPPER_INIT(60311C);
-	EXTCL_CPU_WR_MEM(60311C);
-	EXTCL_SAVE_MAPPER(60311C);
-	EXTCL_WR_CHR(60311C);
-	mapper.internal_struct[0] = (BYTE *)&m60311c;
-	mapper.internal_struct_size[0] = sizeof(m60311c);
+void map_init_289(void) {
+	EXTCL_AFTER_MAPPER_INIT(289);
+	EXTCL_CPU_WR_MEM(289);
+	EXTCL_SAVE_MAPPER(289);
+	EXTCL_WR_CHR(289);
+	mapper.internal_struct[0] = (BYTE *)&m289;
+	mapper.internal_struct_size[0] = sizeof(m289);
 
-	memset(&m60311c, 0x00, sizeof(m60311c));
+	memset(&m289, 0x00, sizeof(m289));
 
 	info.mapper.extend_wr = TRUE;
 }
-void extcl_after_mapper_init_60311C(void) {
-	state_fix_60311C();
+void extcl_after_mapper_init_289(void) {
+	prg_fix_289();
+	mirroring_fix_289();
 }
-void extcl_cpu_wr_mem_60311C(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_289(WORD address, BYTE value) {
 	switch (address & 0xE001) {
 		case 0x6000:
 		case 0x6001:
 		case 0x7000:
 		case 0x7001:
-			m60311c.reg[address & 0x01] = value & 0x7F;
-			state_fix_60311C();
+			m289.reg[address & 0x01] = value & 0x7F;
+			prg_fix_289();
+			mirroring_fix_289();
 			break;
 		case 0x8000:
 		case 0x8001:
@@ -60,37 +63,32 @@ void extcl_cpu_wr_mem_60311C(WORD address, BYTE value) {
 		case 0xC001:
 		case 0xE000:
 		case 0xE001:
-			m60311c.reg[2] = value & 0x07;
-			state_fix_60311C();
+			m289.reg[2] = value & 0x07;
+			prg_fix_289();
+			mirroring_fix_289();
 			break;
 	}
 }
-BYTE extcl_save_mapper_60311C(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m60311c.reg);
+BYTE extcl_save_mapper_289(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m289.reg);
 
 	return (EXIT_OK);
 }
-void extcl_wr_chr_60311C(WORD address, BYTE value) {
-	if (!(m60311c.reg[0] & 0x04)) {
+void extcl_wr_chr_289(WORD address, BYTE value) {
+	if (!(m289.reg[0] & 0x04)) {
 		chr.bank_1k[address >> 10][address & 0x3FF] = value;
 	}
 }
 
-INLINE static void state_fix_60311C(void) {
+INLINE static void prg_fix_289(void) {
 	WORD bank[2];
 
-	if (m60311c.reg[0] & 0x08) {
-		mirroring_H();
+	if (m289.reg[0] & 0x02) {
+		bank[0] = (m289.reg[1] & ~0x07) | (m289.reg[0] & 0x01 ? 0x07 : m289.reg[2]);
+		bank[1] = m289.reg[1] | 0x07;
 	} else {
-		mirroring_V();
-	}
-
-	if (m60311c.reg[0] & 0x02) {
-		bank[0] = (m60311c.reg[1] & ~0x07) | (m60311c.reg[0] & 0x01 ? 0x07 : m60311c.reg[2]);
-		bank[1] = m60311c.reg[1] | 0x07;
-	} else {
-		bank[0] = m60311c.reg[1] & ~(m60311c.reg[0] & 0x01);
-		bank[1] = m60311c.reg[1] | (m60311c.reg[0] & 0x01);
+		bank[0] = m289.reg[1] & ~(m289.reg[0] & 0x01);
+		bank[1] = m289.reg[1] | (m289.reg[0] & 0x01);
 	}
 	_control_bank(bank[0], info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(2, 0, bank[0]);
@@ -99,4 +97,11 @@ INLINE static void state_fix_60311C(void) {
 	map_prg_rom_8k(2, 2, bank[1]);
 
 	map_prg_rom_8k_update();
+}
+INLINE static void mirroring_fix_289(void) {
+	if (m289.reg[0] & 0x08) {
+		mirroring_H();
+	} else {
+		mirroring_V();
+	}
 }

@@ -820,7 +820,7 @@ BYTE map_init(void) {
 			map_init_271();
 			break;
 		case 274:
-			map_init_80013B();
+			map_init_274();
 			break;
 		case 281:
 			map_init_JYASIC(MAP281);
@@ -847,7 +847,7 @@ BYTE map_init(void) {
 			map_init_288();
 			break;
 		case 289:
-			map_init_60311C();
+			map_init_289();
 			break;
 		case 290:
 			map_init_BMCNTD03();

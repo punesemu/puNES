@@ -230,8 +230,10 @@ set(core_srcs
 	core/mappers/mapper_267.c
 	core/mappers/mapper_269.c
 	core/mappers/mapper_271.c
+	core/mappers/mapper_274.c
 	core/mappers/mapper_287.c
 	core/mappers/mapper_288.c
+	core/mappers/mapper_289.c
 	core/mappers/mapper_291.c
 	core/mappers/mapper_292.c
 	core/mappers/mapper_297.c
@@ -338,8 +340,6 @@ set(core_srcs
 	core/mappers/mapper_558.c
 	core/mappers/mapper_559.c
 	core/mappers/mapper_560.c
-	core/mappers/mapper_60311C.c
-	core/mappers/mapper_80013B.c
 	core/mappers/mapper_891227.c
 	core/mappers/mapper_A65AS.c
 	core/mappers/mapper_Active.c
