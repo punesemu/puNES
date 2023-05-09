@@ -28,7 +28,7 @@ void (*MMC1_prg_swap)(WORD address, WORD value);
 void (*MMC1_chr_fix)(void);
 void (*MMC1_chr_swap)(WORD address, WORD value);
 void (*MMC1_wram_fix)(void);
-void (*MMC1_wram_swap)(WORD value);
+void (*MMC1_wram_swap)(WORD address, WORD value);
 void (*MMC1_mirroring_fix)(void);
 
 _mmc1 mmc1;
@@ -123,17 +123,14 @@ void chr_swap_MMC1_base(WORD address, WORD value) {
 	map_chr_rom_4k(address, value);
 }
 void wram_fix_MMC1_base(void) {
-	MMC1_wram_swap(0);
+	MMC1_wram_swap(0x6000, 0);
 }
-void wram_swap_MMC1_base(WORD value) {
-	if (mmc1tmp.type == MMC1B) {
-		cpu.prg_ram_rd_active = (mmc1.reg[3] & 0x10 ? FALSE : TRUE);
-		cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
-	}
-	if (prg.ram_plus) {
-		prg.ram_plus_8k = &prg.ram_plus[(value * 0x2000) & ((prg_ram_plus_size()) - 1)];
-	}
+void wram_swap_MMC1_base(WORD address, WORD value) {
+	const BYTE wram_enabled = mmc1tmp.type == MMC1B
+		? (mmc1.reg[3] & 0x10 ? FALSE : TRUE)
+		: TRUE;
 
+	wram_map_auto_wp_8k(address, value, wram_enabled, wram_enabled);
 }
 void mirroring_fix_MMC1_base(void) {
 	switch (mmc1.reg[0] & 0x03) {

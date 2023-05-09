@@ -315,21 +315,11 @@ void extcl_update_r2006_446(WORD new_r2006, WORD old_r2006) {
 	}
 }
 void extcl_battery_io_446(BYTE mode, FILE *fp) {
-	if (!fp || (tas.type != NOTAS)) {
-		return;
-	}
-
 	if (mode == WR_BAT) {
-		if (info.prg.ram.bat.banks) {
-			map_bat_wr_default(fp);
-		}
 		if (fwrite(m446tmp.sst39sf040, prg_size(), 1, fp) < 1) {
 			log_error(uL("mapper_446;error on write flash chip"));
 		}
 	} else {
-		if (info.prg.ram.bat.banks) {
-			map_bat_rd_default(fp);
-		}
 		if (fread(m446tmp.sst39sf040, prg_size(), 1, fp) < 1) {
 			log_error(uL("mapper_446;error on read flash chip"));
 		}
@@ -546,8 +536,7 @@ INLINE static void chr_fix_nrom_446(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_nrom_446(void) {
-	cpu.prg_ram_wr_active = FALSE;
-	cpu.prg_ram_rd_active = FALSE;
+	wram_map_auto_wp_8k(0x6000, 0, FALSE, FALSE);
 }
 INLINE static void mirroring_fix_nrom_446(void) {
 	if (m446.reg[4] & 0x01) {
@@ -595,8 +584,7 @@ INLINE static void chr_fix_cnrom_446(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_cnrom_446(void) {
-	cpu.prg_ram_wr_active = FALSE;
-	cpu.prg_ram_rd_active = FALSE;
+	wram_map_auto_wp_8k(0x6000, 0, FALSE, FALSE);
 }
 INLINE static void mirroring_fix_cnrom_446(void) {
 	if (m446.reg[4] & 0x01) {
@@ -636,8 +624,7 @@ INLINE static void chr_fix_unrom_446(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_unrom_446(void) {
-	cpu.prg_ram_wr_active = FALSE;
-	cpu.prg_ram_rd_active = FALSE;
+	wram_map_auto_wp_8k(0x6000, 0, FALSE, FALSE);
 }
 INLINE static void mirroring_fix_unrom_446(void) {
 	if (m446.reg[4] & 0x01) {
@@ -677,8 +664,7 @@ INLINE static void chr_fix_bandai_446(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_bandai_446(void) {
-	cpu.prg_ram_wr_active = FALSE;
-	cpu.prg_ram_rd_active = FALSE;
+	wram_map_auto_wp_8k(0x6000, 0, FALSE, FALSE);
 }
 INLINE static void mirroring_fix_bandai_446(void) {
 	if (m446.latch & 0x10) {
@@ -714,8 +700,7 @@ INLINE static void chr_fix_anrom_446(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_anrom_446(void) {
-	cpu.prg_ram_wr_active = FALSE;
-	cpu.prg_ram_rd_active = FALSE;
+	wram_map_auto_wp_8k(0x6000, 0, FALSE, FALSE);
 }
 INLINE static void mirroring_fix_anrom_446(void) {
 	if (m446.reg[4] & 0x01) {
@@ -751,8 +736,7 @@ INLINE static void chr_fix_gnrom_446(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_gnrom_446(void) {
-	cpu.prg_ram_wr_active = FALSE;
-	cpu.prg_ram_rd_active = FALSE;
+	wram_map_auto_wp_8k(0x6000, 0, FALSE, FALSE);
 }
 INLINE static void mirroring_fix_gnrom_446(void) {
 	if (m446.reg[4] & 0x01) {

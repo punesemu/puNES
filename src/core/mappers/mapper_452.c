@@ -20,7 +20,6 @@
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
-#include "cpu.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_452(void);
@@ -48,7 +47,9 @@ void map_init_452(void) {
 		memset(&m452, 0x00, sizeof(m452));
 	}
 
-	info.prg.ram.banks_8k_plus = 1;
+//	if (prg_wram_size() < 0x2000) {
+//		wram_set_ram_size(0x2000);
+//	}
 
 	info.mapper.extend_rd = TRUE;
 }
@@ -66,11 +67,11 @@ void extcl_cpu_wr_mem_452(WORD address, BYTE value) {
 		mirroring_fix_452();
 	}
 	if (prg_ram_452(address)) {
-		prg.ram_plus_8k[address & 0x1FFF] = value;
+		wram_wr(0x6000 | (address & 0x1FFF), value);
 	}
 }
-BYTE extcl_cpu_rd_mem_452(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	return (prg_ram_452(address) ? prg.ram_plus_8k[address & 0x1FFF] : openbus);
+BYTE extcl_cpu_rd_mem_452(WORD address, BYTE openbus, BYTE before) {
+	return (prg_ram_452(address) ? wram_rd(0x6000 | (address & 0x1FFF), before) : openbus);
 }
 BYTE extcl_save_mapper_452(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m452.reg);
@@ -83,7 +84,7 @@ BYTE extcl_save_mapper_452(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_452(void) {
-	WORD bank;
+	WORD bank = 0;
 
 	if (m452.reg[1] & 0x0002) {
 		bank = m452.reg[0] >> 1;
@@ -119,6 +120,7 @@ INLINE static void prg_fix_452(void) {
 INLINE static void prg_ram_fix_452(void) {
 	m452tmp.adr1 = 0x8000 | ((m452.reg[1] & 0x30) << 9);
 	m452tmp.adr2 = (m452.reg[1] & 0x0002) ? 0x8000 | (((m452.reg[1] & 0x30) ^ 0x20) << 9) : 0x0000;
+	wram_map_auto_8k(0x6000, 0);
 }
 INLINE static void mirroring_fix_452(void) {
 	if (m452.reg[1] & 0x0001) {

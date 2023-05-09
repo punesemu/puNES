@@ -122,18 +122,9 @@ void wram_fix_fme7_528(void) {
 	FME7_wram_swap((base + (fme7.prg[0] & mask)));
 }
 void wram_swap_fme7_528(WORD value) {
-	prg.ram_plus_8k = NULL;
 	if (fme7.prg[0] == 0x01) {
-		cpu.prg_ram_rd_active = FALSE;
-		if (info.prg.ram.banks_8k_plus) {
-			cpu.prg_ram_rd_active = TRUE;
-			prg.ram_plus_8k = &prg.ram_plus[0];
-		}
-		cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
+		wram_map_auto_8k(0x6000, 0);
 	} else {
-		cpu.prg_ram_rd_active = TRUE;
-		cpu.prg_ram_wr_active = FALSE;
-		control_bank(info.prg.rom.max.banks_8k)
-		prg.ram_plus_8k = prg_pnt(value << 13);
+		wram_map_prg_rom_8k(0x6000, value);
 	}
 }

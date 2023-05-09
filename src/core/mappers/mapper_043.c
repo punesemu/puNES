@@ -23,20 +23,11 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-#define prg_5000_043()\
-	value = 8 << 1;\
-	control_bank(info.prg.rom.max.banks_4k)\
-	m043tmp.prg_5000 = prg_pnt(value << 12)
-#define prg_6000_swap_043()\
-	value = m043.swap ? 0 : 2;\
-	control_bank(info.prg.rom.max.banks_8k)\
-	m043tmp.prg_6000 = prg_pnt(value << 13)
-#define prg_E000_swap_043()\
-	value = m043.swap ? 8 : 9;\
-	control_bank(info.prg.rom.max.banks_8k)\
-	map_prg_rom_8k(1, 3, value)
+INLINE static void prg_fix_043(void);
+INLINE static void wram_fix_043(void);
 
 struct _m043 {
+	BYTE reg;
 	BYTE swap;
 	struct _m043_irq {
 		BYTE active;
@@ -44,80 +35,61 @@ struct _m043 {
 	} irq;
 } m043;
 struct _m043tmp {
-	BYTE *prg_5000;
-	BYTE *prg_6000;
+	BYTE ds_used;
+	BYTE max;
+	BYTE index;
+	const WORD *dipswitch;
 } m043tmp;
 
 void map_init_043(void) {
+	EXTCL_AFTER_MAPPER_INIT(043);
 	EXTCL_CPU_WR_MEM(043);
-	EXTCL_CPU_RD_MEM(043);
 	EXTCL_SAVE_MAPPER(043);
 	EXTCL_CPU_EVERY_CYCLE(043);
 	mapper.internal_struct[0] = (BYTE *)&m043;
 	mapper.internal_struct_size[0] = sizeof(m043);
 
 	if (info.reset >= HARD) {
-		BYTE value = 0;
-
 		memset(&m043, 0x00, sizeof(m043));
-		prg_5000_043();
-		prg_6000_swap_043();
-		map_prg_rom_8k(1, 0, 1);
-		map_prg_rom_8k(1, 1, 0);
-		map_prg_rom_8k(1, 2, 0);
-		prg_E000_swap_043();
 	}
 
+	// vale come promemoria per quando implementero' il dipswitch letto dal file
+	m043tmp.ds_used = FALSE;
+
 	info.mapper.extend_wr = TRUE;
-	info.mapper.extend_rd = TRUE;
+}
+void extcl_after_mapper_init_043(void) {
+	prg_fix_043();
+	wram_fix_043();
 }
 void extcl_cpu_wr_mem_043(WORD address, BYTE value) {
 	switch (address & 0xF1FF) {
-		case 0x4022: {
-			static const BYTE regs[8] = { 4, 3, 5, 3, 6, 3, 7, 3 };
-
-			value = regs[value & 0x07];
-			control_bank(info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 2, value);
-			map_prg_rom_8k_update();
+		case 0x4022:
+			m043.reg = value;
+			prg_fix_043();
 			return;
-		}
-		case 0x4120: {
+		case 0x4120:
+			// Mr. Mary 2 (Unl)[!].nes
 			m043.swap = value & 0x01;
-			prg_6000_swap_043();
-			prg_E000_swap_043();
-			map_prg_rom_8k_update();
+			prg_fix_043();
 			return;
-		}
 		case 0x8122:
 		case 0x4122:
 			m043.irq.active = value & 0x01;
 			m043.irq.count = 0;
 			irq.high &= ~EXT_IRQ;
 			return;
+		default:
+			return;
 	}
-}
-BYTE extcl_cpu_rd_mem_043(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address < 0x5000) || (address > 0x7FFF)) {
-		return (openbus);
-	}
-
-	if (address < 0x6000) {
-		return (m043tmp.prg_5000[address & 0x0FFF]);
-	}
-
-	return (m043tmp.prg_6000[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_043(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m043.swap);
+	save_slot_ele(mode, slot, m043.reg);
 	save_slot_ele(mode, slot, m043.irq.active);
 	save_slot_ele(mode, slot, m043.irq.count);
 
 	if (mode == SAVE_SLOT_READ) {
-		BYTE value;
-
-		prg_5000_043();
-		prg_6000_swap_043();
+		wram_fix_043();
 	}
 
 	return (EXIT_OK);
@@ -128,4 +100,32 @@ void extcl_cpu_every_cycle_043(void) {
 		m043.irq.active = 0;
 		irq.high |= EXT_IRQ;
 	}
+}
+
+INLINE static void prg_fix_043(void) {
+	static const BYTE prg_e000[8] = { 4, 3, 4, 4, 4, 7, 5, 6 };
+	WORD bank = 0;
+
+	bank = 1;
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 0, bank);
+
+	bank = 0;
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 1, bank);
+
+	bank = prg_e000[m043.reg & 0x07];
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 2, bank);
+
+	bank =  m043.swap ? 8 : 9;
+	_control_bank(bank, info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 3, bank);
+
+	map_prg_rom_8k_update();
+}
+INLINE static void wram_fix_043(void) {
+	wram_map_prg_rom_2k(0x5000, m043tmp.ds_used ? 32 : 33);
+	wram_map_prg_rom_2k(0x5800, m043tmp.ds_used ? 32 : 33);
+	wram_map_prg_rom_8k(0x6000, m043.swap ? 0 : 2);
 }

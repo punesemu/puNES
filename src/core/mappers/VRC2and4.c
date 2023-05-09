@@ -52,7 +52,7 @@ struct _vrc2and4tmp {
 
 void extcl_after_mapper_init_VRC2and4(void) {
 	if (vrc2and4tmp.type == VRC24_VRC2) {
-		if ((info.format == NES_2_0) && !info.prg.ram.banks_8k_plus) {
+		if ((info.format == NES_2_0) && !prg_wram_size()) {
 			vrc2and4tmp.prg6000_wired = TRUE;
 			info.mapper.extend_wr = TRUE;
 		}
@@ -63,102 +63,103 @@ void extcl_after_mapper_init_VRC2and4(void) {
 	VRC2and4_mirroring_fix();
 }
 void extcl_cpu_wr_mem_VRC2and4(WORD address, BYTE value) {
-	if (address >= 0x8000) {
-		WORD bank = address & 0xF000;
-		int index = 0;
+	WORD bank = address & 0xF000;
+	int index = 0;
 
-		switch (bank) {
-			case 0x8000:
-			case 0xA000:
-				vrc2and4.prg[(address >> 13) & 0x01] = value;
-				VRC2and4_prg_fix();
-				return;
-			case 0x9000:
-				index = ((address & vrc2and4tmp.A1 ? 2 : 0) | (address & vrc2and4tmp.A0 ? 1 : 0)) &
+	switch (bank) {
+		case 0x6000:
+			if (vrc2and4tmp.prg6000_wired) {
+				vrc2and4.wired = (vrc2and4.wired & 0xF8) | (value & 0x07);
+				VRC2and4_wired_fix();
+			}
+			return;
+		case 0x8000:
+		case 0xA000:
+			vrc2and4.prg[(address >> 13) & 0x01] = value;
+			VRC2and4_prg_fix();
+			return;
+		case 0x9000:
+			index = ((address & vrc2and4tmp.A1 ? 2 : 0) | (address & vrc2and4tmp.A0 ? 1 : 0)) &
 					((vrc2and4tmp.type == VRC24_VRC4) ? 0x03 : 0x00) ;
+			switch (index) {
+				case 0:
+				case 1:
+					vrc2and4.mirroring = value;
+					VRC2and4_mirroring_fix();
+					return;
+				case 2:
+					vrc2and4.wram_protect = !(value & 0x01);
+					vrc2and4.swap_mode = value & 0x02;
+					VRC2and4_wram_fix();
+					VRC2and4_prg_fix();
+					return;
+				case 3:
+					VRC2and4_misc_03(address, value);
+					break;
+				default:
+					return;
+			}
+			return;
+		case 0xB000:
+		case 0xC000:
+		case 0xD000:
+		case 0xE000: {
+			WORD base = 0, mask = 0;
+
+			if (address & vrc2and4tmp.A0) {
+				base = value << 4;
+				mask = 0x000F;
+			} else {
+				base = value & 0x0F;
+				mask = 0x0FF0;
+			}
+			index = ((bank - 0xB000) >> 11) | (address & vrc2and4tmp.A1 ? 1 : 0);
+			vrc2and4.chr[index] = base | (vrc2and4.chr[index] & mask);
+			VRC2and4_chr_fix();
+			return;
+		}
+		case 0xF000:
+			if (vrc2and4tmp.type == VRC24_VRC4) {
+				index = (address & vrc2and4tmp.A1 ? 2 : 0) | (address & vrc2and4tmp.A0 ? 1 : 0);
 				switch (index) {
 					case 0:
+						vrc2and4.irq.reload = (vrc2and4.irq.reload & 0xF0) | (value & 0x0F);
+						return;
 					case 1:
-						vrc2and4.mirroring = value;
-						VRC2and4_mirroring_fix();
+						vrc2and4.irq.reload = (vrc2and4.irq.reload & 0x0F) | ((value & 0x0F) << 4);
 						return;
 					case 2:
-						vrc2and4.wram_protect = !(value & 0x01);
-						vrc2and4.swap_mode = value & 0x02;
-						VRC2and4_wram_fix();
-						VRC2and4_prg_fix();
+						vrc2and4.irq.acknowledge = value & 0x01;
+						vrc2and4.irq.enabled = value & 0x02;
+						vrc2and4.irq.mode = value & 0x04;
+						if (vrc2and4.irq.enabled) {
+							vrc2and4.irq.prescaler = 0;
+							vrc2and4.irq.count = vrc2and4.irq.reload;
+						}
+						irq.high &= ~EXT_IRQ;
 						return;
 					case 3:
-						VRC2and4_misc_03(address, value);
-						break;
-					default:
+						if (vrc2and4tmp.irq_repeated) {
+							vrc2and4.irq.enabled = vrc2and4.irq.acknowledge;
+						}
+						irq.high &= ~EXT_IRQ;
 						return;
+					default:
+						break;
 				}
-				return;
-			case 0xB000:
-			case 0xC000:
-			case 0xD000:
-			case 0xE000: {
-				WORD base = 0, mask = 0;
-
-				if (address & vrc2and4tmp.A0) {
-					base = value << 4;
-					mask = 0x000F;
-				} else {
-					base = value & 0x0F;
-					mask = 0x0FF0;
-				}
-				index = ((bank - 0xB000) >> 11) | (address & vrc2and4tmp.A1 ? 1 : 0);
-				vrc2and4.chr[index] = base | (vrc2and4.chr[index] & mask);
-				VRC2and4_chr_fix();
-				return;
 			}
-			case 0xF000:
-				if (vrc2and4tmp.type == VRC24_VRC4) {
-					index = (address & vrc2and4tmp.A1 ? 2 : 0) | (address & vrc2and4tmp.A0 ? 1 : 0);
-					switch (index) {
-						case 0:
-							vrc2and4.irq.reload = (vrc2and4.irq.reload & 0xF0) | (value & 0x0F);
-							return;
-						case 1:
-							vrc2and4.irq.reload = (vrc2and4.irq.reload & 0x0F) | ((value & 0x0F) << 4);
-							return;
-						case 2:
-							vrc2and4.irq.acknowledge = value & 0x01;
-							vrc2and4.irq.enabled = value & 0x02;
-							vrc2and4.irq.mode = value & 0x04;
-							if (vrc2and4.irq.enabled) {
-								vrc2and4.irq.prescaler = 0;
-								vrc2and4.irq.count = vrc2and4.irq.reload;
-							}
-							irq.high &= ~EXT_IRQ;
-							return;
-						case 3:
-							if (vrc2and4tmp.irq_repeated) {
-								vrc2and4.irq.enabled = vrc2and4.irq.acknowledge;
-							}
-							irq.high &= ~EXT_IRQ;
-							return;
-						default:
-							break;
-					}
-				}
-				return;
-			default:
-				return;
-		}
-		return;
-	}
-	if ((address >= 0x6000) && (address <= 0x6FFF) && vrc2and4tmp.prg6000_wired) {
-		vrc2and4.wired = (vrc2and4.wired & 0xF8) | (value & 0x07);
-		VRC2and4_wired_fix();
+			return;
+		default:
+			return;
 	}
 }
 BYTE extcl_cpu_rd_mem_VRC2and4(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address >= 0x6000) && (address <= 0x6FFF) && vrc2and4tmp.prg6000_wired) {
-		return ((openbus & 0xFE) | ((vrc2and4.wired & 0x08) >> 3)) ;
+	switch (address & 0xF000) {
+		case 0x6000:
+			return (vrc2and4tmp.prg6000_wired ? (openbus & 0xFE) | ((vrc2and4.wired & 0x08) >> 3) : openbus);
+		default:
+			return (openbus);
 	}
-	return (openbus);
 }
 BYTE extcl_save_mapper_VRC2and4(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, vrc2and4.prg);
@@ -272,8 +273,7 @@ void chr_swap_VRC2and4_base(WORD address, WORD value) {
 	map_chr_rom_1k(address, value);
 }
 void wram_fix_VRC2and4_base(void) {
-	cpu.prg_ram_rd_active = !vrc2and4.wram_protect;
-	cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
+	wram_map_auto_wp_8k(0x6000, 0, !vrc2and4.wram_protect, !vrc2and4.wram_protect);
 }
 void mirroring_fix_VRC2and4_base(void) {
 	switch (vrc2and4.mirroring & (vrc2and4tmp.type == VRC24_VRC4 ? 0x03 : 0x01)) {

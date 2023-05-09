@@ -82,12 +82,12 @@ void extcl_after_mapper_init_100(void) {
 	chr_fix_100();
 }
 void extcl_cpu_init_pc_100(void) {
-	if (info.mapper.trainer && prg.ram_plus_8k) {
-		BYTE *data = &prg.ram_plus_8k[0x7000 & 0x1FFF];
-
-		memcpy(data, &mapper.trainer[0], sizeof(mapper.trainer));
-		if (mapper.trainer[0] == 0x4C) {
-			cpu.PC = 0x7000;
+	if (info.reset >= HARD) {
+		// trainer
+		if (info.mapper.trainer && wram.size) {
+			if (trainer.data[0] == 0x4C) {
+				cpu.PC = 0x7000;
+			}
 		}
 	}
 }

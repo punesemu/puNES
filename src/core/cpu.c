@@ -1022,9 +1022,6 @@ void cpu_init_PC(void) {
 
 	cfg->cheat_mode = NOCHEAT_MODE;
 	cpu.PC = (cpu_rd_mem(INT_RESET + 1, FALSE) << 8 | cpu_rd_mem(INT_RESET, FALSE));
-	if (extcl_cpu_init_pc) {
-		extcl_cpu_init_pc();
-	}
 	cfg->cheat_mode = save_cheat_mode;
 	cpu.openbus = save_cpu_openbus;
 }
@@ -1041,7 +1038,7 @@ void cpu_turn_on(void) {
 		cpu.SR = 0x34;
 
 		if (tas.type && (tas.emulator == FCEUX)) {
-			unsigned int x;
+			unsigned int x = 0;
 
 			for (x = 0; x < sizeof(mmcpu.ram); x++) {
 				mmcpu.ram[x] = (x & 0x04) ? 0xFF : 0x00;

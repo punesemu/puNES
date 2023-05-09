@@ -52,9 +52,12 @@ void map_init_518(void) {
 	m518tmp.prg_8000 = m518tmp.prg_A000 = NULL;
 	m518tmp.prg_C000 = m518tmp.prg_E000 = NULL;
 
-	info.prg.ram.banks_8k_plus = 16;
+	if (prg_wram_size() < 0x20000) {
+		wram_set_ram_size(0x20000);
+	}
 
-	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
+	info.mapper.extend_wr = TRUE;
+	info.mapper.extend_rd = TRUE;
 }
 void extcl_after_mapper_init_518(void) {
 	prg_fix_518();
@@ -143,7 +146,7 @@ void extcl_cpu_every_cycle_518(void) {
 }
 
 INLINE static void prg_fix_518(void) {
-	DBWORD bank;
+	DBWORD bank = 0;
 
 	m518tmp.prg_8000 = m518tmp.prg_A000 = NULL;
 	m518tmp.prg_C000 = m518tmp.prg_E000 = NULL;
@@ -151,14 +154,14 @@ INLINE static void prg_fix_518(void) {
 	if (m518.reg[0] & 0x80) {
 		if (m518.reg[1] & 0x04) {
 			bank = (m518.reg[0] & 0x03) << 15;
-			m518tmp.prg_8000 = &prg.ram_plus[bank | 0x0000];
-			m518tmp.prg_A000 = &prg.ram_plus[bank | 0x2000];
-			m518tmp.prg_C000 = &prg.ram_plus[bank | 0x4000];
-			m518tmp.prg_E000 = &prg.ram_plus[bank | 0x8000];
+			m518tmp.prg_8000 = &wram.data[bank | 0x0000];
+			m518tmp.prg_A000 = &wram.data[bank | 0x2000];
+			m518tmp.prg_C000 = &wram.data[bank | 0x4000];
+			m518tmp.prg_E000 = &wram.data[bank | 0x8000];
 		} else {
 			bank = (m518.reg[0] & 0x07) << 14;
-			m518tmp.prg_8000 = &prg.ram_plus[bank | 0x0000];
-			m518tmp.prg_A000 = &prg.ram_plus[bank | 0x2000];
+			m518tmp.prg_8000 = &wram.data[bank | 0x0000];
+			m518tmp.prg_A000 = &wram.data[bank | 0x2000];
 
 			bank = 0;
 			_control_bank(bank, info.prg.rom.max.banks_16k)
@@ -182,7 +185,7 @@ INLINE static void prg_fix_518(void) {
 	map_prg_rom_8k_update();
 }
 INLINE static void prg_ram_fix_518(void) {
-	prg.ram_plus_8k = &prg.ram_plus[0x0F << 13];
+	wram_map_auto_8k(0x6000, 16);
 }
 INLINE static void mirroring_fix_518(void) {
 	if (m518.reg[1] & 0x01) {

@@ -185,21 +185,11 @@ BYTE extcl_rd_nmt_111_GTROM(WORD address) {
 	//}
 }
 void extcl_battery_io_111_GTROM(BYTE mode, FILE *fp) {
-	if (!fp || (tas.type != NOTAS)) {
-		return;
-	}
-
 	if (mode == WR_BAT) {
-		if (info.prg.ram.bat.banks) {
-			map_bat_wr_default(fp);
-		}
 		if (fwrite(gtromtmp.sst39sf040, prg_size(), 1, fp) < 1) {
 			log_error(uL("CHEAPOCABRA;error on write flash chip"));
 		}
 	} else {
-		if (info.prg.ram.bat.banks) {
-			map_bat_rd_default(fp);
-		}
 		if (fread(gtromtmp.sst39sf040, prg_size(), 1, fp) < 1) {
 			log_error(uL("CHEAPOCABRA;error on read flash chip"));
 		}

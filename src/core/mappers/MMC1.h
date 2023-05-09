@@ -58,7 +58,7 @@ void prg_swap_MMC1_base(WORD address, WORD value);
 void chr_fix_MMC1_base(void);
 void chr_swap_MMC1_base(WORD address, WORD value);
 void wram_fix_MMC1_base(void);
-void wram_swap_MMC1_base(WORD value);
+void wram_swap_MMC1_base(WORD address, WORD value);
 void mirroring_fix_MMC1_base(void);
 
 WORD prg_bank_MMC1(int index);
@@ -69,7 +69,7 @@ extern void (*MMC1_prg_swap)(WORD address, WORD value);
 extern void (*MMC1_chr_fix)(void);
 extern void (*MMC1_chr_swap)(WORD address, WORD value);
 extern void (*MMC1_wram_fix)(void);
-extern void (*MMC1_wram_swap)(WORD value);
+extern void (*MMC1_wram_swap)(WORD address, WORD value);
 extern void (*MMC1_mirroring_fix)(void);
 
 #endif /* MAPPER_MMC1_H_ */

@@ -110,14 +110,14 @@ void chr_swap_mmc1_001(WORD address, WORD value) {
 void wram_fix_mmc1_001(void) {
 	WORD bank = chr_bank_MMC1(0);
 
-	if (prg_ram_plus_size() == (16 * 1024)) {
+	if (prg_wram_size() == (16 * 1024)) {
 		bank = chr_size() ? (~bank & 0x10) >> 4 : (~bank & 0x08) >> 3;
-	} else if (prg_ram_plus_size() == (32 * 1024)) {
+	} else if (prg_wram_size() == (32 * 1024)) {
 		bank = (bank & 0x0C) >> 3;
 	} else if (mmc1tmp.type == MMC1A) {
 		bank = (bank & 0x08) >> 3;
 	}
-	MMC1_wram_swap(bank);
+	MMC1_wram_swap(0x6000, bank);
 }
 void mirroring_fix_mmc1_001(void) {
 	if (mapper.mirroring == MIRRORING_FOURSCR) {

@@ -57,8 +57,9 @@ void init_MMC3(void);
 void prg_fix_MMC3_base(void);
 void prg_swap_MMC3_base(WORD address, WORD value);
 void chr_fix_MMC3_base(void);
-void wram_fix_MMC3_base(void);
 void chr_swap_MMC3_base(WORD address, WORD value);
+void wram_fix_MMC3_base(void);
+void wram_swap_MMC3_base(WORD address, WORD value);
 void mirroring_fix_MMC3_base(void);
 
 extern void (*MMC3_prg_fix)(void);
@@ -66,6 +67,7 @@ extern void (*MMC3_prg_swap)(WORD address, WORD value);
 extern void (*MMC3_chr_fix)(void);
 extern void (*MMC3_chr_swap)(WORD address, WORD value);
 extern void (*MMC3_wram_fix)(void);
+extern void (*MMC3_wram_swap)(WORD address, WORD value);
 extern void (*MMC3_mirroring_fix)(void);
 
 #endif /* MAPPER_MMC3_H_ */

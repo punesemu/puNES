@@ -28,6 +28,7 @@
 
 INLINE static void prg_fix_FFESMC(void);
 INLINE static void chr_fix_FFESMC(void);
+INLINE static void wram_fix_FFESMC(void);
 INLINE static void mirroring_fix_FFESMC(void);
 INLINE static void irq_clock_FFESMC(void);
 
@@ -378,8 +379,8 @@ void map_init_FFESMC(void) {
 		} else {
 			info.chr.rom.banks_8k = 32;
 		}
-		if (info.prg.ram.banks_8k_plus == 0) {
-			info.prg.ram.banks_8k_plus = 1;
+		if (!wram.size) {
+			wram.size = 0x2000;
 		}
 	}
 
@@ -435,17 +436,24 @@ void map_init_FFESMC(void) {
 		ffesmc.chr.reg[5] = 5;
 		ffesmc.chr.reg[6] = 6;
 		ffesmc.chr.reg[7] = 7;
+
+		r4017.value = 0x40;
 	}
 
-	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
+	info.mapper.extend_wr = TRUE;
 }
 void extcl_after_mapper_init_FFESMC(void) {
 	prg_fix_FFESMC();
+	chr_fix_FFESMC();
+	wram_fix_FFESMC();
+	mirroring_fix_FFESMC();
+}
+void extcl_cpu_init_pc_FFESMC(void) {
 	if (info.reset >= HARD) {
-		WORD nmiHandler;
+		WORD nmi_handler;
 
-		nmiHandler = prg_rom_rd(0xFFFA) | (prg_rom_rd(0xFFFB) << 8);
-		if (nmiHandler == 0x5032) {
+		nmi_handler = prg_rom_rd(0xFFFA) | (prg_rom_rd(0xFFFB) << 8);
+		if (nmi_handler == 0x5032) {
 			prg_rom_rd(0xFFFA) = ffesmc.scratch[0x4F];
 			prg_rom_rd(0xFFFB) = ffesmc.scratch[0x50];
 		}
@@ -462,22 +470,15 @@ void extcl_after_mapper_init_FFESMC(void) {
 			ffesmctmp.buf.data = NULL;
 			ffesmctmp.buf.size = 0;
 		}
-		r4017.value = 0x40;
-	}
-	chr_fix_FFESMC();
-	mirroring_fix_FFESMC();
-}
-void extcl_cpu_init_pc_FFESMC(void) {
-	if (info.reset >= HARD) {
-		if (info.mapper.trainer) {
+		// trainer
+		if (info.mapper.trainer && wram.size) {
 			WORD address = info.mapper.id != 17 ? 0x7000 :
 				info.mapper.submapper == 0 ? 0x7000 :
 				info.mapper.submapper << 8 | 0x5C00;
-			BYTE *data = (address < 0x6000) ?
-				&ffesmc.scratch[address & 0xF00] :
-				&prg.ram_plus_8k[address & 0x1FFF];
 
-			memcpy(data, &mapper.trainer[0], sizeof(mapper.trainer));
+			trainer.where_to_copy = (address < 0x6000) ?
+				&ffesmc.scratch[address & 0xF00] :
+				&wram.data[address & 0x1FFF];
 			cpu.PC = info.mapper.id == 17 ? address : 0x5000;
 		}
 	}
@@ -493,7 +494,7 @@ void extcl_cpu_wr_mem_FFESMC(WORD address, BYTE value) {
 					// no IRQ counter of its own, a few games abuse the FDS Disk Data IRQ for frame timing and write any
 					// value to this register to acknowledge a pending IRQ.
 					irq.high &= ~EXT_IRQ;
-					break;
+					return;
 				case 0x4025:
 					// FDS Control ($4025)
 					// This register is not part of the RAM cartridge, but part of the FDS RAM adapter that originally
@@ -508,7 +509,7 @@ void extcl_cpu_wr_mem_FFESMC(WORD address, BYTE value) {
 							ffesmc.fds.counter = 0;
 						}
 					}
-					break;
+					return;
 				case 0x42FC:
 				case 0x42FD:
 				case 0x42FE:
@@ -533,7 +534,7 @@ void extcl_cpu_wr_mem_FFESMC(WORD address, BYTE value) {
 					prg_fix_FFESMC();
 					chr_fix_FFESMC();
 					mirroring_fix_FFESMC();
-					break;
+					return;
 				case 0x43FC:
 				case 0x43FD:
 				case 0x43FE:
@@ -556,7 +557,7 @@ void extcl_cpu_wr_mem_FFESMC(WORD address, BYTE value) {
 					prg_fix_FFESMC();
 					chr_fix_FFESMC();
 					mirroring_fix_FFESMC();
-					break;
+					return;
 				case 0x4500:
 					//D~7654 3210
 					//  ---------
@@ -587,20 +588,20 @@ void extcl_cpu_wr_mem_FFESMC(WORD address, BYTE value) {
 					prg_fix_FFESMC();
 					chr_fix_FFESMC();
 					mirroring_fix_FFESMC();
-					break;
+					return;
 				case 0x4501:
 					ffesmc.irq.enable = FALSE;
 					irq.high &= ~EXT_IRQ;
-					break;
+					return;
 				case 0x4502:
 					ffesmc.irq.counter = (ffesmc.irq.counter & 0xFF00) | value;
 					irq.high &= ~EXT_IRQ;
-					break;
+					return;
 				case 0x4503:
 					ffesmc.irq.counter = (ffesmc.irq.counter & 0x00FF) | (value << 8);
 					ffesmc.irq.enable = TRUE;
 					irq.high &= ~EXT_IRQ;
-					break;
+					return;
 				case 0x4504:
 				case 0x4505:
 				case 0x4506:
@@ -610,7 +611,7 @@ void extcl_cpu_wr_mem_FFESMC(WORD address, BYTE value) {
 					}
 					ffesmc.prg[address & 0x03] = value;
 					prg_fix_FFESMC();
-					break;
+					return;
 				case 0x4510:
 				case 0x4511:
 				case 0x4512:
@@ -626,9 +627,11 @@ void extcl_cpu_wr_mem_FFESMC(WORD address, BYTE value) {
 					ffesmc.chr.reg[address & 0x0F] = value;
 					chr_fix_FFESMC();
 					mirroring_fix_FFESMC();
-					break;
+					return;
+				default:
+					return;
 			}
-			break;
+			return;
 		case 0x5000:
 			ffesmc.scratch[address & 0x0FFF] = value;
 			return;
@@ -651,7 +654,9 @@ void extcl_cpu_wr_mem_FFESMC(WORD address, BYTE value) {
 			} else {
 				prg.rom_8k[(address >> 13) & 0x03][address & 0x1FFF] = value;
 			}
-			break;
+			return;
+		default:
+			return;
 	}
 }
 BYTE extcl_cpu_rd_mem_FFESMC(WORD address, BYTE openbus, UNUSED(BYTE before)) {
@@ -661,8 +666,8 @@ BYTE extcl_cpu_rd_mem_FFESMC(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 				return (ffesmc.mode.smc);
 			}
 			break;
-		case 0x5000:
-			return (ffesmc.scratch[address & 0x0FFF]);
+		default:
+			return (openbus);
 	}
 	return (openbus);
 }
@@ -770,7 +775,7 @@ void extcl_update_r2006_FFESMC(WORD new_r2006, WORD old_r2006) {
 }
 
 INLINE static void prg_fix_FFESMC(void) {
-	WORD bank;
+	WORD bank = 0;
 
 	if (ffesmc.mode.m2m4 & 0x01) {
 		switch (ffesmc.mode.m1 & 0xE0) {
@@ -922,6 +927,9 @@ INLINE static void chr_fix_FFESMC(void) {
 
 	_control_bank(bank[7], info.chr.rom.max.banks_1k)
 	chr.bank_1k[7] = chr_pnt(bank[7] << 10);
+}
+INLINE static void wram_fix_FFESMC(void) {
+	wram_map_other_4k(0x5000, 0, &ffesmc.scratch[0], sizeof(ffesmc.scratch), TRUE, TRUE);
 }
 INLINE static void mirroring_fix_FFESMC(void) {
 	if (ffesmc.mode.smc & 0x02) {

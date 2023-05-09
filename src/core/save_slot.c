@@ -450,6 +450,7 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	// mem map
 	save_slot_ele(mode, slot, mmcpu.ram);
 	save_slot_mem(mode, slot, prg.ram.data, prg.ram.size, FALSE);
+#if defined WRAM_OLD_HANDLER
 	if (mode == SAVE_SLOT_READ) {
 		save_slot_int(mode, slot, tmp);
 		if (tmp > TRUE) {
@@ -482,7 +483,26 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 			save_slot_int(mode, slot, tmp);
 		}
 	}
-
+#else
+	if (mode == SAVE_SLOT_READ) {
+		save_slot_int(mode, slot, tmp);
+		if (tmp > TRUE) {
+			return (EXIT_ERROR);
+		}
+		if (tmp) {
+			save_slot_mem(mode, slot, wram.data, prg_wram_size(), FALSE);
+		}
+	} else {
+		if (prg_wram_size()) {
+			tmp = TRUE;
+			save_slot_int(mode, slot, tmp);
+			save_slot_mem(mode, slot, wram.data, prg_wram_size(), FALSE);
+		} else {
+			tmp = FALSE;
+			save_slot_int(mode, slot, tmp);
+		}
+	}
+#endif
 	for (i = 0; i < LENGTH(prg.rom_8k); i++) {
 		if (mode == SAVE_SLOT_SAVE) {
 			postype bank = mapper.rom_map_to[i] << 13;
@@ -668,6 +688,18 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 
 	// salvo la preview in formato PNG
 	save_slot_mem(mode, slot, NULL, 0, TRUE);
+
+
+
+
+
+	if (mode == SAVE_SLOT_READ) {
+		wram_reset();
+		extcl_after_mapper_init();
+	}
+
+
+
 
 	return (EXIT_OK);
 }

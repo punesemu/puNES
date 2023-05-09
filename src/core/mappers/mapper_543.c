@@ -50,9 +50,9 @@ void map_init_543(void) {
 	// per far avviare 1996 無敵智カ卡 5-in-1 (CH-501).nes
 	mmc1.reg[3] = 0x0E;
 
-	if (info.prg.ram.banks_8k_plus != 8) {
-		info.prg.ram.banks_8k_plus = 8;
-	}
+//	if (prg_wram_nvram_size() < (64 * 1024)) {
+//		wram_set_nvram_size(64 * 1024);
+//	}
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -92,5 +92,5 @@ void wram_fix_mmc1_543(void) {
 		? 0x04 | ((m543.reg & 0x04) >> 1) | (m543.reg & 0x01)
 		: ((m543.reg & 0x01) << 1) | ((mmc1.reg[1] & 0x08) >> 3);
 
-	MMC1_wram_swap(bank);
+	MMC1_wram_swap(0x6000, bank);
 }

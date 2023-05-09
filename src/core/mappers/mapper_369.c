@@ -27,6 +27,7 @@ void prg_fix_mmc3_369(void);
 void prg_swap_mmc3_369(WORD address, WORD value);
 void chr_fix_mmc3_369(void);
 void chr_swap_mmc3_369(WORD address, WORD value);
+void wram_fix_mmc3_369(void);
 
 struct _m369 {
 	BYTE reg;
@@ -36,14 +37,10 @@ struct _m369 {
 		WORD counter;
 	} irq;
 } m369;
-struct _m369tmp {
-	BYTE *prg_6000;
-} m369tmp;
 
 void map_init_369(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(369);
-	EXTCL_CPU_RD_MEM(369);
 	EXTCL_SAVE_MAPPER(369);
 	EXTCL_CPU_EVERY_CYCLE(369);
 	EXTCL_PPU_000_TO_34X(369);
@@ -64,13 +61,13 @@ void map_init_369(void) {
 	MMC3_prg_swap = prg_swap_mmc3_369;
 	MMC3_chr_fix = chr_fix_mmc3_369;
 	MMC3_chr_swap = chr_swap_mmc3_369;
+	MMC3_wram_fix = wram_fix_mmc3_369;
 
 	if (!info.chr.ram.banks_8k_plus) {
 		info.chr.ram.banks_8k_plus = 1;
 	}
 
 	info.mapper.extend_wr = TRUE;
-	info.mapper.ram_plus_op_controlled_by_mapper = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -82,12 +79,7 @@ void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
 				m369.reg = value;
 				MMC3_prg_fix();
 				MMC3_chr_fix();
-			}
-			return;
-		case 0x6000:
-		case 0x7000:
-			if (!m369tmp.prg_6000) {
-				prg.ram_plus_8k[address & 0x1FFF] = value;
+				MMC3_wram_fix();
 			}
 			return;
 		case 0x8000:
@@ -135,15 +127,9 @@ void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
 			}
 			extcl_cpu_wr_mem_MMC3(address, value);
 			return;
+		default:
+			return;
 	}
-}
-BYTE extcl_cpu_rd_mem_369(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	switch (address & 0xF000) {
-		case 0x6000:
-		case 0x7000:
-			return (m369tmp.prg_6000 ? m369tmp.prg_6000[address & 0x1FFF] : prg.ram_plus_8k[address & 0x1FFF]);
-	}
-	return (openbus);
 }
 BYTE extcl_save_mapper_369(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m369.reg);
@@ -153,7 +139,7 @@ BYTE extcl_save_mapper_369(BYTE mode, BYTE slot, FILE *fp) {
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
-		MMC3_prg_fix();
+		MMC3_wram_fix();
 	}
 
 	return (EXIT_OK);
@@ -199,8 +185,6 @@ void extcl_update_r2006_369(WORD new_r2006, WORD old_r2006) {
 void prg_fix_mmc3_369(void) {
 	WORD bank = 0;
 
-	m369tmp.prg_6000 = NULL;
-
 	switch (m369.reg) {
 		case 0x00:
 			bank = 0x00;
@@ -215,10 +199,6 @@ void prg_fix_mmc3_369(void) {
 			map_prg_rom_8k_update();
 			return;
 		case 0x13:
-			bank = 0x0E;
-			_control_bank(bank, info.prg.rom.max.banks_8k)
-			m369tmp.prg_6000 = prg_pnt(bank << 13);
-
 			bank = 0x0C;
 			_control_bank(bank, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, bank);
@@ -303,4 +283,11 @@ void chr_swap_mmc3_369(WORD address, WORD value) {
 	WORD mask = 0x7F;
 
 	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
+}
+void wram_fix_mmc3_369(void) {
+	if (m369.reg == 0x13) {
+		wram_map_prg_rom_8k(0x6000, 0x0E);
+	} else {
+		wram_fix_MMC3_base();
+	}
 }

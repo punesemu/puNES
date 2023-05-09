@@ -28,6 +28,7 @@ void (*MMC3_prg_swap)(WORD address, WORD value);
 void (*MMC3_chr_fix)(void);
 void (*MMC3_chr_swap)(WORD address, WORD value);
 void (*MMC3_wram_fix)(void);
+void (*MMC3_wram_swap)(WORD address, WORD value);
 void (*MMC3_mirroring_fix)(void);
 
 _mmc3 mmc3;
@@ -223,6 +224,11 @@ void chr_swap_MMC3_base(WORD address, WORD value) {
 	map_chr_rom_1k(address, value);
 }
 void wram_fix_MMC3_base(void) {
+	wram_swap_MMC3_base(0x6000, 0);
+}
+void wram_swap_MMC3_base(WORD address, WORD value) {
+	BYTE rd = TRUE, wr = TRUE;
+
 	if (info.mapper.submapper != MMC3_MMC6) {
 		// 7  bit  0
 		// ---- ----
@@ -230,20 +236,10 @@ void wram_fix_MMC3_base(void) {
 		// ||
 		// |+-------- Write protection (0: allow writes; 1: deny writes)
 		// +--------- Chip enable (0: disable chip; 1: enable chip)
-		switch ((mmc3.wram_protect & 0xC0) >> 6) {
-			case 0x00:
-			case 0x01:
-				cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = FALSE;
-				break;
-			case 0x02:
-				cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = TRUE;
-				break;
-			case 0x03:
-				cpu.prg_ram_rd_active = TRUE;
-				cpu.prg_ram_wr_active = FALSE;
-				break;
-		}
+		rd = (mmc3.wram_protect & 0x80) >> 7;
+		wr = rd ? !(mmc3.wram_protect & 0x40) : FALSE;
 	}
+	wram_map_auto_wp_8k(address, value, rd, wr);
 }
 void mirroring_fix_MMC3_base(void) {
 	// se e' abilitato il 4 schermi, il cambio

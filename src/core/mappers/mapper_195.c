@@ -25,6 +25,7 @@
 
 void prg_swap_mmc3_195(WORD address, WORD value);
 void chr_swap_mmc3_195(WORD address, WORD value);
+void wram_fix_mmc3_195(void);
 
 INLINE static BYTE chr_bank_mmc3(WORD address);
 
@@ -67,6 +68,7 @@ void map_init_195(void) {
 	init_MMC3();
 	MMC3_prg_swap = prg_swap_mmc3_195;
 	MMC3_chr_swap = chr_swap_mmc3_195;
+	MMC3_wram_fix = wram_fix_mmc3_195;
 
 	m195.chr.mask = 0xFC;
 	m195.chr.compare = 0x00;
@@ -129,7 +131,6 @@ void extcl_wr_chr_195(WORD address, BYTE value) {
 		}
 		MMC3_chr_fix();
 	}
-
 	if (map_chr_ram_slot_in_range(slot)) {
 		chr.bank_1k[slot][address & 0x3FF] = value;
 	}
@@ -147,6 +148,10 @@ void chr_swap_mmc3_195(WORD address, WORD value) {
 	} else {
 		chr_swap_MMC3_base(address, value);
 	}
+}
+void wram_fix_mmc3_195(void) {
+	wram_map_auto_4k(0x5000, 2);
+	wram_fix_MMC3_base();
 }
 
 INLINE static BYTE chr_bank_mmc3(WORD address) {

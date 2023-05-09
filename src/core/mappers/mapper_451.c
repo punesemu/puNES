@@ -122,21 +122,11 @@ void extcl_cpu_every_cycle_451(void) {
 	extcl_cpu_every_cycle_MMC3();
 }
 void extcl_battery_io_451(BYTE mode, FILE *fp) {
-	if (!fp || (tas.type != NOTAS)) {
-		return;
-	}
-
 	if (mode == WR_BAT) {
-		if (info.prg.ram.bat.banks) {
-			map_bat_wr_default(fp);
-		}
 		if (fwrite(m451tmp.sst39sf040, prg_size(), 1, fp) < 1) {
 			log_error(uL("mapper_451;error on write flash chip"));
 		}
 	} else {
-		if (info.prg.ram.bat.banks) {
-			map_bat_rd_default(fp);
-		}
 		if (fread(m451tmp.sst39sf040, prg_size(), 1, fp) < 1) {
 			log_error(uL("mapper_451;error on read flash chip"));
 		}

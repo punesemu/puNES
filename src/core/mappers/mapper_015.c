@@ -31,7 +31,6 @@ struct _m015 {
 
 void map_init_015(void) {
 	EXTCL_AFTER_MAPPER_INIT(015);
-	EXTCL_CPU_INIT_PC(015);
 	EXTCL_CPU_WR_MEM(015);
 	EXTCL_SAVE_MAPPER(015);
 	mapper.internal_struct[0] = (BYTE *)&m015;
@@ -42,15 +41,6 @@ void map_init_015(void) {
 void extcl_after_mapper_init_015(void) {
 	prg_fix_015();
 	mirroring_fix_015();
-}
-void extcl_cpu_init_pc_015(void) {
-	if (info.reset >= HARD) {
-		if (info.mapper.trainer && prg.ram_plus_8k) {
-			BYTE *data = &prg.ram_plus_8k[0x7000 & 0x1FFF];
-
-			memcpy(data, &mapper.trainer[0], sizeof(mapper.trainer));
-		}
-	}
 }
 void extcl_cpu_wr_mem_015(WORD address, BYTE value) {
 	m015.reg[0] = address;

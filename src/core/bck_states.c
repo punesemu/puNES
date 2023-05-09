@@ -32,15 +32,15 @@
 #define bck_states_on_struct(_mode, _strct, _data, _index, _size_buf)\
 	switch (_mode) {\
 		case BCK_STATES_OP_SAVE_ON_MEM:\
-			memcpy(_data + _index, &_strct, sizeof(_strct));\
-			_index += sizeof(_strct);\
+			memcpy((_data + _index), &_strct, sizeof(_strct));\
+			(_index) += sizeof(_strct);\
 			break;\
 		case BCK_STATES_OP_READ_FROM_MEM:\
-			memcpy(&_strct, _data + _index, sizeof(_strct));\
-			_index += sizeof(_strct);\
+			memcpy(&_strct, (_data + _index), sizeof(_strct));\
+			(_index) += sizeof(_strct);\
 			break;\
 		case BCK_STATES_OP_COUNT:\
-			_size_buf += sizeof(_strct);\
+			(_size_buf) += sizeof(_strct);\
 			break;\
     	default:\
     		break;\
@@ -48,25 +48,25 @@
 #define bck_states_on_mem(_mode, _mem, _size, _data, _index, _size_buf)\
 	switch (_mode) {\
 		case BCK_STATES_OP_SAVE_ON_MEM:\
-			memcpy(_data + _index, _mem, _size);\
-			_index += _size;\
+			memcpy((_data + _index), _mem, _size);\
+			(_index) += _size;\
 			break;\
 		case BCK_STATES_OP_READ_FROM_MEM:\
-			memcpy(_mem, _data + _index, _size);\
-			_index += _size;\
+			memcpy(_mem, (_data + _index), _size);\
+			(_index) += _size;\
 			break;\
 		case BCK_STATES_OP_COUNT:\
-			_size_buf += _size;\
+			(_size_buf) += _size;\
 			break;\
     	default:\
     		break;\
 	}
 
 void bck_states_op_screen(BYTE mode, void *data, size_t *index, size_t *size_buff) {
-	bck_states_on_mem(mode, ppu_screen.rd->data, screen_size(), data, (*index), (*size_buff))
+	bck_states_on_mem(mode, ppu_screen.rd->data, (screen_size()), data, (*index), (*size_buff))
 }
 void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_buff) {
-	unsigned int i;
+	unsigned int i = 0;
 
 	// CPU
 	bck_states_on_struct(mode, cpu, data, (*index), (*size_buff))
@@ -104,9 +104,16 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_b
 	bck_states_on_struct(mode, mmcpu, data, (*index), (*size_buff))
 	bck_states_on_struct(mode, prg, data, (*index), (*size_buff))
 	bck_states_on_mem(mode, prg.ram.data, prg.ram.size, data, (*index), (*size_buff))
+#if defined WRAM_OLD_HANDLER
 	if (prg.ram_plus) {
 		bck_states_on_mem(mode, prg.ram_plus, prg_ram_plus_size(), data, (*index), (*size_buff))
 	}
+#else
+	bck_states_on_struct(mode, wram, data, (*index), (*size_buff))
+	if (wram.data) {
+		bck_states_on_mem(mode, wram.data, prg_wram_nvram_size(), data, (*index), (*size_buff))
+	}
+#endif
 	bck_states_on_struct(mode, chr, data, (*index), (*size_buff))
 	if (mapper.write_vram) {
 		bck_states_on_mem(mode, chr_rom(), chr_ram_size(), data, (*index), (*size_buff))
@@ -154,7 +161,7 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_b
 	}
 }
 void bck_states_op_input(BYTE mode, void *data, size_t *index, size_t *size_buff) {
-	int i;
+	int i = 0;
 
 	// standard controller
 	for (i = PORT1; i < PORT_MAX; i++) {

@@ -34,14 +34,10 @@ struct _m210 {
 	WORD chr[8];
 	BYTE wram_protect;
 } m210;
-struct _m210tmp {
-	WORD mask;
-} m210tmp;
 
 void map_init_210(void) {
 	EXTCL_AFTER_MAPPER_INIT(210);
 	EXTCL_CPU_WR_MEM(210);
-	EXTCL_CPU_RD_MEM(210);
 	EXTCL_SAVE_MAPPER(210);
 	mapper.internal_struct[0] = (BYTE *)&n118;
 	mapper.internal_struct_size[0] = sizeof(n118);
@@ -63,15 +59,6 @@ void map_init_210(void) {
 		m210.chr[6] = 6;
 		m210.chr[7] = 7;
 	}
-
-	m210tmp.mask = (info.format != NES_2_0)
-		? 0x1FFF
-		: info.mapper.nes20db.in_use
-			? (nes20db.prgram.size ? nes20db.prgram.size - 1 : nes20db.prgnvram.size - 1)
-			: (WORD)((64 << (ines.flags[FL10] & 0xF0 ? ines.flags[FL10] >> 4 : ines.flags[FL10] & 0x0F)) - 1);
-
-	info.mapper.extend_wr = TRUE;
-	info.mapper.ram_plus_op_controlled_by_mapper = TRUE;
 }
 void extcl_after_mapper_init_210(void) {
 	prg_fix_210();
@@ -81,12 +68,6 @@ void extcl_after_mapper_init_210(void) {
 }
 void extcl_cpu_wr_mem_210(WORD address, BYTE value) {
 	switch (address & 0xF000) {
-		case 0x6000:
-		case 0x7000:
-			if (cpu.prg_ram_wr_active && prg.ram_plus_8k) {
-				prg.ram_plus_8k[address & m210tmp.mask] = value;
-			}
-			return;
 		case 0x8000:
 		case 0x9000:
 		case 0xA000:
@@ -111,15 +92,6 @@ void extcl_cpu_wr_mem_210(WORD address, BYTE value) {
 			}
 			return;
 		}
-	}
-}
-BYTE extcl_cpu_rd_mem_210(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	switch (address & 0xF000) {
-		case 0x6000:
-		case 0x7000:
-			return (cpu.prg_ram_rd_active && prg.ram_plus_8k ? prg.ram_plus_8k[address & m210tmp.mask] : openbus);
-		default:
-			return (openbus);
 	}
 }
 BYTE extcl_save_mapper_210(BYTE mode, BYTE slot, FILE *fp) {
@@ -163,8 +135,7 @@ INLINE static void chr_fix_210(void) {
 	map_chr_rom_1k(0x1C00, m210.chr[7]);
 }
 INLINE static void wram_fix_210(void) {
-	cpu.prg_ram_rd_active = TRUE;
-	cpu.prg_ram_wr_active = m210.wram_protect;
+	wram_map_auto_wp_8k(0x6000, 0, TRUE, m210.wram_protect);
 }
 INLINE static void mirroring_fix_210(void) {
 	if (info.mapper.submapper != 1) {

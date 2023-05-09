@@ -109,21 +109,11 @@ void extcl_cpu_every_cycle_406(void) {
 	extcl_cpu_every_cycle_MMC3();
 }
 void extcl_battery_io_406(BYTE mode, FILE *fp) {
-	if (!fp || (tas.type != NOTAS)) {
-		return;
-	}
-
 	if (mode == WR_BAT) {
-		if (info.prg.ram.bat.banks) {
-			map_bat_wr_default(fp);
-		}
 		if (fwrite(m406tmp.sst39sf040, prg_size(), 1, fp) < 1) {
 			log_error(uL("mapper_406;error on write flash chip"));
 		}
 	} else {
-		if (info.prg.ram.bat.banks) {
-			map_bat_rd_default(fp);
-		}
 		if (fread(m406tmp.sst39sf040, prg_size(), 1, fp) < 1) {
 			log_error(uL("mapper_406;error on read flash chip"));
 		}

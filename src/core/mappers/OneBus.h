@@ -16,8 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef ONEBUS_H_
-#define ONEBUS_H_
+#ifndef ONEBUSV_H_
+#define ONEBUSV_H_
 
 #include "common.h"
 
@@ -41,7 +41,6 @@ typedef struct _onebus {
 
 extern _onebus onebus;
 
-void map_init_OneBus(void);
 void extcl_after_mapper_init_OneBus(void);
 void extcl_mapper_quit_OneBus(void);
 void extcl_cpu_wr_mem_OneBus(WORD address, BYTE value);
@@ -55,9 +54,25 @@ void extcl_cpu_every_cycle_OneBus(void);
 void extcl_irq_A12_clock_OneBus(void);
 void extcl_ppu_000_to_34x_OneBus(void);
 
-void prg_fix_8k_OneBus(WORD mmask, WORD mblock);
-void prg_fix_16k_OneBus(WORD bank0, WORD bank1, WORD mmask, WORD mblock);
-void chr_fix_OneBus(WORD mmask, WORD mblock);
-void mirroring_fix_OneBus(void);
+void init_OneBus(void);
+void prg_fix_8k_OneBus_base(WORD mmask, WORD mblock);
+void prg_swap_8k_OneBus_base(WORD address, WORD value);
+void prg_fix_16k_OneBus_base(WORD bank0, WORD bank1, WORD mmask, WORD mblock);
+void prg_swap_16k_OneBus_base(WORD address, WORD value);
+void chr_fix_OneBus_base(WORD mmask, WORD mblock);
+void chr_swap_OneBus_base(BYTE **banks, BYTE *base, BYTE bit4pp, BYTE extended, WORD EVA, WORD mmask, WORD mblock);
+void wram_fix_OneBus_base(WORD mmask, WORD mblock);
+void mirroring_fix_OneBus_base(void);
 
-#endif /* ONEBUS_H_ */
+void chr_wrap_OneBus(BYTE **banks, BYTE *base, BYTE bit4pp, BYTE extended, WORD EVA, WORD mmask, WORD mblock);
+
+extern void (*OneBus_prg_fix_8k)(WORD mmask, WORD mblock);
+extern void (*OneBus_prg_swap_8k)(WORD address, WORD value);
+extern void (*OneBus_prg_fix_16k)(WORD bank0, WORD bank1, WORD mmask, WORD mblock);
+extern void (*OneBus_prg_swap_16k)(WORD address, WORD value);
+extern void (*OneBus_chr_fix)(WORD mmask, WORD mblock);
+extern void (*OneBus_chr_swap)(BYTE **banks, BYTE *base, BYTE bit4pp, BYTE extended, WORD EVA, WORD mmask, WORD mblock);
+extern void (*OneBus_wram_fix)(WORD mmask, WORD mblock);
+extern void (*OneBus_mirroring_fix)(void);
+
+#endif /* ONEBUSV_H_ */

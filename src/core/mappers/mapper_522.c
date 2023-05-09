@@ -22,49 +22,40 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-INLINE static void lh10_update(void);
+INLINE static void prg_fix_522(void);
+INLINE static void wram_fix_522(void);
 
-struct _lh10 {
+struct _m522 {
 	BYTE ind;
 	BYTE reg[8];
-} lh10;
-struct _lh10tmp {
-	BYTE *prg_6000;
+} m522;
+struct _m522tmp {
 	BYTE *prg_C000;
-} lh10tmp;
+} m522tmp;
 
-void map_init_LH10(void) {
-	EXTCL_AFTER_MAPPER_INIT(LH10);
-	EXTCL_CPU_WR_MEM(LH10);
-	EXTCL_CPU_RD_MEM(LH10);
-	EXTCL_SAVE_MAPPER(LH10);
-	mapper.internal_struct[0] = (BYTE *)&lh10;
-	mapper.internal_struct_size[0] = sizeof(lh10);
+void map_init_522(void) {
+	EXTCL_AFTER_MAPPER_INIT(522);
+	EXTCL_CPU_WR_MEM(522);
+	EXTCL_CPU_RD_MEM(522);
+	EXTCL_SAVE_MAPPER(522);
+	mapper.internal_struct[0] = (BYTE *)&m522;
+	mapper.internal_struct_size[0] = sizeof(m522);
 
-	memset(&lh10, 0x00, sizeof(lh10));
-
-	info.prg.ram.banks_8k_plus = 1;
+	memset(&m522, 0x00, sizeof(m522));
 
 	info.mapper.extend_rd = TRUE;
-	info.mapper.extend_wr = TRUE;
-	info.mapper.ram_plus_op_controlled_by_mapper = TRUE;
 }
-void extcl_after_mapper_init_LH10(void) {
-	// posso farlo solo dopo il map_prg_ram_init();
-	lh10_update();
+void extcl_after_mapper_init_522(void) {
+	prg_fix_522();
+	wram_fix_522();
 }
-void extcl_cpu_wr_mem_LH10(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_522(WORD address, BYTE value) {
 	switch (address & 0xF001) {
-		case 0x6000:
-		case 0x6001:
-		case 0x7000:
-		case 0x7001:
-			return;
 		case 0xC000:
 		case 0xC001:
 		case 0xD000:
 		case 0xD001:
-			lh10tmp.prg_C000[address & 0x1FFF] = value;
+			m522tmp.prg_C000[address & 0x1FFF] = value;
 			return;
 		case 0x8000:
 		case 0x9000:
@@ -72,7 +63,7 @@ void extcl_cpu_wr_mem_LH10(WORD address, BYTE value) {
 		case 0xB000:
 		case 0xE000:
 		case 0xF000:
-			lh10.ind = value & 0x07;
+			m522.ind = value & 0x07;
 			return;
 		case 0x8001:
 		case 0x9001:
@@ -80,53 +71,53 @@ void extcl_cpu_wr_mem_LH10(WORD address, BYTE value) {
 		case 0xB001:
 		case 0xE001:
 		case 0xF001:
-			lh10.reg[lh10.ind] = value;
-			lh10_update();
+			m522.reg[m522.ind] = value;
+			prg_fix_522();
+			wram_fix_522();
+			return;
+		default:
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_LH10(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_522(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	switch (address & 0xF000) {
-		case 0x6000:
-		case 0x7000:
-			return (lh10tmp.prg_6000[address & 0x1FFF]);
 		case 0xC000:
 		case 0xD000:
-			return (lh10tmp.prg_C000[address & 0x1FFF]);
+			return (m522tmp.prg_C000[address & 0x1FFF]);
+		default:
+			return (openbus);
 	}
-	return (openbus);
 }
-BYTE extcl_save_mapper_LH10(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, lh10.ind);
-	save_slot_ele(mode, slot, lh10.reg);
+BYTE extcl_save_mapper_522(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m522.ind);
+	save_slot_ele(mode, slot, m522.reg);
 
 	if (mode == SAVE_SLOT_READ) {
-		lh10_update();
+		prg_fix_522();
+		wram_fix_522();
 	}
 
 	return (EXIT_OK);
 }
 
-INLINE static void lh10_update(void) {
+INLINE static void prg_fix_522(void) {
 	WORD value;
 
-	// 0x6000 - 0x7000
-	value = 0xFE;
-	control_bank(info.prg.rom.max.banks_8k)
-	lh10tmp.prg_6000 = prg_pnt(value << 13);
-
 	// 0x8000 - 0x9000
-	value = lh10.reg[6];
+	value = m522.reg[6];
 	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 0, value);
 	prg.rom_8k[0] = prg_pnt(mapper.rom_map_to[0] << 13);
 
 	// 0xA000 - 0xB000
-	value = lh10.reg[7];
+	value = m522.reg[7];
 	control_bank(info.prg.rom.max.banks_8k)
 	map_prg_rom_8k(1, 1, value);
 	prg.rom_8k[1] = prg_pnt(mapper.rom_map_to[1] << 13);
 
 	// 0xC000 - 0xD000
-	lh10tmp.prg_C000 = &prg.ram_plus_8k[0];
+	m522tmp.prg_C000 = &wram.data[0];
+}
+INLINE static void wram_fix_522(void) {
+	wram_map_prg_rom_8k(0x6000, 0xFE);
 }

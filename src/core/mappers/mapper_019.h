@@ -25,7 +25,7 @@ typedef struct _m019 {
 	WORD prg[4];
 	WORD chr[8];
 	WORD nmt[4];
-	BYTE write_protect;
+	BYTE wram_protect;
 	struct _snd_m019 {
 		BYTE enabled;
 		BYTE adr;

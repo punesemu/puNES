@@ -23,58 +23,55 @@
 #include "save_slot.h"
 
 INLINE static void prg_fix_000(void);
+INLINE static void wram_fix_000(void);
 
 struct _m000tmp {
 	BYTE nrom368;
-	BYTE *prg_4000;
 } m000tmp;
 
 void map_init_000(void) {
 	EXTCL_AFTER_MAPPER_INIT(000);
-	EXTCL_CPU_INIT_PC(000);
 	EXTCL_CPU_WR_MEM(000);
-	EXTCL_CPU_RD_MEM(000);
 	EXTCL_SAVE_MAPPER(000);
 
+	// Alter Ego (World) (Aftermarket) (Homebrew) (Alt).nes
 	m000tmp.nrom368 = (info.prg.rom.banks_16k == 3);
 }
 void extcl_after_mapper_init_000(void) {
 	prg_fix_000();
-}
-void extcl_cpu_init_pc_000(void) {
-	if (info.reset >= HARD) {
-		if (info.mapper.trainer && prg.ram_plus_8k) {
-			BYTE *data = &prg.ram_plus_8k[0x7000 & 0x1FFF];
-
-			memcpy(data, &mapper.trainer[0], sizeof(mapper.trainer));
-		}
-	}
+	wram_fix_000();
 }
 void extcl_cpu_wr_mem_000(UNUSED(WORD address), UNUSED(BYTE value)) {}
-BYTE extcl_cpu_rd_mem_000(WORD address, BYTE openbus, BYTE before) {
-	if (address < 0x6000) {
-		if (m000tmp.prg_4000) {
-			return (m000tmp.prg_4000[address & 0x1FFF]);
-		}
-		return (before);
-	}
-	return (openbus);
-}
 BYTE extcl_save_mapper_000(UNUSED(BYTE mode), UNUSED(BYTE slot), UNUSED(FILE *fp)) {
 	if (mode == SAVE_SLOT_READ) {
-		prg_fix_000();
+		wram_fix_000();
 	}
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_000(void) {
+	WORD bank = 0;
+
 	if (m000tmp.nrom368) {
-		m000tmp.prg_4000 = prg_pnt(0);
-		map_prg_rom_8k(2, 0, 1);
-		map_prg_rom_8k(2, 2, 2);
+		bank = 1;
+		_control_bank(bank, info.prg.rom.max.banks_16k)
+		map_prg_rom_8k(2, 0, bank);
+
+		bank = 2;
+		_control_bank(bank, info.prg.rom.max.banks_16k)
+		map_prg_rom_8k(2, 2, bank);
 	} else {
-		m000tmp.prg_4000 = NULL;
-		map_prg_rom_8k(4, 0, 0);
+		bank = 0;
+		_control_bank(bank, info.prg.rom.max.banks_32k)
+		map_prg_rom_8k(4, 0, bank);
 	}
+
 	map_prg_rom_8k_update();
+}
+INLINE static void wram_fix_000(void) {
+	if (m000tmp.nrom368) {
+		wram_map_prg_rom_16k(0x4000, 0);
+	} else {
+		wram_map_disable_8k(0x4000);
+	}
 }

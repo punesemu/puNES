@@ -155,6 +155,7 @@ set(core_srcs
 	core/mappers/mapper_120.c
 	core/mappers/mapper_121.c
 	core/mappers/mapper_123.c
+	core/mappers/mapper_125.c
 	core/mappers/mapper_126.c
 	core/mappers/mapper_134.c
 	core/mappers/mapper_152.c
@@ -166,6 +167,7 @@ set(core_srcs
 	core/mappers/mapper_166.c
 	core/mappers/mapper_167.c
 	core/mappers/mapper_168.c
+	core/mappers/mapper_176.c
 	core/mappers/mapper_178.c
 	core/mappers/mapper_182.c
 	core/mappers/mapper_183.c
@@ -250,6 +252,7 @@ set(core_srcs
 	core/mappers/mapper_323.c
 	core/mappers/mapper_325.c
 	core/mappers/mapper_327.c
+	core/mappers/mapper_329.c
 	core/mappers/mapper_331.c
 	core/mappers/mapper_333.c
 	core/mappers/mapper_334.c
@@ -257,6 +260,7 @@ set(core_srcs
 	core/mappers/mapper_339.c
 	core/mappers/mapper_344.c
 	core/mappers/mapper_345.c
+	core/mappers/mapper_347.c
 	core/mappers/mapper_348.c
 	core/mappers/mapper_351.c
 	core/mappers/mapper_353.c
@@ -322,6 +326,7 @@ set(core_srcs
 	core/mappers/mapper_513.c
 	core/mappers/mapper_516.c
 	core/mappers/mapper_518.c
+	core/mappers/mapper_522.c
 	core/mappers/mapper_524.c
 	core/mappers/mapper_527.c
 	core/mappers/mapper_528.c
@@ -352,7 +357,6 @@ set(core_srcs
 	core/mappers/mapper_BMC70IN1.c
 	core/mappers/mapper_BMC810544CA1.c
 	core/mappers/mapper_BMC830425C.c
-	core/mappers/mapper_BMCFK23C.c
 	core/mappers/mapper_BMCG146.c
 	core/mappers/mapper_BMCHP898F.c
 	core/mappers/mapper_BMCNTD03.c
@@ -370,7 +374,6 @@ set(core_srcs
 	core/mappers/mapper_CTC09.c
 	core/mappers/mapper_DREAMTECH01.c
 	core/mappers/mapper_DRIPGAME.c
-	core/mappers/mapper_EDU2000.c
 	core/mappers/mapper_EH8813A.c
 	core/mappers/mapper_FARIDUNROM8IN1.c
 	core/mappers/mapper_FDS.c
@@ -394,11 +397,8 @@ set(core_srcs
 	core/mappers/mapper_KS7016.c
 	core/mappers/mapper_KS7017.c
 	core/mappers/mapper_KS7021A.c
-	core/mappers/mapper_KS7030.c
 	core/mappers/mapper_KS7031.c
 	core/mappers/mapper_KS7032.c
-	core/mappers/mapper_LH10.c
-	core/mappers/mapper_LH32.c
 	core/mappers/mapper_LH51.c
 	core/mappers/mapper_Magic.c
 	core/mappers/mapper_Malee.c
@@ -430,13 +430,13 @@ set(core_srcs
 
 	core/mappers/EE93Cx6.c
 	core/mappers/FME7.c
-	core/mappers/OneBus.c
-	core/mappers/opll.c
 	core/mappers/N118.c
 	core/mappers/MMC1.c
 	core/mappers/MMC2.c
 	core/mappers/MMC3.c
 	core/mappers/MMC4.c
+	core/mappers/OneBus.c
+	core/mappers/opll.c
 	core/mappers/serial_devices.cpp
 	core/mappers/serial_devices_interface.cpp
 	core/mappers/SST39SF040.c
@@ -478,6 +478,16 @@ set(core_srcs
 	core/uncompress.c
 	core/unif.c
 	core/vector.c
+
+
+
+
+
+
+
+
+	#core/ramplusold.c
+	core/wram.c
 	)
 
 set(extra_srcs
