@@ -27,7 +27,6 @@ enum {
 	E24C01,
 	E24C02,
 	DATACH,
-	FAMICOMJUMPII = 100
 };
 
 void map_init_Bandai(BYTE model);

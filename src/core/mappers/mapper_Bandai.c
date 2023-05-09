@@ -185,11 +185,9 @@ void map_init_Bandai(BYTE model) {
 		}
 	}
 
-	switch (info.id) {
-		case FAMICOMJUMPII:
-			info.prg.ram.banks_8k_plus = 1;
-			info.prg.ram.bat.banks = 1;
-			break;
+	if (info.crc32.prg == 0xF76AA523) {
+		wram_set_ram_size(0);
+		wram_set_nvram_size(0x2000);
 	}
 
 	bandaitmp.type = model;
@@ -229,7 +227,8 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 		return;
 	}
 
-	if (!info.prg.ram.banks_8k_plus) {
+//	if (!info.prg.ram.banks_8k_plus) {
+	if (!wram.data) {
 		address |= 0x8000;
 	}
 
@@ -351,10 +350,6 @@ BYTE extcl_save_mapper_Bandai_FCGX(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp) {
-	if ((mode == WR_BAT) && !fp) {
-		return;
-	}
-
 	if (FCGX.e0.size || FCGX.e1.size) {
 		if (tas.type == NOTAS) {
 			if (FCGX.e0.size) {
@@ -380,24 +375,27 @@ void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp) {
 				}
 			}
 		}
-	} else {
-		if (mode == WR_BAT) {
-			map_bat_wr_default(fp);
-		} else {
-			map_bat_rd_default(fp);
-			/*
-			 * ho notato che quando avvio per la prima volta
-			 * "Famicom Jump II - Saikyou no 7 Nin (J) [!].nes", se questa zona di memoria
-			 * non e' valorizzata almeno ad uno, il gioco va in loop. Con un reset (soft
-			 * o hard non ha importanza) il gioco inizia a funzionare perche' questa
-			 * locazione di memoria e' stata nel frattempo valorizzata dal gioco stesso.
-			 */
-			if (!fp && (info.id == FAMICOMJUMPII)) {
-				prg.ram_battery[0xBBC] = 0x01;
-			}
-		}
+	} else if (mode == RD_BAT) {
+		/*
+		 * ho notato che quando avvio per la prima volta
+		 * "Famicom Jump II - Saikyou no 7 Nin (J) [!].nes", se questa zona di memoria
+		 * non e' valorizzata almeno ad uno, il gioco va in loop. Con un reset (soft
+		 * o hard non ha importanza) il gioco inizia a funzionare perche' questa
+		 * locazione di memoria e' stata nel frattempo valorizzata dal gioco stesso.
+		 */
+		//if (!fp && (info.id == FAMICOMJUMPII)) {
+		//	wram.nvram.pnt[0xBBC] = 0x01;
+			//prg.ram_battery[0xBBC] = 0x01;
+		//}
 	}
 }
+
+
+
+
+
+
+
 void extcl_cpu_every_cycle_Bandai_FCGX(void) {
 	if (FCGX.delay && !(--FCGX.delay)) {
 		irq.high |= EXT_IRQ;

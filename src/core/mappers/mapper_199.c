@@ -24,17 +24,11 @@
 #include "save_slot.h"
 
 void chr_swap_mmc3_199(WORD address, WORD value);
-
-INLINE static void prg_5000_fix(void);
-
-struct _m199tmp {
-	BYTE *prg_5000;
-} m199tmp;
+void wram_fix_mmc3_199(void);
 
 void map_init_199(void) {
-	EXTCL_AFTER_MAPPER_INIT(199);
-	EXTCL_CPU_WR_MEM(199);
-	EXTCL_CPU_RD_MEM(199);
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
+	EXTCL_CPU_WR_MEM(MMC3);
 	EXTCL_SAVE_MAPPER(199);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
@@ -49,42 +43,21 @@ void map_init_199(void) {
 
 	init_MMC3();
 	MMC3_chr_swap = chr_swap_mmc3_199;
+	MMC3_wram_fix = wram_fix_mmc3_199;
 
-	if (info.prg.ram.banks_8k_plus < 2) {
-		info.prg.ram.banks_8k_plus = 2;
-		info.prg.ram.bat.banks = 2;
-	}
-
-	info.mapper.extend_wr = TRUE;
+//	if (prg_wram_size() < (12 * 1024)) {
+//		wram_set_ram_size(4 * 1024);
+//		wram_set_nvram_size(8 * 1024);
+//	}
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
-}
-void extcl_after_mapper_init_199(void) {
-	extcl_after_mapper_init_MMC3();
-	prg_5000_fix();
-}
-void extcl_cpu_wr_mem_199(WORD address, BYTE value) {
-	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		m199tmp.prg_5000[address & 0x0FFF] = value;
-		return;
-	}
-	if (address >= 0x8000) {
-		extcl_cpu_wr_mem_MMC3(address, value);
-	}
-}
-BYTE extcl_cpu_rd_mem_199(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		return (m199tmp.prg_5000[address & 0x0FFF]);
-	}
-	return (openbus);
 }
 BYTE extcl_save_mapper_199(BYTE mode, BYTE slot, FILE *fp) {
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix();
-		prg_5000_fix();
+		MMC3_wram_fix();
 	}
 
 	return (EXIT_OK);
@@ -93,7 +66,7 @@ BYTE extcl_save_mapper_199(BYTE mode, BYTE slot, FILE *fp) {
 void chr_swap_mmc3_199(WORD address, UNUSED(WORD value)) {
 	chr_swap_MMC3_base(address, (address >> 10));
 }
-
-INLINE static void prg_5000_fix(void) {
-	m199tmp.prg_5000 = &prg.ram_plus[0x2000 & ((prg_ram_plus_size()) - 1)];
+void wram_fix_mmc3_199(void) {
+	wram_map_auto_4k(0x5000, 2);
+	wram_fix_MMC3_base();
 }

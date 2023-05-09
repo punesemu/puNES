@@ -291,7 +291,9 @@ BYTE unif_load_rom(void) {
 
 	// setto i defaults
 	info.machine[HEADER] = info.machine[DATABASE] = NTSC;
+#if defined WRAM_OLD_HANDLER
 	info.prg.ram.bat.banks = 0;
+#endif
 	info.mapper.submapper = DEFAULT;
 	info.mapper.mirroring = MIRRORING_HORIZONTAL;
 	info.mirroring_db = info.id = DEFAULT;
@@ -473,6 +475,7 @@ BYTE unif_load_rom(void) {
 			nes20_submapper();
 		}
 
+#if defined WRAM_OLD_HANDLER
 		if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
 			info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
 		}
@@ -480,6 +483,11 @@ BYTE unif_load_rom(void) {
 		if ((info.format != NES_2_0) && !info.prg.ram.banks_8k_plus) {
 			info.prg.ram.banks_8k_plus = 1;
 		}
+#else
+		if ((info.format != NES_2_0) && !prg_wram_size()) {
+			wram_set_ram_size(0x2000);
+		}
+#endif
 
 		if (!info.chr.rom.banks_1k) {
 			mapper.write_vram = TRUE;
@@ -725,7 +733,11 @@ BYTE unif_BATR(_rom_mem *rom, BYTE phase) {
 
 	rom_mem_memcpy(&batr, rom, unif.chunk.length);
 
+#if defined WRAM_OLD_HANDLER
 	info.prg.ram.bat.banks = batr & 0x01;
+#else
+	wram_set_nvram_size((batr & 0x01) * 0x2000);
+#endif
 
 	return (EXIT_OK);
 }

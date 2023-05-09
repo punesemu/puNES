@@ -81,7 +81,6 @@ enum mirroring_types {
 #define prg_pnt(index) &prg_byte(index)
 #define prg_chip_rom(chip_rom) prg.chip[chip_rom].data
 #define prg_chip_size(chip_rom) prg.chip[chip_rom].size
-#define prg_ram_plus_size() info.prg.ram.banks_8k_plus << 13
 
 #define chr_rom() chr.rom.data
 #define chr_size() chr.rom.size
@@ -111,9 +110,9 @@ typedef struct _prg {
 		BYTE *data;
 	} ram;
 
-	BYTE *ram_plus;    // PRG Ram extra
-	BYTE *ram_plus_8k;
-	BYTE *ram_battery; // Battery RAM
+//	BYTE *ram_plus;    // PRG Ram extra
+//	BYTE *ram_plus_8k;
+//	BYTE *ram_battery; // Battery RAM
 } _prg;
 typedef struct _chr {
 	struct _chr_rom {

@@ -3636,9 +3636,9 @@ static const _dbelement dblist[] = {
 
 /* ----------------------------------------- 153 ------------------------------------------ */
 	/* Famicom Jump II - Saikyou no 7 Nin (J) [b1].nes */
-	{"7348a4530054205925f3182aa5f12dd4d8a19410", 153, FCGx, FAMICOMJUMPII, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"7348a4530054205925f3182aa5f12dd4d8a19410", 153, FCGx, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Famicom Jump II - Saikyou no 7 Nin (J) [o1].nes */
-	{"1d7417d31e19b590afceb6a8a6e7b9cab9f9b475", 153, FCGx, FAMICOMJUMPII, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"1d7417d31e19b590afceb6a8a6e7b9cab9f9b475", 153, FCGx, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ----------------------------------------- 155 ------------------------------------------ */
 	/* Money Game, The (J).nes */
@@ -3752,7 +3752,7 @@ static const _dbelement dblist[] = {
 
 /* ----------------------------------------- 178 ------------------------------------------ */
 	/* Education Computer 32-in-1 (Game Star)(Unl)[!].nes */
-	{"156a81a1c1e0d2238cbdc261f8c71d71afe17d73", 178, M178EC32IN1, DEFAULT, DENDY, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"156a81a1c1e0d2238cbdc261f8c71d71afe17d73", 178, DEFAULT, DEFAULT, DENDY, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Education Computer 2000 48-in-1 (Unl)[f1].nes */
 	{"c8770f4285e7600b15b2e728533575b41db7b612", 178, DEFAULT, DEFAULT, DENDY, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Education Computer 48-in-1 (Game Star)(Unl)[!].nes */

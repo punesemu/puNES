@@ -22,17 +22,22 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-INLINE static void prg_setup_178(void);
+// TODO : aggiungere emulazione infrared
+
+INLINE static void prg_fix_178(void);
+INLINE static void chr_fix_178(void);
+INLINE static void wram_fix_178(void);
+INLINE static void mirroring_fix_178(void);
 
 struct _m178 {
-	BYTE reg[3];
-	BYTE prg_mode;
+	BYTE reg[4];
 } m178;
 struct _m178tmp {
-	BYTE model;
+	BYTE baddumps;
 } m178tmp;
 
-void map_init_178(BYTE type) {
+void map_init_178(void) {
+	EXTCL_AFTER_MAPPER_INIT(178);
 	EXTCL_CPU_WR_MEM(178);
 	EXTCL_SAVE_MAPPER(178);
 	mapper.internal_struct[0] = (BYTE *)&m178;
@@ -40,97 +45,92 @@ void map_init_178(BYTE type) {
 
 	if (info.reset >= HARD) {
 		memset(&m178, 0x00, sizeof(m178));
-		map_prg_rom_8k(4, 0, 0);
 	}
 
-	info.prg.ram.banks_8k_plus = 4;
+	// Education Computer 32-in-1 (Game Star)(Unl)[!].nes
+	// 宠物: 小精灵 IV (Chǒngwù: Xiǎo Jīnglíng IV)
+	if ((info.crc32.total == 0xF834F634) || (info.crc32.total == 0xB0B13DBD)) {
+		m178tmp.baddumps = TRUE;
+	} else {
+		m178tmp.baddumps = FALSE;
+	}
+
+//	if (prg_wram_size() < 0x4000) {
+//		wram_set_ram_size(0x4000);
+//	}
 
 	info.mapper.extend_wr = TRUE;
-
-	m178tmp.model = type;
+}
+void extcl_after_mapper_init_178(void) {
+	prg_fix_178();
+	chr_fix_178();
+	wram_fix_178();
+	mirroring_fix_178();
 }
 void extcl_cpu_wr_mem_178(WORD address, BYTE value) {
-	switch (address) {
-		case 0x4800:
-			if (value & 0x01) {
-				mirroring_H();
-			} else {
-				mirroring_V();
+	switch (address & 0xFF00) {
+		case 0x4800: {
+			BYTE reg = address & 0x03;
+
+			if (m178tmp.baddumps) {
+				reg = ((reg & 0x01) << 1) | ((reg & 0x02) >> 1);
 			}
-			m178.prg_mode = (value & 0x06) >> 1;
-			prg_setup_178();
+			m178.reg[reg] = value;
+			prg_fix_178();
+			chr_fix_178();
+			wram_fix_178();
+			mirroring_fix_178();
 			return;
-		case 0x4801:
-			if (m178tmp.model == M178EC32IN1) {
-				m178.reg[1] = value;
-			} else {
-				m178.reg[0] = value;
-			}
-			prg_setup_178();
-			return;
-		case 0x4802:
-			if (m178tmp.model == M178EC32IN1) {
-				m178.reg[0] = value;
-			} else {
-				m178.reg[1] = value;
-			}
-			prg_setup_178();
-			return;
-		case 0x4803:
-			m178.reg[2] = value & 0x03;
-			prg.ram_plus_8k = &prg.ram_plus[m178.reg[2] << 13];
+		}
+		default:
 			return;
 	}
 }
 BYTE extcl_save_mapper_178(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m178.reg);
-	save_slot_ele(mode, slot, m178.prg_mode);
 
 	return (EXIT_OK);
 }
 
-INLINE static void prg_setup_178(void) {
-	DBWORD value;
+INLINE static void prg_fix_178(void) {
+	WORD base = ((m178.reg[1] & 0x07) << (m178tmp.baddumps ? 1 : 0)) | (m178.reg[2] << 3);
+	WORD nrom = (~m178.reg[0] & 0x04) >> 2;
+	WORD unrom = (m178.reg[0] & 0x02) >> 1;
+	WORD bank = 0;
 
-	if (m178tmp.model == M178EC32IN1) {
-		value = (m178.reg[1] << 3) | ((m178.reg[0] & 0x07) << 1);
-	} else {
-		value = (m178.reg[1] << 3) | (m178.reg[0] & 0x07);
-	}
+	bank = base & ~(nrom * !unrom);
+	_control_bank(bank, info.prg.rom.max.banks_16k)
+	map_prg_rom_8k(2, 0, bank);
 
-	switch (m178.prg_mode) {
-		case 0:
-			value >>= 1;
-			control_bank(info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, value);
-			break;
-		case 1:
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-			if (m178tmp.model == M178EC32IN1) {
-				value = (m178.reg[1] << 3) | 0x07;
-			} else {
-				value = (m178.reg[1] << 3) | 0x07;
-			}
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 2, value);
-			break;
-		case 2:
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-			map_prg_rom_8k(2, 2, value);
-			break;
-		case 3:
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-			if (m178tmp.model == M178EC32IN1) {
-				value = (m178.reg[1] << 3) | 0x06 | ((m178.reg[0] & 0x01) << 1);
-			} else {
-				value = (m178.reg[1] << 3) | 0x06 | (m178.reg[0] & 0x01);
-			}
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 2, value);
-			break;
-	}
+	bank = base | (nrom | unrom * 6);
+	_control_bank(bank, info.prg.rom.max.banks_16k)
+	map_prg_rom_8k(2, 2, bank);
+
 	map_prg_rom_8k_update();
+}
+INLINE static void chr_fix_178(void) {
+	DBWORD bank = (info.mapper.id == 551) ? m178.reg[3] : 0;
+
+	_control_bank(bank, info.chr.rom.max.banks_8k)
+	bank <<= 13;
+	chr.bank_1k[0] = chr_pnt(bank);
+	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
+	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
+	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
+	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
+	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
+	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
+	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+}
+INLINE static void wram_fix_178(void) {
+	wram_map_auto_8k(0x6000, (info.mapper.id == 551) ? 0 : m178.reg[3]);
+}
+INLINE static void mirroring_fix_178(void) {
+	if (info.mapper.id != 511) {
+		if (m178.reg[0] & 0x01) {
+			mirroring_H();
+		} else {
+			mirroring_V();
+		}
+	}
 }

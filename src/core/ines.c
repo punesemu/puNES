@@ -143,8 +143,26 @@ BYTE ines_load_rom(void) {
 			info.chr.rom.banks_8k |= ((ines.flags[FL9] & 0xF0) << 4);
 			nes20_prg_chr_size(&info.chr.rom.banks_8k, &info.chr.rom.banks_4k, 0x1000);
 
+#if defined WRAM_OLD_HANDLER
 			info.prg.ram.banks_8k_plus = nes20_ram_size(ines.flags[FL10] & 0x0F);
 			info.prg.ram.bat.banks = nes20_ram_size(ines.flags[FL10] >> 4);
+
+#else
+			wram_set_ram_size(0);
+			wram_set_nvram_size(0);
+			if (ines.flags[FL10] & 0x0F) {
+				wram_set_ram_size(64 << (ines.flags[FL10] & 0x0F));
+			}
+			if (ines.flags[FL10] & 0xF0) {
+				wram_set_nvram_size(64 << ((ines.flags[FL10] & 0xF0) >> 4));
+			}
+			wram.battery_present = (ines.flags[FL6] & 0x02) >> 1;
+
+
+
+			info.prg.ram.banks_8k_plus = 0;
+			info.prg.ram.bat.banks = 0;
+#endif
 
 			info.chr.ram.banks_8k_plus = nes20_ram_size(ines.flags[FL11] & 0x0F);
 
@@ -198,8 +216,17 @@ BYTE ines_load_rom(void) {
 
 			info.mapper.submapper = DEFAULT;
 
+#if defined WRAM_OLD_HANDLER
 			info.prg.ram.banks_8k_plus = 1;
 			info.prg.ram.bat.banks = (ines.flags[FL6] & 0x02) >> 1;
+#else
+			wram_set_ram_size(0x2000);
+			wram_set_nvram_size(ines.flags[FL6] & 0x02 ? 0x2000 : 0);
+			wram.battery_present = prg_wram_nvram_size() != 0;
+
+			info.prg.ram.banks_8k_plus = 0;
+			info.prg.ram.bat.banks = 0;
+#endif
 
 			vs_system.ppu = vs_system.special_mode.type = 0;
 			vs_system.special_mode.type = 0;
@@ -252,9 +279,11 @@ BYTE ines_load_rom(void) {
 
 		nes20db_search();
 
+#if defined WRAM_OLD_HANDLER
 		if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
 			info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
 		}
+#endif
 
 		switch (info.mapper.mirroring) {
 			default:
@@ -338,6 +367,7 @@ BYTE ines_load_rom(void) {
 			vs_system.special_mode.index = 0;
 		}
 
+#if defined WRAM_OLD_HANDLER
 		if (info.mapper.trainer) {
 			if (rom_mem_ctrl_memcpy(&mapper.trainer, &rom, sizeof(mapper.trainer)) == EXIT_ERROR) {
 				free(rom.data);
@@ -346,6 +376,16 @@ BYTE ines_load_rom(void) {
 		} else {
 			memset(&mapper.trainer, 0x00, sizeof(mapper.trainer));
 		}
+#else
+		wram_trainer_quit();
+		if (info.mapper.trainer) {
+			if ((wram_trainer_malloc(512) == EXIT_ERROR) ||
+				(rom_mem_ctrl_memcpy(trainer.data, &rom, trainer.size) == EXIT_ERROR)) {
+				free(rom.data);
+				return (EXIT_ERROR);
+			}
+		}
+#endif
 
 		if (!info.chr.rom.banks_8k) {
 			mapper.write_vram = TRUE;
@@ -470,26 +510,6 @@ void nes20_submapper(void) {
 					break;
 			}
 			break;
-		case 176:
-			switch (info.mapper.submapper) {
-				case 0:
-					info.mapper.submapper = LP8002KB;
-					break;
-				default:
-				case 1:
-					info.mapper.submapper = BMCFK23C;
-					break;
-				case 2:
-					info.mapper.submapper = FS005;
-					break;
-				case 3:
-					info.mapper.submapper = JX9003B;
-					break;
-				case 4:
-					info.mapper.submapper = HST162;
-					break;
-			}
-			break;
 		case 268:
 			switch (info.mapper.submapper) {
 				case 0:
@@ -559,7 +579,7 @@ void calculate_checksums_from_rom(void *rom_mem) {
 
 	// punto oltre l'header
 	if (info.mapper.trainer) {
-		len = sizeof(mapper.trainer);
+		len = 512;
 		info.crc32.trainer = emu_crc32((void *)(rom->data + position), len);
 		info.crc32.total = info.crc32.trainer;
 		position += len;

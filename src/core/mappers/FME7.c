@@ -36,7 +36,7 @@ INLINE static void fme7_square_tick(_square_fme7 *square);
 _fme7 fme7;
 
 // promemoria
-//void map_init_FME7(BYTE revision) {
+//void map_init_FME7(void) {
 //	EXTCL_AFTER_MAPPER_INIT(FME7);
 //	EXTCL_CPU_WR_MEM(FME7);
 //	EXTCL_SAVE_MAPPER(FME7);
@@ -208,13 +208,7 @@ void init_FME7(void) {
 	fme7.snd.square[1].timer = 1;
 	fme7.snd.square[2].timer = 1;
 
-	FME7_prg_fix = prg_fix_FME7_base;
-	FME7_prg_swap = prg_swap_FME7_base;
-	FME7_chr_fix = chr_fix_FME7_base;
-	FME7_chr_swap = chr_swap_FME7_base;
-	FME7_wram_fix = wram_fix_FME7_base;
-	FME7_wram_swap = wram_swap_FME7_base;
-	FME7_mirroring_fix = mirroring_fix_FME7_base;
+
 }
 void prg_fix_FME7_base(void) {
 	FME7_prg_swap(0x8000, fme7.prg[1]);
@@ -241,32 +235,13 @@ void chr_swap_FME7_base(WORD address, WORD value) {
 	map_chr_rom_1k(address, value);
 }
 void wram_fix_FME7_base(void) {
-	switch (fme7.prg[0] & 0xC0) {
-		default:
-		case 0x00:
-		case 0x80:
-			cpu.prg_ram_rd_active = TRUE;
-			cpu.prg_ram_wr_active = FALSE;
-			FME7_wram_swap(fme7.prg[0] & 0x3F);
-			return;
-		case 0x40:
-		case 0xC0:
-			cpu.prg_ram_rd_active = fme7.prg[0] >> 7;
-			cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
-			FME7_wram_swap(fme7.prg[0] & 0x3F);
-			return;
-	}
+	FME7_wram_swap(fme7.prg[0] & 0x3F);
 }
 void wram_swap_FME7_base(WORD value) {
-	prg.ram_plus_8k = NULL;
 	if (fme7.prg[0] & 0x40) {
-		if (info.prg.ram.banks_8k_plus) {
-			control_bank(info.prg.ram.banks_8k_plus - 1)
-			prg.ram_plus_8k = &prg.ram_plus[value << 13];
-		}
+		wram_map_auto_wp_8k(0x6000, value, fme7.prg[0] >> 7, fme7.prg[0] >> 7);
 	} else {
-		control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
-		prg.ram_plus_8k = prg_pnt(value << 13);
+		wram_map_prg_rom_8k(0x6000, value);
 	}
 }
 void mirroring_fix_FME7_base(void) {

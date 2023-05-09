@@ -38,6 +38,7 @@
 #include "qt.h"
 #include "audio/snd.h"
 #include "tape_data_recorder.h"
+#include "wram.h"
 
 #define mod_cycles_op(op, vl) cpu.cycles op vl
 #define r2006_during_rendering()\
@@ -229,7 +230,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 
-		/* controllo se e' consentita la lettura dalla PRG Ram */
+#if defined WRAM_OLD_HANDLER
 		if (cpu.prg_ram_rd_active) {
 			if (address < 0x6000) {
 				// Vs System
@@ -272,21 +273,12 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 				}
 			}
 		}
+#else
+		cpu.openbus = wram_rd(address, before);
+#endif
 		if (extcl_cpu_rd_mem) {
-			/*
-			 * utilizzato dalle mappers :
-			 * MMC5
-			 * Namcot (163)
-			 * Rex (DBZ)
-			 * Sunsoft (FME7)
-			 * 249
-			 * 163
-			 * 164
-			 */
-			/* Mappers */
 			cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus, before);
 		}
-
 		/* cheat */
 		if (cfg->cheat_mode == CHEATSLIST_MODE) {
 			look_cheats_list(cheats_list, cheats_list.counter, (address & 0x1FFF))
@@ -970,7 +962,8 @@ void cpu_wr_mem(WORD address, BYTE value) {
 	if (address < 0x8000) {
 		/* eseguo un tick hardware */
 		tick_hw(1);
-		/* controllo se e' attiva la PRG Ram */
+#if defined WRAM_OLD_HANDLER
+		// controllo se e' attiva la PRG Ram
 		if (cpu.prg_ram_wr_active) {
 			if (address < 0x6000) {
 				// Vs System
@@ -995,6 +988,9 @@ void cpu_wr_mem(WORD address, BYTE value) {
 				}
 			}
 		}
+#else
+		wram_wr(address, value);
+#endif
 		if (info.mapper.extend_wr) {
 			extcl_cpu_wr_mem(address, value);
 		}
@@ -1340,7 +1336,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		return;
 	}
 	if (address == 0x2007) {
-		WORD old_r2006 = r2006.value;
+		const WORD old_r2006 = r2006.value;
 
 		/* open bus */
 		ppu.openbus = value;

@@ -28,6 +28,19 @@
 #include "mem_map.h"
 #include "vs_system.h"
 
+
+#include "wram.h"
+
+
+#include <QtCore/QDebug>
+
+
+
+
+
+
+
+
 #define NES20DBFILENAME "nes20db.xml"
 
 typedef QMap<QString, QString> game_map;
@@ -138,6 +151,30 @@ void search_in_xml(QFile &file) {
 					if (game.count() > 0) {
 						populate_game_info(nes20db, game);
 
+
+
+
+
+//						//if (nes20db.trainer.size) {
+//							//if ((nes20db.prgram.size + nes20db.prgnvram.size) != 0x2000){
+//							//if ((nes20db.pcb.mapper == 0) && (nes20db.prgrom.size == (16 * 3 * 1024))){
+//							//if ((nes20db.pcb.mapper == 176) && (nes20db.prgram.size || nes20db.prgnvram.size)) {
+//							if (nes20db.prgram.size && nes20db.prgnvram.size) {
+//								qDebug()
+//										<< nes20db.pcb.mapper
+//										<< nes20db.prgram.size
+//										<< nes20db.prgnvram.size
+//										<< game["comment"]
+//										;
+//							}
+//						//}
+//						continue;
+
+
+
+
+
+
 						if ((nes20db.rom.crc32 == info.crc32.total) || (nes20db.prgrom.crc32 == info.crc32.prg)) {
 							const QString comment = game["comment"];
 
@@ -160,12 +197,18 @@ void search_in_xml(QFile &file) {
 								info.mapper.submapper = DEFAULT;
 							}
 
+#if defined WRAM_OLD_HANDLER
 							info.prg.ram.bat.banks = info.prg.ram.banks_8k_plus = nes20db.prgnvram.size
 								? (nes20db.prgnvram.size <= 0x2000 ? 1 : emu_power_of_two(nes20db.prgnvram.size / 0x2000))
 								: 0;
 							info.prg.ram.banks_8k_plus += nes20db.prgram.size
 								? (nes20db.prgram.size <= 0x2000 ? 1 : emu_power_of_two(nes20db.prgram.size / 0x2000))
 								: 0;
+#else
+							wram_set_ram_size(nes20db.prgram.size ? emu_power_of_two(nes20db.prgram.size) : 0);
+							wram_set_nvram_size(nes20db.prgnvram.size ? emu_power_of_two(nes20db.prgnvram.size) : 0);
+							wram.battery_present = nes20db.pcb.battery;
+#endif
 
 							{
 								DBWORD banks = 0;

@@ -49,6 +49,7 @@
 #if defined (FULLSCREEN_RESFREQ)
 #include "video/gfx_monitor.h"
 #include "nes20db.h"
+#include "wram.h"
 #endif
 
 #define RS_SCALE (1.0f / (1.0f + (float)RAND_MAX))
@@ -518,6 +519,8 @@ BYTE emu_turn_on(void) {
 	memset(&oam, 0x00, sizeof(oam));
 	memset(&ppu_screen, 0x00, sizeof(ppu_screen));
 	memset(&vs_system, 0x00, sizeof(vs_system));
+	memset(&wram, 0x00, sizeof(wram));
+	memset(&trainer, 0x00, sizeof(trainer));
 
 	info.lag_frame.next = TRUE;
 	info.lag_frame.actual = TRUE;
@@ -591,6 +594,21 @@ BYTE emu_turn_on(void) {
 	}
 
 	cpu_init_PC();
+
+	if (extcl_cpu_init_pc) {
+		extcl_cpu_init_pc();
+	}
+
+#if defined WRAM_OLD_HANDLER
+	// da cancellare
+	// da cancellare
+	// da cancellare
+	// da cancellare
+	// da cancellare
+#else
+	// trainer
+	wram_trainer_init();
+#endif
 
 	// controller
 	input_init(NO_SET_CURSOR);
@@ -745,6 +763,21 @@ BYTE emu_reset(BYTE type) {
 	}
 
 	cpu_init_PC();
+
+	if (extcl_cpu_init_pc) {
+		extcl_cpu_init_pc();
+	}
+
+#if defined WRAM_OLD_HANDLER
+	// da cancellare
+	// da cancellare
+	// da cancellare
+	// da cancellare
+	// da cancellare
+#else
+	// trainer
+	wram_trainer_init();
+#endif
 
 	if (info.no_rom) {
 		info.reset = FALSE;
@@ -1226,6 +1259,7 @@ void emu_info_rom(void) {
 		log_info_box(uL("trainer;yes [ %08X ]"), info.crc32.trainer);
 	}
 
+#if defined WRAM_OLD_HANDLER
 	if (info.prg.ram.banks_8k_plus) {
 		ischanged((info.header.prgram != info.prg.ram.banks_8k_plus) && (info.header.prgnvram != info.prg.ram.bat.banks));
 		log_info_box_open(uL("RAM PRG 8k;%u"), info.prg.ram.banks_8k_plus);
@@ -1238,6 +1272,18 @@ void emu_info_rom(void) {
 		}
 		log_close_box(uL("%s"), ifchanged());
 	}
+#else
+	if (prg_wram_ram_size()) {
+		ischanged(info.header.prgram != prg_wram_ram_size());
+		log_info_box(uL("prg ram;%u%s"), prg_wram_ram_size(), ifchanged());
+	}
+	if (prg_wram_nvram_size()) {
+		ischanged(info.header.prgnvram !=  prg_wram_nvram_size());
+		log_info_box(uL("prg nvram;%u%s"),  prg_wram_nvram_size(), ifchanged());
+	}
+	ischanged(info.header.battery != wram.battery_present);
+	log_info_box(uL("battery;%s%s"), (wram.battery_present ? "present" : "not present"), ifchanged());
+#endif
 
 	if (mapper.write_vram) {
 		DBWORD banks = info.chr.rom.banks_8k;
@@ -1332,8 +1378,14 @@ void emu_save_header_info(void) {
 	info.header.format = info.format;
 	info.header.prgrom = info.prg.rom.banks_16k;
 	info.header.chrrom = info.chr.rom.banks_8k;
+#if defined WRAM_OLD_HANDLER
 	info.header.prgram = info.prg.ram.banks_8k_plus;
 	info.header.prgnvram = info.prg.ram.bat.banks;
+#else
+	info.header.prgram = prg_wram_ram_size();
+	info.header.prgnvram = prg_wram_nvram_size();
+	info.header.battery = wram.battery_present;
+#endif
 	info.header.chrram = !info.chr.rom.banks_8k
 		 ? info.format == NES_2_0
 			   ? info.chr.ram.banks_8k_plus
@@ -1377,7 +1429,11 @@ INLINE static void emu_frame_finished(void) {
 	if (cfg->save_battery_ram_file && (++info.bat_ram_frames >= info.bat_ram_frames_snap)) {
 		// faccio anche un refresh del file della battery ram
 		info.bat_ram_frames = 0;
+#if defined WRAM_OLD_HANDLER
 		map_prg_ram_battery_save();
+#else
+		wram_save_nvram_file();
+#endif
 	}
 
 	if (vs_system.enabled & vs_system.watchdog.reset) {

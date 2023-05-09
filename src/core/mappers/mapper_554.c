@@ -24,13 +24,11 @@
 
 INLINE static void prg_fix_554(void);
 INLINE static void chr_fix_554(void);
+INLINE static void wram_fix_554(void);
 
 struct _m554 {
 	WORD reg;
 } m554;
-struct _m554tmp {
-	BYTE *prg_6000;
-} m554tmp;
 
 void map_init_554(void) {
 	EXTCL_AFTER_MAPPER_INIT(554);
@@ -43,18 +41,15 @@ void map_init_554(void) {
 	memset(&m554, 0x00, sizeof(m554));
 
 	info.mapper.extend_rd = TRUE;
-	info.mapper.ram_plus_op_controlled_by_mapper = TRUE;
 }
 void extcl_after_mapper_init_554(void) {
 	prg_fix_554();
 	chr_fix_554();
+	wram_fix_554();
 }
 void extcl_cpu_wr_mem_554(UNUSED(WORD address), UNUSED(BYTE value)) {}
 BYTE extcl_cpu_rd_mem_554(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	switch (address & 0xF000) {
-		case 0x6000:
-		case 0x7000:
-			return (m554tmp.prg_6000[address & 0x1FFF]);
 		case 0xC000:
 			if ((address >= 0xCAB6) && (address <= 0xCAD7)) {
 				m554.reg = (address & 0x3C) >> 2;
@@ -82,18 +77,14 @@ BYTE extcl_save_mapper_554(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m554.reg);
 
 	if (mode == SAVE_SLOT_READ) {
-		prg_fix_554();
+		wram_fix_554();
 	}
 
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_554(void) {
-	WORD bank;
-
-	bank = m554.reg;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	m554tmp.prg_6000 = prg_pnt(bank << 13);
+	WORD bank = 0;
 
 	bank = 0x0A;
 	_control_bank(bank, info.prg.rom.max.banks_8k)
@@ -114,7 +105,7 @@ INLINE static void prg_fix_554(void) {
 	map_prg_rom_8k_update();
 }
 INLINE static void chr_fix_554(void) {
-	DBWORD bank;
+	DBWORD bank = 0;
 
 	bank = m554.reg;
 	_control_bank(bank, info.chr.rom.max.banks_8k)
@@ -127,4 +118,7 @@ INLINE static void chr_fix_554(void) {
 	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+}
+INLINE static void wram_fix_554(void) {
+	wram_map_prg_rom_8k(0x6000, m554.reg);
 }

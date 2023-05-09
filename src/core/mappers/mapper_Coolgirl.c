@@ -45,6 +45,7 @@ INLINE static void prg_swap_8k_Coolgirl(BYTE flash, BYTE at, DBWORD value);
 INLINE static void prg_swap_16k_Coolgirl(BYTE flash, BYTE at, DBWORD value);
 INLINE static void prg_swap_32k_Coolgirl(BYTE flash, DBWORD value);
 INLINE static void chr_fix_Coolgirl(void);
+INLINE static void wram_fix_Coolgirl(void);
 INLINE static void mirroring_fix_Coolgirl(void);
 INLINE static void flash_write_Coolgirl(WORD address, BYTE value);
 
@@ -282,7 +283,6 @@ struct _coolgirl {
 struct _coolgirltmp {
 	BYTE *save_flash;
 	BYTE *cfi;
-	BYTE *prg_6000;
 } coolgirltmp;
 
 void map_init_Coolgirl(void) {
@@ -321,8 +321,10 @@ void map_init_Coolgirl(void) {
 	info.chr.rom.banks_8k = 64;
 
 	// 32k di PRG RAM
-	info.prg.ram.banks_8k_plus = 4;
-	info.prg.ram.bat.banks = 4;
+	if (prg_wram_nvram_size() < 0x8000) {
+		wram_set_ram_size(0);
+		wram_set_nvram_size(0x8000);
+	}
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		coolgirltmp.save_flash = (BYTE *)malloc(SAVE_FLASH_SIZE);
@@ -517,15 +519,6 @@ BYTE extcl_cpu_rd_mem_Coolgirl(WORD address, BYTE openbus, UNUSED(BYTE before)) 
 					return (mapper35_cpu_rd());
 			}
 			break;
-		case 0x6000:
-		case 0x7000:
-			if (coolgirl.map_rom_on_6000) {
-				return (coolgirltmp.prg_6000[address & 0x1FFF]);
-			}
-			//if (coolgirl.wram.enabled) {
-			//	return (prg.ram_plus_8k[address & 0x1FFF]);
-			//}
-			break;
 		case 0x8000:
 		case 0x9000:
 		case 0xA000:
@@ -656,17 +649,11 @@ BYTE extcl_save_mapper_Coolgirl(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_battery_io_Coolgirl(BYTE mode, FILE *fp) {
-	if (!fp || (tas.type != NOTAS)) {
-		return;
-	}
-
 	if (mode == WR_BAT) {
-		map_bat_wr_default(fp);
 		if (fwrite(coolgirltmp.save_flash, SAVE_FLASH_SIZE, 1, fp) < 1) {
 			log_error(uL("Coolgirl;error on write flash chip"));
 		}
 	} else {
-		map_bat_rd_default(fp);
 		if (fread(coolgirltmp.save_flash, SAVE_FLASH_SIZE, 1, fp) < 1) {
 			log_error(uL("Coolgirl;error on read flash chip"));
 		}
@@ -770,13 +757,13 @@ void extcl_update_r2006_Coolgirl(WORD new_r2006, UNUSED(WORD old_r2006)) {
 INLINE static void state_fix_Coolgirl(void) {
 	prg_fix_Coolgirl();
 	chr_fix_Coolgirl();
+	wram_fix_Coolgirl();
 	mirroring_fix_Coolgirl();
 }
 INLINE static void prg_fix_Coolgirl(void) {
 	BYTE a_is_flash, b_is_flash, c_is_flash, d_is_flash;
 	DBWORD bank;
 
-	coolgirl.prg.b6000_mapped = prg_mapped_Coolgirl(coolgirl.prg.b6000);
 	coolgirl.prg.a_mapped = prg_mapped_Coolgirl(coolgirl.prg.a);
 	coolgirl.prg.b_mapped = prg_mapped_Coolgirl(coolgirl.prg.b);
 	coolgirl.prg.c_mapped = prg_mapped_Coolgirl(coolgirl.prg.c);
@@ -794,13 +781,13 @@ INLINE static void prg_fix_Coolgirl(void) {
 				prg_swap_16k_Coolgirl(a_is_flash, 0, bank);
 				bank = coolgirl.prg.c_mapped >> 1;
 				prg_swap_16k_Coolgirl(c_is_flash, 2, bank);
-				break;
+				return;
 			case 1:
 				bank = coolgirl.prg.c_mapped >> 1;
 				prg_swap_16k_Coolgirl(c_is_flash, 0, bank);
 				bank = coolgirl.prg.a_mapped >> 1;
 				prg_swap_16k_Coolgirl(a_is_flash, 2, bank);
-				break;
+				return;
 			case 4:
 				bank = coolgirl.prg.a_mapped;
 				prg_swap_8k_Coolgirl(a_is_flash, 0, bank);
@@ -810,7 +797,7 @@ INLINE static void prg_fix_Coolgirl(void) {
 				prg_swap_8k_Coolgirl(c_is_flash, 2, bank);
 				bank = coolgirl.prg.d_mapped;
 				prg_swap_8k_Coolgirl(d_is_flash, 3, bank);
-				break;
+				return;
 			case 5:
 				bank = coolgirl.prg.c_mapped;
 				prg_swap_8k_Coolgirl(c_is_flash, 0, bank);
@@ -820,24 +807,16 @@ INLINE static void prg_fix_Coolgirl(void) {
 				prg_swap_8k_Coolgirl(a_is_flash, 2, bank);
 				bank = coolgirl.prg.d_mapped;
 				prg_swap_8k_Coolgirl(d_is_flash, 3, bank);
-				break;
+				return;
 			case 6:
 				bank = coolgirl.prg.b_mapped >> 2;
 				prg_swap_32k_Coolgirl(b_is_flash, bank);
-				break;
+				return;
 			case 7:
 				bank = coolgirl.prg.a_mapped >> 2;
 				prg_swap_32k_Coolgirl(a_is_flash, bank);
-				break;
+				return;
 		}
-	}
-
-	if (coolgirl.map_rom_on_6000) {
-		bank = coolgirl.prg.b6000_mapped;
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		coolgirltmp.prg_6000 = prg_pnt(bank << 13);
-	} else if (coolgirl.wram.enabled) {
-		prg.ram_plus_8k = &prg.ram_plus[coolgirl.wram.page << 13];
 	}
 }
 INLINE static DBWORD prg_mapped_Coolgirl(BYTE bank) {
@@ -1067,6 +1046,16 @@ INLINE static void chr_fix_Coolgirl(void) {
 	chr.bank_1k[6] = chr_pnt(bank[6] << 10);
 	chr.bank_1k[7] = chr_pnt(bank[7] << 10);
 }
+INLINE static void wram_fix_Coolgirl(void) {
+	coolgirl.prg.b6000_mapped = prg_mapped_Coolgirl(coolgirl.prg.b6000);
+
+	if (coolgirl.map_rom_on_6000) {
+		wram_map_prg_rom_8k(0x6000, coolgirl.prg.b6000_mapped);
+	} else if (coolgirl.wram.enabled) {
+		wram_map_auto_8k(0x6000, coolgirl.wram.page);
+	}
+}
+
 INLINE static void mirroring_fix_Coolgirl(void) {
 	if (coolgirl.fscreen) {
 		mirroring_FSCR();
@@ -2323,7 +2312,7 @@ INLINE static void mapper36_cpu_wr_high(WORD address, BYTE value) {
 				coolgirl.mirroring = value & 0x03;
 				break;
 			case 0x7000:
-				coolgirl.chr.g = (coolgirl.chr.g & 0xE1) | ((value & 0x0F) << 1);
+				coolgirl.prg.a = (coolgirl.prg.a & 0xE1) | ((value & 0x0F) << 1);
 				break;
 		}
 	} else {

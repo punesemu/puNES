@@ -20,6 +20,17 @@
 #define MAPPERS_H_
 
 #include "common.h"
+
+
+//#include "ramplusold.h"
+#include "wram.h"
+
+
+
+
+
+
+
 #include "external_calls.h"
 #include "unif.h"
 #include "mappers/mapper_NSF.h"
@@ -93,6 +104,7 @@
 #include "mappers/mapper_120.h"
 #include "mappers/mapper_121.h"
 #include "mappers/mapper_123.h"
+#include "mappers/mapper_125.h"
 #include "mappers/mapper_126.h"
 #include "mappers/mapper_134.h"
 #include "mappers/mapper_152.h"
@@ -104,6 +116,7 @@
 #include "mappers/mapper_166.h"
 #include "mappers/mapper_167.h"
 #include "mappers/mapper_168.h"
+#include "mappers/mapper_176.h"
 #include "mappers/mapper_178.h"
 #include "mappers/mapper_182.h"
 #include "mappers/mapper_183.h"
@@ -188,6 +201,7 @@
 #include "mappers/mapper_323.h"
 #include "mappers/mapper_325.h"
 #include "mappers/mapper_327.h"
+#include "mappers/mapper_329.h"
 #include "mappers/mapper_331.h"
 #include "mappers/mapper_333.h"
 #include "mappers/mapper_334.h"
@@ -195,6 +209,7 @@
 #include "mappers/mapper_339.h"
 #include "mappers/mapper_344.h"
 #include "mappers/mapper_345.h"
+#include "mappers/mapper_347.h"
 #include "mappers/mapper_348.h"
 #include "mappers/mapper_351.h"
 #include "mappers/mapper_353.h"
@@ -260,6 +275,7 @@
 #include "mappers/mapper_513.h"
 #include "mappers/mapper_516.h"
 #include "mappers/mapper_518.h"
+#include "mappers/mapper_522.h"
 #include "mappers/mapper_524.h"
 #include "mappers/mapper_527.h"
 #include "mappers/mapper_528.h"
@@ -283,7 +299,6 @@
 #include "mappers/mapper_Ave.h"
 #include "mappers/mapper_AxROM.h"
 #include "mappers/mapper_Bandai.h"
-#include "mappers/mapper_BMCFK23C.h"
 #include "mappers/mapper_BxROM.h"
 #include "mappers/mapper_Caltron.h"
 #include "mappers/mapper_Camerica.h"
@@ -336,7 +351,6 @@
 #include "mappers/mapper_CTC09.h"
 #include "mappers/mapper_DREAMTECH01.h"
 #include "mappers/mapper_DRIPGAME.h"
-#include "mappers/mapper_EDU2000.h"
 #include "mappers/mapper_EH8813A.h"
 #include "mappers/mapper_FARIDUNROM8IN1.h"
 #include "mappers/mapper_GS_20xx.h"
@@ -349,11 +363,8 @@
 #include "mappers/mapper_KS7016.h"
 #include "mappers/mapper_KS7017.h"
 #include "mappers/mapper_KS7021A.h"
-#include "mappers/mapper_KS7030.h"
 #include "mappers/mapper_KS7031.h"
 #include "mappers/mapper_KS7032.h"
-#include "mappers/mapper_LH10.h"
-#include "mappers/mapper_LH32.h"
 #include "mappers/mapper_LH51.h"
 #include "mappers/mapper_Malee.h"
 #include "mappers/mapper_RESETNROMXIN1.h"
@@ -367,11 +378,12 @@
 #include "mappers/mapper_YOKO.h"
 
 #include "mappers/FME7.h"
-#include "mappers/N118.h"
 #include "mappers/MMC1.h"
 #include "mappers/MMC2.h"
 #include "mappers/MMC3.h"
 #include "mappers/MMC4.h"
+#include "mappers/N118.h"
+#include "mappers/OneBus.h"
 #include "mappers/VRC2and4.h"
 #include "mappers/VRC6.h"
 #include "mappers/VRC7.h"
@@ -390,7 +402,9 @@ typedef struct _mapper {
 	WORD rom_map_to[4];
 	BYTE *internal_struct[10];
 	WORD internal_struct_size[10];
+#if defined WRAM_OLD_HANDLER
 	BYTE trainer[512];
+#endif
 	struct _misc_roms {
 		size_t size;
 		BYTE *data;
@@ -401,26 +415,32 @@ extern _mapper mapper;
 
 BYTE map_init(void);
 void map_quit(void);
+
 BYTE map_prg_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom);
 void map_prg_rom_8k(BYTE banks_8k, BYTE at, WORD value);
 void map_prg_rom_8k_reset(void);
 void map_prg_rom_8k_update(void);
-void map_prg_ram_init(void);
+
 BYTE map_prg_ram_malloc(WORD size);
 void map_prg_ram_memset(void);
-void map_prg_ram_battery_save(void);
-void map_prg_ram_battery_load(void);
+
 BYTE map_chr_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom);
 void map_chr_bank_1k_reset(void);
+
 BYTE map_chr_ram_init(void);
 BYTE map_chr_ram_extra_init(uint32_t size);
 void map_chr_ram_extra_reset(void);
 BYTE map_chr_ram_slot_in_range(BYTE slot);
+
 BYTE map_misc_malloc(size_t size, BYTE set_value);
+
 void map_set_banks_max_prg(void);
 void map_set_banks_max_chr(void);
-void map_bat_wr_default(FILE *fp) ;
-void map_bat_rd_default(FILE *fp);
+
+
+
+
+
 
 void map_chr_rom_1k(const WORD address, const WORD value);
 void map_chr_rom_2k(const WORD address, const WORD value);

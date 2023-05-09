@@ -25,13 +25,14 @@ void prg_fix_n118_307(void);
 void chr_fix_n118_307(void);
 void chr_swap_n118_307(WORD address, WORD value);
 
+INLINE static void wram_fix_307(void);
+
 struct _m307tmp {
-	BYTE *prg_7000;
 	BYTE *prg_B000;
 } m307tmp;
 
 void map_init_307(void) {
-	EXTCL_AFTER_MAPPER_INIT(N118);
+	EXTCL_AFTER_MAPPER_INIT(307);
 	EXTCL_CPU_WR_MEM(307);
 	EXTCL_CPU_RD_MEM(307);
 	EXTCL_SAVE_MAPPER(307);
@@ -43,20 +44,18 @@ void map_init_307(void) {
 	N118_chr_fix = chr_fix_n118_307;
 	N118_chr_swap = chr_swap_n118_307;
 
-	if (!info.prg.ram.banks_8k_plus) {
-		info.prg.ram.banks_8k_plus = 1;
-	}
+//	if (!wram.size) {
+//		wram_set_ram_size(0x2000);
+//	}
 
 	info.mapper.extend_rd = TRUE;
-	info.mapper.extend_wr = TRUE;
-	info.mapper.ram_plus_op_controlled_by_mapper = TRUE;
+}
+void extcl_after_mapper_init_307(void) {
+	extcl_after_mapper_init_N118();
+	wram_fix_307();
 }
 void extcl_cpu_wr_mem_307(WORD address, BYTE value) {
 	switch (address & 0xF000) {
-		case 0x6000:
-			prg.ram_plus_8k[address & 0x0FFF] = value;
-			return;
-		case 0x7000:
 		case 0xA000:
 			return;
 		case 0xB000:
@@ -69,10 +68,6 @@ void extcl_cpu_wr_mem_307(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_307(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	switch (address & 0xF000) {
-		case 0x6000:
-			return (prg.ram_plus_8k[address & 0x0FFF]);
-		case 0x7000:
-			return (m307tmp.prg_7000[address & 0x0FFF]);
 		case 0xA000:
 			return (prg.rom_8k[1][address & 0x0FFF]);
 		case 0xB000:
@@ -86,6 +81,7 @@ BYTE extcl_save_mapper_307(BYTE mode, BYTE slot, FILE *fp) {
 
 	if (mode == SAVE_SLOT_READ) {
 		N118_prg_fix();
+		wram_fix_307();
 	}
 
 	return (EXIT_OK);
@@ -93,11 +89,6 @@ BYTE extcl_save_mapper_307(BYTE mode, BYTE slot, FILE *fp) {
 
 void prg_fix_n118_307(void) {
 	WORD bank = 0;
-
-	// 0x7000
-	bank = 0x0F;
-	_control_bank(bank, info.prg.rom.max.banks_4k)
-	m307tmp.prg_7000 = prg_pnt(bank << 12);
 
 	// 0x8000 - 0x9000
 	bank = n118.reg[6];
@@ -109,9 +100,6 @@ void prg_fix_n118_307(void) {
 	bank = 0x1C;
 	_control_bank(bank, info.prg.rom.max.banks_4k)
 	prg.rom_8k[1] = prg_pnt(bank << 12);
-
-	// 0xB000
-	m307tmp.prg_B000 = &prg.ram_plus_8k[1 << 12];
 
 	// 0xC000 - 0xD000
 	bank = n118.reg[7];
@@ -129,4 +117,12 @@ void chr_fix_n118_307(void) {
 void chr_swap_n118_307(WORD address, WORD value) {
 	value = (address >> 10) & 0x07;
 	chr_swap_N118_base(address, value);
+}
+
+INLINE static void wram_fix_307(void) {
+	wram_map_auto_4k(0x6000, 0);
+	wram_map_prg_rom_4k(0x7000, 0x0F);
+
+	// 0xB000
+	m307tmp.prg_B000 = &wram.data[1 << 12];
 }
