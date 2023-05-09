@@ -1958,7 +1958,7 @@
     <name>wdgNTSCBisqwitFilter</name>
     <message>
       <source>QWidth</source>
-      <translation type="unfinished">QWidth</translation>
+      <translation>QШирина</translation>
     </message>
     <message>
       <source>YWidth</source>
