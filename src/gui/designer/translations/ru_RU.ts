@@ -142,11 +142,11 @@
     </message>
     <message>
       <source>NES Four Score/Satellite</source>
-      <translation>NES Four Score/Satellite</translation>
+      <translation>NES Четыре балла/Спутник</translation>
     </message>
     <message>
       <source>Famicom Four Players Adapter</source>
-      <translation>Адаптер Famicom для игры вчетвером</translation>
+      <translation>Адаптер для четырех игроков на Famicom</translation>
     </message>
     <message>
       <source>Vs. System</source>
@@ -1958,11 +1958,11 @@
     <name>wdgNTSCBisqwitFilter</name>
     <message>
       <source>QWidth</source>
-      <translation>QШирина</translation>
+      <translation>Q Ширина</translation>
     </message>
     <message>
       <source>YWidth</source>
-      <translation type="unfinished">YWidth</translation>
+      <translation>Y Ширина</translation>
     </message>
     <message>
       <source>VBlend</source>
@@ -1974,7 +1974,7 @@
     </message>
     <message>
       <source>IWidth</source>
-      <translation type="unfinished">IWidth</translation>
+      <translation>I Ширина</translation>
     </message>
     <message>
       <source>Scanline</source>
