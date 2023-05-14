@@ -1297,15 +1297,15 @@
     </message>
     <message>
       <source>Stop &amp;WAV recording</source>
-      <translation type="unfinished">Stop &amp;WAV recording</translation>
+      <translation>Zatrzymaj nagrywanie &amp;WAV</translation>
     </message>
     <message>
       <source>Start &amp;WAV recording</source>
-      <translation type="unfinished">Start &amp;WAV recording</translation>
+      <translation>Rozpocznij nagrywanie &amp;WAV</translation>
     </message>
     <message>
       <source>MS WAVE files</source>
-      <translation type="unfinished">MS WAVE files</translation>
+      <translation>Pliki MS WAVE</translation>
     </message>
     <message>
       <source>Record sound</source>
@@ -1341,7 +1341,7 @@
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
-      <translation type="unfinished">Save Unalte&amp;red NES screen</translation>
+      <translation>Zapisz nieprzetwo&amp;rzony ekran NESa</translation>
     </message>
     <message>
       <source>Widgets</source>
@@ -1349,36 +1349,36 @@
     </message>
     <message>
       <source>Start &amp;AUDIO recording</source>
-      <translation type="unfinished">Start &amp;AUDIO recording</translation>
+      <translation>Rozpocznij nagrywanie &amp;AUDIO</translation>
     </message>
     <message>
       <source>Start &amp;VIDEO recording</source>
-      <translation type="unfinished">Start &amp;VIDEO recording</translation>
+      <translation>Rozpocznij nagrywanie %VIDEO</translation>
     </message>
     <message>
       <source>Stop &amp;AUDIO recording</source>
-      <translation type="unfinished">Stop &amp;AUDIO recording</translation>
+      <translation>Zatrzymaj nagrywanie &amp;AUDIO</translation>
     </message>
     <message>
       <source>Stop &amp;VIDEO recording</source>
-      <translation type="unfinished">Stop &amp;VIDEO recording</translation>
+      <translation>Zatrzymaj nagrywanie &amp;VIDEO</translation>
     </message>
     <message>
       <source>Start/Stop &amp;AUDIO recording</source>
-      <translation type="unfinished">Start/Stop &amp;AUDIO recording</translation>
+      <translation>Rozpocznij/zatrzymaj nagrywanie &amp;AUDIO</translation>
     </message>
     <message>
       <source>&amp;Recording</source>
-      <translation type="unfinished">&amp;Recording</translation>
+      <translation>Nag&amp;rywanie</translation>
     </message>
     <message>
       <source>Start/Stop &amp;VIDEO recording</source>
-      <translation type="unfinished">Start/Stop &amp;VIDEO recording</translation>
+      <translation>Rozpocznij/zatrzymaj nagrywanie &amp;VIDEO</translation>
     </message>
     <message>
       <source>Slot %1 never used</source>
       <extracomment>Refers to the unused save slot. Important: Do not translate the &quot;%1&quot;.</extracomment>
-      <translation type="unfinished">Slot %1 never used</translation>
+      <translation>Nie użyto slotu nr %1 </translation>
     </message>
     <message>
       <source>Slot &amp;A</source>
