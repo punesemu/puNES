@@ -1390,55 +1390,55 @@
     </message>
     <message>
       <source>&amp;Vs System Controls</source>
-      <translation type="unfinished">&amp;Vs System Controls</translation>
+      <translation>&amp;Vs System Controls</translation>
     </message>
     <message>
       <source>&amp;Joypad/Gamepad Debug</source>
-      <translation type="unfinished">&amp;Joypad/Gamepad Debug</translation>
+      <translation>&amp;Joypad/Gamepad - debugowanie</translation>
     </message>
     <message>
       <source>Fast Forward (hold button)</source>
-      <translation type="unfinished">Fast Forward (hold button)</translation>
+      <translation>Fast Forward (przytrzymaj przycisk)</translation>
     </message>
     <message>
       <source>puNES tape image</source>
-      <translation type="unfinished">puNES tape image</translation>
+      <translation>Obraz taśmy puNES</translation>
     </message>
     <message>
       <source>Virtuanes tape image</source>
-      <translation type="unfinished">Virtuanes tape image</translation>
+      <translation>Obraz taśmy virtuanes</translation>
     </message>
     <message>
       <source>Nestopia tape image</source>
-      <translation type="unfinished">Nestopia tape image</translation>
+      <translation>Obraz taśmy Nestopia</translation>
     </message>
     <message>
       <source>Open tape image</source>
-      <translation type="unfinished">Open tape image</translation>
+      <translation>Wczytaj obraz taśmy</translation>
     </message>
     <message>
       <source>Tape Image</source>
-      <translation type="unfinished">Tape Image</translation>
+      <translation>Obraz taśmy</translation>
     </message>
     <message>
       <source>Unsupported format</source>
-      <translation type="unfinished">Unsupported format</translation>
+      <translation>Nieobsługiwany format</translation>
     </message>
     <message>
       <source>Error opening tape image file</source>
-      <translation type="unfinished">Error opening tape image file</translation>
+      <translation>Wystąpił błąd podczas otwierania pliku obrazu taśmy</translation>
     </message>
     <message>
       <source>WAVE tape image</source>
-      <translation type="unfinished">WAVE tape image</translation>
+      <translation>Obraz taśmy WAVE</translation>
     </message>
     <message>
       <source>Save tape image</source>
-      <translation type="unfinished">Save tape image</translation>
+      <translation>Zapisz obraz taśmy</translation>
     </message>
     <message>
       <source>Toggle &amp;Fast Forward</source>
-      <translation type="unfinished">Toggle &amp;Fast Forward</translation>
+      <translation>Przełącz &amp;Fast Forward</translation>
     </message>
     <message>
       <source>&amp;Play</source>
@@ -1454,11 +1454,11 @@
     </message>
     <message>
       <source>Shout into &amp;Microphone</source>
-      <translation type="unfinished">Shout into &amp;Microphone</translation>
+      <translation>Mów do &amp;mikrofonu</translation>
     </message>
     <message>
       <source>Toggle Virtual &amp;Keyboard</source>
-      <translation type="unfinished">Toggle Virtual &amp;Keyboard</translation>
+      <translation>Przełącz &amp;wirtualną klawiaturę</translation>
     </message>
     <message>
       <source>&amp;Show Log</source>
@@ -1466,11 +1466,11 @@
     </message>
     <message>
       <source>Edit Current iNES/NES2.0 &amp;Header</source>
-      <translation type="unfinished">Edit Current iNES/NES2.0 &amp;Header</translation>
+      <translation>Edytuj bieżący &amp;nagłówek iNES/NES2.0</translation>
     </message>
     <message>
       <source>Toggle &amp;GUI in window</source>
-      <translation type="unfinished">Toggle &amp;GUI in window</translation>
+      <translation>Przełącz &amp;GUI w oknie</translation>
     </message>
     <message>
       <source>Sa&amp;ve Screenshot</source>
@@ -1482,15 +1482,15 @@
     </message>
     <message>
       <source>Open &amp;working folder</source>
-      <translation type="unfinished">Open &amp;working folder</translation>
+      <translation>Otwórz katalog roboczy</translation>
     </message>
     <message>
       <source>Apply IPS/BPS/XDELTA &amp;Patch</source>
-      <translation type="unfinished">Apply IPS/BPS/XDELTA &amp;Patch</translation>
+      <translation>Zastosuj IPS/BPS/XDELTA &amp;Patch</translation>
     </message>
     <message>
       <source>Open &amp;config folder</source>
-      <translation type="unfinished">Open &amp;config folder</translation>
+      <translation>Otwórz &amp;katalog konfiguracji</translation>
     </message>
     <message>
       <source>T&amp;ape</source>
@@ -1501,7 +1501,7 @@
     <name>nesKeyboardStatusBar</name>
     <message>
       <source>Capture/Release the Input</source>
-      <translation type="unfinished">Capture/Release the Input</translation>
+      <translation>Przechwyć/zwolnij wejście</translation>
     </message>
     <message>
       <source>Input is released</source>
@@ -1528,7 +1528,7 @@
     </message>
     <message>
       <source>The file is in read only mode</source>
-      <translation type="unfinished">The file is in read only mode</translation>
+      <translation>Plik jest w trybie tylko do odczytu</translation>
     </message>
   </context>
   <context>
@@ -1536,107 +1536,107 @@
     <message>
       <source>start wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">start wav recording</translation>
+      <translation>rozpocznij nagrywanie wav</translation>
     </message>
     <message>
       <source>stop wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">stop wav recording</translation>
+      <translation>zatrzymaj nagrywanie wav</translation>
     </message>
     <message>
       <source>[red]Game Genie rom not found[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]Game Genie rom not found[normal]</translation>
+      <translation>[red]nie znaleziono ROMu Game Genie[normal]</translation>
     </message>
     <message>
       <source>[red]error loading Game Genie rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error loading Game Genie rom[normal]</translation>
+      <translation>[red]błąd ładowania ROMu Game Genie[normal]</translation>
     </message>
     <message>
       <source>[red]Illegal Opcode[normal] [yellow]0x%1[normal] at [yellow]0x%2[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]Illegal Opcode[normal] [yellow]0x%1[normal] at [yellow]0x%2[normal]</translation>
+      <translation>[red]Nieprawidłowy Opcode[normal] [yellow]0x%1[normal] przy [yellow]0x%2[normal]</translation>
     </message>
     <message>
       <source>[red]error loading rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error loading rom[normal]</translation>
+      <translation>[red]Błąd wczytywania ROMu[normal]</translation>
     </message>
     <message>
       <source>[red]FDS bios not found[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]FDS bios not found[normal]</translation>
+      <translation>[red]nie znaleziono BIOSu FDS[normal]</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</translation>
+      <translation>dysk [cyan]%1[normal] strona [cyan]%2[normal] [yellow]wysunięty[normal]</translation>
     </message>
     <message>
       <source>you must [yellow]eject[normal] disk first</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">you must [yellow]eject[normal] disk first</translation>
+      <translation>najpierw należy [yellow]wysunąć[normal] dysk</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</translation>
+      <translation>dysk [cyan]%1[normal] strona [cyan]%2[normal] [green]włożony[normal]</translation>
     </message>
     <message>
       <source>disk [cyan]%1[normal] side [cyan]%2[normal] [brown]selected[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">disk [cyan]%1[normal] side [cyan]%2[normal] [brown]selected[normal]</translation>
+      <translation>dysk [cyan]%1[normal] strona [cyan]%2[normal] [brown]wybrany[normal]</translation>
     </message>
     <message>
       <source>[yellow]mapper[normal] [brown]%1[normal] [yellow]not supported[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[yellow]mapper[normal] [brown]%1[normal] [yellow]not supported[normal]</translation>
+      <translation>[yellow]mapper[normal] [brown]%1[normal] [yellow]niewspierany[normal]</translation>
     </message>
     <message>
       <source>[red]error loading patch file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error loading patch file[normal]</translation>
+      <translation>[red]Błąd wczytywania patcha[normal]</translation>
     </message>
     <message>
       <source>[yellow]save is impossible in Game Genie menu[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[yellow]save is impossible in Game Genie menu[normal]</translation>
+      <translation>[yellow]zapis w menu Game Genie jest niemożliwy[normal]</translation>
     </message>
     <message>
       <source>[yellow]movie playback interrupted[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[yellow]movie playback interrupted[normal]</translation>
+      <translation>[yellow]przerwano odtwarzanie filmu[normal]</translation>
     </message>
     <message>
       <source>[red]error[normal] loading state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] loading state</translation>
+      <translation>[red]błąd[normal] ładowania zapisu stanu</translation>
     </message>
     <message>
       <source>[red]state file is not for this rom[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]state file is not for this rom[normal]</translation>
+      <translation>[red]zapis dotyczy innej gry[normal]</translation>
     </message>
     <message>
       <source>[green]%1[normal] cheat active</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[green]%1[normal] cheat active</translation>
+      <translation>[green]%1[normal] cheat aktywny</translation>
     </message>
     <message>
       <source>[green]%1[normal] cheats active</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[green]%1[normal] cheats active</translation>
+      <translation>[green]%1[normal] cheaty aktywne</translation>
     </message>
     <message>
       <source>overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
+      <translation>zastosowano podkręcenie [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
     </message>
     <message>
       <source>[yellow]silence, the movie has begun[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[yellow]silence, the movie has begun[normal]</translation>
+      <translation>[yellow]cisza, film się rozpoczął[normal]</translation>
     </message>
     <message>
       <source>The End</source>
@@ -1646,82 +1646,82 @@
     <message>
       <source>switched to [green]%1[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">switched to [green]%1[normal]</translation>
+      <translation>przełączono na [green]%1[normal]</translation>
     </message>
     <message>
       <source>[red]error on game genie rom file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on game genie rom file[normal]</translation>
+      <translation>[red]błąd w pliku ROMu Game Genie[normal]</translation>
     </message>
     <message>
       <source>[red]error on FDS bios file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on FDS bios file[normal]</translation>
+      <translation>[red]Błąd pliku BIOSu FDS[normal]</translation>
     </message>
     <message>
       <source>[red]error on shader file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on shader file[normal]</translation>
+      <translation>[red]błąd pliku z shaderami[normal]</translation>
     </message>
     <message>
       <source>[red]error on palette file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on palette file[normal]</translation>
+      <translation>[red]błąd pliku palety barw[normal]</translation>
     </message>
     <message>
       <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]errors[normal] on shader, use [green]&apos;No shader&apos;[cyan]</translation>
+      <translation>[red]błędy[normal] związane z shaderami, użyj opcji [green]&apos;Brak shaderów&apos;[cyan]</translation>
     </message>
     <message>
       <source>switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">switch on [cyan]%1x%2[normal] at [green]%3Hz[normal]</translation>
+      <translation>przełącz przy [cyan]%1x%2[normal] w [green]%3Hz[normal]</translation>
     </message>
     <message>
       <source>[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[cyan]%1[normal] ID sides founds, auto switch [red]disabled[normal]</translation>
+      <translation>[cyan]%1[normal] znaleziono strony ID, automatyczna zmiana [red]wyłączona[normal]</translation>
     </message>
     <message>
       <source>[red]error[normal] loading state [cyan]%1[normal], file is corrupted</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] loading state [cyan]%1[normal], file is corrupted</translation>
+      <translation>[red]błąd[normal] ładowania zapisu stanu [cyan]%1[normal], plik jest uszkodzony</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] saved successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">state [cyan]%1[normal] saved successfully</translation>
+      <translation>Pomyślnie zapisano stan [cyan]%1[normal]</translation>
     </message>
     <message>
       <source>state [cyan]%1[normal] loaded successfully</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">state [cyan]%1[normal] loaded successfully</translation>
+      <translation>Pomyślnie wczytano stan [cyan]%1[normal]</translation>
     </message>
     <message>
       <source>tape play</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">tape play</translation>
+      <translation>taśma - odtwarzaj</translation>
     </message>
     <message>
       <source>tape record</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">tape record</translation>
+      <translation>taśma - nagrywaj</translation>
     </message>
     <message>
       <source>tape stop</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">tape stop</translation>
+      <translation>taśma - zatrzymaj</translation>
     </message>
     <message>
       <source>keyboard input captured</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">keyboard input captured</translation>
+      <translation>przechwycono klawiaturę</translation>
     </message>
     <message>
       <source>keyboard input released</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">keyboard input released</translation>
+      <translation>zwolniono klawiaturę</translation>
     </message>
   </context>
   <context>
@@ -2417,11 +2417,11 @@
     </message>
     <message>
       <source>Save battery RAM file every 3 min.</source>
-      <translation type="unfinished">Save battery RAM file every 3 min.</translation>
+      <translation>Zapisz stan baterii RAMu co 3 minuty.</translation>
     </message>
     <message>
       <source>Fast Forward velocity</source>
-      <translation type="unfinished">Fast Forward velocity</translation>
+      <translation>Prędkość "Fast forward"</translation>
     </message>
     <message>
       <source>Misc</source>
@@ -2433,7 +2433,7 @@
     </message>
     <message>
       <source>Game Genie Rom file</source>
-      <translation type="unfinished">Game Genie Rom file</translation>
+      <translation>Plik ROMu Game Genie</translation>
     </message>
     <message>
       <source>FDS Bios file</source>
@@ -2441,7 +2441,7 @@
     </message>
     <message>
       <source>Rewind minutes</source>
-      <translation type="unfinished">Rewind minutes</translation>
+      <translation>Cofnij minuty</translation>
     </message>
     <message>
       <source>Spanish</source>
@@ -2497,7 +2497,7 @@
     </message>
     <message>
       <source>Insert disk 1 side A at power-up/reset</source>
-      <translation type="unfinished">Insert disk 1 side A at power-up/reset</translation>
+      <translation>Włóż dysk 1 stronę A po włączeniu/resecie</translation>
     </message>
     <message>
       <source>Famicom Disk System</source>
@@ -2505,7 +2505,7 @@
     </message>
     <message>
       <source>Switch the disk/side automatically</source>
-      <translation type="unfinished">Switch the disk/side automatically</translation>
+      <translation>Automatycznie przełącz dysk/stronę</translation>
     </message>
     <message>
       <source>Allow multiple instances of the emulator</source>
@@ -2513,7 +2513,7 @@
     </message>
     <message>
       <source>Use fast forward when loading the disk/side</source>
-      <translation type="unfinished">Use fast forward when loading the disk/side</translation>
+      <translation>Użyj "fast forward" podczas ładowania dysku/strony</translation>
     </message>
     <message>
       <source>French</source>
@@ -2580,7 +2580,7 @@
     </message>
     <message>
       <source>No usable device</source>
-      <translation type="unfinished">No usable device</translation>
+      <translation>Brak urządzeń do użycia</translation>
     </message>
     <message>
       <source>Input Settings</source>
@@ -2636,7 +2636,7 @@
     </message>
     <message>
       <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
-      <translation type="unfinished">Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</translation>
+      <translation>Pozwól wcisnąć &quot;górę + dół&quot; oraz &quot;lewo + prawo&quot; jednocześnie</translation>
     </message>
     <message>
       <source>Controller Mode</source>
@@ -3132,7 +3132,7 @@
     </message>
     <message>
       <source>No Shaders</source>
-      <translation>Brak</translation>
+      <translation>Brak shaderów</translation>
     </message>
     <message>
       <source>CRT Dotmask</source>
