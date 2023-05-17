@@ -107,7 +107,7 @@ void extcl_cpu_wr_mem_163(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_163(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_163(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		if (!(address & 0x0800)) {
 			return (~m163.reg[1] & 0x04);

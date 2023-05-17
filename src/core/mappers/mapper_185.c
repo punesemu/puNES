@@ -22,16 +22,28 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+INLINE static void prg_fix_185(void);
+
 struct _m185 {
 	BYTE reg;
 	BYTE ppu_read_count;
 } m185;
 
 void map_init_185() {
+
+
+
+
+	// TODO: implementare la disabilitazione della scrittura della CHRAM
+
+
+
+
+
+	EXTCL_AFTER_MAPPER_INIT(185);
 	EXTCL_CPU_WR_MEM(185);
 	EXTCL_SAVE_MAPPER(185);
 	EXTCL_RD_CHR(185);
-	EXTCL_RD_R2007(185);
 	mapper.internal_struct[0] = (BYTE *)&m185;
 	mapper.internal_struct_size[0] = sizeof(m185);
 
@@ -39,26 +51,17 @@ void map_init_185() {
 		info.mapper.submapper = 0;
 	}
 
+	if ((info.mapper.submapper & 0x0C) != 0x04) {
+		EXTCL_RD_R2007(185);
+	}
+
 	memset(&m185, 0x00, sizeof(m185));
 }
-void extcl_cpu_wr_mem_185(WORD address, BYTE value) {
-	DBWORD bank;
-
-	// bus conflict
-	value &= prg_rom_rd(address);
-
+void extcl_after_mapper_init_185(void) {
+	prg_fix_185();
+}
+void extcl_cpu_wr_mem_185(UNUSED(WORD address), BYTE value) {
 	m185.reg = value;
-	control_bank(info.chr.rom.max.banks_8k)
-	bank = value << 13;
-
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 BYTE extcl_save_mapper_185(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m185.reg);
@@ -76,4 +79,8 @@ void extcl_rd_r2007_185(void) {
 	if (m185.ppu_read_count < 2) {
 		m185.ppu_read_count++;
 	}
+}
+
+INLINE static void prg_fix_185(void) {
+	memmap_auto_32k(0x8000, 0);
 }

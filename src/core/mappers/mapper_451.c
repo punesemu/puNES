@@ -104,7 +104,7 @@ void extcl_cpu_wr_mem_451(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_451(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_451(WORD address, BYTE openbus) {
 	if (address >= 0x8000) {
 		return (sst39sf040_read(address));
 	}

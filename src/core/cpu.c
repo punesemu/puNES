@@ -184,9 +184,9 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 /* BIT */
 #define BIT(x)\
 	x;\
-	cpu.sf = (cpu.openbus & 0x80);\
-	cpu.of = (cpu.openbus & 0x40);\
-	ZF((cpu.AR & cpu.openbus));
+	cpu.sf = (cpu.openbus.actual & 0x80);\
+	cpu.of = (cpu.openbus.actual & 0x40);\
+	ZF((cpu.AR & cpu.openbus.actual));
 /* BRK, PHP
  * NOTE:
  * lo Status Register viene salvato solo nello stack con
@@ -294,11 +294,11 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define ISC(x)\
 	BYTE tmp = x + 1;\
 	_MSX(tmp);\
-	cpu.openbus = tmp;\
+	cpu.openbus.actual = tmp;\
 	_RSZ(_SUB, cpu.AR)
 /* LAS */
 #define LAS\
-	cpu.SR &= cpu.openbus;\
+	cpu.SR &= cpu.openbus.actual;\
 	_RSZ(cpu.AR = cpu.XR = cpu.SR;, cpu.AR)
 /* LAX */
 #define LAX(x)\
@@ -313,7 +313,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	BYTE shift = x;\
 	_ROR(shift, 0x01, >>=);\
 	_MSX(shift);\
-	cpu.openbus = shift;\
+	cpu.openbus.actual = shift;\
 	_RSZ(_ADD, cpu.AR)
 /* SXX */
 #define SXX(reg)\
@@ -379,13 +379,13 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	{\
 	WORD A;\
 	if (info.decimal_mode && cpu.df) {\
-		BYTE AL = (cpu.AR & 0x0F) + (cpu.openbus & 0x0F) + cpu.cf;\
+		BYTE AL = (cpu.AR & 0x0F) + (cpu.openbus.actual & 0x0F) + cpu.cf;\
 		if (AL >= 0x0A) { AL = ((AL + 0x06) & 0x0F) + 0x10; }\
-		A = (cpu.AR & 0xF0) + (cpu.openbus & 0xF0) + AL;\
+		A = (cpu.AR & 0xF0) + (cpu.openbus.actual & 0xF0) + AL;\
 		if (A >= 0xA0) { A += 0x60; }\
-	} else { A = cpu.AR + cpu.openbus + cpu.cf; }\
+	} else { A = cpu.AR + cpu.openbus.actual + cpu.cf; }\
 	cpu.cf = (A > 0xFF ? 1 : 0);\
-	cpu.of = ((!((cpu.AR ^ cpu.openbus) & 0x80) && ((cpu.AR ^ A) & 0x80)) ? 0x40 : 0);\
+	cpu.of = ((!((cpu.AR ^ cpu.openbus.actual) & 0x80) && ((cpu.AR ^ A) & 0x80)) ? 0x40 : 0);\
 	cpu.AR = (BYTE)A;\
 	}
 #define _BSH(dst, bitmask, opr)\
@@ -429,7 +429,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define _RD2\
 	_RDX(adr1, FALSE);\
 	_DMC
-#define _RDB cpu.openbus
+#define _RDB cpu.openbus.actual
 #define _RDP _RDX(cpu.PC++, TRUE)
 #define _RDX(src, LASTTICKHW) cpu_rd_mem(src, LASTTICKHW)
 #define _RLA(dst, bitmask, opr)\
@@ -480,18 +480,18 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define _SUB\
 	{\
 	if (info.decimal_mode && cpu.df) {\
-		SWORD A; SWORD AL = (cpu.AR & 0x0F) - (cpu.openbus & 0x0F) + cpu.cf - 1;\
-		AL = (cpu.AR & 0x0F) - (cpu.openbus & 0x0F) + cpu.cf - 1;\
+		SWORD A; SWORD AL = (cpu.AR & 0x0F) - (cpu.openbus.actual & 0x0F) + cpu.cf - 1;\
+		AL = (cpu.AR & 0x0F) - (cpu.openbus.actual & 0x0F) + cpu.cf - 1;\
 		if (AL < 0) { AL = ((AL - 0x06) & 0x0F) - 0x10; }\
-		A = (cpu.AR & 0xF0) - (cpu.openbus & 0xF0) + AL;\
+		A = (cpu.AR & 0xF0) - (cpu.openbus.actual & 0xF0) + AL;\
 		if (A < 0) { A -= 0x60; }\
 		cpu.cf = (A < 0x100 ? 1 : 0);\
-		cpu.of = (((cpu.AR ^ cpu.openbus) & 0x80) & ((cpu.AR ^ A) & 0x80) ? 0x40 : 0);\
+		cpu.of = (((cpu.AR ^ cpu.openbus.actual) & 0x80) & ((cpu.AR ^ A) & 0x80) ? 0x40 : 0);\
 		cpu.AR = (BYTE)A;\
 	} else {\
-		WORD A = cpu.AR - cpu.openbus - !cpu.cf;\
+		WORD A = cpu.AR - cpu.openbus.actual - !cpu.cf;\
 		cpu.cf = (A < 0x100 ? 1 : 0);\
-		cpu.of = (((cpu.AR ^ cpu.openbus) & 0x80) & ((cpu.AR ^ A) & 0x80) ? 0x40 : 0);\
+		cpu.of = (((cpu.AR ^ cpu.openbus.actual) & 0x80) & ((cpu.AR ^ A) & 0x80) ? 0x40 : 0);\
 		cpu.AR = (BYTE)A;\
 	}\
 	}
@@ -1018,12 +1018,12 @@ void cpu_exe_op(void) {
 }
 void cpu_init_PC(void) {
 	BYTE save_cheat_mode = cfg->cheat_mode;
-	BYTE save_cpu_openbus = cpu.openbus;
+	BYTE save_cpu_openbus = cpu.openbus.actual;
 
 	cfg->cheat_mode = NOCHEAT_MODE;
 	cpu.PC = (cpu_rd_mem(INT_RESET + 1, FALSE) << 8 | cpu_rd_mem(INT_RESET, FALSE));
 	cfg->cheat_mode = save_cheat_mode;
-	cpu.openbus = save_cpu_openbus;
+	cpu.openbus.actual = save_cpu_openbus;
 }
 void cpu_turn_on(void) {
 	if (info.reset >= HARD) {
@@ -1097,9 +1097,6 @@ void cpu_turn_on(void) {
 				mmcpu.ram[0x080] = 0x00;
 			}
 		}
-
-		/* reset della PRG Ram */
-		map_prg_ram_memset();
 	} else {
 		cpu.SP -= 0x03;
 		cpu.SR |= 0x04;

@@ -126,6 +126,8 @@ void extcl_cpu_wr_mem_FME7(WORD address, BYTE value) {
 					index &= 0x03;
 					fme7.snd.square[index].volume = value & 0x0F;
 					return;
+				default:
+					return;
 			}
 			return;
 		default:
@@ -208,7 +210,13 @@ void init_FME7(void) {
 	fme7.snd.square[1].timer = 1;
 	fme7.snd.square[2].timer = 1;
 
-
+	FME7_prg_fix = prg_fix_FME7_base;
+	FME7_prg_swap = prg_swap_FME7_base;
+	FME7_chr_fix = chr_fix_FME7_base;
+	FME7_chr_swap = chr_swap_FME7_base;
+	FME7_wram_fix = wram_fix_FME7_base;
+	FME7_wram_swap = wram_swap_FME7_base;
+	FME7_mirroring_fix = mirroring_fix_FME7_base;
 }
 void prg_fix_FME7_base(void) {
 	FME7_prg_swap(0x8000, fme7.prg[1]);
@@ -217,9 +225,7 @@ void prg_fix_FME7_base(void) {
 	FME7_prg_swap(0xE000, ~0);
 }
 void prg_swap_FME7_base(WORD address, WORD value) {
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	memmap_prgrom_8k(address, value);
 }
 void chr_fix_FME7_base(void) {
 	FME7_chr_swap(0x0000, fme7.chr[0]);
@@ -239,9 +245,9 @@ void wram_fix_FME7_base(void) {
 }
 void wram_swap_FME7_base(WORD value) {
 	if (fme7.prg[0] & 0x40) {
-		wram_map_auto_wp_8k(0x6000, value, fme7.prg[0] >> 7, fme7.prg[0] >> 7);
+		memmap_auto_wp_8k(0x6000, value, fme7.prg[0] >> 7, fme7.prg[0] >> 7);
 	} else {
-		wram_map_prg_rom_8k(0x6000, value);
+		memmap_prgrom_8k(0x6000, value);
 	}
 }
 void mirroring_fix_FME7_base(void) {

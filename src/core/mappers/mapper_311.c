@@ -24,6 +24,7 @@
 #include "save_slot.h"
 
 INLINE static void prg_fix_311(void);
+INLINE static void wram_fix_311(void);
 
 struct _m311 {
 	BYTE reg;
@@ -32,10 +33,6 @@ struct _m311 {
 		uint32_t count;
 	} irq;
 } m311;
-struct _m311tmp {
-	BYTE *prg_5000;
-	BYTE *prg_6000;
-} m311tmp;
 
 void map_init_311(void) {
 	EXTCL_AFTER_MAPPER_INIT(311);
@@ -46,18 +43,22 @@ void map_init_311(void) {
 	mapper.internal_struct[0] = (BYTE *)&m311;
 	mapper.internal_struct_size[0] = sizeof(m311);
 
-	memset(&m311, 0x00, sizeof(m311));
+	if (info.reset >= HARD) {
+		memset(&m311, 0x00, sizeof(m311));
+	}
 
 	info.mapper.extend_wr = TRUE;
 }
 void extcl_after_mapper_init_311(void) {
 	prg_fix_311();
+	wram_fix_311();
 }
 void extcl_cpu_wr_mem_311(WORD address, BYTE value) {
 	switch (address) {
 		case 0x4022:
 			m311.reg = value & 0x01;
 			prg_fix_311();
+			wram_fix_311();
 			return;
 		case 0x4122:
 			m311.irq.enabled = value & 0x01;
@@ -68,15 +69,10 @@ void extcl_cpu_wr_mem_311(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_311(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_311(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x4000:
 			return ((address >= 0x4042) && (address <= 0x4055) ? 0xFF : openbus);
-		case 0x5000:
-			return (m311tmp.prg_5000[address & 0x0FFF]);
-		case 0x6000:
-		case 0x7000:
-			return (m311tmp.prg_6000[address & 0x1FFF]);
 		default:
 			return (openbus);
 	}
@@ -104,18 +100,9 @@ void extcl_cpu_every_cycle_311(void) {
 }
 
 INLINE static void prg_fix_311(void) {
-	WORD bank = 17;
-
-	_control_bank(bank, info.prg.rom.max.banks_4k)
-	m311tmp.prg_5000 = prg_pnt(bank << 12);
-
-	bank = 9;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	m311tmp.prg_6000 = prg_pnt(bank << 13);
-
-	bank = m311.reg;
-	_control_bank(bank, info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, bank);
-
-	map_prg_rom_8k_update();
+	memmap_prgrom_32k(0x8000, m311.reg);
+}
+INLINE static void wram_fix_311(void) {
+	memmap_prgrom_4k(0x5000, 17);
+	memmap_prgrom_8k(0x6000, 9);
 }

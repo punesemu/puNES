@@ -111,9 +111,7 @@ void prg_fix_MMC1_base(void) {
 	MMC1_prg_swap(0xC000, prg_bank_MMC1(1));
 }
 void prg_swap_MMC1_base(WORD address, WORD value) {
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, ((address >> 13) & 0x02), value);
-	map_prg_rom_8k_update();
+	memmap_auto_16k(address, value);
 }
 void chr_fix_MMC1_base(void) {
 	MMC1_chr_swap(0x0000, chr_bank_MMC1(0));
@@ -130,7 +128,7 @@ void wram_swap_MMC1_base(WORD address, WORD value) {
 		? (mmc1.reg[3] & 0x10 ? FALSE : TRUE)
 		: TRUE;
 
-	wram_map_auto_wp_8k(address, value, wram_enabled, wram_enabled);
+	memmap_auto_wp_8k(address, value, wram_enabled, wram_enabled);
 }
 void mirroring_fix_MMC1_base(void) {
 	switch (mmc1.reg[0] & 0x03) {

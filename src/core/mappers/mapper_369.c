@@ -75,7 +75,7 @@ void map_init_369(void) {
 void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x4000:
-			if (cpu.prg_ram_wr_active && (address & 0x0100)) {
+			if (address & 0x0100) {
 				m369.reg = value;
 				MMC3_prg_fix();
 				MMC3_chr_fix();
@@ -183,39 +183,16 @@ void extcl_update_r2006_369(WORD new_r2006, WORD old_r2006) {
 }
 
 void prg_fix_mmc3_369(void) {
-	WORD bank = 0;
-
 	switch (m369.reg) {
 		case 0x00:
-			bank = 0x00;
-			_control_bank(bank, info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, bank);
-			map_prg_rom_8k_update();
-			return;
 		case 0x01:
-			bank = 0x01;
-			_control_bank(bank, info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, bank);
-			map_prg_rom_8k_update();
+			memmap_auto_32k(0x8000, m369.reg);
 			return;
 		case 0x13:
-			bank = 0x0C;
-			_control_bank(bank, info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 0, bank);
-
-			bank = 0x0D;
-			_control_bank(bank, info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 1, bank);
-
-			bank = 0x08 | (m369.smb2j & 0x03);
-			_control_bank(bank, info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 2, bank);
-
-			bank = 0x0F;
-			_control_bank(bank, info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 3, bank);
-
-			map_prg_rom_8k_update();
+			memmap_auto_8k(0x8000, 0x0C);
+			memmap_auto_8k(0xA000, 0x0D);
+			memmap_auto_8k(0xC000, (0x08 | (m369.smb2j & 0x03)));
+			memmap_auto_8k(0xE000, 0x0F);
 			return;
 		case 0x37:
 		case 0xFF:
@@ -286,7 +263,7 @@ void chr_swap_mmc3_369(WORD address, WORD value) {
 }
 void wram_fix_mmc3_369(void) {
 	if (m369.reg == 0x13) {
-		wram_map_prg_rom_8k(0x6000, 0x0E);
+		memmap_prgrom_8k(0x6000, 0x0E);
 	} else {
 		wram_fix_MMC3_base();
 	}

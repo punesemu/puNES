@@ -27,11 +27,16 @@ void prg_swap_mmc3_370(WORD address, WORD value);
 void chr_swap_mmc3_370(WORD address, WORD value);
 void mirroring_fix_mmc3_370(void);
 
+INLINE static void tmp_fix_370(BYTE max, BYTE index, const BYTE *ds);
+
 struct _m370 {
 	BYTE reg;
 } m370;
 struct _m370tmp {
-	BYTE dipswitch;
+	BYTE ds_used;
+	BYTE max;
+	BYTE index;
+	const BYTE *dipswitch;
 } m370tmp;
 
 void map_init_370(void) {
@@ -59,9 +64,19 @@ void map_init_370(void) {
 	MMC3_mirroring_fix = mirroring_fix_mmc3_370;
 
 	if (info.reset == RESET) {
-		m370tmp.dipswitch ^= 0x80;
+		if (m370tmp.ds_used) {
+			m370tmp.index = (m370tmp.index + 1) % m370tmp.max;
+		}
 	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		m370tmp.dipswitch = 0x80;
+		if (info.crc32.prg == 0x83392938) { // Mario Party II 6-in-1 (Multi)[Unknown].nes
+			static BYTE ds[] = {0x80, 0x00};
+
+			tmp_fix_370(LENGTH(ds), 0, &ds[0]);
+		} else {
+			static BYTE ds[] = {0x00};
+
+			tmp_fix_370(LENGTH(ds), 0, &ds[0]);
+		}
 	}
 
 	info.mapper.extend_wr = TRUE;
@@ -71,20 +86,18 @@ void map_init_370(void) {
 }
 void extcl_cpu_wr_mem_370(WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		if (cpu.prg_ram_wr_active) {
-			m370.reg = address & 0xFF;
-			MMC3_prg_fix();
-			MMC3_chr_fix();
-		}
+		m370.reg = address & 0xFF;
+		MMC3_prg_fix();
+		MMC3_chr_fix();
 		return;
 	}
 	if (address >= 0x8000) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_370(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_370(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		return ((m370tmp.dipswitch & 0x80) | (openbus & 0x7F));
+		return ((m370tmp.dipswitch[m370tmp.index] & 0x80) | (openbus & 0x7F));
 	}
 	return (openbus);
 }
@@ -123,4 +136,11 @@ void mirroring_fix_mmc3_370(void) {
 		return;
 	}
 	mirroring_fix_MMC3_base();
+}
+
+INLINE static void tmp_fix_370(BYTE max, BYTE index, const BYTE *ds) {
+	m370tmp.ds_used = TRUE;
+	m370tmp.max = max;
+	m370tmp.index = index;
+	m370tmp.dipswitch = ds;
 }

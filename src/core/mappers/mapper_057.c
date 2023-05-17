@@ -114,7 +114,7 @@ void extcl_cpu_wr_mem_057(WORD address, BYTE value) {
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
-BYTE extcl_cpu_rd_mem_057(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_057(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x6FFF)) {
 		return (m057tmp.dipswitch);
 	}

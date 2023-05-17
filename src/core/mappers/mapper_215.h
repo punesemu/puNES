@@ -25,7 +25,7 @@ enum _unif8237_type { U8237, U8237A };
 
 void map_init_215(void);
 void extcl_cpu_wr_mem_215(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_215(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_215(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_215(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_215_H_ */

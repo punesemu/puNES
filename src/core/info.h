@@ -57,12 +57,9 @@ typedef struct _info {
 		WORD id;
 		BYTE submapper_nes20;
 		BYTE submapper;
-		BYTE battery;
 		BYTE extend_wr;
 		BYTE extend_rd;
 		BYTE ram_plus_op_controlled_by_mapper;
-		BYTE trainer;
-		BYTE misc_roms;
 		BYTE force_battery_io;
 		BYTE ext_console_type;
 		BYTE mirroring;
@@ -154,7 +151,9 @@ typedef struct _info {
 		} ram;
 	} chr;
 	struct _info_prg {
+#if defined WRAM_OLD_HANDLER
 		WORD chips;
+#endif
 		struct _info_prg_rom {
 			DBWORD banks_16k;
 			DBWORD banks_8k;

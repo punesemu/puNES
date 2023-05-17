@@ -59,7 +59,7 @@ void map_init_361(void) {
 }
 void extcl_cpu_wr_mem_361(WORD address, BYTE value) {
 	if ((address >= 0x7000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active) {
+		if (memmap_adr_is_writable(address)) {
 			m361.reg = value;
 			MMC3_prg_fix();
 			MMC3_chr_fix();

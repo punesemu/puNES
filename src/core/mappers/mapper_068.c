@@ -20,7 +20,6 @@
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
-#include "cpu.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_068(void);
@@ -35,7 +34,6 @@ struct _m068 {
 	BYTE mirroring;
 	struct _m068_external_rom {
 		BYTE access;
-		BYTE rd_openbus;
 		uint32_t timer;
 	} ext;
 } m068;
@@ -43,7 +41,6 @@ struct _m068 {
 void map_init_068(void) {
 	EXTCL_AFTER_MAPPER_INIT(068);
 	EXTCL_CPU_WR_MEM(068);
-	EXTCL_CPU_RD_MEM(068);
 	EXTCL_SAVE_MAPPER(068);
 	EXTCL_CPU_EVERY_CYCLE(068);
 	mapper.internal_struct[0] = (BYTE *)&m068;
@@ -62,7 +59,6 @@ void map_init_068(void) {
 	}
 
 	info.mapper.extend_wr = TRUE;
-	info.mapper.extend_rd = TRUE;
 }
 void extcl_after_mapper_init_068(void) {
 	prg_fix_068();
@@ -74,7 +70,7 @@ void extcl_cpu_wr_mem_068(WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x6000:
 		case 0x7000:
-			if ((info.mapper.submapper == 1) && !cpu.prg_ram_wr_active) {
+			if ((info.mapper.submapper == 1) && !memmap_adr_is_writable(address)) {
 				m068.ext.access = TRUE;
 				m068.ext.timer = 107520;
 				prg_fix_068();
@@ -105,17 +101,6 @@ void extcl_cpu_wr_mem_068(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_068(WORD address, BYTE openbus, BYTE before) {
-	switch (address & 0xF000) {
-		case 0x8000:
-		case 0x9000:
-		case 0xA000:
-		case 0xB000:
-			return (m068.ext.rd_openbus ? before : openbus);
-		default:
-			return (openbus);
-	}
-}
 BYTE extcl_save_mapper_068(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m068.prg);
 	save_slot_ele(mode, slot, m068.chr);
@@ -123,7 +108,6 @@ BYTE extcl_save_mapper_068(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m068.mirroring);
 	save_slot_ele(mode, slot, m068.ext.timer);
 	save_slot_ele(mode, slot, m068.ext.access);
-	save_slot_ele(mode, slot, m068.ext.rd_openbus);
 
 	if (mode == SAVE_SLOT_READ) {
 		mirroring_fix_068();
@@ -140,8 +124,7 @@ void extcl_cpu_every_cycle_068(void) {
 
 INLINE static void prg_fix_068(void) {
 	WORD bank[2] = { 0, 0 };
-
-	m068.ext.rd_openbus = FALSE;
+	BYTE rd = TRUE;
 
 	if (info.mapper.submapper == 1) {
 		bank[1] = 0x07;
@@ -150,7 +133,7 @@ INLINE static void prg_fix_068(void) {
 			if (m068.ext.access) {
 				bank[0] = 0x08;
 			} else {
-				m068.ext.rd_openbus = TRUE;
+				rd = FALSE;
 			}
 		} else {
 			bank[0] = m068.prg & 0x07;
@@ -159,14 +142,8 @@ INLINE static void prg_fix_068(void) {
 		bank[0] = m068.prg;
 		bank[1] = 0xFF;
 	}
-
-	_control_bank(bank[0], info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank[0]);
-
-	_control_bank(bank[1], info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank[1]);
-
-	map_prg_rom_8k_update();
+	memmap_auto_wp_16k(0x8000, bank[0], rd, FALSE);
+	memmap_auto_16k(0xC000, bank[1]);
 }
 INLINE static void chr_fix_068(void) {
 	map_chr_rom_2k(0x0000, m068.chr[0]);
@@ -175,8 +152,7 @@ INLINE static void chr_fix_068(void) {
 	map_chr_rom_2k(0x1800, m068.chr[3]);
 }
 INLINE static void wram_fix_068(void) {
-	cpu.prg_ram_rd_active = (m068.prg & 0x10) >> 4;
-	cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
+	memmap_auto_wp_8k(0x6000, 0, ((m068.prg & 0x10) >> 4), ((m068.prg & 0x10) >> 4));
 }
 INLINE static void mirroring_fix_068(void) {
 	if (!(m068.mirroring & 0x10)) {

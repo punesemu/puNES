@@ -64,7 +64,7 @@ void extcl_cpu_wr_mem_235(WORD address, BYTE value) {
 		mirroring_V();
 	}
 }
-BYTE extcl_cpu_rd_mem_235(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_235(WORD address, BYTE openbus) {
 	if (!m235.openbus || (address < 0x8000)) {
 		return (openbus);
 	}

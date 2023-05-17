@@ -35,7 +35,7 @@ void extcl_cpu_wr_mem_241(UNUSED(WORD address), BYTE value) {
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 }
-BYTE extcl_cpu_rd_mem_241(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_241(WORD address, BYTE openbus) {
 	if ((address >= 0x4020) && (address < 0x6000)) {
 		return (0x50);
 	}

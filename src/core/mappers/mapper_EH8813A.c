@@ -93,7 +93,7 @@ void extcl_cpu_wr_mem_EH8813A(WORD address, BYTE value) {
 		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 	}
 }
-BYTE extcl_cpu_rd_mem_EH8813A(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_EH8813A(WORD address, BYTE openbus) {
 	if (address < 0x8000) {
 		return (openbus);
 	}

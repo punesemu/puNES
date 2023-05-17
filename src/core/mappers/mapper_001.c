@@ -91,7 +91,7 @@ void map_init_001(void) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_ram_001(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_ram_001(WORD address, BYTE openbus) {
 	if (m001tmp.ds_used && (address >= 0x1000) && (address <= 0x1FFF)) {
 		return (m001tmp.dipswitch[m001tmp.index]);
 	}
@@ -110,9 +110,9 @@ void chr_swap_mmc1_001(WORD address, WORD value) {
 void wram_fix_mmc1_001(void) {
 	WORD bank = chr_bank_MMC1(0);
 
-	if (prg_wram_size() == (16 * 1024)) {
+	if (wram_size() == (16 * 1024)) {
 		bank = chr_size() ? (~bank & 0x10) >> 4 : (~bank & 0x08) >> 3;
-	} else if (prg_wram_size() == (32 * 1024)) {
+	} else if (wram_size() == (32 * 1024)) {
 		bank = (bank & 0x0C) >> 3;
 	} else if (mmc1tmp.type == MMC1A) {
 		bank = (bank & 0x08) >> 3;

@@ -23,7 +23,7 @@
 
 void map_init_SC_127(void);
 void extcl_cpu_wr_mem_SC_127(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_SC_127(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_SC_127(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_SC_127(BYTE mode, BYTE slot, FILE *fp);
 void extcl_ppu_256_to_319_SC_127(void);
 

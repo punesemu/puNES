@@ -291,16 +291,13 @@ BYTE unif_load_rom(void) {
 
 	// setto i defaults
 	info.machine[HEADER] = info.machine[DATABASE] = NTSC;
-#if defined WRAM_OLD_HANDLER
-	info.prg.ram.bat.banks = 0;
-#endif
 	info.mapper.submapper = DEFAULT;
 	info.mapper.mirroring = MIRRORING_HORIZONTAL;
 	info.mirroring_db = info.id = DEFAULT;
 	info.extra_from_db = 0;
 	info.chr.rom.banks_8k = 0;
 	info.chr.ram.banks_8k_plus = 0;
-	info.prg.chips = info.chr.chips = 0;
+	info.chr.chips = 0;
 	vs_system.enabled = FALSE;
 
 	if (strncmp(unif.header.identification, "UNIF", 4) == 0) {
@@ -323,17 +320,21 @@ BYTE unif_load_rom(void) {
 
 				// PRG
 				{
-					for (i = 0, size = 0; i < info.prg.chips; i++) {
+					for (i = 0, size = 0; i < prgrom.chips.amount; i++) {
 						size += prg_chip_size(i);
 					}
 
-					if ((size == 0) || (map_prg_malloc(size, 0x00, FALSE) == EXIT_ERROR)) {
+					prgrom_set_size(size);
+
+					if (prgrom_init(0x00) == EXIT_ERROR) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
 
-					info.prg.rom.banks_16k = prg_size() / 0x4000;
-					info.prg.rom.banks_8k = prg_size() / 0x2000;
+					prg_chip_rom(0) = prg_rom();
+
+					info.prg.rom.banks_16k = prgrom_size() / 0x4000;
+					info.prg.rom.banks_8k = prgrom_size() / 0x2000;
 					map_set_banks_max_prg();
 				}
 
@@ -355,12 +356,6 @@ BYTE unif_load_rom(void) {
 
 						map_chr_bank_1k_reset();
 					}
-				}
-
-				// alloco la PRG Ram
-				if (map_prg_ram_malloc(0x2000) != EXIT_OK) {
-					free(rom.data);
-					return (EXIT_ERROR);
 				}
 
 				// la CHR ram extra
@@ -461,7 +456,7 @@ BYTE unif_load_rom(void) {
 		}
 
 		{
-			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
+			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prgrom_size());
 
 			if (chr_size()) {
 				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
@@ -475,19 +470,9 @@ BYTE unif_load_rom(void) {
 			nes20_submapper();
 		}
 
-#if defined WRAM_OLD_HANDLER
-		if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
-			info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
-		}
-
-		if ((info.format != NES_2_0) && !info.prg.ram.banks_8k_plus) {
-			info.prg.ram.banks_8k_plus = 1;
-		}
-#else
-		if ((info.format != NES_2_0) && !prg_wram_size()) {
+		if ((info.format != NES_2_0) && !wram_size()) {
 			wram_set_ram_size(0x2000);
 		}
-#endif
 
 		if (!info.chr.rom.banks_1k) {
 			mapper.write_vram = TRUE;
@@ -646,7 +631,7 @@ BYTE unif_PRG(_rom_mem *rom, BYTE phase) {
 		if ((rom->position + unif.chunk.length) > rom->size) {
 			return (EXIT_ERROR);
 		}
-		info.prg.chips = ++unif.chips.prg;
+		prgrom.chips.amount = ++unif.chips.prg;
 		prg_chip_size(chip) = unif.chunk.length;
 		rom->position += unif.chunk.length;
 		return (EXIT_OK);
@@ -733,11 +718,7 @@ BYTE unif_BATR(_rom_mem *rom, BYTE phase) {
 
 	rom_mem_memcpy(&batr, rom, unif.chunk.length);
 
-#if defined WRAM_OLD_HANDLER
-	info.prg.ram.bat.banks = batr & 0x01;
-#else
-	wram_set_nvram_size((batr & 0x01) * 0x2000);
-#endif
+	wram_set_nvram_size((size_t)(batr & 0x01) * 0x2000);
 
 	return (EXIT_OK);
 }

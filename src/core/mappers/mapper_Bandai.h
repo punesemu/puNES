@@ -37,7 +37,7 @@ void extcl_update_r2006_Bandai_161x02x74(WORD new_r2006, WORD old_r2006);
 BYTE extcl_rd_nmt_Bandai_161x02x74(WORD address);
 
 void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_Bandai_FCGX(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_Bandai_FCGX(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_Bandai_FCGX(BYTE mode, BYTE slot, FILE *fp);
 void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp);
 void extcl_cpu_every_cycle_Bandai_FCGX(void);

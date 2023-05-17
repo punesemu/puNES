@@ -321,7 +321,7 @@ void map_init_Coolgirl(void) {
 	info.chr.rom.banks_8k = 64;
 
 	// 32k di PRG RAM
-	if (prg_wram_nvram_size() < 0x8000) {
+	if (wram_nvram_size() < 0x8000) {
 		wram_set_ram_size(0);
 		wram_set_nvram_size(0x8000);
 	}
@@ -498,7 +498,7 @@ void extcl_cpu_wr_mem_Coolgirl(WORD address, BYTE value) {
 	}
 	state_fix_Coolgirl();
 }
-BYTE extcl_cpu_rd_mem_Coolgirl(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_Coolgirl(WORD address, BYTE openbus) {
 	// Mapper #36 is assigned to TXC's PCB 01-22000-400
 	if ((coolgirl.mapper == 29) && ((address & 0xE100) == 0x4100)) {
 		return ((coolgirl.prg.a & 0x0C) << 2);
@@ -1050,9 +1050,9 @@ INLINE static void wram_fix_Coolgirl(void) {
 	coolgirl.prg.b6000_mapped = prg_mapped_Coolgirl(coolgirl.prg.b6000);
 
 	if (coolgirl.map_rom_on_6000) {
-		wram_map_prg_rom_8k(0x6000, coolgirl.prg.b6000_mapped);
+		memmap_prgrom_8k(0x6000, coolgirl.prg.b6000_mapped);
 	} else if (coolgirl.wram.enabled) {
-		wram_map_auto_8k(0x6000, coolgirl.wram.page);
+		memmap_auto_8k(0x6000, coolgirl.wram.page);
 	}
 }
 

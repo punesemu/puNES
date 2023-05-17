@@ -29,21 +29,15 @@ struct _m522 {
 	BYTE ind;
 	BYTE reg[8];
 } m522;
-struct _m522tmp {
-	BYTE *prg_C000;
-} m522tmp;
 
 void map_init_522(void) {
 	EXTCL_AFTER_MAPPER_INIT(522);
 	EXTCL_CPU_WR_MEM(522);
-	EXTCL_CPU_RD_MEM(522);
 	EXTCL_SAVE_MAPPER(522);
 	mapper.internal_struct[0] = (BYTE *)&m522;
 	mapper.internal_struct_size[0] = sizeof(m522);
 
 	memset(&m522, 0x00, sizeof(m522));
-
-	info.mapper.extend_rd = TRUE;
 }
 void extcl_after_mapper_init_522(void) {
 	prg_fix_522();
@@ -51,12 +45,6 @@ void extcl_after_mapper_init_522(void) {
 }
 void extcl_cpu_wr_mem_522(WORD address, BYTE value) {
 	switch (address & 0xF001) {
-		case 0xC000:
-		case 0xC001:
-		case 0xD000:
-		case 0xD001:
-			m522tmp.prg_C000[address & 0x1FFF] = value;
-			return;
 		case 0x8000:
 		case 0x9000:
 		case 0xA000:
@@ -79,15 +67,6 @@ void extcl_cpu_wr_mem_522(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_522(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	switch (address & 0xF000) {
-		case 0xC000:
-		case 0xD000:
-			return (m522tmp.prg_C000[address & 0x1FFF]);
-		default:
-			return (openbus);
-	}
-}
 BYTE extcl_save_mapper_522(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m522.ind);
 	save_slot_ele(mode, slot, m522.reg);
@@ -101,23 +80,11 @@ BYTE extcl_save_mapper_522(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_522(void) {
-	WORD value;
-
-	// 0x8000 - 0x9000
-	value = m522.reg[6];
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, value);
-	prg.rom_8k[0] = prg_pnt(mapper.rom_map_to[0] << 13);
-
-	// 0xA000 - 0xB000
-	value = m522.reg[7];
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, value);
-	prg.rom_8k[1] = prg_pnt(mapper.rom_map_to[1] << 13);
-
-	// 0xC000 - 0xD000
-	m522tmp.prg_C000 = &wram.data[0];
+	memmap_auto_8k(0x8000, m522.reg[6]);
+	memmap_auto_8k(0xA000, m522.reg[7]);
+	memmap_wram_8k(0xC000, 0);
+	memmap_auto_8k(0xE000, 0xFF);
 }
 INLINE static void wram_fix_522(void) {
-	wram_map_prg_rom_8k(0x6000, 0xFE);
+	memmap_prgrom_8k(0x6000, 0xFE);
 }

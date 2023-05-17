@@ -66,8 +66,6 @@ typedef struct _cpu {
 	WORD opcode_PC;
 	/* il flag che indica se il ciclo della cpu e' dispari */
 	BYTE odd_cycle;
-	/* buffer di lettura */
-	BYTE openbus;
 	/*
 	 * cicli cpu dell'istruzione e delle
 	 * operazioni di lettura e scrittura.
@@ -85,6 +83,11 @@ typedef struct _cpu {
 	BYTE prg_ram_wr_active;
 	/* i cicli (senza aggiustamenti) impiegati dall'opcode */
 	WORD base_opcode_cycles;
+	/* buffer di lettura */
+	struct _cpu_openbus {
+		BYTE actual;
+		BYTE before;
+	} openbus;
 } _cpu;
 typedef struct _irq {
 	BYTE high;

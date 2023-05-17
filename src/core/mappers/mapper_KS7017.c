@@ -80,7 +80,7 @@ void extcl_cpu_wr_mem_KS7017(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_KS7017(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_KS7017(WORD address, BYTE openbus) {
 	if (address == 0x4030) {
 		openbus = (irq.high & EXT_IRQ) ? 1 : 0;
 		irq.high &= ~EXT_IRQ;

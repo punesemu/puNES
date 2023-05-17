@@ -36,7 +36,7 @@ void map_init_302(void) {
 
 	info.mapper.extend_rd = TRUE;
 }
-BYTE extcl_cpu_rd_mem_302(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_302(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x9FFF)) {
 		BYTE reg = ((((address >> 12) - 0x06) << 1) | ((address & 0x0800) >> 11)) ^ 0x04;
 

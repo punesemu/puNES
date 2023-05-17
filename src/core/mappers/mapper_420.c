@@ -61,7 +61,7 @@ void map_init_420(void) {
 }
 void extcl_cpu_wr_mem_420(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active) {
+		if (memmap_adr_is_writable(address)) {
 			m420.reg[address & 0x03] = value;
 			MMC3_prg_fix();
 			MMC3_chr_fix();

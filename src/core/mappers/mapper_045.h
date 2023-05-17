@@ -23,7 +23,7 @@
 
 void map_init_045(void);
 void extcl_cpu_wr_mem_045(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_045(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_045(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_045(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_045_H_ */

@@ -25,23 +25,28 @@
 INLINE static void prg_fix_227(void);
 INLINE static void mirroring_fix_227(void);
 
-static const SWORD dipswitch_227[][32] = {
-	{
-		0x00,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  -1,
-		  -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  -1
-	}, // 0
-};
+INLINE static void tmp_fix_227(BYTE max, BYTE index, const BYTE *ds);
 
 struct _m227 {
 	WORD reg;
 } m227;
 struct _m227tmp {
-	BYTE select;
+	BYTE ds_used;
+	BYTE max;
 	BYTE index;
-	WORD dipswitch;
+	const BYTE *dipswitch;
 } m227tmp;
 
 void map_init_227(void) {
+
+
+
+
+	// TODO: implementare la disabilitazione della scrittura della CHRAM
+
+
+
+
 	EXTCL_AFTER_MAPPER_INIT(227);
 	EXTCL_CPU_WR_MEM(227);
 	EXTCL_CPU_RD_MEM(227);
@@ -53,15 +58,14 @@ void map_init_227(void) {
 	memset(&m227, 0x00, sizeof(m227));
 
 	if (info.reset == RESET) {
-		do {
-			m227tmp.index = (m227tmp.index + 1) & 0x1F;
-		} while (dipswitch_227[m227tmp.select][m227tmp.index] < 0);
+		if (m227tmp.ds_used) {
+			m227tmp.index = (m227tmp.index + 1) % m227tmp.max;
+		}
 	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		m227tmp.select = 0;
-		m227tmp.index = 0;
-	}
+		static BYTE ds[] = { 0x00 };
 
-	m227tmp.dipswitch = dipswitch_227[m227tmp.select][m227tmp.index];
+		tmp_fix_227(LENGTH(ds), 0, &ds[0]);
+	}
 
 	if ((info.format != NES_2_0) && (info.mapper.submapper == WAIXING_FW01)) {
 		info.prg.ram.banks_8k_plus = 1;
@@ -79,9 +83,9 @@ void extcl_cpu_wr_mem_227(WORD address, UNUSED(BYTE value)) {
 	prg_fix_227();
 	mirroring_fix_227();
 }
-BYTE extcl_cpu_rd_mem_227(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_227(WORD address, BYTE openbus) {
 	if ((address >= 0x8000) && (m227.reg & 0x0400)) {
-		return (prg_rom_rd((address | m227tmp.dipswitch)));
+		return (prgrom_rd((address | m227tmp.dipswitch[m227tmp.index])));
 	}
 	return (openbus);
 }
@@ -100,31 +104,53 @@ void extcl_wr_chr_227(WORD address, BYTE value) {
 }
 
 INLINE static void prg_fix_227(void) {
-	WORD outer = ((m227.reg & 0x0100) >> 3) | ((m227.reg & 0x0060) >> 2);
-	WORD bank = (m227.reg & 0x001C) >> 2;
+	//WORD bank = ((m227.reg & 0x0100) >> 3) | ((m227.reg & 0x007C) >> 2);
 	WORD bit0 = (m227.reg & 0x0001);
 	WORD bit7 = (m227.reg & 0x0080) >> 7;
 	WORD bit9 = (m227.reg & 0x0200) >> 9;
+	//WORD sub2 = (info.mapper.submapper == 2);
+
+
+//	[A~1... .mLQ OQQP PpMS]
+//	         ||| |||| |||+-0: PRG A14=p
+//	         ||| |||| |||  1: PRG A14=CPU A14
+//	         ||| |||| ||+- 0: Vertical mirroring
+//	         ||| |||| ||   1: Horizontal mirroring
+//	         ||| |||+-++-- PRG A16..A14 (inner bank)
+//	         ||+-|++------ PRG A19..A17 (outer bank)
+//	         ||  +-------- 0: When CPU A14=1: PRG A16..14=LLL
+//	         ||            1: When CPU A14=1: PRG A16..14=PPp
+//	         |+----------- Value for PRG A16..14 when CPU A14=1 and O=0
+//	         +------------ 0: PRG A3..A0=CPU A3..A0
+//	                       1: PRG A3..A0=Solder pad 3-0
+//
+//	EMU->SetPRG_ROM16(0x8, prg &~cpuA14);
+//	EMU->SetPRG_ROM16(0xC,(prg | cpuA14) &~(0xFF*variant*!nrom*!last) &~(7*!nrom*!last) |7*!nrom*last);
 
 	//Bit 9   Bit 7   Bit 0   Meaning
 	//$200s   $080s   $001s
 	// (L)     (O)     (S)
-	//  0       0       0     Switchable inner 16 KiB bank PPp at CPU $8000-$BFFF, fixed inner bank #0 at CPU $C000-$FFFF (UNROM-like with fixed bank 0)
-	//  0       0       1     Switchable inner 16 KIB bank PP0 at CPU $8000-$BFFF, fixed inner bank #0 at CPU $C000-$FFFF (UNROM-like with only even banks reachable, pointless)
-	//  1       0       0     Switchable inner 16 KiB bank PPp at CPU $8000-$BFFF, fixed inner bank #7 at CPU $C000-$FFFF (UNROM)
-	//  1       0       1     Switchable inner 16 KIB bank PP0 at CPU $8000-$BFFF, fixed inner bank #7 at CPU $C000-$FFFF (UNROM with only even banks reachable, pointless)
+	//  0       0       0     Switchable inner 16 KiB bank PPp at CPU $8000-$BFFF,
+	//                        fixed inner bank #0 at CPU $C000-$FFFF (UNROM-like with fixed bank 0)
+	//  0       0       1     Switchable inner 16 KIB bank PP0 at CPU $8000-$BFFF,
+	//                        fixed inner bank #0 at CPU $C000-$FFFF (UNROM-like with only even banks reachable, pointless)
+	//  1       0       0     Switchable inner 16 KiB bank PPp at CPU $8000-$BFFF,
+	//                        fixed inner bank #7 at CPU $C000-$FFFF (UNROM)
+	//  1       0       1     Switchable inner 16 KIB bank PP0 at CPU $8000-$BFFF,
+	//                        fixed inner bank #7 at CPU $C000-$FFFF (UNROM with only even banks reachable, pointless)
 	//  ?       1       0     Switchable 16 KiB inner bank PPp at CPU $8000-$BFFF, mirrored at CPU $C000-$FFFF (NROM-128)
 	//  ?       1       1     Switchable 32 KiB inner bank PP at CPU $8000-$FFFF (NROM-256)
 
+	WORD outer = ((m227.reg & 0x0100) >> 3) | ((m227.reg & 0x0060) >> 2);
+	WORD bank = (m227.reg & 0x001C) >> 2;
+
 	bank = outer | (bank & ~bit0);
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
+	//bank = (bank & ~bit0);
+	memmap_auto_16k(0x8000, bank);
 
 	bank = bit7 ? bank | bit0 : outer | (7 * bit9);
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank);
-
-	map_prg_rom_8k_update();
+	//bank = ((bank | bit0) & ~(0xFF * sub2 * !bit7 * !bit9) & ~(7 * !bit7 * !bit9)) | (7 * !bit7 * bit9);
+	memmap_auto_16k(0xC000, bank);
 }
 INLINE static void mirroring_fix_227(void) {
 	if (m227.reg & 0x0002) {
@@ -132,4 +158,11 @@ INLINE static void mirroring_fix_227(void) {
 	} else  {
 		mirroring_V();
 	}
+}
+
+INLINE static void tmp_fix_227(BYTE max, BYTE index, const BYTE *ds) {
+	m227tmp.ds_used = TRUE;
+	m227tmp.max = max;
+	m227tmp.index = index;
+	m227tmp.dipswitch = ds;
 }

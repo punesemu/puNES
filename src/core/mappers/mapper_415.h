@@ -24,7 +24,6 @@
 void map_init_415(void);
 void extcl_after_mapper_init_415(void);
 void extcl_cpu_wr_mem_415(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_415(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_415(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_415_H_ */

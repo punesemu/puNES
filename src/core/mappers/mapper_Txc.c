@@ -117,7 +117,7 @@ void extcl_cpu_wr_mem_Txc_t22211ab(WORD address, BYTE value) {
 
 	chr_fix_Txc_t22211x();
 }
-BYTE extcl_cpu_rd_mem_Txc_t22211ab(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_Txc_t22211ab(WORD address, BYTE openbus) {
 	if (address == 0x4100) {
 		return ((openbus & 0xF0) | output_Txc_t22211ab());
 	}
@@ -170,7 +170,7 @@ void extcl_cpu_wr_mem_Txc_t22211c(WORD address, BYTE value) {
 		mirroring_H();
 	}
 }
-BYTE extcl_cpu_rd_mem_Txc_t22211c(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_Txc_t22211c(WORD address, BYTE openbus) {
 	if ((address >= 0x4100) && (address <= 0x4103)) {
 		// Read $4100-$4103: [..RR RRRR]: Read Register. Bits 4-5 are inverted if Invert==1.
 		// Bits 6-7 are open bus. Note that the bit order D0-D5 is reversed.

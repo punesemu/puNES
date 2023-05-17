@@ -18,13 +18,11 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <libgen.h>
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
 #include "irqA12.h"
 #include "irql2f.h"
-#include "tas.h"
 #include "unif.h"
 #include "gui.h"
 #include "vs_system.h"
@@ -134,7 +132,7 @@ BYTE map_init(void) {
 			map_init_FFESMC();
 			break;
 		case 18:
-			map_init_Jaleco(SS8806);
+			map_init_018();
 			break;
 		case 19:
 			map_init_019();
@@ -240,10 +238,10 @@ BYTE map_init(void) {
 			map_init_053();
 			break;
 		case 55:
-			map_init_malee();
+			map_init_055();
 			break;
 		case 56:
-			map_init_Kaiser(KS202);
+			map_init_056();
 			break;
 		case 57:
 			map_init_057();
@@ -333,7 +331,7 @@ BYTE map_init(void) {
 			map_init_Jaleco(JF13);
 			break;
 		case 87:
-			map_init_Jaleco(JF05);
+			map_init_087();
 			break;
 		case 88:
 			map_init_088();
@@ -466,7 +464,7 @@ BYTE map_init(void) {
 			map_init_Sachen(SA8259A);
 			break;
 		case 142:
-			map_init_KS7032();
+			map_init_142();
 			break;
 		case 143:
 			map_init_Sachen(TCA01);
@@ -539,7 +537,7 @@ BYTE map_init(void) {
 			map_init_168();
 			break;
 		case 171:
-			map_init_Kaiser(KS7058);
+			map_init_171();
 			break;
 		case 172:
 			map_init_Txc(T22211C);
@@ -548,7 +546,7 @@ BYTE map_init(void) {
 			map_init_Txc(T22211B);
 			break;
 		case 175:
-			map_init_Kaiser(KS7022);
+			map_init_175();
 			break;
 		case 176:
 			map_init_176();
@@ -703,7 +701,7 @@ BYTE map_init(void) {
 			map_init_227();
 			break;
 		case 228:
-			map_init_Active();
+			map_init_228();
 			break;
 		case 229:
 			map_init_229();
@@ -828,10 +826,10 @@ BYTE map_init(void) {
 			map_init_JYASIC(MAP282);
 			break;
 		case 283:
-			map_init_GS_20xx();
+			map_init_283();
 			break;
 		case 284:
-			map_init_DRIPGAME();
+			map_init_284();
 			break;
 		case 285:
 			map_init_A65AS();
@@ -882,13 +880,13 @@ BYTE map_init(void) {
 			map_init_KS7017();
 			break;
 		case 304:
-			map_init_UNIFSMB2J();
+			map_init_304();
 			break;
 		case 305:
-			map_init_KS7031();
+			map_init_305();
 			break;
 		case 306:
-			map_init_KS7016();
+			map_init_306();
 			break;
 		case 307:
 			map_init_307();
@@ -999,7 +997,7 @@ BYTE map_init(void) {
 			map_init_BMCG146();
 			break;
 		case 350:
-			map_init_891227();
+			map_init_350();
 			break;
 		case 351:
 			map_init_351();
@@ -1023,7 +1021,7 @@ BYTE map_init(void) {
 			map_init_JYASIC(MAP358);
 			break;
 		case 359:
-			map_init_359(MAP359);
+			map_init_359();
 			break;
 		case 360:
 			map_init_360();
@@ -1268,7 +1266,7 @@ BYTE map_init(void) {
 			map_init_539();
 			break;
 		case 540:
-			map_init_359(MAP540);
+			map_init_359();
 			break;
 		case 541:
 			map_init_541();
@@ -1329,14 +1327,8 @@ BYTE map_init(void) {
 			break;
 	}
 
-	// PRG
-	map_prg_rom_8k_update();
-#if defined WRAM_OLD_HANDLER
-	map_prg_ram_init();
-#else
 	// WRAM
 	wram_init();
-#endif
 
 	// CHR
 	if (mapper.write_vram) {
@@ -1380,44 +1372,20 @@ BYTE map_init(void) {
 	return (EXIT_OK);
 }
 void map_quit(void) {
-#if defined WRAM_OLD_HANDLER
-	map_prg_ram_battery_save();
-#else
-	// devo farlo prima di liberare prg.rom.data
+	// devo farlo prima di liberare prgrom.data
 	wram_quit();
-#endif
 
 	info.id = 0;
 	memset(&info.mapper, 0x00, sizeof(info.mapper));
 	memset(&info.sha1sum, 0x00, sizeof(info.sha1sum));
 	memset(&info.chr, 0x00, sizeof(info.chr));
 	memset(&info.prg, 0x00, sizeof(info.prg));
-#if defined WRAM_OLD_HANDLER
-	info.prg.ram.bat.start = DEFAULT;
-#endif
+
 	nes20db_reset();
 
 	// PRG
-	if (prg_rom()) {
-		free(prg_rom());
-		prg_rom() = NULL;
-		prg_size() = 0;
-	}
-
-	if (prg.ram.data) {
-		free(prg.ram.data);
-	}
-	memset(&prg.ram, 0x00, sizeof(prg.ram));
-
-#if defined WRAM_OLD_HANDLER
-	if (prg.ram_plus) {
-		free(prg.ram_plus);
-	}
-	memset(prg.rom_8k, 0x00, sizeof(prg.rom_8k));
-	prg.ram_plus = NULL;
-	prg.ram_plus_8k = NULL;
-	prg.ram_battery = NULL;
-#endif
+	prgrom_quit();
+	miscrom_quit();
 
 	// CHR
 	if (chr_rom()) {
@@ -1435,12 +1403,6 @@ void map_quit(void) {
 
 	memset(chr.bank_1k, 0, sizeof(chr.bank_1k));
 
-	if (mapper.misc_roms.data) {
-		free(mapper.misc_roms.data);
-		mapper.misc_roms.size = 0;
-	}
-	mapper.misc_roms.data = NULL;
-
 	mirroring_V();
 
 	mapper.write_vram = FALSE;
@@ -1457,77 +1419,41 @@ void map_quit(void) {
 
 
 
-
-BYTE map_prg_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom) {
-	if (prg_rom()) {
-		free(prg_rom());
-		prg_rom() = NULL;
-		prg_size() = 0;
-	}
-
-	prg_rom() = (BYTE *)malloc(size);
-	if (prg_rom()) {
-		memset(prg_rom(), set_value, size);
-		prg_size() = size;
-	} else {
-		free(prg_rom());
-		prg_rom() = NULL;
-		prg_size() = 0;
-		log_error(uL("prg malloc;out of memory"));
-	}
-
-	if (init_chip0_rom) {
-		prg_chip_rom(0) = prg_rom();
-	}
-
-	return (prg_rom() ? EXIT_OK : EXIT_ERROR);
-}
 void map_prg_rom_8k(BYTE banks_8k, BYTE at, WORD value) {
-	BYTE a = 0;
-
-	/* se cerco di switchare 32k ma ho solo un banco da 16k esco */
-	if ((banks_8k == 4) && (info.prg.rom.banks_16k <= 1)) {
-		return;
-	}
-
-	for (a = 0; a < banks_8k; ++a) {
-		mapper.rom_map_to[at + a] = ((value * banks_8k) + a);
+	switch (banks_8k) {
+		default:
+		case 0:
+			printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
+			break;
+		case 1:
+			memmap_auto_8k(0x8000 | (at * 0x2000), value);
+			break;
+		case 2:
+			memmap_auto_16k(0x8000 | (at * 0x2000), value);
+			break;
+		case 4:
+			memmap_auto_32k(0x8000, value);
+			break;
 	}
 }
 void map_prg_rom_8k_reset(void) {
-	mapper.rom_map_to[0] = 0;
-	mapper.rom_map_to[1] = 1;
-	mapper.rom_map_to[2] = info.prg.rom.banks_8k - 2;
-	mapper.rom_map_to[3] = info.prg.rom.banks_8k - 1;
+	prgrom_reset();
 }
 void map_prg_rom_8k_update(void) {
-	BYTE i = 0;
 
-	for (i = 0; i < 4; ++i) {
-		prg.rom_8k[i] = prg_pnt(mapper.rom_map_to[i] << 13);
-	}
 }
 
 
 
-BYTE map_prg_ram_malloc(WORD size) {
-	prg.ram.size = size;
 
-	prg.ram.data = (BYTE *)malloc(prg.ram.size);
-	if (!prg.ram.data) {
-		log_error(uL("prg ram malloc;out of memory"));
-		return (EXIT_ERROR);
-	}
 
-	return (EXIT_OK);
-}
-void map_prg_ram_memset(void) {
-	if (info.mapper.id == FDS_MAPPER) {
-		memset(prg.ram.data, 0xEA, prg.ram.size);
-	} else {
-		emu_initial_ram(prg.ram.data, prg.ram.size);
-	}
-}
+
+
+
+
+
+
+
 
 
 
@@ -1612,26 +1538,6 @@ BYTE map_chr_ram_slot_in_range(BYTE slot) {
 		(chr.bank_1k[slot] >= chr.extra.data) &&
 		(chr.bank_1k[slot] < (chr.extra.data + chr.extra.size))));
 }
-BYTE map_misc_malloc(size_t size, BYTE set_value) {
-	if (mapper.misc_roms.data) {
-		free(mapper.misc_roms.data);
-		mapper.misc_roms.data = NULL;
-		mapper.misc_roms.size = 0;
-	}
-
-	mapper.misc_roms.data = (BYTE *)malloc(size);
-	if (mapper.misc_roms.data) {
-		memset(mapper.misc_roms.data, set_value, size);
-		mapper.misc_roms.size = size;
-	} else {
-		free(mapper.misc_roms.data);
-		mapper.misc_roms.data = NULL;
-		mapper.misc_roms.size = 0;
-		log_error(uL("misc malloc;out of memory"));
-	}
-
-	return (mapper.misc_roms.data ? EXIT_OK : EXIT_ERROR);
-}
 void map_set_banks_max_prg(void) {
 	info.prg.rom.max.banks_32k = (info.prg.rom.banks_16k == 1) ? 0 :
 		((info.prg.rom.banks_16k >> 1) ? (info.prg.rom.banks_16k >> 1) - 1 : 0);
@@ -1648,11 +1554,6 @@ void map_set_banks_max_chr(void) {
 	info.chr.rom.max.banks_2k = ((info.chr.rom.banks_1k >> 1) != 0) ? (info.chr.rom.banks_1k >> 1) - 1 : 0;
 	info.chr.rom.max.banks_1k = info.chr.rom.banks_1k ? info.chr.rom.banks_1k - 1 : 0;
 }
-
-
-
-
-
 
 void map_chr_rom_1k(const WORD address, const WORD value) {
 	const BYTE slot = (address >> 10) & 0x07;

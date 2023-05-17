@@ -112,9 +112,7 @@ void prg_fix_MMC2_base(void) {
 	MMC2_prg_swap(0xE000, 0x0F);
 }
 void prg_swap_MMC2_base(WORD address, WORD value) {
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	memmap_auto_8k(address, value);
 }
 void chr_fix_MMC2_base(void) {
 	MMC2_chr_swap(0x0000, mmc2.chr[mmc2.latch[0]]);

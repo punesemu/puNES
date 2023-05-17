@@ -74,10 +74,8 @@ void extcl_after_mapper_init_394(void) {
 }
 void extcl_cpu_wr_mem_394(WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		if (cpu.prg_ram_wr_active) {
-			m394.reg[address & 0x03] = value;
-			extcl_after_mapper_init_394();
-		}
+		m394.reg[address & 0x03] = value;
+		extcl_after_mapper_init_394();
 		return;
 	}
 	if (address >= 0x8000) {
@@ -88,9 +86,9 @@ void extcl_cpu_wr_mem_394(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_394(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_394(WORD address, BYTE openbus) {
 	if (m394.reg[1] & 0x10) {
-		return (extcl_cpu_rd_mem_JYASIC(address, openbus, before));
+		return (extcl_cpu_rd_mem_JYASIC(address, openbus));
 	}
 	return (openbus);
 }

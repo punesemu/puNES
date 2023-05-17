@@ -28,7 +28,7 @@ void extcl_after_mapper_init_176(void);
 void extcl_cpu_wr_mem_176(WORD address, BYTE value);
 
 
-BYTE extcl_cpu_rd_mem_176(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_176(WORD address, BYTE openbus);
 
 
 

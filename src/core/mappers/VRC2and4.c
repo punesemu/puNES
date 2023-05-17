@@ -52,7 +52,7 @@ struct _vrc2and4tmp {
 
 void extcl_after_mapper_init_VRC2and4(void) {
 	if (vrc2and4tmp.type == VRC24_VRC2) {
-		if ((info.format == NES_2_0) && !prg_wram_size()) {
+		if ((info.format == NES_2_0) && !wram_size()) {
 			vrc2and4tmp.prg6000_wired = TRUE;
 			info.mapper.extend_wr = TRUE;
 		}
@@ -153,7 +153,7 @@ void extcl_cpu_wr_mem_VRC2and4(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_VRC2and4(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_VRC2and4(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x6000:
 			return (vrc2and4tmp.prg6000_wired ? (openbus & 0xFE) | ((vrc2and4.wired & 0x08) >> 3) : openbus);
@@ -255,9 +255,7 @@ void prg_fix_VRC2and4_base(void) {
 	VRC2and4_prg_swap(0xE000, ~0);
 }
 void prg_swap_VRC2and4_base(WORD address, WORD value) {
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	memmap_auto_8k(address, value);
 }
 void chr_fix_VRC2and4_base(void) {
 	VRC2and4_chr_swap(0x0000, vrc2and4.chr[0]);
@@ -273,7 +271,7 @@ void chr_swap_VRC2and4_base(WORD address, WORD value) {
 	map_chr_rom_1k(address, value);
 }
 void wram_fix_VRC2and4_base(void) {
-	wram_map_auto_wp_8k(0x6000, 0, !vrc2and4.wram_protect, !vrc2and4.wram_protect);
+	memmap_auto_wp_8k(0x6000, 0, !vrc2and4.wram_protect, !vrc2and4.wram_protect);
 }
 void mirroring_fix_VRC2and4_base(void) {
 	switch (vrc2and4.mirroring & (vrc2and4tmp.type == VRC24_VRC4 ? 0x03 : 0x01)) {

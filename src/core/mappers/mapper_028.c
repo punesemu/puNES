@@ -20,6 +20,7 @@
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
+#include "cpu.h"
 #include "save_slot.h"
 
 enum m28_reg { INNERBNK, MODEBNK, OUTERBNK };
@@ -106,9 +107,9 @@ void extcl_cpu_wr_mem_028(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_028(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_028(WORD address, BYTE openbus) {
 	if ((address > 0x4FFF) && (address < 0x6000)) {
-		return (before);
+		return (cpu.openbus.before);
 	}
 	return (openbus);
 }

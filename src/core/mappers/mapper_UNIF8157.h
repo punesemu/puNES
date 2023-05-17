@@ -23,7 +23,7 @@
 
 void map_init_UNIF8157(void);
 void extcl_cpu_wr_mem_UNIF8157(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_UNIF8157(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_UNIF8157(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_UNIF8157(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_UNIF8157_H_ */

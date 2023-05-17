@@ -127,8 +127,6 @@ BYTE nsfe_load_rom(void) {
 		info.format = NSFE_FORMAT;
 
 		info.machine[DATABASE] = DEFAULT;
-		info.prg.ram.bat.banks = 0;
-		info.prg.ram.banks_8k_plus = 0;
 
 		nsf.info.name = &nsf_default_label[0];
 		nsf.info.artist = &nsf_default_label[0];
@@ -245,18 +243,7 @@ BYTE nsfe_load_rom(void) {
 			}
 		}
 
-		{
-			WORD ram = 0x2000;
-
-			if (nsf.sound_chips.fds) {
-				ram = 0xA000;
-			}
-
-			if (map_prg_ram_malloc(ram) != EXIT_OK) {
-				free(rom.data);
-				return (EXIT_ERROR);
-			}
-		}
+		wram_set_ram_size(nsf.sound_chips.fds ? 0xA000 : 0x2000);
 
 		nsf.enabled = TRUE;
 
@@ -364,7 +351,7 @@ BYTE nsfe_INFO(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE nsfe_DATA(_rom_mem *rom, BYTE phase) {
-	int padding = nsf.adr.load & 0x0FFF;
+	uint32_t padding = nsf.adr.load & 0x0FFF;
 
 	if (phase == NSFE_COUNT) {
 		if ((rom->position + nsfe.chunk.length) > rom->size) {
@@ -374,18 +361,15 @@ BYTE nsfe_DATA(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
-	nsf.prg.banks_4k = ((nsfe.chunk.length + padding) / 0x1000);
+	prgrom_set_size(((((size_t)nsfe.chunk.length + padding) / 0x1000) +
+		((((size_t)nsfe.chunk.length + padding) % 0x1000) ? 1 : 0)) * 0x1000);
 
-	if (((nsfe.chunk.length + padding) % 0x1000)) {
-		nsf.prg.banks_4k++;
-	}
-
-	if (map_prg_malloc((size_t)(nsf.prg.banks_4k * 0x1000), 0xF2, TRUE) == EXIT_ERROR) {
+	if (prgrom_init(0xF2) == EXIT_ERROR) {
+		free(rom->data);
 		return (EXIT_ERROR);
 	}
-	rom_mem_memcpy(prg_rom() + padding, rom, nsfe.chunk.length);
 
-	nsf.prg.banks_4k--;
+	rom_mem_memcpy(prgrom_pnt() + padding, rom, nsfe.chunk.length);
 
 	return (EXIT_OK);
 }

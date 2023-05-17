@@ -59,7 +59,7 @@ void extcl_cpu_wr_mem_539(WORD address, BYTE value) {
 		case 0x8200: case 0xC000: case 0xC100: case 0xC200:
 		case 0xC300: case 0xC400: case 0xC500: case 0xC600: case 0xC700: case 0xC800: case 0xC900: case 0xCA00:
 		case 0xCB00: case 0xCC00: case 0xCD00: case 0xCE00: case 0xCF00: case 0xD000: case 0xD100: case 0xDF00:
-			wram.data[wram_address(address)] = value;
+			wram_byte(wram_address(address)) = value;
 			return;
 		case 0xA000: case 0xA100: case 0xA200: case 0xA300: case 0xA400: case 0xA500: case 0xA600: case 0xA700:
 		case 0xA800: case 0xA900: case 0xAA00: case 0xAB00: case 0xAC00: case 0xAD00: case 0xAE00: case 0xAF00:
@@ -75,12 +75,12 @@ void extcl_cpu_wr_mem_539(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_539(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_539(WORD address, BYTE openbus) {
 	switch (address & 0xFF00) {
 		case 0x8200: case 0xC000: case 0xC100: case 0xC200:
 		case 0xC300: case 0xC400: case 0xC500: case 0xC600: case 0xC700: case 0xC800: case 0xC900: case 0xCA00:
 		case 0xCB00: case 0xCC00: case 0xCD00: case 0xCE00: case 0xCF00: case 0xD000: case 0xD100: case 0xDF00:
-			return (wram.data[wram_address(address)]);
+			return (wram_byte(wram_address(address)));
 		default:
 			return (openbus);
 	}
@@ -126,11 +126,11 @@ INLINE static void wram_fix_539(void) {
 	// CPU $8200-$82FF
 	// CPU $C000-$D1FF
 	// CPU $DF00-$DFFF
-	wram_map_prg_rom_8k(0x6000, 0x0D);
-	wram_map_auto_256b(0x6000, 0x18);
-	wram_map_auto_256b(0x6200, 0x1A);
-	wram_map_auto_256b(0x6400, 0x1C);
-	wram_map_auto_256b(0x6500, 0x1D);
+	memmap_prgrom_8k(0x6000, 0x0D);
+	memmap_auto_256b(0x6000, 0x18);
+	memmap_auto_256b(0x6200, 0x1A);
+	memmap_auto_256b(0x6400, 0x1C);
+	memmap_auto_256b(0x6500, 0x1D);
 }
 INLINE static void mirroring_fix_539(void) {
 	if (m539.reg[1] & 0x08) {

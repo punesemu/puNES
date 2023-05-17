@@ -23,7 +23,7 @@
 
 void map_init_YOKO(void);
 void extcl_cpu_wr_mem_YOKO(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_YOKO(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_YOKO(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_YOKO(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_YOKO(void);
 

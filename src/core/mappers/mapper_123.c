@@ -27,8 +27,6 @@
 void prg_fix_mmc3_123(void);
 void prg_swap_mmc3_123(WORD address, WORD value);
 
-static const BYTE vlu2288[8] = {0, 3, 1, 5, 6, 7, 2, 4};
-
 struct _m123 {
 	BYTE reg;
 } m123;
@@ -62,19 +60,20 @@ void map_init_123(void) {
 }
 void extcl_cpu_wr_mem_123(WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		if (cpu.prg_ram_wr_active) {
-			if (address & 0x0800) {
-				m123.reg = value;
-				MMC3_prg_fix();
-			}
+		if (address & 0x0800) {
+			m123.reg = value;
+			MMC3_prg_fix();
 		}
 		return;
 	}
 	if (address >= 0x8000) {
 		switch (address & 0xE001) {
-			case 0x8000:
+			case 0x8000: {
+				static const BYTE vlu2288[8] = {0, 3, 1, 5, 6, 7, 2, 4};
+
 				extcl_cpu_wr_mem_MMC3(address, (value & 0xC0) | vlu2288[value & 7]);
 				return;
+			}
 			case 0x8001:
 				switch (mmc3.bank_to_update & 0x07) {
 					case 6:
@@ -106,15 +105,11 @@ void prg_fix_mmc3_123(void) {
 	if (m123.reg & 0x40) {
 		value = (m123.reg & 0x05) | ((m123.reg & 0x08) >> 2) | ((m123.reg & 0x20) >> 2);
 		if (m123.reg & 0x02) {
-			value >>= 1;
-			control_bank(info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, value);
+			memmap_auto_32k(0x8000, (value >> 1));
 		} else {
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-			map_prg_rom_8k(2, 2, value);
+			memmap_auto_16k(0x8000, value);
+			memmap_auto_16k(0xC000, value);
 		}
-		map_prg_rom_8k_update();
 		return;
 	}
 	prg_fix_MMC3_base();

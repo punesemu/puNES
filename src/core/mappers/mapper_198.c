@@ -17,9 +17,7 @@
  */
 
 #include <string.h>
-#include <stdlib.h>
 #include "mappers.h"
-#include "info.h"
 #include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
@@ -44,7 +42,7 @@ void map_init_198(void) {
 	init_MMC3();
 	MMC3_wram_fix = wram_fix_mmc3_198;
 
-//	if (prg_wram_size() < (12 * 1024)) {
+//	if (wram_size() < (12 * 1024)) {
 //		wram_set_ram_size(4 * 1024);
 //		wram_set_nvram_size(8 * 1024);
 //	}
@@ -63,6 +61,6 @@ BYTE extcl_save_mapper_198(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void wram_fix_mmc3_198(void) {
-	wram_map_auto_4k(0x5000, 2);
+	memmap_auto_4k(0x5000, 2);
 	wram_fix_MMC3_base();
 }

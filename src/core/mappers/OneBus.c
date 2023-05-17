@@ -187,7 +187,7 @@ void extcl_cpu_wr_mem_OneBus(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_OneBus(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_OneBus(WORD address, BYTE openbus) {
 	if ((address >= 0x4100) && (address <= 0x4FFF)) {
 		switch(address & 0x0FFF) {
 			case 0x140: case 0x141: case 0x142: case 0x143: case 0x144: case 0x145: case 0x146: case 0x147:
@@ -289,7 +289,7 @@ BYTE extcl_wr_apu_OneBus(WORD address, BYTE *value) {
 	}
 	return (FALSE);
 }
-BYTE extcl_rd_apu_OneBus(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_rd_apu_OneBus(WORD address, BYTE openbus) {
 	switch (address & 0x003F) {
 		case 0x15:
 			if (onebus.reg.apu[0x30] & 0x10) {
@@ -406,7 +406,7 @@ void init_OneBus(void) {
 		onebus.pcm.clock = 0xE1;
 	}
 
-//	if (!prg_wram_size()) {
+//	if (!wram_size()) {
 //		wram_set_ram_size(0x2000);
 //	}
 
@@ -475,9 +475,7 @@ void prg_fix_8k_OneBus_base(WORD mmask, WORD mblock) {
 	OneBus_prg_swap_8k(0xE000, bank);
 }
 void prg_swap_8k_OneBus_base(WORD address, WORD value) {
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	memmap_auto_8k(address, value);
 }
 void prg_fix_16k_OneBus_base(WORD bank0, WORD bank1, WORD mmask, WORD mblock) {
 	BYTE mode = onebus.reg.cpu[0x0B] & 0x07;
@@ -492,9 +490,7 @@ void prg_fix_16k_OneBus_base(WORD bank0, WORD bank1, WORD mmask, WORD mblock) {
 	OneBus_prg_swap_16k(0xC000, bank);
 }
 void prg_swap_16k_OneBus_base(WORD address, WORD value) {
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, (address >> 14) & 0x01, value);
-	map_prg_rom_8k_update();
+	memmap_auto_16k(address, value);
 }
 void chr_fix_OneBus_base(WORD mmask, WORD mblock) {
 	BYTE v16ben = (onebus.reg.ppu[0x10] & 0x40) || (onebus.reg.cpu[0x2B] == 0x61);
@@ -586,9 +582,9 @@ void wram_fix_OneBus_base(WORD mmask, WORD mblock) {
 		WORD block = ((onebus.reg.cpu[0] & 0xF0) << 4) | (onebus.reg.cpu[0x0A] & ~mask);
 		WORD bank = mblock | (((block | (onebus.reg.cpu[0x12] & mask)) + onebus.relative_8k) & mmask);
 
-		wram_map_prg_rom_8k(0x6000, bank);
+		memmap_prgrom_8k(0x6000, bank);
 	} else {
-		wram_map_auto_8k(0x6000, 0);
+		memmap_auto_8k(0x6000, 0);
 	}
 }
 void mirroring_fix_OneBus_base(void) {

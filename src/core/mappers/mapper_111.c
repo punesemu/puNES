@@ -134,7 +134,7 @@ void extcl_cpu_wr_mem_111_GTROM(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_111_GTROM(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_111_GTROM(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x5000:
 		case 0x7000:

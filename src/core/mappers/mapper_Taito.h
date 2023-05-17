@@ -42,7 +42,7 @@ void extcl_ppu_256_to_319_Taito_TC0690(void);
 void extcl_ppu_320_to_34x_Taito_TC0690(void);
 
 void extcl_cpu_wr_mem_Taito_X1005(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_Taito_X1005(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_Taito_X1005(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_Taito_X1005(BYTE mode, BYTE slot, FILE *fp);
 void extcl_battery_io_Taito_X1005(BYTE mode, FILE *fp);
 

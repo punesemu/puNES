@@ -16,15 +16,22 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_KS7032_H_
-#define MAPPER_KS7032_H_
+#include "mappers.h"
 
-#include "common.h"
+void prg_swap_ks202_142(WORD address, WORD value);
 
-void map_init_KS7032(void);
-void extcl_cpu_wr_mem_KS7032(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_KS7032(WORD address, BYTE openbus, BYTE before);
-BYTE extcl_save_mapper_KS7032(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_KS7032(void);
+void map_init_142(void) {
+	EXTCL_AFTER_MAPPER_INIT(KS202);
+	EXTCL_CPU_WR_MEM(KS202);
+	EXTCL_SAVE_MAPPER(KS202);
+	EXTCL_CPU_EVERY_CYCLE(KS202);
+	mapper.internal_struct[0] = (BYTE *)&ks202;
+	mapper.internal_struct_size[0] = sizeof(ks202);
 
-#endif /* MAPPER_KS7032_H_ */
+	init_KS202();
+	KS202_prg_swap = prg_swap_ks202_142;
+}
+
+void prg_swap_ks202_142(WORD address, WORD value) {
+	prg_swap_KS202_base(address, (value & 0x0F));
+}

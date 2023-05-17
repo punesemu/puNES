@@ -25,7 +25,7 @@ void map_init_446(void);
 void extcl_after_mapper_init_446(void);
 void extcl_mapper_quit_446(void);
 void extcl_cpu_wr_mem_446(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_446(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_446(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_446(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_446(void);
 void extcl_ppu_000_to_34x_446(void);

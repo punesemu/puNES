@@ -24,7 +24,6 @@
 void map_init_538(void);
 void extcl_after_mapper_init_538(void);
 void extcl_cpu_wr_mem_538(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_538(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_538(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_538_H_ */

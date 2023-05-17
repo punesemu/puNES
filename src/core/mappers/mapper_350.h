@@ -16,12 +16,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_MALEE_H_
-#define MAPPER_MALEE_H_
+#ifndef MAPPER_350_H_
+#define MAPPER_350_H_
 
 #include "common.h"
 
-void map_init_malee(void);
-BYTE extcl_cpu_rd_mem_malee(WORD address, BYTE openbus, BYTE before);
+void map_init_350(void);
+void extcl_after_mapper_init_350(void);
+void extcl_cpu_wr_mem_350(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_350(WORD address, BYTE openbus);
+BYTE extcl_save_mapper_350(BYTE mode, BYTE slot, FILE *fp);
 
-#endif /* MAPPER_MALEE_H_ */
+#endif /* MAPPER_350_H_ */

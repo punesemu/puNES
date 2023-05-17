@@ -355,7 +355,7 @@ BYTE extcl_save_mapper_Sachen_sa8259x(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void extcl_cpu_wr_mem_Sachen_tca01(UNUSED(WORD address), UNUSED(BYTE value)) {}
-BYTE extcl_cpu_rd_mem_Sachen_tca01(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_Sachen_tca01(WORD address, BYTE openbus) {
 	if ((address < 0x4100) || (address > 0x5FFF)) {
 		return (openbus);
 	}
@@ -417,7 +417,7 @@ void extcl_cpu_wr_mem_Sachen_tcu01(WORD address, BYTE value) {
 		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 	}
 }
-BYTE extcl_cpu_rd_mem_Sachen_tcu01(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_Sachen_tcu01(WORD address, BYTE openbus) {
 	if ((address >= 0x4000) && (address <= 0x5FFF)) {
 		if ((address & 0x103) == 0x0100) {
 			// Read $4100-$4103: [RRRR RR..]: Read Register (with its bits 0-5), connected to the CPU data bus bits 2-7.
@@ -486,7 +486,7 @@ void extcl_cpu_wr_mem_Sachen_tcu02(WORD address, BYTE value) {
 		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 	}
 }
-BYTE extcl_cpu_rd_mem_Sachen_tcu02(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_Sachen_tcu02(WORD address, BYTE openbus) {
 	if ((address >= 0x4000) && (address <= 0x5FFF)) {
 		if ((address & 0x103) == 0x0100) {
 			// Read $4100-$4103: [..RR RRRR]: Read Register. Bits 4-5 are inverted if Invert==1. Bits 6-7 are open bus.
@@ -580,7 +580,7 @@ void extcl_cpu_wr_mem_Sachen_sa74374x(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_Sachen_sa74374x(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_Sachen_sa74374x(WORD address, BYTE openbus) {
 	if ((address < 0x4100) || (address > 0x5FFF)) {
 		return (openbus);
 	}

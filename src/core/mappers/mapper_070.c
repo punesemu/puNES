@@ -43,7 +43,7 @@ void extcl_after_mapper_init_070(void) {
 }
 void extcl_cpu_wr_mem_070(WORD address, BYTE value) {
 	/* bus conflict */
-	m070.reg = value & prg_rom_rd(address);
+	m070.reg = value & prgrom_rd(address);
 	prg_fix_070();
 	chr_fix_070();
 }
@@ -54,16 +54,8 @@ BYTE extcl_save_mapper_070(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_070(void) {
-	WORD bank = m070.reg >> 4;
-
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-
-	bank = 0xFF;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_16k(0x8000, (m070.reg >> 4));
+	memmap_auto_16k(0xC000, 0xFF);
 }
 INLINE static void chr_fix_070(void) {
 	DBWORD bank = m070.reg & 0x0F;

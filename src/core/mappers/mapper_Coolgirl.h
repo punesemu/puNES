@@ -25,7 +25,7 @@ void map_init_Coolgirl(void);
 void extcl_after_mapper_init_Coolgirl(void);
 void extcl_mapper_quit_Coolgirl(void);
 void extcl_cpu_wr_mem_Coolgirl(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_Coolgirl(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_Coolgirl(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_Coolgirl(BYTE mode, BYTE slot, FILE *fp);
 void extcl_battery_io_Coolgirl(BYTE mode, FILE *fp);
 void extcl_cpu_every_cycle_Coolgirl(void);

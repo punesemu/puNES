@@ -25,7 +25,7 @@ enum { MAP83_REG0, MAP83_DGP };
 
 void map_init_083(void);
 void extcl_cpu_wr_mem_083(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_083(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_083(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_083(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_083(void);
 

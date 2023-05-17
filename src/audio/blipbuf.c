@@ -379,8 +379,8 @@ static void apu_tick_blipbuf_VRC7(void) {
 static void apu_tick_blipbuf_DRIPGAME(void) {
 	if (++blipbuf.dripgame.period == blipbuf.dripgame.min_period) {
 		blipbuf.output =
-			ch_gain_ext(dripgame.channel[0].out, 1.0f) +
-			ch_gain_ext(dripgame.channel[1].out, 1.0f);
+			ch_gain_ext(m284.channel[0].out, 1.0f) +
+			ch_gain_ext(m284.channel[1].out, 1.0f);
 		update_tick_extra_blbuf(dripgame, 0);
 	}
 }

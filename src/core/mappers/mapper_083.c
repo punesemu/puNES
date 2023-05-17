@@ -129,7 +129,7 @@ void extcl_cpu_wr_mem_083(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_083(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_083(WORD address, BYTE openbus) {
 	if (address == 0x5000) {
 		return (m083.dip);
 	}
@@ -137,7 +137,7 @@ BYTE extcl_cpu_rd_mem_083(WORD address, BYTE openbus, BYTE before) {
 		return (m083.low[address & 0x0003]);
 	}
 	if (address <= 0x5FFF) {
-		return (before);
+		return (cpu.openbus.before);
 	}
 	/* nestopia */
 	if ((address <= 0x7FFF) && !info.prg.ram.banks_8k_plus) {

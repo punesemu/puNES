@@ -125,7 +125,7 @@ INLINE static void prg_fix_043(void) {
 	map_prg_rom_8k_update();
 }
 INLINE static void wram_fix_043(void) {
-	wram_map_prg_rom_2k(0x5000, m043tmp.ds_used ? 32 : 33);
-	wram_map_prg_rom_2k(0x5800, m043tmp.ds_used ? 32 : 33);
-	wram_map_prg_rom_8k(0x6000, m043.swap ? 0 : 2);
+	memmap_prgrom_2k(0x5000, m043tmp.ds_used ? 32 : 33);
+	memmap_prgrom_2k(0x5800, m043tmp.ds_used ? 32 : 33);
+	memmap_prgrom_8k(0x6000, m043.swap ? 0 : 2);
 }

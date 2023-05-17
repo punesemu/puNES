@@ -84,8 +84,8 @@ void extcl_after_mapper_init_100(void) {
 void extcl_cpu_init_pc_100(void) {
 	if (info.reset >= HARD) {
 		// trainer
-		if (info.mapper.trainer && wram.size) {
-			if (trainer.data[0] == 0x4C) {
+		if (miscrom.trainer.in_use && wram_size()) {
+			if (miscrom_byte(0) == 0x4C) {
 				cpu.PC = 0x7000;
 			}
 		}

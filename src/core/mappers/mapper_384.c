@@ -19,7 +19,6 @@
 #include <string.h>
 #include "mappers.h"
 #include "mem_map.h"
-#include "cpu.h"
 #include "save_slot.h"
 
 void prg_swap_vrc2and4_384(WORD address, WORD value);
@@ -47,7 +46,7 @@ void map_init_384(void) {
 }
 void extcl_cpu_wr_mem_384(WORD address, BYTE value) {
 	if ((address >= 0x6800) && (address <= 0x6FFF)) {
-		if (cpu.prg_ram_wr_active && !(m384.reg & 0x08)) {
+		if (!(m384.reg & 0x08) && memmap_adr_is_writable(address)) {
 			m384.reg = value;
 			VRC2and4_prg_fix();
 			VRC2and4_chr_fix();

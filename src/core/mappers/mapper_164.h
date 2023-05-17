@@ -25,7 +25,7 @@ void map_init_164(void);
 void extcl_after_mapper_init_164(void);
 void extcl_cpu_init_pc_164(void);
 void extcl_cpu_wr_mem_164(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_164(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_164(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_164(BYTE mode, BYTE slot, FILE *fp);
 BYTE extcl_wr_nmt_164(WORD address, BYTE value);
 void extcl_wr_chr_164(WORD address, BYTE value);

@@ -96,14 +96,15 @@ void map_init_134(void) {
 		}
 	}
 
-	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
+	info.mapper.extend_wr = TRUE;
+	info.mapper.extend_rd = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_134(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active) {
+		if (memmap_adr_is_writable(address)) {
 			switch (address & 0x0003) {
 				case 0:
 					if (!(m134.reg[0] & 0x80)) {
@@ -159,7 +160,7 @@ void extcl_cpu_wr_mem_134(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_134(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_134(WORD address, BYTE openbus) {
 	if (m134tmp.ds_used && (address >= 0x8000) && (m134.reg[0] & 0x40)) {
 		return (m134tmp.dipswitch[m134tmp.index]);
 	}

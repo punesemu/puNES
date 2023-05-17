@@ -86,9 +86,9 @@ void extcl_cpu_wr_mem_014(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_VRC2and4(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_014(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_014(WORD address, BYTE openbus) {
 	if (!(m014.reg & 0x02)) {
-		return (extcl_cpu_rd_mem_VRC2and4(address, openbus, before));
+		return (extcl_cpu_rd_mem_VRC2and4(address, openbus));
 	}
 	return (openbus);
 }

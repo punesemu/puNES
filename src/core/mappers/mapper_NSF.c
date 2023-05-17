@@ -30,6 +30,7 @@
 void map_init_NSF(void) {
 	BYTE internal_struct = 0;
 
+	EXTCL_AFTER_MAPPER_INIT(NSF);
 	EXTCL_SAVE_MAPPER(NSF);
 	EXTCL_LENGTH_CLOCK(NSF);
 	EXTCL_ENVELOPE_CLOCK(NSF);
@@ -40,8 +41,6 @@ void map_init_NSF(void) {
 	internal_struct++;
 
 	nsf.made_tick = FALSE;
-
-	nsf_reset_prg();
 
 	if (info.reset >= HARD) {
 		if (cfg->nsf_player_nsfe_playlist && (nsf.playlist.count > 0)) {
@@ -133,6 +132,9 @@ void map_init_NSF(void) {
 
 	nsf_main_screen();
 }
+void extcl_after_mapper_init_NSF(void) {
+	nsf_reset_prg();
+}
 BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 	int i = 0;
 
@@ -145,20 +147,30 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 
 	save_slot_ele(mode, slot, nsf.songs.current);
 
-	for (i = 0; i < (int)LENGTH(nsf.prg.rom_4k); i++) {
-		if (nsf.sound_chips.fds) {
-			save_slot_pos(mode, slot, prg.ram.data, nsf.prg.rom_4k[i]);
-		} else {
-			save_slot_pos(mode, slot, prg_rom(), nsf.prg.rom_4k[i]);
-		}
-	}
-	for (i = 0; i < (int)LENGTH(nsf.prg.rom_4k_6xxx); i++) {
-		if (nsf.sound_chips.fds) {
-			save_slot_pos(mode, slot, prg.ram.data, nsf.prg.rom_4k_6xxx[i]);
-		} else {
-			save_slot_pos(mode, slot, prg_rom(), nsf.prg.rom_4k_6xxx[i]);
-		}
-	}
+
+
+
+
+
+
+//	for (i = 0; i < (int)LENGTH(nsf.prg.rom_4k); i++) {
+//		if (nsf.sound_chips.fds) {
+//			save_slot_pos(mode, slot, prg.ram.data, nsf.prg.rom_4k[i]);
+//		} else {
+//			save_slot_pos(mode, slot, prg_rom(), nsf.prg.rom_4k[i]);
+//		}
+//	}
+//	for (i = 0; i < (int)LENGTH(nsf.prg.rom_4k_6xxx); i++) {
+//		if (nsf.sound_chips.fds) {
+//			save_slot_pos(mode, slot, prg.ram.data, nsf.prg.rom_4k_6xxx[i]);
+//		} else {
+//			save_slot_pos(mode, slot, prg_rom(), nsf.prg.rom_4k_6xxx[i]);
+//		}
+//	}
+
+
+
+
 
 	save_slot_ele(mode, slot, nsf.routine.prg);
 	save_slot_ele(mode, slot, nsf.routine.INT_NMI);

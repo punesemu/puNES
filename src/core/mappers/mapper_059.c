@@ -103,7 +103,7 @@ void extcl_cpu_wr_mem_059(WORD address, BYTE value) {
 		mirroring_V();
 	}
 }
-BYTE extcl_cpu_rd_mem_059(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_059(WORD address, BYTE openbus) {
 	if ((address >= 0x8000) && (m059.reg & 0x0100)) {
 		return ((openbus & 0xFC) | m059tmp.dipswitch);
 	}

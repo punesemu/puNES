@@ -79,7 +79,7 @@ void extcl_cpu_wr_mem_428(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_428(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_428(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return ((openbus & 0xFC) | (m428tmp.dipswitch & 0x03));
 	}

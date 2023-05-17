@@ -45,9 +45,6 @@ struct _m042 {
 		uint16_t count;
 	} irq;
 } m042;
-struct _m042tmp {
-	BYTE *prg_6000;
-} m042tmp;
 
 void map_init_042(void) {
 	if ((info.mapper.submapper < 1) || (info.mapper.submapper > 3)) {
@@ -67,7 +64,6 @@ void map_init_042(void) {
 		case 1:
 			EXTCL_AFTER_MAPPER_INIT(042_s1);
 			EXTCL_CPU_WR_MEM(042_s1);
-			EXTCL_CPU_RD_MEM(042);
 			EXTCL_SAVE_MAPPER(042_s1);
 			mapper.internal_struct[0] = (BYTE *)&m042;
 			mapper.internal_struct_size[0] = sizeof(m042);
@@ -81,7 +77,6 @@ void map_init_042(void) {
 		case 2:
 			EXTCL_AFTER_MAPPER_INIT(042_s2);
 			EXTCL_CPU_WR_MEM(042_s2);
-			EXTCL_CPU_RD_MEM(042);
 			EXTCL_SAVE_MAPPER(042_s2);
 			mapper.internal_struct[0] = (BYTE *)&m042;
 			mapper.internal_struct_size[0] = sizeof(m042);
@@ -100,7 +95,6 @@ void map_init_042(void) {
 		case 3:
 			EXTCL_AFTER_MAPPER_INIT(042_s3);
 			EXTCL_CPU_WR_MEM(042_s3);
-			EXTCL_CPU_RD_MEM(042);
 			EXTCL_SAVE_MAPPER(042_s3);
 			EXTCL_CPU_EVERY_CYCLE(042_s3);
 			mapper.internal_struct[0] = (BYTE *)&m042;
@@ -111,13 +105,6 @@ void map_init_042(void) {
 			}
 			return;
 	}
-}
-
-BYTE extcl_cpu_rd_mem_042(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (m042tmp.prg_6000[address & 0x1FFF]);
-	}
-	return (openbus);
 }
 
 // submapper 1 -----------------------------------------------------------------
@@ -153,20 +140,13 @@ BYTE extcl_save_mapper_042_s1(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_042_s1(void) {
-	WORD bank = 0xFF;
-
-	_control_bank(bank, info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, bank);
-	map_prg_rom_8k_update();
+	memmap_auto_32k(0x8000,  0xFF);
 }
 INLINE static void chr_fix_042_s1(void) {
 	map_chr_rom_8k(m042.chr);
 }
 INLINE static void wram_fix_042_s1(void) {
-	WORD bank = m042.prg;
-
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	m042tmp.prg_6000 = prg_pnt(bank << 13);
+	memmap_prgrom_8k(0x6000,  m042.prg);
 }
 
 // submapper 2 -----------------------------------------------------------------
@@ -200,20 +180,12 @@ BYTE extcl_save_mapper_042_s2(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void prg_fix_n118_042_s2(void) {
-	WORD bank = info.prg.rom.banks_16k & 0x0F ? 4 : 7;
-
-	_control_bank(bank, info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, bank);
-	map_prg_rom_8k_update();
-
+	memmap_prgrom_32k(0x8000,  (prgrom_banks(S16K) & 0x0F ? 4 : 7));
 	wram_fix_042_s2();
 }
 
 INLINE static void wram_fix_042_s2(void) {
-	WORD bank = (n118.reg[5] & 0x1E) >> 1;
-
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	m042tmp.prg_6000 = prg_pnt(bank << 13);
+	memmap_prgrom_8k(0x6000,  ((n118.reg[5] & 0x1E) >> 1));
 }
 INLINE static void mirroring_fix_042_s2(void) {
 	if (m042.mirroring & 0x08) {
@@ -273,17 +245,10 @@ BYTE extcl_save_mapper_042_s3(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_042_s3(void) {
-	WORD bank = 0xFF;
-
-	_control_bank(bank, info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, bank);
-	map_prg_rom_8k_update();
+	memmap_prgrom_32k(0x8000,  0xFF);
 }
 INLINE static void wram_fix_042_s3(void) {
-	WORD bank = m042.prg;
-
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	m042tmp.prg_6000 = prg_pnt(bank << 13);
+	memmap_prgrom_8k(0x6000,  m042.prg);
 }
 INLINE static void mirroring_fix_042_s3(void) {
 	if (m042.mirroring & 0x08) {

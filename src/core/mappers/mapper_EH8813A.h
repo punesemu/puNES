@@ -23,7 +23,7 @@
 
 void map_init_EH8813A(void);
 void extcl_cpu_wr_mem_EH8813A(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_EH8813A(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_EH8813A(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_EH8813A(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_EH8813A_H_ */

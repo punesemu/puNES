@@ -88,14 +88,15 @@ void map_init_045(void) {
 		}
 	}
 
-	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
+	info.mapper.extend_wr = TRUE;
+	info.mapper.extend_rd = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_045(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active && !(m045.reg[3] & 0x40)) {
+		if (!(m045.reg[3] & 0x40) && memmap_adr_is_writable(address)) {
 			m045.reg[m045.index] = value;
 			m045.index = (m045.index + 1) & 0x03;
 			MMC3_prg_fix();
@@ -107,10 +108,10 @@ void extcl_cpu_wr_mem_045(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_045(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_045(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x5000:
-			if (!cpu.prg_ram_rd_active || !m045tmp.ds_used) {
+			if (!m045tmp.ds_used || !memmap_adr_is_readable(address)) {
 				return (openbus);
 			}
 			if (~m045tmp.dipswitch[m045tmp.index] & address) {

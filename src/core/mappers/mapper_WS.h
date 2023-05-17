@@ -24,7 +24,7 @@
 void map_init_WS(void);
 void extcl_after_mapper_init_WS(void);
 void extcl_cpu_wr_mem_WS(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_WS(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_WS(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_WS(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_WS_H_ */

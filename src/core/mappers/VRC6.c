@@ -43,7 +43,7 @@ struct _vrc6tmp {
 } vrc6tmp;
 
 // promemoria
-//void map_init_VRC6(BYTE revision) {
+//void map_init_VRC6(void) {
 //	EXTCL_AFTER_MAPPER_INIT(VRC6);
 //	EXTCL_CPU_WR_MEM(VRC6);
 //	EXTCL_SAVE_MAPPER(VRC6);
@@ -285,9 +285,7 @@ void prg_fix_VRC6_base(void) {
 	VRC6_prg_swap(0xE000, 0xFF);
 }
 void prg_swap_VRC6_base(WORD address, WORD value) {
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	memmap_auto_8k(address, value);
 }
 void chr_fix_VRC6_base(void) {
 	WORD bank[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -358,8 +356,7 @@ void chr_swap_VRC6_base(WORD address, WORD value) {
 	map_chr_rom_1k(address, value);
 }
 void wram_fix_VRC6_base(void) {
-	cpu.prg_ram_rd_active = vrc6.reg >> 7;
-	cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
+	memmap_auto_wp_8k(0x6000, 0, (vrc6.reg >> 7), (vrc6.reg >> 7));
 }
 void mirroring_fix_VRC6_base(void) {
 	BYTE nmt = 0, mode = vrc6.reg & 0x03, mirroring = (vrc6.reg & 0x0C) >> 2;

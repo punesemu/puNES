@@ -122,7 +122,7 @@ void extcl_cpu_wr_mem_215(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_215(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_215(WORD address, BYTE openbus) {
 	static const BYTE arrayLUT[8][8] = {
 		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, // 0 Super Hang-On
 		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00 }, // 1 Monkey King

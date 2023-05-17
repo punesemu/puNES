@@ -16,14 +16,37 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_ACTIVE_H_
-#define MAPPER_ACTIVE_H_
+#include <string.h>
+#include "mappers.h"
+#include "info.h"
 
-#include "common.h"
+INLINE static void prg_fix_283(void);
+INLINE static void wram_fix_283(void);
 
-void map_init_Active(void);
-void extcl_cpu_wr_mem_Active(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_Active(WORD address, BYTE openbus, BYTE before);
-BYTE extcl_save_mapper_Active(BYTE mode, BYTE slot, FILE *fp);
+struct _m283 {
+	BYTE reg;
+} m283;
 
-#endif /* MAPPER_ACTIVE_H_ */
+void map_init_283(void) {
+	EXTCL_AFTER_MAPPER_INIT(283);
+	EXTCL_CPU_WR_MEM(283);
+
+	if (info.reset >= HARD) {
+		memset(&m283, 0x00, sizeof(m283));
+	}
+}
+void extcl_after_mapper_init_283(void) {
+	prg_fix_283();
+	wram_fix_283();
+}
+void extcl_cpu_wr_mem_283(UNUSED(WORD address), BYTE value) {
+	m283.reg = value;
+	prg_fix_283();
+}
+
+INLINE static void prg_fix_283(void) {
+	memmap_auto_32k(0x8000, m283.reg);
+}
+INLINE static void wram_fix_283(void) {
+	memmap_prgrom_8k(0x6000, (prgrom_size() & 0x6000 ? 0x20 : 0x1F));
+}

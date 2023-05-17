@@ -314,7 +314,7 @@ void extcl_cpu_wr_mem_Taito_X1005(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_Taito_X1005(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_Taito_X1005(WORD address, BYTE openbus) {
 	if ((address < 0x7EF8) || (address > 0x7FFF)) {
 		return (openbus);
 	}
@@ -339,7 +339,7 @@ BYTE extcl_save_mapper_Taito_X1005(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_battery_io_Taito_X1005(BYTE mode, FILE *fp) {
-	if (wram.battery_present) {
+	if (wram.battery.in_use) {
 		if (mode == WR_BAT) {
 			if (fwrite(&taito_X1005.ram[0], LENGTH(taito_X1005.ram), 1, fp) < 1) {
 				log_error(uL("Taito_X1005;error on write battery memory"));

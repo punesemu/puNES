@@ -42,9 +42,9 @@ void map_init_093(void) {
 void extcl_after_mapper_init_093(void) {
 	prg_fix_093();
 }
-void extcl_cpu_wr_mem_093(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_093(WORD address, BYTE value) {
 	// bus conflict
-	m093.reg = value & prg_rom_rd(address);
+	m093.reg = value & prgrom_rd(address);
 	prg_fix_093();
 }
 BYTE extcl_save_mapper_093(BYTE mode, BYTE slot, FILE *fp) {
@@ -59,15 +59,6 @@ BYTE extcl_rd_chr_093(WORD address) {
 }
 
 INLINE static void prg_fix_093(void) {
-	WORD bank = 0;
-
-	bank = m093.reg >> 4;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-
-	bank = ~0;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_16k(0x8000, (m093.reg >> 4));
+	memmap_auto_16k(0xC000, 0xFF);
 }

@@ -61,7 +61,7 @@ void map_init_114(void) {
 }
 void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active && !(m114.reg[1] & 0x01)) {
+		if (!(m114.reg[1] & 0x01) && memmap_adr_is_writable(address)) {
 			m114.reg[address & 0x03] = value;
 			MMC3_chr_fix();
 			MMC3_prg_fix();
@@ -97,15 +97,11 @@ void prg_swap_mmc3_114(WORD address, WORD value) {
 		value = ((m114.reg[0] & 0x0E) | (m114.reg[0] & 0x20 ? (address & 0x4000) >> 14 : m114.reg[0] & 0x01)) << 1;
 		value |= (address & 0x2000) >> 13;
 	}
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3_base(address, value);
 }
 void chr_swap_mmc3_114(WORD address, WORD value) {
 	WORD base = (m114.reg[1] & 0x01) << 8;
 	WORD mask = 0xFF;
 
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

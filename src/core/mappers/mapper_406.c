@@ -88,7 +88,7 @@ void extcl_cpu_wr_mem_406(WORD address, BYTE value) {
 
 	extcl_cpu_wr_mem_MMC3(address, value);
 }
-BYTE extcl_cpu_rd_mem_406(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_406(WORD address, BYTE openbus) {
 	if (address >= 0x8000) {
 		return (sst39sf040_read(address));
 	}

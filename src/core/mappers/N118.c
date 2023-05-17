@@ -90,9 +90,7 @@ void prg_fix_N118_base(void) {
 	N118_prg_swap(0xE000, ~0);
 }
 void prg_swap_N118_base(WORD address, WORD value) {
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	memmap_auto_8k(address, value);
 }
 void chr_fix_N118_base(void) {
 	N118_chr_swap(0x0000, n118.reg[0] & (~1));

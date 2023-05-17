@@ -78,7 +78,7 @@ void extcl_cpu_wr_mem_200(WORD address, UNUSED(BYTE value)) {
 	chr_fix_200();
 	mirroring_fix_200();
 }
-BYTE extcl_cpu_rd_mem_200(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_200(WORD address, BYTE openbus) {
 	if ((address < 0x8000) || !m200tmp.dipswitch) {
 		return (openbus);
 	}

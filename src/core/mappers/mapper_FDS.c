@@ -36,6 +36,7 @@ static const SBYTE modulation_table[8] = { 0, 1, 2, 4, 8, -4, -2, -1 };
 static const BYTE volume_wave[4] = { 36, 24, 17, 14 };
 
 void map_init_FDS(void) {
+	EXTCL_AFTER_MAPPER_INIT(FDS);
 	EXTCL_CPU_RD_MEM(FDS);
 	EXTCL_CPU_EVERY_CYCLE(FDS);
 	EXTCL_APU_TICK(FDS);
@@ -74,7 +75,14 @@ void map_init_NSF_FDS(void) {
 
 	fds.drive.enabled_snd_reg = 0x02;
 }
-BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus), UNUSED(BYTE before)) {
+void extcl_after_mapper_init_FDS(void) {
+	memmap_wram_8k(0x6000, 0);
+	memmap_wram_8k(0x8000, 1);
+	memmap_wram_8k(0xA000, 2);
+	memmap_wram_8k(0xC000, 3);
+	memmap_prgrom_8k(0xE000, 0);
+}
+BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus)) {
 	// 0xE18B : NMI entry point
 	// [$0100]: PC action on NMI. set to $C0 on reset
 	// When NMI occurs while $100 & $C0 != 0, it typically means that the game is starting.
@@ -157,7 +165,7 @@ BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus), UNUSED(BYTE before
 			}
 		}
 	}
-	return (prg_byte(address & 0x1FFF));
+	return (openbus);
 }
 void extcl_cpu_every_cycle_FDS(void) {
 	BYTE max_speed = cfg->fds_fast_forward &
@@ -166,17 +174,17 @@ void extcl_cpu_every_cycle_FDS(void) {
 
 	// auto insert
 	if (fds_auto_insert_enabled()) {
-#define _max_speed cfg->fds_fast_forward & (info.lag_frame.consecutive > MIN_LAG_FRAMES)
+#define df_max_speed (cfg->fds_fast_forward & (info.lag_frame.consecutive > MIN_LAG_FRAMES))
 		if (fds.auto_insert.delay.eject > 0) {
 			fds.auto_insert.delay.eject--;
-			max_speed = _max_speed & (fds.auto_insert.delay.eject > 0);
+			max_speed = df_max_speed & (fds.auto_insert.delay.eject > 0);
 		} else if (fds.auto_insert.delay.dummy > 0) {
 			if (--fds.auto_insert.delay.dummy == 0) {
 				fds.auto_insert.delay.dummy = -1;
 				fds_disk_op(FDS_DISK_INSERT, 0, TRUE);
 				gui_update_fds_menu();
 			}
-			max_speed = _max_speed & (fds.auto_insert.delay.dummy > 0);
+			max_speed = df_max_speed & (fds.auto_insert.delay.dummy > 0);
 		} else if (fds.auto_insert.delay.side > 0) {
 			if (--fds.auto_insert.delay.side == 0) {
 				fds.auto_insert.delay.side = -1;
@@ -185,7 +193,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 				fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
 				gui_update_fds_menu();
 			}
-			max_speed = _max_speed & (fds.auto_insert.delay.side > 0);
+			max_speed = df_max_speed & (fds.auto_insert.delay.side > 0);
 		}
 		if (!fds.auto_insert.delay.eject & (fds.auto_insert.delay.dummy == -1) & (fds.auto_insert.r4032.checks > 20)) {
 			fds.auto_insert.delay.eject = -1;
@@ -194,9 +202,9 @@ void extcl_cpu_every_cycle_FDS(void) {
 			fds.auto_insert.delay.dummy = FDS_OP_SIDE_DELAY;
 			fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
 			gui_update_fds_menu();
-			max_speed = _max_speed;
+			max_speed = df_max_speed;
 		}
-#undef _max_speed
+#undef df_max_speed
 	}
 
 	if (max_speed & !fds.info.bios_first_run) {

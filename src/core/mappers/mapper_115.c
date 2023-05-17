@@ -46,11 +46,10 @@ void map_init_115(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
+	memset(&irqA12, 0x00, sizeof(irqA12));
+
 	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
 		memset(&m115, 0x00, sizeof(m115));
-	} else {
-		memset(&irqA12, 0x00, sizeof(irqA12));
 	}
 
 	init_MMC3();
@@ -65,7 +64,7 @@ void map_init_115(void) {
 }
 void extcl_cpu_wr_mem_115(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active) {
+		if (memmap_adr_is_writable(address)) {
 			if (address & 0x0001) {
 				m115.reg[0] = value;
 				MMC3_chr_fix();
@@ -106,15 +105,11 @@ void prg_fix_mmc3_115(void) {
 	if (m115.reg[1] & 0x80) {
 		value = (m115.reg[1] & 0x0F);
 		if (m115.reg[1] & 0x20) {
-			value >>= 1;
-			control_bank(info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, value);
+			memmap_auto_32k(0x8000, (value >> 1));
 		} else {
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-			map_prg_rom_8k(2, 2, value);
+			memmap_auto_16k(0x8000, value);
+			memmap_auto_16k(0xC000, value);
 		}
-		map_prg_rom_8k_update();
 		return;
 	}
 	prg_fix_MMC3_base();

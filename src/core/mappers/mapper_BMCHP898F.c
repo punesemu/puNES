@@ -101,7 +101,7 @@ void extcl_cpu_wr_mem_BMCHP898F(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_BMCHP898F(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_BMCHP898F(WORD address, BYTE openbus) {
 	if (address == 0x5FF0) {
 		return (bmchp898ftmp.reset << 6);
 	}

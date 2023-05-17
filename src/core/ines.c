@@ -43,8 +43,8 @@ BYTE ines10_search_in_database(void);
 _ines ines;
 
 BYTE ines_load_rom(void) {
-	_rom_mem rom;
 	BYTE cpu_timing = 0;
+	_rom_mem rom;
 
 	{
 		static const uTCHAR rom_ext[2][10] = { uL(".nes\0"), uL(".NES\0") };
@@ -143,11 +143,6 @@ BYTE ines_load_rom(void) {
 			info.chr.rom.banks_8k |= ((ines.flags[FL9] & 0xF0) << 4);
 			nes20_prg_chr_size(&info.chr.rom.banks_8k, &info.chr.rom.banks_4k, 0x1000);
 
-#if defined WRAM_OLD_HANDLER
-			info.prg.ram.banks_8k_plus = nes20_ram_size(ines.flags[FL10] & 0x0F);
-			info.prg.ram.bat.banks = nes20_ram_size(ines.flags[FL10] >> 4);
-
-#else
 			wram_set_ram_size(0);
 			wram_set_nvram_size(0);
 			if (ines.flags[FL10] & 0x0F) {
@@ -156,13 +151,29 @@ BYTE ines_load_rom(void) {
 			if (ines.flags[FL10] & 0xF0) {
 				wram_set_nvram_size(64 << ((ines.flags[FL10] & 0xF0) >> 4));
 			}
-			wram.battery_present = (ines.flags[FL6] & 0x02) >> 1;
+			wram.battery.in_use = (ines.flags[FL6] & 0x02) >> 1;
+
+
+
+
+
+
 
 
 
 			info.prg.ram.banks_8k_plus = 0;
 			info.prg.ram.bat.banks = 0;
-#endif
+
+
+
+
+
+
+
+
+
+
+
 
 			info.chr.ram.banks_8k_plus = nes20_ram_size(ines.flags[FL11] & 0x0F);
 
@@ -196,7 +207,7 @@ BYTE ines_load_rom(void) {
 				}
 			}
 
-			info.mapper.misc_roms = ines.flags[FL14] & 0x03;
+			miscrom.chips = ines.flags[FL14] & 0x03;
 		} else {
 			// iNES 1.0
 			info.format = iNES_1_0;
@@ -222,7 +233,7 @@ BYTE ines_load_rom(void) {
 #else
 			wram_set_ram_size(0x2000);
 			wram_set_nvram_size(ines.flags[FL6] & 0x02 ? 0x2000 : 0);
-			wram.battery_present = prg_wram_nvram_size() != 0;
+			wram.battery.in_use = wram_nvram_size() != 0;
 
 			info.prg.ram.banks_8k_plus = 0;
 			info.prg.ram.bat.banks = 0;
@@ -233,7 +244,7 @@ BYTE ines_load_rom(void) {
 			info.decimal_mode = FALSE;
 		}
 
-		info.mapper.trainer = ines.flags[FL6] & 0x04;
+		miscrom.trainer.in_use = ines.flags[FL6] & 0x04;
 
 		if (ines.flags[FL6] & 0x08) {
 			info.mapper.mirroring = MIRRORING_FOURSCR;
@@ -278,12 +289,6 @@ BYTE ines_load_rom(void) {
 		}
 
 		nes20db_search();
-
-#if defined WRAM_OLD_HANDLER
-		if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
-			info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
-		}
-#endif
 
 		switch (info.mapper.mirroring) {
 			default:
@@ -365,27 +370,20 @@ BYTE ines_load_rom(void) {
 			}
 
 			vs_system.special_mode.index = 0;
+
+			if (wram_size() < 0x800) {
+				wram_set_ram_size(0x800);
+			}
 		}
 
-#if defined WRAM_OLD_HANDLER
-		if (info.mapper.trainer) {
-			if (rom_mem_ctrl_memcpy(&mapper.trainer, &rom, sizeof(mapper.trainer)) == EXIT_ERROR) {
-				free(rom.data);
-				return (EXIT_ERROR);
-			}
-		} else {
-			memset(&mapper.trainer, 0x00, sizeof(mapper.trainer));
-		}
-#else
-		wram_trainer_quit();
-		if (info.mapper.trainer) {
-			if ((wram_trainer_malloc(512) == EXIT_ERROR) ||
-				(rom_mem_ctrl_memcpy(trainer.data, &rom, trainer.size) == EXIT_ERROR)) {
+		if (miscrom.trainer.in_use) {
+			miscrom_set_size(512);
+			if ((miscrom_init() == EXIT_ERROR) ||
+				(rom_mem_ctrl_memcpy(miscrom_pnt(), &rom, miscrom_size()) == EXIT_ERROR)) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
 		}
-#endif
 
 		if (!info.chr.rom.banks_8k) {
 			mapper.write_vram = TRUE;
@@ -395,25 +393,32 @@ BYTE ines_load_rom(void) {
 			}
 		}
 
+		info.chr.chips = 0;
+
+
+
+
+
 		info.prg.rom.banks_8k = !info.prg.rom.banks_16k ? 1 : info.prg.rom.banks_16k * 2;
-		info.prg.chips = info.chr.chips = 0;
+
 		map_set_banks_max_prg();
 
-		// alloco la PRG Ram
-		if (map_prg_ram_malloc(0x2000) != EXIT_OK) {
-			free(rom.data);
-			return (EXIT_ERROR);
-		}
-
 		// alloco e carico la PRG Rom
-		if (map_prg_malloc((size_t)info.prg.rom.banks_8k * 0x2000, 0x00, TRUE) == EXIT_ERROR) {
+		prgrom_set_size(info.prg.rom.banks_8k * 0x2000);
+
+		if (prgrom_init(0x00) == EXIT_ERROR) {
 			free(rom.data);
 			return (EXIT_ERROR);
 		}
 
-		if (rom_mem_ctrl_memcpy_truncated(prg_rom(), &rom, prg_size()) == EXIT_ERROR) {
+		if (rom_mem_ctrl_memcpy_truncated(prgrom_pnt(), &rom, prgrom_size()) == EXIT_ERROR) {
 			info.prg_truncated = TRUE;
 		}
+
+
+
+
+
 
 		// se e' settato mapper.write_vram, vuol dire
 		// che la rom non ha CHR Rom e che quindi la CHR Ram
@@ -440,12 +445,13 @@ BYTE ines_load_rom(void) {
 			}
 		}
 
-		if (info.mapper.misc_roms) {
-			if (map_misc_malloc(rom.size - rom.position, 0x00) == EXIT_ERROR) {
-				info.misc_truncated = TRUE;
+		if (miscrom.chips) {
+			miscrom_set_size(rom.size - rom.position);
+			if (miscrom_init() == EXIT_ERROR) {
+				free(rom.data);
+				return (EXIT_ERROR);
 			}
-
-			if (rom_mem_ctrl_memcpy_truncated(mapper.misc_roms.data, &rom, mapper.misc_roms.size) == EXIT_ERROR) {
+			if (rom_mem_ctrl_memcpy_truncated(miscrom_pnt(), &rom, miscrom_size()) == EXIT_ERROR) {
 				info.misc_truncated = TRUE;
 			}
 		}
@@ -578,7 +584,7 @@ void calculate_checksums_from_rom(void *rom_mem) {
 	info.crc32.total = 0;
 
 	// punto oltre l'header
-	if (info.mapper.trainer) {
+	if (miscrom.trainer.in_use) {
 		len = 512;
 		info.crc32.trainer = emu_crc32((void *)(rom->data + position), len);
 		info.crc32.total = info.crc32.trainer;
@@ -632,12 +638,8 @@ void calculate_checksums_from_rom(void *rom_mem) {
 		position += len;
 	}
 
-	if (mapper.misc_roms.size) {
-		len = mapper.misc_roms.size;
-		if ((position + len) > rom->size) {
-			mapper.misc_roms.size = rom->size - position;
-			len = mapper.misc_roms.size;
-		}
+	if (position < rom->size) {
+		len = rom->size - position;
 		info.crc32.misc = emu_crc32((void *)(void *)(rom->data + position), len);
 		info.crc32.total = emu_crc32_continue((void *)(rom->data + position), len, info.crc32.total);
 		position += len;
@@ -647,7 +649,7 @@ void search_in_database(void) {
 	unsigned int i = 0;
 
 	// Nesticle MMC3
-	if ((info.mapper.id == 4) && info.mapper.trainer) {
+	if ((info.mapper.id == 4) && miscrom.trainer.in_use) {
 		info.mapper.id = 100;
 	}
 

@@ -68,7 +68,7 @@ void extcl_cpu_wr_mem_414(WORD address, BYTE value) {
 	chr_fix_414();
 	mirroring_fix_414();
 }
-BYTE extcl_cpu_rd_mem_414(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_414(WORD address, BYTE openbus) {
 	if (address >= 0xC000) {
 		if (!(m414.reg[0] & 0x0100) && (m414.reg[0] & m414tmp.dipswitch)) {
 			return (0xFF);

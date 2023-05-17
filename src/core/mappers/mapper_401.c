@@ -26,15 +26,17 @@
 void prg_swap_mmc3_401(WORD address, WORD value);
 void chr_swap_mmc3_401(WORD address, WORD value);
 
-static BYTE dipswitch_401[] = { 7, 1, 2, 4, 3, 5, 6, 0 };
+INLINE static void tmp_fix_401(BYTE max, BYTE index, const BYTE *ds);
 
 struct _m401 {
 	BYTE index;
 	BYTE reg[4];
 } m401;
 struct _m401tmp {
+	BYTE ds_used;
+	BYTE max;
 	BYTE index;
-	BYTE dipswitch;
+	const BYTE *dipswitch;
 } m401tmp;
 
 void map_init_401(void) {
@@ -60,24 +62,37 @@ void map_init_401(void) {
 	MMC3_prg_swap = prg_swap_mmc3_401;
 	MMC3_chr_swap = chr_swap_mmc3_401;
 
-	if (info.reset == RESET) {
-		m401tmp.index = (m401tmp.index + 1) & 0x07;
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		m401tmp.index = 0;
-	}
-
-	m401tmp.dipswitch = dipswitch_401[m401tmp.index];
-
 	m401.reg[2] = 0x0F;
 
-	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
+	if (info.reset == RESET) {
+		if (m401tmp.ds_used) {
+			m401tmp.index = (m401tmp.index + 1) % m401tmp.max;
+		}
+	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+		if (info.crc32.prg == 0xC4EBED19) { // Super 19-in-1 (VIP19).nes
+			static BYTE ds[] = { 7, 1, 2, 4, 3, 5, 6, 0 };
+
+			tmp_fix_401(LENGTH(ds), 0, &ds[0]);
+		} else if (info.crc32.prg == 0xAF8F7059) { // NTF2 System Cart (U) [!].nes
+			static BYTE ds[] = { 0xFD, 0x03, 0xFE, 0x07 };
+
+			tmp_fix_401(LENGTH(ds), 3, &ds[0]);
+		} else {
+			static BYTE ds[1] = { 0 };
+
+			tmp_fix_401(LENGTH(ds), 0, &ds[0]);
+		}
+	}
+
+	info.mapper.extend_wr = TRUE;
+	info.mapper.extend_rd = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_401(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if ((cpu.prg_ram_wr_active) && !(m401.reg[3] & 0x40)) {
+		if (!(m401.reg[3] & 0x40) && memmap_adr_is_writable(address)) {
 			m401.reg[m401.index] = value;
 			m401.index = (m401.index + 1) & 0x03;
 			MMC3_prg_fix();
@@ -89,10 +104,10 @@ void extcl_cpu_wr_mem_401(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_401(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_401(WORD address, BYTE openbus) {
 	if (address >= 0x8000) {
-		if ((m401tmp.dipswitch & 0x01) && (m401.reg[1] & 0x80)) {
-			return (m401tmp.dipswitch);
+		if ((m401tmp.dipswitch[m401tmp.index] & 0x01) && (m401.reg[1] & 0x80)) {
+			return (m401tmp.dipswitch[m401tmp.index]);
 		}
 	}
 	return (openbus);
@@ -109,8 +124,8 @@ BYTE extcl_save_mapper_401(BYTE mode, BYTE slot, FILE *fp) {
 
 void prg_swap_mmc3_401(WORD address, WORD value) {
 	WORD base = (m401.reg[1] & 0x1F) | (m401.reg[2] & 0x80) |
-		(m401tmp.dipswitch & 0x02 ? m401.reg[2] & 0x20 : (m401.reg[1] & 0x40) >> 1) |
-		(m401tmp.dipswitch & 0x04 ? m401.reg[2] & 0x40 : (m401.reg[1] & 0x20) << 1);
+		(m401tmp.dipswitch[m401tmp.index] & 0x02 ? m401.reg[2] & 0x20 : (m401.reg[1] & 0x40) >> 1) |
+		(m401tmp.dipswitch[m401tmp.index] & 0x04 ? m401.reg[2] & 0x40 : (m401.reg[1] & 0x20) << 1);
 	WORD mask = ~m401.reg[3] & 0x1F;
 
 	prg_swap_MMC3_base(address, (base | (value & mask)));
@@ -120,4 +135,11 @@ void chr_swap_mmc3_401(WORD address, WORD value) {
 	WORD mask = 0xFF >> (~m401.reg[2] & 0x0F);
 
 	chr_swap_MMC3_base(address, (base | (value & mask)));
+}
+
+INLINE static void tmp_fix_401(BYTE max, BYTE index, const BYTE *ds) {
+	m401tmp.ds_used = TRUE;
+	m401tmp.max = max;
+	m401tmp.index = index;
+	m401tmp.dipswitch = ds;
 }

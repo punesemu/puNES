@@ -117,7 +117,7 @@ void extcl_cpu_wr_mem_208(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_208(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_208(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return (address & 0x0800 ? m208.protection.reg[address & 0x0003]: openbus);
 	}

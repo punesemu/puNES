@@ -219,19 +219,9 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 				tick = 1;\
 				break;\
 		}\
-		if (fds.info.enabled) {\
-			if (DMC.address < 0xE000) {\
-				DMC.buffer = prg.ram.data[DMC.address - 0x6000];\
-			} else {\
-				DMC.buffer = prg_byte(DMC.address & 0x1FFF);\
-			}\
-		} else if (nsf.enabled) {\
-			DMC.buffer = nsf_prg_rom_rd(DMC.address);\
-		} else {\
-			DMC.buffer = prg_rom_rd(DMC.address);\
-			if (info.mapper.extend_rd) {\
-				DMC.buffer = extcl_cpu_rd_mem(DMC.address, DMC.buffer, 0);\
-			}\
+		DMC.buffer = prgrom_rd(DMC.address);\
+		if (!fds.info.enabled && info.mapper.extend_rd) {\
+			DMC.buffer = extcl_cpu_rd_mem(DMC.address, DMC.buffer);\
 		}\
 		if (cfg->reverse_bits_dpcm) DMC.buffer = dmc_reverse_buffer_bits[DMC.buffer];\
 		/* incremento gli hwtick da compiere */\

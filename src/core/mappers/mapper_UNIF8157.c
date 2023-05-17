@@ -55,7 +55,7 @@ void extcl_cpu_wr_mem_UNIF8157(WORD address, BYTE value) {
 	unif8157.reg = address;
 	unif8157_update(value);
 }
-BYTE extcl_cpu_rd_mem_UNIF8157(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_UNIF8157(WORD address, BYTE openbus) {
 	if (address >= 0x8000) {
 		if ((unif8157.reg & 0x0100) && (prg_chip_size(0) < (1024 * 1024))) {
 			address = (address & 0xFFF0) + unif8157tmp.reset;

@@ -24,7 +24,7 @@
 void map_init_547(void);
 void extcl_after_mapper_init_547(void);
 void extcl_cpu_wr_mem_547(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_547(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_547(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_547(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_547(void);
 BYTE extcl_wr_nmt_547(WORD address, BYTE value);

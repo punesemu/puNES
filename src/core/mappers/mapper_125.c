@@ -53,17 +53,17 @@ void extcl_cpu_wr_mem_125(WORD address, BYTE value) {
 			return;
 		case 0xC000:
 		case 0xD000:
-			wram.data[address & 0x1FFF] = value;
+			wram_byte(address & 0x1FFF) = value;
 			return;
 		default:
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_125(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_125(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0xC000:
 		case 0xD000:
-			return (wram.data[address & 0x1FFF]);
+			return (wram_byte(address & 0x1FFF));
 		default:
 			return (openbus);
 	}
@@ -100,5 +100,5 @@ INLINE static void prg_fix_125(void) {
 	map_prg_rom_8k_update();
 }
 INLINE static void wram_fix_125(void) {
-	wram_map_prg_rom_8k(0x6000, m125.reg);
+	memmap_prgrom_8k(0x6000, m125.reg);
 }

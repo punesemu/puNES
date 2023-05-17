@@ -50,7 +50,7 @@ void map_init_543(void) {
 	// per far avviare 1996 無敵智カ卡 5-in-1 (CH-501).nes
 	mmc1.reg[3] = 0x0E;
 
-//	if (prg_wram_nvram_size() < (64 * 1024)) {
+//	if (wram_nvram_size() < (64 * 1024)) {
 //		wram_set_nvram_size(64 * 1024);
 //	}
 

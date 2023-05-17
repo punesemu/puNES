@@ -23,7 +23,7 @@
 
 void map_init_Rexdbz(void);
 void extcl_cpu_wr_mem_Rexdbz(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_Rexdbz(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_Rexdbz(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_Rexdbz(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_REX_H_ */

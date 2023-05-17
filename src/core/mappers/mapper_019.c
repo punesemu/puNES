@@ -163,7 +163,7 @@ void extcl_cpu_wr_mem_019(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_019(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_019(WORD address, BYTE openbus) {
 	switch (address & 0xF800) {
 		case 0x4800:
 			openbus = m019tmp.ram[m019.snd.adr];
@@ -232,7 +232,7 @@ void extcl_apu_tick_019(void) {
 	}
 }
 void extcl_battery_io_019(BYTE mode, FILE *fp) {
-	if (wram.battery_present) {
+	if (wram.battery.in_use) {
 		if (mode == WR_BAT) {
 			if (fwrite(m019tmp.ram, sizeof(m019tmp.ram), 1, fp) < 1) {
 				log_error(uL("mapper_019;error on write 128 bytes ram"));
@@ -295,10 +295,10 @@ INLINE static void chr_swap_019(WORD address, WORD value, BYTE force_chrom) {
 	}
 }
 INLINE static void wram_fix_019(void) {
-	wram_map_auto_wp_2k(0x6000, 0, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 0))) == 0x40));
-	wram_map_auto_wp_2k(0x6800, 1, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 1))) == 0x40));
-	wram_map_auto_wp_2k(0x7000, 2, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 2))) == 0x40));
-	wram_map_auto_wp_2k(0x7800, 3, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 3))) == 0x40));
+	memmap_auto_wp_2k(0x6000, 0, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 0))) == 0x40));
+	memmap_auto_wp_2k(0x6800, 1, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 1))) == 0x40));
+	memmap_auto_wp_2k(0x7000, 2, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 2))) == 0x40));
+	memmap_auto_wp_2k(0x7800, 3, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 3))) == 0x40));
 }
 INLINE static void mirroring_fix_019(void) {
 	nmt_swap_019(0, m019.nmt[0]);

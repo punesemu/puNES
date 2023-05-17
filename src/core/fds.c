@@ -166,9 +166,7 @@ BYTE fds_load_rom(void) {
 	fds.info.enabled = TRUE;
 
 	// Prg Ram
-	if (map_prg_ram_malloc(0x8000) != EXIT_OK) {
-		return (EXIT_ERROR);
-	}
+	wram_set_ram_size(0x8000);
 
 	info.mapper.id = FDS_MAPPER;
 	info.machine[HEADER] = NTSC;
@@ -230,12 +228,14 @@ BYTE fds_load_bios(void) {
 	return (EXIT_ERROR);
 
 	fds_load_bios_founded:
-	if (map_prg_malloc(0x2000, 0x00, TRUE) == EXIT_ERROR) {
+	prgrom_set_size(0x2000);
+
+	if (prgrom_init(0x00) == EXIT_ERROR) {
 		fclose(bios);
 		return (EXIT_ERROR);
 	}
 
-	if (fread(prg_rom(), prg_size(), 1, bios) < 1) {
+	if (fread(prgrom_pnt(), prgrom_size(), 1, bios) < 1) {
 		log_error(uL("FDS;error on reading bios"));
 	}
 

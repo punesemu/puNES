@@ -227,7 +227,7 @@ void extcl_cpu_wr_mem_446(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_446(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_446(WORD address, BYTE openbus) {
 	if (address >= 0x8000) {
 		return (sst39sf040_read(address));
 	}
@@ -536,7 +536,7 @@ INLINE static void chr_fix_nrom_446(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_nrom_446(void) {
-	wram_map_auto_wp_8k(0x6000, 0, FALSE, FALSE);
+	memmap_auto_wp_8k(0x6000, 0, FALSE, FALSE);
 }
 INLINE static void mirroring_fix_nrom_446(void) {
 	if (m446.reg[4] & 0x01) {
@@ -584,7 +584,7 @@ INLINE static void chr_fix_cnrom_446(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_cnrom_446(void) {
-	wram_map_auto_wp_8k(0x6000, 0, FALSE, FALSE);
+	memmap_auto_wp_8k(0x6000, 0, FALSE, FALSE);
 }
 INLINE static void mirroring_fix_cnrom_446(void) {
 	if (m446.reg[4] & 0x01) {
@@ -624,7 +624,7 @@ INLINE static void chr_fix_unrom_446(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_unrom_446(void) {
-	wram_map_auto_wp_8k(0x6000, 0, FALSE, FALSE);
+	memmap_auto_wp_8k(0x6000, 0, FALSE, FALSE);
 }
 INLINE static void mirroring_fix_unrom_446(void) {
 	if (m446.reg[4] & 0x01) {
@@ -664,7 +664,7 @@ INLINE static void chr_fix_bandai_446(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_bandai_446(void) {
-	wram_map_auto_wp_8k(0x6000, 0, FALSE, FALSE);
+	memmap_auto_wp_8k(0x6000, 0, FALSE, FALSE);
 }
 INLINE static void mirroring_fix_bandai_446(void) {
 	if (m446.latch & 0x10) {
@@ -700,7 +700,7 @@ INLINE static void chr_fix_anrom_446(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_anrom_446(void) {
-	wram_map_auto_wp_8k(0x6000, 0, FALSE, FALSE);
+	memmap_auto_wp_8k(0x6000, 0, FALSE, FALSE);
 }
 INLINE static void mirroring_fix_anrom_446(void) {
 	if (m446.reg[4] & 0x01) {
@@ -736,7 +736,7 @@ INLINE static void chr_fix_gnrom_446(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_gnrom_446(void) {
-	wram_map_auto_wp_8k(0x6000, 0, FALSE, FALSE);
+	memmap_auto_wp_8k(0x6000, 0, FALSE, FALSE);
 }
 INLINE static void mirroring_fix_gnrom_446(void) {
 	if (m446.reg[4] & 0x01) {

@@ -255,7 +255,7 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, cpu.opcode);
 	save_slot_ele(mode, slot, cpu.opcode_PC);
 	save_slot_ele(mode, slot, cpu.odd_cycle);
-	save_slot_ele(mode, slot, cpu.openbus);
+	save_slot_ele(mode, slot, cpu.openbus.actual);
 	save_slot_ele(mode, slot, cpu.cycles);
 	save_slot_ele(mode, slot, cpu.opcode_cycle);
 	save_slot_ele(mode, slot, cpu.double_rd);
@@ -449,8 +449,8 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 
 	// mem map
 	save_slot_ele(mode, slot, mmcpu.ram);
-	save_slot_mem(mode, slot, prg.ram.data, prg.ram.size, FALSE);
 #if defined WRAM_OLD_HANDLER
+	save_slot_mem(mode, slot, prg.ram.data, prg.ram.size, FALSE);
 	if (mode == SAVE_SLOT_READ) {
 		save_slot_int(mode, slot, tmp);
 		if (tmp > TRUE) {
@@ -490,13 +490,13 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 			return (EXIT_ERROR);
 		}
 		if (tmp) {
-			save_slot_mem(mode, slot, wram.data, prg_wram_size(), FALSE);
+			save_slot_mem(mode, slot, wram_pnt(), wram_size(), FALSE);
 		}
 	} else {
-		if (prg_wram_size()) {
+		if (wram_size()) {
 			tmp = TRUE;
 			save_slot_int(mode, slot, tmp);
-			save_slot_mem(mode, slot, wram.data, prg_wram_size(), FALSE);
+			save_slot_mem(mode, slot, wram_pnt(), wram_size(), FALSE);
 		} else {
 			tmp = FALSE;
 			save_slot_int(mode, slot, tmp);

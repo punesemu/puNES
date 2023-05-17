@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "mem_map.h"
 #include "info.h"
 #include "mappers.h"
@@ -31,16 +30,11 @@ struct _m347 {
 } m347;
 struct _m347tmp {
 	BYTE old_mask_rom;
-	BYTE *prg_B800;
-	BYTE *prg_C000;
-	BYTE *prg_CC00;
-	BYTE *prg_8000;
 } m347tmp;
 
 void map_init_347(void) {
 	EXTCL_AFTER_MAPPER_INIT(347);
 	EXTCL_CPU_WR_MEM(347);
-	EXTCL_CPU_RD_MEM(347);
 	EXTCL_SAVE_MAPPER(347);
 	mapper.internal_struct[0] = (BYTE *)&m347;
 	mapper.internal_struct_size[0] = sizeof(m347);
@@ -67,15 +61,13 @@ void map_init_347(void) {
 		//    the final 32 KiB mapped to CPU $8000-$FFFF except where replaced by RAM and the switchable PRG-ROM bank.
 		m347tmp.old_mask_rom = FALSE;
 	}
-
-	info.mapper.extend_rd = TRUE;
 }
 void extcl_after_mapper_init_347(void) {
 	prg_fix_347();
 	wram_fix_347();
 	mirroring_fix_347();
 }
-void extcl_cpu_wr_mem_347(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_347(WORD address, UNUSED(BYTE value)) {
 	switch (address & 0xFC00) {
 		case 0x8000:
 		case 0x8400:
@@ -94,37 +86,8 @@ void extcl_cpu_wr_mem_347(WORD address, BYTE value) {
 			prg_fix_347();
 			wram_fix_347();
 			break;
-		case 0xB800:
-		case 0xBC00:
-			m347tmp.prg_B800[address - 0xB800] = value;
-			break;
-		case 0xCC00:
-		case 0xD000:
-		case 0xD400:
-			m347tmp.prg_CC00[address - 0xCC00] = value;
-			break;
 		default:
 			break;
-	}
-}
-BYTE extcl_cpu_rd_mem_347(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	switch (address & 0xFC00) {
-		case 0xB800:
-		case 0xBC00:
-			return (m347tmp.prg_B800[address - 0xB800]);
-		case 0xC000:
-		case 0xC400:
-		case 0xC800:
-			return (m347tmp.prg_C000[address - 0xC000]);
-		case 0xCC00:
-		case 0xD000:
-		case 0xD400:
-			return (m347tmp.prg_CC00[address - 0xCC00]);
-		default:
-			if (address < 0x8000) {
-				return (openbus);
-			}
-			return (m347tmp.prg_8000[address - 0x8000]);
 	}
 }
 BYTE extcl_save_mapper_347(BYTE mode, BYTE slot, FILE *fp) {
@@ -139,24 +102,22 @@ BYTE extcl_save_mapper_347(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_347(void) {
-	if (m347tmp.old_mask_rom) {
-		m347tmp.prg_B800 = &wram.data[0x0C00];
-		m347tmp.prg_C000 = prg_pnt(((m347.reg[1] & 0x000F) * 0x1000) + 0x08400);
-		m347tmp.prg_CC00 = &wram.data[0x1400];
-		m347tmp.prg_8000 = prg_pnt(0x18000);
-	} else {
-		m347tmp.prg_B800 = &wram.data[0x0C00];
-		m347tmp.prg_C000 = prg_pnt(((m347.reg[1] & 0x000F) * 0x1000) + 0x00000);
-		m347tmp.prg_CC00 = &wram.data[0x1400];
-		m347tmp.prg_8000 = prg_pnt(0x18000);
-	}
+	DBWORD chunkc0 = m347tmp.old_mask_rom
+		? (((m347.reg[1] & 0x000F) * 0x1000) + 0x08400)
+		: (((m347.reg[1] & 0x000F) * 0x1000) + 0x00000);
+
+	memmap_auto_custom_size(0x8000, prgrom_calc_chunk(0x18000), (0x400 * 14));
+	memmap_wram_custom_size(0xB800, wram_calc_chunk(0xC00), (0x400 * 2));
+	memmap_auto_custom_size(0xC000, prgrom_calc_chunk(chunkc0), (0x400 * 3));
+	memmap_wram_custom_size(0xCC00, wram_calc_chunk(0x1400), (0x400 * 3));
 }
 INLINE static void wram_fix_347(void) {
-	wram_map_auto_1k(0x6000, 0);
-	wram_map_auto_1k(0x6400, 1);
-	wram_map_auto_1k(0x6800, 2);
-	wram_map_prg_rom_1k(0x6C00, (((m347.reg[1] & 0x000F) * 0x1000) + (m347tmp.old_mask_rom ? 0x08000 : 0x00C00)) / 0x0400);
-	wram_map_prg_rom_4k(0x7000, (((m347.reg[0] & 0x0007) * 0x1000) + (m347tmp.old_mask_rom ? 0x00000 : 0x10000)) / 0x1000);
+	DBWORD chunk6c = (((m347.reg[1] & 0x000F) * 0x1000) + (m347tmp.old_mask_rom ? 0x08000 : 0x00C00));
+	DBWORD chunk70 = (((m347.reg[0] & 0x0007) * 0x1000) + (m347tmp.old_mask_rom ? 0x00000 : 0x10000));
+
+	memmap_auto_custom_size(0x6000, wram_calc_chunk(0), (0x400 * 3));
+	memmap_prgrom_custom_size(0x6C00, prgrom_calc_chunk(chunk6c), 0x400);
+	memmap_prgrom_custom_size(0x7000, prgrom_calc_chunk(chunk70), 0x1000);
 }
 INLINE static void mirroring_fix_347(void) {
 	if (m347.reg[0] & 0x0008) {

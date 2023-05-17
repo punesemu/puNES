@@ -44,7 +44,7 @@ void map_init_558(void) {
 
 	memset(&m558, 0x00, sizeof(m558));
 
-	m558tmp.cc93c66 = prg_wram_nvram_size() == 512;
+	m558tmp.cc93c66 = wram_nvram_size() == 512;
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -55,7 +55,7 @@ void extcl_after_mapper_init_558(void) {
 void extcl_cpu_init_pc_558(void) {
 	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
 		if (m558tmp.cc93c66) {
-			ee93cx6_init(prg_wram_nvram_pnt(), prg_wram_nvram_size(), 8);
+			ee93cx6_init(wram_nvram_pnt(), wram_nvram_size(), 8);
 		}
 	}
 }
@@ -102,7 +102,7 @@ void extcl_cpu_wr_mem_558(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_558(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_558(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x5000:
 			if (m558tmp.cc93c66) {
@@ -130,12 +130,12 @@ INLINE static void prg_fix_558(void) {
 }
 INLINE static void wram_fix_558(void) {
 	if (m558tmp.cc93c66) {
-		if (prg_wram_ram_size()) {
-			wram_map_ram_wp_8k(0x6000, 0, TRUE, TRUE);
+		if (wram_ram_size()) {
+			memmap_wram_ram_wp_8k(0x6000, 0, TRUE, TRUE);
 		} else {
-			wram_map_disable_8k(0x6000);
+			memmap_disable_8k(0x6000);
 		}
 	} else {
-		wram_map_auto_8k(0x6000, 0);
+		memmap_auto_8k(0x6000, 0);
 	}
 }

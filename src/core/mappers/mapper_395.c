@@ -59,7 +59,7 @@ void map_init_395(void) {
 }
 void extcl_cpu_wr_mem_395(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active && !(m395.reg[1] & 0x80)) {
+		if (!(m395.reg[1] & 0x80) && memmap_adr_is_writable(address)) {
 			const BYTE index = (address & 0x0010) >> 4;
 
 			m395.reg[index] = value;

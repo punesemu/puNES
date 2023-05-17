@@ -94,6 +94,7 @@ set(core_srcs
 	core/mappers/mapper_010.c
 	core/mappers/mapper_014.c
 	core/mappers/mapper_015.c
+	core/mappers/mapper_018.c
 	core/mappers/mapper_019.c
 	core/mappers/mapper_021.c
 	core/mappers/mapper_022.c
@@ -119,6 +120,8 @@ set(core_srcs
 	core/mappers/mapper_051.c
 	core/mappers/mapper_052.c
 	core/mappers/mapper_053.c
+	core/mappers/mapper_055.c
+	core/mappers/mapper_056.c
 	core/mappers/mapper_057.c
 	core/mappers/mapper_058.c
 	core/mappers/mapper_059.c
@@ -135,6 +138,7 @@ set(core_srcs
 	core/mappers/mapper_081.c
 	core/mappers/mapper_083.c
 	core/mappers/mapper_085.c
+	core/mappers/mapper_087.c
 	core/mappers/mapper_088.c
 	core/mappers/mapper_089.c
 	core/mappers/mapper_091.c
@@ -157,6 +161,7 @@ set(core_srcs
 	core/mappers/mapper_123.c
 	core/mappers/mapper_125.c
 	core/mappers/mapper_126.c
+	core/mappers/mapper_142.c
 	core/mappers/mapper_134.c
 	core/mappers/mapper_152.c
 	core/mappers/mapper_154.c
@@ -167,6 +172,8 @@ set(core_srcs
 	core/mappers/mapper_166.c
 	core/mappers/mapper_167.c
 	core/mappers/mapper_168.c
+	core/mappers/mapper_171.c
+	core/mappers/mapper_175.c
 	core/mappers/mapper_176.c
 	core/mappers/mapper_178.c
 	core/mappers/mapper_182.c
@@ -207,6 +214,7 @@ set(core_srcs
 	core/mappers/mapper_225.c
 	core/mappers/mapper_226.c
 	core/mappers/mapper_227.c
+	core/mappers/mapper_228.c
 	core/mappers/mapper_229.c
 	core/mappers/mapper_230.c
 	core/mappers/mapper_231.c
@@ -233,6 +241,8 @@ set(core_srcs
 	core/mappers/mapper_269.c
 	core/mappers/mapper_271.c
 	core/mappers/mapper_274.c
+	core/mappers/mapper_283.c
+	core/mappers/mapper_284.c
 	core/mappers/mapper_287.c
 	core/mappers/mapper_288.c
 	core/mappers/mapper_289.c
@@ -243,6 +253,9 @@ set(core_srcs
 	core/mappers/mapper_299.c
 	core/mappers/mapper_300.c
 	core/mappers/mapper_302.c
+	core/mappers/mapper_304.c
+	core/mappers/mapper_305.c
+	core/mappers/mapper_306.c
 	core/mappers/mapper_307.c
 	core/mappers/mapper_308.c
 	core/mappers/mapper_311.c
@@ -262,6 +275,7 @@ set(core_srcs
 	core/mappers/mapper_345.c
 	core/mappers/mapper_347.c
 	core/mappers/mapper_348.c
+	core/mappers/mapper_350.c
 	core/mappers/mapper_351.c
 	core/mappers/mapper_353.c
 	core/mappers/mapper_355.c
@@ -345,9 +359,7 @@ set(core_srcs
 	core/mappers/mapper_558.c
 	core/mappers/mapper_559.c
 	core/mappers/mapper_560.c
-	core/mappers/mapper_891227.c
 	core/mappers/mapper_A65AS.c
-	core/mappers/mapper_Active.c
 	core/mappers/mapper_Agci.c
 	core/mappers/mapper_Ave.c
 	core/mappers/mapper_AxROM.c
@@ -373,14 +385,12 @@ set(core_srcs
 	core/mappers/mapper_CPROM.c
 	core/mappers/mapper_CTC09.c
 	core/mappers/mapper_DREAMTECH01.c
-	core/mappers/mapper_DRIPGAME.c
 	core/mappers/mapper_EH8813A.c
 	core/mappers/mapper_FARIDUNROM8IN1.c
 	core/mappers/mapper_FDS.c
 	core/mappers/mapper_FFESMC.c
 	core/mappers/mapper_FS304.c
 	core/mappers/mapper_GameGenie.c
-	core/mappers/mapper_GS_20xx.c
 	core/mappers/mapper_GxROM.c
 	core/mappers/mapper_Hen.c
 	core/mappers/mapper_Hes.c
@@ -390,18 +400,13 @@ set(core_srcs
 	core/mappers/mapper_K3036.c
 	core/mappers/mapper_K3046.c
 	core/mappers/mapper_K3071.c
-	core/mappers/mapper_Kaiser.c
 	core/mappers/mapper_KS106C.c
 	core/mappers/mapper_KS7012.c
 	core/mappers/mapper_KS7013B.c
-	core/mappers/mapper_KS7016.c
 	core/mappers/mapper_KS7017.c
 	core/mappers/mapper_KS7021A.c
-	core/mappers/mapper_KS7031.c
-	core/mappers/mapper_KS7032.c
 	core/mappers/mapper_LH51.c
 	core/mappers/mapper_Magic.c
-	core/mappers/mapper_Malee.c
 	core/mappers/mapper_MMC3_old.c
 	core/mappers/mapper_MMC5.c
 	core/mappers/mapper_NSF.c
@@ -420,7 +425,6 @@ set(core_srcs
 	core/mappers/mapper_Txc.c
 	core/mappers/mapper_TxROM.c
 	core/mappers/mapper_UNIF8157.c
-	core/mappers/mapper_UNIFSMB2J.c
 	core/mappers/mapper_UxROM.c
 	core/mappers/mapper_VRC1.c
 	core/mappers/mapper_VRC3.c
@@ -430,6 +434,7 @@ set(core_srcs
 
 	core/mappers/EE93Cx6.c
 	core/mappers/FME7.c
+	core/mappers/KS202.c
 	core/mappers/N118.c
 	core/mappers/MMC1.c
 	core/mappers/MMC2.c
@@ -487,7 +492,7 @@ set(core_srcs
 
 
 	#core/ramplusold.c
-	core/wram.c
+	core/memmap.c
 	)
 
 set(extra_srcs

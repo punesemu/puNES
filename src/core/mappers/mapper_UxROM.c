@@ -159,7 +159,7 @@ void extcl_cpu_wr_mem_UNROM512(UNUSED(WORD address), BYTE value) {
 		sst39sf040_write(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_UNROM512(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_UNROM512(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x8000:
 		case 0x9000:

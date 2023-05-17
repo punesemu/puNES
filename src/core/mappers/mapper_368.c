@@ -68,7 +68,7 @@ void extcl_cpu_wr_mem_368(WORD address, BYTE value) {
 				break;
 		}
 }
-BYTE extcl_cpu_rd_mem_368(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_368(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x4000:
 			return ((address & 0x01FF) == 0x0122 ? 0x8A | (m368.reg[1] & 0x35) : openbus);
@@ -129,5 +129,5 @@ INLINE static void prg_fix_368(void) {
 }
 
 INLINE static void wram_fix_368(void) {
-	wram_map_prg_rom_8k(0x6000, 0x02);
+	memmap_prgrom_8k(0x6000, 0x02);
 }

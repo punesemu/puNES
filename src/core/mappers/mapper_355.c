@@ -17,12 +17,13 @@
  */
 
 #include <string.h>
-#include "mem_map.h"
 #include "info.h"
 #include "mappers.h"
 #include "cpu.h"
 #include "save_slot.h"
 #include "../../c++/pic16c5x/pic16c5x.h"
+
+INLINE static void prg_fix_355(void);
 
 uint8_t pic16c5x_rd(int port);
 void pic16c5x_wr(int port, int val);
@@ -165,6 +166,7 @@ struct _m355 {
 } m355;
 
 void map_init_355(void) {
+	//EXTCL_AFTER_MAPPER_INIT(355);
 	EXTCL_MAPPER_QUIT(355);
 	EXTCL_CPU_WR_MEM(355);
 	EXTCL_CPU_RD_MEM(355);
@@ -178,8 +180,8 @@ void map_init_355(void) {
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		BYTE *eprom = NULL;
 
-		if ((info.mapper.misc_roms == 1) & (mapper.misc_roms.size == 1024)) {
-			eprom = mapper.misc_roms.data;
+		if ((miscrom.chips == 1) & (miscrom_size() == 1024)) {
+			eprom = miscrom_pnt();
 		} else {
 			if (info.crc32.prg == 0x86DBA660) { // 3D Block (Hwang Shinwei) [!].nes
 				eprom = &eprom_3d_block[0];
@@ -199,7 +201,11 @@ void map_init_355(void) {
 
 	pic16c5x_reset(info.reset);
 
-	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
+	info.mapper.extend_wr = TRUE;
+	info.mapper.extend_rd = TRUE;
+}
+void extcl_after_mapper_init_355(void) {
+	prg_fix_355();
 }
 void extcl_mapper_quit_355(void) {
 	pic16c5x_quit();
@@ -207,7 +213,7 @@ void extcl_mapper_quit_355(void) {
 void extcl_cpu_wr_mem_355(WORD address, UNUSED(BYTE value)) {
 	m355.address = address;
 }
-BYTE extcl_cpu_rd_mem_355(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_355(WORD address, BYTE openbus) {
 	m355.address = address;
 	return (openbus);
 }
@@ -219,6 +225,10 @@ BYTE extcl_save_mapper_355(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_355(void) {
 	pic16c5x_run();
+}
+
+INLINE static void prg_fix_355(void) {
+	memmap_auto_32k(0x8000, 0);
 }
 
 uint8_t pic16c5x_rd(int port) {

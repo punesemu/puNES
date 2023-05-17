@@ -23,6 +23,6 @@
 
 void map_init_212(void);
 void extcl_cpu_wr_mem_212(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_212(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_212(WORD address, BYTE openbus);
 
 #endif /* MAPPER_212_H_ */

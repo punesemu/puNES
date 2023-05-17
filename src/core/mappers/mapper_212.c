@@ -66,7 +66,7 @@ void extcl_cpu_wr_mem_212(WORD address, BYTE value) {
 		mirroring_V();
 	}
 }
-BYTE extcl_cpu_rd_mem_212(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_212(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return (openbus | ((address & 0x10)? 0x00: 0x80));
 	}

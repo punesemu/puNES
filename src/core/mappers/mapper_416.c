@@ -24,6 +24,7 @@
 
 INLINE static void prg_fix_416(void);
 INLINE static void chr_fix_416(void);
+INLINE static void wram_fix_416(void);
 INLINE static void mirroring_fix_416(void);
 
 struct _m416 {
@@ -33,14 +34,10 @@ struct _m416 {
 		WORD counter;
 	} irq;
 } m416;
-struct _m416tmp {
-	BYTE *prg_6000;
-} m416tmp;
 
 void map_init_416(void) {
 	EXTCL_AFTER_MAPPER_INIT(416);
 	EXTCL_CPU_WR_MEM(416);
-	EXTCL_CPU_RD_MEM(416);
 	EXTCL_SAVE_MAPPER(416);
 	EXTCL_CPU_EVERY_CYCLE(416);
 	mapper.internal_struct[0] = (BYTE *)&m416;
@@ -54,11 +51,12 @@ void map_init_416(void) {
 		m416.irq.counter = 0;
 	}
 
-	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
+	info.mapper.extend_wr = TRUE;
 }
 void extcl_after_mapper_init_416(void) {
 	prg_fix_416();
 	chr_fix_416();
+	wram_fix_416();
 	mirroring_fix_416();
 }
 void extcl_cpu_wr_mem_416(WORD address, BYTE value) {
@@ -83,12 +81,6 @@ void extcl_cpu_wr_mem_416(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_416(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (m416tmp.prg_6000[address & 0x1FFF]);
-	}
-	return (openbus);
-}
 BYTE extcl_save_mapper_416(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m416.reg);
 	save_slot_ele(mode, slot, m416.irq.enable);
@@ -112,48 +104,30 @@ void extcl_cpu_every_cycle_416(void) {
 INLINE static void prg_fix_416(void) {
 	WORD bank;
 
-	bank = 0x07;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	m416tmp.prg_6000 = prg_pnt(bank << 13);
-
 	if (m416.reg[1] & 0x08) {
 		bank = ((m416.reg[1] & 0x08) >> 1) | ((m416.reg[1] & 0x80) >> 6) | ((m416.reg[1] & 0x20) >> 5);
-
 		if (m416.reg[1] & 0x80) {
-			bank >>= 1;
-			_control_bank(bank, info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, bank);
+			memmap_auto_32k(0x8000, (bank >> 1));
 		} else if (m416.reg[1] & 0x40) {
-			_control_bank(bank, info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, bank);
-			map_prg_rom_8k(2, 2, bank);
+			memmap_auto_16k(0x8000, bank);
+			memmap_auto_16k(0xC000, bank);
 		} else {
 			bank <<= 1;
-			_control_bank(bank, info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 0, bank);
-			map_prg_rom_8k(1, 1, bank);
-			map_prg_rom_8k(1, 2, bank);
-			map_prg_rom_8k(1, 3, bank);
+			memmap_auto_8k(0x8000, bank);
+			memmap_auto_8k(0xA000, bank);
+			memmap_auto_8k(0xC000, bank);
+			memmap_auto_8k(0xE000, bank);
 		}
 	} else {
-		bank = 0;
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 0, bank);
-
-		bank = 1;
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 1, bank);
-
 		bank = (m416.reg[0] & 0x08) | ((m416.reg[0] & 0x01) << 2) | ((m416.reg[0] & 0x06) >> 1);
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 2, bank);
-
-		bank = 3;
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 3, bank);
+		memmap_auto_8k(0x8000, 0);
+		memmap_auto_8k(0xA000, 1);
+		memmap_auto_8k(0xC000, bank);
+		memmap_auto_8k(0xE000, 3);
 	}
-
-	map_prg_rom_8k_update();
+}
+INLINE static void wram_fix_416(void) {
+	memmap_prgrom_8k(0x6000, 0x07);
 }
 INLINE static void chr_fix_416(void) {
 	DBWORD bank;

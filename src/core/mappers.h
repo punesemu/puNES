@@ -22,8 +22,8 @@
 #include "common.h"
 
 
-//#include "ramplusold.h"
-#include "wram.h"
+#include "ramplusold.h"
+#include "memmap.h"
 
 
 
@@ -43,6 +43,7 @@
 #include "mappers/mapper_010.h"
 #include "mappers/mapper_014.h"
 #include "mappers/mapper_015.h"
+#include "mappers/mapper_018.h"
 #include "mappers/mapper_019.h"
 #include "mappers/mapper_021.h"
 #include "mappers/mapper_022.h"
@@ -68,6 +69,8 @@
 #include "mappers/mapper_051.h"
 #include "mappers/mapper_052.h"
 #include "mappers/mapper_053.h"
+#include "mappers/mapper_055.h"
+#include "mappers/mapper_056.h"
 #include "mappers/mapper_057.h"
 #include "mappers/mapper_058.h"
 #include "mappers/mapper_059.h"
@@ -84,6 +87,7 @@
 #include "mappers/mapper_081.h"
 #include "mappers/mapper_083.h"
 #include "mappers/mapper_085.h"
+#include "mappers/mapper_087.h"
 #include "mappers/mapper_088.h"
 #include "mappers/mapper_089.h"
 #include "mappers/mapper_091.h"
@@ -107,6 +111,7 @@
 #include "mappers/mapper_125.h"
 #include "mappers/mapper_126.h"
 #include "mappers/mapper_134.h"
+#include "mappers/mapper_142.h"
 #include "mappers/mapper_152.h"
 #include "mappers/mapper_154.h"
 #include "mappers/mapper_156.h"
@@ -116,6 +121,8 @@
 #include "mappers/mapper_166.h"
 #include "mappers/mapper_167.h"
 #include "mappers/mapper_168.h"
+#include "mappers/mapper_171.h"
+#include "mappers/mapper_175.h"
 #include "mappers/mapper_176.h"
 #include "mappers/mapper_178.h"
 #include "mappers/mapper_182.h"
@@ -156,6 +163,7 @@
 #include "mappers/mapper_225.h"
 #include "mappers/mapper_226.h"
 #include "mappers/mapper_227.h"
+#include "mappers/mapper_228.h"
 #include "mappers/mapper_229.h"
 #include "mappers/mapper_230.h"
 #include "mappers/mapper_231.h"
@@ -182,6 +190,8 @@
 #include "mappers/mapper_269.h"
 #include "mappers/mapper_271.h"
 #include "mappers/mapper_274.h"
+#include "mappers/mapper_283.h"
+#include "mappers/mapper_284.h"
 #include "mappers/mapper_287.h"
 #include "mappers/mapper_288.h"
 #include "mappers/mapper_289.h"
@@ -192,6 +202,9 @@
 #include "mappers/mapper_299.h"
 #include "mappers/mapper_300.h"
 #include "mappers/mapper_302.h"
+#include "mappers/mapper_304.h"
+#include "mappers/mapper_305.h"
+#include "mappers/mapper_306.h"
 #include "mappers/mapper_307.h"
 #include "mappers/mapper_308.h"
 #include "mappers/mapper_311.h"
@@ -211,6 +224,7 @@
 #include "mappers/mapper_345.h"
 #include "mappers/mapper_347.h"
 #include "mappers/mapper_348.h"
+#include "mappers/mapper_350.h"
 #include "mappers/mapper_351.h"
 #include "mappers/mapper_353.h"
 #include "mappers/mapper_355.h"
@@ -294,7 +308,6 @@
 #include "mappers/mapper_558.h"
 #include "mappers/mapper_559.h"
 #include "mappers/mapper_560.h"
-#include "mappers/mapper_Active.h"
 #include "mappers/mapper_Agci.h"
 #include "mappers/mapper_Ave.h"
 #include "mappers/mapper_AxROM.h"
@@ -316,7 +329,6 @@
 #include "mappers/mapper_Irem.h"
 #include "mappers/mapper_Jaleco.h"
 #include "mappers/mapper_JYASIC.h"
-#include "mappers/mapper_Kaiser.h"
 #include "mappers/mapper_Magic.h"
 #include "mappers/mapper_MMC3_old.h"
 #include "mappers/mapper_MMC5.h"
@@ -334,7 +346,6 @@
 #include "mappers/mapper_VRC3.h"
 #include "mappers/mapper_Vs.h"
 // UNIF
-#include "mappers/mapper_891227.h"
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_BJ56.h"
 #include "mappers/mapper_BMC64IN1NOREPEAT.h"
@@ -350,34 +361,28 @@
 #include "mappers/mapper_Coolgirl.h"
 #include "mappers/mapper_CTC09.h"
 #include "mappers/mapper_DREAMTECH01.h"
-#include "mappers/mapper_DRIPGAME.h"
 #include "mappers/mapper_EH8813A.h"
 #include "mappers/mapper_FARIDUNROM8IN1.h"
-#include "mappers/mapper_GS_20xx.h"
 #include "mappers/mapper_K3036.h"
 #include "mappers/mapper_K3046.h"
 #include "mappers/mapper_K3071.h"
 #include "mappers/mapper_KS106C.h"
 #include "mappers/mapper_KS7012.h"
 #include "mappers/mapper_KS7013B.h"
-#include "mappers/mapper_KS7016.h"
 #include "mappers/mapper_KS7017.h"
 #include "mappers/mapper_KS7021A.h"
-#include "mappers/mapper_KS7031.h"
-#include "mappers/mapper_KS7032.h"
 #include "mappers/mapper_LH51.h"
-#include "mappers/mapper_Malee.h"
 #include "mappers/mapper_RESETNROMXIN1.h"
 #include "mappers/mapper_RT_01.h"
 #include "mappers/mapper_SA005A.h"
 #include "mappers/mapper_T262.h"
 #include "mappers/mapper_TJ03.h"
 #include "mappers/mapper_UNIF8157.h"
-#include "mappers/mapper_UNIFSMB2J.h"
 #include "mappers/mapper_WS.h"
 #include "mappers/mapper_YOKO.h"
 
 #include "mappers/FME7.h"
+#include "mappers/KS202.h"
 #include "mappers/MMC1.h"
 #include "mappers/MMC2.h"
 #include "mappers/MMC3.h"
@@ -392,7 +397,6 @@
 #define control_bank(max) _control_bank(value, max)
 #define _control_bank_with_AND(val, mask, max) (val) &= (mask); _control_bank(val, max)
 #define control_bank_with_AND(mask, max) _control_bank_with_AND(value, mask, max)
-#define prg_rom_rd(address) prg.rom_8k[((address) >> 13) & 0x03][(address) & 0x1FFF]
 
 enum mappers_op_battery { RD_BAT, WR_BAT };
 
@@ -402,13 +406,6 @@ typedef struct _mapper {
 	WORD rom_map_to[4];
 	BYTE *internal_struct[10];
 	WORD internal_struct_size[10];
-#if defined WRAM_OLD_HANDLER
-	BYTE trainer[512];
-#endif
-	struct _misc_roms {
-		size_t size;
-		BYTE *data;
-	} misc_roms;
 } _mapper;
 
 extern _mapper mapper;
@@ -416,13 +413,19 @@ extern _mapper mapper;
 BYTE map_init(void);
 void map_quit(void);
 
-BYTE map_prg_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom);
-void map_prg_rom_8k(BYTE banks_8k, BYTE at, WORD value);
-void map_prg_rom_8k_reset(void);
-void map_prg_rom_8k_update(void);
 
-BYTE map_prg_ram_malloc(WORD size);
-void map_prg_ram_memset(void);
+
+
+void map_prg_rom_8k(BYTE banks_8k, BYTE at, WORD value);
+void map_prg_rom_8k_update(void);
+void map_prg_rom_8k_reset(void);
+
+
+
+
+
+
+
 
 BYTE map_chr_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom);
 void map_chr_bank_1k_reset(void);
@@ -431,8 +434,6 @@ BYTE map_chr_ram_init(void);
 BYTE map_chr_ram_extra_init(uint32_t size);
 void map_chr_ram_extra_reset(void);
 BYTE map_chr_ram_slot_in_range(BYTE slot);
-
-BYTE map_misc_malloc(size_t size, BYTE set_value);
 
 void map_set_banks_max_prg(void);
 void map_set_banks_max_chr(void);

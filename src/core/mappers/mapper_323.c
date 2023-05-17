@@ -49,7 +49,7 @@ void map_init_323(void) {
 }
 void extcl_cpu_wr_mem_323(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active && !(m323.reg & 0x08)) {
+		if (!(m323.reg & 0x08) && memmap_adr_is_writable(address)) {
 			m323.reg = value;
 			MMC1_prg_fix();
 			MMC1_chr_fix();

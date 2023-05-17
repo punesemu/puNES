@@ -23,8 +23,6 @@
 
 void map_init_042(void);
 
-BYTE extcl_cpu_rd_mem_042(WORD address, BYTE openbus, BYTE before);
-
 void extcl_after_mapper_init_042_s1(void);
 void extcl_cpu_wr_mem_042_s1(WORD address, BYTE value);
 BYTE extcl_save_mapper_042_s1(BYTE mode, BYTE slot, FILE *fp);

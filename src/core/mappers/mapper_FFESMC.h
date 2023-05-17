@@ -25,7 +25,7 @@ void map_init_FFESMC(void);
 void extcl_after_mapper_init_FFESMC(void);
 void extcl_cpu_init_pc_FFESMC(void);
 void extcl_cpu_wr_mem_FFESMC(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_FFESMC(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_FFESMC(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_FFESMC(BYTE mode, BYTE slot, FILE *fp);
 void extcl_wr_chr_FFESMC(WORD address, BYTE value);
 BYTE extcl_rd_chr_FFESMC(WORD address);

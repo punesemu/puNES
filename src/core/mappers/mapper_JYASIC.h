@@ -57,7 +57,7 @@ extern _jyasic jyasic;
 void map_init_JYASIC(BYTE model);
 void extcl_after_mapper_init_JYASIC(void);
 void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_JYASIC(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_JYASIC(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_JYASIC(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_JYASIC(void);
 void extcl_rd_ppu_mem_JYASIC(WORD address);

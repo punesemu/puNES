@@ -62,7 +62,7 @@ void map_init_327(void) {
 }
 void extcl_cpu_wr_mem_327(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active && !(m327.reg & 0x07)) {
+		if (!(m327.reg & 0x07) && memmap_adr_is_writable(address)) {
 			m327.reg = address;
 			MMC3_prg_fix();
 			MMC3_chr_fix();

@@ -45,7 +45,7 @@ void map_init_199(void) {
 	MMC3_chr_swap = chr_swap_mmc3_199;
 	MMC3_wram_fix = wram_fix_mmc3_199;
 
-//	if (prg_wram_size() < (12 * 1024)) {
+//	if (wram_size() < (12 * 1024)) {
 //		wram_set_ram_size(4 * 1024);
 //		wram_set_nvram_size(8 * 1024);
 //	}
@@ -67,6 +67,6 @@ void chr_swap_mmc3_199(WORD address, UNUSED(WORD value)) {
 	chr_swap_MMC3_base(address, (address >> 10));
 }
 void wram_fix_mmc3_199(void) {
-	wram_map_auto_4k(0x5000, 2);
+	memmap_auto_4k(0x5000, 2);
 	wram_fix_MMC3_base();
 }

@@ -47,14 +47,14 @@ void extcl_cpu_wr_mem_Sachen_sa8259x(WORD address, BYTE value);
 BYTE extcl_save_mapper_Sachen_sa8259x(BYTE mode, BYTE slot, FILE *fp);
 
 void extcl_cpu_wr_mem_Sachen_tca01(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_Sachen_tca01(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_Sachen_tca01(WORD address, BYTE openbus);
 
 void extcl_cpu_wr_mem_Sachen_tcu01(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_Sachen_tcu01(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_Sachen_tcu01(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_Sachen_tcu01(BYTE mode, BYTE slot, FILE *fp);
 
 void extcl_cpu_wr_mem_Sachen_tcu02(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_Sachen_tcu02(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_Sachen_tcu02(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_Sachen_tcu02(BYTE mode, BYTE slot, FILE *fp);
 
 void extcl_cpu_wr_mem_Sachen_sa72007(WORD address, BYTE value);
@@ -63,7 +63,7 @@ void extcl_cpu_wr_mem_Sachen_sa72008(WORD address, BYTE value);
 
 void extcl_after_mapper_init_Sachen_sa74374x(void);
 void extcl_cpu_wr_mem_Sachen_sa74374x(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_Sachen_sa74374x(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_Sachen_sa74374x(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_Sachen_sa74374x(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_SACHEN_H_ */

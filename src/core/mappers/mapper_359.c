@@ -25,6 +25,7 @@
 
 INLINE static void prg_fix_359(void);
 INLINE static void chr_fix_359(void);
+INLINE static void wram_fix_359(void);
 INLINE static void mirroring_fix_359(void);
 
 struct _m359 {
@@ -39,16 +40,11 @@ struct _m359 {
 		WORD counter;
 	} irq;
 } m359;
-struct _m359tmp {
-	BYTE model;
-	BYTE *prg_6000;
-} m359tmp;
 
-void map_init_359(BYTE model) {
+void map_init_359(void) {
 	EXTCL_CPU_WR_MEM(359);
 	EXTCL_AFTER_MAPPER_INIT(359);
 	EXTCL_CPU_WR_MEM(359);
-	EXTCL_CPU_RD_MEM(359);
 	EXTCL_SAVE_MAPPER(359);
 	EXTCL_CPU_EVERY_CYCLE(359);
 	EXTCL_PPU_000_TO_34X(359);
@@ -80,14 +76,13 @@ void map_init_359(BYTE model) {
 	m359.chr[8] = 0x00;
 	m359.chr[9] = 0xFF;
 
-	m359tmp.model = model;
-
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
 void extcl_after_mapper_init_359(void) {
 	prg_fix_359();
 	chr_fix_359();
+	wram_fix_359();
 	mirroring_fix_359();
 }
 void extcl_cpu_wr_mem_359(WORD address, BYTE value) {
@@ -95,12 +90,14 @@ void extcl_cpu_wr_mem_359(WORD address, BYTE value) {
 		case 0x8000:
 			m359.prg[address & 0x03] = value;
 			prg_fix_359();
+			wram_fix_359();
 			break;
 		case 0x9000:
 			switch (address & 0x03) {
 				case 0:
 					m359.prg[4] = value;
 					prg_fix_359();
+					wram_fix_359();
 					break;
 				case 1:
 					switch (value & 0x03) {
@@ -119,6 +116,7 @@ void extcl_cpu_wr_mem_359(WORD address, BYTE value) {
 					}
 					m359.chr[9] = value & 0x40 ? 0xFF : 0x7F;
 					prg_fix_359();
+					wram_fix_359();
 					chr_fix_359();
 					break;
 				case 2:
@@ -163,12 +161,6 @@ void extcl_cpu_wr_mem_359(WORD address, BYTE value) {
 			irq.high &= ~EXT_IRQ;
 			break;
 	}
-}
-BYTE extcl_cpu_rd_mem_359(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (m359tmp.prg_6000[address & 0x1FFF]);
-	}
-	return (openbus);
 }
 BYTE extcl_save_mapper_359(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m359.prg);
@@ -229,30 +221,13 @@ void extcl_irq_A12_clock_359(void) {
 }
 
 INLINE static void prg_fix_359(void) {
-	BYTE outer = (m359.prg[4] & 0x38) << 1, mask = m359.prg[5];
-	WORD value;
+	WORD base = (m359.prg[4] & 0x38) << 1;
+	WORD mask = m359.prg[5];
 
-	value = (m359.prg[3] & mask) | outer;
-	control_bank(info.prg.rom.max.banks_8k)
-	m359tmp.prg_6000 = prg_pnt(value << 13);
-
-	value = (m359.prg[0] & mask) | outer;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, value);
-
-	value = (m359.prg[1] & mask) | outer;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, value);
-
-	value = (m359.prg[2] & mask) | outer;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, value);
-
-	value = (0xFF & mask) | outer;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, value);
-
-	map_prg_rom_8k_update();
+	memmap_auto_8k(0x8000, (base | (m359.prg[0] & mask)));
+	memmap_auto_8k(0xA000, (base | (m359.prg[1] & mask)));
+	memmap_auto_8k(0xC000, (base | (m359.prg[2] & mask)));
+	memmap_auto_8k(0xE000, (base | (0xFF & mask)));
 }
 INLINE static void chr_fix_359(void) {
 	DBWORD bank;
@@ -261,7 +236,7 @@ INLINE static void chr_fix_359(void) {
 		return;
 	}
 
-	if (m359tmp.model == MAP540) {
+	if (info.mapper.id == 540) {
 		bank = m359.chr[0];
 		_control_bank(bank, info.chr.rom.max.banks_2k)
 		bank = bank << 11;
@@ -329,6 +304,12 @@ INLINE static void chr_fix_359(void) {
 		bank = bank << 10;
 		chr.bank_1k[7] = chr_pnt(bank);
 	}
+}
+INLINE static void wram_fix_359(void) {
+	WORD base = (m359.prg[4] & 0x38) << 1;
+	WORD mask = m359.prg[5];
+
+	memmap_prgrom_8k(0x6000, (base | (m359.prg[3] & mask)));
 }
 INLINE static void mirroring_fix_359(void) {
 	switch (m359.mirroring & 0x03) {

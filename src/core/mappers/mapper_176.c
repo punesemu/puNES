@@ -371,16 +371,16 @@ void extcl_wr_chr_176(WORD address, BYTE value) {
 }
 
 INLINE static void prg_fix_176(void) {
-	WORD bank[4];
-
 	switch (m176.cpu5xxx[0] & 0x07) {
 		case 0:
 		case 1:
 		case 2:
 		case 6:
 		case 7: {
-			BYTE swap = (m176.cpu8xxx[0] & 0x40) >> 5;
+			//WORD swap = (m176.cpu8xxx[0] & 0x40) >> 5;
+			WORD swap = (m176.cpu8xxx[0] & 0x40) << 8;
 			WORD outer = (m176.prg << 1);
+			WORD bank[4];
 
 			if (m176.cpu5xxx[3] & 0x02) {
 				bank[0] = outer | m176.mmc3[6];
@@ -402,36 +402,21 @@ INLINE static void prg_fix_176(void) {
 				bank[3] = outer | (0xFF & mask);
 			}
 
-			_control_bank(bank[0], info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 0 ^ swap, bank[0]);
-
-			_control_bank(bank[1], info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 1, bank[1]);
-
-			_control_bank(bank[2], info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 2 ^ swap, bank[2]);
-
-			_control_bank(bank[3], info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 3, bank[3]);
-
-			map_prg_rom_8k_update();
-			break;
+			memmap_auto_8k(0x8000 ^ swap, bank[0]);
+			memmap_auto_8k(0xA000, bank[1]);
+			memmap_auto_8k(0xC000 ^ swap, bank[2]);
+			memmap_auto_8k(0xE000, bank[3]);
+			return;
 		}
 		case 3:
-			bank[0] = m176.prg;
-			_control_bank(bank[0], info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, bank[0]);
-			map_prg_rom_8k(2, 2, bank[0]);
-			map_prg_rom_8k_update();
-			break;
+			memmap_auto_16k(0x8000, m176.prg);
+			memmap_auto_16k(0xC000, m176.prg);
+			return;
 		case 4:
-			bank[0] = (m176.prg & 0x0FFF) >> 1;
-			_control_bank(bank[0], info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, bank[0]);
-			map_prg_rom_8k_update();
-			break;
+			memmap_auto_32k(0x8000, (m176.prg & 0x0FFF) >> 1);
+			return;
 		default:
-			break;
+			return;
 	}
 }
 INLINE static void chr_fix_176(void) {
@@ -531,15 +516,15 @@ INLINE static void wram_fix_176(void) {
 	// +--------- PRG RAM enable (0: disable, 1: enable)
 	if (m176.ram_enabled || m176.ram_cfg_reg) {
 		if (m176.ram_cfg_reg) {
-			wram_map_auto_8k(0x4000, bank + 1);
-			wram_map_auto_8k(0x6000, bank);
+			memmap_auto_8k(0x4000, bank + 1);
+			memmap_auto_8k(0x6000, bank);
 		} else {
 			// MMC3 mode
-			wram_map_disable_4k(0x5000);
-			wram_map_auto_wp_8k(0x6000, 0, m176.ram_enabled >> 7, !m176.ram_out_reg);
+			memmap_disable_4k(0x5000);
+			memmap_auto_wp_8k(0x6000, 0, m176.ram_enabled >> 7, !m176.ram_out_reg);
 		}
 	} else {
-		wram_map_disable_16k(0x4000);
+		memmap_disable_16k(0x4000);
 	}
 }
 INLINE static void mirroring_fix_176(void) {

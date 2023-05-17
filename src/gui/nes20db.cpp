@@ -29,7 +29,7 @@
 #include "vs_system.h"
 
 
-#include "wram.h"
+#include "memmap.h"
 
 
 #include <QtCore/QDebug>
@@ -159,11 +159,14 @@ void search_in_xml(QFile &file) {
 //							//if ((nes20db.prgram.size + nes20db.prgnvram.size) != 0x2000){
 //							//if ((nes20db.pcb.mapper == 0) && (nes20db.prgrom.size == (16 * 3 * 1024))){
 //							//if ((nes20db.pcb.mapper == 176) && (nes20db.prgram.size || nes20db.prgnvram.size)) {
-//							if (nes20db.prgram.size && nes20db.prgnvram.size) {
-//								qDebug()
-//										<< nes20db.pcb.mapper
-//										<< nes20db.prgram.size
-//										<< nes20db.prgnvram.size
+//							//if (nes20db.prgram.size && nes20db.prgnvram.size) {
+//							if (nes20db.pcb.mapper == 86 && nes20db.miscrom.size) {
+//								qDebug().noquote()
+//										<< QString("%1").arg(nes20db.pcb.mapper, 3, 10, QLatin1Char(' '))
+//										<< QString("%1").arg(nes20db.pcb.submapper, 2, 10, QLatin1Char(' '))
+//										<< QString("%1").arg(nes20db.prgram.size, 4, 10, QLatin1Char(' '))
+//										<< QString("%1").arg(nes20db.prgnvram.size, 4, 10, QLatin1Char(' '))
+//										<< QString("%1").arg(nes20db.miscrom.size, 4, 10, QLatin1Char(' '))
 //										<< game["comment"]
 //										;
 //							}
@@ -174,8 +177,13 @@ void search_in_xml(QFile &file) {
 
 
 
-
-						if ((nes20db.rom.crc32 == info.crc32.total) || (nes20db.prgrom.crc32 == info.crc32.prg)) {
+						// Ho deciso di usare solo il crc32 total (tralasciando quello della prgrom perche' ci sono
+						// roms con lo stesso crc32 ma usano mapper diverse :
+						// Esempio :
+						//    Angry Birds Week(byCasperdj777).nes (0x2A629F7D mapper 185) e
+						//    Compatibility Hacks\Bird Week [m003].nes ((0x2A629F7D mapper 003)
+//						if ((nes20db.rom.crc32 == info.crc32.total) || (nes20db.prgrom.crc32 == info.crc32.prg)) {
+						if (nes20db.rom.crc32 == info.crc32.total) {
 							const QString comment = game["comment"];
 
 							info.mapper.nes20db.in_use = TRUE;
@@ -197,27 +205,18 @@ void search_in_xml(QFile &file) {
 								info.mapper.submapper = DEFAULT;
 							}
 
-#if defined WRAM_OLD_HANDLER
-							info.prg.ram.bat.banks = info.prg.ram.banks_8k_plus = nes20db.prgnvram.size
-								? (nes20db.prgnvram.size <= 0x2000 ? 1 : emu_power_of_two(nes20db.prgnvram.size / 0x2000))
-								: 0;
-							info.prg.ram.banks_8k_plus += nes20db.prgram.size
-								? (nes20db.prgram.size <= 0x2000 ? 1 : emu_power_of_two(nes20db.prgram.size / 0x2000))
-								: 0;
-#else
 							wram_set_ram_size(nes20db.prgram.size ? emu_power_of_two(nes20db.prgram.size) : 0);
 							wram_set_nvram_size(nes20db.prgnvram.size ? emu_power_of_two(nes20db.prgnvram.size) : 0);
-							wram.battery_present = nes20db.pcb.battery;
-#endif
+							wram.battery.in_use = nes20db.pcb.battery;
 
 							{
 								DBWORD banks = 0;
 
 								banks = nes20db.chrram.size
-									? (nes20db.chrram.size <= 0x2000 ? 1 : emu_power_of_two(nes20db.chrram.size / 0x2000))
+									? (nes20db.chrram.size <= 0x2000 ? 1 : nes20db.chrram.size / 0x2000)
 									: 0;
 								banks += nes20db.chrnvram.size
-									? (nes20db.chrnvram.size <= 0x2000 ? 1 : emu_power_of_two(nes20db.chrnvram.size / 0x2000))
+									? (nes20db.chrnvram.size <= 0x2000 ? 1 : nes20db.chrnvram.size / 0x2000)
 									: 0;
 
 								info.chr.ram.banks_8k_plus = banks;

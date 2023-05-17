@@ -22,18 +22,15 @@
 #include "save_slot.h"
 
 INLINE static void prg_fix_538(void);
+INLINE static void wram_fix_538(void);
 
 struct _m538 {
 	BYTE reg;
 } m538;
-struct _m538tmp {
-	BYTE *prg_6000;
-} m538tmp;
 
 void map_init_538(void) {
 	EXTCL_AFTER_MAPPER_INIT(538);
 	EXTCL_CPU_WR_MEM(538);
-	EXTCL_CPU_RD_MEM(538);
 	EXTCL_SAVE_MAPPER(538);
 	mapper.internal_struct[0] = (BYTE *)&m538;
 	mapper.internal_struct_size[0] = sizeof(m538);
@@ -42,18 +39,14 @@ void map_init_538(void) {
 }
 void extcl_after_mapper_init_538(void) {
 	prg_fix_538();
+	wram_fix_538();
 }
 void extcl_cpu_wr_mem_538(WORD address, BYTE value) {
 	if ((address >= 0xC000) && (address <= 0xDFFF)) {
 		m538.reg = value;
 		prg_fix_538();
+		wram_fix_538();
 	}
-}
-BYTE extcl_cpu_rd_mem_538(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (m538tmp.prg_6000[address & 0x1FFF]);
-	}
-	return (openbus);
 }
 BYTE extcl_save_mapper_538(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m538.reg);
@@ -66,27 +59,11 @@ BYTE extcl_save_mapper_538(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_538(void) {
-	WORD bank;
-
-	bank = m538.reg | 0x01;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	m538tmp.prg_6000 = prg_pnt(bank << 13);
-
-	bank = (m538.reg & 0x01) && (~m538.reg & 0x08) ? 0x0A : m538.reg & 0xFE;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, bank);
-
-	bank = 0x0D;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, bank);
-
-	bank = 0x0E;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, bank);
-
-	bank = 0x0F;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_8k(0x8000, ((m538.reg & 0x01) && (~m538.reg & 0x08) ? 0x0A : m538.reg & 0xFE));
+	memmap_auto_8k(0xA000, 0x0D);
+	memmap_auto_8k(0xC000, 0x0E);
+	memmap_auto_8k(0xE000, 0x0F);
+}
+INLINE static void wram_fix_538(void) {
+	memmap_prgrom_8k(0x6000, (m538.reg | 0x01));
 }

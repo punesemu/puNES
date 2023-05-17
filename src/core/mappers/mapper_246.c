@@ -19,6 +19,7 @@
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
+#include "cpu.h"
 
 void map_init_246(void) {
 	EXTCL_CPU_WR_MEM(246);
@@ -53,10 +54,9 @@ void extcl_cpu_wr_mem_246(WORD address, BYTE value) {
 	chr.bank_1k[slot] = chr_pnt(bank);
 	chr.bank_1k[slot + 1] = chr_pnt(bank | 0x0400);
 }
-BYTE extcl_cpu_rd_mem_246(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_246(WORD address, BYTE openbus) {
 	if ((address < 0x6000) || (address > 0x67FF)) {
 		return (openbus);
 	}
-
-	return (before);
+	return (cpu.openbus.before);
 }

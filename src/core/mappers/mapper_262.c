@@ -82,7 +82,7 @@ void extcl_cpu_wr_mem_262(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_262(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_262(WORD address, BYTE openbus) {
 	if ((address >= 0x4000) && (address <= 0x4FFF)) {
 		if (address & 0x0100) {
 			return (m262tmp.reset);

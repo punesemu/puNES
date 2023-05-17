@@ -64,7 +64,7 @@ void extcl_cpu_wr_mem_238(WORD address, BYTE value) {
 		return;
 	}
 }
-BYTE extcl_cpu_rd_mem_238(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_238(WORD address, BYTE openbus) {
 	if ((address >= 0x4020) && (address <= 0x7FFF)) {
 		return (m238.reg);
 	}

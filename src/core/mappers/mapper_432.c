@@ -26,19 +26,19 @@
 void prg_swap_mmc3_432(WORD address, WORD value);
 void chr_swap_mmc3_432(WORD address, WORD value);
 
-static const BYTE dipswitch_432[4] = { 0, 1, 2, 3 };
-static const SBYTE dipswitch_index_432[][4] = {
-	{ 0,  1,  2,  3 }, // 0
-	{ 1,  0,  2,  3 }, // 1
-};
+INLINE static void tmp_fix_432(BYTE max, BYTE index, const BYTE *ds);
 
 struct _m432 {
 	BYTE reg[2];
 } m432;
 struct _m432tmp {
-	BYTE select;
+	BYTE read_dp;
+	BYTE less1024;
+
+	BYTE ds_used;
+	BYTE max;
 	BYTE index;
-	BYTE dipswitch;
+	const BYTE *dipswitch;
 } m432tmp;
 
 void map_init_432(void) {
@@ -64,30 +64,38 @@ void map_init_432(void) {
 	MMC3_prg_swap = prg_swap_mmc3_432;
 	MMC3_chr_swap = chr_swap_mmc3_432;
 
+	m432tmp.less1024 = prgrom_size() < (1024 * 1024);
+
 	if (info.reset == RESET) {
-		do {
-			m432tmp.index = (m432tmp.index + 1) & 0x03;
-		} while (dipswitch_index_432[m432tmp.select][m432tmp.index] < 0);
+		if (m432tmp.ds_used) {
+			m432tmp.index = (m432tmp.index + 1) % m432tmp.max;
+		}
 	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
 		if (info.crc32.prg == 0xE736A4BE) { // 160000000-in-1.nes
-			m432tmp.select = 1;
-			m432tmp.index = 1;
+			static const BYTE ds[4] = { 1,  0,  2,  3 };
+
+			tmp_fix_432(LENGTH(ds), 0, &ds[0]);
 		} else {
-			m432tmp.select = 0;
-			m432tmp.index = 0;
+			static const BYTE ds[1] = { 0 };
+
+			tmp_fix_432(LENGTH(ds), 0, &ds[0]);
 		}
 	}
-	m432tmp.dipswitch = dipswitch_432[dipswitch_index_432[m432tmp.select][m432tmp.index]];
 
-	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
+	info.mapper.extend_wr = TRUE;
+	info.mapper.extend_rd = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_432(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active) {
+		if (memmap_adr_is_writable(address)) {
 			m432.reg[address & 0x01] = value;
+			if (m432tmp.less1024 && !(address & 0x0001) && !(value & 0x01)) {
+				m432.reg[1] &= ~0x20;
+			}
+			m432tmp.read_dp = (m432.reg[0] & 0x01) || (m432tmp.less1024 && (m432.reg[1] & 0x20));
 			MMC3_prg_fix();
 			MMC3_chr_fix();
 		}
@@ -97,9 +105,9 @@ void extcl_cpu_wr_mem_432(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_432(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address > 0x8000) && (m432.reg[0] & 0x01)) {
-		return (m432tmp.dipswitch);
+BYTE extcl_cpu_rd_mem_432(WORD address, BYTE openbus) {
+	if ((address > 0x8000) && m432tmp.read_dp) {
+		return (m432tmp.dipswitch[m432tmp.index]);
 	}
 	return (openbus);
 }
@@ -131,4 +139,11 @@ void chr_swap_mmc3_432(WORD address, WORD value) {
 	WORD mask = 0xFF >> ((m432.reg[1] & 0x04) >> 2);
 
 	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
+}
+
+INLINE static void tmp_fix_432(BYTE max, BYTE index, const BYTE *ds) {
+	m432tmp.ds_used = TRUE;
+	m432tmp.max = max;
+	m432tmp.index = index;
+	m432tmp.dipswitch = ds;
 }

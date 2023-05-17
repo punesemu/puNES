@@ -67,7 +67,7 @@ void map_init_372(void) {
 }
 void extcl_cpu_wr_mem_372(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active) {
+		if (memmap_adr_is_writable(address)) {
 			m372.reg[m372.index] = value;
 			m372.index = (m372.index + 1) & 0x03;
 			MMC3_prg_fix();

@@ -110,9 +110,7 @@ void prg_fix_MMC4_base(void) {
 	MMC4_prg_swap(0xC000, 0xFF);
 }
 void prg_swap_MMC4_base(WORD address, WORD value) {
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, (address >> 13) & 0x02, value);
-	map_prg_rom_8k_update();
+	memmap_auto_16k(address, value);
 }
 void chr_fix_MMC4_base(void) {
 	MMC4_chr_swap(0x0000, mmc4.chr[mmc4.latch[0]]);

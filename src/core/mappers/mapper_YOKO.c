@@ -108,7 +108,7 @@ void extcl_cpu_wr_mem_YOKO(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_YOKO(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_YOKO(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x53FF)) {
 		return ((openbus & 0xFC) | yoko.dip);
 	}

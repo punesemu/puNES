@@ -16,15 +16,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_UNIFSMB2J_H_
-#define MAPPER_UNIFSMB2J_H_
+#ifndef MAPPER_283_H_
+#define MAPPER_283_H_
 
 #include "common.h"
 
-void map_init_UNIFSMB2J(void);
-void extcl_cpu_wr_mem_UNIFSMB2J(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_UNIFSMB2J(WORD address, BYTE openbus, BYTE before);
-BYTE extcl_save_mapper_UNIFSMB2J(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_UNIFSMB2J(void);
+void map_init_283(void);
+void extcl_after_mapper_init_283(void);
+void extcl_cpu_wr_mem_283(WORD address, BYTE value);
 
-#endif /* MAPPER_UNIFSMB2J_H_ */
+#endif /* MAPPER_283_H_ */

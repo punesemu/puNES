@@ -60,8 +60,8 @@ void map_init_292(void) {
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_292(WORD address, BYTE value) {
-	if ((address & 0xE001) == 0x6000) {
-		if (cpu.prg_ram_wr_active) {
+	if ((address >= 0x6000) && (address <= 0x7FFF)) {
+		if (memmap_adr_is_writable(address)) {
 			m292.reg[0] = value;
 			MMC3_prg_fix();
 		}
@@ -87,9 +87,9 @@ void extcl_cpu_wr_mem_292(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_292(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address & 0xE001) == 0x6000) {
-		if (cpu.prg_ram_rd_active) {
+BYTE extcl_cpu_rd_mem_292(WORD address, BYTE openbus) {
+	if ((address >= 0x6000) && (address <= 0x7FFF)) {
+		if (memmap_adr_is_readable(address)) {
 			if ((m292.reg[0] & 0xE0) == 0xC0) {
 				m292.reg[1] = mmcpu.ram[0x06A];
 			} else {
@@ -113,10 +113,10 @@ void prg_swap_mmc3_292(WORD address, WORD value) {
 	if (!slot) {
 		value = m292.reg[0] & 0x1F;
 	}
-	prg_swap_MMC3_base(address, value);
+	prg_swap_MMC3_base(address, value & 0xFF);
 }
 void chr_fix_mmc3_292(void) {
 	map_chr_rom_2k(0x0000, ((mmc3.reg[0] >> 1) ^ m292.reg[1]));
-	map_chr_rom_2k(0x0800, ((mmc3.reg[1] >> 1) | ((m292.reg[2] & 0x40) << 1)));
+	map_chr_rom_2k(0x0800, ((mmc3.reg[1] >> 1) ^ ((m292.reg[2] & 0x40) << 1)));
 	map_chr_rom_4k(0x1000, m292.reg[2] & 0x3F);
 }

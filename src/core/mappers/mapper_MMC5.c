@@ -151,19 +151,19 @@
 //INLINE static void use_chr_s(void);
 //INLINE static void use_chr_b(void);
 //
-//enum {
-//	PRG_RAM_NONE,
-//	PRG_RAM_8K,
-//	PRG_RAM_16K,
-//	PRG_RAM_32K,
-//	PRG_RAM_40K,
-//	PRG_RAM_64K,
-//	INVALID,
-//	X = INVALID
-//};
-//enum { MODE0, MODE1, MODE2, MODE3 };
-//enum { CHR_S, CHR_B };
-//enum { SPLIT_LEFT, SPLIT_RIGHT = 0x40 };
+enum {
+	PRG_RAM_NONE,
+	PRG_RAM_8K,
+	PRG_RAM_16K,
+	PRG_RAM_32K,
+	PRG_RAM_40K,
+	PRG_RAM_64K,
+	INVALID,
+	X = INVALID
+};
+enum { MODE0, MODE1, MODE2, MODE3 };
+enum { CHR_S, CHR_B };
+enum { SPLIT_LEFT, SPLIT_RIGHT = 0x40 };
 
 //const BYTE filler_attrib[4] = {0x00, 0x55, 0xAA, 0xFF};
 //static const BYTE prg_ram_access[6][8] = {
@@ -274,9 +274,10 @@ void map_init_NSF_MMC5(void) {
 //	mmc5.S4.length.value = 0;
 }
 void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
-//	if (address < 0x5000) {
-//		return;
-//	}
+//void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
+	if (address < 0x5000) {
+		return;
+	}
 //
 //	switch (address) {
 //		case 0x5000:
@@ -473,52 +474,52 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 //			return;
 //	}
 }
-BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-//	BYTE value;
-//
-//	switch (address) {
-//		case 0x5015:
-//			/* azzero la varibile d'uscita */
-//			value = 0;
-//			/*
-//			 * per ogni canale controllo se il length counter
-//			 * non e' a 0 e se si setto a 1 il bit corrispondente
-//			 * nel byte di ritorno.
-//			 */
-//			if (mmc5.S3.length.value) {
-//				value |= 0x01;
-//			}
-//			if (mmc5.S4.length.value) {
-//				value |= 0x02;
-//			}
-//			return (value);
-//		case 0x5204:
-//			value = irql2f.pending | irql2f.in_frame;
-//			irql2f.pending = FALSE;
-//			/* disabilito l'IRQ dell'MMC5 */
-//			irq.high &= ~EXT_IRQ;
-//			return (value);
-//		case 0x5205:
-//			return (mmc5.product & 0x00FF);
-//		case 0x5206:
-//			return ((mmc5.product & 0xFF00) >> 8);
-//		default:
-//			if ((address < 0x5C00) || (address >= 0x6000)) {
-//				return (openbus);
-//			}
-//			if (mmc5.ext_mode < MODE2) {
-//				return (openbus);
-//			}
-//			if (mmc5.ext_mode == MODE2) {
-//				return (mmc5.ext_ram[address & 0x03FF]);
-//			}
-//			return (mmc5.fill_table[address & 0x03FF]);
-//	}
+BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus) {
+	BYTE value;
+
+	switch (address) {
+		case 0x5015:
+			/* azzero la varibile d'uscita */
+			value = 0;
+			/*
+			 * per ogni canale controllo se il length counter
+			 * non e' a 0 e se si setto a 1 il bit corrispondente
+			 * nel byte di ritorno.
+			 */
+			if (mmc5.S3.length.value) {
+				value |= 0x01;
+			}
+			if (mmc5.S4.length.value) {
+				value |= 0x02;
+			}
+			return (value);
+		case 0x5204:
+			value = irql2f.pending | irql2f.in_frame;
+			irql2f.pending = FALSE;
+			/* disabilito l'IRQ dell'MMC5 */
+			irq.high &= ~EXT_IRQ;
+			return (value);
+		case 0x5205:
+			return (mmc5.product & 0x00FF);
+		case 0x5206:
+			return ((mmc5.product & 0xFF00) >> 8);
+		default:
+			if ((address < 0x5C00) || (address >= 0x6000)) {
+				return (openbus);
+			}
+			if (mmc5.ext_mode < MODE2) {
+				return (openbus);
+			}
+			if (mmc5.ext_mode == MODE2) {
+				return (mmc5.ext_ram[address & 0x03FF]);
+			}
+			return (mmc5.fill_table[address & 0x03FF]);
+	}
 }
 BYTE extcl_save_mapper_MMC5(BYTE mode, BYTE slot, FILE *fp) {
 //	BYTE i;
 //
-//	save_slot_ele(mode, slot, mmc5.prg_mode);
+	save_slot_ele(mode, slot, mmc5.prg_mode);
 //	save_slot_ele(mode, slot, mmc5.chr_mode);
 //	save_slot_ele(mode, slot, mmc5.ext_mode);
 //	save_slot_ele(mode, slot, mmc5.nmt_mode);
@@ -570,7 +571,7 @@ BYTE extcl_save_mapper_MMC5(BYTE mode, BYTE slot, FILE *fp) {
 //
 //	save_slot_ele(mode, slot, mmc5.filler);
 //
-//	return (EXIT_OK);
+	return (EXIT_OK);
 }
 //void extcl_ppu_256_to_319_MMC5(void) {
 //	if (ppu.frame_x != 256) {

@@ -81,7 +81,7 @@ void map_init_334(void) {
 }
 void extcl_cpu_wr_mem_334(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active && !(address & 0x0001)) {
+		if (!(address & 0x0001) && memmap_adr_is_writable(address)) {
 			m334.reg = value;
 			MMC3_prg_fix();
 			MMC3_chr_fix();
@@ -92,9 +92,9 @@ void extcl_cpu_wr_mem_334(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_334(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_334(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (m334tmp.ds_used && cpu.prg_ram_rd_active && (address & 0x0002)) {
+		if (m334tmp.ds_used && (address & 0x0002) && memmap_adr_is_readable(address)) {
 			return ((openbus & 0xFE) | (m334tmp.dipswitch[m334tmp.index] & 0x01));
 		}
 	}

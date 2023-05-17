@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
@@ -35,7 +34,7 @@ void map_init_000(void) {
 	EXTCL_SAVE_MAPPER(000);
 
 	// Alter Ego (World) (Aftermarket) (Homebrew) (Alt).nes
-	m000tmp.nrom368 = (info.prg.rom.banks_16k == 3);
+	m000tmp.nrom368 = (prgrom_banks(S16K) == 3);
 }
 void extcl_after_mapper_init_000(void) {
 	prg_fix_000();
@@ -50,28 +49,17 @@ BYTE extcl_save_mapper_000(UNUSED(BYTE mode), UNUSED(BYTE slot), UNUSED(FILE *fp
 }
 
 INLINE static void prg_fix_000(void) {
-	WORD bank = 0;
-
 	if (m000tmp.nrom368) {
-		bank = 1;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
-
-		bank = 2;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 2, bank);
+		memmap_prgrom_16k(0x8000, 1);
+		memmap_prgrom_16k(0xC000, 2);
 	} else {
-		bank = 0;
-		_control_bank(bank, info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, bank);
+		memmap_prgrom_32k(0x8000, 0);
 	}
-
-	map_prg_rom_8k_update();
 }
 INLINE static void wram_fix_000(void) {
 	if (m000tmp.nrom368) {
-		wram_map_prg_rom_16k(0x4000, 0);
+		memmap_prgrom_16k(0x4000, 0);
 	} else {
-		wram_map_disable_8k(0x4000);
+		memmap_disable_8k(0x4000);
 	}
 }

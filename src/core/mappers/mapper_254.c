@@ -59,7 +59,7 @@ void extcl_cpu_wr_mem_254(WORD address, BYTE value) {
 	}
 	extcl_cpu_wr_mem_MMC3(address, value);
 }
-BYTE extcl_cpu_rd_mem_254(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_254(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		if (!m254.reg[0]) {
 			return (openbus ^ m254.reg[1]);

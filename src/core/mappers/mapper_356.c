@@ -70,7 +70,7 @@ void map_init_356(void) {
 }
 void extcl_cpu_wr_mem_356(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active && !(m356.reg[3] & 0x40)) {
+		if (!(m356.reg[3] & 0x40) && memmap_adr_is_writable(address)) {
 			m356.reg[m356.index] = value;
 			m356.index = (m356.index + 1) & 0x03;
 			MMC3_prg_fix();

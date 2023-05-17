@@ -150,7 +150,7 @@ void chr_swap_mmc3_195(WORD address, WORD value) {
 	}
 }
 void wram_fix_mmc3_195(void) {
-	wram_map_auto_4k(0x5000, 2);
+	memmap_auto_4k(0x5000, 2);
 	wram_fix_MMC3_base();
 }
 

@@ -80,7 +80,7 @@ void map_init_205(void) {
 }
 void extcl_cpu_wr_mem_205(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active) {
+		if (memmap_adr_is_writable(address)) {
 			m205.reg = value;
 			if ((value & 0x01) && m205tmp.ds_used && (m205tmp.dipswitch[m205tmp.index])) {
 				m205.reg |= 2;

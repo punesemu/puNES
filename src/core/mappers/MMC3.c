@@ -204,9 +204,7 @@ void prg_fix_MMC3_base(void) {
 	MMC3_prg_swap(0xE000, ~0);
 }
 void prg_swap_MMC3_base(WORD address, WORD value) {
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	memmap_auto_8k(address, value);
 }
 void chr_fix_MMC3_base(void) {
 	WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
@@ -239,7 +237,7 @@ void wram_swap_MMC3_base(WORD address, WORD value) {
 		rd = (mmc3.wram_protect & 0x80) >> 7;
 		wr = rd ? !(mmc3.wram_protect & 0x40) : FALSE;
 	}
-	wram_map_auto_wp_8k(address, value, rd, wr);
+	memmap_auto_wp_8k(address, value, rd, wr);
 }
 void mirroring_fix_MMC3_base(void) {
 	// se e' abilitato il 4 schermi, il cambio

@@ -23,7 +23,7 @@
 
 void map_init_238(void);
 void extcl_cpu_wr_mem_238(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_238(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_238(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_238(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_238_H_ */

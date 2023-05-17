@@ -228,7 +228,7 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 	}
 
 //	if (!info.prg.ram.banks_8k_plus) {
-	if (!wram.data) {
+	if (!wram_pnt()) {
 		address |= 0x8000;
 	}
 
@@ -318,7 +318,7 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_Bandai_FCGX(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_Bandai_FCGX(WORD address, BYTE openbus) {
 	if (!FCGX.e0.size || (address < 0x6000)) {
 		return (openbus);
 	}
@@ -384,8 +384,7 @@ void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp) {
 		 * locazione di memoria e' stata nel frattempo valorizzata dal gioco stesso.
 		 */
 		//if (!fp && (info.id == FAMICOMJUMPII)) {
-		//	wram.nvram.pnt[0xBBC] = 0x01;
-			//prg.ram_battery[0xBBC] = 0x01;
+		//	prg_wram_nvram(0xBBC) = 0x01;
 		//}
 	}
 }

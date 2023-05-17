@@ -87,7 +87,7 @@ void extcl_cpu_wr_mem_288(WORD address, BYTE value) {
 	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
-BYTE extcl_cpu_rd_mem_288(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_288(WORD address, BYTE openbus) {
 	if ((address >= 0x8000) && (m288.reg & 0x0020)) {
 		return (prg_rom_rd((address | dipswitch[m288tmp.index][m288tmp.dipswitch])));
 	}

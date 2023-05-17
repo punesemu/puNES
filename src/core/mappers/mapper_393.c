@@ -64,7 +64,7 @@ void map_init_393(void) {
 }
 void extcl_cpu_wr_mem_393(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active) {
+		if (memmap_adr_is_writable(address)) {
 			m393.reg[0] = address & 0xFF;
 			MMC3_prg_fix();
 			MMC3_chr_fix();

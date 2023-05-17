@@ -135,7 +135,7 @@ INLINE static void chr_fix_210(void) {
 	map_chr_rom_1k(0x1C00, m210.chr[7]);
 }
 INLINE static void wram_fix_210(void) {
-	wram_map_auto_wp_8k(0x6000, 0, TRUE, m210.wram_protect);
+	memmap_auto_wp_8k(0x6000, 0, TRUE, m210.wram_protect);
 }
 INLINE static void mirroring_fix_210(void) {
 	if (info.mapper.submapper != 1) {

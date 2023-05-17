@@ -26,10 +26,10 @@ enum { T22211A, T22211B, T22211C };
 void map_init_Txc(BYTE model);
 
 void extcl_cpu_wr_mem_Txc_t22211ab(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_Txc_t22211ab(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_Txc_t22211ab(WORD address, BYTE openbus);
 
 void extcl_cpu_wr_mem_Txc_t22211c(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_Txc_t22211c(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_Txc_t22211c(WORD address, BYTE openbus);
 
 BYTE extcl_save_mapper_Txc_t22211x(BYTE mode, BYTE slot, FILE *fp);
 

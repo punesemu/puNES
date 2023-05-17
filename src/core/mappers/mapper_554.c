@@ -48,7 +48,7 @@ void extcl_after_mapper_init_554(void) {
 	wram_fix_554();
 }
 void extcl_cpu_wr_mem_554(UNUSED(WORD address), UNUSED(BYTE value)) {}
-BYTE extcl_cpu_rd_mem_554(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_554(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0xC000:
 			if ((address >= 0xCAB6) && (address <= 0xCAD7)) {
@@ -120,5 +120,5 @@ INLINE static void chr_fix_554(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_554(void) {
-	wram_map_prg_rom_8k(0x6000, m554.reg);
+	memmap_prgrom_8k(0x6000, m554.reg);
 }

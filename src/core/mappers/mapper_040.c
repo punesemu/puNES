@@ -23,66 +23,56 @@
 #include "cpu.h"
 #include "save_slot.h"
 
+INLINE static void prg_fix_040(void);
+INLINE static void wram_fix_040(void);
+INLINE static void mirroring_fix_040(void);
+
 struct _m040 {
+	BYTE reg[2];
 	BYTE enabled;
 	WORD count;
 	BYTE delay;
 } m040;
-struct _m040tmp {
-	BYTE *prg_6000;
-} m040tmp;
 
 void map_init_040(void) {
+	EXTCL_AFTER_MAPPER_INIT(040);
 	EXTCL_CPU_WR_MEM(040);
-	EXTCL_CPU_RD_MEM(040);
 	EXTCL_SAVE_MAPPER(040);
 	EXTCL_CPU_EVERY_CYCLE(040);
 	mapper.internal_struct[0] = (BYTE *)&m040;
 	mapper.internal_struct_size[0] = sizeof(m040);
 
-	if (info.reset >= HARD) {
-		memset(&m040, 0x00, sizeof(40));
-
-		mapper.rom_map_to[2] = 0;
-	}
-
-	m040tmp.prg_6000 = prg_pnt(6 << 13);
-
-	mapper.rom_map_to[0] = 4;
-	mapper.rom_map_to[1] = 5;
-	mapper.rom_map_to[3] = 7;
-
-	info.mapper.extend_wr = TRUE;
+	memset(&m040, 0x00, sizeof(m040));
+}
+void extcl_after_mapper_init_040(void) {
+	prg_fix_040();
+	wram_fix_040();
+	mirroring_fix_040();
 }
 void extcl_cpu_wr_mem_040(WORD address, BYTE value) {
-	if (address < 0x8000) {
-		return;
-	}
-
 	switch (address & 0xE000) {
 		case 0x8000:
 			m040.enabled = FALSE;
 			m040.count = 0;
 			irq.high &= ~EXT_IRQ;
 			return;
+		case 0xC000:
+			if (info.mapper.submapper == 1) {
+				m040.reg[1] = address & 0xFF;
+				prg_fix_040();
+			}
+			return;
 		case 0xA000:
 			m040.enabled = TRUE;
 			return;
 		case 0xE000:
-			control_bank(info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 2, value);
-			map_prg_rom_8k_update();
+			m040.reg[0] = value;
+			prg_fix_040();
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_040(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address < 0x6000) || (address > 0x7FFF)) {
-		return (openbus);
-	}
-
-	return (m040tmp.prg_6000[address & 0x1FFF]);
-}
 BYTE extcl_save_mapper_040(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m040.reg);
 	save_slot_ele(mode, slot, m040.enabled);
 	save_slot_ele(mode, slot, m040.count);
 	save_slot_ele(mode, slot, m040.delay);
@@ -96,5 +86,31 @@ void extcl_cpu_every_cycle_040(void) {
 
 	if (m040.enabled && (++m040.count == 0x1000)) {
 		m040.delay = 1;
+	}
+}
+
+INLINE static void prg_fix_040(void) {
+	if (m040.reg[1] & 0x08) {
+		if (m040.reg[1] & 0x10)
+			memmap_auto_32k(0x8000, 2 | (m040.reg[1] >> 6));
+		else {
+			memmap_auto_16k(0x8000, 4 | (m040.reg[1] >> 5));
+			memmap_auto_16k(0xC000, 4 | (m040.reg[1] >> 5));
+		}
+	} else {
+		memmap_auto_8k(0x8000, 4);
+		memmap_auto_8k(0xA000, 5);
+		memmap_auto_8k(0xC000, m040.reg[0] & 0x07);
+		memmap_auto_8k(0xE000, 7);
+	}
+}
+INLINE static void wram_fix_040(void) {
+	memmap_prgrom_8k(0x6000, 6);
+}
+INLINE static void mirroring_fix_040(void) {
+	if (m040.reg[1] & 0x01) {
+		mirroring_H();
+	} else {
+		mirroring_V();
 	}
 }

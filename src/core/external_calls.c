@@ -23,8 +23,8 @@ void (*extcl_after_mapper_init)(void);
 // viene chiamata dal mapper_quit()
 void (*extcl_mapper_quit)(void);
 void (*extcl_cpu_wr_mem)(WORD address, BYTE value);
-BYTE (*extcl_cpu_rd_mem)(WORD address, BYTE openbus, BYTE before);
-BYTE (*extcl_cpu_rd_ram)(WORD address, BYTE openbus, BYTE before);
+BYTE (*extcl_cpu_rd_mem)(WORD address, BYTE openbus);
+BYTE (*extcl_cpu_rd_ram)(WORD address, BYTE openbus);
 BYTE (*extcl_save_mapper)(BYTE mode, BYTE slot, FILE *fp);
 // CPU
 // viene chimata subito dopo il cpu_init_pc
@@ -64,7 +64,7 @@ void (*extcl_wr_chr)(WORD address, BYTE value);
 // vine chiamata in cpu_inline.h alla scrittura nei rigistri della apu
 BYTE (*extcl_wr_apu)(WORD address, BYTE *value);
 // vine chiamata in cpu_inline.h alla lettura dei rigistri della apu
-BYTE (*extcl_rd_apu)(WORD address, BYTE openbus, BYTE before);
+BYTE (*extcl_rd_apu)(WORD address, BYTE openbus);
 void (*extcl_length_clock)(void);
 void (*extcl_envelope_clock)(void);
 void (*extcl_apu_tick)(void);

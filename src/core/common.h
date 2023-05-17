@@ -96,7 +96,6 @@ enum length_file_name_type {
 	LENGTH_FILE_NAME_MAX  = 4096
 };
 enum forced_mirroring { UNK_HORIZONTAL, UNK_VERTICAL };
-enum max_chips_rom { MAX_CHIPS = 8 };
 enum languages {
 	LNG_ENGLISH,
 	LNG_ITALIAN,

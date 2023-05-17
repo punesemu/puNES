@@ -23,18 +23,21 @@
 #include "cpu.h"
 #include "save_slot.h"
 
+INLINE static void prg_fix_050(void);
+INLINE static void wram_fix_050(void);
+
 struct _m050 {
-	BYTE enabled;
-	WORD count;
-	BYTE delay;
+	BYTE reg;
+	struct _m50_irq {
+		BYTE enabled;
+		WORD count;
+		BYTE delay;
+	} irq;
 } m050;
-struct _m050tmp {
-	BYTE *prg_6000;
-} m050tmp;
 
 void map_init_050(void) {
+	EXTCL_AFTER_MAPPER_INIT(050);
 	EXTCL_CPU_WR_MEM(050);
-	EXTCL_CPU_RD_MEM(050);
 	EXTCL_SAVE_MAPPER(050);
 	EXTCL_CPU_EVERY_CYCLE(050);
 	mapper.internal_struct[0] = (BYTE *)&m050;
@@ -42,55 +45,52 @@ void map_init_050(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m050, 0x00, sizeof(m050));
-
-		mapper.rom_map_to[2] = 0;
 	}
 
-	m050tmp.prg_6000 = prg_pnt(info.prg.rom.max.banks_8k << 13);
-
-	mapper.rom_map_to[0] = 8;
-	mapper.rom_map_to[1] = 9;
-	mapper.rom_map_to[3] = 11;
-
 	info.mapper.extend_wr = TRUE;
+}
+void extcl_after_mapper_init_050(void) {
+	prg_fix_050();
+	wram_fix_050();
 }
 void extcl_cpu_wr_mem_050(WORD address, BYTE value) {
 	if ((address <= 0x5FFF) && ((address & 0x0060) == 0x0020)) {
 		if (address & 0x0100) {
-			if (!(m050.enabled = value & 0x01)) {
-				m050.count = 0;
+			m050.irq.enabled = value & 0x01;
+			if (!m050.irq.enabled) {
+				m050.irq.count = 0;
 				irq.high &= ~EXT_IRQ;
 			}
 			return;
 		}
-
-		value = (value & 0x08) | ((value << 2) & 0x04) | ((value >> 1) & 0x03);
-		control_bank(info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 2, value);
-		map_prg_rom_8k_update();
-		return;
+		m050.reg = value;
+		prg_fix_050();
 	}
-}
-BYTE extcl_cpu_rd_mem_050(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address < 0x6000) || (address > 0x7FFF)) {
-		return (openbus);
-	}
-
-	return (m050tmp.prg_6000[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_050(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m050.enabled);
-	save_slot_ele(mode, slot, m050.count);
-	save_slot_ele(mode, slot, m050.delay);
+	save_slot_ele(mode, slot, m050.reg);
+	save_slot_ele(mode, slot, m050.irq.enabled);
+	save_slot_ele(mode, slot, m050.irq.count);
+	save_slot_ele(mode, slot, m050.irq.delay);
 
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_050(void) {
-	if (m050.delay && !(--m050.delay)) {
+	if (m050.irq.delay && !(--m050.irq.delay)) {
 		irq.high |= EXT_IRQ;
 	}
 
-	if (m050.enabled && (++m050.count == 0x1000)) {
-		m050.delay = 1;
+	if (m050.irq.enabled && (++m050.irq.count == 0x1000)) {
+		m050.irq.delay = 1;
 	}
+}
+
+INLINE static void prg_fix_050(void) {
+	memmap_auto_8k(0x8000, 8);
+	memmap_auto_8k(0xA000, 9);
+	memmap_auto_8k(0xC000, ((m050.reg & 0x08) | ((m050.reg & 0x01) << 2) | ((m050.reg & 0x06) >> 1)));
+	memmap_auto_8k(0xE000, 11);
+}
+INLINE static void wram_fix_050(void) {
+	memmap_prgrom_8k(0x6000, 0x0F);
 }

@@ -51,7 +51,7 @@ void extcl_cpu_wr_mem_031(WORD address, BYTE value) {
 	m031.regs[address & 0x0007] = value;
 	sync_031();
 }
-BYTE extcl_cpu_rd_mem_031(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_031(WORD address, BYTE openbus) {
 	if (address < 0x8000) {
 		return (openbus);
 	}

@@ -25,7 +25,7 @@ enum _bmc70in1_type { BMC70IN1, BMC70IN1B };
 
 void map_init_BMC70IN1(void);
 void extcl_cpu_wr_mem_BMC70IN1(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_BMC70IN1(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_BMC70IN1(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_BMC70IN1(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_BMC70IN1_H_ */

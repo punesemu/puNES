@@ -16,98 +16,100 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <stdlib.h>
 #include <string.h>
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
 #include "save_slot.h"
-#include "../../c++/crc/crc.h"
 
-INLINE static void m53_update_6000(void);
+INLINE static void prg_fix_053(void);
+INLINE static void wram_fix_053(void);
+INLINE static void mirroring_fix_053(void);
 
 struct _m053 {
 	BYTE reg[2];
 } m053;
-struct _m053tmp {
-	BYTE *prg_6000;
-	BYTE eprom_first;
-} m053tmp;
 
 void map_init_053(void) {
+	EXTCL_AFTER_MAPPER_INIT(053);
 	EXTCL_CPU_WR_MEM(053);
-	EXTCL_CPU_RD_MEM(053);
 	EXTCL_SAVE_MAPPER(053);
 	mapper.internal_struct[0] = (BYTE *)&m053;
 	mapper.internal_struct_size[0] = sizeof(m053);
 
 	if (info.reset >= HARD) {
 		memset(&m053, 0x00, sizeof(m053));
-		// Supervision 16-in-1 [U][p1][!].unf
-		m053tmp.eprom_first = (prg_size() >= 0x8000) && (emu_crc32((void *)prg_rom(), 0x8000) == 0x63794E25);
-		extcl_cpu_wr_mem_053(0x6000, 0x00);
 	}
 
 	info.mapper.extend_wr = TRUE;
 }
-void extcl_cpu_wr_mem_053(WORD address, BYTE value) {
-	if (address < 0x6000) {
-		return;
-	}
+void extcl_after_mapper_init_053(void) {
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		size_t size = prgrom_size() - 0x8000;
 
-	if (address >= 0x8000) {
-		m053.reg[1] = value;
-	} else {
-		m053.reg[0] = value;
+		// Supervision 16-in-1 [U][p1][!].unf
+		if (size == 0x200000) {
+			BYTE *buffer = malloc(size);
 
-		if (m053.reg[0] & 0x20) {
-			mirroring_H();
-		} else  {
-			mirroring_V();
+			miscrom_set_size(0x8000);
+			miscrom_init();
+
+			memcpy(miscrom_pnt(), prgrom_pnt(), miscrom_size());
+			memcpy(buffer, prgrom_pnt_byte(0x8000), size);
+
+			prgrom_set_size(size);
+			prgrom_init(0x00);
+			memcpy(prgrom_pnt(), buffer, size);
+			free(buffer);
 		}
 	}
-
-	m53_update_6000();
-
-	if (m053.reg[0] & 0x10) {
-		WORD bank, tmp = (m053.reg[0] << 3) & 0x78;
-
-		bank = (tmp | (m053.reg[1] & 0x07)) + (m053tmp.eprom_first ? 0x02 : 0x00);
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
-
-		bank = (tmp | 0x07) + (m053tmp.eprom_first ? 0x02 : 0x00);
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 2, bank);
-	} else {
-		value = m053tmp.eprom_first ? 0x00 : 0x80;
-		control_bank(info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, value);
-
-		value = m053tmp.eprom_first ? 0x01 : 0x81;
-		control_bank(info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 2, value);
-	}
-	map_prg_rom_8k_update();
+	prg_fix_053();
+	wram_fix_053();
+	mirroring_fix_053();
 }
-BYTE extcl_cpu_rd_mem_053(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address < 0x6000) || (address > 0x7FFF)) {
-		return (openbus);
+void extcl_cpu_wr_mem_053(WORD address, BYTE value) {
+	if ((address >= 0x6000) && (address <= 0x7FFF)) {
+		if (!(m053.reg[0] & 0x10)) {
+			m053.reg[0] = value;
+			prg_fix_053();
+			wram_fix_053();
+			mirroring_fix_053();
+		}
+		return;
 	}
-
-	return (m053tmp.prg_6000[address & 0x1FFF]);
+	if (address >= 0x8000) {
+		m053.reg[1] = value;
+		prg_fix_053();
+	}
 }
 BYTE extcl_save_mapper_053(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m053.reg);
+
 	if (mode == SAVE_SLOT_READ) {
-		m53_update_6000();
+		wram_fix_053();
 	}
 
 	return (EXIT_OK);
 }
 
-INLINE static void m53_update_6000(void) {
-	WORD value = (((m053.reg[0] << 4) & 0xF0) | 0x0F) + (m053tmp.eprom_first ? 0x04 : 0x00);
+INLINE static void prg_fix_053(void) {
+	if (m053.reg[0] & 0x10) {
+		WORD base = m053.reg[0] << 3;
 
-	control_bank(info.prg.rom.max.banks_8k)
-	m053tmp.prg_6000 = prg_pnt(value << 13);
+		memmap_auto_16k(0x8000, (base | (m053.reg[1] & 0x07)));
+		memmap_auto_16k(0xC000, (base | 0x07));
+	} else {
+		memmap_other_32k(0x8000, 0, miscrom_pnt(), miscrom_size(), TRUE, FALSE);
+	}
+}
+INLINE static void wram_fix_053(void) {
+	memmap_prgrom_8k(0x6000, ((m053.reg[0] << 4) | 0x0F));
+}
+INLINE static void mirroring_fix_053(void) {
+	if (m053.reg[0] & 0x20) {
+		mirroring_H();
+	} else  {
+		mirroring_V();
+	}
 }

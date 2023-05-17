@@ -67,7 +67,7 @@ void map_init_410(void) {
 }
 void extcl_cpu_wr_mem_410(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active && !(m410.reg[3] & 0x40)) {
+		if (!(m410.reg[3] & 0x40) && memmap_adr_is_writable(address)) {
 			m410.reg[m410.index] = value;
 			m410.index = (m410.index + 1) & 0x03;
 			MMC3_prg_fix();

@@ -44,12 +44,12 @@ void map_init_529(void) {
 	VRC2and4_chr_swap = chr_swap_vrc2and4_529;
 	VRC2and4_wram_fix = wram_fix_vrc2and4_529;
 
-	m529tmp.cc93c56 = prg_wram_nvram_size() == 256;
+	m529tmp.cc93c56 = wram_nvram_size() == 256;
 }
 void extcl_cpu_init_pc_529(void) {
 	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
 		if (m529tmp.cc93c56) {
-			ee93cx6_init(prg_wram_nvram_pnt(), prg_wram_nvram_size(), 8);
+			ee93cx6_init(wram_nvram_pnt(), wram_nvram_size(), 8);
 		}
 	}
 }
@@ -64,7 +64,7 @@ void extcl_cpu_wr_mem_529(WORD address, BYTE value) {
 	}
 	extcl_cpu_wr_mem_VRC2and4(address, value);
 }
-BYTE extcl_cpu_rd_mem_529(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_529(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x5000:
 			return (m529tmp.cc93c56 ? ee93cx6_read() ? 0x01 : 0x00 : 0x01);
@@ -91,10 +91,10 @@ void chr_swap_vrc2and4_529(WORD address, WORD value) {
 }
 void wram_fix_vrc2and4_529(void) {
 	if (m529tmp.cc93c56) {
-		if (prg_wram_ram_size()) {
-			wram_map_ram_wp_8k(0x6000, 0, !vrc2and4.wram_protect, !vrc2and4.wram_protect);
+		if (wram_ram_size()) {
+			memmap_wram_ram_wp_8k(0x6000, 0, !vrc2and4.wram_protect, !vrc2and4.wram_protect);
 		} else {
-			wram_map_disable_8k(0x6000);
+			memmap_disable_8k(0x6000);
 		}
 	} else {
 		wram_fix_VRC2and4_base();

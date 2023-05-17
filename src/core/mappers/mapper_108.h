@@ -26,7 +26,6 @@ enum mm14_types { M108_1 = 1, M108_2, M108_3, M108_4 };
 void map_init_108(void);
 void extcl_after_mapper_init_108(void);
 void extcl_cpu_wr_mem_108(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_108(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_108(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_108_H_ */

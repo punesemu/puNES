@@ -93,7 +93,7 @@ void extcl_cpu_wr_mem_242(WORD address, UNUSED(BYTE value)) {
 	prg_fix_242();
 	mirroring_fix_242();
 }
-BYTE extcl_cpu_rd_mem_242(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_242(WORD address, BYTE openbus) {
 	if ((address >= 0x8000) && (m242.reg & 0x0100)) {
 		return (prg_rom_rd((address | m242tmp.dipswitch)));
 	}

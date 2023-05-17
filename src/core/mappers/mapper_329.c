@@ -39,7 +39,7 @@ void map_init_329(void) {
 
 	memset(&m329, 0x00, sizeof(m329));
 
-//	if (prg_wram_size() < 0x8000) {
+//	if (wram_size() < 0x8000) {
 //		wram_set_ram_size(0x8000);
 //	}
 }
@@ -69,7 +69,7 @@ INLINE static void prg_fix_329(void) {
 	map_prg_rom_8k_update();
 }
 INLINE static void wram_fix_329(void) {
-	wram_map_auto_8k(0x6000, m329.reg >> 6);
+	memmap_auto_8k(0x6000, m329.reg >> 6);
 }
 INLINE static void mirroring_fix_329(void) {
 	if (m329.reg & 0x20) {

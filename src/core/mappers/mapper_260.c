@@ -141,7 +141,7 @@ void extcl_cpu_wr_mem_260(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_260(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_260(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return ((openbus & ~0x03) | (m260tmp.dipswitch & 0x03));
 	}
@@ -158,55 +158,35 @@ BYTE extcl_save_mapper_260(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_260(void) {
-	WORD bank[4];
-
 	switch (m260.cpu5xxx[0] & 0x07) {
 		case 0:
 		case 1:
 		case 2:
 		case 3: {
-			BYTE swap = (m260.cpu8xxx[0] & 0x40) >> 5;
+			WORD swap = (m260.cpu8xxx[0] & 0x40) << 8;
 			WORD base = m260.prg_base << 1;
-			BYTE mask = m260.cpu5xxx[0] & 0x02 ? 0x0F : 0x1F;
+			WORD mask = m260.cpu5xxx[0] & 0x02 ? 0x0F : 0x1F;
 
 			base &= ~mask;
-
-			bank[0] = base | (m260.mmc3[6] & mask);
-			bank[1] = base | (m260.mmc3[7] & mask);
-			bank[2] = base | (0xFE & mask);
-			bank[3] = base | (0xFF & mask);
-
-			_control_bank(bank[0], info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 0 ^ swap, bank[0]);
-
-			_control_bank(bank[1], info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 1, bank[1]);
-
-			_control_bank(bank[2], info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 2 ^ swap, bank[2]);
-
-			_control_bank(bank[3], info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 3, bank[3]);
+			memmap_auto_8k(0x8000 ^ swap, (base | (m260.mmc3[6] & mask)));
+			memmap_auto_8k(0xA000, (base | (m260.mmc3[7] & mask)));
+			memmap_auto_8k(0xC000 ^ swap, (base | (0xFE & mask)));
+			memmap_auto_8k(0xE000, (base | (0xFF & mask)));
 			break;
 		}
 		case 4:
-			bank[0] = m260.prg_base;
-			_control_bank(bank[0], info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, bank[0]);
-			map_prg_rom_8k(2, 2, bank[0]);
+			memmap_auto_16k(0x8000, m260.prg_base);
+			memmap_auto_16k(0xC000, m260.prg_base);
 			break;
 		case 5:
 		case 6:
 		case 7:
-			bank[0] = m260.prg_base >> 1;
-			_control_bank(bank[0], info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, bank[0]);
+			memmap_auto_32k(0x8000, (m260.prg_base >> 1));
 			break;
 	}
-	map_prg_rom_8k_update();
 }
 INLINE static void chr_fix_260(void) {
-	WORD mask, bank[8], base = m260.cpu5xxx[2] << 3;
+	WORD mask = 0, bank[8], base = m260.cpu5xxx[2] << 3;
 	BYTE swap = 0;
 
 	switch (m260.cpu5xxx[0] & 0x07) {

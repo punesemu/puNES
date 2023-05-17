@@ -247,8 +247,6 @@ BYTE nsf_load_rom(void) {
 		info.format = NSF_FORMAT;
 
 		info.machine[DATABASE] = DEFAULT;
-		info.prg.ram.bat.banks = 0;
-		info.prg.ram.banks_8k_plus = 0;
 
 		nsf.info.name = &nsf_default_label[0];
 		nsf.info.artist = &nsf_default_label[0];
@@ -396,39 +394,23 @@ BYTE nsf_load_rom(void) {
 			}
 		}
 
-		{
-			WORD ram = 0x2000;
-
-			if (nsf.sound_chips.fds) {
-				ram = 0xA000;
-			}
-
-			if (map_prg_ram_malloc(ram) != EXIT_OK) {
-				free(rom.data);
-				return (EXIT_ERROR);
-			}
-		}
+		wram_set_ram_size(nsf.sound_chips.fds ? 0xA000 : 0x2000);
 
 		{
 			int padding = nsf.adr.load & 0x0FFF;
 
-			nsf.prg.banks_4k = ((len + padding) / 0x1000);
+			prgrom_set_size((((len + padding) / 0x1000) +
+				(((len + padding) % 0x1000) ? 1 : 0)) * 0x1000);
 
-			if (((len + padding) % 0x1000)) {
-				nsf.prg.banks_4k++;
-			}
-
-			if (map_prg_malloc((size_t)(nsf.prg.banks_4k * 0x1000), 0xF2, TRUE) == EXIT_ERROR) {
+			if (prgrom_init(0xF2) == EXIT_ERROR) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
 
-			if (rom_mem_ctrl_memcpy(prg_rom() + padding, &rom, len) == EXIT_ERROR) {
+			if (rom_mem_ctrl_memcpy(prgrom_pnt() + padding, &rom, len) == EXIT_ERROR) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
-
-			nsf.prg.banks_4k--;
 		}
 
 		nsf.enabled = TRUE;
@@ -496,7 +478,7 @@ void nsf_init_tune(void) {
 	cpu.SP = 0xFD;
 	memset(mmcpu.ram, 0x00, sizeof(mmcpu.ram));
 
-	memset(prg.ram.data, 0x00, prg.ram.size);
+	wram_memset();
 
 	if (nsf.sound_chips.vrc6) {
 		init_NSF_VRC6(0x01, 0x02);
@@ -622,6 +604,8 @@ void extcl_audio_samples_mod_nsf(SWORD *samples, int count) {
 void nsf_reset_prg(void) {
 	DBWORD i = 0;
 
+	wram_reset();
+
 	if (nsf.bankswitch.enabled) {
 		if (nsf.sound_chips.fds) {
 			for (i = 0x5FF6; i <= 0x5FF7; i++) {
@@ -635,21 +619,14 @@ void nsf_reset_prg(void) {
 		BYTE value = 0, bank = 0;
 
 		nsf.bankswitch.enabled = TRUE;
-
-		if (nsf.sound_chips.fds) {
-			i = 0x6000;
-		} else {
-			i = 0x8000;
-		}
-
+		i = nsf.sound_chips.fds ? 0x6000 : 0x8000;
 		for (; i < 0x10000; i += 0x1000) {
-			value = bank;
-			control_bank(nsf.prg.banks_4k)
+			value = prgrom_control_bank(S4K, bank);
 			if (i < (nsf.adr.load & 0xF000)) {
 				cpu_wr_mem(0x5FF0 | (i >> 12), 0);
 			} else {
 				cpu_wr_mem(0x5FF0 | (i >> 12), value);
-				if (bank < nsf.prg.banks_4k) {
+				if (bank < prgrom_banks(S4K)) {
 					bank++;
 				}
 			}
@@ -1612,7 +1589,7 @@ static void nsf_draw_controls(void) {
 		if (nsf.sound_chips.fds) {
 			dos_text(x + 1 + (d * 6) + (dospf(2) * 5),
 				y + ((h / NSF_GUI_INFO_SONG_LINES) * 3) + (((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2),
-				"[green][bck][black][fds1][fds2]")
+				"[green][bck][gray][fds1][fds2]")
 		} else {
 			dos_text(x + 1 + (d * 6) + (dospf(2) * 5),
 				y + ((h / NSF_GUI_INFO_SONG_LINES) * 3) + (((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2),

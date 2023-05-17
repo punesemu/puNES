@@ -100,7 +100,7 @@ void extcl_cpu_wr_mem_237(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_237(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_237(WORD address, BYTE openbus) {
 	if (address >= 0x8000) {
 		return (m237.reg[0] & 0x0001 ? m237tmp.dipswitch : openbus);
 	}

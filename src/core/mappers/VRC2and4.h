@@ -61,7 +61,7 @@ extern _vrc2and4 vrc2and4;
 
 void extcl_after_mapper_init_VRC2and4(void);
 void extcl_cpu_wr_mem_VRC2and4(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_VRC2and4(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_VRC2and4(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_VRC2and4(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_VRC2and4(void);
 

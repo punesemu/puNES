@@ -379,8 +379,8 @@ void map_init_FFESMC(void) {
 		} else {
 			info.chr.rom.banks_8k = 32;
 		}
-		if (!wram.size) {
-			wram.size = 0x2000;
+		if (!wram_size()) {
+			wram_set_ram_size(0x2000);
 		}
 	}
 
@@ -454,15 +454,15 @@ void extcl_cpu_init_pc_FFESMC(void) {
 
 		nmi_handler = prg_rom_rd(0xFFFA) | (prg_rom_rd(0xFFFB) << 8);
 		if (nmi_handler == 0x5032) {
-			prg_rom_rd(0xFFFA) = ffesmc.scratch[0x4F];
-			prg_rom_rd(0xFFFB) = ffesmc.scratch[0x50];
+			prgrom_wr(0xFFFA, ffesmc.scratch[0x4F]);
+			prgrom_wr(0xFFFB, ffesmc.scratch[0x50]);
 		}
 		memcpy(&ffesmc.scratch[0], &initial_state, sizeof(ffesmc.scratch));
 		ffesmc.scratch[0x4F] = prg_rom_rd(0xFFFA);
 		ffesmc.scratch[0x50] = prg_rom_rd(0xFFFB);
 		if (info.mapper.id == 17) {
-			prg_rom_rd(0xFFFA) = 0x32;
-			prg_rom_rd(0xFFFB) = 0x50;
+			prgrom_wr(0xFFFA, 0x32);
+			prgrom_wr(0xFFFB, 0x50);
 		}
 		if (ffesmctmp.buf.data) {
 			memcpy(chr_rom(), ffesmctmp.buf.data, ffesmctmp.buf.size);
@@ -471,14 +471,14 @@ void extcl_cpu_init_pc_FFESMC(void) {
 			ffesmctmp.buf.size = 0;
 		}
 		// trainer
-		if (info.mapper.trainer && wram.size) {
+		if (miscrom.trainer.in_use && wram_size()) {
 			WORD address = info.mapper.id != 17 ? 0x7000 :
 				info.mapper.submapper == 0 ? 0x7000 :
 				info.mapper.submapper << 8 | 0x5C00;
 
-			trainer.where_to_copy = (address < 0x6000) ?
+			miscrom_trainer_dst() = (address < 0x6000) ?
 				&ffesmc.scratch[address & 0xF00] :
-				&wram.data[address & 0x1FFF];
+				wram_pnt_byte(address & 0x1FFF);
 			cpu.PC = info.mapper.id == 17 ? address : 0x5000;
 		}
 	}
@@ -659,7 +659,7 @@ void extcl_cpu_wr_mem_FFESMC(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_FFESMC(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_FFESMC(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x4000:
 			if (address == 0x4500) {
@@ -775,78 +775,39 @@ void extcl_update_r2006_FFESMC(WORD new_r2006, WORD old_r2006) {
 }
 
 INLINE static void prg_fix_FFESMC(void) {
-	WORD bank = 0;
-
 	if (ffesmc.mode.m2m4 & 0x01) {
 		switch (ffesmc.mode.m1 & 0xE0) {
 			case 0x00: // 0: UNROM
-				bank = ffesmc.latch & 0x07;
-				_control_bank(bank, info.prg.rom.max.banks_16k)
-				map_prg_rom_8k(2, 0, bank);
-
-				bank = 0x07;
-				_control_bank(bank, info.prg.rom.max.banks_16k)
-				map_prg_rom_8k(2, 2, bank);
+				memmap_auto_16k(0x8000, (ffesmc.latch & 0x07));
+				memmap_auto_16k(0xC000, 0x07);
 				break;
 			case 0x20: // 1: UN1ROM+CHRSW
-				bank = (ffesmc.latch & 0x3C) >> 2;
-				_control_bank(bank, info.prg.rom.max.banks_16k)
-				map_prg_rom_8k(2, 0, bank);
-
-				bank = 0x07;
-				_control_bank(bank, info.prg.rom.max.banks_16k)
-				map_prg_rom_8k(2, 2, bank);
+				memmap_auto_16k(0x8000, ((ffesmc.latch & 0x3C) >> 2));
+				memmap_auto_16k(0xC000, 0x07);
 				break;
 			case 0x40: // 2: UOROM
-				bank = ffesmc.latch & 0x0F;
-				_control_bank(bank, info.prg.rom.max.banks_16k)
-				map_prg_rom_8k(2, 0, bank);
-
-				bank = 0x0F;
-				_control_bank(bank, info.prg.rom.max.banks_16k)
-				map_prg_rom_8k(2, 2, bank);
+				memmap_auto_16k(0x8000, (ffesmc.latch & 0x0F));
+				memmap_auto_16k(0xC000, 0x0F);
 				break;
 			case 0x60: // 3: Reverse UOROM+CHRSW
-				bank = 0x0F;
-				_control_bank(bank, info.prg.rom.max.banks_16k)
-				map_prg_rom_8k(2, 0, bank);
-
-				bank = ffesmc.latch & 0x0F;
-				_control_bank(bank, info.prg.rom.max.banks_16k)
-				map_prg_rom_8k(2, 2, bank);
+				memmap_auto_16k(0x8000, 0x0F);
+				memmap_auto_16k(0xC000, (ffesmc.latch & 0x0F));
 				break;
 			case 0x80: // 4: GNROM
-				bank = (ffesmc.latch & 0x30) >> 4;
-				_control_bank(bank, info.prg.rom.max.banks_32k)
-				map_prg_rom_8k(4, 0, bank);
+				memmap_auto_32k(0x8000, ((ffesmc.latch & 0x30) >> 4));
 				break;
 			case 0xA0: // 5: CNROM-256
 			case 0xC0: // 6: CNROM-128
 			case 0xE0: // 7: NROM-256
-				bank = 0x03;
-				_control_bank(bank, info.prg.rom.max.banks_32k)
-				map_prg_rom_8k(4, 0, bank);
+				memmap_auto_32k(0x8000, 0x03);
 				break;
 		}
 	} else {
-		bank = ffesmc.prg[0];
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 0, bank);
-
-		bank = ffesmc.prg[1];
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 1, bank);
-
-		bank = ffesmc.prg[2];
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 2, bank);
-
-		bank = ffesmc.prg[3];
-		_control_bank(bank, info.prg.rom.max.banks_8k)
-		map_prg_rom_8k(1, 3, bank);
+		memmap_auto_8k(0x8000, ffesmc.prg[0]);
+		memmap_auto_8k(0xA000, ffesmc.prg[1]);
+		memmap_auto_8k(0xC000, ffesmc.prg[2]);
+		memmap_auto_8k(0xE000, ffesmc.prg[3]);
 	}
-
-	map_prg_rom_8k_update();
 }
 INLINE static void chr_fix_FFESMC(void) {
 	WORD bank[8];
@@ -929,7 +890,7 @@ INLINE static void chr_fix_FFESMC(void) {
 	chr.bank_1k[7] = chr_pnt(bank[7] << 10);
 }
 INLINE static void wram_fix_FFESMC(void) {
-	wram_map_other_4k(0x5000, 0, &ffesmc.scratch[0], sizeof(ffesmc.scratch), TRUE, TRUE);
+	memmap_other_4k(0x5000, 0, &ffesmc.scratch[0], sizeof(ffesmc.scratch), TRUE, TRUE);
 }
 INLINE static void mirroring_fix_FFESMC(void) {
 	if (ffesmc.mode.smc & 0x02) {

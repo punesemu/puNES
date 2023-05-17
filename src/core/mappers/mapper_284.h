@@ -16,12 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_DRIPGAME_H_
-#define MAPPER_DRIPGAME_H_
+#ifndef MAPPER_284_H_
+#define MAPPER_284_H_
 
 #include "common.h"
 
-typedef struct _dripgame_channel {
+typedef struct _m284_channel {
 	SWORD out;
 	BYTE fifo[256];
 	BYTE full;
@@ -29,33 +29,33 @@ typedef struct _dripgame_channel {
 	WORD freq;
 	WORD vol;
 	WORD timer;
-	struct _dripgame_channel_pos {
+	struct _m284_channel_pos {
 		BYTE read;
 		BYTE write;
 	} pos;
-} _dripgame_channel;
-typedef struct _dripgame {
+} _m284_channel;
+typedef struct _m284 {
 	BYTE dipswitch;
 	BYTE control;
 	BYTE prg;
 	BYTE chr[4];
 	BYTE extended_attributes[2][0x400];
-	_dripgame_channel channel[2];
-	struct _dripgame_irq {
+	_m284_channel channel[2];
+	struct _m284_irq {
 		BYTE enabled;
 		BYTE latch;
 		WORD counter;
 	} irq;
-} _dripgame;
+} _m284;
 
-extern _dripgame dripgame;
+extern _m284 m284;
 
-void map_init_DRIPGAME(void);
-void extcl_after_mapper_init_DRIPGAME(void);
-void extcl_cpu_wr_mem_DRIPGAME(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_DRIPGAME(WORD address, BYTE openbus, BYTE before);
-BYTE extcl_save_mapper_DRIPGAME(BYTE mode, BYTE slot, FILE *fp);
-BYTE extcl_rd_nmt_DRIPGAME(WORD address);
-void extcl_cpu_every_cycle_DRIPGAME(void);
+void map_init_284(void);
+void extcl_after_mapper_init_284(void);
+void extcl_cpu_wr_mem_284(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_284(WORD address, BYTE openbus);
+BYTE extcl_save_mapper_284(BYTE mode, BYTE slot, FILE *fp);
+BYTE extcl_rd_nmt_284(WORD address);
+void extcl_cpu_every_cycle_284(void);
 
-#endif /* MAPPER_DRIPGAME_H_ */
+#endif /* MAPPER_284_H_ */

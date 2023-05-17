@@ -75,13 +75,6 @@ enum mirroring_types {
 	map_nmt_1k(2, 0);\
 	map_nmt_1k(3, 1)
 
-#define prg_rom() prg.rom.data
-#define prg_size() prg.rom.size
-#define prg_byte(index) prg_rom()[index]
-#define prg_pnt(index) &prg_byte(index)
-#define prg_chip_rom(chip_rom) prg.chip[chip_rom].data
-#define prg_chip_size(chip_rom) prg.chip[chip_rom].size
-
 #define chr_rom() chr.rom.data
 #define chr_size() chr.rom.size
 #define chr_byte(index) chr_rom()[index]
@@ -98,21 +91,8 @@ typedef struct _prg {
 		size_t size;
 		BYTE *data;
 	} rom;
-	struct _prg_chip {
-		size_t size;
-		BYTE *data;
-	} chip[MAX_CHIPS];
 
 	BYTE *rom_8k[4];   // 8k pages (0x2000)
-
-	struct _prg_ram_chip { // Non Battery RAM
-		size_t size;
-		BYTE *data;
-	} ram;
-
-//	BYTE *ram_plus;    // PRG Ram extra
-//	BYTE *ram_plus_8k;
-//	BYTE *ram_battery; // Battery RAM
 } _prg;
 typedef struct _chr {
 	struct _chr_rom {
@@ -122,7 +102,7 @@ typedef struct _chr {
 	struct _chr_chip {
 		size_t size;
 		BYTE *data;
-	} chip[MAX_CHIPS];
+	} chip[8 /*MAX_CHIPS*/];
 
 	BYTE *bank_1k[8];
 

@@ -26,17 +26,17 @@
 void prg_swap_mmc3_344(WORD address, WORD value);
 void chr_swap_mmc3_344(WORD address, WORD value);
 
-static BYTE dipswitch[2] = { 0x00, 0x78 };
-static BYTE prg_chip_order[2][4] = {
-	{ 0, 1, 2, 3 },
-	{ 0, 3, 1, 2 }
-};
+INLINE static void tmp_fix_334(BYTE max, BYTE index, const BYTE *ds);
+
 struct _m344 {
 	WORD reg;
 } m344;
 struct _m344tmp {
 	BYTE prg_chip;
-	BYTE dipswitch;
+	BYTE ds_used;
+	BYTE max;
+	BYTE index;
+	const BYTE *dipswitch;
 } m344tmp;
 
 void map_init_344(void) {
@@ -63,20 +63,29 @@ void map_init_344(void) {
 	MMC3_chr_swap = chr_swap_mmc3_344;
 
 	m344tmp.prg_chip = info.crc32.prg == 0xAB2ACA46 ? 1 : 0;
+
 	if (info.reset == RESET) {
-		m344tmp.dipswitch = !m344tmp.dipswitch;
+		if (m344tmp.ds_used) {
+			m344tmp.index = (m344tmp.index + 1) % m344tmp.max;
+		}
 	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		m344tmp.dipswitch = 0;
+		if ((info.crc32.prg == 0xAB2ACA46) || // Kuai Da Jin Ka Zhong Ji Tiao Zhan 3-in-1 (3-in-1,6-in-1,Unl).unif
+			(info.crc32.prg == 0x42F4BF99)) { // 快打金卡终极挑战.nes
+			static BYTE ds[2] = {0x00, 0x78};
+
+			tmp_fix_334(LENGTH(ds), 0, &ds[0]);
+		}
 	}
 
-	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
+	info.mapper.extend_wr = TRUE;
+	info.mapper.extend_rd = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_344(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active) {
+		if (memmap_adr_is_writable(address)) {
 			m344.reg = address;
 			MMC3_prg_fix();
 			MMC3_chr_fix();
@@ -106,9 +115,9 @@ void extcl_cpu_wr_mem_344(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_344(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address >= 0x8000) && (m344.reg & 0x08)) {
-		return (dipswitch[m344tmp.dipswitch]);
+BYTE extcl_cpu_rd_mem_344(WORD address, BYTE openbus) {
+	if ((address >= 0x8000) && m344tmp.ds_used && (m344.reg & 0x08)) {
+		return (m344tmp.dipswitch[m344tmp.index]);
 	}
 	return (openbus);
 }
@@ -120,7 +129,11 @@ BYTE extcl_save_mapper_344(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void prg_swap_mmc3_344(WORD address, WORD value) {
-	WORD base = (prg_chip_order[m344tmp.prg_chip][m344.reg & 0x03]) << 4;
+	static BYTE chip_order[2][4] = {
+		{ 0, 1, 2, 3 },
+		{ 0, 3, 1, 2 }
+	};
+	WORD base = (chip_order[m344tmp.prg_chip][m344.reg & 0x03]) << 4;
 	WORD mask = 0x0F;
 
 	// NROM mode
@@ -136,4 +149,11 @@ void chr_swap_mmc3_344(WORD address, WORD value) {
 	WORD mask = m344.reg & 0x02 ? 0x7F : 0xFF;
 
 	chr_swap_MMC3_base(address, (base | (value & mask)));
+}
+
+INLINE static void tmp_fix_334(BYTE max, BYTE index, const BYTE *ds) {
+	m344tmp.ds_used = TRUE;
+	m344tmp.max = max;
+	m344tmp.index = index;
+	m344tmp.dipswitch = ds;
 }

@@ -22,6 +22,6 @@
 #include "common.h"
 
 void map_init_RT_01(void);
-BYTE extcl_cpu_rd_mem_RT_01(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_RT_01(WORD address, BYTE openbus);
 
 #endif /* MAPPER_RT_01_H_ */

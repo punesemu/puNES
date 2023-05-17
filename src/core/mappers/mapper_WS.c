@@ -83,7 +83,7 @@ void extcl_cpu_wr_mem_WS(WORD address, UNUSED(BYTE value)) {
 	}
 	return;
 }
-BYTE extcl_cpu_rd_mem_WS(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_WS(WORD address, BYTE openbus) {
 	if (address >= 0x8000) {
 		if ((ws.reg[1] & 0xC0) & wstmp.dipswitch) {
 			return (0xFF);
