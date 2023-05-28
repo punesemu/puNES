@@ -110,14 +110,14 @@ void prg_fix_MMC4_base(void) {
 	MMC4_prg_swap(0xC000, 0xFF);
 }
 void prg_swap_MMC4_base(WORD address, WORD value) {
-	memmap_auto_16k(address, value);
+	memmap_auto_16k(MMCPU(address), value);
 }
 void chr_fix_MMC4_base(void) {
 	MMC4_chr_swap(0x0000, mmc4.chr[mmc4.latch[0]]);
 	MMC4_chr_swap(0x1000, mmc4.chr[mmc4.latch[1]]);
 }
 void chr_swap_MMC4_base(WORD address, WORD value) {
-	map_chr_rom_4k(address, value);
+	memmap_auto_4k(MMPPU(address), value);
 }
 void mirroring_fix_MMC4_base(void) {
 	if (mmc4.mirroring & 0x01) {

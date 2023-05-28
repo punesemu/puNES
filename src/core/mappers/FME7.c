@@ -225,7 +225,7 @@ void prg_fix_FME7_base(void) {
 	FME7_prg_swap(0xE000, ~0);
 }
 void prg_swap_FME7_base(WORD address, WORD value) {
-	memmap_prgrom_8k(address, value);
+	memmap_prgrom_8k(MMCPU(address), value);
 }
 void chr_fix_FME7_base(void) {
 	FME7_chr_swap(0x0000, fme7.chr[0]);
@@ -238,16 +238,16 @@ void chr_fix_FME7_base(void) {
 	FME7_chr_swap(0x1C00, fme7.chr[7]);
 }
 void chr_swap_FME7_base(WORD address, WORD value) {
-	map_chr_rom_1k(address, value);
+	memmap_auto_1k(MMPPU(address), value);
 }
 void wram_fix_FME7_base(void) {
 	FME7_wram_swap(fme7.prg[0] & 0x3F);
 }
 void wram_swap_FME7_base(WORD value) {
 	if (fme7.prg[0] & 0x40) {
-		memmap_auto_wp_8k(0x6000, value, fme7.prg[0] >> 7, fme7.prg[0] >> 7);
+		memmap_auto_wp_8k(MMCPU(0x6000), value, fme7.prg[0] >> 7, fme7.prg[0] >> 7);
 	} else {
-		memmap_prgrom_8k(0x6000, value);
+		memmap_prgrom_8k(MMCPU(0x6000), value);
 	}
 }
 void mirroring_fix_FME7_base(void) {

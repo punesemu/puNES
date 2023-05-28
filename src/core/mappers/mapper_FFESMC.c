@@ -333,10 +333,7 @@ struct _ffemsc {
 	BYTE scratch[0x1000];
 } ffesmc;
 struct _ffesmctmp {
-	struct _ffesmctmp_chr_buffer {
-		size_t size;
-		BYTE *data;
-	} buf;
+	BYTE *chr;
 } ffesmctmp;
 
 void map_init_FFESMC(void) {
@@ -355,32 +352,30 @@ void map_init_FFESMC(void) {
 	mapper.internal_struct[0] = (BYTE *)&ffesmc;
 	mapper.internal_struct_size[0] = sizeof(ffesmc);
 
-	ffesmctmp.buf.data = NULL;
-	ffesmctmp.buf.size = 0;
+	ffesmctmp.chr = NULL;
 
-	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		if (!mapper.write_vram) {
-			mapper.write_vram = TRUE;
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		if (chrrom_size()) {
 			if (info.mapper.id != 12) {
-				ffesmctmp.buf.data = malloc(chr_size());
-				ffesmctmp.buf.size = chr_size();
-				memcpy(ffesmctmp.buf.data, chr_rom(), chr_size());
-				info.chr.rom.banks_8k = (chr_size() / 0x2000) < 32 ? 32 : chr_size() / 0x2000;
-			} else {
-				size_t old_size = prg_size();
-
-				if (old_size < 0x80000) {
-					prg_rom() = realloc(prg_rom(), 0x80000);
-					prg_size() = 0x80000;
+				if (vram_size() < chrrom_size()) {
+					vram_set_ram_size(chrrom_size());
+					ffesmctmp.chr = chrrom_pnt();
 				}
-				memcpy(prg_rom() + 0x40000, chr_rom(), (chr_size() < (0x80000 - 0x40000) ? chr_size() : 0x80000 - 0x40000));
-				info.chr.rom.banks_8k = 32;
+			} else {
+				size_t old_size = prgrom_size();
+
+				if (old_size < S512K) {
+					prgrom_pnt() = realloc(prgrom_pnt(), S512K);
+					prgrom_set_size(S512K);
+				}
+				memcpy(prgrom_pnt_byte(S256K), chrrom_pnt(),
+					   (chrrom_size() < (S512K - S256K) ? chrrom_size() : S512K - S256K));
 			}
-		} else {
-			info.chr.rom.banks_8k = 32;
+		} else if (info.format != NES_2_0) {
+			vram_set_ram_size(S256K);
 		}
 		if (!wram_size()) {
-			wram_set_ram_size(0x2000);
+			wram_set_ram_size(S8K);
 		}
 	}
 
@@ -404,7 +399,7 @@ void map_init_FFESMC(void) {
 		}
 
 		ffesmc.mode.m1 = ((info.mapper.id == 6 ? info.mapper.submapper : 1) << 5) |
-			(mapper.mirroring == MIRRORING_VERTICAL ? 0x01 : 0x11) | 0x02;
+			(info.mapper.mirroring == MIRRORING_VERTICAL ? 0x01 : 0x11) | 0x02;
 		ffesmc.mode.m2m4 = (info.mapper.id == 12) || (info.mapper.id == 17) ? 0x00 : 0x03;
 		ffesmc.mode.smc = info.mapper.id == 17 ? 0x47 : 0x42;
 
@@ -450,25 +445,22 @@ void extcl_after_mapper_init_FFESMC(void) {
 }
 void extcl_cpu_init_pc_FFESMC(void) {
 	if (info.reset >= HARD) {
-		WORD nmi_handler;
+		WORD nmi_handler = 0;
 
-		nmi_handler = prg_rom_rd(0xFFFA) | (prg_rom_rd(0xFFFB) << 8);
+		nmi_handler = prgrom_rd(0xFFFA) | (prgrom_rd(0xFFFB) << 8);
 		if (nmi_handler == 0x5032) {
 			prgrom_wr(0xFFFA, ffesmc.scratch[0x4F]);
 			prgrom_wr(0xFFFB, ffesmc.scratch[0x50]);
 		}
 		memcpy(&ffesmc.scratch[0], &initial_state, sizeof(ffesmc.scratch));
-		ffesmc.scratch[0x4F] = prg_rom_rd(0xFFFA);
-		ffesmc.scratch[0x50] = prg_rom_rd(0xFFFB);
+		ffesmc.scratch[0x4F] = prgrom_rd(0xFFFA);
+		ffesmc.scratch[0x50] = prgrom_rd(0xFFFB);
 		if (info.mapper.id == 17) {
 			prgrom_wr(0xFFFA, 0x32);
 			prgrom_wr(0xFFFB, 0x50);
 		}
-		if (ffesmctmp.buf.data) {
-			memcpy(chr_rom(), ffesmctmp.buf.data, ffesmctmp.buf.size);
-			free(ffesmctmp.buf.data);
-			ffesmctmp.buf.data = NULL;
-			ffesmctmp.buf.size = 0;
+		if (ffesmctmp.chr) {
+			memcpy(vram_pnt(), ffesmctmp.chr, chrrom_size());
 		}
 		// trainer
 		if (miscrom.trainer.in_use && wram_size()) {
@@ -611,6 +603,8 @@ void extcl_cpu_wr_mem_FFESMC(WORD address, BYTE value) {
 					}
 					ffesmc.prg[address & 0x03] = value;
 					prg_fix_FFESMC();
+					chr_fix_FFESMC();
+					mirroring_fix_FFESMC();
 					return;
 				case 0x4510:
 				case 0x4511:
@@ -651,8 +645,6 @@ void extcl_cpu_wr_mem_FFESMC(WORD address, BYTE value) {
 				prg_fix_FFESMC();
 				chr_fix_FFESMC();
 				mirroring_fix_FFESMC();
-			} else {
-				prg.rom_8k[(address >> 13) & 0x03][address & 0x1FFF] = value;
 			}
 			return;
 		default:
@@ -692,10 +684,11 @@ void extcl_wr_chr_FFESMC(WORD address, BYTE value) {
 	if ((ffesmc.mode.m1 >= 0xA0) && !(ffesmc.mode.m1 & 0x01)) {
 		ffesmc.chr.lock = (ffesmc.mode.m1 & 0x10) != 0;
 	}
-	if (((ffesmc.mode.m1 & 0xE1) >= 0x81) || ffesmc.chr.lock) {
-		return;
-	}
-	chr.bank_1k[address >> 10][address & 0x3FF] = value;
+	chr_wr(address, value);
+//	if (((ffesmc.mode.m1 & 0xE1) >= 0x81) || ffesmc.chr.lock) {
+//		return;
+//	}
+//	chr.bank_1k[address >> 10][address & 0x3FF] = value;
 }
 BYTE extcl_rd_chr_FFESMC(WORD address) {
 	if ((ffesmc.mode.smc & 0x05) == 0x01) {
@@ -710,13 +703,7 @@ BYTE extcl_rd_chr_FFESMC(WORD address) {
 			}
 		}
 	}
-	return (chr.bank_1k[address >> 10][address & 0x3FF]);
-}
-BYTE extcl_wr_nmt_FFESMC(UNUSED(WORD address), UNUSED(BYTE value)) {
-	if (!(ffesmc.mode.smc & 0x02) && (((ffesmc.mode.m1 & 0xE1) >= 0x81) || ffesmc.chr.lock)) {
-		return (TRUE);
-	}
-	return (FALSE);
+	return (chr_rd(address));
 }
 void extcl_cpu_every_cycle_FFESMC(void) {
 	ffesmc.fds.counter += 3;
@@ -775,38 +762,40 @@ void extcl_update_r2006_FFESMC(WORD new_r2006, WORD old_r2006) {
 }
 
 INLINE static void prg_fix_FFESMC(void) {
+	BYTE enabled = !(ffesmc.mode.m1 & 0x02);
+
 	if (ffesmc.mode.m2m4 & 0x01) {
 		switch (ffesmc.mode.m1 & 0xE0) {
 			case 0x00: // 0: UNROM
-				memmap_auto_16k(0x8000, (ffesmc.latch & 0x07));
-				memmap_auto_16k(0xC000, 0x07);
+				memmap_auto_wp_16k(MMCPU(0x8000), (ffesmc.latch & 0x07), TRUE, enabled);
+				memmap_auto_wp_16k(MMCPU(0xC000), 0x07, TRUE, enabled);
 				break;
 			case 0x20: // 1: UN1ROM+CHRSW
-				memmap_auto_16k(0x8000, ((ffesmc.latch & 0x3C) >> 2));
-				memmap_auto_16k(0xC000, 0x07);
+				memmap_auto_wp_16k(MMCPU(0x8000), ((ffesmc.latch & 0x3C) >> 2), TRUE, enabled);
+				memmap_auto_wp_16k(MMCPU(0xC000), 0x07, TRUE, enabled);
 				break;
 			case 0x40: // 2: UOROM
-				memmap_auto_16k(0x8000, (ffesmc.latch & 0x0F));
-				memmap_auto_16k(0xC000, 0x0F);
+				memmap_auto_wp_16k(MMCPU(0x8000), (ffesmc.latch & 0x0F), TRUE, enabled);
+				memmap_auto_wp_16k(MMCPU(0xC000), 0x0F, TRUE, enabled);
 				break;
 			case 0x60: // 3: Reverse UOROM+CHRSW
-				memmap_auto_16k(0x8000, 0x0F);
-				memmap_auto_16k(0xC000, (ffesmc.latch & 0x0F));
+				memmap_auto_wp_16k(MMCPU(0x8000), 0x0F, TRUE, enabled);
+				memmap_auto_wp_16k(MMCPU(0xC000), (ffesmc.latch & 0x0F), TRUE, enabled);
 				break;
 			case 0x80: // 4: GNROM
-				memmap_auto_32k(0x8000, ((ffesmc.latch & 0x30) >> 4));
+				memmap_auto_wp_32k(MMCPU(0x8000), ((ffesmc.latch & 0x30) >> 4), TRUE, enabled);
 				break;
 			case 0xA0: // 5: CNROM-256
 			case 0xC0: // 6: CNROM-128
 			case 0xE0: // 7: NROM-256
-				memmap_auto_32k(0x8000, 0x03);
+				memmap_auto_wp_32k(MMCPU(0x8000), 0x03, TRUE, enabled);
 				break;
 		}
 	} else {
-		memmap_auto_8k(0x8000, ffesmc.prg[0]);
-		memmap_auto_8k(0xA000, ffesmc.prg[1]);
-		memmap_auto_8k(0xC000, ffesmc.prg[2]);
-		memmap_auto_8k(0xE000, ffesmc.prg[3]);
+		memmap_auto_wp_16k(MMCPU(0x8000), ffesmc.prg[0], TRUE, enabled);
+		memmap_auto_wp_16k(MMCPU(0xA000), ffesmc.prg[1], TRUE, enabled);
+		memmap_auto_wp_16k(MMCPU(0xC000), ffesmc.prg[2], TRUE, enabled);
+		memmap_auto_wp_16k(MMCPU(0xE000), ffesmc.prg[3], TRUE, enabled);
 	}
 }
 INLINE static void chr_fix_FFESMC(void) {
@@ -864,33 +853,21 @@ INLINE static void chr_fix_FFESMC(void) {
 		bank[6] = bank[0] | 0x06;
 		bank[7] = bank[0] | 0x07;
 	}
+	{
+		BYTE enabled = !(((ffesmc.mode.m1 & 0xE1) >= 0x81) || ffesmc.chr.lock);
 
-	_control_bank(bank[0], info.chr.rom.max.banks_1k)
-	chr.bank_1k[0] = chr_pnt(bank[0] << 10);
-
-	_control_bank(bank[1], info.chr.rom.max.banks_1k)
-	chr.bank_1k[1] = chr_pnt(bank[1] << 10);
-
-	_control_bank(bank[2], info.chr.rom.max.banks_1k)
-	chr.bank_1k[2] = chr_pnt(bank[2] << 10);
-
-	_control_bank(bank[3], info.chr.rom.max.banks_1k)
-	chr.bank_1k[3] = chr_pnt(bank[3] << 10);
-
-	_control_bank(bank[4], info.chr.rom.max.banks_1k)
-	chr.bank_1k[4] = chr_pnt(bank[4] << 10);
-
-	_control_bank(bank[5], info.chr.rom.max.banks_1k)
-	chr.bank_1k[5] = chr_pnt(bank[5] << 10);
-
-	_control_bank(bank[6], info.chr.rom.max.banks_1k)
-	chr.bank_1k[6] = chr_pnt(bank[6] << 10);
-
-	_control_bank(bank[7], info.chr.rom.max.banks_1k)
-	chr.bank_1k[7] = chr_pnt(bank[7] << 10);
+		memmap_vram_wp_1k(MMPPU(0x0000), bank[0], TRUE, enabled);
+		memmap_vram_wp_1k(MMPPU(0x0400), bank[1], TRUE, enabled);
+		memmap_vram_wp_1k(MMPPU(0x0800), bank[2], TRUE, enabled);
+		memmap_vram_wp_1k(MMPPU(0x0C00), bank[3], TRUE, enabled);
+		memmap_vram_wp_1k(MMPPU(0x1000), bank[4], TRUE, enabled);
+		memmap_vram_wp_1k(MMPPU(0x1400), bank[5], TRUE, enabled);
+		memmap_vram_wp_1k(MMPPU(0x1800), bank[6], TRUE, enabled);
+		memmap_vram_wp_1k(MMPPU(0x1C00), bank[7], TRUE, enabled);
+	}
 }
 INLINE static void wram_fix_FFESMC(void) {
-	memmap_other_4k(0x5000, 0, &ffesmc.scratch[0], sizeof(ffesmc.scratch), TRUE, TRUE);
+	memmap_other_4k(MMCPU(0x5000), 0, &ffesmc.scratch[0], sizeof(ffesmc.scratch), TRUE, TRUE);
 }
 INLINE static void mirroring_fix_FFESMC(void) {
 	if (ffesmc.mode.smc & 0x02) {
@@ -909,10 +886,17 @@ INLINE static void mirroring_fix_FFESMC(void) {
 				return;
 		}
 	} else {
-		map_nmt_chr_rom_1k(0, ffesmc.chr.reg[8]);
-		map_nmt_chr_rom_1k(1, ffesmc.chr.reg[9]);
-		map_nmt_chr_rom_1k(2, ffesmc.chr.reg[10]);
-		map_nmt_chr_rom_1k(3, ffesmc.chr.reg[11]);
+		memmap_nmt_chrrom_1k(MMPPU(0x2000), ffesmc.chr.reg[8]);
+		memmap_nmt_chrrom_1k(MMPPU(0x3000), ffesmc.chr.reg[8]);
+
+		memmap_nmt_chrrom_1k(MMPPU(0x2400), ffesmc.chr.reg[9]);
+		memmap_nmt_chrrom_1k(MMPPU(0x3400), ffesmc.chr.reg[9]);
+
+		memmap_nmt_chrrom_1k(MMPPU(0x2800), ffesmc.chr.reg[10]);
+		memmap_nmt_chrrom_1k(MMPPU(0x3800), ffesmc.chr.reg[10]);
+
+		memmap_nmt_chrrom_1k(MMPPU(0x2C00), ffesmc.chr.reg[11]);
+		memmap_nmt_chrrom_1k(MMPPU(0x3C00), ffesmc.chr.reg[11]);
 	}
 }
 INLINE static void irq_clock_FFESMC(void) {

@@ -30,7 +30,6 @@ void map_init_192(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(MMC3);
 	EXTCL_SAVE_MAPPER(192);
-	EXTCL_WR_CHR(192);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
 	EXTCL_PPU_000_TO_255(MMC3);
@@ -60,23 +59,13 @@ BYTE extcl_save_mapper_192(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_wr_chr_192(WORD address, BYTE value) {
-	const BYTE slot = address >> 10;
-
-	if (map_chr_ram_slot_in_range(slot)) {
-		chr.bank_1k[slot][address & 0x3FF] = value;
-	}
-}
 
 void prg_swap_mmc3_192(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, (value & 0x3F));
 }
 void chr_swap_mmc3_192(WORD address, WORD value) {
-	const BYTE slot = address >> 10;
-
-	if (((value & 0xF8) == 0x08) && chr.extra.data) {
-		value &= 0x03;
-		chr.bank_1k[slot] = &chr.extra.data[value << 10];
+	if (((value & 0xF8) == 0x08) && vram_size()) {
+		memmap_vram_1k(MMPPU(address), (value & 0x03));
 	} else {
 		chr_swap_MMC3_base(address, value);
 	}

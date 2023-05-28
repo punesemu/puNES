@@ -22,7 +22,7 @@
 #include "ppu.h"
 #include "save_slot.h"
 
-// TODO : aggiungere l'emulazione del floppy disk controller e della tastiera.
+// TODO : aggiungere l'emulazione del floppy disk controller
 
 INLINE static void prg_fix_518(void);
 INLINE static void wram_fix_518(void);
@@ -35,17 +35,13 @@ void map_init_518(void) {
 	EXTCL_CPU_WR_MEM(518);
 	EXTCL_CPU_RD_MEM(518);
 	EXTCL_SAVE_MAPPER(518);
-	EXTCL_RD_NMT(518);
 	EXTCL_RD_CHR(518);
+	EXTCL_RD_NMT(518);
 	EXTCL_CPU_EVERY_CYCLE(518);
 	mapper.internal_struct[0] = (BYTE *)&m518;
 	mapper.internal_struct_size[0] = sizeof(m518);
 
 	memset(&m518, 0x00, sizeof(m518));
-
-	if (wram_size() < 0x20000) {
-		wram_set_ram_size(0x20000);
-	}
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -86,22 +82,18 @@ BYTE extcl_save_mapper_518(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m518.dac.status);
 	save_slot_ele(mode, slot, m518.dac.count);
 
-	if (mode == SAVE_SLOT_READ) {
-		prg_fix_518();
-	}
-
 	return (EXIT_OK);
+}
+BYTE extcl_rd_chr_518(WORD address) {
+	return ((address < 0x1000) && (m518.reg[1] & 0x02)
+		? chr_rd((m518.chr_bank << 10) | (address & 0xFFF))
+		: chr_rd(address));
 }
 BYTE extcl_rd_nmt_518(WORD address) {
 	BYTE slot = (address & 0x0FFF) >> 10;
 
 	m518.chr_bank = ((slot >> (m518.reg[1] & 0x01)) & 0x01) << 2;
-	return (ntbl.bank_1k[slot][address & 0x3FF]);
-}
-BYTE extcl_rd_chr_518(WORD address) {
-	BYTE slot = (address & 0x1FFF) >> 10;
-
-	return (chr.bank_1k[(address < 0x1000) && (m518.reg[1] & 0x02) ? m518.chr_bank | (slot & 0x03) : slot][address & 0x3FF]);
+	return (nmt_rd(address));
 }
 void extcl_cpu_every_cycle_518(void) {
 	m518.dac.count++;
@@ -114,22 +106,22 @@ void extcl_cpu_every_cycle_518(void) {
 INLINE static void prg_fix_518(void) {
 	if (m518.reg[0] & 0x80) {
 		if (m518.reg[1] & 0x04) {
-			memmap_wram_32k(0x8000, (m518.reg[0] & 0x03));
+			memmap_wram_32k(MMCPU(0x8000), (m518.reg[0] & 0x03));
 		} else {
-			memmap_wram_16k(0x8000, (m518.reg[0] & 0x07));
-			memmap_auto_16k(0xC000, 0);
+			memmap_wram_16k(MMCPU(0x8000), (m518.reg[0] & 0x07));
+			memmap_auto_16k(MMCPU(0xC000), 0);
 		}
 	} else {
 		if (m518.reg[1] & 0x04) {
-			memmap_auto_32k(0x8000, m518.reg[0]);
+			memmap_auto_32k(MMCPU(0x8000), m518.reg[0]);
 		} else {
-			memmap_auto_16k(0x8000, m518.reg[0]);
-			memmap_auto_16k(0xC000, 0);
+			memmap_auto_16k(MMCPU(0x8000), m518.reg[0]);
+			memmap_auto_16k(MMCPU(0xC000), 0);
 		}
 	}
 }
 INLINE static void wram_fix_518(void) {
-	memmap_auto_8k(0x6000, 16);
+	memmap_auto_8k(MMCPU(0x6000), 16);
 }
 INLINE static void mirroring_fix_518(void) {
 	if (m518.reg[1] & 0x01) {

@@ -67,6 +67,6 @@ void chr_swap_mmc3_199(WORD address, UNUSED(WORD value)) {
 	chr_swap_MMC3_base(address, (address >> 10));
 }
 void wram_fix_mmc3_199(void) {
-	memmap_auto_4k(0x5000, 2);
+	memmap_auto_4k(MMCPU(0x5000), 2);
 	wram_fix_MMC3_base();
 }

@@ -34,7 +34,6 @@ void map_init_393(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(393);
 	EXTCL_SAVE_MAPPER(393);
-	EXTCL_WR_CHR(393);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
 	EXTCL_PPU_000_TO_255(MMC3);
@@ -53,10 +52,6 @@ void map_init_393(void) {
 	MMC3_prg_swap = prg_swap_mmc3_393;
 	MMC3_chr_swap = chr_swap_mmc3_393;
 
-	if (info.format != NES_2_0) {
-		info.chr.ram.banks_8k_plus = 1;
-	}
-
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
@@ -64,7 +59,7 @@ void map_init_393(void) {
 }
 void extcl_cpu_wr_mem_393(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (memmap_adr_is_writable(address)) {
+		if (memmap_adr_is_writable(MMCPU(address))) {
 			m393.reg[0] = address & 0xFF;
 			MMC3_prg_fix();
 			MMC3_chr_fix();
@@ -102,20 +97,7 @@ void extcl_cpu_wr_mem_393(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_393(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m393.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix();
-	}
-
-	return (EXIT_OK);
-}
-void extcl_wr_chr_393(WORD address, BYTE value) {
-	const BYTE slot = address >> 10;
-
-	if ((m393.reg[0] & 0x08) && map_chr_ram_slot_in_range(slot)) {
-		chr.bank_1k[slot][address & 0x3FF] = value;
-	}
+	return(extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_393(WORD address, WORD value) {
@@ -132,9 +114,8 @@ void prg_swap_mmc3_393(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_mmc3_393(WORD address, WORD value) {
-	if ((m393.reg[0] & 0x08) && chr.extra.data) {
-		value = address >> 10;
-		chr.bank_1k[address >> 10] = &chr.extra.data[value << 10];
+	if ((m393.reg[0] & 0x08) && vram_size()) {
+		memmap_vram_1k(MMPPU(address), (address >> 10));
 	} else {
 		WORD base = (m393.reg[0] & 0x07) << 8;
 		WORD mask = 0xFF;

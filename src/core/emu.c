@@ -760,16 +760,8 @@ BYTE emu_reset(BYTE type) {
 		extcl_cpu_init_pc();
 	}
 
-#if defined WRAM_OLD_HANDLER
-	// da cancellare
-	// da cancellare
-	// da cancellare
-	// da cancellare
-	// da cancellare
-#else
 	// trainer
 	miscrom_trainer_init();
-#endif
 
 	if (info.no_rom) {
 		info.reset = FALSE;
@@ -1249,33 +1241,41 @@ void emu_info_rom(void) {
 			(info.misc_truncated ? " truncated" : ""));
 	}
 
+	ischanged(info.header.battery != info.mapper.battery);
+	if (changed || info.mapper.battery) {
+		log_info_box(uL("battery;%s%s"), (info.mapper.battery ? "present" : "not present"), ifchanged());
+	}
 	if (wram_ram_size()) {
 		ischanged(info.header.prgram != wram_ram_size());
-		log_info_box(uL("prg ram;%u%s"), wram_ram_size(), ifchanged());
+		log_info_box(uL("PRG RAM;%u%s"), wram_ram_size(), ifchanged());
 	}
 	if (wram_nvram_size()) {
 		ischanged(info.header.prgnvram !=  wram_nvram_size());
-		log_info_box(uL("prg nvram;%u%s"),  wram_nvram_size(), ifchanged());
+		log_info_box(uL("PRG NVRAM;%u%s"),  wram_nvram_size(), ifchanged());
 	}
-	ischanged(info.header.battery != wram.battery.in_use);
-	if (changed || wram.battery.in_use) {
-		log_info_box(uL("battery;%s%s"), (wram.battery.in_use ? "present" : "not present"), ifchanged());
+	if (vram_ram_size()) {
+		ischanged(info.header.chrram != vram_ram_size());
+		log_info_box(uL("CHR RAM;%u%s"), vram_ram_size(), ifchanged());
+	}
+	if (vram_nvram_size()) {
+		ischanged(info.header.chrnvram !=  vram_nvram_size());
+		log_info_box(uL("CHR NVRAM;%u%s"),  vram_nvram_size(), ifchanged());
 	}
 
-	if (mapper.write_vram) {
-		DBWORD banks = info.chr.rom.banks_8k;
-
-		ischanged((info.header.chrram + info.header.chrnvram) != banks);
-		log_info_box(uL("RAM CHR 8k;%-4u (wvram)%s"), banks, ifchanged());
-	} else if (info.chr.ram.banks_8k_plus) {
-		DBWORD banks = info.chr.ram.banks_8k_plus;
-
-		ischanged((info.header.chrram + info.header.chrnvram) != banks);
-		log_info_box(uL("RAM CHR 8k;%-4u%s"), banks, ifchanged());
-	}
-	if (!info.chr.ram.banks_8k_plus && chr.extra.data) {
-		log_info_box(uL("RAM CHR extra;%ld"), (long)chr.extra.size);
-	}
+//	if (mapper.write_vram) {
+//		DBWORD banks = info.chr.rom.banks_8k;
+//
+//		ischanged((info.header.chrram + info.header.chrnvram) != banks);
+//		log_info_box(uL("RAM CHR 8k;%-4u (wvram)%s"), banks, ifchanged());
+//	} else if (info.chr.ram.banks_8k_plus) {
+//		DBWORD banks = info.chr.ram.banks_8k_plus;
+//
+//		ischanged((info.header.chrram + info.header.chrnvram) != banks);
+//		log_info_box(uL("RAM CHR 8k;%-4u%s"), banks, ifchanged());
+//	}
+//	if (!info.chr.ram.banks_8k_plus && chr.extra.data) {
+//		log_info_box(uL("RAM CHR extra;%ld"), (long)chr.extra.size);
+//	}
 
 	log_info_box(uL("PRG 8k rom;%-4lu [ %08X %ld ]%s"),
 		prgrom_banks(S8K),
@@ -1296,26 +1296,47 @@ void emu_info_rom(void) {
 		}
 	}
 
-	if (!mapper.write_vram && chr_size()) {
+	if (chrrom_size()) {
 		log_info_box(uL("CHR 4k vrom;%-4lu [ %08X %ld ]%s"),
-			(long unsigned)chr_size() / 0x1000,
+			chrrom_banks(S4K),
 			info.crc32.chr,
-			(long)chr_size(),
+			chrrom_size(),
 			(info.chr_truncated ? " truncated" : ""));
-	}
 
-	if (info.header.format == UNIF_FORMAT) {
-		if (unif.chips.chr > 1) {
-			int chip = 0;
+		if (info.header.format == UNIF_FORMAT) {
+			if (chrrom.chips.amount > 1) {
+				int chip = 0;
 
-			for (chip = 0; chip < unif.chips.chr; chip++) {
-				log_info_box(uL(" 4k chip %d;%-4lu [ %08X %ld ]"),
-					chip, (long unsigned)chr_chip_size(chip) / 0x1000,
-					emu_crc32((void *)chr_chip_rom(chip), chr_chip_size(chip)),
-					(long)chr_chip_size(chip));
+				for (chip = 0; chip < chrrom.chips.amount; chip++) {
+					log_info_box(uL(" 4k chip %d;%-4lu [ %08X %ld ]"),
+						chip, chr_chip_size(chip) / 0x1000,
+						emu_crc32((void *)chr_chip_rom(chip), chr_chip_size(chip)),
+						chr_chip_size(chip));
+				}
 			}
 		}
 	}
+
+//	if (!mapper.write_vram && chr_size()) {
+//		log_info_box(uL("CHR 4k vrom;%-4lu [ %08X %ld ]%s"),
+//			(long unsigned)chr_size() / 0x1000,
+//			info.crc32.chr,
+//			(long)chr_size(),
+//			(info.chr_truncated ? " truncated" : ""));
+//	}
+//
+//	if (info.header.format == UNIF_FORMAT) {
+//		if (unif.chips.chr > 1) {
+//			int chip = 0;
+//
+//			for (chip = 0; chip < unif.chips.chr; chip++) {
+//				log_info_box(uL(" 4k chip %d;%-4lu [ %08X %ld ]"),
+//					chip, (long unsigned)chr_chip_size(chip) / 0x1000,
+//					emu_crc32((void *)chr_chip_rom(chip), chr_chip_size(chip)),
+//					(long)chr_chip_size(chip));
+//			}
+//		}
+//	}
 
 	if (info.header.format == iNES_1_0) {
 		log_info_box(uL("sha1prg;%40s"), info.sha1sum.prg.string);
@@ -1358,17 +1379,19 @@ void emu_save_header_info(void) {
 #if defined WRAM_OLD_HANDLER
 	info.header.prgram = info.prg.ram.banks_8k_plus;
 	info.header.prgnvram = info.prg.ram.bat.banks;
-#else
-	info.header.prgram = wram_ram_size();
-	info.header.prgnvram = wram_nvram_size();
-	info.header.battery = wram.battery.in_use;
-#endif
 	info.header.chrram = !info.chr.rom.banks_8k
 		 ? info.format == NES_2_0
 			   ? info.chr.ram.banks_8k_plus
 			   : 1
 		 : info.chr.ram.banks_8k_plus;
 	//info.header.chrnvram = info.prg.ram.bat.banks;
+#else
+	info.header.prgram = wram_ram_size();
+	info.header.prgnvram = wram_nvram_size();
+	info.header.chrram = vram_ram_size();
+	info.header.chrnvram = vram_nvram_size();
+	info.header.battery = info.mapper.battery;
+#endif
 	info.header.mapper = info.mapper.id;
 	info.header.submapper = info.mapper.submapper;
 	info.header.mirroring = info.mapper.mirroring;
@@ -1406,7 +1429,7 @@ INLINE static void emu_frame_finished(void) {
 	if (cfg->save_battery_ram_file && (++info.bat_ram_frames >= info.bat_ram_frames_snap)) {
 		// faccio anche un refresh del file della battery ram
 		info.bat_ram_frames = 0;
-		wram_save_nvram_file();
+		nvram_save_file();
 	}
 
 	if (vs_system.enabled & vs_system.watchdog.reset) {

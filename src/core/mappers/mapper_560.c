@@ -23,8 +23,6 @@
 #include "ppu.h"
 #include "save_slot.h"
 
-// TODO : aggiungere l'emulazione della tastiera.
-
 INLINE static void prg_fix_560(void);
 
 struct _m560 {
@@ -38,17 +36,15 @@ void map_init_560(void) {
 	EXTCL_AFTER_MAPPER_INIT(560);
 	EXTCL_CPU_WR_MEM(560);
 	EXTCL_SAVE_MAPPER(560);
+	EXTCL_RD_CHR(560);
 	EXTCL_WR_NMT(560);
 	EXTCL_RD_NMT(560);
-	EXTCL_RD_CHR(560);
 	mapper.internal_struct[0] = (BYTE *)&m560;
 	mapper.internal_struct_size[0] = sizeof(m560);
 
 	memset(&m560, 0x00, sizeof(m560));
 
 	m560.reg = 1;
-
-	info.prg.ram.banks_8k_plus = 1;
 }
 void extcl_after_mapper_init_560(void) {
 	prg_fix_560();
@@ -65,35 +61,28 @@ BYTE extcl_save_mapper_560(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-BYTE extcl_wr_nmt_560(WORD address, BYTE value) {
-	const BYTE slot = (address & 0x0F00) >> 10;
+BYTE extcl_rd_chr_560(WORD address) {
+	WORD base = ((address >> 10) << 9) | ((address & 0x03F0) >> 1) | (address & 0x0007);
 
-	if (slot & 0x01) {
+	m560.pa13 = FALSE;
+	return (m560.reg
+		? chrrom_byte(((m560.ext_ram[m560.nmt_address & 0x3FF] << 11) & 0x1F800) | base)
+		: chrrom_byte(((address & 0x03FF) << 13) & 0x10000) | base);
+}
+void extcl_wr_nmt_560(WORD address, BYTE value) {
+	if (((address & 0x0F00) >> 10) & 0x01) {
 		m560.ext_ram[r2006.value & 0x3FF] = value;
 	}
-	return (FALSE);
+	nmt_wr(address, value);
 }
 BYTE extcl_rd_nmt_560(WORD address) {
 	if (!m560.pa13) {
 		m560.nmt_address = r2006.value;
 	}
 	m560.pa13 = TRUE;
-	return (ntbl.bank_1k[(address & 0x0FFF) >> 10][address & 0x3FF]);
-}
-BYTE extcl_rd_chr_560(WORD address) {
-	WORD base = ((address >> 10) << 9) | ((address & 0x03F0) >> 1) | (address & 0x0007);
-
-	m560.pa13 = FALSE;
-	return (m560.reg ?
-		chr_rom()[((m560.ext_ram[m560.nmt_address & 0x3FF] << 11) & 0x1F800) | base] :
-		chr_rom()[(((address & 0x03FF) << 13) & 0x10000) | base]);
+	return (nmt_rd(address));
 }
 
 INLINE static void prg_fix_560(void) {
-	WORD bank;
-
-	bank = m560.reg;
-	_control_bank(bank, info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, bank);
-	map_prg_rom_8k_update();
+	memmap_auto_32k(MMCPU(0x8000), m560.reg);
 }

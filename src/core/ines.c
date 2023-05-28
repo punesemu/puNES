@@ -112,7 +112,12 @@ BYTE ines_load_rom(void) {
 
 		info.prg.rom.banks_16k = rom.data[rom.position++];
 		info.chr.rom.banks_8k = rom.data[rom.position++];
-		info.chr.ram.banks_8k_plus = 0;
+
+		wram_set_ram_size(0);
+		wram_set_nvram_size(0);
+
+		vram_set_ram_size(0);
+		vram_set_nvram_size(0);
 
 		if (rom_mem_ctrl_memcpy(&ines.flags[0], &rom, TOTAL_FL) == EXIT_ERROR) {
 			free(rom.data);
@@ -137,45 +142,31 @@ BYTE ines_load_rom(void) {
 				info.mapper.submapper = DEFAULT;
 			}
 
+			// PRGROM
 			info.prg.rom.banks_16k |= ((ines.flags[FL9] & 0x0F) << 8);
 			nes20_prg_chr_size(&info.prg.rom.banks_16k, &info.prg.rom.banks_8k, 0x2000);
 
+			// CHROM
 			info.chr.rom.banks_8k |= ((ines.flags[FL9] & 0xF0) << 4);
 			nes20_prg_chr_size(&info.chr.rom.banks_8k, &info.chr.rom.banks_4k, 0x1000);
 
-			wram_set_ram_size(0);
-			wram_set_nvram_size(0);
+			// WRAM
 			if (ines.flags[FL10] & 0x0F) {
 				wram_set_ram_size(64 << (ines.flags[FL10] & 0x0F));
 			}
 			if (ines.flags[FL10] & 0xF0) {
 				wram_set_nvram_size(64 << ((ines.flags[FL10] & 0xF0) >> 4));
 			}
-			wram.battery.in_use = (ines.flags[FL6] & 0x02) >> 1;
 
+			// VRAM
+			if (ines.flags[FL11] & 0x0F) {
+				vram_set_ram_size(64 << (ines.flags[FL11] & 0x0F));
+			}
+			if (ines.flags[FL11] & 0xF0) {
+				vram_set_nvram_size(64 << ((ines.flags[FL11] & 0xF0) >> 4));
+			}
 
-
-
-
-
-
-
-
-			info.prg.ram.banks_8k_plus = 0;
-			info.prg.ram.bat.banks = 0;
-
-
-
-
-
-
-
-
-
-
-
-
-			info.chr.ram.banks_8k_plus = nes20_ram_size(ines.flags[FL11] & 0x0F);
+			info.mapper.battery = (ines.flags[FL6] & 0x02) >> 1;
 
 			cpu_timing = ines.flags[FL12] & 0x03;
 
@@ -226,18 +217,11 @@ BYTE ines_load_rom(void) {
 			}
 
 			info.mapper.submapper = DEFAULT;
+			info.mapper.battery = (ines.flags[FL6] & 0x02) >> 1;
 
-#if defined WRAM_OLD_HANDLER
-			info.prg.ram.banks_8k_plus = 1;
-			info.prg.ram.bat.banks = (ines.flags[FL6] & 0x02) >> 1;
-#else
-			wram_set_ram_size(0x2000);
-			wram_set_nvram_size(ines.flags[FL6] & 0x02 ? 0x2000 : 0);
-			wram.battery.in_use = wram_nvram_size() != 0;
-
-			info.prg.ram.banks_8k_plus = 0;
-			info.prg.ram.bat.banks = 0;
-#endif
+			wram_set_ram_size(S8K);
+			// devo verificare se lo fa davvero ????????????????????????????????????????
+			vram_set_ram_size(S8K);
 
 			vs_system.ppu = vs_system.special_mode.type = 0;
 			vs_system.special_mode.type = 0;
@@ -278,7 +262,7 @@ BYTE ines_load_rom(void) {
 		// si permette anche il lusso di swappare. Quindi imposto
 		// a FALSE qui in modo da poter cambiare impostazione nel
 		// ines10_search_in_database().
-		mapper.write_vram = FALSE;
+		//mapper.write_vram = FALSE;
 
 		if (info.format != NES_2_0)  {
 			if (ines10_search_in_database()) {
@@ -289,6 +273,10 @@ BYTE ines_load_rom(void) {
 		}
 
 		nes20db_search();
+
+		nmt_set_size(S4K);
+		nmt_init();
+		nmt_reset();
 
 		switch (info.mapper.mirroring) {
 			default:
@@ -310,71 +298,71 @@ BYTE ines_load_rom(void) {
 		}
 
 		// gestione Vs. System
-		if ((info.mapper.id != 99) && !vs_system.ppu && !vs_system.special_mode.type) {
-			vs_system.enabled = FALSE;
-			vs_system.special_mode.r5e0x = NULL;
-			vs_system.special_mode.index = 0;
-			vs_system.rc2c05.enabled = FALSE;
-		} else {
-			vs_system.enabled = TRUE;
-
-			switch (vs_system.ppu) {
-				case RP2C03B:
-				case RP2C03G:
-				case RP2C04:
-				case RP2C04_0002:
-				case RP2C04_0003:
-				case RP2C04_0004:
-				case RC2C03B:
-				case RC2C03C:
-				default:
-					vs_system.rc2c05.enabled = FALSE;
-					vs_system.rc2c05.r2002 = 0x00;
-					break;
-				case RC2C05_01:
-					vs_system.rc2c05.enabled = TRUE;
-					vs_system.rc2c05.r2002 = 0x1B;
-					break;
-				case RC2C05_02:
-					vs_system.rc2c05.enabled = TRUE;
-					vs_system.rc2c05.r2002 = 0x3D;
-					break;
-				case RC2C05_03:
-					vs_system.rc2c05.enabled = TRUE;
-					vs_system.rc2c05.r2002 = 0x1C;
-					break;
-				case RC2C05_04:
-					vs_system.rc2c05.enabled = TRUE;
-					vs_system.rc2c05.r2002 = 0x1B;
-					break;
-				case RC2C05_05:
-					vs_system.rc2c05.enabled = TRUE;
-					vs_system.rc2c05.r2002 = 0x00;
-					break;
-			}
-
-			switch (vs_system.special_mode.type) {
-				case VS_SM_Normal:
-				default:
-					vs_system.special_mode.r5e0x = NULL;
-					break;
-				case VS_SM_RBI_Baseball:
-					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[1][0];
-					break;
-				case VS_SM_TKO_Boxing:
-					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[0][0];
-					break;
-				case VS_SM_Super_Xevious:
-					vs_system.special_mode.r5e0x = NULL;
-					break;
-			}
-
-			vs_system.special_mode.index = 0;
-
-			if (wram_size() < 0x800) {
-				wram_set_ram_size(0x800);
-			}
-		}
+//		if ((info.mapper.id != 99) && !vs_system.ppu && !vs_system.special_mode.type) {
+//			vs_system.enabled = FALSE;
+//			vs_system.special_mode.r5e0x = NULL;
+//			vs_system.special_mode.index = 0;
+//			vs_system.rc2c05.enabled = FALSE;
+//		} else {
+//			vs_system.enabled = TRUE;
+//
+//			switch (vs_system.ppu) {
+//				case RP2C03B:
+//				case RP2C03G:
+//				case RP2C04:
+//				case RP2C04_0002:
+//				case RP2C04_0003:
+//				case RP2C04_0004:
+//				case RC2C03B:
+//				case RC2C03C:
+//				default:
+//					vs_system.rc2c05.enabled = FALSE;
+//					vs_system.rc2c05.r2002 = 0x00;
+//					break;
+//				case RC2C05_01:
+//					vs_system.rc2c05.enabled = TRUE;
+//					vs_system.rc2c05.r2002 = 0x1B;
+//					break;
+//				case RC2C05_02:
+//					vs_system.rc2c05.enabled = TRUE;
+//					vs_system.rc2c05.r2002 = 0x3D;
+//					break;
+//				case RC2C05_03:
+//					vs_system.rc2c05.enabled = TRUE;
+//					vs_system.rc2c05.r2002 = 0x1C;
+//					break;
+//				case RC2C05_04:
+//					vs_system.rc2c05.enabled = TRUE;
+//					vs_system.rc2c05.r2002 = 0x1B;
+//					break;
+//				case RC2C05_05:
+//					vs_system.rc2c05.enabled = TRUE;
+//					vs_system.rc2c05.r2002 = 0x00;
+//					break;
+//			}
+//
+//			switch (vs_system.special_mode.type) {
+//				case VS_SM_Normal:
+//				default:
+//					vs_system.special_mode.r5e0x = NULL;
+//					break;
+//				case VS_SM_RBI_Baseball:
+//					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[1][0];
+//					break;
+//				case VS_SM_TKO_Boxing:
+//					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[0][0];
+//					break;
+//				case VS_SM_Super_Xevious:
+//					vs_system.special_mode.r5e0x = NULL;
+//					break;
+//			}
+//
+//			vs_system.special_mode.index = 0;
+//
+//			if (wram_size() < 0x800) {
+//				wram_set_ram_size(0x800);
+//			}
+//		}
 
 		if (miscrom.trainer.in_use) {
 			miscrom_set_size(512);
@@ -385,26 +373,10 @@ BYTE ines_load_rom(void) {
 			}
 		}
 
-		if (!info.chr.rom.banks_8k) {
-			mapper.write_vram = TRUE;
-			if (info.format == NES_2_0) {
-				info.chr.rom.banks_8k = info.chr.ram.banks_8k_plus;
-				info.chr.ram.banks_8k_plus = 0;
-			}
-		}
-
-		info.chr.chips = 0;
-
-
-
-
-
 		info.prg.rom.banks_8k = !info.prg.rom.banks_16k ? 1 : info.prg.rom.banks_16k * 2;
 
-		map_set_banks_max_prg();
-
 		// alloco e carico la PRG Rom
-		prgrom_set_size(info.prg.rom.banks_8k * 0x2000);
+		prgrom_set_size(info.prg.rom.banks_8k * S8K);
 
 		if (prgrom_init(0x00) == EXIT_ERROR) {
 			free(rom.data);
@@ -420,28 +392,22 @@ BYTE ines_load_rom(void) {
 
 
 
-		// se e' settato mapper.write_vram, vuol dire
-		// che la rom non ha CHR Rom e che quindi la CHR Ram
-		// la trattero' nell'inizializzazione della mapper
-		// (perche' alcune mapper ne hanno 16k, altre 8k).
-		if (!mapper.write_vram) {
-			// alloco la CHR Rom
-			if (map_chr_malloc((size_t)info.chr.rom.banks_8k * 0x2000, 0x00, TRUE) == EXIT_ERROR) {
+//		if (info.format == NES_2_0) {
+//			sha1_csum(chr_rom(), chr_size(), info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
+//		}
+
+
+		// alloco e carico la CHR Rom
+		chrrom_set_size(info.chr.rom.banks_8k * S8K);
+
+		if (chrrom_size()) {
+			if (chrrom_init() == EXIT_ERROR) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
 
-			if (rom_mem_ctrl_memcpy_truncated(chr_rom(), &rom, chr_size()) == EXIT_ERROR) {
+			if (rom_mem_ctrl_memcpy_truncated(chrrom_pnt(), &rom, chrrom_size()) == EXIT_ERROR) {
 				info.chr_truncated = TRUE;
-			}
-
-			info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
-			info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
-			map_set_banks_max_chr();
-			map_chr_bank_1k_reset();
-
-			if (info.format == NES_2_0) {
-				sha1_csum(chr_rom(), chr_size(), info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
 			}
 		}
 
@@ -456,8 +422,25 @@ BYTE ines_load_rom(void) {
 			}
 		}
 
-		// la CHR ram extra
-		memset(&chr.extra, 0x00, sizeof(chr.extra));
+
+
+
+
+		if (!wram_size() && info.mapper.battery) {
+			wram_set_nvram_size(S8K);
+		}
+		if (info.mapper.battery && !wram_nvram_size()) {
+			wram_set_nvram_size(wram_ram_size());
+			wram_set_ram_size(0);
+		}
+		if (!chrrom_size() && !vram_size()) {
+			vram_set_ram_size(S8K);
+		}
+
+
+
+
+
 
 		if (info.format == NES_2_0) {
 			nes20_submapper();
@@ -476,53 +459,10 @@ BYTE ines_load_rom(void) {
 
 void nes20_submapper(void) {
 	switch (info.mapper.id) {
-		case 2:
-			switch (info.mapper.submapper) {
-				case 0:
-				case 1:
-					info.mapper.submapper = UXROMNBC;
-					break;
-				case 2:
-					info.mapper.submapper = UXROM;
-					break;
-			}
-			break;
-		case 3:
-			switch (info.mapper.submapper) {
-				case 0:
-				case 1:
-					info.mapper.submapper = DEFAULT;
-					break;
-				case 2:
-					info.mapper.submapper = CNROM_CNFL;
-					break;
-			}
-			break;
-		case 7:
-			switch (info.mapper.submapper) {
-				case 0:
-				case 1:
-					info.mapper.submapper = DEFAULT;
-					break;
-				case 2:
-					info.mapper.submapper = AMROM;
-					break;
-			}
-			break;
 		case 78:
 			switch (info.mapper.submapper) {
 				case 3:
 					info.mapper.submapper = HOLYDIVER;
-					break;
-			}
-			break;
-		case 268:
-			switch (info.mapper.submapper) {
-				case 0:
-					info.mapper.submapper = COOLBOY;
-					break;
-				case 1:
-					info.mapper.submapper = MINDKIDS;
 					break;
 			}
 			break;
@@ -675,31 +615,13 @@ void search_in_database(void) {
 					}
 					break;
 				case 2:
-					// Fix per "Best of the Best - Championship Karate (E) [!].nes"
-					// che ha l'header INES non corretto.
-					if (info.id == BAD_INES_BOTBE) {
-						info.prg.rom.banks_16k = 16;
-						info.chr.rom.banks_8k = 0;
-					}
-					break;
-				case 3:
-					// Fix per "Tetris (Bulletproof) (Japan).nes"
-					// che ha l'header INES non corretto.
-					if (info.id == BAD_INES_TETRIS_BPS) {
-						info.prg.rom.banks_16k = 2;
-						info.chr.rom.banks_8k = 2;
-					}
-					break;
-				case 7:
-					// Fix per "WWF Wrestlemania (E) [!].nes"
-					// che ha l'header INES non corretto.
-					if (info.id == BAD_INES_WWFWE) {
-						info.prg.rom.banks_16k = 8;
-						info.chr.rom.banks_8k = 0;
-					} else if (info.id == CSPC10) {
-						info.chr.rom.banks_8k = 0;
-					}
-					break;
+//					// Fix per "Best of the Best - Championship Karate (E) [!].nes"
+//					// che ha l'header INES non corretto.
+//					if (info.id == BAD_INES_BOTBE) {
+//						info.prg.rom.banks_16k = 16;
+//						info.chr.rom.banks_8k = 0;
+//					}
+//					break;
 				case 10:
 					// Fix per Famicom Wars (J) [!] che ha l'header INES errato
 					if (info.id == BAD_INES_FWJ) {

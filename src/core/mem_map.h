@@ -22,66 +22,25 @@
 #include <stdio.h>
 #include "common.h"
 
-enum mirroring_types {
-	MIRRORING_HORIZONTAL,
-	MIRRORING_VERTICAL,
-	MIRRORING_SINGLE_SCR0,
-	MIRRORING_SINGLE_SCR1,
-	MIRRORING_FOURSCR,
-	MIRRORING_SCR0x1_SCR1x3,
-	MIRRORING_SCR0x3_SCR1x1
-};
 
-#define mirroring_H()\
-	mapper.mirroring = MIRRORING_HORIZONTAL;\
-	map_nmt_1k(0, 0);\
-	map_nmt_1k(1, 0);\
-	map_nmt_1k(2, 1);\
-	map_nmt_1k(3, 1)
-#define mirroring_V()\
-	mapper.mirroring = MIRRORING_VERTICAL;\
-	map_nmt_1k(0, 0);\
-	map_nmt_1k(1, 1);\
-	map_nmt_1k(2, 0);\
-	map_nmt_1k(3, 1)
-#define mirroring_SCR0()\
-	mapper.mirroring = MIRRORING_SINGLE_SCR0;\
-	map_nmt_1k(0, 0);\
-	map_nmt_1k(1, 0);\
-	map_nmt_1k(2, 0);\
-	map_nmt_1k(3, 0)
-#define mirroring_SCR1()\
-	mapper.mirroring = MIRRORING_SINGLE_SCR1;\
-	map_nmt_1k(0, 1);\
-	map_nmt_1k(1, 1);\
-	map_nmt_1k(2, 1);\
-	map_nmt_1k(3, 1)
-#define mirroring_FSCR()\
-	mapper.mirroring = MIRRORING_FOURSCR;\
-	map_nmt_1k(0, 0);\
-	map_nmt_1k(1, 1);\
-	map_nmt_1k(2, 2);\
-	map_nmt_1k(3, 3)
-#define mirroring_SCR0x1_SCR1x3()\
-	mapper.mirroring = MIRRORING_SCR0x1_SCR1x3;\
-	map_nmt_1k(0, 0);\
-	map_nmt_1k(1, 1);\
-	map_nmt_1k(2, 1);\
-	map_nmt_1k(3, 1)
-#define mirroring_SCR0x3_SCR1x1()\
-	mapper.mirroring = MIRRORING_SCR0x3_SCR1x1;\
-	map_nmt_1k(0, 0);\
-	map_nmt_1k(1, 0);\
-	map_nmt_1k(2, 0);\
-	map_nmt_1k(3, 1)
 
-#define chr_rom() chr.rom.data
-#define chr_size() chr.rom.size
-#define chr_byte(index) chr_rom()[index]
-#define chr_pnt(index) &chr_byte(index)
-#define chr_chip_rom(chip_rom) chr.chip[chip_rom].data
-#define chr_chip_size(chip_rom) chr.chip[chip_rom].size
-#define chr_ram_size() info.chr.rom.banks_8k << 13
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 typedef struct _mmcpu {
 	BYTE ram[0x800];   // Mirrored four times

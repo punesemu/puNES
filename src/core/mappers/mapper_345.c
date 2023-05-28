@@ -64,7 +64,7 @@ void map_init_345(void) {
 }
 void extcl_cpu_wr_mem_345(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (memmap_adr_is_writable(address)) {
+		if (memmap_adr_is_writable(MMCPU(address))) {
 			m345.reg = value;
 			MMC3_prg_fix();
 			MMC3_chr_fix();

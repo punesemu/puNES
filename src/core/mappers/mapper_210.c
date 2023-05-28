@@ -21,8 +21,6 @@
 #include "cpu.h"
 #include "mem_map.h"
 #include "save_slot.h"
-#include "ines.h"
-#include "nes20db.h"
 
 INLINE static void prg_fix_210(void);
 INLINE static void chr_fix_210(void);
@@ -39,8 +37,8 @@ void map_init_210(void) {
 	EXTCL_AFTER_MAPPER_INIT(210);
 	EXTCL_CPU_WR_MEM(210);
 	EXTCL_SAVE_MAPPER(210);
-	mapper.internal_struct[0] = (BYTE *)&n118;
-	mapper.internal_struct_size[0] = sizeof(n118);
+	mapper.internal_struct[0] = (BYTE *)&m210;
+	mapper.internal_struct_size[0] = sizeof(m210);
 
 	if (info.reset >= HARD) {
 		memset(&m210, 0x00, sizeof(m210));
@@ -103,43 +101,27 @@ BYTE extcl_save_mapper_210(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_210(void) {
-	WORD mask = 0x3F;
-	WORD bank = 0;
-
-	bank = m210.prg[0] & mask;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, bank);
-
-	bank = m210.prg[1] & mask;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, bank);
-
-	bank = m210.prg[2] & mask;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, bank);
-
-	bank = m210.prg[3] & mask;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_8k(MMCPU(0x8000), (m210.prg[0] & 0x3F));
+	memmap_auto_8k(MMCPU(0xA000), (m210.prg[1] & 0x3F));
+	memmap_auto_8k(MMCPU(0xC000), (m210.prg[2] & 0x3F));
+	memmap_auto_8k(MMCPU(0xE000), (m210.prg[3] & 0x3F));
 }
 INLINE static void chr_fix_210(void) {
-	map_chr_rom_1k(0x0000, m210.chr[0]);
-	map_chr_rom_1k(0x0400, m210.chr[1]);
-	map_chr_rom_1k(0x0800, m210.chr[2]);
-	map_chr_rom_1k(0x0C00, m210.chr[3]);
-	map_chr_rom_1k(0x1000, m210.chr[4]);
-	map_chr_rom_1k(0x1400, m210.chr[5]);
-	map_chr_rom_1k(0x1800, m210.chr[6]);
-	map_chr_rom_1k(0x1C00, m210.chr[7]);
+	memmap_auto_1k(MMPPU(0x0000), m210.chr[0]);
+	memmap_auto_1k(MMPPU(0x0400), m210.chr[1]);
+	memmap_auto_1k(MMPPU(0x0800), m210.chr[2]);
+	memmap_auto_1k(MMPPU(0x0C00), m210.chr[3]);
+	memmap_auto_1k(MMPPU(0x1000), m210.chr[4]);
+	memmap_auto_1k(MMPPU(0x1400), m210.chr[5]);
+	memmap_auto_1k(MMPPU(0x1800), m210.chr[6]);
+	memmap_auto_1k(MMPPU(0x1C00), m210.chr[7]);
 }
 INLINE static void wram_fix_210(void) {
-	memmap_auto_wp_8k(0x6000, 0, TRUE, m210.wram_protect);
+	memmap_auto_wp_8k(MMCPU(0x6000), 0, TRUE, m210.wram_protect);
 }
 INLINE static void mirroring_fix_210(void) {
 	if (info.mapper.submapper != 1) {
-		switch(m210.prg[0] >> 6) {
+		switch (m210.prg[0] >> 6) {
 			case 0:
 				mirroring_SCR0();
 				break;

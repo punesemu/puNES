@@ -73,8 +73,6 @@ void map_init_195(void) {
 	m195.chr.mask = 0xFC;
 	m195.chr.compare = 0x00;
 
-	info.chr.ram.banks_8k_plus = 1;
-
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
@@ -95,11 +93,12 @@ BYTE extcl_save_mapper_195(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_wr_chr_195(WORD address, BYTE value) {
-	const BYTE slot = address >> 10;
+void extcl_wr_chr_195(WORD address, UNUSED(BYTE value)) {
 	const BYTE bank = chr_bank_mmc3(address);
 
 	if (bank & 0x80) {
+		BYTE index = ((bank & 0x40) >> 4) | ((bank & 0x08) >> 2) | ((bank & 0x02) >> 1);
+
 		// CHRB~[1Z.D L.L.]
 		//       || | | |
 		//       |+-|-+-+---------------- Select first bank and size of CHR RAM:
@@ -114,7 +113,6 @@ void extcl_wr_chr_195(WORD address, BYTE value) {
 		//       || +-------------------- If 1, ignore above and always enable CHR ROM / disable CHR RAM
 		//       |+---------------------- Number of banks of CHR RAM, 0=4KiB, 1=2KiB
 		//       +----------------------- Must be 1
-		BYTE index = ((bank & 0x40) >> 4) | ((bank & 0x08) >> 2) | ((bank & 0x02) >> 1);
 
 		// 天使之翼 2, 足球小将: Waixing's Chinese translation of Tecmo's Captain Tsubasa Vol. II: Super Strike
 		if (info.crc32.prg == 0x7BEAEBDB) {
@@ -131,26 +129,21 @@ void extcl_wr_chr_195(WORD address, BYTE value) {
 		}
 		MMC3_chr_fix();
 	}
-	if (map_chr_ram_slot_in_range(slot)) {
-		chr.bank_1k[slot][address & 0x3FF] = value;
-	}
+	chr_wr(address, value);
 }
 
 void prg_swap_mmc3_195(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, (value & 0x3F));
 }
 void chr_swap_mmc3_195(WORD address, WORD value) {
-	const BYTE slot = address >> 10;
-
-	if ((value & m195.chr.mask) == m195.chr.compare) {
-		control_bank(info.chr.ram.max.banks_1k)
-		chr.bank_1k[slot] = &chr.extra.data[value << 10];
+	if (((value & m195.chr.mask) == m195.chr.compare) && vram_size()){
+		memmap_vram_1k(MMPPU(address), value);
 	} else {
 		chr_swap_MMC3_base(address, value);
 	}
 }
 void wram_fix_mmc3_195(void) {
-	memmap_auto_4k(0x5000, 2);
+	memmap_auto_4k(MMCPU(0x5000), 2);
 	wram_fix_MMC3_base();
 }
 

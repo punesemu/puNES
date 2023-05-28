@@ -68,7 +68,7 @@ void map_init_045(void) {
 		if (m045tmp.ds_used) {
 			m045tmp.index = (m045tmp.index + 1) % m045tmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		memset(&m045tmp, 0x00, sizeof(m045tmp));
 		if (info.crc32.prg == 0x2011376B) { // 98+1800000-in-1.nes
 			static const BYTE ds[] = { 0,  4,  3,  2 };
@@ -96,7 +96,7 @@ void map_init_045(void) {
 }
 void extcl_cpu_wr_mem_045(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m045.reg[3] & 0x40) && memmap_adr_is_writable(address)) {
+		if (!(m045.reg[3] & 0x40) && memmap_adr_is_writable(MMCPU(address))) {
 			m045.reg[m045.index] = value;
 			m045.index = (m045.index + 1) & 0x03;
 			MMC3_prg_fix();
@@ -111,7 +111,7 @@ void extcl_cpu_wr_mem_045(WORD address, BYTE value) {
 BYTE extcl_cpu_rd_mem_045(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x5000:
-			if (!m045tmp.ds_used || !memmap_adr_is_readable(address)) {
+			if (!m045tmp.ds_used || !memmap_adr_is_readable(MMCPU(address))) {
 				return (openbus);
 			}
 			if (~m045tmp.dipswitch[m045tmp.index] & address) {

@@ -23,6 +23,7 @@
 #include "save_slot.h"
 
 INLINE static void prg_fix_227(void);
+INLINE static void chr_fix_227(void);
 INLINE static void mirroring_fix_227(void);
 
 INLINE static void tmp_fix_227(BYTE max, BYTE index, const BYTE *ds);
@@ -38,20 +39,11 @@ struct _m227tmp {
 } m227tmp;
 
 void map_init_227(void) {
-
-
-
-
-	// TODO: implementare la disabilitazione della scrittura della CHRAM
-
-
-
-
 	EXTCL_AFTER_MAPPER_INIT(227);
 	EXTCL_CPU_WR_MEM(227);
 	EXTCL_CPU_RD_MEM(227);
 	EXTCL_SAVE_MAPPER(227);
-	EXTCL_WR_CHR(227);
+
 	mapper.internal_struct[0] = (BYTE *)&m227;
 	mapper.internal_struct_size[0] = sizeof(m227);
 
@@ -61,26 +53,23 @@ void map_init_227(void) {
 		if (m227tmp.ds_used) {
 			m227tmp.index = (m227tmp.index + 1) % m227tmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		static BYTE ds[] = { 0x00 };
 
 		tmp_fix_227(LENGTH(ds), 0, &ds[0]);
-	}
-
-	if ((info.format != NES_2_0) && (info.mapper.submapper == WAIXING_FW01)) {
-		info.prg.ram.banks_8k_plus = 1;
-		info.prg.ram.bat.banks = TRUE;
 	}
 
 	info.mapper.extend_rd = TRUE;
 }
 void extcl_after_mapper_init_227(void) {
 	prg_fix_227();
+	chr_fix_227();
 	mirroring_fix_227();
 }
 void extcl_cpu_wr_mem_227(WORD address, UNUSED(BYTE value)) {
 	m227.reg = address;
 	prg_fix_227();
+	chr_fix_227();
 	mirroring_fix_227();
 }
 BYTE extcl_cpu_rd_mem_227(WORD address, BYTE openbus) {
@@ -96,36 +85,13 @@ BYTE extcl_save_mapper_227(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_wr_chr_227(WORD address, BYTE value) {
-	if (!info.prg.ram.bat.banks && (m227.reg & 0x0080)) {
-		return;
-	}
-	chr.bank_1k[address >> 10][address & 0x3FF] = value;
-}
 
 INLINE static void prg_fix_227(void) {
-	//WORD bank = ((m227.reg & 0x0100) >> 3) | ((m227.reg & 0x007C) >> 2);
+	WORD outer = ((m227.reg & 0x0100) >> 3) | ((m227.reg & 0x0060) >> 2);
+	WORD bank = (m227.reg & 0x001C) >> 2;
 	WORD bit0 = (m227.reg & 0x0001);
 	WORD bit7 = (m227.reg & 0x0080) >> 7;
 	WORD bit9 = (m227.reg & 0x0200) >> 9;
-	//WORD sub2 = (info.mapper.submapper == 2);
-
-
-//	[A~1... .mLQ OQQP PpMS]
-//	         ||| |||| |||+-0: PRG A14=p
-//	         ||| |||| |||  1: PRG A14=CPU A14
-//	         ||| |||| ||+- 0: Vertical mirroring
-//	         ||| |||| ||   1: Horizontal mirroring
-//	         ||| |||+-++-- PRG A16..A14 (inner bank)
-//	         ||+-|++------ PRG A19..A17 (outer bank)
-//	         ||  +-------- 0: When CPU A14=1: PRG A16..14=LLL
-//	         ||            1: When CPU A14=1: PRG A16..14=PPp
-//	         |+----------- Value for PRG A16..14 when CPU A14=1 and O=0
-//	         +------------ 0: PRG A3..A0=CPU A3..A0
-//	                       1: PRG A3..A0=Solder pad 3-0
-//
-//	EMU->SetPRG_ROM16(0x8, prg &~cpuA14);
-//	EMU->SetPRG_ROM16(0xC,(prg | cpuA14) &~(0xFF*variant*!nrom*!last) &~(7*!nrom*!last) |7*!nrom*last);
 
 	//Bit 9   Bit 7   Bit 0   Meaning
 	//$200s   $080s   $001s
@@ -140,17 +106,16 @@ INLINE static void prg_fix_227(void) {
 	//                        fixed inner bank #7 at CPU $C000-$FFFF (UNROM with only even banks reachable, pointless)
 	//  ?       1       0     Switchable 16 KiB inner bank PPp at CPU $8000-$BFFF, mirrored at CPU $C000-$FFFF (NROM-128)
 	//  ?       1       1     Switchable 32 KiB inner bank PP at CPU $8000-$FFFF (NROM-256)
-
-	WORD outer = ((m227.reg & 0x0100) >> 3) | ((m227.reg & 0x0060) >> 2);
-	WORD bank = (m227.reg & 0x001C) >> 2;
-
 	bank = outer | (bank & ~bit0);
-	//bank = (bank & ~bit0);
-	memmap_auto_16k(0x8000, bank);
+	memmap_auto_16k(MMCPU(0x8000), bank);
 
 	bank = bit7 ? bank | bit0 : outer | (7 * bit9);
-	//bank = ((bank | bit0) & ~(0xFF * sub2 * !bit7 * !bit9) & ~(7 * !bit7 * !bit9)) | (7 * !bit7 * bit9);
-	memmap_auto_16k(0xC000, bank);
+	memmap_auto_16k(MMCPU(0xC000), bank);
+}
+INLINE static void chr_fix_227(void) {
+	BYTE enabled = (info.mapper.battery || !(m227.reg & 0x0080));
+
+	memmap_auto_wp_8k(MMPPU(0x0000), 0, TRUE, enabled);
 }
 INLINE static void mirroring_fix_227(void) {
 	if (m227.reg & 0x0002) {

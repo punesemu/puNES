@@ -31,12 +31,6 @@ INLINE static void wram_fix_547(void);
 INLINE static void wram_swap_547(WORD address, WORD value);
 INLINE static void mirroring_fix_547(void);
 
-static const BYTE page_table[0x24] ={
-	// JIS X 0208 rows $20-$4F. $20 is not a valid row number.
-	0x0, 0x0, 0x2, 0x2, 0x1, 0x1, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF,
-	// JIS X 0208 rows $50-$7F. $7F is not a valid row number.
-	0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF, 0xD, 0xD
-};
 struct _m547 {
 	BYTE reg[16];
 	struct _m547_qt {
@@ -59,15 +53,12 @@ void map_init_547(void) {
 	EXTCL_CPU_EVERY_CYCLE(547);
 	EXTCL_WR_NMT(547);
 	EXTCL_RD_NMT(547);
-	EXTCL_WR_CHR(547);
 	EXTCL_RD_CHR(547);
 	mapper.internal_struct[0] = (BYTE *)&m547;
 	mapper.internal_struct_size[0] = sizeof(m547);
 
-	memset(&m547, 0x00, sizeof(m547));
-
-	if (info.format != NES_2_0) {
-		info.chr.ram.banks_8k_plus = 1;
+	if (info.reset >= HARD) {
+		memset(&m547, 0x00, sizeof(m547));
 	}
 
 	info.mapper.extend_rd = TRUE;
@@ -132,6 +123,14 @@ BYTE extcl_cpu_rd_mem_547(WORD address, BYTE openbus) {
 
 				// "row" and "col" are the first and second 7-bit JIS X 0208 code byte, respectively, each minus the $21 offset.
 				if ((row < 0x60) && (col < 0x60)) {
+					static const BYTE page_table[0x24] = {
+						// JIS X 0208 rows $20-$4F. $20 is not a valid row number.
+						0x0, 0x0, 0x2, 0x2, 0x1, 0x1, 0x4, 0x5, 0x6,
+						0x7, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF,
+						// JIS X 0208 rows $50-$7F. $7F is not a valid row number.
+						0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8,
+						0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF, 0xD, 0xD
+					};
 					WORD code =
 						(col % 32) +              // First, go through 32 columns of a column-third.
 						(row % 16) * 32 +         // Then, through 16 rows of a row-third.
@@ -165,11 +164,6 @@ BYTE extcl_save_mapper_547(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m547.irq.counter);
 	save_slot_ele(mode, slot, m547.irq.latch);
 
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_547();
-		chr_fix_547();
-	}
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_547(void) {
@@ -181,27 +175,6 @@ void extcl_cpu_every_cycle_547(void) {
 		}
 	}
 }
-BYTE extcl_wr_nmt_547(WORD address, BYTE value) {
-	if (m547.reg[10] & 0x01) {
-		BYTE bank = mapper.mirroring == MIRRORING_HORIZONTAL ? (address & 0x800) ? 1 : 0 : (address & 0x400) ? 1 : 0;
-
-		m547.qt.ram[(bank << 10) | (address & 0x3FF)] = value;
-		return (TRUE);
-	}
-	return (FALSE);
-}
-BYTE extcl_rd_nmt_547(WORD address) {
-	address &= 0x0FFF;
-	if ((address & 0x03FF) < 0x3C0) {
-		BYTE bank = mapper.mirroring == MIRRORING_HORIZONTAL ? (address & 0x800) ? 1 : 0 : (address & 0x400) ? 1 : 0;
-
-		m547.qt.byte = m547.qt.ram[(bank << 10) | (address & 0x3FF)];
-	}
-	return (ntbl.bank_1k[address >> 10][address & 0x3FF]);
-}
-void extcl_wr_chr_547(WORD address, BYTE value) {
-	chr.bank_1k[address >> 10][address & 0x3FF] = value;
-}
 BYTE extcl_rd_chr_547(WORD address) {
 	// controllo di trattare il background
 	if (((address & 0xFFF7) == ppu.bck_adr)) {
@@ -209,62 +182,61 @@ BYTE extcl_rd_chr_547(WORD address) {
 			if (address & 0x0008) {
 				return (m547.qt.byte & 0x80 ? 0xFF : 0x00);
 			} else {
-				DBWORD addr256K = ((m547.qt.byte & 0x3F) << 12) | (address & 0x0FFF);
+				size_t addr256K = ((m547.qt.byte & 0x3F) << 12) | (address & 0x0FFF);
 
-				if (chr_size() == (size_t)(128 * 1024)) {
-					addr256K = ((addr256K & 0x00007) << 1) | ((addr256K & 0x00010) >> 4) | ((addr256K & 0x3FFE0) >> 1);
+				if (chrrom_size() == S128K) {
+					addr256K = ((addr256K & 0x07) << 1) | ((addr256K & 0x10) >> 4) | ((addr256K & 0x3FFE0) >> 1);
 				}
-				return (chr_rom()[addr256K]);
+				return (chrrom_byte(addr256K));
 			}
 		}
-		return (chr.extra.data[((m547.qt.byte & 0x01) << 12) | (address & 0x0FFF)]);
+		return (vram_byte(((m547.qt.byte & 0x01) << 12) | (address & 0x0FFF)));
 	}
-	return (chr.bank_1k[address >> 10][address & 0x3FF]);
+	return (chr_rd(address));
+}
+void extcl_wr_nmt_547(WORD address, BYTE value) {
+	if (m547.reg[10] & 0x01) {
+		BYTE bank = (m547.reg[10] & 0x02)
+			? (address & 0x800) ? 1 : 0
+			: (address & 0x400) ? 1 : 0;
+
+		m547.qt.ram[(bank << 10) | (address & 0x3FF)] = value;
+		return;
+	}
+	nmt_wr(address, value);
+}
+BYTE extcl_rd_nmt_547(WORD address) {
+	if ((address & 0x03FF) < 0x3C0) {
+		BYTE bank = (m547.reg[10] & 0x02)
+			? (address & 0x800) ? 1 : 0
+			: (address & 0x400) ? 1 : 0;
+
+		m547.qt.byte = m547.qt.ram[(bank << 10) | (address & 0x3FF)];
+	}
+	return (nmt_rd(address));
 }
 
 INLINE static void prg_fix_547(void) {
-	WORD value = 0;
-
 	prg_swap_547(0x8000, m547.reg[2]);
 	prg_swap_547(0xA000, m547.reg[3]);
 	prg_swap_547(0xC000, m547.reg[4]);
-
-	value = 0x4F;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, value);
-
-	map_prg_rom_8k_update();
+	memmap_auto_8k(MMCPU(0xE000), 0x4F);
 }
 INLINE static void prg_swap_547(WORD address, WORD value) {
-	value = value & 0x40 ? (value & 0x3F) + 0x10 : value & 0x0F;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
+	WORD bank = value & 0x40 ? (value & 0x3F) + 0x10 : value & 0x0F;
+
+	memmap_auto_8k(MMCPU(address),bank);
 }
 INLINE static void chr_fix_547(void) {
-	DBWORD value;
-
-	value = m547.reg[5] & 0x01;
-	control_bank(info.chr.ram.max.banks_4k)
-	value <<= 12;
-	chr.bank_1k[0] = &chr.extra.data[value];
-	chr.bank_1k[1] = &chr.extra.data[value | 0x400];
-	chr.bank_1k[2] = &chr.extra.data[value | 0x800];
-	chr.bank_1k[3] = &chr.extra.data[value | 0xC00];
-
-	value = 1;
-	control_bank(info.chr.ram.max.banks_4k)
-	value <<= 12;
-	chr.bank_1k[4] = &chr.extra.data[value];
-	chr.bank_1k[5] = &chr.extra.data[value | 0x400];
-	chr.bank_1k[6] = &chr.extra.data[value | 0x800];
-	chr.bank_1k[7] = &chr.extra.data[value | 0xC00];
+	memmap_vram_4k(MMPPU(0x0000), (m547.reg[5] & 0x01));
+	memmap_vram_4k(MMPPU(0x1000), 1);
 }
 INLINE static void wram_fix_547(void) {
 	wram_swap_547(0x6000, m547.reg[0]);
 	wram_swap_547(0x7000, m547.reg[1]);
 }
 INLINE static void wram_swap_547(WORD address, WORD value) {
-	memmap_auto_4k(address, (value & 0x01) | ((value & 0x80) >> 2));
+	memmap_auto_4k(MMCPU(address), (value & 0x01) | ((value & 0x80) >> 2));
 }
 INLINE static void mirroring_fix_547(void) {
 	if (m547.reg[10] & 0x02) {

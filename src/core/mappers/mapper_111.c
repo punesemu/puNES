@@ -21,7 +21,6 @@
 #include "mappers.h"
 #include "mem_map.h"
 #include "ppu.h"
-#include "tas.h"
 #include "save_slot.h"
 #include "SST39SF040.h"
 #include "gui.h"
@@ -38,11 +37,10 @@ struct _m111 {
 } m111;
 struct _gtromtmp {
 	BYTE *sst39sf040;
-	BYTE *vram;
 } gtromtmp;
 
 void map_init_111(void) {
-	if (!mapper.write_vram) {
+	if (!vram_size()) {
 		EXTCL_AFTER_MAPPER_INIT(MMC1);
 		EXTCL_CPU_WR_MEM(111_MMC1);
 		EXTCL_SAVE_MAPPER(111_MMC1);
@@ -65,8 +63,6 @@ void map_init_111(void) {
 		EXTCL_CPU_RD_MEM(111_GTROM);
 		EXTCL_SAVE_MAPPER(111_GTROM);
 		EXTCL_CPU_EVERY_CYCLE(111_GTROM);
-		EXTCL_WR_NMT(111_GTROM);
-		EXTCL_RD_NMT(111_GTROM);
 		EXTCL_BATTERY_IO(111_GTROM);
 		mapper.internal_struct[0] = (BYTE*)&m111;
 		mapper.internal_struct_size[0] = sizeof(m111);
@@ -76,16 +72,18 @@ void map_init_111(void) {
 		}
 
 		if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-			gtromtmp.sst39sf040 = (BYTE *)malloc(prg_size());
-			memcpy(gtromtmp.sst39sf040, prg_rom(), prg_size());
-			sst39sf040_init(gtromtmp.sst39sf040, prg_size(), 0xBF, 0xB7, 0x5555, 0x2AAA, 4096);
+			gtromtmp.sst39sf040 = (BYTE *)malloc(prgrom_size());
+			memcpy(gtromtmp.sst39sf040, prgrom_pnt(), prgrom_size());
+			sst39sf040_init(gtromtmp.sst39sf040, prgrom_size(), 0xBF, 0xB7, 0x5555, 0x2AAA, 4096);
 		}
 
-		info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks = 0;
-		info.chr.rom.banks_8k = 4;
+		if (info.format != NES_2_0) {
+			vram_set_ram_size(S32K);
+		}
 
 		info.mapper.force_battery_io = TRUE;
-		info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
+		info.mapper.extend_wr = TRUE;
+		info.mapper.extend_rd = TRUE;
 	}
 }
 
@@ -157,40 +155,18 @@ BYTE extcl_cpu_rd_mem_111_GTROM(WORD address, BYTE openbus) {
 }
 BYTE extcl_save_mapper_111_GTROM(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m111.reg);
-	sst39sf040_save_mapper(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		mirroring_fix_gtrom_111();
-	}
-
-	return (EXIT_OK);
+	return (sst39sf040_save_mapper(mode, slot, fp));
 }
 void extcl_cpu_every_cycle_111_GTROM(void) {
 	sst39sf040_tick();
 }
-BYTE extcl_wr_nmt_111_GTROM(WORD address, BYTE value) {
-	//if (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_ROWS)) {
-		gtromtmp.vram[address & 0x1FFF] = value;
-	//} else {
-	//	gtromtmp.vram[address & 0x1FFF] = value;
-	//}
-	// write is done
-	return (TRUE);
-}
-BYTE extcl_rd_nmt_111_GTROM(WORD address) {
-	//if (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_ROWS)) {
-		return (gtromtmp.vram[address & 0x1FFF]);
-	//} else {
-	//	return (gtromtmp.vram[address & 0x1FFF]);
-	//}
-}
 void extcl_battery_io_111_GTROM(BYTE mode, FILE *fp) {
 	if (mode == WR_BAT) {
-		if (fwrite(gtromtmp.sst39sf040, prg_size(), 1, fp) < 1) {
+		if (fwrite(gtromtmp.sst39sf040, prgrom_size(), 1, fp) < 1) {
 			log_error(uL("CHEAPOCABRA;error on write flash chip"));
 		}
 	} else {
-		if (fread(gtromtmp.sst39sf040, prg_size(), 1, fp) < 1) {
+		if (fread(gtromtmp.sst39sf040, prgrom_size(), 1, fp) < 1) {
 			log_error(uL("CHEAPOCABRA;error on read flash chip"));
 		}
 	}
@@ -204,30 +180,11 @@ void chr_swap_mmc1_111(WORD address, WORD value) {
 }
 
 INLINE static void prg_fix_gtrom_111(void) {
-	BYTE value = m111.reg & 0x0F;
-
-	control_bank(info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, value);
-	map_prg_rom_8k_update();
+	memmap_auto_32k(MMCPU(0x8000), (m111.reg & 0x0F));
 }
 INLINE static void chr_fix_gtrom_111(void) {
-	DBWORD bank = (m111.reg & 0x10) >> 4;
-
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank | 0x0000);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	memmap_vram_8k(MMPPU(0x0000), ((m111.reg & 0x10) >> 4));
 }
 INLINE static void mirroring_fix_gtrom_111(void) {
-	DBWORD bank = 0x02 | ((m111.reg & 0x20) >> 5);
-
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	gtromtmp.vram = chr_pnt(bank);
+	memmap_nmt_vram_8k(MMPPU(0x2000), (0x02 | ((m111.reg & 0x20) >> 5)));
 }

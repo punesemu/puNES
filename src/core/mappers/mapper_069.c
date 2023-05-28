@@ -17,7 +17,6 @@
  */
 
 #include "mappers.h"
-#include "info.h"
 
 void prg_swap_fme7_069(WORD address, WORD value);
 void chr_swap_fme7_069(WORD address, WORD value);

@@ -57,18 +57,10 @@ BYTE map_init(void) {
 			map_init_001();
 			break;
 		case 2:
-			if (info.mapper.submapper == UNLROM) {
-				map_init_UxROM(UNLROM);
-			} else if (info.mapper.submapper == UNROM512) {
-				map_init_UxROM(UNROM512);
-			} else if (info.mapper.submapper == UXROMNBC) {
-				map_init_UxROM(UXROMNBC);
-			} else {
-				map_init_UxROM(UXROM);
-			}
+			map_init_002();
 			break;
 		case 3:
-			map_init_CNROM();
+			map_init_003();
 			break;
 		case 4:
 			if (info.mapper.submapper == MMC3_T9552) {
@@ -84,7 +76,7 @@ BYTE map_init(void) {
 			map_init_FFESMC();
 			break;
 		case 7:
-			map_init_AxROM();
+			map_init_007();
 			break;
 		case 8:
 			map_init_FFESMC();
@@ -168,13 +160,13 @@ BYTE map_init(void) {
 			map_init_029();
 			break;
 		case 30:
-			map_init_UxROM(UNROM512);
+			map_init_030();
 			break;
 		case 31:
 			map_init_031();
 			break;
 		case 32:
-			map_init_Irem(G101);
+			map_init_032();
 			break;
 		case 33:
 			map_init_Taito(TC0190FMC);
@@ -183,7 +175,7 @@ BYTE map_init(void) {
 			map_init_BxROM();
 			break;
 		case 35:
-			map_init_SC_127();
+			map_init_209();
 			break;
 		case 36:
 			map_init_036();
@@ -205,7 +197,6 @@ BYTE map_init(void) {
 			break;
 		case 43:
 			map_init_043();
-			//map_init_357();
 			break;
 		case 44:
 			map_init_044();
@@ -265,10 +256,10 @@ BYTE map_init(void) {
 			map_init_063();
 			break;
 		case 64:
-			map_init_Tengen(TRAMBO);
+			map_init_064();
 			break;
 		case 65:
-			map_init_Irem(H3000);
+			map_init_065();
 			break;
 		case 66:
 			map_init_GxROM();
@@ -286,7 +277,7 @@ BYTE map_init(void) {
 			map_init_070();
 			break;
 		case 71:
-			map_init_Camerica();
+			map_init_071();
 			break;
 		case 72:
 			map_init_Jaleco(JF17);
@@ -298,13 +289,13 @@ BYTE map_init(void) {
 			map_init_074();
 			break;
 		case 75:
-			map_init_VRC1();
+			map_init_075();
 			break;
 		case 76:
 			map_init_076();
 			break;
 		case 77:
-			map_init_Irem(LROG017);
+			map_init_077();
 			break;
 		case 78:
 			map_init_Jaleco(JF16);
@@ -340,7 +331,7 @@ BYTE map_init(void) {
 			map_init_089();
 			break;
 		case 90:
-			map_init_JYASIC(MAP90);
+			map_init_209();
 			break;
 		case 91:
 			map_init_091();
@@ -352,7 +343,7 @@ BYTE map_init(void) {
 			map_init_093();
 			break;
 		case 94:
-			map_init_UxROM(UNL1XROM);
+			map_init_094();
 			break;
 		case 95:
 			map_init_095();
@@ -361,7 +352,7 @@ BYTE map_init(void) {
 			map_init_Bandai(B161X02X74);
 			break;
 		case 97:
-			map_init_Irem(TAMS1);
+			map_init_097();
 			break;
 		case 99:
 			map_init_Vs();
@@ -376,7 +367,7 @@ BYTE map_init(void) {
 			map_init_103();
 			break;
 		case 104:
-			map_init_Camerica_GoldenFive();
+			map_init_104();
 			break;
 		case 105:
 			map_init_105();
@@ -385,7 +376,7 @@ BYTE map_init(void) {
 			map_init_106();
 			break;
 		case 107:
-			map_init_Magic();
+			map_init_107();
 			break;
 		case 108:
 			map_init_108();
@@ -412,7 +403,7 @@ BYTE map_init(void) {
 			map_init_117();
 			break;
 		case 118:
-			map_init_TxROM();
+			map_init_118();
 			break;
 		case 119:
 			map_init_119();
@@ -482,7 +473,7 @@ BYTE map_init(void) {
 			map_init_Sachen(TCU01);
 			break;
 		case 148:
-			map_init_Sachen(SA0037);
+			map_init_148();
 			break;
 		case 149:
 			map_init_Sachen(SA0036);
@@ -491,7 +482,7 @@ BYTE map_init(void) {
 			map_init_Sachen(SA74374B);
 			break;
 		case 151:
-			map_init_VRC1();
+			map_init_075();
 			break;
 		case 152:
 			map_init_152();
@@ -510,13 +501,13 @@ BYTE map_init(void) {
 			map_init_156();
 			break;
 		case 158:
-			map_init_Tengen(T800037);
+			map_init_064();
 			break;
 		case 159:
 			map_init_Bandai(E24C01);
 			break;
 		case 162:
-			map_init_FS304();
+			map_init_162();
 			break;
 		case 163:
 			map_init_163();
@@ -566,7 +557,7 @@ BYTE map_init(void) {
 			map_init_176();
 			break;
 		case 180:
-			map_init_UxROM(UNROM180);
+			map_init_180();
 			break;
 		case 182:
 			map_init_182();
@@ -650,13 +641,13 @@ BYTE map_init(void) {
 			map_init_208();
 			break;
 		case 209:
-			map_init_JYASIC(MAP209);
+			map_init_209();
 			break;
 		case 210:
 			map_init_210();
 			break;
 		case 211:
-			map_init_JYASIC(MAP211);
+			map_init_209();
 			break;
 		case 212:
 			map_init_212();
@@ -689,13 +680,14 @@ BYTE map_init(void) {
 			map_init_222();
 			break;
 		case 224:
-			map_init_Coolboy(MINDKIDS);
+			info.mapper.submapper = 1;
+			map_init_268();
 			break;
 		case 225:
 			map_init_225();
 			break;
 		case 226:
-			map_init_226(MAP226);
+			map_init_226();
 			break;
 		case 227:
 			map_init_227();
@@ -713,10 +705,10 @@ BYTE map_init(void) {
 			map_init_231();
 			break;
 		case 232:
-			map_init_Camerica_BF9096();
+			map_init_232();
 			break;
 		case 233:
-			map_init_226(MAP233);
+			map_init_233();
 			break;
 		case 234:
 			map_init_Ave(D1012);
@@ -725,7 +717,7 @@ BYTE map_init(void) {
 			map_init_235();
 			break;
 		case 236:
-			map_init_BMC70IN1();
+			map_init_236();
 			break;
 		case 237:
 			map_init_237();
@@ -755,7 +747,6 @@ BYTE map_init(void) {
 			map_init_246();
 			break;
 		case 248:
-			// stessa mapper della 115
 			map_init_115();
 			break;
 		case 249:
@@ -787,7 +778,7 @@ BYTE map_init(void) {
 			map_init_260();
 			break;
 		case 261:
-			map_init_BMC810544CA1();
+			map_init_261();
 			break;
 		case 262:
 			map_init_262();
@@ -808,7 +799,7 @@ BYTE map_init(void) {
 			map_init_267();
 			break;
 		case 268:
-			map_init_Coolboy(info.mapper.submapper == MINDKIDS ? MINDKIDS : COOLBOY);
+			map_init_268();
 			break;
 		case 269:
 			map_init_269();
@@ -820,10 +811,10 @@ BYTE map_init(void) {
 			map_init_274();
 			break;
 		case 281:
-			map_init_JYASIC(MAP281);
+			map_init_281();
 			break;
 		case 282:
-			map_init_JYASIC(MAP282);
+			map_init_282();
 			break;
 		case 283:
 			map_init_283();
@@ -856,7 +847,7 @@ BYTE map_init(void) {
 			map_init_292();
 			break;
 		case 295:
-			map_init_JYASIC(MAP295);
+			map_init_295();
 			break;
 		case 297:
 			map_init_297();
@@ -916,7 +907,7 @@ BYTE map_init(void) {
 			map_init_BMCHP898F();
 			break;
 		case 320:
-			map_init_BMC830425C();
+			map_init_320();
 			break;
 		case 322:
 			map_init_322();
@@ -973,10 +964,10 @@ BYTE map_init(void) {
 			map_init_TJ03();
 			break;
 		case 342:
-			map_init_Coolgirl();
+			map_init_342();
 			break;
 		case 343:
-			map_init_RESETNROMXIN1();
+			map_init_343();
 			break;
 		case 344:
 			map_init_344();
@@ -1003,7 +994,7 @@ BYTE map_init(void) {
 			map_init_351();
 			break;
 		case 352:
-			map_init_KS106C();
+			map_init_352();
 			break;
 		case 353:
 			map_init_353();
@@ -1018,7 +1009,7 @@ BYTE map_init(void) {
 			map_init_357();
 			break;
 		case 358:
-			map_init_JYASIC(MAP358);
+			map_init_358();
 			break;
 		case 359:
 			map_init_359();
@@ -1069,19 +1060,19 @@ BYTE map_init(void) {
 			map_init_384();
 			break;
 		case 386:
-			map_init_JYASIC(MAP386);
+			map_init_386();
 			break;
 		case 387:
-			map_init_JYASIC(MAP387);
+			map_init_387();
 			break;
 		case 388:
-			map_init_JYASIC(MAP388);
+			map_init_388();
 			break;
 		case 389:
 			map_init_389();
 			break;
 		case 390:
-			map_init_BMC70IN1();
+			map_init_390();
 			break;
 		case 393:
 			map_init_393();
@@ -1096,7 +1087,7 @@ BYTE map_init(void) {
 			map_init_396();
 			break;
 		case 397:
-			map_init_JYASIC(MAP397);
+			map_init_397();
 			break;
 		case 398:
 			map_init_398();
@@ -1148,6 +1139,9 @@ BYTE map_init(void) {
 			break;
 		case 420:
 			map_init_420();
+			break;
+		case 421:
+			map_init_421();
 			break;
 		case 422:
 			map_init_126(MAP422);
@@ -1327,39 +1321,12 @@ BYTE map_init(void) {
 			break;
 	}
 
-	// WRAM
 	wram_init();
 
-	// CHR
-	if (mapper.write_vram) {
-		if (!info.chr.rom.banks_8k) {
-			if ((info.format == iNES_1_0) || (info.format == UNIF_FORMAT)) {
-				if (info.extra_from_db & CHRRAM32K) {
-					info.chr.rom.banks_8k = 4;
-				} else if (info.extra_from_db & CHRRAM256K) {
-					info.chr.rom.banks_8k = 32;
-				} else {
-					info.chr.rom.banks_8k = 1;
-				}
-			} else {
-				info.chr.rom.banks_8k = 1;
-			}
-		}
-		info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
-		info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
-		map_set_banks_max_chr();
-	}
-	if (map_chr_ram_init()) {
-		return (EXIT_ERROR);
-	}
+	vram_init();
+	nvram_load_file();
 
-	if (info.chr.ram.banks_8k_plus) {
-		if (chr.extra.data) {
-			info.chr.ram.banks_8k_plus = 0;
-		} else if (map_chr_ram_extra_init(info.chr.ram.banks_8k_plus * 0x2000)) {
-			return (EXIT_ERROR);
-		}
-	}
+	chrrom_reset();
 
 	// after mapper init
 	if (extcl_after_mapper_init) {
@@ -1372,8 +1339,12 @@ BYTE map_init(void) {
 	return (EXIT_OK);
 }
 void map_quit(void) {
+	nvram_save_file();
+
 	// devo farlo prima di liberare prgrom.data
 	wram_quit();
+	vram_quit();
+	nmt_quit();
 
 	info.id = 0;
 	memset(&info.mapper, 0x00, sizeof(info.mapper));
@@ -1383,29 +1354,11 @@ void map_quit(void) {
 
 	nes20db_reset();
 
-	// PRG
-	prgrom_quit();
 	miscrom_quit();
-
-	// CHR
-	if (chr_rom()) {
-		free(chr_rom());
-		chr_rom() = NULL;
-		chr_size() = 0;
-	}
-
-	// CHR extra
-	if (chr.extra.data) {
-		free(chr.extra.data);
-		chr.extra.size = 0;
-	}
-	chr.extra.data = NULL;
-
-	memset(chr.bank_1k, 0, sizeof(chr.bank_1k));
+	prgrom_quit();
+	chrrom_quit();
 
 	mirroring_V();
-
-	mapper.write_vram = FALSE;
 
 	vs_system.ppu = vs_system.special_mode.type = 0;
 	info.mapper.ext_console_type = 0;
@@ -1426,13 +1379,13 @@ void map_prg_rom_8k(BYTE banks_8k, BYTE at, WORD value) {
 			printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
 			break;
 		case 1:
-			memmap_auto_8k(0x8000 | (at * 0x2000), value);
+			memmap_auto_8k(MMCPU(0x8000 | (at * 0x2000)), value);
 			break;
 		case 2:
-			memmap_auto_16k(0x8000 | (at * 0x2000), value);
+			memmap_auto_16k(MMCPU(0x8000 | (at * 0x2000)), value);
 			break;
 		case 4:
-			memmap_auto_32k(0x8000, value);
+			memmap_auto_32k(MMCPU(0x8000), value);
 			break;
 	}
 }
@@ -1459,30 +1412,7 @@ void map_prg_rom_8k_update(void) {
 
 
 
-BYTE map_chr_malloc(size_t size, BYTE set_value, BYTE init_chip0_rom) {
-	if (chr_rom()) {
-		free(chr_rom());
-		chr_rom() = NULL;
-		chr_size() = 0;
-	}
 
-	chr_rom() = (BYTE *)malloc(size);
-	if (chr_rom()) {
-		memset(chr_rom(), set_value, size);
-		chr_size() = size;
-	} else {
-		free(chr_rom());
-		chr_rom() = NULL;
-		chr_size() = 0;
-		log_error(uL("chr malloc;out of memory"));
-	}
-
-	if (init_chip0_rom) {
-		chr_chip_rom(0) = chr_rom();
-	}
-
-	return (chr_rom() ? EXIT_OK : EXIT_ERROR);
-}
 void map_chr_bank_1k_reset(void) {
 	BYTE bank1k = 0, bnk = 0;
 
@@ -1492,38 +1422,27 @@ void map_chr_bank_1k_reset(void) {
 		chr.bank_1k[bank1k] = chr_pnt((int)(bnk * 0x0400));
 	}
 }
-BYTE map_chr_ram_init(void) {
-	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		if (mapper.write_vram) {
-			/* alloco la CHR Rom */
-			if (map_chr_malloc(chr_ram_size(), 0x00, TRUE) == EXIT_ERROR) {
-				return (EXIT_ERROR);
-			}
-			map_chr_bank_1k_reset();
-		}
-	}
 
-	return (EXIT_OK);
-}
-BYTE map_chr_ram_extra_init(uint32_t size) {
-	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		if (chr.extra.data) {
-			free(chr.extra.data);
-			chr.extra.size = 0;
-		}
-		/* alloco la CHR Ram extra */
-		chr.extra.data = (BYTE *)malloc(size);
-		if (!chr.extra.data) {
-			log_error(uL("prg ram extra;out of memory"));
-			return (EXIT_ERROR);
-		}
-		chr.extra.size = size;
-		memset(chr.extra.data, 0x00, chr.extra.size);
-		info.chr.ram.max.banks_8k = (chr.extra.size / 0x2000) ? (chr.extra.size / 0x2000) - 1 : 0;
-		info.chr.ram.max.banks_4k = (chr.extra.size / 0x1000) ? (chr.extra.size / 0x1000) - 1 : 0;
-		info.chr.ram.max.banks_2k = (chr.extra.size / 0x0800) ? (chr.extra.size / 0x0800) - 1 : 0;
-		info.chr.ram.max.banks_1k = (chr.extra.size / 0x0400) ? (chr.extra.size / 0x0400) - 1 : 0;
-	}
+
+BYTE map_chr_ram_extra_init(UNUSED(uint32_t size)) {
+//	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+//		if (chr.extra.data) {
+//			free(chr.extra.data);
+//			chr.extra.size = 0;
+//		}
+//		/* alloco la CHR Ram extra */
+//		chr.extra.data = (BYTE *)malloc(size);
+//		if (!chr.extra.data) {
+//			log_error(uL("prg ram extra;out of memory"));
+//			return (EXIT_ERROR);
+//		}
+//		chr.extra.size = size;
+//		memset(chr.extra.data, 0x00, chr.extra.size);
+//		info.chr.ram.max.banks_8k = (chr.extra.size / 0x2000) ? (chr.extra.size / 0x2000) - 1 : 0;
+//		info.chr.ram.max.banks_4k = (chr.extra.size / 0x1000) ? (chr.extra.size / 0x1000) - 1 : 0;
+//		info.chr.ram.max.banks_2k = (chr.extra.size / 0x0800) ? (chr.extra.size / 0x0800) - 1 : 0;
+//		info.chr.ram.max.banks_1k = (chr.extra.size / 0x0400) ? (chr.extra.size / 0x0400) - 1 : 0;
+//	}
 
 	return (EXIT_OK);
 }
@@ -1531,12 +1450,6 @@ void map_chr_ram_extra_reset(void) {
 	if (chr.extra.data) {
 		memset(chr.extra.data, 0x00, chr.extra.size);
 	}
-}
-BYTE map_chr_ram_slot_in_range(BYTE slot) {
-	return (mapper.write_vram ||
-		(chr.extra.data &&
-		(chr.bank_1k[slot] >= chr.extra.data) &&
-		(chr.bank_1k[slot] < (chr.extra.data + chr.extra.size))));
 }
 void map_set_banks_max_prg(void) {
 	info.prg.rom.max.banks_32k = (info.prg.rom.banks_16k == 1) ? 0 :
@@ -1555,99 +1468,8 @@ void map_set_banks_max_chr(void) {
 	info.chr.rom.max.banks_1k = info.chr.rom.banks_1k ? info.chr.rom.banks_1k - 1 : 0;
 }
 
-void map_chr_rom_1k(const WORD address, const WORD value) {
-	const BYTE slot = (address >> 10) & 0x07;
-	DBWORD bank = value;
-
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
-	chr.bank_1k[slot] = chr_pnt(bank);
-}
-void map_chr_rom_2k(const WORD address, const WORD value) {
-	const BYTE slot = (address >> 10) & 0x06;
-	DBWORD bank = value;
-
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[slot] = chr_pnt(bank);
-	chr.bank_1k[slot | 0x01] = chr_pnt(bank | 0x0400);
-}
-void map_chr_rom_4k(const WORD address, const WORD value) {
-	const BYTE slot = (address >> 10) & 0x04;
-	DBWORD bank = value;
-
-	_control_bank(bank, info.chr.rom.max.banks_4k)
-	bank <<= 12;
-	chr.bank_1k[slot] = chr_pnt(bank);
-	chr.bank_1k[slot | 0x01] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[slot | 0x02] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[slot | 0x03] = chr_pnt(bank | 0x0C00);
-}
-void map_chr_rom_8k(const WORD value) {
-	DBWORD bank = value;
-
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
-}
-
 void map_nmt_1k(BYTE slot, const WORD value) {
 	slot &= 0x03;
 	ntbl.bank_1k[slot] = &ntbl.data[(value & 0x03) << 10];
 	ntbl.writable[slot] = TRUE;
-}
-void map_nmt_chr_ram_1k(BYTE slot, const WORD value) {
-	DBWORD bank = value;
-
-	slot &= 0x03;
-	_control_bank(bank, info.chr.ram.max.banks_1k)
-	bank <<= 10;
-	ntbl.bank_1k[slot] = &chr.extra.data[bank];
-	ntbl.writable[slot] = TRUE;
-}
-void map_nmt_chr_rom_1k(BYTE slot, const WORD value) {
-	DBWORD bank = value;
-
-	slot &= 0x03;
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
-	ntbl.bank_1k[slot] = chr_pnt(bank);
-	ntbl.writable[slot] = mapper.write_vram;
-}
-void map_nmt_chr_rom_2k(BYTE slot, const WORD value) {
-	DBWORD bank = value;
-
-	slot &= 0x02;
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	ntbl.bank_1k[slot] = chr_pnt(bank);
-	ntbl.writable[slot] = mapper.write_vram;
-
-	slot |= 1;
-	ntbl.bank_1k[slot] = chr_pnt(bank | 0x400);
-	ntbl.writable[slot] = mapper.write_vram;
-}
-void map_nmt_chr_rom_4k(const WORD value) {
-	DBWORD bank = value;
-
-	_control_bank(bank, info.chr.rom.max.banks_4k)
-	bank <<= 12;
-	ntbl.bank_1k[0] = chr_pnt(bank);
-	ntbl.writable[0] = mapper.write_vram;
-
-	ntbl.bank_1k[1] = chr_pnt(bank | 0x400);
-	ntbl.writable[1] = mapper.write_vram;
-
-	ntbl.bank_1k[2] = chr_pnt(bank | 0x800);
-	ntbl.writable[2] = mapper.write_vram;
-
-	ntbl.bank_1k[3] = chr_pnt(bank | 0xC00);
-	ntbl.writable[3] = mapper.write_vram;
 }

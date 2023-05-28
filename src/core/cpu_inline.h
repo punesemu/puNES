@@ -949,28 +949,16 @@ INLINE static void ppu_wr_mem(WORD address, BYTE value) {
 	if (address < 0x2000) {
 		if (extcl_wr_chr) {
 			extcl_wr_chr(address, value);
-			return;
-		}
-		if (mapper.write_vram) {
-			chr.bank_1k[address >> 10][address & 0x3FF] = value;
+		} else {
+			chr_wr(address, value);
 		}
 		return;
 	}
 	if (address < 0x3F00) {
 		if (extcl_wr_nmt) {
-			// TRUE = write is menagement in extcl_wr_nmt()
-			// FALSE = continue with the write to ntbl.bank_1k
-			if (extcl_wr_nmt(address, value) == TRUE) {
-				return;
-			}
-		}
-		address &= 0x0FFF;
-		{
-			const BYTE slot = address >> 10;
-
-			if (ntbl.writable[slot]) {
-				ntbl.bank_1k[slot][address & 0x3FF] = value;
-			}
+			extcl_wr_nmt(address, value);
+		} else  {
+			nmt_wr(address, value);
 		}
 		return;
 	}
@@ -1800,7 +1788,7 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 					value = prgrom_control_bank(S4K, value);
 					bank = (address & 0x01);
 					address = (address & 0x000F) << 12;
-					memmap_wram_4k(address, bank);
+					memmap_wram_4k(MMCPU(address), bank);
 					dst = memmap_chunk_pnt(address);
 					if (dst) memcpy(dst, prgrom_pnt_byte(value << 12), S4K);
 				}
@@ -1817,13 +1805,13 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 					value = prgrom_control_bank(S4K, value);
 					bank = (address & 0x07);
 					address = (address & 0x000F) << 12;
-					memmap_wram_4k(address, bank + 2);
+					memmap_wram_4k(MMCPU(address), bank + 2);
 					dst = memmap_chunk_pnt(address);
 					if (dst) memcpy(dst, prgrom_pnt_byte(value << 12), S4K);
 					return;
 				}
 				address = (address & 0x000F) << 12;
-				memmap_prgrom_4k(address, value);
+				memmap_prgrom_4k(MMCPU(address), value);
 				return;
 			default:
 				return;

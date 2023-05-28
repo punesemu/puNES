@@ -28,8 +28,8 @@
 INLINE static void prg_fix_164(void);
 INLINE static void wram_fix_164(void);
 INLINE static void mirroring_fix_164(void);
+
 INLINE static void mode1_bpp(WORD address);
-INLINE static BYTE mode1_bpp_rd(WORD address);
 
 struct _m164 {
 	BYTE reg[4];
@@ -68,7 +68,7 @@ void extcl_after_mapper_init_164(void) {
 	mirroring_fix_164();
 }
 void extcl_cpu_init_pc_164(void) {
-	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		if (m164tmp.cc93c66) {
 			ee93cx6_init(wram_nvram_pnt(), wram_nvram_size(), 8);
 		}
@@ -127,21 +127,19 @@ BYTE extcl_save_mapper_164(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-BYTE extcl_wr_nmt_164(WORD address, UNUSED(BYTE value)) {
+void extcl_wr_chr_164(WORD address, UNUSED(BYTE value)) {
 	mode1_bpp(address);
-	return (FALSE);
-}
-void extcl_wr_chr_164(WORD address, BYTE value) {
-	mode1_bpp(address);
-	if (mapper.write_vram) {
-		chr.bank_1k[address >> 10][address & 0x3FF] = value;
-	}
+	chr_wr(address, value);
 }
 BYTE extcl_rd_chr_164(WORD address) {
 	if ((m164.reg[0] & 0x80) && !m164.pa13) {
-		return (mode1_bpp_rd(address));
+		address = (m164.pa9 << 12) | (address & 0x0FF7) | (m164.pa0 << 3);
 	}
-	return (chr.bank_1k[address >> 10][address & 0x3FF]);
+	return (chr_rd(address));
+}
+void extcl_wr_nmt_164(WORD address, UNUSED(BYTE value)) {
+	mode1_bpp(address);
+	nmt_wr(address, value);
 }
 void extcl_ppu_000_to_255_164(void) {
 	if (r2001.visible) {
@@ -178,7 +176,7 @@ void extcl_ppu_320_to_34x_164(void) {
 INLINE static void prg_fix_164(void) {
 	WORD high = (m164.reg[1] & 0x03) << 5;
 	WORD low = (m164.reg[0] & 0x0F) | ((m164.reg[0] & 0x20) >> 1);
-	WORD bank;
+	WORD bank = 0;
 
 	// D~7654 3210
 	//   ---------
@@ -196,28 +194,24 @@ INLINE static void prg_fix_164(void) {
 	//   |+-------- See 'M' bit description
 	if (m164.reg[0] & 0x10) {
 		bank = (high >> 1) | (low & 0x0F);
-		_control_bank(bank, info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, bank);
+		memmap_auto_32k(MMCPU(0x8000), bank);
 	} else {
 		bank = high | low;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
+		memmap_auto_16k(MMCPU(0x8000), bank);
 
 		bank = high | (m164.reg[0] & 0x40 ? 0x1C | ((m164.reg[0] & 0x01) << 1) : 0x1F);
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 2, bank);
+		memmap_auto_16k(MMCPU(0xC000), bank);
 	}
-	map_prg_rom_8k_update();
 }
 INLINE static void wram_fix_164(void) {
 	if (m164tmp.cc93c66) {
 		if (wram_ram_size()) {
-			memmap_wram_ram_wp_8k(0x6000, 0, TRUE, TRUE);
+			memmap_wram_ram_wp_8k(MMCPU(0x6000), 0, TRUE, TRUE);
 		} else {
-			memmap_disable_8k(0x6000);
+			memmap_disable_8k(MMCPU(0x6000));
 		}
 	} else {
-		memmap_auto_8k(0x6000, 0);
+		memmap_auto_8k(MMCPU(0x6000), 0);
 	}
 }
 INLINE static void mirroring_fix_164(void) {
@@ -227,6 +221,7 @@ INLINE static void mirroring_fix_164(void) {
 		mirroring_V();
 	}
 }
+
 INLINE static void mode1_bpp(WORD address) {
 	BYTE pa13 = (address & 0x2000) >> 13;
 
@@ -235,8 +230,4 @@ INLINE static void mode1_bpp(WORD address) {
 		m164.pa9 = (address & 0x0200) != 0;
 	}
 	m164.pa13 = pa13;
-}
-INLINE static BYTE mode1_bpp_rd(WORD address) {
-	address = (m164.pa9 << 12) | (address & 0x0FF7) | (m164.pa0 << 3);
-	return (chr.bank_1k[address >> 10][address & 0x3FF]);
 }

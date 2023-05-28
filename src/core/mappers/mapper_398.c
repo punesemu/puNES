@@ -59,17 +59,17 @@ void extcl_cpu_wr_mem_398(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_398(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m398.reg);
-	extcl_save_mapper_VRC2and4(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
 BYTE extcl_rd_chr_398(WORD address) {
-	const BYTE slot = address >> 10;
+	BYTE reg1 = address >> 10;
 
-	m398.reg[1] = slot;
-	VRC2and4_prg_fix();
-	VRC2and4_chr_fix();
-	return (chr.bank_1k[slot][address & 0x3FF]);
+	if (reg1 != m398.reg[1]) {
+		m398.reg[1] = reg1;
+		VRC2and4_prg_fix();
+		VRC2and4_chr_fix();
+	}
+	return (chr_rd(address));
 }
 
 void prg_swap_vrc2and4_398(WORD address, WORD value) {

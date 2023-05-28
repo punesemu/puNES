@@ -104,13 +104,13 @@ BYTE extcl_save_mapper_103(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_103(void) {
-	memmap_auto_32k(0x8000, 3);
+	memmap_auto_32k(MMCPU(0x8000), 3);
 }
 INLINE static void wram_fix_103(void) {
 	if (m103.reg[2] & 0x10) {
-		memmap_prgrom_8k(0x6000, m103.reg[0]);
+		memmap_prgrom_8k(MMCPU(0x6000), m103.reg[0]);
 	} else {
-		memmap_auto_8k(0x6000, 0);
+		memmap_auto_8k(MMCPU(0x6000), 0);
 	}
 }
 INLINE static void mirroring_fix_103(void) {

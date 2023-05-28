@@ -50,7 +50,6 @@ void extcl_cpu_wr_mem_019(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_019(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_019(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_019(void);
-void extcl_wr_chr_019(WORD address, BYTE value);
 void extcl_apu_tick_019(void);
 void extcl_battery_io_019(BYTE mode, FILE *fp);
 

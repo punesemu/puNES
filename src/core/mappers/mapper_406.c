@@ -22,11 +22,11 @@
 #include "info.h"
 #include "mem_map.h"
 #include "irqA12.h"
-#include "tas.h"
 #include "SST39SF040.h"
 #include "gui.h"
 
 void prg_swap_mmc3_406(WORD address, WORD value);
+void wram_fix_mmc3_406(void);
 
 struct _m406tmp {
 	BYTE *sst39sf040;
@@ -53,16 +53,17 @@ void map_init_406(void) {
 
 	init_MMC3();
 	MMC3_prg_swap = prg_swap_mmc3_406;
+	MMC3_wram_fix = wram_fix_mmc3_406;
 
 	if (info.mapper.submapper == DEFAULT) {
 		info.mapper.submapper = 0;
 	}
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		m406tmp.sst39sf040 = (BYTE *)malloc(prg_size());
-		memcpy(m406tmp.sst39sf040, prg_rom(), prg_size());
+		m406tmp.sst39sf040 = (BYTE *)malloc(prgrom_size());
+		memcpy(m406tmp.sst39sf040, prgrom_pnt(), prgrom_size());
 		// Macronix MX29F040 (0)/AMD AM29F040 (1)
-		sst39sf040_init(m406tmp.sst39sf040, prg_size(), info.mapper.submapper == 0 ? 0xC2 : 0x01, 0xA4, 0x5555, 0x2AAA, 65536);
+		sst39sf040_init(m406tmp.sst39sf040, prgrom_size(), info.mapper.submapper == 0 ? 0xC2 : 0x01, 0xA4, 0x5555, 0x2AAA, 65536);
 	}
 
 	info.mapper.force_battery_io = TRUE;
@@ -79,30 +80,22 @@ void extcl_mapper_quit_406(void) {
 }
 void extcl_cpu_wr_mem_406(WORD address, BYTE value) {
 	sst39sf040_write(address, value);
-
 	if (info.mapper.submapper == 0) {
 		address = (address & 0xFFFC) | ((address & 0x0001) << 1) | ((address & 0x0002) >> 1);
 	} else if ((address <= 0x9000) || (address >= 0xE000)) {
 		address ^= 0x6000;
 	}
-
 	extcl_cpu_wr_mem_MMC3(address, value);
 }
 BYTE extcl_cpu_rd_mem_406(WORD address, BYTE openbus) {
 	if (address >= 0x8000) {
 		return (sst39sf040_read(address));
 	}
-	// Nessuna WRAM
-	if (address >= 0x6000) {
-		return (0xFF);
-	}
 	return (openbus);
 }
 BYTE extcl_save_mapper_406(BYTE mode, BYTE slot, FILE *fp) {
 	extcl_save_mapper_MMC3(mode, slot, fp);
-	sst39sf040_save_mapper(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (sst39sf040_save_mapper(mode, slot, fp));
 }
 void extcl_cpu_every_cycle_406(void) {
 	sst39sf040_tick();
@@ -110,11 +103,11 @@ void extcl_cpu_every_cycle_406(void) {
 }
 void extcl_battery_io_406(BYTE mode, FILE *fp) {
 	if (mode == WR_BAT) {
-		if (fwrite(m406tmp.sst39sf040, prg_size(), 1, fp) < 1) {
+		if (fwrite(m406tmp.sst39sf040, prgrom_size(), 1, fp) < 1) {
 			log_error(uL("mapper_406;error on write flash chip"));
 		}
 	} else {
-		if (fread(m406tmp.sst39sf040, prg_size(), 1, fp) < 1) {
+		if (fread(m406tmp.sst39sf040, prgrom_size(), 1, fp) < 1) {
 			log_error(uL("mapper_406;error on read flash chip"));
 		}
 	}
@@ -125,4 +118,8 @@ void extcl_irq_A12_clock_406(void) {
 
 void prg_swap_mmc3_406(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, (value & 0x3F));
+}
+void wram_fix_mmc3_406(void) {
+	// Nessuna WRAM
+	memmap_disable_8k(MMCPU(0x6000));
 }

@@ -23,7 +23,6 @@
 #include "cpu.h"
 #include "save_slot.h"
 #include "emu.h"
-#include "tas.h"
 #include "gui.h"
 
 INLINE static void prg_fix_019(void);
@@ -31,14 +30,13 @@ INLINE static void chr_fix_019(void);
 INLINE static void chr_swap_019(WORD address, WORD value, BYTE force_chrom);
 INLINE static void wram_fix_019(void);
 INLINE static void mirroring_fix_019(void);
-INLINE static void nmt_swap_019(BYTE slot, WORD value);
+INLINE static void nmt_swap_019(WORD address, WORD value);
 INLINE static void snd_set_volume_019(void);
 INLINE static SWORD snd_wave_019(int cycles, int channel_offset);
 
 _m019 m019;
 struct _m019tmp {
 	BYTE ram[0x80];
-	BYTE chr_bank_writable[8];
 	SWORD volume;
 } m019tmp;
 
@@ -47,7 +45,6 @@ void map_init_019(void) {
 	EXTCL_CPU_WR_MEM(019);
 	EXTCL_CPU_RD_MEM(019);
 	EXTCL_SAVE_MAPPER(019);
-	EXTCL_WR_CHR(019);
 	EXTCL_CPU_EVERY_CYCLE(019);
 	EXTCL_BATTERY_IO(019);
 	EXTCL_APU_TICK(019);
@@ -209,13 +206,6 @@ void extcl_cpu_every_cycle_019(void) {
 		m019.irq.delay = TRUE;
 	}
 }
-void extcl_wr_chr_019(WORD address, BYTE value) {
-	const BYTE slot = address >> 10;
-
-	if (m019tmp.chr_bank_writable[slot]) {
-		chr.bank_1k[slot][address & 0x3FF] = value;
-	}
-}
 void extcl_apu_tick_019(void) {
 	if (m019.snd.enabled) {
 		m019.snd.channel_start = (~m019tmp.ram[0x7F] >> 4) & 0x07;
@@ -232,7 +222,7 @@ void extcl_apu_tick_019(void) {
 	}
 }
 void extcl_battery_io_019(BYTE mode, FILE *fp) {
-	if (wram.battery.in_use) {
+	if (info.mapper.battery) {
 		if (mode == WR_BAT) {
 			if (fwrite(m019tmp.ram, sizeof(m019tmp.ram), 1, fp) < 1) {
 				log_error(uL("mapper_019;error on write 128 bytes ram"));
@@ -247,25 +237,11 @@ void extcl_battery_io_019(BYTE mode, FILE *fp) {
 
 INLINE static void prg_fix_019(void) {
 	WORD mask = 0x3F;
-	WORD bank = 0;
 
-	bank = m019.prg[0] & mask;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, bank);
-
-	bank = m019.prg[1] & mask;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, bank);
-
-	bank = m019.prg[2] & mask;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, bank);
-
-	bank = m019.prg[3] & mask;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_8k(MMCPU(0x8000), (m019.prg[0] & mask));
+	memmap_auto_8k(MMCPU(0xA000), (m019.prg[1] & mask));
+	memmap_auto_8k(MMCPU(0xC000), (m019.prg[2] & mask));
+	memmap_auto_8k(MMCPU(0xE000), (m019.prg[3] & mask));
 }
 INLINE static void chr_fix_019(void) {
 	BYTE force_chrom = 0;
@@ -283,35 +259,33 @@ INLINE static void chr_fix_019(void) {
 	chr_swap_019(0x1C00, m019.chr[7], force_chrom);
 }
 INLINE static void chr_swap_019(WORD address, WORD value, BYTE force_chrom) {
-	const BYTE slot = (address >> 10) & 0x07;
-
 	if ((value < 0xE0) || force_chrom) {
-		map_chr_rom_1k(address, value);
-		m019tmp.chr_bank_writable[slot] = mapper.write_vram;
+		memmap_auto_1k(MMPPU(address), value);
 	} else {
-		value &= (mapper.mirroring == MIRRORING_FOURSCR ? 0x03 : 0x01);
-		chr.bank_1k[slot] = &ntbl.data[value << 10];
-		m019tmp.chr_bank_writable[slot] = TRUE;
+		value &= (info.mapper.mirroring == MIRRORING_FOURSCR ? 0x03 : 0x01);
+		memmap_chrrom_nmt_1k(MMPPU(address), value);
 	}
 }
 INLINE static void wram_fix_019(void) {
-	memmap_auto_wp_2k(0x6000, 0, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 0))) == 0x40));
-	memmap_auto_wp_2k(0x6800, 1, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 1))) == 0x40));
-	memmap_auto_wp_2k(0x7000, 2, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 2))) == 0x40));
-	memmap_auto_wp_2k(0x7800, 3, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 3))) == 0x40));
+	memmap_auto_wp_2k(MMCPU(0x6000), 0, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 0))) == 0x40));
+	memmap_auto_wp_2k(MMCPU(0x6800), 1, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 1))) == 0x40));
+	memmap_auto_wp_2k(MMCPU(0x7000), 2, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 2))) == 0x40));
+	memmap_auto_wp_2k(MMCPU(0x7800), 3, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 3))) == 0x40));
 }
 INLINE static void mirroring_fix_019(void) {
-	nmt_swap_019(0, m019.nmt[0]);
-	nmt_swap_019(1, m019.nmt[1]);
-	nmt_swap_019(2, m019.nmt[2]);
-	nmt_swap_019(3, m019.nmt[3]);
+	nmt_swap_019(0x2000, m019.nmt[0]);
+	nmt_swap_019(0x2400, m019.nmt[1]);
+	nmt_swap_019(0x2800, m019.nmt[2]);
+	nmt_swap_019(0x2C00, m019.nmt[3]);
 }
-INLINE static void nmt_swap_019(BYTE slot, WORD value) {
+INLINE static void nmt_swap_019(WORD address, WORD value) {
 	if (value < 0xE0) {
-		map_nmt_chr_rom_1k(slot, value);
+		memmap_nmt_chrrom_1k(MMPPU(address), value);
+		memmap_nmt_chrrom_1k(MMPPU(address ^ 0x1000), value);
 	} else {
-		value &= (mapper.mirroring == MIRRORING_FOURSCR ? 0x03 : 0x01);
-		map_nmt_1k(slot, value);
+		value &= (info.mapper.mirroring == MIRRORING_FOURSCR ? 0x03 : 0x01);
+		memmap_nmt_1k(MMPPU(address), value);
+		memmap_nmt_1k(MMPPU(address ^ 0x1000), value);
 	}
 }
 INLINE static void snd_set_volume_019(void) {

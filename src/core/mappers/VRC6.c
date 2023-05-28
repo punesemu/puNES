@@ -285,7 +285,7 @@ void prg_fix_VRC6_base(void) {
 	VRC6_prg_swap(0xE000, 0xFF);
 }
 void prg_swap_VRC6_base(WORD address, WORD value) {
-	memmap_auto_8k(address, value);
+	memmap_auto_8k(MMCPU(address), value);
 }
 void chr_fix_VRC6_base(void) {
 	WORD bank[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -350,17 +350,14 @@ void chr_fix_VRC6_base(void) {
 	VRC6_chr_swap(0x1C00, bank[7]);
 }
 void chr_swap_VRC6_base(WORD address, WORD value) {
-	const WORD slot = address >> 10;
-
-	value = chr_control(slot, value);
-	map_chr_rom_1k(address, value);
+	memmap_chrrom_1k(MMPPU(address), chr_control(address, value));
 }
 void wram_fix_VRC6_base(void) {
-	memmap_auto_wp_8k(0x6000, 0, (vrc6.reg >> 7), (vrc6.reg >> 7));
+	memmap_auto_wp_8k(MMCPU(0x6000), 0, (vrc6.reg >> 7), (vrc6.reg >> 7));
 }
 void mirroring_fix_VRC6_base(void) {
 	BYTE nmt = 0, mode = vrc6.reg & 0x03, mirroring = (vrc6.reg & 0x0C) >> 2;
-	BYTE reg[4] = {0, 0, 0, 0};
+	BYTE reg[4] = {0, 0, 0, 0 };
 
 	if (mode == 1) {
 		reg[0] = 4;
@@ -403,25 +400,26 @@ void mirroring_fix_VRC6_base(void) {
 				}
 			}
 		}
-		VRC6_nmt_swap(nmt << 10, bank);
+		VRC6_nmt_swap((0x2000 | (nmt << 10)), bank);
 	}
 }
 void nmt_swap_VRC6_base(WORD address, WORD value) {
-	WORD const slot = address >> 10;
-
 	if (vrc6.reg & 0x10) {
-		map_nmt_chr_rom_1k(slot, chr_control(address, value));
-	} else if (info.chr.ram.banks_8k_plus) {
-		map_nmt_chr_ram_1k(slot, value);
+		memmap_nmt_chrrom_1k(MMPPU(address), chr_control(address, value));
+		memmap_nmt_chrrom_1k(MMPPU(address ^ 0x1000), chr_control(address, value));
+	} else if (vram_size()) {
+		memmap_nmt_vram_1k(MMPPU(address), value);
+		memmap_nmt_vram_1k(MMPPU(address ^ 0x1000), value);
 	} else {
-		map_nmt_1k(slot, (value & 0x01));
+		memmap_nmt_1k(MMPPU(address), (value & ((info.mapper.mirroring == MIRRORING_FOURSCR) ? 0x03 : 0x01)));
+		memmap_nmt_1k(MMPPU(address ^ 0x1000), (value & ((info.mapper.mirroring == MIRRORING_FOURSCR) ? 0x03 : 0x01)));
 	}
 }
 
 INLINE static WORD chr_control(const WORD address, const WORD value) {
-	WORD const slot = (address & 0x0F00) >> 10;
+	const WORD slot = (address & 0x0F00) >> 10;
 
-	return (chr.rom.size >= (size_t)(512 * 1024) ? (value << 1) | (slot & 0x01) : value);
+	return (chrrom_size() >= S512K ? (value << 1) | (slot & 0x01) : value);
 }
 INLINE static void vrc6_square_wr(int index, BYTE value, _vrc6_square *square) {
 	switch (index) {

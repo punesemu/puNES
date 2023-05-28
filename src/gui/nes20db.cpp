@@ -185,6 +185,7 @@ void search_in_xml(QFile &file) {
 //						if ((nes20db.rom.crc32 == info.crc32.total) || (nes20db.prgrom.crc32 == info.crc32.prg)) {
 						if (nes20db.rom.crc32 == info.crc32.total) {
 							const QString comment = game["comment"];
+							BYTE old_format = info.format;
 
 							info.mapper.nes20db.in_use = TRUE;
 							info.mapper.nes20db.from_crc32_prg = TRUE;
@@ -205,24 +206,42 @@ void search_in_xml(QFile &file) {
 								info.mapper.submapper = DEFAULT;
 							}
 
-							wram_set_ram_size(nes20db.prgram.size ? emu_power_of_two(nes20db.prgram.size) : 0);
-							wram_set_nvram_size(nes20db.prgnvram.size ? emu_power_of_two(nes20db.prgnvram.size) : 0);
-							wram.battery.in_use = nes20db.pcb.battery;
+							wram_set_ram_size(nes20db.prgram.size ? nes20db.prgram.size : 0);
+							wram_set_nvram_size(nes20db.prgnvram.size ? nes20db.prgnvram.size : 0);
 
-							{
-								DBWORD banks = 0;
+							vram_set_ram_size(nes20db.chrram.size ? nes20db.chrram.size : 0);
+							vram_set_nvram_size(nes20db.chrnvram.size ? nes20db.chrnvram.size : 0);
 
-								banks = nes20db.chrram.size
-									? (nes20db.chrram.size <= 0x2000 ? 1 : nes20db.chrram.size / 0x2000)
-									: 0;
-								banks += nes20db.chrnvram.size
-									? (nes20db.chrnvram.size <= 0x2000 ? 1 : nes20db.chrnvram.size / 0x2000)
-									: 0;
+							info.mapper.battery = nes20db.pcb.battery;
 
-								info.chr.ram.banks_8k_plus = banks;
+
+							if (old_format != UNIF_FORMAT) {
+								info.prg.rom.banks_16k = (nes20db.prgrom.size / S16K) +
+									((nes20db.prgrom.size % S16K) ? 1 : 0);
+								info.chr.rom.banks_8k = (nes20db.chrrom.size / S8K) +
+									((nes20db.chrrom.size % S8K) ? 1 : 0);
 							}
 
-							info.mapper.mirroring = nes20db.pcb.mirroring;
+							// There is no such thing as an "initial mirroring" in the NES header.
+							// "Initial mirroring" is a peculiar behavior of FCEUX that was carried over from
+							// the old Nesticle emulator from a time when mapper 4 did not distinguish between
+							// actual MMC3 (with software-selectable mirroring) and
+							// Namco 108 (with hard-wired mirroring, now assigned to mapper 206).
+							// For mappers with software-selectable mirroring such as mapper 45, the
+							// mirroring bit of the NES header has no function. It does not specify
+							// an "initial mirroring", and must be ignored. And as the NES 2.0 Wiki
+							// article states, "Bit 0 is normally relevant only if the mapper does not
+							// allow the mirroring type to be switched. It should be set to zero otherwise.",
+							// which is the reason it is set to "Horizontal" (i.e. zero) in nes20db.
+							// Although Nintendo's original MMC3 has the power-on register state
+							// undefined (and thus potentially random), mapper 45's MMC3 clone,
+							// based on all hardware tests, seems to power on with all registers cleared
+							// to $00, which in the case of $A000 means Vertical mirroring.
+							// Of course, since this is a homebrew ROM file that likely was never
+							// tested on real hardware, actual hardware behavior is beside the point.
+							if (nes20db.pcb.mirroring != MIRRORING_HORIZONTAL) {
+								info.mapper.mirroring = nes20db.pcb.mirroring;
+							}
 
 							switch (nes20db.console.type) {
 								case 0:

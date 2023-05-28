@@ -59,7 +59,7 @@ typedef struct _info {
 		BYTE submapper;
 		BYTE extend_wr;
 		BYTE extend_rd;
-		BYTE ram_plus_op_controlled_by_mapper;
+		BYTE battery;
 		BYTE force_battery_io;
 		BYTE ext_console_type;
 		BYTE mirroring;

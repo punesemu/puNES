@@ -22,7 +22,6 @@
 #include "info.h"
 #include "mem_map.h"
 #include "irqA12.h"
-#include "tas.h"
 #include "save_slot.h"
 #include "SST39SF040.h"
 #include "gui.h"
@@ -61,10 +60,10 @@ void map_init_451(void) {
 	init_MMC3();
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		m451tmp.sst39sf040 = (BYTE *)malloc(prg_size());
-		memcpy(m451tmp.sst39sf040, prg_rom(), prg_size());
+		m451tmp.sst39sf040 = (BYTE *)malloc(prgrom_size());
+		memcpy(m451tmp.sst39sf040, prgrom_pnt(), prgrom_size());
 		// AMIC A29040B
-		sst39sf040_init(m451tmp.sst39sf040, prg_size(), 0x37, 0x86, 0x0555, 0x02AA, 65536);
+		sst39sf040_init(m451tmp.sst39sf040, prgrom_size(), 0x37, 0x86, 0x0555, 0x02AA, 65536);
 	}
 
 	info.mapper.force_battery_io = TRUE;
@@ -112,10 +111,8 @@ BYTE extcl_cpu_rd_mem_451(WORD address, BYTE openbus) {
 }
 BYTE extcl_save_mapper_451(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m451.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-	sst39sf040_save_mapper(mode, slot, fp);
-
-	return (EXIT_OK);
+	if (extcl_save_mapper_MMC3(mode, slot, fp) == EXIT_ERROR) return EXIT_ERROR;
+	return (sst39sf040_save_mapper(mode, slot, fp));
 }
 void extcl_cpu_every_cycle_451(void) {
 	sst39sf040_tick();
@@ -123,49 +120,30 @@ void extcl_cpu_every_cycle_451(void) {
 }
 void extcl_battery_io_451(BYTE mode, FILE *fp) {
 	if (mode == WR_BAT) {
-		if (fwrite(m451tmp.sst39sf040, prg_size(), 1, fp) < 1) {
+		if (fwrite(m451tmp.sst39sf040, prgrom_size(), 1, fp) < 1) {
 			log_error(uL("mapper_451;error on write flash chip"));
 		}
 	} else {
-		if (fread(m451tmp.sst39sf040, prg_size(), 1, fp) < 1) {
+		if (fread(m451tmp.sst39sf040, prgrom_size(), 1, fp) < 1) {
 			log_error(uL("mapper_451;error on read flash chip"));
 		}
 	}
 }
 
 INLINE static void prg_fix_451(void) {
-	BYTE value;
+	WORD bank = 0;
 
-	value = 0;
-	control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, value);
+	memmap_auto_8k(MMCPU(0x8000), bank);
 
-	value = 0x10 + (m451.reg & 1) + ((m451.reg & 2) << 2);
-	control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, value);
+	bank = 0x10 + (m451.reg & 1) + ((m451.reg & 2) << 2);
+	memmap_auto_8k(MMCPU(0xA000), bank);
 
-	value = 0x20 + (m451.reg & 1) + ((m451.reg & 2) << 2);
-	control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, value);
+	bank = 0x20 + (m451.reg & 1) + ((m451.reg & 2) << 2);
+	memmap_auto_8k(MMCPU(0xC000), bank);
 
-	value = 0x30;
-	control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, value);
-
-	map_prg_rom_8k_update();
+	bank = 0x30;
+	memmap_auto_8k(MMCPU(0xE000), 0x30);
 }
 INLINE static void chr_fix_451(void) {
-	DBWORD value = m451.reg & 0x01;
-
-	control_bank_with_AND(0xFF, info.chr.rom.max.banks_8k)
-	value <<= 13;
-
-	chr.bank_1k[0] = chr_pnt(value | 0x0000);
-	chr.bank_1k[1] = chr_pnt(value | 0x0400);
-	chr.bank_1k[2] = chr_pnt(value | 0x0800);
-	chr.bank_1k[3] = chr_pnt(value | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(value | 0x1000);
-	chr.bank_1k[5] = chr_pnt(value | 0x1400);
-	chr.bank_1k[6] = chr_pnt(value | 0x1800);
-	chr.bank_1k[7] = chr_pnt(value | 0x1C00);
+	memmap_auto_8k(MMPPU(0x0000), (m451.reg & 0x01));
 }

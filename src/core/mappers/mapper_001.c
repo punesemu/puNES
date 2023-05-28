@@ -16,6 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
@@ -25,13 +26,13 @@ void chr_swap_mmc1_001(WORD address, WORD value);
 void wram_fix_mmc1_001(void);
 void mirroring_fix_mmc1_001(void);
 
-INLINE static void tmp_fix_001(BYTE max, BYTE index, const BYTE *ds);
+INLINE static void tmp_fix_001(BYTE max, BYTE index, const WORD *ds);
 
 struct _m001tmp {
 	BYTE ds_used;
 	BYTE max;
 	BYTE index;
-	const BYTE *dipswitch;
+	const WORD *dipswitch;
 } m001tmp;
 
 void map_init_001(void) {
@@ -52,9 +53,11 @@ void map_init_001(void) {
 		if (m001tmp.ds_used) {
 			m001tmp.index = (m001tmp.index + 1) % m001tmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memset(&m001tmp, 0x00, sizeof(m001tmp));
+
 		if (info.crc32.prg == 0xAF8F7059) { // NTF2 System Cart (U) [!].nes
-			static BYTE ds[] = { 0x07, 0xFD, 0x03, 0xFE };
+			static WORD ds[] = { 0x07, 0xFD, 0x03, 0xFE };
 
 			tmp_fix_001(LENGTH(ds), 0, &ds[0]);
 		}
@@ -110,9 +113,9 @@ void chr_swap_mmc1_001(WORD address, WORD value) {
 void wram_fix_mmc1_001(void) {
 	WORD bank = chr_bank_MMC1(0);
 
-	if (wram_size() == (16 * 1024)) {
+	if (wram_size() == S16K) {
 		bank = chr_size() ? (~bank & 0x10) >> 4 : (~bank & 0x08) >> 3;
-	} else if (wram_size() == (32 * 1024)) {
+	} else if (wram_size() == S32K) {
 		bank = (bank & 0x0C) >> 3;
 	} else if (mmc1tmp.type == MMC1A) {
 		bank = (bank & 0x08) >> 3;
@@ -120,13 +123,13 @@ void wram_fix_mmc1_001(void) {
 	MMC1_wram_swap(0x6000, bank);
 }
 void mirroring_fix_mmc1_001(void) {
-	if (mapper.mirroring == MIRRORING_FOURSCR) {
+	if (info.mapper.mirroring == MIRRORING_FOURSCR) {
 		return;
 	}
 	mirroring_fix_MMC1_base();
 }
 
-INLINE static void tmp_fix_001(BYTE max, BYTE index, const BYTE *ds) {
+INLINE static void tmp_fix_001(BYTE max, BYTE index, const WORD *ds) {
 	m001tmp.ds_used = TRUE;
 	m001tmp.max = max;
 	m001tmp.index = index;

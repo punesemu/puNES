@@ -21,18 +21,10 @@
 
 #include "common.h"
 
-enum m176_types { LP8002KB = 0, BMCFK23C = 1, FS005 = 2, JX9003B = 3, HST162 = 4 };
-
 void map_init_176(void);
 void extcl_after_mapper_init_176(void);
 void extcl_cpu_wr_mem_176(WORD address, BYTE value);
-
-
 BYTE extcl_cpu_rd_mem_176(WORD address, BYTE openbus);
-
-
-
-void extcl_wr_chr_176(WORD address, BYTE value);
 BYTE extcl_save_mapper_176(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_176_H_ */
