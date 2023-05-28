@@ -77,10 +77,10 @@ BYTE extcl_save_mapper_186(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_186(void) {
-	memmap_auto_16k(0x8000, m186.reg[1]);
-	memmap_auto_16k(0xC000, 0);
+	memmap_auto_16k(MMCPU(0x8000), m186.reg[1]);
+	memmap_auto_16k(MMCPU(0xC000), 0);
 }
 INLINE static void wram_fix_186(void) {
-	memmap_auto_wp_custom_size(0x4400, 0, TRUE, TRUE, 0xC00);
-	memmap_auto_8k(0x6000, m186.reg[0] >> 6);
+	memmap_auto_wp_custom_size(MMCPU(0x4400), 0, TRUE, TRUE, 0xC00);
+	memmap_auto_8k(MMCPU(0x6000), m186.reg[0] >> 6);
 }

@@ -120,5 +120,5 @@ INLINE static void chr_fix_554(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_554(void) {
-	memmap_prgrom_8k(0x6000, m554.reg);
+	memmap_prgrom_8k(MMCPU(0x6000), m554.reg);
 }

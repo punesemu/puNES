@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
 #include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
@@ -29,7 +28,6 @@ void map_init_119(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(MMC3);
 	EXTCL_SAVE_MAPPER(119);
-	EXTCL_WR_CHR(119);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
 	EXTCL_PPU_000_TO_255(MMC3);
@@ -44,10 +42,6 @@ void map_init_119(void) {
 	init_MMC3();
 	MMC3_chr_swap = chr_swap_mmc3_119;
 
-	if (info.format != NES_2_0) {
-		info.chr.ram.banks_8k_plus = 1;
-	}
-
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
@@ -60,22 +54,11 @@ BYTE extcl_save_mapper_119(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_wr_chr_119(WORD address, BYTE value) {
-	const BYTE slot = address >> 10;
-
-	if (map_chr_ram_slot_in_range(slot)) {
-		chr.bank_1k[slot][address & 0x3FF] = value;
-	}
-}
 
 void chr_swap_mmc3_119(WORD address, WORD value) {
-	const BYTE slot = address >> 10;
-
-	if (value & 0x40) {
-		control_bank_with_AND(0x3F, info.chr.ram.max.banks_1k)
-		chr.bank_1k[slot] = &chr.extra.data[value << 10];
+	if ((value & 0x40) && vram_size()) {
+		memmap_vram_1k(MMPPU(address), (value & 0x3F));
 	} else {
 		chr_swap_MMC3_base(address, (value & 0x3F));
 	}
 }
-

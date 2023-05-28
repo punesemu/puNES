@@ -228,7 +228,7 @@ void extcl_cpu_every_cycle_355(void) {
 }
 
 INLINE static void prg_fix_355(void) {
-	memmap_auto_32k(0x8000, 0);
+	memmap_auto_32k(MMCPU(0x8000), 0);
 }
 
 uint8_t pic16c5x_rd(int port) {

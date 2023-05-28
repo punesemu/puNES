@@ -41,7 +41,7 @@ void map_init_154(void) {
 	mapper.internal_struct_size[1] = sizeof(n118);
 
 	if (info.reset >= HARD) {
-		memset(&n118, 0x00, sizeof(n118));
+		memset(&m154, 0x00, sizeof(m154));
 	}
 
 	init_N118();
@@ -61,21 +61,19 @@ void extcl_cpu_wr_mem_154(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_154(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, n118.reg);
-	extcl_save_mapper_N118(mode, slot, fp);
-
-	return (EXIT_OK);
+	return(extcl_save_mapper_N118(mode, slot, fp));
 }
 
 void prg_swap_n118_154(WORD address, WORD value) {
 	prg_swap_N118_base(address, (value & 0x0F));
 }
 void chr_fix_n118_154(void) {
-	map_chr_rom_2k(0x0000, ((n118.reg[0] & 0x3E) >> 1));
-	map_chr_rom_2k(0x0800, ((n118.reg[1] & 0x3E) >> 1));
-	map_chr_rom_1k(0x1000, (0x40 | n118.reg[2]));
-	map_chr_rom_1k(0x1400, (0x40 | n118.reg[3]));
-	map_chr_rom_1k(0x1800, (0x40 | n118.reg[4]));
-	map_chr_rom_1k(0x1C00, (0x40 | n118.reg[5]));
+	memmap_auto_2k(MMPPU(0x0000), ((n118.reg[0] & 0x3E) >> 1));
+	memmap_auto_2k(MMPPU(0x0800), ((n118.reg[1] & 0x3E) >> 1));
+	memmap_auto_1k(MMPPU(0x1000), (0x40 | n118.reg[2]));
+	memmap_auto_1k(MMPPU(0x1400), (0x40 | n118.reg[3]));
+	memmap_auto_1k(MMPPU(0x1800), (0x40 | n118.reg[4]));
+	memmap_auto_1k(MMPPU(0x1C00), (0x40 | n118.reg[5]));
 }
 
 INLINE static void mirroring_fix_154(void) {

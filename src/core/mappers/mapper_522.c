@@ -80,11 +80,11 @@ BYTE extcl_save_mapper_522(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_522(void) {
-	memmap_auto_8k(0x8000, m522.reg[6]);
-	memmap_auto_8k(0xA000, m522.reg[7]);
-	memmap_wram_8k(0xC000, 0);
-	memmap_auto_8k(0xE000, 0xFF);
+	memmap_auto_8k(MMCPU(0x8000), m522.reg[6]);
+	memmap_auto_8k(MMCPU(0xA000), m522.reg[7]);
+	memmap_wram_8k(MMCPU(0xC000), 0);
+	memmap_auto_8k(MMCPU(0xE000), 0xFF);
 }
 INLINE static void wram_fix_522(void) {
-	memmap_prgrom_8k(0x6000, 0xFE);
+	memmap_prgrom_8k(MMCPU(0x6000), 0xFE);
 }

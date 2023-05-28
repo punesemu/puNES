@@ -29,7 +29,6 @@ void mirroring_fix_mmc3_356(void);
 
 struct _m356 {
 	BYTE index;
-	BYTE chr_writable;
 	BYTE reg[4];
 } m356;
 
@@ -37,7 +36,6 @@ void map_init_356(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(356);
 	EXTCL_SAVE_MAPPER(356);
-	EXTCL_WR_CHR(356);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
 	EXTCL_PPU_000_TO_255(MMC3);
@@ -70,7 +68,7 @@ void map_init_356(void) {
 }
 void extcl_cpu_wr_mem_356(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m356.reg[3] & 0x40) && memmap_adr_is_writable(address)) {
+		if (!(m356.reg[3] & 0x40) && memmap_adr_is_writable(MMCPU(address))) {
 			m356.reg[m356.index] = value;
 			m356.index = (m356.index + 1) & 0x03;
 			MMC3_prg_fix();
@@ -85,7 +83,6 @@ void extcl_cpu_wr_mem_356(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_356(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m356.index);
-	save_slot_ele(mode, slot, m356.chr_writable);
 	save_slot_ele(mode, slot, m356.reg);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
@@ -96,11 +93,6 @@ BYTE extcl_save_mapper_356(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_wr_chr_356(WORD address, BYTE value) {
-	if (m356.chr_writable) {
-		chr.bank_1k[address >> 10][address & 0x3FF] = value;
-	}
-}
 
 void prg_swap_mmc3_356(WORD address, WORD value) {
 	WORD base = m356.reg[1] | ((m356.reg[2] & 0xC0) << 2);
@@ -109,18 +101,13 @@ void prg_swap_mmc3_356(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_mmc3_356(WORD address, WORD value) {
-	if (!(m356.reg[2] & 0x20)) {
-		m356.chr_writable = TRUE;
-		value = address >> 10;
-		chr.bank_1k[address >> 10] = &chr.extra.data[value << 10];
+	if (!(m356.reg[2] & 0x20) && vram_size()) {
+		memmap_vram_1k(MMPPU(address), address >> 10);
 	} else {
 		WORD base = ((m356.reg[2] & 0xF0) << 4) | m356.reg[0];
 		WORD mask = 0xFF >> (~m356.reg[2] & 0x0F);
 
-		m356.chr_writable = FALSE;
-		value = (base & ~mask) | (value & mask);
-		control_bank(info.chr.rom.max.banks_1k)
-		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+		memmap_auto_1k(MMPPU(address), ((base & ~mask) | (value & mask)));
 	}
 }
 void mirroring_fix_mmc3_356(void) {

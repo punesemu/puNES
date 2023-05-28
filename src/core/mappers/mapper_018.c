@@ -163,45 +163,20 @@ void extcl_cpu_every_cycle_018(void) {
 }
 
 INLINE static void prg_fix_018(void) {
-	memmap_auto_8k(0x8000, m018.prg[0]);
-	memmap_auto_8k(0xA000, m018.prg[1]);
-	memmap_auto_8k(0xC000, m018.prg[2]);
-	memmap_auto_8k(0xE000, 0xFF);
+	memmap_auto_8k(MMCPU(0x8000), m018.prg[0]);
+	memmap_auto_8k(MMCPU(0xA000), m018.prg[1]);
+	memmap_auto_8k(MMCPU(0xC000), m018.prg[2]);
+	memmap_auto_8k(MMCPU(0xE000), 0xFF);
 }
 INLINE static void chr_fix_018(void) {
-	DBWORD bank = 0;
-
-	bank = m018.chr[0];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[0] = chr_pnt(bank << 10);
-
-	bank = m018.chr[1];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[1] = chr_pnt(bank << 10);
-
-	bank = m018.chr[2];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[2] = chr_pnt(bank << 10);
-
-	bank = m018.chr[3];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[3] = chr_pnt(bank << 10);
-
-	bank = m018.chr[4];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[4] = chr_pnt(bank << 10);
-
-	bank = m018.chr[5];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[5] = chr_pnt(bank << 10);
-
-	bank = m018.chr[6];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[6] = chr_pnt(bank << 10);
-
-	bank = m018.chr[7];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[7] = chr_pnt(bank << 10);
+	memmap_auto_1k(MMPPU(0x0000), m018.chr[0]);
+	memmap_auto_1k(MMPPU(0x0400), m018.chr[1]);
+	memmap_auto_1k(MMPPU(0x0800), m018.chr[2]);
+	memmap_auto_1k(MMPPU(0x0C00), m018.chr[3]);
+	memmap_auto_1k(MMPPU(0x1000), m018.chr[4]);
+	memmap_auto_1k(MMPPU(0x1400), m018.chr[5]);
+	memmap_auto_1k(MMPPU(0x1800), m018.chr[6]);
+	memmap_auto_1k(MMPPU(0x1C00), m018.chr[7]);
 }
 INLINE static void wram_fix_018(void) {
 	BYTE rd = m018.prg[3] & 0x01;
@@ -213,7 +188,7 @@ INLINE static void wram_fix_018(void) {
 	//	      ||
 	//        |+- PRG RAM chip enable (0: disable; 1: enable) (same as MMC3)
 	//        +-- Write protection (0: deny writes; 1: allow writes) (opposite MMC3)
-	memmap_auto_wp_8k(0x6000, 0, rd, wr);
+	memmap_auto_wp_8k(MMCPU(0x6000), 0, rd, wr);
 }
 INLINE static void mirroring_fix_018(void) {
 	switch (m018.mirroring & 0x03) {

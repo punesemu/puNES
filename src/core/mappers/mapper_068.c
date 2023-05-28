@@ -70,7 +70,7 @@ void extcl_cpu_wr_mem_068(WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x6000:
 		case 0x7000:
-			if ((info.mapper.submapper == 1) && !memmap_adr_is_writable(address)) {
+			if ((info.mapper.submapper == 1) && !memmap_adr_is_writable(MMCPU(address))) {
 				m068.ext.access = TRUE;
 				m068.ext.timer = 107520;
 				prg_fix_068();
@@ -142,17 +142,17 @@ INLINE static void prg_fix_068(void) {
 		bank[0] = m068.prg;
 		bank[1] = 0xFF;
 	}
-	memmap_auto_wp_16k(0x8000, bank[0], rd, FALSE);
-	memmap_auto_16k(0xC000, bank[1]);
+	memmap_auto_wp_16k(MMCPU(0x8000), bank[0], rd, FALSE);
+	memmap_auto_16k(MMCPU(0xC000), bank[1]);
 }
 INLINE static void chr_fix_068(void) {
-	map_chr_rom_2k(0x0000, m068.chr[0]);
-	map_chr_rom_2k(0x0800, m068.chr[1]);
-	map_chr_rom_2k(0x1000, m068.chr[2]);
-	map_chr_rom_2k(0x1800, m068.chr[3]);
+	memmap_auto_2k(MMPPU(0x0000), m068.chr[0]);
+	memmap_auto_2k(MMPPU(0x0800), m068.chr[1]);
+	memmap_auto_2k(MMPPU(0x1000), m068.chr[2]);
+	memmap_auto_2k(MMPPU(0x1800), m068.chr[3]);
 }
 INLINE static void wram_fix_068(void) {
-	memmap_auto_wp_8k(0x6000, 0, ((m068.prg & 0x10) >> 4), ((m068.prg & 0x10) >> 4));
+	memmap_auto_wp_8k(MMCPU(0x6000), 0, ((m068.prg & 0x10) >> 4), ((m068.prg & 0x10) >> 4));
 }
 INLINE static void mirroring_fix_068(void) {
 	if (!(m068.mirroring & 0x10)) {
@@ -176,29 +176,49 @@ INLINE static void mirroring_fix_068(void) {
 
 		switch (m068.mirroring & 0x03) {
 			case 0:
-				map_nmt_chr_rom_1k(0, bank[0]);
-				map_nmt_chr_rom_1k(1, bank[1]);
-				map_nmt_chr_rom_1k(2, bank[0]);
-				map_nmt_chr_rom_1k(3, bank[1]);
-				break;
+				memmap_nmt_chrrom_1k(MMPPU(0x2000), bank[0]);
+				memmap_nmt_chrrom_1k(MMPPU(0x2400), bank[1]);
+				memmap_nmt_chrrom_1k(MMPPU(0x2800), bank[0]);
+				memmap_nmt_chrrom_1k(MMPPU(0x2C00), bank[1]);
+
+				memmap_nmt_chrrom_1k(MMPPU(0x3000), bank[0]);
+				memmap_nmt_chrrom_1k(MMPPU(0x3400), bank[1]);
+				memmap_nmt_chrrom_1k(MMPPU(0x3800), bank[0]);
+				memmap_nmt_chrrom_1k(MMPPU(0x3C00), bank[1]);
+				return;
 			case 1:
-				map_nmt_chr_rom_1k(0, bank[0]);
-				map_nmt_chr_rom_1k(1, bank[0]);
-				map_nmt_chr_rom_1k(2, bank[1]);
-				map_nmt_chr_rom_1k(3, bank[1]);
-				break;
+				memmap_nmt_chrrom_1k(MMPPU(0x2000), bank[0]);
+				memmap_nmt_chrrom_1k(MMPPU(0x2400), bank[0]);
+				memmap_nmt_chrrom_1k(MMPPU(0x2800), bank[1]);
+				memmap_nmt_chrrom_1k(MMPPU(0x2C00), bank[1]);
+
+				memmap_nmt_chrrom_1k(MMPPU(0x3000), bank[0]);
+				memmap_nmt_chrrom_1k(MMPPU(0x3400), bank[0]);
+				memmap_nmt_chrrom_1k(MMPPU(0x3800), bank[1]);
+				memmap_nmt_chrrom_1k(MMPPU(0x3C00), bank[1]);
+				return;
 			case 2:
-				map_nmt_chr_rom_1k(0, bank[0]);
-				map_nmt_chr_rom_1k(1, bank[0]);
-				map_nmt_chr_rom_1k(2, bank[0]);
-				map_nmt_chr_rom_1k(3, bank[0]);
-				break;
+				memmap_nmt_chrrom_1k(MMPPU(0x2000), bank[0]);
+				memmap_nmt_chrrom_1k(MMPPU(0x2400), bank[0]);
+				memmap_nmt_chrrom_1k(MMPPU(0x2800), bank[0]);
+				memmap_nmt_chrrom_1k(MMPPU(0x2C00), bank[0]);
+
+				memmap_nmt_chrrom_1k(MMPPU(0x3000), bank[0]);
+				memmap_nmt_chrrom_1k(MMPPU(0x3400), bank[0]);
+				memmap_nmt_chrrom_1k(MMPPU(0x3800), bank[0]);
+				memmap_nmt_chrrom_1k(MMPPU(0x3C00), bank[0]);
+				return;
 			case 3:
-				map_nmt_chr_rom_1k(0, bank[1]);
-				map_nmt_chr_rom_1k(1, bank[1]);
-				map_nmt_chr_rom_1k(2, bank[1]);
-				map_nmt_chr_rom_1k(3, bank[1]);
-				break;
+				memmap_nmt_chrrom_1k(MMPPU(0x2000), bank[1]);
+				memmap_nmt_chrrom_1k(MMPPU(0x2400), bank[1]);
+				memmap_nmt_chrrom_1k(MMPPU(0x2800), bank[1]);
+				memmap_nmt_chrrom_1k(MMPPU(0x2C00), bank[1]);
+
+				memmap_nmt_chrrom_1k(MMPPU(0x3000), bank[1]);
+				memmap_nmt_chrrom_1k(MMPPU(0x3400), bank[1]);
+				memmap_nmt_chrrom_1k(MMPPU(0x3800), bank[1]);
+				memmap_nmt_chrrom_1k(MMPPU(0x3C00), bank[1]);
+				return;
 		}
 	}
 }

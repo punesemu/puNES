@@ -100,9 +100,9 @@ void extcl_cpu_every_cycle_311(void) {
 }
 
 INLINE static void prg_fix_311(void) {
-	memmap_prgrom_32k(0x8000, m311.reg);
+	memmap_prgrom_32k(MMCPU(0x8000), m311.reg);
 }
 INLINE static void wram_fix_311(void) {
-	memmap_prgrom_4k(0x5000, 17);
-	memmap_prgrom_8k(0x6000, 9);
+	memmap_prgrom_4k(MMCPU(0x5000), 17);
+	memmap_prgrom_8k(MMCPU(0x6000), 9);
 }

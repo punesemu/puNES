@@ -34,7 +34,6 @@ void map_init_327(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(327);
 	EXTCL_SAVE_MAPPER(327);
-	EXTCL_WR_CHR(327);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
 	EXTCL_PPU_000_TO_255(MMC3);
@@ -53,8 +52,6 @@ void map_init_327(void) {
 	MMC3_prg_swap = prg_swap_mmc3_327;
 	MMC3_chr_swap = chr_swap_mmc3_327;
 
-	info.chr.ram.banks_8k_plus = 1;
-
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
@@ -62,7 +59,7 @@ void map_init_327(void) {
 }
 void extcl_cpu_wr_mem_327(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m327.reg & 0x07) && memmap_adr_is_writable(address)) {
+		if (!(m327.reg & 0x07) && memmap_adr_is_writable(MMCPU(address))) {
 			m327.reg = address;
 			MMC3_prg_fix();
 			MMC3_chr_fix();
@@ -83,13 +80,6 @@ BYTE extcl_save_mapper_327(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_wr_chr_327(WORD address, BYTE value) {
-	BYTE slot = address >> 10;
-
-	if (m327.reg & 0x10) {
-		chr.bank_1k[slot][address & 0x3FF] = value;
-	}
-}
 
 void prg_swap_mmc3_327(WORD address, WORD value) {
 	WORD base = (m327.reg & 0x07) << 4;
@@ -98,10 +88,8 @@ void prg_swap_mmc3_327(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_mmc3_327(WORD address, WORD value) {
-	BYTE slot = address >> 10;
-
-	if (m327.reg & 0x10) {
-		chr.bank_1k[slot] = &chr.extra.data[slot << 10];
+	if ((m327.reg & 0x10) && vram_size()) {
+		memmap_vram_8k(MMPPU(0x0000), 0);
 	} else {
 		WORD base = (m327.reg & 0x07) << 7;
 		WORD mask = m327.reg & 0x20 ? 0xFF : 0x7F;

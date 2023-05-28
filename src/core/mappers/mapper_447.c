@@ -60,7 +60,7 @@ void map_init_447(void) {
 		if (m447tmp.ds_used) {
 			m447tmp.index = (m447tmp.index + 1) % m447tmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		memset(&m447tmp, 0x00, sizeof(m447tmp));
 		if (info.crc32.prg == 0x8A929147) { // 1993 New 860-in-1 Over-Valued Golden Version Games.nes
 			static BYTE ds[] = { 0x00, 0x01, 0x02, 0x03 };
@@ -74,7 +74,7 @@ void map_init_447(void) {
 }
 void extcl_cpu_wr_mem_447(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m447.reg & 0x01) && memmap_adr_is_writable(address)) {
+		if (!(m447.reg & 0x01) && memmap_adr_is_writable(MMCPU(address))) {
 			m447.reg = address & 0xFF;
 			VRC2and4_prg_fix();
 			VRC2and4_chr_fix();

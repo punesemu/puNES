@@ -26,6 +26,7 @@ void chr_fix_n118_307(void);
 void chr_swap_n118_307(WORD address, WORD value);
 
 INLINE static void wram_fix_307(void);
+INLINE static void mirroring_fix_307(void);
 
 void map_init_307(void) {
 	EXTCL_AFTER_MAPPER_INIT(307);
@@ -38,10 +39,6 @@ void map_init_307(void) {
 	N118_prg_fix = prg_fix_n118_307;
 	N118_chr_fix = chr_fix_n118_307;
 	N118_chr_swap = chr_swap_n118_307;
-
-//	if (!wram_size()) {
-//		wram_set_ram_size(0x2000);
-//	}
 }
 void extcl_after_mapper_init_307(void) {
 	extcl_after_mapper_init_N118();
@@ -59,25 +56,32 @@ BYTE extcl_save_mapper_307(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void prg_fix_n118_307(void) {
-	memmap_auto_8k(0x8000, n118.reg[6]);
-	memmap_auto_4k(0xA000, 28);
-	memmap_wram_4k(0xB000, 1);
-	memmap_auto_8k(0xC000, n118.reg[7]);
-	memmap_auto_8k(0xE000, 15);
+	memmap_auto_8k(MMCPU(0x8000), n118.reg[6]);
+	memmap_auto_4k(MMCPU(0xA000), 28);
+	memmap_wram_4k(MMCPU(0xB000), 1);
+	memmap_auto_8k(MMCPU(0xC000), n118.reg[7]);
+	memmap_auto_8k(MMCPU(0xE000), 15);
 }
 void chr_fix_n118_307(void) {
 	chr_fix_N118_base();
-	map_nmt_1k(0, (n118.reg[2] & 0x01));
-	map_nmt_1k(1, (n118.reg[4] & 0x01));
-	map_nmt_1k(2, (n118.reg[3] & 0x01));
-	map_nmt_1k(3, (n118.reg[5] & 0x01));
+	mirroring_fix_307();
 }
-void chr_swap_n118_307(WORD address, WORD value) {
-	value = (address >> 10) & 0x07;
-	chr_swap_N118_base(address, value);
+void chr_swap_n118_307(WORD address, UNUSED(WORD value)) {
+	chr_swap_N118_base(address, ((address >> 10) & 0x07));
 }
 
 INLINE static void wram_fix_307(void) {
-	memmap_auto_4k(0x6000, 0);
-	memmap_prgrom_4k(0x7000, 15);
+	memmap_auto_4k(MMCPU(0x6000), 0);
+	memmap_prgrom_4k(MMCPU(0x7000), 15);
+}
+INLINE static void mirroring_fix_307(void) {
+	memmap_nmt_1k(MMPPU(0x2000), (n118.reg[2] & 0x01));
+	memmap_nmt_1k(MMPPU(0x2400), (n118.reg[4] & 0x01));
+	memmap_nmt_1k(MMPPU(0x2800), (n118.reg[3] & 0x01));
+	memmap_nmt_1k(MMPPU(0x2C00), (n118.reg[5] & 0x01));
+
+	memmap_nmt_1k(MMPPU(0x3000), (n118.reg[2] & 0x01));
+	memmap_nmt_1k(MMPPU(0x3400), (n118.reg[4] & 0x01));
+	memmap_nmt_1k(MMPPU(0x3800), (n118.reg[3] & 0x01));
+	memmap_nmt_1k(MMPPU(0x3C00), (n118.reg[5] & 0x01));
 }

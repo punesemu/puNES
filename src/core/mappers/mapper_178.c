@@ -123,7 +123,7 @@ INLINE static void chr_fix_178(void) {
 	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }
 INLINE static void wram_fix_178(void) {
-	memmap_auto_8k(0x6000, (info.mapper.id == 551) ? 0 : m178.reg[3]);
+	memmap_auto_8k(MMCPU(0x6000), (info.mapper.id == 551) ? 0 : m178.reg[3]);
 }
 INLINE static void mirroring_fix_178(void) {
 	if (info.mapper.id != 511) {

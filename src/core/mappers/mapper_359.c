@@ -224,10 +224,10 @@ INLINE static void prg_fix_359(void) {
 	WORD base = (m359.prg[4] & 0x38) << 1;
 	WORD mask = m359.prg[5];
 
-	memmap_auto_8k(0x8000, (base | (m359.prg[0] & mask)));
-	memmap_auto_8k(0xA000, (base | (m359.prg[1] & mask)));
-	memmap_auto_8k(0xC000, (base | (m359.prg[2] & mask)));
-	memmap_auto_8k(0xE000, (base | (0xFF & mask)));
+	memmap_auto_8k(MMCPU(0x8000), (base | (m359.prg[0] & mask)));
+	memmap_auto_8k(MMCPU(0xA000), (base | (m359.prg[1] & mask)));
+	memmap_auto_8k(MMCPU(0xC000), (base | (m359.prg[2] & mask)));
+	memmap_auto_8k(MMCPU(0xE000), (base | (0xFF & mask)));
 }
 INLINE static void chr_fix_359(void) {
 	DBWORD bank;
@@ -309,7 +309,7 @@ INLINE static void wram_fix_359(void) {
 	WORD base = (m359.prg[4] & 0x38) << 1;
 	WORD mask = m359.prg[5];
 
-	memmap_prgrom_8k(0x6000, (base | (m359.prg[3] & mask)));
+	memmap_prgrom_8k(MMCPU(0x6000), (base | (m359.prg[3] & mask)));
 }
 INLINE static void mirroring_fix_359(void) {
 	switch (m359.mirroring & 0x03) {

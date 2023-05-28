@@ -46,7 +46,7 @@ void map_init_384(void) {
 }
 void extcl_cpu_wr_mem_384(WORD address, BYTE value) {
 	if ((address >= 0x6800) && (address <= 0x6FFF)) {
-		if (!(m384.reg & 0x08) && memmap_adr_is_writable(address)) {
+		if (!(m384.reg & 0x08) && memmap_adr_is_writable(MMCPU(address))) {
 			m384.reg = value;
 			VRC2and4_prg_fix();
 			VRC2and4_chr_fix();

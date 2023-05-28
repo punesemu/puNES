@@ -77,8 +77,8 @@ BYTE extcl_save_mapper_175(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_175(void) {
-	memmap_auto_16k(0x8000, m175.reg[0]);
-	memmap_auto_16k(0xC000, m175.reg[0]);
+	memmap_auto_16k(MMCPU(0x8000), m175.reg[0]);
+	memmap_auto_16k(MMCPU(0xC000), m175.reg[0]);
 }
 INLINE static void chr_fix_175(void) {
 	DBWORD bank = m175.reg[0];

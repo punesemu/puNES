@@ -90,7 +90,7 @@ void prg_fix_N118_base(void) {
 	N118_prg_swap(0xE000, ~0);
 }
 void prg_swap_N118_base(WORD address, WORD value) {
-	memmap_auto_8k(address, value);
+	memmap_auto_8k(MMCPU(address), value);
 }
 void chr_fix_N118_base(void) {
 	N118_chr_swap(0x0000, n118.reg[0] & (~1));
@@ -103,5 +103,5 @@ void chr_fix_N118_base(void) {
 	N118_chr_swap(0x1C00, n118.reg[5]);
 }
 void chr_swap_N118_base(WORD address, WORD value) {
-	map_chr_rom_1k(address, value);
+	memmap_auto_1k(MMPPU(address), value);
 }

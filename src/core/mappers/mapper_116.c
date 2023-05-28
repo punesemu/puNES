@@ -101,7 +101,7 @@ void map_init_116(void) {
 		if (info.mapper.submapper == 3) {
 			m116tmp.dipswitch = (++m116tmp.dipswitch > 4) ? 0 : m116tmp.dipswitch;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		m116tmp.dipswitch = 0;
 	}
 

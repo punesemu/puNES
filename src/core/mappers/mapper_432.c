@@ -70,7 +70,7 @@ void map_init_432(void) {
 		if (m432tmp.ds_used) {
 			m432tmp.index = (m432tmp.index + 1) % m432tmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		if (info.crc32.prg == 0xE736A4BE) { // 160000000-in-1.nes
 			static const BYTE ds[4] = { 1,  0,  2,  3 };
 
@@ -90,7 +90,7 @@ void map_init_432(void) {
 }
 void extcl_cpu_wr_mem_432(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (memmap_adr_is_writable(address)) {
+		if (memmap_adr_is_writable(MMCPU(address))) {
 			m432.reg[address & 0x01] = value;
 			if (m432tmp.less1024 && !(address & 0x0001) && !(value & 0x01)) {
 				m432.reg[1] &= ~0x20;

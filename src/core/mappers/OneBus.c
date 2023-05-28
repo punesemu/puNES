@@ -348,15 +348,15 @@ void extcl_irq_A12_clock_OneBus(void) {
 }
 
 void init_OneBus(void) {
-	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		memset(&onebustmp, 0x00, sizeof(onebustmp));
 
-		if (mapper.write_vram) {
-			onebustmp.chr.data = prg_pnt(0);
-			onebustmp.chr.size = prg_size();
+		if (!chrrom_size()) {
+			onebustmp.chr.data = prgrom_pnt();
+			onebustmp.chr.size = prgrom_size();
 		} else {
-			onebustmp.chr.data = chr_pnt(0);
-			onebustmp.chr.size = chr_size();
+			onebustmp.chr.data = chrrom_pnt();
+			onebustmp.chr.size = chrrom_size();
 		}
 
 		onebustmp.chr.size = emu_power_of_two(onebustmp.chr.size);
@@ -444,7 +444,6 @@ void init_OneBus(void) {
 	}
 
 	info.mapper.extend_wr = TRUE;
-	mapper.write_vram = FALSE;
 
 	OneBus_prg_fix_8k = prg_fix_8k_OneBus_base;
 	OneBus_prg_swap_8k = prg_swap_8k_OneBus_base;
@@ -475,7 +474,7 @@ void prg_fix_8k_OneBus_base(WORD mmask, WORD mblock) {
 	OneBus_prg_swap_8k(0xE000, bank);
 }
 void prg_swap_8k_OneBus_base(WORD address, WORD value) {
-	memmap_auto_8k(address, value);
+	memmap_auto_8k(MMCPU(address), value);
 }
 void prg_fix_16k_OneBus_base(WORD bank0, WORD bank1, WORD mmask, WORD mblock) {
 	BYTE mode = onebus.reg.cpu[0x0B] & 0x07;
@@ -490,7 +489,7 @@ void prg_fix_16k_OneBus_base(WORD bank0, WORD bank1, WORD mmask, WORD mblock) {
 	OneBus_prg_swap_16k(0xC000, bank);
 }
 void prg_swap_16k_OneBus_base(WORD address, WORD value) {
-	memmap_auto_16k(address, value);
+	memmap_auto_16k(MMCPU(address), value);
 }
 void chr_fix_OneBus_base(WORD mmask, WORD mblock) {
 	BYTE v16ben = (onebus.reg.ppu[0x10] & 0x40) || (onebus.reg.cpu[0x2B] == 0x61);
@@ -549,8 +548,8 @@ void chr_swap_OneBus_base(BYTE **banks, BYTE *base, BYTE bit4pp, BYTE extended, 
 	}
 
 	if (extended) {
-#define chrpnt(input)\
-	((((mblock | ((block | ((input) & mask) | EVA | ((onebus.reg.cpu[0] & 0x0F) << 11)) & mmask)) + relative) << 10) & chrMask)
+#define chrpnt(input) ((((mblock | ((block | ((input) & mask) | EVA | ((onebus.reg.cpu[0] & 0x0F) << 11)) & mmask)) + relative) << 10) & chrMask)
+
 		banks[0 ^ swap] = &base[chrpnt((onebus.reg.ppu[0x16] & 0xFE))];
 		banks[1 ^ swap] = &base[chrpnt((onebus.reg.ppu[0x16] | 0x01))];
 		banks[2 ^ swap] = &base[chrpnt((onebus.reg.ppu[0x17] & 0xFE))];
@@ -559,11 +558,12 @@ void chr_swap_OneBus_base(BYTE **banks, BYTE *base, BYTE bit4pp, BYTE extended, 
 		banks[5 ^ swap] = &base[chrpnt(onebus.reg.ppu[0x13])];
 		banks[6 ^ swap] = &base[chrpnt(onebus.reg.ppu[0x14])];
 		banks[7 ^ swap] = &base[chrpnt(onebus.reg.ppu[0x15])];
+
 #undef chrpnt
 	} else {
 		block |= ((onebus.reg.ppu[0x18] & 0x70) << 4);
-#define chrpnt(input)\
-	((((mblock | ((block | ((input) & mask) | ((onebus.reg.cpu[0] & 0x0F) << 11)) & mmask)) + relative) << 10) & chrMask)
+#define chrpnt(input) ((((mblock | ((block | ((input) & mask) | ((onebus.reg.cpu[0] & 0x0F) << 11)) & mmask)) + relative) << 10) & chrMask)
+
 		banks[0 ^ swap] = &base[chrpnt((onebus.reg.ppu[0x16] & 0xFE))];
 		banks[1 ^ swap] = &base[chrpnt((onebus.reg.ppu[0x16] | 0x01))];
 		banks[2 ^ swap] = &base[chrpnt((onebus.reg.ppu[0x17] & 0xFE))];
@@ -572,6 +572,7 @@ void chr_swap_OneBus_base(BYTE **banks, BYTE *base, BYTE bit4pp, BYTE extended, 
 		banks[5 ^ swap] = &base[chrpnt(onebus.reg.ppu[0x13])];
 		banks[6 ^ swap] = &base[chrpnt(onebus.reg.ppu[0x14])];
 		banks[7 ^ swap] = &base[chrpnt(onebus.reg.ppu[0x15])];
+
 #undef chrpnt
 	}
 }
@@ -582,9 +583,9 @@ void wram_fix_OneBus_base(WORD mmask, WORD mblock) {
 		WORD block = ((onebus.reg.cpu[0] & 0xF0) << 4) | (onebus.reg.cpu[0x0A] & ~mask);
 		WORD bank = mblock | (((block | (onebus.reg.cpu[0x12] & mask)) + onebus.relative_8k) & mmask);
 
-		memmap_prgrom_8k(0x6000, bank);
+		memmap_prgrom_8k(MMCPU(0x6000), bank);
 	} else {
-		memmap_auto_8k(0x6000, 0);
+		memmap_auto_8k(MMCPU(0x6000), 0);
 	}
 }
 void mirroring_fix_OneBus_base(void) {

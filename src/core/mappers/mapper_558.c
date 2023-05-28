@@ -53,7 +53,7 @@ void extcl_after_mapper_init_558(void) {
 	wram_fix_558();
 }
 void extcl_cpu_init_pc_558(void) {
-	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		if (m558tmp.cc93c66) {
 			ee93cx6_init(wram_nvram_pnt(), wram_nvram_size(), 8);
 		}
@@ -124,18 +124,16 @@ INLINE static void prg_fix_558(void) {
 	WORD low = (m558.reg[0] & 0x0F) | (m558.reg[3] & 0x04? 0x00: 0x03);
 	WORD bank = high | low;
 
-	_control_bank(bank, info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, bank);
-	map_prg_rom_8k_update();
+	memmap_auto_32k(MMCPU(0x8000), bank);
 }
 INLINE static void wram_fix_558(void) {
 	if (m558tmp.cc93c66) {
 		if (wram_ram_size()) {
-			memmap_wram_ram_wp_8k(0x6000, 0, TRUE, TRUE);
+			memmap_wram_ram_wp_8k(MMCPU(0x6000), 0, TRUE, TRUE);
 		} else {
-			memmap_disable_8k(0x6000);
+			memmap_disable_8k(MMCPU(0x6000));
 		}
 	} else {
-		memmap_auto_8k(0x6000, 0);
+		memmap_auto_8k(MMCPU(0x6000), 0);
 	}
 }

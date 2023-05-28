@@ -47,16 +47,14 @@ void map_init_399(void) {
 
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
+	if (info.reset >= HARD) {
+		m399.reg[0] = m399.reg[2] = 0;
+		m399.reg[1] = m399.reg[3] = 1;
+	}
+
 	init_MMC3();
 	MMC3_prg_fix = prg_fix_mmc3_399;
 	MMC3_chr_fix = chr_fix_mmc3_399;
-
-	m399.reg[0] = m399.reg[2] = 0;
-	m399.reg[1] = m399.reg[3] = 1;
-
-	if (mapper.write_vram) {
-		info.chr.rom.banks_8k = 4;
-	}
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -72,33 +70,16 @@ void extcl_cpu_wr_mem_399(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_399(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m399.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_fix_mmc3_399(void) {
-	WORD bank = 0;
-
-	bank = 0;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, bank);
-
-	bank = m399.reg[0];
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, bank);
-
-	bank = m399.reg[1];
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, bank);
-
-	bank = 0xFF;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_8k(MMCPU(0x8000), 0);
+	memmap_auto_8k(MMCPU(0xA000), m399.reg[0]);
+	memmap_auto_8k(MMCPU(0xC000), m399.reg[1]);
+	memmap_auto_8k(MMCPU(0xE000), 0xFF);
 }
 void chr_fix_mmc3_399(void) {
-	map_chr_rom_4k(0x0000, m399.reg[2]);
-	map_chr_rom_4k(0x1000, m399.reg[3]);
+	memmap_auto_4k(MMPPU(0x0000), m399.reg[2]);
+	memmap_auto_4k(MMPPU(0x1000), m399.reg[3]);
 }

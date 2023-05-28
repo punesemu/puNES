@@ -23,14 +23,20 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
+void prg_swap_jyasic_394(WORD address, DBWORD value);
+void chr_swap_jyasic_394(WORD address, DBWORD value);
+void wram_swap_jyasic_394(WORD address, DBWORD value);
+void mirroring_swap_jyasic_394(WORD address, DBWORD value);
+
 void prg_swap_mmc3_394(WORD address, WORD value);
 void chr_swap_mmc3_394(WORD address, WORD value);
+
+INLINE static WORD prg_base(void);
+INLINE static WORD chr_base(void);
 
 _m394 m394;
 
 void map_init_394(void) {
-	map_init_JYASIC(MAP394);
-
 	EXTCL_AFTER_MAPPER_INIT(394);
 	EXTCL_CPU_WR_MEM(394);
 	EXTCL_CPU_RD_MEM(394);
@@ -58,6 +64,12 @@ void map_init_394(void) {
 		m394.reg[3] = 0x10;
 	}
 
+	init_JYASIC(TRUE);
+	JYASIC_prg_swap = prg_swap_jyasic_394;
+	JYASIC_chr_swap = chr_swap_jyasic_394;
+	JYASIC_wram_swap = wram_swap_jyasic_394;
+	JYASIC_mirroring_swap = mirroring_swap_jyasic_394;
+
 	init_MMC3();
 	MMC3_prg_swap = prg_swap_mmc3_394;
 	MMC3_chr_swap = chr_swap_mmc3_394;
@@ -76,14 +88,11 @@ void extcl_cpu_wr_mem_394(WORD address, BYTE value) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		m394.reg[address & 0x03] = value;
 		extcl_after_mapper_init_394();
-		return;
 	}
-	if (address >= 0x8000) {
-		if (m394.reg[1] & 0x10) {
-			extcl_cpu_wr_mem_JYASIC(address, value);
-		} else {
-			extcl_cpu_wr_mem_MMC3(address, value);
-		}
+	if (m394.reg[1] & 0x10) {
+		extcl_cpu_wr_mem_JYASIC(address, value);
+	} else {
+		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
 BYTE extcl_cpu_rd_mem_394(WORD address, BYTE openbus) {
@@ -119,7 +128,7 @@ BYTE extcl_rd_chr_394(WORD address) {
 	if (m394.reg[1] & 0x10) {
 		return (extcl_rd_chr_JYASIC(address));
 	}
-	return (chr.bank_1k[address >> 10][address & 0x3FF]);
+	return (chr_rd(address));
 }
 void extcl_ppu_000_to_34x_394(void) {
 	if (!(m394.reg[1] & 0x10)) {
@@ -155,8 +164,21 @@ void extcl_update_r2006_394(WORD new_r2006, WORD old_r2006) {
 	}
 }
 
+void prg_swap_jyasic_394(WORD address, DBWORD value) {
+	prg_swap_JYASIC_base(address, (prg_base() | (value & 0x1F)));
+}
+void chr_swap_jyasic_394(WORD address, DBWORD value) {
+	chr_swap_JYASIC_base(address, (chr_base() | (value & 0xFF)));
+}
+void wram_swap_jyasic_394(WORD address, DBWORD value) {
+	wram_swap_JYASIC_base(address, (prg_base() | (value & 0x1F)));
+}
+void mirroring_swap_jyasic_394(WORD address, DBWORD value) {
+	mirroring_swap_JYASIC_base(address, (chr_base() | (value & 0xFF)));
+}
+
 void prg_swap_mmc3_394(WORD address, WORD value) {
-	WORD base = ((m394.reg[3] & 0x08) << 1) | ((m394.reg[1] & 0x01) << 5);
+	WORD base = prg_base();
 	WORD mask = 0x1F >> !(m394.reg[3] & 0x10);
 
 	if (!(m394.reg[1] & 0x08)) {
@@ -167,8 +189,15 @@ void prg_swap_mmc3_394(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, ((base & ~mask)| (value & mask)));
 }
 void chr_swap_mmc3_394(WORD address, WORD value) {
-	WORD base =((m394.reg[3] & 0x40) << 1) | ((m394.reg[1] & 0x01) << 8);
+	WORD base = chr_base();
 	WORD mask = 0xFF >> !(m394.reg[3] & 0x80);
 
 	chr_swap_MMC3_base(address, (base | (value & mask)));
+}
+
+INLINE static WORD prg_base(void) {
+	return (((m394.reg[3] & 0x08) << 1) | ((m394.reg[1] & 0x01) << 5));
+}
+INLINE static WORD chr_base(void) {
+	return ((m394.reg[3] & 0x40) << 1) | ((m394.reg[1] & 0x01) << 8);
 }

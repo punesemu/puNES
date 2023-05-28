@@ -112,14 +112,14 @@ void prg_fix_MMC2_base(void) {
 	MMC2_prg_swap(0xE000, 0x0F);
 }
 void prg_swap_MMC2_base(WORD address, WORD value) {
-	memmap_auto_8k(address, value);
+	memmap_auto_8k(MMCPU(address), value);
 }
 void chr_fix_MMC2_base(void) {
 	MMC2_chr_swap(0x0000, mmc2.chr[mmc2.latch[0]]);
 	MMC2_chr_swap(0x1000, mmc2.chr[mmc2.latch[1]]);
 }
 void chr_swap_MMC2_base(WORD address, WORD value) {
-	map_chr_rom_4k(address, value);
+	memmap_auto_4k(MMPPU(address), value);
 }
 void mirroring_fix_MMC2_base(void) {
 	if (mmc2.mirroring & 0x01) {

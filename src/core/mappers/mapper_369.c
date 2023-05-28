@@ -186,13 +186,13 @@ void prg_fix_mmc3_369(void) {
 	switch (m369.reg) {
 		case 0x00:
 		case 0x01:
-			memmap_auto_32k(0x8000, m369.reg);
+			memmap_auto_32k(MMCPU(0x8000), m369.reg);
 			return;
 		case 0x13:
-			memmap_auto_8k(0x8000, 0x0C);
-			memmap_auto_8k(0xA000, 0x0D);
-			memmap_auto_8k(0xC000, (0x08 | (m369.smb2j & 0x03)));
-			memmap_auto_8k(0xE000, 0x0F);
+			memmap_auto_8k(MMCPU(0x8000), 0x0C);
+			memmap_auto_8k(MMCPU(0xA000), 0x0D);
+			memmap_auto_8k(MMCPU(0xC000), (0x08 | (m369.smb2j & 0x03)));
+			memmap_auto_8k(MMCPU(0xE000), 0x0F);
 			return;
 		case 0x37:
 		case 0xFF:
@@ -263,7 +263,7 @@ void chr_swap_mmc3_369(WORD address, WORD value) {
 }
 void wram_fix_mmc3_369(void) {
 	if (m369.reg == 0x13) {
-		memmap_prgrom_8k(0x6000, 0x0E);
+		memmap_prgrom_8k(MMCPU(0x6000), 0x0E);
 	} else {
 		wram_fix_MMC3_base();
 	}

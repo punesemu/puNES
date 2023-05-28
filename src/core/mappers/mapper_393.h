@@ -24,6 +24,5 @@
 void map_init_393(void);
 void extcl_cpu_wr_mem_393(WORD address, BYTE value);
 BYTE extcl_save_mapper_393(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_393(WORD address, BYTE value);
 
 #endif /* MAPPER_393_H_ */

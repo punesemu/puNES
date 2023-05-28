@@ -60,7 +60,7 @@ void map_init_348(void) {
 }
 void extcl_cpu_wr_mem_348(WORD address, BYTE value) {
 	if ((address >= 0x6800) && (address <= 0x68FF)) {
-		if (memmap_adr_is_writable(address)) {
+		if (memmap_adr_is_writable(MMCPU(address))) {
 			m348.reg = value;
 			MMC3_prg_fix();
 			MMC3_chr_fix();

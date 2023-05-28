@@ -46,7 +46,7 @@ void map_init_428(void) {
 
 	if (info.reset == RESET) {
 		m428tmp.dipswitch = (m428tmp.dipswitch + 1) & 0x03;
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		m428tmp.dipswitch = 0;
 	}
 

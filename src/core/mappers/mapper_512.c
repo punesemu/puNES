@@ -24,19 +24,17 @@
 #include "save_slot.h"
 
 void chr_swap_mmc3_512(WORD address, WORD value);
+void wram_swap_mmc3_512(WORD address, WORD value);
+void mirroring_fix_mmc3_512(void);
 
 struct _m512 {
 	BYTE reg;
-	BYTE vram[0x1000];
 } m512;
 
 void map_init_512(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(512);
 	EXTCL_SAVE_MAPPER(512);
-	EXTCL_WR_CHR(512);
-	EXTCL_WR_NMT(512);
-	EXTCL_RD_NMT(512);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
 	EXTCL_PPU_000_TO_255(MMC3);
@@ -53,10 +51,8 @@ void map_init_512(void) {
 
 	init_MMC3();
 	MMC3_chr_swap = chr_swap_mmc3_512;
-
-	if (info.format != NES_2_0) {
-		info.prg.ram.banks_8k_plus = 1;
-	}
+	MMC3_wram_swap = wram_swap_mmc3_512;
+	MMC3_mirroring_fix = mirroring_fix_mmc3_512;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -64,8 +60,8 @@ void map_init_512(void) {
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_512(WORD address, BYTE value) {
-	if ((address >= 0x4000) && (address <= 0x5FFF)) {
-		if ((address & 0x1100) == 0x0100) {
+	if ((address >= 0x4000) && (address <= 0x4FFF)) {
+		if (address & 0x100) {
 			m512.reg = value & 0x03;
 			MMC3_chr_fix();
 		}
@@ -77,43 +73,24 @@ void extcl_cpu_wr_mem_512(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_512(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m512.reg);
-	save_slot_ele(mode, slot, m512.vram);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix();
-	}
-
-	return (EXIT_OK);
-}
-void extcl_wr_chr_512(WORD address, BYTE value) {
-	const BYTE slot = address >> 10;
-
-	if ((m512.reg > 1) && map_chr_ram_slot_in_range(slot)) {
-		chr.bank_1k[slot][address & 0x3FF] = value;
-	}
-}
-BYTE extcl_wr_nmt_512(WORD address, BYTE value) {
-	address &= 0x0FFF;
-	if (m512.reg == 1) {
-		m512.vram[address] = value;
-		return (TRUE);
-	}
-	return (FALSE);
-}
-BYTE extcl_rd_nmt_512(WORD address) {
-	address &= 0x0FFF;
-	if (m512.reg == 1) {
-		return (m512.vram[address]);
-	}
-	return (ntbl.bank_1k[address >> 10][address & 0x3FF]);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void chr_swap_mmc3_512(WORD address, WORD value) {
-	if ((m512.reg > 1) && chr.extra.data) {
-		control_bank_with_AND(0x03, info.chr.ram.max.banks_1k)
-		chr.bank_1k[address >> 10] = &chr.extra.data[value << 10];
+	if ((m512.reg & 2) && vram_size()) {
+		memmap_vram_1k(MMPPU(address), (value & 0x03));
 	} else {
-		chr_swap_MMC3_base(address, (value & 0x7F));
+		chr_swap_MMC3_base(address, value);
+	}
+}
+void wram_swap_mmc3_512(WORD address, WORD value) {
+	memmap_auto_8k(MMCPU(address), value);
+}
+void mirroring_fix_mmc3_512(void) {
+	if ((m512.reg == 1) && vram_size()) {
+		memmap_nmt_vram_4k(MMPPU(0x2000), 1);
+		memmap_nmt_vram_4k(MMPPU(0x3000), 1);
+	} else {
+		mirroring_fix_MMC3_base();
 	}
 }

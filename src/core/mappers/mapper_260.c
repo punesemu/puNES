@@ -25,7 +25,6 @@
 
 INLINE static void prg_fix_260(void);
 INLINE static void chr_fix_260(void);
-INLINE static void chr_swap_260(BYTE slot, WORD value);
 
 struct _m260 {
 	BYTE cpu5xxx[4];
@@ -59,7 +58,7 @@ void map_init_260(void) {
 
 	if (info.reset == RESET) {
 		m260tmp.dipswitch = !m260tmp.dipswitch ; //(m260tmp.dipswitch + 1) & 0x03;
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		if (info.crc32.prg == 0x50A810A6) {
 			m260tmp.dipswitch = 1;
 		} else {
@@ -168,26 +167,26 @@ INLINE static void prg_fix_260(void) {
 			WORD mask = m260.cpu5xxx[0] & 0x02 ? 0x0F : 0x1F;
 
 			base &= ~mask;
-			memmap_auto_8k(0x8000 ^ swap, (base | (m260.mmc3[6] & mask)));
-			memmap_auto_8k(0xA000, (base | (m260.mmc3[7] & mask)));
-			memmap_auto_8k(0xC000 ^ swap, (base | (0xFE & mask)));
-			memmap_auto_8k(0xE000, (base | (0xFF & mask)));
+			memmap_auto_8k(MMCPU(0x8000 ^ swap), (base | (m260.mmc3[6] & mask)));
+			memmap_auto_8k(MMCPU(0xA000), (base | (m260.mmc3[7] & mask)));
+			memmap_auto_8k(MMCPU(0xC000 ^ swap), (base | (0xFE & mask)));
+			memmap_auto_8k(MMCPU(0xE000), (base | (0xFF & mask)));
 			break;
 		}
 		case 4:
-			memmap_auto_16k(0x8000, m260.prg_base);
-			memmap_auto_16k(0xC000, m260.prg_base);
+			memmap_auto_16k(MMCPU(0x8000), m260.prg_base);
+			memmap_auto_16k(MMCPU(0xC000), m260.prg_base);
 			break;
 		case 5:
 		case 6:
 		case 7:
-			memmap_auto_32k(0x8000, (m260.prg_base >> 1));
+			memmap_auto_32k(MMCPU(0x8000), (m260.prg_base >> 1));
 			break;
 	}
 }
 INLINE static void chr_fix_260(void) {
 	WORD mask = 0, bank[8], base = m260.cpu5xxx[2] << 3;
-	BYTE swap = 0;
+	WORD swap = 0;
 
 	switch (m260.cpu5xxx[0] & 0x07) {
 		default:
@@ -195,7 +194,7 @@ INLINE static void chr_fix_260(void) {
 		case 1:
 		case 2:
 		case 3:
-			swap = (m260.cpu8xxx[0] & 0x80) >> 5;
+			swap = (m260.cpu8xxx[0] & 0x80) << 5;
 			mask = m260.cpu5xxx[0] & 0x01 ? 0x7F : 0xFF;
 			base &= ~mask;
 
@@ -234,16 +233,12 @@ INLINE static void chr_fix_260(void) {
 			bank[7] = base | 7;
 			break;
 	}
-	chr_swap_260(0 ^ swap, bank[0]);
-	chr_swap_260(1 ^ swap, bank[1]);
-	chr_swap_260(2 ^ swap, bank[2]);
-	chr_swap_260(3 ^ swap, bank[3]);
-	chr_swap_260(4 ^ swap, bank[4]);
-	chr_swap_260(5 ^ swap, bank[5]);
-	chr_swap_260(6 ^ swap, bank[6]);
-	chr_swap_260(7 ^ swap, bank[7]);
-}
-INLINE static void chr_swap_260(BYTE slot, WORD value) {
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[slot] = chr_pnt(value << 10);
+	memmap_auto_1k(MMPPU(0x0000 ^ swap), bank[0]);
+	memmap_auto_1k(MMPPU(0x0400 ^ swap), bank[1]);
+	memmap_auto_1k(MMPPU(0x0800 ^ swap), bank[2]);
+	memmap_auto_1k(MMPPU(0x0C00 ^ swap), bank[3]);
+	memmap_auto_1k(MMPPU(0x1000 ^ swap), bank[4]);
+	memmap_auto_1k(MMPPU(0x1400 ^ swap), bank[5]);
+	memmap_auto_1k(MMPPU(0x1800 ^ swap), bank[6]);
+	memmap_auto_1k(MMPPU(0x1C00 ^ swap), bank[7]);
 }

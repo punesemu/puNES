@@ -104,28 +104,14 @@ void extcl_cpu_every_cycle_043(void) {
 
 INLINE static void prg_fix_043(void) {
 	static const BYTE prg_e000[8] = { 4, 3, 4, 4, 4, 7, 5, 6 };
-	WORD bank = 0;
 
-	bank = 1;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, bank);
-
-	bank = 0;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, bank);
-
-	bank = prg_e000[m043.reg & 0x07];
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, bank);
-
-	bank =  m043.swap ? 8 : 9;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_8k(MMCPU(0x8000), 1);
+	memmap_auto_8k(MMCPU(0xA000), 0);
+	memmap_auto_8k(MMCPU(0xC000), prg_e000[m043.reg & 0x07]);
+	memmap_auto_8k(MMCPU(0xE000),  (m043.swap ? 8 : 9));
 }
 INLINE static void wram_fix_043(void) {
-	memmap_prgrom_2k(0x5000, m043tmp.ds_used ? 32 : 33);
-	memmap_prgrom_2k(0x5800, m043tmp.ds_used ? 32 : 33);
-	memmap_prgrom_8k(0x6000, m043.swap ? 0 : 2);
+	memmap_prgrom_2k(MMCPU(0x5000), m043tmp.ds_used ? 32 : 33);
+	memmap_prgrom_2k(MMCPU(0x5800), m043tmp.ds_used ? 32 : 33);
+	memmap_prgrom_8k(MMCPU(0x6000), m043.swap ? 0 : 2);
 }

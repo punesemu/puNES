@@ -61,7 +61,7 @@ void map_init_114(void) {
 }
 void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m114.reg[1] & 0x01) && memmap_adr_is_writable(address)) {
+		if (!(m114.reg[1] & 0x01) && memmap_adr_is_writable(MMCPU(address))) {
 			m114.reg[address & 0x03] = value;
 			MMC3_chr_fix();
 			MMC3_prg_fix();

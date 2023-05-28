@@ -42,7 +42,7 @@ void map_init_374(void) {
 
 	if (info.reset == RESET) {
 		m374.reg++;
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		m374.reg = 0;
 	}
 }

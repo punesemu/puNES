@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "mappers.h"
 #include "mem_map.h"
 #include "save_slot.h"
@@ -41,19 +40,19 @@ void map_init_559(void) {
 	mapper.internal_struct[1] = (BYTE *)&vrc2and4;
 	mapper.internal_struct_size[1] = sizeof(vrc2and4);
 
-	memset(&m559, 0x00, sizeof(m559));
+	if (info.reset >= HARD) {
+		m559.prg = 0xFE;
+		m559.mir[0] = 0xE0;
+		m559.mir[1] = 0xE0;
+		m559.mir[2] = 0xE1;
+		m559.mir[3] = 0xE1;
+	}
 
 	init_VRC2and4(VRC24_VRC4, 0x400, 0x800, TRUE);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_559;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_559;
 	VRC2and4_mirroring_fix = mirroring_fix_vrc2and4_559;
 	VRC2and4_misc_03 = misc_03_vrc2and4_559;
-
-	m559.prg = 0xFE;
-	m559.mir[0] = 0xE0;
-	m559.mir[1] = 0xE0;
-	m559.mir[2] = 0xE1;
-	m559.mir[3] = 0xE1;
 }
 void extcl_cpu_wr_mem_559(WORD address, BYTE value) {
 	switch (address & 0xF000) {
@@ -75,13 +74,7 @@ void extcl_cpu_wr_mem_559(WORD address, BYTE value) {
 BYTE extcl_save_mapper_559(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m559.prg);
 	save_slot_ele(mode, slot, m559.mir);
-	extcl_save_mapper_VRC2and4(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		VRC2and4_mirroring_fix();
-	}
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
 
 void prg_swap_vrc2and4_559(WORD address, WORD value) {
@@ -97,10 +90,15 @@ void chr_swap_vrc2and4_559(WORD address, WORD value) {
 	chr_swap_VRC2and4_base(address, (value & 0x1FF));
 }
 void mirroring_fix_vrc2and4_559(void) {
-	map_nmt_chr_rom_1k(0, m559.mir[0]);
-	map_nmt_chr_rom_1k(1, m559.mir[1]);
-	map_nmt_chr_rom_1k(2, m559.mir[2]);
-	map_nmt_chr_rom_1k(3, m559.mir[3]);
+	memmap_nmt_1k(MMPPU(0x2000), m559.mir[0]);
+	memmap_nmt_1k(MMPPU(0x2400), m559.mir[1]);
+	memmap_nmt_1k(MMPPU(0x2800), m559.mir[2]);
+	memmap_nmt_1k(MMPPU(0x2C00), m559.mir[3]);
+
+	memmap_nmt_1k(MMPPU(0x3000), m559.mir[0]);
+	memmap_nmt_1k(MMPPU(0x3400), m559.mir[1]);
+	memmap_nmt_1k(MMPPU(0x3800), m559.mir[2]);
+	memmap_nmt_1k(MMPPU(0x3C00), m559.mir[3]);
 }
 void misc_03_vrc2and4_559(WORD address, BYTE value) {
 	if (address & 0x0004) {

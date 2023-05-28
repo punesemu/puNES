@@ -29,7 +29,6 @@ BYTE extcl_cpu_rd_mem_FFESMC(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_FFESMC(BYTE mode, BYTE slot, FILE *fp);
 void extcl_wr_chr_FFESMC(WORD address, BYTE value);
 BYTE extcl_rd_chr_FFESMC(WORD address);
-BYTE extcl_wr_nmt_FFESMC(WORD address, BYTE value);
 void extcl_cpu_every_cycle_FFESMC(void);
 void extcl_ppu_000_to_255_FFESMC(void);
 void extcl_ppu_256_to_319_FFESMC(void);

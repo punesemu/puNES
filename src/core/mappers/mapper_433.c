@@ -22,6 +22,7 @@
 #include "save_slot.h"
 
 INLINE static void prg_fix_433(void);
+INLINE static void chr_fix_433(void);
 INLINE static void mirroring_fix_433(void);
 
 struct _m433 {
@@ -32,19 +33,22 @@ void map_init_433(void) {
 	EXTCL_AFTER_MAPPER_INIT(433);
 	EXTCL_CPU_WR_MEM(433);
 	EXTCL_SAVE_MAPPER(433);
-	EXTCL_WR_CHR(433);
 	mapper.internal_struct[0] = (BYTE *)&m433;
 	mapper.internal_struct_size[0] = sizeof(m433);
 
-	memset(&m433, 0x00, sizeof(m433));
+	if (info.reset >= HARD) {
+		memset(&m433, 0x00, sizeof(m433));
+	}
 }
 void extcl_after_mapper_init_433(void) {
 	prg_fix_433();
+	chr_fix_433();
 	mirroring_fix_433();
 }
 void extcl_cpu_wr_mem_433(UNUSED(WORD address), BYTE value) {
 	m433.reg = value;
 	prg_fix_433();
+	chr_fix_433();
 	mirroring_fix_433();
 }
 BYTE extcl_save_mapper_433(BYTE mode, BYTE slot, FILE *fp) {
@@ -52,26 +56,20 @@ BYTE extcl_save_mapper_433(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_wr_chr_433(WORD address, BYTE value) {
-	if (m433.reg & 0x80) {
-		chr.bank_1k[address >> 10][address & 0x3FF] = value;
-	}
-}
 
 INLINE static void prg_fix_433(void) {
 	WORD bank = m433.reg & 0x1F;
 
 	if (!(m433.reg & 0x20)) {
 		bank >>= 1;
-		_control_bank(bank, info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, bank);
+		memmap_auto_32k(MMCPU(0x8000), bank);
 	} else {
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
-		map_prg_rom_8k(2, 2, bank);
+		memmap_auto_16k(MMCPU(0x8000), bank);
+		memmap_auto_16k(MMCPU(0xC000), bank);
 	}
-
-	map_prg_rom_8k_update();
+}
+INLINE static void chr_fix_433(void) {
+	memmap_vram_wp_8k(MMPPU(0x0000), 0, TRUE, (m433.reg & 0x80));
 }
 INLINE static void mirroring_fix_433(void) {
 	if (m433.reg & 0x40) {

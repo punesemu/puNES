@@ -64,7 +64,7 @@ void map_init_205(void) {
 		if (m205tmp.ds_used) {
 			m205tmp.index = (m205tmp.index + 1) % m205tmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		memset(&m205tmp, 0x00, sizeof(m205tmp));
 		if (info.crc32.prg == 0x5A22BA9F) { // 15-in-1 [p1].nes
 			static const BYTE ds[] = { 1, 0 };
@@ -80,7 +80,7 @@ void map_init_205(void) {
 }
 void extcl_cpu_wr_mem_205(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (memmap_adr_is_writable(address)) {
+		if (memmap_adr_is_writable(MMCPU(address))) {
 			m205.reg = value;
 			if ((value & 0x01) && m205tmp.ds_used && (m205tmp.dipswitch[m205tmp.index])) {
 				m205.reg |= 2;

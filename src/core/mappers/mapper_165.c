@@ -38,7 +38,6 @@ void map_init_165(void) {
 	EXTCL_CPU_WR_MEM(165);
 	EXTCL_SAVE_MAPPER(165);
 	EXTCL_AFTER_RD_CHR(165);
-	EXTCL_WR_CHR(165);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
 	EXTCL_PPU_000_TO_255(MMC3);
@@ -62,10 +61,6 @@ void map_init_165(void) {
 	mmc3.reg[1] = 0;
 	mmc3.reg[2] = 0;
 	mmc3.reg[4] = 0;
-
-	if (!info.chr.ram.banks_8k_plus) {
-		info.chr.ram.banks_8k_plus = 1;
-	}
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -112,13 +107,6 @@ void extcl_update_r2006_165(WORD new_r2006, WORD old_r2006) {
 		MMC3_chr_fix();
 	}
 }
-void extcl_wr_chr_165(WORD address, BYTE value) {
-	const BYTE slot = address >> 10;
-
-	if (map_chr_ram_slot_in_range(slot)) {
-		chr.bank_1k[slot][address & 0x3FF] = value;
-	}
-}
 
 void prg_swap_mmc3_165(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, (value & 0x3F));
@@ -147,11 +135,8 @@ void chr_fix_mmc3_165(void) {
 	chr_swap_mmc3_165(0x1C00, bank[1] | 0x03);
 }
 void chr_swap_mmc3_165(WORD address, WORD value) {
-	const BYTE slot = address >> 10;
-
-	if (!(value & ~3)) {
-		control_bank(info.chr.ram.max.banks_1k)
-		chr.bank_1k[slot] = &chr.extra.data[value << 10];
+	if (!(value & ~3) && vram_size()) {
+		memmap_vram_1k(MMPPU(address), value);
 	} else {
 		chr_swap_MMC3_base(address, value);
 	}

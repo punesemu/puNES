@@ -65,8 +65,8 @@ BYTE extcl_save_mapper_120(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_120(void) {
-	memmap_auto_32k(0x8000, 2);
+	memmap_auto_32k(MMCPU(0x8000), 2);
 }
 INLINE static void wram_fix_120(void) {
-	memmap_prgrom_8k(0x6000, m120.reg);
+	memmap_prgrom_8k(MMCPU(0x6000), m120.reg);
 }

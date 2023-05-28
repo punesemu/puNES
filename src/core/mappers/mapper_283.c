@@ -45,8 +45,8 @@ void extcl_cpu_wr_mem_283(UNUSED(WORD address), BYTE value) {
 }
 
 INLINE static void prg_fix_283(void) {
-	memmap_auto_32k(0x8000, m283.reg);
+	memmap_auto_32k(MMCPU(0x8000), m283.reg);
 }
 INLINE static void wram_fix_283(void) {
-	memmap_prgrom_8k(0x6000, (prgrom_size() & 0x6000 ? 0x20 : 0x1F));
+	memmap_prgrom_8k(MMCPU(0x6000), (prgrom_size() & 0x6000 ? 0x20 : 0x1F));
 }

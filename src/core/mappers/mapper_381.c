@@ -37,7 +37,7 @@ void map_init_381(void) {
 
 	if (info.reset == RESET) {
 		m381.index++;
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		m381.index = 0;
 	}
 }

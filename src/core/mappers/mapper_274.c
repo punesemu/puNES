@@ -68,17 +68,13 @@ BYTE extcl_save_mapper_274(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_274(void) {
-	WORD bank;
+	WORD bank = 0;
 
 	bank = m274.extra | (m274.reg[1] & 0x70) | (m274.reg[0] & 0x0F);
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-	
-	bank = m274.reg[1] & 0x7F;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank);
+	memmap_auto_16k(MMCPU(0x8000), bank);
 
-	map_prg_rom_8k_update();
+	bank = m274.reg[1] & 0x7F;
+	memmap_auto_16k(MMCPU(0xC000), bank);
 }
 INLINE static void mirroring_fix_274(void) {
 	if (m274.reg[0] & 0x10) {

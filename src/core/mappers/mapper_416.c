@@ -107,27 +107,27 @@ INLINE static void prg_fix_416(void) {
 	if (m416.reg[1] & 0x08) {
 		bank = ((m416.reg[1] & 0x08) >> 1) | ((m416.reg[1] & 0x80) >> 6) | ((m416.reg[1] & 0x20) >> 5);
 		if (m416.reg[1] & 0x80) {
-			memmap_auto_32k(0x8000, (bank >> 1));
+			memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
 		} else if (m416.reg[1] & 0x40) {
-			memmap_auto_16k(0x8000, bank);
-			memmap_auto_16k(0xC000, bank);
+			memmap_auto_16k(MMCPU(0x8000), bank);
+			memmap_auto_16k(MMCPU(0xC000), bank);
 		} else {
 			bank <<= 1;
-			memmap_auto_8k(0x8000, bank);
-			memmap_auto_8k(0xA000, bank);
-			memmap_auto_8k(0xC000, bank);
-			memmap_auto_8k(0xE000, bank);
+			memmap_auto_8k(MMCPU(0x8000), bank);
+			memmap_auto_8k(MMCPU(0xA000), bank);
+			memmap_auto_8k(MMCPU(0xC000), bank);
+			memmap_auto_8k(MMCPU(0xE000), bank);
 		}
 	} else {
 		bank = (m416.reg[0] & 0x08) | ((m416.reg[0] & 0x01) << 2) | ((m416.reg[0] & 0x06) >> 1);
-		memmap_auto_8k(0x8000, 0);
-		memmap_auto_8k(0xA000, 1);
-		memmap_auto_8k(0xC000, bank);
-		memmap_auto_8k(0xE000, 3);
+		memmap_auto_8k(MMCPU(0x8000), 0);
+		memmap_auto_8k(MMCPU(0xA000), 1);
+		memmap_auto_8k(MMCPU(0xC000), bank);
+		memmap_auto_8k(MMCPU(0xE000), 3);
 	}
 }
 INLINE static void wram_fix_416(void) {
-	memmap_prgrom_8k(0x6000, 0x07);
+	memmap_prgrom_8k(MMCPU(0x6000), 0x07);
 }
 INLINE static void chr_fix_416(void) {
 	DBWORD bank;

@@ -61,7 +61,7 @@ void map_init_357(void) {
 		if (m357tmp.ds_used) {
 			m357tmp.index = (m357tmp.index + 1) % m357tmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		if (info.crc32.prg == 0x6C30D765) { // 4-in-1 (4602).nes
 			static BYTE ds[4] = { 0x00, 0x08, 0x10, 0x18 };
 
@@ -129,18 +129,18 @@ INLINE static void prg_fix_357(void) {
 				{ 1, 1, 5, 1, 4, 1, 5, 1 }
 		};
 
-		memmap_auto_8k(0x8000, (m357.reg[2] ? 0 : 1));
-		memmap_auto_8k(0xA000, 0);
-		memmap_auto_8k(0xC000, banks[m357.reg[2]][m357.reg[1]]);
-		memmap_auto_8k(0xE000, (m357.reg[2] ? 8 : 10));
+		memmap_auto_8k(MMCPU(0x8000), (m357.reg[2] ? 0 : 1));
+		memmap_auto_8k(MMCPU(0xA000), 0);
+		memmap_auto_8k(MMCPU(0xC000), banks[m357.reg[2]][m357.reg[1]]);
+		memmap_auto_8k(MMCPU(0xE000), (m357.reg[2] ? 8 : 10));
 	} else {
-		memmap_auto_16k(0x8000, (m357tmp.dipswitch[m357tmp.index] | m357.reg[0]));
-		memmap_auto_16k(0xC000, (m357tmp.dipswitch[m357tmp.index] | 0x07));
+		memmap_auto_16k(MMCPU(0x8000), (m357tmp.dipswitch[m357tmp.index] | m357.reg[0]));
+		memmap_auto_16k(MMCPU(0xC000), (m357tmp.dipswitch[m357tmp.index] | 0x07));
 	}
 }
 INLINE static void wram_fix_357(void) {
 	if (!m357tmp.dipswitch[m357tmp.index]) {
-		memmap_prgrom_8k(0x6000, m357.reg[2] ? 0 : 2);
+		memmap_prgrom_8k(MMCPU(0x6000), m357.reg[2] ? 0 : 2);
 	}
 }
 INLINE static void mirroring_fix_357(void) {

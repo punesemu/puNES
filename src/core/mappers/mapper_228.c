@@ -84,10 +84,10 @@ INLINE static void prg_fix_228(void) {
 	WORD bank = (m228.reg[0] >> 6) & 0x7F;
 
 	if (m228.reg[0] & 0x20) {
-		memmap_auto_16k(0x8000, bank);
-		memmap_auto_16k(0xC000, bank);
+		memmap_auto_16k(MMCPU(0x8000), bank);
+		memmap_auto_16k(MMCPU(0xC000), bank);
 	} else {
-		memmap_auto_32k(0x8000, (bank >> 1));
+		memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
 	}
 }
 INLINE static void chr_fix_228(void) {

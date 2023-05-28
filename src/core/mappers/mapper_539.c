@@ -126,11 +126,11 @@ INLINE static void wram_fix_539(void) {
 	// CPU $8200-$82FF
 	// CPU $C000-$D1FF
 	// CPU $DF00-$DFFF
-	memmap_prgrom_8k(0x6000, 0x0D);
-	memmap_auto_256b(0x6000, 0x18);
-	memmap_auto_256b(0x6200, 0x1A);
-	memmap_auto_256b(0x6400, 0x1C);
-	memmap_auto_256b(0x6500, 0x1D);
+	memmap_prgrom_8k(MMCPU(0x6000), 0x0D);
+	memmap_auto_256b(MMCPU(0x6000), 0x18);
+	memmap_auto_256b(MMCPU(0x6200), 0x1A);
+	memmap_auto_256b(MMCPU(0x6400), 0x1C);
+	memmap_auto_256b(MMCPU(0x6500), 0x1D);
 }
 INLINE static void mirroring_fix_539(void) {
 	if (m539.reg[1] & 0x08) {

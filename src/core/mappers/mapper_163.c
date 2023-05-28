@@ -20,15 +20,12 @@
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
-#include "ines.h"
 #include "ppu.h"
 #include "ppu_inline.h"
 #include "save_slot.h"
-#include "EE93Cx6.h"
 
 INLINE static void prg_fix_163(void);
 INLINE static void mode1_bpp(WORD address);
-INLINE static BYTE mode1_bpp_rd(WORD address);
 
 struct _m163 {
 	BYTE reg[4];
@@ -122,21 +119,19 @@ BYTE extcl_save_mapper_163(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-BYTE extcl_wr_nmt_163(WORD address, UNUSED(BYTE value)) {
+void extcl_wr_chr_163(WORD address, UNUSED(BYTE value)) {
 	mode1_bpp(address);
-	return (FALSE);
-}
-void extcl_wr_chr_163(WORD address, BYTE value) {
-	mode1_bpp(address);
-	if (mapper.write_vram) {
-		chr.bank_1k[address >> 10][address & 0x3FF] = value;
-	}
+	chr_wr(address, value);
 }
 BYTE extcl_rd_chr_163(WORD address) {
 	if ((m163.reg[0] & 0x80) && !m163.pa13) {
-		return (mode1_bpp_rd(address));
+		address = (m163.pa9 << 12) | (address & 0x0FFF);
 	}
-	return (chr.bank_1k[address >> 10][address & 0x3FF]);
+	return (chr_rd(address));
+}
+void extcl_wr_nmt_163(WORD address, UNUSED(BYTE value)) {
+	mode1_bpp(address);
+	nmt_wr(address, value);
 }
 void extcl_ppu_000_to_255_163(void) {
 	if (r2001.visible) {
@@ -173,9 +168,7 @@ void extcl_ppu_320_to_34x_163(void) {
 INLINE static void prg_fix_163(void) {
 	WORD bank = ((m163.reg[2] & 0x03) << 4) | (m163.reg[0] & 0x0F) | (m163.reg[3] & 0x04 ? 0x00: 0x03);
 
-	_control_bank(bank, info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, bank);
-	map_prg_rom_8k_update();
+	memmap_auto_32k(MMCPU(0x8000), bank);
 }
 INLINE static void mode1_bpp(WORD address) {
 	BYTE pa13 = (address & 0x2000) >> 13;
@@ -184,8 +177,4 @@ INLINE static void mode1_bpp(WORD address) {
 		m163.pa9 = (address & 0x0200) != 0;
 	}
 	m163.pa13 = pa13;
-}
-INLINE static BYTE mode1_bpp_rd(WORD address) {
-	address = (m163.pa9 << 12) | (address & 0x0FFF);
-	return (chr.bank_1k[address >> 10][address & 0x3FF]);
 }

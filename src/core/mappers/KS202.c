@@ -140,16 +140,16 @@ void prg_fix_KS202_base(void) {
 	KS202_prg_swap(0xE000, 0xFF);
 }
 void prg_swap_KS202_base(WORD address, WORD value) {
-	memmap_auto_8k(address, value);
+	memmap_auto_8k(MMCPU(address), value);
 }
 void wram_fix_KS202_base(void) {
 	KS202_wram_swap(0x6000, ks202.reg[4] ? ks202.reg[3] : 0);
 }
 void wram_swap_KS202_base(WORD address, WORD value) {
 	if (ks202.reg[4]) {
-		memmap_prgrom_8k(address, value);
+		memmap_prgrom_8k(MMCPU(address), value);
 	} else {
-		memmap_auto_8k(address, value);
+		memmap_auto_8k(MMCPU(address), value);
 	}
 
 }

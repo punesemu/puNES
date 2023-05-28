@@ -69,7 +69,7 @@ INLINE static void prg_fix_329(void) {
 	map_prg_rom_8k_update();
 }
 INLINE static void wram_fix_329(void) {
-	memmap_auto_8k(0x6000, m329.reg >> 6);
+	memmap_auto_8k(MMCPU(0x6000), m329.reg >> 6);
 }
 INLINE static void mirroring_fix_329(void) {
 	if (m329.reg & 0x20) {

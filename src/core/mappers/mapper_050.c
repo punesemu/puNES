@@ -86,11 +86,11 @@ void extcl_cpu_every_cycle_050(void) {
 }
 
 INLINE static void prg_fix_050(void) {
-	memmap_auto_8k(0x8000, 8);
-	memmap_auto_8k(0xA000, 9);
-	memmap_auto_8k(0xC000, ((m050.reg & 0x08) | ((m050.reg & 0x01) << 2) | ((m050.reg & 0x06) >> 1)));
-	memmap_auto_8k(0xE000, 11);
+	memmap_auto_8k(MMCPU(0x8000), 8);
+	memmap_auto_8k(MMCPU(0xA000), 9);
+	memmap_auto_8k(MMCPU(0xC000), ((m050.reg & 0x08) | ((m050.reg & 0x01) << 2) | ((m050.reg & 0x06) >> 1)));
+	memmap_auto_8k(MMCPU(0xE000), 11);
 }
 INLINE static void wram_fix_050(void) {
-	memmap_prgrom_8k(0x6000, 0x0F);
+	memmap_prgrom_8k(MMCPU(0x6000), 0x0F);
 }

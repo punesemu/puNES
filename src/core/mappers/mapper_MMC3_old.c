@@ -205,7 +205,7 @@ void extcl_cpu_wr_mem_MMC3_old(WORD address, BYTE value) {
 			 * se e' abilitato il 4 schermi, il cambio
 			 * di mirroring deve essere ignorato.
 			 */
-			if (mapper.mirroring == MIRRORING_FOURSCR) {
+			if (info.mapper.mirroring == MIRRORING_FOURSCR) {
 				break;
 			}
 			if (value & 0x01) {

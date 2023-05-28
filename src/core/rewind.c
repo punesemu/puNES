@@ -90,12 +90,12 @@ struct _rewind_internal {
 		int32_t snaps;
 	} count;
 	struct _rewind_info_size {
-		size_t keyframe;
-		size_t screen;
-		size_t input;
-		size_t chunk;
-		size_t first_chunk;
-		size_t total;
+		uint64_t keyframe;
+		uint64_t screen;
+		uint64_t input;
+		uint64_t chunk;
+		uint64_t first_chunk;
+		uint64_t total;
 	} size;
 } rwint;
 

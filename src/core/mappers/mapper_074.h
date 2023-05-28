@@ -23,6 +23,5 @@
 
 void map_init_074(void);
 BYTE extcl_save_mapper_074(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_074(WORD address, BYTE value);
 
 #endif /* MAPPER_074_H_ */

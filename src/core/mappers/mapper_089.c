@@ -59,11 +59,11 @@ BYTE extcl_save_mapper_089(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_089(void) {
-	memmap_auto_16k(0x8000, ((m089.reg >> 4) & 0x07));
-	memmap_auto_16k(0xC000, 0xFF);
+	memmap_auto_16k(MMCPU(0x8000), ((m089.reg >> 4) & 0x07));
+	memmap_auto_16k(MMCPU(0xC000), 0xFF);
 }
 INLINE static void chr_fix_089(void) {
-	map_chr_rom_8k((((m089.reg & 0x80) >> 4) | (m089.reg & 0x07)));
+	memmap_auto_8k(MMPPU(0x0000), (((m089.reg & 0x80) >> 4) | (m089.reg & 0x07)));
 }
 INLINE static void mirroring_fix_089(void) {
 	if (m089.reg & 0x08) {

@@ -100,5 +100,5 @@ INLINE static void prg_fix_125(void) {
 	map_prg_rom_8k_update();
 }
 INLINE static void wram_fix_125(void) {
-	memmap_prgrom_8k(0x6000, m125.reg);
+	memmap_prgrom_8k(MMCPU(0x6000), m125.reg);
 }

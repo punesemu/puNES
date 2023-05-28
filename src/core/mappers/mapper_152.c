@@ -57,8 +57,8 @@ BYTE extcl_save_mapper_152(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_152(void) {
-	memmap_auto_16k(0x8000, (m152.reg >> 4));
-	memmap_auto_16k(0xC000, 0xFF);
+	memmap_auto_16k(MMCPU(0x8000), (m152.reg >> 4));
+	memmap_auto_16k(MMCPU(0xC000), 0xFF);
 }
 INLINE static void chr_fix_152(void) {
 	DBWORD bank = m152.reg & 0x0F;

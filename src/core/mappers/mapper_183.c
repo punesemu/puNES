@@ -91,14 +91,14 @@ BYTE extcl_save_mapper_183(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void prg_fix_vrc2and4_183(void) {
-	memmap_auto_8k(0x8000, m183.reg[1]);
-	memmap_auto_8k(0xA000, m183.reg[2]);
-	memmap_auto_8k(0xC000, m183.reg[3]);
-	memmap_auto_8k(0xE000, 0xFF);
+	memmap_auto_8k(MMCPU(0x8000), m183.reg[1]);
+	memmap_auto_8k(MMCPU(0xA000), m183.reg[2]);
+	memmap_auto_8k(MMCPU(0xC000), m183.reg[3]);
+	memmap_auto_8k(MMCPU(0xE000), 0xFF);
 }
 void chr_swap_vrc2and4_183(WORD address, WORD value) {
 	chr_swap_VRC2and4_base(address, (value & 0x1FF));
 }
 void wram_fix_vrc2and4_183(void) {
-	memmap_prgrom_8k(0x6000, m183.reg[0]);
+	memmap_prgrom_8k(MMCPU(0x6000), m183.reg[0]);
 }

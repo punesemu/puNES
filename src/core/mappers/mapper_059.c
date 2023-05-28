@@ -21,21 +21,24 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static const SBYTE dipswitch_59[][4] = {
-	{  0,  1,  2,  3 }, // 0
-	{  0,  1,  2, -1 }, // 1
-};
+INLINE static void prg_fix_059(void);
+INLINE static void chr_fix_059(void);
+INLINE static void mirroring_fix_059(void);
+
+INLINE static void tmp_fix_059(BYTE max, BYTE index, const BYTE *ds);
 
 struct _m059 {
 	WORD reg;
 } m059;
 struct _m059tmp {
-	BYTE select;
+	BYTE ds_used;
+	BYTE max;
 	BYTE index;
-	WORD dipswitch;
+	const BYTE *dipswitch;
 } m059tmp;
 
 void map_init_059(void) {
+	EXTCL_AFTER_MAPPER_INIT(059);
 	EXTCL_CPU_WR_MEM(059);
 	EXTCL_CPU_RD_MEM(059);
 	EXTCL_SAVE_MAPPER(059);
@@ -45,74 +48,76 @@ void map_init_059(void) {
 	m059.reg = 0;
 
 	if (info.reset == RESET) {
-		do {
-			m059tmp.index = (m059tmp.index + 1) & 0x03;
-		} while (dipswitch_59[m059tmp.select][m059tmp.index] < 0);
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+		if (m059tmp.ds_used) {
+			m059tmp.index = (m059tmp.index + 1) % m059tmp.max;
+		}
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memset(&m059tmp, 0x00, sizeof(m059tmp));
+
 		if (info.crc32.prg == 0xED831F98) { // (VT-104) 2000 Super Aladdin.nes
-			m059tmp.select = 1;
-			m059tmp.index = 0;
+			static BYTE ds[] = {0x00, 0x01, 0x02};
+
+			tmp_fix_059(LENGTH(ds), 0, &ds[0]);
+		} else if (info.crc32.prg == 0x30FDFBA7) { // (WQ5209) 1998 Super 64-in-1.nes
+			static BYTE ds[] = { 0x00, 0x02, 0x01, 0x03 };
+
+			tmp_fix_059(LENGTH(ds), 0, &ds[0]);
 		} else {
-			m059tmp.select = 0;
-			m059tmp.index = 0;
+			static BYTE ds[] = { 0x00 };
+
+			tmp_fix_059(LENGTH(ds), 0, &ds[0]);
 		}
 	}
 
-	m059tmp.dipswitch = dipswitch_59[m059tmp.select][m059tmp.index];
-
 	info.mapper.extend_rd = TRUE;
-
-	extcl_cpu_wr_mem_059(0x0000, 0);
 }
-void extcl_cpu_wr_mem_059(WORD address, BYTE value) {
-	DBWORD bank;
-
-	if (m059.reg & 0x0200) {
-		return;
-	}
-
-	m059.reg = address;
-
-	if (address & 0x80) {
-		value = (address & 0x70) >> 4;
-		control_bank(info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, value);
-		map_prg_rom_8k(2, 2, value);
-	} else {
-		value = (address & 0x60) >> 5;
-		control_bank(info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, value);
-	}
-	map_prg_rom_8k_update();
-
-	value = address & 0x07;
-	control_bank(info.chr.rom.max.banks_8k)
-	bank = value << 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
-
-	if (address & 0x0008) {
-		mirroring_H();
-	} else {
-		mirroring_V();
+void extcl_after_mapper_init_059(void) {
+	prg_fix_059();
+	chr_fix_059();
+	mirroring_fix_059();
+}
+void extcl_cpu_wr_mem_059(WORD address, UNUSED(BYTE value)) {
+	if (!(m059.reg & 0x0200)) {
+		m059.reg = address;
+		prg_fix_059();
+		chr_fix_059();
+		mirroring_fix_059();
 	}
 }
 BYTE extcl_cpu_rd_mem_059(WORD address, BYTE openbus) {
 	if ((address >= 0x8000) && (m059.reg & 0x0100)) {
-		return ((openbus & 0xFC) | m059tmp.dipswitch);
+		return ((openbus & 0xFC) | m059tmp.dipswitch[m059tmp.index]);
 	}
 	return (openbus);
 }
 BYTE extcl_save_mapper_059(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m059.reg);
-	save_slot_ele(mode, slot, m059tmp.index);
-	save_slot_ele(mode, slot, m059tmp.dipswitch);
 
 	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_059(void) {
+	if (m059.reg & 0x80) {
+		memmap_auto_16k(MMCPU(0x8000), ((m059.reg & 0xF0) >> 4));
+		memmap_auto_16k(MMCPU(0xC000), ((m059.reg & 0xF0) >> 4));
+	} else {
+		memmap_auto_32k(MMCPU(0x8000), ((m059.reg & 0xF0) >> 5));
+	}
+}
+INLINE static void chr_fix_059(void) {
+	memmap_auto_8k(MMPPU(0x0000), (m059.reg & 0x0F));
+}
+INLINE static void mirroring_fix_059(void) {
+	if (m059.reg & 0x08) {
+		mirroring_H();
+	} else {
+		mirroring_V();
+	}
+}
+
+INLINE static void tmp_fix_059(BYTE max, BYTE index, const BYTE *ds) {
+	m059tmp.ds_used = TRUE;
+	m059tmp.max = max;
+	m059tmp.index = index;
+	m059tmp.dipswitch = ds;
 }

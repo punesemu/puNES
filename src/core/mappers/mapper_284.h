@@ -35,7 +35,7 @@ typedef struct _m284_channel {
 	} pos;
 } _m284_channel;
 typedef struct _m284 {
-	BYTE dipswitch;
+	BYTE jumper;
 	BYTE control;
 	BYTE prg;
 	BYTE chr[4];

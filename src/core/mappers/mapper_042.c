@@ -48,10 +48,10 @@ struct _m042 {
 
 void map_init_042(void) {
 	if ((info.mapper.submapper < 1) || (info.mapper.submapper > 3)) {
-		if (info.chr.rom.banks_8k && !mapper.write_vram) {
+		if (chrrom_size()) {
 			// Ai Senshi Nicole
 			info.mapper.submapper = 1;
-		} else if (info.prg.rom.banks_16k > (128 /16)) {
+		} else if (prgrom_size() > S128K) {
 			// Green Beret
 			info.mapper.submapper = 2;
 		} else {
@@ -59,6 +59,7 @@ void map_init_042(void) {
 			info.mapper.submapper = 3;
 		}
 	}
+
 	switch(info.mapper.submapper) {
 		default:
 		case 1:
@@ -132,21 +133,17 @@ BYTE extcl_save_mapper_042_s1(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m042.prg);
 	save_slot_ele(mode, slot, m042.chr);
 
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_042_s1();
-	}
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_042_s1(void) {
-	memmap_auto_32k(0x8000,  0xFF);
+	memmap_auto_32k(MMCPU(0x8000),  0xFF);
 }
 INLINE static void chr_fix_042_s1(void) {
-	map_chr_rom_8k(m042.chr);
+	memmap_auto_8k(MMPPU(0x0000), m042.chr);
 }
 INLINE static void wram_fix_042_s1(void) {
-	memmap_prgrom_8k(0x6000,  m042.prg);
+	memmap_prgrom_8k(MMCPU(0x6000),  m042.prg);
 }
 
 // submapper 2 -----------------------------------------------------------------
@@ -170,22 +167,16 @@ void extcl_cpu_wr_mem_042_s2(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_042_s2(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m042.mirroring);
-	extcl_save_mapper_N118(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_042_s2();
-	}
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_N118(mode, slot, fp));
 }
 
 void prg_fix_n118_042_s2(void) {
-	memmap_prgrom_32k(0x8000,  (prgrom_banks(S16K) & 0x0F ? 4 : 7));
+	memmap_prgrom_32k(MMCPU(0x8000),  (prgrom_banks(S16K) & 0x0F ? 4 : 7));
 	wram_fix_042_s2();
 }
 
 INLINE static void wram_fix_042_s2(void) {
-	memmap_prgrom_8k(0x6000,  ((n118.reg[5] & 0x1E) >> 1));
+	memmap_prgrom_8k(MMCPU(0x6000),  ((n118.reg[5] & 0x1E) >> 1));
 }
 INLINE static void mirroring_fix_042_s2(void) {
 	if (m042.mirroring & 0x08) {
@@ -237,18 +228,14 @@ BYTE extcl_save_mapper_042_s3(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m042.irq.reg);
 	save_slot_ele(mode, slot, m042.irq.count);
 
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_042_s3();
-	}
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_042_s3(void) {
-	memmap_prgrom_32k(0x8000,  0xFF);
+	memmap_prgrom_32k(MMCPU(0x8000),  0xFF);
 }
 INLINE static void wram_fix_042_s3(void) {
-	memmap_prgrom_8k(0x6000,  m042.prg);
+	memmap_prgrom_8k(MMCPU(0x6000),  m042.prg);
 }
 INLINE static void mirroring_fix_042_s3(void) {
 	if (m042.mirroring & 0x08) {

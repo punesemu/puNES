@@ -68,7 +68,7 @@ void map_init_057(void) {
 
 	if (info.reset == RESET) {
 		m057tmp.dipswitch = (m057tmp.dipswitch + m057tmp.op) & m057tmp.mask;
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		m057tmp.dipswitch = m057tmp.start;
 	}
 

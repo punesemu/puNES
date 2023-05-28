@@ -113,12 +113,6 @@ BYTE extcl_save_mapper_413(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m413.serial.address);
 	save_slot_ele(mode, slot, m413.serial.control);
 
-	if (mode == SAVE_SLOT_READ) {
-		prg_fix_413();
-		wram_fix_413();
-		chr_fix_413();
-	}
-
 	return (EXIT_OK);
 }
 void extcl_irq_A12_clock_413(void) {
@@ -129,17 +123,17 @@ void extcl_irq_A12_clock_413(void) {
 }
 
 INLINE static void prg_fix_413(void) {
-	memmap_auto_8k(0x8000, m413.reg[1]);
-	memmap_auto_8k(0xA000, m413.reg[2]);
-	memmap_disable_4k(0xC000);
-	memmap_auto_4k(0xD000, 7);
-	memmap_auto_8k(0xE000, 4);
+	memmap_auto_8k(MMCPU(0x8000), m413.reg[1]);
+	memmap_auto_8k(MMCPU(0xA000), m413.reg[2]);
+	memmap_disable_4k(MMCPU(0xC000));
+	memmap_auto_4k(MMCPU(0xD000), 7);
+	memmap_auto_8k(MMCPU(0xE000), 4);
 }
 INLINE static void wram_fix_413(void) {
-	memmap_prgrom_4k(0x5000, 1);
-	memmap_prgrom_8k(0x6000, m413.reg[0]);
+	memmap_prgrom_4k(MMCPU(0x5000), 1);
+	memmap_prgrom_8k(MMCPU(0x6000), m413.reg[0]);
 }
 INLINE static void chr_fix_413(void) {
-	map_chr_rom_4k(0x0000, m413.reg[3]);
-	map_chr_rom_4k(0x1000, 0xFD);
+	memmap_auto_4k(MMPPU(0x0000), m413.reg[3]);
+	memmap_auto_4k(MMPPU(0x1000), 0xFD);
 }

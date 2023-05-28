@@ -99,7 +99,7 @@ extern BYTE (*extcl_rd_chr)(WORD address);
 // viene chiamata dopo il FETCHB e dopo il fetch dello sprite
 extern void (*extcl_after_rd_chr)(WORD address);
 // viene chiamato quando si tenta di scrivere nella Nametable Ram
-extern BYTE (*extcl_wr_nmt)(WORD address, BYTE value);
+extern void (*extcl_wr_nmt)(WORD address, BYTE value);
 // viene chiamato quando si tenta di scrivere nella CHR Ram
 extern void (*extcl_wr_chr)(WORD address, BYTE value);
 // APU

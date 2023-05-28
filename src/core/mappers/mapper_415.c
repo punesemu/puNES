@@ -60,10 +60,10 @@ BYTE extcl_save_mapper_415(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_415(void) {
-	memmap_auto_32k(0x8000, 0xFF);
+	memmap_auto_32k(MMCPU(0x8000), 0xFF);
 }
 INLINE static void wram_fix_415(void) {
-	memmap_prgrom_8k(0x6000, (m415.reg & 0x0F));
+	memmap_prgrom_8k(MMCPU(0x6000), (m415.reg & 0x0F));
 }
 INLINE static void mirroring_fix_415(void) {
 	if (m415.reg & 0x10) {

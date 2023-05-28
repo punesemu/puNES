@@ -46,8 +46,11 @@ void map_init_292(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&m292, 0x00, sizeof(m292));
 	memset(&irqA12, 0x00, sizeof(irqA12));
+
+	if (info.reset >= HARD) {
+		memset(&m292, 0x00, sizeof(m292));
+	}
 
 	init_MMC3();
 	MMC3_prg_swap = prg_swap_mmc3_292;
@@ -61,7 +64,7 @@ void map_init_292(void) {
 }
 void extcl_cpu_wr_mem_292(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (memmap_adr_is_writable(address)) {
+		if (memmap_adr_is_writable(MMCPU(address))) {
 			m292.reg[0] = value;
 			MMC3_prg_fix();
 		}
@@ -89,7 +92,7 @@ void extcl_cpu_wr_mem_292(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_292(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (memmap_adr_is_readable(address)) {
+		if (memmap_adr_is_readable(MMCPU(address))) {
 			if ((m292.reg[0] & 0xE0) == 0xC0) {
 				m292.reg[1] = mmcpu.ram[0x06A];
 			} else {
@@ -102,9 +105,7 @@ BYTE extcl_cpu_rd_mem_292(WORD address, BYTE openbus) {
 }
 BYTE extcl_save_mapper_292(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m292.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	return(extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_292(WORD address, WORD value) {
@@ -116,7 +117,7 @@ void prg_swap_mmc3_292(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, value & 0xFF);
 }
 void chr_fix_mmc3_292(void) {
-	map_chr_rom_2k(0x0000, ((mmc3.reg[0] >> 1) ^ m292.reg[1]));
-	map_chr_rom_2k(0x0800, ((mmc3.reg[1] >> 1) ^ ((m292.reg[2] & 0x40) << 1)));
-	map_chr_rom_4k(0x1000, m292.reg[2] & 0x3F);
+	memmap_auto_2k(MMPPU(0x0000), ((mmc3.reg[0] >> 1) ^ m292.reg[1]));
+	memmap_auto_2k(MMPPU(0x0800), ((mmc3.reg[1] >> 1) ^ ((m292.reg[2] & 0x40) << 1)));
+	memmap_auto_4k(MMPPU(0x1000), (m292.reg[2] & 0x3F));
 }

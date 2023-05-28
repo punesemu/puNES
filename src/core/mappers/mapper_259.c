@@ -57,7 +57,7 @@ void map_init_259(void) {
 }
 void extcl_cpu_wr_mem_259(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (memmap_adr_is_writable(address)) {
+		if (memmap_adr_is_writable(MMCPU(address))) {
 			m259.reg = value;
 			MMC3_prg_fix();
 			MMC3_chr_fix();

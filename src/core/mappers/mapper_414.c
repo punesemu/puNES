@@ -47,7 +47,7 @@ void map_init_414(void) {
 
 	if (info.reset == RESET) {
 		m414tmp.index = (m414tmp.index + 1) >= 5 ? 0 : m414tmp.index + 1;
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		m414tmp.index = 0;
 	}
 

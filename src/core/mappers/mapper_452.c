@@ -89,26 +89,26 @@ INLINE static void prg_fix_452(void) {
 
 	if (m452.reg[1] & 0x0002) {
 		bank = m452.reg[0] >> 1;
-		memmap_auto_8k(0x8000, bank);
-		memmap_auto_8k(0xA000, bank);
-		memmap_auto_8k(0xC000, bank);
-		memmap_auto_8k(0xE000, bank);
+		memmap_auto_8k(MMCPU(0x8000), bank);
+		memmap_auto_8k(MMCPU(0xA000), bank);
+		memmap_auto_8k(MMCPU(0xC000), bank);
+		memmap_auto_8k(MMCPU(0xE000), bank);
 	} else if (m452.reg[1] & 0x0008) {
 		bank = m452.reg[0] >> 1;
-		memmap_auto_8k(0x8000, bank);
-		memmap_auto_8k(0xA000, (bank | 0x01));
-		memmap_auto_8k(0xC000, (bank | 0x02));
-		memmap_auto_8k(0xE000, (bank | 0x03 | (m452.reg[1] & 0x0004)));
+		memmap_auto_8k(MMCPU(0x8000), bank);
+		memmap_auto_8k(MMCPU(0xA000), (bank | 0x01));
+		memmap_auto_8k(MMCPU(0xC000), (bank | 0x02));
+		memmap_auto_8k(MMCPU(0xE000), (bank | 0x03 | (m452.reg[1] & 0x0004)));
 	} else {
 		bank = m452.reg[0] >> 2;
-		memmap_auto_16k(0x8000, bank);
-		memmap_auto_16k(0xC000, 0);
+		memmap_auto_16k(MMCPU(0x8000), bank);
+		memmap_auto_16k(MMCPU(0xC000), 0);
 	}
 }
 INLINE static void wram_fix_452(void) {
 	m452tmp.adr1 = 0x8000 | ((m452.reg[1] & 0x30) << 9);
 	m452tmp.adr2 = (m452.reg[1] & 0x0002) ? 0x8000 | (((m452.reg[1] & 0x30) ^ 0x20) << 9) : 0x0000;
-	memmap_auto_8k(0x6000, 0);
+	memmap_auto_8k(MMCPU(0x6000), 0);
 }
 INLINE static void mirroring_fix_452(void) {
 	if (m452.reg[1] & 0x0001) {

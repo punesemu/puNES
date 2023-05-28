@@ -49,8 +49,13 @@ void chr_swap_n118_095(WORD address, WORD value) {
 }
 
 INLINE static void mirroring_fix_095(void) {
-	map_nmt_1k(0, (n118.reg[0] >> 5));
-	map_nmt_1k(1, (n118.reg[0] >> 5));
-	map_nmt_1k(2, (n118.reg[1] >> 5));
-	map_nmt_1k(3, (n118.reg[1] >> 5));
+	memmap_nmt_1k(MMPPU(0x2000), (n118.reg[0] >> 5));
+	memmap_nmt_1k(MMPPU(0x2400), (n118.reg[0] >> 5));
+	memmap_nmt_1k(MMPPU(0x2800), (n118.reg[1] >> 5));
+	memmap_nmt_1k(MMPPU(0x2C00), (n118.reg[1] >> 5));
+
+	memmap_nmt_1k(MMPPU(0x3000), (n118.reg[0] >> 5));
+	memmap_nmt_1k(MMPPU(0x3400), (n118.reg[0] >> 5));
+	memmap_nmt_1k(MMPPU(0x3800), (n118.reg[1] >> 5));
+	memmap_nmt_1k(MMPPU(0x3C00), (n118.reg[1] >> 5));
 }

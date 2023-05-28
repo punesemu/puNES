@@ -123,8 +123,8 @@ void wram_fix_fme7_528(void) {
 }
 void wram_swap_fme7_528(WORD value) {
 	if (fme7.prg[0] == 0x01) {
-		memmap_auto_8k(0x6000, 0);
+		memmap_auto_8k(MMCPU(0x6000), 0);
 	} else {
-		memmap_prgrom_8k(0x6000, value);
+		memmap_prgrom_8k(MMCPU(0x6000), value);
 	}
 }

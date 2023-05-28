@@ -17,9 +17,9 @@
  */
 
 #include "mappers.h"
-#include "mem_map.h"
 
 void prg_swap_vrc2and4_527(WORD address, WORD value);
+void chr_fix_vrc2and4_527(void);
 void chr_swap_vrc2and4_527(WORD address, WORD value);
 void mirroring_fix_vrc2and4_527(void);
 
@@ -33,6 +33,7 @@ void map_init_527(void) {
 
 	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_527;
+	VRC2and4_chr_fix = chr_fix_vrc2and4_527;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_527;
 	VRC2and4_mirroring_fix = mirroring_fix_vrc2and4_527;
 }
@@ -40,14 +41,21 @@ void map_init_527(void) {
 void prg_swap_vrc2and4_527(WORD address, WORD value) {
 	prg_swap_VRC2and4_base(address, (value & 0x1F));
 }
+void chr_fix_vrc2and4_527(void) {
+	chr_fix_VRC2and4_base();
+	mirroring_fix_vrc2and4_527();
+}
 void chr_swap_vrc2and4_527(WORD address, WORD value) {
-	BYTE slot = address >> 10;
-
-	if (slot < 2) {
-		slot <<= 1;
-		map_nmt_1k(slot, ((value & 0x80) >> 7));
-		map_nmt_1k(slot | 0x01, ((value & 0x80) >> 7));
-	}
 	chr_swap_VRC2and4_base(address, (value & 0xFFF));
 }
-void mirroring_fix_vrc2and4_527(void) {}
+void mirroring_fix_vrc2and4_527(void) {
+	memmap_nmt_1k(MMPPU(0x2000), (vrc2and4.chr[0] >> 7));
+	memmap_nmt_1k(MMPPU(0x2400), (vrc2and4.chr[0] >> 7));
+	memmap_nmt_1k(MMPPU(0x2800), (vrc2and4.chr[1] >> 7));
+	memmap_nmt_1k(MMPPU(0x2C00), (vrc2and4.chr[1] >> 7));
+
+	memmap_nmt_1k(MMPPU(0x3000), (vrc2and4.chr[0] >> 7));
+	memmap_nmt_1k(MMPPU(0x3400), (vrc2and4.chr[0] >> 7));
+	memmap_nmt_1k(MMPPU(0x3800), (vrc2and4.chr[1] >> 7));
+	memmap_nmt_1k(MMPPU(0x3C00), (vrc2and4.chr[1] >> 7));
+}

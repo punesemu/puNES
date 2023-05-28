@@ -34,6 +34,5 @@ void extcl_ppu_256_to_319_446(void);
 void extcl_ppu_320_to_34x_446(void);
 void extcl_update_r2006_446(WORD new_r2006, WORD old_r2006);
 void extcl_battery_io_446(BYTE mode, FILE *fp);
-void extcl_wr_chr_446(WORD address, BYTE value);
 
 #endif /* MAPPER_446_H_ */

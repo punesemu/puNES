@@ -24,9 +24,7 @@
 #include "save_slot.h"
 
 INLINE static void prg_fix_100(void);
-INLINE static void prg_swap_100(BYTE bank, WORD value);
 INLINE static void chr_fix_100(void);
-INLINE static void chr_swap_100(BYTE bank, WORD value);
 
 struct _m100 {
 	BYTE reg;
@@ -168,27 +166,18 @@ BYTE extcl_save_mapper_100(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_100(void) {
-	prg_swap_100(0, m100.prg[0]);
-	prg_swap_100(1, m100.prg[1]);
-	prg_swap_100(2, m100.prg[2]);
-	prg_swap_100(3, m100.prg[3]);
-	map_prg_rom_8k_update();
-}
-INLINE static void prg_swap_100(BYTE bank, WORD value) {
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, bank, value);
+	memmap_auto_8k(MMCPU(0x8000), m100.prg[0]);
+	memmap_auto_8k(MMCPU(0xA000), m100.prg[1]);
+	memmap_auto_8k(MMCPU(0xC000), m100.prg[2]);
+	memmap_auto_8k(MMCPU(0xE000), m100.prg[3]);
 }
 INLINE static void chr_fix_100(void) {
-	chr_swap_100(0, m100.chr[0]);
-	chr_swap_100(1, m100.chr[1]);
-	chr_swap_100(2, m100.chr[2]);
-	chr_swap_100(3, m100.chr[3]);
-	chr_swap_100(4, m100.chr[4]);
-	chr_swap_100(5, m100.chr[5]);
-	chr_swap_100(6, m100.chr[6]);
-	chr_swap_100(7, m100.chr[7]);
-}
-INLINE static void chr_swap_100(BYTE bank, WORD value) {
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[bank] = chr_pnt(value << 10);
+	memmap_auto_1k(MMPPU(0x0000), m100.chr[0]);
+	memmap_auto_1k(MMPPU(0x0400), m100.chr[1]);
+	memmap_auto_1k(MMPPU(0x0800), m100.chr[2]);
+	memmap_auto_1k(MMPPU(0x0C00), m100.chr[3]);
+	memmap_auto_1k(MMPPU(0x1000), m100.chr[4]);
+	memmap_auto_1k(MMPPU(0x1400), m100.chr[5]);
+	memmap_auto_1k(MMPPU(0x1800), m100.chr[6]);
+	memmap_auto_1k(MMPPU(0x1C00), m100.chr[7]);
 }

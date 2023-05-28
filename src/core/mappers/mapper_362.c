@@ -40,13 +40,12 @@ void map_init_362(void) {
 	mapper.internal_struct[1] = (BYTE *)&vrc2and4;
 	mapper.internal_struct_size[1] = sizeof(vrc2and4);
 
-	memset(&m362, 0x00, sizeof(m362));
-
 	init_VRC2and4(VRC24_VRC4, 0x01, 0x02, FALSE);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_362;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_362;
 
-	if ((info.reset >= HARD) || (prg.rom.size <= (512 * 1024))) {
+	if ((info.reset >= HARD) || (prgrom_size() <= S512K)) {
+		memset(&m362, 0x00, sizeof(m362));
 		m362.game = 0;
 	} else if (info.reset == RESET) {
 		m362.game ^= 1;
@@ -69,17 +68,17 @@ void extcl_cpu_wr_mem_362(WORD address, BYTE value) {
 BYTE extcl_save_mapper_362(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m362.reg);
 	save_slot_ele(mode, slot, m362.game);
-	extcl_save_mapper_VRC2and4(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
 BYTE extcl_rd_chr_362(WORD address) {
-	const BYTE slot = address >> 10;
+	BYTE reg = address >> 10;
 
-	m362.reg = slot;
-	VRC2and4_prg_fix();
-	VRC2and4_chr_fix();
-	return (chr.bank_1k[slot][address & 0x3FF]);
+	if (m362.reg != reg) {
+		m362.reg = reg;
+		VRC2and4_prg_fix();
+		VRC2and4_chr_fix();
+	}
+	return (chr_rd(address));
 }
 
 void prg_swap_vrc2and4_362(WORD address, WORD value) {

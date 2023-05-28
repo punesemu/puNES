@@ -92,8 +92,8 @@ void extcl_cpu_every_cycle_304(void) {
 }
 
 INLINE static void prg_fix_304(void) {
-	memmap_auto_32k(0x8000, 0);
+	memmap_auto_32k(MMCPU(0x8000), 0);
 }
 INLINE static void wram_fix_304(void) {
-	memmap_prgrom_8k(0x6000, (m304.reg | 0x04));
+	memmap_prgrom_8k(MMCPU(0x6000), (m304.reg | 0x04));
 }

@@ -21,12 +21,11 @@
 
 #include "common.h"
 
-enum _m063_ids { M63_NOID, M63_ID_82IN1O1 };
+enum _m063_ids { M63_ID_82IN1O1 };
 
 void map_init_063(void);
 void extcl_after_mapper_init_063(void);
 void extcl_cpu_wr_mem_063(WORD address, BYTE value);
 BYTE extcl_save_mapper_063(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_063(WORD address, BYTE value);
 
 #endif /* MAPPER_063_H_ */

@@ -24,11 +24,8 @@
 #include "ppu_inline.h"
 #include "save_slot.h"
 
-// TODO : aggiungere l'emulazione della tastiera.
-
 INLINE static void prg_fix_442(void);
 INLINE static void mode1_bpp(WORD address);
-INLINE static BYTE mode1_bpp_rd(WORD address);
 
 struct _m442 {
 	BYTE reg[8];
@@ -52,8 +49,6 @@ void map_init_442(void) {
 
 	memset(&m442, 0x00, sizeof(m442));
 
-	info.prg.ram.banks_8k_plus = 1;
-
 	info.mapper.extend_wr = TRUE;
 }
 void extcl_after_mapper_init_442(void) {
@@ -73,21 +68,19 @@ BYTE extcl_save_mapper_442(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-BYTE extcl_wr_nmt_442(WORD address, UNUSED(BYTE value)) {
+void extcl_wr_chr_442(WORD address, UNUSED(BYTE value)) {
 	mode1_bpp(address);
-	return (FALSE);
-}
-void extcl_wr_chr_442(WORD address, BYTE value) {
-	mode1_bpp(address);
-	if (mapper.write_vram) {
-		chr.bank_1k[address >> 10][address & 0x3FF] = value;
-	}
+	chr_wr(address, value);
 }
 BYTE extcl_rd_chr_442(WORD address) {
 	if ((m442.reg[0] & 0x80) && !m442.pa13) {
-		return (mode1_bpp_rd(address));
+		address = (m442.pa9 << 12) | (address & 0x0FF7) | (m442.pa0 << 3);
 	}
-	return (chr.bank_1k[address >> 10][address & 0x3FF]);
+	return (chr_rd(address));
+}
+void extcl_wr_nmt_442(WORD address, UNUSED(BYTE value)) {
+	mode1_bpp(address);
+	nmt_wr(address, value);
 }
 void extcl_ppu_000_to_255_442(void) {
 	if (r2001.visible) {
@@ -122,12 +115,9 @@ void extcl_ppu_320_to_34x_442(void) {
 }
 
 INLINE static void prg_fix_442(void) {
-	WORD bank;
+	WORD bank = ((m442.reg[0] & 0x40) >> 1) | (m442.reg[0] & 0x1F);
 
-	bank = ((m442.reg[0] & 0x40) >> 1) | (m442.reg[0] & 0x1F);
-	_control_bank(bank, info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, bank);
-	map_prg_rom_8k_update();
+	memmap_auto_32k(MMCPU(0x8000), bank);
 }
 INLINE static void mode1_bpp(WORD address) {
 	BYTE pa13 = (address & 0x2000) >> 13;
@@ -137,8 +127,4 @@ INLINE static void mode1_bpp(WORD address) {
 		m442.pa9 = (address & 0x200) != 0;
 	}
 	m442.pa13 = pa13;
-}
-INLINE static BYTE mode1_bpp_rd(WORD address) {
-	address = (m442.pa9 << 12) | (address & 0x0FF7) | (m442.pa0 << 3);
-	return (chr.bank_1k[address >> 10][address & 0x3FF]);
 }

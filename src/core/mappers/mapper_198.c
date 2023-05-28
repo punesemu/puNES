@@ -61,6 +61,6 @@ BYTE extcl_save_mapper_198(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void wram_fix_mmc3_198(void) {
-	memmap_auto_4k(0x5000, 2);
+	memmap_auto_4k(MMCPU(0x5000), 2);
 	wram_fix_MMC3_base();
 }

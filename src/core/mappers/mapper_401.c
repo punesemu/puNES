@@ -68,7 +68,7 @@ void map_init_401(void) {
 		if (m401tmp.ds_used) {
 			m401tmp.index = (m401tmp.index + 1) % m401tmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		if (info.crc32.prg == 0xC4EBED19) { // Super 19-in-1 (VIP19).nes
 			static BYTE ds[] = { 7, 1, 2, 4, 3, 5, 6, 0 };
 
@@ -92,7 +92,7 @@ void map_init_401(void) {
 }
 void extcl_cpu_wr_mem_401(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m401.reg[3] & 0x40) && memmap_adr_is_writable(address)) {
+		if (!(m401.reg[3] & 0x40) && memmap_adr_is_writable(MMCPU(address))) {
 			m401.reg[m401.index] = value;
 			m401.index = (m401.index + 1) & 0x03;
 			MMC3_prg_fix();

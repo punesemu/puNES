@@ -35,7 +35,9 @@ void map_init_029(void) {
 	mapper.internal_struct[0] = (BYTE *)&m029;
 	mapper.internal_struct_size[0] = sizeof(m029);
 
-	memset(&m029, 0x00, sizeof(m029));
+	if (info.reset >= HARD) {
+		memset(&m029, 0x00, sizeof(m029));
+	}
 }
 void extcl_after_mapper_init_029(void) {
 	prg_fix_029();
@@ -53,18 +55,9 @@ BYTE extcl_save_mapper_029(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_029(void) {
-	WORD bank = 0;
-
-	bank = m029.reg >> 2;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-
-	bank = 0xFF;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_16k(MMCPU(0x8000), (m029.reg >> 2));
+	memmap_auto_16k(MMCPU(0xC000), 0xFF);
 }
 INLINE static void chr_fix_029(void) {
-	map_chr_rom_8k(m029.reg & 0x03);
+	memmap_auto_8k(MMPPU(0x0000), (m029.reg & 0x03));
 }

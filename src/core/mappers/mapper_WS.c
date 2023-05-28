@@ -46,7 +46,7 @@ void map_init_WS(void) {
 
 	if (info.reset == RESET) {
 		wstmp.index = (wstmp.index + 1) >= 3 ? 0 : wstmp.index + 1;
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		wstmp.index = 0;
 	}
 

@@ -255,7 +255,7 @@ void prg_fix_VRC2and4_base(void) {
 	VRC2and4_prg_swap(0xE000, ~0);
 }
 void prg_swap_VRC2and4_base(WORD address, WORD value) {
-	memmap_auto_8k(address, value);
+	memmap_auto_8k(MMCPU(address), value);
 }
 void chr_fix_VRC2and4_base(void) {
 	VRC2and4_chr_swap(0x0000, vrc2and4.chr[0]);
@@ -268,26 +268,26 @@ void chr_fix_VRC2and4_base(void) {
 	VRC2and4_chr_swap(0x1C00, vrc2and4.chr[7]);
 }
 void chr_swap_VRC2and4_base(WORD address, WORD value) {
-	map_chr_rom_1k(address, value);
+	memmap_auto_1k(MMPPU(address), value);
 }
 void wram_fix_VRC2and4_base(void) {
-	memmap_auto_wp_8k(0x6000, 0, !vrc2and4.wram_protect, !vrc2and4.wram_protect);
+	memmap_auto_wp_8k(MMCPU(0x6000), 0, !vrc2and4.wram_protect, !vrc2and4.wram_protect);
 }
 void mirroring_fix_VRC2and4_base(void) {
 	switch (vrc2and4.mirroring & (vrc2and4tmp.type == VRC24_VRC4 ? 0x03 : 0x01)) {
 		default:
 		case 0:
 			mirroring_V();
-			break;
+			return;
 		case 1:
 			mirroring_H();
-			break;
+			return;
 		case 2:
 			mirroring_SCR0();
-			break;
+			return;
 		case 3:
 			mirroring_SCR1();
-			break;
+			return;
 	}
 }
 void wired_fix_VRC2and4_base(void) {}

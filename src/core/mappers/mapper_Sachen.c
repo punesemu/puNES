@@ -51,15 +51,6 @@ void map_init_Sachen(BYTE model) {
 		case SA0036:
 			EXTCL_CPU_WR_MEM(Sachen_sa0036);
 			break;
-		case SA0037:
-			EXTCL_CPU_WR_MEM(Sachen_sa0037);
-
-			if (info.reset >= HARD) {
-				if (info.prg.rom.max.banks_32k != 0xFFFF) {
-					map_prg_rom_8k(4, 0, 0);
-				}
-			}
-			break;
 		case SA8259A:
 		case SA8259B:
 		case SA8259C:
@@ -183,7 +174,7 @@ void map_init_Sachen(BYTE model) {
 			if (info.mapper.id == 150) {
 				if (info.reset == RESET) {
 					sachentmp.dipswitch ^= 0x04;
-				} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+				} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 					sachentmp.dipswitch = 0;
 				}
 			} else {
@@ -207,31 +198,6 @@ void extcl_cpu_wr_mem_Sachen_sa0036(UNUSED(WORD address), BYTE value) {
 	DBWORD bank;
 
 	value >>= 7;
-	control_bank(info.chr.rom.max.banks_8k)
-	bank = value << 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
-}
-
-void extcl_cpu_wr_mem_Sachen_sa0037(WORD address, BYTE value) {
-	/* bus conflict */
-	const BYTE save = value &= prg_rom_rd(address);
-	DBWORD bank;
-
-	if (info.prg.rom.max.banks_32k != 0xFFFF) {
-		value >>= 3;
-		control_bank(info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, value);
-		map_prg_rom_8k_update();
-		value = save;
-	}
-
 	control_bank(info.chr.rom.max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = chr_pnt(bank);

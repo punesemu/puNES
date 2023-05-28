@@ -21,8 +21,6 @@
 
 #include "common.h"
 
-enum _unif8237_type { U8237, U8237A };
-
 void map_init_215(void);
 void extcl_cpu_wr_mem_215(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_215(WORD address, BYTE openbus);

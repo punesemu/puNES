@@ -24,6 +24,5 @@
 void map_init_119(void);
 void extcl_cpu_wr_mem_119(WORD address, BYTE value);
 BYTE extcl_save_mapper_119(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_119(WORD address, BYTE value);
 
 #endif /* MAPPER_119_H_ */

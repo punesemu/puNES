@@ -120,23 +120,14 @@ void extcl_cpu_every_cycle_067(void) {
 }
 
 INLINE static void prg_fix_067(void) {
-	WORD bank = 0;
-
-	bank = m067.prg;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-
-	bank = ~0;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_16k(MMCPU(0x8000), m067.prg);
+	memmap_auto_16k(MMCPU(0xC000), 0xFF);
 }
 INLINE static void chr_fix_067(void) {
-	map_chr_rom_2k(0x0000, m067.chr[0]);
-	map_chr_rom_2k(0x0800, m067.chr[1]);
-	map_chr_rom_2k(0x1000, m067.chr[2]);
-	map_chr_rom_2k(0x1800, m067.chr[3]);
+	memmap_auto_2k(MMPPU(0x0000), m067.chr[0]);
+	memmap_auto_2k(MMPPU(0x0800), m067.chr[1]);
+	memmap_auto_2k(MMPPU(0x1000), m067.chr[2]);
+	memmap_auto_2k(MMPPU(0x1800), m067.chr[3]);
 }
 INLINE static void mirroring_fix_067(void) {
 	switch (m067.mirroring & 0x03) {

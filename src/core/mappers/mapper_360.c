@@ -54,7 +54,7 @@ void map_init_360(void) {
 		if (++m360.dipswitch.index >= LENGTH(dipswitch_360)) {
 			m360.dipswitch.index = 0;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		m360.dipswitch.index = 0;
 	}
 	m360.dipswitch.actual = dipswitch_360[m360.dipswitch.index];

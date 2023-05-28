@@ -25,7 +25,6 @@ void map_init_351(void);
 void extcl_after_mapper_init_351(void);
 void extcl_cpu_wr_mem_351(WORD address, BYTE value);
 BYTE extcl_save_mapper_351(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_351(WORD address, BYTE value);
 void extcl_cpu_every_cycle_351(void);
 void extcl_ppu_000_to_34x_351(void);
 void extcl_ppu_000_to_255_351(void);

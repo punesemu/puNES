@@ -68,7 +68,7 @@ void map_init_344(void) {
 		if (m344tmp.ds_used) {
 			m344tmp.index = (m344tmp.index + 1) % m344tmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		if ((info.crc32.prg == 0xAB2ACA46) || // Kuai Da Jin Ka Zhong Ji Tiao Zhan 3-in-1 (3-in-1,6-in-1,Unl).unif
 			(info.crc32.prg == 0x42F4BF99)) { // 快打金卡终极挑战.nes
 			static BYTE ds[2] = {0x00, 0x78};
@@ -85,7 +85,7 @@ void map_init_344(void) {
 }
 void extcl_cpu_wr_mem_344(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (memmap_adr_is_writable(address)) {
+		if (memmap_adr_is_writable(MMCPU(address))) {
 			m344.reg = address;
 			MMC3_prg_fix();
 			MMC3_chr_fix();

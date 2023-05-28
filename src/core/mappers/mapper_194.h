@@ -25,6 +25,5 @@ enum m194_types { DAI2JI = 1 };
 
 void map_init_194(void);
 BYTE extcl_save_mapper_194(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_194(WORD address, BYTE value);
 
 #endif /* MAPPER_194_H_ */

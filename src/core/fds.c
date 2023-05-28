@@ -165,8 +165,14 @@ BYTE fds_load_rom(void) {
 	info.cpu_rw_extern = TRUE;
 	fds.info.enabled = TRUE;
 
-	// Prg Ram
-	wram_set_ram_size(0x8000);
+	// WRAM
+	wram_set_ram_size(S32K);
+	// VRAM
+	vram_set_ram_size(S8K);
+	// NMT
+	nmt_set_size(S4K);
+	nmt_init();
+	nmt_reset();
 
 	info.mapper.id = FDS_MAPPER;
 	info.machine[HEADER] = NTSC;

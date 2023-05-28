@@ -67,7 +67,7 @@ void map_init_370(void) {
 		if (m370tmp.ds_used) {
 			m370tmp.index = (m370tmp.index + 1) % m370tmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		if (info.crc32.prg == 0x83392938) { // Mario Party II 6-in-1 (Multi)[Unknown].nes
 			static BYTE ds[] = {0x80, 0x00};
 
@@ -123,15 +123,25 @@ void chr_swap_mmc3_370(WORD address, WORD value) {
 void mirroring_fix_mmc3_370(void) {
 	if ((m370.reg & 0x07) == 0x01) {
 		if (mmc3.bank_to_update & 0x80) {
-			map_nmt_1k(0, ((mmc3.reg[2] >> 7) ^ 0x01));
-			map_nmt_1k(1, ((mmc3.reg[3] >> 7) ^ 0x01));
-			map_nmt_1k(2, ((mmc3.reg[4] >> 7) ^ 0x01));
-			map_nmt_1k(3, ((mmc3.reg[5] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x2000), ((mmc3.reg[2] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x2400), ((mmc3.reg[3] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x2800), ((mmc3.reg[4] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x2C00), ((mmc3.reg[5] >> 7) ^ 0x01));
+
+			memmap_nmt_1k(MMPPU(0x3000), ((mmc3.reg[2] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x3400), ((mmc3.reg[3] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x3800), ((mmc3.reg[4] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x3C00), ((mmc3.reg[5] >> 7) ^ 0x01));
 		} else {
-			map_nmt_1k(0, ((mmc3.reg[0] >> 7) ^ 0x01));
-			map_nmt_1k(1, ((mmc3.reg[0] >> 7) ^ 0x01));
-			map_nmt_1k(2, ((mmc3.reg[1] >> 7) ^ 0x01));
-			map_nmt_1k(3, ((mmc3.reg[1] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x2000), ((mmc3.reg[0] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x2400), ((mmc3.reg[0] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x2800), ((mmc3.reg[1] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x2C00), ((mmc3.reg[1] >> 7) ^ 0x01));
+
+			memmap_nmt_1k(MMPPU(0x3000), ((mmc3.reg[0] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x3400), ((mmc3.reg[0] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x3800), ((mmc3.reg[1] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x3C00), ((mmc3.reg[1] >> 7) ^ 0x01));
 		}
 		return;
 	}

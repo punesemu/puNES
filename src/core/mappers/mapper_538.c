@@ -59,11 +59,11 @@ BYTE extcl_save_mapper_538(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_538(void) {
-	memmap_auto_8k(0x8000, ((m538.reg & 0x01) && (~m538.reg & 0x08) ? 0x0A : m538.reg & 0xFE));
-	memmap_auto_8k(0xA000, 0x0D);
-	memmap_auto_8k(0xC000, 0x0E);
-	memmap_auto_8k(0xE000, 0x0F);
+	memmap_auto_8k(MMCPU(0x8000), ((m538.reg & 0x01) && (~m538.reg & 0x08) ? 0x0A : m538.reg & 0xFE));
+	memmap_auto_8k(MMCPU(0xA000), 0x0D);
+	memmap_auto_8k(MMCPU(0xC000), 0x0E);
+	memmap_auto_8k(MMCPU(0xE000), 0x0F);
 }
 INLINE static void wram_fix_538(void) {
-	memmap_prgrom_8k(0x6000, (m538.reg | 0x01));
+	memmap_prgrom_8k(MMCPU(0x6000), (m538.reg | 0x01));
 }

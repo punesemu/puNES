@@ -40,7 +40,7 @@ void map_init_237(void) {
 
 	if (info.reset == RESET) {
 		m237tmp.dipswitch = (m237tmp.dipswitch + 1) & 0x03;
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		m237tmp.dipswitch = 0;
 	}
 

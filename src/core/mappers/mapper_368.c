@@ -129,5 +129,5 @@ INLINE static void prg_fix_368(void) {
 }
 
 INLINE static void wram_fix_368(void) {
-	memmap_prgrom_8k(0x6000, 0x02);
+	memmap_prgrom_8k(MMCPU(0x6000), 0x02);
 }

@@ -61,7 +61,7 @@ void map_init_197(void) {
 }
 void extcl_cpu_wr_mem_197(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (memmap_adr_is_writable(address)) {
+		if (memmap_adr_is_writable(MMCPU(address))) {
 			m197.reg = value;
 			MMC3_prg_fix();
 		}
@@ -102,7 +102,6 @@ void prg_swap_mmc3_197(WORD address, WORD value) {
 }
 void chr_fix_mmc3_197(void) {
 	WORD slot[4];
-	DBWORD bank = 0;
 
 	switch (info.mapper.submapper) {
 		default:
@@ -126,28 +125,8 @@ void chr_fix_mmc3_197(void) {
 			slot[3] = mmc3.reg[5];
 			break;
 	}
-
-	bank = slot[0];
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-
-	bank = slot[1];
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[2] = chr_pnt(bank);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0400);
-
-	bank = slot[2];
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[4] = chr_pnt(bank);
-	chr.bank_1k[5] = chr_pnt(bank | 0x0400);
-
-	bank = slot[3];
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[6] = chr_pnt(bank);
-	chr.bank_1k[7] = chr_pnt(bank | 0x0400);
+	memmap_auto_2k(MMPPU(0x0000), slot[0]);
+	memmap_auto_2k(MMPPU(0x0800), slot[1]);
+	memmap_auto_2k(MMPPU(0x1000), slot[2]);
+	memmap_auto_2k(MMPPU(0x1800), slot[3]);
 }

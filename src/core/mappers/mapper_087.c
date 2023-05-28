@@ -57,7 +57,7 @@ BYTE extcl_save_mapper_087(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_087(void) {
-	memmap_auto_32k(0x8000, 0);
+	memmap_auto_32k(MMCPU(0x8000), 0);
 }
 INLINE static void chr_fix_087(void) {
 	DBWORD bank = ((m087.reg & 0x01) << 1) | ((m087.reg & 0x02) >> 1);

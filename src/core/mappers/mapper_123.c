@@ -105,10 +105,10 @@ void prg_fix_mmc3_123(void) {
 	if (m123.reg & 0x40) {
 		value = (m123.reg & 0x05) | ((m123.reg & 0x08) >> 2) | ((m123.reg & 0x20) >> 2);
 		if (m123.reg & 0x02) {
-			memmap_auto_32k(0x8000, (value >> 1));
+			memmap_auto_32k(MMCPU(0x8000), (value >> 1));
 		} else {
-			memmap_auto_16k(0x8000, value);
-			memmap_auto_16k(0xC000, value);
+			memmap_auto_16k(MMCPU(0x8000), value);
+			memmap_auto_16k(MMCPU(0xC000), value);
 		}
 		return;
 	}

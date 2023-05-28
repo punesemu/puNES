@@ -60,10 +60,9 @@ BYTE extcl_save_mapper_184(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_184(void) {
-	map_prg_rom_8k(4, 0, 0);
-	map_prg_rom_8k_update();
+	memmap_auto_32k(MMCPU(0x8000), 0);
 }
 INLINE static void chr_fix_184(void) {
-	map_chr_rom_4k(0x0000, m184.reg & 0x0F);
-	map_chr_rom_4k(0x1000, m184.reg >> 4);
+	memmap_auto_4k(MMPPU(0x0000), (m184.reg & 0x0F));
+	memmap_auto_4k(MMPPU(0x1000), (m184.reg >> 4));
 }

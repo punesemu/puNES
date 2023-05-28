@@ -37,7 +37,9 @@ void map_init_331(void) {
 	mapper.internal_struct[0] = (BYTE *)&m331;
 	mapper.internal_struct_size[0] = sizeof(m331);
 
-	memset(&m331, 0x00, sizeof(m331));
+	if (info.reset >= HARD) {
+		memset(&m331, 0x00, sizeof(m331));
+	}
 }
 void extcl_after_mapper_init_331(void) {
 	prg_fix_331();
@@ -70,7 +72,7 @@ BYTE extcl_save_mapper_331(BYTE mode, BYTE slot, FILE *fp) {
 
 INLINE static void prg_fix_331(void) {
 	WORD base = (m331.reg[2] & 0x03) << 3;
-	WORD bank[2] = { 0, 0 };
+	WORD bank[2] = { 0 };
 
 	if (m331.reg[2] & 0x08) {
 		bank[0] = base | (m331.reg[0] & 0x06);
@@ -79,20 +81,14 @@ INLINE static void prg_fix_331(void) {
 		bank[0] = base | (m331.reg[0] & 0x07);
 		bank[1] = base | 0x07;
 	}
-
-	_control_bank(bank[0], info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank[0]);
-
-	_control_bank(bank[1], info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank[1]);
-
-	map_prg_rom_8k_update();
+	memmap_auto_16k(MMCPU(0x8000), bank[0]);
+	memmap_auto_16k(MMCPU(0xC000), bank[1]);
 }
 INLINE static void chr_fix_331(void) {
 	WORD base = (m331.reg[2] & 0x03) << 5;
 
-	map_chr_rom_4k(0x0000, (base | (m331.reg[0] >> 3)));
-	map_chr_rom_4k(0x1000, (base | (m331.reg[1] >> 3)));
+	memmap_auto_4k(MMPPU(0x0000), (base | (m331.reg[0] >> 3)));
+	memmap_auto_4k(MMPPU(0x1000), (base | (m331.reg[1] >> 3)));
 }
 INLINE static void mirroring_fix_331(void) {
 	if (m331.reg[2] & 0x04) {

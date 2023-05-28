@@ -23,36 +23,60 @@
 #include "save_slot.h"
 
 INLINE static void prg_fix_289(void);
+INLINE static void chr_fix_289(void);
 INLINE static void mirroring_fix_289(void);
+
+INLINE static void tmp_fix_289(BYTE max, BYTE index, const WORD *ds);
 
 struct _m289 {
 	BYTE reg[3];
 } m289;
+struct _m289tmp {
+	BYTE ds_used;
+	BYTE max;
+	BYTE index;
+	const WORD *dipswitch;
+} m289tmp;
 
 void map_init_289(void) {
 	EXTCL_AFTER_MAPPER_INIT(289);
 	EXTCL_CPU_WR_MEM(289);
 	EXTCL_SAVE_MAPPER(289);
-	EXTCL_WR_CHR(289);
 	mapper.internal_struct[0] = (BYTE *)&m289;
 	mapper.internal_struct_size[0] = sizeof(m289);
 
 	memset(&m289, 0x00, sizeof(m289));
 
+	if (info.reset == RESET) {
+		if (m289tmp.ds_used) {
+			m289tmp.index = (m289tmp.index + 1) % m289tmp.max;
+		}
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memset(&m289tmp, 0x00, sizeof(m289tmp));
+
+		{
+			static WORD ds[] = { 0x00 };
+
+			tmp_fix_289(LENGTH(ds), 0, &ds[0]);
+		}
+	}
+
 	info.mapper.extend_wr = TRUE;
 }
 void extcl_after_mapper_init_289(void) {
 	prg_fix_289();
+	chr_fix_289();
 	mirroring_fix_289();
 }
 void extcl_cpu_wr_mem_289(WORD address, BYTE value) {
-	switch (address & 0xE001) {
+	switch (address & 0xE289) {
 		case 0x6000:
 		case 0x6001:
 		case 0x7000:
 		case 0x7001:
 			m289.reg[address & 0x01] = value & 0x7F;
 			prg_fix_289();
+			chr_fix_289();
 			mirroring_fix_289();
 			break;
 		case 0x8000:
@@ -63,40 +87,39 @@ void extcl_cpu_wr_mem_289(WORD address, BYTE value) {
 		case 0xC001:
 		case 0xE000:
 		case 0xE001:
-			m289.reg[2] = value & 0x07;
+			m289.reg[2] = value;
 			prg_fix_289();
 			mirroring_fix_289();
 			break;
 	}
+}
+BYTE extcl_cpu_rd_mem_289(WORD address, BYTE openbus) {
+	if ((address >= 0x6000) && (address <= 0x7FFF)) {
+		return ((openbus & 0xFC) | (m289tmp.dipswitch[m289tmp.index] & 0x03));
+	}
+	return (openbus);
 }
 BYTE extcl_save_mapper_289(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m289.reg);
 
 	return (EXIT_OK);
 }
-void extcl_wr_chr_289(WORD address, BYTE value) {
-	if (!(m289.reg[0] & 0x04)) {
-		chr.bank_1k[address >> 10][address & 0x3FF] = value;
-	}
-}
 
 INLINE static void prg_fix_289(void) {
 	WORD bank[2];
 
 	if (m289.reg[0] & 0x02) {
-		bank[0] = (m289.reg[1] & ~0x07) | (m289.reg[0] & 0x01 ? 0x07 : m289.reg[2]);
+		bank[0] = (m289.reg[1] & ~0x07) | (m289.reg[0] & 0x01 ? 0x07 : (m289.reg[2] & 0x07));
 		bank[1] = m289.reg[1] | 0x07;
 	} else {
 		bank[0] = m289.reg[1] & ~(m289.reg[0] & 0x01);
 		bank[1] = m289.reg[1] | (m289.reg[0] & 0x01);
 	}
-	_control_bank(bank[0], info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(2, 0, bank[0]);
-
-	_control_bank(bank[1], info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(2, 2, bank[1]);
-
-	map_prg_rom_8k_update();
+	memmap_auto_16k(MMCPU(0x8000), bank[0]);
+	memmap_auto_16k(MMCPU(0xC000), bank[1]);
+}
+INLINE static void chr_fix_289(void) {
+	memmap_vram_wp_8k(MMPPU(0x0000), 0, TRUE, !(m289.reg[0] & 0x04));
 }
 INLINE static void mirroring_fix_289(void) {
 	if (m289.reg[0] & 0x08) {
@@ -104,4 +127,11 @@ INLINE static void mirroring_fix_289(void) {
 	} else {
 		mirroring_V();
 	}
+}
+
+INLINE static void tmp_fix_289(BYTE max, BYTE index, const WORD *ds) {
+	m289tmp.ds_used = TRUE;
+	m289tmp.max = max;
+	m289tmp.index = index;
+	m289tmp.dipswitch = ds;
 }

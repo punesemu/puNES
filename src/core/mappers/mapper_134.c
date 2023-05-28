@@ -65,7 +65,7 @@ void map_init_134(void) {
 		if (m134tmp.ds_used) {
 			m134tmp.index = (m134tmp.index + 1) % m134tmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		memset(&m134tmp, 0x00, sizeof(m134tmp));
 		if (info.crc32.prg == 0x7A9405C1) { // 2-in-1 - Family Kid & Aladdin 4 (Ch) [!].nes
 			static const BYTE ds[] = { 0, 1 };
@@ -104,7 +104,7 @@ void map_init_134(void) {
 }
 void extcl_cpu_wr_mem_134(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (memmap_adr_is_writable(address)) {
+		if (memmap_adr_is_writable(MMCPU(address))) {
 			switch (address & 0x0003) {
 				case 0:
 					if (!(m134.reg[0] & 0x80)) {

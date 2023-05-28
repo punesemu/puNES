@@ -41,8 +41,6 @@ void map_init_Sachen(BYTE model);
 
 void extcl_cpu_wr_mem_Sachen_sa0036(WORD address, BYTE value);
 
-void extcl_cpu_wr_mem_Sachen_sa0037(WORD address, BYTE value);
-
 void extcl_cpu_wr_mem_Sachen_sa8259x(WORD address, BYTE value);
 BYTE extcl_save_mapper_Sachen_sa8259x(BYTE mode, BYTE slot, FILE *fp);
 

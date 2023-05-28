@@ -106,18 +106,18 @@ INLINE static void prg_fix_347(void) {
 		? (((m347.reg[1] & 0x000F) * 0x1000) + 0x08400)
 		: (((m347.reg[1] & 0x000F) * 0x1000) + 0x00000);
 
-	memmap_auto_custom_size(0x8000, prgrom_calc_chunk(0x18000), (0x400 * 14));
-	memmap_wram_custom_size(0xB800, wram_calc_chunk(0xC00), (0x400 * 2));
-	memmap_auto_custom_size(0xC000, prgrom_calc_chunk(chunkc0), (0x400 * 3));
-	memmap_wram_custom_size(0xCC00, wram_calc_chunk(0x1400), (0x400 * 3));
+	memmap_auto_custom_size(MMCPU(0x8000), prgrom_calc_chunk(0x18000), (0x400 * 14));
+	memmap_wram_custom_size(MMCPU(0xB800), wram_calc_chunk(0xC00), (0x400 * 2));
+	memmap_auto_custom_size(MMCPU(0xC000), prgrom_calc_chunk(chunkc0), (0x400 * 3));
+	memmap_wram_custom_size(MMCPU(0xCC00), wram_calc_chunk(0x1400), (0x400 * 3));
 }
 INLINE static void wram_fix_347(void) {
 	DBWORD chunk6c = (((m347.reg[1] & 0x000F) * 0x1000) + (m347tmp.old_mask_rom ? 0x08000 : 0x00C00));
 	DBWORD chunk70 = (((m347.reg[0] & 0x0007) * 0x1000) + (m347tmp.old_mask_rom ? 0x00000 : 0x10000));
 
-	memmap_auto_custom_size(0x6000, wram_calc_chunk(0), (0x400 * 3));
-	memmap_prgrom_custom_size(0x6C00, prgrom_calc_chunk(chunk6c), 0x400);
-	memmap_prgrom_custom_size(0x7000, prgrom_calc_chunk(chunk70), 0x1000);
+	memmap_auto_custom_size(MMCPU(0x6000), wram_calc_chunk(0), (0x400 * 3));
+	memmap_prgrom_custom_size(MMCPU(0x6C00), prgrom_calc_chunk(chunk6c), 0x400);
+	memmap_prgrom_custom_size(MMCPU(0x7000), prgrom_calc_chunk(chunk70), 0x1000);
 }
 INLINE static void mirroring_fix_347(void) {
 	if (m347.reg[0] & 0x0008) {

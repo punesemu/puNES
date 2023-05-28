@@ -209,7 +209,7 @@ void prg_fix_VRC7_base(void) {
 	VRC7_prg_swap(0xE000, ~0);
 }
 void prg_swap_VRC7_base(WORD address, WORD value) {
-	memmap_auto_8k(address, value);
+	memmap_auto_8k(MMCPU(address), value);
 }
 void chr_fix_VRC7_base(void) {
 	VRC7_chr_swap(0x0000, vrc7.chr[0]);
@@ -222,10 +222,10 @@ void chr_fix_VRC7_base(void) {
 	VRC7_chr_swap(0x1C00, vrc7.chr[7]);
 }
 void chr_swap_VRC7_base(WORD address, WORD value) {
-	map_chr_rom_1k(address, value);
+	memmap_auto_1k(MMPPU(address), value);
 }
 void wram_fix_VRC7_base(void) {
-	memmap_auto_wp_8k(0x6000, 0, (vrc7.reg >> 7), (vrc7.reg >> 7));
+	memmap_auto_wp_8k(MMCPU(0x6000), 0, (vrc7.reg >> 7), (vrc7.reg >> 7));
 }
 void mirroring_fix_VRC7_base(void) {
 	switch (vrc7.reg & 0x03) {

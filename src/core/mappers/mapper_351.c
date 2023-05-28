@@ -54,7 +54,6 @@ void map_init_351(void) {
 	EXTCL_AFTER_MAPPER_INIT(351);
 	EXTCL_CPU_WR_MEM(351);
 	EXTCL_SAVE_MAPPER(351);
-	EXTCL_WR_CHR(351);
 	EXTCL_CPU_EVERY_CYCLE(351);
 	EXTCL_PPU_000_TO_34X(351);
 	EXTCL_PPU_000_TO_255(351);
@@ -92,13 +91,12 @@ void map_init_351(void) {
 		// becomes addressable via register $5001. At least one multicart containing both TLROM and UNROM games makes
 		// use of this feature and puts the UNROM game's PRG data into CHR-ROM. This seems to be possible as the mapper ASIC,
 		// PRG and CHR-ROM are under a single glob.
-		if (!mapper.write_vram) {
-			prg_rom() = realloc(prg_rom(), prg_size() + chr_size());
-			memcpy(prg_rom() + prg_size(), chr_rom(), chr_size());
-			prg_size() = prg_size() + chr_size();
-			info.prg.rom.banks_16k = prg_size() / 0x4000;
-			info.prg.rom.banks_8k = info.prg.rom.banks_16k * 2;
-			map_set_banks_max_prg();
+		if (chrrom_size()) {
+			size_t old_prgrom_size = prgrom_size();
+
+			prgrom_set_size(prgrom_size() + chrrom_size());
+			prgrom_pnt() = realloc(prgrom_pnt(), prgrom.real_size);
+			memcpy(prgrom_pnt() + old_prgrom_size, chrrom_pnt(), chrrom_size());
 		}
 	}
 
@@ -149,13 +147,6 @@ BYTE extcl_save_mapper_351(BYTE mode, BYTE slot, FILE *fp) {
 	extcl_save_mapper_MMC1(mode, slot, fp);
 
 	return (EXIT_OK);
-}
-void extcl_wr_chr_351(WORD address, BYTE value) {
-	const BYTE slot = address >> 10;
-
-	if (map_chr_ram_slot_in_range(slot)) {
-		chr.bank_1k[slot][address & 0x3FF] = value;
-	}
 }
 void extcl_cpu_every_cycle_351(void) {
 	if (m351.mapper == M351_MMC3) {
@@ -218,15 +209,12 @@ INLINE static void prg_fix(void) {
 	if (m351.reg[2] & 0x10) {
 		if (m351.reg[2] & 0x04) {
 			bank = m351.reg[1] >> 2;
-			_control_bank(bank, info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, bank);
-			map_prg_rom_8k(2, 2, bank);
+			memmap_auto_16k(MMCPU(0x8000), bank);
+			memmap_auto_16k(MMCPU(0xC000), bank);
 		} else {
 			bank = m351.reg[1] >> 3;
-			_control_bank(bank, info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, bank);
+			memmap_auto_32k(MMCPU(0x8000), bank);
 		}
-		map_prg_rom_8k_update();
 	} else {
 		if (m351.mapper == M351_MMC3) {
 			MMC3_prg_fix();
@@ -238,29 +226,10 @@ INLINE static void prg_fix(void) {
 	}
 }
 INLINE static void chr_fix(void) {
-	DBWORD bank = 0;
-
-	if (m351.reg[2] & 0x01) {
-		chr.bank_1k[0] = &chr.extra.data[0 | 0x0000];
-		chr.bank_1k[1] = &chr.extra.data[0 | 0x0400];
-		chr.bank_1k[2] = &chr.extra.data[0 | 0x0800];
-		chr.bank_1k[3] = &chr.extra.data[0 | 0x0C00];
-		chr.bank_1k[4] = &chr.extra.data[0 | 0x1000];
-		chr.bank_1k[5] = &chr.extra.data[0 | 0x1400];
-		chr.bank_1k[6] = &chr.extra.data[0 | 0x1800];
-		chr.bank_1k[7] = &chr.extra.data[0 | 0x1C00];
+	if ((m351.reg[2] & 0x01) && wram_size()) {
+		memmap_vram_8k(MMPPU(0x0000), 0);
 	} else if (m351.reg[2] & 0x40) {
-		bank = m351.reg[0] >> 2;
-		_control_bank(bank, info.chr.rom.max.banks_8k)
-		bank <<= 13;
-		chr.bank_1k[0] = chr_pnt(bank);
-		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-		chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+		memmap_auto_8k(MMPPU(0x0000), (m351.reg[0] >> 2));
 	} else {
 		if (m351.mapper == M351_MMC3) {
 			MMC3_chr_fix();

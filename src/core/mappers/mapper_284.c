@@ -34,7 +34,6 @@ INLINE static void channel_tick(_m284_channel *channel);
 INLINE static BYTE channel_status(_m284_channel *channel);
 INLINE static void channel_reg(_m284_channel *channel, BYTE address, BYTE value);
 
-const BYTE m284_ext_attrib[4] = { 0x00, 0x55, 0xAA, 0xFF };
 _m284 m284;
 
 void map_init_284(void) {
@@ -60,9 +59,9 @@ void map_init_284(void) {
 	channel_reset(&m284.channel[1]);
 
 	if (info.reset == RESET) {
-		m284.dipswitch = !m284.dipswitch ? 0x80 : 0;
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
-		m284.dipswitch = 0;
+		m284.jumper = !m284.jumper ? 0x80 : 0;
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		m284.jumper = 0;
 	}
 }
 void extcl_after_mapper_init_284(void) {
@@ -123,14 +122,14 @@ void extcl_cpu_wr_mem_284(WORD address, BYTE value) {
 BYTE extcl_cpu_rd_mem_284(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x4000:
-			return (address & 0x0800 ? m284.dipswitch | 'd' : openbus);
+			return (address & 0x0800 ? m284.jumper | 'd' : openbus);
 		case 0x5000:
 			return (address & 0x0800 ? channel_status(&m284.channel[1]) : channel_status(&m284.channel[0]));
 	}
 	return (openbus);
 }
 BYTE extcl_save_mapper_284(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m284.dipswitch);
+	save_slot_ele(mode, slot, m284.jumper);
 	save_slot_ele(mode, slot, m284.control);
 	save_slot_ele(mode, slot, m284.prg);
 	save_slot_ele(mode, slot, m284.chr);
@@ -160,10 +159,11 @@ BYTE extcl_save_mapper_284(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 BYTE extcl_rd_nmt_284(WORD address) {
-	address &= 0x0FFF;
-
 	if ((m284.control & 0x04) && ((address & 0x3FF) >= 0x3C0)) {
-		BYTE bank;
+		const BYTE ext_attrib[4] = { 0x00, 0x55, 0xAA, 0xFF };
+		BYTE bank = 0;
+
+		address &= 0x0FFF;
 
 		switch (mapper.mirroring) {
 			default:
@@ -180,9 +180,9 @@ BYTE extcl_rd_nmt_284(WORD address) {
 				bank = (address & 0x400) ? 1 : 0;
 				break;
 		}
-		return (m284_ext_attrib[m284.extended_attributes[bank][r2006.value & 0x3FF]]);
+		return (ext_attrib[m284.extended_attributes[bank][r2006.value & 0x3FF]]);
 	}
-	return (ntbl.bank_1k[address >> 10][address & 0x3FF]);
+	return (nmt_rd(address));
 }
 void extcl_cpu_every_cycle_284(void) {
 	if (m284.irq.enabled) {
@@ -199,40 +199,19 @@ void extcl_cpu_every_cycle_284(void) {
 }
 
 INLINE static void prg_fix_284(void) {
-	memmap_auto_16k(0x8000, m284.prg);
-	memmap_auto_16k(0xC000, 0x0F);
+	memmap_auto_16k(MMCPU(0x8000), m284.prg);
+	memmap_auto_16k(MMCPU(0xC000), 0x0F);
 }
 INLINE static void chr_fix_284(void) {
-	DBWORD bank;
-
-	bank = m284.chr[0];
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-
-	bank = m284.chr[1];
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[2] = chr_pnt(bank);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0400);
-
-	bank = m284.chr[2];
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[4] = chr_pnt(bank);
-	chr.bank_1k[5] = chr_pnt(bank | 0x0400);
-
-	bank = m284.chr[3];
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[6] = chr_pnt(bank);
-	chr.bank_1k[7] = chr_pnt(bank | 0x0400);
+	memmap_auto_2k(MMPPU(0x0000), m284.chr[0]);
+	memmap_auto_2k(MMPPU(0x0800), m284.chr[1]);
+	memmap_auto_2k(MMPPU(0x1000), m284.chr[2]);
+	memmap_auto_2k(MMPPU(0x1800), m284.chr[3]);
 }
 INLINE static void wram_fix_284(void) {
 	BYTE enabled = (m284.control & 0x08) >> 3;
 
-	memmap_auto_wp_8k(0x6000, 0, enabled, enabled);
+	memmap_auto_wp_8k(MMCPU(0x6000), 0, enabled, enabled);
 }
 INLINE static void mirroring_fix_284(void) {
 	switch (m284.control & 0x03) {
@@ -260,14 +239,14 @@ INLINE static void channel_tick(_m284_channel *channel) {
 		if (channel->pos.read == channel->pos.write) {
 			channel->full = FALSE;
 		}
-		channel_output(channel, (channel->fifo[++channel->pos.read] - 0x80) * channel->vol);
+		channel_output(channel, (SWORD)((channel->fifo[++channel->pos.read] - 0x80) * channel->vol));
 		if (channel->pos.read == channel->pos.write) {
 			channel->empty = TRUE;
 		}
 	}
 }
 INLINE static void channel_output(_m284_channel *channel, SWORD output) {
-	channel->out = output / 10;
+	channel->out = (SWORD)(output / 10);
 }
 INLINE static void channel_reset(_m284_channel *channel) {
 	memset(channel->fifo, 0x00, 256);
@@ -292,27 +271,29 @@ INLINE static void channel_reg(_m284_channel *channel, BYTE address, BYTE value)
 	switch (address) {
 		case 0:
 			channel_reset(channel);
-			break;
+			return;
 		case 1:
 			if (channel->pos.read == channel->pos.write) {
 				channel->empty = FALSE;
-				channel_output(channel, (value - 0x80) * channel->vol);
+				channel_output(channel, (SWORD)((value - 0x80) * channel->vol));
 				channel->timer = channel->freq;
 			}
 			channel->fifo[channel->pos.write++] = value;
 			if (channel->pos.read == channel->pos.write) {
 				channel->full = TRUE;
 			}
-			break;
+			return;
 		case 2:
 			channel->freq = (channel->freq & 0x0F00) | value;
-			break;
+			return;
 		case 3:
 			channel->freq = (channel->freq & 0x00FF) | ((value & 0x0F) << 8);
 			channel->vol = (value & 0xF0) >> 4;
 			if (!channel->empty) {
-				channel_output(channel, (channel->fifo[channel->pos.read] - 0x80) * channel->vol);
+				channel_output(channel, (SWORD)((channel->fifo[channel->pos.read] - 0x80) * channel->vol));
 			}
-			break;
+			return;
+		default:
+			return;
 	}
 }

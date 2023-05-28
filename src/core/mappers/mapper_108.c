@@ -92,7 +92,7 @@ BYTE extcl_save_mapper_108(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_108(void) {
-	memmap_prgrom_32k(0x8000, 0xFF);
+	memmap_prgrom_32k(MMCPU(0x8000), 0xFF);
 }
 INLINE static void chr_fix_108(void) {
 	if (!mapper.write_vram) {
@@ -111,5 +111,5 @@ INLINE static void chr_fix_108(void) {
 	}
 }
 INLINE static void wram_fix_108(void) {
-	memmap_prgrom_8k(0x6000, info.mapper.submapper == 4 ? 0xFF : m108.reg);
+	memmap_prgrom_8k(MMCPU(0x6000), info.mapper.submapper == 4 ? 0xFF : m108.reg);
 }

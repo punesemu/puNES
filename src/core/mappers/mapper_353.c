@@ -29,14 +29,12 @@ void mirroring_fix_mmc3_353(void);
 
 struct _m353 {
 	BYTE reg;
-	BYTE chr_writable;
 } m353;
 
 void map_init_353(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(353);
 	EXTCL_SAVE_MAPPER(353);
-	EXTCL_WR_CHR(353);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
 	EXTCL_PPU_000_TO_255(MMC3);
@@ -104,7 +102,6 @@ void extcl_cpu_wr_mem_353(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_353(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m353.reg);
-	save_slot_ele(mode, slot, m353.chr_writable);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
@@ -113,11 +110,6 @@ BYTE extcl_save_mapper_353(BYTE mode, BYTE slot, FILE *fp) {
 	}
 
 	return (EXIT_OK);
-}
-void extcl_wr_chr_353(WORD address, BYTE value) {
-	if (m353.chr_writable) {
-		chr.bank_1k[address >> 10][address & 0x3FF] = value;
-	}
 }
 
 void prg_swap_mmc3_353(WORD address, WORD value) {
@@ -135,33 +127,37 @@ void prg_swap_mmc3_353(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_mmc3_353(WORD address, WORD value) {
-	WORD base = m353.reg << 7;
-	WORD mask = 0x7F;
-
-	if ((m353.reg == 2) && (mmc3.reg[0] & 0x80) && chr.extra.data) {
-		m353.chr_writable = TRUE;
-		value = address >> 10;
-		control_bank(info.chr.ram.max.banks_1k)
-		chr.bank_1k[address >> 10] = &chr.extra.data[value << 10];
+	if ((m353.reg == 2) && (mmc3.reg[0] & 0x80) && vram_size()) {
+		memmap_vram_1k(MMPPU(address), address >> 10);
 	} else {
-		m353.chr_writable = FALSE;
-		value = (base & ~mask) | (value & mask);
-		control_bank(info.chr.rom.max.banks_1k)
-		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+		WORD base = m353.reg << 7;
+		WORD mask = 0x7F;
+
+		memmap_auto_1k(MMPPU(address), ((base & ~mask) | (value & mask)));
 	}
 }
 void mirroring_fix_mmc3_353(void) {
 	if (!m353.reg) {
-		 if (!(mmc3.reg[0] & 0x80)) {
-			map_nmt_1k(0, ((mmc3.reg[0] >> 7) ^ 0x01));
-			map_nmt_1k(1, ((mmc3.reg[0] >> 7) ^ 0x01));
-			map_nmt_1k(2, ((mmc3.reg[1] >> 7) ^ 0x01));
-			map_nmt_1k(3, ((mmc3.reg[1] >> 7) ^ 0x01));
-		 } else {
-			map_nmt_1k(0, ((mmc3.reg[2] >> 7) ^ 0x01));
-			map_nmt_1k(1, ((mmc3.reg[3] >> 7) ^ 0x01));
-			map_nmt_1k(2, ((mmc3.reg[4] >> 7) ^ 0x01));
-			map_nmt_1k(3, ((mmc3.reg[5] >> 7) ^ 0x01));
+		if (!(mmc3.reg[0] & 0x80)) {
+			memmap_nmt_1k(MMPPU(0x2000), ((mmc3.reg[0] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x2400), ((mmc3.reg[0] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x2800), ((mmc3.reg[1] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x2C00), ((mmc3.reg[1] >> 7) ^ 0x01));
+
+			memmap_nmt_1k(MMPPU(0x3000), ((mmc3.reg[0] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x3400), ((mmc3.reg[0] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x3800), ((mmc3.reg[1] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x3C00), ((mmc3.reg[1] >> 7) ^ 0x01));
+		} else {
+			memmap_nmt_1k(MMPPU(0x2000), ((mmc3.reg[2] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x2400), ((mmc3.reg[3] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x2800), ((mmc3.reg[4] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x2C00), ((mmc3.reg[5] >> 7) ^ 0x01));
+
+			memmap_nmt_1k(MMPPU(0x3000), ((mmc3.reg[2] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x3400), ((mmc3.reg[3] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x3800), ((mmc3.reg[4] >> 7) ^ 0x01));
+			memmap_nmt_1k(MMPPU(0x3C00), ((mmc3.reg[5] >> 7) ^ 0x01));
 		 }
 	} else {
 		mirroring_fix_MMC3_base();

@@ -46,7 +46,7 @@ void map_init_200(void) {
 		if (m200tmp.dipswitch) {
 			m200tmp.index = (m200tmp.index + 1) % m200tmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		memset(&m200tmp, 0x00, sizeof(m200tmp));
 
 		if (info.crc32.prg == 0x478E9E8A) { // 4-in-1 (Multi)[Unknown][Mapper 204].nes

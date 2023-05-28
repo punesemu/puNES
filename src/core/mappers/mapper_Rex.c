@@ -63,7 +63,7 @@ void map_init_Rexdbz(void) {
 		if (rexdbztmp.ds_used) {
 			rexdbztmp.index = (rexdbztmp.index + 1) % rexdbztmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		static const BYTE ds[] = { 0, 1 };
 
 		memset(&rexdbztmp, 0x00, sizeof(rexdbztmp));

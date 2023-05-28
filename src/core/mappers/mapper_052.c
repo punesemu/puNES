@@ -68,7 +68,7 @@ void map_init_052(void) {
 }
 void extcl_cpu_wr_mem_052(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m052.reg & 0x80) && memmap_adr_is_readable(address)) {
+		if (!(m052.reg & 0x80) && memmap_adr_is_readable(MMCPU(address))) {
 			m052.reg = value;
 			MMC3_prg_fix();
 			MMC3_chr_fix();

@@ -25,6 +25,6 @@ void map_init_168(void);
 void extcl_after_mapper_init_168(void);
 void extcl_cpu_wr_mem_168(WORD address, BYTE value);
 BYTE extcl_save_mapper_168(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_168(WORD address, BYTE value);
+void extcl_cpu_every_cycle_168(void);
 
 #endif /* MAPPER_168_H_ */

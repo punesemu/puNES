@@ -65,7 +65,7 @@ void map_init_334(void) {
 		if (m334tmp.ds_used) {
 			m334tmp.index = (m334tmp.index + 1) % m334tmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		memset(&m334tmp, 0x00, sizeof(m334tmp));
 		if (info.crc32.prg == 0x7EC6DF24) { // 5-in-1 (Multi)[Unknown][1993 Copyrights].nes
 			static const BYTE ds[] = { 1, 0 };
@@ -81,7 +81,7 @@ void map_init_334(void) {
 }
 void extcl_cpu_wr_mem_334(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(address & 0x0001) && memmap_adr_is_writable(address)) {
+		if (!(address & 0x0001) && memmap_adr_is_writable(MMCPU(address))) {
 			m334.reg = value;
 			MMC3_prg_fix();
 			MMC3_chr_fix();
@@ -94,7 +94,7 @@ void extcl_cpu_wr_mem_334(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_334(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (m334tmp.ds_used && (address & 0x0002) && memmap_adr_is_readable(address)) {
+		if (m334tmp.ds_used && (address & 0x0002) && memmap_adr_is_readable(MMCPU(address))) {
 			return ((openbus & 0xFE) | (m334tmp.dipswitch[m334tmp.index] & 0x01));
 		}
 	}

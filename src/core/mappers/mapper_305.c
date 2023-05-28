@@ -57,26 +57,26 @@ BYTE extcl_save_mapper_305(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_305(void) {
-	memmap_auto_2k(0x8000, 15);
-	memmap_auto_2k(0x8800, 14);
-	memmap_auto_2k(0x9000, 13);
-	memmap_auto_2k(0x9800, 12);
-	memmap_auto_2k(0xA000, 11);
-	memmap_auto_2k(0xA800, 10);
-	memmap_auto_2k(0xB000, 9);
-	memmap_auto_2k(0xB800, 8);
-	memmap_auto_2k(0xC000, 7);
-	memmap_auto_2k(0xC800, 6);
-	memmap_auto_2k(0xD000, 5);
-	memmap_auto_2k(0xD800, 4);
-	memmap_auto_2k(0xE000, 3);
-	memmap_auto_2k(0xE800, 2);
-	memmap_auto_2k(0xF000, 1);
-	memmap_auto_2k(0xF800, 0);
+	memmap_auto_2k(MMCPU(0x8000), 15);
+	memmap_auto_2k(MMCPU(0x8800), 14);
+	memmap_auto_2k(MMCPU(0x9000), 13);
+	memmap_auto_2k(MMCPU(0x9800), 12);
+	memmap_auto_2k(MMCPU(0xA000), 11);
+	memmap_auto_2k(MMCPU(0xA800), 10);
+	memmap_auto_2k(MMCPU(0xB000), 9);
+	memmap_auto_2k(MMCPU(0xB800), 8);
+	memmap_auto_2k(MMCPU(0xC000), 7);
+	memmap_auto_2k(MMCPU(0xC800), 6);
+	memmap_auto_2k(MMCPU(0xD000), 5);
+	memmap_auto_2k(MMCPU(0xD800), 4);
+	memmap_auto_2k(MMCPU(0xE000), 3);
+	memmap_auto_2k(MMCPU(0xE800), 2);
+	memmap_auto_2k(MMCPU(0xF000), 1);
+	memmap_auto_2k(MMCPU(0xF800), 0);
 }
 INLINE static void wram_fix_305(void) {
-	memmap_prgrom_2k(0x6000, m305.reg[0]);
-	memmap_prgrom_2k(0x6800, m305.reg[1]);
-	memmap_prgrom_2k(0x7000, m305.reg[2]);
-	memmap_prgrom_2k(0x7800, m305.reg[3]);
+	memmap_prgrom_2k(MMCPU(0x6000), m305.reg[0]);
+	memmap_prgrom_2k(MMCPU(0x6800), m305.reg[1]);
+	memmap_prgrom_2k(MMCPU(0x7000), m305.reg[2]);
+	memmap_prgrom_2k(MMCPU(0x7800), m305.reg[3]);
 }

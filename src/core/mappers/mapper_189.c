@@ -67,7 +67,7 @@ void extcl_cpu_wr_mem_189(WORD address, BYTE value) {
 			return;
 		case 0x6000:
 		case 0x7000:
-			if (memmap_adr_is_writable(address)) {
+			if (memmap_adr_is_writable(MMCPU(address))) {
 				m189.reg = value;
 				MMC3_prg_fix();
 				MMC3_chr_fix();

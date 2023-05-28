@@ -63,7 +63,7 @@ void map_init_105(void) {
 		if (m105tmp.ds_used) {
 			m105tmp.index = (m105tmp.index + 1) % m105tmp.max;
 		}
-	} else if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		if (
 			(info.crc32.prg == 0x0B0E128F) || // Nintendo World Championships 1990 (U) [!].nes
 			(info.crc32.prg == 0x00CA6F07)) {
