@@ -18,39 +18,48 @@
 
 #include <string.h>
 #include "mappers.h"
+#include "cpu.h"
 #include "mem_map.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_241(void);
+INLINE static void prg_fix_324(void);
 
-struct _m241 {
-	WORD reg;
-} m241;
+struct _m324 {
+	BYTE reg;
+} m324;
 
-void map_init_241(void) {
-	EXTCL_AFTER_MAPPER_INIT(241);
-	EXTCL_CPU_WR_MEM(241);
-	EXTCL_SAVE_MAPPER(241);
-	mapper.internal_struct[0] = (BYTE *)&m241;
-	mapper.internal_struct_size[0] = sizeof(m241);
+void map_init_324(void) {
+	EXTCL_AFTER_MAPPER_INIT(324);
+	EXTCL_CPU_WR_MEM(324);
+	EXTCL_SAVE_MAPPER(324);
+	mapper.internal_struct[0] = (BYTE *)&m324;
+	mapper.internal_struct_size[0] = sizeof(m324);
 
 	if (info.reset >= HARD) {
-		memset(&m241, 0x00, sizeof(m241));
+		memset(&m324, 0x00, sizeof(m324));
 	}
 }
-void extcl_after_mapper_init_241(void) {
-	prg_fix_241();
+void extcl_after_mapper_init_324(void) {
+	prg_fix_324();
 }
-void extcl_cpu_wr_mem_241(UNUSED(WORD address), BYTE value) {
-	m241.reg = value;
-	prg_fix_241();
+void extcl_cpu_wr_mem_324(WORD address, UNUSED(BYTE value)) {
+	if ((m324.reg & 0x08) || (m324.reg & 0x80) || !(value & 0x80)) {
+		m324.reg = (m324.reg & 0xF8) | (value & 0x07);
+	} else {
+		// bus conflict
+		m324.reg = value & prgrom_rd(address);
+	}
+	prg_fix_324();
 }
-BYTE extcl_save_mapper_241(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m241.reg);
+BYTE extcl_save_mapper_324(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m324.reg);
 
 	return (EXIT_OK);
 }
 
-INLINE static void prg_fix_241(void) {
-	memmap_auto_32k(MMCPU(0x8000), m241.reg);
+INLINE static void prg_fix_324(void) {
+	WORD bank = ((m324.reg & 0x70) >> 1) | (m324.reg & 0x07);
+
+	memmap_auto_16k(MMCPU(0x8000), bank);
+	memmap_auto_16k(MMCPU(0xC000), (bank | 0x07));
 }

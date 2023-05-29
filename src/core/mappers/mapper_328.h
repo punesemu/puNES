@@ -16,12 +16,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_CC_21_H_
-#define MAPPER_CC_21_H_
+#ifndef MAPPER_328_H_
+#define MAPPER_328_H_
 
 #include "common.h"
 
-void map_init_CC_21(void);
-void extcl_cpu_wr_mem_CC_21(WORD address, BYTE value);
+void map_init_328(void);
+void extcl_after_mapper_init_328(void);
+BYTE extcl_cpu_rd_mem_328(WORD address, BYTE openbus);
 
-#endif /* MAPPER_CC_21_H_ */
+#endif /* MAPPER_328_H_ */

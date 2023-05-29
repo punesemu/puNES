@@ -151,7 +151,7 @@ BYTE map_init(void) {
 			map_init_026();
 			break;
 		case 27:
-			map_init_CC_21();
+			map_init_027();
 			break;
 		case 28:
 			map_init_028();
@@ -838,7 +838,7 @@ BYTE map_init(void) {
 			map_init_289();
 			break;
 		case 290:
-			map_init_BMCNTD03();
+			map_init_290();
 			break;
 		case 291:
 			map_init_291();
@@ -868,7 +868,7 @@ BYTE map_init(void) {
 			map_init_302();
 			break;
 		case 303:
-			map_init_KS7017();
+			map_init_303();
 			break;
 		case 304:
 			map_init_304();
@@ -892,13 +892,13 @@ BYTE map_init(void) {
 			map_init_311();
 			break;
 		case 312:
-			map_init_KS7013B();
+			map_init_312();
 			break;
 		case 313:
 			map_init_313();
 			break;
 		case 314:
-			map_init_BMC64IN1NOREPEAT();
+			map_init_314();
 			break;
 		case 315:
 			map_init_315();
@@ -916,7 +916,7 @@ BYTE map_init(void) {
 			map_init_323();
 			break;
 		case 324:
-			map_init_FARIDUNROM8IN1();
+			map_init_324();
 			break;
 		case 325:
 			map_init_325();
@@ -925,7 +925,7 @@ BYTE map_init(void) {
 			map_init_327();
 			break;
 		case 328:
-			map_init_RT_01();
+			map_init_328();
 			break;
 		case 329:
 			map_init_329();
@@ -934,7 +934,7 @@ BYTE map_init(void) {
 			map_init_331();
 			break;
 		case 332:
-			map_init_WS();
+			map_init_332();
 			break;
 		case 333:
 			map_init_333();
@@ -943,10 +943,10 @@ BYTE map_init(void) {
 			map_init_334();
 			break;
 		case 335:
-			map_init_CTC09();
+			map_init_335();
 			break;
 		case 336:
-			map_init_K3046();
+			map_init_336();
 			break;
 		case 337:
 			map_init_337();
@@ -958,7 +958,7 @@ BYTE map_init(void) {
 			map_init_339();
 			break;
 		case 340:
-			map_init_K3036();
+			map_init_340();
 			break;
 		case 341:
 			map_init_TJ03();
@@ -976,7 +976,7 @@ BYTE map_init(void) {
 			map_init_345();
 			break;
 		case 346:
-			map_init_KS7012();
+			map_init_346();
 			break;
 		case 347:
 			map_init_347();
@@ -1171,7 +1171,7 @@ BYTE map_init(void) {
 			map_init_437();
 			break;
 		case 438:
-			map_init_K3071();
+			map_init_438();
 			break;
 		case 442:
 			map_init_442();

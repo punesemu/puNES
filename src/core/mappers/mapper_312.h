@@ -16,13 +16,14 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_BMC64IN1NOREPEAT_H_
-#define MAPPER_BMC64IN1NOREPEAT_H_
+#ifndef MAPPER_312_H_
+#define MAPPER_312_H_
 
 #include "common.h"
 
-void map_init_BMC64IN1NOREPEAT(void);
-void extcl_cpu_wr_mem_BMC64IN1NOREPEAT(WORD address, BYTE value);
-BYTE extcl_save_mapper_BMC64IN1NOREPEAT(BYTE mode, BYTE slot, FILE *fp);
+void map_init_312(void);
+void extcl_after_mapper_init_312(void);
+void extcl_cpu_wr_mem_312(WORD address, BYTE value);
+BYTE extcl_save_mapper_312(BYTE mode, BYTE slot, FILE *fp);
 
-#endif /* MAPPER_BMC64IN1NOREPEAT_H_ */
+#endif /* MAPPER_312_H_ */

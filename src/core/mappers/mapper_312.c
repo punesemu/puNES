@@ -18,53 +18,57 @@
 
 #include <string.h>
 #include "mappers.h"
+#include "cpu.h"
+#include "mem_map.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_046(void);
-INLINE static void chr_fix_046(void);
+INLINE static void prg_fix_312(void);
+INLINE static void mirroring_fix_312(void);
 
-struct _m046 {
-	BYTE reg[2];
-} m046;
+struct _m312 {
+	WORD reg[2];
+} m312;
 
-void map_init_046(void) {
-	EXTCL_AFTER_MAPPER_INIT(046);
-	EXTCL_CPU_WR_MEM(046);
-	EXTCL_SAVE_MAPPER(046);
-	mapper.internal_struct[0] = (BYTE *)&m046;
-	mapper.internal_struct_size[0] = sizeof(m046);
+void map_init_312(void) {
+	EXTCL_AFTER_MAPPER_INIT(312);
+	EXTCL_CPU_WR_MEM(312);
+	EXTCL_SAVE_MAPPER(312);
+	mapper.internal_struct[0] = (BYTE *)&m312;
+	mapper.internal_struct_size[0] = sizeof(m312);
 
-	memset(&m046, 0x00, sizeof(m046));
+	if (info.reset >= HARD) {
+		memset(&m312, 0x00, sizeof(m312));
+	}
 
 	info.mapper.extend_wr = TRUE;
 }
-void extcl_after_mapper_init_046(void) {
-	prg_fix_046();
-	chr_fix_046();
+void extcl_after_mapper_init_312(void) {
+	prg_fix_312();
+	mirroring_fix_312();
 }
-void extcl_cpu_wr_mem_046(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_312(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		m046.reg[0] = value;
-		prg_fix_046();
-		chr_fix_046();
-		return;
+		m312.reg[0] = value;
+		prg_fix_312();
 	} else if (address >= 0x8000) {
-		// bus conflict
-		m046.reg[1] = value & prgrom_rd(address);
-		prg_fix_046();
-		chr_fix_046();
-		return;
+		m312.reg[1] = value;
+		mirroring_fix_312();
 	}
 }
-BYTE extcl_save_mapper_046(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m046.reg);
+BYTE extcl_save_mapper_312(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m312.reg);
 
 	return (EXIT_OK);
 }
 
-INLINE static void prg_fix_046(void) {
-	memmap_auto_32k(MMCPU(0x8000), (((m046.reg[0] & 0x0F) << 1) | (m046.reg[1] & 0x01)));
+INLINE static void prg_fix_312(void) {
+	memmap_auto_16k(MMCPU(0x8000), m312.reg[0]);
+	memmap_auto_16k(MMCPU(0xC000), 0xFF);
 }
-INLINE static void chr_fix_046(void) {
-	memmap_auto_8k(MMPPU(0x0000), (((m046.reg[0] & 0xF0) >> 1) | ((m046.reg[1] & 0x70) >> 4)));
+INLINE static void mirroring_fix_312(void) {
+	if (m312.reg[1] & 0x01) {
+		mirroring_H();
+	} else {
+		mirroring_V();
+	}
 }

@@ -16,12 +16,28 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_K3046_H_
-#define MAPPER_K3046_H_
+#include <stdlib.h>
+#include "mappers.h"
+#include "info.h"
 
-#include "common.h"
+INLINE static void prg_fix_328(void);
 
-void map_init_K3046(void);
-void extcl_cpu_wr_mem_K3046(WORD address, BYTE value);
+void map_init_328(void) {
+	EXTCL_AFTER_MAPPER_INIT(328);
+	EXTCL_CPU_RD_MEM(328);
 
-#endif /* MAPPER_K3046_H_ */
+	info.mapper.extend_rd = TRUE;
+}
+void extcl_after_mapper_init_328(void) {
+	prg_fix_328();
+}
+BYTE extcl_cpu_rd_mem_328(WORD address, BYTE openbus) {
+	if (((address >= 0xCE80) && (address < 0xCF00)) || ((address >= 0xFE80) && (address < 0xFF00))) {
+		return (0xF2 | (rand() & 0x0D));
+	}
+	return (openbus);
+}
+
+INLINE static void prg_fix_328(void) {
+	memmap_auto_32k(MMCPU(0x8000), 0);
+}

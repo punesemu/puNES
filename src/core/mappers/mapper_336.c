@@ -18,28 +18,41 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
+#include "cpu.h"
 #include "mem_map.h"
+#include "save_slot.h"
 
-void map_init_K3036(void) {
-	EXTCL_CPU_WR_MEM(K3036);
+INLINE static void prg_fix_336(void);
 
-	extcl_cpu_wr_mem_K3036(0x8000, 0xFF);
-}
-void extcl_cpu_wr_mem_K3036(WORD address, UNUSED(BYTE value)) {
-	BYTE outer = address & 0x1F;
+struct _m336 {
+	WORD reg;
+} m336;
 
-	value = outer;
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, value);
-	value = outer | (address & 0x0020 ? 0 : 7);
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, value);
-	map_prg_rom_8k_update();
+void map_init_336(void) {
+	EXTCL_AFTER_MAPPER_INIT(336);
+	EXTCL_CPU_WR_MEM(336);
+	EXTCL_SAVE_MAPPER(336);
+	mapper.internal_struct[0] = (BYTE *)&m336;
+	mapper.internal_struct_size[0] = sizeof(m336);
 
-	if ((address & 0x0025) == 0x0025) {
-		mirroring_H();
-	} else {
-		mirroring_V();
+	if (info.reset >= HARD) {
+		memset(&m336, 0x00, sizeof(m336));
 	}
+}
+void extcl_after_mapper_init_336(void) {
+	prg_fix_336();
+}
+void extcl_cpu_wr_mem_336(UNUSED(WORD address), BYTE value) {
+	m336.reg = value | prgrom_rd(address);
+	prg_fix_336();
+}
+BYTE extcl_save_mapper_336(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m336.reg);
+
+	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_336(void) {
+	memmap_auto_16k(MMCPU(0x8000), m336.reg);
+	memmap_auto_16k(MMCPU(0xC000), (m336.reg | 0x07));
 }

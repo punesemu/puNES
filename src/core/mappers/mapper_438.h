@@ -16,18 +16,14 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <stdlib.h>
-#include "mappers.h"
-#include "info.h"
+#ifndef MAPPER_438_H_
+#define MAPPER_438_H_
 
-void map_init_RT_01(void) {
-	EXTCL_CPU_RD_MEM(RT_01);
+#include "common.h"
 
-	info.mapper.extend_rd = TRUE;
-}
-BYTE extcl_cpu_rd_mem_RT_01(WORD address, BYTE openbus) {
-	if (((address >= 0xCE80) && (address < 0xCF00)) || ((address >= 0xFE80) && (address < 0xFF00))) {
-		return (0xF2 | (rand() & 0x0D));
-	}
-	return (openbus);
-}
+void map_init_438(void);
+void extcl_after_mapper_init_438(void);
+void extcl_cpu_wr_mem_438(WORD address, BYTE value);
+BYTE extcl_save_mapper_438(BYTE mode, BYTE slot, FILE *fp);
+
+#endif /* MAPPER_438_H_ */

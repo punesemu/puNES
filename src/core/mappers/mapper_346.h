@@ -16,23 +16,14 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
-#include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
+#ifndef MAPPER_346_H_
+#define MAPPER_346_H_
 
-void map_init_K3046(void) {
-	EXTCL_CPU_WR_MEM(K3046);
+#include "common.h"
 
-	extcl_cpu_wr_mem_K3046(0x8000, 0x00);
-}
-void extcl_cpu_wr_mem_K3046(UNUSED(WORD address), BYTE value) {
-	BYTE outer = value & 0x38;
+void map_init_346(void);
+void extcl_after_mapper_init_346(void);
+void extcl_cpu_wr_mem_346(WORD address, BYTE value);
+BYTE extcl_save_mapper_346(BYTE mode, BYTE slot, FILE *fp);
 
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, value);
-	value = outer | 0x07;
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, value);
-	map_prg_rom_8k_update();
-}
+#endif /* MAPPER_346_H_ */

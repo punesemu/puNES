@@ -17,32 +17,48 @@
  */
 
 #include "mappers.h"
+#include "cpu.h"
 #include "mem_map.h"
-#include "info.h"
+#include "save_slot.h"
 
-void map_init_KS7012(void) {
-	EXTCL_CPU_WR_MEM(KS7012);
+INLINE static void prg_fix_346(void);
 
-	{
-		BYTE value = 0xFF;
+struct _m346 {
+	WORD reg;
+} m346;
 
-		control_bank(info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, value);
+void map_init_346(void) {
+	EXTCL_AFTER_MAPPER_INIT(346);
+	EXTCL_CPU_WR_MEM(346);
+	EXTCL_SAVE_MAPPER(346);
+	mapper.internal_struct[0] = (BYTE *)&m346;
+	mapper.internal_struct_size[0] = sizeof(m346);
+
+	if (info.reset >= HARD) {
+		m346.reg = 1;
 	}
 }
-void extcl_cpu_wr_mem_KS7012(WORD address, BYTE value) {
+void extcl_after_mapper_init_346(void) {
+	prg_fix_346();
+}
+void extcl_cpu_wr_mem_346(WORD address, UNUSED(BYTE value)) {
 	switch (address) {
 		case 0xE0A0:
-			value = 0;
-			control_bank(info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, value);
-			map_prg_rom_8k_update();
+			m346.reg = 0;
+			prg_fix_346();
 			return;
 		case 0xEE36:
-			value = 1;
-			control_bank(info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, value);
-			map_prg_rom_8k_update();
+			m346.reg = 1;
+			prg_fix_346();
 			return;
 	}
+}
+BYTE extcl_save_mapper_346(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m346.reg);
+
+	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_346(void) {
+	memmap_auto_32k(MMCPU(0x8000), m346.reg);
 }

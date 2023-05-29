@@ -16,13 +16,14 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_FARIDUNROM8IN1_H_
-#define MAPPER_FARIDUNROM8IN1_H_
+#ifndef MAPPER_335_H_
+#define MAPPER_335_H_
 
 #include "common.h"
 
-void map_init_FARIDUNROM8IN1(void);
-void extcl_cpu_wr_mem_FARIDUNROM8IN1(WORD address, BYTE value);
-BYTE extcl_save_mapper_FARIDUNROM8IN1(BYTE mode, BYTE slot, FILE *fp);
+void map_init_335(void);
+void extcl_after_mapper_init_335(void);
+void extcl_cpu_wr_mem_335(WORD address, BYTE value);
+BYTE extcl_save_mapper_335(BYTE mode, BYTE slot, FILE *fp);
 
-#endif /* MAPPER_FARIDUNROM8IN1_H_ */
+#endif /* MAPPER_335_H_ */

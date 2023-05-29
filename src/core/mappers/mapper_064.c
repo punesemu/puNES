@@ -187,7 +187,7 @@ void extcl_ppu_256_to_319_064(void) {
 		ppu_spr_adr((ppu.frame_x & 0x0038) >> 3);
 	}
 
-	m064.irq.a12 = ((ppu.spr_adr & 0x1000) > (ppu.bck_adr & 0x1000));
+	m064.irq.a12 = (ppu.spr_adr & 0x1000) >> 12;
 }
 void extcl_ppu_320_to_34x_064(void) {
 	if ((ppu.frame_x & 0x0007) != 0x0003) {
@@ -200,10 +200,10 @@ void extcl_ppu_320_to_34x_064(void) {
 
 	ppu_bck_adr(r2000.bpt_adr, r2006.value);
 
-	m064.irq.a12 = ((ppu.bck_adr & 0x1000) > (ppu.spr_adr & 0x1000));
+	m064.irq.a12 = (ppu.bck_adr & 0x1000) >> 12;
 }
-void extcl_update_r2006_064(WORD new_r2006, WORD old_r2006) {
-	m064.irq.a12 = ((new_r2006 & 0x1000) > (old_r2006 & 0x1000));
+void extcl_update_r2006_064(WORD new_r2006, UNUSED(WORD old_r2006)) {
+	m064.irq.a12 = (new_r2006 & 0x1000) >> 12;
 }
 void extcl_cpu_every_cycle_064(void) {
 	if (m064.irq.delay && !(--m064.irq.delay)) {
