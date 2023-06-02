@@ -276,26 +276,6 @@ BYTE ines_load_rom(void) {
 
 		nmt_set_size(S4K);
 		nmt_init();
-		nmt_reset();
-
-		switch (info.mapper.mirroring) {
-			default:
-			case MIRRORING_HORIZONTAL:
-				mirroring_H();
-				break;
-			case MIRRORING_VERTICAL:
-				mirroring_V();
-				break;
-			case MIRRORING_FOURSCR:
-				mirroring_FSCR();
-				break;
-			case MIRRORING_SINGLE_SCR0:
-				mirroring_SCR0();
-				break;
-			case MIRRORING_SINGLE_SCR1:
-				mirroring_SCR1();
-				break;
-		}
 
 		// gestione Vs. System
 //		if ((info.mapper.id != 99) && !vs_system.ppu && !vs_system.special_mode.type) {
@@ -614,26 +594,10 @@ void search_in_database(void) {
 						info.chr.rom.banks_8k = 0;
 					}
 					break;
-				case 2:
-//					// Fix per "Best of the Best - Championship Karate (E) [!].nes"
-//					// che ha l'header INES non corretto.
-//					if (info.id == BAD_INES_BOTBE) {
-//						info.prg.rom.banks_16k = 16;
-//						info.chr.rom.banks_8k = 0;
-//					}
-//					break;
 				case 10:
 					// Fix per Famicom Wars (J) [!] che ha l'header INES errato
 					if (info.id == BAD_INES_FWJ) {
 						info.chr.rom.banks_8k = 8;
-					}
-					break;
-				case 11:
-					// Fix per King Neptune's Adventure (Color Dreams) [!]
-					// che ha l'header INES errato
-					if (info.id == BAD_KING_NEPT) {
-						info.prg.rom.banks_16k = 4;
-						info.chr.rom.banks_8k = 4;
 					}
 					break;
 				case 33:
@@ -644,12 +608,6 @@ void search_in_database(void) {
 				case 63:
 					if (info.id == M63_ID_82IN1O1) {
 						info.prg.rom.banks_16k = 256;
-					}
-					break;
-				case 113:
-					if (info.id == BAD_INES_SWAUS) {
-						info.prg.rom.banks_16k = 1;
-						info.chr.rom.banks_8k = 2;
 					}
 					break;
 				case 191:

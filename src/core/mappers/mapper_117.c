@@ -18,87 +18,223 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
-#include "irqA12.h"
+#include "cpu.h"
+#include "ppu.h"
 #include "save_slot.h"
+#include "mem_map.h"
+#include "ppu_inline.h"
+
+INLINE static void prg_fix_117(void);
+INLINE static void chr_fix_117(void);
+INLINE static void wram_fix_117(void);
+INLINE static void mirroring_fix_117(void);
+
+INLINE static void irq_clock_117(void);
 
 struct _m117 {
-	BYTE delay;
+	BYTE prg[4];
+	BYTE chr[8];
+	BYTE mirroring;
+	struct _m117_irq {
+		BYTE mode;
+		BYTE enable;
+		BYTE reload;
+		BYTE a12_filter;
+		union _m117_irq_counter {
+			BYTE b[2];
+			WORD w[1];
+		} counter;
+	} irq;
 } m117;
 
 void map_init_117(void) {
+	EXTCL_AFTER_MAPPER_INIT(117);
 	EXTCL_CPU_WR_MEM(117);
 	EXTCL_SAVE_MAPPER(117);
-	EXTCL_PPU_000_TO_34X(MMC3);
-	EXTCL_PPU_000_TO_255(MMC3);
-	EXTCL_PPU_256_TO_319(MMC3);
-	EXTCL_PPU_320_TO_34X(MMC3);
-	EXTCL_UPDATE_R2006(MMC3);
-	EXTCL_IRQ_A12_CLOCK(117);
+	EXTCL_PPU_000_TO_255(117);
+	EXTCL_PPU_256_TO_319(117);
+	EXTCL_PPU_320_TO_34X(117);
+	EXTCL_UPDATE_R2006(117);
 	EXTCL_CPU_EVERY_CYCLE(117);
 	mapper.internal_struct[0] = (BYTE *)&m117;
 	mapper.internal_struct_size[0] = sizeof(m117);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m117, 0x00, sizeof(m117));
+	if (info.reset >= HARD) {
+		memset(&m117, 0x00, sizeof(m117));
 
-	irqA12.present = TRUE;
+		m117.prg[0] = 0xFC;
+		m117.prg[1] = 0xFD;
+		m117.prg[2] = 0xFE;
+		m117.prg[3] = 0xFF;
+
+		m117.chr[0] = 0;
+		m117.chr[0] = 1;
+		m117.chr[0] = 2;
+		m117.chr[0] = 3;
+		m117.chr[0] = 4;
+		m117.chr[0] = 5;
+		m117.chr[0] = 6;
+		m117.chr[0] = 7;
+	}
+}
+void extcl_after_mapper_init_117(void) {
+	prg_fix_117();
+	chr_fix_117();
+	wram_fix_117();
+	mirroring_fix_117();
 }
 void extcl_cpu_wr_mem_117(WORD address, BYTE value) {
-	switch (address) {
+	switch (address & 0xF000) {
 		case 0x8000:
-		case 0x8001:
-		case 0x8002:
-		case 0x8003:
-			control_bank(info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, address & 0x0003, value);
-			map_prg_rom_8k_update();
+			m117.prg[address & 0x03] = value;
+			prg_fix_117();
 			return;
 		case 0xA000:
-		case 0xA001:
-		case 0xA002:
-		case 0xA003:
-		case 0xA004:
-		case 0xA005:
-		case 0xA006:
-		case 0xA007:
-			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[address & 0x0007] = chr_pnt(value << 10);
-			return;
-		case 0xC001:
-			irqA12.reload = value;
-			return;
-		case 0xC002:
-			irq.high &= ~EXT_IRQ;
-			return;
-		case 0xC003:
-			irqA12.counter = irqA12.reload;
-			return;
-		case 0xD000:
-			if (value & 0x01) {
-				mirroring_H();
-			} else {
-				mirroring_V();
+			if (!(address & 0x0008)) {
+				m117.chr[address & 0x07] = value;
+				chr_fix_117();
 			}
 			return;
+		case 0xC000:
+			switch (address & 0x03) {
+				case 0:
+					m117.irq.counter.b[0] = value;
+					break;
+				case 1:
+					m117.irq.counter.b[1] = value;
+					m117.irq.reload = TRUE;
+					break;
+				case 2:
+					m117.irq.enable = FALSE;
+					break;
+				case 3:
+					m117.irq.enable = TRUE;
+					break;
+			}
+			irq.high &= ~EXT_IRQ;
+			return;
+		case 0xD000:
+			m117.mirroring = value;
+			mirroring_fix_117();
+			return;
 		case 0xE000:
-			irqA12.enable = value & 0x01;
+			m117.irq.mode = value;
+			return;
+		default:
 			return;
 	}
 }
 BYTE extcl_save_mapper_117(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m117.delay);
+	save_slot_ele(mode, slot, m117.prg);
+	save_slot_ele(mode, slot, m117.chr);
+	save_slot_ele(mode, slot, m117.mirroring);
+	save_slot_ele(mode, slot, m117.irq.mode);
+	save_slot_ele(mode, slot, m117.irq.enable);
+	save_slot_ele(mode, slot, m117.irq.reload);
+	save_slot_ele(mode, slot, m117.irq.a12_filter);
+	save_slot_ele(mode, slot, m117.irq.counter.w);
 
 	return (EXIT_OK);
 }
-void extcl_irq_A12_clock_117(void) {
-	if (irqA12.enable && irqA12.counter && !(--irqA12.counter)) {
-		m117.delay = 2;
+void extcl_ppu_000_to_255_117(void) {
+	if (r2001.visible) {
+		extcl_ppu_320_to_34x_117();
+	}
+}
+void extcl_ppu_256_to_319_117(void) {
+	if ((ppu.frame_x & 0x0007) != 0x0003) {
+		return;
+	}
+
+	if ((!spr_ev.count_plus || (spr_ev.tmp_spr_plus == spr_ev.count_plus)) && (r2000.size_spr == 16)) {
+		ppu.spr_adr = r2000.spt_adr;
+	} else {
+		ppu_spr_adr((ppu.frame_x & 0x0038) >> 3);
+	}
+
+	if ((ppu.spr_adr & 0x1000) > (ppu.bck_adr & 0x1000)) {
+		irq_clock_117();
+	}
+}
+void extcl_ppu_320_to_34x_117(void) {
+	if ((ppu.frame_x & 0x0007) != 0x0003) {
+		return;
+	}
+
+	if (ppu.frame_x == 323) {
+		ppu_spr_adr(7);
+	}
+
+	ppu_bck_adr(r2000.bpt_adr, r2006.value);
+
+	if ((ppu.bck_adr & 0x1000) > (ppu.spr_adr & 0x1000)) {
+		irq_clock_117();
+	}
+}
+void extcl_update_r2006_117(WORD new_r2006, UNUSED(WORD old_r2006)) {
+	if ((new_r2006 & 0x1000) > (old_r2006 & 0x1000)) {
+		irq_clock_117();
 	}
 }
 void extcl_cpu_every_cycle_117(void) {
-	if (m117.delay && !(--m117.delay)) {
+	if (m117.irq.a12_filter) {
+		m117.irq.a12_filter--;
+	}
+	if (m117.irq.enable && !(m117.irq.mode & 0x02) && m117.irq.counter.w[0] && !--m117.irq.counter.w[0]){
 		irq.high |= EXT_IRQ;
 	}
 }
+
+INLINE static void prg_fix_117(void) {
+	memmap_auto_8k(MMCPU(0x8000), m117.prg[0]);
+	memmap_auto_8k(MMCPU(0xA000), m117.prg[1]);
+	memmap_auto_8k(MMCPU(0xC000), m117.prg[2]);
+	memmap_auto_8k(MMCPU(0xE000), 0xFF);
+}
+INLINE static void chr_fix_117(void) {
+	memmap_auto_1k(MMPPU(0x0000), m117.chr[0]);
+	memmap_auto_1k(MMPPU(0x0400), m117.chr[1]);
+	memmap_auto_1k(MMPPU(0x0800), m117.chr[2]);
+	memmap_auto_1k(MMPPU(0x0C00), m117.chr[3]);
+	memmap_auto_1k(MMPPU(0x1000), m117.chr[4]);
+	memmap_auto_1k(MMPPU(0x1400), m117.chr[5]);
+	memmap_auto_1k(MMPPU(0x1800), m117.chr[6]);
+	memmap_auto_1k(MMPPU(0x1C00), m117.chr[7]);
+}
+INLINE static void wram_fix_117(void) {
+	memmap_prgrom_8k(MMCPU(0x6000), m117.prg[3]);
+}
+INLINE static void mirroring_fix_117(void) {
+	switch (m117.mirroring & 0x03) {
+		case 0:
+			mirroring_V();
+			return;
+		case 1:
+			mirroring_H();
+			return;
+		case 2:
+			mirroring_SCR0();
+			return;
+		case 3:
+			mirroring_SCR1();
+			return;
+	}
+}
+
+INLINE static void irq_clock_117(void) {
+	if (m117.irq.mode & 0x01) {
+		if (!m117.irq.a12_filter && (m117.irq.mode & 0x02)) {
+			if (!m117.irq.counter.b[0] || m117.irq.reload) {
+				m117.irq.counter.b[0] = m117.irq.counter.b[1];
+			} else {
+				m117.irq.counter.b[0]--;
+			}
+			if (!m117.irq.counter.b[0] && m117.irq.enable) {
+				irq.high |= EXT_IRQ;
+			}
+			m117.irq.reload = FALSE;
+		}
+		m117.irq.a12_filter = 5;
+	}
+}
+

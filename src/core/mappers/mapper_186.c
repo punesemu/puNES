@@ -19,7 +19,6 @@
 #include <string.h>
 #include "mappers.h"
 #include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_186(void);
@@ -36,6 +35,10 @@ void map_init_186(void) {
 	EXTCL_SAVE_MAPPER(186);
 	mapper.internal_struct[0] = (BYTE *)&m186;
 	mapper.internal_struct_size[0] = sizeof(m186);
+
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memmap_wram_region_init(S1K);
+	}
 
 	if (info.reset >= HARD) {
 		memset(&m186, 0x00, sizeof(m186));
@@ -69,10 +72,6 @@ BYTE extcl_cpu_rd_mem_186(WORD address, BYTE openbus) {
 BYTE extcl_save_mapper_186(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m186.reg);
 
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_186();
-	}
-
 	return (EXIT_OK);
 }
 
@@ -81,6 +80,6 @@ INLINE static void prg_fix_186(void) {
 	memmap_auto_16k(MMCPU(0xC000), 0);
 }
 INLINE static void wram_fix_186(void) {
-	memmap_auto_wp_custom_size(MMCPU(0x4400), 0, TRUE, TRUE, 0xC00);
+	memmap_auto_custom_size(MMCPU(0x4400), 0, (size_t)(0x400 * 3));
 	memmap_auto_8k(MMCPU(0x6000), m186.reg[0] >> 6);
 }

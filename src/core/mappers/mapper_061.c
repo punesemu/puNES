@@ -16,33 +16,55 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
+#include "save_slot.h"
+
+INLINE static void prg_fix_061(void);
+INLINE static void mirroring_fix_061(void);
+
+struct _m061 {
+	WORD reg;
+} m061;
 
 void map_init_061(void) {
+	EXTCL_AFTER_MAPPER_INIT(061);
 	EXTCL_CPU_WR_MEM(061);
+	EXTCL_SAVE_MAPPER(061);
+	mapper.internal_struct[0] = (BYTE *)&m061;
+	mapper.internal_struct_size[0] = sizeof(m061);
 
-	if (info.reset >= HARD) {
-		map_prg_rom_8k(4, 0, 0);
+	memset(&m061, 0x00, sizeof(m061));
+}
+void extcl_after_mapper_init_061(void) {
+	prg_fix_061();
+	mirroring_fix_061();
+}
+void extcl_cpu_wr_mem_061(WORD address, UNUSED(BYTE value)) {
+	m061.reg = address;
+	prg_fix_061();
+	mirroring_fix_061();
+}
+BYTE extcl_save_mapper_061(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m061.reg);
+
+	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_061(void) {
+	WORD bank = ((m061.reg & 0x0F) << 1) | ((m061.reg & 0x20) >> 5);
+
+	if (m061.reg & 0x10) {
+		memmap_auto_16k(MMCPU(0x8000), bank);
+		memmap_auto_16k(MMCPU(0xC000), bank);
+	} else {
+		memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
 	}
 }
-void extcl_cpu_wr_mem_061(WORD address, BYTE value) {
-	if (address & 0x0080) {
+INLINE static void mirroring_fix_061(void) {
+	if (m061.reg & 0x80) {
 		mirroring_H();
-	} else  {
+	} else {
 		mirroring_V();
 	}
-
-	if (address & 0x0010) {
-		value = ((address << 1) & 0x1E) | ((address >> 5) & 0x01);
-		control_bank(info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, value);
-		map_prg_rom_8k(2, 2, value);
-	} else {
-		value = address & 0x0F;
-		control_bank(info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, value);
-	}
-	map_prg_rom_8k_update();
 }

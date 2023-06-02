@@ -55,7 +55,7 @@
 #define RS_SCALE (1.0f / (1.0f + (float)RAND_MAX))
 
 #if defined (DEBUG)
-WORD PCBREAK = 0xC425;
+WORD PCBREAK = 0x7F92;
 #endif
 
 INLINE static void emu_frame_started(void);
@@ -731,12 +731,6 @@ BYTE emu_reset(BYTE type) {
 		gfx_monitor_set_res(cfg->fullscreen_res_w, cfg->fullscreen_res_h, cfg->adaptive_rrate, TRUE);
 	}
 #endif
-
-	map_chr_bank_1k_reset();
-
-	if (info.reset >= HARD) {
-		prgrom_reset();
-	}
 
 	// APU
 	apu_turn_on();

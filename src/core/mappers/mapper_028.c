@@ -18,111 +18,68 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
-#include "cpu.h"
 #include "save_slot.h"
 
-enum m28_reg { INNERBNK, MODEBNK, OUTERBNK };
+INLINE static void prg_fix_028(void);
+INLINE static void chr_fix_028(void);
+INLINE static void mirroring_fix_028(void);
 
-INLINE static void nmt_setup_028(void);
-INLINE static void prg_setup_028(void);
-INLINE static BYTE calc_prg_bank_028(WORD address);
+INLINE static WORD prg_bank_028(WORD address);
 
 struct _m028 {
 	BYTE index;
-	BYTE mirroring;
-	BYTE prg[3];
+	BYTE reg[4];
 } m028;
-static BYTE const inner_and[4] = { 0x01, 0x03, 0x07, 0x0F };
 
 void map_init_028(void) {
+	EXTCL_AFTER_MAPPER_INIT(028);
 	EXTCL_CPU_WR_MEM(028);
-	EXTCL_CPU_RD_MEM(028);
 	EXTCL_SAVE_MAPPER(028);
 	mapper.internal_struct[0] = (BYTE *)&m028;
 	mapper.internal_struct_size[0] = sizeof(m028);
 
 	if (info.reset >= HARD) {
-		memset(&m028, 0x00, sizeof(m028));
-		m028.prg[OUTERBNK] = 0x3F;
-		m028.prg[INNERBNK] = 0x0F;
+		memset(&m028, 0xFF, sizeof(m028));
 	}
 
 	info.mapper.extend_wr = TRUE;
 }
+void extcl_after_mapper_init_028(void) {
+	prg_fix_028();
+	chr_fix_028();
+	mirroring_fix_028();
+}
 void extcl_cpu_wr_mem_028(WORD address, BYTE value) {
-	if (address < 0x5000) {
-		return;
-	}
-	if (address < 0x6000) {
+	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		m028.index = ((value & 0x80) >> 6) | (value & 0x01);
 		return;
-	}
-	if (address < 0x8000) {
+	} else if (address >= 0x8000) {
+		m028.reg[m028.index] = value;
+		if (!(m028.index & 0x02) && !(m028.reg[2] & 0x02)) {
+			m028.reg[2] = (m028.reg[2] & 0xFE) | ((value & 0x10) >> 4);
+		}
+		prg_fix_028();
+		chr_fix_028();
+		mirroring_fix_028();
 		return;
 	}
-
-	switch (m028.index) {
-		case 0: {
-			DBWORD bank;
-
-			if (!(m028.mirroring & 0x02)) {
-				m028.mirroring = (m028.mirroring & 0x02) | ((value & 0x10) >> 4);
-				nmt_setup_028();
-			}
-
-			value &= 0x03;
-			control_bank(info.chr.rom.max.banks_8k)
-			bank = value << 13;
-			chr.bank_1k[0] = chr_pnt(bank);
-			chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-			chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-			chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-			chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-			chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-			chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-			chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
-			return;
-		}
-		case 1:
-			m028.prg[INNERBNK] = value & 0x0F;
-			prg_setup_028();
-
-			if (!(m028.mirroring & 0x02)) {
-				m028.mirroring = (m028.mirroring & 0x02) | ((value & 0x10) >> 4);
-				nmt_setup_028();
-			}
-			return;
-		case 2:
-			m028.prg[MODEBNK] = value & 0x3C;
-			prg_setup_028();
-
-			m028.mirroring = value & 0x03;
-			nmt_setup_028();
-			return;
-		case 3:
-			m028.prg[OUTERBNK] = value & 0x3F;
-			prg_setup_028();
-			return;
-	}
-}
-BYTE extcl_cpu_rd_mem_028(WORD address, BYTE openbus) {
-	if ((address > 0x4FFF) && (address < 0x6000)) {
-		return (cpu.openbus.before);
-	}
-	return (openbus);
 }
 BYTE extcl_save_mapper_028(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m028.index);
-	save_slot_ele(mode, slot, m028.mirroring);
-	save_slot_ele(mode, slot, m028.prg);
+	save_slot_ele(mode, slot, m028.reg);
 
 	return (EXIT_OK);
 }
 
-INLINE static void nmt_setup_028(void) {
-	switch (m028.mirroring) {
+INLINE static void prg_fix_028(void) {
+	memmap_auto_16k(MMCPU(0x8000), prg_bank_028(0x8000));
+	memmap_auto_16k(MMCPU(0xC000), prg_bank_028(0xC000));
+}
+INLINE static void chr_fix_028(void) {
+	memmap_auto_8k(MMPPU(0x0000), (m028.reg[0] & 0x03));
+}
+INLINE static void mirroring_fix_028(void) {
+	switch (m028.reg[2] & 0x03) {
 		case 0:
 			mirroring_SCR0();
 			break;
@@ -137,24 +94,14 @@ INLINE static void nmt_setup_028(void) {
 			break;
 	}
 }
-INLINE static void prg_setup_028(void) {
-	BYTE value;
 
-	value = calc_prg_bank_028(0x8000);
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, value);
-
-	value = calc_prg_bank_028(0xC000);
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, value);
-
-	map_prg_rom_8k_update();
-}
-INLINE static BYTE calc_prg_bank_028(WORD address) {
-	BYTE cpu_a14 = (address >> 14) & 0x01;
-	BYTE outer_bank = m028.prg[OUTERBNK] << 1;
-	BYTE bank_mode = m028.prg[MODEBNK] >> 2;
-	BYTE current_bank = m028.prg[INNERBNK];
+INLINE static WORD prg_bank_028(WORD address) {
+	static const WORD bank_size_masks[4] = { 0x01, 0x03, 0x07, 0x0F };
+	WORD cpu_a14 = (address >> 14) & 0x01;
+	WORD outer_bank = m028.reg[3] << 1;
+	WORD bank_mode = m028.reg[2] >> 2;
+	WORD current_bank = m028.reg[1];
+	WORD bank_size_mask = 0;
 
 	if (((bank_mode ^ cpu_a14) & 0x03) == 0x02) {
 		bank_mode = 0;
@@ -162,5 +109,6 @@ INLINE static BYTE calc_prg_bank_028(WORD address) {
 	if ((bank_mode & 0x02) == 0) {
 		current_bank = (current_bank << 1) | cpu_a14;
 	}
-	return (((current_bank ^ outer_bank) & inner_and[(bank_mode >> 2) & 0x03]) ^ outer_bank);
+	bank_size_mask = bank_size_masks[(bank_mode >> 2) & 0x03];
+	return ((current_bank & bank_size_mask) | (outer_bank & ~bank_size_mask));
 }

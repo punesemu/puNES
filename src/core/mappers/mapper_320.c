@@ -35,9 +35,7 @@ void map_init_320(void) {
 	mapper.internal_struct[0] = (BYTE *)&m320;
 	mapper.internal_struct_size[0] = sizeof(m320);
 
-	if (info.reset) {
-		memset(&m320, 0x00, sizeof(m320));
-	}
+	memset(&m320, 0x00, sizeof(m320));
 }
 void extcl_after_mapper_init_320(void) {
 	prg_fix_320();

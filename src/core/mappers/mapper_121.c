@@ -47,7 +47,10 @@ void map_init_121(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m121, 0x00, sizeof(m121));
+
+	if (info.reset >= HARD) {
+		memset(&m121, 0x00, sizeof(m121));
+	}
 
 	init_MMC3();
 	MMC3_prg_swap = prg_swap_mmc3_121;
@@ -114,17 +117,13 @@ void prg_swap_mmc3_121(WORD address, WORD value) {
 		value = m121.reg[slot - 1];
 		mask = 0xFF;
 	}
-
-	value = base | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, slot, value);
-	map_prg_rom_8k_update();
+	memmap_auto_8k(MMCPU(address), (base | (value & mask)));
 }
 void chr_swap_mmc3_121(WORD address, WORD value) {
 	const BYTE slot = address >> 10;
 	WORD base = 0;
 
-	if (prg_size() > (1024 * 256)) {
+	if (prgrom_size() > S256K) {
 		base = (m121.reg[3] & 0x80) << 1;
 	} else if ((slot & 0x04) == ((mmc3.bank_to_update & 0x80) >> 5)) {
 		base = 0x100;

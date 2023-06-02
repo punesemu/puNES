@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "cpu.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_340(void);
@@ -59,7 +57,7 @@ BYTE extcl_save_mapper_340(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_340(void) {
-	WORD bank = (((m340.reg & 0x80) >> 2) | (m340.reg & 0x1F));
+	WORD bank = ((m340.reg & 0x80) >> 2) | (m340.reg & 0x1F);
 
 	if (m340.reg & 0x20) {
 		if (!(m340.reg & 0x01)) {

@@ -97,39 +97,14 @@ void wram_swap_ks202_056(WORD address, WORD value) {
 }
 
 INLINE static void chr_fix_056(void) {
-	DBWORD bank = 0;
-
-	bank = m056.chr[0];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[0] = chr_pnt(bank << 10);
-
-	bank = m056.chr[1];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[1] = chr_pnt(bank << 10);
-
-	bank = m056.chr[2];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[2] = chr_pnt(bank << 10);
-
-	bank = m056.chr[3];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[3] = chr_pnt(bank << 10);
-
-	bank = m056.chr[4];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[4] = chr_pnt(bank << 10);
-
-	bank = m056.chr[5];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[5] = chr_pnt(bank << 10);
-
-	bank = m056.chr[6];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[6] = chr_pnt(bank << 10);
-
-	bank = m056.chr[7];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[7] = chr_pnt(bank << 10);
+	memmap_auto_1k(MMPPU(0x0000), m056.chr[0]);
+	memmap_auto_1k(MMPPU(0x0400), m056.chr[1]);
+	memmap_auto_1k(MMPPU(0x0800), m056.chr[2]);
+	memmap_auto_1k(MMPPU(0x0C00), m056.chr[3]);
+	memmap_auto_1k(MMPPU(0x1000), m056.chr[4]);
+	memmap_auto_1k(MMPPU(0x1400), m056.chr[5]);
+	memmap_auto_1k(MMPPU(0x1800), m056.chr[6]);
+	memmap_auto_1k(MMPPU(0x1C00), m056.chr[7]);
 }
 INLINE static void mirroring_fix_056(void) {
 	if (m056.mirroring & 0x01) {

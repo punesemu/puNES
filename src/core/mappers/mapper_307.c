@@ -18,8 +18,6 @@
 
 #include "mappers.h"
 #include "info.h"
-#include "mem_map.h"
-#include "save_slot.h"
 
 void prg_fix_n118_307(void);
 void chr_fix_n118_307(void);
@@ -35,6 +33,10 @@ void map_init_307(void) {
 	mapper.internal_struct[0] = (BYTE *)&n118;
 	mapper.internal_struct_size[0] = sizeof(n118);
 
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memmap_prg_region_init(S4K);
+	}
+
 	init_N118();
 	N118_prg_fix = prg_fix_n118_307;
 	N118_chr_fix = chr_fix_n118_307;
@@ -46,11 +48,6 @@ void extcl_after_mapper_init_307(void) {
 }
 BYTE extcl_save_mapper_307(BYTE mode, BYTE slot, FILE *fp) {
 	extcl_save_mapper_N118(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		N118_prg_fix();
-		wram_fix_307();
-	}
 
 	return (EXIT_OK);
 }

@@ -18,12 +18,11 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "info.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_171(void);
-INLINE static void wram_fix_171(void);
+INLINE static void chr_fix_171(void);
 
 struct _m171 {
 	BYTE reg[2];
@@ -37,18 +36,14 @@ void map_init_171(void) {
 	if (info.reset >= HARD) {
 		memset(&m171, 0x00, sizeof(m171));
 	}
-
-	info.mapper.extend_wr = TRUE;
 }
 void extcl_after_mapper_init_171(void) {
 	prg_fix_171();
-	wram_fix_171();
+	chr_fix_171();
 }
 void extcl_cpu_wr_mem_171(WORD address, BYTE value) {
-	if ((address >= 0x4000) && (address <= 0x4FFF)) {
-		m171.reg[address & 0x01] = value;
-		wram_fix_171();
-	}
+	m171.reg[address & 0x01] = value;
+	chr_fix_171();
 }
 BYTE extcl_save_mapper_171(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m171.reg);
@@ -59,7 +54,7 @@ BYTE extcl_save_mapper_171(BYTE mode, BYTE slot, FILE *fp) {
 INLINE static void prg_fix_171(void) {
 	memmap_auto_32k(MMCPU(0x8000), 0);
 }
-INLINE static void wram_fix_171(void) {
-	memmap_prgrom_4k(MMCPU(0x6000), m171.reg[0]);
-	memmap_prgrom_4k(MMCPU(0x7000), m171.reg[1]);
+INLINE static void chr_fix_171(void) {
+	memmap_auto_4k(MMPPU(0x0000), m171.reg[0]);
+	memmap_auto_4k(MMPPU(0x1000), m171.reg[1]);
 }

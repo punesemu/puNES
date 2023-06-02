@@ -215,7 +215,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			return (cpu.openbus.actual);
 		}
 	}
-	/* Prg Ram (normale ed extra (battery packed o meno) */
+	// WRam (normale ed extra (battery packed o meno)
 	if (address < 0x8000) {
 		cpu.openbus.before = cpu.openbus.actual;
 

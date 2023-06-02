@@ -36,7 +36,9 @@ void map_init_152(void) {
 	mapper.internal_struct[0] = (BYTE *)&m152;
 	mapper.internal_struct_size[0] = sizeof(m152);
 
-	m152.reg = 0;
+	if (info.reset >= HARD) {
+		m152.reg = 0;
+	}
 }
 void extcl_after_mapper_init_152(void) {
 	prg_fix_152();
@@ -44,7 +46,7 @@ void extcl_after_mapper_init_152(void) {
 	mirroring_fix_152();
 }
 void extcl_cpu_wr_mem_152(WORD address, BYTE value) {
-	/* bus conflict */
+	// bus conflict
 	m152.reg = value & prgrom_rd(address);
 	prg_fix_152();
 	chr_fix_152();
@@ -61,18 +63,7 @@ INLINE static void prg_fix_152(void) {
 	memmap_auto_16k(MMCPU(0xC000), 0xFF);
 }
 INLINE static void chr_fix_152(void) {
-	DBWORD bank = m152.reg & 0x0F;
-
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	memmap_auto_8k(MMPPU(0x0000), (m152.reg & 0x0F));
 }
 INLINE static void mirroring_fix_152(void) {
 	if (m152.reg & 0x80) {

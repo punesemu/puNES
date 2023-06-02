@@ -25,8 +25,6 @@
 #include "tas.h"
 #include "cpu.h"
 #include "mappers.h"
-#include "vs_system.h"
-#include "ppu.h"
 
 INLINE static unsigned int slot_from_address(_memmap_info *info, DBWORD address);
 INLINE static size_t calc_mask(size_t size);
@@ -61,22 +59,24 @@ typedef struct _memmap_bank {
 } _memmap_bank;
 
 BYTE memmap_malloc(BYTE **dst, size_t size);
-BYTE memmap_region_init(_memmap_region *region, size_t size, size_t items);
+BYTE memmap_region_init(_memmap_region *region, size_t size, size_t chunk_size);
 void memmap_region_quit(_memmap_region *region);
 
-INLINE static void memmap_auto_wp(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size);
-INLINE static void memmap_auto(DBWORD adr, DBWORD value, BYTE tvalue, size_t size);
-INLINE static void memmap_disable(DBWORD adr, BYTE tvalue, size_t size);
-INLINE static void memmap_other(DBWORD adr, DBWORD value, BYTE *dst, size_t dsize, BYTE rd, BYTE wr, BYTE tvalue, size_t bsize);
-INLINE static void memmap_prgrom(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size);
-INLINE static void memmap_wram(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size);
-INLINE static void memmap_chrrom(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size);
-INLINE static void memmap_chrrom_nmt(DBWORD adr, DBWORD value, BYTE tvalue, size_t size);
-INLINE static void memmap_vram(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size);
-INLINE static void memmap_vram_wp(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size);
-INLINE static void memmap_nmt(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size);
-INLINE static void memmap_nmt_wp(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size);
-INLINE static void memmap_nmt_chrrom(DBWORD adr, DBWORD value, BYTE tvalue, size_t size);
+INLINE static void memmap_auto_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
+INLINE static void memmap_auto(DBWORD adr, DBWORD value, size_t size, BYTE tvalue);
+INLINE static void memmap_disable(DBWORD adr, size_t size, BYTE tvalue);
+INLINE static void memmap_other(DBWORD adr, DBWORD value, size_t bsize, BYTE *dst, size_t dsize, BYTE rd, BYTE wr, BYTE tvalue);
+INLINE static void memmap_prgrom(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
+INLINE static void memmap_wram(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
+INLINE static void memmap_chrrom(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
+INLINE static void memmap_chrrom_nmt(DBWORD adr, DBWORD value, size_t size, BYTE tvalue);
+INLINE static void memmap_wram_ram_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
+INLINE static void memmap_wram_nvram_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
+INLINE static void memmap_vram(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
+INLINE static void memmap_vram_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
+INLINE static void memmap_nmt(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
+INLINE static void memmap_nmt_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
+INLINE static void memmap_nmt_chrrom(DBWORD adr, DBWORD value, size_t size, BYTE tvalue);
 
 INLINE static void memmap_wp_chunk(_memmap_region *region);
 INLINE static void memmap_wp_set_chunks(void);
@@ -88,35 +88,35 @@ INLINE static size_t memmap_region_address(_memmap_region *region, WORD address)
 static _memmap_bank smmbank;
 
 BYTE memmap_init(void) {
-	if (memmap_region_init(&memmap.wram, MEMMAP_WRAM_CHUNK_SIZE, MEMMAP_WRAM_CHUNK_BANKS) == EXIT_ERROR) {
+	if (memmap_prg_region_init(MEMMAP_PRG_CHUNK_SIZE_DEFAULT) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	};
-	if (memmap_region_init(&memmap.prg, MEMMAP_PRG_CHUNK_SIZE, MEMMAP_PRG_CHUNK_BANKS) == EXIT_ERROR) {
+	if (memmap_chr_region_init(MEMMAP_CHR_CHUNK_SIZE_DEFAULT) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	};
-	if (memmap_region_init(&memmap.chr, MEMMAP_CHR_CHUNK_SIZE, MEMMAP_CHR_CHUNK_BANKS) == EXIT_ERROR) {
+	if (memmap_wram_region_init(MEMMAP_WRAM_CHUNK_SIZE_DEFAULT) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	};
-	if (memmap_region_init(&memmap.nmt, MEMMAP_NMT_CHUNK_SIZE, MEMMAP_NMT_CHUNK_BANKS) == EXIT_ERROR) {
+	if (memmap_nmt_region_init(MEMMAP_NMT_CHUNK_SIZE_DEFAULT) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	};
 	return (EXIT_OK);
 }
 void memmap_quit(void) {
-	memmap_region_quit(&memmap.wram);
 	memmap_region_quit(&memmap.prg);
 	memmap_region_quit(&memmap.chr);
+	memmap_region_quit(&memmap.wram);
 	memmap_region_quit(&memmap.nmt);
 }
 BYTE memmap_adr_is_readable(DBWORD address) {
 	_memmap_region *region = memmap_get_region(address);
 
-	return (region->chunks[slot_from_address(&region->info, address)].readable);
+	return (region ? region->chunks[slot_from_address(&region->info, address)].readable : FALSE);
 }
 BYTE memmap_adr_is_writable(DBWORD address) {
 	_memmap_region *region = memmap_get_region(address);
 
-	return (region->chunks[slot_from_address(&region->info, address)].writable);
+	return (region ? region->chunks[slot_from_address(&region->info, address)].writable : FALSE);
 }
 WORD memmap_chunk_actual_bank(DBWORD address) {
 	_memmap_region *region = memmap_get_region(address);
@@ -147,56 +147,69 @@ BYTE *memmap_chunk_pnt(DBWORD address) {
 	return (NULL);
 }
 
+BYTE memmap_prg_region_init(size_t chunk_size) {
+	return (memmap_region_init(&memmap.prg, MEMMAP_PRG_SIZE, chunk_size));
+}
+BYTE memmap_chr_region_init(size_t chunk_size) {
+	return (memmap_region_init(&memmap.chr, MEMMAP_CHR_SIZE, chunk_size));
+}
+BYTE memmap_wram_region_init(size_t chunk_size) {
+	return (memmap_region_init(&memmap.wram, MEMMAP_WRAM_SIZE, chunk_size));
+}
+BYTE memmap_nmt_region_init(size_t chunk_size) {
+	return (memmap_region_init(&memmap.nmt, MEMMAP_NMT_SIZE, chunk_size));
+}
+
 // with permissions
-INLINE static void memmap_auto_wp(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size) {
+INLINE static void memmap_auto_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	WORD in_region_adr = adr & 0xFFFF;
 
 	if (adr & PPUMM) {
 		// PPU
 		if (in_region_adr < 0x2000) {
 			if (chrrom_size()) {
-				memmap_chrrom(adr, value, rd, wr, tvalue, size);
+				memmap_chrrom(adr, value, size, rd, wr, tvalue);
 			} else {
-				memmap_vram(adr, value, rd, wr, tvalue, size);
+				memmap_vram(adr, value, size, rd, wr, tvalue);
 			}
 		} else if (in_region_adr < 0x3F00) {
-			memmap_nmt(adr, value, rd, wr, tvalue, size);
+			memmap_nmt(adr, value, size, rd, wr, tvalue);
 		}
 	} else if (adr & CPUMM) {
 		// CPU
 		if (in_region_adr >= 0x8000) {
-			memmap_prgrom(adr, value, rd, wr, tvalue, size);
+			memmap_prgrom(adr, value, size, rd, wr, tvalue);
 		} else if (in_region_adr >= 0x4000) {
-			memmap_wram(adr, value, rd, wr, tvalue, size);
+			memmap_wram(adr, value, size, rd, wr, tvalue);
 		}
 	}
 }
 void memmap_auto_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_auto_wp(address, value, rd, wr, TRUE, S256B);
+	memmap_auto_wp(address, value, S256B, rd, wr, TRUE);
 }
 void memmap_auto_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_auto_wp(address, value, rd, wr, TRUE, S512B);
+	memmap_auto_wp(address, value, S512B, rd, wr, TRUE);
 }
 void memmap_auto_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_auto_wp(address, value, rd, wr, TRUE, S1K);
+	memmap_auto_wp(address, value, S1K, rd, wr, TRUE);
 }
 void memmap_auto_wp_2k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_auto_wp(address, value, rd, wr, TRUE, S2K);
+	memmap_auto_wp(address, value, S2K, rd, wr, TRUE);
 }
 void memmap_auto_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_auto_wp(address, value, rd, wr, TRUE, S4K);
+	memmap_auto_wp(address, value, S4K, rd, wr, TRUE);
 }
 void memmap_auto_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_auto_wp(address, value, rd, wr, TRUE, S8K);
+	memmap_auto_wp(address, value, S8K, rd, wr, TRUE);
 }
 void memmap_auto_wp_16k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_auto_wp(address, value, rd, wr, TRUE, S16K);
+	memmap_auto_wp(address, value, S16K, rd, wr, TRUE);
 }
 void memmap_auto_wp_32k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_auto_wp(address, value, rd, wr, TRUE, S32K);
+	memmap_auto_wp(address, value, S32K, rd, wr, TRUE);
 }
-void memmap_auto_wp_custom_size(DBWORD address, DBWORD chunk, BYTE rd, BYTE wr, size_t size) {
-	memmap_auto_wp(address, chunk, rd, wr, FALSE, size);
+void memmap_auto_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr) {
+	memmap_auto_wp(address, chunk, size, rd, wr, FALSE);
 }
 
 // permissions :
@@ -205,59 +218,59 @@ void memmap_auto_wp_custom_size(DBWORD address, DBWORD chunk, BYTE rd, BYTE wr, 
 // chrrom : rd = TRUE, wr = FALSE
 // vram : rd = TRUE, wr = TRUE
 // nmt    : rd = TRUE, wr = TRUE
-INLINE static void memmap_auto(DBWORD adr, DBWORD value, BYTE tvalue, size_t size) {
+INLINE static void memmap_auto(DBWORD adr, DBWORD value, size_t size, BYTE tvalue) {
 	WORD in_region_adr = adr & 0xFFFF;
 
 	if (adr & PPUMM) {
 		// PPU
 		if (in_region_adr < 0x2000) {
 			if (chrrom_size()) {
-				memmap_chrrom(adr, value, TRUE, FALSE, tvalue, size);
+				memmap_chrrom(adr, value, size, TRUE, FALSE, tvalue);
 			} else {
-				memmap_vram(adr, value, TRUE, TRUE, tvalue, size);
+				memmap_vram(adr, value, size, TRUE, TRUE, tvalue);
 			}
 		} else if (in_region_adr < 0x3F00) {
-			memmap_nmt(adr, value, TRUE, TRUE, tvalue, size);
+			memmap_nmt(adr, value, size, TRUE, TRUE, tvalue);
 		}
 	} else if (adr & CPUMM) {
 		// CPU
 		if (in_region_adr >= 0x8000) {
-			memmap_prgrom(adr, value, TRUE, FALSE, tvalue, size);
+			memmap_prgrom(adr, value, size, TRUE, FALSE, tvalue);
 		} else if (in_region_adr >= 0x4000) {
-			memmap_wram(adr, value, TRUE, TRUE, tvalue, size);
+			memmap_wram(adr, value, size, TRUE, TRUE, tvalue);
 		}
 	}
 }
 void memmap_auto_256b(DBWORD address, DBWORD value) {
-	memmap_auto(address, value, TRUE, S256B);
+	memmap_auto(address, value, S256B, TRUE);
 }
 void memmap_auto_512b(DBWORD address, DBWORD value) {
-	memmap_auto(address, value, TRUE, S512B);
+	memmap_auto(address, value, S512B, TRUE);
 }
 void memmap_auto_1k(DBWORD address, DBWORD value) {
-	memmap_auto(address, value, TRUE, S1K);
+	memmap_auto(address, value, S1K, TRUE);
 }
 void memmap_auto_2k(DBWORD address, DBWORD value) {
-	memmap_auto(address, value, TRUE, S2K);
+	memmap_auto(address, value, S2K, TRUE);
 }
 void memmap_auto_4k(DBWORD address, DBWORD value) {
-	memmap_auto(address, value, TRUE, S4K);
+	memmap_auto(address, value, S4K, TRUE);
 }
 void memmap_auto_8k(DBWORD address, DBWORD value) {
-	memmap_auto(address, value, TRUE, S8K);
+	memmap_auto(address, value, S8K, TRUE);
 }
 void memmap_auto_16k(DBWORD address, DBWORD value) {
-	memmap_auto(address, value, TRUE, S16K);
+	memmap_auto(address, value, S16K, TRUE);
 }
 void memmap_auto_32k(DBWORD address, DBWORD value) {
-	memmap_auto(address, value, TRUE, S32K);
+	memmap_auto(address, value, S32K, TRUE);
 }
 void memmap_auto_custom_size(DBWORD address, DBWORD chunk, size_t size) {
-	memmap_auto(address, chunk, FALSE, size);
+	memmap_auto(address, chunk, size, FALSE);
 }
 
 // permissions : rd = FALSE, wr = FALSE
-INLINE static void memmap_disable(DBWORD adr, BYTE tvalue, size_t size) {
+INLINE static void memmap_disable(DBWORD adr, size_t size, BYTE tvalue) {
 	smmbank.region.address = adr;
 	smmbank.region.value = 0;
 	smmbank.region.slot = 0;
@@ -273,35 +286,35 @@ INLINE static void memmap_disable(DBWORD adr, BYTE tvalue, size_t size) {
 	memmap_wp_set_chunks();
 }
 void memmap_disable_256b(DBWORD address) {
-	memmap_disable(address, TRUE, S256B);
+	memmap_disable( address, S256B, TRUE);
 }
 void memmap_disable_512b(DBWORD address) {
-	memmap_disable(address, TRUE, S512B);
+	memmap_disable( address, S512B, TRUE);
 }
 void memmap_disable_1k(DBWORD address) {
-	memmap_disable(address, TRUE, S1K);
+	memmap_disable( address, S1K, TRUE);
 }
 void memmap_disable_2k(DBWORD address) {
-	memmap_disable(address, TRUE, S2K);
+	memmap_disable( address, S2K, TRUE);
 }
 void memmap_disable_4k(DBWORD address) {
-	memmap_disable(address, TRUE, S4K);
+	memmap_disable( address, S4K, TRUE);
 }
 void memmap_disable_8k(DBWORD address) {
-	memmap_disable(address, TRUE, S8K);
+	memmap_disable( address, S8K, TRUE);
 }
 void memmap_disable_16k(DBWORD address) {
-	memmap_disable(address, TRUE, S16K);
+	memmap_disable( address, S16K, TRUE);
 }
 void memmap_disable_32k(DBWORD address) {
-	memmap_disable(address, TRUE, S32K);
+	memmap_disable( address, S32K, TRUE);
 }
 void memmap_disable_custom_size(DBWORD address, size_t size) {
-	memmap_disable(address, FALSE, size);
+	memmap_disable(address, size, FALSE);
 }
 
 // with permissions
-INLINE static void memmap_other(DBWORD adr, DBWORD value, BYTE *dst, size_t dsize, BYTE rd, BYTE wr, BYTE tvalue, size_t bsize) {
+INLINE static void memmap_other(DBWORD adr, DBWORD value, size_t bsize, BYTE *dst, size_t dsize, BYTE rd, BYTE wr, BYTE tvalue) {
 	smmbank.region.address = adr;
 	smmbank.region.value = value;
 	smmbank.region.slot = 0;
@@ -317,42 +330,45 @@ INLINE static void memmap_other(DBWORD adr, DBWORD value, BYTE *dst, size_t dsiz
 	memmap_wp_set_chunks();
 }
 void memmap_other_256b(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr) {
-	memmap_other(address, value, dst, dst_size, rd, wr, TRUE, S256B);
+	memmap_other(address,  value, S256B, dst, dst_size, rd, wr, TRUE);
 }
 void memmap_other_512b(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr) {
-	memmap_other(address, value, dst, dst_size, rd, wr, TRUE, S512B);
+	memmap_other(address,  value, S512B, dst, dst_size, rd, wr, TRUE);
 }
 void memmap_other_1k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr) {
-	memmap_other(address, value, dst, dst_size, rd, wr, TRUE, S1K);
+	memmap_other(address,  value, S1K, dst, dst_size, rd, wr, TRUE);
 }
 void memmap_other_2k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr) {
-	memmap_other(address, value, dst, dst_size, rd, wr, TRUE, S2K);
+	memmap_other(address,  value, S2K, dst, dst_size, rd, wr, TRUE);
 }
 void memmap_other_4k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr) {
-	memmap_other(address, value, dst, dst_size, rd, wr, TRUE, S4K);
+	memmap_other(address,  value, S4K, dst, dst_size, rd, wr, TRUE);
 }
 void memmap_other_8k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr) {
-	memmap_other(address, value, dst, dst_size, rd, wr, TRUE, S8K);
+	memmap_other(address,  value, S8K, dst, dst_size, rd, wr, TRUE);
 }
 void memmap_other_16k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr) {
-	memmap_other(address, value, dst, dst_size, rd, wr, TRUE, S16K);
+	memmap_other(address,  value, S16K, dst, dst_size, rd, wr, TRUE);
 }
 void memmap_other_32k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr) {
-	memmap_other(address, value, dst, dst_size, rd, wr, TRUE, S32K);
+	memmap_other(address,  value, S32K, dst, dst_size, rd, wr, TRUE);
 }
-void memmap_other_custom_size(DBWORD address, DBWORD chunk, BYTE *dst, size_t dsize, BYTE rd, BYTE wr, size_t size) {
-	memmap_other(address, chunk, dst, dsize, rd, wr, FALSE, size);
+void memmap_other_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE *dst, size_t dsize, BYTE rd, BYTE wr) {
+	memmap_other(address, chunk, size, dst, dsize, rd, wr, FALSE);
 }
 
 BYTE memmap_malloc(BYTE **dst, size_t size) {
 	(*dst) = !size ? NULL : (BYTE *)malloc(size);
 	return ((*dst) ? EXIT_OK : EXIT_ERROR);
 }
-BYTE memmap_region_init(_memmap_region *region, size_t size, size_t items) {
-	region->info.shift = shift_from_size(size);
-	region->info.chunk.size = size;
-	region->info.chunk.items = items;
-	region->chunks = malloc(sizeof(_memmap_chunk ) * items);
+BYTE memmap_region_init(_memmap_region *region, size_t size, size_t chunk_size) {
+	memmap_region_quit(region);
+
+	region->info.shift = shift_from_size(chunk_size);
+	region->info.size = size;
+	region->info.chunk.size = chunk_size;
+	region->info.chunk.items = size / chunk_size;
+	region->chunks = malloc(sizeof(_memmap_chunk ) * region->info.chunk.items);
 	if (!region->chunks) {
 		return (EXIT_ERROR);
 	}
@@ -470,7 +486,7 @@ void prgrom_quit(void) {
 	memmap_disable_32k(MMCPU(0x8000));
 }
 void prgrom_set_size(size_t size) {
-	set_size(&prgrom_size(), &prgrom.real_size, MEMMAP_PRG_CHUNK_SIZE, size);
+	set_size(&prgrom_size(), &prgrom.real_size, memmap.prg.info.chunk.size, size);
 }
 void prgrom_reset(void) {
 	memmap_auto_16k(MMCPU(0x8000), 0);
@@ -504,7 +520,7 @@ void prgrom_wr(WORD address, BYTE value) {
 }
 
 // permissions : rd = TRUE, wr = FALSE
-INLINE static void memmap_prgrom(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size) {
+INLINE static void memmap_prgrom(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & CPUMM) {
 		smmbank.region.address = adr;
 		smmbank.region.value = value;
@@ -522,31 +538,31 @@ INLINE static void memmap_prgrom(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYT
 	}
 }
 void memmap_prgrom_256b(DBWORD address, DBWORD value) {
-	memmap_prgrom(address, value, TRUE, FALSE, TRUE, S256B);
+	memmap_prgrom(address,  value, S256B, TRUE, FALSE, TRUE);
 }
 void memmap_prgrom_512b(DBWORD address, DBWORD value) {
-	memmap_prgrom(address, value, TRUE, FALSE, TRUE, S512B);
+	memmap_prgrom(address,  value, S512B, TRUE, FALSE, TRUE);
 }
 void memmap_prgrom_1k(DBWORD address, DBWORD value) {
-	memmap_prgrom(address, value, TRUE, FALSE, TRUE, S1K);
+	memmap_prgrom(address,  value, S1K, TRUE, FALSE, TRUE);
 }
 void memmap_prgrom_2k(DBWORD address, DBWORD value) {
-	memmap_prgrom(address, value, TRUE, FALSE, TRUE, S2K);
+	memmap_prgrom(address,  value, S2K, TRUE, FALSE, TRUE);
 }
 void memmap_prgrom_4k(DBWORD address, DBWORD value) {
-	memmap_prgrom(address, value, TRUE, FALSE, TRUE, S4K);
+	memmap_prgrom(address,  value, S4K, TRUE, FALSE, TRUE);
 }
 void memmap_prgrom_8k(DBWORD address, DBWORD value) {
-	memmap_prgrom(address, value, TRUE, FALSE, TRUE, S8K);
+	memmap_prgrom(address,  value, S8K, TRUE, FALSE, TRUE);
 }
 void memmap_prgrom_16k(DBWORD address, DBWORD value) {
-	memmap_prgrom(address, value, TRUE, FALSE, TRUE, S16K);
+	memmap_prgrom(address,  value, S16K, TRUE, FALSE, TRUE);
 }
 void memmap_prgrom_32k(DBWORD address, DBWORD value) {
-	memmap_prgrom(address, value, TRUE, FALSE, TRUE, S32K);
+	memmap_prgrom(address,  value, S32K, TRUE, FALSE, TRUE);
 }
 void memmap_prgrom_custom_size(DBWORD address, DBWORD chunk, size_t size) {
-	memmap_prgrom(address, chunk, TRUE, FALSE, FALSE, size);
+	memmap_prgrom(address, chunk, size, TRUE, FALSE, FALSE);
 }
 
 BYTE prgrom_malloc(void) {
@@ -584,7 +600,7 @@ void chrrom_quit(void) {
 	memset(&chrrom, 0x00, sizeof(chrrom));
 }
 void chrrom_set_size(size_t size) {
-	set_size(&chrrom_size(), &chrrom.real_size, MEMMAP_CHR_CHUNK_SIZE, size);
+	set_size(&chrrom_size(), &chrrom.real_size, memmap.chr.info.chunk.size, size);
 }
 void chrrom_reset(void) {
 	memmap_auto_8k(MMPPU(0x0000), 0);
@@ -622,7 +638,7 @@ void chr_disable_write(void) {
 
 // permissions :
 // chrrom : rd = TRUE, wr = FALSE
-INLINE static void memmap_chrrom(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size) {
+INLINE static void memmap_chrrom(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & PPUMM) {
 		smmbank.region.address = adr;
 		smmbank.region.value = value;
@@ -640,55 +656,55 @@ INLINE static void memmap_chrrom(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYT
 	}
 }
 void memmap_chrrom_256b(DBWORD address, DBWORD value) {
-	memmap_chrrom(address, value, TRUE, FALSE, TRUE, S256B);
+	memmap_chrrom(address,  value, S256B, TRUE, FALSE, TRUE);
 }
 void memmap_chrrom_512b(DBWORD address, DBWORD value) {
-	memmap_chrrom(address, value, TRUE, FALSE, TRUE, S512B);
+	memmap_chrrom(address,  value, S512B, TRUE, FALSE, TRUE);
 }
 void memmap_chrrom_1k(DBWORD address, DBWORD value) {
-	memmap_chrrom(address, value, TRUE, FALSE, TRUE, S1K);
+	memmap_chrrom(address,  value, S1K, TRUE, FALSE, TRUE);
 }
 void memmap_chrrom_2k(DBWORD address, DBWORD value) {
-	memmap_chrrom(address, value, TRUE, FALSE, TRUE, S2K);
+	memmap_chrrom(address,  value, S2K, TRUE, FALSE, TRUE);
 }
 void memmap_chrrom_4k(DBWORD address, DBWORD value) {
-	memmap_chrrom(address, value, TRUE, FALSE, TRUE, S4K);
+	memmap_chrrom(address,  value, S4K, TRUE, FALSE, TRUE);
 }
 void memmap_chrrom_8k(DBWORD address, DBWORD value) {
-	memmap_chrrom(address, value, TRUE, FALSE, TRUE, S8K);
+	memmap_chrrom(address,  value, S8K, TRUE, FALSE, TRUE);
 }
 void memmap_chrrom_16k(DBWORD address, DBWORD value) {
-	memmap_chrrom(address, value, TRUE, FALSE, TRUE, S16K);
+	memmap_chrrom(address,  value, S16K, TRUE, FALSE, TRUE);
 }
 void memmap_chrrom_32k(DBWORD address, DBWORD value) {
-	memmap_chrrom(address, value, TRUE, FALSE, TRUE, S32K);
+	memmap_chrrom(address,  value, S32K, TRUE, FALSE, TRUE);
 }
 void memmap_chrrom_custom_size(DBWORD address, DBWORD chunk, size_t size) {
-	memmap_chrrom(address, chunk, TRUE, FALSE, FALSE, size);
+	memmap_chrrom(address, chunk, size, TRUE, FALSE, FALSE);
 }
 
-INLINE static void memmap_chrrom_nmt(DBWORD adr, DBWORD value, BYTE tvalue, size_t size) {
+INLINE static void memmap_chrrom_nmt(DBWORD adr, DBWORD value, size_t size, BYTE tvalue) {
 	if (adr & PPUMM) {
-		memmap_other(adr, value, nmt_pnt(), nmt_size(), TRUE, TRUE, tvalue, size);
+		memmap_other(adr, value, size, nmt_pnt(), nmt_size(), TRUE, TRUE, tvalue);
 	}
 }
 void memmap_chrrom_nmt_256b(DBWORD address, DBWORD value) {
-	memmap_chrrom_nmt(address, value, TRUE, S256B);
+	memmap_chrrom_nmt(address, value, S256B, TRUE);
 }
 void memmap_chrrom_nmt_512b(DBWORD address, DBWORD value) {
-	memmap_chrrom_nmt(address, value, TRUE, S512B);
+	memmap_chrrom_nmt(address, value, S512B, TRUE);
 }
 void memmap_chrrom_nmt_1k(DBWORD address, DBWORD value) {
-	memmap_chrrom_nmt(address, value, TRUE, S1K);
+	memmap_chrrom_nmt(address, value, S1K, TRUE);
 }
 void memmap_chrrom_nmt_2k(DBWORD address, DBWORD value) {
-	memmap_chrrom_nmt(address, value, TRUE, S2K);
+	memmap_chrrom_nmt(address, value, S2K, TRUE);
 }
 void memmap_chrrom_nmt_4k(DBWORD address, DBWORD value) {
-	memmap_chrrom_nmt(address, value, TRUE, S4K);
+	memmap_chrrom_nmt(address, value, S4K, TRUE);
 }
 void memmap_chrrom_nmt_8k(DBWORD address, DBWORD value) {
-	memmap_chrrom_nmt(address, value, TRUE, S8K);
+	memmap_chrrom_nmt(address, value, S8K, TRUE);
 }
 
 BYTE chrrom_malloc(void) {
@@ -702,9 +718,6 @@ BYTE chrrom_malloc(void) {
 // wram ------------------------------------------------------------------------------
 
 BYTE wram_malloc(void);
-
-INLINE static void memmap_wram_ram_wp(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size);
-INLINE static void memmap_wram_nvram_wp(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size);
 
 BYTE wram_init(void) {
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
@@ -850,7 +863,7 @@ void wram_direct_wr(WORD address, BYTE value) {
 }
 
 // permissions : rd = TRUE, wr = TRUE
-INLINE static void memmap_wram(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size) {
+INLINE static void memmap_wram(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & CPUMM) {
 		smmbank.region.address = adr;
 		smmbank.region.value = value;
@@ -868,35 +881,35 @@ INLINE static void memmap_wram(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE 
 	}
 }
 void memmap_wram_256b(DBWORD address, DBWORD value) {
-	memmap_wram(address, value, TRUE, TRUE, TRUE, S256B);
+	memmap_wram(address,  value, S256B, TRUE, TRUE, TRUE);
 }
 void memmap_wram_512b(DBWORD address, DBWORD value) {
-	memmap_wram(address, value, TRUE, TRUE, TRUE, S512B);
+	memmap_wram(address,  value, S512B, TRUE, TRUE, TRUE);
 }
 void memmap_wram_1k(DBWORD address, DBWORD value) {
-	memmap_wram(address, value, TRUE, TRUE, TRUE, S1K);
+	memmap_wram(address,  value, S1K, TRUE, TRUE, TRUE);
 }
 void memmap_wram_2k(DBWORD address, DBWORD value) {
-	memmap_wram(address, value, TRUE, TRUE, TRUE, S2K);
+	memmap_wram(address,  value, S2K, TRUE, TRUE, TRUE);
 }
 void memmap_wram_4k(DBWORD address, DBWORD value) {
-	memmap_wram(address, value, TRUE, TRUE, TRUE, S4K);
+	memmap_wram(address,  value, S4K, TRUE, TRUE, TRUE);
 }
 void memmap_wram_8k(DBWORD address, DBWORD value) {
-	memmap_wram(address, value, TRUE, TRUE, TRUE, S8K);
+	memmap_wram(address,  value, S8K, TRUE, TRUE, TRUE);
 }
 void memmap_wram_16k(DBWORD address, DBWORD value) {
-	memmap_wram(address, value, TRUE, TRUE, TRUE, S16K);
+	memmap_wram(address,  value, S16K, TRUE, TRUE, TRUE);
 }
 void memmap_wram_32k(DBWORD address, DBWORD value) {
-	memmap_wram(address, value, TRUE, TRUE, TRUE, S32K);
+	memmap_wram(address,  value, S32K, TRUE, TRUE, TRUE);
 }
 void memmap_wram_custom_size(DBWORD address, DBWORD chunk, size_t size) {
-	memmap_wram(address, chunk, TRUE, TRUE, FALSE, size);
+	memmap_wram(address, chunk, size, TRUE, TRUE, FALSE);
 }
 
 // with permissions
-INLINE static void memmap_wram_ram_wp(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size) {
+INLINE static void memmap_wram_ram_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & CPUMM) {
 		smmbank.region.address = adr;
 		smmbank.region.value = value;
@@ -914,35 +927,35 @@ INLINE static void memmap_wram_ram_wp(DBWORD adr, DBWORD value, BYTE rd, BYTE wr
 	}
 }
 void memmap_wram_ram_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_ram_wp(address, value, rd, wr, TRUE, S256B);
+	memmap_wram_ram_wp(address, value, S256B, rd, wr, TRUE);
 }
 void memmap_wram_ram_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_ram_wp(address, value, rd, wr, TRUE, S512B);
+	memmap_wram_ram_wp(address, value, S512B, rd, wr, TRUE);
 }
 void memmap_wram_ram_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_ram_wp(address, value, rd, wr, TRUE, S1K);
+	memmap_wram_ram_wp(address, value, S1K, rd, wr, TRUE);
 }
 void memmap_wram_ram_wp_2k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_ram_wp(address, value, rd, wr, TRUE, S2K);
+	memmap_wram_ram_wp(address, value, S2K, rd, wr, TRUE);
 }
 void memmap_wram_ram_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_ram_wp(address, value, rd, wr, TRUE, S4K);
+	memmap_wram_ram_wp(address, value, S4K, rd, wr, TRUE);
 }
 void memmap_wram_ram_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_ram_wp(address, value, rd, wr, TRUE, S8K);
+	memmap_wram_ram_wp(address, value, S8K, rd, wr, TRUE);
 }
 void memmap_wram_ram_wp_16k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_ram_wp(address, value, rd, wr, TRUE, S16K);
+	memmap_wram_ram_wp(address, value, S16K, rd, wr, TRUE);
 }
 void memmap_wram_ram_wp_32k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_ram_wp(address, value, rd, wr, TRUE, S32K);
+	memmap_wram_ram_wp(address, value, S32K, rd, wr, TRUE);
 }
-void memmap_wram_ram_wp_custom_size(DBWORD address, DBWORD chunk, BYTE rd, BYTE wr, size_t size) {
-	memmap_wram_ram_wp(address, chunk, rd, wr, FALSE, size);
+void memmap_wram_ram_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr) {
+	memmap_wram_ram_wp(address, chunk, size, rd, wr, FALSE);
 }
 
 // with permissions
-INLINE static void memmap_wram_nvram_wp(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size) {
+INLINE static void memmap_wram_nvram_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & CPUMM) {
 		smmbank.region.address = adr;
 		smmbank.region.value = value;
@@ -960,31 +973,31 @@ INLINE static void memmap_wram_nvram_wp(DBWORD adr, DBWORD value, BYTE rd, BYTE 
 	}
 }
 void memmap_wram_nvram_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_nvram_wp(address, value, rd, wr, TRUE, S256B);
+	memmap_wram_nvram_wp(address,  value, S256B, rd, wr, TRUE);
 }
 void memmap_wram_nvram_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_nvram_wp(address, value, rd, wr, TRUE, S512B);
+	memmap_wram_nvram_wp(address,  value, S512B, rd, wr, TRUE);
 }
 void memmap_wram_nvram_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_nvram_wp(address, value, rd, wr, TRUE, S1K);
+	memmap_wram_nvram_wp(address,  value, S1K, rd, wr, TRUE);
 }
 void memmap_wram_nvram_wp_2k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_nvram_wp(address, value, rd, wr, TRUE, S2K);
+	memmap_wram_nvram_wp(address,  value, S2K, rd, wr, TRUE);
 }
 void memmap_wram_nvram_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_nvram_wp(address, value, rd, wr, TRUE, S4K);
+	memmap_wram_nvram_wp(address,  value, S4K, rd, wr, TRUE);
 }
 void memmap_wram_nvram_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_nvram_wp(address, value, rd, wr, TRUE, S8K);
+	memmap_wram_nvram_wp(address,  value, S8K, rd, wr, TRUE);
 }
 void memmap_wram_nvram_wp_16k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_nvram_wp(address, value, rd, wr, TRUE, S16K);
+	memmap_wram_nvram_wp(address,  value, S16K, rd, wr, TRUE);
 }
 void memmap_wram_nvram_wp_32k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_wram_nvram_wp(address, value, rd, wr, TRUE, S32K);
+	memmap_wram_nvram_wp(address,  value, S32K, rd, wr, TRUE);
 }
-void memmap_wram_nvram_wp_custom_size(DBWORD address, DBWORD chunk, BYTE rd, BYTE wr, size_t size) {
-	memmap_wram_nvram_wp(address, chunk, rd, wr, FALSE, size);
+void memmap_wram_nvram_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr) {
+	memmap_wram_nvram_wp(address, chunk, size, rd, wr, FALSE);
 }
 
 BYTE wram_malloc(void) {
@@ -1055,7 +1068,7 @@ void vram_memset(void) {
 }
 
 // permissions : rd = TRUE, wr = TRUE
-INLINE static void memmap_vram(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size) {
+INLINE static void memmap_vram(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & PPUMM) {
 		smmbank.region.address = adr;
 		smmbank.region.value = value;
@@ -1073,50 +1086,50 @@ INLINE static void memmap_vram(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE 
 	}
 }
 void memmap_vram_256b(DBWORD address, DBWORD value) {
-	memmap_vram(address, value, TRUE, TRUE, TRUE, S256B);
+	memmap_vram(address,  value, S256B, TRUE, TRUE, TRUE);
 }
 void memmap_vram_512b(DBWORD address, DBWORD value) {
-	memmap_vram(address, value, TRUE, TRUE, TRUE, S512B);
+	memmap_vram(address,  value, S512B, TRUE, TRUE, TRUE);
 }
 void memmap_vram_1k(DBWORD address, DBWORD value) {
-	memmap_vram(address, value, TRUE, TRUE, TRUE, S1K);
+	memmap_vram(address,  value, S1K, TRUE, TRUE, TRUE);
 }
 void memmap_vram_2k(DBWORD address, DBWORD value) {
-	memmap_vram(address, value, TRUE, TRUE, TRUE, S2K);
+	memmap_vram(address,  value, S2K, TRUE, TRUE, TRUE);
 }
 void memmap_vram_4k(DBWORD address, DBWORD value) {
-	memmap_vram(address, value, TRUE, TRUE, TRUE, S4K);
+	memmap_vram(address,  value, S4K, TRUE, TRUE, TRUE);
 }
 void memmap_vram_8k(DBWORD address, DBWORD value) {
-	memmap_vram(address, value, TRUE, TRUE, TRUE, S8K);
+	memmap_vram(address,  value, S8K, TRUE, TRUE, TRUE);
 }
 void memmap_vram_custom_size(DBWORD address, DBWORD chunk, size_t size) {
-	memmap_vram(address, chunk, TRUE, TRUE, FALSE, size);
+	memmap_vram(address, chunk, size, TRUE, TRUE, FALSE);
 }
 
-INLINE static void memmap_vram_wp(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size) {
+INLINE static void memmap_vram_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	memmap_vram(adr, value, rd, wr, tvalue, size);
 }
 void memmap_vram_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_vram_wp(address, value, rd, wr, TRUE, S256B);
+	memmap_vram_wp(address,  value, S256B, rd, wr, TRUE);
 }
 void memmap_vram_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_vram_wp(address, value, rd, wr, TRUE, S512B);
+	memmap_vram_wp(address,  value, S512B, rd, wr, TRUE);
 }
 void memmap_vram_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_vram_wp(address, value, rd, wr, TRUE, S1K);
+	memmap_vram_wp(address,  value, S1K, rd, wr, TRUE);
 }
 void memmap_vram_wp_2k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_vram_wp(address, value, rd, wr, TRUE, S2K);
+	memmap_vram_wp(address,  value, S2K, rd, wr, TRUE);
 }
 void memmap_vram_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_vram_wp(address, value, rd, wr, TRUE, S4K);
+	memmap_vram_wp(address,  value, S4K, rd, wr, TRUE);
 }
 void memmap_vram_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_vram_wp(address, value, rd, wr, TRUE, S8K);
+	memmap_vram_wp(address,  value, S8K, rd, wr, TRUE);
 }
-void memmap_vram_wp_custom_size(DBWORD address, DBWORD chunk, BYTE rd, BYTE wr, size_t size) {
-	memmap_vram_wp(address, chunk, rd, wr, FALSE, size);
+void memmap_vram_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr) {
+	memmap_vram_wp(address, chunk, size, rd, wr, FALSE);
 }
 
 BYTE vram_malloc(void) {
@@ -1152,10 +1165,29 @@ void nmt_quit(void) {
 	memset(&nmt, 0x00, sizeof(nmt));
 }
 void nmt_set_size(size_t size) {
-	set_size(&nmt_size(), &nmt.real_size, MEMMAP_NMT_CHUNK_SIZE, size);
+	set_size(&nmt_size(), &nmt.real_size, memmap.nmt.info.chunk.size, size);
 }
 void nmt_reset(void) {
-	mirroring_V();
+	switch (info.mapper.mirroring) {
+		case MIRRORING_HORIZONTAL:
+			mirroring_H();
+			return;
+		case MIRRORING_VERTICAL:
+			mirroring_V();
+			return;
+		case MIRRORING_FOURSCR:
+			mirroring_FSCR();
+			return;
+		case MIRRORING_SINGLE_SCR0:
+			mirroring_SCR0();
+			return;
+		case MIRRORING_SINGLE_SCR1:
+			mirroring_SCR1();
+			return;
+		default:
+			mirroring_V();
+			return;
+	}
 }
 void nmt_memset(void) {
 	if (nmt_size()) {
@@ -1188,7 +1220,7 @@ void nmt_disable_write(void) {
 }
 
 // permissions : rd = TRUE, wr = TRUE
-INLINE static void memmap_nmt(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size) {
+INLINE static void memmap_nmt(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & PPUMM) {
 		smmbank.region.address = adr;
 		smmbank.region.value = value;
@@ -1206,47 +1238,47 @@ INLINE static void memmap_nmt(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE t
 	}
 }
 void memmap_nmt_256b(DBWORD address, DBWORD value) {
-	memmap_nmt(address, value, TRUE, TRUE, TRUE, S256B);
+	memmap_nmt(address,  value, S256B, TRUE, TRUE, TRUE);
 }
 void memmap_nmt_512b(DBWORD address, DBWORD value) {
-	memmap_nmt(address, value, TRUE, TRUE, TRUE, S512B);
+	memmap_nmt(address,  value, S512B, TRUE, TRUE, TRUE);
 }
 void memmap_nmt_1k(DBWORD address, DBWORD value) {
-	memmap_nmt(address, value, TRUE, TRUE, TRUE, S1K);
+	memmap_nmt(address,  value, S1K, TRUE, TRUE, TRUE);
 }
 void memmap_nmt_2k(DBWORD address, DBWORD value) {
-	memmap_nmt(address, value, TRUE, TRUE, TRUE, S2K);
+	memmap_nmt(address,  value, S2K, TRUE, TRUE, TRUE);
 }
 void memmap_nmt_4k(DBWORD address, DBWORD value) {
-	memmap_nmt(address, value, TRUE, TRUE, TRUE, S4K);
+	memmap_nmt(address,  value, S4K, TRUE, TRUE, TRUE);
 }
 void memmap_nmt_8k(DBWORD address, DBWORD value) {
-	memmap_nmt(address, value, TRUE, TRUE, TRUE, S8K);
+	memmap_nmt(address,  value, S8K, TRUE, TRUE, TRUE);
 }
 
-INLINE static void memmap_nmt_wp(DBWORD adr, DBWORD value, BYTE rd, BYTE wr, BYTE tvalue, size_t size) {
-	memmap_nmt(adr, value, rd, wr, tvalue, size);
+INLINE static void memmap_nmt_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
+	memmap_nmt(adr, value, size, rd, wr, tvalue);
 }
 void memmap_nmt_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_nmt_wp(address, value, rd, wr, TRUE, S256B);
+	memmap_nmt_wp(address,  value, S256B, rd, wr, TRUE);
 }
 void memmap_nmt_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_nmt_wp(address, value, rd, wr, TRUE, S512B);
+	memmap_nmt_wp(address,  value, S512B, rd, wr, TRUE);
 }
 void memmap_nmt_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_nmt_wp(address, value, rd, wr, TRUE, S1K);
+	memmap_nmt_wp(address,  value, S1K, rd, wr, TRUE);
 }
 void memmap_nmt_wp_2k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_nmt_wp(address, value, rd, wr, TRUE, S2K);
+	memmap_nmt_wp(address,  value, S2K, rd, wr, TRUE);
 }
 void memmap_nmt_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_nmt_wp(address, value, rd, wr, TRUE, S4K);
+	memmap_nmt_wp(address,  value, S4K, rd, wr, TRUE);
 }
 void memmap_nmt_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
-	memmap_nmt_wp(address, value, rd, wr, TRUE, S8K);
+	memmap_nmt_wp(address,  value, S8K, rd, wr, TRUE);
 }
 
-INLINE static void memmap_nmt_chrrom(DBWORD adr, DBWORD value, BYTE tvalue, size_t size) {
+INLINE static void memmap_nmt_chrrom(DBWORD adr, DBWORD value, size_t size, BYTE tvalue) {
 	BYTE *dst = NULL;
 	size_t dsize = 0;
 	BYTE rd = TRUE;
@@ -1262,51 +1294,51 @@ INLINE static void memmap_nmt_chrrom(DBWORD adr, DBWORD value, BYTE tvalue, size
 			wr = TRUE;
 		}
 		if (dst) {
-			memmap_other(adr, value, dst, dsize, rd, wr, tvalue, size);
+			memmap_other(adr, value, size, dst, dsize, rd, wr, tvalue);
 		}
 	}
 }
 void memmap_nmt_chrrom_256b(DBWORD address, DBWORD value) {
-	memmap_nmt_chrrom(address, value, TRUE, S256B);
+	memmap_nmt_chrrom(address, value, S256B, TRUE);
 }
 void memmap_nmt_chrrom_512b(DBWORD address, DBWORD value) {
-	memmap_nmt_chrrom(address, value, TRUE, S512B);
+	memmap_nmt_chrrom(address, value, S512B, TRUE);
 }
 void memmap_nmt_chrrom_1k(DBWORD address, DBWORD value) {
-	memmap_nmt_chrrom(address, value, TRUE, S1K);
+	memmap_nmt_chrrom(address, value, S1K, TRUE);
 }
 void memmap_nmt_chrrom_2k(DBWORD address, DBWORD value) {
-	memmap_nmt_chrrom(address, value, TRUE, S2K);
+	memmap_nmt_chrrom(address, value, S2K, TRUE);
 }
 void memmap_nmt_chrrom_4k(DBWORD address, DBWORD value) {
-	memmap_nmt_chrrom(address, value, TRUE, S4K);
+	memmap_nmt_chrrom(address, value, S4K, TRUE);
 }
 void memmap_nmt_chrrom_8k(DBWORD address, DBWORD value) {
-	memmap_nmt_chrrom(address, value, TRUE, S8K);
+	memmap_nmt_chrrom(address, value, S8K, TRUE);
 }
 
-INLINE static void memmap_nmt_vram(DBWORD adr, DBWORD value, BYTE tvalue, size_t size) {
+INLINE static void memmap_nmt_vram(DBWORD adr, DBWORD value, size_t size, BYTE tvalue) {
 	if (adr & PPUMM) {
-		memmap_other(adr, value, vram_pnt(), vram_size(), TRUE, TRUE, tvalue, size);
+		memmap_other(adr, value, size, vram_pnt(), vram_size(), TRUE, TRUE, tvalue);
 	}
 }
 void memmap_nmt_vram_256b(DBWORD address, DBWORD value) {
-	memmap_nmt_vram(address, value, TRUE, S256B);
+	memmap_nmt_vram(address, value, S256B, TRUE);
 }
 void memmap_nmt_vram_512b(DBWORD address, DBWORD value) {
-	memmap_nmt_vram(address, value, TRUE, S512B);
+	memmap_nmt_vram(address, value, S512B, TRUE);
 }
 void memmap_nmt_vram_1k(DBWORD address, DBWORD value) {
-	memmap_nmt_vram(address, value, TRUE, S1K);
+	memmap_nmt_vram(address, value, S1K, TRUE);
 }
 void memmap_nmt_vram_2k(DBWORD address, DBWORD value) {
-	memmap_nmt_vram(address, value, TRUE, S2K);
+	memmap_nmt_vram(address, value, S2K, TRUE);
 }
 void memmap_nmt_vram_4k(DBWORD address, DBWORD value) {
-	memmap_nmt_vram(address, value, TRUE, S4K);
+	memmap_nmt_vram(address, value, S4K, TRUE);
 }
 void memmap_nmt_vram_8k(DBWORD address, DBWORD value) {
-	memmap_nmt_vram(address, value, TRUE, S8K);
+	memmap_nmt_vram(address, value, S8K, TRUE);
 }
 
 
@@ -1432,7 +1464,7 @@ void miscrom_quit(void) {
 	memset(&miscrom, 0x00, sizeof(miscrom));
 }
 void miscrom_set_size(size_t size) {
-	set_size(&miscrom_size(), &miscrom.real_size, MEMMAP_PRG_CHUNK_SIZE, size);
+	set_size(&miscrom_size(), &miscrom.real_size, memmap.prg.info.chunk.size, size);
 }
 
 BYTE miscrom_malloc(void) {

@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "ppu.h"
 #include "save_slot.h"
@@ -31,7 +29,7 @@ INLINE static void mirroring_fix_091(void);
 struct _m091 {
 	BYTE prg[2];
 	BYTE chr[4];
-	BYTE mir;
+	BYTE mirroring;
 	BYTE reg;
 	struct _m091_irq {
 		BYTE enable;
@@ -81,11 +79,11 @@ void extcl_cpu_wr_mem_091(WORD address, BYTE value) {
 						chr_fix_091();
 						break;
 					case 4:
-						m091.mir = TRUE;
+						m091.mirroring = TRUE;
 						mirroring_fix_091();
 						break;
 					case 5:
-						m091.mir = FALSE;
+						m091.mirroring = FALSE;
 						mirroring_fix_091();
 						break;
 					case 6:
@@ -124,13 +122,12 @@ void extcl_cpu_wr_mem_091(WORD address, BYTE value) {
 			m091.reg = address & 0xFF;
 			prg_fix_091();
 			break;
-
 	}
 }
 BYTE extcl_save_mapper_091(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m091.prg);
 	save_slot_ele(mode, slot, m091.chr);
-	save_slot_ele(mode, slot, m091.mir);
+	save_slot_ele(mode, slot, m091.mirroring);
 	save_slot_ele(mode, slot, m091.reg);
 	save_slot_ele(mode, slot, m091.irq.enable);
 	save_slot_ele(mode, slot, m091.irq.ppu.counter);
@@ -143,7 +140,6 @@ void extcl_ppu_256_to_319_091(void) {
 	if (ppu.frame_x != 319) {
 		return;
 	}
-
 	if (m091.irq.enable && (m091.irq.ppu.counter < 8)) {
 		m091.irq.ppu.counter++;
 		if (m091.irq.ppu.counter >= 8) {
@@ -162,60 +158,24 @@ void extcl_cpu_every_cycle_091(void) {
 }
 
 INLINE static void prg_fix_091(void) {
-	WORD base = m091.reg << 3;
 	WORD mask = 0x0F;
-	WORD bank;
+	WORD base = (m091.reg << 3) & ~mask;
 
-	base &= ~mask;
-
-	bank = base | (m091.prg[0] & mask);
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, bank);
-
-	bank = base | (m091.prg[1] & mask);
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, bank);
-
-	bank = base | (0xFE & mask);
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, bank);
-
-	bank = base | (0xFF & mask);
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_8k(MMCPU(0x8000), (base | (m091.prg[0] & mask)));
+	memmap_auto_8k(MMCPU(0xA000), (base | (m091.prg[1] & mask)));
+	memmap_auto_8k(MMCPU(0xC000), (base | (0xFE & mask)));
+	memmap_auto_8k(MMCPU(0xE000), (base | (0xFF & mask)));
 }
 INLINE static void chr_fix_091(void) {
-	DBWORD bank;
 	WORD base = (m091.reg & 0x01) << 8;
 
-	bank = base | m091.chr[0];
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x400);
-
-	bank = base | m091.chr[1];
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[2] = chr_pnt(bank);
-	chr.bank_1k[3] = chr_pnt(bank | 0x400);
-
-	bank = base | m091.chr[2];
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[4] = chr_pnt(bank);
-	chr.bank_1k[5] = chr_pnt(bank | 0x400);
-
-	bank = base | m091.chr[3];
-	_control_bank(bank, info.chr.rom.max.banks_2k)
-	bank <<= 11;
-	chr.bank_1k[6] = chr_pnt(bank);
-	chr.bank_1k[7] = chr_pnt(bank | 0x400);
+	memmap_auto_2k(MMPPU(0x0000), (base | m091.chr[0]));
+	memmap_auto_2k(MMPPU(0x0800), (base | m091.chr[1]));
+	memmap_auto_2k(MMPPU(0x1000), (base | m091.chr[2]));
+	memmap_auto_2k(MMPPU(0x1800), (base | m091.chr[3]));
 }
 INLINE static void mirroring_fix_091(void) {
-	if (m091.mir) {
+	if (m091.mirroring) {
 		mirroring_H();
 	} else {
 		mirroring_V();

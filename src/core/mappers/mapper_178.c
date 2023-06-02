@@ -55,10 +55,6 @@ void map_init_178(void) {
 		m178tmp.baddumps = FALSE;
 	}
 
-//	if (wram_size() < 0x4000) {
-//		wram_set_ram_size(0x4000);
-//	}
-
 	info.mapper.extend_wr = TRUE;
 }
 void extcl_after_mapper_init_178(void) {
@@ -96,31 +92,12 @@ INLINE static void prg_fix_178(void) {
 	WORD base = ((m178.reg[1] & 0x07) << (m178tmp.baddumps ? 1 : 0)) | (m178.reg[2] << 3);
 	WORD nrom = (~m178.reg[0] & 0x04) >> 2;
 	WORD unrom = (m178.reg[0] & 0x02) >> 1;
-	WORD bank = 0;
 
-	bank = base & ~(nrom * !unrom);
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-
-	bank = base | (nrom | unrom * 6);
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_16k(MMCPU(0x8000), (base & ~(nrom * !unrom)));
+	memmap_auto_16k(MMCPU(0xC000), (base | (nrom | unrom * 6)));
 }
 INLINE static void chr_fix_178(void) {
-	DBWORD bank = (info.mapper.id == 551) ? m178.reg[3] : 0;
-
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	memmap_auto_8k(MMPPU(0x0000), ((info.mapper.id == 551) ? m178.reg[3] : 0));
 }
 INLINE static void wram_fix_178(void) {
 	memmap_auto_8k(MMCPU(0x6000), (info.mapper.id == 551) ? 0 : m178.reg[3]);

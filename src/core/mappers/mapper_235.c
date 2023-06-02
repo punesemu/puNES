@@ -38,9 +38,8 @@ void map_init_235(void) {
 	mapper.internal_struct[0] = (BYTE *)&m235;
 	mapper.internal_struct_size[0] = sizeof(m235);
 
-	if (info.reset >= HARD) {
-		memset(&m235, 0x00, sizeof(m235));
-	}
+	memset(&m235, 0x00, sizeof(m235));
+
 	if (prgrom_size() & S128K) {
 		m235.mode = info.reset >= HARD ? 1 : !m235.mode;
 	}

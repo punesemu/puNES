@@ -329,7 +329,6 @@ BYTE unif_load_rom(void) {
 
 		nmt_set_size(S4K);
 		nmt_init();
-		nmt_reset();
 
 		// nes20db non ha trovato la rom
 		if (!wram_size() && info.mapper.battery) {

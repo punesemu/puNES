@@ -75,7 +75,6 @@ void extcl_after_mapper_init_FDS(void) {
 	memmap_wram_8k(MMCPU(0xA000), 2);
 	memmap_wram_8k(MMCPU(0xC000), 3);
 	memmap_prgrom_8k(MMCPU(0xE000), 0);
-	mirroring_H();
 }
 BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus)) {
 	// 0xE18B : NMI entry point

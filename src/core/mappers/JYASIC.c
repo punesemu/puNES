@@ -50,7 +50,7 @@ struct _jyasictmp {
 } jyasictmp;
 
 // promemoria
-//void map_init_JYASIC(BYTE model) {
+//void map_init_JYASIC(void) {
 //	EXTCL_AFTER_MAPPER_INIT(JYASIC);
 //	EXTCL_CPU_WR_MEM(JYASIC);
 //	EXTCL_CPU_RD_MEM(JYASIC);

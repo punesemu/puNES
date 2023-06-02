@@ -55,7 +55,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define ABW(opTy, cmd)\
 {\
 	WORD adr0 = lend_word(cpu.PC, FALSE, FALSE);\
-	_DMC;\
+	_DMC\
 	cpu.PC += 2;\
 	cmd\
 }
@@ -108,7 +108,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	WORD adr1 = _RDP;\
 	_RDIDX_;\
 	WORD adr0 = lend_word((adr1 + cpu.XR) & 0x00FF, TRUE, FALSE);\
-	_DMC;\
+	_DMC\
 	cmd\
 }
 #define IXW(opTy, cmd)\
@@ -116,7 +116,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	WORD adr1 = _RDP;\
 	_RDIDX_;\
 	WORD adr0 = lend_word((adr1 + cpu.XR) & 0x00FF, TRUE, FALSE);\
-	_DMC;\
+	_DMC\
 	cmd\
 }
 #define IYW(opTy, cmd)\
@@ -186,7 +186,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	x;\
 	cpu.sf = (cpu.openbus.actual & 0x80);\
 	cpu.of = (cpu.openbus.actual & 0x40);\
-	ZF((cpu.AR & cpu.openbus.actual));
+	ZF((cpu.AR & cpu.openbus.actual))
 /* BRK, PHP
  * NOTE:
  * lo Status Register viene salvato solo nello stack con
@@ -203,7 +203,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 /* CMP, CPX, CPY */
 #define CMP(x, reg)\
 	{\
-	_RSZ(_CMP(x, reg);, (BYTE)cmp)\
+	_RSZ(_CMP(x, reg), (BYTE)cmp)\
 	}
 /* LDA, LDX, LDY */
 #define LDX(x, reg) _RSZ(reg = x;, reg)
@@ -214,7 +214,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 /* JSR, RTS */
 #define JSR\
 	WORD adr0 = lend_word(cpu.PC++, FALSE, TRUE);\
-	_PSP;\
+	_PSP\
 	cpu.PC = adr0;
 #define RTS\
 	/* dummy read */\
@@ -259,14 +259,14 @@ enum cpu_opcode_type { RD_OP, WR_OP };
  */
 /* AAC, ASR, ARR */
 #define AAC\
-	AND(_RDP, &=);\
+	AND(_RDP, &=)\
 	cpu.cf = cpu.sf >> 7;
 #define ASR\
 	cpu.AR &= _RDP;\
-	_RSZ(_BSH(cpu.AR, 0x01, >>=);, cpu.AR)
+	_RSZ(_BSH(cpu.AR, 0x01, >>=), cpu.AR)
 #define ARR\
 	cpu.AR &= _RDP;\
-	_RSZ(_ROR(cpu.AR, 0x01, >>=);, cpu.AR)\
+	_RSZ(_ROR(cpu.AR, 0x01, >>=), cpu.AR)\
 	cpu.cf = (cpu.AR & 0x40) >> 6;\
 	cpu.of = (cpu.AR & 0x40) ^ ((cpu.AR & 0x20) << 1);
 /* ATX */
@@ -278,7 +278,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 /* AXS */
 #define AXS\
 	cpu.XR &= cpu.AR;\
-	_CMP(_RDP, cpu.XR);\
+	_CMP(_RDP, cpu.XR)\
 	_RSZ(cpu.XR = (BYTE)cmp;, cpu.XR)
 /* AAX */
 #define AAX\
@@ -289,11 +289,11 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define DCP(x)\
 	BYTE tmp = x - 1;\
 	CMP(tmp, cpu.AR)\
-	_MSX(tmp);
+	_MSX(tmp)
 /* ISC */
 #define ISC(x)\
 	BYTE tmp = x + 1;\
-	_MSX(tmp);\
+	_MSX(tmp)\
 	cpu.openbus.actual = tmp;\
 	_RSZ(_SUB, cpu.AR)
 /* LAS */
@@ -311,8 +311,8 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 /* RRA */
 #define RRA(x)\
 	BYTE shift = x;\
-	_ROR(shift, 0x01, >>=);\
-	_MSX(shift);\
+	_ROR(shift, 0x01, >>=)\
+	_MSX(shift)\
 	cpu.openbus.actual = shift;\
 	_RSZ(_ADD, cpu.AR)
 /* SXX */
@@ -335,11 +335,11 @@ enum cpu_opcode_type { RD_OP, WR_OP };
  *  flags
  * ---------------------------------------------------------------------------------
  */
-#define SF(x) cpu.sf = x & 0x80
+#define SF(x) cpu.sf = x & 0x80;
 #define SZ(x)\
-	SF(x);\
+	SF(x)\
 	ZF(x)
-#define ZF(x) cpu.zf = !x << 1
+#define ZF(x) cpu.zf = !x << 1;
 
 /* ----------------------------------------------------------------------
  *  varie ed eventuali
@@ -390,10 +390,10 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	}
 #define _BSH(dst, bitmask, opr)\
 	cpu.cf = ((dst & bitmask) ? 1 : 0);\
-	dst opr 1
+	dst opr 1;
 #define _CMP(x, reg)\
 	WORD cmp = reg - x;\
-	cpu.cf = (cmp < 0x100 ? 1 : 0)
+	cpu.cf = (cmp < 0x100 ? 1 : 0);
 #define _CYW(cmd) _CY_(cmd, mod_cycles_op(+=, 1);)
 #define _CY_(cmd1, cmd2)\
 	if (adr1 != adr0) {\
@@ -407,7 +407,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	if (adr0 == 0x4014) {\
 		DMC.tick_type = DMC_R4014;\
 	}\
-	tick_hw(1)
+	tick_hw(1);
 #define _LAX\
 	cpu.AR = _RDB;\
 	_RSZ(cpu.XR = cpu.AR;, cpu.XR)
@@ -418,12 +418,12 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	_ASLWR1(_RDB)\
 	cpu.double_wr = TRUE;\
 	_ASLWR2(result)\
-	cpu.double_wr = FALSE
+	cpu.double_wr = FALSE;
 #define _PUL _RDX(((++cpu.SP) + STACK), TRUE)
 #define _PSH(src) _WRX((cpu.SP--) + STACK, src)
 #define _PSP\
 	_PSH(cpu.PC >> 8);\
-	_PSH(cpu.PC)
+	_PSH(cpu.PC);
 #define _RD0 _RDX(adr0, TRUE)
 #define _RD1 _RDX(adr1, TRUE)
 #define _RD2\
@@ -442,12 +442,12 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define _ROX(dst, bitmask, opr, oprnd)\
 	{\
 	BYTE old_cf = cpu.cf;\
-	_BSH(dst, bitmask, opr);\
+	_BSH(dst, bitmask, opr)\
 	dst |= oprnd;\
 	}
 #define _RSZ(cmd, result)\
 	cmd\
-	SZ(result);
+	SZ(result)
 #define _SBC _RSZ(_SUB, cpu.AR)
 #define _SHF(x, cmd, result1, result2)\
 	{\
@@ -455,7 +455,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	_MSZ(cmd, result1, result2);\
 	}
 #define _SLO(dst, bitmask, opr1, opr2)\
-	_BSH(dst, bitmask, opr1);\
+	_BSH(dst, bitmask, opr1)\
 	cpu.AR opr2 shift
 
 /* NOTE : BCD Subtraction
@@ -501,7 +501,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 /* IRQ */
 #define _IRQ(flags)\
 	BYTE flagNMI = FALSE;\
-	_PSP;\
+	_PSP\
 	if (nmi.high) {\
 		flagNMI = TRUE;\
 	}\
@@ -523,7 +523,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define NMI\
 	nmi.high = nmi.delay = FALSE;\
 	tick_hw(1);\
-	_PSP;\
+	_PSP\
 	assemble_SR();\
 	_PSH(cpu.SR & 0xEF);\
 	cpu.im = irq.inhibit = 0x04;\
@@ -631,7 +631,7 @@ void cpu_exe_op(void) {
 	if (cpu.opcode & 0x300) {
 		tick_hw(1);
 	} else {
-		/* memorizzo l'opcode attuale */
+		// memorizzo l'opcode attuale
 		cpu.opcode = _RDP;
 	}
 
@@ -703,7 +703,7 @@ void cpu_exe_op(void) {
 	case 0x21: IDX(RD_OP, AND(_RDIDX, &=)) break;                        // AND ($IND,X)
 	case 0x31: IDY(RD_OP, _CYW(AND(_RDB, &=))) break;                    // AND ($IND),Y
 
-	case 0x0A: IMP(RD_OP, _RSZ(_BSH(cpu.AR, 0x80, <<=);, cpu.AR)) break; // ASL [AR]
+	case 0x0A: IMP(RD_OP, _RSZ(_BSH(cpu.AR, 0x80, <<=), cpu.AR)) break;  // ASL [AR]
 	case 0x06: ZPG(WR_OP, ASL(_RDZPG)) break;                            // ASL $ZPG
 	case 0x16: ZPX(WR_OP, ASL(_RDZPX), cpu.XR) break;                    // ASL $ZPG,X
 	case 0x0E: ABS(WR_OP, ASL(_RDABS)) break;                            // ASL $ABS
@@ -798,7 +798,7 @@ void cpu_exe_op(void) {
 	case 0xAC: ABS(RD_OP, LDX(_RDABS, cpu.YR)) break;                    // LDY $ABS
 	case 0xBC: ABX(RD_OP, _CYW(LDX(_RDB, cpu.YR)), cpu.XR) break;        // LDY $ABS,X
 
-	case 0x4A: IMP(RD_OP, _RSZ(_BSH(cpu.AR, 0x01, >>=);, cpu.AR)) break; // LSR [AR]
+	case 0x4A: IMP(RD_OP, _RSZ(_BSH(cpu.AR, 0x01, >>=), cpu.AR)) break;  // LSR [AR]
 	case 0x46: ZPG(WR_OP, LSR(_RDZPG)) break;                            // LSR $ZPG
 	case 0x56: ZPX(WR_OP, LSR(_RDZPX), cpu.XR) break;                    // LSR $ZPG,X
 	case 0x4E: ABS(WR_OP, LSR(_RDABS)) break;                            // LSR $ABS
@@ -1107,8 +1107,6 @@ void cpu_turn_on(void) {
 	}
 	memset(&nmi, 0x00, sizeof(nmi));
 	memset(&irq, 0x00, sizeof(irq));
-	/* di default attivo la lettura e la scrittura dalla PRG Ram */
-	cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = TRUE;
 	/* disassemblo il Processor Status Register */
 	disassemble_SR();
 	/* setto il flag di disabilitazione dell'irq */

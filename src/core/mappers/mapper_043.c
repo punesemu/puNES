@@ -49,6 +49,10 @@ void map_init_043(void) {
 	mapper.internal_struct[0] = (BYTE *)&m043;
 	mapper.internal_struct_size[0] = sizeof(m043);
 
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memmap_wram_region_init(S2K);
+	}
+
 	if (info.reset >= HARD) {
 		memset(&m043, 0x00, sizeof(m043));
 	}
@@ -87,10 +91,6 @@ BYTE extcl_save_mapper_043(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m043.reg);
 	save_slot_ele(mode, slot, m043.irq.active);
 	save_slot_ele(mode, slot, m043.irq.count);
-
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_043();
-	}
 
 	return (EXIT_OK);
 }

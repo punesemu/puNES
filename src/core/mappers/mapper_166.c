@@ -18,62 +18,49 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
 #include "save_slot.h"
+
+INLINE static void prg_fix_166(void);
 
 struct _m166 {
 	BYTE reg[4];
 } m166;
 
 void map_init_166(void) {
+	EXTCL_AFTER_MAPPER_INIT(166);
 	EXTCL_CPU_WR_MEM(166);
 	EXTCL_SAVE_MAPPER(166);
 	mapper.internal_struct[0] = (BYTE *)&m166;
 	mapper.internal_struct_size[0] = sizeof(m166);
 
-	memset(&m166, 0x00, sizeof(m166));
-
-	extcl_cpu_wr_mem_166(0x0000, 0x00);
-}
-void extcl_cpu_wr_mem_166(WORD address, BYTE value) {
-	WORD base, bank;
-
-	m166.reg[(address & 0x6000) >> 13] = value;
-	base = (((m166.reg[0] ^ m166.reg[1]) & 0x10) << 1) + ((m166.reg[2] ^ m166.reg[3]) & 0x1F);
-
-	if (m166.reg[1] & 0x08) {
-		base &= 0xFFFE;
-
-		bank = base;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
-
-		bank = base | 0x0001;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 2, bank);
-	} else {
-		if (m166.reg[1] & 0x04) {
-			bank = 0x001F;
-			_control_bank(bank, info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, bank);
-
-			bank = base;
-			_control_bank(bank, info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 2, bank);
-		} else {
-			bank = base;
-			_control_bank(bank, info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, bank);
-
-			bank = 0x0007;
-			_control_bank(bank, info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 2, bank);
-		}
+	if (info.reset >= HARD) {
+		memset(&m166, 0x00, sizeof(m166));
 	}
-	map_prg_rom_8k_update();
+}
+void extcl_after_mapper_init_166(void) {
+	prg_fix_166();
+}
+void extcl_cpu_wr_mem_166(UNUSED(WORD address), BYTE value) {
+	m166.reg[(address & 0x6000) >> 13] = value;
+	prg_fix_166();
 }
 BYTE extcl_save_mapper_166(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m166.reg);
 
 	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_166(void) {
+	WORD bank = (((m166.reg[0] ^ m166.reg[1]) & 0x10) << 1) + ((m166.reg[2] ^ m166.reg[3]) & 0x1F);
+
+	if (m166.reg[1] & 0x08) {
+		memmap_auto_16k(MMCPU(0x8000), (bank & 0xFE));
+		memmap_auto_16k(MMCPU(0xC000), (bank | 0x01));
+	} if (m166.reg[1] & 0x04) {
+		memmap_auto_16k(MMCPU(0x8000), 0x1F);
+		memmap_auto_16k(MMCPU(0xC000), bank);
+	} else {
+		memmap_auto_16k(MMCPU(0x8000), bank);
+		memmap_auto_16k(MMCPU(0xC000), 0x07);
+	}
 }

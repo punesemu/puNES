@@ -35,9 +35,7 @@ void map_init_324(void) {
 	mapper.internal_struct[0] = (BYTE *)&m324;
 	mapper.internal_struct_size[0] = sizeof(m324);
 
-	if (info.reset >= HARD) {
-		memset(&m324, 0x00, sizeof(m324));
-	}
+	memset(&m324, 0x00, sizeof(m324));
 }
 void extcl_after_mapper_init_324(void) {
 	prg_fix_324();

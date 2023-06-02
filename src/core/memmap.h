@@ -63,25 +63,21 @@ enum _memmap_types {
 	CPUMM = 0x10000,
 	PPUMM = 0x20000,
 
-	// imposto 0x100 per la mapper 347
-	MEMMAP_CHUNK_SIZE = S256B,
+	// imposto S256B per la mapper 539
+	// per le mapper 347, 186 uso S1K
+	//MEMMAP_CHUNK_SIZE_DEFAULT = S256B,
 
-//	MEMMAP_WRAM_CHUNK_SIZE = S4K, // per debug
-	MEMMAP_WRAM_CHUNK_SIZE = MEMMAP_CHUNK_SIZE,
-	MEMMAP_WRAM_CHUNK_BANKS = S16K / MEMMAP_WRAM_CHUNK_SIZE,
+	MEMMAP_PRG_CHUNK_SIZE_DEFAULT = S8K,
+	MEMMAP_PRG_SIZE = S32K,
 
-	MEMMAP_PRG_CHUNK_SIZE = S8K, // per debug
-//	MEMMAP_PRG_CHUNK_SIZE = S4K, // per debug
-//	MEMMAP_PRG_CHUNK_SIZE = MEMMAP_CHUNK_SIZE,
-	MEMMAP_PRG_CHUNK_BANKS = S32K / MEMMAP_PRG_CHUNK_SIZE,
+	MEMMAP_CHR_CHUNK_SIZE_DEFAULT = S1K,
+	MEMMAP_CHR_SIZE = S8K,
 
-//	MEMMAP_CHR_CHUNK_SIZE = S1K, // per debug
-	MEMMAP_CHR_CHUNK_SIZE = MEMMAP_CHUNK_SIZE,
-	MEMMAP_CHR_CHUNK_BANKS = S8K / MEMMAP_CHR_CHUNK_SIZE,
+	MEMMAP_WRAM_CHUNK_SIZE_DEFAULT = S4K,
+	MEMMAP_WRAM_SIZE = S16K,
 
-//	MEMMAP_NMT_CHUNK_SIZE = S1K, // per debug
-	MEMMAP_NMT_CHUNK_SIZE = MEMMAP_CHUNK_SIZE,
-	MEMMAP_NMT_CHUNK_BANKS = S8K / MEMMAP_NMT_CHUNK_SIZE
+	MEMMAP_NMT_CHUNK_SIZE_DEFAULT = S1K,
+	MEMMAP_NMT_SIZE = S8K,
 };
 enum _memmap_misc { MAX_CHIPS = 8 };
 
@@ -89,12 +85,25 @@ enum _memmap_misc { MAX_CHIPS = 8 };
 #define MMCPU(address) (CPUMM | (address))
 #define MMPPU(address) (PPUMM | (address))
 
+#define prgrom_size() prgrom.data.size
+#define prgrom_pnt() prgrom.data.pnt
+#define prgrom_pnt_byte(byte) &prgrom.data.pnt[byte]
+#define prgrom_byte(byte) prgrom.data.pnt[(byte)]
+#define prgrom_mask() prgrom.data.mask
+#define prgrom_calc_chunk(address) ((address) / memmap.prg.info.chunk.size)
+
+#define chrrom_size() chrrom.data.size
+#define chrrom_pnt() chrrom.data.pnt
+#define chrrom_pnt_byte(byte) &chrrom.data.pnt[byte]
+#define chrrom_byte(byte) chrrom.data.pnt[(byte)]
+#define chrrom_mask() chrrom.data.mask
+
 #define wram_size() wram.data.size
 #define wram_pnt() wram.data.pnt
 #define wram_pnt_byte(byte) &wram.data.pnt[byte]
 #define wram_byte(byte) wram.data.pnt[(byte)]
 #define wram_mask() wram.data.mask
-#define wram_calc_chunk(address) ((address) / MEMMAP_WRAM_CHUNK_SIZE)
+#define wram_calc_chunk(address) ((address) / memmap.wram.info.chunk.size)
 
 #define wram_ram_size() wram.ram.size
 #define wram_ram_pnt() wram.ram.pnt
@@ -108,25 +117,12 @@ enum _memmap_misc { MAX_CHIPS = 8 };
 #define wram_nvram_byte(byte) wram.nvram.pnt[(byte)]
 #define wram_nvram_mask() wram.nvram.mask
 
-#define prgrom_size() prgrom.data.size
-#define prgrom_pnt() prgrom.data.pnt
-#define prgrom_pnt_byte(byte) &prgrom.data.pnt[byte]
-#define prgrom_byte(byte) prgrom.data.pnt[(byte)]
-#define prgrom_mask() prgrom.data.mask
-#define prgrom_calc_chunk(address) ((address) / MEMMAP_PRG_CHUNK_SIZE)
-
-#define chrrom_size() chrrom.data.size
-#define chrrom_pnt() chrrom.data.pnt
-#define chrrom_pnt_byte(byte) &chrrom.data.pnt[byte]
-#define chrrom_byte(byte) chrrom.data.pnt[(byte)]
-#define chrrom_mask() chrrom.data.mask
-
 #define vram_size() vram.data.size
 #define vram_pnt() vram.data.pnt
 #define vram_pnt_byte(byte) &vram.data.pnt[byte]
 #define vram_byte(byte) vram.data.pnt[(byte)]
 #define vram_mask() vram.data.mask
-#define vram_calc_chunk(address) ((address) / MEMMAP_CHR_CHUNK_SIZE)
+#define vram_calc_chunk(address) ((address) / memmap.vram.info.chunk.size)
 
 #define vram_ram_size() vram.ram.size
 #define vram_ram_pnt() vram.ram.pnt
@@ -196,6 +192,7 @@ enum _memmap_misc { MAX_CHIPS = 8 };
 
 
 typedef struct _memmap_info {
+	size_t size;
 	WORD shift;
 	struct chunk {
 		size_t size;
@@ -204,9 +201,9 @@ typedef struct _memmap_info {
 } _memmap_info;
 typedef struct _memmap_chunk {
 	enum _memmap_bank_types type;
+	BYTE *pnt;
 	BYTE writable;
 	BYTE readable;
-	BYTE *pnt;
 	WORD mask;
 	WORD actual_bank;
 	struct _memmap_chunck_permit {
@@ -223,8 +220,8 @@ typedef struct _memmap_region {
 	_memmap_chunk *chunks;
 } _memmap_region;
 typedef struct _memmap_chunk_dst {
-	size_t size;
 	BYTE *pnt;
+	size_t size;
 	size_t mask;
 } _memmap_chunk_dst;
 typedef struct _memmap {
@@ -239,8 +236,8 @@ typedef struct _prgrom {
 	struct _prgrom_chips {
 		WORD amount;
 		struct _prgrom_chip {
-			size_t size;
 			BYTE *pnt;
+			size_t size;
 		} chunk[MAX_CHIPS];
 	} chips;
 } _prgrom;
@@ -250,8 +247,8 @@ typedef struct _chrrom {
 	struct _chrrom_chips {
 		WORD amount;
 		struct _chrrom_chip {
-			size_t size;
 			BYTE *pnt;
+			size_t size;
 		} chunk[MAX_CHIPS];
 	} chips;
 } _chrrom;
@@ -304,6 +301,11 @@ EXTERNC BYTE memmap_adr_is_writable(DBWORD address);
 EXTERNC WORD memmap_chunk_actual_bank(DBWORD address);
 EXTERNC BYTE *memmap_chunk_pnt(DBWORD address);
 
+EXTERNC BYTE memmap_prg_region_init(size_t chunk_size);
+EXTERNC BYTE memmap_chr_region_init(size_t chunk_size);
+EXTERNC BYTE memmap_wram_region_init(size_t chunk_size);
+EXTERNC BYTE memmap_nmt_region_init(size_t chunk_size);
+
 EXTERNC void memmap_auto_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_auto_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_auto_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
@@ -312,7 +314,7 @@ EXTERNC void memmap_auto_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_auto_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_auto_wp_16k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_auto_wp_32k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_auto_wp_custom_size(DBWORD address, DBWORD chunk, BYTE rd, BYTE wr, size_t size);
+EXTERNC void memmap_auto_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
 
 EXTERNC void memmap_auto_256b(DBWORD address, DBWORD value);
 EXTERNC void memmap_auto_512b(DBWORD address, DBWORD value);
@@ -342,7 +344,7 @@ EXTERNC void memmap_other_4k(DBWORD address, DBWORD value, BYTE *dst, size_t dst
 EXTERNC void memmap_other_8k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
 EXTERNC void memmap_other_16k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
 EXTERNC void memmap_other_32k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
-EXTERNC void memmap_other_custom_size(DBWORD address, DBWORD initial_chunk, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr, size_t custom_size);
+EXTERNC void memmap_other_custom_size(DBWORD address, DBWORD initial_chunk, size_t custom_size, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
 
 // prgrom ----------------------------------------------------------------------------
 
@@ -430,7 +432,7 @@ EXTERNC void memmap_wram_ram_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE w
 EXTERNC void memmap_wram_ram_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_wram_ram_wp_16k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_wram_ram_wp_32k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_ram_wp_custom_size(DBWORD address, DBWORD chunk, BYTE rd, BYTE wr, size_t size);
+EXTERNC void memmap_wram_ram_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
 
 EXTERNC void memmap_wram_nvram_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_wram_nvram_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
@@ -440,7 +442,7 @@ EXTERNC void memmap_wram_nvram_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE
 EXTERNC void memmap_wram_nvram_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_wram_nvram_wp_16k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_wram_nvram_wp_32k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_nvram_custom_size(DBWORD address, DBWORD chunk, BYTE rd, BYTE wr, size_t size);
+EXTERNC void memmap_wram_nvram_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
 
 // nvram -----------------------------------------------------------------------------
 
@@ -464,7 +466,7 @@ EXTERNC void memmap_vram_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_vram_wp_2k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_vram_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_vram_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_vram_wp_custom_size(DBWORD address, DBWORD chunk, BYTE rd, BYTE wr, size_t size);
+EXTERNC void memmap_vram_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
 
 // nmt -------------------------------------------------------------------------------
 

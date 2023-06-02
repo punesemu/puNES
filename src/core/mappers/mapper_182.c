@@ -17,8 +17,6 @@
  */
 
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 
 void prg_swap_mmc3_182(WORD address, WORD value);
 void chr_swap_mmc3_182(WORD address, WORD value);
@@ -40,15 +38,11 @@ void prg_swap_mmc3_182(WORD address, WORD value) {
 
 		value = base | (value & mask);
 	}
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3_base(address, value);
 }
 void chr_swap_mmc3_182(WORD address, WORD value) {
 	WORD base = ((m114.reg[1] & 0x10) << 4) | ((m114.reg[1] & 0x02) << 6);
 	WORD mask = 0x7F | ((m114.reg[1] & 0x40) << 1);
 
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.chr.rom.max.banks_1k)
-	chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

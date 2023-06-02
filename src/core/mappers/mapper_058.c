@@ -16,46 +16,59 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
+#include "save_slot.h"
+
+INLINE static void prg_fix_058(void);
+INLINE static void chr_fix_058(void);
+INLINE static void mirroring_fix_058(void);
+
+struct _m058 {
+	WORD reg;
+} m058;
 
 void map_init_058(void) {
+	EXTCL_AFTER_MAPPER_INIT(058);
 	EXTCL_CPU_WR_MEM(058);
+	EXTCL_SAVE_MAPPER(058);
+	mapper.internal_struct[0] = (BYTE *)&m058;
+	mapper.internal_struct_size[0] = sizeof(m058);
 
 	if (info.reset >= HARD) {
-		extcl_cpu_wr_mem_058(0x8000, 0x00);
+		memset(&m058, 0x00, sizeof(m058));
 	}
 }
-void extcl_cpu_wr_mem_058(WORD address, BYTE value) {
-	DBWORD bank;
-	BYTE tmp = address & 0x07;
+void extcl_after_mapper_init_058(void) {
+	prg_fix_058();
+	chr_fix_058();
+	mirroring_fix_058();
+}
+void extcl_cpu_wr_mem_058(WORD address, UNUSED(BYTE value)) {
+	m058.reg = address;
+	prg_fix_058();
+	chr_fix_058();
+	mirroring_fix_058();
+}
+BYTE extcl_save_mapper_058(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m058.reg);
 
-	if (address & 0x0080) {
+	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_058(void) {
+	WORD bank = m058.reg & 0x07;
+
+	memmap_auto_16k(MMCPU(0x8000), (bank & ~((~m058.reg & 0x40) >> 6)));
+	memmap_auto_16k(MMCPU(0xC000), (bank |  ((~m058.reg & 0x40) >> 6)));
+}
+INLINE static void chr_fix_058(void) {
+	memmap_auto_8k(MMPPU(0x0000), ((m058.reg & 0x38) >> 3));
+}
+INLINE static void mirroring_fix_058(void) {
+	if (m058.reg & 0x80) {
 		mirroring_H();
-	} else  {
+	} else {
 		mirroring_V();
 	}
-
-	value = tmp & ~((~address >> 6) & 0x01);
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, value);
-
-	value = tmp | ((~address >> 6) & 0x01);
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, value);
-
-	map_prg_rom_8k_update();
-
-	value = (address >> 3) & 0x07;
-	control_bank(info.chr.rom.max.banks_8k)
-	bank = value << 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }

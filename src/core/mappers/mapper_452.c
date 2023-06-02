@@ -26,33 +26,22 @@ INLINE static void prg_fix_452(void);
 INLINE static void wram_fix_452(void);
 INLINE static void mirroring_fix_452(void);
 
-INLINE static BYTE wram_adr_452(WORD address);
-
 struct _m452 {
 	WORD reg[2];
 } m452;
-struct _m452tmp {
-	WORD adr1;
-	WORD adr2;
-} m452tmp;
 
 void map_init_452(void) {
 	EXTCL_AFTER_MAPPER_INIT(452);
 	EXTCL_CPU_WR_MEM(452);
-	EXTCL_CPU_RD_MEM(452);
 	EXTCL_SAVE_MAPPER(452);
 	mapper.internal_struct[0] = (BYTE *)&m452;
 	mapper.internal_struct_size[0] = sizeof(m452);
 
-	if (info.reset >= HARD) {
-		memset(&m452, 0x00, sizeof(m452));
+	memset(&m452, 0x00, sizeof(m452));
+
+	if (info.mapper.submapper == DEFAULT) {
+		info.mapper.submapper = 0;
 	}
-
-//	if (wram_size() < 0x2000) {
-//		wram_set_ram_size(0x2000);
-//	}
-
-	info.mapper.extend_rd = TRUE;
 }
 void extcl_after_mapper_init_452(void) {
 	prg_fix_452();
@@ -60,66 +49,79 @@ void extcl_after_mapper_init_452(void) {
 	mirroring_fix_452();
 }
 void extcl_cpu_wr_mem_452(WORD address, BYTE value) {
-	if (address <= 0xDFFF) {
+	if (!memmap_adr_is_writable(MMCPU(address))) {
 		m452.reg[0] = address;
 		m452.reg[1] = value;
 		prg_fix_452();
-		wram_fix_452();
 		mirroring_fix_452();
 	}
-	if (wram_adr_452(address)) {
-		wram_wr(0x6000 | (address & 0x1FFF), value);
-	}
-}
-BYTE extcl_cpu_rd_mem_452(WORD address, BYTE openbus) {
-	return (wram_adr_452(address) ? wram_rd(0x6000 | (address & 0x1FFF)) : openbus);
 }
 BYTE extcl_save_mapper_452(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m452.reg);
-
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_452();
-	}
 
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_452(void) {
-	WORD bank = 0;
+	WORD bank = (m452.reg[0] >> 1);
 
-	if (m452.reg[1] & 0x0002) {
-		bank = m452.reg[0] >> 1;
+	if (info.mapper.submapper == 1) {
+		switch (m452.reg[0] & 0xF000) {
+			case 0xA000:
+				memmap_auto_16k(MMCPU(0x8000), (m452.reg[0] >> 1));
+				memmap_auto_16k(MMCPU(0xC000), 0);
+				memmap_wram_8k(MMCPU((0x8000 | ((m452.reg[0] & 0x0600) << 4))), 0);
+				return;
+			case 0xC000:
+				memmap_auto_16k(MMCPU(0x8000), bank);
+				memmap_auto_16k(MMCPU(0xC000), (bank | 1));
+				memmap_wram_8k(MMCPU((0x8000 | ((m452.reg[0] & 0x0600) << 4))), 0);
+				return;
+			case 0xD000:
+				memmap_auto_8k(MMCPU(0x8000), m452.reg[0]);
+				memmap_auto_8k(MMCPU(0xA000), m452.reg[0]);
+				memmap_auto_8k(MMCPU(0xC000), m452.reg[0]);
+				memmap_auto_8k(MMCPU(0xE000), m452.reg[0]);
+				memmap_wram_8k(MMCPU((0x8000 | ((m452.reg[0] & 0x0200) << 4))), 0);
+				memmap_wram_8k(MMCPU((0xC000 | ((m452.reg[0] & 0x0200) << 4))), 0);
+				return;
+			case 0xE000:
+				memmap_auto_16k(MMCPU(0x8000), bank);
+				memmap_auto_16k(MMCPU(0xC000), (m452.reg[0] & 0x100 ? bank | 0x07 : 0));
+				memmap_wram_8k(MMCPU((0x8000 | ((m452.reg[0] & 0x0600) << 4))), 0);
+				return;
+			default:
+				memmap_auto_16k(MMCPU(0x8000), bank);
+				memmap_auto_16k(MMCPU(0xC000), 0);
+				return;
+		}
+		return;
+	} else if (m452.reg[1] & 0x0002) {
 		memmap_auto_8k(MMCPU(0x8000), bank);
 		memmap_auto_8k(MMCPU(0xA000), bank);
 		memmap_auto_8k(MMCPU(0xC000), bank);
 		memmap_auto_8k(MMCPU(0xE000), bank);
+		memmap_wram_8k(MMCPU((0x8000 | (((m452.reg[1] & 0x30) << 9) ^ 0x4000))), 0);
 	} else if (m452.reg[1] & 0x0008) {
-		bank = m452.reg[0] >> 1;
+		bank &= ~1;
 		memmap_auto_8k(MMCPU(0x8000), bank);
 		memmap_auto_8k(MMCPU(0xA000), (bank | 0x01));
 		memmap_auto_8k(MMCPU(0xC000), (bank | 0x02));
 		memmap_auto_8k(MMCPU(0xE000), (bank | 0x03 | (m452.reg[1] & 0x0004)));
 	} else {
-		bank = m452.reg[0] >> 2;
+		bank >>= 1;
 		memmap_auto_16k(MMCPU(0x8000), bank);
 		memmap_auto_16k(MMCPU(0xC000), 0);
 	}
+	memmap_wram_8k(MMCPU((0x8000 | ((m452.reg[1] & 0x30) << 9))), 0);
 }
 INLINE static void wram_fix_452(void) {
-	m452tmp.adr1 = 0x8000 | ((m452.reg[1] & 0x30) << 9);
-	m452tmp.adr2 = (m452.reg[1] & 0x0002) ? 0x8000 | (((m452.reg[1] & 0x30) ^ 0x20) << 9) : 0x0000;
-	memmap_auto_8k(MMCPU(0x6000), 0);
+	memmap_disable_8k(MMCPU(0x6000));
 }
 INLINE static void mirroring_fix_452(void) {
-	if (m452.reg[1] & 0x0001) {
+	if (info.mapper.submapper == 1 ? m452.reg[0] & 0x0800 : m452.reg[1] & 0x01) {
 		mirroring_H();
 	} else {
 		mirroring_V();
 	}
-}
-
-INLINE static BYTE wram_adr_452(WORD address) {
-	WORD tmp = address & 0xE000;
-
-	return ((tmp == m452tmp.adr1) || (tmp == m452tmp.adr2) ? TRUE : FALSE);
 }

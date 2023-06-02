@@ -2640,13 +2640,13 @@ static const _dbelement dblist[] = {
 
 /* ------------------------------------ Color Dreams -------------------------------------- */
 	/* King Neptune's Adventure (Color Dreams) [!].nes */
-	{"012a23b6fe872bcbcc42dfeb5835a7bfaf721fc6", 11, DEFAULT, BAD_KING_NEPT, DEFAULT, UNK_VERTICAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"012a23b6fe872bcbcc42dfeb5835a7bfaf721fc6", 11, DEFAULT, DEFAULT, DEFAULT, UNK_VERTICAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Kojiki_by_wAMMA.nes */
 	{"9becee07199b622408c0806d1dd1f510989b2488", 11, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Free Fall (U) (Prototype) [!].nes */
-	{"41f6f581c7da9f90c18e0eb2442df7a6adbe3e76", 11, CD_NO_CONFLCT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"41f6f581c7da9f90c18e0eb2442df7a6adbe3e76", 11, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Secret Scout in the Temple of Demise (USA) (Beta) (Unl).nes */
-	{"e667fe1a0eb044c8615042d31dea3b2913d813bb", 11, CD_NO_CONFLCT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"e667fe1a0eb044c8615042d31dea3b2913d813bb", 11, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* --------------------------------------- CPROM ------------------------------------------ */
 	/* Volshebnaya Palitra (R) [!].nes */
@@ -3129,10 +3129,6 @@ static const _dbelement dblist[] = {
 	{"03b5d95bd2ae1c0a005b22624fa973e32670b36c", 79, DEFAULT, DEFAULT, DEFAULT, UNK_VERTICAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Puzzle (NINA03-USA) (AVE) [!].nes */
 	{"7ce6d42024313ed82a9649b468f642f3101538eb", 79, DEFAULT, DEFAULT, DEFAULT, UNK_HORIZONTAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Puzzle (Unl) [a1][o2].nes */
-	{"7ed183454555585b1a5393b158e362624c7e4109", 79, DEFAULT, PUZZLEUNL, DEFAULT, UNK_HORIZONTAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Puzzle (Unl).nes */
-	{"b932af1cfd3fc975e22db69528f7f9ae8a7c85de", 79, DEFAULT, PUZZLEUNL, DEFAULT, UNK_HORIZONTAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Pyramid (AVE) (PRG0) [!].nes */
 	{"d23b489dc965585888fbcf610931181430dd5d33", 79, DEFAULT, DEFAULT, DEFAULT, UNK_HORIZONTAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Rad Racket - Deluxe Tennis II (AVE) [o1].nes */
@@ -3416,7 +3412,7 @@ static const _dbelement dblist[] = {
 	/* Total Funpak (HES).nes */
 	{"17c721cab79fe83eb47a6fb1e53af1f65b851558", 113, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Sidewinder (Australia) (Unl).nes */
-	{"b1cc3ed04c610be18742a3fd78a8f27a597f8549", 113, DEFAULT, BAD_INES_SWAUS, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"b1cc3ed04c610be18742a3fd78a8f27a597f8549", 113, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* --------------------------------------- 114 -------------------------------------------- */
 	/* Boogerman (Sugar Softec) (Unl) [!].nes */
@@ -3736,11 +3732,9 @@ static const _dbelement dblist[] = {
 	/* Wang Zi Fu Chou Ji (Ch).nes */
 	{"0d6dda4af970459d532957d50b937ca42395cf8f", 177, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Xing He Zhan Shi (Ch).nes */
-	{"17473c223453d2d80fcb9dcfa317947287dc5c52", 177, HEN_XJZB, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"17473c223453d2d80fcb9dcfa317947287dc5c52", 177, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Xing Zhan Qing Yuan (Ch).nes */
 	{"6fa15dd888ab43b5c464ad1b5c1da5fbd426f035", 177, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Fan Kong Jing Ying (Ch).nes */
-	{"bfa31777e077e64af0e274b5a22b57c6765d36e1", 177, HEN_FANKONG, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ----------------------------------------- 178 ------------------------------------------ */
 	/* Education Computer 32-in-1 (Game Star)(Unl)[!].nes */
@@ -3941,6 +3935,8 @@ static const _dbelement dblist[] = {
 	{"eea726f679d364e6805d48f923ddd21fe14d9f43", 241, DEFAULT, DEFAULT, DENDY, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Study and Game 32-in-1 [!].nes */
 	{"c073cd6389e373cbb3433f81196ece4d09c33bef", 241, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Fan Kong Jing Ying (Ch).nes */
+	{"bfa31777e077e64af0e274b5a22b57c6765d36e1", 241, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* -------------------------------------------- 242 --------------------------------------- */
 	/* Dragon Quest VIII (ES-1077) (Ch) [!].nes */

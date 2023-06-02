@@ -21,8 +21,6 @@
 
 #include "common.h"
 
-enum mm14_types { M108_1 = 1, M108_2, M108_3, M108_4 };
-
 void map_init_108(void);
 void extcl_after_mapper_init_108(void);
 void extcl_cpu_wr_mem_108(WORD address, BYTE value);

@@ -17,8 +17,6 @@
  */
 
 #include <string.h>
-#include "mem_map.h"
-#include "info.h"
 #include "mappers.h"
 #include "save_slot.h"
 
@@ -36,7 +34,9 @@ void map_init_081(void) {
 	mapper.internal_struct[0] = (BYTE *)&m081;
 	mapper.internal_struct_size[0] = sizeof(m081);
 
-	memset(&m081, 0x00, sizeof(m081));
+	if (info.reset >= HARD) {
+		memset(&m081, 0x00, sizeof(m081));
+	}
 }
 void extcl_after_mapper_init_081(void) {
 	prg_fix_081();
@@ -47,7 +47,6 @@ void extcl_cpu_wr_mem_081(WORD address, UNUSED(BYTE value)) {
 	prg_fix_081();
 	chr_fix_081();
 }
-
 BYTE extcl_save_mapper_081(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m081.reg);
 
@@ -55,30 +54,9 @@ BYTE extcl_save_mapper_081(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_081(void) {
-	WORD bank;
-
-	bank = (m081.reg & 0x000C) >> 2;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-
-	bank = 0xFF;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_16k(MMCPU(0x8000), (m081.reg >> 2));
+	memmap_auto_16k(MMCPU(0xC000), 0xFF);
 }
 INLINE static void chr_fix_081(void) {
-	DBWORD bank;
-
-	bank = m081.reg & 0x0003;
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank = bank << 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	memmap_auto_8k(MMPPU(0x0000), (m081.reg & 0x03));
 }

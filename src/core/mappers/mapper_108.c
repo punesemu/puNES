@@ -16,10 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "mappers.h"
 #include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_108(void);
@@ -44,26 +42,24 @@ void map_init_108(void) {
 		m108.reg = 0;
 	}
 
-	if ((info.mapper.submapper == 0) || (info.mapper.submapper > 4)) {
-		if (mapper.write_vram) {
-			info.mapper.submapper = mapper.mirroring != MIRRORING_VERTICAL ? M108_1 : M108_3;
-		} else {
-			info.mapper.submapper = chr_size() > (1024 * 16) ? M108_2 : M108_4;
-		}
+	if (!info.mapper.submapper || (info.mapper.submapper > 4)) {
+		info.mapper.submapper = !chrrom_size()
+			? info.mapper.mirroring != MIRRORING_VERTICAL ? 1 : 3
+			: prgrom_size() <= S32K ? 4 : 2;
 	}
 
 	switch (info.mapper.submapper) {
 		default:
-		case M108_1:
+		case 1:
 			m108tmp.start = 0xF000;
 			break;
-		case M108_2:
+		case 2:
 			m108tmp.start = 0xE000;
 			break;
-		case M108_3:
+		case 3:
 			m108tmp.start = 0x8000;
 			break;
-		case M108_4:
+		case 4:
 			m108tmp.start = 0x8000;
 			break;
 	}
@@ -95,19 +91,8 @@ INLINE static void prg_fix_108(void) {
 	memmap_prgrom_32k(MMCPU(0x8000), 0xFF);
 }
 INLINE static void chr_fix_108(void) {
-	if (!mapper.write_vram) {
-		DBWORD bank = m108.reg;
-
-		_control_bank(bank, info.chr.rom.max.banks_8k);
-		bank <<= 13;
-		chr.bank_1k[0] = chr_pnt(bank);
-		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-		chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	if (chrrom_size()) {
+		memmap_auto_8k(MMPPU(0x0000), m108.reg);
 	}
 }
 INLINE static void wram_fix_108(void) {

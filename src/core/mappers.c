@@ -33,18 +33,16 @@ _mapper mapper;
 BYTE map_init(void) {
 	unsigned int i = 0;
 
-	/*
-	 * di default la routine di salvataggio
-	 * di una possibile struttura interna
-	 * di dati della mapper e' NULL.
-	 */
+	// di default la routine di salvataggio
+	// di una possibile struttura interna
+	// di dati della mapper e' NULL.
 	for (i = 0; i < LENGTH(mapper.internal_struct); i++) {
 		mapper.internal_struct[i] = 0;
 	}
-	/* disabilito gli accessori */
+	// disabilito gli accessori
 	irqA12.present = FALSE;
 	irql2f.present = FALSE;
-	/* disabilito tutte le chiamate relative alle mappers */
+	// disabilito tutte le chiamate relative alle mappers
 	extcl_init();
 
 	info.mapper.supported = TRUE;
@@ -88,7 +86,7 @@ BYTE map_init(void) {
 			map_init_010();
 			break;
 		case 11:
-			map_init_ColorDreams();
+			map_init_011();
 			break;
 		case 12:
 			if (info.mapper.submapper == 1) {
@@ -98,7 +96,7 @@ BYTE map_init(void) {
 			}
 			break;
 		case 13:
-			map_init_CPROM();
+			map_init_013();
 			break;
 		case 14:
 			map_init_014();
@@ -190,7 +188,7 @@ BYTE map_init(void) {
 			map_init_040();
 			break;
 		case 41:
-			map_init_Caltron();
+			map_init_041();
 			break;
 		case 42:
 			map_init_042();
@@ -301,7 +299,7 @@ BYTE map_init(void) {
 			map_init_Jaleco(JF16);
 			break;
 		case 79:
-			map_init_Ave(NINA06);
+			map_init_079();
 			break;
 		case 80:
 			map_init_Taito(X1005A);
@@ -385,10 +383,10 @@ BYTE map_init(void) {
 			map_init_111();
 			break;
 		case 112:
-			map_init_Ntdec(ASDER);
+			map_init_112();
 			break;
 		case 113:
-			map_init_Hes();
+			map_init_113();
 			break;
 		case 114:
 			map_init_114();
@@ -425,61 +423,61 @@ BYTE map_init(void) {
 			map_init_125();
 			break;
 		case 126:
-			map_init_126(MAP126);
+			map_init_126();
 			break;
 		case 132:
-			map_init_Txc(T22211A);
+			map_init_132();
 			break;
 		case 133:
-			map_init_Sachen(SA72008);
+			map_init_133();
 			break;
 		case 134:
 			map_init_134();
 			break;
 		case 136:
-			map_init_Sachen(TCU02);
+			map_init_136();
 			break;
 		case 137:
-			map_init_Sachen(SA8259D);
+			map_init_137();
 			break;
 		case 138:
-			map_init_Sachen(SA8259B);
+			map_init_138();
 			break;
 		case 139:
-			map_init_Sachen(SA8259C);
+			map_init_139();
 			break;
 		case 140:
-			map_init_Jaleco(JF11);
+			map_init_140();
 			break;
 		case 141:
-			map_init_Sachen(SA8259A);
+			map_init_141();
 			break;
 		case 142:
 			map_init_142();
 			break;
 		case 143:
-			map_init_Sachen(TCA01);
+			map_init_143();
 			break;
 		case 144:
-			map_init_Agci();
+			map_init_144();
 			break;
 		case 145:
-			map_init_Sachen(SA72007);
+			map_init_145();
 			break;
 		case 146:
-			map_init_Ave(NINA06);
+			map_init_079();
 			break;
 		case 147:
-			map_init_Sachen(TCU01);
+			map_init_147();
 			break;
 		case 148:
 			map_init_148();
 			break;
 		case 149:
-			map_init_Sachen(SA0036);
+			map_init_149();
 			break;
 		case 150:
-			map_init_Sachen(SA74374B);
+			map_init_150();
 			break;
 		case 151:
 			map_init_075();
@@ -531,10 +529,10 @@ BYTE map_init(void) {
 			map_init_171();
 			break;
 		case 172:
-			map_init_Txc(T22211C);
+			map_init_172();
 			break;
 		case 173:
-			map_init_Txc(T22211B);
+			map_init_173();
 			break;
 		case 175:
 			map_init_175();
@@ -543,12 +541,7 @@ BYTE map_init(void) {
 			map_init_176();
 			break;
 		case 177:
-			if (info.mapper.submapper != DEFAULT) {
-				// questa e' la mappers 179 in nestopia
-				map_init_Hen(info.mapper.submapper);
-			} else {
-				map_init_Hen(HEN_177);
-			}
+			map_init_177();
 			break;
 		case 178:
 			map_init_178();
@@ -593,7 +586,7 @@ BYTE map_init(void) {
 			map_init_192();
 			break;
 		case 193:
-			map_init_Ntdec(FHERO);
+			map_init_193();
 			break;
 		case 194:
 			map_init_194();
@@ -653,7 +646,7 @@ BYTE map_init(void) {
 			map_init_212();
 			break;
 		case 213:
-			map_init_213();
+			map_init_058();
 			break;
 		case 214:
 			map_init_214();
@@ -711,7 +704,7 @@ BYTE map_init(void) {
 			map_init_233();
 			break;
 		case 234:
-			map_init_Ave(D1012);
+			map_init_234();
 			break;
 		case 235:
 			map_init_235();
@@ -735,7 +728,7 @@ BYTE map_init(void) {
 			map_init_242();
 			break;
 		case 243:
-			map_init_Sachen(SA74374A);
+			map_init_150();
 			break;
 		case 244:
 			map_init_244();
@@ -787,10 +780,10 @@ BYTE map_init(void) {
 			map_init_263();
 			break;
 		case 264:
-			map_init_YOKO();
+			map_init_083();
 			break;
 		case 265:
-			map_init_T262();
+			map_init_265();
 			break;
 		case 266:
 			map_init_266();
@@ -823,10 +816,10 @@ BYTE map_init(void) {
 			map_init_284();
 			break;
 		case 285:
-			map_init_A65AS();
+			map_init_285();
 			break;
 		case 286:
-			map_init_BS5();
+			map_init_286();
 			break;
 		case 287:
 			map_init_287();
@@ -862,7 +855,7 @@ BYTE map_init(void) {
 			map_init_300();
 			break;
 		case 301:
-			map_init_UNIF8157();
+			map_init_301();
 			break;
 		case 302:
 			map_init_302();
@@ -886,7 +879,7 @@ BYTE map_init(void) {
 			map_init_308();
 			break;
 		case 309:
-			map_init_LH51();
+			map_init_309();
 			break;
 		case 311:
 			map_init_311();
@@ -904,7 +897,7 @@ BYTE map_init(void) {
 			map_init_315();
 			break;
 		case 319:
-			map_init_BMCHP898F();
+			map_init_319();
 			break;
 		case 320:
 			map_init_320();
@@ -952,7 +945,7 @@ BYTE map_init(void) {
 			map_init_337();
 			break;
 		case 338:
-			map_init_SA005A();
+			map_init_338();
 			break;
 		case 339:
 			map_init_339();
@@ -961,7 +954,7 @@ BYTE map_init(void) {
 			map_init_340();
 			break;
 		case 341:
-			map_init_TJ03();
+			map_init_341();
 			break;
 		case 342:
 			map_init_342();
@@ -985,7 +978,7 @@ BYTE map_init(void) {
 			map_init_348();
 			break;
 		case 349:
-			map_init_BMCG146();
+			map_init_349();
 			break;
 		case 350:
 			map_init_350();
@@ -1144,7 +1137,7 @@ BYTE map_init(void) {
 			map_init_421();
 			break;
 		case 422:
-			map_init_126(MAP422);
+			map_init_126();
 			break;
 		case 428:
 			map_init_428();
@@ -1213,10 +1206,10 @@ BYTE map_init(void) {
 			map_init_518();
 			break;
 		case 519:
-			map_init_EH8813A();
+			map_init_519();
 			break;
 		case 521:
-			map_init_DREAMTECH01();
+			map_init_521();
 			break;
 		case 522:
 			map_init_522();
@@ -1225,10 +1218,10 @@ BYTE map_init(void) {
 			map_init_524();
 			break;
 		case 525:
-			map_init_KS7021A();
+			map_init_525();
 			break;
 		case 526:
-			map_init_BJ56();
+			map_init_526();
 			break;
 		case 527:
 			map_init_527();
@@ -1246,7 +1239,7 @@ BYTE map_init(void) {
 			map_init_532();
 			break;
 		case 534:
-			map_init_126(MAP534);
+			map_init_126();
 			break;
 		case 536:
 		case 537:
@@ -1322,11 +1315,16 @@ BYTE map_init(void) {
 	}
 
 	wram_init();
-
 	vram_init();
 	nvram_load_file();
 
 	chrrom_reset();
+
+	if (info.reset >= HARD) {
+		prgrom_reset();
+		wram_reset();
+		nmt_reset();
+	}
 
 	// after mapper init
 	if (extcl_after_mapper_init) {
@@ -1357,6 +1355,9 @@ void map_quit(void) {
 	miscrom_quit();
 	prgrom_quit();
 	chrrom_quit();
+
+	// faccio un reset
+	memmap_init();
 
 	mirroring_V();
 

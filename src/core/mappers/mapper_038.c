@@ -16,40 +16,50 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
+#include "save_slot.h"
+
+INLINE static void prg_fix_038(void);
+INLINE static void chr_fix_038(void);
+
+struct _m038 {
+	BYTE reg;
+} m038;
 
 void map_init_038(void) {
+	EXTCL_AFTER_MAPPER_INIT(038);
 	EXTCL_CPU_WR_MEM(038);
-
-	info.mapper.extend_wr = TRUE;
+	EXTCL_SAVE_MAPPER(038);
+	mapper.internal_struct[0] = (BYTE *)&m038;
+	mapper.internal_struct_size[0] = sizeof(m038);
 
 	if (info.reset >= HARD) {
-		map_prg_rom_8k(4, 0, 0);
+		memset(&m038, 0x00, sizeof(m038));
 	}
+
+	info.mapper.extend_wr = TRUE;
+}
+void extcl_after_mapper_init_038(void) {
+	prg_fix_038();
+	chr_fix_038();
 }
 void extcl_cpu_wr_mem_038(WORD address, BYTE value) {
-	const BYTE save = value;
-	DBWORD bank;
-
-	if (address >= 0x8000) {
-		return;
+	if ((address >= 0x7000) && (address <= 0x7FFF)) {
+		m038.reg = value;
+		prg_fix_038();
+		chr_fix_038();
 	}
+}
+BYTE extcl_save_mapper_038(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m038.reg);
 
-	control_bank_with_AND(0x03, info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, value);
-	map_prg_rom_8k_update();
+	return (EXIT_OK);
+}
 
-	value = save >> 2;
-	control_bank(info.chr.rom.max.banks_8k)
-	bank = value << 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+INLINE static void prg_fix_038(void) {
+	memmap_auto_32k(MMCPU(0x8000), (m038.reg & 0x03));
+}
+INLINE static void chr_fix_038(void) {
+	memmap_auto_8k(MMPPU(0x0000), ((m038.reg & 0x0C) >> 2));
 }

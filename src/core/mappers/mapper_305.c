@@ -19,7 +19,6 @@
 #include <string.h>
 #include "mappers.h"
 #include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_305(void);
@@ -36,7 +35,14 @@ void map_init_305(void) {
 	mapper.internal_struct[0] = (BYTE *)&m305;
 	mapper.internal_struct_size[0] = sizeof(m305);
 
-	memset(&m305, 0x00, sizeof(m305));
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memmap_prg_region_init(S2K);
+		memmap_wram_region_init(S2K);
+	}
+
+	if (info.reset >= HARD) {
+		memset(&m305, 0x00, sizeof(m305));
+	}
 }
 void extcl_after_mapper_init_305(void) {
 	prg_fix_305();
@@ -48,10 +54,6 @@ void extcl_cpu_wr_mem_305(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_305(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m305.reg);
-
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_305();
-	}
 
 	return (EXIT_OK);
 }

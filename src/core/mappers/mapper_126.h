@@ -21,9 +21,7 @@
 
 #include "common.h"
 
-enum m126_types { MAP126, MAP422, MAP534 };
-
-void map_init_126(BYTE model);
+void map_init_126(void);
 void extcl_after_mapper_init_126(void);
 void extcl_cpu_wr_mem_126(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_126(WORD address, BYTE openbus);

@@ -39,10 +39,13 @@ void map_init_347(void) {
 	mapper.internal_struct[0] = (BYTE *)&m347;
 	mapper.internal_struct_size[0] = sizeof(m347);
 
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memmap_prg_region_init(S1K);
+		memmap_wram_region_init(S1K);
+	}
+
 	m347.reg[0] = 0x000F;
 	m347.reg[1] = 0x000F;
-
-	//info.prg.ram.banks_8k_plus = 1;
 
 	// Yume Koujou - Doki Doki Panic (Kaiser).nes
 	if (info.crc32.prg == 0xFA4DAC91) {
@@ -93,11 +96,6 @@ void extcl_cpu_wr_mem_347(WORD address, UNUSED(BYTE value)) {
 BYTE extcl_save_mapper_347(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m347.reg);
 
-	if (mode == SAVE_SLOT_READ) {
-		prg_fix_347();
-		wram_fix_347();
-	}
-
 	return (EXIT_OK);
 }
 
@@ -106,16 +104,16 @@ INLINE static void prg_fix_347(void) {
 		? (((m347.reg[1] & 0x000F) * 0x1000) + 0x08400)
 		: (((m347.reg[1] & 0x000F) * 0x1000) + 0x00000);
 
-	memmap_auto_custom_size(MMCPU(0x8000), prgrom_calc_chunk(0x18000), (0x400 * 14));
-	memmap_wram_custom_size(MMCPU(0xB800), wram_calc_chunk(0xC00), (0x400 * 2));
-	memmap_auto_custom_size(MMCPU(0xC000), prgrom_calc_chunk(chunkc0), (0x400 * 3));
-	memmap_wram_custom_size(MMCPU(0xCC00), wram_calc_chunk(0x1400), (0x400 * 3));
+	memmap_auto_custom_size(MMCPU(0x8000), prgrom_calc_chunk(0x18000), (size_t)(0x400 * 14));
+	memmap_wram_custom_size(MMCPU(0xB800), wram_calc_chunk(0xC00), (size_t)(0x400 * 2));
+	memmap_auto_custom_size(MMCPU(0xC000), prgrom_calc_chunk(chunkc0), (size_t)(0x400 * 3));
+	memmap_wram_custom_size(MMCPU(0xCC00), wram_calc_chunk(0x1400), (size_t)(0x400 * 3));
 }
 INLINE static void wram_fix_347(void) {
 	DBWORD chunk6c = (((m347.reg[1] & 0x000F) * 0x1000) + (m347tmp.old_mask_rom ? 0x08000 : 0x00C00));
 	DBWORD chunk70 = (((m347.reg[0] & 0x0007) * 0x1000) + (m347tmp.old_mask_rom ? 0x00000 : 0x10000));
 
-	memmap_auto_custom_size(MMCPU(0x6000), wram_calc_chunk(0), (0x400 * 3));
+	memmap_auto_custom_size(MMCPU(0x6000), wram_calc_chunk(0), (size_t)(0x400 * 3));
 	memmap_prgrom_custom_size(MMCPU(0x6C00), prgrom_calc_chunk(chunk6c), 0x400);
 	memmap_prgrom_custom_size(MMCPU(0x7000), prgrom_calc_chunk(chunk70), 0x1000);
 }

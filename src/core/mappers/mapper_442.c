@@ -25,6 +25,7 @@
 #include "save_slot.h"
 
 INLINE static void prg_fix_442(void);
+
 INLINE static void mode1_bpp(WORD address);
 
 struct _m442 {
@@ -119,6 +120,7 @@ INLINE static void prg_fix_442(void) {
 
 	memmap_auto_32k(MMCPU(0x8000), bank);
 }
+
 INLINE static void mode1_bpp(WORD address) {
 	BYTE pa13 = (address & 0x2000) >> 13;
 

@@ -16,40 +16,63 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
+#include "save_slot.h"
+
+INLINE static void prg_fix_190(void);
+INLINE static void chr_fix_190(void);
+
+struct _m190 {
+	BYTE prg;
+	WORD chr[4];
+} m190;
 
 void map_init_190(void) {
+	EXTCL_AFTER_MAPPER_INIT(190);
 	EXTCL_CPU_WR_MEM(190);
+	EXTCL_SAVE_MAPPER(190);
+	mapper.internal_struct[0] = (BYTE *)&m190;
+	mapper.internal_struct_size[0] = sizeof(m190);
 
-	map_prg_rom_8k(2, 2, 0);
-
-	info.prg.ram.banks_8k_plus = 1;
-	mirroring_V();
+	if (info.reset >= HARD) {
+		memset(&m190, 0x00, sizeof(m190));
+	}
+}
+void extcl_after_mapper_init_190(void) {
+	prg_fix_190();
+	chr_fix_190();
 }
 void extcl_cpu_wr_mem_190(WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x8000:
-			value = value & 0x07;
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-			break;
-		case 0xA000: {
-			BYTE base = (address & 0x0003) << 1;
-			DBWORD bank;
-
-			control_bank(info.chr.rom.max.banks_2k)
-			bank = value << 11;
-			chr.bank_1k[base] = chr_pnt(bank);
-			chr.bank_1k[base | 0x01] = chr_pnt(bank | 0x0400);
+			m190.prg = value & 0x07;
+			prg_fix_190();
 			return;
-		}
+		case 0xA000:
+			m190.chr[address & 0x03] = value;
+			chr_fix_190();
+			return;
 		case 0xC000:
-			value = 0x08 | (value & 0x07);
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-			break;
+			m190.prg = 0x08 | (value & 0x07);
+			prg_fix_190();
+			return;
 	}
-	map_prg_rom_8k_update();
+}
+BYTE extcl_save_mapper_190(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m190.prg);
+	save_slot_ele(mode, slot, m190.chr);
+
+	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_190(void) {
+	memmap_auto_16k(MMCPU(0x8000), m190.prg);
+	memmap_auto_16k(MMCPU(0xC000), 0);
+}
+INLINE static void chr_fix_190(void) {
+	memmap_auto_2k(MMPPU(0x0000), m190.chr[0]);
+	memmap_auto_2k(MMPPU(0x0800), m190.chr[1]);
+	memmap_auto_2k(MMPPU(0x1000), m190.chr[2]);
+	memmap_auto_2k(MMPPU(0x1800), m190.chr[3]);
 }

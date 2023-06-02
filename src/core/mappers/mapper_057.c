@@ -18,105 +18,84 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
+
+INLINE static void prg_fix_057(void);
+INLINE static void chr_fix_057(void);
+INLINE static void mirroring_fix_057(void);
+
+INLINE static void tmp_fix_057(BYTE max, BYTE index, const WORD *ds);
 
 struct _m057 {
 	BYTE reg[2];
 } m057;
 struct _m057tmp {
-	BYTE dipswitch;
-	BYTE mask;
-	BYTE start;
-	SBYTE op;
+	BYTE ds_used;
+	BYTE max;
+	BYTE index;
+	const WORD *dipswitch;
 } m057tmp;
 
 void map_init_057(void) {
+	EXTCL_AFTER_MAPPER_INIT(057);
 	EXTCL_CPU_WR_MEM(057);
 	EXTCL_CPU_RD_MEM(057);
 	EXTCL_SAVE_MAPPER(057);
 	mapper.internal_struct[0] = (BYTE *)&m057;
 	mapper.internal_struct_size[0] = sizeof(m057);
 
-	if (info.reset >= HARD) {
-		memset(&m057, 0x00, sizeof(m057));
-	}
-
-	if (
-		(info.crc32.prg == 0xF77A2663) || // 4-in-1 (ES-Q803B_20210617) (Unl) [p1].nes
-		(info.crc32.prg == 0xDB6228A0) || // 4-in-1_YH-4132.nes
-		(info.crc32.prg == 0x71B7EC3A) || // (YH-4131) Exciting Sport Turbo 4-in-1.nes
-		(info.crc32.prg == 0xEE722DE3) || // (YH-4135) Exciting Sport Turbo 4-in-1.nes
-		(info.crc32.prg == 0xD35D3D8F)) { // (YH-4136) Exciting Sport Turbo 4-in-1.nes
-		m057tmp.mask = 0x01;
-		m057tmp.start = 0x01;
-		m057tmp.op = 1;
-	} else if (info.crc32.prg == 0xC74F9C72) { // 1998 Series No. 10.nes
-		m057tmp.mask = 0x03;
-		m057tmp.start = 0x02;
-		m057tmp.op = -1;
-	} else if (info.crc32.prg == 0xA8930B3B) { // 32-in-1 (42, 52, 62-in-1) (ABCARD-02) (Unl) [p1].nes
-		m057tmp.mask = 0x03;
-		m057tmp.start = 0x03;
-		m057tmp.op = -1;
-	} else {
-		m057tmp.mask = 0x03;
-		m057tmp.start = 0x00;
-		m057tmp.op = 1;
-	}
+	memset(&m057, 0x00, sizeof(m057));
 
 	if (info.reset == RESET) {
-		m057tmp.dipswitch = (m057tmp.dipswitch + m057tmp.op) & m057tmp.mask;
+		if (m057tmp.ds_used) {
+			m057tmp.index = (m057tmp.index + 1) % m057tmp.max;
+		}
 	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		m057tmp.dipswitch = m057tmp.start;
-	}
+		memset(&m057tmp, 0x00, sizeof(m057tmp));
 
-	extcl_cpu_wr_mem_057(0x8800, 0x00);
+		if ((info.crc32.prg == 0xF77A2663) || // 4-in-1 (ES-Q803B_20210617) (Unl) [p1].nes
+			(info.crc32.prg == 0xDB6228A0) || // 4-in-1_YH-4132.nes
+			(info.crc32.prg == 0x71B7EC3A) || // (YH-4131) Exciting Sport Turbo 4-in-1.nes
+			(info.crc32.prg == 0xEE722DE3) || // (YH-4135) Exciting Sport Turbo 4-in-1.nes
+			(info.crc32.prg == 0xD35D3D8F)) { // (YH-4136) Exciting Sport Turbo 4-in-1.nes
+			static WORD ds[] = { 0x01, 0x00 };
+
+			tmp_fix_057(LENGTH(ds), 0, &ds[0]);
+		} else if (info.crc32.prg == 0xC74F9C72) { // 1998 Series No. 10.nes
+			static WORD ds[] = { 0x02, 0x01, 0x00, 0x03 };
+
+			tmp_fix_057(LENGTH(ds), 0, &ds[0]);
+		} else if (info.crc32.prg == 0xA8930B3B) { // 32-in-1 (42, 52, 62-in-1) (ABCARD-02) (Unl) [p1].nes
+			static WORD ds[] = { 0x03, 0x02, 0x01, 0x00 };
+
+			tmp_fix_057(LENGTH(ds), 0, &ds[0]);
+		} else {
+			static WORD ds[] = { 0x07, 0xFD, 0x03, 0xFE };
+
+			tmp_fix_057(LENGTH(ds), 0, &ds[0]);
+		}
+	}
+}
+void extcl_after_mapper_init_057(void) {
+	prg_fix_057();
+	chr_fix_057();
+	mirroring_fix_057();
 }
 void extcl_cpu_wr_mem_057(WORD address, BYTE value) {
-	DBWORD bank;
+	BYTE index = (address & 0x800) >> 11;
 
-	if (address & 0x0800) {
-		m057.reg[0] = value;
-
-		if (m057.reg[0] & 0x08) {
-			mirroring_H();
-		} else  {
-			mirroring_V();
-		}
-
-		if (m057.reg[0] & 0x10) {
-			value = (m057.reg[0] & 0xC0) >> 6;
-			control_bank(info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, value);
-		} else {
-			value = (m057.reg[0] & 0xE0) >> 5;
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-			map_prg_rom_8k(2, 2, value);
-		}
-
-		map_prg_rom_8k_update();
+	if (address & 0x2000) {
+		m057.reg[index] = (m057.reg[index] & 0xB0) | (value & 0x40);
 	} else {
-		m057.reg[1] = value;
+		m057.reg[index] = value;
 	}
-
-	value = (m057.reg[1] & 0x07) | (m057.reg[0] & 0x07) | ((m057.reg[1] & 0x40) >> 3);
-	control_bank(info.chr.rom.max.banks_8k)
-	bank = value << 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	prg_fix_057();
+	chr_fix_057();
+	mirroring_fix_057();
 }
 BYTE extcl_cpu_rd_mem_057(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x6FFF)) {
-		return (m057tmp.dipswitch);
+		return (m057tmp.dipswitch[m057tmp.index]);
 	}
 	return (openbus);
 }
@@ -124,4 +103,38 @@ BYTE extcl_save_mapper_057(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m057.reg);
 
 	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_057(void) {
+	WORD bank = (m057.reg[1] & 0xE0) >> 5;
+
+	if (m057.reg[1] & 0x10) {
+		memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
+	} else {
+		memmap_auto_16k(MMCPU(0x8000), bank);
+		memmap_auto_16k(MMCPU(0xC000), bank);
+	}
+}
+INLINE static void chr_fix_057(void) {
+	WORD bank = ((m057.reg[0] & 0x40) >> 3) | (m057.reg[1] & 0x07);
+
+	if (!(m057.reg[0] & 0x80)) {
+		memmap_auto_8k(MMPPU(0x0000), ((bank & ~0x03) | (m057.reg[0] & 0x03)));
+	} else {
+		memmap_auto_8k(MMPPU(0x0000), bank);
+	}
+}
+INLINE static void mirroring_fix_057(void) {
+	if (m057.reg[1] & 0x08) {
+		mirroring_H();
+	} else  {
+		mirroring_V();
+	}
+}
+
+INLINE static void tmp_fix_057(BYTE max, BYTE index, const WORD *ds) {
+	m057tmp.ds_used = TRUE;
+	m057tmp.max = max;
+	m057tmp.index = index;
+	m057tmp.dipswitch = ds;
 }

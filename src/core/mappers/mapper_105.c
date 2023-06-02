@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
 
@@ -64,8 +62,7 @@ void map_init_105(void) {
 			m105tmp.index = (m105tmp.index + 1) % m105tmp.max;
 		}
 	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		if (
-			(info.crc32.prg == 0x0B0E128F) || // Nintendo World Championships 1990 (U) [!].nes
+		if ((info.crc32.prg == 0x0B0E128F) || // Nintendo World Championships 1990 (U) [!].nes
 			(info.crc32.prg == 0x00CA6F07)) {
 			static BYTE ds[] = {
 				0, 1,  2,  3,  4,  5,  6,  7,
@@ -92,16 +89,11 @@ void extcl_cpu_every_cycle_105(void) {
 }
 
 void prg_fix_mmc1_105(void) {
-	WORD bank = 0;
-
 	if (mmc1.reg[1] & 0x08) {
 		prg_fix_MMC1_base();
 		return;
 	}
-	bank = (mmc1.reg[1] & 0x06) >> 1;
-	_control_bank(bank, info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, bank);
-	map_prg_rom_8k_update();
+	memmap_auto_32k(MMCPU(0x8000), ((mmc1.reg[1] & 0x06) >> 1));
 }
 void prg_swap_mmc1_105(WORD address, WORD value) {
 	prg_swap_MMC1_base(address, (0x08 | (value & 0x07)));

@@ -172,9 +172,9 @@ BYTE fds_load_rom(void) {
 	// NMT
 	nmt_set_size(S4K);
 	nmt_init();
-	nmt_reset();
 
 	info.mapper.id = FDS_MAPPER;
+	info.mapper.mirroring = MIRRORING_HORIZONTAL;
 	info.machine[HEADER] = NTSC;
 
 	emu_save_header_info();

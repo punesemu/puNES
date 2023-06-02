@@ -59,32 +59,24 @@ INLINE static void prg_fix_015(void) {
 
 	switch (m015.reg[0] & 0x0003) {
 		case 0:
-			bank >>= 1;
-			_control_bank(bank, info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, bank);
-			break;
+			memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
+			return;
 		case 1:
-			_control_bank(bank, info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, bank);
-			bank |= 0x07;
-			_control_bank(bank, info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 2, bank);
-			break;
+			memmap_auto_16k(MMCPU(0x8000), bank);
+			memmap_auto_16k(MMCPU(0xC000), (bank | 0x07));
+			return;
 		case 2:
 			bank = (bank << 1) | (m015.reg[1] >> 7);
-			_control_bank(bank, info.prg.rom.max.banks_8k)
-			map_prg_rom_8k(1, 0, bank);
-			map_prg_rom_8k(1, 1, bank);
-			map_prg_rom_8k(1, 2, bank);
-			map_prg_rom_8k(1, 3, bank);
-			break;
+			memmap_auto_8k(MMCPU(0x8000), bank);
+			memmap_auto_8k(MMCPU(0xA000), bank);
+			memmap_auto_8k(MMCPU(0xC000), bank);
+			memmap_auto_8k(MMCPU(0xE000), bank);
+			return;
 		case 3:
-			_control_bank(bank, info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, bank);
-			map_prg_rom_8k(2, 2, bank);
-			break;
+			memmap_auto_16k(MMCPU(0x8000), bank);
+			memmap_auto_16k(MMCPU(0xC000), bank);
+			return;
 	}
-	map_prg_rom_8k_update();
 }
 INLINE static void mirroring_fix_015(void) {
 	if (m015.reg[1] & 0x40) {

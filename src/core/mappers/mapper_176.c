@@ -168,8 +168,6 @@ void map_init_176(void) {
 		}
 	}
 
-
-
 	if (info.reset == RESET) {
 		if (m176tmp.ds_used) {
 			m176tmp.index = (m176tmp.index + 1) % m176tmp.max;

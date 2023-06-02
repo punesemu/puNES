@@ -51,6 +51,10 @@ void map_init_019(void) {
 	mapper.internal_struct[0] = (BYTE *)&m019;
 	mapper.internal_struct_size[0] = sizeof(m019);
 
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memmap_wram_region_init(S2K);
+	}
+
 	snd_set_volume_019();
 
 	if (info.reset >= HARD) {
@@ -188,11 +192,6 @@ BYTE extcl_save_mapper_019(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m019.snd.output);
 	save_slot_ele(mode, slot, m019.irq.delay);
 	save_slot_ele(mode, slot, m019.irq.count);
-
-	if (mode == SAVE_SLOT_READ) {
-		chr_fix_019();
-		mirroring_fix_019();
-	}
 
 	return (EXIT_OK);
 }
