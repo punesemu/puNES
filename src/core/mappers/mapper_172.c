@@ -17,7 +17,6 @@
  */
 
 #include "mappers.h"
-#include "cpu.h"
 
 void prg_fix_jv001_172(void);
 void chr_fix_jv001_172(void);
@@ -47,7 +46,7 @@ BYTE extcl_cpu_rd_mem_172(WORD address, BYTE openbus) {
 		return (((value & 0x01) << 5) | ((value & 0x02) << 3) |
 			((value & 0x04) << 1) | ((value & 0x08) << 1) |
 			((value & 0x10) >> 3) | ((value & 0x20) >> 5) |
-			(cpu.openbus.before & 0xC0));
+			(openbus & 0xC0));
 	}
 	return (openbus);
 }

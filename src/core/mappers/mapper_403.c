@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
-#include "vs_system.h"
 #include "gui.h"
 #include "save_slot.h"
 
@@ -39,6 +37,10 @@ void map_init_403(void) {
 	mapper.internal_struct_size[0] = sizeof(m403);
 
 	memset(&m403, 0x00, sizeof(m403));
+
+	if (!wram_size()) {
+		wram_set_ram_size(S8K);
+	}
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -75,34 +77,17 @@ BYTE extcl_save_mapper_403(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_403(void) {
-	WORD bank;
+	WORD bank = ((m403.reg[0] & 0x7E) >> 1);
 
 	if (m403.reg[2] & 0x01) {
-		bank = ((m403.reg[0] & 0x7E) >> 1);
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
-		map_prg_rom_8k(2, 2, bank);
+		memmap_auto_16k(MMCPU(0x8000), bank);
+		memmap_auto_16k(MMCPU(0xC000), bank);
 	} else {
-		bank = ((m403.reg[0] & 0x7E) >> 2);
-		_control_bank(bank, info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, bank);
+		memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
 	}
-
-	map_prg_rom_8k_update();
 }
 INLINE static void chr_fix_403(void) {
-	DBWORD bank = m403.reg[1] & 0x03;
-
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	memmap_auto_8k(MMPPU(0x0000), (m403.reg[1] & 0x03));
 }
 INLINE static void mirroring_fix_403(void) {
 	if (m403.reg[2] & 0x10) {

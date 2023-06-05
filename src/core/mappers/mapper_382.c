@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_382(void);
@@ -46,7 +45,7 @@ void extcl_cpu_wr_mem_382(WORD address, BYTE value) {
 		m382.reg[0] = address;
 	}
 	// bus conflict
-	m382.reg[1] = value & prg_rom_rd(address);
+	m382.reg[1] = value & prgrom_rd(address);
 	prg_fix_382();
 	mirroring_fix_382();
 }
@@ -57,23 +56,12 @@ BYTE extcl_save_mapper_382(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_382(void) {
-	WORD bank = 0;
-
 	if (m382.reg[0] & 0x0008) {
-		bank = ((m382.reg[0] & 0x0007) << 2) | (m382.reg[1] & 0x0003);
-		_control_bank(bank, info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, bank);
+		memmap_auto_32k(MMCPU(0x8000), (((m382.reg[0] & 0x07) << 2) | (m382.reg[1] & 0x03)));
 	} else {
-		bank = ((m382.reg[0] & 0x0007) << 3) | (m382.reg[1] & 0x0007);
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
-
-		bank = ((m382.reg[0] & 0x0007) << 3) | 0x0007;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 2, bank);
+		memmap_auto_16k(MMCPU(0x8000), (((m382.reg[0] & 0x07) << 3) | (m382.reg[1] & 0x07)));
+		memmap_auto_16k(MMCPU(0xC000), (((m382.reg[0] & 0x07) << 3) | 0x07));
 	}
-
-	map_prg_rom_8k_update();
 }
 INLINE static void mirroring_fix_382(void) {
 	if (m382.reg[0] & 0x0010) {

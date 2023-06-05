@@ -394,13 +394,15 @@ BYTE nsf_load_rom(void) {
 			}
 		}
 
-		wram_set_ram_size(nsf.sound_chips.fds ? 0xA000 : 0x2000);
+		ram_set_size(S2K);
+		ram_init();
+
+		wram_set_ram_size(nsf.sound_chips.fds ? 0xA000 : S8K);
 
 		{
 			int padding = nsf.adr.load & 0x0FFF;
 
-			prgrom_set_size((((len + padding) / 0x1000) +
-				(((len + padding) % 0x1000) ? 1 : 0)) * 0x1000);
+			prgrom_set_size((((len + padding) / S4K) + (((len + padding) % S4K) ? 1 : 0)) * S4K);
 
 			if (prgrom_init(0xF2) == EXIT_ERROR) {
 				free(rom.data);
@@ -476,7 +478,7 @@ void nsf_init_tune(void) {
 	nsf.made_tick = FALSE;
 
 	cpu.SP = 0xFD;
-	memset(mmcpu.ram, 0x00, sizeof(mmcpu.ram));
+	memset(ram_pnt(), 0x00, ram_size());
 
 	wram_memset();
 
@@ -604,7 +606,7 @@ void extcl_audio_samples_mod_nsf(SWORD *samples, int count) {
 void nsf_reset_prg(void) {
 	DBWORD i = 0;
 
-	wram_reset();
+	wram_reset_chunks();
 
 	if (nsf.bankswitch.enabled) {
 		if (nsf.sound_chips.fds) {

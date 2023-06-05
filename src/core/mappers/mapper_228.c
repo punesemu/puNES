@@ -91,18 +91,7 @@ INLINE static void prg_fix_228(void) {
 	}
 }
 INLINE static void chr_fix_228(void) {
-	DBWORD bank = ((m228.reg[0] << 2) & 0x3C) | (m228.reg[1] & 0x03);
-
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	memmap_auto_8k(MMPPU(0x0000), (((m228.reg[0] << 2) & 0x3C) | (m228.reg[1] & 0x03)));
 }
 INLINE static void mirroring_fix_228(void) {
 	if (m228.reg [0] & 0x2000) {

@@ -86,7 +86,6 @@ typedef struct _cpu {
 	/* buffer di lettura */
 	struct _cpu_openbus {
 		BYTE actual;
-		BYTE before;
 	} openbus;
 } _cpu;
 typedef struct _irq {

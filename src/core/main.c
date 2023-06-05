@@ -57,6 +57,7 @@ int main(int argc, char **argv) {
 	memset(&chrrom, 0x00, sizeof(chrrom));
 	memset(&wram, 0x00, sizeof(wram));
 	memset(&vram, 0x00, sizeof(vram));
+	memset(&ram, 0x00, sizeof(ram));
 	memset(&nmt, 0x00, sizeof(nmt));
 	memset(&miscrom, 0x00, sizeof(miscrom));
 

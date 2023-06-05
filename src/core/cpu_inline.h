@@ -130,9 +130,6 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			}
 		}
 	} else if (address >= 0x8000) {
-		/* PRG Rom */
-		cpu.openbus.before = cpu.openbus.actual;
-
 		/* eseguo un tick hardware */
 		if (made_tick) {
 			tick_hw(1);
@@ -160,14 +157,12 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 	if (address <= 0x4017) {
 		/* Ram */
 		if (address < 0x2000) {
-			cpu.openbus.before = cpu.openbus.actual;
-
 			/* eseguo un tick hardware */
 			if (made_tick) {
 				tick_hw(1);
 			}
 			/* leggo */
-			cpu.openbus.actual = mmcpu.ram[address & 0x7FF];
+			cpu.openbus.actual = ram_rd(address);
 
 			if (extcl_cpu_rd_ram) {
 				cpu.openbus.actual = extcl_cpu_rd_ram(address, cpu.openbus.actual);
@@ -217,7 +212,10 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 	}
 	// WRam (normale ed extra (battery packed o meno)
 	if (address < 0x8000) {
-		cpu.openbus.before = cpu.openbus.actual;
+
+
+		BYTE pippo = cpu.openbus.actual;
+
 
 		/* eseguo un tick hardware */
 		/*
@@ -235,7 +233,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		cpu.openbus.actual = wram_rd(address);
 
 		if (extcl_cpu_rd_mem) {
-			cpu.openbus.actual = extcl_cpu_rd_mem(address, cpu.openbus.actual);
+			cpu.openbus.actual = extcl_cpu_rd_mem(address, pippo/*cpu.openbus.actual*/);
 		}
 
 		/* cheat */
@@ -423,8 +421,6 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 INLINE static BYTE apu_rd_reg(WORD address) {
 	BYTE value = cpu.openbus.actual;
 
-	cpu.openbus.before = cpu.openbus.actual;
-
 	if (address == 0x4015) {
 		/* azzero la varibile d'uscita */
 		value = 0;
@@ -564,7 +560,6 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 	}
 	// MMC5
 	if (nsf.sound_chips.mmc5) {
-		cpu.openbus.before = cpu.openbus.actual;
 		if ((address >= 0x5C00) && (address <= 0x5FF5)) {
 			address &= 0x03FF;
 			cpu.openbus.actual = mmc5.ext_ram[address];
@@ -582,7 +577,6 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 	}
 	// Namco 163
 	if (nsf.sound_chips.namco163 && (address == 0x4800)) {
-		cpu.openbus.before = cpu.openbus.actual;
 		cpu.openbus.actual = extcl_cpu_rd_mem_019(address, cpu.openbus.actual);
 		return;
 	}
@@ -591,7 +585,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 		if (made_tick) {
 			tick_hw(1);
 		}
-		cpu.openbus.actual = mmcpu.ram[address & 0x7FF];
+		cpu.openbus.actual = ram_rd(address & 0x7FF);
 		return;
 	}
 	// NSF Player Routine
@@ -617,8 +611,6 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 }
 INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 	if (address >= 0x8000) {
-		cpu.openbus.before = cpu.openbus.actual;
-
 		/* eseguo un tick hardware */
 		if (made_tick) {
 			tick_hw(1);
@@ -629,8 +621,6 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 		return (TRUE);
 	}
 	if (address >= 0x6000) {
-		cpu.openbus.before = cpu.openbus.actual;
-
 		/* eseguo un tick hardware */
 		if (made_tick) {
 			tick_hw(1);
@@ -810,7 +800,7 @@ void cpu_wr_mem(WORD address, BYTE value) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* scrivo */
-			mmcpu.ram[(address & 0x7FF)] = value;
+			ram_wr(address, value);
 			return;
 		}
 		if (address < 0x4000) {
@@ -921,7 +911,7 @@ void cpu_wr_mem(WORD address, BYTE value) {
 			return;
 		}
 	}
-	/* PRG Ram (normale ed extra) */
+	// WRam (normale ed extra) */
 	if (address < 0x8000) {
 		/* eseguo un tick hardware */
 		tick_hw(1);
@@ -1713,7 +1703,7 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 	}
 	if (address < 0x2000) {
 		tick_hw(1);
-		mmcpu.ram[(address & 0x7FF)] = value;
+		ram_wr(address, value);
 		return;
 	}
 	// APU

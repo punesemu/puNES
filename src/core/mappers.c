@@ -1318,12 +1318,13 @@ BYTE map_init(void) {
 	vram_init();
 	nvram_load_file();
 
-	chrrom_reset();
+	chrrom_reset_chunks();
 
 	if (info.reset >= HARD) {
-		prgrom_reset();
-		wram_reset();
-		nmt_reset();
+		prgrom_reset_chunks();
+		wram_reset_chunks();
+		ram_reset_chunks();
+		nmt_reset_chunks();
 	}
 
 	// after mapper init
@@ -1331,7 +1332,7 @@ BYTE map_init(void) {
 		extcl_after_mapper_init();
 	}
 
-	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)){
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		emu_info_rom();
 	}
 	return (EXIT_OK);
@@ -1342,6 +1343,7 @@ void map_quit(void) {
 	// devo farlo prima di liberare prgrom.data
 	wram_quit();
 	vram_quit();
+	ram_quit();
 	nmt_quit();
 
 	info.id = 0;
@@ -1358,8 +1360,6 @@ void map_quit(void) {
 
 	// faccio un reset
 	memmap_init();
-
-	mirroring_V();
 
 	vs_system.ppu = vs_system.special_mode.type = 0;
 	info.mapper.ext_console_type = 0;
@@ -1391,7 +1391,7 @@ void map_prg_rom_8k(BYTE banks_8k, BYTE at, WORD value) {
 	}
 }
 void map_prg_rom_8k_reset(void) {
-	prgrom_reset();
+	prgrom_reset_chunks();
 }
 void map_prg_rom_8k_update(void) {
 

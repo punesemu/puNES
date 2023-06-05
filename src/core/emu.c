@@ -513,10 +513,6 @@ BYTE emu_turn_on(void) {
 	srand(time(0));
 
 	// l'inizializzazione della memmap della cpu e della ppu
-	memset(&mmcpu, 0x00, sizeof(mmcpu));
-	memset(&prg, 0x00, sizeof(prg));
-	memset(&chr, 0x00, sizeof(chr));
-	memset(&ntbl, 0x00, sizeof(ntbl));
 	memset(&mmap_palette, 0x00, sizeof(mmap_palette));
 	memset(&oam, 0x00, sizeof(oam));
 	memset(&ppu_screen, 0x00, sizeof(ppu_screen));
@@ -567,7 +563,7 @@ BYTE emu_turn_on(void) {
 	overscan_set_mode(machine.type);
 
 	// ...nonche' dei puntatori alla PRG Rom...
-	prgrom_reset();
+	prgrom_reset_chunks();
 
 	settings_pgs_parse();
 
@@ -578,9 +574,6 @@ BYTE emu_turn_on(void) {
 	if (ppu_turn_on()) {
 		return (EXIT_ERROR);
 	}
-
-	// CPU
-	cpu_turn_on();
 
 	// gestione grafica
 	if (gfx_init()) {
@@ -593,8 +586,9 @@ BYTE emu_turn_on(void) {
 		return (EXIT_ERROR);
 	}
 
+	// CPU
+	cpu_turn_on();
 	cpu_init_PC();
-
 	if (extcl_cpu_init_pc) {
 		extcl_cpu_init_pc();
 	}
@@ -740,16 +734,14 @@ BYTE emu_reset(BYTE type) {
 		return (EXIT_ERROR);
 	}
 
-	// CPU
-	cpu_turn_on();
-
 	// mapper
 	if (map_init()) {
 		return (EXIT_ERROR);
 	}
 
+	// CPU
+	cpu_turn_on();
 	cpu_init_PC();
-
 	if (extcl_cpu_init_pc) {
 		extcl_cpu_init_pc();
 	}

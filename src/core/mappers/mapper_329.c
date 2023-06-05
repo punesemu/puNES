@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_329(void);
@@ -37,11 +35,9 @@ void map_init_329(void) {
 	mapper.internal_struct[0] = (BYTE *)&m329;
 	mapper.internal_struct_size[0] = sizeof(m329);
 
-	memset(&m329, 0x00, sizeof(m329));
-
-//	if (wram_size() < 0x8000) {
-//		wram_set_ram_size(0x8000);
-//	}
+	if (info.reset >= HARD) {
+		memset(&m329, 0x00, sizeof(m329));
+	}
 }
 void extcl_after_mapper_init_329(void) {
 	prg_fix_329();
@@ -61,15 +57,10 @@ BYTE extcl_save_mapper_329(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_329(void) {
-	WORD bank = m329.reg & 0x1F;
-
-	_control_bank(bank, info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_32k(MMCPU(0x8000), (m329.reg & 0x1F));
 }
 INLINE static void wram_fix_329(void) {
-	memmap_auto_8k(MMCPU(0x6000), m329.reg >> 6);
+	memmap_auto_8k(MMCPU(0x6000), (m329.reg >> 6));
 }
 INLINE static void mirroring_fix_329(void) {
 	if (m329.reg & 0x20) {

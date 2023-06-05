@@ -39,7 +39,6 @@ EXTERNC BYTE ines_load_rom(void);
 
 EXTERNC void nes20_submapper(void);
 EXTERNC void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, double divider);
-EXTERNC BYTE nes20_ram_size(BYTE mode);
 
 #undef EXTERNC
 

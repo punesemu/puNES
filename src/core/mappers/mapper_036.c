@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "cpu.h"
 #include "info.h"
 #include "save_slot.h"
 
@@ -55,7 +54,7 @@ BYTE extcl_cpu_rd_mem_036(WORD address, BYTE openbus) {
 	if ((address >= 0x4020) && (address <= 0x5FFF)) {
 		BYTE value = extcl_cpu_rd_mem_TXC(address, openbus);
 
-		return (((cpu.openbus.before & 0xCF) | ((value & 0x03) << 4)));
+		return (((openbus & 0xCF) | ((value & 0x03) << 4)));
 	}
 	return (openbus);
 }

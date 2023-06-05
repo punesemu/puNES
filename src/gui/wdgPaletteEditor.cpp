@@ -25,7 +25,7 @@
 #include "mainWindow.hpp"
 #include "common.h"
 #include "palette.h"
-#include "mem_map.h"
+#include "memmap.h"
 #include "emu.h"
 #include "conf.h"
 #include "settings.h"

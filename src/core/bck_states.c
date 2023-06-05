@@ -101,9 +101,9 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_b
 	bck_states_on_struct(mode, DMC, data, (*index), (*size_buff))
 
 	// mem map
-	bck_states_on_struct(mode, mmcpu, data, (*index), (*size_buff))
 	bck_states_on_struct(mode, prg, data, (*index), (*size_buff))
 #if defined WRAM_OLD_HANDLER
+	bck_states_on_struct(mode, mmcpu, data, (*index), (*size_buff))
 	bck_states_on_mem(mode, prg.ram.data, prg.ram.size, data, (*index), (*size_buff))
 	if (prg.ram_plus) {
 		bck_states_on_mem(mode, prg.ram_plus, prg_ram_plus_size(), data, (*index), (*size_buff))

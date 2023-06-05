@@ -16,37 +16,70 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
+#include "save_slot.h"
+
+INLINE static void prg_fix_244(void);
+INLINE static void chr_fix_244(void);
+
+struct _m244 {
+	BYTE reg[2];
+} m244;
 
 void map_init_244(void) {
+	EXTCL_AFTER_MAPPER_INIT(244);
 	EXTCL_CPU_WR_MEM(244);
+	EXTCL_SAVE_MAPPER(244);
+	mapper.internal_struct[0] = (BYTE *)&m244;
+	mapper.internal_struct_size[0] = sizeof(m244);
 
 	if (info.reset >= HARD) {
-		map_prg_rom_8k(4, 0, 0);
+		memset(&m244, 0x00, sizeof(m244));
 	}
 }
-void extcl_cpu_wr_mem_244(WORD address, BYTE value) {
-	if ((address >= 0x8065) && (address <= 0x80A4)) {
-		value = (address - 0x8065) & 0x03;
-		control_bank(info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, value);
-		map_prg_rom_8k_update();
-	};
-	if ((address >= 0x80A5) && (address <= 0x80E4)) {
-		DBWORD bank;
+void extcl_after_mapper_init_244(void) {
+	prg_fix_244();
+	chr_fix_244();
+}
+void extcl_cpu_wr_mem_244(UNUSED(WORD address), BYTE value) {
+	if (value & 0x08) {
+		static const BYTE chr_bank[8][8] ={
+			{ 0, 1, 2, 3, 4, 5, 6, 7, },
+			{ 0, 2, 1, 3, 4, 6, 5, 7, },
+			{ 0, 1, 4, 5, 2, 3, 6, 7, },
+			{ 0, 4, 1, 5, 2, 6, 3, 7, },
+			{ 0, 4, 2, 6, 1, 5, 3, 7, },
+			{ 0, 2, 4, 6, 1, 3, 5, 7, },
+			{ 7, 6, 5, 4, 3, 2, 1, 0, },
+			{ 7, 6, 5, 4, 3, 2, 1, 0, }
+		};
 
-		value = (address - 0x80A5) & 0x07;
-		control_bank(info.chr.rom.max.banks_8k)
-		bank = value << 13;
-		chr.bank_1k[0] = chr_pnt(bank);
-		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-		chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
-	};
+		m244.reg[1] = chr_bank[((value & 0x70) >> 4)][value & 0x07];
+		chr_fix_244();
+		return;
+	} else {
+		static const BYTE prg_bank[4][4] ={
+			{ 0, 1, 2, 3, },
+			{ 3, 2, 1, 0, },
+			{ 0, 2, 1, 3, },
+			{ 3, 1, 2, 0, },
+		};
+
+		m244.reg[0] = prg_bank[((value & 0x30) >> 4)][value & 0x03];
+		prg_fix_244();
+		return;
+	}
+}
+BYTE extcl_save_mapper_244(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m244.reg);
+
+	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_244(void) {
+	memmap_auto_32k(MMCPU(0x8000), m244.reg[0]);
+}
+INLINE static void chr_fix_244(void) {
+	memmap_auto_8k(MMPPU(0x0000), m244.reg[1]);
 }

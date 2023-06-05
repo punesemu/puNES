@@ -93,10 +93,12 @@ BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void init_MMC1(BYTE type) {
-	memset(&mmc1, 0x00, sizeof(mmc1));
+	if (info.reset >= HARD) {
+		memset(&mmc1, 0x00, sizeof(mmc1));
 
-	mmc1.reg[0] = 0x0C;
-	mmc1tmp.type = type;
+		mmc1.reg[0] = 0x0C;
+		mmc1tmp.type = type;
+	}
 
 	MMC1_prg_fix = prg_fix_MMC1_base;
 	MMC1_prg_swap = prg_swap_MMC1_base;
@@ -125,7 +127,9 @@ void wram_fix_MMC1_base(void) {
 }
 void wram_swap_MMC1_base(WORD address, WORD value) {
 	const BYTE wram_enabled = mmc1tmp.type == MMC1B
-		? (mmc1.reg[3] & 0x10 ? FALSE : TRUE)
+		? (info.mapper.submapper == 0
+			? (mmc1.reg[3] | (mmc1.reg[0] & 0x10 ? mmc1.reg[1] | mmc1.reg[2] : 0x00)) & 0x10 ? FALSE : TRUE
+			: mmc1.reg[3] & 0x10 ? FALSE : TRUE)
 		: TRUE;
 
 	memmap_auto_wp_8k(MMCPU(address), value, wram_enabled, wram_enabled);
@@ -150,8 +154,8 @@ void mirroring_fix_MMC1_base(void) {
 WORD prg_bank_MMC1(int index) {
 	WORD bank = mmc1.reg[0] & 0x08
 		? mmc1.reg[0] & 0x04
-			? (mmc1.reg[3] | index * 0x0F)
-			: (mmc1.reg[3] & index * 0x0F)
+			? (mmc1.reg[3] | (index * 0x0F))
+			: (mmc1.reg[3] & (index * 0x0F))
 		: (mmc1.reg[3] & ~1) | index;
 
 	return ((mmc1.reg[3] & 0x10) && (mmc1tmp.type == MMC1A)

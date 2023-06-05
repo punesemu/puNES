@@ -35,6 +35,8 @@ void map_init_212(void) {
 	EXTCL_CPU_RD_MEM(212);
 	EXTCL_SAVE_MAPPER(212);
 
+	//wram_set_ram_size(S8K);
+
 	if (info.reset >= HARD) {
 		memset(&m212, 0x00, sizeof(m212));
 	}
@@ -46,7 +48,8 @@ void extcl_after_mapper_init_212(void) {
 }
 void extcl_cpu_wr_mem_212(WORD address, UNUSED(BYTE value)) {
 
-	printf("wr: 0x%04X : 0x%02X\n", address, value);
+
+	printf("wr : 0x%04X : 0x%02X\n", address, value);
 
 	m212.reg = address;
 	prg_fix_212();
@@ -55,8 +58,13 @@ void extcl_cpu_wr_mem_212(WORD address, UNUSED(BYTE value)) {
 }
 BYTE extcl_cpu_rd_mem_212(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		printf("rd: 0x%04X : 0x%02X 0x%02X 0x%02X\n", address, openbus | (address & 0x10 ? 0x00 : 0x80), cpu.openbus.before, openbus);
-		return (cpu.openbus.before | (address & 0x10 ? 0x00 : 0x80));
+
+
+
+		printf("rd : 0x%04X : 0x%02X\n", address, openbus | (address & 0x10 ? 0x00 : 0x80));
+
+
+		return (openbus | (address & 0x10 ? 0x00 : 0x80));
 	}
 	return (openbus);
 }

@@ -22,17 +22,8 @@
 #include "common.h"
 
 enum MMC1_types {
-	SNROM,
-	SUROM,
-	SOROM,
-	MMC1_SUBMAPPER3_DEPRECATED3,
-	SXROM = 4,
-	SEROM = 5,
-	MMC1_2ME,
 	MMC1A = 10,
-	MMC1B,
-	BAD_YOSHI_U = 20,
-	MOWPC10
+	MMC1B
 };
 
 typedef struct _mmc1 {

@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -94,9 +92,9 @@ BYTE extcl_cpu_rd_mem_292(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		if (memmap_adr_is_readable(MMCPU(address))) {
 			if ((m292.reg[0] & 0xE0) == 0xC0) {
-				m292.reg[1] = mmcpu.ram[0x06A];
+				m292.reg[1] = ram_rd(0x06A);
 			} else {
-				m292.reg[2] = mmcpu.ram[0x0FF];
+				m292.reg[2] = ram_rd(0x0FF);
 			}
 			MMC3_chr_fix();
 		}

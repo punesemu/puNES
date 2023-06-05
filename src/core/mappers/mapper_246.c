@@ -58,5 +58,8 @@ BYTE extcl_cpu_rd_mem_246(WORD address, BYTE openbus) {
 	if ((address < 0x6000) || (address > 0x67FF)) {
 		return (openbus);
 	}
-	return (cpu.openbus.before);
+
+
+	// da rifare!!!!!!!!!!!!!!!!!!
+	return (openbus);
 }

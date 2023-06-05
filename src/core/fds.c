@@ -169,6 +169,9 @@ BYTE fds_load_rom(void) {
 	wram_set_ram_size(S32K);
 	// VRAM
 	vram_set_ram_size(S8K);
+	// RAM
+	ram_set_size(S2K);
+	ram_init();
 	// NMT
 	nmt_set_size(S4K);
 	nmt_init();

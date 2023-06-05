@@ -99,7 +99,7 @@ BYTE extcl_cpu_rd_mem_150(WORD address, BYTE openbus) {
 	if ((address >= 0x4000) && (address <= 0x5FFF)) {
 		if ((address & 0x101) == 0x101) {
 			return ((m150.reg[m150.index] & (~m150tmp.dipswitch[m150tmp.index] & 0x07)) |
-				(cpu.openbus.before & ~(~m150tmp.dipswitch[m150tmp.index & 0x07])));
+				(openbus & ~(~m150tmp.dipswitch[m150tmp.index & 0x07])));
 		}
 	}
 	return (openbus);

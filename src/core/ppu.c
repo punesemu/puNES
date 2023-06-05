@@ -279,7 +279,7 @@ void ppu_tick(void) {
 			 */
 			if (ppu.frame_x == 0) {
 				if (chinaersan2.enable) {
-					memcpy(chinaersan2.ram, mmcpu.ram, 256);
+					memcpy(chinaersan2.ram, ram_pnt(), 256);
 				}
 				ppu.screen_y = 0;
 				/* setto a 0 il bit 5, 6 ed il 7 del $2002 */

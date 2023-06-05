@@ -19,7 +19,6 @@
 #include <string.h>
 #include "mappers.h"
 #include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -53,8 +52,10 @@ void map_init_369(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
+	if (info.reset >= HARD) {
+		memset(&m369, 0x00, sizeof(m369));
+	}
 	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m369, 0x00, sizeof(m369));
 
 	init_MMC3();
 	MMC3_prg_fix = prg_fix_mmc3_369;
@@ -62,10 +63,6 @@ void map_init_369(void) {
 	MMC3_chr_fix = chr_fix_mmc3_369;
 	MMC3_chr_swap = chr_swap_mmc3_369;
 	MMC3_wram_fix = wram_fix_mmc3_369;
-
-	if (!info.chr.ram.banks_8k_plus) {
-		info.chr.ram.banks_8k_plus = 1;
-	}
 
 	info.mapper.extend_wr = TRUE;
 
@@ -207,47 +204,11 @@ void prg_swap_mmc3_369(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
 void chr_fix_mmc3_369(void) {
-	DBWORD bank = 0;
-
 	switch (m369.reg) {
 		case 0x00:
-			bank = 0x00;
-			_control_bank(bank, info.chr.rom.max.banks_8k)
-			bank <<= 13;
-			chr.bank_1k[0] = chr_pnt(bank);
-			chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-			chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-			chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-			chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-			chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-			chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-			chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
-			return;
 		case 0x01:
-			bank = 0x01;
-			_control_bank(bank, info.chr.rom.max.banks_8k)
-			bank <<= 13;
-			chr.bank_1k[0] = chr_pnt(bank);
-			chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-			chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-			chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-			chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-			chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-			chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-			chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
-			return;
 		case 0x13:
-			bank = 0x03;
-			_control_bank(bank, info.chr.rom.max.banks_8k)
-			bank <<= 13;
-			chr.bank_1k[0] = chr_pnt(bank);
-			chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-			chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-			chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-			chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-			chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-			chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-			chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+			memmap_auto_8k(MMPPU(0x0000), (m369.reg & 0x03));
 			return;
 		case 0x37:
 		case 0xFF:

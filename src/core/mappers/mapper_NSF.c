@@ -40,6 +40,10 @@ void map_init_NSF(void) {
 	mapper.internal_struct_size[internal_struct] = sizeof(nsf);
 	internal_struct++;
 
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memmap_prg_region_init(S4K);
+	}
+
 	nsf.made_tick = FALSE;
 
 	if (info.reset >= HARD) {

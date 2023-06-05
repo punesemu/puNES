@@ -448,8 +448,8 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, DMC.tick_type);
 
 	// mem map
-	save_slot_ele(mode, slot, mmcpu.ram);
 #if defined WRAM_OLD_HANDLER
+	save_slot_ele(mode, slot, mmcpu.ram);
 	save_slot_mem(mode, slot, prg.ram.data, prg.ram.size, FALSE);
 	if (mode == SAVE_SLOT_READ) {
 		save_slot_int(mode, slot, tmp);
@@ -694,7 +694,11 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 
 
 	if (mode == SAVE_SLOT_READ) {
-		wram_reset();
+		prgrom_reset_chunks();
+		chrrom_reset_chunks();
+		wram_reset_chunks();
+		nmt_reset_chunks();
+		ram_reset_chunks();
 		extcl_after_mapper_init();
 	}
 

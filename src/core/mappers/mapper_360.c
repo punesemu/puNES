@@ -17,93 +17,78 @@
  */
 
 #include <string.h>
-#include "mem_map.h"
 #include "info.h"
 #include "mappers.h"
-#include "save_slot.h"
 
 INLINE static void prg_fix_360(void);
 INLINE static void chr_fix_360(void);
 INLINE static void mirroring_fix_360(void);
 
-static BYTE dipswitch_360[] = {
-	 0,  2,  3,  4,
-	 5,  6,  7,  8,
-	 9, 10, 11, 12,
-	13, 14, 15, 16,
-	17, 18, 19, 20,
-	21, 22, 23, 24,
-	25, 26, 27, 28,
-	29, 30, 31
-};
+INLINE static void tmp_fix_360(BYTE max, BYTE index, const WORD *ds);
 
-struct _m360 {
-	struct _m360_dipswitch {
-		BYTE actual;
-		BYTE index;
-	} dipswitch;
-} m360;
+struct _m360tmp {
+	BYTE ds_used;
+	BYTE max;
+	BYTE index;
+	const WORD *dipswitch;
+} m360tmp;
 
 void map_init_360(void) {
 	EXTCL_AFTER_MAPPER_INIT(360);
-	EXTCL_SAVE_MAPPER(360);
-	mapper.internal_struct[0] = (BYTE *)&m360;
-	mapper.internal_struct_size[0] = sizeof(m360);
+	EXTCL_CPU_WR_MEM(360);
 
 	if (info.reset == RESET) {
-		if (++m360.dipswitch.index >= LENGTH(dipswitch_360)) {
-			m360.dipswitch.index = 0;
+		if (m360tmp.ds_used) {
+			m360tmp.index = (m360tmp.index + 1) % m360tmp.max;
 		}
 	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		m360.dipswitch.index = 0;
+		memset(&m360tmp, 0x00, sizeof(m360tmp));
+
+		{
+			static WORD ds[] = {
+				0,  2,  3,  4,
+				5,  6,  7,  8,
+				9, 10, 11, 12,
+				13, 14, 15, 16,
+				17, 18, 19, 20,
+				21, 22, 23, 24,
+				25, 26, 27, 28,
+				29, 30, 31
+			};
+
+			tmp_fix_360(LENGTH(ds), 0, &ds[0]);
+		}
 	}
-	m360.dipswitch.actual = dipswitch_360[m360.dipswitch.index];
 }
 void extcl_after_mapper_init_360(void) {
 	prg_fix_360();
 	chr_fix_360();
 	mirroring_fix_360();
 }
-BYTE extcl_save_mapper_360(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m360.dipswitch.actual);
-	save_slot_ele(mode, slot, m360.dipswitch.index);
-
-	return (EXIT_OK);
-}
+void extcl_cpu_wr_mem_360(UNUSED(WORD address), UNUSED(BYTE value)) {}
 
 INLINE static void prg_fix_360(void) {
-	WORD bank;
-
-	if (m360.dipswitch.actual < 2) {
-		bank = m360.dipswitch.actual >> 1;
-		_control_bank(bank, info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, bank);
+	if (m360tmp.dipswitch[m360tmp.index] < 2) {
+		memmap_auto_32k(MMCPU(0x8000), (m360tmp.dipswitch[m360tmp.index] >> 1));
 	} else {
-		bank = m360.dipswitch.actual;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
-		map_prg_rom_8k(2, 2, bank);
+		memmap_auto_16k(MMCPU(0x8000), m360tmp.dipswitch[m360tmp.index]);
+		memmap_auto_16k(MMCPU(0xC000), m360tmp.dipswitch[m360tmp.index]);
 	}
-	map_prg_rom_8k_update();
 }
 INLINE static void chr_fix_360(void) {
-	DBWORD bank = m360.dipswitch.actual;
-
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	memmap_auto_8k(MMPPU(0x0000), m360tmp.dipswitch[m360tmp.index]);
 }
 INLINE static void mirroring_fix_360(void) {
-	if (m360.dipswitch.actual & 0x10) {
+	if (m360tmp.dipswitch[m360tmp.index] & 0x10) {
 		mirroring_H();
 	} else {
 		mirroring_V();
 	}
+}
+
+INLINE static void tmp_fix_360(BYTE max, BYTE index, const WORD *ds) {
+	m360tmp.ds_used = TRUE;
+	m360tmp.max = max;
+	m360tmp.index = index;
+	m360tmp.dipswitch = ds;
 }

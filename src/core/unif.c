@@ -327,6 +327,9 @@ BYTE unif_load_rom(void) {
 
 		find_board();
 
+		ram_set_size(S2K);
+		ram_init();
+
 		nmt_set_size(S4K);
 		nmt_init();
 

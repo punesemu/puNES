@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
 
@@ -42,7 +41,9 @@ void map_init_368(void) {
 	mapper.internal_struct[0] = (BYTE *)&m368;
 	mapper.internal_struct_size[0] = sizeof(m368);
 
-	memset(&m368, 0x00, sizeof(m368));
+	if (info.reset >= HARD) {
+		memset(&m368, 0x00, sizeof(m368));
+	}
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -97,16 +98,8 @@ void extcl_cpu_every_cycle_368(void) {
 }
 
 INLINE static void prg_fix_368(void) {
-	WORD bank = 0;
-
-	bank = 0x01;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, bank);
-
-	bank = 0x00;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, bank);
-
+	memmap_auto_8k(MMCPU(0x8000), 0x01);
+	memmap_auto_8k(MMCPU(0xA000), 0x00);
 	// Value  Bank#
 	// ------------
 	// 0      4
@@ -117,17 +110,9 @@ INLINE static void prg_fix_368(void) {
 	// 5      3
 	// 6      7
 	// 7      3
-	bank = m368.reg[0] & 0x01 ? 3 : 4 | ((m368.reg[0] & 0x06) >> 1);
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, bank);
-
-	bank = 0x08;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_8k(MMCPU(0xC000), (m368.reg[0] & 0x01 ? 3 : 4 | ((m368.reg[0] & 0x06) >> 1)));
+	memmap_auto_8k(MMCPU(0xE000), 0x08);
 }
-
 INLINE static void wram_fix_368(void) {
 	memmap_prgrom_8k(MMCPU(0x6000), 0x02);
 }

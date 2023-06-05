@@ -80,17 +80,15 @@ void extcl_cpu_wr_mem_TXC(WORD address, BYTE value) {
 	TXC_mirroring_fix();
 }
 BYTE extcl_cpu_rd_mem_TXC(WORD address, UNUSED(BYTE openbus)) {
-	BYTE result = cpu.openbus.before;
-
 	if ((address & 0x0103) == 0x0100) {
-		result = ((txc.inverter ^ txc.invert) & 0xF8) | (txc.accumulator & 0x07);
-		txc.Y = txc.X | ((result & 0x10) >> 4);
+		openbus = ((txc.inverter ^ txc.invert) & 0xF8) | (txc.accumulator & 0x07);
+		txc.Y = txc.X | ((openbus & 0x10) >> 4);
 		TXC_prg_fix();
 		TXC_chr_fix();
 		TXC_wram_fix();
 		TXC_mirroring_fix();
 	}
-	return (result);
+	return (openbus);
 }
 BYTE extcl_save_mapper_TXC(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, txc.increase);

@@ -220,7 +220,6 @@ BYTE ines_load_rom(void) {
 			info.mapper.battery = (ines.flags[FL6] & 0x02) >> 1;
 
 			wram_set_ram_size(S8K);
-			// devo verificare se lo fa davvero ????????????????????????????????????????
 			vram_set_ram_size(S8K);
 
 			vs_system.ppu = vs_system.special_mode.type = 0;
@@ -273,6 +272,9 @@ BYTE ines_load_rom(void) {
 		}
 
 		nes20db_search();
+
+		ram_set_size(S2K);
+		ram_init();
 
 		nmt_set_size(S4K);
 		nmt_init();
@@ -372,9 +374,9 @@ BYTE ines_load_rom(void) {
 
 
 
-//		if (info.format == NES_2_0) {
-//			sha1_csum(chr_rom(), chr_size(), info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
-//		}
+		if (info.format == NES_2_0) {
+			sha1_csum(chrrom_pnt(), chrrom_size(), info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
+		}
 
 
 		// alloco e carico la CHR Rom
@@ -459,43 +461,11 @@ void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, double divider) {
 		(*reg1) = (*reg2) / 2;
 	}
 }
-BYTE nes20_ram_size(BYTE mode) {
-	switch (mode) {
-		case 0:
-			return (0);
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-		case 7:
-			return (1);
-		case 8:
-			return (2);
-		case 9:
-			return (4);
-		case 10:
-			return (8);
-		case 11:
-			return (16);
-		case 12:
-			return (32);
-		case 13:
-			return (64);
-		case 14:
-			return (128);
-		case 15:
-			return (0);
-		default:
-			break;
-	}
-	return (0);
-}
 
 void calculate_checksums_from_rom(void *rom_mem) {
 	_rom_mem *rom = (_rom_mem *)rom_mem;
-	size_t position = 0x10, len = 0, difference = 0;
+	size_t position = 0x10, len = 0;
+	signed long difference = 0;
 
 	info.crc32.prg = 0;
 	info.crc32.chr = 0;
@@ -523,45 +493,45 @@ void calculate_checksums_from_rom(void *rom_mem) {
 	}
 
 	{
-		len = !info.prg.rom.banks_16k ? 0x2000 : (size_t)info.prg.rom.banks_16k * 0x4000;
-		difference = !info.prg.rom.banks_16k ? 0x2000 : 0;
+		len = !info.prg.rom.banks_16k ? S8K : (size_t)info.prg.rom.banks_16k * S16K;
+		difference = !info.prg.rom.banks_16k ? S8K : 0;
 		if ((position + len) > rom->size) {
-			DBWORD banks = (rom->size - position) / 0x4000;
+			DBWORD banks = ((rom->size - position) / S16K) + ((rom->size - position) % S16K ? 1: 0);
 
-			info.prg.rom.banks_16k = banks < 1 ? banks : emu_power_of_two(banks);
+			info.prg.rom.banks_16k = banks <= 1 ? banks : emu_power_of_two(banks);
 			len = rom->size - position;
-			difference = ((size_t)info.prg.rom.banks_16k * 0x4000) - len;
+			difference = len < S16K ? 0 : ((size_t)info.prg.rom.banks_16k * S16K) - len;
 		}
 		// calcolo l'sha1 e il crc32 della PRG Rom
-		sha1_csum(rom->data + position, (int)len, info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
-		info.crc32.prg = emu_crc32((void *)(rom->data + position), len);
+		sha1_csum(&rom->data[position], (int)len, info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
+		info.crc32.prg = emu_crc32((void *)&rom->data[position], len);
 		info.crc32.prg = emu_crc32_zeroes(difference, info.crc32.prg);
-		info.crc32.total = emu_crc32_continue((void *)(rom->data + position), len, info.crc32.total);
+		info.crc32.total = emu_crc32_continue((void *)&rom->data[position], len, info.crc32.total);
 		position += len;
 	}
 
 	if (info.chr.rom.banks_8k) {
-		len = (size_t)info.chr.rom.banks_8k * 0x2000;
+		len = (size_t)info.chr.rom.banks_8k * S8K;
 		difference = 0;
 		if ((position + len) > rom->size) {
-			DBWORD banks = (rom->size - position) / 0x2000;
+			DBWORD banks = ((rom->size - position) / S8K) + ((rom->size - position) % S8K ? 1: 0) ;
 
-			info.chr.rom.banks_8k = banks < 1 ? banks : emu_power_of_two(banks);
+			info.chr.rom.banks_8k = banks <= 1 ? banks : emu_power_of_two(banks);
 			len = rom->size - position;
-			difference = ((size_t)info.chr.rom.banks_8k * 0x2000) - len;
+			difference = len < S8K ? 0 : ((size_t)info.prg.rom.banks_16k * S16K) - len;
 		}
 		// calcolo anche l'sha1 e il crc32 della CHR rom
-		sha1_csum(rom->data + position, (int)len, info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
-		info.crc32.chr = emu_crc32((void *)(rom->data + position), len);
+		sha1_csum(&rom->data[position], (int)len, info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
+		info.crc32.chr = emu_crc32((void *)&rom->data[position], len);
 		info.crc32.chr = emu_crc32_zeroes(difference, info.crc32.chr);
-		info.crc32.total = emu_crc32_continue((void *)(rom->data + position), len, info.crc32.total);
+		info.crc32.total = emu_crc32_continue((void *)&rom->data[position], len, info.crc32.total);
 		position += len;
 	}
 
 	if (position < rom->size) {
 		len = rom->size - position;
-		info.crc32.misc = emu_crc32((void *)(void *)(rom->data + position), len);
-		info.crc32.total = emu_crc32_continue((void *)(rom->data + position), len, info.crc32.total);
+		info.crc32.misc = emu_crc32((void *)(void *)&rom->data[position], len);
+		info.crc32.total = emu_crc32_continue((void *)&rom->data[position], len, info.crc32.total);
 		position += len;
 	}
 }
@@ -586,14 +556,6 @@ void search_in_database(void) {
 			info.default_dipswitches = dblist[i].dipswitches;
 			info.extra_from_db = dblist[i].extra;
 			switch (info.mapper.id) {
-				case 1:
-					// Fix per Famicom Wars (J) [!] che ha l'header INES errato
-					if (info.id == BAD_YOSHI_U) {
-						info.chr.rom.banks_8k = 4;
-					} else if (info.id == MOWPC10) {
-						info.chr.rom.banks_8k = 0;
-					}
-					break;
 				case 10:
 					// Fix per Famicom Wars (J) [!] che ha l'header INES errato
 					if (info.id == BAD_INES_FWJ) {

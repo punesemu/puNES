@@ -42,25 +42,6 @@
 
 
 
-typedef struct _mmcpu {
-	BYTE ram[0x800];   // Mirrored four times
-} _mmcpu;
-typedef struct _mmap_palette {
-	BYTE color[0x20];
-} _mmap_palette;
-typedef struct _oam {
-	BYTE data[256];
-	BYTE *element[64];
-	BYTE plus[32];
-	BYTE *ele_plus[8];
-	// unlimited sprites
-	BYTE plus_unl[224];
-	BYTE *ele_plus_unl[56];
-} _oam;
-
-extern _mmcpu mmcpu;
-extern _mmap_palette mmap_palette;
-extern _oam oam;
 
 
 

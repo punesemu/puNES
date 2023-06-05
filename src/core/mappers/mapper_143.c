@@ -33,7 +33,7 @@ void extcl_cpu_wr_mem_143(UNUSED(WORD address), UNUSED(BYTE value)) {}
 BYTE extcl_cpu_rd_mem_143(WORD address, BYTE openbus) {
 	if ((address >= 0x4100) && (address <= 0x5FFF)) {
 		if (address & 0x0100) {
-			return ((~address & 0x003F) | (cpu.openbus.before & 0xC0));
+			return ((~address & 0x003F) | (openbus & 0xC0));
 		} else if (address >= 0x5000) {
 			return (0xFF);
 		}

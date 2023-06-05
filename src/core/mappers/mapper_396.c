@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_396(void);
@@ -59,17 +57,9 @@ BYTE extcl_save_mapper_396(BYTE mode, BYTE slot, FILE *fp) {
 
 INLINE static void prg_fix_396(void) {
 	WORD base = (m396.reg[1] & 0x0F) << 3;
-	BYTE value;
 
-	value = base | (m396.reg[0] & 0x07);
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, value);
-
-	value = base | 0x07;
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, value);
-
-	map_prg_rom_8k_update();
+	memmap_auto_16k(MMCPU(0x8000), (base | (m396.reg[0] & 0x07)));
+	memmap_auto_16k(MMCPU(0xC000), (base | 0x07));
 }
 INLINE static void mirroring_fix_396(void) {
 	if (m396.reg[1] & 0x60) {

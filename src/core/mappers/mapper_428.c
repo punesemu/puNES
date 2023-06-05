@@ -17,8 +17,6 @@
  */
 
 #include <string.h>
-#include "mem_map.h"
-#include "info.h"
 #include "mappers.h"
 #include "save_slot.h"
 
@@ -26,12 +24,17 @@ INLINE static void prg_fix_428(void);
 INLINE static void chr_fix_428(void);
 INLINE static void mirroring_fix_428(void);
 
+INLINE static void tmp_fix_428(BYTE max, BYTE index, const WORD *ds);
+
 struct _m428 {
 	BYTE reg[5];
 	BYTE data;
 } m428;
 struct _m428tmp {
-	BYTE dipswitch;
+	BYTE ds_used;
+	BYTE max;
+	BYTE index;
+	const WORD *dipswitch;
 } m428tmp;
 
 void map_init_428(void) {
@@ -42,12 +45,22 @@ void map_init_428(void) {
 	mapper.internal_struct[0] = (BYTE *)&m428;
 	mapper.internal_struct_size[0] = sizeof(m428);
 
-	memset(&m428, 0x00, sizeof(m428));
+	if (info.reset >= HARD) {
+		memset(&m428, 0x00, sizeof(m428));
+	}
 
 	if (info.reset == RESET) {
-		m428tmp.dipswitch = (m428tmp.dipswitch + 1) & 0x03;
+		if (m428tmp.ds_used) {
+			m428tmp.index = (m428tmp.index + 1) % m428tmp.max;
+		}
 	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		m428tmp.dipswitch = 0;
+		memset(&m428tmp, 0x00, sizeof(m428tmp));
+
+		{
+			static WORD ds[] = { 0x00, 0x01, 0x02, 0x03 };
+
+			tmp_fix_428(LENGTH(ds), 0, &ds[0]);
+		}
 	}
 
 	info.mapper.extend_wr = TRUE;
@@ -58,30 +71,21 @@ void extcl_after_mapper_init_428(void) {
 	mirroring_fix_428();
 }
 void extcl_cpu_wr_mem_428(WORD address, BYTE value) {
-	switch (address & 0xF000) {
-		case 0x6000:
-		case 0x7000:
-			m428.reg[address & 0x03] = value;
-			prg_fix_428();
-			chr_fix_428();
-			mirroring_fix_428();
-			break;
-		case 0x8000:
-		case 0x9000:
-		case 0xA000:
-		case 0xB000:
-		case 0xC000:
-		case 0xD000:
-		case 0xE000:
-		case 0xF000:
-			m428.reg[4] = value;
-			chr_fix_428();
-			break;
+	if ((address >= 0x6000) && (address <= 0x7FFF)) {
+		m428.reg[address & 0x03] = value;
+		prg_fix_428();
+		chr_fix_428();
+		mirroring_fix_428();
+		return;
+	} else if (address >= 0x8000) {
+		m428.reg[4] = value;
+		chr_fix_428();
+		return;
 	}
 }
 BYTE extcl_cpu_rd_mem_428(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return ((openbus & 0xFC) | (m428tmp.dipswitch & 0x03));
+		return ((openbus & 0xFC) | (m428tmp.dipswitch[m428tmp.index] & 0x03));
 	}
 	return (openbus);
 }
@@ -92,33 +96,19 @@ BYTE extcl_save_mapper_428(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_428(void) {
-	WORD bank;
+	WORD bank = m428.reg[1] >> 5;
 
 	if (m428.reg[1] & 0x10) {
-		bank = m428.reg[1] >> 6;
-		_control_bank(bank, info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, bank);
+		memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
 	} else {
-		bank = m428.reg[1] >> 5;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
-		map_prg_rom_8k(2, 2, bank);
+		memmap_auto_16k(MMCPU(0x8000), bank);
+		memmap_auto_16k(MMCPU(0xC000), bank);
 	}
-	map_prg_rom_8k_update();
 }
 INLINE static void chr_fix_428(void) {
-	DBWORD bank = ((m428.reg[1] & 0x07) & ~(m428.reg[2] >> 6)) | (m428.reg[4] & (m428.reg[2] >> 6));
+	WORD bank = ((m428.reg[1] & 0x07) & ~(m428.reg[2] >> 6)) | (m428.reg[4] & (m428.reg[2] >> 6));
 
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank | 0x0000);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	memmap_auto_8k(MMPPU(0x0000), bank);
 }
 INLINE static void mirroring_fix_428(void) {
 	if (m428.reg[1] & 0x08) {
@@ -126,4 +116,11 @@ INLINE static void mirroring_fix_428(void) {
 	} else {
 		mirroring_V();
 	}
+}
+
+INLINE static void tmp_fix_428(BYTE max, BYTE index, const WORD *ds) {
+	m428tmp.ds_used = TRUE;
+	m428tmp.max = max;
+	m428tmp.index = index;
+	m428tmp.dipswitch = ds;
 }

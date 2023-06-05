@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_300(void);
@@ -37,7 +35,9 @@ void map_init_300(void) {
 	mapper.internal_struct[0] = (BYTE *)&m300;
 	mapper.internal_struct_size[0] = sizeof(m300);
 
-	memset(&m300, 0x00, sizeof(m300));
+	if (info.reset >= HARD) {
+		memset(&m300, 0x00, sizeof(m300));
+	}
 }
 void extcl_after_mapper_init_300(void) {
 	prg_fix_300();
@@ -57,30 +57,16 @@ BYTE extcl_save_mapper_300(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_300(void) {
-	WORD bank = (m300.reg >> 2) & 0x07;
+	WORD bank = (m300.reg & 0x1C) >> 2;
 
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-	map_prg_rom_8k(2, 2, bank);
-	map_prg_rom_8k_update();
+	memmap_auto_16k(MMCPU(0x8000), bank);
+	memmap_auto_16k(MMCPU(0xC000), bank);
 }
 INLINE static void chr_fix_300(void) {
-	DBWORD bank = (m300.reg >> 2) & 0x07;
-
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
-
+	memmap_auto_8k(MMPPU(0x0000), ((m300.reg & 0x1C) >> 2));
 }
 INLINE static void mirroring_fix_300(void) {
-	if (m300.reg & 0x0001) {
+	if (m300.reg & 0x01) {
 		mirroring_H();
 	} else {
 		mirroring_V();

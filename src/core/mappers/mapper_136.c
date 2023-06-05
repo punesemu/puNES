@@ -17,7 +17,6 @@
  */
 
 #include "mappers.h"
-#include "cpu.h"
 
 void prg_fix_jv001_136(void);
 void chr_fix_jv001_136(void);
@@ -41,7 +40,7 @@ BYTE extcl_cpu_rd_mem_136(WORD address, BYTE openbus) {
 	if ((address >= 0x4020) && (address <= 0x5FFF)) {
 		BYTE value = extcl_cpu_rd_mem_JV001(address, openbus);
 
-		return (((cpu.openbus.before & 0xC0) | (value & 0x3F)));
+		return (((openbus & 0xC0) | (value & 0x3F)));
 	}
 	return (openbus);
 }

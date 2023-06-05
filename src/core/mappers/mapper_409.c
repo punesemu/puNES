@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_409(void);
@@ -34,7 +33,9 @@ void map_init_409(void) {
 	mapper.internal_struct[0] = (BYTE *)&m409;
 	mapper.internal_struct_size[0] = sizeof(m409);
 
-	memset(&m409, 0x00, sizeof(m409));
+	if (info.reset >= HARD) {
+		memset(&m409, 0x00, sizeof(m409));
+	}
 }
 void extcl_after_mapper_init_409(void) {
 	prg_fix_409();
@@ -52,10 +53,6 @@ BYTE extcl_save_mapper_409(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_409(void) {
-	WORD bank;
-
-	bank = m409.reg & 0x0FFF;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-	map_prg_rom_8k_update();
+	memmap_auto_16k(MMCPU(0x8000), m409.reg);
+	memmap_auto_16k(MMCPU(0xC000), 0xFFFF);
 }

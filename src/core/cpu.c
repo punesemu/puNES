@@ -20,7 +20,6 @@
 #include "cpu.h"
 #include "ppu.h"
 #include "apu.h"
-#include "mem_map.h"
 #include "cpu_inline.h"
 
 enum cpu_opcode_type { RD_OP, WR_OP };
@@ -43,7 +42,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	WORD adr1 = _RDP;\
 	/* garbage read */\
 	_RDZPX_;\
-	WORD adr0 = (adr1 + reg) & 0x00FF;\
+	WORD adr0 = (adr1 + (reg)) & 0x00FF;\
 	cmd\
 }
 #define ABS(opTy, cmd)\
@@ -62,7 +61,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define ABX(opTy, cmd, reg)\
 {\
 	WORD adr2 = lend_word(cpu.PC, FALSE, TRUE);\
-	WORD adr0 = adr2 + reg;\
+	WORD adr0 = adr2 + (reg);\
 	WORD adr1 = (adr2 & 0xFF00) | (BYTE)adr0;\
 	/* puo' essere la lettura corretta o anche semplice garbage */\
 	_RDABX_;\
@@ -72,7 +71,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define AXW(opTy, cmd, reg)\
 {\
 	WORD adr2 = lend_word(cpu.PC, FALSE, TRUE);\
-	WORD adr0 = adr2 + reg;\
+	WORD adr0 = adr2 + (reg);\
 	WORD adr1 = (adr2 & 0xFF00) | (BYTE)adr0;\
 	/* puo' essere la lettura corretta o anche semplice garbage */\
 	_RDAXW_;\
@@ -158,7 +157,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define BRC(flag, condition)\
 	WORD adr1 = (cpu.PC + 1);\
 	WORD adr0 = adr1 + (SBYTE) _RDX(cpu.PC, TRUE);\
-	if ((!flag) != condition) {\
+	if ((!(flag)) != (condition)) {\
 		/*\
 		 * A page boundary crossing occurs when the\
 		 * branch destination is on a different page\
@@ -181,6 +180,60 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	} else {\
 		cpu.PC++;\
 	}
+
+
+
+
+//
+//#define BRC(flag, condition) \
+//	BYTE offset = _RDX(cpu.PC++, TRUE);\
+//	WORD adr0 = cpu.PC + (SBYTE)offset;\
+//	if ((!flag) != condition) {\
+//		static union _pluto {\
+//			BYTE b[2];\
+//			WORD w;\
+//		} PC;\
+//		/*\
+//		 * A page boundary crossing occurs when the\
+//		 * branch destination is on a different page\
+//		 * than the instruction AFTER the branch\
+//		 * instruction.\
+//		 */\
+//		PC.w = cpu.PC;\
+//		BYTE inc = !((adr0 & 0xFF00) == (cpu.PC & 0xFF00));\
+//		if (!inc) {\
+//			if (nmi.high && !nmi.before) {\
+//				nmi.delay = TRUE;\
+//			} else if (!(irq.inhibit & 0x04) && irq.high && !irq.before) {\
+//				irq.delay = TRUE;\
+//			}\
+//		}\
+//		mod_cycles_op(+=, 1);\
+//		_RDX(PC.w, TRUE);\
+//		PC.b[0] += offset;\
+//		if (offset & 0x80) {\
+//			if (inc) {\
+//				mod_cycles_op(+=, 1);\
+//				_RDX(PC.w, TRUE);\
+//				PC.b[1]--;\
+//			}\
+//		} else {\
+//			if (inc) {\
+//				mod_cycles_op(+=, 1);\
+//				_RDX(PC.w, TRUE);\
+//				PC.b[1]++;\
+//			}\
+//		}\
+//		cpu.PC = PC.w;\
+//	}
+//
+
+
+
+
+
+
+
 /* BIT */
 #define BIT(x)\
 	x;\
@@ -206,7 +259,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	_RSZ(_CMP(x, reg), (BYTE)cmp)\
 	}
 /* LDA, LDX, LDY */
-#define LDX(x, reg) _RSZ(reg = x;, reg)
+#define LDX(x, reg) _RSZ((reg) = (x);, reg)
 /* JMP */
 #define JMP\
 	WORD adr0 = lend_word(cpu.PC, FALSE, TRUE);\
@@ -287,12 +340,12 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	_AAXIDX(tmp)
 /* DCP */
 #define DCP(x)\
-	BYTE tmp = x - 1;\
+	BYTE tmp = (x) - 1;\
 	CMP(tmp, cpu.AR)\
 	_MSX(tmp)
 /* ISC */
 #define ISC(x)\
-	BYTE tmp = x + 1;\
+	BYTE tmp = (x) + 1;\
 	_MSX(tmp)\
 	cpu.openbus.actual = tmp;\
 	_RSZ(_SUB, cpu.AR)
@@ -317,7 +370,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	_RSZ(_ADD, cpu.AR)
 /* SXX */
 #define SXX(reg)\
-	BYTE tmp = reg & ((adr2 >> 8) + 1);\
+	BYTE tmp = (reg) & ((adr2 >> 8) + 1);\
 	if (adr1 != adr0) adr0 &= 0x00FF;\
 	_SXXABX(tmp)
 /* XAA */
@@ -335,11 +388,11 @@ enum cpu_opcode_type { RD_OP, WR_OP };
  *  flags
  * ---------------------------------------------------------------------------------
  */
-#define SF(x) cpu.sf = x & 0x80;
+#define SF(x) cpu.sf = (x) & 0x80;
 #define SZ(x)\
 	SF(x)\
 	ZF(x)
-#define ZF(x) cpu.zf = !x << 1;
+#define ZF(x) cpu.zf = !(x) << 1;
 
 /* ----------------------------------------------------------------------
  *  varie ed eventuali
@@ -389,10 +442,10 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	cpu.AR = (BYTE)A;\
 	}
 #define _BSH(dst, bitmask, opr)\
-	cpu.cf = ((dst & bitmask) ? 1 : 0);\
+	cpu.cf = ((dst) & (bitmask) ? 1 : 0);\
 	dst opr 1;
 #define _CMP(x, reg)\
-	WORD cmp = reg - x;\
+	WORD cmp = (reg) - (x);\
 	cpu.cf = (cmp < 0x100 ? 1 : 0);
 #define _CYW(cmd) _CY_(cmd, mod_cycles_op(+=, 1);)
 #define _CY_(cmd1, cmd2)\
@@ -443,7 +496,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	{\
 	BYTE old_cf = cpu.cf;\
 	_BSH(dst, bitmask, opr)\
-	dst |= oprnd;\
+	(dst) |= (oprnd);\
 	}
 #define _RSZ(cmd, result)\
 	cmd\
@@ -1040,11 +1093,11 @@ void cpu_turn_on(void) {
 		if (tas.type && (tas.emulator == FCEUX)) {
 			unsigned int x = 0;
 
-			for (x = 0; x < sizeof(mmcpu.ram); x++) {
-				mmcpu.ram[x] = (x & 0x04) ? 0xFF : 0x00;
+			for (x = 0; x < ram_size(); x++) {
+				ram_wr(x, (x & 0x04) ? 0xFF : 0x00);
 			}
 		} else {
-			emu_initial_ram(mmcpu.ram, sizeof(mmcpu.ram));
+			emu_initial_ram(ram_pnt(), ram_size());
 
 //			/*
 //			 * reset della ram
@@ -1059,18 +1112,18 @@ void cpu_turn_on(void) {
 //			 *  state of any registers after Power-UP and especially
 //			 *  not the stack register and WRAM ($0000-$07FF).
 //			 */
-//			mmcpu.ram[0x008] = 0xF7;
-//			mmcpu.ram[0x009] = 0xEF;
-//			mmcpu.ram[0x00A] = 0xDF;
-//			//mmcpu.ram[0x00B] = 0xBF;
-//			mmcpu.ram[0x00F] = 0xBF;
+//			ram_wr(0x008, 0xF7);
+//			ram_wr(0x009, 0xEF);
+//			ram_wr(0x00A, 0xDF);
+//			//ram_wr(0x00B, 0xBF);
+//			ram_wr(0x00F, 0xBF);
 //
 //			/*
 //			 * questo workaround serve solo per
 //			 * 2nd2006.nes e 256inc.nes
 //			 */
 //			if (info.mapper.id == 0) {
-//				mmcpu.ram[0x000] = 0x00;
+//				ram_wr(0x000, 0x00);
 //			}
 
 			/*
@@ -1078,7 +1131,7 @@ void cpu_turn_on(void) {
 			 * Dancing Blocks (Sachen) [!].nes
 			 */
 			if (info.mapper.id == 143) {
-				mmcpu.ram[0x004] = 0x00;
+				ram_wr(0x004, 0x00);
 			}
 
 			/*
@@ -1086,7 +1139,7 @@ void cpu_turn_on(void) {
 			 * Doraemon (J) (PRG0) [hM15].nes
 			 */
 			if (info.mapper.id == 15) {
-				mmcpu.ram[0x018] = 0x00;
+				ram_wr(0x018, 0x00);
 			}
 
 			/*
@@ -1094,7 +1147,7 @@ void cpu_turn_on(void) {
 			 * Ultimate Mortal Kombat 3 14 people (Unl)[!].nes
 			 */
 			if (info.mapper.id == 123) {
-				mmcpu.ram[0x080] = 0x00;
+				ram_wr(0x080 ,0x00);
 			}
 		}
 	} else {

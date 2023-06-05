@@ -18,42 +18,48 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_414(void);
 INLINE static void chr_fix_414(void);
 INLINE static void mirroring_fix_414(void);
 
-static const WORD dipswitch_414[5] = { 0x010, 0x000, 0x030, 0x070, 0x0F0 };
+INLINE static void tmp_fix_414(BYTE max, BYTE index, const WORD *ds);
 
 struct _m414 {
 	WORD reg[2];
 } m414;
 struct _m414tmp {
+	BYTE ds_used;
+	BYTE max;
 	BYTE index;
-	WORD dipswitch;
+	const WORD *dipswitch;
 } m414tmp;
 
 void map_init_414(void) {
 	EXTCL_AFTER_MAPPER_INIT(414);
 	EXTCL_CPU_WR_MEM(414);
-	EXTCL_CPU_RD_MEM(414);
 	EXTCL_SAVE_MAPPER(414);
 	mapper.internal_struct[0] = (BYTE *)&m414;
 	mapper.internal_struct_size[0] = sizeof(m414);
 
-	memset(&m414, 0x00, sizeof(m414));
-
-	if (info.reset == RESET) {
-		m414tmp.index = (m414tmp.index + 1) >= 5 ? 0 : m414tmp.index + 1;
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		m414tmp.index = 0;
+	if (info.reset >= HARD) {
+		memset(&m414, 0x00, sizeof(m414));
 	}
 
-	m414tmp.dipswitch = dipswitch_414[m414tmp.index];
+	if (info.reset == RESET) {
+		if (m414tmp.ds_used) {
+			m414tmp.index = (m414tmp.index + 1) % m414tmp.max;
+		}
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memset(&m414tmp, 0x00, sizeof(m414tmp));
 
-	info.mapper.extend_rd = TRUE;
+		{
+			static const WORD ds[] = { 0x010, 0x000, 0x030, 0x070, 0x0F0 };
+
+			tmp_fix_414(LENGTH(ds), 0, &ds[0]);
+		}
+	}
 }
 void extcl_after_mapper_init_414(void) {
 	prg_fix_414();
@@ -63,62 +69,43 @@ void extcl_after_mapper_init_414(void) {
 void extcl_cpu_wr_mem_414(WORD address, BYTE value) {
 	m414.reg[0] = address;
 	// bus conflict
-	m414.reg[1] = value & prg_rom_rd(address);
+	m414.reg[1] = value & prgrom_rd(address);
 	prg_fix_414();
 	chr_fix_414();
 	mirroring_fix_414();
 }
-BYTE extcl_cpu_rd_mem_414(WORD address, BYTE openbus) {
-	if (address >= 0xC000) {
-		if (!(m414.reg[0] & 0x0100) && (m414.reg[0] & m414tmp.dipswitch)) {
-			return (0xFF);
-		}
-	}
-	return (openbus);
-}
 BYTE extcl_save_mapper_414(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m414.reg);
-	save_slot_ele(mode, slot, m414tmp.index);
-	save_slot_ele(mode, slot, m414tmp.dipswitch);
 
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_414(void) {
-	WORD bank;
+	WORD bank = m414.reg[0] >> 1;
 
-	if (m414.reg[0] & 0x2000) {
-		bank = (m414.reg[0] & 0x0004) >> 2;
-		_control_bank(bank, info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, bank);
+	if (!(m414.reg[0] & 0x0100) && (m414.reg[0] & m414tmp.dipswitch[m414tmp.index])) {
+		memmap_disable_16k(MMCPU(0xC000));
+	} else if (m414.reg[0] & 0x2000) {
+		memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
 	} else {
-		bank = (m414.reg[0] & 0x0006) >> 1;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
-		map_prg_rom_8k(2, 2, bank);
+		memmap_auto_16k(MMCPU(0x8000), bank);
+		memmap_auto_16k(MMCPU(0xC000), bank);
 	}
-
-	map_prg_rom_8k_update();
 }
 INLINE static void chr_fix_414(void) {
-	DBWORD bank;
-
-	bank = m414.reg[1] & 0x03;
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	memmap_auto_8k(MMPPU(0x0000), m414.reg[1]);
 }
 INLINE static void mirroring_fix_414(void) {
-	if (m414.reg[0] & 0x0001) {
+	if (m414.reg[0] & 0x01) {
 		mirroring_H();
 	} else {
 		mirroring_V();
 	}
+}
+
+INLINE static void tmp_fix_414(BYTE max, BYTE index, const WORD *ds) {
+	m414tmp.ds_used = TRUE;
+	m414tmp.max = max;
+	m414tmp.index = index;
+	m414tmp.dipswitch = ds;
 }

@@ -17,7 +17,6 @@
  */
 
 #include "mappers.h"
-#include "cpu.h"
 #include "save_slot.h"
 #include "EE93Cx6.h"
 
@@ -74,17 +73,8 @@ BYTE extcl_cpu_rd_mem_529(WORD address, BYTE openbus) {
 }
 
 void prg_fix_vrc2and4_529(void) {
-	WORD bank = 0;
-
-	bank = vrc2and4.prg[1];
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-
-	bank = 0xFF;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_16k(MMCPU(0x8000), vrc2and4.prg[1]);
+	memmap_auto_16k(MMCPU(0xC000), 0xFF);
 }
 void chr_swap_vrc2and4_529(WORD address, WORD value) {
 	chr_swap_VRC2and4_base(address, (value & 0x1FF));

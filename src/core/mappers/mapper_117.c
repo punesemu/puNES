@@ -21,7 +21,6 @@
 #include "cpu.h"
 #include "ppu.h"
 #include "save_slot.h"
-#include "mem_map.h"
 #include "ppu_inline.h"
 
 INLINE static void prg_fix_117(void);
@@ -237,4 +236,3 @@ INLINE static void irq_clock_117(void) {
 		m117.irq.a12_filter = 5;
 	}
 }
-

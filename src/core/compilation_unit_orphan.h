@@ -49,12 +49,9 @@ _machine machine;
 _vs_system vs_system;
 
 #include "mem_map.h"
-_mmcpu mmcpu;
 _prg prg;
 _chr chr;
 _nametables ntbl;
-_mmap_palette mmap_palette;
-_oam oam;
 
 #include "debugger.h"
 _debugger debugger;

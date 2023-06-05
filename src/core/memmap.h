@@ -56,6 +56,7 @@ enum _memmap_bank_types {
 	MEMMAP_BANK_CHRROM,
 	MEMMAP_BANK_WRAM,
 	MEMMAP_BANK_VRAM,
+	MEMMAP_BANK_RAM,
 	MEMMAP_BANK_NMT,
 	MEMMAP_BANK_OTHER
 };
@@ -75,6 +76,9 @@ enum _memmap_types {
 
 	MEMMAP_WRAM_CHUNK_SIZE_DEFAULT = S4K,
 	MEMMAP_WRAM_SIZE = S16K,
+
+	MEMMAP_RAM_CHUNK_SIZE_DEFAULT = S2K,
+	MEMMAP_RAM_SIZE = S2K,
 
 	MEMMAP_NMT_CHUNK_SIZE_DEFAULT = S1K,
 	MEMMAP_NMT_SIZE = S8K,
@@ -97,6 +101,12 @@ enum _memmap_misc { MAX_CHIPS = 8 };
 #define chrrom_pnt_byte(byte) &chrrom.data.pnt[byte]
 #define chrrom_byte(byte) chrrom.data.pnt[(byte)]
 #define chrrom_mask() chrrom.data.mask
+
+#define ram_size() ram.data.size
+#define ram_pnt() ram.data.pnt
+#define ram_pnt_byte(byte) &ram.data.pnt[byte]
+#define ram_byte(byte) ram.data.pnt[(byte)]
+#define ram_mask() ram.data.mask
 
 #define wram_size() wram.data.size
 #define wram_pnt() wram.data.pnt
@@ -225,6 +235,7 @@ typedef struct _memmap_chunk_dst {
 	size_t mask;
 } _memmap_chunk_dst;
 typedef struct _memmap {
+	_memmap_region ram;
 	_memmap_region wram;
 	_memmap_region prg;
 	_memmap_region chr;
@@ -264,6 +275,10 @@ typedef struct _vram {
 	_memmap_chunk_dst ram;
 	_memmap_chunk_dst nvram;
 } _vram;
+typedef struct _ram {
+	size_t real_size;
+	_memmap_chunk_dst data;
+} _ram;
 typedef struct _nmt {
 	size_t real_size;
 	_memmap_chunk_dst data;
@@ -278,11 +293,30 @@ typedef struct _miscrom {
 	} trainer;
 } _miscrom;
 
+typedef struct _mmap_palette {
+	BYTE color[0x20];
+} _mmap_palette;
+typedef struct _oam {
+	BYTE data[256];
+	BYTE *element[64];
+	BYTE plus[32];
+	BYTE *ele_plus[8];
+	// unlimited sprites
+	BYTE plus_unl[224];
+	BYTE *ele_plus_unl[56];
+} _oam;
+
+extern _mmap_palette mmap_palette;
+extern _oam oam;
+
+
+
 extern _memmap memmap;
 extern _prgrom prgrom;
 extern _chrrom chrrom;
 extern _wram wram;
 extern _vram vram;
+extern _ram ram;
 extern _nmt nmt;
 extern _miscrom miscrom;
 
@@ -304,6 +338,7 @@ EXTERNC BYTE *memmap_chunk_pnt(DBWORD address);
 EXTERNC BYTE memmap_prg_region_init(size_t chunk_size);
 EXTERNC BYTE memmap_chr_region_init(size_t chunk_size);
 EXTERNC BYTE memmap_wram_region_init(size_t chunk_size);
+EXTERNC BYTE memmap_ram_region_init(size_t chunk_size);
 EXTERNC BYTE memmap_nmt_region_init(size_t chunk_size);
 
 EXTERNC void memmap_auto_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
@@ -351,7 +386,7 @@ EXTERNC void memmap_other_custom_size(DBWORD address, DBWORD initial_chunk, size
 EXTERNC BYTE prgrom_init(BYTE set_value);
 EXTERNC void prgrom_quit(void);
 EXTERNC void prgrom_set_size(size_t size);
-EXTERNC void prgrom_reset(void);
+EXTERNC void prgrom_reset_chunks(void);
 EXTERNC WORD prgrom_banks(enum _sizes_types size);
 EXTERNC WORD prgrom_control_bank(enum _sizes_types size, WORD bank);
 EXTERNC size_t prgrom_region_address(WORD address);
@@ -374,7 +409,7 @@ EXTERNC void memmap_prgrom_custom_size(DBWORD address, DBWORD chunk, size_t size
 EXTERNC BYTE chrrom_init(void);
 EXTERNC void chrrom_quit(void);
 EXTERNC void chrrom_set_size(size_t size);
-EXTERNC void chrrom_reset(void);
+EXTERNC void chrrom_reset_chunks(void);
 EXTERNC WORD chrrom_banks(enum _sizes_types size);
 EXTERNC WORD chrrom_control_bank(enum _sizes_types size, WORD bank);
 
@@ -405,7 +440,7 @@ EXTERNC BYTE wram_init(void);
 EXTERNC void wram_quit(void);
 EXTERNC void wram_set_ram_size(size_t size);
 EXTERNC void wram_set_nvram_size(size_t size);
-EXTERNC void wram_reset(void);
+EXTERNC void wram_reset_chunks(void);
 EXTERNC void wram_memset(void);
 
 EXTERNC BYTE wram_rd(WORD address);
@@ -468,12 +503,30 @@ EXTERNC void memmap_vram_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_vram_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_vram_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
 
+
+// ram -------------------------------------------------------------------------------
+
+EXTERNC BYTE ram_init(void);
+EXTERNC void ram_quit(void);
+EXTERNC void ram_set_size(size_t size);
+EXTERNC void ram_reset_chunks(void);
+EXTERNC void ram_memset(void);
+EXTERNC void ram_disable_write(void);
+
+EXTERNC BYTE ram_rd(WORD address);
+EXTERNC void ram_wr(WORD address, BYTE value);
+
+EXTERNC void memmap_ram_256b(DBWORD address, DBWORD value);
+EXTERNC void memmap_ram_512b(DBWORD address, DBWORD value);
+EXTERNC void memmap_ram_1k(DBWORD address, DBWORD value);
+EXTERNC void memmap_ram_2k(DBWORD address, DBWORD value);
+
 // nmt -------------------------------------------------------------------------------
 
 EXTERNC BYTE nmt_init(void);
 EXTERNC void nmt_quit(void);
 EXTERNC void nmt_set_size(size_t size);
-EXTERNC void nmt_reset(void);
+EXTERNC void nmt_reset_chunks(void);
 EXTERNC void nmt_memset(void);
 EXTERNC void nmt_disable_write(void);
 

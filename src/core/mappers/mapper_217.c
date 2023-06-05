@@ -53,25 +53,8 @@ BYTE extcl_save_mapper_217(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_217(void) {
-	WORD bank;
-
-	bank = m217.reg >> 2;
-	_control_bank(bank, info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, bank);
-	map_prg_rom_8k_update();
+	memmap_auto_32k(MMCPU(0x8000), (m217.reg >> 2));
 }
 INLINE static void chr_fix_217(void) {
-	DBWORD bank;
-
-	bank = m217.reg;
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	memmap_auto_8k(MMPPU(0x0000), m217.reg);
 }

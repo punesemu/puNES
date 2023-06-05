@@ -17,7 +17,6 @@
  */
 
 #include "mappers.h"
-#include "cpu.h"
 
 void prg_fix_txc_173(void);
 void chr_fix_txc_173(void);
@@ -41,7 +40,7 @@ BYTE extcl_cpu_rd_mem_173(WORD address, BYTE openbus) {
 	if ((address >= 0x4020) && (address <= 0x5FFF)) {
 		BYTE value = extcl_cpu_rd_mem_TXC(address, openbus);
 
-		return (((cpu.openbus.before & 0xF0) | (value & 0x0F)));
+		return (((openbus & 0xF0) | (value & 0x0F)));
 	}
 	return (openbus);
 }

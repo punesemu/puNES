@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 void prg_swap_mmc1_297(WORD address, WORD value);
@@ -104,41 +103,20 @@ INLINE static void prg_fix_297(void) {
 	if (m297.reg[0] & 0x01) {
 		MMC1_prg_fix();
 	} else {
-		WORD bank = 0;
-
-		bank = ((m297.reg[0] & 0x02) << 1) | ((m297.reg[1] & 0x30) >> 4);
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
-
-		bank = ((m297.reg[0] & 0x02) << 1) | 0x03;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 2, bank);
-
-		map_prg_rom_8k_update();
+		memmap_auto_16k(MMCPU(0x8000), (((m297.reg[0] & 0x02) << 1) | ((m297.reg[1] & 0x30) >> 4)));
+		memmap_auto_16k(MMCPU(0xC000), (((m297.reg[0] & 0x02) << 1) | 0x03));
 	}
 }
 INLINE static void chr_fix_297(void) {
 	if (m297.reg[0] & 0x01) {
 		MMC1_chr_fix();
 	} else {
-		DBWORD bank;
-
-		bank = m297.reg[1] & 0x0F;
-		_control_bank(bank, info.chr.rom.max.banks_8k)
-		bank <<= 13;
-		chr.bank_1k[0] = chr_pnt(bank);
-		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-		chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-		chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-		chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-		chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-		chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-		chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+		memmap_auto_8k(MMPPU(0x0000), (m297.reg[1] & 0x0F));
 	}
 }
 INLINE static void mirroring_fix_297(void) {
 	if (m297.reg[0] & 0x01) {
-		mirroring_fix_MMC1_base();
+		MMC1_mirroring_fix();
 	} else {
 		mirroring_V();
 	}
