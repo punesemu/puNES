@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_235(void);
@@ -71,7 +69,7 @@ INLINE static void prg_fix_235(void) {
 		memmap_auto_16k(MMCPU(0x8000), (bank | (m235.reg[1] & 0x07)));
 		memmap_auto_16k(MMCPU(0xC000), (bank | 0x07));
 	} else {
-		bank = (m235.reg[0] & 0x1F) | ((m235.reg[0] & 0x300) >> 3);
+		bank = ((m235.reg[0] & 0x300) >> 3) | (m235.reg[0] & 0x1F);
 		if (bank >= prgrom_banks(S32K)) {
 			memmap_disable_32k(MMCPU(0x8000));
 		} else if (m235.reg[0] & 0x0800) {

@@ -21,8 +21,6 @@
 
 #include "common.h"
 
-enum _mmc4_types { BAD_INES_FWJ = 20 };
-
 typedef struct _mmc4 {
 	BYTE prg;
 	BYTE chr[4];

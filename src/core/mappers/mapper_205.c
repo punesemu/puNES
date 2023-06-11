@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -96,9 +94,7 @@ void extcl_cpu_wr_mem_205(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_205(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m205.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_205(WORD address, WORD value) {

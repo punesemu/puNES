@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -28,17 +26,17 @@ void chr_swap_mmc3_313(WORD address, WORD value);
 
 struct _m313 {
 	BYTE reg;
-
-	// da non salvare
-	struct _m313_prg {
+} m313;
+struct _m313tmp {
+	struct _m313tmp_prg {
 		WORD outer[2];
 		WORD mask[2];
 	} prg;
-	struct _m313_chr {
+	struct _m313tmp_chr {
 		WORD outer;
 		WORD mask;
 	} chr;
-} m313;
+} m313tmp;
 
 void map_init_313(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
@@ -70,36 +68,36 @@ void map_init_313(void) {
 	switch (info.mapper.submapper) {
 		default:
 		case 0:
-			m313.prg.outer[0] = m313.prg.outer[1] = 4;
-			m313.prg.mask[0] = m313.prg.mask[1] = 0x0F;
-			m313.chr.outer = 7;
-			m313.chr.mask = 0x7F;
+			m313tmp.prg.outer[0] = m313tmp.prg.outer[1] = 4;
+			m313tmp.prg.mask[0] = m313tmp.prg.mask[1] = 0x0F;
+			m313tmp.chr.outer = 7;
+			m313tmp.chr.mask = 0x7F;
 			break;
 		case 1:
-			m313.prg.outer[0] = m313.prg.outer[1] = 5;
-			m313.prg.mask[0] = m313.prg.mask[1] = 0x1F;
-			m313.chr.outer = 7;
-			m313.chr.mask = 0x7F;
+			m313tmp.prg.outer[0] = m313tmp.prg.outer[1] = 5;
+			m313tmp.prg.mask[0] = m313tmp.prg.mask[1] = 0x1F;
+			m313tmp.chr.outer = 7;
+			m313tmp.chr.mask = 0x7F;
 			break;
 		case 2:
-			m313.prg.outer[0] = m313.prg.outer[1] = 4;
-			m313.prg.mask[0] = m313.prg.mask[1] = 0x0F;
-			m313.chr.outer = 8;
-			m313.chr.mask = 0xFF;
+			m313tmp.prg.outer[0] = m313tmp.prg.outer[1] = 4;
+			m313tmp.prg.mask[0] = m313tmp.prg.mask[1] = 0x0F;
+			m313tmp.chr.outer = 8;
+			m313tmp.chr.mask = 0xFF;
 			break;
 		case 3:
-			m313.prg.outer[0] = m313.prg.outer[1] = 5;
-			m313.prg.mask[0] = m313.prg.mask[1] = 0x1F;
-			m313.chr.outer = 8;
-			m313.chr.mask = 0xFF;
+			m313tmp.prg.outer[0] = m313tmp.prg.outer[1] = 5;
+			m313tmp.prg.mask[0] = m313tmp.prg.mask[1] = 0x1F;
+			m313tmp.chr.outer = 8;
+			m313tmp.chr.mask = 0xFF;
 			break;
 		case 4:
-			m313.prg.outer[0] = 5;
-			m313.prg.mask[0] = 0x1F;
-			m313.prg.outer[1] = 4;
-			m313.prg.mask[1] = 0x0F;
-			m313.chr.outer = 7;
-			m313.chr.mask = 0x7F;
+			m313tmp.prg.outer[0] = 5;
+			m313tmp.prg.mask[0] = 0x1F;
+			m313tmp.prg.outer[1] = 4;
+			m313tmp.prg.mask[1] = 0x0F;
+			m313tmp.chr.outer = 7;
+			m313tmp.chr.mask = 0x7F;
 			break;
 	}
 
@@ -108,20 +106,18 @@ void map_init_313(void) {
 }
 BYTE extcl_save_mapper_313(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m313.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_313(WORD address, WORD value) {
-	WORD base = m313.reg << ((m313.reg == 0) ? m313.prg.outer[0] : m313.prg.outer[1]);
-	WORD mask = (m313.reg == 0) ? m313.prg.mask[0] : m313.prg.mask[1];
+	WORD base = m313.reg << ((m313.reg == 0) ? m313tmp.prg.outer[0] : m313tmp.prg.outer[1]);
+	WORD mask = (m313.reg == 0) ? m313tmp.prg.mask[0] : m313tmp.prg.mask[1];
 
 	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_mmc3_313(WORD address, WORD value) {
-	WORD base = m313.reg << m313.chr.outer;
-	WORD mask = m313.chr.mask;
+	WORD base = m313.reg << m313tmp.chr.outer;
+	WORD mask = m313tmp.chr.mask;
 
 	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

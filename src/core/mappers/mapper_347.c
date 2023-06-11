@@ -16,8 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "mem_map.h"
-#include "info.h"
 #include "mappers.h"
 #include "save_slot.h"
 

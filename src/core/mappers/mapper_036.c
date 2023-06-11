@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
 #include "save_slot.h"
 
 void prg_fix_txc_036(void);

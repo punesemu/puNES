@@ -255,7 +255,7 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, cpu.opcode);
 	save_slot_ele(mode, slot, cpu.opcode_PC);
 	save_slot_ele(mode, slot, cpu.odd_cycle);
-	save_slot_ele(mode, slot, cpu.openbus.actual);
+	save_slot_ele(mode, slot, cpu.openbus);
 	save_slot_ele(mode, slot, cpu.cycles);
 	save_slot_ele(mode, slot, cpu.opcode_cycle);
 	save_slot_ele(mode, slot, cpu.double_rd);

@@ -22,6 +22,5 @@
 #include "common.h"
 
 void map_init_199(void);
-BYTE extcl_save_mapper_199(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_199_H_ */

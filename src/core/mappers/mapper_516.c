@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -45,7 +44,10 @@ void map_init_516(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m516, 0x00, sizeof(m516));
+
+	if (info.reset >= HARD) {
+		memset(&m516, 0x00, sizeof(m516));
+	}
 
 	init_MMC3();
 	MMC3_prg_swap = prg_swap_mmc3_516;
@@ -64,9 +66,7 @@ void extcl_cpu_wr_mem_516(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_516(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m516.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_516(WORD address, WORD value) {

@@ -27,7 +27,6 @@ typedef struct _n118 {
 
 extern _n118 n118;
 
-void map_init_N118(void);
 void extcl_after_mapper_init_N118(void);
 void extcl_cpu_wr_mem_N118(WORD address, BYTE value);
 BYTE extcl_save_mapper_N118(BYTE mode, BYTE slot, FILE *fp);

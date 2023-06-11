@@ -18,9 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "cpu.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 void prg_swap_fme7_528(WORD address, WORD value);
@@ -93,14 +90,8 @@ void extcl_cpu_wr_mem_528(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_528(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m528.reg);
-	extcl_save_mapper_VRC7(mode, slot, fp);
-	extcl_save_mapper_FME7(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		FME7_wram_fix();
-	}
-
-	return (EXIT_OK);
+	if (extcl_save_mapper_VRC7(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
+	return (extcl_save_mapper_FME7(mode, slot, fp));
 }
 
 void prg_swap_fme7_528(WORD address, WORD value) {

@@ -19,49 +19,43 @@
 #include <string.h>
 #include "mappers.h"
 #include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 
 void map_init_004(void) {
-	EXTCL_AFTER_MAPPER_INIT(MMC3);
-	EXTCL_CPU_WR_MEM(MMC3);
-	EXTCL_SAVE_MAPPER(MMC3);
-	EXTCL_CPU_EVERY_CYCLE(MMC3);
-	EXTCL_PPU_000_TO_34X(MMC3);
-	EXTCL_PPU_000_TO_255(MMC3);
-	EXTCL_PPU_256_TO_319(MMC3);
-	EXTCL_PPU_320_TO_34X(MMC3);
-	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *)&mmc3;
-	mapper.internal_struct_size[0] = sizeof(mmc3);
-
-	if (info.reset >= HARD) {
-		init_MMC3();
-		memset(&irqA12, 0x00, sizeof(irqA12));
+	if (info.mapper.submapper == DEFAULT) {
+		info.mapper.submapper = 0;
 	}
 
-	switch (info.mapper.submapper) {
-		default:
-		case DEFAULT:
-			info.mapper.submapper = MMC3_SHARP;
-			break;
-		case MMC3_NEC:
-			EXTCL_IRQ_A12_CLOCK(MMC3_NEC);
-			break;
-	}
+	if (info.mapper.submapper == 5) {
+		map_init_249();
+	} else {
+		EXTCL_AFTER_MAPPER_INIT(MMC3);
+		EXTCL_CPU_WR_MEM(MMC3);
+		EXTCL_SAVE_MAPPER(MMC3);
+		EXTCL_CPU_EVERY_CYCLE(MMC3);
+		EXTCL_PPU_000_TO_34X(MMC3);
+		EXTCL_PPU_000_TO_255(MMC3);
+		EXTCL_PPU_256_TO_319(MMC3);
+		EXTCL_PPU_320_TO_34X(MMC3);
+		EXTCL_UPDATE_R2006(MMC3);
+		mapper.internal_struct[0] = (BYTE *)&mmc3;
+		mapper.internal_struct_size[0] = sizeof(mmc3);
 
-	if (info.id == SMB2JSMB1) {
-		info.prg.ram.banks_8k_plus = 1;
-	}
+		if (info.reset >= HARD) {
+			init_MMC3();
+			memset(&irqA12, 0x00, sizeof(irqA12));
+		}
 
-	if (info.id == SMB2EREZA) {
-		info.prg.ram.bat.banks = FALSE;
-	}
+		switch (info.mapper.submapper) {
+			default:
+				info.mapper.submapper = 0;
+				break;
+			case 4:
+				EXTCL_IRQ_A12_CLOCK(MMC3_NEC);
+				break;
+		}
 
-	if (info.id == RADRACER2) {
-		mirroring_FSCR();
+		irqA12.present = TRUE;
+		irqA12_delay = 1;
 	}
-
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
 }

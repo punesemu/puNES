@@ -17,7 +17,6 @@
  */
 
 #include "mappers.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 void prg_swap_vrc2and4_559(WORD address, WORD value);

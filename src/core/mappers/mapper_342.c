@@ -22,8 +22,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "ppu.h"
 #include "tas.h"

@@ -18,8 +18,6 @@
 
 #include "nsf.h"
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "fds.h"
 #include "clock.h"
 #include "save_slot.h"
@@ -209,10 +207,10 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 	}
 
 	if (nsf.sound_chips.vrc6) {
-		extcl_save_mapper_VRC6(mode, slot, fp);
+		if (extcl_save_mapper_VRC6(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	}
 	if (nsf.sound_chips.vrc7) {
-		extcl_save_mapper_VRC7(mode, slot, fp);
+		if (extcl_save_mapper_VRC7(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	}
 	if (nsf.sound_chips.fds) {
 		save_slot_ele(mode, slot, fds.snd.wave.data);
@@ -249,13 +247,13 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, fds.snd.modulation.mod);
 	}
 	if (nsf.sound_chips.mmc5) {
-		extcl_save_mapper_MMC5(mode, slot, fp);
+		if (extcl_save_mapper_MMC5(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	}
 	if (nsf.sound_chips.namco163) {
-		extcl_save_mapper_019(mode, slot, fp);
+		if (extcl_save_mapper_019(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	}
 	if (nsf.sound_chips.sunsoft5b) {
-		extcl_save_mapper_FME7(mode, slot, fp);
+		if (extcl_save_mapper_FME7(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	}
 
 	return (EXIT_OK);

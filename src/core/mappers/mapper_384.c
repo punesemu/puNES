@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 void prg_swap_vrc2and4_384(WORD address, WORD value);
@@ -57,9 +56,7 @@ void extcl_cpu_wr_mem_384(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_384(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m384.reg);
-	extcl_save_mapper_VRC2and4(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
 
 void prg_swap_vrc2and4_384(WORD address, WORD value) {

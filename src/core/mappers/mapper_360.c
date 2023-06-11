@@ -17,8 +17,8 @@
  */
 
 #include <string.h>
-#include "info.h"
 #include "mappers.h"
+#include "info.h"
 
 INLINE static void prg_fix_360(void);
 INLINE static void chr_fix_360(void);

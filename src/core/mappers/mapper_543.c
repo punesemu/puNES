@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 void prg_swap_mmc1_543(WORD address, WORD value);
@@ -50,10 +49,6 @@ void map_init_543(void) {
 	// per far avviare 1996 無敵智カ卡 5-in-1 (CH-501).nes
 	mmc1.reg[3] = 0x0E;
 
-//	if (wram_nvram_size() < (64 * 1024)) {
-//		wram_set_nvram_size(64 * 1024);
-//	}
-
 	info.mapper.extend_wr = TRUE;
 }
 void extcl_cpu_wr_mem_543(WORD address, BYTE value) {
@@ -76,9 +71,7 @@ BYTE extcl_save_mapper_543(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m543.reg);
 	save_slot_ele(mode, slot, m543.accumulator);
 	save_slot_ele(mode, slot, m543.shift);
-	extcl_save_mapper_MMC1(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC1(mode, slot, fp));
 }
 
 void prg_swap_mmc1_543(WORD address, WORD value) {

@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "cpu.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 void prg_fix_vrc2and4_447(void);
@@ -91,9 +89,7 @@ BYTE extcl_cpu_rd_mem_447(WORD address, BYTE openbus) {
 }
 BYTE extcl_save_mapper_447(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m447.reg);
-	extcl_save_mapper_VRC2and4(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
 
 void prg_fix_vrc2and4_447(void) {

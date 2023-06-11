@@ -63,7 +63,7 @@ void extcl_cpu_wr_mem_GameGenie(WORD address, BYTE value) {
 			gamegenie.phase = GG_LOAD_ROM;
 			info.frame_status = FRAME_FINISHED;
 
-			/* la rom ne supporta solo 3 */
+			// la rom ne supporta solo 3
 			for (i = 0; i < 3; i++) {
 				ch = &gamegenie.cheat[i];
 

@@ -17,7 +17,6 @@
  */
 
 #include "mappers.h"
-#include "info.h"
 #include "ines.h"
 
 INLINE static void prg_fix_218(void);

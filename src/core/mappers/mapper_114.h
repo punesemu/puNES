@@ -21,8 +21,6 @@
 
 #include "common.h"
 
-enum _m114_types { M114_0, M114_1 };
-
 typedef struct _m114 {
 	BYTE reg[4];
 } _m114;

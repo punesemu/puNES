@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -32,6 +30,19 @@ void (*MMC3_wram_swap)(WORD address, WORD value);
 void (*MMC3_mirroring_fix)(void);
 
 _mmc3 mmc3;
+
+// promemoria
+//void map_init_MMC3(void) {
+//	EXTCL_AFTER_MAPPER_INIT(MMC3);
+//	EXTCL_CPU_WR_MEM(MMC3);
+//	EXTCL_SAVE_MAPPER(MMC3);
+//	EXTCL_CPU_EVERY_CYCLE(MMC3);
+//	EXTCL_PPU_000_TO_34X(MMC3);
+//	EXTCL_PPU_000_TO_255(MMC3);
+//	EXTCL_PPU_256_TO_319(MMC3);
+//	EXTCL_PPU_320_TO_34X(MMC3);
+//	EXTCL_UPDATE_R2006(MMC3);
+//}
 
 void extcl_after_mapper_init_MMC3(void) {
 	MMC3_prg_fix();
@@ -232,7 +243,7 @@ void wram_fix_MMC3_base(void) {
 void wram_swap_MMC3_base(WORD address, WORD value) {
 	BYTE rd = TRUE, wr = TRUE;
 
-	if (info.mapper.submapper != MMC3_MMC6) {
+	if (info.mapper.submapper != 1) {
 		// 7  bit  0
 		// ---- ----
 		// RWxx xxxx

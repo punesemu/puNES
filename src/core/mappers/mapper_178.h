@@ -21,8 +21,6 @@
 
 #include "common.h"
 
-enum { M178EC32IN1 };
-
 void map_init_178(void);
 void extcl_after_mapper_init_178(void);
 void extcl_cpu_wr_mem_178(WORD address, BYTE value);

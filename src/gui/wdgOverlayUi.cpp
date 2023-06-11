@@ -208,7 +208,7 @@ void gui_overlay_info_append_msg_precompiled_with_alignment(BYTE alignment, int 
 	switch (index) {
 		case 4:
 			a1 = QString("%1").arg(cpu.opcode, 2, 16, QLatin1Char('0')).toUpper();
-			a2 = QString("%1").arg((cpu.PC - 1), 4, 16, QLatin1Char('0')).toUpper();
+			a2 = QString("%1").arg((cpu.PC.w - 1), 4, 16, QLatin1Char('0')).toUpper();
 			msg = msg.arg(a1, a2);
 			break;
 		case 7:

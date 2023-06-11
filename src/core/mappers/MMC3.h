@@ -21,18 +21,6 @@
 
 #include "common.h"
 
-enum {
-	MMC3_SHARP,
-	MMC3_MMC6,
-	MMC3C,
-	MMC3_MCACC,
-	MMC3_NEC,
-	MMC3_T9552,
-	SMB2EREZA = 10,
-	SMB2JSMB1,
-	RADRACER2
-};
-
 typedef struct _mmc3 {
 	WORD reg[8];
 	BYTE bank_to_update;

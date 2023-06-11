@@ -21,8 +21,28 @@
 
 #include "common.h"
 
+typedef struct _m018 {
+	WORD prg[4];
+	WORD chr[8];
+	BYTE mirroring;
+	struct _m018_snd {
+		BYTE speech;
+		BYTE playing;
+		SWORD out;
+	} snd;
+	struct _m018_irq {
+		BYTE enabled;
+		WORD reload;
+		WORD count;
+		BYTE delay;
+	} irq;
+} _m018;
+
+extern _m018 m018;
+
 void map_init_018(void);
 void extcl_after_mapper_init_018(void);
+void extcl_mapper_quit_018(void);
 void extcl_cpu_wr_mem_018(WORD address, BYTE value);
 BYTE extcl_save_mapper_018(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_018(void);

@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -153,13 +151,7 @@ BYTE extcl_save_mapper_045(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m045.reg);
 	save_slot_ele(mode, slot, m045tmp.index);
 	save_slot_ele(mode, slot, m045tmp.dipswitch);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix();
-	}
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_045(WORD address, WORD value) {
@@ -169,9 +161,8 @@ void prg_swap_mmc3_045(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
 void chr_swap_mmc3_045(WORD address, WORD value) {
-	if (mapper.write_vram && (info.chr.rom.max.banks_8k == 1)) {
-		value = address >> 10;
-		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+	if (!chrrom_size() && (vram_size() == S8K)) {
+		memmap_vram_1k(MMPPU(address), (address >> 10));
 	} else {
 		WORD base = m045.reg[0] | ((m045.reg[2] & 0xF0) << 4);
 		WORD mask = 0xFF >> (~m045.reg[2] & 0x0F);

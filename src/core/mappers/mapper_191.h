@@ -21,9 +21,6 @@
 
 #include "common.h"
 
-enum { BAD_SUGOROQUEST };
-
 void map_init_191(void);
-BYTE extcl_save_mapper_191(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_191_H_ */

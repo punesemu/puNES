@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static size_t wr_address_sst39sf040(WORD address);

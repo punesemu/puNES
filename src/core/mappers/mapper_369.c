@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -52,10 +51,11 @@ void map_init_369(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
+	memset(&irqA12, 0x00, sizeof(irqA12));
+
 	if (info.reset >= HARD) {
 		memset(&m369, 0x00, sizeof(m369));
 	}
-	memset(&irqA12, 0x00, sizeof(irqA12));
 
 	init_MMC3();
 	MMC3_prg_fix = prg_fix_mmc3_369;
@@ -133,13 +133,7 @@ BYTE extcl_save_mapper_369(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m369.smb2j);
 	save_slot_ele(mode, slot, m369.irq.enable);
 	save_slot_ele(mode, slot, m369.irq.counter);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		MMC3_wram_fix();
-	}
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 void extcl_cpu_every_cycle_369(void) {
 	if (m369.reg == 0x13) {

@@ -40,7 +40,7 @@ void map_init_167(void) {
 void extcl_after_mapper_init_167(void) {
 	prg_fix_167();
 }
-void extcl_cpu_wr_mem_167(UNUSED(WORD address), BYTE value) {
+void extcl_cpu_wr_mem_167(WORD address, BYTE value) {
 	m167.reg[(address & 0x6000) >> 13] = value;
 	prg_fix_167();
 }
@@ -56,7 +56,7 @@ INLINE static void prg_fix_167(void) {
 	if (m167.reg[1] & 0x08) {
 		memmap_auto_16k(MMCPU(0x8000), (bank | 0x01));
 		memmap_auto_16k(MMCPU(0xC000), (bank & 0xFE));
-	} if (m167.reg[1] & 0x04) {
+	} else if (m167.reg[1] & 0x04) {
 		memmap_auto_16k(MMCPU(0x8000), 0x1F);
 		memmap_auto_16k(MMCPU(0xC000), bank);
 	} else {

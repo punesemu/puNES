@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "cpu.h"
 #include "save_slot.h"
 
 void (*JV001_prg_fix)(void);

@@ -17,7 +17,6 @@
  */
 
 #include "mappers.h"
-#include "info.h"
 
 void prg_swap_vrc6_024(WORD address, WORD value);
 void chr_swap_vrc6_024(WORD address, WORD value);

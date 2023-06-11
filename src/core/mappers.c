@@ -17,7 +17,6 @@
  */
 
 #include <string.h>
-#include <stdlib.h>
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
@@ -61,23 +60,19 @@ BYTE map_init(void) {
 			map_init_003();
 			break;
 		case 4:
-			if (info.mapper.submapper == MMC3_T9552) {
-				map_init_249();
-			} else {
-				map_init_004();
-			}
+			map_init_004();
 			break;
 		case 5:
 			map_init_MMC5();
 			break;
 		case 6:
-			map_init_FFESMC();
+			map_init_006();
 			break;
 		case 7:
 			map_init_007();
 			break;
 		case 8:
-			map_init_FFESMC();
+			map_init_006();
 			break;
 		case 9:
 			map_init_009();
@@ -89,11 +84,7 @@ BYTE map_init(void) {
 			map_init_011();
 			break;
 		case 12:
-			if (info.mapper.submapper == 1) {
-				map_init_FFESMC();
-			} else {
-				map_init_Rexdbz();
-			}
+			map_init_012();
 			break;
 		case 13:
 			map_init_013();
@@ -104,22 +95,11 @@ BYTE map_init(void) {
 		case 15:
 			map_init_015();
 			break;
-		case 16: {
-			switch (info.mapper.submapper) {
-				case E24C02:
-					map_init_Bandai(E24C02);
-					break;
-				case DATACH:
-					map_init_Bandai(DATACH);
-					break;
-				default:
-					map_init_Bandai(FCGx);
-					break;
-			}
+		case 16:
+			map_init_016();
 			break;
-		}
 		case 17:
-			map_init_FFESMC();
+			map_init_006();
 			break;
 		case 18:
 			map_init_018();
@@ -167,10 +147,10 @@ BYTE map_init(void) {
 			map_init_032();
 			break;
 		case 33:
-			map_init_Taito(TC0190FMC);
+			map_init_033();
 			break;
 		case 34:
-			map_init_BxROM();
+			map_init_034();
 			break;
 		case 35:
 			map_init_209();
@@ -209,7 +189,7 @@ BYTE map_init(void) {
 			map_init_047();
 			break;
 		case 48:
-			map_init_Taito(TC0690);
+			map_init_048();
 			break;
 		case 49:
 			map_init_049();
@@ -260,7 +240,7 @@ BYTE map_init(void) {
 			map_init_065();
 			break;
 		case 66:
-			map_init_GxROM();
+			map_init_066();
 			break;
 		case 67:
 			map_init_067();
@@ -278,10 +258,10 @@ BYTE map_init(void) {
 			map_init_071();
 			break;
 		case 72:
-			map_init_Jaleco(JF17);
+			map_init_072();
 			break;
 		case 73:
-			map_init_VRC3();
+			map_init_073();
 			break;
 		case 74:
 			map_init_074();
@@ -296,19 +276,19 @@ BYTE map_init(void) {
 			map_init_077();
 			break;
 		case 78:
-			map_init_Jaleco(JF16);
+			map_init_078();
 			break;
 		case 79:
 			map_init_079();
 			break;
 		case 80:
-			map_init_Taito(X1005A);
+			map_init_080();
 			break;
 		case 81:
 			map_init_081();
 			break;
 		case 82:
-			map_init_Taito(X1017);
+			map_init_082();
 			break;
 		case 83:
 			map_init_083();
@@ -317,7 +297,7 @@ BYTE map_init(void) {
 			map_init_085();
 			break;
 		case 86:
-			map_init_Jaleco(JF13);
+			map_init_086();
 			break;
 		case 87:
 			map_init_087();
@@ -335,7 +315,7 @@ BYTE map_init(void) {
 			map_init_091();
 			break;
 		case 92:
-			map_init_Jaleco(JF19);
+			map_init_072();
 			break;
 		case 93:
 			map_init_093();
@@ -347,7 +327,7 @@ BYTE map_init(void) {
 			map_init_095();
 			break;
 		case 96:
-			map_init_Bandai(B161X02X74);
+			map_init_096();
 			break;
 		case 97:
 			map_init_097();
@@ -486,8 +466,8 @@ BYTE map_init(void) {
 			map_init_152();
 			break;
 		case 153:
-			/* Famicom Jump II - Saikyou no 7 Nin (J) [!].nes */
-			map_init_Bandai(FCGx);
+			// Famicom Jump II - Saikyou no 7 Nin (J) [!].nes
+			map_init_153();
 			break;
 		case 154:
 			map_init_154();
@@ -498,11 +478,14 @@ BYTE map_init(void) {
 		case 156:
 			map_init_156();
 			break;
+		case 157:
+			map_init_157();
+			break;
 		case 158:
 			map_init_064();
 			break;
 		case 159:
-			map_init_Bandai(E24C01);
+			map_init_159();
 			break;
 		case 162:
 			map_init_162();
@@ -628,7 +611,7 @@ BYTE map_init(void) {
 			map_init_206();
 			break;
 		case 207:
-			map_init_Taito(X1005B);
+			map_init_080();
 			break;
 		case 208:
 			map_init_208();
@@ -655,7 +638,7 @@ BYTE map_init(void) {
 			map_init_215();
 			break;
 		case 216:
-			map_init_Rcm(GS2015);
+			map_init_216();
 			break;
 		case 217:
 			map_init_217();
@@ -1270,6 +1253,9 @@ BYTE map_init(void) {
 		case 551:
 			map_init_178();
 			break;
+		case 552:
+			map_init_082();
+			break;
 		case 554:
 			map_init_554();
 			break;
@@ -1335,6 +1321,7 @@ BYTE map_init(void) {
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		emu_info_rom();
 	}
+
 	return (EXIT_OK);
 }
 void map_quit(void) {

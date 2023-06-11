@@ -21,8 +21,20 @@
 
 #include "common.h"
 
+typedef struct _m266 {
+	BYTE reg;
+	BYTE pcm;
+	struct _m266_snd {
+		SWORD out;
+	} snd;
+} _m266;
+
+extern _m266 m266;
+
 void map_init_266(void);
+void extcl_mapper_quit_266(void);
 void extcl_cpu_wr_mem_266(WORD address, BYTE value);
 BYTE extcl_save_mapper_266(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_266(void);
 
 #endif /* MAPPER_266_H_ */

@@ -47,7 +47,6 @@ void map_init_436(void) {
 
 	irqA12.present = TRUE;
 }
-
 void extcl_after_mapper_init_436(void) {
 	if (info.mapper.submapper == 1) {
 		OneBus_prg_fix_8k(0xF7FF, ((onebus.reg.cpu[0x1C] & 0x01) && (onebus.reg.cpu[0x0F] & 0x04) ? 0x0000 : 0x0800));

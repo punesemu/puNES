@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -46,7 +44,10 @@ void map_init_287(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m287, 0x00, sizeof(m287));
+
+	if (info.reset >= HARD) {
+		memset(&m287, 0x00, sizeof(m287));
+	}
 
 	init_MMC3();
 	MMC3_prg_swap = prg_swap_mmc3_287;
@@ -72,9 +73,7 @@ void extcl_cpu_wr_mem_287(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_287(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m287.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_287(WORD address, WORD value) {

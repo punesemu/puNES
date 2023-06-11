@@ -64,24 +64,24 @@ void map_init_MMC3old(void) {
 	switch (info.mapper.submapper) {
 		default:
 		case DEFAULT:
-			info.mapper.submapper = MMC3_SHARP;
+			info.mapper.submapper = 0;
 			break;
-		case MMC3_NEC:
+		case 4:
 			EXTCL_IRQ_A12_CLOCK(MMC3_alternate_old);
 			break;
 	}
 
-	if (info.id == SMB2JSMB1) {
-		info.prg.ram.banks_8k_plus = 1;
-	}
-
-	if (info.id == SMB2EREZA) {
-		info.prg.ram.bat.banks = FALSE;
-	}
-
-	if (info.id == RADRACER2) {
-		mirroring_FSCR();
-	}
+//	if (info.id == SMB2JSMB1) {
+//		info.prg.ram.banks_8k_plus = 1;
+//	}
+//
+//	if (info.id == SMB2EREZA) {
+//		info.prg.ram.bat.banks = FALSE;
+//	}
+//
+//	if (info.id == RADRACER2) {
+//		mirroring_FSCR();
+//	}
 }
 void extcl_cpu_wr_mem_MMC3_old(WORD address, BYTE value) {
 	switch (address & 0xE001) {
@@ -215,7 +215,7 @@ void extcl_cpu_wr_mem_MMC3_old(WORD address, BYTE value) {
 			}
 			break;
 		case 0xA001: {
-			if (info.mapper.submapper != MMC3_MMC6) {
+			if (info.mapper.submapper != 1) {
 				/*
 				 * 7  bit  0
 				 * ---- ----

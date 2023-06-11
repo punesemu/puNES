@@ -17,7 +17,6 @@
  */
 
 #include "mappers.h"
-#include "info.h"
 
 void prg_swap_jyasic_387(WORD address, DBWORD value);
 void chr_swap_jyasic_387(WORD address, DBWORD value);

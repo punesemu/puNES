@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 void (*MMC2_prg_fix)(void);

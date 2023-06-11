@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -88,13 +86,7 @@ void extcl_cpu_wr_mem_165(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_165(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m165.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix();
-	}
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 void extcl_after_rd_chr_165(WORD address) {
 	if (chr_control_165(address)) {

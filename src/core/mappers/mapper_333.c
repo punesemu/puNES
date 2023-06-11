@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -46,15 +44,14 @@ void map_init_333(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m333, 0x00, sizeof(m333));
+
+	if (info.reset >= HARD) {
+		memset(&m333, 0x00, sizeof(m333));
+	}
 
 	init_MMC3();
 	MMC3_prg_swap = prg_swap_mmc3_333;
 	MMC3_chr_swap = chr_swap_mmc3_333;
-
-	if (mapper.write_vram && !info.chr.rom.banks_8k) {
-		info.chr.rom.banks_8k = 32;
-	}
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -78,9 +75,7 @@ void extcl_cpu_wr_mem_333(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_333(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m333.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_333(WORD address, WORD value) {

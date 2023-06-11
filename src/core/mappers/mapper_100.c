@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -67,10 +65,6 @@ void map_init_100(void) {
 	m100.chr[6] = 6;
 	m100.chr[7] = 7;
 
-	//if (!info.prg.ram.banks_8k_plus) {
-	//	info.prg.ram.banks_8k_plus = 1;
-	//}
-
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
@@ -84,7 +78,7 @@ void extcl_cpu_init_pc_100(void) {
 		// trainer
 		if (miscrom.trainer.in_use && wram_size()) {
 			if (miscrom_byte(0) == 0x4C) {
-				cpu.PC = 0x7000;
+				cpu.PC.w = 0x7000;
 			}
 		}
 	}
@@ -160,9 +154,7 @@ BYTE extcl_save_mapper_100(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m100.reg);
 	save_slot_ele(mode, slot, m100.prg);
 	save_slot_ele(mode, slot, m100.chr);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 INLINE static void prg_fix_100(void) {

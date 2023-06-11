@@ -18,16 +18,14 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "irqA12.h"
-#include "save_slot.h"
 
 void chr_swap_mmc3_119(WORD address, WORD value);
 
 void map_init_119(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(MMC3);
-	EXTCL_SAVE_MAPPER(119);
+	EXTCL_SAVE_MAPPER(MMC3);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
 	EXTCL_PPU_000_TO_255(MMC3);
@@ -44,15 +42,6 @@ void map_init_119(void) {
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
-}
-BYTE extcl_save_mapper_119(BYTE mode, BYTE slot, FILE *fp) {
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix();
-	}
-
-	return (EXIT_OK);
 }
 
 void chr_swap_mmc3_119(WORD address, WORD value) {

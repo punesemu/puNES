@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -53,10 +51,6 @@ void map_init_353(void) {
 	MMC3_prg_swap = prg_swap_mmc3_353;
 	MMC3_chr_swap = chr_swap_mmc3_353;
 	MMC3_mirroring_fix = mirroring_fix_mmc3_353;
-
-	if (info.format != NES_2_0) {
-		info.chr.ram.banks_8k_plus = 1;
-	}
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -102,14 +96,7 @@ void extcl_cpu_wr_mem_353(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_353(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m353.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix();
-		MMC3_mirroring_fix();
-	}
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_353(WORD address, WORD value) {

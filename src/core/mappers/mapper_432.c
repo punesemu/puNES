@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -64,7 +62,7 @@ void map_init_432(void) {
 	MMC3_prg_swap = prg_swap_mmc3_432;
 	MMC3_chr_swap = chr_swap_mmc3_432;
 
-	m432tmp.less1024 = prgrom_size() < (1024 * 1024);
+	m432tmp.less1024 = prgrom_size() < S1M;
 
 	if (info.reset == RESET) {
 		if (m432tmp.ds_used) {
@@ -100,8 +98,7 @@ void extcl_cpu_wr_mem_432(WORD address, BYTE value) {
 			MMC3_chr_fix();
 		}
 		return;
-	}
-	if (address >= 0x8000) {
+	} else if (address >= 0x8000) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
@@ -115,9 +112,7 @@ BYTE extcl_save_mapper_432(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m432.reg);
 	save_slot_ele(mode, slot, m432tmp.index);
 	save_slot_ele(mode, slot, m432tmp.dipswitch);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_432(WORD address, WORD value) {

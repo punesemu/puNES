@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -60,7 +58,7 @@ void map_init_215(void) {
 	if (info.mapper.submapper == DEFAULT) {
 		info.mapper.submapper = 0;
 	}
-	if ((info.mapper.submapper < 2) && (prg_size() >= (2048 * 1024))) {
+	if ((info.mapper.submapper < 2) && (prgrom_size() >= S2M)) {
 		info.mapper.submapper = 1;
 	}
 
@@ -141,9 +139,7 @@ BYTE extcl_cpu_rd_mem_215(WORD address, BYTE openbus) {
 }
 BYTE extcl_save_mapper_215(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m215.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_215(WORD address, WORD value) {

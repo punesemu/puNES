@@ -63,7 +63,7 @@ BYTE extcl_save_mapper_471(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_ppu_000_to_255_471(void) {
 	if (r2001.visible) {
-		extcl_ppu_320_to_34x_FFESMC();
+		extcl_ppu_320_to_34x_471();
 	}
 }
 void extcl_ppu_256_to_319_471(void) {

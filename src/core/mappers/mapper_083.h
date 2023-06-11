@@ -21,8 +21,6 @@
 
 #include "common.h"
 
-enum { MAP83_REG0, MAP83_DGP };
-
 void map_init_083(void);
 void extcl_after_mapper_init_083(void);
 void extcl_cpu_wr_mem_083(WORD address, BYTE value);

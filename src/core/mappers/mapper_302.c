@@ -18,7 +18,6 @@
 
 #include "mappers.h"
 #include "info.h"
-#include "mem_map.h"
 
 void prg_swap_vrc2and4_302(WORD address, WORD value);
 void chr_swap_vrc2and4_302(WORD address, WORD value);

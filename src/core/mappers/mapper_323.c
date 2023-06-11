@@ -18,9 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
-#include "cpu.h"
 #include "save_slot.h"
 
 void prg_swap_mmc1_323(WORD address, WORD value);
@@ -39,7 +36,9 @@ void map_init_323(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc1;
 	mapper.internal_struct_size[1] = sizeof(mmc1);
 
-	memset(&m323, 0x00, sizeof(m323));
+	if (info.reset >= HARD) {
+		memset(&m323, 0x00, sizeof(m323));
+	}
 
 	init_MMC1(MMC1B);
 	MMC1_prg_swap = prg_swap_mmc1_323;
@@ -63,9 +62,7 @@ void extcl_cpu_wr_mem_323(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_323(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m323.reg);
-	extcl_save_mapper_MMC1(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC1(mode, slot, fp));
 }
 
 void prg_swap_mmc1_323(WORD address, WORD value) {

@@ -21,10 +21,7 @@
 
 #include "common.h"
 
-enum MMC1_types {
-	MMC1A = 10,
-	MMC1B
-};
+enum MMC1_types { MMC1A = 10, MMC1B };
 
 typedef struct _mmc1 {
 	WORD reg[4];

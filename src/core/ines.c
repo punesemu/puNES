@@ -20,10 +20,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <unistd.h>
 #include "ines.h"
 #include "rom_mem.h"
-#include "mem_map.h"
 #include "mappers.h"
 #include "conf.h"
 #include "cheat.h"
@@ -369,16 +367,6 @@ BYTE ines_load_rom(void) {
 			info.prg_truncated = TRUE;
 		}
 
-
-
-
-
-
-		if (info.format == NES_2_0) {
-			sha1_csum(chrrom_pnt(), chrrom_size(), info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
-		}
-
-
 		// alloco e carico la CHR Rom
 		chrrom_set_size(info.chr.rom.banks_8k * S8K);
 
@@ -393,6 +381,9 @@ BYTE ines_load_rom(void) {
 			}
 		}
 
+		if (!miscrom.chips && ((rom.size - rom.position) > 0)) {
+			miscrom.chips = 1;
+		}
 		if (miscrom.chips) {
 			miscrom_set_size(rom.size - rom.position);
 			if (miscrom_init() == EXIT_ERROR) {
@@ -404,10 +395,6 @@ BYTE ines_load_rom(void) {
 			}
 		}
 
-
-
-
-
 		if (!wram_size() && info.mapper.battery) {
 			wram_set_nvram_size(S8K);
 		}
@@ -417,15 +404,6 @@ BYTE ines_load_rom(void) {
 		}
 		if (!chrrom_size() && !vram_size()) {
 			vram_set_ram_size(S8K);
-		}
-
-
-
-
-
-
-		if (info.format == NES_2_0) {
-			nes20_submapper();
 		}
 
 		free(rom.data);
@@ -439,19 +417,6 @@ BYTE ines_load_rom(void) {
 	return (EXIT_ERROR);
 }
 
-void nes20_submapper(void) {
-	switch (info.mapper.id) {
-		case 78:
-			switch (info.mapper.submapper) {
-				case 3:
-					info.mapper.submapper = HOLYDIVER;
-					break;
-			}
-			break;
-		default:
-			break;
-	}
-}
 void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, double divider) {
 	if (((*reg1) & 0x0F00) == 0x0F00) {
 		unsigned int exponent = ((*reg1) & 0x00FC) >> 2;
@@ -556,32 +521,6 @@ void search_in_database(void) {
 			info.default_dipswitches = dblist[i].dipswitches;
 			info.extra_from_db = dblist[i].extra;
 			switch (info.mapper.id) {
-				case 10:
-					// Fix per Famicom Wars (J) [!] che ha l'header INES errato
-					if (info.id == BAD_INES_FWJ) {
-						info.chr.rom.banks_8k = 8;
-					}
-					break;
-				case 33:
-					if (info.id == BAD_INES_FLINJ) {
-						info.chr.rom.banks_8k = 32;
-					}
-					break;
-				case 63:
-					if (info.id == M63_ID_82IN1O1) {
-						info.prg.rom.banks_16k = 256;
-					}
-					break;
-				case 191:
-					if (info.id == BAD_SUGOROQUEST) {
-						info.chr.rom.banks_8k = 16;
-					}
-					break;
-				case 194:
-					if (info.id == DAI2JI) {
-						info.prg.ram.bat.banks = 1;
-					}
-					break;
 				case 235:
 					if (!info.prg.rom.banks_16k) {
 						info.prg.rom.banks_16k = 256;

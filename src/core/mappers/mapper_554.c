@@ -25,7 +25,7 @@ INLINE static void chr_fix_554(void);
 INLINE static void wram_fix_554(void);
 
 struct _m554 {
-	WORD reg;
+	BYTE reg;
 } m554;
 
 void map_init_554(void) {
@@ -50,11 +50,7 @@ BYTE extcl_cpu_rd_mem_554(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0xC000:
 			if ((address >= 0xCAB6) && (address <= 0xCAD7)) {
-
 				m554.reg = (address & 0x3C) >> 2;
-
-//				printf("0x%04X : 0x%02X\n", address, m554.reg);
-
 				chr_fix_554();
 				wram_fix_554();
 			}
@@ -63,11 +59,6 @@ BYTE extcl_cpu_rd_mem_554(WORD address, BYTE openbus) {
 			address &= 0xFFFE;
 			if ((address == 0xEBE2) || (address == 0xEE32)) {
 				m554.reg = (address & 0x3C) >> 2;
-
-
-//				printf("0x%04X : 0x%02X\n", address, m554.reg);
-
-
 				chr_fix_554();
 				wram_fix_554();
 			}
@@ -76,9 +67,6 @@ BYTE extcl_cpu_rd_mem_554(WORD address, BYTE openbus) {
 			address &= 0xFFFE;
 			if (address == 0xFFFC) {
 				m554.reg = (address & 0x3C) >> 2;
-
-//				printf("0x%04X : 0x%02X\n", address, m554.reg);
-
 				chr_fix_554();
 				wram_fix_554();
 			}

@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
 #include "emu.h"

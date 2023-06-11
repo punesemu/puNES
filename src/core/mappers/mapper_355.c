@@ -17,7 +17,6 @@
  */
 
 #include <string.h>
-#include "info.h"
 #include "mappers.h"
 #include "cpu.h"
 #include "save_slot.h"

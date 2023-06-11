@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
 
@@ -80,7 +78,7 @@ void extcl_cpu_wr_mem_VRC2and4(WORD address, BYTE value) {
 			return;
 		case 0x9000:
 			index = ((address & vrc2and4tmp.A1 ? 2 : 0) | (address & vrc2and4tmp.A0 ? 1 : 0)) &
-					((vrc2and4tmp.type == VRC24_VRC4) ? 0x03 : 0x00) ;
+				((vrc2and4tmp.type == VRC24_VRC4) ? 0x03 : 0x00) ;
 			switch (index) {
 				case 0:
 				case 1:

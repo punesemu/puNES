@@ -20,7 +20,6 @@
 #include <string.h>
 #include "mappers.h"
 #include "mem_map.h"
-#include "info.h"
 #include "irqA12.h"
 #include "save_slot.h"
 #include "emu.h"
@@ -225,13 +224,8 @@ BYTE extcl_save_mapper_OneBus(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, onebus.pcm.clock);
 	save_slot_ele(mode, slot, onebus.pcm.enable);
 	save_slot_ele(mode, slot, onebus.pcm.irq);
-
 	for (int i = 0; i < (int)LENGTH(onebus.gpio); i++) {
-		gpio_onebus_save_mapper(onebus.gpio[i], mode, slot, fp);
-	}
-
-	if (mode == SAVE_SLOT_READ) {
-		extcl_after_mapper_init();
+		if (gpio_onebus_save_mapper(onebus.gpio[i], mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	}
 
 	return (EXIT_OK);

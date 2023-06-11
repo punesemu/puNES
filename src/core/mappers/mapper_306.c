@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_306(void);

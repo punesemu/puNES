@@ -62,7 +62,6 @@ INLINE static void emu_frame_started(void);
 INLINE static void emu_frame_finished(void);
 INLINE static void emu_frame_sleep(void);
 
-static void emu_cpu_initial_cycles(void);
 static BYTE emu_ctrl_if_rom_exist(void);
 static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file);
 static void emu_recent_roms_add(BYTE *add, uTCHAR *file);
@@ -152,7 +151,7 @@ void emu_frame(void) {
 
 	while (info.frame_status == FRAME_STARTED) {
 #if defined (DEBUG)
-		if (cpu.PC == PCBREAK) {
+		if (cpu.PC.w == PCBREAK) {
 			BYTE pippo = 5;
 			pippo = pippo + 1;
 		}
@@ -210,18 +209,18 @@ void emu_frame_debugger(void) {
 	if (debugger.mode == DBG_GO) {
 		// posso passare dal DBG_GO al DBG_STEP durante l'esecuzione di un frame intero
 		while ((info.frame_status == FRAME_STARTED) && (debugger.mode == DBG_GO)) {
-			if ((debugger.breakpoint == cpu.PC) && !debugger.breakpoint_after_step) {
+			if ((debugger.breakpoint == cpu.PC.w) && !debugger.breakpoint_after_step) {
 				debugger.mode = DBG_BREAKPOINT;
 				//gui_dlgdebugger_click_step();
 				break;
 			} else {
 				debugger.breakpoint_after_step = FALSE;
-				info.CPU_PC_before = cpu.PC;
+				info.CPU_PC_before = cpu.PC.w;
 				cpu_exe_op();
 			}
 		}
 	} else if (debugger.mode == DBG_STEP) {
-		info.CPU_PC_before = cpu.PC;
+		info.CPU_PC_before = cpu.PC.w;
 		cpu_exe_op();
 	}
 
@@ -588,7 +587,8 @@ BYTE emu_turn_on(void) {
 
 	// CPU
 	cpu_turn_on();
-	cpu_init_PC();
+	// ritardo della CPU
+	cpu_initial_cycles();
 	if (extcl_cpu_init_pc) {
 		extcl_cpu_init_pc();
 	}
@@ -624,9 +624,6 @@ BYTE emu_turn_on(void) {
 	}
 
 	save_slot_count_load();
-
-	// ritardo della CPU
-	emu_cpu_initial_cycles();
 
 	ext_win.vs_system = vs_system.enabled;
 	if (vs_system.enabled) {
@@ -741,7 +738,8 @@ BYTE emu_reset(BYTE type) {
 
 	// CPU
 	cpu_turn_on();
-	cpu_init_PC();
+	// ritardo della CPU
+	cpu_initial_cycles();
 	if (extcl_cpu_init_pc) {
 		extcl_cpu_init_pc();
 	}
@@ -777,9 +775,6 @@ BYTE emu_reset(BYTE type) {
 			return (EXIT_ERROR);
 		}
 	}
-
-	// ritardo della CPU
-	emu_cpu_initial_cycles();
 
 	if (vs_system.enabled) {
 		if (type >= HARD) {
@@ -1217,16 +1212,6 @@ void emu_info_rom(void) {
 		}
 	}
 
-	if (miscrom.trainer.in_use) {
-		log_info_box(uL("trainer;yes [ %08X ]"), info.crc32.trainer);
-	} else if (miscrom_size()) {
-		log_info_box(uL("MISC rom;%-4lu [ %08X %ld ]%s"),
-			(long)miscrom.chips,
-			info.crc32.misc,
-			miscrom_size(),
-			(info.misc_truncated ? " truncated" : ""));
-	}
-
 	ischanged(info.header.battery != info.mapper.battery);
 	if (changed || info.mapper.battery) {
 		log_info_box(uL("battery;%s%s"), (info.mapper.battery ? "present" : "not present"), ifchanged());
@@ -1247,21 +1232,6 @@ void emu_info_rom(void) {
 		ischanged(info.header.chrnvram !=  vram_nvram_size());
 		log_info_box(uL("CHR NVRAM;%u%s"),  vram_nvram_size(), ifchanged());
 	}
-
-//	if (mapper.write_vram) {
-//		DBWORD banks = info.chr.rom.banks_8k;
-//
-//		ischanged((info.header.chrram + info.header.chrnvram) != banks);
-//		log_info_box(uL("RAM CHR 8k;%-4u (wvram)%s"), banks, ifchanged());
-//	} else if (info.chr.ram.banks_8k_plus) {
-//		DBWORD banks = info.chr.ram.banks_8k_plus;
-//
-//		ischanged((info.header.chrram + info.header.chrnvram) != banks);
-//		log_info_box(uL("RAM CHR 8k;%-4u%s"), banks, ifchanged());
-//	}
-//	if (!info.chr.ram.banks_8k_plus && chr.extra.data) {
-//		log_info_box(uL("RAM CHR extra;%ld"), (long)chr.extra.size);
-//	}
 
 	log_info_box(uL("PRG 8k rom;%-4lu [ %08X %ld ]%s"),
 		prgrom_banks(S8K),
@@ -1303,26 +1273,15 @@ void emu_info_rom(void) {
 		}
 	}
 
-//	if (!mapper.write_vram && chr_size()) {
-//		log_info_box(uL("CHR 4k vrom;%-4lu [ %08X %ld ]%s"),
-//			(long unsigned)chr_size() / 0x1000,
-//			info.crc32.chr,
-//			(long)chr_size(),
-//			(info.chr_truncated ? " truncated" : ""));
-//	}
-//
-//	if (info.header.format == UNIF_FORMAT) {
-//		if (unif.chips.chr > 1) {
-//			int chip = 0;
-//
-//			for (chip = 0; chip < unif.chips.chr; chip++) {
-//				log_info_box(uL(" 4k chip %d;%-4lu [ %08X %ld ]"),
-//					chip, (long unsigned)chr_chip_size(chip) / 0x1000,
-//					emu_crc32((void *)chr_chip_rom(chip), chr_chip_size(chip)),
-//					(long)chr_chip_size(chip));
-//			}
-//		}
-//	}
+	if (miscrom.trainer.in_use) {
+		log_info_box(uL("trainer;yes [ %08X ]"), info.crc32.trainer);
+	} else if (miscrom_size()) {
+		log_info_box(uL("MISC chips;%-4lu [ %08X %ld ]%s"),
+					 (long)miscrom.chips,
+					 info.crc32.misc,
+					 miscrom_size(),
+					 (info.misc_truncated ? " truncated" : ""));
+	}
 
 	if (info.header.format == iNES_1_0) {
 		log_info_box(uL("sha1prg;%40s"), info.sha1sum.prg.string);
@@ -1337,8 +1296,8 @@ void emu_info_rom(void) {
 	log_info_box(uL("CRC32;%08X"), info.crc32.total);
 
 	log_info_box(uL("CPU/PPU alig.;PPU %d/%d, CPU %d/%d"),
-		ppu_alignment.ppu, machine.ppu_divide,
-		ppu_alignment.cpu, machine.cpu_divide);
+		ppu_alignment.ppu, (machine.ppu_divide - 1),
+		ppu_alignment.cpu, (machine.cpu_divide - 1));
 
 	if (at_least_one_change) {
 		log_info_box(uL("Note;* different values than the header"));
@@ -1440,17 +1399,6 @@ INLINE static void emu_frame_sleep(void) {
 	fps.frame.expected_end += fps.frame.estimated_ms;
 }
 
-static void emu_cpu_initial_cycles(void) {
-	BYTE i = 0;
-
-	for (i = 0; i < 8; i++) {
-		if (info.mapper.id != NSF_MAPPER) {
-			ppu_tick();
-		}
-		apu_tick(NULL);
-		cpu.odd_cycle = !cpu.odd_cycle;
-	}
-}
 static BYTE emu_ctrl_if_rom_exist(void) {
 	BYTE found = FALSE;
 

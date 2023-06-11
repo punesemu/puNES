@@ -21,8 +21,6 @@
 
 #include "common.h"
 
-enum { VRC7A = 2, VRC7B = 1 };
-
 typedef struct _vrc7 {
 	BYTE reg;
 	WORD prg[3];

@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -29,16 +27,6 @@ void wram_fix_mmc3_195(void);
 
 INLINE static BYTE chr_bank_mmc3(WORD address);
 
-static const BYTE masks[8] = {
-	/* $80 */ 0x28,
-	/* $82 */ 0x00,
-	/* $88 */ 0x4C,
-	/* $8A */ 0x64,
-	/* $C0 */ 0x46,
-	/* $C2 */ 0x7C,
-	/* $C8 */ 0x0A,
-	/* $CA */ 0xFF,
-};
 struct _m195 {
 	struct _m195_chr {
 		BYTE mask;
@@ -63,15 +51,16 @@ void map_init_195(void) {
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m195, 0x00, sizeof(m195));
+
+	if (info.reset >= HARD) {
+		m195.chr.mask = 0xFC;
+		m195.chr.compare = 0x00;
+	}
 
 	init_MMC3();
 	MMC3_prg_swap = prg_swap_mmc3_195;
 	MMC3_chr_swap = chr_swap_mmc3_195;
 	MMC3_wram_fix = wram_fix_mmc3_195;
-
-	m195.chr.mask = 0xFC;
-	m195.chr.compare = 0x00;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -85,16 +74,20 @@ void extcl_cpu_wr_mem_195(WORD address, BYTE value) {
 BYTE extcl_save_mapper_195(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m195.chr.mask);
 	save_slot_ele(mode, slot, m195.chr.compare);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		MMC3_chr_fix();
-	}
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 void extcl_wr_chr_195(WORD address, UNUSED(BYTE value)) {
 	const BYTE bank = chr_bank_mmc3(address);
+	static const BYTE masks[8] = {
+		/* $80 */ 0x28,
+		/* $82 */ 0x00,
+		/* $88 */ 0x4C,
+		/* $8A */ 0x64,
+		/* $C0 */ 0x46,
+		/* $C2 */ 0x7C,
+		/* $C8 */ 0x0A,
+		/* $CA */ 0xFF,
+	};
 
 	if (bank & 0x80) {
 		BYTE index = ((bank & 0x40) >> 4) | ((bank & 0x08) >> 2) | ((bank & 0x02) >> 1);

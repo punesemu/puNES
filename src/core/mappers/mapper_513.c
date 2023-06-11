@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -52,10 +50,6 @@ void map_init_513(void) {
 	MMC3_prg_fix = prg_fix_mmc3_513;
 	MMC3_chr_swap = chr_swap_mmc3_513;
 
-	if (mapper.write_vram && !info.chr.rom.banks_8k) {
-		info.chr.rom.banks_8k = 4;
-	}
-
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
@@ -82,9 +76,7 @@ void extcl_cpu_wr_mem_513(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_513(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m513.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_fix_mmc3_513(void) {

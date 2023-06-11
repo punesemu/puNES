@@ -349,9 +349,6 @@ BYTE unif_load_rom(void) {
 
 		emu_save_header_info();
 		nes20db_search();
-		if (info.format == NES_2_0) {
-			nes20_submapper();
-		}
 
 		switch (info.mapper.mirroring) {
 			default:

@@ -19,8 +19,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 #include "SST39SF040.h"

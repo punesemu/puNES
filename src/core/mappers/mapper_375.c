@@ -16,46 +16,62 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
+#include "save_slot.h"
+
+INLINE static void prg_fix_375(void);
+INLINE static void chr_fix_375(void);
+INLINE static void mirroring_fix_375(void);
+
+struct _m375 {
+	WORD reg[2];
+} m375;
 
 void map_init_375(void) {
+	EXTCL_AFTER_MAPPER_INIT(375);
 	EXTCL_CPU_WR_MEM(375);
+	EXTCL_SAVE_MAPPER(375);
+	mapper.internal_struct[0] = (BYTE *)&m375;
+	mapper.internal_struct_size[0] = sizeof(m375);
 
-	extcl_cpu_wr_mem_375(0x8000, 0x00);
+	memset(&m375, 0x00, sizeof(m375));
 }
-void extcl_cpu_wr_mem_375(WORD address, UNUSED(BYTE value)) {
-	WORD bank[2], base = ((address >> 2) & 0x1F) | ((address & 0x0100) >> 3) | ((address & 0x0400) >> 5);
-
-	if (address & 0x0080) {
-		bank[0] = base;
-		bank[1] = base + (address & 0x0001);
-	} else {
-		WORD mask = (address & 0x0001) ? 0x7E : 0xFF;
-
-		if (address & 0x0800) {
-			base = (value & 0x03) | ((address & 0x0060) >> 2) | ((address & 0x0100) >> 3) | ((address & 0x0400) >> 5);
-		}
-
-		bank[0] = base & mask;
-
-		if (!(address & 0x0200)) {
-			bank[1] = base & 0x78;
-		} else {
-			bank[1] = base | 0x07;
-		}
+void extcl_after_mapper_init_375(void) {
+	prg_fix_375();
+	chr_fix_375();
+	mirroring_fix_375();
+}
+void extcl_cpu_wr_mem_375(WORD address, BYTE value) {
+	if (!(m375.reg[0] & 0x0800)) {
+		m375.reg[0] = address;
+		chr_fix_375();
+		mirroring_fix_375();
 	}
+	m375.reg[1] = value;
+	prg_fix_375();
+}
+BYTE extcl_save_mapper_375(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m375.reg);
 
-	_control_bank(bank[0], info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank[0]);
+	return (EXIT_OK);
+}
 
-	_control_bank(bank[1], info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank[1]);
+INLINE static void prg_fix_375(void) {
+	WORD bank = ((m375.reg[0] & 0x400) >> 4) | ((m375.reg[0] & 0x100) >> 3) | ((m375.reg[0] & 0xF80) >> 2);
+	WORD bit0 = m375.reg[0] & 0x0001;
+	WORD bit7 = (m375.reg[0] & 0x0080) >> 7;
+	WORD bit9 = (m375.reg[0] & 0x0200) >> 9;
+	WORD bit11 = (m375.reg[0] & 0x0800) >> 11;
 
-	map_prg_rom_8k_update();
-
-	if (address & 0x0002) {
+	memmap_auto_16k(MMCPU(0x8000), (((bank & ~bit0) & ~(bit11 * 7)) | (bit11 * m375.reg[1])));
+	memmap_auto_16k(MMCPU(0xC000), (((bank |  bit0) & ~(!bit7 * !bit9 * 7)) | (bit7 * bit9 * 7)));
+}
+INLINE static void chr_fix_375(void) {
+	memmap_vram_wp_8k(MMPPU(0x0000), 0, TRUE, !(m375.reg[0] & 0x80));
+}
+INLINE static void mirroring_fix_375(void) {
+	if (m375.reg[0] & 0x02) {
 		mirroring_H();
 	} else {
 		mirroring_V();

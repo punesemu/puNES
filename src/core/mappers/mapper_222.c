@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
 
@@ -87,9 +86,7 @@ BYTE extcl_save_mapper_222(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m222.mode);
 	save_slot_ele(mode, slot, m222.count);
 	save_slot_ele(mode, slot, m222.pending);
-	extcl_save_mapper_VRC2and4(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
 void extcl_cpu_every_cycle_222(void) {
 	BYTE save = m222.prescaler;

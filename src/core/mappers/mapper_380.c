@@ -17,8 +17,6 @@
  */
 
 #include <string.h>
-#include "mem_map.h"
-#include "info.h"
 #include "mappers.h"
 #include "save_slot.h"
 

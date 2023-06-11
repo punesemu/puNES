@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -72,7 +71,5 @@ BYTE extcl_cpu_rd_mem_238(WORD address, BYTE openbus) {
 }
 BYTE extcl_save_mapper_238(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m238.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }

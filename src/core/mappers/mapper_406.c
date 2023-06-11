@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include "mappers.h"
 #include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "SST39SF040.h"
 #include "gui.h"
@@ -94,7 +93,7 @@ BYTE extcl_cpu_rd_mem_406(WORD address, BYTE openbus) {
 	return (openbus);
 }
 BYTE extcl_save_mapper_406(BYTE mode, BYTE slot, FILE *fp) {
-	extcl_save_mapper_MMC3(mode, slot, fp);
+	if (extcl_save_mapper_MMC3(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	return (sst39sf040_save_mapper(mode, slot, fp));
 }
 void extcl_cpu_every_cycle_406(void) {

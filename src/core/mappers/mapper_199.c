@@ -18,10 +18,7 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
-#include "save_slot.h"
 
 void chr_swap_mmc3_199(WORD address, WORD value);
 void wram_fix_mmc3_199(void);
@@ -29,7 +26,7 @@ void wram_fix_mmc3_199(void);
 void map_init_199(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(MMC3);
-	EXTCL_SAVE_MAPPER(199);
+	EXTCL_SAVE_MAPPER(MMC3);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
 	EXTCL_PPU_000_TO_255(MMC3);
@@ -45,22 +42,13 @@ void map_init_199(void) {
 	MMC3_chr_swap = chr_swap_mmc3_199;
 	MMC3_wram_fix = wram_fix_mmc3_199;
 
-//	if (wram_size() < (12 * 1024)) {
-//		wram_set_ram_size(4 * 1024);
-//		wram_set_nvram_size(8 * 1024);
+//	if (wram_size() < (12 * S1K)) {
+//		wram_set_ram_size(S4K);
+//		wram_set_nvram_size(S8K);
 //	}
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
-}
-BYTE extcl_save_mapper_199(BYTE mode, BYTE slot, FILE *fp) {
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		MMC3_wram_fix();
-	}
-
-	return (EXIT_OK);
 }
 
 void chr_swap_mmc3_199(WORD address, UNUSED(WORD value)) {

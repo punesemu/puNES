@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -28,11 +26,13 @@ void chr_swap_mmc3_269(WORD address, WORD value);
 
 struct _m269 {
 	BYTE write;
-	BYTE reg[4];
+	BYTE reg;
+	WORD prg[2];
+	WORD chr[2];
 } m269;
 
 void map_init_269(void) {
-	EXTCL_AFTER_MAPPER_INIT(269);
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(269);
 	EXTCL_SAVE_MAPPER(269);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -53,10 +53,27 @@ void map_init_269(void) {
 	MMC3_prg_swap = prg_swap_mmc3_269;
 	MMC3_chr_swap = chr_swap_mmc3_269;
 
-	m269.reg[2] = 0x0F;
+	m269.prg[1] = 0x3F;
+	m269.chr[1] = 0xFF;
 
-	if (mapper.write_vram) {
-		info.chr.rom.banks_8k = info.prg.rom.banks_8k;
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		if (!chrrom_size()) {
+			vram_set_ram_size(0);
+			vram_set_nvram_size(0);
+
+			chrrom_set_size(prgrom_size());
+			chrrom_init();
+
+			for (size_t i = 0; i < prgrom_size(); i++) {
+				BYTE value = prgrom_byte(i);
+
+				value = ((value & 0x01) << 6) | ((value & 0x02) << 3) |
+					((value & 0x04) << 0) | ((value & 0x08) >> 3) |
+					((value & 0x10) >> 3) | ((value & 0x20) >> 2) |
+					((value & 0x40) >> 1) | ((value & 0x80) << 0);
+				chrrom_byte(i) = value;
+			}
+		}
 	}
 
 	info.mapper.extend_wr = TRUE;
@@ -64,31 +81,32 @@ void map_init_269(void) {
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extcl_after_mapper_init_269(void) {
-	extcl_after_mapper_init_MMC3();
-
-	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		if (mapper.write_vram) {
-			size_t i;
-
-			for (i = 0; i < prg_size(); i++) {
-				BYTE value = prg_rom()[i];
-
-				value = ((value & 0x01) << 6) | ((value & 0x02) << 3) |
-					((value & 0x04) << 0) | ((value & 0x08) >> 3) |
-					((value & 0x10) >> 3) | ((value & 0x20) >> 2) |
-					((value & 0x40) >> 1) | ((value & 0x80) << 0);
-				chr_rom()[i] = value;
-			}
-		}
-	}
-}
 void extcl_cpu_wr_mem_269(WORD address, BYTE value) {
-	if (address == 0x5000) {
-		if (!(m269.reg[3] & 0x80)) {
-			m269.reg[m269.write++ & 0x03] = value;
-			MMC3_prg_fix();
-			MMC3_chr_fix();
+	if ((address >= 0x5000) && (address <= 0x5FFF)) {
+		if (!(m269.reg & 0x80)) {
+			switch (m269.write++ & 0x03) {
+				case 0:
+					m269.chr[0] = (m269.chr[0] & 0xFF00) | value;
+					MMC3_chr_fix();
+					return;
+				case 1:
+					m269.prg[0] = (m269.prg[0] & 0xFF00) | value;
+					MMC3_prg_fix();
+					return;
+				case 2:
+					m269.chr[0] = (m269.chr[0] & 0xF0FF) | ((value & 0xF0) << 4);
+					m269.chr[1] = 0xFF >> (~value & 0x0F);
+					MMC3_chr_fix();
+					return;
+				case 3:
+					m269.chr[0] = (m269.chr[0] & 0xEFFF) | ((value & 0x40) << 6);
+					m269.prg[0] = (m269.prg[0] & 0xFEFF) | ((value & 0x40) << 2);
+					m269.prg[1] = ~value & 0x3F;
+					m269.reg = value;
+					MMC3_prg_fix();
+					MMC3_chr_fix();
+					return;
+			}
 		}
 		return;
 	}
@@ -99,20 +117,14 @@ void extcl_cpu_wr_mem_269(WORD address, BYTE value) {
 BYTE extcl_save_mapper_269(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m269.write);
 	save_slot_ele(mode, slot, m269.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	save_slot_ele(mode, slot, m269.prg);
+	save_slot_ele(mode, slot, m269.chr);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_269(WORD address, WORD value) {
-	WORD base = ((m269.reg[3] & 0x40) << 2) | m269.reg[1];
-	WORD mask = ~m269.reg[3] & 0x3F;
-
-	prg_swap_MMC3_base(address, (base | (value & mask)));
+	prg_swap_MMC3_base(address, (m269.prg[0] | (value & m269.prg[1])));
 }
 void chr_swap_mmc3_269(WORD address, WORD value) {
-	WORD base = ((m269.reg[3] & 0x40) << 6) | ((m269.reg[2] & 0xF0) << 4) | m269.reg[0];
-	WORD mask = 0xFF >> (~m269.reg[2] & 0x0F);
-
-	chr_swap_MMC3_base(address, (base | (value & mask)));
+	chr_swap_MMC3_base(address, (m269.chr[0] | (value & m269.chr[1])));
 }

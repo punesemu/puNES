@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
 
@@ -94,7 +92,6 @@ BYTE extcl_save_mapper_168(BYTE mode, BYTE slot, FILE *fp) {
 void extcl_cpu_every_cycle_168(void) {
 	if (m168.irq.disabled) {
 		m168.irq.counter = 0;
-
 	} else {
 		if (++m168.irq.counter & 1024) {
 			irq.high |= EXT_IRQ;

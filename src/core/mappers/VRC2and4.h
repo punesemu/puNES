@@ -21,24 +21,7 @@
 
 #include "common.h"
 
-enum _vrc24_types {
-	// m21
-	VRC4A = 1,
-	VRC4C = 2,
-	// m22
-	VRC2A = 0,
-	// m23
-	VRC4F = 1,
-	VRC4E = 2,
-	VRC2B = 3,
-	// m25
-	VRC4B = 1,
-	VRC4D = 2,
-	VRC2C = 3,
-	// basic types
-	VRC24_VRC2 = 20,
-	VRC24_VRC4,
-};
+enum _vrc24_types { VRC24_VRC2 = 20, VRC24_VRC4 };
 
 typedef struct _vrc2and4 {
 	WORD prg[2];

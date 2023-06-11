@@ -18,32 +18,21 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
-#include "info.h"
 #include "cpu.h"
 #include "save_slot.h"
-
-/* TODO : aggiungere l'emulazione del D7756C */
+#include "wave_file_interface.h"
+#include "upd7756_interface.h"
 
 INLINE static void prg_fix_018(void);
 INLINE static void chr_fix_018(void);
 INLINE static void wram_fix_018(void);
 INLINE static void mirroring_fix_018(void);
 
-struct _m018 {
-	WORD prg[4];
-	WORD chr[8];
-	BYTE mirroring;
-	struct _m108_irq {
-		BYTE enabled;
-		WORD reload;
-		WORD count;
-		BYTE delay;
-	} irq;
-} m018;
+_m018 m018;
 
 void map_init_018(void) {
 	EXTCL_AFTER_MAPPER_INIT(018);
+	EXTCL_MAPPER_QUIT(018);
 	EXTCL_CPU_WR_MEM(018);
 	EXTCL_SAVE_MAPPER(018);
 	EXTCL_CPU_EVERY_CYCLE(018);
@@ -56,12 +45,28 @@ void map_init_018(void) {
 		m018.prg[2] = 0xFE;
 		m018.prg[3] = 0x00;
 	}
+
+	if (info.mapper.submapper == DEFAULT) {
+		info.mapper.submapper = 0;
+	}
+
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		wavefiles_clear();
+		if ((info.mapper.submapper == 0) && (miscrom_size() >= S32K)) {
+			upd7756_load_sample_rom(miscrom_pnt(), miscrom_size());
+		} else {
+			// TODO: I need WAV files to implement their playback
+		}
+	}
 }
 void extcl_after_mapper_init_018(void) {
 	prg_fix_018();
 	chr_fix_018();
 	wram_fix_018();
 	mirroring_fix_018();
+}
+void extcl_mapper_quit_018(void) {
+	wavefiles_clear();
 }
 void extcl_cpu_wr_mem_018(WORD address, BYTE value) {
 	switch (address & 0xF000) {
@@ -123,6 +128,14 @@ void extcl_cpu_wr_mem_018(WORD address, BYTE value) {
 					mirroring_fix_018();
 					return;
 				case 3:
+					m018.snd.speech = value;
+					if (value & 0x02) {
+						wavefiles_restart((m018.snd.speech >> 2));
+						m018.snd.playing = TRUE;
+					}
+					if (value & 0x01) {
+						m018.snd.playing = FALSE;
+					}
 					return;
 			}
 			return;
@@ -132,6 +145,9 @@ BYTE extcl_save_mapper_018(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m018.prg);
 	save_slot_ele(mode, slot, m018.chr);
 	save_slot_ele(mode, slot, m018.mirroring);
+	save_slot_ele(mode, slot, m018.snd.speech);
+	save_slot_ele(mode, slot, m018.snd.playing);
+	save_slot_ele(mode, slot, m018.snd.out);
 	save_slot_ele(mode, slot, m018.irq.enabled);
 	save_slot_ele(mode, slot, m018.irq.reload);
 	save_slot_ele(mode, slot, m018.irq.count);
@@ -140,12 +156,18 @@ BYTE extcl_save_mapper_018(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_018(void) {
+	m018.snd.out = 0;
+	if (m018.snd.playing) {
+		BYTE speech = m018.snd.speech >> 2;
+
+		m018.snd.out = (SWORD)(wavefiles_get_next_sample(speech) >> 7);
+		m018.snd.playing = !wavefiles_is_finished(speech);
+	}
 	// gestisco questo delay sempre per la sincronizzazzione con la CPU
 	if (m018.irq.delay && !(--m018.irq.delay)) {
 		irq.delay = TRUE;
 		irq.high |= EXT_IRQ;
 	}
-
 	if (m018.irq.enabled & 0x01) {
 		WORD mask = 0xFFFF;
 

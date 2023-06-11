@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
 
@@ -43,7 +42,9 @@ void map_init_524(void) {
 	mapper.internal_struct[1] = (BYTE *)&vrc2and4;
 	mapper.internal_struct_size[1] = sizeof(vrc2and4);
 
-	memset(&m524, 0x00, sizeof(m524));
+	if (info.reset >= HARD) {
+		memset(&m524, 0x00, sizeof(m524));
+	}
 
 	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_524;
@@ -67,9 +68,7 @@ void extcl_cpu_wr_mem_524(WORD address, BYTE value) {
 BYTE extcl_save_mapper_524(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m524.irq.enabled);
 	save_slot_ele(mode, slot, m524.irq.counter);
-	extcl_save_mapper_VRC2and4(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
 void extcl_cpu_every_cycle_524(void) {
 	if (m524.irq.enabled && (++m524.irq.counter & 0x400)) {

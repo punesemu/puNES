@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
 
@@ -71,9 +70,7 @@ BYTE extcl_save_mapper_308(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m308.irq.enabled);
 	save_slot_ele(mode, slot, m308.irq.h_counter);
 	save_slot_ele(mode, slot, m308.irq.l_counter);
-	extcl_save_mapper_VRC2and4(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
 }
 void extcl_cpu_every_cycle_308(void) {
 	if (m308.irq.enabled) {

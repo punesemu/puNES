@@ -16,11 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <stdlib.h>
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -139,11 +136,9 @@ BYTE extcl_cpu_rd_mem_116(WORD address, BYTE openbus) {
 BYTE extcl_save_mapper_116(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m116.mapper);
 	save_slot_ele(mode, slot, m116.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-	extcl_save_mapper_VRC2and4(mode, slot, fp);
-	extcl_save_mapper_MMC1(mode, slot, fp);
-
-	return (EXIT_OK);
+	if (extcl_save_mapper_MMC3(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
+	if (extcl_save_mapper_VRC2and4(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
+	return (extcl_save_mapper_MMC1(mode, slot, fp));
 }
 void extcl_cpu_every_cycle_116(void) {
 	if (m116.mapper == M116_MMC3) {

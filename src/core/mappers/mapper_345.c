@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -51,7 +49,10 @@ void map_init_345(void) {
 	// is a constant drone pitch. This is likely a game bug.
 
 	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m345, 0x00, sizeof(m345));
+
+	if (info.reset >= HARD) {
+		memset(&m345, 0x00, sizeof(m345));
+	}
 
 	init_MMC3();
 	MMC3_prg_swap = prg_swap_mmc3_345;
@@ -71,16 +72,13 @@ void extcl_cpu_wr_mem_345(WORD address, BYTE value) {
 			MMC3_mirroring_fix();
 		}
 		return;
-	}
-	if (address >= 0x8000) {
+	} else if (address >= 0x8000) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
 BYTE extcl_save_mapper_345(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m345.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_345(WORD address, WORD value) {

@@ -19,7 +19,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "ppu.h"
 #include "save_slot.h"
 #include "SST39SF040.h"
@@ -96,8 +95,7 @@ void extcl_cpu_wr_mem_111_MMC1(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_111_MMC1(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m111.reg);
-	extcl_save_mapper_MMC1(mode, slot, fp);
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC1(mode, slot, fp));
 }
 
 void extcl_after_mapper_init_111_GTROM(void) {

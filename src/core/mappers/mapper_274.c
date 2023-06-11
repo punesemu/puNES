@@ -18,15 +18,14 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_274(void);
 INLINE static void mirroring_fix_274(void);
 
 struct _m274 {
-	BYTE extra;
 	BYTE reg[2];
+	BYTE extra;
 } m274;
 
 void map_init_274(void) {
@@ -68,13 +67,12 @@ BYTE extcl_save_mapper_274(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_274(void) {
-	WORD bank = 0;
+	WORD bank = m274.extra
+		? m274.extra | (m274.reg[0] & (prgrom_banks(S16K) - 1) & 0x0F)
+		: (m274.reg[1] & 0x70) | (m274.reg[0] & 0x0F);
 
-	bank = m274.extra | (m274.reg[1] & 0x70) | (m274.reg[0] & 0x0F);
 	memmap_auto_16k(MMCPU(0x8000), bank);
-
-	bank = m274.reg[1] & 0x7F;
-	memmap_auto_16k(MMCPU(0xC000), bank);
+	memmap_auto_16k(MMCPU(0xC000), (m274.reg[1] & 0x7F));
 }
 INLINE static void mirroring_fix_274(void) {
 	if (m274.reg[0] & 0x10) {

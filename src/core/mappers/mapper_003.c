@@ -18,22 +18,21 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
+#include "wave_file_interface.h"
 
 INLINE static void prg_fix_003(void);
 INLINE static void chr_fix_003(void);
 INLINE static void wram_fix_003(void);
 
-struct m003 {
-	BYTE reg;
-} m003;
+_m003 m003;
 
 void map_init_003() {
 	EXTCL_AFTER_MAPPER_INIT(003);
+	EXTCL_MAPPER_QUIT(003);
 	EXTCL_CPU_WR_MEM(003);
 	EXTCL_SAVE_MAPPER(003);
+	EXTCL_CPU_EVERY_CYCLE(003);
 	mapper.internal_struct[0] = (BYTE *)&m003;
 	mapper.internal_struct_size[0] = sizeof(m003);
 
@@ -44,24 +43,53 @@ void map_init_003() {
 	if (info.mapper.submapper == DEFAULT) {
 		info.mapper.submapper = 0;
 	}
+
+	if (info.crc32.prg == 0xF8DA2506) {
+		// TODO: I need WAV files to implement their playback
+		info.mapper.extend_wr = TRUE;
+	}
 }
 void extcl_after_mapper_init_003(void) {
 	prg_fix_003();
 	chr_fix_003();
 	wram_fix_003();
 }
+void extcl_mapper_quit_003(void) {
+	wavefiles_clear();
+}
 void extcl_cpu_wr_mem_003(WORD address, BYTE value) {
-	// bus conflict
-	if (info.mapper.submapper == 2) {
-		value &= prgrom_rd(address);
+	if ((address >= 0x6000) && (address <= 0x7FFF)) {
+		m003.snd.speech = value;
+		if (!(m003.snd.speech & 0x40) && !m003.snd.playing) {
+			wavefiles_restart(m003.snd.speech & 0x07);
+			m003.snd.playing = TRUE;
+		}
+		return;
+	} else if (address >= 0x8000) {
+		// bus conflict
+		if (info.mapper.submapper == 2) {
+			value &= prgrom_rd(address);
+		}
+		m003.reg = value;
+		chr_fix_003();
 	}
-	m003.reg = value;
-	chr_fix_003();
 }
 BYTE extcl_save_mapper_003(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m003.reg);
+	save_slot_ele(mode, slot, m003.snd.speech);
+	save_slot_ele(mode, slot, m003.snd.playing);
+	save_slot_ele(mode, slot, m003.snd.out);
 
 	return (EXIT_OK);
+}
+void extcl_cpu_every_cycle_003(void) {
+	m003.snd.out = 0;
+	if (m003.snd.playing) {
+		BYTE speech = m003.snd.speech & 0x07;
+
+		m003.snd.out = (SWORD)(wavefiles_get_next_sample(speech) >> 7);
+		m003.snd.playing = !wavefiles_is_finished(speech);
+	}
 }
 
 INLINE static void prg_fix_003(void) {

@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -63,7 +61,7 @@ void map_init_176(void) {
 	mapper.internal_struct_size[0] = sizeof(m176);
 
 	if (info.format != NES_2_0) {
-		if (info.mapper.battery) { // Only Waixing games have batteries
+		if (info.mapper.battery) {
 			info.mapper.submapper = 2;
 			wram_set_ram_size(S32K);
 		} else if ((prgrom_size() == S1M) && (chrrom_size() == S1M)) {
@@ -75,20 +73,19 @@ void map_init_176(void) {
 		}  else if ((prgrom_size() >= S4M) && !chrrom_size()) {
 			info.mapper.submapper = 3;
 		}
-
 		if (chrrom_size()) {
-			if ((prgrom_size() == S2M) && (chrrom_size() == S512K)) { // Rockman I-VI
+			if ((prgrom_size() == S2M) && (chrrom_size() == S512K)) {
 				vram_set_ram_size(S8K);
 			} else {
 				vram_set_ram_size(0);
 			}
 		} else {
-			switch (prgrom_size()) {       // No CHR-ROM. Detect CHR-RAM size by looking at PRG-ROM size. PRG-ROMs larger than 4 MiB are not possible without NES 2.0 anyway.
-				case S2M: // 10-in-1 Omake Game
-				case S4M: // Super Mario 160-in-1 Funny Time
+			switch (prgrom_size()) {
+				case S2M:
+				case S4M:
 					vram_set_ram_size(S128K);
 					break;
-				default:        // Normal oversize TNROM
+				default:
 					vram_set_ram_size(S8K);
 					break;
 			}
@@ -109,63 +106,36 @@ void map_init_176(void) {
 //		}
 	}
 
-
-
-
 	if (info.mapper.submapper == DEFAULT) {
 		info.mapper.submapper = 0;
 	}
-//	if ((prgrom_size() == S128K) && (chrrom_size() == S64K)) {
-//		info.mapper.submapper = BMCFK23C;
-//	}
-//	if ((prgrom_size() == S256K) && (chrrom_size() == S128K)) {
-//		info.mapper.submapper = BMCFK23C;
-//	}
-//	if ((prgrom_size() == S1M) && (prgrom_size() == chrrom_size())) {
-//		// (JY-224) 1998 97格鬥天王 激鬥篇 7-in-1.nes
-//		m176.prg = (info.crc32.prg == 0x6C574B50) ? 0x40 : 0x20;
-//		info.mapper.submapper = BMCFK23C;
-//	}
-//	if ((prgrom_size() >= S8M) && mapper.write_vram) {
-//		info.mapper.submapper = FS005;
-//	}
-//	if ((prgrom_size() == S4M) && mapper.write_vram) {
-//		info.mapper.submapper = JX9003B;
-//	}
-//	if ((info.crc32.prg == 0x3655B7BC) || // New 4-in-1 Supergame (YH4239) [p1][U][!].unf
-//		(info.crc32.prg == 0x60C6D8CD) || // 9-in-1 (KY-9005) [p1][U][!].unf
-//		(info.crc32.prg == 0x63A87C95)) { // 8-in-1 Supergame (KY8002) [p1][U].unf
-//		info.mapper.submapper = LP8002KB;
-//	}
-//	if (info.crc32.prg == 0xB50D8FBC) { // Game 500-in-1.nes
-//		info.mapper.submapper = HST162;
-//	}
-
 
 	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&m176, 0x00, sizeof(m176));
 
-	if (info.reset >= HARD) {
-		memset(&m176, 0x00, sizeof(m176));
+	m176.mmc3[0] = 0;
+	m176.mmc3[1] = 2;
+	m176.mmc3[2] = 4;
+	m176.mmc3[3] = 5;
+	m176.mmc3[4] = 6;
+	m176.mmc3[5] = 7;
+	m176.mmc3[6] = 0;
+	m176.mmc3[7] = 1;
+	m176.mmc3[8] = 0xFE;
+	m176.mmc3[9] = 0xFF;
+	m176.mmc3[10] = 0x01;
+	m176.mmc3[11] = 0x03;
 
-		m176.mmc3[0] = 0;
-		m176.mmc3[1] = 2;
-		m176.mmc3[2] = 4;
-		m176.mmc3[3] = 5;
-		m176.mmc3[4] = 6;
-		m176.mmc3[5] = 7;
-		m176.mmc3[6] = 0;
-		m176.mmc3[7] = 1;
-		m176.mmc3[8] = 0xFE;
-		m176.mmc3[9] = 0xFF;
-		m176.mmc3[10] = 0x01;
-		m176.mmc3[11] = 0x03;
+	if ((info.mapper.submapper == 1) || (info.mapper.submapper == 3)) {
+		m176.cpu5xxx[0] = 0x07;
+	}
+	if (info.mapper.id == 523) {
+		m176.cpu8xxx[1] = (info.mapper.mirroring & 0x01) ^ 0x01;
+	}
 
-		if ((info.mapper.submapper == 1) || (info.mapper.submapper == 3)) {
-			m176.cpu5xxx[0] = 0x07;
-		}
-		if (info.mapper.id == 523) {
-			m176.cpu8xxx[1] = (info.mapper.mirroring & 0x01) ^ 0x01;
-		}
+	// (JY-224) 1998 97格鬥天王 激鬥篇 7-in-1.nes
+	if (info.crc32.total == 0x3C894AD1) {
+		m176.cpu5xxx[0] = 0x00;
 	}
 
 	if (info.reset == RESET) {
@@ -175,8 +145,7 @@ void map_init_176(void) {
 	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		memset (&m176tmp, 0x00, sizeof(m176tmp));
 
-		if (
-			(info.crc32.prg == 0x81907A3B) || // (KY-9006) 9-in-1 Super Game.nes
+		if ((info.crc32.prg == 0x81907A3B) || // (KY-9006) 9-in-1 Super Game.nes
 			(info.crc32.prg == 0x26ABC25E) || // 9-in-1 - Pokemon Yellow (FK23C board)[p4][!].nes
 			(info.crc32.prg == 0xCD028ED2) || // 6-in-1 (Multi)[Unknown][YH602].nes
 			(info.crc32.prg == 0xD6F095DC) || // 8-in-1 (Multi)[Unknown][YH801].nes
@@ -253,6 +222,10 @@ void map_init_176(void) {
 			static WORD ds[] = { 0x080, 0x010, 0x400, 0x020, 0x100, 0x040, 0x200, 0x800 };
 
 			tmp_fix_176(LENGTH(ds), 2, &ds[0]);
+		} else {
+			static WORD ds[] = { 0x010 };
+
+			tmp_fix_176(LENGTH(ds), 0, &ds[0]);
 		}
 	}
 

@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 void prg_swap_mmc1_550(WORD address, WORD value);
@@ -69,9 +67,7 @@ void extcl_cpu_wr_mem_550(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_550(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m550.reg);
-	extcl_save_mapper_MMC1(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC1(mode, slot, fp));
 }
 
 void prg_swap_mmc1_550(WORD address, WORD value) {

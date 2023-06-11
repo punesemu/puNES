@@ -19,8 +19,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -84,8 +82,6 @@ void map_init_351(void) {
 	MMC1_prg_swap = prg_swap_mmc1_351;
 	MMC1_chr_swap = chr_swap_mmc1_351;
 
-	info.chr.ram.banks_8k_plus = 1;
-
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		// Unusually, in CHR-RAM mode (R=1), CHR-ROM becomes the second half of an enlarged PRG address space that
 		// becomes addressable via register $5001. At least one multicart containing both TLROM and UNROM games makes
@@ -142,11 +138,9 @@ void extcl_cpu_wr_mem_351(WORD address, BYTE value) {
 BYTE extcl_save_mapper_351(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m351.mapper);
 	save_slot_ele(mode, slot, m351.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-	extcl_save_mapper_VRC2and4(mode, slot, fp);
-	extcl_save_mapper_MMC1(mode, slot, fp);
-
-	return (EXIT_OK);
+	if (extcl_save_mapper_MMC3(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
+	if (extcl_save_mapper_VRC2and4(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
+	return (extcl_save_mapper_MMC1(mode, slot, fp));
 }
 void extcl_cpu_every_cycle_351(void) {
 	if (m351.mapper == M351_MMC3) {

@@ -20,33 +20,26 @@
 #define MAPPERS_H_
 
 #include "common.h"
-
-
 #include "memmap.h"
-
-
-
-
-
-
-
 #include "external_calls.h"
 #include "unif.h"
-#include "mappers/mapper_NSF.h"
-// INES/NES2.0
 
+// INES/NES2.0
 #include "mappers/mapper_000.h"
 #include "mappers/mapper_001.h"
 #include "mappers/mapper_002.h"
 #include "mappers/mapper_003.h"
 #include "mappers/mapper_004.h"
+#include "mappers/mapper_006.h"
 #include "mappers/mapper_007.h"
 #include "mappers/mapper_009.h"
 #include "mappers/mapper_010.h"
 #include "mappers/mapper_011.h"
+#include "mappers/mapper_012.h"
 #include "mappers/mapper_013.h"
 #include "mappers/mapper_014.h"
 #include "mappers/mapper_015.h"
+#include "mappers/mapper_016.h"
 #include "mappers/mapper_018.h"
 #include "mappers/mapper_019.h"
 #include "mappers/mapper_021.h"
@@ -61,6 +54,8 @@
 #include "mappers/mapper_030.h"
 #include "mappers/mapper_031.h"
 #include "mappers/mapper_032.h"
+#include "mappers/mapper_033.h"
+#include "mappers/mapper_034.h"
 #include "mappers/mapper_036.h"
 #include "mappers/mapper_037.h"
 #include "mappers/mapper_038.h"
@@ -72,6 +67,7 @@
 #include "mappers/mapper_045.h"
 #include "mappers/mapper_046.h"
 #include "mappers/mapper_047.h"
+#include "mappers/mapper_048.h"
 #include "mappers/mapper_049.h"
 #include "mappers/mapper_050.h"
 #include "mappers/mapper_051.h"
@@ -88,19 +84,26 @@
 #include "mappers/mapper_063.h"
 #include "mappers/mapper_064.h"
 #include "mappers/mapper_065.h"
+#include "mappers/mapper_066.h"
 #include "mappers/mapper_067.h"
 #include "mappers/mapper_068.h"
 #include "mappers/mapper_069.h"
 #include "mappers/mapper_070.h"
 #include "mappers/mapper_071.h"
+#include "mappers/mapper_072.h"
+#include "mappers/mapper_073.h"
 #include "mappers/mapper_074.h"
 #include "mappers/mapper_075.h"
 #include "mappers/mapper_076.h"
 #include "mappers/mapper_077.h"
+#include "mappers/mapper_078.h"
 #include "mappers/mapper_079.h"
+#include "mappers/mapper_080.h"
 #include "mappers/mapper_081.h"
+#include "mappers/mapper_082.h"
 #include "mappers/mapper_083.h"
 #include "mappers/mapper_085.h"
+#include "mappers/mapper_086.h"
 #include "mappers/mapper_087.h"
 #include "mappers/mapper_088.h"
 #include "mappers/mapper_089.h"
@@ -108,6 +111,7 @@
 #include "mappers/mapper_093.h"
 #include "mappers/mapper_094.h"
 #include "mappers/mapper_095.h"
+#include "mappers/mapper_096.h"
 #include "mappers/mapper_097.h"
 #include "mappers/mapper_100.h"
 #include "mappers/mapper_101.h"
@@ -149,8 +153,11 @@
 #include "mappers/mapper_149.h"
 #include "mappers/mapper_150.h"
 #include "mappers/mapper_152.h"
+#include "mappers/mapper_153.h"
 #include "mappers/mapper_154.h"
 #include "mappers/mapper_156.h"
+#include "mappers/mapper_157.h"
+#include "mappers/mapper_159.h"
 #include "mappers/mapper_162.h"
 #include "mappers/mapper_163.h"
 #include "mappers/mapper_164.h"
@@ -197,6 +204,7 @@
 #include "mappers/mapper_212.h"
 #include "mappers/mapper_214.h"
 #include "mappers/mapper_215.h"
+#include "mappers/mapper_216.h"
 #include "mappers/mapper_217.h"
 #include "mappers/mapper_218.h"
 #include "mappers/mapper_219.h"
@@ -395,27 +403,18 @@
 #include "mappers/mapper_558.h"
 #include "mappers/mapper_559.h"
 #include "mappers/mapper_560.h"
-#include "mappers/mapper_Bandai.h"
-#include "mappers/mapper_BxROM.h"
 #include "mappers/mapper_FDS.h"
-#include "mappers/mapper_FFESMC.h"
 #include "mappers/mapper_GameGenie.h"
-#include "mappers/mapper_GxROM.h"
-#include "mappers/mapper_Jaleco.h"
-#include "mappers/mapper_MMC3_old.h"
 #include "mappers/mapper_MMC5.h"
-#include "mappers/mapper_Rcm.h"
-#include "mappers/mapper_Rex.h"
-#include "mappers/mapper_Taito.h"
-#include "mappers/mapper_VRC3.h"
+#include "mappers/mapper_NSF.h"
 #include "mappers/mapper_Vs.h"
-// UNIF
-#include "mappers/mapper_BOY.h"
 
+#include "mappers/FCG.h"
 #include "mappers/FME7.h"
 #include "mappers/JV001.h"
 #include "mappers/JYASIC.h"
 #include "mappers/KS202.h"
+#include "mappers/LZ93D50.h"
 #include "mappers/MMC1.h"
 #include "mappers/MMC2.h"
 #include "mappers/MMC3.h"
@@ -426,6 +425,11 @@
 #include "mappers/VRC2and4.h"
 #include "mappers/VRC6.h"
 #include "mappers/VRC7.h"
+
+// UNIF
+#include "mappers/mapper_BOY.h"
+#include "mappers/mapper_MMC3_old.h"
+
 
 #define _control_bank(val, max)	if ((val) > (max)) (val) &= (max);
 #define control_bank(max) _control_bank(value, max)

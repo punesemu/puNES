@@ -49,8 +49,10 @@ enum blbuf_misc { master_vol = 65536 / 15 };
 #define update_tick_extra_blbuf(extra, restart) _update_tick_blbuf(extra, restart)
 
 typedef struct {
-	int time; /* clock time of next delta */
-	int amp; /* current amplitude in delta buffer */
+	// clock time of next delta
+	int time;
+	// current amplitude in delta buffer
+	int amp;
 	int period;
 	int min_period;
 } _blipbuf_group;
@@ -66,6 +68,11 @@ static struct _blipbuf {
 	_blipbuf_group vrc6;
 	_blipbuf_group vrc7;
 	_blipbuf_group dripgame;
+	_blipbuf_group m003;
+	_blipbuf_group m018;
+	_blipbuf_group m072;
+	_blipbuf_group m086;
+	_blipbuf_group m266;
 	_blipbuf_group m518;
 
 	struct _blipbuf_samples {
@@ -88,6 +95,11 @@ static void apu_tick_blipbuf_Sunsoft_FME7(void);
 static void apu_tick_blipbuf_VRC6(void);
 static void apu_tick_blipbuf_VRC7(void);
 static void apu_tick_blipbuf_DRIPGAME(void);
+static void apu_tick_blipbuf_003(void);
+static void apu_tick_blipbuf_018(void);
+static void apu_tick_blipbuf_072(void);
+static void apu_tick_blipbuf_086(void);
+static void apu_tick_blipbuf_266(void);
 static void apu_tick_blipbuf_518(void);
 static void (*extra_audio_end_frame_blipbuf)(void);
 static void extra_audio_end_frame_blipbuf_NSF(void);
@@ -98,6 +110,11 @@ static void extra_audio_end_frame_blipbuf_Sunsoft_FME7(void);
 static void extra_audio_end_frame_blipbuf_VRC6(void);
 static void extra_audio_end_frame_blipbuf_VRC7(void);
 static void extra_audio_end_frame_blipbuf_DRIPGAME(void);
+static void extra_audio_end_frame_blipbuf_003(void);
+static void extra_audio_end_frame_blipbuf_018(void);
+static void extra_audio_end_frame_blipbuf_072(void);
+static void extra_audio_end_frame_blipbuf_086(void);
+static void extra_audio_end_frame_blipbuf_266(void);
 static void extra_audio_end_frame_blipbuf_518(void);
 
 BYTE audio_init_blipbuf(void) {
@@ -139,10 +156,21 @@ BYTE audio_init_blipbuf(void) {
 			extra_apu_tick_blipbuf = apu_tick_blipbuf_FDS;
 			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_FDS;
 			break;
+		case 3:
+			extra_apu_tick_blipbuf = apu_tick_blipbuf_003;
+			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_003;
+			blipbuf.m003.min_period = (int)snd.frequency;
+			break;
 		case 5:
 			// MMC5
 			extra_apu_tick_blipbuf = apu_tick_blipbuf_MMC5;
 			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_MMC5;
+			break;
+		case 18:
+			// 18
+			extra_apu_tick_blipbuf = apu_tick_blipbuf_018;
+			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_018;
+			blipbuf.m018.min_period = (int)snd.frequency;
 			break;
 		case 19:
 			// Namcot N163
@@ -167,6 +195,22 @@ BYTE audio_init_blipbuf(void) {
 			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_VRC7;
 			blipbuf.vrc7.min_period = (int)snd.frequency;
 			break;
+		case 72:
+		case 92:
+			extra_apu_tick_blipbuf = apu_tick_blipbuf_072;
+			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_072;
+			blipbuf.m072.min_period = (int)snd.frequency;
+			break;
+		case 86:
+			extra_apu_tick_blipbuf = apu_tick_blipbuf_086;
+			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_086;
+			blipbuf.m086.min_period = (int)snd.frequency;
+			break;
+		case 266:
+			extra_apu_tick_blipbuf = apu_tick_blipbuf_266;
+			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_266;
+			blipbuf.m266.min_period = (int)snd.frequency;
+			break;
 		case 284:
 			// DRIPGAME
 			extra_apu_tick_blipbuf = apu_tick_blipbuf_DRIPGAME;
@@ -174,7 +218,6 @@ BYTE audio_init_blipbuf(void) {
 			blipbuf.dripgame.min_period = (int)snd.frequency;
 			break;
 		case 518:
-			// 518
 			extra_apu_tick_blipbuf = apu_tick_blipbuf_518;
 			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_518;
 			blipbuf.m518.min_period = (int)snd.frequency;
@@ -384,6 +427,36 @@ static void apu_tick_blipbuf_DRIPGAME(void) {
 		update_tick_extra_blbuf(dripgame, 0);
 	}
 }
+static void apu_tick_blipbuf_003(void) {
+	if (++blipbuf.m003.period == blipbuf.m003.min_period) {
+		blipbuf.output = ch_gain_ext(m003.snd.out, 1.0f);
+		update_tick_extra_blbuf(m003, 0);
+	}
+}
+static void apu_tick_blipbuf_018(void) {
+	if (++blipbuf.m018.period == blipbuf.m018.min_period) {
+		blipbuf.output = ch_gain_ext(m018.snd.out, 1.0f);
+		update_tick_extra_blbuf(m018, 0);
+	}
+}
+static void apu_tick_blipbuf_072(void) {
+	if (++blipbuf.m072.period == blipbuf.m072.min_period) {
+		blipbuf.output = ch_gain_ext(m072.snd.out, 1.0f);
+		update_tick_extra_blbuf(m072, 0);
+	}
+}
+static void apu_tick_blipbuf_086(void) {
+	if (++blipbuf.m086.period == blipbuf.m086.min_period) {
+		blipbuf.output = ch_gain_ext(m086.snd.out, 1.0f);
+		update_tick_extra_blbuf(m086, 0);
+	}
+}
+static void apu_tick_blipbuf_266(void) {
+	if (++blipbuf.m266.period == blipbuf.m266.min_period) {
+		blipbuf.output = ch_gain_ext(m266.snd.out, 1.0f);
+		update_tick_extra_blbuf(m266, 0);
+	}
+}
 static void apu_tick_blipbuf_518(void) {
 	if (++blipbuf.m518.period == blipbuf.m518.min_period) {
 		blipbuf.output = ch_gain_ext(m518.dac.out, 8.0f);
@@ -434,6 +507,21 @@ static void extra_audio_end_frame_blipbuf_VRC7(void) {
 }
 static void extra_audio_end_frame_blipbuf_DRIPGAME(void) {
 	blipbuf.dripgame.time -= (int)blipbuf.counter;
+}
+static void extra_audio_end_frame_blipbuf_003(void) {
+	blipbuf.m003.time -= (int)blipbuf.counter;
+}
+static void extra_audio_end_frame_blipbuf_018(void) {
+	blipbuf.m018.time -= (int)blipbuf.counter;
+}
+static void extra_audio_end_frame_blipbuf_072(void) {
+	blipbuf.m072.time -= (int)blipbuf.counter;
+}
+static void extra_audio_end_frame_blipbuf_086(void) {
+	blipbuf.m086.time -= (int)blipbuf.counter;
+}
+static void extra_audio_end_frame_blipbuf_266(void) {
+	blipbuf.m266.time -= (int)blipbuf.counter;
 }
 static void extra_audio_end_frame_blipbuf_518(void) {
 	blipbuf.m518.time -= (int)blipbuf.counter;
