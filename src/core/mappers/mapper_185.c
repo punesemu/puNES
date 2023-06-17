@@ -43,7 +43,9 @@ void map_init_185() {
 		EXTCL_RD_R2007(185);
 	}
 
-	memset(&m185, 0x00, sizeof(m185));
+	if (info.reset >= HARD) {
+		memset(&m185, 0x00, sizeof(m185));
+	}
 }
 void extcl_after_mapper_init_185(void) {
 	prg_fix_185();

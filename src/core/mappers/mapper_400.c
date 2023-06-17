@@ -38,7 +38,6 @@ void map_init_400(void) {
 	mapper.internal_struct_size[0] = sizeof(m400);
 
 	memset(&m400, 0x00, sizeof(m400));
-
 	m400.reg[0] = 0x80;
 
 	info.mapper.extend_wr = TRUE;

@@ -34,9 +34,7 @@ void map_init_261(void) {
 	mapper.internal_struct[0] = (BYTE *)&m261;
 	mapper.internal_struct_size[0] = sizeof(m261);
 
-	if (info.reset) {
-		memset(&m261, 0x00, sizeof(m261));
-	}
+	memset(&m261, 0x00, sizeof(m261));
 }
 void extcl_after_mapper_init_261(void) {
 	prg_fix_261();

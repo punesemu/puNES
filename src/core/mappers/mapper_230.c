@@ -38,6 +38,7 @@ void map_init_230(void) {
 	if (info.reset >= HARD) {
 		memset(&m230, 0x00, sizeof(m230));
 	} else {
+		m230.reg = 0;
 		m230.mode ^= 1;
 	};
 }

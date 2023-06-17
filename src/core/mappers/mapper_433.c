@@ -35,9 +35,7 @@ void map_init_433(void) {
 	mapper.internal_struct[0] = (BYTE *)&m433;
 	mapper.internal_struct_size[0] = sizeof(m433);
 
-	if (info.reset >= HARD) {
-		memset(&m433, 0x00, sizeof(m433));
-	}
+	memset(&m433, 0x00, sizeof(m433));
 }
 void extcl_after_mapper_init_433(void) {
 	prg_fix_433();

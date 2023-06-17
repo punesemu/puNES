@@ -16,6 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "mappers.h"
 #include "save_slot.h"
 
@@ -33,10 +34,12 @@ void map_init_381(void) {
 	mapper.internal_struct[0] = (BYTE *)&m381;
 	mapper.internal_struct_size[0] = sizeof(m381);
 
+	if (info.reset > HARD) {
+		memset(&m381, 0x00, sizeof(m381));
+	}
+
 	if (info.reset == RESET) {
 		m381.index++;
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		m381.index = 0;
 	}
 }
 void extcl_after_mapper_init_381(void) {

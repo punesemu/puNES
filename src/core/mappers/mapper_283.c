@@ -31,9 +31,7 @@ void map_init_283(void) {
 	EXTCL_AFTER_MAPPER_INIT(283);
 	EXTCL_CPU_WR_MEM(283);
 
-	if (info.reset >= HARD) {
-		memset(&m283, 0x00, sizeof(m283));
-	}
+	memset(&m283, 0x00, sizeof(m283));
 }
 void extcl_after_mapper_init_283(void) {
 	prg_fix_283();

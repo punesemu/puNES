@@ -46,7 +46,7 @@ void map_init_065() {
 	mapper.internal_struct[0] = (BYTE *)&m065;
 	mapper.internal_struct_size[0] = sizeof(m065);
 
-	if (info.reset) {
+	if (info.reset >= HARD) {
 		memset(&m065, 0x00, sizeof(m065));
 
 		m065.prg[0] = 0;

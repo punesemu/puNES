@@ -36,9 +36,7 @@ void map_init_438(void) {
 	mapper.internal_struct[0] = (BYTE *)&m438;
 	mapper.internal_struct_size[0] = sizeof(m438);
 
-	if (info.reset >= HARD) {
-		memset(&m438, 0x00, sizeof(m438));
-	}
+	memset(&m438, 0x00, sizeof(m438));
 }
 void extcl_after_mapper_init_438(void) {
 	prg_fix_438();

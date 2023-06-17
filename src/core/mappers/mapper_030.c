@@ -44,7 +44,6 @@ void map_init_030(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m030, 0x00, sizeof(m030));
-
 	}
 
 	if (info.mapper.submapper == DEFAULT) {

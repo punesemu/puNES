@@ -36,9 +36,7 @@ void map_init_290(void) {
 	mapper.internal_struct[0] = (BYTE *)&m290;
 	mapper.internal_struct_size[0] = sizeof(m290);
 
-	if (info.reset >= HARD) {
-		memset(&m290, 0x00, sizeof(m290));
-	}
+	memset(&m290, 0x00, sizeof(m290));
 }
 void extcl_after_mapper_init_290(void) {
 	prg_fix_290();

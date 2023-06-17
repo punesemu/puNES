@@ -33,7 +33,9 @@ void map_init_070(void) {
 	mapper.internal_struct[0] = (BYTE *)&m070;
 	mapper.internal_struct_size[0] = sizeof(m070);
 
-	m070.reg = 0;
+	if (info.reset >= HARD) {
+		m070.reg = 0;
+	}
 }
 void extcl_after_mapper_init_070(void) {
 	prg_fix_070();
