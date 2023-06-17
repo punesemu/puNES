@@ -1125,12 +1125,8 @@ void emu_info_rom(void) {
 			log_info_box(uL("UNIF name;%s"), unif.name);
 		}
 
-		if (info.mapper.id == UNIF_MAPPER) {
-			log_info_box(uL("UNIF mapper;%u"), unif.internal_mapper);
-		} else {
-			ischanged(info.header.mapper != info.mapper.id);
-			log_info_box(uL("NES mapper;%u%s%s"), info.mapper.id, ifsupported(), ifchanged());
-		}
+		ischanged(info.header.mapper != info.mapper.id);
+		log_info_box(uL("NES mapper;%u%s%s"), info.mapper.id, ifsupported(), ifchanged());
 	} else {
 		ischanged(info.header.mapper != info.mapper.id);
 		log_info_box(uL("NES mapper;%u%s%s"), info.mapper.id, ifsupported(), ifchanged());

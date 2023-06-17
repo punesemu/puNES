@@ -28,7 +28,6 @@
 #include "patcher.h"
 #include "../../c++/crc/crc.h"
 #include "emu.h"
-#include "ines.h"
 #include "nes20db.h"
 
 enum unif_phase_type { UNIF_COUNT, UNIF_READ };
@@ -44,23 +43,7 @@ BYTE unif_MIRR(_rom_mem *rom, BYTE phase);
 BYTE unif_DINF(_rom_mem *rom, BYTE phase);
 BYTE unif_FONT(_rom_mem *rom, BYTE phase);
 
-
-
-
 void find_board(void);
-
-
-
-
-
-typedef struct _unif_board {
-	char board[50];
-	WORD ines_mapper;
-	WORD unif_mapper;
-	BYTE submapper;
-	WORD id;
-	WORD extra;
-} _unif_board;
 
 _unif unif;
 
@@ -614,16 +597,11 @@ BYTE unif_FONT(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 
-
-
-
 void find_board(void) {
 	unif.finded = FALSE;
-	unif.internal_mapper = NO_UNIF;
 	info.mapper.id = DEFAULT;
 	info.mapper.submapper = DEFAULT;
 	info.extra_from_db = DEFAULT;
-
 
 	if (!strncasecmp("NROM", unif.stripped_board, strlen(unif.stripped_board)) ||
 		!strncasecmp("NROM-128", unif.stripped_board, strlen(unif.stripped_board)) ||
@@ -1368,12 +1346,89 @@ void find_board(void) {
 		unif.finded = TRUE;
 		return;
 	}
-
-
-
+	if (!strncasecmp("S-2009", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 434;
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("K-3010", unif.stripped_board, strlen(unif.stripped_board)) ||
+		!strncasecmp("K-3071", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 438;
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("SA-9602B", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 513;
+		vram_set_ram_size(S32K);
+		unif.finded = TRUE;
+		return;
+	}
 	if (!strncasecmp("DANCE2000", unif.stripped_board, strlen(unif.stripped_board))) {
 		info.mapper.id = 518;
 		wram_set_ram_size(S8K);
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("EH8813A", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 519;
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("DREAMTECH01", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 521;
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("LH10", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 522;
+		wram_set_ram_size(S8K);
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("900218", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 524;
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("KS7021A", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 525;
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("BJ-56", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 526;
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("AX-40G", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 527;
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("831128C", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 528;
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("T-230", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 529;
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("AX5705", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 530;
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("82112C", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 540;
+		unif.finded = TRUE;
+		return;
+	}
+	if (!strncasecmp("CHINA_ER_SAN2", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 532;
+		wram_set_nvram_size(S8K);
+		info.mapper.battery = TRUE;
 		unif.finded = TRUE;
 		return;
 	}
@@ -1385,43 +1440,5 @@ void find_board(void) {
 		unif.finded = TRUE;
 		return;
 	}
-
-
-	static const _unif_board unif_boards[] = {
-//		{"AC08", 42, NO_UNIF, 2, DEFAULT, NOEXTRA},
-//		{"SA-016-1M", 146, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"K-3010", 438, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"K-3071", 438, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"SA-9602B", 513, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"EH8813A", 519, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"DREAMTECH01", 521, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"LH10", 522, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"900218", 524, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"KS7021A", 525, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"BJ-56", 526, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"AX-40G", 527, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"831128C", 528, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"T-230", 529, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"AX5705", 530, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"CHINA_ER_SAN2", 532, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-		{"82112C", 540, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-	};
-
 	unif.finded = FALSE;
-
-	for (uint i = 0; i < LENGTH(unif_boards); i++) {
-		if (strncasecmp(unif.stripped_board, unif_boards[i].board, strlen(unif.stripped_board)) == 0) {
-			if (unif_boards[i].ines_mapper == NO_INES) {
-				info.mapper.id = UNIF_MAPPER;
-			} else {
-				info.mapper.id = unif_boards[i].ines_mapper;
-			}
-			info.mapper.submapper = unif_boards[i].submapper;
-			info.id = unif_boards[i].id;
-			info.extra_from_db = unif_boards[i].extra;
-			unif.internal_mapper = unif_boards[i].unif_mapper;
-			unif.finded = TRUE;
-			break;
-		}
-	}
 }

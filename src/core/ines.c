@@ -526,9 +526,6 @@ void search_in_database(void) {
 						info.mapper.prgrom_banks_16k = 256;
 					}
 					break;
-				case UNIF_MAPPER:
-					unif.internal_mapper = info.mapper.submapper;
-					break;
 				default:
 					break;
 			}
