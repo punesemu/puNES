@@ -47,10 +47,13 @@ void map_init_165(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	if (info.reset >= HARD) {
+		memset(&irqA12, 0x00, sizeof(irqA12));
+	}
+
 	memset(&m165, 0x00, sizeof(m165));
 
-	init_MMC3();
+	init_MMC3(info.reset);
 	MMC3_prg_swap = prg_swap_mmc3_165;
 	MMC3_chr_fix = chr_fix_mmc3_165;
 	MMC3_chr_swap = chr_swap_mmc3_165;

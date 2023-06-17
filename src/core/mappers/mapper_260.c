@@ -49,10 +49,13 @@ void map_init_260(void) {
 	mapper.internal_struct[0] = (BYTE *)&m260;
 	mapper.internal_struct_size[0] = sizeof(m260);
 
-	memset(&m260, 0x00, sizeof(m260));
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	if (info.reset >= HARD) {
+		memset(&irqA12, 0x00, sizeof(irqA12));
+	}
 
-	init_MMC3();
+	memset(&m260, 0x00, sizeof(m260));
+
+	init_MMC3(info.reset);
 
 	if (info.reset == RESET) {
 		m260tmp.dipswitch = !m260tmp.dipswitch ; //(m260tmp.dipswitch + 1) & 0x03;

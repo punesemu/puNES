@@ -55,13 +55,12 @@ void map_init_012(void) {
 		mapper.internal_struct[1] = (BYTE *)&mmc3;
 		mapper.internal_struct_size[1] = sizeof(mmc3);
 
-		memset(&irqA12, 0x00, sizeof(irqA12));
-
 		if (info.reset >= HARD) {
+			memset(&irqA12, 0x00, sizeof(irqA12));
 			memset(&m012, 0x00, sizeof(m012));
 		}
 
-		init_MMC3();
+		init_MMC3(info.reset);
 		MMC3_prg_swap = prg_swap_mmc3_012;
 		MMC3_chr_swap = chr_swap_mmc3_012;
 
@@ -93,8 +92,7 @@ void extcl_cpu_wr_mem_012(WORD address, BYTE value) {
 			MMC3_chr_fix();
 		}
 		return;
-	}
-	if (address >= 0x8000) {
+	} else if (address >= 0x8000) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }

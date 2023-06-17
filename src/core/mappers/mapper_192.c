@@ -18,6 +18,7 @@
 
 #include <string.h>
 #include "mappers.h"
+#include "info.h"
 #include "irqA12.h"
 
 void prg_swap_mmc3_192(WORD address, WORD value);
@@ -36,9 +37,11 @@ void map_init_192(void) {
 	mapper.internal_struct[0] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[0] = sizeof(mmc3);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	if (info.reset >= HARD) {
+		memset(&irqA12, 0x00, sizeof(irqA12));
+	}
 
-	init_MMC3();
+	init_MMC3(info.reset);
 	MMC3_prg_swap = prg_swap_mmc3_192;
 	MMC3_chr_swap = chr_swap_mmc3_192;
 

@@ -42,13 +42,12 @@ void map_init_189(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
-
 	if (info.reset >= HARD) {
+		memset(&irqA12, 0x00, sizeof(irqA12));
 		memset(&m189, 0x00, sizeof(m189));
 	}
 
-	init_MMC3();
+	init_MMC3(info.reset);
 	MMC3_prg_swap = prg_swap_mmc3_189;
 
 	info.mapper.extend_wr = TRUE;

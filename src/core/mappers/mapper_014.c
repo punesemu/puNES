@@ -51,10 +51,12 @@ void map_init_014(void) {
 	mapper.internal_struct[2] = (BYTE *)&vrc2and4;
 	mapper.internal_struct_size[2] = sizeof(vrc2and4);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m014, 0x00, sizeof(m014));
+	if (info.reset >= HARD) {
+		memset(&irqA12, 0x00, sizeof(irqA12));
+		memset(&m014, 0x00, sizeof(m014));
+	}
 
-	init_MMC3();
+	init_MMC3(info.reset);
 	MMC3_prg_swap = prg_swap_mmc3_014;
 	MMC3_chr_swap = chr_swap_mmc3_014;
 

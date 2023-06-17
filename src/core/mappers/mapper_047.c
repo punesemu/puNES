@@ -46,7 +46,7 @@ void map_init_047(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m047, 0x00, sizeof(m047));
 
-	init_MMC3();
+	init_MMC3(HARD);
 	MMC3_prg_swap = prg_swap_mmc3_047;
 	MMC3_chr_swap = chr_swap_mmc3_047;
 

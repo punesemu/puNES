@@ -55,18 +55,20 @@ void map_init_556(void) {
 	mapper.internal_struct[2] = (BYTE *)&vrc2and4;
 	mapper.internal_struct_size[2] = sizeof(vrc2and4);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m556, 0x00, sizeof(m556));
+	if (info.reset >= HARD) {
+		memset(&irqA12, 0x00, sizeof(irqA12));
+	}
 
-	init_MMC3();
+	memset(&m556, 0x00, sizeof(m556));
+	m556.reg[2] = 0x0F;
+
+	init_MMC3(info.reset);
 	MMC3_prg_swap = prg_swap_mmc3_556;
 	MMC3_chr_swap = chr_swap_mmc3_556;
 
 	init_VRC2and4(VRC24_VRC4, 0x05, 0x0A, TRUE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_556;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_556;
-
-	m556.reg[2] = 0x0F;
 
 	info.mapper.extend_wr = TRUE;
 

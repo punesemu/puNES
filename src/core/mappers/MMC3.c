@@ -182,8 +182,8 @@ void extcl_irq_A12_clock_MMC3_NEC(void) {
 	}
 }
 
-void init_MMC3(void) {
-	if (info.reset >= HARD) {
+void init_MMC3(BYTE reset) {
+	if (reset >= HARD) {
 		memset(&mmc3, 0x00, sizeof(mmc3));
 
 		mmc3.reg[0] = 0;
@@ -240,18 +240,15 @@ void wram_fix_MMC3_base(void) {
 	MMC3_wram_swap(0x6000, 0);
 }
 void wram_swap_MMC3_base(WORD address, WORD value) {
-	BYTE rd = TRUE, wr = TRUE;
+	BYTE rd = (mmc3.wram_protect & 0x80) >> 7;
+	BYTE wr = rd ? !(mmc3.wram_protect & 0x40) : FALSE;
 
-	if (info.mapper.submapper != 1) {
-		// 7  bit  0
-		// ---- ----
-		// RWxx xxxx
-		// ||
-		// |+-------- Write protection (0: allow writes; 1: deny writes)
-		// +--------- Chip enable (0: disable chip; 1: enable chip)
-		rd = (mmc3.wram_protect & 0x80) >> 7;
-		wr = rd ? !(mmc3.wram_protect & 0x40) : FALSE;
-	}
+	// 7  bit  0
+	// ---- ----
+	// RWxx xxxx
+	// ||
+	// |+-------- Write protection (0: allow writes; 1: deny writes)
+	// +--------- Chip enable (0: disable chip; 1: enable chip)
 	memmap_auto_wp_8k(MMCPU(address), value, rd, wr);
 }
 void mirroring_fix_MMC3_base(void) {

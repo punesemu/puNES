@@ -61,13 +61,7 @@ BYTE map_init(void) {
 			map_init_004();
 			break;
 		case 5:
-
-
 			map_init_005();
-
-			//map_init_005v2();
-
-
 			break;
 		case 6:
 			map_init_006();

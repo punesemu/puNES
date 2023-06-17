@@ -43,14 +43,16 @@ void map_init_455(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m455, 0x00, sizeof(m455));
+	if (info.reset >= HARD) {
+		memset(&irqA12, 0x00, sizeof(irqA12));
+	}
 
-	init_MMC3();
+	memset(&m455, 0x00, sizeof(m455));
+	m455.reg[1] = 1;
+
+	init_MMC3(info.reset);
 	MMC3_prg_swap = prg_swap_mmc3_455;
 	MMC3_chr_swap = chr_swap_mmc3_455;
-
-	m455.reg[1] = 1;
 
 	info.mapper.extend_wr = TRUE;
 

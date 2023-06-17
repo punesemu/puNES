@@ -44,7 +44,7 @@ struct _m116 {
 	WORD reg;
 } m116;
 struct _m116tmp {
-	BYTE dipswitch;
+	BYTE game;
 } m116tmp;
 
 void map_init_116(void) {
@@ -70,7 +70,7 @@ void map_init_116(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m116, 0x00, sizeof(m116));
 
-	init_MMC3();
+	init_MMC3(info.reset);
 	MMC3_prg_swap = prg_swap_mmc3_116;
 	MMC3_chr_swap = chr_swap_mmc3_116;
 
@@ -82,24 +82,24 @@ void map_init_116(void) {
 	MMC1_prg_swap = prg_swap_mmc1_116;
 	MMC1_chr_swap = chr_swap_mmc1_116;
 
-	vrc2and4.chr[0] = 0xFF;
-	vrc2and4.chr[1] = 0xFF;
-	vrc2and4.chr[2] = 0xFF;
-	vrc2and4.chr[3] = 0xFF;
-
-	m116.reg = 0x01;
-
 	// AV Kyuukyoku Mahjong 2 (Asia) (Ja) (Ge De) (Unl).nes
 	if ((prgrom_size() == S128K) && (prgrom_size() == chrrom_size())) {
 		info.mapper.submapper = 2;
 	};
 
-	if (info.reset == RESET) {
+	if (info.reset >= HARD) {
+		vrc2and4.chr[0] = 0xFF;
+		vrc2and4.chr[1] = 0xFF;
+		vrc2and4.chr[2] = 0xFF;
+		vrc2and4.chr[3] = 0xFF;
+
+		m116.reg = 0x01;
+
 		if (info.mapper.submapper == 3) {
-			m116tmp.dipswitch = (++m116tmp.dipswitch > 4) ? 0 : m116tmp.dipswitch;
+			m116tmp.game = (info.reset == CHANGE_ROM) || (info.reset == POWER_UP)
+				? 0
+				: (m116tmp.game + 1) % 4;
 		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		m116tmp.dipswitch = 0;
 	}
 
 	info.mapper.extend_wr = TRUE;
@@ -136,6 +136,7 @@ BYTE extcl_cpu_rd_mem_116(WORD address, UNUSED(BYTE openbus)) {
 BYTE extcl_save_mapper_116(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m116.mapper);
 	save_slot_ele(mode, slot, m116.reg);
+	save_slot_ele(mode, slot, m116tmp.game);
 	if (extcl_save_mapper_MMC3(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	if (extcl_save_mapper_VRC2and4(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	return (extcl_save_mapper_MMC1(mode, slot, fp));
@@ -200,16 +201,16 @@ INLINE static void fix_all(void) {
 	}
 }
 INLINE static WORD prg_base(void) {
-	return (m116tmp.dipswitch ? (m116tmp.dipswitch + 1) * 0x10 : 0x00);
+	return (m116tmp.game ? (m116tmp.game + 1) * 0x10 : 0x00);
 }
 INLINE static WORD prg_mask(void) {
-	return (info.mapper.submapper != 3 ? 0x3F : m116tmp.dipswitch ? 0x0F : 0x1F);
+	return (info.mapper.submapper != 3 ? 0x3F : m116tmp.game ? 0x0F : 0x1F);
 }
 INLINE static WORD chr_base(void) {
-	return (m116tmp.dipswitch ? (m116tmp.dipswitch + 1) * 0x80 : 0x00);
+	return (m116tmp.game ? (m116tmp.game + 1) * 0x80 : 0x00);
 }
 INLINE static WORD chr_mask(void) {
-	return (m116tmp.dipswitch ? 0x7F : 0xFF);
+	return (m116tmp.game ? 0x7F : 0xFF);
 }
 
 void prg_swap_mmc3_116(WORD address, WORD value) {

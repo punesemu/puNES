@@ -48,13 +48,12 @@ void map_init_345(void) {
 	// after soft resetting and loading Track & Field there
 	// is a constant drone pitch. This is likely a game bug.
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
-
 	if (info.reset >= HARD) {
+		memset(&irqA12, 0x00, sizeof(irqA12));
 		memset(&m345, 0x00, sizeof(m345));
 	}
 
-	init_MMC3();
+	init_MMC3(info.reset);
 	MMC3_prg_swap = prg_swap_mmc3_345;
 	MMC3_mirroring_fix = mirroring_fix_mmc3_345;
 

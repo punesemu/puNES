@@ -19,34 +19,26 @@
 #include <string.h>
 #include "mappers.h"
 #include "irqA12.h"
-#include "save_slot.h"
 
 void prg_swap_mmc3_044(WORD address, WORD value);
 void chr_swap_mmc3_044(WORD address, WORD value);
 
-struct _m044 {
-	BYTE reg;
-} m044;
-
 void map_init_044(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(044);
-	EXTCL_SAVE_MAPPER(044);
+	EXTCL_SAVE_MAPPER(MMC3);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
 	EXTCL_PPU_000_TO_255(MMC3);
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *)&m044;
-	mapper.internal_struct_size[0] = sizeof(m044);
-	mapper.internal_struct[1] = (BYTE *)&mmc3;
-	mapper.internal_struct_size[1] = sizeof(mmc3);
+	mapper.internal_struct[0] = (BYTE *)&mmc3;
+	mapper.internal_struct_size[0] = sizeof(mmc3);
 
 	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m044, 0x00, sizeof(m044));
 
-	init_MMC3();
+	init_MMC3(HARD);
 	MMC3_prg_swap = prg_swap_mmc3_044;
 	MMC3_chr_swap = chr_swap_mmc3_044;
 
@@ -54,27 +46,22 @@ void map_init_044(void) {
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_044(WORD address, BYTE value) {
+	extcl_cpu_wr_mem_MMC3(address, value);
 	if ((address & 0xE001) == 0xA001) {
-		m044.reg = value & 0x07;
 		MMC3_prg_fix();
 		MMC3_chr_fix();
 	}
-	extcl_cpu_wr_mem_MMC3(address, value);
-}
-BYTE extcl_save_mapper_044(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m044.reg);
-	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_044(WORD address, WORD value) {
-	WORD base = m044.reg << 4;
-	WORD mask = m044.reg >= 6 ? 0x1F : 0x0F;
+	WORD base = (mmc3.wram_protect & 0x07) << 4;
+	WORD mask = (mmc3.wram_protect & 0x07) >= 6 ? 0x1F : 0x0F;
 
 	prg_swap_MMC3_base(address, (base | (value & mask)));
 }
 void chr_swap_mmc3_044(WORD address, WORD value) {
-	WORD base = m044.reg << 7;
-	WORD mask = m044.reg >= 6 ? 0xFF : 0x7F;
+	WORD base = (mmc3.wram_protect & 0x07) << 7;
+	WORD mask = (mmc3.wram_protect & 0x07) >= 6 ? 0xFF : 0x7F;
 
 	chr_swap_MMC3_base(address, (base | (value & mask)));
 }

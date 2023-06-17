@@ -21,6 +21,8 @@
 #include "info.h"
 #include "irqA12.h"
 
+void wram_fix_004_mmc6(void);
+
 void map_init_004(void) {
 	if (info.mapper.submapper == DEFAULT) {
 		info.mapper.submapper = 0;
@@ -42,20 +44,56 @@ void map_init_004(void) {
 		mapper.internal_struct_size[0] = sizeof(mmc3);
 
 		if (info.reset >= HARD) {
-			init_MMC3();
 			memset(&irqA12, 0x00, sizeof(irqA12));
 		}
 
+		init_MMC3(info.reset);
+
 		switch (info.mapper.submapper) {
-			default:
-				info.mapper.submapper = 0;
+			case 1:
+				EXTCL_CPU_RD_MEM(004_mmc6);
+				if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+					memmap_wram_region_init(S512B);
+				}
+				MMC3_wram_fix = wram_fix_004_mmc6;
 				break;
 			case 4:
 				EXTCL_IRQ_A12_CLOCK(MMC3_NEC);
+				break;
+			default:
 				break;
 		}
 
 		irqA12.present = TRUE;
 		irqA12_delay = 1;
 	}
+}
+
+BYTE extcl_cpu_rd_mem_004_mmc6(WORD address, BYTE openbus) {
+	if ((address >= 0x7000) && (address <= 0x7FFF)) {
+		return (memmap_adr_is_readable(MMCPU(address))
+			? wram_rd(address)
+			: memmap_adr_is_readable(MMCPU((address ^ 0x200)) ? 0x00 : openbus));
+	}
+	return (wram_rd(address));
+}
+
+void wram_fix_004_mmc6(void) {
+	BYTE rd = TRUE, wr = TRUE;
+
+	memmap_disable_4k(MMCPU(0x6000));
+
+	rd = !(mmc3.bank_to_update & 0x20) ? FALSE : (mmc3.wram_protect & 0x20) >> 5;
+	wr = rd ? (mmc3.wram_protect & 0x10) >> 4 : FALSE;
+	memmap_auto_wp_512b(MMCPU(0x7000), 0, rd, wr);
+	memmap_auto_wp_512b(MMCPU(0x7400), 0, rd, wr);
+	memmap_auto_wp_512b(MMCPU(0x7800), 0, rd, wr);
+	memmap_auto_wp_512b(MMCPU(0x7C00), 0, rd, wr);
+
+	rd = !(mmc3.bank_to_update & 0x20) ? FALSE : (mmc3.wram_protect & 0x80) >> 7;
+	wr = rd ? (mmc3.wram_protect & 0x40) >> 6 : FALSE;
+	memmap_auto_wp_512b(MMCPU(0x7200), 1, rd, wr);
+	memmap_auto_wp_512b(MMCPU(0x7600), 1, rd, wr);
+	memmap_auto_wp_512b(MMCPU(0x7A00), 1, rd, wr);
+	memmap_auto_wp_512b(MMCPU(0x7E00), 1, rd, wr);
 }

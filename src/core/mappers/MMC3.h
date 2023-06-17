@@ -41,7 +41,7 @@ void extcl_ppu_320_to_34x_MMC3(void);
 void extcl_update_r2006_MMC3(WORD new_r2006, WORD old_r2006);
 void extcl_irq_A12_clock_MMC3_NEC(void);
 
-void init_MMC3(void);
+void init_MMC3(BYTE reset);
 void prg_fix_MMC3_base(void);
 void prg_swap_MMC3_base(WORD address, WORD value);
 void chr_fix_MMC3_base(void);

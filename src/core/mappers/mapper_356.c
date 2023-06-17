@@ -45,12 +45,14 @@ void map_init_356(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m356, 0x00, sizeof(m356));
+	if (info.reset >= HARD) {
+		memset(&irqA12, 0x00, sizeof(irqA12));
+	}
 
+	memset(&m356, 0x00, sizeof(m356));
 	m356.reg[2] = 0x0F;
 
-	init_MMC3();
+	init_MMC3(info.reset);
 	MMC3_prg_swap = prg_swap_mmc3_356;
 	MMC3_chr_swap = chr_swap_mmc3_356;
 	MMC3_mirroring_fix = mirroring_fix_mmc3_356;

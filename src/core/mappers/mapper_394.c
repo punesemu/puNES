@@ -68,7 +68,7 @@ void map_init_394(void) {
 	JYASIC_wram_swap = wram_swap_jyasic_394;
 	JYASIC_mirroring_swap = mirroring_swap_jyasic_394;
 
-	init_MMC3();
+	init_MMC3(info.reset);
 	MMC3_prg_swap = prg_swap_mmc3_394;
 	MMC3_chr_swap = chr_swap_mmc3_394;
 

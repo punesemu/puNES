@@ -18,6 +18,7 @@
 
 #include <string.h>
 #include "mappers.h"
+#include "info.h"
 #include "irqA12.h"
 
 void mirroring_fix_mmc3_118(void);
@@ -35,9 +36,11 @@ void map_init_118(void) {
 	mapper.internal_struct[0] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[0] = sizeof(mmc3);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	if (info.reset >= HARD) {
+		memset(&irqA12, 0x00, sizeof(irqA12));
+	}
 
-	init_MMC3();
+	init_MMC3(info.reset);
 	MMC3_mirroring_fix = mirroring_fix_mmc3_118;
 
 	irqA12.present = TRUE;

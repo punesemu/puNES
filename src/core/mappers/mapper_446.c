@@ -22,6 +22,7 @@
 #include "save_slot.h"
 #include "SST39SF040.h"
 #include "gui.h"
+#include "irqA12.h"
 
 INLINE static void switch_mode(void);
 INLINE static void fix_all(void);
@@ -156,11 +157,12 @@ void map_init_446(void) {
 		sst39sf040_init(m446tmp.sst39sf040, prgrom_size(), 0x01, 0x76, 0x0AAA, 0x0555, 131072);
 	}
 
-	init_MMC3();
-
 	info.mapper.force_battery_io = TRUE;
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
+
+	irqA12.present = TRUE;
+	irqA12_delay = 1;
 }
 void extcl_after_mapper_init_446(void) {
 	switch_mode();
@@ -386,17 +388,20 @@ INLINE static void switch_mode(void) {
 				MMC1_chr_swap = chr_swap_mmc1_446;
 				break;
 			case M446_MMC3:
-				init_MMC3();
+				memset(&irqA12, 0x00, sizeof(irqA12));
+				init_MMC3(HARD);
 				MMC3_prg_swap = prg_swap_mmc3_446;
 				MMC3_chr_swap = chr_swap_mmc3_446;
 				break;
 			case M446_TLSROM:
-				init_MMC3();
+				memset(&irqA12, 0x00, sizeof(irqA12));
+				init_MMC3(HARD);
 				MMC3_prg_swap = prg_swap_mmc3_tlsrom_446;
 				MMC3_chr_swap = chr_swap_mmc3_tlsrom_446;
 				break;
 			case M446_189:
-				init_MMC3();
+				memset(&irqA12, 0x00, sizeof(irqA12));
+				init_MMC3(HARD);
 				MMC3_prg_swap = prg_swap_mmc3_m189_446;
 				MMC3_chr_swap = chr_swap_mmc3_m189_446;
 				break;

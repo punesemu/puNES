@@ -50,14 +50,14 @@ void map_init_195(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
-
 	if (info.reset >= HARD) {
+		memset(&irqA12, 0x00, sizeof(irqA12));
+
 		m195.chr.mask = 0xFC;
 		m195.chr.compare = 0x00;
 	}
 
-	init_MMC3();
+	init_MMC3(info.reset);
 	MMC3_prg_swap = prg_swap_mmc3_195;
 	MMC3_chr_swap = chr_swap_mmc3_195;
 	MMC3_wram_fix = wram_fix_mmc3_195;

@@ -47,7 +47,7 @@ void map_init_353(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m353, 0x00, sizeof(m353));
 
-	init_MMC3();
+	init_MMC3(HARD);
 	MMC3_prg_swap = prg_swap_mmc3_353;
 	MMC3_chr_swap = chr_swap_mmc3_353;
 	MMC3_mirroring_fix = mirroring_fix_mmc3_353;
