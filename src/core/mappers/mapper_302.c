@@ -29,19 +29,19 @@ void map_init_302(void) {
 	EXTCL_SAVE_MAPPER(VRC2and4);
 	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
 
-	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE);
+	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_302;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_302;
 
 	info.mapper.extend_rd = TRUE;
 }
-BYTE extcl_cpu_rd_mem_302(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_302(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x6000) && (address <= 0x9FFF)) {
 		BYTE reg = ((((address >> 12) - 0x06) << 1) | ((address & 0x0800) >> 11)) ^ 0x04;
 
-		return (prg_byte((vrc2and4.chr[reg] << 11) | (address & 0x07FF)));
+		return (prgrom_byte((vrc2and4.chr[reg] << 11) | (address & 0x07FF)));
 	}
-	return (openbus);
+	return (address >= 0x8000 ? prgrom_rd(address) : wram_rd(address));
 }
 
 void prg_swap_vrc2and4_302(WORD address, WORD value) {

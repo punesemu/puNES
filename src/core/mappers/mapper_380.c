@@ -77,11 +77,13 @@ void extcl_cpu_wr_mem_380(WORD address, UNUSED(BYTE value)) {
 	chr_fix_380();
 	mirroring_fix_380();
 }
-BYTE extcl_cpu_rd_mem_380(WORD address, BYTE openbus) {
-	if ((address >= 0x8000) && (info.mapper.submapper == 0) && (m380.reg & 0x0100)) {
-		return ((address & 0xFF) | m380tmp.dipswitch[m380tmp.index]);
+BYTE extcl_cpu_rd_mem_380(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		return ((info.mapper.submapper == 0) && (m380.reg & 0x100)
+			? (address & 0xFF) | m380tmp.dipswitch[m380tmp.index]
+			: prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_380(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m380.reg);

@@ -159,8 +159,8 @@ void init_NSF_VRC7(WORD A0, WORD A1) {
 	vrc7tmp.A0 = A0;
 	vrc7tmp.A1 = A1;
 }
-void init_VRC7(WORD A0, WORD A1) {
-	if (info.reset >= HARD) {
+void init_VRC7(WORD A0, WORD A1, BYTE reset) {
+	if (reset >= HARD) {
 		memset(&vrc7, 0x00, sizeof(vrc7));
 
 		vrc7.prg[0] = 0;

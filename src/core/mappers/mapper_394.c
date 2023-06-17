@@ -62,7 +62,7 @@ void map_init_394(void) {
 		m394.reg[3] = 0x10;
 	}
 
-	init_JYASIC(TRUE);
+	init_JYASIC(TRUE, info.reset);
 	JYASIC_prg_swap = prg_swap_jyasic_394;
 	JYASIC_chr_swap = chr_swap_jyasic_394;
 	JYASIC_wram_swap = wram_swap_jyasic_394;
@@ -97,7 +97,7 @@ BYTE extcl_cpu_rd_mem_394(WORD address, BYTE openbus) {
 	if (m394.reg[1] & 0x10) {
 		return (extcl_cpu_rd_mem_JYASIC(address, openbus));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_394(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m394.reg);

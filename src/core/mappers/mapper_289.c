@@ -95,7 +95,7 @@ BYTE extcl_cpu_rd_mem_289(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return ((openbus & 0xFC) | (m289tmp.dipswitch[m289tmp.index] & 0x03));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_289(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m289.reg);

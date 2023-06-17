@@ -86,18 +86,18 @@ void extcl_cpu_wr_mem_200(WORD address, UNUSED(BYTE value)) {
 	chr_fix_200();
 	mirroring_fix_200();
 }
-BYTE extcl_cpu_rd_mem_200(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_200(WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		switch (m200.reg & 0xFF0F) {
 			case 0xF004:
-				return (prgrom_size() < S64K ? m200tmp.dipswitch[m200tmp.index] & 0x00FF : openbus);
+				return (prgrom_size() <= S64K ? m200tmp.dipswitch[m200tmp.index] & 0x00FF : prgrom_rd(address));
 			case 0xF008:
 				return ((m200tmp.dipswitch[m200tmp.index] & 0xFF00) >> 8);
 			default:
-				return (openbus);
+				return (prgrom_rd(address));
 		}
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_200(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m200.reg);

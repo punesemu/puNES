@@ -38,12 +38,12 @@ void map_init_529(void) {
 	mapper.internal_struct[0] = (BYTE *)&vrc2and4;
 	mapper.internal_struct_size[0] = sizeof(vrc2and4);
 
-	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE);
+	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE, info.reset);
 	VRC2and4_prg_fix = prg_fix_vrc2and4_529;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_529;
 	VRC2and4_wram_fix = wram_fix_vrc2and4_529;
 
-	m529tmp.cc93c56 = wram_nvram_size() == 256;
+	m529tmp.cc93c56 = wram_nvram_size() == S256B;
 }
 void extcl_cpu_init_pc_529(void) {
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
@@ -63,12 +63,12 @@ void extcl_cpu_wr_mem_529(WORD address, BYTE value) {
 	}
 	extcl_cpu_wr_mem_VRC2and4(address, value);
 }
-BYTE extcl_cpu_rd_mem_529(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_529(WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF000) {
 		case 0x5000:
 			return (m529tmp.cc93c56 ? ee93cx6_read() ? 0x01 : 0x00 : 0x01);
 		default:
-			return (openbus);
+			return (wram_rd(address));
 	}
 }
 

@@ -33,16 +33,16 @@ void map_init_025(void) {
 
 	switch (info.mapper.submapper) {
 		default:
-			init_VRC2and4(VRC24_VRC4, 0x0A, 0x05, TRUE);
+			init_VRC2and4(VRC24_VRC4, 0x0A, 0x05, TRUE, info.reset);
 			break;
 		case 1:
-			init_VRC2and4(VRC24_VRC4, 0x02, 0x01, TRUE);
+			init_VRC2and4(VRC24_VRC4, 0x02, 0x01, TRUE, info.reset);
 			break;
 		case 2:
-			init_VRC2and4(VRC24_VRC4, 0x08, 0x04, TRUE);
+			init_VRC2and4(VRC24_VRC4, 0x08, 0x04, TRUE, info.reset);
 			break;
 		case 3:
-			init_VRC2and4(VRC24_VRC2, 0x02, 0x01, TRUE);
+			init_VRC2and4(VRC24_VRC2, 0x02, 0x01, TRUE, info.reset);
 			break;
 	}
 	VRC2and4_prg_swap = prg_swap_vrc2and4_025;

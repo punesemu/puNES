@@ -47,9 +47,11 @@ void map_init_168(void) {
 		m168.chr_protect = TRUE;
 	}
 
-	if (vram_nvram_size() < S32K) {
-		vram_set_ram_size(0);
-		vram_set_nvram_size(S64K);
+	if (info.format != NES_2_0) {
+		if (vram_nvram_size() < S32K) {
+			vram_set_ram_size(0);
+			vram_set_nvram_size(S64K);
+		}
 	}
 }
 void extcl_after_mapper_init_168(void) {

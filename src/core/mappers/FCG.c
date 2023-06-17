@@ -37,8 +37,8 @@ _fcg fcg;
 //	EXTCL_CPU_EVERY_CYCLE(FCG);
 //}
 
-void init_FCG(void) {
-	if (info.reset >= HARD) {
+void init_FCG(BYTE reset) {
+	if (reset >= HARD) {
 		memset(&fcg, 0x00, sizeof(fcg));
 
 		fcg.chr[1] = 1;

@@ -22,7 +22,6 @@
 #include "fds.h"
 #include "rom_mem.h"
 #include "mappers.h"
-#include "mem_map.h"
 #include "info.h"
 #include "gui.h"
 #include "patcher.h"

@@ -38,7 +38,7 @@ void map_init_550(void) {
 
 	memset(&m550, 0x00, sizeof(m550));
 
-	init_MMC1(MMC1A);
+	init_MMC1(MMC1A, HARD);
 	MMC1_prg_swap = prg_swap_mmc1_550;
 	MMC1_chr_swap = chr_swap_mmc1_550;
 

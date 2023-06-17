@@ -61,21 +61,16 @@ void extcl_cpu_wr_mem_304(WORD address, BYTE value) {
 		irq.high &= ~EXT_IRQ;
 	}
 }
-BYTE extcl_cpu_rd_mem_304(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_304(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x4020) && (address <= 0x4FFF)) {
 		return (0xFF);
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_304(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m304.reg);
 	save_slot_ele(mode, slot, m304.irq.active);
 	save_slot_ele(mode, slot, m304.irq.count);
-
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_304();
-	}
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_304(void) {

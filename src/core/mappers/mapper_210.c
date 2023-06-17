@@ -39,6 +39,10 @@ void map_init_210(void) {
 	mapper.internal_struct[0] = (BYTE *)&m210;
 	mapper.internal_struct_size[0] = sizeof(m210);
 
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memmap_wram_region_init(S2K);
+	}
+
 	if (info.reset >= HARD) {
 		memset(&m210, 0x00, sizeof(m210));
 
@@ -116,7 +120,10 @@ INLINE static void chr_fix_210(void) {
 	memmap_auto_1k(MMPPU(0x1C00), m210.chr[7]);
 }
 INLINE static void wram_fix_210(void) {
-	memmap_auto_wp_8k(MMCPU(0x6000), 0, TRUE, m210.wram_protect);
+	memmap_auto_wp_2k(MMCPU(0x6000), 0, TRUE, m210.wram_protect);
+	memmap_auto_wp_2k(MMCPU(0x6800), 0, TRUE, m210.wram_protect);
+	memmap_auto_wp_2k(MMCPU(0x7000), 0, TRUE, m210.wram_protect);
+	memmap_auto_wp_2k(MMCPU(0x7800), 0, TRUE, m210.wram_protect);
 }
 INLINE static void mirroring_fix_210(void) {
 	if (info.mapper.submapper != 1) {

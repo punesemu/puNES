@@ -43,10 +43,8 @@ void map_init_237(void) {
 	mapper.internal_struct[0] = (BYTE *)&m237;
 	mapper.internal_struct_size[0] = sizeof(m237);
 
-	if (info.reset >= HARD) {
-		memset(&m237, 0x00, sizeof(m237));
-	}
-	
+	memset(&m237, 0x00, sizeof(m237));
+
 	if (info.reset == RESET) {
 		if (m237tmp.ds_used) {
 			m237tmp.index = (m237tmp.index + 1) % m237tmp.max;
@@ -77,11 +75,11 @@ void extcl_cpu_wr_mem_237(WORD address, BYTE value) {
 	prg_fix_237();
 	mirroring_fix_237();
 }
-BYTE extcl_cpu_rd_mem_237(WORD address, BYTE openbus) {
-	if ((address >= 0x8000) && (m237.reg[0] & 0x01)) {
-		return (m237tmp.dipswitch[m237tmp.index]);
+BYTE extcl_cpu_rd_mem_237(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		return (m237.reg[0] & 0x01 ? m237tmp.dipswitch[m237tmp.index] : prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 
 BYTE extcl_save_mapper_237(BYTE mode, BYTE slot, FILE *fp) {

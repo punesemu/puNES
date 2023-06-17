@@ -17,6 +17,7 @@
  */
 
 #include "mappers.h"
+#include "info.h"
 
 void prg_swap_n118_095(WORD address, WORD value);
 void chr_fix_n118_095(void);
@@ -31,7 +32,7 @@ void map_init_095(void) {
 	mapper.internal_struct[0] = (BYTE *)&n118;
 	mapper.internal_struct_size[0] = sizeof(n118);
 
-	init_N118();
+	init_N118(info.reset);
 	N118_prg_swap = prg_swap_n118_095;
 	N118_chr_fix = chr_fix_n118_095;
 	N118_chr_swap = chr_swap_n118_095;

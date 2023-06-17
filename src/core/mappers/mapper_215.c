@@ -135,7 +135,7 @@ BYTE extcl_cpu_rd_mem_215(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return ((openbus & 0xF0) | (arrayLUT[m215.reg[2]][address & 0x07] & 0x0F));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_215(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m215.reg);

@@ -106,11 +106,6 @@ BYTE extcl_save_mapper_068(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m068.mirroring);
 	save_slot_ele(mode, slot, m068.ext.timer);
 	save_slot_ele(mode, slot, m068.ext.access);
-
-	if (mode == SAVE_SLOT_READ) {
-		mirroring_fix_068();
-	}
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_068(void) {

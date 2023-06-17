@@ -42,8 +42,6 @@ void map_init_191(void) {
 	MMC3_prg_swap = prg_swap_mmc3_191;
 	MMC3_chr_swap = chr_swap_mmc3_191;
 
-	map_chr_ram_extra_init(0x800);
-
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }

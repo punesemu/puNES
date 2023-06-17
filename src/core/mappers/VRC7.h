@@ -45,7 +45,7 @@ void extcl_cpu_every_cycle_VRC7(void);
 void extcl_apu_tick_VRC7(void);
 
 void init_NSF_VRC7(WORD A0, WORD A1);
-void init_VRC7(WORD A0, WORD A1);
+void init_VRC7(WORD A0, WORD A1, BYTE reset);
 void prg_fix_VRC7_base(void);
 void prg_swap_VRC7_base(WORD address, WORD value);
 void chr_fix_VRC7_base(void);

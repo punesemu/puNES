@@ -31,7 +31,7 @@ void extcl_after_mapper_init_N118(void);
 void extcl_cpu_wr_mem_N118(WORD address, BYTE value);
 BYTE extcl_save_mapper_N118(BYTE mode, BYTE slot, FILE *fp);
 
-void init_N118(void);
+void init_N118(BYTE reset);
 void prg_fix_N118_base(void);
 void prg_swap_N118_base(WORD address, WORD value);
 void chr_fix_N118_base(void);

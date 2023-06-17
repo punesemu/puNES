@@ -43,7 +43,7 @@ void map_init_154(void) {
 		memset(&m154, 0x00, sizeof(m154));
 	}
 
-	init_N118();
+	init_N118(info.reset);
 	N118_prg_swap = prg_swap_n118_154;
 	N118_chr_fix = chr_fix_n118_154;
 }
@@ -60,7 +60,7 @@ void extcl_cpu_wr_mem_154(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_154(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, n118.reg);
-	return(extcl_save_mapper_N118(mode, slot, fp));
+	return (extcl_save_mapper_N118(mode, slot, fp));
 }
 
 void prg_swap_n118_154(WORD address, WORD value) {

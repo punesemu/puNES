@@ -40,11 +40,11 @@ void map_init_398(void) {
 
 	memset(&m398, 0x00, sizeof(m398));
 
-	init_VRC2and4(VRC24_VRC4, 0x01, 0x02, TRUE);
+	m398.reg[0] = 0xC0;
+
+	init_VRC2and4(VRC24_VRC4, 0x01, 0x02, TRUE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_398;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_398;
-
-	m398.reg[0] = 0xC0;
 }
 void extcl_cpu_wr_mem_398(WORD address, BYTE value) {
 	BYTE reg0 = address & 0xFF;

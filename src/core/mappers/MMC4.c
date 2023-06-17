@@ -92,10 +92,12 @@ void extcl_update_r2006_MMC4(WORD new_r2006, UNUSED(WORD old_r2006)) {
 	extcl_after_rd_chr_MMC4(new_r2006);
 }
 
-void init_MMC4(void) {
-	memset(&mmc4, 0x00, sizeof(mmc4));
+void init_MMC4(BYTE reset) {
+	if (reset >= HARD) {
+		memset(&mmc4, 0x00, sizeof(mmc4));
 
-	mmc4.latch[1] = 2;
+		mmc4.latch[1] = 2;
+	}
 
 	MMC4_prg_fix = prg_fix_MMC4_base;
 	MMC4_prg_swap = prg_swap_MMC4_base;

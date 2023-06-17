@@ -75,12 +75,14 @@ void extcl_cpu_wr_mem_236(WORD address, UNUSED(BYTE value)) {
 	chr_fix_236();
 	mirroring_fix_236();
 }
-BYTE extcl_cpu_rd_mem_236(WORD address, BYTE openbus) {
-	if ((address >= 0x8000) && (m236.reg[1] == 0x10)) {
-		address = (address & 0xFFF0) |  m236tmp.dipswitch[m236tmp.index];
+BYTE extcl_cpu_rd_mem_236(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		if (m236.reg[1] == 0x10) {
+			address = (address & 0xFFF0) | m236tmp.dipswitch[m236tmp.index];
+		}
 		return (prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_236(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m236.reg);

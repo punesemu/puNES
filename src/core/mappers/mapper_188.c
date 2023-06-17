@@ -20,6 +20,8 @@
 #include "mappers.h"
 #include "save_slot.h"
 
+// TODO aggiungere l'emulzione del microfono
+
 INLINE static void prg_fix_188(void);
 
 struct _m188 {
@@ -45,11 +47,11 @@ void extcl_cpu_wr_mem_188(UNUSED(WORD address), BYTE value) {
 	m188.reg = value;
 	prg_fix_188();
 }
-BYTE extcl_cpu_rd_mem_188(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_188(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return (0x03);
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_188(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m188.reg);

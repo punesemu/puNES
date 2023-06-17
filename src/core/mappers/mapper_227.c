@@ -41,7 +41,6 @@ void map_init_227(void) {
 	EXTCL_CPU_WR_MEM(227);
 	EXTCL_CPU_RD_MEM(227);
 	EXTCL_SAVE_MAPPER(227);
-
 	mapper.internal_struct[0] = (BYTE *)&m227;
 	mapper.internal_struct_size[0] = sizeof(m227);
 
@@ -70,16 +69,14 @@ void extcl_cpu_wr_mem_227(WORD address, UNUSED(BYTE value)) {
 	chr_fix_227();
 	mirroring_fix_227();
 }
-BYTE extcl_cpu_rd_mem_227(WORD address, BYTE openbus) {
-	if ((address >= 0x8000) && (m227.reg & 0x0400)) {
-		return (prgrom_rd((address | m227tmp.dipswitch[m227tmp.index])));
+BYTE extcl_cpu_rd_mem_227(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		return (m227.reg & 0x400 ? prgrom_rd(address | m227tmp.dipswitch[m227tmp.index]) : prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_227(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m227.reg);
-	save_slot_ele(mode, slot, m227tmp.index);
-	save_slot_ele(mode, slot, m227tmp.dipswitch);
 
 	return (EXIT_OK);
 }

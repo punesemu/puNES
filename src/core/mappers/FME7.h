@@ -59,7 +59,7 @@ void extcl_cpu_every_cycle_FME7(void);
 void extcl_apu_tick_FME7(void);
 
 void init_NSF_FME7(void);
-void init_FME7(void);
+void init_FME7(BYTE reset);
 void prg_fix_FME7_base(void);
 void prg_swap_FME7_base(WORD address, WORD value);
 void chr_fix_FME7_base(void);

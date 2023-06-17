@@ -133,8 +133,6 @@ void extcl_cpu_wr_mem_FME7(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_FME7(BYTE mode, BYTE slot, FILE *fp) {
-	int i = 0;
-
 	save_slot_ele(mode, slot, fme7.reg);
 	save_slot_ele(mode, slot, fme7.prg);
 	save_slot_ele(mode, slot, fme7.chr);
@@ -142,7 +140,7 @@ BYTE extcl_save_mapper_FME7(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, fme7.irq.control);
 	save_slot_ele(mode, slot, fme7.irq.count);
 	save_slot_ele(mode, slot, fme7.snd.reg);
-	for (i = 0; i < (int)LENGTH(fme7.snd.square); i++) {
+	for (int i = 0; i < (int)LENGTH(fme7.snd.square); i++) {
 		save_slot_ele(mode, slot, fme7.snd.square[i].disable);
 		save_slot_ele(mode, slot, fme7.snd.square[i].step);
 		save_slot_ele(mode, slot, fme7.snd.square[i].frequency);
@@ -150,11 +148,6 @@ BYTE extcl_save_mapper_FME7(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, fme7.snd.square[i].volume);
 		save_slot_ele(mode, slot, fme7.snd.square[i].output);
 	}
-
-	if (mode == SAVE_SLOT_READ) {
-		FME7_wram_fix();
-	}
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_FME7(void) {
@@ -185,8 +178,8 @@ void init_NSF_FME7(void) {
 	fme7.snd.square[1].timer = 1;
 	fme7.snd.square[2].timer = 1;
 }
-void init_FME7(void) {
-	if (info.reset >= HARD) {
+void init_FME7(BYTE reset) {
+	if (reset >= HARD) {
 		memset(&fme7, 0x00, sizeof(fme7));
 
 		fme7.prg[0] = 0;

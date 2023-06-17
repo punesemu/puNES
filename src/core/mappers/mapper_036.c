@@ -39,7 +39,7 @@ void map_init_036(void) {
 		memset(&m036, 0x00, sizeof(m036));
 	}
 
-	init_TXC();
+	init_TXC(info.reset);
 	TXC_prg_fix = prg_fix_txc_036;
 	TXC_chr_fix = chr_fix_txc_036;
 }
@@ -55,7 +55,7 @@ BYTE extcl_cpu_rd_mem_036(WORD address, BYTE openbus) {
 
 		return (((openbus & 0xCF) | ((value & 0x03) << 4)));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_036(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m036.reg);

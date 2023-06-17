@@ -29,7 +29,7 @@ void map_init_206(void) {
 	mapper.internal_struct[0] = (BYTE *)&n118;
 	mapper.internal_struct_size[0] = sizeof(n118);
 
-	init_N118();
+	init_N118(info.reset);
 	N118_prg_swap = prg_swap_n118_206;
 	N118_chr_swap = chr_swap_n118_206;
 }

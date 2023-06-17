@@ -24,11 +24,20 @@
 void prg_swap_mmc3_114(WORD address, WORD value);
 void chr_swap_mmc3_114(WORD address, WORD value);
 
+INLINE static void tmp_fix_114(BYTE max, BYTE index, const WORD *ds);
+
 _m114 m114;
+struct _m114tmp {
+	BYTE ds_used;
+	BYTE max;
+	BYTE index;
+	const WORD *dipswitch;
+} m114tmp;
 
 void map_init_114(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(114);
+	EXTCL_CPU_RD_MEM(114);
 	EXTCL_SAVE_MAPPER(114);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
@@ -51,6 +60,20 @@ void map_init_114(void) {
 	init_MMC3();
 	MMC3_prg_swap = prg_swap_mmc3_114;
 	MMC3_chr_swap = chr_swap_mmc3_114;
+
+	if (info.reset == RESET) {
+		if (m114tmp.ds_used) {
+			m114tmp.index = (m114tmp.index + 1) % m114tmp.max;
+		}
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memset(&m114tmp, 0x00, sizeof(m114tmp));
+
+		{
+			static WORD ds[] = { 0x00 };
+
+			tmp_fix_114(LENGTH(ds), 0, &ds[0]);
+		}
+	}
 
 	info.mapper.extend_wr = TRUE;
 
@@ -75,13 +98,21 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 			{ 0, 3, 1, 5, 6, 7, 2, 4 },
 			{ 0, 2, 5, 3, 6, 1, 7, 4 },
 		};
-		WORD mmc_address = m114_mmc3_adr[info.mapper.submapper][((address & 0x6000) >> 12) | (address & 0x0001)];
+		WORD mmc_address = m114_mmc3_adr[info.mapper.submapper][((address & 0x6000) >> 12) | (address & 0x01)];
 
 		extcl_cpu_wr_mem_MMC3(mmc_address, value);
 		if (mmc_address == 0x8000) {
 			mmc3.bank_to_update = (value & 0xF8) | m114_r8000_idx[info.mapper.submapper][value & 0x07];
 		}
 	}
+}
+BYTE extcl_cpu_rd_mem_114(WORD address, BYTE openbus) {
+	if ((address >= 0x6000) && (address <= 0x7FFF)) {
+		return ((address & 0x03) == 2
+			? (m114tmp.dipswitch[m114tmp.index] & 0x07) | (openbus & 0xF8)
+			: openbus);
+	}
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_114(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m114.reg);
@@ -100,4 +131,11 @@ void chr_swap_mmc3_114(WORD address, WORD value) {
 	WORD mask = 0xFF;
 
 	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
+}
+
+INLINE static void tmp_fix_114(BYTE max, BYTE index, const WORD *ds) {
+	m114tmp.ds_used = TRUE;
+	m114tmp.max = max;
+	m114tmp.index = index;
+	m114tmp.dipswitch = ds;
 }

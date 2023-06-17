@@ -396,9 +396,9 @@ void chinaersan2_apply_font(void) { //书写浮动的文本 Writing floating tex
 
 						if (pos2 < maxpos) {
 							if (jj < 8 && (pSan2Font[index * 32 + ii * 2] & (0x80 >> jj)))
-								ppu_screen.wr->data[pos2] = mmap_palette.color[color];
+								ppu_screen.wr->data[pos2] = memmap_palette.color[color];
 							if (jj >= 8 && (pSan2Font[index * 32 + ii * 2 + 1] & (0x80 >> (jj - 8))))
-								ppu_screen.wr->data[pos2] = mmap_palette.color[color];
+								ppu_screen.wr->data[pos2] = memmap_palette.color[color];
 						}
 					}
 				}

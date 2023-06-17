@@ -33,13 +33,13 @@ void map_init_085(void) {
 
 	switch(info.mapper.submapper) {
 		case 1:
-			init_VRC7(0x08, 0x20);
+			init_VRC7(0x08, 0x20, info.reset);
 			break;
 		case 2:
-			init_VRC7(0x10, 0x20);
+			init_VRC7(0x10, 0x20, info.reset);
 			break;
 		default:
-			init_VRC7(0x18, 0x20);
+			init_VRC7(0x18, 0x20, info.reset);
 			break;
 	}
 	VRC7_prg_swap = prg_swap_vrc7v2_085;

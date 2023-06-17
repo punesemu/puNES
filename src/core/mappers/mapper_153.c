@@ -40,7 +40,7 @@ void map_init_153(void) {
 		memset(&m153, 0x00, sizeof(m153));
 	}
 
-	init_LZ93D50(FALSE);
+	init_LZ93D50(FALSE, info.reset);
 	LZ93D50_prg_swap = prg_swap_lz93d50_153;
 	LZ93D50_chr_fix = chr_fix_lz93d50_153;
 }

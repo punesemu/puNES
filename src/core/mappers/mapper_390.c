@@ -75,11 +75,13 @@ void extcl_cpu_wr_mem_390(WORD address, UNUSED(BYTE value)) {
 	chr_fix_390();
 	mirroring_fix_390();
 }
-BYTE extcl_cpu_rd_mem_390(WORD address, BYTE openbus) {
-	if ((address >= 0x8000) && ((m390.reg[1] & 0x30) == 0x10)) {
-		return (prgrom_rd((address |  m390tmp.dipswitch[m390tmp.index])));
+BYTE extcl_cpu_rd_mem_390(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		return ((m390.reg[1] & 0x30) == 0x10
+			? prgrom_rd(address |  m390tmp.dipswitch[m390tmp.index])
+			: prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_390(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m390.reg);

@@ -194,10 +194,9 @@ void init_MMC3(void) {
 		mmc3.reg[5] = 7;
 		mmc3.reg[6] = 0;
 		mmc3.reg[7] = 1;
-
-		mmc3.wram_protect = 0x80;
 	}
 
+	mmc3.wram_protect = 0x80;
 	irq.high &= ~EXT_IRQ;
 
 	MMC3_prg_fix = prg_fix_MMC3_base;

@@ -17,6 +17,7 @@
  */
 
 #include "mappers.h"
+#include "info.h"
 
 void prg_swap_vrc2and4_527(WORD address, WORD value);
 void chr_fix_vrc2and4_527(void);
@@ -31,7 +32,7 @@ void map_init_527(void) {
 	mapper.internal_struct[0] = (BYTE *)&vrc2and4;
 	mapper.internal_struct_size[0] = sizeof(vrc2and4);
 
-	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE);
+	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_527;
 	VRC2and4_chr_fix = chr_fix_vrc2and4_527;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_527;

@@ -73,8 +73,6 @@ void map_init_260(void) {
 	m260.mmc3[6] = 0;
 	m260.mmc3[7] = 0;
 
-	info.prg.ram.banks_8k_plus = 1;
-
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
@@ -142,7 +140,7 @@ BYTE extcl_cpu_rd_mem_260(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return ((openbus & ~0x03) | (m260tmp.dipswitch & 0x03));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_260(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m260.cpu5xxx);

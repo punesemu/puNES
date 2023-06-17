@@ -49,7 +49,7 @@ void map_init_447(void) {
 
 	memset(&m447, 0x00, sizeof(m447));
 
-	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE);
+	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE, info.reset);
 	VRC2and4_prg_fix = prg_fix_vrc2and4_447;
 	VRC2and4_prg_swap = prg_swap_vrc2and4_447;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_447;
@@ -81,11 +81,13 @@ void extcl_cpu_wr_mem_447(WORD address, BYTE value) {
 	}
 	extcl_cpu_wr_mem_VRC2and4(address, value);
 }
-BYTE extcl_cpu_rd_mem_447(WORD address, BYTE openbus) {
-	if ((address >= 0x8000) && m447tmp.ds_used && (m447.reg & 0x08)) {
-		return (prg_rom_rd(((address & 0xFFFC) | (m447tmp.dipswitch[m447tmp.index] & 0x03))));
+BYTE extcl_cpu_rd_mem_447(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		return (m447tmp.ds_used && (m447.reg & 0x08)
+			? prgrom_rd((address & 0xFFFC) | (m447tmp.dipswitch[m447tmp.index] & 0x03))
+			: prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_447(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m447.reg);

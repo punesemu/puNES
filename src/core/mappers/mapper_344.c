@@ -69,7 +69,11 @@ void map_init_344(void) {
 	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		if ((info.crc32.prg == 0xAB2ACA46) || // Kuai Da Jin Ka Zhong Ji Tiao Zhan 3-in-1 (3-in-1,6-in-1,Unl).unif
 			(info.crc32.prg == 0x42F4BF99)) { // 快打金卡终极挑战.nes
-			static BYTE ds[2] = {0x00, 0x78};
+			static BYTE ds[2] = { 0x00, 0x78 };
+
+			tmp_fix_334(LENGTH(ds), 0, &ds[0]);
+		} else {
+			static BYTE ds[2] = { 0x00 };
 
 			tmp_fix_334(LENGTH(ds), 0, &ds[0]);
 		}
@@ -112,11 +116,11 @@ void extcl_cpu_wr_mem_344(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_344(WORD address, BYTE openbus) {
-	if ((address >= 0x8000) && m344tmp.ds_used && (m344.reg & 0x08)) {
-		return (m344tmp.dipswitch[m344tmp.index]);
+BYTE extcl_cpu_rd_mem_344(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		return (m344.reg & 0x08 ? m344tmp.dipswitch[m344tmp.index] : prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_344(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m344.reg);

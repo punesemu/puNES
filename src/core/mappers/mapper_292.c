@@ -55,7 +55,6 @@ void map_init_292(void) {
 	MMC3_chr_fix = chr_fix_mmc3_292;
 
 	info.mapper.extend_wr = TRUE;
-	info.mapper.extend_rd = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -88,7 +87,7 @@ void extcl_cpu_wr_mem_292(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_292(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_292(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		if (memmap_adr_is_readable(MMCPU(address))) {
 			if ((m292.reg[0] & 0xE0) == 0xC0) {
@@ -99,11 +98,11 @@ BYTE extcl_cpu_rd_mem_292(WORD address, BYTE openbus) {
 			MMC3_chr_fix();
 		}
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_292(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m292.reg);
-	return(extcl_save_mapper_MMC3(mode, slot, fp));
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_292(WORD address, WORD value) {

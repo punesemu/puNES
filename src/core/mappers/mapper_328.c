@@ -31,11 +31,14 @@ void map_init_328(void) {
 void extcl_after_mapper_init_328(void) {
 	prg_fix_328();
 }
-BYTE extcl_cpu_rd_mem_328(WORD address, BYTE openbus) {
-	if (((address >= 0xCE80) && (address < 0xCF00)) || ((address >= 0xFE80) && (address < 0xFF00))) {
-		return (0xF2 | (rand() & 0x0D));
+BYTE extcl_cpu_rd_mem_328(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		if (((address >= 0xCE80) && (address < 0xCF00)) || ((address >= 0xFE80) && (address < 0xFF00))) {
+			return (0xF2 | (rand() & 0x0D));
+		}
+		return (prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 
 INLINE static void prg_fix_328(void) {

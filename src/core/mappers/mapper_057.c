@@ -93,11 +93,11 @@ void extcl_cpu_wr_mem_057(WORD address, BYTE value) {
 	chr_fix_057();
 	mirroring_fix_057();
 }
-BYTE extcl_cpu_rd_mem_057(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_057(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x6000) && (address <= 0x6FFF)) {
 		return (m057tmp.dipswitch[m057tmp.index]);
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_057(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m057.reg);

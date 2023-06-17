@@ -46,7 +46,7 @@ void map_init_524(void) {
 		memset(&m524, 0x00, sizeof(m524));
 	}
 
-	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE);
+	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_524;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_524;
 }

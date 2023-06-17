@@ -58,7 +58,7 @@ void map_init_001(void) {
 		}
 	}
 
-	init_MMC1((info.mapper.id == 155) || (info.mapper.submapper == 3) ? MMC1A : MMC1B);
+	init_MMC1((info.mapper.id == 155) || (info.mapper.submapper == 3) ? MMC1A : MMC1B, info.reset);
 	MMC1_prg_swap = prg_swap_mmc1_001;
 	MMC1_chr_swap = chr_swap_mmc1_001;
 	MMC1_wram_fix = wram_fix_mmc1_001;
@@ -78,11 +78,11 @@ void map_init_001(void) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_ram_001(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_ram_001(WORD address, UNUSED(BYTE openbus)) {
 	if (m001tmp.ds_used && (address >= 0x1000) && (address <= 0x1FFF)) {
 		return (m001tmp.dipswitch[m001tmp.index]);
 	}
-	return (openbus);
+	return (ram_rd(address));
 }
 
 void prg_swap_mmc1_001(WORD address, WORD value) {

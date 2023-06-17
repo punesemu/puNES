@@ -48,11 +48,6 @@ _machine machine;
 #include "vs_system.h"
 _vs_system vs_system;
 
-#include "mem_map.h"
-_prg prg;
-_chr chr;
-_nametables ntbl;
-
 #include "debugger.h"
 _debugger debugger;
 

@@ -90,8 +90,8 @@ BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void init_MMC1(BYTE type) {
-	if (info.reset >= HARD) {
+void init_MMC1(BYTE type, BYTE reset) {
+	if (reset >= HARD) {
 		memset(&mmc1, 0x00, sizeof(mmc1));
 
 		mmc1.reg[0] = 0x0C;

@@ -17,6 +17,7 @@
  */
 
 #include "mappers.h"
+#include "info.h"
 
 void prg_swap_jyasic_358(WORD address, DBWORD value);
 void chr_swap_jyasic_358(WORD address, DBWORD value);
@@ -41,7 +42,7 @@ void map_init_358(void) {
 	mapper.internal_struct[0] = (BYTE *)&jyasic;
 	mapper.internal_struct_size[0] = sizeof(jyasic);
 
-	init_JYASIC(TRUE);
+	init_JYASIC(TRUE, info.reset);
 	JYASIC_prg_swap = prg_swap_jyasic_358;
 	JYASIC_chr_swap = chr_swap_jyasic_358;
 	JYASIC_wram_swap = wram_swap_jyasic_358;

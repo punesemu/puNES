@@ -32,7 +32,7 @@ void extcl_cpu_wr_mem_034_s2(WORD address, BYTE value);
 BYTE extcl_save_mapper_034_s2(BYTE mode, BYTE slot, FILE *fp);
 
 void extcl_after_mapper_init_034_nstcl(void);
-void extcl_cpu_wr_mem_034_nstcl(UNUSED(WORD address), BYTE value);
+void extcl_cpu_wr_mem_034_nstcl(WORD address, BYTE value);
 BYTE extcl_save_mapper_034_nstcl(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_034_H_ */

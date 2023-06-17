@@ -17,6 +17,7 @@
  */
 
 #include "mappers.h"
+#include "info.h"
 
 void prg_swap_vrc2and4_298(WORD address, WORD value);
 void chr_swap_vrc2and4_298(WORD address, WORD value);
@@ -27,7 +28,7 @@ void map_init_298(void) {
 	EXTCL_SAVE_MAPPER(VRC2and4);
 	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
 
-	init_VRC2and4(VRC24_VRC4, 0x02, 0x01, FALSE);
+	init_VRC2and4(VRC24_VRC4, 0x02, 0x01, FALSE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_298;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_298;
 }

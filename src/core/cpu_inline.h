@@ -134,14 +134,10 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		if (made_tick) {
 			tick_hw(1);
 		}
-		/* leggo */
-		cpu.openbus = prgrom_rd(address);
 		// nella mapper 413 extcl_cpu_rd_mem e' utilizzato anche dal DMC
 		// (in apu.c : DMC.buffer = prgrom_rd(DMC.address) per leggere
 		// i dati dal miscrom.
-		if (info.mapper.extend_rd) {
-			cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus);
-		}
+		cpu.openbus = info.mapper.extend_rd ? extcl_cpu_rd_mem(address, cpu.openbus) : prgrom_rd(address);
 
 		/* cheat */
 		if (cfg->cheat_mode != NOCHEAT_MODE) {
@@ -161,12 +157,8 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			if (made_tick) {
 				tick_hw(1);
 			}
-			/* leggo */
-			cpu.openbus = ram_rd(address);
 
-			if (extcl_cpu_rd_ram) {
-				cpu.openbus = extcl_cpu_rd_ram(address, cpu.openbus);
-			}
+			cpu.openbus = extcl_cpu_rd_ram ? extcl_cpu_rd_ram(address, cpu.openbus) : ram_rd(address);
 
 			/* cheat */
 			if (cfg->cheat_mode == CHEATSLIST_MODE) {
@@ -212,7 +204,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 	}
 	// WRam (normale ed extra (battery packed o meno)
 	if (address < 0x8000) {
-		/* eseguo un tick hardware */
+		// eseguo un tick hardware
 		/*
 		 * la mancanza del controllo del made_tick l'ho notata grazie alla rom
 		 * "Tetris 2 + BomBliss (J) [!].nes". Questa utilizza la ram extra per eseguire
@@ -225,11 +217,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 
-		cpu.openbus = wram_rd(address);
-
-		if (extcl_cpu_rd_mem) {
-			cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus);
-		}
+		cpu.openbus = extcl_cpu_rd_mem ? extcl_cpu_rd_mem(address, cpu.openbus) : wram_rd(address);
 
 		/* cheat */
 		if (cfg->cheat_mode == CHEATSLIST_MODE) {
@@ -557,14 +545,14 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 	if (nsf.sound_chips.mmc5) {
 		if ((address >= 0x5C00) && (address <= 0x5FF5)) {
 			address &= 0x03FF;
-			cpu.openbus = mmc5.ext_ram[address];
+			cpu.openbus = m005.ext_ram[address];
 			return;
 		}
 		switch (address) {
 			case 0x5015:
 			case 0x5205:
 			case 0x5206:
-				cpu.openbus = extcl_cpu_rd_mem_MMC5(address, cpu.openbus);
+				cpu.openbus = extcl_cpu_rd_mem_005(address, cpu.openbus);
 				return;
 			default:
 				break;
@@ -611,7 +599,6 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 		/* leggo */
-		cpu.openbus = prgrom_rd(address);
 		cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus);
 		return (TRUE);
 	}
@@ -948,9 +935,9 @@ INLINE static void ppu_wr_mem(WORD address, BYTE value) {
 		return;
 	}
 	address &= 0x1F;
-	mmap_palette.color[address] = value & 0x3F;
+	memmap_palette.color[address] = value & 0x3F;
 	if (!(address & 0x03)) {
-		 mmap_palette.color[(address + 0x10) & 0x1F] = mmap_palette.color[address];
+		 memmap_palette.color[(address + 0x10) & 0x1F] = memmap_palette.color[address];
 	}
 }
 INLINE static void ppu_wr_reg(WORD address, BYTE value) {
@@ -1721,7 +1708,7 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 	if (nsf.sound_chips.mmc5) {
 		if ((address >= 0x5C00) && (address <= 0x5FF5)) {
 			address &= 0x03FF;
-			mmc5.ext_ram[address] = value;
+			m005.ext_ram[address] = value;
 			return;
 		}
 		switch (address) {
@@ -1749,7 +1736,7 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 			case 0x5015:
 			case 0x5205:
 			case 0x5206:
-				extcl_cpu_wr_mem_MMC5(address, value);
+				extcl_cpu_wr_mem_005(address, value);
 				return;
 			default:
 				break;

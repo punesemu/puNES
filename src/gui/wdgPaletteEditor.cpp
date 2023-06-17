@@ -332,7 +332,7 @@ wdgPalettePPU::wdgPalettePPU(QWidget *parent) : wdgPaletteWall(parent) {
 wdgPalettePPU::~wdgPalettePPU() = default;
 
 int wdgPalettePPU::palette_index(int row, int col) {
-	return (mmap_palette.color[(row * ncols) + col]);
+	return (memmap_palette.color[(row * ncols) + col]);
 }
 void wdgPalettePPU::print_in_cell(QPainter *p, int row, int col, const QRect &rect) {
 	QString pindex = QString("%1").arg(palette_index(row, col), 2, 16, QChar('0')).toUpper();

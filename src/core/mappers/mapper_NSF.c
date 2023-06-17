@@ -111,11 +111,11 @@ void map_init_NSF(void) {
 		map_init_NSF_FDS();
 	}
 	if (nsf.sound_chips.mmc5) {
-		mapper.internal_struct[internal_struct] = (BYTE *)&mmc5;
-		mapper.internal_struct_size[internal_struct] = sizeof(mmc5);
+		mapper.internal_struct[internal_struct] = (BYTE *)&m005;
+		mapper.internal_struct_size[internal_struct] = sizeof(m005);
 		internal_struct++;
 
-		map_init_NSF_MMC5();
+		map_init_NSF_005();
 	}
 	if (nsf.sound_chips.namco163) {
 		mapper.internal_struct[internal_struct] = (BYTE *)&m019;
@@ -138,8 +138,6 @@ void extcl_after_mapper_init_NSF(void) {
 	nsf_reset_prg();
 }
 BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
-	int i = 0;
-
 	save_slot_ele(mode, slot, nsf.type);
 	save_slot_ele(mode, slot, nsf.state);
 	save_slot_ele(mode, slot, nsf.made_tick);
@@ -148,31 +146,6 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, nsf.rate.count);
 
 	save_slot_ele(mode, slot, nsf.songs.current);
-
-
-
-
-
-
-
-//	for (i = 0; i < (int)LENGTH(nsf.prg.rom_4k); i++) {
-//		if (nsf.sound_chips.fds) {
-//			save_slot_pos(mode, slot, prg.ram.data, nsf.prg.rom_4k[i]);
-//		} else {
-//			save_slot_pos(mode, slot, prg_rom(), nsf.prg.rom_4k[i]);
-//		}
-//	}
-//	for (i = 0; i < (int)LENGTH(nsf.prg.rom_4k_6xxx); i++) {
-//		if (nsf.sound_chips.fds) {
-//			save_slot_pos(mode, slot, prg.ram.data, nsf.prg.rom_4k_6xxx[i]);
-//		} else {
-//			save_slot_pos(mode, slot, prg_rom(), nsf.prg.rom_4k_6xxx[i]);
-//		}
-//	}
-
-
-
-
 
 	save_slot_ele(mode, slot, nsf.routine.prg);
 	save_slot_ele(mode, slot, nsf.routine.INT_NMI);
@@ -247,7 +220,7 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, fds.snd.modulation.mod);
 	}
 	if (nsf.sound_chips.mmc5) {
-		if (extcl_save_mapper_MMC5(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
+		if (extcl_save_mapper_005(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
 	}
 	if (nsf.sound_chips.namco163) {
 		if (extcl_save_mapper_019(mode, slot, fp) == EXIT_ERROR) return (EXIT_ERROR);
@@ -260,12 +233,12 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_length_clock_NSF(void) {
 	if (nsf.sound_chips.mmc5) {
-		extcl_length_clock_MMC5();
+		extcl_length_clock_005();
 	}
 }
 void extcl_envelope_clock_NSF(void) {
 	if (nsf.sound_chips.mmc5) {
-		extcl_envelope_clock_MMC5();
+		extcl_envelope_clock_005();
 	}
 }
 void extcl_apu_tick_NSF(void) {
@@ -279,7 +252,7 @@ void extcl_apu_tick_NSF(void) {
 		extcl_apu_tick_FDS();
 	}
 	if (nsf.sound_chips.mmc5) {
-		extcl_apu_tick_MMC5();
+		extcl_apu_tick_005();
 	}
 	if (nsf.sound_chips.namco163) {
 		extcl_apu_tick_019();

@@ -76,15 +76,18 @@ void extcl_cpu_wr_mem_338(WORD address, UNUSED(BYTE value)) {
 	chr_fix_338();
 	mirroring_fix_338();
 }
-BYTE extcl_cpu_rd_mem_338(UNUSED(WORD address), BYTE openbus) {
-	switch (m338.reg & 0xFF0F) {
-		case 0xF004:
-			return (prgrom_size() <= S64K ? m338tmp.dipswitch[m338tmp.index] & 0x00FF : openbus);
-		case 0xF008:
-			return ((m338tmp.dipswitch[m338tmp.index] & 0xFF00) >> 8);
-		default:
-			return (openbus);
+BYTE extcl_cpu_rd_mem_338(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		switch (m338.reg & 0xFF0F) {
+			case 0xF004:
+				return (prgrom_size() <= S64K ? m338tmp.dipswitch[m338tmp.index] & 0x00FF : prgrom_rd(address));
+			case 0xF008:
+				return ((m338tmp.dipswitch[m338tmp.index] & 0xFF00) >> 8);
+			default:
+				return (prgrom_rd(address));
+		}
 	}
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_338(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m338.reg);

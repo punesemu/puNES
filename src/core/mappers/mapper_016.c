@@ -43,7 +43,7 @@ void map_init_016(void) {
 			mapper.internal_struct[0] = (BYTE *)&lz93d50;
 			mapper.internal_struct_size[0] = sizeof(lz93d50);
 
-			init_LZ93D50(TRUE);
+			init_LZ93D50(TRUE, info.reset);
 			LZ93D50_prg_swap = prg_swap_lz93d50_016;
 			LZ93D50_chr_swap = chr_swap_lz93d50_016;
 			return;
@@ -64,7 +64,7 @@ void map_init_016(void) {
 			mapper.internal_struct[0] = (BYTE *)&fcg;
 			mapper.internal_struct_size[0] = sizeof(fcg);
 
-			init_FCG();
+			init_FCG(info.reset);
 			FCG_prg_swap = prg_swap_fcg_016;
 			FCG_chr_swap = chr_swap_fcg_016;
 			return;
@@ -78,7 +78,7 @@ void map_init_016(void) {
 			mapper.internal_struct[0] = (BYTE *)&lz93d50;
 			mapper.internal_struct_size[0] = sizeof(lz93d50);
 
-			init_LZ93D50(FALSE);
+			init_LZ93D50(FALSE, info.reset);
 			LZ93D50_prg_swap = prg_swap_lz93d50_016;
 			LZ93D50_chr_swap = chr_swap_lz93d50_016;
 			return;

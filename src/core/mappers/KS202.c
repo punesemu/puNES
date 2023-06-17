@@ -96,11 +96,6 @@ BYTE extcl_save_mapper_KS202(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ks202.irq.enabled);
 	save_slot_ele(mode, slot, ks202.irq.count);
 	save_slot_ele(mode, slot, ks202.irq.reload);
-
-	if (mode == SAVE_SLOT_READ) {
-		KS202_wram_fix();
-	}
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_KS202(void) {
@@ -114,8 +109,8 @@ void extcl_cpu_every_cycle_KS202(void) {
 	}
 }
 
-void init_KS202(void) {
-	if (info.reset >= HARD) {
+void init_KS202(BYTE reset) {
+	if (reset >= HARD) {
 		memset(&ks202, 0x00, sizeof(ks202));
 
 		ks202.reg[0] = 0;

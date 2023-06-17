@@ -39,7 +39,7 @@ void map_init_384(void) {
 
 	memset(&m384, 0x00, sizeof(m384));
 
-	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, FALSE);
+	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, FALSE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_384;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_384;
 }

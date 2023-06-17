@@ -87,7 +87,7 @@ BYTE extcl_cpu_rd_mem_428(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return ((openbus & 0xFC) | (m428tmp.dipswitch[m428tmp.index] & 0x03));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_428(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m428.reg);

@@ -38,9 +38,9 @@ void map_init_403(void) {
 
 	memset(&m403, 0x00, sizeof(m403));
 
-	if (!wram_size()) {
-		wram_set_ram_size(S8K);
-	}
+//	if (!wram_size()) {
+//		wram_set_ram_size(S8K);
+//	}
 
 	info.mapper.extend_wr = TRUE;
 }

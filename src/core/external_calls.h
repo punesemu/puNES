@@ -60,7 +60,7 @@
 // audio
 #define EXTCL_AUDIO_SAMPLES_MOD(n) extcl_audio_samples_mod = extcl_audio_samples_mod_##n
 
-// viene chiamata dopo il map_init(), map_prg_ram_init() e map_chr_ram_init()
+// viene chiamata dopo il map_init()
 extern void (*extcl_after_mapper_init)(void);
 // viene chiamata dal mapper_quit()
 extern void (*extcl_mapper_quit)(void);

@@ -40,7 +40,7 @@ void map_init_323(void) {
 		memset(&m323, 0x00, sizeof(m323));
 	}
 
-	init_MMC1(MMC1B);
+	init_MMC1(MMC1B, info.reset);
 	MMC1_prg_swap = prg_swap_mmc1_323;
 	MMC1_chr_swap = chr_swap_mmc1_323;
 

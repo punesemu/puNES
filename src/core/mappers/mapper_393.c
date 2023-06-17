@@ -95,7 +95,7 @@ void extcl_cpu_wr_mem_393(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_393(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m393.reg);
-	return(extcl_save_mapper_MMC3(mode, slot, fp));
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
 void prg_swap_mmc3_393(WORD address, WORD value) {

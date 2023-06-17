@@ -40,7 +40,7 @@ void extcl_cpu_wr_mem_JV001(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_JV001(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_JV001(BYTE mode, BYTE slot, FILE *fp);
 
-void init_JV001(void);
+void init_JV001(BYTE reset);
 void prg_fix_JV001_base(void);
 void chr_fix_JV001_base(void);
 void wram_fix_JV001_base(void);

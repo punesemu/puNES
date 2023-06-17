@@ -78,13 +78,16 @@ void extcl_cpu_wr_mem_246(WORD address, BYTE value) {
 		return;
 	}
 }
-BYTE extcl_cpu_rd_mem_246(WORD address, BYTE openbus) {
-	if ((address > 0xFF00) && (address & 0xFFE4) == 0xFFE4) {
-		size_t adr = (((m246.prg[3] | 0x10) << 13) | 0x1000 | (address & 0x0FFF)) & 0x7FFFF;
+BYTE extcl_cpu_rd_mem_246(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		if ((address > 0xFF00) && (address & 0xFFE4) == 0xFFE4) {
+			size_t adr = (((m246.prg[3] | 0x10) << 13) | 0x1000 | (address & 0x0FFF)) & 0x7FFFF;
 
-		return (prgrom_byte(adr));
+			return (prgrom_byte(adr));
+		}
+		return (prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_246(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m246.prg);

@@ -43,7 +43,7 @@ BYTE extcl_cpu_rd_mem_LZ93D50(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_LZ93D50(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_LZ93D50(void);
 
-void init_LZ93D50(BYTE include_wram);
+void init_LZ93D50(BYTE include_wram, BYTE reset);
 void init_eeprom_LZ93D50(heeprom_i2c *eeprom);
 void prg_fix_LZ93D50_base(void);
 void prg_swap_LZ93D50_base(WORD address, WORD value);

@@ -29,7 +29,6 @@ struct _m000tmp {
 void map_init_000(void) {
 	EXTCL_AFTER_MAPPER_INIT(000);
 	EXTCL_CPU_WR_MEM(000);
-	EXTCL_SAVE_MAPPER(000);
 
 	// Alter Ego (World) (Aftermarket) (Homebrew) (Alt).nes
 	m000tmp.nrom368 = (prgrom_banks(S16K) == 3);
@@ -39,12 +38,6 @@ void extcl_after_mapper_init_000(void) {
 	wram_fix_000();
 }
 void extcl_cpu_wr_mem_000(UNUSED(WORD address), UNUSED(BYTE value)) {}
-BYTE extcl_save_mapper_000(UNUSED(BYTE mode), UNUSED(BYTE slot), UNUSED(FILE *fp)) {
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_000();
-	}
-	return (EXIT_OK);
-}
 
 INLINE static void prg_fix_000(void) {
 	if (m000tmp.nrom368) {

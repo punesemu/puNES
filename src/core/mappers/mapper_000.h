@@ -24,6 +24,5 @@
 void map_init_000(void);
 void extcl_after_mapper_init_000(void);
 void extcl_cpu_wr_mem_000(WORD address, BYTE value);
-BYTE extcl_save_mapper_000(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_000_H_ */

@@ -75,12 +75,12 @@ void extcl_cpu_wr_mem_303(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_303(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_303(WORD address, UNUSED(BYTE openbus)) {
 	if (address == 0x4030) {
 		openbus = (irq.high & EXT_IRQ) ? 1 : 0;
 		irq.high &= ~EXT_IRQ;
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_303(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m303.reg);

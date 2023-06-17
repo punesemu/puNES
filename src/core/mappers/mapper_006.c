@@ -368,13 +368,10 @@ void map_init_006(void) {
 					prgrom_set_size(S512K);
 				}
 				memcpy(prgrom_pnt_byte(S256K), chrrom_pnt(),
-					   (chrrom_size() < (S512K - S256K) ? chrrom_size() : S512K - S256K));
+					(chrrom_size() < (S512K - S256K) ? chrrom_size() : S512K - S256K));
 			}
 		} else if (info.format != NES_2_0) {
 			vram_set_ram_size(S256K);
-		}
-		if (!wram_size()) {
-			wram_set_ram_size(S8K);
 		}
 	}
 
@@ -650,17 +647,8 @@ void extcl_cpu_wr_mem_006(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_006(WORD address, BYTE openbus) {
-	switch (address & 0xF000) {
-		case 0x4000:
-			if (address == 0x4500) {
-				return (m006.mode.smc);
-			}
-			break;
-		default:
-			return (openbus);
-	}
-	return (openbus);
+BYTE extcl_cpu_rd_mem_006(WORD address, UNUSED(BYTE openbus)) {
+	return (address == 0x4500 ? m006.mode.smc : wram_rd(address));
 }
 BYTE extcl_save_mapper_006(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m006.prg);

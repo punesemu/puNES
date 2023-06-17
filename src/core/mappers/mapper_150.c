@@ -102,7 +102,7 @@ BYTE extcl_cpu_rd_mem_150(WORD address, BYTE openbus) {
 				(openbus & ~(~m150tmp.dipswitch[m150tmp.index & 0x07])));
 		}
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_150(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m150.index);

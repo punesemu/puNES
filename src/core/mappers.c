@@ -19,10 +19,8 @@
 #include <string.h>
 #include "mappers.h"
 #include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "irql2f.h"
-#include "unif.h"
 #include "gui.h"
 #include "vs_system.h"
 #include "nes20db.h"
@@ -63,7 +61,13 @@ BYTE map_init(void) {
 			map_init_004();
 			break;
 		case 5:
-			map_init_MMC5();
+
+
+			map_init_005();
+
+			//map_init_005v2();
+
+
 			break;
 		case 6:
 			map_init_006();
@@ -1291,12 +1295,6 @@ BYTE map_init(void) {
 			map_init_GameGenie();
 			break;
 		case UNIF_MAPPER:
-			switch (unif.internal_mapper) {
-				case 1:
-					// BOY
-					map_init_BOY();
-					break;
-			}
 			break;
 	}
 
@@ -1336,8 +1334,6 @@ void map_quit(void) {
 	info.id = 0;
 	memset(&info.mapper, 0x00, sizeof(info.mapper));
 	memset(&info.sha1sum, 0x00, sizeof(info.sha1sum));
-	memset(&info.chr, 0x00, sizeof(info.chr));
-	memset(&info.prg, 0x00, sizeof(info.prg));
 
 	nes20db_reset();
 
@@ -1355,109 +1351,4 @@ void map_quit(void) {
 	if (extcl_mapper_quit) {
 		extcl_mapper_quit();
 	}
-}
-
-
-
-
-void map_prg_rom_8k(BYTE banks_8k, BYTE at, WORD value) {
-	switch (banks_8k) {
-		default:
-		case 0:
-			printf("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
-			break;
-		case 1:
-			memmap_auto_8k(MMCPU(0x8000 | (at * 0x2000)), value);
-			break;
-		case 2:
-			memmap_auto_16k(MMCPU(0x8000 | (at * 0x2000)), value);
-			break;
-		case 4:
-			memmap_auto_32k(MMCPU(0x8000), value);
-			break;
-	}
-}
-void map_prg_rom_8k_reset(void) {
-	prgrom_reset_chunks();
-}
-void map_prg_rom_8k_update(void) {
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void map_chr_bank_1k_reset(void) {
-	BYTE bank1k = 0, bnk = 0;
-
-	for (bank1k = 0; bank1k < 8; ++bank1k) {
-		bnk = bank1k;
-		_control_bank(bnk, info.chr.rom.max.banks_1k)
-		chr.bank_1k[bank1k] = chr_pnt((int)(bnk * 0x0400));
-	}
-}
-
-
-BYTE map_chr_ram_extra_init(UNUSED(uint32_t size)) {
-//	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-//		if (chr.extra.data) {
-//			free(chr.extra.data);
-//			chr.extra.size = 0;
-//		}
-//		/* alloco la CHR Ram extra */
-//		chr.extra.data = (BYTE *)malloc(size);
-//		if (!chr.extra.data) {
-//			log_error(uL("prg ram extra;out of memory"));
-//			return (EXIT_ERROR);
-//		}
-//		chr.extra.size = size;
-//		memset(chr.extra.data, 0x00, chr.extra.size);
-//		info.chr.ram.max.banks_8k = (chr.extra.size / 0x2000) ? (chr.extra.size / 0x2000) - 1 : 0;
-//		info.chr.ram.max.banks_4k = (chr.extra.size / 0x1000) ? (chr.extra.size / 0x1000) - 1 : 0;
-//		info.chr.ram.max.banks_2k = (chr.extra.size / 0x0800) ? (chr.extra.size / 0x0800) - 1 : 0;
-//		info.chr.ram.max.banks_1k = (chr.extra.size / 0x0400) ? (chr.extra.size / 0x0400) - 1 : 0;
-//	}
-
-	return (EXIT_OK);
-}
-void map_chr_ram_extra_reset(void) {
-	if (chr.extra.data) {
-		memset(chr.extra.data, 0x00, chr.extra.size);
-	}
-}
-void map_set_banks_max_prg(void) {
-	info.prg.rom.max.banks_32k = (info.prg.rom.banks_16k == 1) ? 0 :
-		((info.prg.rom.banks_16k >> 1) ? (info.prg.rom.banks_16k >> 1) - 1 : 0);
-	info.prg.rom.max.banks_16k = info.prg.rom.banks_16k ? info.prg.rom.banks_16k - 1 : 0;
-	info.prg.rom.max.banks_8k = info.prg.rom.banks_8k ? info.prg.rom.banks_8k - 1 : 0;
-	info.prg.rom.max.banks_8k_before_last = (info.prg.rom.banks_8k > 1) ? info.prg.rom.banks_8k - 2 : 0;
-	info.prg.rom.max.banks_4k = ((info.prg.rom.banks_8k << 1) != 0) ? (info.prg.rom.banks_8k << 1) - 1 : 0;
-	info.prg.rom.max.banks_2k = ((info.prg.rom.banks_8k << 2) != 0) ? (info.prg.rom.banks_8k << 2) - 1 : 0;
-	info.prg.rom.max.banks_1k = ((info.prg.rom.banks_8k << 3) != 0) ? (info.prg.rom.banks_8k << 3) - 1 : 0;
-}
-void map_set_banks_max_chr(void) {
-	info.chr.rom.max.banks_8k = info.chr.rom.banks_8k ? info.chr.rom.banks_8k - 1 : 0;
-	info.chr.rom.max.banks_4k = info.chr.rom.banks_4k ? info.chr.rom.banks_4k - 1 : 0;
-	info.chr.rom.max.banks_2k = ((info.chr.rom.banks_1k >> 1) != 0) ? (info.chr.rom.banks_1k >> 1) - 1 : 0;
-	info.chr.rom.max.banks_1k = info.chr.rom.banks_1k ? info.chr.rom.banks_1k - 1 : 0;
-}
-
-void map_nmt_1k(BYTE slot, const WORD value) {
-	slot &= 0x03;
-	ntbl.bank_1k[slot] = &ntbl.data[(value & 0x03) << 10];
-	ntbl.writable[slot] = TRUE;
 }

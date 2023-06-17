@@ -101,7 +101,7 @@ void map_init_256(void) {
 
 	info.mapper.submapper = info.mapper.submapper ==  DEFAULT ? M256_NORMAL: info.mapper.submapper;
 
-	init_OneBus();
+	init_OneBus(info.reset);
 
 	irqA12.present = TRUE;
 }

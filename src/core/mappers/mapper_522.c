@@ -68,12 +68,6 @@ void extcl_cpu_wr_mem_522(WORD address, BYTE value) {
 BYTE extcl_save_mapper_522(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m522.ind);
 	save_slot_ele(mode, slot, m522.reg);
-
-	if (mode == SAVE_SLOT_READ) {
-		prg_fix_522();
-		wram_fix_522();
-	}
-
 	return (EXIT_OK);
 }
 

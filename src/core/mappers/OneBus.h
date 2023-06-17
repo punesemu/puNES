@@ -54,7 +54,7 @@ void extcl_cpu_every_cycle_OneBus(void);
 void extcl_irq_A12_clock_OneBus(void);
 void extcl_ppu_000_to_34x_OneBus(void);
 
-void init_OneBus(void);
+void init_OneBus(BYTE reset);
 void prg_fix_8k_OneBus_base(WORD mmask, WORD mblock);
 void prg_swap_8k_OneBus_base(WORD address, WORD value);
 void prg_fix_16k_OneBus_base(WORD bank0, WORD bank1, WORD mmask, WORD mblock);

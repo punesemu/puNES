@@ -39,7 +39,7 @@ void extcl_cpu_wr_mem_FCG(WORD address, BYTE value);
 BYTE extcl_save_mapper_FCG(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_FCG(void);
 
-void init_FCG(void);
+void init_FCG(BYTE reset);
 void prg_fix_FCG_base(void);
 void prg_swap_FCG_base(WORD address, WORD value);
 void chr_fix_FCG_base(void);

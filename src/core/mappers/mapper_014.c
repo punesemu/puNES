@@ -58,7 +58,7 @@ void map_init_014(void) {
 	MMC3_prg_swap = prg_swap_mmc3_014;
 	MMC3_chr_swap = chr_swap_mmc3_014;
 
-	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE);
+	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_014;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_014;
 
@@ -84,11 +84,11 @@ void extcl_cpu_wr_mem_014(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_VRC2and4(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_014(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_014(WORD address, UNUSED(BYTE openbus)) {
 	if (!(m014.reg & 0x02)) {
-		return (extcl_cpu_rd_mem_VRC2and4(address, openbus));
+		return (extcl_cpu_rd_mem_VRC2and4(address, wram_rd(address)));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_014(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m014.reg);

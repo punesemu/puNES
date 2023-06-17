@@ -17,12 +17,11 @@
  */
 
 #include "bck_states.h"
+#include "mappers.h"
 #include "info.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "ppu.h"
 #include "apu.h"
-#include "mappers.h"
 #include "irqA12.h"
 #include "irql2f.h"
 #include "fds.h"
@@ -101,28 +100,19 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_b
 	bck_states_on_struct(mode, DMC, data, (*index), (*size_buff))
 
 	// mem map
-	bck_states_on_struct(mode, prg, data, (*index), (*size_buff))
-#if defined WRAM_OLD_HANDLER
-	bck_states_on_struct(mode, mmcpu, data, (*index), (*size_buff))
-	bck_states_on_mem(mode, prg.ram.data, prg.ram.size, data, (*index), (*size_buff))
-	if (prg.ram_plus) {
-		bck_states_on_mem(mode, prg.ram_plus, prg_ram_plus_size(), data, (*index), (*size_buff))
+	if (ram_size()) {
+		bck_states_on_mem(mode, ram_pnt(), ram_size(), data, (*index), (*size_buff))
 	}
-#else
-	bck_states_on_struct(mode, wram, data, (*index), (*size_buff))
-	if (wram_pnt()) {
-		bck_states_on_mem(mode, wram_pnt(), wram_nvram_size(), data, (*index), (*size_buff))
+	if (wram_size()) {
+		bck_states_on_mem(mode, wram_pnt(), wram_size(), data, (*index), (*size_buff))
 	}
-#endif
-	bck_states_on_struct(mode, chr, data, (*index), (*size_buff))
-	if (mapper.write_vram) {
-		bck_states_on_mem(mode, chr_rom(), chr_ram_size(), data, (*index), (*size_buff))
+	if (vram_size()) {
+		bck_states_on_mem(mode, vram_pnt(), vram_size(), data, (*index), (*size_buff))
 	}
-	if (chr.extra.size) {
-		bck_states_on_mem(mode, chr.extra.data, chr.extra.size, data, (*index), (*size_buff))
+	if (nmt_size()) {
+		bck_states_on_mem(mode, nmt_pnt(), nmt_size(), data, (*index), (*size_buff))
 	}
-	bck_states_on_struct(mode, ntbl, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, mmap_palette, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, memmap_palette, data, (*index), (*size_buff))
 	bck_states_on_struct(mode, oam, data, (*index), (*size_buff))
 
 	// mapper
@@ -158,6 +148,16 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_b
 			fds_disk_op(FDS_DISK_SELECT_FROM_REWIND, fds.drive.side_inserted, FALSE);
 			gui_update();
 		}
+	}
+
+	if (mode == BCK_STATES_OP_READ_FROM_MEM) {
+		prgrom_reset_chunks();
+		chrrom_reset_chunks();
+		ram_reset_chunks();
+		wram_reset_chunks();
+		nmt_reset_chunks();
+		// ripristino i puntatori
+		extcl_after_mapper_init();
 	}
 }
 void bck_states_op_input(BYTE mode, void *data, size_t *index, size_t *size_buff) {

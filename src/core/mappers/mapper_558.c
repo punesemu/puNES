@@ -42,7 +42,7 @@ void map_init_558(void) {
 
 	memset(&m558, 0x00, sizeof(m558));
 
-	m558tmp.cc93c66 = wram_nvram_size() == 512;
+	m558tmp.cc93c66 = wram_nvram_size() == S512B;
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -100,7 +100,7 @@ void extcl_cpu_wr_mem_558(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_558(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_558(WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF000) {
 		case 0x5000:
 			if (m558tmp.cc93c66) {
@@ -108,7 +108,7 @@ BYTE extcl_cpu_rd_mem_558(WORD address, BYTE openbus) {
 			}
 			return (m558.reg[2] & 0x04);
 		default:
-			return (openbus);
+			return (address >= 0x8000 ? prgrom_rd(address) : wram_rd(address));
 	}
 }
 BYTE extcl_save_mapper_558(BYTE mode, BYTE slot, FILE *fp) {

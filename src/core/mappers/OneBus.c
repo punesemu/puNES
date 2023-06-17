@@ -19,7 +19,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 #include "emu.h"
@@ -62,7 +61,6 @@ struct _onebustmp {
 
 // promemoria
 //void map_init_OneBus(void) {
-//	EXTCL_AFTER_MAPPER_INIT(OneBus);
 //	EXTCL_MAPPER_QUIT(OneBus);
 //	EXTCL_CPU_WR_MEM(OneBus);
 //	EXTCL_CPU_RD_MEM(OneBus);
@@ -186,7 +184,7 @@ void extcl_cpu_wr_mem_OneBus(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_OneBus(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_OneBus(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x4100) && (address <= 0x4FFF)) {
 		switch(address & 0x0FFF) {
 			case 0x140: case 0x141: case 0x142: case 0x143: case 0x144: case 0x145: case 0x146: case 0x147:
@@ -208,10 +206,10 @@ BYTE extcl_cpu_rd_mem_OneBus(WORD address, BYTE openbus) {
 				if ((address <= 0x410D) || ((address >= 0x4160) && (address < 0x4800))) {
 					return (onebus.reg.cpu[address & 0xFF]);
 				}
-				return (openbus);
+				return (wram_rd(address));
 		}
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_OneBus(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, onebus.relative_8k);
@@ -232,14 +230,7 @@ BYTE extcl_save_mapper_OneBus(BYTE mode, BYTE slot, FILE *fp) {
 }
 BYTE extcl_wr_ppu_reg_OneBus(WORD address, BYTE *value) {
 	if ((address >= 0x3000) && (info.mapper.ext_console_type == VT369)) {
-		address &= 0x0FFF;
-		{
-			const BYTE slot = address >> 10;
-
-			if (ntbl.writable[slot]) {
-				ntbl.bank_1k[slot][address & 0x3FF] = (*value);
-			}
-		}
+		nmt_wr(address, (*value));
 		return (TRUE);
 	}
 	if (address >= 0x2008) {
@@ -341,8 +332,8 @@ void extcl_irq_A12_clock_OneBus(void) {
 	}
 }
 
-void init_OneBus(void) {
-	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+void init_OneBus(BYTE reset) {
+	if ((reset == CHANGE_ROM) || (reset == POWER_UP)) {
 		memset(&onebustmp, 0x00, sizeof(onebustmp));
 
 		if (!chrrom_size()) {
@@ -371,7 +362,7 @@ void init_OneBus(void) {
 		}
 	}
 
-	if (info.reset >= HARD) {
+	if (reset >= HARD) {
 		size_t i = 0;
 
 		for (i = 0; i < onebustmp.chr.size; i++) {
@@ -399,10 +390,6 @@ void init_OneBus(void) {
 
 		onebus.pcm.clock = 0xE1;
 	}
-
-//	if (!wram_size()) {
-//		wram_set_ram_size(0x2000);
-//	}
 
 	onebus.relative_8k = 0;
 

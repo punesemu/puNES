@@ -44,7 +44,7 @@ void map_init_297(void) {
 		memset(&m297, 0x00, sizeof(m297));
 	}
 
-	init_MMC1(MMC1A);
+	init_MMC1(MMC1A, info.reset);
 	MMC1_prg_swap = prg_swap_mmc1_297;
 	MMC1_chr_swap = chr_swap_mmc1_297;
 

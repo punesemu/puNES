@@ -54,11 +54,6 @@ void extcl_cpu_wr_mem_120(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_120(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m120.reg);
-
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_120();
-	}
-
 	return (EXIT_OK);
 }
 

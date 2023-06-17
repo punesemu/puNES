@@ -41,7 +41,7 @@ void extcl_cpu_wr_mem_TXC(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_TXC(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_TXC(BYTE mode, BYTE slot, FILE *fp);
 
-void init_TXC(void);
+void init_TXC(BYTE reset);
 void prg_fix_TXC_base(void);
 void chr_fix_TXC_base(void);
 void wram_fix_TXC_base(void);

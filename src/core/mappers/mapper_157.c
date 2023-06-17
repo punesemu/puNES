@@ -63,9 +63,11 @@ void map_init_157(void) {
 
 	m157tmp.barcode[0] = 0;
 
-	init_LZ93D50(FALSE);
+	init_LZ93D50(FALSE, info.reset);
 	LZ93D50_prg_swap = prg_swap_lz93d50_157;
 	LZ93D50_chr_fix = chr_fix_lz93d50_157;
+
+	info.mapper.force_battery_io = TRUE;
 }
 void extcl_after_mapper_init_157(void) {
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
@@ -130,7 +132,7 @@ BYTE extcl_cpu_rd_mem_157(WORD address, BYTE openbus) {
 		value |= (openbus & 0xE7);
 		return (value);
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_157(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m157.e0_data);

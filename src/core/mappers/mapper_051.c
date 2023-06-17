@@ -66,11 +66,6 @@ void extcl_cpu_wr_mem_051(WORD address, BYTE value) {
 BYTE extcl_save_mapper_051(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m051.reg);
 	save_slot_ele(mode, slot, m051.mode);
-
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_051();
-	}
-
 	return (EXIT_OK);
 }
 

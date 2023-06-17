@@ -21,7 +21,6 @@
 #include "cpu.h"
 #include "info.h"
 #include "clock.h"
-#include "mem_map.h"
 #include "ppu_inline.h"
 #include "video/gfx.h"
 #include "mappers.h"
@@ -57,7 +56,7 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 	/* deve essere azzerato alla fine di ogni ciclo PPU */\
 	r2006.changed_from_op = 0;
 #define put_pixel(clr) ppu_screen.wr->line[ppu.screen_y][ppu.frame_x] = r2001.emphasis | clr;
-#define put_emphasis(clr) put_pixel((mmap_palette.color[clr] & r2001.color_mode))
+#define put_emphasis(clr) put_pixel((memmap_palette.color[clr] & r2001.color_mode))
 #define put_bg put_emphasis(color_bg)
 #define put_sp put_emphasis(color_sp | 0x10)
 #define examine_sprites(senv, sp, vis, ty)\
@@ -514,7 +513,7 @@ void ppu_tick(void) {
 							 * utilizzo quello del background.
 							 */
 							if (cfg->hide_background) {
-								put_pixel(mmap_palette.color[0])
+								put_pixel(memmap_palette.color[0])
 							} else {
 								put_bg
 							}
@@ -524,7 +523,7 @@ void ppu_tick(void) {
 							 * trasparente, utilizzo quello dello sprite.
 							 */
 							if (cfg->hide_sprites) {
-								put_pixel(mmap_palette.color[0])
+								put_pixel(memmap_palette.color[0])
 							} else {
 								put_sp
 							}
@@ -539,7 +538,7 @@ void ppu_tick(void) {
 									 */
 									if (cfg->hide_background) {
 										if (cfg->hide_sprites) {
-											put_pixel(mmap_palette.color[0])
+											put_pixel(memmap_palette.color[0])
 										} else {
 											put_sp
 										}
@@ -550,7 +549,7 @@ void ppu_tick(void) {
 									/* altrimenti quello dello sprite */
 									if (cfg->hide_sprites) {
 										if (cfg->hide_background) {
-											put_pixel(mmap_palette.color[0])
+											put_pixel(memmap_palette.color[0])
 										} else {
 											put_bg
 										}
@@ -580,7 +579,7 @@ void ppu_tick(void) {
 								if (sprite_unl[visible_spr_unl].attrib & 0x20) {
 									if (cfg->hide_background) {
 										if (cfg->hide_sprites) {
-											put_pixel(mmap_palette.color[0])
+											put_pixel(memmap_palette.color[0])
 										} else {
 											put_sp
 										}
@@ -590,7 +589,7 @@ void ppu_tick(void) {
 								} else {
 									if (cfg->hide_sprites) {
 										if (cfg->hide_background) {
-											put_pixel(mmap_palette.color[0])
+											put_pixel(memmap_palette.color[0])
 										} else {
 											put_bg
 										}
@@ -607,7 +606,7 @@ void ppu_tick(void) {
 						 * altrimenti visualizzo un pixel del
 						 * colore 0 della paletta.
 						 */
-						put_pixel(mmap_palette.color[0])
+						put_pixel(memmap_palette.color[0])
 
 						if ((r2006.value & 0xFF00) == 0x3F00) {
 							/*
@@ -1066,13 +1065,13 @@ BYTE ppu_turn_on(void) {
 			memset(oam.plus, 0xFF, sizeof(oam.plus));
 			memset(oam.plus_unl, 0xFF, sizeof(oam.plus_unl));
 			/* inizializzo nametables */
-			memset(ntbl.data, 0x00, sizeof(ntbl.data));
+			nmt_memset();
 			/* e paletta dei colori */
-			memcpy(mmap_palette.color, palette_init, sizeof(mmap_palette.color));
+			memcpy(memmap_palette.color, palette_init, sizeof(memmap_palette.color));
 
 			// power_up_palette.nes
 			if (info.crc32.total == 0xDD941E82) {
-				mmap_palette.color[0] = 0x09;
+				memmap_palette.color[0] = 0x09;
 			}
 		}
 		ppu_alignment_init();

@@ -43,7 +43,9 @@ void map_init_288(void) {
 	mapper.internal_struct[0] = (BYTE *)&m288;
 	mapper.internal_struct_size[0] = sizeof(m288);
 
-	memset(&m288, 0x00, sizeof(m288));
+	if (info.reset >= HARD) {
+		memset(&m288, 0x00, sizeof(m288));
+	}
 
 	if (info.reset == RESET) {
 		if (m288tmp.ds_used) {
@@ -78,11 +80,11 @@ void extcl_cpu_wr_mem_288(WORD address, UNUSED(BYTE value)) {
 	prg_fix_288();
 	chr_fix_288();
 }
-BYTE extcl_cpu_rd_mem_288(WORD address, BYTE openbus) {
-	if ((address >= 0x8000) && (m288.reg & 0x0020)) {
-		return (prg_rom_rd((address | m288tmp.dipswitch[m288tmp.index])));
+BYTE extcl_cpu_rd_mem_288(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		return (m288.reg & 0x0020 ? prgrom_rd((address | m288tmp.dipswitch[m288tmp.index])) : prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_288(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m288.reg);

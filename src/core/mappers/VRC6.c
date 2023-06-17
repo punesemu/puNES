@@ -169,11 +169,6 @@ BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, vrc6.saw.frequency);
 	save_slot_ele(mode, slot, vrc6.saw.output);
 
-	if (mode == SAVE_SLOT_READ) {
-		VRC6_chr_fix();
-		VRC6_mirroring_fix();
-	}
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_VRC6(void) {
@@ -232,8 +227,8 @@ void init_NSF_VRC6(WORD A0, WORD A1) {
 	vrc6tmp.A0 = A0;
 	vrc6tmp.A1 = A1;
 }
-void init_VRC6(WORD A0, WORD A1) {
-	if (info.reset >= HARD) {
+void init_VRC6(WORD A0, WORD A1, BYTE reset) {
+	if (reset >= HARD) {
 		memset(&vrc6, 0x00, sizeof(vrc6));
 
 		vrc6.prg[1] = 0xFE;

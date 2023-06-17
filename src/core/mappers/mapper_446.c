@@ -156,6 +156,8 @@ void map_init_446(void) {
 		sst39sf040_init(m446tmp.sst39sf040, prgrom_size(), 0x01, 0x76, 0x0AAA, 0x0555, 131072);
 	}
 
+	init_MMC3();
+
 	info.mapper.force_battery_io = TRUE;
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
@@ -237,12 +239,14 @@ void extcl_cpu_wr_mem_446(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_446(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_446(WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF000) {
+		default:
+			return (wram_rd(address));
 		case 0x6000:
 			return ((m446.reg[0] & 0x80) && (m446.mapper == M446_VRC2_22)
-				? extcl_cpu_rd_mem_VRC2and4(address, openbus)
-				: openbus);
+				? extcl_cpu_rd_mem_VRC2and4(address, wram_rd(address))
+				: wram_rd(address));
 		case 0x8000:
 		case 0x9000:
 		case 0xA000:
@@ -252,8 +256,6 @@ BYTE extcl_cpu_rd_mem_446(WORD address, BYTE openbus) {
 		case 0xE000:
 		case 0xF000:
 			return (sst39sf040_read(address));
-		default:
-			return (openbus);
 	}
 }
 BYTE extcl_save_mapper_446(BYTE mode, BYTE slot, FILE *fp) {
@@ -379,7 +381,7 @@ INLINE static void switch_mode(void) {
 				break;
 			case M446_SLROM:
 			case M446_SNROM:
-				init_MMC1(MMC1B);
+				init_MMC1(MMC1B, HARD);
 				MMC1_prg_swap = prg_swap_mmc1_446;
 				MMC1_chr_swap = chr_swap_mmc1_446;
 				break;
@@ -399,22 +401,22 @@ INLINE static void switch_mode(void) {
 				MMC3_chr_swap = chr_swap_mmc3_m189_446;
 				break;
 			case M446_VRC2_22:
-				init_VRC2and4(VRC24_VRC2, 0x02, 0x01, TRUE);
+				init_VRC2and4(VRC24_VRC2, 0x02, 0x01, TRUE, HARD);
 				VRC2and4_prg_swap = prg_swap_vrc2and4_m022_446;
 				VRC2and4_chr_swap = chr_swap_vrc2and4_m022_446;
 				break;
 			case M446_VRC4_23:
-				init_VRC2and4(VRC24_VRC4, 0x05, 0x0A, TRUE);
+				init_VRC2and4(VRC24_VRC4, 0x05, 0x0A, TRUE, HARD);
 				VRC2and4_prg_swap = prg_swap_vrc2and4_m023m025_446;
 				VRC2and4_chr_swap = chr_swap_vrc2and4_m023m025_446;
 				break;
 			case M446_VRC4_25:
-				init_VRC2and4(VRC24_VRC4, 0x0A, 0x05, TRUE);
+				init_VRC2and4(VRC24_VRC4, 0x0A, 0x05, TRUE, HARD);
 				VRC2and4_prg_swap = prg_swap_vrc2and4_m023m025_446;
 				VRC2and4_chr_swap = chr_swap_vrc2and4_m023m025_446;
 				break;
 			case M446_VRC6:
-				init_VRC6(0x01, 0x02);
+				init_VRC6(0x01, 0x02, HARD);
 				VRC6_prg_swap = prg_swap_vrc6_446;
 				VRC6_chr_swap = chr_swap_vrc6_446;
 				VRC6_nmt_swap = nmt_swap_vrc6_446;

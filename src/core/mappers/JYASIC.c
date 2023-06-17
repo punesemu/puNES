@@ -306,8 +306,8 @@ void extcl_update_r2006_JYASIC(WORD new_r2006, WORD old_r2006) {
 	}
 }
 
-void init_JYASIC(BYTE extended_mode) {
-	if (info.reset >= HARD) {
+void init_JYASIC(BYTE extended_mode, BYTE reset) {
+	if (reset >= HARD) {
 		memset(&jyasic, 0x00, sizeof(jyasic));
 	}
 

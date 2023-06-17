@@ -43,7 +43,6 @@ struct _m082 {
 void map_init_082(void) {
 	EXTCL_AFTER_MAPPER_INIT(082);
 	EXTCL_CPU_WR_MEM(082);
-	EXTCL_CPU_RD_MEM(082);
 	EXTCL_SAVE_MAPPER(082);
 	EXTCL_CPU_EVERY_CYCLE(082);
 	mapper.internal_struct[0] = (BYTE *)&m082;
@@ -113,12 +112,6 @@ void extcl_cpu_wr_mem_082(WORD address, BYTE value) {
 				return;
 		}
 	}
-}
-BYTE extcl_cpu_rd_mem_082(WORD address, BYTE openbus) {
-	if ((address >= 0x4000) && (address <= 0x7FFF) && !memmap_adr_is_readable(MMCPU(address))) {
-		return (0x00);
-	}
-	return (openbus);
 }
 
 BYTE extcl_save_mapper_082(BYTE mode, BYTE slot, FILE *fp) {

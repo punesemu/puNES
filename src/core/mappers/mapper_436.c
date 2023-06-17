@@ -43,7 +43,7 @@ void map_init_436(void) {
 
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
-	init_OneBus();
+	init_OneBus(info.reset);
 
 	irqA12.present = TRUE;
 }

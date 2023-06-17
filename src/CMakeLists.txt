@@ -92,6 +92,7 @@ set(core_srcs
 	core/mappers/mapper_002.c
 	core/mappers/mapper_003.c
 	core/mappers/mapper_004.c
+	core/mappers/mapper_005.c
 	core/mappers/mapper_006.c
 	core/mappers/mapper_007.c
 	core/mappers/mapper_009.c
@@ -465,11 +466,8 @@ set(core_srcs
 	core/mappers/mapper_558.c
 	core/mappers/mapper_559.c
 	core/mappers/mapper_560.c
-	core/mappers/mapper_BOY.c
 	core/mappers/mapper_FDS.c
 	core/mappers/mapper_GameGenie.c
-	core/mappers/mapper_MMC3_old.c
-	core/mappers/mapper_MMC5.c
 	core/mappers/mapper_NSF.c
 	core/mappers/mapper_Vs.c
 

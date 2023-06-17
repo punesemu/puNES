@@ -48,7 +48,7 @@ BYTE extcl_cpu_rd_mem_VRC2and4(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_VRC2and4(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_VRC2and4(void);
 
-void init_VRC2and4(BYTE type, WORD A0, WORD A1, BYTE irq_repeated);
+void init_VRC2and4(BYTE type, WORD A0, WORD A1, BYTE irq_repeated, BYTE reset);
 void prg_fix_VRC2and4_base(void);
 void prg_swap_VRC2and4_base(WORD address, WORD value);
 void chr_fix_VRC2and4_base(void);

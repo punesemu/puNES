@@ -18,6 +18,7 @@
 
 #include <string.h>
 #include "mappers.h"
+#include "cpu.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_212(void);
@@ -53,7 +54,7 @@ BYTE extcl_cpu_rd_mem_212(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return (openbus | (address & 0x10 ? 0x00 : 0x80));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_212(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m212.reg);

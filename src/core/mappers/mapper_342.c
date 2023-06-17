@@ -30,7 +30,7 @@
 
 enum _m342_misc {
 	SAVE_FLASH_SIZE = S8M,
-	CFI_SIZE = 1024 * 32
+	CFI_SIZE = S32K
 };
 
 INLINE static void state_fix_342(void);
@@ -312,12 +312,6 @@ void map_init_342(void) {
 	m342.chr.g = 6;
 	m342.chr.h = 7;
 
-	// 32k di PRG RAM
-	if (wram_nvram_size() < 0x8000) {
-		wram_set_ram_size(0);
-		wram_set_nvram_size(0x8000);
-	}
-
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		m342tmp.save_flash = (BYTE *)malloc(SAVE_FLASH_SIZE);
 		memset(m342tmp.save_flash, 0x00, SAVE_FLASH_SIZE);
@@ -325,12 +319,14 @@ void map_init_342(void) {
 		m342tmp.cfi = (BYTE *)malloc(CFI_SIZE);
 		memset(m342tmp.cfi, 0x00, CFI_SIZE);
 
-		for (int i = 0; i < 0x8000; i += sizeof(cfi_data)) {
+		for (int i = 0; i < S32K; i += sizeof(cfi_data)) {
 			memcpy(&m342tmp.cfi[i], cfi_data, sizeof(cfi_data));
 		}
 	}
 
-	info.mapper.extend_wr = info.mapper.extend_rd = TRUE;
+	info.mapper.force_battery_io = TRUE;
+	info.mapper.extend_wr = TRUE;
+	info.mapper.extend_rd = TRUE;
 }
 void extcl_after_mapper_init_342(void) {
 	state_fix_342();
@@ -495,7 +491,6 @@ BYTE extcl_cpu_rd_mem_342(WORD address, BYTE openbus) {
 	if ((m342.mapper == 29) && ((address & 0xE100) == 0x4100)) {
 		return ((m342.prg.a & 0x0C) << 2);
 	}
-
 	switch (address & 0xF000) {
 		case 0x5000:
 			switch (m342.mapper) {
@@ -522,9 +517,9 @@ BYTE extcl_cpu_rd_mem_342(WORD address, BYTE openbus) {
 			if (m342.cfi_mode) {
 				return (m342tmp.cfi[address & 0x7FFF]);
 			}
-			break;
+			return (prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_342(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m342.mapper);
@@ -633,10 +628,6 @@ BYTE extcl_save_mapper_342(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m342.mapper67.irq.enabled);
 	save_slot_ele(mode, slot, m342.mapper67.irq.latch);
 	save_slot_ele(mode, slot, m342.mapper67.irq.counter);
-
-	if (mode == SAVE_SLOT_READ) {
-		state_fix_342();
-	}
 
 	return (EXIT_OK);
 }

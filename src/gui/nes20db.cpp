@@ -25,11 +25,10 @@
 #include "version.h"
 #include "gui.h"
 #include "info.h"
-#include "mem_map.h"
+#include "memmap.h"
 #include "vs_system.h"
 
 
-#include "memmap.h"
 
 
 #include <QtCore/QDebug>
@@ -79,7 +78,6 @@ void nes20db_search(void) {
 	data_locations.append(gaf);
 
 	info.mapper.nes20db.in_use = FALSE;
-	info.mapper.nes20db.from_crc32_prg = FALSE;
 
 	foreach(const QString path, data_locations) {
 		QFile file(QString("%0/%1").arg(path, NES20DBFILENAME));
@@ -160,7 +158,8 @@ void search_in_xml(QFile &file) {
 //							//if ((nes20db.pcb.mapper == 0) && (nes20db.prgrom.size == (16 * 3 * 1024))){
 //							//if ((nes20db.pcb.mapper == 176) && (nes20db.prgram.size || nes20db.prgnvram.size)) {
 //							//if (nes20db.prgram.size && nes20db.prgnvram.size) {
-//							if (nes20db.pcb.mapper == 86 && nes20db.miscrom.size) {
+//							//if (nes20db.pcb.mapper == 86 && nes20db.miscrom.size) {
+//							if (nes20db.prgrom.size < S16K) {
 //								qDebug().noquote()
 //										<< QString("%1").arg(nes20db.pcb.mapper, 3, 10, QLatin1Char(' '))
 //										<< QString("%1").arg(nes20db.pcb.submapper, 2, 10, QLatin1Char(' '))
@@ -182,13 +181,11 @@ void search_in_xml(QFile &file) {
 						// Esempio :
 						//    Angry Birds Week(byCasperdj777).nes (0x2A629F7D mapper 185) e
 						//    Compatibility Hacks\Bird Week [m003].nes ((0x2A629F7D mapper 003)
-//						if ((nes20db.rom.crc32 == info.crc32.total) || (nes20db.prgrom.crc32 == info.crc32.prg)) {
 						if (nes20db.rom.crc32 == info.crc32.total) {
-							const QString comment = game["comment"];
-							BYTE old_format = info.format;
+							//const QString comment = game["comment"];
+							const BYTE old_format = info.format;
 
 							info.mapper.nes20db.in_use = TRUE;
-							info.mapper.nes20db.from_crc32_prg = TRUE;
 
 							info.format = NES_2_0;
 
@@ -214,11 +211,10 @@ void search_in_xml(QFile &file) {
 
 							info.mapper.battery = nes20db.pcb.battery;
 
-
 							if (old_format != UNIF_FORMAT) {
-								info.prg.rom.banks_16k = (nes20db.prgrom.size / S16K) +
+								info.mapper.prgrom_banks_16k = (nes20db.prgrom.size / S16K) +
 									((nes20db.prgrom.size % S16K) ? 1 : 0);
-								info.chr.rom.banks_8k = (nes20db.chrrom.size / S8K) +
+								info.mapper.chrrom_banks_8k = (nes20db.chrrom.size / S8K) +
 									((nes20db.chrrom.size % S8K) ? 1 : 0);
 							}
 
@@ -274,11 +270,6 @@ void search_in_xml(QFile &file) {
 								case 3:
 									info.machine[DATABASE] = DENDY;
 									break;
-							}
-
-							if (nes20db.rom.crc32 == info.crc32.total) {
-								info.mapper.nes20db.from_crc32_prg = FALSE;
-								break;
 							}
 						}
 					}

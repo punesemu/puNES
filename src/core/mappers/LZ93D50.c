@@ -44,8 +44,8 @@ struct lz93d50tmp {
 //	EXTCL_CPU_EVERY_CYCLE(LZ93D50);
 //}
 
-void init_LZ93D50(BYTE include_wram) {
-	if (info.reset >= HARD) {
+void init_LZ93D50(BYTE include_wram, BYTE reset) {
+	if (reset >= HARD) {
 		memset(&lz93d50, 0x00, sizeof(lz93d50));
 
 		lz93d50.chr[1] = 1;

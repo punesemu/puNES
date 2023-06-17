@@ -103,11 +103,6 @@ BYTE extcl_save_mapper_357(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m357.reg);
 	save_slot_ele(mode, slot, m357.irq.enable);
 	save_slot_ele(mode, slot, m357.irq.counter);
-
-	if (mode == SAVE_SLOT_READ) {
-		prg_fix_357();
-	}
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_357(void) {

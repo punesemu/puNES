@@ -36,7 +36,7 @@ BYTE extcl_save_mapper_MMC4(BYTE mode, BYTE slot, FILE *fp);
 void extcl_after_rd_chr_MMC4(WORD address);
 void extcl_update_r2006_MMC4(WORD new_r2006, WORD old_r2006);
 
-void init_MMC4(void);
+void init_MMC4(BYTE reset);
 void prg_fix_MMC4_base(void);
 void prg_swap_MMC4_base(WORD address, WORD value);
 void chr_fix_MMC4_base(void);

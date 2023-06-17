@@ -38,7 +38,7 @@ BYTE extcl_cpu_rd_mem_143(WORD address, BYTE openbus) {
 			return (0xFF);
 		}
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 
 INLINE static void prg_fix_143(void) {

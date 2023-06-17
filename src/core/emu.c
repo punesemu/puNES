@@ -28,7 +28,6 @@
 #include "settings.h"
 #include "clock.h"
 #include "cpu.h"
-#include "mem_map.h"
 #include "ppu.h"
 #include "video/gfx_thread.h"
 #include "mappers.h"
@@ -397,16 +396,12 @@ BYTE emu_load_rom(void) {
 		}
 	} else if (info.gui) {
 		// impostazione primaria
-		info.prg.rom.banks_16k = info.chr.rom.banks_8k = 1;
-		info.prg.rom.banks_8k = info.prg.rom.banks_16k * 2;
-		info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
-		info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
-
+		info.mapper.prgrom_banks_16k = 1;
+		info.mapper.chrrom_banks_8k = 1;
 		// PRG Ram
-		wram_set_ram_size(0x2000);
-
+		wram_set_ram_size(S8K);
 		// PRG Rom
-		prgrom_set_size(info.prg.rom.banks_8k * 0x2000);
+		prgrom_set_size(info.mapper.prgrom_banks_16k * S16K);
 
 		if (prgrom_init(0xEA) == EXIT_ERROR) {
 			return (EXIT_ERROR);
@@ -512,7 +507,7 @@ BYTE emu_turn_on(void) {
 	srand(time(0));
 
 	// l'inizializzazione della memmap della cpu e della ppu
-	memset(&mmap_palette, 0x00, sizeof(mmap_palette));
+	memset(&memmap_palette, 0x00, sizeof(memmap_palette));
 	memset(&oam, 0x00, sizeof(oam));
 	memset(&ppu_screen, 0x00, sizeof(ppu_screen));
 	memset(&vs_system, 0x00, sizeof(vs_system));
@@ -976,9 +971,8 @@ void emu_info_rom(void) {
 #define ischanged(a) changed = (a); at_least_one_change = changed ? TRUE : at_least_one_change
 #define ifchanged() (changed ? " *" : "")
 
-	log_info_box(uL("nes20db;%s%s"),
-		info.mapper.nes20db.in_use ? "yes" : "no",
-		info.mapper.nes20db.from_crc32_prg ? " [from crc32 prg]" : "");
+	log_info_box(uL("nes20db;%s"),
+		info.mapper.nes20db.in_use ? "yes" : "no");
 
 	{
 		log_info_box_open(uL("console type;"));
@@ -1245,9 +1239,9 @@ void emu_info_rom(void) {
 
 			for (chip = 0; chip < prgrom.chips.amount; chip++) {
 				log_info_box(uL(" 8k chip %d;%-4lu [ %08X %ld ]"),
-					chip, prg_chip_size(chip) / 0x2000,
-					emu_crc32((void *)prg_chip_rom(chip), prg_chip_size(chip)),
-					prg_chip_size(chip));
+					chip, prgrom_chip_size(chip) / 0x2000,
+					emu_crc32((void *)prgrom_chip(chip), prgrom_chip_size(chip)),
+					prgrom_chip_size(chip));
 			}
 		}
 	}
@@ -1265,27 +1259,27 @@ void emu_info_rom(void) {
 
 				for (chip = 0; chip < chrrom.chips.amount; chip++) {
 					log_info_box(uL(" 4k chip %d;%-4lu [ %08X %ld ]"),
-						chip, chr_chip_size(chip) / 0x1000,
-						emu_crc32((void *)chr_chip_rom(chip), chr_chip_size(chip)),
-						chr_chip_size(chip));
+						chip, chrrom_chip_size(chip) / 0x1000,
+						emu_crc32((void *)chrrom_chip(chip), chrrom_chip_size(chip)),
+						chrrom_chip_size(chip));
 				}
 			}
 		}
 	}
 
 	if (miscrom.trainer.in_use) {
-		log_info_box(uL("trainer;yes [ %08X ]"), info.crc32.trainer);
+		log_info_box(uL("trainer;yes  [ %08X ]"), info.crc32.trainer);
 	} else if (miscrom_size()) {
 		log_info_box(uL("MISC chips;%-4lu [ %08X %ld ]%s"),
-					 (long)miscrom.chips,
-					 info.crc32.misc,
-					 miscrom_size(),
-					 (info.misc_truncated ? " truncated" : ""));
+			 (long)miscrom.chips,
+			 info.crc32.misc,
+			 miscrom_size(),
+			 (info.misc_truncated ? " truncated" : ""));
 	}
 
 	if (info.header.format == iNES_1_0) {
 		log_info_box(uL("sha1prg;%40s"), info.sha1sum.prg.string);
-		if (!mapper.write_vram && chr_size()) {
+		if (chrrom_size()) {
 			log_info_box(uL("shachr;%40s"), info.sha1sum.chr.string);
 		}
 	}
@@ -1319,24 +1313,13 @@ void emu_initial_ram(BYTE *ram, unsigned int length) {
 }
 void emu_save_header_info(void) {
 	info.header.format = info.format;
-	info.header.prgrom = info.prg.rom.banks_16k;
-	info.header.chrrom = info.chr.rom.banks_8k;
-#if defined WRAM_OLD_HANDLER
-	info.header.prgram = info.prg.ram.banks_8k_plus;
-	info.header.prgnvram = info.prg.ram.bat.banks;
-	info.header.chrram = !info.chr.rom.banks_8k
-		 ? info.format == NES_2_0
-			   ? info.chr.ram.banks_8k_plus
-			   : 1
-		 : info.chr.ram.banks_8k_plus;
-	//info.header.chrnvram = info.prg.ram.bat.banks;
-#else
+	info.header.prgrom = info.mapper.prgrom_banks_16k;
+	info.header.chrrom = info.mapper.chrrom_banks_8k;
 	info.header.prgram = wram_ram_size();
 	info.header.prgnvram = wram_nvram_size();
 	info.header.chrram = vram_ram_size();
 	info.header.chrnvram = vram_nvram_size();
 	info.header.battery = info.mapper.battery;
-#endif
 	info.header.mapper = info.mapper.id;
 	info.header.submapper = info.mapper.submapper;
 	info.header.mirroring = info.mapper.mirroring;

@@ -57,13 +57,13 @@ void extcl_cpu_wr_mem_254(WORD address, BYTE value) {
 	}
 	extcl_cpu_wr_mem_MMC3(address, value);
 }
-BYTE extcl_cpu_rd_mem_254(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_254(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		if (!m254.reg[0]) {
-			return (openbus ^ m254.reg[1]);
+			return (wram_rd(address) ^ m254.reg[1]);
 		}
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_254(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m254.reg);

@@ -74,11 +74,11 @@ void map_init_116(void) {
 	MMC3_prg_swap = prg_swap_mmc3_116;
 	MMC3_chr_swap = chr_swap_mmc3_116;
 
-	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE);
+	init_VRC2and4(VRC24_VRC2, 0x01, 0x02, TRUE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_116;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_116;
 
-	init_MMC1(MMC1A);
+	init_MMC1(MMC1A, info.reset);
 	MMC1_prg_swap = prg_swap_mmc1_116;
 	MMC1_chr_swap = chr_swap_mmc1_116;
 
@@ -90,7 +90,7 @@ void map_init_116(void) {
 	m116.reg = 0x01;
 
 	// AV Kyuukyoku Mahjong 2 (Asia) (Ja) (Ge De) (Unl).nes
-	if ((prg_size() == (size_t)(1024 * 128)) && (prg_size() == chr_size())) {
+	if ((prgrom_size() == S128K) && (prgrom_size() == chrrom_size())) {
 		info.mapper.submapper = 2;
 	};
 
@@ -127,11 +127,11 @@ void extcl_cpu_wr_mem_116(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC1(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_116(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_116(WORD address, UNUSED(BYTE openbus)) {
 	if (m116.mapper == M116_VRC2) {
-		return (extcl_cpu_rd_mem_VRC2and4(address, openbus));
+		return (extcl_cpu_rd_mem_VRC2and4(address, wram_rd(address)));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_116(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m116.mapper);

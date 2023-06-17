@@ -92,6 +92,7 @@ void map_init_019(void) {
 		m019.irq.delay = 0;
 	}
 
+	info.mapper.force_battery_io = TRUE;
 	info.mapper.extend_wr = TRUE;
 }
 void map_init_NSF_N163(void) {
@@ -173,7 +174,7 @@ BYTE extcl_cpu_rd_mem_019(WORD address, BYTE openbus) {
 		case 0x5800:
 			return ((m019.irq.count >> 8) & 0xFF);
 		default:
-			return (openbus);
+			return (wram_rd(address));
 	}
 }
 BYTE extcl_save_mapper_019(BYTE mode, BYTE slot, FILE *fp) {

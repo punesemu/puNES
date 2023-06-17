@@ -72,7 +72,7 @@ void extcl_cpu_every_cycle_VRC6(void);
 void extcl_apu_tick_VRC6(void);
 
 void init_NSF_VRC6(WORD A0, WORD A1);
-void init_VRC6(WORD A0, WORD A1);
+void init_VRC6(WORD A0, WORD A1, BYTE reset);
 void prg_fix_VRC6_base(void);
 void prg_swap_VRC6_base(WORD address, WORD value);
 void chr_fix_VRC6_base(void);

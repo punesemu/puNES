@@ -49,7 +49,7 @@ void map_init_056(void) {
 	m056.prg[2] = 0x10;
 	m056.prg[3] = 0x10;
 
-	init_KS202();
+	init_KS202(info.reset);
 	KS202_prg_swap = prg_swap_ks202_056;
 	KS202_wram_swap = wram_swap_ks202_056;
 }

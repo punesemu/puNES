@@ -32,7 +32,6 @@ struct _m030 {
 	WORD reg;
 } m030;
 struct _m030tmp {
-	BYTE mirroring;
 	BYTE *sst39sf040;
 } m030tmp;
 
@@ -50,6 +49,10 @@ void map_init_030(void) {
 
 	if (info.mapper.submapper == DEFAULT) {
 		info.mapper.submapper = 0;
+	}
+
+	if ((info.format != NES_2_0) && (vram_size() <= S8K)) {
+		vram_set_ram_size(S32K);
 	}
 
 	if (ines.flags[FL6] & 0x02) {
@@ -87,15 +90,21 @@ void extcl_cpu_wr_mem_030(WORD address, BYTE value) {
 		sst39sf040_write(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_030(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_030(WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF000) {
+		case 0x4000:
+		case 0x5000:
+		case 0x6000:
+		case 0x7000:
+			return (wram_rd(address));
 		case 0x8000:
 		case 0x9000:
 		case 0xA000:
 		case 0xB000:
 			return (sst39sf040_read(address));
+		default:
+			return (prgrom_rd(address));
 	}
-	return (openbus);
 }
 BYTE extcl_save_mapper_030(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m030.reg);
@@ -106,11 +115,11 @@ void extcl_cpu_every_cycle_030(void) {
 }
 void extcl_battery_io_030(BYTE mode, FILE *fp) {
 	if (mode == WR_BAT) {
-		if (m030tmp.sst39sf040 && (fwrite(m030tmp.sst39sf040, prg_size(), 1, fp) < 1)) {
+		if (m030tmp.sst39sf040 && (fwrite(m030tmp.sst39sf040, prgrom_size(), 1, fp) < 1)) {
 			log_error(uL("mapper_030;error on write flash chip"));
 		}
 	} else {
-		if (m030tmp.sst39sf040 && (fread(m030tmp.sst39sf040, prg_size(), 1, fp) < 1)) {
+		if (m030tmp.sst39sf040 && (fread(m030tmp.sst39sf040, prgrom_size(), 1, fp) < 1)) {
 			log_error(uL("mapper_030;error on read flash chip"));
 		}
 	}
@@ -132,6 +141,12 @@ INLINE static void mirroring_fix_030(void) {
 		return;
 	} else {
 		switch ((ines.flags[FL6] & 0x01) | ((ines.flags[FL6] & 0x08) >> 2)) {
+			case 0:
+				mirroring_H();
+				return;
+			case 1:
+				mirroring_V();
+				return;
 			case 2:
 				if (m030.reg & 0x80) {
 					mirroring_SCR1();

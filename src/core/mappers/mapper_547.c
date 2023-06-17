@@ -112,7 +112,7 @@ void extcl_cpu_wr_mem_547(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_547(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_547(WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF000) {
 		case 0xD000:
 			if ((address == 0xDC00) || (address == 0xDD00)) {
@@ -148,9 +148,9 @@ BYTE extcl_cpu_rd_mem_547(WORD address, BYTE openbus) {
 					return (0);
 				}
 			}
-			return (openbus);
+			return (prgrom_rd(address));
 		default:
-			return (openbus);
+			return (address >= 0x8000 ? prgrom_rd(address) : wram_rd(address));
 	}
 }
 BYTE extcl_save_mapper_547(BYTE mode, BYTE slot, FILE *fp) {

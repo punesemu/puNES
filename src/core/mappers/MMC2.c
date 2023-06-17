@@ -92,10 +92,12 @@ void extcl_update_r2006_MMC2(WORD new_r2006, UNUSED(WORD old_r2006)) {
 	extcl_after_rd_chr_MMC2(new_r2006);
 }
 
-void init_MMC2(void) {
-	memset(&mmc2, 0x00, sizeof(mmc2));
+void init_MMC2(BYTE reset) {
+	if (reset >= HARD) {
+		memset(&mmc2, 0x00, sizeof(mmc2));
 
-	mmc2.latch[1] = 2;
+		mmc2.latch[1] = 2;
+	}
 
 	MMC2_prg_fix = prg_fix_MMC2_base;
 	MMC2_prg_swap = prg_swap_MMC2_base;

@@ -69,6 +69,10 @@ void map_init_242(void) {
 			static WORD ds[] = { 0x0F, 0xFF };
 
 			tmp_fix_242(LENGTH(ds), 0, &ds[0]);
+		} else {
+			static WORD ds[] = { 0x00 };
+
+			tmp_fix_242(LENGTH(ds), 0, &ds[0]);
 		}
 	}
 
@@ -85,16 +89,14 @@ void extcl_cpu_wr_mem_242(WORD address, UNUSED(BYTE value)) {
 	chr_fix_242();
 	mirroring_fix_242();
 }
-BYTE extcl_cpu_rd_mem_242(WORD address, BYTE openbus) {
-	if ((address >= 0x8000) && (m242.reg & 0x0100) && m242tmp.ds_used) {
-		return (prgrom_rd((address | m242tmp.dipswitch[m242tmp.index])));
+BYTE extcl_cpu_rd_mem_242(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		return (m242.reg & 0x100 ? prgrom_rd(address | m242tmp.dipswitch[m242tmp.index]) : prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_242(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m242.reg);
-	save_slot_ele(mode, slot, m242tmp.index);
-	save_slot_ele(mode, slot, m242tmp.dipswitch);
 
 	return (EXIT_OK);
 }
@@ -121,9 +123,9 @@ INLINE static void prg_fix_242(void) {
 	//  ?       1       1     Switchable 32 KiB inner bank PP at CPU $8000-$FFFF (NROM-256)
 	if (m242tmp.two_chips) {
 		if (m242.reg & 0x0600) {
-			outer &= ((info.prg.rom.banks_16k & ~8) - 1);
+			outer &= ((info.mapper.prgrom_banks_16k & ~8) - 1);
 		} else {
-			outer = (info.prg.rom.banks_16k & ~8);
+			outer = (info.mapper.prgrom_banks_16k & ~8);
 		}
 	}
 

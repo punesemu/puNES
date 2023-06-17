@@ -56,7 +56,7 @@ void extcl_cpu_wr_mem_186(WORD address, BYTE value) {
 		wram_fix_186();
 	}
 }
-BYTE extcl_cpu_rd_mem_186(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_186(WORD address, UNUSED(BYTE openbus)) {
 	switch (address) {
 		case 0x4200:
 		case 0x4201:
@@ -65,7 +65,7 @@ BYTE extcl_cpu_rd_mem_186(WORD address, BYTE openbus) {
 		case 0x4202:
 			return (0x40);
 		default:
-			return (openbus);
+			return (wram_rd(address));
 	}
 }
 BYTE extcl_save_mapper_186(BYTE mode, BYTE slot, FILE *fp) {

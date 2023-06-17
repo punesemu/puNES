@@ -198,8 +198,8 @@ void extcl_cpu_every_cycle_VRC2and4(void) {
 	irq.high |= EXT_IRQ;
 }
 
-void init_VRC2and4(BYTE type, WORD A0, WORD A1, BYTE irq_repeated) {
-	if (info.reset >= HARD) {
+void init_VRC2and4(BYTE type, WORD A0, WORD A1, BYTE irq_repeated, BYTE reset) {
+	if (reset >= HARD) {
 		memset(&vrc2and4, 0x00, sizeof(vrc2and4));
 
 		vrc2and4.prg[0] = 0;

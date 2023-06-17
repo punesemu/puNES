@@ -158,11 +158,13 @@ void extcl_cpu_wr_mem_134(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_134(WORD address, BYTE openbus) {
-	if (m134tmp.ds_used && (address >= 0x8000) && (m134.reg[0] & 0x40)) {
-		return (m134tmp.dipswitch[m134tmp.index]);
+BYTE extcl_cpu_rd_mem_134(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		return (m134tmp.ds_used && (m134.reg[0] & 0x40)
+			? m134tmp.dipswitch[m134tmp.index]
+			: prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_134(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m134.reg);

@@ -52,7 +52,7 @@ void map_init_105(void) {
 	memset(&m105, 0x00, sizeof(m105));
 	memset(&m105tmp, 0x00, sizeof(m105tmp));
 
-	init_MMC1(MMC1B);
+	init_MMC1(MMC1B, HARD);
 	MMC1_prg_fix = prg_fix_mmc1_105;
 	MMC1_prg_swap = prg_swap_mmc1_105;
 	MMC1_chr_swap = chr_swap_mmc1_105;

@@ -84,11 +84,6 @@ BYTE extcl_save_mapper_416(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m416.reg);
 	save_slot_ele(mode, slot, m416.irq.enable);
 	save_slot_ele(mode, slot, m416.irq.counter);
-
-	if (mode == SAVE_SLOT_READ) {
-		prg_fix_416();
-	}
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_416(void) {

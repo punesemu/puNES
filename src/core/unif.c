@@ -21,7 +21,6 @@
 #include "unif.h"
 #include "rom_mem.h"
 #include "info.h"
-#include "mem_map.h"
 #include "mappers.h"
 #include "conf.h"
 #include "cheat.h"
@@ -146,9 +145,7 @@ BYTE unif_load_rom(void) {
 	info.mapper.battery = FALSE;
 	info.mirroring_db = info.id = DEFAULT;
 	info.extra_from_db = 0;
-	info.chr.rom.banks_8k = 0;
-	info.chr.ram.banks_8k_plus = 0;
-	info.chr.chips = 0;
+	info.mapper.chrrom_banks_8k = 0;
 	vs_system.enabled = FALSE;
 
 	if (strncmp(unif.header.identification, "UNIF", 4) == 0) {
@@ -164,7 +161,7 @@ BYTE unif_load_rom(void) {
 				size_t size = 0;
 				int i = 0;
 
-				if (prg_chip_size(0) == 0) {
+				if (prgrom_chip_size(0) == 0) {
 					free(rom.data);
 					return (EXIT_ERROR);
 				}
@@ -172,7 +169,7 @@ BYTE unif_load_rom(void) {
 				// PRG
 				{
 					for (i = 0, size = 0; i < prgrom.chips.amount; i++) {
-						size += prg_chip_size(i);
+						size += prgrom_chip_size(i);
 					}
 
 					prgrom_set_size(size);
@@ -181,23 +178,14 @@ BYTE unif_load_rom(void) {
 						free(rom.data);
 						return (EXIT_ERROR);
 					}
-
-					prg_chip_rom(0) = prg_rom();
-
-
-
-
-
-
-					info.prg.rom.banks_16k = prgrom_size() / 0x4000;
-					info.prg.rom.banks_8k = prgrom_size() / 0x2000;
-					map_set_banks_max_prg();
+					prgrom_chip(0) = prgrom_pnt();
+					info.mapper.prgrom_banks_16k = prgrom_size() / S16K;
 				}
 
 				// CHR
 				{
 					for (i = 0, size = 0; i < chrrom.chips.amount; i++) {
-						size += chr_chip_size(i);
+						size += chrrom_chip_size(i);
 					}
 
 					chrrom_set_size(size);
@@ -207,17 +195,8 @@ BYTE unif_load_rom(void) {
 							free(rom.data);
 							return (EXIT_ERROR);
 						}
-
-						chr_chip_rom(0) = chr_rom();
-
-
-
-
-
-						info.chr.rom.banks_8k = chr_size() / 0x2000;
-						info.chr.rom.banks_4k = chr_size() / 0x1000;
-						info.chr.rom.banks_1k = chr_size() / 0x0400;
-						map_set_banks_max_chr();
+						chrrom_chip(0) = chrrom_pnt();
+						info.mapper.chrrom_banks_8k = chrrom_size() / S8K;
 					}
 				}
 
@@ -316,12 +295,12 @@ BYTE unif_load_rom(void) {
 		}
 
 		{
-			info.crc32.prg = emu_crc32((void *)prg_rom(), prgrom_size());
+			info.crc32.prg = emu_crc32((void *)prgrom_pnt(), prgrom_size());
 			info.crc32.total = info.crc32.prg;
 
-			if (chr_size()) {
-				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
-				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.prg);
+			if (chrrom_size()) {
+				info.crc32.chr = emu_crc32((void *)chrrom_pnt(), chrrom_size());
+				info.crc32.total = emu_crc32_continue((void *)chrrom_pnt(), chrrom_size(), info.crc32.prg);
 			}
 		}
 
@@ -480,17 +459,17 @@ BYTE unif_PRG(_rom_mem *rom, BYTE phase) {
 			return (EXIT_ERROR);
 		}
 		prgrom.chips.amount = ++unif.chips.prg;
-		prg_chip_size(chip) = unif.chunk.length;
+		prgrom_chip_size(chip) = unif.chunk.length;
 		rom->position += unif.chunk.length;
 		return (EXIT_OK);
 	} else {
 		int i = 0;
 
 		unif.chips.prg++;
-		for (i = 0, prg_chip_rom(chip) = prg_rom(); i < chip; i++) {
-			prg_chip_rom(chip) += prg_chip_size(i);
+		for (i = 0, prgrom_chip(chip) = prgrom_pnt(); i < chip; i++) {
+			prgrom_chip(chip) += prgrom_chip_size(i);
 		}
-		rom_mem_memcpy(prg_chip_rom(chip), rom, prg_chip_size(chip));
+		rom_mem_memcpy(prgrom_chip(chip), rom, prgrom_chip_size(chip));
 	}
 
 	return (EXIT_OK);
@@ -507,17 +486,17 @@ BYTE unif_CHR(_rom_mem *rom, BYTE phase) {
 			return (EXIT_ERROR);
 		}
 		chrrom.chips.amount = ++unif.chips.chr;
-		chr_chip_size(chip) = unif.chunk.length;
+		chrrom_chip_size(chip) = unif.chunk.length;
 		rom->position += unif.chunk.length;
 		return (EXIT_OK);
 	} else {
 		int i = 0;
 
 		unif.chips.chr++;
-		for (i = 0, chr_chip_rom(chip) = chr_rom(); i < chip; i++) {
-			chr_chip_rom(chip) += chr_chip_size(i);
+		for (i = 0, chrrom_chip(chip) = chrrom_pnt(); i < chip; i++) {
+			chrrom_chip(chip) += chrrom_chip_size(i);
 		}
-		rom_mem_memcpy(chr_chip_rom(chip), rom, chr_chip_size(chip));
+		rom_mem_memcpy(chrrom_chip(chip), rom, chrrom_chip_size(chip));
 	}
 
 	return (EXIT_OK);
@@ -563,7 +542,6 @@ BYTE unif_BATR(_rom_mem *rom, BYTE phase) {
 	}
 	batr = 0;
 	rom_mem_memcpy(&batr, rom, unif.chunk.length);
-	wram_set_nvram_size((size_t)(batr & 0x01) * 0x2000);
 	info.mapper.battery = TRUE;
 
 	return (EXIT_OK);
@@ -739,11 +717,11 @@ void find_board(void) {
 		unif.finded = TRUE;
 		return;
 	}
-
-
-
-
-
+	if (!strncasecmp("Supervision16in1", unif.stripped_board, strlen(unif.stripped_board))) {
+		info.mapper.id = 53;
+		unif.finded = TRUE;
+		return;
+	}
 	if (!strncasecmp("MARIO1-MALEE2", unif.stripped_board, strlen(unif.stripped_board))) {
 		info.mapper.id = 55;
 		wram_set_ram_size(S2K);
@@ -1411,7 +1389,6 @@ void find_board(void) {
 
 	static const _unif_board unif_boards[] = {
 //		{"AC08", 42, NO_UNIF, 2, DEFAULT, NOEXTRA},
-//		{"Supervision16in1", 53, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 //		{"SA-016-1M", 146, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 		{"K-3010", 438, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 		{"K-3071", 438, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
@@ -1428,8 +1405,6 @@ void find_board(void) {
 		{"AX5705", 530, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 		{"CHINA_ER_SAN2", 532, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 		{"82112C", 540, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
-
-		{"BOY", NO_INES, 1, DEFAULT, DEFAULT, NOEXTRA}
 	};
 
 	unif.finded = FALSE;

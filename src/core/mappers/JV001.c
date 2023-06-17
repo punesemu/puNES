@@ -100,8 +100,8 @@ BYTE extcl_save_mapper_JV001(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void init_JV001(void) {
-	if (info.reset >= HARD) {
+void init_JV001(BYTE reset) {
+	if (reset >= HARD) {
 		memset(&jv001, 0x00, sizeof(jv001));
 
 		jv001.invert = 0xFF;
@@ -109,14 +109,12 @@ void init_JV001(void) {
 	}
 
 	info.mapper.extend_wr = TRUE;
-	info.mapper.extend_rd = TRUE;
 
 	JV001_prg_fix = prg_fix_JV001_base;
 	JV001_chr_fix = chr_fix_JV001_base;
 	JV001_wram_fix = wram_fix_JV001_base;
 	JV001_mirroring_fix = mirroring_fix_JV001_base;
 }
-
 void prg_fix_JV001_base(void) {}
 void chr_fix_JV001_base(void) {}
 void wram_fix_JV001_base(void) {}

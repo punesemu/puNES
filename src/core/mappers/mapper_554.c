@@ -46,33 +46,35 @@ void extcl_after_mapper_init_554(void) {
 	wram_fix_554();
 }
 void extcl_cpu_wr_mem_554(UNUSED(WORD address), UNUSED(BYTE value)) {}
-BYTE extcl_cpu_rd_mem_554(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_554(WORD address, UNUSED(BYTE openbus)) {
+	WORD adr = address;
+
 	switch (address & 0xF000) {
 		case 0xC000:
-			if ((address >= 0xCAB6) && (address <= 0xCAD7)) {
-				m554.reg = (address & 0x3C) >> 2;
+			if ((adr >= 0xCAB6) && (adr <= 0xCAD7)) {
+				m554.reg = (adr & 0x3C) >> 2;
 				chr_fix_554();
 				wram_fix_554();
 			}
-			break;
+			return (prgrom_rd(address));
 		case 0xE000:
-			address &= 0xFFFE;
-			if ((address == 0xEBE2) || (address == 0xEE32)) {
-				m554.reg = (address & 0x3C) >> 2;
+			adr &= 0xFFFE;
+			if ((adr == 0xEBE2) || (adr == 0xEE32)) {
+				m554.reg = (adr & 0x3C) >> 2;
 				chr_fix_554();
 				wram_fix_554();
 			}
-			break;
+			return (prgrom_rd(address));
 		case 0xF000:
-			address &= 0xFFFE;
-			if (address == 0xFFFC) {
-				m554.reg = (address & 0x3C) >> 2;
+			adr &= 0xFFFE;
+			if (adr == 0xFFFC) {
+				m554.reg = (adr & 0x3C) >> 2;
 				chr_fix_554();
 				wram_fix_554();
 			}
-			break;
+			return (prgrom_rd(address));
 	}
-	return (openbus);
+	return (address >= 0x8000 ? prgrom_rd(address) : wram_rd(address));
 }
 BYTE extcl_save_mapper_554(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m554.reg);

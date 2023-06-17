@@ -41,7 +41,7 @@ void map_init_543(void) {
 
 	memset(&m543, 0x00, sizeof(m543));
 
-	init_MMC1(MMC1B);
+	init_MMC1(MMC1B, HARD);
 	MMC1_prg_swap = prg_swap_mmc1_543;
 	MMC1_chr_swap = chr_swap_mmc1_543;
 	MMC1_wram_fix = wram_fix_mmc1_543;

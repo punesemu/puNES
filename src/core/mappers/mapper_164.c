@@ -56,7 +56,7 @@ void map_init_164(void) {
 
 	memset(&m164, 0x00, sizeof(m164));
 
-	m164tmp.cc93c66 = wram_nvram_size() == 512;
+	m164tmp.cc93c66 = wram_nvram_size() == S512B;
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -114,7 +114,7 @@ BYTE extcl_cpu_rd_mem_164(WORD address, BYTE openbus) {
 			}
 			return (m164.reg[2] & 0x04);
 		default:
-			return (openbus);
+			return (wram_rd(address));
 	}
 }
 BYTE extcl_save_mapper_164(BYTE mode, BYTE slot, FILE *fp) {

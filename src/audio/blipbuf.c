@@ -361,12 +361,12 @@ static void apu_tick_blipbuf_FDS(void) {
 	}
 }
 static void apu_tick_blipbuf_MMC5(void) {
-	if (mmc5.clocked) {
-		mmc5.clocked = FALSE;
+	if (m005.snd.clocked) {
+		m005.snd.clocked = FALSE;
 		blipbuf.output =
-			ch_gain_ext(mmc5.S3.output, 10.0f) +
-			ch_gain_ext(mmc5.S4.output, 10.0f) +
-			ch_gain_ext(mmc5.pcm.output, 2.0f);
+			ch_gain_ext(m005.snd.S3.output, 10.0f) +
+			ch_gain_ext(m005.snd.S4.output, 10.0f) +
+			ch_gain_ext(m005.snd.pcm.output, 2.0f);
 		update_tick_extra_blbuf(mmc5, 1);
 	} else {
 		blipbuf.mmc5.period++;

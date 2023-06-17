@@ -60,11 +60,6 @@ void extcl_cpu_wr_mem_337(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_337(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m337.reg);
-
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_337();
-	}
-
 	return (EXIT_OK);
 }
 

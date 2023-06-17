@@ -42,11 +42,6 @@ void map_init_198(void) {
 	MMC3_prg_swap = prg_swap_mmc3_198;
 	MMC3_wram_fix = wram_fix_mmc3_198;
 
-	if (wram_size() < (12 * S1K)) {
-		wram_set_ram_size(S4K);
-		wram_set_nvram_size(S8K);
-	}
-
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }

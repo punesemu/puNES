@@ -73,18 +73,18 @@ void extcl_cpu_wr_mem_204(WORD address, UNUSED(BYTE value)) {
 	chr_fix_204();
 	mirroring_fix_204();
 }
-BYTE extcl_cpu_rd_mem_204(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_204(WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		switch (m204.reg & 0xFF0F) {
 			case 0xF004:
-				return (prgrom_size() < S64K ? m204tmp.dipswitch[m204tmp.index] & 0x00FF : openbus);
+				return (prgrom_size() <= S64K ? m204tmp.dipswitch[m204tmp.index] & 0x00FF : prgrom_rd(address));
 			case 0xF008:
 				return ((m204tmp.dipswitch[m204tmp.index] & 0xFF00) >> 8);
 			default:
-				return (openbus);
+				return (prgrom_rd(address));
 		}
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_204(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m204.reg);

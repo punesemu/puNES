@@ -86,7 +86,7 @@ void map_init_042(void) {
 				memset(&m042, 0x00, sizeof(m042));
 			}
 
-			init_N118();
+			init_N118(info.reset);
 			N118_prg_fix = prg_fix_n118_042_s2;
 
 			info.mapper.extend_wr = TRUE;

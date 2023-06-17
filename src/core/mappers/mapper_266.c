@@ -45,7 +45,7 @@ void map_init_266(void) {
 
 	m266.pcm = 7;
 
-	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE);
+	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_266;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_266;
 	VRC2and4_misc_03 = misc_03_vrc2and4_266;

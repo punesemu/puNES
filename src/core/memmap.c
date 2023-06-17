@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "info.h"
-#include "mem_map.h"
 #include "gui.h"
 #include "tas.h"
 #include "cpu.h"
@@ -33,7 +32,7 @@ INLINE static unsigned int shift_from_size(size_t size);
 INLINE static size_t pow_of_2(size_t size);
 INLINE static void set_size(size_t *s, size_t *rs, size_t cs, size_t size);
 
-_mmap_palette mmap_palette;
+_memmap_palette memmap_palette;
 _oam oam;
 
 _memmap memmap;
@@ -74,6 +73,7 @@ INLINE static void memmap_prgrom(DBWORD adr, DBWORD value, size_t size, BYTE rd,
 INLINE static void memmap_wram(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
 INLINE static void memmap_chrrom(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
 INLINE static void memmap_chrrom_nmt(DBWORD adr, DBWORD value, size_t size, BYTE tvalue);
+INLINE static void memmap_wram_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
 INLINE static void memmap_wram_ram_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
 INLINE static void memmap_wram_nvram_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
 INLINE static void memmap_vram(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
@@ -478,7 +478,7 @@ INLINE static WORD memmap_banks(enum _sizes_types bsize, size_t size) {
 INLINE static WORD memmap_control_bank(enum _sizes_types bsize, size_t size, WORD bank) {
 	unsigned int max = memmap_banks(bsize, size);
 
-	return (!max ? 0 : bank > max ? bank & (max - 1) : bank);
+	return (!max ? 0 : bank < max ? bank : bank & (max - 1));
 }
 INLINE static size_t memmap_region_address(_memmap_region *region, WORD address) {
 	const unsigned int slot = slot_from_address(&region->info, address);
@@ -532,10 +532,9 @@ size_t prgrom_region_address(WORD address) {
 BYTE prgrom_rd(WORD address) {
 	const unsigned int slot = slot_from_address(&memmap.prg.info, address);
 
-	if (memmap.prg.chunks[slot].permit.rd) {
-		return (memmap.prg.chunks[slot].pnt[address & memmap.prg.chunks[slot].mask]);
-	}
-	return (cpu.openbus);
+	return (memmap.prg.chunks[slot].permit.rd
+		? memmap.prg.chunks[slot].pnt[address & memmap.prg.chunks[slot].mask]
+		: address >> 8);
 }
 void prgrom_wr(WORD address, BYTE value) {
 	const unsigned int slot = slot_from_address(&memmap.prg.info, address);
@@ -827,7 +826,6 @@ void wram_memset(void) {
 
 BYTE wram_rd(WORD address) {
 	const unsigned int slot = slot_from_address(&memmap.wram.info, address);
-	BYTE openbus = cpu.openbus;
 
 //	if (address < 0x6000) {
 //		if ((vs_system.enabled) && (address >= 0x4020)) {
@@ -860,10 +858,10 @@ BYTE wram_rd(WORD address) {
 //			return (prg.ram.data[address & 0x07FF]);
 //		}
 //	} else
-	if (memmap.wram.chunks[slot].permit.rd) {
-		openbus = (memmap.wram.chunks[slot].pnt[address & memmap.wram.chunks[slot].mask]);
-	}
-	return (openbus);
+
+	return (memmap.wram.chunks[slot].permit.rd)
+		? memmap.wram.chunks[slot].pnt[address & memmap.wram.chunks[slot].mask]
+		: (address >> 8);
 }
 void wram_wr(WORD address, BYTE value) {
 	const unsigned int slot = slot_from_address(&memmap.wram.info, address);
@@ -942,6 +940,41 @@ void memmap_wram_32k(DBWORD address, DBWORD value) {
 }
 void memmap_wram_custom_size(DBWORD address, DBWORD chunk, size_t size) {
 	memmap_wram(address, chunk, size, TRUE, TRUE, FALSE);
+}
+
+// with permissions
+INLINE static void memmap_wram_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
+	memmap_wram(adr, value, size, rd, wr, tvalue);
+}
+void memmap_wram_wp_128b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
+	memmap_wram_wp(address, value, S128B, rd, wr, TRUE);
+}
+void memmap_wram_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
+	memmap_wram_wp(address, value, S256B, rd, wr, TRUE);
+}
+void memmap_wram_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
+	memmap_wram_wp(address, value, S512B, rd, wr, TRUE);
+}
+void memmap_wram_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
+	memmap_wram_wp(address, value, S1K, rd, wr, TRUE);
+}
+void memmap_wram_wp_2k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
+	memmap_wram_wp(address, value, S2K, rd, wr, TRUE);
+}
+void memmap_wram_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
+	memmap_wram_wp(address, value, S4K, rd, wr, TRUE);
+}
+void memmap_wram_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
+	memmap_wram_wp(address, value, S8K, rd, wr, TRUE);
+}
+void memmap_wram_wp_16k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
+	memmap_wram_wp(address, value, S16K, rd, wr, TRUE);
+}
+void memmap_wram_wp_32k(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
+	memmap_wram_wp(address, value, S32K, rd, wr, TRUE);
+}
+void memmap_wram_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr) {
+	memmap_wram_wp(address, chunk, size, rd, wr, FALSE);
 }
 
 // with permissions
@@ -1344,7 +1377,6 @@ void nmt_reset_chunks(void) {
 void nmt_memset(void) {
 	if (nmt_size()) {
 		memset(nmt_pnt(), 0x00, nmt.real_size);
-		//emu_initial_ram(nmt_pnt(), nmt.real_size);
 	}
 }
 
@@ -1504,10 +1536,6 @@ void memmap_nmt_vram_8k(DBWORD address, DBWORD value) {
 	memmap_nmt_vram(address, value, S8K, TRUE);
 }
 
-
-
-
-
 void mirroring_H(void) {
 	mapper.mirroring = MIRRORING_HORIZONTAL;
 	memmap_nmt_1k(MMPPU(0x2000), 0);
@@ -1582,16 +1610,6 @@ void mirroring_SCR0x3_SCR1x1(void) {
 	memmap_nmt_1k(MMPPU(0x3800), 0);
 	memmap_nmt_1k(MMPPU(0x3C00), 1);
 }
-
-
-
-
-
-
-
-
-
-
 
 BYTE nmt_malloc(void) {
 	if (memmap_malloc(&nmt_pnt(), nmt.real_size) == EXIT_ERROR) {
@@ -1757,10 +1775,8 @@ void nvram_save_file(void) {
 					return;
 				}
 			}
-			if (info.mapper.force_battery_io) {
-				if (extcl_battery_io) {
-					extcl_battery_io(WR_BAT, fp);
-				}
+			if (extcl_battery_io) {
+				extcl_battery_io(WR_BAT, fp);
 			}
 			// forzo la scrittura del file
 			fflush(fp);

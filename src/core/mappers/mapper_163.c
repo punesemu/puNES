@@ -90,7 +90,7 @@ void extcl_cpu_wr_mem_163(WORD address, BYTE value) {
 		case 0x5200:
 			// 1 MiB games connect both ASIC PRG A19 and A20 outputs to ROM A19,
 			// effectively exempting this register from the bit-swap.
-			if ((m163.reg[3] & 0x01) && (prg_size() >= (2 * 1024 * 1024))) {
+			if ((m163.reg[3] & 0x01) && (prgrom_size() >= S2M)) {
 				value = (value & 0xFC) | ((value & 0x01) << 1) | ((value & 0x02) >> 1);
 			}
 			m163.reg[2] = value;
@@ -104,11 +104,9 @@ void extcl_cpu_wr_mem_163(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_163(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		if (!(address & 0x0800)) {
-			return (~m163.reg[1] & 0x04);
-		}
+		return (!(address & 0x0800) ? ~m163.reg[1] & 0x04 : openbus);
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_163(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m163.reg);

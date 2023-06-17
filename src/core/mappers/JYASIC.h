@@ -60,7 +60,7 @@ void extcl_ppu_256_to_319_JYASIC(void);
 void extcl_ppu_320_to_34x_JYASIC(void);
 void extcl_update_r2006_JYASIC(WORD new_r2006, WORD old_r2006);
 
-void init_JYASIC(BYTE extended_mode);
+void init_JYASIC(BYTE extended_mode, BYTE reset);
 void prg_fix_JYASIC_base(void);
 void prg_swap_JYASIC_base(WORD address, DBWORD value);
 void chr_fix_JYASIC_base(void);

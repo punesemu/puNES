@@ -90,11 +90,13 @@ void extcl_cpu_wr_mem_519(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_519(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		return (address & 0x0800 ? m519.read5xxx[address & 0x03] : openbus);
+		return (address & 0x800 ? m519.read5xxx[address & 0x03] : openbus);
 	} else if (address >= 0x8000) {
-		return (m519.reg[0] & 0x0040 ? prgrom_rd(((address & 0xFFF0) | m519tmp.dipswitch[m519tmp.index])) : openbus);
+		return (m519.reg[0] & 0x0040
+			? prgrom_rd(((address & 0xFFF0) | m519tmp.dipswitch[m519tmp.index]))
+			: prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_519(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m519.reg);

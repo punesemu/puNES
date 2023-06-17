@@ -17,6 +17,7 @@
  */
 
 #include "mappers.h"
+#include "info.h"
 
 void prg_swap_vrc6_026(WORD address, WORD value);
 void chr_swap_vrc6_026(WORD address, WORD value);
@@ -31,7 +32,7 @@ void map_init_026(void) {
 	mapper.internal_struct[0] = (BYTE *)&vrc6;
 	mapper.internal_struct_size[0] = sizeof(vrc6);
 
-	init_VRC6(0x02, 0x01);
+	init_VRC6(0x02, 0x01, info.reset);
 	VRC6_prg_swap = prg_swap_vrc6_026;
 	VRC6_chr_swap = chr_swap_vrc6_026;
 	VRC6_nmt_swap = nmt_swap_vrc6_026;

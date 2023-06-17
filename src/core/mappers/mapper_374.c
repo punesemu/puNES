@@ -35,15 +35,15 @@ void map_init_374(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc1;
 	mapper.internal_struct_size[1] = sizeof(mmc1);
 
-	init_MMC1(MMC1A);
-	MMC1_prg_swap = prg_swap_mmc1_374;
-	MMC1_chr_swap = chr_swap_mmc1_374;
-
 	if (info.reset == RESET) {
 		m374.reg++;
 	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		m374.reg = 0;
 	}
+
+	init_MMC1(MMC1A, HARD);
+	MMC1_prg_swap = prg_swap_mmc1_374;
+	MMC1_chr_swap = chr_swap_mmc1_374;
 }
 BYTE extcl_save_mapper_374(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m374.reg);

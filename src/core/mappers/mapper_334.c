@@ -24,7 +24,7 @@
 void prg_swap_mmc3_334(WORD address, WORD value);
 void chr_swap_mmc3_334(WORD address, WORD value);
 
-INLINE static void tmp_fix_334(BYTE max, BYTE index, const BYTE *ds);
+INLINE static void tmp_fix_334(BYTE max, BYTE index, const WORD *ds);
 
 struct _m334 {
 	BYTE reg;
@@ -33,7 +33,7 @@ struct _m334tmp {
 	BYTE ds_used;
 	BYTE max;
 	BYTE index;
-	const BYTE *dipswitch;
+	const WORD *dipswitch;
 } m334tmp;
 
 void map_init_334(void) {
@@ -65,8 +65,13 @@ void map_init_334(void) {
 		}
 	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		memset(&m334tmp, 0x00, sizeof(m334tmp));
+
 		if (info.crc32.prg == 0x7EC6DF24) { // 5-in-1 (Multi)[Unknown][1993 Copyrights].nes
-			static const BYTE ds[] = { 1, 0 };
+			static const WORD ds[] = { 1, 0 };
+
+			tmp_fix_334(LENGTH(ds), 0, &ds[0]);
+		} else {
+			static const WORD ds[] = { 0x00 };
 
 			tmp_fix_334(LENGTH(ds), 0, &ds[0]);
 		}
@@ -91,11 +96,11 @@ void extcl_cpu_wr_mem_334(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_334(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (m334tmp.ds_used && (address & 0x0002) && memmap_adr_is_readable(MMCPU(address))) {
+		if ((address & 0x0002) && memmap_adr_is_readable(MMCPU(address))) {
 			return ((openbus & 0xFE) | (m334tmp.dipswitch[m334tmp.index] & 0x01));
 		}
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_334(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m334.reg);
@@ -115,7 +120,7 @@ void chr_swap_mmc3_334(WORD address, WORD value) {
 	chr_swap_MMC3_base(address, (base | (value & mask)));
 }
 
-INLINE static void tmp_fix_334(BYTE max, BYTE index, const BYTE *ds) {
+INLINE static void tmp_fix_334(BYTE max, BYTE index, const WORD *ds) {
 	m334tmp.ds_used = TRUE;
 	m334tmp.max = max;
 	m334tmp.index = index;

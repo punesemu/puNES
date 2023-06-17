@@ -62,7 +62,7 @@ void map_init_556(void) {
 	MMC3_prg_swap = prg_swap_mmc3_556;
 	MMC3_chr_swap = chr_swap_mmc3_556;
 
-	init_VRC2and4(VRC24_VRC4, 0x05, 0x0A, TRUE);
+	init_VRC2and4(VRC24_VRC4, 0x05, 0x0A, TRUE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_556;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_556;
 

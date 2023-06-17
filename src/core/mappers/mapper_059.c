@@ -84,10 +84,10 @@ void extcl_cpu_wr_mem_059(WORD address, UNUSED(BYTE value)) {
 	}
 }
 BYTE extcl_cpu_rd_mem_059(WORD address, BYTE openbus) {
-	if ((address >= 0x8000) && (m059.reg & 0x0100)) {
-		return ((openbus & 0xFC) | m059tmp.dipswitch[m059tmp.index]);
+	if (address >= 0x8000) {
+		return (m059.reg & 0x0100 ? (openbus & 0xFC) | m059tmp.dipswitch[m059tmp.index] : prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_059(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m059.reg);

@@ -165,7 +165,7 @@ struct _m355 {
 } m355;
 
 void map_init_355(void) {
-	//EXTCL_AFTER_MAPPER_INIT(355);
+	EXTCL_AFTER_MAPPER_INIT(355);
 	EXTCL_MAPPER_QUIT(355);
 	EXTCL_CPU_WR_MEM(355);
 	EXTCL_CPU_RD_MEM(355);
@@ -212,9 +212,9 @@ void extcl_mapper_quit_355(void) {
 void extcl_cpu_wr_mem_355(WORD address, UNUSED(BYTE value)) {
 	m355.address = address;
 }
-BYTE extcl_cpu_rd_mem_355(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_355(WORD address, UNUSED(BYTE openbus)) {
 	m355.address = address;
-	return (openbus);
+	return (address >= 0x8000 ? prgrom_rd(address) : wram_rd(address));
 }
 BYTE extcl_save_mapper_355(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m355.address);

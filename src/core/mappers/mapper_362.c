@@ -39,7 +39,7 @@ void map_init_362(void) {
 	mapper.internal_struct[1] = (BYTE *)&vrc2and4;
 	mapper.internal_struct_size[1] = sizeof(vrc2and4);
 
-	init_VRC2and4(VRC24_VRC4, 0x01, 0x02, FALSE);
+	init_VRC2and4(VRC24_VRC4, 0x01, 0x02, FALSE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_362;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_362;
 

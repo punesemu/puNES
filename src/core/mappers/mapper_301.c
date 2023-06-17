@@ -70,11 +70,11 @@ void extcl_cpu_wr_mem_301(WORD address, UNUSED(BYTE value)) {
 	prg_fix_301();
 	mirroring_fix_301();
 }
-BYTE extcl_cpu_rd_mem_301(WORD address, BYTE openbus) {
-	if ((address >= 0x8000) && (m301.reg & 0x0100)) {
-		return (prgrom_rd((address & 0xFFFE) | m301tmp.dipswitch[m301tmp.index]));
+BYTE extcl_cpu_rd_mem_301(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		return (m301.reg & 0x100 ? prgrom_rd((address & 0xFFFE) | m301tmp.dipswitch[m301tmp.index]) : prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_301(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m301.reg);

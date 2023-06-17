@@ -31,11 +31,9 @@ void map_init_010(void) {
 	mapper.internal_struct[0] = (BYTE *)&mmc4;
 	mapper.internal_struct_size[0] = sizeof(mmc4);
 
-	if (info.reset >= HARD) {
-		init_MMC4();
-		MMC4_prg_swap = prg_swap_mmc4_010;
-		MMC4_chr_swap = chr_swap_mmc4_010;
-	}
+	init_MMC4(info.reset);
+	MMC4_prg_swap = prg_swap_mmc4_010;
+	MMC4_chr_swap = chr_swap_mmc4_010;
 }
 
 void prg_swap_mmc4_010(WORD address, WORD value) {

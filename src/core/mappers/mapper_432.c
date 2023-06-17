@@ -102,11 +102,11 @@ void extcl_cpu_wr_mem_432(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_432(WORD address, BYTE openbus) {
-	if ((address > 0x8000) && m432tmp.read_dp) {
-		return (m432tmp.dipswitch[m432tmp.index]);
+BYTE extcl_cpu_rd_mem_432(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		return (m432tmp.read_dp ? m432tmp.dipswitch[m432tmp.index] : prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_432(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m432.reg);

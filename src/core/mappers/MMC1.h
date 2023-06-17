@@ -40,7 +40,7 @@ void extcl_after_mapper_init_MMC1(void);
 void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value);
 BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp);
 
-void init_MMC1(BYTE type);
+void init_MMC1(BYTE type, BYTE reset);
 void prg_fix_MMC1_base(void);
 void prg_swap_MMC1_base(WORD address, WORD value);
 void chr_fix_MMC1_base(void);

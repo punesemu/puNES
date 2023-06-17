@@ -30,7 +30,7 @@ void map_init_132(void) {
 	mapper.internal_struct[0] = (BYTE *)&txc;
 	mapper.internal_struct_size[0] = sizeof(txc);
 
-	init_TXC();
+	init_TXC(info.reset);
 	TXC_prg_fix = prg_fix_txc_132;
 	TXC_chr_fix = chr_fix_txc_132;
 }
@@ -38,12 +38,12 @@ void extcl_cpu_wr_mem_132(WORD address, BYTE value) {
 	extcl_cpu_wr_mem_TXC(address, (value & 0x0F));
 }
 BYTE extcl_cpu_rd_mem_132(WORD address, BYTE openbus) {
-	if ((address >= 0x4020) && (address <= 0x5FFF)) {
+	if ((address > 0x4020) && (address <= 0x5FFF)) {
 		BYTE value = extcl_cpu_rd_mem_TXC(address, openbus);
 
 		return (((openbus & 0xF0) | (value & 0x0F)));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 
 void prg_fix_txc_132(void) {

@@ -17,6 +17,7 @@
  */
 
 #include "mappers.h"
+#include "info.h"
 
 void prg_swap_fme7_069(WORD address, WORD value);
 void chr_swap_fme7_069(WORD address, WORD value);
@@ -30,7 +31,7 @@ void map_init_069(void) {
 	mapper.internal_struct[0] = (BYTE *)&fme7;
 	mapper.internal_struct_size[0] = sizeof(fme7);
 
-	init_FME7();
+	init_FME7(info.reset);
 	FME7_prg_swap = prg_swap_fme7_069;
 	FME7_chr_swap = chr_swap_fme7_069;
 }

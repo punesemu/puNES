@@ -42,7 +42,7 @@ void map_init_209(void) {
 	mapper.internal_struct[0] = (BYTE *)&jyasic;
 	mapper.internal_struct_size[0] = sizeof(jyasic);
 
-	init_JYASIC(info.mapper.id != 90);
+	init_JYASIC(info.mapper.id != 90, info.reset);
 	JYASIC_prg_swap = prg_swap_jyasic_209;
 	JYASIC_chr_swap = chr_swap_jyasic_209;
 	JYASIC_wram_swap = wram_swap_jyasic_209;

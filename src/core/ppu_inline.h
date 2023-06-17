@@ -40,7 +40,7 @@ INLINE static BYTE ppu_rd_mem(WORD address) {
 	if (address < 0x3F00) {
 		return (extcl_rd_nmt ? extcl_rd_nmt(address) : nmt_rd(address));
 	}
-	return (mmap_palette.color[address & 0x1F]);
+	return (memmap_palette.color[address & 0x1F]);
 }
 
 #endif /* PPU_INLINE_H_ */

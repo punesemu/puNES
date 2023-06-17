@@ -78,7 +78,7 @@ void extcl_cpu_wr_mem_TXC(WORD address, BYTE value) {
 	TXC_wram_fix();
 	TXC_mirroring_fix();
 }
-BYTE extcl_cpu_rd_mem_TXC(WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_TXC(WORD address, BYTE openbus) {
 	if ((address & 0x0103) == 0x0100) {
 		openbus = ((txc.inverter ^ txc.invert) & 0xF8) | (txc.accumulator & 0x07);
 		txc.Y = txc.X | ((openbus & 0x10) >> 4);
@@ -104,22 +104,20 @@ BYTE extcl_save_mapper_TXC(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void init_TXC(void) {
-	if (info.reset >= HARD) {
+void init_TXC(BYTE reset) {
+	if (reset >= HARD) {
 		memset(&txc, 0x00, sizeof(txc));
 
 		txc.B = 1;
 	}
 
 	info.mapper.extend_wr = TRUE;
-	info.mapper.extend_rd = TRUE;
 
 	TXC_prg_fix = prg_fix_TXC_base;
 	TXC_chr_fix = chr_fix_TXC_base;
 	TXC_wram_fix = wram_fix_TXC_base;
 	TXC_mirroring_fix = mirroring_fix_TXC_base;
 }
-
 void prg_fix_TXC_base(void) {}
 void chr_fix_TXC_base(void) {}
 void wram_fix_TXC_base(void) {}

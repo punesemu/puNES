@@ -30,6 +30,7 @@
 #include "mappers/mapper_002.h"
 #include "mappers/mapper_003.h"
 #include "mappers/mapper_004.h"
+#include "mappers/mapper_005.h"
 #include "mappers/mapper_006.h"
 #include "mappers/mapper_007.h"
 #include "mappers/mapper_009.h"
@@ -405,7 +406,6 @@
 #include "mappers/mapper_560.h"
 #include "mappers/mapper_FDS.h"
 #include "mappers/mapper_GameGenie.h"
-#include "mappers/mapper_MMC5.h"
 #include "mappers/mapper_NSF.h"
 #include "mappers/mapper_Vs.h"
 
@@ -426,22 +426,10 @@
 #include "mappers/VRC6.h"
 #include "mappers/VRC7.h"
 
-// UNIF
-#include "mappers/mapper_BOY.h"
-#include "mappers/mapper_MMC3_old.h"
-
-
-#define _control_bank(val, max)	if ((val) > (max)) (val) &= (max);
-#define control_bank(max) _control_bank(value, max)
-#define _control_bank_with_AND(val, mask, max) (val) &= (mask); _control_bank(val, max)
-#define control_bank_with_AND(mask, max) _control_bank_with_AND(value, mask, max)
-
 enum mappers_op_battery { RD_BAT, WR_BAT };
 
 typedef struct _mapper {
 	BYTE mirroring;
-	BYTE write_vram;
-	WORD rom_map_to[4];
 	BYTE *internal_struct[10];
 	WORD internal_struct_size[10];
 } _mapper;
@@ -450,36 +438,5 @@ extern _mapper mapper;
 
 BYTE map_init(void);
 void map_quit(void);
-
-
-
-
-void map_prg_rom_8k(BYTE banks_8k, BYTE at, WORD value);
-void map_prg_rom_8k_update(void);
-void map_prg_rom_8k_reset(void);
-
-
-
-
-
-
-
-
-
-void map_chr_bank_1k_reset(void);
-
-
-BYTE map_chr_ram_extra_init(uint32_t size);
-void map_chr_ram_extra_reset(void);
-
-void map_set_banks_max_prg(void);
-void map_set_banks_max_chr(void);
-
-
-
-
-
-
-void map_nmt_1k(BYTE slot, const WORD value);
 
 #endif /* MAPPERS_H_ */

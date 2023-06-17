@@ -45,9 +45,9 @@ void map_init_528(void) {
 	memset(&m528, 0x00, sizeof(m528));
 
 	// IRQ
-	init_VRC7(0x01, 0x00);
+	init_VRC7(0x01, 0x00, HARD);
 	// tutto il resto
-	init_FME7();
+	init_FME7(info.reset);
 	FME7_prg_swap = prg_swap_fme7_528;
 	FME7_chr_swap = chr_swap_fme7_528;
 	FME7_wram_fix = wram_fix_fme7_528;

@@ -31,11 +31,9 @@ void map_init_009(void) {
 	mapper.internal_struct[0] = (BYTE *)&mmc2;
 	mapper.internal_struct_size[0] = sizeof(mmc2);
 
-	if (info.reset >= HARD) {
-		init_MMC2();
-		MMC2_prg_swap = prg_swap_mmc2_009;
-		MMC2_chr_swap = chr_swap_mmc2_009;
-	}
+	init_MMC2(info.reset);
+	MMC2_prg_swap = prg_swap_mmc2_009;
+	MMC2_chr_swap = chr_swap_mmc2_009;
 }
 
 void prg_swap_mmc2_009(WORD address, WORD value) {

@@ -119,7 +119,7 @@ BYTE extcl_cpu_rd_mem_208(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return (address & 0x0800 ? m208.protection.reg[address & 0x0003]: openbus);
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_208(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m208.reg);

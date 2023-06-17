@@ -59,10 +59,10 @@ void extcl_cpu_wr_mem_225(WORD address, UNUSED(BYTE value)) {
 	}
 }
 BYTE extcl_cpu_rd_mem_225(WORD address, BYTE openbus) {
-	if ((address >= 0x5000) && (address <= 0x5FFF) && (address & 0x0800)) {
-		return (m225.scratch[address & 0x03]);
+	if ((address >= 0x5000) && (address <= 0x5FFF)) {
+		return (address & 0x800 ? m225.scratch[address & 0x03] : openbus);
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_225(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m225.reg);

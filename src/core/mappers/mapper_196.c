@@ -23,13 +23,22 @@
 
 void prg_swap_mmc3_196(WORD address, WORD value);
 
+INLINE static void tmp_fix_196(BYTE max, BYTE index, const WORD *ds);
+
 struct _m196 {
 	BYTE reg[2];
 } m196;
+struct _m196tmp {
+	BYTE ds_used;
+	BYTE max;
+	BYTE index;
+	const WORD *dipswitch;
+} m196tmp;
 
 void map_init_196(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(196);
+	EXTCL_CPU_RD_MEM(196);
 	EXTCL_SAVE_MAPPER(196);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
@@ -50,6 +59,20 @@ void map_init_196(void) {
 
 	init_MMC3();
 	MMC3_prg_swap = prg_swap_mmc3_196;
+
+	if (info.reset == RESET) {
+		if (m196tmp.ds_used) {
+			m196tmp.index = (m196tmp.index + 1) % m196tmp.max;
+		}
+	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memset(&m196tmp, 0x00, sizeof(m196tmp));
+
+		{
+			static WORD ds[] = { 0x00 };
+
+			tmp_fix_196(LENGTH(ds), 0, &ds[0]);
+		}
+	}
 
 	info.mapper.extend_wr = TRUE;
 
@@ -72,6 +95,12 @@ void extcl_cpu_wr_mem_196(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
+BYTE extcl_cpu_rd_mem_196(WORD address, UNUSED(BYTE openbus)) {
+	if ((address >= 0x5000) && (address <= 0x5FFF)) {
+		return (m196tmp.dipswitch[m196tmp.index]);
+	}
+	return (wram_rd(address));
+}
 BYTE extcl_save_mapper_196(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m196.reg);
 	return (extcl_save_mapper_MMC3(mode, slot, fp));
@@ -84,4 +113,11 @@ void prg_swap_mmc3_196(WORD address, WORD value) {
 		value = (m196.reg[1] << 2) | slot;
 	}
 	prg_swap_MMC3_base(address, value);
+}
+
+INLINE static void tmp_fix_196(BYTE max, BYTE index, const WORD *ds) {
+	m196tmp.ds_used = TRUE;
+	m196tmp.max = max;
+	m196tmp.index = index;
+	m196tmp.dipswitch = ds;
 }

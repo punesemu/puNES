@@ -17,6 +17,7 @@
  */
 
 #include "mappers.h"
+#include "info.h"
 
 void prg_fix_jv001_136(void);
 void chr_fix_jv001_136(void);
@@ -29,7 +30,7 @@ void map_init_136(void) {
 	mapper.internal_struct[0] = (BYTE *)&jv001;
 	mapper.internal_struct_size[0] = sizeof(jv001);
 
-	init_JV001();
+	init_JV001(info.reset);
 	JV001_prg_fix = prg_fix_jv001_136;
 	JV001_chr_fix = chr_fix_jv001_136;
 }
@@ -42,7 +43,7 @@ BYTE extcl_cpu_rd_mem_136(WORD address, BYTE openbus) {
 
 		return (((openbus & 0xC0) | (value & 0x3F)));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 
 void prg_fix_jv001_136(void) {

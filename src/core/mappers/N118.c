@@ -34,8 +34,8 @@ _n118 n118;
 //	EXTCL_SAVE_MAPPER(N118);
 //}
 
-void init_N118(void) {
-	if (info.reset >= HARD) {
+void init_N118(BYTE reset) {
+	if (reset >= HARD) {
 		memset(&n118, 0x00, sizeof(n118));
 
 		n118.reg[0] = 0;

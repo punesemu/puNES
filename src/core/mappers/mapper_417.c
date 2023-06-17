@@ -95,11 +95,6 @@ BYTE extcl_save_mapper_417(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m417.mir);
 	save_slot_ele(mode, slot, m417.irq.enable);
 	save_slot_ele(mode, slot, m417.irq.counter);
-
-	if (mode == SAVE_SLOT_READ) {
-		mirroring_fix_417();
-	}
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_417(void) {

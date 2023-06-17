@@ -67,12 +67,10 @@ void extcl_cpu_wr_mem_518(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_cpu_rd_mem_518(WORD address, BYTE openbus) {
-	switch (address & 0xFF00) {
-		case 0x5300:
-			return (m518.dac.status);
-		default:
-			return (openbus);
+	if ((address >= 0x5000) && (address <= 0x5FFF)) {
+		return ((address & 0xFF00) == 0x5300 ? m518.dac.status : openbus);
 	}
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_518(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m518.reg);

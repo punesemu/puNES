@@ -27,7 +27,6 @@
 #undef _DOS_STATIC_
 #include "nsfe.h"
 #include "rom_mem.h"
-#include "mem_map.h"
 #include "mappers.h"
 #include "video/gfx.h"
 #include "info.h"
@@ -492,7 +491,7 @@ void nsf_init_tune(void) {
 		map_init_NSF_FDS();
 	}
 	if (nsf.sound_chips.mmc5) {
-		map_init_NSF_MMC5();
+		map_init_NSF_005();
 	}
 	if (nsf.sound_chips.namco163) {
 		map_init_NSF_N163();
@@ -1847,11 +1846,14 @@ static void nsf_text_scroll_tick(_nsf_text_scroll *scroll) {
 		margin = scroll->pixel % 8;
 
 		for (row = 0; row < (scroll->rows + (margin > 0));) {
-			if ((scroll->buffer[bindex] == '[') && ((tmp = dos_is_tag(scroll->buffer + bindex, &tag)) > 0)) {
-				strncat(scroll->string, scroll->buffer + bindex, tmp);
-				bindex += tmp;
-				sindex += tmp;
-				continue;
+			if (scroll->buffer[bindex] == '[') {
+				tmp = dos_is_tag(scroll->buffer + bindex, &tag);
+				if (tmp > 0) {
+					strncat(scroll->string, scroll->buffer + bindex, tmp);
+					bindex += tmp;
+					sindex += tmp;
+					continue;
+				}
 			}
 			if (++count <= start) {
 				bindex++;
@@ -1862,7 +1864,6 @@ static void nsf_text_scroll_tick(_nsf_text_scroll *scroll) {
 			sindex++;
 			row++;
 		}
-
 		_dos_text(scroll->x, scroll->y, margin, (margin ? 8 - margin : -1), -1, -1, scroll->string);
 	} else {
 		scroll->timer -= nsf.timers.diff;
@@ -1948,13 +1949,16 @@ static void nsf_text_curtain_add_line(_nsf_text_curtain *curtain, const char *fm
 				if (length == curtain->rows) {
 					break;
 				}
-				if ((buffer[i] == '[') && ((tmp = dos_is_tag(buffer + i, &tag)) > 0)) {
-					i += (tmp - 1);
-					curtain->line[index].length += tmp;
-					if (tag > DOS_BACKGROUND_COLOR) {
-						length++;
+				if (buffer[i] == '[') {
+					tmp = dos_is_tag(buffer + i, &tag);
+					if (tmp > 0) {
+						i += (tmp - 1);
+						curtain->line[index].length += tmp;
+						if (tag > DOS_BACKGROUND_COLOR) {
+							length++;
+						}
+						continue;
 					}
-					continue;
 				}
 				length++;
 				curtain->line[index].length++;

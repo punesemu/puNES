@@ -51,7 +51,7 @@ void map_init_252(void) {
 		}
 	}
 
-	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE);
+	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_252;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_252;
 }

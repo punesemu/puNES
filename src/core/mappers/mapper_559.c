@@ -47,7 +47,7 @@ void map_init_559(void) {
 		m559.mir[3] = 0xE1;
 	}
 
-	init_VRC2and4(VRC24_VRC4, 0x400, 0x800, TRUE);
+	init_VRC2and4(VRC24_VRC4, 0x400, 0x800, TRUE, info.reset);
 	VRC2and4_prg_swap = prg_swap_vrc2and4_559;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_559;
 	VRC2and4_mirroring_fix = mirroring_fix_vrc2and4_559;

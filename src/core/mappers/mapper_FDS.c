@@ -159,7 +159,7 @@ BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus)) {
 			}
 		}
 	}
-	return (openbus);
+	return (prgrom_rd(address));
 }
 void extcl_cpu_every_cycle_FDS(void) {
 	BYTE max_speed = cfg->fds_fast_forward &

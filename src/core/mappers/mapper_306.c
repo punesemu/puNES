@@ -51,11 +51,6 @@ void extcl_cpu_wr_mem_306(WORD address, UNUSED(BYTE value)) {
 }
 BYTE extcl_save_mapper_306(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m306.reg);
-
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_306();
-	}
-
 	return (EXIT_OK);
 }
 

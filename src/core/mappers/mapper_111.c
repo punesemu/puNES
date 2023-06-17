@@ -52,7 +52,7 @@ void map_init_111(void) {
 			memset(&m111, 0x00, sizeof(m111));
 		}
 
-		init_MMC1(MMC1B);
+		init_MMC1(MMC1B, info.reset);
 		MMC1_prg_swap = prg_swap_mmc1_111;
 		MMC1_chr_swap = chr_swap_mmc1_111;
 	} else {
@@ -132,6 +132,8 @@ void extcl_cpu_wr_mem_111_GTROM(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_111_GTROM(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
+		default:
+			return (wram_rd(address));
 		case 0x5000:
 		case 0x7000:
 			m111.reg = openbus;
@@ -149,7 +151,6 @@ BYTE extcl_cpu_rd_mem_111_GTROM(WORD address, BYTE openbus) {
 		case 0xF000:
 			return (sst39sf040_read(address));
 	}
-	return (openbus);
 }
 BYTE extcl_save_mapper_111_GTROM(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m111.reg);

@@ -86,7 +86,6 @@ enum _memmap_types {
 };
 enum _memmap_misc { MAX_CHIPS = 8 };
 
-
 #define MMCPU(address) (CPUMM | (address))
 #define MMPPU(address) (PPUMM | (address))
 
@@ -96,12 +95,16 @@ enum _memmap_misc { MAX_CHIPS = 8 };
 #define prgrom_byte(byte) prgrom.data.pnt[(byte)]
 #define prgrom_mask() prgrom.data.mask
 #define prgrom_calc_chunk(address) ((address) / memmap.prg.info.chunk.size)
+#define prgrom_chip(chip_rom) prgrom.chips.chunk[chip_rom].pnt
+#define prgrom_chip_size(chip_rom) prgrom.chips.chunk[chip_rom].size
 
 #define chrrom_size() chrrom.data.size
 #define chrrom_pnt() chrrom.data.pnt
 #define chrrom_pnt_byte(byte) &chrrom.data.pnt[byte]
 #define chrrom_byte(byte) chrrom.data.pnt[(byte)]
 #define chrrom_mask() chrrom.data.mask
+#define chrrom_chip(chip_rom) chrrom.chips.chunk[chip_rom].pnt
+#define chrrom_chip_size(chip_rom) chrrom.chips.chunk[chip_rom].size
 
 #define ram_size() ram.data.size
 #define ram_pnt() ram.data.pnt
@@ -159,48 +162,6 @@ enum _memmap_misc { MAX_CHIPS = 8 };
 #define miscrom_byte(byte) miscrom.data.pnt[(byte)]
 #define miscrom_ram_mask() miscrom.data.mask
 #define miscrom_trainer_dst() miscrom.trainer.dst
-
-
-
-// TUTTI da rinomiare e poi ELIMINARE
-#if defined WRAM_OLD_HANDLER
-#define prg_size() prg.rom.size
-#define prg_byte(index) prg_rom()[index]
-#define prg_pnt(index) &prg_byte(index)
-#define prg_chip_rom(chip_rom) prg.chip[chip_rom].data
-#define prg_chip_size(chip_rom) prg.chip[chip_rom].size
-#define prg_rom_rd(address) prg.rom_8k[((address) >> 13) & 0x03][(address) & 0x1FFF]
-
-#define chr_rom() chr.rom.data
-#define chr_size() chr.rom.size
-#define chr_byte(index) chr_rom()[index]
-#define chr_pnt(index) &chr_byte(index)
-#define chr_chip_rom(chip_rom) chr.chip[chip_rom].data
-#define chr_chip_size(chip_rom) chr.chip[chip_rom].size
-#define chr_ram_size() info.chr.rom.banks_8k << 13
-
-#else
-#define prg_rom() prgrom_pnt()
-#define prg_size() prgrom_size()
-#define prg_byte(index) prg_rom()[index]
-#define prg_pnt(index) &prg_byte(index)
-#define prg_chip_rom(chip_rom) prgrom.chips.chunk[chip_rom].pnt
-#define prg_chip_size(chip_rom) prgrom.chips.chunk[chip_rom].size
-#define prg_rom_rd(address) prgrom_rd(address)
-
-#define chr_rom() chrrom_pnt()
-#define chr_size() chrrom_size()
-#define chr_byte(index) chr_rom()[index]
-#define chr_pnt(index) &chr_byte(index)
-#define chr_chip_rom(chip_rom) chrrom.chips.chunk[chip_rom].pnt
-#define chr_chip_size(chip_rom) chrrom.chips.chunk[chip_rom].size
-#define chr_ram_size() vram_size()
-
-#endif
-
-
-
-
 
 typedef struct _memmap_info {
 	size_t size;
@@ -293,10 +254,9 @@ typedef struct _miscrom {
 		BYTE *dst;
 	} trainer;
 } _miscrom;
-
-typedef struct _mmap_palette {
+typedef struct _memmap_palette {
 	BYTE color[0x20];
-} _mmap_palette;
+} _memmap_palette;
 typedef struct _oam {
 	BYTE data[256];
 	BYTE *element[64];
@@ -307,11 +267,6 @@ typedef struct _oam {
 	BYTE *ele_plus_unl[56];
 } _oam;
 
-extern _mmap_palette mmap_palette;
-extern _oam oam;
-
-
-
 extern _memmap memmap;
 extern _prgrom prgrom;
 extern _chrrom chrrom;
@@ -320,6 +275,9 @@ extern _vram vram;
 extern _ram ram;
 extern _nmt nmt;
 extern _miscrom miscrom;
+
+extern _memmap_palette memmap_palette;
+extern _oam oam;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -468,6 +426,17 @@ EXTERNC void memmap_wram_16k(DBWORD address, DBWORD value);
 EXTERNC void memmap_wram_32k(DBWORD address, DBWORD value);
 EXTERNC void memmap_wram_custom_size(DBWORD address, DBWORD chunk, size_t size);
 
+EXTERNC void memmap_wram_wp_128b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_2k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_16k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_32k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
+
 EXTERNC void memmap_wram_ram_wp_128b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_wram_ram_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 EXTERNC void memmap_wram_ram_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
@@ -577,7 +546,6 @@ EXTERNC void memmap_nmt_vram_1k(DBWORD address, DBWORD value);
 EXTERNC void memmap_nmt_vram_2k(DBWORD address, DBWORD value);
 EXTERNC void memmap_nmt_vram_4k(DBWORD address, DBWORD value);
 EXTERNC void memmap_nmt_vram_8k(DBWORD address, DBWORD value);
-
 
 EXTERNC void mirroring_H(void);
 EXTERNC void mirroring_V(void);

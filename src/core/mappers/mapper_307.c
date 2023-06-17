@@ -37,7 +37,7 @@ void map_init_307(void) {
 		memmap_prg_region_init(S4K);
 	}
 
-	init_N118();
+	init_N118(info.reset);
 	N118_prg_fix = prg_fix_n118_307;
 	N118_chr_fix = chr_fix_n118_307;
 	N118_chr_swap = chr_swap_n118_307;

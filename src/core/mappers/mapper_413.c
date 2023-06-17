@@ -96,7 +96,7 @@ void extcl_cpu_wr_mem_413(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_413(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_413(WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF800) {
 		case 0x4800:
 		case 0xC000:
@@ -107,7 +107,7 @@ BYTE extcl_cpu_rd_mem_413(WORD address, BYTE openbus) {
 				return (miscrom_byte(m413.serial.address & (miscrom_size() - 1)));
 			}
 		default:
-			return (openbus);
+			return (address >= 0x8000 ? prgrom_rd(address) : wram_rd(address));
 	}
 }
 BYTE extcl_save_mapper_413(BYTE mode, BYTE slot, FILE *fp) {

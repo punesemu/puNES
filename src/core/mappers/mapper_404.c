@@ -38,7 +38,7 @@ void map_init_404(void) {
 
 	memset(&m404, 0x00, sizeof(m404));
 
-	init_MMC1(MMC1A);
+	init_MMC1(MMC1A, HARD);
 	MMC1_prg_swap = prg_swap_mmc1_404;
 	MMC1_chr_swap = chr_swap_mmc1_404;
 

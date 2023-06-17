@@ -42,7 +42,7 @@ void map_init_183(void) {
 		memset(&m183, 0x00, sizeof(m183));
 	}
 
-	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE);
+	init_VRC2and4(VRC24_VRC4, 0x04, 0x08, TRUE, info.reset);
 	VRC2and4_prg_fix = prg_fix_vrc2and4_183;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_183;
 	VRC2and4_wram_fix = wram_fix_vrc2and4_183;

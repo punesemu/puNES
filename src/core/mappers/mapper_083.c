@@ -175,11 +175,11 @@ void extcl_cpu_wr_mem_083(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_083(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_083(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return (address & m083tmp.dip_mask ? m083.low[address & 0x03] : m083tmp.dipswitch[m083tmp.index]);
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_083(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m083.mode);

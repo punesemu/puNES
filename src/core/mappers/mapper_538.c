@@ -49,11 +49,6 @@ void extcl_cpu_wr_mem_538(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_538(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m538.reg);
-
-	if (mode == SAVE_SLOT_READ) {
-		prg_fix_538();
-	}
-
 	return (EXIT_OK);
 }
 

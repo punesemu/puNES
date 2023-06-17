@@ -17,6 +17,7 @@
  */
 
 #include "mappers.h"
+#include "info.h"
 
 void prg_swap_ks202_142(WORD address, WORD value);
 
@@ -28,7 +29,7 @@ void map_init_142(void) {
 	mapper.internal_struct[0] = (BYTE *)&ks202;
 	mapper.internal_struct_size[0] = sizeof(ks202);
 
-	init_KS202();
+	init_KS202(info.reset);
 	KS202_prg_swap = prg_swap_ks202_142;
 }
 

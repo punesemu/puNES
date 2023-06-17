@@ -118,14 +118,15 @@ void extcl_cpu_wr_mem_284(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_284(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_284(WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF000) {
 		case 0x4000:
-			return (address & 0x0800 ? m284.jumper | 'd' : openbus);
+			return (address & 0x0800 ? m284.jumper | 'd' : wram_rd(address));
 		case 0x5000:
 			return (address & 0x0800 ? channel_status(&m284.channel[1]) : channel_status(&m284.channel[0]));
+		default:
+			return (wram_rd(address));
 	}
-	return (openbus);
 }
 BYTE extcl_save_mapper_284(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m284.jumper);

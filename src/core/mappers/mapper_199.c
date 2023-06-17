@@ -42,11 +42,6 @@ void map_init_199(void) {
 	MMC3_chr_swap = chr_swap_mmc3_199;
 	MMC3_wram_fix = wram_fix_mmc3_199;
 
-//	if (wram_size() < (12 * S1K)) {
-//		wram_set_ram_size(S4K);
-//		wram_set_nvram_size(S8K);
-//	}
-
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }

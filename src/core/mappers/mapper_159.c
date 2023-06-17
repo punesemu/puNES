@@ -37,7 +37,7 @@ void map_init_159(void) {
 	mapper.internal_struct[0] = (BYTE *)&lz93d50;
 	mapper.internal_struct_size[0] = sizeof(lz93d50);
 
-	init_LZ93D50(FALSE);
+	init_LZ93D50(FALSE, info.reset);
 	LZ93D50_prg_swap = prg_swap_lz93d50_159;
 	LZ93D50_chr_swap = chr_swap_lz93d50_159;
 }

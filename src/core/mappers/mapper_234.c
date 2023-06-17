@@ -79,6 +79,7 @@ void extcl_cpu_wr_mem_234(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_cpu_rd_mem_234(WORD address, BYTE openbus) {
+	openbus = address >= 0x8000 ? prgrom_rd(address) : wram_rd(address);
 	if ((address & 0xFF80) == 0xFF80) {
 		extcl_cpu_wr_mem_234(address, openbus);
 	}

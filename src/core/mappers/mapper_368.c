@@ -69,23 +69,13 @@ void extcl_cpu_wr_mem_368(WORD address, BYTE value) {
 				break;
 		}
 }
-BYTE extcl_cpu_rd_mem_368(WORD address, BYTE openbus) {
-	switch (address & 0xF000) {
-		case 0x4000:
-			return ((address & 0x01FF) == 0x0122 ? 0x8A | (m368.reg[1] & 0x35) : openbus);
-		default:
-			return (openbus);
-	}
+BYTE extcl_cpu_rd_mem_368(WORD address, UNUSED(BYTE openbus)) {
+	return ((address & 0xF1FF) == 0x4122 ? 0x8A | (m368.reg[1] & 0x35) : wram_rd(address));
 }
 BYTE extcl_save_mapper_368(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m368.reg);
 	save_slot_ele(mode, slot, m368.irq.enable);
 	save_slot_ele(mode, slot, m368.irq.counter);
-
-	if (mode == SAVE_SLOT_READ) {
-		wram_fix_368();
-	}
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_368(void) {

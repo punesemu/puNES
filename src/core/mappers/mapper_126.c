@@ -122,11 +122,13 @@ void extcl_cpu_wr_mem_126(WORD address, BYTE value) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_126(WORD address, BYTE openbus) {
-	if ((address >= 0x8000) && (m126.reg[1] & 0x01)) {
-		return ((openbus & 0xFC) | m126tmp.dipswitch[m126tmp.index]);
+BYTE extcl_cpu_rd_mem_126(WORD address, UNUSED(BYTE openbus)) {
+	if (address >= 0x8000) {
+		return (m126.reg[1] & 0x01
+			? (prgrom_rd(address) & 0xFC) | m126tmp.dipswitch[m126tmp.index]
+			: prgrom_rd(address));
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_126(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m126.reg);

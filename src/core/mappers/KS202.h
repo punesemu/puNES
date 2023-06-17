@@ -38,7 +38,7 @@ void extcl_cpu_wr_mem_KS202(WORD address, BYTE value);
 BYTE extcl_save_mapper_KS202(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_KS202(void);
 
-void init_KS202(void);
+void init_KS202(BYTE reset);
 void prg_fix_KS202_base(void);
 void prg_swap_KS202_base(WORD address, WORD value);
 void wram_fix_KS202_base(void);

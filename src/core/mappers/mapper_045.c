@@ -87,7 +87,6 @@ void map_init_045(void) {
 	}
 
 	info.mapper.extend_wr = TRUE;
-	info.mapper.extend_rd = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -101,50 +100,17 @@ void extcl_cpu_wr_mem_045(WORD address, BYTE value) {
 			MMC3_chr_fix();
 		}
 		return;
-	}
-	if (address >= 0x8000) {
+	} else if (address >= 0x8000) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
-BYTE extcl_cpu_rd_mem_045(WORD address, BYTE openbus) {
-	switch (address & 0xF000) {
-		case 0x5000:
-			if (!m045tmp.ds_used || !memmap_adr_is_readable(MMCPU(address))) {
-				return (openbus);
-			}
-			if (~m045tmp.dipswitch[m045tmp.index] & address) {
-				return (0x01);
-			} else {
-				return (0x00);
-			}
-			break;
-		case 0x8000:
-		case 0x9000:
-		case 0xA000:
-		case 0xB000:
-		case 0xC000:
-		case 0xD000:
-		case 0xE000:
-		case 0xF000:
-			if (!m045tmp.ds_used) {
-				return (openbus);
-			}
-			switch (m045tmp.dipswitch[m045tmp.index]) {
-				case 1:
-					return (m045.reg[1] & 0x80 ? 0xFF : openbus);
-				case 2:
-					return (m045.reg[2] & 0x40 ? 0xFF : openbus);
-				case 3:
-					return (m045.reg[1] & 0x40 ? 0xFF : openbus);
-				case 4:
-					return (m045.reg[2] & 0x20 ? 0xFF : openbus);
-				default:
-					return (openbus);
-			}
-			break;
-		default:
-			return (openbus);
+BYTE extcl_cpu_rd_mem_045(WORD address, UNUSED(BYTE openbus)) {
+	if ((address >= 0x5000) && (address <= 0x5FFF)) {
+		if (m045tmp.ds_used) {
+			return (~m045tmp.dipswitch[m045tmp.index] & address ? 0x01 : 0x00);
+		}
 	}
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_045(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m045.index);
@@ -157,8 +123,25 @@ BYTE extcl_save_mapper_045(BYTE mode, BYTE slot, FILE *fp) {
 void prg_swap_mmc3_045(WORD address, WORD value) {
 	WORD base = m045.reg[1] | ((m045.reg[2] & 0xC0) << 2);
 	WORD mask = ~m045.reg[3] & 0x3F;
+	BYTE enabled = TRUE;
 
-	prg_swap_MMC3_base(address, (base | (value & mask)));
+	if (m045tmp.ds_used) {
+		switch (m045tmp.dipswitch[m045tmp.index]) {
+			case 1:
+				enabled = (m045.reg[1] & 0x80) ? FALSE : TRUE;
+				break;
+			case 2:
+				enabled = (m045.reg[2] & 0x40) ? FALSE : TRUE;
+				break;
+			case 3:
+				enabled = (m045.reg[1] & 0x40) ? FALSE : TRUE;
+				break;
+			case 4:
+				enabled = (m045.reg[2] & 0x20) ? FALSE : TRUE;
+				break;
+		}
+	}
+	memmap_auto_wp_8k(MMCPU(address), (base | (value & mask)), enabled, FALSE);
 }
 void chr_swap_mmc3_045(WORD address, WORD value) {
 	if (!chrrom_size() && (vram_size() == S8K)) {

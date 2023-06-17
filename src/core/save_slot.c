@@ -19,11 +19,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "save_slot.h"
+#include "mappers.h"
 #include "conf.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "ppu.h"
-#include "mappers.h"
 #include "irqA12.h"
 #include "irql2f.h"
 #include "bck_states.h"
@@ -39,6 +38,7 @@
 
 #define SAVE_VERSION 100
 
+static BYTE mem_with_size(BYTE mode, BYTE slot, BYTE *mem, size_t msize, FILE *fp);
 static void preview_image_from_ppu_screen(BYTE slot, _ppu_screen_buffer *sb, void **dst, size_t *size);
 static void preview_image_from_png(BYTE slot, void *src, size_t size);
 static uTCHAR *name_slot_file(BYTE slot);
@@ -207,7 +207,6 @@ void save_slot_count_load(void) {
 	emu_thread_continue();
 }
 BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
-	uint32_t tmp = 0;
 	unsigned int i = 0;
 
 	if (fp) {
@@ -448,108 +447,27 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, DMC.tick_type);
 
 	// mem map
-#if defined WRAM_OLD_HANDLER
-	save_slot_ele(mode, slot, mmcpu.ram);
-	save_slot_mem(mode, slot, prg.ram.data, prg.ram.size, FALSE);
-	if (mode == SAVE_SLOT_READ) {
-		save_slot_int(mode, slot, tmp);
-		if (tmp > TRUE) {
-			return(EXIT_ERROR);
-		}
-		if (tmp) {
-			save_slot_mem(mode, slot, prg.ram_plus, prg_ram_plus_size(), FALSE);
-			save_slot_pos(mode, slot, prg.ram_plus, prg.ram_plus_8k);
-			save_slot_int(mode, slot, tmp);
-			if (tmp) {
-				save_slot_pos(mode, slot, prg.ram_plus, prg.ram_battery);
-			}
-		}
-	} else {
-		if (prg.ram_plus) {
-			tmp = TRUE;
-			save_slot_int(mode, slot, tmp);
-			save_slot_mem(mode, slot, prg.ram_plus, prg_ram_plus_size(), FALSE);
-			save_slot_pos(mode, slot, prg.ram_plus, prg.ram_plus_8k);
-			if (prg.ram_battery) {
-				tmp = TRUE;
-				save_slot_int(mode, slot, tmp);
-				save_slot_pos(mode, slot, prg.ram_plus, prg.ram_battery);
-			} else {
-				tmp = FALSE;
-				save_slot_int(mode, slot, tmp);
-			}
-		} else {
-			tmp = FALSE;
-			save_slot_int(mode, slot, tmp);
-		}
+	if (mem_with_size(mode, slot, ram_pnt(), ram_size(), fp) == EXIT_ERROR) {
+		return (EXIT_ERROR);
 	}
-#else
-	if (mode == SAVE_SLOT_READ) {
-		save_slot_int(mode, slot, tmp);
-		if (tmp > TRUE) {
-			return (EXIT_ERROR);
-		}
-		if (tmp) {
-			save_slot_mem(mode, slot, wram_pnt(), wram_size(), FALSE);
-		}
-	} else {
-		if (wram_size()) {
-			tmp = TRUE;
-			save_slot_int(mode, slot, tmp);
-			save_slot_mem(mode, slot, wram_pnt(), wram_size(), FALSE);
-		} else {
-			tmp = FALSE;
-			save_slot_int(mode, slot, tmp);
-		}
+	if (mem_with_size(mode, slot, wram_pnt(), wram_size(), fp) == EXIT_ERROR) {
+		return (EXIT_ERROR);
 	}
-#endif
-	for (i = 0; i < LENGTH(prg.rom_8k); i++) {
-		if (mode == SAVE_SLOT_SAVE) {
-			postype bank = mapper.rom_map_to[i] << 13;
-
-			save_slot_int(mode, slot, bank);
-		} else {
-			save_slot_pos(mode, slot, prg_rom(), prg.rom_8k[i]);
-		}
+	if (mem_with_size(mode, slot, vram_pnt(), vram_size(), fp) == EXIT_ERROR) {
+		return (EXIT_ERROR);
 	}
-
-	save_slot_int(mode, slot, mapper.write_vram);
-	if (mapper.write_vram) {
-		save_slot_mem(mode, slot, chr_rom(), chr_ram_size(), FALSE);
+	if (mem_with_size(mode, slot, nmt_pnt(), nmt_size(), fp) == EXIT_ERROR) {
+		return (EXIT_ERROR);
 	}
-	for (i = 0; i < LENGTH(chr.bank_1k); i++) {
-		save_slot_pos(mode, slot, chr_rom(), chr.bank_1k[i]);
-	}
-	if (chr.extra.size) {
-		save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
-	}
-
-	save_slot_ele(mode, slot, ntbl.data);
-	for (i = 0; i < LENGTH(ntbl.bank_1k); i++) {
-		if (mode == SAVE_SLOT_SAVE) {
-			postype diff = ntbl.bank_1k[i] - ntbl.data;
-
-			if (diff > 0x1000) {
-				tmp = 0;
-				save_slot_int(mode, slot, tmp);
-			} else {
-				save_slot_pos(mode, slot, ntbl.data, ntbl.bank_1k[i]);
-			}
-		} else {
-			save_slot_pos(mode, slot, ntbl.data, ntbl.bank_1k[i]);
-		}
-	}
-	save_slot_ele(mode, slot, ntbl.writable);
-	save_slot_ele(mode, slot, mmap_palette.color);
+	save_slot_ele(mode, slot, memmap_palette.color);
 	save_slot_ele(mode, slot, oam.data);
 	save_slot_ele(mode, slot, oam.plus);
 	for (i = 0; i < LENGTH(oam.ele_plus); i++) {
 		save_slot_pos(mode, slot, oam.plus, oam.ele_plus[i]);
 	}
+
 	// mapper
 	save_slot_ele(mode, slot, mapper.mirroring);
-	save_slot_ele(mode, slot, mapper.rom_map_to);
-
 	if (mapper.internal_struct[0]) {
 		extcl_save_mapper(mode, slot, fp);
 	}
@@ -689,21 +607,15 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	// salvo la preview in formato PNG
 	save_slot_mem(mode, slot, NULL, 0, TRUE);
 
-
-
-
-
 	if (mode == SAVE_SLOT_READ) {
 		prgrom_reset_chunks();
 		chrrom_reset_chunks();
+		ram_reset_chunks();
 		wram_reset_chunks();
 		nmt_reset_chunks();
-		ram_reset_chunks();
+		// ripristino i puntatori
 		extcl_after_mapper_init();
 	}
-
-
-
 
 	return (EXIT_OK);
 }
@@ -790,6 +702,38 @@ BYTE save_slot_position(BYTE mode, BYTE slot, void *start, void *end, FILE *fp) 
 	return (EXIT_OK);
 }
 
+static BYTE mem_with_size(BYTE mode, BYTE slot, BYTE *mem, size_t msize, FILE *fp) {
+	postype size = 0;
+	int tmp = 0;
+
+	if (mode == SAVE_SLOT_READ) {
+		save_slot_int(mode, slot, tmp);
+		if (tmp > TRUE) {
+			return (EXIT_ERROR);
+		}
+		save_slot_ele(mode, slot, size);
+		if (tmp) {
+			if (size != msize) {
+				return (EXIT_ERROR);
+			}
+			save_slot_mem(mode, slot, wram_pnt(), wram_size(), FALSE);
+		}
+	} else {
+		if (size) {
+			tmp = TRUE;
+			size = msize;
+			save_slot_int(mode, slot, tmp);
+			save_slot_ele(mode, slot, size);
+			save_slot_mem(mode, slot, mem, size, FALSE);
+		} else {
+			tmp = FALSE;
+			size = 0;
+			save_slot_int(mode, slot, tmp);
+			save_slot_ele(mode, slot, size);
+		}
+	}
+	return (EXIT_OK);
+}
 static void preview_image_from_ppu_screen(BYTE slot, _ppu_screen_buffer *sb, void **dst, size_t *size) {
 	int stride = SCR_COLUMNS * sizeof(uint32_t);
 	void *buffer = malloc((size_t)stride * SCR_ROWS);
