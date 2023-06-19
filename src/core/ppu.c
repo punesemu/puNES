@@ -261,11 +261,6 @@ void ppu_tick(void) {
 			}
 
 			if (extcl_update_r2006) {
-				// utilizzato dalle mappers :
-				// MMC3
-				// Rex (DBZ)
-				// Taito (TC0690)
-				// Tengen (Rambo)
 				extcl_update_r2006(r2006.value, old_r2006);
 			}
 		}
@@ -1250,7 +1245,7 @@ INLINE static void ppu_oam_evaluation(void) {
 					/*
 					 * We've since discovered that not only are
 					 * sprites 0 and 1 temporarily replaced with
-					 * the pair that OAMADDR&0xF8 points to, but
+					 * the pair that OAMADDR & 0xF8 points to, but
 					 * it's permanent: the pair that OAMADDR & 0xF8
 					 * points to is copied to the first 8 bytes of
 					 * OAM when rendering starts.
@@ -1537,15 +1532,20 @@ INLINE static void ppu_oam_evaluation(void) {
 					/* ...e sono nell'ultimo ciclo...*/
 					if (spr_ev.timing == 7) {
 						/* ...indico la nuova modalita'... */
-						spr_ev.evaluate = PPU_OVERFLOW_SPR;
-						/* ...passo al prossimo sprite.. */
-						spr_ev.timing = 0;
-						/*
-						 * ...anche se devo riesaminare questo
-						 * stesso sprite (ricordo che incremento
-						 * index al timing = 0).
-						 */
-						spr_ev.index--;
+						if (spr_ev.evaluate == PPU_OVERFLOW_SPR){
+							/* ...passo al prossimo sprite.. */
+							spr_ev.timing = 0;
+						} else {
+							spr_ev.evaluate = PPU_OVERFLOW_SPR;
+							/* ...passo al prossimo sprite.. */
+							spr_ev.timing = 0;
+							/*
+							 * ...anche se devo riesaminare questo
+							 * stesso sprite (ricordo che incremento
+							 * index al timing == 0).
+							 */
+							spr_ev.index--;
+						}
 					} else {
 						/* ... e non sono nell'ultimo ciclo,
 						 * continuo a esaminare lo sprite.
