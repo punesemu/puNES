@@ -148,14 +148,14 @@ void dlgVsSystem::update_dialog(void) {
 
 	lineEdit_Coin_Counter->setText(QString("%1").arg(vs_system.coins.counter));
 
-	checkBox_ds1->setChecked((cfg->dipswitch & 0x01) >> 0);
-	checkBox_ds2->setChecked((cfg->dipswitch & 0x02) >> 1);
-	checkBox_ds3->setChecked((cfg->dipswitch & 0x04) >> 2);
-	checkBox_ds4->setChecked((cfg->dipswitch & 0x08) >> 3);
-	checkBox_ds5->setChecked((cfg->dipswitch & 0x10) >> 4);
-	checkBox_ds6->setChecked((cfg->dipswitch & 0x20) >> 5);
-	checkBox_ds7->setChecked((cfg->dipswitch & 0x40) >> 6);
-	checkBox_ds8->setChecked((cfg->dipswitch & 0x80) >> 7);
+	checkBox_ds1->setChecked((cfg->dipswitch_vs & 0x01) >> 0);
+	checkBox_ds2->setChecked((cfg->dipswitch_vs & 0x02) >> 1);
+	checkBox_ds3->setChecked((cfg->dipswitch_vs & 0x04) >> 2);
+	checkBox_ds4->setChecked((cfg->dipswitch_vs & 0x08) >> 3);
+	checkBox_ds5->setChecked((cfg->dipswitch_vs & 0x10) >> 4);
+	checkBox_ds6->setChecked((cfg->dipswitch_vs & 0x20) >> 5);
+	checkBox_ds7->setChecked((cfg->dipswitch_vs & 0x40) >> 6);
+	checkBox_ds8->setChecked((cfg->dipswitch_vs & 0x80) >> 7);
 
 	groupBox_Vs_System->setEnabled(vs_system.enabled);
 
@@ -194,28 +194,28 @@ void dlgVsSystem::s_ds_changed(int state) {
 
 	switch (index) {
 		case 1:
-			cfg->dipswitch = (cfg->dipswitch & 0xFE) | (state ? 0x01 : 0x00);
+			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0xFE) | (state ? 0x01 : 0x00);
 			break;
 		case 2:
-			cfg->dipswitch = (cfg->dipswitch & 0xFD) | (state ? 0x02 : 0x00);
+			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0xFD) | (state ? 0x02 : 0x00);
 			break;
 		case 3:
-			cfg->dipswitch = (cfg->dipswitch & 0xFB) | (state ? 0x04 : 0x00);
+			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0xFB) | (state ? 0x04 : 0x00);
 			break;
 		case 4:
-			cfg->dipswitch = (cfg->dipswitch & 0xF7) | (state ? 0x08 : 0x00);
+			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0xF7) | (state ? 0x08 : 0x00);
 			break;
 		case 5:
-			cfg->dipswitch = (cfg->dipswitch & 0xEF) | (state ? 0x10 : 0x00);
+			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0xEF) | (state ? 0x10 : 0x00);
 			break;
 		case 6:
-			cfg->dipswitch = (cfg->dipswitch & 0xDF) | (state ? 0x20 : 0x00);
+			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0xDF) | (state ? 0x20 : 0x00);
 			break;
 		case 7:
-			cfg->dipswitch = (cfg->dipswitch & 0xBF) | (state ? 0x40 : 0x00);
+			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0xBF) | (state ? 0x40 : 0x00);
 			break;
 		case 8:
-			cfg->dipswitch = (cfg->dipswitch & 0x7F) | (state ? 0x80 : 0x00);
+			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0x7F) | (state ? 0x80 : 0x00);
 			break;
 		default:
 			break;
@@ -225,7 +225,7 @@ void dlgVsSystem::s_ds_changed(int state) {
 	gui_set_focus();
 }
 void dlgVsSystem::s_defaults_clicked(UNUSED(bool checked)) {
-	cfg->dipswitch = info.default_dipswitches;
+	cfg->dipswitch_vs = info.default_dipswitches;
 	update_dialog();
 
 	settings_pgs_save();

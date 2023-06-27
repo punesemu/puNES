@@ -34,8 +34,6 @@ INLINE static WORD prg_mask(void);
 INLINE static WORD chr_base(void);
 INLINE static WORD chr_mask(void);
 
-INLINE static void tmp_fix_351(BYTE max, BYTE index, const WORD *ds);
-
 void prg_swap_mmc3_351(WORD address, WORD value);
 void chr_swap_mmc3_351(WORD address, WORD value);
 
@@ -49,12 +47,6 @@ struct _m351 {
 	BYTE mapper;
 	WORD reg[4];
 } m351;
-struct _m351tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m351tmp;
 
 void map_init_351(void) {
 	EXTCL_AFTER_MAPPER_INIT(351);
@@ -104,20 +96,6 @@ void map_init_351(void) {
 		}
 	}
 
-	if (info.reset == RESET) {
-		if (m351tmp.ds_used) {
-			m351tmp.index = (m351tmp.index + 1) % m351tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m351tmp, 0x00, sizeof(m351tmp));
-
-		{
-			static WORD ds[] = { 0x00 };
-
-			tmp_fix_351(LENGTH(ds), 0, &ds[0]);
-		}
-	}
-
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
@@ -159,7 +137,7 @@ void extcl_cpu_wr_mem_351(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_351(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		return ((openbus & 0xF8) | (m351tmp.dipswitch[m351tmp.index] & 0x07));
+		return ((openbus & 0xF8) | (dipswitch.value & 0x07));
 	}
 	return (wram_rd(address));
 }
@@ -329,11 +307,4 @@ void chr_swap_mmc1_351(WORD address, WORD value) {
 	WORD mask = chr_mask() >> 2;
 
 	chr_swap_MMC1_base(address, (base & ~mask) | (value & mask));
-}
-
-INLINE static void tmp_fix_351(BYTE max, BYTE index, const WORD *ds) {
-	m351tmp.ds_used = TRUE;
-	m351tmp.max = max;
-	m351tmp.index = index;
-	m351tmp.dipswitch = ds;
 }

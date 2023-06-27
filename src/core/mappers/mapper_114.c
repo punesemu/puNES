@@ -24,15 +24,7 @@
 void prg_swap_mmc3_114(WORD address, WORD value);
 void chr_swap_mmc3_114(WORD address, WORD value);
 
-INLINE static void tmp_fix_114(BYTE max, BYTE index, const WORD *ds);
-
 _m114 m114;
-struct _m114tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m114tmp;
 
 void map_init_114(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
@@ -64,20 +56,6 @@ void map_init_114(void) {
 	MMC3_prg_swap = prg_swap_mmc3_114;
 	MMC3_chr_swap = chr_swap_mmc3_114;
 
-	if (info.reset == RESET) {
-		if (m114tmp.ds_used) {
-			m114tmp.index = (m114tmp.index + 1) % m114tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m114tmp, 0x00, sizeof(m114tmp));
-
-		{
-			static WORD ds[] = { 0x00 };
-
-			tmp_fix_114(LENGTH(ds), 0, &ds[0]);
-		}
-	}
-
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
@@ -85,21 +63,20 @@ void map_init_114(void) {
 }
 void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (!(m114.reg[1] & 0x01) && memmap_adr_is_writable(MMCPU(address))) {
-			m114.reg[address & 0x03] = value;
+//		if !(m114.reg[1] & 0x01) {
+			m114.reg[address & 0x01] = value;
 			MMC3_chr_fix();
 			MMC3_prg_fix();
 			return;
-		}
-	}
-	if (address >= 0x8000) {
+//		}
+	} else if (address >= 0x8000) {
 		static WORD m114_mmc3_adr[2][8] = {
 			{ 0xA001, 0xA000, 0x8000, 0xC000, 0x8001, 0xC001, 0xE000, 0xE001 },
 			{ 0xA001, 0x8001, 0x8000, 0xC001, 0xA000, 0xC000, 0xE000, 0xE001 }
 		};
 		static BYTE m114_r8000_idx[2][8] = {
 			{ 0, 3, 1, 5, 6, 7, 2, 4 },
-			{ 0, 2, 5, 3, 6, 1, 7, 4 },
+			{ 0, 2, 5, 3, 6, 1, 7, 4 }
 		};
 		WORD mmc_address = m114_mmc3_adr[info.mapper.submapper][((address & 0x6000) >> 12) | (address & 0x01)];
 
@@ -111,9 +88,7 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_114(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return ((address & 0x03) == 2
-			? (m114tmp.dipswitch[m114tmp.index] & 0x07) | (openbus & 0xF8)
-			: openbus);
+		return ((address & 0x03) == 2 ? (dipswitch.value & 0x07) | (openbus & 0xF8) : openbus);
 	}
 	return (wram_rd(address));
 }
@@ -134,11 +109,4 @@ void chr_swap_mmc3_114(WORD address, WORD value) {
 	WORD mask = 0xFF;
 
 	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
-}
-
-INLINE static void tmp_fix_114(BYTE max, BYTE index, const WORD *ds) {
-	m114tmp.ds_used = TRUE;
-	m114tmp.max = max;
-	m114tmp.index = index;
-	m114tmp.dipswitch = ds;
 }

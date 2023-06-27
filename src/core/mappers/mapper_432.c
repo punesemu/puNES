@@ -24,19 +24,12 @@
 void prg_swap_mmc3_432(WORD address, WORD value);
 void chr_swap_mmc3_432(WORD address, WORD value);
 
-INLINE static void tmp_fix_432(BYTE max, BYTE index, const BYTE *ds);
-
 struct _m432 {
 	BYTE reg[2];
 } m432;
 struct _m432tmp {
 	BYTE read_dp;
 	BYTE less1024;
-
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const BYTE *dipswitch;
 } m432tmp;
 
 void map_init_432(void) {
@@ -67,22 +60,6 @@ void map_init_432(void) {
 
 	m432tmp.less1024 = prgrom_size() < S1M;
 
-	if (info.reset == RESET) {
-		if (m432tmp.ds_used) {
-			m432tmp.index = (m432tmp.index + 1) % m432tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		if (info.crc32.prg == 0xE736A4BE) { // 160000000-in-1.nes
-			static const BYTE ds[4] = { 1,  0,  2,  3 };
-
-			tmp_fix_432(LENGTH(ds), 0, &ds[0]);
-		} else {
-			static const BYTE ds[1] = { 0 };
-
-			tmp_fix_432(LENGTH(ds), 0, &ds[0]);
-		}
-	}
-
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
 
@@ -107,14 +84,12 @@ void extcl_cpu_wr_mem_432(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_432(WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
-		return (m432tmp.read_dp ? m432tmp.dipswitch[m432tmp.index] : prgrom_rd(address));
+		return (m432tmp.read_dp ? dipswitch.value : prgrom_rd(address));
 	}
 	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_432(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m432.reg);
-	save_slot_ele(mode, slot, m432tmp.index);
-	save_slot_ele(mode, slot, m432tmp.dipswitch);
 	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
@@ -137,11 +112,4 @@ void chr_swap_mmc3_432(WORD address, WORD value) {
 	WORD mask = 0xFF >> ((m432.reg[1] & 0x04) >> 2);
 
 	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
-}
-
-INLINE static void tmp_fix_432(BYTE max, BYTE index, const BYTE *ds) {
-	m432tmp.ds_used = TRUE;
-	m432tmp.max = max;
-	m432tmp.index = index;
-	m432tmp.dipswitch = ds;
 }

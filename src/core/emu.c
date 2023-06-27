@@ -622,8 +622,8 @@ BYTE emu_turn_on(void) {
 
 	ext_win.vs_system = vs_system.enabled;
 	if (vs_system.enabled) {
-		if ((cfg->dipswitch == 0xFF00) && (info.default_dipswitches != 0xFF00)) {
-			cfg->dipswitch = info.default_dipswitches;
+		if ((cfg->dipswitch_vs == 0xFF00) && (info.default_dipswitches != 0xFF00)) {
+			cfg->dipswitch_vs = info.default_dipswitches;
 		}
 	}
 
@@ -775,8 +775,8 @@ BYTE emu_reset(BYTE type) {
 		if (type >= HARD) {
 			vs_system.shared_mem = 0;
 		}
-		if ((cfg->dipswitch == 0xFF00) && (info.default_dipswitches != 0xFF00)) {
-			cfg->dipswitch = info.default_dipswitches;
+		if ((cfg->dipswitch_vs == 0xFF00) && (info.default_dipswitches != 0xFF00)) {
+			cfg->dipswitch_vs = info.default_dipswitches;
 		}
 	}
 	memset(&vs_system.watchdog, 0x00, sizeof(vs_system.watchdog));

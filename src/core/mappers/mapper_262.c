@@ -25,17 +25,9 @@ void prg_swap_mmc3_262(WORD address, WORD value);
 void chr_swap_mmc3_262(WORD address, WORD value);
 void mirroring_fix_mmc3_262(void);
 
-INLINE static void tmp_fix_262(BYTE max, BYTE index, const BYTE *ds);
-
 struct _m262 {
 	BYTE reg;
 } m262;
-struct _m262tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const BYTE *dipswitch;
-} m262tmp;
 
 void map_init_262(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
@@ -63,20 +55,6 @@ void map_init_262(void) {
 	MMC3_chr_swap = chr_swap_mmc3_262;
 	MMC3_mirroring_fix = mirroring_fix_mmc3_262;
 
-	if (info.reset == RESET) {
-		if (m262tmp.ds_used) {
-			m262tmp.index = (m262tmp.index + 1) % m262tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m262tmp, 0x00, sizeof(m262tmp));
-
-		{
-			static BYTE ds[] = { 0x00 };
-
-			tmp_fix_262(LENGTH(ds), 0, &ds[0]);
-		}
-	}
-
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
@@ -89,15 +67,14 @@ void extcl_cpu_wr_mem_262(WORD address, BYTE value) {
 			MMC3_chr_fix();
 		}
 		return;
-	}
-	if (address >= 0x8000) {
+	} else if (address >= 0x8000) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
 BYTE extcl_cpu_rd_mem_262(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x4000) && (address <= 0x4FFF)) {
 		if (address & 0x0100) {
-			return (m262tmp.dipswitch[m262tmp.index]);
+			return (dipswitch.value);
 		}
 	}
 	return (wram_rd(address));
@@ -126,11 +103,4 @@ void chr_swap_mmc3_262(WORD address, WORD value) {
 }
 void mirroring_fix_mmc3_262(void) {
 	mirroring_FSCR();
-}
-
-INLINE static void tmp_fix_262(BYTE max, BYTE index, const BYTE *ds) {
-	m262tmp.ds_used = TRUE;
-	m262tmp.max = max;
-	m262tmp.index = index;
-	m262tmp.dipswitch = ds;
 }

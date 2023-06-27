@@ -16,17 +16,17 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef BCK_STATES_H_
-#define BCK_STATES_H_
+#ifndef DIPSWITCH_HPP_
+#define DIPSWITCH_HPP_
 
-#include <string.h>
 #include "common.h"
 
-enum bck_states_operations_mode {
-	BCK_STATES_OP_SAVE_ON_MEM,
-	BCK_STATES_OP_READ_FROM_MEM,
-	BCK_STATES_OP_COUNT
-};
+typedef struct _dipswitch {
+	BYTE used;
+	int value;
+} _dipswitch;
+
+extern _dipswitch dipswitch;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -34,11 +34,10 @@ enum bck_states_operations_mode {
 #define EXTERNC
 #endif
 
-EXTERNC void bck_states_op_screen(BYTE mode, void *data, size_t *index, uint64_t *size_buff);
-EXTERNC void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size_buff);
-EXTERNC void bck_states_op_input(BYTE mode, void *data, size_t *index, uint64_t *size_buff);
-EXTERNC void bck_states_op_input_port(BYTE port, BYTE mode, void *data, size_t *index, uint64_t *size_buff);
+EXTERNC void dipswitch_reset(void);
+EXTERNC void dipswitch_search(void);
+EXTERNC void dipswitch_update_value(void);
 
 #undef EXTERNC
 
-#endif /* BCK_STATES_H_ */
+#endif /* DIPSWITCH_HPP_ */

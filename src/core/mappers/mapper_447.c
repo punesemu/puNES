@@ -24,17 +24,9 @@ void prg_fix_vrc2and4_447(void);
 void prg_swap_vrc2and4_447(WORD address, WORD value);
 void chr_swap_vrc2and4_447(WORD address, WORD value);
 
-INLINE static void tmp_fix_447(BYTE max, BYTE index, const BYTE *ds);
-
 struct _m447 {
 	BYTE reg;
 } m447;
-struct _m447tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const BYTE *dipswitch;
-} m447tmp;
 
 void map_init_447(void) {
 	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
@@ -54,19 +46,6 @@ void map_init_447(void) {
 	VRC2and4_prg_swap = prg_swap_vrc2and4_447;
 	VRC2and4_chr_swap = chr_swap_vrc2and4_447;
 
-	if (info.reset == RESET) {
-		if (m447tmp.ds_used) {
-			m447tmp.index = (m447tmp.index + 1) % m447tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m447tmp, 0x00, sizeof(m447tmp));
-		if (info.crc32.prg == 0x8A929147) { // 1993 New 860-in-1 Over-Valued Golden Version Games.nes
-			static BYTE ds[] = { 0x00, 0x01, 0x02, 0x03 };
-
-			tmp_fix_447(LENGTH(ds), 0, &ds[0]);
-		}
-	}
-
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
 }
@@ -83,8 +62,8 @@ void extcl_cpu_wr_mem_447(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_447(WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
-		return (m447tmp.ds_used && (m447.reg & 0x08)
-			? prgrom_rd((address & 0xFFFC) | (m447tmp.dipswitch[m447tmp.index] & 0x03))
+		return (dipswitch.used && (m447.reg & 0x08)
+			? prgrom_rd((address & 0xFFFC) | (dipswitch.value & 0x03))
 			: prgrom_rd(address));
 	}
 	return (wram_rd(address));
@@ -118,11 +97,4 @@ void prg_swap_vrc2and4_447(WORD address, WORD value) {
 }
 void chr_swap_vrc2and4_447(WORD address, WORD value) {
 	chr_swap_VRC2and4_base(address, ((m447.reg << 7) | (value & 0x7F)));
-}
-
-INLINE static void tmp_fix_447(BYTE max, BYTE index, const BYTE *ds) {
-	m447tmp.ds_used = TRUE;
-	m447tmp.max = max;
-	m447tmp.index = index;
-	m447tmp.dipswitch = ds;
 }

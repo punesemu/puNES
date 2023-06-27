@@ -592,6 +592,8 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 
 		save_slot_ele(mode, slot, info.lag_frame.consecutive);
 
+		save_slot_ele(mode, slot, dipswitch.value);
+
 		// in caso di ripristino di una salvataggio, se era caricato
 		// un'altro side del disco, devo ricaricarlo.
 		if ((mode == SAVE_SLOT_READ) && (old_side_inserted != fds.drive.side_inserted)) {

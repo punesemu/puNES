@@ -26,8 +26,6 @@ INLINE static void chr_fix_083(void);
 INLINE static void wram_fix_083(void);
 INLINE static void mirroring_fix_083(void);
 
-INLINE static void tmp_fix_083(BYTE max, BYTE index, const WORD *ds);
-
 struct _m083 {
 	BYTE mode;
 	BYTE outer;
@@ -44,11 +42,6 @@ struct _m083tmp {
 	BYTE chr_mode;
 	WORD dip_mask;
 	BYTE use_wram;
-
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
 } m083tmp;
 
 void map_init_083(void) {
@@ -78,24 +71,6 @@ void map_init_083(void) {
 		m083.chr[7] = 7;
 
 		m083.mode = 0x10;
-	}
-
-	if (info.reset == RESET) {
-		if (m083tmp.ds_used) {
-			m083tmp.index = (m083tmp.index + 1) % m083tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m083tmp, 0x00, sizeof(m083tmp));
-
-		if (info.crc32.prg == 0xD3E3E457) { // Master Fighter VI' (YOKO-Y1) [U][!].unf
-			static WORD ds[] = { 0x01, 0x00 };
-
-			tmp_fix_083(LENGTH(ds), 0, &ds[0]);
-		} else {
-			static WORD ds[] = { 0x03 };
-
-			tmp_fix_083(LENGTH(ds), 0, &ds[0]);
-		}
 	}
 
 	if (info.mapper.submapper == DEFAULT) {
@@ -137,7 +112,6 @@ void extcl_cpu_wr_mem_083(WORD address, BYTE value) {
 		if (info.mapper.id == 264) {
 			address = ((address & 0xF00) >> 2) | (address & 0x003F);
 		}
-
 		switch (address & 0x0300) {
 			case 0x0000:
 				m083.outer = value;
@@ -177,7 +151,7 @@ void extcl_cpu_wr_mem_083(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_083(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		return (address & m083tmp.dip_mask ? m083.low[address & 0x03] : m083tmp.dipswitch[m083tmp.index]);
+		return (address & m083tmp.dip_mask ? m083.low[address & 0x03] : dipswitch.value);
 	}
 	return (wram_rd(address));
 }
@@ -280,11 +254,3 @@ INLINE static void mirroring_fix_083(void) {
 			break;
 	}
 }
-
-INLINE static void tmp_fix_083(BYTE max, BYTE index, const WORD *ds) {
-	m083tmp.ds_used = TRUE;
-	m083tmp.max = max;
-	m083tmp.index = index;
-	m083tmp.dipswitch = ds;
-}
-

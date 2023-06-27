@@ -24,17 +24,11 @@
 void prg_swap_mmc3_344(WORD address, WORD value);
 void chr_swap_mmc3_344(WORD address, WORD value);
 
-INLINE static void tmp_fix_334(BYTE max, BYTE index, const BYTE *ds);
-
 struct _m344 {
 	WORD reg;
 } m344;
 struct _m344tmp {
 	BYTE prg_chip;
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const BYTE *dipswitch;
 } m344tmp;
 
 void map_init_344(void) {
@@ -61,23 +55,6 @@ void map_init_344(void) {
 	MMC3_chr_swap = chr_swap_mmc3_344;
 
 	m344tmp.prg_chip = info.crc32.prg == 0xAB2ACA46 ? 1 : 0;
-
-	if (info.reset == RESET) {
-		if (m344tmp.ds_used) {
-			m344tmp.index = (m344tmp.index + 1) % m344tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		if ((info.crc32.prg == 0xAB2ACA46) || // Kuai Da Jin Ka Zhong Ji Tiao Zhan 3-in-1 (3-in-1,6-in-1,Unl).unif
-			(info.crc32.prg == 0x42F4BF99)) { // 快打金卡终极挑战.nes
-			static BYTE ds[2] = { 0x00, 0x78 };
-
-			tmp_fix_334(LENGTH(ds), 0, &ds[0]);
-		} else {
-			static BYTE ds[2] = { 0x00 };
-
-			tmp_fix_334(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
@@ -118,7 +95,7 @@ void extcl_cpu_wr_mem_344(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_344(WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
-		return (m344.reg & 0x08 ? m344tmp.dipswitch[m344tmp.index] : prgrom_rd(address));
+		return (m344.reg & 0x08 ? dipswitch.value : prgrom_rd(address));
 	}
 	return (wram_rd(address));
 }
@@ -148,11 +125,4 @@ void chr_swap_mmc3_344(WORD address, WORD value) {
 	WORD mask = m344.reg & 0x02 ? 0x7F : 0xFF;
 
 	chr_swap_MMC3_base(address, (base | (value & mask)));
-}
-
-INLINE static void tmp_fix_334(BYTE max, BYTE index, const BYTE *ds) {
-	m344tmp.ds_used = TRUE;
-	m344tmp.max = max;
-	m344tmp.index = index;
-	m344tmp.dipswitch = ds;
 }

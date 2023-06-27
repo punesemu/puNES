@@ -28,7 +28,6 @@ INLINE static void wram_fix_176(void);
 INLINE static void mirroring_fix_176(void);
 
 INLINE static BYTE mmc3ext(void);
-INLINE static void tmp_fix_176(BYTE max, BYTE index, const WORD *ds);
 
 struct _m176 {
 	BYTE cpu4800;
@@ -40,12 +39,6 @@ struct _m176 {
 	BYTE mmc3_bank_to_update;
 	BYTE mmc3[16];
 } m176;
-struct _m176tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m176tmp;
 
 void map_init_176(void) {
 	EXTCL_AFTER_MAPPER_INIT(176);
@@ -124,100 +117,13 @@ void map_init_176(void) {
 		m176.cpu5xxx[0] = 0x00;
 	}
 
-	if (info.reset == RESET) {
-		if (m176tmp.ds_used) {
-			m176tmp.index = (m176tmp.index + 1) % m176tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset (&m176tmp, 0x00, sizeof(m176tmp));
-
-		if ((info.crc32.prg == 0x81907A3B) || // (KY-9006) 9-in-1 Super Game.nes
-			(info.crc32.prg == 0x26ABC25E) || // 9-in-1 - Pokemon Yellow (FK23C board)[p4][!].nes
-			(info.crc32.prg == 0xCD028ED2) || // 6-in-1 (Multi)[Unknown][YH602].nes
-			(info.crc32.prg == 0xD6F095DC) || // 8-in-1 (Multi)[Unknown][YH801].nes
-			(info.crc32.prg == 0xCFAE9BF7)) { // 6-in-1 - Spider Man 2 (FK23C board)[p4][!].nes
-			static WORD ds[] = { 0x10, 0x20 };
-
-			tmp_fix_176(LENGTH(ds), 0, &ds[0]);
-		} else if (
-			(info.crc32.prg == 0xA3265AEE) || // Super Game 4-in-1 (6-in-1) (KT-3445AB_20210418) (Unl) [p1].nes
-			(info.crc32.prg == 0x324E55C4) || // Super Games 4-in-1(KT-3445AB_20201201) (Unl) [p1].nes
-			(info.crc32.prg == 0x0007E045)) { // Super Game 4-in-1 (6-in-1) (BS-8174) (Unl) [p1].nes
-			static WORD ds[] = { 0x10, 0x20 };
-
-			tmp_fix_176(LENGTH(ds), 1, &ds[0]);
-		} else if (
-			(info.crc32.prg == 0xC08E77C1) || // 5-in-1 (19, 66, 90, 93, 113, 133, 200-in-1) (KD-1512_20210408) (Unl) [p1].nes
-			(info.crc32.prg == 0x613BBEE9) || // Super Game 15-in-1 (7, 80, 82, 102, 122, 160-in-1) (KD-6012) (Unl) [p1].nes
-			(info.crc32.prg == 0x03CF81B4)) { // 16 in 1 (KD-1512).nes
-			static WORD ds[] = { 0x400, 0x010, 0x020, 0x080, 0x100, 0x200, 0x040 };
-
-			tmp_fix_176(LENGTH(ds), 0, &ds[0]);
-		} else if (info.crc32.prg == 0x30FF6159) { // 15-in-1 (20, 25, 80, 99, 160, 210, 260-in-1) (BS-6008) (Unl) [p1].nes
-			static WORD ds[] = { 0x010, 0x080, 0x400, 0x100, 0x020, 0x040, 0x200, 0x800 };
-
-			tmp_fix_176(LENGTH(ds), 0, &ds[0]);
-		} else if (info.crc32.prg == 0x2F3DB40D) { // 17-in-1 (76000, 1000000, 9999999-in-1) (KD-6038) (Unl) [p1].nes
-			static WORD ds[] = { 0x010, 0x020, 0x080, 0x040 };
-
-			tmp_fix_176(LENGTH(ds), 0, &ds[0]);
-		} else if (
-			(info.crc32.prg == 0xA9C3824E) || // Super Game 4-in-1 (8, 64, 128-in-1) (KT-8008) (Unl) [p1].nes
-			(info.crc32.prg == 0x55BEBFCB) || // 44-in-1 (Super Game KT-A) [p1][!].nes
-			(info.crc32.prg == 0x4D5C057A)) { // 19-in-1 (7600, 9999999, 999999999-in-1) (BS-8307) (Unl) [p1].nes
-			static WORD ds[] = { 0x010, 0x020, 0x040, 0x080 };
-
-			tmp_fix_176(LENGTH(ds), 0, &ds[0]);
-		} else if (
-			(info.crc32.prg == 0x8052AA1E) || // (FK-014) 128-in-1.nes
-			(info.crc32.prg == 0xDF4E55F3)) { // 160-in-1.nes
-			static WORD ds[] = { 0x080, 0x010, 0x400, 0x100, 0x020, 0x040, 0x200, 0x800 };
-
-			tmp_fix_176(LENGTH(ds), 1, &ds[0]);
-		} else if (
-			(info.crc32.prg == 0x8ACCE289) || // (FK-022) 178-in-1.nes
-			(info.crc32.prg == 0x7BF49FEE) || // (FK-021) 180-in-1.nes
-			(info.crc32.prg == 0xD2A7F82B)) { // (BS-6028) 180-in-1.nes
-			static WORD ds[] = { 0x080, 0x010, 0x400, 0x100, 0x020, 0x040, 0x200, 0x800 };
-
-			tmp_fix_176(LENGTH(ds), 6, &ds[0]);
-		} else if (info.crc32.prg == 0x5507A5A8) { // (FK-033) 52-in-1.nes
-			static WORD ds[] = { 0x080, 0x010, 0x400, 0x100, 0x020, 0x040, 0x200, 0x800 };
-
-			tmp_fix_176(LENGTH(ds), 3, &ds[0]);
-		} else if (
-			(info.crc32.prg == 0x67F8DFE4) || // Super Game 4-in-1 (7, 30, 65, 111, 9999999-in-1) (KB-0306N-2_20201107) (Unl) [p1].nes
-			(info.crc32.prg == 0x48A64738) || // Super 4-in-1 (7, 60, 99, 111, 9999999-in-1) (KB-4016) (Unl) [p1].nes
-			(info.crc32.prg == 0xFDF94F9E)) { // Super 4-in-1 (7, 25, 28, 111, 9999999-in-1) (KB-4009) (Unl) [p1].nes
-			static WORD ds[] = { 0x010, 0x080, 0x400, 0x100, 0x020, 0x800, 0x040, 0x200 };
-
-			tmp_fix_176(LENGTH(ds), 2, &ds[0]);
-		} else if (info.crc32.prg == 0x41252709) { // Super Game 16-in-1 (19, 31, 51, 56, 112, 121, 126-in-1) (BS-6002) (Unl) [p1].nes
-			static WORD ds[] = { 0x010, 0x080, 0x400, 0x100, 0x020, 0x800, 0x200, 0x040 };
-
-			tmp_fix_176(LENGTH(ds), 0, &ds[0]);
-		} else if (info.crc32.prg == 0xB2BC6FF8) { // Super Game 16-in-1 (500, 9999999, 999999999-in-1) (FK037) (Unl) [p1].nes
-			static WORD ds[] = { 0x010, 0x100, 0x020, 0x200, 0x040, 0x400, 0x080, 0x800 };
-
-			tmp_fix_176(LENGTH(ds), 0, &ds[0]);
-		} else if (info.crc32.prg == 0x8F1D2425) { // Super Game 20-in-1 (6, 16, 36, 56, 99, 210-in-1) (KD-6026) (Unl) [p1].nes
-			static WORD ds[] = { 0x400, 0x080, 0x010, 0x100, 0x200, 0x020, 0x040 };
-
-			tmp_fix_176(LENGTH(ds), 0, &ds[0]);
-		} else if (info.crc32.prg == 0xDDA1E214) { // Super Game 28-in-1 (15, 30, 36, 52, 160, 180, 255-in-1) (BS-6017) (Unl) [p1].nes
-			static WORD ds[] = { 0x080, 0x010, 0x400, 0x020, 0x100, 0x040, 0x200, 0x800 };
-
-			tmp_fix_176(LENGTH(ds), 2, &ds[0]);
-		} else {
-			static WORD ds[] = { 0x010 };
-
-			tmp_fix_176(LENGTH(ds), 0, &ds[0]);
-		}
-	}
-
 	// Super Rockman 6-in-1 (861234C Hack).unif
 	// Super Rockman 4 ha bisogno di almeno 8k di wram per funzionare correttamente
 //	wram_set_ram_size(S32K);
+
+	if (!dipswitch.used) {
+		dipswitch.value = 0x10;
+	}
 
 	info.mapper.extend_wr = TRUE;
 
@@ -240,7 +146,7 @@ void extcl_cpu_wr_mem_176(WORD address, BYTE value) {
 			return;
 		case 0x5000:
 			if (!m176.ram_cfg_reg || m176.ram_out_reg) {
-				WORD mask = 0x5000 | (m176tmp.ds_used ? m176tmp.dipswitch[m176tmp.index] : 0);
+				WORD mask = 0x5000 | dipswitch.value;
 
 				if ((address & mask) != mask) {
 					return;
@@ -493,10 +399,3 @@ INLINE static BYTE mmc3ext(void) {
 	return ((m176.cpu5xxx[3] & 0x02) && ((info.mapper.submapper == 1) || (info.mapper.submapper == 2) ||
 		(info.mapper.id == 523)));
 }
-INLINE static void tmp_fix_176(BYTE max, BYTE index, const WORD *ds) {
-	m176tmp.ds_used = TRUE;
-	m176tmp.max = max;
-	m176tmp.index = index;
-	m176tmp.dipswitch = ds;
-}
-

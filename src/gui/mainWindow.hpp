@@ -293,6 +293,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_state_save_slot_set(void);
 		void s_state_save_file(void);
 		void s_state_load_file(void);
+		void s_open_ddip(void);
 		void s_open_djsc(void);
 		void s_tape_play(void);
 		void s_tape_record(void);

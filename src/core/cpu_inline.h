@@ -1622,7 +1622,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 	}
 
 #if defined (DEBUG)
-		//printf("Alert: Attempt to write APU port %04X\n", address);
+	//printf("Alert: Attempt to write APU port %04X\n", address);
 #endif
 }
 INLINE static void nsf_wr_mem(WORD address, BYTE value) {

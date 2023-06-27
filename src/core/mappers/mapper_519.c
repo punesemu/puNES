@@ -24,20 +24,12 @@ INLINE static void prg_fix_519(void);
 INLINE static void chr_fix_519(void);
 INLINE static void mirroring_fix_519(void);
 
-INLINE static void tmp_fix_519(BYTE max, BYTE index, const WORD *ds);
-
 struct _m519 {
 	WORD reg[2];
 	BYTE lock;
 	BYTE chr_outer;
 	BYTE read5xxx[4];
 } m519;
-struct _m519tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m519tmp;
 
 void map_init_519(void) {
 	EXTCL_AFTER_MAPPER_INIT(519);
@@ -48,20 +40,6 @@ void map_init_519(void) {
 	mapper.internal_struct_size[0] = sizeof(m519);
 
 	memset(&m519, 0x00, sizeof(m519));
-
-	if (info.reset == RESET) {
-		if (m519tmp.ds_used) {
-			m519tmp.index = (m519tmp.index + 1) % m519tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m519tmp, 0x00, sizeof(m519tmp));
-
-		{
-			static WORD ds[] = { 0x00 };
-
-			tmp_fix_519(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
@@ -93,7 +71,7 @@ BYTE extcl_cpu_rd_mem_519(WORD address, BYTE openbus) {
 		return (address & 0x800 ? m519.read5xxx[address & 0x03] : openbus);
 	} else if (address >= 0x8000) {
 		return (m519.reg[0] & 0x0040
-			? prgrom_rd(((address & 0xFFF0) | m519tmp.dipswitch[m519tmp.index]))
+			? prgrom_rd(((address & 0xFFF0) | dipswitch.value))
 			: prgrom_rd(address));
 	}
 	return (wram_rd(address));
@@ -124,11 +102,4 @@ INLINE static void mirroring_fix_519(void) {
 	} else {
 		mirroring_V();
 	}
-}
-
-INLINE static void tmp_fix_519(BYTE max, BYTE index, const WORD *ds) {
-	m519tmp.ds_used = TRUE;
-	m519tmp.max = max;
-	m519tmp.index = index;
-	m519tmp.dipswitch = ds;
 }

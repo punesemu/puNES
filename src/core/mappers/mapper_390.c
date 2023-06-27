@@ -24,17 +24,9 @@ INLINE static void prg_fix_390(void);
 INLINE static void chr_fix_390(void);
 INLINE static void mirroring_fix_390(void);
 
-INLINE static void tmp_fix_390(BYTE max, BYTE index, const BYTE *ds);
-
 struct _m390 {
 	WORD reg[3];
 } m390;
-struct _m390tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const BYTE *dipswitch;
-} m390tmp;
 
 void map_init_390(void) {
 	EXTCL_AFTER_MAPPER_INIT(390);
@@ -45,22 +37,6 @@ void map_init_390(void) {
 	mapper.internal_struct_size[0] = sizeof(m390);
 
 	memset(&m390, 0x00, sizeof(m390));
-
-	if (info.reset == RESET) {
-		if (m390tmp.ds_used) {
-			m390tmp.index = (m390tmp.index + 1) % m390tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		if (info.crc32.prg == 0xF92EFDE7) { // 150-in-1.nes
-			static BYTE ds[] = { 0x0D };
-
-			tmp_fix_390(LENGTH(ds), 0, &ds[0]);
-		} else {
-			static BYTE ds[] = { 0x00 };
-
-			tmp_fix_390(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 
 	info.mapper.extend_rd = TRUE;
 }
@@ -78,7 +54,7 @@ void extcl_cpu_wr_mem_390(WORD address, UNUSED(BYTE value)) {
 BYTE extcl_cpu_rd_mem_390(WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		return ((m390.reg[1] & 0x30) == 0x10
-			? prgrom_rd(address |  m390tmp.dipswitch[m390tmp.index])
+			? prgrom_rd(address | dipswitch.value)
 			: prgrom_rd(address));
 	}
 	return (wram_rd(address));
@@ -116,11 +92,4 @@ INLINE static void mirroring_fix_390(void) {
 	} else  {
 		mirroring_V();
 	}
-}
-
-INLINE static void tmp_fix_390(BYTE max, BYTE index, const BYTE *ds) {
-	m390tmp.ds_used = TRUE;
-	m390tmp.max = max;
-	m390tmp.index = index;
-	m390tmp.dipswitch = ds;
 }

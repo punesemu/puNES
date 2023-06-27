@@ -24,17 +24,9 @@
 void prg_swap_mmc3_205(WORD address, WORD value);
 void chr_swap_mmc3_205(WORD address, WORD value);
 
-INLINE static void tmp_fix_205(BYTE max, BYTE index, const BYTE *ds);
-
 struct _m205 {
 	BYTE reg;
 } m205;
-struct _m205tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const BYTE *dipswitch;
-} m205tmp;
 
 void map_init_205(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
@@ -61,19 +53,6 @@ void map_init_205(void) {
 	MMC3_prg_swap = prg_swap_mmc3_205;
 	MMC3_chr_swap = chr_swap_mmc3_205;
 
-	if (info.reset == RESET) {
-		if (m205tmp.ds_used) {
-			m205tmp.index = (m205tmp.index + 1) % m205tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m205tmp, 0x00, sizeof(m205tmp));
-		if (info.crc32.prg == 0x5A22BA9F) { // 15-in-1 [p1].nes
-			static const BYTE ds[] = { 1, 0 };
-
-			tmp_fix_205(LENGTH(ds), 0, &ds[0]);
-		}
-	}
-
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
@@ -83,7 +62,7 @@ void extcl_cpu_wr_mem_205(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		if (memmap_adr_is_writable(MMCPU(address))) {
 			m205.reg = value;
-			if ((value & 0x01) && m205tmp.ds_used && (m205tmp.dipswitch[m205tmp.index])) {
+			if ((value & 0x01) && dipswitch.value) {
 				m205.reg |= 2;
 			}
 			MMC3_prg_fix();
@@ -111,11 +90,4 @@ void chr_swap_mmc3_205(WORD address, WORD value) {
 	WORD mask = 0xFF >> ((m205.reg & 0x04) ? 1 : ((m205.reg & 0x02) >> 1));
 
 	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
-}
-
-INLINE static void tmp_fix_205(BYTE max, BYTE index, const BYTE *ds) {
-	m205tmp.ds_used = TRUE;
-	m205tmp.max = max;
-	m205tmp.index = index;
-	m205tmp.dipswitch = ds;
 }

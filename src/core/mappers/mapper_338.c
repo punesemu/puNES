@@ -25,17 +25,9 @@ INLINE static void prg_fix_338(void);
 INLINE static void chr_fix_338(void);
 INLINE static void mirroring_fix_338(void);
 
-INLINE static void tmp_fix_338(BYTE max, BYTE index, const WORD *ds);
-
 struct _m338 {
 	WORD reg;
 } m338;
-struct _m338tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m338tmp;
 
 void map_init_338(void) {
 	EXTCL_AFTER_MAPPER_INIT(338);
@@ -47,20 +39,6 @@ void map_init_338(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m338, 0x00, sizeof(m338));
-	}
-
-	if (info.reset == RESET) {
-		if (m338tmp.ds_used) {
-			m338tmp.index = (m338tmp.index + 1) % m338tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m338tmp, 0x00, sizeof(m338tmp));
-
-		{
-			static WORD ds[] = { 0x00 };
-
-			tmp_fix_338(LENGTH(ds), 0, &ds[0]);
-		}
 	}
 
 	info.mapper.extend_rd = TRUE;
@@ -80,9 +58,9 @@ BYTE extcl_cpu_rd_mem_338(WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		switch (m338.reg & 0xFF0F) {
 			case 0xF004:
-				return (prgrom_size() <= S64K ? m338tmp.dipswitch[m338tmp.index] & 0x00FF : prgrom_rd(address));
+				return (prgrom_size() <= S64K ? dipswitch.value & 0x00FF : prgrom_rd(address));
 			case 0xF008:
-				return ((m338tmp.dipswitch[m338tmp.index] & 0xFF00) >> 8);
+				return ((dipswitch.value & 0xFF00) >> 8);
 			default:
 				return (prgrom_rd(address));
 		}
@@ -108,11 +86,4 @@ INLINE static void mirroring_fix_338(void) {
 	} else {
 		mirroring_H();
 	}
-}
-
-INLINE static void tmp_fix_338(BYTE max, BYTE index, const WORD *ds) {
-	m338tmp.ds_used = TRUE;
-	m338tmp.max = max;
-	m338tmp.index = index;
-	m338tmp.dipswitch = ds;
 }

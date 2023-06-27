@@ -24,17 +24,9 @@ INLINE static void prg_fix_289(void);
 INLINE static void chr_fix_289(void);
 INLINE static void mirroring_fix_289(void);
 
-INLINE static void tmp_fix_289(BYTE max, BYTE index, const WORD *ds);
-
 struct _m289 {
 	BYTE reg[3];
 } m289;
-struct _m289tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m289tmp;
 
 void map_init_289(void) {
 	EXTCL_AFTER_MAPPER_INIT(289);
@@ -44,20 +36,6 @@ void map_init_289(void) {
 	mapper.internal_struct_size[0] = sizeof(m289);
 
 	memset(&m289, 0x00, sizeof(m289));
-
-	if (info.reset == RESET) {
-		if (m289tmp.ds_used) {
-			m289tmp.index = (m289tmp.index + 1) % m289tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m289tmp, 0x00, sizeof(m289tmp));
-
-		{
-			static WORD ds[] = { 0x00 };
-
-			tmp_fix_289(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -93,7 +71,7 @@ void extcl_cpu_wr_mem_289(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_289(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return ((openbus & 0xFC) | (m289tmp.dipswitch[m289tmp.index] & 0x03));
+		return ((openbus & 0xFC) | (dipswitch.value & 0x03));
 	}
 	return (wram_rd(address));
 }
@@ -125,11 +103,4 @@ INLINE static void mirroring_fix_289(void) {
 	} else {
 		mirroring_V();
 	}
-}
-
-INLINE static void tmp_fix_289(BYTE max, BYTE index, const WORD *ds) {
-	m289tmp.ds_used = TRUE;
-	m289tmp.max = max;
-	m289tmp.index = index;
-	m289tmp.dipswitch = ds;
 }

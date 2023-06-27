@@ -24,17 +24,9 @@ INLINE static void prg_fix_414(void);
 INLINE static void chr_fix_414(void);
 INLINE static void mirroring_fix_414(void);
 
-INLINE static void tmp_fix_414(BYTE max, BYTE index, const WORD *ds);
-
 struct _m414 {
 	WORD reg[2];
 } m414;
-struct _m414tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m414tmp;
 
 void map_init_414(void) {
 	EXTCL_AFTER_MAPPER_INIT(414);
@@ -45,20 +37,6 @@ void map_init_414(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m414, 0x00, sizeof(m414));
-	}
-
-	if (info.reset == RESET) {
-		if (m414tmp.ds_used) {
-			m414tmp.index = (m414tmp.index + 1) % m414tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m414tmp, 0x00, sizeof(m414tmp));
-
-		{
-			static const WORD ds[] = { 0x010, 0x000, 0x030, 0x070, 0x0F0 };
-
-			tmp_fix_414(LENGTH(ds), 0, &ds[0]);
-		}
 	}
 }
 void extcl_after_mapper_init_414(void) {
@@ -83,7 +61,7 @@ BYTE extcl_save_mapper_414(BYTE mode, BYTE slot, FILE *fp) {
 INLINE static void prg_fix_414(void) {
 	WORD bank = m414.reg[0] >> 1;
 
-	if (!(m414.reg[0] & 0x0100) && (m414.reg[0] & m414tmp.dipswitch[m414tmp.index])) {
+	if (!(m414.reg[0] & 0x0100) && (m414.reg[0] & dipswitch.value)) {
 		memmap_disable_16k(MMCPU(0xC000));
 	} else if (m414.reg[0] & 0x2000) {
 		memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
@@ -101,11 +79,4 @@ INLINE static void mirroring_fix_414(void) {
 	} else {
 		mirroring_V();
 	}
-}
-
-INLINE static void tmp_fix_414(BYTE max, BYTE index, const WORD *ds) {
-	m414tmp.ds_used = TRUE;
-	m414tmp.max = max;
-	m414tmp.index = index;
-	m414tmp.dipswitch = ds;
 }

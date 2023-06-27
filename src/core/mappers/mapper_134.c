@@ -24,17 +24,9 @@
 void prg_swap_mmc3_134(WORD address, WORD value);
 void chr_swap_mmc3_134(WORD address, WORD value);
 
-INLINE static void tmp_fix_134(BYTE max, BYTE index, const BYTE *ds);
-
 struct _m134 {
 	BYTE reg[4];
 } m134;
-struct _m134tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const BYTE *dipswitch;
-} m134tmp;
 
 void map_init_134(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
@@ -61,41 +53,6 @@ void map_init_134(void) {
 	init_MMC3(info.reset);
 	MMC3_prg_swap = prg_swap_mmc3_134;
 	MMC3_chr_swap = chr_swap_mmc3_134;
-
-	if (info.reset == RESET) {
-		if (m134tmp.ds_used) {
-			m134tmp.index = (m134tmp.index + 1) % m134tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m134tmp, 0x00, sizeof(m134tmp));
-		if (info.crc32.prg == 0x7A9405C1) { // 2-in-1 - Family Kid & Aladdin 4 (Ch) [!].nes
-			static const BYTE ds[] = { 0, 1 };
-
-			tmp_fix_134(LENGTH(ds), 0, &ds[0]);
-		} else if (info.crc32.prg == 0x08C80066) { // 7500-in-1.nes
-			static const BYTE ds[] = {
-				1, 6, 5, 7, 8, 4, 10, 11, 0,
-				3, 12, 13, 14, 9, 15, 2
-			};
-
-			tmp_fix_134(LENGTH(ds), 8, &ds[0]);
-		} else if (info.crc32.prg == 0x331113AB) { // 27-in-1.nes
-			static const BYTE ds[] = {0, 2, 3, 1 };
-
-			tmp_fix_134(LENGTH(ds), 0, &ds[0]);
-		} else if (info.crc32.prg == 0xC03FE986) { // 9700-in-1.nes
-			static const BYTE ds[] = {0, 1, 2, 3 };
-
-			tmp_fix_134(LENGTH(ds), 0, &ds[0]);
-		} else if (info.crc32.prg == 0xCC4E95E0) { // 2200000-in-1.nes
-			static const BYTE ds[] = {
-					4, 5, 6, 3, 2, 7, 8, 9, 10,
-					11, 12, 13, 1, 14, 0, 15
-			};
-
-			tmp_fix_134(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
@@ -163,9 +120,7 @@ void extcl_cpu_wr_mem_134(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_134(WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
-		return (m134tmp.ds_used && (m134.reg[0] & 0x40)
-			? m134tmp.dipswitch[m134tmp.index]
-			: prgrom_rd(address));
+		return (m134.reg[0] & 0x40 ? dipswitch.value : prgrom_rd(address));
 	}
 	return (wram_rd(address));
 }
@@ -193,11 +148,4 @@ void chr_swap_mmc3_134(WORD address, WORD value) {
 		value = ((m134.reg[2] & mask) << 3) | (address >> 10);
 	}
 	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
-}
-
-INLINE static void tmp_fix_134(BYTE max, BYTE index, const BYTE *ds) {
-	m134tmp.ds_used = TRUE;
-	m134tmp.max = max;
-	m134tmp.index = index;
-	m134tmp.dipswitch = ds;
 }

@@ -24,18 +24,10 @@
 void prg_swap_mmc3_401(WORD address, WORD value);
 void chr_swap_mmc3_401(WORD address, WORD value);
 
-INLINE static void tmp_fix_401(BYTE max, BYTE index, const BYTE *ds);
-
 struct _m401 {
 	BYTE index;
 	BYTE reg[4];
 } m401;
-struct _m401tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const BYTE *dipswitch;
-} m401tmp;
 
 void map_init_401(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
@@ -64,28 +56,6 @@ void map_init_401(void) {
 
 	m401.reg[2] = 0x0F;
 
-	if (info.reset == RESET) {
-		if (m401tmp.ds_used) {
-			m401tmp.index = (m401tmp.index + 1) % m401tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m401tmp, 0x00, sizeof(m401tmp));
-
-		if (info.crc32.prg == 0xC4EBED19) { // Super 19-in-1 (VIP19).nes
-			static BYTE ds[] = { 7, 1, 2, 4, 3, 5, 6, 0 };
-
-			tmp_fix_401(LENGTH(ds), 0, &ds[0]);
-		} else if (info.crc32.prg == 0xAF8F7059) { // NTF2 System Cart (U) [!].nes
-			static BYTE ds[] = { 0xFD, 0x03, 0xFE, 0x07 };
-
-			tmp_fix_401(LENGTH(ds), 3, &ds[0]);
-		} else {
-			static BYTE ds[] = { 0 };
-
-			tmp_fix_401(LENGTH(ds), 0, &ds[0]);
-		}
-	}
-
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
@@ -111,12 +81,12 @@ BYTE extcl_save_mapper_401(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void prg_swap_mmc3_401(WORD address, WORD value) {
-	if ((m401tmp.dipswitch[m401tmp.index] & 0x01) && (m401.reg[1] & 0x80)) {
+	if ((dipswitch.value & 0x01) && (m401.reg[1] & 0x80)) {
 		memmap_disable_8k(MMCPU(address));
 	} else {
 		WORD base = (m401.reg[1] & 0x1F) | (m401.reg[2] & 0x80) |
-			(m401tmp.dipswitch[m401tmp.index] & 0x02 ? m401.reg[2] & 0x20 : (m401.reg[1] & 0x40) >> 1) |
-			(m401tmp.dipswitch[m401tmp.index] & 0x04 ? m401.reg[2] & 0x40 : (m401.reg[1] & 0x20) << 1);
+			(dipswitch.value & 0x02 ? m401.reg[2] & 0x20 : (m401.reg[1] & 0x40) >> 1) |
+			(dipswitch.value & 0x04 ? m401.reg[2] & 0x40 : (m401.reg[1] & 0x20) << 1);
 		WORD mask = ~m401.reg[3] & 0x1F;
 
 		prg_swap_MMC3_base(address, (base | (value & mask)));
@@ -127,11 +97,4 @@ void chr_swap_mmc3_401(WORD address, WORD value) {
 	WORD mask = 0xFF >> (~m401.reg[2] & 0x0F);
 
 	chr_swap_MMC3_base(address, (base | (value & mask)));
-}
-
-INLINE static void tmp_fix_401(BYTE max, BYTE index, const BYTE *ds) {
-	m401tmp.ds_used = TRUE;
-	m401tmp.max = max;
-	m401tmp.index = index;
-	m401tmp.dipswitch = ds;
 }

@@ -58,6 +58,7 @@
 #include "video/effects/tv_noise.h"
 #include "debugger.h"
 #include "tape_data_recorder.h"
+#include "dipswitch.h"
 #if defined (WITH_FFMPEG)
 #include "recording.h"
 #else
@@ -883,9 +884,10 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_State_Save_to_file, SLOT(s_state_save_file()));
 	connect_action(action_State_Load_from_file, SLOT(s_state_load_file()));
 	// Tools
-	connect_action(action_Joypad_Gamepads_Debug, SLOT(s_open_djsc()));
+	connect_action(action_Dipswitch, SLOT(s_open_ddip()));
 	connect_action(action_Virtual_Keyboard, SLOT(s_open_dkeyb()));
 	connect_action(action_Vs_System, SLOT(s_set_vs_window()));
+	connect_action(action_Joypad_Gamepads_Debug, SLOT(s_open_djsc()));
 	// Help/About
 	connect_action(action_Show_Log, SLOT(s_show_log()));
 	connect_action(action_About, SLOT(s_help()));
@@ -1148,6 +1150,7 @@ void mainWindow::update_tape_menu(void) {
 	}
 }
 void mainWindow::update_menu_tools(void) {
+	action_Dipswitch->setEnabled(dipswitch.used);
 	action_Virtual_Keyboard->setEnabled(nes_keyboard.enabled);
 	if (!action_Virtual_Keyboard->isEnabled() && dlgkeyb->isVisible()) {
 		dlgkeyb->hide();
@@ -1782,6 +1785,11 @@ void mainWindow::s_state_load_file(void) {
 	}
 
 	emu_thread_continue();
+}
+void mainWindow::s_open_ddip(void) {
+	emu_pause(TRUE);
+	gui_dipswitch_dialog();
+	emu_pause(FALSE);
 }
 void mainWindow::s_open_djsc(void) {
 	dlgjsc->show();

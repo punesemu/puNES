@@ -24,17 +24,11 @@ INLINE static void prg_fix_242(void);
 INLINE static void chr_fix_242(void);
 INLINE static void mirroring_fix_242(void);
 
-INLINE static void tmp_fix_242(BYTE max, BYTE index, const WORD *ds);
-
 struct _m242 {
 	WORD reg;
 } m242;
 struct _m242tmp {
 	BYTE two_chips;
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
 } m242tmp;
 
 void map_init_242(void) {
@@ -48,33 +42,6 @@ void map_init_242(void) {
 	memset(&m242, 0x00, sizeof(m242));
 
 	m242tmp.two_chips = (prgrom_size() & S128K) && (prgrom_size() > S128K);
-
-	if (info.reset == RESET) {
-		if (m242tmp.ds_used) {
-			m242tmp.index = (m242tmp.index + 1) % m242tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m242tmp, 0x00, sizeof(m242tmp));
-
-		if (info.crc32.prg ==  0x556C97D2) { // '93 世界冠軍卡超値享受.nes
-			static WORD ds[] = {
-				0x10, 0x11, 0x12, 0x0F, 0x0E, 0x0D, 0x0C, 0x14,
-				0x13, 0x0B, 0x0A, 0x09, 0x08, 0x15, 0x07, 0x16,
-				0x06, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D,
-				0x05, 0x04, 0x1E, 0x03, 0x1F, 0x02, 0x01, 0x00
-			};
-
-			tmp_fix_242(LENGTH(ds), 0, &ds[0]);
-		} else if (info.crc32.prg == 0x7E70BCF4) { // 1992 突破 劃面選關 190-in-1.nes
-			static WORD ds[] = { 0x0F, 0xFF };
-
-			tmp_fix_242(LENGTH(ds), 0, &ds[0]);
-		} else {
-			static WORD ds[] = { 0x00 };
-
-			tmp_fix_242(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 
 	info.mapper.extend_rd = TRUE;
 }
@@ -91,7 +58,7 @@ void extcl_cpu_wr_mem_242(WORD address, UNUSED(BYTE value)) {
 }
 BYTE extcl_cpu_rd_mem_242(WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
-		return (m242.reg & 0x100 ? prgrom_rd(address | m242tmp.dipswitch[m242tmp.index]) : prgrom_rd(address));
+		return (m242.reg & 0x100 ? prgrom_rd(address | dipswitch.value) : prgrom_rd(address));
 	}
 	return (wram_rd(address));
 }
@@ -146,11 +113,4 @@ INLINE static void mirroring_fix_242(void) {
 	} else  {
 		mirroring_V();
 	}
-}
-
-INLINE static void tmp_fix_242(BYTE max, BYTE index, const WORD *ds) {
-	m242tmp.ds_used = TRUE;
-	m242tmp.max = max;
-	m242tmp.index = index;
-	m242tmp.dipswitch = ds;
 }

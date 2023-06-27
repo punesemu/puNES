@@ -25,17 +25,9 @@ INLINE static void prg_fix_332(void);
 INLINE static void chr_fix_332(void);
 INLINE static void mirroring_fix_332(void);
 
-INLINE static void tmp_fix_332(BYTE max, BYTE index, const WORD *ds);
-
 struct _m332 {
 	BYTE reg[3];
 } m332;
-struct _m332tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m332tmp;
 
 void map_init_332(void) {
 	EXTCL_AFTER_MAPPER_INIT(332);
@@ -45,24 +37,6 @@ void map_init_332(void) {
 	mapper.internal_struct_size[0] = sizeof(m332);
 
 	memset(&m332, 0x00, sizeof(m332));
-
-	if (info.reset == RESET) {
-		if (m332tmp.ds_used) {
-			m332tmp.index = (m332tmp.index + 1) % m332tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m332tmp, 0x00, sizeof(m332tmp));
-
-		if (info.crc32.prg == 0xB2CD52F5) { // Super 40-in-1 (Multicart WS-1001) [U][!].unf
-			static WORD ds[] = { 0x00, 0x40, 0x80 };
-
-			tmp_fix_332(LENGTH(ds), 0, &ds[0]);
-		} else {
-			static WORD ds[] = { 0x00 };
-
-			tmp_fix_332(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -91,7 +65,7 @@ BYTE extcl_save_mapper_332(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_332(void) {
-	BYTE enabled = !((m332.reg[1] & 0xC0) & m332tmp.dipswitch[m332tmp.index]);
+	BYTE enabled = !((m332.reg[1] & 0xC0) & dipswitch.value);
 	WORD bank = ((m332.reg[0] & 0x40) >> 3) | (m332.reg[0] & 0x07);
 	WORD nrom = !(m332.reg[0] & 0x08);
 
@@ -110,11 +84,4 @@ INLINE static void mirroring_fix_332(void) {
 	} else {
 		mirroring_V();
 	}
-}
-
-INLINE static void tmp_fix_332(BYTE max, BYTE index, const WORD *ds) {
-	m332tmp.ds_used = TRUE;
-	m332tmp.max = max;
-	m332tmp.index = index;
-	m332tmp.dipswitch = ds;
 }

@@ -63,6 +63,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "dlgSettings.hpp"
 #include "dlgUncomp.hpp"
 #include "dlgVsSystem.hpp"
+#include "dlgDipswitch.hpp"
 #include "wdgScreen.hpp"
 #include "wdgOverlayUi.hpp"
 #include "video/gfx_thread.h"
@@ -72,6 +73,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "clock.h"
 #include "save_slot.h"
 #include "vs_system.h"
+#include "dipswitch.h"
 #include "gui.h"
 #if defined (WITH_D3D9)
 #include "d3d9.h"
@@ -497,6 +499,15 @@ void gui_fullscreen(void) {
 	// desktop e che le decorazioni della finestra non appaiano correttamente (problema
 	// riscontrato sotto Linux e BSD).
 	QTimer::singleShot(250, qt.mwin, SLOT(s_set_fullscreen()));
+}
+
+void gui_dipswitch_dialog(void) {
+	if (dipswitch.used) {
+		dlgDipswitch *dlg = new dlgDipswitch(qt.mwin);
+
+		dlg->show();
+		dlg->exec();
+	}
 }
 
 int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type) {

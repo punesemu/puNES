@@ -24,17 +24,9 @@
 void prg_swap_mmc3_126(WORD address, WORD value);
 void chr_swap_mmc3_126(WORD address, WORD value);
 
-INLINE static void tmp_fix_126(BYTE max, BYTE index, const WORD *ds);
-
 struct _m126 {
 	BYTE reg[4];
 } m126;
-struct _m126tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m126tmp;
 
 void map_init_126(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
@@ -58,36 +50,6 @@ void map_init_126(void) {
 	init_MMC3(HARD);
 	MMC3_prg_swap = prg_swap_mmc3_126;
 	MMC3_chr_swap = chr_swap_mmc3_126;
-
-	if (info.reset == RESET) {
-		if (m126tmp.ds_used) {
-			m126tmp.index = (m126tmp.index + 1) % m126tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m126tmp, 0x00, sizeof(m126tmp));
-
-		if (info.crc32.prg == 0xB1082DE6) { // 1998 4000000-in-1 (BS-400 PCB).nes
-			static WORD ds[] = { 0,  2,  3,  1 };
-
-			tmp_fix_126(LENGTH(ds), 0, &ds[0]);
-		} else if (
-			(info.crc32.prg == 0xA4AEEA4A) || // 3000000-in-1 (BS-300 PCB).nes
-			(info.crc32.prg == 0xB5EC8A0A)) { // 700000-in-1 (BS-400 PCB).nes
-			static WORD ds[] = { 0,  1 };
-
-			tmp_fix_126(LENGTH(ds), 0, &ds[0]);
-		} else if (
-			(info.crc32.prg == 0xC6FDE109) || // Double Dragon 530-in-1.nes
-			(info.crc32.prg == 0x9E54027F)) { // (GD-106) 18-in-1.nes
-			static WORD ds[] = { 1,  0 };
-
-			tmp_fix_126(LENGTH(ds), 0, &ds[0]);
-		} else {
-			static WORD ds[] = { 0 };
-
-			tmp_fix_126(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
@@ -125,7 +87,7 @@ void extcl_cpu_wr_mem_126(WORD address, BYTE value) {
 BYTE extcl_cpu_rd_mem_126(WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		return (m126.reg[1] & 0x01
-			? (prgrom_rd(address) & 0xFC) | m126tmp.dipswitch[m126tmp.index]
+			? (prgrom_rd(address) & 0xFC) | dipswitch.value
 			: prgrom_rd(address));
 	}
 	return (wram_rd(address));
@@ -171,11 +133,4 @@ void chr_swap_mmc3_126(WORD address, WORD value) {
 		value = address >> 10;
 	}
 	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
-}
-
-INLINE static void tmp_fix_126(BYTE max, BYTE index, const WORD *ds) {
-	m126tmp.ds_used = TRUE;
-	m126tmp.max = max;
-	m126tmp.index = index;
-	m126tmp.dipswitch = ds;
 }

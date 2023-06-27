@@ -199,7 +199,7 @@ void gui_overlay_info_append_msg_precompiled(int index, void *arg1) {
 void gui_overlay_info_append_msg_precompiled_with_alignment(BYTE alignment, int index, void *arg1) {
 	QString msg, a1, a2, a3;
 
-	if (index >= (int)LENGTH(info_messages_precompiled)) {
+	if (index >= (int)(LENGTH(info_messages_precompiled))) {
 		return;
 	}
 
@@ -354,7 +354,7 @@ void wdgOverlayUi::changeEvent(QEvent *event) {
 	}
 }
 void wdgOverlayUi::resizeEvent(QResizeEvent *event) {
-	uint32_t size = ((event->size().height() * event->size().width()) * 4);
+	const uint32_t size = ((event->size().height() * event->size().width()) * 4);
 
 	if (cfg->scale == X1) {
 		overlaySaveSlot->dim_cell_x1 = cfg->fullscreen ? 20 : 20 / 1.75f;
@@ -428,7 +428,7 @@ void wdgOverlayUi::update_widget(void) {
 	force_redraw = true;
 }
 void wdgOverlayUi::overlay_blit(void) {
-	qreal dpr = devicePixelRatioF();
+	const qreal dpr = devicePixelRatioF();
 
 	update_texture = FALSE;
 
@@ -545,7 +545,12 @@ overlayWidget::overlayWidget(QWidget *parent) : QWidget(parent) {
 	setAttribute(Qt::WA_OpaquePaintEvent);
 	setAutoFillBackground(false);
 
+	setGraphicsEffect(opacity.effect);
+
 	set_opacity(0.88);
+
+	connect(fade_in.animation, SIGNAL(finished()), this, SLOT(s_fade_in_finished()));
+	connect(fade_out.animation, SIGNAL(finished()), this, SLOT(s_fade_out_finished()));
 }
 overlayWidget::~overlayWidget() = default;
 
@@ -580,15 +585,14 @@ int overlayWidget::vpadtot(void) const {
 }
 int overlayWidget::minimum_eight(const QFont *f = nullptr, int rows = 1) const {
 	// 16 pixel e' l'altezza delle immagini
-	qreal fm = round(((dpr_per_int(f ? QFontMetrics((*f)).height() : fontMetrics().height()) * rows) + (vpadtot() * rows)) / 2.0) * 2.0;
-	qreal px = round((16.0 + (double)vpadtot()) / 2.0) * 2.0;
+	const qreal fm = round(((dpr_per_int(f ? QFontMetrics((*f)).height() : fontMetrics().height()) * rows) + (vpadtot() * rows)) / 2.0) * 2.0;
+	const qreal px = round((16.0 + (double)vpadtot()) / 2.0) * 2.0;
 
 	return ((int)(fm < px ? px : fm));
 }
 void overlayWidget::set_opacity(qreal value) {
 	opacity.value = value;
 	opacity.effect->setOpacity(opacity.value);
-	setGraphicsEffect(opacity.effect);
 }
 void overlayWidget::draw_background(void) {
 	draw_background(dpr_rect());
@@ -612,7 +616,6 @@ void overlayWidget::fade_in_animation(void) {
 	fade_in.animation->setEndValue(opacity.value);
 	fade_in.animation->setEasingCurve(QEasingCurve::InBack);
 	fade_in.animation->start();
-	connect(fade_in.animation, SIGNAL(finished()), this, SLOT(s_fade_in_finished()));
 }
 void overlayWidget::fade_out_animation(void) {
 	if (always_visible) {
@@ -624,7 +627,6 @@ void overlayWidget::fade_out_animation(void) {
 	fade_out.animation->setEndValue(0);
 	fade_out.animation->setEasingCurve(QEasingCurve::OutBack);
 	fade_out.animation->start();
-	connect(fade_out.animation, SIGNAL(finished()), this, SLOT(s_fade_out_finished()));
 }
 void overlayWidget::fade_out_start_timer(void) {
 	if (fade_out.animation->state() == QPropertyAnimation::Running) {
@@ -829,7 +831,7 @@ QSize overlayWidgetFloppy::sizeHint(void) const {
 	return (QSize(floppy.gray.size().width() + hpadtot(), minimum_eight()));
 }
 void overlayWidgetFloppy::paintEvent(QPaintEvent *event) {
-	QPointF coords = QPointF(((qreal)rect().width() - (qreal)(floppy.gray.size().width())) / 2.0,
+	const QPointF coords = QPointF(((qreal)rect().width() - (qreal)(floppy.gray.size().width())) / 2.0,
 		((qreal)rect().height() - (qreal)floppy.gray.size().height()) / 2.0);
 
 	overlayWidget::paintEvent(event);
@@ -982,7 +984,7 @@ void overlayWidgetInputPort::update_widget(void) {
 	}
 }
 BYTE overlayWidgetInputPort::is_to_redraw(void) {
-	int i;
+	int i = 0;
 
 	switch (type) {
 		case CTRL_STANDARD:
@@ -1162,7 +1164,7 @@ void overlayWidgetInputPort::draw_subor_keyboard_sb97(void) {
 	}
 }
 void overlayWidgetInputPort::draw_mouse_coords(void) {
-	int x, y;
+	int x = 0, y = 0;
 
 	input_read_mouse_coords(&x, &y);
 	if (x < 0) {
@@ -1248,7 +1250,7 @@ void overlayWidgetRewind::update_old_value(void) {
 }
 
 int32_t overlayWidgetRewind::min(void) {
-	int32_t max = this->max();
+	const int32_t max = this->max();
 
 	return (max < rewind_max_buffered_snaps() ? 0 : max - rewind_max_buffered_snaps());
 }
@@ -1285,7 +1287,7 @@ QString overlayWidgetRewind::info_short(void) {
 }
 
 QString overlayWidgetRewind::seconds_to_string(_infotime *itime, _infotime::_measure max, const QColor &clr) {
-	QColor disabled = color.disabled;
+	const QColor disabled = color.disabled;
 	QString txt = "";
 
 	if (itime->hh > 0) {
@@ -1296,8 +1298,8 @@ QString overlayWidgetRewind::seconds_to_string(_infotime *itime, _infotime::_mea
 		txt += color_string(QString("%1").arg(itime->ss, 2, 10, QLatin1Char('0')), clr);
 		txt += ":";
 	} else if (itime->mm > 0) {
-		int a = itime->mm / 10;
-		int b = itime->mm % 10;
+		const int a = itime->mm / 10;
+		const int b = itime->mm % 10;
 
 		if (max == _infotime::_measure::HH) {
 			txt += color_string(QString("%1").arg(itime->hh), disabled);
@@ -1313,8 +1315,8 @@ QString overlayWidgetRewind::seconds_to_string(_infotime *itime, _infotime::_mea
 		txt += color_string(QString("%1").arg(itime->ss, 2, 10, QLatin1Char('0')), clr);
 		txt += ":";
 	} else if (itime->ss > 0) {
-		int a = itime->ss / 10;
-		int b = itime->ss % 10;
+		const int a = itime->ss / 10;
+		const int b = itime->ss % 10;
 
 		if (max <= _infotime::_measure::HH) {
 			txt += color_string(QString("%1").arg(itime->hh), disabled);
@@ -1403,9 +1405,9 @@ void overlayWidgetRewind::draw_command(void) {
 	}
 
 	if (image) {
-		qreal dpr_w = dpr_int(act.play.width());
-		qreal dpr_h = dpr_int(act.play.height());
-		qreal x, y, w, h;
+		const qreal dpr_w = dpr_int(act.play.width());
+		const qreal dpr_h = dpr_int(act.play.height());
+		qreal x = 0, y = 0, w = 0, h = 0;
 
 		x = dpr_rect().width() - dpr_w - dpr_int(padding.h);
 		y = (dpr_rect().height() - dpr_h) / 2.0;
@@ -1430,9 +1432,9 @@ void overlayWidgetRewind::draw_command(void) {
 }
 void overlayWidgetRewind::draw_corner_bar_info(void) {
 	static QRectF qr;
-	qreal vpad = dpr_int(2), hpad = dpr_int(3);
-	qreal max = this->max();
-	qreal min = this->min();
+	const qreal vpad = dpr_int(2), hpad = dpr_int(3);
+	const qreal max = this->max();
+	const qreal min = this->min();
 	qreal value = this->value();
 	qreal step = 0;
 
@@ -1599,8 +1601,8 @@ overlayWidgetSaveSlot::~overlayWidgetSaveSlot() = default;
 
 QSize overlayWidgetSaveSlot::sizeHint(void) const {
 	if (cfg->scale == X1) {
-		qreal ratio = (qreal)SCR_COLUMNS / (qreal)SCR_ROWS;
-		qreal width = (SAVE_SLOTS * dim_cell_x1) + hpadtot();
+		const qreal ratio = (qreal)SCR_COLUMNS / (qreal)SCR_ROWS;
+		const qreal width = (SAVE_SLOTS * dim_cell_x1) + hpadtot();
 
 		return (QSize((int)width, (int)((double)vpadtot() + dim_cell_x1 + padding.v + ((width / ratio)))));
 	}
@@ -1642,9 +1644,9 @@ QSize overlayWidgetSaveSlot::calc_size(void) {
 }
 
 void overlayWidgetSaveSlot::draw_slots_x1(void) {
-	qreal x, y, w, h, radius;
-	qreal nw, nh;
-	qreal x1, y1;
+	qreal x = 0, y = 0, w = 0, h = 0, radius = 0;
+	qreal nw = 0, nh = 0;
+	qreal x1 = 0, y1 = 0;
 	static QFont f;
 	static QRectF rect;
 	static QPen pen;
@@ -1755,7 +1757,7 @@ void overlayWidgetSaveSlot::draw_slots_x1(void) {
 	painter.restore();
 }
 void overlayWidgetSaveSlot::draw_slots(void) {
-	qreal x, y, w, h;
+	qreal x = 0, y = 0, w = 0, h = 0;
 	static QFont f;
 	static QRectF rect;
 	static QPen pen;
@@ -1763,8 +1765,8 @@ void overlayWidgetSaveSlot::draw_slots(void) {
 	painter.save();
 
 	{
-		qreal nw, nh;
-		qreal x1, y1;
+		qreal nw = 0, nh = 0;
+		qreal x1 = 0, y1 = 0;
 
 		nw = ((qreal)this->rect().width() - (qreal)hpadtot()) / (qreal)columns;
 		nh = ((qreal)this->rect().height() - (qreal)vpadtot()) / (qreal)rows;
@@ -1872,7 +1874,7 @@ QSize overlayWidgetInfo::sizeHint(void) const {
 }
 void overlayWidgetInfo::paintEvent(QPaintEvent *event) {
 	if (!isHidden()) {
-		int alignment, len;
+		int alignment = 0, len = 0;
 		QString actual;
 
 		overlay.info.mutex.lock();
@@ -1883,9 +1885,9 @@ void overlayWidgetInfo::paintEvent(QPaintEvent *event) {
 
 		if (len) {
 			static QTextOption to;
-			qreal font_height = QFontMetrics(font_info).height();
+			const qreal font_height = QFontMetrics(font_info).height();
 			QTextDocument td;
-			qreal x, y, w, h, lines = 1;
+			qreal x = 0, y = 0, w = 0, h = 0, lines = 1;
 
 			overlayWidget::paintEvent(event);
 
@@ -1900,8 +1902,8 @@ void overlayWidgetInfo::paintEvent(QPaintEvent *event) {
 			td.setHtml(actual);
 
 			if (td.size().width() > dpr_rect().width()) {
-				int i, divider = 20;
-				qreal piece = (dpr_rect().width() / (qreal)divider);
+				int i = 0, divider = 20;
+				const qreal piece = (dpr_rect().width() / (qreal)divider);
 
 				for (i = 5; i < divider; i++) {
 					w = (piece * (qreal)i) - dpr_int(hpadtot());
@@ -2026,7 +2028,6 @@ void overlayWidgetInfo::fade_in_animation(void) {
 		fade_in.animation->setEndValue(opacity.value);
 		fade_in.animation->setEasingCurve(QEasingCurve::InBack);
 		fade_in.animation->start();
-		connect(fade_in.animation, SIGNAL(finished()), this, SLOT(s_fade_in_finished()));
 		return;
 	}
 
@@ -2056,16 +2057,16 @@ QString overlayWidgetInfo::decode_tags(QString input) {
 		{ "[white]",  "#FFFFFF" },
 		{ "[normal]",        "" }
 	};
-	int i;
-	unsigned int tag;
+	int i = 0;
+	unsigned int tag = 0;
 	QString output = "";
 
 	for (i = 0; i < input.length();) {
 		bool found = false;
 
 		if (input[i] == '[') {
-			for (tag = 0; tag < LENGTH(tags); tag++) {
-				int len = tags[tag].name.length();
+			for (tag = 0; tag < (unsigned int)LENGTH(tags); tag++) {
+				const int len = tags[tag].name.length();
 
 				if (input.mid(i, len) == tags[tag].name) {
 					if (tags[tag].name == "[normal]") {
@@ -2093,7 +2094,7 @@ QString overlayWidgetInfo::decode_tags(QString input) {
 void overlayWidgetInfo::s_fade_in_finished(void) {
 	QTextDocument td;
 	QString actual;
-	int words, sec;
+	int words = 0, sec = 0;
 
 	fade_out_start_timer();
 
@@ -2106,7 +2107,7 @@ void overlayWidgetInfo::s_fade_in_finished(void) {
 	td.setHtml(actual);
 
 	{
-		static QRegularExpression rx("(\\s|\\n|\\r)+");
+		static const QRegularExpression rx("(\\s|\\n|\\r)+");
 
 		words = td.toPlainText().split(rx).count();
 		sec = ceil(sec_for_word * (double)words);
@@ -2115,6 +2116,7 @@ void overlayWidgetInfo::s_fade_in_finished(void) {
 }
 void overlayWidgetInfo::s_fade_out_finished(void) {
 	overlay.info.mutex.lock();
+	enabled = false;
 	overlay.info.alignment = OVERLAY_INFO_LEFT;
 	overlay.info.actual = "";
 	overlay.info.mutex.unlock();

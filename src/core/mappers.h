@@ -20,8 +20,9 @@
 #define MAPPERS_H_
 
 #include "common.h"
-#include "memmap.h"
+#include "dipswitch.h"
 #include "external_calls.h"
+#include "memmap.h"
 #include "unif.h"
 
 // INES/NES2.0

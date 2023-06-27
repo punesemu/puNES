@@ -557,6 +557,7 @@ set(extra_srcs
 set(gui_ui_srcs
 	gui/designer/dlgCfgNSCode.ui
 	gui/designer/dlgCmdLineHelp.ui
+	gui/designer/dlgDipswitch.ui
 	gui/designer/dlgHeaderEditor.ui
 	gui/designer/dlgJsc.ui
 	gui/designer/dlgKeyboard.ui
@@ -592,8 +593,11 @@ set(gui_srcs
 	# N.B: Include here both cpp and hpp files since automoc relies on both types
 	gui/cgp.cpp
 	gui/cmd_line.cpp
+	gui/dipswitch.cpp
 	gui/dlgCmdLineHelp.cpp
 	gui/dlgCmdLineHelp.hpp
+	gui/dlgDipswitch.cpp
+	gui/dlgDipswitch.hpp
 	gui/dlgHeaderEditor.cpp
 	gui/dlgHeaderEditor.hpp
 	gui/dlgJsc.cpp

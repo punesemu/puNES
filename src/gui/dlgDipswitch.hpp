@@ -16,29 +16,40 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef BCK_STATES_H_
-#define BCK_STATES_H_
+#ifndef DLGDIPSWITCH_HPP_
+#define DLGDIPSWITCH_HPP_
 
-#include <string.h>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QButtonGroup>
+#include "ui_dlgDipswitch.h"
 #include "common.h"
 
-enum bck_states_operations_mode {
-	BCK_STATES_OP_SAVE_ON_MEM,
-	BCK_STATES_OP_READ_FROM_MEM,
-	BCK_STATES_OP_COUNT
+typedef struct _dp_value {
+	QString name;
+	WORD value;
+} _dp_value;
+typedef struct _dp_type {
+	QString name;
+	WORD mask;
+	WORD def;
+	QVector<_dp_value> values;
+} _dp_type;
+typedef struct _dp_internal {
+	QString name;
+	QVector<uint32_t> crc32s;
+	QVector<_dp_type> types;
+} _dp_internal;
+
+class dlgDipswitch : public QDialog, public Ui::dlgDipswitch {
+	Q_OBJECT
+
+	public:
+		explicit dlgDipswitch(QWidget *parent = nullptr);
+		~dlgDipswitch() override;
+
+	private slots:
+		void s_dipswitch(int index);
+		void s_start(bool checked);
 };
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC void bck_states_op_screen(BYTE mode, void *data, size_t *index, uint64_t *size_buff);
-EXTERNC void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size_buff);
-EXTERNC void bck_states_op_input(BYTE mode, void *data, size_t *index, uint64_t *size_buff);
-EXTERNC void bck_states_op_input_port(BYTE port, BYTE mode, void *data, size_t *index, uint64_t *size_buff);
-
-#undef EXTERNC
-
-#endif /* BCK_STATES_H_ */
+#endif /* DLGDIPSWITCH_HPP_ */

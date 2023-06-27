@@ -1178,7 +1178,8 @@ static void ppu_alignment_init(void) {
 			break;
 	}
 
-	ppu.cycles = (SWORD)((ppu_alignment.cpu + (-ppu_alignment.ppu + 1)) % machine.cpu_divide);
+	ppu.cycles = 0; //(SWORD)(machine.ppu_divide * -8);
+	ppu.cycles += (SWORD)((ppu_alignment.cpu + (-ppu_alignment.ppu + 1)) % machine.cpu_divide);
 
 	if (cfg->ppu_alignment == PPU_ALIGMENT_INC_AT_RESET) {
 		ppu_alignment.count.cpu = (ppu_alignment.count.cpu + 1) % machine.cpu_divide;

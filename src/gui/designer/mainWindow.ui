@@ -163,6 +163,7 @@
     <property name="title">
      <string>Too&amp;ls</string>
     </property>
+    <addaction name="action_Dipswitch"/>
     <addaction name="action_Virtual_Keyboard"/>
     <addaction name="action_Vs_System"/>
     <addaction name="action_Joypad_Gamepads_Debug"/>
@@ -753,6 +754,15 @@
    </property>
    <property name="text">
     <string>Edit Current iNES/NES2.0 &amp;Header</string>
+   </property>
+  </action>
+  <action name="action_Dipswitch">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/dipswitch.svgz</normaloff>:/icon/icons/dipswitch.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Dipswitch</string>
    </property>
   </action>
  </widget>

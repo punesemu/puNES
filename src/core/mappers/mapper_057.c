@@ -24,17 +24,9 @@ INLINE static void prg_fix_057(void);
 INLINE static void chr_fix_057(void);
 INLINE static void mirroring_fix_057(void);
 
-INLINE static void tmp_fix_057(BYTE max, BYTE index, const WORD *ds);
-
 struct _m057 {
 	BYTE reg[2];
 } m057;
-struct _m057tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m057tmp;
 
 void map_init_057(void) {
 	EXTCL_AFTER_MAPPER_INIT(057);
@@ -45,36 +37,6 @@ void map_init_057(void) {
 	mapper.internal_struct_size[0] = sizeof(m057);
 
 	memset(&m057, 0x00, sizeof(m057));
-
-	if (info.reset == RESET) {
-		if (m057tmp.ds_used) {
-			m057tmp.index = (m057tmp.index + 1) % m057tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m057tmp, 0x00, sizeof(m057tmp));
-
-		if ((info.crc32.prg == 0xF77A2663) || // 4-in-1 (ES-Q803B_20210617) (Unl) [p1].nes
-			(info.crc32.prg == 0xDB6228A0) || // 4-in-1_YH-4132.nes
-			(info.crc32.prg == 0x71B7EC3A) || // (YH-4131) Exciting Sport Turbo 4-in-1.nes
-			(info.crc32.prg == 0xEE722DE3) || // (YH-4135) Exciting Sport Turbo 4-in-1.nes
-			(info.crc32.prg == 0xD35D3D8F)) { // (YH-4136) Exciting Sport Turbo 4-in-1.nes
-			static WORD ds[] = { 0x01, 0x00 };
-
-			tmp_fix_057(LENGTH(ds), 0, &ds[0]);
-		} else if (info.crc32.prg == 0xC74F9C72) { // 1998 Series No. 10.nes
-			static WORD ds[] = { 0x02, 0x01, 0x00, 0x03 };
-
-			tmp_fix_057(LENGTH(ds), 0, &ds[0]);
-		} else if (info.crc32.prg == 0xA8930B3B) { // 32-in-1 (42, 52, 62-in-1) (ABCARD-02) (Unl) [p1].nes
-			static WORD ds[] = { 0x03, 0x02, 0x01, 0x00 };
-
-			tmp_fix_057(LENGTH(ds), 0, &ds[0]);
-		} else {
-			static WORD ds[] = { 0x07, 0xFD, 0x03, 0xFE };
-
-			tmp_fix_057(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 }
 void extcl_after_mapper_init_057(void) {
 	prg_fix_057();
@@ -95,7 +57,7 @@ void extcl_cpu_wr_mem_057(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_057(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x6000) && (address <= 0x6FFF)) {
-		return (m057tmp.dipswitch[m057tmp.index]);
+		return (dipswitch.value);
 	}
 	return (wram_rd(address));
 }
@@ -130,11 +92,4 @@ INLINE static void mirroring_fix_057(void) {
 	} else  {
 		mirroring_V();
 	}
-}
-
-INLINE static void tmp_fix_057(BYTE max, BYTE index, const WORD *ds) {
-	m057tmp.ds_used = TRUE;
-	m057tmp.max = max;
-	m057tmp.index = index;
-	m057tmp.dipswitch = ds;
 }

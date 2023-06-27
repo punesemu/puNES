@@ -32,12 +32,6 @@ struct _m043 {
 		WORD count;
 	} irq;
 } m043;
-struct _m043tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m043tmp;
 
 void map_init_043(void) {
 	EXTCL_AFTER_MAPPER_INIT(043);
@@ -54,11 +48,6 @@ void map_init_043(void) {
 	if (info.reset >= HARD) {
 		memset(&m043, 0x00, sizeof(m043));
 	}
-
-	// vale come promemoria per quando implementero' il dipswitch letto dal file
-	//if (!ROM->dipValueSet) ROM->dipValue =0x800
-	memset(&m043tmp, 0x00, sizeof(m043tmp));
-	m043tmp.ds_used = FALSE;
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -111,7 +100,7 @@ INLINE static void prg_fix_043(void) {
 	memmap_auto_8k(MMCPU(0xE000),  (m043.swap ? 8 : 9));
 }
 INLINE static void wram_fix_043(void) {
-	WORD bank = ((0x10000 | (m043tmp.ds_used ? m043tmp.dipswitch[m043tmp.index] : 0x800)) / 0x800);
+	WORD bank = ((0x10000 | (dipswitch.used ? dipswitch.value : 0x800)) / S2K);
 
 	memmap_prgrom_2k(MMCPU(0x5000), bank);
 	memmap_prgrom_2k(MMCPU(0x5800), bank);

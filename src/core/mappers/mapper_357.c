@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "mappers.h"
 #include "irqA12.h"
 #include "save_slot.h"
@@ -25,8 +24,6 @@ INLINE static void prg_fix_357(void);
 INLINE static void wram_fix_357(void);
 INLINE static void mirroring_fix_357(void);
 
-INLINE static void tmp_fix_357(BYTE max, BYTE index, const BYTE *ds);
-
 struct _m357 {
 	BYTE reg[3];
 	struct _m357_irq {
@@ -34,12 +31,6 @@ struct _m357 {
 		WORD counter;
 	} irq;
 } m357;
-struct _m357tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const BYTE *dipswitch;
-} m357tmp;
 
 void map_init_357(void) {
 	EXTCL_AFTER_MAPPER_INIT(357);
@@ -54,22 +45,6 @@ void map_init_357(void) {
 	m357.reg[2] = 0;
 	m357.irq.enable = 0;
 	m357.irq.counter = 0;
-
-	if (info.reset == RESET) {
-		if (m357tmp.ds_used) {
-			m357tmp.index = (m357tmp.index + 1) % m357tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		if (info.crc32.prg == 0x6C30D765) { // 4-in-1 (4602).nes
-			static BYTE ds[4] = { 0x00, 0x08, 0x10, 0x18 };
-
-			tmp_fix_357(LENGTH(ds), 0, &ds[0]);
-		} else {
-			static BYTE ds[] = { 0x00 };
-
-			tmp_fix_357(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -116,7 +91,7 @@ void extcl_cpu_every_cycle_357(void) {
 }
 
 INLINE static void prg_fix_357(void) {
-	if (!m357tmp.dipswitch[m357tmp.index]) {
+	if (!dipswitch.value) {
 		static BYTE banks[2][8] = {
 				{ 4, 3, 5, 3, 6, 3, 7, 3 },
 				{ 1, 1, 5, 1, 4, 1, 5, 1 }
@@ -127,26 +102,19 @@ INLINE static void prg_fix_357(void) {
 		memmap_auto_8k(MMCPU(0xC000), banks[m357.reg[2]][m357.reg[1]]);
 		memmap_auto_8k(MMCPU(0xE000), (m357.reg[2] ? 8 : 10));
 	} else {
-		memmap_auto_16k(MMCPU(0x8000), (m357tmp.dipswitch[m357tmp.index] | m357.reg[0]));
-		memmap_auto_16k(MMCPU(0xC000), (m357tmp.dipswitch[m357tmp.index] | 0x07));
+		memmap_auto_16k(MMCPU(0x8000), (dipswitch.value | m357.reg[0]));
+		memmap_auto_16k(MMCPU(0xC000), (dipswitch.value | 0x07));
 	}
 }
 INLINE static void wram_fix_357(void) {
-	if (!m357tmp.dipswitch[m357tmp.index]) {
+	if (!dipswitch.value) {
 		memmap_prgrom_8k(MMCPU(0x6000), m357.reg[2] ? 0 : 2);
 	}
 }
 INLINE static void mirroring_fix_357(void) {
-	if (m357tmp.dipswitch[m357tmp.index] == 0x18) {
+	if (dipswitch.value == 0x18) {
 		mirroring_H();
 	} else {
 		mirroring_V();
 	}
-}
-
-INLINE static void tmp_fix_357(BYTE max, BYTE index, const BYTE *ds) {
-	m357tmp.ds_used = TRUE;
-	m357tmp.max = max;
-	m357tmp.index = index;
-	m357tmp.dipswitch = ds;
 }

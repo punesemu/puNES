@@ -24,17 +24,9 @@
 void prg_swap_mmc3_012(WORD address, WORD value);
 void chr_swap_mmc3_012(WORD address, WORD value);
 
-INLINE static void tmp_fix_012(BYTE max, BYTE index, const WORD *ds);
-
 struct _m012 {
 	BYTE reg;
 } m012;
-struct _m012tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m012tmp;
 
 void map_init_012(void) {
 	if (info.mapper.submapper == 1) {
@@ -64,21 +56,6 @@ void map_init_012(void) {
 		MMC3_prg_swap = prg_swap_mmc3_012;
 		MMC3_chr_swap = chr_swap_mmc3_012;
 
-		if (info.reset == RESET) {
-			if (m012tmp.ds_used) {
-				m012tmp.index = (m012tmp.index + 1) % m012tmp.max;
-			}
-		} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-			memset(&m012tmp, 0x00, sizeof(m012tmp));
-
-			{
-				//static const BYTE ds[] = { 0, 1 };
-				static const WORD ds[] = { 0 };
-
-				tmp_fix_012(LENGTH(ds), 0, &ds[0]);
-			}
-		}
-
 		info.mapper.extend_wr = TRUE;
 
 		irqA12.present = TRUE;
@@ -98,7 +75,7 @@ void extcl_cpu_wr_mem_012(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_012(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x4000) && (address < 0x4FFF)) {
-		return (address & 0x0100 ? m012tmp.dipswitch[m012tmp.index] : wram_rd(address));
+		return (address & 0x0100 ? dipswitch.value : wram_rd(address));
 	}
 	return (wram_rd(address));
 }
@@ -114,11 +91,4 @@ void chr_swap_mmc3_012(WORD address, WORD value) {
 	WORD base = (m012.reg << (((address >> 10) >= 4) ? 4 : 8)) & 0x0100;
 
 	chr_swap_MMC3_base(address, (base | (value & 0xFF)));
-}
-
-INLINE static void tmp_fix_012(BYTE max, BYTE index, const WORD *ds) {
-	m012tmp.ds_used = TRUE;
-	m012tmp.max = max;
-	m012tmp.index = index;
-	m012tmp.dipswitch = ds;
 }

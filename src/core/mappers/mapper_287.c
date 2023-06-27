@@ -65,8 +65,7 @@ void extcl_cpu_wr_mem_287(WORD address, BYTE value) {
 			MMC3_chr_fix();
 		}
 		return;
-	}
-	if (address >= 0x8000) {
+	} else if (address >= 0x8000) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
@@ -76,7 +75,7 @@ BYTE extcl_save_mapper_287(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void prg_swap_mmc3_287(WORD address, WORD value) {
-	if (m287.reg & 0x0008) {
+	if (m287.reg & ((dipswitch.value && prgrom_size() <= S512K) ? 0x000C : 0x0008)) {
 		BYTE bank = ((m287.reg & 0x0007) << 2) | ((m287.reg & 0x0030) >> 4);
 
 		value = (bank << 2) | ((address >> 13) & 0x03);

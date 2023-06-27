@@ -61,10 +61,10 @@
     		break;\
 	}
 
-void bck_states_op_screen(BYTE mode, void *data, size_t *index, size_t *size_buff) {
+void bck_states_op_screen(BYTE mode, void *data, size_t *index, uint64_t *size_buff) {
 	bck_states_on_mem(mode, ppu_screen.rd->data, (screen_size()), data, (*index), (*size_buff))
 }
-void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_buff) {
+void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size_buff) {
 	unsigned int i = 0;
 
 	// CPU
@@ -133,6 +133,9 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_b
 		bck_states_on_struct(mode, irql2f, data, (*index), (*size_buff))
 	}
 
+	// dipswitch
+	bck_states_on_struct(mode, dipswitch, data, (*index), (*size_buff))
+
 	// FDS
 	if (fds.info.enabled) {
 		BYTE old_side_inserted = fds.drive.side_inserted;
@@ -160,7 +163,7 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_b
 		extcl_after_mapper_init();
 	}
 }
-void bck_states_op_input(BYTE mode, void *data, size_t *index, size_t *size_buff) {
+void bck_states_op_input(BYTE mode, void *data, size_t *index, uint64_t *size_buff) {
 	int i = 0;
 
 	// standard controller
@@ -185,7 +188,7 @@ void bck_states_op_input(BYTE mode, void *data, size_t *index, size_t *size_buff
 	bck_states_on_struct(mode, info.lag_frame.totals, data, (*index), (*size_buff))
 	bck_states_on_struct(mode, info.lag_frame.consecutive, data, (*index), (*size_buff))
 }
-void bck_states_op_input_port(BYTE id, BYTE mode, void *data, size_t *index, size_t *size_buff) {
+void bck_states_op_input_port(BYTE id, BYTE mode, void *data, size_t *index, uint64_t *size_buff) {
 	bck_states_on_struct(mode, port[id].type_pad, data, (*index), (*size_buff))
 	bck_states_on_struct(mode, port[id].index, data, (*index), (*size_buff))
 	bck_states_on_struct(mode, port[id].data, data, (*index), (*size_buff))

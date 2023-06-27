@@ -50,7 +50,7 @@ BYTE input_rd_reg_vs_r4016(UNUSED(BYTE openbus), BYTE nport) {
 	//  ++------- Coin inserted (read below)
 	return ((vs_system.coins.right ? 0x40 : 0x00) |
 			(vs_system.coins.left ? 0x20 : 0x00) |
-			((cfg->dipswitch & 0x03) << 3) |
+			((cfg->dipswitch_vs & 0x03) << 3) |
 			(vs_system.coins.service ? 0x04 : 0x00) |
 			(value & 0x01));
 }
@@ -67,7 +67,7 @@ BYTE input_rd_reg_vs_r4017(UNUSED(BYTE openbus), BYTE nport) {
 	// |||| || |
 	// |||| || +- Buttons for player 1 (A, B, 2, 4, Up, Down, Left, Right)
 	// ++++-++--- More DIP switches (7 down to 2)
-	return ((cfg->dipswitch & 0xFC) | (value & 0x01));
+	return ((cfg->dipswitch_vs & 0xFC) | (value & 0x01));
 }
 
 INLINE static void _input_rd_reg_vs(BYTE *value, BYTE nport) {

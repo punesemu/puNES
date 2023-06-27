@@ -24,17 +24,9 @@ INLINE static void prg_fix_204(void);
 INLINE static void chr_fix_204(void);
 INLINE static void mirroring_fix_204(void);
 
-INLINE static void tmp_fix_204(BYTE max, BYTE index, const WORD *ds);
-
 struct _m204 {
 	WORD reg;
 } m204;
-struct _m204tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m204tmp;
 
 void map_init_204(void) {
 	EXTCL_AFTER_MAPPER_INIT(204);
@@ -44,20 +36,6 @@ void map_init_204(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m204, 0x00, sizeof(m204));
-	}
-
-	if (info.reset == RESET) {
-		if (m204tmp.dipswitch) {
-			m204tmp.index = (m204tmp.index + 1) % m204tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m204tmp, 0x00, sizeof(m204tmp));
-
-		{
-			static const WORD ds[] = { 0x00 };
-
-			tmp_fix_204(LENGTH(ds), 0, &ds[0]);
-		}
 	}
 
 	info.mapper.extend_rd = TRUE;
@@ -77,9 +55,9 @@ BYTE extcl_cpu_rd_mem_204(WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		switch (m204.reg & 0xFF0F) {
 			case 0xF004:
-				return (prgrom_size() <= S64K ? m204tmp.dipswitch[m204tmp.index] & 0x00FF : prgrom_rd(address));
+				return (prgrom_size() <= S64K ? dipswitch.value & 0x00FF : prgrom_rd(address));
 			case 0xF008:
-				return ((m204tmp.dipswitch[m204tmp.index] & 0xFF00) >> 8);
+				return ((dipswitch.value & 0xFF00) >> 8);
 			default:
 				return (prgrom_rd(address));
 		}
@@ -109,11 +87,4 @@ INLINE static void mirroring_fix_204(void) {
 	} else {
 		mirroring_V();
 	}
-}
-
-INLINE static void tmp_fix_204(BYTE max, BYTE index, const WORD *ds) {
-	m204tmp.ds_used = TRUE;
-	m204tmp.max = max;
-	m204tmp.index = index;
-	m204tmp.dipswitch = ds;
 }

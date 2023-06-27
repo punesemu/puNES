@@ -24,18 +24,10 @@
 void prg_swap_mmc3_045(WORD address, WORD value);
 void chr_swap_mmc3_045(WORD address, WORD value);
 
-INLINE static void tmp_fix_045(BYTE max, BYTE index, const BYTE *ds);
-
 struct _m045 {
 	BYTE index;
 	BYTE reg[4];
 } m045;
-struct _m045tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const BYTE *dipswitch;
-} m045tmp;
 
 void map_init_045(void) {
 	EXTCL_AFTER_MAPPER_INIT(MMC3);
@@ -64,30 +56,6 @@ void map_init_045(void) {
 	MMC3_prg_swap = prg_swap_mmc3_045;
 	MMC3_chr_swap = chr_swap_mmc3_045;
 
-	if (info.reset == RESET) {
-		if (m045tmp.ds_used) {
-			m045tmp.index = (m045tmp.index + 1) % m045tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m045tmp, 0x00, sizeof(m045tmp));
-		if (info.crc32.prg == 0x2011376B) { // 98+1800000-in-1.nes
-			static const BYTE ds[] = { 0,  4,  3,  2 };
-
-			tmp_fix_045(LENGTH(ds), 0, &ds[0]);
-		} else if (
-			(info.crc32.prg == 0x70EE2D30) || // Super 19-in-1 (329-JY818).nes
-			(info.crc32.prg == 0x07FDD349) || // Super 1000000-in-1 [p1][!].nes
-			(info.crc32.prg == 0x899AEB47)) { // Super 19-in-1 (329-JY819).nes
-			static const BYTE ds[] = { 0,  1,  2 };
-
-			tmp_fix_045(LENGTH(ds), 0, &ds[0]);
-		} else if (info.crc32.prg == 0x28E0CF3B) { // Brain Series 12-in-1 [p1][!].nes
-			static const BYTE ds[] = { 0,  2 };
-
-			tmp_fix_045(LENGTH(ds), 0, &ds[0]);
-		}
-	}
-
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
@@ -107,18 +75,14 @@ void extcl_cpu_wr_mem_045(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_cpu_rd_mem_045(WORD address, UNUSED(BYTE openbus)) {
-	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		if (m045tmp.ds_used) {
-			return (~m045tmp.dipswitch[m045tmp.index] & address ? 0x01 : 0x00);
-		}
+	if (dipswitch.used && (address >= 0x5000) && (address <= 0x5FFF)) {
+		return (~dipswitch.value & address ? 0x01 : 0x00);
 	}
 	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_045(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m045.index);
 	save_slot_ele(mode, slot, m045.reg);
-	save_slot_ele(mode, slot, m045tmp.index);
-	save_slot_ele(mode, slot, m045tmp.dipswitch);
 	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
@@ -127,8 +91,8 @@ void prg_swap_mmc3_045(WORD address, WORD value) {
 	WORD mask = ~m045.reg[3] & 0x3F;
 	BYTE enabled = TRUE;
 
-	if (m045tmp.ds_used) {
-		switch (m045tmp.dipswitch[m045tmp.index]) {
+	if (dipswitch.used) {
+		switch (dipswitch.value) {
 			case 1:
 				enabled = (m045.reg[1] & 0x80) ? FALSE : TRUE;
 				break;
@@ -154,11 +118,4 @@ void chr_swap_mmc3_045(WORD address, WORD value) {
 
 		chr_swap_MMC3_base(address, (base | (value & mask)));
 	}
-}
-
-INLINE static void tmp_fix_045(BYTE max, BYTE index, const BYTE *ds) {
-	m045tmp.ds_used = TRUE;
-	m045tmp.max = max;
-	m045tmp.index = index;
-	m045tmp.dipswitch = ds;
 }

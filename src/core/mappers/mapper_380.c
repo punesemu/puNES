@@ -24,17 +24,9 @@ INLINE static void prg_fix_380(void);
 INLINE static void chr_fix_380(void);
 INLINE static void mirroring_fix_380(void);
 
-INLINE static void tmp_fix_380(BYTE max, BYTE index, const WORD *ds);
-
 struct _m380 {
 	WORD reg;
 } m380;
-struct _m380tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m380tmp;
 
 void map_init_380(void) {
 	EXTCL_AFTER_MAPPER_INIT(380);
@@ -48,20 +40,6 @@ void map_init_380(void) {
 
 	if (info.mapper.submapper == DEFAULT) {
 		info.mapper.submapper = 0;
-	}
-
-	if (info.reset == RESET) {
-		if (m380tmp.ds_used) {
-			m380tmp.index = (m380tmp.index + 1) % m380tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m380tmp, 0x00, sizeof(m380tmp));
-
-		{
-			static WORD ds[] = { 0x00 };
-
-			tmp_fix_380(LENGTH(ds), 0, &ds[0]);
-		}
 	}
 
 	info.mapper.extend_rd = TRUE;
@@ -80,7 +58,7 @@ void extcl_cpu_wr_mem_380(WORD address, UNUSED(BYTE value)) {
 BYTE extcl_cpu_rd_mem_380(WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		return ((info.mapper.submapper == 0) && (m380.reg & 0x100)
-			? (address & 0xFF) | m380tmp.dipswitch[m380tmp.index]
+			? (address & 0xFF) | dipswitch.value
 			: prgrom_rd(address));
 	}
 	return (wram_rd(address));
@@ -114,11 +92,4 @@ INLINE static void mirroring_fix_380(void) {
 	} else {
 		mirroring_V();
 	}
-}
-
-INLINE static void tmp_fix_380(BYTE max, BYTE index, const WORD *ds) {
-	m380tmp.ds_used = TRUE;
-	m380tmp.max = max;
-	m380tmp.index = index;
-	m380tmp.dipswitch = ds;
 }

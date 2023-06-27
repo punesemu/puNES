@@ -145,10 +145,18 @@ BYTE extcl_save_mapper_215(BYTE mode, BYTE slot, FILE *fp) {
 void prg_swap_mmc3_215(WORD address, WORD value) {
 	const WORD slot = (address >> 13) & 0x03;
 	WORD base = info.mapper.submapper == 1
-		? ((m215.reg[1] & 0x03) << 5) | (m215.reg[1] & 0x10) | ((m215.reg[1] & 0x08) << 4)
-		: ((m215.reg[1] & 0x03) << 5) | (m215.reg[1] & 0x10);
+		? ((m215.reg[1] & 0x03) << 5) | ((m215.reg[1] & 0x08) << 4)
+		: ((m215.reg[1] & 0x03) << 5);
 	WORD mask = 0x1F >> ((m215.reg[0] & 0x40) >> 6);
 
+	if (dipswitch.used) {
+		if (dipswitch.value & 0x01) {
+			base &= dipswitch.value;
+		} else {
+			base |= dipswitch.value;
+		}
+	}
+	base |= (m215.reg[1] & 0x10);
 	if (m215.reg[0] & 0x80) {
 		value = (m215.reg[0] & 0x0F);
 		if (m215.reg[0] & 0x20) {
@@ -164,10 +172,12 @@ void prg_swap_mmc3_215(WORD address, WORD value) {
 	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
 void chr_swap_mmc3_215(WORD address, WORD value) {
-	WORD base = info.mapper.submapper == 1
-		? ((m215.reg[1] & 0x0E) << 7) | ((m215.reg[1] & 0x20) << 2)
-		: ((m215.reg[1] & 0x0C) << 6) | ((m215.reg[1] & 0x20) << 2);
+	WORD base = info.mapper.submapper == 1 ? ((m215.reg[1] & 0x0E) << 7) : ((m215.reg[1] & 0x0C) << 6);
 	WORD mask = 0xFF >> ((m215.reg[0] & 0x40) >> 6);
 
+	if (dipswitch.used && (dipswitch.value & 0x01)) {
+		base &= (dipswitch.value << 3) | 0x07;
+	}
+	base |=  ((m215.reg[1] & 0x20) << 2);
 	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

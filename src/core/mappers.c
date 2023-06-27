@@ -42,6 +42,12 @@ BYTE map_init(void) {
 	// disabilito tutte le chiamate relative alle mappers
 	extcl_init();
 
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		dipswitch_search();
+		gui_update();
+		gui_dipswitch_dialog();
+	}
+
 	info.mapper.supported = TRUE;
 
 	switch (info.mapper.id) {

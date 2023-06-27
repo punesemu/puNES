@@ -31,9 +31,6 @@ struct _m260 {
 	BYTE mmc3[8];
 	WORD prg_base;
 } m260;
-struct _m260tmp {
-	BYTE dipswitch;
-} m260tmp;
 
 void map_init_260(void) {
 	EXTCL_AFTER_MAPPER_INIT(260);
@@ -49,32 +46,21 @@ void map_init_260(void) {
 	mapper.internal_struct[0] = (BYTE *)&m260;
 	mapper.internal_struct_size[0] = sizeof(m260);
 
+	memset(&m260, 0x00, sizeof(m260));
 	if (info.reset >= HARD) {
 		memset(&irqA12, 0x00, sizeof(irqA12));
-	}
 
-	memset(&m260, 0x00, sizeof(m260));
+		m260.mmc3[0] = 0;
+		m260.mmc3[1] = 2;
+		m260.mmc3[2] = 4;
+		m260.mmc3[3] = 5;
+		m260.mmc3[4] = 6;
+		m260.mmc3[5] = 7;
+		m260.mmc3[6] = 0;
+		m260.mmc3[7] = 0;
+	}
 
 	init_MMC3(info.reset);
-
-	if (info.reset == RESET) {
-		m260tmp.dipswitch = !m260tmp.dipswitch ; //(m260tmp.dipswitch + 1) & 0x03;
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		if (info.crc32.prg == 0x50A810A6) {
-			m260tmp.dipswitch = 1;
-		} else {
-			m260tmp.dipswitch = 0;
-		}
-	}
-
-	m260.mmc3[0] = 0;
-	m260.mmc3[1] = 2;
-	m260.mmc3[2] = 4;
-	m260.mmc3[3] = 5;
-	m260.mmc3[4] = 6;
-	m260.mmc3[5] = 7;
-	m260.mmc3[6] = 0;
-	m260.mmc3[7] = 0;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -141,7 +127,7 @@ void extcl_cpu_wr_mem_260(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_260(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		return ((openbus & ~0x03) | (m260tmp.dipswitch & 0x03));
+		return ((openbus & ~0x03) | (dipswitch.value & 0x03));
 	}
 	return (wram_rd(address));
 }

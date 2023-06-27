@@ -25,18 +25,11 @@ INLINE static void prg_fix_150(void);
 INLINE static void chr_fix_150(void);
 INLINE static void mirroring_fix_150(void);
 
-INLINE static void tmp_fix_150(BYTE max, BYTE index, const WORD *ds);
-
 struct _m150 {
 	BYTE index;
 	BYTE reg[8];
 } m150;
 struct _m150tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-
 	BYTE inverted_chr;
 } m150tmp;
 
@@ -48,24 +41,10 @@ void map_init_150(void) {
 	mapper.internal_struct[0] = (BYTE *)&m150;
 	mapper.internal_struct_size[0] = sizeof(m150);
 
-	if (info.reset == RESET) {
-		if (m150tmp.ds_used) {
-			m150tmp.index = (m150tmp.index + 1) % m150tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m150tmp, 0x00, sizeof(m150tmp));
-
-		{
-			static WORD ds[] = { 0x00 };
-
-			tmp_fix_150(LENGTH(ds), 0, &ds[0]);
-		}
-	}
-
 	if (info.reset >= HARD) {
 		memset(&m150, 0x00, sizeof(m150));
 
-		m150.index = m150tmp.dipswitch[m150tmp.index];
+		m150.index = dipswitch.value;
 	}
 
 	if ((info.crc32.prg == 0xE93400B2) || // Poker III (Sachen) [!].nes
@@ -83,7 +62,7 @@ void extcl_after_mapper_init_150(void) {
 void extcl_cpu_wr_mem_150(WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x5FFF)) {
 		if (address & 0x100) {
-			value = m150tmp.dipswitch[m150tmp.index] | (value & 0x07);
+			value = dipswitch.value | (value & 0x07);
 			if (address & 0x01) {
 				m150.reg[m150.index] = value;
 				prg_fix_150();
@@ -98,8 +77,7 @@ void extcl_cpu_wr_mem_150(WORD address, BYTE value) {
 BYTE extcl_cpu_rd_mem_150(WORD address, BYTE openbus) {
 	if ((address >= 0x4000) && (address <= 0x5FFF)) {
 		if ((address & 0x101) == 0x101) {
-			return ((m150.reg[m150.index] & (~m150tmp.dipswitch[m150tmp.index] & 0x07)) |
-				(openbus & ~(~m150tmp.dipswitch[m150tmp.index & 0x07])));
+			return ((m150.reg[m150.index] & (~dipswitch.value & 0x07)) | (openbus & ~(~dipswitch.value & 0x07)));
 		}
 	}
 	return (wram_rd(address));
@@ -139,11 +117,4 @@ INLINE static void mirroring_fix_150(void) {
 			mirroring_SCR1();
 			break;
 	}
-}
-
-INLINE static void tmp_fix_150(BYTE max, BYTE index, const WORD *ds) {
-	m150tmp.ds_used = TRUE;
-	m150tmp.max = max;
-	m150tmp.index = index;
-	m150tmp.dipswitch = ds;
 }

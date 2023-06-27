@@ -24,17 +24,9 @@ INLINE static void prg_fix_236(void);
 INLINE static void chr_fix_236(void);
 INLINE static void mirroring_fix_236(void);
 
-INLINE static void tmp_fix_236(BYTE max, BYTE index, const BYTE *ds);
-
 struct _m236 {
 	WORD reg[3];
 } m236;
-struct _m236tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const BYTE *dipswitch;
-} m236tmp;
 
 void map_init_236(void) {
 	EXTCL_AFTER_MAPPER_INIT(236);
@@ -45,22 +37,6 @@ void map_init_236(void) {
 	mapper.internal_struct_size[0] = sizeof(m236);
 
 	memset(&m236, 0x00, sizeof(m236));
-
-	if (info.reset == RESET) {
-		if (m236tmp.ds_used) {
-			m236tmp.index = (m236tmp.index + 1) % m236tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		if (info.crc32.prg == 0x0BB4FD7A) { // 800-in-1 [p1][U][!].unf
-			static BYTE ds[] = { 0x0D };
-
-			tmp_fix_236(LENGTH(ds), 0, &ds[0]);
-		} else {
-			static BYTE ds[] = { 0x00 };
-
-			tmp_fix_236(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 
 	info.mapper.extend_rd = TRUE;
 }
@@ -78,7 +54,7 @@ void extcl_cpu_wr_mem_236(WORD address, UNUSED(BYTE value)) {
 BYTE extcl_cpu_rd_mem_236(WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
 		if (m236.reg[1] == 0x10) {
-			address = (address & 0xFFF0) | m236tmp.dipswitch[m236tmp.index];
+			address = (address & 0xFFF0) | dipswitch.value;
 		}
 		return (prgrom_rd(address));
 	}
@@ -117,11 +93,4 @@ INLINE static void mirroring_fix_236(void) {
 	} else  {
 		mirroring_V();
 	}
-}
-
-INLINE static void tmp_fix_236(BYTE max, BYTE index, const BYTE *ds) {
-	m236tmp.ds_used = TRUE;
-	m236tmp.max = max;
-	m236tmp.index = index;
-	m236tmp.dipswitch = ds;
 }

@@ -24,17 +24,9 @@ INLINE static void prg_fix_319(void);
 INLINE static void chr_fix_319(void);
 INLINE static void mirroring_fix_319(void);
 
-INLINE static void tmp_fix_319(BYTE max, BYTE index, const WORD *ds);
-
 struct _m319 {
 	BYTE reg[3];
 } m319;
-struct _m319tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m319tmp;
 
 void map_init_319(void) {
 	EXTCL_AFTER_MAPPER_INIT(319);
@@ -50,20 +42,6 @@ void map_init_319(void) {
 
 	m319.reg[0] = 0;
 	m319.reg[1] = 0;
-
-	if (info.reset == RESET) {
-		if (m319tmp.ds_used) {
-			m319tmp.index = (m319tmp.index + 1) % m319tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m319tmp, 0x00, sizeof(m319tmp));
-
-		{
-			static WORD ds[] = { 0x00 };
-
-			tmp_fix_319(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -93,7 +71,7 @@ void extcl_cpu_wr_mem_319(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_319(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		return (m319tmp.dipswitch[m319tmp.index]);
+		return (dipswitch.value);
 	}
 	return (wram_rd(address));
 }
@@ -128,11 +106,4 @@ INLINE static void mirroring_fix_319(void) {
 	} else {
 		mirroring_H();
 	}
-}
-
-INLINE static void tmp_fix_319(BYTE max, BYTE index, const WORD *ds) {
-	m319tmp.ds_used = TRUE;
-	m319tmp.max = max;
-	m319tmp.index = index;
-	m319tmp.dipswitch = ds;
 }

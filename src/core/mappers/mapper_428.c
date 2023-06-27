@@ -24,18 +24,10 @@ INLINE static void prg_fix_428(void);
 INLINE static void chr_fix_428(void);
 INLINE static void mirroring_fix_428(void);
 
-INLINE static void tmp_fix_428(BYTE max, BYTE index, const WORD *ds);
-
 struct _m428 {
 	BYTE reg[5];
 	BYTE data;
 } m428;
-struct _m428tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m428tmp;
 
 void map_init_428(void) {
 	EXTCL_AFTER_MAPPER_INIT(428);
@@ -47,20 +39,6 @@ void map_init_428(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m428, 0x00, sizeof(m428));
-	}
-
-	if (info.reset == RESET) {
-		if (m428tmp.ds_used) {
-			m428tmp.index = (m428tmp.index + 1) % m428tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m428tmp, 0x00, sizeof(m428tmp));
-
-		{
-			static WORD ds[] = { 0x00, 0x01, 0x02, 0x03 };
-
-			tmp_fix_428(LENGTH(ds), 0, &ds[0]);
-		}
 	}
 
 	info.mapper.extend_wr = TRUE;
@@ -85,7 +63,7 @@ void extcl_cpu_wr_mem_428(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_428(WORD address, BYTE openbus) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return ((openbus & 0xFC) | (m428tmp.dipswitch[m428tmp.index] & 0x03));
+		return ((openbus & 0xFC) | (dipswitch.value & 0x03));
 	}
 	return (wram_rd(address));
 }
@@ -116,11 +94,4 @@ INLINE static void mirroring_fix_428(void) {
 	} else {
 		mirroring_V();
 	}
-}
-
-INLINE static void tmp_fix_428(BYTE max, BYTE index, const WORD *ds) {
-	m428tmp.ds_used = TRUE;
-	m428tmp.max = max;
-	m428tmp.index = index;
-	m428tmp.dipswitch = ds;
 }

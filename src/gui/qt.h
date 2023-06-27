@@ -217,6 +217,8 @@ EXTERNC void gui_egds_stop_rwnd(void);
 
 EXTERNC void gui_fullscreen(void);
 
+EXTERNC void gui_dipswitch_dialog(void);
+
 EXTERNC int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type);
 
 EXTERNC void gui_control_pause_bck(WORD event);

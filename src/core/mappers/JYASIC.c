@@ -35,16 +35,9 @@ void (*JYASIC_mirroring_swap)(WORD address, DBWORD value);
 INLINE static void irq_clock_prescaler_JYASIC(void);
 INLINE static BYTE prg_reverse_JYASIC(BYTE value);
 
-INLINE static void tmp_fix_JYASIC(BYTE max, BYTE index, const WORD *ds);
-
 _jyasic jyasic;
 struct _jyasictmp {
 	BYTE extended_mode;
-
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
 } jyasictmp;
 
 // promemoria
@@ -193,7 +186,7 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 BYTE extcl_cpu_rd_mem_JYASIC(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		if (!(address & 0x03FF) && (address != 0x5800)) {
-			return ((jyasictmp.dipswitch[jyasictmp.index] & 0xC0) | (openbus & 0x3F));
+			return ((dipswitch.value & 0xC0) | (openbus & 0x3F));
 		}
 		switch (address & 0x5803) {
 			case 0x5800:
@@ -326,64 +319,6 @@ void init_JYASIC(BYTE extended_mode, BYTE reset) {
 	JYASIC_wram_swap = wram_swap_JYASIC_base;
 	JYASIC_mirroring_fix = mirroring_fix_JYASIC_base;
 	JYASIC_mirroring_swap = mirroring_swap_JYASIC_base;
-
-	if (info.reset == RESET) {
-		if (jyasictmp.ds_used) {
-			jyasictmp.index = (jyasictmp.index + 1) % jyasictmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&jyasictmp, 0x00, sizeof(jyasictmp));
-
-		if (info.crc32.prg == 0x642E8D63) { // Tiny Toon Adventures 6 (Unl) [!].nes
-			static WORD ds[] = {0x40, 0x00};
-
-			tmp_fix_JYASIC(LENGTH(ds), 0, &ds[0]);
-		} else if (
-			(info.crc32.prg == 0x3C4E1F59) || // Final Fight 3 Super 25-in-1 (SC-128).nes
-			(info.crc32.prg == 0x2572906E)) { // Final Fight 3 (Unl) [!].nes
-			static WORD ds[] = { 0x00, 0x40 };
-
-			tmp_fix_JYASIC(LENGTH(ds), 0, &ds[0]);
-		} else if (
-			(info.crc32.prg == 0x73A9F3AE) || // 1996 Super Aladdin III 18-in-1 Series (JY-064).nes
-			(info.crc32.prg == 0xD12E3F63)) { // Popeye 2 - Travels in Persia (Unl) [!].nes
-			static WORD ds[] = { 0x80, 0x00 };
-
-			tmp_fix_JYASIC(LENGTH(ds), 0, &ds[0]);
-		} else if (
-			(info.crc32.prg == 0xCE4BA157) || // 45-in-1 (JY-120A) (Unl) [b1].nes
-			(info.crc32.prg == 0x3886BCF7) || // Aladdin (Unl).nes
-			(info.crc32.prg == 0xCDDB21DA) || // Tekken 2 (Unl) [!].nes
-			(info.crc32.prg == 0xEF3E7897) || // Tekken 2 (Unl) [T+Kor].nes
-			(info.crc32.prg == 0x859E81FC) || // Tekken 2 (Unl) [T+Kor][a1].nes
-			(info.crc32.prg == 0xA0859966) || // 1996 Super Mortal Kombat III 18-in-1 Series (JY-062).nes
-			(info.crc32.prg == 0x2A268152)) { // Mortal Kombat 3 - Special 56 Peoples (Unl) [!].nes
-			static WORD ds[] = { 0x00, 0x80 };
-
-			tmp_fix_JYASIC(LENGTH(ds), 0, &ds[0]);
-		} else if (
-			(info.crc32.prg == 0xCE4BA157) || // 45-in-1 (JY-120A) (Unl) [b1].nes
-			(info.crc32.prg == 0x3886BCF7) || // Aladdin (Unl).nes
-			(info.crc32.prg == 0xCDDB21DA) || // Tekken 2 (Unl) [!].nes
-			(info.crc32.prg == 0xEF3E7897) || // Tekken 2 (Unl) [T+Kor].nes
-			(info.crc32.prg == 0x859E81FC) || // Tekken 2 (Unl) [T+Kor][a1].nes
-			(info.crc32.prg == 0xD12E3F63) || // Popeye 2 - Travels in Persia (Unl) [!].nes
-			(info.crc32.prg == 0x73A9F3AE) || // 1996 Super Aladdin III 18-in-1 Series (JY-064).nes
-			(info.crc32.prg == 0xA0859966) || // 1996 Super Mortal Kombat III 18-in-1 Series (JY-062).nes
-			(info.crc32.prg == 0x2A268152)) { // Mortal Kombat 3 - Special 56 Peoples (Unl) [!].nes
-			static WORD ds[] = { 0x00, 0x40 };
-
-			tmp_fix_JYASIC(LENGTH(ds), 0, &ds[0]);
-		} else if (info.crc32.prg == 0x826E8D77) { // Donkey Kong Country 4 (Unl) [!].nes
-			static WORD ds[] = { 0x00, 0xC0, 0x80 };
-
-			tmp_fix_JYASIC(LENGTH(ds), 0, &ds[0]);
-		} else {
-			static WORD ds[] = { 0x00 };
-
-			tmp_fix_JYASIC(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 
 	jyasictmp.extended_mode = extended_mode;
 }
@@ -600,11 +535,4 @@ INLINE static BYTE prg_reverse_JYASIC(BYTE value) {
 		((value & 0x20) >> 4) |
 		// 0x01
 		((value & 0x40) >> 6));
-}
-
-INLINE static void tmp_fix_JYASIC(BYTE max, BYTE index, const WORD *ds) {
-	jyasictmp.ds_used = TRUE;
-	jyasictmp.max = max;
-	jyasictmp.index = index;
-	jyasictmp.dipswitch = ds;
 }

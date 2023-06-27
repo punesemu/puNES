@@ -24,19 +24,11 @@ INLINE static void prg_fix_286(void);
 INLINE static void chr_fix_286(void);
 INLINE static void mirroring_fix_286(void);
 
-INLINE static void tmp_fix_286(BYTE max, BYTE index, const WORD *ds);
-
 struct _m286 {
 	BYTE prg[4];
 	BYTE chr[4];
 	BYTE mirroring;
 } m286;
-struct _m286tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m286tmp;
 
 void map_init_286(void) {
 	EXTCL_AFTER_MAPPER_INIT(286);
@@ -53,20 +45,6 @@ void map_init_286(void) {
 		m286.prg[2] = 0x0E;
 		m286.prg[3] = 0x0F;
 	}
-
-	if (info.reset == RESET) {
-		if (m286tmp.ds_used) {
-			m286tmp.index = (m286tmp.index + 1) % m286tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m286tmp, 0x00, sizeof(m286tmp));
-
-		{
-			static WORD ds[] = { 0x10 };
-
-			tmp_fix_286(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 }
 void extcl_after_mapper_init_286(void) {
 	prg_fix_286();
@@ -82,7 +60,7 @@ void extcl_cpu_wr_mem_286(WORD address, UNUSED(BYTE value)) {
 			return;
 		case 0xA000:
 		case 0xB000:
-			if (address & m286tmp.dipswitch[m286tmp.index]) {
+			if (address & dipswitch.value) {
 				m286.prg[(address >> 10) & 0x03] = address & 0x0F;
 				prg_fix_286();
 			}
@@ -119,11 +97,4 @@ INLINE static void mirroring_fix_286(void) {
 	} else {
 		mirroring_V();
 	}
-}
-
-INLINE static void tmp_fix_286(BYTE max, BYTE index, const WORD *ds) {
-	m286tmp.ds_used = TRUE;
-	m286tmp.max = max;
-	m286tmp.index = index;
-	m286tmp.dipswitch = ds;
 }

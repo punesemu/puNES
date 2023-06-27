@@ -23,17 +23,9 @@
 INLINE static void prg_fix_301(void);
 INLINE static void mirroring_fix_301(void);
 
-INLINE static void tmp_fix_301(BYTE max, BYTE index, const WORD *ds);
-
 struct _m301 {
 	WORD reg;
 } m301;
-struct _m301tmp {
-	BYTE ds_used;
-	BYTE max;
-	BYTE index;
-	const WORD *dipswitch;
-} m301tmp;
 
 void map_init_301(void) {
 	EXTCL_AFTER_MAPPER_INIT(301);
@@ -44,20 +36,6 @@ void map_init_301(void) {
 	mapper.internal_struct_size[0] = sizeof(m301);
 
 	memset(&m301, 0x00, sizeof(m301));
-
-	if (info.reset == RESET) {
-		if (m301tmp.ds_used) {
-			m301tmp.index = (m301tmp.index + 1) % m301tmp.max;
-		}
-	} else if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memset(&m301tmp, 0x00, sizeof(m301tmp));
-
-		{
-			static WORD ds[] = { 0x00 };
-
-			tmp_fix_301(LENGTH(ds), 0, &ds[0]);
-		}
-	}
 
 	info.mapper.extend_rd = TRUE;
 }
@@ -72,7 +50,7 @@ void extcl_cpu_wr_mem_301(WORD address, UNUSED(BYTE value)) {
 }
 BYTE extcl_cpu_rd_mem_301(WORD address, UNUSED(BYTE openbus)) {
 	if (address >= 0x8000) {
-		return (m301.reg & 0x100 ? prgrom_rd((address & 0xFFFE) | m301tmp.dipswitch[m301tmp.index]) : prgrom_rd(address));
+		return (m301.reg & 0x100 ? prgrom_rd((address & 0xFFFE) | dipswitch.value) : prgrom_rd(address));
 	}
 	return (wram_rd(address));
 }
@@ -95,11 +73,4 @@ INLINE static void mirroring_fix_301(void) {
 	} else {
 		mirroring_V();
 	}
-}
-
-INLINE static void tmp_fix_301(BYTE max, BYTE index, const WORD *ds) {
-	m301tmp.ds_used = TRUE;
-	m301tmp.max = max;
-	m301tmp.index = index;
-	m301tmp.dipswitch = ds;
 }
