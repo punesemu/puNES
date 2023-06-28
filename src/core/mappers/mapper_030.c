@@ -46,10 +46,6 @@ void map_init_030(void) {
 		memset(&m030, 0x00, sizeof(m030));
 	}
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	if ((info.format != NES_2_0) && (vram_size() <= S8K)) {
 		vram_set_ram_size(S32K);
 	}

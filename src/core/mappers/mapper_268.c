@@ -59,10 +59,6 @@ void map_init_268(void) {
 	MMC3_chr_swap = chr_swap_mmc3_268;
 	MMC3_wram_fix = wram_fix_mmc3_268;
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	if ((info.mapper.id == 224) || (info.mapper.submapper & 0x01)) {
 		m268tmp.rstart = 0x5000;
 		m268tmp.rstop = 0x5FFF;

@@ -73,10 +73,6 @@ void map_init_083(void) {
 		m083.mode = 0x10;
 	}
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	if (info.mapper.id == 83) {
 		if (info.format != NES_2_0) {
 			if (chrrom_size() >= S1M) {

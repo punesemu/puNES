@@ -46,10 +46,6 @@ void map_init_018(void) {
 		m018.prg[3] = 0x00;
 	}
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		wavefiles_clear();
 		if ((info.mapper.submapper == 0) && (miscrom_size() >= S32K)) {

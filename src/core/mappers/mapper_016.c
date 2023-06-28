@@ -30,10 +30,6 @@ struct _m016tmp {
 } m016tmp;
 
 void map_init_016(void) {
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	switch (info.mapper.submapper) {
 		default:
 			EXTCL_AFTER_MAPPER_INIT(LZ93D50);

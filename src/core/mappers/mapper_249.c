@@ -45,10 +45,6 @@ void map_init_249(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	if (info.reset >= HARD) {
 		memset(&irqA12, 0x00, sizeof(irqA12));
 	}

@@ -24,10 +24,6 @@
 void wram_fix_004_mmc6(void);
 
 void map_init_004(void) {
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	if (info.mapper.submapper == 5) {
 		map_init_249();
 	} else {

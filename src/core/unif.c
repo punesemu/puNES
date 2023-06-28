@@ -123,10 +123,10 @@ BYTE unif_load_rom(void) {
 
 	// setto i defaults
 	info.machine[HEADER] = info.machine[DATABASE] = NTSC;
-	info.mapper.submapper = DEFAULT;
+	info.mapper.submapper = 0;
 	info.mapper.mirroring = MIRRORING_HORIZONTAL;
 	info.mapper.battery = FALSE;
-	info.mirroring_db = info.id = DEFAULT;
+	info.mirroring_db = DEFAULT;
 	info.extra_from_db = 0;
 	info.mapper.chrrom_banks_8k = 0;
 	vs_system.enabled = FALSE;
@@ -600,7 +600,7 @@ BYTE unif_FONT(_rom_mem *rom, BYTE phase) {
 void find_board(void) {
 	unif.finded = FALSE;
 	info.mapper.id = DEFAULT;
-	info.mapper.submapper = DEFAULT;
+	info.mapper.submapper = 0;
 	info.extra_from_db = DEFAULT;
 
 	if (!strncasecmp("NROM", unif.stripped_board, strlen(unif.stripped_board)) ||

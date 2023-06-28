@@ -191,17 +191,12 @@ void search_in_xml(QFile &file) {
 
 							// visto che con il NES_2_0 non eseguo la ricerca nel
 							// database inizializzo queste variabili.
-							info.mirroring_db = info.id = DEFAULT;
+							info.mirroring_db = DEFAULT;
 							info.extra_from_db = 0;
 
 							info.mapper.id = nes20db.pcb.mapper;
 							info.mapper.submapper_nes20 = nes20db.pcb.submapper;
 							info.mapper.submapper = info.mapper.submapper_nes20;
-
-							// Submapper number. Mappers not using submappers set this to zero.
-							if (info.mapper.submapper == 0) {
-								info.mapper.submapper = DEFAULT;
-							}
 
 							wram_set_ram_size(nes20db.prgram.size ? nes20db.prgram.size : 0);
 							wram_set_nvram_size(nes20db.prgnvram.size ? nes20db.prgnvram.size : 0);

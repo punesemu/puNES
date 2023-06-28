@@ -56,10 +56,6 @@ void map_init_406(void) {
 	MMC3_prg_swap = prg_swap_mmc3_406;
 	MMC3_wram_fix = wram_fix_mmc3_406;
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		m406tmp.sst39sf040 = (BYTE *)malloc(prgrom_size());
 		memcpy(m406tmp.sst39sf040, prgrom_pnt(), prgrom_size());

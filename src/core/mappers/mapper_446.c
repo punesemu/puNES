@@ -147,10 +147,6 @@ void map_init_446(void) {
 		memset(&m446, 0x00, sizeof(m446));
 	}
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		m446tmp.sst39sf040 = (BYTE *)malloc(prgrom_size());
 		memcpy(m446tmp.sst39sf040, prgrom_pnt(), prgrom_size());

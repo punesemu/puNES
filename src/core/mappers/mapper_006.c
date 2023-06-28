@@ -383,9 +383,6 @@ void map_init_006(void) {
 	} else if (info.reset >= HARD) {
 		memset(&m006, 0x00, sizeof(m006));
 
-		if (info.mapper.submapper == DEFAULT) {
-			info.mapper.submapper = 0;
-		}
 		if ((info.format == iNES_1_0) && (info.mapper.id == 6)) {
 			info.mapper.submapper = 1;
 		}

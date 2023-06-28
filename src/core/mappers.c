@@ -1331,7 +1331,6 @@ void map_quit(void) {
 	ram_quit();
 	nmt_quit();
 
-	info.id = 0;
 	memset(&info.mapper, 0x00, sizeof(info.mapper));
 	memset(&info.sha1sum, 0x00, sizeof(info.sha1sum));
 

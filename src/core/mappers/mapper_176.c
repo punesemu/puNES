@@ -85,10 +85,6 @@ void map_init_176(void) {
 		}
 	}
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m176, 0x00, sizeof(m176));
 

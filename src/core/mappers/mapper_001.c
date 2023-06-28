@@ -32,10 +32,6 @@ void map_init_001(void) {
 	mapper.internal_struct[0] = (BYTE *)&mmc1;
 	mapper.internal_struct_size[0] = sizeof(mmc1);
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	if (info.format != NES_2_0) {
 		if (!chrrom_size()) {
 			if (prgrom_size() == S512K) {

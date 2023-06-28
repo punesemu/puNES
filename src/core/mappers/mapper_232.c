@@ -37,10 +37,6 @@ void map_init_232(void) {
 	if (info.reset >= HARD) {
 		memset(&m232, 0x00, sizeof(m232));
 	}
-
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
 }
 void extcl_after_mapper_init_232(void) {
 	prg_fix_232();

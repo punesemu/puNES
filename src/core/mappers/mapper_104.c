@@ -39,10 +39,6 @@ void map_init_104(void) {
 	if (info.reset >= HARD) {
 		memset(&m104, 0x00, sizeof(m104));
 	}
-
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
 }
 void extcl_after_mapper_init_104(void) {
 	prg_fix_104();

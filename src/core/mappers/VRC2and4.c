@@ -222,7 +222,7 @@ void init_VRC2and4(BYTE type, WORD A0, WORD A1, BYTE irq_repeated, BYTE reset) {
 	vrc2and4.irq.count = 0;
 	vrc2and4.irq.prescaler = 0;
 
-	vrc2and4.wram_protect = ((info.format == NES_2_0) && (info.mapper.submapper != DEFAULT) && (info.mapper.submapper > 1));
+	vrc2and4.wram_protect = ((info.format == NES_2_0) && (info.mapper.submapper > 1));
 
 	irq.high &= ~EXT_IRQ;
 

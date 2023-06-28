@@ -40,10 +40,6 @@ void map_init_003() {
 		memset(&m003, 0x00, sizeof(m003));
 	}
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	if (info.crc32.prg == 0xF8DA2506) {
 		// TODO: I need WAV files to implement their playback
 		info.mapper.extend_wr = TRUE;

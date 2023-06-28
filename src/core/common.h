@@ -102,9 +102,7 @@ enum languages {
 enum database_mode {
 	NODIPSWITCH = 0xFF00,
 	NOEXTRA = 0x0000,
-	VSZAPPER = 0x0001,
-	CHRRAM32K = 0x0002,
-	CHRRAM256K = 0x0004
+	VSZAPPER = 0x0001
 };
 enum toolbar { TLB_TOP, TLB_RIGHT, TLB_BOTTOM, TLB_LEFT };
 

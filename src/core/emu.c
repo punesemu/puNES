@@ -1138,15 +1138,11 @@ void emu_info_rom(void) {
 		log_info_box_open(uL("submapper;"));
 		ischanged(info.header.submapper != info.mapper.submapper);
 		if ((info.header.format == NES_2_0) || info.mapper.nes20db.in_use) {
-			info.mapper.submapper == DEFAULT
-				? log_close_box(uL("%u (DEFAULT)%s"), info.mapper.submapper_nes20, ifchanged())
-				: info.mapper.submapper == info.mapper.submapper_nes20
-					? log_close_box(uL("%u%s"), info.mapper.submapper_nes20, ifchanged())
-					: log_close_box(uL("%u (%u)%s"), info.mapper.submapper_nes20, info.mapper.submapper, ifchanged());
+			info.mapper.submapper == info.mapper.submapper_nes20
+				? log_close_box(uL("%u%s"), info.mapper.submapper_nes20, ifchanged())
+				: log_close_box(uL("%u (%u)%s"), info.mapper.submapper_nes20, info.mapper.submapper, ifchanged());
 		} else {
-			info.mapper.submapper == DEFAULT
-				? log_close_box(uL("DEFAULT%s"), ifchanged())
-				: log_close_box(uL("%u%s"), info.mapper.submapper, ifchanged());
+				log_close_box(uL("%u%s"), info.mapper.submapper, ifchanged());
 		}
 	}
 
@@ -1200,6 +1196,10 @@ void emu_info_rom(void) {
 					break;
 			}
 		}
+	}
+
+	if (dipswitch.used) {
+		log_info_box(uL("dipswitch;%s"), "present");
 	}
 
 	ischanged(info.header.battery != info.mapper.battery);
@@ -1267,10 +1267,10 @@ void emu_info_rom(void) {
 		log_info_box(uL("trainer;yes  [ %08X ]"), info.crc32.trainer);
 	} else if (miscrom_size()) {
 		log_info_box(uL("MISC chips;%-4lu [ %08X %ld ]%s"),
-			 (long)miscrom.chips,
-			 info.crc32.misc,
-			 miscrom_size(),
-			 (info.misc_truncated ? " truncated" : ""));
+			(long)miscrom.chips,
+			info.crc32.misc,
+			miscrom_size(),
+			(info.misc_truncated ? " truncated" : ""));
 	}
 
 	if (info.header.format == iNES_1_0) {

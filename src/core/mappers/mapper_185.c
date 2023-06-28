@@ -35,10 +35,6 @@ void map_init_185() {
 	mapper.internal_struct[0] = (BYTE *)&m185;
 	mapper.internal_struct_size[0] = sizeof(m185);
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	if ((info.mapper.submapper & 0x0C) != 0x04) {
 		EXTCL_RD_R2007(185);
 	}

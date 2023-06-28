@@ -38,10 +38,6 @@ void map_init_380(void) {
 
 	memset(&m380, 0x00, sizeof(m380));
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	info.mapper.extend_rd = TRUE;
 }
 void extcl_after_mapper_init_380(void) {

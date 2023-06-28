@@ -46,10 +46,6 @@ void map_init_086(void) {
 		memset(&m086, 0x00, sizeof(m086));
 	}
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		memset(&m086tmp, 0x00, sizeof(m086tmp));
 		wavefiles_clear();

@@ -104,7 +104,6 @@ typedef struct _info {
 
 	BYTE mirroring_db;
 	BYTE portable;
-	BYTE id;
 	BYTE stop;
 	BYTE reset;
 	BYTE frame_status;

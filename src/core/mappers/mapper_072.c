@@ -40,10 +40,6 @@ void map_init_072(void) {
 		memset(&m072, 0x00, sizeof(m072));
 	}
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
-
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 		wavefiles_clear();
 		if ((info.mapper.submapper == 0) && (miscrom_size() >= S32K)) {

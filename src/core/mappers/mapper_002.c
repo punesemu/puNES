@@ -36,10 +36,6 @@ void map_init_002(void) {
 	if (info.reset >= HARD) {
 		memset(&m002, 0x00, sizeof(m002));
 	}
-
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
 }
 void extcl_after_mapper_init_002(void) {
 	prg_fix_002();

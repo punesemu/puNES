@@ -128,17 +128,12 @@ BYTE ines_load_rom(void) {
 
 			// visto che con il NES_2_0 non eseguo la ricerca nel
 			// database inizializzo queste variabili.
-			info.mirroring_db = info.id = DEFAULT;
+			info.mirroring_db = DEFAULT;
 			info.extra_from_db = 0;
 
 			info.mapper.id = ((ines.flags[FL8] & 0x0F) << 8) | (ines.flags[FL7] & 0xF0) | (ines.flags[FL6] >> 4);
 			info.mapper.submapper_nes20 = (ines.flags[FL8] & 0xF0) >> 4;
 			info.mapper.submapper = info.mapper.submapper_nes20;
-
-			// Submapper number. Mappers not using submappers set this to zero.
-			if (info.mapper.submapper == 0) {
-				info.mapper.submapper = DEFAULT;
-			}
 
 			// PRGROM
 			info.mapper.prgrom_banks_16k |= ((ines.flags[FL9] & 0x0F) << 8);
@@ -214,7 +209,7 @@ BYTE ines_load_rom(void) {
 				cpu_timing = ines.flags[FL9] & 0x01;
 			}
 
-			info.mapper.submapper = DEFAULT;
+			info.mapper.submapper = 0;
 			info.mapper.battery = (ines.flags[FL6] & 0x02) >> 1;
 
 			wram_set_ram_size(S8K);
@@ -376,7 +371,6 @@ BYTE ines_load_rom(void) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
-
 			if (rom_mem_ctrl_memcpy_truncated(chrrom_pnt(), &rom, chrrom_size()) == EXIT_ERROR) {
 				info.chr_truncated = TRUE;
 			}
@@ -512,8 +506,7 @@ void search_in_database(void) {
 	for (i = 0; i < LENGTH(dblist); i++) {
 		if (!(memcmp(dblist[i].sha1sum, info.sha1sum.prg.string, 40))) {
 			info.mapper.id = dblist[i].mapper;
-			info.mapper.submapper = dblist[i].submapper;
-			info.id = dblist[i].id;
+			info.mapper.submapper = dblist[i].submapper == DEFAULT ? 0 : dblist[i].submapper;
 			info.machine[DATABASE] = dblist[i].machine;
 			info.mirroring_db = dblist[i].mirroring;
 			vs_system.ppu = dblist[i].vs_ppu;
@@ -541,7 +534,8 @@ void search_in_database(void) {
 }
 BYTE ines10_search_in_database(void) {
 	// setto i default prima della ricerca
-	info.machine[DATABASE] = info.mapper.submapper = info.mirroring_db = info.id = DEFAULT;
+	info.machine[DATABASE] = info.mirroring_db = DEFAULT;
+	info.mapper.submapper = 0;
 	info.extra_from_db = 0;
 	vs_system.ppu = vs_system.special_mode.type = DEFAULT;
 

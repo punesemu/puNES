@@ -38,10 +38,6 @@ void map_init_180(void) {
 	if (info.reset >= HARD) {
 		memset(&m180, 0x00, sizeof(m180));
 	}
-
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
 }
 void extcl_after_mapper_init_180(void) {
 	prg_fix_180();

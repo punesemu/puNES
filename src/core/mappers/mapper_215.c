@@ -55,9 +55,6 @@ void map_init_215(void) {
 	m215.reg[2] = 0x07;
 	m215.reg[3] = 0x04;
 
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
 	if ((info.mapper.submapper < 2) && (prgrom_size() >= S2M)) {
 		info.mapper.submapper = 1;
 	}

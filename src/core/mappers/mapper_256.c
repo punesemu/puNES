@@ -83,7 +83,7 @@ void map_init_256(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
 	if (info.format != NES_2_0) {
-		if (info.mapper.submapper == DEFAULT) {
+		if (info.mapper.submapper == 0) {
 			if ((info.crc32.prg == 0x947AC898) || // Power Joy Supermax 30-in-1 (Unl) [U][!].unf
 				(info.crc32.prg == 0x1AB45228)) { // Power Joy Supermax 60-in-1 (Unl) [U][!].unf
 				info.mapper.submapper = M256_POWER_JOY_SUPERMAX;
@@ -98,8 +98,6 @@ void map_init_256(void) {
 			}
 		}
 	}
-
-	info.mapper.submapper = info.mapper.submapper ==  DEFAULT ? M256_NORMAL: info.mapper.submapper;
 
 	init_OneBus(info.reset);
 

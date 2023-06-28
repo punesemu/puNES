@@ -36,10 +36,6 @@ void map_init_452(void) {
 	mapper.internal_struct_size[0] = sizeof(m452);
 
 	memset(&m452, 0x00, sizeof(m452));
-
-	if (info.mapper.submapper == DEFAULT) {
-		info.mapper.submapper = 0;
-	}
 }
 void extcl_after_mapper_init_452(void) {
 	prg_fix_452();
