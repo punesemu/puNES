@@ -28,18 +28,6 @@
 #include "memmap.h"
 #include "vs_system.h"
 
-
-
-
-#include <QtCore/QDebug>
-
-
-
-
-
-
-
-
 #define NES20DBFILENAME "nes20db.xml"
 
 typedef QMap<QString, QString> game_map;
@@ -148,34 +136,6 @@ void search_in_xml(QFile &file) {
 
 					if (game.count() > 0) {
 						populate_game_info(nes20db, game);
-
-
-
-
-
-//						//if (nes20db.trainer.size) {
-//							//if ((nes20db.prgram.size + nes20db.prgnvram.size) != 0x2000){
-//							//if ((nes20db.pcb.mapper == 0) && (nes20db.prgrom.size == (16 * 3 * 1024))){
-//							//if ((nes20db.pcb.mapper == 176) && (nes20db.prgram.size || nes20db.prgnvram.size)) {
-//							//if (nes20db.prgram.size && nes20db.prgnvram.size) {
-//							//if (nes20db.pcb.mapper == 86 && nes20db.miscrom.size) {
-//							if (nes20db.prgrom.size < S16K) {
-//								qDebug().noquote()
-//										<< QString("%1").arg(nes20db.pcb.mapper, 3, 10, QLatin1Char(' '))
-//										<< QString("%1").arg(nes20db.pcb.submapper, 2, 10, QLatin1Char(' '))
-//										<< QString("%1").arg(nes20db.prgram.size, 4, 10, QLatin1Char(' '))
-//										<< QString("%1").arg(nes20db.prgnvram.size, 4, 10, QLatin1Char(' '))
-//										<< QString("%1").arg(nes20db.miscrom.size, 4, 10, QLatin1Char(' '))
-//										<< game["comment"]
-//										;
-//							}
-//						//}
-//						continue;
-
-
-
-
-
 						// Ho deciso di usare solo il crc32 total (tralasciando quello della prgrom perche' ci sono
 						// roms con lo stesso crc32 ma usano mapper diverse :
 						// Esempio :
