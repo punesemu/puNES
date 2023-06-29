@@ -250,7 +250,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void update_menu_tools(void);
 
 	private:
-		void action_text(QAction *action, const QString &description, QString *shortcut);
+		void action_text(QAction *action, const QString &description, QString *scut);
 		void ctrl_disk_side(QAction *action);
 		void geom_to_cfg(const QRect &geom, _last_geometry *lg);
 		void set_dialog_geom(QRect &geom);

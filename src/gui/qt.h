@@ -124,7 +124,8 @@ enum _overlay_info_alignment {
 #define mainwin ((mainWindow *)gui_mainwindow_get_ptr())
 #define objcheat ((objCheat *)gui_objcheat_get_ptr())
 #define wdgoverlayui ((wdgOverlayUi *)gui_wdgoverlayui_get_ptr())
-#define wdgrewind ((wdgRewind *)gui_wdgrewind_get_ptr())
+#define wdgrewind dynamic_cast<wdgRewind *>((wdgRewind *)gui_wdgrewind_get_ptr())
+//#define wdgrewind ((wdgRewind *)gui_wdgrewind_get_ptr())
 
 typedef struct _gui {
 #if defined (_WIN32)

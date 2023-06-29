@@ -1150,18 +1150,18 @@ void mainWindow::update_tape_menu(void) {
 	}
 }
 void mainWindow::update_menu_tools(void) {
-	action_Dipswitch->setEnabled(dipswitch.used);
+	action_Dipswitch->setEnabled(dipswitch.used && dipswitch.show_dlg);
 	action_Virtual_Keyboard->setEnabled(nes_keyboard.enabled);
 	if (!action_Virtual_Keyboard->isEnabled() && dlgkeyb->isVisible()) {
 		dlgkeyb->hide();
 	}
 }
 
-void mainWindow::action_text(QAction *action, const QString &description, QString *shortcut) {
-	if ((*shortcut) == "NULL") {
+void mainWindow::action_text(QAction *action, const QString &description, QString *scut) {
+	if ((*scut) == "NULL") {
 		action->setText(description);
 	} else {
-		action->setText(description + '\t' + (*shortcut));
+		action->setText(description + '\t' + (*scut));
 	}
 }
 void mainWindow::ctrl_disk_side(QAction *action) {
@@ -1642,7 +1642,7 @@ void mainWindow::s_max_speed_stop(void) const {
 	emu_thread_continue();
 }
 void mainWindow::s_toggle_gui_in_window(void) {
-	bool visibility;
+	bool visibility = false;
 
 	if (gfx.type_of_fscreen_in_use == FULLSCR) {
 		return;
@@ -1686,7 +1686,7 @@ void mainWindow::s_state_save_slot_action(void) {
 }
 void mainWindow::s_state_save_slot_incdec(void) {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
-	BYTE new_slot;
+	BYTE new_slot = 0;
 
 	if (mode == INC) {
 		new_slot = save_slot.slot_in_use + 1;
@@ -1709,7 +1709,7 @@ void mainWindow::s_state_save_slot_set(void) {
 void mainWindow::s_state_save_file(void) {
 	QStringList filters;
 	QString file;
-	uTCHAR *fl;
+	uTCHAR *fl = NULL;
 
 	emu_thread_pause();
 
@@ -1770,7 +1770,7 @@ void mainWindow::s_state_load_file(void) {
 	filters[1].append(" (*.*)");
 
 	file = QFileDialog::getOpenFileName(this, tr("Open save state"),
-			QFileInfo(uQString(cfg->save_file)).dir().absolutePath(), filters.join(";;"));
+		QFileInfo(uQString(cfg->save_file)).dir().absolutePath(), filters.join(";;"));
 
 	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
@@ -2443,12 +2443,9 @@ void actionOneTrigger::reset_count(void) {
 // ----------------------------------------------------------------------------------------------
 
 timerEgds::timerEgds(QObject *parent) : QTimer(parent) {
-	int i;
-
-	for (i = 0 ; i < EGDS_TOTALS; i++) {
+	for (int i = 0 ; i < EGDS_TOTALS; i++) {
 		calls[i].count = 0;
 	}
-
 	connect(this, SIGNAL(timeout()), this, SLOT(s_draw_screen()));
 }
 timerEgds::~timerEgds() = default;

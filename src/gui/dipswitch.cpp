@@ -145,8 +145,12 @@ void search_in_cfg(QFile &file) {
 			dipswitch_reset();
 		} else {
 			dipswitch.used = TRUE;
+			dipswitch.show_dlg = FALSE;
 			dipswitch.value = 0;
 			for (int type = 0; type < dp.types.length(); type++) {
+				if (dp.types.at(type).values.length() > 1) {
+					dipswitch.show_dlg = TRUE;
+				}
 				for (int index = 0; index < dp.types.at(type).values.length(); index++) {
 					if (dp.types.at(type).values.at(index).value == dp.types.at(type).def) {
 						dipswitch.value = (dipswitch.value & ~dp.types.at(type).mask) | dp.types.at(type).values.at(index).value;

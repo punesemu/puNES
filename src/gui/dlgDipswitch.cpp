@@ -56,13 +56,14 @@ dlgDipswitch::dlgDipswitch(QWidget *parent) : QDialog(parent) {
 				def = index;
 			}
 		}
-		connect(cb, SIGNAL(activated(int)), this, SLOT(s_dipswitch(int)));
+		connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(s_dipswitch(int)));
 		cb->setCurrentIndex(def);
 
 		formLayout_Dipswitch->setWidget(i, QFormLayout::LabelRole, lb);
 		formLayout_Dipswitch->setWidget(i, QFormLayout::FieldRole, cb);
 	}
 	connect(pushButton_Start, SIGNAL(clicked(bool)), this, SLOT(s_start(bool)));
+	connect(pushButton_Default, SIGNAL(clicked(bool)), this, SLOT(s_default(bool)));
 
 	if ((info.reset != CHANGE_ROM) && (info.reset != POWER_UP)) {
 		pushButton_Start->setText(tr("Ok"));
@@ -73,7 +74,7 @@ dlgDipswitch::dlgDipswitch(QWidget *parent) : QDialog(parent) {
 dlgDipswitch::~dlgDipswitch() = default;
 
 void dlgDipswitch::s_dipswitch(int index) {
-	const int type = QVariant(((QComboBox *)sender())->property("myIndex")).toInt();
+	const int type = QVariant((dynamic_cast<QComboBox *>(sender()))->property("myIndex")).toInt();
 	const int value = QVariant(((QComboBox *)sender())->itemData(index)).toInt();
 	const int mask = dp.types.at(type).mask;
 
@@ -83,4 +84,20 @@ void dlgDipswitch::s_dipswitch(int index) {
 }
 void dlgDipswitch::s_start(UNUSED(bool checked)) {
 	close();
+}
+void dlgDipswitch::s_default(UNUSED(bool checked)) {
+	for (int i = 0; i < dp.types.length(); i++) {
+		QComboBox *cb = findChild<QComboBox *>(QString("comboBox_dipswitch_%0").arg(i));
+
+		if (cb) {
+			int def = 0;
+
+			for (int index = 0; index < dp.types.at(i).values.length(); index++) {
+				if (dp.types.at(i).def == dp.types.at(i).values.at(index).value) {
+					def = index;
+				}
+			}
+			cb->setCurrentIndex(def);
+		}
+	}
 }

@@ -33,6 +33,17 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_Default">
+       <property name="text">
+        <string>Default</string>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/overscan_default.svgz</normaloff>:/icon/icons/overscan_default.svgz</iconset>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>

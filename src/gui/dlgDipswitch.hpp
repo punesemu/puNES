@@ -50,6 +50,7 @@ class dlgDipswitch : public QDialog, public Ui::dlgDipswitch {
 	private slots:
 		void s_dipswitch(int index);
 		void s_start(bool checked);
+		void s_default(bool checked);
 };
 
 #endif /* DLGDIPSWITCH_HPP_ */

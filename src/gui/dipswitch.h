@@ -23,6 +23,7 @@
 
 typedef struct _dipswitch {
 	BYTE used;
+	BYTE show_dlg;
 	int value;
 } _dipswitch;
 

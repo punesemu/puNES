@@ -339,7 +339,7 @@ double gui_device_pixel_ratio(void) {
 }
 void gui_set_window_size(void) {
 	int w = gfx.w[VIDEO_MODE], h = gfx.h[VIDEO_MODE];
-	bool toolbar;
+	bool toolbar = false;
 
 #if defined (_WIN32)
 	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
@@ -502,7 +502,7 @@ void gui_fullscreen(void) {
 }
 
 void gui_dipswitch_dialog(void) {
-	if (dipswitch.used) {
+	if (dipswitch.used && dipswitch.show_dlg) {
 		dlgDipswitch *dlg = new dlgDipswitch(qt.mwin);
 
 		dlg->show();
