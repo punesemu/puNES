@@ -242,6 +242,9 @@ BYTE nsfe_load_rom(void) {
 			}
 		}
 
+		ram_set_size(S2K);
+		ram_init();
+
 		wram_set_ram_size(nsf.sound_chips.fds ? 0xA000 : 0x2000);
 
 		nsf.enabled = TRUE;
@@ -360,8 +363,8 @@ BYTE nsfe_DATA(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
-	prgrom_set_size(((((size_t)nsfe.chunk.length + padding) / 0x1000) +
-		((((size_t)nsfe.chunk.length + padding) % 0x1000) ? 1 : 0)) * 0x1000);
+	prgrom_set_size(((((size_t)nsfe.chunk.length + padding) / S4K) +
+		((((size_t)nsfe.chunk.length + padding) % S4K) ? 1 : 0)) * S4K);
 
 	if (prgrom_init(0xF2) == EXIT_ERROR) {
 		free(rom->data);
