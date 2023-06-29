@@ -249,6 +249,7 @@ void search_in_xml(QFile &file) {
 									info.decimal_mode = TRUE;
 									break;
 								default:
+									info.mapper.ext_console_type = nes20db.console.type;
 									info.decimal_mode = FALSE;
 									break;
 							}
