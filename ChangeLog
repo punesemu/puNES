@@ -7,7 +7,7 @@ Changelog:
   * Randomize.
 - Added fully support to NES 2.0 file cart format header.
 - Rewritten mappers : All.
-- Added support to mapper : 100, 122, 157, 291, 311, 334, 362, 366, 384, 421, 446, 471, 551, 552.
+- Added support to mapper : 100, 122, 157, 291, 311, 334, 362, 366, 384, 421, 446, 471, 551, 552, 561.
 - Added support to UNIF mapper : Transformer, UNROM, AMROM, AOROM, LH09, A60AS, T4A54A, FC-28-5027, 150in1A, 212-HONG-KONG, GKCXIN, 113in1JY110, 820561C, M2C52A, S-2009.
 - Windows x86_64: Update to Qt5 5.15.8 (#279).
 - Fixed map of one keyboard button to multiple controllers (#277).

@@ -125,6 +125,7 @@ To see a list of available command-line options, start puNES with the `-h` argum
 | 528 | 529 | 530 |     | 532 |     | 534 |     | 536 | 537 | 538 |
 | 539 | 540 | 541 |     | 543 |     |     |     | 547 |     |     |
 | 550 | 551 | 552 |     | 554 |     | 556 | 557 | 558 | 559 | 560 |
+| 561 |     |     |     |     |     |     |     |     |     |     |
 
 
 :electric_plug: Unif

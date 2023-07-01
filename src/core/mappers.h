@@ -25,7 +25,6 @@
 #include "memmap.h"
 #include "unif.h"
 
-// INES/NES2.0
 #include "mappers/mapper_000.h"
 #include "mappers/mapper_001.h"
 #include "mappers/mapper_002.h"
@@ -405,6 +404,7 @@
 #include "mappers/mapper_558.h"
 #include "mappers/mapper_559.h"
 #include "mappers/mapper_560.h"
+#include "mappers/mapper_561.h"
 #include "mappers/mapper_FDS.h"
 #include "mappers/mapper_GameGenie.h"
 #include "mappers/mapper_NSF.h"

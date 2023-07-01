@@ -1278,6 +1278,9 @@ BYTE map_init(void) {
 		case 560:
 			map_init_560();
 			break;
+		case 561:
+			map_init_561();
+			break;
 		default:
 			gui_overlay_info_append_msg_precompiled(11, NULL);
 			EXTCL_CPU_WR_MEM(000);
