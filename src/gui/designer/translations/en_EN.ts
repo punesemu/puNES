@@ -39,6 +39,25 @@
     </message>
 </context>
 <context>
+    <name>dlgDipswitch</name>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dipswitch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>dlgHeaderEditor</name>
     <message>
         <source>Attention</source>
@@ -1496,6 +1515,10 @@
         <source>T&amp;ape</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Dipswitch</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>nesKeyboardStatusBar</name>
@@ -2546,6 +2569,10 @@
     </message>
     <message>
         <source>0xFF</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Polish</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

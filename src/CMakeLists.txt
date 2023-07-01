@@ -6,6 +6,7 @@ set(ts_files
 	gui/designer/translations/fr_FR.ts
 	gui/designer/translations/hu_HU.ts
 	gui/designer/translations/it_IT.ts
+	gui/designer/translations/pl_PL.ts
 	gui/designer/translations/pt_BR.ts
 	gui/designer/translations/ru_RU.ts
 	gui/designer/translations/tr_TR.ts
@@ -16,6 +17,7 @@ set(ts_files
 	gui/designer/translations/qt_fr.ts
 	gui/designer/translations/qt_hu.ts
 	gui/designer/translations/qt_it.ts
+	gui/designer/translations/qt_pl.ts
 	gui/designer/translations/qt_pt_BR.ts
 	gui/designer/translations/qt_ru.ts
 	gui/designer/translations/qt_tr.ts
@@ -536,15 +538,6 @@ set(core_srcs
 	core/uncompress.c
 	core/unif.c
 	core/vector.c
-
-
-
-
-
-
-
-
-	#core/ramplusold.c
 	core/memmap.c
 	)
 
