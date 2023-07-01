@@ -51,24 +51,59 @@ typedef struct _info {
 		uTCHAR change_rom[LENGTH_FILE_NAME_LONG];
 		uTCHAR *from_load_menu;
 	} rom;
-	BYTE format;
-	BYTE machine[2];
 	struct _info_mapper {
 		WORD id;
 		BYTE submapper_nes20;
 		BYTE submapper;
+		DBWORD prgrom_banks_16k;
+		DBWORD chrrom_banks_8k;
 		BYTE extend_wr;
 		BYTE extend_rd;
-		BYTE ram_plus_op_controlled_by_mapper;
-		BYTE trainer;
-		BYTE misc_roms;
+		BYTE battery;
 		BYTE force_battery_io;
 		BYTE ext_console_type;
 		BYTE mirroring;
+		BYTE supported;
+		struct _info_mapper_nes20db {
+			BYTE in_use;
+		} nes20db;
 	} mapper;
+	struct _info_header {
+		BYTE format;
+		WORD mapper;
+		BYTE submapper;
+		DBWORD prgrom;
+		DBWORD chrrom;
+		DBWORD prgram;
+		DBWORD prgnvram;
+		DBWORD chrram;
+		DBWORD chrnvram;
+		BYTE trainer;
+		BYTE misc_roms;
+		BYTE battery;
+		BYTE ext_console_type;
+		BYTE mirroring;
+		BYTE cpu_timing;
+		BYTE vs_hardware;
+		BYTE vs_ppu;
+	} header;
+	struct _info_crc32 {
+		uint32_t prg;
+		uint32_t chr;
+		uint32_t trainer;
+		uint32_t misc;
+		uint32_t total;
+	} crc32;
+
+	BYTE format;
+	BYTE machine[2];
+
+	BYTE prg_truncated;
+	BYTE chr_truncated;
+	BYTE misc_truncated;
+
 	BYTE mirroring_db;
 	BYTE portable;
-	BYTE id;
 	BYTE stop;
 	BYTE reset;
 	BYTE frame_status;
@@ -89,63 +124,6 @@ typedef struct _info {
 #endif
 	_info_sh1sum sha1sum;
 	_info_lag_frame lag_frame;
-	struct _info_crc32 {
-		uint32_t prg;
-		uint32_t chr;
-		uint32_t misc;
-		uint32_t total;
-	} crc32;
-	struct _info_chr {
-		WORD chips;
-		struct _info_chr_rom {
-			BYTE is_ram;
-			DBWORD banks_8k;
-			DBWORD banks_4k;
-			DBWORD banks_1k;
-			struct _info_chr_rom_max {
-				DBWORD banks_8k;
-				DBWORD banks_4k;
-				DBWORD banks_2k;
-				DBWORD banks_1k;
-			} max;
-		} rom;
-		struct _info_chr_ram {
-			SWORD banks_8k_plus;
-			struct _info_chr_ram_max {
-				DBWORD banks_8k;
-				DBWORD banks_4k;
-				DBWORD banks_2k;
-				DBWORD banks_1k;
-			} max;
-			//struct _info_chr_ram_bat {
-			//	BYTE banks;
-			//	BYTE start;
-			//} bat;
-		} ram;
-	} chr;
-	struct _info_prg {
-		WORD chips;
-		struct _info_prg_rom {
-			DBWORD banks_16k;
-			DBWORD banks_8k;
-			struct _info_prg_rom_max {
-				DBWORD banks_32k;
-				DBWORD banks_16k;
-				DBWORD banks_8k;
-				DBWORD banks_8k_before_last;
-				DBWORD banks_4k;
-				DBWORD banks_2k;
-				DBWORD banks_1k;
-			} max;
-		} rom;
-		struct _info_prg_ram {
-			BYTE banks_8k_plus;
-			struct _info_prg_ram_bat {
-				BYTE banks;
-				BYTE start;
-			} bat;
-		} ram;
-	} prg;
 	BYTE r4016_dmc_double_read_disabled;
 	BYTE r2002_race_condition_disabled;
 	BYTE r4014_precise_timing_disabled;

@@ -16,50 +16,48 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
-#include <stdlib.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "ines.h"
-#include "save_slot.h"
 
-struct _m218tmp {
-	BYTE va10;
-} m218tmp;
+INLINE static void prg_fix_218(void);
+INLINE static void chr_fix_218(void);
+INLINE static void mirroring_fix_218(void);
+
+INLINE BYTE va10(void);
 
 void map_init_218(void) {
-	EXTCL_WR_NMT(218);
-	EXTCL_RD_NMT(218);
-	EXTCL_WR_CHR(218);
-	EXTCL_RD_CHR(218);
+	EXTCL_AFTER_MAPPER_INIT(218);
+}
+void extcl_after_mapper_init_218(void) {
+	prg_fix_218();
+	chr_fix_218();
+	mirroring_fix_218();
+}
 
-	switch (ines.flags[FL6] & 0x09) {
-		case 0:
-			m218tmp.va10 = 10;
-			break;
-		case 1:
-			m218tmp.va10 = 11;
-			break;
-		case 8:
-			m218tmp.va10 = 12;
-			break;
-		case 9:
-			m218tmp.va10 = 13;
-			break;
+INLINE static void prg_fix_218(void) {
+	memmap_auto_32k(MMCPU(0x8000), 0);
+}
+INLINE static void chr_fix_218(void) {
+	for (int i = 0; i < 8; i++) {
+		memmap_chrrom_nmt_1k(MMPPU(0x0000 | (i * S1K)), ((i >> va10()) & 0x01));
 	}
 }
-void extcl_wr_nmt_218(WORD address, BYTE value) {
-	extcl_wr_chr_218((address & 0x0FFF) + 0x2000, value);
+INLINE static void mirroring_fix_218(void) {
+	for (int i = 0; i < 8; i++) {
+		memmap_nmt_1k(MMPPU(0x2000 | (i * S1K)), (((i | 0x08) >> va10()) & 0x01));
+	}
 }
-BYTE extcl_rd_nmt_218(WORD address) {
-	return (extcl_rd_chr_218((address & 0x0FFF) + 0x2000));
-}
-void extcl_wr_chr_218(WORD address, BYTE value) {
-	address = (address & 0x03FF) | ((address >> m218tmp.va10) << 10);
-	ntbl.data[address] = value;
-}
-BYTE extcl_rd_chr_218(WORD address) {
-	address = (address & 0x03FF) | ((address >> m218tmp.va10) << 10);
-	return (ntbl.data[address]);
+
+INLINE BYTE va10(void) {
+	switch (ines.flags[FL6] & 0x09) {
+		case 0:
+			return (1);
+		default:
+		case 1:
+			return (0);
+		case 8:
+			return (2);
+		case 9:
+			return (3);
+	}
 }

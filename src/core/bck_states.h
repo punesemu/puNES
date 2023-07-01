@@ -34,10 +34,10 @@ enum bck_states_operations_mode {
 #define EXTERNC
 #endif
 
-EXTERNC void bck_states_op_screen(BYTE mode, void *data, size_t *index, size_t *size_buff);
-EXTERNC void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, size_t *size_buff);
-EXTERNC void bck_states_op_input(BYTE mode, void *data, size_t *index, size_t *size_buff);
-EXTERNC void bck_states_op_input_port(BYTE port, BYTE mode, void *data, size_t *index, size_t *size_buff);
+EXTERNC void bck_states_op_screen(BYTE mode, void *data, size_t *index, uint64_t *size_buff);
+EXTERNC void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size_buff);
+EXTERNC void bck_states_op_input(BYTE mode, void *data, size_t *index, uint64_t *size_buff);
+EXTERNC void bck_states_op_input_port(BYTE port, BYTE mode, void *data, size_t *index, uint64_t *size_buff);
 
 #undef EXTERNC
 

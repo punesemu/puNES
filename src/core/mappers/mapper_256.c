@@ -18,9 +18,8 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "info.h"
-#include "OneBus.h"
+#include "irqA12.h"
 
 enum m256_models {
 	M256_NORMAL,
@@ -62,8 +61,29 @@ static const _m256_regs regs[M256_SUBMAPPERS] = {
 };
 
 void map_init_256(void) {
+	EXTCL_AFTER_MAPPER_INIT(256);
+	EXTCL_MAPPER_QUIT(OneBus);
+	EXTCL_CPU_WR_MEM(256);
+	EXTCL_CPU_RD_MEM(OneBus);
+	EXTCL_SAVE_MAPPER(OneBus);
+	EXTCL_WR_PPU_REG(256);
+	EXTCL_WR_APU(OneBus);
+	EXTCL_RD_APU(OneBus);
+	EXTCL_RD_CHR(OneBus);
+	EXTCL_CPU_EVERY_CYCLE(OneBus);
+	EXTCL_IRQ_A12_CLOCK(OneBus);
+	EXTCL_PPU_000_TO_34X(OneBus);
+	EXTCL_PPU_000_TO_255(MMC3);
+	EXTCL_PPU_256_TO_319(MMC3);
+	EXTCL_PPU_320_TO_34X(MMC3);
+	EXTCL_UPDATE_R2006(MMC3);
+	mapper.internal_struct[0] = (BYTE *)&onebus;
+	mapper.internal_struct_size[0] = sizeof(onebus);
+
+	memset(&irqA12, 0x00, sizeof(irqA12));
+
 	if (info.format != NES_2_0) {
-		if (info.mapper.submapper == DEFAULT) {
+		if (info.mapper.submapper == 0) {
 			if ((info.crc32.prg == 0x947AC898) || // Power Joy Supermax 30-in-1 (Unl) [U][!].unf
 				(info.crc32.prg == 0x1AB45228)) { // Power Joy Supermax 60-in-1 (Unl) [U][!].unf
 				info.mapper.submapper = M256_POWER_JOY_SUPERMAX;
@@ -79,12 +99,15 @@ void map_init_256(void) {
 		}
 	}
 
-	info.mapper.submapper = info.mapper.submapper ==  DEFAULT ? M256_NORMAL: info.mapper.submapper;
+	init_OneBus(info.reset);
 
-	map_init_OneBus();
-
-	EXTCL_CPU_WR_MEM(256);
-	EXTCL_WR_PPU_REG(256);
+	irqA12.present = TRUE;
+}
+void extcl_after_mapper_init_256(void) {
+	OneBus_prg_fix_8k(0x0FFF, 0);
+	OneBus_chr_fix(0x7FFF, 0);
+	OneBus_wram_fix(0x0FFF, 0);
+	OneBus_mirroring_fix();
 }
 void extcl_cpu_wr_mem_256(WORD address, BYTE value) {
 	if ((address >= 0x4107) && (address <= 0x410A)) {

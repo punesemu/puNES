@@ -58,6 +58,7 @@
 #include "video/effects/tv_noise.h"
 #include "debugger.h"
 #include "tape_data_recorder.h"
+#include "dipswitch.h"
 #if defined (WITH_FFMPEG)
 #include "recording.h"
 #else
@@ -697,27 +698,26 @@ void mainWindow::state_save_slot_set(int slot, bool on_video) {
 	if (info.no_rom | info.turn_off) {
 		return;
 	}
-	save_slot.slot = slot;
+	save_slot.slot_in_use = slot;
 	if (on_video) {
 		gui_overlay_enable_save_slot(SAVE_SLOT_INCDEC);
 	}
 	update_window();
 }
-void mainWindow::state_save_slot_set_tooltip(BYTE slot, char *buffer) {
+void mainWindow::state_save_slot_set_tooltip(BYTE slot) {
+	QImage *preview = (QImage *)gui_overlay_slot_preview_get(slot);
 	QString tooltip;
 
-	if (buffer) {
+	if (preview) {
 		static QPainter painter;
 		static QFont f;
 		static QRect rect;
 		static QPen pen;
-		QImage img = QImage((uchar *)buffer, SCR_COLUMNS, SCR_ROWS, SCR_COLUMNS * sizeof(uint32_t), QImage::Format_RGB32);
 		QByteArray data;
 		QBuffer png(&data);
-		int x, y, w, h;
-		double mul = 1.5f;
-
-		img = img.scaled((int)(SCR_COLUMNS * mul), (int)(SCR_ROWS * mul), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+		int x = 0, y = 0, w = 0, h = 0;
+		const double mul = 1.5f;
+		QImage img = preview->scaled((int)(SCR_COLUMNS * mul), (int)(SCR_ROWS * mul), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
 		// scrivo le info
 		w = img.rect().width();
@@ -759,12 +759,12 @@ void mainWindow::state_save_slot_set_tooltip(BYTE slot, char *buffer) {
 	state_save_slot_action(slot)->setToolTip(tooltip);
 }
 void mainWindow::toggle_toolbars(void) {
-	bool visibility = !toolbar->isVisible();
+	const bool visible = !toolbar->isVisible();
 
 	emu_thread_pause();
 
-	toolbar->setVisible(visibility);
-	statusbar->setVisible(visibility);
+	toolbar->setVisible(visible);
+	statusbar->setVisible(visible);
 	update_gfx_monitor_dimension();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 
@@ -884,9 +884,10 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_State_Save_to_file, SLOT(s_state_save_file()));
 	connect_action(action_State_Load_from_file, SLOT(s_state_load_file()));
 	// Tools
-	connect_action(action_Joypad_Gamepads_Debug, SLOT(s_open_djsc()));
+	connect_action(action_Dipswitch, SLOT(s_open_ddip()));
 	connect_action(action_Virtual_Keyboard, SLOT(s_open_dkeyb()));
 	connect_action(action_Vs_System, SLOT(s_set_vs_window()));
+	connect_action(action_Joypad_Gamepads_Debug, SLOT(s_open_djsc()));
 	// Help/About
 	connect_action(action_Show_Log, SLOT(s_show_log()));
 	connect_action(action_About, SLOT(s_help()));
@@ -970,7 +971,7 @@ void mainWindow::update_menu_file(void) {
 
 	// recent roms
 	if (recent_roms_count() > 0) {
-		int i;
+		int i = 0;
 
 		foreach (QAction *action, menu_Recent_Roms->actions()) {
 			delete (action);
@@ -979,9 +980,9 @@ void mainWindow::update_menu_file(void) {
 		menu_Recent_Roms->clear();
 
 		for (i = 0; i < RECENT_ROMS_MAX; i++) {
-			QString description = QString((const QChar *)recent_roms_item(i), recent_roms_item_size(i));
-			QFileInfo rom(description);
-			QAction *action;
+			const QString description = QString((const QChar *)recent_roms_item(i), recent_roms_item_size(i));
+			const QFileInfo rom(description);
+			QAction *action = nullptr;
 
 			if (description.isEmpty()) {
 				break;
@@ -1074,7 +1075,7 @@ void mainWindow::update_menu_state(void) {
 	}
 
 	action_Save_state->setEnabled(state);
-	action_Load_state->setEnabled(state && (tas.type == NOTAS) && save_slot.state[save_slot.slot]);
+	action_Load_state->setEnabled(state && (tas.type == NOTAS) && save_slot.slot[save_slot.slot_in_use].state);
 	action_Increment_slot->setEnabled(state);
 	action_Decrement_slot->setEnabled(state);
 
@@ -1083,11 +1084,11 @@ void mainWindow::update_menu_state(void) {
 		QString used = " *";
 		QString txt = a->text().replace(used, "");
 
-		if (i == save_slot.slot) {
+		if (i == save_slot.slot_in_use) {
 			a->setChecked(true);
 		}
 
-		if (save_slot.state[i]) {
+		if (save_slot.slot[i].state) {
 			a->setText(txt + used);
 		} else {
 			a->setText(txt);
@@ -1149,17 +1150,18 @@ void mainWindow::update_tape_menu(void) {
 	}
 }
 void mainWindow::update_menu_tools(void) {
+	action_Dipswitch->setEnabled(dipswitch.used && dipswitch.show_dlg);
 	action_Virtual_Keyboard->setEnabled(nes_keyboard.enabled);
 	if (!action_Virtual_Keyboard->isEnabled() && dlgkeyb->isVisible()) {
 		dlgkeyb->hide();
 	}
 }
 
-void mainWindow::action_text(QAction *action, const QString &description, QString *shortcut) {
-	if ((*shortcut) == "NULL") {
+void mainWindow::action_text(QAction *action, const QString &description, QString *scut) {
+	if ((*scut) == "NULL") {
 		action->setText(description);
 	} else {
-		action->setText(description + '\t' + (*shortcut));
+		action->setText(description + '\t' + (*scut));
 	}
 }
 void mainWindow::ctrl_disk_side(QAction *action) {
@@ -1640,7 +1642,7 @@ void mainWindow::s_max_speed_stop(void) const {
 	emu_thread_continue();
 }
 void mainWindow::s_toggle_gui_in_window(void) {
-	bool visibility;
+	bool visibility = false;
 
 	if (gfx.type_of_fscreen_in_use == FULLSCR) {
 		return;
@@ -1674,25 +1676,25 @@ void mainWindow::s_state_save_slot_action(void) {
 
 	emu_thread_pause();
 	if (mode == SAVE) {
-		save_slot_save(save_slot.slot);
+		save_slot_save(save_slot.slot_in_use);
 		settings_pgs_save();
 	} else {
-		save_slot_load(save_slot.slot);
+		save_slot_load(save_slot.slot_in_use);
 	}
 	emu_thread_continue();
 	update_window();
 }
 void mainWindow::s_state_save_slot_incdec(void) {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
-	BYTE new_slot;
+	BYTE new_slot = 0;
 
 	if (mode == INC) {
-		new_slot = save_slot.slot + 1;
+		new_slot = save_slot.slot_in_use + 1;
 		if (new_slot >= SAVE_SLOTS) {
 			new_slot = 0;
 		}
 	} else {
-		new_slot = save_slot.slot - 1;
+		new_slot = save_slot.slot_in_use - 1;
 		if (new_slot >= SAVE_SLOTS) {
 			new_slot = SAVE_SLOTS - 1;
 		}
@@ -1707,7 +1709,7 @@ void mainWindow::s_state_save_slot_set(void) {
 void mainWindow::s_state_save_file(void) {
 	QStringList filters;
 	QString file;
-	uTCHAR *fl;
+	uTCHAR *fl = NULL;
 
 	emu_thread_pause();
 
@@ -1768,7 +1770,7 @@ void mainWindow::s_state_load_file(void) {
 	filters[1].append(" (*.*)");
 
 	file = QFileDialog::getOpenFileName(this, tr("Open save state"),
-			QFileInfo(uQString(cfg->save_file)).dir().absolutePath(), filters.join(";;"));
+		QFileInfo(uQString(cfg->save_file)).dir().absolutePath(), filters.join(";;"));
 
 	if (!file.isNull()) {
 		QFileInfo fileinfo(file);
@@ -1783,6 +1785,11 @@ void mainWindow::s_state_load_file(void) {
 	}
 
 	emu_thread_continue();
+}
+void mainWindow::s_open_ddip(void) {
+	emu_pause(TRUE);
+	gui_dipswitch_dialog();
+	emu_pause(FALSE);
 }
 void mainWindow::s_open_djsc(void) {
 	dlgjsc->show();
@@ -2436,12 +2443,9 @@ void actionOneTrigger::reset_count(void) {
 // ----------------------------------------------------------------------------------------------
 
 timerEgds::timerEgds(QObject *parent) : QTimer(parent) {
-	int i;
-
-	for (i = 0 ; i < EGDS_TOTALS; i++) {
+	for (int i = 0 ; i < EGDS_TOTALS; i++) {
 		calls[i].count = 0;
 	}
-
 	connect(this, SIGNAL(timeout()), this, SLOT(s_draw_screen()));
 }
 timerEgds::~timerEgds() = default;

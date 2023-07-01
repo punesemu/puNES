@@ -87,7 +87,6 @@ enum length_file_name_type {
 	LENGTH_FILE_NAME_MAX  = 4096
 };
 enum forced_mirroring { UNK_HORIZONTAL, UNK_VERTICAL };
-enum max_chips_rom { MAX_CHIPS = 8 };
 enum languages {
 	LNG_ENGLISH,
 	LNG_ITALIAN,
@@ -103,9 +102,7 @@ enum languages {
 enum database_mode {
 	NODIPSWITCH = 0xFF00,
 	NOEXTRA = 0x0000,
-	VSZAPPER = 0x0001,
-	CHRRAM32K = 0x0002,
-	CHRRAM256K = 0x0004
+	VSZAPPER = 0x0001
 };
 enum toolbar { TLB_TOP, TLB_RIGHT, TLB_BOTTOM, TLB_LEFT };
 

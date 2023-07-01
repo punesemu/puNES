@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
 
@@ -96,11 +95,6 @@ BYTE extcl_save_mapper_417(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m417.mir);
 	save_slot_ele(mode, slot, m417.irq.enable);
 	save_slot_ele(mode, slot, m417.irq.counter);
-
-	if (mode == SAVE_SLOT_READ) {
-		mirroring_fix_417();
-	}
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_417(void) {
@@ -111,81 +105,29 @@ void extcl_cpu_every_cycle_417(void) {
 }
 
 INLINE static void prg_fix_417(void) {
-	WORD bank;
-
-	bank = m417.prg[0];
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, bank);
-
-	bank = m417.prg[1];
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, bank);
-
-	bank = m417.prg[2];
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, bank);
-
-	bank = 0xFF;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_8k(MMCPU(0x8000), m417.prg[0]);
+	memmap_auto_8k(MMCPU(0xA000), m417.prg[1]);
+	memmap_auto_8k(MMCPU(0xC000), m417.prg[2]);
+	memmap_auto_8k(MMCPU(0xE000), 0xFF);
 }
 INLINE static void chr_fix_417(void) {
-	DBWORD bank;
-
-	bank = m417.chr[0];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
-	chr.bank_1k[0] = chr_pnt(bank);
-
-	bank = m417.chr[1];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
-	chr.bank_1k[1] = chr_pnt(bank);
-
-	bank = m417.chr[2];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
-	chr.bank_1k[2] = chr_pnt(bank);
-
-	bank = m417.chr[3];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
-	chr.bank_1k[3] = chr_pnt(bank);
-
-	bank = m417.chr[4];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
-	chr.bank_1k[4] = chr_pnt(bank);
-
-	bank = m417.chr[5];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
-	chr.bank_1k[5] = chr_pnt(bank);
-
-	bank = m417.chr[6];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
-	chr.bank_1k[6] = chr_pnt(bank);
-
-	bank = m417.chr[7];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
-	chr.bank_1k[7] = chr_pnt(bank);
+	memmap_auto_1k(MMPPU(0x0000), m417.chr[0]);
+	memmap_auto_1k(MMPPU(0x0400), m417.chr[1]);
+	memmap_auto_1k(MMPPU(0x0800), m417.chr[2]);
+	memmap_auto_1k(MMPPU(0x0C00), m417.chr[3]);
+	memmap_auto_1k(MMPPU(0x1000), m417.chr[4]);
+	memmap_auto_1k(MMPPU(0x1400), m417.chr[5]);
+	memmap_auto_1k(MMPPU(0x1800), m417.chr[6]);
+	memmap_auto_1k(MMPPU(0x1C00), m417.chr[7]);
 }
 INLINE static void mirroring_fix_417(void) {
-	WORD bank;
+	memmap_nmt_1k(MMPPU(0x2000), (m417.mir[0] & 0x01));
+	memmap_nmt_1k(MMPPU(0x2400), (m417.mir[1] & 0x01));
+	memmap_nmt_1k(MMPPU(0x2800), (m417.mir[2] & 0x01));
+	memmap_nmt_1k(MMPPU(0x2C00), (m417.mir[3] & 0x01));
 
-	bank = m417.mir[0] & 0x01;
-	ntbl.bank_1k[0] = &ntbl.data[bank << 10];
-
-	bank = m417.mir[1] & 0x01;
-	ntbl.bank_1k[1] = &ntbl.data[bank << 10];
-
-	bank = m417.mir[2] & 0x01;
-	ntbl.bank_1k[2] = &ntbl.data[bank << 10];
-
-	bank = m417.mir[3] & 0x01;
-	ntbl.bank_1k[3] = &ntbl.data[bank << 10];
+	memmap_nmt_1k(MMPPU(0x3000), (m417.mir[0] & 0x01));
+	memmap_nmt_1k(MMPPU(0x3400), (m417.mir[1] & 0x01));
+	memmap_nmt_1k(MMPPU(0x3800), (m417.mir[2] & 0x01));
+	memmap_nmt_1k(MMPPU(0x3C00), (m417.mir[3] & 0x01));
 }

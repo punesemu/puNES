@@ -22,10 +22,5 @@
 #include "common.h"
 
 void map_init_198(void);
-void extcl_after_mapper_init_198(void);
-void extcl_mapper_quit_198(void);
-void extcl_cpu_wr_mem_198(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_198(WORD address, BYTE openbus, BYTE before);
-BYTE extcl_save_mapper_198(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_198_H_ */

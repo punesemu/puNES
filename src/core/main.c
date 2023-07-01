@@ -52,6 +52,19 @@ int main(int argc, char **argv) {
 	memset(&jstick, 0x00, sizeof(jstick));
 	memset(&chinaersan2, 0x00, sizeof(chinaersan2));
 	memset(&tape_data_recorder, 0x00, sizeof(tape_data_recorder));
+	memset(&memmap, 0x00, sizeof(memmap));
+	memset(&prgrom, 0x00, sizeof(prgrom));
+	memset(&chrrom, 0x00, sizeof(chrrom));
+	memset(&wram, 0x00, sizeof(wram));
+	memset(&vram, 0x00, sizeof(vram));
+	memset(&ram, 0x00, sizeof(ram));
+	memset(&nmt, 0x00, sizeof(nmt));
+	memset(&miscrom, 0x00, sizeof(miscrom));
+
+	if (memmap_init() == EXIT_ERROR) {
+		emu_quit();
+		return (EXIT_SUCCESS);
+	}
 
 	info.no_rom = TRUE;
 	info.doublebuffer = TRUE;

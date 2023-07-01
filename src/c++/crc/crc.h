@@ -29,7 +29,8 @@
 #endif
 
 EXTERNC uint32_t emu_crc32(const void *data, size_t length);
-EXTERNC uint32_t emu_crc32_continue(const void *data, size_t length, uint32_t previuos);
+EXTERNC uint32_t emu_crc32_continue(const void *data, size_t length, uint32_t previous);
+EXTERNC uint32_t emu_crc32_zeroes(size_t length, uint32_t previous);
 
 #undef EXTERNC
 

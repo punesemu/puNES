@@ -18,66 +18,48 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_415(void);
+INLINE static void wram_fix_415(void);
 INLINE static void mirroring_fix_415(void);
 
 struct _m415 {
 	BYTE reg;
 } m415;
-struct _m415tmp {
-	BYTE *prg_6000;
-} m415tmp;
 
 void map_init_415(void) {
 	EXTCL_AFTER_MAPPER_INIT(415);
 	EXTCL_CPU_WR_MEM(415);
-	EXTCL_CPU_RD_MEM(415);
 	EXTCL_SAVE_MAPPER(415);
 	mapper.internal_struct[0] = (BYTE *)&m415;
 	mapper.internal_struct_size[0] = sizeof(m415);
 
-	memset(&m415, 0x00, sizeof(m415));
+	if (info.reset >= HARD) {
+		memset(&m415, 0x00, sizeof(m415));
+	}
 }
 void extcl_after_mapper_init_415(void) {
 	prg_fix_415();
+	wram_fix_415();
 	mirroring_fix_415();
 }
 void extcl_cpu_wr_mem_415(UNUSED(WORD address), BYTE value) {
 	m415.reg = value;
 	prg_fix_415();
+	wram_fix_415();
 	mirroring_fix_415();
 }
-BYTE extcl_cpu_rd_mem_415(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if (address >= 0x6000) {
-		return (m415tmp.prg_6000[address & 0x1FFF]);
-	}
-	return (openbus);
-}
-
 BYTE extcl_save_mapper_415(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m415.reg);
-
-	if (mode == SAVE_SLOT_READ) {
-		prg_fix_415();
-	}
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_415(void) {
-	WORD bank;
-
-	bank = m415.reg & 0x0F;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	m415tmp.prg_6000 = prg_pnt(bank << 13);
-
-	bank = 0xFF;
-	_control_bank(bank, info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, bank);
-	map_prg_rom_8k_update();
+	memmap_auto_32k(MMCPU(0x8000), 0xFF);
+}
+INLINE static void wram_fix_415(void) {
+	memmap_prgrom_8k(MMCPU(0x6000), (m415.reg & 0x0F));
 }
 INLINE static void mirroring_fix_415(void) {
 	if (m415.reg & 0x10) {

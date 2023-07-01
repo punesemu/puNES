@@ -90,12 +90,12 @@ struct _rewind_internal {
 		int32_t snaps;
 	} count;
 	struct _rewind_info_size {
-		size_t keyframe;
-		size_t screen;
-		size_t input;
-		size_t chunk;
-		size_t first_chunk;
-		size_t total;
+		uint64_t keyframe;
+		uint64_t screen;
+		uint64_t input;
+		uint64_t chunk;
+		uint64_t first_chunk;
+		uint64_t total;
 	} size;
 } rwint;
 
@@ -115,14 +115,15 @@ BYTE rewind_init(void) {
 		size_t size = sizeof(_rewind_snapshoot) * REWIND_SNAPS_FOR_CHUNK;
 
 		if (!rewind_is_disabled()) {
-			if ((rwint.segment.snaps = (_rewind_snapshoot *)malloc(size)) == NULL) {
+			rwint.segment.snaps = (_rewind_snapshoot *)malloc(size);
+			if (!rwint.segment.snaps) {
 				log_error(uL("rewind;out of memory"));
 				return (EXIT_ERROR);
 			}
 			memset(rwint.segment.snaps, 0, size);
 		}
-
-		if ((rwint.cbuffer.snaps = (_rewind_snapshoot *)malloc(size)) == NULL) {
+		rwint.cbuffer.snaps = (_rewind_snapshoot *)malloc(size);
+		if (!rwint.cbuffer.snaps) {
 			log_error(uL("rewind;out of memory"));
 			return (EXIT_ERROR);
 		}
@@ -142,7 +143,8 @@ BYTE rewind_init(void) {
 	rwint.size.total = rwint.size.screen + (rwint.size.chunk * rwint.chunks_for_segment);
 
 	if (!rewind_is_disabled()) {
-		if ((rwint.segment.data = (BYTE *)malloc(rwint.size.total)) == NULL) {
+		rwint.segment.data = (BYTE *)malloc(rwint.size.total);
+		if (!rwint.segment.data) {
 			log_error(uL("rewind;out of memory"));
 			return (EXIT_ERROR);
 		}
@@ -150,7 +152,8 @@ BYTE rewind_init(void) {
 		rwint.segment.type = REWIND_CHUNK_TYPE_SEGMENT;
 		rewind_update_chunk_snaps(&rwint.segment, 0, NULL);
 	}
-	if ((rwint.cbuffer.data = (BYTE *)malloc(rwint.size.first_chunk)) == NULL) {
+	rwint.cbuffer.data = (BYTE *)malloc(rwint.size.first_chunk);
+	if (!rwint.cbuffer.data) {
 		log_error(uL("rewind;out of memory"));
 		return (EXIT_ERROR);
 	}
@@ -201,12 +204,13 @@ BYTE rewind_init(void) {
 
 	// creo il file temporaneo
 	if (!rewind_is_disabled()) {
-		uTCHAR basename[255], *last_dot;
+		uTCHAR basename[255], *last_dot = NULL;
 
 		gui_utf_basename(info.rom.file, basename, usizeof(basename));
 
 		// rintraccio l'ultimo '.' nel nome
-		if ((last_dot = ustrrchr(basename, uL('.')))) {
+		last_dot = ustrrchr(basename, uL('.'));
+		if (last_dot) {
 			// elimino l'estensione
 			(*last_dot) = 0x00;
 		}
@@ -219,7 +223,8 @@ BYTE rewind_init(void) {
 			basename, emu_rand_str());
 #endif
 
-		if ((rwint.file = ufopen(rwint.file_name, uL("w+b"))) == NULL) {
+		rwint.file = ufopen(rwint.file_name, uL("w+b"));
+		if (!rwint.file) {
 			return (EXIT_ERROR);
 		}
 	}
@@ -238,7 +243,7 @@ void rewind_quit(void) {
 	}
 }
 void rewind_snapshoot(void) {
-	_rewind_snapshoot *snap;
+	_rewind_snapshoot *snap = NULL;
 
 	// se non ci sono rom caricate, non faccio niente
 	if (rewind_is_disabled()) {
@@ -377,8 +382,8 @@ INLINE static void rewind_increment_count_chunks(void) {
 	rwint.count.chunks++;
 }
 INLINE static void rewind_update_chunk_snaps( _rewind_chunk *chunk, int32_t chunk_index, BYTE *src) {
-	BYTE *start;
-	uint32_t i;
+	BYTE *start = NULL;
+	uint32_t i = 0;
 
 	if (chunk_index == 0) {
 		start = chunk->data + rwint.size.screen + (rwint.size.chunk * chunk_index);
@@ -441,10 +446,10 @@ INLINE static void rewind_execute_frame(void) {
 }
 
 static BYTE _rewind_frames(int32_t frames_to_rewind, BYTE exec_last_frame) {
-	int32_t cursor, segment, chunk, snaps;
+	int32_t cursor = 0, segment = 0, chunk = 0, snaps = 0;
 	_rewind_snapshoot *snap = NULL;
 	_rewind_index index;
-	BYTE *src;
+	BYTE *src = NULL;
 
 	cursor = rwint.snap_cursor + frames_to_rewind;
 

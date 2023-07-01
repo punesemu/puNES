@@ -5,14 +5,24 @@ Changelog:
   * 0x00
   * 0xFF (default)
   * Randomize.
-- Rewritten mapper : 19 (#276), 200.
-- Fixed mapper : 30, 75, 95, 111, 154, 344, 406.
-- Added support to mapper : 291, 334, 366, 446, 471.
+- Added fully support to NES 2.0 file cart format header.
+- Rewritten mappers : All.
+- Added support to mapper : 100, 122, 157, 291, 311, 334, 362, 366, 384, 421, 446, 471, 551, 552, 561.
+- Added support to UNIF mapper : Transformer, UNROM, AMROM, AOROM, LH09, A60AS, T4A54A, FC-28-5027, 150in1A, 212-HONG-KONG, GKCXIN, 113in1JY110, 820561C, M2C52A, S-2009.
 - Windows x86_64: Update to Qt5 5.15.8 (#279).
 - Fixed map of one keyboard button to multiple controllers (#277).
 - Fixed FDS wavetable pitch (#295).
-- Updated Portuguese, Russian and Spanish translations (thx to Felipefpl, Matheus Scattolin Anselmo,
-  Alexey Timonin and MS-PC).
+- Updated Portuguese, Russian and Spanish translations (thx to Felipefpl, Matheus Scattolin Anselmo, Alexey Timonin and MS-PC).
+- Added support for nes20db.xml and dip.cfg (many thx to NewRisingSun for is for his immense work).
+  Both files will be distributed together with the emulator and will be located in the following directories:
+  * Linux/BSD - {default system datadir}/puNES
+  * Windows - directory where the executable is placed.
+  if you want to use a more updated version than the one distributed with the emulator, just copy it either in the executable directory or in the working directory of the emulator, which can also be opened from the "File -> Open working directory" menu.
+- Rewritten WRAM, VRAM, PRGROM, CHROM and Nametebles management.
+- Rewritten the format and management of save states.
+  WARNING save states of version 0.110 or earlier are no longer compatible.
+
+Note: Due to the numerous changes I'm making to the core of the emulator, new bugs may have been introduced, if you find roms no longer work correctly compared to the previous version, please let me know.
 
 0.110
 - Added support to Wayland.

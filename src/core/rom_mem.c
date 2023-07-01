@@ -30,3 +30,11 @@ BYTE rom_mem_ctrl_memcpy(void *dst, _rom_mem *rom, size_t increment) {
 	rom_mem_memcpy(dst, rom, increment);
 	return (EXIT_OK);
 }
+BYTE rom_mem_ctrl_memcpy_truncated(void *dst, _rom_mem *rom, size_t increment) {
+	if ((rom->position + increment) > rom->size) {
+		rom_mem_memcpy(dst, rom, rom->size - rom->position);
+		return (EXIT_ERROR);
+	}
+	rom_mem_memcpy(dst, rom, increment);
+	return (EXIT_OK);
+}

@@ -27,10 +27,10 @@
 
 class serialDevice {
 	protected:
-		BYTE state;
-		BYTE clock;
-		BYTE data;
-		BYTE output;
+		BYTE state{};
+		BYTE clock{};
+		BYTE data{};
+		BYTE output{};
 
 	public:
 		serialDevice();
@@ -41,6 +41,25 @@ class serialDevice {
 		virtual BYTE getData() const;
 		virtual void setPins(BYTE select, BYTE newClock, BYTE newData);
 		virtual BYTE saveMapper(BYTE mode, BYTE slot, FILE *fp);
+};
+
+// ----------------------------------------------------------------------------------------
+
+class I2CDevice: public serialDevice {
+	protected:
+		BYTE deviceType;
+		BYTE deviceAddr;
+		bool readMode;
+
+	public:
+		I2CDevice(BYTE _deviceType, BYTE _deviceAddr);
+		virtual ~I2CDevice();
+
+	public:
+		virtual void reset();
+		virtual void setPins(BYTE select, BYTE newClock, BYTE newData);
+		virtual void receiveBit();
+		virtual BYTE saveMapper (BYTE mode, BYTE slot, FILE *fp);
 };
 
 // ----------------------------------------------------------------------------------------
@@ -102,6 +121,68 @@ class GPIO_OneBus {
 		void write(BYTE address, BYTE value);
 		void attachSerialDevice(serialDevice *s, BYTE select, BYTE clock, BYTE data);
 		BYTE saveMapper(BYTE mode, BYTE slot, FILE *fp);
+};
+
+// ----------------------------------------------------------------------------------------
+
+class EEPROM_I2C: public I2CDevice {
+	protected:
+		WORD address;
+		WORD addressMask;
+		BYTE *rom;
+		BYTE bit;
+		BYTE latch;
+
+	public:
+		EEPROM_I2C(WORD _addressMask, BYTE _deviceAddr, BYTE *rom);
+		~EEPROM_I2C();
+
+	public:
+		virtual void reset();
+		virtual void receiveBit();
+		virtual BYTE saveMapper(BYTE mode, BYTE slot, FILE *fp);
+};
+
+class EEPROM_24C01: public EEPROM_I2C {
+	public:
+		EEPROM_24C01(BYTE _deviceAddr, BYTE *rom);
+		~EEPROM_24C01();
+
+	public:
+		void       receiveBit();
+};
+
+class EEPROM_24C02: public EEPROM_I2C {
+	public:
+		EEPROM_24C02(BYTE _deviceAddr, BYTE *rom);
+		~EEPROM_24C02();
+};
+
+class EEPROM_24C04: public EEPROM_I2C {
+	public:
+		EEPROM_24C04(BYTE _deviceAddr, BYTE *rom);
+		~EEPROM_24C04();
+
+	public:
+		void       receiveBit();
+};
+
+class EEPROM_24C08: public EEPROM_I2C {
+	public:
+		EEPROM_24C08(BYTE _deviceAddr, BYTE *rom);
+		~EEPROM_24C08();
+
+		public:
+		void       receiveBit();
+};
+
+class EEPROM_24C16: public EEPROM_I2C {
+	public:
+		EEPROM_24C16(BYTE _deviceAddr, BYTE *rom);
+		~EEPROM_24C16();
+
+	public:
+		void       receiveBit();
 };
 
 #endif /* SERIAL_DEVICES_HPP_ */

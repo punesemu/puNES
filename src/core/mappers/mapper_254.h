@@ -23,7 +23,7 @@
 
 void map_init_254(void);
 void extcl_cpu_wr_mem_254(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_254(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_254(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_254(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_254_H_ */

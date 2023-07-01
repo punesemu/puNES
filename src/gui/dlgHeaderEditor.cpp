@@ -34,6 +34,7 @@
 #include "gui.h"
 #include "ines.h"
 #include "conf.h"
+#include "memmap.h"
 
 dlgHeaderEditor::dlgHeaderEditor(QWidget *parent) : QDialog(parent) {
 	setupUi(this);
@@ -176,18 +177,16 @@ bool dlgHeaderEditor::header_to_struct(_header_info &hi, const BYTE *header) {
 	hi.format = (header[7] & 0x0C) == 0x08 ? NES_2_0 : iNES_1_0;
 
 	if (hi.format == NES_2_0) {
-		DBWORD tmp = 0;
-
 		hi.console_type = (header[7] & 0x03) == 0x03 ? header[13] & 0x0F : header[7] & 0x03;
 
 		hi.mapper = ((header[8] & 0x0F) << 8) | (header[7] & 0xF0) | (header[6] >> 4);
 		hi.submapper = (header[8] & 0xF0) >> 4;
 
 		hi.prg_rom_kib = ((header[9] & 0x0F) << 8) | header[4];
-		nes20_prg_chr_size(&hi.prg_rom_kib, &tmp, 0x2000);
+		nes20_prg_chr_size(&hi.prg_rom_kib, S16K);
 
 		hi.chr_rom_kib = ((header[9] & 0xF0) << 4) | header[5];
-		nes20_prg_chr_size(&hi.chr_rom_kib, &tmp, 0x4000);
+		nes20_prg_chr_size(&hi.chr_rom_kib, S8K);
 
 		hi.prg_ram = header[10] & 0x0F;
 		hi.chr_ram = header[11] & 0x0F;

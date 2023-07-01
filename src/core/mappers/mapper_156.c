@@ -18,20 +18,20 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
-INLINE static void chr_setup_156(void);
+INLINE static void prg_fix_156(void);
+INLINE static void chr_fix_156(void);
+INLINE static void mirroring_fix_156(void);
 
 struct _m156 {
-	struct _m156_chr {
-		BYTE low[8];
-		BYTE high[8];
-	} chr;
+	BYTE prg;
+	WORD chr[8];
+	BYTE mirroring;
 } m156;
 
 void map_init_156(void) {
+	EXTCL_AFTER_MAPPER_INIT(156);
 	EXTCL_CPU_WR_MEM(156);
 	EXTCL_SAVE_MAPPER(156);
 	mapper.internal_struct[0] = (BYTE *)&m156;
@@ -39,69 +39,75 @@ void map_init_156(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m156, 0x00, sizeof(m156));
-		map_prg_rom_8k(2, 0, 0);
-	}
 
-	mirroring_SCR0();
+		m156.mirroring = 2;
+	}
 }
-void extcl_cpu_wr_mem_156(WORD address, BYTE value) {
-	switch (address) {
+void extcl_after_mapper_init_156(void) {
+	prg_fix_156();
+	chr_fix_156();
+	mirroring_fix_156();
+}
+void extcl_cpu_wr_mem_156(WORD address, UNUSED(BYTE value)) {
+	switch (address & 0xCFFC) {
 		case 0xC000:
-		case 0xC001:
-		case 0xC002:
-		case 0xC003:
-			m156.chr.low[address & 0x0003] = value;
-			chr_setup_156();
+			m156.chr[address & 0x03] = (m156.chr[address & 0x03] & 0xFF00) | value;
+			chr_fix_156();
 			return;
 		case 0xC004:
-		case 0xC005:
-		case 0xC006:
-		case 0xC007:
-			m156.chr.high[address & 0x0003] = value;
-			chr_setup_156();
+			m156.chr[address & 0x03] = (m156.chr[address & 0x03] & 0x00FF) | (value << 8);
+			chr_fix_156();
 			return;
 		case 0xC008:
-		case 0xC009:
-		case 0xC00A:
-		case 0xC00B:
-			m156.chr.low[(address & 0x0003) + 4] = value;
-			chr_setup_156();
+			m156.chr[0x04 | (address & 0x03)] = (m156.chr[0x04 | (address & 0x03)] & 0xFF00) | value;
+			chr_fix_156();
 			return;
 		case 0xC00C:
-		case 0xC00D:
-		case 0xC00E:
-		case 0xC00F:
-			m156.chr.high[(address & 0x0003) + 4] = value;
-			chr_setup_156();
+			m156.chr[0x04 | (address & 0x03)] = (m156.chr[0x04 | (address & 0x03)] & 0x00FF) | (value << 8);
+			chr_fix_156();
 			return;
 		case 0xC010:
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-			map_prg_rom_8k_update();
+			m156.prg = value;
+			prg_fix_156();
 			return;
 		case 0xC014:
-			if (value & 0x01) {
-				mirroring_H();
-			} else {
-				mirroring_V();
-			}
+			m156.mirroring = value & 0x01;
+			mirroring_fix_156();
 			return;
 	}
 }
 BYTE extcl_save_mapper_156(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m156.chr.low);
-	save_slot_ele(mode, slot, m156.chr.high);
+	save_slot_ele(mode, slot, m156.prg);
+	save_slot_ele(mode, slot, m156.chr);
+	save_slot_ele(mode, slot, m156.mirroring);
 
 	return (EXIT_OK);
 }
 
-INLINE static void chr_setup_156(void) {
-	WORD value;
-	BYTE i;
-
-	for (i = 0; i < 8; i++) {
-		value = (m156.chr.high[i] << 8) | m156.chr.low[i];
-		control_bank(info.chr.rom.max.banks_1k)
-		chr.bank_1k[i] = chr_pnt(value << 10);
+INLINE static void prg_fix_156(void) {
+	memmap_auto_16k(MMCPU(0x8000), m156.prg);
+	memmap_auto_16k(MMCPU(0xC000), 0xFF);
+}
+INLINE static void chr_fix_156(void) {
+	memmap_auto_1k(MMPPU(0x0000), m156.chr[0]);
+	memmap_auto_1k(MMPPU(0x0400), m156.chr[1]);
+	memmap_auto_1k(MMPPU(0x0800), m156.chr[2]);
+	memmap_auto_1k(MMPPU(0x0C00), m156.chr[3]);
+	memmap_auto_1k(MMPPU(0x1000), m156.chr[4]);
+	memmap_auto_1k(MMPPU(0x1400), m156.chr[5]);
+	memmap_auto_1k(MMPPU(0x1800), m156.chr[6]);
+	memmap_auto_1k(MMPPU(0x1C00), m156.chr[7]);
+}
+INLINE static void mirroring_fix_156(void) {
+	switch (m156.mirroring) {
+		case 0:
+			mirroring_V();
+			return;
+		case 1:
+			mirroring_H();
+			return;
+		default:
+			mirroring_SCR0();
+			return;
 	}
 }

@@ -16,36 +16,47 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
+#include "save_slot.h"
+
+INLINE static void prg_fix_203(void);
+INLINE static void chr_fix_203(void);
+
+struct _m203 {
+	BYTE reg;
+} m203;
 
 void map_init_203(void) {
+	EXTCL_AFTER_MAPPER_INIT(203);
 	EXTCL_CPU_WR_MEM(203);
+	EXTCL_SAVE_MAPPER(203);
 
 	if (info.reset >= HARD) {
-		extcl_cpu_wr_mem_203(0x8000, 0);
+		memset(&m203, 0x00, sizeof(m203));
 	}
 }
+void extcl_after_mapper_init_203(void) {
+	prg_fix_203();
+	chr_fix_203();
+}
 void extcl_cpu_wr_mem_203(UNUSED(WORD address), BYTE value) {
-	BYTE save = value;
-	DBWORD bank;
+	m203.reg = value;
+	prg_fix_203();
+	chr_fix_203();
+}
+BYTE extcl_save_mapper_203(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m203.reg);
 
-	value = save >> 2;
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, value);
-	map_prg_rom_8k(2, 2, value);
-	map_prg_rom_8k_update();
+	return (EXIT_OK);
+}
 
-	value = save;
-	control_bank(info.chr.rom.max.banks_8k)
-	bank = value << 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+INLINE static void prg_fix_203(void) {
+	WORD bank = m203.reg >> 2;
+
+	memmap_auto_16k(MMCPU(0x8000), bank);
+	memmap_auto_16k(MMCPU(0xC000), bank);
+}
+INLINE static void chr_fix_203(void) {
+	memmap_auto_8k(MMPPU(0x0000), (m203.reg & 0x03));
 }

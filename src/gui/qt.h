@@ -124,7 +124,8 @@ enum _overlay_info_alignment {
 #define mainwin ((mainWindow *)gui_mainwindow_get_ptr())
 #define objcheat ((objCheat *)gui_objcheat_get_ptr())
 #define wdgoverlayui ((wdgOverlayUi *)gui_wdgoverlayui_get_ptr())
-#define wdgrewind ((wdgRewind *)gui_wdgrewind_get_ptr())
+#define wdgrewind dynamic_cast<wdgRewind *>((wdgRewind *)gui_wdgrewind_get_ptr())
+//#define wdgrewind ((wdgRewind *)gui_wdgrewind_get_ptr())
 
 typedef struct _gui {
 #if defined (_WIN32)
@@ -186,12 +187,13 @@ EXTERNC const uTCHAR *gui_application_folder(void);
 EXTERNC const uTCHAR *gui_config_folder(void);
 EXTERNC const uTCHAR *gui_data_folder(void);
 EXTERNC const uTCHAR *gui_temp_folder(void);
+EXTERNC const uTCHAR *gui_extract_base(const uTCHAR *path);
 
 EXTERNC double gui_device_pixel_ratio(void);
 EXTERNC void gui_set_window_size(void);
 
 EXTERNC void gui_state_save_slot_set(BYTE slot, BYTE on_video);
-EXTERNC void gui_state_save_slot_set_tooltip(BYTE slot, char *buffer);
+EXTERNC void gui_state_save_slot_set_tooltip(BYTE slot);
 
 EXTERNC void gui_update(void);
 EXTERNC void gui_update_gps_settings(void);
@@ -215,6 +217,8 @@ EXTERNC void gui_egds_start_rwnd(void);
 EXTERNC void gui_egds_stop_rwnd(void);
 
 EXTERNC void gui_fullscreen(void);
+
+EXTERNC void gui_dipswitch_dialog(void);
 
 EXTERNC int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type);
 
@@ -262,7 +266,9 @@ EXTERNC void gui_overlay_info_append_subtitle(uTCHAR *msg);
 EXTERNC void gui_overlay_info_append_msg_precompiled(int index, void *arg1);
 EXTERNC void gui_overlay_info_append_msg_precompiled_with_alignment(BYTE alignment, int index, void *arg1);
 EXTERNC void gui_overlay_blit(void);
-EXTERNC void gui_overlay_slot_preview(int slot, void *buffer, uTCHAR *file);
+EXTERNC void gui_overlay_slot_preview_set_from_ppu_screen(int slot, void *buffer, uTCHAR *file);
+EXTERNC void gui_overlay_slot_preview_set_from_png(int slot, void *buffer, size_t size, uTCHAR *file);
+EXTERNC void *gui_overlay_slot_preview_get(int slot);
 
 EXTERNC void *gui_dlgheadereditor_get_ptr(void);
 EXTERNC void gui_dlgheadereditor_read_header(void);
@@ -303,6 +309,7 @@ EXTERNC uint32_t gui_color(BYTE a, BYTE r, BYTE g, BYTE b);
 
 EXTERNC BYTE gui_load_lut(void *l, const uTCHAR *path);
 EXTERNC void gui_save_screenshot(int w, int h, int stride, char *buffer, BYTE flip);
+EXTERNC void gui_save_slot_preview_to_png(int slot, void **dst, size_t *size);
 
 EXTERNC void gui_utf_dirname(uTCHAR *path, uTCHAR *dst, size_t len);
 EXTERNC void gui_utf_basename(uTCHAR *path, uTCHAR *dst, size_t len);

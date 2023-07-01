@@ -18,73 +18,101 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
 
-INLINE static void m168_update_chr(void);
+INLINE static void prg_fix_168(void);
+INLINE static void chr_fix_168(void);
 
 struct _m168 {
-	WORD chr_map[8];
+	BYTE reg;
+	BYTE chr_protect;
+	struct m168_irq {
+		BYTE disabled;
+		WORD counter;
+	} irq;
 } m168;
 
 void map_init_168(void) {
+	EXTCL_AFTER_MAPPER_INIT(168);
 	EXTCL_CPU_WR_MEM(168);
 	EXTCL_SAVE_MAPPER(168);
-	EXTCL_WR_CHR(168);
-	mapper.internal_struct[0] = (BYTE *)&m168;
+	EXTCL_CPU_EVERY_CYCLE(168);
+	mapper.internal_struct[0] = (BYTE *) &m168;
 	mapper.internal_struct_size[0] = sizeof(m168);
 
-	{
-		BYTE i;
+	if (info.reset >= HARD) {
+		memset(&m168, 0x00, sizeof(m168));
 
-		for (i = 0; i < 4; i++) {
-			m168.chr_map[i] = m168.chr_map[i + 4] = i;
-		}
+		m168.chr_protect = TRUE;
 	}
 
-	map_chr_ram_extra_init(0x2000 * 8);
-	m168_update_chr();
+	if (info.format != NES_2_0) {
+		if (vram_nvram_size() < S32K) {
+			vram_set_ram_size(0);
+			vram_set_nvram_size(S64K);
+		}
+	}
+}
+void extcl_after_mapper_init_168(void) {
+	prg_fix_168();
+	chr_fix_168();
 }
 void extcl_cpu_wr_mem_168(WORD address, BYTE value) {
-	if (address == 0xB000) {
-		BYTE save = value;
-
-		value = save >> 6;
-		control_bank(info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, value);
-		map_prg_rom_8k_update();
-
-		value = (save & 0x0F) << 2;
-		m168.chr_map[4] = value;
-		m168.chr_map[5] = value + 1;
-		m168.chr_map[6] = value + 2;
-		m168.chr_map[7] = value + 3;
-
-		m168_update_chr();
+	switch (address & 0xF000) {
+		case 0x8000:
+		case 0x9000:
+		case 0xA000:
+		case 0xB000:
+			m168.reg = value;
+			prg_fix_168();
+			chr_fix_168();
+			return;
+		case 0xC000:
+		case 0xD000:
+		case 0xE000:
+		case 0xF000:
+			if (m168.irq.disabled && !(address & 0x0080)) {
+				m168.chr_protect = FALSE;
+				chr_fix_168();
+			}
+			m168.irq.disabled = address & 0x0080;
+			if (m168.irq.disabled) {
+				irq.high &= ~EXT_IRQ;
+			}
+			return;
 	}
 }
 BYTE extcl_save_mapper_168(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m168.chr_map);
-	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
-
-	if (mode == SAVE_SLOT_READ) {
-		m168_update_chr();
-	}
+	save_slot_ele(mode, slot, m168.reg);
+	save_slot_ele(mode, slot, m168.chr_protect);
+	save_slot_ele(mode, slot, m168.irq.disabled);
+	save_slot_ele(mode, slot, m168.irq.counter);
 
 	return (EXIT_OK);
 }
-void extcl_wr_chr_168(WORD address, BYTE value) {
-	BYTE i = address >> 10;
-
-	chr.bank_1k[i][address & 0x3FF] = value;
+void extcl_cpu_every_cycle_168(void) {
+	if (m168.irq.disabled) {
+		m168.irq.counter = 0;
+	} else {
+		if (++m168.irq.counter & 1024) {
+			irq.high |= EXT_IRQ;
+			return;
+		}
+		irq.high &= ~EXT_IRQ;
+	}
 }
 
-INLINE static void m168_update_chr(void) {
-	BYTE i;
-
-	for (i = 0; i < 8 ; i++) {
-		chr.bank_1k[i] = &chr.extra.data[m168.chr_map[i] << 10];
+INLINE static void prg_fix_168() {
+	memmap_auto_16k(MMCPU(0x8000), (m168.reg >> 6));
+	memmap_auto_16k(MMCPU(0xC000), 0xFF);
+}
+INLINE static void chr_fix_168() {
+	if (vram_nvram_size() >= S64K) {
+		memmap_vram_wp_4k(MMPPU(0x0000), 0, !m168.chr_protect, !m168.chr_protect);
+		memmap_vram_wp_4k(MMPPU(0x1000), (m168.reg & 0xF) ^ 0x08, !m168.chr_protect, !m168.chr_protect);
+	} else {
+		memmap_vram_4k(MMPPU(0x0000), 0);
+		memmap_vram_wp_4k(MMPPU(0x1000), (m168.reg & 0xF) ^ 0x08, !m168.chr_protect, !m168.chr_protect);
 	}
 }

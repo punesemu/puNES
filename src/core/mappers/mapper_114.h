@@ -21,11 +21,15 @@
 
 #include "common.h"
 
-enum _m114_types { M114_0, M114_1 };
+typedef struct _m114 {
+	BYTE reg[4];
+} _m114;
+
+extern _m114 m114;
 
 void map_init_114(void);
-void extcl_after_mapper_init_114(void);
 void extcl_cpu_wr_mem_114(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_114(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_114(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_114_H_ */

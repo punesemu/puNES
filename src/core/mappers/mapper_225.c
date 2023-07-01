@@ -16,65 +16,78 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
+#include "save_slot.h"
+
+INLINE static void prg_fix_225(void);
+INLINE static void chr_fix_225(void);
+INLINE static void mirroring_fix_225(void);
+
+struct _m225 {
+	WORD reg;
+	BYTE scratch[4];
+} m225;
 
 void map_init_225(void) {
+	EXTCL_AFTER_MAPPER_INIT(225);
 	EXTCL_CPU_WR_MEM(225);
+	EXTCL_CPU_RD_MEM(225);
+	EXTCL_SAVE_MAPPER(225);
+	mapper.internal_struct[0] = (BYTE *)&m225;
+	mapper.internal_struct_size[0] = sizeof(m225);
 
 	if (info.reset >= HARD) {
-		map_prg_rom_8k(4, 0, 0);
+		memset(&m225, 0x00, sizeof(m225));
+	}
+
+	info.mapper.extend_wr = TRUE;
+}
+void extcl_after_mapper_init_225(void) {
+	prg_fix_225();
+	chr_fix_225();
+	mirroring_fix_225();
+}
+void extcl_cpu_wr_mem_225(WORD address, UNUSED(BYTE value)) {
+	if ((address >= 0x5000) && (address <= 0x5FFF) && (address & 0x0800)) {
+		m225.scratch[address & 0x03] = value;
+	} else if (address >= 0x8000) {
+		m225.reg = address;
+		prg_fix_225();
+		chr_fix_225();
+		mirroring_fix_225();
 	}
 }
-void extcl_cpu_wr_mem_225(WORD address, BYTE value) {
-	DBWORD bank;
-
-	value = (address >> 7) & 0x1F;
-
-	if (info.prg.rom.max.banks_32k > 0x1F) {
-		value |= ((address >> 9) & 0x20);
+BYTE extcl_cpu_rd_mem_225(WORD address, BYTE openbus) {
+	if ((address >= 0x5000) && (address <= 0x5FFF)) {
+		return (address & 0x800 ? m225.scratch[address & 0x03] : openbus);
 	}
+	return (wram_rd(address));
+}
+BYTE extcl_save_mapper_225(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m225.reg);
+	save_slot_ele(mode, slot, m225.scratch);
 
-	if (address & 0x1000) {
-		value = (value << 1) | ((address >> 6) & 0x01);
-		control_bank(info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, value);
-		map_prg_rom_8k(2, 2, value);
+	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_225(void) {
+	WORD bank = ((m225.reg & 0x4000) >> 8) | ((m225.reg & 0xFC0) >> 6);
+
+	if (m225.reg & 0x1000) {
+		memmap_auto_16k(MMCPU(0x8000), bank);
+		memmap_auto_16k(MMCPU(0xC000), bank);
 	} else {
-		control_bank(info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, value);
+		memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
 	}
-	map_prg_rom_8k_update();
-
-	if (address & 0x2000) {
+}
+INLINE static void chr_fix_225(void) {
+	memmap_auto_8k(MMPPU(0x0000), (((m225.reg & 0x4000) >> 8) | (m225.reg & 0x3F)));
+}
+INLINE static void mirroring_fix_225(void) {
+	if (m225.reg & 0x2000) {
 		mirroring_H();
-		/*
-		 * workaround per far funzionare correttamente il 52esimo gioco
-		 * della rom "52 Games [p1].nes" che non utilizza ne il mirroring
-		 * verticale ne quello orizzontale.
-		 */
-		if ((info.id == BMC52IN1) && (address == 0xA394)) {
-			mirroring_FSCR();
-		}
 	} else {
 		mirroring_V();
 	}
-
-	value = address & 0x3F;
-
-	if (info.chr.rom.max.banks_8k > 0x3F) {
-		value |= ((address >> 8) & 0x40);
-	}
-
-	control_bank(info.chr.rom.max.banks_8k)
-	bank = value << 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
 }

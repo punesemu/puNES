@@ -18,14 +18,17 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
-#include "irqA12.h"
+#include "cpu.h"
+#include "ppu.h"
 #include "save_slot.h"
+#include "ppu_inline.h"
 
 INLINE static void prg_fix_359(void);
 INLINE static void chr_fix_359(void);
+INLINE static void wram_fix_359(void);
 INLINE static void mirroring_fix_359(void);
+
+INLINE static void irq_clock_359(void);
 
 struct _m359 {
 	BYTE prg[6];
@@ -36,58 +39,52 @@ struct _m359 {
 		BYTE auto_enable;
 		BYTE enable;
 		BYTE reload;
-		WORD counter;
+		BYTE a12_filter;
+		union _m359_irq_counter {
+			BYTE b[2];
+			WORD w[1];
+		} counter;
 	} irq;
 } m359;
-struct _m359tmp {
-	BYTE model;
-	BYTE *prg_6000;
-} m359tmp;
 
-void map_init_359(BYTE model) {
+void map_init_359(void) {
 	EXTCL_CPU_WR_MEM(359);
 	EXTCL_AFTER_MAPPER_INIT(359);
 	EXTCL_CPU_WR_MEM(359);
-	EXTCL_CPU_RD_MEM(359);
 	EXTCL_SAVE_MAPPER(359);
-	EXTCL_CPU_EVERY_CYCLE(359);
-	EXTCL_PPU_000_TO_34X(359);
 	EXTCL_PPU_000_TO_255(359);
 	EXTCL_PPU_256_TO_319(359);
 	EXTCL_PPU_320_TO_34X(359);
 	EXTCL_UPDATE_R2006(359);
-	EXTCL_IRQ_A12_CLOCK(359);
+	EXTCL_CPU_EVERY_CYCLE(359);
 	mapper.internal_struct[0] = (BYTE *)&m359;
 	mapper.internal_struct_size[0] = sizeof(m359);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m359, 0x00, sizeof(m359));
+	if (info.reset >= HARD) {
+		memset(&m359, 0x00, sizeof(m359));
 
-	m359.prg[0] = 0xFC;
-	m359.prg[1] = 0xFD;
-	m359.prg[2] = 0xFE;
-	m359.prg[2] = 0xFF;
-	m359.prg[4] = 0x00;
-	m359.prg[5] = 0x3F;
+		m359.prg[0] = 0xFC;
+		m359.prg[1] = 0xFD;
+		m359.prg[2] = 0xFE;
+		m359.prg[2] = 0xFF;
+		m359.prg[4] = 0x00;
+		m359.prg[5] = 0x3F;
 
-	m359.chr[1] = 0x01;
-	m359.chr[2] = 0x02;
-	m359.chr[3] = 0x03;
-	m359.chr[4] = 0x04;
-	m359.chr[5] = 0x05;
-	m359.chr[6] = 0x06;
-	m359.chr[7] = 0x07;
-	m359.chr[8] = 0x00;
-	m359.chr[9] = 0xFF;
-
-	m359tmp.model = model;
-
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+		m359.chr[1] = 0x01;
+		m359.chr[2] = 0x02;
+		m359.chr[3] = 0x03;
+		m359.chr[4] = 0x04;
+		m359.chr[5] = 0x05;
+		m359.chr[6] = 0x06;
+		m359.chr[7] = 0x07;
+		m359.chr[8] = 0x00;
+		m359.chr[9] = 0xFF;
+	}
 }
 void extcl_after_mapper_init_359(void) {
 	prg_fix_359();
 	chr_fix_359();
+	wram_fix_359();
 	mirroring_fix_359();
 }
 void extcl_cpu_wr_mem_359(WORD address, BYTE value) {
@@ -95,12 +92,14 @@ void extcl_cpu_wr_mem_359(WORD address, BYTE value) {
 		case 0x8000:
 			m359.prg[address & 0x03] = value;
 			prg_fix_359();
+			wram_fix_359();
 			break;
 		case 0x9000:
 			switch (address & 0x03) {
 				case 0:
 					m359.prg[4] = value;
 					prg_fix_359();
+					wram_fix_359();
 					break;
 				case 1:
 					switch (value & 0x03) {
@@ -119,6 +118,7 @@ void extcl_cpu_wr_mem_359(WORD address, BYTE value) {
 					}
 					m359.chr[9] = value & 0x40 ? 0xFF : 0x7F;
 					prg_fix_359();
+					wram_fix_359();
 					chr_fix_359();
 					break;
 				case 2:
@@ -142,13 +142,13 @@ void extcl_cpu_wr_mem_359(WORD address, BYTE value) {
 					if (m359.irq.auto_enable) {
 						m359.irq.enable = FALSE;
 					}
-					m359.irq.counter = (m359.irq.counter & 0xFF00) | value;
+					m359.irq.counter.b[0] = value;
 					break;
 				case 1:
 					if (m359.irq.auto_enable) {
 						m359.irq.enable = TRUE;
 					}
-					m359.irq.counter = (m359.irq.counter & 0x00FF) | (value << 8);
+					m359.irq.counter.b[1] = value;
 					m359.irq.reload = TRUE;
 					break;
 				case 2:
@@ -164,12 +164,6 @@ void extcl_cpu_wr_mem_359(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_359(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (m359tmp.prg_6000[address & 0x1FFF]);
-	}
-	return (openbus);
-}
 BYTE extcl_save_mapper_359(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m359.prg);
 	save_slot_ele(mode, slot, m359.chr);
@@ -178,157 +172,96 @@ BYTE extcl_save_mapper_359(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m359.irq.auto_enable);
 	save_slot_ele(mode, slot, m359.irq.enable);
 	save_slot_ele(mode, slot, m359.irq.reload);
-	save_slot_ele(mode, slot, m359.irq.counter);
+	save_slot_ele(mode, slot, m359.irq.a12_filter);
+	save_slot_ele(mode, slot, m359.irq.counter.w);
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_359(void) {
-	if (m359.irq.enable && !m359.irq.mode) {
-		m359.irq.counter--;
-		if (!m359.irq.counter) {
-			irq.high |= EXT_IRQ;
-		}
-	}
-}
-void extcl_ppu_000_to_34x_359(void) {
-	irqA12_RS();
-}
 void extcl_ppu_000_to_255_359(void) {
 	if (r2001.visible) {
-		irqA12_SB();
+		extcl_ppu_320_to_34x_359();
 	}
 }
 void extcl_ppu_256_to_319_359(void) {
-	irqA12_BS();
-}
-void extcl_ppu_320_to_34x_359(void) {
-	irqA12_SB();
-}
-void extcl_update_r2006_359(WORD new_r2006, WORD old_r2006) {
-	irqA12_IO(new_r2006, old_r2006);
-}
-void extcl_irq_A12_clock_359(void) {
-	BYTE counter;
-
-	if (!m359.irq.mode) {
+	if ((ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	counter = m359.irq.counter & 0x00FF;
-
-	if (!counter) {
-		counter = (m359.irq.counter & 0xFF00) >> 8;
-		irqA12.reload = FALSE;
+	if ((!spr_ev.count_plus || (spr_ev.tmp_spr_plus == spr_ev.count_plus)) && (r2000.size_spr == 16)) {
+		ppu.spr_adr = r2000.spt_adr;
 	} else {
-		counter--;
+		ppu_spr_adr((ppu.frame_x & 0x0038) >> 3);
 	}
-	if (!counter && m359.irq.enable) {
+
+	if ((ppu.spr_adr & 0x1000) > (ppu.bck_adr & 0x1000)) {
+		irq_clock_359();
+	}
+}
+void extcl_ppu_320_to_34x_359(void) {
+	if ((ppu.frame_x & 0x0007) != 0x0003) {
+		return;
+	}
+
+	if (ppu.frame_x == 323) {
+		ppu_spr_adr(7);
+	}
+
+	ppu_bck_adr(r2000.bpt_adr, r2006.value);
+
+	if ((ppu.bck_adr & 0x1000) > (ppu.spr_adr & 0x1000)) {
+		irq_clock_359();
+	}
+}
+void extcl_update_r2006_359(WORD new_r2006, UNUSED(WORD old_r2006)) {
+	if ((new_r2006 & 0x1000) > (old_r2006 & 0x1000)) {
+		irq_clock_359();
+	}
+}
+void extcl_cpu_every_cycle_359(void) {
+	if (m359.irq.a12_filter) {
+		m359.irq.a12_filter--;
+	}
+	if (m359.irq.enable && !m359.irq.mode && m359.irq.counter.w[0] && !--m359.irq.counter.w[0]){
 		irq.high |= EXT_IRQ;
 	}
-	m359.irq.counter = (m359.irq.counter & 0xFF00) | counter;
 }
 
 INLINE static void prg_fix_359(void) {
-	BYTE outer = (m359.prg[4] & 0x38) << 1, mask = m359.prg[5];
-	WORD value;
+	WORD base = (m359.prg[4] & 0x38) << 1;
+	WORD mask = m359.prg[5];
 
-	value = (m359.prg[3] & mask) | outer;
-	control_bank(info.prg.rom.max.banks_8k)
-	m359tmp.prg_6000 = prg_pnt(value << 13);
-
-	value = (m359.prg[0] & mask) | outer;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, value);
-
-	value = (m359.prg[1] & mask) | outer;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, value);
-
-	value = (m359.prg[2] & mask) | outer;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, value);
-
-	value = (0xFF & mask) | outer;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, value);
-
-	map_prg_rom_8k_update();
+	memmap_auto_8k(MMCPU(0x8000), (base | (m359.prg[0] & mask)));
+	memmap_auto_8k(MMCPU(0xA000), (base | (m359.prg[1] & mask)));
+	memmap_auto_8k(MMCPU(0xC000), (base | (m359.prg[2] & mask)));
+	memmap_auto_8k(MMCPU(0xE000), (base | (0xFF & mask)));
 }
 INLINE static void chr_fix_359(void) {
-	DBWORD bank;
+	if (chrrom_size()) {
+		if (info.mapper.id == 540) {
+			memmap_auto_2k(MMPPU(0x0000), m359.chr[0]);
+			memmap_auto_2k(MMPPU(0x0800), m359.chr[1]);
+			memmap_auto_2k(MMPPU(0x1000), m359.chr[6]);
+			memmap_auto_2k(MMPPU(0x1800), m359.chr[7]);
+		} else {
+			WORD base = m359.chr[8] << 7;
+			WORD mask = m359.chr[9];
 
-	if (mapper.write_vram) {
-		return;
+			memmap_auto_1k(MMPPU(0x0000), (base | (m359.chr[0] & mask)));
+			memmap_auto_1k(MMPPU(0x0400), (base | (m359.chr[1] & mask)));
+			memmap_auto_1k(MMPPU(0x0800), (base | (m359.chr[2] & mask)));
+			memmap_auto_1k(MMPPU(0x0C00), (base | (m359.chr[3] & mask)));
+			memmap_auto_1k(MMPPU(0x1000), (base | (m359.chr[4] & mask)));
+			memmap_auto_1k(MMPPU(0x1400), (base | (m359.chr[5] & mask)));
+			memmap_auto_1k(MMPPU(0x1800), (base | (m359.chr[6] & mask)));
+			memmap_auto_1k(MMPPU(0x1C00), (base | (m359.chr[7] & mask)));
+		}
 	}
+}
+INLINE static void wram_fix_359(void) {
+	WORD base = (m359.prg[4] & 0x38) << 1;
+	WORD mask = m359.prg[5];
 
-	if (m359tmp.model == MAP540) {
-		bank = m359.chr[0];
-		_control_bank(bank, info.chr.rom.max.banks_2k)
-		bank = bank << 11;
-		chr.bank_1k[0] = chr_pnt(bank);
-		chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-
-		bank = m359.chr[1];
-		_control_bank(bank, info.chr.rom.max.banks_2k)
-		bank = bank << 11;
-		chr.bank_1k[2] = chr_pnt(bank);
-		chr.bank_1k[3] = chr_pnt(bank | 0x0400);
-
-		bank = m359.chr[6];
-		_control_bank(bank, info.chr.rom.max.banks_2k)
-		bank = bank << 11;
-		chr.bank_1k[4] = chr_pnt(bank);
-		chr.bank_1k[5] = chr_pnt(bank | 0x0400);
-
-		bank = m359.chr[7];
-		_control_bank(bank, info.chr.rom.max.banks_2k)
-		bank = bank << 11;
-		chr.bank_1k[6] = chr_pnt(bank);
-		chr.bank_1k[7] = chr_pnt(bank | 0x0400);
-	} else {
-		WORD outer = m359.chr[8] << 7;
-		WORD mask = m359.chr[9];
-
-		bank = outer | (m359.chr[0] & mask);
-		_control_bank(bank, info.chr.rom.max.banks_1k)
-		bank = bank << 10;
-		chr.bank_1k[0] = chr_pnt(bank);
-
-		bank = outer | (m359.chr[1] & mask);
-		_control_bank(bank, info.chr.rom.max.banks_1k)
-		bank = bank << 10;
-		chr.bank_1k[1] = chr_pnt(bank);
-
-		bank = outer | (m359.chr[2] & mask);
-		_control_bank(bank, info.chr.rom.max.banks_1k)
-		bank = bank << 10;
-		chr.bank_1k[2] = chr_pnt(bank);
-
-		bank = outer | (m359.chr[3] & mask);
-		_control_bank(bank, info.chr.rom.max.banks_1k)
-		bank = bank << 10;
-		chr.bank_1k[3] = chr_pnt(bank);
-
-		bank = outer | (m359.chr[4] & mask);
-		_control_bank(bank, info.chr.rom.max.banks_1k)
-		bank = bank << 10;
-		chr.bank_1k[4] = chr_pnt(bank);
-
-		bank = outer | (m359.chr[5] & mask);
-		_control_bank(bank, info.chr.rom.max.banks_1k)
-		bank = bank << 10;
-		chr.bank_1k[5] = chr_pnt(bank);
-
-		bank = outer | (m359.chr[6] & mask);
-		_control_bank(bank, info.chr.rom.max.banks_1k)
-		bank = bank << 10;
-		chr.bank_1k[6] = chr_pnt(bank);
-
-		bank = outer | (m359.chr[7] & mask);
-		_control_bank(bank, info.chr.rom.max.banks_1k)
-		bank = bank << 10;
-		chr.bank_1k[7] = chr_pnt(bank);
-	}
+	memmap_prgrom_8k(MMCPU(0x6000), (base | (m359.prg[3] & mask)));
 }
 INLINE static void mirroring_fix_359(void) {
 	switch (m359.mirroring & 0x03) {
@@ -346,3 +279,19 @@ INLINE static void mirroring_fix_359(void) {
 			break;
 	}
 }
+
+INLINE static void irq_clock_359(void) {
+	if (!m359.irq.a12_filter && m359.irq.mode) {
+		if (!m359.irq.counter.b[0] || m359.irq.reload) {
+			m359.irq.counter.b[0] = m359.irq.counter.b[1];
+		} else {
+			m359.irq.counter.b[0]--;
+		}
+		if (!m359.irq.counter.b[0] && m359.irq.enable) {
+			irq.high |= EXT_IRQ;
+		}
+		m359.irq.reload = FALSE;
+	}
+	m359.irq.a12_filter = 5;
+}
+

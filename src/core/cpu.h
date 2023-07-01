@@ -45,8 +45,11 @@ enum interrupt_types {
 	cpu.sf = cpu.SR & 0x80
 
 typedef struct _cpu {
-	/* Processor Registers */
-	WORD PC; // Program Counter
+	// Processor Registers
+	union _cpu_pc {
+		BYTE b[2];
+		WORD w;
+	} PC;
 	BYTE SP; // Stack Pointer
 	BYTE AR; // Accumulator
 	BYTE XR; // Index Register X
@@ -61,30 +64,27 @@ typedef struct _cpu {
 	/*            (bit 5) - Always 1 */
 	BYTE of; // O (bit 6) - Overflow flag
 	BYTE sf; // S (bit 7) - Sign flag or N - Negative flag
-	/* il codice che identifica l'istruzione */
+	// il codice che identifica l'istruzione
 	WORD opcode;
 	WORD opcode_PC;
-	/* il flag che indica se il ciclo della cpu e' dispari */
+	// il flag che indica se il ciclo della cpu e' dispari
 	BYTE odd_cycle;
-	/* buffer di lettura */
-	BYTE openbus;
-	/*
-	 * cicli cpu dell'istruzione e delle
-	 * operazioni di lettura e scrittura.
-	 */
+	// cicli cpu dell'istruzione e delle operazioni di lettura e scrittura
 	SWORD cycles;
-	/* DMC */
+	// DMC
 	WORD opcode_cycle;
-	/* doppia lettura */
+	// doppia lettura
 	BYTE double_rd;
-	/* doppia scrittura */
+	// doppia scrittura
 	BYTE double_wr;
-	/* lettura PRG Ram attiva/disattiva */
+	// lettura PRG Ram attiva/disattiva
 	BYTE prg_ram_rd_active;
-	/* scrittura PRG Ram attiva/disattiva */
+	// scrittura PRG Ram attiva/disattiva
 	BYTE prg_ram_wr_active;
-	/* i cicli (senza aggiustamenti) impiegati dall'opcode */
+	// i cicli (senza aggiustamenti) impiegati dall'opcode
 	WORD base_opcode_cycles;
+	// buffer di lettura
+	BYTE openbus;
 } _cpu;
 typedef struct _irq {
 	BYTE high;
@@ -98,7 +98,7 @@ typedef struct _nmi {
 	BYTE before;
 	BYTE inhibit;
 	WORD frame_x;
-	/* i cicli passati dall'inizio dell'NMI */
+	// i cicli passati dall'inizio dell'NMI
 	uint32_t cpu_cycles_from_last_nmi;
 } _nmi;
 
@@ -113,7 +113,7 @@ extern _nmi nmi;
 #endif
 
 EXTERNC void cpu_exe_op(void);
-EXTERNC void cpu_init_PC(void);
+EXTERNC void cpu_initial_cycles(void);
 EXTERNC void cpu_turn_on(void);
 EXTERNC BYTE cpu_rd_mem_dbg(WORD address);
 EXTERNC BYTE cpu_rd_mem(WORD address, BYTE made_tick);

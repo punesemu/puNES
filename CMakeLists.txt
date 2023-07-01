@@ -207,5 +207,7 @@ foreach(SIZE "16" "22" "24" "32" "48" "64" "256" "512")
 endforeach()
 
 install(FILES misc/io.github.punesemu.puNES.metainfo.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
+install(FILES misc/nes20db.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/puNES)
+install(FILES misc/dip.cfg DESTINATION ${CMAKE_INSTALL_DATADIR}/puNES)
 
 install(FILES README.md ChangeLog DESTINATION ${CMAKE_INSTALL_DOCDIR})

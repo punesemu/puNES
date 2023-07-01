@@ -35,7 +35,10 @@ These executables are always updated to the latest commit:
 * Windows 32 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build/master/punes32.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build/master/punes32.wip.d3d9.zip)
 * Windows 64 bit : :link:[`OpenGL`](https://nightly.link/punesemu/puNES/workflows/build/master/punes64.wip.opengl.zip) - :link:[`D3D9`](https://nightly.link/punesemu/puNES/workflows/build/master/punes64.wip.d3d9.zip)
 
-Note : 32 bit versions are Windows XP compatible.
+Notes: 
+- WARNING save states of version 0.110 or earlier are no longer compatible.
+- Due to the many changes I'm making to the core of the emulator, new bugs may have been introduced, if you find that the roms no longer work properly compared to version 0.110, please let me know.
+- 32 bit versions are Windows XP compatible.
 
 :beer: Support
 -----------
@@ -80,12 +83,12 @@ To see a list of available command-line options, start puNES with the `-h` argum
 | 66  | 67  | 68  | 69  | 70  | 71  | 72  | 73  | 74  | 75  | 76  |
 | 77  | 78  | 79  | 80  | 81  | 82  | 83  |     | 85  | 86  | 87  |
 | 88  | 89  | 90  | 91  | 92  | 93  | 94  | 95  | 96  | 97  |     |
-| 99  |     | 101 |     | 103 | 104 | 105 | 106 | 107 | 108 |     |
+| 99  | 100 | 101 |     | 103 | 104 | 105 | 106 | 107 | 108 |     |
 |     | 111 | 112 | 113 | 114 | 115 | 116 | 117 | 118 | 119 | 120 |
-| 121 |     | 123 |     | 125 | 126 |     |     |     |     |     |
+| 121 | 122 | 123 |     | 125 | 126 |     |     |     |     |     |
 | 132 | 133 | 134 |     | 136 | 137 | 138 | 139 | 140 | 141 | 142 |
 | 143 | 144 | 145 | 146 | 147 | 148 | 149 | 150 | 151 | 152 | 153 |
-| 154 | 155 | 156 |     | 158 | 159 |     |     | 162 | 163 | 164 |
+| 154 | 155 | 156 | 157 | 158 | 159 |     |     | 162 | 163 | 164 |
 | 165 | 166 | 167 | 168 |     |     | 171 | 172 | 173 |     | 175 |
 | 176 | 177 | 178 | 179 | 180 |     | 182 | 183 | 184 | 185 | 186 |
 | 187 | 188 | 189 | 190 | 191 | 192 | 193 | 194 | 195 | 196 | 197 |
@@ -99,17 +102,17 @@ To see a list of available command-line options, start puNES with the `-h` argum
 |     |     |     |     |     |     | 281 | 282 | 283 | 284 | 285 |
 | 286 | 287 | 288 | 289 | 290 | 291 | 292 |     |     | 295 |     |
 | 297 | 298 | 299 | 300 | 301 | 302 | 303 | 304 | 305 | 306 | 307 |
-| 308 | 309 |     |     | 312 | 313 | 314 | 315 |     |     |     |
+| 308 | 309 |     | 311 | 312 | 313 | 314 | 315 |     |     |     |
 | 319 | 320 |     | 322 | 323 | 324 | 325 |     | 327 | 328 | 329 |
 |     | 331 | 332 | 333 | 334 | 335 | 336 | 337 | 338 | 339 | 340 |
 | 341 | 342 | 343 | 344 | 345 | 346 | 347 | 348 | 349 | 350 | 351 |
-| 352 | 353 |     | 355 | 356 | 357 | 358 | 359 | 360 | 361 |     |
+| 352 | 353 |     | 355 | 356 | 357 | 358 | 359 | 360 | 361 | 362 |
 |     |     |     | 366 |     | 368 | 369 | 370 |     | 372 |     |
-| 374 | 375 |     | 377 |     |     | 380 | 381 | 382 |     |     |
+| 374 | 375 |     | 377 |     |     | 380 | 381 | 382 |     | 384 |
 |     | 386 | 387 | 388 | 389 | 390 |     |     | 393 | 394 | 395 |
 | 396 | 397 | 398 | 399 | 400 | 401 |     | 403 | 404 |     | 406 |
 |     |     | 409 | 410 | 411 | 412 | 413 | 414 | 415 | 416 | 417 |
-|     |     | 420 |     | 422 |     |     |     |     |     | 428 |
+|     |     | 420 | 421 | 422 |     |     |     |     |     | 428 |
 | 429 |     | 431 | 432 | 433 | 434 |     | 436 | 437 | 438 |     |
 |     |     | 442 |     |     |     | 446 | 447 |     |     |     |
 | 451 | 452 |     |     | 455 | 456 | 457 |     |     |     |     |
@@ -121,12 +124,13 @@ To see a list of available command-line options, start puNES with the `-h` argum
 |     | 518 | 519 |     | 521 | 522 |     | 524 | 525 | 526 | 527 |
 | 528 | 529 | 530 |     | 532 |     | 534 |     | 536 | 537 | 538 |
 | 539 | 540 | 541 |     | 543 |     |     |     | 547 |     |     |
-| 550 |     |     |     | 554 |     | 556 | 557 | 558 | 559 | 560 |
+| 550 | 551 | 552 |     | 554 |     | 556 | 557 | 558 | 559 | 560 |
+| 561 |     |     |     |     |     |     |     |     |     |     |
 
 
 :electric_plug: Unif
 -----------
-NROM, NROM-128, NROM-256, SLROM, UOROM, CNROM, TLROM, TBROM, TKROM, TFROM, ANROM, SL1632, SC-127, SuperHIK8in1, STREETFIGTER-GAME4IN1, Supervision16in1, MARIO1-MALEE2, T3H53, D1038, NTBROM, VRC7, TEK90, BB, H2288, LH32, 22211, SA-72008, Sachen-8259D, Sachen-8259B, Sachen-8259C, Sachen-8259A, KS7032, SA-NROM, SA-72007, SA-016-1M, TC-U01-1.5M, SA-0037, SA-0036, Sachen-74LS374N, FS304, FK23C, FK23CA, Super24in1SC03, WAIXING-FS005, NovelDiamond9999999in1, JC-016-2, 8237, 8237A, N625092, WAIXING-FW01, 42in1ResetSwitch, 70in1, 70in1B, 603-5052, OneBus, DANCE, 158B, F-15, HPXX, HP2018-A, 810544-C-A1, SHERO, KOF97, YOKO, T-262, CITYFIGHT, COOLBOY, MINDKIDS, 22026, 80013-B, GS-2004, GS-2013, A65AS, DRIPGAME, BS-5, 411120-C, K-3088, 60311C, NTD-03, DRAGONFIGHTER, TF1201, 11160, 190in1, 8157, KS7057, KS7017, SMB2J, KS7031, KS7016, KS7037, TH2131-1, LH51, KS7013B, RESET-TXROM, 64in1NoRepeat, 830134C, HP898F, 830425C-4391T, K-3033, FARID_SLROM_8-IN-1, FARID_UNROM_8-IN-1, MALISB, 10-24-C-A1, RT-01, EDU2000, 12-IN-1, WS, 8-IN-1, NEWSTAR-GRM070-8IN1, CTC-09, K-3046, CTC-12IN1, SA005-A, K-3006, K-3036, TJ-03, COOLGIRL, RESETNROM-XIN1, GN-26, L6IN1, KS7012, KS7030, 830118C, G-146, 891227, KS106C, 3D-BLOCK, SB-5013, N49C-300, 830752C, BS-400R, BS-4040R, K-3010, K-3071, SA-9602B, DANCE2000, EH8813A, DREAMTECH01, LH10, 900218, KS7021A, BJ-56, AX-40G, 831128C, T-230, AX5705, CHINA_ER_SAN2, 82112C, KONAMI-QTAI, Ghostbusters63in1, 43272, AC08, CC-21, BOY
+NROM, NROM-128, NROM-256, Transformer, SLROM, UOROM, UNROM, CNROM, TLROM, TBROM, TFROM, TKROM, ANROM, AMROM, AOROM, SL1632, SC-127, CC-21, SuperHIK8in1, STREETFIGTER-GAME4IN1, A60AS, Supervision16in1, MARIO1-MALEE2, T3H53, D1038, NTBROM, SA-016-1M, VRC7, TEK90, BB, H2288, LH32, 22211, SA-72008, T4A54A, Sachen-8259D, Sachen-8259B, Sachen-8259C, Sachen-8259A, KS7032, SA-NROM, SA-72007, TC-U01-1.5M, SA-0037, SA-0036, Sachen-74LS374N, FS304, Super24in1SC03, WAIXING-FS005, FK23C, FK23CA, FC-28-5027, NovelDiamond9999999in1, JC-016-2, 8237, 8237A, N625092, Ghostbusters63in1, WAIXING-FW01, 42in1ResetSwitch, 150in1A, 212-HONG-KONG, 70in1, 70in1B, 603-5052, 43272, OneBus, DANCE, 158B, F-15, HPXX, HP2018-A, 810544-C-A1, SHERO, KOF97, YOKO, T-262, CITYFIGHT, COOLBOY, MINDKIDS, 22026, 80013-B, GS-2004, GS-2013, A65AS, DRIPGAME, BS-5, 411120-C, K-3088, GKCXIN1, 60311C, NTD-03, DRAGONFIGHTER, 13in1JY110, TF1201, 11160, 190in1, 8157, KS7057, KS7017, SMB2J, KS7031, KS7016, KS7037, TH2131-1, LH51, KS7013B, RESET-TXROM, 64in1NoRepeat, 830134C, HP898F, 830425C-4391T, K-3033, FARID_SLROM_8-IN-1, FARID_UNROM_8-IN-1, MALISB, 10-24-C-A1, RT-01, EDU2000, 12-IN-1, WS, 8-IN-1, NEWSTAR-GRM070-8IN1, CTC-09, K-3046, CTC-12IN1, SA005-A, K-3006, K-3036, TJ-03, COOLGIRL, RESETNROM-XIN1, GN-26, L6IN1, KS7012, KS7030, 830118C, G-146, 891227, KS106C, 3D-BLOCK, SB-5013, N49C-300, 820561C, M2C52A, 830752C, BS-400R, BS-4040R, K-3010, K-3071, SA-9602B, DANCE2000, EH8813A, DREAMTECH01, LH10, 900218, KS7021A, BJ-56, AX-40G, 831128C, T-230, AX5705, CHINA_ER_SAN2, 82112C, KONAMI-QTAI, AC08, S-2009
 
 :information_source: How to Compile
 -----------

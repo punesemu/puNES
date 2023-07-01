@@ -24,6 +24,7 @@
 enum { NSF_MAPPER = 0x1003 };
 
 void map_init_NSF(void);
+void extcl_after_mapper_init_NSF(void);
 BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp);
 void extcl_length_clock_NSF(void);
 void extcl_envelope_clock_NSF(void);

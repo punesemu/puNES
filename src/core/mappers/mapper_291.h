@@ -22,7 +22,6 @@
 #include "common.h"
 
 void map_init_291(void);
-void extcl_after_mapper_init_291(void);
 void extcl_cpu_wr_mem_291(WORD address, BYTE value);
 BYTE extcl_save_mapper_291(BYTE mode, BYTE slot, FILE *fp);
 

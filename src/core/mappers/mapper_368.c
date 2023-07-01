@@ -18,11 +18,11 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_368(void);
+INLINE static void wram_fix_368(void);
 
 struct _m368 {
 	BYTE reg[2];
@@ -31,9 +31,6 @@ struct _m368 {
 		WORD counter;
 	} irq;
 } m368;
-struct _m368tmp {
-	BYTE *prg_6000;
-} m368tmp;
 
 void map_init_368(void) {
 	EXTCL_AFTER_MAPPER_INIT(368);
@@ -44,13 +41,15 @@ void map_init_368(void) {
 	mapper.internal_struct[0] = (BYTE *)&m368;
 	mapper.internal_struct_size[0] = sizeof(m368);
 
-	memset(&m368, 0x00, sizeof(m368));
+	if (info.reset >= HARD) {
+		memset(&m368, 0x00, sizeof(m368));
+	}
 
 	info.mapper.extend_wr = TRUE;
-	info.mapper.ram_plus_op_controlled_by_mapper = TRUE;
 }
 void extcl_after_mapper_init_368(void) {
 	prg_fix_368();
+	wram_fix_368();
 }
 void extcl_cpu_wr_mem_368(WORD address, BYTE value) {
 		switch (address & 0xF1FF)
@@ -70,28 +69,13 @@ void extcl_cpu_wr_mem_368(WORD address, BYTE value) {
 				break;
 		}
 }
-BYTE extcl_cpu_rd_mem_368(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	switch (address & 0xF000) {
-		case 0x4000:
-			if ((address & 0x01FF) == 0x0122) {
-				return (0x8A | (m368.reg[1] & 0x35));
-			}
-			break;
-		case 0x6000:
-		case 0x7000:
-			return (m368tmp.prg_6000[address & 0x1FFF]);
-	}
-	return (openbus);
+BYTE extcl_cpu_rd_mem_368(WORD address, UNUSED(BYTE openbus)) {
+	return ((address & 0xF1FF) == 0x4122 ? 0x8A | (m368.reg[1] & 0x35) : wram_rd(address));
 }
 BYTE extcl_save_mapper_368(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m368.reg);
 	save_slot_ele(mode, slot, m368.irq.enable);
 	save_slot_ele(mode, slot, m368.irq.counter);
-
-	if (mode == SAVE_SLOT_READ) {
-		prg_fix_368();
-	}
-
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_368(void) {
@@ -104,20 +88,8 @@ void extcl_cpu_every_cycle_368(void) {
 }
 
 INLINE static void prg_fix_368(void) {
-	WORD bank;
-
-	bank = 0x02;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	m368tmp.prg_6000 = prg_pnt(bank << 13);
-
-	bank = 0x01;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, bank);
-
-	bank = 0x00;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, bank);
-
+	memmap_auto_8k(MMCPU(0x8000), 0x01);
+	memmap_auto_8k(MMCPU(0xA000), 0x00);
 	// Value  Bank#
 	// ------------
 	// 0      4
@@ -128,13 +100,9 @@ INLINE static void prg_fix_368(void) {
 	// 5      3
 	// 6      7
 	// 7      3
-	bank = m368.reg[0] & 0x01 ? 3 : 4 | ((m368.reg[0] & 0x06) >> 1);
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, bank);
-
-	bank = 0x08;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_8k(MMCPU(0xC000), (m368.reg[0] & 0x01 ? 3 : 4 | ((m368.reg[0] & 0x06) >> 1)));
+	memmap_auto_8k(MMCPU(0xE000), 0x08);
+}
+INLINE static void wram_fix_368(void) {
+	memmap_prgrom_8k(MMCPU(0x6000), 0x02);
 }

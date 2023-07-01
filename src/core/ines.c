@@ -22,7 +22,6 @@
 #include <math.h>
 #include "ines.h"
 #include "rom_mem.h"
-#include "mem_map.h"
 #include "mappers.h"
 #include "conf.h"
 #include "cheat.h"
@@ -33,20 +32,23 @@
 #include "sha1.h"
 #include "database.h"
 #include "../../c++/crc/crc.h"
+#include "nes20db.h"
 
+void calculate_checksums_from_rom(void *rom_mem);
 void search_in_database(void);
-BYTE ines10_search_in_database(void *rom_mem);
+BYTE ines10_search_in_database(void);
 
 _ines ines;
 
 BYTE ines_load_rom(void) {
+	BYTE cpu_timing = 0;
 	_rom_mem rom;
 
 	{
 		static const uTCHAR rom_ext[2][10] = { uL(".nes\0"), uL(".NES\0") };
-		unsigned int i;
+		unsigned int i = 0;
 		BYTE found = TRUE;
-		FILE *fp;
+		FILE *fp = NULL;
 
 		fp = ufopen(info.rom.file, uL("rb"));
 
@@ -78,7 +80,8 @@ BYTE ines_load_rom(void) {
 		rom.size = ftell(fp);
 		fseek(fp, 0L, SEEK_SET);
 
-		if ((rom.data = (BYTE *)malloc(rom.size)) == NULL) {
+		rom.data = (BYTE *)malloc(rom.size);
+		if (rom.data == NULL) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
@@ -104,12 +107,15 @@ BYTE ines_load_rom(void) {
 		(rom.data[rom.position++] == 'E') &&
 		(rom.data[rom.position++] == 'S') &&
 		(rom.data[rom.position++] == '\32')) {
-		BYTE cpu_timing;
 
-		info.prg.rom.banks_16k = rom.data[rom.position++];
-		info.chr.rom.banks_8k = rom.data[rom.position++];
+		info.mapper.prgrom_banks_16k = rom.data[rom.position++];
+		info.mapper.chrrom_banks_8k = rom.data[rom.position++];
 
-		info.chr.ram.banks_8k_plus = 0;
+		wram_set_ram_size(0);
+		wram_set_nvram_size(0);
+
+		vram_set_ram_size(0);
+		vram_set_nvram_size(0);
 
 		if (rom_mem_ctrl_memcpy(&ines.flags[0], &rom, TOTAL_FL) == EXIT_ERROR) {
 			free(rom.data);
@@ -122,28 +128,38 @@ BYTE ines_load_rom(void) {
 
 			// visto che con il NES_2_0 non eseguo la ricerca nel
 			// database inizializzo queste variabili.
-			info.mirroring_db = info.id = DEFAULT;
+			info.mirroring_db = DEFAULT;
 			info.extra_from_db = 0;
 
 			info.mapper.id = ((ines.flags[FL8] & 0x0F) << 8) | (ines.flags[FL7] & 0xF0) | (ines.flags[FL6] >> 4);
 			info.mapper.submapper_nes20 = (ines.flags[FL8] & 0xF0) >> 4;
 			info.mapper.submapper = info.mapper.submapper_nes20;
 
-			// Submapper number. Mappers not using submappers set this to zero.
-			if (info.mapper.submapper == 0) {
-				info.mapper.submapper = DEFAULT;
+			// PRGROM
+			info.mapper.prgrom_banks_16k |= ((ines.flags[FL9] & 0x0F) << 8);
+			nes20_prg_chr_size(&info.mapper.prgrom_banks_16k, S16K);
+
+			// CHROM
+			info.mapper.chrrom_banks_8k |= ((ines.flags[FL9] & 0xF0) << 4);
+			nes20_prg_chr_size(&info.mapper.chrrom_banks_8k, S8K);
+
+			// WRAM
+			if (ines.flags[FL10] & 0x0F) {
+				wram_set_ram_size(64 << (ines.flags[FL10] & 0x0F));
+			}
+			if (ines.flags[FL10] & 0xF0) {
+				wram_set_nvram_size(64 << ((ines.flags[FL10] & 0xF0) >> 4));
 			}
 
-			info.prg.rom.banks_16k |= ((ines.flags[FL9] & 0x0F) << 8);
-			nes20_prg_chr_size(&info.prg.rom.banks_16k, &info.prg.rom.banks_8k, 0x2000);
+			// VRAM
+			if (ines.flags[FL11] & 0x0F) {
+				vram_set_ram_size(64 << (ines.flags[FL11] & 0x0F));
+			}
+			if (ines.flags[FL11] & 0xF0) {
+				vram_set_nvram_size(64 << ((ines.flags[FL11] & 0xF0) >> 4));
+			}
 
-			info.chr.rom.banks_8k |= ((ines.flags[FL9] & 0xF0) << 4);
-			nes20_prg_chr_size(&info.chr.rom.banks_8k, &info.chr.rom.banks_4k, 0x1000);
-
-			info.prg.ram.banks_8k_plus = nes20_ram_size(ines.flags[FL10] & 0x0F);
-			info.prg.ram.bat.banks = nes20_ram_size(ines.flags[FL10] >> 4);
-
-			info.chr.ram.banks_8k_plus = nes20_ram_size(ines.flags[FL11] & 0x0F);
+			info.mapper.battery = (ines.flags[FL6] & 0x02) >> 1;
 
 			cpu_timing = ines.flags[FL12] & 0x03;
 
@@ -175,7 +191,7 @@ BYTE ines_load_rom(void) {
 				}
 			}
 
-			info.mapper.misc_roms = ines.flags[FL14] & 0x03;
+			miscrom.chips = ines.flags[FL14] & 0x03;
 		} else {
 			// iNES 1.0
 			info.format = iNES_1_0;
@@ -193,11 +209,27 @@ BYTE ines_load_rom(void) {
 				cpu_timing = ines.flags[FL9] & 0x01;
 			}
 
-			info.prg.ram.bat.banks = (ines.flags[FL6] & 0x02) >> 1;
+			info.mapper.submapper = 0;
+			info.mapper.battery = (ines.flags[FL6] & 0x02) >> 1;
+
+			wram_set_ram_size(S8K);
+			vram_set_ram_size(S8K);
+
+			vs_system.ppu = vs_system.special_mode.type = 0;
+			vs_system.special_mode.type = 0;
+			info.decimal_mode = FALSE;
 		}
 
-		if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
-			info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
+		miscrom.trainer.in_use = ines.flags[FL6] & 0x04;
+
+		if (ines.flags[FL6] & 0x08) {
+			info.mapper.mirroring = MIRRORING_FOURSCR;
+		} else {
+			if (ines.flags[FL6] & 0x01) {
+				info.mapper.mirroring = MIRRORING_VERTICAL;
+			} else {
+				info.mapper.mirroring = MIRRORING_HORIZONTAL;
+			}
 		}
 
 		switch (cpu_timing) {
@@ -214,192 +246,159 @@ BYTE ines_load_rom(void) {
 				break;
 		}
 
-		info.mapper.trainer = ines.flags[FL6] & 0x04;
-
-		if (ines.flags[FL6] & 0x08) {
-			mirroring_FSCR();
-		} else {
-			if (ines.flags[FL6] & 0x01) {
-				mirroring_V();
-			} else {
-				mirroring_H();
-			}
-		}
-		info.mapper.mirroring = mapper.mirroring;
+		emu_save_header_info();
+		calculate_checksums_from_rom(&rom);
 
 		// inizializzo qui il writeVRAM per la mapper 96 perche'
 		// e' l'unica mapper che utilizza 32k di CHR Ram e che
 		// si permette anche il lusso di swappare. Quindi imposto
 		// a FALSE qui in modo da poter cambiare impostazione nel
 		// ines10_search_in_database().
-		mapper.write_vram = FALSE;
+		//mapper.write_vram = FALSE;
 
-		if ((info.format != NES_2_0) && ines10_search_in_database(&rom)) {
-			free(rom.data);
-			return (EXIT_ERROR);
+		if (info.format != NES_2_0)  {
+			if (ines10_search_in_database()) {
+				free(rom.data);
+				return (EXIT_ERROR);
+			}
+			calculate_checksums_from_rom(&rom);
 		}
+
+		nes20db_search();
+
+		ram_set_size(S2K);
+		ram_init();
+
+		nmt_set_size(S4K);
+		nmt_init();
 
 		// gestione Vs. System
-		if ((info.mapper.id != 99) && !vs_system.ppu && !vs_system.special_mode.type) {
-			vs_system.enabled = FALSE;
-			vs_system.special_mode.r5e0x = NULL;
-			vs_system.special_mode.index = 0;
-			vs_system.rc2c05.enabled = FALSE;
-		} else {
-			vs_system.enabled = TRUE;
+//		if ((info.mapper.id != 99) && !vs_system.ppu && !vs_system.special_mode.type) {
+//			vs_system.enabled = FALSE;
+//			vs_system.special_mode.r5e0x = NULL;
+//			vs_system.special_mode.index = 0;
+//			vs_system.rc2c05.enabled = FALSE;
+//		} else {
+//			vs_system.enabled = TRUE;
+//
+//			switch (vs_system.ppu) {
+//				case RP2C03B:
+//				case RP2C03G:
+//				case RP2C04:
+//				case RP2C04_0002:
+//				case RP2C04_0003:
+//				case RP2C04_0004:
+//				case RC2C03B:
+//				case RC2C03C:
+//				default:
+//					vs_system.rc2c05.enabled = FALSE;
+//					vs_system.rc2c05.r2002 = 0x00;
+//					break;
+//				case RC2C05_01:
+//					vs_system.rc2c05.enabled = TRUE;
+//					vs_system.rc2c05.r2002 = 0x1B;
+//					break;
+//				case RC2C05_02:
+//					vs_system.rc2c05.enabled = TRUE;
+//					vs_system.rc2c05.r2002 = 0x3D;
+//					break;
+//				case RC2C05_03:
+//					vs_system.rc2c05.enabled = TRUE;
+//					vs_system.rc2c05.r2002 = 0x1C;
+//					break;
+//				case RC2C05_04:
+//					vs_system.rc2c05.enabled = TRUE;
+//					vs_system.rc2c05.r2002 = 0x1B;
+//					break;
+//				case RC2C05_05:
+//					vs_system.rc2c05.enabled = TRUE;
+//					vs_system.rc2c05.r2002 = 0x00;
+//					break;
+//			}
+//
+//			switch (vs_system.special_mode.type) {
+//				case VS_SM_Normal:
+//				default:
+//					vs_system.special_mode.r5e0x = NULL;
+//					break;
+//				case VS_SM_RBI_Baseball:
+//					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[1][0];
+//					break;
+//				case VS_SM_TKO_Boxing:
+//					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[0][0];
+//					break;
+//				case VS_SM_Super_Xevious:
+//					vs_system.special_mode.r5e0x = NULL;
+//					break;
+//			}
+//
+//			vs_system.special_mode.index = 0;
+//
+//			if (wram_size() < 0x800) {
+//				wram_set_ram_size(0x800);
+//			}
+//		}
 
-			switch (vs_system.ppu) {
-				case RP2C03B:
-				case RP2C03G:
-				case RP2C04:
-				case RP2C04_0002:
-				case RP2C04_0003:
-				case RP2C04_0004:
-				case RC2C03B:
-				case RC2C03C:
-				default:
-					vs_system.rc2c05.enabled = FALSE;
-					vs_system.rc2c05.r2002 = 0x00;
-					break;
-				case RC2C05_01:
-					vs_system.rc2c05.enabled = TRUE;
-					vs_system.rc2c05.r2002 = 0x1B;
-					break;
-				case RC2C05_02:
-					vs_system.rc2c05.enabled = TRUE;
-					vs_system.rc2c05.r2002 = 0x3D;
-					break;
-				case RC2C05_03:
-					vs_system.rc2c05.enabled = TRUE;
-					vs_system.rc2c05.r2002 = 0x1C;
-					break;
-				case RC2C05_04:
-					vs_system.rc2c05.enabled = TRUE;
-					vs_system.rc2c05.r2002 = 0x1B;
-					break;
-				case RC2C05_05:
-					vs_system.rc2c05.enabled = TRUE;
-					vs_system.rc2c05.r2002 = 0x00;
-					break;
-			}
-
-			switch (vs_system.special_mode.type) {
-				case VS_SM_Normal:
-				default:
-					vs_system.special_mode.r5e0x = NULL;
-					break;
-				case VS_SM_RBI_Baseball:
-					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[1][0];
-					break;
-				case VS_SM_TKO_Boxing:
-					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[0][0];
-					break;
-				case VS_SM_Super_Xevious:
-					vs_system.special_mode.r5e0x = NULL;
-					break;
-			}
-			vs_system.special_mode.index = 0;
-		}
-
-		if (info.mapper.trainer) {
-			if (rom_mem_ctrl_memcpy(&mapper.trainer, &rom, sizeof(mapper.trainer)) == EXIT_ERROR) {
+		if (miscrom.trainer.in_use) {
+			miscrom.chips = 0;
+			miscrom_set_size(512);
+			if ((miscrom_init() == EXIT_ERROR) ||
+				(rom_mem_ctrl_memcpy(miscrom_pnt(), &rom, miscrom_size()) == EXIT_ERROR)) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
-		} else {
-			memset(&mapper.trainer, 0x00, sizeof(mapper.trainer));
 		}
 
-		if (!info.chr.rom.banks_8k) {
-			mapper.write_vram = TRUE;
-			if (info.format == NES_2_0) {
-				info.chr.rom.banks_8k = nes20_ram_size(ines.flags[FL11] & 0x0F);
-				info.chr.ram.banks_8k_plus = 0;
-			}
-		}
-
-		info.prg.rom.banks_8k = !info.prg.rom.banks_16k ? 1 : info.prg.rom.banks_16k * 2;
-		info.prg.chips = info.chr.chips = 0;
-		map_set_banks_max_prg();
-
-		// alloco la PRG Ram
-		if (map_prg_ram_malloc(0x2000) != EXIT_OK) {
-			free(rom.data);
-			return (EXIT_ERROR);
-		}
+		info.mapper.prgrom_banks_16k = !info.mapper.prgrom_banks_16k ? 1 : info.mapper.prgrom_banks_16k;
 
 		// alloco e carico la PRG Rom
-		if (map_prg_malloc(info.prg.rom.banks_8k * 0x2000, 0x00, TRUE) == EXIT_ERROR) {
+		prgrom_set_size(info.mapper.prgrom_banks_16k * S16K);
+
+		if (prgrom_init(0x00) == EXIT_ERROR) {
 			free(rom.data);
 			return (EXIT_ERROR);
 		}
 
-		if (rom_mem_ctrl_memcpy(prg_rom(), &rom, prg_size()) == EXIT_ERROR) {
-			free(rom.data);
-			return (EXIT_ERROR);
+		if (rom_mem_ctrl_memcpy_truncated(prgrom_pnt(), &rom, prgrom_size()) == EXIT_ERROR) {
+			info.prg_truncated = TRUE;
 		}
 
-		if (info.format == NES_2_0) {
-			sha1_csum(prg_rom(), prg_size(), info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
-		}
+		// alloco e carico la CHR Rom
+		chrrom_set_size(info.mapper.chrrom_banks_8k * S8K);
 
-		// se e' settato mapper.write_vram, vuol dire
-		// che la rom non ha CHR Rom e che quindi la CHR Ram
-		// la trattero' nell'inizializzazione della mapper
-		// (perche' alcune mapper ne hanno 16k, altre 8k).
-		if (!mapper.write_vram) {
-			// alloco la CHR Rom
-			if (map_chr_malloc(info.chr.rom.banks_8k * 0x2000, 0x00, TRUE) == EXIT_ERROR) {
+		if (chrrom_size()) {
+			if (chrrom_init() == EXIT_ERROR) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
-
-			if (rom_mem_ctrl_memcpy(chr_rom(), &rom, chr_size()) == EXIT_ERROR) {
-				free(rom.data);
-				return (EXIT_ERROR);
-			}
-
-			info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
-			info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
-			map_set_banks_max_chr();
-			map_chr_bank_1k_reset();
-
-			if (info.format == NES_2_0) {
-				sha1_csum(chr_rom(), chr_size(), info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
+			if (rom_mem_ctrl_memcpy_truncated(chrrom_pnt(), &rom, chrrom_size()) == EXIT_ERROR) {
+				info.chr_truncated = TRUE;
 			}
 		}
 
-		if (info.mapper.misc_roms) {
-			if (map_misc_malloc(rom.size - rom.position, 0x00) == EXIT_ERROR) {
+		if (!miscrom.trainer.in_use && !miscrom.chips && ((rom.size - rom.position) > 0)) {
+			miscrom.chips = 1;
+		}
+		if (miscrom.chips) {
+			miscrom_set_size(rom.size - rom.position);
+			if (miscrom_init() == EXIT_ERROR) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
-
-			if (rom_mem_ctrl_memcpy(mapper.misc_roms.data, &rom, mapper.misc_roms.size) == EXIT_ERROR) {
-				free(rom.data);
-				return (EXIT_ERROR);
+			if (rom_mem_ctrl_memcpy_truncated(miscrom_pnt(), &rom, miscrom_size()) == EXIT_ERROR) {
+				info.misc_truncated = TRUE;
 			}
 		}
 
-		// la CHR ram extra
-		memset(&chr.extra, 0x00, sizeof(chr.extra));
-
-		if (info.format == NES_2_0) {
-			nes20_submapper();
+		if (!wram_size() && info.mapper.battery) {
+			wram_set_nvram_size(S8K);
 		}
-
-		{
-			info.crc32.prg = info.crc32.total = emu_crc32((void *)prg_rom(), prg_size());
-			info.crc32.total = info.crc32.prg;
-
-			if (!mapper.write_vram && chr_size()) {
-				info.crc32.chr = emu_crc32((void *)chr_rom(), chr_size());
-				info.crc32.total = emu_crc32_continue((void *)chr_rom(), chr_size(), info.crc32.total);
-			}
-			if (mapper.misc_roms.size) {
-				info.crc32.misc = emu_crc32((void *)mapper.misc_roms.data, mapper.misc_roms.size);
-				info.crc32.total = emu_crc32_continue((void *)mapper.misc_roms.data, mapper.misc_roms.size, info.crc32.total);
-			}
+		if (info.mapper.battery && !wram_nvram_size()) {
+			wram_set_nvram_size(wram_ram_size());
+			wram_set_ram_size(0);
+		}
+		if (!chrrom_size() && !vram_size()) {
+			vram_set_ram_size(S8K);
 		}
 
 		free(rom.data);
@@ -413,287 +412,32 @@ BYTE ines_load_rom(void) {
 	return (EXIT_ERROR);
 }
 
-void nes20_submapper(void) {
-	switch (info.mapper.id) {
-		case 2:
-			switch (info.mapper.submapper) {
-				case 0:
-				case 1:
-					info.mapper.submapper = UXROMNBC;
-					break;
-				case 2:
-					info.mapper.submapper = UXROM;
-					break;
-			}
-			break;
-		case 3:
-			switch (info.mapper.submapper) {
-				case 0:
-				case 1:
-					info.mapper.submapper = DEFAULT;
-					break;
-				case 2:
-					info.mapper.submapper = CNROM_CNFL;
-					break;
-			}
-			break;
-		case 4:
-			if (info.mapper.submapper == 1) {
-				info.mapper.submapper = MMC6;
-			}
-			break;
-		case 7:
-			switch (info.mapper.submapper) {
-				case 0:
-				case 1:
-					info.mapper.submapper = DEFAULT;
-					break;
-				case 2:
-					info.mapper.submapper = AMROM;
-					break;
-			}
-			break;
-		case 21:
-			switch (info.mapper.submapper) {
-				case 1:
-					info.mapper.submapper = VRC4A;
-					break;
-				case 2:
-					info.mapper.submapper = VRC4C;
-					break;
-			}
-			break;
-		case 23:
-			switch (info.mapper.submapper) {
-				case 0:
-				case 3:
-					info.mapper.submapper = VRC2B;
-					break;
-				case 1:
-					info.mapper.submapper = VRC4UNL;
-					break;
-				case 2:
-					info.mapper.submapper = VRC4E;
-					break;
-			}
-			break;
-		case 78:
-			switch (info.mapper.submapper) {
-				case 3:
-					info.mapper.submapper = HOLYDIVER;
-					break;
-			}
-			break;
-		case 85:
-			switch (info.mapper.submapper) {
-				case 1:
-					info.mapper.submapper = VRC7B;
-					break;
-				case 2:
-					info.mapper.submapper = VRC7A;
-					break;
-			}
-			break;
-		case 176:
-			switch (info.mapper.submapper) {
-				case 0:
-					info.mapper.submapper = LP8002KB;
-					break;
-				default:
-				case 1:
-					info.mapper.submapper = BMCFK23C;
-					break;
-				case 2:
-					info.mapper.submapper = FS005;
-					break;
-				case 3:
-					info.mapper.submapper = JX9003B;
-					break;
-				case 4:
-					info.mapper.submapper = HST162;
-					break;
-			}
-			break;
-		case 210:
-			search_in_database();
-			break;
-		case 268:
-			switch (info.mapper.submapper) {
-				case 0:
-					info.mapper.submapper = COOLBOY;
-					break;
-				case 1:
-					info.mapper.submapper = MINDKIDS;
-					break;
-			}
-			break;
-		default:
-			break;
-	}
-}
-void nes20_prg_chr_size(DBWORD *reg1, DBWORD *reg2, double divider) {
-	if (((*reg1) & 0x0F00) == 0x0F00) {
-		unsigned int exponent = ((*reg1) & 0x00FC) >> 2;
-		double len = pow(2, exponent) * ((((*reg1) & 0x0003) * 2) + 1);
+void nes20_prg_chr_size(DBWORD *reg, double divider) {
+	if (((*reg) & 0x0F00) == 0x0F00) {
+		unsigned int exponent = ((*reg) & 0x00FC) >> 2;
+		double len = pow(2, exponent) * ((((*reg) & 0x0003) * 2) + 1);
 
-		(*reg2) = (int)ceil(len / divider);
-		(*reg1) = (*reg2) / 2;
+		(*reg) = (int)ceil(len / divider);
 	}
-}
-BYTE nes20_ram_size(BYTE mode) {
-	switch (mode) {
-		case 0:
-			return (0);
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-		case 7:
-			return (1);
-		case 8:
-			return (2);
-		case 9:
-			return (4);
-		case 10:
-			return (8);
-		case 11:
-			return (16);
-		case 12:
-			return (32);
-		case 13:
-			return (64);
-		case 14:
-			return (128);
-		case 15:
-			return (0);
-		default:
-			break;
-	}
-	return (0);
 }
 
-void search_in_database(void) {
-	unsigned int i;
-
-	// cerco nel database
-	for (i = 0; i < LENGTH(dblist); i++) {
-		if (!(memcmp(dblist[i].sha1sum, info.sha1sum.prg.string, 40))) {
-			info.mapper.id = dblist[i].mapper;
-			info.mapper.submapper = dblist[i].submapper;
-			info.id = dblist[i].id;
-			info.machine[DATABASE] = dblist[i].machine;
-			info.mirroring_db = dblist[i].mirroring;
-			vs_system.ppu = dblist[i].vs_ppu;
-			vs_system.special_mode.type = dblist[i].vs_sm;
-			info.default_dipswitches = dblist[i].dipswitches;
-			info.extra_from_db = dblist[i].extra;
-			switch (info.mapper.id) {
-				case 1:
-					// Fix per Famicom Wars (J) [!] che ha l'header INES errato
-					if (info.id == BAD_YOSHI_U) {
-						info.chr.rom.banks_8k = 4;
-					} else if (info.id == MOWPC10) {
-						info.chr.rom.banks_8k = 0;
-					}
-					break;
-				case 2:
-					// Fix per "Best of the Best - Championship Karate (E) [!].nes"
-					// che ha l'header INES non corretto.
-					if (info.id == BAD_INES_BOTBE) {
-						info.prg.rom.banks_16k = 16;
-						info.chr.rom.banks_8k = 0;
-					}
-					break;
-				case 3:
-					// Fix per "Tetris (Bulletproof) (Japan).nes"
-					// che ha l'header INES non corretto.
-					if (info.id == BAD_INES_TETRIS_BPS) {
-						info.prg.rom.banks_16k = 2;
-						info.chr.rom.banks_8k = 2;
-					}
-					break;
-				case 7:
-					// Fix per "WWF Wrestlemania (E) [!].nes"
-					// che ha l'header INES non corretto.
-					if (info.id == BAD_INES_WWFWE) {
-						info.prg.rom.banks_16k = 8;
-						info.chr.rom.banks_8k = 0;
-					} else if (info.id == CSPC10) {
-						info.chr.rom.banks_8k = 0;
-					}
-					break;
-				case 10:
-					// Fix per Famicom Wars (J) [!] che ha l'header INES errato
-					if (info.id == BAD_INES_FWJ) {
-						info.chr.rom.banks_8k = 8;
-					}
-					break;
-				case 11:
-					// Fix per King Neptune's Adventure (Color Dreams) [!]
-					// che ha l'header INES errato
-					if (info.id == BAD_KING_NEPT) {
-						info.prg.rom.banks_16k = 4;
-						info.chr.rom.banks_8k = 4;
-					}
-					break;
-				case 33:
-					if (info.id == BAD_INES_FLINJ) {
-						info.chr.rom.banks_8k = 32;
-					}
-					break;
-				case 63:
-					if (info.id == M63_ID_82IN1O1) {
-						info.prg.rom.banks_16k = 256;
-					}
-					break;
-				case 113:
-					if (info.id == BAD_INES_SWAUS) {
-						info.prg.rom.banks_16k = 1;
-						info.chr.rom.banks_8k = 2;
-					}
-					break;
-				case 191:
-					if (info.id == BAD_SUGOROQUEST) {
-						info.chr.rom.banks_8k = 16;
-					}
-					break;
-				case 235:
-					if (!info.prg.rom.banks_16k) {
-						info.prg.rom.banks_16k = 256;
-					}
-					break;
-				case UNIF_MAPPER:
-					unif.internal_mapper = info.mapper.submapper;
-					break;
-				default:
-					break;
-			}
-			if (info.mirroring_db == UNK_VERTICAL) {
-				mirroring_V();
-			}
-			if (info.mirroring_db == UNK_HORIZONTAL) {
-				mirroring_H();
-			}
-			break;
-		}
-	}
-}
-BYTE ines10_search_in_database(void *rom_mem) {
+void calculate_checksums_from_rom(void *rom_mem) {
 	_rom_mem *rom = (_rom_mem *)rom_mem;
-	size_t position;
+	size_t position = 0x10, len = 0;
+	size_t difference = 0;
 
-	// setto i default prima della ricerca
-	info.machine[DATABASE] = info.mapper.submapper = info.mirroring_db = info.id = DEFAULT;
-	info.extra_from_db = 0;
-	vs_system.ppu = vs_system.special_mode.type = DEFAULT;
+	info.crc32.prg = 0;
+	info.crc32.chr = 0;
+	info.crc32.trainer = 0;
+	info.crc32.misc = 0;
+	info.crc32.total = 0;
 
 	// punto oltre l'header
-	if (info.mapper.trainer) {
-		position = (0x10 + sizeof(mapper.trainer));
-	} else {
-		position = 0x10;
+	if (miscrom.trainer.in_use) {
+		len = 512;
+		info.crc32.trainer = emu_crc32((void *)(rom->data + position), len);
+		info.crc32.total = info.crc32.trainer;
+		position += len;
 	}
 
 	// mapper 235
@@ -703,33 +447,97 @@ BYTE ines10_search_in_database(void *rom_mem) {
 	// presente 0.
 	// 150-in-1 [a1][p1][!].nes ha lo stesso chsum del 260-in-1 [p1][b1].nes
 	// ma ha un numero di prg_rom_16k_count di 127.
-	if (!info.prg.rom.banks_16k && (info.mapper.id == 235)) {
-		info.prg.rom.banks_16k = 256;
+	if (!info.mapper.prgrom_banks_16k && (info.mapper.id == 235)) {
+		info.mapper.prgrom_banks_16k = 256;
 	}
 
 	{
-		size_t len = !info.prg.rom.banks_16k ? 0x2000 : info.prg.rom.banks_16k * 0x4000;
-
+		len = !info.mapper.prgrom_banks_16k ? S8K : (size_t)info.mapper.prgrom_banks_16k * S16K;
+		difference = !info.mapper.prgrom_banks_16k ? S8K : 0;
 		if ((position + len) > rom->size) {
-			info.prg.rom.banks_16k = (rom->size - position) / 0x4000;
-			len = !info.prg.rom.banks_16k ? 0x2000 : info.prg.rom.banks_16k * 0x4000;
-			log_error(uL("ines 1.0;truncated PRG ROM"));
-		}
+			DBWORD banks = ((rom->size - position) / S16K) + ((rom->size - position) % S16K ? 1: 0);
 
-		// calcolo l'sha1 della PRG Rom
-		sha1_csum(rom->data + position, (int)len, info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
-		position += (info.prg.rom.banks_16k * 0x4000);
+			info.mapper.prgrom_banks_16k = banks <= 1 ? banks : emu_power_of_two(banks);
+			len = rom->size - position;
+			difference = len < S16K ? 0 : ((size_t)info.mapper.prgrom_banks_16k * S16K) - len;
+		}
+		// calcolo l'sha1 e il crc32 della PRG Rom
+		sha1_csum(&rom->data[position], (int)len, info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
+		info.crc32.prg = emu_crc32((void *)&rom->data[position], len);
+		info.crc32.prg = emu_crc32_zeroes(difference, info.crc32.prg);
+		info.crc32.total = emu_crc32_continue((void *)&rom->data[position], len, info.crc32.total);
+		position += len;
 	}
 
-	if (info.chr.rom.banks_8k) {
-		if ((position + (info.chr.rom.banks_8k * 0x2000)) > rom->size) {
-			info.chr.rom.banks_8k = (rom->size - position) / 0x2000;
-			log_error(uL("ines 1.0;truncated CHR ROM"));
+	if (info.mapper.chrrom_banks_8k) {
+		len = (size_t)info.mapper.chrrom_banks_8k * S8K;
+		difference = 0;
+		if ((position + len) > rom->size) {
+			DBWORD banks = ((rom->size - position) / S8K) + ((rom->size - position) % S8K ? 1: 0) ;
+
+			info.mapper.chrrom_banks_8k = banks <= 1 ? banks : emu_power_of_two(banks);
+			len = rom->size - position;
+			difference = len < S8K ? 0 : ((size_t)info.mapper.prgrom_banks_16k * S16K) - len;
 		}
-		// calcolo anche l'sha1 della CHR rom
-		sha1_csum(rom->data + position, (int)(info.chr.rom.banks_8k * 0x2000), info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
-		position += (info.chr.rom.banks_8k * 0x2000);
+		// calcolo anche l'sha1 e il crc32 della CHR rom
+		sha1_csum(&rom->data[position], (int)len, info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
+		info.crc32.chr = emu_crc32((void *)&rom->data[position], len);
+		info.crc32.chr = emu_crc32_zeroes(difference, info.crc32.chr);
+		info.crc32.total = emu_crc32_continue((void *)&rom->data[position], len, info.crc32.total);
+		position += len;
 	}
+
+	if (position < rom->size) {
+		len = rom->size - position;
+		info.crc32.misc = emu_crc32((void *)(void *)&rom->data[position], len);
+		info.crc32.total = emu_crc32_continue((void *)&rom->data[position], len, info.crc32.total);
+		position += len;
+	}
+}
+void search_in_database(void) {
+	unsigned int i = 0;
+
+	// Nesticle MMC3
+	if ((info.mapper.id == 4) && miscrom.trainer.in_use) {
+		info.mapper.id = 100;
+	}
+
+	// cerco nel database
+	for (i = 0; i < LENGTH(dblist); i++) {
+		if (!(memcmp(dblist[i].sha1sum, info.sha1sum.prg.string, 40))) {
+			info.mapper.id = dblist[i].mapper;
+			info.mapper.submapper = dblist[i].submapper == DEFAULT ? 0 : dblist[i].submapper;
+			info.machine[DATABASE] = dblist[i].machine;
+			info.mirroring_db = dblist[i].mirroring;
+			vs_system.ppu = dblist[i].vs_ppu;
+			vs_system.special_mode.type = dblist[i].vs_sm;
+			info.default_dipswitches = dblist[i].dipswitches;
+			info.extra_from_db = dblist[i].extra;
+			switch (info.mapper.id) {
+				case 235:
+					if (!info.mapper.prgrom_banks_16k) {
+						info.mapper.prgrom_banks_16k = 256;
+					}
+					break;
+				default:
+					break;
+			}
+			if (info.mirroring_db == UNK_VERTICAL) {
+				info.mapper.mirroring = MIRRORING_VERTICAL;
+			}
+			if (info.mirroring_db == UNK_HORIZONTAL) {
+				info.mapper.mirroring = MIRRORING_HORIZONTAL;
+			}
+			break;
+		}
+	}
+}
+BYTE ines10_search_in_database(void) {
+	// setto i default prima della ricerca
+	info.machine[DATABASE] = info.mirroring_db = DEFAULT;
+	info.mapper.submapper = 0;
+	info.extra_from_db = 0;
+	vs_system.ppu = vs_system.special_mode.type = DEFAULT;
 
 	// cerco nel database
 	search_in_database();

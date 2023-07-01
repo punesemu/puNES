@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "ines.h"
 #include "save_slot.h"
 
@@ -39,7 +38,6 @@ void map_init_400(void) {
 	mapper.internal_struct_size[0] = sizeof(m400);
 
 	memset(&m400, 0x00, sizeof(m400));
-
 	m400.reg[0] = 0x80;
 
 	info.mapper.extend_wr = TRUE;
@@ -67,7 +65,7 @@ void extcl_cpu_wr_mem_400(WORD address, BYTE value) {
 		case 0xE000:
 		case 0xF000:
 			// bus conflict
-			m400.reg[1] = value & prg_rom_rd(address);
+			m400.reg[1] = value & prgrom_rd(address);
 			break;
 		default:
 			return;
@@ -84,31 +82,11 @@ BYTE extcl_save_mapper_400(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_400(void) {
-	WORD bank;
-
-	bank = (m400.reg[0] & 0xF8) | (m400.reg[1] & 0x07);
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-
-	bank = (m400.reg[0] & 0xF8) | 0x07;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_16k(MMCPU(0x8000), ((m400.reg[0] & 0xF8) | (m400.reg[1] & 0x07)));
+	memmap_auto_16k(MMCPU(0xC000), ((m400.reg[0] & 0xF8) | 0x07));
 }
 INLINE static void chr_fix_400(void) {
-	DBWORD bank = m400.reg[1] >> 5;
-
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	memmap_auto_8k(MMPPU(0x0000), (m400.reg[1] >> 5));
 }
 INLINE static void mirroring_fix_400(void) {
 	if (m400.reg[0] == 0x80) {

@@ -21,9 +21,6 @@
 #include "common.h"
 #include "input.h"
 
-#define nsf_prg_rom_rd(address) nsf.prg.rom_4k[(address >> 12) & 0x07][address & 0x0FFF]
-#define nsf_prg_rom_rd_6xxx(address) nsf.prg.rom_4k_6xxx[(address >> 12) & 0x01][address & 0x0FFF]
-
 enum nsf_mode {
 	NSF_NTSC_MODE,
 	NSF_PAL_MODE,
@@ -163,11 +160,6 @@ typedef struct _nsf {
 		BYTE namco163;
 		BYTE sunsoft5b;
 	} sound_chips;
-	struct _nsf_prg {
-		WORD banks_4k;
-		BYTE *rom_4k[8];
-		BYTE *rom_4k_6xxx[2];
-	} prg;
 	struct _nsf_routine {
 		BYTE prg[17];
 		BYTE INT_NMI;

@@ -18,9 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
-#include "cpu.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_437(void);
@@ -53,7 +50,8 @@ void extcl_cpu_wr_mem_437(WORD address, BYTE value) {
 		prg_fix_437();
 		mirroring_fix_437();
 	} else if (address >= 0x8000) {
-		m437.reg[1] = value;
+		// bus conflict
+		m437.reg[1] = value & prgrom_rd(address);
 		prg_fix_437();
 	}
 }
@@ -64,21 +62,13 @@ BYTE extcl_save_mapper_437(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_437(void) {
-	WORD base = (m437.reg[0] & 0x07) << 3;
-	WORD bank;
+	WORD base = (m437.reg[0] & 0x0F) << 3;
 
-	bank = base | (m437.reg[1] & 0x07);
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-
-	bank = base | 0x07;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_16k(MMCPU(0x8000), (base | (m437.reg[1] & 0x07)));
+	memmap_auto_16k(MMCPU(0xC000), (base | 0x07));
 }
 INLINE static void mirroring_fix_437(void) {
-	if (m437.reg[0] & 0x0008) {
+	if (m437.reg[0] & 0x08) {
 		mirroring_H();
 	} else {
 		mirroring_V();

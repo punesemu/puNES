@@ -18,13 +18,12 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
-#include "info.h"
 #include "cpu.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_413(void);
+INLINE static void wram_fix_413(void);
 INLINE static void chr_fix_413(void);
 
 struct _m413 {
@@ -34,11 +33,6 @@ struct _m413 {
 		uint32_t address;
 	} serial;
 } m413;
-struct _m413tmp {
-	BYTE *prg_5000;
-	BYTE *prg_6000;
-	BYTE *prg_D000;
-} m413tmp;
 
 void map_init_413(void) {
 	EXTCL_AFTER_MAPPER_INIT(413);
@@ -56,8 +50,12 @@ void map_init_413(void) {
 	mapper.internal_struct[1] = (BYTE *)&irqA12;
 	mapper.internal_struct_size[1] = sizeof(irqA12);
 
-	memset(&m413, 0x00, sizeof(m413));
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memmap_prg_region_init(S4K);
+	}
+
 	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&m413, 0x00, sizeof(m413));
 
 	info.mapper.extend_rd = TRUE;
 
@@ -65,6 +63,7 @@ void map_init_413(void) {
 }
 void extcl_after_mapper_init_413(void) {
 	prg_fix_413();
+	wram_fix_413();
 	chr_fix_413();
 }
 void extcl_cpu_wr_mem_413(WORD address, BYTE value) {
@@ -92,43 +91,29 @@ void extcl_cpu_wr_mem_413(WORD address, BYTE value) {
 		case 0xF000:
 			m413.reg[value >> 6] = value & 0x3F;
 			prg_fix_413();
+			wram_fix_413();
 			chr_fix_413();
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_413(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_413(WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF800) {
-		case 0x5000:
-		case 0x5800:
-			return (m413tmp.prg_5000[address & 0x0FFF]);
-		case 0x6000:
-		case 0x6800:
-		case 0x7000:
-		case 0x7800:
-			return (m413tmp.prg_6000[address & 0x1FFF]);
 		case 0x4800:
 		case 0xC000:
 		case 0xC800:
 			if (m413.serial.control & 0x02) {
-				return (mapper.misc_roms.data[m413.serial.address++ & (mapper.misc_roms.size - 1)]);
+				return (miscrom_byte(m413.serial.address++ & (miscrom_size() - 1)));
 			} else {
-				return (mapper.misc_roms.data[m413.serial.address & (mapper.misc_roms.size - 1)]);
+				return (miscrom_byte(m413.serial.address & (miscrom_size() - 1)));
 			}
-		case 0xD000:
-		case 0xD800:
-			return (m413tmp.prg_D000[address & 0x0FFF]);
+		default:
+			return (address >= 0x8000 ? prgrom_rd(address) : wram_rd(address));
 	}
-	return (openbus);
 }
 BYTE extcl_save_mapper_413(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m413.reg);
 	save_slot_ele(mode, slot, m413.serial.address);
 	save_slot_ele(mode, slot, m413.serial.control);
-
-	if (mode == SAVE_SLOT_READ) {
-		prg_fix_413();
-		chr_fix_413();
-	}
 
 	return (EXIT_OK);
 }
@@ -140,50 +125,17 @@ void extcl_irq_A12_clock_413(void) {
 }
 
 INLINE static void prg_fix_413(void) {
-	WORD value;
-
-	value = 1;
-	control_bank(info.prg.rom.max.banks_4k)
-	m413tmp.prg_5000 = prg_pnt(value << 12);
-
-	value = m413.reg[0];
-	control_bank(info.prg.rom.max.banks_8k)
-	m413tmp.prg_6000 = prg_pnt(value << 13);
-
-	value = m413.reg[1];
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, value);
-
-	value = m413.reg[2];
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, value);
-
-	value = 7;
-	control_bank(info.prg.rom.max.banks_4k)
-	m413tmp.prg_D000 = prg_pnt(value << 12);
-
-	value = 4;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, value);
-
-	map_prg_rom_8k_update();
+	memmap_auto_8k(MMCPU(0x8000), m413.reg[1]);
+	memmap_auto_8k(MMCPU(0xA000), m413.reg[2]);
+	memmap_disable_4k(MMCPU(0xC000));
+	memmap_auto_4k(MMCPU(0xD000), 7);
+	memmap_auto_8k(MMCPU(0xE000), 4);
+}
+INLINE static void wram_fix_413(void) {
+	memmap_prgrom_4k(MMCPU(0x5000), 1);
+	memmap_prgrom_8k(MMCPU(0x6000), m413.reg[0]);
 }
 INLINE static void chr_fix_413(void) {
-	DBWORD bank;
-
-	bank = m413.reg[3];
-	_control_bank(bank, info.chr.rom.max.banks_4k)
-	bank <<= 12;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-
-	bank = 0xFD;
-	_control_bank(bank, info.chr.rom.max.banks_4k)
-	bank <<= 12;
-	chr.bank_1k[4] = chr_pnt(bank);
-	chr.bank_1k[5] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x0C00);
+	memmap_auto_4k(MMPPU(0x0000), m413.reg[3]);
+	memmap_auto_4k(MMPPU(0x1000), 0xFD);
 }

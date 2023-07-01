@@ -16,45 +16,50 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
+#include "save_slot.h"
+
+// TODO aggiungere l'emulzione del microfono
+
+INLINE static void prg_fix_188(void);
+
+struct _m188 {
+	BYTE reg;
+} m188;
 
 void map_init_188(void) {
+	EXTCL_AFTER_MAPPER_INIT(188);
 	EXTCL_CPU_WR_MEM(188);
 	EXTCL_CPU_RD_MEM(188);
+	EXTCL_SAVE_MAPPER(188);
+	mapper.internal_struct[0] = (BYTE *)&m188;
+	mapper.internal_struct_size[0] = sizeof(m188);
 
-	{
-		BYTE value;
-
-		extcl_cpu_wr_mem_188(0x0000, 0x00);
-
-		value = 7;
-		control_bank(info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 2, value);
+	if (info.reset >= HARD) {
+		memset(&m188, 0x00, sizeof(m188));
 	}
+}
+void extcl_after_mapper_init_188(void) {
+	prg_fix_188();
 }
 void extcl_cpu_wr_mem_188(UNUSED(WORD address), BYTE value) {
-	if (value) {
-		if (value & 0x10) {
-			value = value & 0x07;
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-		} else {
-			value = 0x08 | (value & 0x07);
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-		}
-	} else {
-		value = 7 + (info.prg.rom.banks_16k >> 4);
-		control_bank(info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, value);
-	}
-	map_prg_rom_8k_update();
+	m188.reg = value;
+	prg_fix_188();
 }
-BYTE extcl_cpu_rd_mem_188(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_188(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (3);
+		return (0x03);
 	}
-	return (openbus);
+	return (wram_rd(address));
+}
+BYTE extcl_save_mapper_188(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m188.reg);
+
+	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_188(void) {
+	memmap_auto_16k(MMCPU(0x8000), (m188.reg & 0x10 ? m188.reg & 0x07 : m188.reg | 0x08));
+	memmap_auto_16k(MMCPU(0xC000), 0x07);
 }

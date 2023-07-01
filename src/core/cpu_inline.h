@@ -38,6 +38,7 @@
 #include "qt.h"
 #include "audio/snd.h"
 #include "tape_data_recorder.h"
+#include "memmap.h"
 
 #define mod_cycles_op(op, vl) cpu.cycles op vl
 #define r2006_during_rendering()\
@@ -65,7 +66,7 @@
 	ppu_openbus_wr(bit7)
 #define ppu_openbus_rd(bit, mask)\
 	if ((ppu.frames - ppu_openbus.bit) > machine.ppu_openbus_frames) {\
-		ppu.openbus &= mask;\
+		ppu.openbus &= (mask);\
 	}
 #define ppu_openbus_rd_all()\
 	ppu_openbus_rd(bit0, 0x01);\
@@ -77,16 +78,16 @@
 	ppu_openbus_rd(bit6, 0x40);\
 	ppu_openbus_rd(bit7, 0x80)
 #define look_cheats_list(lst, lng, adr)\
-	if (lst.counter) {\
+	if ((lst).counter) {\
 		int i;\
-		for (i = 0; i < lng; i++) {\
-			if (!lst.cheat[i].disabled && (lst.cheat[i].address == adr)) {\
-				if (lst.cheat[i].enabled_compare) {\
-					if (lst.cheat[i].compare == cpu.openbus) {\
-						cpu.openbus = lst.cheat[i].replace;\
+		for (i = 0; i < (lng); i++) {\
+			if (!(lst).cheat[i].disabled && ((lst).cheat[i].address == (adr))) {\
+				if ((lst).cheat[i].enabled_compare) {\
+					if ((lst).cheat[i].compare == cpu.openbus) {\
+						cpu.openbus = (lst).cheat[i].replace;\
 					}\
 				} else {\
-					cpu.openbus = lst.cheat[i].replace;\
+					cpu.openbus = (lst).cheat[i].replace;\
 				}\
 			}\
 		}\
@@ -110,7 +111,7 @@ INLINE static void tick_hw(BYTE value);
 
 BYTE cpu_rd_mem_dbg(WORD address) {
 	BYTE cpu_openbus = cpu.openbus;
-	BYTE read;
+	BYTE read = 0;
 
 	info.disable_tick_hw = TRUE;
 	read = cpu_rd_mem(address, FALSE);
@@ -129,19 +130,14 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			}
 		}
 	} else if (address >= 0x8000) {
-		/* PRG Rom */
-		BYTE before = cpu.openbus;
-
 		/* eseguo un tick hardware */
 		if (made_tick) {
 			tick_hw(1);
 		}
-		/* leggo */
-		cpu.openbus = prg_rom_rd(address);
-
-		if (info.mapper.extend_rd) {
-			cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus, before);
-		}
+		// nella mapper 413 extcl_cpu_rd_mem e' utilizzato anche dal DMC
+		// (in apu.c : DMC.buffer = prgrom_rd(DMC.address) per leggere
+		// i dati dal miscrom.
+		cpu.openbus = info.mapper.extend_rd ? extcl_cpu_rd_mem(address, cpu.openbus) : prgrom_rd(address);
 
 		/* cheat */
 		if (cfg->cheat_mode != NOCHEAT_MODE) {
@@ -157,18 +153,12 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 	if (address <= 0x4017) {
 		/* Ram */
 		if (address < 0x2000) {
-			BYTE before = cpu.openbus;
-
 			/* eseguo un tick hardware */
 			if (made_tick) {
 				tick_hw(1);
 			}
-			/* leggo */
-			cpu.openbus = mmcpu.ram[address & 0x7FF];
 
-			if (extcl_cpu_rd_ram) {
-				cpu.openbus = extcl_cpu_rd_ram(address, cpu.openbus, before);
-			}
+			cpu.openbus = extcl_cpu_rd_ram ? extcl_cpu_rd_ram(address, cpu.openbus) : ram_rd(address);
 
 			/* cheat */
 			if (cfg->cheat_mode == CHEATSLIST_MODE) {
@@ -212,11 +202,9 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			return (cpu.openbus);
 		}
 	}
-	/* Prg Ram (normale ed extra (battery packed o meno) */
+	// WRam (normale ed extra (battery packed o meno)
 	if (address < 0x8000) {
-		BYTE before = cpu.openbus;
-
-		/* eseguo un tick hardware */
+		// eseguo un tick hardware
 		/*
 		 * la mancanza del controllo del made_tick l'ho notata grazie alla rom
 		 * "Tetris 2 + BomBliss (J) [!].nes". Questa utilizza la ram extra per eseguire
@@ -229,68 +217,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 
-		/* controllo se e' consentita la lettura dalla PRG Ram */
-		if (cpu.prg_ram_rd_active) {
-			if (address < 0x6000) {
-				/* leggo */
-				cpu.openbus = prg.ram.data[address & 0x1FFF];
-
-				// Vs System
-				if ((vs_system.enabled) && (address >= 0x4020)) {
-					if ((address & 0x4020) == 0x4020) {
-						vs_system_r4020_clock(rd, before)
-					}
-					if (vs_system.special_mode.r5e0x) {
-						if (address == 0x5E00) {
-							vs_system.special_mode.index = 0;
-						} else if (address == 0x5E01) {
-							cpu.openbus = vs_system.special_mode.r5e0x[(vs_system.special_mode.index++) & 0x1F];
-						}
-					} else if (vs_system.special_mode.type == VS_SM_Super_Xevious) {
-						if (address == 0x54FF) {
-							cpu.openbus = 0x05;
-						} else if (address == 0x5678) {
-							cpu.openbus = vs_system.special_mode.index ? 0x00 : 0x01;
-						} else if (address == 0x578F) {
-							cpu.openbus = vs_system.special_mode.index ? 0xD1 : 0x89;
-						} else if (address == 0x5567) {
-							vs_system.special_mode.index ^= 1;
-							cpu.openbus = vs_system.special_mode.index ? 0x37 : 0x3E;
-						}
-					}
-				}
-			} else {
-				/*
-				 * se la rom ha una PRG Ram extra allora
-				 * la utilizzo, altrimenti leggo dalla PRG
-				 * Ram normale.
-				 */
-				if (!prg.ram_plus) {
-					// Vs. System
-					if (vs_system.enabled && vs_system.shared_mem) {
-						cpu.openbus = prg.ram.data[address & 0x07FF];
-					} else {
-						cpu.openbus = prg.ram.data[address & 0x1FFF];
-					}
-				} else if (!info.mapper.ram_plus_op_controlled_by_mapper) {
-					cpu.openbus = prg.ram_plus_8k[address & 0x1FFF];
-				}
-			}
-		}
-		if (extcl_cpu_rd_mem) {
-			/*
-			 * utilizzato dalle mappers :
-			 * MMC5
-			 * Namcot (163)
-			 * Rex (DBZ)
-			 * Sunsoft (FM7)
-			 * 249
-			 * 163
-			 * 164
-			 */
-			/* Mappers */
-			cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus, before);
-		}
+		cpu.openbus = extcl_cpu_rd_mem ? extcl_cpu_rd_mem(address, cpu.openbus) : wram_rd(address);
 
 		/* cheat */
 		if (cfg->cheat_mode == CHEATSLIST_MODE) {
@@ -476,7 +403,6 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 }
 INLINE static BYTE apu_rd_reg(WORD address) {
 	BYTE value = cpu.openbus;
-	BYTE before = cpu.openbus;
 
 	if (address == 0x4015) {
 		/* azzero la varibile d'uscita */
@@ -528,7 +454,7 @@ INLINE static BYTE apu_rd_reg(WORD address) {
 		 * utilizzato dalle mappers :
 		 * OneBus
 		 */
-		value = extcl_rd_apu(address, value, before);
+		value = extcl_rd_apu(address, value);
 	}
 
 	return (value);
@@ -583,7 +509,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 			default:
 				break;
 		}
-		cpu.openbus = nsf_prg_rom_rd(address);
+		cpu.openbus = prgrom_rd(address);
 		return;
 	}
 	// Ram
@@ -591,11 +517,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 		if (made_tick) {
 			tick_hw(1);
 		}
-		if (nsf.sound_chips.fds) {
-			cpu.openbus = nsf_prg_rom_rd_6xxx(address);
-		} else {
-			cpu.openbus = prg.ram.data[address & 0x1FFF];
-		}
+		cpu.openbus = wram_rd(address);
 		return;
 	}
 	// APU
@@ -623,14 +545,14 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 	if (nsf.sound_chips.mmc5) {
 		if ((address >= 0x5C00) && (address <= 0x5FF5)) {
 			address &= 0x03FF;
-			cpu.openbus = mmc5.ext_ram[address];
+			cpu.openbus = m005.ext_ram[address];
 			return;
 		}
 		switch (address) {
 			case 0x5015:
 			case 0x5205:
 			case 0x5206:
-				cpu.openbus = extcl_cpu_rd_mem_MMC5(address, cpu.openbus, cpu.openbus);
+				cpu.openbus = extcl_cpu_rd_mem_005(address, cpu.openbus);
 				return;
 			default:
 				break;
@@ -638,7 +560,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 	}
 	// Namco 163
 	if (nsf.sound_chips.namco163 && (address == 0x4800)) {
-		cpu.openbus = extcl_cpu_rd_mem_Namco_163(address, cpu.openbus, cpu.openbus);
+		cpu.openbus = extcl_cpu_rd_mem_019(address, cpu.openbus);
 		return;
 	}
 	// RAM
@@ -646,7 +568,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 		if (made_tick) {
 			tick_hw(1);
 		}
-		cpu.openbus = mmcpu.ram[address & 0x7FF];
+		cpu.openbus = ram_rd(address & 0x7FF);
 		return;
 	}
 	// NSF Player Routine
@@ -671,13 +593,13 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 	}
 }
 INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
-	if (address >= 0xE000) {
+	if (address >= 0x8000) {
 		/* eseguo un tick hardware */
 		if (made_tick) {
 			tick_hw(1);
 		}
 		/* leggo */
-		cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus, cpu.openbus);
+		cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus);
 		return (TRUE);
 	}
 	if (address >= 0x6000) {
@@ -686,7 +608,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 		/* leggo */
-		cpu.openbus = prg.ram.data[address - 0x6000];
+		cpu.openbus = wram_rd(address);
 		return (TRUE);
 	}
 	if (fds.drive.enabled_dsk_reg && ((address >= 0x4030) && (address <= 0x4033))) {
@@ -860,7 +782,7 @@ void cpu_wr_mem(WORD address, BYTE value) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* scrivo */
-			mmcpu.ram[(address & 0x7FF)] = value;
+			ram_wr(address, value);
 			return;
 		}
 		if (address < 0x4000) {
@@ -971,64 +893,23 @@ void cpu_wr_mem(WORD address, BYTE value) {
 			return;
 		}
 	}
-	/* PRG Ram (normale ed extra) */
+	// WRam (normale ed extra) */
 	if (address < 0x8000) {
 		/* eseguo un tick hardware */
 		tick_hw(1);
-		/* controllo se e' attiva la PRG Ram */
-		if (cpu.prg_ram_wr_active) {
-			if (address < 0x6000) {
-				// Vs System
-				if (vs_system.enabled) {
-					if ((address >= 0x4020) && ((address & 0x4020) == 0x4020)) {
-						vs_system_r4020_clock(wr, value)
-					}
-				}
-				/* scrivo */
-				prg.ram.data[address & 0x1FFF] = value;
-			} else {
-				/*
-				 * se la rom ha una PRG Ram extra allora
-				 * la utilizzo, altrimenti uso la PRG Ram
-				 * normale.
-				 */
-				if (!prg.ram_plus) {
-					// Vs. System
-					if (vs_system.enabled && vs_system.shared_mem) {
-						prg.ram.data[address & 0x07FF] = value;
-					} else {
-						prg.ram.data[address & 0x1FFF] = value;
-					}
-				} else if (!info.mapper.ram_plus_op_controlled_by_mapper) {
-					prg.ram_plus_8k[address & 0x1FFF] = value;
-				}
-			}
-		}
+
+		wram_wr(address, value);
+
 		if (info.mapper.extend_wr) {
-			/*
-			 * utilizzato dalle mappers :
-			 * Active
-			 * 74x138x161
-			 * Ave (NINA06)
-			 * BxROM (AVENINA001)
-			 * Caltron
-			 * Jaleco (JF05 e JF11)
-			 * MMC5
-			 * REX (DBZ)
-			 * 163
-			 * 164
-			 * 176
-			 * 28
-			 * 91
-			 * 31
-			 */
 			extcl_cpu_wr_mem(address, value);
 		}
 		return;
 	}
 
-	/* Mappers */
+	prgrom_wr(address, value);
+
 	extcl_cpu_wr_mem(address, value);
+
 	/* su questo devo fare qualche altro esperimento */
 	tick_hw(1);
 }
@@ -1039,35 +920,24 @@ INLINE static void ppu_wr_mem(WORD address, BYTE value) {
 	address &= 0x3FFF;
 	if (address < 0x2000) {
 		if (extcl_wr_chr) {
-			/*
-			 * utilizzato dalle mappers :
-			 * Irem (LROG017)
-			 */
 			extcl_wr_chr(address, value);
-			return;
-		}
-		if (mapper.write_vram) {
-			chr.bank_1k[address >> 10][address & 0x3FF] = value;
+		} else {
+			chr_wr(address, value);
 		}
 		return;
 	}
 	if (address < 0x3F00) {
 		if (extcl_wr_nmt) {
-			/*
-			 * utilizzato dalle mappers :
-			 * JYASIC
-			 */
 			extcl_wr_nmt(address, value);
-			return;
+		} else  {
+			nmt_wr(address, value);
 		}
-		address &= 0x0FFF;
-		ntbl.bank_1k[address >> 10][address & 0x3FF] = value;
 		return;
 	}
 	address &= 0x1F;
-	mmap_palette.color[address] = value & 0x3F;
+	memmap_palette.color[address] = value & 0x3F;
 	if (!(address & 0x03)) {
-		 mmap_palette.color[(address + 0x10) & 0x1F] = mmap_palette.color[address];
+		 memmap_palette.color[(address + 0x10) & 0x1F] = memmap_palette.color[address];
 	}
 }
 INLINE static void ppu_wr_reg(WORD address, BYTE value) {
@@ -1365,7 +1235,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		return;
 	}
 	if (address == 0x2007) {
-		WORD old_r2006 = r2006.value;
+		const WORD old_r2006 = r2006.value;
 
 		/* open bus */
 		ppu.openbus = value;
@@ -1403,7 +1273,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		/* DMA transfer source address */
 		address = value << 8;
 		{
-			WORD index;
+			WORD index = 0;
 			BYTE save_irq = irq.high;
 			BYTE save_cpu_cycles = cpu.cycles;
 
@@ -1701,16 +1571,20 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 			 * counter di ogni canale e' a 0, il counter
 			 * dello stesso canale e' immediatamente azzerato.
 			 */
-			if (!(S1.length.enabled = r4015.value & 0x01)) {
+			S1.length.enabled = r4015.value & 0x01;
+			if (!S1.length.enabled) {
 				S1.length.value = 0;
 			}
-			if (!(S2.length.enabled = r4015.value & 0x02)) {
+			S2.length.enabled = r4015.value & 0x02;
+			if (!S2.length.enabled) {
 				S2.length.value = 0;
 			}
-			if (!(TR.length.enabled = r4015.value & 0x04)) {
+			TR.length.enabled = r4015.value & 0x04;
+			if (!TR.length.enabled) {
 				TR.length.value = 0;
 			}
-			if (!(NS.length.enabled = r4015.value & 0x08)) {
+			NS.length.enabled = r4015.value & 0x08;
+			if (!NS.length.enabled) {
 				NS.length.value = 0;
 			}
 			/*
@@ -1748,7 +1622,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 	}
 
 #if defined (DEBUG)
-		//printf("Alert: Attempt to write APU port %04X\n", address);
+	//printf("Alert: Attempt to write APU port %04X\n", address);
 #endif
 }
 INLINE static void nsf_wr_mem(WORD address, BYTE value) {
@@ -1785,37 +1659,33 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 			}
 		}
 		if (nsf.sound_chips.namco163 && (address == 0xF800)) {
-			extcl_cpu_wr_mem_Namco_163(address, value);
+			extcl_cpu_wr_mem_019(address, value);
 			return;
 		}
 		if (nsf.sound_chips.sunsoft5b) {
 			switch (address) {
 				case 0xC000:
 				case 0xE000:
-					extcl_cpu_wr_mem_Sunsoft_FM7(address, value);
+					extcl_cpu_wr_mem_FME7(address, value);
 					return;
 				default:
 					break;
 			}
 		}
 		if (nsf.sound_chips.fds) {
-			nsf.prg.rom_4k[(address >> 12) & 0x07][address & 0x0FFF] = value;
+			prgrom_wr(address, value);
 			return;
 		}
 		return;
 	}
 	if (address >= 0x6000) {
 		tick_hw(1);
-		if (nsf.sound_chips.fds) {
-			nsf.prg.rom_4k_6xxx[(address >> 12) & 0x01][address & 0x0FFF] = value;
-			return;
-		}
-		prg.ram.data[address & 0x1FFF] = value;
+		wram_wr(address, value);
 		return;
 	}
 	if (address < 0x2000) {
 		tick_hw(1);
-		mmcpu.ram[(address & 0x7FF)] = value;
+		ram_wr(address, value);
 		return;
 	}
 	// APU
@@ -1838,7 +1708,7 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 	if (nsf.sound_chips.mmc5) {
 		if ((address >= 0x5C00) && (address <= 0x5FF5)) {
 			address &= 0x03FF;
-			mmc5.ext_ram[address] = value;
+			m005.ext_ram[address] = value;
 			return;
 		}
 		switch (address) {
@@ -1866,7 +1736,7 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 			case 0x5015:
 			case 0x5205:
 			case 0x5206:
-				extcl_cpu_wr_mem_MMC5(address, value);
+				extcl_cpu_wr_mem_005(address, value);
 				return;
 			default:
 				break;
@@ -1874,11 +1744,12 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 	}
 	// Namco 163
 	if (nsf.sound_chips.namco163 && (address == 0x4800)) {
-		extcl_cpu_wr_mem_Namco_163(address, value);
+		extcl_cpu_wr_mem_019(address, value);
 	}
 	// Bankswitch
 	if (nsf.bankswitch.enabled && (address >= 0x5FF6) && (address <= 0x5FFF)) {
-		BYTE bank;
+		BYTE *dst = NULL;
+		WORD bank = 0;
 
 		tick_hw(1);
 
@@ -1886,10 +1757,12 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 			case 0x5FF6:
 			case 0x5FF7:
 				if (nsf.sound_chips.fds) {
-					control_bank(nsf.prg.banks_4k)
-					bank = address & 0x01;
-					nsf.prg.rom_4k_6xxx[bank] = &prg.ram.data[bank << 12];
-					memcpy(nsf.prg.rom_4k_6xxx[bank], prg_pnt(value << 12), 0x1000);
+					value = prgrom_control_bank(S4K, value);
+					bank = (address & 0x01);
+					address = (address & 0x000F) << 12;
+					memmap_wram_4k(MMCPU(address), bank);
+					dst = memmap_chunk_pnt(address);
+					if (dst) memcpy(dst, prgrom_pnt_byte(value << 12), S4K);
 				}
 				return;
 			case 0x5FF8:
@@ -1900,35 +1773,38 @@ INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 			case 0x5FFD:
 			case 0x5FFE:
 			case 0x5FFF:
-				control_bank(nsf.prg.banks_4k)
-				if (nsf.sound_chips.fds) {
-					bank = address & 0x07;
-					nsf.prg.rom_4k[bank] = &prg.ram.data[(bank + 2) << 12];
-					memcpy(nsf.prg.rom_4k[bank], prg_pnt(value << 12), 0x1000);
-				} else {
-					bank = address & 0x07;
-					nsf.prg.rom_4k[bank] = prg_pnt(value << 12);
+				if (nsf.sound_chips.fds && (address <= 0x5FFD)) {
+					value = prgrom_control_bank(S4K, value);
+					bank = (address & 0x07);
+					address = (address & 0x000F) << 12;
+					memmap_wram_4k(MMCPU(address), bank + 2);
+					dst = memmap_chunk_pnt(address);
+					if (dst) memcpy(dst, prgrom_pnt_byte(value << 12), S4K);
+					return;
 				}
+				address = (address & 0x000F) << 12;
+				memmap_prgrom_4k(MMCPU(address), value);
 				return;
 			default:
-				break;
+				return;
 		}
 	}
 
 	tick_hw(1);
 }
 INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
-	if (address >= 0xE000) {
+	if (address >= 0x8000) {
 		/* eseguo un tick hardware */
 		tick_hw(1);
-		/* non faccio proprio niente */
+		/* scrivo */
+		prgrom_wr(address, value);
 		return (TRUE);
 	}
 	if (address >= 0x6000) {
 		/* eseguo un tick hardware */
 		tick_hw(1);
 		/* scrivo */
-		prg.ram.data[address - 0x6000] = value;
+		wram_wr(address, value);
 		return (TRUE);
 	}
 	if ((address >= 0x4020) && (address <= 0x4026)) {
@@ -2054,8 +1930,8 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 				fds.drive.gap_ended = FALSE;
 			}
 			fds.drive.read_mode = value & 0x04;
-
-			if ((fds.drive.mirroring = value & 0x08)) {
+			fds.drive.mirroring = value & 0x08;
+			if (fds.drive.mirroring) {
 				mirroring_H();
 			} else {
 				mirroring_V();
@@ -2169,9 +2045,8 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 /* ------------------------------------ MISC ROUTINE ------------------------------------------- */
 
 INLINE static WORD lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw) {
-	WORD newAdr;
+	WORD newAdr = cpu_rd_mem(address++, TRUE);
 
-	newAdr = cpu_rd_mem(address++, TRUE);
 	/* 6502 Bugs :
 	 * Indirect addressing modes are not able to fetch an address which
 	 * crosses the page boundary
@@ -2248,27 +2123,6 @@ INLINE static void tick_hw(BYTE value) {
 	}
 
 	if (extcl_cpu_every_cycle) {
-		/*
-		 * utilizzato dalle mappers :
-		 * 183
-		 * 222
-		 * Bandai (FCGX)
-		 * FDS
-		 * Futeremedia
-		 * Kaise (ks202)
-		 * Jaleco (SS8806)
-		 * Irem (H3000)
-		 * Namco (163)
-		 * Tengen (Rambo)
-		 * MMC3
-		 * VRC3
-		 * VRC4
-		 * VRC6
-		 * VRC7
-		 * Sunsoft (S3)
-		 * Sunsoft (FM7)
-		 * TxROM
-		 */
 		extcl_cpu_every_cycle();
 	}
 	cpu.odd_cycle = !cpu.odd_cycle;

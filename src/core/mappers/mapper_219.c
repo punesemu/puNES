@@ -18,21 +18,18 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
-#define m219_chr_1k(a, b)\
-	value = m219.reg[2] | ((save >> 1) | a);\
-	control_bank(info.chr.rom.max.banks_1k)\
-	chr.bank_1k[b] = chr_pnt(value << 10)
+void prg_swap_mmc3_219(WORD address, WORD value);
+void chr_swap_mmc3_219(WORD address, WORD value);
 
 struct _m219 {
-	BYTE reg[3];
+	BYTE reg[2];
 } m219;
 
 void map_init_219(void) {
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(219);
 	EXTCL_SAVE_MAPPER(219);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -43,89 +40,83 @@ void map_init_219(void) {
 	EXTCL_UPDATE_R2006(MMC3);
 	mapper.internal_struct[0] = (BYTE *)&m219;
 	mapper.internal_struct_size[0] = sizeof(m219);
+	mapper.internal_struct[1] = (BYTE *)&mmc3;
+	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
-		memset(&m219, 0x00, sizeof(m219));
+		memset(&irqA12, 0x00, sizeof(irqA12));
 	}
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&m219, 0x00, sizeof(m219));
+
+	init_MMC3(info.reset);
+	MMC3_prg_swap = prg_swap_mmc3_219;
+	MMC3_chr_swap = chr_swap_mmc3_219;
+
+	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_219(WORD address, BYTE value) {
-	if (address >= 0xA000) {
-		extcl_cpu_wr_mem_MMC3(address, value);
+	if ((address >= 0x5000) && (address <= 0x5FFF)) {
+		m219.reg[0] = address & 0x0001
+			? (m219.reg[0] & 0xFD) | ((value & 0x20) >> 4)
+			: (m219.reg[0] & 0xFE) | ((value & 0x08) >> 3);
+		MMC3_prg_fix();
+		MMC3_chr_fix();
 		return;
 	}
+	if (address >= 0x8000) {
+		switch (address & 0xE001) {
+			case 0x8000:
+				extcl_cpu_wr_mem_MMC3(address, value);
+				if (address & 0x0002) {
+					m219.reg[1] = value & 0x20;
+				}
+				return;
+			case 0x8001:
+				if (!m219.reg[1]) {
+					extcl_cpu_wr_mem_MMC3(address, value);
+					return;
+				}
+				if ((mmc3.bank_to_update >= 0x25) && (mmc3.bank_to_update <= 0x26)) {
+					value = ((value >> 5) & 0x01) | ((value >> 3) & 0x02) | ((value >> 1) & 0x04) | ((value << 1) & 0x08);
+					mmc3.reg[6 | (mmc3.bank_to_update & 0x01)] = value;
+				} else if ((mmc3.bank_to_update >= 0x08) && (mmc3.bank_to_update < 0x20)) {
+					int index = (mmc3.bank_to_update - 8) >> 2;
 
-	/* intercetto cio' che mi interessa */
-	switch (address & 0x03) {
-		case 0:
-			m219.reg[0] = 0;
-			m219.reg[1] = value;
-			return;
-		case 1: {
-			BYTE bank = m219.reg[0] - 0x23;
-			BYTE save = value;
-
-			if (bank < 4) {
-				value = ((value >> 5) & 0x01) | ((value >> 3) & 0x02) | ((value >> 1) & 0x04) |
-					((value << 1) & 0x08);
-				control_bank(info.prg.rom.max.banks_8k)
-				map_prg_rom_8k(1, bank ^ 0x03, value);
-				map_prg_rom_8k_update();
-			}
-			switch (m219.reg[1]) {
-				case 0x08:
-				case 0x0A:
-				case 0x0C:
-				case 0x0E:
-				case 0x10:
-				case 0x12:
-				case 0x14:
-				case 0x16:
-				case 0x18:
-				case 0x1A:
-				case 0x1C:
-				case 0x1E:
-					m219.reg[2] = save << 4;
-					return;
-				case 0x09:
-					m219_chr_1k(0x00, 0);
-					return;
-				case 0x0B:
-					m219_chr_1k(0x01, 1);
-					return;
-				case 0x0D:
-					m219_chr_1k(0x00, 2);
-					return;
-				case 0x0F:
-					m219_chr_1k(0x01, 3);
-					return;
-				case 0x11:
-					m219_chr_1k(0x00, 4);
-					return;
-				case 0x15:
-					m219_chr_1k(0x00, 5);
-					return;
-				case 0x19:
-					m219_chr_1k(0x00, 6);
-					return;
-				case 0x1D:
-					m219_chr_1k(0x00, 7);
-					return;
-			}
-			return;
+					if (mmc3.bank_to_update & 0x01) {
+						mmc3.reg[index] &= 0xFFF0;
+						mmc3.reg[index] |= ((value & 0x1E) >> 1);
+					} else {
+						mmc3.reg[index] &= 0xFF0F;
+						mmc3.reg[index] |= ((value & 0x0F) << 4);
+					}
+				}
+				MMC3_prg_fix();
+				MMC3_chr_fix();
+				return;
+			default:
+				extcl_cpu_wr_mem_MMC3(address, value);
+				return;
 		}
-		case 2:
-			m219.reg[0] = value;
-			m219.reg[1] = 0;
-			return;
 	}
 }
 BYTE extcl_save_mapper_219(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m219.reg);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
+}
 
-	return (EXIT_OK);
+void prg_swap_mmc3_219(WORD address, WORD value) {
+	WORD base = m219.reg[0] << 4;
+	WORD mask = 0x0F;
+
+	prg_swap_MMC3_base(address, (base | (value & mask)));
+}
+void chr_swap_mmc3_219(WORD address, WORD value) {
+	WORD base = m219.reg[0] << 7;
+	WORD mask = 0x7F;
+
+	chr_swap_MMC3_base(address, (base | (value & mask)));
 }

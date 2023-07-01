@@ -19,6 +19,7 @@
 #include "input/nes_001.h"
 #include "info.h"
 #include "apu.h"
+#include "clock.h"
 
 BYTE input_wr_reg_nes_001(BYTE value) {
 	// in caso di strobe azzero l'indice
@@ -36,7 +37,20 @@ BYTE input_rd_reg_nes_001(BYTE openbus, BYTE nport) {
 	// se avviene un DMA del DMC all'inizio
 	// dell'istruzione di lettura del registro,
 	// avverranno due letture.
-	if (!info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
+	// Aggiornamento da https://www.nesdev.org/wiki/Controller_reading :
+	// DPCM conflict
+	// Using DPCM sample playback while trying to read the controller can cause
+	// problems because of a bug in its hardware implementation.
+	// If the DMC DMA is running, and happens to start a read in the same cycle that the CPU
+	// is trying to read from $4016 or $4017, the values read will become invalid. Since the address
+	// bus will change for one cycle, the shift register will see an extra rising clock edge (a "double clock"),
+	// and the shift register will drop a bit out. The program will see this as a bit deletion from the serial
+	// data. Not correcting for this results in spurious presses. On the standard controller this is most
+	// often seen as a right-press as a trailing 1 bit takes the place of the 8th bit of the report (right).
+	// This glitch is fixed in the 2A07 CPU used in the PAL NES.
+	// This detail is poorly represented in emulators.[2] Because it is not normally a compatibility issue,
+	// many emulators do not simulate this glitch at all.
+	if ((machine.type == NTSC) && !info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
 		port_funct[nport].input_rd(&value, nport, 0);
 	}
 

@@ -16,12 +16,22 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "crc.h"
 #include "Crc32.h"
 
 uint32_t emu_crc32(const void *data, size_t length) {
 	return (crc32_fast(data, length));
 }
-uint32_t emu_crc32_continue(const void *data, size_t length, uint32_t previuos) {
-	return (crc32_fast(data, length, previuos));
+uint32_t emu_crc32_continue(const void *data, size_t length, uint32_t previous) {
+	return (crc32_fast(data, length, previous));
+}
+uint32_t emu_crc32_zeroes(size_t length, uint32_t previous) {
+	if (length) {
+		BYTE zeroes[length];
+
+		memset(&zeroes[0], 0x00, sizeof(zeroes));
+		return (crc32_fast(&zeroes[0], length, previous));
+	}
+	return (previous);
 }

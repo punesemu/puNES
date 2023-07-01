@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
 
@@ -112,60 +110,20 @@ void extcl_cpu_every_cycle_106(void) {
 }
 
 INLINE static void prg_fix_106(void) {
-	BYTE value;
-
-	value = m106.prg[0] | 0x010;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0, value);
-
-	value = m106.prg[1];
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, value);
-
-	value = m106.prg[2];
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, value);
-
-	value = m106.prg[3] | 0x010;
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, value);
-
-	map_prg_rom_8k_update();
+	memmap_auto_8k(MMCPU(0x8000), (m106.prg[0] | 0x010));
+	memmap_auto_8k(MMCPU(0xA000), m106.prg[1]);
+	memmap_auto_8k(MMCPU(0xC000), m106.prg[2]);
+	memmap_auto_8k(MMCPU(0xE000), (m106.prg[3] | 0x010));
 }
 INLINE static void chr_fix_106(void) {
-	DBWORD bank;
-
-	bank = m106.chr[0];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[0] = chr_pnt(bank << 10);
-
-	bank = m106.chr[1];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[1] = chr_pnt(bank << 10);
-
-	bank = m106.chr[2];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[2] = chr_pnt(bank << 10);
-
-	bank = m106.chr[3];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[3] = chr_pnt(bank << 10);
-
-	bank = m106.chr[4];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[4] = chr_pnt(bank << 10);
-
-	bank = m106.chr[5];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[5] = chr_pnt(bank << 10);
-
-	bank = m106.chr[6];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[6] = chr_pnt(bank << 10);
-
-	bank = m106.chr[7];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	chr.bank_1k[7] = chr_pnt(bank << 10);
+	memmap_auto_1k(MMPPU(0x0000), m106.chr[0]);
+	memmap_auto_1k(MMPPU(0x0400), m106.chr[1]);
+	memmap_auto_1k(MMPPU(0x0800), m106.chr[2]);
+	memmap_auto_1k(MMPPU(0x0C00), m106.chr[3]);
+	memmap_auto_1k(MMPPU(0x1000), m106.chr[4]);
+	memmap_auto_1k(MMPPU(0x1400), m106.chr[5]);
+	memmap_auto_1k(MMPPU(0x1800), m106.chr[6]);
+	memmap_auto_1k(MMPPU(0x1C00), m106.chr[7]);
 }
 INLINE static void mirroring_fix_106(void) {
 	if (m106.mirroring & 0x01) {

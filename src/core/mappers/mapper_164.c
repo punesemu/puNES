@@ -18,20 +18,16 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
-#include "ines.h"
 #include "ppu.h"
 #include "ppu_inline.h"
 #include "save_slot.h"
 #include "EE93Cx6.h"
 
 INLINE static void prg_fix_164(void);
-INLINE static void prg_ram_fix_164(void);
+INLINE static void wram_fix_164(void);
 INLINE static void mirroring_fix_164(void);
-INLINE static BYTE prg_ram_check(void);
+
 INLINE static void mode1_bpp(WORD address);
-INLINE static BYTE mode1_bpp_rd(WORD address);
 
 struct _m164 {
 	BYTE reg[4];
@@ -40,12 +36,12 @@ struct _m164 {
 	BYTE pa13;
 } m164;
 struct _m164tmp {
-	BYTE *prg_6000;
 	BYTE cc93c66;
 } m164tmp;
 
 void map_init_164(void) {
 	EXTCL_AFTER_MAPPER_INIT(164);
+	EXTCL_CPU_INIT_PC(164);
 	EXTCL_CPU_WR_MEM(164);
 	EXTCL_CPU_RD_MEM(164);
 	EXTCL_SAVE_MAPPER(164);
@@ -60,24 +56,21 @@ void map_init_164(void) {
 
 	memset(&m164, 0x00, sizeof(m164));
 
-	if (prg_ram_check()) {
-		info.prg.ram.banks_8k_plus = 1;
-		info.prg.ram.bat.banks = 1;
-	}
+	m164tmp.cc93c66 = wram_nvram_size() == S512B;
 
 	info.mapper.extend_wr = TRUE;
 }
 void extcl_after_mapper_init_164(void) {
 	prg_fix_164();
+	wram_fix_164();
 	mirroring_fix_164();
-
-	if ((m164tmp.cc93c66 = prg_ram_check())) {
-		ee93cx6_init(prg.ram_plus_8k, 512, 8);
+}
+void extcl_cpu_init_pc_164(void) {
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		if (m164tmp.cc93c66) {
+			ee93cx6_init(wram_nvram_pnt(), wram_nvram_size(), 8);
+		}
 	}
-
-	prg_ram_fix_164();
-
-	info.mapper.ram_plus_op_controlled_by_mapper = m164tmp.prg_6000 != NULL;
 }
 void extcl_cpu_wr_mem_164(WORD address, BYTE value) {
 	switch (address & 0xFF00) {
@@ -85,11 +78,11 @@ void extcl_cpu_wr_mem_164(WORD address, BYTE value) {
 			m164.reg[0] = value;
 			prg_fix_164();
 			mirroring_fix_164();
-			break;
+			return;
 		case 0x5100:
 			m164.reg[1] = value;
 			prg_fix_164();
-			break;
+			return;
 		case 0x5200:
 			m164.reg[2] = value;
 			if (m164tmp.cc93c66) {
@@ -107,20 +100,11 @@ void extcl_cpu_wr_mem_164(WORD address, BYTE value) {
 			m164.reg[3] = value;
 			mirroring_fix_164();
 			return;
-		case 0x6000: case 0x6100: case 0x6200: case 0x6300: case 0x6400: case 0x6500: case 0x6600: case 0x6700:
-		case 0x6800: case 0x6900: case 0x6A00: case 0x6B00: case 0x6C00: case 0x6D00: case 0x6E00: case 0x6F00:
-		case 0x7000: case 0x7100: case 0x7200: case 0x7300: case 0x7400: case 0x7500: case 0x7600: case 0x7700:
-		case 0x7800: case 0x7900: case 0x7A00: case 0x7B00: case 0x7C00: case 0x7D00: case 0x7E00: case 0x7F00:
-			if (m164tmp.prg_6000) {
-				if (m164tmp.cc93c66 && (address >= 0x7E00)) {
-					return;
-				}
-				m164tmp.prg_6000[address & 0x1FFF] = value;
-			}
-			break;
+		default:
+			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_164(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_164(WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x5000:
 			if ((address & 0x0800) || !(address & 0x0400)) {
@@ -129,17 +113,9 @@ BYTE extcl_cpu_rd_mem_164(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 				return (ee93cx6_read() ? 0x00 : 0x04);
 			}
 			return (m164.reg[2] & 0x04);
-		case 0x6000:
-		case 0x7000:
-			if (m164tmp.prg_6000) {
-				if (m164tmp.cc93c66 && (address >= 0x7E00)) {
-					return (0xFF);
-				}
-				return (m164tmp.prg_6000[address & 0x1FFF]);
-			}
-			break;
+		default:
+			return (wram_rd(address));
 	}
-	return (openbus);
 }
 BYTE extcl_save_mapper_164(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m164.reg);
@@ -147,27 +123,21 @@ BYTE extcl_save_mapper_164(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m164.pa9);
 	save_slot_ele(mode, slot, m164.pa13);
 
-	if (mode == SAVE_SLOT_READ) {
-		prg_ram_fix_164();
-	}
-
 	return (EXIT_OK);
 }
-void extcl_wr_nmt_164(WORD address, BYTE value) {
+void extcl_wr_chr_164(WORD address, UNUSED(BYTE value)) {
 	mode1_bpp(address);
-	ntbl.bank_1k[(address & 0x0FFF) >> 10][address & 0x3FF] = value;
-}
-void extcl_wr_chr_164(WORD address, BYTE value) {
-	mode1_bpp(address);
-	if (mapper.write_vram) {
-		chr.bank_1k[address >> 10][address & 0x3FF] = value;
-	}
+	chr_wr(address, value);
 }
 BYTE extcl_rd_chr_164(WORD address) {
 	if ((m164.reg[0] & 0x80) && !m164.pa13) {
-		return (mode1_bpp_rd(address));
+		address = (m164.pa9 << 12) | (address & 0x0FF7) | (m164.pa0 << 3);
 	}
-	return (chr.bank_1k[address >> 10][address & 0x3FF]);
+	return (chr_rd(address));
+}
+void extcl_wr_nmt_164(WORD address, UNUSED(BYTE value)) {
+	mode1_bpp(address);
+	nmt_wr(address, value);
 }
 void extcl_ppu_000_to_255_164(void) {
 	if (r2001.visible) {
@@ -204,7 +174,7 @@ void extcl_ppu_320_to_34x_164(void) {
 INLINE static void prg_fix_164(void) {
 	WORD high = (m164.reg[1] & 0x03) << 5;
 	WORD low = (m164.reg[0] & 0x0F) | ((m164.reg[0] & 0x20) >> 1);
-	WORD bank;
+	WORD bank = 0;
 
 	// D~7654 3210
 	//   ---------
@@ -222,21 +192,25 @@ INLINE static void prg_fix_164(void) {
 	//   |+-------- See 'M' bit description
 	if (m164.reg[0] & 0x10) {
 		bank = (high >> 1) | (low & 0x0F);
-		_control_bank(bank, info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, bank);
+		memmap_auto_32k(MMCPU(0x8000), bank);
 	} else {
 		bank = high | low;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
+		memmap_auto_16k(MMCPU(0x8000), bank);
 
 		bank = high | (m164.reg[0] & 0x40 ? 0x1C | ((m164.reg[0] & 0x01) << 1) : 0x1F);
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 2, bank);
+		memmap_auto_16k(MMCPU(0xC000), bank);
 	}
-	map_prg_rom_8k_update();
 }
-INLINE static void prg_ram_fix_164(void) {
-	m164tmp.prg_6000 = prg.ram_plus_8k ? prg.ram_plus_8k + (m164tmp.cc93c66 ? 512 : 0) : NULL;
+INLINE static void wram_fix_164(void) {
+	if (m164tmp.cc93c66) {
+		if (wram_ram_size()) {
+			memmap_wram_ram_wp_8k(MMCPU(0x6000), 0, TRUE, TRUE);
+		} else {
+			memmap_disable_8k(MMCPU(0x6000));
+		}
+	} else {
+		memmap_auto_8k(MMCPU(0x6000), 0);
+	}
 }
 INLINE static void mirroring_fix_164(void) {
 	if ((m164.reg[0] & 0x10) && !(m164.reg[3] & 0x80)) {
@@ -245,20 +219,7 @@ INLINE static void mirroring_fix_164(void) {
 		mirroring_V();
 	}
 }
-INLINE static BYTE prg_ram_check(void) {
-	if (info.format == NES_2_0) {
-		size_t ee_size = (ines.flags[FL10] & 0xF0) ? (64 << (ines.flags[FL10] >> 4)): 0;
 
-		if (ee_size == 512) {
-			return (TRUE);
-		}
-	} else {
-		if (info.prg.ram.banks_8k_plus && info.prg.ram.bat.banks) {
-			return (TRUE);
-		}
-	}
-	return (FALSE);
-}
 INLINE static void mode1_bpp(WORD address) {
 	BYTE pa13 = (address & 0x2000) >> 13;
 
@@ -267,8 +228,4 @@ INLINE static void mode1_bpp(WORD address) {
 		m164.pa9 = (address & 0x0200) != 0;
 	}
 	m164.pa13 = pa13;
-}
-INLINE static BYTE mode1_bpp_rd(WORD address) {
-	address = (m164.pa9 << 12) | (address & 0x0FF7) | (m164.pa0 << 3);
-	return (chr.bank_1k[address >> 10][address & 0x3FF]);
 }

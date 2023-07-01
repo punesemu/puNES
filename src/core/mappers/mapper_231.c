@@ -16,29 +16,55 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
+#include "save_slot.h"
+
+INLINE static void prg_fix_231(void);
+INLINE static void mirroring_fix_231(void);
+
+struct _m231 {
+	WORD reg;
+} m231;
 
 void map_init_231(void) {
+	EXTCL_AFTER_MAPPER_INIT(231);
 	EXTCL_CPU_WR_MEM(231);
+	EXTCL_SAVE_MAPPER(231);
+	mapper.internal_struct[0] = (BYTE *)&m231;
+	mapper.internal_struct_size[0] = sizeof(m231);
 
 	if (info.reset >= HARD) {
-		map_prg_rom_8k(4, 0, 0);
+		memset(&m231, 0x00, sizeof(m231));
 	}
 }
-void extcl_cpu_wr_mem_231(WORD address, BYTE value) {
-	value = address & 0x1E;
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, value);
+void extcl_after_mapper_init_231(void) {
+	prg_fix_231();
+	mirroring_fix_231();
+}
+void extcl_cpu_wr_mem_231(WORD address, UNUSED(BYTE value)) {
+	m231.reg = address;
+	prg_fix_231();
+	mirroring_fix_231();
+}
+BYTE extcl_save_mapper_231(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m231.reg);
 
-	value |= ((address >> 5) & 0x01);
-	control_bank(info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, value);
+	return (EXIT_OK);
+}
 
-	map_prg_rom_8k_update();
+INLINE static void prg_fix_231(void) {
+	WORD bank = m231.reg & 0x1E;
 
-	switch ((address & 0xC0) >> 6) {
+	if (m231.reg & 0x20) {
+		memmap_auto_32k(MMCPU(0x8000), (bank >> 1));
+	} else {
+		memmap_auto_16k(MMCPU(0x8000), bank);
+		memmap_auto_16k(MMCPU(0xC000), bank);
+	}
+}
+INLINE static void mirroring_fix_231(void) {
+	switch ((m231.reg & 0xC0) >> 6) {
 		case 0:
 			mirroring_SCR0();
 			break;

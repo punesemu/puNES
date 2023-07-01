@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
@@ -28,6 +26,7 @@ struct _m254 {
 } m254;
 
 void map_init_254(void) {
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(254);
 	EXTCL_CPU_RD_MEM(254);
 	EXTCL_SAVE_MAPPER(254);
@@ -42,9 +41,13 @@ void map_init_254(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
+	if (info.reset >= HARD) {
+		memset(&irqA12, 0x00, sizeof(irqA12));
+	}
+
 	memset(&m254, 0x00, sizeof(m254));
-	memset(&mmc3, 0x00, sizeof(mmc3));
-	memset(&irqA12, 0x00, sizeof(irqA12));
+
+	init_MMC3(info.reset);
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -57,17 +60,15 @@ void extcl_cpu_wr_mem_254(WORD address, BYTE value) {
 	}
 	extcl_cpu_wr_mem_MMC3(address, value);
 }
-BYTE extcl_cpu_rd_mem_254(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_254(WORD address, UNUSED(BYTE openbus)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		if (!m254.reg[0]) {
-			return (openbus ^ m254.reg[1]);
+			return (wram_rd(address) ^ m254.reg[1]);
 		}
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_254(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m254.reg);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	return (EXIT_OK);
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }

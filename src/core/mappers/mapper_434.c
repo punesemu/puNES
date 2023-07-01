@@ -18,8 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_434(void);
@@ -53,7 +51,7 @@ void extcl_cpu_wr_mem_434(WORD address, BYTE value) {
 		mirroring_fix_434();
 	} else if (address >= 0x8000) {
 		// bus conflict
-		m434.reg[1] = value & prg_rom_rd(address);
+		m434.reg[1] = value & prgrom_rd(address);
 		prg_fix_434();
 	}
 }
@@ -65,17 +63,9 @@ BYTE extcl_save_mapper_434(BYTE mode, BYTE slot, FILE *fp) {
 
 INLINE static void prg_fix_434(void) {
 	WORD base = (m434.reg[0] & 0x07) << 3;
-	WORD bank;
 
-	bank = base | (m434.reg[1] & 0x07);
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 0, bank);
-
-	bank = base | 0x07;
-	_control_bank(bank, info.prg.rom.max.banks_16k)
-	map_prg_rom_8k(2, 2, bank);
-
-	map_prg_rom_8k_update();
+	memmap_auto_16k(MMCPU(0x8000), (base | (m434.reg[1] & 0x07)));
+	memmap_auto_16k(MMCPU(0xC000), (base | 0x07));
 }
 INLINE static void mirroring_fix_434(void) {
 	if (m434.reg[0] & 0x20) {

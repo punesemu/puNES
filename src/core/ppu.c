@@ -21,7 +21,6 @@
 #include "cpu.h"
 #include "info.h"
 #include "clock.h"
-#include "mem_map.h"
 #include "ppu_inline.h"
 #include "video/gfx.h"
 #include "mappers.h"
@@ -57,7 +56,7 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 	/* deve essere azzerato alla fine di ogni ciclo PPU */\
 	r2006.changed_from_op = 0;
 #define put_pixel(clr) ppu_screen.wr->line[ppu.screen_y][ppu.frame_x] = r2001.emphasis | clr;
-#define put_emphasis(clr) put_pixel((mmap_palette.color[clr] & r2001.color_mode))
+#define put_emphasis(clr) put_pixel((memmap_palette.color[clr] & r2001.color_mode))
 #define put_bg put_emphasis(color_bg)
 #define put_sp put_emphasis(color_sp | 0x10)
 #define examine_sprites(senv, sp, vis, ty)\
@@ -129,7 +128,6 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 	}
 
 static void ppu_alignment_init(void);
-static BYTE ppu_alloc_screen_buffer(_ppu_screen_buffer *sb);
 INLINE static void ppu_oam_evaluation(void);
 
 static const BYTE inv_chr[256] = {
@@ -167,7 +165,8 @@ static const BYTE inv_chr[256] = {
 	0x1F, 0x9F, 0x5F, 0xDF, 0x3F, 0xBF, 0x7F, 0xFF
 };
 static const BYTE palette_init[0x20] = {
-	0x09, 0x01, 0x00, 0x01, 0x00, 0x02, 0x02, 0x0D,
+//	0x09, 0x01, 0x00, 0x01, 0x00, 0x02, 0x02, 0x0D,
+	0x0D, 0x01, 0x00, 0x01, 0x00, 0x02, 0x02, 0x0D,
 	0x08, 0x10, 0x08, 0x24, 0x00, 0x00, 0x04, 0x2C,
 	0x09, 0x01, 0x34, 0x03, 0x00, 0x04, 0x00, 0x14,
 	0x08, 0x3A, 0x00, 0x02, 0x00, 0x20, 0x2C, 0x08
@@ -195,7 +194,7 @@ void ppu_init(void) {
 }
 void ppu_quit(void) {
 	/* libero la memoria riservata */
-	BYTE a;
+	BYTE a = 0;
 
 	for (a = 0; a < 2; a++) {
 		_ppu_screen_buffer *sb = &ppu_screen.buff[a];
@@ -204,11 +203,6 @@ void ppu_quit(void) {
 			free(sb->data);
 			sb->data = NULL;
 		}
-	}
-
-	if (ppu_screen.preview.data) {
-		free(ppu_screen.preview.data);
-		ppu_screen.preview.data = NULL;
 	}
 }
 
@@ -267,11 +261,6 @@ void ppu_tick(void) {
 			}
 
 			if (extcl_update_r2006) {
-				// utilizzato dalle mappers :
-				// MMC3
-				// Rex (DBZ)
-				// Taito (TC0690)
-				// Tengen (Rambo)
 				extcl_update_r2006(r2006.value, old_r2006);
 			}
 		}
@@ -285,14 +274,14 @@ void ppu_tick(void) {
 			 */
 			if (ppu.frame_x == 0) {
 				if (chinaersan2.enable) {
-					memcpy(chinaersan2.ram, mmcpu.ram, 256);
+					memcpy(chinaersan2.ram, ram_pnt(), 256);
 				}
 				ppu.screen_y = 0;
 				/* setto a 0 il bit 5, 6 ed il 7 del $2002 */
 				r2002.sprite_overflow = r2002.sprite0_hit = r2002.vblank = ppu.vblank = FALSE;
 				// serve assolutamente per la corretta lettura delle coordinate del puntatore zapper
 				if (info.zapper_is_present && !fps_fast_forward_enabled()) {
-					memset((BYTE *)ppu_screen.wr->data, 0, screen_size());
+					memset((BYTE *)ppu_screen.wr->data, 0, (size_t)screen_size());
 				}
 			} else if ((ppu.frame_x == (SHORT_SLINE_CYCLES - 1)) && (machine.type == NTSC)) {
 				/*
@@ -504,7 +493,7 @@ void ppu_tick(void) {
 						 * invisibili e non devo disegnarli).
 						 */
 						if (r2001.spr_visible) {
-							BYTE a;
+							BYTE a = 0;
 
 							examine_sprites(spr_ev, sprite, visible_spr, FALSE)
 
@@ -519,7 +508,7 @@ void ppu_tick(void) {
 							 * utilizzo quello del background.
 							 */
 							if (cfg->hide_background) {
-								put_pixel(mmap_palette.color[0])
+								put_pixel(memmap_palette.color[0])
 							} else {
 								put_bg
 							}
@@ -529,7 +518,7 @@ void ppu_tick(void) {
 							 * trasparente, utilizzo quello dello sprite.
 							 */
 							if (cfg->hide_sprites) {
-								put_pixel(mmap_palette.color[0])
+								put_pixel(memmap_palette.color[0])
 							} else {
 								put_sp
 							}
@@ -544,7 +533,7 @@ void ppu_tick(void) {
 									 */
 									if (cfg->hide_background) {
 										if (cfg->hide_sprites) {
-											put_pixel(mmap_palette.color[0])
+											put_pixel(memmap_palette.color[0])
 										} else {
 											put_sp
 										}
@@ -555,7 +544,7 @@ void ppu_tick(void) {
 									/* altrimenti quello dello sprite */
 									if (cfg->hide_sprites) {
 										if (cfg->hide_background) {
-											put_pixel(mmap_palette.color[0])
+											put_pixel(memmap_palette.color[0])
 										} else {
 											put_bg
 										}
@@ -585,7 +574,7 @@ void ppu_tick(void) {
 								if (sprite_unl[visible_spr_unl].attrib & 0x20) {
 									if (cfg->hide_background) {
 										if (cfg->hide_sprites) {
-											put_pixel(mmap_palette.color[0])
+											put_pixel(memmap_palette.color[0])
 										} else {
 											put_sp
 										}
@@ -595,7 +584,7 @@ void ppu_tick(void) {
 								} else {
 									if (cfg->hide_sprites) {
 										if (cfg->hide_background) {
-											put_pixel(mmap_palette.color[0])
+											put_pixel(memmap_palette.color[0])
 										} else {
 											put_bg
 										}
@@ -612,7 +601,7 @@ void ppu_tick(void) {
 						 * altrimenti visualizzo un pixel del
 						 * colore 0 della paletta.
 						 */
-						put_pixel(mmap_palette.color[0])
+						put_pixel(memmap_palette.color[0])
 
 						if ((r2006.value & 0xFF00) == 0x3F00) {
 							/*
@@ -721,7 +710,7 @@ void ppu_tick(void) {
 									for (spr_ev_unl.tmp_spr_plus = 0;
 										spr_ev_unl.tmp_spr_plus < spr_ev_unl.count_plus;
 										spr_ev_unl.tmp_spr_plus++) {
-										WORD spr_adr;
+										WORD spr_adr = 0;
 
 										_ppu_spr_adr(spr_ev_unl.tmp_spr_plus, ele_plus_unl, sprite_plus_unl, spr_adr)
 										get_sprites(ele_plus_unl, spr_ev_unl, sprite_plus_unl, spr_adr)
@@ -875,7 +864,7 @@ void ppu_tick(void) {
 		 */
 		/* controllo di essere nel range [dummy...rendering screen] */
 		if ((ppu.frame_y >= ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) {
-			BYTE a;
+			BYTE a = 0;
 
 			/* verifico di non trattare la dummy line */
 			if (ppu.frame_y > ppu_sclines.vint) {
@@ -1022,7 +1011,7 @@ BYTE ppu_turn_on(void) {
 
 		/* riservo una zona di memoria per lo screen */
 		if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-			BYTE a;
+			BYTE a = 0;
 
 			ppu_screen.rd = &ppu_screen.buff[0];
 			ppu_screen.wr = &ppu_screen.buff[1];
@@ -1033,27 +1022,24 @@ BYTE ppu_turn_on(void) {
 					return (EXIT_ERROR);
 				}
 			}
-			if (ppu_alloc_screen_buffer(&ppu_screen.preview) == EXIT_ERROR) {
-				return (EXIT_ERROR);
-			}
 			/*
 			 * tabella di indici che puntano ad ogni
 			 * elemento dell'OAM (4 bytes ciascuno).
 			 */
 			for (a = 0; a < 64; ++a) {
-				oam.element[a] = &oam.data[(a * 4)];
+				oam.element[a] = &oam.data[(size_t)(a * 4)];
 			}
 			for (a = 0; a < 8; ++a) {
-				oam.ele_plus[a] = &oam.plus[(a * 4)];
+				oam.ele_plus[a] = &oam.plus[(size_t)(a * 4)];
 			}
 			for (a = 0; a < 56; ++a) {
-				oam.ele_plus_unl[a] = &oam.plus_unl[(a * 4)];
+				oam.ele_plus_unl[a] = &oam.plus_unl[(size_t)(a * 4)];
 			}
 			ppu_alignment_reset();
 		}
 		/* reinizializzazione completa della PPU */
 		{
-			int a, x, y;
+			int a = 0, x = 0, y = 0;
 
 			/* inizializzo lo screen */
 			for (a = 0; a < 2; a++) {
@@ -1074,9 +1060,14 @@ BYTE ppu_turn_on(void) {
 			memset(oam.plus, 0xFF, sizeof(oam.plus));
 			memset(oam.plus_unl, 0xFF, sizeof(oam.plus_unl));
 			/* inizializzo nametables */
-			memset(ntbl.data, 0x00, sizeof(ntbl.data));
+			nmt_memset();
 			/* e paletta dei colori */
-			memcpy(mmap_palette.color, palette_init, sizeof(mmap_palette.color));
+			memcpy(memmap_palette.color, palette_init, sizeof(memmap_palette.color));
+
+			// power_up_palette.nes
+			if (info.crc32.total == 0xDD941E82) {
+				memmap_palette.color[0] = 0x09;
+			}
 		}
 		ppu_alignment_init();
 	} else {
@@ -1139,6 +1130,31 @@ void ppu_draw_screen_continue_ctrl_count(int *count) {
 	}
 	(*count) = 0;
 }
+BYTE ppu_alloc_screen_buffer(_ppu_screen_buffer *sb) {
+	int b = 0;
+
+	sb->ready = FALSE;
+	sb->frame = 0;
+
+	if (sb->data) {
+		free(sb->data);
+	}
+
+	sb->data = (WORD *)malloc((size_t)screen_size());
+	if (!sb->data) {
+		log_error(uL("ppu;out of memory"));
+		return (EXIT_ERROR);
+	}
+	/*
+	 * creo una tabella di indici che puntano
+	 * all'inizio di ogni linea dello screen.
+	 */
+	for (b = 0; b < SCR_ROWS; b++) {
+		sb->line[b] = (WORD *)(sb->data + ((size_t)b * SCR_COLUMNS));
+	}
+
+	return (EXIT_OK);
+}
 
 void ppu_alignment_reset(void) {
 	ppu_alignment.count.cpu = 0;
@@ -1162,10 +1178,12 @@ static void ppu_alignment_init(void) {
 			break;
 	}
 
-	ppu.cycles = (SWORD)((ppu_alignment.cpu + (-ppu_alignment.ppu + 1)) % machine.cpu_divide);
+	ppu.cycles = 0; //(SWORD)(machine.ppu_divide * -8);
+	ppu.cycles += (SWORD)((ppu_alignment.cpu + (-ppu_alignment.ppu + 1)) % machine.cpu_divide);
 
 	if (cfg->ppu_alignment == PPU_ALIGMENT_INC_AT_RESET) {
-		if ((ppu_alignment.count.cpu = (ppu_alignment.count.cpu + 1) % machine.cpu_divide) == 0) {
+		ppu_alignment.count.cpu = (ppu_alignment.count.cpu + 1) % machine.cpu_divide;
+		if (!ppu_alignment.count.cpu) {
 			ppu_alignment.count.ppu = (ppu_alignment.count.ppu + 1) % machine.ppu_divide;
 		}
 	}
@@ -1177,34 +1195,11 @@ static void ppu_alignment_init(void) {
 		return;
 	} else if (info.reset >= HARD) {
 		log_info(uL("CPU/PPU alig.;PPU %d/%d, CPU %d/%d"),
-			ppu_alignment.ppu, machine.ppu_divide,
-			ppu_alignment.cpu, machine.cpu_divide);
+			ppu_alignment.ppu, (machine.ppu_divide - 1),
+			ppu_alignment.cpu, (machine.cpu_divide - 1));
 	}
 }
-static BYTE ppu_alloc_screen_buffer(_ppu_screen_buffer *sb) {
-	int b;
 
-	sb->ready = FALSE;
-	sb->frame = 0;
-
-	if (sb->data) {
-		free(sb->data);
-	}
-
-	if (!(sb->data = (WORD *)malloc(screen_size()))) {
-		log_error(uL("ppu;out of memory"));
-		return (EXIT_ERROR);
-	}
-	/*
-	 * creo una tabella di indici che puntano
-	 * all'inizio di ogni linea dello screen.
-	 */
-	for (b = 0; b < SCR_ROWS; b++) {
-		sb->line[b] = (WORD *)(sb->data + (b * SCR_COLUMNS));
-	}
-
-	return (EXIT_OK);
-}
 INLINE static void ppu_oam_evaluation(void) {
 /* ------------------------------- CONTROLLO SPRITE SCANLINE+1 ------------------------------- */
 	if (ppu.frame_x < 64) {
@@ -1251,7 +1246,7 @@ INLINE static void ppu_oam_evaluation(void) {
 					/*
 					 * We've since discovered that not only are
 					 * sprites 0 and 1 temporarily replaced with
-					 * the pair that OAMADDR&0xF8 points to, but
+					 * the pair that OAMADDR & 0xF8 points to, but
 					 * it's permanent: the pair that OAMADDR & 0xF8
 					 * points to is copied to the first 8 bytes of
 					 * OAM when rendering starts.
@@ -1348,7 +1343,7 @@ INLINE static void ppu_oam_evaluation(void) {
 							if (cfg->unlimited_sprites_auto) {
 								BYTE count = 0,  max_count = 0;
 								WORD last_position = 0xFFFF;
-								int i;
+								int i = 0;
 
 								for (i = 0; i < 64; i++) {
 									BYTE y = oam.element[i][YC];
@@ -1373,7 +1368,7 @@ INLINE static void ppu_oam_evaluation(void) {
 							// end
 
 							if (unlimited_sprites) {
-								BYTE t2004;
+								BYTE t2004 = 0;
 
 								spr_ev_unl.index = spr_ev.index + 1;
 								spr_ev_unl.count_plus = 0;
@@ -1538,15 +1533,20 @@ INLINE static void ppu_oam_evaluation(void) {
 					/* ...e sono nell'ultimo ciclo...*/
 					if (spr_ev.timing == 7) {
 						/* ...indico la nuova modalita'... */
-						spr_ev.evaluate = PPU_OVERFLOW_SPR;
-						/* ...passo al prossimo sprite.. */
-						spr_ev.timing = 0;
-						/*
-						 * ...anche se devo riesaminare questo
-						 * stesso sprite (ricordo che incremento
-						 * index al timing = 0).
-						 */
-						spr_ev.index--;
+						if (spr_ev.evaluate == PPU_OVERFLOW_SPR){
+							/* ...passo al prossimo sprite.. */
+							spr_ev.timing = 0;
+						} else {
+							spr_ev.evaluate = PPU_OVERFLOW_SPR;
+							/* ...passo al prossimo sprite.. */
+							spr_ev.timing = 0;
+							/*
+							 * ...anche se devo riesaminare questo
+							 * stesso sprite (ricordo che incremento
+							 * index al timing == 0).
+							 */
+							spr_ev.index--;
+						}
 					} else {
 						/* ... e non sono nell'ultimo ciclo,
 						 * continuo a esaminare lo sprite.

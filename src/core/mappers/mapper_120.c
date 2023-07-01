@@ -18,51 +18,48 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
-#include "cpu.h"
 #include "save_slot.h"
 
+INLINE static void prg_fix_120(void);
+INLINE static void wram_fix_120(void);
+
 struct _m120 {
-	BYTE *prg_ram_rd;
+	BYTE reg;
 } m120;
 
 void map_init_120(void) {
+	EXTCL_AFTER_MAPPER_INIT(120);
 	EXTCL_CPU_WR_MEM(120);
-	EXTCL_CPU_RD_MEM(120);
 	EXTCL_SAVE_MAPPER(120);
 	mapper.internal_struct[0] = (BYTE *)&m120;
 	mapper.internal_struct_size[0] = sizeof(m120);
 
-	info.mapper.extend_wr = TRUE;
-	cpu.prg_ram_wr_active = FALSE;
-	cpu.prg_ram_rd_active = FALSE;
-
 	if (info.reset >= HARD) {
 		memset(&m120, 0x00, sizeof(m120));
-		m120.prg_ram_rd = prg_rom();
-		map_prg_rom_8k(4, 0, 2);
 	}
+
+	info.mapper.extend_wr = TRUE;
+}
+void extcl_after_mapper_init_120(void) {
+	prg_fix_120();
+	wram_fix_120();
 }
 void extcl_cpu_wr_mem_120(WORD address, BYTE value) {
-	if ((address < 0x4100) || (address > 0x5FFF)) {
-		return;
+	if ((address >= 0x4000) && (address < 0x5FFF)) {
+		if ((address & 0xFFF) == 0x01FF) {
+			m120.reg = value;
+			wram_fix_120();
+		}
 	}
-
-	if ((address & 0xE3C0) == 0x41C0) {
-		control_bank_with_AND(0x07, info.prg.rom.max.banks_8k)
-		m120.prg_ram_rd = prg_pnt(value << 13);
-	}
-}
-BYTE extcl_cpu_rd_mem_120(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address < 0x6000) || (address > 0x7FFF)) {
-		return (openbus);
-	}
-
-	return (m120.prg_ram_rd[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_120(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_pos(mode, slot, prg_rom(), m120.prg_ram_rd);
-
+	save_slot_ele(mode, slot, m120.reg);
 	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_120(void) {
+	memmap_auto_32k(MMCPU(0x8000), 2);
+}
+INLINE static void wram_fix_120(void) {
+	memmap_prgrom_8k(MMCPU(0x6000), m120.reg);
 }

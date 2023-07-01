@@ -224,7 +224,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void update_gfx_monitor_dimension(void);
 		QAction *state_save_slot_action(BYTE slot);
 		void state_save_slot_set(int slot, bool on_video);
-		void state_save_slot_set_tooltip(BYTE slot, char *buffer);
+		void state_save_slot_set_tooltip(BYTE slot);
 		void toggle_toolbars(void);
 		void reset_min_max_size(void);
 		QScreen *win_handle_screen(void);
@@ -250,7 +250,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void update_menu_tools(void);
 
 	private:
-		void action_text(QAction *action, const QString &description, QString *shortcut);
+		void action_text(QAction *action, const QString &description, QString *scut);
 		void ctrl_disk_side(QAction *action);
 		void geom_to_cfg(const QRect &geom, _last_geometry *lg);
 		void set_dialog_geom(QRect &geom);
@@ -293,6 +293,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_state_save_slot_set(void);
 		void s_state_save_file(void);
 		void s_state_load_file(void);
+		void s_open_ddip(void);
 		void s_open_djsc(void);
 		void s_tape_play(void);
 		void s_tape_record(void);

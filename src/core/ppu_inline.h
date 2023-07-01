@@ -20,6 +20,7 @@
 #define PPU_INLINE_H_
 
 #include "external_calls.h"
+#include "memmap.h"
 
 INLINE static BYTE ppu_rd_mem(WORD address);
 
@@ -32,33 +33,14 @@ INLINE static BYTE ppu_rd_mem(WORD address) {
 		 */
 		extcl_rd_ppu_mem(address);
 	}
-
 	address &= 0x3FFF;
-
 	if (address < 0x2000) {
-		address &= 0x1FFF;
-		if (extcl_rd_chr) {
-			/*
-			 * utilizzato dalle mappers :
-			 * MMC5
-			 */
-			return (extcl_rd_chr(address));
-		}
-		return (chr.bank_1k[address >> 10][address & 0x3FF]);
+		return (extcl_rd_chr ? extcl_rd_chr(address) : chr_rd(address));
 	}
 	if (address < 0x3F00) {
-		if (extcl_rd_nmt) {
-			/*
-			 * utilizzato dalle mappers :
-			 * MMC5
-			 * Bandai (B161X02X74)
-			 */
-			return (extcl_rd_nmt(address));
-		}
-		address &= 0x0FFF;
-		return (ntbl.bank_1k[address >> 10][address & 0x3FF]);
+		return (extcl_rd_nmt ? extcl_rd_nmt(address) : nmt_rd(address));
 	}
-	return (mmap_palette.color[address & 0x1F]);
+	return (memmap_palette.color[address & 0x1F]);
 }
 
 #endif /* PPU_INLINE_H_ */

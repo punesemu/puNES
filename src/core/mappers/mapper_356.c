@@ -18,29 +18,22 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_356(BYTE value);
-INLINE static void prg_swap_356(WORD address, WORD value);
-INLINE static void chr_fix_356(BYTE value);
-INLINE static void chr_swap_356(WORD address, WORD value);
-INLINE static void mirroring_fix_356(void);
+void prg_swap_mmc3_356(WORD address, WORD value);
+void chr_swap_mmc3_356(WORD address, WORD value);
+void mirroring_fix_mmc3_356(void);
 
 struct _m356 {
 	BYTE index;
-	BYTE chr_writable;
-	BYTE reg[5];
-	WORD mmc3[8];
+	BYTE reg[4];
 } m356;
 
 void map_init_356(void) {
-	EXTCL_AFTER_MAPPER_INIT(356);
+	EXTCL_AFTER_MAPPER_INIT(MMC3);
 	EXTCL_CPU_WR_MEM(356);
 	EXTCL_SAVE_MAPPER(356);
-	EXTCL_WR_CHR(356);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
 	EXTCL_PPU_000_TO_255(MMC3);
@@ -52,183 +45,65 @@ void map_init_356(void) {
 	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	memset(&mmc3, 0x00, sizeof(mmc3));
-	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m356, 0x00, sizeof(m356));
+	if (info.reset >= HARD) {
+		memset(&irqA12, 0x00, sizeof(irqA12));
+	}
 
+	memset(&m356, 0x00, sizeof(m356));
 	m356.reg[2] = 0x0F;
 
-	m356.mmc3[0] = 0;
-	m356.mmc3[1] = 2;
-	m356.mmc3[2] = 4;
-	m356.mmc3[3] = 5;
-	m356.mmc3[4] = 6;
-	m356.mmc3[5] = 7;
-	m356.mmc3[6] = 0;
-	m356.mmc3[7] = 0;
-
-	if (info.format == NES_2_0) {
-		if (info.chr.ram.banks_8k_plus > 0) {
-			map_chr_ram_extra_init(info.chr.ram.banks_8k_plus * 0x2000);
-		}
-	} else {
-		map_chr_ram_extra_init(0x2000);
-	}
+	init_MMC3(info.reset);
+	MMC3_prg_swap = prg_swap_mmc3_356;
+	MMC3_chr_swap = chr_swap_mmc3_356;
+	MMC3_mirroring_fix = mirroring_fix_mmc3_356;
 
 	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extcl_after_mapper_init_356(void) {
-	prg_fix_356(mmc3.bank_to_update);
-	chr_fix_356(mmc3.bank_to_update);
-	mirroring_fix_356();
-}
 void extcl_cpu_wr_mem_356(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		if (cpu.prg_ram_wr_active && !(m356.reg[3] & 0x40)) {
+		if (!(m356.reg[3] & 0x40) && memmap_adr_is_writable(MMCPU(address))) {
 			m356.reg[m356.index] = value;
 			m356.index = (m356.index + 1) & 0x03;
-			prg_fix_356(mmc3.bank_to_update);
-			chr_fix_356(mmc3.bank_to_update);
-			mirroring_fix_356();
+			MMC3_prg_fix();
+			MMC3_chr_fix();
+			MMC3_mirroring_fix();
 		}
 		return;
-	}
-	if (address >= 0x8000) {
-		switch (address & 0xE001) {
-			case 0x8000:
-				if ((value & 0x40) != (mmc3.bank_to_update & 0x40)) {
-					prg_fix_356(value);
-				}
-				if ((value & 0x80) != (mmc3.bank_to_update & 0x80)) {
-					chr_fix_356(value);
-				}
-				mmc3.bank_to_update = value;
-				return;
-			case 0x8001: {
-				WORD cbase = (mmc3.bank_to_update & 0x80) << 5;
-
-				m356.mmc3[mmc3.bank_to_update & 0x07] = value;
-
-				switch (mmc3.bank_to_update & 0x07) {
-					case 0:
-						chr_swap_356(cbase ^ 0x0000, value & (~1));
-						chr_swap_356(cbase ^ 0x0400, value | 1);
-						return;
-					case 1:
-						chr_swap_356(cbase ^ 0x0800, value & (~1));
-						chr_swap_356(cbase ^ 0x0C00, value | 1);
-						return;
-					case 2:
-						chr_swap_356(cbase ^ 0x1000, value);
-						return;
-					case 3:
-						chr_swap_356(cbase ^ 0x1400, value);
-						return;
-					case 4:
-						chr_swap_356(cbase ^ 0x1800, value);
-						return;
-					case 5:
-						chr_swap_356(cbase ^ 0x1C00, value);
-						return;
-					case 6:
-						if (mmc3.bank_to_update & 0x40) {
-							prg_swap_356(0xC000, value);
-						} else {
-							prg_swap_356(0x8000, value);
-						}
-						return;
-					case 7:
-						prg_swap_356(0xA000, value);
-						return;
-				}
-				return;
-			}
-			case 0xA000:
-				m356.reg[4] = value;
-				mirroring_fix_356();
-				return;
-		}
+	} else if (address >= 0x8000) {
 		extcl_cpu_wr_mem_MMC3(address, value);
 	}
 }
 BYTE extcl_save_mapper_356(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m356.index);
-	save_slot_ele(mode, slot, m356.chr_writable);
 	save_slot_ele(mode, slot, m356.reg);
-	save_slot_ele(mode, slot, m356.mmc3);
-	extcl_save_mapper_MMC3(mode, slot, fp);
-
-	if (mode == SAVE_SLOT_READ) {
-		chr_fix_356(mmc3.bank_to_update);
-		mirroring_fix_356();
-	}
-
-	return (EXIT_OK);
-}
-void extcl_wr_chr_356(WORD address, BYTE value) {
-	if (m356.chr_writable) {
-		chr.bank_1k[address >> 10][address & 0x3FF] = value;
-	}
+	return (extcl_save_mapper_MMC3(mode, slot, fp));
 }
 
-INLINE static void prg_fix_356(BYTE value) {
-	if (value & 0x40) {
-		prg_swap_356(0x8000, ~1);
-		prg_swap_356(0xC000, m356.mmc3[6]);
-	} else {
-		prg_swap_356(0x8000, m356.mmc3[6]);
-		prg_swap_356(0xC000, ~1);
-	}
-	prg_swap_356(0xA000, m356.mmc3[7]);
-	prg_swap_356(0xE000, ~0);
-}
-INLINE static void prg_swap_356(WORD address, WORD value) {
+void prg_swap_mmc3_356(WORD address, WORD value) {
 	WORD base = m356.reg[1] | ((m356.reg[2] & 0xC0) << 2);
 	WORD mask = ~m356.reg[3] & 0x3F;
 
-	value = (base & ~mask) | (value & mask);
-	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, (address >> 13) & 0x03, value);
-	map_prg_rom_8k_update();
+	prg_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }
-INLINE static void chr_fix_356(BYTE value) {
-	WORD cbase = (value & 0x80) << 5;
-
-	chr_swap_356(cbase ^ 0x0000, m356.mmc3[0] & (~1));
-	chr_swap_356(cbase ^ 0x0400, m356.mmc3[0] |   1);
-	chr_swap_356(cbase ^ 0x0800, m356.mmc3[1] & (~1));
-	chr_swap_356(cbase ^ 0x0C00, m356.mmc3[1] |   1);
-	chr_swap_356(cbase ^ 0x1000, m356.mmc3[2]);
-	chr_swap_356(cbase ^ 0x1400, m356.mmc3[3]);
-	chr_swap_356(cbase ^ 0x1800, m356.mmc3[4]);
-	chr_swap_356(cbase ^ 0x1C00, m356.mmc3[5]);
-}
-INLINE static void chr_swap_356(WORD address, WORD value) {
-	if (!(m356.reg[2] & 0x20)) {
-		m356.chr_writable = TRUE;
-		value = address >> 10;
-		chr.bank_1k[address >> 10] = &chr.extra.data[value << 10];
+void chr_swap_mmc3_356(WORD address, WORD value) {
+	if (!(m356.reg[2] & 0x20) && vram_size()) {
+		memmap_vram_1k(MMPPU(address), address >> 10);
 	} else {
 		WORD base = ((m356.reg[2] & 0xF0) << 4) | m356.reg[0];
 		WORD mask = 0xFF >> (~m356.reg[2] & 0x0F);
 
-		m356.chr_writable = FALSE;
-		value = (base & ~mask) | (value & mask);
-		control_bank(info.chr.rom.max.banks_1k)
-		chr.bank_1k[address >> 10] = chr_pnt(value << 10);
+		memmap_auto_1k(MMPPU(address), ((base & ~mask) | (value & mask)));
 	}
 }
-INLINE static void mirroring_fix_356(void) {
+void mirroring_fix_mmc3_356(void) {
 	if (m356.reg[2] & 0x40) {
 		mirroring_FSCR();
+	} else if (mmc3.mirroring & 0x01) {
+		mirroring_H();
 	} else {
-		if (m356.reg[4] & 0x01) {
-			mirroring_H();
-		} else {
-			mirroring_V();
-		}
+		mirroring_V();
 	}
 }

@@ -18,11 +18,10 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_221(void);
+INLINE static void chr_fix_221(void);
 INLINE static void mirroring_fix_221(void);
 
 struct _m221 {
@@ -33,7 +32,6 @@ void map_init_221(void) {
 	EXTCL_AFTER_MAPPER_INIT(221);
 	EXTCL_CPU_WR_MEM(221);
 	EXTCL_SAVE_MAPPER(221);
-	EXTCL_WR_CHR(221);
 	mapper.internal_struct[0] = (BYTE *)&m221;
 	mapper.internal_struct_size[0] = sizeof(m221);
 
@@ -43,6 +41,7 @@ void map_init_221(void) {
 }
 void extcl_after_mapper_init_221(void) {
 	prg_fix_221();
+	chr_fix_221();
 	mirroring_fix_221();
 }
 void extcl_cpu_wr_mem_221(WORD address, UNUSED(BYTE value)) {
@@ -85,6 +84,7 @@ void extcl_cpu_wr_mem_221(WORD address, UNUSED(BYTE value)) {
 			//                         1: Enabled, CHR-RAM write-protected
 			m221.reg[1] = address;
 			prg_fix_221();
+			chr_fix_221();
 			break;
 	}
 }
@@ -93,40 +93,32 @@ BYTE extcl_save_mapper_221(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_wr_chr_221(WORD address, BYTE value) {
-	if (mapper.write_vram && !(m221.reg[1] & 0x08)) {
-		chr.bank_1k[address >> 10][address & 0x3FF] = value;
-	}
-}
 
 INLINE static void prg_fix_221(void) {
 	WORD outer = ((m221.reg[0] & 0x200) >> 3) | ((m221.reg[0] & 0xE0) >> 2);
 	WORD inner = m221.reg[1] & 0x07;
-	WORD bank;
+	WORD bank = 0;
 
 	if (!(m221.reg[0] & 0x02)) {
 		bank = outer | inner;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
-		map_prg_rom_8k(2, 2, bank);
+		memmap_auto_16k(MMCPU(0x8000), bank);
+		memmap_auto_16k(MMCPU(0xC000), bank);
 	} else {
 		if (m221.reg[0] & 0x100) {
 			bank = outer | inner;
-			_control_bank(bank, info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, bank);
+			memmap_auto_16k(MMCPU(0x8000), bank);
 
 			bank = outer | 0x07;
-			_control_bank(bank, info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 2, bank);
+			memmap_auto_16k(MMCPU(0xC000), bank);
 		} else {
 			bank = (outer | inner) >> 1;
-			_control_bank(bank, info.prg.rom.max.banks_32k)
-			map_prg_rom_8k(4, 0, bank);
+			memmap_auto_32k(MMCPU(0x8000), bank);
 		}
 	}
-	map_prg_rom_8k_update();
 }
-
+INLINE static void chr_fix_221(void) {
+	memmap_vram_wp_8k(MMPPU(0x0000), 0, TRUE, !(m221.reg[1] & 0x08));
+}
 INLINE static void mirroring_fix_221(void) {
 	if (m221.reg[0] & 0x01) {
 		mirroring_H();

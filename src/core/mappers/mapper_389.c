@@ -18,7 +18,6 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
 INLINE static void prg_fix_389(void);
@@ -74,38 +73,15 @@ BYTE extcl_save_mapper_389(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_389(void) {
-	WORD bank;
-
 	if (m389.reg[1] & 0x02) {
-		bank = (m389.reg[0] >> 2) | ((m389.reg[2] & 0x0C) >> 2);
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, bank);
-
-		bank = (m389.reg[0] >> 2) | 0x03;
-		_control_bank(bank, info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 2, bank);
+		memmap_auto_16k(MMCPU(0x8000), ((m389.reg[0] >> 2) | ((m389.reg[2] & 0x0C) >> 2)));
+		memmap_auto_16k(MMCPU(0xC000), ((m389.reg[0] >> 2) | 0x03));
 	} else {
-		bank = m389.reg[0] >> 3;
-		_control_bank(bank, info.prg.rom.max.banks_32k)
-		map_prg_rom_8k(4, 0, bank);
+		memmap_auto_32k(MMCPU(0x8000), (m389.reg[0] >> 3));
 	}
-
-	map_prg_rom_8k_update();
 }
 INLINE static void chr_fix_389(void) {
-	DBWORD bank;
-
-	bank = ((m389.reg[1] & 0x38) >> 1) | (m389.reg[2] & 0x03);
-	_control_bank(bank, info.chr.rom.max.banks_8k)
-	bank <<= 13;
-	chr.bank_1k[0] = chr_pnt(bank);
-	chr.bank_1k[1] = chr_pnt(bank | 0x0400);
-	chr.bank_1k[2] = chr_pnt(bank | 0x0800);
-	chr.bank_1k[3] = chr_pnt(bank | 0x0C00);
-	chr.bank_1k[4] = chr_pnt(bank | 0x1000);
-	chr.bank_1k[5] = chr_pnt(bank | 0x1400);
-	chr.bank_1k[6] = chr_pnt(bank | 0x1800);
-	chr.bank_1k[7] = chr_pnt(bank | 0x1C00);
+	memmap_auto_8k(MMPPU(0x0000), (((m389.reg[1] & 0x38) >> 1) | (m389.reg[2] & 0x03)));
 }
 INLINE static void mirroring_fix_389(void) {
 	if (m389.reg[0] & 0x01) {

@@ -66,4 +66,38 @@ EXTERNC BYTE gpio_onebus_save_mapper(hgpio_onebus g, BYTE mode, BYTE slot, FILE 
 	return (((GPIO_OneBus *)g)->saveMapper(mode, slot, fp));
 }
 
+// ----------------------------------------------------------------------------------------
+
+EXTERNC heeprom_i2c eeprom_24c01_create(BYTE _deviceAddr, BYTE *_rom) {
+	return ((EEPROM_24C01 *)new EEPROM_24C01(_deviceAddr, _rom));
+}
+EXTERNC heeprom_i2c eeprom_24c02_create(BYTE _deviceAddr, BYTE *_rom) {
+	return ((EEPROM_24C02 *)new EEPROM_24C02(_deviceAddr, _rom));
+}
+EXTERNC heeprom_i2c eeprom_24c04_create(BYTE _deviceAddr, BYTE *_rom) {
+	return ((EEPROM_24C02 *)new EEPROM_24C04(_deviceAddr, _rom));
+}
+EXTERNC heeprom_i2c eeprom_24c08_create(BYTE _deviceAddr, BYTE *_rom) {
+	return ((EEPROM_24C08 *)new EEPROM_24C08(_deviceAddr, _rom));
+}
+EXTERNC heeprom_i2c eeprom_24c16_create(BYTE _deviceAddr, BYTE *_rom) {
+	return ((EEPROM_24C16 *)new EEPROM_24C16(_deviceAddr, _rom));
+}
+
+EXTERNC void eeprom_i2c_free(heeprom_i2c e) {
+	delete (EEPROM_I2C *)e;
+}
+EXTERNC void eeprom_i2c_reset(heeprom_i2c e) {
+	((EEPROM_I2C *)e)->reset();
+}
+EXTERNC BYTE eeprom_i2c_get_data(heeprom_i2c e) {
+	return (((EEPROM_I2C *)e)->getData());
+}
+EXTERNC void eeprom_i2c_set_pins(heeprom_i2c e, BYTE select, BYTE newClock, BYTE newData) {
+	((EEPROM_I2C *)e)->setPins(select, newClock, newData);
+}
+EXTERNC BYTE eeprom_i2c_save_mapper(heeprom_i2c e, BYTE mode, BYTE slot, FILE *fp) {
+	return (((EEPROM_I2C *)e)->saveMapper(mode, slot, fp));
+}
+
 #undef EXTERNC

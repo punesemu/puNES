@@ -18,17 +18,12 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
-#include "ines.h"
 #include "ppu.h"
 #include "ppu_inline.h"
 #include "save_slot.h"
-#include "EE93Cx6.h"
 
 INLINE static void prg_fix_163(void);
 INLINE static void mode1_bpp(WORD address);
-INLINE static BYTE mode1_bpp_rd(WORD address);
 
 struct _m163 {
 	BYTE reg[4];
@@ -95,7 +90,7 @@ void extcl_cpu_wr_mem_163(WORD address, BYTE value) {
 		case 0x5200:
 			// 1 MiB games connect both ASIC PRG A19 and A20 outputs to ROM A19,
 			// effectively exempting this register from the bit-swap.
-			if ((m163.reg[3] & 0x01) && (prg.rom.size >= (2 * 1024 * 1024))) {
+			if ((m163.reg[3] & 0x01) && (prgrom_size() >= S2M)) {
 				value = (value & 0xFC) | ((value & 0x01) << 1) | ((value & 0x02) >> 1);
 			}
 			m163.reg[2] = value;
@@ -107,13 +102,11 @@ void extcl_cpu_wr_mem_163(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_163(WORD address, BYTE openbus, UNUSED(BYTE before)) {
+BYTE extcl_cpu_rd_mem_163(WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
-		if (!(address & 0x0800)) {
-			return (~m163.reg[1] & 0x04);
-		}
+		return (!(address & 0x0800) ? ~m163.reg[1] & 0x04 : openbus);
 	}
-	return (openbus);
+	return (wram_rd(address));
 }
 BYTE extcl_save_mapper_163(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m163.reg);
@@ -122,21 +115,19 @@ BYTE extcl_save_mapper_163(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_wr_nmt_163(WORD address, BYTE value) {
+void extcl_wr_chr_163(WORD address, UNUSED(BYTE value)) {
 	mode1_bpp(address);
-	ntbl.bank_1k[(address & 0x0FFF) >> 10][address & 0x3FF] = value;
-}
-void extcl_wr_chr_163(WORD address, BYTE value) {
-	mode1_bpp(address);
-	if (mapper.write_vram) {
-		chr.bank_1k[address >> 10][address & 0x3FF] = value;
-	}
+	chr_wr(address, value);
 }
 BYTE extcl_rd_chr_163(WORD address) {
 	if ((m163.reg[0] & 0x80) && !m163.pa13) {
-		return (mode1_bpp_rd(address));
+		address = (m163.pa9 << 12) | (address & 0x0FFF);
 	}
-	return (chr.bank_1k[address >> 10][address & 0x3FF]);
+	return (chr_rd(address));
+}
+void extcl_wr_nmt_163(WORD address, UNUSED(BYTE value)) {
+	mode1_bpp(address);
+	nmt_wr(address, value);
 }
 void extcl_ppu_000_to_255_163(void) {
 	if (r2001.visible) {
@@ -173,9 +164,7 @@ void extcl_ppu_320_to_34x_163(void) {
 INLINE static void prg_fix_163(void) {
 	WORD bank = ((m163.reg[2] & 0x03) << 4) | (m163.reg[0] & 0x0F) | (m163.reg[3] & 0x04 ? 0x00: 0x03);
 
-	_control_bank(bank, info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, bank);
-	map_prg_rom_8k_update();
+	memmap_auto_32k(MMCPU(0x8000), bank);
 }
 INLINE static void mode1_bpp(WORD address) {
 	BYTE pa13 = (address & 0x2000) >> 13;
@@ -184,8 +173,4 @@ INLINE static void mode1_bpp(WORD address) {
 		m163.pa9 = (address & 0x0200) != 0;
 	}
 	m163.pa13 = pa13;
-}
-INLINE static BYTE mode1_bpp_rd(WORD address) {
-	address = (m163.pa9 << 12) | (address & 0x0FFF);
-	return (chr.bank_1k[address >> 10][address & 0x3FF]);
 }

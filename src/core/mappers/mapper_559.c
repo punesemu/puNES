@@ -16,135 +16,95 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_559(void);
-INLINE static void mirroring_fix_559(void);
+void prg_swap_vrc2and4_559(WORD address, WORD value);
+void chr_swap_vrc2and4_559(WORD address, WORD value);
+void mirroring_fix_vrc2and4_559(void);
+void misc_03_vrc2and4_559(WORD address, BYTE value);
 
 struct _m559 {
-	BYTE prg[3];
+	BYTE prg;
 	BYTE mir[4];
-	BYTE swap;
 } m559;
 
 void map_init_559(void) {
-	map_init_VRC4(VRC4M559);
-
-	EXTCL_AFTER_MAPPER_INIT(559);
+	EXTCL_AFTER_MAPPER_INIT(VRC2and4);
 	EXTCL_CPU_WR_MEM(559);
 	EXTCL_SAVE_MAPPER(559);
+	EXTCL_CPU_EVERY_CYCLE(VRC2and4);
 	mapper.internal_struct[0] = (BYTE *)&m559;
 	mapper.internal_struct_size[0] = sizeof(m559);
-	mapper.internal_struct[1] = (BYTE *)&vrc4;
-	mapper.internal_struct_size[1] = sizeof(vrc4);
+	mapper.internal_struct[1] = (BYTE *)&vrc2and4;
+	mapper.internal_struct_size[1] = sizeof(vrc2and4);
 
-	memset(&m559, 0x00, sizeof(m559));
+	if (info.reset >= HARD) {
+		m559.prg = 0xFE;
+		m559.mir[0] = 0xE0;
+		m559.mir[1] = 0xE0;
+		m559.mir[2] = 0xE1;
+		m559.mir[3] = 0xE1;
+	}
 
-	m559.prg[2] = 0xFE;
-	m559.mir[0] = 0xE0;
-	m559.mir[1] = 0xE0;
-	m559.mir[2] = 0xE1;
-	m559.mir[3] = 0xE1;
-}
-void extcl_after_mapper_init_559(void) {
-	prg_fix_559();
-	mirroring_fix_559();
+	init_VRC2and4(VRC24_VRC4, 0x400, 0x800, TRUE, info.reset);
+	VRC2and4_prg_swap = prg_swap_vrc2and4_559;
+	VRC2and4_chr_swap = chr_swap_vrc2and4_559;
+	VRC2and4_mirroring_fix = mirroring_fix_vrc2and4_559;
+	VRC2and4_misc_03 = misc_03_vrc2and4_559;
 }
 void extcl_cpu_wr_mem_559(WORD address, BYTE value) {
-	switch (address_VRC4(address)) {
-		case 0x8000:
-			m559.prg[0] = value;
-			break;
-		case 0xA000:
-			m559.prg[1] = value;
-			break;
-		case 0x9002:
-			m559.swap = value & 0x02;
-			break;
-		case 0x9003:
-			if (address & 0x0004) {
-				m559.mir[address & 0x03] = value;
-			} else {
-				m559.prg[2] = value;
+	switch (address & 0xF000) {
+		case 0xB000:
+		case 0xC000:
+		case 0xD000:
+		case 0xE000:
+		case 0xF000:
+			if (address & 0x0400) {
+				value >>= 4;
 			}
-			break;
-		case 0xB001:
-		case 0xB003:
-		case 0xC001:
-		case 0xC003:
-		case 0xD001:
-		case 0xD003:
-		case 0xE001:
-		case 0xE003:
-		case 0xF001:
-		case 0xF003:
-			value >>= 4;
-			extcl_cpu_wr_mem_VRC4(address, value);
+			extcl_cpu_wr_mem_VRC2and4(address, value);
 			break;
 		default:
-			extcl_cpu_wr_mem_VRC4(address, value);
+			extcl_cpu_wr_mem_VRC2and4(address, value);
 			break;
 	}
-	prg_fix_559();
-	mirroring_fix_559();
 }
 BYTE extcl_save_mapper_559(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m559.prg);
 	save_slot_ele(mode, slot, m559.mir);
-	save_slot_ele(mode, slot, m559.swap);
-	extcl_save_mapper_VRC4(mode, slot, fp);
+	return (extcl_save_mapper_VRC2and4(mode, slot, fp));
+}
 
-	if (mode == SAVE_SLOT_READ) {
-		mirroring_fix_559();
+void prg_swap_vrc2and4_559(WORD address, WORD value) {
+	WORD mask = 0x1F;
+
+	if (((address >> 13) & 0x03) == 2) {
+		value = m559.prg;
+		mask = 0xFF;
 	}
-
-	return (EXIT_OK);
+	prg_swap_VRC2and4_base(address, (value & mask));
 }
-
-INLINE static void prg_fix_559(void) {
-	WORD bank;
-
-	bank = m559.prg[0] & 0x1F;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 0 ^ m559.swap, bank);
-
-	bank = m559.prg[1] & 0x1F;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 1, bank);
-
-	bank = m559.prg[2];
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 2, bank);
-
-	bank = 0xFF & 0x1F;
-	_control_bank(bank, info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(1, 3, bank);
-
-	map_prg_rom_8k_update();
+void chr_swap_vrc2and4_559(WORD address, WORD value) {
+	chr_swap_VRC2and4_base(address, (value & 0x1FF));
 }
-INLINE static void mirroring_fix_559(void) {
-	DBWORD bank;
+void mirroring_fix_vrc2and4_559(void) {
+	memmap_nmt_1k(MMPPU(0x2000), m559.mir[0]);
+	memmap_nmt_1k(MMPPU(0x2400), m559.mir[1]);
+	memmap_nmt_1k(MMPPU(0x2800), m559.mir[2]);
+	memmap_nmt_1k(MMPPU(0x2C00), m559.mir[3]);
 
-	bank = m559.mir[0];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
-	ntbl.bank_1k[0] = chr_pnt(bank);
-
-	bank = m559.mir[1];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
-	ntbl.bank_1k[1] = chr_pnt(bank);
-
-	bank = m559.mir[2];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
-	ntbl.bank_1k[2] = chr_pnt(bank);
-
-	bank = m559.mir[3];
-	_control_bank(bank, info.chr.rom.max.banks_1k)
-	bank <<= 10;
-	ntbl.bank_1k[3] = chr_pnt(bank);
+	memmap_nmt_1k(MMPPU(0x3000), m559.mir[0]);
+	memmap_nmt_1k(MMPPU(0x3400), m559.mir[1]);
+	memmap_nmt_1k(MMPPU(0x3800), m559.mir[2]);
+	memmap_nmt_1k(MMPPU(0x3C00), m559.mir[3]);
+}
+void misc_03_vrc2and4_559(WORD address, BYTE value) {
+	if (address & 0x0004) {
+		m559.mir[address & 0x03] = value;
+		VRC2and4_mirroring_fix();
+	} else {
+		m559.prg = value;
+		VRC2and4_prg_fix();
+	}
 }

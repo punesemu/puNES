@@ -20,6 +20,7 @@
 #include "info.h"
 #include "conf.h"
 #include "vs_system.h"
+#include "clock.h"
 
 INLINE static void _input_rd_reg_vs(BYTE *value, BYTE nport);
 
@@ -49,7 +50,7 @@ BYTE input_rd_reg_vs_r4016(UNUSED(BYTE openbus), BYTE nport) {
 	//  ++------- Coin inserted (read below)
 	return ((vs_system.coins.right ? 0x40 : 0x00) |
 			(vs_system.coins.left ? 0x20 : 0x00) |
-			((cfg->dipswitch & 0x03) << 3) |
+			((cfg->dipswitch_vs & 0x03) << 3) |
 			(vs_system.coins.service ? 0x04 : 0x00) |
 			(value & 0x01));
 }
@@ -66,7 +67,7 @@ BYTE input_rd_reg_vs_r4017(UNUSED(BYTE openbus), BYTE nport) {
 	// |||| || |
 	// |||| || +- Buttons for player 1 (A, B, 2, 4, Up, Down, Left, Right)
 	// ++++-++--- More DIP switches (7 down to 2)
-	return ((cfg->dipswitch & 0xFC) | (value & 0x01));
+	return ((cfg->dipswitch_vs & 0xFC) | (value & 0x01));
 }
 
 INLINE static void _input_rd_reg_vs(BYTE *value, BYTE nport) {
@@ -75,7 +76,20 @@ INLINE static void _input_rd_reg_vs(BYTE *value, BYTE nport) {
 	// se avviene un DMA del DMC all'inizio
 	// dell'istruzione di lettura del registro,
 	// avverranno due letture.
-	if (!info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
+	// Aggiornamento da https://www.nesdev.org/wiki/Controller_reading :
+	// DPCM conflict
+	// Using DPCM sample playback while trying to read the controller can cause
+	// problems because of a bug in its hardware implementation.
+	// If the DMC DMA is running, and happens to start a read in the same cycle that the CPU
+	// is trying to read from $4016 or $4017, the values read will become invalid. Since the address
+	// bus will change for one cycle, the shift register will see an extra rising clock edge (a "double clock"),
+	// and the shift register will drop a bit out. The program will see this as a bit deletion from the serial
+	// data. Not correcting for this results in spurious presses. On the standard controller this is most
+	// often seen as a right-press as a trailing 1 bit takes the place of the 8th bit of the report (right).
+	// This glitch is fixed in the 2A07 CPU used in the PAL NES.
+	// This detail is poorly represented in emulators.[2] Because it is not normally a compatibility issue,
+	// many emulators do not simulate this glitch at all.
+	if ((machine.type == NTSC) && !info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
 		port_funct[nport].input_rd(value, nport, 0);
 	}
 }

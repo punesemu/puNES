@@ -154,11 +154,12 @@ enum pgs_element {
 	SET_PGS_SLOT,
 	SET_PGS_FILE_SAVE,
 	SET_PGS_OVERSCAN,
+	SET_PGS_DIPSWITCH_VS,
 	SET_PGS_DIPSWITCH,
 	SET_PGS_PPU_OVERCLOCK,
 	SET_PGS_PPU_OVERCLOCK_7BIT,
 	SET_PGS_PPU_OVERCLOCK_VB_SCLINE,
-	SET_PGS_PPU_OVERCLOCK_PR_SCLINE
+	SET_PGS_PPU_OVERCLOCK_PR_SCLINE,
 };
 enum inp_element {
 	SET_INP_SC_OPEN,
@@ -1461,7 +1462,13 @@ static const _settings pgs_cfg[] = {
 		{LENGTH(opt_oscan), opt_oscan}
 	},
 	{
-		uL("system"), uL("dipswitch"), uL("65280"),
+		uL("system"), uL("dipswitch_vs"), uL("65280"),
+		uL("# possible values: [it depends on the mapper]"),
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("system"), uL("dipswitch"), uL("-1"),
 		uL("# possible values: [it depends on the mapper]"),
 		NULL,
 		{0, NULL}

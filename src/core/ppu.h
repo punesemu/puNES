@@ -143,8 +143,6 @@ typedef struct _ppu {
 	struct _short_frame {
 		BYTE actual;
 		BYTE prev;
-		/* questo byte non serve piu' */
-		BYTE first_of_tick;
 	} sf;
 	WORD rnd_adr;
 }  _ppu;
@@ -160,7 +158,6 @@ typedef struct _screen {
 	_ppu_screen_buffer *rd;
 	_ppu_screen_buffer *last_completed_wr;
 	_ppu_screen_buffer buff[2];
-	_ppu_screen_buffer preview;
 } _ppu_screen;
 typedef struct _ppu_openbus {
 	int32_t bit0;
@@ -320,6 +317,7 @@ EXTERNC void ppu_draw_screen_continue(void);
 EXTERNC void ppu_draw_screen_pause_with_count(int *count);
 EXTERNC void ppu_draw_screen_continue_with_count(int *count);
 EXTERNC void ppu_draw_screen_continue_ctrl_count(int *count);
+EXTERNC BYTE ppu_alloc_screen_buffer(_ppu_screen_buffer *sb);
 
 EXTERNC void ppu_alignment_reset(void);
 

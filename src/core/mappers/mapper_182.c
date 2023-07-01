@@ -16,100 +16,33 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
-#include "irqA12.h"
-#include "save_slot.h"
+
+void prg_swap_mmc3_182(WORD address, WORD value);
+void chr_swap_mmc3_182(WORD address, WORD value);
 
 void map_init_182(void) {
-	EXTCL_CPU_WR_MEM(182);
-	EXTCL_SAVE_MAPPER(MMC3);
-	EXTCL_CPU_EVERY_CYCLE(MMC3);
-	EXTCL_PPU_000_TO_34X(MMC3);
-	EXTCL_PPU_000_TO_255(MMC3);
-	EXTCL_PPU_256_TO_319(MMC3);
-	EXTCL_PPU_320_TO_34X(MMC3);
-	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *)&mmc3;
-	mapper.internal_struct_size[0] = sizeof(mmc3);
+	map_init_114();
 
-	if (info.reset >= HARD) {
-		memset(&mmc3, 0x00, sizeof(mmc3));
-		memset(&irqA12, 0x00, sizeof(irqA12));
-	}
-
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	MMC3_prg_swap = prg_swap_mmc3_182;
+	MMC3_chr_swap = chr_swap_mmc3_182;
 }
-void extcl_cpu_wr_mem_182(WORD address, BYTE value) {
-	switch (address & 0xE001) {
-		case 0x8001:
-			extcl_cpu_wr_mem_MMC3(0xA000, value);
-			return;
-		case 0xA000:
-			extcl_cpu_wr_mem_MMC3(0x8000, value);
-			return;
-		case 0xC000: {
-			switch (mmc3.bank_to_update) {
-				case 0: {
-					DBWORD bank;
 
-					value >>= 1;
-					control_bank(info.chr.rom.max.banks_2k)
-					bank = value << 11;
-					chr.bank_1k[mmc3.chr_rom_cfg] = chr_pnt(bank);
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = chr_pnt(bank | 0x0400);
-					break;
-				}
-				case 1:
-					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = chr_pnt(value << 10);
-					break;
-				case 2: {
-					DBWORD bank;
+void prg_swap_mmc3_182(WORD address, WORD value) {
+	if (m114.reg[0] & 0x80) {
+		value = ((m114.reg[0] & 0x0E) | (m114.reg[0] & 0x20 ? (address & 0x4000) >> 14 : m114.reg[0] & 0x01)) << 1;
+		value |= (address & 0x2000) >> 13;
+	} else {
+		WORD mask = 0x0F | ((m114.reg[1] & 0x20) >> 1);
+		WORD base = ((m114.reg[1] & 0x10) << 1) | ((m114.reg[1] & 0x02) << 3);
 
-					value >>= 1;
-					control_bank(info.chr.rom.max.banks_2k)
-					bank = value << 11;
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = chr_pnt(bank);
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = chr_pnt(bank | 0x0400);
-					break;
-				}
-				case 3:
-					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = chr_pnt(value << 10);
-					break;
-				case 4:
-					control_bank(info.prg.rom.max.banks_8k)
-					map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);
-					map_prg_rom_8k_update();
-					break;
-				case 5:
-					control_bank(info.prg.rom.max.banks_8k)
-					map_prg_rom_8k(1, 1, value);
-					map_prg_rom_8k_update();
-					break;
-				case 6:
-					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = chr_pnt(value << 10);
-					break;
-				case 7:
-					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = chr_pnt(value << 10);
-					break;
-			}
-			return;
-		}
-		case 0xC001:
-			irqA12.latch = value;
-			irqA12.reload = TRUE;
-			irqA12.counter = 0;
-			return;
-		case 0xE000:
-		case 0xE001:
-			extcl_cpu_wr_mem_MMC3(address, value);
-			return;
+		value = base | (value & mask);
 	}
+	prg_swap_MMC3_base(address, value);
+}
+void chr_swap_mmc3_182(WORD address, WORD value) {
+	WORD base = ((m114.reg[1] & 0x10) << 4) | ((m114.reg[1] & 0x02) << 6);
+	WORD mask = 0x7F | ((m114.reg[1] & 0x40) << 1);
+
+	chr_swap_MMC3_base(address, ((base & ~mask) | (value & mask)));
 }

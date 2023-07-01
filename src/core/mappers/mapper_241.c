@@ -16,29 +16,38 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
+#include "save_slot.h"
 
-//TODO : aggiungere l'emulazione della tastiera.
+INLINE static void prg_fix_241(void);
+
+struct _m241 {
+	WORD reg;
+} m241;
 
 void map_init_241(void) {
+	EXTCL_AFTER_MAPPER_INIT(241);
 	EXTCL_CPU_WR_MEM(241);
-	EXTCL_CPU_RD_MEM(241);
+	EXTCL_SAVE_MAPPER(241);
+	mapper.internal_struct[0] = (BYTE *)&m241;
+	mapper.internal_struct_size[0] = sizeof(m241);
 
-	if (info.reset >= HARD) {
-		map_prg_rom_8k(4, 0, 0);
-	}
+	memset(&m241, 0x00, sizeof(m241));
+}
+void extcl_after_mapper_init_241(void) {
+	prg_fix_241();
 }
 void extcl_cpu_wr_mem_241(UNUSED(WORD address), BYTE value) {
-	control_bank(info.prg.rom.max.banks_32k)
-	map_prg_rom_8k(4, 0, value);
-	map_prg_rom_8k_update();
+	m241.reg = value;
+	prg_fix_241();
 }
-BYTE extcl_cpu_rd_mem_241(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address >= 0x4020) && (address < 0x6000)) {
-		return (0x50);
-	}
+BYTE extcl_save_mapper_241(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m241.reg);
 
-	return (openbus);
+	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_241(void) {
+	memmap_auto_32k(MMCPU(0x8000), m241.reg);
 }

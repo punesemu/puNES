@@ -22,9 +22,8 @@
 #include "common.h"
 
 void map_init_432(void);
-void extcl_after_mapper_init_432(void);
 void extcl_cpu_wr_mem_432(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_432(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_cpu_rd_mem_432(WORD address, BYTE openbus);
 BYTE extcl_save_mapper_432(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_432_H_ */

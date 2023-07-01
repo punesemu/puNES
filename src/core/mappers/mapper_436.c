@@ -18,16 +18,44 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "mem_map.h"
-#include "OneBus.h"
+#include "info.h"
+#include "irqA12.h"
 
 void map_init_436(void) {
-	map_init_OneBus();
-
 	EXTCL_AFTER_MAPPER_INIT(436);
+	EXTCL_MAPPER_QUIT(OneBus);
+	EXTCL_CPU_WR_MEM(OneBus);
+	EXTCL_CPU_RD_MEM(OneBus);
+	EXTCL_SAVE_MAPPER(OneBus);
+	EXTCL_WR_PPU_REG(OneBus);
+	EXTCL_WR_APU(OneBus);
+	EXTCL_RD_APU(OneBus);
+	EXTCL_RD_CHR(OneBus);
+	EXTCL_CPU_EVERY_CYCLE(OneBus);
+	EXTCL_IRQ_A12_CLOCK(OneBus);
+	EXTCL_PPU_000_TO_34X(OneBus);
+	EXTCL_PPU_000_TO_255(MMC3);
+	EXTCL_PPU_256_TO_319(MMC3);
+	EXTCL_PPU_320_TO_34X(MMC3);
+	EXTCL_UPDATE_R2006(MMC3);
+	mapper.internal_struct[0] = (BYTE *)&onebus;
+	mapper.internal_struct_size[0] = sizeof(onebus);
+
+	memset(&irqA12, 0x00, sizeof(irqA12));
+
+	init_OneBus(info.reset);
+
+	irqA12.present = TRUE;
 }
 void extcl_after_mapper_init_436(void) {
-	prg_fix_8k_OneBus(0xF3FF, ((onebus.reg.cpu[0x00] & 0x40) << 5) | ((onebus.reg.cpu[0x0F] & 0x20) << 5));
-	chr_fix_OneBus(0x9FFF, ((onebus.reg.cpu[0x00] & 0x04) << 12) | ((onebus.reg.cpu[0x0F] & 0x20) << 8));
-	mirroring_fix_OneBus();
+	if (info.mapper.submapper == 1) {
+		OneBus_prg_fix_8k(0xF7FF, ((onebus.reg.cpu[0x1C] & 0x01) && (onebus.reg.cpu[0x0F] & 0x04) ? 0x0000 : 0x0800));
+		OneBus_chr_fix(0xBFFF, ((onebus.reg.cpu[0x1C] & 0x01) && (onebus.reg.cpu[0x0F] & 0x04) ? 0x0000 : 0x4000));
+		OneBus_wram_fix(0xF7FF, ((onebus.reg.cpu[0x1C] & 0x01) && (onebus.reg.cpu[0x0F] & 0x04) ? 0x0000 : 0x0800));
+	} else {
+		OneBus_prg_fix_8k(0xF3FF, ((onebus.reg.cpu[0x00] & 0x40) << 5) | ((onebus.reg.cpu[0x0F] & 0x20) << 5));
+		OneBus_chr_fix(0x9FFF, ((onebus.reg.cpu[0x00] & 0x04) << 12) | ((onebus.reg.cpu[0x0F] & 0x20) << 8));
+		OneBus_wram_fix(0xF3FF, ((onebus.reg.cpu[0x00] & 0x40) << 5) | ((onebus.reg.cpu[0x0F] & 0x20) << 5));
+	}
+	OneBus_mirroring_fix();
 }

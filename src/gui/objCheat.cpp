@@ -448,10 +448,10 @@ void objCheat::complete_rocky(chl_map *cheat) {
 }
 
 void objCheat::import_Nestopia_xml(QWidget *parent, const QString &path) {
-	QFile *file = new QFile(path);
+	QFile file(path);
 
-	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-		QXmlStreamReader xmlReader(file);
+	if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QXmlStreamReader xmlReader(&file);
 
 		while (!xmlReader.atEnd() && !xmlReader.hasError()) {
 			QXmlStreamReader::TokenType token = xmlReader.readNext();
@@ -478,15 +478,14 @@ void objCheat::import_Nestopia_xml(QWidget *parent, const QString &path) {
 		}
 		xmlReader.clear();
 
-		file->close();
+		file.close();
 	}
-	delete (file);
 }
 void objCheat::import_MAME_xml(QWidget *parent, const QString &path) {
-	QFile *file = new QFile(path);
+	QFile file(path);
 
-	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-		QXmlStreamReader xmlReader(file);
+	if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QXmlStreamReader xmlReader(&file);
 
 		while (!xmlReader.atEnd() && !xmlReader.hasError()) {
 			QXmlStreamReader::TokenType token = xmlReader.readNext();
@@ -516,15 +515,14 @@ void objCheat::import_MAME_xml(QWidget *parent, const QString &path) {
 		}
 		xmlReader.clear();
 
-		file->close();
+		file.close();
 	}
-	delete (file);
 }
 void objCheat::import_FCEUX_cht(const QString &path) {
-	QFile *file = new QFile(path);
+	QFile file(path);
 
-	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-		QTextStream in(file);
+	if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QTextStream in(&file);
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 		in.setCodec("UTF-8");
@@ -540,10 +538,8 @@ void objCheat::import_FCEUX_cht(const QString &path) {
 			}
 		}
 
-		file->close();
+		file.close();
 	}
-
-	delete (file);
 }
 void objCheat::import_libretro_cht(const QString &path) {
 	static const QSettings::Format cfg = QSettings::registerFormat("libretro", libretro_rd_file, nullptr);
@@ -641,78 +637,71 @@ void objCheat::import_libretro_cht(const QString &path) {
 }
 
 void objCheat::save_Nestopia_xml(QWidget *parent, const QString &path) const {
-	QFile *file;
+	QFile file(path);
 
 	if (cheats.count() == 0) {
 		return;
 	}
 
-	file = new QFile(path);
-
-	if (!file->open(QIODevice::WriteOnly)) {
+	if (!file.open(QIODevice::WriteOnly)) {
 		QMessageBox::warning(parent, tr("Read only"), tr("The file is in read only mode"));
 	} else {
-		QXmlStreamWriter *xmlWriter = new QXmlStreamWriter(file);
+		QXmlStreamWriter xmlWriter(&file);
 
 		// with QT6 QXmlStreamWriter always encodes XML in UTF-8.
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-		xmlWriter->setCodec("UTF-8");
+		xmlWriter.setCodec("UTF-8");
 #endif
+		xmlWriter.setAutoFormatting(true);
 
-		xmlWriter->setAutoFormatting(true);
+		xmlWriter.writeStartDocument();
 
-		xmlWriter->writeStartDocument();
-
-		xmlWriter->writeStartElement("cheats");
-		xmlWriter->writeAttribute("version", CHEAT_XML_VERSION);
+		xmlWriter.writeStartElement("cheats");
+		xmlWriter.writeAttribute("version", CHEAT_XML_VERSION);
 
 		for (int i = 0; i < cheats.count(); i++) {
 			chl_map cheat = cheats.at(i);
 
-			xmlWriter->writeStartElement("cheat");
-			xmlWriter->writeAttribute("enabled", cheat["enabled"]);
+			xmlWriter.writeStartElement("cheat");
+			xmlWriter.writeAttribute("enabled", cheat["enabled"]);
 
 			if (cheat["genie"] != "-") {
-				xmlWriter->writeStartElement("genie");
-				xmlWriter->writeCharacters(cheat["genie"]);
-				xmlWriter->writeEndElement();
+				xmlWriter.writeStartElement("genie");
+				xmlWriter.writeCharacters(cheat["genie"]);
+				xmlWriter.writeEndElement();
 			} else if (cheat["rocky"] != "-") {
-				xmlWriter->writeStartElement("rocky");
-				xmlWriter->writeCharacters(cheat["rocky"]);
-				xmlWriter->writeEndElement();
+				xmlWriter.writeStartElement("rocky");
+				xmlWriter.writeCharacters(cheat["rocky"]);
+				xmlWriter.writeEndElement();
 			} else {
 				if (cheat.contains("address")) {
-					xmlWriter->writeStartElement("address");
-					xmlWriter->writeCharacters(cheat["address"]);
-					xmlWriter->writeEndElement();
+					xmlWriter.writeStartElement("address");
+					xmlWriter.writeCharacters(cheat["address"]);
+					xmlWriter.writeEndElement();
 				}
 				if (cheat.contains("value")) {
-					xmlWriter->writeStartElement("value");
-					xmlWriter->writeCharacters(cheat["value"]);
-					xmlWriter->writeEndElement();
+					xmlWriter.writeStartElement("value");
+					xmlWriter.writeCharacters(cheat["value"]);
+					xmlWriter.writeEndElement();
 				}
 				if (cheat.contains("compare") && (cheat["compare"].compare("-") != 0)) {
-					xmlWriter->writeStartElement("compare");
-					xmlWriter->writeCharacters(cheat["compare"]);
-					xmlWriter->writeEndElement();
+					xmlWriter.writeStartElement("compare");
+					xmlWriter.writeCharacters(cheat["compare"]);
+					xmlWriter.writeEndElement();
 				}
 			}
 			if (cheat.contains("description")) {
-				xmlWriter->writeStartElement("description");
-				xmlWriter->writeCharacters(cheat["description"]);
-				xmlWriter->writeEndElement();
+				xmlWriter.writeStartElement("description");
+				xmlWriter.writeCharacters(cheat["description"]);
+				xmlWriter.writeEndElement();
 			}
 
-			xmlWriter->writeEndElement();
+			xmlWriter.writeEndElement();
 		}
-		xmlWriter->writeEndElement();
-
-		xmlWriter->writeEndDocument();
-		delete (xmlWriter);
-
-		file->close();
+		xmlWriter.writeEndElement();
+		xmlWriter.writeEndDocument();
+		file.close();
 	}
-	delete (file);
 }
 
 chl_map objCheat::parse_nestopia_cheat(QXmlStreamReader &xml) {

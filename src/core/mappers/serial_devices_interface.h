@@ -28,8 +28,9 @@
 #define EXTERNC
 #endif
 
-typedef void* hgpio_onebus;
-typedef void* hserial;
+typedef void *hserial;
+typedef void *hgpio_onebus;
+typedef void *heeprom_i2c;
 
 // ----------------------------------------------------------------------------------------
 
@@ -49,6 +50,20 @@ EXTERNC void gpio_onebus_attach_serial_device(hgpio_onebus g, hserial s, BYTE se
 EXTERNC BYTE gpio_onebus_read(hgpio_onebus g, BYTE address);
 EXTERNC void gpio_onebus_write(hgpio_onebus g, BYTE address, BYTE value);
 EXTERNC BYTE gpio_onebus_save_mapper(hgpio_onebus g, BYTE mode, BYTE slot, FILE *fp);
+
+// ----------------------------------------------------------------------------------------
+
+EXTERNC heeprom_i2c eeprom_24c01_create(BYTE _deviceAddr, BYTE *_rom);
+EXTERNC heeprom_i2c eeprom_24c02_create(BYTE _deviceAddr, BYTE *_rom);
+EXTERNC heeprom_i2c eeprom_24c04_create(BYTE _deviceAddr, BYTE *_rom);
+EXTERNC heeprom_i2c eeprom_24c08_create(BYTE _deviceAddr, BYTE *_rom);
+EXTERNC heeprom_i2c eeprom_24c16_create(BYTE _deviceAddr, BYTE *_rom);
+
+EXTERNC void eeprom_i2c_free(heeprom_i2c e);
+EXTERNC void eeprom_i2c_reset(heeprom_i2c e);
+EXTERNC BYTE eeprom_i2c_get_data(heeprom_i2c e);
+EXTERNC void eeprom_i2c_set_pins(heeprom_i2c e, BYTE select, BYTE newClock, BYTE newData);
+EXTERNC BYTE eeprom_i2c_save_mapper(heeprom_i2c e, BYTE mode, BYTE slot, FILE *fp);
 
 #undef EXTERNC
 

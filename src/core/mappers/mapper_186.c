@@ -18,62 +18,45 @@
 
 #include <string.h>
 #include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
-#include "cpu.h"
 #include "save_slot.h"
 
+INLINE static void prg_fix_186(void);
+INLINE static void wram_fix_186(void);
+
 struct _m186 {
-	BYTE *prg_ram_bank2;
+	BYTE reg[4];
 } m186;
 
 void map_init_186(void) {
+	EXTCL_AFTER_MAPPER_INIT(186);
 	EXTCL_CPU_WR_MEM(186);
 	EXTCL_CPU_RD_MEM(186);
 	EXTCL_SAVE_MAPPER(186);
 	mapper.internal_struct[0] = (BYTE *)&m186;
 	mapper.internal_struct_size[0] = sizeof(m186);
 
-	info.mapper.extend_wr = TRUE;
-	info.prg.ram.banks_8k_plus = 0;
-	cpu.prg_ram_wr_active = TRUE;
-	cpu.prg_ram_rd_active = TRUE;
+	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
+		memmap_wram_region_init(S1K);
+	}
 
 	if (info.reset >= HARD) {
 		memset(&m186, 0x00, sizeof(m186));
-		m186.prg_ram_bank2 = prg_rom();
-		map_prg_rom_8k(2, 0, 0);
-		map_prg_rom_8k(2, 2, 0);
 	}
+
+	info.mapper.extend_wr = TRUE;
+}
+void extcl_after_mapper_init_186(void) {
+	prg_fix_186();
+	wram_fix_186();
 }
 void extcl_cpu_wr_mem_186(WORD address, BYTE value) {
-	if ((address < 0x4200) || (address > 0x4EFF)) {
-		return;
-	}
-
-	if (address > 0x43FF) {
-		prg.ram.data[address & 0x0BFF] = value;
-		return;
-	}
-
-	switch (address & 0x0001) {
-		case 0x0000:
-			value >>= 6;
-			control_bank(info.prg.rom.max.banks_8k)
-			m186.prg_ram_bank2 = prg_pnt(value << 13);
-			return;
-		case 0x0001:
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-			map_prg_rom_8k_update();
-			return;
+	if ((address >= 0x4200) && (address <= 0x4203)) {
+		m186.reg[address & 0x03] = value;
+		prg_fix_186();
+		wram_fix_186();
 	}
 }
-BYTE extcl_cpu_rd_mem_186(WORD address, BYTE openbus, UNUSED(BYTE before)) {
-	if ((address < 0x4200) || (address > 0x7FFF)) {
-		return (openbus);
-	}
-
+BYTE extcl_cpu_rd_mem_186(WORD address, UNUSED(BYTE openbus)) {
 	switch (address) {
 		case 0x4200:
 		case 0x4201:
@@ -81,24 +64,21 @@ BYTE extcl_cpu_rd_mem_186(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 			return (0x00);
 		case 0x4202:
 			return (0x40);
+		default:
+			return (wram_rd(address));
 	}
-
-	if (address < 0x4400) {
-		return (0xFF);
-	}
-
-	if (address < 0x4F00) {
-		return (prg.ram.data[address & 0x1FFF]);
-	}
-
-	/* mi mancano informazioni per far funzionare questa mapper */
-	if (address > 0x5FFF) {
-		return (m186.prg_ram_bank2[address & 0x1FFF]);
-	}
-
-	return (openbus);
 }
 BYTE extcl_save_mapper_186(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_pos(mode, slot, prg_rom(), m186.prg_ram_bank2);
+	save_slot_ele(mode, slot, m186.reg);
+
 	return (EXIT_OK);
+}
+
+INLINE static void prg_fix_186(void) {
+	memmap_auto_16k(MMCPU(0x8000), m186.reg[1]);
+	memmap_auto_16k(MMCPU(0xC000), 0);
+}
+INLINE static void wram_fix_186(void) {
+	memmap_auto_custom_size(MMCPU(0x4400), 0, (size_t)(0x400 * 3));
+	memmap_auto_8k(MMCPU(0x6000), m186.reg[0] >> 6);
 }

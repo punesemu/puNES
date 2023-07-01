@@ -23,7 +23,6 @@
 #include "nsf.h"
 #undef _NSF_STATIC_
 #include "info.h"
-#include "mem_map.h"
 #include "mappers.h"
 #include "gui.h"
 #include "audio/blipbuf.h"
@@ -68,12 +67,12 @@ BYTE nsfe_load_rom(void) {
 	{
 		static const uTCHAR rom_ext[2][10] = { uL(".nsfe\0"), uL(".NSFE\0") };
 		BYTE found = TRUE;
-		FILE *fp;
+		FILE *fp = NULL;
 
 		fp = ufopen(info.rom.file, uL("rb"));
 
 		if (!fp) {
-			unsigned int i;
+			unsigned int i = 0;
 
 			found = FALSE;
 
@@ -102,7 +101,8 @@ BYTE nsfe_load_rom(void) {
 		rom.size = ftell(fp);
 		fseek(fp, 0L, SEEK_SET);
 
-		if ((rom.data = (BYTE *)malloc(rom.size)) == NULL) {
+		rom.data = (BYTE *)malloc(rom.size);
+		if (rom.data == NULL) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
@@ -121,13 +121,11 @@ BYTE nsfe_load_rom(void) {
 	rom.position = 0;
 
 	if (strncmp((char *)rom.data, "NSFE", 4) == 0) {
-		int phase;
+		int phase = 0;
 
 		info.format = NSFE_FORMAT;
 
 		info.machine[DATABASE] = DEFAULT;
-		info.prg.ram.bat.banks = 0;
-		info.prg.ram.banks_8k_plus = 0;
 
 		nsf.info.name = &nsf_default_label[0];
 		nsf.info.artist = &nsf_default_label[0];
@@ -244,18 +242,10 @@ BYTE nsfe_load_rom(void) {
 			}
 		}
 
-		{
-			WORD ram = 0x2000;
+		ram_set_size(S2K);
+		ram_init();
 
-			if (nsf.sound_chips.fds) {
-				ram = 0xA000;
-			}
-
-			if (map_prg_ram_malloc(ram) != EXIT_OK) {
-				free(rom.data);
-				return (EXIT_ERROR);
-			}
-		}
+		wram_set_ram_size(nsf.sound_chips.fds ? 0xA000 : 0x2000);
 
 		nsf.enabled = TRUE;
 
@@ -271,6 +261,8 @@ BYTE nsfe_load_rom(void) {
 
 		info.mapper.id = NSF_MAPPER;
 		info.cpu_rw_extern = TRUE;
+
+		emu_save_header_info();
 	} else {
 		free(rom.data);
 		return (EXIT_ERROR);
@@ -283,7 +275,7 @@ BYTE nsfe_load_rom(void) {
 	return (EXIT_OK);
 }
 void nsfe_info(void) {
-	uint32_t tmp;
+	uint32_t tmp = 0;
 
 	log_info_box(uL("name;%s"), nsf.info.name);
 	log_info_box(uL("artist;%s"), nsf.info.artist);
@@ -350,7 +342,8 @@ BYTE nsfe_INFO(_rom_mem *rom, BYTE phase) {
 	}
 
 	if (phase == NSFE_READ) {
-		if (!(nsf.info_song = (_nsf_info_song *)malloc(nsf.songs.total * sizeof(_nsf_info_song)))) {
+		nsf.info_song = (_nsf_info_song *)malloc(nsf.songs.total * sizeof(_nsf_info_song));
+		if (!nsf.info_song) {
 			log_error(uL("nsfe;out of memory"));
 			return (EXIT_ERROR);
 		}
@@ -360,7 +353,7 @@ BYTE nsfe_INFO(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE nsfe_DATA(_rom_mem *rom, BYTE phase) {
-	int padding = nsf.adr.load & 0x0FFF;
+	uint32_t padding = nsf.adr.load & 0x0FFF;
 
 	if (phase == NSFE_COUNT) {
 		if ((rom->position + nsfe.chunk.length) > rom->size) {
@@ -370,18 +363,15 @@ BYTE nsfe_DATA(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
-	nsf.prg.banks_4k = ((nsfe.chunk.length + padding) / 0x1000);
+	prgrom_set_size(((((size_t)nsfe.chunk.length + padding) / S4K) +
+		((((size_t)nsfe.chunk.length + padding) % S4K) ? 1 : 0)) * S4K);
 
-	if (((nsfe.chunk.length + padding) % 0x1000)) {
-		nsf.prg.banks_4k++;
-	}
-
-	if (map_prg_malloc(nsf.prg.banks_4k * 0x1000, 0xF2, TRUE) == EXIT_ERROR) {
+	if (prgrom_init(0xF2) == EXIT_ERROR) {
+		free(rom->data);
 		return (EXIT_ERROR);
 	}
-	rom_mem_memcpy(prg_rom() + padding, rom, nsfe.chunk.length);
 
-	nsf.prg.banks_4k--;
+	rom_mem_memcpy(prgrom_pnt() + padding, rom, nsfe.chunk.length);
 
 	return (EXIT_OK);
 }
@@ -419,7 +409,8 @@ BYTE nsfe_plst(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
-	if (!(nsf.playlist.data = (BYTE *)malloc(nsfe.chunk.length))) {
+	nsf.playlist.data = (BYTE *)malloc(nsfe.chunk.length);
+	if (!nsf.playlist.data) {
 		log_error(uL("nsfe;out of memory"));
 		return (EXIT_ERROR);
 	}
@@ -433,7 +424,7 @@ BYTE nsfe_plst(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE nsfe_time(_rom_mem *rom, BYTE phase) {
-	unsigned int i, total;
+	unsigned int i = 0, total = 0;
 
 	if (phase == NSFE_COUNT) {
 		if ((rom->position + nsfe.chunk.length) > rom->size) {
@@ -461,7 +452,7 @@ BYTE nsfe_time(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE nsfe_fade(_rom_mem *rom, BYTE phase) {
-	unsigned int i, total;
+	unsigned int i = 0, total = 0;
 
 	if (phase == NSFE_COUNT) {
 		if ((rom->position + nsfe.chunk.length) > rom->size) {
@@ -489,8 +480,8 @@ BYTE nsfe_fade(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase) {
-	unsigned int i, count;
-	char *src;
+	unsigned int i = 0, count = 0;
+	char *src = NULL;
 
 	if (phase == NSFE_COUNT) {
 		if ((rom->position + nsfe.chunk.length) > rom->size) {
@@ -500,7 +491,8 @@ BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
-	if (!(nsf.info.track_label = (char *)malloc(nsfe.chunk.length))) {
+	nsf.info.track_label = (char *)malloc(nsfe.chunk.length);
+	if (!nsf.info.track_label) {
 		log_error(uL("nsfe;out of memory"));
 		return (EXIT_ERROR);
 	}
@@ -536,7 +528,7 @@ BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE nsfe_auth(_rom_mem *rom, BYTE phase) {
-	unsigned int i, count;
+	unsigned int i = 0, count = 0;
 	char *src = NULL, **dst = NULL;
 
 	if (phase == NSFE_COUNT) {
@@ -547,7 +539,8 @@ BYTE nsfe_auth(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
-	if (!(nsf.info.auth = (char *)malloc(nsfe.chunk.length))) {
+	nsf.info.auth = (char *)malloc(nsfe.chunk.length);
+	if (!nsf.info.auth) {
 		log_error(uL("nsfe;out of memory"));
 		return (EXIT_ERROR);
 	}
@@ -597,7 +590,8 @@ BYTE nsfe_text(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
-	if (!(nsf.text.data = (BYTE *)malloc(nsfe.chunk.length))) {
+	nsf.text.data = (BYTE *)malloc(nsfe.chunk.length);
+	if (!nsf.text.data) {
 		log_error(uL("nsfe;out of memory"));
 		return (EXIT_ERROR);
 	}

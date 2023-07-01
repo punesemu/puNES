@@ -17,18 +17,37 @@
  */
 
 #include "mappers.h"
-#include "mem_map.h"
+#include "info.h"
+
+void prg_swap_n118_557(WORD address, WORD value);
+void chr_fix_n118_557(void);
+void chr_swap_n118_557(WORD address, WORD value);
 
 INLINE static void mirroring_fix_557(void);
 
 void map_init_557(void) {
-	map_init_N118();
+	EXTCL_AFTER_MAPPER_INIT(N118);
+	EXTCL_CPU_WR_MEM(N118);
+	EXTCL_SAVE_MAPPER(N118);
+	mapper.internal_struct[0] = (BYTE *)&n118;
+	mapper.internal_struct_size[0] = sizeof(n118);
 
-	EXTCL_AFTER_MAPPER_INIT(557);
+	init_N118(info.reset);
+	N118_prg_swap = prg_swap_n118_557;
+	N118_chr_fix = chr_fix_n118_557;
+	N118_chr_swap = chr_swap_n118_557;
 }
-void extcl_after_mapper_init_557(void) {
-	prg_fix_N118(0x000F, 0x00);
+
+void prg_swap_n118_557(WORD address, WORD value) {
+	prg_swap_N118_base(address, (value & 0x0F));
+}
+void chr_fix_n118_557(void) {
+	chr_fix_N118_base();
 	mirroring_fix_557();
+}
+void chr_swap_n118_557(WORD address, WORD value) {
+	value = (address >> 10) & 0x07;
+	chr_swap_N118_base(address, value);
 }
 
 INLINE static void mirroring_fix_557(void) {

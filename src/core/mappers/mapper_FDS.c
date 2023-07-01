@@ -24,7 +24,6 @@
 #include <string.h>
 #include "mappers.h"
 #include "info.h"
-#include "mem_map.h"
 #include "fds.h"
 #include "cpu.h"
 #include "conf.h"
@@ -36,6 +35,7 @@ static const SBYTE modulation_table[8] = { 0, 1, 2, 4, 8, -4, -2, -1 };
 static const BYTE volume_wave[4] = { 36, 24, 17, 14 };
 
 void map_init_FDS(void) {
+	EXTCL_AFTER_MAPPER_INIT(FDS);
 	EXTCL_CPU_RD_MEM(FDS);
 	EXTCL_CPU_EVERY_CYCLE(FDS);
 	EXTCL_APU_TICK(FDS);
@@ -54,13 +54,7 @@ void map_init_FDS(void) {
 		}
 	}
 
-	mapper.write_vram = TRUE;
-	info.chr.rom.banks_8k = 1;
-
-	mirroring_H();
-
 	cpu.SP = 0xFF;
-
 	cpu.SR = 0x30;
 	/* disassemblo il Processor Status Register */
 	disassemble_SR();
@@ -69,12 +63,20 @@ void map_init_FDS(void) {
 }
 void map_init_NSF_FDS(void) {
 	memset(&fds, 0x00, sizeof(fds));
+
 	fds.snd.modulation.counter = 0xFFFF;
 	fds.snd.wave.counter = 0xFFFF;
 
 	fds.drive.enabled_snd_reg = 0x02;
 }
-BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus), UNUSED(BYTE before)) {
+void extcl_after_mapper_init_FDS(void) {
+	memmap_wram_8k(MMCPU(0x6000), 0);
+	memmap_wram_8k(MMCPU(0x8000), 1);
+	memmap_wram_8k(MMCPU(0xA000), 2);
+	memmap_wram_8k(MMCPU(0xC000), 3);
+	memmap_prgrom_8k(MMCPU(0xE000), 0);
+}
+BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus)) {
 	// 0xE18B : NMI entry point
 	// [$0100]: PC action on NMI. set to $C0 on reset
 	// When NMI occurs while $100 & $C0 != 0, it typically means that the game is starting.
@@ -157,26 +159,26 @@ BYTE extcl_cpu_rd_mem_FDS(WORD address, UNUSED(BYTE openbus), UNUSED(BYTE before
 			}
 		}
 	}
-	return (prg_byte(address & 0x1FFF));
+	return (prgrom_rd(address));
 }
 void extcl_cpu_every_cycle_FDS(void) {
 	BYTE max_speed = cfg->fds_fast_forward &
 		((fds.drive.scan & (info.lag_frame.consecutive > MIN_LAG_FRAMES)) | !fds.auto_insert.in_game);
-	WORD data;
+	WORD data = 0;
 
 	// auto insert
 	if (fds_auto_insert_enabled()) {
-#define _max_speed cfg->fds_fast_forward & (info.lag_frame.consecutive > MIN_LAG_FRAMES)
+#define df_max_speed (cfg->fds_fast_forward & (info.lag_frame.consecutive > MIN_LAG_FRAMES))
 		if (fds.auto_insert.delay.eject > 0) {
 			fds.auto_insert.delay.eject--;
-			max_speed = _max_speed & (fds.auto_insert.delay.eject > 0);
+			max_speed = df_max_speed & (fds.auto_insert.delay.eject > 0);
 		} else if (fds.auto_insert.delay.dummy > 0) {
 			if (--fds.auto_insert.delay.dummy == 0) {
 				fds.auto_insert.delay.dummy = -1;
 				fds_disk_op(FDS_DISK_INSERT, 0, TRUE);
 				gui_update_fds_menu();
 			}
-			max_speed = _max_speed & (fds.auto_insert.delay.dummy > 0);
+			max_speed = df_max_speed & (fds.auto_insert.delay.dummy > 0);
 		} else if (fds.auto_insert.delay.side > 0) {
 			if (--fds.auto_insert.delay.side == 0) {
 				fds.auto_insert.delay.side = -1;
@@ -185,7 +187,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 				fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
 				gui_update_fds_menu();
 			}
-			max_speed = _max_speed & (fds.auto_insert.delay.side > 0);
+			max_speed = df_max_speed & (fds.auto_insert.delay.side > 0);
 		}
 		if (!fds.auto_insert.delay.eject & (fds.auto_insert.delay.dummy == -1) & (fds.auto_insert.r4032.checks > 20)) {
 			fds.auto_insert.delay.eject = -1;
@@ -194,9 +196,9 @@ void extcl_cpu_every_cycle_FDS(void) {
 			fds.auto_insert.delay.dummy = FDS_OP_SIDE_DELAY;
 			fds_disk_op(FDS_DISK_EJECT, 0, TRUE);
 			gui_update_fds_menu();
-			max_speed = _max_speed;
+			max_speed = df_max_speed;
 		}
-#undef _max_speed
+#undef df_max_speed
 	}
 
 	if (max_speed & !fds.info.bios_first_run) {
@@ -323,7 +325,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 		fds.drive.gap_ended = FALSE;
 	}
 
-	if (++fds.drive.disk_position >= fds.info.sides_size[fds.drive.side_inserted]) {
+	if (++fds.drive.disk_position >= fds.info.sides[fds.drive.side_inserted].size) {
 		fds.drive.end_of_head = END_OF_HEAD;
 		fds.drive.disk_position = 0;
 		fds.drive.gap_ended = FALSE;
