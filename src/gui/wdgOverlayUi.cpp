@@ -500,7 +500,8 @@ void wdgOverlayUi::wdg_clear(overlayWidget *wdg, QRect *qrect, qreal dpr) {
 	QRect *g = (QRect *)&wdg->geometry();
 	bool erase = false;
 
-	if (wdg->isHidden() & wdg->enabled) {
+	if ((wdg->isHidden() || wdg->force_disable) & wdg->enabled) {
+		wdg->force_disable = false;
 		wdg->enabled = false;
 		erase = true;
 	} else if (qrect) {
@@ -535,6 +536,7 @@ overlayWidget::overlayWidget(QWidget *parent) : QWidget(parent) {
 	fade_out.animation = new QPropertyAnimation(opacity.effect, "opacity");
 	fade_out.timer.seconds = 3;
 	enabled = false;
+	force_disable = false;
 	force_control_when_hidden = false;
 	radius = 5;
 	fade_in_duration = 500;
@@ -719,7 +721,7 @@ void overlayWidget::s_fade_in_finished(void) {
 	set_opacity(opacity.value);
 }
 void overlayWidget::s_fade_out_finished(void) {
-	enabled = false;
+	force_disable = true;
 	set_opacity(opacity.value);
 }
 
@@ -1977,7 +1979,7 @@ BYTE overlayWidgetInfo::is_to_redraw(void) {
 		actual = overlay.info.actual;
 		overlay.info.mutex.unlock();
 
-		if ((actual != "") || fade_out.timer.enabled) {
+		if (fade_out.timer.enabled || (fade_out.animation->state() == QAbstractAnimation::State::Running)) {
 			return (TRUE);
 		}
 
@@ -2116,9 +2118,8 @@ void overlayWidgetInfo::s_fade_in_finished(void) {
 }
 void overlayWidgetInfo::s_fade_out_finished(void) {
 	overlay.info.mutex.lock();
-	enabled = false;
 	overlay.info.alignment = OVERLAY_INFO_LEFT;
 	overlay.info.actual = "";
+	overlayWidget::s_fade_out_finished();
 	overlay.info.mutex.unlock();
-	set_opacity(opacity.value);
 }
