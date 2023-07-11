@@ -675,6 +675,15 @@
        </item>
        <item>
         <property name="text">
+         <string>Polish</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/flag_poland.svgz</normaloff>:/icon/icons/flag_poland.svgz</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Portuguese (Brazil)</string>
         </property>
         <property name="icon">

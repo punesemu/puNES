@@ -67,6 +67,7 @@ class overlayWidget : public QWidget {
 		int fade_in_duration;
 		int fade_out_duration;
 		bool enabled;
+		bool force_disable;
 		bool force_control_when_hidden;
 		bool always_visible;
 		qreal radius;

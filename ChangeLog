@@ -5,6 +5,7 @@ Changelog:
   * 0x00
   * 0xFF (default)
   * Randomize.
+- Added Polish translation (thx to elektronicznypank).
 - Added fully support to NES 2.0 file cart format header.
 - Rewritten mappers : All.
 - Added support to mapper : 100, 122, 157, 291, 311, 334, 362, 366, 384, 421, 446, 471, 551, 552, 561.
