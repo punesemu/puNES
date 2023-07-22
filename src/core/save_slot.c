@@ -718,21 +718,19 @@ static BYTE mem_with_size(BYTE mode, BYTE slot, BYTE *mem, size_t msize, FILE *f
 			if (size != msize) {
 				return (EXIT_ERROR);
 			}
-			save_slot_mem(mode, slot, wram_pnt(), wram_size(), FALSE);
-		}
-	} else {
-		if (size) {
-			tmp = TRUE;
-			size = msize;
-			save_slot_int(mode, slot, tmp);
-			save_slot_ele(mode, slot, size);
 			save_slot_mem(mode, slot, mem, size, FALSE);
-		} else {
-			tmp = FALSE;
-			size = 0;
-			save_slot_int(mode, slot, tmp);
-			save_slot_ele(mode, slot, size);
 		}
+	} else if (msize) {
+		tmp = TRUE;
+		size = msize;
+		save_slot_int(mode, slot, tmp);
+		save_slot_ele(mode, slot, size);
+		save_slot_mem(mode, slot, mem, size, FALSE);
+	} else {
+		tmp = FALSE;
+		size = 0;
+		save_slot_int(mode, slot, tmp);
+		save_slot_ele(mode, slot, size);
 	}
 	return (EXIT_OK);
 }
