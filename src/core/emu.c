@@ -680,6 +680,9 @@ BYTE emu_reset(BYTE type) {
 	info.lag_frame.consecutive = 0;
 
 	if (info.reset == CHANGE_ROM) {
+		BYTE vs_enab = vs_system.enabled;
+		BYTE vs_ppu = vs_system.ppu;
+
 		info.r4014_precise_timing_disabled = FALSE;
 		info.r2002_race_condition_disabled = FALSE;
 		info.r4016_dmc_double_read_disabled = FALSE;
@@ -701,7 +704,8 @@ BYTE emu_reset(BYTE type) {
 
 		settings_pgs_parse();
 
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE,
+			(vs_enab != vs_system.enabled) || (vs_ppu != vs_system.ppu));
 
 		gui_update_gps_settings();
 	}

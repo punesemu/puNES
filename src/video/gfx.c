@@ -79,8 +79,8 @@ void gfx_quit(void) {
 	gfx_api_quit();
 }
 void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette, BYTE force_scale, BYTE force_palette) {
-	BYTE set_mode;
-	WORD width, height;
+	BYTE set_mode = 0;
+	WORD width = 0, height = 0;
 	DBWORD old_shader = cfg->shader;
 	BYTE ntsc_update = FALSE;
 
@@ -292,7 +292,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		palette = cfg->palette;
 	}
 	if ((palette != cfg->palette) || info.on_cfg || force_palette) {
-		int i;
+		int i = 0;
 
 		if (palette == PALETTE_FILE) {
 			if (ustrlen(cfg->palette_file) != 0) {
@@ -447,7 +447,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				gfx.w[VIDEO_MODE] = (SDBWORD)((float)gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio);
 
 				if (overscan.enabled && !cfg->oscan_black_borders) {
-					float brd;
+					float brd = 0;
 
 					brd = (float)gfx.w[VIDEO_MODE] / (float)SCR_COLUMNS;
 					brd = brd * (float)(overscan.borders->right + overscan.borders->left);
@@ -536,7 +536,8 @@ BYTE gfx_palette_init(void) {
 
 	// mi alloco una zona di memoria dove conservare la
 	// paletta nel formato di visualizzazione.
-	if (!(gfx.palette = (uint32_t *)malloc(NUM_COLORS * sizeof(uint32_t)))) {
+	gfx.palette = (uint32_t *)malloc(NUM_COLORS * sizeof(uint32_t));
+	if (!gfx.palette) {
 		gui_critical(uL("Unable to allocate the palette."));
 		return (EXIT_ERROR);
 	}
@@ -554,7 +555,7 @@ BYTE gfx_palette_init(void) {
 	return (EXIT_OK);
 }
 void gfx_palette_update(void) {
-	WORD i;
+	WORD i = 0;
 
 	if (!cfg->disable_swap_emphasis_pal && ((machine.type == PAL) || (machine.type == DENDY))) {
 		palette_RGB.in_use = &palette_RGB.swapped[0];
