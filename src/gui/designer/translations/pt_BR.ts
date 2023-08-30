@@ -42,19 +42,19 @@
     <name>dlgDipswitch</name>
     <message>
       <source>Ok</source>
-      <translation type="unfinished">Ok</translation>
+      <translation>Ok</translation>
     </message>
     <message>
       <source>Dipswitch</source>
-      <translation type="unfinished">Dipswitch</translation>
+      <translation>Dipswitch</translation>
     </message>
     <message>
       <source>Start</source>
-      <translation type="unfinished">Start</translation>
+      <translation>Iniciar</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Padrão</translation>
     </message>
   </context>
   <context>
@@ -65,7 +65,7 @@
     </message>
     <message>
       <source>Do you want to boot the ROM with the changes made?</source>
-      <translation>Você deseja iniciar a ROM com as alterações feitas?</translation>
+      <translation>Você quer iniciar a ROM com as mudanças feitas?</translation>
     </message>
     <message>
       <source>Header Editor</source>
@@ -1517,7 +1517,7 @@
     </message>
     <message>
       <source>Dipswitch</source>
-      <translation type="unfinished">Dipswitch</translation>
+      <translation>Dipswitch</translation>
     </message>
   </context>
   <context>
@@ -1749,7 +1749,7 @@
     <message>
       <source>[red]error[normal] on write save state</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error[normal] on write save state</translation>
+      <translation>[red]erro[normal] ao gravar o save state</translation>
     </message>
   </context>
   <context>
@@ -2573,7 +2573,7 @@
     </message>
     <message>
       <source>Polish</source>
-      <translation type="unfinished">Polish</translation>
+      <translation>Polonês</translation>
     </message>
   </context>
   <context>
