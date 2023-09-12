@@ -83,14 +83,12 @@ INLINE static void memmap_nmt(DBWORD adr, DBWORD value, size_t size, BYTE rd, BY
 INLINE static void memmap_nmt_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
 INLINE static void memmap_nmt_chrrom(DBWORD adr, DBWORD value, size_t size, BYTE tvalue);
 
-INLINE static void memmap_wp_chunk(_memmap_region *region);
-INLINE static void memmap_wp_set_chunks(void);
+INLINE static void memmap_wp_chunk(_memmap_bank *mbank, _memmap_region *region);
+INLINE static void memmap_wp_set_chunks(_memmap_bank *mbank);
 INLINE static _memmap_region *memmap_get_region(DBWORD address);
 INLINE static WORD memmap_banks(enum _sizes_types bsize, size_t size);
 INLINE static WORD memmap_control_bank(enum _sizes_types bsize, size_t size, WORD bank);
 INLINE static size_t memmap_region_address(_memmap_region *region, WORD address);
-
-static _memmap_bank smmbank;
 
 BYTE memmap_init(void) {
 	if (memmap_prg_region_init(MEMMAP_PRG_CHUNK_SIZE_DEFAULT) == EXIT_ERROR) return (EXIT_ERROR);
@@ -288,19 +286,21 @@ void memmap_auto_custom_size(DBWORD address, DBWORD chunk, size_t size) {
 
 // permissions : rd = FALSE, wr = FALSE
 INLINE static void memmap_disable(DBWORD adr, size_t size, BYTE tvalue) {
-	smmbank.region.address = adr;
-	smmbank.region.value = 0;
-	smmbank.region.slot = 0;
-	smmbank.region.bank = 0;
-	smmbank.dst.pnt = NULL;
-	smmbank.dst.size = 0;
-	smmbank.dst.mask = 0;
-	smmbank.type = MEMMAP_BANK_NONE;
-	smmbank.rd = FALSE;
-	smmbank.wr = FALSE;
-	smmbank.size = size;
-	smmbank.translate_value = tvalue;
-	memmap_wp_set_chunks();
+	_memmap_bank mbank;
+
+	mbank.region.address = adr;
+	mbank.region.value = 0;
+	mbank.region.slot = 0;
+	mbank.region.bank = 0;
+	mbank.dst.pnt = NULL;
+	mbank.dst.size = 0;
+	mbank.dst.mask = 0;
+	mbank.type = MEMMAP_BANK_NONE;
+	mbank.rd = FALSE;
+	mbank.wr = FALSE;
+	mbank.size = size;
+	mbank.translate_value = tvalue;
+	memmap_wp_set_chunks(&mbank);
 }
 void memmap_disable_128b(DBWORD address) {
 	memmap_disable( address, S128B, TRUE);
@@ -335,19 +335,21 @@ void memmap_disable_custom_size(DBWORD address, size_t size) {
 
 // with permissions
 INLINE static void memmap_other(DBWORD adr, DBWORD value, size_t bsize, BYTE *dst, size_t dsize, BYTE rd, BYTE wr, BYTE tvalue) {
-	smmbank.region.address = adr;
-	smmbank.region.value = value;
-	smmbank.region.slot = 0;
-	smmbank.region.bank = 0;
-	smmbank.dst.pnt = dst;
-	smmbank.dst.size = dsize;
-	smmbank.dst.mask = calc_mask(dsize);
-	smmbank.type = MEMMAP_BANK_OTHER;
-	smmbank.rd = rd;
-	smmbank.wr = wr;
-	smmbank.size = bsize;
-	smmbank.translate_value = tvalue;
-	memmap_wp_set_chunks();
+	_memmap_bank mbank;
+
+	mbank.region.address = adr;
+	mbank.region.value = value;
+	mbank.region.slot = 0;
+	mbank.region.bank = 0;
+	mbank.dst.pnt = dst;
+	mbank.dst.size = dsize;
+	mbank.dst.mask = calc_mask(dsize);
+	mbank.type = MEMMAP_BANK_OTHER;
+	mbank.rd = rd;
+	mbank.wr = wr;
+	mbank.size = bsize;
+	mbank.translate_value = tvalue;
+	memmap_wp_set_chunks(&mbank);
 }
 void memmap_other_128b(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr) {
 	memmap_other(address,  value, S128B, dst, dst_size, rd, wr, TRUE);
@@ -404,46 +406,46 @@ void memmap_region_quit(_memmap_region *region) {
 	}
 }
 
-INLINE static void memmap_wp_chunk(_memmap_region *region) {
-	region->chunks[smmbank.region.slot].type = !smmbank.dst.pnt ? MEMMAP_BANK_NONE : smmbank.type;
+INLINE static void memmap_wp_chunk(_memmap_bank *mbank, _memmap_region *region) {
+	region->chunks[mbank->region.slot].type = !mbank->dst.pnt ? MEMMAP_BANK_NONE : mbank->type;
 	// per le mapper che permettono il controllo sulla WRAM (tipo MMC3), posso scrivere (o leggere)
 	// nella regione interessata anche se non c'è installata nessuan WRAM solo per valorizzare i
 	// registri interni della mapper.
-	region->chunks[smmbank.region.slot].writable = smmbank.wr;
-	region->chunks[smmbank.region.slot].readable = smmbank.rd;
-	region->chunks[smmbank.region.slot].permit.wr = smmbank.dst.pnt && smmbank.wr;
-	region->chunks[smmbank.region.slot].permit.rd = smmbank.dst.pnt && smmbank.rd;
-	region->chunks[smmbank.region.slot].pnt = !smmbank.dst.pnt
+	region->chunks[mbank->region.slot].writable = mbank->wr;
+	region->chunks[mbank->region.slot].readable = mbank->rd;
+	region->chunks[mbank->region.slot].permit.wr = mbank->dst.pnt && mbank->wr;
+	region->chunks[mbank->region.slot].permit.rd = mbank->dst.pnt && mbank->rd;
+	region->chunks[mbank->region.slot].pnt = !mbank->dst.pnt
 		? NULL
-		: &smmbank.dst.pnt[(smmbank.region.bank << region->info.shift) & smmbank.dst.mask];
-	region->chunks[smmbank.region.slot].mem_region.start = !smmbank.dst.pnt
+		: &mbank->dst.pnt[(mbank->region.bank << region->info.shift) & mbank->dst.mask];
+	region->chunks[mbank->region.slot].mem_region.start = !mbank->dst.pnt
 		? NULL
-		: smmbank.dst.pnt;
-	region->chunks[smmbank.region.slot].mem_region.end = !smmbank.dst.pnt
+		: mbank->dst.pnt;
+	region->chunks[mbank->region.slot].mem_region.end = !mbank->dst.pnt
 		? NULL
-		: &smmbank.dst.pnt[smmbank.dst.size];
-	region->chunks[smmbank.region.slot].mask = !smmbank.dst.pnt
+		: &mbank->dst.pnt[mbank->dst.size];
+	region->chunks[mbank->region.slot].mask = !mbank->dst.pnt
 		? 0
-		: mask_address_with_size(region->info.chunk.size - 1, smmbank.dst.size);
-	region->chunks[smmbank.region.slot].actual_bank = !smmbank.dst.pnt
+		: mask_address_with_size(region->info.chunk.size - 1, mbank->dst.size);
+	region->chunks[mbank->region.slot].actual_bank = !mbank->dst.pnt
 		? 0
-		: memmap_control_bank(smmbank.size, smmbank.dst.size, smmbank.region.value);
+		: memmap_control_bank(mbank->size, mbank->dst.size, mbank->region.value);
 }
-INLINE static void memmap_wp_set_chunks(void) {
-	_memmap_region *region = memmap_get_region(smmbank.region.address);
+INLINE static void memmap_wp_set_chunks(_memmap_bank *mbank) {
+	_memmap_region *region = memmap_get_region(mbank->region.address);
 
-	smmbank.region.address &= 0xFFFF;
+	mbank->region.address &= 0xFFFF;
 
 	if (region) {
-		unsigned int slot = slot_from_address(&region->info, smmbank.region.address);
-		size_t chunks = smmbank.size / region->info.chunk.size;
-		size_t bank = smmbank.translate_value ? smmbank.region.value * chunks : smmbank.region.value;
+		unsigned int slot = slot_from_address(&region->info, mbank->region.address);
+		size_t chunks = mbank->size / region->info.chunk.size;
+		size_t bank = mbank->translate_value ? mbank->region.value * chunks : mbank->region.value;
 
 		for (size_t i = 0; i < chunks; i++) {
-			smmbank.region.slot = slot + i;
-			smmbank.region.bank = bank + i;
-			if (smmbank.region.slot < region->info.chunk.items) {
-				memmap_wp_chunk(region);
+			mbank->region.slot = slot + i;
+			mbank->region.bank = bank + i;
+			if (mbank->region.slot < region->info.chunk.items) {
+				memmap_wp_chunk(mbank, region);
 			}
 		}
 	}
@@ -547,19 +549,21 @@ void prgrom_wr(WORD address, BYTE value) {
 // permissions : rd = TRUE, wr = FALSE
 INLINE static void memmap_prgrom(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & CPUMM) {
-		smmbank.region.address = adr;
-		smmbank.region.value = value;
-		smmbank.region.slot = 0;
-		smmbank.region.bank = 0;
-		smmbank.dst.pnt = prgrom_pnt();
-		smmbank.dst.size = prgrom_size();
-		smmbank.dst.mask = prgrom_mask();
-		smmbank.type = MEMMAP_BANK_PRGROM;
-		smmbank.rd = rd;
-		smmbank.wr = wr;
-		smmbank.size = size;
-		smmbank.translate_value = tvalue;
-		memmap_wp_set_chunks();
+		_memmap_bank mbank;
+
+		mbank.region.address = adr;
+		mbank.region.value = value;
+		mbank.region.slot = 0;
+		mbank.region.bank = 0;
+		mbank.dst.pnt = prgrom_pnt();
+		mbank.dst.size = prgrom_size();
+		mbank.dst.mask = prgrom_mask();
+		mbank.type = MEMMAP_BANK_PRGROM;
+		mbank.rd = rd;
+		mbank.wr = wr;
+		mbank.size = size;
+		mbank.translate_value = tvalue;
+		memmap_wp_set_chunks(&mbank);
 	}
 }
 void memmap_prgrom_128b(DBWORD address, DBWORD value) {
@@ -666,19 +670,21 @@ void chr_disable_write(void) {
 // chrrom : rd = TRUE, wr = FALSE
 INLINE static void memmap_chrrom(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & PPUMM) {
-		smmbank.region.address = adr;
-		smmbank.region.value = value;
-		smmbank.region.slot = 0;
-		smmbank.region.bank = 0;
-		smmbank.dst.pnt = chrrom_pnt();
-		smmbank.dst.size = chrrom_size();
-		smmbank.dst.mask = chrrom_mask();
-		smmbank.type = MEMMAP_BANK_CHRROM;
-		smmbank.rd = rd;
-		smmbank.wr = wr;
-		smmbank.size = size;
-		smmbank.translate_value = tvalue;
-		memmap_wp_set_chunks();
+		_memmap_bank mbank;
+
+		mbank.region.address = adr;
+		mbank.region.value = value;
+		mbank.region.slot = 0;
+		mbank.region.bank = 0;
+		mbank.dst.pnt = chrrom_pnt();
+		mbank.dst.size = chrrom_size();
+		mbank.dst.mask = chrrom_mask();
+		mbank.type = MEMMAP_BANK_CHRROM;
+		mbank.rd = rd;
+		mbank.wr = wr;
+		mbank.size = size;
+		mbank.translate_value = tvalue;
+		memmap_wp_set_chunks(&mbank);
 	}
 }
 void memmap_chrrom_128b(DBWORD address, DBWORD value) {
@@ -759,7 +765,9 @@ BYTE wram_init(void) {
 				return (EXIT_ERROR);
 			}
 			// inizializzo il pointer della ram
-			wram.ram.pnt = wram_nvram_size() ? wram_pnt_byte(wram_nvram_size()) : wram_pnt_byte(0);
+			wram.ram.pnt = wram_nvram_size()
+				? wram_ram_size() ? wram_pnt_byte(wram_nvram_size()) : NULL
+				: wram_pnt_byte(0);
 			// inizializzo il pointer della nvram
 			wram.nvram.pnt = wram_nvram_size() ? wram_pnt_byte(0) : NULL;
 			// inizializzom le mask
@@ -896,19 +904,21 @@ void wram_direct_wr(WORD address, BYTE value) {
 // permissions : rd = TRUE, wr = TRUE
 INLINE static void memmap_wram(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & CPUMM) {
-		smmbank.region.address = adr;
-		smmbank.region.value = value;
-		smmbank.region.slot = 0;
-		smmbank.region.bank = 0;
-		smmbank.dst.pnt = wram_pnt();
-		smmbank.dst.size = wram_size();
-		smmbank.dst.mask = wram_mask();
-		smmbank.type = MEMMAP_BANK_WRAM;
-		smmbank.rd = rd;
-		smmbank.wr = wr;
-		smmbank.size = size;
-		smmbank.translate_value = tvalue;
-		memmap_wp_set_chunks();
+		_memmap_bank mbank;
+
+		mbank.region.address = adr;
+		mbank.region.value = value;
+		mbank.region.slot = 0;
+		mbank.region.bank = 0;
+		mbank.dst.pnt = wram_pnt();
+		mbank.dst.size = wram_size();
+		mbank.dst.mask = wram_mask();
+		mbank.type = MEMMAP_BANK_WRAM;
+		mbank.rd = rd;
+		mbank.wr = wr;
+		mbank.size = size;
+		mbank.translate_value = tvalue;
+		memmap_wp_set_chunks(&mbank);
 	}
 }
 void memmap_wram_128b(DBWORD address, DBWORD value) {
@@ -980,19 +990,21 @@ void memmap_wram_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE 
 // with permissions
 INLINE static void memmap_wram_ram_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & CPUMM) {
-		smmbank.region.address = adr;
-		smmbank.region.value = value;
-		smmbank.region.slot = 0;
-		smmbank.region.bank = 0;
-		smmbank.dst.pnt = wram_ram_pnt();
-		smmbank.dst.size = wram_ram_size();
-		smmbank.dst.mask = wram_ram_mask();
-		smmbank.type = MEMMAP_BANK_WRAM;
-		smmbank.rd = rd;
-		smmbank.wr = wr;
-		smmbank.size = size;
-		smmbank.translate_value = tvalue;
-		memmap_wp_set_chunks();
+		_memmap_bank mbank;
+
+		mbank.region.address = adr;
+		mbank.region.value = value;
+		mbank.region.slot = 0;
+		mbank.region.bank = 0;
+		mbank.dst.pnt = wram_ram_pnt();
+		mbank.dst.size = wram_ram_size();
+		mbank.dst.mask = wram_ram_mask();
+		mbank.type = MEMMAP_BANK_WRAM;
+		mbank.rd = rd;
+		mbank.wr = wr;
+		mbank.size = size;
+		mbank.translate_value = tvalue;
+		memmap_wp_set_chunks(&mbank);
 	}
 }
 void memmap_wram_ram_wp_128b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
@@ -1029,19 +1041,21 @@ void memmap_wram_ram_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, B
 // with permissions
 INLINE static void memmap_wram_nvram_wp(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & CPUMM) {
-		smmbank.region.address = adr;
-		smmbank.region.value = value;
-		smmbank.region.slot = 0;
-		smmbank.region.bank = 0;
-		smmbank.dst.pnt = wram_nvram_pnt();
-		smmbank.dst.size = wram_nvram_size();
-		smmbank.dst.mask = wram_nvram_mask();
-		smmbank.type = MEMMAP_BANK_WRAM;
-		smmbank.rd = rd;
-		smmbank.wr = wr;
-		smmbank.size = size;
-		smmbank.translate_value = tvalue;
-		memmap_wp_set_chunks();
+		_memmap_bank mbank;
+
+		mbank.region.address = adr;
+		mbank.region.value = value;
+		mbank.region.slot = 0;
+		mbank.region.bank = 0;
+		mbank.dst.pnt = wram_nvram_pnt();
+		mbank.dst.size = wram_nvram_size();
+		mbank.dst.mask = wram_nvram_mask();
+		mbank.type = MEMMAP_BANK_WRAM;
+		mbank.rd = rd;
+		mbank.wr = wr;
+		mbank.size = size;
+		mbank.translate_value = tvalue;
+		memmap_wp_set_chunks(&mbank);
 	}
 }
 void memmap_wram_nvram_wp_128b(DBWORD address, DBWORD value, BYTE rd, BYTE wr) {
@@ -1095,7 +1109,9 @@ BYTE vram_init(void) {
 				return (EXIT_ERROR);
 			}
 			// inizializzo il pointer della ram
-			vram.ram.pnt = vram_nvram_size() ? vram_pnt_byte(vram_nvram_size()) : vram_pnt_byte(0);
+			vram.ram.pnt = vram_nvram_size()
+				? vram_ram_size() ? vram_pnt_byte(vram_nvram_size()) : NULL
+				: vram_pnt_byte(0);
 			// inizializzo il pointer della nvram
 			vram.nvram.pnt = vram_nvram_size() ? vram_pnt_byte(0) : NULL;
 			// inizializzom le mask
@@ -1145,19 +1161,21 @@ void vram_memset(void) {
 // permissions : rd = TRUE, wr = TRUE
 INLINE static void memmap_vram(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & PPUMM) {
-		smmbank.region.address = adr;
-		smmbank.region.value = value;
-		smmbank.region.slot = 0;
-		smmbank.region.bank = 0;
-		smmbank.dst.pnt = vram_pnt();
-		smmbank.dst.size = vram_size();
-		smmbank.dst.mask = vram_mask();
-		smmbank.type = MEMMAP_BANK_VRAM;
-		smmbank.rd = rd;
-		smmbank.wr = wr;
-		smmbank.size = size;
-		smmbank.translate_value = tvalue;
-		memmap_wp_set_chunks();
+		_memmap_bank mbank;
+
+		mbank.region.address = adr;
+		mbank.region.value = value;
+		mbank.region.slot = 0;
+		mbank.region.bank = 0;
+		mbank.dst.pnt = vram_pnt();
+		mbank.dst.size = vram_size();
+		mbank.dst.mask = vram_mask();
+		mbank.type = MEMMAP_BANK_VRAM;
+		mbank.rd = rd;
+		mbank.wr = wr;
+		mbank.size = size;
+		mbank.translate_value = tvalue;
+		memmap_wp_set_chunks(&mbank);
 	}
 }
 void memmap_vram_128b(DBWORD address, DBWORD value) {
@@ -1280,19 +1298,21 @@ void ram_wr(WORD address, BYTE value) {
 // permissions : rd = TRUE, wr = TRUE
 INLINE static void memmap_ram(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & CPUMM) {
-		smmbank.region.address = adr;
-		smmbank.region.value = value;
-		smmbank.region.slot = 0;
-		smmbank.region.bank = 0;
-		smmbank.dst.pnt = ram_pnt();
-		smmbank.dst.size = ram_size();
-		smmbank.dst.mask = ram_mask();
-		smmbank.type = MEMMAP_BANK_RAM;
-		smmbank.rd = rd;
-		smmbank.wr = wr;
-		smmbank.size = size;
-		smmbank.translate_value = tvalue;
-		memmap_wp_set_chunks();
+		_memmap_bank mbank;
+
+		mbank.region.address = adr;
+		mbank.region.value = value;
+		mbank.region.slot = 0;
+		mbank.region.bank = 0;
+		mbank.dst.pnt = ram_pnt();
+		mbank.dst.size = ram_size();
+		mbank.dst.mask = ram_mask();
+		mbank.type = MEMMAP_BANK_RAM;
+		mbank.rd = rd;
+		mbank.wr = wr;
+		mbank.size = size;
+		mbank.translate_value = tvalue;
+		memmap_wp_set_chunks(&mbank);
 	}
 }
 void memmap_ram_128b(DBWORD address, DBWORD value) {
@@ -1405,19 +1425,21 @@ void nmt_disable_write(void) {
 // permissions : rd = TRUE, wr = TRUE
 INLINE static void memmap_nmt(DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
 	if (adr & PPUMM) {
-		smmbank.region.address = adr;
-		smmbank.region.value = value;
-		smmbank.region.slot = 0;
-		smmbank.region.bank = 0;
-		smmbank.dst.pnt = nmt_pnt();
-		smmbank.dst.size = nmt_size();
-		smmbank.dst.mask = nmt_mask();
-		smmbank.type = MEMMAP_BANK_NMT;
-		smmbank.rd = rd;
-		smmbank.wr = wr;
-		smmbank.size = size;
-		smmbank.translate_value = tvalue;
-		memmap_wp_set_chunks();
+		_memmap_bank mbank;
+
+		mbank.region.address = adr;
+		mbank.region.value = value;
+		mbank.region.slot = 0;
+		mbank.region.bank = 0;
+		mbank.dst.pnt = nmt_pnt();
+		mbank.dst.size = nmt_size();
+		mbank.dst.mask = nmt_mask();
+		mbank.type = MEMMAP_BANK_NMT;
+		mbank.rd = rd;
+		mbank.wr = wr;
+		mbank.size = size;
+		mbank.translate_value = tvalue;
+		memmap_wp_set_chunks(&mbank);
 	}
 }
 void memmap_nmt_128b(DBWORD address, DBWORD value) {
@@ -1810,9 +1832,11 @@ INLINE static size_t calc_mask(size_t size) {
 	size_t max = size - 1;
 	size_t mask = 0;
 
-	while (max > 0) {
-		mask = (mask << 1) | 1;
-		max >>= 1;
+	if (size) {
+		while (max > 0) {
+			mask = (mask << 1) | 1;
+			max >>= 1;
+		}
 	}
 	return (mask);
 }
