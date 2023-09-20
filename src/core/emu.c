@@ -507,7 +507,7 @@ BYTE emu_turn_on(void) {
 	srand(time(0));
 
 	// l'inizializzazione della memmap della cpu e della ppu
-	memset(&memmap_palette, 0x00, sizeof(memmap_palette));
+	memset(&nes.m.memmap_palette, 0x00, sizeof(nes.m.memmap_palette));
 	memset(&nes.p.oam, 0x00, sizeof(_oam));
 	memset(&nes.p.ppu_screen, 0x00, sizeof(_ppu_screen));
 	memset(&vs_system, 0x00, sizeof(vs_system));

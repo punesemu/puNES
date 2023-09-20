@@ -935,9 +935,9 @@ INLINE static void ppu_wr_mem(WORD address, BYTE value) {
 		return;
 	}
 	address &= 0x1F;
-	memmap_palette.color[address] = value & 0x3F;
+	nes.m.memmap_palette.color[address] = value & 0x3F;
 	if (!(address & 0x03)) {
-		 memmap_palette.color[(address + 0x10) & 0x1F] = memmap_palette.color[address];
+		nes.m.memmap_palette.color[(address + 0x10) & 0x1F] = nes.m.memmap_palette.color[address];
 	}
 }
 INLINE static void ppu_wr_reg(WORD address, BYTE value) {

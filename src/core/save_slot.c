@@ -459,7 +459,7 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	if (mem_with_size(mode, slot, nmt_pnt(), nmt_size(), fp) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}
-	save_slot_ele(mode, slot, memmap_palette.color);
+	save_slot_ele(mode, slot, nes.m.memmap_palette.color);
 	save_slot_ele(mode, slot, nes.p.oam.data);
 	save_slot_ele(mode, slot, nes.p.oam.plus);
 	for (i = 0; i < LENGTH(nes.p.oam.ele_plus); i++) {

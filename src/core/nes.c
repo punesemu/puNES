@@ -16,31 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef PPU_INLINE_H_
-#define PPU_INLINE_H_
+#include "nes.h"
 
-#include "external_calls.h"
-#include "memmap.h"
-
-INLINE static BYTE ppu_rd_mem(WORD address);
-
-INLINE static BYTE ppu_rd_mem(WORD address) {
-	if (extcl_rd_ppu_mem) {
-		/*
-		 * utilizzato dalle mappers :
-		 * 394
-		 * JYASIC
-		 */
-		extcl_rd_ppu_mem(address);
-	}
-	address &= 0x3FFF;
-	if (address < 0x2000) {
-		return (extcl_rd_chr ? extcl_rd_chr(address) : chr_rd(address));
-	}
-	if (address < 0x3F00) {
-		return (extcl_rd_nmt ? extcl_rd_nmt(address) : nmt_rd(address));
-	}
-	return (nes.m.memmap_palette.color[address & 0x1F]);
-}
-
-#endif /* PPU_INLINE_H_ */
+//_nes __attribute__((aligned(64))) nes;
+_nes nes;
+_ppu_alignment ppu_alignment;
+_prgrom prgrom;
+_chrrom chrrom;
+_wram wram;
+_miscrom miscrom;

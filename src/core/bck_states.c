@@ -112,7 +112,7 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size
 	if (nmt_size()) {
 		bck_states_on_mem(mode, nmt_pnt(), nmt_size(), data, (*index), (*size_buff))
 	}
-	bck_states_on_struct(mode, memmap_palette, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, nes.m.memmap_palette, data, (*index), (*size_buff))
 	bck_states_on_struct(mode, nes.p.oam, data, (*index), (*size_buff))
 
 	// mapper

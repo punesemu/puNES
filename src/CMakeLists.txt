@@ -522,6 +522,7 @@ set(core_srcs
 	core/jstick.c
 	core/main.c
 	core/mappers.c
+	core/nes.c
 	core/nsf.c
 	core/nsfe.c
 	core/overscan.c

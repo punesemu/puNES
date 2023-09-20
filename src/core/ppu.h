@@ -126,17 +126,6 @@ enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_
 		nes.p.overclock.in_extra_sclines = FALSE;\
 	}
 
-typedef struct _ppu_alignment {
-	struct _ppu_alignment_counter {
-		BYTE cpu;
-		BYTE ppu;
-	} count;
-	BYTE cpu;
-	BYTE ppu;
-}  _ppu_alignment;
-
-extern _ppu_alignment ppu_alignment;
-
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else

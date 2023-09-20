@@ -32,17 +32,6 @@ INLINE static unsigned int shift_from_size(size_t size);
 INLINE static size_t pow_of_2(size_t size);
 INLINE static void set_size(size_t *s, size_t *rs, size_t cs, size_t size);
 
-_memmap_palette memmap_palette;
-
-_memmap memmap;
-_prgrom prgrom;
-_chrrom chrrom;
-_wram wram;
-_vram vram;
-_ram ram;
-_nmt nmt;
-_miscrom miscrom;
-
 // memmap ----------------------------------------------------------------------------
 
 typedef struct _memmap_bank {
@@ -98,11 +87,11 @@ BYTE memmap_init(void) {
 	return (EXIT_OK);
 }
 void memmap_quit(void) {
-	memmap_region_quit(&memmap.prg);
-	memmap_region_quit(&memmap.chr);
-	memmap_region_quit(&memmap.wram);
-	memmap_region_quit(&memmap.ram);
-	memmap_region_quit(&memmap.nmt);
+	memmap_region_quit(&nes.m.memmap.prg);
+	memmap_region_quit(&nes.m.memmap.chr);
+	memmap_region_quit(&nes.m.memmap.wram);
+	memmap_region_quit(&nes.m.memmap.ram);
+	memmap_region_quit(&nes.m.memmap.nmt);
 }
 BYTE memmap_adr_is_readable(DBWORD address) {
 	_memmap_region *region = memmap_get_region(address);
@@ -144,19 +133,19 @@ BYTE *memmap_chunk_pnt(DBWORD address) {
 }
 
 BYTE memmap_prg_region_init(size_t chunk_size) {
-	return (memmap_region_init(&memmap.prg, MEMMAP_PRG_SIZE, chunk_size));
+	return (memmap_region_init(&nes.m.memmap.prg, MEMMAP_PRG_SIZE, chunk_size));
 }
 BYTE memmap_chr_region_init(size_t chunk_size) {
-	return (memmap_region_init(&memmap.chr, MEMMAP_CHR_SIZE, chunk_size));
+	return (memmap_region_init(&nes.m.memmap.chr, MEMMAP_CHR_SIZE, chunk_size));
 }
 BYTE memmap_wram_region_init(size_t chunk_size) {
-	return (memmap_region_init(&memmap.wram, MEMMAP_WRAM_SIZE, chunk_size));
+	return (memmap_region_init(&nes.m.memmap.wram, MEMMAP_WRAM_SIZE, chunk_size));
 }
 BYTE memmap_ram_region_init(size_t chunk_size) {
-	return (memmap_region_init(&memmap.ram, MEMMAP_RAM_SIZE, chunk_size));
+	return (memmap_region_init(&nes.m.memmap.ram, MEMMAP_RAM_SIZE, chunk_size));
 }
 BYTE memmap_nmt_region_init(size_t chunk_size) {
-	return (memmap_region_init(&memmap.nmt, MEMMAP_NMT_SIZE, chunk_size));
+	return (memmap_region_init(&nes.m.memmap.nmt, MEMMAP_NMT_SIZE, chunk_size));
 }
 
 // with permissions
@@ -455,20 +444,20 @@ INLINE static _memmap_region *memmap_get_region(DBWORD address) {
 	if (address & PPUMM) {
 		// PPU
 		if (real_address < 0x2000) {
-			return (&memmap.chr);
+			return (&nes.m.memmap.chr);
 		} else if (real_address < 0x3F00) {
-			return (&memmap.nmt);
+			return (&nes.m.memmap.nmt);
 		}
 	} else if (address & CPUMM) {
 		// CPU
 		if (real_address >= 0x8000) {
-			return (&memmap.prg);
+			return (&nes.m.memmap.prg);
 		} else if (real_address >= 0x4000) {
-			return (&memmap.wram);
+			return (&nes.m.memmap.wram);
 		} else if (real_address >= 0x2000) {
 
 		} else {
-			return (&memmap.ram);
+			return (&nes.m.memmap.ram);
 		}
 	}
 	return (NULL);
@@ -514,7 +503,7 @@ void prgrom_quit(void) {
 	memmap_disable_32k(MMCPU(0x8000));
 }
 void prgrom_set_size(size_t size) {
-	set_size(&prgrom_size(), &prgrom.real_size, memmap.prg.info.chunk.size, size);
+	set_size(&prgrom_size(), &prgrom.real_size, nes.m.memmap.prg.info.chunk.size, size);
 }
 void prgrom_reset_chunks(void) {
 	memmap_auto_16k(MMCPU(0x8000), 0);
@@ -527,21 +516,21 @@ WORD prgrom_control_bank(enum _sizes_types size, WORD bank) {
 	return (memmap_control_bank(size, prgrom_size(), bank));
 }
 size_t prgrom_region_address(WORD address) {
-	return (memmap_region_address(&memmap.prg, address));
+	return (memmap_region_address(&nes.m.memmap.prg, address));
 }
 
 BYTE prgrom_rd(WORD address) {
-	const unsigned int slot = slot_from_address(&memmap.prg.info, address);
+	const unsigned int slot = slot_from_address(&nes.m.memmap.prg.info, address);
 
-	return (memmap.prg.chunks[slot].permit.rd
-		? memmap.prg.chunks[slot].pnt[address & memmap.prg.chunks[slot].mask]
+	return (nes.m.memmap.prg.chunks[slot].permit.rd
+		? nes.m.memmap.prg.chunks[slot].pnt[address & nes.m.memmap.prg.chunks[slot].mask]
 		: address >> 8);
 }
 void prgrom_wr(WORD address, BYTE value) {
-	const unsigned int slot = slot_from_address(&memmap.prg.info, address);
+	const unsigned int slot = slot_from_address(&nes.m.memmap.prg.info, address);
 
-	if (memmap.prg.chunks[slot].permit.wr) {
-		memmap.prg.chunks[slot].pnt[address & memmap.prg.chunks[slot].mask] = value;
+	if (nes.m.memmap.prg.chunks[slot].permit.wr) {
+		nes.m.memmap.prg.chunks[slot].pnt[address & nes.m.memmap.prg.chunks[slot].mask] = value;
 	}
 }
 
@@ -631,7 +620,7 @@ void chrrom_quit(void) {
 	memset(&chrrom, 0x00, sizeof(chrrom));
 }
 void chrrom_set_size(size_t size) {
-	set_size(&chrrom_size(), &chrrom.real_size, memmap.chr.info.chunk.size, size);
+	set_size(&chrrom_size(), &chrrom.real_size, nes.m.memmap.chr.info.chunk.size, size);
 }
 void chrrom_reset_chunks(void) {
 	memmap_auto_8k(MMPPU(0x0000), 0);
@@ -644,24 +633,24 @@ WORD chrrom_control_bank(enum _sizes_types size, WORD bank) {
 }
 
 BYTE chr_rd(WORD address) {
-	const unsigned int slot = slot_from_address(&memmap.chr.info, address);
+	const unsigned int slot = slot_from_address(&nes.m.memmap.chr.info, address);
 
-	if (memmap.chr.chunks[slot].permit.rd) {
-		return (memmap.chr.chunks[slot].pnt[address & memmap.chr.chunks[slot].mask]);
+	if (nes.m.memmap.chr.chunks[slot].permit.rd) {
+		return (nes.m.memmap.chr.chunks[slot].pnt[address & nes.m.memmap.chr.chunks[slot].mask]);
 	}
 	return (nes.c.cpu.openbus);
 }
 void chr_wr(WORD address, BYTE value) {
-	const unsigned int slot = slot_from_address(&memmap.chr.info, address);
+	const unsigned int slot = slot_from_address(&nes.m.memmap.chr.info, address);
 
-	if (memmap.chr.chunks[slot].permit.wr) {
-		memmap.chr.chunks[slot].pnt[address & memmap.chr.chunks[slot].mask] = value;
+	if (nes.m.memmap.chr.chunks[slot].permit.wr) {
+		nes.m.memmap.chr.chunks[slot].pnt[address & nes.m.memmap.chr.chunks[slot].mask] = value;
 	}
 }
 void chr_disable_write(void) {
-	for (size_t i = 0; i < memmap.chr.info.chunk.items; i++) {
-		memmap.chr.chunks[i].writable = FALSE;
-		memmap.chr.chunks[i].permit.wr = FALSE;
+	for (size_t i = 0; i < nes.m.memmap.chr.info.chunk.items; i++) {
+		nes.m.memmap.chr.chunks[i].writable = FALSE;
+		nes.m.memmap.chr.chunks[i].permit.wr = FALSE;
 	}
 }
 
@@ -832,7 +821,7 @@ void wram_memset(void) {
 }
 
 BYTE wram_rd(WORD address) {
-	const unsigned int slot = slot_from_address(&memmap.wram.info, address);
+	const unsigned int slot = slot_from_address(&nes.m.memmap.wram.info, address);
 
 //	if (address < 0x6000) {
 //		if ((vs_system.enabled) && (address >= 0x4020)) {
@@ -859,19 +848,19 @@ BYTE wram_rd(WORD address) {
 //			}
 //		}
 //	}
-//	if (!memmap.wram.chunks[slot].pnt) {
+//	if (!nes.m.memmap.wram.chunks[slot].pnt) {
 //		// TODO : devo controllare se lo fa davvero
 //		if (vs_system.enabled && vs_system.shared_mem) {
 //			return (prg.ram.data[address & 0x07FF]);
 //		}
 //	} else
 
-	return (memmap.wram.chunks[slot].permit.rd)
-		? memmap.wram.chunks[slot].pnt[address & memmap.wram.chunks[slot].mask]
+	return (nes.m.memmap.wram.chunks[slot].permit.rd)
+		? nes.m.memmap.wram.chunks[slot].pnt[address & nes.m.memmap.wram.chunks[slot].mask]
 		: (address >> 8);
 }
 void wram_wr(WORD address, BYTE value) {
-	const unsigned int slot = slot_from_address(&memmap.wram.info, address);
+	const unsigned int slot = slot_from_address(&nes.m.memmap.wram.info, address);
 
 //	if (address < 0x6000) {
 //		if (vs_system.enabled) {
@@ -880,14 +869,14 @@ void wram_wr(WORD address, BYTE value) {
 //			}
 //		}
 //	}
-//	if (!memmap.wram.chunks[slot].pnt) {
+//	if (!nes.m.memmap.wram.chunks[slot].pnt) {
 //		// TODO : devo controllare se lo fa davvero
 //		if (vs_system.enabled && vs_system.shared_mem) {
 //			prg.ram.data[address & 0x07FF] = value;
 //		}
 //	} else
-	if (memmap.wram.chunks[slot].permit.wr) {
-		memmap.wram.chunks[slot].pnt[address & memmap.wram.chunks[slot].mask] = value;
+	if (nes.m.memmap.wram.chunks[slot].permit.wr) {
+		nes.m.memmap.wram.chunks[slot].pnt[address & nes.m.memmap.wram.chunks[slot].mask] = value;
 	}
 }
 
@@ -1108,11 +1097,11 @@ BYTE vram_init(void) {
 				return (EXIT_ERROR);
 			}
 			// inizializzo il pointer della ram
-			vram.ram.pnt = vram_nvram_size()
+			nes.m.vram.ram.pnt = vram_nvram_size()
 				? vram_ram_size() ? vram_pnt_byte(vram_nvram_size()) : NULL
 				: vram_pnt_byte(0);
 			// inizializzo il pointer della nvram
-			vram.nvram.pnt = vram_nvram_size() ? vram_pnt_byte(0) : NULL;
+			nes.m.vram.nvram.pnt = vram_nvram_size() ? vram_pnt_byte(0) : NULL;
 			// inizializzom le mask
 			vram_mask() = calc_mask(vram_size());
 			vram_ram_mask() = calc_mask(vram_ram_size());
@@ -1126,17 +1115,17 @@ void vram_quit(void) {
 	if (vram_pnt()) {
 		free(vram_pnt());
 	}
-	memset(&vram, 0x00, sizeof(vram));
+	memset(&nes.m.vram, 0x00, sizeof(nes.m.vram));
 }
 void vram_set_ram_size(size_t size) {
-	vram.ram.size = pow_of_2(size);
+	nes.m.vram.ram.size = pow_of_2(size);
 	vram_size() = vram_ram_size() + vram_nvram_size();
-	vram.real_size = pow_of_2(vram_size());
+	nes.m.vram.real_size = pow_of_2(vram_size());
 }
 void vram_set_nvram_size(size_t size) {
-	vram.nvram.size = pow_of_2(size);
+	nes.m.vram.nvram.size = pow_of_2(size);
 	vram_size() = vram_ram_size() + vram_nvram_size();
-	vram.real_size = pow_of_2(vram_size());
+	nes.m.vram.real_size = pow_of_2(vram_size());
 }
 void vram_memset(void) {
 	if (vram_size()) {
@@ -1145,7 +1134,7 @@ void vram_memset(void) {
 
 		if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 			dst = vram_pnt();
-			size = vram.real_size;
+			size = nes.m.vram.real_size;
 		} else if (info.reset >= HARD) {
 			dst = vram_ram_pnt();
 			size = vram_ram_size();
@@ -1231,7 +1220,7 @@ void memmap_vram_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE 
 }
 
 BYTE vram_malloc(void) {
-	if (memmap_malloc(&vram_pnt(), vram.real_size) == EXIT_ERROR) {
+	if (memmap_malloc(&vram_pnt(), nes.m.vram.real_size) == EXIT_ERROR) {
 		log_error(uL("vram malloc;out of memory"));
 		return (EXIT_ERROR);
 	}
@@ -1260,10 +1249,10 @@ void ram_quit(void) {
 	if (ram_pnt()) {
 		free(ram_pnt());
 	}
-	memset(&ram, 0x00, sizeof(ram));
+	memset(&nes.m.ram, 0x00, sizeof(nes.m.ram));
 }
 void ram_set_size(size_t size) {
-	set_size(&ram_size(), &ram.real_size, memmap.ram.info.chunk.size, size);
+	set_size(&ram_size(), &nes.m.ram.real_size, nes.m.memmap.ram.info.chunk.size, size);
 }
 void ram_reset_chunks(void) {
 	memmap_auto_2k(MMCPU(0x0000), 0);
@@ -1273,24 +1262,24 @@ void ram_reset_chunks(void) {
 }
 void ram_memset(void) {
 	if (ram_size()) {
-		//memset(ram_pnt(), 0x00, ram.real_size);
-		emu_initial_ram(ram_pnt(), ram.real_size);
+		//memset(ram_pnt(), 0x00, nes.m.ram.real_size);
+		emu_initial_ram(ram_pnt(), nes.m.ram.real_size);
 	}
 }
 
 BYTE ram_rd(WORD address) {
-	unsigned int slot = slot_from_address(&memmap.ram.info, address);
+	unsigned int slot = slot_from_address(&nes.m.memmap.ram.info, address);
 
-	if (memmap.ram.chunks[slot].permit.rd) {
-		return (memmap.ram.chunks[slot].pnt[address & memmap.ram.chunks[slot].mask]);
+	if (nes.m.memmap.ram.chunks[slot].permit.rd) {
+		return (nes.m.memmap.ram.chunks[slot].pnt[address & nes.m.memmap.ram.chunks[slot].mask]);
 	}
 	return (nes.c.cpu.openbus);
 }
 void ram_wr(WORD address, BYTE value) {
-	unsigned int slot = slot_from_address(&memmap.ram.info, address);
+	unsigned int slot = slot_from_address(&nes.m.memmap.ram.info, address);
 
-	if (memmap.ram.chunks[slot].permit.wr) {
-		memmap.ram.chunks[slot].pnt[address & memmap.ram.chunks[slot].mask] = value;
+	if (nes.m.memmap.ram.chunks[slot].permit.wr) {
+		nes.m.memmap.ram.chunks[slot].pnt[address & nes.m.memmap.ram.chunks[slot].mask] = value;
 	}
 }
 
@@ -1337,7 +1326,7 @@ void memmap_ram_8k(DBWORD address, DBWORD value) {
 }
 
 BYTE ram_malloc(void) {
-	if (memmap_malloc(&ram_pnt(), ram.real_size) == EXIT_ERROR) {
+	if (memmap_malloc(&ram_pnt(), nes.m.ram.real_size) == EXIT_ERROR) {
 		log_error(uL("ram malloc;out of memory"));
 		return (EXIT_ERROR);
 	}
@@ -1366,10 +1355,10 @@ void nmt_quit(void) {
 	if (nmt_pnt()) {
 		free(nmt_pnt());
 	}
-	memset(&nmt, 0x00, sizeof(nmt));
+	memset(&nes.m.nmt, 0x00, sizeof(nes.m.nmt));
 }
 void nmt_set_size(size_t size) {
-	set_size(&nmt_size(), &nmt.real_size, memmap.nmt.info.chunk.size, size);
+	set_size(&nmt_size(), &nes.m.nmt.real_size, nes.m.memmap.nmt.info.chunk.size, size);
 }
 void nmt_reset_chunks(void) {
 	switch (info.mapper.mirroring) {
@@ -1395,29 +1384,29 @@ void nmt_reset_chunks(void) {
 }
 void nmt_memset(void) {
 	if (nmt_size()) {
-		memset(nmt_pnt(), 0x00, nmt.real_size);
+		memset(nmt_pnt(), 0x00, nes.m.nmt.real_size);
 	}
 }
 
 BYTE nmt_rd(WORD address) {
-	unsigned int slot = slot_from_address(&memmap.nmt.info, address);
+	unsigned int slot = slot_from_address(&nes.m.memmap.nmt.info, address);
 
-	if (memmap.nmt.chunks[slot].permit.rd) {
-		return (memmap.nmt.chunks[slot].pnt[address & memmap.nmt.chunks[slot].mask]);
+	if (nes.m.memmap.nmt.chunks[slot].permit.rd) {
+		return (nes.m.memmap.nmt.chunks[slot].pnt[address & nes.m.memmap.nmt.chunks[slot].mask]);
 	}
 	return (nes.c.cpu.openbus);
 }
 void nmt_wr(WORD address, BYTE value) {
-	unsigned int slot = slot_from_address(&memmap.nmt.info, address);
+	unsigned int slot = slot_from_address(&nes.m.memmap.nmt.info, address);
 
-	if (memmap.nmt.chunks[slot].permit.wr) {
-		memmap.nmt.chunks[slot].pnt[address & memmap.nmt.chunks[slot].mask] = value;
+	if (nes.m.memmap.nmt.chunks[slot].permit.wr) {
+		nes.m.memmap.nmt.chunks[slot].pnt[address & nes.m.memmap.nmt.chunks[slot].mask] = value;
 	}
 }
 void nmt_disable_write(void) {
-	for (size_t i = 0; i < memmap.nmt.info.chunk.items; i++) {
-		memmap.nmt.chunks[i].writable = FALSE;
-		memmap.nmt.chunks[i].permit.wr = FALSE;
+	for (size_t i = 0; i < nes.m.memmap.nmt.info.chunk.items; i++) {
+		nes.m.memmap.nmt.chunks[i].writable = FALSE;
+		nes.m.memmap.nmt.chunks[i].permit.wr = FALSE;
 	}
 }
 
@@ -1633,7 +1622,7 @@ void mirroring_SCR0x3_SCR1x1(void) {
 }
 
 BYTE nmt_malloc(void) {
-	if (memmap_malloc(&nmt_pnt(), nmt.real_size) == EXIT_ERROR) {
+	if (memmap_malloc(&nmt_pnt(), nes.m.nmt.real_size) == EXIT_ERROR) {
 		log_error(uL("nmt malloc;out of memory"));
 		return (EXIT_ERROR);
 	}
@@ -1666,7 +1655,7 @@ void miscrom_quit(void) {
 	memset(&miscrom, 0x00, sizeof(miscrom));
 }
 void miscrom_set_size(size_t size) {
-	set_size(&miscrom_size(), &miscrom.real_size, memmap.prg.info.chunk.size, size);
+	set_size(&miscrom_size(), &miscrom.real_size, nes.m.memmap.prg.info.chunk.size, size);
 }
 
 BYTE miscrom_malloc(void) {

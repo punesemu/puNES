@@ -56,7 +56,7 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 	/* deve essere azzerato alla fine di ogni ciclo PPU */\
 	nes.p.r2006.changed_from_op = 0;
 #define put_pixel(clr) nes.p.ppu_screen.wr->line[nes.p.ppu.screen_y][nes.p.ppu.frame_x] = nes.p.r2001.emphasis | clr;
-#define put_emphasis(clr) put_pixel((memmap_palette.color[clr] & nes.p.r2001.color_mode))
+#define put_emphasis(clr) put_pixel((nes.m.memmap_palette.color[clr] & nes.p.r2001.color_mode))
 #define put_bg put_emphasis(color_bg)
 #define put_sp put_emphasis(color_sp | 0x10)
 #define examine_sprites(senv, sp, vis, ty)\
@@ -171,9 +171,6 @@ static const BYTE palette_init[0x20] = {
 	0x09, 0x01, 0x34, 0x03, 0x00, 0x04, 0x00, 0x14,
 	0x08, 0x3A, 0x00, 0x02, 0x00, 0x20, 0x2C, 0x08
 };
-
-_ppu_data ppudata;
-_ppu_alignment ppu_alignment;
 
 void ppu_init(void) {
 	memset(&nes.p.ppu_screen, 0x00, sizeof(nes.p.ppu_screen));
@@ -494,7 +491,7 @@ void ppu_tick(void) {
 							 * utilizzo quello del background.
 							 */
 							if (cfg->hide_background) {
-								put_pixel(memmap_palette.color[0])
+								put_pixel(nes.m.memmap_palette.color[0])
 							} else {
 								put_bg
 							}
@@ -504,7 +501,7 @@ void ppu_tick(void) {
 							 * trasparente, utilizzo quello dello sprite.
 							 */
 							if (cfg->hide_sprites) {
-								put_pixel(memmap_palette.color[0])
+								put_pixel(nes.m.memmap_palette.color[0])
 							} else {
 								put_sp
 							}
@@ -519,7 +516,7 @@ void ppu_tick(void) {
 									 */
 									if (cfg->hide_background) {
 										if (cfg->hide_sprites) {
-											put_pixel(memmap_palette.color[0])
+											put_pixel(nes.m.memmap_palette.color[0])
 										} else {
 											put_sp
 										}
@@ -530,7 +527,7 @@ void ppu_tick(void) {
 									/* altrimenti quello dello sprite */
 									if (cfg->hide_sprites) {
 										if (cfg->hide_background) {
-											put_pixel(memmap_palette.color[0])
+											put_pixel(nes.m.memmap_palette.color[0])
 										} else {
 											put_bg
 										}
@@ -560,7 +557,7 @@ void ppu_tick(void) {
 								if (nes.p.sprite_unl[visible_spr_unl].attrib & 0x20) {
 									if (cfg->hide_background) {
 										if (cfg->hide_sprites) {
-											put_pixel(memmap_palette.color[0])
+											put_pixel(nes.m.memmap_palette.color[0])
 										} else {
 											put_sp
 										}
@@ -570,7 +567,7 @@ void ppu_tick(void) {
 								} else {
 									if (cfg->hide_sprites) {
 										if (cfg->hide_background) {
-											put_pixel(memmap_palette.color[0])
+											put_pixel(nes.m.memmap_palette.color[0])
 										} else {
 											put_bg
 										}
@@ -587,7 +584,7 @@ void ppu_tick(void) {
 						 * altrimenti visualizzo un pixel del
 						 * colore 0 della paletta.
 						 */
-						put_pixel(memmap_palette.color[0])
+						put_pixel(nes.m.memmap_palette.color[0])
 
 						if ((nes.p.r2006.value & 0xFF00) == 0x3F00) {
 							/*
@@ -1048,11 +1045,11 @@ BYTE ppu_turn_on(void) {
 			/* inizializzo nametables */
 			nmt_memset();
 			/* e paletta dei colori */
-			memcpy(memmap_palette.color, palette_init, sizeof(memmap_palette.color));
+			memcpy(nes.m.memmap_palette.color, palette_init, sizeof(nes.m.memmap_palette.color));
 
 			// power_up_palette.nes
 			if (info.crc32.total == 0xDD941E82) {
-				memmap_palette.color[0] = 0x09;
+				nes.m.memmap_palette.color[0] = 0x09;
 			}
 		}
 		ppu_alignment_init();
