@@ -464,7 +464,7 @@ void extcl_cpu_init_pc_006(void) {
 			miscrom_trainer_dst() = (address < 0x6000)
 				? &m006.scratch[address & 0xF00]
 				: wram_pnt_byte(address & 0x1FFF);
-			cpu.PC.w = info.mapper.id == 17 ? address : 0x5000;
+			cpudata.cpu.PC.w = info.mapper.id == 17 ? address : 0x5000;
 		}
 	}
 }
@@ -478,7 +478,7 @@ void extcl_cpu_wr_mem_006(WORD address, BYTE value) {
 					// attached to it. Because the Magic Card 1M and 2M, the predecessors to the Super Magic Card, had
 					// no IRQ counter of its own, a few games abuse the FDS Disk Data IRQ for frame timing and write any
 					// value to this register to acknowledge a pending IRQ.
-					irq.high &= ~EXT_IRQ;
+					cpudata.irq.high &= ~EXT_IRQ;
 					return;
 				case 0x4025:
 					// FDS Control ($4025)
@@ -487,7 +487,7 @@ void extcl_cpu_wr_mem_006(WORD address, BYTE value) {
 					// no IRQ counter of its own, a few games abuse the FDS Disk Data IRQ for frame timing. If bit 7 is
 					// set, the FDS RAM adapter will generate IRQs every 1,792 cycles of the 21.4772 MHz master clock,
 					// or after every 149+1/3 CPU cycles.
-					irq.high &= ~EXT_IRQ;
+					cpudata.irq.high &= ~EXT_IRQ;
 					if (!m006.irq.enable) {
 						m006.fds.control = value;
 						if (value & 0x42) {
@@ -576,16 +576,16 @@ void extcl_cpu_wr_mem_006(WORD address, BYTE value) {
 					return;
 				case 0x4501:
 					m006.irq.enable = FALSE;
-					irq.high &= ~EXT_IRQ;
+					cpudata.irq.high &= ~EXT_IRQ;
 					return;
 				case 0x4502:
 					m006.irq.counter = (m006.irq.counter & 0xFF00) | value;
-					irq.high &= ~EXT_IRQ;
+					cpudata.irq.high &= ~EXT_IRQ;
 					return;
 				case 0x4503:
 					m006.irq.counter = (m006.irq.counter & 0x00FF) | (value << 8);
 					m006.irq.enable = TRUE;
-					irq.high &= ~EXT_IRQ;
+					cpudata.irq.high &= ~EXT_IRQ;
 					return;
 				case 0x4504:
 				case 0x4505:
@@ -692,7 +692,7 @@ BYTE extcl_rd_chr_006(WORD address) {
 void extcl_cpu_every_cycle_006(void) {
 	m006.fds.counter += 3;
 	while ((m006.fds.counter >= 448) && (m006.fds.control & 0x80)) {
-		irq.high |= EXT_IRQ;
+		cpudata.irq.high |= EXT_IRQ;
 		m006.fds.counter -= 448;
 	}
 	if (!(m006.mode.smc & 0x08)) {
@@ -889,7 +889,7 @@ INLINE static void irq_clock_006(void) {
 		if (m006.irq.counter >= 0x10000) {
 			m006.irq.counter = 0;
 			m006.irq.enable = FALSE;
-			irq.high |= EXT_IRQ;
+			cpudata.irq.high |= EXT_IRQ;
 		}
 	}
 }

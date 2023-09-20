@@ -61,7 +61,7 @@ void extcl_cpu_wr_mem_311(WORD address, BYTE value) {
 		case 0x4122:
 			m311.irq.enabled = value & 0x01;
 			m311.irq.count = 0;
-			irq.high &= ~EXT_IRQ;
+			cpudata.irq.high &= ~EXT_IRQ;
 			return;
 		default:
 			return;
@@ -85,7 +85,7 @@ void extcl_cpu_every_cycle_311(void) {
 			m311.irq.count++;
 		} else {
 			m311.irq.count++;
-			irq.high |= EXT_IRQ;
+			cpudata.irq.high |= EXT_IRQ;
 		}
 	}
 }

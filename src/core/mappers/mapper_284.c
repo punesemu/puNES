@@ -92,7 +92,7 @@ void extcl_cpu_wr_mem_284(WORD address, BYTE value) {
 				case 0x9:
 					m284.irq.counter = ((value & 0x7F) << 8) | m284.irq.latch;
 					m284.irq.enabled = value & 0x80;
-					irq.high &= ~EXT_IRQ;
+					cpudata.irq.high &= ~EXT_IRQ;
 					break;
 				case 0xA:
 					m284.control = value & 0x0F;
@@ -190,7 +190,7 @@ void extcl_cpu_every_cycle_284(void) {
 			m284.irq.counter--;
 			if (!m284.irq.counter) {
 				m284.irq.enabled = FALSE;
-				irq.high |= EXT_IRQ;
+				cpudata.irq.high |= EXT_IRQ;
 			}
 		}
 	}

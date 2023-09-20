@@ -476,7 +476,7 @@ void nsf_init_tune(void) {
 
 	nsf.made_tick = FALSE;
 
-	cpu.SP = 0xFD;
+	cpudata.cpu.SP = 0xFD;
 	memset(ram_pnt(), 0x00, ram_size());
 
 	wram_memset();
@@ -536,7 +536,7 @@ void nsf_tick(void) {
 		nsf.rate.count = nsf.rate.reload;
 		nsf.routine.prg[NSF_R_JMP_PLAY] = NSF_R_PLAY;
 		if (nsf.routine.INT_NMI) {
-			nmi.high = TRUE;
+			cpudata.nmi.high = TRUE;
 		}
 		ppudata.ppu.odd_frame = !ppudata.ppu.odd_frame;
 		info.frame_status = FRAME_FINISHED;

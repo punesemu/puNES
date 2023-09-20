@@ -70,7 +70,7 @@ void extcl_cpu_wr_mem_043(WORD address, BYTE value) {
 		case 0x4122:
 			m043.irq.active = value & 0x01;
 			m043.irq.count = 0;
-			irq.high &= ~EXT_IRQ;
+			cpudata.irq.high &= ~EXT_IRQ;
 			return;
 		default:
 			return;
@@ -87,7 +87,7 @@ void extcl_cpu_every_cycle_043(void) {
 	m043.irq.count++;
 	if (m043.irq.active && (m043.irq.count >= 4096)) {
 		m043.irq.active = 0;
-		irq.high |= EXT_IRQ;
+		cpudata.irq.high |= EXT_IRQ;
 	}
 }
 

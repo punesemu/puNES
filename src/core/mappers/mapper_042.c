@@ -211,12 +211,12 @@ void extcl_cpu_wr_mem_042_s3(WORD address, BYTE value) {
 void extcl_cpu_every_cycle_042_s3(void) {
 	if (m042.irq.reg & 0x02) {
 		if ((++m042.irq.count & 0x6000) == 0x6000) {
-			irq.high |= EXT_IRQ;
+			cpudata.irq.high |= EXT_IRQ;
 		} else {
-			irq.high &= ~EXT_IRQ;
+			cpudata.irq.high &= ~EXT_IRQ;
 		}
 	} else {
-		irq.high &= ~EXT_IRQ;
+		cpudata.irq.high &= ~EXT_IRQ;
 		m042.irq.count = 0;
 	}
 }

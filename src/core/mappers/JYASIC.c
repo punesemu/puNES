@@ -124,7 +124,7 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 					jyasic.irq.active = value & 0x01;
 					if (!jyasic.irq.active) {
 						jyasic.irq.prescaler = 0;
-						irq.high &= ~EXT_IRQ;
+						cpudata.irq.high &= ~EXT_IRQ;
 					}
 					break;
 				case 1:
@@ -138,7 +138,7 @@ void extcl_cpu_wr_mem_JYASIC(WORD address, BYTE value) {
 				case 2:
 					jyasic.irq.active = 0;
 					jyasic.irq.prescaler = 0;
-					irq.high &= ~EXT_IRQ;
+					cpudata.irq.high &= ~EXT_IRQ;
 					break;
 				case 3:
 					jyasic.irq.active = 1;
@@ -307,7 +307,7 @@ void init_JYASIC(BYTE extended_mode, BYTE reset) {
 	jyasic.chr.latch[0] = 0;
 	jyasic.chr.latch[1] = 4;
 
-	irq.high &= ~EXT_IRQ;
+	cpudata.irq.high &= ~EXT_IRQ;
 
 	info.mapper.extend_wr = TRUE;
 
@@ -505,7 +505,7 @@ INLINE static void irq_clock_prescaler_JYASIC(void) {
 				jyasic.irq.count++;
 			}
 			if (jyasic.irq.count == 0x00) {
-				irq.high |= EXT_IRQ;
+				cpudata.irq.high |= EXT_IRQ;
 			}
 		}
 	} else if (type == 2) {
@@ -514,7 +514,7 @@ INLINE static void irq_clock_prescaler_JYASIC(void) {
 				jyasic.irq.count--;
 			}
 			if (jyasic.irq.count == 0xFF) {
-				irq.high |= EXT_IRQ;
+				cpudata.irq.high |= EXT_IRQ;
 			}
 		}
 	}

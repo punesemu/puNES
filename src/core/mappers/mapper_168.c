@@ -78,7 +78,7 @@ void extcl_cpu_wr_mem_168(WORD address, BYTE value) {
 			}
 			m168.irq.disabled = address & 0x0080;
 			if (m168.irq.disabled) {
-				irq.high &= ~EXT_IRQ;
+				cpudata.irq.high &= ~EXT_IRQ;
 			}
 			return;
 	}
@@ -96,10 +96,10 @@ void extcl_cpu_every_cycle_168(void) {
 		m168.irq.counter = 0;
 	} else {
 		if (++m168.irq.counter & 1024) {
-			irq.high |= EXT_IRQ;
+			cpudata.irq.high |= EXT_IRQ;
 			return;
 		}
-		irq.high &= ~EXT_IRQ;
+		cpudata.irq.high &= ~EXT_IRQ;
 	}
 }
 

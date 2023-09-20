@@ -58,10 +58,10 @@ void extcl_cpu_wr_mem_KS202(WORD address, BYTE value) {
 			if (ks202.irq.enabled) {
 				ks202.irq.count = ks202.irq.reload;
 			}
-			irq.high &= ~EXT_IRQ;
+			cpudata.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xD000:
-			irq.high &= ~EXT_IRQ;
+			cpudata.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xE000:
 			ks202.index = value;
@@ -104,8 +104,8 @@ void extcl_cpu_every_cycle_KS202(void) {
 	}
 	if (++ks202.irq.count == 0xFFFF) {
 		ks202.irq.count = ks202.irq.reload;
-		irq.delay = TRUE;
-		irq.high |= EXT_IRQ;
+		cpudata.irq.delay = TRUE;
+		cpudata.irq.high |= EXT_IRQ;
 	}
 }
 
@@ -119,7 +119,7 @@ void init_KS202(BYTE reset) {
 		ks202.reg[3] = 3;
 	}
 
-	irq.high &= ~EXT_IRQ;
+	cpudata.irq.high &= ~EXT_IRQ;
 
 	KS202_prg_fix = prg_fix_KS202_base;
 	KS202_prg_swap = prg_swap_KS202_base;

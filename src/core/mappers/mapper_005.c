@@ -254,7 +254,7 @@ void extcl_cpu_wr_mem_005(WORD address, BYTE value) {
 					return;
 				}
 				irql2f.enable = FALSE;
-				irq.high &= ~EXT_IRQ;
+				cpudata.irq.high &= ~EXT_IRQ;
 				return;
 			case 0x5205:
 				m005.factor[0] = value;
@@ -301,7 +301,7 @@ BYTE extcl_cpu_rd_mem_005(WORD address, UNUSED(BYTE openbus)) {
 				value = irql2f.pending | irql2f.in_frame;
 				irql2f.pending = FALSE;
 				// disabilito l'IRQ del MMC5
-				irq.high &= ~EXT_IRQ;
+				cpudata.irq.high &= ~EXT_IRQ;
 				return (value);
 			case 0x5205:
 				return ((WORD)(m005.factor[0] * m005.factor[1]) & 0x00FF);
@@ -310,7 +310,7 @@ BYTE extcl_cpu_rd_mem_005(WORD address, UNUSED(BYTE openbus)) {
 			case 0x5209:
 				value = (m005.timer_irq ? 0x80 : 0x00);
 				m005.timer_irq = FALSE;
-				irq.high &= ~EXT_IRQ;
+				cpudata.irq.high &= ~EXT_IRQ;
 				return (value);
 			default:
 				return (wram_rd(address));
@@ -487,11 +487,11 @@ BYTE extcl_rd_nmt_005(WORD address) {
 }
 void extcl_cpu_every_cycle_005(void) {
 	if (irql2f.delay && !(--irql2f.delay)) {
-		irq.high |= EXT_IRQ;
+		cpudata.irq.high |= EXT_IRQ;
 	}
 	if (m005.timer_running && !--m005.timer_count) {
 		m005.timer_irq = TRUE;
-		irq.high |= EXT_IRQ;
+		cpudata.irq.high |= EXT_IRQ;
 	}
 }
 void extcl_length_clock_005(void) {

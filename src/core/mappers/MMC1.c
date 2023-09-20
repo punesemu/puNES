@@ -51,7 +51,7 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 			// azzero il flag
 			mmc1.reset = FALSE;
 			// esco se necessario
-			if (cpu.double_wr) {
+			if (cpudata.cpu.double_wr) {
 				return;
 			}
 		}

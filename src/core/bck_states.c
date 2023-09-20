@@ -68,9 +68,9 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size
 	unsigned int i = 0;
 
 	// CPU
-	bck_states_on_struct(mode, cpu, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, irq, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nmi, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, cpudata.cpu, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, cpudata.irq, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, cpudata.nmi, data, (*index), (*size_buff))
 
 	// PPU
 	bck_states_on_struct(mode, ppudata.ppu, data, (*index), (*size_buff))

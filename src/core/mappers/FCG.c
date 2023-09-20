@@ -90,7 +90,7 @@ void extcl_cpu_wr_mem_FCG(WORD address, BYTE value) {
 				if (fcg.irq.enabled && !fcg.irq.count) {
 					fcg.irq.delay = 1;
 				} else {
-					irq.high &= ~EXT_IRQ;
+					cpudata.irq.high &= ~EXT_IRQ;
 				}
 				return;
 			case 0x0B:
@@ -116,7 +116,7 @@ BYTE extcl_save_mapper_FCG(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_FCG(void) {
 	if (fcg.irq.delay && !(--fcg.irq.delay)) {
-		irq.high |= EXT_IRQ;
+		cpudata.irq.high |= EXT_IRQ;
 	}
 	if (fcg.irq.enabled && !(--fcg.irq.count)) {
 		fcg.irq.delay = 1;

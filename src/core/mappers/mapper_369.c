@@ -82,7 +82,7 @@ void extcl_cpu_wr_mem_369(WORD address, BYTE value) {
 		case 0x9000:
 			if (m369.reg == 0x13) {
 				m369.irq.enable = FALSE;
-				irq.high &= ~EXT_IRQ;
+				cpudata.irq.high &= ~EXT_IRQ;
 			}
 			if (!(address & 0x0001)) {
 				extcl_cpu_wr_mem_MMC3(address, value);
@@ -139,7 +139,7 @@ void extcl_cpu_every_cycle_369(void) {
 		if (m369.irq.enable) {
 			m369.irq.counter = (m369.irq.counter + 1) & 0x0FFF;
 			if (!m369.irq.counter) {
-				irq.high |= EXT_IRQ;
+				cpudata.irq.high |= EXT_IRQ;
 			}
 		}
 	} else {

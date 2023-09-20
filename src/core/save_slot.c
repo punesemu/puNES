@@ -238,43 +238,43 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	}
 
 	// cpu
-	save_slot_ele(mode, slot, cpu.PC);
-	save_slot_ele(mode, slot, cpu.SP);
-	save_slot_ele(mode, slot, cpu.AR);
-	save_slot_ele(mode, slot, cpu.XR);
-	save_slot_ele(mode, slot, cpu.YR);
-	save_slot_ele(mode, slot, cpu.SR);
-	save_slot_ele(mode, slot, cpu.cf);
-	save_slot_ele(mode, slot, cpu.zf);
-	save_slot_ele(mode, slot, cpu.im);
-	save_slot_ele(mode, slot, cpu.df);
-	save_slot_ele(mode, slot, cpu.bf);
-	save_slot_ele(mode, slot, cpu.of);
-	save_slot_ele(mode, slot, cpu.sf);
-	save_slot_ele(mode, slot, cpu.opcode);
-	save_slot_ele(mode, slot, cpu.opcode_PC);
-	save_slot_ele(mode, slot, cpu.odd_cycle);
-	save_slot_ele(mode, slot, cpu.openbus);
-	save_slot_ele(mode, slot, cpu.cycles);
-	save_slot_ele(mode, slot, cpu.opcode_cycle);
-	save_slot_ele(mode, slot, cpu.double_rd);
-	save_slot_ele(mode, slot, cpu.double_wr);
-	save_slot_ele(mode, slot, cpu.prg_ram_rd_active);
-	save_slot_ele(mode, slot, cpu.prg_ram_wr_active);
-	save_slot_ele(mode, slot, cpu.base_opcode_cycles);
+	save_slot_ele(mode, slot, cpudata.cpu.PC);
+	save_slot_ele(mode, slot, cpudata.cpu.SP);
+	save_slot_ele(mode, slot, cpudata.cpu.AR);
+	save_slot_ele(mode, slot, cpudata.cpu.XR);
+	save_slot_ele(mode, slot, cpudata.cpu.YR);
+	save_slot_ele(mode, slot, cpudata.cpu.SR);
+	save_slot_ele(mode, slot, cpudata.cpu.cf);
+	save_slot_ele(mode, slot, cpudata.cpu.zf);
+	save_slot_ele(mode, slot, cpudata.cpu.im);
+	save_slot_ele(mode, slot, cpudata.cpu.df);
+	save_slot_ele(mode, slot, cpudata.cpu.bf);
+	save_slot_ele(mode, slot, cpudata.cpu.of);
+	save_slot_ele(mode, slot, cpudata.cpu.sf);
+	save_slot_ele(mode, slot, cpudata.cpu.opcode);
+	save_slot_ele(mode, slot, cpudata.cpu.opcode_PC);
+	save_slot_ele(mode, slot, cpudata.cpu.odd_cycle);
+	save_slot_ele(mode, slot, cpudata.cpu.openbus);
+	save_slot_ele(mode, slot, cpudata.cpu.cycles);
+	save_slot_ele(mode, slot, cpudata.cpu.opcode_cycle);
+	save_slot_ele(mode, slot, cpudata.cpu.double_rd);
+	save_slot_ele(mode, slot, cpudata.cpu.double_wr);
+	save_slot_ele(mode, slot, cpudata.cpu.prg_ram_rd_active);
+	save_slot_ele(mode, slot, cpudata.cpu.prg_ram_wr_active);
+	save_slot_ele(mode, slot, cpudata.cpu.base_opcode_cycles);
 
 	// irq
-	save_slot_ele(mode, slot, irq.high);
-	save_slot_ele(mode, slot, irq.delay);
-	save_slot_ele(mode, slot, irq.before);
-	save_slot_ele(mode, slot, irq.inhibit);
+	save_slot_ele(mode, slot, cpudata.irq.high);
+	save_slot_ele(mode, slot, cpudata.irq.delay);
+	save_slot_ele(mode, slot, cpudata.irq.before);
+	save_slot_ele(mode, slot, cpudata.irq.inhibit);
 	// nmi
-	save_slot_ele(mode, slot, nmi.high);
-	save_slot_ele(mode, slot, nmi.delay);
-	save_slot_ele(mode, slot, nmi.before);
-	save_slot_ele(mode, slot, nmi.inhibit);
-	save_slot_ele(mode, slot, nmi.frame_x);
-	save_slot_ele(mode, slot, nmi.cpu_cycles_from_last_nmi);
+	save_slot_ele(mode, slot, cpudata.nmi.high);
+	save_slot_ele(mode, slot, cpudata.nmi.delay);
+	save_slot_ele(mode, slot, cpudata.nmi.before);
+	save_slot_ele(mode, slot, cpudata.nmi.inhibit);
+	save_slot_ele(mode, slot, cpudata.nmi.frame_x);
+	save_slot_ele(mode, slot, cpudata.nmi.cpu_cycles_from_last_nmi);
 
 	// ppu
 	save_slot_ele(mode, slot, ppudata.ppu.frame_x);

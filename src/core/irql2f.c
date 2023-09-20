@@ -35,7 +35,7 @@ void irql2f_tick(void) {
 		irql2f.counter = 0;
 		irql2f.pending = FALSE;
 		// disabilito l'IRQ dell'MMC5
-		irq.high &= ~EXT_IRQ;
+		cpudata.irq.high &= ~EXT_IRQ;
 		return;
 	}
 	if (++irql2f.counter == irql2f.scanline) {

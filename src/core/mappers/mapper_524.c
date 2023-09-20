@@ -58,7 +58,7 @@ void extcl_cpu_wr_mem_524(WORD address, BYTE value) {
 		case 0xF00C :
 			m524.irq.enabled = FALSE;
 			m524.irq.counter = 0;
-			irq.high &= ~EXT_IRQ;
+			cpudata.irq.high &= ~EXT_IRQ;
 			return;
 		default:
 			extcl_cpu_wr_mem_VRC2and4(address, value);
@@ -72,7 +72,7 @@ BYTE extcl_save_mapper_524(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_524(void) {
 	if (m524.irq.enabled && (++m524.irq.counter & 0x400)) {
-		irq.high |= EXT_IRQ;
+		cpudata.irq.high |= EXT_IRQ;
 	}
 }
 

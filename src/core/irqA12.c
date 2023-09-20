@@ -37,7 +37,7 @@ void irqA12_IO(WORD value, WORD value_old) {
 					irqA12.counter--;
 				}
 				if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {
-					irq.high |= EXT_IRQ;
+					cpudata.irq.high |= EXT_IRQ;
 				}
 				irqA12.save_counter = irqA12.counter;
 			} else {

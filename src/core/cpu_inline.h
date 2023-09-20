@@ -40,7 +40,7 @@
 #include "tape_data_recorder.h"
 #include "memmap.h"
 
-#define mod_cycles_op(op, vl) cpu.cycles op vl
+#define mod_cycles_op(op, vl) cpudata.cpu.cycles op vl
 #define r2006_during_rendering()\
 	if (!ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.frame_y > ppudata.ppu_sclines.vint) && (ppudata.ppu.screen_y < SCR_ROWS)) {\
 		_r2006_during_rendering()\
@@ -83,11 +83,11 @@
 		for (i = 0; i < (lng); i++) {\
 			if (!(lst).cheat[i].disabled && ((lst).cheat[i].address == (adr))) {\
 				if ((lst).cheat[i].enabled_compare) {\
-					if ((lst).cheat[i].compare == cpu.openbus) {\
-						cpu.openbus = (lst).cheat[i].replace;\
+					if ((lst).cheat[i].compare == cpudata.cpu.openbus) {\
+						cpudata.cpu.openbus = (lst).cheat[i].replace;\
 					}\
 				} else {\
-					cpu.openbus = (lst).cheat[i].replace;\
+					cpudata.cpu.openbus = (lst).cheat[i].replace;\
 				}\
 			}\
 		}\
@@ -110,12 +110,12 @@ INLINE static void tick_hw(BYTE value);
 /* ------------------------------------ READ ROUTINE ------------------------------------------- */
 
 BYTE cpu_rd_mem_dbg(WORD address) {
-	BYTE cpu_openbus = cpu.openbus;
+	BYTE cpu_openbus = cpudata.cpu.openbus;
 	BYTE read = 0;
 
 	info.disable_tick_hw = TRUE;
 	read = cpu_rd_mem(address, FALSE);
-	cpu.openbus = cpu_openbus;
+	cpudata.cpu.openbus = cpu_openbus;
 	info.disable_tick_hw = FALSE;
 	return (read);
 }
@@ -123,10 +123,10 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 	if (info.cpu_rw_extern) {
 		if (nsf.enabled) {
 			nsf_rd_mem(address, made_tick);
-			return (cpu.openbus);
+			return (cpudata.cpu.openbus);
 		} else if (fds.info.enabled) {
 			if (fds_rd_mem(address, made_tick)) {
-				return (cpu.openbus);
+				return (cpudata.cpu.openbus);
 			}
 		}
 	} else if (address >= 0x8000) {
@@ -137,7 +137,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		// nella mapper 413 extcl_cpu_rd_mem e' utilizzato anche dal DMC
 		// (in apu.c : DMC.buffer = prgrom_rd(DMC.address) per leggere
 		// i dati dal miscrom.
-		cpu.openbus = info.mapper.extend_rd ? extcl_cpu_rd_mem(address, cpu.openbus) : prgrom_rd(address);
+		cpudata.cpu.openbus = info.mapper.extend_rd ? extcl_cpu_rd_mem(address, cpudata.cpu.openbus) : prgrom_rd(address);
 
 		/* cheat */
 		if (cfg->cheat_mode != NOCHEAT_MODE) {
@@ -148,7 +148,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			}
 		}
 
-		return (cpu.openbus);
+		return (cpudata.cpu.openbus);
 	}
 	if (address <= 0x4017) {
 		/* Ram */
@@ -158,30 +158,30 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 				tick_hw(1);
 			}
 
-			cpu.openbus = extcl_cpu_rd_ram ? extcl_cpu_rd_ram(address, cpu.openbus) : ram_rd(address);
+			cpudata.cpu.openbus = extcl_cpu_rd_ram ? extcl_cpu_rd_ram(address, cpudata.cpu.openbus) : ram_rd(address);
 
 			/* cheat */
 			if (cfg->cheat_mode == CHEATSLIST_MODE) {
 				look_cheats_list(cheats_list, cheats_list.counter, (address & 0x7FF))
 			}
 
-			return (cpu.openbus);
+			return (cpudata.cpu.openbus);
 		}
 		/* PPU */
 		if (address < 0x4000) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* leggo */
-			cpu.openbus = ppu_rd_reg(address & 0x2007);
-			return (cpu.openbus);
+			cpudata.cpu.openbus = ppu_rd_reg(address & 0x2007);
+			return (cpudata.cpu.openbus);
 		}
 		/* APU */
 		if (address <= 0x4015) {
 			/* leggo */
-			cpu.openbus = apu_rd_reg(address);
+			cpudata.cpu.openbus = apu_rd_reg(address);
 			/* eseguo un tick hardware ed e' importante che sia fatto dopo */
 			tick_hw(1);
-			return (cpu.openbus);
+			return (cpudata.cpu.openbus);
 		}
 		/* Controller port 1 */
 		if (address == 0x4016) {
@@ -189,8 +189,8 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* leggo dal controller */
-			cpu.openbus = input_rd_reg[PORT1](cpu.openbus, PORT1);
-			return (cpu.openbus);
+			cpudata.cpu.openbus = input_rd_reg[PORT1](cpudata.cpu.openbus, PORT1);
+			return (cpudata.cpu.openbus);
 		}
 		/* Controller port 2 */
 		if (address == 0x4017) {
@@ -198,8 +198,8 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* leggo dal controller */
-			cpu.openbus = input_rd_reg[PORT2](cpu.openbus, PORT2);
-			return (cpu.openbus);
+			cpudata.cpu.openbus = input_rd_reg[PORT2](cpudata.cpu.openbus, PORT2);
+			return (cpudata.cpu.openbus);
 		}
 	}
 	// WRam (normale ed extra (battery packed o meno)
@@ -217,20 +217,20 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 
-		cpu.openbus = extcl_cpu_rd_mem ? extcl_cpu_rd_mem(address, cpu.openbus) : wram_rd(address);
+		cpudata.cpu.openbus = extcl_cpu_rd_mem ? extcl_cpu_rd_mem(address, cpudata.cpu.openbus) : wram_rd(address);
 
 		/* cheat */
 		if (cfg->cheat_mode == CHEATSLIST_MODE) {
 			look_cheats_list(cheats_list, cheats_list.counter, (address & 0x1FFF))
 		}
 
-		return (cpu.openbus);
+		return (cpudata.cpu.openbus);
 	}
 
 	/* eseguo un tick hardware */
 	tick_hw(1);
 	/* qualsiasi altra cosa */
-	return (cpu.openbus);
+	return (cpudata.cpu.openbus);
 }
 INLINE static BYTE ppu_rd_reg(WORD address) {
 	BYTE value = 0;
@@ -239,7 +239,7 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 
 	if (address == 0x2002) {
 		/* Situazioni particolari --- */
-		if (!info.r2002_race_condition_disabled && !(ppudata.ppu.frame_y | nmi.before)) {
+		if (!info.r2002_race_condition_disabled && !(ppudata.ppu.frame_y | cpudata.nmi.before)) {
 			/* situazione di contesa (race condition)
 			 *
 			 * se la lettura avviene esattamente all'inizio
@@ -261,7 +261,7 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 			 * cicli PPU del vblank, se presente, viene
 			 * disabilitato l'NMI pendente.
 			 */
-			nmi.high = nmi.delay = FALSE;
+			cpudata.nmi.high = cpudata.nmi.delay = FALSE;
 		}
 		if ((ppudata.ppu.frame_y == ppudata.ppu_sclines.vint) && !ppudata.ppu.frame_x) {
 			/* situazione di contesa (race condition)
@@ -327,7 +327,7 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 
 		if (DMC.dma_cycle == 2) {
 			repeat = 3;
-		} else if (cpu.double_rd) {
+		} else if (cpudata.cpu.double_rd) {
 			WORD random = (WORD)emu_irand(10);
 
 			value = ppu_rd_mem(ppudata.r2006.value - (ppudata.r2000.r2006_inc << 1));
@@ -402,7 +402,7 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 	return (ppudata.ppu.openbus);
 }
 INLINE static BYTE apu_rd_reg(WORD address) {
-	BYTE value = cpu.openbus;
+	BYTE value = cpudata.cpu.openbus;
 
 	if (address == 0x4015) {
 		/* azzero la varibile d'uscita */
@@ -440,8 +440,8 @@ INLINE static BYTE apu_rd_reg(WORD address) {
 		 * rom interessate :
 		 * test_cpu_flag_concurrency.nes (by Bisqwit)
 		 */
-		if ((irq.high & APU_IRQ) && irq.before) {
-			irq.high &= ~APU_IRQ;
+		if ((cpudata.irq.high & APU_IRQ) && cpudata.irq.before) {
+			cpudata.irq.high &= ~APU_IRQ;
 		}
 #if defined (DEBUG)
 	//} else {
@@ -470,11 +470,11 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 				if (nsf.routine.INT_NMI) {
 					nsf.routine.INT_NMI--;
 					if (nsf.state & NSF_CHANGE_SONG) {
-						cpu.openbus = 0x00;
+						cpudata.cpu.openbus = 0x00;
 						snd_reset_buffers();
 						nsf_reset();
 					} else {
-						cpu.openbus = 0x0E;
+						cpudata.cpu.openbus = 0x0E;
 					}
 					return;
 				}
@@ -482,7 +482,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 			case 0xFFFB:
 				if (nsf.routine.INT_NMI) {
 					nsf.routine.INT_NMI--;
-					cpu.openbus = 0x25;
+					cpudata.cpu.openbus = 0x25;
 					snd_reset_buffers();
 					nsf_reset();
 					return;
@@ -491,7 +491,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 			case 0xFFFC:
 				if (nsf.routine.INT_RESET) {
 					nsf.routine.INT_RESET--;
-					cpu.openbus = 0x08;
+					cpudata.cpu.openbus = 0x08;
 					snd_reset_buffers();
 					nsf_reset();
 					return;
@@ -500,7 +500,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 			case 0xFFFD:
 				if (nsf.routine.INT_RESET) {
 					nsf.routine.INT_RESET--;
-					cpu.openbus = 0x25;
+					cpudata.cpu.openbus = 0x25;
 					snd_reset_buffers();
 					nsf_reset();
 					return;
@@ -509,7 +509,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 			default:
 				break;
 		}
-		cpu.openbus = prgrom_rd(address);
+		cpudata.cpu.openbus = prgrom_rd(address);
 		return;
 	}
 	// Ram
@@ -517,12 +517,12 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 		if (made_tick) {
 			tick_hw(1);
 		}
-		cpu.openbus = wram_rd(address);
+		cpudata.cpu.openbus = wram_rd(address);
 		return;
 	}
 	// APU
 	if (address == 0x4015) {
-		cpu.openbus = apu_rd_reg(address);
+		cpudata.cpu.openbus = apu_rd_reg(address);
 		tick_hw(1);
 		return;
 	}
@@ -545,14 +545,14 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 	if (nsf.sound_chips.mmc5) {
 		if ((address >= 0x5C00) && (address <= 0x5FF5)) {
 			address &= 0x03FF;
-			cpu.openbus = m005.ext_ram[address];
+			cpudata.cpu.openbus = m005.ext_ram[address];
 			return;
 		}
 		switch (address) {
 			case 0x5015:
 			case 0x5205:
 			case 0x5206:
-				cpu.openbus = extcl_cpu_rd_mem_005(address, cpu.openbus);
+				cpudata.cpu.openbus = extcl_cpu_rd_mem_005(address, cpudata.cpu.openbus);
 				return;
 			default:
 				break;
@@ -560,7 +560,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 	}
 	// Namco 163
 	if (nsf.sound_chips.namco163 && (address == 0x4800)) {
-		cpu.openbus = extcl_cpu_rd_mem_019(address, cpu.openbus);
+		cpudata.cpu.openbus = extcl_cpu_rd_mem_019(address, cpudata.cpu.openbus);
 		return;
 	}
 	// RAM
@@ -568,7 +568,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 		if (made_tick) {
 			tick_hw(1);
 		}
-		cpu.openbus = ram_rd(address & 0x7FF);
+		cpudata.cpu.openbus = ram_rd(address & 0x7FF);
 		return;
 	}
 	// NSF Player Routine
@@ -588,7 +588,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 				break;
 		}
 
-		cpu.openbus = nsf.routine.prg[address & NSF_R_MASK];
+		cpudata.cpu.openbus = nsf.routine.prg[address & NSF_R_MASK];
 		return;
 	}
 }
@@ -599,7 +599,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 		/* leggo */
-		cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus);
+		cpudata.cpu.openbus = extcl_cpu_rd_mem(address, cpudata.cpu.openbus);
 		return (TRUE);
 	}
 	if (address >= 0x6000) {
@@ -608,7 +608,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 		/* leggo */
-		cpu.openbus = wram_rd(address);
+		cpudata.cpu.openbus = wram_rd(address);
 		return (TRUE);
 	}
 	if (fds.drive.enabled_dsk_reg && ((address >= 0x4030) && (address <= 0x4033))) {
@@ -631,41 +631,41 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			 * +--------- Disk Data Read/Write Enable (1 when disk is readable/writable)
 			 */
 			/* azzero */
-			cpu.openbus = 0;
+			cpudata.cpu.openbus = 0;
 			/* bit 0 (timer irq) */
-			cpu.openbus |= fds.drive.irq_timer_high;
+			cpudata.cpu.openbus |= fds.drive.irq_timer_high;
 			/* bit 1 (trasfer flag) */
-			cpu.openbus |= fds.drive.irq_disk_high;
+			cpudata.cpu.openbus |= fds.drive.irq_disk_high;
 			/* bit 2 e 3 non settati */
 			/* TODO : bit 4 (CRC control : 0 passato, 1 errore) */
 			/* bit 5 non settato */
 			/* TODO : bit 6 (end of head) */
-			cpu.openbus |= fds.drive.end_of_head;
+			cpudata.cpu.openbus |= fds.drive.end_of_head;
 			//fds.drive.end_of_head = FALSE;
 			/* TODO : bit 7 (disk data read/write enable (1 when disk is readable/writable) */
 			/* devo disabilitare sia il timer IRQ ... */
 			fds.drive.irq_timer_high = FALSE;
-			irq.high &= ~FDS_TIMER_IRQ;
+			cpudata.irq.high &= ~FDS_TIMER_IRQ;
 			/* che il disk IRQ */
 			fds.drive.irq_disk_high = FALSE;
-			irq.high &= ~FDS_DISK_IRQ;
+			cpudata.irq.high &= ~FDS_DISK_IRQ;
 #if !defined (RELEASE)
-			//printf("0x%04X 0x%02X %d\n", address, cpu.openbus, irq.high);
+			//printf("0x%04X 0x%02X %d\n", address, cpudata.cpu.openbus, cpudata.irq.high);
 #endif
 			return (TRUE);
 		}
 		if (address == 0x4031) {
-			cpu.openbus = fds.drive.data_readed;
+			cpudata.cpu.openbus = fds.drive.data_readed;
 #if !defined (RELEASE)
 			/*
-			printf("0x%04X 0x%02X [0x%04X] 0x%04X %d %d %d\n", address, cpu.openbus,
-				fds.side.data[fds.drive.disk_position], cpu.opcode_PC, fds.drive.disk_position,
-				fds.info.sides_size[fds.drive.side_inserted], irq.high);
+			printf("0x%04X 0x%02X [0x%04X] 0x%04X %d %d %d\n", address, cpudata.cpu.openbus,
+				fds.side.data[fds.drive.disk_position], cpudata.cpu.opcode_PC, fds.drive.disk_position,
+				fds.info.sides_size[fds.drive.side_inserted], cpudata.irq.high);
 			*/
 #endif
 			/* devo disabilitare il disk IRQ */
 			fds.drive.irq_disk_high = FALSE;
-			irq.high &= ~FDS_DISK_IRQ;
+			cpudata.irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4032) {
@@ -678,12 +678,12 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			 *       |+-- Ready flag (0: Disk read; 1: Disk not ready)
 			 *       +--- Protect flag (0: Not write protected; 1: Write protected or disk ejected)
 			 */
-			cpu.openbus &= ~0x07;
+			cpudata.cpu.openbus &= ~0x07;
 
 			if (fds.drive.disk_ejected) {
-				cpu.openbus |= 0x07;
+				cpudata.cpu.openbus |= 0x07;
 			} else if (!fds.drive.scan) {
-				cpu.openbus |= 0x02;
+				cpudata.cpu.openbus |= 0x02;
 			}
 
 			if (fds_auto_insert_enabled()) {
@@ -719,7 +719,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			 * |            on the back of the ram card.
 			 * +--------- Battery status (0: Good; 1: Voltage is low).
 			 */
-			cpu.openbus = fds.drive.data_external_connector & 0x80;
+			cpudata.cpu.openbus = fds.drive.data_external_connector & 0x80;
 			return (TRUE);
 		}
 	}
@@ -736,20 +736,20 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			 * ++-------- Returns 01 on read, likely from open bus
 			 */
 			// When writing is disabled ($4089.7), reading anywhere in 4040-407F returns the value at the current wave position.
-			cpu.openbus = (fds.snd.wave.writable ? fds.snd.wave.data[address & 0x3F] : fds.snd.wave.data[fds.snd.wave.index]) |
-				(cpu.openbus & 0xC0);
+			cpudata.cpu.openbus = (fds.snd.wave.writable ? fds.snd.wave.data[address & 0x3F] : fds.snd.wave.data[fds.snd.wave.index]) |
+				(cpudata.cpu.openbus & 0xC0);
 			return (TRUE);
 		}
 		if (address == 0x4090) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
-			cpu.openbus = (fds.snd.volume.gain & 0x3F) | (cpu.openbus & 0xC0);
+			cpudata.cpu.openbus = (fds.snd.volume.gain & 0x3F) | (cpudata.cpu.openbus & 0xC0);
 			return (TRUE);
 		}
 		if (address == 0x4092) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
-			cpu.openbus = (fds.snd.sweep.gain & 0x3F) | (cpu.openbus & 0xC0);
+			cpudata.cpu.openbus = (fds.snd.sweep.gain & 0x3F) | (cpudata.cpu.openbus & 0xC0);
 			return (TRUE);
 		}
 	}
@@ -956,11 +956,11 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * esecuzione dell'istruzione successiva pone le condizioni
 		 * per il secondo nmi che avverra' 25 scanline dopo.
 		 */
-		if (nmi.high && (nmi.cpu_cycles_from_last_nmi <= cpu.base_opcode_cycles)) {
+		if (cpudata.nmi.high && (cpudata.nmi.cpu_cycles_from_last_nmi <= cpudata.cpu.base_opcode_cycles)) {
 #if !defined (RELEASE)
 			old_delay = TRUE;
 #endif
-			nmi.delay = TRUE;
+			cpudata.nmi.delay = TRUE;
 		}
 
 		/* open bus */
@@ -989,8 +989,8 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 */
 		if (!ppudata.r2000.nmi_enable && (value & 0x80)) {
 			if (ppudata.r2002.vblank) {
-				nmi.high = nmi.delay = TRUE;
-				nmi.frame_x = ppudata.ppu.frame_x;
+				cpudata.nmi.high = cpudata.nmi.delay = TRUE;
+				cpudata.nmi.frame_x = ppudata.ppu.frame_x;
 			}
 			/*
 			 * se viene disabilitato l'NMI (bit 7 da 1 a 0)
@@ -998,8 +998,8 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			 * essere disabilitato.
 			 */
 		} else if (ppudata.r2000.nmi_enable && !(value & 0x80)) {
-			if (!(ppudata.ppu.frame_y | nmi.before)) {
-				nmi.high = nmi.delay = FALSE;
+			if (!(ppudata.ppu.frame_y | cpudata.nmi.before)) {
+				cpudata.nmi.high = cpudata.nmi.delay = FALSE;
 			}
 		}
 		/* valorizzo $2000 */
@@ -1029,7 +1029,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			 */
 			ppudata.r2000.race.ctrl = TRUE;
 			ppudata.r2000.race.value = value;
-			ppudata.ppu.tmp_vram = (ppudata.ppu.tmp_vram & 0xF3FF) | ((cpu.openbus & 0x03) << 10);
+			ppudata.ppu.tmp_vram = (ppudata.ppu.tmp_vram & 0xF3FF) | ((cpudata.cpu.openbus & 0x03) << 10);
 			r2006_end_scanline();
 		} else {
 			ppudata.ppu.tmp_vram = (ppudata.ppu.tmp_vram & 0xF3FF) | ((value & 0x03) << 10);
@@ -1054,10 +1054,10 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		}
 
 #if !defined (RELEASE)
-		if (old_delay && nmi.high) {
-			log_warning(uL("cpu_inline;r2000 nmi high, set delay nmi.before, %d %d %d - %d %d - 0x%02X %d"),
-				ppudata.ppu.frames, ppudata.ppu.frame_y, ppudata.ppu.frame_x, nmi.frame_x, nmi.cpu_cycles_from_last_nmi,
-				cpu.opcode, cpu.base_opcode_cycles);
+		if (old_delay && cpudata.nmi.high) {
+			log_warning(uL("cpu_inline;r2000 nmi high, set delay cpudata.nmi.before, %d %d %d - %d %d - 0x%02X %d"),
+				ppudata.ppu.frames, ppudata.ppu.frame_y, ppudata.ppu.frame_x, cpudata.nmi.frame_x, cpudata.nmi.cpu_cycles_from_last_nmi,
+				cpudata.cpu.opcode, cpudata.cpu.base_opcode_cycles);
 		}
 #endif
 		return;
@@ -1267,15 +1267,15 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * e' stato richiesto un IRQ, deve essere ritardato
 		 * all'istruzione successiva.
 		 */
-		if (irq.high && !cpu.cycles && !irq.before) {
-			irq.delay = TRUE;
+		if (cpudata.irq.high && !cpudata.cpu.cycles && !cpudata.irq.before) {
+			cpudata.irq.delay = TRUE;
 		}
 		/* DMA transfer source address */
 		address = value << 8;
 		{
 			WORD index = 0;
-			BYTE save_irq = irq.high;
-			BYTE save_cpu_cycles = cpu.cycles;
+			BYTE save_irq = cpudata.irq.high;
+			BYTE save_cpu_cycles = cpudata.cpu.cycles;
 
 			if (info.r4014_precise_timing_disabled) {
 				mod_cycles_op(+=, 512);
@@ -1293,7 +1293,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 				 * di un altro ciclo (quindi in totale diventano
 				 * 514).
 				 */
-				if ((machine.type == NTSC) && cpu.odd_cycle) {
+				if ((machine.type == NTSC) && cpudata.cpu.odd_cycle) {
 					tick_hw(1);
 					mod_cycles_op(+=, 1);
 				}
@@ -1319,17 +1319,17 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 				}
 				tick_hw(1);
 				if ((ppudata.r2003.value & 0x03) == 0x02) {
-					cpu.openbus &= 0xE3;
+					cpudata.cpu.openbus &= 0xE3;
 				}
-				ppudata.oam.data[ppudata.r2003.value++] = cpu.openbus;
+				ppudata.oam.data[ppudata.r2003.value++] = cpudata.cpu.openbus;
 			}
 			/*
 			 * se sopraggiunge un IRQ durante i 513/514 cicli
 			 * e non ci sono altri cicli dell'istruzione,
 			 * l'IRQ deve essere ritardato di una istruzione.
 			 */
-			if (irq.high && !(save_irq | save_cpu_cycles)) {
-				irq.delay = TRUE;
+			if (cpudata.irq.high && !(save_irq | save_cpu_cycles)) {
+				cpudata.irq.delay = TRUE;
 			}
 		}
 		return;
@@ -1477,7 +1477,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 					/* ...azzero l'interrupt flag del DMC */
 					r4015.value &= 0x7F;
 					/* disabilito l'IRQ del DMC */
-					irq.high &= ~DMC_IRQ;
+					cpudata.irq.high &= ~DMC_IRQ;
 				}
 				DMC.loop = value & 0x40;
 				DMC.rate_index = value & 0x0F;
@@ -1565,7 +1565,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 			 */
 			r4015.value = (r4015.value & 0x60) | (value & 0x1F);
 			/* disabilito l'IRQ del DMC */
-			irq.high &= ~DMC_IRQ;
+			cpudata.irq.high &= ~DMC_IRQ;
 			/*
 			 * quando il flag di abilitazione del length
 			 * counter di ogni canale e' a 0, il counter
@@ -1610,7 +1610,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 			 * in un ciclo pari, allora l'effettiva modifica
 			 * avverra' nel ciclo successivo.
 			 */
-			if (cpu.odd_cycle) {
+			if (cpudata.cpu.odd_cycle) {
 				r4017.jitter.delay = TRUE;
 			} else {
 				r4017.jitter.delay = FALSE;
@@ -1816,7 +1816,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 			printf("0x%04X 0x%02X %d\n", address, value, fds.drive.enabled_dsk_reg);
 		} else {
 			if (fds.drive.disk_position)
-			printf("0x%04X 0x%02X 0x%04X %d 0x%02X %d\n", address, value, cpu.opcode_PC,
+			printf("0x%04X 0x%02X 0x%04X %d 0x%02X %d\n", address, value, cpudata.cpu.opcode_PC,
 				fds.drive.disk_position - 1, fds.side.data[fds.drive.disk_position - 1], ppudata.ppu.frames);
 		}*/
 #endif
@@ -1831,7 +1831,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 			 */
 			fds.drive.irq_timer_reload = (fds.drive.irq_timer_reload & 0xFF00) | value;
 			fds.drive.irq_timer_high = FALSE;
-			irq.high &= ~FDS_TIMER_IRQ;
+			cpudata.irq.high &= ~FDS_TIMER_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4021) {
@@ -1844,7 +1844,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 			 */
 			fds.drive.irq_timer_reload = (value << 8) | (fds.drive.irq_timer_reload & 0x00FF);
 			fds.drive.irq_timer_high = FALSE;
-			irq.high &= ~FDS_TIMER_IRQ;
+			cpudata.irq.high &= ~FDS_TIMER_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4022) {
@@ -1865,7 +1865,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 				fds.drive.irq_timer_counter = fds.drive.irq_timer_reload;
 			} else {
 				fds.drive.irq_timer_high = FALSE;
-				irq.high &= ~FDS_TIMER_IRQ;
+				cpudata.irq.high &= ~FDS_TIMER_IRQ;
 			}
 
 			return (TRUE);
@@ -1884,7 +1884,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 
 			if (!fds.drive.enabled_dsk_reg) {
 				fds.drive.irq_timer_high = FALSE;
-				irq.high &= ~FDS_TIMER_IRQ;
+				cpudata.irq.high &= ~FDS_TIMER_IRQ;
 			}
 
 			return (TRUE);
@@ -1892,7 +1892,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 		if (address == 0x4024) {
 			fds.drive.data_to_write = value;
 			fds.drive.irq_disk_high = FALSE;
-			irq.high &= ~FDS_DISK_IRQ;
+			cpudata.irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4025) {
@@ -1942,7 +1942,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 			fds.drive.irq_disk_enabled = value & 0x80;
 
 			fds.drive.irq_disk_high = FALSE;
-			irq.high &= ~FDS_DISK_IRQ;
+			cpudata.irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4026) {
@@ -2073,21 +2073,21 @@ INLINE static void tick_hw(BYTE value) {
 	tick_hw_start:
 	if (nsf.enabled) {
 		if (nsf.made_tick) {
-			cpu.opcode_cycle++;
-			nmi.before = nmi.high;
-			irq.before = irq.high;
+			cpudata.cpu.opcode_cycle++;
+			cpudata.nmi.before = cpudata.nmi.high;
+			cpudata.irq.before = cpudata.irq.high;
 			nsf_tick();
 
 			apu_tick(&value);
-			cpu.odd_cycle = !cpu.odd_cycle;
+			cpudata.cpu.odd_cycle = !cpudata.cpu.odd_cycle;
 			value--;
 			mod_cycles_op(-=, 1);
 		}
 		return;
 	}
-	cpu.opcode_cycle++;
-	nmi.before = nmi.high;
-	irq.before = irq.high;
+	cpudata.cpu.opcode_cycle++;
+	cpudata.nmi.before = cpudata.nmi.high;
+	cpudata.irq.before = cpudata.irq.high;
 	ppu_tick();
 
 	if (!ppudata.overclock.in_extra_sclines) {
@@ -2125,7 +2125,7 @@ INLINE static void tick_hw(BYTE value) {
 	if (extcl_cpu_every_cycle) {
 		extcl_cpu_every_cycle();
 	}
-	cpu.odd_cycle = !cpu.odd_cycle;
+	cpudata.cpu.odd_cycle = !cpudata.cpu.odd_cycle;
 	value--;
 	mod_cycles_op(-=, 1);
 

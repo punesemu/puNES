@@ -114,7 +114,7 @@ void extcl_cpu_wr_mem_OneBus(WORD address, BYTE value) {
 				break;
 			case 0x103:
 				irqA12.enable = FALSE;
-				irq.high &= ~EXT_IRQ;
+				cpudata.irq.high &= ~EXT_IRQ;
 				break;
 			case 0x104:
 				irqA12.enable = TRUE;
@@ -261,7 +261,7 @@ BYTE extcl_wr_apu_OneBus(WORD address, BYTE *value) {
 				if (onebus.reg.apu[0x30] & 0x10) {
 					onebus.pcm.enable = (*value) & 0x10;
 					if (onebus.pcm.irq) {
-						irq.high &= ~EXT_IRQ;
+						cpudata.irq.high &= ~EXT_IRQ;
 						onebus.pcm.irq = 0;
 					}
 					if (onebus.pcm.enable) {
@@ -296,7 +296,7 @@ void extcl_cpu_every_cycle_OneBus(void) {
 			if (onebus.pcm.size < 0) {
 				onebus.pcm.irq = 0x80;
 				onebus.pcm.enable = 0;
-				irq.high |= EXT_IRQ;
+				cpudata.irq.high |= EXT_IRQ;
 			} else {
 				WORD address = onebus.pcm.address | ((onebus.reg.apu[0x30] ^ 3) << 14);
 
@@ -583,7 +583,7 @@ INLINE static void irq_tick_OneBus(void) {
 		if ((info.mapper.ext_console_type == VT369) && (onebus.reg.cpu[0x1C] & 0x20)) {
 			irqA12.delay = 24;
 		} else {
-			irq.high |= EXT_IRQ;
+			cpudata.irq.high |= EXT_IRQ;
 		}
 	}
 }

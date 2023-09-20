@@ -80,7 +80,7 @@ void extcl_cpu_wr_mem_106(WORD address, BYTE value) {
 		case 13:
 			m106.irq.enabled = FALSE;
 			m106.irq.counter = 0;
-			irq.high &= ~EXT_IRQ;
+			cpudata.irq.high &= ~EXT_IRQ;
 			break;
 		case 14:
 			m106.irq.counter = (m106.irq.counter & 0xFF00) | value;
@@ -104,7 +104,7 @@ void extcl_cpu_every_cycle_106(void) {
 	if (m106.irq.counter != 0xFFFF) {
 		m106.irq.counter++;
 		if ((m106.irq.counter == 0xFFFF) && m106.irq.enabled) {
-			irq.high |= EXT_IRQ;
+			cpudata.irq.high |= EXT_IRQ;
 		}
 	}
 }

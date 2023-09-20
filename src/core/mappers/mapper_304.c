@@ -58,7 +58,7 @@ void extcl_cpu_wr_mem_304(WORD address, BYTE value) {
 	} else if (address == 0x4068) {
 		m304.irq.active = value & 0x01;
 		m304.irq.count = 0;
-		irq.high &= ~EXT_IRQ;
+		cpudata.irq.high &= ~EXT_IRQ;
 	}
 }
 BYTE extcl_cpu_rd_mem_304(WORD address, UNUSED(BYTE openbus)) {
@@ -78,7 +78,7 @@ void extcl_cpu_every_cycle_304(void) {
 		if (m304.irq.count < 5750) {
 			m304.irq.count++;
 		} else {
-			irq.high |= EXT_IRQ;
+			cpudata.irq.high |= EXT_IRQ;
 			m304.irq.active = 0;
 		}
 	}

@@ -94,7 +94,7 @@ void extcl_cpu_wr_mem_547(WORD address, BYTE value) {
 				return;
 			case 0xD800:
 				m547.irq.enable = m547.irq.after;
-				irq.high &= ~EXT_IRQ;
+				cpudata.irq.high &= ~EXT_IRQ;
 				return;
 			case 0xD900:
 				m547.irq.after = value & 0x01;
@@ -102,7 +102,7 @@ void extcl_cpu_wr_mem_547(WORD address, BYTE value) {
 				if (m547.irq.enable) {
 					m547.irq.counter = m547.irq.latch;
 				}
-				irq.high &= ~EXT_IRQ;
+				cpudata.irq.high &= ~EXT_IRQ;
 				return;
 			case 0xDA00:
 				mirroring_fix_547();
@@ -169,7 +169,7 @@ void extcl_cpu_every_cycle_547(void) {
 		m547.irq.counter++;
 		if (!m547.irq.counter) {
 			m547.irq.counter = m547.irq.latch;
-			irq.high |= EXT_IRQ;
+			cpudata.irq.high |= EXT_IRQ;
 		}
 	}
 }

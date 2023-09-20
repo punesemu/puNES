@@ -52,7 +52,7 @@ void extcl_after_mapper_init_471(void) {
 }
 void extcl_cpu_wr_mem_471(WORD address, UNUSED(BYTE value)) {
 	m471.reg = address;
-	irq.high &= ~EXT_IRQ;
+	cpudata.irq.high &= ~EXT_IRQ;
 	prg_fix_471();
 	chr_fix_471();
 }
@@ -109,5 +109,5 @@ INLINE static void chr_fix_471(void) {
 }
 
 INLINE static void irq_clock_471(void) {
-	irq.high |= EXT_IRQ;
+	cpudata.irq.high |= EXT_IRQ;
 }

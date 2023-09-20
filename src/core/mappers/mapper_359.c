@@ -160,7 +160,7 @@ void extcl_cpu_wr_mem_359(WORD address, BYTE value) {
 					m359.irq.enable = value & 0x01;
 					break;
 			}
-			irq.high &= ~EXT_IRQ;
+			cpudata.irq.high &= ~EXT_IRQ;
 			break;
 	}
 }
@@ -222,7 +222,7 @@ void extcl_cpu_every_cycle_359(void) {
 		m359.irq.a12_filter--;
 	}
 	if (m359.irq.enable && !m359.irq.mode && m359.irq.counter.w[0] && !--m359.irq.counter.w[0]){
-		irq.high |= EXT_IRQ;
+		cpudata.irq.high |= EXT_IRQ;
 	}
 }
 
@@ -288,7 +288,7 @@ INLINE static void irq_clock_359(void) {
 			m359.irq.counter.b[0]--;
 		}
 		if (!m359.irq.counter.b[0] && m359.irq.enable) {
-			irq.high |= EXT_IRQ;
+			cpudata.irq.high |= EXT_IRQ;
 		}
 		m359.irq.reload = FALSE;
 	}

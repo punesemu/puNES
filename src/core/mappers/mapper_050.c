@@ -57,7 +57,7 @@ void extcl_cpu_wr_mem_050(WORD address, BYTE value) {
 			m050.irq.enabled = value & 0x01;
 			if (!m050.irq.enabled) {
 				m050.irq.count = 0;
-				irq.high &= ~EXT_IRQ;
+				cpudata.irq.high &= ~EXT_IRQ;
 			}
 			return;
 		}
@@ -75,7 +75,7 @@ BYTE extcl_save_mapper_050(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_050(void) {
 	if (m050.irq.delay && !(--m050.irq.delay)) {
-		irq.high |= EXT_IRQ;
+		cpudata.irq.high |= EXT_IRQ;
 	}
 
 	if (m050.irq.enabled && (++m050.irq.count == 0x1000)) {

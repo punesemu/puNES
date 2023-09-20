@@ -52,7 +52,7 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 #define ppu_ticket()\
 	ppudata.ppu.cycles -= machine.ppu_divide;\
 	ppudata.ppu.frame_x++;\
-	nmi.cpu_cycles_from_last_nmi++;\
+	cpudata.nmi.cpu_cycles_from_last_nmi++;\
 	/* deve essere azzerato alla fine di ogni ciclo PPU */\
 	ppudata.r2006.changed_from_op = 0;
 #define put_pixel(clr) ppudata.ppu_screen.wr->line[ppudata.ppu.screen_y][ppudata.ppu.frame_x] = ppudata.r2001.emphasis | clr;
@@ -941,10 +941,10 @@ void ppu_tick(void) {
 			 * del $2000 sono a 1 devo generare un NMI.
 			 */
 			if (ppudata.r2000.nmi_enable) {
-				nmi.high = TRUE;
-				nmi.frame_x = ppudata.ppu.frame_x;
+				cpudata.nmi.high = TRUE;
+				cpudata.nmi.frame_x = ppudata.ppu.frame_x;
 				/* azzero i numeri di cicli dall'nmi */
-				nmi.cpu_cycles_from_last_nmi = 0;
+				cpudata.nmi.cpu_cycles_from_last_nmi = 0;
 			}
 		}
 

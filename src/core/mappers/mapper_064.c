@@ -206,7 +206,7 @@ void extcl_update_r2006_064(WORD new_r2006, UNUSED(WORD old_r2006)) {
 }
 void extcl_cpu_every_cycle_064(void) {
 	if (m064.irq.delay && !(--m064.irq.delay)) {
-		irq.high |= EXT_IRQ;
+		cpudata.irq.high |= EXT_IRQ;
 	}
 	m064.irq.prescaler++;
 	if (!(m064.irq.prescaler & 0x03) && (m064.irq.mode == CPU_MODE)) {
@@ -221,7 +221,7 @@ void extcl_cpu_every_cycle_064(void) {
 		m064.irq.a12_filter--;
 	}
 	if (!m064.irq.enable) {
-		irq.high &= ~EXT_IRQ;
+		cpudata.irq.high &= ~EXT_IRQ;
 	}
 }
 

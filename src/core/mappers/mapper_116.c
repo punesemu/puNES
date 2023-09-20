@@ -180,14 +180,14 @@ INLINE static void switch_mode(void) {
 		case 2:
 		case 3:
 			m116.mapper = M116_MMC1;
-			irq.high &= ~EXT_IRQ;
+			cpudata.irq.high &= ~EXT_IRQ;
 			if (info.mapper.submapper != 1) {
 				extcl_cpu_wr_mem_MMC1(0x8000, 0x80);
 			}
 			break;
 		case 0:
 			m116.mapper = M116_VRC2;
-			irq.high &= ~EXT_IRQ;
+			cpudata.irq.high &= ~EXT_IRQ;
 			break;
 	}
 }

@@ -81,7 +81,7 @@ void extcl_cpu_init_pc_100(void) {
 		// trainer
 		if (miscrom.trainer.in_use && wram_size()) {
 			if (miscrom_byte(0) == 0x4C) {
-				cpu.PC.w = 0x7000;
+				cpudata.cpu.PC.w = 0x7000;
 			}
 		}
 	}

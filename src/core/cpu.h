@@ -34,15 +34,15 @@ enum interrupt_types {
 };
 
 #define assemble_SR()\
-	cpu.SR = (cpu.sf | cpu.of | 0x20 | cpu.bf | cpu.df | cpu.im | cpu.zf | cpu.cf)
+	cpudata.cpu.SR = (cpudata.cpu.sf | cpudata.cpu.of | 0x20 | cpudata.cpu.bf | cpudata.cpu.df | cpudata.cpu.im | cpudata.cpu.zf | cpudata.cpu.cf)
 #define disassemble_SR()\
-	cpu.cf = cpu.SR & 0x01;\
-	cpu.zf = cpu.SR & 0x02;\
-	cpu.im = cpu.SR & 0x04;\
-	cpu.df = cpu.SR & 0x08;\
-	cpu.bf = cpu.SR & 0x10;\
-	cpu.of = cpu.SR & 0x40;\
-	cpu.sf = cpu.SR & 0x80
+	cpudata.cpu.cf = cpudata.cpu.SR & 0x01;\
+	cpudata.cpu.zf = cpudata.cpu.SR & 0x02;\
+	cpudata.cpu.im = cpudata.cpu.SR & 0x04;\
+	cpudata.cpu.df = cpudata.cpu.SR & 0x08;\
+	cpudata.cpu.bf = cpudata.cpu.SR & 0x10;\
+	cpudata.cpu.of = cpudata.cpu.SR & 0x40;\
+	cpudata.cpu.sf = cpudata.cpu.SR & 0x80
 
 typedef struct _cpu {
 	// Processor Registers
@@ -101,10 +101,13 @@ typedef struct _nmi {
 	// i cicli passati dall'inizio dell'NMI
 	uint32_t cpu_cycles_from_last_nmi;
 } _nmi;
+typedef struct _cpu_data {
+	_cpu cpu;
+	_irq irq;
+	_nmi nmi;
+} _cpu_data;
 
-extern _cpu cpu;
-extern _irq irq;
-extern _nmi nmi;
+extern _cpu_data cpudata;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"

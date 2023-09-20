@@ -116,11 +116,11 @@ void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 						vrc6.irq.prescaler = 0;
 						vrc6.irq.count = vrc6.irq.reload;
 					}
-					irq.high &= ~EXT_IRQ;
+					cpudata.irq.high &= ~EXT_IRQ;
 					break;
 				case 0x02:
 					vrc6.irq.enabled = vrc6.irq.acknowledge;
-					irq.high &= ~EXT_IRQ;
+					cpudata.irq.high &= ~EXT_IRQ;
 					break;
 				default:
 					break;
@@ -173,7 +173,7 @@ BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_VRC6(void) {
 	if (vrc6.irq.delay && !(--vrc6.irq.delay)) {
-		irq.high |= EXT_IRQ;
+		cpudata.irq.high |= EXT_IRQ;
 	}
 
 	if (!vrc6.irq.enabled) {
@@ -257,7 +257,7 @@ void init_VRC6(WORD A0, WORD A1, BYTE reset) {
 	vrc6.S4.duty = 1;
 	vrc6.saw.timer = 1;
 
-	irq.high &= ~EXT_IRQ;
+	cpudata.irq.high &= ~EXT_IRQ;
 
 	vrc6tmp.A0 = A0;
 	vrc6tmp.A1 = A1;

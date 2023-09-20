@@ -126,7 +126,7 @@ void extcl_cpu_wr_mem_083(WORD address, BYTE value) {
 					m083.irq.count = (m083.irq.count & 0x00FF) | (value << 8);
 				} else {
 					m083.irq.count = (m083.irq.count & 0xFF00) | value;
-					irq.high &= ~EXT_IRQ;
+					cpudata.irq.high &= ~EXT_IRQ;
 				}
 				return;
 			case 0x0300: {
@@ -166,7 +166,7 @@ void extcl_cpu_every_cycle_083(void) {
 	if (m083.irq.active && m083.irq.count) {
 		m083.irq.count = (m083.mode & 0x40 ? m083.irq.count - 1 : m083.irq.count + 1);
 		if (!m083.irq.count) {
-			irq.high |= EXT_IRQ;
+			cpudata.irq.high |= EXT_IRQ;
 			m083.irq.active = FALSE;
 		}
 	}

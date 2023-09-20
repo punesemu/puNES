@@ -110,7 +110,7 @@ void extcl_cpu_wr_mem_117(WORD address, BYTE value) {
 					m117.irq.enable = TRUE;
 					break;
 			}
-			irq.high &= ~EXT_IRQ;
+			cpudata.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xD000:
 			m117.mirroring = value;
@@ -180,7 +180,7 @@ void extcl_cpu_every_cycle_117(void) {
 		m117.irq.a12_filter--;
 	}
 	if (m117.irq.enable && !(m117.irq.mode & 0x02) && m117.irq.counter.w[0] && !--m117.irq.counter.w[0]){
-		irq.high |= EXT_IRQ;
+		cpudata.irq.high |= EXT_IRQ;
 	}
 }
 
@@ -229,7 +229,7 @@ INLINE static void irq_clock_117(void) {
 				m117.irq.counter.b[0]--;
 			}
 			if (!m117.irq.counter.b[0] && m117.irq.enable) {
-				irq.high |= EXT_IRQ;
+				cpudata.irq.high |= EXT_IRQ;
 			}
 			m117.irq.reload = FALSE;
 		}

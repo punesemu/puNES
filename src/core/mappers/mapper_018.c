@@ -113,11 +113,11 @@ void extcl_cpu_wr_mem_018(WORD address, BYTE value) {
 			switch (address & 0x03) {
 				case 0:
 					m018.irq.count = m018.irq.reload;
-					irq.high &= ~EXT_IRQ;
+					cpudata.irq.high &= ~EXT_IRQ;
 					return;
 				case 1:
 					m018.irq.enabled = value;
-					irq.high &= ~EXT_IRQ;
+					cpudata.irq.high &= ~EXT_IRQ;
 					return;
 				case 2:
 					m018.mirroring = value;
@@ -161,8 +161,8 @@ void extcl_cpu_every_cycle_018(void) {
 	}
 	// gestisco questo delay sempre per la sincronizzazzione con la CPU
 	if (m018.irq.delay && !(--m018.irq.delay)) {
-		irq.delay = TRUE;
-		irq.high |= EXT_IRQ;
+		cpudata.irq.delay = TRUE;
+		cpudata.irq.high |= EXT_IRQ;
 	}
 	if (m018.irq.enabled & 0x01) {
 		WORD mask = 0xFFFF;
