@@ -33,7 +33,6 @@ INLINE static size_t pow_of_2(size_t size);
 INLINE static void set_size(size_t *s, size_t *rs, size_t cs, size_t size);
 
 _memmap_palette memmap_palette;
-_oam oam;
 
 _memmap memmap;
 _prgrom prgrom;

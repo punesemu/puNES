@@ -21,11 +21,11 @@
 _irql2f irql2f;
 
 void irql2f_tick(void) {
-	if (irql2f.frame_x != ppu.frame_x) {
+	if (irql2f.frame_x != ppudata.ppu.frame_x) {
 		return;
 	}
 
-	if (ppu.screen_y == (SCR_ROWS - 1)) {
+	if (ppudata.ppu.screen_y == (SCR_ROWS - 1)) {
 		irql2f.in_frame = FALSE;
 		return;
 	}

@@ -62,7 +62,7 @@
 	}
 
 void bck_states_op_screen(BYTE mode, void *data, size_t *index, uint64_t *size_buff) {
-	bck_states_on_mem(mode, ppu_screen.rd->data, (screen_size()), data, (*index), (*size_buff))
+	bck_states_on_mem(mode, ppudata.ppu_screen.rd->data, (screen_size()), data, (*index), (*size_buff))
 }
 void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size_buff) {
 	unsigned int i = 0;
@@ -73,20 +73,20 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size
 	bck_states_on_struct(mode, nmi, data, (*index), (*size_buff))
 
 	// PPU
-	bck_states_on_struct(mode, ppu, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, ppu_openbus, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, r2000, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, r2001, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, r2002, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, r2003, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, r2004, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, r2006, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, r2007, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, spr_ev, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, sprite, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, sprite_plus, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, tile_render, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, tile_fetch, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.ppu, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.ppu_openbus, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.r2000, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.r2001, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.r2002, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.r2003, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.r2004, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.r2006, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.r2007, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.spr_ev, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.sprite, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.sprite_plus, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.tile_render, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.tile_fetch, data, (*index), (*size_buff))
 
 	// APU
 	bck_states_on_struct(mode, apu, data, (*index), (*size_buff))
@@ -113,7 +113,7 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size
 		bck_states_on_mem(mode, nmt_pnt(), nmt_size(), data, (*index), (*size_buff))
 	}
 	bck_states_on_struct(mode, memmap_palette, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, oam, data, (*index), (*size_buff))
+	bck_states_on_struct(mode, ppudata.oam, data, (*index), (*size_buff))
 
 	// mapper
 	bck_states_on_struct(mode, mapper, data, (*index), (*size_buff))

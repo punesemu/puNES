@@ -175,7 +175,7 @@ void extcl_cpu_every_cycle_547(void) {
 }
 BYTE extcl_rd_chr_547(WORD address) {
 	// controllo di trattare il background
-	if (((address & 0xFFF7) == ppu.bck_adr)) {
+	if (((address & 0xFFF7) == ppudata.ppu.bck_adr)) {
 		if (m547.qt.byte & 0x40) {
 			if (address & 0x0008) {
 				return (m547.qt.byte & 0x80 ? 0xFF : 0x00);

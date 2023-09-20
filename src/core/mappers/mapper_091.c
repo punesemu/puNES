@@ -137,7 +137,7 @@ BYTE extcl_save_mapper_091(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_ppu_256_to_319_091(void) {
-	if (ppu.frame_x != 319) {
+	if (ppudata.ppu.frame_x != 319) {
 		return;
 	}
 	if (m091.irq.enable && (m091.irq.ppu.counter < 8)) {

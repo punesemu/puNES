@@ -42,7 +42,7 @@ void scale_surface(void) {
 	scl.rows = SCR_COLUMNS;
 	scl.startx = 0;
 
-	scale_surface1x(ppu_screen.rd, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
+	scale_surface1x(ppudata.ppu_screen.rd, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
 }
 void scale_surface_screenshoot_1x(uint32_t pitch, void *pix) {
 	scl.sx = 0;
@@ -52,7 +52,7 @@ void scale_surface_screenshoot_1x(uint32_t pitch, void *pix) {
 	scl.rows = SCR_COLUMNS;
 	scl.startx = 0;
 
-	scale_surface1x(ppu_screen.rd, gfx.palette, pitch, pix);
+	scale_surface1x(ppudata.ppu_screen.rd, gfx.palette, pitch, pix);
 }
 void scale_surface_preview_1x(void *sb, uint32_t pitch, void *pix) {
 	scl.sx = 0;

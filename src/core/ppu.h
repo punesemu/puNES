@@ -35,7 +35,7 @@ enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_
 	 *  0 -> no flip verticale\
 	 *  1 -> si flip verticale\
 	 */\
-	if (oam.epl[sprite][AT] & 0x80) {\
+	if (ppudata.oam.epl[sprite][AT] & 0x80) {\
 		/* flip verticale */\
 		flip_v = ~spl[sprite].flip_v;\
 	} else {\
@@ -47,7 +47,7 @@ enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_
 	 *  0 -> sprite 8x8 (1 tile)\
 	 *  1 -> sprite 8x16 (2 tile)\
 	 */\
-	if (r2000.size_spr == 16) {\
+	if (ppudata.r2000.size_spr == 16) {\
 		/* -- 8x16 --\
 		 *\
 		 * sprite_plus[x].tile:\
@@ -65,64 +65,64 @@ enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_
 		 * caso di flip verticale sara' l'esatto contrario,\
 		 * dispari per i primi 8x8 e pari per i secondi 8x8.\
 		 */\
-		sadr = (oam.epl[sprite][TL] & 0xFE) | ((flip_v & 0x08) >> 3);\
+		sadr = (ppudata.oam.epl[sprite][TL] & 0xFE) | ((flip_v & 0x08) >> 3);\
 		/* recupero la posizione nella vram del tile */\
-		sadr = ((oam.epl[sprite][TL] & 0x01) << 12) | (sadr << 4);\
+		sadr = ((ppudata.oam.epl[sprite][TL] & 0x01) << 12) | (sadr << 4);\
 	} else {\
 		/* -- 8x8 --\
 		 *\
 		 * sprite_plus[x].tile = numero del tile nella vram.\
 		 */\
 		/* recupero la posizione nella vram del tile */\
-		sadr = r2000.spt_adr | (oam.epl[sprite][TL] << 4);\
+		sadr = ppudata.r2000.spt_adr | (ppudata.oam.epl[sprite][TL] << 4);\
 	}\
 	/* aggiungo la cordinata Y dello sprite */\
 	sadr += (flip_v & 0x07);\
 }
-#define ppu_spr_adr(sprite) _ppu_spr_adr(sprite, ele_plus, sprite_plus, ppu.spr_adr)
+#define ppu_spr_adr(sprite) _ppu_spr_adr(sprite, ele_plus, ppudata.sprite_plus, ppudata.ppu.spr_adr)
 #define ppu_bck_adr(r2000bck, r2006vl)\
-	ppu.bck_adr = r2000bck | ((ppu_rd_mem(0x2000 | (r2006vl & 0x0FFF)) << 4)\
+	ppudata.ppu.bck_adr = r2000bck | ((ppu_rd_mem(0x2000 | (r2006vl & 0x0FFF)) << 4)\
 		| ((r2006vl & 0x7000) >> 12))
 #define r2006_inc()\
 	/* controllo se fine Y e' uguale a 7 */\
-	if ((r2006.value & 0x7000) == 0x7000) {\
+	if ((ppudata.r2006.value & 0x7000) == 0x7000) {\
 		WORD tile_y;\
 		/* azzero il fine Y */\
-		r2006.value &= 0x0FFF;\
+		ppudata.r2006.value &= 0x0FFF;\
 		/* isolo il tile Y */\
-		tile_y = (r2006.value & 0x03E0);\
+		tile_y = (ppudata.r2006.value & 0x03E0);\
 		/* quindi lo esamino */\
 		if (tile_y == 0x03A0) {\
 			/* nel caso di 29 */\
-			r2006.value ^= 0x0BA0;\
+			ppudata.r2006.value ^= 0x0BA0;\
 		} else if (tile_y == 0x03E0) {\
 			/* nel caso di 31 */\
-			r2006.value ^= 0x03E0;\
+			ppudata.r2006.value ^= 0x03E0;\
 		} else {\
 			/* incremento tile Y */\
-			r2006.value += 0x20;\
+			ppudata.r2006.value += 0x20;\
 		}\
 	} else {\
 		/* incremento di 1 fine Y */\
-		r2006.value += 0x1000;\
+		ppudata.r2006.value += 0x1000;\
 	}
-#define r2006_end_scanline() r2006.value = (r2006.value & 0xFBE0) | (ppu.tmp_vram & 0x041F)
+#define r2006_end_scanline() ppudata.r2006.value = (ppudata.r2006.value & 0xFBE0) | (ppudata.ppu.tmp_vram & 0x041F)
 #define ppu_overclock_update()\
-	if (overclock.DMC_in_use) {\
-		ppu_sclines.total = machine.total_lines;\
-		ppu_sclines.frame = machine.total_lines;\
-		ppu_sclines.vint = machine.vint_lines;\
-		ppu_sclines.vint_extra = 0;\
+	if (ppudata.overclock.DMC_in_use) {\
+		ppudata.ppu_sclines.total = machine.total_lines;\
+		ppudata.ppu_sclines.frame = machine.total_lines;\
+		ppudata.ppu_sclines.vint = machine.vint_lines;\
+		ppudata.ppu_sclines.vint_extra = 0;\
 	} else {\
-		ppu_sclines.total = machine.total_lines + overclock.sclines.total;\
-		ppu_sclines.frame = machine.total_lines + overclock.sclines.vb;\
-		ppu_sclines.vint = machine.vint_lines + overclock.sclines.vb;\
-		ppu_sclines.vint_extra = overclock.sclines.vb;\
+		ppudata.ppu_sclines.total = machine.total_lines + ppudata.overclock.sclines.total;\
+		ppudata.ppu_sclines.frame = machine.total_lines + ppudata.overclock.sclines.vb;\
+		ppudata.ppu_sclines.vint = machine.vint_lines + ppudata.overclock.sclines.vb;\
+		ppudata.ppu_sclines.vint_extra = ppudata.overclock.sclines.vb;\
 	}
 #define ppu_overclock_control()\
-	overclock.in_extra_sclines = TRUE;\
-	if ((ppu.frame_y >= ppu_sclines.vint_extra) && (ppu.frame_y < ppu_sclines.frame)) {\
-		overclock.in_extra_sclines = FALSE;\
+	ppudata.overclock.in_extra_sclines = TRUE;\
+	if ((ppudata.ppu.frame_y >= ppudata.ppu_sclines.vint_extra) && (ppudata.ppu.frame_y < ppudata.ppu_sclines.frame)) {\
+		ppudata.overclock.in_extra_sclines = FALSE;\
 	}
 
 typedef struct _ppu {
@@ -257,6 +257,15 @@ typedef struct _tile {
 	WORD l_byte;
 	DBWORD h_byte;
 } _tile;
+typedef struct _oam {
+	BYTE data[256];
+	BYTE *element[64];
+	BYTE plus[32];
+	BYTE *ele_plus[8];
+	// unlimited sprites
+	BYTE plus_unl[224];
+	BYTE *ele_plus_unl[56];
+} _oam;
 typedef struct _ppu_sclines {
 	WORD total;
 	WORD frame;
@@ -280,22 +289,26 @@ typedef struct _ppu_alignment {
 	BYTE cpu;
 	BYTE ppu;
 }  _ppu_alignment;
+typedef struct _ppu_data {
+	_ppu ppu;
+	_ppu_screen ppu_screen;
+	_ppu_openbus ppu_openbus;
+	_r2000 r2000;
+	_r2001 r2001;
+	_r2002 r2002;
+	_r2006 r2006;
+	_r2xxx r2003, r2004, r2007;
+	_spr_evaluate spr_ev;
+	_spr sprite[8], sprite_plus[8];
+	_spr_evaluate spr_ev_unl;
+	_spr sprite_unl[56], sprite_plus_unl[56];
+	_tile tile_render, tile_fetch;
+	_oam oam;
+	_ppu_sclines ppu_sclines;
+	_overclock overclock;
+} _ppu_data;
 
-extern _ppu ppu;
-extern _ppu_screen ppu_screen;
-extern _ppu_openbus ppu_openbus;
-extern _r2000 r2000;
-extern _r2001 r2001;
-extern _r2002 r2002;
-extern _r2006 r2006;
-extern _r2xxx r2003, r2004, r2007;
-extern _spr_evaluate spr_ev;
-extern _spr sprite[8], sprite_plus[8];
-extern _spr_evaluate spr_ev_unl;
-extern _spr sprite_unl[56], sprite_plus_unl[56];
-extern _tile tile_render, tile_fetch;
-extern _ppu_sclines ppu_sclines;
-extern _overclock overclock;
+extern _ppu_data ppudata;
 extern _ppu_alignment ppu_alignment;
 
 #if defined (__cplusplus)

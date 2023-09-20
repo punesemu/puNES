@@ -118,7 +118,7 @@ void ntsc_bisqwit_surface(void) {
 
 	for (i = 0; i < NTSC_BISQWIT_NUM_SLICE; i++) {
 		param[i].factor = gfx.filter.factor;
-		param[i].src = ppu_screen.rd->data;
+		param[i].src = ppudata.ppu_screen.rd->data;
 		param[i].dst = (uint32_t *)gfx.filter.data.pix;
 		param[i].palette = (uint32_t *)gfx.filter.data.palette;
 		param[i].start_row = height * i;

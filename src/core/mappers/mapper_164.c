@@ -140,35 +140,35 @@ void extcl_wr_nmt_164(WORD address, UNUSED(BYTE value)) {
 	nmt_wr(address, value);
 }
 void extcl_ppu_000_to_255_164(void) {
-	if (r2001.visible) {
+	if (ppudata.r2001.visible) {
 		extcl_ppu_320_to_34x_164();
 	}
 }
 void extcl_ppu_256_to_319_164(void) {
-	if ((ppu.frame_x & 0x0007) != 0x0003) {
+	if ((ppudata.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if ((!spr_ev.count_plus || (spr_ev.tmp_spr_plus == spr_ev.count_plus)) && (r2000.size_spr == 16)) {
-		ppu.spr_adr = r2000.spt_adr;
+	if ((!ppudata.spr_ev.count_plus || (ppudata.spr_ev.tmp_spr_plus == ppudata.spr_ev.count_plus)) && (ppudata.r2000.size_spr == 16)) {
+		ppudata.ppu.spr_adr = ppudata.r2000.spt_adr;
 	} else {
-		ppu_spr_adr((ppu.frame_x & 0x0038) >> 3);
+		ppu_spr_adr((ppudata.ppu.frame_x & 0x0038) >> 3);
 	}
-	mode1_bpp(ppu.spr_adr);
+	mode1_bpp(ppudata.ppu.spr_adr);
 }
 void extcl_ppu_320_to_34x_164(void) {
-	if ((ppu.frame_x & 0x0007) != 0x0003) {
+	if ((ppudata.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if (ppu.frame_x == 323) {
+	if (ppudata.ppu.frame_x == 323) {
 		ppu_spr_adr(7);
 	}
 
-	ppu_bck_adr(r2000.bpt_adr, r2006.value);
+	ppu_bck_adr(ppudata.r2000.bpt_adr, ppudata.r2006.value);
 
-	mode1_bpp(0x2000 | (r2006.value & 0x0FFF));
-	mode1_bpp(ppu.bck_adr);
+	mode1_bpp(0x2000 | (ppudata.r2006.value & 0x0FFF));
+	mode1_bpp(ppudata.ppu.bck_adr);
 }
 
 INLINE static void prg_fix_164(void) {

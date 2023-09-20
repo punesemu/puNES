@@ -42,19 +42,19 @@
 
 #define mod_cycles_op(op, vl) cpu.cycles op vl
 #define r2006_during_rendering()\
-	if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) {\
+	if (!ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.frame_y > ppudata.ppu_sclines.vint) && (ppudata.ppu.screen_y < SCR_ROWS)) {\
 		_r2006_during_rendering()\
 	} else {\
-		r2006.value += r2000.r2006_inc;\
+		ppudata.r2006.value += ppudata.r2000.r2006_inc;\
 	}
 #define _r2006_during_rendering()\
 	r2006_inc()\
-	if ((r2006.value & 0x1F) == 0x1F) {\
-		r2006.value ^= 0x41F;\
+	if ((ppudata.r2006.value & 0x1F) == 0x1F) {\
+		ppudata.r2006.value ^= 0x41F;\
 	} else {\
-		r2006.value++;\
+		ppudata.r2006.value++;\
 	}
-#define ppu_openbus_wr(bit) ppu_openbus.bit = ppu.frames
+#define ppu_openbus_wr(bit) ppudata.ppu_openbus.bit = ppudata.ppu.frames
 #define ppu_openbus_wr_all()\
 	ppu_openbus_wr(bit0);\
 	ppu_openbus_wr(bit1);\
@@ -65,8 +65,8 @@
 	ppu_openbus_wr(bit6);\
 	ppu_openbus_wr(bit7)
 #define ppu_openbus_rd(bit, mask)\
-	if ((ppu.frames - ppu_openbus.bit) > machine.ppu_openbus_frames) {\
-		ppu.openbus &= (mask);\
+	if ((ppudata.ppu.frames - ppudata.ppu_openbus.bit) > machine.ppu_openbus_frames) {\
+		ppudata.ppu.openbus &= (mask);\
 	}
 #define ppu_openbus_rd_all()\
 	ppu_openbus_rd(bit0, 0x01);\
@@ -239,14 +239,14 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 
 	if (address == 0x2002) {
 		/* Situazioni particolari --- */
-		if (!info.r2002_race_condition_disabled && !(ppu.frame_y | nmi.before)) {
+		if (!info.r2002_race_condition_disabled && !(ppudata.ppu.frame_y | nmi.before)) {
 			/* situazione di contesa (race condition)
 			 *
 			 * se la lettura avviene esattamente all'inizio
 			 * del vblank allora il bit 7 verra' restituito
 			 * a 0.
 			 */
-			if (!ppu.frame_x) {
+			if (!ppudata.ppu.frame_x) {
 				/*
 				 * Nota: quando e' abilitato questo controllo
 				 * la demo cuter.nes (Who's Cuter?) ha un problema
@@ -254,7 +254,7 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 				 * della demo e non dell'emulatore (confermato
 				 * dall'autore stesso della demo).
 				 */
-				r2002.vblank = FALSE;
+				ppudata.r2002.vblank = FALSE;
 			}
 			/*
 			 * leggendo questo registro nei primi tre
@@ -263,27 +263,27 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 			 */
 			nmi.high = nmi.delay = FALSE;
 		}
-		if ((ppu.frame_y == ppu_sclines.vint) && !ppu.frame_x) {
+		if ((ppudata.ppu.frame_y == ppudata.ppu_sclines.vint) && !ppudata.ppu.frame_x) {
 			/* situazione di contesa (race condition)
 			 *
 			 * se la lettura avviene esattamente alla fine
 			 * del vblank allora i bit 5 e 6 verranno restituiti
 			 * a 0.
 			 */
-			r2002.sprite_overflow = r2002.sprite0_hit = FALSE;
+			ppudata.r2002.sprite_overflow = ppudata.r2002.sprite0_hit = FALSE;
 		}
 		/* -------------------------- */
 
-		value = r2002.vblank | r2002.sprite0_hit | (r2002.race.sprite_overflow ? 0 : r2002.sprite_overflow);
+		value = ppudata.r2002.vblank | ppudata.r2002.sprite0_hit | (ppudata.r2002.race.sprite_overflow ? 0 : ppudata.r2002.sprite_overflow);
 		/* azzero il VBlank */
-		r2002.vblank = FALSE;
+		ppudata.r2002.vblank = FALSE;
 		/*
 		 * azzero il bit toggle (1°/2° write flipflop
 		 * usato da $2005 e $2006)
 		 */
-		r2002.toggle = 0;
+		ppudata.r2002.toggle = 0;
 		/* open bus */
-		value = ppu.openbus = (value & 0xE0) | (ppu.openbus & 0x1F);
+		value = ppudata.ppu.openbus = (value & 0xE0) | (ppudata.ppu.openbus & 0x1F);
 		ppu_openbus_wr(bit5);
 		ppu_openbus_wr(bit6);
 		ppu_openbus_wr(bit7);
@@ -296,25 +296,25 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 		return (value);
 	}
 	if (address == 0x2004) {
-		value = oam.data[r2003.value];
+		value = ppudata.oam.data[ppudata.r2003.value];
 
-		if (ppu.vblank) {
-			if ((machine.type == PAL) && (ppu.frame_y > 23)) {
-				value = r2004.value;
+		if (ppudata.ppu.vblank) {
+			if ((machine.type == PAL) && (ppudata.ppu.frame_y > 23)) {
+				value = ppudata.r2004.value;
 			}
 		} else {
-			if (r2001.visible && (ppu.screen_y < SCR_ROWS)) {
-				value = r2004.value;
+			if (ppudata.r2001.visible && (ppudata.ppu.screen_y < SCR_ROWS)) {
+				value = ppudata.r2004.value;
 			}
 		}
 
 		/* ppu open bus */
-		ppu.openbus = value;
+		ppudata.ppu.openbus = value;
 		ppu_openbus_wr_all();
 		return (value);
 	}
 	if (address == 0x2007) {
-		WORD old_r2006 = r2006.value;
+		WORD old_r2006 = ppudata.r2006.value;
 		BYTE repeat = 1;
 
 		/*
@@ -330,13 +330,13 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 		} else if (cpu.double_rd) {
 			WORD random = (WORD)emu_irand(10);
 
-			value = ppu_rd_mem(r2006.value - (r2000.r2006_inc << 1));
+			value = ppu_rd_mem(ppudata.r2006.value - (ppudata.r2000.r2006_inc << 1));
 			if (random > 5) {
-				r2007.value = ppu_rd_mem(r2006.value);
+				ppudata.r2007.value = ppu_rd_mem(ppudata.r2006.value);
 				r2006_during_rendering()
 			}
 			/* ppu open bus */
-			ppu.openbus = value;
+			ppudata.ppu.openbus = value;
 			ppu_openbus_wr_all();
 			return (value);
 		}
@@ -356,17 +356,17 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 			 * Sembra che il registro utilizzi un buffer interno
 			 * che ha questo ritardo nel leggere da $0000 - $3EFF.
 			 */
-			if ((r2006.value & 0x3FFF) < 0x3F00) {
-				value = r2007.value;
-				r2007.value = ppu_rd_mem(r2006.value);
+			if ((ppudata.r2006.value & 0x3FFF) < 0x3F00) {
+				value = ppudata.r2007.value;
+				ppudata.r2007.value = ppu_rd_mem(ppudata.r2006.value);
 				/* ppu open bus */
-				ppu.openbus = value;
+				ppudata.ppu.openbus = value;
 				ppu_openbus_wr_all();
 			} else {
-				value = ppu_rd_mem(r2006.value);
-				r2007.value = ppu_rd_mem(r2006.value & 0x2FFF);
+				value = ppu_rd_mem(ppudata.r2006.value);
+				ppudata.r2007.value = ppu_rd_mem(ppudata.r2006.value & 0x2FFF);
 				/* ppu open bus */
-				value = ppu.openbus = (value & 0x3F) | (ppu.openbus & 0xC0);
+				value = ppudata.ppu.openbus = (value & 0x3F) | (ppudata.ppu.openbus & 0xC0);
 				ppu_openbus_wr(bit0);
 				ppu_openbus_wr(bit1);
 				ppu_openbus_wr(bit2);
@@ -384,10 +384,10 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 				 * Taito (TC0690)
 				 * Tengen (Rambo)
 				 */
-				if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) {
-					extcl_update_r2006(r2006.value & 0x2FFF, old_r2006);
+				if (!ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.frame_y > ppudata.ppu_sclines.vint) && (ppudata.ppu.screen_y < SCR_ROWS)) {
+					extcl_update_r2006(ppudata.r2006.value & 0x2FFF, old_r2006);
 				} else {
-					extcl_update_r2006(r2006.value, old_r2006);
+					extcl_update_r2006(ppudata.r2006.value, old_r2006);
 				}
 			}
 		}
@@ -399,7 +399,7 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 #endif
 
 	/* ppu open bus */
-	return (ppu.openbus);
+	return (ppudata.ppu.openbus);
 }
 INLINE static BYTE apu_rd_reg(WORD address) {
 	BYTE value = cpu.openbus;
@@ -687,7 +687,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			}
 
 			if (fds_auto_insert_enabled()) {
-				if ((ppu.frames - fds.auto_insert.r4032.frames) < 100) {
+				if ((ppudata.ppu.frames - fds.auto_insert.r4032.frames) < 100) {
 					if ((++fds.auto_insert.r4032.checks > FDS_AUTOINSERT_R4032_MAX_CHECKS) &&
 						(fds.auto_insert.delay.side == -1) &&
 						(fds.auto_insert.delay.eject == -1) &&
@@ -704,7 +704,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 				} else {
 					fds.auto_insert.r4032.checks = 0;
 				}
-				fds.auto_insert.r4032.frames = ppu.frames;
+				fds.auto_insert.r4032.frames = ppudata.ppu.frames;
 			}
 
 			return (TRUE);
@@ -964,7 +964,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		}
 
 		/* open bus */
-		ppu.openbus = value;
+		ppudata.ppu.openbus = value;
 		ppu_openbus_wr_all();
 
 		/*
@@ -987,33 +987,33 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * del $2002 e' a 1 devo generare un NMI
 		 * ma dopo l'istruzione successiva.
 		 */
-		if (!r2000.nmi_enable && (value & 0x80)) {
-			if (r2002.vblank) {
+		if (!ppudata.r2000.nmi_enable && (value & 0x80)) {
+			if (ppudata.r2002.vblank) {
 				nmi.high = nmi.delay = TRUE;
-				nmi.frame_x = ppu.frame_x;
+				nmi.frame_x = ppudata.ppu.frame_x;
 			}
 			/*
 			 * se viene disabilitato l'NMI (bit 7 da 1 a 0)
 			 * all'inizio del vblank, l'NMI generato deve
 			 * essere disabilitato.
 			 */
-		} else if (r2000.nmi_enable && !(value & 0x80)) {
-			if (!(ppu.frame_y | nmi.before)) {
+		} else if (ppudata.r2000.nmi_enable && !(value & 0x80)) {
+			if (!(ppudata.ppu.frame_y | nmi.before)) {
 				nmi.high = nmi.delay = FALSE;
 			}
 		}
 		/* valorizzo $2000 */
-		r2000.value = value;
+		ppudata.r2000.value = value;
 		/* NMI abilitato */
-		r2000.nmi_enable = value & 0x80;
+		ppudata.r2000.nmi_enable = value & 0x80;
 		/* VRAM address increment */
-		(value & 0x04) ? (r2000.r2006_inc = 32) : (r2000.r2006_inc = 1);
+		(value & 0x04) ? (ppudata.r2000.r2006_inc = 32) : (ppudata.r2000.r2006_inc = 1);
 		/* memorizzo la dimensione degli sprites */
-		(value & 0x20) ? (r2000.size_spr = 16) : (r2000.size_spr = 8);
+		(value & 0x20) ? (ppudata.r2000.size_spr = 16) : (ppudata.r2000.size_spr = 8);
 		/* Sprite pattern table address */
-		r2000.spt_adr = (value & 0x08) << 9;
+		ppudata.r2000.spt_adr = (value & 0x08) << 9;
 		/* Background pattern table address */
-		r2000.bpt_adr = (value & 0x10) << 8;
+		ppudata.r2000.bpt_adr = (value & 0x10) << 8;
 		/*
 		 * NN -> Name-table Bits. Vertical bit e Horizontal bit
 		 *
@@ -1021,26 +1021,26 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * bitsNT       %0000 00NN
 		 * tmp_vram      %---- NN-- ---- ----
 		 */
-		if ((ppu.frame_x == 257) && (!ppu.vblank && (!r2001.spr_visible && r2001.bck_visible) && (ppu.screen_y < SCR_ROWS))) {
+		if ((ppudata.ppu.frame_x == 257) && (!ppudata.ppu.vblank && (!ppudata.r2001.spr_visible && ppudata.r2001.bck_visible) && (ppudata.ppu.screen_y < SCR_ROWS))) {
 			/*
 			 * gestione della condizione di race del $2000 al dot 257
 			 * https://forums.nesdev.com/viewtopic.php?f=3&t=18113
 			 * ppu_2000_glitch.nes e ppu_2100_glitch.nes
 			 */
-			r2000.race.ctrl = TRUE;
-			r2000.race.value = value;
-			ppu.tmp_vram = (ppu.tmp_vram & 0xF3FF) | ((cpu.openbus & 0x03) << 10);
+			ppudata.r2000.race.ctrl = TRUE;
+			ppudata.r2000.race.value = value;
+			ppudata.ppu.tmp_vram = (ppudata.ppu.tmp_vram & 0xF3FF) | ((cpu.openbus & 0x03) << 10);
 			r2006_end_scanline();
 		} else {
-			ppu.tmp_vram = (ppu.tmp_vram & 0xF3FF) | ((value & 0x03) << 10);
+			ppudata.ppu.tmp_vram = (ppudata.ppu.tmp_vram & 0xF3FF) | ((value & 0x03) << 10);
 		}
 
 		/*
 		 * per questo registro il tick_hw e' gia' stato effettuato, quindi
 		 * la PPU ha gia' fatto 3 cicli. Se sono nel range 253 - 255 del
-		 * ppu.frame_x, il registro $2006 e' gia' stato aggiornato dalla PPU
+		 * ppudata.ppu.frame_x, il registro $2006 e' gia' stato aggiornato dalla PPU
 		 * (cosa che avviene nel ciclo 253). Questa variazione e' direttamente
-		 * controllata anche dal valore di ppu.tmp_vram, quindi una scrittura
+		 * controllata anche dal valore di ppudata.ppu.tmp_vram, quindi una scrittura
 		 * in questo registro nella PPU che ha gia' fatto il ciclo 253, non
 		 * influenzerebbe il $2006 e questo e' sbagliato. Quindi lo ricalcolo io,
 		 * ma solo so sono in fase di rendering.
@@ -1049,14 +1049,14 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * (premuto il tasto start due volte ed avviato il gioco, una riga
 		 * piu' scura sfarfalla nello schermo).
 		 */
-		if (((ppu.frame_x >= 253) && (ppu.frame_x <= 255)) && (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_ROWS))) {
+		if (((ppudata.ppu.frame_x >= 253) && (ppudata.ppu.frame_x <= 255)) && (!ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.screen_y < SCR_ROWS))) {
 			r2006_end_scanline();
 		}
 
 #if !defined (RELEASE)
 		if (old_delay && nmi.high) {
 			log_warning(uL("cpu_inline;r2000 nmi high, set delay nmi.before, %d %d %d - %d %d - 0x%02X %d"),
-				ppu.frames, ppu.frame_y, ppu.frame_x, nmi.frame_x, nmi.cpu_cycles_from_last_nmi,
+				ppudata.ppu.frames, ppudata.ppu.frame_y, ppudata.ppu.frame_x, nmi.frame_x, nmi.cpu_cycles_from_last_nmi,
 				cpu.opcode, cpu.base_opcode_cycles);
 		}
 #endif
@@ -1064,30 +1064,30 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 	}
 	if (address == 0x2001) {
 		/* open bus */
-		ppu.openbus = value;
+		ppudata.ppu.openbus = value;
 		ppu_openbus_wr_all();
 
 		/*
-		 * se viene scritto esattamente nel ppu.frame_x compreso tra (326 e 328)
-		 * e tra (334 e 336) azzerando l'r2001.visible, inibirebbe il
+		 * se viene scritto esattamente nel ppudata.ppu.frame_x compreso tra (326 e 328)
+		 * e tra (334 e 336) azzerando l'ppudata.r2001.visible, inibirebbe il
 		 * "FETCH TILE 0 e 1 SCANLINE+1" non permettendo piu' l'incremento del
-		 * r2006.value (glitch grafici in "Micro Machines (Camerica) [!].nes".
+		 * ppudata.r2006.value (glitch grafici in "Micro Machines (Camerica) [!].nes".
 		 */
-		if (((ppu.frame_x >= 326) && (ppu.frame_x <= 328)) ||
-			((ppu.frame_x >= 334) && (ppu.frame_x <= 336))) {
-			if (r2001.visible) {
-				r2001.race.ctrl = TRUE;
-				r2001.race.value = r2001.visible;
+		if (((ppudata.ppu.frame_x >= 326) && (ppudata.ppu.frame_x <= 328)) ||
+			((ppudata.ppu.frame_x >= 334) && (ppudata.ppu.frame_x <= 336))) {
+			if (ppudata.r2001.visible) {
+				ppudata.r2001.race.ctrl = TRUE;
+				ppudata.r2001.race.value = ppudata.r2001.visible;
 			}
-		} else if ((ppu.frame_x >= 338) && (ppu.frame_x <= 339)) {
+		} else if ((ppudata.ppu.frame_x >= 338) && (ppudata.ppu.frame_x <= 339)) {
 			if (machine.type == NTSC) {
-				r2001.race.ctrl = TRUE;
-				r2001.race.value = r2001.visible;
+				ppudata.r2001.race.ctrl = TRUE;
+				ppudata.r2001.race.value = ppudata.r2001.visible;
 			}
 		}
 
 		/* valorizzo $2001 */
-		r2001.value = value;
+		ppudata.r2001.value = value;
 		/*
 		 * con il bit 0 settato viene indicata
 		 * la modalita' scale di grigio per l'output.
@@ -1097,20 +1097,20 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * nmi_sync test ros (demo_ntsc.nes e demo_pal.nes).
 		 */
 		if (value & 0x01) {
-			r2001.grayscale_bit.delay = 2 + 1;
+			ppudata.r2001.grayscale_bit.delay = 2 + 1;
 		} else {
-			r2001.grayscale_bit.delay = 0;
-			r2001.color_mode = PPU_CM_NORMAL;
+			ppudata.r2001.grayscale_bit.delay = 0;
+			ppudata.r2001.color_mode = PPU_CM_NORMAL;
 		}
 		/* visibilita' del background */
-		r2001.bck_visible = value & 0x08;
+		ppudata.r2001.bck_visible = value & 0x08;
 		/* visibilita' degli sprites */
-		r2001.spr_visible = value & 0x10;
+		ppudata.r2001.spr_visible = value & 0x10;
 		/* basta che uno dei due sia visibile */
-		r2001.visible = r2001.bck_visible | r2001.spr_visible;
+		ppudata.r2001.visible = ppudata.r2001.bck_visible | ppudata.r2001.spr_visible;
 		/* questo per ora mi serve solo per l'A12 */
 		/* MMC3 and Taito*/
-		if (r2001.visible) {
+		if (ppudata.r2001.visible) {
 			if (irqA12.present) {
 				irqA12.s_adr_old = irqA12.b_adr_old = 0;
 			}
@@ -1120,23 +1120,23 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			}
 		}
 		/* clipping del background */
-		r2001.bck_clipping = value & 0x02;
+		ppudata.r2001.bck_clipping = value & 0x02;
 		/* clipping degli sprites */
-		r2001.spr_clipping = value & 0x04;
+		ppudata.r2001.spr_clipping = value & 0x04;
 		/* salvo la maschera di enfatizzazione del colore */
-		r2001.emphasis = (value << 1) & 0x1C0;
+		ppudata.r2001.emphasis = (value << 1) & 0x1C0;
 		return;
 	}
 	if (address == 0x2003) {
 		/* open bus */
-		ppu.openbus = value;
+		ppudata.ppu.openbus = value;
 		ppu_openbus_wr_all();
-		r2003.value = value;
+		ppudata.r2003.value = value;
 		return;
 	}
 	if (address == 0x2004) {
 		/* open bus */
-		ppu.openbus = value;
+		ppudata.ppu.openbus = value;
 		ppu_openbus_wr_all();
 		/*
 		 * il 3° byte dei quattro che compongono un elemento
@@ -1151,22 +1151,22 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * |+------- Flip sprite horizontally
 		 * +-------- Flip sprite vertically
 		 */
-		if ((r2003.value & 0x03) == 0x02) {
+		if ((ppudata.r2003.value & 0x03) == 0x02) {
 			value &= 0xE3;
 		}
-		oam.data[r2003.value++] = value;
+		ppudata.oam.data[ppudata.r2003.value++] = value;
 		return;
 	}
 	if (address == 0x2005) {
 		/* open bus */
-		ppu.openbus = value;
+		ppudata.ppu.openbus = value;
 		ppu_openbus_wr_all();
 
 		/*
 		 * Bit totali manipolati con $2005:
 		 * tmpAdrVRAM %0yyy --YY YYYX XXXX
 		 */
-		if (!r2002.toggle) {
+		if (!ppudata.r2002.toggle) {
 			/*
 			 * XXXXX -> Tile X
 			 * xxx   -> Fine X
@@ -1176,8 +1176,8 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			 * tmp_vram      %0--- ---- ---X XXXX
 			 * toggle = 1
 			 */
-			ppu.fine_x = (value & 0x07);
-			ppu.tmp_vram = (ppu.tmp_vram & 0x7FE0) | (value >> 3);
+			ppudata.ppu.fine_x = (value & 0x07);
+			ppudata.ppu.tmp_vram = (ppudata.ppu.tmp_vram & 0x7FE0) | (value >> 3);
 		} else {
 			/*
 			 * YYYYY -> Tile Y
@@ -1187,22 +1187,22 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			 * tmpAdrVRAM    %0yyy --YY YYY- ----
 			 * toggle = 0
 			 */
-			ppu.tmp_vram = (ppu.tmp_vram & 0x0C1F) | ((value & 0xF8) << 2) | ((value & 0x07) << 12);
+			ppudata.ppu.tmp_vram = (ppudata.ppu.tmp_vram & 0x0C1F) | ((value & 0xF8) << 2) | ((value & 0x07) << 12);
 		}
 
-		r2002.toggle = !r2002.toggle;
+		ppudata.r2002.toggle = !ppudata.r2002.toggle;
 		return;
 	}
 	if (address == 0x2006) {
 		/* open bus */
-		ppu.openbus = value;
+		ppudata.ppu.openbus = value;
 		ppu_openbus_wr_all();
 
 		/*
 		 * Bit totali manipolati con $2006:
 		 * tmpAdrVRAM  %00yy NNYY YYYX XXXX
 		 */
-		if (!r2002.toggle) {
+		if (!ppudata.r2002.toggle) {
 			/*
 			 * YYYYY -> Tile Y
 			 * yyy   -> Fine Y
@@ -1212,7 +1212,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			 * tmpAdrVRAM    %00yy NNYY ---- ----
 			 * toggle = 1
 			 */
-			ppu.tmp_vram = (ppu.tmp_vram & 0x00FF) | ((value & 0x3F) << 8);
+			ppudata.ppu.tmp_vram = (ppudata.ppu.tmp_vram & 0x00FF) | ((value & 0x3F) << 8);
 		} else {
 			/*
 			 * YYYYY -> Tile Y
@@ -1227,26 +1227,26 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			// http://forums.nesdev.com/viewtopic.php?p=189463#p189463
 			// sembra che la seconda scrittura del $2006 avvenga con qualche
 			// ciclo ppu di ritardo.
-			r2006.second_write.value = (ppu.tmp_vram & 0x7F00) | value;
-			r2006.second_write.delay = 3;
+			ppudata.r2006.second_write.value = (ppudata.ppu.tmp_vram & 0x7F00) | value;
+			ppudata.r2006.second_write.delay = 3;
 		}
 
-		r2002.toggle = !r2002.toggle;
+		ppudata.r2002.toggle = !ppudata.r2002.toggle;
 		return;
 	}
 	if (address == 0x2007) {
-		const WORD old_r2006 = r2006.value;
+		const WORD old_r2006 = ppudata.r2006.value;
 
 		/* open bus */
-		ppu.openbus = value;
+		ppudata.ppu.openbus = value;
 		ppu_openbus_wr_all();
 
-		if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) {
-			ppu_wr_mem(ppu.rnd_adr, ppu.rnd_adr & 0x00FF);
+		if (!ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.frame_y > ppudata.ppu_sclines.vint) && (ppudata.ppu.screen_y < SCR_ROWS)) {
+			ppu_wr_mem(ppudata.ppu.rnd_adr, ppudata.ppu.rnd_adr & 0x00FF);
 			_r2006_during_rendering()
 		} else {
-			ppu_wr_mem(r2006.value, value);
-			r2006.value += r2000.r2006_inc;
+			ppu_wr_mem(ppudata.r2006.value, value);
+			ppudata.r2006.value += ppudata.r2000.r2006_inc;
 		}
 
 		if (extcl_update_r2006) {
@@ -1257,7 +1257,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			  * Taito (TC0690)
 			  * Tengen (Rambo)
 			  */
-			extcl_update_r2006(r2006.value, old_r2006);
+			extcl_update_r2006(ppudata.r2006.value, old_r2006);
 		}
 		return;
 	}
@@ -1303,7 +1303,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 				 * ogni trasferimento prende due cicli, uno di
 				 * lettura (contenuto nel cpu_rd_mem e l'altro di
 				 * scrittura che faccio prima di valorizzare
-				 * l'oam.
+				 * l'ppudata.oam.
 				 */
 				if (index == 253) {
 					cpu_rd_mem(address++, TRUE);
@@ -1318,10 +1318,10 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 					cpu_rd_mem(address++, TRUE);
 				}
 				tick_hw(1);
-				if ((r2003.value & 0x03) == 0x02) {
+				if ((ppudata.r2003.value & 0x03) == 0x02) {
 					cpu.openbus &= 0xE3;
 				}
-				oam.data[r2003.value++] = cpu.openbus;
+				ppudata.oam.data[ppudata.r2003.value++] = cpu.openbus;
 			}
 			/*
 			 * se sopraggiunge un IRQ durante i 513/514 cicli
@@ -1341,7 +1341,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 #endif
 
 	/* open bus */
-	ppu.openbus = value;
+	ppudata.ppu.openbus = value;
 	ppu_openbus_wr_all();
 }
 INLINE static void apu_wr_reg(WORD address, BYTE value) {
@@ -1513,9 +1513,9 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 				r4011.value = value;
 
 				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
-					overclock.DMC_in_use = TRUE;
-					ppu_sclines.total = machine.total_lines;
-					ppu_sclines.vint = machine.vint_lines;
+					ppudata.overclock.DMC_in_use = TRUE;
+					ppudata.ppu_sclines.total = machine.total_lines;
+					ppudata.ppu_sclines.vint = machine.vint_lines;
 					ppu_overclock_control()
 				}
 				return;
@@ -1524,7 +1524,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 				DMC.address_start = (value << 6) | 0xC000;
 
 				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
-					overclock.DMC_in_use = FALSE;
+					ppudata.overclock.DMC_in_use = FALSE;
 					ppu_overclock_update()
 					ppu_overclock_control()
 				}
@@ -1535,7 +1535,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 				DMC.length = (value << 4) | 0x01;
 
 				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
-					overclock.DMC_in_use = FALSE;
+					ppudata.overclock.DMC_in_use = FALSE;
 					ppu_overclock_update()
 					ppu_overclock_control()
 				}
@@ -1817,7 +1817,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 		} else {
 			if (fds.drive.disk_position)
 			printf("0x%04X 0x%02X 0x%04X %d 0x%02X %d\n", address, value, cpu.opcode_PC,
-				fds.drive.disk_position - 1, fds.side.data[fds.drive.disk_position - 1], ppu.frames);
+				fds.drive.disk_position - 1, fds.side.data[fds.drive.disk_position - 1], ppudata.ppu.frames);
 		}*/
 #endif
 
@@ -2090,7 +2090,7 @@ INLINE static void tick_hw(BYTE value) {
 	irq.before = irq.high;
 	ppu_tick();
 
-	if (!overclock.in_extra_sclines) {
+	if (!ppudata.overclock.in_extra_sclines) {
 		apu_tick(&value);
 	}
 
@@ -2129,9 +2129,9 @@ INLINE static void tick_hw(BYTE value) {
 	value--;
 	mod_cycles_op(-=, 1);
 
-	r2000.race.ctrl = FALSE;
-	r2001.race.ctrl = FALSE;
-	r2006.race.ctrl = FALSE;
+	ppudata.r2000.race.ctrl = FALSE;
+	ppudata.r2001.race.ctrl = FALSE;
+	ppudata.r2006.race.ctrl = FALSE;
 
 	if (irqA12.present) {
 		irqA12.cycles++;

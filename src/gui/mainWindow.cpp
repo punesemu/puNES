@@ -324,7 +324,7 @@ void mainWindow::retranslateUi(mainWindow *mainWindow) {
 	Ui::mainWindow::retranslateUi(mainWindow);
 	qaction_shcut.hold_fast_forward->setText(tr("Fast Forward (hold button)"));
 	shortcuts();
-	if (ppu_screen.rd) {
+	if (ppudata.ppu_screen.rd) {
 		save_slot_count_load();
 	}
 	update_window();

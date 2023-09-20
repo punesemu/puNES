@@ -119,7 +119,7 @@ void emu_frame(void) {
 		tv_noise_effect();
 		gfx_draw_screen();
 		emu_frame_sleep();
-		ppu.frames++;
+		ppudata.ppu.frames++;
 		return;
 	} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 		int i = 0;
@@ -174,7 +174,7 @@ void emu_frame_debugger(void) {
 				tv_noise_effect();
 				gfx_draw_screen();
 				emu_frame_sleep();
-				ppu.frames++;
+				ppudata.ppu.frames++;
 				return;
 			} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 				int i = 0;
@@ -508,8 +508,8 @@ BYTE emu_turn_on(void) {
 
 	// l'inizializzazione della memmap della cpu e della ppu
 	memset(&memmap_palette, 0x00, sizeof(memmap_palette));
-	memset(&oam, 0x00, sizeof(oam));
-	memset(&ppu_screen, 0x00, sizeof(ppu_screen));
+	memset(&ppudata.oam, 0x00, sizeof(_oam));
+	memset(&ppudata.ppu_screen, 0x00, sizeof(_ppu_screen));
 	memset(&vs_system, 0x00, sizeof(vs_system));
 
 	info.lag_frame.next = TRUE;

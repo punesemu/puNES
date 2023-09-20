@@ -802,7 +802,7 @@ void overlayWidgetFrame::update_widget(void) {
 	}
 }
 BYTE overlayWidgetFrame::is_to_redraw(void) {
-	if (ppu.frames != old.actual_frame) {
+	if (ppudata.ppu.frames != old.actual_frame) {
 		update_info();
 		setMinimumWidth((int)td.size().width());
 		return (TRUE);
@@ -810,7 +810,7 @@ BYTE overlayWidgetFrame::is_to_redraw(void) {
 	return (FALSE);
 }
 void overlayWidgetFrame::update_old_value(void) {
-	old.actual_frame = ppu.frames;
+	old.actual_frame = ppudata.ppu.frames;
 }
 
 void overlayWidgetFrame::update_info(void) {

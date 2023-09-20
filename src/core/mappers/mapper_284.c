@@ -180,7 +180,7 @@ BYTE extcl_rd_nmt_284(WORD address) {
 				bank = (address & 0x400) ? 1 : 0;
 				break;
 		}
-		return (ext_attrib[m284.extended_attributes[bank][r2006.value & 0x3FF]]);
+		return (ext_attrib[m284.extended_attributes[bank][ppudata.r2006.value & 0x3FF]]);
 	}
 	return (nmt_rd(address));
 }

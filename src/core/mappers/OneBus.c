@@ -312,16 +312,16 @@ void extcl_ppu_000_to_34x_OneBus(void) {
 	extcl_ppu_000_to_34x_MMC3();
 
 	if (info.mapper.ext_console_type == VT369) {
-		if ((onebus.reg.cpu[0x1C] & 0x80) && (ppu.frame_y <= ppu_sclines.vint)) {
+		if ((onebus.reg.cpu[0x1C] & 0x80) && (ppudata.ppu.frame_y <= ppudata.ppu_sclines.vint)) {
 			return;
 		}
-		if ((onebus.reg.cpu[0x1C] & 0x20) && (ppu.frame_y == ppu_sclines.vint)) {
+		if ((onebus.reg.cpu[0x1C] & 0x20) && (ppudata.ppu.frame_y == ppudata.ppu_sclines.vint)) {
 			return;
 		}
 	}
 	if (((onebus.reg.cpu[0x0B] & 0x80) | (onebus.reg.ppu[0x10] & 0x02))) {
-		if (((ppu.frame_y >= ppu_sclines.vint) && (ppu.screen_y < SCR_ROWS)) &&
-			(ppu.frame_x == (info.mapper.ext_console_type == VT369 ? 240 : 256))) {
+		if (((ppudata.ppu.frame_y >= ppudata.ppu_sclines.vint) && (ppudata.ppu.screen_y < SCR_ROWS)) &&
+			(ppudata.ppu.frame_x == (info.mapper.ext_console_type == VT369 ? 240 : 256))) {
 			irq_tick_OneBus();
 		}
 	}
@@ -579,7 +579,7 @@ void mirroring_fix_OneBus_base(void) {
 
 INLINE static void irq_tick_OneBus(void) {
 	irqA12.counter = !irqA12.counter ? onebus.reg.cpu[0x01] : irqA12.counter - 1;
-	if (!irqA12.counter &&irqA12.enable && !ppu.vblank && r2001.visible) {
+	if (!irqA12.counter &&irqA12.enable && !ppudata.ppu.vblank && ppudata.r2001.visible) {
 		if ((info.mapper.ext_console_type == VT369) && (onebus.reg.cpu[0x1C] & 0x20)) {
 			irqA12.delay = 24;
 		} else {

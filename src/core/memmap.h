@@ -257,15 +257,6 @@ typedef struct _miscrom {
 typedef struct _memmap_palette {
 	BYTE color[0x20];
 } _memmap_palette;
-typedef struct _oam {
-	BYTE data[256];
-	BYTE *element[64];
-	BYTE plus[32];
-	BYTE *ele_plus[8];
-	// unlimited sprites
-	BYTE plus_unl[224];
-	BYTE *ele_plus_unl[56];
-} _oam;
 
 extern _memmap memmap;
 extern _prgrom prgrom;
@@ -277,7 +268,6 @@ extern _nmt nmt;
 extern _miscrom miscrom;
 
 extern _memmap_palette memmap_palette;
-extern _oam oam;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"

@@ -157,7 +157,7 @@ void extcl_ppu_000_to_34x_MMC3(void) {
 	irqA12_RS();
 }
 void extcl_ppu_000_to_255_MMC3(void) {
-	if (r2001.visible) {
+	if (ppudata.r2001.visible) {
 		irqA12_SB();
 	}
 }

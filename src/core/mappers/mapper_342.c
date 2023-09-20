@@ -671,10 +671,10 @@ void extcl_cpu_every_cycle_342(void) {
 	}
 }
 void extcl_ppu_000_to_34x_342(void) {
-	m342.mmc5.ppu.rendering = !ppu.vblank && r2001.visible && (ppu.screen_y < SCR_ROWS);
-	m342.mmc5.ppu.scanline = ppu.screen_y;
+	m342.mmc5.ppu.rendering = !ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.screen_y < SCR_ROWS);
+	m342.mmc5.ppu.scanline = ppudata.ppu.screen_y;
 
-	if ((ppu.frame_x == 260) && m342.mmc5.ppu.rendering) {
+	if ((ppudata.ppu.frame_x == 260) && m342.mmc5.ppu.rendering) {
 		// for MMC3 and MMC3-based
 		if (m342.mmc3.irq.reload || !m342.mmc3.irq.counter) {
 			m342.mmc3.irq.counter = m342.mmc3.irq.latch;
@@ -687,17 +687,17 @@ void extcl_ppu_000_to_34x_342(void) {
 		}
 
 		// for MMC5
-		if ((m342.mmc5.irq.line == (ppu.screen_y + 1)) && m342.mmc5.irq.enabled) {
+		if ((m342.mmc5.irq.line == (ppudata.ppu.screen_y + 1)) && m342.mmc5.irq.enabled) {
 			m342.mmc5.irq.out = 1;
 			irq.high |= EXT_IRQ;
 		}
 
 		// for mapper #163
 		if (m342.mapper == 6) {
-			if (ppu.screen_y == 239) {
+			if (ppudata.ppu.screen_y == 239) {
 				m342.mapper163.latch = 0;
 				chr_fix_342();
-			} else if (ppu.screen_y == 127) {
+			} else if (ppudata.ppu.screen_y == 127) {
 				m342.mapper163.latch = 1;
 				chr_fix_342();
 			}
