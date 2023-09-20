@@ -69,13 +69,13 @@ BYTE extcl_rd_chr_560(WORD address) {
 }
 void extcl_wr_nmt_560(WORD address, BYTE value) {
 	if (((address & 0x0F00) >> 10) & 0x01) {
-		m560.ext_ram[ppudata.r2006.value & 0x3FF] = value;
+		m560.ext_ram[nes.p.r2006.value & 0x3FF] = value;
 	}
 	nmt_wr(address, value);
 }
 BYTE extcl_rd_nmt_560(WORD address) {
 	if (!m560.pa13) {
-		m560.nmt_address = ppudata.r2006.value;
+		m560.nmt_address = nes.p.r2006.value;
 	}
 	m560.pa13 = TRUE;
 	return (nmt_rd(address));

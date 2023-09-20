@@ -109,36 +109,36 @@ void extcl_cpu_init_pc_561(void) {
 				ram_wr(0x704, 0xFC);
 				ram_wr(0x705, 0xFF);
 
-				cpudata.cpu.PC.w = 0x700;
+				nes.c.cpu.PC.w = 0x700;
 			}
 		}
 		r4015.value &= 0xBF;
-		cpudata.irq.high &= ~APU_IRQ;
+		nes.c.irq.high &= ~APU_IRQ;
 	}
 }
 void extcl_cpu_wr_mem_561(WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x4FFF)) {
 		switch (address) {
 			case 0x4024:
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 				return;
 			case 0x4025:
 				m561.irq.reg = value;
 				if (m561.irq.reg & 0x42) {
 					m561.irq.count_fds = 0;
 				}
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 				return;
 			case 0x4100:
 				m561.irq.count_sgd = (SWORD)((m561.irq.count_sgd & 0xFF00) | value);
 				if (!value) {
 					m561.irq.count_sgd = value;
 				}
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 				return;
 			case 0x4101:
 				m561.irq.count_sgd = (SWORD)((m561.irq.count_sgd & 0x00FF) | (value << 8));
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 				return;
 			case 0x42FC:
 			case 0x42FD:
@@ -201,10 +201,10 @@ void extcl_cpu_every_cycle_561(void) {
 	m561.irq.count_fds += 3;
 	while ((m561.irq.count_fds >= 448) && (m561.irq.reg & 0x80)) {
 		m561.irq.count_fds -= 448;
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 	if ((m561.irq.count_sgd < 0) && !++m561.irq.count_sgd) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 }
 

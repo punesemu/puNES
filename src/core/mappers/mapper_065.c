@@ -87,11 +87,11 @@ void extcl_cpu_wr_mem_065(WORD address, BYTE value) {
 					return;
 				case 3:
 					m065.irq.enable = value & 0x80;
-					cpudata.irq.high &= ~EXT_IRQ;
+					nes.c.irq.high &= ~EXT_IRQ;
 					return;
 				case 4:
 					m065.irq.count = m065.irq.reload;
-					cpudata.irq.high &= ~EXT_IRQ;
+					nes.c.irq.high &= ~EXT_IRQ;
 					return;
 				case 5:
 					m065.irq.reload = (m065.irq.reload & 0x00FF) | (value << 8);
@@ -124,7 +124,7 @@ BYTE extcl_save_mapper_065(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_065(void) {
 	if (m065.irq.delay && !(--m065.irq.delay)) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 	if (m065.irq.enable && m065.irq.count && !(--m065.irq.count)) {
 		m065.irq.enable = FALSE;

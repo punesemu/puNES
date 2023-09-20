@@ -78,7 +78,7 @@ void extcl_cpu_wr_mem_417(WORD address, BYTE value) {
 			break;
 		case 0x8040:
 			m417.irq.enable = FALSE;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			break;
 		case 0x8050:
 		case 0x8051:
@@ -100,7 +100,7 @@ BYTE extcl_save_mapper_417(BYTE mode, BYTE slot, FILE *fp) {
 void extcl_cpu_every_cycle_417(void) {
 	if ((++m417.irq.counter & 0x400) && m417.irq.enable) {
 		m417.irq.counter = 0;
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 }
 

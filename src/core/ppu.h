@@ -20,6 +20,7 @@
 #define PPU_H_
 
 #include "common.h"
+#include "nes.h"
 
 enum ppu_sprite_byte { YC, TL, AT, XC };
 enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
@@ -35,7 +36,7 @@ enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_
 	 *  0 -> no flip verticale\
 	 *  1 -> si flip verticale\
 	 */\
-	if (ppudata.oam.epl[sprite][AT] & 0x80) {\
+	if (nes.p.oam.epl[sprite][AT] & 0x80) {\
 		/* flip verticale */\
 		flip_v = ~spl[sprite].flip_v;\
 	} else {\
@@ -47,7 +48,7 @@ enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_
 	 *  0 -> sprite 8x8 (1 tile)\
 	 *  1 -> sprite 8x16 (2 tile)\
 	 */\
-	if (ppudata.r2000.size_spr == 16) {\
+	if (nes.p.r2000.size_spr == 16) {\
 		/* -- 8x16 --\
 		 *\
 		 * sprite_plus[x].tile:\
@@ -65,222 +66,66 @@ enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_
 		 * caso di flip verticale sara' l'esatto contrario,\
 		 * dispari per i primi 8x8 e pari per i secondi 8x8.\
 		 */\
-		sadr = (ppudata.oam.epl[sprite][TL] & 0xFE) | ((flip_v & 0x08) >> 3);\
+		sadr = (nes.p.oam.epl[sprite][TL] & 0xFE) | ((flip_v & 0x08) >> 3);\
 		/* recupero la posizione nella vram del tile */\
-		sadr = ((ppudata.oam.epl[sprite][TL] & 0x01) << 12) | (sadr << 4);\
+		sadr = ((nes.p.oam.epl[sprite][TL] & 0x01) << 12) | (sadr << 4);\
 	} else {\
 		/* -- 8x8 --\
 		 *\
 		 * sprite_plus[x].tile = numero del tile nella vram.\
 		 */\
 		/* recupero la posizione nella vram del tile */\
-		sadr = ppudata.r2000.spt_adr | (ppudata.oam.epl[sprite][TL] << 4);\
+		sadr = nes.p.r2000.spt_adr | (nes.p.oam.epl[sprite][TL] << 4);\
 	}\
 	/* aggiungo la cordinata Y dello sprite */\
 	sadr += (flip_v & 0x07);\
 }
-#define ppu_spr_adr(sprite) _ppu_spr_adr(sprite, ele_plus, ppudata.sprite_plus, ppudata.ppu.spr_adr)
+#define ppu_spr_adr(sprite) _ppu_spr_adr(sprite, ele_plus, nes.p.sprite_plus, nes.p.ppu.spr_adr)
 #define ppu_bck_adr(r2000bck, r2006vl)\
-	ppudata.ppu.bck_adr = r2000bck | ((ppu_rd_mem(0x2000 | (r2006vl & 0x0FFF)) << 4)\
+	nes.p.ppu.bck_adr = r2000bck | ((ppu_rd_mem(0x2000 | (r2006vl & 0x0FFF)) << 4)\
 		| ((r2006vl & 0x7000) >> 12))
 #define r2006_inc()\
 	/* controllo se fine Y e' uguale a 7 */\
-	if ((ppudata.r2006.value & 0x7000) == 0x7000) {\
+	if ((nes.p.r2006.value & 0x7000) == 0x7000) {\
 		WORD tile_y;\
 		/* azzero il fine Y */\
-		ppudata.r2006.value &= 0x0FFF;\
+		nes.p.r2006.value &= 0x0FFF;\
 		/* isolo il tile Y */\
-		tile_y = (ppudata.r2006.value & 0x03E0);\
+		tile_y = (nes.p.r2006.value & 0x03E0);\
 		/* quindi lo esamino */\
 		if (tile_y == 0x03A0) {\
 			/* nel caso di 29 */\
-			ppudata.r2006.value ^= 0x0BA0;\
+			nes.p.r2006.value ^= 0x0BA0;\
 		} else if (tile_y == 0x03E0) {\
 			/* nel caso di 31 */\
-			ppudata.r2006.value ^= 0x03E0;\
+			nes.p.r2006.value ^= 0x03E0;\
 		} else {\
 			/* incremento tile Y */\
-			ppudata.r2006.value += 0x20;\
+			nes.p.r2006.value += 0x20;\
 		}\
 	} else {\
 		/* incremento di 1 fine Y */\
-		ppudata.r2006.value += 0x1000;\
+		nes.p.r2006.value += 0x1000;\
 	}
-#define r2006_end_scanline() ppudata.r2006.value = (ppudata.r2006.value & 0xFBE0) | (ppudata.ppu.tmp_vram & 0x041F)
+#define r2006_end_scanline() nes.p.r2006.value = (nes.p.r2006.value & 0xFBE0) | (nes.p.ppu.tmp_vram & 0x041F)
 #define ppu_overclock_update()\
-	if (ppudata.overclock.DMC_in_use) {\
-		ppudata.ppu_sclines.total = machine.total_lines;\
-		ppudata.ppu_sclines.frame = machine.total_lines;\
-		ppudata.ppu_sclines.vint = machine.vint_lines;\
-		ppudata.ppu_sclines.vint_extra = 0;\
+	if (nes.p.overclock.DMC_in_use) {\
+		nes.p.ppu_sclines.total = machine.total_lines;\
+		nes.p.ppu_sclines.frame = machine.total_lines;\
+		nes.p.ppu_sclines.vint = machine.vint_lines;\
+		nes.p.ppu_sclines.vint_extra = 0;\
 	} else {\
-		ppudata.ppu_sclines.total = machine.total_lines + ppudata.overclock.sclines.total;\
-		ppudata.ppu_sclines.frame = machine.total_lines + ppudata.overclock.sclines.vb;\
-		ppudata.ppu_sclines.vint = machine.vint_lines + ppudata.overclock.sclines.vb;\
-		ppudata.ppu_sclines.vint_extra = ppudata.overclock.sclines.vb;\
+		nes.p.ppu_sclines.total = machine.total_lines + nes.p.overclock.sclines.total;\
+		nes.p.ppu_sclines.frame = machine.total_lines + nes.p.overclock.sclines.vb;\
+		nes.p.ppu_sclines.vint = machine.vint_lines + nes.p.overclock.sclines.vb;\
+		nes.p.ppu_sclines.vint_extra = nes.p.overclock.sclines.vb;\
 	}
 #define ppu_overclock_control()\
-	ppudata.overclock.in_extra_sclines = TRUE;\
-	if ((ppudata.ppu.frame_y >= ppudata.ppu_sclines.vint_extra) && (ppudata.ppu.frame_y < ppudata.ppu_sclines.frame)) {\
-		ppudata.overclock.in_extra_sclines = FALSE;\
+	nes.p.overclock.in_extra_sclines = TRUE;\
+	if ((nes.p.ppu.frame_y >= nes.p.ppu_sclines.vint_extra) && (nes.p.ppu.frame_y < nes.p.ppu_sclines.frame)) {\
+		nes.p.overclock.in_extra_sclines = FALSE;\
 	}
 
-typedef struct _ppu {
-	WORD frame_x;
-	WORD frame_y;
-	BYTE fine_x;
-	BYTE screen_y;
-	BYTE vblank;
-	WORD pixel_tile;
-	WORD sline_cycles;
-	WORD tmp_vram;
-	WORD spr_adr;
-	WORD bck_adr;
-	BYTE openbus;
-	BYTE odd_frame;
-	SWORD cycles;
-	uint32_t frames;
-	struct _short_frame {
-		BYTE actual;
-		BYTE prev;
-	} sf;
-	WORD rnd_adr;
-}  _ppu;
-typedef struct _ppu_screen_buffer {
-	BYTE ready;
-	uint64_t frame;
-	WORD *data;
-	WORD *line[SCR_ROWS];
-} _ppu_screen_buffer;
-typedef struct _screen {
-	BYTE index;
-	_ppu_screen_buffer *wr;
-	_ppu_screen_buffer *rd;
-	_ppu_screen_buffer *last_completed_wr;
-	_ppu_screen_buffer buff[2];
-} _ppu_screen;
-typedef struct _ppu_openbus {
-	int32_t bit0;
-	int32_t bit1;
-	int32_t bit2;
-	int32_t bit3;
-	int32_t bit4;
-	int32_t bit5;
-	int32_t bit6;
-	int32_t bit7;
-} _ppu_openbus;
-typedef struct _r2xxx {
-	BYTE value;
-} _r2xxx;
-typedef struct _r2000 {
-	BYTE value;
-	BYTE nmi_enable;
-	BYTE size_spr;
-	BYTE r2006_inc;
-	WORD spt_adr;
-	WORD bpt_adr;
-	struct _r2000_race {
-		WORD ctrl;
-		WORD value;
-	} race;
-} _r2000;
-typedef struct _r2001 {
-	BYTE value;
-	WORD emphasis;
-	BYTE visible;
-	BYTE bck_visible;
-	BYTE spr_visible;
-	BYTE bck_clipping;
-	BYTE spr_clipping;
-	BYTE color_mode;
-	struct _r2001_race {
-		WORD ctrl;
-		WORD value;
-	} race;
-	struct _r2001_grayscale_bit {
-		BYTE delay;
-	} grayscale_bit;
-} _r2001;
-typedef struct _r2002 {
-	BYTE vblank;
-	BYTE sprite0_hit;
-	BYTE sprite_overflow;
-	BYTE toggle;
-	struct _r2002_race {
-		WORD sprite_overflow;
-	} race;
-} _r2002;
-typedef struct _r2006 {
-	WORD value;
-	// ormai non più utilizzato
-	WORD changed_from_op;
-	struct _r2006_second_write {
-		BYTE delay;
-		WORD value;
-	} second_write;
-	struct _r2006_race {
-		WORD ctrl;
-		WORD value;
-	} race;
-} _r2006;
-typedef struct _spr_evaluate {
-	WORD range;
-	BYTE count;
-	BYTE count_plus;
-	BYTE tmp_spr_plus;
-	BYTE evaluate;
-	BYTE byte_OAM;
-	BYTE index_plus;
-	BYTE index;
-	BYTE timing;
-	BYTE phase;
-	BYTE real;
-} _spr_evaluate;
-typedef struct _spr {
-	BYTE y_C;
-	BYTE tile;
-	BYTE attrib;
-	BYTE x_C;
-	BYTE number;
-	BYTE flip_v;
-	BYTE l_byte;
-	WORD h_byte;
-} _spr;
-/*
- * le variabili sono di tipo WORD e DBWORD perche',
- * per gestire correttamente lo scrolling, saranno
- * sempre trattati due tiles alla volta, altrimenti
- * sarebbero stati sufficienti BYTE e WORD.
- */
-typedef struct _tile {
-	WORD attrib;
-	WORD l_byte;
-	DBWORD h_byte;
-} _tile;
-typedef struct _oam {
-	BYTE data[256];
-	BYTE *element[64];
-	BYTE plus[32];
-	BYTE *ele_plus[8];
-	// unlimited sprites
-	BYTE plus_unl[224];
-	BYTE *ele_plus_unl[56];
-} _oam;
-typedef struct _ppu_sclines {
-	WORD total;
-	WORD frame;
-	WORD vint;
-	WORD vint_extra;
-} _ppu_sclines;
-typedef struct _overclock {
-	BYTE in_extra_sclines;
-	BYTE DMC_in_use;
-	struct _extra_sclines {
-		WORD vb;
-		WORD pr;
-		WORD total;
-	} sclines;
-} _overclock;
 typedef struct _ppu_alignment {
 	struct _ppu_alignment_counter {
 		BYTE cpu;
@@ -289,26 +134,7 @@ typedef struct _ppu_alignment {
 	BYTE cpu;
 	BYTE ppu;
 }  _ppu_alignment;
-typedef struct _ppu_data {
-	_ppu ppu;
-	_ppu_screen ppu_screen;
-	_ppu_openbus ppu_openbus;
-	_r2000 r2000;
-	_r2001 r2001;
-	_r2002 r2002;
-	_r2006 r2006;
-	_r2xxx r2003, r2004, r2007;
-	_spr_evaluate spr_ev;
-	_spr sprite[8], sprite_plus[8];
-	_spr_evaluate spr_ev_unl;
-	_spr sprite_unl[56], sprite_plus_unl[56];
-	_tile tile_render, tile_fetch;
-	_oam oam;
-	_ppu_sclines ppu_sclines;
-	_overclock overclock;
-} _ppu_data;
 
-extern _ppu_data ppudata;
 extern _ppu_alignment ppu_alignment;
 
 #if defined (__cplusplus)

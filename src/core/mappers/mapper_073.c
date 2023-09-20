@@ -75,11 +75,11 @@ void extcl_cpu_wr_mem_073(WORD address, BYTE value) {
 			if (m073.irq.enabled) {
 				m073.irq.count = m073.irq.reload;
 			}
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xD000:
 			m073.irq.enabled = m073.irq.acknowledge;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xF000:
 			m073.prg = value;
@@ -111,7 +111,7 @@ void extcl_cpu_every_cycle_073(void) {
 	}
 	if (!(++m073.irq.count & m073.irq.mask)) {
 		m073.irq.count = m073.irq.reload;
-		cpudata.irq.delay = TRUE;
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.delay = TRUE;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 }

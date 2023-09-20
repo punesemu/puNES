@@ -96,7 +96,7 @@ void extcl_cpu_wr_mem_048(WORD address, BYTE value) {
 			return;
 		case 0xC003:
 			irqA12.enable = FALSE;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xE000:
 		case 0xE001:

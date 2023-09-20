@@ -108,7 +108,7 @@ void extcl_cpu_wr_mem_082(WORD address, BYTE value) {
 				return;
 			case 0x7EFF:
 				m082.irq.counter = m082.irq.latch ? (m082.irq.latch + 1) * 16 : 1;
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 				return;
 		}
 	}
@@ -134,9 +134,9 @@ void extcl_cpu_every_cycle_082(void) {
 		m082.irq.counter = m082.irq.latch ? (m082.irq.latch + 2) * 16 : 17;
 	}
 	if ((m082.irq.control & 0x02) && !m082.irq.counter) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	} else {
-		cpudata.irq.high &= ~EXT_IRQ;
+		nes.c.irq.high &= ~EXT_IRQ;
 	}
 }
 

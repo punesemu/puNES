@@ -119,7 +119,7 @@ void emu_frame(void) {
 		tv_noise_effect();
 		gfx_draw_screen();
 		emu_frame_sleep();
-		ppudata.ppu.frames++;
+		nes.p.ppu.frames++;
 		return;
 	} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 		int i = 0;
@@ -150,7 +150,7 @@ void emu_frame(void) {
 
 	while (info.frame_status == FRAME_STARTED) {
 #if defined (DEBUG)
-		if (cpudata.cpu.PC.w == PCBREAK) {
+		if (nes.c.cpu.PC.w == PCBREAK) {
 			BYTE pippo = 5;
 			pippo = pippo + 1;
 		}
@@ -174,7 +174,7 @@ void emu_frame_debugger(void) {
 				tv_noise_effect();
 				gfx_draw_screen();
 				emu_frame_sleep();
-				ppudata.ppu.frames++;
+				nes.p.ppu.frames++;
 				return;
 			} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 				int i = 0;
@@ -208,18 +208,18 @@ void emu_frame_debugger(void) {
 	if (debugger.mode == DBG_GO) {
 		// posso passare dal DBG_GO al DBG_STEP durante l'esecuzione di un frame intero
 		while ((info.frame_status == FRAME_STARTED) && (debugger.mode == DBG_GO)) {
-			if ((debugger.breakpoint == cpudata.cpu.PC.w) && !debugger.breakpoint_after_step) {
+			if ((debugger.breakpoint == nes.c.cpu.PC.w) && !debugger.breakpoint_after_step) {
 				debugger.mode = DBG_BREAKPOINT;
 				//gui_dlgdebugger_click_step();
 				break;
 			} else {
 				debugger.breakpoint_after_step = FALSE;
-				info.CPU_PC_before = cpudata.cpu.PC.w;
+				info.CPU_PC_before = nes.c.cpu.PC.w;
 				cpu_exe_op();
 			}
 		}
 	} else if (debugger.mode == DBG_STEP) {
-		info.CPU_PC_before = cpudata.cpu.PC.w;
+		info.CPU_PC_before = nes.c.cpu.PC.w;
 		cpu_exe_op();
 	}
 
@@ -508,8 +508,8 @@ BYTE emu_turn_on(void) {
 
 	// l'inizializzazione della memmap della cpu e della ppu
 	memset(&memmap_palette, 0x00, sizeof(memmap_palette));
-	memset(&ppudata.oam, 0x00, sizeof(_oam));
-	memset(&ppudata.ppu_screen, 0x00, sizeof(_ppu_screen));
+	memset(&nes.p.oam, 0x00, sizeof(_oam));
+	memset(&nes.p.ppu_screen, 0x00, sizeof(_ppu_screen));
 	memset(&vs_system, 0x00, sizeof(vs_system));
 
 	info.lag_frame.next = TRUE;

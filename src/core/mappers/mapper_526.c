@@ -88,7 +88,7 @@ void extcl_cpu_wr_mem_526(WORD address, BYTE value) {
 			m526.irq.counter = 0;
 			return;
 		case 0x800F:
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			return;
 	}
 }
@@ -101,7 +101,7 @@ BYTE extcl_save_mapper_526(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_526(void) {
 	if (++m526.irq.counter & 0x1000) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 }
 

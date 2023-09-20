@@ -130,35 +130,35 @@ void extcl_wr_nmt_163(WORD address, UNUSED(BYTE value)) {
 	nmt_wr(address, value);
 }
 void extcl_ppu_000_to_255_163(void) {
-	if (ppudata.r2001.visible) {
+	if (nes.p.r2001.visible) {
 		extcl_ppu_320_to_34x_163();
 	}
 }
 void extcl_ppu_256_to_319_163(void) {
-	if ((ppudata.ppu.frame_x & 0x0007) != 0x0003) {
+	if ((nes.p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if ((!ppudata.spr_ev.count_plus || (ppudata.spr_ev.tmp_spr_plus == ppudata.spr_ev.count_plus)) && (ppudata.r2000.size_spr == 16)) {
-		ppudata.ppu.spr_adr = ppudata.r2000.spt_adr;
+	if ((!nes.p.spr_ev.count_plus || (nes.p.spr_ev.tmp_spr_plus == nes.p.spr_ev.count_plus)) && (nes.p.r2000.size_spr == 16)) {
+		nes.p.ppu.spr_adr = nes.p.r2000.spt_adr;
 	} else {
-		ppu_spr_adr((ppudata.ppu.frame_x & 0x0038) >> 3)
+		ppu_spr_adr((nes.p.ppu.frame_x & 0x0038) >> 3)
 	}
-	mode1_bpp(ppudata.ppu.spr_adr);
+	mode1_bpp(nes.p.ppu.spr_adr);
 }
 void extcl_ppu_320_to_34x_163(void) {
-	if ((ppudata.ppu.frame_x & 0x0007) != 0x0003) {
+	if ((nes.p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if (ppudata.ppu.frame_x == 323) {
+	if (nes.p.ppu.frame_x == 323) {
 		ppu_spr_adr(7)
 	}
 
-	ppu_bck_adr(ppudata.r2000.bpt_adr, ppudata.r2006.value);
+	ppu_bck_adr(nes.p.r2000.bpt_adr, nes.p.r2006.value);
 
-	mode1_bpp(0x2000 | (ppudata.r2006.value & 0x0FFF));
-	mode1_bpp(ppudata.ppu.bck_adr);
+	mode1_bpp(0x2000 | (nes.p.r2006.value & 0x0FFF));
+	mode1_bpp(nes.p.ppu.bck_adr);
 }
 
 INLINE static void prg_fix_163(void) {

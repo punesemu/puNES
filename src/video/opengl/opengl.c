@@ -696,12 +696,12 @@ void opengl_draw_scene(void) {
 				cgGLEnableProfile(opengl.cg.profile.f);
 				cgGLEnableProfile(opengl.cg.profile.v);
 
-				opengl_shader_cg_params_set(texture, sindex, sp->frame_count_mod, ppudata.ppu.frames);
+				opengl_shader_cg_params_set(texture, sindex, sp->frame_count_mod, nes.p.ppu.frames);
 			}
 #endif
 		} else {
 			glUseProgram(texture->shader.glslp.prg);
-			opengl_shader_glsl_params_set(&texture->shader, sindex, sp->frame_count_mod, ppudata.ppu.frames);
+			opengl_shader_glsl_params_set(&texture->shader, sindex, sp->frame_count_mod, nes.p.ppu.frames);
 		}
 
 		if (i == shader_effect.last_pass) {

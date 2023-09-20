@@ -100,9 +100,9 @@ void extcl_cpu_every_cycle_222(void) {
 		m222.count[1] &= 0x0F;
 	}
 	if (m222.pending) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	} else {
-		cpudata.irq.high &= ~EXT_IRQ;
+		nes.c.irq.high &= ~EXT_IRQ;
 	}
 }
 

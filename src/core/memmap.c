@@ -649,7 +649,7 @@ BYTE chr_rd(WORD address) {
 	if (memmap.chr.chunks[slot].permit.rd) {
 		return (memmap.chr.chunks[slot].pnt[address & memmap.chr.chunks[slot].mask]);
 	}
-	return (cpudata.cpu.openbus);
+	return (nes.c.cpu.openbus);
 }
 void chr_wr(WORD address, BYTE value) {
 	const unsigned int slot = slot_from_address(&memmap.chr.info, address);
@@ -1284,7 +1284,7 @@ BYTE ram_rd(WORD address) {
 	if (memmap.ram.chunks[slot].permit.rd) {
 		return (memmap.ram.chunks[slot].pnt[address & memmap.ram.chunks[slot].mask]);
 	}
-	return (cpudata.cpu.openbus);
+	return (nes.c.cpu.openbus);
 }
 void ram_wr(WORD address, BYTE value) {
 	unsigned int slot = slot_from_address(&memmap.ram.info, address);
@@ -1405,7 +1405,7 @@ BYTE nmt_rd(WORD address) {
 	if (memmap.nmt.chunks[slot].permit.rd) {
 		return (memmap.nmt.chunks[slot].pnt[address & memmap.nmt.chunks[slot].mask]);
 	}
-	return (cpudata.cpu.openbus);
+	return (nes.c.cpu.openbus);
 }
 void nmt_wr(WORD address, BYTE value) {
 	unsigned int slot = slot_from_address(&memmap.nmt.info, address);

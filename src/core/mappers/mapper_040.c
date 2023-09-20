@@ -52,7 +52,7 @@ void extcl_cpu_wr_mem_040(WORD address, BYTE value) {
 		case 0x8000:
 			m040.enabled = FALSE;
 			m040.count = 0;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xC000:
 			if (info.mapper.submapper == 1) {
@@ -79,7 +79,7 @@ BYTE extcl_save_mapper_040(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_040(void) {
 	if (m040.delay && !(--m040.delay)) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 	if (m040.enabled && (++m040.count == 0x1000)) {
 		m040.delay = 1;

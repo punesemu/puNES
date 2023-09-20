@@ -464,7 +464,7 @@ void extcl_cpu_init_pc_006(void) {
 			miscrom_trainer_dst() = (address < 0x6000)
 				? &m006.scratch[address & 0xF00]
 				: wram_pnt_byte(address & 0x1FFF);
-			cpudata.cpu.PC.w = info.mapper.id == 17 ? address : 0x5000;
+			nes.c.cpu.PC.w = info.mapper.id == 17 ? address : 0x5000;
 		}
 	}
 }
@@ -478,7 +478,7 @@ void extcl_cpu_wr_mem_006(WORD address, BYTE value) {
 					// attached to it. Because the Magic Card 1M and 2M, the predecessors to the Super Magic Card, had
 					// no IRQ counter of its own, a few games abuse the FDS Disk Data IRQ for frame timing and write any
 					// value to this register to acknowledge a pending IRQ.
-					cpudata.irq.high &= ~EXT_IRQ;
+					nes.c.irq.high &= ~EXT_IRQ;
 					return;
 				case 0x4025:
 					// FDS Control ($4025)
@@ -487,7 +487,7 @@ void extcl_cpu_wr_mem_006(WORD address, BYTE value) {
 					// no IRQ counter of its own, a few games abuse the FDS Disk Data IRQ for frame timing. If bit 7 is
 					// set, the FDS RAM adapter will generate IRQs every 1,792 cycles of the 21.4772 MHz master clock,
 					// or after every 149+1/3 CPU cycles.
-					cpudata.irq.high &= ~EXT_IRQ;
+					nes.c.irq.high &= ~EXT_IRQ;
 					if (!m006.irq.enable) {
 						m006.fds.control = value;
 						if (value & 0x42) {
@@ -576,16 +576,16 @@ void extcl_cpu_wr_mem_006(WORD address, BYTE value) {
 					return;
 				case 0x4501:
 					m006.irq.enable = FALSE;
-					cpudata.irq.high &= ~EXT_IRQ;
+					nes.c.irq.high &= ~EXT_IRQ;
 					return;
 				case 0x4502:
 					m006.irq.counter = (m006.irq.counter & 0xFF00) | value;
-					cpudata.irq.high &= ~EXT_IRQ;
+					nes.c.irq.high &= ~EXT_IRQ;
 					return;
 				case 0x4503:
 					m006.irq.counter = (m006.irq.counter & 0x00FF) | (value << 8);
 					m006.irq.enable = TRUE;
-					cpudata.irq.high &= ~EXT_IRQ;
+					nes.c.irq.high &= ~EXT_IRQ;
 					return;
 				case 0x4504:
 				case 0x4505:
@@ -692,7 +692,7 @@ BYTE extcl_rd_chr_006(WORD address) {
 void extcl_cpu_every_cycle_006(void) {
 	m006.fds.counter += 3;
 	while ((m006.fds.counter >= 448) && (m006.fds.control & 0x80)) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 		m006.fds.counter -= 448;
 	}
 	if (!(m006.mode.smc & 0x08)) {
@@ -700,38 +700,38 @@ void extcl_cpu_every_cycle_006(void) {
 	}
 }
 void extcl_ppu_000_to_255_006(void) {
-	if (ppudata.r2001.visible) {
+	if (nes.p.r2001.visible) {
 		extcl_ppu_320_to_34x_006();
 	}
 }
 void extcl_ppu_256_to_319_006(void) {
-	if ((ppudata.ppu.frame_x & 0x0007) != 0x0003) {
+	if ((nes.p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if ((!ppudata.spr_ev.count_plus || (ppudata.spr_ev.tmp_spr_plus == ppudata.spr_ev.count_plus)) && (ppudata.r2000.size_spr == 16)) {
-		ppudata.ppu.spr_adr = ppudata.r2000.spt_adr;
+	if ((!nes.p.spr_ev.count_plus || (nes.p.spr_ev.tmp_spr_plus == nes.p.spr_ev.count_plus)) && (nes.p.r2000.size_spr == 16)) {
+		nes.p.ppu.spr_adr = nes.p.r2000.spt_adr;
 	} else {
-		ppu_spr_adr((ppudata.ppu.frame_x & 0x0038) >> 3);
+		ppu_spr_adr((nes.p.ppu.frame_x & 0x0038) >> 3);
 	}
-	if ((ppudata.ppu.spr_adr & 0x1000) > (ppudata.ppu.bck_adr & 0x1000)) {
+	if ((nes.p.ppu.spr_adr & 0x1000) > (nes.p.ppu.bck_adr & 0x1000)) {
 		if (m006.mode.smc & 0x08) {
 			irq_clock_006();
 		}
 	}
 }
 void extcl_ppu_320_to_34x_006(void) {
-	if ((ppudata.ppu.frame_x & 0x0007) != 0x0003) {
+	if ((nes.p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if (ppudata.ppu.frame_x == 323) {
+	if (nes.p.ppu.frame_x == 323) {
 		ppu_spr_adr(7);
 	}
 
-	ppu_bck_adr(ppudata.r2000.bpt_adr, ppudata.r2006.value);
+	ppu_bck_adr(nes.p.r2000.bpt_adr, nes.p.r2006.value);
 
-	if ((ppudata.ppu.bck_adr & 0x1000) > (ppudata.ppu.spr_adr & 0x1000)) {
+	if ((nes.p.ppu.bck_adr & 0x1000) > (nes.p.ppu.spr_adr & 0x1000)) {
 		if (m006.mode.smc & 0x08) {
 			irq_clock_006();
 		}
@@ -889,7 +889,7 @@ INLINE static void irq_clock_006(void) {
 		if (m006.irq.counter >= 0x10000) {
 			m006.irq.counter = 0;
 			m006.irq.enable = FALSE;
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 	}
 }

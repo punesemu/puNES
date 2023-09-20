@@ -35,28 +35,28 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 #define fetch_at()\
 {\
 	BYTE shift_at, tmp;\
-	ppudata.ppu.rnd_adr = ((ppudata.r2006.value & 0x0380) >> 4) | ((ppudata.r2006.value & 0x001C) >> 2);\
-	ppudata.ppu.rnd_adr = 0x23C0 | (ppudata.r2006.value & 0x0C00) | ppudata.ppu.rnd_adr;\
-	tmp = ppu_rd_mem(ppudata.ppu.rnd_adr);\
-	shift_at = ((ppudata.r2006.value & 0x40) >> 4) | (ppudata.r2006.value & 0x02);\
-	ppudata.tile_fetch.attrib = (ppudata.tile_fetch.attrib >> 8) | (((tmp >> shift_at) & 0x03) << 8);\
+	nes.p.ppu.rnd_adr = ((nes.p.r2006.value & 0x0380) >> 4) | ((nes.p.r2006.value & 0x001C) >> 2);\
+	nes.p.ppu.rnd_adr = 0x23C0 | (nes.p.r2006.value & 0x0C00) | nes.p.ppu.rnd_adr;\
+	tmp = ppu_rd_mem(nes.p.ppu.rnd_adr);\
+	shift_at = ((nes.p.r2006.value & 0x40) >> 4) | (nes.p.r2006.value & 0x02);\
+	nes.p.tile_fetch.attrib = (nes.p.tile_fetch.attrib >> 8) | (((tmp >> shift_at) & 0x03) << 8);\
 }
 #define fetch_lb(r2000bck, r2006vl)\
-	ppudata.ppu.rnd_adr = 0x2000 | ((ppudata.r2006.race.ctrl ? ppudata.r2006.race.value : ppudata.r2006.value) & 0x0FFF);\
+	nes.p.ppu.rnd_adr = 0x2000 | ((nes.p.r2006.race.ctrl ? nes.p.r2006.race.value : nes.p.r2006.value) & 0x0FFF);\
 	ppu_bck_adr(r2000bck, r2006vl);\
-	ppudata.tile_fetch.l_byte = (ppudata.tile_fetch.l_byte >> 8) | (inv_chr[ppu_rd_mem(ppudata.ppu.bck_adr)] << 8);
+	nes.p.tile_fetch.l_byte = (nes.p.tile_fetch.l_byte >> 8) | (inv_chr[ppu_rd_mem(nes.p.ppu.bck_adr)] << 8);
 #define fetch_hb()\
-	ppudata.ppu.rnd_adr = ppudata.ppu.bck_adr | 0x0008;\
-	ppudata.tile_fetch.h_byte = (ppudata.tile_fetch.h_byte >> 8) | (inv_chr[ppu_rd_mem(ppudata.ppu.rnd_adr)] << 8);\
-	((ppudata.r2006.value & 0x1F) == 0x1F) ? (ppudata.r2006.value ^= 0x041F) : (ppudata.r2006.value++);
+	nes.p.ppu.rnd_adr = nes.p.ppu.bck_adr | 0x0008;\
+	nes.p.tile_fetch.h_byte = (nes.p.tile_fetch.h_byte >> 8) | (inv_chr[ppu_rd_mem(nes.p.ppu.rnd_adr)] << 8);\
+	((nes.p.r2006.value & 0x1F) == 0x1F) ? (nes.p.r2006.value ^= 0x041F) : (nes.p.r2006.value++);
 #define ppu_ticket()\
-	ppudata.ppu.cycles -= machine.ppu_divide;\
-	ppudata.ppu.frame_x++;\
-	cpudata.nmi.cpu_cycles_from_last_nmi++;\
+	nes.p.ppu.cycles -= machine.ppu_divide;\
+	nes.p.ppu.frame_x++;\
+	nes.c.nmi.cpu_cycles_from_last_nmi++;\
 	/* deve essere azzerato alla fine di ogni ciclo PPU */\
-	ppudata.r2006.changed_from_op = 0;
-#define put_pixel(clr) ppudata.ppu_screen.wr->line[ppudata.ppu.screen_y][ppudata.ppu.frame_x] = ppudata.r2001.emphasis | clr;
-#define put_emphasis(clr) put_pixel((memmap_palette.color[clr] & ppudata.r2001.color_mode))
+	nes.p.r2006.changed_from_op = 0;
+#define put_pixel(clr) nes.p.ppu_screen.wr->line[nes.p.ppu.screen_y][nes.p.ppu.frame_x] = nes.p.r2001.emphasis | clr;
+#define put_emphasis(clr) put_pixel((memmap_palette.color[clr] & nes.p.r2001.color_mode))
 #define put_bg put_emphasis(color_bg)
 #define put_sp put_emphasis(color_sp | 0x10)
 #define examine_sprites(senv, sp, vis, ty)\
@@ -68,14 +68,14 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 		 * inferiore a 8 (per questo uso il WORD, per\
 		 * avere risultati unsigned).\
 		 */\
-		if ((WORD)(ppudata.ppu.frame_x - sp[a].x_C) < 8) {\
+		if ((WORD)(nes.p.ppu.frame_x - sp[a].x_C) < 8) {\
 			/*\
 			 * se il bit 2 del $2001 e' a 0 vuol dire\
 			 * che e' abilitato il clipping degli sprite\
 			 * (in poche parole non vengono disegnati i\
 			 * primi 8 pixel dello screen).\
 			 */\
-			if ((ppudata.ppu.frame_x >= 8) || ppudata.r2001.spr_clipping) {\
+			if ((nes.p.ppu.frame_x >= 8) || nes.p.r2001.spr_clipping) {\
 				/* indico che uno sprite e' stato trovato */\
 				/*flag_sp = TRUE;*/\
 				/*\
@@ -116,7 +116,7 @@ enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 	 *  0 -> no flip orizzontale\
 	 *  1 -> si flip orizzontale\
 	 */\
-	if (ppudata.oam.elp[spenv.tmp_spr_plus][AT] & 0x40) {\
+	if (nes.p.oam.elp[spenv.tmp_spr_plus][AT] & 0x40) {\
 		/* salvo i primi 8 bit del tile dello sprite */\
 		spl[spenv.tmp_spr_plus].l_byte = ppu_rd_mem(sadr);\
 		/* salvo i secondi 8 bit del tile dello sprite */\
@@ -176,14 +176,14 @@ _ppu_data ppudata;
 _ppu_alignment ppu_alignment;
 
 void ppu_init(void) {
-	memset(&ppudata.ppu_screen, 0x00, sizeof(ppudata.ppu_screen));
+	memset(&nes.p.ppu_screen, 0x00, sizeof(nes.p.ppu_screen));
 }
 void ppu_quit(void) {
 	/* libero la memoria riservata */
 	BYTE a = 0;
 
 	for (a = 0; a < 2; a++) {
-		_ppu_screen_buffer *sb = &ppudata.ppu_screen.buff[a];
+		_ppu_screen_buffer *sb = &nes.p.ppu_screen.buff[a];
 
 		if (sb->data) {
 			free(sb->data);
@@ -194,32 +194,32 @@ void ppu_quit(void) {
 
 void ppu_tick(void) {
 	/* aggiungo i cicli della cpu trascorsi */
-	ppudata.ppu.cycles = (SWORD)(ppudata.ppu.cycles + machine.cpu_divide);
+	nes.p.ppu.cycles = (SWORD)(nes.p.ppu.cycles + machine.cpu_divide);
 
-	while (ppudata.ppu.cycles >= machine.ppu_divide) {
-		ppudata.r2002.race.sprite_overflow = FALSE;
+	while (nes.p.ppu.cycles >= machine.ppu_divide) {
+		nes.p.r2002.race.sprite_overflow = FALSE;
 
 		/* gestione della condizione di race del $2000 al dot 257 */
-		if (ppudata.r2000.race.ctrl) {
-			ppudata.r2000.race.ctrl = FALSE;
-			ppudata.ppu.tmp_vram = (ppudata.ppu.tmp_vram & 0xF3FF) | ((ppudata.r2000.race.value & 0x03) << 10);
+		if (nes.p.r2000.race.ctrl) {
+			nes.p.r2000.race.ctrl = FALSE;
+			nes.p.ppu.tmp_vram = (nes.p.ppu.tmp_vram & 0xF3FF) | ((nes.p.r2000.race.value & 0x03) << 10);
 		}
 
 		/* gestione del delay del bit del grayscale */
-		if (ppudata.r2001.grayscale_bit.delay && (--ppudata.r2001.grayscale_bit.delay == 0)) {
-			ppudata.r2001.color_mode = PPU_CM_GRAYSCALE;
+		if (nes.p.r2001.grayscale_bit.delay && (--nes.p.r2001.grayscale_bit.delay == 0)) {
+			nes.p.r2001.color_mode = PPU_CM_GRAYSCALE;
 		}
 
 		// gestione della seconda scrittura del $2006
-		if (ppudata.r2006.second_write.delay && (--ppudata.r2006.second_write.delay == 0)) {
-			WORD old_r2006 = ppudata.r2006.value;
+		if (nes.p.r2006.second_write.delay && (--nes.p.r2006.second_write.delay == 0)) {
+			WORD old_r2006 = nes.p.r2006.value;
 
-			ppudata.ppu.tmp_vram = ppudata.r2006.second_write.value;
+			nes.p.ppu.tmp_vram = nes.p.r2006.second_write.value;
 
-			if ((!ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.screen_y < SCR_ROWS)) && (ppudata.ppu.frame_y > ppudata.ppu_sclines.vint)) {
+			if ((!nes.p.ppu.vblank && nes.p.r2001.visible && (nes.p.ppu.screen_y < SCR_ROWS)) && (nes.p.ppu.frame_y > nes.p.ppu_sclines.vint)) {
 				// split_scroll_test_v2.nes e split_scroll_delay.nes
-				if (ppudata.ppu.frame_x == 255) {
-					ppudata.ppu.tmp_vram &= ppudata.r2006.value;
+				if (nes.p.ppu.frame_x == 255) {
+					nes.p.ppu.tmp_vram &= nes.p.r2006.value;
 				}
 
 				// condizione di race riscontrata in "scanline.nes" e
@@ -227,49 +227,49 @@ void ppu_tick(void) {
 				// nell'introduzione sono presenti su hardware reale).
 				// Anche "logo (E).nes" e "Ferrari - Grand Prix Challenge (U) [!].nes"
 				// ne sono soggetti.
-				if (ppudata.ppu.frame_x < SCR_COLUMNS) {
-					if ((ppudata.ppu.pixel_tile >= 1) && (ppudata.ppu.pixel_tile <= 3)) {
-						ppudata.r2006.race.ctrl = TRUE;
-						ppudata.r2006.race.value = (ppudata.r2006.value & 0x00FF) | (ppudata.ppu.tmp_vram & 0xFF00);
+				if (nes.p.ppu.frame_x < SCR_COLUMNS) {
+					if ((nes.p.ppu.pixel_tile >= 1) && (nes.p.ppu.pixel_tile <= 3)) {
+						nes.p.r2006.race.ctrl = TRUE;
+						nes.p.r2006.race.value = (nes.p.r2006.value & 0x00FF) | (nes.p.ppu.tmp_vram & 0xFF00);
 					}
 				}
 
 				// aggiorno l'r2006
-				ppudata.r2006.value = ppudata.ppu.tmp_vram;
+				nes.p.r2006.value = nes.p.ppu.tmp_vram;
 
 				// split_scroll_test_v2.nes e split_scroll_delay.nes
-				if (ppudata.ppu.frame_x == 254) {
+				if (nes.p.ppu.frame_x == 254) {
 					r2006_inc()
 				}
 			} else {
 				// aggiorno l'r2006
-				ppudata.r2006.value = ppudata.ppu.tmp_vram;
+				nes.p.r2006.value = nes.p.ppu.tmp_vram;
 			}
 
 			if (extcl_update_r2006) {
-				extcl_update_r2006(ppudata.r2006.value, old_r2006);
+				extcl_update_r2006(nes.p.r2006.value, old_r2006);
 			}
 		}
 
 		/* controllo se sono all'inizio della dummy line */
-		if (ppudata.ppu.frame_y == ppudata.ppu_sclines.vint) {
+		if (nes.p.ppu.frame_y == nes.p.ppu_sclines.vint) {
 			/*
 			 * disabilito il vblank al ciclo 0 della scanline,
 			 * a differenza dell'abilitazione del vblank che
 			 * avviene al ciclo 341.
 			 */
-			if (ppudata.ppu.frame_x == 0) {
+			if (nes.p.ppu.frame_x == 0) {
 				if (chinaersan2.enable) {
 					memcpy(chinaersan2.ram, ram_pnt(), 256);
 				}
-				ppudata.ppu.screen_y = 0;
+				nes.p.ppu.screen_y = 0;
 				/* setto a 0 il bit 5, 6 ed il 7 del $2002 */
-				ppudata.r2002.sprite_overflow = ppudata.r2002.sprite0_hit = ppudata.r2002.vblank = ppudata.ppu.vblank = FALSE;
+				nes.p.r2002.sprite_overflow = nes.p.r2002.sprite0_hit = nes.p.r2002.vblank = nes.p.ppu.vblank = FALSE;
 				// serve assolutamente per la corretta lettura delle coordinate del puntatore zapper
 				if (info.zapper_is_present && !fps_fast_forward_enabled()) {
-					memset((BYTE *)ppudata.ppu_screen.wr->data, 0, (size_t)screen_size());
+					memset((BYTE *)nes.p.ppu_screen.wr->data, 0, (size_t)screen_size());
 				}
-			} else if ((ppudata.ppu.frame_x == (SHORT_SLINE_CYCLES - 1)) && (machine.type == NTSC)) {
+			} else if ((nes.p.ppu.frame_x == (SHORT_SLINE_CYCLES - 1)) && (machine.type == NTSC)) {
 				/*
 				 * nei frame NTSC dispari, la dummy line e' lunga 340
 				 * cicli invece dei soliti 341. Visto che la lettura
@@ -278,18 +278,18 @@ void ppu_tick(void) {
 				 * della dummy line, ne anticipo il controllo e
 				 * l'eventuale modifica.
 				 */
-				ppudata.ppu.sf.prev = ppudata.ppu.sf.actual;
-				ppudata.ppu.sf.actual = FALSE;
-				if (ppudata.ppu.odd_frame) {
-					if (ppudata.r2001.bck_visible) {
-						if (!ppudata.r2001.race.ctrl || (ppudata.r2001.race.value & 0x08)) {
-							ppudata.ppu.sline_cycles = SHORT_SLINE_CYCLES;
-							ppudata.ppu.sf.actual = TRUE;
+				nes.p.ppu.sf.prev = nes.p.ppu.sf.actual;
+				nes.p.ppu.sf.actual = FALSE;
+				if (nes.p.ppu.odd_frame) {
+					if (nes.p.r2001.bck_visible) {
+						if (!nes.p.r2001.race.ctrl || (nes.p.r2001.race.value & 0x08)) {
+							nes.p.ppu.sline_cycles = SHORT_SLINE_CYCLES;
+							nes.p.ppu.sf.actual = TRUE;
 						}
 					} else {
-						if (ppudata.r2001.race.ctrl && (ppudata.r2001.race.value & 0x08)) {
-							ppudata.ppu.sline_cycles = SHORT_SLINE_CYCLES;
-							ppudata.ppu.sf.actual = TRUE;
+						if (nes.p.r2001.race.ctrl && (nes.p.r2001.race.value & 0x08)) {
+							nes.p.ppu.sline_cycles = SHORT_SLINE_CYCLES;
+							nes.p.ppu.sf.actual = TRUE;
 						}
 					}
 				}
@@ -317,7 +317,7 @@ void ppu_tick(void) {
 		 * disegnato un pixel a video (per questo motivo
 		 * utillizzo frameX per contarli [i cicli]).
 		 */
-		if (ppudata.ppu.frame_x < SCR_COLUMNS) {
+		if (nes.p.ppu.frame_x < SCR_COLUMNS) {
 			/*
 			 * controllo:
 			 * 1) di non essere nel vblank
@@ -326,11 +326,11 @@ void ppu_tick(void) {
 			 *    la PPU rimane assolutamente ferma per una
 			 *    scanline.
 			 */
-			if (ppudata.ppu.vblank) {
-				if ((machine.type == PAL) && (ppudata.ppu.frame_y > 23)) {
+			if (nes.p.ppu.vblank) {
+				if ((machine.type == PAL) && (nes.p.ppu.frame_y > 23)) {
 					ppu_oam_evaluation();
 				}
-			} else if (ppudata.ppu.screen_y < SCR_ROWS) {
+			} else if (nes.p.ppu.screen_y < SCR_ROWS) {
 				if (extcl_ppu_000_to_255) {
 					/*
 					 * utilizzato dalle mappers :
@@ -341,12 +341,12 @@ void ppu_tick(void) {
 					extcl_ppu_000_to_255();
 				}
 				/* controllo di non essere nella dummy line */
-				if (ppudata.ppu.frame_y > ppudata.ppu_sclines.vint) {
+				if (nes.p.ppu.frame_y > nes.p.ppu_sclines.vint) {
 					/*
 					 * controllo se background o sprites (basta
 					 * solo uno dei due) siano visibili.
 					 */
-					if (ppudata.r2001.visible) {
+					if (nes.p.r2001.visible) {
 						/*
 						 * inizializzo le variabili dei colori e
 						 * l'indicatore del numero dello sprite
@@ -362,15 +362,15 @@ void ppu_tick(void) {
 						 * (quindi in base al ciclo PPU) faccio
 						 * cio' che serve.
 						 */
-						if (ppudata.ppu.pixel_tile == 0) {
+						if (nes.p.ppu.pixel_tile == 0) {
 							/*
 							 * inizializzo i buffer che utilizzero'
 							 * per renderizzare i prossimi 8 pixels.
 							 */
-							ppudata.tile_render = ppudata.tile_fetch;
+							nes.p.tile_render = nes.p.tile_fetch;
 							/* applico il fine X (cioe' lo scrolling) */
-							ppudata.tile_render.l_byte >>= ppudata.ppu.fine_x;
-							ppudata.tile_render.h_byte >>= ppudata.ppu.fine_x;
+							nes.p.tile_render.l_byte >>= nes.p.ppu.fine_x;
+							nes.p.tile_render.h_byte >>= nes.p.ppu.fine_x;
 							/*
 							 * visto che in questo buffer c'e' l'MSB dei
 							 * 2 bit che, a loro volta sono i 2 bit LSB
@@ -378,18 +378,18 @@ void ppu_tick(void) {
 							 * in modo da ritrovarmelo in posizione per
 							 * l'OR che faro' nel rendering del background.
 							 */
-							ppudata.tile_render.h_byte <<= 1;
-						} else if (ppudata.ppu.pixel_tile == 1) {
+							nes.p.tile_render.h_byte <<= 1;
+						} else if (nes.p.ppu.pixel_tile == 1) {
 							/* faccio il fetch del byte degli attributi */
 							fetch_at()
-						} else if (ppudata.ppu.pixel_tile == 3) {
+						} else if (nes.p.ppu.pixel_tile == 3) {
 							/*
 							 * faccio il fetch dei primi 8 bit che
 							 * che compongono il tile (che hanno un
 							 * peso minore rispetto ai secondi).
 							 */
-							fetch_lb(ppudata.r2000.bpt_adr, (ppudata.r2006.race.ctrl ? ppudata.r2006.race.value : ppudata.r2006.value))
-						} else if (ppudata.ppu.pixel_tile == 5) {
+							fetch_lb(nes.p.r2000.bpt_adr, (nes.p.r2006.race.ctrl ? nes.p.r2006.race.value : nes.p.r2006.value))
+						} else if (nes.p.ppu.pixel_tile == 5) {
 							/*
 							 * faccio il fetch dei secondi 8 bit che
 							 * compongono il tile (che hanno un peso maggiore
@@ -403,7 +403,7 @@ void ppu_tick(void) {
 								 * MMC5
 								 * MMC2/4
 								 */
-								extcl_after_rd_chr(ppudata.ppu.bck_adr);
+								extcl_after_rd_chr(nes.p.ppu.bck_adr);
 							}
 							/*
 							 * Fine Y e' incrementato dopo l'ultimo fetch
@@ -416,7 +416,7 @@ void ppu_tick(void) {
 							 * ne l'azzeramento ne il flip e, nel caso sia
 							 * l'indirizzo, puntera' alla attribut table.
 							 */
-							if (ppudata.ppu.frame_x == 253) {
+							if (nes.p.ppu.frame_x == 253) {
 								r2006_inc()
 								/*
 								 * alla fine di ogni scanline
@@ -430,24 +430,24 @@ void ppu_tick(void) {
 						 * se non e' settato il bit 3 del $2001 il
 						 * background e' invisibile.
 						 */
-						if (ppudata.r2001.bck_visible) {
+						if (nes.p.r2001.bck_visible) {
 							/*
 							 * se il bit 1 del $2001 e' a 0 vuol dire
 							 * che e' abilitato il clipping del background
 							 * (in poche parole non vengono disegnati i primi
 							 * 8 pixel dello screen).
 							 */
-							if ((ppudata.ppu.frame_x >= 8) || ppudata.r2001.bck_clipping) {
+							if ((nes.p.ppu.frame_x >= 8) || nes.p.r2001.bck_clipping) {
 								/* sto trattando un pixel del background */
 								//flag_bg = TRUE;
 								/* recupero i 2 bit LSB del pixel */
-								color_bg = (ppudata.tile_render.l_byte & 0x01) | (ppudata.tile_render.h_byte & 0x02);
+								color_bg = (nes.p.tile_render.l_byte & 0x01) | (nes.p.tile_render.h_byte & 0x02);
 								/*
 								 * shifto di un bit (leggi un pixel) i
 								 * due bitmap buffers
 								 */
-								ppudata.tile_render.l_byte >>= 1;
-								ppudata.tile_render.h_byte >>= 1;
+								nes.p.tile_render.l_byte >>= 1;
+								nes.p.tile_render.h_byte >>= 1;
 								/*
 								 * se i 2 bit LSB del colore non sono uguali a
 								 * 0, vuol dire che il pixel non e' trasparente
@@ -464,10 +464,10 @@ void ppu_tick(void) {
 									 * a 7 sono ancora nel tile corrente,
 									 * altrimenti sono nel tile successivo.
 									 */
-									if ((ppudata.ppu.pixel_tile + ppudata.ppu.fine_x) < 8) {
-										color_bg |= (ppudata.tile_render.attrib << 2);
+									if ((nes.p.ppu.pixel_tile + nes.p.ppu.fine_x) < 8) {
+										color_bg |= (nes.p.tile_render.attrib << 2);
 									} else {
-										color_bg |= (ppudata.tile_render.attrib >> 6);
+										color_bg |= (nes.p.tile_render.attrib >> 6);
 									}
 								}
 							}
@@ -478,13 +478,13 @@ void ppu_tick(void) {
 						 * sprite sono visibili (se a 0 sono
 						 * invisibili e non devo disegnarli).
 						 */
-						if (ppudata.r2001.spr_visible) {
+						if (nes.p.r2001.spr_visible) {
 							BYTE a = 0;
 
-							examine_sprites(ppudata.spr_ev, ppudata.sprite, visible_spr, FALSE)
+							examine_sprites(nes.p.spr_ev, nes.p.sprite, visible_spr, FALSE)
 
 							if (cfg->unlimited_sprites) {
-								examine_sprites(ppudata.spr_ev_unl, ppudata.sprite_unl, visible_spr_unl, TRUE)
+								examine_sprites(nes.p.spr_ev_unl, nes.p.sprite_unl, visible_spr_unl, TRUE)
 							}
 						}
 /* ------------------------------------ MULTIPLEXER ------------------------------------------ */
@@ -510,7 +510,7 @@ void ppu_tick(void) {
 							}
 						} else {
 							if (!unlimited_spr) {
-								if (ppudata.sprite[visible_spr].attrib & 0x20) {
+								if (nes.p.sprite[visible_spr].attrib & 0x20) {
 									/*
 									 * se non lo sono tutti e due, controllo la
 									 * profondita' dello sprite e se e' settata su
@@ -553,11 +553,11 @@ void ppu_tick(void) {
 								 * posizionate le informazioni su tipo di
 								 * sistema (pal o nes e frequenza di aggiornamento).
 								 */
-								if (!ppudata.r2002.sprite0_hit && !ppudata.sprite[visible_spr].number && (ppudata.ppu.frame_x != 255)) {
-									ppudata.r2002.sprite0_hit = 0x40;
+								if (!nes.p.r2002.sprite0_hit && !nes.p.sprite[visible_spr].number && (nes.p.ppu.frame_x != 255)) {
+									nes.p.r2002.sprite0_hit = 0x40;
 								}
 							} else {
-								if (ppudata.sprite_unl[visible_spr_unl].attrib & 0x20) {
+								if (nes.p.sprite_unl[visible_spr_unl].attrib & 0x20) {
 									if (cfg->hide_background) {
 										if (cfg->hide_sprites) {
 											put_pixel(memmap_palette.color[0])
@@ -589,20 +589,20 @@ void ppu_tick(void) {
 						 */
 						put_pixel(memmap_palette.color[0])
 
-						if ((ppudata.r2006.value & 0xFF00) == 0x3F00) {
+						if ((nes.p.r2006.value & 0xFF00) == 0x3F00) {
 							/*
 							 * se background e sprites non sono visibili
 							 * e $2006 e' nel range 0x3F00/0x3FFF (nella
 							 * paletta insomma) allora a video devo
 							 * visualizzare il colore puntato dal registro.
 							 */
-							put_emphasis(ppudata.r2006.value & 0x1F)
+							put_emphasis(nes.p.r2006.value & 0x1F)
 						}
 					}
 				}
 				/* incremento in contatore dei pixel interni al tile */
-				if (++ppudata.ppu.pixel_tile > 7) {
-					ppudata.ppu.pixel_tile = 0;
+				if (++nes.p.ppu.pixel_tile > 7) {
+					nes.p.ppu.pixel_tile = 0;
 				}
 				ppu_ticket()
 				continue;
@@ -618,8 +618,8 @@ void ppu_tick(void) {
 		 * 		4. Pattern table bitmap #1 for applicable object (for next scanline)
 		 * 		This process is repeated 8 times.
 		 */
-		if (ppudata.ppu.frame_x < 320) {
-			if (!ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.screen_y < SCR_ROWS)) {
+		if (nes.p.ppu.frame_x < 320) {
+			if (!nes.p.ppu.vblank && nes.p.r2001.visible && (nes.p.ppu.screen_y < SCR_ROWS)) {
 				if (extcl_ppu_256_to_319) {
 					/*
 					 * utilizzato dalle mappers :
@@ -630,91 +630,91 @@ void ppu_tick(void) {
 					 */
 					extcl_ppu_256_to_319();
 				}
-				if (ppudata.ppu.frame_x == 256) {
-					ppudata.spr_ev.timing = ppudata.spr_ev.tmp_spr_plus = 0;
+				if (nes.p.ppu.frame_x == 256) {
+					nes.p.spr_ev.timing = nes.p.spr_ev.tmp_spr_plus = 0;
 				}
 				/* controllo se ci sono sprite per la (scanline+1) */
-				if (ppudata.spr_ev.tmp_spr_plus < ppudata.spr_ev.count_plus) {
-					switch (ppudata.spr_ev.timing) {
+				if (nes.p.spr_ev.tmp_spr_plus < nes.p.spr_ev.count_plus) {
+					switch (nes.p.spr_ev.timing) {
 						case 0:
 							/*
-							 * utilizzo ppudata.spr_ev.timing come contatore di cicli per
+							 * utilizzo nes.p.spr_ev.timing come contatore di cicli per
 							 * esaminare uno sprite ogni 8 cicli.
 							 */
-							ppudata.ppu.rnd_adr = 0x2000 | (ppudata.r2006.value & 0xFFF);
-							ppu_spr_adr(ppudata.spr_ev.tmp_spr_plus)
-							get_sprites(ele_plus, ppudata.spr_ev, ppudata.sprite_plus, ppudata.ppu.spr_adr)
-							ppudata.r2004.value = ppudata.oam.ele_plus[ppudata.spr_ev.tmp_spr_plus][YC];
+							nes.p.ppu.rnd_adr = 0x2000 | (nes.p.r2006.value & 0xFFF);
+							ppu_spr_adr(nes.p.spr_ev.tmp_spr_plus)
+							get_sprites(ele_plus, nes.p.spr_ev, nes.p.sprite_plus, nes.p.ppu.spr_adr)
+							nes.p.r2004.value = nes.p.oam.ele_plus[nes.p.spr_ev.tmp_spr_plus][YC];
 							if (extcl_after_rd_chr) {
 								/*
 								 * utilizzato dalle mappers :
 								 * MMC5
 								 * MMC2/4
 								 */
-								extcl_after_rd_chr(ppudata.ppu.spr_adr);
+								extcl_after_rd_chr(nes.p.ppu.spr_adr);
 							}
 							/* incremento il contatore del ciclo interno */
-							ppudata.spr_ev.timing++;
+							nes.p.spr_ev.timing++;
 							break;
 						case 2:
-							ppudata.ppu.rnd_adr = 0x2000 | (ppudata.r2006.value & 0xFFF);
-							ppudata.r2004.value = ppudata.oam.ele_plus[ppudata.spr_ev.tmp_spr_plus][ppudata.spr_ev.timing];
+							nes.p.ppu.rnd_adr = 0x2000 | (nes.p.r2006.value & 0xFFF);
+							nes.p.r2004.value = nes.p.oam.ele_plus[nes.p.spr_ev.tmp_spr_plus][nes.p.spr_ev.timing];
 							/* incremento il contatore del ciclo interno */
-							ppudata.spr_ev.timing++;
+							nes.p.spr_ev.timing++;
 							break;
 						case 1:
 						case 3:
-							ppudata.r2004.value = ppudata.oam.ele_plus[ppudata.spr_ev.tmp_spr_plus][ppudata.spr_ev.timing];
+							nes.p.r2004.value = nes.p.oam.ele_plus[nes.p.spr_ev.tmp_spr_plus][nes.p.spr_ev.timing];
 							/* incremento il contatore del ciclo interno */
-							ppudata.spr_ev.timing++;
+							nes.p.spr_ev.timing++;
 							break;
 						case 4:
-							ppudata.ppu.rnd_adr = ppudata.ppu.spr_adr;
-							ppudata.r2004.value = ppudata.oam.ele_plus[ppudata.spr_ev.tmp_spr_plus][XC];
+							nes.p.ppu.rnd_adr = nes.p.ppu.spr_adr;
+							nes.p.r2004.value = nes.p.oam.ele_plus[nes.p.spr_ev.tmp_spr_plus][XC];
 							/* incremento il contatore del ciclo interno */
-							ppudata.spr_ev.timing++;
+							nes.p.spr_ev.timing++;
 							break;
 						case 5:
-							ppudata.r2004.value = ppudata.oam.ele_plus[ppudata.spr_ev.tmp_spr_plus][XC];
+							nes.p.r2004.value = nes.p.oam.ele_plus[nes.p.spr_ev.tmp_spr_plus][XC];
 							/* incremento il contatore del ciclo interno */
-							ppudata.spr_ev.timing++;
+							nes.p.spr_ev.timing++;
 							break;
 						case 6:
-							ppudata.ppu.rnd_adr = ppudata.ppu.spr_adr | 0x0008;
-							ppudata.r2004.value = ppudata.oam.ele_plus[ppudata.spr_ev.tmp_spr_plus][XC];
+							nes.p.ppu.rnd_adr = nes.p.ppu.spr_adr | 0x0008;
+							nes.p.r2004.value = nes.p.oam.ele_plus[nes.p.spr_ev.tmp_spr_plus][XC];
 							/* incremento il contatore del ciclo interno */
-							ppudata.spr_ev.timing++;
+							nes.p.spr_ev.timing++;
 							break;
 						case 7:
-							ppudata.r2004.value = ppudata.oam.ele_plus[ppudata.spr_ev.tmp_spr_plus][XC];
+							nes.p.r2004.value = nes.p.oam.ele_plus[nes.p.spr_ev.tmp_spr_plus][XC];
 							/* passo al prossimo sprite */
-							ppudata.spr_ev.timing = 0;
+							nes.p.spr_ev.timing = 0;
 							/* incremento l'indice temporaneo degli sprites */
-							if (++ppudata.spr_ev.tmp_spr_plus == 8) {
+							if (++nes.p.spr_ev.tmp_spr_plus == 8) {
 								// unlimited sprites
-								if (cfg->unlimited_sprites && ppudata.spr_ev_unl.evaluate) {
-									for (ppudata.spr_ev_unl.tmp_spr_plus = 0;
-										ppudata.spr_ev_unl.tmp_spr_plus < ppudata.spr_ev_unl.count_plus;
-										ppudata.spr_ev_unl.tmp_spr_plus++) {
+								if (cfg->unlimited_sprites && nes.p.spr_ev_unl.evaluate) {
+									for (nes.p.spr_ev_unl.tmp_spr_plus = 0;
+										nes.p.spr_ev_unl.tmp_spr_plus < nes.p.spr_ev_unl.count_plus;
+										nes.p.spr_ev_unl.tmp_spr_plus++) {
 										WORD spr_adr = 0;
 
-										_ppu_spr_adr(ppudata.spr_ev_unl.tmp_spr_plus, ele_plus_unl, ppudata.sprite_plus_unl, spr_adr)
-										get_sprites(ele_plus_unl, ppudata.spr_ev_unl, ppudata.sprite_plus_unl, spr_adr)
+										_ppu_spr_adr(nes.p.spr_ev_unl.tmp_spr_plus, ele_plus_unl, nes.p.sprite_plus_unl, spr_adr)
+										get_sprites(ele_plus_unl, nes.p.spr_ev_unl, nes.p.sprite_plus_unl, spr_adr)
 									}
-									ppudata.spr_ev_unl.evaluate = FALSE;
+									nes.p.spr_ev_unl.evaluate = FALSE;
 								}
 							}
 							break;
 					 }
 				} else {
-					if (ppudata.spr_ev.timing == 0) {
-						ppudata.r2004.value = ppudata.oam.element[63][YC];
-						ppudata.spr_ev.timing++;
-					} else if (ppudata.spr_ev.timing < 7) {
-						ppudata.r2004.value = 0xFF;
-						ppudata.spr_ev.timing++;
+					if (nes.p.spr_ev.timing == 0) {
+						nes.p.r2004.value = nes.p.oam.element[63][YC];
+						nes.p.spr_ev.timing++;
+					} else if (nes.p.spr_ev.timing < 7) {
+						nes.p.r2004.value = 0xFF;
+						nes.p.spr_ev.timing++;
 					} else {
-						ppudata.spr_ev.timing = 0;
+						nes.p.spr_ev.timing = 0;
 					}
 				}
 				/*
@@ -725,8 +725,8 @@ void ppu_tick(void) {
 				 * Dusty Diamond's All-Star Softball (U) [!].nes
 				 * Bing Kuang Ji Dan Zi - Flighty Chicken (Ch).nes
 				 */
-				if ((ppudata.ppu.frame_x == 319) && (ppudata.ppu.screen_y == 238)) {
-					ppudata.r2003.value = 0;
+				if ((nes.p.ppu.frame_x == 319) && (nes.p.ppu.screen_y == 238)) {
+					nes.p.r2003.value = 0;
 				}
 				ppu_ticket()
 				continue;
@@ -740,7 +740,7 @@ void ppu_tick(void) {
 		 * 		3. Fetch 2 pattern table bitmap bytes
 		 * 		This process is repeated 2 times.
 		 */
-		if (!ppudata.ppu.vblank && (ppudata.r2001.visible || ppudata.r2001.race.ctrl) && (ppudata.ppu.screen_y < SCR_ROWS)) {
+		if (!nes.p.ppu.vblank && (nes.p.r2001.visible || nes.p.r2001.race.ctrl) && (nes.p.ppu.screen_y < SCR_ROWS)) {
 			if (extcl_ppu_320_to_34x) {
 				/*
 				 * utilizzato dalle mappers :
@@ -751,14 +751,14 @@ void ppu_tick(void) {
 				 */
 				extcl_ppu_320_to_34x();
 			}
-			switch (ppudata.ppu.frame_x) {
+			switch (nes.p.ppu.frame_x) {
 				case 323:
-					if (ppudata.ppu.frame_y == ppudata.ppu_sclines.vint) {
+					if (nes.p.ppu.frame_y == nes.p.ppu_sclines.vint) {
 						/*
 						 * all'inizio di ogni frame reinizializzo
 						 * l'indirizzo della PPU.
 						 */
-						ppudata.r2006.value = ppudata.ppu.tmp_vram;
+						nes.p.r2006.value = nes.p.ppu.tmp_vram;
 					}
 					fetch_at()
 					break;
@@ -767,7 +767,7 @@ void ppu_tick(void) {
 					break;
 				case 325:
 				case 333:
-					fetch_lb(ppudata.r2000.bpt_adr, ppudata.r2006.value)
+					fetch_lb(nes.p.r2000.bpt_adr, nes.p.r2006.value)
 					break;
 				case 327:
 				case 335:
@@ -778,12 +778,12 @@ void ppu_tick(void) {
 						 * MMC5
 						 * MMC2/4
 						 */
-						extcl_after_rd_chr(ppudata.ppu.bck_adr);
+						extcl_after_rd_chr(nes.p.ppu.bck_adr);
 					}
 					break;
 				case 337:
 				case 339:
-					ppudata.ppu.rnd_adr = 0x2000 | (ppudata.r2006.value & 0x0FFF);
+					nes.p.ppu.rnd_adr = 0x2000 | (nes.p.r2006.value & 0x0FFF);
 					break;
 			}
 		}
@@ -803,11 +803,11 @@ void ppu_tick(void) {
 		 * when the PPU is fetching background data on the
 		 * next scanline).
 		 */
-		if (ppudata.ppu.frame_x < ppudata.ppu.sline_cycles) {
-			if (ppudata.spr_ev.count_plus) {
-				ppudata.r2004.value = ppudata.oam.ele_plus[0][YC];
+		if (nes.p.ppu.frame_x < nes.p.ppu.sline_cycles) {
+			if (nes.p.spr_ev.count_plus) {
+				nes.p.r2004.value = nes.p.oam.ele_plus[0][YC];
 			} else {
-				ppudata.r2004.value = ppudata.oam.element[63][YC];
+				nes.p.r2004.value = nes.p.oam.element[63][YC];
 			}
 			ppu_ticket()
 			/*
@@ -815,7 +815,7 @@ void ppu_tick(void) {
 			 * che in realta' e' iniziato il ciclo 0
 			 * della scanline successiva.
 			 */
-			if (ppudata.ppu.frame_x != ppudata.ppu.sline_cycles) {
+			if (nes.p.ppu.frame_x != nes.p.ppu.sline_cycles) {
 				continue;
 			}
 		}
@@ -849,14 +849,14 @@ void ppu_tick(void) {
 		 *
 		 */
 		/* controllo di essere nel range [dummy...rendering screen] */
-		if ((ppudata.ppu.frame_y >= ppudata.ppu_sclines.vint) && (ppudata.ppu.screen_y < SCR_ROWS)) {
+		if ((nes.p.ppu.frame_y >= nes.p.ppu_sclines.vint) && (nes.p.ppu.screen_y < SCR_ROWS)) {
 			BYTE a = 0;
 
 			/* verifico di non trattare la dummy line */
-			if (ppudata.ppu.frame_y > ppudata.ppu_sclines.vint) {
+			if (nes.p.ppu.frame_y > nes.p.ppu_sclines.vint) {
 				/* incremento il contatore delle scanline renderizzate */
-				ppudata.ppu.screen_y++;
-				if ((ppudata.ppu.screen_y == SCR_ROWS) && (info.no_ppu_draw_screen == 0)) {
+				nes.p.ppu.screen_y++;
+				if ((nes.p.ppu.screen_y == SCR_ROWS) && (info.no_ppu_draw_screen == 0)) {
 					gfx_draw_screen();
 				}
 			}
@@ -865,43 +865,43 @@ void ppu_tick(void) {
 			 * diventa quello attuale (visto che sto per
 			 * incrementare la scanline).
 			 */
-			ppudata.spr_ev.count = ppudata.spr_ev.count_plus;
+			nes.p.spr_ev.count = nes.p.spr_ev.count_plus;
 			/* azzero l'indice per la (scanline+1) */
-			ppudata.spr_ev.count_plus = 0;
+			nes.p.spr_ev.count_plus = 0;
 			/*
 			 * sposto il buffer degli sprites della scanline
 			 * successiva (scanline+1) nel buffer di quella
 			 * che sto per trattare.
 			 */
-			for (a = ppudata.spr_ev.count; a--;) {
-				ppudata.sprite[a].y_C = ppudata.oam.ele_plus[a][YC];
-				ppudata.sprite[a].tile = ppudata.oam.ele_plus[a][TL];
-				ppudata.sprite[a].attrib = ppudata.oam.ele_plus[a][AT];
-				ppudata.sprite[a].x_C = ppudata.oam.ele_plus[a][XC];
-				ppudata.sprite[a].number = ppudata.sprite_plus[a].number;
-				ppudata.sprite[a].flip_v = ppudata.sprite_plus[a].flip_v;
-				ppudata.sprite[a].l_byte = ppudata.sprite_plus[a].l_byte;
-				ppudata.sprite[a].h_byte = ppudata.sprite_plus[a].h_byte;
+			for (a = nes.p.spr_ev.count; a--;) {
+				nes.p.sprite[a].y_C = nes.p.oam.ele_plus[a][YC];
+				nes.p.sprite[a].tile = nes.p.oam.ele_plus[a][TL];
+				nes.p.sprite[a].attrib = nes.p.oam.ele_plus[a][AT];
+				nes.p.sprite[a].x_C = nes.p.oam.ele_plus[a][XC];
+				nes.p.sprite[a].number = nes.p.sprite_plus[a].number;
+				nes.p.sprite[a].flip_v = nes.p.sprite_plus[a].flip_v;
+				nes.p.sprite[a].l_byte = nes.p.sprite_plus[a].l_byte;
+				nes.p.sprite[a].h_byte = nes.p.sprite_plus[a].h_byte;
 			}
 			// unlimited sprites
 			if (cfg->unlimited_sprites) {
-				ppudata.spr_ev_unl.count = ppudata.spr_ev_unl.count_plus;
+				nes.p.spr_ev_unl.count = nes.p.spr_ev_unl.count_plus;
 				/* azzero l'indice per la (scanline+1) */
-				ppudata.spr_ev_unl.count_plus = 0;
+				nes.p.spr_ev_unl.count_plus = 0;
 				/*
 				 * sposto il buffer degli sprites della scanline
 				 * successiva (scanline+1) nel buffer di quella
 				 * che sto per trattare.
 				 */
-				for (a = ppudata.spr_ev_unl.count; a--;) {
-					ppudata.sprite_unl[a].y_C = ppudata.oam.ele_plus_unl[a][YC];
-					ppudata.sprite_unl[a].tile = ppudata.oam.ele_plus_unl[a][TL];
-					ppudata.sprite_unl[a].attrib = ppudata.oam.ele_plus_unl[a][AT];
-					ppudata.sprite_unl[a].x_C = ppudata.oam.ele_plus_unl[a][XC];
-					ppudata.sprite_unl[a].number = ppudata.sprite_plus_unl[a].number;
-					ppudata.sprite_unl[a].flip_v = ppudata.sprite_plus_unl[a].flip_v;
-					ppudata.sprite_unl[a].l_byte = ppudata.sprite_plus_unl[a].l_byte;
-					ppudata.sprite_unl[a].h_byte = ppudata.sprite_plus_unl[a].h_byte;
+				for (a = nes.p.spr_ev_unl.count; a--;) {
+					nes.p.sprite_unl[a].y_C = nes.p.oam.ele_plus_unl[a][YC];
+					nes.p.sprite_unl[a].tile = nes.p.oam.ele_plus_unl[a][TL];
+					nes.p.sprite_unl[a].attrib = nes.p.oam.ele_plus_unl[a][AT];
+					nes.p.sprite_unl[a].x_C = nes.p.oam.ele_plus_unl[a][XC];
+					nes.p.sprite_unl[a].number = nes.p.sprite_plus_unl[a].number;
+					nes.p.sprite_unl[a].flip_v = nes.p.sprite_plus_unl[a].flip_v;
+					nes.p.sprite_unl[a].l_byte = nes.p.sprite_plus_unl[a].l_byte;
+					nes.p.sprite_unl[a].h_byte = nes.p.sprite_plus_unl[a].h_byte;
 				}
 			}
 		}
@@ -911,40 +911,40 @@ void ppu_tick(void) {
 		 * slineCycles ed e' estremamente importante
 		 * che lo faccia esattamente qui, cosi'
 		 * come e' importante che l'azzeramento del
-		 * ppudata.ppu.framex lo faccia dopo il settaggio dell'nmi.
+		 * nes.p.ppu.framex lo faccia dopo il settaggio dell'nmi.
 		 */
-		ppudata.ppu.frame_y++;
-		ppudata.ppu.sline_cycles = SLINE_CYCLES;
+		nes.p.ppu.frame_y++;
+		nes.p.ppu.sline_cycles = SLINE_CYCLES;
 
 		/* controllo se ho completato il frame */
-		if (ppudata.ppu.frame_y >= ppudata.ppu_sclines.total) {
+		if (nes.p.ppu.frame_y >= nes.p.ppu_sclines.total) {
 			// aggiorno il numero delle scanlines
 			ppu_overclock_update()
 			// azzero il flag del DMC dell'overclock
-			ppudata.overclock.DMC_in_use = FALSE;
+			nes.p.overclock.DMC_in_use = FALSE;
 			/* incremento il contatore ppu dei frames */
-			ppudata.ppu.frames++;
+			nes.p.ppu.frames++;
 			/* azzero frame_y */
-			ppudata.ppu.frame_y = 0;
+			nes.p.ppu.frame_y = 0;
 			/* setto il flag che indica che un frame e' stato completato */
 			info.frame_status = FRAME_FINISHED;
 			/* e' un frame dispari? */
-			ppudata.ppu.odd_frame = !ppudata.ppu.odd_frame;
+			nes.p.ppu.odd_frame = !nes.p.ppu.odd_frame;
 			/* abilito il vblank */
-			ppudata.r2002.vblank = 0x80;
-			ppudata.ppu.vblank = TRUE;
-			if ((ppudata.ppu.frames == 1) && info.r2002_jump_first_vblank) {
-				ppudata.r2002.vblank = 0x00;
+			nes.p.r2002.vblank = 0x80;
+			nes.p.ppu.vblank = TRUE;
+			if ((nes.p.ppu.frames == 1) && info.r2002_jump_first_vblank) {
+				nes.p.r2002.vblank = 0x00;
 			}
 			/*
 			 * quando il bit 7 del $2002 e il bit 7
 			 * del $2000 sono a 1 devo generare un NMI.
 			 */
-			if (ppudata.r2000.nmi_enable) {
-				cpudata.nmi.high = TRUE;
-				cpudata.nmi.frame_x = ppudata.ppu.frame_x;
+			if (nes.p.r2000.nmi_enable) {
+				nes.c.nmi.high = TRUE;
+				nes.c.nmi.frame_x = nes.p.ppu.frame_x;
 				/* azzero i numeri di cicli dall'nmi */
-				cpudata.nmi.cpu_cycles_from_last_nmi = 0;
+				nes.c.nmi.cpu_cycles_from_last_nmi = 0;
 			}
 		}
 
@@ -956,55 +956,55 @@ void ppu_tick(void) {
 		 * importante che lo faccia esattamente
 		 * dopo il settaggio dell'nmi.
 		 */
-		ppudata.ppu.frame_x = 0;
+		nes.p.ppu.frame_x = 0;
 		/* deve essere azzerato alla fine di ogni ciclo PPU */
-		ppudata.r2006.changed_from_op = 0;
+		nes.p.r2006.changed_from_op = 0;
 	}
 }
 BYTE ppu_turn_on(void) {
 	// nel primo frame l'overclocking e' sempre disabilitato
-	ppudata.overclock.DMC_in_use = TRUE;
+	nes.p.overclock.DMC_in_use = TRUE;
 	ppu_overclock(FALSE);
 
 	if (info.reset >= HARD) {
-		memset(&ppudata.ppu, 0x00, sizeof(_ppu));
-		memset(&ppudata.ppu_openbus, 0x00, sizeof(_ppu_openbus));
-		memset(&ppudata.r2000, 0x00, sizeof(_r2000));
-		memset(&ppudata.r2001, 0x00, sizeof(_r2001));
-		memset(&ppudata.r2002, 0x00, sizeof(_r2002));
-		memset(&ppudata.r2003, 0x00, sizeof(_r2xxx));
-		memset(&ppudata.r2004, 0x00, sizeof(_r2xxx));
-		memset(&ppudata.r2006, 0x00, sizeof(_r2006));
-		memset(&ppudata.r2007, 0x00, sizeof(_r2xxx));
-		memset(&ppudata.spr_ev, 0x00, sizeof(_spr_evaluate));
-		memset(&ppudata.sprite, 0x00, sizeof(_spr));
-		memset(&ppudata.sprite_plus, 0x00, sizeof(_spr));
-		memset(&ppudata.spr_ev_unl, 0x00, sizeof(_spr_evaluate));
-		memset(&ppudata.sprite_unl, 0x00, sizeof(_spr));
-		memset(&ppudata.sprite_plus_unl, 0x00, sizeof(_spr));
-		memset(&ppudata.tile_render, 0x00, sizeof(_tile));
-		memset(&ppudata.tile_fetch, 0x00, sizeof(_tile));
+		memset(&nes.p.ppu, 0x00, sizeof(_ppu));
+		memset(&nes.p.ppu_openbus, 0x00, sizeof(_ppu_openbus));
+		memset(&nes.p.r2000, 0x00, sizeof(_r2000));
+		memset(&nes.p.r2001, 0x00, sizeof(_r2001));
+		memset(&nes.p.r2002, 0x00, sizeof(_r2002));
+		memset(&nes.p.r2003, 0x00, sizeof(_r2xxx));
+		memset(&nes.p.r2004, 0x00, sizeof(_r2xxx));
+		memset(&nes.p.r2006, 0x00, sizeof(_r2006));
+		memset(&nes.p.r2007, 0x00, sizeof(_r2xxx));
+		memset(&nes.p.spr_ev, 0x00, sizeof(_spr_evaluate));
+		memset(&nes.p.sprite, 0x00, sizeof(_spr));
+		memset(&nes.p.sprite_plus, 0x00, sizeof(_spr));
+		memset(&nes.p.spr_ev_unl, 0x00, sizeof(_spr_evaluate));
+		memset(&nes.p.sprite_unl, 0x00, sizeof(_spr));
+		memset(&nes.p.sprite_plus_unl, 0x00, sizeof(_spr));
+		memset(&nes.p.tile_render, 0x00, sizeof(_tile));
+		memset(&nes.p.tile_fetch, 0x00, sizeof(_tile));
 		/*
 		 * "Time Lord (U) [!].nes"
 		 * funziona correttamente (altrimenti avviato il gioco
 		 * la parte di sotto si sporca e non appaiono sprites).
 		 */
-		ppudata.ppu.frame_y = ppudata.ppu_sclines.vint + 1;
-		ppudata.ppu.sline_cycles = SLINE_CYCLES;
-		ppudata.r2000.r2006_inc = 1;
-		ppudata.r2000.size_spr = 8;
-		ppudata.r2001.color_mode = PPU_CM_NORMAL;
+		nes.p.ppu.frame_y = nes.p.ppu_sclines.vint + 1;
+		nes.p.ppu.sline_cycles = SLINE_CYCLES;
+		nes.p.r2000.r2006_inc = 1;
+		nes.p.r2000.size_spr = 8;
+		nes.p.r2001.color_mode = PPU_CM_NORMAL;
 
 		/* riservo una zona di memoria per lo screen */
 		if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 			BYTE a = 0;
 
-			ppudata.ppu_screen.rd = &ppudata.ppu_screen.buff[0];
-			ppudata.ppu_screen.wr = &ppudata.ppu_screen.buff[1];
-			ppudata.ppu_screen.last_completed_wr = ppudata.ppu_screen.wr;
+			nes.p.ppu_screen.rd = &nes.p.ppu_screen.buff[0];
+			nes.p.ppu_screen.wr = &nes.p.ppu_screen.buff[1];
+			nes.p.ppu_screen.last_completed_wr = nes.p.ppu_screen.wr;
 
 			for (a = 0; a < 2; a++) {
-				if (ppu_alloc_screen_buffer(&ppudata.ppu_screen.buff[a]) == EXIT_ERROR) {
+				if (ppu_alloc_screen_buffer(&nes.p.ppu_screen.buff[a]) == EXIT_ERROR) {
 					return (EXIT_ERROR);
 				}
 			}
@@ -1013,13 +1013,13 @@ BYTE ppu_turn_on(void) {
 			 * elemento dell'OAM (4 bytes ciascuno).
 			 */
 			for (a = 0; a < 64; ++a) {
-				ppudata.oam.element[a] = &ppudata.oam.data[(size_t)(a * 4)];
+				nes.p.oam.element[a] = &nes.p.oam.data[(size_t)(a * 4)];
 			}
 			for (a = 0; a < 8; ++a) {
-				ppudata.oam.ele_plus[a] = &ppudata.oam.plus[(size_t)(a * 4)];
+				nes.p.oam.ele_plus[a] = &nes.p.oam.plus[(size_t)(a * 4)];
 			}
 			for (a = 0; a < 56; ++a) {
-				ppudata.oam.ele_plus_unl[a] = &ppudata.oam.plus_unl[(size_t)(a * 4)];
+				nes.p.oam.ele_plus_unl[a] = &nes.p.oam.plus_unl[(size_t)(a * 4)];
 			}
 			ppu_alignment_reset();
 		}
@@ -1029,7 +1029,7 @@ BYTE ppu_turn_on(void) {
 
 			/* inizializzo lo screen */
 			for (a = 0; a < 2; a++) {
-				_ppu_screen_buffer *sb = &ppudata.ppu_screen.buff[a];
+				_ppu_screen_buffer *sb = &nes.p.ppu_screen.buff[a];
 
 				for (y = 0; y < SCR_ROWS; y++) {
 					for (x = 0; x < SCR_COLUMNS; x++) {
@@ -1042,9 +1042,9 @@ BYTE ppu_turn_on(void) {
 			 * utilizzata per conservare le informazioni
 			 * inerenti gli sprites.
 			 */
-			memset(ppudata.oam.data, 0xFF, sizeof(ppudata.oam.data));
-			memset(ppudata.oam.plus, 0xFF, sizeof(ppudata.oam.plus));
-			memset(ppudata.oam.plus_unl, 0xFF, sizeof(ppudata.oam.plus_unl));
+			memset(nes.p.oam.data, 0xFF, sizeof(nes.p.oam.data));
+			memset(nes.p.oam.plus, 0xFF, sizeof(nes.p.oam.plus));
+			memset(nes.p.oam.plus_unl, 0xFF, sizeof(nes.p.oam.plus_unl));
 			/* inizializzo nametables */
 			nmt_memset();
 			/* e paletta dei colori */
@@ -1057,39 +1057,39 @@ BYTE ppu_turn_on(void) {
 		}
 		ppu_alignment_init();
 	} else {
-		memset(&ppudata.r2000, 0x00, sizeof(_r2000));
-		memset(&ppudata.r2001, 0x00, sizeof(_r2001));
-		memset(&ppudata.r2002, 0x00, sizeof(_r2002));
-		memset(&ppudata.r2007, 0x00, sizeof(_r2xxx));
+		memset(&nes.p.r2000, 0x00, sizeof(_r2000));
+		memset(&nes.p.r2001, 0x00, sizeof(_r2001));
+		memset(&nes.p.r2002, 0x00, sizeof(_r2002));
+		memset(&nes.p.r2007, 0x00, sizeof(_r2xxx));
 
-		ppudata.ppu.frame_x = ppudata.ppu.screen_y = ppudata.ppu.pixel_tile = 0;
-		ppudata.ppu.frame_y = ppudata.ppu_sclines.vint + 1;
-		ppudata.ppu.tmp_vram = ppudata.ppu.fine_x = 0;
-		ppudata.ppu.spr_adr = ppudata.ppu.bck_adr = 0;
-		ppudata.ppu.sline_cycles = SLINE_CYCLES;
-		ppudata.ppu.odd_frame = 0;
-		ppudata.ppu.cycles = 0;
-		ppudata.r2000.r2006_inc = 1;
-		ppudata.r2000.size_spr = 8;
-		ppudata.r2001.color_mode = PPU_CM_NORMAL;
+		nes.p.ppu.frame_x = nes.p.ppu.screen_y = nes.p.ppu.pixel_tile = 0;
+		nes.p.ppu.frame_y = nes.p.ppu_sclines.vint + 1;
+		nes.p.ppu.tmp_vram = nes.p.ppu.fine_x = 0;
+		nes.p.ppu.spr_adr = nes.p.ppu.bck_adr = 0;
+		nes.p.ppu.sline_cycles = SLINE_CYCLES;
+		nes.p.ppu.odd_frame = 0;
+		nes.p.ppu.cycles = 0;
+		nes.p.r2000.r2006_inc = 1;
+		nes.p.r2000.size_spr = 8;
+		nes.p.r2001.color_mode = PPU_CM_NORMAL;
 	}
 
 	return (EXIT_OK);
 }
 void ppu_overclock(BYTE reset_dmc_in_use) {
 	if (reset_dmc_in_use) {
-		ppudata.overclock.DMC_in_use = FALSE;
+		nes.p.overclock.DMC_in_use = FALSE;
 	}
 
-	ppudata.overclock.sclines.vb = 0;
-	ppudata.overclock.sclines.pr = 0;
+	nes.p.overclock.sclines.vb = 0;
+	nes.p.overclock.sclines.pr = 0;
 
 	if (cfg->ppu_overclock) {
-		ppudata.overclock.sclines.vb = cfg->extra_vb_scanlines;
-		ppudata.overclock.sclines.pr = cfg->extra_pr_scanlines;
+		nes.p.overclock.sclines.vb = cfg->extra_vb_scanlines;
+		nes.p.overclock.sclines.pr = cfg->extra_pr_scanlines;
 	}
 
-	ppudata.overclock.sclines.total = ppudata.overclock.sclines.vb + ppudata.overclock.sclines.pr;
+	nes.p.overclock.sclines.total = nes.p.overclock.sclines.vb + nes.p.overclock.sclines.pr;
 	ppu_overclock_update()
 	ppu_overclock_control()
 }
@@ -1164,8 +1164,8 @@ static void ppu_alignment_init(void) {
 			break;
 	}
 
-	ppudata.ppu.cycles = 0; //(SWORD)(machine.ppu_divide * -8);
-	ppudata.ppu.cycles += (SWORD)((ppu_alignment.cpu + (-ppu_alignment.ppu + 1)) % machine.cpu_divide);
+	nes.p.ppu.cycles = 0; //(SWORD)(machine.ppu_divide * -8);
+	nes.p.ppu.cycles += (SWORD)((ppu_alignment.cpu + (-ppu_alignment.ppu + 1)) % machine.cpu_divide);
 
 	if (cfg->ppu_alignment == PPU_ALIGMENT_INC_AT_RESET) {
 		ppu_alignment.count.cpu = (ppu_alignment.count.cpu + 1) % machine.cpu_divide;
@@ -1188,10 +1188,10 @@ static void ppu_alignment_init(void) {
 
 INLINE static void ppu_oam_evaluation(void) {
 /* ------------------------------- CONTROLLO SPRITE SCANLINE+1 ------------------------------- */
-	if (ppudata.ppu.frame_x < 64) {
-		ppudata.r2004.value = 0xFF;
+	if (nes.p.ppu.frame_x < 64) {
+		nes.p.r2004.value = 0xFF;
 		/* inizializzo le varibili per il ciclo 64 */
-		if (ppudata.ppu.frame_x == 63) {
+		if (nes.p.ppu.frame_x == 63) {
 			/*
 			 * inizializzo i vari indici
 			 *
@@ -1200,13 +1200,13 @@ INLINE static void ppu_oam_evaluation(void) {
 			 * solo perche' nel 64° ciclo, come prima
 			 * cosa lo incremento azzerandolo.
 			 */
-			ppudata.spr_ev.timing = 0;
-			ppudata.spr_ev.real = 0;
-			ppudata.spr_ev.index = 0xFF;
+			nes.p.spr_ev.timing = 0;
+			nes.p.spr_ev.real = 0;
+			nes.p.spr_ev.index = 0xFF;
 			/* la fase 1 e 2 corrispondono */
-			ppudata.spr_ev.phase = 2;
+			nes.p.spr_ev.phase = 2;
 		}
-	} else if (ppudata.ppu.frame_x < 256) {
+	} else if (nes.p.ppu.frame_x < 256) {
 /* --------------------------------------- FASE 1 E 2 ---------------------------------------- */
 		/*
 		 * in questa fase esamino e salvo i primi 8 sprites
@@ -1214,21 +1214,21 @@ INLINE static void ppu_oam_evaluation(void) {
 		 * alla fase 3. Se invece esamino tutti e 64 gli sprites
 		 * dell'OAM, passo alla fase 4.
 		 */
-		if (ppudata.spr_ev.phase == 2) {
-			if (ppudata.spr_ev.timing == 0) {
+		if (nes.p.spr_ev.phase == 2) {
+			if (nes.p.spr_ev.timing == 0) {
 				/* in caso di overflow dell'indice degli sprite ... */
-				if (++ppudata.spr_ev.index == 64) {
+				if (++nes.p.spr_ev.index == 64) {
 					/* ...azzero l'indice... */
-					ppudata.spr_ev.index = ppudata.spr_ev.real = 0;
+					nes.p.spr_ev.index = nes.p.spr_ev.real = 0;
 					/* ...passo alla fase 4... */
-					ppudata.spr_ev.phase = 4;
+					nes.p.spr_ev.phase = 4;
 					/*
 					 * ...di cui questo stesso ciclo sara' il
 					 * timing = 0, quindi il prossimo sara' l'1.
 					 */
-					ppudata.spr_ev.timing = 1;
+					nes.p.spr_ev.timing = 1;
 					/* leggo la coordinata Y dello sprite 0 */
-					ppudata.r2004.value = ppudata.oam.element[0][YC];
+					nes.p.r2004.value = nes.p.oam.element[0][YC];
 					/*
 					 * We've since discovered that not only are
 					 * sprites 0 and 1 temporarily replaced with
@@ -1243,13 +1243,13 @@ INLINE static void ppu_oam_evaluation(void) {
 						static BYTE i;
 
 						for (i = 8; i--;) {
-							ppudata.oam.data[i] = ppudata.oam.data[(ppudata.r2003.value & 0xF8) + i];
+							nes.p.oam.data[i] = nes.p.oam.data[(nes.p.r2003.value & 0xF8) + i];
 						}
 					}
 				} else {
-					ppudata.spr_ev.real = ppudata.spr_ev.index;
+					nes.p.spr_ev.real = nes.p.spr_ev.index;
 					/* leggo dall'OAM il byte 0 dell'elemento in esame */
-					ppudata.r2004.value = ppudata.oam.element[ppudata.spr_ev.real][YC];
+					nes.p.r2004.value = nes.p.oam.element[nes.p.spr_ev.real][YC];
 					/*
 					 * calcolo la differenza tra la posizione
 					 * iniziale dello sprite e la posizione Y
@@ -1257,57 +1257,57 @@ INLINE static void ppu_oam_evaluation(void) {
 					 * inferiore a 8 o 16 (dipende dalla dimensione
 					 * dello sprite) allora puo' essere disegnato.
 					 */
-					ppudata.spr_ev.range = ppudata.ppu.screen_y - ppudata.r2004.value;
+					nes.p.spr_ev.range = nes.p.ppu.screen_y - nes.p.r2004.value;
 
-					ppudata.spr_ev.evaluate = FALSE;
+					nes.p.spr_ev.evaluate = FALSE;
 					/*
 					 * se sono nel range e lo sprite ha una
 					 * posizione Y inferiore o uguale a 0xEF,
 					 * lo esamino.
 					 */
-					if ((ppudata.spr_ev.count_plus < 8) && (ppudata.r2004.value <= 0xEF) && (ppudata.spr_ev.range < ppudata.r2000.size_spr)) {
-						ppudata.spr_ev.evaluate = TRUE;
+					if ((nes.p.spr_ev.count_plus < 8) && (nes.p.r2004.value <= 0xEF) && (nes.p.spr_ev.range < nes.p.r2000.size_spr)) {
+						nes.p.spr_ev.evaluate = TRUE;
 					}
 					/* incremento timing */
-					ppudata.spr_ev.timing++;
+					nes.p.spr_ev.timing++;
 				}
-			} else if (ppudata.spr_ev.timing == 1) {
+			} else if (nes.p.spr_ev.timing == 1) {
 				/*
 				 * esamino lo sprites e se necessario
 				 * inizio a memorizzare le informazioni.
 				 */
-				if (ppudata.spr_ev.evaluate) {
+				if (nes.p.spr_ev.evaluate) {
 					/*
 					 * memorizzo la prima parte delle
 					 * informazione dello sprite nel buffer.
 					 */
-					ppudata.oam.ele_plus[ppudata.spr_ev.count_plus][YC] = ppudata.r2004.value;
-					ppudata.sprite_plus[ppudata.spr_ev.count_plus].number = ppudata.spr_ev.index;
-					ppudata.sprite_plus[ppudata.spr_ev.count_plus].flip_v = ppudata.spr_ev.range;
+					nes.p.oam.ele_plus[nes.p.spr_ev.count_plus][YC] = nes.p.r2004.value;
+					nes.p.sprite_plus[nes.p.spr_ev.count_plus].number = nes.p.spr_ev.index;
+					nes.p.sprite_plus[nes.p.spr_ev.count_plus].flip_v = nes.p.spr_ev.range;
 					/* continuo a trattare questo sprite */
-					ppudata.spr_ev.timing++;
+					nes.p.spr_ev.timing++;
 				} else {
 					/* passo al prossimo sprite */
-					ppudata.spr_ev.timing = 0;
+					nes.p.spr_ev.timing = 0;
 				}
 			/* tratto i cicli pari */
-			} else if (!(ppudata.spr_ev.timing & 0x01)) {
+			} else if (!(nes.p.spr_ev.timing & 0x01)) {
 				/* leggo il prossimo byte dell'OAM */
-				ppudata.r2004.value = ppudata.oam.element[ppudata.spr_ev.real][ppudata.spr_ev.timing >> 1];
+				nes.p.r2004.value = nes.p.oam.element[nes.p.spr_ev.real][nes.p.spr_ev.timing >> 1];
 				/* passo al ciclo successivo */
-				ppudata.spr_ev.timing++;
+				nes.p.spr_ev.timing++;
 			/* tratto i cicli dispari */
 			} else {
 				/* memorizzo il valore letto nel ciclo prima */
-				ppudata.oam.ele_plus[ppudata.spr_ev.count_plus][ppudata.spr_ev.timing >> 1] = ppudata.r2004.value;
+				nes.p.oam.ele_plus[nes.p.spr_ev.count_plus][nes.p.spr_ev.timing >> 1] = nes.p.r2004.value;
 				/* l'unico ciclo diverso e' l'ultimo */
-				if (ppudata.spr_ev.timing == 7) {
+				if (nes.p.spr_ev.timing == 7) {
 					/*
 					 * se ho gia' trovato 8 sprites allora
 					 * devo avviare la fase 3.
 					 */
-					if (++ppudata.spr_ev.count_plus == 8) {
-						ppudata.spr_ev.phase = 3;
+					if (++nes.p.spr_ev.count_plus == 8) {
+						nes.p.spr_ev.phase = 3;
 						/*
 						 * inizilizzo le variabili che
 						 * mi serviranno. byte_OAM = 3
@@ -1315,9 +1315,9 @@ INLINE static void ppu_oam_evaluation(void) {
 						 * riportata a 0 nel primo ciclo
 						 * della fase 3.
 						 */
-						ppudata.spr_ev.evaluate = FALSE;
-						ppudata.spr_ev.byte_OAM = 3;
-						ppudata.spr_ev.index_plus = 0;
+						nes.p.spr_ev.evaluate = FALSE;
+						nes.p.spr_ev.byte_OAM = 3;
+						nes.p.spr_ev.index_plus = 0;
 
 						// unlimited sprites
 						if (cfg->unlimited_sprites) {
@@ -1332,11 +1332,11 @@ INLINE static void ppu_oam_evaluation(void) {
 								int i = 0;
 
 								for (i = 0; i < 64; i++) {
-									BYTE y = ppudata.oam.element[i][YC];
-									WORD range = ppudata.ppu.screen_y - y;
+									BYTE y = nes.p.oam.element[i][YC];
+									WORD range = nes.p.ppu.screen_y - y;
 
-									if ((y <= 0xEF) && (range < ppudata.r2000.size_spr)) {
-										WORD position = (y << 8) | ppudata.oam.element[i][XC];
+									if ((y <= 0xEF) && (range < nes.p.r2000.size_spr)) {
+										WORD position = (y << 8) | nes.p.oam.element[i][XC];
 
 										if (position != last_position) {
 											if (count > max_count) {
@@ -1356,26 +1356,26 @@ INLINE static void ppu_oam_evaluation(void) {
 							if (unlimited_sprites) {
 								BYTE t2004 = 0;
 
-								ppudata.spr_ev_unl.index = ppudata.spr_ev.index + 1;
-								ppudata.spr_ev_unl.count_plus = 0;
+								nes.p.spr_ev_unl.index = nes.p.spr_ev.index + 1;
+								nes.p.spr_ev_unl.count_plus = 0;
 
-								for (; ppudata.spr_ev_unl.index < 64; ppudata.spr_ev_unl.index++) {
-									t2004 = ppudata.oam.element[ppudata.spr_ev_unl.index][YC];
+								for (; nes.p.spr_ev_unl.index < 64; nes.p.spr_ev_unl.index++) {
+									t2004 = nes.p.oam.element[nes.p.spr_ev_unl.index][YC];
 
-									ppudata.spr_ev_unl.range = ppudata.ppu.screen_y - t2004;
+									nes.p.spr_ev_unl.range = nes.p.ppu.screen_y - t2004;
 
-									if ((t2004 <= 0xEF) && (ppudata.spr_ev_unl.range < ppudata.r2000.size_spr)) {
-										ppudata.oam.ele_plus_unl[ppudata.spr_ev_unl.count_plus][YC] = ppudata.oam.element[ppudata.spr_ev_unl.index][YC];
-										ppudata.oam.ele_plus_unl[ppudata.spr_ev_unl.count_plus][TL] = ppudata.oam.element[ppudata.spr_ev_unl.index][TL];
-										ppudata.oam.ele_plus_unl[ppudata.spr_ev_unl.count_plus][AT] = ppudata.oam.element[ppudata.spr_ev_unl.index][AT];
-										ppudata.oam.ele_plus_unl[ppudata.spr_ev_unl.count_plus][XC] = ppudata.oam.element[ppudata.spr_ev_unl.index][XC];
-										ppudata.sprite_plus_unl[ppudata.spr_ev_unl.count_plus].number = ppudata.spr_ev_unl.index;
-										ppudata.sprite_plus_unl[ppudata.spr_ev_unl.count_plus].flip_v = ppudata.spr_ev_unl.range;
-										ppudata.spr_ev_unl.count_plus++;
+									if ((t2004 <= 0xEF) && (nes.p.spr_ev_unl.range < nes.p.r2000.size_spr)) {
+										nes.p.oam.ele_plus_unl[nes.p.spr_ev_unl.count_plus][YC] = nes.p.oam.element[nes.p.spr_ev_unl.index][YC];
+										nes.p.oam.ele_plus_unl[nes.p.spr_ev_unl.count_plus][TL] = nes.p.oam.element[nes.p.spr_ev_unl.index][TL];
+										nes.p.oam.ele_plus_unl[nes.p.spr_ev_unl.count_plus][AT] = nes.p.oam.element[nes.p.spr_ev_unl.index][AT];
+										nes.p.oam.ele_plus_unl[nes.p.spr_ev_unl.count_plus][XC] = nes.p.oam.element[nes.p.spr_ev_unl.index][XC];
+										nes.p.sprite_plus_unl[nes.p.spr_ev_unl.count_plus].number = nes.p.spr_ev_unl.index;
+										nes.p.sprite_plus_unl[nes.p.spr_ev_unl.count_plus].flip_v = nes.p.spr_ev_unl.range;
+										nes.p.spr_ev_unl.count_plus++;
 									}
 								}
-								if (ppudata.spr_ev_unl.count_plus) {
-									ppudata.spr_ev_unl.evaluate = TRUE;
+								if (nes.p.spr_ev_unl.count_plus) {
+									nes.p.spr_ev_unl.evaluate = TRUE;
 								}
 							}
 						}
@@ -1384,19 +1384,19 @@ INLINE static void ppu_oam_evaluation(void) {
 						 * index_plus non superera'
 						 * mai il valore 7.
 						 */
-						ppudata.spr_ev.index_plus = ppudata.spr_ev.count_plus;
+						nes.p.spr_ev.index_plus = nes.p.spr_ev.count_plus;
 					}
 					/* passo al prossimo sprite */
-					ppudata.spr_ev.timing = 0;
+					nes.p.spr_ev.timing = 0;
 				} else {
 					/* se non sono nel 7° continuo a esaminare lo sprite */
-					ppudata.spr_ev.timing++;
+					nes.p.spr_ev.timing++;
 				}
 			}
 /* ------------------------------------------- FASE 3 ---------------------------------------- */
-		} else if (ppudata.spr_ev.phase == 3) {
+		} else if (nes.p.spr_ev.phase == 3) {
 			/* cicli pari */
-			if (!(ppudata.spr_ev.timing & 0x01)) {
+			if (!(nes.p.spr_ev.timing & 0x01)) {
 				/*
 				 * se non ho ancora trovato il nono sprite devo
 				 * aumentare sia byte_OAM che index. Questo
@@ -1404,32 +1404,32 @@ INLINE static void ppu_oam_evaluation(void) {
 				 * la coordinata Y (byte 0), tratta il byte puntato
 				 * da byte_OAM come se fosse la coordinata Y.
 				 */
-				if (!ppudata.spr_ev.evaluate) {
+				if (!nes.p.spr_ev.evaluate) {
 					/* incremento l'indice del byte da leggere */
-					if (++ppudata.spr_ev.byte_OAM == 4) {
-						ppudata.spr_ev.byte_OAM = 0;
+					if (++nes.p.spr_ev.byte_OAM == 4) {
+						nes.p.spr_ev.byte_OAM = 0;
 					}
 					/* in caso di overflow dell'indice degli sprite ... */
-					if (++ppudata.spr_ev.index == 64) {
+					if (++nes.p.spr_ev.index == 64) {
 						/* ...azzero l'indice... */
-						ppudata.spr_ev.index = 0;
+						nes.p.spr_ev.index = 0;
 						/* ...e passo alla fase 4... */
-						ppudata.spr_ev.phase = 4;
+						nes.p.spr_ev.phase = 4;
 						/*
 						 * ...di cui questo stesso ciclo sara' il
 						 * timing = 0, quindi il prossimo sara' l'1.
 						 */
-						ppudata.spr_ev.timing = 1;
+						nes.p.spr_ev.timing = 1;
 						/* leggo la coordinata Y dello sprite 0 */
-						ppudata.r2004.value = ppudata.oam.element[0][YC];
+						nes.p.r2004.value = nes.p.oam.element[0][YC];
 					} else {
 						/*
 						 * leggo dall'OAM il byte byte_OAM
 						 * dell'elemento in esame.
 						 */
-						ppudata.r2004.value = ppudata.oam.element[ppudata.spr_ev.index][ppudata.spr_ev.byte_OAM];
+						nes.p.r2004.value = nes.p.oam.element[nes.p.spr_ev.index][nes.p.spr_ev.byte_OAM];
 						/* l'unica differenza nei cicli pari e' lo 0 */
-						if (ppudata.spr_ev.timing == 0) {
+						if (nes.p.spr_ev.timing == 0) {
 							/*
 							 * calcolo la differenza tra la posizione
 							 * iniziale dello sprite e la posizione Y
@@ -1437,68 +1437,68 @@ INLINE static void ppu_oam_evaluation(void) {
 							 * inferiore a 8 o 16 (dipende dalla dimensione
 							 * dello sprite) allora puo' essere disegnato.
 							 */
-							ppudata.spr_ev.range = ppudata.ppu.screen_y - ppudata.r2004.value;
+							nes.p.spr_ev.range = nes.p.ppu.screen_y - nes.p.r2004.value;
 							/*
 							 * se sono nel range e lo sprite ha una
 							 * posizione Y inferiore o uguale a 0xEF,
 							 * vuol dire che sono al nono sprite.
 							 */
-							if ((ppudata.r2004.value <= 0xEF) && (ppudata.spr_ev.range < ppudata.r2000.size_spr)) {
+							if ((nes.p.r2004.value <= 0xEF) && (nes.p.spr_ev.range < nes.p.r2000.size_spr)) {
 								/* setto il bit 5 (overflow) del $2002 */
-								ppudata.r2002.sprite_overflow = 0x20;
-								ppudata.r2002.race.sprite_overflow = TRUE;
+								nes.p.r2002.sprite_overflow = 0x20;
+								nes.p.r2002.race.sprite_overflow = TRUE;
 								/*
 								 * devo esaminare i 3 byte
 								 * consequenziali a questo.
 								 */
-								ppudata.spr_ev.evaluate = TRUE;
+								nes.p.spr_ev.evaluate = TRUE;
 							}
 						}
 						/* continuo a esaminare lo sprite */
-						ppudata.spr_ev.timing++;
+						nes.p.spr_ev.timing++;
 					}
 				/*
 				 * se ho esaminato tutti i 4 byte del nono allora
 				 * devo riprendere a esaminare le coordinate Y degli
 				 * sprites.
 				 */
-				} else if (ppudata.spr_ev.evaluate == PPU_OVERFLOW_SPR) {
+				} else if (nes.p.spr_ev.evaluate == PPU_OVERFLOW_SPR) {
 					/* in caso di overflow dell'indice degli sprite ... */
-					if (++ppudata.spr_ev.index == 64) {
+					if (++nes.p.spr_ev.index == 64) {
 						/* ...azzero l'indice... */
-						ppudata.spr_ev.index = 0;
+						nes.p.spr_ev.index = 0;
 						/* ...e passo alla fase 4... */
-						ppudata.spr_ev.phase = 4;
+						nes.p.spr_ev.phase = 4;
 					}
 					/* leggo la coordinata Y dello sprite in esame */
-					ppudata.r2004.value = ppudata.oam.element[ppudata.spr_ev.index][YC];
+					nes.p.r2004.value = nes.p.oam.element[nes.p.spr_ev.index][YC];
 					/* continuo a esaminare lo sprite */
-					ppudata.spr_ev.timing++;
+					nes.p.spr_ev.timing++;
 				/*
 				 * sto esaminando il nono sprite e devo farlo controllando
 				 * i 3 byte dell'OAM successivi a quello che ho considerato
 				 * come coordinata Y anche se questi finiscono nell'elemento
 				 * dell'OAM successivo.
 				 */
-				} else if (ppudata.spr_ev.evaluate) {
+				} else if (nes.p.spr_ev.evaluate) {
 					/* incremento l'indice del byte da leggere */
-					if (++ppudata.spr_ev.byte_OAM == 4) {
+					if (++nes.p.spr_ev.byte_OAM == 4) {
 						/*
 						 * c'e' la possibilita' che finisca
 						 * nell'elemento dell'OAM successivo.
 						 */
-						ppudata.spr_ev.byte_OAM = 0;
+						nes.p.spr_ev.byte_OAM = 0;
 						/* in caso di overflow dell'indice degli sprite ... */
-						if (++ppudata.spr_ev.index == 64) {
+						if (++nes.p.spr_ev.index == 64) {
 							/* ...azzero l'indice... */
-							ppudata.spr_ev.index = 0;
+							nes.p.spr_ev.index = 0;
 							/* ...e passo alla fase 4... */
-							ppudata.spr_ev.phase = 4;
+							nes.p.spr_ev.phase = 4;
 							/*
 							 * l'ho imposto a 0 perche' in uscita da
 							 * questo if sara' aumentato.
 							 */
-							ppudata.spr_ev.timing = 0;
+							nes.p.spr_ev.timing = 0;
 						}
 					}
 					/*
@@ -1506,67 +1506,67 @@ INLINE static void ppu_oam_evaluation(void) {
 					 * alla fase 4 questo corrispondera' alla coordinata Y
 					 * dello sprite 0
 					 */
-					ppudata.r2004.value = ppudata.oam.element[ppudata.spr_ev.index][ppudata.spr_ev.byte_OAM];
+					nes.p.r2004.value = nes.p.oam.element[nes.p.spr_ev.index][nes.p.spr_ev.byte_OAM];
 					/* continuo a esaminare lo sprite */
-					ppudata.spr_ev.timing++;
+					nes.p.spr_ev.timing++;
 				}
 			/* cicli dispari */
 			} else {
 				/* leggo la coordinata Y dello sprite in esame */
-				ppudata.r2004.value = ppudata.oam.ele_plus[ppudata.spr_ev.index_plus][YC];
+				nes.p.r2004.value = nes.p.oam.ele_plus[nes.p.spr_ev.index_plus][YC];
 				/* se sto esaminando il nono sprite... */
-				if (ppudata.spr_ev.evaluate) {
+				if (nes.p.spr_ev.evaluate) {
 					/* ...e sono nell'ultimo ciclo...*/
-					if (ppudata.spr_ev.timing == 7) {
+					if (nes.p.spr_ev.timing == 7) {
 						/* ...indico la nuova modalita'... */
-						if (ppudata.spr_ev.evaluate == PPU_OVERFLOW_SPR){
+						if (nes.p.spr_ev.evaluate == PPU_OVERFLOW_SPR){
 							/* ...passo al prossimo sprite.. */
-							ppudata.spr_ev.timing = 0;
+							nes.p.spr_ev.timing = 0;
 						} else {
-							ppudata.spr_ev.evaluate = PPU_OVERFLOW_SPR;
+							nes.p.spr_ev.evaluate = PPU_OVERFLOW_SPR;
 							/* ...passo al prossimo sprite.. */
-							ppudata.spr_ev.timing = 0;
+							nes.p.spr_ev.timing = 0;
 							/*
 							 * ...anche se devo riesaminare questo
 							 * stesso sprite (ricordo che incremento
 							 * index al timing == 0).
 							 */
-							ppudata.spr_ev.index--;
+							nes.p.spr_ev.index--;
 						}
 					} else {
 						/* ... e non sono nell'ultimo ciclo,
 						 * continuo a esaminare lo sprite.
 						 */
-						ppudata.spr_ev.timing++;
+						nes.p.spr_ev.timing++;
 					}
 				} else {
 					/*
 					 * se non sono nel nono sprite
 					 * allora passo al prossimo.
 					 */
-					ppudata.spr_ev.timing = 0;
+					nes.p.spr_ev.timing = 0;
 				}
 			}
 /* ------------------------------------------- FASE 4 ---------------------------------------- */
 		/* e' composto solo da due cicli (0 e 1) */
-		} else if (ppudata.spr_ev.phase == 4) {
+		} else if (nes.p.spr_ev.phase == 4) {
 			/* ciclo 0 */
-			if (ppudata.spr_ev.timing == 0) {
+			if (nes.p.spr_ev.timing == 0) {
 				/* in caso di overflow dell'indice degli sprite ... */
-				if (++ppudata.spr_ev.index == 64) {
+				if (++nes.p.spr_ev.index == 64) {
 					/* ...azzero l'indice */
-					ppudata.spr_ev.index = 0;
+					nes.p.spr_ev.index = 0;
 				}
 				/* leggo la coordinata Y dello sprite OAM in esame */
-				ppudata.r2004.value = ppudata.oam.element[ppudata.spr_ev.index][YC];
+				nes.p.r2004.value = nes.p.oam.element[nes.p.spr_ev.index][YC];
 				/* passo al ciclo successivo */
-				ppudata.spr_ev.timing = 1;
+				nes.p.spr_ev.timing = 1;
 				/* ciclo 1 */
 			} else {
 				/* leggo la coordinata Y dello sprite in esame */
-				ppudata.r2004.value = ppudata.oam.ele_plus[ppudata.spr_ev.index_plus][YC];
+				nes.p.r2004.value = nes.p.oam.ele_plus[nes.p.spr_ev.index_plus][YC];
 				/* passo al prossimo sprite */
-				ppudata.spr_ev.timing = 0;
+				nes.p.spr_ev.timing = 0;
 			}
 		}
 	}

@@ -58,15 +58,15 @@ void input_rd_zapper(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 		return;
 	}
 
-	if (!ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.frame_y > ppudata.ppu_sclines.vint) && (ppudata.ppu.screen_y < SCR_ROWS)) {
+	if (!nes.p.ppu.vblank && nes.p.r2001.visible && (nes.p.ppu.frame_y > nes.p.ppu_sclines.vint) && (nes.p.ppu.screen_y < SCR_ROWS)) {
 		for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 			if (y_rect < 0) {
 				continue;
 			}
-			if (y_rect <= (ppudata.ppu.screen_y - 18)) {
+			if (y_rect <= (nes.p.ppu.screen_y - 18)) {
 				continue;
 			}
-			if (y_rect > ppudata.ppu.screen_y) {
+			if (y_rect > nes.p.ppu.screen_y) {
 				break;
 			}
 
@@ -79,7 +79,7 @@ void input_rd_zapper(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 				}
 				{
 					int brightness;
-					_color_RGB color = palette_RGB.in_use[ppudata.ppu_screen.wr->line[y_rect][x_rect]];
+					_color_RGB color = palette_RGB.in_use[nes.p.ppu_screen.wr->line[y_rect][x_rect]];
 
 					brightness = (int)((color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114));
 					if (brightness > 0x80) {
@@ -119,15 +119,15 @@ void input_rd_zapper_vs(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	}
 
 	if ((x_zapper > 0) && (x_zapper < SCR_COLUMNS) && (y_zapper > 0) && (y_zapper < SCR_ROWS)) {
-		if (!ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.frame_y > ppudata.ppu_sclines.vint) && (ppudata.ppu.screen_y < SCR_ROWS)) {
+		if (!nes.p.ppu.vblank && nes.p.r2001.visible && (nes.p.ppu.frame_y > nes.p.ppu_sclines.vint) && (nes.p.ppu.screen_y < SCR_ROWS)) {
 			for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 				if (y_rect < 0) {
 					continue;
 				}
-				if (y_rect <= (ppudata.ppu.screen_y - 18)) {
+				if (y_rect <= (nes.p.ppu.screen_y - 18)) {
 					continue;
 				}
-				if (y_rect > ppudata.ppu.screen_y) {
+				if (y_rect > nes.p.ppu.screen_y) {
 					break;
 				}
 				for (x_rect = (x_zapper - 8); x_rect < (x_zapper + 8); x_rect++) {
@@ -139,7 +139,7 @@ void input_rd_zapper_vs(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 					}
 					{
 						int brightness;
-						_color_RGB color = palette_RGB.in_use[ppudata.ppu_screen.wr->line[y_rect][x_rect]];
+						_color_RGB color = palette_RGB.in_use[nes.p.ppu_screen.wr->line[y_rect][x_rect]];
 
 						brightness = (int)((color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114));
 						if (brightness > 0x80) {

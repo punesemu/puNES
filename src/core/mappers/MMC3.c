@@ -131,7 +131,7 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 		case 0xE000:
 			irqA12.enable = FALSE;
 			// disabilito l'IRQ dell'MMC3
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			break;
 		case 0xE001:
 			irqA12.enable = TRUE;
@@ -150,14 +150,14 @@ BYTE extcl_save_mapper_MMC3(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_MMC3(void) {
 	if (irqA12.delay && !(--irqA12.delay)) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 }
 void extcl_ppu_000_to_34x_MMC3(void) {
 	irqA12_RS();
 }
 void extcl_ppu_000_to_255_MMC3(void) {
-	if (ppudata.r2001.visible) {
+	if (nes.p.r2001.visible) {
 		irqA12_SB();
 	}
 }
@@ -178,7 +178,7 @@ void extcl_irq_A12_clock_MMC3_NEC(void) {
 		irqA12.counter--;
 	}
 	if (!irqA12.counter && irqA12.enable) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 }
 
@@ -197,7 +197,7 @@ void init_MMC3(BYTE reset) {
 	}
 
 	mmc3.wram_protect = 0x80;
-	cpudata.irq.high &= ~EXT_IRQ;
+	nes.c.irq.high &= ~EXT_IRQ;
 
 	MMC3_prg_fix = prg_fix_MMC3_base;
 	MMC3_prg_swap = prg_swap_MMC3_base;

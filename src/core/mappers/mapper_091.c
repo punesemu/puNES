@@ -108,12 +108,12 @@ void extcl_cpu_wr_mem_091(WORD address, BYTE value) {
 				case 2:
 					m091.irq.enable = FALSE;
 					m091.irq.ppu.counter = 0;
-					cpudata.irq.high &= ~EXT_IRQ;
+					nes.c.irq.high &= ~EXT_IRQ;
 					return;
 				case 3:
 					m091.irq.enable = TRUE;
 					m091.irq.cpu.prescaler = 3;
-					cpudata.irq.high &= ~EXT_IRQ;
+					nes.c.irq.high &= ~EXT_IRQ;
 					return;
 			}
 			break;
@@ -137,13 +137,13 @@ BYTE extcl_save_mapper_091(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_ppu_256_to_319_091(void) {
-	if (ppudata.ppu.frame_x != 319) {
+	if (nes.p.ppu.frame_x != 319) {
 		return;
 	}
 	if (m091.irq.enable && (m091.irq.ppu.counter < 8)) {
 		m091.irq.ppu.counter++;
 		if (m091.irq.ppu.counter >= 8) {
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 	}
 }
@@ -152,7 +152,7 @@ void extcl_cpu_every_cycle_091(void) {
 	if (!m091.irq.cpu.prescaler) {
 		m091.irq.cpu.counter -= 5;
 		if ((m091.irq.cpu.counter <= 0) && m091.irq.enable) {
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 	}
 }

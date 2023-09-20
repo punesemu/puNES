@@ -79,7 +79,7 @@ void extcl_cpu_wr_mem_067(WORD address, BYTE value) {
 		case 0xD800:
 			m067.irq.toggle = 0;
 			m067.irq.enable = value & 0x10;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xE800:
 			m067.mirroring = value;
@@ -90,7 +90,7 @@ void extcl_cpu_wr_mem_067(WORD address, BYTE value) {
 			prg_fix_067();
 			return;
 		default:
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			return;
 	}
 }
@@ -107,7 +107,7 @@ BYTE extcl_save_mapper_067(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_067(void) {
 	if (m067.irq.delay && !(--m067.irq.delay)) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 	if (m067.irq.enable && m067.irq.count && !(--m067.irq.count)) {
 		m067.irq.enable = FALSE;

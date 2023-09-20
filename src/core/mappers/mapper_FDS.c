@@ -54,12 +54,12 @@ void map_init_FDS(void) {
 		}
 	}
 
-	cpudata.cpu.SP = 0xFF;
-	cpudata.cpu.SR = 0x30;
+	nes.c.cpu.SP = 0xFF;
+	nes.c.cpu.SR = 0x30;
 	/* disassemblo il Processor Status Register */
 	disassemble_SR();
 	/* setto il flag di disabilitazione dell'irq */
-	cpudata.irq.inhibit = cpudata.cpu.im;
+	nes.c.irq.inhibit = nes.c.cpu.im;
 }
 void map_init_NSF_FDS(void) {
 	memset(&fds, 0x00, sizeof(fds));
@@ -219,7 +219,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 				fds.drive.irq_timer_enabled = FALSE;
 			}
 			fds.drive.irq_timer_high = 0x01;
-			cpudata.irq.high |= FDS_TIMER_IRQ;
+			nes.c.irq.high |= FDS_TIMER_IRQ;
 		}
 	}
 
@@ -286,7 +286,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 	if (fds.drive.gap_ended) {
 		if (fds.drive.irq_disk_enabled) {
 			fds.drive.irq_disk_high = 0x02;
-			cpudata.irq.high |= FDS_DISK_IRQ;
+			nes.c.irq.high |= FDS_DISK_IRQ;
 		}
 
 		if (!fds.drive.read_mode) {

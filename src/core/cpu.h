@@ -20,6 +20,7 @@
 #define CPU_H_
 
 #include "common.h"
+#include "nes.h"
 
 enum cpu_misc { STACK = 0x0100 };
 enum interrupt_types {
@@ -34,80 +35,15 @@ enum interrupt_types {
 };
 
 #define assemble_SR()\
-	cpudata.cpu.SR = (cpudata.cpu.sf | cpudata.cpu.of | 0x20 | cpudata.cpu.bf | cpudata.cpu.df | cpudata.cpu.im | cpudata.cpu.zf | cpudata.cpu.cf)
+	nes.c.cpu.SR = (nes.c.cpu.sf | nes.c.cpu.of | 0x20 | nes.c.cpu.bf | nes.c.cpu.df | nes.c.cpu.im | nes.c.cpu.zf | nes.c.cpu.cf)
 #define disassemble_SR()\
-	cpudata.cpu.cf = cpudata.cpu.SR & 0x01;\
-	cpudata.cpu.zf = cpudata.cpu.SR & 0x02;\
-	cpudata.cpu.im = cpudata.cpu.SR & 0x04;\
-	cpudata.cpu.df = cpudata.cpu.SR & 0x08;\
-	cpudata.cpu.bf = cpudata.cpu.SR & 0x10;\
-	cpudata.cpu.of = cpudata.cpu.SR & 0x40;\
-	cpudata.cpu.sf = cpudata.cpu.SR & 0x80
-
-typedef struct _cpu {
-	// Processor Registers
-	union _cpu_pc {
-		BYTE b[2];
-		WORD w;
-	} PC;
-	BYTE SP; // Stack Pointer
-	BYTE AR; // Accumulator
-	BYTE XR; // Index Register X
-	BYTE YR; // Index Register Y
-	/* Processor Status Register */
-	BYTE SR; // Status Register
-	BYTE cf; // C (bit 0) - Carry flag
-	BYTE zf; // Z (bit 1) - Zero flag
-	BYTE im; // I (bit 2) - Interrupt mask
-	BYTE df; // D (bit 3) - Decimal flag
-	BYTE bf; // B (bit 4) - Break flag
-	/*            (bit 5) - Always 1 */
-	BYTE of; // O (bit 6) - Overflow flag
-	BYTE sf; // S (bit 7) - Sign flag or N - Negative flag
-	// il codice che identifica l'istruzione
-	WORD opcode;
-	WORD opcode_PC;
-	// il flag che indica se il ciclo della cpu e' dispari
-	BYTE odd_cycle;
-	// cicli cpu dell'istruzione e delle operazioni di lettura e scrittura
-	SWORD cycles;
-	// DMC
-	WORD opcode_cycle;
-	// doppia lettura
-	BYTE double_rd;
-	// doppia scrittura
-	BYTE double_wr;
-	// lettura PRG Ram attiva/disattiva
-	BYTE prg_ram_rd_active;
-	// scrittura PRG Ram attiva/disattiva
-	BYTE prg_ram_wr_active;
-	// i cicli (senza aggiustamenti) impiegati dall'opcode
-	WORD base_opcode_cycles;
-	// buffer di lettura
-	BYTE openbus;
-} _cpu;
-typedef struct _irq {
-	BYTE high;
-	BYTE delay;
-	BYTE before;
-	BYTE inhibit;
-} _irq;
-typedef struct _nmi {
-	BYTE high;
-	BYTE delay;
-	BYTE before;
-	BYTE inhibit;
-	WORD frame_x;
-	// i cicli passati dall'inizio dell'NMI
-	uint32_t cpu_cycles_from_last_nmi;
-} _nmi;
-typedef struct _cpu_data {
-	_cpu cpu;
-	_irq irq;
-	_nmi nmi;
-} _cpu_data;
-
-extern _cpu_data cpudata;
+	nes.c.cpu.cf = nes.c.cpu.SR & 0x01;\
+	nes.c.cpu.zf = nes.c.cpu.SR & 0x02;\
+	nes.c.cpu.im = nes.c.cpu.SR & 0x04;\
+	nes.c.cpu.df = nes.c.cpu.SR & 0x08;\
+	nes.c.cpu.bf = nes.c.cpu.SR & 0x10;\
+	nes.c.cpu.of = nes.c.cpu.SR & 0x40;\
+	nes.c.cpu.sf = nes.c.cpu.SR & 0x80
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"

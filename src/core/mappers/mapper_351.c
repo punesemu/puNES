@@ -190,11 +190,11 @@ INLINE static void switch_mode(void) {
 			break;
 		case 2:
 			m351.mapper = M351_MMC1;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			break;
 		case 3:
 			m351.mapper = M351_VRC4;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			break;
 	}
 }

@@ -54,7 +54,7 @@ void gfx_api_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ra
 	glPixelStoref(GL_UNPACK_ROW_LENGTH, 0);
 }
 void gfx_api_apply_filter(void) {
-	gfx.frame.filtered = ppudata.ppu_screen.rd->frame;
+	gfx.frame.filtered = nes.p.ppu_screen.rd->frame;
 
 	// applico l'effetto desiderato
 	gfx.filter.data.pitch = opengl.surface.pitch;

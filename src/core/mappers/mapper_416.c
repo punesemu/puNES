@@ -88,11 +88,11 @@ BYTE extcl_save_mapper_416(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_416(void) {
 	if (m416.irq.enable && (++m416.irq.counter == 0x1000)) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 		return;
 	}
 	m416.irq.counter = 0;
-	cpudata.irq.high &= ~EXT_IRQ;
+	nes.c.irq.high &= ~EXT_IRQ;
 }
 
 INLINE static void prg_fix_416(void) {

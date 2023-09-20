@@ -134,13 +134,13 @@ void extcl_cpu_wr_mem_VRC2and4(WORD address, BYTE value) {
 							vrc2and4.irq.prescaler = 0;
 							vrc2and4.irq.count = vrc2and4.irq.reload;
 						}
-						cpudata.irq.high &= ~EXT_IRQ;
+						nes.c.irq.high &= ~EXT_IRQ;
 						return;
 					case 3:
 						if (vrc2and4tmp.irq_repeated) {
 							vrc2and4.irq.enabled = vrc2and4.irq.acknowledge;
 						}
-						cpudata.irq.high &= ~EXT_IRQ;
+						nes.c.irq.high &= ~EXT_IRQ;
 						return;
 					default:
 						break;
@@ -194,8 +194,8 @@ void extcl_cpu_every_cycle_VRC2and4(void) {
 	}
 
 	vrc2and4.irq.count = vrc2and4.irq.reload;
-	cpudata.irq.delay = TRUE;
-	cpudata.irq.high |= EXT_IRQ;
+	nes.c.irq.delay = TRUE;
+	nes.c.irq.high |= EXT_IRQ;
 }
 
 void init_VRC2and4(BYTE type, WORD A0, WORD A1, BYTE irq_repeated, BYTE reset) {
@@ -224,7 +224,7 @@ void init_VRC2and4(BYTE type, WORD A0, WORD A1, BYTE irq_repeated, BYTE reset) {
 
 	vrc2and4.wram_protect = ((info.format == NES_2_0) && (info.mapper.submapper > 1));
 
-	cpudata.irq.high &= ~EXT_IRQ;
+	nes.c.irq.high &= ~EXT_IRQ;
 
 	vrc2and4tmp.type = type;
 	vrc2and4tmp.A0 = A0;

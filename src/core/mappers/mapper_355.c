@@ -252,9 +252,9 @@ uint8_t pic16c5x_rd(int port) {
 void pic16c5x_wr(int port, int val) {
 	if (port == 0) {
 		if (val & 0x1001) {
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 		} else {
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 	}
 }

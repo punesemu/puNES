@@ -113,7 +113,7 @@ void extcl_cpu_wr_mem_LZ93D50(WORD address, BYTE value) {
 				if (lz93d50.irq.enabled && !lz93d50.irq.count) {
 					lz93d50.irq.delay = 1;
 				} else {
-					cpudata.irq.high &= ~EXT_IRQ;
+					nes.c.irq.high &= ~EXT_IRQ;
 				}
 				return;
 			case 0x0B:
@@ -153,7 +153,7 @@ BYTE extcl_save_mapper_LZ93D50(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_LZ93D50(void) {
 	if (lz93d50.irq.delay && !(--lz93d50.irq.delay)) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 	if (lz93d50.irq.enabled) {
 		if (lz93d50.irq.count && !(--lz93d50.irq.count)) {

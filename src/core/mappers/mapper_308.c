@@ -53,7 +53,7 @@ void extcl_cpu_wr_mem_308(WORD address, BYTE value) {
 		case 0xF000:
 			m308.irq.enabled = FALSE;
 			m308.irq.l_counter = 0;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xF001 :
 			m308.irq.enabled = TRUE;
@@ -79,7 +79,7 @@ void extcl_cpu_every_cycle_308(void) {
 			m308.irq.h_counter--;
 		}
 		if (!m308.irq.h_counter && (m308.irq.l_counter < 0x800)) {
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 	}
 }

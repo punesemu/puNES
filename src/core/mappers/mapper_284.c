@@ -92,7 +92,7 @@ void extcl_cpu_wr_mem_284(WORD address, BYTE value) {
 				case 0x9:
 					m284.irq.counter = ((value & 0x7F) << 8) | m284.irq.latch;
 					m284.irq.enabled = value & 0x80;
-					cpudata.irq.high &= ~EXT_IRQ;
+					nes.c.irq.high &= ~EXT_IRQ;
 					break;
 				case 0xA:
 					m284.control = value & 0x0F;
@@ -180,7 +180,7 @@ BYTE extcl_rd_nmt_284(WORD address) {
 				bank = (address & 0x400) ? 1 : 0;
 				break;
 		}
-		return (ext_attrib[m284.extended_attributes[bank][ppudata.r2006.value & 0x3FF]]);
+		return (ext_attrib[m284.extended_attributes[bank][nes.p.r2006.value & 0x3FF]]);
 	}
 	return (nmt_rd(address));
 }
@@ -190,7 +190,7 @@ void extcl_cpu_every_cycle_284(void) {
 			m284.irq.counter--;
 			if (!m284.irq.counter) {
 				m284.irq.enabled = FALSE;
-				cpudata.irq.high |= EXT_IRQ;
+				nes.c.irq.high |= EXT_IRQ;
 			}
 		}
 	}

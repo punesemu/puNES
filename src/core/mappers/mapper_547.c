@@ -94,7 +94,7 @@ void extcl_cpu_wr_mem_547(WORD address, BYTE value) {
 				return;
 			case 0xD800:
 				m547.irq.enable = m547.irq.after;
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 				return;
 			case 0xD900:
 				m547.irq.after = value & 0x01;
@@ -102,7 +102,7 @@ void extcl_cpu_wr_mem_547(WORD address, BYTE value) {
 				if (m547.irq.enable) {
 					m547.irq.counter = m547.irq.latch;
 				}
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 				return;
 			case 0xDA00:
 				mirroring_fix_547();
@@ -169,13 +169,13 @@ void extcl_cpu_every_cycle_547(void) {
 		m547.irq.counter++;
 		if (!m547.irq.counter) {
 			m547.irq.counter = m547.irq.latch;
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 	}
 }
 BYTE extcl_rd_chr_547(WORD address) {
 	// controllo di trattare il background
-	if (((address & 0xFFF7) == ppudata.ppu.bck_adr)) {
+	if (((address & 0xFFF7) == nes.p.ppu.bck_adr)) {
 		if (m547.qt.byte & 0x40) {
 			if (address & 0x0008) {
 				return (m547.qt.byte & 0x80 ? 0xFF : 0x00);

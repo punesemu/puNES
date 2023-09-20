@@ -118,11 +118,11 @@ void extcl_cpu_wr_mem_019(WORD address, BYTE value) {
 			return;
 		case 0x5000:
 			m019.irq.count = (m019.irq.count & 0xFF00) | value;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0x5800:
 			m019.irq.count = (value << 8) | (m019.irq.count & 0x00FF);
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0x8000:
 		case 0x8800:
@@ -197,7 +197,7 @@ BYTE extcl_save_mapper_019(BYTE mode, BYTE slot, FILE *fp) {
 void extcl_cpu_every_cycle_019(void) {
 	if (m019.irq.delay) {
 		m019.irq.delay = FALSE;
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 	if (((m019.irq.count - 0x8000) < 0x7FFF) && (++m019.irq.count == 0xFFFF)) {
 		// vale sempre il solito discorso di un ciclo di delay

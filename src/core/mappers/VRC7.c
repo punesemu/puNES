@@ -92,7 +92,7 @@ void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
 		case 0xF000:
 			if (address & vrc7tmp.A0) {
 				vrc7.irq.enabled = vrc7.irq.acknowledge;
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 			} else {
 				vrc7.irq.acknowledge = value & 0x01;
 				vrc7.irq.enabled = value & 0x02;
@@ -101,7 +101,7 @@ void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
 					vrc7.irq.prescaler = 0;
 					vrc7.irq.count = vrc7.irq.reload;
 				}
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 			}
 			return;
 		default:
@@ -124,7 +124,7 @@ BYTE extcl_save_mapper_VRC7(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_VRC7(void) {
 	if (vrc7.irq.delay && !(--vrc7.irq.delay)) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 
 	if (!vrc7.irq.enabled) {
@@ -185,7 +185,7 @@ void init_VRC7(WORD A0, WORD A1, BYTE reset) {
 	vrc7.irq.delay = 0;
 	vrc7.irq.prescaler = 0;
 
-	cpudata.irq.high &= ~EXT_IRQ;
+	nes.c.irq.high &= ~EXT_IRQ;
 
 	opll_reset();
 

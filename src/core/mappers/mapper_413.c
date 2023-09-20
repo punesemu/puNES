@@ -78,7 +78,7 @@ void extcl_cpu_wr_mem_413(WORD address, BYTE value) {
 		case 0xB000:
 			irqA12.enable = (address & 0x1000) != 0;
 			if (!irqA12.enable) {
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 			}
 			break;
 		case 0xC000:
@@ -120,7 +120,7 @@ BYTE extcl_save_mapper_413(BYTE mode, BYTE slot, FILE *fp) {
 void extcl_irq_A12_clock_413(void) {
 	irqA12.counter = !irqA12.counter ? irqA12.latch : irqA12.counter - 1;
 	if (!irqA12.counter && irqA12.enable) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 }
 

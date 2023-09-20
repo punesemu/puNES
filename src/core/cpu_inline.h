@@ -40,21 +40,21 @@
 #include "tape_data_recorder.h"
 #include "memmap.h"
 
-#define mod_cycles_op(op, vl) cpudata.cpu.cycles op vl
+#define mod_cycles_op(op, vl) nes.c.cpu.cycles op vl
 #define r2006_during_rendering()\
-	if (!ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.frame_y > ppudata.ppu_sclines.vint) && (ppudata.ppu.screen_y < SCR_ROWS)) {\
+	if (!nes.p.ppu.vblank && nes.p.r2001.visible && (nes.p.ppu.frame_y > nes.p.ppu_sclines.vint) && (nes.p.ppu.screen_y < SCR_ROWS)) {\
 		_r2006_during_rendering()\
 	} else {\
-		ppudata.r2006.value += ppudata.r2000.r2006_inc;\
+		nes.p.r2006.value += nes.p.r2000.r2006_inc;\
 	}
 #define _r2006_during_rendering()\
 	r2006_inc()\
-	if ((ppudata.r2006.value & 0x1F) == 0x1F) {\
-		ppudata.r2006.value ^= 0x41F;\
+	if ((nes.p.r2006.value & 0x1F) == 0x1F) {\
+		nes.p.r2006.value ^= 0x41F;\
 	} else {\
-		ppudata.r2006.value++;\
+		nes.p.r2006.value++;\
 	}
-#define ppu_openbus_wr(bit) ppudata.ppu_openbus.bit = ppudata.ppu.frames
+#define ppu_openbus_wr(bit) nes.p.ppu_openbus.bit = nes.p.ppu.frames
 #define ppu_openbus_wr_all()\
 	ppu_openbus_wr(bit0);\
 	ppu_openbus_wr(bit1);\
@@ -65,8 +65,8 @@
 	ppu_openbus_wr(bit6);\
 	ppu_openbus_wr(bit7)
 #define ppu_openbus_rd(bit, mask)\
-	if ((ppudata.ppu.frames - ppudata.ppu_openbus.bit) > machine.ppu_openbus_frames) {\
-		ppudata.ppu.openbus &= (mask);\
+	if ((nes.p.ppu.frames - nes.p.ppu_openbus.bit) > machine.ppu_openbus_frames) {\
+		nes.p.ppu.openbus &= (mask);\
 	}
 #define ppu_openbus_rd_all()\
 	ppu_openbus_rd(bit0, 0x01);\
@@ -83,11 +83,11 @@
 		for (i = 0; i < (lng); i++) {\
 			if (!(lst).cheat[i].disabled && ((lst).cheat[i].address == (adr))) {\
 				if ((lst).cheat[i].enabled_compare) {\
-					if ((lst).cheat[i].compare == cpudata.cpu.openbus) {\
-						cpudata.cpu.openbus = (lst).cheat[i].replace;\
+					if ((lst).cheat[i].compare == nes.c.cpu.openbus) {\
+						nes.c.cpu.openbus = (lst).cheat[i].replace;\
 					}\
 				} else {\
-					cpudata.cpu.openbus = (lst).cheat[i].replace;\
+					nes.c.cpu.openbus = (lst).cheat[i].replace;\
 				}\
 			}\
 		}\
@@ -110,12 +110,12 @@ INLINE static void tick_hw(BYTE value);
 /* ------------------------------------ READ ROUTINE ------------------------------------------- */
 
 BYTE cpu_rd_mem_dbg(WORD address) {
-	BYTE cpu_openbus = cpudata.cpu.openbus;
+	BYTE cpu_openbus = nes.c.cpu.openbus;
 	BYTE read = 0;
 
 	info.disable_tick_hw = TRUE;
 	read = cpu_rd_mem(address, FALSE);
-	cpudata.cpu.openbus = cpu_openbus;
+	nes.c.cpu.openbus = cpu_openbus;
 	info.disable_tick_hw = FALSE;
 	return (read);
 }
@@ -123,10 +123,10 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 	if (info.cpu_rw_extern) {
 		if (nsf.enabled) {
 			nsf_rd_mem(address, made_tick);
-			return (cpudata.cpu.openbus);
+			return (nes.c.cpu.openbus);
 		} else if (fds.info.enabled) {
 			if (fds_rd_mem(address, made_tick)) {
-				return (cpudata.cpu.openbus);
+				return (nes.c.cpu.openbus);
 			}
 		}
 	} else if (address >= 0x8000) {
@@ -137,7 +137,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		// nella mapper 413 extcl_cpu_rd_mem e' utilizzato anche dal DMC
 		// (in apu.c : DMC.buffer = prgrom_rd(DMC.address) per leggere
 		// i dati dal miscrom.
-		cpudata.cpu.openbus = info.mapper.extend_rd ? extcl_cpu_rd_mem(address, cpudata.cpu.openbus) : prgrom_rd(address);
+		nes.c.cpu.openbus = info.mapper.extend_rd ? extcl_cpu_rd_mem(address, nes.c.cpu.openbus) : prgrom_rd(address);
 
 		/* cheat */
 		if (cfg->cheat_mode != NOCHEAT_MODE) {
@@ -148,7 +148,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			}
 		}
 
-		return (cpudata.cpu.openbus);
+		return (nes.c.cpu.openbus);
 	}
 	if (address <= 0x4017) {
 		/* Ram */
@@ -158,30 +158,30 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 				tick_hw(1);
 			}
 
-			cpudata.cpu.openbus = extcl_cpu_rd_ram ? extcl_cpu_rd_ram(address, cpudata.cpu.openbus) : ram_rd(address);
+			nes.c.cpu.openbus = extcl_cpu_rd_ram ? extcl_cpu_rd_ram(address, nes.c.cpu.openbus) : ram_rd(address);
 
 			/* cheat */
 			if (cfg->cheat_mode == CHEATSLIST_MODE) {
 				look_cheats_list(cheats_list, cheats_list.counter, (address & 0x7FF))
 			}
 
-			return (cpudata.cpu.openbus);
+			return (nes.c.cpu.openbus);
 		}
 		/* PPU */
 		if (address < 0x4000) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* leggo */
-			cpudata.cpu.openbus = ppu_rd_reg(address & 0x2007);
-			return (cpudata.cpu.openbus);
+			nes.c.cpu.openbus = ppu_rd_reg(address & 0x2007);
+			return (nes.c.cpu.openbus);
 		}
 		/* APU */
 		if (address <= 0x4015) {
 			/* leggo */
-			cpudata.cpu.openbus = apu_rd_reg(address);
+			nes.c.cpu.openbus = apu_rd_reg(address);
 			/* eseguo un tick hardware ed e' importante che sia fatto dopo */
 			tick_hw(1);
-			return (cpudata.cpu.openbus);
+			return (nes.c.cpu.openbus);
 		}
 		/* Controller port 1 */
 		if (address == 0x4016) {
@@ -189,8 +189,8 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* leggo dal controller */
-			cpudata.cpu.openbus = input_rd_reg[PORT1](cpudata.cpu.openbus, PORT1);
-			return (cpudata.cpu.openbus);
+			nes.c.cpu.openbus = input_rd_reg[PORT1](nes.c.cpu.openbus, PORT1);
+			return (nes.c.cpu.openbus);
 		}
 		/* Controller port 2 */
 		if (address == 0x4017) {
@@ -198,8 +198,8 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* leggo dal controller */
-			cpudata.cpu.openbus = input_rd_reg[PORT2](cpudata.cpu.openbus, PORT2);
-			return (cpudata.cpu.openbus);
+			nes.c.cpu.openbus = input_rd_reg[PORT2](nes.c.cpu.openbus, PORT2);
+			return (nes.c.cpu.openbus);
 		}
 	}
 	// WRam (normale ed extra (battery packed o meno)
@@ -217,20 +217,20 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 
-		cpudata.cpu.openbus = extcl_cpu_rd_mem ? extcl_cpu_rd_mem(address, cpudata.cpu.openbus) : wram_rd(address);
+		nes.c.cpu.openbus = extcl_cpu_rd_mem ? extcl_cpu_rd_mem(address, nes.c.cpu.openbus) : wram_rd(address);
 
 		/* cheat */
 		if (cfg->cheat_mode == CHEATSLIST_MODE) {
 			look_cheats_list(cheats_list, cheats_list.counter, (address & 0x1FFF))
 		}
 
-		return (cpudata.cpu.openbus);
+		return (nes.c.cpu.openbus);
 	}
 
 	/* eseguo un tick hardware */
 	tick_hw(1);
 	/* qualsiasi altra cosa */
-	return (cpudata.cpu.openbus);
+	return (nes.c.cpu.openbus);
 }
 INLINE static BYTE ppu_rd_reg(WORD address) {
 	BYTE value = 0;
@@ -239,14 +239,14 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 
 	if (address == 0x2002) {
 		/* Situazioni particolari --- */
-		if (!info.r2002_race_condition_disabled && !(ppudata.ppu.frame_y | cpudata.nmi.before)) {
+		if (!info.r2002_race_condition_disabled && !(nes.p.ppu.frame_y | nes.c.nmi.before)) {
 			/* situazione di contesa (race condition)
 			 *
 			 * se la lettura avviene esattamente all'inizio
 			 * del vblank allora il bit 7 verra' restituito
 			 * a 0.
 			 */
-			if (!ppudata.ppu.frame_x) {
+			if (!nes.p.ppu.frame_x) {
 				/*
 				 * Nota: quando e' abilitato questo controllo
 				 * la demo cuter.nes (Who's Cuter?) ha un problema
@@ -254,36 +254,36 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 				 * della demo e non dell'emulatore (confermato
 				 * dall'autore stesso della demo).
 				 */
-				ppudata.r2002.vblank = FALSE;
+				nes.p.r2002.vblank = FALSE;
 			}
 			/*
 			 * leggendo questo registro nei primi tre
 			 * cicli PPU del vblank, se presente, viene
 			 * disabilitato l'NMI pendente.
 			 */
-			cpudata.nmi.high = cpudata.nmi.delay = FALSE;
+			nes.c.nmi.high = nes.c.nmi.delay = FALSE;
 		}
-		if ((ppudata.ppu.frame_y == ppudata.ppu_sclines.vint) && !ppudata.ppu.frame_x) {
+		if ((nes.p.ppu.frame_y == nes.p.ppu_sclines.vint) && !nes.p.ppu.frame_x) {
 			/* situazione di contesa (race condition)
 			 *
 			 * se la lettura avviene esattamente alla fine
 			 * del vblank allora i bit 5 e 6 verranno restituiti
 			 * a 0.
 			 */
-			ppudata.r2002.sprite_overflow = ppudata.r2002.sprite0_hit = FALSE;
+			nes.p.r2002.sprite_overflow = nes.p.r2002.sprite0_hit = FALSE;
 		}
 		/* -------------------------- */
 
-		value = ppudata.r2002.vblank | ppudata.r2002.sprite0_hit | (ppudata.r2002.race.sprite_overflow ? 0 : ppudata.r2002.sprite_overflow);
+		value = nes.p.r2002.vblank | nes.p.r2002.sprite0_hit | (nes.p.r2002.race.sprite_overflow ? 0 : nes.p.r2002.sprite_overflow);
 		/* azzero il VBlank */
-		ppudata.r2002.vblank = FALSE;
+		nes.p.r2002.vblank = FALSE;
 		/*
 		 * azzero il bit toggle (1°/2° write flipflop
 		 * usato da $2005 e $2006)
 		 */
-		ppudata.r2002.toggle = 0;
+		nes.p.r2002.toggle = 0;
 		/* open bus */
-		value = ppudata.ppu.openbus = (value & 0xE0) | (ppudata.ppu.openbus & 0x1F);
+		value = nes.p.ppu.openbus = (value & 0xE0) | (nes.p.ppu.openbus & 0x1F);
 		ppu_openbus_wr(bit5);
 		ppu_openbus_wr(bit6);
 		ppu_openbus_wr(bit7);
@@ -296,25 +296,25 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 		return (value);
 	}
 	if (address == 0x2004) {
-		value = ppudata.oam.data[ppudata.r2003.value];
+		value = nes.p.oam.data[nes.p.r2003.value];
 
-		if (ppudata.ppu.vblank) {
-			if ((machine.type == PAL) && (ppudata.ppu.frame_y > 23)) {
-				value = ppudata.r2004.value;
+		if (nes.p.ppu.vblank) {
+			if ((machine.type == PAL) && (nes.p.ppu.frame_y > 23)) {
+				value = nes.p.r2004.value;
 			}
 		} else {
-			if (ppudata.r2001.visible && (ppudata.ppu.screen_y < SCR_ROWS)) {
-				value = ppudata.r2004.value;
+			if (nes.p.r2001.visible && (nes.p.ppu.screen_y < SCR_ROWS)) {
+				value = nes.p.r2004.value;
 			}
 		}
 
 		/* ppu open bus */
-		ppudata.ppu.openbus = value;
+		nes.p.ppu.openbus = value;
 		ppu_openbus_wr_all();
 		return (value);
 	}
 	if (address == 0x2007) {
-		WORD old_r2006 = ppudata.r2006.value;
+		WORD old_r2006 = nes.p.r2006.value;
 		BYTE repeat = 1;
 
 		/*
@@ -327,16 +327,16 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 
 		if (DMC.dma_cycle == 2) {
 			repeat = 3;
-		} else if (cpudata.cpu.double_rd) {
+		} else if (nes.c.cpu.double_rd) {
 			WORD random = (WORD)emu_irand(10);
 
-			value = ppu_rd_mem(ppudata.r2006.value - (ppudata.r2000.r2006_inc << 1));
+			value = ppu_rd_mem(nes.p.r2006.value - (nes.p.r2000.r2006_inc << 1));
 			if (random > 5) {
-				ppudata.r2007.value = ppu_rd_mem(ppudata.r2006.value);
+				nes.p.r2007.value = ppu_rd_mem(nes.p.r2006.value);
 				r2006_during_rendering()
 			}
 			/* ppu open bus */
-			ppudata.ppu.openbus = value;
+			nes.p.ppu.openbus = value;
 			ppu_openbus_wr_all();
 			return (value);
 		}
@@ -356,17 +356,17 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 			 * Sembra che il registro utilizzi un buffer interno
 			 * che ha questo ritardo nel leggere da $0000 - $3EFF.
 			 */
-			if ((ppudata.r2006.value & 0x3FFF) < 0x3F00) {
-				value = ppudata.r2007.value;
-				ppudata.r2007.value = ppu_rd_mem(ppudata.r2006.value);
+			if ((nes.p.r2006.value & 0x3FFF) < 0x3F00) {
+				value = nes.p.r2007.value;
+				nes.p.r2007.value = ppu_rd_mem(nes.p.r2006.value);
 				/* ppu open bus */
-				ppudata.ppu.openbus = value;
+				nes.p.ppu.openbus = value;
 				ppu_openbus_wr_all();
 			} else {
-				value = ppu_rd_mem(ppudata.r2006.value);
-				ppudata.r2007.value = ppu_rd_mem(ppudata.r2006.value & 0x2FFF);
+				value = ppu_rd_mem(nes.p.r2006.value);
+				nes.p.r2007.value = ppu_rd_mem(nes.p.r2006.value & 0x2FFF);
 				/* ppu open bus */
-				value = ppudata.ppu.openbus = (value & 0x3F) | (ppudata.ppu.openbus & 0xC0);
+				value = nes.p.ppu.openbus = (value & 0x3F) | (nes.p.ppu.openbus & 0xC0);
 				ppu_openbus_wr(bit0);
 				ppu_openbus_wr(bit1);
 				ppu_openbus_wr(bit2);
@@ -384,10 +384,10 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 				 * Taito (TC0690)
 				 * Tengen (Rambo)
 				 */
-				if (!ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.frame_y > ppudata.ppu_sclines.vint) && (ppudata.ppu.screen_y < SCR_ROWS)) {
-					extcl_update_r2006(ppudata.r2006.value & 0x2FFF, old_r2006);
+				if (!nes.p.ppu.vblank && nes.p.r2001.visible && (nes.p.ppu.frame_y > nes.p.ppu_sclines.vint) && (nes.p.ppu.screen_y < SCR_ROWS)) {
+					extcl_update_r2006(nes.p.r2006.value & 0x2FFF, old_r2006);
 				} else {
-					extcl_update_r2006(ppudata.r2006.value, old_r2006);
+					extcl_update_r2006(nes.p.r2006.value, old_r2006);
 				}
 			}
 		}
@@ -399,10 +399,10 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 #endif
 
 	/* ppu open bus */
-	return (ppudata.ppu.openbus);
+	return (nes.p.ppu.openbus);
 }
 INLINE static BYTE apu_rd_reg(WORD address) {
-	BYTE value = cpudata.cpu.openbus;
+	BYTE value = nes.c.cpu.openbus;
 
 	if (address == 0x4015) {
 		/* azzero la varibile d'uscita */
@@ -440,8 +440,8 @@ INLINE static BYTE apu_rd_reg(WORD address) {
 		 * rom interessate :
 		 * test_cpu_flag_concurrency.nes (by Bisqwit)
 		 */
-		if ((cpudata.irq.high & APU_IRQ) && cpudata.irq.before) {
-			cpudata.irq.high &= ~APU_IRQ;
+		if ((nes.c.irq.high & APU_IRQ) && nes.c.irq.before) {
+			nes.c.irq.high &= ~APU_IRQ;
 		}
 #if defined (DEBUG)
 	//} else {
@@ -470,11 +470,11 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 				if (nsf.routine.INT_NMI) {
 					nsf.routine.INT_NMI--;
 					if (nsf.state & NSF_CHANGE_SONG) {
-						cpudata.cpu.openbus = 0x00;
+						nes.c.cpu.openbus = 0x00;
 						snd_reset_buffers();
 						nsf_reset();
 					} else {
-						cpudata.cpu.openbus = 0x0E;
+						nes.c.cpu.openbus = 0x0E;
 					}
 					return;
 				}
@@ -482,7 +482,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 			case 0xFFFB:
 				if (nsf.routine.INT_NMI) {
 					nsf.routine.INT_NMI--;
-					cpudata.cpu.openbus = 0x25;
+					nes.c.cpu.openbus = 0x25;
 					snd_reset_buffers();
 					nsf_reset();
 					return;
@@ -491,7 +491,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 			case 0xFFFC:
 				if (nsf.routine.INT_RESET) {
 					nsf.routine.INT_RESET--;
-					cpudata.cpu.openbus = 0x08;
+					nes.c.cpu.openbus = 0x08;
 					snd_reset_buffers();
 					nsf_reset();
 					return;
@@ -500,7 +500,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 			case 0xFFFD:
 				if (nsf.routine.INT_RESET) {
 					nsf.routine.INT_RESET--;
-					cpudata.cpu.openbus = 0x25;
+					nes.c.cpu.openbus = 0x25;
 					snd_reset_buffers();
 					nsf_reset();
 					return;
@@ -509,7 +509,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 			default:
 				break;
 		}
-		cpudata.cpu.openbus = prgrom_rd(address);
+		nes.c.cpu.openbus = prgrom_rd(address);
 		return;
 	}
 	// Ram
@@ -517,12 +517,12 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 		if (made_tick) {
 			tick_hw(1);
 		}
-		cpudata.cpu.openbus = wram_rd(address);
+		nes.c.cpu.openbus = wram_rd(address);
 		return;
 	}
 	// APU
 	if (address == 0x4015) {
-		cpudata.cpu.openbus = apu_rd_reg(address);
+		nes.c.cpu.openbus = apu_rd_reg(address);
 		tick_hw(1);
 		return;
 	}
@@ -545,14 +545,14 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 	if (nsf.sound_chips.mmc5) {
 		if ((address >= 0x5C00) && (address <= 0x5FF5)) {
 			address &= 0x03FF;
-			cpudata.cpu.openbus = m005.ext_ram[address];
+			nes.c.cpu.openbus = m005.ext_ram[address];
 			return;
 		}
 		switch (address) {
 			case 0x5015:
 			case 0x5205:
 			case 0x5206:
-				cpudata.cpu.openbus = extcl_cpu_rd_mem_005(address, cpudata.cpu.openbus);
+				nes.c.cpu.openbus = extcl_cpu_rd_mem_005(address, nes.c.cpu.openbus);
 				return;
 			default:
 				break;
@@ -560,7 +560,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 	}
 	// Namco 163
 	if (nsf.sound_chips.namco163 && (address == 0x4800)) {
-		cpudata.cpu.openbus = extcl_cpu_rd_mem_019(address, cpudata.cpu.openbus);
+		nes.c.cpu.openbus = extcl_cpu_rd_mem_019(address, nes.c.cpu.openbus);
 		return;
 	}
 	// RAM
@@ -568,7 +568,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 		if (made_tick) {
 			tick_hw(1);
 		}
-		cpudata.cpu.openbus = ram_rd(address & 0x7FF);
+		nes.c.cpu.openbus = ram_rd(address & 0x7FF);
 		return;
 	}
 	// NSF Player Routine
@@ -588,7 +588,7 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 				break;
 		}
 
-		cpudata.cpu.openbus = nsf.routine.prg[address & NSF_R_MASK];
+		nes.c.cpu.openbus = nsf.routine.prg[address & NSF_R_MASK];
 		return;
 	}
 }
@@ -599,7 +599,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 		/* leggo */
-		cpudata.cpu.openbus = extcl_cpu_rd_mem(address, cpudata.cpu.openbus);
+		nes.c.cpu.openbus = extcl_cpu_rd_mem(address, nes.c.cpu.openbus);
 		return (TRUE);
 	}
 	if (address >= 0x6000) {
@@ -608,7 +608,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 		/* leggo */
-		cpudata.cpu.openbus = wram_rd(address);
+		nes.c.cpu.openbus = wram_rd(address);
 		return (TRUE);
 	}
 	if (fds.drive.enabled_dsk_reg && ((address >= 0x4030) && (address <= 0x4033))) {
@@ -631,41 +631,41 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			 * +--------- Disk Data Read/Write Enable (1 when disk is readable/writable)
 			 */
 			/* azzero */
-			cpudata.cpu.openbus = 0;
+			nes.c.cpu.openbus = 0;
 			/* bit 0 (timer irq) */
-			cpudata.cpu.openbus |= fds.drive.irq_timer_high;
+			nes.c.cpu.openbus |= fds.drive.irq_timer_high;
 			/* bit 1 (trasfer flag) */
-			cpudata.cpu.openbus |= fds.drive.irq_disk_high;
+			nes.c.cpu.openbus |= fds.drive.irq_disk_high;
 			/* bit 2 e 3 non settati */
 			/* TODO : bit 4 (CRC control : 0 passato, 1 errore) */
 			/* bit 5 non settato */
 			/* TODO : bit 6 (end of head) */
-			cpudata.cpu.openbus |= fds.drive.end_of_head;
+			nes.c.cpu.openbus |= fds.drive.end_of_head;
 			//fds.drive.end_of_head = FALSE;
 			/* TODO : bit 7 (disk data read/write enable (1 when disk is readable/writable) */
 			/* devo disabilitare sia il timer IRQ ... */
 			fds.drive.irq_timer_high = FALSE;
-			cpudata.irq.high &= ~FDS_TIMER_IRQ;
+			nes.c.irq.high &= ~FDS_TIMER_IRQ;
 			/* che il disk IRQ */
 			fds.drive.irq_disk_high = FALSE;
-			cpudata.irq.high &= ~FDS_DISK_IRQ;
+			nes.c.irq.high &= ~FDS_DISK_IRQ;
 #if !defined (RELEASE)
-			//printf("0x%04X 0x%02X %d\n", address, cpudata.cpu.openbus, cpudata.irq.high);
+			//printf("0x%04X 0x%02X %d\n", address, nes.c.cpu.openbus, nes.c.irq.high);
 #endif
 			return (TRUE);
 		}
 		if (address == 0x4031) {
-			cpudata.cpu.openbus = fds.drive.data_readed;
+			nes.c.cpu.openbus = fds.drive.data_readed;
 #if !defined (RELEASE)
 			/*
-			printf("0x%04X 0x%02X [0x%04X] 0x%04X %d %d %d\n", address, cpudata.cpu.openbus,
-				fds.side.data[fds.drive.disk_position], cpudata.cpu.opcode_PC, fds.drive.disk_position,
-				fds.info.sides_size[fds.drive.side_inserted], cpudata.irq.high);
+			printf("0x%04X 0x%02X [0x%04X] 0x%04X %d %d %d\n", address, nes.c.cpu.openbus,
+				fds.side.data[fds.drive.disk_position], nes.c.cpu.opcode_PC, fds.drive.disk_position,
+				fds.info.sides_size[fds.drive.side_inserted], nes.c.irq.high);
 			*/
 #endif
 			/* devo disabilitare il disk IRQ */
 			fds.drive.irq_disk_high = FALSE;
-			cpudata.irq.high &= ~FDS_DISK_IRQ;
+			nes.c.irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4032) {
@@ -678,16 +678,16 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			 *       |+-- Ready flag (0: Disk read; 1: Disk not ready)
 			 *       +--- Protect flag (0: Not write protected; 1: Write protected or disk ejected)
 			 */
-			cpudata.cpu.openbus &= ~0x07;
+			nes.c.cpu.openbus &= ~0x07;
 
 			if (fds.drive.disk_ejected) {
-				cpudata.cpu.openbus |= 0x07;
+				nes.c.cpu.openbus |= 0x07;
 			} else if (!fds.drive.scan) {
-				cpudata.cpu.openbus |= 0x02;
+				nes.c.cpu.openbus |= 0x02;
 			}
 
 			if (fds_auto_insert_enabled()) {
-				if ((ppudata.ppu.frames - fds.auto_insert.r4032.frames) < 100) {
+				if ((nes.p.ppu.frames - fds.auto_insert.r4032.frames) < 100) {
 					if ((++fds.auto_insert.r4032.checks > FDS_AUTOINSERT_R4032_MAX_CHECKS) &&
 						(fds.auto_insert.delay.side == -1) &&
 						(fds.auto_insert.delay.eject == -1) &&
@@ -704,7 +704,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 				} else {
 					fds.auto_insert.r4032.checks = 0;
 				}
-				fds.auto_insert.r4032.frames = ppudata.ppu.frames;
+				fds.auto_insert.r4032.frames = nes.p.ppu.frames;
 			}
 
 			return (TRUE);
@@ -719,7 +719,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			 * |            on the back of the ram card.
 			 * +--------- Battery status (0: Good; 1: Voltage is low).
 			 */
-			cpudata.cpu.openbus = fds.drive.data_external_connector & 0x80;
+			nes.c.cpu.openbus = fds.drive.data_external_connector & 0x80;
 			return (TRUE);
 		}
 	}
@@ -736,20 +736,20 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			 * ++-------- Returns 01 on read, likely from open bus
 			 */
 			// When writing is disabled ($4089.7), reading anywhere in 4040-407F returns the value at the current wave position.
-			cpudata.cpu.openbus = (fds.snd.wave.writable ? fds.snd.wave.data[address & 0x3F] : fds.snd.wave.data[fds.snd.wave.index]) |
-				(cpudata.cpu.openbus & 0xC0);
+			nes.c.cpu.openbus = (fds.snd.wave.writable ? fds.snd.wave.data[address & 0x3F] : fds.snd.wave.data[fds.snd.wave.index]) |
+				(nes.c.cpu.openbus & 0xC0);
 			return (TRUE);
 		}
 		if (address == 0x4090) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
-			cpudata.cpu.openbus = (fds.snd.volume.gain & 0x3F) | (cpudata.cpu.openbus & 0xC0);
+			nes.c.cpu.openbus = (fds.snd.volume.gain & 0x3F) | (nes.c.cpu.openbus & 0xC0);
 			return (TRUE);
 		}
 		if (address == 0x4092) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
-			cpudata.cpu.openbus = (fds.snd.sweep.gain & 0x3F) | (cpudata.cpu.openbus & 0xC0);
+			nes.c.cpu.openbus = (fds.snd.sweep.gain & 0x3F) | (nes.c.cpu.openbus & 0xC0);
 			return (TRUE);
 		}
 	}
@@ -956,15 +956,15 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * esecuzione dell'istruzione successiva pone le condizioni
 		 * per il secondo nmi che avverra' 25 scanline dopo.
 		 */
-		if (cpudata.nmi.high && (cpudata.nmi.cpu_cycles_from_last_nmi <= cpudata.cpu.base_opcode_cycles)) {
+		if (nes.c.nmi.high && (nes.c.nmi.cpu_cycles_from_last_nmi <= nes.c.cpu.base_opcode_cycles)) {
 #if !defined (RELEASE)
 			old_delay = TRUE;
 #endif
-			cpudata.nmi.delay = TRUE;
+			nes.c.nmi.delay = TRUE;
 		}
 
 		/* open bus */
-		ppudata.ppu.openbus = value;
+		nes.p.ppu.openbus = value;
 		ppu_openbus_wr_all();
 
 		/*
@@ -987,33 +987,33 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * del $2002 e' a 1 devo generare un NMI
 		 * ma dopo l'istruzione successiva.
 		 */
-		if (!ppudata.r2000.nmi_enable && (value & 0x80)) {
-			if (ppudata.r2002.vblank) {
-				cpudata.nmi.high = cpudata.nmi.delay = TRUE;
-				cpudata.nmi.frame_x = ppudata.ppu.frame_x;
+		if (!nes.p.r2000.nmi_enable && (value & 0x80)) {
+			if (nes.p.r2002.vblank) {
+				nes.c.nmi.high = nes.c.nmi.delay = TRUE;
+				nes.c.nmi.frame_x = nes.p.ppu.frame_x;
 			}
 			/*
 			 * se viene disabilitato l'NMI (bit 7 da 1 a 0)
 			 * all'inizio del vblank, l'NMI generato deve
 			 * essere disabilitato.
 			 */
-		} else if (ppudata.r2000.nmi_enable && !(value & 0x80)) {
-			if (!(ppudata.ppu.frame_y | cpudata.nmi.before)) {
-				cpudata.nmi.high = cpudata.nmi.delay = FALSE;
+		} else if (nes.p.r2000.nmi_enable && !(value & 0x80)) {
+			if (!(nes.p.ppu.frame_y | nes.c.nmi.before)) {
+				nes.c.nmi.high = nes.c.nmi.delay = FALSE;
 			}
 		}
 		/* valorizzo $2000 */
-		ppudata.r2000.value = value;
+		nes.p.r2000.value = value;
 		/* NMI abilitato */
-		ppudata.r2000.nmi_enable = value & 0x80;
+		nes.p.r2000.nmi_enable = value & 0x80;
 		/* VRAM address increment */
-		(value & 0x04) ? (ppudata.r2000.r2006_inc = 32) : (ppudata.r2000.r2006_inc = 1);
+		(value & 0x04) ? (nes.p.r2000.r2006_inc = 32) : (nes.p.r2000.r2006_inc = 1);
 		/* memorizzo la dimensione degli sprites */
-		(value & 0x20) ? (ppudata.r2000.size_spr = 16) : (ppudata.r2000.size_spr = 8);
+		(value & 0x20) ? (nes.p.r2000.size_spr = 16) : (nes.p.r2000.size_spr = 8);
 		/* Sprite pattern table address */
-		ppudata.r2000.spt_adr = (value & 0x08) << 9;
+		nes.p.r2000.spt_adr = (value & 0x08) << 9;
 		/* Background pattern table address */
-		ppudata.r2000.bpt_adr = (value & 0x10) << 8;
+		nes.p.r2000.bpt_adr = (value & 0x10) << 8;
 		/*
 		 * NN -> Name-table Bits. Vertical bit e Horizontal bit
 		 *
@@ -1021,26 +1021,26 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * bitsNT       %0000 00NN
 		 * tmp_vram      %---- NN-- ---- ----
 		 */
-		if ((ppudata.ppu.frame_x == 257) && (!ppudata.ppu.vblank && (!ppudata.r2001.spr_visible && ppudata.r2001.bck_visible) && (ppudata.ppu.screen_y < SCR_ROWS))) {
+		if ((nes.p.ppu.frame_x == 257) && (!nes.p.ppu.vblank && (!nes.p.r2001.spr_visible && nes.p.r2001.bck_visible) && (nes.p.ppu.screen_y < SCR_ROWS))) {
 			/*
 			 * gestione della condizione di race del $2000 al dot 257
 			 * https://forums.nesdev.com/viewtopic.php?f=3&t=18113
 			 * ppu_2000_glitch.nes e ppu_2100_glitch.nes
 			 */
-			ppudata.r2000.race.ctrl = TRUE;
-			ppudata.r2000.race.value = value;
-			ppudata.ppu.tmp_vram = (ppudata.ppu.tmp_vram & 0xF3FF) | ((cpudata.cpu.openbus & 0x03) << 10);
+			nes.p.r2000.race.ctrl = TRUE;
+			nes.p.r2000.race.value = value;
+			nes.p.ppu.tmp_vram = (nes.p.ppu.tmp_vram & 0xF3FF) | ((nes.c.cpu.openbus & 0x03) << 10);
 			r2006_end_scanline();
 		} else {
-			ppudata.ppu.tmp_vram = (ppudata.ppu.tmp_vram & 0xF3FF) | ((value & 0x03) << 10);
+			nes.p.ppu.tmp_vram = (nes.p.ppu.tmp_vram & 0xF3FF) | ((value & 0x03) << 10);
 		}
 
 		/*
 		 * per questo registro il tick_hw e' gia' stato effettuato, quindi
 		 * la PPU ha gia' fatto 3 cicli. Se sono nel range 253 - 255 del
-		 * ppudata.ppu.frame_x, il registro $2006 e' gia' stato aggiornato dalla PPU
+		 * nes.p.ppu.frame_x, il registro $2006 e' gia' stato aggiornato dalla PPU
 		 * (cosa che avviene nel ciclo 253). Questa variazione e' direttamente
-		 * controllata anche dal valore di ppudata.ppu.tmp_vram, quindi una scrittura
+		 * controllata anche dal valore di nes.p.ppu.tmp_vram, quindi una scrittura
 		 * in questo registro nella PPU che ha gia' fatto il ciclo 253, non
 		 * influenzerebbe il $2006 e questo e' sbagliato. Quindi lo ricalcolo io,
 		 * ma solo so sono in fase di rendering.
@@ -1049,45 +1049,45 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * (premuto il tasto start due volte ed avviato il gioco, una riga
 		 * piu' scura sfarfalla nello schermo).
 		 */
-		if (((ppudata.ppu.frame_x >= 253) && (ppudata.ppu.frame_x <= 255)) && (!ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.screen_y < SCR_ROWS))) {
+		if (((nes.p.ppu.frame_x >= 253) && (nes.p.ppu.frame_x <= 255)) && (!nes.p.ppu.vblank && nes.p.r2001.visible && (nes.p.ppu.screen_y < SCR_ROWS))) {
 			r2006_end_scanline();
 		}
 
 #if !defined (RELEASE)
-		if (old_delay && cpudata.nmi.high) {
-			log_warning(uL("cpu_inline;r2000 nmi high, set delay cpudata.nmi.before, %d %d %d - %d %d - 0x%02X %d"),
-				ppudata.ppu.frames, ppudata.ppu.frame_y, ppudata.ppu.frame_x, cpudata.nmi.frame_x, cpudata.nmi.cpu_cycles_from_last_nmi,
-				cpudata.cpu.opcode, cpudata.cpu.base_opcode_cycles);
+		if (old_delay && nes.c.nmi.high) {
+			log_warning(uL("cpu_inline;r2000 nmi high, set delay nes.c.nmi.before, %d %d %d - %d %d - 0x%02X %d"),
+				nes.p.ppu.frames, nes.p.ppu.frame_y, nes.p.ppu.frame_x, nes.c.nmi.frame_x, nes.c.nmi.cpu_cycles_from_last_nmi,
+				nes.c.cpu.opcode, nes.c.cpu.base_opcode_cycles);
 		}
 #endif
 		return;
 	}
 	if (address == 0x2001) {
 		/* open bus */
-		ppudata.ppu.openbus = value;
+		nes.p.ppu.openbus = value;
 		ppu_openbus_wr_all();
 
 		/*
-		 * se viene scritto esattamente nel ppudata.ppu.frame_x compreso tra (326 e 328)
-		 * e tra (334 e 336) azzerando l'ppudata.r2001.visible, inibirebbe il
+		 * se viene scritto esattamente nel nes.p.ppu.frame_x compreso tra (326 e 328)
+		 * e tra (334 e 336) azzerando l'nes.p.r2001.visible, inibirebbe il
 		 * "FETCH TILE 0 e 1 SCANLINE+1" non permettendo piu' l'incremento del
-		 * ppudata.r2006.value (glitch grafici in "Micro Machines (Camerica) [!].nes".
+		 * nes.p.r2006.value (glitch grafici in "Micro Machines (Camerica) [!].nes".
 		 */
-		if (((ppudata.ppu.frame_x >= 326) && (ppudata.ppu.frame_x <= 328)) ||
-			((ppudata.ppu.frame_x >= 334) && (ppudata.ppu.frame_x <= 336))) {
-			if (ppudata.r2001.visible) {
-				ppudata.r2001.race.ctrl = TRUE;
-				ppudata.r2001.race.value = ppudata.r2001.visible;
+		if (((nes.p.ppu.frame_x >= 326) && (nes.p.ppu.frame_x <= 328)) ||
+			((nes.p.ppu.frame_x >= 334) && (nes.p.ppu.frame_x <= 336))) {
+			if (nes.p.r2001.visible) {
+				nes.p.r2001.race.ctrl = TRUE;
+				nes.p.r2001.race.value = nes.p.r2001.visible;
 			}
-		} else if ((ppudata.ppu.frame_x >= 338) && (ppudata.ppu.frame_x <= 339)) {
+		} else if ((nes.p.ppu.frame_x >= 338) && (nes.p.ppu.frame_x <= 339)) {
 			if (machine.type == NTSC) {
-				ppudata.r2001.race.ctrl = TRUE;
-				ppudata.r2001.race.value = ppudata.r2001.visible;
+				nes.p.r2001.race.ctrl = TRUE;
+				nes.p.r2001.race.value = nes.p.r2001.visible;
 			}
 		}
 
 		/* valorizzo $2001 */
-		ppudata.r2001.value = value;
+		nes.p.r2001.value = value;
 		/*
 		 * con il bit 0 settato viene indicata
 		 * la modalita' scale di grigio per l'output.
@@ -1097,20 +1097,20 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * nmi_sync test ros (demo_ntsc.nes e demo_pal.nes).
 		 */
 		if (value & 0x01) {
-			ppudata.r2001.grayscale_bit.delay = 2 + 1;
+			nes.p.r2001.grayscale_bit.delay = 2 + 1;
 		} else {
-			ppudata.r2001.grayscale_bit.delay = 0;
-			ppudata.r2001.color_mode = PPU_CM_NORMAL;
+			nes.p.r2001.grayscale_bit.delay = 0;
+			nes.p.r2001.color_mode = PPU_CM_NORMAL;
 		}
 		/* visibilita' del background */
-		ppudata.r2001.bck_visible = value & 0x08;
+		nes.p.r2001.bck_visible = value & 0x08;
 		/* visibilita' degli sprites */
-		ppudata.r2001.spr_visible = value & 0x10;
+		nes.p.r2001.spr_visible = value & 0x10;
 		/* basta che uno dei due sia visibile */
-		ppudata.r2001.visible = ppudata.r2001.bck_visible | ppudata.r2001.spr_visible;
+		nes.p.r2001.visible = nes.p.r2001.bck_visible | nes.p.r2001.spr_visible;
 		/* questo per ora mi serve solo per l'A12 */
 		/* MMC3 and Taito*/
-		if (ppudata.r2001.visible) {
+		if (nes.p.r2001.visible) {
 			if (irqA12.present) {
 				irqA12.s_adr_old = irqA12.b_adr_old = 0;
 			}
@@ -1120,23 +1120,23 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			}
 		}
 		/* clipping del background */
-		ppudata.r2001.bck_clipping = value & 0x02;
+		nes.p.r2001.bck_clipping = value & 0x02;
 		/* clipping degli sprites */
-		ppudata.r2001.spr_clipping = value & 0x04;
+		nes.p.r2001.spr_clipping = value & 0x04;
 		/* salvo la maschera di enfatizzazione del colore */
-		ppudata.r2001.emphasis = (value << 1) & 0x1C0;
+		nes.p.r2001.emphasis = (value << 1) & 0x1C0;
 		return;
 	}
 	if (address == 0x2003) {
 		/* open bus */
-		ppudata.ppu.openbus = value;
+		nes.p.ppu.openbus = value;
 		ppu_openbus_wr_all();
-		ppudata.r2003.value = value;
+		nes.p.r2003.value = value;
 		return;
 	}
 	if (address == 0x2004) {
 		/* open bus */
-		ppudata.ppu.openbus = value;
+		nes.p.ppu.openbus = value;
 		ppu_openbus_wr_all();
 		/*
 		 * il 3° byte dei quattro che compongono un elemento
@@ -1151,22 +1151,22 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * |+------- Flip sprite horizontally
 		 * +-------- Flip sprite vertically
 		 */
-		if ((ppudata.r2003.value & 0x03) == 0x02) {
+		if ((nes.p.r2003.value & 0x03) == 0x02) {
 			value &= 0xE3;
 		}
-		ppudata.oam.data[ppudata.r2003.value++] = value;
+		nes.p.oam.data[nes.p.r2003.value++] = value;
 		return;
 	}
 	if (address == 0x2005) {
 		/* open bus */
-		ppudata.ppu.openbus = value;
+		nes.p.ppu.openbus = value;
 		ppu_openbus_wr_all();
 
 		/*
 		 * Bit totali manipolati con $2005:
 		 * tmpAdrVRAM %0yyy --YY YYYX XXXX
 		 */
-		if (!ppudata.r2002.toggle) {
+		if (!nes.p.r2002.toggle) {
 			/*
 			 * XXXXX -> Tile X
 			 * xxx   -> Fine X
@@ -1176,8 +1176,8 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			 * tmp_vram      %0--- ---- ---X XXXX
 			 * toggle = 1
 			 */
-			ppudata.ppu.fine_x = (value & 0x07);
-			ppudata.ppu.tmp_vram = (ppudata.ppu.tmp_vram & 0x7FE0) | (value >> 3);
+			nes.p.ppu.fine_x = (value & 0x07);
+			nes.p.ppu.tmp_vram = (nes.p.ppu.tmp_vram & 0x7FE0) | (value >> 3);
 		} else {
 			/*
 			 * YYYYY -> Tile Y
@@ -1187,22 +1187,22 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			 * tmpAdrVRAM    %0yyy --YY YYY- ----
 			 * toggle = 0
 			 */
-			ppudata.ppu.tmp_vram = (ppudata.ppu.tmp_vram & 0x0C1F) | ((value & 0xF8) << 2) | ((value & 0x07) << 12);
+			nes.p.ppu.tmp_vram = (nes.p.ppu.tmp_vram & 0x0C1F) | ((value & 0xF8) << 2) | ((value & 0x07) << 12);
 		}
 
-		ppudata.r2002.toggle = !ppudata.r2002.toggle;
+		nes.p.r2002.toggle = !nes.p.r2002.toggle;
 		return;
 	}
 	if (address == 0x2006) {
 		/* open bus */
-		ppudata.ppu.openbus = value;
+		nes.p.ppu.openbus = value;
 		ppu_openbus_wr_all();
 
 		/*
 		 * Bit totali manipolati con $2006:
 		 * tmpAdrVRAM  %00yy NNYY YYYX XXXX
 		 */
-		if (!ppudata.r2002.toggle) {
+		if (!nes.p.r2002.toggle) {
 			/*
 			 * YYYYY -> Tile Y
 			 * yyy   -> Fine Y
@@ -1212,7 +1212,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			 * tmpAdrVRAM    %00yy NNYY ---- ----
 			 * toggle = 1
 			 */
-			ppudata.ppu.tmp_vram = (ppudata.ppu.tmp_vram & 0x00FF) | ((value & 0x3F) << 8);
+			nes.p.ppu.tmp_vram = (nes.p.ppu.tmp_vram & 0x00FF) | ((value & 0x3F) << 8);
 		} else {
 			/*
 			 * YYYYY -> Tile Y
@@ -1227,26 +1227,26 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			// http://forums.nesdev.com/viewtopic.php?p=189463#p189463
 			// sembra che la seconda scrittura del $2006 avvenga con qualche
 			// ciclo ppu di ritardo.
-			ppudata.r2006.second_write.value = (ppudata.ppu.tmp_vram & 0x7F00) | value;
-			ppudata.r2006.second_write.delay = 3;
+			nes.p.r2006.second_write.value = (nes.p.ppu.tmp_vram & 0x7F00) | value;
+			nes.p.r2006.second_write.delay = 3;
 		}
 
-		ppudata.r2002.toggle = !ppudata.r2002.toggle;
+		nes.p.r2002.toggle = !nes.p.r2002.toggle;
 		return;
 	}
 	if (address == 0x2007) {
-		const WORD old_r2006 = ppudata.r2006.value;
+		const WORD old_r2006 = nes.p.r2006.value;
 
 		/* open bus */
-		ppudata.ppu.openbus = value;
+		nes.p.ppu.openbus = value;
 		ppu_openbus_wr_all();
 
-		if (!ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.frame_y > ppudata.ppu_sclines.vint) && (ppudata.ppu.screen_y < SCR_ROWS)) {
-			ppu_wr_mem(ppudata.ppu.rnd_adr, ppudata.ppu.rnd_adr & 0x00FF);
+		if (!nes.p.ppu.vblank && nes.p.r2001.visible && (nes.p.ppu.frame_y > nes.p.ppu_sclines.vint) && (nes.p.ppu.screen_y < SCR_ROWS)) {
+			ppu_wr_mem(nes.p.ppu.rnd_adr, nes.p.ppu.rnd_adr & 0x00FF);
 			_r2006_during_rendering()
 		} else {
-			ppu_wr_mem(ppudata.r2006.value, value);
-			ppudata.r2006.value += ppudata.r2000.r2006_inc;
+			ppu_wr_mem(nes.p.r2006.value, value);
+			nes.p.r2006.value += nes.p.r2000.r2006_inc;
 		}
 
 		if (extcl_update_r2006) {
@@ -1257,7 +1257,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			  * Taito (TC0690)
 			  * Tengen (Rambo)
 			  */
-			extcl_update_r2006(ppudata.r2006.value, old_r2006);
+			extcl_update_r2006(nes.p.r2006.value, old_r2006);
 		}
 		return;
 	}
@@ -1267,15 +1267,15 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * e' stato richiesto un IRQ, deve essere ritardato
 		 * all'istruzione successiva.
 		 */
-		if (cpudata.irq.high && !cpudata.cpu.cycles && !cpudata.irq.before) {
-			cpudata.irq.delay = TRUE;
+		if (nes.c.irq.high && !nes.c.cpu.cycles && !nes.c.irq.before) {
+			nes.c.irq.delay = TRUE;
 		}
 		/* DMA transfer source address */
 		address = value << 8;
 		{
 			WORD index = 0;
-			BYTE save_irq = cpudata.irq.high;
-			BYTE save_cpu_cycles = cpudata.cpu.cycles;
+			BYTE save_irq = nes.c.irq.high;
+			BYTE save_cpu_cycles = nes.c.cpu.cycles;
 
 			if (info.r4014_precise_timing_disabled) {
 				mod_cycles_op(+=, 512);
@@ -1293,7 +1293,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 				 * di un altro ciclo (quindi in totale diventano
 				 * 514).
 				 */
-				if ((machine.type == NTSC) && cpudata.cpu.odd_cycle) {
+				if ((machine.type == NTSC) && nes.c.cpu.odd_cycle) {
 					tick_hw(1);
 					mod_cycles_op(+=, 1);
 				}
@@ -1303,7 +1303,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 				 * ogni trasferimento prende due cicli, uno di
 				 * lettura (contenuto nel cpu_rd_mem e l'altro di
 				 * scrittura che faccio prima di valorizzare
-				 * l'ppudata.oam.
+				 * l'nes.p.oam.
 				 */
 				if (index == 253) {
 					cpu_rd_mem(address++, TRUE);
@@ -1318,18 +1318,18 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 					cpu_rd_mem(address++, TRUE);
 				}
 				tick_hw(1);
-				if ((ppudata.r2003.value & 0x03) == 0x02) {
-					cpudata.cpu.openbus &= 0xE3;
+				if ((nes.p.r2003.value & 0x03) == 0x02) {
+					nes.c.cpu.openbus &= 0xE3;
 				}
-				ppudata.oam.data[ppudata.r2003.value++] = cpudata.cpu.openbus;
+				nes.p.oam.data[nes.p.r2003.value++] = nes.c.cpu.openbus;
 			}
 			/*
 			 * se sopraggiunge un IRQ durante i 513/514 cicli
 			 * e non ci sono altri cicli dell'istruzione,
 			 * l'IRQ deve essere ritardato di una istruzione.
 			 */
-			if (cpudata.irq.high && !(save_irq | save_cpu_cycles)) {
-				cpudata.irq.delay = TRUE;
+			if (nes.c.irq.high && !(save_irq | save_cpu_cycles)) {
+				nes.c.irq.delay = TRUE;
 			}
 		}
 		return;
@@ -1341,7 +1341,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 #endif
 
 	/* open bus */
-	ppudata.ppu.openbus = value;
+	nes.p.ppu.openbus = value;
 	ppu_openbus_wr_all();
 }
 INLINE static void apu_wr_reg(WORD address, BYTE value) {
@@ -1477,7 +1477,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 					/* ...azzero l'interrupt flag del DMC */
 					r4015.value &= 0x7F;
 					/* disabilito l'IRQ del DMC */
-					cpudata.irq.high &= ~DMC_IRQ;
+					nes.c.irq.high &= ~DMC_IRQ;
 				}
 				DMC.loop = value & 0x40;
 				DMC.rate_index = value & 0x0F;
@@ -1513,9 +1513,9 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 				r4011.value = value;
 
 				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
-					ppudata.overclock.DMC_in_use = TRUE;
-					ppudata.ppu_sclines.total = machine.total_lines;
-					ppudata.ppu_sclines.vint = machine.vint_lines;
+					nes.p.overclock.DMC_in_use = TRUE;
+					nes.p.ppu_sclines.total = machine.total_lines;
+					nes.p.ppu_sclines.vint = machine.vint_lines;
 					ppu_overclock_control()
 				}
 				return;
@@ -1524,7 +1524,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 				DMC.address_start = (value << 6) | 0xC000;
 
 				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
-					ppudata.overclock.DMC_in_use = FALSE;
+					nes.p.overclock.DMC_in_use = FALSE;
 					ppu_overclock_update()
 					ppu_overclock_control()
 				}
@@ -1535,7 +1535,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 				DMC.length = (value << 4) | 0x01;
 
 				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
-					ppudata.overclock.DMC_in_use = FALSE;
+					nes.p.overclock.DMC_in_use = FALSE;
 					ppu_overclock_update()
 					ppu_overclock_control()
 				}
@@ -1565,7 +1565,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 			 */
 			r4015.value = (r4015.value & 0x60) | (value & 0x1F);
 			/* disabilito l'IRQ del DMC */
-			cpudata.irq.high &= ~DMC_IRQ;
+			nes.c.irq.high &= ~DMC_IRQ;
 			/*
 			 * quando il flag di abilitazione del length
 			 * counter di ogni canale e' a 0, il counter
@@ -1610,7 +1610,7 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 			 * in un ciclo pari, allora l'effettiva modifica
 			 * avverra' nel ciclo successivo.
 			 */
-			if (cpudata.cpu.odd_cycle) {
+			if (nes.c.cpu.odd_cycle) {
 				r4017.jitter.delay = TRUE;
 			} else {
 				r4017.jitter.delay = FALSE;
@@ -1816,8 +1816,8 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 			printf("0x%04X 0x%02X %d\n", address, value, fds.drive.enabled_dsk_reg);
 		} else {
 			if (fds.drive.disk_position)
-			printf("0x%04X 0x%02X 0x%04X %d 0x%02X %d\n", address, value, cpudata.cpu.opcode_PC,
-				fds.drive.disk_position - 1, fds.side.data[fds.drive.disk_position - 1], ppudata.ppu.frames);
+			printf("0x%04X 0x%02X 0x%04X %d 0x%02X %d\n", address, value, nes.c.cpu.opcode_PC,
+				fds.drive.disk_position - 1, fds.side.data[fds.drive.disk_position - 1], nes.p.ppu.frames);
 		}*/
 #endif
 
@@ -1831,7 +1831,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 			 */
 			fds.drive.irq_timer_reload = (fds.drive.irq_timer_reload & 0xFF00) | value;
 			fds.drive.irq_timer_high = FALSE;
-			cpudata.irq.high &= ~FDS_TIMER_IRQ;
+			nes.c.irq.high &= ~FDS_TIMER_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4021) {
@@ -1844,7 +1844,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 			 */
 			fds.drive.irq_timer_reload = (value << 8) | (fds.drive.irq_timer_reload & 0x00FF);
 			fds.drive.irq_timer_high = FALSE;
-			cpudata.irq.high &= ~FDS_TIMER_IRQ;
+			nes.c.irq.high &= ~FDS_TIMER_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4022) {
@@ -1865,7 +1865,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 				fds.drive.irq_timer_counter = fds.drive.irq_timer_reload;
 			} else {
 				fds.drive.irq_timer_high = FALSE;
-				cpudata.irq.high &= ~FDS_TIMER_IRQ;
+				nes.c.irq.high &= ~FDS_TIMER_IRQ;
 			}
 
 			return (TRUE);
@@ -1884,7 +1884,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 
 			if (!fds.drive.enabled_dsk_reg) {
 				fds.drive.irq_timer_high = FALSE;
-				cpudata.irq.high &= ~FDS_TIMER_IRQ;
+				nes.c.irq.high &= ~FDS_TIMER_IRQ;
 			}
 
 			return (TRUE);
@@ -1892,7 +1892,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 		if (address == 0x4024) {
 			fds.drive.data_to_write = value;
 			fds.drive.irq_disk_high = FALSE;
-			cpudata.irq.high &= ~FDS_DISK_IRQ;
+			nes.c.irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4025) {
@@ -1942,7 +1942,7 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 			fds.drive.irq_disk_enabled = value & 0x80;
 
 			fds.drive.irq_disk_high = FALSE;
-			cpudata.irq.high &= ~FDS_DISK_IRQ;
+			nes.c.irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4026) {
@@ -2073,24 +2073,24 @@ INLINE static void tick_hw(BYTE value) {
 	tick_hw_start:
 	if (nsf.enabled) {
 		if (nsf.made_tick) {
-			cpudata.cpu.opcode_cycle++;
-			cpudata.nmi.before = cpudata.nmi.high;
-			cpudata.irq.before = cpudata.irq.high;
+			nes.c.cpu.opcode_cycle++;
+			nes.c.nmi.before = nes.c.nmi.high;
+			nes.c.irq.before = nes.c.irq.high;
 			nsf_tick();
 
 			apu_tick(&value);
-			cpudata.cpu.odd_cycle = !cpudata.cpu.odd_cycle;
+			nes.c.cpu.odd_cycle = !nes.c.cpu.odd_cycle;
 			value--;
 			mod_cycles_op(-=, 1);
 		}
 		return;
 	}
-	cpudata.cpu.opcode_cycle++;
-	cpudata.nmi.before = cpudata.nmi.high;
-	cpudata.irq.before = cpudata.irq.high;
+	nes.c.cpu.opcode_cycle++;
+	nes.c.nmi.before = nes.c.nmi.high;
+	nes.c.irq.before = nes.c.irq.high;
 	ppu_tick();
 
-	if (!ppudata.overclock.in_extra_sclines) {
+	if (!nes.p.overclock.in_extra_sclines) {
 		apu_tick(&value);
 	}
 
@@ -2125,13 +2125,13 @@ INLINE static void tick_hw(BYTE value) {
 	if (extcl_cpu_every_cycle) {
 		extcl_cpu_every_cycle();
 	}
-	cpudata.cpu.odd_cycle = !cpudata.cpu.odd_cycle;
+	nes.c.cpu.odd_cycle = !nes.c.cpu.odd_cycle;
 	value--;
 	mod_cycles_op(-=, 1);
 
-	ppudata.r2000.race.ctrl = FALSE;
-	ppudata.r2001.race.ctrl = FALSE;
-	ppudata.r2006.race.ctrl = FALSE;
+	nes.p.r2000.race.ctrl = FALSE;
+	nes.p.r2001.race.ctrl = FALSE;
+	nes.p.r2006.race.ctrl = FALSE;
 
 	if (irqA12.present) {
 		irqA12.cycles++;

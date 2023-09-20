@@ -83,7 +83,7 @@ void extcl_cpu_wr_mem_FME7(WORD address, BYTE value) {
 					return;
 				case 0x0D:
 					fme7.irq.control = value;
-					cpudata.irq.high &= ~EXT_IRQ;
+					nes.c.irq.high &= ~EXT_IRQ;
 					return;
 				case 0x0E:
 					fme7.irq.count = (fme7.irq.count & 0xFF00) | value;
@@ -162,7 +162,7 @@ void extcl_cpu_every_cycle_FME7(void) {
 	}
 
 	if (!(--fme7.irq.count) && (fme7.irq.control & 0x01)) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 }
 void extcl_apu_tick_FME7(void) {

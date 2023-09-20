@@ -227,9 +227,9 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 		/* incremento gli hwtick da compiere */\
 		if (hwtick) { hwtick[0] += tick; }\
 		/* e naturalmente incremento anche quelli eseguiti dall'opcode */\
-		cpudata.cpu.cycles += tick;\
+		nes.c.cpu.cycles += tick;\
 		/* salvo a che ciclo dell'istruzione avviene il dma */\
-		DMC.dma_cycle = cpudata.cpu.opcode_cycle;\
+		DMC.dma_cycle = nes.c.cpu.opcode_cycle;\
 		/* il DMC non e' vuoto */\
 		DMC.empty = FALSE;\
 		if (++DMC.address > 0xFFFF) {\
@@ -241,7 +241,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 				DMC.address = DMC.address_start;\
 			} else if (DMC.irq_enabled) {\
 				r4015.value |= 0x80;\
-				cpudata.irq.high |= DMC_IRQ;\
+				nes.c.irq.high |= DMC_IRQ;\
 			}\
 		}\
 	}
@@ -271,7 +271,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 		/* azzero il bit 6 del $4015 */\
 		r4015.value &= 0xBF;\
 		/* disabilito l'IRQ del frame counter */\
-		cpudata.irq.high &= ~APU_IRQ;\
+		nes.c.irq.high &= ~APU_IRQ;\
 	}
 #define r4017_reset_frame()\
 	if (r4017.reset_frame_delay && (--r4017.reset_frame_delay == 0)) {\

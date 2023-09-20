@@ -207,8 +207,8 @@ void gui_overlay_info_append_msg_precompiled_with_alignment(BYTE alignment, int 
 
 	switch (index) {
 		case 4:
-			a1 = QString("%1").arg(cpudata.cpu.opcode, 2, 16, QLatin1Char('0')).toUpper();
-			a2 = QString("%1").arg((cpudata.cpu.PC.w - 1), 4, 16, QLatin1Char('0')).toUpper();
+			a1 = QString("%1").arg(nes.c.cpu.opcode, 2, 16, QLatin1Char('0')).toUpper();
+			a2 = QString("%1").arg((nes.c.cpu.PC.w - 1), 4, 16, QLatin1Char('0')).toUpper();
 			msg = msg.arg(a1, a2);
 			break;
 		case 7:
@@ -802,7 +802,7 @@ void overlayWidgetFrame::update_widget(void) {
 	}
 }
 BYTE overlayWidgetFrame::is_to_redraw(void) {
-	if (ppudata.ppu.frames != old.actual_frame) {
+	if (nes.p.ppu.frames != old.actual_frame) {
 		update_info();
 		setMinimumWidth((int)td.size().width());
 		return (TRUE);
@@ -810,7 +810,7 @@ BYTE overlayWidgetFrame::is_to_redraw(void) {
 	return (FALSE);
 }
 void overlayWidgetFrame::update_old_value(void) {
-	old.actual_frame = ppudata.ppu.frames;
+	old.actual_frame = nes.p.ppu.frames;
 }
 
 void overlayWidgetFrame::update_info(void) {

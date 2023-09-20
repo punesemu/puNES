@@ -671,10 +671,10 @@ void extcl_cpu_every_cycle_342(void) {
 	}
 }
 void extcl_ppu_000_to_34x_342(void) {
-	m342.mmc5.ppu.rendering = !ppudata.ppu.vblank && ppudata.r2001.visible && (ppudata.ppu.screen_y < SCR_ROWS);
-	m342.mmc5.ppu.scanline = ppudata.ppu.screen_y;
+	m342.mmc5.ppu.rendering = !nes.p.ppu.vblank && nes.p.r2001.visible && (nes.p.ppu.screen_y < SCR_ROWS);
+	m342.mmc5.ppu.scanline = nes.p.ppu.screen_y;
 
-	if ((ppudata.ppu.frame_x == 260) && m342.mmc5.ppu.rendering) {
+	if ((nes.p.ppu.frame_x == 260) && m342.mmc5.ppu.rendering) {
 		// for MMC3 and MMC3-based
 		if (m342.mmc3.irq.reload || !m342.mmc3.irq.counter) {
 			m342.mmc3.irq.counter = m342.mmc3.irq.latch;
@@ -683,21 +683,21 @@ void extcl_ppu_000_to_34x_342(void) {
 			m342.mmc3.irq.counter--;
 		}
 		if (!m342.mmc3.irq.counter && m342.mmc3.irq.enabled) {
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 
 		// for MMC5
-		if ((m342.mmc5.irq.line == (ppudata.ppu.screen_y + 1)) && m342.mmc5.irq.enabled) {
+		if ((m342.mmc5.irq.line == (nes.p.ppu.screen_y + 1)) && m342.mmc5.irq.enabled) {
 			m342.mmc5.irq.out = 1;
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 
 		// for mapper #163
 		if (m342.mapper == 6) {
-			if (ppudata.ppu.screen_y == 239) {
+			if (nes.p.ppu.screen_y == 239) {
 				m342.mapper163.latch = 0;
 				chr_fix_342();
-			} else if (ppudata.ppu.screen_y == 127) {
+			} else if (nes.p.ppu.screen_y == 127) {
 				m342.mapper163.latch = 1;
 				chr_fix_342();
 			}
@@ -1185,12 +1185,12 @@ INLINE static void mapper15_cpu_wr_low(WORD address, BYTE value) {
 			m342.chr.h = value;
 			break;
 		case 0x5203:
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			m342.mmc5.irq.out = 0;
 			m342.mmc5.irq.line = value;
 			break;
 		case 0x5204:
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			m342.mmc5.irq.out = 0;
 			m342.mmc5.irq.enabled = (value & 0x80) >> 7;
 			break;
@@ -1354,11 +1354,11 @@ INLINE static void mapper07_cpu_wr_high(WORD address, BYTE value) {
 			break;
 		case 28:
 			m342.mapper18.irq.value = m342.mapper18.irq.latch;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			break;
 		case 29:
 			m342.mapper18.irq.control = value & 0x0F;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			break;
 		case 30:
 			switch (value & 0x03) {
@@ -1457,14 +1457,14 @@ INLINE static void mapper13_cpu_wr_high(WORD address, BYTE value) {
 						m342.mmc3.irq.enabled = 1;
 					} else {
 						m342.mmc3.irq.enabled = 0;
-						cpudata.irq.high &= ~EXT_IRQ;
+						nes.c.irq.high &= ~EXT_IRQ;
 					}
 					break;
 				case 1:
 					break;
 				case 2:
 					m342.mmc3.irq.enabled = 0;
-					cpudata.irq.high &= ~EXT_IRQ;
+					nes.c.irq.high &= ~EXT_IRQ;
 					break;
 				case 3:
 					m342.mmc3.irq.enabled = 1;
@@ -1501,11 +1501,11 @@ INLINE static void mapper14_cpu_wr_high(WORD address, BYTE value) {
 			break;
 		case 11:
 			m342.mapper65.irq.enabled = value >> 7;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			break;
 		case 12:
 			m342.mapper65.irq.value = m342.mapper65.irq.latch;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			break;
 		case 13:
 			m342.mapper65.irq.latch = (m342.mapper65.irq.latch & 0x00FF) | (value << 8);
@@ -1648,11 +1648,11 @@ INLINE static void mapper19_cpu_wr_high(WORD address, BYTE value) {
 			if (m342.vrc3.irq.control & 0x02) {
 				m342.vrc3.irq.value = m342.vrc3.irq.latch;
 			}
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			break;
 		case 0x5000:
 			m342.vrc3.irq.control = (m342.vrc3.irq.control & 0xFD) | (m342.vrc3.irq.control & 0x01) << 1;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			break;
 		case 0x7000:
 			m342.prg.a = (m342.prg.a & 0xF1) | ((value & 0x07) << 1);
@@ -1748,7 +1748,7 @@ INLINE static void mapper20_cpu_wr_high(WORD address, BYTE value) {
 			break;
 		case 6:
 			m342.mmc3.irq.enabled = 0;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			break;
 		case 7:
 			m342.mmc3.irq.enabled = 1;
@@ -1843,7 +1843,7 @@ INLINE static void mapper22_cpu_wr_high(WORD address, BYTE value) {
 			break;
 		case 11:
 			m342.mmc3.irq.enabled = 0;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			break;
 	}
 }
@@ -1863,7 +1863,7 @@ INLINE static void mapper23_cpu_wr_high(WORD address, BYTE value) {
 			m342.mapper42.irq.enabled = (value & 0x02) >> 1;
 			if (!m342.mapper42.irq.enabled) {
 				m342.mapper42.irq.value = 0;
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 			}
 			break;
 	}
@@ -1966,11 +1966,11 @@ INLINE static void mapper24_cpu_wr_high(WORD address, BYTE value) {
 					m342.vrc4.irq.prescaler = 0;
 					m342.vrc4.irq.value = m342.vrc4.irq.latch;
 				}
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 				break;
 			case 3:
 				m342.vrc4.irq.control = (m342.vrc4.irq.control & 0xFD) | (m342.vrc4.irq.control & 0x01) << 1;
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 				break;
 		}
 	}
@@ -2027,7 +2027,7 @@ INLINE static void mapper25_cpu_wr_high(WORD address, BYTE value) {
 			case 13:
 				m342.mapper69.irq.counter_enabled = value >> 7;
 				m342.mapper69.irq.enabled = value & 0x01;
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 				break;
 			case 14:
 				m342.mapper69.irq.value = (m342.mapper69.irq.value & 0xFF00) | value;
@@ -2128,7 +2128,7 @@ INLINE static void mapper35_cpu_wr_high(WORD address, BYTE value) {
 		case 0x0200:
 			if (!(address & 0x0001)) {
 				m342.mapper83.irq.counter = (m342.mapper83.irq.counter & 0xFF00) | value;
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 			} else {
 				m342.mapper83.irq.enabled = m342.mapper83.irq.enabled_latch;
 				m342.mapper83.irq.counter = (m342.mapper83.irq.counter & 0x00FF) | (value << 8);
@@ -2219,7 +2219,7 @@ INLINE static void mapper36_cpu_wr_high(WORD address, BYTE value) {
 		}
 	} else {
 		// Interrupt Acknowledge ($8000)
-		cpudata.irq.high &= ~EXT_IRQ;
+		nes.c.irq.high &= ~EXT_IRQ;
 	}
 }
 INLINE static void mapper37_cpu_wr_high(BYTE value) {
@@ -2256,7 +2256,7 @@ INLINE static BYTE mapper15_cpu_rd(WORD address, BYTE openbus) {
 			(!m342.mmc5.ppu.rendering || ((m342.mmc5.ppu.scanline + 1) >= 241) ? 0 : 0x40);
 
 		m342.mmc5.irq.out = 0;
-		cpudata.irq.high &= ~EXT_IRQ;
+		nes.c.irq.high &= ~EXT_IRQ;
 		return (value);
 	}
 	return (openbus);
@@ -2289,7 +2289,7 @@ INLINE static void mapper07_cpu_every_cycle(void) {
 			carry = (carry >> 4) & 0x01;
 		}
 		if (carry) {
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 	}
 }
@@ -2299,7 +2299,7 @@ INLINE static void mapper14_cpu_every_cycle(void) {
 		if (m342.mapper65.irq.value != 0) {
 			m342.mapper65.irq.value--;
 			if (!m342.mapper65.irq.value) {
-				cpudata.irq.high |= EXT_IRQ;
+				nes.c.irq.high |= EXT_IRQ;
 			}
 		}
 	}
@@ -2311,13 +2311,13 @@ INLINE static void mapper19_cpu_every_cycle(void) {
 			m342.vrc3.irq.value = (m342.vrc3.irq.value & 0xFF00) | ((m342.vrc3.irq.value + 1) & 0xFF);
 			if ((m342.vrc3.irq.value & 0xFF) == 0) {
 				m342.vrc3.irq.value = (m342.vrc3.irq.value & 0xFF00) | (m342.vrc3.irq.latch & 0xFF);
-				cpudata.irq.high |= EXT_IRQ;
+				nes.c.irq.high |= EXT_IRQ;
 			}
 		} else { // 16-bit
 			m342.vrc3.irq.value += 1;
 			if (m342.vrc3.irq.value == 0) {
 				m342.vrc3.irq.value = m342.vrc3.irq.latch;
-				cpudata.irq.high |= EXT_IRQ;
+				nes.c.irq.high |= EXT_IRQ;
 			}
 		}
 	}
@@ -2330,9 +2330,9 @@ INLINE static void mapper23_cpu_every_cycle(void) {
 			m342.mapper42.irq.value = 0;
 		}
 		if (((m342.mapper42.irq.value >> 13) & 0x03) == 0x03) {
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		} else {
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 		}
 	}
 }
@@ -2343,7 +2343,7 @@ INLINE static void mapper24_cpu_every_cycle(void) {
 			m342.vrc4.irq.value++;
 			if (m342.vrc4.irq.value == 0) {
 				m342.vrc4.irq.value = m342.vrc4.irq.latch;
-				cpudata.irq.high |= EXT_IRQ;
+				nes.c.irq.high |= EXT_IRQ;
 			}
 		} else {
 			m342.vrc4.irq.prescaler++;
@@ -2357,7 +2357,7 @@ INLINE static void mapper24_cpu_every_cycle(void) {
 				m342.vrc4.irq.value++;
 				if (m342.vrc4.irq.value == 0) {
 					m342.vrc4.irq.value = m342.vrc4.irq.latch;
-					cpudata.irq.high |= EXT_IRQ;
+					nes.c.irq.high |= EXT_IRQ;
 				}
 			}
 		}
@@ -2368,7 +2368,7 @@ INLINE static void mapper25_cpu_every_cycle(void) {
 	if (m342.mapper69.irq.counter_enabled) {
 		m342.mapper69.irq.value--;
 		if (m342.mapper69.irq.value == 0xFFFF) {
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 	}
 }
@@ -2376,7 +2376,7 @@ INLINE static void mapper35_cpu_every_cycle(void) {
 	// Mapper #83 - Cony/Yoko
 	if (m342.mapper83.irq.enabled) {
 		if (m342.mapper83.irq.counter == 0) {
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 		m342.mapper83.irq.counter--;
 	}
@@ -2386,7 +2386,7 @@ INLINE static void mapper36_cpu_every_cycle(void) {
 	if (m342.mapper67.irq.enabled) {
 		m342.mapper67.irq.counter--;
 		if (m342.mapper67.irq.counter == 0xFFFF) {
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 			m342.mapper67.irq.enabled = 0;
 		}
 	}

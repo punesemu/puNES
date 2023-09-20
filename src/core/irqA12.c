@@ -37,7 +37,7 @@ void irqA12_IO(WORD value, WORD value_old) {
 					irqA12.counter--;
 				}
 				if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {
-					cpudata.irq.high |= EXT_IRQ;
+					nes.c.irq.high |= EXT_IRQ;
 				}
 				irqA12.save_counter = irqA12.counter;
 			} else {
@@ -55,23 +55,23 @@ void irqA12_IO(WORD value, WORD value_old) {
 void irqA12_BS(void) {
 	BYTE n_spr;
 
-	if (irqA12.a12BS || ((ppudata.ppu.frame_x & 0x0007) != 0x0003)) {
+	if (irqA12.a12BS || ((nes.p.ppu.frame_x & 0x0007) != 0x0003)) {
 		return;
 	}
 
-	n_spr = (ppudata.ppu.frame_x & 0x0038) >> 3;
+	n_spr = (nes.p.ppu.frame_x & 0x0038) >> 3;
 
 	if (!n_spr) {
-		irqA12.s_adr_old = ppudata.ppu.bck_adr;
+		irqA12.s_adr_old = nes.p.ppu.bck_adr;
 	}
 
-	if ((!ppudata.spr_ev.count_plus) && (ppudata.r2000.size_spr == 16)) {
-		ppudata.ppu.spr_adr = 0x1000;
+	if ((!nes.p.spr_ev.count_plus) && (nes.p.r2000.size_spr == 16)) {
+		nes.p.ppu.spr_adr = 0x1000;
 	} else {
 		ppu_spr_adr(n_spr)
 	}
 
-	if (!(irqA12.s_adr_old & 0x1000) && (ppudata.ppu.spr_adr & 0x1000)) {
+	if (!(irqA12.s_adr_old & 0x1000) && (nes.p.ppu.spr_adr & 0x1000)) {
 		if (!extcl_irq_A12_clock) {
 			irqA12_clock()
 		} else {
@@ -85,21 +85,21 @@ void irqA12_BS(void) {
 		}
 		irqA12.a12BS = TRUE;
 	}
-	irqA12.s_adr_old = ppudata.ppu.spr_adr;
+	irqA12.s_adr_old = nes.p.ppu.spr_adr;
 }
 void irqA12_SB(void) {
-	if (irqA12.a12SB || ((ppudata.ppu.frame_x & 0x0007) != 0x0003)) {
+	if (irqA12.a12SB || ((nes.p.ppu.frame_x & 0x0007) != 0x0003)) {
 		return;
 	}
 
-	if (ppudata.ppu.frame_x == 323) {
+	if (nes.p.ppu.frame_x == 323) {
 		ppu_spr_adr(7)
-		irqA12.b_adr_old = ppudata.ppu.spr_adr;
+		irqA12.b_adr_old = nes.p.ppu.spr_adr;
 	}
 
-	ppu_bck_adr(ppudata.r2000.bpt_adr, ppudata.r2006.value);
+	ppu_bck_adr(nes.p.r2000.bpt_adr, nes.p.r2006.value);
 
-	if (!(irqA12.b_adr_old & 0x1000) && (ppudata.ppu.bck_adr & 0x1000)) {
+	if (!(irqA12.b_adr_old & 0x1000) && (nes.p.ppu.bck_adr & 0x1000)) {
 		if (!extcl_irq_A12_clock) {
 			irqA12_clock()
 		} else {
@@ -113,14 +113,14 @@ void irqA12_SB(void) {
 		}
 		irqA12.a12SB = TRUE;
 	}
-	irqA12.b_adr_old = ppudata.ppu.bck_adr;
+	irqA12.b_adr_old = nes.p.ppu.bck_adr;
 }
 void irqA12_RS(void) {
-	if (ppudata.ppu.frame_x == 256) {
+	if (nes.p.ppu.frame_x == 256) {
 		irqA12.a12BS = FALSE;
 		return;
 	}
-	if (ppudata.ppu.frame_x == 323) {
+	if (nes.p.ppu.frame_x == 323) {
 		irqA12.a12SB = FALSE;
 		return;
 	}

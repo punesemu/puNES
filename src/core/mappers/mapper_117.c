@@ -110,7 +110,7 @@ void extcl_cpu_wr_mem_117(WORD address, BYTE value) {
 					m117.irq.enable = TRUE;
 					break;
 			}
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0xD000:
 			m117.mirroring = value;
@@ -136,37 +136,37 @@ BYTE extcl_save_mapper_117(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_ppu_000_to_255_117(void) {
-	if (ppudata.r2001.visible) {
+	if (nes.p.r2001.visible) {
 		extcl_ppu_320_to_34x_117();
 	}
 }
 void extcl_ppu_256_to_319_117(void) {
-	if ((ppudata.ppu.frame_x & 0x0007) != 0x0003) {
+	if ((nes.p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if ((!ppudata.spr_ev.count_plus || (ppudata.spr_ev.tmp_spr_plus == ppudata.spr_ev.count_plus)) && (ppudata.r2000.size_spr == 16)) {
-		ppudata.ppu.spr_adr = ppudata.r2000.spt_adr;
+	if ((!nes.p.spr_ev.count_plus || (nes.p.spr_ev.tmp_spr_plus == nes.p.spr_ev.count_plus)) && (nes.p.r2000.size_spr == 16)) {
+		nes.p.ppu.spr_adr = nes.p.r2000.spt_adr;
 	} else {
-		ppu_spr_adr((ppudata.ppu.frame_x & 0x0038) >> 3);
+		ppu_spr_adr((nes.p.ppu.frame_x & 0x0038) >> 3);
 	}
 
-	if ((ppudata.ppu.spr_adr & 0x1000) > (ppudata.ppu.bck_adr & 0x1000)) {
+	if ((nes.p.ppu.spr_adr & 0x1000) > (nes.p.ppu.bck_adr & 0x1000)) {
 		irq_clock_117();
 	}
 }
 void extcl_ppu_320_to_34x_117(void) {
-	if ((ppudata.ppu.frame_x & 0x0007) != 0x0003) {
+	if ((nes.p.ppu.frame_x & 0x0007) != 0x0003) {
 		return;
 	}
 
-	if (ppudata.ppu.frame_x == 323) {
+	if (nes.p.ppu.frame_x == 323) {
 		ppu_spr_adr(7);
 	}
 
-	ppu_bck_adr(ppudata.r2000.bpt_adr, ppudata.r2006.value);
+	ppu_bck_adr(nes.p.r2000.bpt_adr, nes.p.r2006.value);
 
-	if ((ppudata.ppu.bck_adr & 0x1000) > (ppudata.ppu.spr_adr & 0x1000)) {
+	if ((nes.p.ppu.bck_adr & 0x1000) > (nes.p.ppu.spr_adr & 0x1000)) {
 		irq_clock_117();
 	}
 }
@@ -180,7 +180,7 @@ void extcl_cpu_every_cycle_117(void) {
 		m117.irq.a12_filter--;
 	}
 	if (m117.irq.enable && !(m117.irq.mode & 0x02) && m117.irq.counter.w[0] && !--m117.irq.counter.w[0]){
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 }
 
@@ -229,7 +229,7 @@ INLINE static void irq_clock_117(void) {
 				m117.irq.counter.b[0]--;
 			}
 			if (!m117.irq.counter.b[0] && m117.irq.enable) {
-				cpudata.irq.high |= EXT_IRQ;
+				nes.c.irq.high |= EXT_IRQ;
 			}
 			m117.irq.reload = FALSE;
 		}

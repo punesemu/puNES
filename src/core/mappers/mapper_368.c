@@ -62,7 +62,7 @@ void extcl_cpu_wr_mem_368(WORD address, BYTE value) {
 				m368.irq.enable = value & 0x01;
 				if (!m368.irq.enable) {
 					m368.irq.counter = 0;
-					cpudata.irq.high &= ~EXT_IRQ;
+					nes.c.irq.high &= ~EXT_IRQ;
 				}
 				break;
 			default:
@@ -82,7 +82,7 @@ void extcl_cpu_every_cycle_368(void) {
 	if (m368.irq.enable) {
 		m368.irq.counter = (m368.irq.counter + 1) & 0x0FFF;
 		if (!m368.irq.counter) {
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 	}
 }

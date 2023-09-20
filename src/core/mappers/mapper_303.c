@@ -60,11 +60,11 @@ void extcl_cpu_wr_mem_303(WORD address, BYTE value) {
 			prg_fix_303();
 			return;
 		} else if (address == 0x4020) {
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			m303.irq.count = (m303.irq.count & 0xFF00) | value;
 			return;
 		} else if (address == 0x4021) {
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 			m303.irq.count = (value << 8) | (m303.irq.count & 0x00FF);
 			m303.irq.active = 1;
 			return;
@@ -77,8 +77,8 @@ void extcl_cpu_wr_mem_303(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_303(WORD address, UNUSED(BYTE openbus)) {
 	if (address == 0x4030) {
-		openbus = (cpudata.irq.high & EXT_IRQ) ? 1 : 0;
-		cpudata.irq.high &= ~EXT_IRQ;
+		openbus = (nes.c.irq.high & EXT_IRQ) ? 1 : 0;
+		nes.c.irq.high &= ~EXT_IRQ;
 	}
 	return (wram_rd(address));
 }
@@ -93,8 +93,8 @@ void extcl_cpu_every_cycle_303(void) {
 	if (m303.irq.active) {
 		if (--m303.irq.count == 0) {
 			m303.irq.active = 0;
-			cpudata.irq.delay = TRUE;
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.delay = TRUE;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 	}
 }

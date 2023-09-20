@@ -21,11 +21,11 @@
 _irql2f irql2f;
 
 void irql2f_tick(void) {
-	if (irql2f.frame_x != ppudata.ppu.frame_x) {
+	if (irql2f.frame_x != nes.p.ppu.frame_x) {
 		return;
 	}
 
-	if (ppudata.ppu.screen_y == (SCR_ROWS - 1)) {
+	if (nes.p.ppu.screen_y == (SCR_ROWS - 1)) {
 		irql2f.in_frame = FALSE;
 		return;
 	}
@@ -35,7 +35,7 @@ void irql2f_tick(void) {
 		irql2f.counter = 0;
 		irql2f.pending = FALSE;
 		// disabilito l'IRQ dell'MMC5
-		cpudata.irq.high &= ~EXT_IRQ;
+		nes.c.irq.high &= ~EXT_IRQ;
 		return;
 	}
 	if (++irql2f.counter == irql2f.scanline) {

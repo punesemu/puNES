@@ -157,7 +157,7 @@ BYTE fds_load_rom(void) {
 	}
 
 	// inserisco il primo
-	fds.info.frame_insert = ppudata.ppu.frames;
+	fds.info.frame_insert = nes.p.ppu.frames;
 	fds.info.bios_first_run = !cfg->fds_disk1sideA_at_reset;
 	fds_disk_op(cfg->fds_disk1sideA_at_reset ? FDS_DISK_SELECT_AND_INSERT : FDS_DISK_SELECT, 0, FALSE);
 
@@ -470,8 +470,8 @@ fds_disk_op_start:
 	}
 
 	if ((info.reset != CHANGE_ROM) && (type >= FDS_DISK_SELECT)) {
-		if (fds.info.frame_insert != ppudata.ppu.frames) {
-			fds.info.frame_insert = ppudata.ppu.frames;
+		if (fds.info.frame_insert != nes.p.ppu.frames) {
+			fds.info.frame_insert = nes.p.ppu.frames;
 			fds_info_side(side_to_insert);
 		}
 	}

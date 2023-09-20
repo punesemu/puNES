@@ -70,7 +70,7 @@ void extcl_cpu_wr_mem_357(WORD address, BYTE value) {
 		if ((address & 0xF1FF) == 0x4122) {
 			m357.irq.enable = value & 0x01;
 			m357.irq.counter = 0;
-			cpudata.irq.high &= ~EXT_IRQ;
+			nes.c.irq.high &= ~EXT_IRQ;
 		}
 	}
 }
@@ -85,7 +85,7 @@ void extcl_cpu_every_cycle_357(void) {
 		m357.irq.counter++;
 		if (m357.irq.counter == 0x1000) {
 			m357.irq.counter = 0;
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 	}
 }

@@ -254,7 +254,7 @@ void extcl_cpu_wr_mem_005(WORD address, BYTE value) {
 					return;
 				}
 				irql2f.enable = FALSE;
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 				return;
 			case 0x5205:
 				m005.factor[0] = value;
@@ -301,7 +301,7 @@ BYTE extcl_cpu_rd_mem_005(WORD address, UNUSED(BYTE openbus)) {
 				value = irql2f.pending | irql2f.in_frame;
 				irql2f.pending = FALSE;
 				// disabilito l'IRQ del MMC5
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 				return (value);
 			case 0x5205:
 				return ((WORD)(m005.factor[0] * m005.factor[1]) & 0x00FF);
@@ -310,7 +310,7 @@ BYTE extcl_cpu_rd_mem_005(WORD address, UNUSED(BYTE openbus)) {
 			case 0x5209:
 				value = (m005.timer_irq ? 0x80 : 0x00);
 				m005.timer_irq = FALSE;
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 				return (value);
 			default:
 				return (wram_rd(address));
@@ -361,11 +361,11 @@ BYTE extcl_save_mapper_005(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_ppu_256_to_319_005(void) {
-	if (ppudata.ppu.frame_x != 256) {
+	if (nes.p.ppu.frame_x != 256) {
 		return;
 	};
 
-	if ((ppudata.r2000.size_spr == 8) || ppudata.r2001.visible) {
+	if ((nes.p.r2000.size_spr == 8) || nes.p.r2001.visible) {
 		chr_s();
 	} else {
 		if (m005.chr_last < 8) {
@@ -378,13 +378,13 @@ void extcl_ppu_256_to_319_005(void) {
 void extcl_ppu_320_to_34x_005(void) {
 	irql2f_tick();
 
-	if (ppudata.ppu.frame_x != 320) {
+	if (nes.p.ppu.frame_x != 320) {
 		return;
 	};
 
 	if (m005.split) {
 		m005.split_x = 0x1F;
-		if (ppudata.ppu.screen_y == SCR_ROWS - 1) {
+		if (nes.p.ppu.screen_y == SCR_ROWS - 1) {
 			m005.split_y = m005.split_scrl - 1;
 		} else {
 			if (m005.split_y < 239) {
@@ -395,9 +395,9 @@ void extcl_ppu_320_to_34x_005(void) {
 		}
 	}
 
-	if (ppudata.r2000.size_spr == 8) {
+	if (nes.p.r2000.size_spr == 8) {
 		chr_s();
-	} else if (ppudata.r2001.visible) {
+	} else if (nes.p.r2001.visible) {
 		chr_b();
 	} else  {
 		if (m005.chr_last < 8) {
@@ -416,7 +416,7 @@ void extcl_rd_r2007_005(void) {
 	// reads from $2007 during vblank or forced blank are treated as sprite accesses
 	// (using bank set A) if the most recently written register was $5120-5127; and treated as
 	// BG accesses (using bank set B) if the most recently written register was $5128-512B
-	if (ppudata.r2000.size_spr == 8) {
+	if (nes.p.r2000.size_spr == 8) {
 		chr_s();
 	} else {
 		if (m005.chr_last < 8) {
@@ -434,7 +434,7 @@ void extcl_after_rd_chr_005(UNUSED(WORD address)) {
 }
 BYTE extcl_rd_chr_005(WORD address) {
 	// se non sto trattando il background esco
-	if ((address & 0xFFF7) != ppudata.ppu.bck_adr) {
+	if ((address & 0xFFF7) != nes.p.ppu.bck_adr) {
 		return (chr_rd(address));
 	}
 	// sono nella regione di split?
@@ -446,7 +446,7 @@ BYTE extcl_rd_chr_005(WORD address) {
 		return (chr_rd(address));
 	}
 	{
-		WORD value = chrrom_control_bank(S4K, (m005.chr_high | (m005.ext_ram[ppudata.r2006.value & 0x03FF] & 0x3F)));
+		WORD value = chrrom_control_bank(S4K, (m005.chr_high | (m005.ext_ram[nes.p.r2006.value & 0x03FF] & 0x3F)));
 
 		return (chrrom_byte(((value << 12) | (address & 0x0FFF))));
 	}
@@ -479,19 +479,19 @@ BYTE extcl_rd_nmt_005(WORD address) {
 		return (nmt_rd(address));
 	}
 	if ((address & 0x03FF) >= 0x03C0) {
-		BYTE shift = (((ppudata.r2006.value & 0x40) >> 4) | (ppudata.r2006.value & 0x02));
+		BYTE shift = (((nes.p.r2006.value & 0x40) >> 4) | (nes.p.r2006.value & 0x02));
 
-		return (((m005.ext_ram[ppudata.r2006.value & 0x03FF] & 0xC0) >> 6) << shift);
+		return (((m005.ext_ram[nes.p.r2006.value & 0x03FF] & 0xC0) >> 6) << shift);
 	}
 	return (nmt_rd(address));
 }
 void extcl_cpu_every_cycle_005(void) {
 	if (irql2f.delay && !(--irql2f.delay)) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 	if (m005.timer_running && !--m005.timer_count) {
 		m005.timer_irq = TRUE;
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 }
 void extcl_length_clock_005(void) {

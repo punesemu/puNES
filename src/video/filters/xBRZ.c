@@ -20,10 +20,10 @@
 #include "ppu.h"
 
 void xBRZ(void) {
-	xbrz_scale(gfx.filter.factor, ppudata.ppu_screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
+	xbrz_scale(gfx.filter.factor, nes.p.ppu_screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
 		SCR_COLUMNS, SCR_ROWS);
 }
 void xBRZ_mt(void) {
-	xbrz_scale_mt(gfx.filter.factor, ppudata.ppu_screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
+	xbrz_scale_mt(gfx.filter.factor, nes.p.ppu_screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
 		SCR_COLUMNS, SCR_ROWS);
 }

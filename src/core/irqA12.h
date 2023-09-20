@@ -54,7 +54,7 @@
 	 * l'esecuzione dell'IRQ.\
 	 */\
 	irqA12.delay = irqA12_delay;\
-	if (cpudata.cpu.cycles == 2) {\
+	if (nes.c.cpu.cycles == 2) {\
 		irqA12.delay++;\
 	}
 /* modificato il 23/04/2012

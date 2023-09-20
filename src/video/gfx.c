@@ -513,17 +513,17 @@ void gfx_draw_screen(void) {
 		chinaersan2_apply_font();
 	}
 
-	ppudata.ppu_screen.rd = ppudata.ppu_screen.wr;
-	ppudata.ppu_screen.rd->frame = gfx.frame.totals++;
-	ppudata.ppu_screen.last_completed_wr = ppudata.ppu_screen.wr;
+	nes.p.ppu_screen.rd = nes.p.ppu_screen.wr;
+	nes.p.ppu_screen.rd->frame = gfx.frame.totals++;
+	nes.p.ppu_screen.last_completed_wr = nes.p.ppu_screen.wr;
 
 	if (info.doublebuffer) {
-		ppudata.ppu_screen.index = !ppudata.ppu_screen.index;
-		ppudata.ppu_screen.wr = &ppudata.ppu_screen.buff[ppudata.ppu_screen.index];
+		nes.p.ppu_screen.index = !nes.p.ppu_screen.index;
+		nes.p.ppu_screen.wr = &nes.p.ppu_screen.buff[nes.p.ppu_screen.index];
 	}
 
-	if (!ppudata.ppu_screen.rd->ready) {
-		ppudata.ppu_screen.rd->ready = TRUE;
+	if (!nes.p.ppu_screen.rd->ready) {
+		nes.p.ppu_screen.rd->ready = TRUE;
 	}
 }
 BYTE gfx_palette_init(void) {

@@ -59,9 +59,9 @@ BYTE extcl_save_mapper_105(BYTE mode, BYTE slot, FILE *fp) {
 void extcl_cpu_every_cycle_105(void) {
 	if (mmc1.reg[1] & 0x10) {
 		m105.count = 0;
-		cpudata.irq.high &= ~EXT_IRQ;
+		nes.c.irq.high &= ~EXT_IRQ;
 	} else if (++m105.count == m105tmp.counter_must_reach) {
-		cpudata.irq.high |= EXT_IRQ;
+		nes.c.irq.high |= EXT_IRQ;
 	}
 }
 

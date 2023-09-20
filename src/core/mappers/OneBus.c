@@ -114,7 +114,7 @@ void extcl_cpu_wr_mem_OneBus(WORD address, BYTE value) {
 				break;
 			case 0x103:
 				irqA12.enable = FALSE;
-				cpudata.irq.high &= ~EXT_IRQ;
+				nes.c.irq.high &= ~EXT_IRQ;
 				break;
 			case 0x104:
 				irqA12.enable = TRUE;
@@ -261,7 +261,7 @@ BYTE extcl_wr_apu_OneBus(WORD address, BYTE *value) {
 				if (onebus.reg.apu[0x30] & 0x10) {
 					onebus.pcm.enable = (*value) & 0x10;
 					if (onebus.pcm.irq) {
-						cpudata.irq.high &= ~EXT_IRQ;
+						nes.c.irq.high &= ~EXT_IRQ;
 						onebus.pcm.irq = 0;
 					}
 					if (onebus.pcm.enable) {
@@ -296,7 +296,7 @@ void extcl_cpu_every_cycle_OneBus(void) {
 			if (onebus.pcm.size < 0) {
 				onebus.pcm.irq = 0x80;
 				onebus.pcm.enable = 0;
-				cpudata.irq.high |= EXT_IRQ;
+				nes.c.irq.high |= EXT_IRQ;
 			} else {
 				WORD address = onebus.pcm.address | ((onebus.reg.apu[0x30] ^ 3) << 14);
 
@@ -312,16 +312,16 @@ void extcl_ppu_000_to_34x_OneBus(void) {
 	extcl_ppu_000_to_34x_MMC3();
 
 	if (info.mapper.ext_console_type == VT369) {
-		if ((onebus.reg.cpu[0x1C] & 0x80) && (ppudata.ppu.frame_y <= ppudata.ppu_sclines.vint)) {
+		if ((onebus.reg.cpu[0x1C] & 0x80) && (nes.p.ppu.frame_y <= nes.p.ppu_sclines.vint)) {
 			return;
 		}
-		if ((onebus.reg.cpu[0x1C] & 0x20) && (ppudata.ppu.frame_y == ppudata.ppu_sclines.vint)) {
+		if ((onebus.reg.cpu[0x1C] & 0x20) && (nes.p.ppu.frame_y == nes.p.ppu_sclines.vint)) {
 			return;
 		}
 	}
 	if (((onebus.reg.cpu[0x0B] & 0x80) | (onebus.reg.ppu[0x10] & 0x02))) {
-		if (((ppudata.ppu.frame_y >= ppudata.ppu_sclines.vint) && (ppudata.ppu.screen_y < SCR_ROWS)) &&
-			(ppudata.ppu.frame_x == (info.mapper.ext_console_type == VT369 ? 240 : 256))) {
+		if (((nes.p.ppu.frame_y >= nes.p.ppu_sclines.vint) && (nes.p.ppu.screen_y < SCR_ROWS)) &&
+			(nes.p.ppu.frame_x == (info.mapper.ext_console_type == VT369 ? 240 : 256))) {
 			irq_tick_OneBus();
 		}
 	}
@@ -579,11 +579,11 @@ void mirroring_fix_OneBus_base(void) {
 
 INLINE static void irq_tick_OneBus(void) {
 	irqA12.counter = !irqA12.counter ? onebus.reg.cpu[0x01] : irqA12.counter - 1;
-	if (!irqA12.counter &&irqA12.enable && !ppudata.ppu.vblank && ppudata.r2001.visible) {
+	if (!irqA12.counter &&irqA12.enable && !nes.p.ppu.vblank && nes.p.r2001.visible) {
 		if ((info.mapper.ext_console_type == VT369) && (onebus.reg.cpu[0x1C] & 0x20)) {
 			irqA12.delay = 24;
 		} else {
-			cpudata.irq.high |= EXT_IRQ;
+			nes.c.irq.high |= EXT_IRQ;
 		}
 	}
 }
