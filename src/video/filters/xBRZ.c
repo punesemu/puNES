@@ -18,12 +18,13 @@
 
 #include "video/gfx.h"
 #include "ppu.h"
+#include "info.h"
 
-void xBRZ(void) {
-	xbrz_scale(gfx.filter.factor, nes.p.ppu_screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
-		SCR_COLUMNS, SCR_ROWS);
+void xBRZ(BYTE cidx) {
+	xbrz_scale(gfx.filter.factor, nes[cidx].p.ppu_screen.rd->data, (uint32_t *)gfx.filter.data.pix,
+		(uint32_t *)gfx.filter.data.palette, SCR_COLUMNS, SCR_ROWS);
 }
-void xBRZ_mt(void) {
-	xbrz_scale_mt(gfx.filter.factor, nes.p.ppu_screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
-		SCR_COLUMNS, SCR_ROWS);
+void xBRZ_mt(BYTE cidx) {
+	xbrz_scale_mt(gfx.filter.factor, nes[cidx].p.ppu_screen.rd->data, (uint32_t *) gfx.filter.data.pix,
+		(uint32_t *)gfx.filter.data.palette, SCR_COLUMNS, SCR_ROWS);
 }

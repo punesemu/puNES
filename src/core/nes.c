@@ -19,7 +19,7 @@
 #include "nes.h"
 
 //_nes __attribute__((aligned(64))) nes;
-_nes nes;
+_nes nes[NES_CHIPS_MAX];
 _ppu_alignment ppu_alignment;
 _prgrom prgrom;
 _chrrom chrrom;

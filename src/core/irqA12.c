@@ -19,109 +19,90 @@
 #include "ppu_inline.h"
 #include "irqA12.h"
 
-_irqA12 irqA12;
 BYTE irqA12_delay;
 
-void irqA12_IO(WORD value, WORD value_old) {
+void irqA12_IO(BYTE cidx, WORD value, WORD value_old) {
 	if (!(value_old & 0x1000) && (value & 0x1000)) {
-		if (irqA12.cycles > irqA12_min_cpu_cycles_prev_rising_edge) {
-			irqA12.cycles = 0;
+		if (nes[cidx].irqA12.cycles > irqA12_min_cpu_cycles_prev_rising_edge) {
+			nes[cidx].irqA12.cycles = 0;
 			if (!extcl_irq_A12_clock) {
-				if (!irqA12.counter) {
-					irqA12.counter = irqA12.latch;
-					if (!irqA12.counter && irqA12.reload) {
-						irqA12.save_counter = 1;
+				if (!nes[cidx].irqA12.counter) {
+					nes[cidx].irqA12.counter = nes[cidx].irqA12.latch;
+					if (!nes[cidx].irqA12.counter && nes[cidx].irqA12.reload) {
+						nes[cidx].irqA12.save_counter = 1;
 					}
-					irqA12.reload = FALSE;
+					nes[cidx].irqA12.reload = FALSE;
 				} else {
-					irqA12.counter--;
+					nes[cidx].irqA12.counter--;
 				}
-				if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {
-					nes.c.irq.high |= EXT_IRQ;
+				if (!nes[cidx].irqA12.counter && nes[cidx].irqA12.save_counter && nes[cidx].irqA12.enable) {
+					nes[cidx].c.irq.high |= EXT_IRQ;
 				}
-				irqA12.save_counter = irqA12.counter;
+				nes[cidx].irqA12.save_counter = nes[cidx].irqA12.counter;
 			} else {
-				/*
-				 * utilizzato dalle mappers :
-				 * mapper222
-				 * Futuremedia
-				 * Tengen
-				 */
-				extcl_irq_A12_clock();
+				extcl_irq_A12_clock(cidx);
 			}
 		}
 	}
 }
-void irqA12_BS(void) {
+void irqA12_BS(BYTE cidx) {
 	BYTE n_spr;
 
-	if (irqA12.a12BS || ((nes.p.ppu.frame_x & 0x0007) != 0x0003)) {
+	if (nes[cidx].irqA12.a12BS || ((nes[cidx].p.ppu.frame_x & 0x0007) != 0x0003)) {
 		return;
 	}
 
-	n_spr = (nes.p.ppu.frame_x & 0x0038) >> 3;
+	n_spr = (nes[cidx].p.ppu.frame_x & 0x0038) >> 3;
 
 	if (!n_spr) {
-		irqA12.s_adr_old = nes.p.ppu.bck_adr;
+		nes[cidx].irqA12.s_adr_old = nes[cidx].p.ppu.bck_adr;
 	}
 
-	if ((!nes.p.spr_ev.count_plus) && (nes.p.r2000.size_spr == 16)) {
-		nes.p.ppu.spr_adr = 0x1000;
+	if ((!nes[cidx].p.spr_ev.count_plus) && (nes[cidx].p.r2000.size_spr == 16)) {
+		nes[cidx].p.ppu.spr_adr = 0x1000;
 	} else {
 		ppu_spr_adr(n_spr)
 	}
 
-	if (!(irqA12.s_adr_old & 0x1000) && (nes.p.ppu.spr_adr & 0x1000)) {
+	if (!(nes[cidx].irqA12.s_adr_old & 0x1000) && (nes[cidx].p.ppu.spr_adr & 0x1000)) {
 		if (!extcl_irq_A12_clock) {
 			irqA12_clock()
 		} else {
-			/*
-			 * utilizzato dalle mappers :
-			 * mapper222
-			 * Futuremedia
-			 * Tengen
-			 */
-			extcl_irq_A12_clock();
+			extcl_irq_A12_clock(cidx);
 		}
-		irqA12.a12BS = TRUE;
+		nes[cidx].irqA12.a12BS = TRUE;
 	}
-	irqA12.s_adr_old = nes.p.ppu.spr_adr;
+	nes[cidx].irqA12.s_adr_old = nes[cidx].p.ppu.spr_adr;
 }
-void irqA12_SB(void) {
-	if (irqA12.a12SB || ((nes.p.ppu.frame_x & 0x0007) != 0x0003)) {
+void irqA12_SB(BYTE cidx) {
+	if (nes[cidx].irqA12.a12SB || ((nes[cidx].p.ppu.frame_x & 0x0007) != 0x0003)) {
 		return;
 	}
 
-	if (nes.p.ppu.frame_x == 323) {
+	if (nes[cidx].p.ppu.frame_x == 323) {
 		ppu_spr_adr(7)
-		irqA12.b_adr_old = nes.p.ppu.spr_adr;
+		nes[cidx].irqA12.b_adr_old = nes[cidx].p.ppu.spr_adr;
 	}
 
-	ppu_bck_adr(nes.p.r2000.bpt_adr, nes.p.r2006.value);
+	ppu_bck_adr(nes[cidx].p.r2000.bpt_adr, nes[cidx].p.r2006.value);
 
-	if (!(irqA12.b_adr_old & 0x1000) && (nes.p.ppu.bck_adr & 0x1000)) {
+	if (!(nes[cidx].irqA12.b_adr_old & 0x1000) && (nes[cidx].p.ppu.bck_adr & 0x1000)) {
 		if (!extcl_irq_A12_clock) {
 			irqA12_clock()
 		} else {
-			/*
-			 * utilizzato dalle mappers :
-			 * mapper222
-			 * Futuremedia
-			 * Tengen
-			 */
-			extcl_irq_A12_clock();
+			extcl_irq_A12_clock(cidx);
 		}
-		irqA12.a12SB = TRUE;
+		nes[cidx].irqA12.a12SB = TRUE;
 	}
-	irqA12.b_adr_old = nes.p.ppu.bck_adr;
+	nes[cidx].irqA12.b_adr_old = nes[cidx].p.ppu.bck_adr;
 }
-void irqA12_RS(void) {
-	if (nes.p.ppu.frame_x == 256) {
-		irqA12.a12BS = FALSE;
+void irqA12_RS(BYTE cidx) {
+	if (nes[cidx].p.ppu.frame_x == 256) {
+		nes[cidx].irqA12.a12BS = FALSE;
 		return;
 	}
-	if (nes.p.ppu.frame_x == 323) {
-		irqA12.a12SB = FALSE;
+	if (nes[cidx].p.ppu.frame_x == 323) {
+		nes[cidx].irqA12.a12SB = FALSE;
 		return;
 	}
 }

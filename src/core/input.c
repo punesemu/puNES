@@ -56,11 +56,11 @@ _nes_keyboard nes_keyboard;
 _generic_keyboard generic_keyboard;
 _mic mic;
 
-BYTE (*input_wr_reg)(BYTE value);
-BYTE (*input_rd_reg[2])(BYTE openbus, BYTE nport);
+BYTE (*input_wr_reg)(BYTE cidx, BYTE value);
+BYTE (*input_rd_reg[2])(BYTE cidx, BYTE openbus, BYTE nport);
 
 void input_init(BYTE set_cursor) {
-	int a;
+	int a = 0;
 
 	r4016.value = 0;
 
@@ -203,7 +203,7 @@ void input_init(BYTE set_cursor) {
 
 		{
 			BYTE state = RELEASED;
-			int b;
+			int b = 0;
 
 			if (((port[a].type_pad == CTRL_PAD_AUTO) && (machine.type != DENDY)) || (port[a].type_pad == CTRL_PAD_ORIGINAL)) {
 				state = PRESSED;
@@ -279,11 +279,11 @@ void input_init(BYTE set_cursor) {
 	gui_overlay_update();
 }
 
-void input_wr_disabled(UNUSED(const BYTE *value), UNUSED(BYTE nport)) {}
-void input_rd_disabled(UNUSED(BYTE *value), UNUSED(BYTE nport),	UNUSED(BYTE shift)) {}
+void input_wr_disabled(UNUSED(BYTE cidx), UNUSED(const BYTE *value), UNUSED(BYTE nport)) {}
+void input_rd_disabled(UNUSED(BYTE cidx), UNUSED(BYTE *value), UNUSED(BYTE nport),	UNUSED(BYTE shift)) {}
 
 BYTE input_draw_target(void) {
-	int i;
+	int i = 0;
 
 	if (vs_system.enabled) {
 		if ((info.extra_from_db & VSZAPPER) && !cfg->input.hide_zapper_cursor) {

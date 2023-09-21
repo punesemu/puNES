@@ -35,8 +35,8 @@ extern _m003 m003;
 void map_init_003();
 void extcl_after_mapper_init_003(void);
 void extcl_mapper_quit_003(void);
-void extcl_cpu_wr_mem_003(WORD address, BYTE value);
+void extcl_cpu_wr_mem_003(BYTE cidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_003(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_003(void);
+void extcl_cpu_every_cycle_003(BYTE cidx);
 
 #endif /* MAPPER_003_H_ */

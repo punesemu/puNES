@@ -934,7 +934,7 @@ void d3d9_context_delete(BYTE lock) {
 	}
 }
 INLINE static void d3d9_read_front_buffer(void) {
-	int w, h;
+	int w = 0, h = 0;
 
 	if (info.screenshot == SCRSH_ORIGINAL_SIZE) {
 		void *buffer;
@@ -944,7 +944,8 @@ INLINE static void d3d9_read_front_buffer(void) {
 		h = SCR_ROWS;
 		stride = w * (int)sizeof(uint32_t);
 
-		if ((buffer = malloc(stride * SCR_ROWS))) {
+		buffer = malloc(stride * SCR_ROWS);
+		if (buffer) {
 			emu_thread_pause();
 			scale_surface_screenshoot_1x(stride, buffer);
 			gui_save_screenshot(SCR_COLUMNS, SCR_ROWS, stride, buffer, FALSE);

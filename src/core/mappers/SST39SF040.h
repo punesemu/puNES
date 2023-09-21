@@ -22,8 +22,8 @@
 #include "common.h"
 
 void sst39sf040_init(BYTE *data, size_t size, BYTE manufacter_id, BYTE model_id, WORD adr1, WORD adr2, int sector_size);
-void sst39sf040_write(WORD address, BYTE value);
-BYTE sst39sf040_read(WORD address);
+void sst39sf040_write(BYTE cidx, WORD address, BYTE value);
+BYTE sst39sf040_read(BYTE cidx, WORD address);
 void sst39sf040_tick(void);
 BYTE sst39sf040_save_mapper(BYTE mode, BYTE slot, FILE *fp);
 

@@ -220,7 +220,7 @@ const int txt[MAX_GROUP][MAX_INDEX] = {
 	}
 };
 
-void chinaersan2_apply_font(void) { //书写浮动的文本 Writing floating text
+void chinaersan2_apply_font(BYTE cidx) { //书写浮动的文本 Writing floating text
 	//访问CPU_BACKUP[]数组可以获得备份的内存(0-ff)内容 Access to CPU_BACKUP[] array to get backed up memory (0-ff) contents
 	unsigned char tileid = 0, bktileid = 1, count = 0, offset = 0;
 	unsigned int i, j = 0, pos = 0;
@@ -332,7 +332,7 @@ void chinaersan2_apply_font(void) { //书写浮动的文本 Writing floating tex
 			} else {
 				scrolly = scrollyy;
 			}
-			tileid = ppu_rd_mem(pos + BASE_VRAM);
+			tileid = ppu_rd_mem(cidx, pos + BASE_VRAM);
 
 			//汉字显示 Chinese character display
 			if (tileid < MAX_GROUP) {
@@ -347,7 +347,7 @@ void chinaersan2_apply_font(void) { //书写浮动的文本 Writing floating tex
 				//访问属性表，获得文字颜色 Visit the property sheet to get the text color
 				int ataddr;
 				ataddr = 0x03C0 + ((j - (j & 3)) << 1) + (i >> 2);
-				unsigned char atbyte = ppu_rd_mem(ataddr);
+				unsigned char atbyte = ppu_rd_mem(cidx, ataddr);
 				unsigned char color = 0;
 
 				switch ((i & 3) + ((j & 3) << 2)) {
@@ -396,9 +396,9 @@ void chinaersan2_apply_font(void) { //书写浮动的文本 Writing floating tex
 
 						if (pos2 < maxpos) {
 							if (jj < 8 && (pSan2Font[index * 32 + ii * 2] & (0x80 >> jj)))
-								nes.p.ppu_screen.wr->data[pos2] = nes.m.memmap_palette.color[color];
+								nes[cidx].p.ppu_screen.wr->data[pos2] = nes[cidx].m.memmap_palette.color[color];
 							if (jj >= 8 && (pSan2Font[index * 32 + ii * 2 + 1] & (0x80 >> (jj - 8))))
-								nes.p.ppu_screen.wr->data[pos2] = nes.m.memmap_palette.color[color];
+								nes[cidx].p.ppu_screen.wr->data[pos2] = nes[cidx].m.memmap_palette.color[color];
 						}
 					}
 				}

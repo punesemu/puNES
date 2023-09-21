@@ -21,8 +21,8 @@
 #include "tape_data_recorder.h"
 #include "gui.h"
 
-void input_wr_family_basic_keyboard(const BYTE *value, UNUSED(BYTE nport)) {
-	BYTE column;
+void input_wr_family_basic_keyboard(UNUSED(BYTE cidx), const BYTE *value, UNUSED(BYTE nport)) {
+	BYTE column = 0;
 
 	// 7  bit  0
 	// ---- ----
@@ -52,9 +52,9 @@ void input_wr_family_basic_keyboard(const BYTE *value, UNUSED(BYTE nport)) {
 	//       +--- When 0, force audio readback to always read as binary 0 (5V)
 	tape_data_recorder.in = ((*value) & 0x01);
 }
-void input_rd_family_basic_keyboard(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
+void input_rd_family_basic_keyboard(UNUSED(BYTE cidx), BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	if (nport & 0x01) {
-		BYTE state;
+		BYTE state = 0;
 
 		// r4017
 		// 7  bit  0

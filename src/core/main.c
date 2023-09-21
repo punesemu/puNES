@@ -52,14 +52,18 @@ int main(int argc, char **argv) {
 	memset(&jstick, 0x00, sizeof(jstick));
 	memset(&chinaersan2, 0x00, sizeof(chinaersan2));
 	memset(&tape_data_recorder, 0x00, sizeof(tape_data_recorder));
-	memset(&nes.m.memmap, 0x00, sizeof(nes.m.memmap));
+	for (int i = 0; i < NES_CHIPS_MAX; i++) {
+		memset(&nes[i].m.memmap, 0x00, sizeof(nes[i].m.memmap));
+		memset(&nes[i].m.vram, 0x00, sizeof(nes[i].m.vram));
+		memset(&nes[i].m.ram, 0x00, sizeof(nes[i].m.ram));
+		memset(&nes[i].m.nmt, 0x00, sizeof(nes[i].m.nmt));
+	}
 	memset(&prgrom, 0x00, sizeof(prgrom));
 	memset(&chrrom, 0x00, sizeof(chrrom));
 	memset(&wram, 0x00, sizeof(wram));
-	memset(&nes.m.vram, 0x00, sizeof(nes.m.vram));
-	memset(&nes.m.ram, 0x00, sizeof(nes.m.ram));
-	memset(&nes.m.nmt, 0x00, sizeof(nes.m.nmt));
 	memset(&miscrom, 0x00, sizeof(miscrom));
+
+	info.number_of_cpu = 1;
 
 	if (memmap_init() == EXIT_ERROR) {
 		emu_quit();

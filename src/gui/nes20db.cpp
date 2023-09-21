@@ -161,8 +161,8 @@ void search_in_xml(QFile &file) {
 							wram_set_ram_size(nes20db.prgram.size ? nes20db.prgram.size : 0);
 							wram_set_nvram_size(nes20db.prgnvram.size ? nes20db.prgnvram.size : 0);
 
-							vram_set_ram_size(nes20db.chrram.size ? nes20db.chrram.size : 0);
-							vram_set_nvram_size(nes20db.chrnvram.size ? nes20db.chrnvram.size : 0);
+							vram_set_ram_size(0, nes20db.chrram.size ? nes20db.chrram.size : 0);
+							vram_set_nvram_size(0, nes20db.chrnvram.size ? nes20db.chrnvram.size : 0);
 
 							info.mapper.battery = nes20db.pcb.battery;
 

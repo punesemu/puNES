@@ -55,7 +55,7 @@ void extcl_after_mapper_init_VRC6(void) {
 	VRC6_wram_fix();
 	VRC6_mirroring_fix();
 }
-void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_VRC6(BYTE cidx, WORD address, BYTE value) {
 	WORD bank = address & 0xF000;
 	int index = 0;
 
@@ -116,11 +116,11 @@ void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 						vrc6.irq.prescaler = 0;
 						vrc6.irq.count = vrc6.irq.reload;
 					}
-					nes.c.irq.high &= ~EXT_IRQ;
+					nes[cidx].c.irq.high &= ~EXT_IRQ;
 					break;
 				case 0x02:
 					vrc6.irq.enabled = vrc6.irq.acknowledge;
-					nes.c.irq.high &= ~EXT_IRQ;
+					nes[cidx].c.irq.high &= ~EXT_IRQ;
 					break;
 				default:
 					break;
@@ -171,9 +171,9 @@ BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_VRC6(void) {
+void extcl_cpu_every_cycle_VRC6(BYTE cidx) {
 	if (vrc6.irq.delay && !(--vrc6.irq.delay)) {
-		nes.c.irq.high |= EXT_IRQ;
+		nes[cidx].c.irq.high |= EXT_IRQ;
 	}
 
 	if (!vrc6.irq.enabled) {
@@ -257,7 +257,7 @@ void init_VRC6(WORD A0, WORD A1, BYTE reset) {
 	vrc6.S4.duty = 1;
 	vrc6.saw.timer = 1;
 
-	nes.c.irq.high &= ~EXT_IRQ;
+	nes[0].c.irq.high &= ~EXT_IRQ;
 
 	vrc6tmp.A0 = A0;
 	vrc6tmp.A1 = A1;
@@ -278,7 +278,7 @@ void prg_fix_VRC6_base(void) {
 	VRC6_prg_swap(0xE000, 0xFF);
 }
 void prg_swap_VRC6_base(WORD address, WORD value) {
-	memmap_auto_8k(MMCPU(address), value);
+	memmap_auto_8k(0, MMCPU(address), value);
 }
 void chr_fix_VRC6_base(void) {
 	WORD bank[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -343,10 +343,10 @@ void chr_fix_VRC6_base(void) {
 	VRC6_chr_swap(0x1C00, bank[7]);
 }
 void chr_swap_VRC6_base(WORD address, WORD value) {
-	memmap_chrrom_1k(MMPPU(address), chr_control(address, value));
+	memmap_chrrom_1k(0, MMPPU(address), chr_control(address, value));
 }
 void wram_fix_VRC6_base(void) {
-	memmap_auto_wp_8k(MMCPU(0x6000), 0, (vrc6.reg >> 7), (vrc6.reg >> 7));
+	memmap_auto_wp_8k(0, MMCPU(0x6000), 0, (vrc6.reg >> 7), (vrc6.reg >> 7));
 }
 void mirroring_fix_VRC6_base(void) {
 	BYTE nmt = 0, mode = vrc6.reg & 0x03, mirroring = (vrc6.reg & 0x0C) >> 2;
@@ -398,14 +398,14 @@ void mirroring_fix_VRC6_base(void) {
 }
 void nmt_swap_VRC6_base(WORD address, WORD value) {
 	if (vrc6.reg & 0x10) {
-		memmap_nmt_chrrom_1k(MMPPU(address), chr_control(address, value));
-		memmap_nmt_chrrom_1k(MMPPU(address ^ 0x1000), chr_control(address, value));
-	} else if (vram_size()) {
-		memmap_nmt_vram_1k(MMPPU(address), value);
-		memmap_nmt_vram_1k(MMPPU(address ^ 0x1000), value);
+		memmap_nmt_chrrom_1k(0, MMPPU(address), chr_control(address, value));
+		memmap_nmt_chrrom_1k(0, MMPPU(address ^ 0x1000), chr_control(address, value));
+	} else if (vram_size(0)) {
+		memmap_nmt_vram_1k(0, MMPPU(address), value);
+		memmap_nmt_vram_1k(0, MMPPU(address ^ 0x1000), value);
 	} else {
-		memmap_nmt_1k(MMPPU(address), (value & ((info.mapper.mirroring == MIRRORING_FOURSCR) ? 0x03 : 0x01)));
-		memmap_nmt_1k(MMPPU(address ^ 0x1000), (value & ((info.mapper.mirroring == MIRRORING_FOURSCR) ? 0x03 : 0x01)));
+		memmap_nmt_1k(0, MMPPU(address), (value & ((info.mapper.mirroring == MIRRORING_FOURSCR) ? 0x03 : 0x01)));
+		memmap_nmt_1k(0, MMPPU(address ^ 0x1000), (value & ((info.mapper.mirroring == MIRRORING_FOURSCR) ? 0x03 : 0x01)));
 	}
 }
 

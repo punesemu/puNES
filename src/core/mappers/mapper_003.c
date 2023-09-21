@@ -53,7 +53,7 @@ void extcl_after_mapper_init_003(void) {
 void extcl_mapper_quit_003(void) {
 	wavefiles_clear();
 }
-void extcl_cpu_wr_mem_003(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_003(BYTE cidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		m003.snd.speech = value;
 		if (!(m003.snd.speech & 0x40) && !m003.snd.playing) {
@@ -64,7 +64,7 @@ void extcl_cpu_wr_mem_003(WORD address, BYTE value) {
 	} else if (address >= 0x8000) {
 		// bus conflict
 		if (info.mapper.submapper == 2) {
-			value &= prgrom_rd(address);
+			value &= prgrom_rd(cidx, address);
 		}
 		m003.reg = value;
 		chr_fix_003();
@@ -78,7 +78,7 @@ BYTE extcl_save_mapper_003(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_003(void) {
+void extcl_cpu_every_cycle_003(UNUSED(BYTE cidx)) {
 	m003.snd.out = 0;
 	if (m003.snd.playing) {
 		BYTE speech = m003.snd.speech & 0x07;
@@ -89,12 +89,12 @@ void extcl_cpu_every_cycle_003(void) {
 }
 
 INLINE static void prg_fix_003(void) {
-	memmap_auto_32k(MMCPU(0x8000), 0);
+	memmap_auto_32k(0, MMCPU(0x8000), 0);
 }
 INLINE static void chr_fix_003(void) {
-	memmap_auto_8k(MMPPU(0x0000), m003.reg);
+	memmap_auto_8k(0, MMPPU(0x0000), m003.reg);
 }
 INLINE static void wram_fix_003(void) {
-	memmap_wram_8k(MMCPU(0x6000), 0);
+	memmap_wram_8k(0, MMCPU(0x6000), 0);
 }
 

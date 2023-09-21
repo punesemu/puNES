@@ -21,16 +21,16 @@
 
 #include "common.h"
 
-void scale_2xsai(void);
-void scale_dotmatrix(void);
-void scale_paltv1x(void);
-void scale_paltv2x(void);
-void scale_paltv3x(void);
-void scale_paltv4x(void);
-void scale_super2xsai(void);
-void scale_supereagle(void);
-void scale_tv2x(void);
-void scale_tv3x(void);
-void scale_tv4x(void);
+void scale_2xsai(BYTE cidx);
+void scale_dotmatrix(BYTE cidx);
+void scale_paltv1x(BYTE cidx);
+void scale_paltv2x(BYTE cidx);
+void scale_paltv3x(BYTE cidx);
+void scale_paltv4x(BYTE cidx);
+void scale_super2xsai(BYTE cidx);
+void scale_supereagle(BYTE cidx);
+void scale_tv2x(BYTE cidx);
+void scale_tv3x(BYTE cidx);
+void scale_tv4x(BYTE cidx);
 
 #endif /* SRC_VIDEO_FILTERS_2XSAI_H_ */

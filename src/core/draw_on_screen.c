@@ -45,8 +45,8 @@ static char dos_tags[][10] = {
 
 void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 	va_list ap;
-	unsigned int i, tlength;
-	int w, pixels, dlength;
+	unsigned int i = 0, tlength = 0;
+	int w = 0, pixels = 0, dlength = 0;
 	char text[1024];
 	WORD color = doscolor(DOS_NORMAL), background = doscolor(DOS_BLACK);
 	BYTE first_char = TRUE, last_char = FALSE, is_bck_color = FALSE;
@@ -96,7 +96,7 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 	for (pixels = x; pixels < SCR_COLUMNS;) {
 		unsigned int font_x = 0, font_y = 0;
 		int xl = 0, xr = 0;
-		unsigned char ch;
+		unsigned char ch = 0;
 
 		if (i < tlength) {
 			ch = text[i];
@@ -105,7 +105,7 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 		}
 
 		if (ch == '[') {
-			unsigned int tag, found = FALSE;
+			unsigned int tag = 0, found = FALSE;
 
 			for (tag = 0; tag < LENGTH(dos_tags); tag++) {
 				size_t len = strlen(dos_tags[tag]);
@@ -147,7 +147,8 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 		if (last_char) {
 			xr = r;
 		}
-		if ((pixels += (8 - xl - xr)) > SCR_COLUMNS) {
+		pixels += (8 - xl - xr);
+		if (pixels > SCR_COLUMNS) {
 			break;
 		}
 
@@ -672,7 +673,7 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 		}
 
 		{
-			int x1, y1;
+			int x1 = 0, y1 = 0;
 
 			for (y1 = 0; y1 < 8; y1++) {
 				char *list = font_8x8[font_y] + font_x + xl;
@@ -693,13 +694,13 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 					}
 
 					if (list[x1] == '@') {
-						nes.p.ppu_screen.wr->line[y + y1][x + x1] = color;
+						nes[0].p.ppu_screen.wr->line[y + y1][x + x1] = color;
 					} else if (list[x1] == ',') {
-						nes.p.ppu_screen.wr->line[y + y1][x + x1] = 0x0010;
+						nes[0].p.ppu_screen.wr->line[y + y1][x + x1] = 0x0010;
 					} else if (list[x1] == '.') {
-						nes.p.ppu_screen.wr->line[y + y1][x + x1] = 0x002D;
+						nes[0].p.ppu_screen.wr->line[y + y1][x + x1] = 0x002D;
 					} else {
-						nes.p.ppu_screen.wr->line[y + y1][x + x1] = background;
+						nes[0].p.ppu_screen.wr->line[y + y1][x + x1] = background;
 					}
 				}
 				font_y++;
@@ -712,8 +713,8 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 }
 int dos_strlen(const char *fmt, ...) {
 	va_list ap;
-	unsigned int i;
-	int tmp, tag, length = 0;
+	unsigned int i = 0;
+	int tmp = 0, tag = 0, length = 0;
 	char text[1024];
 
 	va_start(ap, fmt);
@@ -737,7 +738,7 @@ int dos_is_tag(const char *text, int *tag_founded) {
 
 	if (text[0] == '[') {
 		BYTE found = FALSE;
-		int tag;
+		int tag = 0;
 
 		for (tag = 0; tag < (int)LENGTH(dos_tags); tag++) {
 			len = (int)strlen(dos_tags[tag]);
@@ -757,7 +758,7 @@ int dos_is_tag(const char *text, int *tag_founded) {
 }
 
 void dos_vline(int x, int y, int h, WORD color) {
-	int y1;
+	int y1 = 0;
 
 	if (x >= DOS_CENTER) {
 		if (x == DOS_CENTER) {
@@ -791,11 +792,11 @@ void dos_vline(int x, int y, int h, WORD color) {
 		if (x >= SCR_COLUMNS) {
 			break;
 		}
-		nes.p.ppu_screen.wr->line[y + y1][x] = color;
+		nes[0].p.ppu_screen.wr->line[y + y1][x] = color;
 	}
 }
 void dos_hline(int x, int y, int w, WORD color) {
-	int x1;
+	int x1 = 0;
 
 	if (x >= DOS_CENTER) {
 		if (x == DOS_CENTER) {
@@ -829,12 +830,12 @@ void dos_hline(int x, int y, int w, WORD color) {
 		if ((x + x1) >= SCR_COLUMNS) {
 			break;
 		}
-		nes.p.ppu_screen.wr->line[y][x + x1] = color;
+		nes[0].p.ppu_screen.wr->line[y][x + x1] = color;
 	}
 }
 
 void dos_box(int x, int y, int w, int h, WORD color1, WORD color2, WORD bck) {
-	int y1;
+	int y1 = 0;
 
 	if (x >= DOS_CENTER) {
 		if (x == DOS_CENTER) {

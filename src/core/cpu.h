@@ -34,16 +34,16 @@ enum interrupt_types {
 	FDS_DISK_IRQ = 0x10
 };
 
-#define assemble_SR()\
-	nes.c.cpu.SR = (nes.c.cpu.sf | nes.c.cpu.of | 0x20 | nes.c.cpu.bf | nes.c.cpu.df | nes.c.cpu.im | nes.c.cpu.zf | nes.c.cpu.cf)
-#define disassemble_SR()\
-	nes.c.cpu.cf = nes.c.cpu.SR & 0x01;\
-	nes.c.cpu.zf = nes.c.cpu.SR & 0x02;\
-	nes.c.cpu.im = nes.c.cpu.SR & 0x04;\
-	nes.c.cpu.df = nes.c.cpu.SR & 0x08;\
-	nes.c.cpu.bf = nes.c.cpu.SR & 0x10;\
-	nes.c.cpu.of = nes.c.cpu.SR & 0x40;\
-	nes.c.cpu.sf = nes.c.cpu.SR & 0x80
+#define assemble_SR(idx)\
+	nes[idx].c.cpu.SR = (nes[idx].c.cpu.sf | nes[idx].c.cpu.of | 0x20 | nes[idx].c.cpu.bf | nes[idx].c.cpu.df | nes[idx].c.cpu.im | nes[idx].c.cpu.zf | nes[idx].c.cpu.cf)
+#define disassemble_SR(idx)\
+	nes[idx].c.cpu.cf = nes[idx].c.cpu.SR & 0x01;\
+	nes[idx].c.cpu.zf = nes[idx].c.cpu.SR & 0x02;\
+	nes[idx].c.cpu.im = nes[idx].c.cpu.SR & 0x04;\
+	nes[idx].c.cpu.df = nes[idx].c.cpu.SR & 0x08;\
+	nes[idx].c.cpu.bf = nes[idx].c.cpu.SR & 0x10;\
+	nes[idx].c.cpu.of = nes[idx].c.cpu.SR & 0x40;\
+	nes[idx].c.cpu.sf = nes[idx].c.cpu.SR & 0x80
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -51,13 +51,13 @@ enum interrupt_types {
 #define EXTERNC
 #endif
 
-EXTERNC void cpu_exe_op(void);
-EXTERNC void cpu_initial_cycles(void);
-EXTERNC void cpu_turn_on(void);
-EXTERNC BYTE cpu_rd_mem_dbg(WORD address);
-EXTERNC BYTE cpu_rd_mem(WORD address, BYTE made_tick);
-EXTERNC void cpu_wr_mem(WORD address, BYTE value);
-EXTERNC void apu_wr_mem_mapper(WORD address, BYTE value);
+EXTERNC void cpu_exe_op(BYTE cidx);
+EXTERNC void cpu_initial_cycles(BYTE cidx);
+EXTERNC void cpu_turn_on(BYTE cidx);
+EXTERNC BYTE cpu_rd_mem_dbg(BYTE cidx, WORD address);
+EXTERNC BYTE cpu_rd_mem(BYTE cidx, WORD address, BYTE made_tick);
+EXTERNC void cpu_wr_mem(BYTE cidx, WORD address, BYTE value);
+EXTERNC void apu_wr_mem_mapper(BYTE cidx, WORD address, BYTE value);
 
 #undef EXTERNC
 

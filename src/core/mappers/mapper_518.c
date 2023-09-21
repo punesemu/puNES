@@ -49,7 +49,7 @@ void extcl_after_mapper_init_518(void) {
 	wram_fix_518();
 	mirroring_fix_518();
 }
-void extcl_cpu_wr_mem_518(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_518(UNUSED(BYTE cidx), WORD address, BYTE value) {
 	switch (address & 0xFF00) {
 		case 0x5000:
 			m518.reg[0] = value;
@@ -66,11 +66,11 @@ void extcl_cpu_wr_mem_518(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_518(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_518(BYTE cidx, WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return ((address & 0xFF00) == 0x5300 ? m518.dac.status : openbus);
 	}
-	return (wram_rd(address));
+	return (wram_rd(cidx, address));
 }
 BYTE extcl_save_mapper_518(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m518.reg);
@@ -81,18 +81,18 @@ BYTE extcl_save_mapper_518(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-BYTE extcl_rd_chr_518(WORD address) {
+BYTE extcl_rd_chr_518(BYTE cidx, WORD address) {
 	return ((address < 0x1000) && (m518.reg[1] & 0x02)
-		? chr_rd((m518.chr_bank << 10) | (address & 0xFFF))
-		: chr_rd(address));
+		? chr_rd(cidx, (m518.chr_bank << 10) | (address & 0xFFF))
+		: chr_rd(cidx, address));
 }
-BYTE extcl_rd_nmt_518(WORD address) {
+BYTE extcl_rd_nmt_518(BYTE cidx, WORD address) {
 	BYTE slot = (address & 0x0FFF) >> 10;
 
 	m518.chr_bank = ((slot >> (m518.reg[1] & 0x01)) & 0x01) << 2;
-	return (nmt_rd(address));
+	return (nmt_rd(cidx, address));
 }
-void extcl_cpu_every_cycle_518(void) {
+void extcl_cpu_every_cycle_518(UNUSED(BYTE cidx)) {
 	m518.dac.count++;
 	if (m518.dac.count == 1789772 / 11025) {
 		m518.dac.count = 0;
@@ -103,27 +103,27 @@ void extcl_cpu_every_cycle_518(void) {
 INLINE static void prg_fix_518(void) {
 	if (m518.reg[0] & 0x80) {
 		if (m518.reg[1] & 0x04) {
-			memmap_wram_32k(MMCPU(0x8000), (m518.reg[0] & 0x03));
+			memmap_wram_32k(0, MMCPU(0x8000), (m518.reg[0] & 0x03));
 		} else {
-			memmap_wram_16k(MMCPU(0x8000), (m518.reg[0] & 0x07));
-			memmap_auto_16k(MMCPU(0xC000), 0);
+			memmap_wram_16k(0, MMCPU(0x8000), (m518.reg[0] & 0x07));
+			memmap_auto_16k(0, MMCPU(0xC000), 0);
 		}
 	} else {
 		if (m518.reg[1] & 0x04) {
-			memmap_auto_32k(MMCPU(0x8000), m518.reg[0]);
+			memmap_auto_32k(0, MMCPU(0x8000), m518.reg[0]);
 		} else {
-			memmap_auto_16k(MMCPU(0x8000), m518.reg[0]);
-			memmap_auto_16k(MMCPU(0xC000), 0);
+			memmap_auto_16k(0, MMCPU(0x8000), m518.reg[0]);
+			memmap_auto_16k(0, MMCPU(0xC000), 0);
 		}
 	}
 }
 INLINE static void wram_fix_518(void) {
-	memmap_auto_8k(MMCPU(0x6000), 16);
+	memmap_auto_8k(0, MMCPU(0x6000), 16);
 }
 INLINE static void mirroring_fix_518(void) {
 	if (m518.reg[1] & 0x01) {
-		mirroring_H();
+		mirroring_H(0);
 	} else {
-		mirroring_V();
+		mirroring_V(0);
 	}
 }

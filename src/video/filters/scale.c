@@ -18,9 +18,9 @@
 
 #include "video/gfx.h"
 #include "ppu.h"
+#include "info.h"
 
-#define put_pixel(type, p0, p1)\
-	*(type *)(dstpix + p0 + p1) = (type)pixel
+#define put_pixel(type, p0, p1) *(type *)(dstpix + (p0) + (p1)) = (type)pixel
 
 INLINE static void scale_surface1x(_ppu_screen_buffer *sb, const uint32_t *palette, uint32_t pitch, void *pix);
 
@@ -34,7 +34,7 @@ struct _scl {
 	WORD lines;
 } scl;
 
-void scale_surface(void) {
+void scale_surface(BYTE cidx) {
 	scl.sx = 0;
 	scl.sy = 0;
 	scl.oy = 0;
@@ -42,9 +42,10 @@ void scale_surface(void) {
 	scl.rows = SCR_COLUMNS;
 	scl.startx = 0;
 
-	scale_surface1x(nes.p.ppu_screen.rd, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
+	scale_surface1x(nes[cidx].p.ppu_screen.rd, (uint32_t *)gfx.filter.data.palette,
+		gfx.filter.data.pitch, gfx.filter.data.pix);
 }
-void scale_surface_screenshoot_1x(uint32_t pitch, void *pix) {
+void scale_surface_screenshoot_1x(BYTE cidx, uint32_t pitch, void *pix) {
 	scl.sx = 0;
 	scl.sy = 0;
 	scl.oy = 0;
@@ -52,7 +53,7 @@ void scale_surface_screenshoot_1x(uint32_t pitch, void *pix) {
 	scl.rows = SCR_COLUMNS;
 	scl.startx = 0;
 
-	scale_surface1x(nes.p.ppu_screen.rd, gfx.palette, pitch, pix);
+	scale_surface1x(nes[cidx].p.ppu_screen.rd, gfx.palette, pitch, pix);
 }
 void scale_surface_preview_1x(void *sb, uint32_t pitch, void *pix) {
 	scl.sx = 0;
@@ -68,8 +69,8 @@ void scale_surface_preview_1x(void *sb, uint32_t pitch, void *pix) {
 INLINE void scale_surface1x(_ppu_screen_buffer *sb, const uint32_t *palette, uint32_t pitch, void *pix) {
 	const uint32_t dstpitch = pitch;
 	uint8_t *dstpix = (uint8_t *)pix;
-	uint32_t TH0, TW0;
-	uint32_t pixel;
+	uint32_t TH0 = 0, TW0 = 0;
+	uint32_t pixel = 0;
 
 	for (; scl.sy < scl.lines; scl.sy++) {
 		TH0 = (scl.oy * dstpitch);

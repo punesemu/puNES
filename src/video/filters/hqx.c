@@ -19,6 +19,7 @@
 #include "video/gfx.h"
 #include "palette.h"
 #include "ppu.h"
+#include "info.h"
 
 uint32_t RGBtoYUV[NUM_COLORS];
 
@@ -26,7 +27,7 @@ _hqnx hqnx;
 
 void hqx_init(void) {
 	/* Initalize RGB to YUV lookup table */
-	uint32_t i, r, g, b, y, u, v;
+	uint32_t i = 0, r = 0, g = 0, b = 0, y = 0, u = 0, v = 0;
 
 	for (i = 0; i < NUM_COLORS; i++) {
 		r = palette_RGB.in_use[i].r;
@@ -38,7 +39,7 @@ void hqx_init(void) {
 		RGBtoYUV[i] = (y << 16) + (u << 8) + v;
 	}
 }
-void hqNx(void) {
+void hqNx(BYTE cidx) {
 	hqnx.sx = 0;
 	hqnx.sy = 0;
 	hqnx.lines = SCR_ROWS;
@@ -47,10 +48,10 @@ void hqNx(void) {
 	hqnx.startx = 0;
 
 	if (gfx.filter.factor == 2) {
-		hq2x_32_rb(nes.p.ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
+		hq2x_32_rb(nes[cidx].p.ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
 	} else if (gfx.filter.factor == 3) {
-		hq3x_32_rb(nes.p.ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
+		hq3x_32_rb(nes[cidx].p.ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
 	} else if (gfx.filter.factor == 4) {
-		hq4x_32_rb(nes.p.ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
+		hq4x_32_rb(nes[cidx].p.ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
 	}
 }

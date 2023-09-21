@@ -46,54 +46,54 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 }
 #define ABS(opTy, cmd)\
 {\
-	WORD adr0 = lend_word(nes.c.cpu.PC.w, FALSE, TRUE);\
-	nes.c.cpu.PC.w += 2;\
+	WORD adr0 = lend_word(cidx, nes[cidx].c.cpu.PC.w, FALSE, TRUE);\
+	nes[cidx].c.cpu.PC.w += 2;\
 	cmd\
 }
 #define ABW(opTy, cmd)\
 {\
-	WORD adr0 = lend_word(nes.c.cpu.PC.w, FALSE, FALSE);\
+	WORD adr0 = lend_word(cidx, nes[cidx].c.cpu.PC.w, FALSE, FALSE);\
 	_DMC\
-	nes.c.cpu.PC.w += 2;\
+	nes[cidx].c.cpu.PC.w += 2;\
 	cmd\
 }
 #define ABX(opTy, cmd, reg)\
 {\
-	WORD adr2 = lend_word(nes.c.cpu.PC.w, FALSE, TRUE);\
+	WORD adr2 = lend_word(cidx, nes[cidx].c.cpu.PC.w, FALSE, TRUE);\
 	WORD adr0 = adr2 + (reg);\
 	WORD adr1 = (adr2 & 0xFF00) | (BYTE)adr0;\
-	nes.c.cpu.PC.w += 2;\
+	nes[cidx].c.cpu.PC.w += 2;\
 	/* puo' essere la lettura corretta o anche semplice garbage */\
 	_RDABX_;\
 	cmd\
 }
 #define AXW(opTy, cmd, reg)\
 {\
-	WORD adr2 = lend_word(nes.c.cpu.PC.w, FALSE, TRUE);\
+	WORD adr2 = lend_word(cidx, nes[cidx].c.cpu.PC.w, FALSE, TRUE);\
 	WORD adr0 = adr2 + (reg);\
 	WORD adr1 = (adr2 & 0xFF00) | (BYTE)adr0;\
-	nes.c.cpu.PC.w += 2;\
+	nes[cidx].c.cpu.PC.w += 2;\
 	/* puo' essere la lettura corretta o anche semplice garbage */\
 	_RDAXW_;\
 	cmd\
 }
 #define IDR(opTy)\
 {\
-	WORD adr0 = lend_word(nes.c.cpu.PC.w, FALSE, TRUE);\
-	nes.c.cpu.PC.w = lend_word(adr0, TRUE, TRUE);\
+	WORD adr0 = lend_word(cidx, nes[cidx].c.cpu.PC.w, FALSE, TRUE);\
+	nes[cidx].c.cpu.PC.w = lend_word(cidx, adr0, TRUE, TRUE);\
 }
 #define IDX(opTy, cmd)\
 {\
 	WORD adr1 = _RDP;\
 	/* garbage read */\
 	_RDIDX_;\
-	WORD adr0 = lend_word((adr1 + nes.c.cpu.XR) & 0x00FF, TRUE, TRUE);\
+	WORD adr0 = lend_word(cidx, (adr1 + nes[cidx].c.cpu.XR) & 0x00FF, TRUE, TRUE);\
 	cmd\
 }
 #define IDY(opTy, cmd)\
 {\
-	WORD adr2 = lend_word(_RDP, TRUE, TRUE);\
-	WORD adr0 = adr2 + nes.c.cpu.YR;\
+	WORD adr2 = lend_word(cidx, _RDP, TRUE, TRUE);\
+	WORD adr0 = adr2 + nes[cidx].c.cpu.YR;\
 	WORD adr1 = (adr2 & 0xFF00) | (BYTE)adr0;\
 	/* puo' essere la lettura corretta o anche semplice garbage */\
 	_RDIDY_;\
@@ -105,7 +105,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 {\
 	WORD adr1 = _RDP;\
 	_RDIDX_;\
-	WORD adr0 = lend_word((adr1 + nes.c.cpu.XR) & 0x00FF, TRUE, FALSE);\
+	WORD adr0 = lend_word(cidx, (adr1 + nes[cidx].c.cpu.XR) & 0x00FF, TRUE, FALSE);\
 	_DMC\
 	cmd\
 }
@@ -113,21 +113,21 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 {\
 	WORD adr1 = _RDP;\
 	_RDIDX_;\
-	WORD adr0 = lend_word((adr1 + nes.c.cpu.XR) & 0x00FF, TRUE, FALSE);\
+	WORD adr0 = lend_word(cidx, (adr1 + nes[cidx].c.cpu.XR) & 0x00FF, TRUE, FALSE);\
 	_DMC\
 	cmd\
 }
 #define IYW(opTy, cmd)\
 {\
-	WORD adr2 = lend_word(_RDP, TRUE, TRUE);\
-	WORD adr0 = adr2 + nes.c.cpu.YR;\
+	WORD adr2 = lend_word(cidx, _RDP, TRUE, TRUE);\
+	WORD adr0 = adr2 + nes[cidx].c.cpu.YR;\
 	WORD adr1 = (adr2 & 0xFF00) | (BYTE)adr0;\
 	_RDIYW_;\
 	cmd\
 }
 #define _WRX(dst, src)\
 	if (!DMC.tick_type) DMC.tick_type = DMC_CPU_WRITE;\
-	cpu_wr_mem(dst, src)
+	cpu_wr_mem(cidx, dst, src)
 */
 
 // ----------------------------------------------------------------------
@@ -141,10 +141,10 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	x;\
 	_SBC
 // AND, DEC, EOR, INC, ORA
-#define AND(x, opr) _RSZ(nes.c.cpu.AR opr x;, nes.c.cpu.AR)
+#define AND(x, opr) _RSZ(nes[cidx].c.cpu.AR opr x;, nes[cidx].c.cpu.AR)
 #define INC(x, opr)\
 	{\
-	_MSZ(BYTE tmp = x opr 1, tmp, tmp);\
+	_MSZ(BYTE tmp = x opr 1, tmp, tmp)\
 	}
 // ASL, LSR, ROL, ROR
 #define ASL(x) _SHF(x, _BSH(shift, 0x80, <<=), shift, shift)
@@ -154,50 +154,50 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 // BCC, BCS, BEQ, BMI, BNF, BPL, BVC, BVS
 #define BRC(flag, condition) \
 	BYTE offset = _RDP;\
-	WORD adr0 = nes.c.cpu.PC.w + (SBYTE)offset;\
+	WORD adr0 = nes[cidx].c.cpu.PC.w + (SBYTE)offset;\
 	if ((!flag) != condition) {\
 		/* A page boundary crossing occurs when the branch destination is on a different page\
 		 * than the instruction AFTER the branch instruction. */\
-		BYTE cross = !((adr0 & 0xFF00) == (nes.c.cpu.PC.w & 0xFF00));\
+		BYTE cross = !((adr0 & 0xFF00) == (nes[cidx].c.cpu.PC.w & 0xFF00));\
 		if (!cross) {\
-			if (nes.c.nmi.high && !nes.c.nmi.before) {\
-				nes.c.nmi.delay = TRUE;\
-			} else if (!(nes.c.irq.inhibit & 0x04) && nes.c.irq.high && !nes.c.irq.before) {\
-				nes.c.irq.delay = TRUE;\
+			if (nes[cidx].c.nmi.high && !nes[cidx].c.nmi.before) {\
+				nes[cidx].c.nmi.delay = TRUE;\
+			} else if (!(nes[cidx].c.irq.inhibit & 0x04) && nes[cidx].c.irq.high && !nes[cidx].c.irq.before) {\
+				nes[cidx].c.irq.delay = TRUE;\
 			}\
 		}\
 		mod_cycles_op(+=, 1);\
 		_RDD;\
-		nes.c.cpu.PC.b[0] += offset;\
+		nes[cidx].c.cpu.PC.b[0] += offset;\
 		if (offset & 0x80) {\
 			if (cross) {\
 				mod_cycles_op(+=, 1);\
 				_RDD;\
-				nes.c.cpu.PC.b[1]--;\
+				nes[cidx].c.cpu.PC.b[1]--;\
 			}\
 		} else {\
 			if (cross) {\
 				mod_cycles_op(+=, 1);\
 				_RDD;\
-				nes.c.cpu.PC.b[1]++;\
+				nes[cidx].c.cpu.PC.b[1]++;\
 			}\
 		}\
 	}
 // BIT
 #define BIT(x)\
 	x;\
-	nes.c.cpu.sf = (nes.c.cpu.openbus & 0x80);\
-	nes.c.cpu.of = (nes.c.cpu.openbus & 0x40);\
-	ZF((nes.c.cpu.AR & nes.c.cpu.openbus))
+	nes[cidx].c.cpu.sf = (nes[cidx].c.cpu.openbus & 0x80);\
+	nes[cidx].c.cpu.of = (nes[cidx].c.cpu.openbus & 0x40);\
+	ZF((nes[cidx].c.cpu.AR & nes[cidx].c.cpu.openbus))
 // BRK, PHP - NOTE: lo Status Register viene salvato solo nello stack con il bf settato a 1.
 #define BRK\
 	/* dummy read */\
 	_RDP;\
-	_IRQ(nes.c.cpu.SR | 0x10)
+	_IRQ(nes[cidx].c.cpu.SR | 0x10)
 #define PHP\
 	_RDD;\
-	assemble_SR();\
-	_PSH(nes.c.cpu.SR | 0x10);
+	assemble_SR(cidx);\
+	_PSH(nes[cidx].c.cpu.SR | 0x10);
 // CMP, CPX, CPY
 #define CMP(x, reg)\
 	{\
@@ -207,51 +207,51 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define LDX(x, reg) _RSZ((reg) = (x);, reg)
 // JMP
 #define JMP\
-	WORD adr0 = lend_word(nes.c.cpu.PC.w, FALSE, TRUE);\
-	nes.c.cpu.PC.w = adr0;
+	WORD adr0 = lend_word(cidx, nes[cidx].c.cpu.PC.w, FALSE, TRUE);\
+	nes[cidx].c.cpu.PC.w = adr0;
 // JSR, RTS
 #define JSR\
-	WORD adr0 = lend_word(nes.c.cpu.PC.w++, FALSE, TRUE);\
+	WORD adr0 = lend_word(cidx, nes[cidx].c.cpu.PC.w++, FALSE, TRUE);\
 	_PSP\
-	nes.c.cpu.PC.w = adr0;
+	nes[cidx].c.cpu.PC.w = adr0;
 #define RTS\
 	/* dummy read */\
 	_RDD;\
-	_RDX((nes.c.cpu.SP | STACK), TRUE);\
-	nes.c.cpu.PC.b[0] = _PUL;\
-	nes.c.cpu.PC.b[1] = _PUL;          \
+	_RDX((nes[cidx].c.cpu.SP | STACK), TRUE);\
+	nes[cidx].c.cpu.PC.b[0] = _PUL;\
+	nes[cidx].c.cpu.PC.b[1] = _PUL;          \
 	_RDP;
 // RTI
 #define RTI\
 	/* dummy read */\
 	_RDD;\
-	_RDX((nes.c.cpu.SP | STACK), TRUE);\
+	_RDX((nes[cidx].c.cpu.SP | STACK), TRUE);\
 	/* il break flag (bit 4) e' sempre a 0 */\
-	nes.c.cpu.SR = (_PUL & 0xEF);\
-	disassemble_SR();\
+	nes[cidx].c.cpu.SR = (_PUL & 0xEF);\
+	disassemble_SR(cidx);\
 	/* nell'RTI non c'e' nessun delay nel settaggio dell'inibizione dell'IRQ.*/\
-	nes.c.irq.inhibit = nes.c.cpu.im;\
-	nes.c.cpu.PC.b[0] = _PUL;\
-	nes.c.cpu.PC.b[1] = _PUL;
+	nes[cidx].c.irq.inhibit = nes[cidx].c.cpu.im;\
+	nes[cidx].c.cpu.PC.b[0] = _PUL;\
+	nes[cidx].c.cpu.PC.b[1] = _PUL;
 // SEI, PHA, PLA, PLP
 #define SEI\
-	nes.c.cpu.im = 0x04;\
-	nes.c.irq.inhibit |= 0x40;
+	nes[cidx].c.cpu.im = 0x04;\
+	nes[cidx].c.irq.inhibit |= 0x40;
 #define PHA\
 	_RDD;\
-	_PSH(nes.c.cpu.AR);
+	_PSH(nes[cidx].c.cpu.AR);
 #define PLA\
 	_RDD;\
-	_RDX((nes.c.cpu.SP | STACK), TRUE);\
-	_RSZ(nes.c.cpu.AR = _PUL;, nes.c.cpu.AR)
+	_RDX((nes[cidx].c.cpu.SP | STACK), TRUE);\
+	_RSZ(nes[cidx].c.cpu.AR = _PUL;, nes[cidx].c.cpu.AR)
 #define PLP\
 	_RDD;\
-	_RDX((nes.c.cpu.SP | STACK), TRUE);\
+	_RDX((nes[cidx].c.cpu.SP | STACK), TRUE);\
 	/* il break flag (bit 4) e' sempre a 0 */\
-	nes.c.cpu.SR = (_PUL & 0xEF);\
-	disassemble_SR();\
-	if (nes.c.cpu.im) {\
-		nes.c.irq.inhibit |= 0x40;\
+	nes[cidx].c.cpu.SR = (_PUL & 0xEF);\
+	disassemble_SR(cidx);\
+	if (nes[cidx].c.cpu.im) {\
+		nes[cidx].c.irq.inhibit |= 0x40;\
 	}
 
 // ----------------------------------------------------------------------
@@ -261,59 +261,59 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 // AAC, ASR, ARR
 #define AAC\
 	AND(_RDP, &=)\
-	nes.c.cpu.cf = nes.c.cpu.sf >> 7;
+	nes[cidx].c.cpu.cf = nes[cidx].c.cpu.sf >> 7;
 #define ASR\
-	nes.c.cpu.AR &= _RDP;\
-	_RSZ(_BSH(nes.c.cpu.AR, 0x01, >>=), nes.c.cpu.AR)
+	nes[cidx].c.cpu.AR &= _RDP;\
+	_RSZ(_BSH(nes[cidx].c.cpu.AR, 0x01, >>=), nes[cidx].c.cpu.AR)
 #define ARR\
-	nes.c.cpu.AR &= _RDP;\
-	_RSZ(_ROR(nes.c.cpu.AR, 0x01, >>=), nes.c.cpu.AR)\
-	nes.c.cpu.cf = (nes.c.cpu.AR & 0x40) >> 6;\
-	nes.c.cpu.of = (nes.c.cpu.AR & 0x40) ^ ((nes.c.cpu.AR & 0x20) << 1);
+	nes[cidx].c.cpu.AR &= _RDP;\
+	_RSZ(_ROR(nes[cidx].c.cpu.AR, 0x01, >>=), nes[cidx].c.cpu.AR)\
+	nes[cidx].c.cpu.cf = (nes[cidx].c.cpu.AR & 0x40) >> 6;\
+	nes[cidx].c.cpu.of = (nes[cidx].c.cpu.AR & 0x40) ^ ((nes[cidx].c.cpu.AR & 0x20) << 1);
 // ATX
-#define ATX _RSZ(nes.c.cpu.XR = nes.c.cpu.AR = _RDP;, nes.c.cpu.AR)
+#define ATX _RSZ(nes[cidx].c.cpu.XR = nes[cidx].c.cpu.AR = _RDP;, nes[cidx].c.cpu.AR)
 // AXA
 #define AXA(cmd)\
-	BYTE tmp = nes.c.cpu.AR & nes.c.cpu.XR & 0x07;\
+	BYTE tmp = nes[cidx].c.cpu.AR & nes[cidx].c.cpu.XR & 0x07;\
 	cmd
 // AXS
 #define AXS\
-	nes.c.cpu.XR &= nes.c.cpu.AR;\
-	_CMP(_RDP, nes.c.cpu.XR)\
-	_RSZ(nes.c.cpu.XR = (BYTE)cmp;, nes.c.cpu.XR)
+	nes[cidx].c.cpu.XR &= nes[cidx].c.cpu.AR;\
+	_CMP(_RDP, nes[cidx].c.cpu.XR)\
+	_RSZ(nes[cidx].c.cpu.XR = (BYTE)cmp;, nes[cidx].c.cpu.XR)
 // AAX
 #define AAX\
 	BYTE tmp;\
-	tmp = nes.c.cpu.AR & nes.c.cpu.XR;\
+	tmp = nes[cidx].c.cpu.AR & nes[cidx].c.cpu.XR;\
 	_AAXIDX(tmp)
 // DCP
 #define DCP(x)\
 	BYTE tmp = (x) - 1;\
-	CMP(tmp, nes.c.cpu.AR)\
+	CMP(tmp, nes[cidx].c.cpu.AR)\
 	_MSX(tmp)
 // ISC
 #define ISC(x)\
 	BYTE tmp = (x) + 1;\
 	_MSX(tmp)\
-	_RSZ(_SUB(tmp), nes.c.cpu.AR)
+	_RSZ(_SUB(tmp), nes[cidx].c.cpu.AR)
 // LAS
 #define LAS\
-	nes.c.cpu.SR &= nes.c.cpu.openbus;\
-	_RSZ(nes.c.cpu.AR = nes.c.cpu.XR = nes.c.cpu.SR;, nes.c.cpu.AR)
+	nes[cidx].c.cpu.SR &= nes[cidx].c.cpu.openbus;\
+	_RSZ(nes[cidx].c.cpu.AR = nes[cidx].c.cpu.XR = nes[cidx].c.cpu.SR;, nes[cidx].c.cpu.AR)
 // LAX
 #define LAX(x)\
 	x;\
 	_LAX
 // RLA, SLO, SRE
-#define RLA(x) _SHF(x, _RLA(shift, 0x80, <<=), nes.c.cpu.AR, shift)
-#define SLO(x) _SHF(x, _SLO(shift, 0x80, <<=, |=), nes.c.cpu.AR, shift)
-#define SRE(x) _SHF(x, _SLO(shift, 0x01, >>=, ^=), nes.c.cpu.AR, shift)
+#define RLA(x) _SHF(x, _RLA(shift, 0x80, <<=), nes[cidx].c.cpu.AR, shift)
+#define SLO(x) _SHF(x, _SLO(shift, 0x80, <<=, |=), nes[cidx].c.cpu.AR, shift)
+#define SRE(x) _SHF(x, _SLO(shift, 0x01, >>=, ^=), nes[cidx].c.cpu.AR, shift)
 // RRA
 #define RRA(x)\
 	BYTE shift = x;\
 	_ROR(shift, 0x01, >>=)\
 	_MSX(shift)\
-	_RSZ(_ADD(shift), nes.c.cpu.AR)
+	_RSZ(_ADD(shift), nes[cidx].c.cpu.AR)
 // SXX
 #define SXX(reg)\
 	BYTE tmp = (reg) & ((adr2 >> 8) + 1);\
@@ -321,20 +321,20 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	_SXXABX(tmp)
 // XAA
 #define XAA\
-	nes.c.cpu.AR = nes.c.cpu.XR;\
-	nes.c.cpu.AR &= _RDP;
+	nes[cidx].c.cpu.AR = nes[cidx].c.cpu.XR;\
+	nes[cidx].c.cpu.AR &= _RDP;
 // XAS
 #define XAS\
-	nes.c.cpu.SR = nes.c.cpu.AR & nes.c.cpu.YR;\
+	nes[cidx].c.cpu.SR = nes[cidx].c.cpu.AR & nes[cidx].c.cpu.YR;\
 	if (adr1 != adr0) adr0 &= 0x00FF;\
-	BYTE tmp = nes.c.cpu.SR & ((adr1 >> 8) + 1);\
+	BYTE tmp = nes[cidx].c.cpu.SR & ((adr1 >> 8) + 1);\
 	_XASABX(tmp)
 
 // ---------------------------------------------------------------------------------
 //  flags
 // ---------------------------------------------------------------------------------
-#define SF(x) nes.c.cpu.sf = (x) & 0x80;
-#define ZF(x) nes.c.cpu.zf = !(x) << 1;
+#define SF(x) nes[cidx].c.cpu.sf = (x) & 0x80;
+#define ZF(x) nes[cidx].c.cpu.zf = !(x) << 1;
 #define SZ(x)\
 	SF(x)\
 	ZF(x)
@@ -342,7 +342,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 // ----------------------------------------------------------------------
 //  varie ed eventuali
 // ----------------------------------------------------------------------
-#define _ADC _RSZ(_ADD(nes.c.cpu.openbus), nes.c.cpu.AR)
+#define _ADC _RSZ(_ADD(nes[cidx].c.cpu.openbus), nes[cidx].c.cpu.AR)
 // NOTE : BCD Addiction
 // 6502
 // A Seq. 1
@@ -369,26 +369,26 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define _ADD(opr)\
 	{\
 	WORD A = 0;\
-	if (info.decimal_mode && nes.c.cpu.df) {\
-		BYTE AL = (nes.c.cpu.AR & 0x0F) + ((opr) & 0x0F) + nes.c.cpu.cf;\
+	if (info.decimal_mode && nes[cidx].c.cpu.df) {\
+		BYTE AL = (nes[cidx].c.cpu.AR & 0x0F) + ((opr) & 0x0F) + nes[cidx].c.cpu.cf;\
 		if (AL >= 0x0A) { AL = ((AL + 0x06) & 0x0F) + 0x10; }\
-		A = (nes.c.cpu.AR & 0xF0) + ((opr) & 0xF0) + AL;\
+		A = (nes[cidx].c.cpu.AR & 0xF0) + ((opr) & 0xF0) + AL;\
 		if (A >= 0xA0) { A += 0x60; }\
-	} else { A = nes.c.cpu.AR + (opr) + nes.c.cpu.cf; }\
-	nes.c.cpu.cf = (A > 0xFF ? 1 : 0);\
-	nes.c.cpu.of = ((!((nes.c.cpu.AR ^ (opr)) & 0x80) && ((nes.c.cpu.AR ^ A) & 0x80)) ? 0x40 : 0);\
-	nes.c.cpu.AR = (BYTE)A;\
+	} else { A = nes[cidx].c.cpu.AR + (opr) + nes[cidx].c.cpu.cf; }\
+	nes[cidx].c.cpu.cf = (A > 0xFF ? 1 : 0);\
+	nes[cidx].c.cpu.of = ((!((nes[cidx].c.cpu.AR ^ (opr)) & 0x80) && ((nes[cidx].c.cpu.AR ^ A) & 0x80)) ? 0x40 : 0);\
+	nes[cidx].c.cpu.AR = (BYTE)A;\
 	}
 #define _BSH(dst, bitmask, opr)\
-	nes.c.cpu.cf = ((dst) & (bitmask) ? 1 : 0);\
+	nes[cidx].c.cpu.cf = ((dst) & (bitmask) ? 1 : 0);\
 	dst opr 1;
 #define _CMP(x, reg)\
 	WORD cmp = (reg) - (x);\
-	nes.c.cpu.cf = (cmp < 0x100 ? 1 : 0);
+	nes[cidx].c.cpu.cf = (cmp < 0x100 ? 1 : 0);
 #define _CYW(cmd) _CY_(cmd, mod_cycles_op(+=, 1);)
 #define _CY_(cmd1, cmd2)\
 	if (adr1 != adr0) {\
-		nes.c.cpu.double_rd = TRUE;\
+		nes[cidx].c.cpu.double_rd = TRUE;\
 		cmd2\
 		_RD0;\
 	}\
@@ -398,42 +398,42 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	if (adr0 == 0x4014) {\
 		DMC.tick_type = DMC_R4014;\
 	}\
-	tick_hw(1);
+	tick_hw(cidx, 1);
 #define _LAX\
-	nes.c.cpu.AR = _RDB;\
-	_RSZ(nes.c.cpu.XR = nes.c.cpu.AR;, nes.c.cpu.XR)
+	nes[cidx].c.cpu.AR = _RDB;\
+	_RSZ(nes[cidx].c.cpu.XR = nes[cidx].c.cpu.AR;, nes[cidx].c.cpu.XR)
 #define _MSZ(cmd, result1, result2)\
 	_RSZ(cmd;, result1)\
 	_MSX(result2)
 #define _MSX(result)\
 	_ASLWR1(_RDB)\
-	nes.c.cpu.double_wr = TRUE;\
+	nes[cidx].c.cpu.double_wr = TRUE;\
 	_ASLWR2(result)\
-	nes.c.cpu.double_wr = FALSE;
-#define _PUL _RDX(((++nes.c.cpu.SP) | STACK), TRUE)
-#define _PSH(src) _WRX((nes.c.cpu.SP--) | STACK, src)
+	nes[cidx].c.cpu.double_wr = FALSE;
+#define _PUL _RDX(((++nes[cidx].c.cpu.SP) | STACK), TRUE)
+#define _PSH(src) _WRX((nes[cidx].c.cpu.SP--) | STACK, src)
 #define _PSP\
-	_PSH(nes.c.cpu.PC.b[1]);\
-	_PSH(nes.c.cpu.PC.b[0]);
+	_PSH(nes[cidx].c.cpu.PC.b[1]);\
+	_PSH(nes[cidx].c.cpu.PC.b[0]);
 #define _RD0 _RDX(adr0, TRUE)
 #define _RD1 _RDX(adr1, TRUE)
 #define _RD2\
 	_RDX(adr1, FALSE)\
 	_DMC
-#define _RDB nes.c.cpu.openbus
-#define _RDP _RDX(nes.c.cpu.PC.w++, TRUE)
-#define _RDD _RDX(nes.c.cpu.PC.w, TRUE)
-#define _RDX(src, LASTTICKHW) cpu_rd_mem(src, LASTTICKHW)
+#define _RDB nes[cidx].c.cpu.openbus
+#define _RDP _RDX(nes[cidx].c.cpu.PC.w++, TRUE)
+#define _RDD _RDX(nes[cidx].c.cpu.PC.w, TRUE)
+#define _RDX(src, LASTTICKHW) cpu_rd_mem(cidx, src, LASTTICKHW)
 #define _RLA(dst, bitmask, opr)\
 	_ROX(dst, bitmask, opr, old_cf);\
-	nes.c.cpu.AR &= shift
+	nes[cidx].c.cpu.AR &= shift
 #define _ROL(dst, bitmask, opr)\
 	_ROX(dst, bitmask, opr, old_cf)
 #define _ROR(dst, bitmask, opr)\
 	_ROX(dst, bitmask, opr, (old_cf << 7))
 #define _ROX(dst, bitmask, opr, oprnd)\
 	{\
-	BYTE old_cf = nes.c.cpu.cf;\
+	BYTE old_cf = nes[cidx].c.cpu.cf;\
 	_BSH(dst, bitmask, opr)\
 	(dst) |= (oprnd);\
 	}
@@ -443,7 +443,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define _RDZ(cmd, result)\
     _RDD;\
 	_RSZ(cmd, result)
-#define _SBC _RSZ(_SUB(nes.c.cpu.openbus), nes.c.cpu.AR)
+#define _SBC _RSZ(_SUB(nes[cidx].c.cpu.openbus), nes[cidx].c.cpu.AR)
 #define _SHF(x, cmd, result1, result2)\
 	{\
 	BYTE shift = x;\
@@ -451,7 +451,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	}
 #define _SLO(dst, bitmask, opr1, opr2)\
 	_BSH(dst, bitmask, opr1)\
-	nes.c.cpu.AR opr2 shift
+	nes[cidx].c.cpu.AR opr2 shift
 
 // NOTE : BCD Subtraction
 // 6502
@@ -470,55 +470,55 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 // il codice per il decimal mode potrebbe essere buggato!!!!!!
 #define _SUB(opr)\
 	{\
-	if (info.decimal_mode && nes.c.cpu.df) {\
-		SWORD A = 0; SWORD AL = (nes.c.cpu.AR & 0x0F) - ((opr) & 0x0F) + nes.c.cpu.cf - 1;\
-		AL = (nes.c.cpu.AR & 0x0F) - ((opr) & 0x0F) + nes.c.cpu.cf - 1;\
+	if (info.decimal_mode && nes[cidx].c.cpu.df) {\
+		SWORD A = 0; SWORD AL = (nes[cidx].c.cpu.AR & 0x0F) - ((opr) & 0x0F) + nes[cidx].c.cpu.cf - 1;\
+		AL = (nes[cidx].c.cpu.AR & 0x0F) - ((opr) & 0x0F) + nes[cidx].c.cpu.cf - 1;\
 		if (AL < 0) { AL = ((AL - 0x06) & 0x0F) - 0x10; }\
-		A = (nes.c.cpu.AR & 0xF0) - ((opr) & 0xF0) + AL;\
+		A = (nes[cidx].c.cpu.AR & 0xF0) - ((opr) & 0xF0) + AL;\
 		if (A < 0) { A -= 0x60; }\
-		nes.c.cpu.cf = (A < 0x100 ? 1 : 0);\
-		nes.c.cpu.of = (((nes.c.cpu.AR ^ (opr)) & 0x80) & ((nes.c.cpu.AR ^ A) & 0x80) ? 0x40 : 0);\
-		nes.c.cpu.AR = (BYTE)A;\
+		nes[cidx].c.cpu.cf = (A < 0x100 ? 1 : 0);\
+		nes[cidx].c.cpu.of = (((nes[cidx].c.cpu.AR ^ (opr)) & 0x80) & ((nes[cidx].c.cpu.AR ^ A) & 0x80) ? 0x40 : 0);\
+		nes[cidx].c.cpu.AR = (BYTE)A;\
 	} else {\
-		WORD A = nes.c.cpu.AR - (opr) - !nes.c.cpu.cf;\
-		nes.c.cpu.cf = (A < 0x100 ? 1 : 0);\
-		nes.c.cpu.of = (((nes.c.cpu.AR ^ (opr)) & 0x80) & ((nes.c.cpu.AR ^ A) & 0x80) ? 0x40 : 0);\
-		nes.c.cpu.AR = (BYTE)A;\
+		WORD A = nes[cidx].c.cpu.AR - (opr) - !nes[cidx].c.cpu.cf;\
+		nes[cidx].c.cpu.cf = (A < 0x100 ? 1 : 0);\
+		nes[cidx].c.cpu.of = (((nes[cidx].c.cpu.AR ^ (opr)) & 0x80) & ((nes[cidx].c.cpu.AR ^ A) & 0x80) ? 0x40 : 0);\
+		nes[cidx].c.cpu.AR = (BYTE)A;\
 	}\
 	}
 #define _WR0(reg) _WRX(adr0, reg);
-#define _WRX(dst, reg) cpu_wr_mem(dst, reg)
+#define _WRX(dst, reg) cpu_wr_mem(cidx, dst, reg)
 
 // IRQ
 #define _IRQ(flags)\
 	BYTE flagNMI = FALSE;\
 	_PSP\
-	if (nes.c.nmi.high) {\
+	if (nes[cidx].c.nmi.high) {\
 		flagNMI = TRUE;\
 	}\
-	assemble_SR();\
+	assemble_SR(cidx);\
 	_PSH(flags);\
-	nes.c.cpu.im = nes.c.irq.inhibit = 0x04;\
+	nes[cidx].c.cpu.im = nes[cidx].c.irq.inhibit = 0x04;\
 	if (flagNMI) {\
-		nes.c.nmi.high = nes.c.nmi.delay = FALSE;\
-		nes.c.cpu.PC.w = lend_word(INT_NMI, FALSE, TRUE);\
+		nes[cidx].c.nmi.high = nes[cidx].c.nmi.delay = FALSE;\
+		nes[cidx].c.cpu.PC.w = lend_word(cidx, INT_NMI, FALSE, TRUE);\
 	} else {\
-		nes.c.cpu.PC.w = lend_word(INT_IRQ, FALSE, TRUE);\
-		if (nes.c.nmi.high) {\
-			nes.c.nmi.delay = TRUE;\
+		nes[cidx].c.cpu.PC.w = lend_word(cidx, INT_IRQ, FALSE, TRUE);\
+		if (nes[cidx].c.nmi.high) {\
+			nes[cidx].c.nmi.delay = TRUE;\
 		}\
 	}
 #define IRQ(flags) \
 	_RDD;\
 	_IRQ(flags)
 #define NMI\
-	nes.c.nmi.high = nes.c.nmi.delay = FALSE; \
+	nes[cidx].c.nmi.high = nes[cidx].c.nmi.delay = FALSE; \
 	_RDD;\
 	_PSP\
-	assemble_SR();\
-	_PSH(nes.c.cpu.SR & 0xEF);\
-	nes.c.cpu.im = nes.c.irq.inhibit = 0x04;\
-	nes.c.cpu.PC.w = lend_word(INT_NMI, FALSE, TRUE);
+	assemble_SR(cidx);\
+	_PSH(nes[cidx].c.cpu.SR & 0xEF);\
+	nes[cidx].c.cpu.im = nes[cidx].c.irq.inhibit = 0x04;\
+	nes[cidx].c.cpu.PC.w = lend_word(cidx, INT_NMI, FALSE, TRUE);
 
 #define _RDZPG  _RD0
 #define _RDZPX_ _RD1
@@ -566,10 +566,10 @@ static const BYTE table_opcode_cycles[256] = {
 /*    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F     */
 };
 
-void cpu_exe_op(void) {
-	nes.c.cpu.opcode = FALSE;
+void cpu_exe_op(BYTE cidx) {
+	nes[cidx].c.cpu.opcode = FALSE;
 	DMC.tick_type = DMC_NORMAL;
-	nes.c.cpu.opcode_PC = nes.c.cpu.PC.w;
+	nes[cidx].c.cpu.opcode_PC = nes[cidx].c.cpu.PC.w;
 
 	// ------------------------------------------------
 	//                   IRQ handler
@@ -580,45 +580,45 @@ void cpu_exe_op(void) {
 	// e' importante che dell'inhibit esamini solo
 	// gli ultimi 4 bit perche' i primi 4 potrebbero
 	// contenere il suo nuovo valore.
-	if (nes.c.irq.high && !(nes.c.irq.inhibit & 0x04)) {
+	if (nes[cidx].c.irq.high && !(nes[cidx].c.irq.inhibit & 0x04)) {
 		// se l'IRQ viene raggiunto nell'ultimo ciclo
-		// dell'istruzione precedente (nes.c.irq.before == 0)
+		// dell'istruzione precedente (nes[cidx].c.irq.before == 0)
 		// devo eseguire l'istruzione successiva e solo
 		// dopo avviarlo.
-		if (!nes.c.irq.before || nes.c.irq.delay) {
-			nes.c.irq.delay = FALSE;
+		if (!nes[cidx].c.irq.before || nes[cidx].c.irq.delay) {
+			nes[cidx].c.irq.delay = FALSE;
 		} else {
-			nes.c.cpu.opcode = 0x200;
+			nes[cidx].c.cpu.opcode = 0x200;
 		}
 	}
-	if (nes.c.nmi.high) {
-		nes.c.cpu.opcode = 0;
+	if (nes[cidx].c.nmi.high) {
+		nes[cidx].c.cpu.opcode = 0;
 		// se l'NMI viene raggiunto nell'ultimo ciclo
-		// dell'istruzione precedente (nes.c.nmi.before = 0)
+		// dell'istruzione precedente (nes[cidx].c.nmi.before = 0)
 		// oppure durante un BRK o un IRQ (dal quinto ciclo
 		// in poi), devo eseguire l'istruzione successiva e
 		// solo dopo avviarlo.
-		if (!nes.c.nmi.before || nes.c.nmi.delay) {
-			nes.c.nmi.delay = FALSE;
+		if (!nes[cidx].c.nmi.before || nes[cidx].c.nmi.delay) {
+			nes[cidx].c.nmi.delay = FALSE;
 		} else {
-			nes.c.cpu.opcode = 0x100;
+			nes[cidx].c.cpu.opcode = 0x100;
 		}
 	}
 	// se codeop e' valorizzato (NMI o IRQ) eseguo
 	// un tick hardware altrimenti devo leggere la
 	// prossima istruzione.
-	if (nes.c.cpu.opcode & 0x300) {
-		tick_hw(1);
+	if (nes[cidx].c.cpu.opcode & 0x300) {
+		tick_hw(cidx, 1);
 	} else {
 		// memorizzo l'opcode attuale
-		nes.c.cpu.opcode = _RDP;
+		nes[cidx].c.cpu.opcode = _RDP;
 	}
 
 	// azzero le variabili che utilizzo per sapere
 	// quando avviene il DMA del DMC durante l'istruzione.
-	nes.c.cpu.opcode_cycle = DMC.dma_cycle = 0;
+	nes[cidx].c.cpu.opcode_cycle = DMC.dma_cycle = 0;
 	// flag della doppia lettura di un registro
-	nes.c.cpu.double_rd = FALSE;
+	nes[cidx].c.cpu.double_rd = FALSE;
 
 	// End of vertical blanking, sometime in pre-render
 	// scanline: Set NMI_occurred to false.
@@ -627,11 +627,11 @@ void cpu_exe_op(void) {
 	// FIXME: non sono affatto sicuro di questa cosa.
 	// Disabilito l'NMI quando viene settato (dal registro $2000)
 	// nello stesso momento in cui il vblank viene disabilitato
-	// (nes.p.ppu.frame_x = 0). In questo modo passo la rom di test
+	// (nes[cidx].p.ppu.frame_x = 0). In questo modo passo la rom di test
 	// 07-nmi_on_timing.nes. Non ho trovato informazioni su quando
 	// effettivamente questa situazione avvenga.
-	if (nes.c.nmi.high && !nes.c.nmi.frame_x && (nes.p.ppu.frame_y == nes.p.ppu_sclines.vint)) {
-		nes.c.nmi.high = nes.c.nmi.delay = FALSE;
+	if (nes[cidx].c.nmi.high && !nes[cidx].c.nmi.frame_x && (nes[cidx].p.ppu.frame_y == nes[cidx].p.ppu_sclines.vint)) {
+		nes[cidx].c.nmi.high = nes[cidx].c.nmi.delay = FALSE;
 	}
 	// le istruzioni CLI, SEI, e PLP ritardano il
 	// cambiamento dell'interrupt mask (im) fino
@@ -640,323 +640,323 @@ void cpu_exe_op(void) {
 	// Register (SR) ma l'effettiva funzione del
 	// flag viene ritardata di un'istruzione.
 	// L'RTI non soffre di questo difetto.
-	if (nes.c.irq.inhibit != nes.c.cpu.im) {
+	if (nes[cidx].c.irq.inhibit != nes[cidx].c.cpu.im) {
 		// l'IRQ handler ha gia' controllato la
 		// presenza di IRQ con il vecchio valore
 		// del flag di inibizione. Adesso, se
 		// serve, posso impostare il nuovo.
-		nes.c.irq.inhibit >>= 4;
+		nes[cidx].c.irq.inhibit >>= 4;
 	}
 	// ------------------------------------------------
 
 	// salvo i cicli presi dall'istruzione...
-	nes.c.cpu.base_opcode_cycles = table_opcode_cycles[(BYTE)nes.c.cpu.opcode];
-	mod_cycles_op(+=, nes.c.cpu.base_opcode_cycles);
+	nes[cidx].c.cpu.base_opcode_cycles = table_opcode_cycles[(BYTE)nes[cidx].c.cpu.opcode];
+	mod_cycles_op(+=, nes[cidx].c.cpu.base_opcode_cycles);
 
 	// ... e la eseguo
-	switch (nes.c.cpu.opcode) {
+	switch (nes[cidx].c.cpu.opcode) {
 
-	case 0x69: IMP(RD_OP, ADC(_RDP)) break;                              // ADC #IMM
-	case 0x65: ZPG(RD_OP, ADC(_RDZPG)) break;                            // ADC $ZPG
-	case 0x75: ZPX(RD_OP, ADC(_RDZPX), nes.c.cpu.XR) break;                    // ADC $ZPG,X
-	case 0x6D: ABS(RD_OP, ADC(_RDABS)) break;                            // ADC $ABS
-	case 0x7D: ABX(RD_OP, _CYW(_ADC), nes.c.cpu.XR) break;                     // ADC $ABS,X
-	case 0x79: ABX(RD_OP, _CYW(_ADC), nes.c.cpu.YR) break;                     // ADC $ABS,Y
-	case 0x61: IDX(RD_OP, ADC(_RDIDX)) break;                            // ADC ($IND,X)
-	case 0x71: IDY(RD_OP, _CYW(_ADC)) break;                             // ADC ($IND),Y
+	case 0x69: IMP(RD_OP, ADC(_RDP)) break;                                                      // ADC #IMM
+	case 0x65: ZPG(RD_OP, ADC(_RDZPG)) break;                                                    // ADC $ZPG
+	case 0x75: ZPX(RD_OP, ADC(_RDZPX), nes[cidx].c.cpu.XR) break;                                // ADC $ZPG,X
+	case 0x6D: ABS(RD_OP, ADC(_RDABS)) break;                                                    // ADC $ABS
+	case 0x7D: ABX(RD_OP, _CYW(_ADC), nes[cidx].c.cpu.XR) break;                                 // ADC $ABS,X
+	case 0x79: ABX(RD_OP, _CYW(_ADC), nes[cidx].c.cpu.YR) break;                                 // ADC $ABS,Y
+	case 0x61: IDX(RD_OP, ADC(_RDIDX)) break;                                                    // ADC ($IND,X)
+	case 0x71: IDY(RD_OP, _CYW(_ADC)) break;                                                     // ADC ($IND),Y
 
-	case 0x29: IMP(RD_OP, AND(_RDP, &=)) break;                          // AND #IMM
-	case 0x25: ZPG(RD_OP, AND(_RDZPG, &=)) break;                        // AND $ZPG
-	case 0x35: ZPX(RD_OP, AND(_RDZPX, &=), nes.c.cpu.XR) break;                // AND $ZPG,X
-	case 0x2D: ABS(RD_OP, AND(_RDABS, &=)) break;                        // AND $ABS
-	case 0x3D: ABX(RD_OP, _CYW(AND(_RDB, &=)), nes.c.cpu.XR) break;            // AND $ABS,X
-	case 0x39: ABX(RD_OP, _CYW(AND(_RDB, &=)), nes.c.cpu.YR) break;            // AND $ABS,Y
-	case 0x21: IDX(RD_OP, AND(_RDIDX, &=)) break;                        // AND ($IND,X)
-	case 0x31: IDY(RD_OP, _CYW(AND(_RDB, &=))) break;                    // AND ($IND),Y
+	case 0x29: IMP(RD_OP, AND(_RDP, &=)) break;                                                  // AND #IMM
+	case 0x25: ZPG(RD_OP, AND(_RDZPG, &=)) break;                                                // AND $ZPG
+	case 0x35: ZPX(RD_OP, AND(_RDZPX, &=), nes[cidx].c.cpu.XR) break;                            // AND $ZPG,X
+	case 0x2D: ABS(RD_OP, AND(_RDABS, &=)) break;                                                // AND $ABS
+	case 0x3D: ABX(RD_OP, _CYW(AND(_RDB, &=)), nes[cidx].c.cpu.XR) break;                        // AND $ABS,X
+	case 0x39: ABX(RD_OP, _CYW(AND(_RDB, &=)), nes[cidx].c.cpu.YR) break;                        // AND $ABS,Y
+	case 0x21: IDX(RD_OP, AND(_RDIDX, &=)) break;                                                // AND ($IND,X)
+	case 0x31: IDY(RD_OP, _CYW(AND(_RDB, &=))) break;                                            // AND ($IND),Y
 
-	case 0x0A: IMP(RD_OP, _RDZ(_BSH(nes.c.cpu.AR, 0x80, <<=), nes.c.cpu.AR)) break;  // ASL [AR]
-	case 0x06: ZPG(WR_OP, ASL(_RDZPG)) break;                            // ASL $ZPG
-	case 0x16: ZPX(WR_OP, ASL(_RDZPX), nes.c.cpu.XR) break;                    // ASL $ZPG,X
-	case 0x0E: ABS(WR_OP, ASL(_RDABS)) break;                            // ASL $ABS
-	case 0x1E: ABX(WR_OP, ASL(_RDABX), nes.c.cpu.XR) break;                    // ASL $ABS,X
+	case 0x0A: IMP(RD_OP, _RDZ(_BSH(nes[cidx].c.cpu.AR, 0x80, <<=), nes[cidx].c.cpu.AR)) break;  // ASL [AR]
+	case 0x06: ZPG(WR_OP, ASL(_RDZPG)) break;                                                    // ASL $ZPG
+	case 0x16: ZPX(WR_OP, ASL(_RDZPX), nes[cidx].c.cpu.XR) break;                                // ASL $ZPG,X
+	case 0x0E: ABS(WR_OP, ASL(_RDABS)) break;                                                    // ASL $ABS
+	case 0x1E: ABX(WR_OP, ASL(_RDABX), nes[cidx].c.cpu.XR) break;                                // ASL $ABS,X
 
-	case 0x90: IMP(RD_OP, BRC(nes.c.cpu.cf, FALSE)) break;                     // BCC [C = 0]
-	case 0xB0: IMP(RD_OP, BRC(nes.c.cpu.cf, TRUE)) break;                      // BCS [C = 1]
-	case 0xF0: IMP(RD_OP, BRC(nes.c.cpu.zf, TRUE)) break;                      // BEQ [Z = 1]
-	case 0x30: IMP(RD_OP, BRC(nes.c.cpu.sf, TRUE)) break;                      // BMI [S = 1]
-	case 0xD0: IMP(RD_OP, BRC(nes.c.cpu.zf, FALSE)) break;                     // BNE [Z = 0]
-	case 0x10: IMP(RD_OP, BRC(nes.c.cpu.sf, FALSE)) break;                     // BPL [S = 0]
-	case 0x50: IMP(RD_OP, BRC(nes.c.cpu.of, FALSE)) break;                     // BVC [O = 0]
-	case 0x70: IMP(RD_OP, BRC(nes.c.cpu.of, TRUE)) break;                      // BVS [O = 1]
+	case 0x90: IMP(RD_OP, BRC(nes[cidx].c.cpu.cf, FALSE)) break;                                 // BCC [C = 0]
+	case 0xB0: IMP(RD_OP, BRC(nes[cidx].c.cpu.cf, TRUE)) break;                                  // BCS [C = 1]
+	case 0xF0: IMP(RD_OP, BRC(nes[cidx].c.cpu.zf, TRUE)) break;                                  // BEQ [Z = 1]
+	case 0x30: IMP(RD_OP, BRC(nes[cidx].c.cpu.sf, TRUE)) break;                                  // BMI [S = 1]
+	case 0xD0: IMP(RD_OP, BRC(nes[cidx].c.cpu.zf, FALSE)) break;                                 // BNE [Z = 0]
+	case 0x10: IMP(RD_OP, BRC(nes[cidx].c.cpu.sf, FALSE)) break;                                 // BPL [S = 0]
+	case 0x50: IMP(RD_OP, BRC(nes[cidx].c.cpu.of, FALSE)) break;                                 // BVC [O = 0]
+	case 0x70: IMP(RD_OP, BRC(nes[cidx].c.cpu.of, TRUE)) break;                                  // BVS [O = 1]
 
-	case 0x24: ZPG(RD_OP, BIT(_RDZPG)) break;                            // BIT $ZPG
-	case 0x2C: ABS(RD_OP, BIT(_RDABS)) break;                            // BIT $ABS
+	case 0x24: ZPG(RD_OP, BIT(_RDZPG)) break;                                                    // BIT $ZPG
+	case 0x2C: ABS(RD_OP, BIT(_RDABS)) break;                                                    // BIT $ABS
 
-	case 0x00: IMP(RD_OP, BRK) break;                                    // BRK
+	case 0x00: IMP(RD_OP, BRK) break;                                                            // BRK
 
-	case 0x18: IMP(RD_OP, _RDD; nes.c.cpu.cf = FALSE;) break;                  // CLC [C -> 0]
-	case 0xD8: IMP(RD_OP, _RDD; nes.c.cpu.df = FALSE;) break;                  // CLD [D -> 0]
-	case 0x58: IMP(RD_OP, _RDD; nes.c.cpu.im = FALSE;) break;                  // CLI [I -> 0]
-	case 0xB8: IMP(RD_OP, _RDD; nes.c.cpu.of = FALSE;) break;                  // CLV [O -> 0]
+	case 0x18: IMP(RD_OP, _RDD; nes[cidx].c.cpu.cf = FALSE;) break;                              // CLC [C -> 0]
+	case 0xD8: IMP(RD_OP, _RDD; nes[cidx].c.cpu.df = FALSE;) break;                              // CLD [D -> 0]
+	case 0x58: IMP(RD_OP, _RDD; nes[cidx].c.cpu.im = FALSE;) break;                              // CLI [I -> 0]
+	case 0xB8: IMP(RD_OP, _RDD; nes[cidx].c.cpu.of = FALSE;) break;                              // CLV [O -> 0]
 
-	case 0xC9: IMP(RD_OP, CMP(_RDP, nes.c.cpu.AR)) break;                      // CMP #IMM
-	case 0xC5: ZPG(RD_OP, CMP(_RDZPG, nes.c.cpu.AR)) break;                    // CMP $ZPG
-	case 0xD5: ZPX(RD_OP, CMP(_RDZPX, nes.c.cpu.AR), nes.c.cpu.XR) break;            // CMP $ZPG,X
-	case 0xCD: ABS(RD_OP, CMP(_RDABS, nes.c.cpu.AR)) break;                    // CMP $ABS
-	case 0xDD: ABX(RD_OP, _CYW(CMP(_RDB, nes.c.cpu.AR)), nes.c.cpu.XR) break;        // CMP $ABS,X
-	case 0xD9: ABX(RD_OP, _CYW(CMP(_RDB, nes.c.cpu.AR)), nes.c.cpu.YR) break;        // CMP $ABS,Y
-	case 0xC1: IDX(RD_OP, CMP(_RDIDX, nes.c.cpu.AR)) break;                    // CMP ($IND,X)
-	case 0xD1: IDY(RD_OP, _CYW(CMP(_RDB, nes.c.cpu.AR))) break;                // CMP ($IND),Y
+	case 0xC9: IMP(RD_OP, CMP(_RDP, nes[cidx].c.cpu.AR)) break;                                  // CMP #IMM
+	case 0xC5: ZPG(RD_OP, CMP(_RDZPG, nes[cidx].c.cpu.AR)) break;                                // CMP $ZPG
+	case 0xD5: ZPX(RD_OP, CMP(_RDZPX, nes[cidx].c.cpu.AR), nes[cidx].c.cpu.XR) break;            // CMP $ZPG,X
+	case 0xCD: ABS(RD_OP, CMP(_RDABS, nes[cidx].c.cpu.AR)) break;                                // CMP $ABS
+	case 0xDD: ABX(RD_OP, _CYW(CMP(_RDB, nes[cidx].c.cpu.AR)), nes[cidx].c.cpu.XR) break;        // CMP $ABS,X
+	case 0xD9: ABX(RD_OP, _CYW(CMP(_RDB, nes[cidx].c.cpu.AR)), nes[cidx].c.cpu.YR) break;        // CMP $ABS,Y
+	case 0xC1: IDX(RD_OP, CMP(_RDIDX, nes[cidx].c.cpu.AR)) break;                                // CMP ($IND,X)
+	case 0xD1: IDY(RD_OP, _CYW(CMP(_RDB, nes[cidx].c.cpu.AR))) break;                            // CMP ($IND),Y
 
-	case 0xE0: IMP(RD_OP, CMP(_RDP, nes.c.cpu.XR)) break;                      // CPX #IMM
-	case 0xE4: ZPG(RD_OP, CMP(_RDZPG, nes.c.cpu.XR)) break;                    // CPX $ZPG
-	case 0xEC: ABS(RD_OP, CMP(_RDABS, nes.c.cpu.XR)) break;                    // CPX $ABS
+	case 0xE0: IMP(RD_OP, CMP(_RDP, nes[cidx].c.cpu.XR)) break;                                  // CPX #IMM
+	case 0xE4: ZPG(RD_OP, CMP(_RDZPG, nes[cidx].c.cpu.XR)) break;                                // CPX $ZPG
+	case 0xEC: ABS(RD_OP, CMP(_RDABS, nes[cidx].c.cpu.XR)) break;                                // CPX $ABS
 
-	case 0xC0: IMP(RD_OP, CMP(_RDP, nes.c.cpu.YR)) break;                      // CPY #IMM
-	case 0xC4: ZPG(RD_OP, CMP(_RDZPG, nes.c.cpu.YR)) break;                    // CPY $ZPG
-	case 0xCC: ABS(RD_OP, CMP(_RDABS, nes.c.cpu.YR)) break;                    // CPY $ABS
+	case 0xC0: IMP(RD_OP, CMP(_RDP, nes[cidx].c.cpu.YR)) break;                                  // CPY #IMM
+	case 0xC4: ZPG(RD_OP, CMP(_RDZPG, nes[cidx].c.cpu.YR)) break;                                // CPY $ZPG
+	case 0xCC: ABS(RD_OP, CMP(_RDABS, nes[cidx].c.cpu.YR)) break;                                // CPY $ABS
 
-	case 0xC6: ZPG(WR_OP, INC(_RDZPG, -)) break;                         // DEC $ZPG
-	case 0xD6: ZPX(WR_OP, INC(_RDZPX, -), nes.c.cpu.XR) break;                 // DEC $ZPG,X
-	case 0xCE: ABS(WR_OP, INC(_RDABS, -)) break;                         // DEC $ABS
-	case 0xDE: ABX(WR_OP, INC(_RDABX, -), nes.c.cpu.XR) break;                 // DEC $ABS,X
+	case 0xC6: ZPG(WR_OP, INC(_RDZPG, -)) break;                                                 // DEC $ZPG
+	case 0xD6: ZPX(WR_OP, INC(_RDZPX, -), nes[cidx].c.cpu.XR) break;                             // DEC $ZPG,X
+	case 0xCE: ABS(WR_OP, INC(_RDABS, -)) break;                                                 // DEC $ABS
+	case 0xDE: ABX(WR_OP, INC(_RDABX, -), nes[cidx].c.cpu.XR) break;                             // DEC $ABS,X
 
-	case 0xCA: IMP(RD_OP, _RDZ(nes.c.cpu.XR--;, nes.c.cpu.XR)) break;                // DEX [XR]
+	case 0xCA: IMP(RD_OP, _RDZ(nes[cidx].c.cpu.XR--;, nes[cidx].c.cpu.XR)) break;                // DEX [XR]
 
-	case 0x88: IMP(RD_OP, _RDZ(nes.c.cpu.YR--;, nes.c.cpu.YR)) break;                // DEY [YR]
+	case 0x88: IMP(RD_OP, _RDZ(nes[cidx].c.cpu.YR--;, nes[cidx].c.cpu.YR)) break;                // DEY [YR]
 
-	case 0x49: IMP(RD_OP, AND(_RDP, ^=)) break;                          // EOR #IMM
-	case 0x45: ZPG(RD_OP, AND(_RDZPG, ^=)) break;                        // EOR $ZPG
-	case 0x55: ZPX(RD_OP, AND(_RDZPX, ^=), nes.c.cpu.XR) break;                // EOR $ZPG,X
-	case 0x4D: ABS(RD_OP, AND(_RDABS, ^=)) break;                        // EOR $ABS
-	case 0x5D: ABX(RD_OP, _CYW(AND(_RDB, ^=)), nes.c.cpu.XR) break;            // EOR $ABS,X
-	case 0x59: ABX(RD_OP, _CYW(AND(_RDB, ^=)), nes.c.cpu.YR) break;            // EOR $ABS,Y
-	case 0x41: IDX(RD_OP, AND(_RDIDX, ^=)) break;                        // EOR ($IND,X)
-	case 0x51: IDY(RD_OP, _CYW(AND(_RDB, ^=))) break;                    // EOR ($IND),Y
+	case 0x49: IMP(RD_OP, AND(_RDP, ^=)) break;                                                  // EOR #IMM
+	case 0x45: ZPG(RD_OP, AND(_RDZPG, ^=)) break;                                                // EOR $ZPG
+	case 0x55: ZPX(RD_OP, AND(_RDZPX, ^=), nes[cidx].c.cpu.XR) break;                            // EOR $ZPG,X
+	case 0x4D: ABS(RD_OP, AND(_RDABS, ^=)) break;                                                // EOR $ABS
+	case 0x5D: ABX(RD_OP, _CYW(AND(_RDB, ^=)), nes[cidx].c.cpu.XR) break;                        // EOR $ABS,X
+	case 0x59: ABX(RD_OP, _CYW(AND(_RDB, ^=)), nes[cidx].c.cpu.YR) break;                        // EOR $ABS,Y
+	case 0x41: IDX(RD_OP, AND(_RDIDX, ^=)) break;                                                // EOR ($IND,X)
+	case 0x51: IDY(RD_OP, _CYW(AND(_RDB, ^=))) break;                                            // EOR ($IND),Y
 
-	case 0xE6: ZPG(WR_OP, INC(_RDZPG, +)) break;                         // INC $ZPG
-	case 0xF6: ZPX(WR_OP, INC(_RDZPX, +), nes.c.cpu.XR) break;                 // INC $ZPG,X
-	case 0xEE: ABS(WR_OP, INC(_RDABS, +)) break;                         // INC $ABS
-	case 0xFE: ABX(WR_OP, INC(_RDABX, +), nes.c.cpu.XR) break;                 // INC $ABS,X
+	case 0xE6: ZPG(WR_OP, INC(_RDZPG, +)) break;                                                 // INC $ZPG
+	case 0xF6: ZPX(WR_OP, INC(_RDZPX, +), nes[cidx].c.cpu.XR) break;                             // INC $ZPG,X
+	case 0xEE: ABS(WR_OP, INC(_RDABS, +)) break;                                                 // INC $ABS
+	case 0xFE: ABX(WR_OP, INC(_RDABX, +), nes[cidx].c.cpu.XR) break;                             // INC $ABS,X
 
-	case 0xE8: IMP(RD_OP, _RDZ(nes.c.cpu.XR++;, nes.c.cpu.XR)) break;                // INX [XR]
+	case 0xE8: IMP(RD_OP, _RDZ(nes[cidx].c.cpu.XR++;, nes[cidx].c.cpu.XR)) break;                // INX [XR]
 
-	case 0xC8: IMP(RD_OP, _RDZ(nes.c.cpu.YR++;, nes.c.cpu.YR)) break;                // INY [YR]
+	case 0xC8: IMP(RD_OP, _RDZ(nes[cidx].c.cpu.YR++;, nes[cidx].c.cpu.YR)) break;                // INY [YR]
 
-	case 0x4C: IMP(RD_OP, JMP) break;                                    // JMP $ABS
-	case 0x6C: IDR(RD_OP) break;                                         // JMP ($IND)
+	case 0x4C: IMP(RD_OP, JMP) break;                                                            // JMP $ABS
+	case 0x6C: IDR(RD_OP) break;                                                                 // JMP ($IND)
 
-	case 0x20: IMP(RD_OP, JSR) break;                                    // JSR $ABS
+	case 0x20: IMP(RD_OP, JSR) break;                                                            // JSR $ABS
 
-	case 0xA9: IMP(RD_OP, LDX(_RDP, nes.c.cpu.AR)) break;                      // LDA #IMM
-	case 0xA5: ZPG(RD_OP, LDX(_RDZPG, nes.c.cpu.AR)) break;                    // LDA $ZPG
-	case 0xB5: ZPX(RD_OP, LDX(_RDZPX, nes.c.cpu.AR), nes.c.cpu.XR) break;            // LDA $ZPG,X
-	case 0xAD: ABS(RD_OP, LDX(_RDABS, nes.c.cpu.AR)) break;                    // LDA $ABS
-	case 0xBD: ABX(RD_OP, _CYW(LDX(_RDB, nes.c.cpu.AR)), nes.c.cpu.XR) break;        // LDA $ABS,X
-	case 0xB9: ABX(RD_OP, _CYW(LDX(_RDB, nes.c.cpu.AR)), nes.c.cpu.YR) break;        // LDA $ABS,Y
-	case 0xA1: IDX(RD_OP, LDX(_RDIDX, nes.c.cpu.AR)) break;                    // LDA ($IND,X)
-	case 0xB1: IDY(RD_OP, _CYW(LDX(_RDB, nes.c.cpu.AR))) break;                // LDA ($IND),Y
+	case 0xA9: IMP(RD_OP, LDX(_RDP, nes[cidx].c.cpu.AR)) break;                                  // LDA #IMM
+	case 0xA5: ZPG(RD_OP, LDX(_RDZPG, nes[cidx].c.cpu.AR)) break;                                // LDA $ZPG
+	case 0xB5: ZPX(RD_OP, LDX(_RDZPX, nes[cidx].c.cpu.AR), nes[cidx].c.cpu.XR) break;            // LDA $ZPG,X
+	case 0xAD: ABS(RD_OP, LDX(_RDABS, nes[cidx].c.cpu.AR)) break;                                // LDA $ABS
+	case 0xBD: ABX(RD_OP, _CYW(LDX(_RDB, nes[cidx].c.cpu.AR)), nes[cidx].c.cpu.XR) break;        // LDA $ABS,X
+	case 0xB9: ABX(RD_OP, _CYW(LDX(_RDB, nes[cidx].c.cpu.AR)), nes[cidx].c.cpu.YR) break;        // LDA $ABS,Y
+	case 0xA1: IDX(RD_OP, LDX(_RDIDX, nes[cidx].c.cpu.AR)) break;                                // LDA ($IND,X)
+	case 0xB1: IDY(RD_OP, _CYW(LDX(_RDB, nes[cidx].c.cpu.AR))) break;                            // LDA ($IND),Y
 
-	case 0xA2: IMP(RD_OP, LDX(_RDP, nes.c.cpu.XR)) break;                      // LDX #IMM
-	case 0xA6: ZPG(RD_OP, LDX(_RDZPG,nes.c.cpu.XR)) break;                     // LDX $ZPG
-	case 0xB6: ZPX(RD_OP, LDX(_RDZPX,nes.c.cpu.XR), nes.c.cpu.YR) break;             // LDX $ZPG,Y
-	case 0xAE: ABS(RD_OP, LDX(_RDABS,nes.c.cpu.XR)) break;                     // LDX $ABS
-	case 0xBE: ABX(RD_OP, _CYW(LDX(_RDB, nes.c.cpu.XR)), nes.c.cpu.YR) break;        // LDX $ABS,Y
+	case 0xA2: IMP(RD_OP, LDX(_RDP, nes[cidx].c.cpu.XR)) break;                                  // LDX #IMM
+	case 0xA6: ZPG(RD_OP, LDX(_RDZPG,nes[cidx].c.cpu.XR)) break;                                 // LDX $ZPG
+	case 0xB6: ZPX(RD_OP, LDX(_RDZPX,nes[cidx].c.cpu.XR), nes[cidx].c.cpu.YR) break;             // LDX $ZPG,Y
+	case 0xAE: ABS(RD_OP, LDX(_RDABS,nes[cidx].c.cpu.XR)) break;                                 // LDX $ABS
+	case 0xBE: ABX(RD_OP, _CYW(LDX(_RDB, nes[cidx].c.cpu.XR)), nes[cidx].c.cpu.YR) break;        // LDX $ABS,Y
 
-	case 0xA0: IMP(RD_OP, LDX(_RDP, nes.c.cpu.YR)) break;                      // LDY #IMM
-	case 0xA4: ZPG(RD_OP, LDX(_RDZPG, nes.c.cpu.YR)) break;                    // LDY $ZPG
-	case 0xB4: ZPX(RD_OP, LDX(_RDZPX, nes.c.cpu.YR), nes.c.cpu.XR) break;            // LDY $ZPG,X
-	case 0xAC: ABS(RD_OP, LDX(_RDABS, nes.c.cpu.YR)) break;                    // LDY $ABS
-	case 0xBC: ABX(RD_OP, _CYW(LDX(_RDB, nes.c.cpu.YR)), nes.c.cpu.XR) break;        // LDY $ABS,X
+	case 0xA0: IMP(RD_OP, LDX(_RDP, nes[cidx].c.cpu.YR)) break;                                  // LDY #IMM
+	case 0xA4: ZPG(RD_OP, LDX(_RDZPG, nes[cidx].c.cpu.YR)) break;                                // LDY $ZPG
+	case 0xB4: ZPX(RD_OP, LDX(_RDZPX, nes[cidx].c.cpu.YR), nes[cidx].c.cpu.XR) break;            // LDY $ZPG,X
+	case 0xAC: ABS(RD_OP, LDX(_RDABS, nes[cidx].c.cpu.YR)) break;                                // LDY $ABS
+	case 0xBC: ABX(RD_OP, _CYW(LDX(_RDB, nes[cidx].c.cpu.YR)), nes[cidx].c.cpu.XR) break;        // LDY $ABS,X
 
-	case 0x4A: IMP(RD_OP, _RDZ(_BSH(nes.c.cpu.AR, 0x01, >>=), nes.c.cpu.AR)) break;  // LSR [AR]
-	case 0x46: ZPG(WR_OP, LSR(_RDZPG)) break;                            // LSR $ZPG
-	case 0x56: ZPX(WR_OP, LSR(_RDZPX), nes.c.cpu.XR) break;                    // LSR $ZPG,X
-	case 0x4E: ABS(WR_OP, LSR(_RDABS)) break;                            // LSR $ABS
-	case 0x5E: ABX(WR_OP, LSR(_RDABX), nes.c.cpu.XR) break;                    // LSR $ABS,X
+	case 0x4A: IMP(RD_OP, _RDZ(_BSH(nes[cidx].c.cpu.AR, 0x01, >>=), nes[cidx].c.cpu.AR)) break;  // LSR [AR]
+	case 0x46: ZPG(WR_OP, LSR(_RDZPG)) break;                                                    // LSR $ZPG
+	case 0x56: ZPX(WR_OP, LSR(_RDZPX), nes[cidx].c.cpu.XR) break;                                // LSR $ZPG,X
+	case 0x4E: ABS(WR_OP, LSR(_RDABS)) break;                                                    // LSR $ABS
+	case 0x5E: ABX(WR_OP, LSR(_RDABX), nes[cidx].c.cpu.XR) break;                                // LSR $ABS,X
 
-	case 0xEA: IMP(RD_OP, _RDD;) break;                                  // NOP
+	case 0xEA: IMP(RD_OP, _RDD;) break;                                                          // NOP
 
-	case 0x09: IMP(RD_OP, AND(_RDP, |=)) break;                          // ORA #IMM
-	case 0x05: ZPG(RD_OP, AND(_RDZPG, |=)) break;                        // ORA $ZPG
-	case 0x15: ZPX(RD_OP, AND(_RDZPX, |=), nes.c.cpu.XR) break;                // ORA $ZPG,X
-	case 0x0D: ABS(RD_OP, AND(_RDABS, |=)) break;                        // ORA $ABS
-	case 0x1D: ABX(RD_OP, _CYW(AND(_RDB, |=)), nes.c.cpu.XR) break;            // ORA $ABS,X
-	case 0x19: ABX(RD_OP, _CYW(AND(_RDB, |=)), nes.c.cpu.YR) break;            // ORA $ABS,Y
-	case 0x01: IDX(RD_OP, AND(_RDIDX, |=)) break;                        // ORA ($IND,X)
-	case 0x11: IDY(RD_OP, _CYW(AND(_RDB, |=))) break;                    // ORA ($IND),Y
+	case 0x09: IMP(RD_OP, AND(_RDP, |=)) break;                                                  // ORA #IMM
+	case 0x05: ZPG(RD_OP, AND(_RDZPG, |=)) break;                                                // ORA $ZPG
+	case 0x15: ZPX(RD_OP, AND(_RDZPX, |=), nes[cidx].c.cpu.XR) break;                            // ORA $ZPG,X
+	case 0x0D: ABS(RD_OP, AND(_RDABS, |=)) break;                                                // ORA $ABS
+	case 0x1D: ABX(RD_OP, _CYW(AND(_RDB, |=)), nes[cidx].c.cpu.XR) break;                        // ORA $ABS,X
+	case 0x19: ABX(RD_OP, _CYW(AND(_RDB, |=)), nes[cidx].c.cpu.YR) break;                        // ORA $ABS,Y
+	case 0x01: IDX(RD_OP, AND(_RDIDX, |=)) break;                                                // ORA ($IND,X)
+	case 0x11: IDY(RD_OP, _CYW(AND(_RDB, |=))) break;                                            // ORA ($IND),Y
 
-	case 0x48: IMP(WR_OP, PHA) break;                                    // PHA
-	case 0x08: IMP(WR_OP, PHP) break;                                    // PHP
+	case 0x48: IMP(WR_OP, PHA) break;                                                            // PHA
+	case 0x08: IMP(WR_OP, PHP) break;                                                            // PHP
 
-	case 0x68: IMP(WR_OP, PLA) break;                                    // PLA
-	case 0x28: IMP(WR_OP, PLP) break;                                    // PLP
+	case 0x68: IMP(WR_OP, PLA) break;                                                            // PLA
+	case 0x28: IMP(WR_OP, PLP) break;                                                            // PLP
 
-	case 0x2A: IMP(RD_OP, _RDZ(_ROL(nes.c.cpu.AR, 0x80, <<=), nes.c.cpu.AR)) break;  // ROL [AR]
-	case 0x26: ZPG(WR_OP, ROL(_RDZPG)) break;                            // ROL $ZPG
-	case 0x36: ZPX(WR_OP, ROL(_RDZPX), nes.c.cpu.XR) break;                    // ROL $ZPG,X
-	case 0x2E: ABS(WR_OP, ROL(_RDABS)) break;                            // ROL $ABS
-	case 0x3E: ABX(WR_OP, ROL(_RDABX), nes.c.cpu.XR) break;                    // ROL $ABS,X
+	case 0x2A: IMP(RD_OP, _RDZ(_ROL(nes[cidx].c.cpu.AR, 0x80, <<=), nes[cidx].c.cpu.AR)) break;  // ROL [AR]
+	case 0x26: ZPG(WR_OP, ROL(_RDZPG)) break;                                                    // ROL $ZPG
+	case 0x36: ZPX(WR_OP, ROL(_RDZPX), nes[cidx].c.cpu.XR) break;                                // ROL $ZPG,X
+	case 0x2E: ABS(WR_OP, ROL(_RDABS)) break;                                                    // ROL $ABS
+	case 0x3E: ABX(WR_OP, ROL(_RDABX), nes[cidx].c.cpu.XR) break;                                // ROL $ABS,X
 
-	case 0x6A: IMP(RD_OP, _RDZ(_ROR(nes.c.cpu.AR, 0x01, >>=), nes.c.cpu.AR)) break;  // ROR [AR]
-	case 0x66: ZPG(WR_OP, ROR(_RDZPG)) break;                            // ROR $ZPG
-	case 0x76: ZPX(WR_OP, ROR(_RDZPX), nes.c.cpu.XR) break;                    // ROR $ZPG,X
-	case 0x6E: ABS(WR_OP, ROR(_RDABS)) break;                            // ROR $ABS
-	case 0x7E: ABX(WR_OP, ROR(_RDABX), nes.c.cpu.XR) break;                    // ROR $ABS,X
+	case 0x6A: IMP(RD_OP, _RDZ(_ROR(nes[cidx].c.cpu.AR, 0x01, >>=), nes[cidx].c.cpu.AR)) break;  // ROR [AR]
+	case 0x66: ZPG(WR_OP, ROR(_RDZPG)) break;                                                    // ROR $ZPG
+	case 0x76: ZPX(WR_OP, ROR(_RDZPX), nes[cidx].c.cpu.XR) break;                                // ROR $ZPG,X
+	case 0x6E: ABS(WR_OP, ROR(_RDABS)) break;                                                    // ROR $ABS
+	case 0x7E: ABX(WR_OP, ROR(_RDABX), nes[cidx].c.cpu.XR) break;                                // ROR $ABS,X
 
-	case 0x40: IMP(RD_OP, RTI) break;                                    // RTI
+	case 0x40: IMP(RD_OP, RTI) break;                                                            // RTI
 
-	case 0x60: IMP(RD_OP, RTS) break;                                    // RTS
+	case 0x60: IMP(RD_OP, RTS) break;                                                            // RTS
 
-	case 0xE9: IMP(RD_OP, SBC(_RDP)) break;                              // SBC #IMM
-	case 0xE5: ZPG(RD_OP, SBC(_RDZPG)) break;                            // SBC $ZPG
-	case 0xF5: ZPX(RD_OP, SBC(_RDZPX), nes.c.cpu.XR) break;                    // SBC $ZPG,X
-	case 0xED: ABS(RD_OP, SBC(_RDABS)) break;                            // SBC $ABS
-	case 0xFD: ABX(RD_OP, _CYW(_SBC), nes.c.cpu.XR) break;                     // SBC $ABS,X
-	case 0xF9: ABX(RD_OP, _CYW(_SBC), nes.c.cpu.YR) break;                     // SBC $ABS,Y
-	case 0xE1: IDX(RD_OP, SBC(_RDIDX)) break;                            // SBC ($IND,X)
-	case 0xF1: IDY(RD_OP, _CYW(_SBC)) break;                             // SBC ($IND),Y
+	case 0xE9: IMP(RD_OP, SBC(_RDP)) break;                                                      // SBC #IMM
+	case 0xE5: ZPG(RD_OP, SBC(_RDZPG)) break;                                                    // SBC $ZPG
+	case 0xF5: ZPX(RD_OP, SBC(_RDZPX), nes[cidx].c.cpu.XR) break;                                // SBC $ZPG,X
+	case 0xED: ABS(RD_OP, SBC(_RDABS)) break;                                                    // SBC $ABS
+	case 0xFD: ABX(RD_OP, _CYW(_SBC), nes[cidx].c.cpu.XR) break;                                 // SBC $ABS,X
+	case 0xF9: ABX(RD_OP, _CYW(_SBC), nes[cidx].c.cpu.YR) break;                                 // SBC $ABS,Y
+	case 0xE1: IDX(RD_OP, SBC(_RDIDX)) break;                                                    // SBC ($IND,X)
+	case 0xF1: IDY(RD_OP, _CYW(_SBC)) break;                                                     // SBC ($IND),Y
 
-	case 0x38: IMP(RD_OP, _RDD; nes.c.cpu.cf = 0x01;) break;                   // SEC [C -> 1]
-	case 0xF8: IMP(RD_OP, _RDD; nes.c.cpu.df = 0x08;) break;                   // SED [D -> 1]
-	case 0x78: IMP(RD_OP, _RDD; SEI) break;                              // SEI [I -> 1]
+	case 0x38: IMP(RD_OP, _RDD; nes[cidx].c.cpu.cf = 0x01;) break;                               // SEC [C -> 1]
+	case 0xF8: IMP(RD_OP, _RDD; nes[cidx].c.cpu.df = 0x08;) break;                               // SED [D -> 1]
+	case 0x78: IMP(RD_OP, _RDD; SEI) break;                                                      // SEI [I -> 1]
 
-	case 0x85: ZPG(WR_OP, _STXZPG(nes.c.cpu.AR)) break;                        // STA $ZPG
-	case 0x95: ZPX(WR_OP, _STXZPX(nes.c.cpu.AR), nes.c.cpu.XR) break;                // STA $ZPG,X
-	case 0x8D: ABW(WR_OP, _STXABS(nes.c.cpu.AR)) break;                        // STA $ABS
-	case 0x9D: ABX(WR_OP, _STXABX(nes.c.cpu.AR), nes.c.cpu.XR) break;                // STA $ABS,X
-	case 0x99: ABX(WR_OP, _STXABX(nes.c.cpu.AR), nes.c.cpu.YR) break;                // STA $ABS,Y
-	case 0x81: IDX(WR_OP, _STXIDX(nes.c.cpu.AR)) break;                        // STA ($IND,X)
-	case 0x91: IDY(WR_OP, _STXIDY(nes.c.cpu.AR)) break;                        // STA ($IND),Y
+	case 0x85: ZPG(WR_OP, _STXZPG(nes[cidx].c.cpu.AR)) break;                                    // STA $ZPG
+	case 0x95: ZPX(WR_OP, _STXZPX(nes[cidx].c.cpu.AR), nes[cidx].c.cpu.XR) break;                // STA $ZPG,X
+	case 0x8D: ABW(WR_OP, _STXABS(nes[cidx].c.cpu.AR)) break;                                    // STA $ABS
+	case 0x9D: ABX(WR_OP, _STXABX(nes[cidx].c.cpu.AR), nes[cidx].c.cpu.XR) break;                // STA $ABS,X
+	case 0x99: ABX(WR_OP, _STXABX(nes[cidx].c.cpu.AR), nes[cidx].c.cpu.YR) break;                // STA $ABS,Y
+	case 0x81: IDX(WR_OP, _STXIDX(nes[cidx].c.cpu.AR)) break;                                    // STA ($IND,X)
+	case 0x91: IDY(WR_OP, _STXIDY(nes[cidx].c.cpu.AR)) break;                                    // STA ($IND),Y
 
-	case 0x86: ZPG(WR_OP, _STXZPG(nes.c.cpu.XR)) break;                        // STX $ZPG
-	case 0x96: ZPX(WR_OP, _STXZPX(nes.c.cpu.XR), nes.c.cpu.YR) break;                // STX $ZPG,Y
-	case 0x8E: ABW(WR_OP, _STXABS(nes.c.cpu.XR)) break;                        // STX $ABS
+	case 0x86: ZPG(WR_OP, _STXZPG(nes[cidx].c.cpu.XR)) break;                                    // STX $ZPG
+	case 0x96: ZPX(WR_OP, _STXZPX(nes[cidx].c.cpu.XR), nes[cidx].c.cpu.YR) break;                // STX $ZPG,Y
+	case 0x8E: ABW(WR_OP, _STXABS(nes[cidx].c.cpu.XR)) break;                                    // STX $ABS
 
-	case 0x84: ZPG(WR_OP, _STXZPG(nes.c.cpu.YR)) break;                        // STY $ZPG
-	case 0x94: ZPX(WR_OP, _STXZPX(nes.c.cpu.YR), nes.c.cpu.XR) break;                // STY $ZPG,X
-	case 0x8C: ABW(WR_OP, _STXABS(nes.c.cpu.YR)) break;                        // STY $ABS
+	case 0x84: ZPG(WR_OP, _STXZPG(nes[cidx].c.cpu.YR)) break;                                    // STY $ZPG
+	case 0x94: ZPX(WR_OP, _STXZPX(nes[cidx].c.cpu.YR), nes[cidx].c.cpu.XR) break;                // STY $ZPG,X
+	case 0x8C: ABW(WR_OP, _STXABS(nes[cidx].c.cpu.YR)) break;                                    // STY $ABS
 
-	case 0xAA: IMP(RD_OP, _RDZ(nes.c.cpu.XR = nes.c.cpu.AR;, nes.c.cpu.XR)) break;         // TAX
-	case 0xA8: IMP(RD_OP, _RDZ(nes.c.cpu.YR = nes.c.cpu.AR;, nes.c.cpu.YR)) break;         // TAY
-	case 0xBA: IMP(RD_OP, _RDZ(nes.c.cpu.XR = nes.c.cpu.SP;, nes.c.cpu.XR)) break;         // TSX
-	case 0x8A: IMP(RD_OP, _RDZ(nes.c.cpu.AR = nes.c.cpu.XR;, nes.c.cpu.AR)) break;         // TXA
-	case 0x9A: IMP(RD_OP, _RDD; nes.c.cpu.SP = nes.c.cpu.XR;) break;                 // TXS
-	case 0x98: IMP(RD_OP, _RDZ(nes.c.cpu.AR = nes.c.cpu.YR;, nes.c.cpu.AR)) break;         // TYA
+	case 0xAA: IMP(RD_OP, _RDZ(nes[cidx].c.cpu.XR = nes[cidx].c.cpu.AR;, nes[cidx].c.cpu.XR)) break; // TAX
+	case 0xA8: IMP(RD_OP, _RDZ(nes[cidx].c.cpu.YR = nes[cidx].c.cpu.AR;, nes[cidx].c.cpu.YR)) break; // TAY
+	case 0xBA: IMP(RD_OP, _RDZ(nes[cidx].c.cpu.XR = nes[cidx].c.cpu.SP;, nes[cidx].c.cpu.XR)) break; // TSX
+	case 0x8A: IMP(RD_OP, _RDZ(nes[cidx].c.cpu.AR = nes[cidx].c.cpu.XR;, nes[cidx].c.cpu.AR)) break; // TXA
+	case 0x9A: IMP(RD_OP, _RDD; nes[cidx].c.cpu.SP = nes[cidx].c.cpu.XR;) break;                     // TXS
+	case 0x98: IMP(RD_OP, _RDZ(nes[cidx].c.cpu.AR = nes[cidx].c.cpu.YR;, nes[cidx].c.cpu.AR)) break; // TYA
 
 	// illegal opcodes
-	case 0x0B:                                                           // AAC #IMM
-	case 0x2B: IMP(RD_OP, AAC) break;                                    // AAC #IMM
+	case 0x0B:                                                                                   // AAC #IMM
+	case 0x2B: IMP(RD_OP, AAC) break;                                                            // AAC #IMM
 
-	case 0x87: ZPG(WR_OP, AAX) break;                                    // AAX $ZPG
-	case 0x97: ZPX(WR_OP, AAX, nes.c.cpu.YR) break;                            // AAX $ZPG,Y
-	case 0x8F: ABS(WR_OP, AAX) break;                                    // AAX $ABS
-	case 0x83: IDX(WR_OP, AAX) break;                                    // AAX ($IND,X)
+	case 0x87: ZPG(WR_OP, AAX) break;                                                            // AAX $ZPG
+	case 0x97: ZPX(WR_OP, AAX, nes[cidx].c.cpu.YR) break;                                        // AAX $ZPG,Y
+	case 0x8F: ABS(WR_OP, AAX) break;                                                            // AAX $ABS
+	case 0x83: IDX(WR_OP, AAX) break;                                                            // AAX ($IND,X)
 
-	case 0x6B: IMP(RD_OP, ARR) break;                                    // ARR #IMM
+	case 0x6B: IMP(RD_OP, ARR) break;                                                            // ARR #IMM
 
-	case 0x4B: IMP(RD_OP, ASR) break;                                    // ASR #IMM
+	case 0x4B: IMP(RD_OP, ASR) break;                                                            // ASR #IMM
 
-	case 0xAB: IMP(RD_OP, ATX) break;                                    // ATX #IMM
+	case 0xAB: IMP(RD_OP, ATX) break;                                                            // ATX #IMM
 
-	case 0xCB: IMP(RD_OP, AXS) break;                                    // AXS #IMM
+	case 0xCB: IMP(RD_OP, AXS) break;                                                            // AXS #IMM
 
-	case 0xC7: ZPG(WR_OP, DCP(_RDZPG)) break;                            // DCP $ZPG
-	case 0xD7: ZPX(WR_OP, DCP(_RDZPX), nes.c.cpu.XR) break;                    // DCP $ZPG,X
-	case 0xCF: ABS(WR_OP, DCP(_RDABS)) break;                            // DCP $ABS
-	case 0xDF: ABX(WR_OP, DCP(_RDABX), nes.c.cpu.XR) break;                    // DCP $ABS,X
-	case 0xDB: ABX(WR_OP, DCP(_RDABX), nes.c.cpu.YR) break;                    // DCP $ABS,Y
-	case 0xC3: IDX(WR_OP, DCP(_RDIDX)) break;                            // DCP ($IND,X)
-	case 0xD3: IDY(WR_OP, DCP(_RDABX)) break;                            // DCP ($IND),Y
+	case 0xC7: ZPG(WR_OP, DCP(_RDZPG)) break;                                                    // DCP $ZPG
+	case 0xD7: ZPX(WR_OP, DCP(_RDZPX), nes[cidx].c.cpu.XR) break;                                // DCP $ZPG,X
+	case 0xCF: ABS(WR_OP, DCP(_RDABS)) break;                                                    // DCP $ABS
+	case 0xDF: ABX(WR_OP, DCP(_RDABX), nes[cidx].c.cpu.XR) break;                                // DCP $ABS,X
+	case 0xDB: ABX(WR_OP, DCP(_RDABX), nes[cidx].c.cpu.YR) break;                                // DCP $ABS,Y
+	case 0xC3: IDX(WR_OP, DCP(_RDIDX)) break;                                                    // DCP ($IND,X)
+	case 0xD3: IDY(WR_OP, DCP(_RDABX)) break;                                                    // DCP ($IND),Y
 
-	case 0x80:                                                           // DOP #IMM
-	case 0x82:                                                           // DOP #IMM
-	case 0x89:                                                           // DOP #IMM
-	case 0XC2:                                                           // DOP #IMM
-	case 0XE2: nes.c.cpu.PC.w++; break;                                        // DOP #IMM
-	case 0x04:                                                           // DOP $ZPG
-	case 0x44:                                                           // DOP $ZPG
-	case 0x64: ZPG(RD_OP, adr0 = adr0;) break;                           // DOP $ZPG
-	case 0x14:                                                           // DOP $ZPG,X
-	case 0x34:                                                           // DOP $ZPG,X
-	case 0x54:                                                           // DOP $ZPG,X
-	case 0x74:                                                           // DOP $ZPG,X
-	case 0xD4:                                                           // DOP $ZPG,X
-	case 0xF4: ZPX(RD_OP, adr0 = adr0;, nes.c.cpu.XR) break;                   // DOP $ZPG,X
+	case 0x80:                                                                                   // DOP #IMM
+	case 0x82:                                                                                   // DOP #IMM
+	case 0x89:                                                                                   // DOP #IMM
+	case 0XC2:                                                                                   // DOP #IMM
+	case 0XE2: nes[cidx].c.cpu.PC.w++; break;                                                    // DOP #IMM
+	case 0x04:                                                                                   // DOP $ZPG
+	case 0x44:                                                                                   // DOP $ZPG
+	case 0x64: ZPG(RD_OP, adr0 = adr0;) break;                                                   // DOP $ZPG
+	case 0x14:                                                                                   // DOP $ZPG,X
+	case 0x34:                                                                                   // DOP $ZPG,X
+	case 0x54:                                                                                   // DOP $ZPG,X
+	case 0x74:                                                                                   // DOP $ZPG,X
+	case 0xD4:                                                                                   // DOP $ZPG,X
+	case 0xF4: ZPX(RD_OP, adr0 = adr0;, nes[cidx].c.cpu.XR) break;                               // DOP $ZPG,X
 
-	case 0xE7: ZPG(WR_OP, ISC(_RDZPG)) break;                            // ISC $ZPG
-	case 0xF7: ZPX(WR_OP, ISC(_RDZPX), nes.c.cpu.XR) break;                    // ISC $ZPG,X
-	case 0xEF: ABS(WR_OP, ISC(_RDABS)) break;                            // ISC $ABS
-	case 0xFF: ABX(WR_OP, ISC(_RDABX), nes.c.cpu.XR) break;                    // ISC $ABS,X
-	case 0xFB: ABX(WR_OP, ISC(_RDABX), nes.c.cpu.YR) break;                    // ISC $ABS,Y
-	case 0xE3: IDX(WR_OP, ISC(_RDIDX)) break;                            // ISC ($IND,X)
-	case 0xF3: IDY(WR_OP, _CY_(ISC(_RDB),)) break;                       // ISC ($IND),Y
+	case 0xE7: ZPG(WR_OP, ISC(_RDZPG)) break;                                                    // ISC $ZPG
+	case 0xF7: ZPX(WR_OP, ISC(_RDZPX), nes[cidx].c.cpu.XR) break;                                // ISC $ZPG,X
+	case 0xEF: ABS(WR_OP, ISC(_RDABS)) break;                                                    // ISC $ABS
+	case 0xFF: ABX(WR_OP, ISC(_RDABX), nes[cidx].c.cpu.XR) break;                                // ISC $ABS,X
+	case 0xFB: ABX(WR_OP, ISC(_RDABX), nes[cidx].c.cpu.YR) break;                                // ISC $ABS,Y
+	case 0xE3: IDX(WR_OP, ISC(_RDIDX)) break;                                                    // ISC ($IND,X)
+	case 0xF3: IDY(WR_OP, _CY_(ISC(_RDB),)) break;                                               // ISC ($IND),Y
 
-	case 0xA7: ZPG(RD_OP, LAX(_RDZPG)) break;                            // LAX $ZPG
-	case 0xB7: ZPX(RD_OP, LAX(_RDABX), nes.c.cpu.YR) break;                    // LAX $ZPG,Y
-	case 0xAF: ABS(RD_OP, LAX(_RDABS)) break;                            // LAX $ABS
-	case 0xBF: ABX(RD_OP, _CYW(_LAX), nes.c.cpu.YR) break;                     // LAX $ABS,Y
-	case 0xA3: IDX(RD_OP, LAX(_RDIDX)) break;                            // LAX ($IND,X)
-	case 0xB3: IDY(RD_OP, _CYW(_LAX)) break;                             // LAX ($IND),Y
+	case 0xA7: ZPG(RD_OP, LAX(_RDZPG)) break;                                                    // LAX $ZPG
+	case 0xB7: ZPX(RD_OP, LAX(_RDABX), nes[cidx].c.cpu.YR) break;                                // LAX $ZPG,Y
+	case 0xAF: ABS(RD_OP, LAX(_RDABS)) break;                                                    // LAX $ABS
+	case 0xBF: ABX(RD_OP, _CYW(_LAX), nes[cidx].c.cpu.YR) break;                                 // LAX $ABS,Y
+	case 0xA3: IDX(RD_OP, LAX(_RDIDX)) break;                                                    // LAX ($IND,X)
+	case 0xB3: IDY(RD_OP, _CYW(_LAX)) break;                                                     // LAX ($IND),Y
 
-	case 0x1A:                                                           // NOP
-	case 0x3A:                                                           // NOP
-	case 0x5A:                                                           // NOP
-	case 0x7A:                                                           // NOP
-	case 0xDA:                                                           // NOP
-	case 0xFA: IMP(RD_OP, _RDD;) break;                                  // NOP
+	case 0x1A:                                                                                   // NOP
+	case 0x3A:                                                                                   // NOP
+	case 0x5A:                                                                                   // NOP
+	case 0x7A:                                                                                   // NOP
+	case 0xDA:                                                                                   // NOP
+	case 0xFA: IMP(RD_OP, _RDD;) break;                                                          // NOP
 
-	case 0x27: ZPG(WR_OP, RLA(_RDZPG)) break;                            // RLA $ZPG
-	case 0x37: ZPX(WR_OP, RLA(_RDZPX), nes.c.cpu.XR) break;                    // RLA $ZPG,X
-	case 0x2F: ABS(WR_OP, RLA(_RDABS)) break;                            // RLA $ABS
-	case 0x3F: ABX(WR_OP, RLA(_RDABX), nes.c.cpu.XR) break;                    // RLA $ABS,X
-	case 0x3B: ABX(WR_OP, RLA(_RDABX), nes.c.cpu.YR) break;                    // RLA $ABS,Y
-	case 0x23: IDX(WR_OP, RLA(_RDIDX)) break;                            // RLA ($IND,X)
-	case 0x33: IDY(WR_OP, _CY_(RLA(_RDB),)) break;                       // RLA ($IND),Y
+	case 0x27: ZPG(WR_OP, RLA(_RDZPG)) break;                                                    // RLA $ZPG
+	case 0x37: ZPX(WR_OP, RLA(_RDZPX), nes[cidx].c.cpu.XR) break;                                // RLA $ZPG,X
+	case 0x2F: ABS(WR_OP, RLA(_RDABS)) break;                                                    // RLA $ABS
+	case 0x3F: ABX(WR_OP, RLA(_RDABX), nes[cidx].c.cpu.XR) break;                                // RLA $ABS,X
+	case 0x3B: ABX(WR_OP, RLA(_RDABX), nes[cidx].c.cpu.YR) break;                                // RLA $ABS,Y
+	case 0x23: IDX(WR_OP, RLA(_RDIDX)) break;                                                    // RLA ($IND,X)
+	case 0x33: IDY(WR_OP, _CY_(RLA(_RDB),)) break;                                               // RLA ($IND),Y
 
-	case 0x67: ZPG(WR_OP, RRA(_RDZPG)) break;                            // RRA $ZPG
-	case 0x77: ZPX(WR_OP, RRA(_RDZPX), nes.c.cpu.XR) break;                    // RRA $ZPG,X
-	case 0x6F: ABS(WR_OP, RRA(_RDABS)) break;                            // RRA $ABS
-	case 0x7F: ABX(WR_OP, RRA(_RDABX), nes.c.cpu.XR) break;                    // RRA $ABS,X
-	case 0x7B: ABX(WR_OP, RRA(_RDABX), nes.c.cpu.YR) break;                    // RRA $ABS,Y
-	case 0x63: IDX(WR_OP, RRA(_RDIDX)) break;                            // RRA ($IND,X)
-	case 0x73: IDY(WR_OP, _CY_(RRA(_RDB),)) break;                       // RRA ($IND),Y
+	case 0x67: ZPG(WR_OP, RRA(_RDZPG)) break;                                                    // RRA $ZPG
+	case 0x77: ZPX(WR_OP, RRA(_RDZPX), nes[cidx].c.cpu.XR) break;                                // RRA $ZPG,X
+	case 0x6F: ABS(WR_OP, RRA(_RDABS)) break;                                                    // RRA $ABS
+	case 0x7F: ABX(WR_OP, RRA(_RDABX), nes[cidx].c.cpu.XR) break;                                // RRA $ABS,X
+	case 0x7B: ABX(WR_OP, RRA(_RDABX), nes[cidx].c.cpu.YR) break;                                // RRA $ABS,Y
+	case 0x63: IDX(WR_OP, RRA(_RDIDX)) break;                                                    // RRA ($IND,X)
+	case 0x73: IDY(WR_OP, _CY_(RRA(_RDB),)) break;                                               // RRA ($IND),Y
 
-	case 0xEB: IMP(RD_OP, SBC(_RDP)) break;                              // SBC #IMM
+	case 0xEB: IMP(RD_OP, SBC(_RDP)) break;                                                      // SBC #IMM
 
-	case 0x07: ZPG(WR_OP, SLO(_RDZPG)) break;                            // SLO $ZPG
-	case 0x17: ZPX(WR_OP, SLO(_RDZPX), nes.c.cpu.XR) break;                    // SLO $ZPG,X
-	case 0x0F: ABS(WR_OP, SLO(_RDABS)) break;                            // SLO $ABS
-	case 0x1F: ABX(WR_OP, SLO(_RDABX), nes.c.cpu.XR) break;                    // SLO $ABS,X
-	case 0x1B: ABX(WR_OP, SLO(_RDABX), nes.c.cpu.YR) break;                    // SLO $ABS,Y
-	case 0x03: IDX(WR_OP, SLO(_RDIDX)) break;                            // SLO ($IND,X)
-	case 0x13: IDY(WR_OP, _CY_(SLO(_RDB),)) break;                       // SLO ($IND),Y
+	case 0x07: ZPG(WR_OP, SLO(_RDZPG)) break;                                                    // SLO $ZPG
+	case 0x17: ZPX(WR_OP, SLO(_RDZPX), nes[cidx].c.cpu.XR) break;                                // SLO $ZPG,X
+	case 0x0F: ABS(WR_OP, SLO(_RDABS)) break;                                                    // SLO $ABS
+	case 0x1F: ABX(WR_OP, SLO(_RDABX), nes[cidx].c.cpu.XR) break;                                // SLO $ABS,X
+	case 0x1B: ABX(WR_OP, SLO(_RDABX), nes[cidx].c.cpu.YR) break;                                // SLO $ABS,Y
+	case 0x03: IDX(WR_OP, SLO(_RDIDX)) break;                                                    // SLO ($IND,X)
+	case 0x13: IDY(WR_OP, _CY_(SLO(_RDB),)) break;                                               // SLO ($IND),Y
 
-	case 0x47: ZPG(WR_OP, SRE(_RDZPG)) break;                            // SRE $ZPG
-	case 0x57: ZPX(WR_OP, SRE(_RDZPX), nes.c.cpu.XR) break;                    // SRE $ZPG,X
-	case 0x4F: ABS(WR_OP, SRE(_RDABS)) break;                            // SRE $ABS
-	case 0x5F: ABX(WR_OP, SRE(_RDABX), nes.c.cpu.XR) break;                    // SRE $ABS,X
-	case 0x5B: ABX(WR_OP, SRE(_RDABX), nes.c.cpu.YR) break;                    // SRE $ABS,Y
-	case 0x43: IDX(WR_OP, SRE(_RDIDX)) break;                            // SRE ($IND,X)
-	case 0x53: IDY(WR_OP, _CY_(SRE(_RDB),)) break;                       // SRE ($IND),Y
+	case 0x47: ZPG(WR_OP, SRE(_RDZPG)) break;                                                    // SRE $ZPG
+	case 0x57: ZPX(WR_OP, SRE(_RDZPX), nes[cidx].c.cpu.XR) break;                                // SRE $ZPG,X
+	case 0x4F: ABS(WR_OP, SRE(_RDABS)) break;                                                    // SRE $ABS
+	case 0x5F: ABX(WR_OP, SRE(_RDABX), nes[cidx].c.cpu.XR) break;                                // SRE $ABS,X
+	case 0x5B: ABX(WR_OP, SRE(_RDABX), nes[cidx].c.cpu.YR) break;                                // SRE $ABS,Y
+	case 0x43: IDX(WR_OP, SRE(_RDIDX)) break;                                                    // SRE ($IND,X)
+	case 0x53: IDY(WR_OP, _CY_(SRE(_RDB),)) break;                                               // SRE ($IND),Y
 
-	case 0x0C: ABS(RD_OP, adr0 = adr0;) break;                           // TOP $ABS
-	case 0x1C:                                                           // TOP $ABS,X
-	case 0x3C:                                                           // TOP $ABS,X
-	case 0X5C:                                                           // TOP $ABS,X
-	case 0X7C:                                                           // TOP $ABS,X
-	case 0XDC:                                                           // TOP $ABS,X
-	case 0XFC: ABX(RD_OP, _CYW(adr0 = 0;), nes.c.cpu.XR) break;                // TOP $ABS,X
+	case 0x0C: ABS(RD_OP, adr0 = adr0;) break;                                                   // TOP $ABS
+	case 0x1C:                                                                                   // TOP $ABS,X
+	case 0x3C:                                                                                   // TOP $ABS,X
+	case 0X5C:                                                                                   // TOP $ABS,X
+	case 0X7C:                                                                                   // TOP $ABS,X
+	case 0XDC:                                                                                   // TOP $ABS,X
+	case 0XFC: ABX(RD_OP, _CYW(adr0 = 0;), nes[cidx].c.cpu.XR) break;                            // TOP $ABS,X
 
-	case 0x9C: ABX(WR_OP, SXX(nes.c.cpu.YR), nes.c.cpu.XR) break;                    // SYA $ABS,X
-	case 0x9E: ABX(WR_OP, SXX(nes.c.cpu.XR), nes.c.cpu.YR) break;                    // SXA $ABS,Y
+	case 0x9C: ABX(WR_OP, SXX(nes[cidx].c.cpu.YR), nes[cidx].c.cpu.XR) break;                    // SYA $ABS,X
+	case 0x9E: ABX(WR_OP, SXX(nes[cidx].c.cpu.XR), nes[cidx].c.cpu.YR) break;                    // SXA $ABS,Y
 
 	// casi incerti
-	case 0x8B: IMP(RD_OP, XAA) break;                                    // XAA #IMM
-	case 0x9F: ABX(WR_OP, AXA(_AXAABX(tmp)), nes.c.cpu.YR) break;              // AXA $ABS,Y
-	case 0x93: IDY(WR_OP, AXA(_AXAIDY(tmp))) break;                      // AXA ($IND),Y
-	case 0xBB: ABX(RD_OP, _CYW(LAS), nes.c.cpu.YR) break;                      // LAS $ABS,Y
-	case 0x9B: ABX(WR_OP, XAS, nes.c.cpu.YR) break;                            // XAS $ABS,Y
+	case 0x8B: IMP(RD_OP, XAA) break;                                                            // XAA #IMM
+	case 0x9F: ABX(WR_OP, AXA(_AXAABX(tmp)), nes[cidx].c.cpu.YR) break;                          // AXA $ABS,Y
+	case 0x93: IDY(WR_OP, AXA(_AXAIDY(tmp))) break;                                              // AXA ($IND),Y
+	case 0xBB: ABX(RD_OP, _CYW(LAS), nes[cidx].c.cpu.YR) break;                                  // LAS $ABS,Y
+	case 0x9B: ABX(WR_OP, XAS, nes[cidx].c.cpu.YR) break;                                        // XAS $ABS,Y
 
 	case 0x02: // JAM
 	case 0x12: // JAM
@@ -972,51 +972,51 @@ void cpu_exe_op(void) {
 	case 0xF2: // JAM
 	default:
 		if (!info.no_rom && !info.first_illegal_opcode) {
-			log_warning(uL("cpu;alert PC = 0x%04X, CODEOP = 0x%02X"), (nes.c.cpu.PC.w - 1), nes.c.cpu.opcode);
+			log_warning(uL("cpu;alert PC = 0x%04X, CODEOP = 0x%02X"), (nes[cidx].c.cpu.PC.w - 1), nes[cidx].c.cpu.opcode);
 			gui_overlay_info_append_msg_precompiled(4, NULL);
 			info.first_illegal_opcode = TRUE;
 		}
-		nes.c.cpu.cycles = 0;
+		nes[cidx].c.cpu.cycles = 0;
 		break;
-	case 0x100: IMP(RD_OP, NMI) break;                                   // NMI
-	case 0x200: IMP(RD_OP, IRQ(nes.c.cpu.SR & 0xEF)) break;                    // IRQ
+	case 0x100: IMP(RD_OP, NMI) break;                                                           // NMI
+	case 0x200: IMP(RD_OP, IRQ(nes[cidx].c.cpu.SR & 0xEF)) break;                                // IRQ
 	}
 
 	// se presenti eseguo i restanti cicli di PPU e APU
-	if (nes.c.cpu.cycles > 0) {
-		tick_hw(nes.c.cpu.cycles);
+	if (nes[cidx].c.cpu.cycles > 0) {
+		tick_hw(cidx, nes[cidx].c.cpu.cycles);
 	}
 }
-void cpu_initial_cycles(void) {
-	cpu_rd_mem(nes.c.cpu.PC.w, TRUE);
-	cpu_rd_mem(nes.c.cpu.PC.w, TRUE);
-	cpu_rd_mem(nes.c.cpu.PC.w, TRUE);
-	cpu_rd_mem(nes.c.cpu.SP-- | STACK, TRUE);
-	cpu_rd_mem(nes.c.cpu.SP-- | STACK, TRUE);
-	cpu_rd_mem(nes.c.cpu.SP-- | STACK, TRUE);
-	nes.c.cpu.PC.b[0] = cpu_rd_mem(INT_RESET, TRUE);
-	nes.c.cpu.PC.b[1] = cpu_rd_mem(INT_RESET + 1, TRUE);
-	nes.c.cpu.cycles = 0;
-	nes.c.cpu.opcode_cycle = 0;
-	nes.c.cpu.double_wr = 0;
-	nes.c.cpu.double_rd = 0;
+void cpu_initial_cycles(BYTE cidx) {
+	cpu_rd_mem(cidx, nes[cidx].c.cpu.PC.w, TRUE);
+	cpu_rd_mem(cidx, nes[cidx].c.cpu.PC.w, TRUE);
+	cpu_rd_mem(cidx, nes[cidx].c.cpu.PC.w, TRUE);
+	cpu_rd_mem(cidx, nes[cidx].c.cpu.SP-- | STACK, TRUE);
+	cpu_rd_mem(cidx, nes[cidx].c.cpu.SP-- | STACK, TRUE);
+	cpu_rd_mem(cidx, nes[cidx].c.cpu.SP-- | STACK, TRUE);
+	nes[cidx].c.cpu.PC.b[0] = cpu_rd_mem(cidx, INT_RESET, TRUE);
+	nes[cidx].c.cpu.PC.b[1] = cpu_rd_mem(cidx, INT_RESET + 1, TRUE);
+	nes[cidx].c.cpu.cycles = 0;
+	nes[cidx].c.cpu.opcode_cycle = 0;
+	nes[cidx].c.cpu.double_wr = 0;
+	nes[cidx].c.cpu.double_rd = 0;
 }
-void cpu_turn_on(void) {
+void cpu_turn_on(BYTE cidx) {
 	if (info.reset >= HARD) {
-		memset(&nes.c.cpu, 0x00, sizeof(nes.c.cpu));
+		memset(&nes[cidx].c.cpu, 0x00, sizeof(nes[cidx].c.cpu));
 		// il bit 5 dell'SR e' sempre a 1 e
 		// il bit 2 (inhibit maskable interrupt) e'
 		// attivo all'avvio (o dopo un reset).
-		nes.c.cpu.SR = 0x34;
+		nes[cidx].c.cpu.SR = 0x34;
 
 		if (tas.type && (tas.emulator == FCEUX)) {
 			unsigned int x = 0;
 
-			for (x = 0; x < ram_size(); x++) {
-				ram_wr(x, (x & 0x04) ? 0xFF : 0x00);
+			for (x = 0; x < ram_size(cidx); x++) {
+				ram_wr(cidx, x, (x & 0x04) ? 0xFF : 0x00);
 			}
 		} else {
-			emu_initial_ram(ram_pnt(), ram_size());
+			emu_initial_ram(ram_pnt(cidx), ram_size(cidx));
 
 //			// reset della ram
 //			// Note:
@@ -1042,31 +1042,31 @@ void cpu_turn_on(void) {
 
 			// questo workaround serve solo per Dancing Blocks (Sachen) [!].nes
 			if (info.mapper.id == 143) {
-				ram_wr(0x004, 0x00);
+				ram_wr(cidx, 0x004, 0x00);
 			}
 
 			// questo workaround serve solo per Doraemon (J) (PRG0) [hM15].nes
 			if (info.mapper.id == 15) {
-				ram_wr(0x018, 0x00);
+				ram_wr(cidx, 0x018, 0x00);
 			}
 
 			// questo workaround serve solo per Ultimate Mortal Kombat 3 14 people (Unl)[!].nes
 			if (info.mapper.id == 123) {
-				ram_wr(0x080 ,0x00);
+				ram_wr(cidx, 0x080 ,0x00);
 			}
 		}
 	} else {
-		nes.c.cpu.SR |= 0x04;
-		nes.c.cpu.odd_cycle = 0;
-		nes.c.cpu.cycles = 0;
-		nes.c.cpu.opcode_cycle = 0;
-		nes.c.cpu.double_wr = 0;
-		nes.c.cpu.double_rd = 0;
+		nes[cidx].c.cpu.SR |= 0x04;
+		nes[cidx].c.cpu.odd_cycle = 0;
+		nes[cidx].c.cpu.cycles = 0;
+		nes[cidx].c.cpu.opcode_cycle = 0;
+		nes[cidx].c.cpu.double_wr = 0;
+		nes[cidx].c.cpu.double_rd = 0;
 	}
-	memset(&nes.c.nmi, 0x00, sizeof(_nmi));
-	memset(&nes.c.irq, 0x00, sizeof(_irq));
+	memset(&nes[cidx].c.nmi, 0x00, sizeof(_nmi));
+	memset(&nes[cidx].c.irq, 0x00, sizeof(_irq));
 	// disassemblo il Processor Status Register
-	disassemble_SR();
+	disassemble_SR(cidx);
 	// setto il flag di disabilitazione dell'irq
-	nes.c.irq.inhibit = nes.c.cpu.im;
+	nes[cidx].c.irq.inhibit = nes[cidx].c.cpu.im;
 }

@@ -25,21 +25,24 @@
 #include "emu.h"
 #include "palette.h"
 #include "gui.h"
+#include "info.h"
 
 _turn_off_effect turn_off_effect;
 
 BYTE tv_noise_init(void) {
-	uint32_t *palette;
+	uint32_t *palette = NULL;
 	_color_RGB pRGB[NUM_COLORS];
-	WORD i;
+	WORD i = 0;
 
-	if (!(turn_off_effect.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
+	turn_off_effect.palette = malloc(NUM_COLORS * sizeof(uint32_t));
+	if (!turn_off_effect.palette) {
 		log_error(uL("tv_noise;unable to allocate the palette"));
 		return (EXIT_ERROR);
 	}
 	palette = (uint32_t *)turn_off_effect.palette;
 
-	if (!(turn_off_effect.ntsc = malloc(sizeof(nes_ntsc_t)))) {
+	turn_off_effect.ntsc = malloc(sizeof(nes_ntsc_t));
+	if (!turn_off_effect.ntsc) {
 		log_error(uL("tv_noise;unable to allocate the palette"));
 		return (EXIT_ERROR);
 	}
@@ -63,15 +66,15 @@ void tv_noise_quit(void) {
 		turn_off_effect.ntsc = NULL;
 	}
 }
-void tv_noise_effect(void) {
+void tv_noise_effect(BYTE cidx) {
 	static WORD t0 = 0;
 	BYTE direction = 1;
-	int x, y;
+	int x = 0, y = 0;
 
 	if (cfg->disable_tv_noise) {
 		for (y = 0; y < SCR_ROWS; y++) {
 			for (x = 0; x < SCR_COLUMNS; x++) {
-				nes.p.ppu_screen.wr->line[y][x] = 0x0D;
+				nes[cidx].p.ppu_screen.wr->line[y][x] = 0x0D;
 			}
 		}
 		return;
@@ -81,7 +84,7 @@ void tv_noise_effect(void) {
 		for (x = 0; x < SCR_COLUMNS; x++) {
 			WORD w = (WORD)(7 + sin((double)x / 50000 + (double)t0 / 7));
 
-			nes.p.ppu_screen.wr->line[y][x] = emu_irand(16) * w;
+			nes[cidx].p.ppu_screen.wr->line[y][x] = emu_irand(16) * w;
 		}
 		t0 = (t0 + 1) % SCR_ROWS;
 	}

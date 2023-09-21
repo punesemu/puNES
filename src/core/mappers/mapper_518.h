@@ -35,11 +35,11 @@ extern _m518 m518;
 
 void map_init_518(void);
 void extcl_after_mapper_init_518(void);
-void extcl_cpu_wr_mem_518(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_518(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_518(BYTE cidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_518(BYTE cidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_518(BYTE mode, BYTE slot, FILE *fp);
-BYTE extcl_rd_chr_518(WORD address);
-BYTE extcl_rd_nmt_518(WORD address);
-void extcl_cpu_every_cycle_518(void);
+BYTE extcl_rd_chr_518(BYTE cidx, WORD address);
+BYTE extcl_rd_nmt_518(BYTE cidx, WORD address);
+void extcl_cpu_every_cycle_518(BYTE cidx);
 
 #endif /* MAPPER_518_H_ */

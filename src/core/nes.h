@@ -22,6 +22,10 @@
 #include <stdio.h>
 #include "common.h"
 
+enum _nes_chips_info {
+	NES_CHIPS_MAX = 2
+};
+
 // cpu -------------------------------------------------------------------------------
 
 typedef struct _cpu {
@@ -440,18 +444,54 @@ typedef struct _memmap_data {
 	_memmap_palette memmap_palette;
 } _memmap_data;
 
+// misc ------------------------------------------------------------------------------
+
+typedef struct _irqA12 {
+	BYTE present;
+	BYTE delay;
+	BYTE counter;
+	BYTE latch;
+	BYTE reload;
+	BYTE enable;
+	BYTE save_counter;
+	BYTE a12BS;
+	BYTE a12SB;
+	WORD b_adr_old;
+	WORD s_adr_old;
+
+	uint32_t cycles;
+
+	struct _race {
+		BYTE C001;
+		BYTE counter;
+		BYTE reload;
+	} race;
+} _irqA12;
+typedef struct _irql2f {
+	BYTE present;
+	BYTE enable;
+	BYTE counter;
+	BYTE scanline;
+	WORD frame_x;
+	BYTE delay;
+	BYTE in_frame;
+	BYTE pending;
+} _irql2f;
+
 // nes -------------------------------------------------------------------------------
 
 typedef struct _nes {
 	_cpu_data c;
 	_ppu_data p;
 	_memmap_data m;
+	_irqA12 irqA12;
+	_irql2f irql2f;
 } _nes;
 
 // -----------------------------------------------------------------------------------
 
 //extern _nes __attribute__((aligned(64))) nes;
-extern _nes nes;
+extern _nes nes[NES_CHIPS_MAX];
 extern _ppu_alignment ppu_alignment;
 extern _prgrom prgrom;
 extern _chrrom chrrom;

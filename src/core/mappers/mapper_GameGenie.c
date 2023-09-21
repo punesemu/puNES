@@ -23,7 +23,7 @@
 void map_init_GameGenie(void) {
 	EXTCL_CPU_WR_MEM(GameGenie);
 }
-void extcl_cpu_wr_mem_GameGenie(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_GameGenie(UNUSED(BYTE cidx), WORD address, BYTE value) {
 	_cheat *ch = NULL;
 
 	if ((address >= 0x8001) && (address <= 0x8004)) {
@@ -58,7 +58,7 @@ void extcl_cpu_wr_mem_GameGenie(WORD address, BYTE value) {
 		if (value) {
 			gamegenie.value = value;
 		} else {
-			BYTE i;
+			BYTE i = 0;
 
 			gamegenie.phase = GG_LOAD_ROM;
 			info.frame_status = FRAME_FINISHED;
@@ -67,7 +67,8 @@ void extcl_cpu_wr_mem_GameGenie(WORD address, BYTE value) {
 			for (i = 0; i < 3; i++) {
 				ch = &gamegenie.cheat[i];
 
-				if (!(ch->disabled = (gamegenie.value >> (4 + i)) & 0x01)) {
+				ch->disabled = (gamegenie.value >> (4 + i)) & 0x01;
+				if (!ch->disabled) {
 					ch->enabled_compare = (gamegenie.value >> (1 + i)) & 0x01;
 					gamegenie.counter++;
 				}

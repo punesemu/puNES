@@ -22,44 +22,44 @@
 void (*extcl_after_mapper_init)(void);
 // viene chiamata dal mapper_quit()
 void (*extcl_mapper_quit)(void);
-void (*extcl_cpu_wr_mem)(WORD address, BYTE value);
-BYTE (*extcl_cpu_rd_mem)(WORD address, BYTE openbus);
-BYTE (*extcl_cpu_rd_ram)(WORD address, BYTE openbus);
+void (*extcl_cpu_wr_mem)(BYTE cidx, WORD address, BYTE value);
+BYTE (*extcl_cpu_rd_mem)(BYTE cidx, WORD address, BYTE openbus);
+BYTE (*extcl_cpu_rd_ram)(BYTE cidx, WORD address, BYTE openbus);
 BYTE (*extcl_save_mapper)(BYTE mode, BYTE slot, FILE *fp);
 // CPU
 // viene chimata subito dopo il cpu_init_pc
-void (*extcl_cpu_init_pc)(void);
+void (*extcl_cpu_init_pc)(BYTE cidx);
 // viene chiamata ad ogni ciclo di cpu
-void (*extcl_cpu_every_cycle)(void);
+void (*extcl_cpu_every_cycle)(BYTE cidx);
 // viene chiamata ogni volta si scrive qualcosa nel registro $4016
-void (*extcl_cpu_wr_r4016)(BYTE value);
+void (*extcl_cpu_wr_r4016)(BYTE cidx, BYTE value);
 // PPU
 // viene chiamata sempre, ad ogni ciclo della PPU
-void (*extcl_ppu_000_to_34x)(void);
+void (*extcl_ppu_000_to_34x)(BYTE cidx);
 // viene chiamata se (!nes.p.ppu.vblank && (nes.p.ppu.screen_y < SCR_ROWS))
 // quindi per essere sicuri di essere durante il rendering della PPU
 // nella funzione devo controllare anche se nes.p.r2001.visible non e' a zero.
-void (*extcl_ppu_000_to_255)(void);
+void (*extcl_ppu_000_to_255)(BYTE cidx);
 // vengono chiamate solo se la PPU e' in fase di rendering
 // (!nes.p.ppu.vblank && nes.p.r2001.visible && (nes.p.ppu.screen_y < SCR_ROWS))
-void (*extcl_ppu_256_to_319)(void);
-void (*extcl_ppu_320_to_34x)(void);
+void (*extcl_ppu_256_to_319)(BYTE cidx);
+void (*extcl_ppu_320_to_34x)(BYTE cidx);
 // viene chiamata dopo ogni cambiamento del $2006 in cpu_inline.h
-void (*extcl_update_r2006)(WORD new_r2006, WORD old_r2006);
+void (*extcl_update_r2006)(BYTE cidx, WORD new_r2006, WORD old_r2006);
 // viene chiamata alla lettura del $2007 in cpu_inline.h
-void (*extcl_rd_r2007)(void);
+void (*extcl_rd_r2007)(BYTE cidx);
 // vine chiamata in cpu_inline.h alla scrittura nei rigistri della ppu
-BYTE (*extcl_wr_ppu_reg)(WORD address, BYTE *value);
+BYTE (*extcl_wr_ppu_reg)(BYTE cidx, WORD address, BYTE *value);
 // vengono chiamate in ppu_inline.h
-void (*extcl_rd_ppu_mem)(WORD address);
-BYTE (*extcl_rd_nmt)(WORD address);
-BYTE (*extcl_rd_chr)(WORD address);
+void (*extcl_rd_ppu_mem)(BYTE cidx, WORD address);
+BYTE (*extcl_rd_nmt)(BYTE cidx, WORD address);
+BYTE (*extcl_rd_chr)(BYTE cidx, WORD address);
 // viene chiamata dopo il FETCHB e dopo il fetch dello sprite
-void (*extcl_after_rd_chr)(WORD address);
+void (*extcl_after_rd_chr)(BYTE cidx, WORD address);
 // viene chiamato quando si tenta di scrivere nella Nametable Ram
-void (*extcl_wr_nmt)(WORD address, BYTE value);
+void (*extcl_wr_nmt)(BYTE cidx, WORD address, BYTE value);
 // viene chiamato quando si tenta di scrivere nella CHR Ram
-void (*extcl_wr_chr)(WORD address, BYTE value);
+void (*extcl_wr_chr)(BYTE cidx, WORD address, BYTE value);
 // APU
 // vine chiamata in cpu_inline.h alla scrittura nei rigistri della apu
 BYTE (*extcl_wr_apu)(WORD address, BYTE *value);
@@ -69,7 +69,7 @@ void (*extcl_length_clock)(void);
 void (*extcl_envelope_clock)(void);
 void (*extcl_apu_tick)(void);
 // irqA12
-void (*extcl_irq_A12_clock)(void);
+void (*extcl_irq_A12_clock)(BYTE cidx);
 // battery
 void (*extcl_battery_io)(BYTE mode, FILE *fp);
 // audio

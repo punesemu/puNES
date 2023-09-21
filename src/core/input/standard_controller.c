@@ -24,12 +24,12 @@
 
 INLINE static void input_turbo_buttons_standard_controller(_port *prt);
 
-void input_wr_standard_controller(const BYTE *value, BYTE nport) {
+void input_wr_standard_controller(UNUSED(BYTE cidx), const BYTE *value, BYTE nport) {
 	if ((r4016.value & 0x01) || ((*value) & 0x01)) {
 		port[nport].index = 0;
 	}
 }
-void input_rd_standard_controller(BYTE *value, BYTE nport, BYTE shift) {
+void input_rd_standard_controller(UNUSED(BYTE cidx), BYTE *value, BYTE nport, BYTE shift) {
 	(*value) = port[nport].data[port[nport].index] << shift;
 
 	// Se $4016 e' a 1 leggo solo lo stato del primo pulsante

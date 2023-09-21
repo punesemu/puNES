@@ -100,6 +100,7 @@ typedef struct _config {
 	int fullscreen_res_w;
 	int fullscreen_res_h;
 #endif
+	BYTE vs_monitor;
 
 	_config_input input;
 	_config_apu apu;

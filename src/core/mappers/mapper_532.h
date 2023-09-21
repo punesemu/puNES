@@ -35,7 +35,7 @@ extern _chinaersan2 chinaersan2;
 void map_init_532(void);
 void extcl_mapper_quit_532(void);
 
-void chinaersan2_apply_font(void);
+void chinaersan2_apply_font(BYTE cidx);
 BYTE chinaersan2_init(void);
 void chinaersan2_quit(void);
 

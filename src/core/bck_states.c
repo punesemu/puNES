@@ -62,32 +62,35 @@
 	}
 
 void bck_states_op_screen(BYTE mode, void *data, size_t *index, uint64_t *size_buff) {
-	bck_states_on_mem(mode, nes.p.ppu_screen.rd->data, (screen_size()), data, (*index), (*size_buff))
+	for (int i = 0; i < info.number_of_cpu; i++) {
+		bck_states_on_mem(mode, nes[i].p.ppu_screen.rd->data, (screen_size()), data, (*index), (*size_buff))
+	}
 }
 void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size_buff) {
 	unsigned int i = 0;
 
-	// CPU
-	bck_states_on_struct(mode, nes.c.cpu, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.c.irq, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.c.nmi, data, (*index), (*size_buff))
+	for (int i = 0; i < info.number_of_cpu; i++) {
+		// CPU
+		bck_states_on_struct(mode, nes[i].c.cpu, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].c.irq, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].c.nmi, data, (*index), (*size_buff))
 
-	// PPU
-	bck_states_on_struct(mode, nes.p.ppu, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.p.ppu_openbus, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.p.r2000, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.p.r2001, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.p.r2002, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.p.r2003, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.p.r2004, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.p.r2006, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.p.r2007, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.p.spr_ev, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.p.sprite, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.p.sprite_plus, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.p.tile_render, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.p.tile_fetch, data, (*index), (*size_buff))
-
+		// PPU
+		bck_states_on_struct(mode, nes[i].p.ppu, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].p.ppu_openbus, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].p.r2000, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].p.r2001, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].p.r2002, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].p.r2003, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].p.r2004, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].p.r2006, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].p.r2007, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].p.spr_ev, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].p.sprite, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].p.sprite_plus, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].p.tile_render, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].p.tile_fetch, data, (*index), (*size_buff))
+	}
 	// APU
 	bck_states_on_struct(mode, apu, data, (*index), (*size_buff))
 	bck_states_on_struct(mode, r4011, data, (*index), (*size_buff))
@@ -100,20 +103,24 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size
 	bck_states_on_struct(mode, DMC, data, (*index), (*size_buff))
 
 	// mem map
-	if (ram_size()) {
-		bck_states_on_mem(mode, ram_pnt(), ram_size(), data, (*index), (*size_buff))
+	for (int i = 0; i < info.number_of_cpu; i++) {
+		if (ram_size(i)) {
+			bck_states_on_mem(mode, ram_pnt(i), ram_size(i), data, (*index), (*size_buff))
+		}
 	}
 	if (wram_size()) {
 		bck_states_on_mem(mode, wram_pnt(), wram_size(), data, (*index), (*size_buff))
 	}
-	if (vram_size()) {
-		bck_states_on_mem(mode, vram_pnt(), vram_size(), data, (*index), (*size_buff))
+	for (int i = 0; i < info.number_of_cpu; i++) {
+		if (vram_size(i)) {
+			bck_states_on_mem(mode, vram_pnt(i), vram_size(i), data, (*index), (*size_buff))
+		}
+		if (nmt_size(i)) {
+			bck_states_on_mem(mode, nmt_pnt(i), nmt_size(i), data, (*index), (*size_buff))
+		}
+		bck_states_on_struct(mode, nes[i].p.oam, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[i].m.memmap_palette, data, (*index), (*size_buff))
 	}
-	if (nmt_size()) {
-		bck_states_on_mem(mode, nmt_pnt(), nmt_size(), data, (*index), (*size_buff))
-	}
-	bck_states_on_struct(mode, nes.m.memmap_palette, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, nes.p.oam, data, (*index), (*size_buff))
 
 	// mapper
 	bck_states_on_struct(mode, mapper, data, (*index), (*size_buff))
@@ -123,14 +130,16 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size
 		}
 	}
 
-	// irqA12
-	if (irqA12.present) {
-		bck_states_on_struct(mode, irqA12, data, (*index), (*size_buff))
-	}
+	for (int i = 0; i < info.number_of_cpu; i++) {
+		// irqA12
+		if (nes[i].irqA12.present) {
+			bck_states_on_struct(mode, nes[i].irqA12, data, (*index), (*size_buff))
+		}
 
-	// irql2f
-	if (irql2f.present) {
-		bck_states_on_struct(mode, irql2f, data, (*index), (*size_buff))
+		// irql2f
+		if (nes[i].irql2f.present) {
+			bck_states_on_struct(mode, nes[i].irql2f, data, (*index), (*size_buff))
+		}
 	}
 
 	// dipswitch

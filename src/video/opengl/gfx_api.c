@@ -53,15 +53,15 @@ void gfx_api_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ra
 	glTexSubImage2D(GL_TEXTURE_2D, 0, (GLint)rect->x, (GLint)rect->y, (GLsizei)rect->w, (GLsizei)rect->h, TI_FRM, TI_TYPE, surface);
 	glPixelStoref(GL_UNPACK_ROW_LENGTH, 0);
 }
-void gfx_api_apply_filter(void) {
-	gfx.frame.filtered = nes.p.ppu_screen.rd->frame;
+void gfx_api_apply_filter(BYTE cidx) {
+	gfx.frame.filtered = nes[cidx].p.ppu_screen.rd->frame;
 
 	// applico l'effetto desiderato
 	gfx.filter.data.pitch = opengl.surface.pitch;
 	gfx.filter.data.pix = opengl.surface.pixels;
 	gfx.filter.data.width = opengl.surface.w;
 	gfx.filter.data.height = opengl.surface.h;
-	gfx.filter.func();
+	gfx.filter.func(cidx);
 }
 void gfx_api_control_changed_adapter(UNUSED(void *monitor)) {
 #if defined (_WIN32)

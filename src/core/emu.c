@@ -116,10 +116,10 @@ void emu_frame(void) {
 
 	// eseguo un frame dell'emulatore
 	if (info.no_rom) {
-		tv_noise_effect();
-		gfx_draw_screen();
+		tv_noise_effect(0);
+		gfx_draw_screen(0);
 		emu_frame_sleep();
-		nes.p.ppu.frames++;
+		nes[0].p.ppu.frames++;
 		return;
 	} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 		int i = 0;
@@ -135,7 +135,7 @@ void emu_frame(void) {
 		extcl_audio_samples_mod_nsf(NULL, 0);
 		nsf_main_screen_event();
 		nsf_effect();
-		gfx_draw_screen();
+		gfx_draw_screen(0);
 		emu_frame_sleep();
 		return;
 	}
@@ -148,16 +148,21 @@ void emu_frame(void) {
 		emu_frame_started();
 	}
 
-	while (info.frame_status == FRAME_STARTED) {
+	// eseguo CPU, PPU e APU
+	for (int i = 0; i < info.number_of_cpu; i++) {
+		info.exec_cpu_op.b[i] = TRUE;
+	}
+	while (info.exec_cpu_op.w) {
 #if defined (DEBUG)
-		if (nes.c.cpu.PC.w == PCBREAK) {
+		if (nes[0].c.cpu.PC.w == PCBREAK) {
 			BYTE pippo = 5;
 			pippo = pippo + 1;
 		}
 #endif
-		// eseguo CPU, PPU e APU
-		cpu_exe_op();
+		if (info.exec_cpu_op.b[0]) cpu_exe_op(0);
+		if (info.exec_cpu_op.b[1]) cpu_exe_op(1);
 	}
+	info.frame_status = FRAME_FINISHED;
 
 	emu_frame_finished();
 	emu_frame_sleep();
@@ -171,10 +176,10 @@ void emu_frame_debugger(void) {
 	if (info.frame_status == FRAME_FINISHED) {
 		if (debugger.mode == DBG_GO) {
 			if (info.no_rom) {
-				tv_noise_effect();
-				gfx_draw_screen();
+				tv_noise_effect(0);
+				gfx_draw_screen(0);
 				emu_frame_sleep();
-				nes.p.ppu.frames++;
+				nes[0].p.ppu.frames++;
 				return;
 			} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 				int i = 0;
@@ -190,7 +195,7 @@ void emu_frame_debugger(void) {
 				extcl_audio_samples_mod_nsf(NULL, 0);
 				nsf_main_screen_event();
 				nsf_effect();
-				gfx_draw_screen();
+				gfx_draw_screen(0);
 				emu_frame_sleep();
 				return;
 			}
@@ -205,23 +210,23 @@ void emu_frame_debugger(void) {
 	}
 
 	// eseguo CPU, PPU e APU
-	if (debugger.mode == DBG_GO) {
-		// posso passare dal DBG_GO al DBG_STEP durante l'esecuzione di un frame intero
-		while ((info.frame_status == FRAME_STARTED) && (debugger.mode == DBG_GO)) {
-			if ((debugger.breakpoint == nes.c.cpu.PC.w) && !debugger.breakpoint_after_step) {
-				debugger.mode = DBG_BREAKPOINT;
-				//gui_dlgdebugger_click_step();
-				break;
-			} else {
-				debugger.breakpoint_after_step = FALSE;
-				info.CPU_PC_before = nes.c.cpu.PC.w;
-				cpu_exe_op();
-			}
-		}
-	} else if (debugger.mode == DBG_STEP) {
-		info.CPU_PC_before = nes.c.cpu.PC.w;
-		cpu_exe_op();
-	}
+//	if (debugger.mode == DBG_GO) {
+//		// posso passare dal DBG_GO al DBG_STEP durante l'esecuzione di un frame intero
+//		while ((info.frame_status == FRAME_STARTED) && (debugger.mode == DBG_GO)) {
+//			if ((debugger.breakpoint == nes.c.cpu.PC.w) && !debugger.breakpoint_after_step) {
+//				debugger.mode = DBG_BREAKPOINT;
+//				//gui_dlgdebugger_click_step();
+//				break;
+//			} else {
+//				debugger.breakpoint_after_step = FALSE;
+//				info.CPU_PC_before = nes.c.cpu.PC.w;
+//				cpu_exe_op();
+//			}
+//		}
+//	} else if (debugger.mode == DBG_STEP) {
+//		info.CPU_PC_before = nes.c.cpu.PC.w;
+//		cpu_exe_op();
+//	}
 
 	if (info.frame_status == FRAME_FINISHED) {
 		emu_frame_finished();
@@ -507,9 +512,11 @@ BYTE emu_turn_on(void) {
 	srand(time(0));
 
 	// l'inizializzazione della memmap della cpu e della ppu
-	memset(&nes.m.memmap_palette, 0x00, sizeof(nes.m.memmap_palette));
-	memset(&nes.p.oam, 0x00, sizeof(_oam));
-	memset(&nes.p.ppu_screen, 0x00, sizeof(_ppu_screen));
+	for (int i = 0; i < info.number_of_cpu; i++) {
+		memset(&nes[i].m.memmap_palette, 0x00, sizeof(nes[i].m.memmap_palette));
+		memset(&nes[i].p.oam, 0x00, sizeof(_oam));
+		memset(&nes[i].p.ppu_screen, 0x00, sizeof(_ppu_screen));
+	}
 	memset(&vs_system, 0x00, sizeof(vs_system));
 
 	info.lag_frame.next = TRUE;
@@ -581,11 +588,13 @@ BYTE emu_turn_on(void) {
 	}
 
 	// CPU
-	cpu_turn_on();
-	// ritardo della CPU
-	cpu_initial_cycles();
-	if (extcl_cpu_init_pc) {
-		extcl_cpu_init_pc();
+	for (int i = 0; i < info.number_of_cpu; i++) {
+		cpu_turn_on(i);
+		// ritardo della CPU
+		cpu_initial_cycles(i);
+		if (extcl_cpu_init_pc) {
+			extcl_cpu_init_pc(i);
+		}
 	}
 
 	// trainer
@@ -736,11 +745,13 @@ BYTE emu_reset(BYTE type) {
 	}
 
 	// CPU
-	cpu_turn_on();
-	// ritardo della CPU
-	cpu_initial_cycles();
-	if (extcl_cpu_init_pc) {
-		extcl_cpu_init_pc();
+	for (int i = 0; i < info.number_of_cpu; i++) {
+		cpu_turn_on(i);
+		// ritardo della CPU
+		cpu_initial_cycles(i);
+		if (extcl_cpu_init_pc) {
+			extcl_cpu_init_pc(i);
+		}
 	}
 
 	// trainer
@@ -776,9 +787,6 @@ BYTE emu_reset(BYTE type) {
 	}
 
 	if (vs_system.enabled) {
-		if (type >= HARD) {
-			vs_system.shared_mem = 0;
-		}
 		if ((cfg->dipswitch_vs == 0xFF00) && (info.default_dipswitches != 0xFF00)) {
 			cfg->dipswitch_vs = info.default_dipswitches;
 		}
@@ -1108,6 +1116,15 @@ void emu_info_rom(void) {
 			case VS_SM_Super_Xevious:
 				log_close_box(uL("Unisystem (Super Xevious protection)%s"), ifchanged());
 				break;
+			case VS_SM_Ice_Climber:
+				log_close_box(uL("Unisystem (Ice Climber Japan protection)%s"), ifchanged());
+				break;
+			case VS_DS_Normal:
+				log_close_box(uL("DualSystem (normal)%s"), ifchanged());
+				break;
+			case VS_DS_Bungeling:
+				log_close_box(uL("DualSystem (Raid on Bungeling Bay protection)%s"), ifchanged());
+				break;
 		}
 	}
 
@@ -1218,13 +1235,13 @@ void emu_info_rom(void) {
 		ischanged(info.header.prgnvram !=  wram_nvram_size());
 		log_info_box(uL("PRG NVRAM;%u%s"),  wram_nvram_size(), ifchanged());
 	}
-	if (vram_ram_size()) {
-		ischanged(info.header.chrram != vram_ram_size());
-		log_info_box(uL("CHR RAM;%u%s"), vram_ram_size(), ifchanged());
+	if (vram_ram_size(0)) {
+		ischanged(info.header.chrram != vram_ram_size(0));
+		log_info_box(uL("CHR RAM;%u%s"), vram_ram_size(0), ifchanged());
 	}
-	if (vram_nvram_size()) {
-		ischanged(info.header.chrnvram !=  vram_nvram_size());
-		log_info_box(uL("CHR NVRAM;%u%s"),  vram_nvram_size(), ifchanged());
+	if (vram_nvram_size(0)) {
+		ischanged(info.header.chrnvram !=  vram_nvram_size(0));
+		log_info_box(uL("CHR NVRAM;%u%s"),  vram_nvram_size(0), ifchanged());
 	}
 
 	log_info_box(uL("PRG 8k rom;%-4lu [ %08X %ld ]%s"),
@@ -1317,8 +1334,8 @@ void emu_save_header_info(void) {
 	info.header.chrrom = info.mapper.chrrom_banks_8k;
 	info.header.prgram = wram_ram_size();
 	info.header.prgnvram = wram_nvram_size();
-	info.header.chrram = vram_ram_size();
-	info.header.chrnvram = vram_nvram_size();
+	info.header.chrram = vram_ram_size(0);
+	info.header.chrnvram = vram_nvram_size(0);
 	info.header.battery = info.mapper.battery;
 	info.header.mapper = info.mapper.id;
 	info.header.submapper = info.mapper.submapper;
@@ -1328,9 +1345,16 @@ void emu_save_header_info(void) {
 	info.header.vs_ppu = vs_system.ppu;
 	info.header.vs_hardware = vs_system.special_mode.type;
 }
+BYTE emu_active_cidx(void) {
+	cfg->vs_monitor = 1;
+
+	return (info.number_of_cpu > 1 ? cfg->vs_monitor : 0);
+}
 
 INLINE static void emu_frame_started(void) {
 	info.lag_frame.next = TRUE;
+
+	info.num_exec_cpu_op = 0;
 
 	// riprendo a far correre la CPU
 	info.frame_status = FRAME_STARTED;

@@ -149,6 +149,7 @@ BYTE fds_load_rom(void) {
 	}
 
 	info.format = FDS_FORMAT;
+	info.number_of_cpu = 1;
 	fds.info.expcted_side = fds.info.total_sides;
 
 	// conto le dimensioni dei vari sides
@@ -157,7 +158,7 @@ BYTE fds_load_rom(void) {
 	}
 
 	// inserisco il primo
-	fds.info.frame_insert = nes.p.ppu.frames;
+	fds.info.frame_insert = nes[0].p.ppu.frames;
 	fds.info.bios_first_run = !cfg->fds_disk1sideA_at_reset;
 	fds_disk_op(cfg->fds_disk1sideA_at_reset ? FDS_DISK_SELECT_AND_INSERT : FDS_DISK_SELECT, 0, FALSE);
 
@@ -167,12 +168,12 @@ BYTE fds_load_rom(void) {
 	// WRAM
 	wram_set_ram_size(S32K);
 	// VRAM
-	vram_set_ram_size(S8K);
+	vram_set_ram_size(0, S8K);
 	// RAM
-	ram_set_size(S2K);
+	ram_set_size(0, S2K);
 	ram_init();
 	// NMT
-	nmt_set_size(S4K);
+	nmt_set_size(0, S4K);
 	nmt_init();
 
 	info.mapper.id = FDS_MAPPER;
@@ -470,8 +471,8 @@ fds_disk_op_start:
 	}
 
 	if ((info.reset != CHANGE_ROM) && (type >= FDS_DISK_SELECT)) {
-		if (fds.info.frame_insert != nes.p.ppu.frames) {
-			fds.info.frame_insert = nes.p.ppu.frames;
+		if (fds.info.frame_insert != nes[0].p.ppu.frames) {
+			fds.info.frame_insert = nes[0].p.ppu.frames;
 			fds_info_side(side_to_insert);
 		}
 	}

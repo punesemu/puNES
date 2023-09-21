@@ -108,14 +108,21 @@ BYTE ines_load_rom(void) {
 		(rom.data[rom.position++] == 'S') &&
 		(rom.data[rom.position++] == '\32')) {
 
+		info.number_of_cpu = 1;
 		info.mapper.prgrom_banks_16k = rom.data[rom.position++];
 		info.mapper.chrrom_banks_8k = rom.data[rom.position++];
 
+		prgrom_set_size(0);
+		chrrom_set_size(0);
 		wram_set_ram_size(0);
 		wram_set_nvram_size(0);
-
-		vram_set_ram_size(0);
-		vram_set_nvram_size(0);
+		miscrom_set_size(0);
+		for (int i = 0; i < NES_CHIPS_MAX; i++) {
+			vram_set_ram_size(i, 0);
+			vram_set_nvram_size(i, 0);
+			ram_set_size(i, 0);
+			nmt_set_size(i, 0);
+		}
 
 		if (rom_mem_ctrl_memcpy(&ines.flags[0], &rom, TOTAL_FL) == EXIT_ERROR) {
 			free(rom.data);
@@ -153,10 +160,10 @@ BYTE ines_load_rom(void) {
 
 			// VRAM
 			if (ines.flags[FL11] & 0x0F) {
-				vram_set_ram_size(64 << (ines.flags[FL11] & 0x0F));
+				vram_set_ram_size(0, 64 << (ines.flags[FL11] & 0x0F));
 			}
 			if (ines.flags[FL11] & 0xF0) {
-				vram_set_nvram_size(64 << ((ines.flags[FL11] & 0xF0) >> 4));
+				vram_set_nvram_size(0, 64 << ((ines.flags[FL11] & 0xF0) >> 4));
 			}
 
 			info.mapper.battery = (ines.flags[FL6] & 0x02) >> 1;
@@ -213,7 +220,7 @@ BYTE ines_load_rom(void) {
 			info.mapper.battery = (ines.flags[FL6] & 0x02) >> 1;
 
 			wram_set_ram_size(S8K);
-			vram_set_ram_size(S8K);
+			vram_set_ram_size(0, S8K);
 
 			vs_system.ppu = vs_system.special_mode.type = 0;
 			vs_system.special_mode.type = 0;
@@ -266,78 +273,86 @@ BYTE ines_load_rom(void) {
 
 		nes20db_search();
 
-		ram_set_size(S2K);
-		ram_init();
-
-		nmt_set_size(S4K);
-		nmt_init();
-
 		// gestione Vs. System
-//		if ((info.mapper.id != 99) && !vs_system.ppu && !vs_system.special_mode.type) {
-//			vs_system.enabled = FALSE;
-//			vs_system.special_mode.r5e0x = NULL;
-//			vs_system.special_mode.index = 0;
-//			vs_system.rc2c05.enabled = FALSE;
-//		} else {
-//			vs_system.enabled = TRUE;
-//
-//			switch (vs_system.ppu) {
-//				case RP2C03B:
-//				case RP2C03G:
-//				case RP2C04:
-//				case RP2C04_0002:
-//				case RP2C04_0003:
-//				case RP2C04_0004:
-//				case RC2C03B:
-//				case RC2C03C:
-//				default:
-//					vs_system.rc2c05.enabled = FALSE;
-//					vs_system.rc2c05.r2002 = 0x00;
-//					break;
-//				case RC2C05_01:
-//					vs_system.rc2c05.enabled = TRUE;
-//					vs_system.rc2c05.r2002 = 0x1B;
-//					break;
-//				case RC2C05_02:
-//					vs_system.rc2c05.enabled = TRUE;
-//					vs_system.rc2c05.r2002 = 0x3D;
-//					break;
-//				case RC2C05_03:
-//					vs_system.rc2c05.enabled = TRUE;
-//					vs_system.rc2c05.r2002 = 0x1C;
-//					break;
-//				case RC2C05_04:
-//					vs_system.rc2c05.enabled = TRUE;
-//					vs_system.rc2c05.r2002 = 0x1B;
-//					break;
-//				case RC2C05_05:
-//					vs_system.rc2c05.enabled = TRUE;
-//					vs_system.rc2c05.r2002 = 0x00;
-//					break;
-//			}
-//
-//			switch (vs_system.special_mode.type) {
-//				case VS_SM_Normal:
-//				default:
-//					vs_system.special_mode.r5e0x = NULL;
-//					break;
-//				case VS_SM_RBI_Baseball:
-//					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[1][0];
-//					break;
-//				case VS_SM_TKO_Boxing:
-//					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[0][0];
-//					break;
-//				case VS_SM_Super_Xevious:
-//					vs_system.special_mode.r5e0x = NULL;
-//					break;
-//			}
-//
-//			vs_system.special_mode.index = 0;
-//
-//			if (wram_size() < 0x800) {
-//				wram_set_ram_size(0x800);
-//			}
-//		}
+		if ((info.mapper.id != 99) && !vs_system.ppu && !vs_system.special_mode.type) {
+			vs_system.enabled = FALSE;
+			vs_system.special_mode.r5e0x = NULL;
+			vs_system.special_mode.index = 0;
+			vs_system.rc2c05.enabled = FALSE;
+		} else {
+			vs_system.enabled = TRUE;
+
+			switch (vs_system.ppu) {
+				case RP2C03B:
+				case RP2C03G:
+				case RP2C04:
+				case RP2C04_0002:
+				case RP2C04_0003:
+				case RP2C04_0004:
+				case RC2C03B:
+				case RC2C03C:
+				default:
+					vs_system.rc2c05.enabled = FALSE;
+					vs_system.rc2c05.r2002 = 0x00;
+					break;
+				case RC2C05_01:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x1B;
+					break;
+				case RC2C05_02:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x3D;
+					break;
+				case RC2C05_03:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x1C;
+					break;
+				case RC2C05_04:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x1B;
+					break;
+				case RC2C05_05:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x00;
+					break;
+			}
+
+			switch (vs_system.special_mode.type) {
+				case VS_SM_Normal:
+				default:
+					vs_system.special_mode.r5e0x = NULL;
+					break;
+				case VS_SM_RBI_Baseball:
+					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[1][0];
+					break;
+				case VS_SM_TKO_Boxing:
+					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[0][0];
+					break;
+				case VS_SM_Super_Xevious:
+					vs_system.special_mode.r5e0x = NULL;
+					break;
+				case VS_DS_Normal:
+				case VS_DS_Bungeling:
+					info.number_of_cpu = 2;
+					break;
+			}
+
+			vs_system.special_mode.index = 0;
+
+			if (wram_size() < S2K) {
+				wram_set_ram_size(S2K);
+			}
+			for (int i = 0; i < info.number_of_cpu; i++) {
+				memmap_wram_region_init(i, S2K);
+			}
+		}
+
+		for (int i = 0; i < info.number_of_cpu; i++) {
+			ram_set_size(i, S2K);
+			nmt_set_size(i, S4K);
+		}
+		ram_init();
+		nmt_init();
 
 		if (miscrom.trainer.in_use) {
 			miscrom.chips = 0;
@@ -397,8 +412,10 @@ BYTE ines_load_rom(void) {
 			wram_set_nvram_size(wram_ram_size());
 			wram_set_ram_size(0);
 		}
-		if (!chrrom_size() && !vram_size()) {
-			vram_set_ram_size(S8K);
+		for (int i = 0; i < info.number_of_cpu; i++) {
+			if (!chrrom_size() && !vram_size(i)) {
+				vram_set_ram_size(i, S8K);
+			}
 		}
 
 		free(rom.data);

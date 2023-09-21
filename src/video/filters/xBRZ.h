@@ -21,8 +21,8 @@
 
 #include "common.h"
 
-void xBRZ(void);
-void xBRZ_mt(void);
+void xBRZ(BYTE cidx);
+void xBRZ_mt(BYTE cidx);
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"

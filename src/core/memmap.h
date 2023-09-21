@@ -30,7 +30,7 @@
 #define prgrom_pnt_byte(byte) &prgrom.data.pnt[byte]
 #define prgrom_byte(byte) prgrom.data.pnt[(byte)]
 #define prgrom_mask() prgrom.data.mask
-#define prgrom_calc_chunk(address) ((address) / nes.m.memmap.prg.info.chunk.size)
+#define prgrom_calc_chunk(address) ((address) / nes[idx].m.memmap.prg.info.chunk.size)
 #define prgrom_chip(chip_rom) prgrom.chips.chunk[chip_rom].pnt
 #define prgrom_chip_size(chip_rom) prgrom.chips.chunk[chip_rom].size
 
@@ -42,18 +42,18 @@
 #define chrrom_chip(chip_rom) chrrom.chips.chunk[chip_rom].pnt
 #define chrrom_chip_size(chip_rom) chrrom.chips.chunk[chip_rom].size
 
-#define ram_size() nes.m.ram.data.size
-#define ram_pnt() nes.m.ram.data.pnt
-#define ram_pnt_byte(byte) &nes.m.ram.data.pnt[byte]
-#define ram_byte(byte) nes.m.ram.data.pnt[(byte)]
-#define ram_mask() nes.m.ram.data.mask
+#define ram_size(idx) nes[idx].m.ram.data.size
+#define ram_pnt(idx) nes[idx].m.ram.data.pnt
+#define ram_pnt_byte(idx, byte) &nes[idx].m.ram.data.pnt[byte]
+#define ram_byte(idx, byte) nes[idx].m.ram.data.pnt[(byte)]
+#define ram_mask(idx) nes[idx].m.ram.data.mask
 
 #define wram_size() wram.data.size
 #define wram_pnt() wram.data.pnt
 #define wram_pnt_byte(byte) &wram.data.pnt[byte]
 #define wram_byte(byte) wram.data.pnt[(byte)]
 #define wram_mask() wram.data.mask
-#define wram_calc_chunk(address) ((address) / nes.m.memmap.wram.info.chunk.size)
+#define wram_calc_chunk(idx, address) ((address) / nes[idx].m.memmap.wram.info.chunk.size)
 
 #define wram_ram_size() wram.ram.size
 #define wram_ram_pnt() wram.ram.pnt
@@ -67,30 +67,30 @@
 #define wram_nvram_byte(byte) wram.nvram.pnt[(byte)]
 #define wram_nvram_mask() wram.nvram.mask
 
-#define vram_size() nes.m.vram.data.size
-#define vram_pnt() nes.m.vram.data.pnt
-#define vram_pnt_byte(byte) &nes.m.vram.data.pnt[byte]
-#define vram_byte(byte) nes.m.vram.data.pnt[(byte)]
-#define vram_mask() nes.m.vram.data.mask
-#define vram_calc_chunk(address) ((address) / nes.m.memmap.vram.info.chunk.size)
+#define vram_size(idx) nes[idx].m.vram.data.size
+#define vram_pnt(idx) nes[idx].m.vram.data.pnt
+#define vram_pnt_byte(idx, byte) &nes[idx].m.vram.data.pnt[byte]
+#define vram_byte(idx, byte) nes[idx].m.vram.data.pnt[(byte)]
+#define vram_mask(idx) nes[idx].m.vram.data.mask
+#define vram_calc_chunk(idx, address) ((address) / nes[idx].m.memmap.vram.info.chunk.size)
 
-#define vram_ram_size() nes.m.vram.ram.size
-#define vram_ram_pnt() nes.m.vram.ram.pnt
-#define vram_ram_pnt_byte(byte) &nes.m.vram.ram.pnt[byte]
-#define vram_ram_byte(byte) nes.m.vram.ram.pnt[(byte)]
-#define vram_ram_mask() nes.m.vram.ram.mask
+#define vram_ram_size(idx) nes[idx].m.vram.ram.size
+#define vram_ram_pnt(idx) nes[idx].m.vram.ram.pnt
+#define vram_ram_pnt_byte(idx, byte) &nes[idx].m.vram.ram.pnt[byte]
+#define vram_ram_byte(idx, byte) nes[idx].m.vram.ram.pnt[(byte)]
+#define vram_ram_mask(idx) nes[idx].m.vram.ram.mask
 
-#define vram_nvram_size() nes.m.vram.nvram.size
-#define vram_nvram_pnt() nes.m.vram.nvram.pnt
-#define vram_nvram_pnt_byte(byte) &nes.m.vram.nvram.pnt[byte]
-#define vram_nvram_byte(byte) nes.m.vram.nvram.pnt[(byte)]
-#define vram_nvram_mask() nes.m.vram.nvram.mask
+#define vram_nvram_size(idx) nes[idx].m.vram.nvram.size
+#define vram_nvram_pnt(idx) nes[idx].m.vram.nvram.pnt
+#define vram_nvram_pnt_byte(idx, byte) &nes[idx].m.vram.nvram.pnt[byte]
+#define vram_nvram_byte(idx, byte) nes[idx].m.vram.nvram.pnt[(byte)]
+#define vram_nvram_mask(idx) nes[idx].m.vram.nvram.mask
 
-#define nmt_size() nes.m.nmt.data.size
-#define nmt_pnt() nes.m.nmt.data.pnt
-#define nmt_pnt_byte(byte) &nes.m.nmt.data.pnt[byte]
-#define nmt_byte(byte) nes.m.nmt.data.pnt[(byte)]
-#define nmt_mask() nes.m.nmt.data.mask
+#define nmt_size(idx) nes[idx].m.nmt.data.size
+#define nmt_pnt(idx) nes[idx].m.nmt.data.pnt
+#define nmt_pnt_byte(idx, byte) &nes[idx].m.nmt.data.pnt[byte]
+#define nmt_byte(idx, byte) nes[idx].m.nmt.data.pnt[(byte)]
+#define nmt_mask(idx) nes[idx].m.nmt.data.mask
 
 #define miscrom_size() miscrom.data.size
 #define miscrom_pnt() miscrom.data.pnt
@@ -109,60 +109,60 @@
 
 EXTERNC BYTE memmap_init(void);
 EXTERNC void memmap_quit(void);
-EXTERNC BYTE memmap_adr_is_readable(DBWORD address);
-EXTERNC BYTE memmap_adr_is_writable(DBWORD address);
-EXTERNC WORD memmap_chunk_actual_bank(DBWORD address);
-EXTERNC BYTE *memmap_chunk_pnt(DBWORD address);
+EXTERNC BYTE memmap_adr_is_readable(BYTE cidx, DBWORD address);
+EXTERNC BYTE memmap_adr_is_writable(BYTE cidx, DBWORD address);
+EXTERNC WORD memmap_chunk_actual_bank(BYTE cidx, DBWORD address);
+EXTERNC BYTE *memmap_chunk_pnt(BYTE cidx, DBWORD address);
 
-EXTERNC BYTE memmap_prg_region_init(size_t chunk_size);
-EXTERNC BYTE memmap_chr_region_init(size_t chunk_size);
-EXTERNC BYTE memmap_wram_region_init(size_t chunk_size);
-EXTERNC BYTE memmap_ram_region_init(size_t chunk_size);
-EXTERNC BYTE memmap_nmt_region_init(size_t chunk_size);
+EXTERNC BYTE memmap_prg_region_init(BYTE cidx, size_t chunk_size);
+EXTERNC BYTE memmap_chr_region_init(BYTE cidx, size_t chunk_size);
+EXTERNC BYTE memmap_wram_region_init(BYTE cidx, size_t chunk_size);
+EXTERNC BYTE memmap_ram_region_init(BYTE cidx, size_t chunk_size);
+EXTERNC BYTE memmap_nmt_region_init(BYTE cidx, size_t chunk_size);
 
-EXTERNC void memmap_auto_wp_128b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_auto_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_auto_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_auto_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_auto_wp_2k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_auto_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_auto_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_auto_wp_16k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_auto_wp_32k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_auto_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
+EXTERNC void memmap_auto_wp_128b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_auto_wp_256b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_auto_wp_512b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_auto_wp_1k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_auto_wp_2k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_auto_wp_4k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_auto_wp_8k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_auto_wp_16k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_auto_wp_32k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_auto_wp_custom_size(BYTE cidx, DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
 
-EXTERNC void memmap_auto_128b(DBWORD address, DBWORD value);
-EXTERNC void memmap_auto_256b(DBWORD address, DBWORD value);
-EXTERNC void memmap_auto_512b(DBWORD address, DBWORD value);
-EXTERNC void memmap_auto_1k(DBWORD address, DBWORD value);
-EXTERNC void memmap_auto_2k(DBWORD address, DBWORD value);
-EXTERNC void memmap_auto_4k(DBWORD address, DBWORD value);
-EXTERNC void memmap_auto_8k(DBWORD address, DBWORD value);
-EXTERNC void memmap_auto_16k(DBWORD address, DBWORD value);
-EXTERNC void memmap_auto_32k(DBWORD address, DBWORD value);
-EXTERNC void memmap_auto_custom_size(DBWORD address, DBWORD chunk, size_t size);
+EXTERNC void memmap_auto_128b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_auto_256b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_auto_512b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_auto_1k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_auto_2k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_auto_4k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_auto_8k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_auto_16k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_auto_32k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_auto_custom_size(BYTE cidx, DBWORD address, DBWORD chunk, size_t size);
 
-EXTERNC void memmap_disable_128b(DBWORD address);
-EXTERNC void memmap_disable_256b(DBWORD address);
-EXTERNC void memmap_disable_512b(DBWORD address);
-EXTERNC void memmap_disable_1k(DBWORD address);
-EXTERNC void memmap_disable_2k(DBWORD address);
-EXTERNC void memmap_disable_4k(DBWORD address);
-EXTERNC void memmap_disable_8k(DBWORD address);
-EXTERNC void memmap_disable_16k(DBWORD address);
-EXTERNC void memmap_disable_32k(DBWORD address);
-EXTERNC void memmap_disable_custom_size(DBWORD address, size_t size);
+EXTERNC void memmap_disable_128b(BYTE cidx, DBWORD address);
+EXTERNC void memmap_disable_256b(BYTE cidx, DBWORD address);
+EXTERNC void memmap_disable_512b(BYTE cidx, DBWORD address);
+EXTERNC void memmap_disable_1k(BYTE cidx, DBWORD address);
+EXTERNC void memmap_disable_2k(BYTE cidx, DBWORD address);
+EXTERNC void memmap_disable_4k(BYTE cidx, DBWORD address);
+EXTERNC void memmap_disable_8k(BYTE cidx, DBWORD address);
+EXTERNC void memmap_disable_16k(BYTE cidx, DBWORD address);
+EXTERNC void memmap_disable_32k(BYTE cidx, DBWORD address);
+EXTERNC void memmap_disable_custom_size(BYTE cidx, DBWORD address, size_t size);
 
-EXTERNC void memmap_other_128b(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
-EXTERNC void memmap_other_256b(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
-EXTERNC void memmap_other_512b(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
-EXTERNC void memmap_other_1k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
-EXTERNC void memmap_other_2k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
-EXTERNC void memmap_other_4k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
-EXTERNC void memmap_other_8k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
-EXTERNC void memmap_other_16k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
-EXTERNC void memmap_other_32k(DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
-EXTERNC void memmap_other_custom_size(DBWORD address, DBWORD initial_chunk, size_t custom_size, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
+EXTERNC void memmap_other_128b(BYTE cidx, DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
+EXTERNC void memmap_other_256b(BYTE cidx, DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
+EXTERNC void memmap_other_512b(BYTE cidx, DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
+EXTERNC void memmap_other_1k(BYTE cidx, DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
+EXTERNC void memmap_other_2k(BYTE cidx, DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
+EXTERNC void memmap_other_4k(BYTE cidx, DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
+EXTERNC void memmap_other_8k(BYTE cidx, DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
+EXTERNC void memmap_other_16k(BYTE cidx, DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
+EXTERNC void memmap_other_32k(BYTE cidx, DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
+EXTERNC void memmap_other_custom_size(BYTE cidx, DBWORD address, DBWORD initial_chunk, size_t custom_size, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
 
 // prgrom ----------------------------------------------------------------------------
 
@@ -172,21 +172,21 @@ EXTERNC void prgrom_set_size(size_t size);
 EXTERNC void prgrom_reset_chunks(void);
 EXTERNC WORD prgrom_banks(enum _sizes_types size);
 EXTERNC WORD prgrom_control_bank(enum _sizes_types size, WORD bank);
-EXTERNC size_t prgrom_region_address(WORD address);
+EXTERNC size_t prgrom_region_address(BYTE cidx, WORD address);
 
-EXTERNC BYTE prgrom_rd(WORD address);
-EXTERNC void prgrom_wr(WORD address, BYTE value);
+EXTERNC BYTE prgrom_rd(BYTE cidx, WORD address);
+EXTERNC void prgrom_wr(BYTE cidx, WORD address, BYTE value);
 
-EXTERNC void memmap_prgrom_128b(DBWORD address, DBWORD value);
-EXTERNC void memmap_prgrom_256b(DBWORD address, DBWORD value);
-EXTERNC void memmap_prgrom_512b(DBWORD address, DBWORD value);
-EXTERNC void memmap_prgrom_1k(DBWORD address, DBWORD value);
-EXTERNC void memmap_prgrom_2k(DBWORD address, DBWORD value);
-EXTERNC void memmap_prgrom_4k(DBWORD address, DBWORD value);
-EXTERNC void memmap_prgrom_8k(DBWORD address, DBWORD value);
-EXTERNC void memmap_prgrom_16k(DBWORD address, DBWORD value);
-EXTERNC void memmap_prgrom_32k(DBWORD address, DBWORD value);
-EXTERNC void memmap_prgrom_custom_size(DBWORD address, DBWORD chunk, size_t size);
+EXTERNC void memmap_prgrom_128b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_prgrom_256b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_prgrom_512b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_prgrom_1k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_prgrom_2k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_prgrom_4k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_prgrom_8k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_prgrom_16k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_prgrom_32k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_prgrom_custom_size(BYTE cidx, DBWORD address, DBWORD chunk, size_t size);
 
 // chrom -----------------------------------------------------------------------------
 
@@ -197,28 +197,28 @@ EXTERNC void chrrom_reset_chunks(void);
 EXTERNC WORD chrrom_banks(enum _sizes_types size);
 EXTERNC WORD chrrom_control_bank(enum _sizes_types size, WORD bank);
 
-EXTERNC BYTE chr_rd(WORD address);
-EXTERNC void chr_wr(WORD address, BYTE value);
-EXTERNC void chr_disable_write(void);
+EXTERNC BYTE chr_rd(BYTE cidx, WORD address);
+EXTERNC void chr_wr(BYTE cidx, WORD address, BYTE value);
+EXTERNC void chr_disable_write(BYTE cidx);
 
-EXTERNC void memmap_chrrom_128b(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_256b(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_512b(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_1k(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_2k(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_4k(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_8k(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_16k(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_32k(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_custom_size(DBWORD address, DBWORD chunk, size_t size);
+EXTERNC void memmap_chrrom_128b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_256b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_512b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_1k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_2k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_4k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_8k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_16k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_32k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_custom_size(BYTE cidx, DBWORD address, DBWORD chunk, size_t size);
 
-EXTERNC void memmap_chrrom_nmt_128b(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_nmt_256b(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_nmt_512b(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_nmt_1k(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_nmt_2k(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_nmt_4k(DBWORD address, DBWORD value);
-EXTERNC void memmap_chrrom_nmt_8k(DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_nmt_128b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_nmt_256b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_nmt_512b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_nmt_1k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_nmt_2k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_nmt_4k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_chrrom_nmt_8k(BYTE cidx, DBWORD address, DBWORD value);
 
 // wram ------------------------------------------------------------------------------
 
@@ -229,151 +229,150 @@ EXTERNC void wram_set_nvram_size(size_t size);
 EXTERNC void wram_reset_chunks(void);
 EXTERNC void wram_memset(void);
 
-EXTERNC BYTE wram_rd(WORD address);
-EXTERNC void wram_wr(WORD address, BYTE value);
+EXTERNC BYTE wram_rd(BYTE cidx, WORD address);
+EXTERNC void wram_wr(BYTE cidx, WORD address, BYTE value);
 
 EXTERNC BYTE wram_direct_rd(WORD address, BYTE openbus);
 EXTERNC void wram_direct_wr(WORD address, BYTE value);
 
-EXTERNC void memmap_wram_128b(DBWORD address, DBWORD value);
-EXTERNC void memmap_wram_256b(DBWORD address, DBWORD value);
-EXTERNC void memmap_wram_512b(DBWORD address, DBWORD value);
-EXTERNC void memmap_wram_1k(DBWORD address, DBWORD value);
-EXTERNC void memmap_wram_2k(DBWORD address, DBWORD value);
-EXTERNC void memmap_wram_4k(DBWORD address, DBWORD value);
-EXTERNC void memmap_wram_8k(DBWORD address, DBWORD value);
-EXTERNC void memmap_wram_16k(DBWORD address, DBWORD value);
-EXTERNC void memmap_wram_32k(DBWORD address, DBWORD value);
-EXTERNC void memmap_wram_custom_size(DBWORD address, DBWORD chunk, size_t size);
+EXTERNC void memmap_wram_128b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_wram_256b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_wram_512b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_wram_1k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_wram_2k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_wram_4k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_wram_8k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_wram_16k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_wram_32k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_wram_custom_size(BYTE cidx, DBWORD address, DBWORD chunk, size_t size);
 
-EXTERNC void memmap_wram_wp_128b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_wp_2k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_wp_16k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_wp_32k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_128b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_256b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_512b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_1k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_2k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_4k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_8k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_16k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_32k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_wp_custom_size(BYTE cidx, DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
 
-EXTERNC void memmap_wram_ram_wp_128b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_ram_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_ram_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_ram_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_ram_wp_2k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_ram_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_ram_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_ram_wp_16k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_ram_wp_32k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_ram_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_ram_wp_128b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_ram_wp_256b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_ram_wp_512b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_ram_wp_1k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_ram_wp_2k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_ram_wp_4k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_ram_wp_8k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_ram_wp_16k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_ram_wp_32k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_ram_wp_custom_size(BYTE cidx, DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
 
-EXTERNC void memmap_wram_nvram_wp_128b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_nvram_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_nvram_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_nvram_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_nvram_wp_2k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_nvram_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_nvram_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_nvram_wp_16k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_nvram_wp_32k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_wram_nvram_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_nvram_wp_128b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_nvram_wp_256b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_nvram_wp_512b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_nvram_wp_1k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_nvram_wp_2k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_nvram_wp_4k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_nvram_wp_8k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_nvram_wp_16k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_nvram_wp_32k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_wram_nvram_custom_size(BYTE cidx, DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
 
 // nvram -----------------------------------------------------------------------------
 
 EXTERNC BYTE vram_init(void);
 EXTERNC void vram_quit(void);
-EXTERNC void vram_set_ram_size(size_t size);
-EXTERNC void vram_set_nvram_size(size_t size);
+EXTERNC void vram_set_ram_size(BYTE cidx, size_t size);
+EXTERNC void vram_set_nvram_size(BYTE cidx, size_t size);
 EXTERNC void vram_memset(void);
 
-EXTERNC void memmap_vram_128b(DBWORD address, DBWORD value);
-EXTERNC void memmap_vram_256b(DBWORD address, DBWORD value);
-EXTERNC void memmap_vram_512b(DBWORD address, DBWORD value);
-EXTERNC void memmap_vram_1k(DBWORD address, DBWORD value);
-EXTERNC void memmap_vram_2k(DBWORD address, DBWORD value);
-EXTERNC void memmap_vram_4k(DBWORD address, DBWORD value);
-EXTERNC void memmap_vram_8k(DBWORD address, DBWORD value);
-EXTERNC void memmap_vram_custom_size(DBWORD address, DBWORD chunk, size_t size);
+EXTERNC void memmap_vram_128b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_vram_256b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_vram_512b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_vram_1k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_vram_2k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_vram_4k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_vram_8k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_vram_custom_size(BYTE cidx, DBWORD address, DBWORD chunk, size_t size);
 
-EXTERNC void memmap_vram_wp_128b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_vram_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_vram_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_vram_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_vram_wp_2k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_vram_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_vram_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_vram_wp_custom_size(DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
+EXTERNC void memmap_vram_wp_128b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_vram_wp_256b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_vram_wp_512b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_vram_wp_1k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_vram_wp_2k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_vram_wp_4k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_vram_wp_8k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_vram_wp_custom_size(BYTE cidx, DBWORD address, DBWORD chunk, size_t size, BYTE rd, BYTE wr);
 
 // ram -------------------------------------------------------------------------------
 
 EXTERNC BYTE ram_init(void);
 EXTERNC void ram_quit(void);
-EXTERNC void ram_set_size(size_t size);
+EXTERNC void ram_set_size(BYTE cidx, size_t size);
 EXTERNC void ram_reset_chunks(void);
 EXTERNC void ram_memset(void);
-EXTERNC void ram_disable_write(void);
 
-EXTERNC BYTE ram_rd(WORD address);
-EXTERNC void ram_wr(WORD address, BYTE value);
+EXTERNC BYTE ram_rd(BYTE cidx, WORD address);
+EXTERNC void ram_wr(BYTE cidx, WORD address, BYTE value);
 
-EXTERNC void memmap_ram_128b(DBWORD address, DBWORD value);
-EXTERNC void memmap_ram_256b(DBWORD address, DBWORD value);
-EXTERNC void memmap_ram_512b(DBWORD address, DBWORD value);
-EXTERNC void memmap_ram_1k(DBWORD address, DBWORD value);
-EXTERNC void memmap_ram_2k(DBWORD address, DBWORD value);
+EXTERNC void memmap_ram_128b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_ram_256b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_ram_512b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_ram_1k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_ram_2k(BYTE cidx, DBWORD address, DBWORD value);
 
 // nmt -------------------------------------------------------------------------------
 
 EXTERNC BYTE nmt_init(void);
 EXTERNC void nmt_quit(void);
-EXTERNC void nmt_set_size(size_t size);
+EXTERNC void nmt_set_size(BYTE cidx, size_t size);
 EXTERNC void nmt_reset_chunks(void);
 EXTERNC void nmt_memset(void);
-EXTERNC void nmt_disable_write(void);
 
-EXTERNC BYTE nmt_rd(WORD address);
-EXTERNC void nmt_wr(WORD address, BYTE value);
+EXTERNC BYTE nmt_rd(BYTE cidx, WORD address);
+EXTERNC void nmt_wr(BYTE cidx, WORD address, BYTE value);
+EXTERNC void nmt_disable_write(BYTE cidx);
 
-EXTERNC void memmap_nmt_128b(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_256b(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_512b(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_1k(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_2k(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_4k(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_8k(DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_128b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_256b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_512b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_1k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_2k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_4k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_8k(BYTE cidx, DBWORD address, DBWORD value);
 
-EXTERNC void memmap_nmt_wp_128b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_nmt_wp_256b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_nmt_wp_512b(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_nmt_wp_1k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_nmt_wp_2k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_nmt_wp_4k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
-EXTERNC void memmap_nmt_wp_8k(DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_nmt_wp_128b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_nmt_wp_256b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_nmt_wp_512b(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_nmt_wp_1k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_nmt_wp_2k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_nmt_wp_4k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
+EXTERNC void memmap_nmt_wp_8k(BYTE cidx, DBWORD address, DBWORD value, BYTE rd, BYTE wr);
 
-EXTERNC void memmap_nmt_chrrom_128b(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_chrrom_256b(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_chrrom_512b(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_chrrom_1k(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_chrrom_2k(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_chrrom_4k(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_chrrom_8k(DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_chrrom_128b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_chrrom_256b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_chrrom_512b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_chrrom_1k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_chrrom_2k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_chrrom_4k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_chrrom_8k(BYTE cidx, DBWORD address, DBWORD value);
 
-EXTERNC void memmap_nmt_vram_128b(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_vram_256b(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_vram_512b(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_vram_1k(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_vram_2k(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_vram_4k(DBWORD address, DBWORD value);
-EXTERNC void memmap_nmt_vram_8k(DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_vram_128b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_vram_256b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_vram_512b(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_vram_1k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_vram_2k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_vram_4k(BYTE cidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_nmt_vram_8k(BYTE cidx, DBWORD address, DBWORD value);
 
-EXTERNC void mirroring_H(void);
-EXTERNC void mirroring_V(void);
-EXTERNC void mirroring_SCR0(void);
-EXTERNC void mirroring_SCR1(void);
-EXTERNC void mirroring_FSCR(void);
-EXTERNC void mirroring_SCR0x1_SCR1x3(void);
-EXTERNC void mirroring_SCR0x3_SCR1x1(void);
+EXTERNC void mirroring_H(BYTE cidx);
+EXTERNC void mirroring_V(BYTE cidx);
+EXTERNC void mirroring_SCR0(BYTE cidx);
+EXTERNC void mirroring_SCR1(BYTE cidx);
+EXTERNC void mirroring_FSCR(BYTE cidx);
+EXTERNC void mirroring_SCR0x1_SCR1x3(BYTE cidx);
+EXTERNC void mirroring_SCR0x3_SCR1x1(BYTE cidx);
 
 // miscrom ---------------------------------------------------------------------------
 

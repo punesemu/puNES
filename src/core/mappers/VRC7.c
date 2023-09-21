@@ -51,7 +51,7 @@ void extcl_after_mapper_init_VRC7(void) {
 	VRC7_wram_fix();
 	VRC7_mirroring_fix();
 }
-void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_VRC7(BYTE cidx, WORD address, BYTE value) {
 	WORD bank = address & 0xF000;
 	int index = 0;
 
@@ -92,7 +92,7 @@ void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
 		case 0xF000:
 			if (address & vrc7tmp.A0) {
 				vrc7.irq.enabled = vrc7.irq.acknowledge;
-				nes.c.irq.high &= ~EXT_IRQ;
+				nes[cidx].c.irq.high &= ~EXT_IRQ;
 			} else {
 				vrc7.irq.acknowledge = value & 0x01;
 				vrc7.irq.enabled = value & 0x02;
@@ -101,7 +101,7 @@ void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
 					vrc7.irq.prescaler = 0;
 					vrc7.irq.count = vrc7.irq.reload;
 				}
-				nes.c.irq.high &= ~EXT_IRQ;
+				nes[cidx].c.irq.high &= ~EXT_IRQ;
 			}
 			return;
 		default:
@@ -122,9 +122,9 @@ BYTE extcl_save_mapper_VRC7(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (opll_save(mode, slot, fp));
 }
-void extcl_cpu_every_cycle_VRC7(void) {
+void extcl_cpu_every_cycle_VRC7(BYTE cidx) {
 	if (vrc7.irq.delay && !(--vrc7.irq.delay)) {
-		nes.c.irq.high |= EXT_IRQ;
+		nes[cidx].c.irq.high |= EXT_IRQ;
 	}
 
 	if (!vrc7.irq.enabled) {
@@ -185,7 +185,7 @@ void init_VRC7(WORD A0, WORD A1, BYTE reset) {
 	vrc7.irq.delay = 0;
 	vrc7.irq.prescaler = 0;
 
-	nes.c.irq.high &= ~EXT_IRQ;
+	nes[0].c.irq.high &= ~EXT_IRQ;
 
 	opll_reset();
 
@@ -207,7 +207,7 @@ void prg_fix_VRC7_base(void) {
 	VRC7_prg_swap(0xE000, ~0);
 }
 void prg_swap_VRC7_base(WORD address, WORD value) {
-	memmap_auto_8k(MMCPU(address), value);
+	memmap_auto_8k(0, MMCPU(address), value);
 }
 void chr_fix_VRC7_base(void) {
 	VRC7_chr_swap(0x0000, vrc7.chr[0]);
@@ -220,25 +220,25 @@ void chr_fix_VRC7_base(void) {
 	VRC7_chr_swap(0x1C00, vrc7.chr[7]);
 }
 void chr_swap_VRC7_base(WORD address, WORD value) {
-	memmap_auto_1k(MMPPU(address), value);
+	memmap_auto_1k(0, MMPPU(address), value);
 }
 void wram_fix_VRC7_base(void) {
-	memmap_auto_wp_8k(MMCPU(0x6000), 0, (vrc7.reg >> 7), (vrc7.reg >> 7));
+	memmap_auto_wp_8k(0, MMCPU(0x6000), 0, (vrc7.reg >> 7), (vrc7.reg >> 7));
 }
 void mirroring_fix_VRC7_base(void) {
 	switch (vrc7.reg & 0x03) {
 		default:
 		case 0:
-			mirroring_V();
+			mirroring_V(0);
 			break;
 		case 1:
-			mirroring_H();
+			mirroring_H(0);
 			break;
 		case 2:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			break;
 		case 3:
-			mirroring_SCR1();
+			mirroring_SCR1(0);
 			break;
 	}
 }

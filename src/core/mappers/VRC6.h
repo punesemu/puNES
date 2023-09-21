@@ -66,9 +66,9 @@ typedef struct _vrc6 {
 extern _vrc6 vrc6;
 
 void extcl_after_mapper_init_VRC6(void);
-void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value);
+void extcl_cpu_wr_mem_VRC6(BYTE cidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_VRC6(void);
+void extcl_cpu_every_cycle_VRC6(BYTE cidx);
 void extcl_apu_tick_VRC6(void);
 
 void init_NSF_VRC6(WORD A0, WORD A1);

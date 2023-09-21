@@ -50,7 +50,7 @@ void map_init_019(void) {
 	mapper.internal_struct_size[0] = sizeof(m019);
 
 	if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
-		memmap_wram_region_init(S2K);
+		memmap_wram_region_init(0, S2K);
 	}
 
 	snd_set_volume_019();
@@ -110,7 +110,7 @@ void extcl_after_mapper_init_019(void) {
 	wram_fix_019();
 	mirroring_fix_019();
 }
-void extcl_cpu_wr_mem_019(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_019(BYTE cidx, WORD address, BYTE value) {
 	switch (address & 0xF800) {
 		case 0x4800:
 			m019tmp.ram[m019.snd.adr] = value;
@@ -118,11 +118,11 @@ void extcl_cpu_wr_mem_019(WORD address, BYTE value) {
 			return;
 		case 0x5000:
 			m019.irq.count = (m019.irq.count & 0xFF00) | value;
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[cidx].c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0x5800:
 			m019.irq.count = (value << 8) | (m019.irq.count & 0x00FF);
-			nes.c.irq.high &= ~EXT_IRQ;
+			nes[cidx].c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0x8000:
 		case 0x8800:
@@ -163,7 +163,7 @@ void extcl_cpu_wr_mem_019(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_019(WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_019(BYTE cidx, WORD address, BYTE openbus) {
 	switch (address & 0xF800) {
 		case 0x4800:
 			openbus = m019tmp.ram[m019.snd.adr];
@@ -174,7 +174,7 @@ BYTE extcl_cpu_rd_mem_019(WORD address, BYTE openbus) {
 		case 0x5800:
 			return ((m019.irq.count >> 8) & 0xFF);
 		default:
-			return (wram_rd(address));
+			return (wram_rd(cidx, address));
 	}
 }
 BYTE extcl_save_mapper_019(BYTE mode, BYTE slot, FILE *fp) {
@@ -194,10 +194,10 @@ BYTE extcl_save_mapper_019(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_019(void) {
+void extcl_cpu_every_cycle_019(BYTE cidx) {
 	if (m019.irq.delay) {
 		m019.irq.delay = FALSE;
-		nes.c.irq.high |= EXT_IRQ;
+		nes[cidx].c.irq.high |= EXT_IRQ;
 	}
 	if (((m019.irq.count - 0x8000) < 0x7FFF) && (++m019.irq.count == 0xFFFF)) {
 		// vale sempre il solito discorso di un ciclo di delay
@@ -236,10 +236,10 @@ void extcl_battery_io_019(BYTE mode, FILE *fp) {
 INLINE static void prg_fix_019(void) {
 	WORD mask = 0x3F;
 
-	memmap_auto_8k(MMCPU(0x8000), (m019.prg[0] & mask));
-	memmap_auto_8k(MMCPU(0xA000), (m019.prg[1] & mask));
-	memmap_auto_8k(MMCPU(0xC000), (m019.prg[2] & mask));
-	memmap_auto_8k(MMCPU(0xE000), (m019.prg[3] & mask));
+	memmap_auto_8k(0, MMCPU(0x8000), (m019.prg[0] & mask));
+	memmap_auto_8k(0, MMCPU(0xA000), (m019.prg[1] & mask));
+	memmap_auto_8k(0, MMCPU(0xC000), (m019.prg[2] & mask));
+	memmap_auto_8k(0, MMCPU(0xE000), (m019.prg[3] & mask));
 }
 INLINE static void chr_fix_019(void) {
 	BYTE force_chrom = 0;
@@ -258,17 +258,17 @@ INLINE static void chr_fix_019(void) {
 }
 INLINE static void chr_swap_019(WORD address, WORD value, BYTE force_chrom) {
 	if ((value < 0xE0) || force_chrom) {
-		memmap_auto_1k(MMPPU(address), value);
+		memmap_auto_1k(0, MMPPU(address), value);
 	} else {
 		value &= (info.mapper.mirroring == MIRRORING_FOURSCR ? 0x03 : 0x01);
-		memmap_chrrom_nmt_1k(MMPPU(address), value);
+		memmap_chrrom_nmt_1k(0, MMPPU(address), value);
 	}
 }
 INLINE static void wram_fix_019(void) {
-	memmap_auto_wp_2k(MMCPU(0x6000), 0, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 0))) == 0x40));
-	memmap_auto_wp_2k(MMCPU(0x6800), 1, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 1))) == 0x40));
-	memmap_auto_wp_2k(MMCPU(0x7000), 2, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 2))) == 0x40));
-	memmap_auto_wp_2k(MMCPU(0x7800), 3, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 3))) == 0x40));
+	memmap_auto_wp_2k(0, MMCPU(0x6000), 0, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 0))) == 0x40));
+	memmap_auto_wp_2k(0, MMCPU(0x6800), 1, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 1))) == 0x40));
+	memmap_auto_wp_2k(0, MMCPU(0x7000), 2, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 2))) == 0x40));
+	memmap_auto_wp_2k(0, MMCPU(0x7800), 3, TRUE, ((m019.wram_protect & (0xF0 | (0x01 << 3))) == 0x40));
 }
 INLINE static void mirroring_fix_019(void) {
 	nmt_swap_019(0x2000, m019.nmt[0]);
@@ -278,12 +278,12 @@ INLINE static void mirroring_fix_019(void) {
 }
 INLINE static void nmt_swap_019(WORD address, WORD value) {
 	if (value < 0xE0) {
-		memmap_nmt_chrrom_1k(MMPPU(address), value);
-		memmap_nmt_chrrom_1k(MMPPU(address ^ 0x1000), value);
+		memmap_nmt_chrrom_1k(0, MMPPU(address), value);
+		memmap_nmt_chrrom_1k(0, MMPPU(address ^ 0x1000), value);
 	} else {
 		value &= (info.mapper.mirroring == MIRRORING_FOURSCR ? 0x03 : 0x01);
-		memmap_nmt_1k(MMPPU(address), value);
-		memmap_nmt_1k(MMPPU(address ^ 0x1000), value);
+		memmap_nmt_1k(0, MMPPU(address), value);
+		memmap_nmt_1k(0, MMPPU(address ^ 0x1000), value);
 	}
 }
 INLINE static void snd_set_volume_019(void) {

@@ -31,15 +31,15 @@ typedef struct _mmc3 {
 extern _mmc3 mmc3;
 
 void extcl_after_mapper_init_MMC3(void);
-void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value);
+void extcl_cpu_wr_mem_MMC3(BYTE cidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_MMC3(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_MMC3(void);
-void extcl_ppu_000_to_34x_MMC3(void);
-void extcl_ppu_000_to_255_MMC3(void);
-void extcl_ppu_256_to_319_MMC3(void);
-void extcl_ppu_320_to_34x_MMC3(void);
-void extcl_update_r2006_MMC3(WORD new_r2006, WORD old_r2006);
-void extcl_irq_A12_clock_MMC3_NEC(void);
+void extcl_cpu_every_cycle_MMC3(BYTE cidx);
+void extcl_ppu_000_to_34x_MMC3(BYTE cidx);
+void extcl_ppu_000_to_255_MMC3(BYTE cidx);
+void extcl_ppu_256_to_319_MMC3(BYTE cidx);
+void extcl_ppu_320_to_34x_MMC3(BYTE cidx);
+void extcl_update_r2006_MMC3(BYTE cidx, WORD new_r2006, WORD old_r2006);
+void extcl_irq_A12_clock_MMC3_NEC(BYTE cidx);
 
 void init_MMC3(BYTE reset);
 void prg_fix_MMC3_base(void);

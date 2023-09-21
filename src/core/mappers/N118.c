@@ -59,7 +59,7 @@ void extcl_after_mapper_init_N118(void) {
 	N118_prg_fix();
 	N118_chr_fix();
 }
-void extcl_cpu_wr_mem_N118(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_N118(UNUSED(BYTE cidx), WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 		case 0x9000:
@@ -88,7 +88,7 @@ void prg_fix_N118_base(void) {
 	N118_prg_swap(0xE000, ~0);
 }
 void prg_swap_N118_base(WORD address, WORD value) {
-	memmap_auto_8k(MMCPU(address), value);
+	memmap_auto_8k(0, MMCPU(address), value);
 }
 void chr_fix_N118_base(void) {
 	N118_chr_swap(0x0000, n118.reg[0] & (~1));
@@ -101,5 +101,5 @@ void chr_fix_N118_base(void) {
 	N118_chr_swap(0x1C00, n118.reg[5]);
 }
 void chr_swap_N118_base(WORD address, WORD value) {
-	memmap_auto_1k(MMPPU(address), value);
+	memmap_auto_1k(0, MMPPU(address), value);
 }

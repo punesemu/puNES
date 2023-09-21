@@ -114,6 +114,7 @@
 #include "mappers/mapper_095.h"
 #include "mappers/mapper_096.h"
 #include "mappers/mapper_097.h"
+#include "mappers/mapper_099.h"
 #include "mappers/mapper_100.h"
 #include "mappers/mapper_101.h"
 #include "mappers/mapper_103.h"
@@ -408,7 +409,6 @@
 #include "mappers/mapper_FDS.h"
 #include "mappers/mapper_GameGenie.h"
 #include "mappers/mapper_NSF.h"
-#include "mappers/mapper_Vs.h"
 
 #include "mappers/FCG.h"
 #include "mappers/FME7.h"

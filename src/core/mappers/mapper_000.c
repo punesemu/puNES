@@ -37,20 +37,20 @@ void extcl_after_mapper_init_000(void) {
 	prg_fix_000();
 	wram_fix_000();
 }
-void extcl_cpu_wr_mem_000(UNUSED(WORD address), UNUSED(BYTE value)) {}
+void extcl_cpu_wr_mem_000(UNUSED(BYTE cidx), UNUSED(WORD address), UNUSED(BYTE value)) {}
 
 INLINE static void prg_fix_000(void) {
 	if (m000tmp.nrom368) {
-		memmap_prgrom_16k(MMCPU(0x8000), 1);
-		memmap_prgrom_16k(MMCPU(0xC000), 2);
+		memmap_prgrom_16k(0, MMCPU(0x8000), 1);
+		memmap_prgrom_16k(0, MMCPU(0xC000), 2);
 	} else {
-		memmap_prgrom_32k(MMCPU(0x8000), 0);
+		memmap_prgrom_32k(0, MMCPU(0x8000), 0);
 	}
 }
 INLINE static void wram_fix_000(void) {
 	if (m000tmp.nrom368) {
-		memmap_prgrom_16k(MMCPU(0x4000), 0);
+		memmap_prgrom_16k(0, MMCPU(0x4000), 0);
 	} else {
-		memmap_disable_8k(MMCPU(0x4000));
+		memmap_disable_8k(0, MMCPU(0x4000));
 	}
 }

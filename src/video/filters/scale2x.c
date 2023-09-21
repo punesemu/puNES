@@ -27,7 +27,7 @@
 	x[0] = i >> 16;\
 	x[1] = (i >> 8) & 0xff;\
 	x[2] = i & 0xff
-#define X3(a) ((a << 1) + a)
+#define X3(a) (((a) << 1) + (a))
 #define SCALE2X()\
 	if (B != H && D != F) {\
 		E0 = D == B ? D : E;\
@@ -49,8 +49,7 @@
 	E8 = H == F ? F : E;
 #define SCALE3X_B()\
 	E0 = E1 = E2 = E3 = E4 = E5 = E6 = E7 = E8 = E;
-#define put_pixel(type, pixel, p0, p1)\
-	*(type *)(dstpix + p0 + p1) = (type)palette[pixel]
+#define put_pixel(type, pixel, p0, p1) *(type *)(dstpix + (p0) + (p1)) = (type)palette[pixel]
 
 INLINE static void scale2x(WORD **screen_index, const uint32_t *palette, uint32_t pitch, void *pix);
 INLINE static void scale3x(WORD **screen_index, const uint32_t *palette, uint32_t pitch, void *pix);
@@ -76,7 +75,7 @@ struct _s4x_buffer {
  * cio' che non utilizzo in questa funzione
  * e' il parametro WORD *screen.
  */
-void scaleNx(void) {
+void scaleNx(BYTE cidx) {
 	scl2x.sx = 0;
 	scl2x.sy = 0;
 	scl2x.oy = 0;
@@ -85,15 +84,18 @@ void scaleNx(void) {
 	scl2x.startx = 0;
 
 	if (gfx.filter.factor == 2) {
-		scale2x(nes.p.ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
+		scale2x(nes[cidx].p.ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette,
+			gfx.filter.data.pitch, gfx.filter.data.pix);
 	} else if (gfx.filter.factor == 3) {
-		scale3x(nes.p.ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
+		scale3x(nes[cidx].p.ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette,
+			gfx.filter.data.pitch, gfx.filter.data.pix);
 	} else if (gfx.filter.factor == 4) {
 		scl4x_buffer.w = SCR_COLUMNS * 2;
 		scl4x_buffer.h = SCR_ROWS * 2;
 		scl4x_buffer.pitch = scl4x_buffer.w * sizeof(uint32_t);
 		scl4x_buffer.size = scl4x_buffer.pitch * scl4x_buffer.h;
-		scale4x(nes.p.ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
+		scale4x(nes[cidx].p.ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette,
+			gfx.filter.data.pitch, gfx.filter.data.pix);
 	}
 }
 
@@ -194,7 +196,8 @@ INLINE static void scale4x(WORD **screen_index, const uint32_t *palette, uint32_
 	uint32_t TH0, TH1, TH2, TH3, TH4;
 	uint32_t TW0, TW1, TW2;
 
-	if ((scl4x_buffer.pixels = malloc(scl4x_buffer.size)) == NULL) {
+	scl4x_buffer.pixels = malloc(scl4x_buffer.size);
+	if (scl4x_buffer.pixels == NULL) {
 		log_error(uL("scale4x;out of memory"));
 		return;
 	} else {

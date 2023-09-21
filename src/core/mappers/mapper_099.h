@@ -16,17 +16,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef IRQL2F_H_
-#define IRQL2F_H_
+#ifndef MAPPER_099_H_
+#define MAPPER_099_H_
 
-#include "cpu.h"
-#include "ppu.h"
+#include "common.h"
 
-enum {
-	IRQL2F_INFRAME = 0x40,
-	IRQL2F_PENDING = 0x80
-};
+void map_init_099(void);
+void extcl_after_mapper_init_099(void);
+void extcl_cpu_wr_mem_099(BYTE cidx, WORD address, BYTE value);
+void extcl_cpu_wr_r4016_099(BYTE cidx, BYTE value);
+BYTE extcl_save_mapper_099(BYTE mode, BYTE slot, FILE *fp);
 
-void irql2f_tick(BYTE cidx);
-
-#endif /* IRQL2F_H_ */
+#endif /* MAPPER_099_H_ */

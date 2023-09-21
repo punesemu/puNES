@@ -22,8 +22,8 @@
 #include "input.h"
 
 void input_init_zapper(void);
-void input_rd_zapper(BYTE *value, BYTE nport, BYTE shift);
+void input_rd_zapper(BYTE cidx, BYTE *value, BYTE nport, BYTE shift);
 
-void input_rd_zapper_vs(BYTE *value, BYTE nport, BYTE shift);
+void input_rd_zapper_vs(BYTE cidx, BYTE *value, BYTE nport, BYTE shift);
 
 #endif /* INPUT_ZAPPER_H_ */

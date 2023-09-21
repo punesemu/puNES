@@ -22,7 +22,7 @@
 #include "input.h"
 
 void input_init_oeka_kids_tablet(void);
-void input_wr_oeka_kids_tablet(const BYTE *value, BYTE nport);
-void input_rd_oeka_kids_tablet(BYTE *value, BYTE nport, BYTE shift);
+void input_wr_oeka_kids_tablet(BYTE cidx, const BYTE *value, BYTE nport);
+void input_rd_oeka_kids_tablet(BYTE cidx, BYTE *value, BYTE nport, BYTE shift);
 
 #endif /* INPUT_OEKA_KIDS_TABLET_H_ */

@@ -56,9 +56,9 @@ void extcl_after_mapper_init_072(void) {
 void extcl_mapper_quit_072(void) {
 	wavefiles_clear();
 }
-void extcl_cpu_wr_mem_072(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_072(BYTE cidx, WORD address, BYTE value) {
 	// bus conflict
-	value &= prgrom_rd(address);
+	value &= prgrom_rd(cidx, address);
 
 	m072.reg = (m072.reg ^ value) & value;
 	if (m072.reg & 0x80) {
@@ -88,7 +88,7 @@ BYTE extcl_save_mapper_072(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_072(void) {
+void extcl_cpu_every_cycle_072(UNUSED(BYTE cidx)) {
 	m072.snd.out = 0;
 	if (m072.snd.playing) {
 		m072.snd.out = (SWORD)(wavefiles_get_next_sample(m072.snd.speech) >> 7);
@@ -98,13 +98,13 @@ void extcl_cpu_every_cycle_072(void) {
 
 INLINE static void prg_fix_072(void) {
 	if (info.mapper.id == 92) {
-		memmap_auto_16k(MMCPU(0x8000), 0x00);
-		memmap_auto_16k(MMCPU(0xC000), m072.prg);
+		memmap_auto_16k(0, MMCPU(0x8000), 0x00);
+		memmap_auto_16k(0, MMCPU(0xC000), m072.prg);
 	} else {
-		memmap_auto_16k(MMCPU(0x8000), m072.prg);
-		memmap_auto_16k(MMCPU(0xC000), 0xFF);
+		memmap_auto_16k(0, MMCPU(0x8000), m072.prg);
+		memmap_auto_16k(0, MMCPU(0xC000), 0xFF);
 	}
 }
 INLINE static void chr_fix_072(void) {
-	memmap_auto_8k(MMPPU(0x0000), m072.chr);
+	memmap_auto_8k(0, MMPPU(0x0000), m072.chr);
 }

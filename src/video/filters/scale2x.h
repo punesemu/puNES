@@ -21,6 +21,6 @@
 
 #include "common.h"
 
-void scaleNx(void);
+void scaleNx(BYTE cidx);
 
 #endif /* SCALE2X_H_ */

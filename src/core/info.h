@@ -143,6 +143,12 @@ typedef struct _info {
 	BYTE old_machine_type;
 #endif
 	BYTE decimal_mode;
+	BYTE number_of_cpu;
+	BYTE num_exec_cpu_op;
+	union _exec_cpu_op {
+		BYTE b[2];
+		WORD w;
+	} exec_cpu_op;
 
 #if !defined (RELEASE)
 	BYTE snd_info;

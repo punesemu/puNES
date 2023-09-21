@@ -144,7 +144,7 @@ void apu_tick(BYTE *hwtick) {
 						/* setto il bit 6 del $4015 */
 						r4015.value |= 0x40;
 						/* abilito l'IRQ del frame counter */
-						nes.c.irq.high |= APU_IRQ;
+						nes[0].c.irq.high |= APU_IRQ;
 					}
 				}
 				/* passo al prossimo step */

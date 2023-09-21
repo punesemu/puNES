@@ -29,15 +29,14 @@ void input_init_four_score(void) {
 	four_score[PORT2].count = 0;
 	four_score[PORT2].signature = 0x20;
 }
-BYTE input_wr_reg_four_score(BYTE value) {
+BYTE input_wr_reg_four_score(UNUSED(BYTE cidx), BYTE value) {
 	if (!(value & 0x01)) {
 		four_score[PORT1].count = 0;
 		four_score[PORT2].count = 0;
 	}
-
 	return (value);
 }
-BYTE input_rd_reg_four_score(BYTE openbus, BYTE nport) {
+BYTE input_rd_reg_four_score(UNUSED(BYTE cidx), BYTE openbus, BYTE nport) {
 	BYTE value = 0;
 
 	if (four_score[nport].count < 8) {
@@ -47,10 +46,8 @@ BYTE input_rd_reg_four_score(BYTE openbus, BYTE nport) {
 	} else if (four_score[nport].count < 24) {
 		value = (four_score[nport].signature >> (23 - four_score[nport].count)) & 0x01;
 	}
-
 	if (++four_score[nport].count >= 32) {
 		four_score[nport].count = 0;
 	}
-
 	return ((openbus & 0xE0) | value);
 }
