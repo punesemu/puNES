@@ -208,7 +208,8 @@ BYTE ines_load_rom(void) {
 			// in 64 being added to the mapper number. A general rule of thumb: if the last 4 bytes are
 			// not all zero, and the header is not marked for NES 2.0 format, an emulator should either
 			// mask off the upper 4 bits of the mapper number or simply refuse to load the ROM.
-			if (ines.flags[FL12] | ines.flags[FL13] | ines.flags[FL14] | ines.flags[FL15]) {
+			if ((ines.flags[FL12] >= ' ') | (ines.flags[FL13] >= ' ') |
+				(ines.flags[FL14] >= ' ') | (ines.flags[FL15] >= ' ')) {
 				info.mapper.id = ines.flags[FL6] >> 4;
 				cpu_timing = 0;
 			} else {
