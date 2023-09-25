@@ -149,8 +149,8 @@ void emu_frame(void) {
 	}
 
 	// eseguo CPU, PPU e APU
-	for (int i = 0; i < info.number_of_cpu; i++) {
-		info.exec_cpu_op.b[i] = TRUE;
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		info.exec_cpu_op.b[nesidx] = TRUE;
 	}
 	while (info.exec_cpu_op.w) {
 #if defined (DEBUG)
@@ -512,10 +512,10 @@ BYTE emu_turn_on(void) {
 	srand(time(0));
 
 	// l'inizializzazione della memmap della cpu e della ppu
-	for (int i = 0; i < info.number_of_cpu; i++) {
-		memset(&nes[i].m.memmap_palette, 0x00, sizeof(nes[i].m.memmap_palette));
-		memset(&nes[i].p.oam, 0x00, sizeof(_oam));
-		memset(&nes[i].p.ppu_screen, 0x00, sizeof(_ppu_screen));
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		memset(&nes[nesidx].m.memmap_palette, 0x00, sizeof(nes[nesidx].m.memmap_palette));
+		memset(&nes[nesidx].p.oam, 0x00, sizeof(_oam));
+		memset(&nes[nesidx].p.ppu_screen, 0x00, sizeof(_ppu_screen));
 	}
 	memset(&vs_system, 0x00, sizeof(vs_system));
 
@@ -588,12 +588,12 @@ BYTE emu_turn_on(void) {
 	}
 
 	// CPU
-	for (int i = 0; i < info.number_of_cpu; i++) {
-		cpu_turn_on(i);
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		cpu_turn_on(nesidx);
 		// ritardo della CPU
-		cpu_initial_cycles(i);
+		cpu_initial_cycles(nesidx);
 		if (extcl_cpu_init_pc) {
-			extcl_cpu_init_pc(i);
+			extcl_cpu_init_pc(nesidx);
 		}
 	}
 
@@ -745,12 +745,12 @@ BYTE emu_reset(BYTE type) {
 	}
 
 	// CPU
-	for (int i = 0; i < info.number_of_cpu; i++) {
-		cpu_turn_on(i);
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		cpu_turn_on(nesidx);
 		// ritardo della CPU
-		cpu_initial_cycles(i);
+		cpu_initial_cycles(nesidx);
 		if (extcl_cpu_init_pc) {
-			extcl_cpu_init_pc(i);
+			extcl_cpu_init_pc(nesidx);
 		}
 	}
 
@@ -1345,16 +1345,14 @@ void emu_save_header_info(void) {
 	info.header.vs_ppu = vs_system.ppu;
 	info.header.vs_hardware = vs_system.special_mode.type;
 }
-BYTE emu_active_cidx(void) {
+BYTE emu_active_nidx(void) {
 	cfg->vs_monitor = 1;
 
-	return (info.number_of_cpu > 1 ? cfg->vs_monitor : 0);
+	return (info.number_of_nes > 1 ? cfg->vs_monitor : 0);
 }
 
 INLINE static void emu_frame_started(void) {
 	info.lag_frame.next = TRUE;
-
-	info.num_exec_cpu_op = 0;
 
 	// riprendo a far correre la CPU
 	info.frame_status = FRAME_STARTED;

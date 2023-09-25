@@ -53,7 +53,7 @@ void extcl_after_mapper_init_003(void) {
 void extcl_mapper_quit_003(void) {
 	wavefiles_clear();
 }
-void extcl_cpu_wr_mem_003(BYTE cidx, WORD address, BYTE value) {
+void extcl_cpu_wr_mem_003(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		m003.snd.speech = value;
 		if (!(m003.snd.speech & 0x40) && !m003.snd.playing) {
@@ -64,7 +64,7 @@ void extcl_cpu_wr_mem_003(BYTE cidx, WORD address, BYTE value) {
 	} else if (address >= 0x8000) {
 		// bus conflict
 		if (info.mapper.submapper == 2) {
-			value &= prgrom_rd(cidx, address);
+			value &= prgrom_rd(nidx, address);
 		}
 		m003.reg = value;
 		chr_fix_003();
@@ -78,7 +78,7 @@ BYTE extcl_save_mapper_003(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_003(UNUSED(BYTE cidx)) {
+void extcl_cpu_every_cycle_003(UNUSED(BYTE nidx)) {
 	m003.snd.out = 0;
 	if (m003.snd.playing) {
 		BYTE speech = m003.snd.speech & 0x07;

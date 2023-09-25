@@ -73,7 +73,7 @@ void extcl_mapper_quit_086(void) {
 	}
 	wavefiles_clear();
 }
-void extcl_cpu_wr_mem_086(UNUSED(BYTE cidx), WORD address, BYTE value) {
+void extcl_cpu_wr_mem_086(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x5000:
 			if (m086tmp.snd_type == 1) {
@@ -122,7 +122,7 @@ BYTE extcl_save_mapper_086(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_086(UNUSED(BYTE cidx)) {
+void extcl_cpu_every_cycle_086(UNUSED(BYTE nidx)) {
 	if (m086tmp.snd_type == 1) {
 		int period = (m086.snd.um_rate & 0x80 ? 176 : 88);
 

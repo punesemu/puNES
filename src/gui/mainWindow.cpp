@@ -2526,7 +2526,7 @@ void timerEgds::_etc(enum with_emu_pause type) {
 }
 
 void timerEgds::s_draw_screen(void) {
-	BYTE cidx = emu_active_cidx();
+	BYTE nidx = emu_active_nidx();
 	bool ret = false;
 
 	if (info.no_rom) {
@@ -2535,7 +2535,7 @@ void timerEgds::s_draw_screen(void) {
 
 	if (info.turn_off) {
 		ret = true;
-		tv_noise_effect(cidx);
+		tv_noise_effect(nidx);
 	} else if (info.pause) {
 		ret = true;
 	} else if (rwnd.active) {
@@ -2561,7 +2561,7 @@ void timerEgds::s_draw_screen(void) {
 			recording_audio_silenced_frame();
 		}
 #endif
-		gfx_draw_screen(cidx);
+		gfx_draw_screen(nidx);
 	}
 }
 

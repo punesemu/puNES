@@ -152,7 +152,7 @@ set(core_srcs
 #	core/mappers/mapper_066.c
 #	core/mappers/mapper_067.c
 #	core/mappers/mapper_068.c
-#	core/mappers/mapper_069.c
+	core/mappers/mapper_069.c
 #	core/mappers/mapper_070.c
 #	core/mappers/mapper_071.c
 	core/mappers/mapper_072.c

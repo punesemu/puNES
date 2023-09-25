@@ -109,7 +109,7 @@ void ntsc_bisqwit_init(void) {
 		_signal_high[i] = q;
 	}
 }
-void ntsc_bisqwit_surface(BYTE cidx) {
+void ntsc_bisqwit_surface(BYTE nidx) {
 	_ntsc_bisqwit_thread param[NTSC_BISQWIT_NUM_SLICE];
 	thread_t thread[NTSC_BISQWIT_NUM_SLICE];
 	int height = (SCR_ROWS / NTSC_BISQWIT_NUM_SLICE);
@@ -119,7 +119,7 @@ void ntsc_bisqwit_surface(BYTE cidx) {
 
 	for (i = 0; i < NTSC_BISQWIT_NUM_SLICE; i++) {
 		param[i].factor = gfx.filter.factor;
-		param[i].src = nes[cidx].p.ppu_screen.rd->data;
+		param[i].src = nes[nidx].p.ppu_screen.rd->data;
 		param[i].dst = (uint32_t *)gfx.filter.data.pix;
 		param[i].palette = (uint32_t *)gfx.filter.data.palette;
 		param[i].start_row = height * i;

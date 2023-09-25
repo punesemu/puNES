@@ -66,7 +66,7 @@ void tv_noise_quit(void) {
 		turn_off_effect.ntsc = NULL;
 	}
 }
-void tv_noise_effect(BYTE cidx) {
+void tv_noise_effect(BYTE nidx) {
 	static WORD t0 = 0;
 	BYTE direction = 1;
 	int x = 0, y = 0;
@@ -74,7 +74,7 @@ void tv_noise_effect(BYTE cidx) {
 	if (cfg->disable_tv_noise) {
 		for (y = 0; y < SCR_ROWS; y++) {
 			for (x = 0; x < SCR_COLUMNS; x++) {
-				nes[cidx].p.ppu_screen.wr->line[y][x] = 0x0D;
+				nes[nidx].p.ppu_screen.wr->line[y][x] = 0x0D;
 			}
 		}
 		return;
@@ -84,7 +84,7 @@ void tv_noise_effect(BYTE cidx) {
 		for (x = 0; x < SCR_COLUMNS; x++) {
 			WORD w = (WORD)(7 + sin((double)x / 50000 + (double)t0 / 7));
 
-			nes[cidx].p.ppu_screen.wr->line[y][x] = emu_irand(16) * w;
+			nes[nidx].p.ppu_screen.wr->line[y][x] = emu_irand(16) * w;
 		}
 		t0 = (t0 + 1) % SCR_ROWS;
 	}

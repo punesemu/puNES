@@ -51,7 +51,7 @@ EXTERNC void emu_frame_input_and_rewind(void);
 EXTERNC void emu_info_rom(void);
 EXTERNC void emu_initial_ram(BYTE *ram, unsigned int length);
 EXTERNC void emu_save_header_info(void);
-EXTERNC BYTE emu_active_cidx(void);
+EXTERNC BYTE emu_active_nidx(void);
 
 #undef EXTERNC
 

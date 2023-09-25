@@ -108,7 +108,7 @@ BYTE ines_load_rom(void) {
 		(rom.data[rom.position++] == 'S') &&
 		(rom.data[rom.position++] == '\32')) {
 
-		info.number_of_cpu = 1;
+		info.number_of_nes = 1;
 		info.mapper.prgrom_banks_16k = rom.data[rom.position++];
 		info.mapper.chrrom_banks_8k = rom.data[rom.position++];
 
@@ -117,11 +117,11 @@ BYTE ines_load_rom(void) {
 		wram_set_ram_size(0);
 		wram_set_nvram_size(0);
 		miscrom_set_size(0);
-		for (int i = 0; i < NES_CHIPS_MAX; i++) {
-			vram_set_ram_size(i, 0);
-			vram_set_nvram_size(i, 0);
-			ram_set_size(i, 0);
-			nmt_set_size(i, 0);
+		for (int nesidx = 0; nesidx < NES_CHIPS_MAX; nesidx++) {
+			vram_set_ram_size(nesidx, 0);
+			vram_set_nvram_size(nesidx, 0);
+			ram_set_size(nesidx, 0);
+			nmt_set_size(nesidx, 0);
 		}
 
 		if (rom_mem_ctrl_memcpy(&ines.flags[0], &rom, TOTAL_FL) == EXIT_ERROR) {
@@ -334,7 +334,7 @@ BYTE ines_load_rom(void) {
 					break;
 				case VS_DS_Normal:
 				case VS_DS_Bungeling:
-					info.number_of_cpu = 2;
+					info.number_of_nes = 2;
 					break;
 			}
 
@@ -343,14 +343,14 @@ BYTE ines_load_rom(void) {
 			if (wram_size() < S2K) {
 				wram_set_ram_size(S2K);
 			}
-			for (int i = 0; i < info.number_of_cpu; i++) {
-				memmap_wram_region_init(i, S2K);
+			for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+				memmap_wram_region_init(nesidx, S2K);
 			}
 		}
 
-		for (int i = 0; i < info.number_of_cpu; i++) {
-			ram_set_size(i, S2K);
-			nmt_set_size(i, S4K);
+		for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+			ram_set_size(nesidx, S2K);
+			nmt_set_size(nesidx, S4K);
 		}
 		ram_init();
 		nmt_init();
@@ -413,9 +413,9 @@ BYTE ines_load_rom(void) {
 			wram_set_nvram_size(wram_ram_size());
 			wram_set_ram_size(0);
 		}
-		for (int i = 0; i < info.number_of_cpu; i++) {
-			if (!chrrom_size() && !vram_size(i)) {
-				vram_set_ram_size(i, S8K);
+		for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+			if (!chrrom_size() && !vram_size(nesidx)) {
+				vram_set_ram_size(nesidx, S8K);
 			}
 		}
 

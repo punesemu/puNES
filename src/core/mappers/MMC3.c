@@ -50,7 +50,7 @@ void extcl_after_mapper_init_MMC3(void) {
 	MMC3_wram_fix();
 	MMC3_mirroring_fix();
 }
-void extcl_cpu_wr_mem_MMC3(BYTE cidx, WORD address, BYTE value) {
+void extcl_cpu_wr_mem_MMC3(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xE001) {
 		case 0x8000: {
 			const BYTE btu = mmc3.bank_to_update;
@@ -113,7 +113,7 @@ void extcl_cpu_wr_mem_MMC3(BYTE cidx, WORD address, BYTE value) {
 			MMC3_wram_fix();
 			break;
 		case 0xC000:
-			nes[cidx].irqA12.latch = value;
+			nes[nidx].irqA12.latch = value;
 			break;
 		case 0xC001:
 			// in "Downtown Special - Kunio-kun no Jidaigeki Dayo Zenin Shuugou! (J)"
@@ -121,20 +121,20 @@ void extcl_cpu_wr_mem_MMC3(BYTE cidx, WORD address, BYTE value) {
 			// una scrittura in questo registro nel momento esatto in cui avviene un
 			// clock irqA12_SB() facendo gia' caricare il counter con il nuovo latch
 			// cosa che invece dovrebbe avvenire nel clock successivo.
-			nes[cidx].irqA12.race.C001 = TRUE;
-			nes[cidx].irqA12.race.reload = nes[cidx].irqA12.reload;
-			nes[cidx].irqA12.race.counter = nes[cidx].irqA12.counter;
+			nes[nidx].irqA12.race.C001 = TRUE;
+			nes[nidx].irqA12.race.reload = nes[nidx].irqA12.reload;
+			nes[nidx].irqA12.race.counter = nes[nidx].irqA12.counter;
 
-			nes[cidx].irqA12.reload = TRUE;
-			nes[cidx].irqA12.counter = 0;
+			nes[nidx].irqA12.reload = TRUE;
+			nes[nidx].irqA12.counter = 0;
 			break;
 		case 0xE000:
-			nes[cidx].irqA12.enable = FALSE;
+			nes[nidx].irqA12.enable = FALSE;
 			// disabilito l'IRQ dell'MMC3
-			nes[cidx].c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			break;
 		case 0xE001:
-			nes[cidx].irqA12.enable = TRUE;
+			nes[nidx].irqA12.enable = TRUE;
 			break;
 		default:
 			return;
@@ -148,37 +148,37 @@ BYTE extcl_save_mapper_MMC3(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_MMC3(BYTE cidx) {
-	if (nes[cidx].irqA12.delay && !(--nes[cidx].irqA12.delay)) {
-		nes[cidx].c.irq.high |= EXT_IRQ;
+void extcl_cpu_every_cycle_MMC3(BYTE nidx) {
+	if (nes[nidx].irqA12.delay && !(--nes[nidx].irqA12.delay)) {
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 }
-void extcl_ppu_000_to_34x_MMC3(BYTE cidx) {
-	irqA12_RS(cidx);
+void extcl_ppu_000_to_34x_MMC3(BYTE nidx) {
+	irqA12_RS(nidx);
 }
-void extcl_ppu_000_to_255_MMC3(BYTE cidx) {
-	if (nes[cidx].p.r2001.visible) {
-		irqA12_SB(cidx);
+void extcl_ppu_000_to_255_MMC3(BYTE nidx) {
+	if (nes[nidx].p.r2001.visible) {
+		irqA12_SB(nidx);
 	}
 }
-void extcl_ppu_256_to_319_MMC3(BYTE cidx) {
-	irqA12_BS(cidx);
+void extcl_ppu_256_to_319_MMC3(BYTE nidx) {
+	irqA12_BS(nidx);
 }
-void extcl_ppu_320_to_34x_MMC3(BYTE cidx) {
-	irqA12_SB(cidx);
+void extcl_ppu_320_to_34x_MMC3(BYTE nidx) {
+	irqA12_SB(nidx);
 }
-void extcl_update_r2006_MMC3(BYTE cidx, WORD new_r2006, WORD old_r2006) {
-	irqA12_IO(cidx, new_r2006, old_r2006);
+void extcl_update_r2006_MMC3(BYTE nidx, WORD new_r2006, WORD old_r2006) {
+	irqA12_IO(nidx, new_r2006, old_r2006);
 }
-void extcl_irq_A12_clock_MMC3_NEC(BYTE cidx) {
-	if (!nes[cidx].irqA12.counter) {
-		nes[cidx].irqA12.counter = nes[cidx].irqA12.latch;
-		nes[cidx].irqA12.reload = FALSE;
+void extcl_irq_A12_clock_MMC3_NEC(BYTE nidx) {
+	if (!nes[nidx].irqA12.counter) {
+		nes[nidx].irqA12.counter = nes[nidx].irqA12.latch;
+		nes[nidx].irqA12.reload = FALSE;
 	} else {
-		nes[cidx].irqA12.counter--;
+		nes[nidx].irqA12.counter--;
 	}
-	if (!nes[cidx].irqA12.counter && nes[cidx].irqA12.enable) {
-		nes[cidx].c.irq.high |= EXT_IRQ;
+	if (!nes[nidx].irqA12.counter && nes[nidx].irqA12.enable) {
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 }
 

@@ -75,7 +75,7 @@ struct _s4x_buffer {
  * cio' che non utilizzo in questa funzione
  * e' il parametro WORD *screen.
  */
-void scaleNx(BYTE cidx) {
+void scaleNx(BYTE nidx) {
 	scl2x.sx = 0;
 	scl2x.sy = 0;
 	scl2x.oy = 0;
@@ -84,17 +84,17 @@ void scaleNx(BYTE cidx) {
 	scl2x.startx = 0;
 
 	if (gfx.filter.factor == 2) {
-		scale2x(nes[cidx].p.ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette,
+		scale2x(nes[nidx].p.ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette,
 			gfx.filter.data.pitch, gfx.filter.data.pix);
 	} else if (gfx.filter.factor == 3) {
-		scale3x(nes[cidx].p.ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette,
+		scale3x(nes[nidx].p.ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette,
 			gfx.filter.data.pitch, gfx.filter.data.pix);
 	} else if (gfx.filter.factor == 4) {
 		scl4x_buffer.w = SCR_COLUMNS * 2;
 		scl4x_buffer.h = SCR_ROWS * 2;
 		scl4x_buffer.pitch = scl4x_buffer.w * sizeof(uint32_t);
 		scl4x_buffer.size = scl4x_buffer.pitch * scl4x_buffer.h;
-		scale4x(nes[cidx].p.ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette,
+		scale4x(nes[nidx].p.ppu_screen.rd->line, (uint32_t *)gfx.filter.data.palette,
 			gfx.filter.data.pitch, gfx.filter.data.pix);
 	}
 }

@@ -130,8 +130,8 @@ typedef struct _array_pointers_port {
 	_port *port[PORT_MAX];
 } _array_pointers_port;
 typedef struct _port_funct {
-	void (*input_wr)(BYTE cidx, const BYTE *value, BYTE nport);
-	void (*input_rd)(BYTE cidx, BYTE *value, BYTE nport, BYTE shift);
+	void (*input_wr)(BYTE nidx, const BYTE *value, BYTE nport);
+	void (*input_rd)(BYTE nidx, BYTE *value, BYTE nport, BYTE shift);
 	void (*input_add_event)(BYTE index);
 	BYTE (*input_decode_event)(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *prt);
 } _port_funct;
@@ -151,8 +151,8 @@ extern _nes_keyboard nes_keyboard;
 extern _generic_keyboard generic_keyboard;
 extern _mic mic;
 
-extern BYTE (*input_wr_reg)(BYTE cidx, BYTE value);
-extern BYTE (*input_rd_reg[2])(BYTE cidx, BYTE openbus, BYTE nport);
+extern BYTE (*input_wr_reg)(BYTE nidx, BYTE value);
+extern BYTE (*input_rd_reg[2])(BYTE nidx, BYTE openbus, BYTE nport);
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -162,8 +162,8 @@ extern BYTE (*input_rd_reg[2])(BYTE cidx, BYTE openbus, BYTE nport);
 
 EXTERNC void input_init(BYTE set_cursor);
 
-EXTERNC void input_wr_disabled(BYTE cidx, const BYTE *value, BYTE nport);
-EXTERNC void input_rd_disabled(BYTE cidx, BYTE *value, BYTE nport, BYTE shift);
+EXTERNC void input_wr_disabled(BYTE nidx, const BYTE *value, BYTE nport);
+EXTERNC void input_rd_disabled(BYTE nidx, BYTE *value, BYTE nport, BYTE shift);
 
 EXTERNC BYTE input_draw_target();
 

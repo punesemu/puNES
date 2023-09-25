@@ -18,28 +18,28 @@
 
 #include "irql2f.h"
 
-void irql2f_tick(BYTE cidx) {
-	if (nes[cidx].irql2f.frame_x != nes[cidx].p.ppu.frame_x) {
+void irql2f_tick(BYTE nidx) {
+	if (nes[nidx].irql2f.frame_x != nes[nidx].p.ppu.frame_x) {
 		return;
 	}
 
-	if (nes[cidx].p.ppu.screen_y == (SCR_ROWS - 1)) {
-		nes[cidx].irql2f.in_frame = FALSE;
+	if (nes[nidx].p.ppu.screen_y == (SCR_ROWS - 1)) {
+		nes[nidx].irql2f.in_frame = FALSE;
 		return;
 	}
 
-	if (!nes[cidx].irql2f.in_frame) {
-		nes[cidx].irql2f.in_frame = IRQL2F_INFRAME;
-		nes[cidx].irql2f.counter = 0;
-		nes[cidx].irql2f.pending = FALSE;
+	if (!nes[nidx].irql2f.in_frame) {
+		nes[nidx].irql2f.in_frame = IRQL2F_INFRAME;
+		nes[nidx].irql2f.counter = 0;
+		nes[nidx].irql2f.pending = FALSE;
 		// disabilito l'IRQ dell'MMC5
-		nes[cidx].c.irq.high &= ~EXT_IRQ;
+		nes[nidx].c.irq.high &= ~EXT_IRQ;
 		return;
 	}
-	if (++nes[cidx].irql2f.counter == nes[cidx].irql2f.scanline) {
-		nes[cidx].irql2f.pending = IRQL2F_PENDING;
-		if (nes[cidx].irql2f.enable) {
-			nes[cidx].irql2f.delay = 2;
+	if (++nes[nidx].irql2f.counter == nes[nidx].irql2f.scanline) {
+		nes[nidx].irql2f.pending = IRQL2F_PENDING;
+		if (nes[nidx].irql2f.enable) {
+			nes[nidx].irql2f.delay = 2;
 		}
 	}
 }

@@ -48,7 +48,7 @@ void extcl_after_mapper_init_FME7(void) {
 	FME7_wram_fix();
 	FME7_mirroring_fix();
 }
-void extcl_cpu_wr_mem_FME7(BYTE cidx, WORD address, BYTE value) {
+void extcl_cpu_wr_mem_FME7(BYTE nidx, WORD address, BYTE value) {
 	int index = 0;
 
 	switch (address & 0xE000) {
@@ -83,7 +83,7 @@ void extcl_cpu_wr_mem_FME7(BYTE cidx, WORD address, BYTE value) {
 					return;
 				case 0x0D:
 					fme7.irq.control = value;
-					nes[cidx].c.irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					return;
 				case 0x0E:
 					fme7.irq.count = (fme7.irq.count & 0xFF00) | value;
@@ -150,7 +150,7 @@ BYTE extcl_save_mapper_FME7(BYTE mode, BYTE slot, FILE *fp) {
 	}
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_FME7(BYTE cidx) {
+void extcl_cpu_every_cycle_FME7(BYTE nidx) {
 	// nell'FME7 l'IRQ viene generato quando il contatore passa da 0x0000 a 0xFFFF.
 	// Nella vecchia gestione utilizzavo il solito delay di un ciclo, ma a quanto pare
 	// se lo genero quando a 0x0000, proprio per il famigerato delay con cui gira
@@ -162,7 +162,7 @@ void extcl_cpu_every_cycle_FME7(BYTE cidx) {
 	}
 
 	if (!(--fme7.irq.count) && (fme7.irq.control & 0x01)) {
-		nes[cidx].c.irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 }
 void extcl_apu_tick_FME7(void) {

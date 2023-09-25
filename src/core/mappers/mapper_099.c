@@ -20,9 +20,9 @@
 #include "mappers.h"
 #include "save_slot.h"
 
-INLINE static void prg_fix_099(BYTE cidx);
-INLINE static void wram_fix_099(BYTE cidx);
-INLINE static void chr_fix_099(BYTE cidx);
+INLINE static void prg_fix_099(BYTE nidx);
+INLINE static void wram_fix_099(BYTE nidx);
+INLINE static void chr_fix_099(BYTE nidx);
 
 struct _m099 {
 	WORD reg[2];
@@ -40,41 +40,41 @@ void map_init_099(void) {
 	}
 }
 void extcl_after_mapper_init_099(void) {
-	for (int i = 0; i < info.number_of_cpu; i++) {
-		prg_fix_099(i);
-		wram_fix_099(i);
-		chr_fix_099(i);
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		prg_fix_099(nesidx);
+		wram_fix_099(nesidx);
+		chr_fix_099(nesidx);
 	}
 }
-void extcl_cpu_wr_mem_099(UNUSED(BYTE cidx), UNUSED(WORD address), UNUSED(BYTE value)) {}
-void extcl_cpu_wr_r4016_099(BYTE cidx, BYTE value) {
+void extcl_cpu_wr_mem_099(UNUSED(BYTE nidx), UNUSED(WORD address), UNUSED(BYTE value)) {}
+void extcl_cpu_wr_r4016_099(BYTE nidx, BYTE value) {
 
 
 //	if ((value != 0x02) && (value != 0x03))
 //	if (value & 0x04)
-//	printf("extcl_cpu_wr_r4016_099 : %d 0x%02X\n", cidx, value);
+//	printf("extcl_cpu_wr_r4016_099 : %d 0x%02X\n", nidx, value);
 
 
-	m099.reg[cidx] = value;
+	m099.reg[nidx] = value;
 
-	prg_fix_099(cidx);
-	wram_fix_099(cidx);
-	chr_fix_099(cidx);
+	prg_fix_099(nidx);
+	wram_fix_099(nidx);
+	chr_fix_099(nidx);
 }
 BYTE extcl_save_mapper_099(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m099.reg);
 	return (EXIT_OK);
 }
 
-INLINE static void prg_fix_099(BYTE cidx) {
-	memmap_auto_32k(cidx, MMCPU(0x8000), cidx);
+INLINE static void prg_fix_099(BYTE nidx) {
+	memmap_auto_32k(nidx, MMCPU(0x8000), nidx);
 //	if (prgrom_size() > S32K) {
-//		memmap_auto_8k(cidx, MMCPU(0x8000), m099.reg[cidx] & 0x04);
+//		memmap_auto_8k(nidx, MMCPU(0x8000), m099.reg[nidx] & 0x04);
 //	}
 }
-INLINE static void wram_fix_099(BYTE cidx) {
-	memmap_auto_8k(cidx, MMCPU(0x6000), 0);
+INLINE static void wram_fix_099(BYTE nidx) {
+	memmap_auto_8k(nidx, MMCPU(0x6000), 0);
 }
-INLINE static void chr_fix_099(BYTE cidx) {
-	memmap_auto_8k(cidx, MMPPU(0x0000), ((cidx << 1) | (m099.reg[cidx] >> 2)));
+INLINE static void chr_fix_099(BYTE nidx) {
+	memmap_auto_8k(nidx, MMPPU(0x0000), ((nidx << 1) | (m099.reg[nidx] >> 2)));
 }

@@ -60,7 +60,7 @@ void extcl_after_mapper_init_VRC2and4(void) {
 	VRC2and4_wram_fix();
 	VRC2and4_mirroring_fix();
 }
-void extcl_cpu_wr_mem_VRC2and4(BYTE cidx, WORD address, BYTE value) {
+void extcl_cpu_wr_mem_VRC2and4(BYTE nidx, WORD address, BYTE value) {
 	WORD bank = address & 0xF000;
 	int index = 0;
 
@@ -134,13 +134,13 @@ void extcl_cpu_wr_mem_VRC2and4(BYTE cidx, WORD address, BYTE value) {
 							vrc2and4.irq.prescaler = 0;
 							vrc2and4.irq.count = vrc2and4.irq.reload;
 						}
-						nes[cidx].c.irq.high &= ~EXT_IRQ;
+						nes[nidx].c.irq.high &= ~EXT_IRQ;
 						return;
 					case 3:
 						if (vrc2and4tmp.irq_repeated) {
 							vrc2and4.irq.enabled = vrc2and4.irq.acknowledge;
 						}
-						nes[cidx].c.irq.high &= ~EXT_IRQ;
+						nes[nidx].c.irq.high &= ~EXT_IRQ;
 						return;
 					default:
 						break;
@@ -151,7 +151,7 @@ void extcl_cpu_wr_mem_VRC2and4(BYTE cidx, WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_VRC2and4(UNUSED(BYTE cidx), WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_VRC2and4(UNUSED(BYTE nidx), WORD address, BYTE openbus) {
 	switch (address & 0xF000) {
 		case 0x6000:
 			return (vrc2and4tmp.prg6000_wired ? (openbus & 0xFE) | ((vrc2and4.wired & 0x08) >> 3) : openbus);
@@ -175,7 +175,7 @@ BYTE extcl_save_mapper_VRC2and4(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_VRC2and4(BYTE cidx) {
+void extcl_cpu_every_cycle_VRC2and4(BYTE nidx) {
 	if (!vrc2and4.irq.enabled) {
 		return;
 	}
@@ -194,8 +194,8 @@ void extcl_cpu_every_cycle_VRC2and4(BYTE cidx) {
 	}
 
 	vrc2and4.irq.count = vrc2and4.irq.reload;
-	nes[cidx].c.irq.delay = TRUE;
-	nes[cidx].c.irq.high |= EXT_IRQ;
+	nes[nidx].c.irq.delay = TRUE;
+	nes[nidx].c.irq.high |= EXT_IRQ;
 }
 
 void init_VRC2and4(BYTE type, WORD A0, WORD A1, BYTE irq_repeated, BYTE reset) {

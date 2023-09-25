@@ -27,18 +27,16 @@
 _mapper mapper;
 
 BYTE map_init(void) {
-	unsigned int i = 0;
-
 	// di default la routine di salvataggio
 	// di una possibile struttura interna
 	// di dati della mapper e' NULL.
-	for (i = 0; i < LENGTH(mapper.internal_struct); i++) {
+	for (unsigned int i = 0; i < LENGTH(mapper.internal_struct); i++) {
 		mapper.internal_struct[i] = 0;
 	}
 	// disabilito gli accessori
-	for (i = 0; i < NES_CHIPS_MAX; i++) {
-		nes[i].irqA12.present = FALSE;
-		nes[i].irql2f.present = FALSE;
+	for (int nesidx = 0; nesidx < NES_CHIPS_MAX; nesidx++) {
+		nes[nesidx].irqA12.present = FALSE;
+		nes[nesidx].irql2f.present = FALSE;
 	}
 	// disabilito tutte le chiamate relative alle mappers
 	extcl_init();
@@ -253,9 +251,9 @@ BYTE map_init(void) {
 //		case 68:
 //			map_init_068();
 //			break;
-//		case 69:
-//			map_init_069();
-//			break;
+		case 69:
+			map_init_069();
+			break;
 //		case 70:
 //			map_init_070();
 //			break;

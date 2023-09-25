@@ -84,48 +84,48 @@ static const uint32_t dotmatrix[16] = {
 	0x003F3F3F, 0x00000000, 0x003F3F3F, 0x00000000
 };
 
-void scale_2xsai(BYTE cidx) {
-	scaler_2xsai((BYTE *)nes[cidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
+void scale_2xsai(BYTE nidx) {
+	scaler_2xsai((BYTE *)nes[nidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
 		SCR_COLUMNS, SCR_ROWS, (uint32_t *)gfx.filter.data.palette);
 }
-void scale_dotmatrix(BYTE cidx) {
-	scaler_dotmatrix((BYTE *)nes[cidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
+void scale_dotmatrix(BYTE nidx) {
+	scaler_dotmatrix((BYTE *)nes[nidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
 		SCR_COLUMNS, SCR_ROWS, (uint32_t *)gfx.filter.data.palette);
 }
-void scale_paltv1x(BYTE cidx) {
-	scaler_paltv1x((BYTE *)nes[cidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
+void scale_paltv1x(BYTE nidx) {
+	scaler_paltv1x((BYTE *)nes[nidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
 		SCR_COLUMNS, SCR_ROWS, (uint32_t *)gfx.filter.data.palette);
 }
-void scale_paltv2x(BYTE cidx) {
-	scaler_paltv2x((BYTE *)nes[cidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
+void scale_paltv2x(BYTE nidx) {
+	scaler_paltv2x((BYTE *)nes[nidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
 		SCR_COLUMNS, SCR_ROWS, (uint32_t *) gfx.filter.data.palette);
 }
-void scale_paltv3x(BYTE cidx) {
-	scaler_paltv3x((BYTE *)nes[cidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
+void scale_paltv3x(BYTE nidx) {
+	scaler_paltv3x((BYTE *)nes[nidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
 		SCR_COLUMNS, SCR_ROWS, (uint32_t *)gfx.filter.data.palette);
 }
-void scale_paltv4x(BYTE cidx) {
-	scaler_paltv4x((BYTE *)nes[cidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
+void scale_paltv4x(BYTE nidx) {
+	scaler_paltv4x((BYTE *)nes[nidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
 		SCR_COLUMNS, SCR_ROWS, (uint32_t *)gfx.filter.data.palette);
 }
-void scale_super2xsai(BYTE cidx) {
-	scaler_super2xsai((BYTE *)nes[cidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
+void scale_super2xsai(BYTE nidx) {
+	scaler_super2xsai((BYTE *)nes[nidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
 		SCR_COLUMNS, SCR_ROWS, (uint32_t *)gfx.filter.data.palette);
 }
-void scale_supereagle(BYTE cidx) {
-	scaler_supereagle((BYTE *)nes[cidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
+void scale_supereagle(BYTE nidx) {
+	scaler_supereagle((BYTE *)nes[nidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
 		SCR_COLUMNS, SCR_ROWS, (uint32_t *)gfx.filter.data.palette);
 }
-void scale_tv2x(BYTE cidx) {
-	scaler_tv2x((BYTE *)nes[cidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
+void scale_tv2x(BYTE nidx) {
+	scaler_tv2x((BYTE *)nes[nidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
 		SCR_COLUMNS, SCR_ROWS, (uint32_t *)gfx.filter.data.palette);
 }
-void scale_tv3x(BYTE cidx) {
-	scaler_tv3x((BYTE *)nes[cidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
+void scale_tv3x(BYTE nidx) {
+	scaler_tv3x((BYTE *)nes[nidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
 		SCR_COLUMNS, SCR_ROWS, (uint32_t *)gfx.filter.data.palette);
 }
-void scale_tv4x(BYTE cidx) {
-	scaler_tv4x((BYTE *)nes[cidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
+void scale_tv4x(BYTE nidx) {
+	scaler_tv4x((BYTE *)nes[nidx].p.ppu_screen.rd->data, (BYTE *)gfx.filter.data.pix, gfx.filter.data.pitch,
 		SCR_COLUMNS, SCR_ROWS, (uint32_t *)gfx.filter.data.palette);
 }
 

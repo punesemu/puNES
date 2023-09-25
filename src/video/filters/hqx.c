@@ -39,7 +39,7 @@ void hqx_init(void) {
 		RGBtoYUV[i] = (y << 16) + (u << 8) + v;
 	}
 }
-void hqNx(BYTE cidx) {
+void hqNx(BYTE nidx) {
 	hqnx.sx = 0;
 	hqnx.sy = 0;
 	hqnx.lines = SCR_ROWS;
@@ -48,10 +48,10 @@ void hqNx(BYTE cidx) {
 	hqnx.startx = 0;
 
 	if (gfx.filter.factor == 2) {
-		hq2x_32_rb(nes[cidx].p.ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
+		hq2x_32_rb(nes[nidx].p.ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
 	} else if (gfx.filter.factor == 3) {
-		hq3x_32_rb(nes[cidx].p.ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
+		hq3x_32_rb(nes[nidx].p.ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
 	} else if (gfx.filter.factor == 4) {
-		hq4x_32_rb(nes[cidx].p.ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
+		hq4x_32_rb(nes[nidx].p.ppu_screen.rd->data, gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette);
 	}
 }

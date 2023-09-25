@@ -68,7 +68,7 @@ void extcl_after_mapper_init_284(void) {
 	wram_fix_284();
 	mirroring_fix_284();
 }
-void extcl_cpu_wr_mem_284(BYTE cidx, WORD address, BYTE value) {
+void extcl_cpu_wr_mem_284(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x8000:
 		case 0xA000:
@@ -91,7 +91,7 @@ void extcl_cpu_wr_mem_284(BYTE cidx, WORD address, BYTE value) {
 				case 0x9:
 					m284.irq.counter = ((value & 0x7F) << 8) | m284.irq.latch;
 					m284.irq.enabled = value & 0x80;
-					nes[cidx].c.irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					break;
 				case 0xA:
 					m284.control = value & 0x0F;
@@ -117,14 +117,14 @@ void extcl_cpu_wr_mem_284(BYTE cidx, WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_284(BYTE cidx, WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_284(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	switch (address & 0xF000) {
 		case 0x4000:
-			return (address & 0x0800 ? m284.jumper | 'd' : wram_rd(cidx, address));
+			return (address & 0x0800 ? m284.jumper | 'd' : wram_rd(nidx, address));
 		case 0x5000:
 			return (address & 0x0800 ? channel_status(&m284.channel[1]) : channel_status(&m284.channel[0]));
 		default:
-			return (wram_rd(cidx, address));
+			return (wram_rd(nidx, address));
 	}
 }
 BYTE extcl_save_mapper_284(BYTE mode, BYTE slot, FILE *fp) {
@@ -157,7 +157,7 @@ BYTE extcl_save_mapper_284(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-BYTE extcl_rd_nmt_284(BYTE cidx, WORD address) {
+BYTE extcl_rd_nmt_284(BYTE nidx, WORD address) {
 	if ((m284.control & 0x04) && ((address & 0x3FF) >= 0x3C0)) {
 		const BYTE ext_attrib[4] = { 0x00, 0x55, 0xAA, 0xFF };
 		BYTE bank = 0;
@@ -179,17 +179,17 @@ BYTE extcl_rd_nmt_284(BYTE cidx, WORD address) {
 				bank = (address & 0x400) ? 1 : 0;
 				break;
 		}
-		return (ext_attrib[m284.extended_attributes[bank][nes[cidx].p.r2006.value & 0x3FF]]);
+		return (ext_attrib[m284.extended_attributes[bank][nes[nidx].p.r2006.value & 0x3FF]]);
 	}
-	return (nmt_rd(cidx, address));
+	return (nmt_rd(nidx, address));
 }
-void extcl_cpu_every_cycle_284(BYTE cidx) {
+void extcl_cpu_every_cycle_284(BYTE nidx) {
 	if (m284.irq.enabled) {
 		if (m284.irq.counter > 0) {
 			m284.irq.counter--;
 			if (!m284.irq.counter) {
 				m284.irq.enabled = FALSE;
-				nes[cidx].c.irq.high |= EXT_IRQ;
+				nes[nidx].c.irq.high |= EXT_IRQ;
 			}
 		}
 	}

@@ -125,7 +125,7 @@ BYTE nsfe_load_rom(void) {
 
 		info.format = NSFE_FORMAT;
 
-		info.number_of_cpu = 1;
+		info.number_of_nes = 1;
 		info.machine[DATABASE] = DEFAULT;
 
 		nsf.info.name = &nsf_default_label[0];

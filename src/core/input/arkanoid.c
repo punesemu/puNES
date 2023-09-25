@@ -36,7 +36,7 @@ void input_init_arkanoid(void) {
 		arkanoid[i].button = 0;
 	}
 }
-void input_wr_arkanoid(UNUSED(BYTE cidx), const BYTE *value, BYTE nport) {
+void input_wr_arkanoid(UNUSED(BYTE nidx), const BYTE *value, BYTE nport) {
 	static const float ratio = (float)ark_rows / (float)ark_stop_x;
 
 	nport &= 0x01;
@@ -60,7 +60,7 @@ void input_wr_arkanoid(UNUSED(BYTE cidx), const BYTE *value, BYTE nport) {
 		arkanoid[nport].button = gmouse.left;
 	}
 }
-void input_rd_arkanoid(UNUSED(BYTE cidx), BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
+void input_rd_arkanoid(UNUSED(BYTE nidx), BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
 		if ((nport & 0x01) == PORT1) {
 			(*value) |= (arkanoid[0].button << 1);

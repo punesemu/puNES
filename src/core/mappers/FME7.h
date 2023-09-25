@@ -53,9 +53,9 @@ typedef struct _fme7 {
 extern _fme7 fme7;
 
 void extcl_after_mapper_init_FME7(void);
-void extcl_cpu_wr_mem_FME7(BYTE cidx, WORD address, BYTE value);
+void extcl_cpu_wr_mem_FME7(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_FME7(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_FME7(BYTE cidx);
+void extcl_cpu_every_cycle_FME7(BYTE nidx);
 void extcl_apu_tick_FME7(void);
 
 void init_NSF_FME7(void);

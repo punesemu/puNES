@@ -149,7 +149,7 @@ BYTE fds_load_rom(void) {
 	}
 
 	info.format = FDS_FORMAT;
-	info.number_of_cpu = 1;
+	info.number_of_nes = 1;
 	fds.info.expcted_side = fds.info.total_sides;
 
 	// conto le dimensioni dei vari sides

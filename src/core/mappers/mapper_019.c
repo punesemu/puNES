@@ -110,7 +110,7 @@ void extcl_after_mapper_init_019(void) {
 	wram_fix_019();
 	mirroring_fix_019();
 }
-void extcl_cpu_wr_mem_019(BYTE cidx, WORD address, BYTE value) {
+void extcl_cpu_wr_mem_019(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF800) {
 		case 0x4800:
 			m019tmp.ram[m019.snd.adr] = value;
@@ -118,11 +118,11 @@ void extcl_cpu_wr_mem_019(BYTE cidx, WORD address, BYTE value) {
 			return;
 		case 0x5000:
 			m019.irq.count = (m019.irq.count & 0xFF00) | value;
-			nes[cidx].c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0x5800:
 			m019.irq.count = (value << 8) | (m019.irq.count & 0x00FF);
-			nes[cidx].c.irq.high &= ~EXT_IRQ;
+			nes[nidx].c.irq.high &= ~EXT_IRQ;
 			return;
 		case 0x8000:
 		case 0x8800:
@@ -163,7 +163,7 @@ void extcl_cpu_wr_mem_019(BYTE cidx, WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_019(BYTE cidx, WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_019(BYTE nidx, WORD address, BYTE openbus) {
 	switch (address & 0xF800) {
 		case 0x4800:
 			openbus = m019tmp.ram[m019.snd.adr];
@@ -174,7 +174,7 @@ BYTE extcl_cpu_rd_mem_019(BYTE cidx, WORD address, BYTE openbus) {
 		case 0x5800:
 			return ((m019.irq.count >> 8) & 0xFF);
 		default:
-			return (wram_rd(cidx, address));
+			return (wram_rd(nidx, address));
 	}
 }
 BYTE extcl_save_mapper_019(BYTE mode, BYTE slot, FILE *fp) {
@@ -194,10 +194,10 @@ BYTE extcl_save_mapper_019(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_019(BYTE cidx) {
+void extcl_cpu_every_cycle_019(BYTE nidx) {
 	if (m019.irq.delay) {
 		m019.irq.delay = FALSE;
-		nes[cidx].c.irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 	if (((m019.irq.count - 0x8000) < 0x7FFF) && (++m019.irq.count == 0xFFFF)) {
 		// vale sempre il solito discorso di un ciclo di delay

@@ -36,7 +36,7 @@ enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_
 	 *  0 -> no flip verticale\
 	 *  1 -> si flip verticale\
 	 */\
-	if (nes[cidx].p.oam.epl[sprite][AT] & 0x80) {\
+	if (nes[nidx].p.oam.epl[sprite][AT] & 0x80) {\
 		/* flip verticale */\
 		flip_v = ~spl[sprite].flip_v;\
 	} else {\
@@ -48,7 +48,7 @@ enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_
 	 *  0 -> sprite 8x8 (1 tile)\
 	 *  1 -> sprite 8x16 (2 tile)\
 	 */\
-	if (nes[cidx].p.r2000.size_spr == 16) {\
+	if (nes[nidx].p.r2000.size_spr == 16) {\
 		/* -- 8x16 --\
 		 *\
 		 * sprite_plus[x].tile:\
@@ -66,64 +66,64 @@ enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_
 		 * caso di flip verticale sara' l'esatto contrario,\
 		 * dispari per i primi 8x8 e pari per i secondi 8x8.\
 		 */\
-		sadr = (nes[cidx].p.oam.epl[sprite][TL] & 0xFE) | ((flip_v & 0x08) >> 3);\
+		sadr = (nes[nidx].p.oam.epl[sprite][TL] & 0xFE) | ((flip_v & 0x08) >> 3);\
 		/* recupero la posizione nella vram del tile */\
-		sadr = ((nes[cidx].p.oam.epl[sprite][TL] & 0x01) << 12) | (sadr << 4);\
+		sadr = ((nes[nidx].p.oam.epl[sprite][TL] & 0x01) << 12) | (sadr << 4);\
 	} else {\
 		/* -- 8x8 --\
 		 *\
 		 * sprite_plus[x].tile = numero del tile nella vram.\
 		 */\
 		/* recupero la posizione nella vram del tile */\
-		sadr = nes[cidx].p.r2000.spt_adr | (nes[cidx].p.oam.epl[sprite][TL] << 4);\
+		sadr = nes[nidx].p.r2000.spt_adr | (nes[nidx].p.oam.epl[sprite][TL] << 4);\
 	}\
 	/* aggiungo la cordinata Y dello sprite */\
 	sadr += (flip_v & 0x07);\
 }
-#define ppu_spr_adr(sprite) _ppu_spr_adr(sprite, ele_plus, nes[cidx].p.sprite_plus, nes[cidx].p.ppu.spr_adr)
+#define ppu_spr_adr(sprite) _ppu_spr_adr(sprite, ele_plus, nes[nidx].p.sprite_plus, nes[nidx].p.ppu.spr_adr)
 #define ppu_bck_adr(r2000bck, r2006vl)\
-	nes[cidx].p.ppu.bck_adr = r2000bck | ((ppu_rd_mem(cidx, 0x2000 | (r2006vl & 0x0FFF)) << 4)\
+	nes[nidx].p.ppu.bck_adr = r2000bck | ((ppu_rd_mem(nidx, 0x2000 | (r2006vl & 0x0FFF)) << 4)\
 		| ((r2006vl & 0x7000) >> 12))
 #define r2006_inc()\
 	/* controllo se fine Y e' uguale a 7 */\
-	if ((nes[cidx].p.r2006.value & 0x7000) == 0x7000) {\
+	if ((nes[nidx].p.r2006.value & 0x7000) == 0x7000) {\
 		WORD tile_y;\
 		/* azzero il fine Y */\
-		nes[cidx].p.r2006.value &= 0x0FFF;\
+		nes[nidx].p.r2006.value &= 0x0FFF;\
 		/* isolo il tile Y */\
-		tile_y = (nes[cidx].p.r2006.value & 0x03E0);\
+		tile_y = (nes[nidx].p.r2006.value & 0x03E0);\
 		/* quindi lo esamino */\
 		if (tile_y == 0x03A0) {\
 			/* nel caso di 29 */\
-			nes[cidx].p.r2006.value ^= 0x0BA0;\
+			nes[nidx].p.r2006.value ^= 0x0BA0;\
 		} else if (tile_y == 0x03E0) {\
 			/* nel caso di 31 */\
-			nes[cidx].p.r2006.value ^= 0x03E0;\
+			nes[nidx].p.r2006.value ^= 0x03E0;\
 		} else {\
 			/* incremento tile Y */\
-			nes[cidx].p.r2006.value += 0x20;\
+			nes[nidx].p.r2006.value += 0x20;\
 		}\
 	} else {\
 		/* incremento di 1 fine Y */\
-		nes[cidx].p.r2006.value += 0x1000;\
+		nes[nidx].p.r2006.value += 0x1000;\
 	}
-#define r2006_end_scanline() nes[cidx].p.r2006.value = (nes[cidx].p.r2006.value & 0xFBE0) | (nes[cidx].p.ppu.tmp_vram & 0x041F)
+#define r2006_end_scanline() nes[nidx].p.r2006.value = (nes[nidx].p.r2006.value & 0xFBE0) | (nes[nidx].p.ppu.tmp_vram & 0x041F)
 #define ppu_overclock_update()\
-	if (nes[cidx].p.overclock.DMC_in_use) {\
-		nes[cidx].p.ppu_sclines.total = machine.total_lines;\
-		nes[cidx].p.ppu_sclines.frame = machine.total_lines;\
-		nes[cidx].p.ppu_sclines.vint = machine.vint_lines;\
-		nes[cidx].p.ppu_sclines.vint_extra = 0;\
+	if (nes[nidx].p.overclock.DMC_in_use) {\
+		nes[nidx].p.ppu_sclines.total = machine.total_lines;\
+		nes[nidx].p.ppu_sclines.frame = machine.total_lines;\
+		nes[nidx].p.ppu_sclines.vint = machine.vint_lines;\
+		nes[nidx].p.ppu_sclines.vint_extra = 0;\
 	} else {\
-		nes[cidx].p.ppu_sclines.total = machine.total_lines + nes[cidx].p.overclock.sclines.total;\
-		nes[cidx].p.ppu_sclines.frame = machine.total_lines + nes[cidx].p.overclock.sclines.vb;\
-		nes[cidx].p.ppu_sclines.vint = machine.vint_lines + nes[cidx].p.overclock.sclines.vb;\
-		nes[cidx].p.ppu_sclines.vint_extra = nes[cidx].p.overclock.sclines.vb;\
+		nes[nidx].p.ppu_sclines.total = machine.total_lines + nes[nidx].p.overclock.sclines.total;\
+		nes[nidx].p.ppu_sclines.frame = machine.total_lines + nes[nidx].p.overclock.sclines.vb;\
+		nes[nidx].p.ppu_sclines.vint = machine.vint_lines + nes[nidx].p.overclock.sclines.vb;\
+		nes[nidx].p.ppu_sclines.vint_extra = nes[nidx].p.overclock.sclines.vb;\
 	}
 #define ppu_overclock_control()\
-	nes[cidx].p.overclock.in_extra_sclines = TRUE;\
-	if ((nes[cidx].p.ppu.frame_y >= nes[cidx].p.ppu_sclines.vint_extra) && (nes[cidx].p.ppu.frame_y < nes[cidx].p.ppu_sclines.frame)) {\
-		nes[cidx].p.overclock.in_extra_sclines = FALSE;\
+	nes[nidx].p.overclock.in_extra_sclines = TRUE;\
+	if ((nes[nidx].p.ppu.frame_y >= nes[nidx].p.ppu_sclines.vint_extra) && (nes[nidx].p.ppu.frame_y < nes[nidx].p.ppu_sclines.frame)) {\
+		nes[nidx].p.overclock.in_extra_sclines = FALSE;\
 	}
 
 #if defined (__cplusplus)
@@ -135,9 +135,9 @@ enum ppu_alignment { PPU_ALIGMENT_DEFAULT, PPU_ALIGMENT_RANDOMIZE, PPU_ALIGMENT_
 EXTERNC void ppu_init(void);
 EXTERNC void ppu_quit(void);
 
-EXTERNC void ppu_tick(BYTE cidx);
+EXTERNC void ppu_tick(BYTE nidx);
 EXTERNC BYTE ppu_turn_on(void);
-EXTERNC void ppu_overclock(BYTE cidx, BYTE reset_dmc_in_use);
+EXTERNC void ppu_overclock(BYTE nidx, BYTE reset_dmc_in_use);
 
 EXTERNC void ppu_draw_screen_pause(void);
 EXTERNC void ppu_draw_screen_continue(void);

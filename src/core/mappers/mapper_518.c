@@ -49,7 +49,7 @@ void extcl_after_mapper_init_518(void) {
 	wram_fix_518();
 	mirroring_fix_518();
 }
-void extcl_cpu_wr_mem_518(UNUSED(BYTE cidx), WORD address, BYTE value) {
+void extcl_cpu_wr_mem_518(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xFF00) {
 		case 0x5000:
 			m518.reg[0] = value;
@@ -66,11 +66,11 @@ void extcl_cpu_wr_mem_518(UNUSED(BYTE cidx), WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extcl_cpu_rd_mem_518(BYTE cidx, WORD address, BYTE openbus) {
+BYTE extcl_cpu_rd_mem_518(BYTE nidx, WORD address, BYTE openbus) {
 	if ((address >= 0x5000) && (address <= 0x5FFF)) {
 		return ((address & 0xFF00) == 0x5300 ? m518.dac.status : openbus);
 	}
-	return (wram_rd(cidx, address));
+	return (wram_rd(nidx, address));
 }
 BYTE extcl_save_mapper_518(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m518.reg);
@@ -81,18 +81,18 @@ BYTE extcl_save_mapper_518(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-BYTE extcl_rd_chr_518(BYTE cidx, WORD address) {
+BYTE extcl_rd_chr_518(BYTE nidx, WORD address) {
 	return ((address < 0x1000) && (m518.reg[1] & 0x02)
-		? chr_rd(cidx, (m518.chr_bank << 10) | (address & 0xFFF))
-		: chr_rd(cidx, address));
+		? chr_rd(nidx, (m518.chr_bank << 10) | (address & 0xFFF))
+		: chr_rd(nidx, address));
 }
-BYTE extcl_rd_nmt_518(BYTE cidx, WORD address) {
+BYTE extcl_rd_nmt_518(BYTE nidx, WORD address) {
 	BYTE slot = (address & 0x0FFF) >> 10;
 
 	m518.chr_bank = ((slot >> (m518.reg[1] & 0x01)) & 0x01) << 2;
-	return (nmt_rd(cidx, address));
+	return (nmt_rd(nidx, address));
 }
-void extcl_cpu_every_cycle_518(UNUSED(BYTE cidx)) {
+void extcl_cpu_every_cycle_518(UNUSED(BYTE nidx)) {
 	m518.dac.count++;
 	if (m518.dac.count == 1789772 / 11025) {
 		m518.dac.count = 0;

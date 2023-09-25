@@ -24,6 +24,6 @@
 enum { GAMEGENIE_MAPPER = 0x1001 };
 
 void map_init_GameGenie(void);
-void extcl_cpu_wr_mem_GameGenie(BYTE cidx, WORD address, BYTE value);
+void extcl_cpu_wr_mem_GameGenie(BYTE nidx, WORD address, BYTE value);
 
 #endif /* MAPPER_GAMEGENIE_H_ */

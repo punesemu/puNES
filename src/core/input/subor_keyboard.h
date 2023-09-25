@@ -21,8 +21,8 @@
 
 #include "input.h"
 
-void input_wr_subor_keyboard(BYTE cidx, const BYTE *value, BYTE nport);
-void input_rd_subor_keyboard(BYTE cidx, BYTE *value, BYTE nport, BYTE shift);
+void input_wr_subor_keyboard(BYTE nidx, const BYTE *value, BYTE nport);
+void input_rd_subor_keyboard(BYTE nidx, BYTE *value, BYTE nport, BYTE shift);
 
 void input_add_event_subor_keyboard(BYTE index);
 

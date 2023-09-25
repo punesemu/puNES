@@ -51,13 +51,13 @@ enum interrupt_types {
 #define EXTERNC
 #endif
 
-EXTERNC void cpu_exe_op(BYTE cidx);
-EXTERNC void cpu_initial_cycles(BYTE cidx);
-EXTERNC void cpu_turn_on(BYTE cidx);
-EXTERNC BYTE cpu_rd_mem_dbg(BYTE cidx, WORD address);
-EXTERNC BYTE cpu_rd_mem(BYTE cidx, WORD address, BYTE made_tick);
-EXTERNC void cpu_wr_mem(BYTE cidx, WORD address, BYTE value);
-EXTERNC void apu_wr_mem_mapper(BYTE cidx, WORD address, BYTE value);
+EXTERNC void cpu_exe_op(BYTE nidx);
+EXTERNC void cpu_initial_cycles(BYTE nidx);
+EXTERNC void cpu_turn_on(BYTE nidx);
+EXTERNC BYTE cpu_rd_mem_dbg(BYTE nidx, WORD address);
+EXTERNC BYTE cpu_rd_mem(BYTE nidx, WORD address, BYTE made_tick);
+EXTERNC void cpu_wr_mem(BYTE nidx, WORD address, BYTE value);
+EXTERNC void apu_wr_mem_mapper(BYTE nidx, WORD address, BYTE value);
 
 #undef EXTERNC
 

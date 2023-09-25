@@ -31,11 +31,11 @@
 #define bck_states_on_struct(_mode, _strct, _data, _index, _size_buf)\
 	switch (_mode) {\
 		case BCK_STATES_OP_SAVE_ON_MEM:\
-			memcpy((_data + _index), &_strct, sizeof(_strct));\
+			memcpy(((_data) + (_index)), &(_strct), sizeof(_strct));\
 			(_index) += sizeof(_strct);\
 			break;\
 		case BCK_STATES_OP_READ_FROM_MEM:\
-			memcpy(&_strct, (_data + _index), sizeof(_strct));\
+			memcpy(&(_strct), ((_data) + (_index)), sizeof(_strct));\
 			(_index) += sizeof(_strct);\
 			break;\
 		case BCK_STATES_OP_COUNT:\
@@ -47,49 +47,47 @@
 #define bck_states_on_mem(_mode, _mem, _size, _data, _index, _size_buf)\
 	switch (_mode) {\
 		case BCK_STATES_OP_SAVE_ON_MEM:\
-			memcpy((_data + _index), _mem, _size);\
-			(_index) += _size;\
+			memcpy((_data) + (_index), _mem, _size);\
+			(_index) += (_size);\
 			break;\
 		case BCK_STATES_OP_READ_FROM_MEM:\
-			memcpy(_mem, (_data + _index), _size);\
-			(_index) += _size;\
+			memcpy(_mem, ((_data) + (_index)), _size);\
+			(_index) += (_size);\
 			break;\
 		case BCK_STATES_OP_COUNT:\
-			(_size_buf) += _size;\
+			(_size_buf) += (_size);\
 			break;\
     	default:\
     		break;\
 	}
 
 void bck_states_op_screen(BYTE mode, void *data, size_t *index, uint64_t *size_buff) {
-	for (int i = 0; i < info.number_of_cpu; i++) {
-		bck_states_on_mem(mode, nes[i].p.ppu_screen.rd->data, (screen_size()), data, (*index), (*size_buff))
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		bck_states_on_mem(mode, nes[nesidx].p.ppu_screen.rd->data, (screen_size()), data, (*index), (*size_buff))
 	}
 }
 void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size_buff) {
-	unsigned int i = 0;
-
-	for (int i = 0; i < info.number_of_cpu; i++) {
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
 		// CPU
-		bck_states_on_struct(mode, nes[i].c.cpu, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].c.irq, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].c.nmi, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].c.cpu, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].c.irq, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].c.nmi, data, (*index), (*size_buff))
 
 		// PPU
-		bck_states_on_struct(mode, nes[i].p.ppu, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].p.ppu_openbus, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].p.r2000, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].p.r2001, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].p.r2002, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].p.r2003, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].p.r2004, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].p.r2006, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].p.r2007, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].p.spr_ev, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].p.sprite, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].p.sprite_plus, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].p.tile_render, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].p.tile_fetch, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.ppu, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.ppu_openbus, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.r2000, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.r2001, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.r2002, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.r2003, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.r2004, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.r2006, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.r2007, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.spr_ev, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.sprite, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.sprite_plus, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.tile_render, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.tile_fetch, data, (*index), (*size_buff))
 	}
 	// APU
 	bck_states_on_struct(mode, apu, data, (*index), (*size_buff))
@@ -103,42 +101,42 @@ void bck_states_op_keyframe(BYTE mode, void *data, size_t *index, uint64_t *size
 	bck_states_on_struct(mode, DMC, data, (*index), (*size_buff))
 
 	// mem map
-	for (int i = 0; i < info.number_of_cpu; i++) {
-		if (ram_size(i)) {
-			bck_states_on_mem(mode, ram_pnt(i), ram_size(i), data, (*index), (*size_buff))
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		if (ram_size(nesidx)) {
+			bck_states_on_mem(mode, ram_pnt(nesidx), ram_size(nesidx), data, (*index), (*size_buff))
 		}
 	}
 	if (wram_size()) {
 		bck_states_on_mem(mode, wram_pnt(), wram_size(), data, (*index), (*size_buff))
 	}
-	for (int i = 0; i < info.number_of_cpu; i++) {
-		if (vram_size(i)) {
-			bck_states_on_mem(mode, vram_pnt(i), vram_size(i), data, (*index), (*size_buff))
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		if (vram_size(nesidx)) {
+			bck_states_on_mem(mode, vram_pnt(nesidx), vram_size(nesidx), data, (*index), (*size_buff))
 		}
-		if (nmt_size(i)) {
-			bck_states_on_mem(mode, nmt_pnt(i), nmt_size(i), data, (*index), (*size_buff))
+		if (nmt_size(nesidx)) {
+			bck_states_on_mem(mode, nmt_pnt(nesidx), nmt_size(nesidx), data, (*index), (*size_buff))
 		}
-		bck_states_on_struct(mode, nes[i].p.oam, data, (*index), (*size_buff))
-		bck_states_on_struct(mode, nes[i].m.memmap_palette, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].p.oam, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].m.memmap_palette, data, (*index), (*size_buff))
 	}
 
 	// mapper
 	bck_states_on_struct(mode, mapper, data, (*index), (*size_buff))
-	for (i = 0; i < LENGTH(mapper.internal_struct); i++) {
+	for (unsigned int i = 0; i < LENGTH(mapper.internal_struct); i++) {
 		if (mapper.internal_struct[i]) {
 			bck_states_on_mem(mode, mapper.internal_struct[i], mapper.internal_struct_size[i], data, (*index), (*size_buff))
 		}
 	}
 
-	for (int i = 0; i < info.number_of_cpu; i++) {
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
 		// irqA12
-		if (nes[i].irqA12.present) {
-			bck_states_on_struct(mode, nes[i].irqA12, data, (*index), (*size_buff))
+		if (nes[nesidx].irqA12.present) {
+			bck_states_on_struct(mode, nes[nesidx].irqA12, data, (*index), (*size_buff))
 		}
 
 		// irql2f
-		if (nes[i].irql2f.present) {
-			bck_states_on_struct(mode, nes[i].irql2f, data, (*index), (*size_buff))
+		if (nes[nesidx].irql2f.present) {
+			bck_states_on_struct(mode, nes[nesidx].irql2f, data, (*index), (*size_buff))
 		}
 	}
 

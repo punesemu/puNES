@@ -46,10 +46,10 @@ extern _m019 m019;
 void map_init_019(void);
 void map_init_NSF_N163(void);
 void extcl_after_mapper_init_019(void);
-void extcl_cpu_wr_mem_019(BYTE cidx, WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_019(BYTE cidx, WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_019(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_019(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_019(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_019(BYTE cidx);
+void extcl_cpu_every_cycle_019(BYTE nidx);
 void extcl_apu_tick_019(void);
 void extcl_battery_io_019(BYTE mode, FILE *fp);
 

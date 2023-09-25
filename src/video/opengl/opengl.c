@@ -698,12 +698,12 @@ void opengl_draw_scene(void) {
 				cgGLEnableProfile(opengl.cg.profile.f);
 				cgGLEnableProfile(opengl.cg.profile.v);
 
-				opengl_shader_cg_params_set(texture, sindex, sp->frame_count_mod, nes[emu_active_cidx()].p.ppu.frames);
+				opengl_shader_cg_params_set(texture, sindex, sp->frame_count_mod, nes[emu_active_nidx()].p.ppu.frames);
 			}
 #endif
 		} else {
 			glUseProgram(texture->shader.glslp.prg);
-			opengl_shader_glsl_params_set(&texture->shader, sindex, sp->frame_count_mod, nes[emu_active_cidx()].p.ppu.frames);
+			opengl_shader_glsl_params_set(&texture->shader, sindex, sp->frame_count_mod, nes[emu_active_nidx()].p.ppu.frames);
 		}
 
 		if (i == shader_effect.last_pass) {
@@ -902,7 +902,7 @@ INLINE static void opengl_read_front_buffer(void) {
 		buffer = malloc((size_t)stride * h);
 		if (buffer) {
 			emu_thread_pause();
-			scale_surface_screenshoot_1x(emu_active_cidx(), stride, buffer);
+			scale_surface_screenshoot_1x(emu_active_nidx(), stride, buffer);
 			gui_save_screenshot(w, h, stride, buffer, FALSE);
 			free(buffer);
 			emu_thread_continue();

@@ -802,7 +802,7 @@ void overlayWidgetFrame::update_widget(void) {
 	}
 }
 BYTE overlayWidgetFrame::is_to_redraw(void) {
-	if (nes[emu_active_cidx()].p.ppu.frames != old.actual_frame) {
+	if (nes[emu_active_nidx()].p.ppu.frames != old.actual_frame) {
 		update_info();
 		setMinimumWidth((int)td.size().width());
 		return (TRUE);
@@ -810,7 +810,7 @@ BYTE overlayWidgetFrame::is_to_redraw(void) {
 	return (FALSE);
 }
 void overlayWidgetFrame::update_old_value(void) {
-	old.actual_frame = nes[emu_active_cidx()].p.ppu.frames;
+	old.actual_frame = nes[emu_active_nidx()].p.ppu.frames;
 }
 
 void overlayWidgetFrame::update_info(void) {

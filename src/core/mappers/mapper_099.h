@@ -23,8 +23,8 @@
 
 void map_init_099(void);
 void extcl_after_mapper_init_099(void);
-void extcl_cpu_wr_mem_099(BYTE cidx, WORD address, BYTE value);
-void extcl_cpu_wr_r4016_099(BYTE cidx, BYTE value);
+void extcl_cpu_wr_mem_099(BYTE nidx, WORD address, BYTE value);
+void extcl_cpu_wr_r4016_099(BYTE nidx, BYTE value);
 BYTE extcl_save_mapper_099(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_099_H_ */

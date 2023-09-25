@@ -23,27 +23,27 @@
 #include "ppu.h"
 
 #define _irqA12_clock(function)\
-	if (nes[cidx].irqA12.cycles > irqA12_min_cpu_cycles_prev_rising_edge) {\
-		BYTE *cnt = &nes[cidx].irqA12.counter;\
-		BYTE *rld = &nes[cidx].irqA12.reload;\
-		nes[cidx].irqA12.cycles = 0;\
-		if (nes[cidx].irqA12.race.C001) {\
-			cnt = &nes[cidx].irqA12.race.counter;\
-			rld = &nes[cidx].irqA12.race.reload;\
+	if (nes[nidx].irqA12.cycles > irqA12_min_cpu_cycles_prev_rising_edge) {\
+		BYTE *cnt = &nes[nidx].irqA12.counter;\
+		BYTE *rld = &nes[nidx].irqA12.reload;\
+		nes[nidx].irqA12.cycles = 0;\
+		if (nes[nidx].irqA12.race.C001) {\
+			cnt = &nes[nidx].irqA12.race.counter;\
+			rld = &nes[nidx].irqA12.race.reload;\
 		}\
 		if (!(*cnt)) {\
-			(*cnt) = nes[cidx].irqA12.latch;\
+			(*cnt) = nes[nidx].irqA12.latch;\
 			if (!(*cnt) && (*rld)) {\
-				nes[cidx].irqA12.save_counter = 1;\
+				nes[nidx].irqA12.save_counter = 1;\
 			}\
 			(*rld) = FALSE;\
 		} else {\
 			(*cnt)--;\
 		}\
-		if (!(*cnt) && nes[cidx].irqA12.save_counter && nes[cidx].irqA12.enable) {\
+		if (!(*cnt) && nes[nidx].irqA12.save_counter && nes[nidx].irqA12.enable) {\
 			function;\
 		}\
-		nes[cidx].irqA12.save_counter = (*cnt);\
+		nes[nidx].irqA12.save_counter = (*cnt);\
 	}
 #define irqA12_irq_default()\
 	/*\
@@ -53,9 +53,9 @@
 	 * allora devo trattarlo come l'ultimo ritardando\
 	 * l'esecuzione dell'IRQ.\
 	 */\
-	nes[cidx].irqA12.delay = irqA12_delay;\
-	if (nes[cidx].c.cpu.cycles == 2) {\
-		nes[cidx].irqA12.delay++;\
+	nes[nidx].irqA12.delay = irqA12_delay;\
+	if (nes[nidx].c.cpu.cycles == 2) {\
+		nes[nidx].irqA12.delay++;\
 	}
 #define irqA12_clock() _irqA12_clock(irqA12_irq_default())
 #define irqA12_mod(function) _irqA12_clock(function)
@@ -74,9 +74,9 @@ enum irqA12_misc_value {
 /* questo non e' necessario salvarlo */
 extern BYTE irqA12_delay;
 
-void irqA12_IO(BYTE cidx, WORD value, WORD value_old);
-void irqA12_BS(BYTE cidx);
-void irqA12_SB(BYTE cidx);
-void irqA12_RS(BYTE cidx);
+void irqA12_IO(BYTE nidx, WORD value, WORD value_old);
+void irqA12_BS(BYTE nidx);
+void irqA12_SB(BYTE nidx);
+void irqA12_RS(BYTE nidx);
 
 #endif /* IRQA12_H_ */

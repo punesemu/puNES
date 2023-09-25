@@ -21,7 +21,7 @@
 
 #include "input.h"
 
-BYTE input_wr_reg_nes_001(BYTE cidx, BYTE value);
-BYTE input_rd_reg_nes_001(BYTE cidx, BYTE openbus, BYTE nport);
+BYTE input_wr_reg_nes_001(BYTE nidx, BYTE value);
+BYTE input_rd_reg_nes_001(BYTE nidx, BYTE openbus, BYTE nport);
 
 #endif /* INPUT_NES_001_H */

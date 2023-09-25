@@ -34,7 +34,7 @@ struct _scl {
 	WORD lines;
 } scl;
 
-void scale_surface(BYTE cidx) {
+void scale_surface(BYTE nidx) {
 	scl.sx = 0;
 	scl.sy = 0;
 	scl.oy = 0;
@@ -42,10 +42,10 @@ void scale_surface(BYTE cidx) {
 	scl.rows = SCR_COLUMNS;
 	scl.startx = 0;
 
-	scale_surface1x(nes[cidx].p.ppu_screen.rd, (uint32_t *)gfx.filter.data.palette,
+	scale_surface1x(nes[nidx].p.ppu_screen.rd, (uint32_t *)gfx.filter.data.palette,
 		gfx.filter.data.pitch, gfx.filter.data.pix);
 }
-void scale_surface_screenshoot_1x(BYTE cidx, uint32_t pitch, void *pix) {
+void scale_surface_screenshoot_1x(BYTE nidx, uint32_t pitch, void *pix) {
 	scl.sx = 0;
 	scl.sy = 0;
 	scl.oy = 0;
@@ -53,7 +53,7 @@ void scale_surface_screenshoot_1x(BYTE cidx, uint32_t pitch, void *pix) {
 	scl.rows = SCR_COLUMNS;
 	scl.startx = 0;
 
-	scale_surface1x(nes[cidx].p.ppu_screen.rd, gfx.palette, pitch, pix);
+	scale_surface1x(nes[nidx].p.ppu_screen.rd, gfx.palette, pitch, pix);
 }
 void scale_surface_preview_1x(void *sb, uint32_t pitch, void *pix) {
 	scl.sx = 0;

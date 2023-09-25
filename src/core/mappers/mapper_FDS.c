@@ -76,11 +76,11 @@ void extcl_after_mapper_init_FDS(void) {
 	memmap_wram_8k(0, MMCPU(0xC000), 3);
 	memmap_prgrom_8k(0, MMCPU(0xE000), 0);
 }
-BYTE extcl_cpu_rd_mem_FDS(BYTE cidx, WORD address, UNUSED(BYTE openbus)) {
+BYTE extcl_cpu_rd_mem_FDS(BYTE nidx, WORD address, UNUSED(BYTE openbus)) {
 	// 0xE18B : NMI entry point
 	// [$0100]: PC action on NMI. set to $C0 on reset
 	// When NMI occurs while $100 & $C0 != 0, it typically means that the game is starting.
-	if ((address == 0xE18B) & !fds.auto_insert.in_game & ((cpu_rd_mem_dbg(cidx, 0x100) & 0xC0) != 0)) {
+	if ((address == 0xE18B) & !fds.auto_insert.in_game & ((cpu_rd_mem_dbg(nidx, 0x100) & 0xC0) != 0)) {
 		fds.auto_insert.in_game = TRUE;
 	} else if (address == 0xE445) {
 		// Address          : 0xE445
@@ -93,7 +93,7 @@ BYTE extcl_cpu_rd_mem_FDS(BYTE cidx, WORD address, UNUSED(BYTE openbus)) {
 		if (fds_auto_insert_enabled() & !fds.auto_insert.rE445.in_run) {
 			// i primi due passaggi sono del bios e li ignoro
 			if (fds.auto_insert.rE445.count > 1) {
-				WORD adr = cpu_rd_mem_dbg(cidx, 0) | (cpu_rd_mem_dbg(cidx, 1) << 8);
+				WORD adr = cpu_rd_mem_dbg(nidx, 0) | (cpu_rd_mem_dbg(nidx, 1) << 8);
 				BYTE string[10], side = 0xFF;
 				uint32_t position = 0;
 				unsigned int a, count = 0;
@@ -103,7 +103,7 @@ BYTE extcl_cpu_rd_mem_FDS(BYTE cidx, WORD address, UNUSED(BYTE openbus)) {
 						string[a] = 0;
 						continue;
 					}
-					string[a] = cpu_rd_mem_dbg(cidx, adr + a);
+					string[a] = cpu_rd_mem_dbg(nidx, adr + a);
 				}
 				for (a = 0; a < fds.info.total_sides; a++) {
 					BYTE finded = TRUE;
@@ -159,9 +159,9 @@ BYTE extcl_cpu_rd_mem_FDS(BYTE cidx, WORD address, UNUSED(BYTE openbus)) {
 			}
 		}
 	}
-	return (prgrom_rd(cidx, address));
+	return (prgrom_rd(nidx, address));
 }
-void extcl_cpu_every_cycle_FDS(BYTE cidx) {
+void extcl_cpu_every_cycle_FDS(BYTE nidx) {
 	BYTE max_speed = cfg->fds_fast_forward &
 		((fds.drive.scan & (info.lag_frame.consecutive > MIN_LAG_FRAMES)) | !fds.auto_insert.in_game);
 	WORD data = 0;
@@ -219,7 +219,7 @@ void extcl_cpu_every_cycle_FDS(BYTE cidx) {
 				fds.drive.irq_timer_enabled = FALSE;
 			}
 			fds.drive.irq_timer_high = 0x01;
-			nes[cidx].c.irq.high |= FDS_TIMER_IRQ;
+			nes[nidx].c.irq.high |= FDS_TIMER_IRQ;
 		}
 	}
 
@@ -286,7 +286,7 @@ void extcl_cpu_every_cycle_FDS(BYTE cidx) {
 	if (fds.drive.gap_ended) {
 		if (fds.drive.irq_disk_enabled) {
 			fds.drive.irq_disk_high = 0x02;
-			nes[cidx].c.irq.high |= FDS_DISK_IRQ;
+			nes[nidx].c.irq.high |= FDS_DISK_IRQ;
 		}
 
 		if (!fds.drive.read_mode) {

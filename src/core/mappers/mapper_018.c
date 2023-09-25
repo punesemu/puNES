@@ -64,7 +64,7 @@ void extcl_after_mapper_init_018(void) {
 void extcl_mapper_quit_018(void) {
 	wavefiles_clear();
 }
-void extcl_cpu_wr_mem_018(BYTE cidx, WORD address, BYTE value) {
+void extcl_cpu_wr_mem_018(BYTE nidx, WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 		case 0x9000: {
@@ -113,11 +113,11 @@ void extcl_cpu_wr_mem_018(BYTE cidx, WORD address, BYTE value) {
 			switch (address & 0x03) {
 				case 0:
 					m018.irq.count = m018.irq.reload;
-					nes[cidx].c.irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					return;
 				case 1:
 					m018.irq.enabled = value;
-					nes[cidx].c.irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					return;
 				case 2:
 					m018.mirroring = value;
@@ -151,7 +151,7 @@ BYTE extcl_save_mapper_018(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_018(BYTE cidx) {
+void extcl_cpu_every_cycle_018(BYTE nidx) {
 	m018.snd.out = 0;
 	if (m018.snd.playing) {
 		BYTE speech = m018.snd.speech >> 2;
@@ -161,8 +161,8 @@ void extcl_cpu_every_cycle_018(BYTE cidx) {
 	}
 	// gestisco questo delay sempre per la sincronizzazzione con la CPU
 	if (m018.irq.delay && !(--m018.irq.delay)) {
-		nes[cidx].c.irq.delay = TRUE;
-		nes[cidx].c.irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.delay = TRUE;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 	if (m018.irq.enabled & 0x01) {
 		WORD mask = 0xFFFF;

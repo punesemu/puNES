@@ -204,8 +204,6 @@ void save_slot_count_load(void) {
 	emu_thread_continue();
 }
 BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
-	unsigned int i = 0;
-
 	if (fp) {
 		fseek(fp, 0L, SEEK_SET);
 	}
@@ -235,150 +233,150 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	}
 
 	// cpu
-	for (i = 0; i < info.number_of_cpu; i++) {
-		save_slot_ele(mode, slot, nes[i].c.cpu.PC);
-		save_slot_ele(mode, slot, nes[i].c.cpu.SP);
-		save_slot_ele(mode, slot, nes[i].c.cpu.AR);
-		save_slot_ele(mode, slot, nes[i].c.cpu.XR);
-		save_slot_ele(mode, slot, nes[i].c.cpu.YR);
-		save_slot_ele(mode, slot, nes[i].c.cpu.SR);
-		save_slot_ele(mode, slot, nes[i].c.cpu.cf);
-		save_slot_ele(mode, slot, nes[i].c.cpu.zf);
-		save_slot_ele(mode, slot, nes[i].c.cpu.im);
-		save_slot_ele(mode, slot, nes[i].c.cpu.df);
-		save_slot_ele(mode, slot, nes[i].c.cpu.bf);
-		save_slot_ele(mode, slot, nes[i].c.cpu.of);
-		save_slot_ele(mode, slot, nes[i].c.cpu.sf);
-		save_slot_ele(mode, slot, nes[i].c.cpu.opcode);
-		save_slot_ele(mode, slot, nes[i].c.cpu.opcode_PC);
-		save_slot_ele(mode, slot, nes[i].c.cpu.odd_cycle);
-		save_slot_ele(mode, slot, nes[i].c.cpu.openbus);
-		save_slot_ele(mode, slot, nes[i].c.cpu.cycles);
-		save_slot_ele(mode, slot, nes[i].c.cpu.opcode_cycle);
-		save_slot_ele(mode, slot, nes[i].c.cpu.double_rd);
-		save_slot_ele(mode, slot, nes[i].c.cpu.double_wr);
-		save_slot_ele(mode, slot, nes[i].c.cpu.prg_ram_rd_active);
-		save_slot_ele(mode, slot, nes[i].c.cpu.prg_ram_wr_active);
-		save_slot_ele(mode, slot, nes[i].c.cpu.base_opcode_cycles);
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.PC);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.SP);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.AR);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.XR);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.YR);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.SR);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.cf);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.zf);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.im);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.df);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.bf);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.of);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.sf);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.opcode);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.opcode_PC);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.odd_cycle);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.openbus);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.cycles);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.opcode_cycle);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.double_rd);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.double_wr);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.prg_ram_rd_active);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.prg_ram_wr_active);
+		save_slot_ele(mode, slot, nes[nesidx].c.cpu.base_opcode_cycles);
 
 		// irq
-		save_slot_ele(mode, slot, nes[i].c.irq.high);
-		save_slot_ele(mode, slot, nes[i].c.irq.delay);
-		save_slot_ele(mode, slot, nes[i].c.irq.before);
-		save_slot_ele(mode, slot, nes[i].c.irq.inhibit);
+		save_slot_ele(mode, slot, nes[nesidx].c.irq.high);
+		save_slot_ele(mode, slot, nes[nesidx].c.irq.delay);
+		save_slot_ele(mode, slot, nes[nesidx].c.irq.before);
+		save_slot_ele(mode, slot, nes[nesidx].c.irq.inhibit);
 		// nmi
-		save_slot_ele(mode, slot, nes[i].c.nmi.high);
-		save_slot_ele(mode, slot, nes[i].c.nmi.delay);
-		save_slot_ele(mode, slot, nes[i].c.nmi.before);
-		save_slot_ele(mode, slot, nes[i].c.nmi.inhibit);
-		save_slot_ele(mode, slot, nes[i].c.nmi.frame_x);
-		save_slot_ele(mode, slot, nes[i].c.nmi.cpu_cycles_from_last_nmi);
+		save_slot_ele(mode, slot, nes[nesidx].c.nmi.high);
+		save_slot_ele(mode, slot, nes[nesidx].c.nmi.delay);
+		save_slot_ele(mode, slot, nes[nesidx].c.nmi.before);
+		save_slot_ele(mode, slot, nes[nesidx].c.nmi.inhibit);
+		save_slot_ele(mode, slot, nes[nesidx].c.nmi.frame_x);
+		save_slot_ele(mode, slot, nes[nesidx].c.nmi.cpu_cycles_from_last_nmi);
 
 		// ppu
-		save_slot_ele(mode, slot, nes[i].p.ppu.frame_x);
-		save_slot_ele(mode, slot, nes[i].p.ppu.frame_y);
-		save_slot_ele(mode, slot, nes[i].p.ppu.fine_x);
-		save_slot_ele(mode, slot, nes[i].p.ppu.screen_y);
-		save_slot_ele(mode, slot, nes[i].p.ppu.pixel_tile);
-		save_slot_ele(mode, slot, nes[i].p.ppu.sline_cycles);
-		save_slot_ele(mode, slot, nes[i].p.ppu.tmp_vram);
-		save_slot_ele(mode, slot, nes[i].p.ppu.spr_adr);
-		save_slot_ele(mode, slot, nes[i].p.ppu.bck_adr);
-		save_slot_ele(mode, slot, nes[i].p.ppu.openbus);
-		save_slot_ele(mode, slot, nes[i].p.ppu.odd_frame);
-		save_slot_ele(mode, slot, nes[i].p.ppu.cycles);
-		save_slot_ele(mode, slot, nes[i].p.ppu.frames);
-		save_slot_ele(mode, slot, nes[i].p.ppu.sf.actual);
-		save_slot_ele(mode, slot, nes[i].p.ppu.sf.prev);
-		save_slot_ele(mode, slot, nes[i].p.ppu.rnd_adr);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.frame_x);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.frame_y);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.fine_x);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.screen_y);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.pixel_tile);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.sline_cycles);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.tmp_vram);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.spr_adr);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.bck_adr);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.openbus);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.odd_frame);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.cycles);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.frames);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.sf.actual);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.sf.prev);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu.rnd_adr);
 		// ppu_openbus
-		save_slot_ele(mode, slot, nes[i].p.ppu_openbus.bit0);
-		save_slot_ele(mode, slot, nes[i].p.ppu_openbus.bit1);
-		save_slot_ele(mode, slot, nes[i].p.ppu_openbus.bit2);
-		save_slot_ele(mode, slot, nes[i].p.ppu_openbus.bit3);
-		save_slot_ele(mode, slot, nes[i].p.ppu_openbus.bit4);
-		save_slot_ele(mode, slot, nes[i].p.ppu_openbus.bit5);
-		save_slot_ele(mode, slot, nes[i].p.ppu_openbus.bit6);
-		save_slot_ele(mode, slot, nes[i].p.ppu_openbus.bit7);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu_openbus.bit0);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu_openbus.bit1);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu_openbus.bit2);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu_openbus.bit3);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu_openbus.bit4);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu_openbus.bit5);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu_openbus.bit6);
+		save_slot_ele(mode, slot, nes[nesidx].p.ppu_openbus.bit7);
 		// r2000
-		save_slot_ele(mode, slot, nes[i].p.r2000.value);
-		save_slot_ele(mode, slot, nes[i].p.r2000.nmi_enable);
-		save_slot_ele(mode, slot, nes[i].p.r2000.size_spr);
-		save_slot_ele(mode, slot, nes[i].p.r2000.r2006_inc);
-		save_slot_ele(mode, slot, nes[i].p.r2000.spt_adr);
-		save_slot_ele(mode, slot, nes[i].p.r2000.bpt_adr);
-		save_slot_ele(mode, slot, nes[i].p.r2000.race.ctrl);
-		save_slot_ele(mode, slot, nes[i].p.r2000.race.value);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2000.value);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2000.nmi_enable);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2000.size_spr);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2000.r2006_inc);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2000.spt_adr);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2000.bpt_adr);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2000.race.ctrl);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2000.race.value);
 		// r2001
-		save_slot_ele(mode, slot, nes[i].p.r2001.value);
-		save_slot_ele(mode, slot, nes[i].p.r2001.emphasis);
-		save_slot_ele(mode, slot, nes[i].p.r2001.visible);
-		save_slot_ele(mode, slot, nes[i].p.r2001.bck_visible);
-		save_slot_ele(mode, slot, nes[i].p.r2001.spr_visible);
-		save_slot_ele(mode, slot, nes[i].p.r2001.bck_clipping);
-		save_slot_ele(mode, slot, nes[i].p.r2001.spr_clipping);
-		save_slot_ele(mode, slot, nes[i].p.r2001.color_mode);
-		save_slot_ele(mode, slot, nes[i].p.r2001.race.ctrl);
-		save_slot_ele(mode, slot, nes[i].p.r2001.race.value);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2001.value);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2001.emphasis);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2001.visible);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2001.bck_visible);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2001.spr_visible);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2001.bck_clipping);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2001.spr_clipping);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2001.color_mode);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2001.race.ctrl);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2001.race.value);
 		// r2002
-		save_slot_ele(mode, slot, nes[i].p.r2002.vblank);
-		save_slot_ele(mode, slot, nes[i].p.r2002.sprite0_hit);
-		save_slot_ele(mode, slot, nes[i].p.r2002.sprite_overflow);
-		save_slot_ele(mode, slot, nes[i].p.r2002.toggle);
-		save_slot_ele(mode, slot, nes[i].p.r2002.race.sprite_overflow);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2002.vblank);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2002.sprite0_hit);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2002.sprite_overflow);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2002.toggle);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2002.race.sprite_overflow);
 		// r2003
-		save_slot_ele(mode, slot, nes[i].p.r2003.value);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2003.value);
 		// r2004
-		save_slot_ele(mode, slot, nes[i].p.r2004.value);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2004.value);
 		// r2006
-		save_slot_ele(mode, slot, nes[i].p.r2006.value);
-		save_slot_ele(mode, slot, nes[i].p.r2006.changed_from_op);
-		save_slot_ele(mode, slot, nes[i].p.r2006.race.ctrl);
-		save_slot_ele(mode, slot, nes[i].p.r2006.race.value);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2006.value);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2006.changed_from_op);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2006.race.ctrl);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2006.race.value);
 		// r2007
-		save_slot_ele(mode, slot, nes[i].p.r2007.value);
+		save_slot_ele(mode, slot, nes[nesidx].p.r2007.value);
 		// spr_ev
-		save_slot_ele(mode, slot, nes[i].p.spr_ev.range);
-		save_slot_ele(mode, slot, nes[i].p.spr_ev.count);
-		save_slot_ele(mode, slot, nes[i].p.spr_ev.count_plus);
-		save_slot_ele(mode, slot, nes[i].p.spr_ev.tmp_spr_plus);
-		save_slot_ele(mode, slot, nes[i].p.spr_ev.evaluate);
-		save_slot_ele(mode, slot, nes[i].p.spr_ev.byte_OAM);
-		save_slot_ele(mode, slot, nes[i].p.spr_ev.index_plus);
-		save_slot_ele(mode, slot, nes[i].p.spr_ev.index);
-		save_slot_ele(mode, slot, nes[i].p.spr_ev.timing);
-		save_slot_ele(mode, slot, nes[i].p.spr_ev.phase);
-		save_slot_ele(mode, slot, nes[i].p.spr_ev.real);
+		save_slot_ele(mode, slot, nes[nesidx].p.spr_ev.range);
+		save_slot_ele(mode, slot, nes[nesidx].p.spr_ev.count);
+		save_slot_ele(mode, slot, nes[nesidx].p.spr_ev.count_plus);
+		save_slot_ele(mode, slot, nes[nesidx].p.spr_ev.tmp_spr_plus);
+		save_slot_ele(mode, slot, nes[nesidx].p.spr_ev.evaluate);
+		save_slot_ele(mode, slot, nes[nesidx].p.spr_ev.byte_OAM);
+		save_slot_ele(mode, slot, nes[nesidx].p.spr_ev.index_plus);
+		save_slot_ele(mode, slot, nes[nesidx].p.spr_ev.index);
+		save_slot_ele(mode, slot, nes[nesidx].p.spr_ev.timing);
+		save_slot_ele(mode, slot, nes[nesidx].p.spr_ev.phase);
+		save_slot_ele(mode, slot, nes[nesidx].p.spr_ev.real);
 		// sprite
-		for (i = 0; i < LENGTH(nes[i].p.sprite); i++) {
-			save_slot_ele(mode, slot, nes[i].p.sprite[i].y_C);
-			save_slot_ele(mode, slot, nes[i].p.sprite[i].tile);
-			save_slot_ele(mode, slot, nes[i].p.sprite[i].attrib);
-			save_slot_ele(mode, slot, nes[i].p.sprite[i].x_C);
-			save_slot_ele(mode, slot, nes[i].p.sprite[i].number);
-			save_slot_ele(mode, slot, nes[i].p.sprite[i].flip_v);
-			save_slot_ele(mode, slot, nes[i].p.sprite[i].l_byte);
-			save_slot_ele(mode, slot, nes[i].p.sprite[i].h_byte);
+		for (unsigned int i = 0; i < LENGTH(nes[nesidx].p.sprite); i++) {
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite[i].y_C);
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite[i].tile);
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite[i].attrib);
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite[i].x_C);
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite[i].number);
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite[i].flip_v);
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite[i].l_byte);
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite[i].h_byte);
 		}
 		// sprite_plus
-		for (i = 0; i < LENGTH(nes[i].p.sprite_plus); i++) {
-			save_slot_ele(mode, slot, nes[i].p.sprite_plus[i].y_C);
-			save_slot_ele(mode, slot, nes[i].p.sprite_plus[i].tile);
-			save_slot_ele(mode, slot, nes[i].p.sprite_plus[i].attrib);
-			save_slot_ele(mode, slot, nes[i].p.sprite_plus[i].x_C);
-			save_slot_ele(mode, slot, nes[i].p.sprite_plus[i].number);
-			save_slot_ele(mode, slot, nes[i].p.sprite_plus[i].flip_v);
-			save_slot_ele(mode, slot, nes[i].p.sprite_plus[i].l_byte);
-			save_slot_ele(mode, slot, nes[i].p.sprite_plus[i].h_byte);
+		for (unsigned int i = 0; i < LENGTH(nes[nesidx].p.sprite); i++) {
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite_plus[i].y_C);
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite_plus[i].tile);
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite_plus[i].attrib);
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite_plus[i].x_C);
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite_plus[i].number);
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite_plus[i].flip_v);
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite_plus[i].l_byte);
+			save_slot_ele(mode, slot, nes[nesidx].p.sprite_plus[i].h_byte);
 		}
 		// tile_render
-		save_slot_ele(mode, slot, nes[i].p.tile_render.attrib);
-		save_slot_ele(mode, slot, nes[i].p.tile_render.l_byte);
-		save_slot_ele(mode, slot, nes[i].p.tile_render.h_byte);
+		save_slot_ele(mode, slot, nes[nesidx].p.tile_render.attrib);
+		save_slot_ele(mode, slot, nes[nesidx].p.tile_render.l_byte);
+		save_slot_ele(mode, slot, nes[nesidx].p.tile_render.h_byte);
 		// tile_fetch
-		save_slot_ele(mode, slot, nes[i].p.tile_fetch.attrib);
-		save_slot_ele(mode, slot, nes[i].p.tile_fetch.l_byte);
-		save_slot_ele(mode, slot, nes[i].p.tile_fetch.h_byte);
+		save_slot_ele(mode, slot, nes[nesidx].p.tile_fetch.attrib);
+		save_slot_ele(mode, slot, nes[nesidx].p.tile_fetch.l_byte);
+		save_slot_ele(mode, slot, nes[nesidx].p.tile_fetch.h_byte);
 	}
 
 	// apu
@@ -446,26 +444,26 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, DMC.tick_type);
 
 	// mem map
-	for (i = 0; i < info.number_of_cpu; i++) {
-		if (mem_with_size(mode, slot, ram_pnt(i), ram_size(i), fp) == EXIT_ERROR) {
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		if (mem_with_size(mode, slot, ram_pnt(nesidx), ram_size(nesidx), fp) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
 	}
 	if (mem_with_size(mode, slot, wram_pnt(), wram_size(), fp) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}
-	for (i = 0; i < info.number_of_cpu; i++) {
-		if (mem_with_size(mode, slot, vram_pnt(i), vram_size(i), fp) == EXIT_ERROR) {
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		if (mem_with_size(mode, slot, vram_pnt(nesidx), vram_size(nesidx), fp) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
-		if (mem_with_size(mode, slot, nmt_pnt(i), nmt_size(i), fp) == EXIT_ERROR) {
+		if (mem_with_size(mode, slot, nmt_pnt(nesidx), nmt_size(nesidx), fp) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
-		save_slot_ele(mode, slot, nes[i].m.memmap_palette.color);
-		save_slot_ele(mode, slot, nes[i].p.oam.data);
-		save_slot_ele(mode, slot, nes[i].p.oam.plus);
-		for (i = 0; i < LENGTH(nes[i].p.oam.ele_plus); i++) {
-			save_slot_pos(mode, slot, nes[i].p.oam.plus, nes[i].p.oam.ele_plus[i]);
+		save_slot_ele(mode, slot, nes[nesidx].m.memmap_palette.color);
+		save_slot_ele(mode, slot, nes[nesidx].p.oam.data);
+		save_slot_ele(mode, slot, nes[nesidx].p.oam.plus);
+		for (unsigned int a = 0; a < LENGTH(nes[nesidx].p.oam.ele_plus); a++) {
+			save_slot_pos(mode, slot, nes[nesidx].p.oam.plus, nes[nesidx].p.oam.ele_plus[a]);
 		}
 	}
 
@@ -476,35 +474,35 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	}
 
 	// irqA12
-	for (i = 0; i < info.number_of_cpu; i++) {
-		if (nes[i].irqA12.present) {
-			save_slot_ele(mode, slot, nes[i].irqA12.present);
-			save_slot_ele(mode, slot, nes[i].irqA12.delay);
-			save_slot_ele(mode, slot, nes[i].irqA12.counter);
-			save_slot_ele(mode, slot, nes[i].irqA12.latch);
-			save_slot_ele(mode, slot, nes[i].irqA12.reload);
-			save_slot_ele(mode, slot, nes[i].irqA12.enable);
-			save_slot_ele(mode, slot, nes[i].irqA12.save_counter);
-			save_slot_ele(mode, slot, nes[i].irqA12.a12BS);
-			save_slot_ele(mode, slot, nes[i].irqA12.a12SB);
-			save_slot_ele(mode, slot, nes[i].irqA12.b_adr_old);
-			save_slot_ele(mode, slot, nes[i].irqA12.s_adr_old);
-			save_slot_ele(mode, slot, nes[i].irqA12.cycles);
-			save_slot_ele(mode, slot, nes[i].irqA12.race.C001);
-			save_slot_ele(mode, slot, nes[i].irqA12.race.counter);
-			save_slot_ele(mode, slot, nes[i].irqA12.race.reload);
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		if (nes[nesidx].irqA12.present) {
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.present);
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.delay);
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.counter);
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.latch);
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.reload);
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.enable);
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.save_counter);
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.a12BS);
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.a12SB);
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.b_adr_old);
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.s_adr_old);
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.cycles);
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.race.C001);
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.race.counter);
+			save_slot_ele(mode, slot, nes[nesidx].irqA12.race.reload);
 		}
 
 		// irql2f
-		if (nes[i].irql2f.present) {
-			save_slot_ele(mode, slot, nes[i].irql2f.present);
-			save_slot_ele(mode, slot, nes[i].irql2f.enable);
-			save_slot_ele(mode, slot, nes[i].irql2f.counter);
-			save_slot_ele(mode, slot, nes[i].irql2f.scanline);
-			save_slot_ele(mode, slot, nes[i].irql2f.frame_x);
-			save_slot_ele(mode, slot, nes[i].irql2f.delay);
-			save_slot_ele(mode, slot, nes[i].irql2f.in_frame);
-			save_slot_ele(mode, slot, nes[i].irql2f.pending);
+		if (nes[nesidx].irql2f.present) {
+			save_slot_ele(mode, slot, nes[nesidx].irql2f.present);
+			save_slot_ele(mode, slot, nes[nesidx].irql2f.enable);
+			save_slot_ele(mode, slot, nes[nesidx].irql2f.counter);
+			save_slot_ele(mode, slot, nes[nesidx].irql2f.scanline);
+			save_slot_ele(mode, slot, nes[nesidx].irql2f.frame_x);
+			save_slot_ele(mode, slot, nes[nesidx].irql2f.delay);
+			save_slot_ele(mode, slot, nes[nesidx].irql2f.in_frame);
+			save_slot_ele(mode, slot, nes[nesidx].irql2f.pending);
 		}
 	}
 
@@ -590,10 +588,10 @@ BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, fds.auto_insert.new_side);
 		save_slot_ele(mode, slot, fds.auto_insert.in_game);
 
-		save_slot_ele(mode, slot, nes[i].p.r2006.second_write.delay);
-		save_slot_ele(mode, slot, nes[i].p.r2006.second_write.value);
+		save_slot_ele(mode, slot, nes[0].p.r2006.second_write.delay);
+		save_slot_ele(mode, slot, nes[0].p.r2006.second_write.value);
 
-		save_slot_ele(mode, slot, nes[i].p.r2001.grayscale_bit.delay);
+		save_slot_ele(mode, slot, nes[0].p.r2001.grayscale_bit.delay);
 
 		save_slot_ele(mode, slot, info.lag_frame.consecutive);
 

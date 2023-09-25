@@ -56,9 +56,9 @@ void extcl_after_mapper_init_072(void) {
 void extcl_mapper_quit_072(void) {
 	wavefiles_clear();
 }
-void extcl_cpu_wr_mem_072(BYTE cidx, WORD address, BYTE value) {
+void extcl_cpu_wr_mem_072(BYTE nidx, WORD address, BYTE value) {
 	// bus conflict
-	value &= prgrom_rd(cidx, address);
+	value &= prgrom_rd(nidx, address);
 
 	m072.reg = (m072.reg ^ value) & value;
 	if (m072.reg & 0x80) {
@@ -88,7 +88,7 @@ BYTE extcl_save_mapper_072(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_072(UNUSED(BYTE cidx)) {
+void extcl_cpu_every_cycle_072(UNUSED(BYTE nidx)) {
 	m072.snd.out = 0;
 	if (m072.snd.playing) {
 		m072.snd.out = (SWORD)(wavefiles_get_next_sample(m072.snd.speech) >> 7);

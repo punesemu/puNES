@@ -27,6 +27,6 @@ enum {
 	IRQL2F_PENDING = 0x80
 };
 
-void irql2f_tick(BYTE cidx);
+void irql2f_tick(BYTE nidx);
 
 #endif /* IRQL2F_H_ */

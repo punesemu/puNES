@@ -22,7 +22,7 @@
 #include "conf.h"
 #include "gui.h"
 
-void input_wr_subor_keyboard(UNUSED(BYTE cidx), const BYTE *value, UNUSED(BYTE nport)) {
+void input_wr_subor_keyboard(UNUSED(BYTE nidx), const BYTE *value, UNUSED(BYTE nport)) {
 	BYTE column = 0;
 
 	generic_keyboard.enable = (*value) & 0x04;
@@ -38,7 +38,7 @@ void input_wr_subor_keyboard(UNUSED(BYTE cidx), const BYTE *value, UNUSED(BYTE n
 	}
 	tape_data_recorder.in = ((*value) & 0x02) >> 1;
 }
-void input_rd_subor_keyboard(UNUSED(BYTE cidx), BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
+void input_rd_subor_keyboard(UNUSED(BYTE nidx), BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	if (nport & 0x01) {
 		BYTE state = 0;
 

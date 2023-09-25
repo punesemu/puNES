@@ -59,7 +59,7 @@ void extcl_after_mapper_init_N118(void) {
 	N118_prg_fix();
 	N118_chr_fix();
 }
-void extcl_cpu_wr_mem_N118(UNUSED(BYTE cidx), WORD address, BYTE value) {
+void extcl_cpu_wr_mem_N118(UNUSED(BYTE nidx), WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 		case 0x9000:

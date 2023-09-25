@@ -23,30 +23,30 @@
 #include "clock.h"
 #include "cpu.h"
 
-INLINE static void _input_rd_reg_vs(BYTE cidx, BYTE *value, BYTE nport);
+INLINE static void _input_rd_reg_vs(BYTE nidx, BYTE *value, BYTE nport);
 
-BYTE input_wr_reg_vs(BYTE cidx, BYTE value) {
-	if (cidx == 0) {
+BYTE input_wr_reg_vs(BYTE nidx, BYTE value) {
+	if (nidx == 0) {
 		vs_system.shared_mem = !(value & 0x02);
 	}
 
 	if (!(value & 0x02)) {
-		nes[!cidx].c.irq.high |= EXT_IRQ;
+		nes[!nidx].c.irq.high |= EXT_IRQ;
 	} else {
-		nes[!cidx].c.irq.high &= ~EXT_IRQ;
+		nes[!nidx].c.irq.high &= ~EXT_IRQ;
 	}
 
 	// in caso di strobe azzero l'indice
-	port_funct[PORT1].input_wr(cidx, &value, PORT1);
-	port_funct[PORT2].input_wr(cidx, &value, PORT2);
+	port_funct[PORT1].input_wr(nidx, &value, PORT1);
+	port_funct[PORT2].input_wr(nidx, &value, PORT2);
 
 	// restituisco il nuovo valore del $4016
 	return (value);
 }
-BYTE input_rd_reg_vs_r4016(BYTE cidx, UNUSED(BYTE openbus), BYTE nport) {
+BYTE input_rd_reg_vs_r4016(BYTE nidx, UNUSED(BYTE openbus), BYTE nport) {
 	BYTE value = 0;
 
-	_input_rd_reg_vs(cidx, &value, !nport);
+	_input_rd_reg_vs(nidx, &value, !nport);
 
 	// port $4016
 	// 7  bit  0
@@ -57,18 +57,18 @@ BYTE input_rd_reg_vs_r4016(BYTE cidx, UNUSED(BYTE openbus), BYTE nport) {
 	//  ||| |+--- Service button (commonly inserts a credit)
 	//  ||+-+---- DIP switches "2" and "1", respectively
 	//  ++------- Coin inserted (read below)
-	return ((cidx << 7) |
+	return ((nidx << 7) |
 		(vs_system.coins.right ? 0x40 : 0x00) |
 		(vs_system.coins.left ? 0x20 : 0x00) |
 		((cfg->dipswitch_vs & 0x03) << 3) |
 		(vs_system.coins.service ? 0x04 : 0x00) |
 		(value & 0x01));
 }
-BYTE input_rd_reg_vs_r4017(BYTE cidx, UNUSED(BYTE openbus), BYTE nport) {
+BYTE input_rd_reg_vs_r4017(BYTE nidx, UNUSED(BYTE openbus), BYTE nport) {
 	BYTE value = 0;
 
 	vs_system.watchdog.timer = 0;
-	_input_rd_reg_vs(cidx, &value, !nport);
+	_input_rd_reg_vs(nidx, &value, !nport);
 
 	// port $4017
 	// 7  bit  0
@@ -80,8 +80,8 @@ BYTE input_rd_reg_vs_r4017(BYTE cidx, UNUSED(BYTE openbus), BYTE nport) {
 	return ((cfg->dipswitch_vs & 0xFC) | (value & 0x01));
 }
 
-INLINE static void _input_rd_reg_vs(BYTE cidx, BYTE *value, BYTE nport) {
-	port_funct[nport].input_rd(cidx, value, nport, 0);
+INLINE static void _input_rd_reg_vs(BYTE nidx, BYTE *value, BYTE nport) {
+	port_funct[nport].input_rd(nidx, value, nport, 0);
 
 	// se avviene un DMA del DMC all'inizio
 	// dell'istruzione di lettura del registro,
@@ -100,6 +100,6 @@ INLINE static void _input_rd_reg_vs(BYTE cidx, BYTE *value, BYTE nport) {
 	// This detail is poorly represented in emulators.[2] Because it is not normally a compatibility issue,
 	// many emulators do not simulate this glitch at all.
 	if ((machine.type == NTSC) && !info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
-		port_funct[nport].input_rd(cidx, value, nport, 0);
+		port_funct[nport].input_rd(nidx, value, nport, 0);
 	}
 }

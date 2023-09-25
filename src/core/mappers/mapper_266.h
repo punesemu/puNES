@@ -33,8 +33,8 @@ extern _m266 m266;
 
 void map_init_266(void);
 void extcl_mapper_quit_266(void);
-void extcl_cpu_wr_mem_266(BYTE cidx, WORD address, BYTE value);
+void extcl_cpu_wr_mem_266(BYTE nidx, WORD address, BYTE value);
 BYTE extcl_save_mapper_266(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_266(BYTE cidx);
+void extcl_cpu_every_cycle_266(BYTE nidx);
 
 #endif /* MAPPER_266_H_ */

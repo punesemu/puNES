@@ -502,10 +502,10 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		info.on_cfg = FALSE;
 	}
 }
-void gfx_draw_screen(BYTE cidx) {
-	BYTE monitor = emu_active_cidx();
+void gfx_draw_screen(BYTE nidx) {
+	BYTE monitor = emu_active_nidx();
 
-	if (cidx == monitor) {
+	if (nidx == monitor) {
 		if (gfx_thread_public.filtering) {
 			gfx.frame.totals++;
 			fps.info.skipped++;
@@ -514,23 +514,23 @@ void gfx_draw_screen(BYTE cidx) {
 	}
 
 	if (chinaersan2.enable) {
-		chinaersan2_apply_font(cidx);
+		chinaersan2_apply_font(nidx);
 	}
 
-	nes[cidx].p.ppu_screen.rd = nes[cidx].p.ppu_screen.wr;
-	nes[cidx].p.ppu_screen.rd->frame = gfx.frame.totals;
-	if (cidx == monitor) {
+	nes[nidx].p.ppu_screen.rd = nes[nidx].p.ppu_screen.wr;
+	nes[nidx].p.ppu_screen.rd->frame = gfx.frame.totals;
+	if (nidx == monitor) {
 		gfx.frame.totals++;
 	}
-	nes[cidx].p.ppu_screen.last_completed_wr = nes[cidx].p.ppu_screen.wr;
+	nes[nidx].p.ppu_screen.last_completed_wr = nes[nidx].p.ppu_screen.wr;
 
 	if (info.doublebuffer) {
-		nes[cidx].p.ppu_screen.index = !nes[cidx].p.ppu_screen.index;
-		nes[cidx].p.ppu_screen.wr = &nes[cidx].p.ppu_screen.buff[nes[cidx].p.ppu_screen.index];
+		nes[nidx].p.ppu_screen.index = !nes[nidx].p.ppu_screen.index;
+		nes[nidx].p.ppu_screen.wr = &nes[nidx].p.ppu_screen.buff[nes[nidx].p.ppu_screen.index];
 	}
 
-	if (!nes[cidx].p.ppu_screen.rd->ready) {
-		nes[cidx].p.ppu_screen.rd->ready = TRUE;
+	if (!nes[nidx].p.ppu_screen.rd->ready) {
+		nes[nidx].p.ppu_screen.rd->ready = TRUE;
 	}
 }
 BYTE gfx_palette_init(void) {
@@ -594,7 +594,7 @@ void gfx_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ratio)
 	}
 	gfx_api_overlay_blit(surface, rect, device_pixel_ratio);
 }
-void gfx_apply_filter(BYTE cidx) {
+void gfx_apply_filter(BYTE nidx) {
 	gfx.filter.data.palette = (void *)gfx.palette;
 
 	//applico la paletta adeguata.
@@ -619,7 +619,7 @@ void gfx_apply_filter(BYTE cidx) {
 
 	gfx_thread_lock();
 
-	gfx_api_apply_filter(cidx);
+	gfx_api_apply_filter(nidx);
 
 	// posso trovarmi nella situazione in cui applico il filtro ad un frame quando ancora
 	// (per molteplici motivi) non ho ancora finito di disegnare il frame precedente. Il gui_screen_update

@@ -21,8 +21,8 @@
 
 #include "common.h"
 
-void scale_surface(BYTE cidx);
-void scale_surface_screenshoot_1x(BYTE cidx, uint32_t pitch, void *pix);
+void scale_surface(BYTE nidx);
+void scale_surface_screenshoot_1x(BYTE nidx, uint32_t pitch, void *pix);
 void scale_surface_preview_1x(void *sb, uint32_t pitch, void *pix);
 
 #endif /* SCALE_H_ */

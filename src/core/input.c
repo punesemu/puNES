@@ -56,8 +56,8 @@ _nes_keyboard nes_keyboard;
 _generic_keyboard generic_keyboard;
 _mic mic;
 
-BYTE (*input_wr_reg)(BYTE cidx, BYTE value);
-BYTE (*input_rd_reg[2])(BYTE cidx, BYTE openbus, BYTE nport);
+BYTE (*input_wr_reg)(BYTE nidx, BYTE value);
+BYTE (*input_rd_reg[2])(BYTE nidx, BYTE openbus, BYTE nport);
 
 void input_init(BYTE set_cursor) {
 	int a = 0;
@@ -279,8 +279,8 @@ void input_init(BYTE set_cursor) {
 	gui_overlay_update();
 }
 
-void input_wr_disabled(UNUSED(BYTE cidx), UNUSED(const BYTE *value), UNUSED(BYTE nport)) {}
-void input_rd_disabled(UNUSED(BYTE cidx), UNUSED(BYTE *value), UNUSED(BYTE nport),	UNUSED(BYTE shift)) {}
+void input_wr_disabled(UNUSED(BYTE nidx), UNUSED(const BYTE *value), UNUSED(BYTE nport)) {}
+void input_rd_disabled(UNUSED(BYTE nidx), UNUSED(BYTE *value), UNUSED(BYTE nport),	UNUSED(BYTE shift)) {}
 
 BYTE input_draw_target(void) {
 	int i = 0;

@@ -122,7 +122,7 @@ BYTE unif_load_rom(void) {
 	}
 
 	// setto i defaults
-	info.number_of_cpu = 1;
+	info.number_of_nes = 1;
 	info.machine[HEADER] = info.machine[DATABASE] = NTSC;
 	info.mapper.submapper = 0;
 	info.mapper.mirroring = MIRRORING_HORIZONTAL;

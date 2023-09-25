@@ -37,7 +37,7 @@ void extcl_after_mapper_init_000(void) {
 	prg_fix_000();
 	wram_fix_000();
 }
-void extcl_cpu_wr_mem_000(UNUSED(BYTE cidx), UNUSED(WORD address), UNUSED(BYTE value)) {}
+void extcl_cpu_wr_mem_000(UNUSED(BYTE nidx), UNUSED(WORD address), UNUSED(BYTE value)) {}
 
 INLINE static void prg_fix_000(void) {
 	if (m000tmp.nrom368) {

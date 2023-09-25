@@ -157,7 +157,7 @@ extern _gfx gfx;
 EXTERNC BYTE gfx_init(void);
 EXTERNC void gfx_quit(void);
 EXTERNC void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette, BYTE force_scale, BYTE force_palette);
-EXTERNC void gfx_draw_screen(BYTE cidx);
+EXTERNC void gfx_draw_screen(BYTE nidx);
 EXTERNC void gfx_control_changed_adapter(void *monitor);
 EXTERNC BYTE gfx_palette_init(void);
 EXTERNC void gfx_palette_update(void);
@@ -165,14 +165,14 @@ EXTERNC uint32_t gfx_color(BYTE alpha, BYTE r, BYTE g, BYTE b);
 EXTERNC void gfx_cursor_init(void);
 EXTERNC void gfx_cursor_set(void);
 EXTERNC void gfx_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ratio);
-EXTERNC void gfx_apply_filter(BYTE cidx);
+EXTERNC void gfx_apply_filter(BYTE nidx);
 
 BYTE gfx_api_init(void);
 void gfx_api_quit(void);
 BYTE gfx_api_context_create(void);
 uint32_t gfx_api_color(BYTE a, BYTE r, BYTE g, BYTE b);
 void gfx_api_overlay_blit(void *surface, _gfx_rect *rect, double device_pixel_ratio);
-void gfx_api_apply_filter(BYTE cidx);
+void gfx_api_apply_filter(BYTE nidx);
 void gfx_api_control_changed_adapter(void *monitor);
 
 #undef EXTERNC

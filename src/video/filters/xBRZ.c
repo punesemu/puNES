@@ -20,11 +20,11 @@
 #include "ppu.h"
 #include "info.h"
 
-void xBRZ(BYTE cidx) {
-	xbrz_scale(gfx.filter.factor, nes[cidx].p.ppu_screen.rd->data, (uint32_t *)gfx.filter.data.pix,
+void xBRZ(BYTE nidx) {
+	xbrz_scale(gfx.filter.factor, nes[nidx].p.ppu_screen.rd->data, (uint32_t *)gfx.filter.data.pix,
 		(uint32_t *)gfx.filter.data.palette, SCR_COLUMNS, SCR_ROWS);
 }
-void xBRZ_mt(BYTE cidx) {
-	xbrz_scale_mt(gfx.filter.factor, nes[cidx].p.ppu_screen.rd->data, (uint32_t *) gfx.filter.data.pix,
+void xBRZ_mt(BYTE nidx) {
+	xbrz_scale_mt(gfx.filter.factor, nes[nidx].p.ppu_screen.rd->data, (uint32_t *) gfx.filter.data.pix,
 		(uint32_t *)gfx.filter.data.palette, SCR_COLUMNS, SCR_ROWS);
 }

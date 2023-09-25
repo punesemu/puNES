@@ -32,7 +32,7 @@ struct _zapper {
 void input_init_zapper(void) {
 	memset(&zapper, 0x00, sizeof(zapper));
 }
-void input_rd_zapper(BYTE cidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
+void input_rd_zapper(BYTE nidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	int x_zapper = -1, y_zapper = -1;
 	int x_rect, y_rect;
 	int count = 0;
@@ -58,16 +58,16 @@ void input_rd_zapper(BYTE cidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 		return;
 	}
 
-	if (!nes[cidx].p.ppu.vblank && nes[cidx].p.r2001.visible &&
-		(nes[cidx].p.ppu.frame_y > nes[cidx].p.ppu_sclines.vint) && (nes[cidx].p.ppu.screen_y < SCR_ROWS)) {
+	if (!nes[nidx].p.ppu.vblank && nes[nidx].p.r2001.visible &&
+		(nes[nidx].p.ppu.frame_y > nes[nidx].p.ppu_sclines.vint) && (nes[nidx].p.ppu.screen_y < SCR_ROWS)) {
 		for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 			if (y_rect < 0) {
 				continue;
 			}
-			if (y_rect <= (nes[cidx].p.ppu.screen_y - 18)) {
+			if (y_rect <= (nes[nidx].p.ppu.screen_y - 18)) {
 				continue;
 			}
-			if (y_rect > nes[cidx].p.ppu.screen_y) {
+			if (y_rect > nes[nidx].p.ppu.screen_y) {
 				break;
 			}
 
@@ -80,7 +80,7 @@ void input_rd_zapper(BYTE cidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 				}
 				{
 					int brightness;
-					_color_RGB color = palette_RGB.in_use[nes[cidx].p.ppu_screen.wr->line[y_rect][x_rect]];
+					_color_RGB color = palette_RGB.in_use[nes[nidx].p.ppu_screen.wr->line[y_rect][x_rect]];
 
 					brightness = (int)((color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114));
 					if (brightness > 0x80) {
@@ -100,7 +100,7 @@ void input_rd_zapper(BYTE cidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	(*value) |= zapper[nport].data;
 }
 
-void input_rd_zapper_vs(BYTE cidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
+void input_rd_zapper_vs(BYTE nidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	int x_zapper = -1, y_zapper = -1;
 	int x_rect, y_rect;
 	int count = 0;
@@ -120,16 +120,16 @@ void input_rd_zapper_vs(BYTE cidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) 
 	}
 
 	if ((x_zapper > 0) && (x_zapper < SCR_COLUMNS) && (y_zapper > 0) && (y_zapper < SCR_ROWS)) {
-		if (!nes[cidx].p.ppu.vblank && nes[cidx].p.r2001.visible &&
-			(nes[cidx].p.ppu.frame_y > nes[cidx].p.ppu_sclines.vint) && (nes[cidx].p.ppu.screen_y < SCR_ROWS)) {
+		if (!nes[nidx].p.ppu.vblank && nes[nidx].p.r2001.visible &&
+			(nes[nidx].p.ppu.frame_y > nes[nidx].p.ppu_sclines.vint) && (nes[nidx].p.ppu.screen_y < SCR_ROWS)) {
 			for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 				if (y_rect < 0) {
 					continue;
 				}
-				if (y_rect <= (nes[cidx].p.ppu.screen_y - 18)) {
+				if (y_rect <= (nes[nidx].p.ppu.screen_y - 18)) {
 					continue;
 				}
-				if (y_rect > nes[cidx].p.ppu.screen_y) {
+				if (y_rect > nes[nidx].p.ppu.screen_y) {
 					break;
 				}
 				for (x_rect = (x_zapper - 8); x_rect < (x_zapper + 8); x_rect++) {
@@ -141,7 +141,7 @@ void input_rd_zapper_vs(BYTE cidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) 
 					}
 					{
 						int brightness;
-						_color_RGB color = palette_RGB.in_use[nes[cidx].p.ppu_screen.wr->line[y_rect][x_rect]];
+						_color_RGB color = palette_RGB.in_use[nes[nidx].p.ppu_screen.wr->line[y_rect][x_rect]];
 
 						brightness = (int)((color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114));
 						if (brightness > 0x80) {

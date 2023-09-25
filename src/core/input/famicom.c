@@ -21,22 +21,22 @@
 #include "apu.h"
 #include "clock.h"
 
-INLINE static void _input_rd_reg_famicom(BYTE cidx, BYTE *value, BYTE nport);
+INLINE static void _input_rd_reg_famicom(BYTE nidx, BYTE *value, BYTE nport);
 
-BYTE input_wr_reg_famicom(BYTE cidx, BYTE value) {
+BYTE input_wr_reg_famicom(BYTE nidx, BYTE value) {
 	// in caso di strobe azzero l'indice
-	port_funct[PORT1].input_wr(cidx, &value, PORT1);
-	port_funct[PORT2].input_wr(cidx, &value, PORT2);
-	port_funct[PORT3].input_wr(cidx, &value, PORT3);
-	port_funct[PORT4].input_wr(cidx, &value, PORT4);
+	port_funct[PORT1].input_wr(nidx, &value, PORT1);
+	port_funct[PORT2].input_wr(nidx, &value, PORT2);
+	port_funct[PORT3].input_wr(nidx, &value, PORT3);
+	port_funct[PORT4].input_wr(nidx, &value, PORT4);
 
 	// restituisco il nuovo valore del $4016
 	return (value);
 }
-BYTE input_rd_reg_famicom_r4016(BYTE cidx, BYTE openbus, BYTE nport) {
+BYTE input_rd_reg_famicom_r4016(BYTE nidx, BYTE openbus, BYTE nport) {
 	BYTE value = 0;
 
-	_input_rd_reg_famicom(cidx, &value, nport);
+	_input_rd_reg_famicom(nidx, &value, nport);
 	value |= mic.data;
 
 	// Famicom $4016:
@@ -50,10 +50,10 @@ BYTE input_rd_reg_famicom_r4016(BYTE cidx, BYTE openbus, BYTE nport) {
 	// ++++-+---- Open bus
 	return ((openbus & 0xF8) | value);
 }
-BYTE input_rd_reg_famicom_r4017(BYTE cidx, BYTE openbus, BYTE nport) {
+BYTE input_rd_reg_famicom_r4017(BYTE nidx, BYTE openbus, BYTE nport) {
 	BYTE value = 0;
 
-	_input_rd_reg_famicom(cidx, &value, nport);
+	_input_rd_reg_famicom(nidx, &value, nport);
 
 	// Famicom $4017:
 	// 7  bit  0
@@ -67,10 +67,10 @@ BYTE input_rd_reg_famicom_r4017(BYTE cidx, BYTE openbus, BYTE nport) {
 	return ((openbus & 0xE0) | value);
 }
 
-INLINE static void _input_rd_reg_famicom(BYTE cidx, BYTE *value, BYTE nport) {
+INLINE static void _input_rd_reg_famicom(BYTE nidx, BYTE *value, BYTE nport) {
 	(*value) = 0;
-	port_funct[nport].input_rd(cidx, value, nport, 0);
-	port_funct[nport + 2].input_rd(cidx, value, nport + 2, 1);
+	port_funct[nport].input_rd(nidx, value, nport, 0);
+	port_funct[nport + 2].input_rd(nidx, value, nport + 2, 1);
 
 	// se avviene un DMA del DMC all'inizio
 	// dell'istruzione di lettura del registro,
@@ -90,7 +90,7 @@ INLINE static void _input_rd_reg_famicom(BYTE cidx, BYTE *value, BYTE nport) {
 	// many emulators do not simulate this glitch at all.
 	if ((machine.type == NTSC) && !info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
 		(*value) = 0;
-		port_funct[nport].input_rd(cidx, value, nport, 0);
-		port_funct[nport + 2].input_rd(cidx, value, nport + 2, 1);
+		port_funct[nport].input_rd(nidx, value, nport, 0);
+		port_funct[nport + 2].input_rd(nidx, value, nport + 2, 1);
 	}
 }

@@ -36,7 +36,7 @@ extern _turn_off_effect turn_off_effect;
 
 EXTERNC BYTE tv_noise_init(void);
 EXTERNC void tv_noise_quit(void);
-EXTERNC void tv_noise_effect(BYTE cidx);
+EXTERNC void tv_noise_effect(BYTE nidx);
 
 #undef EXTERNC
 

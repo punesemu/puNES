@@ -55,7 +55,7 @@ void extcl_after_mapper_init_VRC6(void) {
 	VRC6_wram_fix();
 	VRC6_mirroring_fix();
 }
-void extcl_cpu_wr_mem_VRC6(BYTE cidx, WORD address, BYTE value) {
+void extcl_cpu_wr_mem_VRC6(BYTE nidx, WORD address, BYTE value) {
 	WORD bank = address & 0xF000;
 	int index = 0;
 
@@ -116,11 +116,11 @@ void extcl_cpu_wr_mem_VRC6(BYTE cidx, WORD address, BYTE value) {
 						vrc6.irq.prescaler = 0;
 						vrc6.irq.count = vrc6.irq.reload;
 					}
-					nes[cidx].c.irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					break;
 				case 0x02:
 					vrc6.irq.enabled = vrc6.irq.acknowledge;
-					nes[cidx].c.irq.high &= ~EXT_IRQ;
+					nes[nidx].c.irq.high &= ~EXT_IRQ;
 					break;
 				default:
 					break;
@@ -171,9 +171,9 @@ BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_VRC6(BYTE cidx) {
+void extcl_cpu_every_cycle_VRC6(BYTE nidx) {
 	if (vrc6.irq.delay && !(--vrc6.irq.delay)) {
-		nes[cidx].c.irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 
 	if (!vrc6.irq.enabled) {
