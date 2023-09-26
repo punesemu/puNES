@@ -76,6 +76,9 @@ enum reset_type {
 	CHANGE_MODE = 0x40,
 	POWER_UP    = 0x50
 };
+enum _nes_chips_info {
+	NES_CHIPS_MAX = 2
+};
 /* le dimesioni dello screen da renderizzare */
 enum screen_dimension { SCR_ROWS = 240, SCR_COLUMNS = 256 };
 enum type_of_system_info { HEADER, DATABASE };

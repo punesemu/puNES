@@ -87,9 +87,6 @@ typedef struct _config_input {
 	BYTE vk_size;
 	BYTE vk_subor_extended_mode;
 } _config_input;
-typedef struct _r4016 {
-	BYTE value;
-} _r4016;
 typedef struct _turbo_button {
 	BYTE frequency;
 	BYTE active;
@@ -105,7 +102,6 @@ typedef struct _port {
 
 	// standard controller
 	BYTE type_pad;
-	BYTE index;
 	BYTE data[INPUT_DECODE_COUNTS];
 	// turbo buttons
 	_turbo_button turbo[2];
@@ -143,7 +139,6 @@ typedef struct _nes_keyboard {
 	BYTE matrix[NES_KEYBOARD_MAX_KEYS];
 } _nes_keyboard;
 
-extern _r4016 r4016;
 extern _port port[PORT_MAX];
 extern _port_funct port_funct[PORT_MAX];
 extern _arkanoid arkanoid[PORT_BASE];

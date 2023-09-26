@@ -878,7 +878,7 @@ void cpu_wr_mem(BYTE nidx, WORD address, BYTE value) {
 				extcl_cpu_wr_r4016(nidx, value);
 			}
 			/* memorizzo il nuovo valore */
-			r4016.value = input_wr_reg(nidx, value);
+			nes[nidx].c.input.r4016 = input_wr_reg(nidx, value);
 			return;
 		}
 		/* APU */

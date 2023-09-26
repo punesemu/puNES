@@ -22,8 +22,6 @@
 #include "cpu.h"
 #include "ppu.h"
 #include "apu.h"
-#include "irqA12.h"
-#include "irql2f.h"
 #include "fds.h"
 #include "gui.h"
 #include "tas.h"
@@ -197,7 +195,10 @@ void bck_states_op_input(BYTE mode, void *data, size_t *index, uint64_t *size_bu
 }
 void bck_states_op_input_port(BYTE id, BYTE mode, void *data, size_t *index, uint64_t *size_buff) {
 	bck_states_on_struct(mode, port[id].type_pad, data, (*index), (*size_buff))
-	bck_states_on_struct(mode, port[id].index, data, (*index), (*size_buff))
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		bck_states_on_struct(mode, nes[nesidx].c.input.pindex, data, (*index), (*size_buff))
+		bck_states_on_struct(mode, nes[nesidx].c.input.fsindex, data, (*index), (*size_buff))
+	}
 	bck_states_on_struct(mode, port[id].data, data, (*index), (*size_buff))
 	bck_states_on_struct(mode, port[id].turbo, data, (*index), (*size_buff))
 }

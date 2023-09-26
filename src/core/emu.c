@@ -154,7 +154,7 @@ void emu_frame(void) {
 	}
 	while (info.exec_cpu_op.w) {
 #if defined (DEBUG)
-		if (nes[0].c.cpu.PC.w == PCBREAK) {
+		if (nes[1].c.cpu.PC.w == PCBREAK) {
 			BYTE pippo = 5;
 			pippo = pippo + 1;
 		}
@@ -1346,7 +1346,7 @@ void emu_save_header_info(void) {
 	info.header.vs_hardware = vs_system.special_mode.type;
 }
 BYTE emu_active_nidx(void) {
-	cfg->vs_monitor = 1;
+	cfg->vs_monitor = 0;
 
 	return (info.number_of_nes > 1 ? cfg->vs_monitor : 0);
 }

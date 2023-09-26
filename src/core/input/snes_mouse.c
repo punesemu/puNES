@@ -18,6 +18,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include "nes.h"
 #include "input/snes_mouse.h"
 #include "input/mouse.h"
 
@@ -30,8 +31,8 @@ struct _snes_mouse {
 void input_init_snes_mouse(void) {
 	memset(&snes_mouse, 0x00, sizeof(snes_mouse));
 }
-void input_wr_snes_mouse(UNUSED(BYTE nidx), const BYTE *value, BYTE nport) {
-	if ((r4016.value & 0x01) && !((*value) & 0x01)) {
+void input_wr_snes_mouse(BYTE nidx, const BYTE *value, BYTE nport) {
+	if ((nes[nidx].c.input.r4016 & 0x01) && !((*value) & 0x01)) {
 		BYTE dx = 0, dy = 0;
 		int gx = 0, gy = 0;
 		int x = 0, y = 0;
@@ -63,10 +64,10 @@ void input_wr_snes_mouse(UNUSED(BYTE nidx), const BYTE *value, BYTE nport) {
 			(dx << 0);
 	}
 }
-void input_rd_snes_mouse(UNUSED(BYTE nidx), BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
+void input_rd_snes_mouse(BYTE nidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	(*value) |= ((snes_mouse[nport].latch & 0x80000000) >> 31);
 
-	if ((r4016.value & 0x01) && (++snes_mouse[nport].sensitivity > 2)) {
+	if ((nes[nidx].c.input.r4016 & 0x01) && (++snes_mouse[nport].sensitivity > 2)) {
 		snes_mouse[nport].sensitivity = 0;
 	}
 

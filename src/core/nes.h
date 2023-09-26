@@ -21,10 +21,7 @@
 
 #include <stdio.h>
 #include "common.h"
-
-enum _nes_chips_info {
-	NES_CHIPS_MAX = 2
-};
+#include "input.h"
 
 // cpu -------------------------------------------------------------------------------
 
@@ -85,10 +82,16 @@ typedef struct _nmi {
 	// i cicli passati dall'inizio dell'NMI
 	uint32_t cpu_cycles_from_last_nmi;
 } _nmi;
+typedef struct _cpu_input {
+	BYTE r4016;
+	BYTE pindex[PORT_MAX];
+	BYTE fsindex[PORT_BASE];
+} _cpu_input;
 typedef struct _cpu_data {
 	_cpu cpu;
 	_irq irq;
 	_nmi nmi;
+	_cpu_input input;
 } _cpu_data;
 
 // ppu -------------------------------------------------------------------------------

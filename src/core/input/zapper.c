@@ -34,7 +34,7 @@ void input_init_zapper(void) {
 }
 void input_rd_zapper(BYTE nidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	int x_zapper = -1, y_zapper = -1;
-	int x_rect, y_rect;
+	int x_rect = 0, y_rect = 0;
 	int count = 0;
 
 	zapper[nport].data &= ~0x10;
@@ -79,7 +79,7 @@ void input_rd_zapper(BYTE nidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 					break;
 				}
 				{
-					int brightness;
+					int brightness = 0;
 					_color_RGB color = palette_RGB.in_use[nes[nidx].p.ppu_screen.wr->line[y_rect][x_rect]];
 
 					brightness = (int)((color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114));
@@ -102,7 +102,7 @@ void input_rd_zapper(BYTE nidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 
 void input_rd_zapper_vs(BYTE nidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	int x_zapper = -1, y_zapper = -1;
-	int x_rect, y_rect;
+	int x_rect = 0, y_rect = 0;
 	int count = 0;
 	BYTE trigger = 0, light = 1;
 
@@ -140,7 +140,7 @@ void input_rd_zapper_vs(BYTE nidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) 
 						break;
 					}
 					{
-						int brightness;
+						int brightness = 0;
 						_color_RGB color = palette_RGB.in_use[nes[nidx].p.ppu_screen.wr->line[y_rect][x_rect]];
 
 						brightness = (int)((color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114));
@@ -164,7 +164,7 @@ void input_rd_zapper_vs(BYTE nidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) 
 	// pressed.
 	// Unlike the NES/Famicom Zapper, the Vs. Zapper's "light sense" is 1 when detecting
 	// and 0 when not detecting.
-	switch (port[nport].index) {
+	switch (nes[nidx].c.input.pindex[nport]) {
 		case 0:
 		case 1:
 		case 2:
@@ -186,9 +186,9 @@ void input_rd_zapper_vs(BYTE nidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) 
 			break;
 	}
 
-	if (!(r4016.value & 0x01)) {
-		if (++port[nport].index >= 8) {
-			port[nport].index = 0;
+	if (!(nes[nidx].c.input.r4016 & 0x01)) {
+		if (++nes[nidx].c.input.pindex[nport] >= 8) {
+			nes[nidx].c.input.pindex[nport] = 0;
 		}
 	}
 }

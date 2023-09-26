@@ -17,37 +17,42 @@
  */
 
 #include "input/four_score.h"
+#include "nes.h"
 
 struct _four_score {
-	BYTE count;
 	BYTE signature;
 } four_score[PORT_BASE];
 
 void input_init_four_score(void) {
-	four_score[PORT1].count = 0;
-	four_score[PORT1].signature = 0x10;
-	four_score[PORT2].count = 0;
-	four_score[PORT2].signature = 0x20;
+	for (int nesidx = 0; nesidx < NES_CHIPS_MAX; nesidx++) {
+		nes[nesidx].c.input.fsindex[PORT1] = 0;
+		four_score[PORT1].signature = 0x10;
+		nes[nesidx].c.input.fsindex[PORT2] = 0;
+		four_score[PORT2].signature = 0x20;
+	}
 }
-BYTE input_wr_reg_four_score(UNUSED(BYTE nidx), BYTE value) {
+BYTE input_wr_reg_four_score(BYTE nidx, BYTE value) {
 	if (!(value & 0x01)) {
-		four_score[PORT1].count = 0;
-		four_score[PORT2].count = 0;
+		nes[nidx].c.input.fsindex[PORT1] = 0;
+		nes[nidx].c.input.fsindex[PORT2] = 0;
 	}
 	return (value);
 }
-BYTE input_rd_reg_four_score(UNUSED(BYTE nidx), BYTE openbus, BYTE nport) {
+
+BYTE input_rd_reg_four_score(BYTE nidx, BYTE openbus, BYTE nport) {
 	BYTE value = 0;
 
-	if (four_score[nport].count < 8) {
-		value = port[nport].data[four_score[nport].count & 0x07];
-	} else if (four_score[nport].count < 16) {
-		value = port[nport + 2].data[four_score[nport].count & 0x07];
-	} else if (four_score[nport].count < 24) {
-		value = (four_score[nport].signature >> (23 - four_score[nport].count)) & 0x01;
-	}
-	if (++four_score[nport].count >= 32) {
-		four_score[nport].count = 0;
+	if (nes[nidx].c.input.fsindex[nport] < 8) {
+		value = port[nport].data[nes[nidx].c.input.fsindex[nport] & 0x07];
+		nes[nidx].c.input.fsindex[nport]++;
+	} else if (nes[nidx].c.input.fsindex[nport] < 16) {
+		value = port[nport + 2].data[nes[nidx].c.input.fsindex[nport] & 0x07];
+		nes[nidx].c.input.fsindex[nport]++;
+	} else if (nes[nidx].c.input.fsindex[nport] < 24) {
+		value = (four_score[nport].signature >> (23 - nes[nidx].c.input.fsindex[nport])) & 0x01;
+		nes[nidx].c.input.fsindex[nport]++;
+	} else {
+		value = 0x01;
 	}
 	return ((openbus & 0xE0) | value);
 }

@@ -17,6 +17,7 @@
  */
 
 #include "conf.h"
+#include "nes.h"
 #include "input/arkanoid.h"
 #include "input/mouse.h"
 
@@ -36,12 +37,12 @@ void input_init_arkanoid(void) {
 		arkanoid[i].button = 0;
 	}
 }
-void input_wr_arkanoid(UNUSED(BYTE nidx), const BYTE *value, BYTE nport) {
+void input_wr_arkanoid(BYTE nidx, const BYTE *value, BYTE nport) {
 	static const float ratio = (float)ark_rows / (float)ark_stop_x;
 
 	nport &= 0x01;
 
-	if ((r4016.value & 0x01) && !((*value) & 0x01)) {
+	if ((nes[nidx].c.input.r4016 & 0x01) && !((*value) & 0x01)) {
 		int x = 0, y = 0;
 
 		input_read_mouse_coords(&x, &y);
