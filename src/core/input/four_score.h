@@ -22,7 +22,10 @@
 #include "input.h"
 
 void input_init_four_score(void);
+
 BYTE input_wr_reg_four_score(BYTE nidx, BYTE value);
 BYTE input_rd_reg_four_score(BYTE nidx, BYTE openbus, BYTE nport);
+
+BYTE input_rd_reg_four_score_vs(BYTE nidx, BYTE openbus, BYTE nport);
 
 #endif /* INPUT_FOUR_SCORE_H */

@@ -17,6 +17,7 @@
  */
 
 #include "input/four_score.h"
+#include "vs_system.h"
 #include "nes.h"
 
 struct _four_score {
@@ -31,6 +32,7 @@ void input_init_four_score(void) {
 		four_score[PORT2].signature = 0x20;
 	}
 }
+
 BYTE input_wr_reg_four_score(BYTE nidx, BYTE value) {
 	if (!(value & 0x01)) {
 		nes[nidx].c.input.fsindex[PORT1] = 0;
@@ -38,7 +40,6 @@ BYTE input_wr_reg_four_score(BYTE nidx, BYTE value) {
 	}
 	return (value);
 }
-
 BYTE input_rd_reg_four_score(BYTE nidx, BYTE openbus, BYTE nport) {
 	BYTE value = 0;
 
@@ -47,6 +48,26 @@ BYTE input_rd_reg_four_score(BYTE nidx, BYTE openbus, BYTE nport) {
 		nes[nidx].c.input.fsindex[nport]++;
 	} else if (nes[nidx].c.input.fsindex[nport] < 16) {
 		value = port[nport + 2].data[nes[nidx].c.input.fsindex[nport] & 0x07];
+		nes[nidx].c.input.fsindex[nport]++;
+	} else if (nes[nidx].c.input.fsindex[nport] < 24) {
+		value = (four_score[nport].signature >> (23 - nes[nidx].c.input.fsindex[nport])) & 0x01;
+		nes[nidx].c.input.fsindex[nport]++;
+	} else {
+		value = 0x01;
+	}
+	return ((openbus & 0xE0) | value);
+}
+
+BYTE input_rd_reg_four_score_vs(BYTE nidx, BYTE openbus, BYTE nport) {
+	BYTE protection = vs_system.special_mode.type == VS_DS_Bungeling;
+	BYTE index = nes[nidx].c.input.fsindex[nport] & 0x07;
+	BYTE value = 0;
+
+	if (nes[nidx].c.input.fsindex[nport] < 8) {
+		value = (index == 3) && protection ? PRESSED : port[nport].data[index];
+		nes[nidx].c.input.fsindex[nport]++;
+	} else if (nes[nidx].c.input.fsindex[nport] < 16) {
+		value = (index == 3) && protection ? PRESSED : port[nport + 2].data[index];
 		nes[nidx].c.input.fsindex[nport]++;
 	} else if (nes[nidx].c.input.fsindex[nport] < 24) {
 		value = (four_score[nport].signature >> (23 - nes[nidx].c.input.fsindex[nport])) & 0x01;

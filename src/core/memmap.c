@@ -882,20 +882,6 @@ void wram_wr(BYTE nidx, WORD address, BYTE value) {
 				vs_system_r4020_clock(wr, value)
 			}
 		} else if (vs_system.shared_mem != nidx) {
-			printf("wram_wr NO : %d %d - 0x%04X - %d %d %d - %d %d %d\n",
-				   nidx,
-				   vs_system.shared_mem,
-
-				   address,
-
-				   nes[0].p.ppu.frames,
-				   nes[0].p.ppu.frame_y,
-				   nes[0].p.ppu.frame_x,
-
-				   nes[1].p.ppu.frames,
-				   nes[1].p.ppu.frame_y,
-				   nes[1].p.ppu.frame_x
-			);
 			return;
 		}
 	}

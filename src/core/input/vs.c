@@ -33,7 +33,6 @@ BYTE input_wr_reg_vs(BYTE nidx, BYTE value) {
 			vs_system.shared_mem = !(value & 0x02);
 		}
 		if (!(value & 0x02)) {
-			nes[!nidx].c.irq.delay = TRUE;
 			nes[!nidx].c.irq.high |= EXT_IRQ;
 		} else {
 			nes[!nidx].c.irq.high &= ~EXT_IRQ;
@@ -61,12 +60,12 @@ BYTE input_rd_reg_vs_r4016(BYTE nidx, UNUSED(BYTE openbus), BYTE nport) {
 		value |= (vs_system.coins.right ? 0x40 : 0x00);
 		value |= (vs_system.coins.left ? 0x20 : 0x00);
 	} else {
-		value = input_rd_reg_four_score(nidx, 0x00, nport);
+		value = input_rd_reg_four_score_vs(nidx, 0x00, nport);
 		value |= (nidx == 1 ? vs_system.coins.right ? 0x40 : 0x00 : 0x00);
 		value |= (nidx == 0 ? vs_system.coins.left ? 0x20 : 0x00 : 0x00);
 	}
 	return ((nidx << 7) |
-		((cfg->dipswitch_vs & 0x03) << 3) |
+		(((cfg->dipswitch_vs >> (nidx << 3)) & 0x03) << 3) |
 		(vs_system.coins.service ? 0x04 : 0x00) |
 		(value & 0x61));
 }
@@ -85,7 +84,7 @@ BYTE input_rd_reg_vs_r4017(BYTE nidx, UNUSED(BYTE openbus), BYTE nport) {
 	if (vs_system.special_mode.type < VS_DS_Normal) {
 		value = input_rd_reg_nes_001(nidx, 0x00, nport);
 	} else {
-		value = input_rd_reg_four_score(nidx, 0x00, nport);
+		value = input_rd_reg_four_score_vs(nidx, 0x00, nport);
 	}
-	return ((cfg->dipswitch_vs & 0xFC) | (value & 0x01));
+	return (((cfg->dipswitch_vs >> (nidx << 3)) & 0xFC) | (value & 0x01));
 }

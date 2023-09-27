@@ -159,8 +159,8 @@ void emu_frame(void) {
 			pippo = pippo + 1;
 		}
 #endif
-		if (info.exec_cpu_op.b[0]) cpu_exe_op(0);
 		if (info.exec_cpu_op.b[1]) cpu_exe_op(1);
+		if (info.exec_cpu_op.b[0]) cpu_exe_op(0);
 	}
 	info.frame_status = FRAME_FINISHED;
 
@@ -1346,7 +1346,7 @@ void emu_save_header_info(void) {
 	info.header.vs_hardware = vs_system.special_mode.type;
 }
 BYTE emu_active_nidx(void) {
-	cfg->vs_monitor = 0;
+	cfg->vs_monitor = 1;
 
 	return (info.number_of_nes > 1 ? cfg->vs_monitor : 0);
 }
