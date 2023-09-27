@@ -1397,7 +1397,6 @@ void objPgs::to_cfg(UNUSED(const QString &group)) {
 	int_to_val(SET_PGS_SLOT, (int)save_slot.slot_in_use);
 	cpy_utchar_to_val(SET_PGS_FILE_SAVE, cfg_from_file.save_file);
 	int_to_val(SET_PGS_OVERSCAN, cfg_from_file.oscan);
-	int_to_val(SET_PGS_DIPSWITCH_VS, cfg_from_file.dipswitch_vs);
 	int_to_val(SET_PGS_DIPSWITCH, cfg_from_file.dipswitch);
 	int_to_val(SET_PGS_PPU_OVERCLOCK, cfg_from_file.ppu_overclock);
 	int_to_val(SET_PGS_PPU_OVERCLOCK_7BIT, cfg_from_file.ppu_overclock_dmc_control_disabled);
@@ -1408,7 +1407,6 @@ void objPgs::fr_cfg(UNUSED(const QString &group)) {
 	save_slot.slot_in_use = val_to_int(SET_PGS_SLOT);
 	cpy_val_to_utchar(SET_PGS_FILE_SAVE, cfg_from_file.save_file, usizeof(cfg_from_file.save_file));
 	cfg_from_file.oscan = val_to_int(SET_PGS_OVERSCAN);
-	cfg_from_file.dipswitch_vs = val_to_int(SET_PGS_DIPSWITCH_VS);
 	cfg_from_file.dipswitch = val_to_int(SET_PGS_DIPSWITCH);
 	cfg_from_file.ppu_overclock = val_to_int(SET_PGS_PPU_OVERCLOCK);
 	cfg_from_file.ppu_overclock_dmc_control_disabled = val_to_int(SET_PGS_PPU_OVERCLOCK_7BIT);

@@ -529,7 +529,6 @@ void search_in_database(void) {
 			info.mirroring_db = dblist[i].mirroring;
 			vs_system.ppu = dblist[i].vs_ppu;
 			vs_system.special_mode.type = dblist[i].vs_sm;
-			info.default_dipswitches = dblist[i].dipswitches;
 			info.extra_from_db = dblist[i].extra;
 			switch (info.mapper.id) {
 				case 235:

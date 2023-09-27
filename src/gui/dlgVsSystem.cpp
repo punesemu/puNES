@@ -24,6 +24,8 @@
 #include "clock.h"
 #include "conf.h"
 #include "gui.h"
+#include "dipswitch.h"
+#include "emu_thread.h"
 
 dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 	in_update = false;
@@ -39,6 +41,7 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 	connect(pushButton_Left_Coin, SIGNAL(clicked(bool)), this, SLOT(s_coins_clicked(bool)));
 	connect(pushButton_Right_Coin, SIGNAL(clicked(bool)), this, SLOT(s_coins_clicked(bool)));
 	connect(pushButton_Service_Coin, SIGNAL(clicked(bool)), this, SLOT(s_coins_clicked(bool)));
+	connect(pushButton_Dip_Switches, SIGNAL(clicked(bool)), this, SLOT(s_dip_clicked(bool)));
 	connect(pushButton_Defaults_Dip_Switches, SIGNAL(clicked(bool)), this, SLOT(s_defaults_clicked(bool)));
 
 	checkBox_ds1->setProperty("myIndex", QVariant(1));
@@ -49,6 +52,14 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 	checkBox_ds6->setProperty("myIndex", QVariant(6));
 	checkBox_ds7->setProperty("myIndex", QVariant(7));
 	checkBox_ds8->setProperty("myIndex", QVariant(8));
+	checkBox_ds9->setProperty("myIndex", QVariant(9));
+	checkBox_ds10->setProperty("myIndex", QVariant(10));
+	checkBox_ds11->setProperty("myIndex", QVariant(11));
+	checkBox_ds12->setProperty("myIndex", QVariant(12));
+	checkBox_ds13->setProperty("myIndex", QVariant(13));
+	checkBox_ds14->setProperty("myIndex", QVariant(14));
+	checkBox_ds15->setProperty("myIndex", QVariant(15));
+	checkBox_ds16->setProperty("myIndex", QVariant(16));
 
 	connect(checkBox_ds1, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
 	connect(checkBox_ds2, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
@@ -58,6 +69,14 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 	connect(checkBox_ds6, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
 	connect(checkBox_ds7, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
 	connect(checkBox_ds8, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
+	connect(checkBox_ds9, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
+	connect(checkBox_ds10, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
+	connect(checkBox_ds11, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
+	connect(checkBox_ds12, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
+	connect(checkBox_ds13, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
+	connect(checkBox_ds14, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
+	connect(checkBox_ds15, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
+	connect(checkBox_ds16, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
 
 	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
 
@@ -87,7 +106,7 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 		QMargins vgbm = verticalLayout_groupBox_Vs_System->contentsMargins();
 		QMargins vdia = verticalLayout_Vs_System->contentsMargins();
 		QPushButton *close = new QPushButton(this);
-		int x, y, w, h;
+		int x = 0, y = 0, w = 0, h = 0;
 
 		w = close->fontMetrics().size(0, "x").width() + 10;
 		h = close->fontMetrics().size(0, "x").height() + 5;
@@ -116,7 +135,6 @@ bool dlgVsSystem::eventFilter(QObject *obj, QEvent *event) {
 		default:
 			break;
 	}
-
 	return (QDialog::eventFilter(obj, event));
 }
 void dlgVsSystem::changeEvent(QEvent *event) {
@@ -148,15 +166,43 @@ void dlgVsSystem::update_dialog(void) {
 
 	lineEdit_Coin_Counter->setText(QString("%1").arg(vs_system.coins.counter));
 
-	checkBox_ds1->setChecked((cfg->dipswitch_vs & 0x01) >> 0);
-	checkBox_ds2->setChecked((cfg->dipswitch_vs & 0x02) >> 1);
-	checkBox_ds3->setChecked((cfg->dipswitch_vs & 0x04) >> 2);
-	checkBox_ds4->setChecked((cfg->dipswitch_vs & 0x08) >> 3);
-	checkBox_ds5->setChecked((cfg->dipswitch_vs & 0x10) >> 4);
-	checkBox_ds6->setChecked((cfg->dipswitch_vs & 0x20) >> 5);
-	checkBox_ds7->setChecked((cfg->dipswitch_vs & 0x40) >> 6);
-	checkBox_ds8->setChecked((cfg->dipswitch_vs & 0x80) >> 7);
+	checkBox_ds1->setChecked((cfg->dipswitch & 0x01) >> 0);
+	checkBox_ds2->setChecked((cfg->dipswitch & 0x02) >> 1);
+	checkBox_ds3->setChecked((cfg->dipswitch & 0x04) >> 2);
+	checkBox_ds4->setChecked((cfg->dipswitch & 0x08) >> 3);
+	checkBox_ds5->setChecked((cfg->dipswitch & 0x10) >> 4);
+	checkBox_ds6->setChecked((cfg->dipswitch & 0x20) >> 5);
+	checkBox_ds7->setChecked((cfg->dipswitch & 0x40) >> 6);
+	checkBox_ds8->setChecked((cfg->dipswitch & 0x80) >> 7);
 
+	checkBox_ds9->setChecked(((cfg->dipswitch >> 8) & 0x01) >> 0);
+	checkBox_ds10->setChecked(((cfg->dipswitch >> 8) & 0x02) >> 1);
+	checkBox_ds11->setChecked(((cfg->dipswitch >> 8) & 0x04) >> 2);
+	checkBox_ds12->setChecked(((cfg->dipswitch >> 8) & 0x08) >> 3);
+	checkBox_ds13->setChecked(((cfg->dipswitch >> 8) & 0x10) >> 4);
+	checkBox_ds14->setChecked(((cfg->dipswitch >> 8) & 0x20) >> 5);
+	checkBox_ds15->setChecked(((cfg->dipswitch >> 8) & 0x40) >> 6);
+	checkBox_ds16->setChecked(((cfg->dipswitch >> 8) & 0x80) >> 7);
+
+	label_ds9->setEnabled(info.number_of_nes == 2);
+	label_ds10->setEnabled(info.number_of_nes == 2);
+	label_ds11->setEnabled(info.number_of_nes == 2);
+	label_ds12->setEnabled(info.number_of_nes == 2);
+	label_ds13->setEnabled(info.number_of_nes == 2);
+	label_ds14->setEnabled(info.number_of_nes == 2);
+	label_ds15->setEnabled(info.number_of_nes == 2);
+	label_ds16->setEnabled(info.number_of_nes == 2);
+
+	checkBox_ds9->setEnabled(info.number_of_nes == 2);
+	checkBox_ds10->setEnabled(info.number_of_nes == 2);
+	checkBox_ds11->setEnabled(info.number_of_nes == 2);
+	checkBox_ds12->setEnabled(info.number_of_nes == 2);
+	checkBox_ds13->setEnabled(info.number_of_nes == 2);
+	checkBox_ds14->setEnabled(info.number_of_nes == 2);
+	checkBox_ds15->setEnabled(info.number_of_nes == 2);
+	checkBox_ds16->setEnabled(info.number_of_nes == 2);
+
+	gridLayout_dip_switches2->setEnabled(info.number_of_nes == 2);
 	groupBox_Vs_System->setEnabled(vs_system.enabled);
 
 	in_update = false;
@@ -194,28 +240,52 @@ void dlgVsSystem::s_ds_changed(int state) {
 
 	switch (index) {
 		case 1:
-			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0xFE) | (state ? 0x01 : 0x00);
+			cfg->dipswitch = (cfg->dipswitch & 0xFFFE) | (state ? 0x0001 : 0x0000);
 			break;
 		case 2:
-			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0xFD) | (state ? 0x02 : 0x00);
+			cfg->dipswitch = (cfg->dipswitch & 0xFFFD) | (state ? 0x0002 : 0x0000);
 			break;
 		case 3:
-			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0xFB) | (state ? 0x04 : 0x00);
+			cfg->dipswitch = (cfg->dipswitch & 0xFFFB) | (state ? 0x0004 : 0x0000);
 			break;
 		case 4:
-			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0xF7) | (state ? 0x08 : 0x00);
+			cfg->dipswitch = (cfg->dipswitch & 0xFFF7) | (state ? 0x0008 : 0x0000);
 			break;
 		case 5:
-			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0xEF) | (state ? 0x10 : 0x00);
+			cfg->dipswitch = (cfg->dipswitch & 0xFFEF) | (state ? 0x0010 : 0x0000);
 			break;
 		case 6:
-			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0xDF) | (state ? 0x20 : 0x00);
+			cfg->dipswitch = (cfg->dipswitch & 0xFFDF) | (state ? 0x0020 : 0x0000);
 			break;
 		case 7:
-			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0xBF) | (state ? 0x40 : 0x00);
+			cfg->dipswitch = (cfg->dipswitch & 0xFFBF) | (state ? 0x0040 : 0x0000);
 			break;
 		case 8:
-			cfg->dipswitch_vs = (cfg->dipswitch_vs & 0x7F) | (state ? 0x80 : 0x00);
+			cfg->dipswitch = (cfg->dipswitch & 0xFF7F) | (state ? 0x0080 : 0x0000);
+			break;
+		case 9:
+			cfg->dipswitch = (cfg->dipswitch & 0xFEFF) | (state ? 0x0100 : 0x0000);
+			break;
+		case 10:
+			cfg->dipswitch = (cfg->dipswitch & 0xFDFF) | (state ? 0x0200 : 0x0000);
+			break;
+		case 11:
+			cfg->dipswitch = (cfg->dipswitch & 0xFBFF) | (state ? 0x0400 : 0x0000);
+			break;
+		case 12:
+			cfg->dipswitch = (cfg->dipswitch & 0xF7FF) | (state ? 0x0800 : 0x0000);
+			break;
+		case 13:
+			cfg->dipswitch = (cfg->dipswitch & 0xEFFF) | (state ? 0x1000 : 0x0000);
+			break;
+		case 14:
+			cfg->dipswitch = (cfg->dipswitch & 0xDFFF) | (state ? 0x2000 : 0x0000);
+			break;
+		case 15:
+			cfg->dipswitch = (cfg->dipswitch & 0xBFFF) | (state ? 0x4000 : 0x0000);
+			break;
+		case 16:
+			cfg->dipswitch = (cfg->dipswitch & 0x7FFF) | (state ? 0x8000 : 0x0000);
 			break;
 		default:
 			break;
@@ -224,8 +294,17 @@ void dlgVsSystem::s_ds_changed(int state) {
 	gui_active_window();
 	gui_set_focus();
 }
+void dlgVsSystem::s_dip_clicked(UNUSED(bool checked)) {
+	emu_thread_pause();
+	gui_dipswitch_dialog();
+	emu_thread_continue();
+
+	update_dialog();
+	gui_active_window();
+	gui_set_focus();
+}
 void dlgVsSystem::s_defaults_clicked(UNUSED(bool checked)) {
-	cfg->dipswitch_vs = info.default_dipswitches;
+	cfg->dipswitch = dipswitch.def;
 	update_dialog();
 
 	settings_pgs_save();

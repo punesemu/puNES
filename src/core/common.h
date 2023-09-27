@@ -104,7 +104,6 @@ enum languages {
 	LNG_POLISH
 };
 enum database_mode {
-	NODIPSWITCH = 0xFF00,
 	NOEXTRA = 0x0000,
 	VSZAPPER = 0x0001
 };

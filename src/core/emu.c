@@ -630,11 +630,6 @@ BYTE emu_turn_on(void) {
 	save_slot_count_load();
 
 	ext_win.vs_system = vs_system.enabled;
-	if (vs_system.enabled) {
-		if ((cfg->dipswitch_vs == 0xFF00) && (info.default_dipswitches != 0xFF00)) {
-			cfg->dipswitch_vs = info.default_dipswitches;
-		}
-	}
 
 	gui_external_control_windows_show();
 	gui_wdgrewind_play();
@@ -786,11 +781,6 @@ BYTE emu_reset(BYTE type) {
 		}
 	}
 
-	if (vs_system.enabled) {
-		if ((cfg->dipswitch_vs == 0xFF00) && (info.default_dipswitches != 0xFF00)) {
-			cfg->dipswitch_vs = info.default_dipswitches;
-		}
-	}
 	memset(&vs_system.watchdog, 0x00, sizeof(vs_system.watchdog));
 	memset(&vs_system.r4020, 0x00, sizeof(vs_system.r4020));
 	memset(&vs_system.coins, 0x00, sizeof(vs_system.coins));

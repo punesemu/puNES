@@ -65,7 +65,7 @@ BYTE input_rd_reg_vs_r4016(BYTE nidx, UNUSED(BYTE openbus), BYTE nport) {
 		value |= (nidx == 0 ? vs_system.coins.left ? 0x20 : 0x00 : 0x00);
 	}
 	return ((nidx << 7) |
-		(((cfg->dipswitch_vs >> (nidx << 3)) & 0x03) << 3) |
+		(((cfg->dipswitch >> (nidx << 3)) & 0x03) << 3) |
 		(vs_system.coins.service ? 0x04 : 0x00) |
 		(value & 0x61));
 }
@@ -86,5 +86,5 @@ BYTE input_rd_reg_vs_r4017(BYTE nidx, UNUSED(BYTE openbus), BYTE nport) {
 	} else {
 		value = input_rd_reg_four_score_vs(nidx, 0x00, nport);
 	}
-	return (((cfg->dipswitch_vs >> (nidx << 3)) & 0xFC) | (value & 0x01));
+	return (((cfg->dipswitch >> (nidx << 3)) & 0xFC) | (value & 0x01));
 }

@@ -158,6 +158,7 @@ void search_in_cfg(QFile &file) {
 					}
 				}
 			}
+			dipswitch.def = dipswitch.value;
 			if (cfg->dipswitch != -1) {
 				dipswitch.value = cfg->dipswitch;
 			}

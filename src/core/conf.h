@@ -83,7 +83,6 @@ typedef struct _config {
 #endif
 	BYTE bck_pause;
 	WORD language;
-	WORD dipswitch_vs;
 	int dipswitch;
 	BYTE ppu_overclock;
 	BYTE ppu_overclock_dmc_control_disabled;

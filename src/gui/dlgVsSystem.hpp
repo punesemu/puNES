@@ -44,6 +44,7 @@ class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
 	private slots:
 		void s_coins_clicked(bool checked);
 		void s_ds_changed(int state);
+		void s_dip_clicked(bool checked);
 		void s_defaults_clicked(bool checked);
 		void s_x_clicked(bool checked);
 };

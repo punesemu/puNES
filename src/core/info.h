@@ -128,7 +128,6 @@ typedef struct _info {
 	BYTE r2002_race_condition_disabled;
 	BYTE r4014_precise_timing_disabled;
 	BYTE r2002_jump_first_vblank;
-	WORD default_dipswitches;
 	WORD extra_from_db;
 	DBWORD bat_ram_frames;
 	DBWORD bat_ram_frames_snap;
