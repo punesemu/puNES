@@ -1336,8 +1336,6 @@ void emu_save_header_info(void) {
 	info.header.vs_hardware = vs_system.special_mode.type;
 }
 BYTE emu_active_nidx(void) {
-	cfg->vs_monitor = 1;
-
 	return (info.number_of_nes > 1 ? cfg->vs_monitor : 0);
 }
 

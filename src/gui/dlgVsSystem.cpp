@@ -28,8 +28,6 @@
 #include "emu_thread.h"
 
 dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
-	in_update = false;
-
 	setupUi(this);
 
 	setStyleSheet(tools_stylesheet());
@@ -38,11 +36,16 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 	pushButton_Right_Coin->setProperty("myIndex", QVariant(2));
 	pushButton_Service_Coin->setProperty("myIndex", QVariant(3));
 
+	pushButton_Left_Monitor->setProperty("myIndex", QVariant(0));
+	pushButton_Right_Monitor->setProperty("myIndex", QVariant(1));
+
 	connect(pushButton_Left_Coin, SIGNAL(clicked(bool)), this, SLOT(s_coins_clicked(bool)));
 	connect(pushButton_Right_Coin, SIGNAL(clicked(bool)), this, SLOT(s_coins_clicked(bool)));
 	connect(pushButton_Service_Coin, SIGNAL(clicked(bool)), this, SLOT(s_coins_clicked(bool)));
-	connect(pushButton_Dip_Switches, SIGNAL(clicked(bool)), this, SLOT(s_dip_clicked(bool)));
-	connect(pushButton_Defaults_Dip_Switches, SIGNAL(clicked(bool)), this, SLOT(s_defaults_clicked(bool)));
+	connect(pushButton_Left_Monitor, SIGNAL(clicked(bool)), this, SLOT(s_monitor_clicked(bool)));
+	connect(pushButton_Right_Monitor, SIGNAL(clicked(bool)), this, SLOT(s_monitor_clicked(bool)));
+	connect(pushButton_Dip_Switches, SIGNAL(clicked(bool)), this, SLOT(s_ds_clicked(bool)));
+	connect(pushButton_Defaults_Dip_Switches, SIGNAL(clicked(bool)), this, SLOT(s_ds_defaults_clicked(bool)));
 
 	checkBox_ds1->setProperty("myIndex", QVariant(1));
 	checkBox_ds2->setProperty("myIndex", QVariant(2));
@@ -84,7 +87,7 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 
 	{
 		QFont f9;
-		int h;
+		int h = 0;
 
 		f9.setPointSize(9);
 		f9.setWeight(QFont::Light);
@@ -162,50 +165,40 @@ int dlgVsSystem::update_pos(int startY) {
 	return (frameGeometry().height());
 }
 void dlgVsSystem::update_dialog(void) {
-	in_update = true;
+	groupBox_Vs_System->setEnabled(vs_system.enabled);
 
 	lineEdit_Coin_Counter->setText(QString("%1").arg(vs_system.coins.counter));
 
-	checkBox_ds1->setChecked((cfg->dipswitch & 0x01) >> 0);
-	checkBox_ds2->setChecked((cfg->dipswitch & 0x02) >> 1);
-	checkBox_ds3->setChecked((cfg->dipswitch & 0x04) >> 2);
-	checkBox_ds4->setChecked((cfg->dipswitch & 0x08) >> 3);
-	checkBox_ds5->setChecked((cfg->dipswitch & 0x10) >> 4);
-	checkBox_ds6->setChecked((cfg->dipswitch & 0x20) >> 5);
-	checkBox_ds7->setChecked((cfg->dipswitch & 0x40) >> 6);
-	checkBox_ds8->setChecked((cfg->dipswitch & 0x80) >> 7);
+	qtHelper::pushbutton_set_checked(pushButton_Left_Monitor, false);
+	qtHelper::pushbutton_set_checked(pushButton_Right_Monitor, false);
+	if (cfg->vs_monitor == 0) {
+		qtHelper::pushbutton_set_checked(pushButton_Left_Monitor, true);
+	} else {
+		qtHelper::pushbutton_set_checked(pushButton_Right_Monitor, true);
+	}
 
-	checkBox_ds9->setChecked(((cfg->dipswitch >> 8) & 0x01) >> 0);
-	checkBox_ds10->setChecked(((cfg->dipswitch >> 8) & 0x02) >> 1);
-	checkBox_ds11->setChecked(((cfg->dipswitch >> 8) & 0x04) >> 2);
-	checkBox_ds12->setChecked(((cfg->dipswitch >> 8) & 0x08) >> 3);
-	checkBox_ds13->setChecked(((cfg->dipswitch >> 8) & 0x10) >> 4);
-	checkBox_ds14->setChecked(((cfg->dipswitch >> 8) & 0x20) >> 5);
-	checkBox_ds15->setChecked(((cfg->dipswitch >> 8) & 0x40) >> 6);
-	checkBox_ds16->setChecked(((cfg->dipswitch >> 8) & 0x80) >> 7);
+	qtHelper::checkbox_set_checked(checkBox_ds1, (cfg->dipswitch & 0x01) >> 0);
+	qtHelper::checkbox_set_checked(checkBox_ds2, (cfg->dipswitch & 0x02) >> 1);
+	qtHelper::checkbox_set_checked(checkBox_ds3, (cfg->dipswitch & 0x04) >> 2);
+	qtHelper::checkbox_set_checked(checkBox_ds4, (cfg->dipswitch & 0x08) >> 3);
+	qtHelper::checkbox_set_checked(checkBox_ds5, (cfg->dipswitch & 0x10) >> 4);
+	qtHelper::checkbox_set_checked(checkBox_ds6, (cfg->dipswitch & 0x20) >> 5);
+	qtHelper::checkbox_set_checked(checkBox_ds7, (cfg->dipswitch & 0x40) >> 6);
+	qtHelper::checkbox_set_checked(checkBox_ds8, (cfg->dipswitch & 0x80) >> 7);
 
-	label_ds9->setEnabled(info.number_of_nes == 2);
-	label_ds10->setEnabled(info.number_of_nes == 2);
-	label_ds11->setEnabled(info.number_of_nes == 2);
-	label_ds12->setEnabled(info.number_of_nes == 2);
-	label_ds13->setEnabled(info.number_of_nes == 2);
-	label_ds14->setEnabled(info.number_of_nes == 2);
-	label_ds15->setEnabled(info.number_of_nes == 2);
-	label_ds16->setEnabled(info.number_of_nes == 2);
+	qtHelper::checkbox_set_checked(checkBox_ds9, ((cfg->dipswitch >> 8) & 0x01) >> 0);
+	qtHelper::checkbox_set_checked(checkBox_ds10, ((cfg->dipswitch >> 8) & 0x02) >> 1);
+	qtHelper::checkbox_set_checked(checkBox_ds11, ((cfg->dipswitch >> 8) & 0x04) >> 2);
+	qtHelper::checkbox_set_checked(checkBox_ds12, ((cfg->dipswitch >> 8) & 0x08) >> 3);
+	qtHelper::checkbox_set_checked(checkBox_ds13, ((cfg->dipswitch >> 8) & 0x10) >> 4);
+	qtHelper::checkbox_set_checked(checkBox_ds14, ((cfg->dipswitch >> 8) & 0x20) >> 5);
+	qtHelper::checkbox_set_checked(checkBox_ds15, ((cfg->dipswitch >> 8) & 0x40) >> 6);
+	qtHelper::checkbox_set_checked(checkBox_ds16, ((cfg->dipswitch >> 8) & 0x80) >> 7);
 
-	checkBox_ds9->setEnabled(info.number_of_nes == 2);
-	checkBox_ds10->setEnabled(info.number_of_nes == 2);
-	checkBox_ds11->setEnabled(info.number_of_nes == 2);
-	checkBox_ds12->setEnabled(info.number_of_nes == 2);
-	checkBox_ds13->setEnabled(info.number_of_nes == 2);
-	checkBox_ds14->setEnabled(info.number_of_nes == 2);
-	checkBox_ds15->setEnabled(info.number_of_nes == 2);
-	checkBox_ds16->setEnabled(info.number_of_nes == 2);
+	widget_Monitor->setEnabled(info.number_of_nes == 2);
+	widget_Dip_Switches2->setEnabled(info.number_of_nes == 2);
 
-	gridLayout_dip_switches2->setEnabled(info.number_of_nes == 2);
-	groupBox_Vs_System->setEnabled(vs_system.enabled);
-
-	in_update = false;
+	pushButton_Dip_Switches->setEnabled(dipswitch_type_length() > 0);
 }
 void dlgVsSystem::insert_coin(int index) {
 	int base = vs_system_cn_next()
@@ -231,12 +224,17 @@ void dlgVsSystem::s_coins_clicked(UNUSED(bool checked)) {
 	gui_active_window();
 	gui_set_focus();
 }
+void dlgVsSystem::s_monitor_clicked(UNUSED(bool checked)) {
+	emu_thread_pause();
+	cfg->vs_monitor = !cfg->vs_monitor;
+	emu_thread_continue();
+
+	update_dialog();
+	gui_active_window();
+	gui_set_focus();
+}
 void dlgVsSystem::s_ds_changed(int state) {
 	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
-
-	if (in_update) {
-		return;
-	}
 
 	switch (index) {
 		case 1:
@@ -294,7 +292,7 @@ void dlgVsSystem::s_ds_changed(int state) {
 	gui_active_window();
 	gui_set_focus();
 }
-void dlgVsSystem::s_dip_clicked(UNUSED(bool checked)) {
+void dlgVsSystem::s_ds_clicked(UNUSED(bool checked)) {
 	emu_thread_pause();
 	gui_dipswitch_dialog();
 	emu_thread_continue();
@@ -303,7 +301,7 @@ void dlgVsSystem::s_dip_clicked(UNUSED(bool checked)) {
 	gui_active_window();
 	gui_set_focus();
 }
-void dlgVsSystem::s_defaults_clicked(UNUSED(bool checked)) {
+void dlgVsSystem::s_ds_defaults_clicked(UNUSED(bool checked)) {
 	cfg->dipswitch = dipswitch.def;
 	update_dialog();
 

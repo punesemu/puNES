@@ -39,6 +39,7 @@ extern _dipswitch dipswitch;
 EXTERNC void dipswitch_reset(void);
 EXTERNC void dipswitch_search(void);
 EXTERNC void dipswitch_update_value(void);
+EXTERNC int dipswitch_type_length(void);
 
 #undef EXTERNC
 

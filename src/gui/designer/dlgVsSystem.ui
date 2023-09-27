@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>214</width>
-    <height>331</height>
+    <height>385</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -105,7 +105,79 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_dip_switches">
+       <widget class="QWidget" name="widget_Monitor" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_Monitor">
+           <item>
+            <widget class="QLabel" name="label_Monitor">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Monitor</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line_Monitor">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_Button_Monitor">
+           <item>
+            <widget class="QPushButton" name="pushButton_Left_Monitor">
+             <property name="text">
+              <string>Left</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_Right_Monitor">
+             <property name="text">
+              <string>Right</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_Dip_Switches">
         <item>
          <widget class="QLabel" name="label_Dip_Switches">
           <property name="font">
@@ -135,7 +207,7 @@
        </layout>
       </item>
       <item>
-       <layout class="QGridLayout" name="gridLayout_dip_switches">
+       <layout class="QGridLayout" name="gridLayout_Dip_Switches">
         <item row="1" column="3">
          <widget class="QLabel" name="label_ds5">
           <property name="text">
@@ -267,136 +339,154 @@
        </layout>
       </item>
       <item>
-       <layout class="QGridLayout" name="gridLayout_dip_switches2">
-        <item row="1" column="3">
-         <widget class="QLabel" name="label_ds13">
-          <property name="text">
-           <string>12</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::NoTextInteraction</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="4">
-         <widget class="QLabel" name="label_ds12">
-          <property name="text">
-           <string>13</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::NoTextInteraction</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="5">
-         <widget class="QLabel" name="label_ds11">
-          <property name="text">
-           <string>14</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::NoTextInteraction</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="6">
-         <widget class="QLabel" name="label_ds10">
-          <property name="text">
-           <string>15</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::NoTextInteraction</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="7">
-         <widget class="QLabel" name="label_ds9">
-          <property name="text">
-           <string>16</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::NoTextInteraction</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QLabel" name="label_ds14">
-          <property name="text">
-           <string>11</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::NoTextInteraction</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="label_ds15">
-          <property name="text">
-           <string>10</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::NoTextInteraction</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_ds16">
-          <property name="text">
-           <string>9</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::NoTextInteraction</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="7">
-         <widget class="QCheckBox" name="checkBox_ds16"/>
-        </item>
-        <item row="0" column="6">
-         <widget class="QCheckBox" name="checkBox_ds15"/>
-        </item>
-        <item row="0" column="5">
-         <widget class="QCheckBox" name="checkBox_ds14"/>
-        </item>
-        <item row="0" column="4">
-         <widget class="QCheckBox" name="checkBox_ds13"/>
-        </item>
-        <item row="0" column="3">
-         <widget class="QCheckBox" name="checkBox_ds12"/>
-        </item>
-        <item row="0" column="2">
-         <widget class="QCheckBox" name="checkBox_ds11"/>
-        </item>
-        <item row="0" column="1">
-         <widget class="QCheckBox" name="checkBox_ds10"/>
-        </item>
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="checkBox_ds9"/>
-        </item>
-       </layout>
+       <widget class="QWidget" name="widget_Dip_Switches2" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_Dip_Switches2">
+           <item row="1" column="3">
+            <widget class="QLabel" name="label_ds13">
+             <property name="text">
+              <string>12</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::NoTextInteraction</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="4">
+            <widget class="QLabel" name="label_ds12">
+             <property name="text">
+              <string>13</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::NoTextInteraction</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="5">
+            <widget class="QLabel" name="label_ds11">
+             <property name="text">
+              <string>14</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::NoTextInteraction</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="6">
+            <widget class="QLabel" name="label_ds10">
+             <property name="text">
+              <string>15</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::NoTextInteraction</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="7">
+            <widget class="QLabel" name="label_ds9">
+             <property name="text">
+              <string>16</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::NoTextInteraction</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="label_ds14">
+             <property name="text">
+              <string>11</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::NoTextInteraction</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="label_ds15">
+             <property name="text">
+              <string>10</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::NoTextInteraction</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_ds16">
+             <property name="text">
+              <string>9</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::NoTextInteraction</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="7">
+            <widget class="QCheckBox" name="checkBox_ds16"/>
+           </item>
+           <item row="0" column="6">
+            <widget class="QCheckBox" name="checkBox_ds15"/>
+           </item>
+           <item row="0" column="5">
+            <widget class="QCheckBox" name="checkBox_ds14"/>
+           </item>
+           <item row="0" column="4">
+            <widget class="QCheckBox" name="checkBox_ds13"/>
+           </item>
+           <item row="0" column="3">
+            <widget class="QCheckBox" name="checkBox_ds12"/>
+           </item>
+           <item row="0" column="2">
+            <widget class="QCheckBox" name="checkBox_ds11"/>
+           </item>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="checkBox_ds10"/>
+           </item>
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="checkBox_ds9"/>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_Dip_Switches">
@@ -421,6 +511,8 @@
   <tabstop>pushButton_Left_Coin</tabstop>
   <tabstop>pushButton_Right_Coin</tabstop>
   <tabstop>pushButton_Service_Coin</tabstop>
+  <tabstop>pushButton_Left_Monitor</tabstop>
+  <tabstop>pushButton_Right_Monitor</tabstop>
   <tabstop>checkBox_ds1</tabstop>
   <tabstop>checkBox_ds2</tabstop>
   <tabstop>checkBox_ds3</tabstop>
@@ -429,6 +521,15 @@
   <tabstop>checkBox_ds6</tabstop>
   <tabstop>checkBox_ds7</tabstop>
   <tabstop>checkBox_ds8</tabstop>
+  <tabstop>checkBox_ds9</tabstop>
+  <tabstop>checkBox_ds10</tabstop>
+  <tabstop>checkBox_ds11</tabstop>
+  <tabstop>checkBox_ds12</tabstop>
+  <tabstop>checkBox_ds13</tabstop>
+  <tabstop>checkBox_ds14</tabstop>
+  <tabstop>checkBox_ds15</tabstop>
+  <tabstop>checkBox_ds16</tabstop>
+  <tabstop>pushButton_Dip_Switches</tabstop>
   <tabstop>pushButton_Defaults_Dip_Switches</tabstop>
  </tabstops>
  <resources/>
