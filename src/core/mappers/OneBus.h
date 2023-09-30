@@ -43,16 +43,16 @@ extern _onebus onebus;
 
 void extcl_after_mapper_init_OneBus(void);
 void extcl_mapper_quit_OneBus(void);
-void extcl_cpu_wr_mem_OneBus(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_OneBus(WORD address, BYTE openbus);
+void extcl_cpu_wr_mem_OneBus(BYTE nidx, WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_OneBus(BYTE nidx, WORD address, BYTE openbus);
 BYTE extcl_save_mapper_OneBus(BYTE mode, BYTE slot, FILE *fp);
-BYTE extcl_wr_ppu_reg_OneBus(WORD address, BYTE *value);
-BYTE extcl_wr_apu_OneBus(WORD address, BYTE *value);
-BYTE extcl_rd_apu_OneBus(WORD address, BYTE openbus);
-BYTE extcl_rd_chr_OneBus(WORD address);
-void extcl_cpu_every_cycle_OneBus(void);
-void extcl_irq_A12_clock_OneBus(void);
-void extcl_ppu_000_to_34x_OneBus(void);
+BYTE extcl_wr_ppu_reg_OneBus(BYTE nidx, WORD address, BYTE *value);
+BYTE extcl_wr_apu_OneBus(BYTE nidx, WORD address, BYTE *value);
+BYTE extcl_rd_apu_OneBus(BYTE nidx, WORD address, BYTE openbus);
+BYTE extcl_rd_chr_OneBus(BYTE nidx, WORD address);
+void extcl_cpu_every_cycle_OneBus(BYTE nidx);
+void extcl_irq_A12_clock_OneBus(BYTE nidx);
+void extcl_ppu_000_to_34x_OneBus(BYTE nidx);
 
 void init_OneBus(BYTE reset);
 void prg_fix_8k_OneBus_base(WORD mmask, WORD mblock);

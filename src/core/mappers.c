@@ -68,15 +68,15 @@ BYTE map_init(void) {
 		case 5:
 			map_init_005();
 			break;
-//		case 6:
-//			map_init_006();
-//			break;
+		case 6:
+			map_init_006();
+			break;
 //		case 7:
 //			map_init_007();
 //			break;
-//		case 8:
-//			map_init_006();
-//			break;
+		case 8:
+			map_init_006();
+			break;
 //		case 9:
 //			map_init_009();
 //			break;
@@ -86,9 +86,9 @@ BYTE map_init(void) {
 //		case 11:
 //			map_init_011();
 //			break;
-//		case 12:
-//			map_init_012();
-//			break;
+		case 12:
+			map_init_012();
+			break;
 //		case 13:
 //			map_init_013();
 //			break;
@@ -101,9 +101,9 @@ BYTE map_init(void) {
 //		case 16:
 //			map_init_016();
 //			break;
-//		case 17:
-//			map_init_006();
-//			break;
+		case 17:
+			map_init_006();
+			break;
 		case 18:
 			map_init_018();
 			break;
@@ -744,9 +744,9 @@ BYTE map_init(void) {
 //		case 255:
 //			map_init_225();
 //			break;
-//		case 256:
-//			map_init_256();
-//			break;
+		case 256:
+			map_init_256();
+			break;
 //		case 258:
 //			map_init_215();
 //			break;
@@ -1277,9 +1277,9 @@ BYTE map_init(void) {
 //		case 560:
 //			map_init_560();
 //			break;
-//		case 561:
-//			map_init_561();
-//			break;
+		case 561:
+			map_init_561();
+			break;
 		default:
 			gui_overlay_info_append_msg_precompiled(11, NULL);
 			EXTCL_CPU_WR_MEM(000);
@@ -1335,6 +1335,8 @@ void map_quit(void) {
 
 	memset(&info.mapper, 0x00, sizeof(info.mapper));
 	memset(&info.sha1sum, 0x00, sizeof(info.sha1sum));
+	memset(&info.crc32, 0x00, sizeof(info.crc32));
+	memset(&vs_system, 0x00, sizeof(vs_system));
 
 	nes20db_reset();
 
@@ -1345,7 +1347,7 @@ void map_quit(void) {
 	// faccio un reset
 	memmap_init();
 
-	vs_system.ppu = vs_system.special_mode.type = 0;
+	info.number_of_nes = 1;
 	info.mapper.ext_console_type = 0;
 	info.decimal_mode = FALSE;
 

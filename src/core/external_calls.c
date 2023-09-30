@@ -62,9 +62,9 @@ void (*extcl_wr_nmt)(BYTE nidx, WORD address, BYTE value);
 void (*extcl_wr_chr)(BYTE nidx, WORD address, BYTE value);
 // APU
 // vine chiamata in cpu_inline.h alla scrittura nei rigistri della apu
-BYTE (*extcl_wr_apu)(WORD address, BYTE *value);
+BYTE (*extcl_wr_apu)(BYTE nidx, WORD address, BYTE *value);
 // vine chiamata in cpu_inline.h alla lettura dei rigistri della apu
-BYTE (*extcl_rd_apu)(WORD address, BYTE openbus);
+BYTE (*extcl_rd_apu)(BYTE nidx, WORD address, BYTE openbus);
 void (*extcl_length_clock)(void);
 void (*extcl_envelope_clock)(void);
 void (*extcl_apu_tick)(void);

@@ -70,18 +70,18 @@ void extcl_after_mapper_init_561(void) {
 			prgrom_set_size(S256K);
 		}
 		if (chrrom_size()) {
-			if (!chrrom_size() || (vram_size() < chrrom_size())) {
-				vram_set_ram_size(chrrom_size());
+			if (!chrrom_size() || (vram_size(0) < chrrom_size())) {
+				vram_set_ram_size(0, chrrom_size());
 				vram_init();
 			}
-			memcpy(vram_pnt(), chrrom_pnt(), chrrom_size());
+			memcpy(vram_pnt(0), chrrom_pnt(), chrrom_size());
 		}
 	}
 	prg_fix_561();
 	chr_fix_561();
 	mirroring_fix_561();
 }
-void extcl_cpu_init_pc_561(void) {
+void extcl_cpu_init_pc_561(BYTE nidx) {
 	if (info.reset >= HARD) {
 		if (miscrom_size() >= 4) {
 			WORD address = 0x7000;
@@ -100,45 +100,45 @@ void extcl_cpu_init_pc_561(void) {
 
 			if (init) {
 				// JSR init
-				ram_wr(0x700, 0x20);
-				ram_wr(0x701, init & 0xFF);
-				ram_wr(0x702, init >> 8);
+				ram_wr(nidx, 0x700, 0x20);
+				ram_wr(nidx, 0x701, init & 0xFF);
+				ram_wr(nidx, 0x702, init >> 8);
 
 				// JMP ($FFFC)
-				ram_wr(0x703, 0x6C);
-				ram_wr(0x704, 0xFC);
-				ram_wr(0x705, 0xFF);
+				ram_wr(nidx, 0x703, 0x6C);
+				ram_wr(nidx, 0x704, 0xFC);
+				ram_wr(nidx, 0x705, 0xFF);
 
-				nes.c.cpu.PC.w = 0x700;
+				nes[nidx].c.cpu.PC.w = 0x700;
 			}
 		}
 		r4015.value &= 0xBF;
-		nes.c.irq.high &= ~APU_IRQ;
+		nes[nidx].c.irq.high &= ~APU_IRQ;
 	}
 }
-void extcl_cpu_wr_mem_561(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_561(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x4000) && (address <= 0x4FFF)) {
 		switch (address) {
 			case 0x4024:
-				nes.c.irq.high &= ~EXT_IRQ;
+				nes[nidx].c.irq.high &= ~EXT_IRQ;
 				return;
 			case 0x4025:
 				m561.irq.reg = value;
 				if (m561.irq.reg & 0x42) {
 					m561.irq.count_fds = 0;
 				}
-				nes.c.irq.high &= ~EXT_IRQ;
+				nes[nidx].c.irq.high &= ~EXT_IRQ;
 				return;
 			case 0x4100:
 				m561.irq.count_sgd = (SWORD)((m561.irq.count_sgd & 0xFF00) | value);
 				if (!value) {
 					m561.irq.count_sgd = value;
 				}
-				nes.c.irq.high &= ~EXT_IRQ;
+				nes[nidx].c.irq.high &= ~EXT_IRQ;
 				return;
 			case 0x4101:
 				m561.irq.count_sgd = (SWORD)((m561.irq.count_sgd & 0x00FF) | (value << 8));
-				nes.c.irq.high &= ~EXT_IRQ;
+				nes[nidx].c.irq.high &= ~EXT_IRQ;
 				return;
 			case 0x42FC:
 			case 0x42FD:
@@ -197,14 +197,14 @@ BYTE extcl_save_mapper_561(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m561.irq.count_sgd);
 	return (EXIT_OK);
 }
-void extcl_cpu_every_cycle_561(void) {
+void extcl_cpu_every_cycle_561(BYTE nidx) {
 	m561.irq.count_fds += 3;
 	while ((m561.irq.count_fds >= 448) && (m561.irq.reg & 0x80)) {
 		m561.irq.count_fds -= 448;
-		nes.c.irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 	if ((m561.irq.count_sgd < 0) && !++m561.irq.count_sgd) {
-		nes.c.irq.high |= EXT_IRQ;
+		nes[nidx].c.irq.high |= EXT_IRQ;
 	}
 }
 
@@ -212,63 +212,63 @@ INLINE static void prg_fix_561(void) {
 	BYTE wr = !(m561.reg1m & 0x02);
 
 	if (!(m561.reg4m & 0x01)) {
-		memmap_auto_wp_8k(MMCPU(0x8000), m561.prg[0], TRUE, wr);
-		memmap_auto_wp_8k(MMCPU(0xA000), m561.prg[1], TRUE, wr);
-		memmap_auto_wp_8k(MMCPU(0xC000), m561.prg[2], TRUE, wr);
-		memmap_auto_wp_8k(MMCPU(0xE000), m561.prg[3], TRUE, wr);
+		memmap_auto_wp_8k(0, MMCPU(0x8000), m561.prg[0], TRUE, wr);
+		memmap_auto_wp_8k(0, MMCPU(0xA000), m561.prg[1], TRUE, wr);
+		memmap_auto_wp_8k(0, MMCPU(0xC000), m561.prg[2], TRUE, wr);
+		memmap_auto_wp_8k(0, MMCPU(0xE000), m561.prg[3], TRUE, wr);
 	} else {
 		switch (m561.reg1m >> 5) {
 			case 0:
-				memmap_auto_wp_16k(MMCPU(0x8000), (m561.reg & 0x07), TRUE, wr);
-				memmap_auto_wp_16k(MMCPU(0xC000), 0x07, TRUE, wr);
+				memmap_auto_wp_16k(0, MMCPU(0x8000), (m561.reg & 0x07), TRUE, wr);
+				memmap_auto_wp_16k(0, MMCPU(0xC000), 0x07, TRUE, wr);
 				return;
 			case 1:
-				memmap_auto_wp_16k(MMCPU(0x8000), ((m561.reg & 0x3C) >> 2), TRUE, wr);
-				memmap_auto_wp_16k(MMCPU(0xC000), 0x07, TRUE, wr);
+				memmap_auto_wp_16k(0, MMCPU(0x8000), ((m561.reg & 0x3C) >> 2), TRUE, wr);
+				memmap_auto_wp_16k(0, MMCPU(0xC000), 0x07, TRUE, wr);
 				return;
 			case 2:
-				memmap_auto_wp_16k(MMCPU(0x8000), (m561.reg & 0x0F), TRUE, wr);
-				memmap_auto_wp_16k(MMCPU(0xC000), 0x0F, TRUE, wr);
+				memmap_auto_wp_16k(0, MMCPU(0x8000), (m561.reg & 0x0F), TRUE, wr);
+				memmap_auto_wp_16k(0, MMCPU(0xC000), 0x0F, TRUE, wr);
 				return;
 			case 3:
-				memmap_auto_wp_16k(MMCPU(0x8000), 0x0F, TRUE, wr);
-				memmap_auto_wp_16k(MMCPU(0xC000), (m561.reg & 0x0F), TRUE, wr);
+				memmap_auto_wp_16k(0, MMCPU(0x8000), 0x0F, TRUE, wr);
+				memmap_auto_wp_16k(0, MMCPU(0xC000), (m561.reg & 0x0F), TRUE, wr);
 				return;
 			case 4:
-				memmap_auto_wp_32k(MMCPU(0x8000), ((m561.reg & 0x30) >> 4), TRUE, wr);
+				memmap_auto_wp_32k(0, MMCPU(0x8000), ((m561.reg & 0x30) >> 4), TRUE, wr);
 				return;
 			case 5:
-				memmap_auto_wp_32k(MMCPU(0x8000), 0x03, TRUE, wr);
+				memmap_auto_wp_32k(0, MMCPU(0x8000), 0x03, TRUE, wr);
 				return;
 			case 6:
-				memmap_auto_wp_8k(MMCPU(0x8000), m561.prg[0], TRUE, wr);
-				memmap_auto_wp_8k(MMCPU(0xA000), m561.prg[1], TRUE, wr);
-				memmap_auto_wp_16k(MMCPU(0xC000), 0x07, TRUE, wr);
+				memmap_auto_wp_8k(0, MMCPU(0x8000), m561.prg[0], TRUE, wr);
+				memmap_auto_wp_8k(0, MMCPU(0xA000), m561.prg[1], TRUE, wr);
+				memmap_auto_wp_16k(0, MMCPU(0xC000), 0x07, TRUE, wr);
 				return;
 			case 7:
-				memmap_auto_wp_8k(MMCPU(0x8000), (m561.prg[0] & 0x0E), TRUE, wr);
-				memmap_auto_wp_8k(MMCPU(0xA000), ((m561.reg >> 4) | 0x01), TRUE, wr);
-				memmap_auto_wp_16k(MMCPU(0xC000), 0x07, TRUE, wr);
+				memmap_auto_wp_8k(0, MMCPU(0x8000), (m561.prg[0] & 0x0E), TRUE, wr);
+				memmap_auto_wp_8k(0, MMCPU(0xA000), ((m561.reg >> 4) | 0x01), TRUE, wr);
+				memmap_auto_wp_16k(0, MMCPU(0xC000), 0x07, TRUE, wr);
 				return;
 		}
 	}
 }
 INLINE static void chr_fix_561(void) {
-	memmap_vram_wp_8k(MMPPU(0x0000), m561.chr, TRUE, !((m561.reg1m & 0xE0) & 0x80));
+	memmap_vram_wp_8k(0, MMPPU(0x0000), m561.chr, TRUE, !((m561.reg1m & 0xE0) & 0x80));
 }
 INLINE static void mirroring_fix_561(void) {
 	switch (m561.reg1m & 0x11) {
 		case 0x00:
-			mirroring_SCR0();
+			mirroring_SCR0(0);
 			return;
 		case 0x01:
-			mirroring_V();
+			mirroring_V(0);
 			return;
 		case 0x10:
-			mirroring_SCR1();
+			mirroring_SCR1(0);
 			return;
 		case 0x11:
-			mirroring_H();
+			mirroring_H(0);
 			return;
 	}
 }

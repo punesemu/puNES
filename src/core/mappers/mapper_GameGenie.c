@@ -23,7 +23,7 @@
 void map_init_GameGenie(void) {
 	EXTCL_CPU_WR_MEM(GameGenie);
 }
-void extcl_cpu_wr_mem_GameGenie(UNUSED(BYTE nidx), WORD address, BYTE value) {
+void extcl_cpu_wr_mem_GameGenie(BYTE nidx, WORD address, BYTE value) {
 	_cheat *ch = NULL;
 
 	if ((address >= 0x8001) && (address <= 0x8004)) {
@@ -61,7 +61,7 @@ void extcl_cpu_wr_mem_GameGenie(UNUSED(BYTE nidx), WORD address, BYTE value) {
 			BYTE i = 0;
 
 			gamegenie.phase = GG_LOAD_ROM;
-			info.frame_status = FRAME_FINISHED;
+			info.exec_cpu_op.b[nidx] = FALSE;
 
 			// la rom ne supporta solo 3
 			for (i = 0; i < 3; i++) {

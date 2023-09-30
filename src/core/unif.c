@@ -163,6 +163,7 @@ BYTE unif_load_rom(void) {
 						return (EXIT_ERROR);
 					}
 					prgrom_chip(0) = prgrom_pnt();
+					info.mapper.prgrom_size = prgrom_size();
 					info.mapper.prgrom_banks_16k = prgrom_size() / S16K;
 				}
 
@@ -180,6 +181,7 @@ BYTE unif_load_rom(void) {
 							return (EXIT_ERROR);
 						}
 						chrrom_chip(0) = chrrom_pnt();
+						info.mapper.chrrom_size = chrrom_size();
 						info.mapper.chrrom_banks_8k = chrrom_size() / S8K;
 					}
 				}

@@ -80,7 +80,7 @@ void map_init_256(void) {
 	mapper.internal_struct[0] = (BYTE *)&onebus;
 	mapper.internal_struct_size[0] = sizeof(onebus);
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	memset(&nes[0].irqA12, 0x00, sizeof(nes[0].irqA12));
 
 	if (info.format != NES_2_0) {
 		if (info.mapper.submapper == 0) {
@@ -101,7 +101,7 @@ void map_init_256(void) {
 
 	init_OneBus(info.reset);
 
-	irqA12.present = TRUE;
+	nes[0].irqA12.present = TRUE;
 }
 void extcl_after_mapper_init_256(void) {
 	OneBus_prg_fix_8k(0x0FFF, 0);
@@ -109,17 +109,17 @@ void extcl_after_mapper_init_256(void) {
 	OneBus_wram_fix(0x0FFF, 0);
 	OneBus_mirroring_fix();
 }
-void extcl_cpu_wr_mem_256(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_256(BYTE nidx, WORD address, BYTE value) {
 	if ((address >= 0x4107) && (address <= 0x410A)) {
 		address = 0x4107 + regs[info.mapper.submapper].cpu[address - 0x4107];
 	} else if ((address & 0xE001) == 0x8000) {
 		value = (value & 0xF8) | regs[info.mapper.submapper].mmc3[value & 0x07];
 	}
-	extcl_cpu_wr_mem_OneBus(address, value);
+	extcl_cpu_wr_mem_OneBus(nidx, address, value);
 }
-BYTE extcl_wr_ppu_reg_256(WORD address, BYTE *value) {
+BYTE extcl_wr_ppu_reg_256(BYTE nidx, WORD address, BYTE *value) {
 	if ((address >= 0x2012) && (address <= 0x2017)) {
 		address = 0x2012 + regs[info.mapper.submapper].ppu[address - 0x2012];
 	}
-	return (extcl_wr_ppu_reg_OneBus(address, value));
+	return (extcl_wr_ppu_reg_OneBus(nidx, address, value));
 }

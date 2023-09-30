@@ -464,7 +464,7 @@ INLINE static BYTE apu_rd_reg(BYTE nidx, WORD address) {
 		 * utilizzato dalle mappers :
 		 * OneBus
 		 */
-		value = extcl_rd_apu(address, value);
+		value = extcl_rd_apu(nidx, address, value);
 	}
 
 	return (value);
@@ -850,7 +850,7 @@ void cpu_wr_mem(BYTE nidx, WORD address, BYTE value) {
 			 * utilizzato dalle mappers :
 			 * OneBus
 			 */
-			if (extcl_wr_apu(address, &value)) {
+			if (extcl_wr_apu(nidx, address, &value)) {
 				/* eseguo un tick hardware */
 				tick_hw(nidx, 1);
 				return;

@@ -104,9 +104,9 @@ extern void (*extcl_wr_nmt)(BYTE nidx, WORD address, BYTE value);
 extern void (*extcl_wr_chr)(BYTE nidx, WORD address, BYTE value);
 // APU
 // vine chiamata in cpu_inline.h alla scrittura nei rigistri della apu
-extern BYTE (*extcl_wr_apu)(WORD address, BYTE *value);
+extern BYTE (*extcl_wr_apu)(BYTE nidx, WORD address, BYTE *value);
 // vine chiamata in cpu_inline.h alla lettura dei rigistri della apu
-extern BYTE (*extcl_rd_apu)(WORD address, BYTE openbus);
+extern BYTE (*extcl_rd_apu)(BYTE nidx, WORD address, BYTE openbus);
 extern void (*extcl_length_clock)(void);
 extern void (*extcl_envelope_clock)(void);
 extern void (*extcl_apu_tick)(void);

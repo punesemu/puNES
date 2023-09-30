@@ -19,6 +19,7 @@
 #ifndef INFO_H_
 #define INFO_H_
 
+#include <stddef.h>
 #include "common.h"
 
 enum frame_status_modes {
@@ -55,7 +56,9 @@ typedef struct _info {
 		WORD id;
 		BYTE submapper_nes20;
 		BYTE submapper;
+		size_t prgrom_size;
 		DBWORD prgrom_banks_16k;
+		size_t chrrom_size;
 		DBWORD chrrom_banks_8k;
 		BYTE extend_wr;
 		BYTE extend_rd;
@@ -72,7 +75,9 @@ typedef struct _info {
 		BYTE format;
 		WORD mapper;
 		BYTE submapper;
+		size_t prgrom_size;
 		DBWORD prgrom;
+		size_t chrrom_size;
 		DBWORD chrrom;
 		DBWORD prgram;
 		DBWORD prgnvram;

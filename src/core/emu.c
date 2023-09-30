@@ -149,9 +149,6 @@ void emu_frame(void) {
 	}
 
 	// eseguo CPU, PPU e APU
-	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
-		info.exec_cpu_op.b[nesidx] = TRUE;
-	}
 	while (info.exec_cpu_op.w) {
 #if defined (DEBUG)
 		if (nes[1].c.cpu.PC.w == PCBREAK) {
@@ -162,7 +159,6 @@ void emu_frame(void) {
 		if (info.exec_cpu_op.b[1]) cpu_exe_op(1);
 		if (info.exec_cpu_op.b[0]) cpu_exe_op(0);
 	}
-	info.frame_status = FRAME_FINISHED;
 
 	emu_frame_finished();
 	emu_frame_sleep();
@@ -1237,7 +1233,7 @@ void emu_info_rom(void) {
 	log_info_box(uL("PRG 8k rom;%-4lu [ %08X %ld ]%s"),
 		prgrom_banks(S8K),
 		info.crc32.prg,
-		prgrom_size(),
+		info.mapper.prgrom_size,//prgrom_size(),
 		(info.prg_truncated ? " truncated" : ""));
 
 	if (info.header.format == UNIF_FORMAT) {
@@ -1257,7 +1253,7 @@ void emu_info_rom(void) {
 		log_info_box(uL("CHR 4k vrom;%-4lu [ %08X %ld ]%s"),
 			chrrom_banks(S4K),
 			info.crc32.chr,
-			chrrom_size(),
+			info.mapper.chrrom_size, //chrrom_size(),
 			(info.chr_truncated ? " truncated" : ""));
 
 		if (info.header.format == UNIF_FORMAT) {
@@ -1320,7 +1316,9 @@ void emu_initial_ram(BYTE *ram, unsigned int length) {
 }
 void emu_save_header_info(void) {
 	info.header.format = info.format;
+	info.header.prgrom_size = info.mapper.prgrom_size;
 	info.header.prgrom = info.mapper.prgrom_banks_16k;
+	info.header.chrrom_size = info.mapper.chrrom_size;
 	info.header.chrrom = info.mapper.chrrom_banks_8k;
 	info.header.prgram = wram_ram_size();
 	info.header.prgnvram = wram_nvram_size();
@@ -1336,7 +1334,7 @@ void emu_save_header_info(void) {
 	info.header.vs_hardware = vs_system.special_mode.type;
 }
 BYTE emu_active_nidx(void) {
-	return (info.number_of_nes > 1 ? cfg->vs_monitor : 0);
+	return (vs_system.special_mode.type == VS_DS_Normal ? cfg->vs_monitor : 0);
 }
 
 INLINE static void emu_frame_started(void) {
@@ -1344,8 +1342,14 @@ INLINE static void emu_frame_started(void) {
 
 	// riprendo a far correre la CPU
 	info.frame_status = FRAME_STARTED;
+
+	for (int nesidx = 0; nesidx < info.number_of_nes; nesidx++) {
+		info.exec_cpu_op.b[nesidx] = TRUE;
+	}
 }
 INLINE static void emu_frame_finished(void) {
+	info.frame_status = FRAME_FINISHED;
+
 	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
 		gui_emit_et_gg_reset();
 	}

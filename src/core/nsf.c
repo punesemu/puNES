@@ -541,7 +541,7 @@ void nsf_tick(void) {
 			nes[0].c.nmi.high = TRUE;
 		}
 		nes[0].p.ppu.odd_frame = !nes[0].p.ppu.odd_frame;
-		info.frame_status = FRAME_FINISHED;
+		info.exec_cpu_op.b[0] = FALSE;
 
 		if (!cfg->apu.channel[APU_MASTER]) {
 			extcl_audio_samples_mod_nsf(NULL, 0);

@@ -95,12 +95,12 @@ set(core_srcs
 	core/mappers/mapper_003.c
 #	core/mappers/mapper_004.c
 	core/mappers/mapper_005.c
-#	core/mappers/mapper_006.c
+	core/mappers/mapper_006.c
 #	core/mappers/mapper_007.c
 #	core/mappers/mapper_009.c
 #	core/mappers/mapper_010.c
 #	core/mappers/mapper_011.c
-#	core/mappers/mapper_012.c
+	core/mappers/mapper_012.c
 #	core/mappers/mapper_013.c
 #	core/mappers/mapper_014.c
 #	core/mappers/mapper_015.c
@@ -300,7 +300,7 @@ set(core_srcs
 #	core/mappers/mapper_250.c
 #	core/mappers/mapper_252.c
 #	core/mappers/mapper_254.c
-#	core/mappers/mapper_256.c
+	core/mappers/mapper_256.c
 #	core/mappers/mapper_259.c
 #	core/mappers/mapper_260.c
 #	core/mappers/mapper_261.c
@@ -469,7 +469,7 @@ set(core_srcs
 #	core/mappers/mapper_558.c
 #	core/mappers/mapper_559.c
 #	core/mappers/mapper_560.c
-#	core/mappers/mapper_561.c
+	core/mappers/mapper_561.c
 	core/mappers/mapper_FDS.c
 	core/mappers/mapper_GameGenie.c
 	core/mappers/mapper_NSF.c
@@ -490,7 +490,7 @@ set(core_srcs
 	core/mappers/MMC3.c
 #	core/mappers/MMC4.c
 	core/mappers/N118.c
-#	core/mappers/OneBus.c
+	core/mappers/OneBus.c
 	core/mappers/opll.c
 	core/mappers/serial_devices.cpp
 	core/mappers/serial_devices_interface.cpp

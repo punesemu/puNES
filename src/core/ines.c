@@ -112,16 +112,12 @@ BYTE ines_load_rom(void) {
 		info.mapper.prgrom_banks_16k = rom.data[rom.position++];
 		info.mapper.chrrom_banks_8k = rom.data[rom.position++];
 
-		prgrom_set_size(0);
-		chrrom_set_size(0);
 		wram_set_ram_size(0);
 		wram_set_nvram_size(0);
-		miscrom_set_size(0);
+
 		for (int nesidx = 0; nesidx < NES_CHIPS_MAX; nesidx++) {
 			vram_set_ram_size(nesidx, 0);
 			vram_set_nvram_size(nesidx, 0);
-			ram_set_size(nesidx, 0);
-			nmt_set_size(nesidx, 0);
 		}
 
 		if (rom_mem_ctrl_memcpy(&ines.flags[0], &rom, TOTAL_FL) == EXIT_ERROR) {
@@ -144,11 +140,11 @@ BYTE ines_load_rom(void) {
 
 			// PRGROM
 			info.mapper.prgrom_banks_16k |= ((ines.flags[FL9] & 0x0F) << 8);
-			nes20_prg_chr_size(&info.mapper.prgrom_banks_16k, S16K);
+			info.mapper.prgrom_size = nes20_prg_chr_size(&info.mapper.prgrom_banks_16k, S16K);
 
 			// CHROM
 			info.mapper.chrrom_banks_8k |= ((ines.flags[FL9] & 0xF0) << 4);
-			nes20_prg_chr_size(&info.mapper.chrrom_banks_8k, S8K);
+			info.mapper.chrrom_size = nes20_prg_chr_size(&info.mapper.chrrom_banks_8k, S8K);
 
 			// WRAM
 			if (ines.flags[FL10] & 0x0F) {
@@ -170,7 +166,7 @@ BYTE ines_load_rom(void) {
 
 			cpu_timing = ines.flags[FL12] & 0x03;
 
-			vs_system.ppu = vs_system.special_mode.type = 0;
+			vs_system.ppu = 0;
 			vs_system.special_mode.type = 0;
 			info.decimal_mode = FALSE;
 
@@ -203,6 +199,9 @@ BYTE ines_load_rom(void) {
 			// iNES 1.0
 			info.format = iNES_1_0;
 
+			info.mapper.prgrom_size = (size_t)info.mapper.prgrom_banks_16k *  S16K;
+			info.mapper.chrrom_size = (size_t)info.mapper.chrrom_banks_8k * S8K;
+
 			// Older versions of the iNES emulator ignored bytes 7-15, and several ROM management tools
 			// wrote messages in there. Commonly, these will be filled with "DiskDude!", which results
 			// in 64 being added to the mapper number. A general rule of thumb: if the last 4 bytes are
@@ -223,7 +222,7 @@ BYTE ines_load_rom(void) {
 			wram_set_ram_size(S8K);
 			vram_set_ram_size(0, S8K);
 
-			vs_system.ppu = vs_system.special_mode.type = 0;
+			vs_system.ppu = 0;
 			vs_system.special_mode.type = 0;
 			info.decimal_mode = FALSE;
 		}
@@ -365,7 +364,11 @@ BYTE ines_load_rom(void) {
 			}
 		}
 
-		info.mapper.prgrom_banks_16k = !info.mapper.prgrom_banks_16k ? 1 : info.mapper.prgrom_banks_16k;
+		info.mapper.prgrom_banks_16k = !info.mapper.prgrom_banks_16k? 1 : info.mapper.prgrom_banks_16k;
+		info.mapper.prgrom_size = !info.mapper.prgrom_size ||
+			(info.mapper.prgrom_size > info.mapper.prgrom_banks_16k * S16K)
+			? info.mapper.prgrom_banks_16k * S16K
+			: info.mapper.prgrom_size;
 
 		// alloco e carico la PRG Rom
 		prgrom_set_size(info.mapper.prgrom_banks_16k * S16K);
@@ -375,7 +378,7 @@ BYTE ines_load_rom(void) {
 			return (EXIT_ERROR);
 		}
 
-		if (rom_mem_ctrl_memcpy_truncated(prgrom_pnt(), &rom, prgrom_size()) == EXIT_ERROR) {
+		if (rom_mem_ctrl_memcpy_truncated(prgrom_pnt(), &rom, info.mapper.prgrom_size) == EXIT_ERROR) {
 			info.prg_truncated = TRUE;
 		}
 
@@ -387,7 +390,7 @@ BYTE ines_load_rom(void) {
 				free(rom.data);
 				return (EXIT_ERROR);
 			}
-			if (rom_mem_ctrl_memcpy_truncated(chrrom_pnt(), &rom, chrrom_size()) == EXIT_ERROR) {
+			if (rom_mem_ctrl_memcpy_truncated(chrrom_pnt(), &rom, info.mapper.chrrom_size) == EXIT_ERROR) {
 				info.chr_truncated = TRUE;
 			}
 		}
@@ -430,13 +433,15 @@ BYTE ines_load_rom(void) {
 	return (EXIT_ERROR);
 }
 
-void nes20_prg_chr_size(DBWORD *reg, double divider) {
+size_t nes20_prg_chr_size(DBWORD *reg, double divider) {
 	if (((*reg) & 0x0F00) == 0x0F00) {
 		unsigned int exponent = ((*reg) & 0x00FC) >> 2;
 		double len = pow(2, exponent) * ((((*reg) & 0x0003) * 2) + 1);
 
 		(*reg) = (int)ceil(len / divider);
+		return((int)len);
 	}
+	return((int)((*reg) * divider));
 }
 
 void calculate_checksums_from_rom(void *rom_mem) {
@@ -472,6 +477,10 @@ void calculate_checksums_from_rom(void *rom_mem) {
 	{
 		len = !info.mapper.prgrom_banks_16k ? S8K : (size_t)info.mapper.prgrom_banks_16k * S16K;
 		difference = !info.mapper.prgrom_banks_16k ? S8K : 0;
+		if (len > info.mapper.prgrom_size) {
+			len = !info.mapper.prgrom_size ? S8K : info.mapper.prgrom_size;
+			difference = !info.mapper.prgrom_size ? S8K : 0;
+		}
 		if ((position + len) > rom->size) {
 			DBWORD banks = ((rom->size - position) / S16K) + ((rom->size - position) % S16K ? 1: 0);
 
@@ -486,7 +495,6 @@ void calculate_checksums_from_rom(void *rom_mem) {
 		info.crc32.total = emu_crc32_continue((void *)&rom->data[position], len, info.crc32.total);
 		position += len;
 	}
-
 	if (info.mapper.chrrom_banks_8k) {
 		len = (size_t)info.mapper.chrrom_banks_8k * S8K;
 		difference = 0;
@@ -560,7 +568,8 @@ BYTE ines10_search_in_database(void) {
 	search_in_database();
 
 	if ((vs_system.ppu == DEFAULT) && (vs_system.special_mode.type == DEFAULT)) {
-		vs_system.ppu = vs_system.special_mode.type = 0;
+		vs_system.ppu = 0;
+		vs_system.special_mode.type = 0;
 	}
 
 	return (EXIT_OK);

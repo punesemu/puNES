@@ -167,8 +167,10 @@ void search_in_xml(QFile &file) {
 							info.mapper.battery = nes20db.pcb.battery;
 
 							if (old_format != UNIF_FORMAT) {
+								info.mapper.prgrom_size = nes20db.prgrom.size;
 								info.mapper.prgrom_banks_16k = (nes20db.prgrom.size / S16K) +
 									((nes20db.prgrom.size % S16K) ? 1 : 0);
+								info.mapper.chrrom_size = nes20db.chrrom.size;
 								info.mapper.chrrom_banks_8k = (nes20db.chrrom.size / S8K) +
 									((nes20db.chrrom.size % S8K) ? 1 : 0);
 							}

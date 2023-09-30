@@ -19,6 +19,7 @@
 #include <string.h>
 #include "mappers.h"
 #include "save_slot.h"
+#include "vs_system.h"
 
 INLINE static void prg_fix_099(BYTE nidx);
 INLINE static void wram_fix_099(BYTE nidx);
@@ -48,15 +49,7 @@ void extcl_after_mapper_init_099(void) {
 }
 void extcl_cpu_wr_mem_099(UNUSED(BYTE nidx), UNUSED(WORD address), UNUSED(BYTE value)) {}
 void extcl_cpu_wr_r4016_099(BYTE nidx, BYTE value) {
-
-
-//	if ((value != 0x02) && (value != 0x03))
-//	if (value & 0x04)
-//	printf("extcl_cpu_wr_r4016_099 : %d 0x%02X\n", nidx, value);
-
-
 	m099.reg[nidx] = value;
-
 	prg_fix_099(nidx);
 	wram_fix_099(nidx);
 	chr_fix_099(nidx);
@@ -67,10 +60,33 @@ BYTE extcl_save_mapper_099(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 INLINE static void prg_fix_099(BYTE nidx) {
+	if (vs_system.special_mode.type >= VS_DS_Normal) {
+		if (info.crc32.total == 0x70FFB591) {
+			if (nidx == 1) {
+				memmap_disable_8k(nidx, MMCPU(0x8000));
+				memmap_disable_8k(nidx, MMCPU(0xA000));
+				memmap_disable_8k(nidx, MMCPU(0xC000));
+				memmap_auto_8k(nidx, MMCPU(0xE000), 4);
+				return;
+			}
+		} else if (info.mapper.prgrom_size == S48K) {
+			memmap_disable_8k(nidx, MMCPU(0x8000));
+			memmap_auto_8k(nidx, MMCPU(0xA000), ((3 * nidx) + 0));
+			memmap_auto_8k(nidx, MMCPU(0xC000), ((3 * nidx) + 1));
+			memmap_auto_8k(nidx, MMCPU(0xE000), ((3 * nidx) + 2));
+			return;
+		}
+	} else if (info.mapper.prgrom_size == S24K) {
+		memmap_disable_8k(nidx, MMCPU(0x8000));
+		memmap_auto_8k(nidx, MMCPU(0xA000), 0);
+		memmap_auto_8k(nidx, MMCPU(0xC000), 1);
+		memmap_auto_8k(nidx, MMCPU(0xE000), 2);
+		return;
+	}
 	memmap_auto_32k(nidx, MMCPU(0x8000), nidx);
-//	if (prgrom_size() > S32K) {
-//		memmap_auto_8k(nidx, MMCPU(0x8000), m099.reg[nidx] & 0x04);
-//	}
+	if (vs_system.special_mode.type == VS_SM_Normal) {
+		memmap_auto_8k(nidx, MMCPU(0x8000), m099.reg[nidx] & 0x04);
+	}
 }
 INLINE static void wram_fix_099(BYTE nidx) {
 	memmap_auto_8k(nidx, MMCPU(0x6000), 0);

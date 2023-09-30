@@ -195,8 +195,8 @@ void dlgVsSystem::update_dialog(void) {
 	qtHelper::checkbox_set_checked(checkBox_ds15, ((cfg->dipswitch >> 8) & 0x40) >> 6);
 	qtHelper::checkbox_set_checked(checkBox_ds16, ((cfg->dipswitch >> 8) & 0x80) >> 7);
 
-	widget_Monitor->setEnabled(info.number_of_nes == 2);
-	widget_Dip_Switches2->setEnabled(info.number_of_nes == 2);
+	widget_Monitor->setEnabled(vs_system.special_mode.type == VS_DS_Normal);
+	widget_Dip_Switches2->setEnabled(vs_system.special_mode.type == VS_DS_Normal);
 
 	pushButton_Dip_Switches->setEnabled(dipswitch_type_length() > 0);
 }
