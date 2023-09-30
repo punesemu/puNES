@@ -40,21 +40,20 @@ void map_init_002(void) {
 void extcl_after_mapper_init_002(void) {
 	prg_fix_002();
 }
-void extcl_cpu_wr_mem_002(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_002(BYTE nidx, WORD address, BYTE value) {
 	if (info.mapper.submapper == 2) {
 		// bus conflict
-		value &= prgrom_rd(address);
+		value &= prgrom_rd(nidx, address);
 	}
 	m002.reg = value;
 	prg_fix_002();
 }
 BYTE extcl_save_mapper_002(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m002.reg);
-
 	return (EXIT_OK);
 }
 
 INLINE static void prg_fix_002(void) {
-	memmap_auto_16k(MMCPU(0x8000), m002.reg);
-	memmap_auto_16k(MMCPU(0xC000), 0xFF);
+	memmap_auto_16k(0, MMCPU(0x8000), m002.reg);
+	memmap_auto_16k(0, MMCPU(0xC000), 0xFF);
 }

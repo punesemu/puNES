@@ -318,8 +318,11 @@ BYTE ines_load_rom(void) {
 			}
 
 			switch (vs_system.special_mode.type) {
-				case VS_SM_Normal:
 				default:
+					vs_system.special_mode.type = VS_SM_Normal;
+					vs_system.special_mode.r5e0x = NULL;
+					break;
+				case VS_SM_Normal:
 					vs_system.special_mode.r5e0x = NULL;
 					break;
 				case VS_SM_RBI_Baseball:

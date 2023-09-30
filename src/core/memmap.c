@@ -60,8 +60,10 @@ INLINE static void memmap_auto(BYTE nidx, DBWORD adr, DBWORD value, size_t size,
 INLINE static void memmap_disable(BYTE nidx, DBWORD adr, size_t size, BYTE tvalue);
 INLINE static void memmap_other(BYTE nidx, DBWORD adr, DBWORD value, size_t bsize, BYTE *dst, size_t dsize, BYTE rd, BYTE wr, BYTE tvalue);
 INLINE static void memmap_prgrom(BYTE nidx, DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
+INLINE static void memmap_prgrom_vs(BYTE nidx, DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
 INLINE static void memmap_chrrom(BYTE nidx, DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
 INLINE static void memmap_chrrom_nmt(BYTE nidx, DBWORD adr, DBWORD value, size_t size, BYTE tvalue);
+INLINE static void memmap_chrrom_auto_vs(BYTE nidx, DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
 INLINE static void memmap_wram(BYTE nidx, DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
 INLINE static void memmap_wram_wp(BYTE nidx, DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
 INLINE static void memmap_wram_ram_wp(BYTE nidx, DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue);
@@ -595,6 +597,35 @@ void memmap_prgrom_custom_size(BYTE nidx, DBWORD address, DBWORD chunk, size_t s
 	memmap_prgrom(nidx, address, chunk, size, TRUE, FALSE, FALSE);
 }
 
+// permissions : rd = TRUE, wr = FALSE
+INLINE static void memmap_prgrom_vs(BYTE nidx, DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
+	if (adr & CPUMM) {
+		BYTE dual = vs_system.special_mode.type == VS_DS_Normal;
+		_memmap_bank mbank;
+
+		mbank.region.address = adr;
+		mbank.region.value = value;
+		mbank.region.slot = 0;
+		mbank.region.bank = 0;
+		mbank.dst.size = prgrom_size() >> dual;
+		mbank.dst.pnt = prgrom_pnt_byte(dual * nidx * mbank.dst.size);
+		mbank.dst.mask = prgrom_mask() >> dual;
+		mbank.type = MEMMAP_BANK_PRGROM;
+		mbank.rd = rd;
+		mbank.wr = wr;
+		mbank.size = size;
+		mbank.translate_value = tvalue;
+		mbank.nidx = nidx;
+		memmap_wp_set_chunks(&mbank);
+	}
+}
+void memmap_prgrom_vs_8k(BYTE nidx, DBWORD address, DBWORD value) {
+	memmap_prgrom_vs(nidx, address, value, S8K, TRUE, FALSE, TRUE);
+}
+void memmap_prgrom_vs_32k(BYTE nidx, DBWORD address, DBWORD value) {
+	memmap_prgrom_vs(nidx, address, value, S32K, TRUE, FALSE, TRUE);
+}
+
 BYTE prgrom_malloc(void) {
 	if (memmap_malloc(&prgrom_pnt(), prgrom.real_size) == EXIT_ERROR) {
 		log_error(uL("prgrom malloc;out of memory"));
@@ -744,6 +775,35 @@ void memmap_chrrom_nmt_4k(BYTE nidx, DBWORD address, DBWORD value) {
 }
 void memmap_chrrom_nmt_8k(BYTE nidx, DBWORD address, DBWORD value) {
 	memmap_chrrom_nmt(nidx, address, value, S8K, TRUE);
+}
+
+INLINE static void memmap_chrrom_auto_vs(BYTE nidx, DBWORD adr, DBWORD value, size_t size, BYTE rd, BYTE wr, BYTE tvalue) {
+	if (chrrom_size()) {
+		if (adr & PPUMM) {
+			BYTE dual = (vs_system.special_mode.type == VS_DS_Normal) && (chrrom_size() > S16K);
+			_memmap_bank mbank;
+
+			mbank.region.address = adr;
+			mbank.region.value = value;
+			mbank.region.slot = 0;
+			mbank.region.bank = 0;
+			mbank.dst.size = chrrom_size() >> dual;
+			mbank.dst.pnt = chrrom_pnt_byte(dual * nidx * mbank.dst.size);
+			mbank.dst.mask = chrrom_mask() >> dual;
+			mbank.type = MEMMAP_BANK_CHRROM;
+			mbank.rd = rd;
+			mbank.wr = wr;
+			mbank.size = size;
+			mbank.translate_value = tvalue;
+			mbank.nidx = nidx;
+			memmap_wp_set_chunks(&mbank);
+		}
+	} else {
+		memmap_vram(nidx, adr, value, size, TRUE, TRUE, tvalue);
+	}
+}
+void memmap_chrrom_auto_vs_8k(BYTE nidx, DBWORD address, DBWORD value) {
+	memmap_chrrom_auto_vs(nidx, address, value, S8K, TRUE, FALSE, TRUE);
 }
 
 BYTE chrrom_malloc(void) {

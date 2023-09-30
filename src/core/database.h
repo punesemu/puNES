@@ -4123,6 +4123,8 @@ static const _dbelement dblist[] = {
 	{"83f26eb28474806561a3e5b7c1266c6f138f801b", 99, DEFAULT, DEFAULT, DEFAULT, RP2C03B, DEFAULT, NOEXTRA},
 	/* Tetris (VS).nes */
 	{"810442b860bcef2fd54f9c76f3b8058c9a769b15", 99, DEFAULT, DEFAULT, DEFAULT, RP2C03B, DEFAULT, NOEXTRA},
+	/* Vs. Battle Shitty by Jackass (Hack).nes */
+	{"6be8870249d8b1a80388352bbf8c7a46dccc40ff", 99, DEFAULT, DEFAULT, DEFAULT, RP2C04, DEFAULT, NOEXTRA},
 	/* VS. Blink (SMB1 VS Hack) [o1].nes */
 	{"f3e834ed58e78f7ccfa902ac05fc3b81b68da757", 99, DEFAULT, DEFAULT, DEFAULT, RP2C04_0004, DEFAULT, NOEXTRA},
 	/* VS. Super Mario Bros. (VS) [a1].nes */
@@ -4142,16 +4144,15 @@ static const _dbelement dblist[] = {
 	{"b26efe78798453a903921723f3c9ac69f579b7d2", 151, DEFAULT, DEFAULT, DEFAULT, RP2C04, DEFAULT, NOEXTRA},
 
 	/* Super Xevious - Gump no Nazo (VS) [b1].nes */
-	//{"e0e9b84585b2b217d8ca3af23e6e935e26d1427f", 1, DEFAULT, DEFAULT, DEFAULT, RP2C04,VS_SM_Super_Xevious, NOEXTRA},
+	//{"e0e9b84585b2b217d8ca3af23e6e935e26d1427f", 1, DEFAULT, DEFAULT, DEFAULT, RP2C04, VS_SM_Super_Xevious, NOEXTRA},
 	/* Super Xevious - Gump no Nazo (VS) [b2].nes */
-	//{"c88eb9d327f1ec3a6e24e28fd6332da2e8f2e6a4", 1, DEFAULT, DEFAULT, DEFAULT, RP2C04,VS_SM_Super_Xevious, NOEXTRA},
+	//{"c88eb9d327f1ec3a6e24e28fd6332da2e8f2e6a4", 1, DEFAULT, DEFAULT, DEFAULT, RP2C04, VS_SM_Super_Xevious, NOEXTRA},
 	/* Super Xevious - Gump no Nazo (VS).nes */
-	{"f169152ca55b93d4bc59e46b977f468e9461af18", 206, DEFAULT, DEFAULT, DEFAULT, RP2C04,VS_SM_Super_Xevious, NOEXTRA},
+	{"f169152ca55b93d4bc59e46b977f468e9461af18", 206, DEFAULT, DEFAULT, DEFAULT, RP2C04, VS_SM_Super_Xevious, NOEXTRA},
 
 	/* arbib.nes */
 	//{"bd7a98e6f4f5110aed84c7729d6530d9e7243486", 99, DEFAULT, DEFAULT, DEFAULT, RP2C04, DEFAULT, NOEXTRA},
 
-	                                       /* Vs Dual System non supportato */
 	/* Baseball (VS) (Player 1 Mode) [a1].nes */
 	//{"01c426fa005426956ef45026a2259d5e736a9dc4", 0, DEFAULT, DEFAULT, DEFAULT, RP2C03B, DEFAULT, NOEXTRA},
 	/* Baseball (VS) (Player 1 Mode) [a2].nes */

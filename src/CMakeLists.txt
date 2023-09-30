@@ -91,7 +91,7 @@ set(core_srcs
 
 	core/mappers/mapper_000.c
 #	core/mappers/mapper_001.c
-#	core/mappers/mapper_002.c
+	core/mappers/mapper_002.c
 	core/mappers/mapper_003.c
 #	core/mappers/mapper_004.c
 	core/mappers/mapper_005.c
@@ -150,7 +150,7 @@ set(core_srcs
 #	core/mappers/mapper_064.c
 #	core/mappers/mapper_065.c
 #	core/mappers/mapper_066.c
-#	core/mappers/mapper_067.c
+	core/mappers/mapper_067.c
 #	core/mappers/mapper_068.c
 	core/mappers/mapper_069.c
 #	core/mappers/mapper_070.c
@@ -158,7 +158,7 @@ set(core_srcs
 	core/mappers/mapper_072.c
 #	core/mappers/mapper_073.c
 #	core/mappers/mapper_074.c
-#	core/mappers/mapper_075.c
+	core/mappers/mapper_075.c
 #	core/mappers/mapper_076.c
 #	core/mappers/mapper_077.c
 #	core/mappers/mapper_078.c
@@ -263,7 +263,7 @@ set(core_srcs
 #	core/mappers/mapper_203.c
 #	core/mappers/mapper_204.c
 #	core/mappers/mapper_205.c
-#	core/mappers/mapper_206.c
+	core/mappers/mapper_206.c
 #	core/mappers/mapper_208.c
 #	core/mappers/mapper_209.c
 #	core/mappers/mapper_210.c

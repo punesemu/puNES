@@ -23,6 +23,7 @@
 #include "gui.h"
 #include "vs_system.h"
 #include "nes20db.h"
+#include "conf.h"
 
 _mapper mapper;
 
@@ -45,6 +46,9 @@ BYTE map_init(void) {
 		dipswitch_search();
 		gui_update();
 		gui_dipswitch_dialog();
+		if (vs_system.enabled && (cfg->dipswitch == -1)) {
+			cfg->dipswitch = 0;
+		}
 	}
 
 	info.mapper.supported = TRUE;
@@ -56,9 +60,9 @@ BYTE map_init(void) {
 //		case 1:
 //			map_init_001();
 //			break;
-//		case 2:
-//			map_init_002();
-//			break;
+		case 2:
+			map_init_002();
+			break;
 		case 3:
 			map_init_003();
 			break;
@@ -245,9 +249,9 @@ BYTE map_init(void) {
 //		case 66:
 //			map_init_066();
 //			break;
-//		case 67:
-//			map_init_067();
-//			break;
+		case 67:
+			map_init_067();
+			break;
 //		case 68:
 //			map_init_068();
 //			break;
@@ -269,9 +273,9 @@ BYTE map_init(void) {
 //		case 74:
 //			map_init_074();
 //			break;
-//		case 75:
-//			map_init_075();
-//			break;
+		case 75:
+			map_init_075();
+			break;
 //		case 76:
 //			map_init_076();
 //			break;
@@ -610,9 +614,9 @@ BYTE map_init(void) {
 //		case 205:
 //			map_init_205();
 //			break;
-//		case 206:
-//			map_init_206();
-//			break;
+		case 206:
+			map_init_206();
+			break;
 //		case 207:
 //			map_init_080();
 //			break;

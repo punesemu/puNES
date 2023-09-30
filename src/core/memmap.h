@@ -164,6 +164,9 @@ EXTERNC void memmap_other_16k(BYTE nidx, DBWORD address, DBWORD value, BYTE *dst
 EXTERNC void memmap_other_32k(BYTE nidx, DBWORD address, DBWORD value, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
 EXTERNC void memmap_other_custom_size(BYTE nidx, DBWORD address, DBWORD initial_chunk, size_t custom_size, BYTE *dst, size_t dst_size, BYTE rd, BYTE wr);
 
+EXTERNC void memmap_prgrom_vs_8k(BYTE nidx, DBWORD address, DBWORD value);
+EXTERNC void memmap_prgrom_vs_32k(BYTE nidx, DBWORD address, DBWORD value);
+
 // prgrom ----------------------------------------------------------------------------
 
 EXTERNC BYTE prgrom_init(BYTE set_value);
@@ -219,6 +222,8 @@ EXTERNC void memmap_chrrom_nmt_1k(BYTE nidx, DBWORD address, DBWORD value);
 EXTERNC void memmap_chrrom_nmt_2k(BYTE nidx, DBWORD address, DBWORD value);
 EXTERNC void memmap_chrrom_nmt_4k(BYTE nidx, DBWORD address, DBWORD value);
 EXTERNC void memmap_chrrom_nmt_8k(BYTE nidx, DBWORD address, DBWORD value);
+
+EXTERNC void memmap_chrrom_auto_vs_8k(BYTE nidx, DBWORD address, DBWORD value);
 
 // wram ------------------------------------------------------------------------------
 

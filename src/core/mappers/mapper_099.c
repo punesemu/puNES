@@ -83,14 +83,14 @@ INLINE static void prg_fix_099(BYTE nidx) {
 		memmap_auto_8k(nidx, MMCPU(0xE000), 2);
 		return;
 	}
-	memmap_auto_32k(nidx, MMCPU(0x8000), nidx);
+	memmap_prgrom_vs_32k(nidx, MMCPU(0x8000), 0);
 	if (vs_system.special_mode.type == VS_SM_Normal) {
-		memmap_auto_8k(nidx, MMCPU(0x8000), m099.reg[nidx] & 0x04);
+		memmap_prgrom_vs_8k(nidx, MMCPU(0x8000), 4);
 	}
 }
 INLINE static void wram_fix_099(BYTE nidx) {
 	memmap_auto_8k(nidx, MMCPU(0x6000), 0);
 }
 INLINE static void chr_fix_099(BYTE nidx) {
-	memmap_auto_8k(nidx, MMPPU(0x0000), ((nidx << 1) | (m099.reg[nidx] >> 2)));
+	memmap_chrrom_auto_vs_8k(nidx, MMPPU(0x0000), (m099.reg[nidx] >> 2));
 }
