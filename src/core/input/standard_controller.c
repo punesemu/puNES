@@ -155,13 +155,19 @@ BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), 
 }
 
 void input_rd_standard_controller_vs(BYTE nidx, BYTE *value, BYTE nport, BYTE shift) {
-	BYTE protection = vs_system.special_mode.type == VS_SM_Ice_Climber;
 	BYTE index = nes[nidx].c.input.pindex[nport];
-	BYTE np = ((info.mapper.expansion == EXP_VS_1P_R4017) && (index != SELECT) && (index != START))
-		? nport ^ 0x01
-		: nport;
+	BYTE protection = FALSE;
+	BYTE np = nport;
 
-	(*value) = ((index == START) && protection ? PRESSED : port[np].data[index]) << shift;
+	if (index == START) {
+		index = SELECT;
+		protection = vs_system.special_mode.type == VS_SM_Ice_Climber;
+	} else if (index == SELECT) {
+		index = START;
+	} else if (info.mapper.expansion == EXP_VS_1P_R4017) {
+		np ^= 0x01;
+	}
+	(*value) = (protection ? PRESSED : port[np].data[index]) << shift;
 
 	// Se $4016 e' a 1 leggo solo lo stato del primo pulsante
 	// del controller. Quando verra' scritto 0 nel $4016

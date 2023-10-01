@@ -325,6 +325,8 @@ BYTE ines_load_rom(void) {
 					vs_system.special_mode.r5e0x = NULL;
 					break;
 				case VS_SM_Normal:
+				case VS_SM_Super_Xevious:
+				case VS_SM_Ice_Climber:
 					vs_system.special_mode.r5e0x = NULL;
 					break;
 				case VS_SM_RBI_Baseball:
@@ -332,9 +334,6 @@ BYTE ines_load_rom(void) {
 					break;
 				case VS_SM_TKO_Boxing:
 					vs_system.special_mode.r5e0x = (BYTE *)&vs_protection_data[0][0];
-					break;
-				case VS_SM_Super_Xevious:
-					vs_system.special_mode.r5e0x = NULL;
 					break;
 				case VS_DS_Normal:
 				case VS_DS_Bungeling:
