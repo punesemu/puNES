@@ -178,11 +178,9 @@ void input_rd_zapper_vs(BYTE nidx, BYTE *value, BYTE nport, UNUSED(BYTE shift)) 
 			break;
 		case 6:
 			(*value) = light;
-			//printf("LIGHT : %d %d\n", nport, count);
 			break;
 		case 7:
 			(*value) = trigger;
-			//printf("TRIGG : %d %d\n", nport, (*value));
 			break;
 	}
 

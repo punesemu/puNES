@@ -1114,6 +1114,191 @@ void emu_info_rom(void) {
 		}
 	}
 
+	{
+		log_info_box_open(uL("expansion;"));
+		ischanged(info.mapper.expansion != info.header.expansion);
+		switch (info.mapper.expansion) {
+			default:
+			case 0x00:
+				log_close_box(uL("Unspecified%s"), ifchanged());
+				break;
+			case 0x01:
+				log_close_box(uL("Standard NES/Famicom controllers%s"), ifchanged());
+				break;
+			case 0x02:
+				log_close_box(uL("NES Four Score/Satellite with two additional standard controllers%s"), ifchanged());
+				break;
+			case 0x03:
+				log_close_box(uL("Famicom Four Players Adapter (two additional standard controllers, \"simple\" protocol)%s"), ifchanged());
+				break;
+			case 0x04:
+				log_close_box(uL("Vs. System (1P via $4016)%s"), ifchanged());
+				break;
+			case 0x05:
+				log_close_box(uL("Vs. System (1P via $4017)%s"), ifchanged());
+				break;
+			case 0x06:
+				log_close_box(uL("Reserved%s"), ifchanged());
+				break;
+			case 0x07:
+				log_close_box(uL("Vs. Zapper%s"), ifchanged());
+				break;
+			case 0x08:
+				log_close_box(uL("Zapper ($4017)%s"), ifchanged());
+				break;
+			case 0x09:
+				log_close_box(uL("Two Zappers%s"), ifchanged());
+				break;
+			case 0x0A:
+				log_close_box(uL("Bandai Hyper Shot Lightgun%s"), ifchanged());
+				break;
+			case 0x0B:
+				log_close_box(uL("Power Pad Side A%s"), ifchanged());
+				break;
+			case 0x0C:
+				log_close_box(uL("Power Pad Side B%s"), ifchanged());
+				break;
+			case 0x0D:
+				log_close_box(uL("Family Trainer Side A%s"), ifchanged());
+				break;
+			case 0x0E:
+				log_close_box(uL("Family Trainer Side B%s"), ifchanged());
+				break;
+			case 0x0F:
+				log_close_box(uL("Arkanoid Vaus Controller (NES)%s"), ifchanged());
+				break;
+			case 0x10:
+				log_close_box(uL("Arkanoid Vaus Controller (Famicom)%s"), ifchanged());
+				break;
+			case 0x11:
+				log_close_box(uL("Two Vaus Controllers plus Famicom Data Recorder%s"), ifchanged());
+				break;
+			case 0x12:
+				log_close_box(uL("Konami Hyper Shot Controller%s"), ifchanged());
+				break;
+			case 0x13:
+				log_close_box(uL("Coconuts Pachinko Controller%s"), ifchanged());
+				break;
+			case 0x14:
+				log_close_box(uL("Exciting Boxing Punching Bag (Blowup Doll)%s"), ifchanged());
+				break;
+			case 0x15:
+				log_close_box(uL("Jissen Mahjong Controller%s"), ifchanged());
+				break;
+			case 0x16:
+				log_close_box(uL("Party Tap%s"), ifchanged());
+				break;
+			case 0x17:
+				log_close_box(uL("Oeka Kids Tablet%s"), ifchanged());
+				break;
+			case 0x18:
+				log_close_box(uL("Sunsoft Barcode Battler%s"), ifchanged());
+				break;
+			case 0x19:
+				log_close_box(uL("Miracle Piano Keyboard%s"), ifchanged());
+				break;
+			case 0x1A:
+				log_close_box(uL("Pokkun Moguraa (Whack-a-Mole Mat and Mallet)%s"), ifchanged());
+				break;
+			case 0x1B:
+				log_close_box(uL("Top Rider (Inflatable Bicycle)%s"), ifchanged());
+				break;
+			case 0x1C:
+				log_close_box(uL("Double-Fisted (Requires or allows use of two controllers by one player)%s"), ifchanged());
+				break;
+			case 0x1D:
+				log_close_box(uL("Famicom 3D System%s"), ifchanged());
+				break;
+			case 0x1E:
+				log_close_box(uL("Doremikko Keyboard%s"), ifchanged());
+				break;
+			case 0x1F:
+				log_close_box(uL("R.O.B. Gyro Set%s"), ifchanged());
+				break;
+			case 0x20:
+				log_close_box(uL("Famicom Data Recorder (\"silent\" keyboard)%s"), ifchanged());
+				break;
+			case 0x21:
+				log_close_box(uL("ASCII Turbo File%s"), ifchanged());
+				break;
+			case 0x22:
+				log_close_box(uL("IGS Storage Battle Box%s"), ifchanged());
+				break;
+			case 0x23:
+				log_close_box(uL("Family BASIC Keyboard plus Famicom Data Recorder%s"), ifchanged());
+				break;
+			case 0x24:
+				log_close_box(uL("Dongda PEC-586 Keyboard%s"), ifchanged());
+				break;
+			case 0x25:
+				log_close_box(uL("Bit Corp. Bit-79 Keyboard%s"), ifchanged());
+				break;
+			case 0x26:
+				log_close_box(uL("Subor Keyboard%s"), ifchanged());
+				break;
+			case 0x27:
+				log_close_box(uL("Subor Keyboard plus mouse (3x8-bit protocol)%s"), ifchanged());
+				break;
+			case 0x28:
+				log_close_box(uL("Subor Keyboard plus mouse (24-bit protocol via $4016)%s"), ifchanged());
+				break;
+			case 0x29:
+				log_close_box(uL("SNES Mouse ($4017.d0)%s"), ifchanged());
+				break;
+			case 0x2A:
+				log_close_box(uL("Multicart%s"), ifchanged());
+				break;
+			case 0x2B:
+				log_close_box(uL("Two SNES controllers replacing the two standard NES controllers%s"), ifchanged());
+				break;
+			case 0x2C:
+				log_close_box(uL("RacerMate Bicycle%s"), ifchanged());
+				break;
+			case 0x2D:
+				log_close_box(uL("U-Force%s"), ifchanged());
+				break;
+			case 0x2E:
+				log_close_box(uL("R.O.B. Stack-Up%s"), ifchanged());
+				break;
+			case 0x2F:
+				log_close_box(uL("City Patrolman Lightgun%s"), ifchanged());
+				break;
+			case 0x30:
+				log_close_box(uL("Sharp C1 Cassette Interface%s"), ifchanged());
+				break;
+			case 0x31:
+				log_close_box(uL("Standard Controller with swapped Left-Right/Up-Down/B-A%s"), ifchanged());
+				break;
+			case 0x32:
+				log_close_box(uL("Excalibor Sudoku Pad%s"), ifchanged());
+				break;
+			case 0x33:
+				log_close_box(uL("ABL Pinball%s"), ifchanged());
+				break;
+			case 0x34:
+				log_close_box(uL("Golden Nugget Casino extra buttons%s"), ifchanged());
+				break;
+			case 0x35:
+				log_close_box(uL("Unknown famiclone keyboard used by the \"Golden Key\" educational cartridge%s"), ifchanged());
+				break;
+			case 0x36:
+				log_close_box(uL("Subor Keyboard plus mouse (24-bit protocol via $4017)%s"), ifchanged());
+				break;
+			case 0x37:
+				log_close_box(uL("Port test controller%s"), ifchanged());
+				break;
+			case 0x38:
+				log_close_box(uL("Bandai Multi Game Player Gamepad buttons%s"), ifchanged());
+				break;
+			case 0x39:
+				log_close_box(uL("Venom TV Dance Mat%s"), ifchanged());
+				break;
+			case 0x3A:
+				log_close_box(uL("LG TV Remote Control%s"), ifchanged());
+				break;
+		}
+	}
+
 #define ifsupported() (info.mapper.supported ? "" : " [not supported]")
 
 	if (info.header.format == UNIF_FORMAT) {
@@ -1330,6 +1515,7 @@ void emu_save_header_info(void) {
 	info.header.mirroring = info.mapper.mirroring;
 	info.header.cpu_timing = info.machine[HEADER];
 	info.header.ext_console_type = info.mapper.ext_console_type;
+	info.header.expansion = info.mapper.expansion;
 	info.header.vs_ppu = vs_system.ppu;
 	info.header.vs_hardware = vs_system.special_mode.type;
 }

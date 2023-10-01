@@ -19,6 +19,7 @@
 #include "input/four_score.h"
 #include "vs_system.h"
 #include "nes.h"
+#include "info.h"
 
 struct _four_score {
 	BYTE signature;
@@ -61,16 +62,19 @@ BYTE input_rd_reg_four_score(BYTE nidx, BYTE openbus, BYTE nport) {
 BYTE input_rd_reg_four_score_vs(BYTE nidx, BYTE openbus, BYTE nport) {
 	BYTE protection = vs_system.special_mode.type == VS_DS_Bungeling;
 	BYTE index = nes[nidx].c.input.fsindex[nport] & 0x07;
+	BYTE np = ((info.mapper.expansion == EXP_VS_1P_R4017) && (index != SELECT) && (index != START))
+		? nport ^ 0x01
+		: nport;
 	BYTE value = 0;
 
 	if (nes[nidx].c.input.fsindex[nport] < 8) {
-		value = (index == 3) && protection ? PRESSED : port[nport].data[index];
+		value = (index == 3) && protection ? PRESSED : port[np].data[index];
 		nes[nidx].c.input.fsindex[nport]++;
 	} else if (nes[nidx].c.input.fsindex[nport] < 16) {
-		value = (index == 3) && protection ? PRESSED : port[nport + 2].data[index];
+		value = (index == 3) && protection ? PRESSED : port[np + 2].data[index];
 		nes[nidx].c.input.fsindex[nport]++;
 	} else if (nes[nidx].c.input.fsindex[nport] < 24) {
-		value = (four_score[nport].signature >> (23 - nes[nidx].c.input.fsindex[nport])) & 0x01;
+		value = (four_score[np].signature >> (23 - nes[nidx].c.input.fsindex[nport])) & 0x01;
 		nes[nidx].c.input.fsindex[nport]++;
 	} else {
 		value = 0x01;

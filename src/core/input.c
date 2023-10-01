@@ -128,14 +128,9 @@ void input_init(BYTE set_cursor) {
 			}
 		// VS SYSTEM
 		} else if (vs_system.enabled) {
-			if (info.extra_from_db & VSZAPPER) {
+			if (info.mapper.expansion == EXP_VS_ZAPPER) {
 				switch (a) {
 					case PORT1:
-						SET_WR(a, input_wr_standard_controller);
-						SET_RD(a, input_rd_standard_controller);
-						SET_DECODE_EVENT(a, input_decode_event_standard_controller);
-						SET_ADD_EVENT(a, input_add_event_standard_controller);
-						break;
 					case PORT2:
 						SET_WR(a, input_wr_standard_controller);
 						SET_RD(a, input_rd_zapper_vs);
@@ -289,7 +284,7 @@ BYTE input_draw_target(void) {
 	int i = 0;
 
 	if (vs_system.enabled) {
-		if ((info.extra_from_db & VSZAPPER) && !cfg->input.hide_zapper_cursor) {
+		if ((info.mapper.expansion == EXP_VS_ZAPPER) && !cfg->input.hide_zapper_cursor) {
 			return (TRUE);
 		}
 		return (FALSE);

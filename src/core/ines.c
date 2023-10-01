@@ -132,7 +132,7 @@ BYTE ines_load_rom(void) {
 			// visto che con il NES_2_0 non eseguo la ricerca nel
 			// database inizializzo queste variabili.
 			info.mirroring_db = DEFAULT;
-			info.extra_from_db = 0;
+			info.mapper.expansion = 0;
 
 			info.mapper.id = ((ines.flags[FL8] & 0x0F) << 8) | (ines.flags[FL7] & 0xF0) | (ines.flags[FL6] >> 4);
 			info.mapper.submapper_nes20 = (ines.flags[FL8] & 0xF0) >> 4;
@@ -195,6 +195,7 @@ BYTE ines_load_rom(void) {
 			}
 
 			miscrom.chips = ines.flags[FL14] & 0x03;
+			info.mapper.expansion = ines.flags[FL15];
 		} else {
 			// iNES 1.0
 			info.format = iNES_1_0;
@@ -224,6 +225,7 @@ BYTE ines_load_rom(void) {
 
 			vs_system.ppu = 0;
 			vs_system.special_mode.type = 0;
+			info.mapper.expansion = 0;
 			info.decimal_mode = FALSE;
 		}
 
@@ -540,7 +542,7 @@ void search_in_database(void) {
 			info.mirroring_db = dblist[i].mirroring;
 			vs_system.ppu = dblist[i].vs_ppu;
 			vs_system.special_mode.type = dblist[i].vs_sm;
-			info.extra_from_db = dblist[i].extra;
+			info.mapper.expansion = dblist[i].extra;
 			switch (info.mapper.id) {
 				case 235:
 					if (!info.mapper.prgrom_banks_16k) {
@@ -564,7 +566,6 @@ BYTE ines10_search_in_database(void) {
 	// setto i default prima della ricerca
 	info.machine[DATABASE] = info.mirroring_db = DEFAULT;
 	info.mapper.submapper = 0;
-	info.extra_from_db = 0;
 	vs_system.ppu = vs_system.special_mode.type = DEFAULT;
 
 	// cerco nel database

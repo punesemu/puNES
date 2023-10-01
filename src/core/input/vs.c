@@ -19,7 +19,6 @@
 #include "input/vs.h"
 #include "input/nes_001.h"
 #include "input/four_score.h"
-#include "info.h"
 #include "conf.h"
 #include "vs_system.h"
 #include "cpu.h"

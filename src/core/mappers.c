@@ -1352,7 +1352,6 @@ void map_quit(void) {
 	memmap_init();
 
 	info.number_of_nes = 1;
-	info.mapper.ext_console_type = 0;
 	info.decimal_mode = FALSE;
 
 	if (extcl_mapper_quit) {

@@ -85,7 +85,7 @@ INLINE static void prg_fix_099(BYTE nidx) {
 	}
 	memmap_prgrom_vs_32k(nidx, MMCPU(0x8000), 0);
 	if (vs_system.special_mode.type == VS_SM_Normal) {
-		memmap_prgrom_vs_8k(nidx, MMCPU(0x8000), 4);
+		memmap_prgrom_vs_8k(nidx, MMCPU(0x8000), (m099.reg[nidx] & 0x04));
 	}
 }
 INLINE static void wram_fix_099(BYTE nidx) {

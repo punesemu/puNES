@@ -127,8 +127,8 @@ BYTE unif_load_rom(void) {
 	info.mapper.submapper = 0;
 	info.mapper.mirroring = MIRRORING_HORIZONTAL;
 	info.mapper.battery = FALSE;
+	info.mapper.expansion = 0;
 	info.mirroring_db = DEFAULT;
-	info.extra_from_db = 0;
 	info.mapper.chrrom_banks_8k = 0;
 	vs_system.enabled = FALSE;
 
@@ -604,7 +604,6 @@ void find_board(void) {
 	unif.finded = FALSE;
 	info.mapper.id = DEFAULT;
 	info.mapper.submapper = 0;
-	info.extra_from_db = DEFAULT;
 
 	if (!strncasecmp("NROM", unif.stripped_board, strlen(unif.stripped_board)) ||
 		!strncasecmp("NROM-128", unif.stripped_board, strlen(unif.stripped_board)) ||

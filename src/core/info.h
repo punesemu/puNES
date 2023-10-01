@@ -65,6 +65,7 @@ typedef struct _info {
 		BYTE battery;
 		BYTE force_battery_io;
 		BYTE ext_console_type;
+		BYTE expansion;
 		BYTE mirroring;
 		BYTE supported;
 		struct _info_mapper_nes20db {
@@ -91,6 +92,7 @@ typedef struct _info {
 		BYTE cpu_timing;
 		BYTE vs_hardware;
 		BYTE vs_ppu;
+		BYTE expansion;
 	} header;
 	struct _info_crc32 {
 		uint32_t prg;
@@ -133,7 +135,6 @@ typedef struct _info {
 	BYTE r2002_race_condition_disabled;
 	BYTE r4014_precise_timing_disabled;
 	BYTE r2002_jump_first_vblank;
-	WORD extra_from_db;
 	DBWORD bat_ram_frames;
 	DBWORD bat_ram_frames_snap;
 	BYTE doublebuffer;
